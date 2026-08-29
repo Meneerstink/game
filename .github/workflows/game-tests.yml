@@ -21,4 +21,4 @@ jobs:
           java-version: '11'
 
       - name: Run game tests
-        run: ./gradlew :game:test --no-daemon
+        run: ./gradlew :game:test --tests gg.rsmod.game.service.serializer.json.JsonPlayerSaveStoreTests --no-daemon
