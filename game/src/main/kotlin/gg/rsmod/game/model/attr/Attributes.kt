@@ -608,6 +608,10 @@ val DEATH_RECOVERY_FEE_ATTR = AttributeKey<Int>(persistenceKey = "death_recovery
  * Transient (non-persisted) guard set for the duration of death-loot
  * resolution. Defends against generating PvP ground loot or PvM recovery state
  * more than once for the same death, in addition to the death-flow's own
- * [DEATH_FLAG] re-entrancy guard.
+ * [DEATH_FLAG] re-entrancy guard. `resetOnDeath = true` means
+ * [gg.rsmod.game.action.PlayerDeathAction] itself clears this flag near the
+ * end of every `death()` call (via its existing `attr.removeIf { it.resetOnDeath }`
+ * sweep), so it is armed only for the duration of the death it was set for and
+ * is always clear again before the next death can begin.
  */
-val DEATH_LOOT_RESOLVED_ATTR = AttributeKey<Boolean>()
+val DEATH_LOOT_RESOLVED_ATTR = AttributeKey<Boolean>(resetOnDeath = true)
