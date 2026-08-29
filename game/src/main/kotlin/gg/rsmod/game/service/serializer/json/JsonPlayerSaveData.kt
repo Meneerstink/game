@@ -9,6 +9,7 @@ import gg.rsmod.game.model.varp.Varp
  * @author Tom <rspsmods@gmail.com>
  */
 data class JsonPlayerSaveData(
+    val schemaVersion: Int = LEGACY_SCHEMA_VERSION,
     val username: String,
     val displayName: String, // imma try on local
     val passwordHash: String,
@@ -31,11 +32,17 @@ data class JsonPlayerSaveData(
     val publicFilterSetting: Int?,
     val tradeFilterSetting: Int?,
 ) {
+    companion object {
+        const val LEGACY_SCHEMA_VERSION = 0
+        const val CURRENT_SCHEMA_VERSION = 1
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
         other as JsonPlayerSaveData
+        if (schemaVersion != other.schemaVersion) return false
         if (username != other.username) return false
         if (displayName != other.displayName) return false
         if (passwordHash != other.passwordHash) return false
@@ -61,7 +68,8 @@ data class JsonPlayerSaveData(
     }
 
     override fun hashCode(): Int {
-        var result = username.hashCode()
+        var result = schemaVersion
+        result = 31 * result + username.hashCode()
         result = 31 * result + displayName.hashCode()
         result = 31 * result + passwordHash.hashCode()
         result = 31 * result + displayMode
