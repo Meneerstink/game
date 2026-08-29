@@ -373,12 +373,17 @@ open class ItemCurrency(
             return
         }
 
+        val price = shopItem?.buyPrice ?: getBuyPrice(count, world = p.world, item = unnoted)
+        if (price <= 0) {
+            p.filterableMessage("The shop won't buy this item for that price.")
+            return
+        }
+
         val remove = p.inventory.remove(item = item.id, amount = amount, assureFullRemoval = false)
         if (remove.completed == 0) {
             return
         }
 
-        val price = shopItem?.buyPrice ?: getBuyPrice(count, world = p.world, item = unnoted)
         val compensation = Math.min(Int.MAX_VALUE.toLong(), price.toLong() * remove.completed.toLong()).toInt()
         val add = p.inventory.add(item = currencyItem, amount = compensation, assureFullInsertion = true)
         if (add.requested > 0 && add.completed > 0 || compensation == 0) {
