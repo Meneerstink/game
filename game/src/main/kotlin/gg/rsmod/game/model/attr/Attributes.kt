@@ -579,3 +579,35 @@ val HAMSTRING = AttributeKey<Boolean>(resetOnDeath = true)
  *  How much bleed damage left from Phantom Strike special
  */
 val PHANTOM_STRIKE_BLEED = AttributeKey<Int>(resetOnDeath = true)
+
+/**
+ * A persisted mirror of [Player.skullIcon], kept in sync explicitly by
+ * [gg.rsmod.game.service.serializer.json.JsonPlayerSerializer] on save/load.
+ * The raw field remains the single source of truth during live gameplay (it is
+ * what [gg.rsmod.game.model.entity.Player]'s update-block transmission and the
+ * skull-icon helper extensions read/write); this attribute exists only so that
+ * value survives logout/reconnect without changing the save-file schema.
+ */
+val SKULL_ICON_ATTR = AttributeKey<Int>(persistenceKey = "skull_icon")
+
+/**
+ * The timestamp (epoch millis) at which the items in a player's
+ * [Player.deathRecovery] container become forfeit and can no longer be
+ * reclaimed. Absent when the player has no unreclaimed death-recovery items.
+ */
+val DEATH_RECOVERY_EXPIRY_ATTR = AttributeKey<Long>(persistenceKey = "death_recovery_expiry")
+
+/**
+ * The coin fee required to reclaim the items currently held in a player's
+ * [Player.deathRecovery] container. Absent when the player has no unreclaimed
+ * death-recovery items.
+ */
+val DEATH_RECOVERY_FEE_ATTR = AttributeKey<Int>(persistenceKey = "death_recovery_fee")
+
+/**
+ * Transient (non-persisted) guard set for the duration of death-loot
+ * resolution. Defends against generating PvP ground loot or PvM recovery state
+ * more than once for the same death, in addition to the death-flow's own
+ * [DEATH_FLAG] re-entrancy guard.
+ */
+val DEATH_LOOT_RESOLVED_ATTR = AttributeKey<Boolean>()

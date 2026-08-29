@@ -99,6 +99,12 @@ abstract class Player(
     val randomEventGift = ItemContainer(world.definitions, RANDOM_EVENT_GIFT_KEY)
 
     /**
+     * Holds non-protected items from this player's most recent non-Wilderness
+     * death, pending reclaim. See [gg.rsmod.game.model.container.key.DEATH_RECOVERY_KEY].
+     */
+    val deathRecovery = ItemContainer(world.definitions, DEATH_RECOVERY_KEY)
+
+    /**
      * A flag which indicates if the map should be force
      * refreshed
      */
@@ -119,6 +125,7 @@ abstract class Player(
             put(EQUIPMENT_KEY, equipment)
             put(BANK_KEY, bank)
             put(RANDOM_EVENT_GIFT_KEY, randomEventGift)
+            put(DEATH_RECOVERY_KEY, deathRecovery)
         }
 
     /**

@@ -71,6 +71,49 @@ interface LoggerService : Service {
         killed: Player,
     )
 
+    /**
+     * Records the outcome of a player's death resolution: whether it was a
+     * Wilderness/PvP death or a PvM/safe death, who (if anyone) is credited as
+     * the killer, and how many items were protected vs. lost.
+     */
+    fun logPlayerDeath(
+        player: Player,
+        killer: Player?,
+        context: String,
+        protectedItemCount: Int,
+        lostItemCount: Int,
+    )
+
+    /**
+     * Records a Wilderness/PvP death's items being transferred to the ground as
+     * loot, and who (if anyone) they are owned by.
+     */
+    fun logDeathLootTransfer(
+        player: Player,
+        killer: Player?,
+        items: List<Item>,
+    )
+
+    /**
+     * Records a PvM/safe death's non-protected items being moved into
+     * death-recovery state, pending reclaim.
+     */
+    fun logDeathRecoveryCreated(
+        player: Player,
+        itemCount: Int,
+        expiresAtMs: Long,
+        reclaimFee: Int,
+    )
+
+    /**
+     * Records a successful reclaim of a player's death-recovery items.
+     */
+    fun logDeathReclaim(
+        player: Player,
+        feePaid: Int,
+        itemCount: Int,
+    )
+
     fun logEvent(
         pawn: Pawn,
         event: Event,

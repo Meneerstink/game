@@ -475,6 +475,7 @@ class PluginRepository(
             add(EQUIPMENT_KEY)
             add(BANK_KEY)
             add(RANDOM_EVENT_GIFT_KEY)
+            add(DEATH_RECOVERY_KEY)
         }
 
     /**

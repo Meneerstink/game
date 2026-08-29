@@ -15,6 +15,7 @@ import org.apache.logging.log4j.ThreadContext
 @Suppress("UNUSED")
 class FileLoggerService : LoggerService {
     private val privateMessageLogger = LogManager.getLogger("PrivateMessageLogger")
+    private val deathLogger = LogManager.getLogger("DeathLogger")
 
     // Implement Service interface methods
     override fun init(server: Server, world: World, serviceProperties: ServerProperties) {
@@ -81,6 +82,53 @@ class FileLoggerService : LoggerService {
 
     override fun logPlayerKill(killer: Player, killed: Player) {
         // Do nothing
+    }
+
+    override fun logPlayerDeath(
+        player: Player,
+        killer: Player?,
+        context: String,
+        protectedItemCount: Int,
+        lostItemCount: Int,
+    ) {
+        ThreadContext.put("player", player.username)
+        deathLogger.info(
+            "[DEATH] context=$context killer=${killer?.username ?: "none"} " +
+                "protected=$protectedItemCount lost=$lostItemCount",
+        )
+        ThreadContext.remove("player")
+    }
+
+    override fun logDeathLootTransfer(
+        player: Player,
+        killer: Player?,
+        items: List<Item>,
+    ) {
+        ThreadContext.put("player", player.username)
+        val summary = items.joinToString(", ") { "${it.id}x${it.amount}" }
+        deathLogger.info("[DEATH_LOOT] killer=${killer?.username ?: "public"} items=[$summary]")
+        ThreadContext.remove("player")
+    }
+
+    override fun logDeathRecoveryCreated(
+        player: Player,
+        itemCount: Int,
+        expiresAtMs: Long,
+        reclaimFee: Int,
+    ) {
+        ThreadContext.put("player", player.username)
+        deathLogger.info("[DEATH_RECOVERY] itemCount=$itemCount expiresAtMs=$expiresAtMs reclaimFee=$reclaimFee")
+        ThreadContext.remove("player")
+    }
+
+    override fun logDeathReclaim(
+        player: Player,
+        feePaid: Int,
+        itemCount: Int,
+    ) {
+        ThreadContext.put("player", player.username)
+        deathLogger.info("[DEATH_RECLAIM] feePaid=$feePaid itemCount=$itemCount")
+        ThreadContext.remove("player")
     }
 
     override fun logEvent(pawn: Pawn, event: Event) {

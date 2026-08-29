@@ -9,6 +9,7 @@ import gg.rsmod.game.model.*
 import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.attr.DOUBLE_ATTRIBUTES
 import gg.rsmod.game.model.attr.LONG_ATTRIBUTES
+import gg.rsmod.game.model.attr.SKULL_ICON_ATTR
 import gg.rsmod.game.model.container.ItemContainer
 import gg.rsmod.game.model.entity.Client
 import gg.rsmod.game.model.interf.DisplayMode
@@ -175,6 +176,9 @@ class JsonPlayerSerializer : PlayerSerializerService() {
                 ChatFilterType.getSettingById(data.privateFilterSetting) ?: ChatFilterType.getSettingById(0)!!
             client.tradeFilterSetting =
                 ChatFilterType.getSettingById(data.tradeFilterSetting) ?: ChatFilterType.getSettingById(0)!!
+            // -1 matches SkullIcon.NONE.id; kept as a raw literal here since that
+            // enum lives in the plugins module, which the core module can't depend on.
+            client.skullIcon = client.attr[SKULL_ICON_ATTR] ?: -1
             return PlayerLoadResult.LOAD_ACCOUNT
         } catch (e: Exception) {
             logger.error(e) { "Error when loading player: ${request.username}" }
@@ -184,6 +188,7 @@ class JsonPlayerSerializer : PlayerSerializerService() {
 
     override fun saveClientData(client: Client): Boolean {
         client.loginUsername = client.loginUsername.lowercase() // Convert username to lowercase
+        client.attr[SKULL_ICON_ATTR] = client.skullIcon
         val data =
             JsonPlayerSaveData(
                 username = client.loginUsername,
