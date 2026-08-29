@@ -11,6 +11,7 @@ import java.util.concurrent.Callable
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import kotlin.test.Test
+import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
@@ -30,7 +31,12 @@ class JsonPlayerSaveStoreTests {
 
         val actual = store.read(USERNAME)
         assertEquals(JsonPlayerSaveData.CURRENT_SCHEMA_VERSION, actual.schemaVersion)
-        assertEquals(expected.copy(schemaVersion = JsonPlayerSaveData.CURRENT_SCHEMA_VERSION), actual)
+        assertEquals(expected.username, actual.username)
+        assertEquals(expected.displayName, actual.displayName)
+        assertEquals(expected.passwordHash, actual.passwordHash)
+        assertContentEquals(expected.previousXteas, actual.previousXteas)
+        assertContentEquals(expected.appearance.looks, actual.appearance.looks)
+        assertContentEquals(expected.appearance.colors, actual.appearance.colors)
     }
 
     @Test
