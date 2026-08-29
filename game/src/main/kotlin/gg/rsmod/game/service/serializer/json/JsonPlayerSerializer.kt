@@ -24,6 +24,7 @@ import java.nio.file.Paths
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
+import java.util.concurrent.RejectedExecutionException
 import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
 import kotlin.math.max
@@ -51,6 +52,14 @@ class JsonPlayerSerializer : PlayerSerializerService() {
 
     private var autosaveIntervalSeconds = DEFAULT_AUTOSAVE_INTERVAL_SECONDS
     private var autosaveFuture: ScheduledFuture<*>? = null
+
+    /**
+     * Once shutdown begins no new autosave snapshot may be submitted to the
+     * writer. A game-thread job may otherwise outlive the scheduler that
+     * created it and submit to an already terminated executor.
+     */
+    @Volatile
+    private var acceptingSaves = true
 
     override fun initSerializer(
         server: Server,
@@ -87,8 +96,17 @@ class JsonPlayerSerializer : PlayerSerializerService() {
         server: Server,
         world: World,
     ) {
+        acceptingSaves = false
         autosaveFuture?.cancel(false)
         autosaveScheduler.shutdown()
+        try {
+            if (!autosaveScheduler.awaitTermination(SHUTDOWN_TIMEOUT_SECONDS, TimeUnit.SECONDS)) {
+                logger.error("Player autosave scheduler did not terminate within {} seconds.", SHUTDOWN_TIMEOUT_SECONDS)
+            }
+        } catch (e: InterruptedException) {
+            Thread.currentThread().interrupt()
+            logger.error(e) { "Interrupted while waiting for the player autosave scheduler to stop." }
+        }
         saveExecutor.shutdown()
         try {
             if (!saveExecutor.awaitTermination(SHUTDOWN_TIMEOUT_SECONDS, TimeUnit.SECONDS)) {
@@ -239,6 +257,10 @@ class JsonPlayerSerializer : PlayerSerializerService() {
     }
 
     override fun saveClientData(client: Client): Boolean {
+        if (!acceptingSaves) {
+            logger.warn { "Ignoring save for ${client.loginUsername}: player save service is shutting down." }
+            return false
+        }
         client.loginUsername = client.loginUsername.lowercase() // Convert username to lowercase
         val data = createSaveData(client)
         return try {
@@ -253,8 +275,14 @@ class JsonPlayerSerializer : PlayerSerializerService() {
     }
 
     private fun requestAutosave() {
+        if (!acceptingSaves) {
+            return
+        }
         val gameService = world.getService(GameService::class.java) ?: return
         gameService.submitGameThreadJob {
+            if (!acceptingSaves) {
+                return@submitGameThreadJob
+            }
             val snapshots = mutableMapOf<String, JsonPlayerSaveData>()
             world.players.forEach { player ->
                 if (player is Client) {
@@ -263,13 +291,19 @@ class JsonPlayerSerializer : PlayerSerializerService() {
             }
 
             if (snapshots.isNotEmpty()) {
-                saveExecutor.execute {
-                    snapshots.forEach { (username, data) ->
-                        try {
-                            writeSnapshot(username, data)
-                        } catch (e: Exception) {
-                            logger.error(e) { "Error during autosave for player: $username" }
+                try {
+                    saveExecutor.execute {
+                        snapshots.forEach { (username, data) ->
+                            try {
+                                writeSnapshot(username, data)
+                            } catch (e: Exception) {
+                                logger.error(e) { "Error during autosave for player: $username" }
+                            }
                         }
+                    }
+                } catch (_: RejectedExecutionException) {
+                    if (acceptingSaves) {
+                        logger.error { "Player autosave writer rejected a save while still accepting saves." }
                     }
                 }
             }

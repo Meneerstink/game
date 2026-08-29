@@ -7,6 +7,9 @@ import org.junit.Rule
 import org.junit.rules.TemporaryFolder
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
+import java.util.concurrent.Callable
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -86,6 +89,31 @@ class JsonPlayerSaveStoreTests {
 
         assertFailsWith<IllegalArgumentException> {
             store.exists("../outside")
+        }
+    }
+
+    @Test
+    fun `concurrent saves leave a readable primary and backup`() {
+        val store = createStore()
+        val writer = Executors.newFixedThreadPool(4)
+
+        try {
+            val writes =
+                (1..40).map { number ->
+                    Callable {
+                        store.write(USERNAME, saveData(displayName = "Save $number"))
+                    }
+                }
+
+            writer.invokeAll(writes).forEach { it.get() }
+
+            assertTrue(store.read(USERNAME).displayName.startsWith("Save "))
+            assertTrue(Files.exists(store.backupPath(USERNAME)))
+            Files.write(store.primaryPath(USERNAME), "{broken".toByteArray(StandardCharsets.UTF_8))
+            assertTrue(store.read(USERNAME).displayName.startsWith("Save "))
+        } finally {
+            writer.shutdown()
+            writer.awaitTermination(5, TimeUnit.SECONDS)
         }
     }
 
