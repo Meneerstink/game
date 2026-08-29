@@ -93,6 +93,128 @@ class DeathExecutorTests {
     }
 
     @Test
+    fun `PvM death recovers an item that exactly fills the last free recovery slot`() {
+        val victim = newPlayer()
+        val world = mockk<World>(relaxed = true)
+        fillDeathRecovery(victim, slots = 0 until 41, itemId = FILLER_ITEM)
+        victim.inventory[0] = Item(LOST_ITEM, 1)
+
+        val itemRisk =
+            DeathItemRiskResult(
+                protectedItemCount = 0,
+                protected = emptyList(),
+                lost = listOf(DeathSlotItem(DeathContainerSource.INVENTORY, 0, Item(LOST_ITEM, 1))),
+            )
+        val result = DeathResolutionResult(DeathContext.PVM_SAFE, victim, null, itemRisk)
+
+        val executed = DeathExecutor.execute(world, result, DeathRecoveryConfig.PLACEHOLDER)
+
+        assertTrue(executed)
+        assertNull(victim.inventory[0], "item must be removed once it fits in the last free slot")
+        assertEquals(1, victim.deathRecovery.getItemCount(LOST_ITEM))
+        assertTrue(victim.deathRecovery.isFull, "recovery must now be exactly full, not overflowed")
+    }
+
+    @Test
+    fun `PvM death that would exceed recovery capacity keeps the overflow item on the player instead of losing it`() {
+        val victim = newPlayer()
+        val world = mockk<World>(relaxed = true)
+        fillDeathRecovery(victim, slots = 0 until 42, itemId = FILLER_ITEM)
+        victim.inventory[0] = Item(LOST_ITEM, 5)
+
+        val itemRisk =
+            DeathItemRiskResult(
+                protectedItemCount = 0,
+                protected = emptyList(),
+                lost = listOf(DeathSlotItem(DeathContainerSource.INVENTORY, 0, Item(LOST_ITEM, 5))),
+            )
+        val result = DeathResolutionResult(DeathContext.PVM_SAFE, victim, null, itemRisk)
+
+        val executed = DeathExecutor.execute(world, result, DeathRecoveryConfig.PLACEHOLDER)
+
+        assertTrue(executed, "the death itself still resolves even though this one stack couldn't be recovered")
+        val keptItem = victim.inventory[0]
+        assertNotNull(keptItem, "overflowing stack must never be destroyed")
+        assertEquals(LOST_ITEM, keptItem.id)
+        assertEquals(5, keptItem.amount, "overflowing stack must stay exactly as it was")
+        assertEquals(0, victim.deathRecovery.getItemCount(LOST_ITEM), "overflow item must never enter recovery")
+        assertTrue(victim.deathRecovery.isFull, "the pre-existing recovery contents must be untouched")
+        verify(exactly = 0) { world.spawn(any<GroundItem>()) }
+    }
+
+    @Test
+    fun `PvM death overflow does not partially mutate the inventory slot it couldn't recover`() {
+        val victim = newPlayer()
+        val world = mockk<World>(relaxed = true)
+        fillDeathRecovery(victim, slots = 0 until 42, itemId = FILLER_ITEM)
+        val original = Item(LOST_ITEM, 5)
+        victim.inventory[0] = original
+
+        val itemRisk =
+            DeathItemRiskResult(
+                protectedItemCount = 0,
+                protected = emptyList(),
+                lost = listOf(DeathSlotItem(DeathContainerSource.INVENTORY, 0, original)),
+            )
+        val result = DeathResolutionResult(DeathContext.PVM_SAFE, victim, null, itemRisk)
+
+        DeathExecutor.execute(world, result, DeathRecoveryConfig.PLACEHOLDER)
+
+        val afterSlot = victim.inventory[0]
+        assertNotNull(afterSlot, "the slot must not be left cleared with the item lost nowhere")
+        assertEquals(LOST_ITEM, afterSlot.id)
+        assertEquals(5, afterSlot.amount, "amount must not be partially reduced")
+    }
+
+    @Test
+    fun `PvM death overflow does not partially mutate the equipment slot it couldn't recover`() {
+        val victim = newPlayer()
+        val world = mockk<World>(relaxed = true)
+        fillDeathRecovery(victim, slots = 0 until 42, itemId = FILLER_ITEM)
+        val original = Item(LOST_ITEM, 1)
+        victim.equipment[0] = original
+
+        val itemRisk =
+            DeathItemRiskResult(
+                protectedItemCount = 0,
+                protected = emptyList(),
+                lost = listOf(DeathSlotItem(DeathContainerSource.EQUIPMENT, 0, original)),
+            )
+        val result = DeathResolutionResult(DeathContext.PVM_SAFE, victim, null, itemRisk)
+
+        DeathExecutor.execute(world, result, DeathRecoveryConfig.PLACEHOLDER)
+
+        val afterSlot = victim.equipment[0]
+        assertNotNull(afterSlot, "the equipped item must not be removed if it can't be recovered")
+        assertEquals(LOST_ITEM, afterSlot.id)
+        assertEquals(1, afterSlot.amount)
+    }
+
+    @Test
+    fun `repeated execute for an overflowed PvM death does not duplicate the kept-back item`() {
+        val victim = newPlayer()
+        val world = mockk<World>(relaxed = true)
+        fillDeathRecovery(victim, slots = 0 until 42, itemId = FILLER_ITEM)
+        victim.inventory[0] = Item(LOST_ITEM, 1)
+
+        val itemRisk =
+            DeathItemRiskResult(
+                protectedItemCount = 0,
+                protected = emptyList(),
+                lost = listOf(DeathSlotItem(DeathContainerSource.INVENTORY, 0, Item(LOST_ITEM, 1))),
+            )
+        val result = DeathResolutionResult(DeathContext.PVM_SAFE, victim, null, itemRisk)
+
+        val first = DeathExecutor.execute(world, result, DeathRecoveryConfig.PLACEHOLDER)
+        val second = DeathExecutor.execute(world, result, DeathRecoveryConfig.PLACEHOLDER)
+
+        assertTrue(first)
+        assertFalse(second, "a second execute() for the same death must be a no-op")
+        assertEquals(1, victim.inventory.getItemCount(LOST_ITEM), "kept-back item must not be duplicated")
+        assertEquals(0, victim.deathRecovery.getItemCount(LOST_ITEM))
+    }
+
+    @Test
     fun `PvM death moves lost items into death-recovery and sets expiry and fee`() {
         val victim = newPlayer()
         val world = mockk<World>(relaxed = true)
@@ -134,9 +256,29 @@ class DeathExecutorTests {
         return player
     }
 
+    /**
+     * Pre-fills [player]'s death-recovery container directly by slot (not via
+     * `add`), simulating an unreclaimed prior death's recovery batch, so a
+     * new death's capacity-viability check has to contend with a
+     * near-full/full container. [itemId] is non-stackable, so each slot holds
+     * its own independent stack regardless of how many slots are filled.
+     */
+    private fun fillDeathRecovery(
+        player: Player,
+        slots: IntRange,
+        itemId: Int,
+    ) {
+        for (slot in slots) {
+            player.deathRecovery[slot] = Item(itemId, 1)
+        }
+    }
+
     companion object {
         private const val LOST_ITEM = 4151
         private const val KEPT_ITEM = 995
+
+        /** A distinct non-stackable item used only to occupy recovery slots as filler. */
+        private const val FILLER_ITEM = 1277
 
         private val DEFINITIONS = DefinitionSet()
         private lateinit var store: CacheLibrary
