@@ -377,25 +377,55 @@ class TradeSession(
      */
     private fun complete() {
         if (stage != TradeStage.ACCEPT_SCREEN) return
+        val partnerSession = partner.getTradeSession() ?: return
+
+        /*
+         * Build both final inventories before mutating either real inventory.
+         * A failed insertion must leave both players exactly as they were;
+         * otherwise a full inventory or a duplicate accept can destroy or
+         * duplicate offered items.
+         */
+        val playerFinal = buildFinalInventory(inventory, partnerSession.container) ?: run {
+            decline(forced = true)
+            return
+        }
+        val partnerFinal = partnerSession.buildFinalInventory(partnerSession.inventory, container) ?: run {
+            decline(forced = true)
+            return
+        }
+
         stage = TradeStage.COMPLETED
+        partnerSession.stage = TradeStage.COMPLETED
 
-        // Assign the trade containers for this player
-        val playerInv = player.inventory
-        inventory.forEachIndexed { index, item -> playerInv[index] = item }
-        partner
-            .getTradeSession()
-            ?.container
-            ?.filterNotNull()
-            ?.forEach { playerInv.add(it) }
-
-        // Assign the trade containers for the partner
-        val partnerInv = partner.inventory
-        partner.getTradeSession()?.inventory?.forEachIndexed { index, item -> partnerInv[index] = item }
-        container.filterNotNull().forEach { partnerInv.add(it) }
+        replaceInventory(player.inventory, playerFinal)
+        replaceInventory(partner.inventory, partnerFinal)
 
         // Finalise the trade session
         finalise(player)
-        finalise(partner)
+        partnerSession.finalise(partner)
+    }
+
+    private fun buildFinalInventory(
+        remainingInventory: ItemContainer,
+        incomingOffer: ItemContainer,
+    ): ItemContainer? {
+        val result = ItemContainer(remainingInventory)
+        incomingOffer.filterNotNull().forEach { item ->
+            if (!result.add(item.id, item.amount, assureFullInsertion = true).hasSucceeded()) {
+                return null
+            }
+        }
+        return result
+    }
+
+    private fun replaceInventory(
+        target: ItemContainer,
+        source: ItemContainer,
+    ) {
+        source.forEachIndexed { index, item ->
+            target[index] = item?.let(::Item)
+        }
+        target.dirty = true
     }
 
     /**
