@@ -85,8 +85,8 @@ class JsonPlayerSerializer : PlayerSerializerService() {
         autosaveFuture =
             autosaveScheduler.scheduleWithFixedDelay(
                 ::requestAutosave,
-                autosaveIntervalSeconds,
-                autosaveIntervalSeconds,
+                autosaveIntervalSeconds.toLong(),
+                autosaveIntervalSeconds.toLong(),
                 TimeUnit.SECONDS,
             )
         logger.info("Player autosave scheduled every {} seconds.", autosaveIntervalSeconds)
