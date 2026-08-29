@@ -35,6 +35,8 @@ privileges:
 # You can pick and choose which services you want to run.
 services:
   - class: gg.rsmod.game.service.serializer.json.JsonPlayerSerializer
+    path: "./data/saves/"
+    autosave-interval-seconds: 300
 
   - class: gg.rsmod.game.service.xtea.XteaKeyService
 

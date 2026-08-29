@@ -1,7 +1,6 @@
 package gg.rsmod.game.service.serializer.json
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import de.mkammerer.argon2.Argon2Factory
 import gg.rsmod.game.Server
@@ -15,17 +14,19 @@ import gg.rsmod.game.model.interf.DisplayMode
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.game.model.priv.Privilege
 import gg.rsmod.game.model.timer.TimerKey
+import gg.rsmod.game.service.GameService
 import gg.rsmod.game.service.serializer.PlayerLoadResult
 import gg.rsmod.game.service.serializer.PlayerSerializerService
 import gg.rsmod.net.codec.login.LoginRequest
 import gg.rsmod.util.ServerProperties
 import mu.KLogging
-import java.io.BufferedReader
-import java.io.FileReader
-import java.nio.file.Files
-import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.*
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.Executors
+import java.util.concurrent.RejectedExecutionException
+import java.util.concurrent.ScheduledFuture
+import java.util.concurrent.TimeUnit
 import kotlin.math.max
 
 /**
@@ -35,17 +36,85 @@ import kotlin.math.max
  * @author Tom <rspsmods@gmail.com>
  */
 class JsonPlayerSerializer : PlayerSerializerService() {
-    private lateinit var path: Path
+    private lateinit var world: World
+    private lateinit var store: JsonPlayerSaveStore
+
+    private val gson = GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create()
+    private val accountLocks = ConcurrentHashMap<String, Any>()
+    private val saveExecutor =
+        Executors.newSingleThreadExecutor { runnable ->
+            Thread(runnable, "player-save-writer").apply { isDaemon = true }
+        }
+    private val autosaveScheduler =
+        Executors.newSingleThreadScheduledExecutor { runnable ->
+            Thread(runnable, "player-autosave-scheduler").apply { isDaemon = true }
+        }
+
+    private var autosaveIntervalSeconds = DEFAULT_AUTOSAVE_INTERVAL_SECONDS
+    private var autosaveFuture: ScheduledFuture<*>? = null
+
+    /**
+     * Once shutdown begins no new autosave snapshot may be submitted to the
+     * writer. A game-thread job may otherwise outlive the scheduler that
+     * created it and submit to an already terminated executor.
+     */
+    @Volatile
+    private var acceptingSaves = true
 
     override fun initSerializer(
         server: Server,
         world: World,
         serviceProperties: ServerProperties,
     ) {
-        path = Paths.get(serviceProperties.getOrDefault("path", "./data/saves/"))
-        if (!Files.exists(path)) {
-            Files.createDirectory(path)
-            logger.info("Path does not exist: $path, creating directory...")
+        this.world = world
+        val savePath = Paths.get(serviceProperties.getOrDefault("path", "./data/saves/"))
+        store = JsonPlayerSaveStore(savePath, gson)
+        autosaveIntervalSeconds =
+            serviceProperties.getOrDefault("autosave-interval-seconds", DEFAULT_AUTOSAVE_INTERVAL_SECONDS)
+    }
+
+    override fun postLoad(
+        server: Server,
+        world: World,
+    ) {
+        if (autosaveIntervalSeconds <= 0) {
+            logger.info("Periodic player autosave is disabled.")
+            return
+        }
+
+        autosaveFuture =
+            autosaveScheduler.scheduleWithFixedDelay(
+                ::requestAutosave,
+                autosaveIntervalSeconds.toLong(),
+                autosaveIntervalSeconds.toLong(),
+                TimeUnit.SECONDS,
+            )
+        logger.info("Player autosave scheduled every {} seconds.", autosaveIntervalSeconds)
+    }
+
+    override fun terminate(
+        server: Server,
+        world: World,
+    ) {
+        acceptingSaves = false
+        autosaveFuture?.cancel(false)
+        autosaveScheduler.shutdown()
+        try {
+            if (!autosaveScheduler.awaitTermination(SHUTDOWN_TIMEOUT_SECONDS, TimeUnit.SECONDS)) {
+                logger.error("Player autosave scheduler did not terminate within {} seconds.", SHUTDOWN_TIMEOUT_SECONDS)
+            }
+        } catch (e: InterruptedException) {
+            Thread.currentThread().interrupt()
+            logger.error(e) { "Interrupted while waiting for the player autosave scheduler to stop." }
+        }
+        saveExecutor.shutdown()
+        try {
+            if (!saveExecutor.awaitTermination(SHUTDOWN_TIMEOUT_SECONDS, TimeUnit.SECONDS)) {
+                logger.error("Player save writer did not terminate within {} seconds.", SHUTDOWN_TIMEOUT_SECONDS)
+            }
+        } catch (e: InterruptedException) {
+            Thread.currentThread().interrupt()
+            logger.error(e) { "Interrupted while waiting for the player save writer to stop." }
         }
     }
 
@@ -54,20 +123,25 @@ class JsonPlayerSerializer : PlayerSerializerService() {
         request: LoginRequest,
     ): PlayerLoadResult {
         client.loginUsername = client.loginUsername.lowercase()
+        val accountLock = accountLocks.computeIfAbsent(client.loginUsername) { Any() }
+        return synchronized(accountLock) {
+            loadClientDataLocked(client, request)
+        }
+    }
 
+    private fun loadClientDataLocked(
+        client: Client,
+        request: LoginRequest,
+    ): PlayerLoadResult {
         if (!characterExists(client.loginUsername)) {
             configureNewPlayer(client, request)
             client.uid = PlayerUID(client.loginUsername)
-            saveClientData(client)
+            store.write(client.loginUsername, createSaveData(client))
             return PlayerLoadResult.NEW_ACCOUNT
         }
         try {
             val world = client.world
-            val save = path.resolve(client.loginUsername)
-            val reader = BufferedReader(FileReader(save.toFile()), 8192)
-            val json = Gson()
-            val data = json.fromJson(reader, JsonPlayerSaveData::class.java)
-            reader.close()
+            val data = store.read(client.loginUsername)
             if (!request.reconnecting) {
                 /*
                  * If the [request] is not a [LoginRequest.reconnecting] request, we have to
@@ -183,37 +257,94 @@ class JsonPlayerSerializer : PlayerSerializerService() {
     }
 
     override fun saveClientData(client: Client): Boolean {
+        if (!acceptingSaves) {
+            logger.warn { "Ignoring save for ${client.loginUsername}: player save service is shutting down." }
+            return false
+        }
         client.loginUsername = client.loginUsername.lowercase() // Convert username to lowercase
-        val data =
-            JsonPlayerSaveData(
-                username = client.loginUsername,
-                passwordHash = client.passwordHash,
-                privilege = client.privilege.id,
-                displayName = client.username, // this order didnt change tho hmm
-                x = client.tile.x,
-                z = client.tile.z,
-                height = client.tile.height,
-                previousXteas = client.currentXteaKeys,
-                displayMode = client.interfaces.displayMode.id,
-                runEnergy = client.runEnergy,
-                appearance = client.getPersistentAppearance(),
-                attributes = client.attr.toPersistentMap(),
-                timers = client.timers.toPersistentTimers(),
-                skills = client.getPersistentSkills(),
-                itemContainers = client.getPersistentContainers(),
-                varps = client.varps.getAll().filter { it.state != 0 },
-                friends = client.friends,
-                ignoredPlayers = client.ignoredPlayers,
-                publicFilterSetting = client.publicFilterSetting.settingId,
-                privateFilterSetting = client.privateFilterSetting.settingId,
-                tradeFilterSetting = client.tradeFilterSetting.settingId,
-            )
-        val writer = Files.newBufferedWriter(path.resolve(client.loginUsername))
-        val json = GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create()
-        json.toJson(data, writer)
-        writer.close()
-        return true
+        val data = createSaveData(client)
+        return try {
+            saveExecutor.submit<Boolean> {
+                writeSnapshot(client.loginUsername, data)
+                true
+            }.get()
+        } catch (e: Exception) {
+            logger.error(e) { "Error when saving player: ${client.loginUsername}" }
+            false
+        }
     }
+
+    private fun requestAutosave() {
+        if (!acceptingSaves) {
+            return
+        }
+        val gameService = world.getService(GameService::class.java) ?: return
+        gameService.submitGameThreadJob {
+            if (!acceptingSaves) {
+                return@submitGameThreadJob
+            }
+            val snapshots = mutableMapOf<String, JsonPlayerSaveData>()
+            world.players.forEach { player ->
+                if (player is Client) {
+                    snapshots[player.loginUsername.lowercase()] = createSaveData(player)
+                }
+            }
+
+            if (snapshots.isNotEmpty()) {
+                try {
+                    saveExecutor.execute {
+                        snapshots.forEach { (username, data) ->
+                            try {
+                                writeSnapshot(username, data)
+                            } catch (e: Exception) {
+                                logger.error(e) { "Error during autosave for player: $username" }
+                            }
+                        }
+                    }
+                } catch (_: RejectedExecutionException) {
+                    if (acceptingSaves) {
+                        logger.error { "Player autosave writer rejected a save while still accepting saves." }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun writeSnapshot(
+        username: String,
+        data: JsonPlayerSaveData,
+    ) {
+        val accountLock = accountLocks.computeIfAbsent(username) { Any() }
+        synchronized(accountLock) {
+            store.write(username, data)
+        }
+    }
+
+    private fun createSaveData(client: Client): JsonPlayerSaveData =
+        JsonPlayerSaveData(
+            schemaVersion = JsonPlayerSaveData.CURRENT_SCHEMA_VERSION,
+            username = client.loginUsername,
+            passwordHash = client.passwordHash,
+            privilege = client.privilege.id,
+            displayName = client.username,
+            x = client.tile.x,
+            z = client.tile.z,
+            height = client.tile.height,
+            previousXteas = client.currentXteaKeys.copyOf(),
+            displayMode = client.interfaces.displayMode.id,
+            runEnergy = client.runEnergy,
+            appearance = client.getPersistentAppearance(),
+            attributes = client.attr.toPersistentMap(),
+            timers = client.timers.toPersistentTimers(),
+            skills = client.getPersistentSkills(),
+            itemContainers = client.getPersistentContainers(),
+            varps = client.varps.getAll().filter { it.state != 0 },
+            friends = client.friends.toMutableList(),
+            ignoredPlayers = client.ignoredPlayers.toMutableList(),
+            publicFilterSetting = client.publicFilterSetting.settingId,
+            privateFilterSetting = client.privateFilterSetting.settingId,
+            tradeFilterSetting = client.tradeFilterSetting.settingId,
+        )
 
     private fun Client.getPersistentContainers(): List<PersistentContainer> {
         val persistent = mutableListOf<PersistentContainer>()
@@ -252,9 +383,7 @@ class JsonPlayerSerializer : PlayerSerializerService() {
      * @return If the player exists in the server's save files.
      */
     fun characterExists(username: String): Boolean {
-        val save = path.resolve(username)
-
-        return Files.exists(save)
+        return store.exists(username)
     }
 
     data class PersistentAppearance(
@@ -275,5 +404,8 @@ class JsonPlayerSerializer : PlayerSerializerService() {
         @JsonProperty("lastLvl") val lastLvl: Int,
     )
 
-    companion object : KLogging()
+    companion object : KLogging() {
+        private const val DEFAULT_AUTOSAVE_INTERVAL_SECONDS = 300
+        private const val SHUTDOWN_TIMEOUT_SECONDS = 10L
+    }
 }
