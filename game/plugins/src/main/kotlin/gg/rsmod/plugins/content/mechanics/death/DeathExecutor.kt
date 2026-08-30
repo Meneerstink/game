@@ -88,6 +88,10 @@ object DeathExecutor {
             lostItemCount = toRemove.size,
         )
 
+        if (result.context == DeathContext.WILDERNESS_PVP && result.killer != null) {
+            gg.rsmod.plugins.content.mechanics.pvp.Killstreaks.onWildernessKill(result.killer, victim)
+        }
+
         if (toRemove.isEmpty()) {
             return true
         }
