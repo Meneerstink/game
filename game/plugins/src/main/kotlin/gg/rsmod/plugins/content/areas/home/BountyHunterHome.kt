@@ -40,5 +40,6 @@ object BountyHunterHome {
         isDangerousWilderness(player.tile, player.world.gameContext.home)
 
     fun canPlayersFight(attacker: Player, target: Player): Boolean =
-        isDangerousWilderness(attacker) && isDangerousWilderness(target)
+        (isDangerousWilderness(attacker) && isDangerousWilderness(target)) ||
+            gg.rsmod.plugins.content.mechanics.practicepvp.PracticePvp.areMatched(attacker, target)
 }
