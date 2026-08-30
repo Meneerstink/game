@@ -51,6 +51,8 @@ services:
     output-path: "./game/plugins/src/main/kotlin/gg/rsmod/plugins/api/cfg/"
     dump: false
 
+  - class: gg.rsmod.plugins.content.mechanics.exchange.GrandExchangeService
+
   - class: gg.rsmod.game.service.rsa.RsaService
 
   - class: gg.rsmod.game.service.GameService
