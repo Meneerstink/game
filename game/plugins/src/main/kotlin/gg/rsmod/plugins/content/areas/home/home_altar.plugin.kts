@@ -10,6 +10,6 @@ package gg.rsmod.plugins.content.areas.home
  * instance here reuses that existing, already-correct handler with zero duplicated logic, same
  * pattern as `home_shops.plugin.kts`.
  */
-val altarTile = world.gameContext.home.transform(4, -3)
+val altarTile = world.gameContext.home.transform(4, -2)
 
 spawn_obj(obj = Objs.ALTAR_27661, x = altarTile.x, z = altarTile.z, height = altarTile.height, type = 10, rot = 0)

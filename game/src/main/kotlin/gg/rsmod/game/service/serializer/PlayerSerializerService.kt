@@ -23,7 +23,11 @@ abstract class PlayerSerializerService : Service {
         world: World,
         serviceProperties: ServerProperties,
     ) {
-        startTile = Tile(world.gameContext.home)
+        // R14.5/HOME_DESIGN_2.png: arrival is offset from the exact centre tile (which is
+        // inside the covered bank/GE pavilion) toward the south gate, matching the confirmed
+        // design's "AANKOMST" marker - never spawning a new player inside/blocking the market
+        // structure itself.
+        startTile = Tile(world.gameContext.home).transform(0, -3)
         initSerializer(server, world, serviceProperties)
     }
 

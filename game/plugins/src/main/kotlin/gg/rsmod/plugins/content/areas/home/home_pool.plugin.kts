@@ -1,16 +1,18 @@
 package gg.rsmod.plugins.content.areas.home
 
 /**
- * R02.2/R14.8: home restoration pool. Restores HP, prayer, run energy and any lowered stats -
- * NEVER special attack energy, which is a deliberate deviation from the real Construction
- * "Ornate rejuvenation pool" (which DOES restore special energy) per R14.8's explicit rule.
+ * R02.2/R14.8/HOME_DESIGN_2.png: home restoration pool, in the E quadrant ("POOL & ALTAR" in
+ * the confirmed design) - due east of the bank, clearly separated from Shops (NE) and Vervoer
+ * (SE). Restores HP, prayer, run energy and any lowered stats - NEVER special attack energy,
+ * which is a deliberate deviation from the real Construction "Ornate rejuvenation pool" (which
+ * DOES restore special energy) per R14.8's explicit rule.
  *
  * Uses [Objs.POOL_CLASS_5] (39562), verified live this session to be a real cache pool object
  * whose only real option is "Collect" - matching real 2011 Construction pool terminology, not
  * guessed (candidates without a real functional option, e.g. Objs.WATER_POOL's "Look"/
  * "Investigate" or Objs.POOL's blank options, were checked and rejected first).
  */
-val poolTile = world.gameContext.home.transform(3, -3)
+val poolTile = world.gameContext.home.transform(4, -1)
 
 spawn_obj(obj = Objs.POOL_CLASS_5, x = poolTile.x, z = poolTile.z, height = poolTile.height, type = 10, rot = 0)
 

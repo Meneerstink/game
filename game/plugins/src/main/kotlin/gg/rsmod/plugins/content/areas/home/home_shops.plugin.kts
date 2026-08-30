@@ -1,10 +1,14 @@
 package gg.rsmod.plugins.content.areas.home
 
 /**
- * R14.14: grouped specialty shops at home, in the NW quadrant of the octagonal ruin (per
- * HOME_DESIGN_2.png) - separate specialised shopkeepers within a short walk of each other,
- * not one all-in-one provisioning NPC. Placed clear of the board (2,4), the pool (3,-3), the
- * central bank tile (2,0) and the four cardinal gates/wall ring at radius 5.
+ * R14.14/HOME_DESIGN_2.png: grouped specialty shops at home, in the NE quadrant of the
+ * octagonal ruin - separate specialised shopkeepers within a short walk of each other, not one
+ * all-in-one provisioning NPC. Placed clear of the board, the pool/altar, the central bank tile
+ * and the wall/gate ring.
+ *
+ * Corrected this pass: an earlier version of this file placed these shops in the NW quadrant
+ * before the confirmed design image was actually reviewed - HOME_DESIGN_2.png clearly labels
+ * "SHOPS" in the NE, with "SUMMONING" in the NW instead (see `home_summoning.plugin.kts`).
  *
  * Reuses five real, already-implemented and already-verified town shopkeepers by spawning a
  * second instance of each at home - their `on_npc_option("trade"/"talk-to")` handlers are bound
@@ -16,8 +20,8 @@ package gg.rsmod.plugins.content.areas.home
  */
 val home = world.gameContext.home
 
-spawn_npc(npc = Npcs.SHOPKEEPER_526, x = home.x - 2, z = home.z + 1, height = home.height) // General Store
-spawn_npc(npc = Npcs.AUBURY, x = home.x - 2, z = home.z + 2, height = home.height) // Rune Shop
-spawn_npc(npc = Npcs.HORVIK, x = home.x - 3, z = home.z + 2, height = home.height) // Armour Shop
-spawn_npc(npc = Npcs.HICKTON, x = home.x - 3, z = home.z + 3, height = home.height) // Archery Emporium
-spawn_npc(npc = Npcs.ZAFF, x = home.x - 4, z = home.z + 3, height = home.height) // Superior Staffs
+spawn_npc(npc = Npcs.SHOPKEEPER_526, x = home.x + 2, z = home.z + 1, height = home.height) // General Store
+spawn_npc(npc = Npcs.AUBURY, x = home.x + 2, z = home.z + 2, height = home.height) // Rune Shop
+spawn_npc(npc = Npcs.HORVIK, x = home.x + 3, z = home.z + 2, height = home.height) // Armour Shop
+spawn_npc(npc = Npcs.HICKTON, x = home.x + 3, z = home.z + 3, height = home.height) // Archery Emporium
+spawn_npc(npc = Npcs.ZAFF, x = home.x + 4, z = home.z + 2, height = home.height) // Superior Staffs

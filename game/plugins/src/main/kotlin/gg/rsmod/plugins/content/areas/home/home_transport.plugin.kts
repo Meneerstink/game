@@ -4,27 +4,40 @@ import gg.rsmod.game.fs.def.NpcDef
 import gg.rsmod.plugins.content.mechanics.shops.CoinCurrency
 
 /**
- * R02.3/R02.4: home transport hub, in the SW quadrant (per HOME_DESIGN_2.png).
+ * R02.3/R02.4/HOME_DESIGN_2.png: home transport hub, in the SE quadrant ("VERVOER" in the
+ * confirmed design) - south of the Pool & Altar area, on the way to the south gate/arrival.
+ *
+ * Corrected this pass: an earlier version of this file placed this hub in the SW quadrant
+ * before the confirmed design image was actually reviewed - HOME_DESIGN_2.png clearly labels
+ * "VERVOER" in the SE, with "PVM & MINIGAMES" in the SW instead.
+ *
+ * The design shows glider/minecart/balloon/carpet PROPS as visual identity for this quadrant -
+ * those are decorative-only and not placed this pass (no verified 2011 object ids for those
+ * specific decorative models; guessing one risks an invisible/wrong prop, same reasoning
+ * documented throughout this session for anything without a verified cache id). What IS real
+ * and functional here:
  *
  * Full scope note: R02.3 lists eight historic transport networks (Spirit Tree, Fairy Ring,
  * Gnome Glider, Magic Carpet, balloon, minecart, charter/boat NPC, Wilderness lever/obelisk).
- * None of the first six exist anywhere in this codebase yet and would need verified real
- * network/destination data this environment can't currently decode (same interface-cache
- * limitation as R03.4 - see OWNER_TASK_STATUS.md) - inventing station lists would be guessing,
- * which is explicitly disallowed. The Wilderness obelisk network already exists and works
- * independently, in the Wilderness itself (`areas/wilderness/wilderness_obelisk.plugin.kts`) -
- * it doesn't belong inside the safe home hub.
+ * The Gnome Glider network is now real and live (`mechanics/travel/gnome_glider.plugin.kts`),
+ * at its 6 real pilots' own original locations, not duplicated here. Spirit Tree, Fairy Ring,
+ * Magic Carpet, balloon, minecart, charter/boat still need verified real network/destination
+ * data this environment can't currently decode (same interface-cache limitation as R03.4 - see
+ * OWNER_TASK_STATUS.md) - inventing station lists would be guessing, which is explicitly
+ * disallowed. The Wilderness obelisk network already exists and works independently, in the
+ * Wilderness itself (`areas/wilderness/wilderness_obelisk.plugin.kts`) - it doesn't belong
+ * inside the safe home hub.
  *
- * What IS real and delivered here: a shop selling the charged teleport jewellery that already
- * has verified, working `Player.teleport(...)` handlers to real destinations (Warriors' Guild,
- * Champions' Guild, Monastery, Ranging Guild, Duel Arena, various minigame/skill-training
- * locations, and Grand Exchange/home via glory) - see `items/jewellery/*.plugin.kts`. This
- * connects players to the existing, already-authentic destination network from a single home
- * NPC, satisfying R02.4's "connect central destinations" for everything this environment can
- * currently verify; the remaining six networks stay an open, explicitly tracked gap.
+ * A shop selling the charged teleport jewellery that already has verified, working
+ * `Player.teleport(...)` handlers to real destinations (Warriors' Guild, Champions' Guild,
+ * Monastery, Ranging Guild, Duel Arena, various minigame/skill-training locations, and Grand
+ * Exchange/home via glory) - see `items/jewellery/*.plugin.kts`. This connects players to the
+ * existing, already-authentic destination network from a single home NPC, satisfying R02.4's
+ * "connect central destinations" for everything this environment can currently verify; the
+ * remaining networks stay an open, explicitly tracked gap.
  */
 val transportNpc = Npcs.SHOPKEEPER_530
-val transportTile = world.gameContext.home.transform(-3, -2)
+val transportTile = world.gameContext.home.transform(2, -4)
 
 create_shop("Home Travel Supplies", CoinCurrency(), containsSamples = false) {
     items[0] = ShopItem(Items.GAMES_NECKLACE_8, 5, resupplyCycles = 500)

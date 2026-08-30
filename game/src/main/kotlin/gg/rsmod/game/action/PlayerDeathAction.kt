@@ -52,7 +52,9 @@ object PlayerDeathAction {
         player.animate(-1)
         if (instancedMap == null) {
             // Note: maybe add a player attribute for death locations
-            player.moveTo(player.world.gameContext.home)
+            // R14.5/HOME_DESIGN_2.png: same south-of-centre arrival offset as first login -
+            // never respawn a player inside the bank/GE pavilion at the exact centre tile.
+            player.moveTo(player.world.gameContext.home.transform(0, -3))
         } else {
             player.moveTo(instancedMap.exitTile)
             world.instanceAllocator.death(player)

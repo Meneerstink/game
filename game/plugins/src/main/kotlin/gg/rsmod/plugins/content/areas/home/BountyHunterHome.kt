@@ -15,16 +15,67 @@ import gg.rsmod.plugins.api.ext.getWildernessLevel
  */
 object BountyHunterHome {
     const val SAFE_RADIUS = 5
+
+    /**
+     * R02.1/HOME_DESIGN_2.png ("De Herbouwde Ruïne"): how many tiles are cut off each of the 4
+     * square corners to form the real octagonal ruin shape the confirmed design shows - not a
+     * plain square. Kept as a real, buildable integer-tile shape (no new client assets needed):
+     * the 4 straight edges shrink from the full [SAFE_RADIUS] span to a shorter flat wall, and
+     * each corner becomes a 3-tile diagonal staircase instead of a right angle.
+     */
+    const val CORNER_CUT = 2
     const val BANK_OFFSET_X = 2
     const val BANK_OFFSET_Z = 0
 
-    fun safeArea(home: Tile): SimplePolygonArea =
-        SimplePolygonArea(
-            arrayOf(
-                home.transform(-SAFE_RADIUS, -SAFE_RADIUS),
-                home.transform(SAFE_RADIUS, SAFE_RADIUS),
-            ),
+    /**
+     * The 8 vertices of the octagonal safe-zone perimeter - the exact same shape
+     * `octagonRing` traces tile-by-tile for the real wall/collision boundary, so the safety
+     * classification ([isSafe]) and the physical wall can never disagree about which tiles are
+     * inside.
+     */
+    fun octagonVertices(home: Tile): Array<Tile> {
+        val r = SAFE_RADIUS
+        val c = CORNER_CUT
+        return arrayOf(
+            home.transform(-(r - c), r),
+            home.transform(r - c, r),
+            home.transform(r, r - c),
+            home.transform(r, -(r - c)),
+            home.transform(r - c, -r),
+            home.transform(-(r - c), -r),
+            home.transform(-r, -(r - c)),
+            home.transform(-r, r - c),
         )
+    }
+
+    /**
+     * Every real tile on the octagonal perimeter - the 4 shortened straight edges plus the 4
+     * diagonal corner-cut staircases (each [CORNER_CUT] + 1 tiles). This is the actual wall/
+     * collision boundary; [octagonVertices] is just its 8 corner points for the polygon test.
+     */
+    fun octagonRing(home: Tile): List<Tile> {
+        val r = SAFE_RADIUS
+        val c = CORNER_CUT
+        val ring = LinkedHashSet<Tile>()
+
+        for (x in -(r - c)..(r - c)) {
+            ring.add(home.transform(x, r))
+            ring.add(home.transform(x, -r))
+        }
+        for (z in -(r - c)..(r - c)) {
+            ring.add(home.transform(r, z))
+            ring.add(home.transform(-r, z))
+        }
+        for (i in 0..c) {
+            ring.add(home.transform(r - c + i, r - i)) // NE cut
+            ring.add(home.transform(r - i, -(r - c) - i)) // SE cut
+            ring.add(home.transform(-(r - c) - i, -r + i)) // SW cut
+            ring.add(home.transform(-r + i, (r - c) + i)) // NW cut
+        }
+        return ring.toList()
+    }
+
+    fun safeArea(home: Tile): SimplePolygonArea = SimplePolygonArea(octagonVertices(home))
 
     fun bankTile(home: Tile): Tile = home.transform(BANK_OFFSET_X, BANK_OFFSET_Z)
 
