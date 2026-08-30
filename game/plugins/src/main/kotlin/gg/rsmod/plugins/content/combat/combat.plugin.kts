@@ -9,6 +9,7 @@ import gg.rsmod.game.model.timer.ACTIVE_COMBAT_TIMER
 import gg.rsmod.game.model.timer.FROZEN_TIMER
 import gg.rsmod.game.model.timer.STUN_TIMER
 import gg.rsmod.plugins.content.combat.specialattack.SpecialAttacks
+import gg.rsmod.plugins.content.mechanics.pvp.PvpSkull
 import gg.rsmod.plugins.content.combat.strategy.MeleeCombatStrategy
 import gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell
 import gg.rsmod.plugins.content.inter.attack.AttackTab
@@ -28,6 +29,7 @@ set_combat_logic {
 
 on_player_option("Attack") {
     val target = pawn.attr[INTERACTING_PLAYER_ATTR]?.get() ?: return@on_player_option
+    PvpSkull.onPlayerInitiatedAttack(attacker = player, victim = target)
     player.attack(target)
 }
 

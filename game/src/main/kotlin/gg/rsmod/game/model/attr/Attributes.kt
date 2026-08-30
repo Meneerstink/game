@@ -92,6 +92,16 @@ val LAST_ENGAGED_COMBAT = AttributeKey<WeakReference<Pawn>>()
 val AGGRESSOR = AttributeKey<WeakReference<Pawn>>()
 
 /**
+ * The [Player] that the owner of this attribute currently regards as their
+ * PvP aggressor - i.e. the last player to attack them while the aggressor
+ * window (see `PvpSkull`) is still open. Used to tell a legitimate
+ * retaliation apart from a fresh, unprovoked attack when awarding the PK
+ * skull: attacking back the player recorded here is retaliation, attacking
+ * anyone else (or attacking after this has expired/cleared) is not.
+ */
+val PVP_AGGRESSOR_ATTR = AttributeKey<WeakReference<Player>>()
+
+/**
  * The [Pawn] that killed another pawn.
  */
 val KILLER_ATTR = AttributeKey<WeakReference<Pawn>>()

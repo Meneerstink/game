@@ -26,6 +26,7 @@ import gg.rsmod.plugins.content.combat.strategy.MeleeCombatStrategy
 import gg.rsmod.plugins.content.combat.strategy.RangedCombatStrategy
 import gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell
 import gg.rsmod.plugins.content.inter.attack.AttackTab
+import gg.rsmod.plugins.content.mechanics.pvp.PvpSkull
 import java.lang.ref.WeakReference
 
 /**
@@ -70,6 +71,10 @@ object Combat {
 
         pawn.attr[LAST_HIT_ATTR] = WeakReference(target)
         target.attr[LAST_HIT_BY_ATTR] = WeakReference(pawn)
+
+        if (pawn is Player && target is Player) {
+            PvpSkull.markAggression(attacker = pawn, victim = target)
+        }
 
         if (target is Player && target.interfaces.getModal() != -1) {
             target.closeInterface(target.interfaces.getModal())

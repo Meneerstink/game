@@ -15,9 +15,21 @@ package gg.rsmod.game.model.timer
 internal val RESET_PAWN_FACING_TIMER = TimerKey()
 
 /**
- * A timer for removing a skull icon.
+ * A timer for removing a skull icon. Has a persistence key so the remaining
+ * duration survives logout/reconnect (ticks down in real time while offline,
+ * matching how a PK skull behaves in-game) and is cleared on death, since a
+ * death already resolves the skull's item-risk consequence.
  */
-val SKULL_ICON_DURATION_TIMER = TimerKey()
+val SKULL_ICON_DURATION_TIMER =
+    TimerKey(persistenceKey = "skull_icon_duration", tickOffline = true, resetOnDeath = true, removeOnZero = true)
+
+/**
+ * Window during which a player who was just attacked can attack back without
+ * being treated as the unprovoked initiator for PK-skull purposes. Refreshed
+ * on every hit received, so it stays open for the duration of an active
+ * fight. Session-local only - does not need to survive reconnect.
+ */
+val PVP_AGGRESSOR_WINDOW_TIMER = TimerKey(tickOffline = false, resetOnDeath = true)
 
 /**
  * Timer key set when a pawn is attacked either in PvP or in PvM.
