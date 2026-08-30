@@ -19,13 +19,13 @@ import gg.rsmod.plugins.api.NpcSkills
 import gg.rsmod.plugins.api.ProjectileType
 import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.api.ext.*
-import gg.rsmod.plugins.content.areas.home.BountyHunterHome
 import gg.rsmod.plugins.content.combat.strategy.CombatStrategy
 import gg.rsmod.plugins.content.combat.strategy.MagicCombatStrategy
 import gg.rsmod.plugins.content.combat.strategy.MeleeCombatStrategy
 import gg.rsmod.plugins.content.combat.strategy.RangedCombatStrategy
 import gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell
 import gg.rsmod.plugins.content.inter.attack.AttackTab
+import gg.rsmod.plugins.content.mechanics.pvp.AreaState
 import gg.rsmod.plugins.content.mechanics.pvp.PvpSkull
 import java.lang.ref.WeakReference
 
@@ -268,15 +268,21 @@ object Combat {
             if (pvp) {
                 pawn as Player
 
-                if (!BountyHunterHome.canPlayersFight(pawn, target)) {
+                if (!AreaState.canPlayersFight(pawn, target)) {
                     pawn.message("You can't attack players here.")
                     return false
                 }
 
-                val combatLvlRange = getValidCombatLvlRange(pawn)
-                if (target.combatLevel !in combatLvlRange) {
-                    pawn.message("The level difference between you and your opponent is too great.")
-                    return false
+                // R03.3: the level-difference range is a Wilderness-specific mechanic (it scales
+                // with Wilderness level); global PvP outside the Wilderness (R03.1) has no such
+                // restriction, matching this codebase's other non-Wilderness PvP (Clan Wars etc).
+                val wildLvl = pawn.tile.getWildernessLevel()
+                if (wildLvl > 0) {
+                    val combatLvlRange = getValidCombatLvlRange(pawn, wildLvl)
+                    if (target.combatLevel !in combatLvlRange) {
+                        pawn.message("The level difference between you and your opponent is too great.")
+                        return false
+                    }
                 }
             }
         }
@@ -284,8 +290,7 @@ object Combat {
     }
 
 
-    private fun getValidCombatLvlRange(player: Player): IntRange {
-        val wildLvl = player.tile.getWildernessLevel()
+    private fun getValidCombatLvlRange(player: Player, wildLvl: Int): IntRange {
         val minLvl = Math.max(Skills.MIN_COMBAT_LVL, player.combatLevel - wildLvl)
         val maxLvl = Math.min(Skills.MAX_COMBAT_LVL, player.combatLevel + wildLvl)
         return minLvl..maxLvl

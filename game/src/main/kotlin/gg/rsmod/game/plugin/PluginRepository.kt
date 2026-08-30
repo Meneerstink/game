@@ -1707,6 +1707,13 @@ class PluginRepository(
         return true
     }
 
+    /**
+     * The 1-based option slots (matching [gg.rsmod.game.fs.def.NpcDef.options] index + 1)
+     * that actually have a bound plugin for [npc]. Used by [gg.rsmod.game.model.npc.NpcCensus]
+     * to report which advertised options (Talk-to, Trade, ...) are real vs dead menu entries.
+     */
+    fun boundNpcOptions(npc: Int): Set<Int> = npcPlugins[npc]?.keys ?: emptySet()
+
     fun bindItemOnNpc(
         npc: Int,
         item: Int,

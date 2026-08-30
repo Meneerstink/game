@@ -106,4 +106,11 @@ class ChunkSet(
     }
 
     fun remove(coords: ChunkCoords): Boolean = chunks.remove(coords) != null
+
+    /**
+     * All [Chunk]s currently loaded. Used to derive real, cache-verified data (e.g. bank
+     * safe zones from actually-placed bank booth/chest objects) instead of hand-authored
+     * coordinates - see [gg.rsmod.plugins.content.mechanics.pvp.BankZones].
+     */
+    fun allChunks(): Collection<Chunk> = chunks.values
 }

@@ -17,10 +17,10 @@ import gg.rsmod.game.model.timer.POISON_TIMER
 import gg.rsmod.plugins.api.HitType
 import gg.rsmod.plugins.api.ProjectileType
 import gg.rsmod.plugins.api.ext.hit
-import gg.rsmod.plugins.content.areas.home.BountyHunterHome
 import gg.rsmod.plugins.content.combat.CombatConfigs.getCombatClass
 import gg.rsmod.plugins.content.combat.formula.CombatFormula
 import gg.rsmod.plugins.content.mechanics.poison.Poison
+import gg.rsmod.plugins.content.mechanics.pvp.AreaState
 import java.lang.ref.WeakReference
 import kotlin.random.Random
 
@@ -177,7 +177,7 @@ fun Pawn.dealHit(
     // Re-check PvP safety when a delayed hit lands. This closes the boundary
     // window for projectiles/spells fired before either player entered home.
     hit.setCancelIf {
-        isDead() || (this is Player && target is Player && !BountyHunterHome.canPlayersFight(this, target))
+        isDead() || (this is Player && target is Player && !AreaState.canPlayersFight(this, target))
     }
 
     // Animate the target blocking the hit (if not a melee hit)

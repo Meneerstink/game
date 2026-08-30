@@ -6,7 +6,6 @@ import gg.rsmod.game.model.timer.PVP_AGGRESSOR_WINDOW_TIMER
 import gg.rsmod.game.model.timer.SKULL_ICON_DURATION_TIMER
 import gg.rsmod.plugins.api.SkullIcon
 import gg.rsmod.plugins.api.ext.skull
-import gg.rsmod.plugins.content.areas.home.BountyHunterHome
 import java.lang.ref.WeakReference
 
 /**
@@ -47,7 +46,7 @@ object PvpSkull {
         attacker: Player,
         victim: Player,
     ) {
-        if (!BountyHunterHome.canPlayersFight(attacker, victim)) {
+        if (!AreaState.canPlayersFight(attacker, victim)) {
             return
         }
 

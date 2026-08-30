@@ -22,6 +22,14 @@ import gg.rsmod.plugins.api.ext.hasSkullIcon
  * a future Practice PvP mode can override this per-player without changing
  * this resolver's shape (e.g. by short-circuiting to [PVM_SAFE] for players
  * flagged as being in that mode).
+ *
+ * R03.3/R08.1 note: combat *permission* (can these two players fight at all) is now driven by
+ * [gg.rsmod.plugins.content.mechanics.pvp.AreaState], which allows PvP outside the Wilderness
+ * too (R03.1). This resolver intentionally still classifies purely by Wilderness location -
+ * R08.1 requires preserving established Wilderness item-risk rules and explicitly allows
+ * treating non-Wilderness PvP death policy as provisional rather than inventing full loss
+ * rules here. A player killed by another player outside the Wilderness currently resolves as
+ * [PVM_SAFE] (no item loss) until an owner decision defines real non-Wilderness PvP loot risk.
  */
 enum class DeathContext {
     WILDERNESS_PVP,

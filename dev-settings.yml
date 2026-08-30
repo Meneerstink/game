@@ -3,3 +3,6 @@ debug-objects: true
 debug-buttons: true
 debug-items: true
 debug-spells: true
+# R04.2: dump the full NPC census (all cache definitions, not just spawned) to
+# ./npc_inventory.csv once on every boot, after world init - no owner login needed.
+debug-npc-census: true

@@ -241,6 +241,12 @@ class World(
      */
     internal fun postLoad() {
         plugins.executeWorldInit(this)
+
+        if (devContext.debugNpcCensus) {
+            // R04.2: full NPC census, no owner login required - registries (definitions,
+            // npcCombatDefs, bound npc options, static spawns) are all populated by now.
+            logger.info(gg.rsmod.game.model.npc.NpcCensus.writeCsv(this))
+        }
     }
 
     /**
