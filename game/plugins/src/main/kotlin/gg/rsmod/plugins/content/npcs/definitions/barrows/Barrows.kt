@@ -66,7 +66,7 @@ object Barrows {
             val dx = (index % 3) * 2 - 2
             val dz = (index / 3) * 2 - 1
             val n = Npc(npcId, Tile(centre.x + dx, centre.z + dz, centre.height), world)
-            n.respawns = false
+            n.respawnOverride = false
             n.walkRadius = 0
             world.spawn(n)
         }

@@ -1824,3 +1824,40 @@ fun getAreaName(player: Player): String {
         // if region ID returns any value not in this mapping, displays this string.
     }
 }
+
+/**
+ * R04.2 diagnostic: dumps one row per currently-spawned npc TYPE (not every cache id - only
+ * what's actually reachable via world/activity/owner spawns right now) to
+ * ./npc_inventory.csv: id, name, combat level, whether the cache marks it attackable, its
+ * offered options, whether a real [NpcCombatDef] is bound (vs silently falling back to
+ * [NpcCombatDef.DEFAULT]), and how many live instances of it exist. Re-run after spawning
+ * new content to refresh coverage; the file is overwritten each time.
+ */
+on_command("npc_inventory", Privilege.OWNER_POWER) {
+    val counts = LinkedHashMap<Int, Int>()
+    val missingCombatDef = HashSet<Int>()
+    world.npcs.forEach { npc ->
+        counts[npc.id] = (counts[npc.id] ?: 0) + 1
+        if (npc.def.isAttackable() && npc.combatDef == gg.rsmod.game.model.combat.NpcCombatDef.DEFAULT) {
+            missingCombatDef.add(npc.id)
+        }
+    }
+    val lines = mutableListOf("id,name,combat_level,attackable,options,missing_combat_def,live_count")
+    var attackableTypes = 0
+    counts.keys.sorted().forEach { id ->
+        val def = world.definitions.get(NpcDef::class.java, id)
+        val attackable = def.isAttackable()
+        if (attackable) attackableTypes++
+        val opts = def.options.filterNotNull().filter { it.isNotBlank() }.joinToString("|")
+        lines.add(
+            "$id,\"${def.name}\",${def.combatLevel},$attackable,\"$opts\",${id in missingCombatDef},${counts[id]}",
+        )
+    }
+    java.io.File("./npc_inventory.csv").writeText(lines.joinToString("\n"))
+    player.message(
+        "npc_inventory.csv written: ${counts.size} distinct spawned npc types " +
+            "(${counts.values.sum()} live instances), $attackableTypes attackable types, " +
+            "${missingCombatDef.size} attackable types missing a real combat def.",
+        type = ChatMessageType.CONSOLE,
+    )
+}

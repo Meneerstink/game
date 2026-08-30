@@ -72,7 +72,7 @@ object Dungeoneering {
                         Tile(ENTRANCE.x + RANDOM.nextInt(5) - 2, ENTRANCE.z + RANDOM.nextInt(5) - 2, ENTRANCE.height),
                         world,
                     )
-                n.respawns = false
+                n.respawnOverride = false
                 world.spawn(n)
                 spawned.add(n)
             }

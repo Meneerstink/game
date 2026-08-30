@@ -92,7 +92,7 @@ object WildernessBreach {
                     Tile(epicentre.x + RANDOM.nextInt(7) - 3, epicentre.z + RANDOM.nextInt(7) - 3, epicentre.height),
                     world,
                 )
-            n.respawns = false
+            n.respawnOverride = false
             world.spawn(n)
             spawned.add(n)
         }

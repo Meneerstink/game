@@ -689,7 +689,7 @@ class World(
         npc.combatDef = combatDef
 
         npc.combatDef.bonuses.forEachIndexed { index, bonus -> npc.equipmentBonuses[index] = bonus }
-        npc.respawns = combatDef.respawnDelay > 0
+        npc.respawns = npc.respawnOverride ?: (combatDef.respawnDelay > 0)
 
         npc.setCurrentLifepoints(npc.combatDef.lifepoints)
         combatDef.stats.forEachIndexed { index, level ->

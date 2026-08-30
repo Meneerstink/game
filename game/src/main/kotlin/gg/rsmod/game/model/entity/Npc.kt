@@ -49,8 +49,21 @@ class Npc private constructor(
 
     /**
      * This flag indicates whether or not this npc will respawn after death.
+     *
+     * [World.setNpcDefaults] recomputes this from the npc's [NpcCombatDef] every time it is
+     * (re)spawned, which clobbers a value set on a freshly-constructed npc before it is passed to
+     * [World.spawn]. Callers that need to force a one-off, non-respawning spawn (e.g. Nex, Barrows
+     * brothers) must set [respawnOverride] instead - see its kdoc.
      */
     var respawns = false
+
+    /**
+     * Forces [respawns] to a fixed value on every [World.setNpcDefaults] call instead of letting
+     * it be derived from the npc's [NpcCombatDef.respawnDelay]. Set this - not [respawns] directly
+     * - before calling [World.spawn] on a freshly-constructed npc that must not respawn (or must
+     * always respawn) regardless of what its combat def says.
+     */
+    var respawnOverride: Boolean? = null
 
     /**
      * The radius from [spawnTile], in tiles, which the npc can randomly walk.

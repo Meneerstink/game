@@ -34,7 +34,7 @@ on_command("nex") {
     player.filterableMessage("The Frozen Door grinds open. Nex awakens...")
     val tile = gg.rsmod.game.model.Tile(player.tile)
     val nex = gg.rsmod.game.model.entity.Npc(Npcs.NEX, tile, player.world)
-    nex.respawns = false
+    nex.respawnOverride = false
     nex.walkRadius = 0
     player.world.spawn(nex)
 }

@@ -14,8 +14,13 @@ val edgevilleId =
 // Ardougne market guards (world-spawned region 12081) - no distinct combat def existed for these before.
 val ardougneMarketId =
     listOf(Npcs.GUARD_2699, Npcs.GUARD_2700, Npcs.GUARD_2701, Npcs.GUARD_2702, Npcs.GUARD_2703)
-// Remaining pickpocketable guard recolors with no world spawn found yet but reachable via ::add_npc/spawnnpc.
-val miscId = listOf(Npcs.GUARD_4307, Npcs.GUARD_4308, Npcs.GUARD_4309, Npcs.GUARD_4310, Npcs.GUARD_4311, Npcs.GUARD_8173)
+// Remaining pickpocketable guard recolors with no world spawn found yet but reachable via ::add_npc/spawnnpc,
+// plus Tower guard (world-spawned x5 near the Watchtower, region 10032) which has no dedicated content of its own.
+val miscId =
+    listOf(
+        Npcs.GUARD_4307, Npcs.GUARD_4308, Npcs.GUARD_4309, Npcs.GUARD_4310, Npcs.GUARD_4311, Npcs.GUARD_8173,
+        Npcs.TOWER_GUARD,
+    )
 val allIds =
     (
         faladorSwordId + varrockId + faladorBattleaxeId + faladorCrossbowId + edgevilleId +

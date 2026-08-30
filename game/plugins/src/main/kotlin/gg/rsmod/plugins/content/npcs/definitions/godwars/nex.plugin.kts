@@ -87,7 +87,7 @@ on_item_on_obj(obj = Objs.FROZEN_DOOR, item = Items.FROZEN_KEY_20120) {
     player.filterableMessage("The Frozen Door grinds open. Nex awakens...")
     val tile = Tile(player.tile)
     val nex = Npc(NEX, tile, player.world)
-    nex.respawns = false
+    nex.respawnOverride = false
     nex.walkRadius = 0
     player.world.spawn(nex)
 }
