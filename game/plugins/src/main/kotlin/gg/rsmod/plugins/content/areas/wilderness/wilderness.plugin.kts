@@ -1,5 +1,7 @@
 package gg.rsmod.plugins.content.areas.wilderness
 
+import gg.rsmod.plugins.content.areas.home.BountyHunterHome
+
 val wildernessCheckTimer = TimerKey()
 
 val INTERFACE_ID = 381
@@ -14,7 +16,7 @@ on_timer(wildernessCheckTimer) {
 }
 
 fun checkWildernessLevel(player: Player) {
-    if (player.tile.getWildernessLevel() > 0) {
+    if (BountyHunterHome.isDangerousWilderness(player)) {
         player.openInterface(dest = InterfaceDestination.PVP_OVERLAY, interfaceId = INTERFACE_ID)
         player.sendOption("Attack", 2)
     } else {

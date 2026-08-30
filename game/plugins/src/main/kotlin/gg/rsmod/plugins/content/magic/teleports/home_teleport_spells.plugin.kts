@@ -96,7 +96,7 @@ enum class HomeTeleport(
     val spellName: String,
     val endTile: World.() -> Tile,
 ) {
-    LUMBRIDGE("Lumbridge Home Teleport", { Tile(x = 3221, z = 3218, height = 0) }),
+    LUMBRIDGE("Lumbridge Home Teleport", { gameContext.home }),
     ;
 
     companion object {

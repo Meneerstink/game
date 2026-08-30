@@ -23,7 +23,7 @@ abstract class PlayerSerializerService : Service {
         world: World,
         serviceProperties: ServerProperties,
     ) {
-        startTile = Tile(3205, 3240, 0)
+        startTile = Tile(world.gameContext.home)
         initSerializer(server, world, serviceProperties)
     }
 

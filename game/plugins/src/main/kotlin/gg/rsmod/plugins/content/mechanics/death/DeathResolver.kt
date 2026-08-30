@@ -3,6 +3,7 @@ package gg.rsmod.plugins.content.mechanics.death
 import gg.rsmod.game.model.attr.PROTECT_ITEM_ATTR
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.api.SkullIcon
+import gg.rsmod.plugins.content.areas.home.BountyHunterHome
 import gg.rsmod.plugins.api.ext.getWildernessLevel
 import gg.rsmod.plugins.api.ext.hasSkullIcon
 
@@ -50,7 +51,7 @@ data class DeathResolutionResult(
  */
 object DeathResolver {
     fun resolveContext(victim: Player): DeathContext =
-        if (victim.tile.getWildernessLevel() > 0) DeathContext.WILDERNESS_PVP else DeathContext.PVM_SAFE
+        if (BountyHunterHome.isDangerousWilderness(victim)) DeathContext.WILDERNESS_PVP else DeathContext.PVM_SAFE
 
     /**
      * @param skulled

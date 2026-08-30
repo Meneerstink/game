@@ -43,8 +43,6 @@ load_metadata {
         16.getItemAmount to 4,
         17.getItem to Items.BODY_RUNE,
         17.getItemAmount to 2,
-        0.getBankItem to Items.COINS_995,
-        0.getBankItemAmount to 25,
     )
 }
 
@@ -61,6 +59,7 @@ on_login {
         bank.forEach { slotItem ->
             player.bank.add(item = slotItem.item, beginSlot = slotItem.slot)
         }
+        check(NewPlayerStart.grantStarterCash(player)) { "Unable to grant new-player starter cash." }
 
         player.setCurrentPrayerPoints(10)
         player.setVarp(Bank.LAST_X_INPUT, 50)

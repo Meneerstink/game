@@ -19,6 +19,7 @@ import gg.rsmod.plugins.api.NpcSkills
 import gg.rsmod.plugins.api.ProjectileType
 import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.api.ext.*
+import gg.rsmod.plugins.content.areas.home.BountyHunterHome
 import gg.rsmod.plugins.content.combat.strategy.CombatStrategy
 import gg.rsmod.plugins.content.combat.strategy.MagicCombatStrategy
 import gg.rsmod.plugins.content.combat.strategy.MeleeCombatStrategy
@@ -262,12 +263,8 @@ object Combat {
             if (pvp) {
                 pawn as Player
 
-                if (!inPvpArea(pawn)) {
+                if (!BountyHunterHome.canPlayersFight(pawn, target)) {
                     pawn.message("You can't attack players here.")
-                    return false
-                }
-
-                if (!inPvpArea(target)) {
                     return false
                 }
 
@@ -281,7 +278,6 @@ object Combat {
         return true
     }
 
-    private fun inPvpArea(player: Player): Boolean = player.tile.getWildernessLevel() > 0
 
     private fun getValidCombatLvlRange(player: Player): IntRange {
         val wildLvl = player.tile.getWildernessLevel()

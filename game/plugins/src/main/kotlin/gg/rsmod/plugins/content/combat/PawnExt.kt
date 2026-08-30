@@ -9,6 +9,7 @@ import gg.rsmod.game.model.combat.CombatClass
 import gg.rsmod.game.model.combat.PawnHit
 import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Pawn
+import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.entity.Projectile
 import gg.rsmod.game.model.queue.QueueTask
 import gg.rsmod.game.model.timer.ACTIVE_COMBAT_TIMER
@@ -16,6 +17,7 @@ import gg.rsmod.game.model.timer.POISON_TIMER
 import gg.rsmod.plugins.api.HitType
 import gg.rsmod.plugins.api.ProjectileType
 import gg.rsmod.plugins.api.ext.hit
+import gg.rsmod.plugins.content.areas.home.BountyHunterHome
 import gg.rsmod.plugins.content.combat.CombatConfigs.getCombatClass
 import gg.rsmod.plugins.content.combat.formula.CombatFormula
 import gg.rsmod.plugins.content.mechanics.poison.Poison
@@ -172,8 +174,11 @@ fun Pawn.dealHit(
 
     val pawnHit = PawnHit(hit, executeHit)
 
-    // Cancel the hit if the Pawn is dead
-    hit.setCancelIf { isDead() }
+    // Re-check PvP safety when a delayed hit lands. This closes the boundary
+    // window for projectiles/spells fired before either player entered home.
+    hit.setCancelIf {
+        isDead() || (this is Player && target is Player && !BountyHunterHome.canPlayersFight(this, target))
+    }
 
     // Animate the target blocking the hit (if not a melee hit)
     hit.addAction {

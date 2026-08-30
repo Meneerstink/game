@@ -88,7 +88,7 @@ on_logout {
         if (lastKnownPosition != null) {
             player.moveTo(lastKnownPosition)
         } else {
-            player.moveTo(3222, 3222, 0)
+            player.moveTo(world.gameContext.home)
         }
         player.attr[ANTI_CHEAT_EVENT_ACTIVE] = false
         player.timers[ANTI_CHEAT_TIMER] = Random.nextInt(3000, 10000)
