@@ -1,6 +1,7 @@
 package gg.rsmod.plugins.content.mechanics.shops
 
 import gg.rsmod.game.model.World
+import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.attr.LOYALTY_POINTS
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
@@ -11,15 +12,25 @@ import gg.rsmod.plugins.api.ext.filterableMessage
 import gg.rsmod.plugins.api.ext.format
 import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.api.ext.setComponentText
+import mu.KLogging
 import kotlin.math.floor
 import kotlin.math.min
 
 /**
+ * R10.3: a real, separate point-currency shop needs its own balance, not
+ * [LOYALTY_POINTS] under a different label - [balanceAttr] is that hook. Every currently
+ * existing shop still uses [LoyaltyPointsCurrency] (the only subclass, wired to
+ * [LOYALTY_POINTS] explicitly), so this is a genuine capability fix, not a behaviour change
+ * for existing content: a future Slayer/PK/Void-points shop can now `PointCurrency("slayer
+ * point", "slayer points", SLAYER_POINTS_ATTR)` and get a real independent balance instead of
+ * silently sharing the loyalty one.
+ *
  * @author Alycia <https://github.com/alycii>
  */
 open class PointCurrency(
     val singularCurrency: String,
     private val pluralCurrency: String,
+    private val balanceAttr: AttributeKey<Int> = LOYALTY_POINTS,
 ) : ShopCurrency {
     override fun onSellValueMessage(
         p: Player,
@@ -41,20 +52,26 @@ open class PointCurrency(
         p.message("You can't sell this item to this shop.")
     }
 
+    /**
+     * R10.3: was a hard `TODO()` crash. Every real point shop in this codebase sets
+     * [ShopItem.sellPrice] explicitly per item (the only real caller path, [sellToPlayer]/
+     * [onSellValueMessage], only reaches this as a fallback when it's null) - a missing price
+     * is a content-authoring gap, not something that should crash the player's shop
+     * interaction. Logs a warning and treats it as free rather than throwing.
+     */
     override fun getSellPrice(
         world: World,
         item: Int,
     ): Int {
-        TODO("Not yet implemented")
+        logger.warn { "PointCurrency.getSellPrice fallback hit for item $item - shop entry is missing an explicit sellPrice." }
+        return 0
     }
 
     override fun getBuyPrice(
         stock: Int,
         world: World,
         item: Int,
-    ): Int {
-        TODO("Not needed for points")
-    }
+    ): Int = error("Point shops don't buy items from players (PurchasePolicy.BUY_NONE) - getBuyPrice should be unreachable.")
 
     override fun sellToPlayer(
         p: Player,
@@ -65,7 +82,7 @@ open class PointCurrency(
         val shopItem = shop.items[slot] ?: return
 
         val currencyCost = shopItem.sellPrice ?: getSellPrice(p.world, shopItem.item)
-        val currencyCount = p.attr[LOYALTY_POINTS] ?: 0
+        val currencyCount = p.attr[balanceAttr] ?: 0
 
         var amount = min(floor(currencyCount.toDouble() / currencyCost.toDouble()).toInt(), amt)
 
@@ -97,7 +114,7 @@ open class PointCurrency(
             return
         }
 
-        p.subtractLoyalty(totalCost.toInt())
+        p.attr[balanceAttr] = (p.attr[balanceAttr] ?: 0) - totalCost.toInt()
 
         val add = p.inventory.add(item = shopItem.item, amount = amount, assureFullInsertion = false)
         if (add.completed == 0) {
@@ -106,7 +123,7 @@ open class PointCurrency(
 
         if (add.getLeftOver() > 0) {
             val refund = add.getLeftOver() * currencyCost
-            p.addLoyalty(refund)
+            p.attr[balanceAttr] = (p.attr[balanceAttr] ?: 0) + refund
         }
 
         if (add.completed > 0 && shopItem.amount != Int.MAX_VALUE) {
@@ -123,7 +140,7 @@ open class PointCurrency(
             p.setComponentText(
                 interfaceId = 620,
                 component = 24,
-                text = "You currently have ${p.attr[LOYALTY_POINTS]!!.format()} loyalty points.",
+                text = "You currently have ${(p.attr[balanceAttr] ?: 0).format()} $pluralCurrency.",
             )
         }
     }
@@ -133,18 +150,16 @@ open class PointCurrency(
         shop: Shop,
         slot: Int,
         amt: Int,
-    ) {
-        TODO("Not needed for points")
-    }
+    ): Unit = error("Point shops don't buy items from players (PurchasePolicy.BUY_NONE) - giveToPlayer should be unreachable.")
 
     override fun buyFromPlayer(
         p: Player,
         shop: Shop,
         slot: Int,
         amt: Int,
-    ) {
-        TODO("Not needed for points")
-    }
+    ): Unit = error("Point shops don't buy items from players (PurchasePolicy.BUY_NONE) - buyFromPlayer should be unreachable.")
 
     override val currencyItem = -1
+
+    companion object : KLogging()
 }
