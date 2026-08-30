@@ -10965,7 +10965,7 @@ object Anims {
     const val ANIM_10958 = 10958
     const val ANIM_10959 = 10959
     const val ANIM_10960 = 10960
-    const val HUMANOID_10961 = 10961
+    const val DRAGON_CLAWS_SPECIAL = 10961
     const val ANIM_10962 = 10962
     const val HUMANOID_10963 = 10963
     const val HUMANOID_10964 = 10964

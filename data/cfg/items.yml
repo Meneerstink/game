@@ -174868,7 +174868,7 @@
     appearance_id: 3560
     equip_slot: 3
     equip_type: -1
-    weapon_type: -1
+    weapon_type: 17
     remove_head: false
     remove_beard: false
     remove_arms: false
@@ -183519,7 +183519,7 @@
     appearance_id: 3757
     equip_slot: 3
     equip_type: -1
-    weapon_type: -1
+    weapon_type: 16
     remove_head: false
     remove_beard: false
     remove_arms: false
@@ -183551,7 +183551,7 @@
     appearance_id: 3758
     equip_slot: 3
     equip_type: -1
-    weapon_type: -1
+    weapon_type: 16
     remove_head: false
     remove_beard: false
     remove_arms: false
@@ -183583,7 +183583,7 @@
     appearance_id: 3759
     equip_slot: 3
     equip_type: -1
-    weapon_type: -1
+    weapon_type: 16
     remove_head: false
     remove_beard: false
     remove_arms: false
@@ -183615,7 +183615,7 @@
     appearance_id: 3760
     equip_slot: 3
     equip_type: -1
-    weapon_type: -1
+    weapon_type: 16
     remove_head: false
     remove_beard: false
     remove_arms: false
@@ -224913,7 +224913,7 @@
     appearance_id: 4708
     equip_slot: 3
     equip_type: -1
-    weapon_type: -1
+    weapon_type: 5
     remove_head: false
     remove_beard: false
     remove_arms: false
@@ -224945,7 +224945,7 @@
     appearance_id: 4709
     equip_slot: 3
     equip_type: -1
-    weapon_type: -1
+    weapon_type: 5
     remove_head: false
     remove_beard: false
     remove_arms: false
@@ -224977,7 +224977,7 @@
     appearance_id: 4710
     equip_slot: 3
     equip_type: -1
-    weapon_type: -1
+    weapon_type: 6
     remove_head: false
     remove_beard: false
     remove_arms: false
@@ -225009,7 +225009,7 @@
     appearance_id: 4711
     equip_slot: 3
     equip_type: -1
-    weapon_type: -1
+    weapon_type: 6
     remove_head: false
     remove_beard: false
     remove_arms: false
@@ -225041,7 +225041,7 @@
     appearance_id: 4712
     equip_slot: 3
     equip_type: 5
-    weapon_type: -1
+    weapon_type: 10
     remove_head: false
     remove_beard: false
     remove_arms: false
@@ -225073,7 +225073,7 @@
     appearance_id: 4713
     equip_slot: 3
     equip_type: -1
-    weapon_type: -1
+    weapon_type: 10
     remove_head: false
     remove_beard: false
     remove_arms: false
@@ -225105,7 +225105,7 @@
     appearance_id: 4714
     equip_slot: 3
     equip_type: -1
-    weapon_type: -1
+    weapon_type: 1
     remove_head: false
     remove_beard: false
     remove_arms: false
@@ -225137,7 +225137,7 @@
     appearance_id: 4715
     equip_slot: 3
     equip_type: -1
-    weapon_type: -1
+    weapon_type: 1
     remove_head: false
     remove_beard: false
     remove_arms: false
@@ -225169,7 +225169,7 @@
     appearance_id: 4716
     equip_slot: 3
     equip_type: -1
-    weapon_type: -1
+    weapon_type: 17
     remove_head: false
     remove_beard: false
     remove_arms: false
@@ -225201,7 +225201,7 @@
     appearance_id: 4717
     equip_slot: 3
     equip_type: -1
-    weapon_type: -1
+    weapon_type: 17
     remove_head: false
     remove_beard: false
     remove_arms: false
@@ -230928,7 +230928,7 @@
     appearance_id: 4783
     equip_slot: 3
     equip_type: -1
-    weapon_type: -1
+    weapon_type: 16
     remove_head: false
     remove_beard: false
     remove_arms: false
@@ -230966,7 +230966,7 @@
     appearance_id: 4784
     equip_slot: 3
     equip_type: -1
-    weapon_type: -1
+    weapon_type: 16
     remove_head: false
     remove_beard: false
     remove_arms: false
@@ -230998,7 +230998,7 @@
     appearance_id: 4785
     equip_slot: 3
     equip_type: -1
-    weapon_type: -1
+    weapon_type: 16
     remove_head: false
     remove_beard: false
     remove_arms: false
@@ -231036,7 +231036,7 @@
     appearance_id: 4786
     equip_slot: 3
     equip_type: -1
-    weapon_type: -1
+    weapon_type: 16
     remove_head: false
     remove_beard: false
     remove_arms: false
@@ -231068,7 +231068,7 @@
     appearance_id: 4787
     equip_slot: 3
     equip_type: -1
-    weapon_type: -1
+    weapon_type: 16
     remove_head: false
     remove_beard: false
     remove_arms: false
@@ -231106,7 +231106,7 @@
     appearance_id: 4788
     equip_slot: 3
     equip_type: -1
-    weapon_type: -1
+    weapon_type: 16
     remove_head: false
     remove_beard: false
     remove_arms: false
@@ -242921,7 +242921,7 @@
     appearance_id: 5099
     equip_slot: 3
     equip_type: -1
-    weapon_type: -1
+    weapon_type: 16
     remove_head: false
     remove_beard: false
     remove_arms: false
@@ -242959,7 +242959,7 @@
     appearance_id: 5100
     equip_slot: 3
     equip_type: -1
-    weapon_type: -1
+    weapon_type: 16
     remove_head: false
     remove_beard: false
     remove_arms: false
@@ -242991,7 +242991,7 @@
     appearance_id: 5101
     equip_slot: 3
     equip_type: -1
-    weapon_type: -1
+    weapon_type: 16
     remove_head: false
     remove_beard: false
     remove_arms: false

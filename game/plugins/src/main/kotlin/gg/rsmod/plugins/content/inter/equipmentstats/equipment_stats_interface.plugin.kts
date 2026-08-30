@@ -1,5 +1,7 @@
 package gg.rsmod.plugins.content.inter.equipmentstats
 
+import gg.rsmod.game.action.EquipAction
+
 val EQUIPMENT_BONUS_INTERFACE_ID = 667
 val INVENTORY_INTERFACE_ID = 670
 val EQUIP_ITEM_SOUND = 2238
@@ -42,8 +44,19 @@ on_button(interfaceId = INVENTORY_INTERFACE_ID, component = 0) {
 fun handleOption(player: Player) {
     val opcode = player.getInteractingOpcode()
     val item = player.getInteractingItemId()
+    val slot = player.getInteractingSlot()
     when (opcode) {
-        61 -> TODO("Handle equipping/un-equipping here")
+        61 -> {
+            // Same underlying action as the normal inventory's Wear/Wield (op held 2) - this screen
+            // just presents equippable items via its own embedded inventory (interface 670).
+            val inventoryItem = player.inventory[slot]
+            if (inventoryItem != null && inventoryItem.id == item) {
+                val result = EquipAction.equip(player, inventoryItem, slot)
+                if (result == EquipAction.Result.UNHANDLED && world.devContext.debugItemActions) {
+                    player.message("Unhandled equip action: [item=$item, slot=$slot]", type = ChatMessageType.CONSOLE)
+                }
+            }
+        }
         20 -> showStats(player, item)
         25 -> world.sendExamine(player, item, ExamineEntityType.ITEM)
         else -> player.message("Unhandled Equipment Stats interface opcode: $opcode", type = ChatMessageType.CONSOLE)

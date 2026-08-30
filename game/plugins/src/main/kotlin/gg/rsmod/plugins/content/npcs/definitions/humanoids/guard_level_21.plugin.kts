@@ -1,15 +1,26 @@
 package gg.rsmod.plugins.content.npcs.definitions.humanoids
 
+import gg.rsmod.game.model.combat.StyleType
 import gg.rsmod.plugins.content.drops.DropTableFactory
 import gg.rsmod.plugins.content.drops.global.Seeds.allotmentSeedTable
 
 val varrockId = listOf(Npcs.GUARD_5919, Npcs.GUARD_5920)
-val faladorSwordId = listOf(Npcs.GUARD, Npcs.GUARD_3228)
+val faladorSwordId =
+    listOf(Npcs.GUARD, Npcs.GUARD_32, Npcs.GUARD_3228, Npcs.GUARD_3231, Npcs.GUARD_3232, Npcs.GUARD_3233)
 val faladorBattleaxeId = listOf(Npcs.GUARD_3230, Npcs.GUARD_3241)
-val faladorCrossbowId = listOf(Npcs.GUARD_3229) // no definition yet, first npc ranged should be supported
+val faladorCrossbowId = listOf(Npcs.GUARD_3229) // ranged npc combat is now supported (see Kree'arra), wired below
 val edgevilleId =
     listOf(Npcs.GUARD_296, Npcs.GUARD_297, Npcs.GUARD_298, Npcs.GUARD_299, Npcs.GUARD_3407, Npcs.GUARD_3408)
-val allIds = (faladorSwordId + varrockId + faladorBattleaxeId + faladorCrossbowId + edgevilleId).toIntArray()
+// Ardougne market guards (world-spawned region 12081) - no distinct combat def existed for these before.
+val ardougneMarketId =
+    listOf(Npcs.GUARD_2699, Npcs.GUARD_2700, Npcs.GUARD_2701, Npcs.GUARD_2702, Npcs.GUARD_2703)
+// Remaining pickpocketable guard recolors with no world spawn found yet but reachable via ::add_npc/spawnnpc.
+val miscId = listOf(Npcs.GUARD_4307, Npcs.GUARD_4308, Npcs.GUARD_4309, Npcs.GUARD_4310, Npcs.GUARD_4311, Npcs.GUARD_8173)
+val allIds =
+    (
+        faladorSwordId + varrockId + faladorBattleaxeId + faladorCrossbowId + edgevilleId +
+            ardougneMarketId + miscId
+    ).toIntArray()
 
 val table = DropTableFactory
 val guard =
@@ -192,33 +203,91 @@ faladorBattleaxeId.forEach {
     }
 }
 
-// faladorCrossbowId.forEach {
-//    set_combat_def(it) {
-//        configs {
-//            attackSpeed = 4
-//            respawnDelay = 50
-//        }
-//        stats {
-//            hitpoints = 220
-//            attack = 15
-//            strength = 15
-//            defence = 16
-//            ranged = 26
-//        }
-//        bonuses {
-//            attackStab = 6
-//            attackCrush = 10
-//            rangedStrengthBonus = 10
-//            defenceStab = 13
-//            defenceSlash = 17
-//            defenceCrush = 14
-//            defenceMagic = -4
-//            defenceRanged = 15
-//        }
-//        anims {
-//            attack = 4230
-//            death = 836
-//            block = 424
-//        }
-//    }
-// }
+faladorCrossbowId.forEach {
+    set_combat_def(it) {
+        configs {
+            attackSpeed = 5
+            attackStyle = StyleType.RANGED
+            respawnDelay = 50
+        }
+        stats {
+            hitpoints = 220
+            attack = 15
+            strength = 15
+            defence = 16
+            ranged = 26
+        }
+        bonuses {
+            attackRanged = 10
+            rangedStrengthBonus = 10
+            defenceStab = 13
+            defenceSlash = 17
+            defenceCrush = 14
+            defenceMagic = -4
+            defenceRanged = 15
+        }
+        anims {
+            attack = Anims.ATTACK_CROSSBOW
+            death = 836
+            block = 424
+        }
+    }
+}
+
+ardougneMarketId.forEach {
+    set_combat_def(it) {
+        configs {
+            attackSpeed = 4
+            respawnDelay = 50
+        }
+        stats {
+            hitpoints = 220
+            attack = 19
+            strength = 18
+            defence = 14
+        }
+        bonuses {
+            attackStab = 4
+            attackCrush = 5
+            defenceStab = 18
+            defenceSlash = 25
+            defenceCrush = 19
+            defenceMagic = -4
+            defenceRanged = 20
+        }
+        anims {
+            attack = 390
+            death = 836
+            block = 1156
+        }
+    }
+}
+
+miscId.forEach {
+    set_combat_def(it) {
+        configs {
+            attackSpeed = 4
+            respawnDelay = 50
+        }
+        stats {
+            hitpoints = 220
+            attack = 19
+            strength = 18
+            defence = 14
+        }
+        bonuses {
+            attackStab = 4
+            attackCrush = 5
+            defenceStab = 18
+            defenceSlash = 25
+            defenceCrush = 19
+            defenceMagic = -4
+            defenceRanged = 20
+        }
+        anims {
+            attack = 390
+            death = 836
+            block = 1156
+        }
+    }
+}
