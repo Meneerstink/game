@@ -48,6 +48,17 @@ class Npc private constructor(
     var owner: Player? = null
 
     /**
+     * R07.2: [owner] alone makes an npc PRIVATE (only the owner can see it - see
+     * [gg.rsmod.game.sync.task.NpcSynchronizationTask.shouldAdd]), which is correct for
+     * instance-scoped/personal spawns but wrong for a real Summoning familiar, which real RS
+     * shows to every nearby player. Setting this to true keeps [owner]'s existing
+     * logout-cleanup behaviour ([gg.rsmod.game.task.WorldRemoveTask]) while overriding the
+     * visibility restriction, so a familiar is visible to and targetable by everyone permitted
+     * to see it, not just its owner.
+     */
+    var publicOwner: Boolean = false
+
+    /**
      * This flag indicates whether or not this npc will respawn after death.
      *
      * [World.setNpcDefaults] recomputes this from the npc's [NpcCombatDef] every time it is

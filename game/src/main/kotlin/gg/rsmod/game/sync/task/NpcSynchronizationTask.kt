@@ -130,7 +130,7 @@ class NpcSynchronizationTask(
         npc.isSpawned() &&
             !npc.invisible &&
             isWithinView(player, npc.tile) &&
-            (npc.owner == null || npc.owner == player)
+            (npc.owner == null || npc.owner == player || npc.publicOwner)
 
     private fun isWithinView(
         player: Player,
