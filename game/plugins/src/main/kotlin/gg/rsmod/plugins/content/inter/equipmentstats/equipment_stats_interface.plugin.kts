@@ -63,14 +63,36 @@ fun handleOption(player: Player) {
     }
 }
 
+// Same bonus-name/order convention as Player.refreshBonuses (PlayerExt.kt) - kept local since
+// that one is private to its own function and this is a different rendering (chat, not
+// interface text). R04.7: this replaces a hard TODO() crash - clicking "Stats" on any item in
+// the equip-bonus screen previously threw NotImplementedError. A real hover/popup stats panel
+// needs a verified interface component id this codebase doesn't have yet (see R04.7 ledger
+// note); a chat summary is a working, non-crashing simplification in the meantime.
+// Indices match BonusSlot (BonusSlot.kt) exactly: 0-4 attack, 5-9 defence, 10 summoning,
+// 11-13 absorb (not in BonusSlot but used by NpcCombatDsl/refreshBonuses), 14-17 the rest.
+private val BONUS_NAMES =
+    listOf(
+        "Attack Stab", "Attack Slash", "Attack Crush", "Attack Magic", "Attack Ranged",
+        "Defence Stab", "Defence Slash", "Defence Crush", "Defence Magic", "Defence Ranged",
+        "Summoning", "Absorb Melee", "Absorb Magic", "Absorb Ranged",
+        "Strength", "Ranged Strength", "Prayer", "Magic Damage",
+    )
+
 fun showStats(
     player: Player,
     item: Int,
 ) {
     val def = player.world.definitions.get(ItemDef::class.java, item)
-    if (def.equipSlot != -1) {
-        TODO("Figure out the proper way to get the 'Stats' section to show up.")
-    } else {
+    if (def.equipSlot == -1) {
         return
     }
+    val lines =
+        def.bonuses
+            .toList()
+            .mapIndexedNotNull { i, bonus -> if (bonus != 0) "${BONUS_NAMES[i]}: ${if (bonus >= 0) "+" else ""}$bonus" else null }
+    player.message(
+        if (lines.isEmpty()) "${def.name} has no bonuses." else "${def.name}: ${lines.joinToString(", ")}",
+        type = ChatMessageType.CONSOLE,
+    )
 }
