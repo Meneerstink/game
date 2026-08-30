@@ -20,11 +20,13 @@ import java.lang.ref.WeakReference
  * unaddressed gap below is low economic impact:
  *
  * Temp items are NOT flagged untradeable at the item-definition level (can't add new items
- * to a fixed cache) and bank/trade/shop/GE are not yet guarded against mid-match use - a
- * player could in principle bank/trade/sell temp gear before cleanup fires. Cleanup itself
- * (death/leave/logout, all three wired below) is real and reliable; the mid-match leak
- * surface is the gap. A real fix needs either untradeable item variants or a shared
- * "in practice PvP" guard added to bank/trade/shop/GE entry points.
+ * to a fixed cache), so [isHoldingTempGear] plus a guard at each real entry point
+ * (`Bank.open`/`Bank.openDepositBox`, the "Trade with" option, `Player.openShop`) is the fix
+ * instead - refuses cleanly with a message, before anything opens, so no item or point is ever
+ * at risk (nothing is removed/spent by the refusal itself). GE is not guarded: it has no real
+ * interface entry point yet (R10.1, command-only), so there is nothing reachable to leak
+ * through there today. Cleanup (death/leave/logout, all three wired below) remains the primary
+ * mechanism; these guards close the mid-match window cleanup alone didn't cover.
  */
 object PracticePvp {
     private val IN_MATCH_ATTR = AttributeKey<Boolean>()
@@ -107,6 +109,11 @@ object PracticePvp {
         a: Player,
         b: Player,
     ): Boolean = a.attr[IN_MATCH_ATTR] == true && a.attr[PARTNER_ATTR]?.get() == b
+
+    /** True while [player] is holding granted temp preset gear - the actual leak surface,
+     * not just [IN_MATCH_ATTR] (queued-but-not-yet-matched players already hold temp gear too,
+     * per [grant] being called before [startMatch]). */
+    fun isHoldingTempGear(player: Player): Boolean = player.attr[GRANTED_SLOTS_ATTR] != null
 
     /** Call on death, manual leave, and logout - always safe/idempotent. */
     fun cleanup(player: Player) {

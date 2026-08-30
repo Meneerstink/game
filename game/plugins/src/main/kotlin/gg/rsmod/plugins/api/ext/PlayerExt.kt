@@ -76,6 +76,10 @@ fun Player.openShop(
     shop: String,
     points: Boolean = false,
 ) {
+    if (gg.rsmod.plugins.content.mechanics.practicepvp.PracticePvp.isHoldingTempGear(this)) {
+        message("You can't access shops while in a Practice PvP match.")
+        return
+    }
     val currentShop = world.getShop(shop)
     val shopInterface = 620
     val mainStockComponent = 25

@@ -32,6 +32,15 @@ on_player_option(option = "Trade with") {
     // The trade partner instance
     val partner = player.getInteractingPlayer()
 
+    // R09.1: real trade-item leak guard for Practice PvP temp gear - either side holding it
+    // blocks the request cleanly, before anything is sent (no item/point ever at risk).
+    if (gg.rsmod.plugins.content.mechanics.practicepvp.PracticePvp.isHoldingTempGear(player) ||
+        gg.rsmod.plugins.content.mechanics.practicepvp.PracticePvp.isHoldingTempGear(partner)
+    ) {
+        player.message("You can't trade while in a Practice PvP match.")
+        return@on_player_option
+    }
+
     // If the player is already in a trade
     if (partner.getTradeSession() != null || partner.isLocked()) {
         player.message("Other player is busy at the moment.")

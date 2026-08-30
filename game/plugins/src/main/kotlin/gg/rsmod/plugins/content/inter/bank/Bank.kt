@@ -170,6 +170,10 @@ class Bank {
         }
 
         fun open(player: Player) {
+            if (gg.rsmod.plugins.content.mechanics.practicepvp.PracticePvp.isHoldingTempGear(player)) {
+                player.message("You can't access your bank while in a Practice PvP match.")
+                return
+            }
             player.openInterface(BANK_INTERFACE_ID, InterfaceDestination.MAIN_SCREEN)
             player.openInterface(INV_INTERFACE_ID, InterfaceDestination.TAB_AREA)
             player.inventory.dirty = true
@@ -189,6 +193,10 @@ class Bank {
         }
 
         fun openDepositBox(player: Player) {
+            if (gg.rsmod.plugins.content.mechanics.practicepvp.PracticePvp.isHoldingTempGear(player)) {
+                player.message("You can't access your bank while in a Practice PvP match.")
+                return
+            }
             player.openInterface(DEPOSIT_BOX_INTERFACE_ID, InterfaceDestination.MAIN_SCREEN)
             player.openInterface(INV_INTERFACE_ID, InterfaceDestination.TAB_AREA)
             player.runClientScript(
