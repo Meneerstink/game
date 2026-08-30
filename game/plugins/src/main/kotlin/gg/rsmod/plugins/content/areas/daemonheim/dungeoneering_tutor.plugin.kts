@@ -14,4 +14,10 @@ suspend fun mainChat(it: QueueTask) {
         it.itemMessageBox("He hands you a ring.", item = Items.RING_OF_KINSHIP)
         player.inventory.add(Items.RING_OF_KINSHIP)
     }
+    it.chatNpc("Ready to delve into the dungeon?")
+    Dungeoneering.join(player)
+}
+
+on_command("dungeon") {
+    Dungeoneering.join(player)
 }
