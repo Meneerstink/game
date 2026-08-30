@@ -36,7 +36,7 @@ object WildernessBreach {
 
     private const val MIN_INTERVAL_CYCLES = 6000 // ~60 min
     private const val MAX_INTERVAL_CYCLES = 12000 // ~120 min
-    private const val WARNING_CYCLES = 1500 // ~15 min
+    const val WARNING_CYCLES = 1500 // ~15 min - also read by home_board.plugin.kts (R14.9)
     private const val WAVE_TIMEOUT_CYCLES = 3000 // ~30 min cap
     private const val MIN_CONTRIBUTION = 20
     private const val SNAPSHOT_RADIUS = 20
@@ -52,6 +52,17 @@ object WildernessBreach {
             Items.MORRIGANS_LEATHER_CHAPS,
         )
 
+    /**
+     * R14.9: queryable state for the home activity board, since [start]'s loop has no
+     * externally-visible progress otherwise. Cycle numbers are [World.currentCycle]-relative,
+     * not wall-clock - the board computes a countdown from these against the current cycle.
+     * Null "warningIssuedAtCycle" means no Breach is currently announced - the board must show
+     * that plainly, not fake a countdown (R14.9's own explicit rule).
+     */
+    @Volatile
+    var warningIssuedAtCycle: Int? = null
+        private set
+
     fun start(world: World) {
         world.queue {
             while (true) {
@@ -64,7 +75,9 @@ object WildernessBreach {
                     continue
                 }
                 broadcast(world, "A Wilderness Breach is forming and will erupt in about 15 minutes!")
+                warningIssuedAtCycle = world.currentCycle
                 wait(WARNING_CYCLES)
+                warningIssuedAtCycle = null
                 runBreach(world, epicentre)
             }
         }
