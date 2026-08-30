@@ -840,6 +840,7 @@ on_command("npc", Privilege.ADMIN_POWER) {
         val npc = Npc(id, player.tile, world)
         npc.walkRadius = walkradius
         world.spawn(npc)
+        TestSpawnRegistry.trackNpc(npc)
     }
 }
 
@@ -871,6 +872,7 @@ on_command("obj", Privilege.ADMIN_POWER) {
         val rot = if (values.size > 2) values[2].toInt() else 0
         val obj = DynamicObject(id, type, rot, player.tile)
         world.spawn(obj)
+        TestSpawnRegistry.trackObject(obj)
     }
 }
 
@@ -1901,6 +1903,16 @@ fun grantTestGearKit(player: Player): Int {
  * under-shoot for a player who never played any of it. `finishQuest()` is still called
  * afterwards for its real authored item/xp/quest-point rewards.
  */
+/**
+ * R12.2: removes ONLY npcs/objects placed via `::npc`/`::obj` this session
+ * ([TestSpawnRegistry]) - never touches real world content, since those are the only spawns
+ * ever registered there.
+ */
+on_command("clearspawns", Privilege.OWNER_POWER) {
+    val (npcCount, objCount) = TestSpawnRegistry.clear(world)
+    player.message("clearspawns: removed $npcCount test npc(s) and $objCount test object(s).", type = ChatMessageType.CONSOLE)
+}
+
 on_command("completequests", Privilege.OWNER_POWER) {
     var count = 0
     gg.rsmod.plugins.content.quests.Quest.quests.forEach { quest ->
