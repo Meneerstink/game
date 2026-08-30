@@ -7,6 +7,7 @@ import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.api.cfg.Npcs
 import gg.rsmod.plugins.api.ext.*
+import gg.rsmod.plugins.content.mechanics.pvp.BeginnerProtection
 
 /**
  * Wilderness Breach (PROJECT_PLAN SS13): a scheduled event, announced ~15 minutes ahead, that
@@ -80,8 +81,16 @@ object WildernessBreach {
         epicentre: Tile,
     ) {
         broadcast(world, "The Wilderness Breach erupts!")
+        // R14.26: beginner-protected players are excluded from participation/rewards entirely,
+        // not just the final roll - they were never valid PvP targets to begin with, and a
+        // Breach is exactly the "designated lucrative Wilderness activity" the rule names.
         val participants = ArrayList<Player>()
-        world.players.forEach { p -> if (p.tile.getDistance(epicentre) <= SNAPSHOT_RADIUS) participants.add(p) }
+        world.players.forEach {
+                p ->
+            if (p.tile.getDistance(epicentre) <= SNAPSHOT_RADIUS && !BeginnerProtection.isProtected(p)) {
+                participants.add(p)
+            }
+        }
 
         val spawned = ArrayList<Npc>()
         repeat(6) {

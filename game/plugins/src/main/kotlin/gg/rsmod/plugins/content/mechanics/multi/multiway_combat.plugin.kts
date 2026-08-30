@@ -1,8 +1,19 @@
 package gg.rsmod.plugins.content.mechanics.multi
 
+import gg.rsmod.plugins.api.ext.isMulti
+
 val MULTIWAY_VARC = 616
 
 load_service(MultiService())
+
+// R03.4: the crossed-swords multi-combat icon previously had no login/reconnect check at all -
+// only on_enter/on_exit region/chunk set it, so a player logging in (or reconnecting) already
+// standing inside a multi-combat zone would see no icon until they next crossed a region/chunk
+// boundary. Set the correct initial state immediately, same pattern wilderness.plugin.kts uses
+// for the danger icon.
+on_login {
+    player.setVarc(MULTIWAY_VARC, if (player.tile.isMulti(world)) 1 else 0)
+}
 
 on_world_init {
     world.getService(MultiService::class.java)!!.let { service ->

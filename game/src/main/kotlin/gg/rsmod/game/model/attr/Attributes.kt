@@ -31,6 +31,17 @@ val NEW_ACCOUNT_ATTR = AttributeKey<Boolean>()
 val PROTECTION_FORFEITED_ATTR = AttributeKey<Boolean>(persistenceKey = "protection_forfeited")
 
 /**
+ * R14.24: the [gg.rsmod.game.model.World.currentCycle] of the last real client-originated
+ * packet this player sent - real RS clients send an explicit "mouse became idle" event
+ * ([gg.rsmod.game.message.impl.EventMouseIdleMessage]) after a period of no input, which is
+ * the authentic signal this uses rather than inventing a heuristic. Session-local only
+ * (not persisted): AFK state resets on every login, which is correct - the concern is only
+ * "is this session's play actually active right now", not something that should survive a
+ * disconnect.
+ */
+val LAST_ACTIVE_CYCLE_ATTR = AttributeKey<Int>()
+
+/**
  * A flag which indicates that the player will not take collision into account
  * when walking.
  */

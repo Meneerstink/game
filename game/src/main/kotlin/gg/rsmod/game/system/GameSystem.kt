@@ -2,7 +2,9 @@ package gg.rsmod.game.system
 
 import gg.rsmod.game.message.Message
 import gg.rsmod.game.message.MessageHandler
+import gg.rsmod.game.message.impl.EventMouseIdleMessage
 import gg.rsmod.game.model.World
+import gg.rsmod.game.model.attr.LAST_ACTIVE_CYCLE_ATTR
 import gg.rsmod.game.model.entity.Client
 import gg.rsmod.game.service.GameService
 import gg.rsmod.net.packet.GamePacket
@@ -60,6 +62,13 @@ class GameSystem(
     fun handleMessages() {
         for (i in 0 until service.maxMessagesPerCycle) {
             val next = messages.poll() ?: break
+            // R14.24: every real client-originated packet marks the player as actively
+            // playing, EXCEPT the client's own explicit mouse-idle notification - the single
+            // choke point every incoming message already passes through, so this needs no
+            // per-handler wiring. See BeginnerProtection/LAST_ACTIVE_CYCLE_ATTR.
+            if (next.message !is EventMouseIdleMessage) {
+                client.attr[LAST_ACTIVE_CYCLE_ATTR] = world.currentCycle
+            }
             next.handler.handle(client, world, next.message)
         }
     }
