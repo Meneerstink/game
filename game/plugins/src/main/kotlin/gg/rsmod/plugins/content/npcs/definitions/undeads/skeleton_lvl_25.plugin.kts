@@ -5,6 +5,8 @@ import gg.rsmod.plugins.content.drops.DropTableFactory
 import gg.rsmod.plugins.content.drops.global.Gems
 import gg.rsmod.plugins.content.drops.global.Herbs
 
+val ids = intArrayOf(Npcs.SKELETON_92, Npcs.SKELETON_5337, Npcs.SKELETON_5338, Npcs.SKELETON_5339, Npcs.SKELETON_5340)
+
 val table = DropTableFactory
 val skeleton =
     table.build {
@@ -50,48 +52,50 @@ val skeleton =
         }
     }
 
-table.register(skeleton, Npcs.SKELETON_92)
+table.register(skeleton, *ids)
 
-on_npc_pre_death(Npcs.SKELETON_92) {
+on_npc_pre_death(*ids) {
     val p = npc.damageMap.getMostDamage()!! as Player
     p.playSound(Sfx.SKELETON_DEATH)
 }
 
-on_npc_death(Npcs.SKELETON_92) {
+on_npc_death(*ids) {
     table.getDrop(world, npc.damageMap.getMostDamage()!! as Player, npc.id, npc.tile)
 }
 
-set_combat_def(npc = Npcs.SKELETON_92) {
-    configs {
-        attackSpeed = 4
-        respawnDelay = 60
-    }
-    stats {
-        hitpoints = 170
-        attack = 24
-        strength = 24
-        defence = 24
-    }
-    bonuses {
-        attackStab = 15
-        attackCrush = 14
-        defenceStab = 9
-        defenceSlash = 11
-        defenceCrush = -2
-        defenceMagic = 1
-        defenceRanged = 4
-    }
-    anims {
-        attack = Anims.SKELETON_ATTACK
-        block = Anims.SKELETON_BLOCK
-        death = Anims.SKELETON_DEATH
-    }
-    aggro {
-        radius = 4
-    }
-    slayer {
-        assignment = SlayerAssignment.SKELETON
-        level = 1
-        experience = 17.0
+ids.forEach {
+    set_combat_def(it) {
+        configs {
+            attackSpeed = 4
+            respawnDelay = 60
+        }
+        stats {
+            hitpoints = 170
+            attack = 24
+            strength = 24
+            defence = 24
+        }
+        bonuses {
+            attackStab = 15
+            attackCrush = 14
+            defenceStab = 9
+            defenceSlash = 11
+            defenceCrush = -2
+            defenceMagic = 1
+            defenceRanged = 4
+        }
+        anims {
+            attack = Anims.SKELETON_ATTACK
+            block = Anims.SKELETON_BLOCK
+            death = Anims.SKELETON_DEATH
+        }
+        aggro {
+            radius = 4
+        }
+        slayer {
+            assignment = SlayerAssignment.SKELETON
+            level = 1
+            experience = 17.0
+        }
     }
 }

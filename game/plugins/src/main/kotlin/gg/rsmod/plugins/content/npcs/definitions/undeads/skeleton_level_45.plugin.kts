@@ -5,7 +5,7 @@ import gg.rsmod.plugins.content.drops.DropTableFactory
 import gg.rsmod.plugins.content.drops.global.Gems
 import gg.rsmod.plugins.content.drops.global.Herbs
 
-val id = Npcs.SKELETON_93
+val ids = intArrayOf(Npcs.SKELETON_93, Npcs.SKELETON_5341)
 
 val table = DropTableFactory
 val skeleton =
@@ -53,45 +53,47 @@ val skeleton =
         }
     }
 
-table.register(skeleton, id)
+table.register(skeleton, *ids)
 
-on_npc_pre_death(id) {
+on_npc_pre_death(*ids) {
     val p = npc.damageMap.getMostDamage()!! as Player
     p.playSound(Sfx.SKELETON_DEATH)
 }
 
-on_npc_death(id) {
+on_npc_death(*ids) {
     table.getDrop(world, npc.damageMap.getMostDamage()!! as Player, npc.id, npc.tile)
 }
 
-set_combat_def(id) {
-    configs {
-        attackSpeed = 4
-        respawnDelay = 30
-    }
-    stats {
-        hitpoints = 590
-        attack = 32
-        strength = 35
-        defence = 36
-    }
-    bonuses {
-        attackStab = 15
-        attackCrush = 14
-        defenceStab = 9
-        defenceSlash = 11
-        defenceCrush = -2
-        defenceMagic = 1
-        defenceRanged = 4
-    }
-    anims {
-        attack = Anims.SKELETON_ATTACK
-        block = Anims.SKELETON_BLOCK
-        death = Anims.SKELETON_DEATH
-    }
-    slayer {
-        assignment = SlayerAssignment.SKELETON
-        level = 1
-        experience = 59.0
+ids.forEach {
+    set_combat_def(it) {
+        configs {
+            attackSpeed = 4
+            respawnDelay = 30
+        }
+        stats {
+            hitpoints = 590
+            attack = 32
+            strength = 35
+            defence = 36
+        }
+        bonuses {
+            attackStab = 15
+            attackCrush = 14
+            defenceStab = 9
+            defenceSlash = 11
+            defenceCrush = -2
+            defenceMagic = 1
+            defenceRanged = 4
+        }
+        anims {
+            attack = Anims.SKELETON_ATTACK
+            block = Anims.SKELETON_BLOCK
+            death = Anims.SKELETON_DEATH
+        }
+        slayer {
+            assignment = SlayerAssignment.SKELETON
+            level = 1
+            experience = 59.0
+        }
     }
 }

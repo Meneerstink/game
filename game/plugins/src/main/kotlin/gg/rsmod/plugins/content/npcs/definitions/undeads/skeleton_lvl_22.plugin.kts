@@ -5,7 +5,11 @@ import gg.rsmod.plugins.content.drops.DropTableFactory
 import gg.rsmod.plugins.content.drops.global.Gems
 import gg.rsmod.plugins.content.drops.global.Herbs
 
-val ids = intArrayOf(Npcs.SKELETON, Npcs.SKELETON_5332, Npcs.SKELETON_5333, Npcs.SKELETON_5334)
+val ids =
+    intArrayOf(
+        Npcs.SKELETON, Npcs.SKELETON_5332, Npcs.SKELETON_5333, Npcs.SKELETON_5334,
+        Npcs.SKELETON_6091, Npcs.SKELETON_6092, Npcs.SKELETON_6093,
+    )
 val table = DropTableFactory
 val skeleton =
     table.build {

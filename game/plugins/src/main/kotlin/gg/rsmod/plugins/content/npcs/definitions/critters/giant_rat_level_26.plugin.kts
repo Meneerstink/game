@@ -2,7 +2,7 @@ package gg.rsmod.plugins.content.npcs.definitions.critters
 
 import gg.rsmod.plugins.content.drops.DropTableFactory
 
-val ids = intArrayOf(Npcs.GIANT_RAT_4944, Npcs.GIANT_RAT_4945)
+val ids = intArrayOf(Npcs.GIANT_RAT_4944, Npcs.GIANT_RAT_4945, Npcs.GIANT_RAT_4395)
 
 val table = DropTableFactory
 val rat =

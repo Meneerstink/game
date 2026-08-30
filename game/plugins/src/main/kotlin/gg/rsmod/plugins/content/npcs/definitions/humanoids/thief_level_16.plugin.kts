@@ -3,7 +3,7 @@ package gg.rsmod.plugins.content.npcs.definitions.humanoids
 import gg.rsmod.plugins.content.drops.DropTableFactory
 import gg.rsmod.plugins.content.drops.global.Herbs.minorHerbTable
 
-val ids = intArrayOf(Npcs.THIEF_5926, Npcs.THIEF_5927, Npcs.THIEF_5928, Npcs.THIEF_5929)
+val ids = intArrayOf(Npcs.THIEF_5926, Npcs.THIEF_5927, Npcs.THIEF_5928, Npcs.THIEF_5929, Npcs.THIEF_2674, Npcs.THIEF)
 
 val table = DropTableFactory
 val thief =

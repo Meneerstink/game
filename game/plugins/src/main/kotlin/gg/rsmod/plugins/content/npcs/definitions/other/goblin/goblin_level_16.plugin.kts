@@ -4,7 +4,7 @@ import gg.rsmod.game.model.combat.SlayerAssignment
 import gg.rsmod.plugins.content.drops.DropTableFactory
 import gg.rsmod.plugins.content.drops.global.Herbs.minorHerbTable
 
-val ids = intArrayOf(Npcs.GOBLIN_4412)
+val ids = intArrayOf(Npcs.GOBLIN_4412, Npcs.GOBLIN_4410)
 
 val table = DropTableFactory
 val goblin =

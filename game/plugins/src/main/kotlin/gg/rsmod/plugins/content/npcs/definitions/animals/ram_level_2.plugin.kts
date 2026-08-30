@@ -2,7 +2,11 @@ package gg.rsmod.plugins.content.npcs.definitions.animals
 
 import gg.rsmod.plugins.content.drops.DropTableFactory
 
-val ids = intArrayOf(Npcs.RAM, Npcs.RAM_3673, Npcs.RAM_5168, Npcs.RAM_12369, Npcs.RAM_12370, Npcs.RAM_12371)
+val ids =
+    intArrayOf(
+        Npcs.RAM, Npcs.RAM_3673, Npcs.RAM_5168, Npcs.RAM_12369, Npcs.RAM_12370, Npcs.RAM_12371,
+        Npcs.RAM_5169, Npcs.RAM_5170,
+    )
 
 val table = DropTableFactory
 val ram =

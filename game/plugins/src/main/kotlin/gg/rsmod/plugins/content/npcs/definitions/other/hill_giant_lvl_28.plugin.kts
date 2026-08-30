@@ -7,7 +7,11 @@ import gg.rsmod.plugins.content.drops.global.Gems
 import gg.rsmod.plugins.content.drops.global.Herbs
 import gg.rsmod.plugins.content.drops.global.Seeds
 
-val ids = intArrayOf(Npcs.HILL_GIANT)
+val ids =
+    intArrayOf(
+        Npcs.HILL_GIANT, Npcs.HILL_GIANT_4689, Npcs.HILL_GIANT_4690, Npcs.HILL_GIANT_4691, Npcs.HILL_GIANT_4692,
+        Npcs.HILL_GIANT_4693,
+    )
 val table = DropTableFactory
 val hillgiant =
     table.build {

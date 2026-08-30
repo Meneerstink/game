@@ -12,6 +12,7 @@ val ids =
         Npcs.THUG_7112,
         Npcs.THUG_7113,
         Npcs.THUG_7114,
+        Npcs.THUG,
     )
 
 val table = DropTableFactory

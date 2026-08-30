@@ -3,6 +3,8 @@ package gg.rsmod.plugins.content.npcs.definitions.humanoids
 import gg.rsmod.plugins.content.drops.DropTableFactory
 
 
+val ids = intArrayOf(Npcs.GARDENER_3914, Npcs.GARDENER)
+
 val table = DropTableFactory
 val gardener =
     table.build {
@@ -11,42 +13,44 @@ val gardener =
         }
     }
 
-table.register(gardener, Npcs.GARDENER_3914)
+table.register(gardener, *ids)
 
-on_npc_pre_death(Npcs.GARDENER_3914) {
+on_npc_pre_death(*ids) {
     val p = npc.damageMap.getMostDamage()!! as Player
     p.playSound(Sfx.HUMAN_DEATH)
 }
 
-on_npc_death(Npcs.GARDENER_3914) {
+on_npc_death(*ids) {
     table.getDrop(world, npc.damageMap.getMostDamage()!! as Player, npc.id, npc.tile)
 }
 
-set_combat_def(Npcs.GARDENER_3914) {
-    configs {
-        attackSpeed = 6
-        respawnDelay = 25
-    }
-    stats {
-        hitpoints = 70
-        attack = 4
-        strength = 1
-        defence = 1
-        magic = 1
-        ranged = 1
-    }
-    bonuses {
-        attackStab = 5
-        attackCrush = 6
-        defenceStab = 0
-        defenceSlash = 0
-        defenceCrush = 0
-        defenceMagic = 0
-        defenceRanged = 0
-    }
-    anims {
-        attack = Anims.ATTACK_SPEAR_STAB
-        death = Anims.HUMAN_DEATH
-        block = Anims.BLOCK_BOTH_HANDS
+ids.forEach {
+    set_combat_def(it) {
+        configs {
+            attackSpeed = 6
+            respawnDelay = 25
+        }
+        stats {
+            hitpoints = 70
+            attack = 4
+            strength = 1
+            defence = 1
+            magic = 1
+            ranged = 1
+        }
+        bonuses {
+            attackStab = 5
+            attackCrush = 6
+            defenceStab = 0
+            defenceSlash = 0
+            defenceCrush = 0
+            defenceMagic = 0
+            defenceRanged = 0
+        }
+        anims {
+            attack = Anims.ATTACK_SPEAR_STAB
+            death = Anims.HUMAN_DEATH
+            block = Anims.BLOCK_BOTH_HANDS
+        }
     }
 }

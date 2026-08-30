@@ -5,7 +5,7 @@ import gg.rsmod.plugins.content.drops.global.Gems.gemTable
 import gg.rsmod.plugins.content.drops.global.Herbs.minorHerbTable
 import gg.rsmod.plugins.content.drops.global.Seeds.allotmentSeedTable
 
-val ids = intArrayOf(Npcs.BLACK_KNIGHT)
+val ids = intArrayOf(Npcs.BLACK_KNIGHT, Npcs.BLACK_KNIGHT_179, Npcs.BLACK_KNIGHT_6189)
 
 val table = DropTableFactory
 val guard =

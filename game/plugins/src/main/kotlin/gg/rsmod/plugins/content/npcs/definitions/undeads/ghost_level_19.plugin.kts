@@ -3,7 +3,11 @@ package gg.rsmod.plugins.content.npcs.definitions.undeads
 import gg.rsmod.game.model.combat.SlayerAssignment
 import gg.rsmod.game.model.combat.StyleType
 
-val ghosts = intArrayOf(Npcs.GHOST, Npcs.GHOST_104, Npcs.GHOST_5349, Npcs.GHOST_5350, Npcs.GHOST_5351, Npcs.GHOST_5352)
+val ghosts =
+    intArrayOf(
+        Npcs.GHOST, Npcs.GHOST_104, Npcs.GHOST_5349, Npcs.GHOST_5350, Npcs.GHOST_5351, Npcs.GHOST_5352,
+        Npcs.GHOST_5345, Npcs.GHOST_6094, Npcs.GHOST_6095, Npcs.GHOST_6096, Npcs.GHOST_6097, Npcs.GHOST_6098,
+    )
 
 on_npc_pre_death(*ghosts) {
     val p = npc.damageMap.getMostDamage()!! as Player

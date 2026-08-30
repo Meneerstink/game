@@ -3,7 +3,7 @@ package gg.rsmod.plugins.content.npcs.definitions.humanoids
 import gg.rsmod.game.model.combat.SlayerAssignment
 import gg.rsmod.plugins.content.drops.DropTableFactory
 
-val ids = intArrayOf(Npcs.CHAOS_DWARF)
+val ids = intArrayOf(Npcs.CHAOS_DWARF, Npcs.CHAOS_DWARF_8778)
 
 val table = DropTableFactory
 val chaosDwarf =

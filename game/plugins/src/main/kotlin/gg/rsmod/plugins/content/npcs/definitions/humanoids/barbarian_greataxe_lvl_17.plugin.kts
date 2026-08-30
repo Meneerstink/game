@@ -2,7 +2,7 @@ package gg.rsmod.plugins.content.npcs.definitions.humanoids
 
 import gg.rsmod.plugins.content.drops.DropTableFactory
 
-val ids = intArrayOf(Npcs.BARBARIAN, Npcs.BARBARIAN_3248)
+val ids = intArrayOf(Npcs.BARBARIAN, Npcs.BARBARIAN_3248, Npcs.BARBARIAN_3253)
 
 val table = DropTableFactory
 val barbarian =

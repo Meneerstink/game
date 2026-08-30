@@ -3,7 +3,7 @@ package gg.rsmod.plugins.content.npcs.definitions.animals
 import gg.rsmod.game.model.combat.SlayerAssignment
 import gg.rsmod.plugins.content.drops.DropTableFactory
 
-val ids = intArrayOf(Npcs.CHICKEN, Npcs.CHICKEN_1017, Npcs.CHICKEN_2313, Npcs.CHICKEN_2314, Npcs.CHICKEN_2315)
+val ids = intArrayOf(Npcs.CHICKEN, Npcs.CHICKEN_1017, Npcs.CHICKEN_2313, Npcs.CHICKEN_2314, Npcs.CHICKEN_2315, Npcs.CHICKEN_1401, Npcs.CHICKEN_1402)
 
 val table = DropTableFactory
 val chicken =

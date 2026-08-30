@@ -3,7 +3,7 @@ package gg.rsmod.plugins.content.npcs.definitions.critters
 import gg.rsmod.game.model.combat.SlayerAssignment
 import gg.rsmod.plugins.content.drops.DropTableFactory
 
-val ids = intArrayOf(Npcs.SPIDER)
+val ids = intArrayOf(Npcs.SPIDER, Npcs.SPIDER_1473)
 
 val table = DropTableFactory
 val spider =

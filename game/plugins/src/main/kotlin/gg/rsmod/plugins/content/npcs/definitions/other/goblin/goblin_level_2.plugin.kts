@@ -15,6 +15,27 @@ val unarmed =
         Npcs.GOBLIN_4269,
         Npcs.GOBLIN_4270,
         Npcs.GOBLIN_4271,
+        // R04.3: level-2 recolour/repeat spawns added this session, no reliable way to tell
+        // armed from unarmed without a screenshot - defaulted to unarmed (the more common
+        // variant above: 10 unarmed vs 1 armed).
+        Npcs.GOBLIN_11233,
+        Npcs.GOBLIN_11235,
+        Npcs.GOBLIN_11237,
+        Npcs.GOBLIN_11239,
+        Npcs.GOBLIN_11241,
+        Npcs.GOBLIN_12354,
+        Npcs.GOBLIN_12356,
+        Npcs.GOBLIN_13247,
+        Npcs.GOBLIN_13248,
+        Npcs.GOBLIN_13249,
+        Npcs.GOBLIN_13250,
+        Npcs.GOBLIN_4272,
+        Npcs.GOBLIN_4273,
+        Npcs.GOBLIN_4274,
+        Npcs.GOBLIN_4275,
+        Npcs.GOBLIN_4276,
+        Npcs.GOBLIN_8637,
+        Npcs.GOBLIN_8638,
     )
 val armed = listOf(Npcs.GOBLIN_4262)
 val ids = (unarmed + armed).toIntArray()

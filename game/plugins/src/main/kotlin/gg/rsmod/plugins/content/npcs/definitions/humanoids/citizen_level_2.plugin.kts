@@ -15,6 +15,12 @@ val ids =
         Npcs.MAN_16,
         Npcs.MAN_3223,
         Npcs.WOMAN_BLOND_LONGSKIRT_3226,
+        Npcs.MAN_12346,
+        Npcs.MAN_170,
+        Npcs.MAN_3915,
+        Npcs.MAN_5923,
+        Npcs.WOMAN_25,
+        Npcs.WOMAN_BLOND_5924,
     )
 
 val table = DropTableFactory

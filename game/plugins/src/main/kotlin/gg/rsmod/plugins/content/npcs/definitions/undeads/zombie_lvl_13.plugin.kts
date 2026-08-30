@@ -4,7 +4,7 @@ import gg.rsmod.game.model.combat.SlayerAssignment
 import gg.rsmod.plugins.content.drops.DropTableFactory
 import gg.rsmod.plugins.content.drops.global.Herbs
 
-val ids = intArrayOf(Npcs.ZOMBIE)
+val ids = intArrayOf(Npcs.ZOMBIE, Npcs.ZOMBIE_5298, Npcs.ZOMBIE_5300, Npcs.ZOMBIE_5303, Npcs.ZOMBIE_5304)
 val table = DropTableFactory
 val zombie =
     table.build {

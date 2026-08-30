@@ -5,7 +5,7 @@ import gg.rsmod.plugins.content.drops.DropTableFactory
 import gg.rsmod.plugins.content.drops.global.Gems
 
 val idsLevel10 = intArrayOf(Npcs.DWARF_118, Npcs.DWARF_3221, Npcs.DWARF_3272)
-val idsLevel11 = intArrayOf(Npcs.DWARF_3219, Npcs.DWARF_3220, Npcs.DWARF_3268, Npcs.DWARF_3269, Npcs.DWARF_3270)
+val idsLevel11 = intArrayOf(Npcs.DWARF_3219, Npcs.DWARF_3220, Npcs.DWARF_3268, Npcs.DWARF_3269, Npcs.DWARF_3270, Npcs.DWARF_3273)
 val ids = idsLevel10 + idsLevel11
 
 val table = DropTableFactory

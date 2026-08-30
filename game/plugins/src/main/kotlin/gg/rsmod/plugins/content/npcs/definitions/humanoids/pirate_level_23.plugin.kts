@@ -3,7 +3,11 @@ package gg.rsmod.plugins.content.npcs.definitions.humanoids
 import gg.rsmod.plugins.content.drops.DropTableFactory
 import gg.rsmod.plugins.content.drops.global.Gems
 
-val ids = intArrayOf(Npcs.PIRATE, Npcs.PIRATE_183, Npcs.PIRATE_184)
+val ids =
+    intArrayOf(
+        Npcs.PIRATE, Npcs.PIRATE_183, Npcs.PIRATE_184,
+        Npcs.PIRATE_6346, Npcs.PIRATE_6347, Npcs.PIRATE_6348, Npcs.PIRATE_6349, Npcs.PIRATE_6350,
+    )
 
 val table = DropTableFactory
 val pirate =

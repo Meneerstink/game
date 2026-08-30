@@ -5,7 +5,7 @@ import gg.rsmod.game.model.combat.StyleType
 import gg.rsmod.plugins.content.drops.DropTableFactory
 import gg.rsmod.plugins.content.drops.global.Gems
 
-val ids = intArrayOf(Npcs.PYREFIEND, Npcs.PYREFIEND_1634, Npcs.PYREFIEND_1635, Npcs.PYREFIEND_1636)
+val ids = intArrayOf(Npcs.PYREFIEND, Npcs.PYREFIEND_1634, Npcs.PYREFIEND_1635, Npcs.PYREFIEND_1636, Npcs.PYREFIEND_8598)
 
 val table = DropTableFactory
 val pyrefiend =

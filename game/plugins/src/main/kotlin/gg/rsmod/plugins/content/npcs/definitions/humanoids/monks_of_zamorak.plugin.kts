@@ -2,7 +2,11 @@ package gg.rsmod.plugins.content.npcs.definitions.humanoids
 
 import gg.rsmod.plugins.content.drops.DropTableFactory
 
-val ids = intArrayOf(Npcs.MONK_OF_ZAMORAK_1044, Npcs.MONK_OF_ZAMORAK_1045, Npcs.MONK_OF_ZAMORAK_1046)
+val ids =
+    intArrayOf(
+        Npcs.MONK_OF_ZAMORAK_1044, Npcs.MONK_OF_ZAMORAK_1045, Npcs.MONK_OF_ZAMORAK_1046,
+        Npcs.MONK_OF_ZAMORAK, Npcs.MONK_OF_ZAMORAK_189,
+    )
 
 val table = DropTableFactory
 val monkOfZamorak =

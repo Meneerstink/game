@@ -20,6 +20,8 @@ val ids =
         Npcs.GOBLIN_4489,
         Npcs.GOBLIN_4491,
         Npcs.GOBLIN_4492,
+        Npcs.GOBLIN,
+        Npcs.GOBLIN_13095,
     )
 
 val table = DropTableFactory

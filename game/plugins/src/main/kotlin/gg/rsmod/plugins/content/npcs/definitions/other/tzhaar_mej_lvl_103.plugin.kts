@@ -3,7 +3,11 @@ package gg.rsmod.plugins.content.npcs.definitions.other
 import gg.rsmod.plugins.content.drops.DropTableFactory
 import gg.rsmod.plugins.content.drops.global.Rare
 
-val ids = intArrayOf(Npcs.TZHAARMEJ, Npcs.TZHAARMEJ_2592, Npcs.TZHAARMEJ_2596, Npcs.TZHAARMEJ_2597)
+val ids =
+    intArrayOf(
+        Npcs.TZHAARMEJ, Npcs.TZHAARMEJ_2592, Npcs.TZHAARMEJ_2596, Npcs.TZHAARMEJ_2597,
+        Npcs.TZHAARMEJ_2594, Npcs.TZHAARMEJ_2595,
+    )
 
 val table = DropTableFactory
 val tzhaarMej =
