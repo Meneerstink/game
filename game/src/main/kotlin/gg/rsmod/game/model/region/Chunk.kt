@@ -39,6 +39,15 @@ class Chunk(
     internal val waterTiles = ObjectOpenHashSet<Tile>()
 
     /**
+     * Tiles the cache's own map data marks as roofed (CollisionManager.ROOF_TILE, bit 0x4 of
+     * the tile setting byte read in DefinitionSet.createRegion - a real cache flag this
+     * codebase already declared but never read out into a queryable form before). Used to tell
+     * a real building interior from the street outside when a purely wall/door/collision-based
+     * boundary isn't enough proof on its own - see BankZones.
+     */
+    internal val roofedTiles = ObjectOpenHashSet<Tile>()
+
+    /**
      * The [Entity]s that are currently registered to the [Tile] key. This is
      * not used for [gg.rsmod.game.model.entity.Pawn], but rather [Entity]s
      * that do not regularly change [Tile]s.
@@ -96,6 +105,8 @@ class Chunk(
     fun isClipped(tile: Tile): Boolean = matrices[tile.height].isClipped(tile.x % CHUNK_SIZE, tile.z % CHUNK_SIZE)
 
     fun isWater(tile: Tile): Boolean = waterTiles.contains(tile)
+
+    fun isRoofed(tile: Tile): Boolean = roofedTiles.contains(tile)
 
     fun addEntity(
         world: World,

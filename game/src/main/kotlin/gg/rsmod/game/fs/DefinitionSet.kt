@@ -234,6 +234,7 @@ class DefinitionSet {
         val blocked = hashSetOf<Tile>()
         val bridges = hashSetOf<Tile>()
         val water = hashSetOf<Tile>()
+        val roofs = hashSetOf<Tile>()
         for (height in 0 until 4) {
             for (lx in 0 until 64) {
                 for (lz in 0 until 64) {
@@ -244,6 +245,10 @@ class DefinitionSet {
 
                     if ((tileSetting.toInt() and CollisionManager.BLOCKED_TILE) == CollisionManager.BLOCKED_TILE) {
                         blocked.add(tile)
+                    }
+
+                    if ((tileSetting.toInt() and CollisionManager.ROOF_TILE) == CollisionManager.ROOF_TILE) {
+                        roofs.add(tile)
                     }
 
                     if ((tileSetting.toInt() and CollisionManager.UNKNOWN_TILE) == CollisionManager.UNKNOWN_TILE) {
@@ -289,6 +294,12 @@ class DefinitionSet {
             world.chunks
                 .getOrCreate(tile)
                 .waterTiles
+                .add(tile)
+        }
+        roofs.forEach { tile ->
+            world.chunks
+                .getOrCreate(tile)
+                .roofedTiles
                 .add(tile)
         }
         world.collision.applyUpdate(blockedTileBuilder.build())

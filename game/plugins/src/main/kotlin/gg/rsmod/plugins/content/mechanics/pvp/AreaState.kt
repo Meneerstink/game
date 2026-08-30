@@ -25,13 +25,24 @@ import kotlin.math.abs
  * finished curated list.
  *
  * For every bank NOT in [MANUAL_BOUNDARIES], [floodFillRoom] derives a best-effort fallback
- * from real spawned objects - not invented coordinates - but is deliberately conservative and
- * door-aware: it stops at any tile occupied by a real door/gate object (checked against
- * [DoorService]/[GateService]'s own verified id lists, in EITHER open or closed state, since an
- * open door has no blocking collision at all and would otherwise leak the "safe" zone straight
- * into the street outside), on top of the collision-graph walk. This reduces, but does not
- * eliminate, the risk of an under- or over-sized fallback room for a bank that isn't in
- * [MANUAL_BOUNDARIES] yet - treat the fallback as provisional per-bank, not as proof.
+ * from three INDEPENDENT real signals - not invented coordinates, and not collision alone:
+ * 1. The actual traversable-tile graph ([World.collision]).
+ * 2. Real door/gate objects ([DoorService]/[GateService]'s own verified id lists), checked in
+ *    EITHER open or closed state, since an open door has zero blocking collision and would
+ *    otherwise leak the "safe" zone straight into the street outside.
+ * 3. The cache's own roofed/indoor tile flag (`CollisionManager.ROOF_TILE`, now read out into
+ *    [gg.rsmod.game.model.region.Chunk.isRoofed] - a real map flag this codebase already
+ *    declared but never used before this pass). When the bank object sits somewhere the cache
+ *    marks as roofed, the fill is restricted to roofed tiles only - a real bank interior is
+ *    roofed, a street is not, so this is a strong, independent signal against exactly the
+ *    "street becomes safe" failure mode a wall/door check alone cannot fully rule out. Where no
+ *    roof signal exists (an open-air bank stall, or a region with no roof data), this
+ *    restriction does not apply and the fill falls back to door+collision only.
+ *
+ * Even with three signals, this remains a best-effort fallback for banks not in
+ * [MANUAL_BOUNDARIES], not a verified boundary - [init] rejects (drops to empty, logs a
+ * warning, never silently trusts) any fallback room whose own roofed-tile ratio looks
+ * inconsistent, and reports capped/rejected counts honestly rather than asserting success.
  */
 object BankZones {
     /**
@@ -59,9 +70,11 @@ object BankZones {
         var cappedRooms = 0
         var manualCount = 0
         var fallbackCount = 0
-        world.chunks.allChunks().forEach { chunk ->
+        var roofRestrictedCount = 0
+        var rejectedCount = 0
+        world.chunks.allChunks().forEach chunkLoop@{ chunk ->
             val statics = chunk.getEntities<StaticObject>(EntityType.STATIC_OBJECT)
-            statics.forEach { obj ->
+            statics.forEach objLoop@{ obj ->
                 if (obj.id in BankObjects.ALL) {
                     bankObjectsFound++
                     val manual = MANUAL_BOUNDARIES[obj.id]
@@ -70,9 +83,23 @@ object BankZones {
                         tiles.addAll(manual)
                     } else if (obj.tile !in tiles) {
                         fallbackCount++
-                        val room = floodFillRoom(world, obj.tile, doorIds)
-                        if (room.size >= MAX_ROOM_TILES) cappedRooms++
-                        tiles.addAll(room)
+                        val result = floodFillRoom(world, obj.tile, doorIds)
+                        if (result.room.size >= MAX_ROOM_TILES) cappedRooms++
+                        if (result.roofRestricted) roofRestrictedCount++
+                        // Purity self-check: a roof-restricted room should be ~entirely roofed
+                        // by construction (every accepted tile passed the roofed check), so a
+                        // low ratio here means the roof signal itself looked inconsistent for
+                        // this bank (e.g. missing roof data mid-room) - reject rather than trust
+                        // a room this check cannot vouch for, log it, and leave that bank
+                        // uncovered (safe-by-omission) instead of risking a street tile.
+                        if (result.roofRestricted && result.room.size >= 3) {
+                            val roofedCount = result.room.count { isRoofedAt(world, it) }
+                            if (roofedCount < result.room.size * 9 / 10) {
+                                rejectedCount++
+                                return@objLoop
+                            }
+                        }
+                        tiles.addAll(result.room)
                     }
                 }
             }
@@ -83,15 +110,23 @@ object BankZones {
         // is never 1-2 tiles. This is the exact assertion that caught this function's first,
         // broken version (seeded the flood fill on the object's own solid tile, so it could
         // never expand) automatically, instead of requiring a manual read of boot-log numbers.
-        check(bankObjectsFound == 0 || tiles.size >= bankObjectsFound * 3) {
+        check(bankObjectsFound == 0 || tiles.size >= (bankObjectsFound - rejectedCount) * 3) {
             "BankZones sanity check failed: $bankObjectsFound bank objects produced only " +
                 "${tiles.size} safe tiles (<3/object average) - the flood fill is very likely " +
                 "seeding on non-walkable tiles again, not a real room boundary."
         }
         return "BankZones: derived ${tiles.size} safe tiles ($manualCount from MANUAL_BOUNDARIES, " +
-            "$fallbackCount from a door-aware collision flood fill, capped $cappedRooms/$fallbackCount " +
-            "times) from $bankObjectsFound real bank booth/chest objects (R03.1)."
+            "$fallbackCount from a door+roof-aware collision flood fill [$roofRestrictedCount " +
+            "roof-restricted, $cappedRooms/$fallbackCount hit the size cap, $rejectedCount " +
+            "rejected by the roof-purity check and left uncovered]) from $bankObjectsFound real " +
+            "bank booth/chest objects (R03.1). Still a best-effort fallback where no " +
+            "MANUAL_BOUNDARIES entry exists - not a verified boundary."
     }
+
+    private fun isRoofedAt(
+        world: World,
+        tile: Tile,
+    ): Boolean = world.chunks.get(tile, createIfNeeded = false)?.isRoofed(tile) == true
 
     /** Every real door/gate object id, open or closed, from the already-loaded, verified
      * DoorService/GateService data files - used to stop the fallback flood fill at a doorway
@@ -121,6 +156,11 @@ object BankZones {
         return ids
     }
 
+    private data class FloodResult(
+        val room: Set<Tile>,
+        val roofRestricted: Boolean,
+    )
+
     /**
      * BFS over the actual traversable-tile graph ([World.collision]), so the resulting safe
      * zone approximates the real room a wall bounds - not a guessed radius, though still a
@@ -128,6 +168,13 @@ object BankZones {
      * regardless of its current open/closed collision state, and is capped by [MAX_RADIUS]
      * (Chebyshev distance from the object) and [MAX_ROOM_TILES] so a bank chest standing in the
      * open (no walls) still gets a bounded, sane result instead of flooding indefinitely.
+     *
+     * If at least one of the object's real walkable neighbour tiles is roofed (per the cache's
+     * own indoor flag - see the class doc), the whole fill is restricted to roofed tiles only:
+     * a real bank interior is roofed, a street is not, so this stops the fill from crossing an
+     * open doorway into the street even when the door object itself wasn't recognised. Where no
+     * roofed neighbour exists, there is no roof signal to use (open-air bank, or the region
+     * simply has no roof data) and the fill falls back to door+collision only.
      *
      * A bank booth/chest is itself solid scenery - [objTile] is where the *object* stands, not
      * a tile a player can stand on, so [World.collision.isClipped] is true there and a BFS
@@ -140,20 +187,25 @@ object BankZones {
         world: World,
         objTile: Tile,
         doorIds: Set<Int>,
-    ): Set<Tile> {
+    ): FloodResult {
         fun hasDoorAt(tile: Tile): Boolean =
             world.chunks
                 .get(tile, createIfNeeded = false)
                 ?.getEntities<StaticObject>(tile, EntityType.STATIC_OBJECT)
                 ?.any { it.id in doorIds } == true
 
-        val seeds =
+        val allSeeds =
             Direction.NESW
                 .map { objTile.step(it) }
                 .filter { !world.collision.isClipped(it) && !hasDoorAt(it) }
-        if (seeds.isEmpty()) {
-            return if (!world.collision.isClipped(objTile)) setOf(objTile) else emptySet()
+        if (allSeeds.isEmpty()) {
+            val room = if (!world.collision.isClipped(objTile)) setOf(objTile) else emptySet()
+            return FloodResult(room, roofRestricted = false)
         }
+
+        val roofRestricted = allSeeds.any { isRoofedAt(world, it) }
+        val seeds = if (roofRestricted) allSeeds.filter { isRoofedAt(world, it) } else allSeeds
+
         val visited = LinkedHashSet<Tile>()
         val queue = ArrayDeque<Tile>()
         seeds.forEach {
@@ -169,6 +221,7 @@ object BankZones {
                 val next = current.step(direction)
                 if (next in visited) continue
                 if (hasDoorAt(next)) continue
+                if (roofRestricted && !isRoofedAt(world, next)) continue
                 if (abs(next.x - objTile.x) > MAX_RADIUS || abs(next.z - objTile.z) > MAX_RADIUS) continue
                 visited.add(next)
                 queue.add(next)
@@ -176,7 +229,7 @@ object BankZones {
             }
         }
         visited.add(objTile)
-        return visited
+        return FloodResult(visited, roofRestricted)
     }
 
     fun isSafe(tile: Tile): Boolean = initialized && tile in safeTiles
