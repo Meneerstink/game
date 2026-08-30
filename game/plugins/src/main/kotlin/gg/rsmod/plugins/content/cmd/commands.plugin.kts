@@ -7,6 +7,7 @@ import gg.rsmod.game.message.impl.LogoutFullMessage
 import gg.rsmod.game.model.Area
 import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.attr.*
+import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.bits.INFINITE_VARS_STORAGE
 import gg.rsmod.game.model.bits.InfiniteVarsType
 import gg.rsmod.game.model.collision.ObjectType
@@ -1834,4 +1835,82 @@ fun getAreaName(player: Player): String {
 on_command("npc_inventory", Privilege.OWNER_POWER) {
     val summary = gg.rsmod.game.model.npc.NpcCensus.writeCsv(world)
     player.message(summary, type = ChatMessageType.CONSOLE)
+}
+
+/**
+ * R12.1: owner-only maxtest - maxes/recalculates skills and combat level, restores HP/prayer/
+ * run/spec (same fields `::restore` already sets), grants a safe non-exclusive baseline
+ * melee/ranged/magic kit (see [grantTestGearKit]) and coins. Deliberately does NOT touch quest
+ * state - use `::completequests` separately, which only marks the actually-implemented quests
+ * done, never fabricated ones.
+ */
+on_command("maxtest", Privilege.OWNER_POWER) {
+    for (i in 0 until player.skills.maxSkills) {
+        player.skills.setBaseLevel(i, 99)
+    }
+    player.calculateAndSetCombatLevel()
+    player.setCurrentLifepoints(player.getMaximumLifepoints())
+    player.setCurrentPrayerPoints(player.getMaximumPrayerPoints())
+    player.runEnergy = 100.0
+    AttackTab.setEnergy(player, 100)
+    player.inventory.add(Items.COINS_995, 10_000_000)
+    val granted = grantTestGearKit(player)
+    player.message(
+        "maxtest: all skills set to 99, combat recalculated, stats restored, 10m coins and " +
+            "$granted gear-kit items granted.",
+        type = ChatMessageType.CONSOLE,
+    )
+}
+
+/**
+ * R12.2: re-grants the same baseline kit without re-maxing skills - for when test gear is
+ * lost/broken/traded away. Deliberately non-exclusive real 2011 items only (Rune melee, Rune
+ * crossbow + bolts, Mystic magic set) - no dragon claws/Torva/whip/boots/etc., since R06.9
+ * requires those stay earned through their real exclusive routes; a testgear command must
+ * never become a shortcut around that.
+ */
+on_command("testgear", Privilege.OWNER_POWER) {
+    val granted = grantTestGearKit(player)
+    player.message("testgear: $granted baseline melee/ranged/magic kit items granted.", type = ChatMessageType.CONSOLE)
+}
+
+fun grantTestGearKit(player: Player): Int {
+    val kit =
+        listOf(
+            Items.RUNE_FULL_HELM to 1, Items.RUNE_PLATEBODY to 1, Items.RUNE_PLATELEGS to 1,
+            Items.RUNE_KITESHIELD to 1, Items.RUNE_SCIMITAR to 1,
+            Items.RUNE_CROSSBOW to 1, Items.ADAMANT_BOLTS to 1000,
+            Items.MYSTIC_HAT to 1, Items.MYSTIC_ROBE_TOP to 1, Items.MYSTIC_ROBE_BOTTOM to 1, Items.STAFF_OF_AIR to 1,
+        )
+    var granted = 0
+    kit.forEach { (item, amount) ->
+        if (player.inventory.add(item, amount, assureFullInsertion = false).hasSucceeded()) {
+            granted++
+        }
+    }
+    return granted
+}
+
+/**
+ * R12.2: marks every actually-implemented quest ([gg.rsmod.plugins.content.quests.Quest.quests]
+ * - a real self-registering list of the 12 quest impls that exist in this codebase, not a
+ * fabricated "all quests" claim) as finished. Sets the completion varp/varbit straight to
+ * `quest.stages` first - what [gg.rsmod.plugins.content.quests.finishedQuest] (what other
+ * content, e.g. Lost City's dragon-item gate, actually checks) requires - since each quest's
+ * own `finishQuest()` only advances the stage by 1 from wherever it currently is, which would
+ * under-shoot for a player who never played any of it. `finishQuest()` is still called
+ * afterwards for its real authored item/xp/quest-point rewards.
+ */
+on_command("completequests", Privilege.OWNER_POWER) {
+    var count = 0
+    gg.rsmod.plugins.content.quests.Quest.quests.forEach { quest ->
+        if (quest.usesVarbits) {
+            player.setVarbit(quest.questId, quest.stages)
+        } else {
+            player.setVarp(quest.questId, quest.stages)
+        }
+        quest.finishQuest(player)
+        count++
+    }
+    player.message("completequests: completed $count implemented quests.", type = ChatMessageType.CONSOLE)
 }
