@@ -2,7 +2,13 @@ package gg.rsmod.game.system
 
 import gg.rsmod.game.message.Message
 import gg.rsmod.game.message.MessageHandler
+import gg.rsmod.game.message.impl.ClientCheatMessage
+import gg.rsmod.game.message.impl.DetectModifiedClientMessage
+import gg.rsmod.game.message.impl.EventAppletFocusMessage
+import gg.rsmod.game.message.impl.EventCameraPositionMessage
 import gg.rsmod.game.message.impl.EventMouseIdleMessage
+import gg.rsmod.game.message.impl.SoundSongEndMessage
+import gg.rsmod.game.message.impl.WindowStatusMessage
 import gg.rsmod.game.model.World
 import gg.rsmod.game.model.attr.LAST_ACTIVE_CYCLE_ATTR
 import gg.rsmod.game.model.entity.Client
@@ -62,11 +68,31 @@ class GameSystem(
     fun handleMessages() {
         for (i in 0 until service.maxMessagesPerCycle) {
             val next = messages.poll() ?: break
-            // R14.24: every real client-originated packet marks the player as actively
-            // playing, EXCEPT the client's own explicit mouse-idle notification - the single
-            // choke point every incoming message already passes through, so this needs no
-            // per-handler wiring. See BeginnerProtection/LAST_ACTIVE_CYCLE_ATTR.
-            if (next.message !is EventMouseIdleMessage) {
+            // R14.24: marks the player as actively playing on a real deliberate packet - the
+            // single choke point every incoming message already passes through, so this needs
+            // no per-handler wiring. Deliberately a blocklist of the few message types that are
+            // NOT real user action, rather than an allowlist of the 140+ that are - missing a
+            // legitimate action type here would only make AFK trigger slightly early (safe
+            // direction), but the reverse (an automatic/passive message silently counting as
+            // "still playing") would defeat AFK detection entirely, which is the actual risk:
+            // - EventMouseIdleMessage: the client's own explicit "now idle" signal.
+            // - SoundSongEndMessage: the client reports every looping background track finishing,
+            //   with zero user input involved - confirmed by reading the handler, not assumed.
+            // - EventCameraPositionMessage / EventAppletFocusMessage / WindowStatusMessage:
+            //   plausibly automatic/passive depending on client build (camera drift, window
+            //   manager focus churn, resize on connect) - not confirmed harmless, excluded to
+            //   be safe rather than assumed to count.
+            // - DetectModifiedClientMessage / ClientCheatMessage: anti-cheat internals, not
+            //   user actions.
+            val isPassive =
+                next.message is EventMouseIdleMessage ||
+                    next.message is SoundSongEndMessage ||
+                    next.message is EventCameraPositionMessage ||
+                    next.message is EventAppletFocusMessage ||
+                    next.message is WindowStatusMessage ||
+                    next.message is DetectModifiedClientMessage ||
+                    next.message is ClientCheatMessage
+            if (!isPassive) {
                 client.attr[LAST_ACTIVE_CYCLE_ATTR] = world.currentCycle
             }
             next.handler.handle(client, world, next.message)
