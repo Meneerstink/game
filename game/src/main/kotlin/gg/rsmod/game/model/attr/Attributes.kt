@@ -23,6 +23,14 @@ import java.lang.ref.WeakReference
 val NEW_ACCOUNT_ATTR = AttributeKey<Boolean>()
 
 /**
+ * R14.25: permanently true once a beginner-protected player has explicitly confirmed they
+ * want to initiate PvP. Separate from [gg.rsmod.game.model.timer.NEW_PLAYER_PROTECTION_TIMER]
+ * (the time budget) so forfeiting protection early doesn't need to fake-exhaust the timer, and
+ * so the reason protection ended (ran out vs. chosen) stays distinguishable.
+ */
+val PROTECTION_FORFEITED_ATTR = AttributeKey<Boolean>(persistenceKey = "protection_forfeited")
+
+/**
  * A flag which indicates that the player will not take collision into account
  * when walking.
  */

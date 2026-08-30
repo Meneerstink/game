@@ -9,6 +9,7 @@ import gg.rsmod.game.model.timer.ACTIVE_COMBAT_TIMER
 import gg.rsmod.game.model.timer.FROZEN_TIMER
 import gg.rsmod.game.model.timer.STUN_TIMER
 import gg.rsmod.plugins.content.combat.specialattack.SpecialAttacks
+import gg.rsmod.plugins.content.mechanics.pvp.BeginnerProtection
 import gg.rsmod.plugins.content.mechanics.pvp.PvpSkull
 import gg.rsmod.plugins.content.combat.strategy.MeleeCombatStrategy
 import gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell
@@ -29,6 +30,29 @@ set_combat_logic {
 
 on_player_option("Attack") {
     val target = pawn.attr[INTERACTING_PLAYER_ATTR]?.get() ?: return@on_player_option
+
+    // R14.25: initiating PvP while protected needs explicit confirmation that permanently
+    // forfeits protection - only for a real, explicit click here, never for auto-retaliation
+    // (auto-retaliation never routes through this option handler at all, so it can't
+    // accidentally forfeit protection - matching R14.25's "never through ... auto-retaliation").
+    if (BeginnerProtection.isProtected(player)) {
+        player.queue {
+            val choice =
+                options(
+                    "Yes - attack (this permanently ends your beginner protection).",
+                    "No, cancel.",
+                )
+            if (choice == 1) {
+                BeginnerProtection.forfeit(player)
+                PvpSkull.onPlayerInitiatedAttack(attacker = player, victim = target)
+                player.attack(target)
+            } else {
+                player.message("You decide not to attack.")
+            }
+        }
+        return@on_player_option
+    }
+
     PvpSkull.onPlayerInitiatedAttack(attacker = player, victim = target)
     player.attack(target)
 }

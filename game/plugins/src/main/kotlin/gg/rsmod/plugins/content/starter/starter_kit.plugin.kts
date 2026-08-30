@@ -4,6 +4,7 @@ import gg.rsmod.game.model.attr.CREATION_DATE
 import gg.rsmod.game.model.attr.NEW_ACCOUNT_ATTR
 import gg.rsmod.game.model.interf.DisplayMode
 import gg.rsmod.plugins.content.inter.bank.Bank
+import gg.rsmod.plugins.content.mechanics.pvp.BeginnerProtection
 import gg.rsmod.util.Misc
 
 load_metadata {
@@ -60,6 +61,7 @@ on_login {
             player.bank.add(item = slotItem.item, beginSlot = slotItem.slot)
         }
         check(NewPlayerStart.grantStarterCash(player)) { "Unable to grant new-player starter cash." }
+        BeginnerProtection.grantOnFirstLogin(player)
 
         player.setCurrentPrayerPoints(10)
         player.setVarp(Bank.LAST_X_INPUT, 50)

@@ -32,6 +32,19 @@ val SKULL_ICON_DURATION_TIMER =
 val PVP_AGGRESSOR_WINDOW_TIMER = TimerKey(tickOffline = false, resetOnDeath = true)
 
 /**
+ * R14.23/R14.24: remaining beginner-PvP-protection budget, in game cycles. Granted once (60
+ * minutes = 6000 cycles) at true first login. `tickOffline = false` is the exact mechanism
+ * R14.24/R14.27 ask for: it only counts down while the player is actually online/active, and
+ * is untouched while offline - the opposite of [SKULL_ICON_DURATION_TIMER]'s `tickOffline =
+ * true`, which is deliberately how a skull is supposed to behave (counts down in real time
+ * whether online or not). `removeOnZero = true` means the timer disappears entirely once
+ * exhausted, so "has this timer" doubles as "is currently protected" with no separate expiry
+ * flag needed. Not reset on death (R14.24: "do not grant anew on ... death").
+ */
+val NEW_PLAYER_PROTECTION_TIMER =
+    TimerKey(persistenceKey = "new_player_protection", tickOffline = false, resetOnDeath = false, removeOnZero = true)
+
+/**
  * Timer key set when a pawn is attacked either in PvP or in PvM.
  */
 val ACTIVE_COMBAT_TIMER = TimerKey()

@@ -139,6 +139,12 @@ object AreaState {
         attacker: gg.rsmod.game.model.entity.Player,
         target: gg.rsmod.game.model.entity.Player,
     ): Boolean {
+        // R14.23: covers targeting in BOTH directions - a protected player can neither attack
+        // nor be attacked. The only way out is BeginnerProtection.forfeit (R14.25's explicit
+        // consent flow in combat.plugin.kts), which runs before this is next evaluated.
+        if (BeginnerProtection.isProtected(attacker) || BeginnerProtection.isProtected(target)) {
+            return false
+        }
         val world = attacker.world
         val home = world.gameContext.home
         return (isPvpAllowed(attacker.tile, home) && isPvpAllowed(target.tile, home)) ||
