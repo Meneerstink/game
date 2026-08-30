@@ -33,22 +33,46 @@ fun openEquipmentBonuses(
     }
 }
 
+// R04.7 fix: component 7 on interface 667 is the WORN-ITEMS grid, not the inventory - it was
+// previously routed through the same handler as the 670 embedded inventory below, which always
+// looked the clicked item up in `player.inventory[slot]`. Clicking a worn item to remove it via
+// this screen therefore silently did nothing (the item isn't in the inventory container, it's
+// in equipment) - "checking the bonus math is correct proves nothing about this click handler."
+// Confirmed real bug, not a hypothetical: EquipAction.unequip() takes an equipment-slot id
+// (0=head, 1=cape, ... matching EquipmentType), which `slot` here already is once you're
+// clicking inside the 667 worn-items component, not an inventory index.
 on_button(interfaceId = EQUIPMENT_BONUS_INTERFACE_ID, component = 7) {
-    handleOption(player)
-}
-
-on_button(interfaceId = INVENTORY_INTERFACE_ID, component = 0) {
-    handleOption(player)
-}
-
-fun handleOption(player: Player) {
     val opcode = player.getInteractingOpcode()
     val item = player.getInteractingItemId()
     val slot = player.getInteractingSlot()
     when (opcode) {
         61 -> {
-            // Same underlying action as the normal inventory's Wear/Wield (op held 2) - this screen
-            // just presents equippable items via its own embedded inventory (interface 670).
+            val worn = player.equipment[slot]
+            if (worn != null && worn.id == item) {
+                val result = EquipAction.unequip(player, slot)
+                if (result == EquipAction.Result.SUCCESS) {
+                    player.sendWeaponComponentInformation()
+                    player.refreshBonuses()
+                } else if (result == EquipAction.Result.UNHANDLED && world.devContext.debugItemActions) {
+                    player.message("Unhandled unequip action: [item=$item, slot=$slot]", type = ChatMessageType.CONSOLE)
+                }
+            }
+        }
+        20 -> showStats(player, item)
+        25 -> world.sendExamine(player, item, ExamineEntityType.ITEM)
+        else -> player.message("Unhandled Equipment Stats interface opcode: $opcode", type = ChatMessageType.CONSOLE)
+    }
+}
+
+on_button(interfaceId = INVENTORY_INTERFACE_ID, component = 0) {
+    val opcode = player.getInteractingOpcode()
+    val item = player.getInteractingItemId()
+    val slot = player.getInteractingSlot()
+    when (opcode) {
+        61 -> {
+            // Same underlying action as the normal inventory's Wear/Wield (op held 2) - this
+            // component is the screen's own embedded inventory (interface 670), so `slot` is a
+            // real inventory index, unlike component 7 above.
             val inventoryItem = player.inventory[slot]
             if (inventoryItem != null && inventoryItem.id == item) {
                 val result = EquipAction.equip(player, inventoryItem, slot)

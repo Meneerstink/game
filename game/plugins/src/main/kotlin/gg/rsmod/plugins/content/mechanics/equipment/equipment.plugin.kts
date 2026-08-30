@@ -99,9 +99,14 @@ fun bind_unequip(
         when (opt) {
             61 -> {
                 val result = EquipAction.unequip(player, equipment.id)
-                if (equipment == EquipmentType.WEAPON && result == EquipAction.Result.SUCCESS) {
-                    player.sendWeaponComponentInformation()
+                // R04.7: every slot affects combat bonuses, not just weapon/shield - the bonus
+                // screen (interface 667) went stale after unequipping e.g. a helmet or boots
+                // via the ordinary equipment tab, since only WEAPON refreshed it before this.
+                if (result == EquipAction.Result.SUCCESS) {
                     player.refreshBonuses()
+                    if (equipment == EquipmentType.WEAPON) {
+                        player.sendWeaponComponentInformation()
+                    }
                 }
             }
 
@@ -142,9 +147,11 @@ fun bind_unequip(
 for (equipment in EquipmentType.values) {
     on_equip_to_slot(equipment.id) {
         player.playSound(Sfx.EQUIP_FUN)
+        // R04.7: same fix as the unequip side above - refresh on every slot, not just
+        // weapon/shield, so the bonus screen never shows stale numbers after any equip change.
+        player.refreshBonuses()
         if (equipment == EquipmentType.WEAPON || equipment == EquipmentType.SHIELD) {
             player.sendWeaponComponentInformation()
-            player.refreshBonuses()
         }
     }
 }
