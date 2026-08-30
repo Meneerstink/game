@@ -14,6 +14,9 @@ on_timer(DAILY_TIMER) {
     // Add daily loyalty points
     player.addLoyalty(amount = 500)
 
+    // R14.28/29: reset the three daily objectives alongside the daily loyalty grant
+    DailyObjectives.reset(player)
+
     // Reset the daily timer
     player.timers[DAILY_TIMER] = time
 

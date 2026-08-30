@@ -15,6 +15,7 @@ import gg.rsmod.game.model.container.key.ContainerKey
 import gg.rsmod.game.model.entity.DynamicObject
 import gg.rsmod.game.model.entity.GroundItem
 import gg.rsmod.game.model.entity.Npc
+import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.shop.PurchasePolicy
 import gg.rsmod.game.model.shop.Shop
 import gg.rsmod.game.model.shop.ShopCurrency
@@ -603,6 +604,13 @@ abstract class KotlinPlugin(
         vararg npc: Int,
         plugin: Plugin.() -> Unit,
     ) = npc.forEach { r.bindNpcDeath(it, plugin) }
+
+    /**
+     * Invoked whenever ANY npc is killed by a [Player], regardless of npc id. Safe to register
+     * from multiple independent plugin files (see [gg.rsmod.game.plugin.PluginRepository.bindNpcKilled]) -
+     * unlike [on_npc_death], this never overwrites another feature's handler.
+     */
+    fun on_npc_killed(listener: (killer: Player, npc: Npc) -> Unit) = r.bindNpcKilled(listener)
 
     /**
      * Set the combat logic for [npc] and [others], which will override the [set_combat_logic]

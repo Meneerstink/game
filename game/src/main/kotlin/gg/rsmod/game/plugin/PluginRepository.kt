@@ -742,6 +742,27 @@ class PluginRepository(
         }
     }
 
+    /**
+     * A list of listeners invoked whenever ANY npc is killed by a player, regardless of npc id.
+     * Unlike [npcDeathPlugins] (one bound plugin per npc id, silently overwritten on collision),
+     * this is a plain list - any number of independent features (e.g. daily objectives) can
+     * subscribe without risk of clobbering an npc-specific `on_npc_death` handler bound
+     * elsewhere.
+     */
+    private val npcKilledListeners = ObjectArrayList<(Player, Npc) -> Unit>()
+
+    fun bindNpcKilled(listener: (Player, Npc) -> Unit) {
+        npcKilledListeners.add(listener)
+        pluginCount++
+    }
+
+    fun executeNpcKilled(
+        killer: Player,
+        npc: Npc,
+    ) {
+        npcKilledListeners.forEach { it(killer, npc) }
+    }
+
     fun bindSpellOnPlayer(
         parent: Int,
         child: Int,

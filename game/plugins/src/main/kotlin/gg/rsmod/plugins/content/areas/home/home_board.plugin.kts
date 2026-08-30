@@ -2,6 +2,7 @@ package gg.rsmod.plugins.content.areas.home
 
 import gg.rsmod.plugins.content.areas.wilderness.WildernessBreach
 import gg.rsmod.plugins.content.areas.wilderness.WildernessHotspot
+import gg.rsmod.plugins.content.daily.DailyObjectives
 
 /**
  * R14.9: home activity/info board. Shows the current Wilderness hotspot and next Breach status
@@ -33,7 +34,10 @@ on_obj_option(obj = Objs.JOB_BOARD, option = "look-at") {
             "- Wilderness Breach: not currently announced."
         }
 
-    lines += "- Full activity list, daily objectives and voluntary grouping: coming soon."
+    lines += "Daily objectives:"
+    DailyObjectives.OBJECTIVES.forEach { lines += DailyObjectives.progressLine(player, it) }
+
+    lines += "- Full activity list and voluntary grouping: coming soon."
 
     lines.forEach { player.message(it, type = ChatMessageType.CONSOLE) }
 }
