@@ -33,8 +33,9 @@ val drops =
             obj(Items.BANDOS_TASSETS, slots = 3)
             obj(Items.BANDOS_BOOTS, slots = 3)
             obj(Items.BANDOS_HILT, slots = 2)
+            obj(Items.FROZEN_KEY_PIECE_BANDOS, slots = 3)
 
-            nothing(24)
+            nothing(21)
         }
     }
 

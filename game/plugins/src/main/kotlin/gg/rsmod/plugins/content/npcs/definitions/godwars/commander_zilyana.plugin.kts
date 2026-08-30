@@ -31,8 +31,9 @@ val drops =
             // Saradomin equipment - rare
             obj(Items.SARADOMIN_SWORD, slots = 3)
             obj(Items.SARADOMIN_HILT, slots = 3)
+            obj(Items.FROZEN_KEY_PIECE_SARADOMIN, slots = 3)
 
-            nothing(30)
+            nothing(27)
         }
     }
 

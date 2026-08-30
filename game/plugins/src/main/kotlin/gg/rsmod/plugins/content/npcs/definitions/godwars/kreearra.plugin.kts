@@ -40,8 +40,9 @@ val drops =
             obj(Items.ARMADYL_CHESTPLATE, slots = 3)
             obj(Items.ARMADYL_CHAINSKIRT, slots = 3)
             obj(Items.ARMADYL_HILT, slots = 2)
+            obj(Items.FROZEN_KEY_PIECE_ARMADYL, slots = 3)
 
-            nothing(24)
+            nothing(21)
         }
     }
 

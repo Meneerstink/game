@@ -31,8 +31,9 @@ val drops =
             // Zamorak equipment - rare
             obj(Items.STEAM_BATTLESTAFF, slots = 4)
             obj(Items.ZAMORAK_HILT, slots = 2)
+            obj(Items.FROZEN_KEY_PIECE_ZAMORAK, slots = 3)
 
-            nothing(30)
+            nothing(27)
         }
     }
 
