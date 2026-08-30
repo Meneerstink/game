@@ -296,6 +296,7 @@ object MeleeCombatFormula : CombatFormula {
 
     private fun getPrayerStrengthMultiplier(player: Player): Double =
         when {
+            gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.isTurmoilActive(player) -> 1.25
             Prayers.isActive(player, Prayer.BURST_OF_STRENGTH) -> 1.05
             Prayers.isActive(player, Prayer.SUPERHUMAN_STRENGTH) -> 1.10
             Prayers.isActive(player, Prayer.ULTIMATE_STRENGTH) -> 1.15
@@ -306,6 +307,7 @@ object MeleeCombatFormula : CombatFormula {
 
     private fun getPrayerAttackMultiplier(player: Player): Double =
         when {
+            gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.isTurmoilActive(player) -> 1.22
             Prayers.isActive(player, Prayer.CLARITY_OF_THOUGHT) -> 1.05
             Prayers.isActive(player, Prayer.IMPROVED_REFLEXES) -> 1.10
             Prayers.isActive(player, Prayer.INCREDIBLE_REFLEXES) -> 1.15
@@ -316,6 +318,7 @@ object MeleeCombatFormula : CombatFormula {
 
     private fun getPrayerDefenceMultiplier(player: Player): Double =
         when {
+            gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.isTurmoilActive(player) -> 1.15
             Prayers.isActive(player, Prayer.THICK_SKIN) -> 1.05
             Prayers.isActive(player, Prayer.ROCK_SKIN) -> 1.10
             Prayers.isActive(player, Prayer.STEEL_SKIN) -> 1.15
