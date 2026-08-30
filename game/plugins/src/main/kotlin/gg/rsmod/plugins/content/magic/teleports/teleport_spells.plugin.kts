@@ -43,12 +43,13 @@ fun Player.teleport(
     xp: Double,
     data: SpellMetadata,
 ) {
-    if (!MagicSpells.canCast(this, data.lvl, data.runes)) {
+    val itemRequirements = RuneFreeTeleportRequirements.nonRuneRequirements(data.runes)
+ if (!MagicSpells.canCast(this, data.lvl, itemRequirements)) {
         return
     }
 
     if (canTeleport(type)) {
-        MagicSpells.removeRunes(this, data.runes, data.sprite)
+        MagicSpells.removeRunes(this, itemRequirements, data.sprite)
         teleport(endTile, type)
         addXp(Skills.MAGIC, xp, checkBrawlingGloves = true)
         world.spawn(AreaSound(tile, SOUNDAREA_ID, SOUNDAREA_RADIUS, SOUNDAREA_VOLUME))
