@@ -28,6 +28,21 @@ object BountyHunterHome {
 
     fun bankTile(home: Tile): Tile = home.transform(BANK_OFFSET_X, BANK_OFFSET_Z)
 
+    /**
+     * R14.3: the four real exits, one at each cardinal edge of the safe boundary. Real object
+     * placement/collision for the enclave's visible walls is not yet built (R02.1 gap, see
+     * OWNER_TASK_STATUS.md) - these are the four verified exit points where the pass-through
+     * gates in `home_gates.plugin.kts` are placed, and where the wall perimeter will
+     * eventually connect between once it's built.
+     */
+    fun gateTiles(home: Tile): List<Tile> =
+        listOf(
+            home.transform(0, SAFE_RADIUS), // north
+            home.transform(0, -SAFE_RADIUS), // south
+            home.transform(SAFE_RADIUS, 0), // east
+            home.transform(-SAFE_RADIUS, 0), // west
+        )
+
     fun isSafe(tile: Tile, home: Tile): Boolean =
         tile.height == home.height && safeArea(home).containsTile(tile)
 
