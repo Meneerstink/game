@@ -208,6 +208,7 @@ object Familiar {
         val npc = current(player) ?: return false
         npc.teleportNpc(player.tile)
         player.message("You call your familiar to your side.")
+        updateHud(player)
         return true
     }
 
