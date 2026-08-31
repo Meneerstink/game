@@ -19,10 +19,17 @@ import kotlin.math.abs
  * [MANUAL_BOUNDARIES] is the explicit, controlled source of truth - collision only SUPPORTS
  * deriving a boundary, it does not get to decide one on its own (an open door has no collision
  * at all, and a flood fill has no way to know a doorway is conceptually still the edge of the
- * room). Any bank id listed there uses exactly those tiles, nothing else. Empty by default: no
- * bank has been visually confirmed and hand-verified in this environment yet (no client), so
- * nothing is asserted as final here - this is the hook a verification pass fills in, not a
- * finished curated list.
+ * room). Any bank INSTANCE listed there uses exactly those tiles, nothing else. Empty by
+ * default: no bank has been visually confirmed and hand-verified in this environment yet (no
+ * client), so nothing is asserted as final here - this is the hook a verification pass fills
+ * in, not a finished curated list.
+ *
+ * Keyed by the bank object's own tile (audit finding 12), not its object id: the same bank
+ * booth/chest object id is reused at many physical banks across the map, so keying by id alone
+ * would apply one verified boundary to every bank sharing that id - a real safety-zone bug the
+ * moment this map is first populated, not a hypothetical. A tile already uniquely identifies a
+ * specific instance (no two bank objects occupy the same tile), so no extra key component is
+ * needed.
  *
  * For every bank NOT in [MANUAL_BOUNDARIES], [floodFillRoom] derives a best-effort fallback
  * from three INDEPENDENT real signals - not invented coordinates, and not collision alone:
@@ -46,12 +53,14 @@ import kotlin.math.abs
  */
 object BankZones {
     /**
-     * Explicit, hand-verified bank safe-zone overrides, keyed by the exact bank object id the
-     * boundary belongs to (see [BankObjects.ALL]). Populate this from an actual in-game/client
-     * check, not a guess - an unverified entry here would be worse than the flood-fill
-     * fallback, since it would be trusted completely instead of treated as provisional.
+     * Explicit, hand-verified bank safe-zone overrides, keyed by the exact tile of the specific
+     * bank object instance (see [BankObjects.ALL] for which ids count as a bank) the boundary
+     * belongs to - never by object id alone (finding 12: the same id is reused at many banks).
+     * Populate this from an actual in-game/client check, not a guess - an unverified entry here
+     * would be worse than the flood-fill fallback, since it would be trusted completely instead
+     * of treated as provisional.
      */
-    val MANUAL_BOUNDARIES: Map<Int, Set<Tile>> = emptyMap()
+    val MANUAL_BOUNDARIES: Map<Tile, Set<Tile>> = emptyMap()
 
     /** Safety caps for the fallback flood fill - tightened from an earlier, looser pass;
      * real bank rooms are well under both, and a smaller cap bounds how far a door-detection
@@ -77,7 +86,7 @@ object BankZones {
             statics.forEach objLoop@{ obj ->
                 if (obj.id in BankObjects.ALL) {
                     bankObjectsFound++
-                    val manual = MANUAL_BOUNDARIES[obj.id]
+                    val manual = MANUAL_BOUNDARIES[obj.tile]
                     if (manual != null) {
                         manualCount++
                         tiles.addAll(manual)
