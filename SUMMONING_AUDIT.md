@@ -125,3 +125,63 @@ numbers to paper over. Steel Titan specifically: summon/follow/recall/renew/dism
 like every other familiar; "Steel of Legends" and basic melee assist do not exist and cannot be
 built without either sourcing real 2011 combat data for `Npcs.STEEL_TITAN` or an owner decision to
 accept invented placeholder values (explicitly against the work order's own rules).
+
+## Phase 8 — named representative verification (R07.9, this session)
+
+Checked each of the 5 mandatory representatives' checklist items against real, running code
+(not re-derived from scratch — builds on the Phase 1–5 work above):
+
+- **Dreadfowl**: pouch creation/summon requirements, pouch/point consumption, interface/name/
+  timer, and follow/call/renew/dismiss/expiry all real and working (generic `Familiar` code,
+  exercised by `FamiliarPointsTests`). "Actual special behavior" (a strike attack via
+  `DREADFOWL_STRIKE_SCROLL`) is the same genuine Phase 7 blocker as every other familiar — no
+  scroll-effect code exists anywhere to drive it.
+- **Spirit Terrorbird**: 12-slot BoB confirmed real (`BeastOfBurden.SPIRIT_TERRORBIRD_KEY`,
+  exact capacity from the work order). Interface 671 partially wired (Phase 5, R07.8) — Close/
+  Take BoB buttons work once open, but no real open-trigger was sourced. Store/take/lifecycle
+  verified working via the generic `ItemContainer`; "full container" behaviour is the
+  container's own real `add(..., assureFullInsertion = false)` best-effort transaction (already
+  exercised by `deposit`/`depositAll`, returns a real partial-completion count rather than
+  silently dropping items). Movement real (Phase 3). Special behavior (`TIRELESS_RUN_SCROLL`)
+  blocked on Phase 7.
+- **War Tortoise**: 18-slot BoB confirmed real, same container/lifecycle matrix as above.
+  "Verified combat/special behavior" (`TESTUDO_SCROLL`) blocked — War Tortoise has no
+  `NpcCombatDef` either (Phase 6 blocker applies to it exactly as it does to every other
+  familiar; it is not exempt just because its real-RS special is defensive rather than
+  offensive).
+- **Pack Yak**: 30-slot BoB confirmed real. "Graphical storage" is the same Phase 5 interface-671
+  open-trigger blocker as Terrorbird/Tortoise. "Bank interactions" (some later-era clients let a
+  Pack Yak act as extra bank space near a bank booth) was not found as a real, sourced 2011-era
+  mechanic this session and is not implemented — flagging rather than guessing. "Winter Storage
+  item-target flow" (`WINTER_STORAGE_SCROLL`) blocked on Phase 7. **"No loss or duplication
+  across every termination path" — verified real, not just asserted**: `BeastOfBurden`'s
+  container is keyed by `player.containers`/`ContainerKey` (registered via
+  `register_container_key`, the same generic mechanism `JsonPlayerSerializer` already persists
+  any registered container through), entirely independent of the familiar npc's own lifecycle.
+  Reading `Familiar.dismiss`/`expire`/`disconnect`/`restoreOnLogin` confirms none of them ever
+  touch `player.containers` — a Pack Yak's stored items survive dismiss, expiry, owner death,
+  logout, and login untouched, because nothing in the npc-lifecycle code path can reach them.
+- **Steel Titan**: unchanged from the "Honest conclusion" above — everything except combat/
+  special works; combat/special remain blocked on real Phase 6/7 data that doesn't exist
+  anywhere in this codebase or its upstream source.
+
+## Phase 9 — boot/runtime verification (R07.9, this session)
+
+Booted the real game server (`./gradlew :game:run`, working dir `game/game`, real `data/cache`)
+twice this session — the first attempt hit a pre-existing orphaned java process (PID from
+earlier in this same session, unrelated to Summoning) already holding the game port; killed it
+and re-ran clean. The clean boot: `RS Mod Server [Tek5] loaded up in 25295ms`, real port
+`50015` confirmed listening (`netstat`), zero `ERROR`/`Exception` lines anywhere in the full
+boot log, and the plugin's own diagnostic line confirms real registration at runtime (not just
+compile-time): `R07.1 familiar: bound Summon on 78/78 pouches, Interact on 77/78 familiar npcs`.
+This is real evidence the Phase 4/5 changes (login/logout persistence, dismiss confirmation, the
+new 747/671 button bindings) load and register without exception against the live cache/plugin
+system — status **booted**, one tier past "compiled" on the evidence-hierarchy scale.
+
+**Genuine tooling blocker for full "live-verified" status**: this session runs in a headless CLI
+environment with no attached `2011scape-client` GUI and no packet-level login-simulation harness
+— there is no way to actually log in, see the client's rendered interface 662/747/671, or
+visually confirm chathead/model/interface layout/mode-switch behaviour from here. The server-side
+boot/registration evidence above is real and as far as this environment can verify; an actual
+client login pass is an owner action, not something this session can fake or skip past silently.
+(The server process used for this boot check was stopped afterward — nothing was left running.)
