@@ -121262,7 +121262,7 @@
     remove_head: false
     remove_beard: false
     remove_arms: false
-    weapon_type: -1
+    weapon_type: 22
     attack_speed: 7
     attack_stab: 3
     attack_slash: 8
@@ -174792,7 +174792,7 @@
     appearance_id: 3558
     equip_slot: 3
     equip_type: -1
-    weapon_type: -1
+    weapon_type: 8
     remove_head: false
     remove_beard: false
     remove_arms: false
@@ -174830,7 +174830,7 @@
     appearance_id: 3559
     equip_slot: 3
     equip_type: -1
-    weapon_type: -1
+    weapon_type: 8
     remove_head: false
     remove_beard: false
     remove_arms: false
@@ -179709,7 +179709,7 @@
     remove_head: false
     remove_beard: false
     remove_arms: false
-    weapon_type: -1
+    weapon_type: 4
     attack_speed: 4
     attack_stab: 38
     attack_slash: -2
@@ -179763,7 +179763,7 @@
     appearance_id: 3662
     equip_slot: 3
     equip_type: -1
-    weapon_type: -1
+    weapon_type: 4
     remove_head: false
     remove_beard: false
     remove_arms: false
@@ -180011,7 +180011,7 @@
     appearance_id: 3666
     equip_slot: 3
     equip_type: -1
-    weapon_type: -1
+    weapon_type: 2
     remove_head: false
     remove_beard: false
     remove_arms: false

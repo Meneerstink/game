@@ -7,7 +7,13 @@ import gg.rsmod.plugins.api.cfg.Items
  */
 object Darts {
     val BRONZE_DARTS =
-        arrayOf(Items.BRONZE_DART, Items.BRONZE_DART_P, Items.BRONZE_DART_P_5628, Items.BRONZE_DART_P_5635)
+        arrayOf(
+            Items.BRONZE_DART,
+            Items.BRONZE_DART_P,
+            Items.BRONZE_DART_P_5628,
+            Items.BRONZE_DART_P_5635,
+            Items.POISONED_DART_P,
+        )
     val IRON_DARTS = arrayOf(Items.IRON_DART, Items.IRON_DART_P, Items.IRON_DART_P_5629, Items.IRON_DART_P_5636)
     val STEEL_DARTS = arrayOf(Items.STEEL_DART, Items.STEEL_DART_P, Items.STEEL_DART_P_5630, Items.STEEL_DART_P_5637)
     val BLACK_DARTS = arrayOf(Items.BLACK_DART, Items.BLACK_DART_P, Items.BLACK_DART_P_5631, Items.BLACK_DART_P_5638)
