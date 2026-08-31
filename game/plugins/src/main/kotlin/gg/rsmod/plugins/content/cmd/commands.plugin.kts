@@ -2,6 +2,7 @@ package gg.rsmod.plugins.content.cmd
 
 import de.mkammerer.argon2.Argon2Factory
 import gg.rsmod.game.fs.def.NpcDef
+import gg.rsmod.game.fs.def.ObjectDef
 import gg.rsmod.game.message.impl.LocAnimMessage
 import gg.rsmod.game.message.impl.LogoutFullMessage
 import gg.rsmod.game.model.Area
@@ -85,6 +86,57 @@ on_command("objanim", Privilege.ADMIN_POWER) {
         ObjectSelect?.let { nonNullObjectSelect ->
             player.write(LocAnimMessage(gameObject = nonNullObjectSelect, animation = id))
             player.message("${player.world.getObject(tile, ObjectType.valueOf(idType))}")
+        }
+    }
+}
+
+// PRIORITY 2 audit tooling: find real cache object data instead of guessing IDs (owner rule).
+// ::objsearch <name> - cache-wide ObjectDef name search, no client/tile needed.
+on_command("objsearch", Privilege.ADMIN_POWER) {
+    val args = player.getCommandArgs()
+    tryWithUsage(player, args, "Invalid format! Example of proper command <col=42C66C>::objsearch wall</col>") { values ->
+        val query = values.joinToString(" ").toLowerCase()
+        val allObjDefs = player.world.definitions.getAll(ObjectDef::class.java) as Map<Int, ObjectDef>
+        val matches = allObjDefs.filter { (_, def) -> def.name.toLowerCase().contains(query) }
+        if (matches.isEmpty()) {
+            player.message("No objects found with name containing: $query")
+        } else {
+            player.message("Found ${matches.size} object def(s) (showing up to 20):")
+            matches.entries.take(20).forEach { (id, def) ->
+                val opts = def.options.filterNotNull().joinToString(", ")
+                player.message("ID $id: \"${def.name}\" options=[$opts]")
+            }
+        }
+    }
+}
+
+// ::objsnear [radius] - real PLACED objects around the player (default radius 10), with tile +
+// rotation, so a route/door/shortcut can be confirmed from a real coordinate without guessing.
+on_command("objsnear", Privilege.ADMIN_POWER) {
+    val args = player.getCommandArgs()
+    val radius = args.getOrNull(0)?.toIntOrNull() ?: 10
+    val found = LinkedHashMap<String, MutableList<Tile>>()
+    for (dx in -radius..radius) {
+        for (dz in -radius..radius) {
+            val tile = player.tile.transform(dx, dz)
+            val chunk = player.world.chunks.get(tile, createIfNeeded = false) ?: continue
+            chunk.getEntities<gg.rsmod.game.model.entity.GameObject>(
+                tile,
+                gg.rsmod.game.model.EntityType.STATIC_OBJECT,
+                gg.rsmod.game.model.EntityType.DYNAMIC_OBJECT,
+            ).forEach { obj ->
+                val def = player.world.definitions.get(ObjectDef::class.java, obj.id)
+                val label = "${obj.id} \"${def.name}\" rot=${obj.rot} type=${obj.type}"
+                found.getOrPut(label) { mutableListOf() }.add(tile)
+            }
+        }
+    }
+    if (found.isEmpty()) {
+        player.message("No objects found within $radius tiles.")
+    } else {
+        player.message("Found ${found.size} distinct object(s) within $radius tiles (showing up to 25):")
+        found.entries.take(25).forEach { (label, tiles) ->
+            player.message("$label at ${tiles.take(3).joinToString(", ")}${if (tiles.size > 3) " (+${tiles.size - 3} more)" else ""}")
         }
     }
 }
