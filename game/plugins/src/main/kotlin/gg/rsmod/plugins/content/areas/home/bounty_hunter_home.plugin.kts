@@ -3,7 +3,7 @@ package gg.rsmod.plugins.content.areas.home
 import gg.rsmod.plugins.content.combat.Combat
 
 val homeTile = world.gameContext.home
-val bankTile = BountyHunterHome.bankTile(homeTile)
+val bankTile = HomeLayout.bank.tile(homeTile)
 val safeArea = BountyHunterHome.safeArea(homeTile)
 
 spawn_obj(obj = Objs.BANK_CHEST_42192, x = bankTile.x, z = bankTile.z, height = bankTile.height, rot = 1)

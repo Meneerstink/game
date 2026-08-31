@@ -25,6 +25,13 @@ data class SimplePolygonArea(
             // Tile is on a corner
             if (tile.x == a.x && tile.z == a.z) return true
 
+            // Tile is on a horizontal edge (a.z == b.z): the crossing-number check below only
+            // ever fires when tile.z is strictly between a.z and b.z, so a point lying exactly ON
+            // a horizontal edge's own z was never flagged as "on boundary" - e.g. BountyHunterHome's
+            // north/south gate tiles sit exactly on such an edge and were being misclassified as
+            // outside the safe zone. Found via BountyHunterHomeTests.kt's edge-midpoint assertions.
+            if (a.z == tile.z && b.z == tile.z && tile.x in minOf(a.x, b.x)..maxOf(a.x, b.x)) return true
+
             if ((a.z > tile.z) != (b.z > tile.z)) {
                 val slope = (tile.x - a.x) * (b.z - a.z) - (b.x - a.x) * (tile.z - a.z)
                 // Tile is on boundary

@@ -11,6 +11,7 @@ import gg.rsmod.game.model.container.key.EQUIPMENT_KEY
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.timer.ACTIVE_COMBAT_TIMER
 import gg.rsmod.game.model.timer.TimerMap
+import gg.rsmod.plugins.content.areas.home.BountyHunterHome
 import io.mockk.every
 import io.mockk.mockk
 import kotlin.test.Test
@@ -65,7 +66,8 @@ class CombatEngageTests {
     fun `one player standing in the safe hub still blocks the fight even if the other is in the wilderness`() {
         val home = Tile(3140, 3640, 0)
         val attacker = newPlayer(tile = home, combatLevel = 50, home = home)
-        val target = newPlayer(tile = home.transform(6, 0), combatLevel = 50, home = home)
+        // BATCH 1: SAFE_RADIUS grew 5->24 - one tile beyond the edge, not the old literal "6".
+        val target = newPlayer(tile = home.transform(BountyHunterHome.SAFE_RADIUS + 1, 0), combatLevel = 50, home = home)
 
         assertFalse(Combat.canEngage(attacker, target))
     }

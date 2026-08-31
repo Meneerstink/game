@@ -19,9 +19,14 @@ package gg.rsmod.plugins.content.areas.home
  * instead of a fake or generic single home shop.
  */
 val home = world.gameContext.home
+val generalTile = HomeLayout.shopGeneral.tile(home)
+val runesTile = HomeLayout.shopRunes.tile(home)
+val armourTile = HomeLayout.shopArmour.tile(home)
+val archeryTile = HomeLayout.shopArchery.tile(home)
+val staffsTile = HomeLayout.shopStaffs.tile(home)
 
-spawn_npc(npc = Npcs.SHOPKEEPER_526, x = home.x + 2, z = home.z + 1, height = home.height) // General Store
-spawn_npc(npc = Npcs.AUBURY, x = home.x + 2, z = home.z + 2, height = home.height) // Rune Shop
-spawn_npc(npc = Npcs.HORVIK, x = home.x + 3, z = home.z + 2, height = home.height) // Armour Shop
-spawn_npc(npc = Npcs.HICKTON, x = home.x + 3, z = home.z + 3, height = home.height) // Archery Emporium
-spawn_npc(npc = Npcs.ZAFF, x = home.x + 4, z = home.z + 2, height = home.height) // Superior Staffs
+spawn_npc(npc = Npcs.SHOPKEEPER_526, x = generalTile.x, z = generalTile.z, height = generalTile.height) // General Store
+spawn_npc(npc = Npcs.AUBURY, x = runesTile.x, z = runesTile.z, height = runesTile.height) // Rune Shop
+spawn_npc(npc = Npcs.HORVIK, x = armourTile.x, z = armourTile.z, height = armourTile.height) // Armour Shop
+spawn_npc(npc = Npcs.HICKTON, x = archeryTile.x, z = archeryTile.z, height = archeryTile.height) // Archery Emporium
+spawn_npc(npc = Npcs.ZAFF, x = staffsTile.x, z = staffsTile.z, height = staffsTile.height) // Superior Staffs

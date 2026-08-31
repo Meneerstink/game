@@ -19,8 +19,8 @@ import gg.rsmod.plugins.content.mechanics.practicepvp.PracticePvp
  * the archery target's - type 0, not 10 (this file previously used 10 for both). Fixed here;
  * see `home_walls.plugin.kts` for the matching wall-object fix from the same finding.
  */
-val pvmTile = world.gameContext.home.transform(-3, -2)
-val archeryTile = world.gameContext.home.transform(-2, -3)
+val pvmTile = HomeLayout.pvmArenaEntrance.tile(world.gameContext.home)
+val archeryTile = HomeLayout.pvmArcheryTarget.tile(world.gameContext.home)
 
 // R14.7: a real, physical entry point into the existing Practice PvP system
 // (`PracticePvp.queueUp`, R09.1) - previously command-only (`::practice`).

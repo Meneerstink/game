@@ -54,6 +54,34 @@ import gg.rsmod.game.model.entity.DynamicObject
 val wallHome = world.gameContext.home
 
 on_world_init {
+    // BATCH 1 terrain evidence check: before this file adds its OWN collision, sample the whole
+    // candidate interior for PRE-EXISTING blocked terrain (rock/water/building already in the 667
+    // cache at Tile(3140,3616,0), SAFE_RADIUS=24) - the owner's instruction was to only shift the
+    // home centre if real collision/terrain evidence proved this preferred candidate unworkable.
+    // A mostly-clear interior IS that evidence check passing; a heavily-blocked one would fail
+    // loudly here instead of silently shipping a broken enclave.
+    val interior = mutableListOf<Tile>()
+    for (x in -BountyHunterHome.SAFE_RADIUS..BountyHunterHome.SAFE_RADIUS) {
+        for (z in -BountyHunterHome.SAFE_RADIUS..BountyHunterHome.SAFE_RADIUS) {
+            val tile = wallHome.transform(x, z)
+            if (BountyHunterHome.isSafe(tile, wallHome)) interior.add(tile)
+        }
+    }
+    val preBlocked = interior.count { world.collision.isClipped(it) }
+    val preBlockedPct = preBlocked * 100.0 / interior.size
+    println(
+        "home_walls: terrain evidence at candidate centre $wallHome (SAFE_RADIUS=" +
+            "${BountyHunterHome.SAFE_RADIUS}): $preBlocked/${interior.size} interior tiles " +
+            "(%.1f%%) were already collision-blocked by real cache terrain/objects BEFORE this ".format(preBlockedPct) +
+            "file's own walls were added.",
+    )
+    check(preBlockedPct < 10.0) {
+        "home_walls: $preBlocked/${interior.size} (%.1f%%) of the candidate interior is already ".format(preBlockedPct) +
+            "blocked by real terrain - this is evidence the owner's preferred centre/radius does " +
+            "NOT fit here and the location must be shifted, per the explicit 'only shift when " +
+            "evidence proves necessary' instruction."
+    }
+
     val ring = BountyHunterHome.octagonRing(wallHome)
 
     val builder = CollisionUpdate.Builder()

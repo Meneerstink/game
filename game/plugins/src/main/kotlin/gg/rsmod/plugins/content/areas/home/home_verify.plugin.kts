@@ -1,84 +1,150 @@
 package gg.rsmod.plugins.content.areas.home
 
 import gg.rsmod.game.model.Direction
+import gg.rsmod.game.model.Tile
 
 /**
- * R02.1/R02.2/R14.5/HOME_DESIGN_2.png: automated, boot-time, non-visual verification that goes
- * beyond "the boot didn't crash" - the owner's own explicit standard. Runs after every other
- * home file's `on_world_init` (registration order = file load order in this loader, and this
- * file's name sorts after `home_*` alphabetically... actually not guaranteed - see the
- * `check()` failures below, which would fail LOUD at boot if ordering ever changes and a wall/
- * gate hadn't been placed yet when this runs).
+ * R02.1/R02.2/R14.5/HOME_DESIGN_2.png/BATCH 1: automated, boot-time, non-visual verification that
+ * goes beyond "the boot didn't crash" - the owner's own explicit standard. Runs after every other
+ * home file's `on_world_init` (registration order = file load order in this loader, not strictly
+ * guaranteed by filename - see the `check()` failures below, which would fail LOUD at boot if
+ * ordering ever changes and a wall/gate hadn't been placed yet when this runs).
  *
- * Confirms, with real tile-level assertions (not just spawn counts):
- * 1. every placed home facility's tile is inside the real safe-zone polygon
- *    ([BountyHunterHome.isSafe]) - reuses the SAME shape the wall/collision boundary traces,
- *    so this can never silently disagree with the physical barrier.
- * 2. every facility tile also has at least one non-clipped orthogonal neighbour - a rough,
- *    still-non-visual proxy for "a player can actually stand next to this and click it", not
- *    just "the tile is inside the polygon" (audit finding 4: the old version only checked
- *    polygon membership, which says nothing about whether the object's own footprint or a
- *    neighbouring facility's footprint has silently boxed it in).
- * 3. the arrival tile (used by new-account start and death respawn) is safe and NOT
- *    collision-blocked (a player must be able to actually stand and move from it).
- * 4. each gate's immediate outward neighbour tile is real Wilderness (NOT safe) - confirming
- *    the gates are genuine transitions, not decorative openings in a wall that doesn't
- *    actually enclose anything.
+ * BATCH 1 strengthened this from a per-tile "inside the polygon + one open neighbour" spot-check
+ * into:
+ * 1. every [HomeLayout.functional] facility's full declared footprint is inside the real safe-zone
+ *    polygon ([BountyHunterHome.isSafe]) - reuses the SAME shape the wall/collision boundary
+ *    traces, so this can never silently disagree with the physical barrier.
+ * 2. no two solid [HomeLayout.functional] facilities claim the same tile (real overlap check
+ *    against this file's OWN layout plan, not each object's live cache footprint/rotation, which
+ *    stays the responsibility of the plugin file that actually spawns the object).
+ * 3. every solid facility is actually reachable on foot: a real 4-directional flood-fill from the
+ *    arrival tile across every non-clipped safe-zone tile, then checking each facility (or an
+ *    orthogonal neighbour of it) landed in that reachable set - not just "has one open neighbour",
+ *    which says nothing about whether that neighbour connects back to the rest of the hub.
+ * 4. the flood-fill also reaches at least 90% of all safe-zone tiles - a lightweight, honest proxy
+ *    for "wide open routes, nothing bottlenecked into a 1-tile maze corridor" (this hub places
+ *    isolated small facilities across an otherwise open field rather than building corridors, so a
+ *    real narrow-corridor bug would show up as a materially smaller reachable fraction; it does
+ *    NOT geometrically prove a literal 3-tile minimum width everywhere - ponytail: upgrade to a
+ *    real route-width rasteriser only if a future layout actually adds corridor-like walls).
+ * 5. every decor tile either lands on a functional facility's tile ONLY when intentionally marked
+ *    non-solid (e.g. the arrival ground emblem), or on a completely free tile - never silently
+ *    covering a different functional facility.
+ * 6. the arrival tile (new-account start and death respawn) is safe and NOT collision-blocked.
+ * 7. each gate's immediate outward neighbour tile is real Wilderness (NOT safe) - confirming the
+ *    gates are genuine transitions, not decorative openings in a wall that doesn't actually
+ *    enclose anything.
  *
- * What this still does NOT prove (audit finding 4, honestly disclosed, unchanged this pass):
- * actual client rendering, model presence, or a real click reaching the option handler - only
- * tile-level polygon/collision facts. See OWNER_TASK_STATUS.md for the open visual-verification
- * limitation.
+ * What this still does NOT prove (honestly disclosed, unchanged this pass): actual client
+ * rendering, model presence, or a real click reaching the option handler - only tile-level
+ * polygon/collision facts. See OWNER_TASK_STATUS.md for the open visual-verification limitation.
  */
 on_world_init {
     val home = world.gameContext.home
 
-    val facilityTiles =
-        mapOf(
-            "pool" to home.transform(3, -1),
-            "altar" to home.transform(3, -2),
-            "board" to home.transform(1, -2),
-            "shop-general" to home.transform(2, 1),
-            "shop-runes" to home.transform(2, 2),
-            "shop-armour" to home.transform(3, 2),
-            "shop-archery" to home.transform(3, 3),
-            "shop-staffs" to home.transform(4, 2),
-            "transport" to home.transform(2, -4),
-            "summoning" to home.transform(-3, 2),
-            "pvm-arena-entrance" to home.transform(-3, -2),
-            "pvm-archery-target" to home.transform(-2, -3),
-        )
-
-    var unsafeFacilities = 0
-    var boxedInFacilities = 0
-    facilityTiles.forEach { (name, tile) ->
-        if (!BountyHunterHome.isSafe(tile, home)) {
-            unsafeFacilities++
-            println("home_verify: FACILITY \"$name\" at $tile is OUTSIDE the safe zone.")
-        }
-        val hasOpenNeighbour = Direction.NESW.any { !world.collision.isClipped(tile.step(it)) }
-        if (!hasOpenNeighbour) {
-            boxedInFacilities++
-            println("home_verify: FACILITY \"$name\" at $tile has NO open adjacent tile - it looks boxed in.")
+    // ---- 1. every functional facility's footprint is inside the safe polygon ----
+    var outsideSafeZone = 0
+    HomeLayout.functional.forEach { facility ->
+        facility.footprint(home).forEach { tile ->
+            if (!BountyHunterHome.isSafe(tile, home)) {
+                outsideSafeZone++
+                println("home_verify: FACILITY \"${facility.name}\" tile $tile is OUTSIDE the safe zone.")
+            }
         }
     }
-    check(unsafeFacilities == 0) {
-        "home_verify: $unsafeFacilities home facility tile(s) fall outside the safe octagon - " +
-            "see the printed list above."
-    }
-    check(boxedInFacilities == 0) {
-        "home_verify: $boxedInFacilities home facility tile(s) have no open adjacent tile - " +
-            "see the printed list above."
+    check(outsideSafeZone == 0) {
+        "home_verify: $outsideSafeZone home facility tile(s) fall outside the safe octagon - see the printed list above."
     }
 
-    val arrivalTile = home.transform(0, -3)
-    check(BountyHunterHome.isSafe(arrivalTile, home)) {
-        "home_verify: arrival tile $arrivalTile is OUTSIDE the safe zone."
+    // ---- 2. no two solid facilities claim the same tile ----
+    val tileOwner = HashMap<Tile, String>()
+    var overlaps = 0
+    HomeLayout.functional.filter { it.solid }.forEach { facility ->
+        facility.footprint(home).forEach { tile ->
+            val existing = tileOwner.putIfAbsent(tile, facility.name)
+            if (existing != null) {
+                overlaps++
+                println("home_verify: OVERLAP - \"${facility.name}\" and \"$existing\" both claim tile $tile.")
+            }
+        }
     }
+    check(overlaps == 0) { "home_verify: $overlaps facility tile overlap(s) - see the printed list above." }
+
+    // ---- 3/4. real flood-fill reachability from the arrival tile ----
+    val arrivalTile = HomeLayout.arrival.tile(home)
+    val reachable = HashSet<Tile>()
+    val queue = ArrayDeque<Tile>()
+    reachable.add(arrivalTile)
+    queue.add(arrivalTile)
+    while (queue.isNotEmpty()) {
+        val current = queue.removeFirst()
+        for (direction in Direction.NESW) {
+            val next = current.step(direction)
+            if (next in reachable) continue
+            if (!BountyHunterHome.isSafe(next, home)) continue
+            if (world.collision.isClipped(next)) continue
+            reachable.add(next)
+            queue.add(next)
+        }
+    }
+
+    var totalSafeTiles = 0
+    for (x in -BountyHunterHome.SAFE_RADIUS..BountyHunterHome.SAFE_RADIUS) {
+        for (z in -BountyHunterHome.SAFE_RADIUS..BountyHunterHome.SAFE_RADIUS) {
+            if (BountyHunterHome.isSafe(home.transform(x, z), home)) totalSafeTiles++
+        }
+    }
+    val reachablePct = reachable.size * 100.0 / totalSafeTiles
+    println(
+        "home_verify: flood-fill from arrival reached ${reachable.size}/$totalSafeTiles safe-zone " +
+            "tiles (%.1f%%).".format(reachablePct),
+    )
+    check(reachablePct >= 90.0) {
+        "home_verify: only %.1f%% of the safe zone is reachable from arrival - the layout is ".format(reachablePct) +
+            "bottlenecked or boxed in somewhere."
+    }
+
+    var unreachableFacilities = 0
+    HomeLayout.functional.filter { it.solid }.forEach { facility ->
+        val tile = facility.tile(home)
+        val reached = tile in reachable || Direction.NESW.any { tile.step(it) in reachable }
+        if (!reached) {
+            unreachableFacilities++
+            println("home_verify: FACILITY \"${facility.name}\" at $tile is NOT reachable on foot from arrival.")
+            Direction.NESW.forEach { direction ->
+                val n = tile.step(direction)
+                println(
+                    "home_verify:   neighbour $direction $n - isSafe=${BountyHunterHome.isSafe(n, home)} " +
+                        "isClipped=${world.collision.isClipped(n)} inReachableSet=${n in reachable}",
+                )
+            }
+        }
+    }
+    check(unreachableFacilities == 0) {
+        "home_verify: $unreachableFacilities facility(-ies) unreachable from arrival - see the printed list above."
+    }
+
+    // ---- 5. decor never silently covers a different functional facility ----
+    var badDecor = 0
+    HomeLayout.decor.forEach { decor ->
+        val tile = decor.tile(home)
+        val owner = tileOwner[tile]
+        val allowed = owner == null || (decor.name == "decor-arrival-wheel" && owner == HomeLayout.arrival.name)
+        if (!allowed) {
+            badDecor++
+            println("home_verify: DECOR \"${decor.name}\" at $tile silently covers functional facility \"$owner\".")
+        }
+    }
+    check(badDecor == 0) { "home_verify: $badDecor decor tile(s) cover an unrelated functional facility - see above." }
+
+    // ---- 6. arrival tile itself is safe and walkable ----
+    check(BountyHunterHome.isSafe(arrivalTile, home)) { "home_verify: arrival tile $arrivalTile is OUTSIDE the safe zone." }
     check(!world.collision.isClipped(arrivalTile)) {
         "home_verify: arrival tile $arrivalTile is collision-blocked - a player could not stand there."
     }
 
+    // ---- 7. every gate's outward neighbour is real Wilderness ----
     var badGates = 0
     BountyHunterHome.gateTiles(home).forEach { gate ->
         val outward =
@@ -96,9 +162,9 @@ on_world_init {
     check(badGates == 0) { "home_verify: $badGates gate(s) do not lead to real Wilderness - see the printed list above." }
 
     println(
-        "home_verify: all ${facilityTiles.size} home facility tiles pass safe-zone+open-" +
-            "neighbour checks, arrival tile safe+unblocked, all 4 gates confirmed as real " +
-            "safe->Wilderness transitions. This does NOT prove client-visible rendering or a " +
+        "home_verify: all ${HomeLayout.functional.size} functional facilities pass safe-zone+no-" +
+            "overlap+reachability checks, arrival tile safe+unblocked, all 4 gates confirmed as " +
+            "real safe->Wilderness transitions. This does NOT prove client-visible rendering or a " +
             "real click reaching each handler - see OWNER_TASK_STATUS.md.",
     )
 }

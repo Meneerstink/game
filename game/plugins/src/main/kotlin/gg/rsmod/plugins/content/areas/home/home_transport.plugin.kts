@@ -37,7 +37,7 @@ import gg.rsmod.plugins.content.mechanics.shops.CoinCurrency
  * remaining networks stay an open, explicitly tracked gap.
  */
 val transportNpc = Npcs.SHOPKEEPER_530
-val transportTile = world.gameContext.home.transform(2, -4)
+val transportTile = HomeLayout.transport.tile(world.gameContext.home)
 
 create_shop("Home Travel Supplies", CoinCurrency(), containsSamples = false) {
     items[0] = ShopItem(Items.GAMES_NECKLACE_8, 5, resupplyCycles = 500)

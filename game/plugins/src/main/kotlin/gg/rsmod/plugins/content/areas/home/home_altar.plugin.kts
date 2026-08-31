@@ -11,10 +11,9 @@ package gg.rsmod.plugins.content.areas.home
  * pattern as `home_shops.plugin.kts`.
  *
  * Audit finding 2 fix: this object's real footprint is 2x1 (width=2, length=1), confirmed via a
- * boot-time [ObjectDef] dump. The previous tile (4,-2) let it run onto (5,-2), a perimeter wall
- * position. Moved one tile west to (3,-2), clear of the x=5 wall column and of the pool's
- * footprint (which occupies rows z=-1..0, one row south of here).
+ * boot-time [ObjectDef] dump. BATCH 1: tile now comes from [HomeLayout.altar], which already
+ * declares this 2x1 footprint for the boot-time no-overlap self-check in `home_verify.plugin.kts`.
  */
-val altarTile = world.gameContext.home.transform(3, -2)
+val altarTile = HomeLayout.altar.tile(world.gameContext.home)
 
 spawn_obj(obj = Objs.ALTAR_27661, x = altarTile.x, z = altarTile.z, height = altarTile.height, type = 10, rot = 0)

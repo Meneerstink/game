@@ -15,6 +15,6 @@ package gg.rsmod.plugins.content.areas.home
  * (`skills/summoning/familiar.plugin.kts`) already works from anywhere via the pouch items this
  * shop sells.
  */
-val summoningTile = world.gameContext.home.transform(-3, 2)
+val summoningTile = HomeLayout.summoning.tile(world.gameContext.home)
 
 spawn_npc(npc = Npcs.PIKKUPSTIX, x = summoningTile.x, z = summoningTile.z, height = summoningTile.height)

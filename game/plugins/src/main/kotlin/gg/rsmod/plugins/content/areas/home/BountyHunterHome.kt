@@ -15,18 +15,25 @@ import gg.rsmod.plugins.api.ext.getWildernessLevel
  * so there is no additional transition-safe strip around the hub.
  */
 object BountyHunterHome {
-    const val SAFE_RADIUS = 5
+    /**
+     * BATCH 1: raised from 5 to 24 - the old radius made the whole enclave a single cramped ring
+     * of adjacent objects, not the "full home, primarily southward" the owner's design
+     * (HOME_DESIGN_2.png) actually calls for. `game.yml`'s `home-z` moved from 3640 to 3616 in
+     * the same change, so the auto-derived north gate (`home.transform(0, SAFE_RADIUS)`) still
+     * lands exactly on the preserved `Tile(3140, 3640, 0)` BH/Wilderness connection point.
+     */
+    const val SAFE_RADIUS = 24
 
     /**
      * R02.1/HOME_DESIGN_2.png ("De Herbouwde Ruïne"): how many tiles are cut off each of the 4
      * square corners to form the real octagonal ruin shape the confirmed design shows - not a
      * plain square. Kept as a real, buildable integer-tile shape (no new client assets needed):
      * the 4 straight edges shrink from the full [SAFE_RADIUS] span to a shorter flat wall, and
-     * each corner becomes a 3-tile diagonal staircase instead of a right angle.
+     * each corner becomes a diagonal staircase instead of a right angle. Scaled from 2 to 10
+     * alongside the BATCH 1 radius increase so the corner-cut proportion (roughly 40% of the
+     * radius) stays visually the same shape, just bigger.
      */
-    const val CORNER_CUT = 2
-    const val BANK_OFFSET_X = 2
-    const val BANK_OFFSET_Z = 0
+    const val CORNER_CUT = 10
 
     /**
      * The 8 vertices of the octagonal safe-zone perimeter - the exact same shape
@@ -77,8 +84,6 @@ object BountyHunterHome {
     }
 
     fun safeArea(home: Tile): SimplePolygonArea = SimplePolygonArea(octagonVertices(home))
-
-    fun bankTile(home: Tile): Tile = home.transform(BANK_OFFSET_X, BANK_OFFSET_Z)
 
     /**
      * R14.3/audit finding 3: one real exit at each cardinal edge, now carrying its own FIXED

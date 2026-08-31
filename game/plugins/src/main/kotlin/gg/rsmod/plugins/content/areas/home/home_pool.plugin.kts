@@ -13,11 +13,10 @@ package gg.rsmod.plugins.content.areas.home
  * "Investigate" or Objs.POOL's blank options, were checked and rejected first).
  *
  * Audit finding 2 fix: a boot-time [ObjectDef] dump confirmed this object's real footprint is
- * 2x2, not 1x1 - the previous tile (4,-1) placed it exactly overlapping the east gate tile
- * (5,0). Moved one tile west to (3,-1) so its full 2x2 footprint ((3,-1)-(4,0)) stays clear of
- * both the gate (x=5) and the perimeter wall ring (also x=5 at this z range).
+ * 2x2, not 1x1. BATCH 1: tile now comes from [HomeLayout.pool], which already declares this
+ * 2x2 footprint for the boot-time no-overlap self-check in `home_verify.plugin.kts`.
  */
-val poolTile = world.gameContext.home.transform(3, -1)
+val poolTile = HomeLayout.pool.tile(world.gameContext.home)
 
 spawn_obj(obj = Objs.POOL_CLASS_5, x = poolTile.x, z = poolTile.z, height = poolTile.height, type = 10, rot = 0)
 

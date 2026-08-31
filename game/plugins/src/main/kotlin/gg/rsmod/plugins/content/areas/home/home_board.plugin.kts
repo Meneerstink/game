@@ -31,7 +31,7 @@ private val LOW_POP_THRESHOLD = 10
 // R14.9/HOME_DESIGN_2.png: on the main south path between the bank and the arrival point/south
 // gate - the open plaza area, not a labelled quadrant of its own in the confirmed design, and
 // clear of the corrected Shops (NE)/Vervoer (SE) placements this pass moved away from here.
-val boardTile = world.gameContext.home.transform(1, -2)
+val boardTile = HomeLayout.board.tile(world.gameContext.home)
 
 spawn_obj(obj = Objs.JOB_BOARD, x = boardTile.x, z = boardTile.z, height = boardTile.height, type = 10, rot = 0)
 
