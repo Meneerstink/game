@@ -141,6 +141,36 @@ on_command("objsnear", Privilege.ADMIN_POWER) {
     }
 }
 
+// ::itemsearch <name> - cache-wide ItemDef name search, so near-duplicate ids sharing a display
+// name (holiday-event leftovers, charge variants, etc.) can be told apart before being used,
+// instead of guessing which one is the real wieldable/tradeable item (owner "no guessing" rule).
+on_command("itemsearch", Privilege.ADMIN_POWER) {
+    val args = player.getCommandArgs()
+    tryWithUsage(player, args, "Invalid format! Example of proper command <col=42C66C>::itemsearch korasi</col>") { values ->
+        val query = values.joinToString(" ").toLowerCase()
+        val count = player.world.definitions.getCount(ItemDef::class.java)
+        val matches = mutableListOf<Pair<Int, ItemDef>>()
+        for (i in 0 until count) {
+            val def = player.world.definitions.getNullable(ItemDef::class.java, i) ?: continue
+            if (def.name.toLowerCase().contains(query)) {
+                matches.add(i to def)
+            }
+        }
+        if (matches.isEmpty()) {
+            player.message("No items found with name containing: $query")
+        } else {
+            player.message("Found ${matches.size} item def(s) (showing up to 20):")
+            matches.take(20).forEach { (id, def) ->
+                val equippable = def.equipmentMenu.any { it != null }
+                player.message(
+                    "ID $id: \"${def.name}\" tradeable=${def.tradeable} members=${def.members} " +
+                        "equippable=$equippable noteLinkId=${def.noteLinkId} cost=${def.cost}",
+                )
+            }
+        }
+    }
+}
+
 on_command("players") {
     // Count the total number of players online
     val count = world.players.count()
