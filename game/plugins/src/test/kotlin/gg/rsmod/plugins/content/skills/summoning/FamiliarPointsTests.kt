@@ -105,6 +105,21 @@ class FamiliarPointsTests {
         assertEquals(afterSummon, Familiar.currentPoints(player), "renew itself must not cost extra points")
     }
 
+    @Test
+    fun `summoning and special points are separate capped resources`() {
+        val player = newPlayer(summoningLevel = 43)
+        player.attr[gg.rsmod.game.model.attr.SUMMONING_POINTS_ATTR] = 5
+
+        Familiar.restorePoints(player, 10)
+        assertEquals(15, Familiar.currentPoints(player))
+        assertEquals(Familiar.MAX_SPECIAL_POINTS, Familiar.currentSpecialPoints(player))
+
+        assertTrue(Familiar.consumeSpecialPoints(player, 12))
+        assertEquals(48, Familiar.currentSpecialPoints(player))
+        Familiar.restoreSpecialPoints(player, 20)
+        assertEquals(Familiar.MAX_SPECIAL_POINTS, Familiar.currentSpecialPoints(player))
+    }
+
     private val DREADFOWL get() = SummoningPouchData.DREADFOWL
     private val PACK_YAK get() = SummoningPouchData.PACK_YAK
 

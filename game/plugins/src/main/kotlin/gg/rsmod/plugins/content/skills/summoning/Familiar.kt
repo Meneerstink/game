@@ -33,6 +33,9 @@ import kotlin.math.roundToInt
  */
 val FAMILIAR_ATTR = AttributeKey<WeakReference<Npc>>()
 
+/** Persisted Summoning special-move energy. This is separate from Summoning points. */
+val FAMILIAR_SPECIAL_POINTS_ATTR = AttributeKey<Int>(persistenceKey = "familiar_special_points")
+
 /**
  * R07.7: persisted (sourced - familiars survive logout in this era, the lifetime timer just
  * pauses while offline via [TimerKey.tickOffline] = false and resumes with the same time left
@@ -61,6 +64,7 @@ private val FAMILIAR_DRAIN_COUNTER_ATTR = AttributeKey<Int>()
 
 object Familiar {
     const val LIFETIME_CYCLES = 2000
+    const val MAX_SPECIAL_POINTS = 60
 
     /** R07 follower interface (see InterfaceDestination.SUMMONING_TAB for the evidence trail). */
     private const val HUD_INTERFACE = 662
@@ -89,11 +93,38 @@ object Familiar {
 
     fun currentPoints(player: Player): Int = player.attr.getOrDefault(SUMMONING_POINTS_ATTR, maxPoints(player)).coerceAtMost(maxPoints(player))
 
+    fun currentSpecialPoints(player: Player): Int =
+        player.attr.getOrDefault(FAMILIAR_SPECIAL_POINTS_ATTR, MAX_SPECIAL_POINTS).coerceIn(0, MAX_SPECIAL_POINTS)
+
     private fun setPoints(
         player: Player,
         value: Int,
     ) {
         player.attr[SUMMONING_POINTS_ATTR] = value.coerceIn(0, maxPoints(player))
+    }
+
+    private fun setSpecialPoints(player: Player, value: Int) {
+        player.attr[FAMILIAR_SPECIAL_POINTS_ATTR] = value.coerceIn(0, MAX_SPECIAL_POINTS)
+    }
+
+    /** Restores Summoning points without touching the familiar timer or special-move energy. */
+    fun restorePoints(player: Player, amount: Int = maxPoints(player)) {
+        setPoints(player, currentPoints(player) + amount.coerceAtLeast(0))
+    }
+
+    /** Restores the separate special-move pool (one potion dose restores 15 points). */
+    fun restoreSpecialPoints(player: Player, amount: Int) {
+        setSpecialPoints(player, currentSpecialPoints(player) + amount.coerceAtLeast(0))
+    }
+
+    /** Atomically spends special-move energy; effects must call this only after validation. */
+    fun consumeSpecialPoints(player: Player, amount: Int): Boolean {
+        require(amount >= 0) { "Special-move cost cannot be negative." }
+        if (currentSpecialPoints(player) < amount) {
+            return false
+        }
+        setSpecialPoints(player, currentSpecialPoints(player) - amount)
+        return true
     }
 
     /**

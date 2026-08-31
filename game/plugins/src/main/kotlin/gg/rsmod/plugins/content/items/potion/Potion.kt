@@ -208,6 +208,52 @@ enum class Potion(
         potionType = PotionType.SUPER_RESTORE,
     ),
 
+    SUMMONING_POTION5(
+        item = Items.SUMMONING_POTION_5,
+        replacement = Items.SUMMONING_POTION_4_14279,
+        potionType = PotionType.SUMMONING,
+    ),
+    SUMMONING_POTION4(
+        item = Items.SUMMONING_POTION_4,
+        replacement = Items.SUMMONING_POTION_3,
+        potionType = PotionType.SUMMONING,
+    ),
+    SUMMONING_POTION4_ALT(
+        item = Items.SUMMONING_POTION_4_14279,
+        replacement = Items.SUMMONING_POTION_3_14281,
+        potionType = PotionType.SUMMONING,
+    ),
+    SUMMONING_POTION3(
+        item = Items.SUMMONING_POTION_3,
+        replacement = Items.SUMMONING_POTION_2,
+        potionType = PotionType.SUMMONING,
+    ),
+    SUMMONING_POTION3_ALT(
+        item = Items.SUMMONING_POTION_3_14281,
+        replacement = Items.SUMMONING_POTION_2_14283,
+        potionType = PotionType.SUMMONING,
+    ),
+    SUMMONING_POTION2(
+        item = Items.SUMMONING_POTION_2,
+        replacement = Items.SUMMONING_POTION_1,
+        potionType = PotionType.SUMMONING,
+    ),
+    SUMMONING_POTION2_ALT(
+        item = Items.SUMMONING_POTION_2_14283,
+        replacement = Items.SUMMONING_POTION_1_14285,
+        potionType = PotionType.SUMMONING,
+    ),
+    SUMMONING_POTION1(
+        item = Items.SUMMONING_POTION_1,
+        replacement = Items.VIAL,
+        potionType = PotionType.SUMMONING,
+    ),
+    SUMMONING_POTION1_ALT(
+        item = Items.SUMMONING_POTION_1_14285,
+        replacement = Items.VIAL,
+        potionType = PotionType.SUMMONING,
+    ),
+
     PRAYER4(
         item = Items.PRAYER_POTION_4,
         replacement =

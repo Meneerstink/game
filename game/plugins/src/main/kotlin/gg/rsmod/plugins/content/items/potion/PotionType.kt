@@ -9,6 +9,7 @@ import gg.rsmod.plugins.api.ext.heal
 import gg.rsmod.plugins.api.ext.restorePrayer
 import gg.rsmod.plugins.content.mechanics.poison.Poison
 import gg.rsmod.plugins.content.mechanics.run.RunEnergy
+import gg.rsmod.plugins.content.skills.summoning.Familiar
 import kotlin.math.floor
 
 enum class PotionType(
@@ -168,6 +169,16 @@ enum class PotionType(
     ) {
         override fun apply(p: Player) {
             applyBoost(p, alteredSkills, alterStrategy)
+        }
+    },
+    /**
+     * One dose restores 25% of the player's maximum Summoning points plus 7,
+     * and 15 points of the separate special-move pool.
+     */
+    SUMMONING {
+        override fun apply(p: Player) {
+            Familiar.restorePoints(p, Familiar.maxPoints(p) / 4 + 7)
+            Familiar.restoreSpecialPoints(p, 15)
         }
     },
     PRAYER(alteredSkills = intArrayOf(Skills.PRAYER), alterStrategy = arrayOf("prayer")) {
