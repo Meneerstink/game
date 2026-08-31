@@ -4,6 +4,7 @@ import gg.rsmod.game.fs.def.ItemDef
 import gg.rsmod.game.fs.def.NpcDef
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.queue.QueueTask
+import gg.rsmod.plugins.api.ext.closeInterface
 import gg.rsmod.plugins.api.ext.inputInt
 import gg.rsmod.plugins.api.ext.message
 
@@ -253,4 +254,33 @@ on_button(747, 25) { // "Spell, Cast" (resize-mode only) - special move, blocked
         return@on_button
     }
     player.message("Your familiar has no special move to cast yet.")
+}
+
+/*
+ * R07.8 (Phase 5): interface 671 ("Familiar Inventory" / graphical BoB window) - real
+ * component ids 13 ("Close"), 14 ("Familiar Inventory" title, no action) and 29 ("Take BoB,
+ * Take Beast of Burden items.") verified live this session via the same raw cache probe as 662/
+ * 747. Wired defensively so the window behaves correctly whenever it's open.
+ *
+ * Honest blocker, unchanged from the Phase 4/5 evidence trail: no real cache trigger to OPEN
+ * 671 was sourced this session - the BoB npc's own verified option set is "Interact" only (R07.1
+ * finding), and neither 662 nor 747's real component text names a distinct "View"/"Open BoB
+ * inventory" action, so nothing in this codebase currently calls `player.openInterface(671, ...)`.
+ * The item-slot/container grid among 671's other ~28 components also has no extracted text in
+ * the raw scan (consistent with being a container/background widget, but its exact component id
+ * and slot-count binding isn't decodable this way) - real per-item graphical withdraw/deposit
+ * therefore isn't implemented; the existing chat-based `withdrawOne` prompt and the instant
+ * withdraw-all bindings (662/747) remain the real, working BoB access path.
+ */
+on_button(671, 13) { // "Close"
+    player.closeInterface(671)
+}
+
+on_button(671, 29) { // "Take BoB, Take Beast of Burden items."
+    val npc = Familiar.current(player)
+    if (npc == null || !BeastOfBurden.isBobNpc(npc.id)) {
+        return@on_button
+    }
+    val withdrawn = BeastOfBurden.withdrawAll(player)
+    if (withdrawn > 0) player.message("You withdraw $withdrawn item(s) from your familiar.")
 }
