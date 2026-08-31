@@ -538,6 +538,15 @@ val LOYALTY_POINTS = AttributeKey<Int>(persistenceKey = "loyalty_points")
 val SLAYER_POINTS = AttributeKey<Int>(persistenceKey = "slayer_points")
 
 /**
+ * R07.2: the player's current Summoning points (pre-2018-rework mechanic - max pool equals
+ * current Summoning level, 1:1, no x10 multiplier; sourced from 2011.rs's own worked example
+ * and cross-validated against a same-era 2009scape RSPS implementation). Absent until the
+ * player's first summon/login touches it, at which point it defaults to a full pool - see
+ * [gg.rsmod.plugins.content.skills.summoning.Familiar].
+ */
+val SUMMONING_POINTS_ATTR = AttributeKey<Int>(persistenceKey = "summoning_points")
+
+/**
  * Slayer shop ability unlocks
  */
 val BROAD_FLETCHING = AttributeKey<Boolean>(persistenceKey = "broad_fletching")
