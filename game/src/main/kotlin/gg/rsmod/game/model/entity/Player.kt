@@ -74,6 +74,19 @@ abstract class Player(
     var lastIndex = -1
 
     /**
+     * Interaction/root-cause finding 6: the set of [gg.rsmod.game.model.SimplePolygonArea] hashes
+     * this player is currently standing inside, tracked across ticks so
+     * [gg.rsmod.game.sync.task.PlayerPostSynchronizationTask] can fire the area's enter-callback
+     * only on a genuine outside->inside transition. Without this, the callback re-fired on every
+     * single tile step taken while already inside the area (any move where `moved` is true and
+     * `containsTile` is still true) - for `bounty_hunter_home.plugin.kts`, which resets the
+     * player's face-target on every firing, that silently cancelled any multi-tile walk-to-NPC
+     * interaction anywhere inside the home safe zone (`PawnPathAction.walk`'s post-route check
+     * `FACING_PAWN_ATTR != other` would trip on the reset that happened mid-walk).
+     */
+    val insidePolygonAreas = HashSet<Int>()
+
+    /**
      * A flag which indicates the player is attempting to log out. There can be
      * certain circumstances where the player should not be unregistered from
      * the world.

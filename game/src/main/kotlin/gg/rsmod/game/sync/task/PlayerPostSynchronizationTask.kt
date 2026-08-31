@@ -52,8 +52,18 @@ object PlayerPostSynchronizationTask : SynchronizationTask<Player> {
                 }
             }
             pawn.world.plugins.simplePolygonAreas.forEach {
-                if (pawn.tile.regionId in it.associatedRegionIds && it.containsTile(pawn.tile)) {
-                    pawn.world.plugins.executeSimplePolygonAreaEnter(pawn, it.hashCode())
+                val hash = it.hashCode()
+                val inside = pawn.tile.regionId in it.associatedRegionIds && it.containsTile(pawn.tile)
+                if (inside) {
+                    // Finding 6 fix: only fire on a real outside->inside transition (first tick
+                    // `inside` becomes true), not on every subsequent tile step still inside -
+                    // see the `insidePolygonAreas` doc comment on Player for the interaction bug
+                    // this caused.
+                    if (pawn.insidePolygonAreas.add(hash)) {
+                        pawn.world.plugins.executeSimplePolygonAreaEnter(pawn, hash)
+                    }
+                } else {
+                    pawn.insidePolygonAreas.remove(hash)
                 }
             }
         }
