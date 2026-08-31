@@ -183,6 +183,13 @@ object EquipAction {
                 }
             }
 
+            // Audit finding 9 remainder: refuse the whole swap if any slot it would displace is
+            // blocked (e.g. Practice PvP temp gear) - checked before anything is touched, so a
+            // blocked slot can never be left in an inconsistent state.
+            if (unequip.any { slot -> p.equipment[slot] != null && !plugins.canUnequipSlot(p, slot) }) {
+                return Result.PLUGIN
+            }
+
             val spaceRequired = unequip.filter { slot -> p.equipment[slot] != null }.size - 1
             if (p.inventory.freeSlotCount < spaceRequired) {
                 p.writeMessage("You don't have enough free inventory space to do that.")
@@ -266,6 +273,12 @@ object EquipAction {
         equipmentSlot: Int,
     ): Result {
         val item = p.equipment[equipmentSlot] ?: return Result.INVALID_ITEM
+
+        // Audit finding 9 remainder: same guard as the swap path in [equip] - this is the other
+        // real route into a player's inventory for whatever is currently in [equipmentSlot].
+        if (!p.world.plugins.canUnequipSlot(p, equipmentSlot)) {
+            return Result.PLUGIN
+        }
 
         val addition = p.inventory.add(item.id, item.amount, assureFullInsertion = false)
 

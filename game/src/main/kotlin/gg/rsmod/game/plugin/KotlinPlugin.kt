@@ -748,6 +748,16 @@ abstract class KotlinPlugin(
     ) = r.bindUnequipSlot(equipSlot, logic)
 
     /**
+     * Return false to stop whatever is equipped in [equipSlot] from being un-equipped or
+     * swapped out for another item (see [EquipAction]'s "gear replacement" swap). True if
+     * nothing blocks it.
+     */
+    fun can_unequip_from_slot(
+        equipSlot: Int,
+        logic: (Plugin).() -> Boolean,
+    ) = r.bindCanUnequipSlot(equipSlot, logic)
+
+    /**
      * Return true if [item] can be equipped, false if it can't.
      */
     fun can_equip_item(

@@ -165,6 +165,17 @@ class PluginRepository(
     private val unequipSlotPlugins: Multimap<Int, Plugin.() -> Unit> = HashMultimap.create()
 
     /**
+     * Audit finding 9 remainder: [EquipAction.equip] silently moves whatever is already
+     * equipped in a conflicting slot into the player's real inventory when a new item is worn
+     * over it (a "gear replacement" swap), with no requirement hook at all - unlike equipping a
+     * new item ([equipItemRequirementPlugins]) or the explicit Remove button (guarded manually
+     * per call site), nothing could stop that swap. Multimap (like [unequipSlotPlugins], not a
+     * single-bind map like [equipItemRequirementPlugins]) so more than one plugin can gate the
+     * same slot; all must agree before the swap proceeds.
+     */
+    private val canUnequipSlotPlugins: Multimap<Int, Plugin.() -> Boolean> = HashMultimap.create()
+
+    /**
      * A map of plugins that can stop an item from being equipped.
      */
     private val equipItemRequirementPlugins = Int2ObjectOpenHashMap<Plugin.() -> Boolean>()
@@ -1184,6 +1195,27 @@ class PluginRepository(
     ) {
         unequipSlotPlugins.put(equipSlot, plugin)
         pluginCount++
+    }
+
+    fun bindCanUnequipSlot(
+        equipSlot: Int,
+        plugin: Plugin.() -> Boolean,
+    ) {
+        canUnequipSlotPlugins.put(equipSlot, plugin)
+        pluginCount++
+    }
+
+    /**
+     * Returns false if any plugin bound to [equipSlot] refuses the un-equip/replace - checked
+     * by [EquipAction] before an item currently in that slot is moved to inventory, whether via
+     * the explicit Remove action or an equip that swaps it out. True (allowed) if none block it.
+     */
+    fun canUnequipSlot(
+        p: Player,
+        equipSlot: Int,
+    ): Boolean {
+        val plugins = canUnequipSlotPlugins[equipSlot]
+        return plugins.all { logic -> p.executePlugin(logic) }
     }
 
     fun executeUnequipSlot(
