@@ -8,8 +8,11 @@ commandServer:
     tcpPort: 50017
 
 # The coordinates for the home location.
+# BATCH 1: home-z moved from 3640 to 3616 so the enclave's centre sits 24 tiles further south
+# (SAFE_RADIUS grew 5->24) while the auto-derived north gate (home.z + SAFE_RADIUS) still lands
+# exactly on the preserved Tile(3140, 3640, 0) BH/Wilderness connection point.
 home-x: 3140
-home-z: 3640
+home-z: 3616
 home-height: 0
 
 # Privileges

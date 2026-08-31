@@ -27,7 +27,10 @@ abstract class PlayerSerializerService : Service {
         // inside the covered bank/GE pavilion) toward the south gate, matching the confirmed
         // design's "AANKOMST" marker - never spawning a new player inside/blocking the market
         // structure itself.
-        startTile = Tile(world.gameContext.home).transform(0, -3)
+        // BATCH 1: offset updated from (0,-3) to (0,-10) alongside SAFE_RADIUS 5->24 - the game
+        // module can't depend on the plugins module, so this must stay numerically in sync with
+        // HomeLayout.arrival in gg.rsmod.plugins.content.areas.home.HomeLayout.kt.
+        startTile = Tile(world.gameContext.home).transform(0, -10)
         initSerializer(server, world, serviceProperties)
     }
 

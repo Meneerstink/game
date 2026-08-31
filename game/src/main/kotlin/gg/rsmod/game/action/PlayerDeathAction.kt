@@ -54,7 +54,10 @@ object PlayerDeathAction {
             // Note: maybe add a player attribute for death locations
             // R14.5/HOME_DESIGN_2.png: same south-of-centre arrival offset as first login -
             // never respawn a player inside the bank/GE pavilion at the exact centre tile.
-            player.moveTo(player.world.gameContext.home.transform(0, -3))
+            // BATCH 1: offset updated from (0,-3) to (0,-10) alongside SAFE_RADIUS 5->24 - the
+            // game module can't depend on the plugins module, so this must stay numerically in
+            // sync with HomeLayout.arrival in gg.rsmod.plugins.content.areas.home.HomeLayout.kt.
+            player.moveTo(player.world.gameContext.home.transform(0, -10))
         } else {
             player.moveTo(instancedMap.exitTile)
             world.instanceAllocator.death(player)
