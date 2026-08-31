@@ -15,6 +15,7 @@ import gg.rsmod.game.model.container.key.ContainerKey
 import gg.rsmod.game.model.entity.DynamicObject
 import gg.rsmod.game.model.entity.GroundItem
 import gg.rsmod.game.model.entity.Npc
+import gg.rsmod.game.model.entity.Pawn
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.shop.PurchasePolicy
 import gg.rsmod.game.model.shop.Shop
@@ -756,6 +757,13 @@ abstract class KotlinPlugin(
         equipSlot: Int,
         logic: (Plugin).() -> Boolean,
     ) = r.bindCanUnequipSlot(equipSlot, logic)
+
+    /**
+     * Return false to block [attacker] from attacking [target] - checked in both
+     * directions from the single [Pawn.attack] choke point, so this covers a player's
+     * Attack click, an aggressive npc's own AI, and spell/ranged auto-attack alike.
+     */
+    fun can_attack(logic: (attacker: Pawn, target: Pawn) -> Boolean) = r.bindCanAttack(logic)
 
     /**
      * Return true if [item] can be equipped, false if it can't.

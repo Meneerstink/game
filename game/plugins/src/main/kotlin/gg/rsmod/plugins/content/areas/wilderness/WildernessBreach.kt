@@ -2,6 +2,8 @@ package gg.rsmod.plugins.content.areas.wilderness
 
 import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.World
+import gg.rsmod.game.model.attr.AttributeKey
+import gg.rsmod.game.model.entity.GroundItem
 import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.api.cfg.Items
@@ -40,6 +42,16 @@ object WildernessBreach {
     private const val WAVE_TIMEOUT_CYCLES = 3000 // ~30 min cap
     private const val MIN_CONTRIBUTION = 20
     private const val SNAPSHOT_RADIUS = 20
+
+    /**
+     * Audit finding 13 (R14.26): tags every npc this object spawns so [canAttack] (registered
+     * in wilderness_events.plugin.kts) can refuse the whole interaction for a protected
+     * player - the earlier fix only kept them off the [participants]/reward list, which left
+     * the spawned npcs fully attackable (and thus normal-droppable) for them regardless.
+     */
+    private val BREACH_NPC_ATTR = AttributeKey<Boolean>()
+
+    fun isBreachNpc(npc: Npc): Boolean = npc.attr[BREACH_NPC_ATTR] == true
 
     private val ANCIENT_WARRIOR_REWARDS =
         listOf(
@@ -115,6 +127,7 @@ object WildernessBreach {
                     world,
                 )
             n.respawnOverride = false
+            n.attr[BREACH_NPC_ATTR] = true
             world.spawn(n)
             spawned.add(n)
         }
@@ -132,15 +145,37 @@ object WildernessBreach {
                 val contribution = spawned.sumOf { it.damageMap.getDamageFrom(p) }
                 if (contribution >= MIN_CONTRIBUTION) {
                     val coins = (500 + RANDOM.nextInt(1500) * hotspotBonus).toInt()
-                    p.inventory.add(Items.COINS_995, coins)
+                    grantReward(p, Items.COINS_995, coins)
                     p.filterableMessage("You take part in the Wilderness Breach and are rewarded ($coins coins).")
                     if (world.random(50) == 0) {
                         val reward = ANCIENT_WARRIOR_REWARDS.random()
-                        p.inventory.add(reward)
+                        grantReward(p, reward, 1)
                         p.filterableMessage("A rare Ancient Warriors' relic falls from the Breach!")
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * Audit finding 13: rewards were added straight to inventory with no check at all -
+     * a full inventory silently dropped the item on the floor (Kotlin discards the unused
+     * [ItemTransaction] return value). Same fallback [DropTableFactory.createDropInventory]
+     * already uses for normal kill drops: if there's no space (and it isn't just topping up
+     * an existing stack), spawn it as a ground item owned by [p] instead of losing it. This
+     * also covers a mid-reward disconnect reasonably - the item lands in the world rather
+     * than vanishing, since [p] (a [Player] object) is still valid for the rest of this tick.
+     */
+    private fun grantReward(
+        p: Player,
+        item: Int,
+        amount: Int,
+    ) {
+        val stackable = p.world.definitions.get(gg.rsmod.game.fs.def.ItemDef::class.java, item).stackable
+        if (p.inventory.hasFreeSpace() || (stackable && p.inventory.contains(item))) {
+            p.inventory.add(item, amount)
+        } else {
+            p.world.spawn(GroundItem(item, amount, p.tile, p))
         }
     }
 

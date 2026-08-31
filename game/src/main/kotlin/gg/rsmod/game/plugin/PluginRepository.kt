@@ -695,6 +695,29 @@ class PluginRepository(
         return true
     }
 
+    /**
+     * Audit finding 13 (R14.26): a beginner-protected player must not participate in a
+     * Breach (or any other designated lucrative Wilderness activity) at all - not just be
+     * excluded from the reward roll. [Pawn.attack] is the single choke point every combat
+     * initiator (a player's Attack click, an aggressive npc's own AI, spell/ranged
+     * auto-attack) routes through, so gating there blocks it in both directions with one
+     * check. A plain predicate list rather than a [Plugin]-wrapped, id-keyed map like
+     * [npcCombatPlugins] since this has to see both pawns involved, not one id, and the
+     * check itself needs no messaging/coroutine context - only [BeginnerProtection] and
+     * [WildernessBreach] (both content-layer) know what "protected"/"Breach npc" mean.
+     */
+    private val canAttackPlugins = mutableListOf<(attacker: Pawn, target: Pawn) -> Boolean>()
+
+    fun bindCanAttack(plugin: (attacker: Pawn, target: Pawn) -> Boolean) {
+        canAttackPlugins.add(plugin)
+        pluginCount++
+    }
+
+    fun canAttack(
+        attacker: Pawn,
+        target: Pawn,
+    ): Boolean = canAttackPlugins.all { it(attacker, target) }
+
     fun bindPlayerPreDeath(plugin: Plugin.() -> Unit) {
         playerPreDeathPlugins.add(plugin)
     }

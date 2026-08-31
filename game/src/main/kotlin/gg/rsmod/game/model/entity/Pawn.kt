@@ -252,6 +252,12 @@ abstract class Pawn(
      */
     fun attack(target: Pawn) {
         if (isAlive() && !invisible) {
+            // Audit finding 13 (R14.26): refuse the whole attack (either direction) if a
+            // registered plugin blocks it - see PluginRepository.canAttack's doc comment.
+            if (!world.plugins.canAttack(this, target)) {
+                return
+            }
+
             resetInteractions()
             interruptQueues()
 
