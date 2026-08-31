@@ -850,6 +850,16 @@ class World(
         services.forEach { it.bindNet(server, this) }
     }
 
+    /**
+     * Audit finding 16: [Service.terminate] ("Called when the server is shutting off") was
+     * declared but never invoked anywhere - a forced stop reached the JVM with no shutdown
+     * path at all. Mirrors [loadServices]/[bindServices]'s own forEach pattern so any service
+     * can now rely on its `terminate` actually running. Called from [Launcher]'s shutdown hook.
+     */
+    internal fun terminateServices(server: Server) {
+        services.forEach { it.terminate(server, this) }
+    }
+
     companion object : KLogging() {
         /**
          * If the [rebootTimer] is active and is less than this value, we will
