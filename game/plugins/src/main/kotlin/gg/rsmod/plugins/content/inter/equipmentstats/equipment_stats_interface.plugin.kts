@@ -1,6 +1,7 @@
 package gg.rsmod.plugins.content.inter.equipmentstats
 
 import gg.rsmod.game.action.EquipAction
+import gg.rsmod.plugins.content.mechanics.practicepvp.PracticePvp
 
 val EQUIPMENT_BONUS_INTERFACE_ID = 667
 val INVENTORY_INTERFACE_ID = 670
@@ -49,6 +50,13 @@ on_button(interfaceId = EQUIPMENT_BONUS_INTERFACE_ID, component = 7) {
         61 -> {
             val worn = player.equipment[slot]
             if (worn != null && worn.id == item) {
+                // Finding 9 (audit): same Practice PvP temp-gear leak as the ordinary
+                // equipment tab (equipment.plugin.kts) - this is the other real call site
+                // of EquipAction.unequip, so it needs the same guard.
+                if (PracticePvp.isHoldingTempGear(player)) {
+                    player.filterableMessage("You can't remove free Practice PvP gear - it's cleared automatically when the match ends.")
+                    return@on_button
+                }
                 val result = EquipAction.unequip(player, slot)
                 if (result == EquipAction.Result.SUCCESS) {
                     player.sendWeaponComponentInformation()

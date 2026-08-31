@@ -6,6 +6,7 @@ import gg.rsmod.plugins.content.mechanics.trading.getTradeSession
 import gg.rsmod.plugins.content.mechanics.trading.removeTradeSession
 import gg.rsmod.plugins.content.quests.finishedQuest
 import gg.rsmod.plugins.content.quests.impl.LostCity
+import gg.rsmod.plugins.content.mechanics.practicepvp.PracticePvp
 
 val KEPT_ON_DEATH_INTERFACE = 17
 
@@ -98,6 +99,14 @@ fun bind_unequip(
         }
         when (opt) {
             61 -> {
+                // Finding 9 (audit): EquipAction.unequip moves the item straight into the
+                // player's real inventory with no Practice-block check, and PracticePvp.cleanup
+                // only clears equipment slots (already empty once unequipped) - so granted temp
+                // gear could be kept permanently by simply unequipping it mid-match.
+                if (PracticePvp.isHoldingTempGear(player)) {
+                    player.filterableMessage("You can't remove free Practice PvP gear - it's cleared automatically when the match ends.")
+                    return@on_button
+                }
                 val result = EquipAction.unequip(player, equipment.id)
                 // R04.7: every slot affects combat bonuses, not just weapon/shield - the bonus
                 // screen (interface 667) went stale after unequipping e.g. a helmet or boots
