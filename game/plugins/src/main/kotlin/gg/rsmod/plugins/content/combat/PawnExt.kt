@@ -20,6 +20,7 @@ import gg.rsmod.plugins.api.ext.hit
 import gg.rsmod.plugins.content.combat.CombatConfigs.getCombatClass
 import gg.rsmod.plugins.content.combat.formula.CombatFormula
 import gg.rsmod.plugins.content.mechanics.poison.Poison
+import gg.rsmod.plugins.content.mechanics.prayer.AncientCurses
 import gg.rsmod.plugins.content.mechanics.pvp.AreaState
 import java.lang.ref.WeakReference
 import kotlin.random.Random
@@ -203,6 +204,16 @@ fun Pawn.dealHit(
         hit.addAction {
             val pawn = this@dealHit
             target.damageMap.add(pawn, hit.hitmarks.sumOf { it.damage })
+        }
+    }
+
+    // BATCH 2: Ancient Curses' Sap/Leech/Soul Split trigger once per landed hit - this is the
+    // single point every combat style (melee/ranged/magic) routes through, so it only needs
+    // wiring here rather than in each *CombatFormula.kt.
+    if (landHit) {
+        hit.addAction {
+            val pawn = this@dealHit
+            AncientCurses.onDamageDealt(pawn, target, hit.hitmarks.sumOf { it.damage })
         }
     }
 
