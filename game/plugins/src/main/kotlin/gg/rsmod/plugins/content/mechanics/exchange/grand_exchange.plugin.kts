@@ -5,6 +5,7 @@ import gg.rsmod.game.model.entity.Client
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.api.ChatMessageType
 import gg.rsmod.plugins.api.cfg.Items
+import gg.rsmod.plugins.content.mechanics.practicepvp.PracticePvp
 import java.text.DecimalFormat
 
 /**
@@ -32,6 +33,10 @@ fun geItemName(
 ): String? = player.world.definitions.getNullable(ItemDef::class.java, itemId)?.name
 
 on_command("ge_sell") {
+    if (PracticePvp.isHoldingTempGear(player)) {
+        geMsg(player, "You can't use the Grand Exchange while wearing free Practice PvP gear.")
+        return@on_command
+    }
     val args = player.getCommandArgs()
     if (args.size < 3) {
         geMsg(player, "Usage: ::ge_sell item_id quantity price_per_item")
@@ -50,6 +55,10 @@ on_command("ge_sell") {
         geMsg(player, "Item $itemId does not exist.")
         return@on_command
     }
+    if (!player.world.definitions.get(ItemDef::class.java, itemId).tradeable) {
+        geMsg(player, "$name can't be sold on the Grand Exchange.")
+        return@on_command
+    }
     // Debit the stock up front so it can never be sold twice - the offer's
     // escrow is now the only place these units exist.
     val removed = player.inventory.remove(item = itemId, amount = quantity, assureFullRemoval = true)
@@ -66,6 +75,10 @@ on_command("ge_sell") {
 }
 
 on_command("ge_buy") {
+    if (PracticePvp.isHoldingTempGear(player)) {
+        geMsg(player, "You can't use the Grand Exchange while wearing free Practice PvP gear.")
+        return@on_command
+    }
     val args = player.getCommandArgs()
     if (args.size < 3) {
         geMsg(player, "Usage: ::ge_buy item_id quantity price_per_item")
@@ -82,6 +95,10 @@ on_command("ge_buy") {
     val name = geItemName(player, itemId)
     if (name == null) {
         geMsg(player, "Item $itemId does not exist.")
+        return@on_command
+    }
+    if (!player.world.definitions.get(ItemDef::class.java, itemId).tradeable) {
+        geMsg(player, "$name can't be bought on the Grand Exchange.")
         return@on_command
     }
     val totalCost = price.toLong() * quantity

@@ -82,6 +82,14 @@ open class PointCurrency(
         val shopItem = shop.items[slot] ?: return
 
         val currencyCost = shopItem.sellPrice ?: getSellPrice(p.world, shopItem.item)
+        if (currencyCost <= 0) {
+            // Finding 11 (audit): a missing/zero sellPrice used to fall through to
+            // floor(balance / 0) below, which is either Infinity or NaN -> Int.MAX_VALUE or 0
+            // after toInt(), letting any player with >0 points buy the full stock for free.
+            // A content-authoring gap must never become a free-item exploit.
+            p.message("This item is not currently available for purchase.")
+            return
+        }
         val currencyCount = p.attr[balanceAttr] ?: 0
 
         var amount = min(floor(currencyCount.toDouble() / currencyCost.toDouble()).toInt(), amt)

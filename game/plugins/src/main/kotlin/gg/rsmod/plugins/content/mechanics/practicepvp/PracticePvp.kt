@@ -23,10 +23,12 @@ import java.lang.ref.WeakReference
  * to a fixed cache), so [isHoldingTempGear] plus a guard at each real entry point
  * (`Bank.open`/`Bank.openDepositBox`, the "Trade with" option, `Player.openShop`) is the fix
  * instead - refuses cleanly with a message, before anything opens, so no item or point is ever
- * at risk (nothing is removed/spent by the refusal itself). GE is not guarded: it has no real
- * interface entry point yet (R10.1, command-only), so there is nothing reachable to leak
- * through there today. Cleanup (death/leave/logout, all three wired below) remains the primary
- * mechanism; these guards close the mid-match window cleanup alone didn't cover.
+ * at risk (nothing is removed/spent by the refusal itself). The `::ge_sell`/`::ge_buy` commands
+ * (grand_exchange.plugin.kts) are also guarded the same way - the doc note that used to be here
+ * ("GE is not guarded, nothing reachable to leak through") was wrong: the command route was
+ * already a real, reachable entry point that could sell free temp gear for real GP. Cleanup
+ * (death/leave/logout, all three wired below) remains the primary mechanism; these guards close
+ * the mid-match window cleanup alone didn't cover.
  */
 object PracticePvp {
     private val IN_MATCH_ATTR = AttributeKey<Boolean>()
