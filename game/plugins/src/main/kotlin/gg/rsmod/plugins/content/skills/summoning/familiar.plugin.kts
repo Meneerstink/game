@@ -42,15 +42,42 @@ familiarNpcIds.forEach { npc ->
                 return@on_npc_option
             }
             player.queue {
-                when (options("Renew", "Dismiss", "Cancel")) {
-                    1 -> Familiar.renew(player)
-                    2 -> Familiar.dismiss(player)
+                // R07.3: the 3 real Beast of Burden familiars get an extra "Withdraw-all",
+                // matching real RS's own BoB interact menu on top of the plain Renew/Dismiss.
+                if (BeastOfBurden.isBobNpc(npc)) {
+                    when (options("Renew", "Withdraw-all", "Dismiss", "Cancel")) {
+                        1 -> Familiar.renew(player)
+                        2 -> {
+                            val withdrawn = BeastOfBurden.withdrawAll(player)
+                            if (withdrawn > 0) player.message("You withdraw $withdrawn item(s) from your familiar.")
+                        }
+                        3 -> Familiar.dismiss(player)
+                    }
+                } else {
+                    when (options("Renew", "Dismiss", "Cancel")) {
+                        1 -> Familiar.renew(player)
+                        2 -> Familiar.dismiss(player)
+                    }
                 }
             }
         }
         boundInteract++
     } else {
         skippedInteract++
+    }
+}
+
+// R07.3: depositing into a Beast of Burden familiar - real RS mechanic is using an
+// inventory item on your pack animal. Bound only for the 3 real BoB npc ids, verified via
+// BeastOfBurden.isBobNpc rather than assumed for the whole familiar roster.
+BeastOfBurden.allKeys.forEach { register_container_key(it) }
+familiarNpcIds.filter { BeastOfBurden.isBobNpc(it) }.forEach { npc ->
+    on_any_item_on_npc(npc) {
+        if (Familiar.current(player)?.id != npc) {
+            return@on_any_item_on_npc
+        }
+        val item = player.getInteractingItem()
+        BeastOfBurden.deposit(player, item)
     }
 }
 
