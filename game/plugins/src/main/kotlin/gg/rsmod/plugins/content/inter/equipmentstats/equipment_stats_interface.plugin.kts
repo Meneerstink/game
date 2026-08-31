@@ -27,6 +27,13 @@ fun openEquipmentBonuses(
         player.openInterface(interfaceId = EQUIPMENT_BONUS_INTERFACE_ID, dest = InterfaceDestination.MAIN_SCREEN)
         player.setVarbit(Varbits.IS_BANK_EQUIPMENT_INTERFACE, if (bank) 1 else 0)
         player.openInterface(INVENTORY_INTERFACE_ID, dest = InterfaceDestination.TAB_AREA)
+        // Audit finding 8: these 3 lines (plus a 4th, `runClientScript(787, 1)//unknown`, already
+        // removed) are not an unfinished guess - they were real code, disabled 3+ years ago in
+        // commit 077ddfc4 ("chore: disable some equipment bonus screen configs, caused crash").
+        // No decoded interface-667/670 component layout exists in this environment (same
+        // interface-cache blocker as R03.4/GE - see OWNER_TASK_STATUS.md) to verify what actually
+        // changed between "crashes" and "correct", so re-enabling them here would be reintroducing
+        // a historically real crash on a guess, not a fix. Needs a live client to test safely.
         // player.setInterfaceEvents(interfaceId = INVENTORY_INTERFACE_ID, component = 0, from = 0, to = 27, 1538)
         // player.runClientScript(150, INVENTORY_INTERFACE_ID shl 16, 93, 0, 1, 2, 3)
         // player.setInterfaceEvents(interfaceId = EQUIPMENT_BONUS_INTERFACE_ID, component = 7, from = 0, to = 15, 1538)

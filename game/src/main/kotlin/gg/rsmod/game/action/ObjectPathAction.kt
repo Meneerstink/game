@@ -30,6 +30,20 @@ import java.util.*
  * @author Tom <rspsmods@gmail.com>
  */
 object ObjectPathAction {
+    /** Audit finding 7: opt-in diagnostic trail for the object-route/bank-distance chain. */
+    private fun logRoute(
+        player: Player,
+        obj: GameObject,
+        reason: String,
+    ) {
+        if (player.world.devContext.debugInteractions) {
+            player.writeConsoleMessage(
+                "[object-route] id=${obj.id} type=${obj.type} rot=${obj.rot} tile=${obj.tile} " +
+                    "floor=${obj.tile.height} playerTile=${player.tile} playerFloor=${player.tile.height} reason=$reason",
+            )
+        }
+    }
+
     fun walk(
         player: Player,
         obj: GameObject,
@@ -44,11 +58,19 @@ object ObjectPathAction {
 
             val route = walkTo(obj, lineOfSightRange)
             if (route.success) {
+                logRoute(player, obj, "route succeeded")
                 if (lineOfSightRange == null || lineOfSightRange > 0) {
                     faceObj(player, obj)
                 }
                 player.executePlugin(logic)
             } else {
+                val reason =
+                    when {
+                        player.timers.has(FROZEN_TIMER) -> "frozen"
+                        player.timers.has(STUN_TIMER) -> "stunned"
+                        else -> "no path found"
+                    }
+                logRoute(player, obj, "route failed ($reason)")
                 player.faceTile(obj.tile)
                 when {
                     player.timers.has(FROZEN_TIMER) -> player.writeMessage(Entity.MAGIC_STOPS_YOU_FROM_MOVING)
@@ -276,6 +298,12 @@ object ObjectPathAction {
         }
 
         if (wall && !route.success && Direction.between(tile, pawn.tile) !in blockedWallDirections) {
+            if (pawn is Player && pawn.world.devContext.debugInteractions) {
+                pawn.writeConsoleMessage(
+                    "[object-route] id=${obj.id} tile=${obj.tile} wall-route-exception: real route failed " +
+                        "but pawn is bordering from a non-blocked direction - treated as success.",
+                )
+            }
             return Route(route.path, success = true, tail = route.tail)
         }
 

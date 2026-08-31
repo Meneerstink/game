@@ -297,6 +297,7 @@ class Server {
                 debugButtons = devProperties.getOrDefault("debug-buttons", false),
                 debugItemActions = devProperties.getOrDefault("debug-items", false),
                 debugMagicSpells = devProperties.getOrDefault("debug-spells", false),
+                debugInteractions = devProperties.getOrDefault("debug-interactions", false),
                 debugNpcCensus = devProperties.getOrDefault("debug-npc-census", true),
             )
 

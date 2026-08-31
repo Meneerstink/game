@@ -3,6 +3,11 @@ debug-objects: true
 debug-buttons: true
 debug-items: true
 debug-spells: true
+# Audit findings 6/7: log the packet -> target/option -> queue/interrupt -> route ->
+# distance/sight -> handler chain for pawn (double-click) and object (bank-distance)
+# interactions, so a real reproduction with a client pinpoints the exact cancellation
+# point instead of being re-guessed. Off by default - purely diagnostic, no behavior change.
+debug-interactions: false
 # R04.2: dump the full NPC census (all cache definitions, not just spawned) to
 # ./npc_inventory.csv once on every boot, after world init - no owner login needed.
 debug-npc-census: true

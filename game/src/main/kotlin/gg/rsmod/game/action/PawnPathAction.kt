@@ -24,6 +24,21 @@ import java.lang.ref.WeakReference
 object PawnPathAction {
     private const val ITEM_USE_OPCODE = -1
 
+    /** Audit finding 6: opt-in diagnostic trail for the double-click cancellation chain. */
+    private fun logInteraction(
+        pawn: Pawn,
+        other: Pawn,
+        opt: Int = -1,
+        reason: String,
+    ) {
+        if (pawn is Player && pawn.world.devContext.debugInteractions) {
+            pawn.writeConsoleMessage(
+                "[interaction] target=${other::class.simpleName}(${if (other is Npc) other.id else other.index}) " +
+                    "tile=${other.tile} opt=$opt reason=$reason",
+            )
+        }
+    }
+
     val walkPlugin: Plugin.() -> Unit = {
         val pawn = ctx as Pawn
         val world = pawn.world
@@ -112,6 +127,13 @@ object PawnPathAction {
         if (!pathFound) {
             pawn.movementQueue.clear()
             if (pawn is Player) {
+                val reason =
+                    when {
+                        pawn.timers.has(FROZEN_TIMER) -> "frozen"
+                        pawn.timers.has(STUN_TIMER) -> "stunned"
+                        else -> "no path found"
+                    }
+                logInteraction(pawn, other, opt, "route failed ($reason)")
                 when {
                     pawn.timers.has(FROZEN_TIMER) -> pawn.writeMessage(Entity.MAGIC_STOPS_YOU_FROM_MOVING)
                     pawn.timers.has(STUN_TIMER) -> pawn.writeMessage(Entity.YOURE_STUNNED)
@@ -127,6 +149,7 @@ object PawnPathAction {
 
         if (pawn is Player) {
             if (pawn.attr[FACING_PAWN_ATTR]?.get() != other) {
+                logInteraction(pawn, other, opt, "cancelled: facing-target changed after route completed")
                 return
             }
             /*
@@ -134,6 +157,7 @@ object PawnPathAction {
              * when it was actually invoked, we need to walk towards it again.
              */
             if (!other.tile.sameAs(initialTile)) {
+                logInteraction(pawn, other, opt, "target moved (was $initialTile, now ${other.tile}) - re-walking")
                 walk(it, pawn, other, opt, lineOfSightRange)
                 return
             }
@@ -171,6 +195,7 @@ object PawnPathAction {
                         world.plugins.executeItemOnNpc(pawn, npcId, item.id)
                     }
 
+                logInteraction(pawn, other, opt, if (handled) "handled" else "unhandled")
                 if (!handled) {
                     pawn.writeMessage(Entity.NOTHING_INTERESTING_HAPPENS)
                 }
@@ -181,6 +206,7 @@ object PawnPathAction {
                     val option = pawn.options[opt - 1]
                     if (option != null) {
                         val handled = world.plugins.executePlayerOption(pawn, option)
+                        logInteraction(pawn, other, opt, if (handled) "handled" else "unhandled")
                         if (!handled) {
                             pawn.writeMessage(Entity.NOTHING_INTERESTING_HAPPENS)
                         }
@@ -212,6 +238,7 @@ object PawnPathAction {
         val stunned = pawn.timers.has(STUN_TIMER)
 
         if (pawn.attr[FACING_PAWN_ATTR]?.get() != target) {
+            logInteraction(pawn, target, reason = "cancelled: facing-target changed before route calc")
             return false
         }
 
