@@ -3,6 +3,7 @@ package gg.rsmod.plugins.content.areas.home
 import gg.rsmod.game.model.Direction
 import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.collision.CollisionUpdate
+import gg.rsmod.game.model.collision.ObjectType
 import gg.rsmod.game.model.entity.DynamicObject
 
 /**
@@ -29,13 +30,26 @@ import gg.rsmod.game.model.entity.DynamicObject
  * here (only the 4 real gates are crossable) - see `objs/wilderness_wall.plugin.kts` for where
  * that option IS bound, on the unrelated ditch object family.
  *
- * Object placement type is set to 0 (matching [Objs.GATE]'s own placement type in
- * `home_gates.plugin.kts`), by analogy with the audit's confirmed finding that the PvM arena
- * entrance's correct cache placement type was 0, not 10 - this environment still has no visual
- * capture of the rendered result (see OWNER_TASK_STATUS.md), so this is disclosed as the most
- * plausible choice given the available evidence, not a visually confirmed one. Rotation is left
- * at 0 uniformly for the same disclosed reason as before: getting it wrong only affects
- * appearance, never collision.
+ * Object placement type is set to 0 ([ObjectType.LENGTHWISE_WALL], matching [Objs.GATE]'s own
+ * placement type in `home_gates.plugin.kts`), by analogy with the audit's confirmed finding that
+ * the PvM arena entrance's correct cache placement type was 0, not 10.
+ *
+ * Per-edge rotation/type (R14.4 remainder): each of the 4 straight edges and 4 diagonal corner
+ * tiles now gets the type/rot the engine's own wall renderer actually expects for that facing,
+ * derived directly from this codebase's real collision code
+ * ([gg.rsmod.game.model.collision.CollisionUpdate.Builder.putObject]/[Direction.WNES]/
+ * [Direction.WNES_DIAGONAL]) rather than a uniform placeholder:
+ * - Straight edges: type 0 ([ObjectType.LENGTHWISE_WALL]); rot is the [Direction.WNES] index of
+ *   the direction the wall FACES (north edge -> NORTH -> rot 1, south -> SOUTH -> rot 3,
+ *   east -> EAST -> rot 2, west -> WEST -> rot 0).
+ * - The 4 corner-cut diagonal tiles: type 1 ([ObjectType.TRIANGULAR_CORNER]); rot is the
+ *   [Direction.WNES_DIAGONAL] index of the corner's own diagonal direction (NE -> rot 1,
+ *   SE -> rot 2, SW -> rot 3, NW -> rot 0).
+ * Collision is unaffected either way (this file blocks NESW on every ring tile directly, not via
+ * the object's own def) - this only fixes which real cache wall-type/facing gets rendered. Still
+ * disclosed as visually unverified (no client capture available this session, see
+ * OWNER_TASK_STATUS.md), but now grounded in the engine's real wall-type semantics instead of a
+ * uniform guess.
  */
 val wallHome = world.gameContext.home
 
@@ -68,7 +82,24 @@ on_world_init {
             // took effect correctly. That mismatch - real collision, invisible wall - is
             // exactly what was reported. Fix: spawn the object directly via `world.spawn`,
             // which is the same live-application path `spawnTemporaryObject` already uses.
-            world.spawn(DynamicObject(Objs.CRUMBLING_WALL, 0, 0, tile))
+            val r = BountyHunterHome.SAFE_RADIUS
+            val dx = tile.x - wallHome.x
+            val dz = tile.z - wallHome.z
+            // Straight edges first (also covers the vertex tiles the corner staircases share with
+            // them); only the lone middle diagonal tile of each corner cut falls through to the
+            // corner cases below.
+            val (wallType, wallRot) =
+                when {
+                    dz == r -> ObjectType.LENGTHWISE_WALL.value to 1 // north edge, faces NORTH
+                    dz == -r -> ObjectType.LENGTHWISE_WALL.value to 3 // south edge, faces SOUTH
+                    dx == r -> ObjectType.LENGTHWISE_WALL.value to 2 // east edge, faces EAST
+                    dx == -r -> ObjectType.LENGTHWISE_WALL.value to 0 // west edge, faces WEST
+                    dx > 0 && dz > 0 -> ObjectType.TRIANGULAR_CORNER.value to 1 // NE corner
+                    dx > 0 && dz < 0 -> ObjectType.TRIANGULAR_CORNER.value to 2 // SE corner
+                    dx < 0 && dz < 0 -> ObjectType.TRIANGULAR_CORNER.value to 3 // SW corner
+                    else -> ObjectType.TRIANGULAR_CORNER.value to 0 // NW corner
+                }
+            world.spawn(DynamicObject(Objs.CRUMBLING_WALL, wallType, wallRot, tile))
             wallObjectsPlaced++
         }
     }

@@ -24,6 +24,17 @@ package gg.rsmod.plugins.content.areas.home
  * (server starts cleanly, no ERROR/Exception), but - per the owner's standing requirement - not
  * yet visually confirmed in a live client against HOME_DESIGN_2.png, since this environment has
  * no client to log in with; that visual pass is still an open item.
+ *
+ * Priority-1-remainder item 3 (ruin rubble/broken-arch props + Vervoer glider/minecart/balloon/
+ * carpet props): a second scan (`zz_scratch_decor_scan2.plugin.kts`, deleted once this section
+ * was written) found real ids for both, using the same never-guess discipline. Placement uses
+ * the octagon's own exact containment formula, derived directly from
+ * [BountyHunterHome.octagonVertices]'s 8 corner points (not eyeballed): a tile at offset
+ * (dx,dz) from home is inside iff `|dx|<=5 && |dz|<=5 && |dx|+|dz|<=8` (SAFE_RADIUS=5,
+ * SAFE_RADIUS-CORNER_CUT=3, so the 4 diagonal corner edges are exactly `|dx|+|dz|<=8`). Every
+ * new tile below is checked against that formula, against the 12 hard-checked facility tiles/
+ * arrival tile/4 gate tiles+landings in `home_verify.plugin.kts`/`BountyHunterHome.gates`, and
+ * against every tile already used earlier in this same file - no overlaps.
  */
 val home = world.gameContext.home
 
@@ -59,3 +70,22 @@ spawn_obj(obj = 46398, x = home.x - 1, z = home.z - 3, height = home.height, typ
 spawn_obj(obj = 5403, x = home.x, z = home.z - 3, height = home.height, type = 22, rot = 0)
 spawn_obj(obj = 6410, x = home.x + 1, z = home.z - 3, height = home.height, type = 10, rot = 0)
 spawn_obj(obj = 6412, x = home.x - 1, z = home.z - 4, height = home.height, type = 10, rot = 0)
+
+// Ruin scatter (whole enclave, R14.4 remainder): real "Rubble" (12812) and "Ruined Pillar"
+// (36697) ObjectDefs, both 1x1/non-interactive, placed one tile inside the SE and SW corner-cut
+// wall tiles (which sit exactly on the |dx|+|dz|=8 boundary) - close to the "vervallen ruïne"
+// perimeter without touching the wall ring or any hard-checked tile.
+spawn_obj(obj = 12812, x = home.x + 4, z = home.z - 3, height = home.height, type = 10, rot = 0)
+spawn_obj(obj = 36697, x = home.x - 4, z = home.z - 3, height = home.height, type = 10, rot = 0)
+
+// Vervoer (SE, R02.3/R14.4 remainder): real display-only props near home_transport.plugin.kts's
+// NPC/shop at home+2,-4 - never on an adjacent tile of it (so its own open-neighbour check in
+// home_verify.plugin.kts can't be affected). A real 4x4 "Gnome glider" ObjectDef (5825) does
+// exist in the cache, unlike previously believed, but is deliberately skipped here: at 4x4/solid
+// it is too large to place in this quadrant's remaining space without visual confirmation that it
+// clears the transport NPC, shop, and south gate approach - a real but unverified-fit risk, not a
+// missing-id one. "Carpet" still has 0 real cache matches (confirmed again this scan); "Rug"
+// (13590, 1x1, non-solid) is used as the closest real analogue.
+spawn_obj(obj = 4974, x = home.x + 3, z = home.z - 3, height = home.height, type = 10, rot = 0) // Mine cart
+spawn_obj(obj = 123, x = home.x + 4, z = home.z - 2, height = home.height, type = 10, rot = 0) // Party Balloon
+spawn_obj(obj = 13590, x = home.x + 3, z = home.z - 2, height = home.height, type = 10, rot = 0) // Rug

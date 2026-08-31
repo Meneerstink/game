@@ -12,10 +12,10 @@ import gg.rsmod.plugins.content.mechanics.shops.CoinCurrency
  * "VERVOER" in the SE, with "PVM & MINIGAMES" in the SW instead.
  *
  * The design shows glider/minecart/balloon/carpet PROPS as visual identity for this quadrant -
- * those are decorative-only and not placed this pass (no verified 2011 object ids for those
- * specific decorative models; guessing one risks an invisible/wrong prop, same reasoning
- * documented throughout this session for anything without a verified cache id). What IS real
- * and functional here:
+ * those are now placed as real, verified decorative-only objects in `home_decor.plugin.kts`
+ * (mine cart/party balloon/rug; a real "Gnome glider" id exists too but was skipped there as
+ * too large/solid to safely fit this quadrant without visual confirmation). What IS real and
+ * functional here:
  *
  * Full scope note: R02.3 lists eight historic transport networks (Spirit Tree, Fairy Ring,
  * Gnome Glider, Magic Carpet, balloon, minecart, charter/boat NPC, Wilderness lever/obelisk).
