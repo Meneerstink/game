@@ -20,7 +20,14 @@ enum class InterfaceDestination(
     PRAYER_TAB(interfaceId = 271, fixedChildId = 210, resizeChildId = 96),
     MAGIC_TAB(interfaceId = 192, fixedChildId = 211, resizeChildId = 97),
 
-    //  TODO: Summoning tab
+    // R07 follower interface: interface 662, confirmed via raw-byte cache scan (idx3 group 662,
+    // com.displee CacheLibrary + net.runelite.cache.definitions.loaders.InterfaceLoader - see
+    // OWNER_TASK_STATUS.md R07 for the full evidence trail) - real component text "Summoning
+    // points remaining", "Familiar time remaining", "Call familiar", "Dismiss Familiar",
+    // "Renew Familiar", "Order your familiar to attack a target", "Take Beast of Burden items",
+    // "S P E C I A L   M O V E". Sits at the exact reserved slot between MAGIC_TAB and
+    // FRIENDS_TAB, same pattern as every other real tab here - not invented.
+    SUMMONING_TAB(interfaceId = 662, fixedChildId = 212, resizeChildId = 98),
     FRIENDS_TAB(interfaceId = 550, fixedChildId = 213, resizeChildId = 99),
     FRIEND_CHAT_TAB(interfaceId = 1109, fixedChildId = 214, resizeChildId = 100),
     CLAN_CHAT_TAB(interfaceId = 1110, fixedChildId = 215, resizeChildId = 101),

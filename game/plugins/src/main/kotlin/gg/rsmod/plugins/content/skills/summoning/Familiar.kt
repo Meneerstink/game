@@ -8,6 +8,8 @@ import gg.rsmod.game.model.timer.TimerKey
 import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.api.ext.addXp
 import gg.rsmod.plugins.api.ext.message
+import gg.rsmod.plugins.api.ext.setComponentHidden
+import gg.rsmod.plugins.api.ext.setComponentText
 import java.lang.ref.WeakReference
 
 /**
@@ -29,8 +31,48 @@ import java.lang.ref.WeakReference
 val FAMILIAR_ATTR = AttributeKey<WeakReference<Npc>>()
 val FAMILIAR_LIFETIME_TIMER = TimerKey(tickOffline = false, resetOnDeath = false)
 
+/** Last time-remaining string pushed to the HUD, so [Familiar.tick] doesn't spam an
+ *  [gg.rsmod.plugins.api.ext.setComponentText] packet every cycle - only when the displayed
+ *  value actually changes. */
+private val FAMILIAR_HUD_TEXT_ATTR = AttributeKey<String>()
+
 object Familiar {
     const val LIFETIME_CYCLES = 2000
+
+    /** R07 follower interface (see InterfaceDestination.SUMMONING_TAB for the evidence trail). */
+    private const val HUD_INTERFACE = 662
+    private const val HUD_TIME_COMPONENT_A = 43
+    private const val HUD_TIME_COMPONENT_B = 48
+    private const val HUD_BOB_BUTTON = 67
+
+    /**
+     * Pushes the confirmed-real duration text (components 43/48) and Take-BoB-items button
+     * (67, hidden for non-BoB familiars) to interface 662. Deliberately does NOT touch the
+     * "Summoning points remaining" placeholder (component 41/44) or the special-move/portrait
+     * icons: [SummoningPouchData] has no upkeep-cost field and no verified sprite-per-familiar
+     * mapping exists in this cache, so pushing either would be invented data, not audited data.
+     */
+    private fun updateHud(player: Player) {
+        val npc = current(player)
+        if (npc == null) {
+            if (player.attr.has(FAMILIAR_HUD_TEXT_ATTR)) {
+                player.setComponentText(HUD_INTERFACE, HUD_TIME_COMPONENT_A, "")
+                player.setComponentText(HUD_INTERFACE, HUD_TIME_COMPONENT_B, "")
+                player.setComponentHidden(HUD_INTERFACE, HUD_BOB_BUTTON, true)
+                player.attr.remove(FAMILIAR_HUD_TEXT_ATTR)
+            }
+            return
+        }
+        val cycles = if (player.timers.has(FAMILIAR_LIFETIME_TIMER)) player.timers[FAMILIAR_LIFETIME_TIMER] else 0
+        val totalSeconds = cycles * player.world.gameContext.cycleTime / 1000
+        val text = "%d:%02d".format(totalSeconds / 60, totalSeconds % 60)
+        if (player.attr[FAMILIAR_HUD_TEXT_ATTR] != text) {
+            player.attr[FAMILIAR_HUD_TEXT_ATTR] = text
+            player.setComponentText(HUD_INTERFACE, HUD_TIME_COMPONENT_A, text)
+            player.setComponentText(HUD_INTERFACE, HUD_TIME_COMPONENT_B, text)
+            player.setComponentHidden(HUD_INTERFACE, HUD_BOB_BUTTON, !BeastOfBurden.isBobNpc(npc.id))
+        }
+    }
 
     fun current(player: Player): Npc? {
         val npc = player.attr[FAMILIAR_ATTR]?.get() ?: return null
@@ -49,6 +91,13 @@ object Familiar {
             player.message("You need a Summoning level of ${data.level} to summon this familiar.")
             return false
         }
+        // R07.1 pouch-consumption fix: summon() never removed the pouch at all (root cause of
+        // the owner-reported "pouch remains in inventory after summon" bug) - consume exactly
+        // one pouch, and fail before touching XP/timer/familiar state if it's not actually there
+        // (e.g. this same pouch triggered summon twice in one client tick).
+        if (!player.inventory.remove(data.pouch, assureFullRemoval = true).hasSucceeded()) {
+            return false
+        }
         dismiss(player)
 
         val npc = Npc(player, data.npc, player.tile, player.world)
@@ -60,6 +109,7 @@ object Familiar {
         player.timers[FAMILIAR_LIFETIME_TIMER] = LIFETIME_CYCLES
         player.addXp(Skills.SUMMONING, data.summonExperience)
         player.message("You summon your familiar.")
+        updateHud(player)
         return true
     }
 
@@ -68,6 +118,7 @@ object Familiar {
         current(player) ?: return false
         player.timers[FAMILIAR_LIFETIME_TIMER] = LIFETIME_CYCLES
         player.message("You renew your familiar's summoning duration.")
+        updateHud(player)
         return true
     }
 
@@ -77,6 +128,7 @@ object Familiar {
         player.attr.remove(FAMILIAR_ATTR)
         player.timers.remove(FAMILIAR_LIFETIME_TIMER)
         player.message("Your familiar is dismissed.")
+        updateHud(player)
     }
 
     /** Called once/cycle per online player - see `familiar.plugin.kts`. */
@@ -87,10 +139,12 @@ object Familiar {
             player.world.remove(npc)
             player.attr.remove(FAMILIAR_ATTR)
             player.message("Your familiar has run out of summoning points and returns home.")
+            updateHud(player)
             return
         }
         if (!npc.movementQueue.hasDestination() && npc.tile.getDistance(player.tile) > 1) {
             npc.movementQueue.addStep(player.tile, MovementQueue.StepType.NORMAL, detectCollision = true)
         }
+        updateHud(player)
     }
 }
