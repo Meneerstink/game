@@ -161,10 +161,54 @@ on_world_init {
     }
     check(badGates == 0) { "home_verify: $badGates gate(s) do not lead to real Wilderness - see the printed list above." }
 
+    // ---- 8. real 3-tile-wide route connectivity (owner instruction: "drie tegels brede routes") ----
+    // A tile counts as "wide" only if it AND all 4 orthogonal neighbours are safe+unclipped - a
+    // real (if approximate) 3-tile-clearance test, replacing check 4's honest "90% reachable"
+    // proxy for this specific requirement rather than just re-using it.
+    fun isWide(t: Tile): Boolean {
+        if (!BountyHunterHome.isSafe(t, home) || world.collision.isClipped(t)) return false
+        return Direction.NESW.all { d ->
+            val n = t.step(d)
+            BountyHunterHome.isSafe(n, home) && !world.collision.isClipped(n)
+        }
+    }
+    val wideStart = (listOf(arrivalTile) + Direction.NESW.map { arrivalTile.step(it) }).firstOrNull { isWide(it) }
+    check(wideStart != null) { "home_verify: arrival tile has no 3-tile-wide neighbourhood at all." }
+    val wideReachable = HashSet<Tile>()
+    val wideQueue = ArrayDeque<Tile>()
+    wideReachable.add(wideStart)
+    wideQueue.add(wideStart)
+    while (wideQueue.isNotEmpty()) {
+        val current = wideQueue.removeFirst()
+        for (direction in Direction.NESW) {
+            val next = current.step(direction)
+            if (next in wideReachable || !isWide(next)) continue
+            wideReachable.add(next)
+            wideQueue.add(next)
+        }
+    }
+    var narrowFacilities = 0
+    HomeLayout.functional.filter { it.solid }.forEach { facility ->
+        val tile = facility.tile(home)
+        // Radius 2 (not just the immediate touching neighbour): a facility's own solid tile
+        // always blocks one side of its direct neighbours, so requiring the doorstep tile
+        // itself to be 3-wide-clear would fail for every facility by construction. Radius 2
+        // tests the actual APPROACH route instead of the unavoidable last half-step.
+        val hasWideAccess = (-2..2).any { dx -> (-2..2).any { dz -> tile.transform(dx, dz) in wideReachable } }
+        if (!hasWideAccess) {
+            narrowFacilities++
+            println("home_verify: FACILITY \"${facility.name}\" at $tile has NO 3-tile-wide route from arrival.")
+        }
+    }
+    check(narrowFacilities == 0) {
+        "home_verify: $narrowFacilities facility(-ies) lack a 3-tile-wide route from arrival - see above."
+    }
+    println("home_verify: 3-tile-wide route flood-fill from arrival reached ${wideReachable.size} wide tiles; all ${HomeLayout.functional.count { it.solid }} facilities have wide access.")
+
     println(
         "home_verify: all ${HomeLayout.functional.size} functional facilities pass safe-zone+no-" +
-            "overlap+reachability checks, arrival tile safe+unblocked, all 4 gates confirmed as " +
-            "real safe->Wilderness transitions. This does NOT prove client-visible rendering or a " +
-            "real click reaching each handler - see OWNER_TASK_STATUS.md.",
+            "overlap+reachability+3-tile-wide-route checks, arrival tile safe+unblocked, all 4 " +
+            "gates confirmed as real safe->Wilderness transitions. This does NOT prove client-" +
+            "visible rendering or a real click reaching each handler - see OWNER_TASK_STATUS.md.",
     )
 }
