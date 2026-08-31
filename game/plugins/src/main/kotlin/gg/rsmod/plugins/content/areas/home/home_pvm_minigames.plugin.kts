@@ -14,13 +14,17 @@ import gg.rsmod.plugins.content.mechanics.practicepvp.PracticePvp
  *
  * Placing a decorative npc/object alone would not prove any service works (the owner's own
  * standing rule) - both objects below are wired to real, already-implemented mechanics.
+ *
+ * Audit finding 1 fix: the arena entrance's cache placement type was confirmed the OPPOSITE of
+ * the archery target's - type 0, not 10 (this file previously used 10 for both). Fixed here;
+ * see `home_walls.plugin.kts` for the matching wall-object fix from the same finding.
  */
 val pvmTile = world.gameContext.home.transform(-3, -2)
 val archeryTile = world.gameContext.home.transform(-2, -3)
 
 // R14.7: a real, physical entry point into the existing Practice PvP system
 // (`PracticePvp.queueUp`, R09.1) - previously command-only (`::practice`).
-spawn_obj(obj = Objs.ARENA_ENTRANCE, x = pvmTile.x, z = pvmTile.z, height = pvmTile.height, type = 10, rot = 0)
+spawn_obj(obj = Objs.ARENA_ENTRANCE, x = pvmTile.x, z = pvmTile.z, height = pvmTile.height, type = 0, rot = 0)
 
 on_obj_option(obj = Objs.ARENA_ENTRANCE, option = "open") {
     player.queue {

@@ -21,9 +21,18 @@ import gg.rsmod.game.model.collision.CollisionUpdate
  * proven live in `wilderness_wall.plugin.kts`'s ditch crossing (`Player.forceMove` only touches
  * the block buffer/tile position, it does not consult collision) - so ordinary walking still
  * cannot cross the barrier; only the explicit option can.
+ *
+ * Audit finding 3 fix: [Objs.GATE] (id 37) is an ordinary, non-unique cache object id that could
+ * in principle exist anywhere else on the map. The old handler bound "open" globally for that
+ * id and derived BOTH the crossing direction AND the landing tile from the clicking player's
+ * OWN position (`player.tile + 2`) - an uncontrolled destination, and one that would fire for
+ * ANY Gate(37) a player might click, not just the 4 real home gates. The handler below looks up
+ * the clicked object's tile against [BountyHunterHome.gates] and no-ops if it isn't one of the
+ * 4 real home gates, then force-moves to that gate's own fixed, pre-validated landing tile.
  */
 val home = world.gameContext.home
-val gateTiles = BountyHunterHome.gateTiles(home)
+val gates = BountyHunterHome.gates(home)
+val gateTiles = gates.map { it.tile }
 
 on_world_init {
     val builder = CollisionUpdate.Builder()
@@ -44,16 +53,11 @@ gateTiles.forEach { gate ->
 }
 
 on_obj_option(obj = Objs.GATE, option = "open") {
-    val gate = player.getInteractingGameObj().tile
-    val outward = player.tile.getDistance(home) <= BountyHunterHome.SAFE_RADIUS
-    val direction =
-        when {
-            gate.z > home.z -> if (outward) Direction.NORTH else Direction.SOUTH
-            gate.z < home.z -> if (outward) Direction.SOUTH else Direction.NORTH
-            gate.x > home.x -> if (outward) Direction.EAST else Direction.WEST
-            else -> if (outward) Direction.WEST else Direction.EAST
-        }
-    val endTile = player.tile.step(direction, 2)
+    val clickedTile = player.getInteractingGameObj().tile
+    val gate = gates.find { it.tile == clickedTile } ?: return@on_obj_option
+    val goingOutward = player.tile.getDistance(home) <= BountyHunterHome.SAFE_RADIUS
+    val endTile = if (goingOutward) gate.outerLanding else gate.innerLanding
+    val direction = if (goingOutward) gate.direction else gate.direction.getOpposite()
     player.faceTile(endTile)
     player.queue {
         player.stopMovement()

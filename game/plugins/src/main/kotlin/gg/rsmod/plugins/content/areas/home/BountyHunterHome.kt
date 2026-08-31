@@ -1,5 +1,6 @@
 package gg.rsmod.plugins.content.areas.home
 
+import gg.rsmod.game.model.Direction
 import gg.rsmod.game.model.SimplePolygonArea
 import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.entity.Player
@@ -80,19 +81,32 @@ object BountyHunterHome {
     fun bankTile(home: Tile): Tile = home.transform(BANK_OFFSET_X, BANK_OFFSET_Z)
 
     /**
-     * R14.3: the four real exits, one at each cardinal edge of the safe boundary. Real object
-     * placement/collision for the enclave's visible walls is not yet built (R02.1 gap, see
-     * OWNER_TASK_STATUS.md) - these are the four verified exit points where the pass-through
-     * gates in `home_gates.plugin.kts` are placed, and where the wall perimeter will
-     * eventually connect between once it's built.
+     * R14.3/audit finding 3: one real exit at each cardinal edge, now carrying its own FIXED
+     * approach/landing tile pair instead of deriving the landing tile from the clicking
+     * player's own position (`player.tile + 2`, the audit's concrete complaint - an
+     * uncontrolled destination that varies with where the player clicked from, and can differ
+     * from the intended threshold tile). [innerLanding]/[outerLanding] are always exactly one
+     * tile in from / one tile out from the gate tile itself, so crossing always lands on the
+     * same two validated tiles regardless of approach angle.
      */
-    fun gateTiles(home: Tile): List<Tile> =
-        listOf(
-            home.transform(0, SAFE_RADIUS), // north
-            home.transform(0, -SAFE_RADIUS), // south
-            home.transform(SAFE_RADIUS, 0), // east
-            home.transform(-SAFE_RADIUS, 0), // west
+    data class GateInfo(
+        val tile: Tile,
+        val direction: Direction,
+        val innerLanding: Tile,
+        val outerLanding: Tile,
+    )
+
+    fun gates(home: Tile): List<GateInfo> {
+        val r = SAFE_RADIUS
+        return listOf(
+            GateInfo(home.transform(0, r), Direction.NORTH, home.transform(0, r - 1), home.transform(0, r + 1)),
+            GateInfo(home.transform(0, -r), Direction.SOUTH, home.transform(0, -r + 1), home.transform(0, -r - 1)),
+            GateInfo(home.transform(r, 0), Direction.EAST, home.transform(r - 1, 0), home.transform(r + 1, 0)),
+            GateInfo(home.transform(-r, 0), Direction.WEST, home.transform(-r + 1, 0), home.transform(-r - 1, 0)),
         )
+    }
+
+    fun gateTiles(home: Tile): List<Tile> = gates(home).map { it.tile }
 
     fun isSafe(tile: Tile, home: Tile): Boolean =
         tile.height == home.height && safeArea(home).containsTile(tile)
