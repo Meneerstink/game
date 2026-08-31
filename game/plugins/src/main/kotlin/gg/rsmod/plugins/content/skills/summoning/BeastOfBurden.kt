@@ -92,4 +92,49 @@ object BeastOfBurden {
         }
         return withdrawn
     }
+
+    /** Withdraws [amount] of whatever occupies [slot] in the active BoB container, best-effort. */
+    fun withdraw(
+        player: Player,
+        slot: Int,
+        amount: Int,
+    ): Int {
+        val key = activeKey(player) ?: return 0
+        val container = container(player, key)
+        val item = container[slot] ?: return 0
+        val take = minOf(amount, item.amount)
+        val transaction = player.inventory.add(item.id, take, assureFullInsertion = false)
+        if (transaction.completed <= 0) return 0
+        container[slot] = if (transaction.completed == item.amount) null else Item(item.id, item.amount - transaction.completed)
+        return transaction.completed
+    }
+
+    /** Deposits every item currently in [player]'s inventory into the active BoB container, best-effort. */
+    fun depositAll(player: Player): Int {
+        val key = activeKey(player)
+        if (key == null) {
+            player.message("You need an active Beast of Burden familiar out to store items with it.")
+            return 0
+        }
+        val target = container(player, key)
+        var deposited = 0
+        for (slot in 0 until player.inventory.capacity) {
+            val item = player.inventory[slot] ?: continue
+            val transaction = target.add(item.id, item.amount, assureFullInsertion = false)
+            if (transaction.completed <= 0) continue
+            player.inventory.remove(Item(item.id, transaction.completed), assureFullRemoval = true)
+            deposited += transaction.completed
+        }
+        if (deposited <= 0) {
+            player.message("Your familiar can't carry any more of that.")
+        }
+        return deposited
+    }
+
+    /** Non-null (slot, item) pairs in the active BoB container, for building a withdraw-selection prompt. */
+    fun contents(player: Player): List<IndexedValue<Item>> {
+        val key = activeKey(player) ?: return emptyList()
+        val container = container(player, key)
+        return (0 until container.capacity).mapNotNull { slot -> container[slot]?.let { IndexedValue(slot, it) } }
+    }
 }

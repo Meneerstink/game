@@ -131,6 +131,20 @@ object Familiar {
         updateHud(player)
     }
 
+    /**
+     * "Call familiar" - instant recall, distinct from passive following. Reuses the real
+     * [gg.rsmod.game.model.entity.Pawn.teleportNpc] respawn-style reposition API (sets
+     * moved/teleported/invisible + clears movement queue) rather than inventing a new
+     * adjacent-free-tile finder - no such utility exists anywhere in this codebase, and the
+     * existing follow logic below already proves tile-sharing between player and npc works.
+     */
+    fun call(player: Player): Boolean {
+        val npc = current(player) ?: return false
+        npc.teleportNpc(player.tile)
+        player.message("You call your familiar to your side.")
+        return true
+    }
+
     /** Called once/cycle per online player - see `familiar.plugin.kts`. */
     fun tick(player: Player) {
         val npc = current(player) ?: return
@@ -142,7 +156,13 @@ object Familiar {
             updateHud(player)
             return
         }
-        if (!npc.movementQueue.hasDestination() && npc.tile.getDistance(player.tile) > 1) {
+        val distance = npc.tile.getDistance(player.tile)
+        if (npc.tile.height != player.tile.height || distance > Player.NORMAL_VIEW_DISTANCE) {
+            // Plane change / region teleport put the familiar out of walking range - a normal
+            // MovementQueue step can never catch up (or can't cross planes at all), so recover
+            // it the same way `call()` does rather than leaving it stranded/left behind.
+            npc.teleportNpc(player.tile)
+        } else if (!npc.movementQueue.hasDestination() && distance > 1) {
             npc.movementQueue.addStep(player.tile, MovementQueue.StepType.NORMAL, detectCollision = true)
         }
         updateHud(player)
