@@ -2,6 +2,7 @@ package gg.rsmod.plugins.content.skills.summoning
 
 import gg.rsmod.game.model.MovementQueue
 import gg.rsmod.game.model.attr.AttributeKey
+import gg.rsmod.game.model.attr.FAMILIAR_NPC_ID_ATTR
 import gg.rsmod.game.model.attr.SUMMONING_POINTS_ATTR
 import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Player
@@ -31,7 +32,15 @@ import kotlin.math.roundToInt
  * step - real collision-respecting, animated movement, not a hack.
  */
 val FAMILIAR_ATTR = AttributeKey<WeakReference<Npc>>()
-val FAMILIAR_LIFETIME_TIMER = TimerKey(tickOffline = false, resetOnDeath = false)
+
+/**
+ * R07.7: persisted (sourced - familiars survive logout in this era, the lifetime timer just
+ * pauses while offline via [TimerKey.tickOffline] = false and resumes with the same time left
+ * on login) rather than transient. [FAMILIAR_ATTR] itself stays transient (a live [Npc]
+ * reference is meaningless across a logout/despawn) - [FAMILIAR_NPC_ID_ATTR] is the persisted
+ * id [Familiar.restoreOnLogin] respawns from.
+ */
+val FAMILIAR_LIFETIME_TIMER = TimerKey(persistenceKey = "familiar_lifetime", tickOffline = false, resetOnDeath = false)
 
 /** Last time-remaining string pushed to the HUD, so [Familiar.tick] doesn't spam an
  *  [gg.rsmod.plugins.api.ext.setComponentText] packet every cycle - only when the displayed
@@ -47,7 +56,7 @@ private val FAMILIAR_HUD_POINTS_TEXT_ATTR = AttributeKey<String>()
  * is the Bresenham-style accumulator that spreads that total evenly across [Familiar.LIFETIME_CYCLES]
  * ticks so exactly that many points are drained, no more, no less.
  */
-private val FAMILIAR_DRAIN_REMAINING_ATTR = AttributeKey<Int>()
+private val FAMILIAR_DRAIN_REMAINING_ATTR = AttributeKey<Int>(persistenceKey = "familiar_drain_remaining")
 private val FAMILIAR_DRAIN_COUNTER_ATTR = AttributeKey<Int>()
 
 object Familiar {
@@ -55,10 +64,18 @@ object Familiar {
 
     /** R07 follower interface (see InterfaceDestination.SUMMONING_TAB for the evidence trail). */
     private const val HUD_INTERFACE = 662
-    private const val HUD_TIME_COMPONENT_A = 43
-    private const val HUD_TIME_COMPONENT_B = 48
-    private const val HUD_POINTS_COMPONENT_A = 41
-    private const val HUD_POINTS_COMPONENT_B = 44
+
+    // R07.7 fix: a fresh full raw-component-text re-scan of interface 662 (76 components) found
+    // component 44's real cache text is "Pet size percentage" and component 48 sits right after
+    // component 47's real label "Pet hunger percentage" - both distinct real fields, not a
+    // fixed/resize duplicate of the time/points display as the earlier R07.6 code assumed.
+    // Writing time/points text into them would clobber real UI content, so only the single
+    // component directly following each field's own label is driven now (42=label->43=value for
+    // time; 41 is the value cell directly under the "SPECIAL MOVE" header at 40, the closest
+    // real candidate to a points display near component 18's "Summoning points remaining"
+    // label - no separate value component was found near 18 itself in the raw scan).
+    private const val HUD_TIME_COMPONENT = 43
+    private const val HUD_POINTS_COMPONENT = 41
     private const val HUD_BOB_BUTTON = 67
 
     /**
@@ -98,8 +115,7 @@ object Familiar {
         val npc = current(player)
         if (npc == null) {
             if (player.attr.has(FAMILIAR_HUD_TEXT_ATTR)) {
-                player.setComponentText(HUD_INTERFACE, HUD_TIME_COMPONENT_A, "")
-                player.setComponentText(HUD_INTERFACE, HUD_TIME_COMPONENT_B, "")
+                player.setComponentText(HUD_INTERFACE, HUD_TIME_COMPONENT, "")
                 player.setComponentHidden(HUD_INTERFACE, HUD_BOB_BUTTON, true)
                 player.attr.remove(FAMILIAR_HUD_TEXT_ATTR)
             }
@@ -109,16 +125,14 @@ object Familiar {
             val text = "%d:%02d".format(totalSeconds / 60, totalSeconds % 60)
             if (player.attr[FAMILIAR_HUD_TEXT_ATTR] != text) {
                 player.attr[FAMILIAR_HUD_TEXT_ATTR] = text
-                player.setComponentText(HUD_INTERFACE, HUD_TIME_COMPONENT_A, text)
-                player.setComponentText(HUD_INTERFACE, HUD_TIME_COMPONENT_B, text)
+                player.setComponentText(HUD_INTERFACE, HUD_TIME_COMPONENT, text)
                 player.setComponentHidden(HUD_INTERFACE, HUD_BOB_BUTTON, !BeastOfBurden.isBobNpc(npc.id))
             }
         }
         val pointsText = "${currentPoints(player)}/${maxPoints(player)}"
         if (player.attr[FAMILIAR_HUD_POINTS_TEXT_ATTR] != pointsText) {
             player.attr[FAMILIAR_HUD_POINTS_TEXT_ATTR] = pointsText
-            player.setComponentText(HUD_INTERFACE, HUD_POINTS_COMPONENT_A, pointsText)
-            player.setComponentText(HUD_INTERFACE, HUD_POINTS_COMPONENT_B, pointsText)
+            player.setComponentText(HUD_INTERFACE, HUD_POINTS_COMPONENT, pointsText)
         }
     }
 
@@ -159,6 +173,7 @@ object Familiar {
         player.world.spawn(npc)
 
         player.attr[FAMILIAR_ATTR] = WeakReference(npc)
+        player.attr[FAMILIAR_NPC_ID_ATTR] = data.npc
         player.timers[FAMILIAR_LIFETIME_TIMER] = LIFETIME_CYCLES
         setPoints(player, currentPoints(player) - cost)
         player.attr[FAMILIAR_DRAIN_REMAINING_ATTR] = data.level - cost
@@ -190,10 +205,51 @@ object Familiar {
         val npc = current(player) ?: return
         player.world.remove(npc)
         player.attr.remove(FAMILIAR_ATTR)
+        player.attr.remove(FAMILIAR_NPC_ID_ATTR)
         player.attr.remove(FAMILIAR_DRAIN_REMAINING_ATTR)
         player.attr.remove(FAMILIAR_DRAIN_COUNTER_ATTR)
         player.timers.remove(FAMILIAR_LIFETIME_TIMER)
         player.message("Your familiar is dismissed.")
+        updateHud(player)
+    }
+
+    /**
+     * R07.7: logout - despawn the npc (a dead client connection can't render it) but keep the
+     * persisted state ([FAMILIAR_NPC_ID_ATTR], the lifetime timer, the drain-remaining total)
+     * intact so [restoreOnLogin] can bring the same familiar back with the same time/points
+     * left. Distinct from [dismiss], which is a full, permanent clear.
+     */
+    fun disconnect(player: Player) {
+        val npc = current(player) ?: return
+        player.world.remove(npc)
+        player.attr.remove(FAMILIAR_ATTR)
+    }
+
+    /**
+     * R07.7: login counterpart to [disconnect] - if persisted state says the player had an
+     * active familiar with time left (the timer paused offline via `tickOffline = false`, so a
+     * present, non-zero value means it's still owed), respawn it in place rather than leaving
+     * the player's persisted points/timer state orphaned with no npc to show for it. If the
+     * persisted npc id is missing its timer (e.g. it or the drain-remaining state was cleared
+     * independently), the state is stale - clear it instead of respawning nothing.
+     */
+    fun restoreOnLogin(player: Player) {
+        val npcId = player.attr[FAMILIAR_NPC_ID_ATTR]
+        if (npcId == null) {
+            return
+        }
+        if (!player.timers.has(FAMILIAR_LIFETIME_TIMER) || player.timers[FAMILIAR_LIFETIME_TIMER] <= 0) {
+            player.attr.remove(FAMILIAR_NPC_ID_ATTR)
+            player.attr.remove(FAMILIAR_DRAIN_REMAINING_ATTR)
+            player.attr.remove(FAMILIAR_DRAIN_COUNTER_ATTR)
+            player.timers.remove(FAMILIAR_LIFETIME_TIMER)
+            return
+        }
+        val npc = Npc(player, npcId, player.tile, player.world)
+        npc.publicOwner = true
+        npc.respawnOverride = false
+        player.world.spawn(npc)
+        player.attr[FAMILIAR_ATTR] = WeakReference(npc)
         updateHud(player)
     }
 
@@ -219,6 +275,7 @@ object Familiar {
     ) {
         player.world.remove(npc)
         player.attr.remove(FAMILIAR_ATTR)
+        player.attr.remove(FAMILIAR_NPC_ID_ATTR)
         player.attr.remove(FAMILIAR_DRAIN_REMAINING_ATTR)
         player.attr.remove(FAMILIAR_DRAIN_COUNTER_ATTR)
         player.timers.remove(FAMILIAR_LIFETIME_TIMER)

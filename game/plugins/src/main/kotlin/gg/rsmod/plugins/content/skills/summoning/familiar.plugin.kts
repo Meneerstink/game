@@ -50,6 +50,21 @@ suspend fun QueueTask.withdrawOne(player: Player) {
     if (withdrawn > 0) player.message("You withdraw $withdrawn x ${entry.value.getName(world.definitions)} from your familiar.")
 }
 
+/**
+ * R07.7: authentic dismiss confirmation - real RS asks before dismissing a familiar (losing it
+ * forfeits the remaining life/points, an irreversible action worth guarding against misclicks).
+ * Reuses the same [options] dialog primitive as the interact menu above rather than inventing a
+ * new confirmation mechanism.
+ */
+suspend fun QueueTask.confirmDismiss(player: Player) {
+    if (Familiar.current(player) == null) {
+        return
+    }
+    if (options("Yes", "No", title = "Dismiss your familiar?") == 1) {
+        Familiar.dismiss(player)
+    }
+}
+
 var boundSummon = 0
 var skippedSummon = 0
 SummoningPouchData.values().forEach { data ->
@@ -92,12 +107,12 @@ familiarNpcIds.forEach { npc ->
                             val withdrawn = BeastOfBurden.withdrawAll(player)
                             if (withdrawn > 0) player.message("You withdraw $withdrawn item(s) from your familiar.")
                         }
-                        5 -> Familiar.dismiss(player)
+                        5 -> confirmDismiss(player)
                     }
                 } else {
                     when (options("Renew", "Dismiss", "Cancel")) {
                         1 -> Familiar.renew(player)
-                        2 -> Familiar.dismiss(player)
+                        2 -> confirmDismiss(player)
                     }
                 }
             }
@@ -132,6 +147,10 @@ on_world_init {
 
 on_login {
     player.timers[familiarTickTimer] = 1
+    // R07.7: real RS mechanic - a familiar survives logout, its lifetime timer just pauses
+    // (tickOffline = false) and resumes with the same time/points left on login, it does not
+    // get dismissed. See Familiar.disconnect/restoreOnLogin.
+    Familiar.restoreOnLogin(player)
 }
 
 on_timer(familiarTickTimer) {
@@ -140,7 +159,7 @@ on_timer(familiarTickTimer) {
 }
 
 on_logout {
-    Familiar.dismiss(player)
+    Familiar.disconnect(player)
 }
 
 // R07.1: real owner-death dismiss rule, wired at the same real, existing per-player death hook
@@ -161,7 +180,7 @@ on_button(662, 49) { // "Call familiar" (portrait button)
 }
 
 on_button(662, 51) { // "Dismiss Familiar"
-    Familiar.dismiss(player)
+    player.queue { confirmDismiss(player) }
 }
 
 on_button(662, 69) { // "Renew Familiar"
@@ -186,4 +205,52 @@ on_button(662, 65) { // "Order your familiar to attack a target"
     // this codebase or its upstream source has a registered NpcCombatDef - there is no real
     // combat data anywhere to attack with yet. Reporting that honestly rather than faking damage.
     player.message("Your familiar isn't able to fight yet.")
+}
+
+/*
+ * R07.7: Summoning orb (interface 747, the minimap globe's right-click submenu) - components
+ * verified live this session via a raw cache component-text scan. 747 has two parallel component
+ * sets for the same 7 actions depending on client layout mode (fixed-mode ids 9-15, resize-mode
+ * ids 18-26 - see the arrayOf pairs below), so each real action is bound once across both ids
+ * with Array<Int>.
+ *
+ * "Follower Details" (9/18) and "Interact" (15/26) are deliberately left unbound - their real
+ * server-side effect wasn't sourced this session (662 is a permanently-docked sidebar tab, not
+ * something proven to need an explicit server "open" call; "Interact" has no clear distinct
+ * meaning from the npc's own interact option). Left honestly unimplemented rather than guessed.
+ */
+on_button(747, arrayOf(10, 19)) { // "Call Follower"
+    Familiar.call(player)
+}
+
+on_button(747, arrayOf(11, 20)) { // "Dismiss"
+    player.queue { confirmDismiss(player) }
+}
+
+on_button(747, arrayOf(12, 21)) { // "Take BoB"
+    val npc = Familiar.current(player)
+    if (npc == null || !BeastOfBurden.isBobNpc(npc.id)) {
+        return@on_button
+    }
+    val withdrawn = BeastOfBurden.withdrawAll(player)
+    if (withdrawn > 0) player.message("You withdraw $withdrawn item(s) from your familiar.")
+}
+
+on_button(747, arrayOf(13, 22)) { // "Renew Familiar"
+    Familiar.renew(player)
+}
+
+on_button(747, arrayOf(14, 23)) { // "Attack" - same honest R07.3b blocker as 662's Attack button.
+    if (Familiar.current(player) == null) {
+        return@on_button
+    }
+    player.message("Your familiar isn't able to fight yet.")
+}
+
+on_button(747, 25) { // "Spell, Cast" (resize-mode only) - special move, blocked on Phase 7 (no
+    // scroll special-move dispatcher exists yet, see SUMMONING_AUDIT.md).
+    if (Familiar.current(player) == null) {
+        return@on_button
+    }
+    player.message("Your familiar has no special move to cast yet.")
 }

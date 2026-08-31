@@ -547,6 +547,14 @@ val SLAYER_POINTS = AttributeKey<Int>(persistenceKey = "slayer_points")
 val SUMMONING_POINTS_ATTR = AttributeKey<Int>(persistenceKey = "summoning_points")
 
 /**
+ * R07.7: the npc id of the player's active familiar, persisted so it survives logout (real RS
+ * mechanic - familiar's lifetime timer pauses offline and resumes on login, it does not
+ * dismiss on logout). See [gg.rsmod.plugins.content.skills.summoning.Familiar.disconnect]/
+ * [gg.rsmod.plugins.content.skills.summoning.Familiar.restoreOnLogin].
+ */
+val FAMILIAR_NPC_ID_ATTR = AttributeKey<Int>(persistenceKey = "familiar_npc_id")
+
+/**
  * Slayer shop ability unlocks
  */
 val BROAD_FLETCHING = AttributeKey<Boolean>(persistenceKey = "broad_fletching")
