@@ -51,7 +51,19 @@ object PawnPathAction {
          *
          * Set to null for default interaction range.
          */
-        val lineOfSightRange = if (other is Npc) world.plugins.getNpcInteractionDistance(other.id) else null
+        val lineOfSightRange = if (other is Npc) {
+            val player = pawn as? Player
+            if (player != null) {
+                val transformedId = other.getTransform(player)
+                resolveInteractionDistance(other.id, transformedId) { id ->
+                    world.plugins.getNpcInteractionDistance(id)
+                }
+            } else {
+                world.plugins.getNpcInteractionDistance(other.id)
+            }
+        } else {
+            null
+        }
 
         pawn.queue(TaskPriority.STANDARD) {
             terminateAction = {
@@ -76,7 +88,19 @@ object PawnPathAction {
          *
          * Set to null for default interaction range.
          */
-        val lineOfSightRange = if (other is Npc) world.plugins.getNpcInteractionDistance(other.id) else null
+        val lineOfSightRange = if (other is Npc) {
+            val player = pawn as? Player
+            if (player != null) {
+                val transformedId = other.getTransform(player)
+                resolveInteractionDistance(other.id, transformedId) { id ->
+                    world.plugins.getNpcInteractionDistance(id)
+                }
+            } else {
+                world.plugins.getNpcInteractionDistance(other.id)
+            }
+        } else {
+            null
+        }
 
         pawn.queue(TaskPriority.STANDARD) {
             terminateAction = {

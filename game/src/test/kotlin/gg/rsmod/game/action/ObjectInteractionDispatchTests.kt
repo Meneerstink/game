@@ -41,4 +41,29 @@ class ObjectInteractionDispatchTests {
         val sameIdUnhandled = executeWithObjectIdFallback(100, 100) { false }
         assertTrue(!sameIdUnhandled)
     }
-}
+
+    @Test
+    fun interactionDistanceFallsBackToOriginalDefinition() {
+        val calls = mutableListOf<Int>()
+
+        val distance = resolveInteractionDistance(100, 200) { id ->
+            calls += id
+            if (id == 100) 2 else null
+        }
+
+        assertEquals(2, distance)
+        assertEquals(listOf(200, 100), calls)
+    }
+
+    @Test
+    fun transformedInteractionDistanceWins() {
+        val calls = mutableListOf<Int>()
+
+        val distance = resolveInteractionDistance(100, 200) { id ->
+            calls += id
+            if (id == 200) 4 else 2
+        }
+
+        assertEquals(4, distance)
+        assertEquals(listOf(200), calls)
+    }}

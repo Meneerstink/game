@@ -40,6 +40,18 @@ internal fun executeWithObjectIdFallback(
     return transformedId != originalId && execute(originalId)
 }
 
+/**
+ * Resolves an optional interaction distance using the visually transformed id
+ * first, then the definition id as a compatibility fallback.
+ */
+internal fun resolveInteractionDistance(
+    originalId: Int,
+    transformedId: Int,
+    lookup: (Int) -> Int?,
+): Int? {
+    return lookup(transformedId)
+        ?: if (transformedId != originalId) lookup(originalId) else null
+}
 object ObjectPathAction {
     /** Audit finding 7: opt-in diagnostic trail for the object-route/bank-distance chain. */
     private fun logRoute(
@@ -98,11 +110,13 @@ object ObjectPathAction {
 
         val item = player.attr[INTERACTING_ITEM]!!.get()!!
         val obj = player.attr[INTERACTING_OBJ_ATTR]!!.get()!!
-        val lineOfSightRange = player.world.plugins.getObjInteractionDistance(obj.id)
+        val transformedId = obj.getTransform(player)
+        val lineOfSightRange = resolveInteractionDistance(obj.id, transformedId) { id ->
+            player.world.plugins.getObjInteractionDistance(id)
+        }
 
         walk(player, obj, lineOfSightRange) {
             player.faceTile(obj.tile)
-            val transformedId = obj.getTransform(player)
             val handled = executeWithObjectIdFallback(obj.id, transformedId) { id ->
                 player.world.plugins.executeItemOnObject(player, id, item.id)
             }
@@ -122,10 +136,12 @@ object ObjectPathAction {
 
         val obj = player.attr[INTERACTING_OBJ_ATTR]!!.get()!!
         val opt = player.attr[INTERACTING_OPT_ATTR]
-        val lineOfSightRange = player.world.plugins.getObjInteractionDistance(obj.id)
+        val transformedId = obj.getTransform(player)
+        val lineOfSightRange = resolveInteractionDistance(obj.id, transformedId) { id ->
+            player.world.plugins.getObjInteractionDistance(id)
+        }
 
         walk(player, obj, lineOfSightRange) {
-            val transformedId = obj.getTransform(player)
             val handled = executeWithObjectIdFallback(obj.id, transformedId) { id ->
                 player.world.plugins.executeObject(player, id, opt!!)
             }
