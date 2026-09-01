@@ -238,3 +238,9 @@ client login pass is an owner action, not something this session can fake or ski
 - Void Spinner now restores 100 internal life points and Bunyip 20 every 15 online seconds while active.
 - Healing stops immediately on dismiss/expiry and never exceeds the player's normal maximum.
 - Bunyip uses the sourced revision graphic 1507 only when healing actually restores life points.
+
+## 2026-09-01 — boost, restoration and heal scroll batch
+
+- Added Stony Shell, Thieving Fingers, Unburden, Abyssal Stealth, Volcanic Strength, Magic Focus, Healing Aura, Titan's Constitution and Insane Ferocity.
+- All fourteen implemented special moves now share the same matching-familiar, scroll, energy and stale-click gate on both 662 and 747.
+- Used source-backed revision-667 component, animation and graphic mappings; no new visual ids were guessed.

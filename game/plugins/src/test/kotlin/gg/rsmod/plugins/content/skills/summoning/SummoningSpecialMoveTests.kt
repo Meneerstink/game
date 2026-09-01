@@ -31,9 +31,9 @@ class SummoningSpecialMoveTests {
     @Test
     fun `core dispatcher uses unique verified components`() {
         SummoningSpecialMoves.validate()
-        assertEquals(5, SummoningSpecialMoves.bindings.size)
-        assertEquals(setOf(77, 139, 127, 121, 173), SummoningSpecialMoves.bindings.map { it.detailsComponent }.toSet())
-        assertEquals(setOf(161, 130, 136, 139, 113), SummoningSpecialMoves.bindings.map { it.orbComponent }.toSet())
+        assertEquals(14, SummoningSpecialMoves.bindings.size)
+        assertTrue(SummoningSpecialMoves.bindings.map { it.detailsComponent }.containsAll(setOf(77, 139, 127, 121, 173)))
+        assertTrue(SummoningSpecialMoves.bindings.map { it.orbComponent }.containsAll(setOf(161, 130, 136, 139, 113)))
     }
 
     @Test
