@@ -112,6 +112,17 @@ class FamiliarPointsTests {
         Familiar.restoreSpecialPoints(player, 20)
         assertEquals(Familiar.MAX_SPECIAL_POINTS, Familiar.currentSpecialPoints(player))
     }
+    @Test
+    fun `special points restore by 15 every 30 active seconds`() {
+        val player = newPlayer(summoningLevel = DREADFOWL.level)
+        player.inventory[0] = Item(DREADFOWL.pouch, 1)
+        check(Familiar.summon(player, DREADFOWL))
+        check(Familiar.consumeSpecialPoints(player, 30))
+
+        repeat(50) { Familiar.tick(player) }
+
+        assertEquals(45, Familiar.currentSpecialPoints(player))
+    }
     private val DREADFOWL get() = SummoningPouchData.DREADFOWL
     private val PACK_YAK get() = SummoningPouchData.PACK_YAK
 

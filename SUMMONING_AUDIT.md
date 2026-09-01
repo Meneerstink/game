@@ -1,3 +1,7 @@
+## 2026-09-01 — special-energy recovery (automated)
+
+- Summoning special energy now regenerates by 15 every 30 online seconds, capped at 60, while a familiar is active. The partial 30-second accumulator is persisted, so logout cannot reset or skip the recharge interval.
+- `FamiliarPointsTests` covers the exact restoration interval and amount.
 ## 2026-09-01 — Beast of Burden completion batch (automated)
 
 - Added all nine target-period Beast-of-Burden familiars: Thorny snail (3), Spirit kalphite (6), Bull ant (9), Spirit terrorbird (12), Abyssal parasite (7 essence), Abyssal lurker (7 essence), War tortoise (18), Abyssal titan (7 essence) and Pack yak (30).

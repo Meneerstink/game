@@ -35,6 +35,9 @@ val FAMILIAR_ATTR = AttributeKey<WeakReference<Npc>>()
 /** Persisted Summoning special-move energy. This is separate from Summoning points. */
 val FAMILIAR_SPECIAL_POINTS_ATTR = AttributeKey<Int>(persistenceKey = "familiar_special_points")
 
+
+/** Persisted online-cycle accumulator; preserves partial special regeneration through relog. */
+private val FAMILIAR_SPECIAL_REGEN_CYCLES_ATTR = AttributeKey<Int>(persistenceKey = "familiar_special_regen_cycles")
 /**
  * R07.7: persisted (sourced - familiars survive logout in this era, the lifetime timer just
  * pauses while offline via [TimerKey.tickOffline] = false and resumes with the same time left
@@ -54,6 +57,8 @@ private val FAMILIAR_HUD_POINTS_TEXT_ATTR = AttributeKey<String>()
 object Familiar {
     const val MAX_SPECIAL_POINTS = 60
     private const val RENEW_THRESHOLD_SECONDS = 170
+    private const val SPECIAL_REGEN_SECONDS = 30
+    private const val SPECIAL_REGEN_AMOUNT = 15
 
     /** R07 follower interface (see InterfaceDestination.SUMMONING_TAB for the evidence trail). */
     private const val HUD_INTERFACE = 662
@@ -106,6 +111,17 @@ object Familiar {
         setSpecialPoints(player, currentSpecialPoints(player) + amount.coerceAtLeast(0))
     }
 
+    /** Target-period special energy restoration: +15, capped at 60, every 30 online seconds. */
+    private fun regenerateSpecialPoints(player: Player) {
+        val interval = (SPECIAL_REGEN_SECONDS * 1_000 / player.world.gameContext.cycleTime).coerceAtLeast(1)
+        val accumulated = player.attr.getOrDefault(FAMILIAR_SPECIAL_REGEN_CYCLES_ATTR, 0) + 1
+        if (accumulated < interval) {
+            player.attr[FAMILIAR_SPECIAL_REGEN_CYCLES_ATTR] = accumulated
+            return
+        }
+        player.attr[FAMILIAR_SPECIAL_REGEN_CYCLES_ATTR] = accumulated % interval
+        restoreSpecialPoints(player, SPECIAL_REGEN_AMOUNT)
+    }
     /** Atomically spends special-move energy; effects must call this only after validation. */
     fun consumeSpecialPoints(player: Player, amount: Int): Boolean {
         require(amount >= 0) { "Special-move cost cannot be negative." }
@@ -307,6 +323,7 @@ object Familiar {
     /** Called once/cycle per online player - see `familiar.plugin.kts`. */
     fun tick(player: Player) {
         val npc = current(player) ?: return
+        regenerateSpecialPoints(player)
         if (!player.timers.has(FAMILIAR_LIFETIME_TIMER)) {
             // Lifetime ran out - real RS despawns the familiar, it doesn't just sit there inert.
             expire(player, npc)
