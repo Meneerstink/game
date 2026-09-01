@@ -37,5 +37,8 @@ class ObjectInteractionDispatchTests {
 
         assertTrue(sameIdHandled)
         assertEquals(listOf(100), sameIdCalls)
+
+        val sameIdUnhandled = executeWithObjectIdFallback(100, 100) { false }
+        assertTrue(!sameIdUnhandled)
     }
 }

@@ -37,7 +37,7 @@ internal fun executeWithObjectIdFallback(
     if (execute(transformedId)) {
         return true
     }
-    return transformedId == originalId || execute(originalId)
+    return transformedId != originalId && execute(originalId)
 }
 
 object ObjectPathAction {
