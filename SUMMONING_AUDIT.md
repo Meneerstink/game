@@ -1,3 +1,35 @@
+## 2026-09-01 — sourced scroll table cross-check
+
+Files touched: `SummoningScrollData.kt`, new `src/test/.../SummoningScrollDataTests.kt`.
+
+All 67 scrolls were mechanically diffed on required level, transform experience (per 10 scrolls),
+activation experience and special-move point cost against the revision-667-era official Summoning
+Knowledge Base scroll table, and every disagreement was then checked individually against the
+RuneScape Wiki article for that scroll. No level was wrong. Six values were:
+
+- `TIRELESS_RUN_SCROLL` transform `0.8` → `0.5`. The KB and the wiki article text both say 0.5;
+  nothing supports 0.8. Its activation value 0.8 is kept (KB), against the wiki's 0.5.
+- `RENDING_SCROLL` points `3` → `6` and `GOAD_SCROLL` points `6` → `3`. The two were transposed.
+  Both sources agree, and these are the same level (57) and same experience, which is presumably
+  how they got swapped. This is behavioural: `SummoningSpecialMoves` gates and drains the special
+  pool by `specialPoints`.
+- `ABYSSAL_STEALTH_SCROLL` transform and activation `1.9` → `1.2`. The KB gives 1.2/1.2 and the
+  wiki gives 1.2 for the cast; 1.9 only appears in the wiki's auto-generated creation table, which
+  carries modern rebalanced numbers (the same table also disagrees with its own article text on
+  Tireless Run and Goad).
+- `RISH_FROM_THE_ASHES_SCROLL` activation `8.0` → `5.0`. One of the handful of genuinely
+  asymmetric rows (8 to transform, 5 to activate); no source supports 8 for the cast.
+- `SWAMP_PLAGUE_SCROLL` transform `4.1` → `4.2`, confirmed by both sources.
+
+Two KB cells were rejected rather than copied, because a second source contradicted them and the
+table itself explains the value: Abyssal Drain's activation cell prints 5.5, which is the Dissolve
+row immediately below it, and the wiki gives 1.1 (already in the code); Generate Compost's
+activation cell prints 0.5 against the wiki's 0.6 (already in the code).
+
+Verification: new `SummoningScrollDataTests` pins the full 67-row table on all four fields and
+fails if the enum drifts. `./gradlew :game:plugins:test --tests
+'gg.rsmod.plugins.content.skills.summoning.*'` → 38 tests, 0 failures.
+
 ## 2026-09-01 — lifecycle corrections
 
 Files touched: `Familiar.kt`, `FamiliarCombat.kt`, `BeastOfBurden.kt`, `familiar.plugin.kts`,
