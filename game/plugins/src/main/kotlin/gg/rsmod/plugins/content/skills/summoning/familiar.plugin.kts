@@ -5,6 +5,7 @@ import gg.rsmod.game.fs.def.NpcDef
 import gg.rsmod.game.model.combat.StyleType
 import gg.rsmod.plugins.api.ext.getInteractingNpc
 import gg.rsmod.plugins.api.ext.getInteractingPlayer
+import gg.rsmod.plugins.api.ext.getInteractingItemSlot
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.queue.QueueTask
 import gg.rsmod.plugins.api.ext.closeInterface
@@ -196,6 +197,7 @@ familiarNpcIds.filter { BeastOfBurden.isBobNpc(it) }.forEach { npc ->
 on_world_init {
     SummoningFamiliarDefinitions.validate()
     SummoningCombatDefinitions.validate()
+    SummoningSpecialMoves.validate()
     println(
         "R07.1 familiar: bound Summon on $boundSummon/${boundSummon + skippedSummon} pouches, " +
             "Interact on $boundInteract/${boundInteract + skippedInteract} familiar npcs " +
@@ -328,7 +330,32 @@ on_button(747, 25) { // "Spell, Cast" (resize-mode only) - special move, blocked
     if (Familiar.current(player) == null) {
         return@on_button
     }
-    player.message("Your familiar has no special move to cast yet.")
+    player.message("Select your familiar's special move.")
+}
+
+SummoningSpecialMoves.bindings.forEach { binding ->
+    when (binding.target) {
+        FamiliarSpecialTarget.INSTANT -> {
+            on_button(662, binding.detailsComponent) { SummoningSpecialMoves.castInstant(player, binding) }
+            on_button(747, binding.orbComponent) { SummoningSpecialMoves.castInstant(player, binding) }
+        }
+        FamiliarSpecialTarget.NPC -> {
+            on_spell_on_npc(662, binding.detailsComponent) {
+                SummoningSpecialMoves.castOnNpc(player, binding, player.getInteractingNpc())
+            }
+            on_spell_on_npc(747, binding.orbComponent) {
+                SummoningSpecialMoves.castOnNpc(player, binding, player.getInteractingNpc())
+            }
+        }
+        FamiliarSpecialTarget.INVENTORY_ITEM -> {
+            on_spell_on_item(662, binding.detailsComponent) {
+                SummoningSpecialMoves.castOnInventoryItem(player, binding, player.getInteractingItemSlot())
+            }
+            on_spell_on_item(747, binding.orbComponent) {
+                SummoningSpecialMoves.castOnInventoryItem(player, binding, player.getInteractingItemSlot())
+            }
+        }
+    }
 }
 
 /*

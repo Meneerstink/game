@@ -224,3 +224,11 @@ client login pass is an owner action, not something this session can fake or ski
 - Registered real NPC combat definitions for every executable base/combat familiar ID. The real server booted cleanly against the revision-667 cache, loaded 17,737 plugins, registered 78/78 Summon and 78/78 Interact entries, and listened on port 50015. The temporary boot process was stopped afterward.
 - All focused Summoning tests passed before the final delayed-PvP guard; plugin compilation passed again after it. Live client combat still requires owner verification. Albino Rat remains the sole combat-animation data blocker and is not silently given a guessed animation.
 
+## 2026-09-01 — typed special-move dispatcher, first verified effects
+
+- Added revision-667 component-safe dispatch from both follower details (662) and summoning orb (747).
+- Implemented Dreadfowl Strike, Tireless Run, Testudo, Winter Storage and Steel of Legends.
+- Matching familiar, matching scroll and sufficient special energy are rechecked server-side; failed and stale targets consume nothing.
+- Winter Storage preflights bank capacity and moves exactly one selected inventory item without loss/duplication.
+- Focused special-move plus existing lifecycle, points, BoB and combat-definition suites pass (23 tests).
+- Remaining 62 scroll effects and live client interaction proof remain open; this entry does not claim Summoning complete.
