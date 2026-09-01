@@ -1,3 +1,45 @@
+## 2026-09-02 — obelisk point renewal (owner-reported: "Nothing interesting happens")
+
+Files touched: `summoning_obelisks.plugin.kts`, `obelisk.plugin.kts`, new
+`src/test/.../ObeliskRenewalTests.kt`.
+
+Renewing at an obelisk did nothing and the account stayed at zero Summoning points. The cause was
+not the handler but which objects it was bound to. `summoning_obelisks.plugin.kts` listed eleven
+"Summoning obelisk" ids by hand; five of them (54650, 56083, 56084, 56085, 56086) carry no options
+at all in this revision, and the list named none of the objects players actually renew at. A scan
+of every object definition in `data/cache` gives exactly 39 objects with a "Renew-points" option:
+
+- 28716, 28719, 28722, 28725, 28728, 28731, 28734 — the seven world obelisks;
+- 50205, 50206, 50207, 53883, 55605 — the five "Summoning obelisk" objects;
+- 5787 and 29938-29959 — the small obelisks;
+- 44837-44842 — the player-owned-house obelisks, which also carry "Remove".
+
+Twelve of those (the seven world obelisks plus the five Summoning obelisks) also carry
+"Infuse-pouch", but `obelisk.plugin.kts` only bound the seven, so infusing at the other five did
+nothing either — the same mistake, found by looking for it.
+
+Both handlers now derive their object set from the cache instead of from a hand-written id list,
+and both fail plugin loading if the sourced counts (39 and 12) stop matching, so the two lists
+cannot silently drift apart from the cache again. The option string is matched case-insensitively
+by `on_obj_option` itself, so the "Renew-Points"/"Renew-points" spelling difference was never the
+problem.
+
+**Sourced behaviour.** Renewal restores Summoning points to the maximum and does not touch the
+special-move pool. The knowledge base recharges that pool two other ways — "This will recharge
+over time" and "Summoning potions also restore a portion of your special move bar" — and that
+"also" is what distinguishes the potion from the obelisk, which it describes as renewing points
+only. The previous handler also refilled the special pool to 60 at every obelisk, which nothing
+supports; that has been removed.
+
+Point restoration through potions was already correct and is now pinned by test: one dose of a
+Summoning potion restores a quarter of the maximum plus seven points and 15 special-move points
+(`PotionType.SUMMONING`, wired to every dose of both Summoning potion item sets).
+
+`ObeliskRenewalTests` proves the sourced object sets against the cache, that a drained account
+returns to full, that renewal leaves the special pool untouched and that a potion dose tops a
+zero-point account back up — the four things that decide whether a persisted account can get
+permanently stuck at zero.
+
 ## 2026-09-02 — Phase 1: the 78-familiar classification ledger
 
 Files touched: new `SummoningCatalogue.kt`, `SummoningLedger.kt`, `BeastOfBurden.kt`,
