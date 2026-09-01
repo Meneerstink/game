@@ -57,12 +57,27 @@ object FamiliarCombat {
     }
 
     /** Joins a deliberate owner fight, while preserving the four defensive-only exceptions. */
-    fun assist(player: Player) {
+    fun assist(player: Player) = engageOwnerTarget(player, retarget = false)
+
+    /**
+     * The "Call familiar" button's second job: "If you are fighting in a multicombat area, this
+     * button will also make your familiar attack your enemy." Unlike [assist] this is allowed to
+     * pull the familiar off a target it is already locked onto, which is the whole point of
+     * recalling it mid-fight. It still obeys the same defensive-only policy.
+     */
+    fun recallToOwnerTarget(player: Player) = engageOwnerTarget(player, retarget = true)
+
+    private fun engageOwnerTarget(
+        player: Player,
+        retarget: Boolean,
+    ) {
         val familiar = Familiar.current(player) ?: return
-        if (familiar.getCombatTarget() != null) return
+        val current = familiar.getCombatTarget()
+        if (current != null && !retarget) return
         val definition = SummoningCombatDefinitions.getByNpc(familiar.id) ?: return
         if (!definition.isExecutable || definition.assistMode == FamiliarAssistMode.NONE) return
         val target = player.getCombatTarget() ?: return
+        if (current === target) return
         if (definition.assistMode == FamiliarAssistMode.DEFENSIVE_ONLY && player.getLastHitBy() !== target) return
         commandAttack(player, target, silent = true)
     }

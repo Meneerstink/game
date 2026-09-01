@@ -1,6 +1,8 @@
 package gg.rsmod.plugins.content.skills.summoning
 
+import gg.rsmod.game.fs.def.NpcDef
 import gg.rsmod.game.model.MovementQueue
+import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.attr.DAMAGE_CREDIT_ATTR
 import gg.rsmod.game.model.attr.FAMILIAR_NPC_ID_ATTR
@@ -21,12 +23,12 @@ import java.lang.ref.WeakReference
  * full pouch roster (Spirit Wolf through Steel Titan/Pack Yak/War Tortoise) - not just
  * registrations, an actually working core mechanic every specific familiar builds on.
  *
- * Familiar lifetime is a flat 20 minutes (2000 cycles, matching [gg.rsmod.plugins.content.mechanics.pvp.PvpSkull]'s
- * own established cycle-duration convention) - a conservative implementation default, not a
- * real per-familiar summoning-points-with-upkeep-cost economy (SummoningPouchData has no
- * upkeep-cost field to derive one from; inventing per-familiar costs would be exactly the kind
- * of unrequested precision the master spec warns against). Renewing re-arms the same timer
- * without re-summoning, matching real RS "renew" behaviour.
+ * Summoning points are a one-off cost paid when the pouch is opened; they are not drained
+ * gradually. A familiar's lifetime is an independent per-familiar timer sourced from the
+ * revision-era "Summoning - Familiars" table (see [SummoningFamiliarDefinitions] and the
+ * duration assertions in `SummoningLedgerTests`), ranging from the dreadfowl's 4 minutes to the
+ * rune minotaur's 151. Renewing re-arms that timer from a second pouch of the same type without
+ * charging Summoning points again, matching real RS "renew" behaviour.
  *
  * Following reuses the real, already-existing [MovementQueue] every pawn's normal walking goes
  * through (the same system NPCs use to wander/chase) rather than a simplified teleport-style
@@ -40,7 +42,13 @@ val FAMILIAR_SPECIAL_POINTS_ATTR = AttributeKey<Int>(persistenceKey = "familiar_
 
 /** Persisted online-cycle accumulator; preserves partial special regeneration through relog. */
 private val FAMILIAR_SPECIAL_REGEN_CYCLES_ATTR = AttributeKey<Int>(persistenceKey = "familiar_special_regen_cycles")
-private val FAMILIAR_PASSIVE_HEAL_CYCLES_ATTR = AttributeKey<Int>()
+/**
+ * Persisted for the same reason as the special-regeneration accumulator above: a familiar
+ * survives logout in this era, so its passive-healing cadence has to survive with it. Left
+ * transient, a relog restarted the 15-second cycle from zero, which is the wrong direction of
+ * the same class of bug as a resettable cooldown.
+ */
+private val FAMILIAR_PASSIVE_HEAL_CYCLES_ATTR = AttributeKey<Int>(persistenceKey = "familiar_passive_heal_cycles")
 /**
  * R07.7: persisted (sourced - familiars survive logout in this era, the lifetime timer just
  * pauses while offline via [TimerKey.tickOffline] = false and resumes with the same time left
@@ -208,6 +216,53 @@ object Familiar {
         return npc
     }
 
+    /**
+     * Real RS puts a summoned or recalled familiar *beside* its owner, on tiles its own footprint
+     * actually fits on - it does not stack it on the owner's exact tile, which is what this code
+     * used to do for summon, call, plane changes and teleport recovery alike.
+     *
+     * The eight candidates are the whole adjacent ring expressed as south-west corner tiles, so
+     * they stay correct for the 2x2 and 3x3 familiars (titans, pack yak) as well as the 1x1 ones.
+     * Which direction real RS prefers is not sourced, so the order here is only deterministic;
+     * adjacency and collision validity are the parts that are sourced.
+     *
+     * If nothing in the ring fits - a doorway, a dense object cluster - the owner's own tile is
+     * the last resort. A familiar must always arrive; being stranded is worse than overlapping.
+     */
+    private fun placementTile(
+        player: Player,
+        npcId: Int,
+    ): Tile {
+        val size = player.world.definitions.get(NpcDef::class.java, npcId).size.coerceAtLeast(1)
+        val offsets =
+            arrayOf(
+                -size to 0, 1 to 0, 0 to -size, 0 to 1,
+                -size to -size, 1 to -size, -size to 1, 1 to 1,
+            )
+        offsets.forEach { (x, z) ->
+            val candidate = player.tile.transform(x, z)
+            if (fits(player, candidate, size)) {
+                return candidate
+            }
+        }
+        return player.tile
+    }
+
+    private fun fits(
+        player: Player,
+        tile: Tile,
+        size: Int,
+    ): Boolean {
+        for (x in 0 until size) {
+            for (z in 0 until size) {
+                if (player.world.collision.isClipped(tile.transform(x, z))) {
+                    return false
+                }
+            }
+        }
+        return true
+    }
+
     fun summon(
         player: Player,
         data: SummoningPouchData,
@@ -231,7 +286,7 @@ object Familiar {
         }
         dismiss(player)
 
-        val npc = Npc(player, data.npc, player.tile, player.world)
+        val npc = Npc(player, data.npc, placementTile(player, data.npc), player.world)
         npc.publicOwner = true
         npc.respawnOverride = false
         npc.attr[DAMAGE_CREDIT_ATTR] = WeakReference(player)
@@ -273,10 +328,7 @@ object Familiar {
         val npc = current(player) ?: return
         BeastOfBurden.release(player, npc.tile)
         player.world.remove(npc)
-        player.attr.remove(FAMILIAR_ATTR)
-        player.attr.remove(FAMILIAR_NPC_ID_ATTR)
-        player.timers.remove(FAMILIAR_LIFETIME_TIMER)
-        player.attr.remove(FAMILIAR_PASSIVE_HEAL_CYCLES_ATTR)
+        clearState(player)
         player.message("Your familiar is dismissed.")
         updateHud(player)
     }
@@ -311,7 +363,7 @@ object Familiar {
             player.timers.remove(FAMILIAR_LIFETIME_TIMER)
             return
         }
-        val npc = Npc(player, npcId, player.tile, player.world)
+        val npc = Npc(player, npcId, placementTile(player, npcId), player.world)
         npc.publicOwner = true
         npc.respawnOverride = false
         npc.attr[DAMAGE_CREDIT_ATTR] = WeakReference(player)
@@ -321,18 +373,59 @@ object Familiar {
     }
 
     /**
-     * "Call familiar" - instant recall, distinct from passive following. Reuses the real
+     * "Call familiar" - instant recall, distinct from passive following. Uses the real
      * [gg.rsmod.game.model.entity.Pawn.teleportNpc] respawn-style reposition API (sets
-     * moved/teleported/invisible + clears movement queue) rather than inventing a new
-     * adjacent-free-tile finder - no such utility exists anywhere in this codebase, and the
-     * existing follow logic below already proves tile-sharing between player and npc works.
+     * moved/teleported/invisible + clears movement queue), now onto a valid [placementTile]
+     * beside the owner rather than the owner's own tile.
+     *
+     * The knowledge base also gives this button a second job: "If you are fighting in a
+     * multicombat area, this button will also make your familiar attack your enemy." That is a
+     * re-order, not just the passive per-tick assistance - it pulls a familiar off a stale target
+     * onto whatever the owner is currently fighting.
      */
     fun call(player: Player): Boolean {
         val npc = current(player) ?: return false
-        npc.teleportNpc(player.tile)
+        npc.teleportNpc(placementTile(player, npc.id))
         player.message("You call your familiar to your side.")
+        FamiliarCombat.recallToOwnerTarget(player)
         updateHud(player)
         return true
+    }
+
+    /**
+     * Sourced revision-667 owner-death behaviour, and deliberately not the modern one.
+     *
+     * Two later RuneScape updates fix what this era did: the 22 August 2016 ninja strike added
+     * "A beast of burden's inventory is now dropped to the floor when a player dies", and the
+     * 13 November 2023 patch added "Familiars no longer despawn on death". Both are changes
+     * *away* from the behaviour of this revision, so here the familiar despawns when its owner
+     * dies and whatever it was carrying goes with it - it is not dropped for the killer, and it
+     * is not kept.
+     *
+     * This is destructive, so it is isolated in its own function rather than reusing [dismiss]
+     * (which drops the cargo, the correct behaviour for a voluntary dismissal). Serving the
+     * modern, friendlier rule instead is a one-line change: call [dismiss] from the owner-death
+     * hook in `familiar.plugin.kts`.
+     */
+    fun ownerDeath(player: Player) {
+        val npc = current(player) ?: return
+        val lostItems = BeastOfBurden.contents(player).isNotEmpty()
+        BeastOfBurden.discard(player)
+        player.world.remove(npc)
+        clearState(player)
+        if (lostItems) {
+            player.message("Your familiar vanishes, taking everything it was carrying with it.")
+        } else {
+            player.message("Your familiar vanishes.")
+        }
+        updateHud(player)
+    }
+
+    private fun clearState(player: Player) {
+        player.attr.remove(FAMILIAR_ATTR)
+        player.attr.remove(FAMILIAR_NPC_ID_ATTR)
+        player.timers.remove(FAMILIAR_LIFETIME_TIMER)
+        player.attr.remove(FAMILIAR_PASSIVE_HEAL_CYCLES_ATTR)
     }
 
     /** Common despawn-and-notify cleanup shared by expiry (timer or points) and manual dismiss. */
@@ -342,10 +435,7 @@ object Familiar {
     ) {
         BeastOfBurden.release(player, npc.tile)
         player.world.remove(npc)
-        player.attr.remove(FAMILIAR_ATTR)
-        player.attr.remove(FAMILIAR_NPC_ID_ATTR)
-        player.timers.remove(FAMILIAR_LIFETIME_TIMER)
-        player.attr.remove(FAMILIAR_PASSIVE_HEAL_CYCLES_ATTR)
+        clearState(player)
         player.message("Your familiar has run out of time and returns home.")
         updateHud(player)
     }
@@ -366,7 +456,7 @@ object Familiar {
             // Plane change / region teleport put the familiar out of walking range - a normal
             // MovementQueue step can never catch up (or can't cross planes at all), so recover
             // it the same way `call()` does rather than leaving it stranded/left behind.
-            npc.teleportNpc(player.tile)
+            npc.teleportNpc(placementTile(player, npc.id))
         } else if (!npc.movementQueue.hasDestination() && distance > 1) {
             npc.movementQueue.addStep(player.tile, MovementQueue.StepType.NORMAL, detectCollision = true)
         }

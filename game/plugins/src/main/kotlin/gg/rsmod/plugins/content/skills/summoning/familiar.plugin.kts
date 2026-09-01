@@ -223,11 +223,16 @@ on_logout {
     Familiar.disconnect(player)
 }
 
-// R07.1: real owner-death dismiss rule, wired at the same real, existing per-player death hook
-// death.plugin.kts uses for DeathResolver/DeathExecutor - kept in this file so the summoning
-// package owns its own lifecycle rule instead of touching death.plugin.kts.
+// Owner death, wired at the same real, existing per-player death hook death.plugin.kts uses for
+// DeathResolver/DeathExecutor - kept in this file so the summoning package owns its own lifecycle
+// rule instead of touching death.plugin.kts.
+//
+// This used to call Familiar.dismiss, which drops the beast of burden's cargo on the floor. That
+// is the *modern* rule, introduced by the 22 August 2016 ninja strike ("A beast of burden's
+// inventory is now dropped to the floor when a player dies"); before it, the cargo was simply
+// lost. Familiar.ownerDeath implements this revision's behaviour and documents the switch back.
 on_player_pre_death {
-    Familiar.dismiss(player)
+    Familiar.ownerDeath(player)
 }
 
 /*

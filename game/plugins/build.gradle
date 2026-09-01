@@ -11,6 +11,12 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-script-runtime:1.8.0"
 }
 
+// Several content tests load a full cache-backed DefinitionSet each (containers, death recovery,
+// shops, summoning, ...). The default 512m test worker heap cannot hold them all in one JVM.
+test {
+    maxHeapSize = '2g'
+}
+
 dokka {
     for (def pkg : ["gg.rsmod.plugins.api.cfg"]) {
         packageOptions {

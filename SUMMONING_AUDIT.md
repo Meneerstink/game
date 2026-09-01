@@ -1,3 +1,60 @@
+## 2026-09-01 — lifecycle corrections
+
+Files touched: `Familiar.kt`, `FamiliarCombat.kt`, `BeastOfBurden.kt`, `familiar.plugin.kts`,
+`game/plugins/build.gradle`, new `src/test/.../FamiliarLifecycleTests.kt`.
+
+- **Size-aware placement.** `summon`, `restoreOnLogin`, `call` and `tick`'s teleport-recovery path
+  all used to put the familiar on the owner's exact tile. They now use a `placementTile` helper
+  that walks the adjacent ring as south-west corner tiles (so it is correct for the 2x2 and 3x3
+  familiars too) and takes the first candidate whose whole footprint is unclipped, falling back to
+  the owner's tile only if nothing in the ring fits. Which direction real RS prefers is not
+  sourced, so the order is only deterministic; adjacency and collision validity are the sourced
+  parts.
+- **Call familiar now re-orders an attack.** Sourced: "If you are fighting in a multicombat area,
+  this button will also make your familiar attack your enemy." `FamiliarCombat.assist` and the new
+  `recallToOwnerTarget` share one policy function; the recall variant is allowed to pull the
+  familiar off a stale target, which the per-tick assist deliberately is not. Both still honour
+  the four defensive-only familiars.
+- **Owner death reviewed and changed.** The old `on_player_pre_death { Familiar.dismiss(player) }`
+  implemented the *modern* rule: dismiss drops the beast of burden's cargo on the floor. Two later
+  updates show that is not this revision's behaviour - the 22 August 2016 ninja strike added "A
+  beast of burden's inventory is now dropped to the floor when a player dies", and the 13 November
+  2023 patch added "Familiars no longer despawn on death". Both are changes away from the era
+  being emulated, so `Familiar.ownerDeath` now despawns the familiar and discards its cargo
+  outright via the new `BeastOfBurden.discard`.
+  **Owner decision point:** this destroys items on death. It is the sourced revision-667 rule, but
+  if the project prefers the friendlier modern rule, the hook in `familiar.plugin.kts` only has to
+  call `Familiar.dismiss` again - both functions are kept and documented.
+- **Accumulator persistence.** `FAMILIAR_PASSIVE_HEAL_CYCLES_ATTR` was transient, so a relog
+  restarted the 15-second passive-healing cadence from zero. It now persists, matching the
+  special-regeneration accumulator beside it. That was the only remaining transient accumulator in
+  the package; the HUD-text attributes are display de-duplication only and are correctly transient.
+- **Stale class documentation** on `Familiar` still described a flat 20-minute lifetime and claimed
+  no per-familiar duration data existed. Replaced with the actual sourced model.
+- **Test heap.** Adding a third cache-loading test class to the summoning package pushed the shared
+  test JVM over the default 512m worker heap (`SummoningSpecialMoveTests` failed with
+  `OutOfMemoryError`). `game/plugins/build.gradle` now sets `test { maxHeapSize = '2g' }`. Several
+  content test classes each load a full cache-backed `DefinitionSet`, so this was already tight
+  before this change.
+
+### Verification
+
+- `./gradlew :game:plugins:test --tests 'gg.rsmod.plugins.content.skills.summoning.*'`: 37 tests,
+  0 failures.
+- Full `:game:plugins:test`: 117 tests, 2 failures, both pre-existing and unrelated to Summoning -
+  `ItemContainerTests` fails in its `@BeforeClass` on a wrong relative cache path
+  (`game/plugins/../data/cache/main_file_cache.dat2`), and `DeathExecutorTests`' PvP case throws
+  `ClassCastException` at `Killstreaks.kt:66` inside `DeathExecutor.execute`. Neither stack touches
+  summoning code. Left alone rather than fixed as drive-by work.
+
+### Still open in this area
+
+- Familiar *death* (the familiar itself being killed) has no hook yet, so its cargo is not dropped
+  in that case. The pack yak article lists it as one of the three drop cases alongside expiry and
+  dismissal, both of which are handled.
+- Foragers are described as carrying items retrievable with "Take BoB", but only the nine real
+  beasts of burden plus the Albino Rat have containers; the forage scrolls still drop to the floor.
+
 ## 2026-09-01 — sourced roster ledger + cross-table boot assertions
 
 - Cross-checked all 78 rows of `SummoningFamiliarDefinitions` against the revision-era

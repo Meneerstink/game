@@ -42,6 +42,16 @@ object BeastOfBurden {
     val ABYSSAL_TITAN_KEY = ContainerKey("bob_abyssal_titan", capacity = 7, stackType = ContainerStackType.NORMAL)
     val PACK_YAK_KEY = ContainerKey("bob_pack_yak", capacity = 30, stackType = ContainerStackType.NORMAL)
 
+    /**
+     * Not a real carry-capacity BoB familiar - reused for the Albino Rat's Cheese Feast special
+     * (real RS generates cheese "in the albino rat's inventory", a per-familiar personal store
+     * with the same shape as BoB storage). Registering it here is the smallest way to reuse the
+     * existing container/persistence machinery; the one inauthentic side effect is that using an
+     * item on the rat will also deposit it here same as a real BoB familiar, which real RS does
+     * not allow for this familiar - harmless, so not worth a parallel container system for.
+     */
+    val ALBINO_RAT_KEY = ContainerKey("bob_albino_rat", capacity = 4, stackType = ContainerStackType.NORMAL)
+
     private val storageByPouch = mapOf(
         SummoningPouchData.THORNY_SNAIL to Storage(THORNY_SNAIL_KEY),
         SummoningPouchData.SPIRIT_KALPHITE to Storage(SPIRIT_KALPHITE_KEY),
@@ -52,6 +62,7 @@ object BeastOfBurden {
         SummoningPouchData.WAR_TORTOISE to Storage(WAR_TORTOISE_KEY),
         SummoningPouchData.ABYSSAL_TITAN to Storage(ABYSSAL_TITAN_KEY, essenceOnly = true),
         SummoningPouchData.PACK_YAK to Storage(PACK_YAK_KEY),
+        SummoningPouchData.ALBINO_RAT to Storage(ALBINO_RAT_KEY),
     )
 
     val allKeys = storageByPouch.values.map { it.key }
@@ -98,6 +109,17 @@ object BeastOfBurden {
         }
         player.inventory.remove(Item(item.id, transaction.completed), assureFullRemoval = true)
         return transaction.completed
+    }
+
+    /**
+     * Adds [item] directly into the active familiar's storage without taking it from the
+     * player's inventory first - for specials that generate items in the familiar itself
+     * (e.g. Cheese Feast) rather than depositing something the player already carries.
+     * Returns the amount actually added.
+     */
+    fun grant(player: Player, item: Item): Int {
+        val key = activeKey(player) ?: return 0
+        return container(player, key).add(item.id, item.amount, assureFullInsertion = false).completed
     }
 
     /** Withdraws everything from the active BoB container into the inventory, best-effort. */
@@ -157,6 +179,19 @@ object BeastOfBurden {
             held[slot] = null
         }
     }
+    /**
+     * Empties the active BoB container without dropping anything. Used only by
+     * [Familiar.ownerDeath], where this revision loses the cargo outright rather than dropping it
+     * - see that function for the sourcing. Every other despawn path uses [release].
+     */
+    fun discard(player: Player) {
+        val key = activeKey(player) ?: return
+        val held = container(player, key)
+        for (slot in 0 until held.capacity) {
+            held[slot] = null
+        }
+    }
+
     /** Non-null (slot, item) pairs in the active BoB container, for building a withdraw-selection prompt. */
     fun contents(player: Player): List<IndexedValue<Item>> {
         val key = activeKey(player) ?: return emptyList()
