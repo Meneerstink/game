@@ -29,6 +29,17 @@ import java.util.*
  *
  * @author Tom <rspsmods@gmail.com>
  */
+internal fun executeWithObjectIdFallback(
+    originalId: Int,
+    transformedId: Int,
+    execute: (Int) -> Boolean,
+): Boolean {
+    if (execute(transformedId)) {
+        return true
+    }
+    return transformedId == originalId || execute(originalId)
+}
+
 object ObjectPathAction {
     /** Audit finding 7: opt-in diagnostic trail for the object-route/bank-distance chain. */
     private fun logRoute(
@@ -91,7 +102,11 @@ object ObjectPathAction {
 
         walk(player, obj, lineOfSightRange) {
             player.faceTile(obj.tile)
-            if (!player.world.plugins.executeItemOnObject(player, obj.getTransform(player), item.id)) {
+            val transformedId = obj.getTransform(player)
+            val handled = executeWithObjectIdFallback(obj.id, transformedId) { id ->
+                player.world.plugins.executeItemOnObject(player, id, item.id)
+            }
+            if (!handled) {
                 player.writeMessage(Entity.NOTHING_INTERESTING_HAPPENS)
                 if (player.world.devContext.debugObjects) {
                     player.writeConsoleMessage(
@@ -110,7 +125,11 @@ object ObjectPathAction {
         val lineOfSightRange = player.world.plugins.getObjInteractionDistance(obj.id)
 
         walk(player, obj, lineOfSightRange) {
-            if (!player.world.plugins.executeObject(player, obj.getTransform(player), opt!!)) {
+            val transformedId = obj.getTransform(player)
+            val handled = executeWithObjectIdFallback(obj.id, transformedId) { id ->
+                player.world.plugins.executeObject(player, id, opt!!)
+            }
+            if (!handled) {
                 player.writeMessage(Entity.NOTHING_INTERESTING_HAPPENS)
             }
         }
