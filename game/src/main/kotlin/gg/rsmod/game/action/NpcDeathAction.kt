@@ -54,7 +54,7 @@ object NpcDeathAction {
 
         world.plugins.executeSlayerLogic(npc)
 
-        deathAnimation.forEach { anim ->
+        deathAnimation.filter { it >= 0 }.forEach { anim ->
             val def = npc.world.definitions.get(AnimDef::class.java, anim)
             npc.animate(def.id)
             val timer = if (def.cycleLength >= 6) def.cycleLength - 4 else def.cycleLength

@@ -246,9 +246,7 @@ object Combat {
                 return false
             }
             if (!target.def.isAttackable() ||
-                target.combatDef.lifepoints == -1 ||
-                target.combatDef == NpcCombatDef.DEFAULT
-            ) {
+            target.combatDef.lifepoints == -1) {
                 (pawn as? Player)?.message("You can't attack this npc.")
                 (pawn as? Player)?.message(
                     "Npc ID: ${target.def.id} is missing combat definitions, please report this on Discord.",
