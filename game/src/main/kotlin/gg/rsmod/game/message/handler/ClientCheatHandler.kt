@@ -16,7 +16,7 @@ class ClientCheatHandler : MessageHandler<ClientCheatMessage> {
         world: World,
         message: ClientCheatMessage,
     ) {
-        val values = message.command.split(" ")
+        val values = message.command.trim().trimStart(':').split(" ")
         val command = values[0].lowercase()
         val args =
             if (values.size >
