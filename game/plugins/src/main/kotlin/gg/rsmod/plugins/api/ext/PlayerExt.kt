@@ -173,10 +173,10 @@ fun Player.transformObject(
     if (waitTime == -1) waitTime = 2
 
     val oldObject =
-        DynamicObject(id = objectId, type = 0, rot = currentRotation, tile = Tile(x = currentX, z = currentZ))
+        DynamicObject(id = objectId, type = 0, rot = currentRotation, tile = Tile(x = currentX, z = currentZ, height = tile.height))
 
     lockingQueue(lockState = LockState.DELAY_ACTIONS) {
-        val newObject = DynamicObject(id = newObjectId, type = 0, rot = newRotation, tile = Tile(x = nextX, z = nextZ))
+        val newObject = DynamicObject(id = newObjectId, type = 0, rot = newRotation, tile = Tile(x = nextX, z = nextZ, height = tile.height))
         world.remove(oldObject)
         world.spawn(newObject)
         wait(waitTime)
