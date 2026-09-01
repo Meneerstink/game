@@ -185,3 +185,9 @@ visually confirm chathead/model/interface layout/mode-switch behaviour from here
 boot/registration evidence above is real and as far as this environment can verify; an actual
 client login pass is an owner action, not something this session can fake or skip past silently.
 (The server process used for this boot check was stopped afterward — nothing was left running.)
+[Codex continuation — 2026-09-01]
+
+- `f32d4ec0`: corrected four revision-667 pouch NPC mappings: Spirit Tz-Kih now uses `Npcs.SPIRIT_TZKIH`, Void Shifter/Spinner are no longer swapped, and Phoenix uses the familiar definition `Npcs.PHOENIX_8575`. Added deterministic roster regression coverage.
+- `b0ad2644`: added the separate persisted special-move pool (`0..60`), capped point/special restoration helpers, and all target-cache Summoning potion dose bindings (legacy 12140-series and 5-dose 14277-series). A dose restores `maxSummoning/4 + 7` Summoning points and 15 special points.
+- `1cf15653`: added guarded `Renew-Points` handling for every known revision-667 Summoning obelisk definition; it restores both pools without changing the familiar timer.
+- Verification: `:game:plugins:test` with `FamiliarDefinitionTests` and `FamiliarPointsTests` passes; plugin compilation passes. Full suite remains blocked by pre-existing test-JVM OOM plus unrelated failures when all cache-heavy tests run together. No live-client verification is available in this headless session.
