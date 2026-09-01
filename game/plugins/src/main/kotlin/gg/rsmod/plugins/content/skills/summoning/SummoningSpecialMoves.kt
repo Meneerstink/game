@@ -15,6 +15,7 @@ import gg.rsmod.plugins.api.ext.sendRunEnergy
 import gg.rsmod.plugins.api.ext.stun
 import gg.rsmod.plugins.content.combat.createProjectile
 import gg.rsmod.plugins.content.combat.dealHit
+import gg.rsmod.plugins.content.combat.poison
 import kotlin.math.ceil
 
 enum class FamiliarSpecialTarget { INSTANT, NPC, INVENTORY_ITEM }
@@ -24,7 +25,11 @@ data class FamiliarSpecialBinding(
     val target: FamiliarSpecialTarget,
     val detailsComponent: Int,
     val orbComponent: Int,
+    val alternativeScrolls: List<SummoningScrollData> = emptyList(),
 )
+
+private val FamiliarSpecialBinding.scrolls: List<SummoningScrollData>
+    get() = listOf(scroll) + alternativeScrolls
 
 private data class DirectFamiliarSpecial(
     val maxHit: Double,
@@ -61,6 +66,27 @@ object SummoningSpecialMoves {
         FamiliarSpecialBinding(SummoningScrollData.HEALING_AURA_SCROLL, FamiliarSpecialTarget.INSTANT, 123, 138),
         FamiliarSpecialBinding(SummoningScrollData.MAGIC_FOCUS_SCROLL, FamiliarSpecialTarget.INSTANT, 161, 119),
         FamiliarSpecialBinding(SummoningScrollData.SPIKE_SHOT_SCROLL, FamiliarSpecialTarget.NPC, 157, 121),
+        FamiliarSpecialBinding(
+            SummoningScrollData.ADAMANT_BULL_RUSH_SCROLL,
+            FamiliarSpecialTarget.NPC,
+            159,
+            120,
+            listOf(
+                SummoningScrollData.BRONZE_BULL_RUSH_SCROLL,
+                SummoningScrollData.IRON_BULL_RUSH_SCROLL,
+                SummoningScrollData.STEEL_BULL_RUSH_SCROLL,
+                SummoningScrollData.MITHRIL_BULL_RUSH_SCROLL,
+                SummoningScrollData.RUNE_BULL_RUSH_SCROLL,
+            ),
+        ),
+        FamiliarSpecialBinding(SummoningScrollData.POISONOUS_BLAST_SCROLL, FamiliarSpecialTarget.NPC, 151, 124),
+        FamiliarSpecialBinding(SummoningScrollData.SWAMP_PLAGUE_SCROLL, FamiliarSpecialTarget.NPC, 165, 117),
+        FamiliarSpecialBinding(SummoningScrollData.BOIL_SCROLL, FamiliarSpecialTarget.NPC, 171, 114),
+        FamiliarSpecialBinding(SummoningScrollData.DEADLY_CLAW_SCROLL, FamiliarSpecialTarget.NPC, 153, 123),
+        FamiliarSpecialBinding(SummoningScrollData.ACORN_MISSILE_SCROLL, FamiliarSpecialTarget.NPC, 149, 125),
+        FamiliarSpecialBinding(SummoningScrollData.IRON_WITHIN_SCROLL, FamiliarSpecialTarget.NPC, 193, 103),
+        FamiliarSpecialBinding(SummoningScrollData.SANDSTORM_SCROLL, FamiliarSpecialTarget.INSTANT, 109, 145),
+        FamiliarSpecialBinding(SummoningScrollData.FIREBALL_ASSAULT_SCROLL, FamiliarSpecialTarget.INSTANT, 189, 105),
         FamiliarSpecialBinding(SummoningScrollData.EBON_THUNDER_SCROLL, FamiliarSpecialTarget.NPC, 181, 109),
         FamiliarSpecialBinding(SummoningScrollData.WINTER_STORAGE_SCROLL, FamiliarSpecialTarget.INVENTORY_ITEM, 121, 139),
         FamiliarSpecialBinding(SummoningScrollData.STEEL_OF_LEGENDS_SCROLL, FamiliarSpecialTarget.NPC, 173, 113),
@@ -79,6 +105,14 @@ object SummoningSpecialMoves {
         SummoningScrollData.MANTIS_STRIKE_SCROLL to DirectFamiliarSpecial(100.0, 8071, 1379, 1380, 1381, HitType.RANGE),
         SummoningScrollData.INFERNO_SCROLL to DirectFamiliarSpecial(85.0, 7871, 1394, targetGraphic = 1393),
         SummoningScrollData.SPIKE_SHOT_SCROLL to DirectFamiliarSpecial(170.0, 7787, projectile = 1426, targetGraphic = 1428, hitType = HitType.RANGE),
+        SummoningScrollData.POISONOUS_BLAST_SCROLL to DirectFamiliarSpecial(120.0, 8211, projectile = 1508, targetGraphic = 1511),
+        SummoningScrollData.SWAMP_PLAGUE_SCROLL to DirectFamiliarSpecial(110.0, 8223, projectile = 1462),
+        SummoningScrollData.ADAMANT_BULL_RUSH_SCROLL to DirectFamiliarSpecial(200.0, 8026, 1496, 1497, hitType = HitType.RANGE),
+        SummoningScrollData.BRONZE_BULL_RUSH_SCROLL to DirectFamiliarSpecial(80.0, 8026, 1496, 1497, hitType = HitType.RANGE),
+        SummoningScrollData.IRON_BULL_RUSH_SCROLL to DirectFamiliarSpecial(100.0, 8026, 1496, 1497, hitType = HitType.RANGE),
+        SummoningScrollData.STEEL_BULL_RUSH_SCROLL to DirectFamiliarSpecial(120.0, 8026, 1496, 1497, hitType = HitType.RANGE),
+        SummoningScrollData.MITHRIL_BULL_RUSH_SCROLL to DirectFamiliarSpecial(160.0, 8026, 1496, 1497, hitType = HitType.RANGE),
+        SummoningScrollData.RUNE_BULL_RUSH_SCROLL to DirectFamiliarSpecial(240.0, 8026, 1496, 1497, hitType = HitType.RANGE),
         SummoningScrollData.EBON_THUNDER_SCROLL to DirectFamiliarSpecial(140.0, 7986, 1492, 1493, 1494),
     )
 
@@ -86,15 +120,19 @@ object SummoningSpecialMoves {
         check(bindings.map { it.detailsComponent }.distinct().size == bindings.size)
         check(bindings.map { it.orbComponent }.distinct().size == bindings.size)
         bindings.forEach { binding ->
-            check(binding.scroll.familiars.isNotEmpty())
-            check(binding.scroll.specialPoints in 1..Familiar.MAX_SPECIAL_POINTS)
+            binding.scrolls.forEach { scroll ->
+                check(scroll.familiars.isNotEmpty())
+                check(scroll.specialPoints in 1..Familiar.MAX_SPECIAL_POINTS)
+            }
         }
     }
 
     fun castInstant(player: Player, binding: FamiliarSpecialBinding): Boolean {
         if (binding.target != FamiliarSpecialTarget.INSTANT) return false
-        val familiar = validateResources(player, binding.scroll) ?: return false
-        val changed = when (binding.scroll) {
+        val resolved = validateResources(player, binding) ?: return false
+        val familiar = resolved.familiar
+        val scroll = resolved.scroll
+        val changed = when (scroll) {
             SummoningScrollData.STONY_SHELL_SCROLL ->
                 boost(player, Skills.DEFENCE, 4).also { if (it) animateSelf(player, familiar, 8109, 1326) }
             SummoningScrollData.THIEVING_FINGERS_SCROLL ->
@@ -177,15 +215,21 @@ object SummoningSpecialMoves {
                 animateSelf(player, familiar, 7928, 1397, 1399)
                 true
             }
+            SummoningScrollData.FIREBALL_ASSAULT_SCROLL ->
+                executeAoe(player, familiar, maxTargets = 2, radius = 3, maxHit = 70.0, animation = 8257, targetGraphic = 1329)
+            SummoningScrollData.SANDSTORM_SCROLL ->
+                executeAoe(player, familiar, maxTargets = 6, radius = 6, maxHit = 200.0, animation = 8517, sourceGraphic = 1350, projectile = 1349)
             else -> false
         }
         if (!changed) return false
-        return commitResources(player, binding.scroll)
+        return commitResources(player, scroll)
     }
 
     fun castOnNpc(player: Player, binding: FamiliarSpecialBinding, target: Npc): Boolean {
         if (binding.target != FamiliarSpecialTarget.NPC) return false
-        val familiar = validateResources(player, binding.scroll) ?: return false
+        val resolved = validateResources(player, binding) ?: return false
+        val familiar = resolved.familiar
+        val scroll = resolved.scroll
         if (!target.isAlive() || target === familiar || target.tile.height != familiar.tile.height || familiar.tile.getDistance(target.tile) > 16) {
             player.message("Your familiar cannot use that special move on this target.")
             return false
@@ -194,12 +238,24 @@ object SummoningSpecialMoves {
             player.message("Your familiar cannot attack that target here.")
             return false
         }
-        if (!commitResources(player, binding.scroll)) return false
+        if (!commitResources(player, scroll)) return false
         familiar.facePawn(target)
-        val direct = directCombat[binding.scroll]
+        val direct = directCombat[scroll]
         when {
-            direct != null -> executeDirectCombat(player, familiar, target, binding.scroll, direct)
-            binding.scroll == SummoningScrollData.STEEL_OF_LEGENDS_SCROLL -> {
+            direct != null -> executeDirectCombat(player, familiar, target, scroll, direct)
+            scroll == SummoningScrollData.BOIL_SCROLL -> executeBoil(player, familiar, target)
+            scroll == SummoningScrollData.DEADLY_CLAW_SCROLL -> executeVolley(familiar, target, 3, 100.0, HitType.MAGIC)
+            scroll == SummoningScrollData.ACORN_MISSILE_SCROLL -> {
+                executeDirectCombat(player, familiar, target, scroll, DirectFamiliarSpecial(100.0, 7858, projectile = 1362, targetGraphic = 1363))
+                executeSplash(player, familiar, target, maxTargets = 9, radius = 1, maxHit = 100.0, projectile = 1362, targetGraphic = 1363)
+            }
+            scroll == SummoningScrollData.IRON_WITHIN_SCROLL -> {
+                familiar.animate(7954)
+                familiar.graphic(1450)
+                val melee = familiar.tile.getDistance(target.tile) <= 1
+                executeVolley(familiar, target, 3, if (melee) 230.0 else 220.0, if (melee) HitType.MELEE else HitType.MAGIC)
+            }
+            scroll == SummoningScrollData.STEEL_OF_LEGENDS_SCROLL -> {
                 familiar.animate(8190)
                 target.graphic(1449)
                 repeat(4) { index ->
@@ -215,7 +271,9 @@ object SummoningSpecialMoves {
 
     fun castOnInventoryItem(player: Player, binding: FamiliarSpecialBinding, slot: Int): Boolean {
         if (binding.target != FamiliarSpecialTarget.INVENTORY_ITEM || binding.scroll != SummoningScrollData.WINTER_STORAGE_SCROLL) return false
-        val familiar = validateResources(player, binding.scroll) ?: return false
+        val resolved = validateResources(player, binding) ?: return false
+        val familiar = resolved.familiar
+        val scroll = resolved.scroll
         val selected = player.inventory[slot] ?: return false
         if (selected.id == binding.scroll.scroll) {
             player.message("Your familiar refuses to bank the scroll powering its special move.")
@@ -226,14 +284,14 @@ object SummoningSpecialMoves {
             player.message("Your bank is too full to store that item.")
             return false
         }
-        if (!commitResources(player, binding.scroll)) return false
+        if (!commitResources(player, scroll)) return false
         if (!player.inventory.remove(selected.id, 1, assureFullRemoval = true, beginSlot = slot).hasSucceeded()) {
-            refundResources(player, binding.scroll)
+            refundResources(player, scroll)
             return false
         }
         if (!player.bank.add(selected.id, 1, assureFullInsertion = true).hasSucceeded()) {
             player.inventory.add(selected.id, 1, assureFullInsertion = true, beginSlot = slot)
-            refundResources(player, binding.scroll)
+            refundResources(player, scroll)
             return false
         }
         familiar.graphic(1358)
@@ -241,9 +299,16 @@ object SummoningSpecialMoves {
         return true
     }
 
-    private fun validateResources(player: Player, scroll: SummoningScrollData): Npc? {
+    private data class ResolvedSpecial(val familiar: Npc, val scroll: SummoningScrollData)
+
+    private fun validateResources(player: Player, binding: FamiliarSpecialBinding): ResolvedSpecial? {
         val familiar = Familiar.current(player)
-        if (familiar == null || familiar.id !in scroll.familiars) {
+        if (familiar == null) {
+            player.message("You need the matching familiar summoned to use this scroll.")
+            return null
+        }
+        val scroll = binding.scrolls.singleOrNull { familiar.id in it.familiars }
+        if (scroll == null) {
             player.message("You need the matching familiar summoned to use this scroll.")
             return null
         }
@@ -255,7 +320,7 @@ object SummoningSpecialMoves {
             player.message("You do not have enough familiar special-move energy.")
             return null
         }
-        return familiar
+        return ResolvedSpecial(familiar, scroll)
     }
 
     private fun commitResources(player: Player, scroll: SummoningScrollData): Boolean {
@@ -298,7 +363,16 @@ object SummoningSpecialMoves {
                         SummoningScrollData.ELECTRIC_LASH_SCROLL -> target.stun(5)
                         SummoningScrollData.ARCTIC_BLAST_SCROLL -> if (target.getSize() <= 1 && player.world.randomDouble() < 0.20) target.stun(3)
                         SummoningScrollData.MANTIS_STRIKE_SCROLL -> if (target.getSize() <= 1) target.stun(3)
-                        SummoningScrollData.SPIKE_SHOT_SCROLL -> target.stun(5)
+                    SummoningScrollData.SPIKE_SHOT_SCROLL -> target.stun(5)
+                    SummoningScrollData.POISONOUS_BLAST_SCROLL -> if (player.world.randomDouble() < 0.50) target.poison(20)
+                    SummoningScrollData.SWAMP_PLAGUE_SCROLL -> target.poison(80)
+                    SummoningScrollData.BRONZE_BULL_RUSH_SCROLL,
+                    SummoningScrollData.IRON_BULL_RUSH_SCROLL,
+                    SummoningScrollData.STEEL_BULL_RUSH_SCROLL,
+                    SummoningScrollData.MITHRIL_BULL_RUSH_SCROLL,
+                    SummoningScrollData.ADAMANT_BULL_RUSH_SCROLL,
+                    SummoningScrollData.RUNE_BULL_RUSH_SCROLL,
+                    -> if (player.world.randomDouble() < (1.0 / 3.0)) target.stun(5)
                         SummoningScrollData.CRUSHING_CLAW_SCROLL -> drainNpc(target, NpcSkills.DEFENCE, 0.05)
                         SummoningScrollData.DISSOLVE_SCROLL -> drainNpc(target, NpcSkills.ATTACK, 0.10)
                         SummoningScrollData.RENDING_SCROLL -> drainNpc(target, NpcSkills.STRENGTH, 0.10)
@@ -310,6 +384,90 @@ object SummoningSpecialMoves {
             },
             hitType = effect.hitType,
         )
+    }
+
+    private fun executeBoil(player: Player, familiar: Npc, target: Npc) {
+        familiar.animate(7883)
+        familiar.graphic(1373)
+        val melee = familiar.tile.getDistance(target.tile) <= 1
+        val hitType = if (melee) HitType.MELEE else if (player.world.randomDouble() < 0.50) HitType.RANGE else HitType.MAGIC
+        if (!melee) {
+            val projectileType = if (hitType == HitType.RANGE) ProjectileType.ARROW else ProjectileType.MAGIC
+            player.world.spawn(familiar.createProjectile(target, 1376, projectileType))
+            target.graphic(1377)
+        }
+        familiar.dealHit(target, maxHit = 240.0, landHit = true, delay = if (melee) 1 else 2, hitType = hitType)
+    }
+
+    private fun executeVolley(familiar: Npc, target: Npc, hits: Int, maxHit: Double, hitType: HitType) {
+        if (hits == 3 && maxHit == 100.0) familiar.animate(7348)
+        repeat(hits) { index ->
+            familiar.dealHit(target, maxHit = maxHit, landHit = true, delay = 1 + index / 2, hitType = hitType)
+        }
+    }
+
+    private fun executeAoe(
+        player: Player,
+        familiar: Npc,
+        maxTargets: Int,
+        radius: Int,
+        maxHit: Double,
+        animation: Int,
+        sourceGraphic: Int = -1,
+        projectile: Int = -1,
+        targetGraphic: Int = -1,
+    ): Boolean {
+        val targets = nearbyAttackableNpcs(player, familiar, familiar, radius, maxTargets)
+        if (targets.isEmpty()) {
+            player.message("There are no valid targets for your familiar's special move.")
+            return false
+        }
+        familiar.animate(animation)
+        if (sourceGraphic >= 0) familiar.graphic(sourceGraphic)
+        targets.forEach { target ->
+            if (projectile >= 0) player.world.spawn(familiar.createProjectile(target, projectile, ProjectileType.MAGIC))
+            if (targetGraphic >= 0) target.graphic(targetGraphic)
+            familiar.dealHit(target, maxHit = maxHit, landHit = true, delay = if (projectile >= 0) 2 else 1, hitType = HitType.MAGIC)
+            familiar.attack(target)
+        }
+        return true
+    }
+
+    private fun executeSplash(
+        player: Player,
+        familiar: Npc,
+        primary: Npc,
+        maxTargets: Int,
+        radius: Int,
+        maxHit: Double,
+        projectile: Int = -1,
+        targetGraphic: Int = -1,
+    ) {
+        nearbyAttackableNpcs(player, familiar, primary, radius, maxTargets, excluded = primary).forEach { target ->
+            if (projectile >= 0) player.world.spawn(familiar.createProjectile(target, projectile, ProjectileType.MAGIC))
+            if (targetGraphic >= 0) target.graphic(targetGraphic)
+            familiar.dealHit(target, maxHit = maxHit, landHit = true, delay = if (projectile >= 0) 2 else 1, hitType = HitType.MAGIC)
+        }
+    }
+
+    private fun nearbyAttackableNpcs(
+        player: Player,
+        familiar: Npc,
+        center: Npc,
+        radius: Int,
+        maxTargets: Int,
+        excluded: Npc? = null,
+    ): List<Npc> {
+        val targets = mutableListOf<Npc>()
+        player.world.npcs.forEach { npc ->
+            if (targets.size >= maxTargets) return@forEach
+            if (npc === familiar || npc === excluded || !npc.isAlive() || npc.tile.height != center.tile.height) return@forEach
+            if (!npc.tile.isWithinRadius(center.tile, radius)) return@forEach
+            if (!player.tile.isMulti(player.world) || !npc.tile.isMulti(player.world)) return@forEach
+            if (!player.world.plugins.canAttack(player, npc)) return@forEach
+            targets.add(npc)
+        }
+        return targets
     }
 
     private fun drainNpc(target: Npc, skill: Int, multiplier: Double = 0.0, amount: Int = 0) {

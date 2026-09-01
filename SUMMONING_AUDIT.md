@@ -251,3 +251,11 @@ client login pass is an owner action, not something this session can fake or ski
 - Projectile, source/target graphic, animation and damage data come from the preserved Summoning source tables.
 - Added sourced secondary effects: stuns/binds and Attack, Strength, Defence or Magic drains where applicable.
 - Dispatcher now covers 26 working special moves; the remaining effects are still open and are not counted as complete.
+
+## 2026-09-01 — expanded combat-special batch
+
+- Added source-backed Poisonous Blast, Swamp Plague, Boil, Deadly Claw, Acorn Missile, Iron Within, Fireball Assault, Sandstorm and the full six-tier Bull Rush family.
+- Bull Rush now uses one registered revision-667 interface component and resolves the exact scroll from the active minotaur, preventing duplicate component handlers.
+- Added multi-zone and canAttack filtering for AoE/splash targets; invalid or empty casts consume neither scroll nor special energy.
+- Dispatcher now covers 35 registered component bindings and 40 executable scroll variants (Bull Rush contributes six variants through one binding).
+- Focused SummoningSpecialMoveTests and plugin compilation: BUILD SUCCESSFUL. Live animation, projectile timing and target-selection still require owner client verification.

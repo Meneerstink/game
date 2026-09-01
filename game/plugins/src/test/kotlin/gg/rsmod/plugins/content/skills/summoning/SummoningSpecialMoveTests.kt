@@ -31,7 +31,7 @@ class SummoningSpecialMoveTests {
     @Test
     fun `core dispatcher uses unique verified components`() {
         SummoningSpecialMoves.validate()
-        assertEquals(26, SummoningSpecialMoves.bindings.size)
+        assertEquals(35, SummoningSpecialMoves.bindings.size)
         assertTrue(SummoningSpecialMoves.bindings.map { it.detailsComponent }.containsAll(setOf(77, 139, 127, 121, 173)))
         assertTrue(SummoningSpecialMoves.bindings.map { it.orbComponent }.containsAll(setOf(161, 130, 136, 139, 113)))
     }
@@ -73,7 +73,8 @@ class SummoningSpecialMoveTests {
         assertEquals(48, Familiar.currentSpecialPoints(player))
     }
 
-    private fun binding(scroll: SummoningScrollData) = SummoningSpecialMoves.bindings.single { it.scroll == scroll }
+    private fun binding(scroll: SummoningScrollData) =
+        SummoningSpecialMoves.bindings.single { it.scroll == scroll || scroll in it.alternativeScrolls }
 
     private fun newPlayer(familiarNpcId: Int): Player {
         val world = mockk<World>(relaxed = true)
