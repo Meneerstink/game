@@ -189,10 +189,14 @@ object PawnPathAction {
                 val npcId = other.getTransform(pawn)
                 val handled =
                     if (opt != ITEM_USE_OPCODE) {
-                        world.plugins.executeNpc(pawn, npcId, opt)
+                        executeWithObjectIdFallback(other.id, npcId) { id ->
+                            world.plugins.executeNpc(pawn, id, opt)
+                        }
                     } else {
                         val item = pawn.attr[INTERACTING_ITEM]?.get() ?: return
-                        world.plugins.executeItemOnNpc(pawn, npcId, item.id)
+                        executeWithObjectIdFallback(other.id, npcId) { id ->
+                            world.plugins.executeItemOnNpc(pawn, id, item.id)
+                        }
                     }
 
                 logInteraction(pawn, other, opt, if (handled) "handled" else "unhandled")
