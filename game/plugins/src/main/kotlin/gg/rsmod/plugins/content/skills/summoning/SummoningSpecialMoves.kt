@@ -4,6 +4,7 @@ import gg.rsmod.game.model.container.ItemContainer
 import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.api.HitType
+import gg.rsmod.plugins.api.NpcSkills
 import gg.rsmod.plugins.api.ProjectileType
 import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.api.ext.addXp
@@ -11,6 +12,7 @@ import gg.rsmod.plugins.api.ext.isMulti
 import gg.rsmod.plugins.api.ext.heal
 import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.api.ext.sendRunEnergy
+import gg.rsmod.plugins.api.ext.stun
 import gg.rsmod.plugins.content.combat.createProjectile
 import gg.rsmod.plugins.content.combat.dealHit
 import kotlin.math.ceil
@@ -24,23 +26,60 @@ data class FamiliarSpecialBinding(
     val orbComponent: Int,
 )
 
+private data class DirectFamiliarSpecial(
+    val maxHit: Double,
+    val animation: Int,
+    val sourceGraphic: Int = -1,
+    val projectile: Int = -1,
+    val targetGraphic: Int = -1,
+    val hitType: HitType = HitType.MAGIC,
+)
+
 /** Revision-667 dispatcher whose component ids are sourced from the matching cache interface data. */
 object SummoningSpecialMoves {
     val bindings = listOf(
         FamiliarSpecialBinding(SummoningScrollData.DREADFOWL_STRIKE_SCROLL, FamiliarSpecialTarget.NPC, 77, 161),
+        FamiliarSpecialBinding(SummoningScrollData.SLIME_SPRAY_SCROLL, FamiliarSpecialTarget.NPC, 129, 135),
+        FamiliarSpecialBinding(SummoningScrollData.ELECTRIC_LASH_SCROLL, FamiliarSpecialTarget.NPC, 131, 134),
         FamiliarSpecialBinding(SummoningScrollData.STONY_SHELL_SCROLL, FamiliarSpecialTarget.INSTANT, 85, 157),
         FamiliarSpecialBinding(SummoningScrollData.INSANE_FEROCITY_SCROLL, FamiliarSpecialTarget.INSTANT, 115, 142),
         FamiliarSpecialBinding(SummoningScrollData.THIEVING_FINGERS_SCROLL, FamiliarSpecialTarget.INSTANT, 91, 154),
         FamiliarSpecialBinding(SummoningScrollData.UNBURDEN_SCROLL, FamiliarSpecialTarget.INSTANT, 101, 149),
         FamiliarSpecialBinding(SummoningScrollData.TIRELESS_RUN_SCROLL, FamiliarSpecialTarget.INSTANT, 139, 130),
+        FamiliarSpecialBinding(SummoningScrollData.EVIL_FLAMES_SCROLL, FamiliarSpecialTarget.NPC, 87, 156),
+        FamiliarSpecialBinding(SummoningScrollData.DISSOLVE_SCROLL, FamiliarSpecialTarget.NPC, 133, 133),
+        FamiliarSpecialBinding(SummoningScrollData.RENDING_SCROLL, FamiliarSpecialTarget.NPC, 191, 104),
+        FamiliarSpecialBinding(SummoningScrollData.DOOMSPHERE_SCROLL, FamiliarSpecialTarget.NPC, 145, 127),
         FamiliarSpecialBinding(SummoningScrollData.ABYSSAL_STEALTH_SCROLL, FamiliarSpecialTarget.INSTANT, 97, 151),
         FamiliarSpecialBinding(SummoningScrollData.TESTUDO_SCROLL, FamiliarSpecialTarget.INSTANT, 127, 136),
+        FamiliarSpecialBinding(SummoningScrollData.ARCTIC_BLAST_SCROLL, FamiliarSpecialTarget.NPC, 119, 140),
+        FamiliarSpecialBinding(SummoningScrollData.CRUSHING_CLAW_SCROLL, FamiliarSpecialTarget.NPC, 103, 148),
+        FamiliarSpecialBinding(SummoningScrollData.MANTIS_STRIKE_SCROLL, FamiliarSpecialTarget.NPC, 105, 147),
+        FamiliarSpecialBinding(SummoningScrollData.INFERNO_SCROLL, FamiliarSpecialTarget.NPC, 197, 101),
         FamiliarSpecialBinding(SummoningScrollData.VOLCANIC_STRENGTH_SCROLL, FamiliarSpecialTarget.INSTANT, 183, 108),
         FamiliarSpecialBinding(SummoningScrollData.TITANS_CONSTITUTION_SCROLL, FamiliarSpecialTarget.INSTANT, 169, 115),
         FamiliarSpecialBinding(SummoningScrollData.HEALING_AURA_SCROLL, FamiliarSpecialTarget.INSTANT, 123, 138),
         FamiliarSpecialBinding(SummoningScrollData.MAGIC_FOCUS_SCROLL, FamiliarSpecialTarget.INSTANT, 161, 119),
+        FamiliarSpecialBinding(SummoningScrollData.SPIKE_SHOT_SCROLL, FamiliarSpecialTarget.NPC, 157, 121),
+        FamiliarSpecialBinding(SummoningScrollData.EBON_THUNDER_SCROLL, FamiliarSpecialTarget.NPC, 181, 109),
         FamiliarSpecialBinding(SummoningScrollData.WINTER_STORAGE_SCROLL, FamiliarSpecialTarget.INVENTORY_ITEM, 121, 139),
         FamiliarSpecialBinding(SummoningScrollData.STEEL_OF_LEGENDS_SCROLL, FamiliarSpecialTarget.NPC, 173, 113),
+    )
+
+    private val directCombat = mapOf(
+        SummoningScrollData.DREADFOWL_STRIKE_SCROLL to DirectFamiliarSpecial(30.0, 5387, 1523, 1318),
+        SummoningScrollData.SLIME_SPRAY_SCROLL to DirectFamiliarSpecial(80.0, 8148, 1385, 1386, 1387, HitType.RANGE),
+        SummoningScrollData.ELECTRIC_LASH_SCROLL to DirectFamiliarSpecial(50.0, 7795, 1410, 1411),
+        SummoningScrollData.EVIL_FLAMES_SCROLL to DirectFamiliarSpecial(100.0, 8251, 1328, 1330, 1329),
+        SummoningScrollData.DISSOLVE_SCROLL to DirectFamiliarSpecial(120.0, 8575, 1361, 1360, 1360),
+        SummoningScrollData.RENDING_SCROLL to DirectFamiliarSpecial(120.0, 5229, 1370, 1371, 1372, HitType.RANGE),
+        SummoningScrollData.DOOMSPHERE_SCROLL to DirectFamiliarSpecial(78.0, 7974, 1478, 1479, 1480),
+        SummoningScrollData.ARCTIC_BLAST_SCROLL to DirectFamiliarSpecial(130.0, 4926, 1405, 1406, 1407),
+        SummoningScrollData.CRUSHING_CLAW_SCROLL to DirectFamiliarSpecial(96.0, 8118, 1351, 1352, hitType = HitType.RANGE),
+        SummoningScrollData.MANTIS_STRIKE_SCROLL to DirectFamiliarSpecial(100.0, 8071, 1379, 1380, 1381, HitType.RANGE),
+        SummoningScrollData.INFERNO_SCROLL to DirectFamiliarSpecial(85.0, 7871, 1394, targetGraphic = 1393),
+        SummoningScrollData.SPIKE_SHOT_SCROLL to DirectFamiliarSpecial(170.0, 7787, projectile = 1426, targetGraphic = 1428, hitType = HitType.RANGE),
+        SummoningScrollData.EBON_THUNDER_SCROLL to DirectFamiliarSpecial(140.0, 7986, 1492, 1493, 1494),
     )
 
     fun validate() {
@@ -157,14 +196,10 @@ object SummoningSpecialMoves {
         }
         if (!commitResources(player, binding.scroll)) return false
         familiar.facePawn(target)
-        when (binding.scroll) {
-            SummoningScrollData.DREADFOWL_STRIKE_SCROLL -> {
-                familiar.animate(5387)
-                familiar.graphic(1523)
-                player.world.spawn(familiar.createProjectile(target, 1318, ProjectileType.MAGIC))
-                familiar.dealHit(target, maxHit = 30.0, landHit = true, delay = 2, hitType = HitType.MAGIC)
-            }
-            SummoningScrollData.STEEL_OF_LEGENDS_SCROLL -> {
+        val direct = directCombat[binding.scroll]
+        when {
+            direct != null -> executeDirectCombat(player, familiar, target, binding.scroll, direct)
+            binding.scroll == SummoningScrollData.STEEL_OF_LEGENDS_SCROLL -> {
                 familiar.animate(8190)
                 target.graphic(1449)
                 repeat(4) { index ->
@@ -236,6 +271,51 @@ object SummoningSpecialMoves {
     private fun refundResources(player: Player, scroll: SummoningScrollData) {
         player.inventory.add(scroll.scroll, 1, assureFullInsertion = true)
         Familiar.restoreSpecialPoints(player, scroll.specialPoints)
+    }
+
+    private fun executeDirectCombat(
+        player: Player,
+        familiar: Npc,
+        target: Npc,
+        scroll: SummoningScrollData,
+        effect: DirectFamiliarSpecial,
+    ) {
+        familiar.animate(effect.animation)
+        if (effect.sourceGraphic >= 0) familiar.graphic(effect.sourceGraphic)
+        if (effect.projectile >= 0) {
+            val projectileType = if (effect.hitType == HitType.RANGE) ProjectileType.ARROW else ProjectileType.MAGIC
+            player.world.spawn(familiar.createProjectile(target, effect.projectile, projectileType))
+        }
+        if (effect.targetGraphic >= 0) target.graphic(effect.targetGraphic)
+        familiar.dealHit(
+            target,
+            maxHit = effect.maxHit,
+            landHit = true,
+            delay = if (effect.projectile >= 0) 2 else 1,
+            onHit = { pawnHit ->
+                pawnHit.hit.addAction {
+                    when (scroll) {
+                        SummoningScrollData.ELECTRIC_LASH_SCROLL -> target.stun(5)
+                        SummoningScrollData.ARCTIC_BLAST_SCROLL -> if (target.getSize() <= 1 && player.world.randomDouble() < 0.20) target.stun(3)
+                        SummoningScrollData.MANTIS_STRIKE_SCROLL -> if (target.getSize() <= 1) target.stun(3)
+                        SummoningScrollData.SPIKE_SHOT_SCROLL -> target.stun(5)
+                        SummoningScrollData.CRUSHING_CLAW_SCROLL -> drainNpc(target, NpcSkills.DEFENCE, 0.05)
+                        SummoningScrollData.DISSOLVE_SCROLL -> drainNpc(target, NpcSkills.ATTACK, 0.10)
+                        SummoningScrollData.RENDING_SCROLL -> drainNpc(target, NpcSkills.STRENGTH, 0.10)
+                        SummoningScrollData.EVIL_FLAMES_SCROLL -> drainNpc(target, NpcSkills.MAGIC, amount = 1)
+                        SummoningScrollData.DOOMSPHERE_SCROLL -> drainNpc(target, NpcSkills.MAGIC, 0.05)
+                        else -> Unit
+                    }
+                }
+            },
+            hitType = effect.hitType,
+        )
+    }
+
+    private fun drainNpc(target: Npc, skill: Int, multiplier: Double = 0.0, amount: Int = 0) {
+        val current = target.stats.getCurrentLevel(skill)
+        val drain = if (amount > 0) amount else ceil(target.stats.getMaxLevel(skill) * multiplier).toInt()
+        target.stats.setCurrentLevel(skill, (current - drain).coerceAtLeast(1))
     }
 
     private fun boost(player: Player, skill: Int, amount: Int): Boolean {

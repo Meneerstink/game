@@ -244,3 +244,10 @@ client login pass is an owner action, not something this session can fake or ski
 - Added Stony Shell, Thieving Fingers, Unburden, Abyssal Stealth, Volcanic Strength, Magic Focus, Healing Aura, Titan's Constitution and Insane Ferocity.
 - All fourteen implemented special moves now share the same matching-familiar, scroll, energy and stale-click gate on both 662 and 747.
 - Used source-backed revision-667 component, animation and graphic mappings; no new visual ids were guessed.
+
+## 2026-09-01 — direct combat scroll batch
+
+- Added Slime Spray, Electric Lash, Evil Flames, Dissolve, Rending, Doomsphere, Arctic Blast, Crushing Claw, Mantis Strike, Inferno, Spike Shot and Ebon Thunder.
+- Projectile, source/target graphic, animation and damage data come from the preserved Summoning source tables.
+- Added sourced secondary effects: stuns/binds and Attack, Strength, Defence or Magic drains where applicable.
+- Dispatcher now covers 26 working special moves; the remaining effects are still open and are not counted as complete.
