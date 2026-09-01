@@ -232,3 +232,9 @@ client login pass is an owner action, not something this session can fake or ski
 - Winter Storage preflights bank capacity and moves exactly one selected inventory item without loss/duplication.
 - Focused special-move plus existing lifecycle, points, BoB and combat-definition suites pass (23 tests).
 - Remaining 62 scroll effects and live client interaction proof remain open; this entry does not claim Summoning complete.
+
+## 2026-09-01 — healing familiar passives
+
+- Void Spinner now restores 100 internal life points and Bunyip 20 every 15 online seconds while active.
+- Healing stops immediately on dismiss/expiry and never exceeds the player's normal maximum.
+- Bunyip uses the sourced revision graphic 1507 only when healing actually restores life points.

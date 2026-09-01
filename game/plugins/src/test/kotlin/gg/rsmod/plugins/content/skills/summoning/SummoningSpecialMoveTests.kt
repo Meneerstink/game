@@ -80,13 +80,15 @@ class SummoningSpecialMoveTests {
         every { world.definitions } returns DEFINITIONS
         val npcs = PawnList(arrayOfNulls<Npc>(10))
         every { world.npcs } returns npcs
+        every { world.gameContext.cycleTime } returns 600
         val skills = SkillSet(Skills.SUMMONING + 1)
         for (skill in 0..Skills.SUMMONING) {
             skills.setBaseLevel(skill, 99)
             skills.setCurrentLevel(skill, 99)
         }
         val player = mockk<Player>(relaxed = true)
-        every { player.attr } returns AttributeMap()
+        val playerAttributes = AttributeMap()
+        every { player.attr } returns playerAttributes
         every { player.world } returns world
         every { player.inventory } returns ItemContainer(DEFINITIONS, INVENTORY_KEY)
         every { player.bank } returns ItemContainer(DEFINITIONS, BANK_KEY)
@@ -97,6 +99,8 @@ class SummoningSpecialMoveTests {
         every { npc.id } returns familiarNpcId
         every { npc.tile } returns Tile(0, 0, 0)
         every { npc.world } returns world
+        val npcAttributes = AttributeMap()
+        every { npc.attr } returns npcAttributes
         every { npc.index } returns 0
         npcs.entries[0] = npc
         player.attr[FAMILIAR_ATTR] = WeakReference(npc)

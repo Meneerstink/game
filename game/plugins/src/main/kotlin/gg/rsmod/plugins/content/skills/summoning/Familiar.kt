@@ -10,6 +10,7 @@ import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.timer.TimerKey
 import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.api.ext.addXp
+import gg.rsmod.plugins.api.ext.heal
 import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.api.ext.setComponentHidden
 import gg.rsmod.plugins.api.ext.setComponentText
@@ -39,6 +40,7 @@ val FAMILIAR_SPECIAL_POINTS_ATTR = AttributeKey<Int>(persistenceKey = "familiar_
 
 /** Persisted online-cycle accumulator; preserves partial special regeneration through relog. */
 private val FAMILIAR_SPECIAL_REGEN_CYCLES_ATTR = AttributeKey<Int>(persistenceKey = "familiar_special_regen_cycles")
+private val FAMILIAR_PASSIVE_HEAL_CYCLES_ATTR = AttributeKey<Int>()
 /**
  * R07.7: persisted (sourced - familiars survive logout in this era, the lifetime timer just
  * pauses while offline via [TimerKey.tickOffline] = false and resumes with the same time left
@@ -122,6 +124,29 @@ object Familiar {
         }
         player.attr[FAMILIAR_SPECIAL_REGEN_CYCLES_ATTR] = accumulated % interval
         restoreSpecialPoints(player, SPECIAL_REGEN_AMOUNT)
+    }
+
+    /** Void Spinner and Bunyip restore 100/20 internal life points every 15 online seconds. */
+    private fun applyPassiveHealing(player: Player, npc: Npc) {
+        val amount = when (npc.id) {
+            SummoningPouchData.VOID_SPINNER.npc -> 100
+            SummoningPouchData.BUNYIP.npc -> 20
+            else -> {
+                player.attr.remove(FAMILIAR_PASSIVE_HEAL_CYCLES_ATTR)
+                return
+            }
+        }
+        val interval = (15_000 / player.world.gameContext.cycleTime).coerceAtLeast(1)
+        val cycles = player.attr.getOrDefault(FAMILIAR_PASSIVE_HEAL_CYCLES_ATTR, 0) + 1
+        if (cycles < interval) {
+            player.attr[FAMILIAR_PASSIVE_HEAL_CYCLES_ATTR] = cycles
+            return
+        }
+        player.attr[FAMILIAR_PASSIVE_HEAL_CYCLES_ATTR] = cycles % interval
+        if (player.getCurrentLifepoints() < player.getMaximumLifepoints()) {
+            player.heal(amount)
+            if (npc.id == SummoningPouchData.BUNYIP.npc) player.graphic(1507)
+        }
     }
     /** Atomically spends special-move energy; effects must call this only after validation. */
     fun consumeSpecialPoints(player: Player, amount: Int): Boolean {
@@ -251,6 +276,7 @@ object Familiar {
         player.attr.remove(FAMILIAR_ATTR)
         player.attr.remove(FAMILIAR_NPC_ID_ATTR)
         player.timers.remove(FAMILIAR_LIFETIME_TIMER)
+        player.attr.remove(FAMILIAR_PASSIVE_HEAL_CYCLES_ATTR)
         player.message("Your familiar is dismissed.")
         updateHud(player)
     }
@@ -319,6 +345,7 @@ object Familiar {
         player.attr.remove(FAMILIAR_ATTR)
         player.attr.remove(FAMILIAR_NPC_ID_ATTR)
         player.timers.remove(FAMILIAR_LIFETIME_TIMER)
+        player.attr.remove(FAMILIAR_PASSIVE_HEAL_CYCLES_ATTR)
         player.message("Your familiar has run out of time and returns home.")
         updateHud(player)
     }
@@ -327,6 +354,7 @@ object Familiar {
     fun tick(player: Player) {
         val npc = current(player) ?: return
         regenerateSpecialPoints(player)
+        applyPassiveHealing(player, npc)
         FamiliarCombat.assist(player)
         if (!player.timers.has(FAMILIAR_LIFETIME_TIMER)) {
             // Lifetime ran out - real RS despawns the familiar, it doesn't just sit there inert.
