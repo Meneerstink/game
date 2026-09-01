@@ -234,6 +234,11 @@ on_logout {
 on_player_pre_death {
     Familiar.ownerDeath(player)
 }
+// A familiar can also be killed independently of its owner. Release BoB cargo
+// at the familiar's death tile and clear the owner's live familiar state.
+on_npc_pre_death(*familiarNpcIds) {
+    Familiar.onDeath(npc)
+}
 
 /*
  * R07.4/R07.5: interface 662 button wiring - components 49/51/65/67/69 are the real,

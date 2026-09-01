@@ -421,6 +421,20 @@ object Familiar {
         updateHud(player)
     }
 
+    /**
+     * Handles the familiar itself dying. Beast-of-burden cargo is released at the
+     * familiar's death tile, then the owner's familiar state is cleared so a dead
+     * NPC cannot continue following, attacking, renewing or receiving specials.
+     */
+    fun onDeath(npc: Npc) {
+        val owner = npc.attr[DAMAGE_CREDIT_ATTR]?.get() as? Player ?: return
+        if (owner.attr[FAMILIAR_ATTR]?.get() !== npc) return
+        if (BeastOfBurden.isBobNpc(npc.id)) {
+            BeastOfBurden.release(owner, npc.tile)
+        }
+        clearState(owner)
+        updateHud(owner)
+    }
     private fun clearState(player: Player) {
         player.attr.remove(FAMILIAR_ATTR)
         player.attr.remove(FAMILIAR_NPC_ID_ATTR)
