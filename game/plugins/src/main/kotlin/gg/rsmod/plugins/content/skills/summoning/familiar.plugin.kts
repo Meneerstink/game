@@ -166,6 +166,18 @@ familiarNpcIds.forEach { npc ->
                         }
                         5 -> confirmDismiss(player)
                     }
+                } else if (BeastOfBurden.isWithdrawOnlyNpc(npc)) {
+                    // A forager finds its own items: "You are only able to 'Withdraw' items from
+                    // these familiars", so the same menu without the two deposit options.
+                    when (options("Renew", "Withdraw", "Withdraw-all", "Dismiss")) {
+                        1 -> Familiar.renew(player)
+                        2 -> withdrawOne(player)
+                        3 -> {
+                            val withdrawn = BeastOfBurden.withdrawAll(player)
+                            if (withdrawn > 0) player.message("You withdraw $withdrawn item(s) from your familiar.")
+                        }
+                        4 -> confirmDismiss(player)
+                    }
                 } else {
                     when (options("Renew", "Dismiss", "Cancel")) {
                         1 -> Familiar.renew(player)
@@ -260,7 +272,7 @@ on_button(662, 69) { // "Renew Familiar"
 
 on_button(662, 67) { // "Take Beast of Burden items" - gated to real BoB familiars only
     val npc = Familiar.current(player)
-    if (npc == null || !BeastOfBurden.isBobNpc(npc.id)) {
+    if (npc == null || !BeastOfBurden.isCarrierNpc(npc.id)) {
         return@on_button
     }
     val withdrawn = BeastOfBurden.withdrawAll(player)
@@ -319,7 +331,7 @@ on_button(747, arrayOf(11, 20)) { // "Dismiss"
 
 on_button(747, arrayOf(12, 21)) { // "Take BoB"
     val npc = Familiar.current(player)
-    if (npc == null || !BeastOfBurden.isBobNpc(npc.id)) {
+    if (npc == null || !BeastOfBurden.isCarrierNpc(npc.id)) {
         return@on_button
     }
     val withdrawn = BeastOfBurden.withdrawAll(player)
@@ -384,7 +396,7 @@ on_button(671, 13) { // "Close"
 
 on_button(671, 29) { // "Take BoB, Take Beast of Burden items."
     val npc = Familiar.current(player)
-    if (npc == null || !BeastOfBurden.isBobNpc(npc.id)) {
+    if (npc == null || !BeastOfBurden.isCarrierNpc(npc.id)) {
         return@on_button
     }
     val withdrawn = BeastOfBurden.withdrawAll(player)

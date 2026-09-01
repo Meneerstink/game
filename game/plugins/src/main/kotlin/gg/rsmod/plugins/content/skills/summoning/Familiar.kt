@@ -197,7 +197,9 @@ object Familiar {
             if (player.attr[FAMILIAR_HUD_TEXT_ATTR] != text) {
                 player.attr[FAMILIAR_HUD_TEXT_ATTR] = text
                 player.setComponentText(HUD_INTERFACE, HUD_TIME_COMPONENT, text)
-                player.setComponentHidden(HUD_INTERFACE, HUD_BOB_BUTTON, !BeastOfBurden.isBobNpc(npc.id))
+                // "If you have a beast of burden or a forager out, you can click this button" -
+                // the button is shown for both, not for beasts of burden alone.
+                player.setComponentHidden(HUD_INTERFACE, HUD_BOB_BUTTON, !BeastOfBurden.isCarrierNpc(npc.id))
             }
         }
         val pointsText = "${currentPoints(player)}/${maxPoints(player)}"

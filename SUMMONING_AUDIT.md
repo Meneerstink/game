@@ -1,3 +1,36 @@
+## 2026-09-02 — Phase 4: forager storage
+
+Files touched: `BeastOfBurden.kt`, `SummoningLedger.kt`, `Familiar.kt`, `familiar.plugin.kts`,
+`BeastOfBurdenTests.kt`, new `src/test/.../ForagerStorageTests.kt`.
+
+This closes the gap the Phase 1 entry below recorded as "not yet implemented". All 22 foragers now
+own a real container: "A forager will find certain items from time to time, and can carry up to
+30. You are only able to 'Withdraw' items from these familiars."
+
+- `BeastOfBurden.Storage` gained `withdrawOnly`, which is the whole difference between the two
+  carrying contracts. Deposit, deposit-all and the item-on-familiar interaction refuse a forager;
+  withdraw, withdraw-all and release work exactly as they do for a beast of burden.
+- The forager keys are built from `SummoningCatalogue`, so their capacity is the ledger's 30
+  rather than a number typed a second time in a second file.
+- The albino rat's separate 4-slot "cheese store" is gone. The knowledge base calls the rat a
+  forager that "stores cheese after scroll use", so Cheese Feast now fills its ordinary 30-slot
+  forager store; 4 was never sourced, it was the size of one scroll's output.
+- `SummoningLedger.validate` now asserts every carrier, in both directions: a forager must have a
+  withdraw-only container of the sourced size, a beast of burden must accept deposits, and a
+  familiar that carries nothing must have no container at all. The albino-rat exception it used to
+  carry is deleted rather than rewritten.
+- The "Take Beast of Burden items" button (662/67, 747/12 and 21, 671/29) and the HUD's visibility
+  rule for it now cover foragers, because the button is sourced as covering both: "If you have a
+  beast of burden or a forager out, you can click this button to transfer any items they are
+  carrying to your own inventory." Foragers also get their own interact menu -
+  Renew/Withdraw/Withdraw-all/Dismiss, the beast-of-burden menu without the two deposit options.
+
+**Deliberately not implemented: what a forager finds.** The knowledge base names the forage of
+only five (the albino rat's cheese, evil turnip slices, cockatrice eggs, strange fruit, oak logs),
+all of them scroll effects, and gives no find table or find rate for any familiar. Inventing one
+would be inventing content, so the store is real and the scroll effects fill it; passive finding
+stays unimplemented and is recorded here rather than faked.
+
 ## 2026-09-02 — obelisk point renewal (owner-reported: "Nothing interesting happens")
 
 Files touched: `summoning_obelisks.plugin.kts`, `obelisk.plugin.kts`, new

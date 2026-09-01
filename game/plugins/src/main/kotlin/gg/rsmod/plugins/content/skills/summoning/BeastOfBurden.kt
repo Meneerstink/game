@@ -11,9 +11,12 @@ import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.api.ext.message
 
 /**
- * R07.3 (Beast of Burden storage): extra-inventory-space container for the 3 named BoB
- * familiars - Pack Yak 30 / War Tortoise 18 / Spirit Terrorbird 12 slots, exact capacities
- * given by the work order itself, not guessed.
+ * Familiar item storage: the nine beasts of burden and the twenty-two foragers.
+ *
+ * Capacities are the ledger's, not this file's - the beast-of-burden keys carry the sourced
+ * 3/6/9/12/7/7/18/7/30 and every forager carries the sourced 30, with
+ * [SummoningLedger.validate] failing the server on any disagreement. The two contracts differ in
+ * direction only: a beast of burden accepts deposits, a forager is withdraw-only.
  *
  * Reuses the existing generic [Player.containers]/[ContainerKey]/`register_container_key`
  * persistence mechanism ([gg.rsmod.game.service.serializer.json.JsonPlayerSerializer] already
@@ -30,7 +33,12 @@ import gg.rsmod.plugins.api.ext.message
  * the familiar's existing Renew/Dismiss/Cancel interact menu gains a "Withdraw-all" option.
  */
 object BeastOfBurden {
-    data class Storage(val key: ContainerKey, val essenceOnly: Boolean = false)
+    /**
+     * [withdrawOnly] separates the two carrying contracts the knowledge base describes. A beast
+     * of burden takes items the player hands it; a forager "will find certain items from time to
+     * time, and can carry up to 30. You are only able to 'Withdraw' items from these familiars."
+     */
+    data class Storage(val key: ContainerKey, val essenceOnly: Boolean = false, val withdrawOnly: Boolean = false)
 
     val THORNY_SNAIL_KEY = ContainerKey("bob_thorny_snail", capacity = 3, stackType = ContainerStackType.NORMAL)
     val SPIRIT_KALPHITE_KEY = ContainerKey("bob_spirit_kalphite", capacity = 6, stackType = ContainerStackType.NORMAL)
@@ -42,17 +50,7 @@ object BeastOfBurden {
     val ABYSSAL_TITAN_KEY = ContainerKey("bob_abyssal_titan", capacity = 7, stackType = ContainerStackType.NORMAL)
     val PACK_YAK_KEY = ContainerKey("bob_pack_yak", capacity = 30, stackType = ContainerStackType.NORMAL)
 
-    /**
-     * Not a real carry-capacity BoB familiar - reused for the Albino Rat's Cheese Feast special
-     * (real RS generates cheese "in the albino rat's inventory", a per-familiar personal store
-     * with the same shape as BoB storage). Registering it here is the smallest way to reuse the
-     * existing container/persistence machinery; the one inauthentic side effect is that using an
-     * item on the rat will also deposit it here same as a real BoB familiar, which real RS does
-     * not allow for this familiar - harmless, so not worth a parallel container system for.
-     */
-    val ALBINO_RAT_KEY = ContainerKey("bob_albino_rat", capacity = 4, stackType = ContainerStackType.NORMAL)
-
-    private val storageByPouch = mapOf(
+    private val beastOfBurdenStorage = mapOf(
         SummoningPouchData.THORNY_SNAIL to Storage(THORNY_SNAIL_KEY),
         SummoningPouchData.SPIRIT_KALPHITE to Storage(SPIRIT_KALPHITE_KEY),
         SummoningPouchData.BULL_ANT to Storage(BULL_ANT_KEY),
@@ -62,8 +60,33 @@ object BeastOfBurden {
         SummoningPouchData.WAR_TORTOISE to Storage(WAR_TORTOISE_KEY),
         SummoningPouchData.ABYSSAL_TITAN to Storage(ABYSSAL_TITAN_KEY, essenceOnly = true),
         SummoningPouchData.PACK_YAK to Storage(PACK_YAK_KEY),
-        SummoningPouchData.ALBINO_RAT to Storage(ALBINO_RAT_KEY),
     )
+
+    /**
+     * Every forager's own store, one per familiar, built from the ledger rather than listed by
+     * hand: the capacity is the sourced 30 [SummoningCatalogue] carries for all of them, so a
+     * forager can never end up with a store the ledger disagrees with.
+     *
+     * This is also where the albino rat's Cheese Feast cheese goes. The knowledge base classes
+     * the rat as a forager that "stores cheese after scroll use", so it needs no special-case
+     * container of its own - it is a forager whose forage happens to come from a scroll.
+     */
+    private val foragerStorage =
+        SummoningCatalogue
+            .inCategory(FamiliarCategory.FORAGER)
+            .associate { entry ->
+                entry.pouch to
+                    Storage(
+                        ContainerKey(
+                            "forager_${entry.pouch.name.lowercase()}",
+                            capacity = entry.inventory.capacity,
+                            stackType = ContainerStackType.NORMAL,
+                        ),
+                        withdrawOnly = true,
+                    )
+            }
+
+    private val storageByPouch = beastOfBurdenStorage + foragerStorage
 
     val allKeys = storageByPouch.values.map { it.key }
 
@@ -75,8 +98,19 @@ object BeastOfBurden {
         val pouch = SummoningPouchData.values.firstOrNull { it.npc == npc.id } ?: return null
         return storageByPouch[pouch]
     }
-    /** True if [npcId] is one of the 3 real BoB familiars' summoned npc id. */
-    fun isBobNpc(npcId: Int): Boolean = storageByPouch.keys.any { it.npc == npcId }
+    /** True if [npcId] is a beast of burden - a familiar the player can hand items to. */
+    fun isBobNpc(npcId: Int): Boolean = beastOfBurdenStorage.keys.any { it.npc == npcId }
+
+    /**
+     * True if [npcId] carries items at all, beast of burden or forager. The "Take Beast of Burden
+     * items" button covers both: "If you have a beast of burden or a forager out, you can click
+     * this button to transfer any items they are carrying to your own inventory."
+     */
+    fun isCarrierNpc(npcId: Int): Boolean = storageByPouch.keys.any { it.npc == npcId }
+
+    /** True if [npcId] only lets the player take items out - every forager. */
+    fun isWithdrawOnlyNpc(npcId: Int): Boolean =
+        storageByPouch.entries.any { (pouch, storage) -> pouch.npc == npcId && storage.withdrawOnly }
 
     /** The active familiar inventory key, if the summoned familiar can carry items. */
     fun activeKey(player: Player): ContainerKey? = storage(player)?.key
@@ -97,6 +131,10 @@ object BeastOfBurden {
     ): Int {
         val storage = storage(player) ?: run {
             player.message("You need an active Beast of Burden familiar out to store items with it.")
+            return 0
+        }
+        if (storage.withdrawOnly) {
+            player.message("You can only withdraw items from this familiar.")
             return 0
         }
         val key = storage.key
@@ -158,7 +196,8 @@ object BeastOfBurden {
 
     /** Deposits every permitted inventory item into the active familiar, best-effort. */
     fun depositAll(player: Player): Int {
-        if (activeKey(player) == null) {
+        val storage = storage(player)
+        if (storage == null || storage.withdrawOnly) {
             player.message("You need an active Beast of Burden familiar out to store items with it.")
             return 0
         }

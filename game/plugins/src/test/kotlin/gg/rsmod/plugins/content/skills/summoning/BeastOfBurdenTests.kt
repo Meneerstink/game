@@ -48,7 +48,9 @@ class BeastOfBurdenTests {
         assertTrue(BeastOfBurden.isBobNpc(Npcs.ABYSSAL_PARASITE))
         assertTrue(BeastOfBurden.isBobNpc(Npcs.ABYSSAL_LURKER))
         assertTrue(BeastOfBurden.isBobNpc(Npcs.ABYSSAL_TITAN))
-        assertEquals(9, BeastOfBurden.allKeys.size)
+        // Nine beasts of burden plus the twenty-two foragers, each with its own store.
+        assertEquals(31, BeastOfBurden.allKeys.size)
+        assertEquals(31, BeastOfBurden.allKeys.map { it.name }.distinct().size)
         assertFalse(BeastOfBurden.isBobNpc(Npcs.SPIRIT_WOLF))
     }
 

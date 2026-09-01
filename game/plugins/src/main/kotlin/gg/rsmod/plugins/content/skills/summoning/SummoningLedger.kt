@@ -97,33 +97,44 @@ object SummoningLedger {
 
     /**
      * The catalogue is the sourced statement of what each familiar can carry; [BeastOfBurden] is
-     * the implementation. Every beast of burden must already have a container of exactly the
-     * sourced size, and no container may exist for a familiar that cannot carry anything.
-     *
-     * Foragers are the deliberate exception in the other direction: they are sourced as 30-slot
-     * withdraw-only stores but have no container yet, so they are not asserted here.
+     * the implementation. Every carrier - beast of burden or forager - must have a container of
+     * exactly the sourced size, carrying items in the sourced direction, and no container may
+     * exist for a familiar that carries nothing.
      */
     private fun validateInventories() {
         SummoningCatalogue.byPouch.values.forEach { entry ->
             val storage = BeastOfBurden.storageFor(entry.pouch)
-            if (entry.inventory.kind == FamiliarInventoryKind.BEAST_OF_BURDEN) {
-                val key =
-                    requireNotNull(storage) {
-                        "${entry.pouch.name} carries ${entry.inventory.capacity} items but has no container."
-                    }.key
-                check(key.capacity == entry.inventory.capacity) {
-                    "${entry.pouch.name} carries ${entry.inventory.capacity} items, " +
-                        "but its container holds ${key.capacity}."
+            if (entry.inventory.kind == FamiliarInventoryKind.NONE) {
+                check(storage == null) {
+                    "${entry.pouch.name} carries nothing but has container ${storage?.key?.name}."
                 }
-                check(storage.essenceOnly == entry.inventory.essenceOnly) {
-                    "${entry.pouch.name} essence-only is ${entry.inventory.essenceOnly} in the ledger " +
-                        "but ${storage.essenceOnly} in its container."
+                return@forEach
+            }
+            val carrier =
+                requireNotNull(storage) {
+                    "${entry.pouch.name} carries ${entry.inventory.capacity} items but has no container."
                 }
-            } else if (storage != null) {
-                // The albino rat's cheese store is a special internal inventory, not carrying capacity.
-                check(entry.isIn(FamiliarCategory.FORAGER)) {
-                    "${entry.pouch.name} carries nothing but has container ${storage.key.name}."
+            check(carrier.key.capacity == entry.inventory.capacity) {
+                "${entry.pouch.name} carries ${entry.inventory.capacity} items, " +
+                    "but its container holds ${carrier.key.capacity}."
+            }
+            check(carrier.essenceOnly == entry.inventory.essenceOnly) {
+                "${entry.pouch.name} essence-only is ${entry.inventory.essenceOnly} in the ledger " +
+                    "but ${carrier.essenceOnly} in its container."
+            }
+            val forager = entry.inventory.kind == FamiliarInventoryKind.FORAGER
+            check(carrier.withdrawOnly == forager) {
+                if (forager) {
+                    "${entry.pouch.name} is a forager, so its container must be withdraw-only."
+                } else {
+                    "${entry.pouch.name} is a beast of burden, so its container must accept deposits."
                 }
+            }
+            check(BeastOfBurden.isCarrierNpc(entry.pouch.npc)) {
+                "${entry.pouch.name} carries items but its NPC ${entry.pouch.npc} is not a carrier."
+            }
+            check(BeastOfBurden.isBobNpc(entry.pouch.npc) != forager) {
+                "${entry.pouch.name} is registered under the wrong carrying contract."
             }
         }
     }
