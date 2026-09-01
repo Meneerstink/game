@@ -14,6 +14,21 @@ import gg.rsmod.game.model.timer.TimerMap
  *
  * @author Tom <rspsmods@gmail.com>
  */
+/**
+ * Resolves a definition transform without allowing malformed varp/varbit states
+ * to escape the available transform table.
+ */
+internal fun resolveTransformId(
+    originalId: Int,
+    transforms: Array<Int>?,
+    state: Int,
+): Int {
+    if (transforms.isNullOrEmpty()) {
+        return originalId
+    }
+    return transforms[state.coerceIn(0, transforms.lastIndex)]
+}
+
 abstract class GameObject : Entity {
     /**
      * The object id.
@@ -61,19 +76,17 @@ abstract class GameObject : Entity {
     fun getTransform(player: Player): Int {
         val world = player.world
         val def = getDef(world.definitions)
+        val transforms = def.transforms ?: return id
 
         if (def.varbit != -1) {
             val varbitDef = world.definitions.get(VarbitDef::class.java, def.varbit)
             val state = player.varps.getBit(varbitDef.varp, varbitDef.startBit, varbitDef.endBit)
-            return def.transforms!![state]
+            return resolveTransformId(id, transforms, state)
         }
 
         if (def.varp != -1) {
             val state = player.varps.getState(def.varp)
-            if (state >= def.transforms!!.size) {
-                return def.transforms!![def.transforms!!.size - 1]
-            }
-            return def.transforms!![state]
+            return resolveTransformId(id, transforms, state)
         }
 
         return id

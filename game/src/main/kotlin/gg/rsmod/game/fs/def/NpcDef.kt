@@ -111,7 +111,7 @@ class NpcDef(
                 transforms = Array(count.toInt() + 1) { 0 }
                 for (i in 0..count) {
                     val transform = buf.readUnsignedShort()
-                    transforms!![i] = transform
+                    transforms!![i] = if (transform == 65535) -1 else transform
                 }
             }
             107 -> interactable = false

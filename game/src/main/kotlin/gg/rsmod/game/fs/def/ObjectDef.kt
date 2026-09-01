@@ -138,7 +138,7 @@ class ObjectDef(
                 transforms = Array(count + 1) { 0 }
                 for (i in 0..count) {
                     val transform = buf.readUnsignedShort()
-                    transforms!![i] = transform
+                    transforms!![i] = if (transform == 65535) -1 else transform
                 }
             }
             78 -> {

@@ -196,15 +196,17 @@ class Npc private constructor(
      * [NpcDef.transforms] and [NpcDef.varp]/[NpcDef.varbit].
      */
     fun getTransform(player: Player): Int {
+        val transforms = def.transforms ?: return id
+
         if (def.varbit != -1) {
             val varbitDef = world.definitions.get(VarbitDef::class.java, def.varbit)
             val state = player.varps.getBit(varbitDef.varp, varbitDef.startBit, varbitDef.endBit)
-            return def.transforms!![state]
+            return resolveTransformId(id, transforms, state)
         }
 
         if (def.varp != -1) {
             val state = player.varps.getState(def.varp)
-            return def.transforms!![state]
+            return resolveTransformId(id, transforms, state)
         }
 
         return id
