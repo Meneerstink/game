@@ -7,7 +7,7 @@ import gg.rsmod.game.fs.def.NpcDef
 import gg.rsmod.game.model.PawnList
 import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.World
-import gg.rsmod.game.model.attr.AttributeMap
+import gg.rsmod.game.model.attr.AttributeMap import gg.rsmod.game.model.attr.DAMAGE_CREDIT_ATTR
 import gg.rsmod.game.model.container.ItemContainer
 import gg.rsmod.game.model.container.key.INVENTORY_KEY
 import gg.rsmod.game.model.entity.GroundItem
@@ -98,6 +98,21 @@ class FamiliarLifecycleTests {
         assertNull(Familiar.current(player))
     }
 
+    @Test
+    fun `familiar death releases bob cargo and clears state`() {
+        val player = newPlayer(Npcs.PACK_YAK, Tile(3222, 3218, 0))
+        val world = player.world
+        val familiar = Familiar.current(player)!!
+        familiar.attr[DAMAGE_CREDIT_ATTR] = WeakReference(player)
+        val key = BeastOfBurden.activeKey(player)!!
+        assertEquals(5, BeastOfBurden.grant(player, Item(Items.COINS_995, 5)))
+
+        Familiar.onDeath(familiar)
+
+        verify(exactly = 1) { world.spawn(any<GroundItem>()) }
+        assertEquals(0, player.containers.getValue(key).getItemCount(Items.COINS_995))
+        assertNull(Familiar.current(player))
+    }
     private fun newPlayer(
         familiarNpcId: Int,
         tile: Tile,
