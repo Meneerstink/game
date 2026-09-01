@@ -1,7 +1,89 @@
-## 2026-09-01 — special-energy recovery (automated)
+## 2026-09-01 — sourced roster ledger + cross-table boot assertions
+
+- Cross-checked all 78 rows of `SummoningFamiliarDefinitions` against the revision-era
+  "Summoning - Familiars" knowledge-base table (summon level / duration in minutes). Two rows
+  were wrong: `SPIRIT_GRAAHK` carried 57 minutes (sourced value 49) and `ABYSSAL_TITAN` carried
+  93 minutes (sourced value 32). In both cases the familiar's own summon level had been copied
+  into the duration column. Swept all 78 rows for that exact transcription pattern: only these
+  two were affected, plus Dreadfowl, which genuinely is level 4 / 4 minutes.
+- Added `SummoningLedgerTests`, which pins every familiar's summon level and duration to the
+  sourced table, so a future edit cannot silently reintroduce a transcription error.
+- Added `SummoningLedger.validate()`, run from `on_world_init` alongside the existing per-table
+  validations. It proves the *relationships between* the tables, which is what the four earlier
+  roster bugs (Spirit Tz-Kih, Void shifter, Void spinner, Phoenix) actually broke:
+  - pouch item ids and base familiar NPC ids are each unique across the roster;
+  - every pouch is claimed by exactly one scroll, and that scroll agrees about the base NPC;
+  - every fighting familiar's combat transform is its own base NPC + 1, and the five foragers
+    (beaver, macaw, magpie, ibis, fruit bat) declare no transform at all.
+  The +1 rule is a property of this cache, not an assumption: every summonable familiar occupies
+  a consecutive idle/combat NPC pair (6829/6830, 6825/6826, 6806/6807, ...), it holds for all 73
+  fighting rows, and each of the four roster bugs violated it.
+- That new assertion immediately caught a real leftover of the Phoenix correction:
+  `RISH_FROM_THE_ASHES_SCROLL` still listed `Npcs.PHOENIX` (8548, the Fight Kiln/pet phoenix)
+  while the pouch had already been corrected to 8575. Fixed. The other three corrected rows share
+  their `Npcs` constant with the pouch table and were already consistent.
+- Verified against the cache dump in `npc_inventory.csv` that all 78 base familiar NPCs really do
+  expose an "Interact" option and that all 78 are bound, so no roster row is missing one.
+- Locked the sourced assist behaviour: pack yak, unicorn stallion, bunyip and void spinner are the
+  only familiars that fight purely defensively ("...will only fight to defend themselves, and then
+  only if you have auto-retaliate turned on").
+- `./gradlew :game:plugins:test --tests 'gg.rsmod.plugins.content.skills.summoning.*'`: 33 tests,
+  0 failures.
+
+## 2026-09-01 — regression check + scroll-dispatcher sourcing blocker (this session)
+
+- No Summoning code was changed this session; the goal was to confirm no regression from the
+  same-session Ancient Curses work (a new `AncientCurses.onIncomingHit` call was added into the
+  shared `combat/PawnExt.kt` `dealHit` hook, which `FamiliarCombat`'s native familiar combat also
+  routes through). Re-ran `BeastOfBurdenTests`, `FamiliarDefinitionTests`, `FamiliarPointsTests`,
+  `SummoningCombatDefinitionTests` and `SummoningSpecialMoveTests` — all passing, no regression.
+- Investigated closing the remaining scroll-effect gap (27 of 67 scroll variants, per the last
+  entry below: "35 registered component bindings and 40 executable scroll variants"). The
+  remaining 27 scrolls' *effect mechanics* are sourceable from runescape.wiki like the curse
+  fixes were, but every existing `SummoningSpecialMoves.bindings` entry also carries a real
+  revision-667 interface component id for both interface 662 (follower details) and 747
+  (Summoning orb) — sourced, per this file's own Phase 5/R07.7 notes, via "a raw cache
+  component-text scan" performed live in an earlier session. This codebase has no checked-in
+  interface-decoding tool to reproduce that scan (`IMPLEMENTATION_STATUS.md`'s own "Next
+  priorities" #3 independently lists "decode this cache's interface definitions... unblocks... any
+  future interface work" as still-open project-wide), and I found no cache-dump artifact left
+  behind from the earlier scan to read instead. Guessing component ids was not attempted — a wrong
+  id fires the wrong scroll's special move from the wrong button, a correctness bug a player would
+  hit immediately, not a cosmetic gap. This is a disclosed sourcing blocker, not a decision to stop
+  early.
 
 - Summoning special energy now regenerates by 15 every 30 online seconds, capped at 60, while a familiar is active. The partial 30-second accumulator is persisted, so logout cannot reset or skip the recharge interval.
 - `FamiliarPointsTests` covers the exact restoration interval and amount.
+## 2026-09-01 — Group A special-move batch (this session)
+
+- Reworked the scroll dispatcher onto a single shared trigger component (747:25, "Spell, Cast"), resolved server-side by the summoned familiar's npc id via `resolveBinding(player)`, with a `FamiliarSpecialTarget` (`INSTANT`/`NPC`/`INVENTORY_ITEM`) per binding. `bindings.size` is now 45 (was 35).
+- Implemented 10 more scroll effects: Pester, Toad Bark, Abyssal Drain (direct-combat drains, resolved via `SummoningCombatDefinitions`' own real familiar animation/max-hit rows where the scroll itself has no published number), Dust Cloud, Egg Spawn, Fruitfall, Fish Rain, Blood Drain, Essence Shipment and Cheese Feast.
+- Two revision-accuracy corrections, both confirmed via each scroll's own wiki "Update history" section rather than the current live-game number: **Blood Drain** is 10 flat self-damage with an LP >= 60 gate (wiki's current 100/600 is a 6 Nov 2017 buff, "up from 10"/"up from 60"); **Abyssal Drain** restores 5 real prayer points, coded as `restorePrayer(50, ...)` because the engine stores prayer in x10 internal units (wiki's current "up to 50" is the same 6 Nov 2017 patch, "up from 5").
+- Disclosed simplifications where the wiki confirms the mechanic's shape but not an exact formula: Egg Spawn uses a uniform 1–8 count ("up to 8" is all the wiki gives); Fruitfall guarantees one papaya then rolls each of 5 other fruit types independently at 20% (approximates the wiki's "average two fruits" without inventing per-fruit rates); Fish Rain rolls 8 tiles at the wiki-published 19% each, first hit always a bass, later hits weighted by flat approximate odds since the wiki's `stat_random` parameters don't publish the underlying formula.
+- Cheese Feast reuses the existing `BeastOfBurden` container/persistence machinery for the Albino Rat (a 10th registered key, `ALBINO_RAT_KEY`, plus a new `grant()` entry point) rather than building a parallel per-familiar store — disclosed side effect: the rat also gains the generic "deposit by use"/"Take BoB" affordance real RS does not give it for this familiar, judged harmless.
+- `SummoningSpecialMoveTests` (binding count, new Blood Drain LP-gate/damage/poison-cure/scroll-consumption test) and `BeastOfBurdenTests` (allKeys now 10) updated to match; `:game:plugins:compileTestKotlin` and the full `gg.rsmod.plugins.content.skills.summoning.*` suite (26 tests) both `BUILD SUCCESSFUL`.
+- Dispatcher now covers 45 registered bindings / 50 executable scroll variants (Bull Rush still contributes six variants through one binding). Remaining "Group B" scrolls (Goad, Ambush, Call to Arms, Multichop, Regrowth, Generate Compost, Immense Heat, Venom Shot, Ophidian Incubation, Petrifying Gaze, Rise from the Ashes, Swallow Whole, Famine, Vampire Touch, Explode, Herbcall) are architecturally harder — several need a familiar's own normal-attack-damage formula or a new "cast on world object" target case that don't exist yet, and Petrifying Gaze currently has no sourced effect data at all — and are not counted as done.
+
+## 2026-09-01 — Group B special-move batch (this session)
+
+- Implemented 4 more scroll effects using only wiki-verified mechanics or an explicitly disclosed simplification: Vampire Touch, Herbcall, Ophidian Incubation (6 of 7 egg mappings) and Explode. `bindings.size` is now 49 (was 45).
+- **Vampire Touch** (NPC target, direct combat): no unique special-move animation/max hit is published, so it reuses Vampyre Bat's own real, verified melee normal-attack animation and max hit from `SummoningCombatDefinitions` (4915 / 40) — same convention as Group A's Toad Bark/Abyssal Drain. Its "heals for 50% of the damage dealt" secondary effect (wiki's own wording) reads the landed hit's real dealt damage via `pawnHit.hit.hitmarks.sumOf { it.damage }`, the same accessor `FamiliarCombat.attachOwnerExperience` already uses for owner XP.
+- **Herbcall** (INSTANT): implements the wiki's exact published weighted table (11 grimy herbs out of 128, confirmed unchanged since 2011 — no revision-accuracy correction needed). Delivery mechanism (inventory vs. ground) isn't specified by the wiki, so it reuses this file's own established "forage special drops on the ground" convention from Group A's Fruitfall/Fish Rain rather than guessing a bank-note-into-inventory mechanic.
+- **Ophidian Incubation** (INVENTORY_ITEM target): `castOnNpc`'s dispatch-by-scroll shape didn't exist yet on `castOnInventoryItem` (it was hard-wired to Winter Storage's bank logic), so that function was split into `executeWinterStorage`/`executeOphidianIncubation` behind a `when (scroll)`. Implements 6 of the 7 real egg transforms (Egg→Cockatrice, 3 bird eggs→Sara/Zama/Guthatrice, Penguin→Pengatrice, Vulture→Vulatrice) using the item-swap-with-rollback shape (remove input, add output, restore input and refund resources on any failure) mirrored from Winter Storage's own remove/add-with-rollback pattern. The bird egg color mapping is sourced from `bird_nest.plugin.kts`'s own existing god-alignment comments (Zamorak/Guthix/Saradomin) cross-referenced against the scroll's own god-themed egg names — not an invented id. **Raven Egg → Coraxatrice Egg is deliberately excluded**: a 16 May 2022 patch note says this pairing was "now correctly" fixed, implying it was wrong/broken before, but the wiki does not record what the pre-fix (revision-667-era) mapping actually was. This is a genuine undocumented value, disclosed rather than guessed; using an item on the familiar with a Raven Egg selected is simply rejected ("Your spirit cobra can't incubate that.").
+- **Explode** (INSTANT, reuses `executeAoe`): wiki confirms "damaging up to 9 other targets" but gives no radius, so it reuses Sandstorm's own real radius (6) from Group A/pre-existing code as the closest verified precedent. Wiki also confirms the hit "has a higher max hit than the chinchompa's normal attacks" but gives no exact number, so it reuses the chinchompa's own real normal-attack max hit (38, from `SummoningCombatDefinitions`) as a disclosed conservative floor, not the true higher value. Per the wiki the familiar destroys itself in the process — implemented by calling the real `Familiar.dismiss(player)` after a successful explosion, before resources are committed (safe: point/scroll consumption reads only `player.attr`, not the live familiar reference).
+- Disclosed as genuine blockers, not attempted: **Venom Shot** (current wiki mechanic is dated to a 6 Nov 2017 patch — "now works by..." — implying a different pre-2017/revision-667 mechanic that the wiki does not record); **Generate Compost** and **Call to Arms** (Call to Arms is a teleport to the Void Knights' Outpost, not a stat buff as its name suggests — confirmed via search — and this codebase has zero Pest Control/Void Knight tile or teleport infrastructure to source a destination from); both Generate Compost and the already-known Multichop/Regrowth need a new "cast on world object" `FamiliarSpecialTarget` case that doesn't exist yet and isn't safe to invent without real interaction-packet/object-id data. Goad, Ambush (need a familiar's own attack-damage formula), Petrifying Gaze (no sourced effect data at all), Immense Heat, Swallow Whole, Famine and Rise from the Ashes remain unresearched or blocked from earlier sessions.
+- `SummoningSpecialMoveTests` (binding count now 49, new Herbcall resource-consumption test, new Ophidian Incubation transform + unmapped-item-rejection test) updated to match; `:game:plugins:compileTestKotlin` and the full `gg.rsmod.plugins.content.skills.summoning.*` suite both `BUILD SUCCESSFUL`. Vampire Touch/Explode have no new test coverage — consistent with this file's existing scope, since no `castOnNpc`-routed special (direct-combat or AoE) has unit test coverage yet in this codebase (Sandstorm/Dust Cloud/etc. are likewise untested), not a gap unique to this batch.
+- Dispatcher now covers 49 registered bindings / 54 executable scroll variants.
+
+## 2026-09-01 — Group C special-move batch: Immense Heat + Swallow Whole (this session)
+
+- Researched the 4 previously-unresearched Group B candidates (Immense Heat, Swallow Whole, Famine, Rise from the Ashes). All 4 familiars (Pyrelord, Bunyip, Ravenous Locust, Phoenix) are confirmed 2008-era releases, well before revision 667 (Oct 2011), so all 4 are in-scope content — the blocker on the last two is architectural, not a release-date gap.
+- **Immense Heat** (INSTANT): wiki confirms the Pyrelord's move "acts as a portable furnace" (crafts gold jewellery without a furnace). Rather than build a new jewellery-selection UI, this reuses the exact real, already-verified interface `furnaces.plugin.kts` opens for a gold bar used on a furnace (`player.openJewelleryCraftingInterface()`, interface 446) — same precondition that flow itself uses (gold bar present; no separate mould check, since the interface itself hides components for moulds the player doesn't carry).
+- **Swallow Whole** (INVENTORY_ITEM): wiki confirms "eat a raw fish without having to cook it, gaining the correct number of life points corresponding to the fish eaten, if they have the Cooking level to cook the fish." Reuses this codebase's own real `CookingData` (raw→cooked map, for the Cooking level gate) and `Food` (cooked-item heal table) rather than inventing a new heal table. A 4 Dec 2012 patch note says Swallow Whole "now gives the correct amount of life points," implying an earlier undocumented wrong value pre-dating that fix — not recoverable from the wiki, so this implements the presumably-intended correct healing rather than guessing the bug.
+- **Famine** and **Rise from the Ashes** remain genuine blockers: both target another *player*, not an NPC or an inventory item or nothing — Famine "consumes a piece of the target player's food," and Rise from the Ashes blasts a target player/area then requires a second cast onto a resulting ashes tile. `FamiliarSpecialTarget` only has `INSTANT`/`NPC`/`INVENTORY_ITEM` — there is no player-target or tile-target case, and inventing one (plus the ashes-tile persistence Rise from the Ashes needs) is real new architecture, not a small/reversible change. Disclosed rather than built around.
+- `SummoningSpecialMoveTests`: binding count now 51 (was 49); two new tests (Immense Heat's gold-bar gate + resource consumption, Swallow Whole's heal-for-cooked-value + resource consumption). `:game:plugins:compileTestKotlin` and the full `gg.rsmod.plugins.content.skills.summoning.*` suite both `BUILD SUCCESSFUL`.
+- Dispatcher now covers 51 registered bindings / 56 executable scroll variants. Remaining disclosed blockers, unchanged: Venom Shot, Generate Compost, Call to Arms, Multichop, Regrowth, Goad, Ambush, Petrifying Gaze, Famine, Rise from the Ashes.
+
 ## 2026-09-01 — Beast of Burden completion batch (automated)
 
 - Added all nine target-period Beast-of-Burden familiars: Thorny snail (3), Spirit kalphite (6), Bull ant (9), Spirit terrorbird (12), Abyssal parasite (7 essence), Abyssal lurker (7 essence), War tortoise (18), Abyssal titan (7 essence) and Pack yak (30).

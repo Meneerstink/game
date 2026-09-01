@@ -558,7 +558,8 @@ enum class SummoningScrollData(
     RISH_FROM_THE_ASHES_SCROLL(
         72,
         Items.RISE_FROM_THE_ASHES_SCROLL,
-        arrayOf(Npcs.PHOENIX),
+        // 8548 is the Fight Kiln/pet phoenix, the summonable familiar is 8575 (see PHOENIX pouch).
+        arrayOf(Npcs.PHOENIX_8575),
         arrayOf(Items.PHOENIX_POUCH),
         8.0,
         8.0,

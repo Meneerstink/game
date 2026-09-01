@@ -198,6 +198,7 @@ on_world_init {
     SummoningFamiliarDefinitions.validate()
     SummoningCombatDefinitions.validate()
     SummoningSpecialMoves.validate()
+    SummoningLedger.validate()
     println(
         "R07.1 familiar: bound Summon on $boundSummon/${boundSummon + skippedSummon} pouches, " +
             "Interact on $boundInteract/${boundInteract + skippedInteract} familiar npcs " +
@@ -279,9 +280,10 @@ on_button(662, 65) { // "Order your familiar to attack a target"
     if (npc == null) {
         return@on_button
     }
-    // R07.3b (honest, evidence-backed, unchanged from SUMMONING_AUDIT.md): no familiar npc in
-    // this codebase or its upstream source has a registered NpcCombatDef - there is no real
-    // combat data anywhere to attack with yet. Reporting that honestly rather than faking damage.
+    // R07.3b update: 72/73 fighting familiars now have real, sourced combat data wired via
+    // set_combat_def above and FamiliarCombat - only Albino Rat (SummoningCombatDefinitions.
+    // blockedCombatValues) still lacks a sourced attack/death animation. commandAttack (bound to
+    // the spell-on-npc/spell-on-player packets, not this button) rejects that one honestly.
     player.message("Select a target for your familiar.")
 }
 
@@ -318,44 +320,36 @@ on_button(747, arrayOf(13, 22)) { // "Renew Familiar"
     Familiar.renew(player)
 }
 
-on_button(747, arrayOf(14, 23)) { // "Attack" - same honest R07.3b blocker as 662's Attack button.
+on_button(747, arrayOf(14, 23)) { // "Attack" - see R07.3b note on 662's Attack button above.
     if (Familiar.current(player) == null) {
         return@on_button
     }
     player.message("Select a target for your familiar.")
 }
 
-on_button(747, 25) { // "Spell, Cast" (resize-mode only) - special move, blocked on Phase 7 (no
-    // scroll special-move dispatcher exists yet, see SUMMONING_AUDIT.md).
-    if (Familiar.current(player) == null) {
-        return@on_button
-    }
-    player.message("Select your familiar's special move.")
+/*
+ * R08 correction: the previous per-binding wiring here bound `on_button`/`on_spell_on_npc`/
+ * `on_spell_on_item` at 662/747 component ids like 77, 129, 161, 197... none of which exist -
+ * interface 662 only has real components 0-75 and 747 only 0-26 (confirmed this session with a
+ * decoder ported from this revision's real client source, see SummoningSpecialMoves.kt's R08
+ * doc comment). Every one of those 34 old bindings was dead. The cache's real special-move
+ * trigger is a single component - 747:25 ("Spell, Cast", resize-mode only) - used the same
+ * spell-cast way as the existing on_spell_on_npc(662, 65) attack binding above: click it to
+ * self-cast an INSTANT special, or click it then a target for an NPC/INVENTORY_ITEM special.
+ * Which scroll it means is resolved server-side from the player's active familiar
+ * (SummoningSpecialMoves.resolveBinding) rather than from any per-scroll id, because no such
+ * ids exist in this cache. 662 has no equivalent trigger.
+ */
+on_button(747, 25) {
+    SummoningSpecialMoves.castInstant(player)
 }
 
-SummoningSpecialMoves.bindings.forEach { binding ->
-    when (binding.target) {
-        FamiliarSpecialTarget.INSTANT -> {
-            on_button(662, binding.detailsComponent) { SummoningSpecialMoves.castInstant(player, binding) }
-            on_button(747, binding.orbComponent) { SummoningSpecialMoves.castInstant(player, binding) }
-        }
-        FamiliarSpecialTarget.NPC -> {
-            on_spell_on_npc(662, binding.detailsComponent) {
-                SummoningSpecialMoves.castOnNpc(player, binding, player.getInteractingNpc())
-            }
-            on_spell_on_npc(747, binding.orbComponent) {
-                SummoningSpecialMoves.castOnNpc(player, binding, player.getInteractingNpc())
-            }
-        }
-        FamiliarSpecialTarget.INVENTORY_ITEM -> {
-            on_spell_on_item(662, binding.detailsComponent) {
-                SummoningSpecialMoves.castOnInventoryItem(player, binding, player.getInteractingItemSlot())
-            }
-            on_spell_on_item(747, binding.orbComponent) {
-                SummoningSpecialMoves.castOnInventoryItem(player, binding, player.getInteractingItemSlot())
-            }
-        }
-    }
+on_spell_on_npc(747, 25) {
+    SummoningSpecialMoves.castOnNpc(player, player.getInteractingNpc())
+}
+
+on_spell_on_item(747, 25) {
+    SummoningSpecialMoves.castOnInventoryItem(player, player.getInteractingItemSlot())
 }
 
 /*
