@@ -33,7 +33,7 @@ object ObjectCensus {
                 solid = def.solid,
                 width = def.width,
                 length = def.length,
-                options = def.options.filterNotNull().filter { it.isNotBlank() },
+                options = def.options.map { it.orEmpty() },
                 boundOptions = world.plugins.boundObjectOptions(id).sorted(),
                 hasItemOnObjectHandler = world.plugins.hasItemOnObjectHandler(id),
                 transforms = def.transforms?.toList() ?: emptyList(),
@@ -63,7 +63,7 @@ object ObjectCensus {
 
         val interactive = rows.count { it.interactive }
         val deadOptions = rows.count { row ->
-            row.options.indices.any { index -> (index + 1) !in row.boundOptions }
+            row.options.withIndex().any { it.value.isNotBlank() && (it.index + 1) !in row.boundOptions }
         }
         val transformed = rows.count { it.transforms.isNotEmpty() }
         return "object_inventory.csv written: ${rows.size} definitions, $interactive interactive, " +
