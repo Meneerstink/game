@@ -1,3 +1,63 @@
+## 2026-09-02 — Phase 1: the 78-familiar classification ledger
+
+Files touched: new `SummoningCatalogue.kt`, `SummoningLedger.kt`, `BeastOfBurden.kt`,
+`FamiliarCombat.kt`, new `src/test/.../SummoningCatalogueTests.kt`.
+
+`SummoningCatalogue` is the classification half of the ledger: one row per pouch carrying the
+skill focus, combat level, category set, item-carrying contract and the knowledge base's "Other
+Abilities" wording verbatim. It was generated from the revision-667-era official knowledge base
+familiars table, which has 73 rows: one (Meerkats) has no pouch in this revision and is therefore
+absent, and one covers all seven -atrice familiars, giving 78 rows here.
+
+The numeric half of the ledger already existed and is unchanged - `SummoningPouchData` (ids,
+level, experience), `SummoningFamiliarDefinitions` (point cost, duration),
+`SummoningCombatDefinitions` (stats, animations) and `SummoningScrollData` (scrolls).
+`SummoningLedger.validate()` joins all five and now additionally proves, at world init:
+
+- every pouch has exactly one catalogue row;
+- a familiar credits a skill if and only if it can fight, and is categorised as combat if and only
+  if it has a combat level;
+- the beast-of-burden category, the inventory kind and a real registered container all agree, and
+  every container's capacity and essence-only flag equals the sourced number.
+
+That last check is what pins the nine carrying capacities (3/6/9/12/7/7/18/7/30) to their source
+rather than to whatever the container declarations happen to say.
+
+**Sourced correction - experience is credited by skill focus, not by attack style.** The knowledge
+base defines its Skill Focus column as "Every familiar that can fight will also note the style.
+You will receive experience in that skill (or spread evenly in the case of 'Controlled') as well
+as Constitution as if you had inflicted the damage yourself." `FamiliarCombat` was instead
+deriving the skill from `FamiliarAttackStyle`, so every melee-animated familiar gave the
+three-way controlled split. That is right for the twelve Controlled familiars and wrong for the
+rest: a spirit wolf is Attack focus, a moss titan is Strength, an iron titan is Defence. Six
+familiars are sourced as Ranged or Magic focus while still swinging in melee (dreadfowl, giant
+chinchompa, void torcher, evil turnip, forge regent, fire titan), which is why focus and attack
+style are recorded as two separate fields instead of one being derived from the other. The
+experience *rates* are unchanged; only the skill each hit is credited to changed.
+
+**Not changed, with evidence.** The revision-634 candidate matrix proposes 12 essence slots for
+the abyssal lurker and 20 for the abyssal titan, and the modern wiki agrees. The wiki also dates
+the titan's increase to the 15 September 2014 update, long after this revision, and the knowledge
+base gives all three abyssal familiars 7. The code already had 7 and keeps it.
+
+**Recorded, not yet implemented.** The knowledge base states "A forager will find certain items
+from time to time, and can carry up to 30. You are only able to 'Withdraw' items from these
+familiars." All 22 foragers therefore carry a sourced 30-slot withdraw-only store in the
+catalogue, and none of them has a container yet - that is Phase 4. `validateInventories`
+deliberately does not assert foragers against containers so this gap is visible rather than
+enforced.
+
+**Conflict recorded from the previous entry.** The revision-634 candidate matrix agrees with the
+*old* Rending 3 / Goad 6 special-move costs. It is a private-server dataset that ranks below the
+official knowledge base in this project's own source hierarchy, both official sources agree on
+6/3, and 6/3 is the internally coherent reading (the graahk's and kyatt's near-identical
+call-into-combat specials then both cost 3, and the larupia's damage-and-drain costs 6). The
+correction stands.
+
+Verification: `./gradlew :game:plugins:test --tests
+'gg.rsmod.plugins.content.skills.summoning.*'` → 48 tests, 0 failures
+across the whole summoning package.
+
 ## 2026-09-01 — sourced scroll table cross-check
 
 Files touched: `SummoningScrollData.kt`, new `src/test/.../SummoningScrollDataTests.kt`.

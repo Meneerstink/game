@@ -67,6 +67,9 @@ object BeastOfBurden {
 
     val allKeys = storageByPouch.values.map { it.key }
 
+    /** The carrying contract for [pouch], for [SummoningLedger] to check against the ledger. */
+    fun storageFor(pouch: SummoningPouchData): Storage? = storageByPouch[pouch]
+
     private fun storage(player: Player): Storage? {
         val npc = Familiar.current(player) ?: return null
         val pouch = SummoningPouchData.values.firstOrNull { it.npc == npc.id } ?: return null

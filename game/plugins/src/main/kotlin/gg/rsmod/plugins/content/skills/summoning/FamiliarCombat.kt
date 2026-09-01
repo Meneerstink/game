@@ -156,31 +156,47 @@ object FamiliarCombat {
             definition.maxHit.toDouble(),
             accuracy >= familiar.world.randomDouble(),
             hitDelay,
-            { hit -> attachOwnerExperience(hit, familiar, owner, target, definition.style) },
+            { hit -> attachOwnerExperience(hit, familiar, owner, target) },
             hitType,
         )
     }
 
+    /**
+     * Credits the owner for damage their familiar dealt, "as if you had inflicted the damage
+     * yourself".
+     *
+     * Which skill is credited comes from the familiar's sourced [FamiliarSkillFocus], not from how
+     * it swings: the knowledge base gives every fighting familiar a Skill Focus of Attack,
+     * Strength, Defence, Controlled, Ranged or Magic, and several familiars that attack in melee
+     * animation credit Magic or Ranged. Deriving the skill from [FamiliarAttackStyle] instead - as
+     * this used to - gave every melee familiar the three-way controlled split, which is only
+     * correct for the twelve familiars whose focus really is Controlled.
+     *
+     * The rates themselves are unchanged from the existing implementation.
+     */
     private fun attachOwnerExperience(
         pawnHit: PawnHit,
         familiar: Npc,
         owner: Player,
         target: Pawn,
-        style: FamiliarAttackStyle,
     ) {
+        val focus = SummoningCatalogue.getByNpc(familiar.id)?.skillFocus ?: return
         pawnHit.hit.addAction {
             if (Familiar.current(owner) !== familiar || !owner.isOnline) return@addAction
             val damage = pawnHit.hit.hitmarks.sumOf { it.damage }.coerceAtMost(target.getMaximumLifepoints())
             if (damage <= 0) return@addAction
-            when (style) {
-                FamiliarAttackStyle.MELEE -> {
+            when (focus) {
+                FamiliarSkillFocus.ATTACK -> owner.addXp(Skills.ATTACK, damage * 0.4)
+                FamiliarSkillFocus.STRENGTH -> owner.addXp(Skills.STRENGTH, damage * 0.4)
+                FamiliarSkillFocus.DEFENCE -> owner.addXp(Skills.DEFENCE, damage * 0.4)
+                FamiliarSkillFocus.CONTROLLED -> {
                     owner.addXp(Skills.ATTACK, damage * 0.133)
                     owner.addXp(Skills.STRENGTH, damage * 0.133)
                     owner.addXp(Skills.DEFENCE, damage * 0.133)
                 }
-                FamiliarAttackStyle.RANGED -> owner.addXp(Skills.RANGED, damage * 0.4)
-                FamiliarAttackStyle.MAGIC -> owner.addXp(Skills.MAGIC, damage * 0.4)
-                FamiliarAttackStyle.NONE -> Unit
+                FamiliarSkillFocus.RANGED -> owner.addXp(Skills.RANGED, damage * 0.4)
+                FamiliarSkillFocus.MAGIC -> owner.addXp(Skills.MAGIC, damage * 0.4)
+                FamiliarSkillFocus.NONE -> return@addAction
             }
             owner.addXp(Skills.CONSTITUTION, damage * 0.133)
         }

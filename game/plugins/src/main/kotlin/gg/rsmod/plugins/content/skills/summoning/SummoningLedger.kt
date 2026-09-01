@@ -13,7 +13,10 @@ package gg.rsmod.plugins.content.skills.summoning
  * These checks therefore prove the relationships instead:
  *  - every pouch maps to exactly one base familiar NPC,
  *  - every pouch maps to exactly one scroll, and that scroll agrees about the base NPC,
- *  - every fighting familiar's combat transform is that familiar's own base NPC + 1.
+ *  - every fighting familiar's combat transform is that familiar's own base NPC + 1,
+ *  - every pouch has a [SummoningCatalogue] row, and that row's sourced classification agrees
+ *    with the combat table about whether the familiar fights and with [BeastOfBurden] about what
+ *    it can carry.
  *
  * The transform rule is not a guess: in the 667 cache every summonable familiar occupies a pair
  * of consecutive NPC slots, the lower being the idle/follow form and the higher the combat form
@@ -21,20 +24,12 @@ package gg.rsmod.plugins.content.skills.summoning
  * fighting rows, and it is exactly the invariant each of the four roster bugs violated.
  */
 object SummoningLedger {
-    /** The five foragers that have no combat form at all and therefore no transform NPC. */
-    private val NON_COMBAT_FAMILIARS =
-        setOf(
-            SummoningPouchData.BEAVER,
-            SummoningPouchData.MACAW,
-            SummoningPouchData.MAGPIE,
-            SummoningPouchData.IBIS,
-            SummoningPouchData.FRUIT_BAT,
-        )
-
     fun validate() {
         validatePouchIdentity()
         validateScrollRelationships()
+        validateCatalogue()
         validateCombatTransforms()
+        validateInventories()
     }
 
     private fun validatePouchIdentity() {
@@ -77,10 +72,66 @@ object SummoningLedger {
         }
     }
 
+    private fun validateCatalogue() {
+        val missing = SummoningPouchData.values.filterNot { SummoningCatalogue.byPouch.containsKey(it) }
+        check(missing.isEmpty()) {
+            "These pouches have no catalogue row: ${missing.joinToString { it.name }}"
+        }
+        SummoningCatalogue.byPouch.values.forEach { entry ->
+            check(entry.canFight == (entry.skillFocus != FamiliarSkillFocus.NONE)) {
+                "${entry.pouch.name} must credit a skill if and only if it can fight, but it is " +
+                    "combat level ${entry.combatLevel} with focus ${entry.skillFocus}."
+            }
+            check(entry.canFight == entry.isIn(FamiliarCategory.COMBAT)) {
+                "${entry.pouch.name} has a combat level but is not categorised as a combat familiar."
+            }
+            val kind = entry.inventory.kind
+            check(entry.isIn(FamiliarCategory.BEAST_OF_BURDEN) == (kind == FamiliarInventoryKind.BEAST_OF_BURDEN)) {
+                "${entry.pouch.name} is categorised as a beast of burden but carries $kind."
+            }
+            check((kind == FamiliarInventoryKind.NONE) == (entry.inventory.capacity == 0)) {
+                "${entry.pouch.name} declares $kind with capacity ${entry.inventory.capacity}."
+            }
+        }
+    }
+
+    /**
+     * The catalogue is the sourced statement of what each familiar can carry; [BeastOfBurden] is
+     * the implementation. Every beast of burden must already have a container of exactly the
+     * sourced size, and no container may exist for a familiar that cannot carry anything.
+     *
+     * Foragers are the deliberate exception in the other direction: they are sourced as 30-slot
+     * withdraw-only stores but have no container yet, so they are not asserted here.
+     */
+    private fun validateInventories() {
+        SummoningCatalogue.byPouch.values.forEach { entry ->
+            val storage = BeastOfBurden.storageFor(entry.pouch)
+            if (entry.inventory.kind == FamiliarInventoryKind.BEAST_OF_BURDEN) {
+                val key =
+                    requireNotNull(storage) {
+                        "${entry.pouch.name} carries ${entry.inventory.capacity} items but has no container."
+                    }.key
+                check(key.capacity == entry.inventory.capacity) {
+                    "${entry.pouch.name} carries ${entry.inventory.capacity} items, " +
+                        "but its container holds ${key.capacity}."
+                }
+                check(storage.essenceOnly == entry.inventory.essenceOnly) {
+                    "${entry.pouch.name} essence-only is ${entry.inventory.essenceOnly} in the ledger " +
+                        "but ${storage.essenceOnly} in its container."
+                }
+            } else if (storage != null) {
+                // The albino rat's cheese store is a special internal inventory, not carrying capacity.
+                check(entry.isIn(FamiliarCategory.FORAGER)) {
+                    "${entry.pouch.name} carries nothing but has container ${storage.key.name}."
+                }
+            }
+        }
+    }
+
     private fun validateCombatTransforms() {
         SummoningPouchData.values.forEach { pouch ->
             val combat = SummoningCombatDefinitions.get(pouch)
-            val nonCombat = pouch in NON_COMBAT_FAMILIARS
+            val nonCombat = !SummoningCatalogue[pouch].canFight
             check(combat.canFight != nonCombat) {
                 if (nonCombat) {
                     "${pouch.name} is a forager and must not have a combat style."
