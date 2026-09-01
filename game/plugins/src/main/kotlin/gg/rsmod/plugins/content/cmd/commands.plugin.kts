@@ -1920,6 +1920,14 @@ on_command("npc_inventory", Privilege.OWNER_POWER) {
     val summary = gg.rsmod.game.model.npc.NpcCensus.writeCsv(world)
     player.message(summary, type = ChatMessageType.CONSOLE)
 }
+/**
+ * Owner-only object census. It cross-references cached object options with
+ * registered object and item-on-object handlers.
+ */
+on_command("object_inventory", Privilege.OWNER_POWER) {
+    val summary = gg.rsmod.game.model.obj.ObjectCensus.writeCsv(world)
+    player.message(summary, type = ChatMessageType.CONSOLE)
+}
 
 /**
  * R12.1: owner-only maxtest - maxes/recalculates skills and combat level, restores HP/prayer/

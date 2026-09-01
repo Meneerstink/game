@@ -1789,6 +1789,18 @@ class PluginRepository(
      * to report which advertised options (Talk-to, Trade, ...) are real vs dead menu entries.
      */
     fun boundNpcOptions(npc: Int): Set<Int> = npcPlugins[npc]?.keys ?: emptySet()
+    /**
+     * The 1-based option slots that have a bound handler for an object definition.
+     * This lets object audits distinguish advertised cache options from executable routes.
+     */
+    fun boundObjectOptions(obj: Int): Set<Int> = objectPlugins[obj]?.keys?.toSet() ?: emptySet()
+
+    /**
+     * Whether any item-on-object route is registered for an object, including generic
+     * any-item handlers.
+     */
+    fun hasItemOnObjectHandler(obj: Int): Boolean =
+        anyItemOnObjectPlugins.containsKey(obj) || itemOnObjectPlugins.values.any { it.containsKey(obj) }
 
     fun bindItemOnNpc(
         npc: Int,
