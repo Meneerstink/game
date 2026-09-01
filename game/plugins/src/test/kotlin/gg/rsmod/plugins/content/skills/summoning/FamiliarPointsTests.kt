@@ -34,75 +34,69 @@ import kotlin.test.assertTrue
  */
 class FamiliarPointsTests {
     @Test
-    fun `maxPoints equals current Summoning level`() {
+    fun `max points equals current Summoning level`() {
         val player = newPlayer(summoningLevel = 43)
         assertEquals(43, Familiar.maxPoints(player))
     }
 
     @Test
-    fun `summon deducts the immediate level-10 cost and blocks below-cost summons`() {
+    fun `summon deducts the ledger pouch cost exactly once`() {
         val player = newPlayer(summoningLevel = DREADFOWL.level)
         player.inventory[0] = Item(DREADFOWL.pouch, 1)
 
-        val summoned = Familiar.summon(player, DREADFOWL)
-
-        assertTrue(summoned)
-        // level 4 -> round(4/10) coerced up to a minimum of 1 point immediate cost.
-        assertEquals(DREADFOWL.level - 1, Familiar.currentPoints(player))
+        assertTrue(Familiar.summon(player, DREADFOWL))
+        assertEquals(3, Familiar.currentPoints(player))
+        assertEquals(0, player.inventory.getItemCount(DREADFOWL.pouch))
     }
 
     @Test
-    fun `summon refuses when points are below the immediate cost`() {
+    fun `summon refuses when points are below its real pouch cost`() {
         val player = newPlayer(summoningLevel = PACK_YAK.level)
-        player.attr[gg.rsmod.game.model.attr.SUMMONING_POINTS_ATTR] = 0
+        player.attr[gg.rsmod.game.model.attr.SUMMONING_POINTS_ATTR] = 9
         player.inventory[0] = Item(PACK_YAK.pouch, 1)
 
-        val summoned = Familiar.summon(player, PACK_YAK)
-
-        assertFalse(summoned)
+        assertFalse(Familiar.summon(player, PACK_YAK))
         assertNull(Familiar.current(player))
-        assertEquals(1, player.inventory.getItemCount(PACK_YAK.pouch), "pouch must not be consumed on a refused summon")
+        assertEquals(1, player.inventory.getItemCount(PACK_YAK.pouch))
     }
 
     @Test
-    fun `a full familiar life drains exactly the pouch's own level in total`() {
+    fun `expiry does not drain summoning points`() {
         val player = newPlayer(summoningLevel = DREADFOWL.level)
         player.inventory[0] = Item(DREADFOWL.pouch, 1)
         check(Familiar.summon(player, DREADFOWL))
+        val pointsAfterSummon = Familiar.currentPoints(player)
 
-        repeat(Familiar.LIFETIME_CYCLES) { Familiar.tick(player) }
-
-        // Total drained over the whole life (immediate + gradual) must equal the sourced rule:
-        // total drained = the familiar's own required level.
-        assertEquals(DREADFOWL.level - DREADFOWL.level, Familiar.currentPoints(player))
-        assertNull(Familiar.current(player), "familiar's timer ran out over its full life")
-    }
-
-    @Test
-    fun `running out of points despawns the familiar early, before the timer would`() {
-        val player = newPlayer(summoningLevel = PACK_YAK.level)
-        player.inventory[0] = Item(PACK_YAK.pouch, 1)
-        check(Familiar.summon(player, PACK_YAK))
-        assertNotEquals(null, Familiar.current(player))
-
-        // Force points to run out immediately, independent of the timer.
-        player.attr[gg.rsmod.game.model.attr.SUMMONING_POINTS_ATTR] = 0
+        player.timers.remove(FAMILIAR_LIFETIME_TIMER)
         Familiar.tick(player)
 
         assertNull(Familiar.current(player))
+        assertEquals(pointsAfterSummon, Familiar.currentPoints(player))
     }
 
     @Test
-    fun `renew restarts the gradual drain allowance without an extra immediate charge`() {
+    fun `renew requires low remaining time and consumes one matching pouch`() {
         val player = newPlayer(summoningLevel = DREADFOWL.level)
-        player.inventory[0] = Item(DREADFOWL.pouch, 1)
+        player.inventory[0] = Item(DREADFOWL.pouch, 2)
         check(Familiar.summon(player, DREADFOWL))
-        val afterSummon = Familiar.currentPoints(player)
+        assertFalse(Familiar.renew(player), "renew must reject a familiar with more than 2:50 left")
 
-        val renewed = Familiar.renew(player)
+        player.timers[FAMILIAR_LIFETIME_TIMER] = 1
+        assertTrue(Familiar.renew(player))
+        assertEquals(400, player.timers[FAMILIAR_LIFETIME_TIMER])
+        assertEquals(0, player.inventory.getItemCount(DREADFOWL.pouch))
+    }
 
-        assertTrue(renewed)
-        assertEquals(afterSummon, Familiar.currentPoints(player), "renew itself must not cost extra points")
+    @Test
+    fun `zero summoning points do not dismiss an already active familiar`() {
+        val player = newPlayer(summoningLevel = PACK_YAK.level)
+        player.inventory[0] = Item(PACK_YAK.pouch, 1)
+        check(Familiar.summon(player, PACK_YAK))
+        player.attr[gg.rsmod.game.model.attr.SUMMONING_POINTS_ATTR] = 0
+
+        Familiar.tick(player)
+
+        assertNotEquals(null, Familiar.current(player))
     }
 
     @Test
@@ -113,13 +107,11 @@ class FamiliarPointsTests {
         Familiar.restorePoints(player, 10)
         assertEquals(15, Familiar.currentPoints(player))
         assertEquals(Familiar.MAX_SPECIAL_POINTS, Familiar.currentSpecialPoints(player))
-
         assertTrue(Familiar.consumeSpecialPoints(player, 12))
         assertEquals(48, Familiar.currentSpecialPoints(player))
         Familiar.restoreSpecialPoints(player, 20)
         assertEquals(Familiar.MAX_SPECIAL_POINTS, Familiar.currentSpecialPoints(player))
     }
-
     private val DREADFOWL get() = SummoningPouchData.DREADFOWL
     private val PACK_YAK get() = SummoningPouchData.PACK_YAK
 

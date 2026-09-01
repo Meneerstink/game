@@ -139,6 +139,7 @@ familiarNpcIds.filter { BeastOfBurden.isBobNpc(it) }.forEach { npc ->
 }
 
 on_world_init {
+    SummoningFamiliarDefinitions.validate()
     println(
         "R07.1 familiar: bound Summon on $boundSummon/${boundSummon + skippedSummon} pouches, " +
             "Interact on $boundInteract/${boundInteract + skippedInteract} familiar npcs " +

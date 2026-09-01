@@ -13,7 +13,6 @@ import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.api.ext.setComponentHidden
 import gg.rsmod.plugins.api.ext.setComponentText
 import java.lang.ref.WeakReference
-import kotlin.math.roundToInt
 
 /**
  * R07.1/R07.2: real summon/follow/renew/dismiss for [SummoningPouchData]'s already-existing
@@ -51,20 +50,10 @@ val FAMILIAR_LIFETIME_TIMER = TimerKey(persistenceKey = "familiar_lifetime", tic
 private val FAMILIAR_HUD_TEXT_ATTR = AttributeKey<String>()
 private val FAMILIAR_HUD_POINTS_TEXT_ATTR = AttributeKey<String>()
 
-/**
- * R07.2: gradual-drain bookkeeping for the currently-summoned familiar, not persisted -
- * matches [gg.rsmod.plugins.content.mechanics.prayer.Prayers]' own transient
- * `PRAYER_DRAIN_COUNTER` pattern. [FAMILIAR_DRAIN_REMAINING_ATTR] is the whole-points total
- * still owed for this familiar's current life (set on summon/renew); [FAMILIAR_DRAIN_COUNTER_ATTR]
- * is the Bresenham-style accumulator that spreads that total evenly across [Familiar.LIFETIME_CYCLES]
- * ticks so exactly that many points are drained, no more, no less.
- */
-private val FAMILIAR_DRAIN_REMAINING_ATTR = AttributeKey<Int>(persistenceKey = "familiar_drain_remaining")
-private val FAMILIAR_DRAIN_COUNTER_ATTR = AttributeKey<Int>()
 
 object Familiar {
-    const val LIFETIME_CYCLES = 2000
     const val MAX_SPECIAL_POINTS = 60
+    private const val RENEW_THRESHOLD_SECONDS = 170
 
     /** R07 follower interface (see InterfaceDestination.SUMMONING_TAB for the evidence trail). */
     private const val HUD_INTERFACE = 662
@@ -127,15 +116,16 @@ object Familiar {
         return true
     }
 
-    /**
-     * R07.2: the immediate on-summon deduction, ~round(level/10) - sourced from the bunyip
-     * worked example (level 68 -> 7 immediate + 61 gradual = 68 total) and cross-checked
-     * against the ratio implied by RS3's own post-rework cost table (both agree on level/10).
-     * The remaining `level - immediateCost` drains gradually over the familiar's active life
-     * (see [FAMILIAR_DRAIN_REMAINING_ATTR]), so the full level is spent across a full life -
-     * matching the sourced "total drained over a familiar's life = its own required level" rule.
-     */
-    private fun immediateCost(data: SummoningPouchData): Int = (data.level / 10.0).roundToInt().coerceAtLeast(1)
+    /** Target-period pouch values from the 2011 familiar roster. */
+    private fun definition(data: SummoningPouchData): SummoningFamiliarDefinition =
+        SummoningFamiliarDefinitions.get(data)
+
+    /** TimerMap uses game cycles, not real milliseconds. */
+    private fun lifetimeCycles(player: Player, data: SummoningPouchData): Int =
+        definition(data).durationMinutes * 60_000 / player.world.gameContext.cycleTime
+
+    private fun renewThresholdCycles(player: Player): Int =
+        RENEW_THRESHOLD_SECONDS * 1_000 / player.world.gameContext.cycleTime
 
     /**
      * Pushes the confirmed-real duration text (components 43/48), the points-remaining text
@@ -184,7 +174,8 @@ object Familiar {
             player.message("You need a Summoning level of ${data.level} to summon this familiar.")
             return false
         }
-        val cost = immediateCost(data)
+        val definition = definition(data)
+        val cost = definition.summonPoints
         if (currentPoints(player) < cost) {
             player.message("You don't have enough Summoning points to summon this familiar.")
             return false
@@ -205,10 +196,8 @@ object Familiar {
 
         player.attr[FAMILIAR_ATTR] = WeakReference(npc)
         player.attr[FAMILIAR_NPC_ID_ATTR] = data.npc
-        player.timers[FAMILIAR_LIFETIME_TIMER] = LIFETIME_CYCLES
+        player.timers[FAMILIAR_LIFETIME_TIMER] = lifetimeCycles(player, data)
         setPoints(player, currentPoints(player) - cost)
-        player.attr[FAMILIAR_DRAIN_REMAINING_ATTR] = data.level - cost
-        player.attr[FAMILIAR_DRAIN_COUNTER_ATTR] = 0
         player.addXp(Skills.SUMMONING, data.summonExperience)
         player.message("You summon your familiar.")
         updateHud(player)
@@ -216,17 +205,22 @@ object Familiar {
     }
 
     /**
-     * R07.1/R07.2 "renew": tops the same familiar's lifetime back up without re-summoning it,
-     * and restarts its gradual-drain allowance for the fresh life (no extra immediate charge -
-     * real RS renew has no sourced lump cost, only the ongoing gradual drain the fresh timer
-     * now spreads across).
+     * A familiar can only be renewed below 2:50 remaining. Renew consumes one matching pouch
+     * and restores its native duration; it does not charge Summoning points a second time.
      */
     fun renew(player: Player): Boolean {
         val npc = current(player) ?: return false
         val data = SummoningPouchData.values.firstOrNull { it.npc == npc.id } ?: return false
-        player.timers[FAMILIAR_LIFETIME_TIMER] = LIFETIME_CYCLES
-        player.attr[FAMILIAR_DRAIN_REMAINING_ATTR] = data.level - immediateCost(data)
-        player.attr[FAMILIAR_DRAIN_COUNTER_ATTR] = 0
+        val remaining = if (player.timers.has(FAMILIAR_LIFETIME_TIMER)) player.timers[FAMILIAR_LIFETIME_TIMER] else 0
+        if (remaining >= renewThresholdCycles(player)) {
+            player.message("You need less than 2:50 remaining before you can renew your familiar.")
+            return false
+        }
+        if (!player.inventory.remove(data.pouch, assureFullRemoval = true).hasSucceeded()) {
+            player.message("You need another pouch of this type to renew your familiar.")
+            return false
+        }
+        player.timers[FAMILIAR_LIFETIME_TIMER] = lifetimeCycles(player, data)
         player.message("You renew your familiar's summoning duration.")
         updateHud(player)
         return true
@@ -237,8 +231,6 @@ object Familiar {
         player.world.remove(npc)
         player.attr.remove(FAMILIAR_ATTR)
         player.attr.remove(FAMILIAR_NPC_ID_ATTR)
-        player.attr.remove(FAMILIAR_DRAIN_REMAINING_ATTR)
-        player.attr.remove(FAMILIAR_DRAIN_COUNTER_ATTR)
         player.timers.remove(FAMILIAR_LIFETIME_TIMER)
         player.message("Your familiar is dismissed.")
         updateHud(player)
@@ -271,8 +263,6 @@ object Familiar {
         }
         if (!player.timers.has(FAMILIAR_LIFETIME_TIMER) || player.timers[FAMILIAR_LIFETIME_TIMER] <= 0) {
             player.attr.remove(FAMILIAR_NPC_ID_ATTR)
-            player.attr.remove(FAMILIAR_DRAIN_REMAINING_ATTR)
-            player.attr.remove(FAMILIAR_DRAIN_COUNTER_ATTR)
             player.timers.remove(FAMILIAR_LIFETIME_TIMER)
             return
         }
@@ -307,10 +297,8 @@ object Familiar {
         player.world.remove(npc)
         player.attr.remove(FAMILIAR_ATTR)
         player.attr.remove(FAMILIAR_NPC_ID_ATTR)
-        player.attr.remove(FAMILIAR_DRAIN_REMAINING_ATTR)
-        player.attr.remove(FAMILIAR_DRAIN_COUNTER_ATTR)
         player.timers.remove(FAMILIAR_LIFETIME_TIMER)
-        player.message("Your familiar has run out of summoning points and returns home.")
+        player.message("Your familiar has run out of time and returns home.")
         updateHud(player)
     }
 
@@ -319,26 +307,6 @@ object Familiar {
         val npc = current(player) ?: return
         if (!player.timers.has(FAMILIAR_LIFETIME_TIMER)) {
             // Lifetime ran out - real RS despawns the familiar, it doesn't just sit there inert.
-            expire(player, npc)
-            return
-        }
-        // R07.2 gradual drain: Bresenham-style accumulator spreads FAMILIAR_DRAIN_REMAINING_ATTR
-        // points evenly across LIFETIME_CYCLES ticks - mirrors Prayers.drainPrayer's own
-        // PRAYER_DRAIN_COUNTER accumulator pattern (architecture reused, our own sourced formula).
-        val remaining = player.attr.getOrDefault(FAMILIAR_DRAIN_REMAINING_ATTR, 0)
-        if (remaining > 0) {
-            val counter = player.attr.getOrDefault(FAMILIAR_DRAIN_COUNTER_ATTR, 0) + remaining
-            if (counter >= LIFETIME_CYCLES) {
-                setPoints(player, currentPoints(player) - counter / LIFETIME_CYCLES)
-                player.attr[FAMILIAR_DRAIN_COUNTER_ATTR] = counter % LIFETIME_CYCLES
-            } else {
-                player.attr[FAMILIAR_DRAIN_COUNTER_ATTR] = counter
-            }
-        }
-        if (currentPoints(player) <= 0) {
-            // R07.2: real RS (matching this era per the Void reference implementation) despawns
-            // the familiar outright once its owner's Summoning points hit 0, same as the
-            // existing timer-expiry path - not just a cosmetic "can't use special" state.
             expire(player, npc)
             return
         }

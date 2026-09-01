@@ -15,5 +15,7 @@ class FamiliarDefinitionTests {
         assertEquals(Npcs.VOID_SPINNER, SummoningPouchData.VOID_SPINNER.npc)
         assertEquals(Npcs.PHOENIX_8575, SummoningPouchData.PHOENIX.npc)
         assertTrue(SummoningPouchData.values.all { it.npc > 0 })
+        SummoningFamiliarDefinitions.validate()
+        assertTrue(SummoningPouchData.values.all { SummoningFamiliarDefinitions.get(it).summonPoints > 0 && SummoningFamiliarDefinitions.get(it).durationMinutes > 0 })
     }
 }

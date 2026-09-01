@@ -1,3 +1,9 @@
+## 2026-09-01 — lifecycle data correction (automated)
+
+- Replaced the invented gradual Summoning-point drain with the target-period one-time pouch cost.
+- Added a production 78-row ledger for pouch cost and native familiar duration, sourced from the 2011 familiar roster and cross-checked with the preserved revision-634 data where the target cache does not expose the values.
+- Renew is now gated below 2:50 remaining, consumes one matching pouch, and restores the native duration without a second point cost.
+- Summoning points reaching zero no longer dismisses a familiar; lifetime expiry alone does. `FamiliarDefinitionTests` and `FamiliarPointsTests` cover the ledger, costs, expiry and renewal rules.
 # Summoning familiar audit — Section A deliverable
 
 Source data (both read in full, verbatim, this session — not summarized/guessed):
