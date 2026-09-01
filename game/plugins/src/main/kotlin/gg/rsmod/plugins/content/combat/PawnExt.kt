@@ -3,6 +3,7 @@ package gg.rsmod.plugins.content.combat
 import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.attr.AGGRESSOR
 import gg.rsmod.game.model.attr.COMBAT_TARGET_FOCUS_ATTR
+import gg.rsmod.game.model.attr.DAMAGE_CREDIT_ATTR
 import gg.rsmod.game.model.attr.LAST_HIT_ATTR
 import gg.rsmod.game.model.attr.LAST_HIT_BY_ATTR
 import gg.rsmod.game.model.combat.CombatClass
@@ -177,8 +178,14 @@ fun Pawn.dealHit(
 
     // Re-check PvP safety when a delayed hit lands. This closes the boundary
     // window for projectiles/spells fired before either player entered home.
+    val creditedPlayer = attr[DAMAGE_CREDIT_ATTR]?.get() as? Player
     hit.setCancelIf {
-        isDead() || (this is Player && target is Player && !AreaState.canPlayersFight(this, target))
+        isDead() ||
+            when {
+                this is Player && target is Player -> !AreaState.canPlayersFight(this, target)
+                creditedPlayer != null && target is Player -> !AreaState.canPlayersFight(creditedPlayer, target)
+                else -> false
+            }
     }
 
     // Animate the target blocking the hit (if not a melee hit)
@@ -203,7 +210,7 @@ fun Pawn.dealHit(
     if (landHit) {
         hit.addAction {
             val pawn = this@dealHit
-            target.damageMap.add(pawn, hit.hitmarks.sumOf { it.damage })
+            target.damageMap.add(pawn.attr[DAMAGE_CREDIT_ATTR]?.get() ?: pawn, hit.hitmarks.sumOf { it.damage })
         }
     }
 

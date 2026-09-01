@@ -125,6 +125,9 @@ val PVP_AGGRESSOR_ATTR = AttributeKey<WeakReference<Player>>()
  */
 val KILLER_ATTR = AttributeKey<WeakReference<Pawn>>()
 
+/** Optional owner credited for damage dealt by a controlled pawn such as a familiar. */
+val DAMAGE_CREDIT_ATTR = AttributeKey<WeakReference<Pawn>>()
+
 /**
  * The last [Pawn] that the owner of this attribute has hit.
  */

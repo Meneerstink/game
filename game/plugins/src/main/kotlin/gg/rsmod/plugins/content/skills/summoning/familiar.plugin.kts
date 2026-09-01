@@ -2,6 +2,9 @@ package gg.rsmod.plugins.content.skills.summoning
 
 import gg.rsmod.game.fs.def.ItemDef
 import gg.rsmod.game.fs.def.NpcDef
+import gg.rsmod.game.model.combat.StyleType
+import gg.rsmod.plugins.api.ext.getInteractingNpc
+import gg.rsmod.plugins.api.ext.getInteractingPlayer
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.queue.QueueTask
 import gg.rsmod.plugins.api.ext.closeInterface
@@ -83,6 +86,58 @@ SummoningPouchData.values().forEach { data ->
 var boundInteract = 0
 var skippedInteract = 0
 val familiarNpcIds = SummoningPouchData.values().map { it.npc }.distinct().toIntArray()
+
+// Register native combat definitions only for rows whose animations and death data are sourced.
+SummoningCombatDefinitions.executableCombatValues.forEach { definition ->
+    listOfNotNull(definition.pouch.npc, definition.combatNpc).distinct().forEach { npcId ->
+        set_combat_def(npcId) {
+            configs {
+                attackSpeed = definition.attackSpeed
+                respawnDelay = 0
+                attackStyle = when (definition.style) {
+                    FamiliarAttackStyle.MELEE -> StyleType.CRUSH
+                    FamiliarAttackStyle.RANGED -> StyleType.RANGED
+                    FamiliarAttackStyle.MAGIC -> StyleType.MAGIC
+                    FamiliarAttackStyle.NONE -> StyleType.NONE
+                }
+            }
+            stats {
+                hitpoints = definition.hitpoints
+                attack = definition.attack
+                strength = definition.strength
+                defence = definition.defence
+                ranged = definition.ranged
+                magic = definition.magic
+            }
+            bonuses {
+                attackStab = definition.attack
+                attackSlash = definition.attack
+                attackCrush = definition.attack
+                attackMagic = definition.magic
+                attackRanged = definition.ranged
+                attackBonus = definition.attack
+                strengthBonus = definition.strength
+                rangedStrengthBonus = definition.maxHit
+                magicDamageBonus = definition.maxHit / 10
+            }
+            anims {
+                attack = definition.attackAnimation
+                block = definition.blockAnimation
+                death = definition.deathAnimation
+            }
+        }
+    }
+}
+
+val executableCombatNpcIds = SummoningCombatDefinitions.executableCombatValues
+    .flatMap { listOfNotNull(it.pouch.npc, it.combatNpc) }
+    .distinct()
+    .toIntArray()
+
+on_npc_combat(*executableCombatNpcIds) {
+    npc.queue { FamiliarCombat.handleCombat(this) }
+}
+
 familiarNpcIds.forEach { npc ->
     val def = world.definitions.get(NpcDef::class.java, npc)
     if (def.options.any { it?.lowercase() == "interact" }) {
@@ -140,6 +195,7 @@ familiarNpcIds.filter { BeastOfBurden.isBobNpc(it) }.forEach { npc ->
 
 on_world_init {
     SummoningFamiliarDefinitions.validate()
+    SummoningCombatDefinitions.validate()
     println(
         "R07.1 familiar: bound Summon on $boundSummon/${boundSummon + skippedSummon} pouches, " +
             "Interact on $boundInteract/${boundInteract + skippedInteract} familiar npcs " +
@@ -198,6 +254,24 @@ on_button(662, 67) { // "Take Beast of Burden items" - gated to real BoB familia
     if (withdrawn > 0) player.message("You withdraw $withdrawn item(s) from your familiar.")
 }
 
+// Interface-target packets for the follower-details attack action.
+on_spell_on_npc(662, 65) {
+    FamiliarCombat.commandAttack(player, player.getInteractingNpc())
+}
+on_spell_on_player(662, 65) {
+    FamiliarCombat.commandAttack(player, player.getInteractingPlayer())
+}
+
+// Fixed/resizable Summoning-orb attack target actions.
+arrayOf(14, 23).forEach { component ->
+    on_spell_on_npc(747, component) {
+        FamiliarCombat.commandAttack(player, player.getInteractingNpc())
+    }
+    on_spell_on_player(747, component) {
+        FamiliarCombat.commandAttack(player, player.getInteractingPlayer())
+    }
+}
+
 on_button(662, 65) { // "Order your familiar to attack a target"
     val npc = Familiar.current(player)
     if (npc == null) {
@@ -206,7 +280,7 @@ on_button(662, 65) { // "Order your familiar to attack a target"
     // R07.3b (honest, evidence-backed, unchanged from SUMMONING_AUDIT.md): no familiar npc in
     // this codebase or its upstream source has a registered NpcCombatDef - there is no real
     // combat data anywhere to attack with yet. Reporting that honestly rather than faking damage.
-    player.message("Your familiar isn't able to fight yet.")
+    player.message("Select a target for your familiar.")
 }
 
 /*
@@ -246,7 +320,7 @@ on_button(747, arrayOf(14, 23)) { // "Attack" - same honest R07.3b blocker as 66
     if (Familiar.current(player) == null) {
         return@on_button
     }
-    player.message("Your familiar isn't able to fight yet.")
+    player.message("Select a target for your familiar.")
 }
 
 on_button(747, 25) { // "Spell, Cast" (resize-mode only) - special move, blocked on Phase 7 (no

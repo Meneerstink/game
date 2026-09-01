@@ -215,3 +215,12 @@ client login pass is an owner action, not something this session can fake or ski
 - `SummoningCombatDefinitionTests` verifies all 78 rows, the 73/5 split, the four defensive-only exceptions, the single blocked row and named Dreadfowl/Steel Titan data. Targeted test result: `BUILD SUCCESSFUL`.
 - This batch creates the validated data foundation. Native combat queue integration, owner damage/XP attribution and live gameplay remain the next batch; ledger completion alone is not claimed as working familiar combat.
 
+
+## 2026-09-01 — native familiar combat runtime (Codex continuation)
+
+- Added `FamiliarCombat`: 72 fully sourced familiar rows now use the normal combat queue, pathing, attack delay, line-of-sight/range checks, hit queue, animations, graphics/projectiles and combat formulas. Combat is restricted to multi-combat and all owner attack blockers are checked before a familiar receives a target.
+- Owner-led assist runs from the existing familiar tick. Void Spinner, Bunyip, Unicorn Stallion and Pack Yak only assist defensively; the other executable combat familiars join a deliberate owner fight. Interface-target packets are bound for follower details 662 and fixed/resizable Summoning orb 747.
+- Familiar damage now credits the owner through a general non-persistent `DAMAGE_CREDIT_ATTR`, so NPC killer/drop attribution uses the player. Familiar combat awards the matching combat XP plus Constitution XP. Delayed familiar hits re-check player safe-zone PvP eligibility before landing.
+- Registered real NPC combat definitions for every executable base/combat familiar ID. The real server booted cleanly against the revision-667 cache, loaded 17,737 plugins, registered 78/78 Summon and 78/78 Interact entries, and listened on port 50015. The temporary boot process was stopped afterward.
+- All focused Summoning tests passed before the final delayed-PvP guard; plugin compilation passed again after it. Live client combat still requires owner verification. Albino Rat remains the sole combat-animation data blocker and is not silently given a guessed animation.
+

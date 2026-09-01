@@ -2,6 +2,7 @@ package gg.rsmod.plugins.content.skills.summoning
 
 import gg.rsmod.game.model.MovementQueue
 import gg.rsmod.game.model.attr.AttributeKey
+import gg.rsmod.game.model.attr.DAMAGE_CREDIT_ATTR
 import gg.rsmod.game.model.attr.FAMILIAR_NPC_ID_ATTR
 import gg.rsmod.game.model.attr.SUMMONING_POINTS_ATTR
 import gg.rsmod.game.model.entity.Npc
@@ -208,6 +209,7 @@ object Familiar {
         val npc = Npc(player, data.npc, player.tile, player.world)
         npc.publicOwner = true
         npc.respawnOverride = false
+        npc.attr[DAMAGE_CREDIT_ATTR] = WeakReference(player)
         player.world.spawn(npc)
 
         player.attr[FAMILIAR_ATTR] = WeakReference(npc)
@@ -286,6 +288,7 @@ object Familiar {
         val npc = Npc(player, npcId, player.tile, player.world)
         npc.publicOwner = true
         npc.respawnOverride = false
+        npc.attr[DAMAGE_CREDIT_ATTR] = WeakReference(player)
         player.world.spawn(npc)
         player.attr[FAMILIAR_ATTR] = WeakReference(npc)
         updateHud(player)
@@ -324,6 +327,7 @@ object Familiar {
     fun tick(player: Player) {
         val npc = current(player) ?: return
         regenerateSpecialPoints(player)
+        FamiliarCombat.assist(player)
         if (!player.timers.has(FAMILIAR_LIFETIME_TIMER)) {
             // Lifetime ran out - real RS despawns the familiar, it doesn't just sit there inert.
             expire(player, npc)
