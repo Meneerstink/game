@@ -23,6 +23,8 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
 import kotlin.test.assertNull
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 /**
  * R07.3: regression tests for [BeastOfBurden]'s deposit/withdraw-all container logic - the
@@ -36,11 +38,18 @@ import kotlin.test.assertNull
  */
 class BeastOfBurdenTests {
     @Test
-    fun `isBobNpc is true only for the 3 real BoB familiar npc ids`() {
+    fun `all target-period beasts of burden are registered`() {
         assertEquals(true, BeastOfBurden.isBobNpc(Npcs.PACK_YAK))
         assertEquals(true, BeastOfBurden.isBobNpc(Npcs.WAR_TORTOISE))
         assertEquals(true, BeastOfBurden.isBobNpc(Npcs.SPIRIT_TERRORBIRD))
-        assertEquals(false, BeastOfBurden.isBobNpc(Npcs.SPIRIT_WOLF))
+        assertTrue(BeastOfBurden.isBobNpc(Npcs.THORNY_SNAIL))
+        assertTrue(BeastOfBurden.isBobNpc(Npcs.SPIRIT_KALPHITE))
+        assertTrue(BeastOfBurden.isBobNpc(Npcs.BULL_ANT))
+        assertTrue(BeastOfBurden.isBobNpc(Npcs.ABYSSAL_PARASITE))
+        assertTrue(BeastOfBurden.isBobNpc(Npcs.ABYSSAL_LURKER))
+        assertTrue(BeastOfBurden.isBobNpc(Npcs.ABYSSAL_TITAN))
+        assertEquals(9, BeastOfBurden.allKeys.size)
+        assertFalse(BeastOfBurden.isBobNpc(Npcs.SPIRIT_WOLF))
     }
 
     @Test
@@ -111,6 +120,16 @@ class BeastOfBurdenTests {
         assertEquals(2, yakPlayer.containers.getValue(BeastOfBurden.PACK_YAK_KEY).getItemCount(TEST_STACKABLE))
     }
 
+    @Test
+    fun `essence beasts accept only unnoted rune or pure essence`() {
+        val player = newPlayer(familiarNpcId = Npcs.ABYSSAL_TITAN)
+        player.inventory[0] = Item(TEST_STACKABLE, 1)
+        player.inventory[1] = Item(Items.PURE_ESSENCE, 5)
+
+        assertEquals(0, BeastOfBurden.deposit(player, Item(TEST_STACKABLE, 1)))
+        assertEquals(5, BeastOfBurden.deposit(player, Item(Items.PURE_ESSENCE, 5)))
+        assertEquals(5, player.containers.getValue(BeastOfBurden.ABYSSAL_TITAN_KEY).getItemCount(Items.PURE_ESSENCE))
+    }
     private fun newPlayer(familiarNpcId: Int?): Player {
         val world = mockk<World>(relaxed = true)
         every { world.definitions } returns DEFINITIONS

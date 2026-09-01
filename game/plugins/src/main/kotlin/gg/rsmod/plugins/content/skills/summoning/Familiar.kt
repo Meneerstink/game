@@ -228,6 +228,7 @@ object Familiar {
 
     fun dismiss(player: Player) {
         val npc = current(player) ?: return
+        BeastOfBurden.release(player, npc.tile)
         player.world.remove(npc)
         player.attr.remove(FAMILIAR_ATTR)
         player.attr.remove(FAMILIAR_NPC_ID_ATTR)
@@ -294,6 +295,7 @@ object Familiar {
         player: Player,
         npc: Npc,
     ) {
+        BeastOfBurden.release(player, npc.tile)
         player.world.remove(npc)
         player.attr.remove(FAMILIAR_ATTR)
         player.attr.remove(FAMILIAR_NPC_ID_ATTR)

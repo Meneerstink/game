@@ -3,8 +3,11 @@ package gg.rsmod.plugins.content.skills.summoning
 import gg.rsmod.game.model.container.ContainerStackType
 import gg.rsmod.game.model.container.ItemContainer
 import gg.rsmod.game.model.container.key.ContainerKey
+import gg.rsmod.game.model.Tile
+import gg.rsmod.game.model.entity.GroundItem
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
+import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.api.ext.message
 
 /**
@@ -27,28 +30,42 @@ import gg.rsmod.plugins.api.ext.message
  * the familiar's existing Renew/Dismiss/Cancel interact menu gains a "Withdraw-all" option.
  */
 object BeastOfBurden {
-    val PACK_YAK_KEY = ContainerKey("bob_pack_yak", capacity = 30, stackType = ContainerStackType.NORMAL)
-    val WAR_TORTOISE_KEY = ContainerKey("bob_war_tortoise", capacity = 18, stackType = ContainerStackType.NORMAL)
+    data class Storage(val key: ContainerKey, val essenceOnly: Boolean = false)
+
+    val THORNY_SNAIL_KEY = ContainerKey("bob_thorny_snail", capacity = 3, stackType = ContainerStackType.NORMAL)
+    val SPIRIT_KALPHITE_KEY = ContainerKey("bob_spirit_kalphite", capacity = 6, stackType = ContainerStackType.NORMAL)
+    val BULL_ANT_KEY = ContainerKey("bob_bull_ant", capacity = 9, stackType = ContainerStackType.NORMAL)
     val SPIRIT_TERRORBIRD_KEY = ContainerKey("bob_spirit_terrorbird", capacity = 12, stackType = ContainerStackType.NORMAL)
+    val ABYSSAL_PARASITE_KEY = ContainerKey("bob_abyssal_parasite", capacity = 7, stackType = ContainerStackType.NORMAL)
+    val ABYSSAL_LURKER_KEY = ContainerKey("bob_abyssal_lurker", capacity = 7, stackType = ContainerStackType.NORMAL)
+    val WAR_TORTOISE_KEY = ContainerKey("bob_war_tortoise", capacity = 18, stackType = ContainerStackType.NORMAL)
+    val ABYSSAL_TITAN_KEY = ContainerKey("bob_abyssal_titan", capacity = 7, stackType = ContainerStackType.NORMAL)
+    val PACK_YAK_KEY = ContainerKey("bob_pack_yak", capacity = 30, stackType = ContainerStackType.NORMAL)
 
-    private val keysByPouch =
-        mapOf(
-            SummoningPouchData.PACK_YAK to PACK_YAK_KEY,
-            SummoningPouchData.WAR_TORTOISE to WAR_TORTOISE_KEY,
-            SummoningPouchData.SPIRIT_TERRORBIRD to SPIRIT_TERRORBIRD_KEY,
-        )
+    private val storageByPouch = mapOf(
+        SummoningPouchData.THORNY_SNAIL to Storage(THORNY_SNAIL_KEY),
+        SummoningPouchData.SPIRIT_KALPHITE to Storage(SPIRIT_KALPHITE_KEY),
+        SummoningPouchData.BULL_ANT to Storage(BULL_ANT_KEY),
+        SummoningPouchData.SPIRIT_TERRORBIRD to Storage(SPIRIT_TERRORBIRD_KEY),
+        SummoningPouchData.ABYSSAL_PARASITE to Storage(ABYSSAL_PARASITE_KEY, essenceOnly = true),
+        SummoningPouchData.ABYSSAL_LURKER to Storage(ABYSSAL_LURKER_KEY, essenceOnly = true),
+        SummoningPouchData.WAR_TORTOISE to Storage(WAR_TORTOISE_KEY),
+        SummoningPouchData.ABYSSAL_TITAN to Storage(ABYSSAL_TITAN_KEY, essenceOnly = true),
+        SummoningPouchData.PACK_YAK to Storage(PACK_YAK_KEY),
+    )
 
-    val allKeys = keysByPouch.values.toList()
+    val allKeys = storageByPouch.values.map { it.key }
 
-    /** True if [npcId] is one of the 3 real BoB familiars' summoned npc id. */
-    fun isBobNpc(npcId: Int): Boolean = keysByPouch.keys.any { it.npc == npcId }
-
-    /** The active BoB container key for [player]'s currently-summoned familiar, if any. */
-    fun activeKey(player: Player): ContainerKey? {
+    private fun storage(player: Player): Storage? {
         val npc = Familiar.current(player) ?: return null
-        val data = SummoningPouchData.values.firstOrNull { it.npc == npc.id } ?: return null
-        return keysByPouch[data]
+        val pouch = SummoningPouchData.values.firstOrNull { it.npc == npc.id } ?: return null
+        return storageByPouch[pouch]
     }
+    /** True if [npcId] is one of the 3 real BoB familiars' summoned npc id. */
+    fun isBobNpc(npcId: Int): Boolean = storageByPouch.keys.any { it.npc == npcId }
+
+    /** The active familiar inventory key, if the summoned familiar can carry items. */
+    fun activeKey(player: Player): ContainerKey? = storage(player)?.key
 
     private fun container(
         player: Player,
@@ -64,9 +81,14 @@ object BeastOfBurden {
         player: Player,
         item: Item,
     ): Int {
-        val key = activeKey(player)
-        if (key == null) {
+        val storage = storage(player) ?: run {
             player.message("You need an active Beast of Burden familiar out to store items with it.")
+            return 0
+        }
+        val key = storage.key
+        val essence = item.id == Items.RUNE_ESSENCE || item.id == Items.PURE_ESSENCE
+        if (storage.essenceOnly != essence) {
+            player.message("Your familiar can't carry that item.")
             return 0
         }
         val transaction = container(player, key).add(item.id, item.amount, assureFullInsertion = false)
@@ -109,28 +131,32 @@ object BeastOfBurden {
         return transaction.completed
     }
 
-    /** Deposits every item currently in [player]'s inventory into the active BoB container, best-effort. */
+    /** Deposits every permitted inventory item into the active familiar, best-effort. */
     fun depositAll(player: Player): Int {
-        val key = activeKey(player)
-        if (key == null) {
+        if (activeKey(player) == null) {
             player.message("You need an active Beast of Burden familiar out to store items with it.")
             return 0
         }
-        val target = container(player, key)
         var deposited = 0
         for (slot in 0 until player.inventory.capacity) {
             val item = player.inventory[slot] ?: continue
-            val transaction = target.add(item.id, item.amount, assureFullInsertion = false)
-            if (transaction.completed <= 0) continue
-            player.inventory.remove(Item(item.id, transaction.completed), assureFullRemoval = true)
-            deposited += transaction.completed
-        }
-        if (deposited <= 0) {
-            player.message("Your familiar can't carry any more of that.")
+            deposited += deposit(player, item)
         }
         return deposited
     }
-
+    /**
+     * A dismissed, expired or replaced familiar drops its stored items at the familiar's tile.
+     * Logout deliberately does not call this: the same familiar and items return on login.
+     */
+    fun release(player: Player, tile: Tile) {
+        val key = activeKey(player) ?: return
+        val held = container(player, key)
+        for (slot in 0 until held.capacity) {
+            val item = held[slot] ?: continue
+            player.world.spawn(GroundItem(item, tile, player))
+            held[slot] = null
+        }
+    }
     /** Non-null (slot, item) pairs in the active BoB container, for building a withdraw-selection prompt. */
     fun contents(player: Player): List<IndexedValue<Item>> {
         val key = activeKey(player) ?: return emptyList()

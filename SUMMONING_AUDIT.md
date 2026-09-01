@@ -1,3 +1,8 @@
+## 2026-09-01 — Beast of Burden completion batch (automated)
+
+- Added all nine target-period Beast-of-Burden familiars: Thorny snail (3), Spirit kalphite (6), Bull ant (9), Spirit terrorbird (12), Abyssal parasite (7 essence), Abyssal lurker (7 essence), War tortoise (18), Abyssal titan (7 essence) and Pack yak (30).
+- The three Abyssal familiars accept only unnoted rune/pure essence; all other BoB familiars reject essence. Dismiss, expiry, death and replacement now drop held items at the familiar rather than leaving hidden persistent storage. Logout preserves the active familiar and its storage for relog.
+- Focused tests cover the registry, capacities, deposits, withdrawals and essence rule. Graphical interface 671 remains a separate client-contract task.
 ## 2026-09-01 — lifecycle data correction (automated)
 
 - Replaced the invented gradual Summoning-point drain with the target-period one-time pouch cost.
