@@ -206,3 +206,12 @@ client login pass is an owner action, not something this session can fake or ski
 - `b0ad2644`: added the separate persisted special-move pool (`0..60`), capped point/special restoration helpers, and all target-cache Summoning potion dose bindings (legacy 12140-series and 5-dose 14277-series). A dose restores `maxSummoning/4 + 7` Summoning points and 15 special points.
 - `1cf15653`: added guarded `Renew-Points` handling for every known revision-667 Summoning obelisk definition; it restores both pools without changing the familiar timer.
 - Verification: `:game:plugins:test` with `FamiliarDefinitionTests` and `FamiliarPointsTests` passes; plugin compilation passes. Full suite remains blocked by pre-existing test-JVM OOM plus unrelated failures when all cache-heavy tests run together. No live-client verification is available in this headless session.
+
+## 2026-09-01 — authoritative familiar-combat ledger (Codex continuation)
+
+- Added a machine-readable 78-row `SummoningCombatDefinitions` production ledger. It links every target revision-667 pouch/base familiar to its combat variant candidate, stats, combat style, assist policy, range, speed, max hit, animations and projectile/graphic fields.
+- The official defensive-only exceptions are explicit: Void Spinner, Bunyip, Unicorn Stallion and Pack Yak. The five non-combat foragers are explicit: Beaver, Macaw, Magpie, Ibis and Fruit Bat.
+- 73 familiars are classified as fighting familiars. 72 have a complete sourced executable combat row. Albino Rat remains explicitly blocked because the preserved combat data does not contain its attack/death animation mapping; no animation ID was guessed.
+- `SummoningCombatDefinitionTests` verifies all 78 rows, the 73/5 split, the four defensive-only exceptions, the single blocked row and named Dreadfowl/Steel Titan data. Targeted test result: `BUILD SUCCESSFUL`.
+- This batch creates the validated data foundation. Native combat queue integration, owner damage/XP attribution and live gameplay remain the next batch; ledger completion alone is not claimed as working familiar combat.
+
