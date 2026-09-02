@@ -1,3 +1,89 @@
+## 2026-09-02 — interface 671 ("Familiar Inventory"): why the item grid stays blocked
+
+Evidence file: `interface_671_dump.txt`, components 0-30 of group 671.
+
+What the group really contains: a window titled "Familiar Inventory" (component 14), a "Close"
+button (13), a "Take BoB" button (29, already bound), background/border sprites, six vertical
+divider sprites (20-25) over four horizontal row sprites (16-19), and two empty layers, 27
+(308x244 at 88,65) and 30, inside layer 671:28.
+
+What it does **not** contain is any inventory-type component: every one of the 31 components is a
+layer, sprite, text or model, and none carries `invObject`/`invCount`/`invTriggers`. The item
+slots the dividers are drawn for do not exist statically - the client builds them from a CS2
+script in cache index 12, and that script is what binds the client-side container id. This server
+sends container contents by that id (`Player.sendItemContainer` -> `UpdateInvFullMessage`
+(containerKey, items)), so without the id there is nothing correct to send: a guessed key either
+silently updates nothing or overwrites a real container such as the inventory (93) or bank (95).
+
+The 667 client cannot supply it either. `2011scape-client` contains no occurrence of "familiar"
+or "beast of burden" in `client/src` or `runescape/src` - the familiar window is entirely
+CS2-driven, with no Java-side constant to read. Disassembling index 12 for the 667 opcode set
+would be the way to recover the id and is not something this run can source honestly.
+
+So the grid stays unimplemented and the server-side store keeps being reached through the working
+routes (Interact menu, "Take BoB" on 662/747/671, item-on-familiar). Recorded as a blocker with
+the evidence needed to finish it: the missing piece is exactly one number, 671's CS2 container id.
+
+## 2026-09-02 — end-of-run verification, and the two failures it found (both outside Summoning)
+
+`./gradlew :util:compileKotlin :net:compileKotlin :game:compileKotlin :game:plugins:compileKotlin
+:game:plugins:test` — every compile task passed; 138 tests ran, 2 failed. Neither failure is in
+Summoning, neither is in a file this session's commits touched (`5f4d920f` and `09bb9019` touch
+only `summoning/`), and both were traced to their real cause rather than assumed pre-existing.
+They are recorded here, not fixed, because fixing unrelated subsystems is out of scope for this
+assignment.
+
+**1. `gg.rsmod.game.model.container.ItemContainerTests > classMethod`** (source file
+`plugins/src/test/.../api/ext/ContainerExtTests.kt:173`). Its `@BeforeClass` loads the cache from
+`Paths.get("..", "data", "cache")`, which from the Gradle test working directory
+`C:\RSPS\game\game\game\plugins` resolves to `game\plugins\..\data\cache` =
+`C:\RSPS\game\game\game\data\cache`. That directory does not exist; the cache is one level further
+up at `C:\RSPS\game\game\data\cache`, which is what every other cache-backed test in this module
+uses (`Paths.get("..", "..", "data", "cache")`). The failure is
+`java.io.FileNotFoundException: ...\game\plugins\..\data\cache\main_file_cache.dat2`, i.e. a
+missing `".."` in that one test, and it can never have passed in this layout. Not a heap problem:
+the 2g test-worker heap that `game/plugins/build.gradle` sets for multiple cache-backed
+`DefinitionSet`s still holds with the two summoning test classes added this session.
+
+**2. `mechanics.death.DeathExecutorTests > PvP death spawns lost items as killer-owned ground loot
+exactly once`**. `java.lang.ClassCastException: class java.lang.Object cannot be cast to class
+java.lang.Integer` at `pvp/Killstreaks.kt:66`, reached from `DeathExecutor.execute` (line 92). The
+test builds its killer as `mockk<Player>(relaxed = true)` without stubbing `attr`, so
+`killer.attr[CURRENT_KILLSTREAK_ATTR]` returns a relaxed-mock `Object` that
+`onWildernessKill`'s `?: 0` then casts to `Int`. The test's victim is stubbed with a real
+`AttributeMap` (`every { player.attr } returns AttributeMap()`) and the killer is not. The call
+into `Killstreaks` arrived with commit `938be77e` (2026-08-30, "killstreak/PK-points tracking,
+leaderboard, Wilderness hotspots and Breaches"), which did not update this older death test; the
+fix belongs with that work, and is one `every { killer.attr } returns AttributeMap()`.
+
+The Summoning suite itself is green: `./gradlew :game:plugins:test --tests
+'gg.rsmod.plugins.content.skills.summoning.*'` passes.
+
+## 2026-09-02 — Phase 3 evidence: interfaces 880, 71 and 72 established or excluded
+
+Evidence file: `interface_probe.txt` (component counts and every readable string in cache index 3
+for groups 71, 72, 662, 671, 747 and 880). No code changed by this step.
+
+**880 — established, and it is a Summoning interface.** 27 components, and its text is the
+left-click chooser for the follower orb: "Left-click option:" (4), "Confirm" (6), "Confirm
+Selection" (21) and eight selectable actions, each an option label followed by its own "Select"
+button - "Follower details" (8), "Special move" (10), "Attack" (12), "Call follower" (14),
+"Dismiss follower" (16), "Take BoB" (18), "Renew familiar" (20) and "Interact" (26). That is the
+same action set already wired on 662 and 747, which is what identifies it.
+
+It is not wired yet, and deliberately so: what 880 configures is which action the *client* performs
+on a left-click of the orb, and nothing sourced this session says whether that choice is a varbit
+the server sets, a client-side setting, or a packet the server must interpret. Storing the choice
+server-side without knowing which of those is true would either do nothing or fight the client.
+The component ids above are the evidence needed to finish it once that contract is known.
+
+**71 — excluded.** 8 components whose text is "Name", "Line1", "Line2", "Line3", "Line4": a
+generic four-line name panel with no Summoning content.
+
+**72 — excluded.** 77 components, and the text is the jadinko hunting log - "Known Jadinko
+Requirements", the nine jadinko names with their Hunter levels, ten "Undiscovered" rows and
+"This creature is attracted by: Any flower type." A Hunter interface, not a Summoning one.
+
 ## 2026-09-02 — Phase 4: forager storage
 
 Files touched: `BeastOfBurden.kt`, `SummoningLedger.kt`, `Familiar.kt`, `familiar.plugin.kts`,

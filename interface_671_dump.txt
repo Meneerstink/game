@@ -1,0 +1,705 @@
+group=16 file=39 size=234 strings=Basic items are protected automatically, unless you're in a special place such as the Wilderness.
+group=18 file=21 size=234 strings=Basic items are protected automatically, unless you're in a special place such as the Wilderness.
+group=51 file=26 size=167 strings=Route 1:<br><br>Take the route through<br>Canifis.<br><br>Shorter but potentially<br>more dangerous.
+group=53 file=45 size=109 strings=Wilderness Pond - <br>No canoe trees here.
+group=53 file=51 size=109 strings=Wilderness Pond - <br>No canoe trees here.
+group=192 file=27 size=381 strings=Cast | Enchant Crossbow Bolt | Minimum level 4 Magic Multiple other requirements | Enchant Crossbow Bolt | Minimum level 4 Magic Multiple other requirements
+group=193 file=22 size=211 strings=Autocast | Cast | Ice Burst | A multi-target ice attack
+group=193 file=23 size=220 strings=Autocast | Cast | Ice Barrage | A multi-target strong ice attack
+group=193 file=26 size=215 strings=Autocast | Cast | Blood Burst | A multi-target blood attack
+group=193 file=27 size=224 strings=Autocast | Cast | Blood Barrage | A multi-target strong blood attack
+group=193 file=30 size=215 strings=Autocast | Cast | Smoke Burst | A multi-target smoke attack
+group=193 file=31 size=224 strings=Autocast | Cast | Smoke Barrage | A multi-target strong smoke attack
+group=193 file=34 size=217 strings=Autocast | Cast | Shadow Burst | A multi-target shadow attack
+group=193 file=35 size=226 strings=Autocast | Cast | Shadow Barrage | A multi-target strong shadow attack
+group=193 file=38 size=224 strings=Autocast | Cast | Miasmic Burst | A multi-target miasmic attack
+group=193 file=39 size=233 strings=Autocast | Cast | Miasmic Barrage | A multi-target strong miasmic attack
+group=251 file=5 size=585 strings=Use this ring when you are ready to summon me to your aid. It is a daunting task, yet you must battle the king to allow me to remove the spell from him. When the king is almost dead, use this ring and I will teleport to your aid. Be warned - Though I am skilled with magic, I am no fighter! Should you summon me too early I will have to teleport us out of danger! When our mission is completed, I will remove the summon ability from this ring, but you may keep it for protection.                                   Zaff
+component group=381 file=0 type=0 layer=-1 pos=8,7 size=53,41 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=381 file=1 type=5 layer=24969216 pos=15,0 size=25,25 hidden=false graphic=523 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=381 file=2 type=4 layer=24969216 pos=1,26 size=52,6 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=381 file=2 onLoad=null onVar=null varp=null onTimer=[54, -2147483645]
+component group=381 file=3 type=0 layer=-1 pos=221,6 size=53,41 hidden=true graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=381 file=4 type=5 layer=24969219 pos=15,0 size=25,25 hidden=false graphic=1184 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=381 file=5 type=4 layer=24969219 pos=1,26 size=52,6 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=381 file=5 onLoad=null onVar=null varp=null onTimer=[54, -2147483645]
+component group=381 file=6 type=0 layer=-1 pos=4,4 size=189,59 hidden=true graphic=-1 clientcode=0 text= ops=[, , , , , , , , ,    ] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=381 file=7 type=3 layer=24969222 pos=0,0 size=16391,16391 hidden=false graphic=-1 clientcode=0 text= ops=[, , , , , , , , ,    ] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=381 file=8 type=3 layer=24969222 pos=0,1 size=16391,2 hidden=false graphic=-1 clientcode=0 text= ops=[, , , , , , , , ,    ] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=381 file=9 type=3 layer=24969222 pos=0,1 size=16384,2 hidden=false graphic=-1 clientcode=0 text= ops=[, , , , , , , , ,    ] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=381 file=10 type=3 layer=24969222 pos=1,0 size=2,16391 hidden=false graphic=-1 clientcode=0 text= ops=[, , , , , , , , ,    ] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=381 file=11 type=3 layer=24969222 pos=1,0 size=2,16391 hidden=false graphic=-1 clientcode=0 text= ops=[, , , , , , , , ,    ] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=381 file=12 type=3 layer=24969222 pos=0,0 size=16384,16384 hidden=false graphic=-1 clientcode=0 text= ops=[, , , , , , , , ,    ] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=381 file=13 type=4 layer=24969222 pos=9,2 size=62,23 hidden=false graphic=-1 clientcode=0 text=Target: ops=[, , , , , , , , ,    ] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=381 file=14 type=4 layer=24969222 pos=8,2 size=98,23 hidden=false graphic=-1 clientcode=0 text=nnnnnnnnnnnnnnnnnnnnnn ops=[, , , , , , , , ,    ] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=381 file=15 type=4 layer=24969222 pos=9,26 size=88,23 hidden=false graphic=-1 clientcode=0 text=Target likelihood: ops=[, , , , , , , , ,    ] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=381 file=16 type=5 layer=24969222 pos=154,24 size=27,27 hidden=false graphic=1785 clientcode=0 text= ops=[, , , , , , , , ,  ] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=381 file=16 onLoad=null onVar=[210] varp=[1410] onTimer=null
+component group=382 file=0 type=3 layer=-1 pos=5,5 size=440,275 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=382 file=1 type=0 layer=-1 pos=0,0 size=440,275 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=382 file=1 onLoad=[348, 25034783, 25034785, 7] onVar=[348, 25034783, 25034785, 7] varp=[1045] onTimer=null
+component group=382 file=2 type=5 layer=25034753 pos=0,0 size=6,6 hidden=false graphic=297 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=382 file=3 type=5 layer=25034753 pos=0,-13 size=20,32 hidden=false graphic=820 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=382 file=4 type=5 layer=25034753 pos=-13,0 size=32,20 hidden=false graphic=821 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=382 file=5 type=5 layer=25034753 pos=-12,0 size=32,20 hidden=false graphic=823 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=382 file=6 type=5 layer=25034753 pos=0,-12 size=20,32 hidden=false graphic=822 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=382 file=7 type=5 layer=25034753 pos=0,0 size=32,32 hidden=false graphic=824 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=382 file=8 type=5 layer=25034753 pos=0,0 size=32,32 hidden=false graphic=826 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=382 file=9 type=5 layer=25034753 pos=0,0 size=32,32 hidden=false graphic=825 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=382 file=10 type=5 layer=25034753 pos=0,0 size=32,32 hidden=false graphic=827 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=382 file=11 type=5 layer=25034753 pos=0,16 size=16,32 hidden=false graphic=828 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=382 file=12 type=5 layer=25034753 pos=0,18 size=32,32 hidden=false graphic=829 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=382 file=13 type=5 layer=25034753 pos=0,18 size=32,32 hidden=false graphic=830 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=382 file=14 type=5 layer=25034753 pos=10,10 size=16,16 hidden=false graphic=831 clientcode=0 text= ops=[Close] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=382 file=15 type=6 layer=25034753 pos=10,40 size=38,44 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=382 file=16 type=6 layer=25034753 pos=10,40 size=39,44 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=382 file=17 type=6 layer=25034753 pos=10,10 size=37,43 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=382 file=18 type=6 layer=25034753 pos=10,10 size=39,44 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=382 file=19 type=5 layer=25034753 pos=100,10 size=90,56 hidden=false graphic=833 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=382 file=20 type=5 layer=25034753 pos=100,10 size=90,56 hidden=false graphic=833 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+group=382 file=21 size=83 strings=Enter Wilderness
+component group=382 file=21 type=4 layer=25034753 pos=100,10 size=90,56 hidden=false graphic=-1 clientcode=0 text=Enter Wilderness ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=382 file=22 type=4 layer=25034753 pos=100,10 size=90,56 hidden=false graphic=-1 clientcode=0 text=Don't Enter ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=382 file=23 type=5 layer=25034753 pos=-80,9 size=19,19 hidden=false graphic=940 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=382 file=24 type=5 layer=25034753 pos=80,9 size=19,19 hidden=false graphic=940 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=382 file=25 type=4 layer=25034753 pos=0,0 size=146,36 hidden=false graphic=-1 clientcode=0 text=WARNING! ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+group=382 file=26 size=304 strings=If you proceed, you will enter the Wilderness.<br><br>In the Wilderness:<br><col=ff0000>Other players can attack you.</col><br>If you drop items, other players may take them immediately.<br>You will leave no gravestone behind if you die.
+component group=382 file=26 type=4 layer=25034753 pos=0,38 size=100,121 hidden=false graphic=-1 clientcode=0 text=If you proceed, you will enter the Wilderness.<br><br>In the Wilderness:<br><col=ff0000>Other players can attack you.</col><br>If you drop items, other players may take them immediately.<br>You will leave no gravestone behind if you die. ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+group=382 file=27 size=135 strings=kbase/view.ws?guid=pvp_wilderness
+component group=382 file=27 type=0 layer=25034753 pos=0,160 size=200,24 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=382 file=28 type=0 layer=25034779 pos=0,0 size=0,0 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=382 file=28 onLoad=[1414, -2147483645] onVar=null varp=null onTimer=null
+component group=382 file=29 type=5 layer=25034779 pos=4,0 size=16,16 hidden=false graphic=1549 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=382 file=30 type=4 layer=25034779 pos=4,0 size=28,0 hidden=false graphic=-1 clientcode=0 text=Visit Knowledge Base ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=382 file=31 type=0 layer=25034753 pos=0,70 size=255,20 hidden=true graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=382 file=32 type=4 layer=25034783 pos=0,0 size=227,15 hidden=false graphic=-1 clientcode=0 text=Don't ask me this again ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=382 file=33 type=5 layer=25034783 pos=3,0 size=19,19 hidden=false graphic=941 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+group=503 file=6 size=110 strings=Multi-rotation head for lifelike simulation | 0,'
+group=561 file=3 size=90 strings=ORecent Wilderness Kills
+group=565 file=14 size=372 strings=The desert is a VERY dangerous place. Do not<br> enter if you are afraid of dying. Beware of high temperatures, sandstorms, robbers and slavers.<br> No responsibility is taken by Shantay if anything<br> bad should happen to you, in any circumstances whatsoever.
+group=573 file=14 size=136 strings=You can run past, but keep in mind that a<br> dangerous area follows!
+group=574 file=14 size=130 strings=This area is very dangerous, are you sure you want to continue?
+group=576 file=14 size=165 strings=This way leads into the Wilderness and is only<br> one way! Are you sure you want to go down here?
+group=579 file=17 size=154 strings=Yes - I know that it may be <br> dangerous down there | Yes
+group=580 file=14 size=154 strings=Mort Myre is a dangerous ghast-infested swamp.<br> Do not enter if you value your life.
+group=581 file=14 size=252 strings=Danger! Death Plateau is not named that for<br> a joke! If you continue down this path you will<br> be assailed by trolls! If you are not prepared<br> for that you should turn back now!
+group=583 file=65 size=103 strings=Trollheim Wilderness Entrance | Toggle
+group=583 file=66 size=89 strings=Wilderness Wall | Toggle
+group=583 file=71 size=107 strings=God Wars Wilderness Agility Route | Toggle
+group=583 file=76 size=104 strings=Corporeal Beast<br>(Dangerous) | Toggle
+group=583 file=78 size=114 strings=Clan Wars<br>Free-for-all<br>(Dangerous) | Toggle
+group=600 file=14 size=165 strings=This way leads into the Wilderness and is only<br> one way! Are you sure you want to go down here?
+component group=631 file=0 type=0 layer=-1 pos=0,0 size=0,0 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=631 file=0 onLoad=[172] onVar=null varp=null onTimer=null
+component group=631 file=1 type=5 layer=41353216 pos=8,25 size=497,302 hidden=false graphic=297 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=631 file=2 type=5 layer=41353216 pos=-12,51 size=32,252 hidden=false graphic=821 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=631 file=3 type=5 layer=41353216 pos=1,20 size=32,32 hidden=false graphic=824 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=631 file=4 type=5 layer=41353216 pos=492,51 size=32,251 hidden=false graphic=823 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=631 file=5 type=5 layer=41353216 pos=33,7 size=447,34 hidden=false graphic=820 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=631 file=6 type=5 layer=41353216 pos=32,314 size=448,32 hidden=false graphic=822 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=631 file=7 type=5 layer=41353216 pos=1,302 size=32,32 hidden=false graphic=826 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=631 file=8 type=5 layer=41353216 pos=480,20 size=32,32 hidden=false graphic=825 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=631 file=9 type=5 layer=41353216 pos=480,302 size=32,32 hidden=false graphic=827 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=631 file=10 type=5 layer=41353216 pos=149,26 size=32,301 hidden=false graphic=852 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=631 file=11 type=5 layer=41353216 pos=180,34 size=325,32 hidden=false graphic=851 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=631 file=12 type=5 layer=41353216 pos=150,34 size=32,32 hidden=false graphic=853 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=631 file=13 type=5 layer=41353216 pos=147,162 size=32,32 hidden=false graphic=854 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=631 file=14 type=5 layer=41353216 pos=7,162 size=155,32 hidden=false graphic=851 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=631 file=15 type=5 layer=41353216 pos=8,25 size=155,32 hidden=false graphic=1074 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=631 file=16 type=5 layer=41353216 pos=8,182 size=155,32 hidden=false graphic=1074 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=631 file=17 type=5 layer=41353216 pos=315,50 size=32,213 hidden=false graphic=1075 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=631 file=18 type=5 layer=41353216 pos=166,275 size=339,32 hidden=false graphic=1074 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=631 file=19 type=5 layer=41353216 pos=150,249 size=32,32 hidden=false graphic=853 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=631 file=20 type=5 layer=41353216 pos=180,249 size=325,32 hidden=false graphic=851 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=631 file=21 type=0 layer=41353258 pos=0,-80 size=36,36 hidden=false graphic=-1 clientcode=0 text= ops=[Toggle slot] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=631 file=21 onLoad=[4170, -2147483645, 41353268, 0, If selected, neither player can wear items on their heads.] onVar=null varp=null onTimer=null
+component group=631 file=22 type=0 layer=41353258 pos=-40,-40 size=36,36 hidden=false graphic=-1 clientcode=0 text= ops=[Toggle slot] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=631 file=22 onLoad=[4170, -2147483645, 41353268, 1, If selected, neither player can wear items on their backs, such as capes.] onVar=null varp=null onTimer=null
+component group=631 file=23 type=0 layer=41353258 pos=0,-40 size=36,36 hidden=false graphic=-1 clientcode=0 text= ops=[Toggle slot] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=631 file=23 onLoad=[4170, -2147483645, 41353268, 2, If selected, neither player can wear items around their necks, such as amulets.] onVar=null varp=null onTimer=null
+component group=631 file=24 type=0 layer=41353258 pos=-55,0 size=36,36 hidden=false graphic=-1 clientcode=0 text= ops=[Toggle slot] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=631 file=24 onLoad=[4170, -2147483645, 41353268, 3, If selected, neither player can wield weapons in their right hands.] onVar=null varp=null onTimer=null
+component group=631 file=25 type=0 layer=41353258 pos=0,0 size=36,36 hidden=false graphic=-1 clientcode=0 text= ops=[Toggle slot] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=631 file=25 onLoad=[4170, -2147483645, 41353268, 4, If selected, neither player can wear items on their torsos.] onVar=null varp=null onTimer=null
+component group=631 file=26 type=0 layer=41353258 pos=55,0 size=36,36 hidden=false graphic=-1 clientcode=0 text= ops=[Toggle slot] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=631 file=26 onLoad=[4170, -2147483645, 41353268, 5, If selected, neither player can wield items in their left hands, such as shields, or 2-handed weapons such as bows.] onVar=null varp=null onTimer=null
+component group=631 file=27 type=0 layer=41353258 pos=0,40 size=36,36 hidden=false graphic=-1 clientcode=0 text= ops=[Toggle slot] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=631 file=27 onLoad=[4170, -2147483645, 41353268, 7, If selected, neither player can wear items on their legs.] onVar=null varp=null onTimer=null
+component group=631 file=28 type=0 layer=41353258 pos=-55,80 size=36,36 hidden=false graphic=-1 clientcode=0 text= ops=[Toggle slot] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=631 file=28 onLoad=[4170, -2147483645, 41353268, 9, If selected, neither player can wear items on their hands.] onVar=null varp=null onTimer=null
+component group=631 file=29 type=0 layer=41353258 pos=0,80 size=36,36 hidden=false graphic=-1 clientcode=0 text= ops=[Toggle slot] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=631 file=29 onLoad=[4170, -2147483645, 41353268, 10, If selected, neither player can wear items on their feet.] onVar=null varp=null onTimer=null
+component group=631 file=30 type=0 layer=41353258 pos=55,80 size=36,36 hidden=false graphic=-1 clientcode=0 text= ops=[Toggle slot] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=631 file=30 onLoad=[4170, -2147483645, 41353268, 12, If selected, neither player can wear rings.] onVar=null varp=null onTimer=null
+component group=631 file=31 type=0 layer=41353258 pos=40,-40 size=36,36 hidden=false graphic=-1 clientcode=0 text= ops=[Toggle slot] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=631 file=31 onLoad=[4170, -2147483645, 41353268, 13, If selected, neither player can keep items in their quivers.] onVar=null varp=null onTimer=null
+component group=631 file=32 type=0 layer=41353262 pos=0,0 size=0,0 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=631 file=32 onLoad=[92, -2147483645] onVar=null varp=null onTimer=null
+component group=631 file=33 type=4 layer=41353262 pos=0,0 size=0,0 hidden=false graphic=-1 clientcode=0 text=Accept ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=631 file=34 type=5 layer=41353216 pos=70,160 size=32,32 hidden=false graphic=855 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=631 file=35 type=4 layer=41353216 pos=70,161 size=32,32 hidden=false graphic=-1 clientcode=0 text=VS ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=631 file=36 type=5 layer=41353216 pos=486,29 size=16,16 hidden=false graphic=831 clientcode=0 text= ops=[Close] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=631 file=37 type=4 layer=41353216 pos=167,27 size=76,20 hidden=false graphic=-1 clientcode=0 text=Opponent: ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=631 file=38 type=4 layer=41353216 pos=243,27 size=105,20 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+group=631 file=39 size=84 strings=Opponent's Level:
+component group=631 file=39 type=4 layer=41353216 pos=350,27 size=110,20 hidden=false graphic=-1 clientcode=0 text=Opponent's Level: ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=631 file=40 type=4 layer=41353216 pos=459,27 size=26,20 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=631 file=41 type=4 layer=41353216 pos=166,293 size=338,33 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=631 file=42 type=0 layer=41353216 pos=165,50 size=164,212 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=631 file=43 type=0 layer=41353216 pos=330,50 size=173,212 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=631 file=44 type=4 layer=41353216 pos=8,27 size=155,15 hidden=false graphic=-1 clientcode=0 text=Your stake: ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=631 file=45 type=4 layer=41353216 pos=8,183 size=155,15 hidden=false graphic=-1 clientcode=0 text=Opponent's stake: ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=631 file=46 type=0 layer=41353216 pos=212,266 size=100,24 hidden=false graphic=-1 clientcode=0 text= ops=[Accept] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=631 file=47 type=0 layer=41353216 pos=21,43 size=130,125 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=[134]
+hooks group=631 file=47 onLoad=[99] onVar=null varp=null onTimer=null
+component group=631 file=48 type=0 layer=41353216 pos=21,43 size=130,125 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=631 file=49 type=0 layer=41353216 pos=21,200 size=130,125 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=631 file=50 type=0 layer=41353216 pos=21,200 size=130,125 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=631 file=51 type=0 layer=41353216 pos=358,266 size=100,24 hidden=false graphic=-1 clientcode=0 text= ops=[Decline] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=631 file=52 type=0 layer=41353216 pos=0,0 size=1,1 hidden=false graphic=-1 clientcode=0 text= ops=[, , , , , , , , ,    ] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=631 file=53 type=0 layer=41353267 pos=0,0 size=0,0 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=631 file=53 onLoad=[92, -2147483645] onVar=null varp=null onTimer=null
+component group=631 file=54 type=4 layer=41353267 pos=0,0 size=0,0 hidden=false graphic=-1 clientcode=0 text=Decline ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=631 file=55 type=0 layer=41353259 pos=0,0 size=0,15 hidden=false graphic=-1 clientcode=0 text= ops=[Toggle] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=631 file=55 onLoad=[4166, -2147483645, 41353268, 4, No Ranged, Neither player is allowed to use ranged attacks., 0] onVar=null varp=null onTimer=null
+component group=631 file=56 type=0 layer=41353259 pos=0,16 size=0,15 hidden=false graphic=-1 clientcode=0 text= ops=[Toggle] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=631 file=56 onLoad=[4166, -2147483645, 41353268, 5, No Melee, Neither player is allowed to use melee attacks., 0] onVar=null varp=null onTimer=null
+component group=631 file=57 type=0 layer=41353259 pos=0,32 size=0,15 hidden=false graphic=-1 clientcode=0 text= ops=[Toggle] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=631 file=57 onLoad=[4166, -2147483645, 41353268, 6, No Magic, Neither player is allowed to use magic attacks., 0] onVar=null varp=null onTimer=null
+component group=631 file=58 type=0 layer=41353259 pos=0,48 size=0,15 hidden=false graphic=-1 clientcode=0 text= ops=[Toggle] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=631 file=58 onLoad=[4166, -2147483645, 41353268, 12, Fun Weapons, Both players will use a 'fun weapon', such as a rubber chicken., 0] onVar=null varp=null onTimer=null
+component group=631 file=59 type=0 layer=41353259 pos=0,64 size=0,15 hidden=false graphic=-1 clientcode=0 text= ops=[Toggle] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=631 file=59 onLoad=[4166, -2147483645, 41353268, 0, No Forfeit, Neither player is allowed to forfeit the duel., 0] onVar=null varp=null onTimer=null
+component group=631 file=60 type=0 layer=41353259 pos=0,80 size=0,15 hidden=false graphic=-1 clientcode=0 text= ops=[Toggle] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=631 file=60 onLoad=[4166, -2147483645, 41353268, 7, No Drinks, Neither player will be allowed to use drinks, such as Strength potions., 0] onVar=null varp=null onTimer=null
+component group=631 file=61 type=0 layer=41353259 pos=0,96 size=0,15 hidden=false graphic=-1 clientcode=0 text= ops=[Toggle] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=631 file=61 onLoad=[4166, -2147483645, 41353268, 8, No Food, Neither player will be allowed to use food., 0] onVar=null varp=null onTimer=null
+component group=631 file=62 type=0 layer=41353259 pos=0,112 size=0,15 hidden=false graphic=-1 clientcode=0 text= ops=[Toggle] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=631 file=62 onLoad=[4166, -2147483645, 41353268, 9, No Prayer, Neither player will be allowed to use prayers., 0] onVar=null varp=null onTimer=null
+component group=631 file=63 type=0 layer=41353259 pos=0,128 size=0,15 hidden=false graphic=-1 clientcode=0 text= ops=[Toggle] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=631 file=63 onLoad=[4166, -2147483645, 41353268, 1, No Movement, Players stand next to each other and aren't allowed to move or use holding spells., 0] onVar=null varp=null onTimer=null
+component group=631 file=64 type=0 layer=41353259 pos=0,144 size=0,15 hidden=false graphic=-1 clientcode=0 text= ops=[Toggle] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=631 file=64 onLoad=[4166, -2147483645, 41353268, 10, Obstacles, The duel will be in an arena with obstacles., 0] onVar=null varp=null onTimer=null
+component group=631 file=65 type=0 layer=41353259 pos=0,160 size=0,15 hidden=false graphic=-1 clientcode=0 text= ops=[Toggle] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=631 file=65 onLoad=[4166, -2147483645, 41353268, 28, Enable Summoning, Players can summon familiars during the duel., 1] onVar=null varp=null onTimer=null
+component group=631 file=66 type=0 layer=41353259 pos=0,176 size=0,15 hidden=false graphic=-1 clientcode=0 text= ops=[Toggle] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=631 file=66 onLoad=[4166, -2147483645, 41353268, 13, No Special Attacks, Neither player will be allowed to use special attacks., 1] onVar=null varp=null onTimer=null
+component group=631 file=67 type=0 layer=41353259 pos=0,0 size=1,20 hidden=false graphic=-1 clientcode=0 text= ops=[Previous options] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=631 file=67 onLoad=[92, -2147483645] onVar=null varp=null onTimer=null
+component group=631 file=68 type=4 layer=41353259 pos=0,0 size=1,20 hidden=false graphic=-1 clientcode=0 text=Previous options ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=633 file=0 type=3 layer=-1 pos=17,25 size=488,305 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=633 file=1 type=5 layer=-1 pos=14,25 size=485,300 hidden=false graphic=297 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=633 file=2 type=5 layer=-1 pos=0,53 size=32,241 hidden=false graphic=821 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=633 file=3 type=5 layer=-1 pos=13,20 size=32,32 hidden=false graphic=824 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=633 file=4 type=5 layer=-1 pos=480,51 size=32,243 hidden=false graphic=823 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=633 file=5 type=5 layer=-1 pos=44,7 size=424,34 hidden=false graphic=820 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=633 file=6 type=5 layer=-1 pos=45,306 size=423,32 hidden=false graphic=822 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=633 file=7 type=5 layer=-1 pos=13,294 size=32,32 hidden=false graphic=826 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=633 file=8 type=5 layer=-1 pos=468,20 size=32,32 hidden=false graphic=825 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=633 file=9 type=5 layer=-1 pos=468,294 size=32,32 hidden=false graphic=827 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=633 file=10 type=5 layer=-1 pos=24,35 size=465,32 hidden=false graphic=828 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=633 file=11 type=5 layer=-1 pos=13,37 size=32,32 hidden=false graphic=829 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=633 file=12 type=5 layer=-1 pos=468,37 size=32,32 hidden=false graphic=830 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=633 file=13 type=6 layer=-1 pos=31,63 size=65,241 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=633 file=14 type=0 layer=-1 pos=344,262 size=105,43 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=633 file=15 type=4 layer=-1 pos=30,30 size=450,16 hidden=false graphic=-1 clientcode=0 text=You are Victorious! ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=633 file=16 type=3 layer=41484302 pos=6,6 size=94,32 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=633 file=17 type=4 layer=41484302 pos=6,6 size=93,32 hidden=false graphic=-1 clientcode=0 text=Close ops=[Claim] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=633 file=18 type=5 layer=-1 pos=346,264 size=32,32 hidden=false graphic=824 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=633 file=19 type=5 layer=-1 pos=346,272 size=32,32 hidden=false graphic=826 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=633 file=20 type=5 layer=-1 pos=416,264 size=32,32 hidden=false graphic=825 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=633 file=21 type=5 layer=-1 pos=416,272 size=32,32 hidden=false graphic=827 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=633 file=22 type=5 layer=-1 pos=376,251 size=42,37 hidden=false graphic=820 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=633 file=23 type=5 layer=-1 pos=375,284 size=43,32 hidden=false graphic=822 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=633 file=24 type=6 layer=-1 pos=348,154 size=100,88 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=633 file=25 type=5 layer=-1 pos=474,30 size=16,16 hidden=false graphic=831 clientcode=0 text= ops=[Close] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=633 file=26 type=0 layer=-1 pos=467,23 size=32,32 hidden=true graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=633 file=27 type=4 layer=-1 pos=129,112 size=122,15 hidden=false graphic=-1 clientcode=0 text=The Defeated: ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=633 file=28 type=4 layer=-1 pos=129,138 size=51,14 hidden=false graphic=-1 clientcode=0 text=Name: ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+group=633 file=29 size=80 strings=Combat Level:
+component group=633 file=29 type=4 layer=-1 pos=129,162 size=34,14 hidden=false graphic=-1 clientcode=0 text=Combat Level: ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=633 file=30 type=4 layer=-1 pos=215,162 size=31,13 hidden=false graphic=-1 clientcode=0 text=126 ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=633 file=31 type=4 layer=-1 pos=173,138 size=182,14 hidden=false graphic=-1 clientcode=0 text=Crunchy ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=633 file=32 type=0 layer=-1 pos=0,0 size=16384,16391 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=633 file=33 type=0 layer=41484320 pos=198,144 size=59,14 hidden=false graphic=-1 clientcode=0 text= ops=[, , , , , , , , ,     ] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=634 file=0 type=3 layer=-1 pos=17,25 size=488,305 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=634 file=1 type=5 layer=-1 pos=14,25 size=485,300 hidden=false graphic=297 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=634 file=2 type=5 layer=-1 pos=0,53 size=32,241 hidden=false graphic=821 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=634 file=3 type=5 layer=-1 pos=13,20 size=32,32 hidden=false graphic=824 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=634 file=4 type=5 layer=-1 pos=480,51 size=32,243 hidden=false graphic=823 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=634 file=5 type=5 layer=-1 pos=44,7 size=424,34 hidden=false graphic=820 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=634 file=6 type=5 layer=-1 pos=45,306 size=423,32 hidden=false graphic=822 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=634 file=7 type=5 layer=-1 pos=13,294 size=32,32 hidden=false graphic=826 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=634 file=8 type=5 layer=-1 pos=468,20 size=32,32 hidden=false graphic=825 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=634 file=9 type=5 layer=-1 pos=468,294 size=32,32 hidden=false graphic=827 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=634 file=10 type=5 layer=-1 pos=24,35 size=465,32 hidden=false graphic=828 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=634 file=11 type=5 layer=-1 pos=13,37 size=32,32 hidden=false graphic=829 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=634 file=12 type=5 layer=-1 pos=468,37 size=32,32 hidden=false graphic=830 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=634 file=13 type=6 layer=-1 pos=31,63 size=65,241 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=634 file=14 type=0 layer=-1 pos=344,262 size=105,43 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=634 file=15 type=4 layer=-1 pos=30,30 size=450,16 hidden=false graphic=-1 clientcode=0 text=You are Victorious! ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=634 file=16 type=3 layer=41549838 pos=6,6 size=94,32 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=634 file=17 type=4 layer=41549838 pos=6,6 size=93,32 hidden=false graphic=-1 clientcode=0 text=Claim! ops=[Claim] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=634 file=18 type=4 layer=-1 pos=106,67 size=109,14 hidden=false graphic=-1 clientcode=0 text=The Spoils: ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=634 file=19 type=5 layer=-1 pos=346,264 size=32,32 hidden=false graphic=824 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=634 file=20 type=5 layer=-1 pos=346,272 size=32,32 hidden=false graphic=826 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=634 file=21 type=5 layer=-1 pos=416,264 size=32,32 hidden=false graphic=825 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=634 file=22 type=5 layer=-1 pos=416,272 size=32,32 hidden=false graphic=827 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=634 file=23 type=5 layer=-1 pos=376,251 size=42,37 hidden=false graphic=820 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=634 file=24 type=5 layer=-1 pos=375,284 size=43,32 hidden=false graphic=822 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=634 file=25 type=6 layer=-1 pos=348,154 size=100,88 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=634 file=26 type=5 layer=-1 pos=474,30 size=16,16 hidden=false graphic=831 clientcode=0 text= ops=[Close] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=634 file=27 type=0 layer=-1 pos=467,23 size=32,32 hidden=true graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=634 file=28 type=0 layer=-1 pos=102,92 size=211,205 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=634 file=29 type=4 layer=-1 pos=323,71 size=122,15 hidden=false graphic=-1 clientcode=0 text=The Defeated: ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=634 file=30 type=4 layer=-1 pos=323,97 size=51,14 hidden=false graphic=-1 clientcode=0 text=Name: ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+group=634 file=31 size=80 strings=Combat Level:
+component group=634 file=31 type=4 layer=-1 pos=323,121 size=36,17 hidden=false graphic=-1 clientcode=0 text=Combat Level: ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=634 file=32 type=4 layer=-1 pos=409,122 size=31,13 hidden=false graphic=-1 clientcode=0 text=126 ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=634 file=33 type=4 layer=-1 pos=367,97 size=110,14 hidden=false graphic=-1 clientcode=0 text=Crunchy ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=634 file=34 type=0 layer=-1 pos=0,0 size=16391,16391 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=634 file=35 type=0 layer=41549858 pos=386,104 size=59,14 hidden=false graphic=-1 clientcode=0 text= ops=[, , , , , , , , ,      ] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=637 file=0 type=0 layer=-1 pos=0,0 size=0,0 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=637 file=1 type=5 layer=41746432 pos=63,25 size=387,294 hidden=false graphic=297 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=637 file=2 type=5 layer=41746432 pos=43,52 size=32,242 hidden=false graphic=821 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=637 file=3 type=5 layer=41746432 pos=437,51 size=32,243 hidden=false graphic=823 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=637 file=4 type=5 layer=41746432 pos=56,20 size=32,32 hidden=false graphic=824 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=637 file=5 type=5 layer=41746432 pos=88,7 size=337,34 hidden=false graphic=820 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=637 file=6 type=5 layer=41746432 pos=88,306 size=337,32 hidden=false graphic=822 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=637 file=7 type=5 layer=41746432 pos=56,294 size=32,32 hidden=false graphic=826 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=637 file=8 type=5 layer=41746432 pos=425,20 size=32,32 hidden=false graphic=825 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=637 file=9 type=5 layer=41746432 pos=425,294 size=32,32 hidden=false graphic=827 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=637 file=10 type=5 layer=41746432 pos=62,36 size=388,32 hidden=false graphic=851 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=637 file=11 type=5 layer=41746432 pos=62,248 size=389,32 hidden=false graphic=851 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=637 file=12 type=5 layer=41746432 pos=243,52 size=32,210 hidden=false graphic=1075 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=637 file=13 type=5 layer=41746432 pos=62,276 size=387,32 hidden=false graphic=1074 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=637 file=14 type=5 layer=41746432 pos=431,29 size=16,16 hidden=false graphic=831 clientcode=0 text= ops=[Close] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=637 file=15 type=4 layer=41746432 pos=67,30 size=77,15 hidden=false graphic=-1 clientcode=0 text=Duelling with: ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=637 file=16 type=4 layer=41746432 pos=142,30 size=108,15 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+group=637 file=17 size=86 strings=Their Combat Level:
+component group=637 file=17 type=4 layer=41746432 pos=244,30 size=126,15 hidden=false graphic=-1 clientcode=0 text=Their Combat Level: ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=637 file=18 type=4 layer=41746432 pos=374,30 size=108,15 hidden=false graphic=-1 clientcode=0 text=126 ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=637 file=19 type=0 layer=41746432 pos=268,52 size=172,209 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=637 file=20 type=4 layer=41746432 pos=64,294 size=385,25 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=637 file=21 type=0 layer=41746432 pos=134,266 size=80,24 hidden=false graphic=-1 clientcode=0 text= ops=[Accept] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=637 file=22 type=0 layer=41746432 pos=305,266 size=80,24 hidden=false graphic=-1 clientcode=0 text= ops=[Decline] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=637 file=23 type=0 layer=41746432 pos=63,52 size=195,210 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=637 file=24 type=0 layer=41746432 pos=0,0 size=1,1 hidden=false graphic=-1 clientcode=0 text= ops=[, , , , , , , , ,   ] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=637 file=25 type=0 layer=41746451 pos=0,0 size=0,15 hidden=false graphic=-1 clientcode=0 text= ops=[Toggle] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=637 file=25 onLoad=[4166, -2147483645, 41746456, 4, No Ranged, Neither player is allowed to use ranged attacks., 0] onVar=null varp=null onTimer=null
+component group=637 file=26 type=0 layer=41746451 pos=0,16 size=0,15 hidden=false graphic=-1 clientcode=0 text= ops=[Toggle] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=637 file=26 onLoad=[4166, -2147483645, 41746456, 5, No Melee, Neither player is allowed to use melee attacks., 0] onVar=null varp=null onTimer=null
+component group=637 file=27 type=0 layer=41746451 pos=0,32 size=0,15 hidden=false graphic=-1 clientcode=0 text= ops=[Toggle] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=637 file=27 onLoad=[4166, -2147483645, 41746456, 6, No Magic, Neither player is allowed to use magic attacks., 0] onVar=null varp=null onTimer=null
+component group=637 file=28 type=0 layer=41746451 pos=0,48 size=0,15 hidden=false graphic=-1 clientcode=0 text= ops=[Toggle] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=637 file=28 onLoad=[4166, -2147483645, 41746456, 12, Fun Weapons, Both players will use a 'fun weapon', such as a rubber chicken., 0] onVar=null varp=null onTimer=null
+component group=637 file=29 type=0 layer=41746451 pos=0,64 size=0,15 hidden=false graphic=-1 clientcode=0 text= ops=[Toggle] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=637 file=29 onLoad=[4166, -2147483645, 41746456, 0, No Forfeit, Neither player is allowed to forfeit the duel., 0] onVar=null varp=null onTimer=null
+component group=637 file=30 type=0 layer=41746451 pos=0,80 size=0,15 hidden=false graphic=-1 clientcode=0 text= ops=[Toggle] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=637 file=30 onLoad=[4166, -2147483645, 41746456, 7, No Drinks, Neither player will be allowed to use drinks, such as Strength potions., 0] onVar=null varp=null onTimer=null
+component group=637 file=31 type=0 layer=41746451 pos=0,96 size=0,15 hidden=false graphic=-1 clientcode=0 text= ops=[Toggle] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=637 file=31 onLoad=[4166, -2147483645, 41746456, 8, No Food, Neither player will be allowed to use food., 0] onVar=null varp=null onTimer=null
+component group=637 file=32 type=0 layer=41746451 pos=0,112 size=0,15 hidden=false graphic=-1 clientcode=0 text= ops=[Toggle] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=637 file=32 onLoad=[4166, -2147483645, 41746456, 9, No Prayer, Neither player will be allowed to use prayers., 0] onVar=null varp=null onTimer=null
+component group=637 file=33 type=0 layer=41746451 pos=0,128 size=0,15 hidden=false graphic=-1 clientcode=0 text= ops=[Toggle] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=637 file=33 onLoad=[4166, -2147483645, 41746456, 1, No Movement, Players stand next to each other and aren't allowed to move or use holding spells., 0] onVar=null varp=null onTimer=null
+component group=637 file=34 type=0 layer=41746451 pos=0,144 size=0,15 hidden=false graphic=-1 clientcode=0 text= ops=[Toggle] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=637 file=34 onLoad=[4166, -2147483645, 41746456, 10, Obstacles, The duel will be in an arena with obstacles., 0] onVar=null varp=null onTimer=null
+component group=637 file=35 type=0 layer=41746451 pos=0,160 size=0,15 hidden=false graphic=-1 clientcode=0 text= ops=[Toggle] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=637 file=35 onLoad=[4166, -2147483645, 41746456, 28, Enable Summoning, Players can summon familiars during the duel., 1] onVar=null varp=null onTimer=null
+component group=637 file=36 type=0 layer=41746451 pos=0,176 size=0,15 hidden=false graphic=-1 clientcode=0 text= ops=[Toggle] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=637 file=36 onLoad=[4166, -2147483645, 41746456, 13, No Special Attacks, Neither player will be allowed to use special attacks., 1] onVar=null varp=null onTimer=null
+component group=637 file=37 type=0 layer=41746451 pos=0,0 size=0,17 hidden=false graphic=-1 clientcode=0 text= ops=[Previous options] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=637 file=37 onLoad=[92, -2147483645] onVar=null varp=null onTimer=null
+component group=637 file=38 type=4 layer=41746451 pos=0,0 size=0,17 hidden=false graphic=-1 clientcode=0 text=Previous options ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=637 file=39 type=0 layer=41746453 pos=0,0 size=80,24 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=637 file=39 onLoad=[92, -2147483645] onVar=null varp=null onTimer=null
+component group=637 file=40 type=4 layer=41746453 pos=0,0 size=80,24 hidden=false graphic=-1 clientcode=0 text=Accept ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=637 file=41 type=0 layer=41746454 pos=0,0 size=80,24 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=637 file=41 onLoad=[92, -2147483645] onVar=null varp=null onTimer=null
+component group=637 file=42 type=4 layer=41746454 pos=0,0 size=80,24 hidden=false graphic=-1 clientcode=0 text=Decline ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=637 file=43 type=0 layer=41746455 pos=0,-80 size=36,36 hidden=false graphic=-1 clientcode=0 text= ops=[Toggle slot] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=637 file=43 onLoad=[4170, -2147483645, 41746456, 0, If selected, neither player can wear items on their heads.] onVar=null varp=null onTimer=null
+component group=637 file=44 type=0 layer=41746455 pos=-40,-40 size=36,36 hidden=false graphic=-1 clientcode=0 text= ops=[Toggle slot] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=637 file=44 onLoad=[4170, -2147483645, 41746456, 1, If selected, neither player can wear items on their backs, such as capes.] onVar=null varp=null onTimer=null
+component group=637 file=45 type=0 layer=41746455 pos=0,-40 size=36,36 hidden=false graphic=-1 clientcode=0 text= ops=[Toggle slot] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=637 file=45 onLoad=[4170, -2147483645, 41746456, 2, If selected, neither player can wear items around their necks, such as amulets.] onVar=null varp=null onTimer=null
+component group=637 file=46 type=0 layer=41746455 pos=-55,0 size=36,36 hidden=false graphic=-1 clientcode=0 text= ops=[Toggle slot] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=637 file=46 onLoad=[4170, -2147483645, 41746456, 3, If selected, neither player can wield weapons in their right hands.] onVar=null varp=null onTimer=null
+component group=637 file=47 type=0 layer=41746455 pos=0,0 size=36,36 hidden=false graphic=-1 clientcode=0 text= ops=[Toggle slot] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=637 file=47 onLoad=[4170, -2147483645, 41746456, 4, If selected, neither player can wear items on their torsos.] onVar=null varp=null onTimer=null
+component group=637 file=48 type=0 layer=41746455 pos=55,0 size=36,36 hidden=false graphic=-1 clientcode=0 text= ops=[Toggle slot] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=637 file=48 onLoad=[4170, -2147483645, 41746456, 5, If selected, neither player can wield items in their left hands, such as shields, or 2-handed weapons such as bows.] onVar=null varp=null onTimer=null
+component group=637 file=49 type=0 layer=41746455 pos=0,40 size=36,36 hidden=false graphic=-1 clientcode=0 text= ops=[Toggle slot] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=637 file=49 onLoad=[4170, -2147483645, 41746456, 7, If selected, neither player can wear items on their legs.] onVar=null varp=null onTimer=null
+component group=637 file=50 type=0 layer=41746455 pos=-55,80 size=36,36 hidden=false graphic=-1 clientcode=0 text= ops=[Toggle slot] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=637 file=50 onLoad=[4170, -2147483645, 41746456, 9, If selected, neither player can wear items on their hands.] onVar=null varp=null onTimer=null
+component group=637 file=51 type=0 layer=41746455 pos=0,80 size=36,36 hidden=false graphic=-1 clientcode=0 text= ops=[Toggle slot] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=637 file=51 onLoad=[4170, -2147483645, 41746456, 10, If selected, neither player can wear items on their feet.] onVar=null varp=null onTimer=null
+component group=637 file=52 type=0 layer=41746455 pos=55,80 size=36,36 hidden=false graphic=-1 clientcode=0 text= ops=[Toggle slot] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=637 file=52 onLoad=[4170, -2147483645, 41746456, 12, If selected, neither player can wear rings.] onVar=null varp=null onTimer=null
+component group=637 file=53 type=0 layer=41746455 pos=40,-40 size=36,36 hidden=false graphic=-1 clientcode=0 text= ops=[Toggle slot] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=637 file=53 onLoad=[4170, -2147483645, 41746456, 13, If selected, neither player can keep items in their quivers.] onVar=null varp=null onTimer=null
+component group=671 file=0 type=3 layer=-1 pos=74,24 size=371,305 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=671 file=1 type=5 layer=-1 pos=71,24 size=362,300 hidden=false graphic=297 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=671 file=2 type=5 layer=-1 pos=57,52 size=32,241 hidden=false graphic=821 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=671 file=3 type=5 layer=-1 pos=70,19 size=32,32 hidden=false graphic=824 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=671 file=4 type=5 layer=-1 pos=420,50 size=32,243 hidden=false graphic=823 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=671 file=5 type=5 layer=-1 pos=101,6 size=307,34 hidden=false graphic=820 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=671 file=6 type=5 layer=-1 pos=102,305 size=306,32 hidden=false graphic=822 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=671 file=7 type=5 layer=-1 pos=70,293 size=32,32 hidden=false graphic=826 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=671 file=8 type=5 layer=-1 pos=408,19 size=32,32 hidden=false graphic=825 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=671 file=9 type=5 layer=-1 pos=408,293 size=32,32 hidden=false graphic=827 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=671 file=10 type=5 layer=-1 pos=81,34 size=349,32 hidden=false graphic=828 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=671 file=11 type=5 layer=-1 pos=70,36 size=32,32 hidden=false graphic=829 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=671 file=12 type=5 layer=-1 pos=408,36 size=32,32 hidden=false graphic=830 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=671 file=13 type=5 layer=-1 pos=413,29 size=16,16 hidden=false graphic=831 clientcode=0 text= ops=[Close] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=671 file=14 type=4 layer=-1 pos=147,28 size=234,13 hidden=false graphic=-1 clientcode=0 text=Familiar Inventory ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=671 file=15 type=6 layer=-1 pos=12,-1 size=0,0 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=671 file=16 type=5 layer=-1 pos=77,87 size=324,32 hidden=false graphic=1074 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=671 file=17 type=5 layer=-1 pos=77,141 size=324,32 hidden=false graphic=1074 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=671 file=18 type=5 layer=-1 pos=77,195 size=324,32 hidden=false graphic=1074 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=671 file=19 type=5 layer=-1 pos=76,249 size=324,32 hidden=false graphic=1074 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=671 file=20 type=5 layer=-1 pos=116,53 size=32,264 hidden=false graphic=1075 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=671 file=21 type=5 layer=-1 pos=170,53 size=32,264 hidden=false graphic=1075 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=671 file=22 type=5 layer=-1 pos=224,53 size=32,264 hidden=false graphic=1075 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=671 file=23 type=5 layer=-1 pos=278,53 size=32,264 hidden=false graphic=1075 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=671 file=24 type=5 layer=-1 pos=332,53 size=32,264 hidden=false graphic=1075 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=671 file=25 type=5 layer=-1 pos=386,53 size=32,264 hidden=false graphic=1075 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=671 file=26 type=6 layer=-1 pos=12,-14 size=0,0 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=671 file=27 type=0 layer=-1 pos=88,65 size=308,244 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=671 file=28 type=0 layer=-1 pos=77,26 size=356,292 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=671 file=29 type=5 layer=43974684 pos=330,267 size=29,21 hidden=false graphic=1728 clientcode=0 text= ops=[Take BoB] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=671 file=30 type=0 layer=43974684 pos=0,27 size=323,265 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+group=676 file=14 size=167 strings=This area is dangerous and death is more than a possibility! Are you sure you want to go down there?
+group=677 file=14 size=167 strings=This area is dangerous and death is more than a possibility! Are you sure you want to go down there?
+group=678 file=14 size=167 strings=This area is dangerous and death is more than a possibility! Are you sure you want to go down there?
+group=697 file=42 size=232 strings=Giving out personal information to another player is dangerous, as you can never be sure who you are talking to. It's best to keep your personal details to yourself.
+component group=745 file=0 type=0 layer=-1 pos=0,0 size=82,25 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=745 file=0 onLoad=[1951] onVar=null varp=null onTimer=null
+group=745 file=1 size=116 strings=Multiway Combat
+component group=745 file=1 type=5 layer=48824320 pos=57,0 size=25,25 hidden=true graphic=442 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=745 file=2 type=5 layer=48824320 pos=28,0 size=25,25 hidden=true graphic=1073 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=745 file=3 type=5 layer=48824320 pos=0,0 size=25,25 hidden=true graphic=1576 clientcode=0 text= ops=[, , , , , , , , ,  ] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=745 file=4 type=5 layer=48824320 pos=0,0 size=25,25 hidden=true graphic=1578 clientcode=0 text= ops=[, , , , , , , , ,   ] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=745 file=5 type=4 layer=48824320 pos=0,0 size=25,25 hidden=true graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=745 file=5 onLoad=null onVar=[1177] varp=[1317] onTimer=null
+component group=745 file=6 type=5 layer=48824320 pos=0,0 size=25,25 hidden=true graphic=1577 clientcode=0 text= ops=[, , , , , , , , ,  ] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=758 file=0 type=3 layer=49676298 pos=0,0 size=16391,16391 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=758 file=1 type=6 layer=49676298 pos=157,40 size=167,299 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=758 file=2 type=6 layer=49676298 pos=209,23 size=167,299 hidden=false graphic=-1 clientcode=0 text= ops=[, , , , , , , , ,  ] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=758 file=3 type=6 layer=49676298 pos=31,-56 size=513,456 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=758 file=4 type=4 layer=49676298 pos=276,272 size=70,27 hidden=false graphic=-1 clientcode=0 text=Lumbridge ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=758 file=5 type=4 layer=49676298 pos=262,206 size=118,31 hidden=false graphic=-1 clientcode=0 text=Champion's Guild ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=758 file=6 type=4 layer=49676298 pos=128,192 size=94,26 hidden=false graphic=-1 clientcode=0 text=Barbarian Village ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=758 file=7 type=4 layer=49676298 pos=134,120 size=94,31 hidden=false graphic=-1 clientcode=0 text=Edgeville ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+group=758 file=8 size=77 strings=Wilderness
+component group=758 file=8 type=4 layer=49676298 pos=225,52 size=81,33 hidden=false graphic=-1 clientcode=0 text=Wilderness ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=758 file=9 type=4 layer=49676298 pos=59,9 size=302,19 hidden=false graphic=-1 clientcode=0 text=You Journey on the canoe.... ops=[, , , , , , , , ,  ] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=758 file=10 type=0 layer=-1 pos=0,0 size=512,334 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=758 file=11 type=0 layer=-1 pos=0,0 size=16391,16391 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=758 file=12 type=0 layer=49676299 pos=0,0 size=16391,16391 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=758 file=13 type=5 layer=-1 pos=-260,0 size=32,334 hidden=false graphic=821 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=758 file=14 type=5 layer=-1 pos=0,-171 size=462,32 hidden=false graphic=820 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=758 file=15 type=5 layer=-1 pos=0,170 size=512,32 hidden=false graphic=822 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=758 file=16 type=5 layer=-1 pos=259,0 size=32,334 hidden=false graphic=823 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=758 file=17 type=5 layer=-1 pos=-247,-158 size=32,32 hidden=false graphic=824 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=758 file=18 type=5 layer=-1 pos=247,-158 size=32,32 hidden=false graphic=825 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=758 file=19 type=5 layer=-1 pos=247,158 size=32,32 hidden=false graphic=827 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=758 file=20 type=5 layer=-1 pos=-247,158 size=32,32 hidden=false graphic=826 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=758 file=21 type=0 layer=49676300 pos=0,0 size=8192,16391 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=758 file=22 type=0 layer=49676300 pos=0,0 size=8188,16391 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=758 file=23 type=0 layer=49676300 pos=0,0 size=16391,8192 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=758 file=24 type=0 layer=49676300 pos=0,0 size=16391,8182 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=758 file=25 type=0 layer=49676300 pos=0,0 size=512,334 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=758 file=26 type=5 layer=49676310 pos=0,0 size=256,16384 hidden=false graphic=297 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=758 file=27 type=5 layer=49676309 pos=0,0 size=256,16391 hidden=false graphic=297 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=758 file=28 type=5 layer=49676311 pos=0,0 size=16391,167 hidden=false graphic=297 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=758 file=29 type=5 layer=49676312 pos=0,0 size=16391,166 hidden=false graphic=297 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=0 type=6 layer=51118129 pos=-278,-178 size=889,1029 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=1 type=6 layer=51118129 pos=14,2 size=486,330 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=2 type=4 layer=51118129 pos=243,191 size=32,32 hidden=false graphic=-1 clientcode=0 text=You are here ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=3 type=4 layer=51118129 pos=212,140 size=49,21 hidden=false graphic=-1 clientcode=0 text=Asgarnia ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=4 type=4 layer=51118129 pos=283,150 size=54,27 hidden=false graphic=-1 clientcode=0 text=Misthalin ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=5 type=4 layer=51118129 pos=163,229 size=48,31 hidden=false graphic=-1 clientcode=0 text=Karamja ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=6 type=4 layer=51118129 pos=94,124 size=52,27 hidden=false graphic=-1 clientcode=0 text=Kandarin ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=7 type=4 layer=51118129 pos=22,173 size=54,32 hidden=false graphic=-1 clientcode=0 text=Tirannwn ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=8 type=4 layer=51118129 pos=59,231 size=53,32 hidden=false graphic=-1 clientcode=0 text=Feldip Hills ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=9 type=4 layer=51118129 pos=385,132 size=54,20 hidden=false graphic=-1 clientcode=0 text=Morytania ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+group=780 file=10 size=77 strings=Wilderness
+component group=780 file=10 type=4 layer=51118129 pos=218,42 size=59,25 hidden=false graphic=-1 clientcode=0 text=Wilderness ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=11 type=5 layer=51118129 pos=492,4 size=16,16 hidden=false graphic=831 clientcode=0 text= ops=[Close] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=780 file=11 onLoad=[728] onVar=null varp=null onTimer=null
+component group=780 file=12 type=0 layer=51118129 pos=0,0 size=512,334 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=13 type=0 layer=51118129 pos=0,0 size=512,334 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=14 type=6 layer=51118115 pos=214,143 size=41,36 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=15 type=6 layer=51118117 pos=200,82 size=41,36 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=16 type=6 layer=51118119 pos=262,166 size=41,36 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=17 type=6 layer=51118118 pos=302,105 size=41,36 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=18 type=6 layer=51118120 pos=323,170 size=41,36 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=19 type=6 layer=51118116 pos=238,105 size=41,36 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=20 type=6 layer=51118121 pos=209,48 size=41,36 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=21 type=6 layer=51118124 pos=166,221 size=41,36 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=22 type=6 layer=51118122 pos=174,131 size=41,36 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=23 type=6 layer=51118123 pos=414,149 size=41,36 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=24 type=6 layer=51118127 pos=42,165 size=41,36 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=25 type=6 layer=51118128 pos=283,182 size=41,36 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=26 type=5 layer=51118093 pos=286,271 size=211,58 hidden=false graphic=297 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=27 type=5 layer=51118093 pos=284,267 size=32,32 hidden=false graphic=824 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=28 type=5 layer=51118093 pos=472,267 size=32,32 hidden=false graphic=825 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=29 type=5 layer=51118093 pos=284,299 size=32,32 hidden=false graphic=826 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=30 type=5 layer=51118093 pos=472,299 size=32,32 hidden=false graphic=827 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=31 type=5 layer=51118093 pos=316,254 size=157,32 hidden=false graphic=820 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=32 type=5 layer=51118093 pos=316,311 size=156,32 hidden=false graphic=822 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=33 type=4 layer=51118093 pos=294,277 size=199,43 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=34 type=0 layer=51118092 pos=0,0 size=512,334 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=35 type=0 layer=51118092 pos=61,-18 size=512,334 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=36 type=0 layer=51118092 pos=0,0 size=512,334 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=37 type=0 layer=51118092 pos=0,0 size=512,334 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=38 type=0 layer=51118092 pos=0,0 size=512,334 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=39 type=0 layer=51118092 pos=13,18 size=512,334 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=40 type=0 layer=51118092 pos=0,0 size=512,334 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=41 type=0 layer=51118092 pos=0,0 size=512,334 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=42 type=0 layer=51118092 pos=0,0 size=512,334 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=43 type=0 layer=51118092 pos=0,0 size=512,334 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=44 type=0 layer=51118092 pos=0,0 size=512,334 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=45 type=0 layer=51118092 pos=0,0 size=512,334 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=46 type=0 layer=51118092 pos=0,0 size=512,334 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=47 type=0 layer=51118092 pos=0,0 size=512,334 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=48 type=0 layer=51118092 pos=13,2 size=512,334 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=49 type=0 layer=-1 pos=0,0 size=512,334 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=50 type=0 layer=-1 pos=0,0 size=16391,16391 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=51 type=0 layer=51118130 pos=0,0 size=16391,16391 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=52 type=5 layer=-1 pos=-260,0 size=32,334 hidden=false graphic=821 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=53 type=5 layer=-1 pos=0,-171 size=462,32 hidden=false graphic=820 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=54 type=5 layer=-1 pos=0,170 size=512,32 hidden=false graphic=822 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=55 type=5 layer=-1 pos=259,0 size=32,334 hidden=false graphic=823 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=56 type=5 layer=-1 pos=-247,-158 size=32,32 hidden=false graphic=824 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=57 type=5 layer=-1 pos=247,-158 size=32,32 hidden=false graphic=825 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=58 type=5 layer=-1 pos=247,158 size=32,32 hidden=false graphic=827 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=59 type=5 layer=-1 pos=-247,158 size=32,32 hidden=false graphic=826 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=60 type=0 layer=51118131 pos=0,0 size=8192,16391 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=61 type=0 layer=51118131 pos=0,0 size=8188,16391 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=62 type=0 layer=51118131 pos=0,0 size=16391,8192 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=63 type=0 layer=51118131 pos=0,0 size=16391,8182 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=64 type=0 layer=51118131 pos=0,0 size=512,334 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=65 type=5 layer=51118141 pos=0,0 size=256,16384 hidden=false graphic=297 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=66 type=5 layer=51118140 pos=0,0 size=256,16391 hidden=false graphic=297 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=67 type=5 layer=51118142 pos=0,0 size=16391,167 hidden=false graphic=297 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=780 file=68 type=5 layer=51118143 pos=0,0 size=16391,166 hidden=false graphic=297 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+group=892 file=14 size=167 strings=This area is dangerous and death is more than a possibility! Are you sure you want to go down there?
+group=1090 file=3 size=79 strings=Total level:
+component group=1126 file=0 type=5 layer=73793645 pos=0,0 size=18,24 hidden=false graphic=454 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=1 type=5 layer=73793645 pos=0,0 size=12288,24 hidden=false graphic=456 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=2 type=5 layer=73793701 pos=5,5 size=130,255 hidden=false graphic=5471 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=3 type=4 layer=73793701 pos=10,30 size=120,180 hidden=false graphic=-1 clientcode=0 text=If the sum level of the NPCs you've trekked with is greater than the numbers to the left, you can select them to find out about additional rewards! ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=4 type=5 layer=73793583 pos=0,-34 size=50,10 hidden=false graphic=5935 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=5 type=5 layer=73793583 pos=0,-8 size=50,10 hidden=false graphic=5935 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=6 type=5 layer=73793583 pos=0,17 size=50,10 hidden=false graphic=5935 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=7 type=5 layer=73793583 pos=0,43 size=50,10 hidden=false graphic=5935 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=8 type=5 layer=73793596 pos=4,4 size=130,254 hidden=false graphic=5471 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=9 type=9 layer=73793596 pos=-187,28 size=120,0 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=10 type=4 layer=73793596 pos=0,0 size=4423,32 hidden=false graphic=-1 clientcode=0 text=Name ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+group=1126 file=11 size=73 strings=Level:
+component group=1126 file=11 type=4 layer=73793596 pos=10,30 size=2215,20 hidden=false graphic=-1 clientcode=0 text=Level: ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=12 type=4 layer=73793596 pos=85,30 size=40,20 hidden=false graphic=-1 clientcode=0 text=25 ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=13 type=4 layer=73793596 pos=10,68 size=2215,20 hidden=false graphic=-1 clientcode=0 text=Difficulty: ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=14 type=4 layer=73793596 pos=85,68 size=40,20 hidden=false graphic=-1 clientcode=0 text=Easy ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=15 type=4 layer=73793596 pos=-186,93 size=2215,20 hidden=false graphic=-1 clientcode=0 text=Unlocks ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=16 type=5 layer=73793596 pos=22,114 size=100,23 hidden=false graphic=462 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=17 type=5 layer=73793596 pos=35,114 size=12,23 hidden=false graphic=466 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=18 type=5 layer=73793596 pos=120,114 size=12,23 hidden=false graphic=469 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=19 type=5 layer=73793596 pos=10,114 size=12,23 hidden=false graphic=461 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=20 type=4 layer=73793596 pos=12,114 size=29,23 hidden=false graphic=-1 clientcode=0 text=25 ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=21 type=4 layer=73793596 pos=40,114 size=92,23 hidden=false graphic=-1 clientcode=0 text=Backpack ops=[Reward] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=22 type=5 layer=73793596 pos=22,140 size=100,23 hidden=false graphic=462 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=23 type=5 layer=73793596 pos=35,140 size=12,23 hidden=false graphic=466 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=24 type=5 layer=73793596 pos=120,140 size=12,23 hidden=false graphic=469 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=25 type=5 layer=73793596 pos=10,140 size=12,23 hidden=false graphic=461 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=26 type=4 layer=73793596 pos=12,140 size=29,23 hidden=false graphic=-1 clientcode=0 text=60 ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=27 type=4 layer=73793596 pos=40,140 size=92,23 hidden=false graphic=-1 clientcode=0 text=Butcher ops=[Reward] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=28 type=5 layer=73793596 pos=22,166 size=100,23 hidden=false graphic=462 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=29 type=5 layer=73793596 pos=35,166 size=12,23 hidden=false graphic=466 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=30 type=5 layer=73793596 pos=120,166 size=12,23 hidden=false graphic=469 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=31 type=5 layer=73793596 pos=10,166 size=12,23 hidden=false graphic=461 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=32 type=4 layer=73793596 pos=12,166 size=29,23 hidden=false graphic=-1 clientcode=0 text=75 ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=33 type=4 layer=73793596 pos=40,166 size=92,23 hidden=false graphic=-1 clientcode=0 text=Daredevil ops=[Reward] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=34 type=5 layer=73793596 pos=22,192 size=100,23 hidden=false graphic=462 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=35 type=5 layer=73793596 pos=35,192 size=12,23 hidden=false graphic=466 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=36 type=5 layer=73793596 pos=120,192 size=12,23 hidden=false graphic=469 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=37 type=5 layer=73793596 pos=10,192 size=12,23 hidden=false graphic=461 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=38 type=4 layer=73793596 pos=12,192 size=29,23 hidden=false graphic=-1 clientcode=0 text=95 ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=39 type=4 layer=73793596 pos=40,192 size=92,23 hidden=false graphic=-1 clientcode=0 text=Abyssal ops=[Reward] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=40 type=0 layer=73793596 pos=4,50 size=131,18 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=1126 file=40 onLoad=[5237] onVar=null varp=null onTimer=[5236]
+component group=1126 file=41 type=0 layer=73793596 pos=-183,228 size=110,30 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=42 type=5 layer=73793660 pos=0,0 size=6,8 hidden=false graphic=5610 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=43 type=5 layer=73793660 pos=0,0 size=15564,8 hidden=false graphic=5611 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=44 type=5 layer=73793576 pos=0,0 size=12,18 hidden=false graphic=5606 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=45 type=0 layer=-1 pos=6,18 size=15,31 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=46 type=0 layer=-1 pos=21,50 size=138,263 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=47 type=0 layer=-1 pos=136,152 size=230,114 hidden=true graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=48 type=5 layer=73793583 pos=0,0 size=16391,16384 hidden=false graphic=5932 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=49 type=4 layer=73793583 pos=0,0 size=13107,13107 hidden=false graphic=-1 clientcode=0 text=Ability to fire silver encrusted projectiles ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=50 type=5 layer=73793582 pos=0,0 size=0,0 hidden=false graphic=5471 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=51 type=5 layer=73793582 pos=0,0 size=10,10 hidden=false graphic=5475 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=52 type=5 layer=73793582 pos=0,0 size=10,10 hidden=false graphic=5475 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=53 type=5 layer=73793582 pos=0,0 size=10,10 hidden=false graphic=5475 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=54 type=5 layer=73793582 pos=0,0 size=10,10 hidden=false graphic=5475 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=55 type=5 layer=73793582 pos=0,0 size=20,10 hidden=false graphic=5474 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=56 type=5 layer=73793582 pos=0,0 size=20,10 hidden=false graphic=5474 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=57 type=5 layer=73793582 pos=0,0 size=10,20 hidden=false graphic=5476 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=58 type=5 layer=73793582 pos=0,0 size=10,20 hidden=false graphic=5476 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=59 type=4 layer=73793582 pos=0,0 size=13066,13089 hidden=false graphic=-1 clientcode=0 text=Select an advert from the left to begin! ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=60 type=0 layer=73793582 pos=0,0 size=60794,24546 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=61 type=5 layer=73793577 pos=0,0 size=4,4 hidden=false graphic=4652 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=62 type=5 layer=73793577 pos=0,0 size=4,4 hidden=false graphic=4625 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=63 type=5 layer=73793577 pos=0,0 size=4,4 hidden=false graphic=4624 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=64 type=0 layer=73793577 pos=0,0 size=4,4 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=1126 file=64 onLoad=[4201, -2147483645, 1736] onVar=null varp=null onTimer=null
+component group=1126 file=65 type=5 layer=73793600 pos=0,0 size=24,22 hidden=false graphic=5440 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=66 type=5 layer=73793600 pos=0,0 size=12,12 hidden=false graphic=5421 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=67 type=5 layer=73793600 pos=0,0 size=12,12 hidden=false graphic=5421 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=68 type=5 layer=73793600 pos=0,0 size=24,12 hidden=false graphic=5430 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=69 type=5 layer=73793600 pos=0,0 size=24,12 hidden=false graphic=5420 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=70 type=5 layer=73793600 pos=0,0 size=12,12 hidden=false graphic=5431 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=71 type=5 layer=73793600 pos=0,0 size=12,12 hidden=false graphic=5431 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=72 type=5 layer=73793600 pos=0,0 size=12,24 hidden=false graphic=5441 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=73 type=5 layer=73793600 pos=0,0 size=12,24 hidden=false graphic=5441 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=74 type=0 layer=73793577 pos=0,0 size=4,4 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=1126 file=74 onLoad=[4201, -2147483645, 1737] onVar=null varp=null onTimer=null
+component group=1126 file=75 type=0 layer=73793577 pos=0,0 size=4,4 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=1126 file=75 onLoad=[4201, -2147483645, 1738] onVar=null varp=null onTimer=null
+component group=1126 file=76 type=0 layer=73793577 pos=0,0 size=4,4 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=1126 file=76 onLoad=[4201, -2147483645, 1739] onVar=null varp=null onTimer=null
+component group=1126 file=77 type=0 layer=73793577 pos=0,0 size=4,4 hidden=false graphic=-1 clientcode=0 text= ops=[Done] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=78 type=0 layer=73793577 pos=0,0 size=4,4 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=79 type=4 layer=73793614 pos=0,0 size=8,4 hidden=false graphic=-1 clientcode=0 text=Confirm ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=1126 file=79 onLoad=[4210, -2147483645, 4040, 15458492, 5918266] onVar=null varp=null onTimer=null
+component group=1126 file=80 type=0 layer=73793577 pos=0,0 size=4,4 hidden=true graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=1126 file=80 onLoad=[4201, -2147483645, 1740] onVar=null varp=null onTimer=null
+component group=1126 file=81 type=5 layer=73793581 pos=0,1 size=16391,16391 hidden=false graphic=5470 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=82 type=5 layer=73793581 pos=0,0 size=125,29 hidden=false graphic=5465 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=83 type=5 layer=73793581 pos=0,0 size=364,7 hidden=false graphic=5460 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=84 type=5 layer=73793581 pos=0,28 size=8,68 hidden=false graphic=5464 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=85 type=5 layer=73793581 pos=0,0 size=8,190 hidden=false graphic=5468 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=86 type=5 layer=73793581 pos=0,28 size=8,68 hidden=false graphic=5464 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=87 type=5 layer=73793581 pos=8,28 size=4,3 hidden=false graphic=5473 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=88 type=5 layer=73793581 pos=63,0 size=120,7 hidden=false graphic=5460 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=89 type=5 layer=73793581 pos=63,0 size=120,7 hidden=false graphic=5460 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=90 type=5 layer=73793581 pos=0,53 size=8,43 hidden=false graphic=5469 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=91 type=5 layer=73793581 pos=8,7 size=3,4 hidden=false graphic=5472 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=92 type=5 layer=73793581 pos=0,29 size=14,4 hidden=false graphic=5472 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=93 type=5 layer=73793581 pos=8,28 size=4,3 hidden=false graphic=5473 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=94 type=5 layer=73793581 pos=0,0 size=8,190 hidden=false graphic=5468 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=95 type=5 layer=73793581 pos=0,53 size=8,43 hidden=false graphic=5469 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=96 type=5 layer=73793581 pos=0,0 size=64,53 hidden=false graphic=5461 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=97 type=5 layer=73793581 pos=8,0 size=56,29 hidden=false graphic=5462 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=98 type=5 layer=73793581 pos=8,0 size=56,29 hidden=false graphic=5466 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=99 type=0 layer=73793581 pos=12,51 size=10951,13200 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=100 type=5 layer=73793581 pos=0,0 size=64,53 hidden=false graphic=5461 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=101 type=5 layer=73793581 pos=0,0 size=8,29 hidden=false graphic=5467 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=102 type=5 layer=73793581 pos=0,0 size=8,29 hidden=false graphic=5463 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=103 type=0 layer=73793581 pos=5,5 size=15,13 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=104 type=5 layer=73793639 pos=0,0 size=15,13 hidden=false graphic=5450 clientcode=0 text= ops=[Close] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=105 type=5 layer=73793639 pos=0,0 size=15,13 hidden=false graphic=5451 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=106 type=5 layer=73793639 pos=0,0 size=15,13 hidden=false graphic=5452 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=107 type=0 layer=73793581 pos=0,0 size=16391,23 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=108 type=0 layer=73793581 pos=12,51 size=10951,13107 hidden=true graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=109 type=0 layer=73793581 pos=30,32 size=100,21 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=110 type=4 layer=73793643 pos=0,0 size=8192,4 hidden=false graphic=-1 clientcode=0 text=Temple Trekking ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=111 type=5 layer=73793635 pos=0,0 size=0,0 hidden=false graphic=5471 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=112 type=5 layer=73793635 pos=0,0 size=10,10 hidden=false graphic=5475 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=113 type=5 layer=73793635 pos=0,0 size=10,10 hidden=false graphic=5475 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=114 type=5 layer=73793635 pos=0,0 size=10,10 hidden=false graphic=5475 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=115 type=5 layer=73793635 pos=0,0 size=10,10 hidden=false graphic=5475 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=116 type=5 layer=73793635 pos=0,0 size=20,10 hidden=false graphic=5474 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=117 type=5 layer=73793635 pos=0,0 size=20,10 hidden=false graphic=5474 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=118 type=5 layer=73793635 pos=0,0 size=10,20 hidden=false graphic=5476 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=119 type=5 layer=73793635 pos=0,0 size=10,20 hidden=false graphic=5476 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=120 type=5 layer=73793635 pos=24,16 size=123,111 hidden=false graphic=471 clientcode=0 text= ops=[Details] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=121 type=5 layer=73793635 pos=24,16 size=123,111 hidden=true graphic=484 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=122 type=5 layer=73793576 pos=0,0 size=12,18 hidden=false graphic=5608 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=123 type=5 layer=73793576 pos=0,0 size=13660,18 hidden=false graphic=5607 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=124 type=0 layer=73793576 pos=6,5 size=60,14 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=125 type=5 layer=73793660 pos=0,0 size=6,8 hidden=false graphic=5612 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=126 type=5 layer=73793644 pos=0,0 size=0,0 hidden=false graphic=5471 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=127 type=5 layer=73793644 pos=0,0 size=10,10 hidden=false graphic=5475 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=128 type=5 layer=73793644 pos=0,0 size=10,10 hidden=false graphic=5475 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=129 type=5 layer=73793644 pos=0,0 size=10,10 hidden=false graphic=5475 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=130 type=5 layer=73793644 pos=0,0 size=10,10 hidden=false graphic=5475 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=131 type=5 layer=73793644 pos=0,0 size=20,10 hidden=false graphic=5474 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=132 type=5 layer=73793644 pos=0,0 size=20,10 hidden=false graphic=5474 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=133 type=5 layer=73793644 pos=0,0 size=10,20 hidden=false graphic=5476 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=134 type=5 layer=73793644 pos=0,0 size=10,20 hidden=false graphic=5476 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=135 type=0 layer=73793644 pos=-100,-50 size=90,90 hidden=false graphic=-1 clientcode=0 text= ops=[Select] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=136 type=5 layer=73793671 pos=0,0 size=16391,16391 hidden=false graphic=5523 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=137 type=5 layer=73793671 pos=0,8 size=11475,11475 hidden=false graphic=6093 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=138 type=4 layer=73793671 pos=0,0 size=16391,16384 hidden=false graphic=-1 clientcode=0 text=100 ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=139 type=0 layer=73793582 pos=0,0 size=60794,24546 hidden=true graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=140 type=5 layer=73793675 pos=5,5 size=130,255 hidden=false graphic=5471 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=141 type=0 layer=73793675 pos=-183,228 size=110,30 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=142 type=5 layer=73793677 pos=0,0 size=4,4 hidden=false graphic=4652 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=143 type=5 layer=73793677 pos=0,0 size=4,4 hidden=false graphic=4625 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=144 type=5 layer=73793677 pos=0,0 size=4,4 hidden=false graphic=4624 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=145 type=0 layer=73793677 pos=0,0 size=4,4 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=1126 file=145 onLoad=[4201, -2147483645, 1736] onVar=null varp=null onTimer=null
+component group=1126 file=146 type=5 layer=73793681 pos=0,0 size=24,22 hidden=false graphic=5440 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=147 type=5 layer=73793681 pos=0,0 size=12,12 hidden=false graphic=5421 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=148 type=5 layer=73793681 pos=0,0 size=12,12 hidden=false graphic=5421 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=149 type=5 layer=73793681 pos=0,0 size=24,12 hidden=false graphic=5430 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=150 type=5 layer=73793681 pos=0,0 size=24,12 hidden=false graphic=5420 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=151 type=5 layer=73793681 pos=0,0 size=12,12 hidden=false graphic=5431 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=152 type=5 layer=73793681 pos=0,0 size=12,12 hidden=false graphic=5431 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=153 type=5 layer=73793681 pos=0,0 size=12,24 hidden=false graphic=5441 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=154 type=5 layer=73793681 pos=0,0 size=12,24 hidden=false graphic=5441 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=155 type=0 layer=73793677 pos=0,0 size=4,4 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=1126 file=155 onLoad=[4201, -2147483645, 1737] onVar=null varp=null onTimer=null
+component group=1126 file=156 type=0 layer=73793677 pos=0,0 size=4,4 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=1126 file=156 onLoad=[4201, -2147483645, 1738] onVar=null varp=null onTimer=null
+component group=1126 file=157 type=0 layer=73793677 pos=0,0 size=4,4 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=1126 file=157 onLoad=[4201, -2147483645, 1739] onVar=null varp=null onTimer=null
+component group=1126 file=158 type=0 layer=73793677 pos=0,0 size=4,4 hidden=false graphic=-1 clientcode=0 text= ops=[Done] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=159 type=0 layer=73793677 pos=0,0 size=4,4 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=160 type=4 layer=73793695 pos=0,0 size=8,4 hidden=false graphic=-1 clientcode=0 text=Claim ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=161 type=0 layer=73793677 pos=0,0 size=4,4 hidden=true graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+hooks group=1126 file=161 onLoad=[4201, -2147483645, 1740] onVar=null varp=null onTimer=null
+component group=1126 file=162 type=4 layer=73793675 pos=0,10 size=140,32 hidden=false graphic=-1 clientcode=0 text=Rewards ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=163 type=4 layer=73793675 pos=10,50 size=120,165 hidden=false graphic=-1 clientcode=0 text=Description ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=164 type=9 layer=73793675 pos=10,40 size=115,0 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=165 type=0 layer=73793675 pos=0,0 size=16391,16391 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=166 type=0 layer=73793644 pos=0,-50 size=90,90 hidden=false graphic=-1 clientcode=0 text= ops=[Select] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=167 type=5 layer=73793702 pos=0,0 size=16391,16391 hidden=false graphic=5523 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=168 type=5 layer=73793702 pos=0,8 size=11475,11475 hidden=false graphic=6093 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=169 type=4 layer=73793702 pos=0,0 size=16391,16391 hidden=false graphic=-1 clientcode=0 text=200 ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=170 type=0 layer=73793644 pos=100,-50 size=90,90 hidden=false graphic=-1 clientcode=0 text= ops=[Select] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=171 type=5 layer=73793706 pos=0,0 size=16391,16391 hidden=false graphic=5523 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=172 type=5 layer=73793706 pos=0,8 size=11475,11475 hidden=false graphic=6093 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=173 type=4 layer=73793706 pos=0,0 size=16391,16391 hidden=false graphic=-1 clientcode=0 text=300 ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=174 type=0 layer=73793644 pos=-100,50 size=90,90 hidden=false graphic=-1 clientcode=0 text= ops=[Select] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=175 type=5 layer=73793710 pos=0,0 size=16391,16391 hidden=false graphic=5523 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=176 type=5 layer=73793710 pos=0,8 size=11475,11475 hidden=false graphic=6093 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=177 type=4 layer=73793710 pos=0,0 size=16391,16391 hidden=false graphic=-1 clientcode=0 text=400 ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=178 type=0 layer=73793644 pos=0,50 size=90,90 hidden=false graphic=-1 clientcode=0 text= ops=[Select] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=179 type=5 layer=73793714 pos=0,0 size=16391,16391 hidden=false graphic=5523 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=180 type=5 layer=73793714 pos=0,8 size=11475,11475 hidden=false graphic=6093 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=181 type=4 layer=73793714 pos=0,0 size=16391,16391 hidden=false graphic=-1 clientcode=0 text=500 ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=182 type=0 layer=73793644 pos=100,50 size=90,90 hidden=false graphic=-1 clientcode=0 text= ops=[Select] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=183 type=5 layer=73793718 pos=0,0 size=16391,16391 hidden=false graphic=5523 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=184 type=5 layer=73793718 pos=0,8 size=11475,11475 hidden=false graphic=6093 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=185 type=4 layer=73793718 pos=0,0 size=16391,16391 hidden=false graphic=-1 clientcode=0 text=594 ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=186 type=5 layer=73793645 pos=0,0 size=18,24 hidden=false graphic=454 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=187 type=4 layer=73793645 pos=0,1 size=16391,16384 hidden=false graphic=-1 clientcode=0 text=Noticeboard ops=[Select] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=188 type=0 layer=73793581 pos=135,32 size=100,21 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=189 type=5 layer=73793724 pos=0,0 size=18,24 hidden=false graphic=459 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=190 type=5 layer=73793724 pos=0,0 size=12288,24 hidden=false graphic=460 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=191 type=5 layer=73793724 pos=0,0 size=18,24 hidden=false graphic=459 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=192 type=4 layer=73793724 pos=0,1 size=16391,16384 hidden=false graphic=-1 clientcode=0 text=Rewards ops=[Select] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=193 type=5 layer=73793635 pos=200,21 size=123,111 hidden=false graphic=477 clientcode=0 text= ops=[Details] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=194 type=5 layer=73793635 pos=200,21 size=123,111 hidden=true graphic=484 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=195 type=5 layer=73793635 pos=85,127 size=123,111 hidden=false graphic=481 clientcode=0 text= ops=[Details] invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=196 type=5 layer=73793635 pos=85,127 size=123,111 hidden=true graphic=484 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=197 type=6 layer=73793635 pos=138,112 size=22,34 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=198 type=6 layer=73793635 pos=60,0 size=22,35 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+component group=1126 file=199 type=6 layer=73793635 pos=265,4 size=22,34 hidden=false graphic=-1 clientcode=0 text= ops=null invObject=-1 invCount=0 scrollW=0 scrollH=0 invTriggers=null
+scanned_groups=1149 scanned_files=54488

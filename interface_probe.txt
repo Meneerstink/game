@@ -1,0 +1,111 @@
+group=71 components=8
+  component=3 size=71 text=Name
+  component=4 size=72 text=Line1
+  component=5 size=72 text=Line2
+  component=6 size=72 text=Line3
+  component=7 size=72 text=Line4
+group=72 components=77
+  component=2 size=81 text=Common jadinko
+  component=3 size=77 text= 70 Hunter
+  component=5 size=82 text=Shadow jadinko 
+  component=6 size=76 text=71 Hunter
+  component=8 size=83 text=Diseased jadinko
+  component=9 size=76 text=78 Hunter
+  component=11 size=83 text=Igneous jadinko 
+  component=12 size=77 text= 74 Hunter
+  component=14 size=83 text=Cannibal jadinko
+  component=15 size=76 text=75 Hunter
+  component=17 size=82 text=Aquatic jadinko
+  component=18 size=76 text=76 Hunter
+  component=20 size=85 text=Amphibious jadinko
+  component=21 size=76 text=77 Hunter
+  component=23 size=82 text=Carrion jadinko
+  component=24 size=76 text=78 Hunter
+  component=26 size=86 text=Camouflaged jadinko
+  component=27 size=76 text=79 Hunter
+  component=29 size=83 text=Draconic jadinko
+  component=30 size=76 text=80 Hunter
+  component=31 size=79 text=Undiscovered
+  component=32 size=79 text=Undiscovered
+  component=33 size=79 text=Undiscovered
+  component=34 size=79 text=Undiscovered
+  component=35 size=79 text=Undiscovered
+  component=36 size=79 text=Undiscovered
+  component=37 size=79 text=Undiscovered
+  component=38 size=79 text=Undiscovered
+  component=39 size=79 text=Undiscovered
+  component=40 size=79 text=Undiscovered
+  component=54 size=115 text=Close
+  component=55 size=93 text=Known Jadinko Requirements
+  component=60 size=80 text=Basic Jadinko
+  component=61 size=91 text=Test test test test test
+  component=62 size=121 text=This creature is attracted by: <br>   Any flower type.
+  component=64 size=142 text=Requirements
+  component=65 size=142 text=Requirements
+  component=66 size=142 text=Requirements
+  component=67 size=142 text=Requirements
+  component=68 size=142 text=Requirements
+  component=69 size=142 text=Requirements
+  component=70 size=142 text=Requirements
+  component=71 size=142 text=Requirements
+  component=72 size=142 text=Requirements
+  component=73 size=142 text=Requirements
+  component=76 size=91 text=Back | Back
+group=662 components=76
+  component=18 size=137 text=Summoning points remaining
+  component=40 size=143 text=S P E C I A L   M O V E
+  component=41 size=80 text=9999
+  component=42 size=134 text=Familiar time remaining
+  component=43 size=80 text=9999
+  component=44 size=130 text=Pet size percentage
+  component=45 size=91 text=100%
+  component=46 size=71 text=100%
+  component=47 size=132 text=Pet hunger percentage
+  component=48 size=71 text=9999
+  component=49 size=149 text=Call Follower | Call familiar
+  component=51 size=167 text=Dismiss Familiar | Dismiss Now | Dismiss familiar
+  component=65 size=181 text=Attack | Order your familiar to attack a target
+  component=66 size=134 text=9999 | Scrolls remaining
+  component=67 size=157 text=Take BoB | Take Beast of Burden items
+  component=69 size=161 text=Renew Familiar | Renew familiar
+group=671 components=31
+  component=13 size=120 text=Close
+  component=14 size=85 text=Familiar Inventory
+  component=29 size=147 text=Take BoB | Take Beast of Burden items.
+group=747 components=27
+  component=7 size=103 text=Select left-click option
+  component=9 size=102 text=Follower Details
+  component=10 size=84 text=Call Follower
+  component=11 size=78 text=Dismiss
+  component=12 size=79 text=Take BoB
+  component=13 size=85 text=Renew Familiar
+  component=14 size=92 text=Attack
+  component=15 size=74 text=Interact
+  component=18 size=92 text=Follower Details
+  component=19 size=74 text=Call Follower
+  component=20 size=68 text=Dismiss
+  component=21 size=69 text=Take BoB
+  component=22 size=75 text=Renew Familiar
+  component=23 size=103 text=Attack
+  component=25 size=95 text=Spell | Cast
+  component=26 size=69 text=Interact
+group=880 components=27
+  component=4 size=96 text=Left-click option:
+  component=6 size=85 text=Confirm
+  component=7 size=124 text=Select
+  component=8 size=135 text=Follower details | Select
+  component=9 size=114 text=Select
+  component=10 size=130 text=Special move | Select
+  component=11 size=124 text=Select
+  component=12 size=125 text=Attack | Select
+  component=13 size=124 text=Select
+  component=14 size=132 text=Call follower | Select
+  component=15 size=124 text=Select
+  component=16 size=135 text=Dismiss follower | Select
+  component=17 size=124 text=Select
+  component=18 size=127 text=Take BoB | Select
+  component=19 size=124 text=Select
+  component=20 size=133 text=Renew familiar | Select
+  component=21 size=118 text=Confirm Selection
+  component=25 size=114 text=Select
+  component=26 size=115 text=Interact | Select
