@@ -16,6 +16,7 @@ import gg.rsmod.game.model.entity.GroundItem
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.game.service.log.LoggerService
+import gg.rsmod.plugins.content.mechanics.pvp.BEST_KILLSTREAK_ATTR
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -45,7 +46,13 @@ class DeathExecutorTests {
     @Test
     fun `PvP death spawns lost items as killer-owned ground loot exactly once`() {
         val victim = newPlayer()
-        val killer = mockk<Player>(relaxed = true)
+        // The killer needs a real AttributeMap like the victim: a Wilderness PvP death runs
+        // through Killstreaks.onWildernessKill, which reads the killer's killstreak and PK-point
+        // attributes as Ints, and a relaxed mock hands back a plain Object there.
+        val killer = newPlayer()
+        // Seeded above the streak this kill produces so the leaderboard's best-streak branch,
+        // which writes data/killstreak_leaderboard.txt, stays out of a unit test.
+        killer.attr[BEST_KILLSTREAK_ATTR] = 5
         val world = mockk<World>(relaxed = true)
 
         victim.inventory[0] = Item(LOST_ITEM, 3)

@@ -171,7 +171,10 @@ class ItemContainerTests {
         @BeforeClass
         @JvmStatic
         fun loadCache() {
-            store = CacheLibrary(Paths.get("..", "data", "cache").toFile().toString())
+            // Tests run with the module directory (game/plugins) as their working directory, so
+            // the cache is two levels up at game/game/data/cache - the same path every other
+            // cache-backed test in this module uses.
+            store = CacheLibrary(Paths.get("..", "..", "data", "cache").toFile().toString())
 
             definitions.loadAll(store)
 
