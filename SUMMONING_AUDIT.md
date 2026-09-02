@@ -1,3 +1,31 @@
+## 2026-09-02 — the Summoning tab/orb slots, checked against the cache (owner: "no summoning icon")
+
+Evidence file: `gameframe_probe.txt` — every decodable component of the fixed (548) and resizable
+(746) gameframes, the list of component ids that exist in each, and the component count of all 17
+interfaces the server mounts as sidebar tabs.
+
+What the probe settles:
+
+- **Every tab slot the server uses exists.** 548 has components 200-229 and 746 has 90-119, so
+  `SUMMONING_TAB(662, fixed 212, resize 98)`, `MUSIC(218/104)`, `NOTES(219/105)` and
+  `LOGOUT(222/108)` all point at real components. An earlier reading of this dump suggested
+  218-220 were missing; they are not — the interface loader simply fails to decode those three,
+  while the raw archive entries are present. Nothing in the tab list is shifted.
+- **All 17 tab interfaces exist in this cache**, including 662 (76 components), so the tab list is
+  not one entry too long for the revision.
+- **The orb slots are right too.** The four orb layers are 57x34 at 548:183/185/186/188 and
+  746:177-180, and `SUMMONING_ORB(747, 188/180)` matches; 747's own root is 57x34 with the orb
+  sprite (1206), an icon (1200) and a text field (component 5) for the number.
+- Tabs are mounted at login: `runetek5.plugin.kts` calls `sendTabs()`, which opens every
+  destination, and it already sets `Varps.VARP_1160 = -1` with the comment "Unlocks summoning orb".
+
+So the missing icon is **not** a wrong slot, a missing component or an unsent interface on the
+server side. What remains is client-side: the sidebar icon for that slot is drawn by the client,
+and this revision has a `SUMMONING_ICON_FLASHING` varbit (4755) but no sourced varbit for tab
+visibility. Which of the possible symptoms it is - no icon at all, an icon that opens an empty
+panel, or the panel docked under a different icon - cannot be told apart from the cache alone and
+needs one live observation before anything is changed. Nothing was guessed or altered.
+
 ## 2026-09-02 — interface 671 ("Familiar Inventory"): why the item grid stays blocked
 
 Evidence file: `interface_671_dump.txt`, components 0-30 of group 671.
