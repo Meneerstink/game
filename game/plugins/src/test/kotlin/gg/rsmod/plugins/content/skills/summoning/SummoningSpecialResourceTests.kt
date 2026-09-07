@@ -259,9 +259,12 @@ class SummoningSpecialResourceTests {
     fun `no instant special consumes resources without changing observable state`() {
         val offenders = mutableListOf<String>()
         var provenEffective = 0
+        var swept = 0
+        var fired = 0
         instantFamiliars().forEach { pouch ->
             val scroll = scrollFor(pouch) ?: return@forEach
             if (scroll in UNOBSERVABLE_IN_THIS_HARNESS) return@forEach
+            swept++
 
             val player = newPlayer(pouch.npc)
             player.inventory.add(scroll.scroll, 5)
@@ -274,6 +277,7 @@ class SummoningSpecialResourceTests {
             val before = observableState(player, scroll.scroll)
 
             if (SummoningSpecialMoves.castInstant(player)) {
+                fired++
                 if (observableState(player, scroll.scroll) == before) {
                     offenders += "${pouch.name} (${scroll.name}): consumed a scroll and " +
                         "${scroll.specialPoints} points but changed nothing observable"
@@ -287,17 +291,19 @@ class SummoningSpecialResourceTests {
          * Without this the test could pass by proving nothing - every move exempted, or every cast
          * refused. It has to actually witness moves *working*.
          *
-         * 12 is the number observed today, recorded as a floor rather than chosen as a target: it
-         * can only be tightened. It is not the full sweep because the harness refuses the
-         * lifepoint-based moves - `getCurrentLifepoints` and `getMaximumLifepoints` both answer 0
-         * on a relaxed mock, so a heal correctly reports "already at full life points" and returns
-         * without doing anything. Those moves are covered on the accounting axis by the other tests
-         * in this class; giving the mock real lifepoints would raise this floor.
+         * 14 is the number observed today, recorded as a floor rather than chosen as a target: it
+         * can only be tightened. It rose from 12 when the harness was given real lifepoints, which
+         * is what let the heal-based moves - Healing Aura among them - actually run at all.
+         *
+         * It is still short of the full sweep. The remaining shortfall is **not yet explained**,
+         * and the failure message reports swept/fired/effective so the next session can see the
+         * breakdown without re-instrumenting. Finding out which swept moves neither fire nor change
+         * state, and why, is a recorded TODO rather than something this assertion papers over.
          */
         assertTrue(
-            provenEffective >= 12,
-            "only $provenEffective instant specials were observed changing state; this test has " +
-                "stopped proving anything",
+            provenEffective >= 14,
+            "only $provenEffective of $swept swept instant specials were observed changing state " +
+                "($fired fired); this test has stopped proving anything",
         )
     }
 
@@ -359,6 +365,24 @@ class SummoningSpecialResourceTests {
         every { player.containers } returns HashMap()
         every { player.skills } returns skills
         every { player.tile } returns Tile(0, 0, 0)
+        /*
+         * Real lifepoints, backed by a variable.
+         *
+         * Without this every heal-based special is invisible: `Player.heal` is an extension that
+         * delegates to `Player.alterLifepoints`, a member the relaxed mock swallows, and
+         * `getCurrentLifepoints`/`getMaximumLifepoints` both answer 0 — so a heal correctly reports
+         * "you are already at full life points" and the move looks like a no-op.
+         *
+         * Only the three accessors are stubbed. `alterLifepoints` itself is delegated back to the
+         * real implementation with `callOriginal()`, so the production capping and signum logic is
+         * what runs; reimplementing it here would mean asserting against a copy of the code rather
+         * than against the code.
+         */
+        var lifepoints = HALF_LIFEPOINTS
+        every { player.getMaximumLifepoints() } returns MAX_LIFEPOINTS
+        every { player.getCurrentLifepoints() } answers { lifepoints }
+        every { player.setCurrentLifepoints(any()) } answers { lifepoints = firstArg() }
+        every { player.alterLifepoints(any(), any()) } answers { callOriginal() }
         if (familiarNpcId != null) {
             val npc = mockk<Npc>(relaxed = true)
             every { npc.id } returns familiarNpcId
@@ -373,6 +397,12 @@ class SummoningSpecialResourceTests {
     }
 
     companion object {
+        /** Hitpoints 99 on this revision's 1:1 scale: getMaximumLifepoints is skills.getMaxLevel(3) * 10. */
+        private const val MAX_LIFEPOINTS = 990
+
+        /** Start injured so a heal has room to be visible; a full-health player cannot show one. */
+        private const val HALF_LIFEPOINTS = 495
+
         /**
          * Instant specials whose real effect this **harness** cannot observe. Each is listed with
          * the reason, because the distinction matters: none of these is a move that does nothing,
