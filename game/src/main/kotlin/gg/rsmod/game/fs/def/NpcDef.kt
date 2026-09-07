@@ -38,6 +38,16 @@ class NpcDef(
     var transforms: Array<Int>? = null
     var walkMask = -1
 
+    /**
+     * The npc's chathead models (opcode 60), or `null` when it has none.
+     *
+     * The client refuses to draw a dialogue portrait without them: `NPCType.headModel` returns
+     * `null` the moment `headModels` is absent, so a `chatNpc` conversation with such an npc shows
+     * an empty portrait box. The server previously skipped this opcode, which made that condition
+     * invisible to it - and therefore impossible to test for.
+     */
+    var chatheadModels: IntArray? = null
+
     var examine: String? = null
 
     /**
@@ -95,7 +105,11 @@ class NpcDef(
                     buf.readByte()
                 }
             }
-            60, 160 -> {
+            60 -> {
+                val count = buf.readUnsignedByte()
+                chatheadModels = IntArray(count.toInt()) { buf.readUnsignedShort().toInt() }
+            }
+            160 -> {
                 val count = buf.readUnsignedByte()
                 for (i in 0 until count) {
                     buf.readUnsignedShort()

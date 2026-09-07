@@ -70,11 +70,27 @@ suspend fun QueueTask.familiarDialogue(
     val understands =
         !pouch.name.startsWith("ABYSSAL_") &&
             player.skills.getCurrentLevel(Skills.SUMMONING) >= pouch.level + 10
+    /*
+     * Owner failures F4/F5: the familiar's chatbox model behaviour was wrong.
+     *
+     * All 78 familiars do have a chathead model in this cache (`FamiliarChatheadTests`), so the
+     * portrait itself was never the problem - what was wrong is what it was being animated with.
+     * `chatNpc` defaults to [FacialExpression.HAPPY_TALKING], and every named expression in that
+     * enum is a `97xx`/`98xx` **humanoid** facial-expression sequence. A Spirit wolf's head has no
+     * frames for a human expression rig, so the portrait was being driven by a sequence built for
+     * a different model entirely.
+     *
+     * [FacialExpression.NONE] is the client's own answer to that: `MainLogicManager` clears the
+     * component's animator outright on -1, leaving the chathead in its resting pose. The player's
+     * own lines keep their expressions, because a player head is exactly what those sequences are
+     * for.
+     */
     conversations.random().forEach { line ->
         when {
             line.speaker == SummoningDialogueData.Speaker.PLAYER -> chatPlayer(line.speech)
-            line.translation.isEmpty() || !understands -> chatNpc(line.speech, npc = npcId)
-            else -> chatNpc(line.speech, line.translation, npc = npcId)
+            line.translation.isEmpty() || !understands ->
+                chatNpc(line.speech, npc = npcId, facialExpression = FacialExpression.NONE)
+            else -> chatNpc(line.speech, line.translation, npc = npcId, facialExpression = FacialExpression.NONE)
         }
     }
 }

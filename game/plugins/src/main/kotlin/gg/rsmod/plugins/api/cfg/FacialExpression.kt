@@ -19,6 +19,17 @@ const val FIFTH_OPTION = 5
 enum class FacialExpression(
     val animationId: Int,
 ) {
+    /**
+     * No facial animation at all - the portrait is drawn in its model's own resting pose.
+     *
+     * Every other entry here is a `97xx`/`98xx` **humanoid** facial-expression sequence, animating
+     * a human head rig. Putting one on a chathead that has no such frames is not a no-op: the
+     * portrait is driven by a sequence its model was never built for. Familiars are the case that
+     * exposed this, and -1 is the client's own answer rather than an invented sentinel -
+     * `MainLogicManager`'s `IF_SETMODELANIM` branch sets `component.animator = null` for exactly
+     * this value.
+     */
+    NONE(-1),
     NORMAL(9760),
     ANGRY(9792),
     GRUMPY(9784),
