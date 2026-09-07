@@ -1,7 +1,9 @@
 package gg.rsmod.plugins.content.skills.summoning
 
+import gg.rsmod.game.fs.def.AnimDef
 import gg.rsmod.game.fs.def.BasDef
 import gg.rsmod.game.fs.def.NpcDef
+import gg.rsmod.game.fs.def.SpotAnimDef
 import gg.rsmod.game.model.World
 
 /**
@@ -65,6 +67,57 @@ object SummoningLedger {
         }
         validateCombatLevels(world)
         validatePathingData(world)
+        validateCombatVisuals(world)
+    }
+
+    /**
+     * Phase J: every animation, graphic and projectile id the combat ledger wires for a familiar
+     * must actually exist in the production cache.
+     *
+     * ## Why an existence check is worth a boot gate
+     *
+     * An animation id that does not resolve is not a crash and not a log line. The server sends it,
+     * the client looks it up, finds nothing, and renders nothing - so the familiar attacks in its
+     * idle pose, or dies without a death animation, and the only symptom is a human saying "the
+     * animation is wrong" about one familiar out of 78. That is precisely the class of fault this
+     * subsystem keeps producing, and it is the class an id-existence check catches cheaply.
+     *
+     * This gate deliberately proves only **existence**, which is the whole of what the server can
+     * be wrong about here: whether the *right* animation was chosen is a sourcing question settled
+     * in `SummoningCombatDefinitions`, and whether it *looks* right is a human question. Claiming
+     * more from a lookup would repeat the mistake the 2026-09-07 verification reset was called for.
+     *
+     * `-1` means "this familiar has none", which is real ledger state and is skipped rather than
+     * failed. Only a positive id that does not resolve is a fault.
+     */
+    private fun validateCombatVisuals(world: World) {
+        fun missing(
+            kind: String,
+            id: Int,
+            resolves: (Int) -> Boolean,
+        ): String? = if (id >= 0 && !resolves(id)) "$kind $id" else null
+
+        val seqExists = { id: Int -> world.definitions.getNullable(AnimDef::class.java, id) != null }
+        val gfxExists = { id: Int -> world.definitions.getNullable(SpotAnimDef::class.java, id) != null }
+
+        val faults =
+            SummoningCombatDefinitions.values.mapNotNull { definition ->
+                val broken =
+                    listOfNotNull(
+                        missing("attack animation", definition.attackAnimation, seqExists),
+                        missing("block animation", definition.blockAnimation, seqExists),
+                        missing("death animation", definition.deathAnimation, seqExists),
+                        missing("attack graphic", definition.attackGraphic, gfxExists),
+                        // A projectile is a spotanim in this revision - the same archive the
+                        // graphic ids come from - so it is checked the same way.
+                        missing("projectile", definition.projectile, gfxExists),
+                    )
+                if (broken.isEmpty()) null else "${definition.pouch.name}: ${broken.joinToString(", ")} not in the cache"
+            }
+        check(faults.isEmpty()) {
+            "${faults.size} familiars are wired to combat visuals this cache does not contain, so " +
+                "they would silently render nothing: $faults"
+        }
     }
 
     /**
