@@ -63,6 +63,66 @@ object SummoningLedger {
             "${unresolved.size} of 78 familiars have no resolvable idle animation, so the Follower " +
                 "Details panel would fall back to the client's pet default for them: $unresolved"
         }
+        validateCombatLevels(world)
+    }
+
+    /**
+     * Owner requirement H15: authentic combat levels, for combat familiars only.
+     *
+     * ## Where the level actually lives
+     *
+     * A probe of all 78 familiar npc definitions shows **every following-form familiar carries
+     * `combatLevel = 0`**. The level is on the familiar's **combat form** instead - the id
+     * [SummoningCombatDefinition.combatNpc] names:
+     *
+     * | Familiar | following form | combat form |
+     * |---|---|---|
+     * | Steel titan | 7343, level 0 | 7344, level 230 |
+     * | Spirit wolf | 6829, level 0 | 6830, level 26 |
+     * | Unicorn stallion | 6822, level 0 | 6823, level 70 |
+     *
+     * So the authentic rule is not "push a level onto the familiar": it is that a familiar which is
+     * merely following shows no level, and the combat form it transforms into shows one. That is
+     * the cache's own design and it is already what the roster models.
+     *
+     * What this gate checks is that the two records agree: [SummoningCatalogue]'s combat levels,
+     * which come from the 2011 Knowledge Base familiars table, must match what the cache puts on
+     * the corresponding combat form. Two independent sources for the same number, so a
+     * disagreement means one of them is wrong and the level shown in game would be unsourced.
+     *
+     * A familiar with no combat form is skipped rather than failed: not every combat familiar in
+     * the roster has a separate combat npc id, and the absence of one is real cache state.
+     */
+    private fun validateCombatLevels(world: World) {
+        val mismatches =
+            SummoningCombatDefinitions.values.mapNotNull { definition ->
+                val combatNpc = definition.combatNpc ?: return@mapNotNull null
+                val expected = SummoningCatalogue[definition.pouch].combatLevel ?: return@mapNotNull null
+                val actual = world.definitions.get(NpcDef::class.java, combatNpc).combatLevel
+                if (actual == expected) {
+                    null
+                } else {
+                    "${definition.pouch.name}: catalogue says level $expected, cache npc $combatNpc says $actual"
+                }
+            }
+        check(mismatches.isEmpty()) {
+            "${mismatches.size} familiars' combat levels disagree between the 2011 Knowledge Base " +
+                "catalogue and this cache's own combat-form npc definitions: $mismatches"
+        }
+
+        // The other half of H15: a familiar with no sourced combat level must not be carrying
+        // combat data that would let the client show one.
+        val unexpected =
+            SummoningCombatDefinitions.values.mapNotNull { definition ->
+                if (SummoningCatalogue[definition.pouch].combatLevel != null || !definition.canFight) {
+                    null
+                } else {
+                    "${definition.pouch.name} has combat data but no sourced combat level"
+                }
+            }
+        check(unexpected.isEmpty()) {
+            "familiars that would fight without a sourced combat level: $unexpected"
+        }
     }
 
     /**
