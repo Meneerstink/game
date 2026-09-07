@@ -385,3 +385,13 @@ task runBasTypeProbeTool(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     main = 'gg.rsmod.game.tools.importer.BasTypeProbeTool'
 }
+
+task runSeqSoundProbeTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Read-only recovery of the sounds a sequence carries. SeqType opcode 13 attaches ' +
+        'sounds per animation frame (soundId = soundInfo[frame][0] >> 8), which is where a familiar ' +
+        "s audio lives when its npc definition reports none. Usage: " +
+        './gradlew :game:runSeqSoundProbeTool --args="<cachePath> <seqId> [seqId ...]"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.SeqSoundProbeTool'
+}
