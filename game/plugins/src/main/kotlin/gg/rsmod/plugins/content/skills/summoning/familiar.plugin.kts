@@ -562,55 +562,71 @@ arrayOf(
  * unbound as well means that even if a client did surface one, it would do nothing.
  */
 
+/** The most rows the game's own "Select an Option" chatbox dialogue can draw (interface 234). */
+val MAX_DIALOGUE_OPTIONS = 5
+
 on_button(747, 7) { // "Select left-click option" - op10 on 747:7, an IF_BUTTON10 with no onOp
     /*
      * 747:7 has an `onVarTransmit` hook and no `onOp`, so the client does not open anything
      * itself: op10 is delivered to the server and the server decides what to show.
      *
-     * What it used to show was interface 880 on MAIN_SCREEN, and that is the whole of the
-     * owner's "it still opens a fake/custom GUI" report. 880 is genuine cache content - eight
-     * `op1='Select'` rows and a `Confirm Selection` button - but its root component is
-     * `190x261`, which is the **sidebar panel** size, the same box every gameframe tab slot and
-     * interfaces 320 and 662 use. Opening a sidebar panel as a modal over the game view is what
-     * made it look like a bolted-on custom window rather than part of the game frame.
+     * ## Why interface 880 is not used, even though it is real cache content
      *
-     * So it goes where its own dimensions say it belongs: the Summoning panel region, slot 95,
-     * temporarily in place of the Follower Details panel. Confirming or closing puts 662 back.
+     * 880 is genuine: eight `op1='Select'` rows and a `Confirm Selection` button. It was tried
+     * twice - first as a modal across the game view, then in the sidebar panel region its own
+     * `190x261` root asks for - and the owner rejected it both times as a "fake custom
+     * radio-button GUI" that "must be REMOVED completely".
+     *
+     * The rejection is not really about where it was drawn. 880's eight rows are **baked**, and
+     * two of them are "Follower details" and "Interact", which requirement G4 says must never be
+     * offered. A server cannot delete a baked row, so the previous attempt could only refuse the
+     * click afterwards - the player still saw, and could still click, two entries that do
+     * nothing, plus rows for capabilities their familiar does not have. An interface that always
+     * advertises the wrong options is the fault, and no placement fixes it.
+     *
+     * So the choice is made through the game's own "Select an Option" chatbox dialogue instead -
+     * stock content (interfaces 228..234 mounted on 752:13, the same dialogue every shop and
+     * quest uses), not a Summoning-specific window - and its rows come from
+     * [Player.selectableActions], so it offers exactly the actions the *current* familiar can
+     * perform and nothing else.
      */
-    player.setPendingLeftClickAction(player.leftClickAction())
-    player.openInterface(880, InterfaceDestination.SUMMONING_TAB)
-    SummoningUi.showPanel(player)
+    player.queue { chooseLeftClickAction(player) }
 }
 
-FamiliarAction.ORDERED.forEach { action ->
-    val (graphic, text) = action.selectRow
-    on_button(880, arrayOf(graphic, text)) {
-        // H7: a row for an action this familiar cannot perform is not selectable. The rows are
-        // baked into 880 and cannot be removed, so the guard is here as well as in the redraw.
-        if (action !in player.selectableActions()) {
-            return@on_button
-        }
-        // Real 2011 behaviour: selecting a row live-updates 880's own preview icon (component 3,
-        // driven by the client's own onVarTransmit redraw off the varbit this writes) - the
-        // interface shows the highlight itself, there is no chatbox feedback for this step.
-        player.setPendingLeftClickAction(action)
-    }
-}
-
-on_button(880, 21) { // "Confirm Selection"
-    player.confirmLeftClickAction()
-    SummoningUi.restorePanel(player)
-}
-
-/*
- * Closing the selector any other way - the Escape key, or the client rebuilding the pane - must
- * also put the Follower Details panel back, or slot 95 would be left holding the selector and the
- * player would have no way to reach their familiar's panel again.
+/**
+ * Asks which action a plain left-click on the orb should perform, and stores the answer.
+ *
+ * The chatbox dialogue holds at most five rows, and a fully-capable familiar - a Pack yak, say,
+ * which fights, carries and has a special move - has all six. The overflow is paged rather than
+ * truncated, because silently dropping the sixth action would be the same class of fault as
+ * offering two that do not exist.
  */
-on_interface_close(880) {
-    SummoningUi.restorePanel(player)
-}
+suspend fun QueueTask.chooseLeftClickAction(player: Player) {
+    val available = player.selectableActions()
+    if (available.isEmpty()) {
+        return
+    }
+    var offset = 0
+    while (true) {
+        val remaining = available.drop(offset)
+        val paged = remaining.size > MAX_DIALOGUE_OPTIONS
+        val shown = if (paged) remaining.take(MAX_DIALOGUE_OPTIONS - 1) else remaining
+        val labels = shown.map { it.label } + if (paged) listOf("More options...") else emptyList()
+        val choice = options(*labels.toTypedArray(), title = "Select left-click option")
+        if (choice < 1 || choice > labels.size) {
+            return
+        }
+        if (paged && choice == labels.size) {
+            offset += shown.size
+            continue
+        }
+        val action = shown[choice - 1]
+        player.setLeftClickAction(action)
+        player.message("Left-click on your Summoning orb will now <col=255>${action.label}</col>.")
+        return
+    }
 
+}
 /*
  * Interface 671 - the real graphical "Familiar Inventory" window. The previous blocker note here
  * ("no real cache trigger to OPEN 671 was sourced", "the item-slot grid ... isn't decodable")

@@ -442,6 +442,10 @@ object Familiar {
         npc.ignoresEntityCollision = true
         npc.respawnOverride = false
         npc.attr[DAMAGE_CREDIT_ATTR] = WeakReference(player)
+        // G9: the cache gives every familiar combatLevel 0, so the client draws no level at all
+        // unless the server sends one. Combat familiars get their sourced 2011 level; non-combat
+        // ones are left alone and keep showing none, which is correct for them.
+        SummoningCombatLevels.forNpc(npc.id)?.let { npc.setCombatLevel(it) }
         player.world.spawn(npc)
 
         player.attr[FAMILIAR_ATTR] = WeakReference(npc)
@@ -534,6 +538,10 @@ object Familiar {
         npc.ignoresEntityCollision = true
         npc.respawnOverride = false
         npc.attr[DAMAGE_CREDIT_ATTR] = WeakReference(player)
+        // G9: the cache gives every familiar combatLevel 0, so the client draws no level at all
+        // unless the server sends one. Combat familiars get their sourced 2011 level; non-combat
+        // ones are left alone and keep showing none, which is correct for them.
+        SummoningCombatLevels.forNpc(npc.id)?.let { npc.setCombatLevel(it) }
         player.world.spawn(npc)
         player.attr[FAMILIAR_ATTR] = WeakReference(npc)
         updateHud(player)

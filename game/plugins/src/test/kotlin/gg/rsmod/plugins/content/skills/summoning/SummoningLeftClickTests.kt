@@ -49,19 +49,6 @@ class SummoningLeftClickTests {
             7 to 26,
         )
 
-    /** varbit 6455 value -> the 880 row graphic script 2674 highlights for it. */
-    private val cs2PreviewRows =
-        mapOf(
-            0 to 7,
-            1 to 9,
-            2 to 11,
-            3 to 13,
-            4 to 15,
-            5 to 17,
-            6 to 19,
-            7 to 25,
-        )
-
     /** The cache's own eight labels, in varbit-value order. */
     private val cacheLabels =
         mapOf(
@@ -135,15 +122,24 @@ class SummoningLeftClickTests {
     }
 
     @Test
-    fun `each action selects the 880 row script 2674 highlights for its value`() {
-        FamiliarAction.ORDERED.forEach { action ->
-            assertEquals(
-                "action ${action.name} points at the wrong 880 row",
-                cs2PreviewRows[action.leftClickValue],
-                action.selectRow.first,
+    fun `no Summoning source opens the rejected selector interface any more`() {
+        // G4: interface 880 is real cache content but the owner rejected it outright, twice.
+        // Its eight rows are baked, two of them ("Follower details", "Interact") are forbidden
+        // outright and the rest ignore the current familiar's capabilities, so a server can
+        // refuse a click but can never stop it advertising options that do not exist. This
+        // fails if any Summoning source reaches for it again.
+        val sources = summoningSources()
+        assertTrue("no Summoning sources were found to scan", sources.isNotEmpty())
+        sources.forEach { file ->
+            val offending =
+                file.readLines().withIndex().filter { (_, line) ->
+                    SELECTOR_INTERFACE_USE.containsMatchIn(line)
+                }
+            assertTrue(
+                "${file.name} still opens or binds interface 880: " +
+                    offending.joinToString { "line ${it.index + 1}: ${it.value.trim()}" },
+                offending.isEmpty(),
             )
-            // Every row is a (graphic, text) pair of adjacent component ids.
-            assertEquals(action.selectRow.first + 1, action.selectRow.second)
         }
     }
 
@@ -169,5 +165,26 @@ class SummoningLeftClickTests {
             "a component is both offered and removed",
             offered.intersect(FamiliarAction.REMOVED_ORB_COMPONENTS.toSet()).isEmpty(),
         )
+    }
+
+    /**
+     * Every Kotlin source in the Summoning package, for the source-level guards above.
+     */
+    private fun summoningSources(): List<java.io.File> =
+        java.nio.file.Paths
+            .get("src", "main", "kotlin", "gg", "rsmod", "plugins", "content", "skills", "summoning")
+            .toFile()
+            .walkTopDown()
+            .filter { it.isFile && (it.extension == "kt" || it.extension == "kts") }
+            .toList()
+
+    companion object {
+        /**
+         * Opening or binding interface 880. Deliberately narrow: the number 880 also appears in
+         * prose (the doc comments that record *why* it is not used are worth keeping), so only a
+         * real call site matches.
+         */
+        private val SELECTOR_INTERFACE_USE =
+            Regex("""(openInterface|on_button|on_interface_close|setComponent\w+)\s*\(\s*880\b""")
     }
 }

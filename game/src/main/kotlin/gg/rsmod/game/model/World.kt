@@ -25,6 +25,7 @@ import gg.rsmod.game.model.queue.TaskPriority
 import gg.rsmod.game.model.queue.impl.WorldQueueTaskSet
 import gg.rsmod.game.model.region.ChunkSet
 import gg.rsmod.game.model.shop.Shop
+import gg.rsmod.game.model.social.FriendsChat
 import gg.rsmod.game.model.timer.TimerMap
 import gg.rsmod.game.plugin.Plugin
 import gg.rsmod.game.plugin.PluginRepository
@@ -83,6 +84,12 @@ class World(
     }
 
     /**
+     * The live friends-chat channels. Session state only - a channel exists for as long as somebody
+     * is in it - so it is held here rather than persisted.
+     */
+    val friendsChat = FriendsChat()
+
+    /**
      * A collection of our [Service]s specified in our game [ServerProperties]
      * files.
      */
@@ -131,7 +138,13 @@ class World(
     /**
      * The [UpdateBlockSet] for npcs.
      */
-    internal val npcUpdateBlocks = UpdateBlockSet()
+    /*
+     * Public rather than internal so a test world can be handed the real block table loaded from
+     * `data/blocks.yml`. A relaxed mock returns a mock EnumMap whose lookups yield bare Objects,
+     * which turns every npc update block into a ClassCastException inside Npc.addBlock instead of
+     * testing anything.
+     */
+    val npcUpdateBlocks = UpdateBlockSet()
 
     /**
      * A [Random] implementation used for pseudo-random purposes through-out
@@ -408,6 +421,11 @@ class World(
     }
 
     fun unregister(p: Player) {
+        /*
+         * Friends-chat membership holds a strong reference to the player, and the remaining members
+         * are shown a list that would otherwise still name someone who has logged out.
+         */
+        friendsChat.leave(p, notifyLeaver = false)
         players.remove(p)
         chunks.get(p.tile)?.removeEntity(this, p, p.tile)
     }

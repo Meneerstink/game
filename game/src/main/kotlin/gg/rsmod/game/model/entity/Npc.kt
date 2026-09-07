@@ -132,6 +132,23 @@ class Npc private constructor(
     var aggroCheck: ((Npc, Player) -> Boolean)? = null
 
     /**
+     * Shows this npc at [level] instead of the combat level baked into the client's own
+     * `NPCType`, for every player who can see it.
+     *
+     * This is the only lever there is. In this revision the combat level a client draws beside an
+     * npc's name comes from its cached `NPCType` (config opcode 95), and the server never sends
+     * npc definitions - so an npc whose cache entry says 0 shows no level at all no matter what
+     * the server believes about it. The one exception is the `COMBAT_LEVEL` extended-info block,
+     * which `NPCList` applies over the cached value; that is what this writes.
+     *
+     * Pass [UpdateBlockBuffer.CACHE_COMBAT_LEVEL] to hand the decision back to the cache.
+     */
+    fun setCombatLevel(level: Int) {
+        blockBuffer.combatLevel = level
+        addBlock(UpdateBlockType.COMBAT_LEVEL)
+    }
+
+    /**
      * Gets the [NpcDef] corresponding to our [id].
      */
     val def: NpcDef = world.definitions.get(NpcDef::class.java, id)

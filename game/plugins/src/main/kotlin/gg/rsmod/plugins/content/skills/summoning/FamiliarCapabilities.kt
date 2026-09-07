@@ -33,22 +33,20 @@ enum class FamiliarAction(
      * this action, decoded from 2671's branch targets against 747's op labels.
      */
     val leftClickValue: Int,
-    /** The paired (graphic, text) row components on the "Select left-click option" interface 880. */
-    val selectRow: Pair<Int, Int>,
     /** The label the cache itself bakes on that component. */
     val label: String,
 ) {
     /** 747:16 -> 24 -> 25 is the baked "Spell/Cast" twin; 747:17 is the dynamic button. */
-    SPECIAL_MOVE(intArrayOf(16, 17, 24, 25), 1, 9 to 10, "Special move"),
-    ATTACK(intArrayOf(14, 23), 2, 11 to 12, "Attack"),
-    CALL(intArrayOf(10, 19), 3, 13 to 14, "Call Follower"),
-    DISMISS(intArrayOf(11, 20), 4, 15 to 16, "Dismiss"),
-    TAKE_BOB(intArrayOf(12, 21), 5, 17 to 18, "Take BoB"),
-    RENEW(intArrayOf(13, 22), 6, 19 to 20, "Renew Familiar"),
+    SPECIAL_MOVE(intArrayOf(16, 17, 24, 25), 1, "Special move"),
+    ATTACK(intArrayOf(14, 23), 2, "Attack"),
+    CALL(intArrayOf(10, 19), 3, "Call Follower"),
+    DISMISS(intArrayOf(11, 20), 4, "Dismiss"),
+    TAKE_BOB(intArrayOf(12, 21), 5, "Take BoB"),
+    RENEW(intArrayOf(13, 22), 6, "Renew Familiar"),
     ;
 
     companion object {
-        /** In the order interface 880's rows are drawn. */
+        /** In the order the orb menu and the selection dialogue list them. */
         val ORDERED = values().toList()
 
         fun byLeftClickValue(value: Int): FamiliarAction? = ORDERED.firstOrNull { it.leftClickValue == value }

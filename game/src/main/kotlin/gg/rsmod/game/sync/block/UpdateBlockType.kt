@@ -25,4 +25,11 @@ enum class UpdateBlockType {
     HITMARK,
 
     FORCE_CHAT,
+
+    /**
+     * NPC only. `NpcExtendedInfoFlag.COMBAT_LEVEL` (0x80000): overrides the combat level the
+     * client would otherwise take from its own cached `NPCType`, for as long as that npc is
+     * tracked. `NPCList` falls back to the cache value when 65535 is sent.
+     */
+    COMBAT_LEVEL,
 }

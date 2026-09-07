@@ -131,6 +131,7 @@ npcs:
     - APPEARANCE # 6
     - FORCE_CHAT # 7
     - FACE_TILE # 8
+    - COMBAT_LEVEL # 10
     - ANIMATION # 11
     - GFX # 15
 
@@ -168,6 +169,17 @@ npcs:
           order: LITTLE
           type: SHORT
         - name: z
+          order: LITTLE
+          type: SHORT
+
+    # NpcExtendedInfoFlag.COMBAT_LEVEL. Read by NPCList as a single ig2() - little-endian
+    # unsigned short - directly after TURN_TO and before ANIMATE, which is where it sits in the
+    # order above. The bit is in the third mask byte, so sending it also forces the 0x80 and
+    # 0x8000 mask-extension markers; see NpcUpdateBlockSegment.
+    - block: COMBAT_LEVEL
+      bit: 0x80000
+      structure:
+        - name: combat_level
           order: LITTLE
           type: SHORT
 

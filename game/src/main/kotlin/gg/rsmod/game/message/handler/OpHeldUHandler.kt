@@ -30,9 +30,33 @@ class OpHeldUHandler : MessageHandler<OpHeldUMessage> {
         val toItemId = message.toItem
 
         /**
-         * Handles spell on item
+         * Handles spell on item.
+         *
+         * The client sends this one packet (`ClientProt.IF_BUTTONT`, opcode 73) for *every*
+         * target-mode click on a component, so the two cases - "a spell/interface button was
+         * used on an inventory item" and "one inventory item was used on another" - have to be
+         * told apart here, from the source component's own fields.
+         *
+         * `fromSlot` alone cannot do it. It is `InterfaceManager.targetComponent`, which
+         * `enterTargetMode` fills from `target.id`, and in this revision's deob `Component.id` is
+         * the **dynamic child index**, not the component id (`InterfaceList.getComponent` is
+         * called as `getComponent(component.slot, component.id)`, and `CC_CREATE` sets
+         * `cc.slot = parent.slot; cc.id = componentId`). A static spell button is never a
+         * dynamic child, so its `id` is the default `-1` and the old test worked for spells. A
+         * button that clientscript 606 creates with `CC_CREATE` gets `id = 0`, and the old test
+         * sent it down the item-on-item path instead, where it died silently on the
+         * `fromItem.id != fromItemId` check.
+         *
+         * That is the whole of the owner's "Winter Storage enters targeting and then clicking the
+         * inventory item does nothing": both Summoning special-move buttons (662:74 and 747:17)
+         * are dynamic children of exactly that kind.
+         *
+         * The reliable discriminator is the source's **item**: `targetInvObj` is only set for an
+         * inventory-style component and is `-1` for a button. An item-on-item use always has a
+         * real source item, so testing for one covers both cases without depending on how the
+         * source component happened to be created.
          */
-        if (fromSlot == -1) {
+        if (fromSlot == -1 || fromItemId == -1) {
             val item = client.inventory[toSlot] ?: return
 
             if (item.id != toItemId) {

@@ -13,37 +13,43 @@ import gg.rsmod.plugins.api.ext.syncVarp
  * Re-derived from this cache on 2026-09-06 and recorded in
  * `C:\RSPS\RSPS_SUMMONING_2011_EVIDENCE.md`:
  *
- *  1. 747:7 carries the real op `op10 = 'Select left-click option'` and opens interface 880.
- *  2. 880's rows each carry the real op `op1 = 'Select'` as a plain `IF_BUTTON1`, i.e. the click
- *     goes to the *server*; there is no `onOp` script on them. The server answers by writing 880's
- *     preview varbit 6455 (varp 1494), which 880:3's `onVarTransmit` picks up
- *     (`varpTriggers=[1494]` -> script 2672 -> `GOSUB(2674)`). `disasm 2674` paints sprite 2035 on
- *     the selected row and 2034 on the other seven, so the highlight is drawn by the interface
- *     itself. Nothing is committed yet.
- *  3. 880:21 carries the real op `op1 = 'Confirm Selection'`. Confirming writes the real varbit
- *     6454 (varp 1493).
- *  4. 747:7's own `onVarTransmit` (`varpTriggers=[1493]`) then runs script 751, whose tail is
+ *  1. 747:7 carries the real op `op10 = 'Select left-click option'`, an `IF_BUTTON10` with no
+ *     `onOp` script, so the click is delivered to the *server* and the server decides what to show.
+ *  2. Whatever asked the question, the answer is stored in the real varbit 6454 (varp 1493).
+ *  3. 747:7's own `onVarTransmit` (`varpTriggers=[1493]`) then runs script 751, whose tail is
  *     `GOSUB_WITH_PARAMS(2671)`. `disasm 2671` shows the chosen action's direct left-click
  *     component on 747 and hides that action's twin in the right-click submenu, and does the
  *     opposite for every action it is not making the left-click.
  *
- * ## What the owner's 2026-09-07 retest changed
+ * So the varbit *is* the mechanism: writing 6454 is the entire server side of configuring the
+ * orb, and the client's own script performs the redraw exactly as it would for a real 2011 server.
  *
- * The selector used to offer all eight actions the cache bakes. Requirement H6 reduces the orb to
- * six - Special Move, Attack, Call, Dismiss, Take BoB, Renew - so "Follower Details" (varbit value
- * 0, now on the Skills tab instead) and "Interact" (value 7, a duplicate of the familiar's own npc
- * option) are no longer offered. Requirement H7 further restricts the list to the actions the
- * **currently summoned** familiar can actually perform, which is why [selectableActions] takes a
- * player rather than being a constant.
+ * ## Why the cache's own selector interface is not used
  *
- * The action set, the varbit values and the interface-880 row components all live on
- * [FamiliarAction] now, so the selector, the orb gating and the server handlers read one
- * declaration instead of three parallel ones.
+ * The cache also bakes interface **880** for step 1 - eight `op1='Select'` rows and a
+ * `Confirm Selection` button - and 747:7 opened it on a real 2011 server. It is not used here.
+ * The owner rejected it twice by hand ("the fake custom radio-button GUI ... must be REMOVED
+ * completely"), and the reason it cannot be salvaged is structural rather than cosmetic: its
+ * eight rows are **baked**, two of them are "Follower details" and "Interact" - which requirement
+ * G4 forbids outright - and the rest are shown whether or not the current familiar has the
+ * capability. A server can refuse the click afterwards but cannot remove a row, so the interface
+ * permanently advertises options that do not exist.
+ *
+ * The question is asked through the game's own "Select an Option" chatbox dialogue instead (see
+ * `familiar.plugin.kts`), built from [selectableActions]. Nothing about the stored value changes:
+ * the varbit, its values and the client redraw are all still the cache's own.
+ *
+ * ## What the owner's retests changed
+ *
+ * Requirement G4 reduces the orb to six actions - Special Move, Attack, Call, Dismiss, Take BoB,
+ * Renew - so "Follower Details" (varbit value 0) and "Interact" (value 7) are no longer offered
+ * at all. [selectableActions] further restricts the list to the actions the **currently summoned**
+ * familiar can actually perform, which is why it takes a player rather than being a constant.
  *
  * A consequence worth being explicit about: a never-configured account reads varbit 6454 = 0,
  * which used to mean Follower Details and is no longer an orb action at all. [leftClickAction]
  * therefore reports [DEFAULT_ACTION] for value 0, and [migrateRemovedDefault] rewrites the varbit
- * once on login so client and server agree. That is a consequence of H1/H6, not invented RS
+ * once on login so client and server agree. That is a consequence of G4, not invented RS
  * behaviour, and it is the only value this file substitutes.
  */
 
@@ -52,9 +58,6 @@ private const val ACTIVE_ACTION_VARBIT = 6454
 
 /** The varp varbit 6454 lives in; 747:7 listens for it (`varpTriggers=[1493]`). */
 private const val LEFT_CLICK_VARP = 1493
-
-/** varbit 6455 (varp 1494 bits 0..3) - interface 880's own preview, live while the dialog is open. */
-private const val PREVIEW_ACTION_VARBIT = 6455
 
 /**
  * The varbit-6454 values the cache bakes for the two actions H1/H6 removed from the orb:
@@ -95,24 +98,34 @@ fun Player.selectableActions(): List<FamiliarAction> {
     return FamiliarAction.ORDERED.filter { capabilities.supports(it) }
 }
 
-/** Live-previews a row selection on 880 (step 2 above). */
-fun Player.setPendingLeftClickAction(action: FamiliarAction) {
-    setVarbit(PREVIEW_ACTION_VARBIT, action.leftClickValue)
-}
-
-fun Player.pendingLeftClickAction(): FamiliarAction =
-    FamiliarAction.byLeftClickValue(getVarbit(PREVIEW_ACTION_VARBIT)) ?: leftClickAction()
-
 /**
- * Commits the previewed selection (step 3 above). Writing the varp is the entire server side of
- * this: script 751 -> 2671 performs the redraw on the client, exactly as it does for a real 2011
- * server. There is deliberately no chat feedback - the real interface gives none.
+ * Stores the chosen action. Writing the varbit is the entire server side of this: script
+ * 751 -> 2671 performs the redraw on the client, exactly as it does for a real 2011 server.
  */
-fun Player.confirmLeftClickAction() {
-    setVarbit(ACTIVE_ACTION_VARBIT, pendingLeftClickAction().leftClickValue)
+fun Player.setLeftClickAction(action: FamiliarAction) {
+    setVarbit(ACTIVE_ACTION_VARBIT, action.leftClickValue)
     // Script 2671 shows every op6 twin it is not making the left-click, including the ones this
     // familiar has no handler for, so the per-familiar gating has to be re-applied on top of it.
     SummoningUi.invalidate(this)
+}
+
+/**
+ * Drops a stored choice the *current* familiar cannot perform, falling back to [DEFAULT_ACTION].
+ *
+ * Requirement G4: "stale selection must reset safely when familiar changes". Without this, a
+ * player who set the orb's left-click to Take BoB with a Pack yak out, then summoned a Steel
+ * titan, would be left with an orb whose single left-click does nothing at all - the server-side
+ * capability guard correctly refuses it, and the refusal is silent because the option should
+ * never have been reachable.
+ *
+ * Called from [SummoningUi.settle], i.e. whenever the active familiar changes, so it also covers
+ * dismiss (no familiar -> every action is selectable again, nothing is reset) and login.
+ */
+fun Player.resetStaleLeftClickAction() {
+    val capabilities = FamiliarCapabilityTable.active(this) ?: return
+    if (!capabilities.supports(leftClickAction())) {
+        setVarbit(ACTIVE_ACTION_VARBIT, DEFAULT_ACTION.leftClickValue)
+    }
 }
 
 /**

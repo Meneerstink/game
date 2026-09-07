@@ -61,6 +61,8 @@ class FamineSpecialMoveTests {
 
     private fun setup(): Setup {
         val world = mockk<World>(relaxed = true)
+        // Real npc update-block table: a relaxed mock returns Objects that break Npc.addBlock.
+        every { world.npcUpdateBlocks } returns SummoningTestCache.npcUpdateBlocks
         every { world.definitions } returns DEFINITIONS
         val tile = Tile(3200, 3600, 0)
         every { world.getMultiCombatRegions() } returns setOf(tile.regionId)

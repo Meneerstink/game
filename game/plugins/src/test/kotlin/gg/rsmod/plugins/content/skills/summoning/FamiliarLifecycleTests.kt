@@ -146,6 +146,8 @@ class FamiliarLifecycleTests {
         tile: Tile,
     ): Player {
         val world = mockk<World>(relaxed = true)
+        // Real npc update-block table: a relaxed mock returns Objects that break Npc.addBlock.
+        every { world.npcUpdateBlocks } returns SummoningTestCache.npcUpdateBlocks
         every { world.definitions } returns DEFINITIONS
         val npcs = PawnList(arrayOfNulls<Npc>(10))
         every { world.npcs } returns npcs

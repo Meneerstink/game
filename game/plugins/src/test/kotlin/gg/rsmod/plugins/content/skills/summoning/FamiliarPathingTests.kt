@@ -237,6 +237,8 @@ class FamiliarPathingTests {
      */
     private fun newWorld(): World {
         val world = mockk<World>(relaxed = true)
+        // Real npc update-block table: a relaxed mock returns Objects that break Npc.addBlock.
+        every { world.npcUpdateBlocks } returns SummoningTestCache.npcUpdateBlocks
         val definitions = mockk<DefinitionSet>(relaxed = true)
         every { definitions.get(NpcDef::class.java, any()) } answers {
             DEFINITIONS.get(NpcDef::class.java, secondArg())

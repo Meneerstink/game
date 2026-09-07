@@ -174,13 +174,13 @@ object SummoningUi {
     }
 
     /**
-     * Puts interface 662 back on slot 95 after the "Select left-click option" panel has borrowed
-     * the slot, and then shows or hides it according to whether a familiar is actually out.
+     * Re-mounts interface 662 on slot 95 and then shows or hides it according to whether a
+     * familiar is actually out.
      *
      * Both halves matter. Re-mounting alone would leave the sidebar showing an empty Summoning
-     * panel for a player with no familiar; focusing alone would leave slot 95 still holding the
-     * selector, and since nothing else opens the Follower Details panel, the player would have no
-     * route back to it.
+     * panel for a player with no familiar; focusing alone would not survive anything that had
+     * taken the slot, and since nothing else opens the Follower Details panel, the player would
+     * have no route back to it.
      */
     fun restorePanel(player: Player) {
         player.openInterface(InterfaceDestination.SUMMONING_TAB)
@@ -265,9 +265,22 @@ object SummoningUi {
         if (player.attr[RENDERED_FAMILIAR] == npcId && !due) {
             return
         }
+        val familiarChanged = player.attr[RENDERED_FAMILIAR] != npcId
         player.attr[RENDERED_FAMILIAR] = npcId
         player.attr[RENDERED_ON_CYCLE] = now
         val active = npcId.takeIf { it != NO_FAMILIAR }
+        if (familiarChanged) {
+            // G4: a left-click the new familiar cannot perform is dropped rather than left to
+            // fail silently on the next click. Done before the orb is redrawn so the redraw
+            // already reflects the corrected value.
+            player.resetStaleLeftClickAction()
+            // G1: the panel is the familiar's own surface and has no click entry point of any
+            // kind, so a familiar appearing has to bring it up. Doing it here rather than only in
+            // Familiar.summon covers every other way a familiar can start existing - login with
+            // one already out, a reconnect, a renew that swapped the npc - which is what left the
+            // owner with no Follower Details panel to look at.
+            if (active != null) showPanel(player)
+        }
         refreshPanel(player, active)
         refreshOrb(player, active)
         refreshSpecialMode(player)

@@ -3,6 +3,8 @@ package gg.rsmod.plugins.content.skills.summoning
 import com.displee.cache.CacheLibrary
 import gg.rsmod.game.fs.DefinitionSet
 import gg.rsmod.game.fs.def.ItemDef
+import gg.rsmod.game.sync.block.UpdateBlockSet
+import gg.rsmod.util.ServerProperties
 import java.nio.file.Paths
 
 /**
@@ -35,5 +37,20 @@ object SummoningTestCache {
             "the production cache at data/cache loaded no item definitions"
         }
         definitions
+    }
+
+    /**
+     * The real npc update-block table, loaded from the server's own `data/blocks.yml`.
+     *
+     * Test worlds are `mockk(relaxed = true)`, and a relaxed mock answers
+     * `world.npcUpdateBlocks` with a mock `UpdateBlockSet` whose `EnumMap` returns bare
+     * `Object`s - so `Npc.addBlock` fails with a `ClassCastException` the moment any npc update
+     * block is used. Handing the mock the genuine table both fixes that and means the tests
+     * exercise the same bits and structures the running server does.
+     */
+    val npcUpdateBlocks: UpdateBlockSet by lazy {
+        val properties = ServerProperties().loadYaml(Paths.get("..", "..", "data", "blocks.yml").toFile())
+        check(properties.has("npcs")) { "data/blocks.yml carries no npc block definitions" }
+        UpdateBlockSet().apply { load(properties.extract("npcs")) }
     }
 }

@@ -26,6 +26,12 @@ class UpdateBlockBuffer {
     var graphicDelay = 0
     var graphicRotation = 0
 
+    /**
+     * NPC only. The combat level to advertise instead of the one baked in the client's own
+     * `NPCType`. `NPCList` treats 65535 as "use the cache value", so that is the neutral value.
+     */
+    var combatLevel = CACHE_COMBAT_LEVEL
+
     lateinit var forceMovement: ForcedMovement
 
     val hits = mutableListOf<Hit>()
@@ -47,4 +53,9 @@ class UpdateBlockBuffer {
     }
 
     fun blockValue(): Int = mask
+
+    companion object {
+        /** The value `NPCList` reads as "fall back to `npc.type.combatLevel`". */
+        const val CACHE_COMBAT_LEVEL = 65535
+    }
 }
