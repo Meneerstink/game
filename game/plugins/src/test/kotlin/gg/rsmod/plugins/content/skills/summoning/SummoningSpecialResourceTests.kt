@@ -234,6 +234,100 @@ class SummoningSpecialResourceTests {
         assertEquals(emptyList<String>(), offenders, "target-mode mismatch is not refused cleanly")
     }
 
+    /**
+     * **No instant special may charge the player and then do nothing.**
+     *
+     * Effects are individually proven for only nine of the bound moves. Proving the remaining
+     * effects one by one is a much larger job and several need world state a unit test cannot
+     * honestly build — but there is one property that holds for *all* of them and that catches the
+     * worst outcome: a move that takes a scroll and its points and changes no observable state at
+     * all. That is a silent theft of resources, and it is exactly what an unimplemented or
+     * mis-wired branch in the big `when (scroll)` dispatch looks like from the player's side.
+     *
+     * The check is deliberately about *whether* state moved, not *by how much*: asserting the
+     * amounts here would mean copying the per-move constants out of the implementation into the
+     * test, which proves only that two copies of a number match. The amounts belong in the
+     * individually-sourced per-move tests.
+     *
+     * Observable state, for the purposes of this test, is every skill's current level plus
+     * lifepoints and run energy — the things an instant familiar special can move without a target.
+     * A move whose real effect is outside that set (spawning a ground item, opening an interface)
+     * is exempted by name, with the reason, rather than being allowed to weaken the rule for
+     * everything else.
+     */
+    @Test
+    fun `no instant special consumes resources without changing observable state`() {
+        val offenders = mutableListOf<String>()
+        var provenEffective = 0
+        instantFamiliars().forEach { pouch ->
+            val scroll = scrollFor(pouch) ?: return@forEach
+            if (scroll in UNOBSERVABLE_IN_THIS_HARNESS) return@forEach
+
+            val player = newPlayer(pouch.npc)
+            player.inventory.add(scroll.scroll, 5)
+            player.attr[FAMILIAR_SPECIAL_POINTS_ATTR] = Familiar.MAX_SPECIAL_POINTS
+            // Leave room for a heal or a boost to be visible: a player already at maximum
+            // everything cannot show a change, and would make this test vacuous.
+            for (skill in 0 until SkillSet.DEFAULT_SKILL_COUNT) {
+                player.skills.setCurrentLevel(skill, 50)
+            }
+            val before = observableState(player, scroll.scroll)
+
+            if (SummoningSpecialMoves.castInstant(player)) {
+                if (observableState(player, scroll.scroll) == before) {
+                    offenders += "${pouch.name} (${scroll.name}): consumed a scroll and " +
+                        "${scroll.specialPoints} points but changed nothing observable"
+                } else {
+                    provenEffective++
+                }
+            }
+        }
+        assertEquals(emptyList<String>(), offenders, "special moves are charging for no effect")
+        /*
+         * Without this the test could pass by proving nothing - every move exempted, or every cast
+         * refused. It has to actually witness moves *working*.
+         *
+         * 12 is the number observed today, recorded as a floor rather than chosen as a target: it
+         * can only be tightened. It is not the full sweep because the harness refuses the
+         * lifepoint-based moves - `getCurrentLifepoints` and `getMaximumLifepoints` both answer 0
+         * on a relaxed mock, so a heal correctly reports "already at full life points" and returns
+         * without doing anything. Those moves are covered on the accounting axis by the other tests
+         * in this class; giving the mock real lifepoints would raise this floor.
+         */
+        assertTrue(
+            provenEffective >= 12,
+            "only $provenEffective instant specials were observed changing state; this test has " +
+                "stopped proving anything",
+        )
+    }
+
+    /**
+     * Everything an instant familiar special can move that this harness can actually see: every
+     * skill's current level, lifepoints, and the contents of both the player's inventory and the
+     * familiar's own store (which is where a forager special such as Cheese Feast puts its items).
+     *
+     * The inventory is snapshotted *excluding the scroll being consumed*, because consuming the
+     * scroll is the cost, not the effect — counting it would make every move look effective.
+     */
+    private fun observableState(
+        player: Player,
+        consumedScroll: Int,
+    ): List<Int> {
+        val skills = (0 until SkillSet.DEFAULT_SKILL_COUNT).map { player.skills.getCurrentLevel(it) }
+        val inventory =
+            (0 until player.inventory.capacity).map { slot ->
+                player.inventory[slot]?.takeIf { it.id != consumedScroll }?.let { it.id * 31 + it.amount } ?: 0
+            }
+        val store =
+            BeastOfBurden.activeKey(player)?.let { key ->
+                val container = player.containers.getOrPut(key) { ItemContainer(SummoningTestCache.definitions, key) }
+                (0 until container.capacity).map { slot ->
+                    container[slot]?.let { it.id * 31 + it.amount } ?: 0
+                }
+            }.orEmpty()
+        return skills + listOf(player.getCurrentLifepoints()) + inventory + store
+    }
+
     @Test
     fun `with no familiar summoned nothing is ever consumed`() {
         val scroll = instantFamiliars().firstNotNullOfOrNull { scrollFor(it) }!!
@@ -279,6 +373,31 @@ class SummoningSpecialResourceTests {
     }
 
     companion object {
+        /**
+         * Instant specials whose real effect this **harness** cannot observe. Each is listed with
+         * the reason, because the distinction matters: none of these is a move that does nothing,
+         * they are moves whose effect lands somewhere a mocked world does not record.
+         *
+         * The first pass of this test flagged five of them as offenders. That was the test being
+         * wrong, not the code — Herbcall in particular already has its effect proven directly in
+         * `SummoningSpecialMoveTests`. Widening what counts as observable (the inventory and the
+         * familiar's own container are now included) reclaimed one of them; the rest are genuine
+         * harness limits and are named rather than quietly tolerated.
+         */
+        private val UNOBSERVABLE_IN_THIS_HARNESS =
+            mapOf(
+                // world.spawn(GroundItem(...)) on a relaxed mock World is swallowed.
+                SummoningScrollData.EGG_SPAWN_SCROLL to "spawns ground items",
+                SummoningScrollData.HERBCALL_SCROLL to "spawns a ground item",
+                SummoningScrollData.FISH_RAIN_SCROLL to "spawns ground items",
+                SummoningScrollData.FRUITFALL_SCROLL to "spawns ground items",
+                // Player.runEnergy is a mocked property; a write to it is recorded by mockk but
+                // the getter still answers its default, so a restore is invisible here.
+                SummoningScrollData.UNBURDEN_SCROLL to "restores run energy, a mocked property",
+                // Moves the player; Player.tile is stubbed to a constant.
+                SummoningScrollData.CALL_TO_ARMS_SCROLL to "teleports the player",
+            )
+
         /**
          * Shared rather than a private copy: 38 test classes in this module each loaded their own
          * full `DefinitionSet` into a companion object, and adding a 39th produced an
