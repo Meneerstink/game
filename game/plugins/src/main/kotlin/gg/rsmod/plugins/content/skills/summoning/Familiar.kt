@@ -686,9 +686,8 @@ object Familiar {
         val ownerRunning = player.isRunning()
         val ownerSteps = player.movementQueue.peekSteps(if (ownerRunning) 2 else 1)
         val target = ownerSteps.lastOrNull()?.tile ?: player.tile
-        // Already in the follow slot for where the owner is about to stand: nothing to do. Using
-        // the owner's size keeps this correct for the 2x2/3x3 familiars and mounts alike.
-        if (npc.tile.isWithinRadius(target, 1)) {
+        val ownerFootprint = footprint(target, player.getSize())
+        if (isInFollowSlot(npc.tile, npc.getSize(), target, player.getSize())) {
             return
         }
         val request =
@@ -702,22 +701,58 @@ object Familiar {
                 .build()
         val route = BFSPathFindingStrategy(npc.world.collision).calculateRoute(request)
         /*
-         * 2026-09-07 owner human retest: "familiar can appear partly inside the player". A
-         * familiar is exempt from the entity-collision stop (see (3) above) so that other
-         * creatures cannot freeze it, and the price of that exemption is that nothing else stops
-         * it walking onto the tiles its owner is standing on. Real 2011 familiars stand beside
-         * their owner, never underneath. Dropping the owner's own footprint out of the route is
-         * the narrowest fix: it leaves the exemption - and therefore the fix for the freezing -
-         * intact, and only removes the destination that should never have been legal.
+         * The familiar must not *stop* on its owner. It may legitimately pass over them - a
+         * familiar does not collide with players, which is why [Npc.ignoresEntityCollision] is set
+         * at spawn - so the tiles to remove are the trailing ones, not every overlapping one.
+         *
+         * This used to be a `filterNot` over the whole route, which is unsafe for a different
+         * reason than it looks: removing a tile from the *middle* of a path leaves two
+         * non-adjacent tiles next to each other in the queue, and [MovementQueue.addStep]
+         * interpolates a straight line between them. Those interpolated tiles were never seen by
+         * the pathfinder, so the familiar could be handed a step around a corner that no
+         * breadth-first search had ever approved. Truncating instead keeps every remaining step
+         * exactly as the route produced it, which is the only form in which the route's collision
+         * guarantee still means anything.
          */
-        val ownerFootprint = footprint(target, player.getSize())
         val path: java.util.Queue<Tile> =
-            java.util.ArrayDeque(route.path.filterNot { step -> footprint(step, npc.getSize()).any { it in ownerFootprint } })
+            java.util.ArrayDeque(
+                route.path.toList().dropLastWhile { step -> footprint(step, npc.getSize()).any { it in ownerFootprint } },
+            )
         npc.walkPath(
             path,
             stepType = if (ownerSteps.size > 1) MovementQueue.StepType.FORCED_RUN else MovementQueue.StepType.FORCED_WALK,
             detectCollision = true,
         )
+    }
+
+    /**
+     * Whether a familiar of [npcSize] with its south-west corner on [npcTile] is already standing
+     * where a follower should stand, relative to an owner of [ownerSize] on [ownerTile].
+     *
+     * Being in the follow slot is **two** conditions, and the previous implementation tested
+     * neither of them properly. It asked `npc.tile.isWithinRadius(target, 1)`, which compares the
+     * familiar's south-west *corner* against the owner's tile. For a size-2 familiar the corner
+     * can sit on the owner's south-west diagonal - inside that radius - while the familiar's own
+     * body covers the owner completely. Because the caller returns as soon as this is true, such
+     * a familiar never routed anywhere again and stayed embedded in its owner permanently. That
+     * is the owner's "familiar can appear partly inside the player" report, and it applied to the
+     * 43 of 78 familiars this cache gives `size=2` - the common case, not an exotic one.
+     *
+     * So the test is expressed over footprints: the familiar must be **touching** the owner and
+     * must **not overlap** them, which is what a real 2011 follower does.
+     */
+    fun isInFollowSlot(
+        npcTile: Tile,
+        npcSize: Int,
+        ownerTile: Tile,
+        ownerSize: Int,
+    ): Boolean {
+        val owner = footprint(ownerTile, ownerSize)
+        val standing = footprint(npcTile, npcSize)
+        if (standing.any { it in owner }) {
+            return false
+        }
+        return standing.any { tile -> owner.any { tile.isWithinRadius(it, 1) } }
     }
 
     /** Every tile a pawn of [size] occupies with its south-west corner on [origin]. */

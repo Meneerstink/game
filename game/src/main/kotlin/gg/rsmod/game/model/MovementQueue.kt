@@ -64,8 +64,6 @@ class MovementQueue(
     }
 
     fun cycle() {
-        val collision = pawn.world.collision
-
         var next = steps.poll()
         if (next != null) {
             var tile = pawn.tile
@@ -75,18 +73,7 @@ class MovementQueue(
 
             walkDirection = Direction.between(tile, next.tile)
 
-            if (walkDirection != Direction.NONE &&
-                (
-                    !next.detectCollision ||
-                        collision.canTraverse(
-                            tile,
-                            walkDirection,
-                            projectile = false,
-                            water =
-                                (pawn.walkMask and 0x4) != 0,
-                        )
-                )
-            ) {
+            if (walkDirection != Direction.NONE && canStep(tile, walkDirection, next.detectCollision)) {
                 if (pawn is Npc && !pawn.ignoresEntityCollision) {
                     val entitiesClipped = mutableListOf<Pawn>()
 
@@ -122,15 +109,7 @@ class MovementQueue(
                     if (next != null) {
                         runDirection = Direction.between(tile, next.tile)
 
-                        if (!next.detectCollision ||
-                            collision.canTraverse(
-                                tile,
-                                runDirection,
-                                projectile = false,
-                                water =
-                                    (pawn.walkMask and 0x4) != 0,
-                            )
-                        ) {
+                        if (canStep(tile, runDirection, next.detectCollision)) {
                             tile = Tile(next.tile)
                             pawn.lastFacingDirection = runDirection
                         } else {
@@ -152,6 +131,51 @@ class MovementQueue(
                 }
             }
         }
+    }
+
+    /**
+     * Whether [pawn] may take one step from [from] in [direction].
+     *
+     * A pawn's collision is its whole **footprint**, not just its south-west corner tile. This
+     * used to test the corner alone, which meant every pawn bigger than 1x1 could step through a
+     * wall that only its other tiles touched. It is the reason familiars still walked through
+     * scenery after their routing had been moved onto a real breadth-first search: 43 of the 78
+     * familiars are `size=2` in this cache, and [gg.rsmod.game.model.path.strategy.BFSPathFindingStrategy.isStepBlocked]
+     * had always tested every tile of the footprint while the mover that executed its route did
+     * not. The pathfinder was strict and the mover was not, so any step the mover synthesised
+     * itself - [addStep] interpolates a straight line between two non-adjacent queued tiles -
+     * bypassed the collision the route had been built to respect.
+     *
+     * The loop below is deliberately the same test `isStepBlocked` performs, applied to the same
+     * tiles, so a route the pathfinder considers walkable is always executable and a step it
+     * would have rejected is always refused. Making the two agree is the point; being marginally
+     * stricter than necessary on a diagonal only ever stops a pawn, it can never clip one.
+     */
+    private fun canStep(
+        from: Tile,
+        direction: Direction,
+        detectCollision: Boolean,
+    ): Boolean {
+        if (!detectCollision) {
+            return true
+        }
+        val collision = pawn.world.collision
+        val water = (pawn.walkMask and 0x4) != 0
+        val size = pawn.getSize().coerceAtLeast(1)
+        for (x in 0 until size) {
+            for (z in 0 until size) {
+                if (!collision.canTraverse(
+                        from.transform(x, z),
+                        direction,
+                        projectile = false,
+                        water = water,
+                    )
+                ) {
+                    return false
+                }
+            }
+        }
+        return true
     }
 
     private fun addStep(
