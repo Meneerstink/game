@@ -2,6 +2,7 @@ package gg.rsmod.plugins.content.skills.summoning
 
 import com.displee.cache.CacheLibrary
 import gg.rsmod.game.fs.DefinitionSet
+import gg.rsmod.game.fs.def.BasDef
 import gg.rsmod.game.fs.def.ItemDef
 import gg.rsmod.game.fs.def.NpcDef
 import org.junit.BeforeClass
@@ -80,6 +81,35 @@ class FamiliarChatheadTests {
             "${undrawable.size} familiars have a sourced Interact conversation but no chathead model, " +
                 "so the client draws an empty portrait for them: " +
                 undrawable.joinToString { "${it.name}(npc ${it.npc})" },
+        )
+    }
+
+    /**
+     * The Follower Details panel's own model animation, which is a different question from both
+     * the chatbox portrait above and the familiar's animation in the world (owner failure F5).
+     *
+     * The panel's model is 662:1, and the cache's own script 751 only puts the npc **model** on it
+     * (`IF_SETNPCMODEL`); it animates it with `ENUM(1276, varbit 4282)`, which is the *pet* growth
+     * stage, so every familiar was drawn idling as a pet. `SummoningUi.refreshPanelAnimation`
+     * overrides that with the familiar's real idle, read from `NpcDef.basId` into `BasDef`.
+     *
+     * That override is only as good as the data behind it: a familiar whose BAS carried no idle
+     * would silently fall back to the pet animation, which is the fault it exists to fix. Viewport
+     * zoom, rotation and orientation are deliberately not asserted - they are baked on 662:1 and
+     * script 751 never writes them, so the server has nothing to get wrong there.
+     */
+    @Test
+    fun `every familiar resolves a real panel idle animation, all 78`() {
+        val missing =
+            SummoningPouchData.values().filter { pouch ->
+                val basId = DEFINITIONS.get(NpcDef::class.java, pouch.npc).basId
+                basId == -1 || DEFINITIONS.get(BasDef::class.java, basId).idleAnimation() == -1
+            }
+        assertTrue(
+            missing.isEmpty(),
+            "${missing.size} familiars resolve no idle animation for the Follower Details panel, so " +
+                "the cache's pet-growth-stage animation would be drawn instead: " +
+                missing.joinToString { "${it.name}(npc ${it.npc})" },
         )
     }
 
