@@ -181,6 +181,21 @@ object SummoningSpecialMoves {
         FamiliarSpecialBinding(SummoningScrollData.WINTER_STORAGE_SCROLL, FamiliarSpecialTarget.INVENTORY_ITEM),
         FamiliarSpecialBinding(SummoningScrollData.STEEL_OF_LEGENDS_SCROLL, FamiliarSpecialTarget.NPC),
         FamiliarSpecialBinding(SummoningScrollData.PESTER_SCROLL, FamiliarSpecialTarget.NPC),
+        /*
+         * Goad and Ambush had no binding at all, which left the Spirit graahk and the Spirit kyatt
+         * with no special move on either surface despite both carrying fully sourced scroll data.
+         *
+         * Neither needs an invented damage figure, because the Knowledge Base text describes them
+         * as the same thing Pester already is - "Sends your spirit graahk to attack an enemy" and
+         * "Calls the kyatt into combat for an instant hit with potential high damage". That is
+         * precisely what this dispatcher's own `familiar.attack(target)` does for Pester: the
+         * familiar attacks the given target whether or not it is the player's active one, and the
+         * damage comes from that familiar's own sourced combat definition rather than from a
+         * number chosen here. The Spirit larupia's Rending, the third of the three hunter
+         * familiars, was already bound and is unaffected.
+         */
+        FamiliarSpecialBinding(SummoningScrollData.GOAD_SCROLL, FamiliarSpecialTarget.NPC),
+        FamiliarSpecialBinding(SummoningScrollData.AMBUSH_SCROLL, FamiliarSpecialTarget.NPC),
         FamiliarSpecialBinding(SummoningScrollData.FAMINE_SCROLL, FamiliarSpecialTarget.PLAYER),
         FamiliarSpecialBinding(SummoningScrollData.TOAD_BARK_SCROLL, FamiliarSpecialTarget.NPC),
         FamiliarSpecialBinding(SummoningScrollData.ABYSSAL_DRAIN_SCROLL, FamiliarSpecialTarget.NPC),
@@ -771,7 +786,12 @@ object SummoningSpecialMoves {
             // active target" - already exactly what this function's own target parameter (as
             // opposed to the player's normal combat target) plus the unconditional
             // familiar.attack(target) below provide, so there's nothing extra to do here.
-            scroll == SummoningScrollData.PESTER_SCROLL -> Unit
+            // Goad and Ambush are the same instruction as Pester - send the familiar at that
+            // target - so they take the same branch, and for the same reason: the attack itself
+            // is the effect, and its damage is the familiar's own.
+            scroll == SummoningScrollData.PESTER_SCROLL ||
+                scroll == SummoningScrollData.GOAD_SCROLL ||
+                scroll == SummoningScrollData.AMBUSH_SCROLL -> Unit
             /*
              * Petrifying Gaze, shared by all seven "-atrice" familiars, had no binding at all,
              * which left the seven "Drain" options the cache really puts on those npcs doing
