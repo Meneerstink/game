@@ -103,6 +103,34 @@ class BeastOfBurdenTests {
         assertEquals(true, player.containers.getValue(BeastOfBurden.WAR_TORTOISE_KEY).isEmpty)
     }
 
+    /**
+     * The mandatory "empty BoB" case: Take BoB on a beast of burden that is carrying nothing must
+     * give informative feedback rather than doing nothing silently.
+     *
+     * `withdrawAll` returns 0 for an empty store **and** for a full inventory, so the count alone
+     * cannot tell those apart - which is why the handler branches on [BeastOfBurden.storedCount]
+     * first to produce "Your familiar isn't carrying anything." This pins the distinction the
+     * message depends on, rather than the message string itself.
+     */
+    @Test
+    fun `an empty beast of burden is distinguishable from one that simply cannot unload`() {
+        val player = newPlayer(familiarNpcId = Npcs.WAR_TORTOISE)
+        assertEquals(0, BeastOfBurden.storedCount(player), "an untouched BoB should report nothing stored")
+
+        player.inventory[0] = Item(TEST_STACKABLE, 3)
+        BeastOfBurden.deposit(player, Item(TEST_STACKABLE, 3))
+
+        assertEquals(3, BeastOfBurden.storedCount(player), "a loaded BoB must not report itself empty")
+
+        BeastOfBurden.withdrawAll(player)
+        assertEquals(0, BeastOfBurden.storedCount(player), "an unloaded BoB should report nothing stored again")
+    }
+
+    @Test
+    fun `storedCount reports nothing when no familiar is out`() {
+        assertEquals(0, BeastOfBurden.storedCount(newPlayer(familiarNpcId = null)))
+    }
+
     @Test
     fun `withdrawAll without an active familiar is a no-op`() {
         val player = newPlayer(familiarNpcId = null)
