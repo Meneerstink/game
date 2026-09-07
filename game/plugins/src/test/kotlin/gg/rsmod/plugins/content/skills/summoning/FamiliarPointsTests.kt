@@ -50,6 +50,36 @@ class FamiliarPointsTests {
         assertEquals(0, player.inventory.getItemCount(DREADFOWL.pouch))
     }
 
+    /**
+     * The "maximum one familiar" lifecycle rule, and - the part that actually costs the player if
+     * it is wrong - that a rejected summon is **free**.
+     *
+     * The rule itself is a 2026-09-06 human-retest fix: summoning a second pouch used to
+     * unconditionally dismiss the active familiar and replace it, losing whatever life and points
+     * were left on it. It was corrected to reject the new summon outright, and that correction was
+     * never covered by a test.
+     *
+     * The ordering matters as much as the rule. The guard sits above the pouch removal in
+     * [Familiar.summon], so a rejected summon must leave the second pouch in the inventory and the
+     * points untouched. A guard placed below the removal would read as "one familiar at a time"
+     * while quietly eating a pouch on every misclick.
+     */
+    @Test
+    fun `a second summon is rejected outright and costs the player nothing`() {
+        val player = newPlayer(summoningLevel = PACK_YAK.level)
+        player.inventory[0] = Item(DREADFOWL.pouch, 1)
+        player.inventory[1] = Item(PACK_YAK.pouch, 1)
+        assertTrue(Familiar.summon(player, DREADFOWL))
+        val first = Familiar.current(player)
+        val pointsAfterFirst = Familiar.currentPoints(player)
+
+        assertFalse(Familiar.summon(player, PACK_YAK), "a second familiar must not be summonable")
+
+        assertEquals(first, Familiar.current(player), "the active familiar was replaced or lost")
+        assertEquals(1, player.inventory.getItemCount(PACK_YAK.pouch), "the rejected summon consumed its pouch")
+        assertEquals(pointsAfterFirst, Familiar.currentPoints(player), "the rejected summon consumed points")
+    }
+
     @Test
     fun `summon refuses when points are below its real pouch cost`() {
         val player = newPlayer(summoningLevel = PACK_YAK.level)
