@@ -175,6 +175,65 @@ class SummoningSpecialResourceTests {
         assertEquals(emptyList<String>(), offenders, "familiars can consume scrolls that are not theirs")
     }
 
+    /**
+     * The **targeted** half of the roster, covered on the axis a unit test can honestly reach.
+     *
+     * A targeted special cannot be fired end-to-end here — `castOnNpc` requires multi-combat tiles
+     * and a real `canAttack` ruling, and stubbing those would test the stub. What *is* reachable,
+     * and is worth pinning, is the **entry-point mismatch**: sending a targeted special down the
+     * instant path, or an instant special down the item path, must be refused **before** anything
+     * is committed.
+     *
+     * That ordering is the whole point. `castInstant` rejects a mismatched target mode above its
+     * call to `validateResources`; if a refactor ever moved the resource check first, every
+     * targeted familiar would burn a scroll and its points on a click that then did nothing. This
+     * test fails the moment that ordering inverts.
+     */
+    @Test
+    fun `a special cast through the wrong entry point is refused before anything is consumed`() {
+        val offenders = mutableListOf<String>()
+        SummoningPouchData.values().forEach { pouch ->
+            val capabilities = FamiliarCapabilityTable.forNpc(pouch.npc) ?: return@forEach
+            val mode = capabilities.specialTarget ?: return@forEach
+            val scroll = scrollFor(pouch) ?: return@forEach
+
+            if (mode != FamiliarSpecialTarget.INSTANT) {
+                val player = newPlayer(pouch.npc)
+                player.inventory.add(scroll.scroll, 5)
+                player.attr[FAMILIAR_SPECIAL_POINTS_ATTR] = Familiar.MAX_SPECIAL_POINTS
+                if (SummoningSpecialMoves.castInstant(player)) {
+                    offenders += "${pouch.name}: a $mode special fired through the instant path"
+                }
+                if (player.inventory.getItemCount(scroll.scroll) != 5) {
+                    offenders += "${pouch.name}: consumed a scroll for a mismatched instant cast"
+                }
+                if (Familiar.currentSpecialPoints(player) != Familiar.MAX_SPECIAL_POINTS) {
+                    offenders += "${pouch.name}: spent points for a mismatched instant cast"
+                }
+            }
+
+            if (mode != FamiliarSpecialTarget.INVENTORY_ITEM) {
+                val player = newPlayer(pouch.npc)
+                player.inventory.add(scroll.scroll, 5)
+                // Slot 1 holds something that is not the scroll, so the refusal is about the target
+                // mode rather than about the familiar refusing to bank its own scroll.
+                player.inventory.add(scroll.scroll, 1)
+                player.attr[FAMILIAR_SPECIAL_POINTS_ATTR] = Familiar.MAX_SPECIAL_POINTS
+                val before = player.inventory.getItemCount(scroll.scroll)
+                if (SummoningSpecialMoves.castOnInventoryItem(player, slot = 0)) {
+                    offenders += "${pouch.name}: a $mode special fired through the item-target path"
+                }
+                if (player.inventory.getItemCount(scroll.scroll) != before) {
+                    offenders += "${pouch.name}: consumed a scroll for a mismatched item cast"
+                }
+                if (Familiar.currentSpecialPoints(player) != Familiar.MAX_SPECIAL_POINTS) {
+                    offenders += "${pouch.name}: spent points for a mismatched item cast"
+                }
+            }
+        }
+        assertEquals(emptyList<String>(), offenders, "target-mode mismatch is not refused cleanly")
+    }
+
     @Test
     fun `with no familiar summoned nothing is ever consumed`() {
         val scroll = instantFamiliars().firstNotNullOfOrNull { scrollFor(it) }!!
