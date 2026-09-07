@@ -174,19 +174,58 @@ object SummoningUi {
     }
 
     /**
-     * Applies the gating if anything has changed since it was last applied. Driven once per cycle
-     * from [Familiar.tick]; see [invalidate] for why it is not done inline.
+     * How many cycles may pass before the gating is re-sent even though nothing the server knows
+     * about has changed. 50 cycles is ~30 seconds.
+     *
+     * ## Why a periodic re-send is needed at all
+     *
+     * Everything this object writes - `IF_SETHIDE`, `IF_SETEVENTS`, `IF_SETGRAPHIC`, the varc that
+     * chooses instant-versus-targeted - is **live client state, not persisted state**. Any time the
+     * client rebuilds a component it comes back with its baked flags: no ops, the baked sprite,
+     * visible. The server has no packet that tells it a rebuild happened.
+     *
+     * A change-only refresh therefore fails open: once the client has silently reverted a
+     * component, the server's own "already rendered this familiar" bookkeeping says there is
+     * nothing to do and the surface stays broken until the familiar changes or the player relogs.
+     * That is the shape of every "it worked and then stopped working" report against these two
+     * surfaces - a special-move button that stops responding mid-fight, a Take BoB that reappears
+     * on a familiar that cannot carry.
+     *
+     * Re-sending on a slow heartbeat makes the surfaces self-healing without turning ~15 packets
+     * per player into a per-cycle cost: the steady state is one refresh every 30 seconds, and a
+     * real change still refreshes immediately.
+     */
+    private const val RESEND_INTERVAL_CYCLES = 50
+
+    /** Cycle count at the last full refresh, for [RESEND_INTERVAL_CYCLES]. */
+    private val RENDERED_ON_CYCLE = AttributeKey<Int>()
+
+    /**
+     * Applies the gating if anything has changed since it was last applied, or if it is simply due
+     * a re-send. Driven once per cycle from [Familiar.tick]; see [invalidate] for why it is not
+     * done inline, and [RESEND_INTERVAL_CYCLES] for why "unchanged" is not the same as "nothing to
+     * do".
      */
     fun settle(player: Player) {
         val npcId = Familiar.current(player)?.id ?: NO_FAMILIAR
-        if (player.attr[RENDERED_FAMILIAR] == npcId) {
+        val now = player.world.currentCycle
+        val due = now - (player.attr[RENDERED_ON_CYCLE] ?: Int.MIN_VALUE) >= RESEND_INTERVAL_CYCLES
+        if (player.attr[RENDERED_FAMILIAR] == npcId && !due) {
             return
         }
         player.attr[RENDERED_FAMILIAR] = npcId
+        player.attr[RENDERED_ON_CYCLE] = now
         val active = npcId.takeIf { it != NO_FAMILIAR }
         refreshPanel(player, active)
         refreshOrb(player, active)
         refreshSpecialMode(player)
+        // The special-move button's own IF_SETEVENTS has exactly the same "live client state"
+        // problem, and is what stops a Unicorn's Healing Aura responding mid-fight (H11), so it is
+        // re-armed on the same heartbeat rather than only when the familiar changes.
+        SummoningSpecialMoves.refreshOrbButton(player, force = true)
+        // ...and the panel's special-move name/description/cost, which are varcs and a varbit and
+        // are just as much client state as the events mask.
+        SummoningSpecialMoves.refreshPanelText(player, force = true)
     }
 
     /**

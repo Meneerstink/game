@@ -88,10 +88,32 @@ object SummoningSpecialMoves {
     private const val VOID_OUTPOST_X = 2657
     private const val VOID_OUTPOST_Z = 2639
 
-    // com.jagex.game.runetek6.config.iftype.TargetMask, from this revision's own client source.
-    private const val TARGET_OBJ = 0x01
+    /*
+     * com.jagex.game.runetek6.config.iftype.TargetMask, from this revision's own client source:
+     *
+     *   TGT_OBJ 0x01   TGT_NPC 0x02   TGT_LOC 0x04   TGT_PLAYER 0x08
+     *   TGT_SELF 0x10  TGT_BUTTON 0x20  TGT_GROUND 0x40
+     */
     private const val TARGET_NPC = 0x02
     private const val TARGET_PLAYER = 0x08
+
+    /**
+     * Selecting an **inventory item** is `TGT_BUTTON`, not `TGT_OBJ`.
+     *
+     * This is the fix for the owner's requirement H10 ("Pack yak Winter Storage must enter
+     * inventory-item targeting"). An inventory item is a *component slot*, so the entry that turns
+     * a click on it into the interface-target packet is added by
+     * `InterfaceManager.addMiniMenuOptions`, which requires `targetMask & TGT_BUTTON`. `TGT_OBJ`
+     * is the **ground**-item mask, tested in `MiniMenu`'s ground-item scan instead - so with 0x01
+     * the button entered target mode and then refused every inventory slot, which is exactly the
+     * reported symptom.
+     *
+     * Confirmed against the cache's own working precedent rather than reasoned about alone: High
+     * Alchemy (192:38), Low Alchemy (192:59) and Enchant Jewellery (192:29) are all item-targeted
+     * spells in this revision and every one of them bakes `events=0x010000`, i.e. `targetMask=32`.
+     */
+    private const val TARGET_BUTTON = 0x20
+
     private const val TARGET_MASK_SHIFT = 11
 
     /** The follower panel's special-move line; see [refreshPanelText] and [SummoningSpecialMoveText]. */
@@ -266,19 +288,35 @@ object SummoningSpecialMoves {
      * `IF_SETEVENTS` is keyed by (parent hash, child index), so arming the dynamic children means
      * writing the range 0..0 on 662:74 and 747:17 - not -1..-1, which addresses static components.
      */
-    fun refreshOrbButton(player: Player) {
-        val target = resolveBinding(player)?.target
-        val mask =
-            when (target) {
-                FamiliarSpecialTarget.NPC -> TARGET_NPC or TARGET_PLAYER
-                FamiliarSpecialTarget.PLAYER -> TARGET_PLAYER
-                FamiliarSpecialTarget.INVENTORY_ITEM -> TARGET_OBJ
-                else -> 0
-            }
-        val events = BAKED_EVENTS or (mask shl TARGET_MASK_SHIFT)
+    /**
+     * The `TargetMask` bits the special-move button needs so the client will accept the kind of
+     * target this special uses. An INSTANT special takes no target and so needs no mask - it fires
+     * from its op1 instead, gated by varc 1436.
+     *
+     * An NPC-targeted special also accepts a player, because every familiar attack special in the
+     * roster is usable in PvP; that is one mask, not two behaviours, and the dispatch resolves
+     * which handler runs from the packet the client sends.
+     */
+    fun targetMaskFor(target: FamiliarSpecialTarget?): Int =
+        when (target) {
+            FamiliarSpecialTarget.NPC -> TARGET_NPC or TARGET_PLAYER
+            FamiliarSpecialTarget.PLAYER -> TARGET_PLAYER
+            FamiliarSpecialTarget.INVENTORY_ITEM -> TARGET_BUTTON
+            FamiliarSpecialTarget.INSTANT, null -> 0
+        }
+
+    fun refreshOrbButton(
+        player: Player,
+        force: Boolean = false,
+    ) {
+        val events = BAKED_EVENTS or (targetMaskFor(resolveBinding(player)?.target) shl TARGET_MASK_SHIFT)
         // Guarded: [Familiar.updateHud] calls this once per cycle, and IfSetEvents has no
         // "unchanged" short-circuit of its own.
-        if (player.attr[ORB_EVENTS_ATTR] == events) {
+        //
+        // [force] defeats the guard. The events mask is live client state that a component rebuild
+        // silently reverts to its baked value, and the server is never told, so an unchanged mask
+        // does not mean the client still has it - see SummoningUi.RESEND_INTERVAL_CYCLES.
+        if (!force && player.attr[ORB_EVENTS_ATTR] == events) {
             return
         }
         player.attr[ORB_EVENTS_ATTR] = events
@@ -320,7 +358,10 @@ object SummoningSpecialMoves {
      * The pouch's own `param 394` supplies the "Level <n>" prefix client-side, so there is
      * deliberately nothing to send for it.
      */
-    fun refreshPanelText(player: Player) {
+    fun refreshPanelText(
+        player: Player,
+        force: Boolean = false,
+    ) {
         val binding = resolveBinding(player)
         val familiar = Familiar.current(player)
         val scroll =
@@ -330,7 +371,11 @@ object SummoningSpecialMoves {
         val move = text?.move ?: ""
         // 662:74 lists varcstrTriggers=[205], so 205 has to be written last for the redraw to see
         // the new name and cost.
-        if (player.attr[PANEL_TEXT_ATTR] == move) {
+        //
+        // [force] defeats the guard for the same reason it does on [refreshOrbButton]: a varc is
+        // client state, so an unchanged value on the server is no evidence the client still holds
+        // it after a rebuild.
+        if (!force && player.attr[PANEL_TEXT_ATTR] == move) {
             return
         }
         player.attr[PANEL_TEXT_ATTR] = move
