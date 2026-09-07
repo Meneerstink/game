@@ -260,6 +260,7 @@ class SummoningSpecialResourceTests {
         val offenders = mutableListOf<String>()
         var provenEffective = 0
         var swept = 0
+        val refused = mutableListOf<String>()
         var fired = 0
         instantFamiliars().forEach { pouch ->
             val scroll = scrollFor(pouch) ?: return@forEach
@@ -284,6 +285,8 @@ class SummoningSpecialResourceTests {
                 } else {
                     provenEffective++
                 }
+            } else {
+                refused += "${pouch.name} (${scroll.name})"
             }
         }
         assertEquals(emptyList<String>(), offenders, "special moves are charging for no effect")
@@ -295,15 +298,28 @@ class SummoningSpecialResourceTests {
          * can only be tightened. It rose from 12 when the harness was given real lifepoints, which
          * is what let the heal-based moves - Healing Aura among them - actually run at all.
          *
-         * It is still short of the full sweep. The remaining shortfall is **not yet explained**,
-         * and the failure message reports swept/fired/effective so the next session can see the
-         * breakdown without re-instrumenting. Finding out which swept moves neither fire nor change
-         * state, and why, is a recorded TODO rather than something this assertion papers over.
          */
         assertTrue(
             provenEffective >= 14,
             "only $provenEffective of $swept swept instant specials were observed changing state " +
-                "($fired fired); this test has stopped proving anything",
+                "($fired fired, refused: $refused); this test has stopped proving anything",
+        )
+        /*
+         * Every move that fired changed state, so the sweep's shortfall is entirely moves that
+         * **declined to fire** - not moves that fired and did nothing. Each is conditional on
+         * something this harness deliberately does not provide, and the set is pinned so a *new*
+         * silent refusal, a move that quietly stops working, cannot hide inside the same shortfall.
+         */
+        assertEquals(
+            CONDITIONAL_ON_UNPROVIDED_STATE,
+            refused.toSet(),
+            "the set of instant specials that decline to fire has changed; a move that used to " +
+                "work may have silently stopped, or a newly conditional one needs documenting",
+        )
+        assertEquals(
+            swept,
+            provenEffective + refused.size,
+            "a move both fired and changed nothing; the offender list above should have caught it",
         )
     }
 
@@ -397,6 +413,29 @@ class SummoningSpecialResourceTests {
     }
 
     companion object {
+        /**
+         * The instant specials that legitimately decline to fire in this harness, each because it
+         * needs world or inventory state the harness deliberately does not provide. None of these
+         * is broken — every one of them is a real precondition.
+         *
+         * Pinned as an exact set, so a move that *silently stops working* cannot hide among them.
+         *
+         * | Familiar | Why it declines |
+         * |---|---|
+         * | Spirit tz-kih, Spirit kalphite, Giant chinchompa, Smoke devil | area-of-effect moves with no npcs in range of the mock world |
+         * | Pyrelord | Immense Heat needs a gold bar; its effect is proven directly in `SummoningSpecialMoveTests` |
+         * | Abyssal titan | Essence Shipment needs essence already in the familiar's store |
+         */
+        private val CONDITIONAL_ON_UNPROVIDED_STATE =
+            setOf(
+                "SPIRIT_TZ_KIH (FIREBALL_ASSAULT_SCROLL)",
+                "SPIRIT_KALPHITE (SANDSTORM_SCROLL)",
+                "GIANT_CHINCHOMPA (EXPLODE_SCROLL)",
+                "PYRELORD (IMMENSE_HEAT_SCROLL)",
+                "SMOKE_DEVIL (DUST_CLOUD_SCROLL)",
+                "ABYSSAL_TITAN (ESSENCE_SHIPMENT_SCROLL)",
+            )
+
         /** Hitpoints 99 on this revision's 1:1 scale: getMaximumLifepoints is skills.getMaxLevel(3) * 10. */
         private const val MAX_LIFEPOINTS = 990
 
