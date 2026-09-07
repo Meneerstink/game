@@ -30,6 +30,73 @@ object SummoningLedger {
         validateCatalogue()
         validateCombatTransforms()
         validateInventories()
+        validateSpecialMoveCompleteness()
+        validateInterfaceCapabilities()
+    }
+
+    /**
+     * Every special move a familiar can be offered must be fully specified before the button that
+     * offers it is drawn: a scroll to consume, a point cost that fits the client's own field, a
+     * target mode the dispatch understands, and panel text to describe it.
+     *
+     * This is the gate the run brief asks for - "fail the build/test if future data introduces an
+     * option with no implementation". Adding a familiar whose special is half-declared now stops
+     * the server at boot instead of producing a button that does nothing, which is exactly the
+     * class of fault the Special Move button was.
+     */
+    private fun validateSpecialMoveCompleteness() {
+        SummoningSpecialMoves.bindings.forEach { binding ->
+            binding.scrolls.forEach { scroll ->
+                check(scroll.scroll > 0) {
+                    "${scroll.name} has no scroll item id, so its special move cannot be consumed."
+                }
+                check(scroll.specialPoints in 1..Familiar.MAX_SPECIAL_POINTS) {
+                    "${scroll.name} costs ${scroll.specialPoints} special-move points, which is outside 1..${Familiar.MAX_SPECIAL_POINTS}."
+                }
+                check(scroll.specialPoints <= SummoningSpecialMoves.MAX_PANEL_COST) {
+                    "${scroll.name} costs ${scroll.specialPoints} points, which does not fit varbit 4288."
+                }
+                check(SummoningSpecialMoveText[scroll] != null) {
+                    "${scroll.name} has no sourced name/description, so the follower panel would " +
+                        "render an empty special-move line for it."
+                }
+                scroll.familiars.forEach { npc ->
+                    check(SummoningPouchData.values.any { it.npc == npc }) {
+                        "${scroll.name} is bound to familiar NPC $npc, which is not in the roster."
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * The interface gate: every capability the two Summoning surfaces can *show* must be one the
+     * server can actually *do*, and vice versa.
+     *
+     * Concretely, for every familiar in the roster:
+     *  - "Take BoB" and the Familiar Inventory are offered exactly when the familiar really
+     *    carries items, so a Unicorn stallion can never be offered a beast-of-burden action;
+     *  - "Attack" is offered exactly when the familiar has executable combat data behind it;
+     *  - the Special Move button is offered exactly when a fully specified special exists.
+     *
+     * [SummoningUi] is the single place both surfaces read those three answers from, so checking
+     * it here checks the panel and the orb at once.
+     */
+    private fun validateInterfaceCapabilities() {
+        SummoningPouchData.values.forEach { pouch ->
+            val entry = SummoningCatalogue[pouch]
+            val carries = SummoningUi.carries(pouch.npc)
+            check(carries == (entry.inventory.kind != FamiliarInventoryKind.NONE)) {
+                "${pouch.name} would be offered Take BoB: ${carries}, but the ledger says it carries " +
+                    "${entry.inventory.kind}."
+            }
+            val fights = SummoningUi.canFight(pouch.npc)
+            val combat = SummoningCombatDefinitions.get(pouch)
+            check(fights == combat.isExecutable) {
+                "${pouch.name} would be offered Attack: ${fights}, but its combat row is " +
+                    "executable=${combat.isExecutable}."
+            }
+        }
     }
 
     private fun validatePouchIdentity() {

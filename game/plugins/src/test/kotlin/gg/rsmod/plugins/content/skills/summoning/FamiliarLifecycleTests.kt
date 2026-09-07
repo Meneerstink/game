@@ -9,6 +9,7 @@ import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.World
 import gg.rsmod.game.model.attr.AttributeMap import gg.rsmod.game.model.attr.DAMAGE_CREDIT_ATTR
 import gg.rsmod.game.model.container.ItemContainer
+import gg.rsmod.game.model.container.key.DEATH_RECOVERY_KEY
 import gg.rsmod.game.model.container.key.INVENTORY_KEY
 import gg.rsmod.game.model.entity.GroundItem
 import gg.rsmod.game.model.entity.Npc
@@ -70,8 +71,15 @@ class FamiliarLifecycleTests {
         )
     }
 
+    /*
+     * CUSTOM_SERVER_OVERRIDE - deliberately not authentic 2011 behaviour. These three tests used
+     * to assert the two period rules (dismiss/death drops the cargo on the floor, owner death
+     * destroys it). The owner's standing design decision replaces both with a single safe one:
+     * the cargo is never floored and never lost, it moves into Death's Domain recovery storage.
+     * See BeastOfBurden.release.
+     */
     @Test
-    fun `dismissing drops the beast of burden cargo on the floor`() {
+    fun `dismissing moves the beast of burden cargo to deaths domain`() {
         val player = newPlayer(Npcs.PACK_YAK, Tile(3222, 3218, 0))
         val world = player.world
         val key = BeastOfBurden.activeKey(player)!!
@@ -79,13 +87,15 @@ class FamiliarLifecycleTests {
 
         Familiar.dismiss(player)
 
-        verify(exactly = 1) { world.spawn(any<GroundItem>()) }
+        verify(exactly = 0) { world.spawn(any<GroundItem>()) }
         assertEquals(0, player.containers.getValue(key).getItemCount(Items.COINS_995))
+        assertEquals(5, player.deathRecovery.getItemCount(Items.COINS_995))
+        assertEquals(1, BeastOfBurden.deathsDomainCount(player))
         assertNull(Familiar.current(player))
     }
 
     @Test
-    fun `owner death loses the beast of burden cargo instead of dropping it`() {
+    fun `owner death moves the beast of burden cargo to deaths domain`() {
         val player = newPlayer(Npcs.PACK_YAK, Tile(3222, 3218, 0))
         val world = player.world
         val key = BeastOfBurden.activeKey(player)!!
@@ -95,11 +105,12 @@ class FamiliarLifecycleTests {
 
         verify(exactly = 0) { world.spawn(any<GroundItem>()) }
         assertEquals(0, player.containers.getValue(key).getItemCount(Items.COINS_995))
+        assertEquals(5, player.deathRecovery.getItemCount(Items.COINS_995))
         assertNull(Familiar.current(player))
     }
 
     @Test
-    fun `familiar death releases bob cargo and clears state`() {
+    fun `familiar death moves bob cargo to deaths domain and clears state`() {
         val player = newPlayer(Npcs.PACK_YAK, Tile(3222, 3218, 0))
         val world = player.world
         val familiar = Familiar.current(player)!!
@@ -109,9 +120,26 @@ class FamiliarLifecycleTests {
 
         Familiar.onDeath(familiar)
 
-        verify(exactly = 1) { world.spawn(any<GroundItem>()) }
+        verify(exactly = 0) { world.spawn(any<GroundItem>()) }
         assertEquals(0, player.containers.getValue(key).getItemCount(Items.COINS_995))
+        assertEquals(5, player.deathRecovery.getItemCount(Items.COINS_995))
         assertNull(Familiar.current(player))
+    }
+
+    /** Nothing may be duplicated or destroyed when Death's Domain has no room left. */
+    @Test
+    fun `a full deaths domain leaves the cargo where it is instead of destroying it`() {
+        val player = newPlayer(Npcs.PACK_YAK, Tile(3222, 3218, 0))
+        val key = BeastOfBurden.activeKey(player)!!
+        for (slot in 0 until player.deathRecovery.capacity) {
+            player.deathRecovery[slot] = Item(Items.BRONZE_ARROW, 1)
+        }
+        assertEquals(1, BeastOfBurden.grant(player, Item(Items.RUNE_PLATEBODY, 1)))
+
+        Familiar.dismiss(player)
+
+        assertEquals(1, player.containers.getValue(key).getItemCount(Items.RUNE_PLATEBODY))
+        assertEquals(0, player.deathRecovery.getItemCount(Items.RUNE_PLATEBODY))
     }
     private fun newPlayer(
         familiarNpcId: Int,
@@ -128,6 +156,8 @@ class FamiliarLifecycleTests {
         every { player.tile } returns tile
         every { player.inventory } returns ItemContainer(DEFINITIONS, INVENTORY_KEY)
         every { player.containers } returns HashMap()
+        // A real container, not a relaxed mock: the Death's Domain rescue is the thing under test.
+        every { player.deathRecovery } returns ItemContainer(DEFINITIONS, DEATH_RECOVERY_KEY)
 
         val npc = Npc(familiarNpcId, tile, world)
         npcs.add(npc)

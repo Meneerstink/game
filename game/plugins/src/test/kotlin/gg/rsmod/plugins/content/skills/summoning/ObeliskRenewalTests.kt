@@ -5,8 +5,8 @@ import gg.rsmod.game.fs.DefinitionSet
 import gg.rsmod.game.fs.def.ObjectDef
 import gg.rsmod.game.model.World
 import gg.rsmod.game.model.attr.AttributeMap
-import gg.rsmod.game.model.attr.SUMMONING_POINTS_ATTR
 import gg.rsmod.game.model.entity.Player
+import gg.rsmod.game.model.skill.SkillSet
 import gg.rsmod.plugins.api.Skills
 import io.mockk.every
 import io.mockk.mockk
@@ -57,7 +57,7 @@ class ObeliskRenewalTests {
     @Test
     fun `renewing restores a drained account to full`() {
         val player = newPlayer(summoningLevel = 50)
-        player.attr[SUMMONING_POINTS_ATTR] = 0
+        player.skills.setCurrentLevel(gg.rsmod.plugins.api.Skills.SUMMONING, 0)
         assertEquals(0, Familiar.currentPoints(player))
 
         Familiar.restorePoints(player)
@@ -72,7 +72,7 @@ class ObeliskRenewalTests {
     @Test
     fun `renewing leaves the special move pool alone`() {
         val player = newPlayer(summoningLevel = 50)
-        player.attr[SUMMONING_POINTS_ATTR] = 0
+        player.skills.setCurrentLevel(gg.rsmod.plugins.api.Skills.SUMMONING, 0)
         Familiar.consumeSpecialPoints(player, 45)
 
         Familiar.restorePoints(player)
@@ -85,7 +85,7 @@ class ObeliskRenewalTests {
     @Test
     fun `a summoning potion dose tops up a drained account`() {
         val player = newPlayer(summoningLevel = 60)
-        player.attr[SUMMONING_POINTS_ATTR] = 0
+        player.skills.setCurrentLevel(gg.rsmod.plugins.api.Skills.SUMMONING, 0)
         Familiar.consumeSpecialPoints(player, Familiar.MAX_SPECIAL_POINTS)
 
         Familiar.restorePoints(player, Familiar.maxPoints(player) / 4 + 7)
@@ -104,14 +104,24 @@ class ObeliskRenewalTests {
             .map { it.id }
             .sorted()
 
+    /**
+     * A real [SkillSet], not a relaxed mock: since 2026-09-06 Summoning points *are* the current
+     * level of skill 23 (client scripts 755 and 801 read the stat directly - see [Familiar]), so a
+     * mock that answers `getMaxLevel` alone would leave the current level permanently reading 0
+     * and every point assertion below would be measuring the mock rather than the mechanic.
+     */
     private fun newPlayer(summoningLevel: Int): Player {
         val world = mockk<World>(relaxed = true)
         every { world.definitions } returns DEFINITIONS
 
+        val skills = SkillSet(Skills.SUMMONING + 1)
+        skills.setBaseLevel(Skills.SUMMONING, summoningLevel)
+        skills.setCurrentLevel(Skills.SUMMONING, summoningLevel)
+
         val player = mockk<Player>(relaxed = true)
         every { player.attr } returns AttributeMap()
         every { player.world } returns world
-        every { player.skills.getMaxLevel(Skills.SUMMONING) } returns summoningLevel
+        every { player.skills } returns skills
         return player
     }
 

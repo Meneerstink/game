@@ -1,6 +1,8 @@
 import gg.rsmod.plugins.content.mechanics.shops.CoinCurrency
+import gg.rsmod.game.model.shop.PurchasePolicy
 
-create_shop("Pikkupstix's Summoning Shop", CoinCurrency()) {
+
+create_shop("Pikkupstix's Summoning Shop", CoinCurrency(), purchasePolicy = PurchasePolicy.BUY_STOCK) {
     sampleItems[0] = ShopItem(Items.SPIRIT_SHARDS, 7)
     sampleItems[1] = ShopItem(Items.POUCH, 1)
     sampleItems[2] = ShopItem(Items.GOLD_CHARM, 1)
@@ -19,7 +21,7 @@ create_shop("Pikkupstix's Summoning Shop", CoinCurrency()) {
     items[10] = ShopItem(Items.WOLF_BONES, 0)
 }
 
-create_shop("Summoning Supplies", CoinCurrency(), containsSamples = false) {
+create_shop("Summoning Supplies", CoinCurrency(), containsSamples = false, purchasePolicy = PurchasePolicy.BUY_STOCK) {
     items[0] = ShopItem(Items.ANTLERS, 10)
     items[1] = ShopItem(Items.LIZARD_SKULL, 10)
     items[2] = ShopItem(Items.FEATHER_HEADDRESS, 0)

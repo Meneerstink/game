@@ -1,5 +1,7 @@
 package gg.rsmod.plugins.content.skills.fishing
 
+import gg.rsmod.plugins.content.skills.summoning.SummoningBoosts
+
 import gg.rsmod.game.model.attr.learnedBarbarianRod
 import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Player
@@ -29,7 +31,8 @@ object Fishing {
         while (canFish(player, tool, fishingSpot)) {
             player.animate(tool.animation)
             task.wait(waitTime)
-            val fishingLevel = player.skills.getCurrentLevel(Skills.FISHING)
+            // Invisible familiar boost: raises the success roll only, never a requirement.
+            val fishingLevel = SummoningBoosts.effectiveLevel(player, Skills.FISHING)
             val strengthLevel = player.skills.getCurrentLevel(Skills.STRENGTH)
             val agilityLevel = player.skills.getCurrentLevel(Skills.AGILITY)
             for (fish in tool.relevantFish(fishingLevel, strengthLevel, agilityLevel)) {

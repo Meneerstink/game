@@ -1,5 +1,7 @@
 package gg.rsmod.plugins.content.skills.mining
 
+import gg.rsmod.plugins.content.skills.summoning.SummoningBoosts
+
 import gg.rsmod.game.fs.def.ItemDef
 import gg.rsmod.game.fs.def.ObjectDef
 import gg.rsmod.game.model.entity.DynamicObject
@@ -53,7 +55,8 @@ object Mining {
             }
 
             if (ticks % pick.ticksBetweenRolls == 0) {
-                val level = player.skills.getCurrentLevel(Skills.MINING)
+                // Invisible familiar boost: raises the success roll only, never a requirement.
+                val level = SummoningBoosts.effectiveLevel(player, Skills.MINING)
                 var baseChance = interpolate(rock.lowChance, rock.highChance, level)
 
                 if (pick == PickaxeType.DRAGON) {
@@ -67,7 +70,8 @@ object Mining {
 
             // Check if accumulated extra roll is due for DRAGON pickaxe
             if (player.miningAccumulator >= 1 && pick == PickaxeType.DRAGON) {
-                val level = player.skills.getCurrentLevel(Skills.MINING)
+                // Invisible familiar boost: raises the success roll only, never a requirement.
+                val level = SummoningBoosts.effectiveLevel(player, Skills.MINING)
                 var baseChance = interpolate(rock.lowChance, rock.highChance, level) * 1.12
 
                 if (baseChance > RANDOM.nextInt(255)) {

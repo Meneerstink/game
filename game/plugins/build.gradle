@@ -13,8 +13,11 @@ dependencies {
 
 // Several content tests load a full cache-backed DefinitionSet each (containers, death recovery,
 // shops, summoning, ...). The default 512m test worker heap cannot hold them all in one JVM.
+// Raised from 2g to 3g on 2026-09-07 when the Summoning completeness gates added another
+// cache-backed class and the suite started failing with OutOfMemoryError in a different, random
+// class on each run.
 test {
-    maxHeapSize = '2g'
+    maxHeapSize = '3g'
 }
 
 dokka {

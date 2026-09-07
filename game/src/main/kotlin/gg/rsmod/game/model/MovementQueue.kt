@@ -32,6 +32,24 @@ class MovementQueue(
 
     fun peekLastStep(): Step? = if (steps.isNotEmpty()) steps.peekLast() else null
 
+    /**
+     * The next tile this queue's owner will actually move onto once [cycle] next runs, i.e. the
+     * tile it will occupy at the *end* of the current game cycle - as opposed to [pawn.tile],
+     * which is still last cycle's resting tile until [cycle] executes. Needed by anything that
+     * must react to where a pawn is *about* to be this same cycle (e.g. a follower pathing
+     * towards its owner) rather than one cycle stale.
+     */
+    fun peekFirstStep(): Step? = if (steps.isNotEmpty()) steps.peekFirst() else null
+
+    /**
+     * The next [limit] queued steps in the order [cycle] will consume them. A follower needs this
+     * to know where its target will actually stand at the *end* of this cycle: [cycle] consumes
+     * two steps for a running pawn and one for a walking one, so only the first one or two entries
+     * matter, and [peekLast] (the whole clicked destination, possibly many tiles away) is the
+     * wrong tile to chase.
+     */
+    fun peekSteps(limit: Int): List<Step> = steps.take(limit)
+
     fun clear() {
         steps.clear()
     }
@@ -69,7 +87,7 @@ class MovementQueue(
                         )
                 )
             ) {
-                if (pawn is Npc) {
+                if (pawn is Npc && !pawn.ignoresEntityCollision) {
                     val entitiesClipped = mutableListOf<Pawn>()
 
                     pawn.world.chunks

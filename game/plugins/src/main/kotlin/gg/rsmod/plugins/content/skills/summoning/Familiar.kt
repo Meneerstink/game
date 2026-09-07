@@ -6,16 +6,19 @@ import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.attr.DAMAGE_CREDIT_ATTR
 import gg.rsmod.game.model.attr.FAMILIAR_NPC_ID_ATTR
-import gg.rsmod.game.model.attr.SUMMONING_POINTS_ATTR
 import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Player
+import gg.rsmod.game.model.path.PathRequest
+import gg.rsmod.game.model.path.strategy.BFSPathFindingStrategy
 import gg.rsmod.game.model.timer.TimerKey
 import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.api.ext.addXp
 import gg.rsmod.plugins.api.ext.heal
 import gg.rsmod.plugins.api.ext.message
-import gg.rsmod.plugins.api.ext.setComponentHidden
-import gg.rsmod.plugins.api.ext.setComponentText
+import gg.rsmod.plugins.api.ext.getVarbit
+import gg.rsmod.plugins.api.ext.getVarp
+import gg.rsmod.plugins.api.ext.setVarbit
+import gg.rsmod.plugins.api.ext.setVarp
 import java.lang.ref.WeakReference
 
 /**
@@ -23,8 +26,13 @@ import java.lang.ref.WeakReference
  * full pouch roster (Spirit Wolf through Steel Titan/Pack Yak/War Tortoise) - not just
  * registrations, an actually working core mechanic every specific familiar builds on.
  *
- * Summoning points are a one-off cost paid when the pouch is opened; they are not drained
- * gradually. A familiar's lifetime is an independent per-familiar timer sourced from the
+ * Summoning points are paid in two parts, exactly as the 2011 Knowledge Base describes: an
+ * initial pouch cost plus a slow drain for as long as the familiar is out ("When you summon a
+ * familiar, you will notice that your Summoning level begins to fall. Like Prayer, Summoning a
+ * familiar will drain your Summoning points, which can only be regained by visiting a Summoning
+ * obelisk or drinking a Summoning potion." - Summoning: The Basics, archived at 2011.rs, local
+ * copy `C:\RSPS\2011RS_SUMMONING_BASICS.md`). See [drainPoints] for the rate and its evidence.
+ * A familiar's lifetime is an independent per-familiar timer sourced from the
  * revision-era "Summoning - Familiars" table (see [SummoningFamiliarDefinitions] and the
  * duration assertions in `SummoningLedgerTests`), ranging from the dreadfowl's 4 minutes to the
  * rune minotaur's 151. Renewing re-arms that timer from a second pouch of the same type without
@@ -42,6 +50,13 @@ val FAMILIAR_SPECIAL_POINTS_ATTR = AttributeKey<Int>(persistenceKey = "familiar_
 
 /** Persisted online-cycle accumulator; preserves partial special regeneration through relog. */
 private val FAMILIAR_SPECIAL_REGEN_CYCLES_ATTR = AttributeKey<Int>(persistenceKey = "familiar_special_regen_cycles")
+
+/**
+ * Persisted online-cycle accumulator for the lifetime Summoning-point drain. Persisted for the
+ * same reason as the two accumulators around it: the familiar itself survives a logout, so its
+ * drain cadence has to as well, otherwise relogging repeatedly would pay for a familiar once.
+ */
+private val FAMILIAR_DRAIN_CYCLES_ATTR = AttributeKey<Int>(persistenceKey = "familiar_drain_cycles")
 /**
  * Persisted for the same reason as the special-regeneration accumulator above: a familiar
  * survives logout in this era, so its passive-healing cadence has to survive with it. Left
@@ -58,34 +73,60 @@ private val FAMILIAR_PASSIVE_HEAL_CYCLES_ATTR = AttributeKey<Int>(persistenceKey
  */
 val FAMILIAR_LIFETIME_TIMER = TimerKey(persistenceKey = "familiar_lifetime", tickOffline = false, resetOnDeath = false)
 
-/** Last time-remaining string pushed to the HUD, so [Familiar.tick] doesn't spam an
- *  [gg.rsmod.plugins.api.ext.setComponentText] packet every cycle - only when the displayed
- *  value actually changes. */
-private val FAMILIAR_HUD_TEXT_ATTR = AttributeKey<String>()
-private val FAMILIAR_HUD_POINTS_TEXT_ATTR = AttributeKey<String>()
-
 
 object Familiar {
     const val MAX_SPECIAL_POINTS = 60
-    private const val RENEW_THRESHOLD_SECONDS = 170
     private const val SPECIAL_REGEN_SECONDS = 30
     private const val SPECIAL_REGEN_AMOUNT = 15
 
-    /** R07 follower interface (see InterfaceDestination.SUMMONING_TAB for the evidence trail). */
-    private const val HUD_INTERFACE = 662
+    /*
+     * 2026-09-06: the whole Summoning tab (662) and orb (747) are CLIENT-driven. Every field the
+     * previous implementation tried to push with `IF_SETTEXT`/`IF_SETHIDE` is really rendered by
+     * the cache's own cs2 off a handful of vars, so the server's only job is to keep those vars
+     * accurate. Decoded from this cache with `runInterfaceHookProbeTool interface/disasm` and
+     * `runVarbitDefProbeTool`; the full evidence table lives in
+     * `C:\RSPS\RSPS_SUMMONING_2011_EVIDENCE.md`.
+     *
+     *   varp 448  -> active pouch OBJ id. 662:74 and 747:17 both list `varpTriggers=[448]`;
+     *                script 751 resolves the familiar from it (`ENUM(o->n, 1320, var448)`) and
+     *                names the follower from it (`OC_NAME(var448)` -> 662:54).
+     *   varp 1174 -> active familiar NPC id. 662:1/747:16 `varpTriggers=[1174]`; script 751 does
+     *                `OP_2201(var1174, 662:1)`, i.e. the tab's big familiar model.
+     *   varp 1176 -> remaining time, as two varbits: 4534 (bits 7..31) whole minutes and 4290
+     *                (bit 6) a "+30 seconds" flag. Script 752 renders exactly "M.00" / "M.30",
+     *                or "---" when both are zero. This is why the real tab shows "4.00", not a
+     *                free-form "4:00" string - the format is baked into the client.
+     *   varp 1177 -> special-move points, 0..60. Script 756 shows/hides the 20 bar segments
+     *                662:20..39 at 3 points each; tooltip script 777 prints
+     *                "<var1177>/60 special move points remaining".
+     *
+     * Everything else on the tab follows for free once these are right: the scroll counter
+     * (662:66) is computed client-side by script 769 as `INV_TOTAL(93, ENUM(o->o, 1283, var448))`,
+     * and the Take-BoB button, familiar-panel and special-move icon visibility are all switched by
+     * script 751 itself.
+     */
+    private const val POUCH_VARP = 448
+    private const val FAMILIAR_NPC_VARP = 1174
+    private const val SPECIAL_POINTS_VARP = 1177
+    private const val TIME_MINUTES_VARBIT = 4534
+    private const val TIME_HALF_MINUTE_VARBIT = 4290
 
-    // R07.7 fix: a fresh full raw-component-text re-scan of interface 662 (76 components) found
-    // component 44's real cache text is "Pet size percentage" and component 48 sits right after
-    // component 47's real label "Pet hunger percentage" - both distinct real fields, not a
-    // fixed/resize duplicate of the time/points display as the earlier R07.6 code assumed.
-    // Writing time/points text into them would clobber real UI content, so only the single
-    // component directly following each field's own label is driven now (42=label->43=value for
-    // time; 41 is the value cell directly under the "SPECIAL MOVE" header at 40, the closest
-    // real candidate to a points display near component 18's "Summoning points remaining"
-    // label - no separate value component was found near 18 itself in the raw scan).
-    private const val HUD_TIME_COMPONENT = 43
-    private const val HUD_POINTS_COMPONENT = 41
-    private const val HUD_BOB_BUTTON = 67
+    /**
+     * varbit 4280 (varp 1160, bit 23) - "this account may use Summoning". `disasm 1364`, the
+     * gameframe rebuild, shows the Summoning orb's entire familiar-option layer 747:8 only when
+     * this is set *and* a sub-interface is mounted on gameframe slot 95; with it clear, the orb's
+     * right-click menu has nothing on it but "Select left-click option", which is exactly what
+     * the owner saw. Summoning here is not gated behind Wolf Whistle, so it is simply set.
+     */
+    private const val SUMMONING_UNLOCKED_VARBIT = 4280
+
+    /**
+     * Arms the client-side half of the Summoning HUD. Idempotent, and cheap enough to call on
+     * every login: the varbit lives in a persisted varp, so this normally writes nothing.
+     */
+    fun unlockInterface(player: Player) {
+        setVarbitIfChanged(player, SUMMONING_UNLOCKED_VARBIT, 1)
+    }
 
     /**
      * R07.2: max Summoning points = the player's current (boosted) Summoning level, 1:1, no
@@ -96,7 +137,23 @@ object Familiar {
      */
     fun maxPoints(player: Player): Int = player.skills.getMaxLevel(Skills.SUMMONING)
 
-    fun currentPoints(player: Player): Int = player.attr.getOrDefault(SUMMONING_POINTS_ATTR, maxPoints(player)).coerceAtMost(maxPoints(player))
+    /**
+     * 2026-09-06 cache correction: Summoning points ARE the current level of skill 23, exactly
+     * like Prayer points are the current level of skill 5 - they are not a private server-side
+     * counter. Proof, decoded from this cache and recorded in `RSPS_SUMMONING_2011_EVIDENCE.md`:
+     *
+     *  - `disasm 755` (662:41's `onStatTransmit`, `statTriggers=[23]`) builds the tab's
+     *    "32/34" cell as literally `STAT(23) + "/" + STAT_BASE(23)`.
+     *  - `disasm 801` (747:5's `onStatTransmit`, `statTriggers=[23]`) builds the minimap orb's
+     *    number as `STAT(23)`.
+     *
+     * Neither reads a varp, and neither can be driven by an `IF_SETTEXT`, because the client
+     * recomputes both from the stat on every skill update. The previous implementation stored
+     * points in a private `summoning_points` attribute and pushed text into 662:41 by hand, which the client
+     * then overwrote from the (untouched, always-full) stat - that is why the orb and the tab
+     * disagreed with the server's own idea of the player's points.
+     */
+    fun currentPoints(player: Player): Int = player.skills.getCurrentLevel(Skills.SUMMONING).coerceIn(0, maxPoints(player))
 
     fun currentSpecialPoints(player: Player): Int =
         player.attr.getOrDefault(FAMILIAR_SPECIAL_POINTS_ATTR, MAX_SPECIAL_POINTS).coerceIn(0, MAX_SPECIAL_POINTS)
@@ -105,11 +162,12 @@ object Familiar {
         player: Player,
         value: Int,
     ) {
-        player.attr[SUMMONING_POINTS_ATTR] = value.coerceIn(0, maxPoints(player))
+        player.skills.setCurrentLevel(Skills.SUMMONING, value.coerceIn(0, maxPoints(player)))
     }
 
     private fun setSpecialPoints(player: Player, value: Int) {
         player.attr[FAMILIAR_SPECIAL_POINTS_ATTR] = value.coerceIn(0, MAX_SPECIAL_POINTS)
+        player.setVarp(SPECIAL_POINTS_VARP, currentSpecialPoints(player))
     }
 
     /** Restores Summoning points without touching the familiar timer or special-move energy. */
@@ -132,6 +190,59 @@ object Familiar {
         }
         player.attr[FAMILIAR_SPECIAL_REGEN_CYCLES_ATTR] = accumulated % interval
         restoreSpecialPoints(player, SPECIAL_REGEN_AMOUNT)
+    }
+
+    /**
+     * The lifetime Summoning-point drain (Phase 7).
+     *
+     * The 2011 Knowledge Base states plainly that there are two costs - "There is an initial
+     * Summoning points cost to summon a familiar" *and* "Like Prayer, Summoning a familiar will
+     * drain your Summoning points, which can only be regained by visiting a Summoning obelisk or
+     * drinking a Summoning potion" - but Jagex never published the rate, and neither the pouch nor
+     * the familiar article carries a point-cost column at all.
+     *
+     * The one surviving quantitative statement is runescape.wiki's Summoning-points article: a
+     * familiar consumes its **required Summoning level x 10** points in total over its full
+     * duration, upfront cost included (its worked example: a bunyip takes 70 on summoning and a
+     * further 610 across its life, 680 = level 68 x 10). That x10 is purely the 20 August 2018
+     * rescale which "separated summoning points from the Summoning skill level (with a
+     * multiplication by 10)"; on this revision's 1:1 scale the same rule reads *total lifetime
+     * cost = the familiar's required Summoning level*. That is also self-consistent with the era:
+     * a player at exactly the level needed to summon a familiar, with full points, can sustain
+     * exactly one full-duration familiar and no more, which is what the KB's "you must have
+     * enough Summoning points to support this" is describing.
+     *
+     * So: `total = data.level`, of which [SummoningFamiliarDefinitions] `summonPoints` is taken
+     * at the pouch, and the remainder is spread evenly across the familiar's own duration - one
+     * point every `duration / remainder` cycles.
+     *
+     * Reaching zero does **not** dismiss the familiar; runescape.wiki is explicit that "the
+     * familiar does not disappear when the points are depleted" and only its right-click
+     * abilities stop working. [tick] therefore never expires a familiar on points.
+     *
+     * SOURCE_CONFLICT, recorded rather than hidden: the per-familiar upfront costs themselves are
+     * a reconstruction (modern point cost / 10) - no 2011 primary source publishes them. The
+     * mechanic and the total are sourced; the split between upfront and drain is not.
+     */
+    private fun drainPoints(
+        player: Player,
+        data: SummoningPouchData,
+    ) {
+        val drained = data.level - definition(data).summonPoints
+        if (drained <= 0) {
+            return
+        }
+        val interval = (lifetimeCycles(player, data) / drained).coerceAtLeast(1)
+        val cycles = player.attr.getOrDefault(FAMILIAR_DRAIN_CYCLES_ATTR, 0) + 1
+        if (cycles < interval) {
+            player.attr[FAMILIAR_DRAIN_CYCLES_ATTR] = cycles
+            return
+        }
+        player.attr[FAMILIAR_DRAIN_CYCLES_ATTR] = cycles % interval
+        val points = currentPoints(player)
+        if (points > 0) {
+            setPoints(player, points - 1)
+        }
     }
 
     /** Void Spinner and Bunyip restore 100/20 internal life points every 15 online seconds. */
@@ -174,39 +285,66 @@ object Familiar {
     private fun lifetimeCycles(player: Player, data: SummoningPouchData): Int =
         definition(data).durationMinutes * 60_000 / player.world.gameContext.cycleTime
 
-    private fun renewThresholdCycles(player: Player): Int =
-        RENEW_THRESHOLD_SECONDS * 1_000 / player.world.gameContext.cycleTime
+    /**
+     * Remaining lifetime expressed the way the client expects it: whole minutes plus a separate
+     * "+30 seconds" flag (script 752 renders only ".00" and ".30"). Rounded UP so a familiar with
+     * any time left never reads as "---" while it is still following.
+     */
+    private fun remainingTimeVarbits(player: Player): Pair<Int, Int> {
+        val cycles = if (player.timers.has(FAMILIAR_LIFETIME_TIMER)) player.timers[FAMILIAR_LIFETIME_TIMER] else 0
+        if (cycles <= 0) return 0 to 0
+        val seconds = cycles * player.world.gameContext.cycleTime / 1000
+        val halfMinutes = (seconds + 29) / 30
+        return (halfMinutes / 2) to (halfMinutes % 2)
+    }
 
     /**
-     * Pushes the confirmed-real duration text (components 43/48), the points-remaining text
-     * (41/44 - now real, driven by [currentPoints]/[maxPoints] rather than left blank) and the
-     * Take-BoB-items button (67, hidden for non-BoB familiars) to interface 662.
+     * Writes the five real Summoning vars (see the constant block above). Cheap and idempotent:
+     * [gg.rsmod.game.model.Varps.setState] only queues a packet when the value actually changes,
+     * so this is safe to call every cycle from [tick] as well as from every lifecycle event.
      */
-    private fun updateHud(player: Player) {
+    fun updateHud(player: Player) {
         val npc = current(player)
-        if (npc == null) {
-            if (player.attr.has(FAMILIAR_HUD_TEXT_ATTR)) {
-                player.setComponentText(HUD_INTERFACE, HUD_TIME_COMPONENT, "")
-                player.setComponentHidden(HUD_INTERFACE, HUD_BOB_BUTTON, true)
-                player.attr.remove(FAMILIAR_HUD_TEXT_ATTR)
-            }
-        } else {
-            val cycles = if (player.timers.has(FAMILIAR_LIFETIME_TIMER)) player.timers[FAMILIAR_LIFETIME_TIMER] else 0
-            val totalSeconds = cycles * player.world.gameContext.cycleTime / 1000
-            val text = "%d:%02d".format(totalSeconds / 60, totalSeconds % 60)
-            if (player.attr[FAMILIAR_HUD_TEXT_ATTR] != text) {
-                player.attr[FAMILIAR_HUD_TEXT_ATTR] = text
-                player.setComponentText(HUD_INTERFACE, HUD_TIME_COMPONENT, text)
-                // "If you have a beast of burden or a forager out, you can click this button" -
-                // the button is shown for both, not for beasts of burden alone.
-                player.setComponentHidden(HUD_INTERFACE, HUD_BOB_BUTTON, !BeastOfBurden.isCarrierNpc(npc.id))
-            }
-        }
-        val pointsText = "${currentPoints(player)}/${maxPoints(player)}"
-        if (player.attr[FAMILIAR_HUD_POINTS_TEXT_ATTR] != pointsText) {
-            player.attr[FAMILIAR_HUD_POINTS_TEXT_ATTR] = pointsText
-            player.setComponentText(HUD_INTERFACE, HUD_POINTS_COMPONENT, pointsText)
-        }
+        val pouch = npc?.let { active -> SummoningPouchData.values.firstOrNull { it.npc == active.id } }
+        // [gg.rsmod.game.model.varp.VarpSet.setState] marks a varp dirty even when the value is
+        // unchanged, so every write here is guarded - this runs once per cycle per online player.
+        setVarpIfChanged(player, POUCH_VARP, pouch?.pouch ?: -1)
+        setVarpIfChanged(player, FAMILIAR_NPC_VARP, npc?.id ?: -1)
+        val (minutes, halfMinute) = remainingTimeVarbits(player)
+        setVarbitIfChanged(player, TIME_MINUTES_VARBIT, minutes)
+        setVarbitIfChanged(player, TIME_HALF_MINUTE_VARBIT, halfMinute)
+        setVarpIfChanged(player, SPECIAL_POINTS_VARP, currentSpecialPoints(player))
+        // The orb's special-move button has to offer the target types this familiar's own special
+        // uses - see SummoningSpecialMoves.refreshOrbButton for why nothing targeted worked before.
+        SummoningSpecialMoves.refreshOrbButton(player)
+        // ...and the follower panel's special-move name/description/cost, which the client takes
+        // from varcstr 204/205 and varbit 4288 rather than from the cache.
+        SummoningSpecialMoves.refreshPanelText(player)
+    }
+
+    /**
+     * Forces both Summoning surfaces to be redrawn from scratch on the next cycle. Used on login,
+     * where the client has just been rebuilt and holds none of the hide state the server last
+     * sent it. See [SummoningUi.invalidate] for why this is deferred rather than immediate.
+     */
+    fun redrawInterfaces(player: Player) {
+        SummoningUi.invalidate(player)
+    }
+
+    private fun setVarpIfChanged(
+        player: Player,
+        id: Int,
+        value: Int,
+    ) {
+        if (player.getVarp(id) != value) player.setVarp(id, value)
+    }
+
+    private fun setVarbitIfChanged(
+        player: Player,
+        id: Int,
+        value: Int,
+    ) {
+        if (player.getVarbit(id) != value) player.setVarbit(id, value)
     }
 
     fun current(player: Player): Npc? {
@@ -241,9 +379,12 @@ object Familiar {
                 -size to 0, 1 to 0, 0 to -size, 0 to 1,
                 -size to -size, 1 to -size, -size to 1, 1 to 1,
             )
+        val ownerFootprint = footprint(player.tile, player.getSize())
         offsets.forEach { (x, z) ->
             val candidate = player.tile.transform(x, z)
-            if (fits(player, candidate, size)) {
+            // Never place a familiar on a tile its owner is standing on: at 2x2 and 3x3 an
+            // otherwise-legal ring offset can still swallow the owner.
+            if (fits(player, candidate, size) && footprint(candidate, size).none { it in ownerFootprint }) {
                 return candidate
             }
         }
@@ -273,6 +414,14 @@ object Familiar {
             player.message("You need a Summoning level of ${data.level} to summon this familiar.")
             return false
         }
+        // Authentic RS behaviour: summoning while a follower is already out does NOT swap it for
+        // the new one - the new summon is rejected outright and the existing familiar is
+        // untouched. (2026-09-06 owner human retest: summoning another pouch incorrectly replaced
+        // the old familiar; this used to unconditionally `dismiss(player)` below instead.)
+        if (current(player) != null) {
+            player.message("You can only have one follower at a time.")
+            return false
+        }
         val definition = definition(data)
         val cost = definition.summonPoints
         if (currentPoints(player) < cost) {
@@ -286,10 +435,11 @@ object Familiar {
         if (!player.inventory.remove(data.pouch, assureFullRemoval = true).hasSucceeded()) {
             return false
         }
-        dismiss(player)
 
         val npc = Npc(player, data.npc, placementTile(player, data.npc), player.world)
         npc.publicOwner = true
+        // Familiars walk in their owner's footsteps; other creatures must not stop them dead.
+        npc.ignoresEntityCollision = true
         npc.respawnOverride = false
         npc.attr[DAMAGE_CREDIT_ATTR] = WeakReference(player)
         player.world.spawn(npc)
@@ -305,17 +455,22 @@ object Familiar {
     }
 
     /**
-     * A familiar can only be renewed below 2:50 remaining. Renew consumes one matching pouch
-     * and restores its native duration; it does not charge Summoning points a second time.
+     * Renew consumes one matching pouch and restores the familiar's native duration to full; it
+     * does not charge Summoning points a second time.
+     *
+     * 2026-09-06 owner human retest: "Renew Familiar behavior/message/threshold previously
+     * behaved incorrectly." The former "You need less than 2:50 remaining" gate had no source -
+     * runescape.wiki's Summoning familiars article describes no minimum/maximum remaining-time
+     * requirement for Renew at all, and its one Renew-related changelog entry ("Players can no
+     * longer prevent their familiars from despawning by clicking the Renew button at the right
+     * moment", 5 Jul 2010) is a fix for exploiting renewal *at* the expiry moment, which only
+     * makes sense if Renew was otherwise usable at any remaining duration, including near zero.
+     * A 170-second floor invented on top of that would itself block the exact case the patch note
+     * describes fixing an exploit around, not a real restriction. Removed rather than retuned.
      */
     fun renew(player: Player): Boolean {
         val npc = current(player) ?: return false
         val data = SummoningPouchData.values.firstOrNull { it.npc == npc.id } ?: return false
-        val remaining = if (player.timers.has(FAMILIAR_LIFETIME_TIMER)) player.timers[FAMILIAR_LIFETIME_TIMER] else 0
-        if (remaining >= renewThresholdCycles(player)) {
-            player.message("You need less than 2:50 remaining before you can renew your familiar.")
-            return false
-        }
         if (!player.inventory.remove(data.pouch, assureFullRemoval = true).hasSucceeded()) {
             player.message("You need another pouch of this type to renew your familiar.")
             return false
@@ -328,7 +483,7 @@ object Familiar {
 
     fun dismiss(player: Player) {
         val npc = current(player) ?: return
-        BeastOfBurden.release(player, npc.tile)
+        BeastOfBurden.release(player)
         player.world.remove(npc)
         clearState(player)
         player.message("Your familiar is dismissed.")
@@ -367,6 +522,8 @@ object Familiar {
         }
         val npc = Npc(player, npcId, placementTile(player, npcId), player.world)
         npc.publicOwner = true
+        // Familiars walk in their owner's footsteps; other creatures must not stop them dead.
+        npc.ignoresEntityCollision = true
         npc.respawnOverride = false
         npc.attr[DAMAGE_CREDIT_ATTR] = WeakReference(player)
         player.world.spawn(npc)
@@ -411,15 +568,12 @@ object Familiar {
      */
     fun ownerDeath(player: Player) {
         val npc = current(player) ?: return
-        val lostItems = BeastOfBurden.contents(player).isNotEmpty()
         BeastOfBurden.discard(player)
         player.world.remove(npc)
         clearState(player)
-        if (lostItems) {
-            player.message("Your familiar vanishes, taking everything it was carrying with it.")
-        } else {
-            player.message("Your familiar vanishes.")
-        }
+        // The cargo is no longer lost here - CUSTOM_SERVER_OVERRIDE, see BeastOfBurden.release,
+        // which posts its own red Death's Domain line. This one only reports the familiar.
+        player.message("Your familiar vanishes.")
         updateHud(player)
     }
 
@@ -432,16 +586,21 @@ object Familiar {
         val owner = npc.attr[DAMAGE_CREDIT_ATTR]?.get() as? Player ?: return
         if (owner.attr[FAMILIAR_ATTR]?.get() !== npc) return
         if (BeastOfBurden.isBobNpc(npc.id)) {
-            BeastOfBurden.release(owner, npc.tile)
+            BeastOfBurden.release(owner)
         }
         clearState(owner)
         updateHud(owner)
     }
     private fun clearState(player: Player) {
+        // The Familiar Inventory window belongs to a familiar that no longer exists - close it
+        // before the state it renders is gone, on every despawn route (dismiss, expiry, either
+        // death). Leaving it open would show a live-looking grid backed by nothing.
+        FamiliarInventory.close(player)
         player.attr.remove(FAMILIAR_ATTR)
         player.attr.remove(FAMILIAR_NPC_ID_ATTR)
         player.timers.remove(FAMILIAR_LIFETIME_TIMER)
         player.attr.remove(FAMILIAR_PASSIVE_HEAL_CYCLES_ATTR)
+        player.attr.remove(FAMILIAR_DRAIN_CYCLES_ATTR)
     }
 
     /** Common despawn-and-notify cleanup shared by expiry (timer or points) and manual dismiss. */
@@ -449,7 +608,7 @@ object Familiar {
         player: Player,
         npc: Npc,
     ) {
-        BeastOfBurden.release(player, npc.tile)
+        BeastOfBurden.release(player)
         player.world.remove(npc)
         clearState(player)
         player.message("Your familiar has run out of time and returns home.")
@@ -458,24 +617,115 @@ object Familiar {
 
     /** Called once/cycle per online player - see `familiar.plugin.kts`. */
     fun tick(player: Player) {
+        // First, and unconditionally: the deferred interface gating. It has to run on the cycle
+        // *after* the varps it competes with were flushed (see SummoningUi.invalidate), and it has
+        // to run when there is no familiar too - clearing the panel after a dismiss is precisely
+        // the case the owner reported as "stale Steel titan graphics".
+        SummoningUi.settle(player)
         val npc = current(player) ?: return
         regenerateSpecialPoints(player)
         applyPassiveHealing(player, npc)
+        SummoningPouchData.values.firstOrNull { it.npc == npc.id }?.let { drainPoints(player, it) }
         FamiliarCombat.assist(player)
         if (!player.timers.has(FAMILIAR_LIFETIME_TIMER)) {
             // Lifetime ran out - real RS despawns the familiar, it doesn't just sit there inert.
             expire(player, npc)
             return
         }
-        val distance = npc.tile.getDistance(player.tile)
-        if (npc.tile.height != player.tile.height || distance > Player.NORMAL_VIEW_DISTANCE) {
-            // Plane change / region teleport put the familiar out of walking range - a normal
-            // MovementQueue step can never catch up (or can't cross planes at all), so recover
-            // it the same way `call()` does rather than leaving it stranded/left behind.
-            npc.teleportNpc(placementTile(player, npc.id))
-        } else if (!npc.movementQueue.hasDestination() && distance > 1) {
-            npc.movementQueue.addStep(player.tile, MovementQueue.StepType.NORMAL, detectCollision = true)
-        }
+        follow(player, npc)
         updateHud(player)
     }
+
+    /**
+     * Authentic follower movement, rewritten 2026-09-06 after the owner's round-2 retest still
+     * reported "stays much too far behind" and "clips through walls".
+     *
+     * The three things real 2011 familiar following actually requires, and what each fixes:
+     *
+     * (1) CHASE THE OWNER'S END-OF-CYCLE TILE, NOT ITS CURRENT ONE. This runs inside
+     *     `SequentialPlayerCycleTask`, well before `SequentialSynchronizationTask` moves anyone;
+     *     `PlayerPreSynchronizationTask` (players) runs there *before*
+     *     `NpcPreSynchronizationTask` (npcs), so within one cycle the owner moves first and the
+     *     familiar moves second - exactly like real RS, where a familiar steps into the tile its
+     *     owner just left. To land there, the target must be where the owner will *finish* this
+     *     cycle. [MovementQueue.cycle] consumes two queued steps for a running pawn and one for a
+     *     walking one, so that tile is the owner's second queued step while running and its first
+     *     while walking. The previous code always used the first step, which is one full tile
+     *     short every single cycle a running owner moves - a permanent, compounding gap that
+     *     never closes while the owner keeps running. That is the "much too far behind" bug.
+     *
+     * (2) MATCH THE OWNER'S SPEED. A familiar chasing a running owner has to cover two tiles per
+     *     cycle too, so the step type mirrors how far the owner is actually moving this cycle
+     *     rather than the owner's run *toggle* (which is on even while the owner stands still).
+     *
+     * (3) DON'T STOP DEAD ON OTHER CREATURES. [MovementQueue.cycle] clears an npc's entire queue
+     *     when its next tile holds any other pawn. A familiar walking one tile behind its owner
+     *     targets occupied tiles constantly, and every such cycle it froze and lost another tile.
+     *     [Npc.ignoresEntityCollision] (set at spawn) exempts familiars from that entity check
+     *     only - scenery/wall collision is a separate `canTraverse` test and is untouched, so
+     *     this cannot reintroduce wall clipping.
+     *
+     * Walls: routing stays on [BFSPathFindingStrategy] - genuine breadth-first search with
+     * per-tile `isStepBlocked` collision - rather than [gg.rsmod.game.model.path.strategy.SimplePathFindingStrategy],
+     * which is what `Pawn.walkTo` resolves to for a non-player pawn and which has no real obstacle
+     * routing. Remaining reports of a familiar crossing scenery are the recovery teleport below
+     * firing, not the walk: it is now gated on the familiar genuinely being unable to path (a
+     * different plane, or beyond the distance at which the client can even render it), which is
+     * the same "your familiar reappears next to you" behaviour real RS has after a teleport.
+     */
+    private fun follow(
+        player: Player,
+        npc: Npc,
+    ) {
+        if (npc.tile.height != player.tile.height ||
+            npc.tile.getDistance(player.tile) > Player.NORMAL_VIEW_DISTANCE
+        ) {
+            npc.teleportNpc(placementTile(player, npc.id))
+            return
+        }
+        val ownerRunning = player.isRunning()
+        val ownerSteps = player.movementQueue.peekSteps(if (ownerRunning) 2 else 1)
+        val target = ownerSteps.lastOrNull()?.tile ?: player.tile
+        // Already in the follow slot for where the owner is about to stand: nothing to do. Using
+        // the owner's size keeps this correct for the 2x2/3x3 familiars and mounts alike.
+        if (npc.tile.isWithinRadius(target, 1)) {
+            return
+        }
+        val request =
+            PathRequest.Builder()
+                .setPoints(Tile(npc.tile), Tile(target))
+                .setSourceSize(npc.getSize(), npc.getSize())
+                .setTargetSize(player.getSize(), player.getSize())
+                .setTouchRadius(1)
+                .clipPathNodes(node = true, link = true)
+                .clipOverlapTiles()
+                .build()
+        val route = BFSPathFindingStrategy(npc.world.collision).calculateRoute(request)
+        /*
+         * 2026-09-07 owner human retest: "familiar can appear partly inside the player". A
+         * familiar is exempt from the entity-collision stop (see (3) above) so that other
+         * creatures cannot freeze it, and the price of that exemption is that nothing else stops
+         * it walking onto the tiles its owner is standing on. Real 2011 familiars stand beside
+         * their owner, never underneath. Dropping the owner's own footprint out of the route is
+         * the narrowest fix: it leaves the exemption - and therefore the fix for the freezing -
+         * intact, and only removes the destination that should never have been legal.
+         */
+        val ownerFootprint = footprint(target, player.getSize())
+        val path: java.util.Queue<Tile> =
+            java.util.ArrayDeque(route.path.filterNot { step -> footprint(step, npc.getSize()).any { it in ownerFootprint } })
+        npc.walkPath(
+            path,
+            stepType = if (ownerSteps.size > 1) MovementQueue.StepType.FORCED_RUN else MovementQueue.StepType.FORCED_WALK,
+            detectCollision = true,
+        )
+    }
+
+    /** Every tile a pawn of [size] occupies with its south-west corner on [origin]. */
+    private fun footprint(
+        origin: Tile,
+        size: Int,
+    ): List<Tile> =
+        (0 until size.coerceAtLeast(1)).flatMap { x ->
+            (0 until size.coerceAtLeast(1)).map { z -> origin.transform(x, z) }
+        }
 }

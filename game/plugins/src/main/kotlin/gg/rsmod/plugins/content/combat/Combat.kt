@@ -33,6 +33,21 @@ import java.lang.ref.WeakReference
  * @author Tom <rspsmods@gmail.com>
  */
 object Combat {
+    /**
+     * Modal interfaces that survive being attacked, plus -1 for "no modal is open".
+     *
+     * Blanket-closing every modal on the first incoming hit is not a pre-EoC rule; it is a
+     * convenience this server added. It is wrong for Summoning in particular, which is built
+     * around acting while under attack: 2011 players routinely withdrew food from a beast of
+     * burden mid-fight, and the Knowledge Base describes the Familiar Inventory as an ordinary
+     * interaction with no combat caveat. The live symptom was a pack yak's Familiar Inventory
+     * opening and then closing again about a second later, as soon as anything hit the player.
+     *
+     * 671 is the Familiar Inventory window (see
+     * [gg.rsmod.plugins.content.skills.summoning.FamiliarInventory]).
+     */
+    private val COMBAT_PERSISTENT_MODALS = intArrayOf(-1, 671)
+
     val CASTING_SPELL = AttributeKey<CombatSpell>()
     val DAMAGE_DEAL_MULTIPLIER = AttributeKey<Double>()
     val DAMAGE_TAKE_MULTIPLIER = AttributeKey<Double>()
@@ -76,7 +91,7 @@ object Combat {
             PvpSkull.markAggression(attacker = pawn, victim = target)
         }
 
-        if (target is Player && target.interfaces.getModal() != -1) {
+        if (target is Player && target.interfaces.getModal() !in COMBAT_PERSISTENT_MODALS) {
             target.closeInterface(target.interfaces.getModal())
             target.interfaces.setModal(-1)
         }

@@ -44,8 +44,18 @@ object FamiliarCombat {
             if (!silent) player.message("Your familiar cannot attack that target.")
             return false
         }
-        if (!player.tile.isMulti(player.world) || !target.tile.isMulti(player.world)) {
-            if (!silent) player.message("Your familiar can only fight in a multi-combat area.")
+        /*
+         * The multi-way rule is two separate rules with two separate messages, and collapsing them
+         * into one told the player the wrong thing half the time: standing in single combat is a
+         * different failure from standing in multi and pointing at something that is not.
+         * Wordings supplied by the owner from period screenshots.
+         */
+        if (!player.tile.isMulti(player.world)) {
+            if (!silent) player.message("Your familiar cannot fight unless it is in a multi-way combat area.")
+            return false
+        }
+        if (!target.tile.isMulti(player.world)) {
+            if (!silent) player.message("Your familiar cannot fight a target that is not in a multi-way combat area.")
             return false
         }
         if (!player.world.plugins.canAttack(player, target)) {

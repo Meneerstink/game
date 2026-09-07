@@ -3,6 +3,7 @@ package gg.rsmod.plugins.content.skills.summoning
 import gg.rsmod.game.fs.def.ItemDef
 import gg.rsmod.game.fs.def.NpcDef
 import gg.rsmod.game.model.combat.StyleType
+import gg.rsmod.plugins.api.InterfaceDestination
 import gg.rsmod.plugins.api.ext.getInteractingNpc
 import gg.rsmod.plugins.api.ext.getInteractingPlayer
 import gg.rsmod.plugins.api.ext.getInteractingItemSlot
@@ -11,6 +12,7 @@ import gg.rsmod.game.model.queue.QueueTask
 import gg.rsmod.plugins.api.ext.closeInterface
 import gg.rsmod.plugins.api.ext.inputInt
 import gg.rsmod.plugins.api.ext.message
+import gg.rsmod.plugins.api.ext.openInterface
 
 /**
  * R07.1: wires [Familiar] to the real, verified cache options - "Summon" on the pouch
@@ -27,32 +29,54 @@ import gg.rsmod.plugins.api.ext.message
 val familiarTickTimer = TimerKey()
 
 /**
- * Non-graphical withdraw-one flow: no verified BoB interface component layout exists in this
- * cache (see R07.3 note below), so item selection reuses the real [options]/[inputInt] dialog
- * primitives already used elsewhere in this codebase rather than inventing component IDs. Lists
- * contents by message (item count can exceed the confirmed 5-option dialog cap), then two
- * [inputInt] prompts pick the slot and amount.
+ * The familiar's real "Interact" option: the ordinary NPC chatbox, with the familiar's own
+ * chathead, running one of its sourced conversations (see [SummoningDialogueData]). This replaces
+ * the previous fabricated Renew/Deposit/Withdraw/Dismiss option menu, which had no basis in the
+ * cache - `runNpcDefProbeTool` shows a familiar's real options are only
+ * `[Interact, , Withdraw|Store, , ]`, and Renew/Dismiss live on the tab and orb instead.
+ *
+ * A familiar with no sourced transcript falls through to its other real cache option rather than
+ * to invented dialogue: carriers open the Familiar Inventory (their "Store"/"Withdraw" option),
+ * and anything else does nothing, which is honest about the data gap instead of papering over it
+ * with a game message.
  */
-suspend fun QueueTask.withdrawOne(player: Player) {
-    val contents = BeastOfBurden.contents(player)
-    if (contents.isEmpty()) {
-        player.message("Your familiar isn't carrying anything.")
+suspend fun QueueTask.familiarDialogue(
+    player: Player,
+    npcId: Int,
+) {
+    val pouch = SummoningPouchData.values.firstOrNull { it.npc == npcId }
+    val conversations = pouch?.let { SummoningDialogueData.conversationsFor(it) }.orEmpty()
+    if (pouch == null || conversations.isEmpty()) {
+        if (BeastOfBurden.isCarrierNpc(npcId)) {
+            FamiliarInventory.open(player)
+        }
         return
     }
-    contents.forEach { (slot, item) -> player.message("${slot + 1}: ${item.getName(world.definitions)} x${item.amount}") }
-    val choice = inputInt("Enter item number (1-${contents.size})")
-    val entry = contents.firstOrNull { it.index + 1 == choice }
-    if (entry == null) {
-        player.message("Nothing withdrawn.")
-        return
+    /*
+     * Comprehension, straight out of the 2011 Knowledge Base ("Summoning - The Basics"):
+     *
+     *   "To understand your familiars, you need a Summoning level 10 points higher than you do to
+     *    summon it - for example, to understand a magpie, which requires a Summoning level of 47 to
+     *    summon, you will need a Summoning level of 57. Obviously, you can never understand a
+     *    familiar with a Summoning level of 91, as you will not be able to boost your level above
+     *    100 ... In addition, abyssal creatures are strange, unnatural beasts, and will only speak
+     *    in what seems to be gibberish."
+     *
+     * The boosted level is the one that counts (the article's own reasoning is about boosting), so
+     * this reads the current level, not the base one. Failing the check does not silence the
+     * familiar - it removes the parenthetical translation and leaves the noise, which is what the
+     * player is meant to hear.
+     */
+    val understands =
+        !pouch.name.startsWith("ABYSSAL_") &&
+            player.skills.getCurrentLevel(Skills.SUMMONING) >= pouch.level + 10
+    conversations.random().forEach { line ->
+        when {
+            line.speaker == SummoningDialogueData.Speaker.PLAYER -> chatPlayer(line.speech)
+            line.translation.isEmpty() || !understands -> chatNpc(line.speech, npc = npcId)
+            else -> chatNpc(line.speech, line.translation, npc = npcId)
+        }
     }
-    val amount = inputInt("Enter amount (max ${entry.value.amount})")
-    if (amount <= 0) {
-        player.message("Nothing withdrawn.")
-        return
-    }
-    val withdrawn = BeastOfBurden.withdraw(player, entry.index, amount)
-    if (withdrawn > 0) player.message("You withdraw $withdrawn x ${entry.value.getName(world.definitions)} from your familiar.")
 }
 
 /**
@@ -76,7 +100,9 @@ SummoningPouchData.values().forEach { data ->
     val def = world.definitions.get(ItemDef::class.java, data.pouch)
     if (def.inventoryMenu.any { it?.lowercase() == "summon" }) {
         on_item_option(item = data.pouch, option = "summon") {
-            Familiar.summon(player, data)
+            if (Familiar.summon(player, data)) {
+                player.applyLeftClickAction()
+            }
         }
         boundSummon++
     } else {
@@ -146,50 +172,70 @@ familiarNpcIds.forEach { npc ->
             if (Familiar.current(player)?.id != npc) {
                 return@on_npc_option
             }
-            player.queue {
-                // R07.3: the 3 real Beast of Burden familiars get the full real BoB interact
-                // menu (Renew/Deposit-all/Withdraw/Withdraw-all/Dismiss) - 5 options is the
-                // confirmed max seen anywhere in this codebase (games_necklace, skills_necklace,
-                // combat_bracelet, amulet_of_glory all use exactly 5), so plain "Cancel" is
-                // dropped - escape/click-away already returns -1 with no action, same as those.
-                if (BeastOfBurden.isBobNpc(npc)) {
-                    when (options("Renew", "Deposit-all", "Withdraw", "Withdraw-all", "Dismiss")) {
-                        1 -> Familiar.renew(player)
-                        2 -> {
-                            val deposited = BeastOfBurden.depositAll(player)
-                            if (deposited > 0) player.message("You deposit $deposited item(s) with your familiar.")
-                        }
-                        3 -> withdrawOne(player)
-                        4 -> {
-                            val withdrawn = BeastOfBurden.withdrawAll(player)
-                            if (withdrawn > 0) player.message("You withdraw $withdrawn item(s) from your familiar.")
-                        }
-                        5 -> confirmDismiss(player)
-                    }
-                } else if (BeastOfBurden.isWithdrawOnlyNpc(npc)) {
-                    // A forager finds its own items: "You are only able to 'Withdraw' items from
-                    // these familiars", so the same menu without the two deposit options.
-                    when (options("Renew", "Withdraw", "Withdraw-all", "Dismiss")) {
-                        1 -> Familiar.renew(player)
-                        2 -> withdrawOne(player)
-                        3 -> {
-                            val withdrawn = BeastOfBurden.withdrawAll(player)
-                            if (withdrawn > 0) player.message("You withdraw $withdrawn item(s) from your familiar.")
-                        }
-                        4 -> confirmDismiss(player)
-                    }
-                } else {
-                    when (options("Renew", "Dismiss", "Cancel")) {
-                        1 -> Familiar.renew(player)
-                        2 -> confirmDismiss(player)
-                    }
-                }
-            }
+            player.queue { familiarDialogue(player, npc) }
         }
         boundInteract++
     } else {
         skippedInteract++
     }
+}
+
+// The familiar's real third cache option: "Store" on a beast of burden, "Withdraw" on a forager
+// (`runNpcDefProbeTool 6815` -> `OPTIONS=[Interact, , Store, , ]`, `6796`/`6817`/`6991` ->
+// `[Interact, , Withdraw, , ]`). Both open the same real Familiar Inventory window - see
+// [FamiliarInventory] - which is what makes the difference visible: a beast of burden gets a
+// Store-enabled backpack panel next to the grid, a forager a read-only one. Bound only where the
+// cache actually carries the option, using the same skip-and-count idiom as Interact above.
+var boundStore = 0
+var skippedStore = 0
+familiarNpcIds.filter { BeastOfBurden.isCarrierNpc(it) }.forEach { npc ->
+    val def = world.definitions.get(NpcDef::class.java, npc)
+    val option = def.options.firstOrNull { it?.lowercase() == "store" || it?.lowercase() == "withdraw" }
+    if (option != null) {
+        on_npc_option(npc = npc, option = option.lowercase()) {
+            if (Familiar.current(player)?.id != npc) {
+                return@on_npc_option
+            }
+            FamiliarInventory.open(player)
+        }
+        boundStore++
+    } else {
+        skippedStore++
+    }
+}
+
+/*
+ * 2026-09-07 owner human retest: "Cure Unicorn stallion currently has no effect and no chatbox
+ * feedback." That option is not a one-off. A census of all 78 familiar npc definitions in the
+ * production cache (`runNpcDefProbeTool`, kept at summoning_refs/familiar_npcdefs.txt) shows the
+ * complete set of option strings a familiar can carry is:
+ *
+ *   Interact (78)  Withdraw (20)  Store (9)  Drain (7, the -atrice family)
+ *   Cure (Unicorn stallion)   Burrow (Desert wyrm)     Cannon (Barker toad)
+ *   Special (Dreadfowl)       Fireball (Forge regent)  Drown (Karamthulhu overlord)
+ *   Ash-blast (Phoenix)       Flames (Smoke devil)     Strike (Void torcher)
+ *
+ * Every one of those thirteen non-carry options is the same thing wearing the familiar's own
+ * name: a second entry point to that familiar's special move, next to the follower panel's
+ * button and the orb's "Cast <move>". So they are bound once, generically, to the same
+ * [SummoningSpecialMoves] dispatch - there are no per-npc ability implementations here, and no
+ * option is bound that the cache does not really carry.
+ */
+val carryOptions = setOf("interact", "store", "withdraw")
+var boundAbility = 0
+familiarNpcIds.forEach { npcId ->
+    val def = world.definitions.get(NpcDef::class.java, npcId)
+    def.options.filterNotNull().map { it.lowercase() }.filter { it.isNotBlank() && it !in carryOptions }
+        .distinct()
+        .forEach { option ->
+            on_npc_option(npc = npcId, option = option) {
+                if (Familiar.current(player)?.id != npcId) {
+                    return@on_npc_option
+                }
+                SummoningSpecialMoves.castFromFamiliarOption(player)
+            }
+            boundAbility++
+        }
 }
 
 // R07.3: depositing into a Beast of Burden familiar - real RS mechanic is using an
@@ -213,17 +259,45 @@ on_world_init {
     SummoningLedger.validate()
     println(
         "R07.1 familiar: bound Summon on $boundSummon/${boundSummon + skippedSummon} pouches, " +
-            "Interact on $boundInteract/${boundInteract + skippedInteract} familiar npcs " +
+            "Interact on $boundInteract/${boundInteract + skippedInteract} familiar npcs, " +
+            "$boundAbility unique familiar ability options, " +
+            "Store on $boundStore/${boundStore + skippedStore} BoB npcs " +
             "(skipped entries didn't have that exact real cache option - not guessed).",
     )
 }
 
 on_login {
     player.timers[familiarTickTimer] = 1
+    // Without varbit 4280 the client hides the orb's whole familiar-option layer (747:8), so this
+    // has to be armed before anything else here writes Summoning state - see Familiar.unlockInterface.
+    Familiar.unlockInterface(player)
     // R07.7: real RS mechanic - a familiar survives logout, its lifetime timer just pauses
     // (tickOffline = false) and resumes with the same time/points left on login, it does not
     // get dismissed. See Familiar.disconnect/restoreOnLogin.
     Familiar.restoreOnLogin(player)
+    // Unconditional: varps persist, so an account that logged out with a familiar and then lost it
+    // (expiry while offline, a cleared save) would otherwise log back in with varp 448/1174 still
+    // naming the old familiar and the tab drawing a follower that does not exist.
+    Familiar.updateHud(player)
+    player.applyLeftClickAction()
+    // The client is freshly rebuilt at this point and holds none of the IF_SETHIDE state the
+    // server last sent, so the panel/orb gating has to be re-sent unconditionally.
+    Familiar.redrawInterfaces(player)
+    // ...and again a few cycles in. The gameframe is still being assembled while login runs, and
+    // every component an interface (re)builds comes back with its baked hidden flag, which would
+    // silently undo the first pass. Cheap, one-shot, and it makes the login path behave like the
+    // mid-session path rather than being a special case.
+    player.queue {
+        wait(5)
+        Familiar.redrawInterfaces(player)
+    }
+    // CUSTOM_SERVER_OVERRIDE (see BeastOfBurden.release): a familiar's cargo is rescued into
+    // Death's Domain instead of being lost or floored, so the player is reminded on every login
+    // for as long as anything is still waiting there.
+    val waiting = BeastOfBurden.deathsDomainCount(player)
+    if (waiting > 0) {
+        player.message("<col=ff0000>You have items stored at Death's Domain.")
+    }
 }
 
 on_timer(familiarTickTimer) {
@@ -262,8 +336,17 @@ on_button(662, 49) { // "Call familiar" (portrait button)
     Familiar.call(player)
 }
 
-on_button(662, 51) { // "Dismiss Familiar"
-    player.queue { confirmDismiss(player) }
+/*
+ * 662:51 carries two real ops in the cache: `ops=[1:'Dismiss Familiar', 2:'Dismiss Now']`. Op 2 is
+ * the deliberate "skip the confirmation" shortcut, so it must not re-ask; only op 1 confirms.
+ * IF_BUTTON2 arrives as opcode 64, the same mapping the bank's container handlers already use.
+ */
+on_button(662, 51) {
+    if (player.getInteractingOpcode() == 64) {
+        Familiar.dismiss(player)
+    } else {
+        player.queue { confirmDismiss(player) }
+    }
 }
 
 on_button(662, 69) { // "Renew Familiar"
@@ -362,43 +445,167 @@ on_button(747, arrayOf(14, 23)) { // "Attack" - see R07.3b note on 662's Attack 
  * (SummoningSpecialMoves.resolveBinding) rather than from any per-scroll id, because no such
  * ids exist in this cache. 662 has no equivalent trigger.
  */
-on_button(747, 25) {
-    SummoningSpecialMoves.castInstant(player)
+/*
+ * 2026-09-07 owner human retest: "Special Move from the main Follower Details GUI does NOTHING."
+ * That was true, and 747:25 alone could never have fixed it. The real special-move buttons on
+ * both surfaces are *dynamic* components:
+ *
+ *   `disasm 211` (bound to 662:74 and 747:17 `onLoad`/`onVarTransmit`/`onVarcstrTransmit`, varp
+ *   448 / varcstr 205) calls script 606, which does `CC_CREATE` under **662:74** and **747:17**,
+ *   and script 608, which gives that child `opbase = "<col=00ff00>" + varcstr 204` (the familiar's
+ *   own move name - this is where "Cast Venom Shot" in the orb menu comes from), a target verb of
+ *   "Cast", and `op1 = "Cast"` only when varc 1436 is set.
+ *
+ * A click on a dynamic child is addressed to its parent, with the child index in `slot` (see
+ * IfButton1Decoder/IfButton1Handler), so the three parents below are the complete set of real
+ * triggers: 662:74 is the follower panel's button, 747:17 the orb's, and 747:25 the orb's baked
+ * "Spell"/"Cast" twin. 662 had no binding at all before this, which is exactly the reported fault.
+ *
+ * Whether the click fires on the spot or starts target selection is not decided here: the server
+ * drives varc 1436 from the active familiar's own binding (SummoningUi.refreshSpecialMode), so
+ * INSTANT specials get an op1 and targeted ones only get the verb.
+ */
+arrayOf(
+    SummoningUi.PANEL to SummoningUi.PANEL_SPECIAL,
+    SummoningUi.ORB to SummoningUi.ORB_SPECIAL,
+    SummoningUi.ORB to 25,
+).forEach { (parent, component) ->
+    on_button(parent, component) {
+        SummoningSpecialMoves.castInstant(player)
+    }
+    on_spell_on_player(parent, component) {
+        SummoningSpecialMoves.castOnPlayer(player, player.getInteractingPlayer())
+    }
+    on_spell_on_npc(parent, component) {
+        SummoningSpecialMoves.castOnNpc(player, player.getInteractingNpc())
+    }
+    on_spell_on_item(parent, component) {
+        SummoningSpecialMoves.castOnInventoryItem(player, player.getInteractingItemSlot())
+    }
 }
 
-on_spell_on_npc(747, 25) {
-    SummoningSpecialMoves.castOnNpc(player, player.getInteractingNpc())
+// 2026-09-06 owner human retest: "Select left-click option" displays choices but does not
+// actually configure the left-click behaviour. Completes the two actions the R08 correction
+// above left unbound ("Follower Details"/"Interact" had no clear distinct server effect at the
+// time) and wires interface 880 - see SummoningLeftClick.kt for the full design note on why this
+// is a server-driven IF_SETHIDE switch rather than a recovered client variable.
+/*
+ * "Follower Details" - the authentic effect is simply to switch the sidebar to the Summoning tab,
+ * and the cache does it client-side: 747:9 and 747:18 both carry `onOp=[2457, 95, ...]`, and
+ * `disasm 2457` resolves the gameframe tab component through `GOSUB(8)` and writes the selected
+ * tab into varc 168 - no server packet is involved at all. The server-side focus below is the
+ * same operation through this engine's existing `focusTab` (client script 115 -> 71 -> the same
+ * varc 168), so a client that does run its own onOp simply lands on the tab twice.
+ *
+ * This replaces the previous chat-message summary, which was a fabricated substitute for an
+ * interface action.
+ */
+on_button(747, arrayOf(9, 18)) { // "Follower Details"
+    player.focusTab(Tabs.SUMMONING)
 }
 
-on_spell_on_item(747, 25) {
-    SummoningSpecialMoves.castOnInventoryItem(player, player.getInteractingItemSlot())
+on_button(747, arrayOf(15, 26)) { // "Interact"
+    val npc = Familiar.current(player) ?: return@on_button
+    player.queue { familiarDialogue(player, npc.id) }
+}
+
+on_button(747, 7) { // "Select left-click option" (op10 on 747:7, opens 880)
+    // Real 2011 behaviour (see SummoningLeftClick.kt): 880's preview varbit (1494) starts the
+    // dialog showing whatever is already the real active choice (1493), not blank/unset.
+    player.setPendingLeftClickAction(player.leftClickAction())
+    player.openInterface(880, InterfaceDestination.MAIN_SCREEN)
+}
+
+LeftClickAction.ORDERED.forEach { action ->
+    val (graphic, text) = action.selectRow
+    on_button(880, arrayOf(graphic, text)) {
+        // Real 2011 behaviour: selecting a row live-updates 880's own preview icon (component 3,
+        // driven by the client's own onVarTransmit redraw off the varbit this writes) - the
+        // interface shows the highlight itself, there is no chatbox feedback for this step.
+        player.setPendingLeftClickAction(action)
+    }
+}
+
+on_button(880, 21) { // "Confirm Selection"
+    player.confirmLeftClickAction()
+    player.closeInterface(880)
 }
 
 /*
- * R07.8 (Phase 5): interface 671 ("Familiar Inventory" / graphical BoB window) - real
- * component ids 13 ("Close"), 14 ("Familiar Inventory" title, no action) and 29 ("Take BoB,
- * Take Beast of Burden items.") verified live this session via the same raw cache probe as 662/
- * 747. Wired defensively so the window behaves correctly whenever it's open.
- *
- * Honest blocker, unchanged from the Phase 4/5 evidence trail: no real cache trigger to OPEN
- * 671 was sourced this session - the BoB npc's own verified option set is "Interact" only (R07.1
- * finding), and neither 662 nor 747's real component text names a distinct "View"/"Open BoB
- * inventory" action, so nothing in this codebase currently calls `player.openInterface(671, ...)`.
- * The item-slot/container grid among 671's other ~28 components also has no extracted text in
- * the raw scan (consistent with being a container/background widget, but its exact component id
- * and slot-count binding isn't decodable this way) - real per-item graphical withdraw/deposit
- * therefore isn't implemented; the existing chat-based `withdrawOne` prompt and the instant
- * withdraw-all bindings (662/747) remain the real, working BoB access path.
+ * Interface 671 - the real graphical "Familiar Inventory" window. The previous blocker note here
+ * ("no real cache trigger to OPEN 671 was sourced", "the item-slot grid ... isn't decodable")
+ * is resolved: the open trigger is the familiar's own third cache option (Store / Withdraw, wired
+ * above) and the grid is 671:27, a 6x5 = 30-cell layer whose dimensions are provable from the
+ * divider graphics' baked positions. See [FamiliarInventory] for the whole evidence trail.
  */
-on_button(671, 13) { // "Close"
-    player.closeInterface(671)
+on_button(671, FamiliarInventory.CLOSE_COMPONENT) { // "Close"
+    FamiliarInventory.close(player)
 }
 
-on_button(671, 29) { // "Take BoB, Take Beast of Burden items."
+on_interface_close(671) {
+    FamiliarInventory.onClosed(player)
+}
+
+on_button(671, FamiliarInventory.TAKE_BOB_COMPONENT) { // "Take BoB, Take Beast of Burden items."
     val npc = Familiar.current(player)
     if (npc == null || !BeastOfBurden.isCarrierNpc(npc.id)) {
         return@on_button
     }
     val withdrawn = BeastOfBurden.withdrawAll(player)
     if (withdrawn > 0) player.message("You withdraw $withdrawn item(s) from your familiar.")
+}
+
+/*
+ * Withdrawing: a click on the familiar's own 6x5 grid. Opcode -> amount uses exactly the same
+ * mapping the bank's container handlers already use in this codebase (61/64/4 = ops 1..3,
+ * 91 = "-All", 81 = "-X"), so the meaning of each opcode is established by working code.
+ */
+on_button(671, FamiliarInventory.GRID_COMPONENT) p@{
+    if (!FamiliarInventory.isOpen(player)) {
+        return@p
+    }
+    val slot = player.getInteractingSlot()
+    val opcode = player.getInteractingOpcode()
+    val container = BeastOfBurden.activeContainer(player) ?: return@p
+    if (slot !in 0 until container.capacity) {
+        return@p
+    }
+    val item = container[slot] ?: return@p
+    if (opcode == 25) {
+        world.sendExamine(player, item.id, ExamineEntityType.ITEM)
+        return@p
+    }
+    if (FamiliarInventory.isEnterAmount(opcode)) {
+        player.queue(TaskPriority.WEAK) {
+            val amount = inputInt("How many would you like to withdraw?")
+            if (amount > 0) BeastOfBurden.withdraw(player, slot, amount)
+        }
+        return@p
+    }
+    val amount = FamiliarInventory.amountFor(opcode, item.amount)
+    if (amount > 0) BeastOfBurden.withdraw(player, slot, amount)
+}
+
+/* Storing: a click on the backpack panel that sits alongside the window. */
+on_button(665, FamiliarInventory.SIDE_COMPONENT) p@{
+    if (!FamiliarInventory.isOpen(player)) {
+        return@p
+    }
+    val slot = player.getInteractingSlot()
+    val opcode = player.getInteractingOpcode()
+    val item = player.inventory[slot] ?: return@p
+    if (opcode == 25) {
+        world.sendExamine(player, item.id, ExamineEntityType.ITEM)
+        return@p
+    }
+    if (FamiliarInventory.isEnterAmount(opcode)) {
+        player.queue(TaskPriority.WEAK) {
+            val amount = inputInt("How many would you like to store?")
+            if (amount > 0) BeastOfBurden.deposit(player, Item(item.id, minOf(amount, player.inventory.getItemCount(item.id))))
+        }
+        return@p
+    }
+    val available = player.inventory.getItemCount(item.id)
+    val amount = FamiliarInventory.amountFor(opcode, available)
+    if (amount > 0) BeastOfBurden.deposit(player, Item(item.id, minOf(amount, available)))
 }

@@ -59,6 +59,19 @@ class Npc private constructor(
     var publicOwner: Boolean = false
 
     /**
+     * Lets this npc step onto a tile another [Pawn] is standing on.
+     *
+     * [gg.rsmod.game.model.MovementQueue.cycle] normally reacts to that by clearing an npc's whole
+     * movement queue and refusing to move at all for the cycle, which is right for ordinary
+     * wandering/chasing npcs but wrong for a Summoning familiar: a familiar walks in its owner's
+     * footsteps a single tile behind, so it constantly targets tiles that another player or npc
+     * happens to be standing on, and every one of those cycles it would simply stop dead and fall
+     * another tile behind. Real familiars are not blocked by other creatures - only by scenery.
+     * Wall/scenery collision is unaffected; that is the separate `canTraverse` check above.
+     */
+    var ignoresEntityCollision: Boolean = false
+
+    /**
      * This flag indicates whether or not this npc will respawn after death.
      *
      * [World.setNpcDefaults] recomputes this from the npc's [NpcCombatDef] every time it is

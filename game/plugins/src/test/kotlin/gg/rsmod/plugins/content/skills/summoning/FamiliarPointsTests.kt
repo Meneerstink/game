@@ -3,6 +3,7 @@ package gg.rsmod.plugins.content.skills.summoning
 import com.displee.cache.CacheLibrary
 import gg.rsmod.game.fs.DefinitionSet
 import gg.rsmod.game.fs.def.ItemDef
+import gg.rsmod.game.fs.def.VarbitDef
 import gg.rsmod.game.model.PawnList
 import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.World
@@ -52,7 +53,7 @@ class FamiliarPointsTests {
     @Test
     fun `summon refuses when points are below its real pouch cost`() {
         val player = newPlayer(summoningLevel = PACK_YAK.level)
-        player.attr[gg.rsmod.game.model.attr.SUMMONING_POINTS_ATTR] = 9
+        player.skills.setCurrentLevel(gg.rsmod.plugins.api.Skills.SUMMONING, 9)
         player.inventory[0] = Item(PACK_YAK.pouch, 1)
 
         assertFalse(Familiar.summon(player, PACK_YAK))
@@ -75,16 +76,27 @@ class FamiliarPointsTests {
     }
 
     @Test
-    fun `renew requires low remaining time and consumes one matching pouch`() {
+    fun `renew is not gated by remaining time and consumes one matching pouch`() {
+        // 2026-09-06 owner human retest: the former "less than 2:50 remaining" gate had no
+        // source (see Familiar.renew's KDoc) and is removed - Renew must work at any remaining
+        // duration, including immediately after summoning.
         val player = newPlayer(summoningLevel = DREADFOWL.level)
         player.inventory[0] = Item(DREADFOWL.pouch, 2)
         check(Familiar.summon(player, DREADFOWL))
-        assertFalse(Familiar.renew(player), "renew must reject a familiar with more than 2:50 left")
-
-        player.timers[FAMILIAR_LIFETIME_TIMER] = 1
-        assertTrue(Familiar.renew(player))
+        assertTrue(Familiar.renew(player), "renew must work regardless of remaining time")
         assertEquals(400, player.timers[FAMILIAR_LIFETIME_TIMER])
         assertEquals(0, player.inventory.getItemCount(DREADFOWL.pouch))
+    }
+
+    @Test
+    fun `renew without a matching pouch fails and leaves the timer untouched`() {
+        val player = newPlayer(summoningLevel = DREADFOWL.level)
+        player.inventory[0] = Item(DREADFOWL.pouch, 1)
+        check(Familiar.summon(player, DREADFOWL))
+        player.timers[FAMILIAR_LIFETIME_TIMER] = 1
+
+        assertFalse(Familiar.renew(player))
+        assertEquals(1, player.timers[FAMILIAR_LIFETIME_TIMER])
     }
 
     @Test
@@ -92,7 +104,7 @@ class FamiliarPointsTests {
         val player = newPlayer(summoningLevel = PACK_YAK.level)
         player.inventory[0] = Item(PACK_YAK.pouch, 1)
         check(Familiar.summon(player, PACK_YAK))
-        player.attr[gg.rsmod.game.model.attr.SUMMONING_POINTS_ATTR] = 0
+        player.skills.setCurrentLevel(gg.rsmod.plugins.api.Skills.SUMMONING, 0)
 
         Familiar.tick(player)
 
@@ -102,7 +114,7 @@ class FamiliarPointsTests {
     @Test
     fun `summoning and special points are separate capped resources`() {
         val player = newPlayer(summoningLevel = 43)
-        player.attr[gg.rsmod.game.model.attr.SUMMONING_POINTS_ATTR] = 5
+        player.skills.setCurrentLevel(gg.rsmod.plugins.api.Skills.SUMMONING, 5)
 
         Familiar.restorePoints(player, 10)
         assertEquals(15, Familiar.currentPoints(player))
@@ -147,6 +159,10 @@ class FamiliarPointsTests {
         every { player.timers } returns TimerMap()
         every { player.skills } returns skills
         every { player.tile } returns Tile(0, 0, 0)
+        // Familiar.tick drives the interface gating, which writes varc 1436 (the special-move
+        // button's instant/targeted flag). Player.varcs is sized from the varbit definitions on a
+        // real world; a relaxed mock hands back an empty list and the write goes out of bounds.
+        every { player.varcs } returns MutableList(DEFINITIONS.getCount(VarbitDef::class.java)) { 0 }
         return player
     }
 

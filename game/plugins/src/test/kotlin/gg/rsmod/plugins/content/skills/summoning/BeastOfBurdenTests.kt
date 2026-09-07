@@ -92,6 +92,7 @@ class BeastOfBurdenTests {
     @Test
     fun `withdrawAll empties the active BoB container back into the inventory`() {
         val player = newPlayer(familiarNpcId = Npcs.WAR_TORTOISE)
+        player.inventory[0] = Item(TEST_STACKABLE, 3)
         BeastOfBurden.deposit(player, Item(TEST_STACKABLE, 3))
         check(player.containers.getValue(BeastOfBurden.WAR_TORTOISE_KEY).getItemCount(TEST_STACKABLE) == 3)
 
@@ -114,6 +115,7 @@ class BeastOfBurdenTests {
     @Test
     fun `each BoB familiar keeps its own separate container`() {
         val yakPlayer = newPlayer(familiarNpcId = Npcs.PACK_YAK)
+        yakPlayer.inventory[0] = Item(TEST_STACKABLE, 2)
         BeastOfBurden.deposit(yakPlayer, Item(TEST_STACKABLE, 2))
 
         // War Tortoise's container is never even lazily created for this player - it was
@@ -132,6 +134,100 @@ class BeastOfBurdenTests {
         assertEquals(5, BeastOfBurden.deposit(player, Item(Items.PURE_ESSENCE, 5)))
         assertEquals(5, player.containers.getValue(BeastOfBurden.ABYSSAL_TITAN_KEY).getItemCount(Items.PURE_ESSENCE))
     }
+
+    @Test
+    fun `a stale deposit cannot create cargo without inventory items`() {
+        val player = newPlayer(familiarNpcId = Npcs.PACK_YAK)
+        val staleItem = Item(TEST_STACKABLE, 5)
+        player.inventory[0] = staleItem
+        player.inventory[0] = null
+
+        assertEquals(0, BeastOfBurden.deposit(player, staleItem))
+        assertTrue(BeastOfBurden.contents(player).isEmpty())
+        assertEquals(0, player.inventory.getItemCount(TEST_STACKABLE))
+    }
+
+    @Test
+    fun `an oversized deposit moves only the quantity still owned`() {
+        val player = newPlayer(familiarNpcId = Npcs.PACK_YAK)
+        player.inventory[0] = Item(TEST_STACKABLE, 3)
+
+        assertEquals(3, BeastOfBurden.deposit(player, Item(TEST_STACKABLE, 8)))
+        assertEquals(0, player.inventory.getItemCount(TEST_STACKABLE))
+        assertEquals(3, player.containers.getValue(BeastOfBurden.PACK_YAK_KEY).getItemCount(TEST_STACKABLE))
+    }
+
+    @Test
+    fun `partial deposit removes only cargo that fits`() {
+        val player = newPlayer(familiarNpcId = Npcs.PACK_YAK)
+        assertEquals(29, BeastOfBurden.grant(player, Item(Items.LOGS, 29)))
+        player.inventory.add(Items.LOGS, 3, assureFullInsertion = true)
+
+        assertEquals(1, BeastOfBurden.deposit(player, Item(Items.LOGS, 3)))
+        assertEquals(2, player.inventory.getItemCount(Items.LOGS))
+        assertEquals(30, player.containers.getValue(BeastOfBurden.PACK_YAK_KEY).getItemCount(Items.LOGS))
+    }
+
+    @Test
+    fun `full cargo leaves inventory unchanged`() {
+        val player = newPlayer(familiarNpcId = Npcs.PACK_YAK)
+        assertEquals(30, BeastOfBurden.grant(player, Item(Items.LOGS, 30)))
+        player.inventory[0] = Item(TEST_STACKABLE, 5)
+
+        assertEquals(0, BeastOfBurden.deposit(player, player.inventory[0]!!))
+        assertEquals(5, player.inventory.getItemCount(TEST_STACKABLE))
+        assertEquals(0, player.containers.getValue(BeastOfBurden.PACK_YAK_KEY).getItemCount(TEST_STACKABLE))
+    }
+
+    @Test
+    fun `withdrawAll leaves untransferred items in cargo when inventory fills`() {
+        val player = newPlayer(familiarNpcId = Npcs.PACK_YAK)
+        assertEquals(3, BeastOfBurden.grant(player, Item(Items.LOGS, 3)))
+        player.inventory.add(Items.LOGS, 27, assureFullInsertion = true)
+
+        assertEquals(1, BeastOfBurden.withdrawAll(player))
+        assertEquals(28, player.inventory.getItemCount(Items.LOGS))
+        assertEquals(2, player.containers.getValue(BeastOfBurden.PACK_YAK_KEY).getItemCount(Items.LOGS))
+        assertEquals(0, BeastOfBurden.withdrawAll(player))
+    }
+
+    @Test
+    fun `withdraw preserves cargo beyond the inventory stack limit`() {
+        val player = newPlayer(familiarNpcId = Npcs.PACK_YAK)
+        assertEquals(5, BeastOfBurden.grant(player, Item(TEST_STACKABLE, 5)))
+        player.inventory[0] = Item(TEST_STACKABLE, Int.MAX_VALUE - 2)
+
+        assertEquals(2, BeastOfBurden.withdraw(player, 0, 5))
+        assertEquals(Int.MAX_VALUE, player.inventory.getItemCount(TEST_STACKABLE))
+        assertEquals(3, player.containers.getValue(BeastOfBurden.PACK_YAK_KEY).getItemCount(TEST_STACKABLE))
+    }
+
+    @Test
+    fun `invalid withdrawal amounts and slots leave both containers unchanged`() {
+        val player = newPlayer(familiarNpcId = Npcs.PACK_YAK)
+        assertEquals(5, BeastOfBurden.grant(player, Item(TEST_STACKABLE, 5)))
+        player.inventory[0] = Item(TEST_STACKABLE, 10)
+
+        assertEquals(0, BeastOfBurden.withdraw(player, 0, 0))
+        assertEquals(0, BeastOfBurden.withdraw(player, 0, -1))
+        assertEquals(0, BeastOfBurden.withdraw(player, -1, 1))
+        assertEquals(0, BeastOfBurden.withdraw(player, 30, 1))
+        assertEquals(10, player.inventory.getItemCount(TEST_STACKABLE))
+        assertEquals(5, player.containers.getValue(BeastOfBurden.PACK_YAK_KEY).getItemCount(TEST_STACKABLE))
+    }
+
+    @Test
+    fun `invalid deposit amounts leave both containers unchanged`() {
+        val player = newPlayer(familiarNpcId = Npcs.PACK_YAK)
+        assertEquals(5, BeastOfBurden.grant(player, Item(TEST_STACKABLE, 5)))
+        player.inventory[0] = Item(TEST_STACKABLE, 10)
+
+        assertEquals(0, BeastOfBurden.deposit(player, Item(TEST_STACKABLE, 0)))
+        assertEquals(0, BeastOfBurden.deposit(player, Item(TEST_STACKABLE, -1)))
+        assertEquals(10, player.inventory.getItemCount(TEST_STACKABLE))
+        assertEquals(5, player.containers.getValue(BeastOfBurden.PACK_YAK_KEY).getItemCount(TEST_STACKABLE))
+    }
+
     private fun newPlayer(familiarNpcId: Int?): Player {
         val world = mockk<World>(relaxed = true)
         every { world.definitions } returns DEFINITIONS

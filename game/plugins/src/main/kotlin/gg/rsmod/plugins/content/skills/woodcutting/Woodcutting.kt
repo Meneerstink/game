@@ -1,5 +1,7 @@
 package gg.rsmod.plugins.content.skills.woodcutting
 
+import gg.rsmod.plugins.content.skills.summoning.SummoningBoosts
+
 import gg.rsmod.game.fs.def.ItemDef
 import gg.rsmod.game.fs.def.ObjectDef
 import gg.rsmod.game.model.collision.ObjectType
@@ -56,7 +58,8 @@ object Woodcutting {
                 interpolate(
                     (tree.lowChance * axe.ratio).toInt(),
                     (tree.highChance * axe.ratio).toInt(),
-                    player.skills.getCurrentLevel(Skills.WOODCUTTING),
+                    // Invisible familiar boost: raises the success roll only, never a requirement.
+                    SummoningBoosts.effectiveLevel(player, Skills.WOODCUTTING),
                 ) > RANDOM.nextInt(255)
             if (success) {
                 val wasChoppedDown = onSuccess(player, obj, tree, axe.item == Items.INFERNO_ADZE, farmingTreeState)

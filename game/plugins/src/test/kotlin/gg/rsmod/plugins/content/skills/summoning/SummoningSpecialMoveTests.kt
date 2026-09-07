@@ -18,6 +18,7 @@ import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.api.cfg.Items
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import org.junit.BeforeClass
 import java.lang.ref.WeakReference
 import java.nio.file.Paths
@@ -29,20 +30,24 @@ import kotlin.test.assertTrue
 
 class SummoningSpecialMoveTests {
     @Test
-    fun `core dispatcher uses unique verified components`() {
+    fun `dispatcher resolves the right binding by active familiar, not a component id`() {
+        // R08: 662/747 have no per-scroll component ids at all (confirmed against the real
+        // cache), so resolution is keyed by which familiar the player has summoned.
         SummoningSpecialMoves.validate()
-        assertEquals(35, SummoningSpecialMoves.bindings.size)
-        assertTrue(SummoningSpecialMoves.bindings.map { it.detailsComponent }.containsAll(setOf(77, 139, 127, 121, 173)))
-        assertTrue(SummoningSpecialMoves.bindings.map { it.orbComponent }.containsAll(setOf(161, 130, 136, 139, 113)))
+        // 52 before 2026-09-07, plus Call to Arms (the four Void familiars), Petrifying Gaze (the
+        // seven "-atrice" familiars) and Rise from the Ashes (Phoenix) - twelve familiars that had
+        // no special-move binding at all, and therefore a dead Special Move button.
+        assertEquals(55, SummoningSpecialMoves.bindings.size)
+        val player = newPlayer(SummoningPouchData.WAR_TORTOISE.npc)
+        assertEquals(SummoningScrollData.TESTUDO_SCROLL, SummoningSpecialMoves.resolveBinding(player)?.scroll)
     }
 
     @Test
     fun `wrong familiar cannot consume testudo scroll or energy`() {
         val player = newPlayer(SummoningPouchData.DREADFOWL.npc)
         player.inventory[0] = Item(Items.TESTUDO_SCROLL)
-        val binding = binding(SummoningScrollData.TESTUDO_SCROLL)
 
-        assertFalse(SummoningSpecialMoves.castInstant(player, binding))
+        assertFalse(SummoningSpecialMoves.castInstant(player))
         assertEquals(1, player.inventory.getItemCount(Items.TESTUDO_SCROLL))
         assertEquals(60, Familiar.currentSpecialPoints(player))
     }
@@ -51,9 +56,8 @@ class SummoningSpecialMoveTests {
     fun `testudo boosts defence and consumes exactly one scroll and twenty points`() {
         val player = newPlayer(SummoningPouchData.WAR_TORTOISE.npc)
         player.inventory[0] = Item(Items.TESTUDO_SCROLL, 2)
-        val binding = binding(SummoningScrollData.TESTUDO_SCROLL)
 
-        assertTrue(SummoningSpecialMoves.castInstant(player, binding))
+        assertTrue(SummoningSpecialMoves.castInstant(player))
         assertEquals(8, player.skills.getCurrentLevel(Skills.DEFENCE) - player.skills.getMaxLevel(Skills.DEFENCE))
         assertEquals(1, player.inventory.getItemCount(Items.TESTUDO_SCROLL))
         assertEquals(40, Familiar.currentSpecialPoints(player))
@@ -64,17 +68,83 @@ class SummoningSpecialMoveTests {
         val player = newPlayer(SummoningPouchData.PACK_YAK.npc)
         player.inventory[0] = Item(Items.WINTER_STORAGE_SCROLL)
         player.inventory[5] = Item(Items.COINS_995, 10)
-        val binding = binding(SummoningScrollData.WINTER_STORAGE_SCROLL)
 
-        assertTrue(SummoningSpecialMoves.castOnInventoryItem(player, binding, 5))
+        assertTrue(SummoningSpecialMoves.castOnInventoryItem(player, 5))
         assertEquals(9, player.inventory.getItemCount(Items.COINS_995))
         assertEquals(1, player.bank.getItemCount(Items.COINS_995))
         assertEquals(0, player.inventory.getItemCount(Items.WINTER_STORAGE_SCROLL))
         assertEquals(48, Familiar.currentSpecialPoints(player))
     }
 
-    private fun binding(scroll: SummoningScrollData) =
-        SummoningSpecialMoves.bindings.single { it.scroll == scroll || scroll in it.alternativeScrolls }
+    @Test
+    fun `blood drain deals flat self-damage, cures poison and requires sixty lifepoints`() {
+        val player = newPlayer(SummoningPouchData.BLOATED_LEECH.npc)
+        every { player.getCurrentLifepoints() } returns 59
+        player.inventory[0] = Item(Items.BLOOD_DRAIN_SCROLL)
+
+        assertFalse(SummoningSpecialMoves.castInstant(player))
+        assertEquals(1, player.inventory.getItemCount(Items.BLOOD_DRAIN_SCROLL))
+
+        every { player.getCurrentLifepoints() } returns 60
+        assertTrue(SummoningSpecialMoves.castInstant(player))
+        assertEquals(0, player.inventory.getItemCount(Items.BLOOD_DRAIN_SCROLL))
+        verify { player.alterLifepoints(value = -10) }
+    }
+
+    @Test
+    fun `herbcall spawns a grimy herb and consumes exactly one scroll and twelve points`() {
+        val player = newPlayer(SummoningPouchData.MACAW.npc)
+        player.inventory[0] = Item(Items.HERBCALL_SCROLL, 2)
+
+        assertTrue(SummoningSpecialMoves.castInstant(player))
+        assertEquals(1, player.inventory.getItemCount(Items.HERBCALL_SCROLL))
+        assertEquals(48, Familiar.currentSpecialPoints(player))
+    }
+
+    @Test
+    fun `ophidian incubation transforms a verified egg but rejects an unmapped item`() {
+        val player = newPlayer(SummoningPouchData.SPIRIT_COBRA.npc)
+        player.inventory[0] = Item(Items.OPH_INCUBATION_SCROLL, 2)
+        player.inventory[5] = Item(Items.EGG)
+
+        assertTrue(SummoningSpecialMoves.castOnInventoryItem(player, 5))
+        assertEquals(0, player.inventory.getItemCount(Items.EGG))
+        assertEquals(1, player.inventory.getItemCount(Items.COCKATRICE_EGG))
+        assertEquals(1, player.inventory.getItemCount(Items.OPH_INCUBATION_SCROLL))
+        assertEquals(57, Familiar.currentSpecialPoints(player))
+
+        player.inventory[6] = Item(Items.COINS_995, 10)
+        assertFalse(SummoningSpecialMoves.castOnInventoryItem(player, 6))
+        assertEquals(10, player.inventory.getItemCount(Items.COINS_995), "unmapped item must not be consumed")
+        assertEquals(1, player.inventory.getItemCount(Items.OPH_INCUBATION_SCROLL), "failed cast must not consume the scroll")
+    }
+
+    @Test
+    fun `immense heat opens the jewellery crafting interface only with a gold bar and consumes one scroll and six points`() {
+        val player = newPlayer(SummoningPouchData.PYRELORD.npc)
+        player.inventory[0] = Item(Items.IMMENSE_HEAT_SCROLL, 2)
+
+        assertFalse(SummoningSpecialMoves.castInstant(player))
+        assertEquals(2, player.inventory.getItemCount(Items.IMMENSE_HEAT_SCROLL), "no gold bar means nothing should be consumed")
+
+        player.inventory[1] = Item(Items.GOLD_BAR)
+        assertTrue(SummoningSpecialMoves.castInstant(player))
+        assertEquals(1, player.inventory.getItemCount(Items.IMMENSE_HEAT_SCROLL))
+        assertEquals(54, Familiar.currentSpecialPoints(player))
+    }
+
+    @Test
+    fun `swallow whole heals for the cooked fish's value and consumes exactly one scroll and three points`() {
+        val player = newPlayer(SummoningPouchData.BUNYIP.npc)
+        player.inventory[0] = Item(Items.SWALLOW_WHOLE_SCROLL, 2)
+        player.inventory[5] = Item(Items.RAW_SHRIMPS)
+
+        assertTrue(SummoningSpecialMoves.castOnInventoryItem(player, 5))
+        assertEquals(0, player.inventory.getItemCount(Items.RAW_SHRIMPS))
+        assertEquals(1, player.inventory.getItemCount(Items.SWALLOW_WHOLE_SCROLL))
+        assertEquals(57, Familiar.currentSpecialPoints(player))
+        verify { player.alterLifepoints(value = 30, capValue = 0) }
+    }
 
     private fun newPlayer(familiarNpcId: Int): Player {
         val world = mockk<World>(relaxed = true)
@@ -82,8 +152,8 @@ class SummoningSpecialMoveTests {
         val npcs = PawnList(arrayOfNulls<Npc>(10))
         every { world.npcs } returns npcs
         every { world.gameContext.cycleTime } returns 600
-        val skills = SkillSet(Skills.SUMMONING + 1)
-        for (skill in 0..Skills.SUMMONING) {
+        val skills = SkillSet(SkillSet.DEFAULT_SKILL_COUNT)
+        for (skill in 0 until SkillSet.DEFAULT_SKILL_COUNT) {
             skills.setBaseLevel(skill, 99)
             skills.setCurrentLevel(skill, 99)
         }

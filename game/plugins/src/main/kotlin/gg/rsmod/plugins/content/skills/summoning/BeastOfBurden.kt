@@ -1,14 +1,16 @@
 package gg.rsmod.plugins.content.skills.summoning
 
+import gg.rsmod.game.model.attr.DEATH_RECOVERY_FEE_ATTR
 import gg.rsmod.game.model.container.ContainerStackType
 import gg.rsmod.game.model.container.ItemContainer
 import gg.rsmod.game.model.container.key.ContainerKey
-import gg.rsmod.game.model.Tile
-import gg.rsmod.game.model.entity.GroundItem
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.api.ext.message
+
+/** Inline red, the only red this revision's chatbox has - see [BeastOfBurden.release]. */
+private const val DEATHS_DOMAIN_RED = "<col=ff0000>"
 
 /**
  * Familiar item storage: the nine beasts of burden and the twenty-two foragers.
@@ -115,6 +117,24 @@ object BeastOfBurden {
     /** The active familiar inventory key, if the summoned familiar can carry items. */
     fun activeKey(player: Player): ContainerKey? = storage(player)?.key
 
+    /**
+     * The live container behind the active familiar, or null when nothing that carries items is
+     * out. [FamiliarInventory] renders this directly rather than copying it, so the window and the
+     * server can never disagree about what the familiar is holding.
+     */
+    fun activeContainer(player: Player): ItemContainer? = activeKey(player)?.let { container(player, it) }
+
+    /**
+     * Every mutation below funnels through here so the graphical window (when open) and the
+     * player's backpack are both re-sent in the same breath as the change - the immediate
+     * client/server synchronisation the Beast of Burden acceptance criteria require.
+     */
+    private fun synchronise(player: Player) {
+        if (FamiliarInventory.isOpen(player)) {
+            FamiliarInventory.refresh(player)
+        }
+    }
+
     private fun container(
         player: Player,
         key: ContainerKey,
@@ -129,6 +149,7 @@ object BeastOfBurden {
         player: Player,
         item: Item,
     ): Int {
+        if (item.amount <= 0) return 0
         val storage = storage(player) ?: run {
             player.message("You need an active Beast of Burden familiar out to store items with it.")
             return 0
@@ -143,13 +164,22 @@ object BeastOfBurden {
             player.message("Your familiar can't carry that item.")
             return 0
         }
-        val transaction = container(player, key).add(item.id, item.amount, assureFullInsertion = false)
+        // Item-on-familiar actions can retain an item reference while queued. Recheck
+        // ownership here, and never credit more cargo than the inventory can pay for.
+        val requested = minOf(item.amount, player.inventory.getItemCount(item.id))
+        if (requested <= 0) return 0
+        val held = container(player, key)
+        val transaction = held.add(item.id, requested, assureFullInsertion = false)
         if (transaction.completed <= 0) {
             player.message("Your familiar can't carry any more of that.")
             return 0
         }
-        player.inventory.remove(Item(item.id, transaction.completed), assureFullRemoval = true)
-        return transaction.completed
+        val removed = player.inventory.remove(item.id, transaction.completed, assureFullRemoval = true).completed
+        if (removed < transaction.completed) {
+            held.remove(item.id, transaction.completed - removed, assureFullRemoval = true)
+        }
+        synchronise(player)
+        return removed
     }
 
     /**
@@ -160,7 +190,9 @@ object BeastOfBurden {
      */
     fun grant(player: Player, item: Item): Int {
         val key = activeKey(player) ?: return 0
-        return container(player, key).add(item.id, item.amount, assureFullInsertion = false).completed
+        val added = container(player, key).add(item.id, item.amount, assureFullInsertion = false).completed
+        synchronise(player)
+        return added
     }
 
     /** Withdraws everything from the active BoB container into the inventory, best-effort. */
@@ -175,6 +207,7 @@ object BeastOfBurden {
             container[slot] = if (transaction.completed == item.amount) null else Item(item.id, item.amount - transaction.completed)
             withdrawn += transaction.completed
         }
+        synchronise(player)
         return withdrawn
     }
 
@@ -184,13 +217,16 @@ object BeastOfBurden {
         slot: Int,
         amount: Int,
     ): Int {
+        if (amount <= 0) return 0
         val key = activeKey(player) ?: return 0
         val container = container(player, key)
+        if (slot !in 0 until container.capacity) return 0
         val item = container[slot] ?: return 0
         val take = minOf(amount, item.amount)
         val transaction = player.inventory.add(item.id, take, assureFullInsertion = false)
         if (transaction.completed <= 0) return 0
         container[slot] = if (transaction.completed == item.amount) null else Item(item.id, item.amount - transaction.completed)
+        synchronise(player)
         return transaction.completed
     }
 
@@ -206,32 +242,86 @@ object BeastOfBurden {
             val item = player.inventory[slot] ?: continue
             deposited += deposit(player, item)
         }
+        synchronise(player)
         return deposited
     }
     /**
-     * A dismissed, expired or replaced familiar drops its stored items at the familiar's tile.
-     * Logout deliberately does not call this: the same familiar and items return on login.
+     * CUSTOM_SERVER_OVERRIDE - deliberately **not** authentic 2011 behaviour.
+     *
+     * In 2011 a beast of burden's cargo was simply lost when the familiar went away (the "drop it
+     * on the floor" rule is the 22 August 2016 ninja strike, and dropping it here would in any
+     * case put it on the ground for anyone to take). The owner's standing design decision for
+     * this server is that the cargo is never lost and never floored: it moves into the player's
+     * own Death's Domain recovery storage instead, and the player is told so in red.
+     *
+     * Safety properties, in order of importance:
+     *
+     * * **No duplication and no loss.** Each slot is inserted first and only cleared once the
+     *   insert has actually completed; a slot that cannot be inserted is left exactly where it is
+     *   rather than being deleted. `assureFullInsertion = false` plus the completed-amount check
+     *   means a partially inserted stack leaves the remainder behind instead of vanishing.
+     * * **Persistence.** [Player.deathRecovery] is a saved container
+     *   ([gg.rsmod.game.model.container.key.DEATH_RECOVERY_KEY]), so the cargo survives logout and
+     *   a server restart.
+     * * **Free to reclaim.** The reclaim fee is only defaulted when nothing has set one; an
+     *   unpaid fee from a real death is never overwritten, and cargo rescued from a familiar
+     *   never invents a charge of its own.
+     *
+     * Called by every path that takes a familiar away while it still holds items - dismiss,
+     * expiry, death, replacement and the owner's own death. Logout deliberately does not call it:
+     * the same familiar and the same items come back on login.
      */
-    fun release(player: Player, tile: Tile) {
-        val key = activeKey(player) ?: return
-        val held = container(player, key)
-        for (slot in 0 until held.capacity) {
-            val item = held[slot] ?: continue
-            player.world.spawn(GroundItem(item, tile, player))
-            held[slot] = null
-        }
+    fun release(player: Player) {
+        moveToDeathsDomain(player)
     }
+
     /**
-     * Empties the active BoB container without dropping anything. Used only by
-     * [Familiar.ownerDeath], where this revision loses the cargo outright rather than dropping it
-     * - see that function for the sourcing. Every other despawn path uses [release].
+     * Same override as [release]; kept as a distinct entry point because [Familiar.ownerDeath]
+     * used to destroy the cargo outright and the difference is worth keeping visible.
      */
     fun discard(player: Player) {
+        moveToDeathsDomain(player)
+    }
+
+    /** How many items are currently waiting in Death's Domain. */
+    fun deathsDomainCount(player: Player): Int =
+        (0 until player.deathRecovery.capacity).count { player.deathRecovery[it] != null }
+
+    private fun moveToDeathsDomain(player: Player) {
         val key = activeKey(player) ?: return
         val held = container(player, key)
+        var moved = 0
+        var stranded = 0
         for (slot in 0 until held.capacity) {
-            held[slot] = null
+            val item = held[slot] ?: continue
+            val transaction = player.deathRecovery.add(item.id, item.amount, assureFullInsertion = false)
+            if (transaction.completed <= 0) {
+                stranded++
+                continue
+            }
+            held[slot] =
+                if (transaction.completed == item.amount) {
+                    null
+                } else {
+                    Item(item.id, item.amount - transaction.completed).copyAttr(item)
+                }
+            moved++
         }
+        if (moved == 0) {
+            return
+        }
+        if (player.attr[DEATH_RECOVERY_FEE_ATTR] == null) {
+            player.attr[DEATH_RECOVERY_FEE_ATTR] = 0
+        }
+        // Red, per the owner's specification. This revision has no red chat *type*; every other
+        // red line in this codebase is an inline colour tag on an ordinary game message.
+        player.message("$DEATHS_DOMAIN_RED Your familiar's items have been moved to Death's Domain.")
+        if (stranded > 0) {
+            player.message(
+                "$DEATHS_DOMAIN_RED Death's Domain is full - $stranded of your familiar's items could not be stored.",
+            )
+        }
+        synchronise(player)
     }
 
     /** Non-null (slot, item) pairs in the active BoB container, for building a withdraw-selection prompt. */
