@@ -1,5 +1,9 @@
 package gg.rsmod.plugins.content.skills.summoning
 
+import gg.rsmod.game.fs.def.BasDef
+import gg.rsmod.game.fs.def.NpcDef
+import gg.rsmod.game.model.World
+
 /**
  * Cross-entity boot assertions for the Summoning ledger.
  *
@@ -32,6 +36,33 @@ object SummoningLedger {
         validateInventories()
         validateSpecialMoveCompleteness()
         validateInterfaceCapabilities()
+    }
+
+    /**
+     * Every one of the 78 familiars must resolve to a real idle animation from the cache
+     * (owner requirement H13).
+     *
+     * This gate needs a loaded [World] and so is separate from [validate]. It walks the same chain
+     * the Follower Details panel does: `NpcDef.basId` (NPCType opcode 127) -> `BasDef` (config
+     * group 32) -> `ready`, or the weighted `readyAnimations` pool for the two familiars whose set
+     * varies its idle. Every familiar resolves as of 2026-09-07 - see
+     * `C:\RSPS\summoning_refs\familiar_bastypes.txt` - so anything that stops resolving is a
+     * regression in the decode chain, not a data gap, and the run should not boot past it silently.
+     */
+    fun validateRenderData(world: World) {
+        val unresolved =
+            SummoningPouchData.values.mapNotNull { pouch ->
+                val basId = world.definitions.get(NpcDef::class.java, pouch.npc).basId
+                if (basId == -1) {
+                    return@mapNotNull "${pouch.name} (npc ${pouch.npc}) has no basId"
+                }
+                val idle = world.definitions.get(BasDef::class.java, basId).idleAnimation()
+                if (idle == -1) "${pouch.name} (npc ${pouch.npc}, bas $basId) has no idle animation" else null
+            }
+        check(unresolved.isEmpty()) {
+            "${unresolved.size} of 78 familiars have no resolvable idle animation, so the Follower " +
+                "Details panel would fall back to the client's pet default for them: $unresolved"
+        }
     }
 
     /**

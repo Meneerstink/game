@@ -94,6 +94,55 @@ suspend fun QueueTask.confirmDismiss(player: Player) {
     }
 }
 
+/**
+ * "Take BoB" - identical on all three surfaces it is offered from (the follower panel's button, the
+ * orb, and the Familiar Inventory window), so it is written once here rather than three times.
+ *
+ * Two rules it enforces:
+ *
+ *  * **Capability.** The familiar must actually carry items. This is re-checked server-side even
+ *    though the option is hidden for non-carriers, so a forged or stale click after a dismiss,
+ *    expiry or familiar swap cannot act on a familiar that has no store.
+ *  * **Feedback on the empty case** (owner requirement H9). Withdrawing nothing used to be
+ *    silent, which is indistinguishable from a broken button. It now says so.
+ */
+fun takeBeastOfBurdenItems(player: Player) {
+    if (!FamiliarCapabilityTable.activeSupports(player, FamiliarAction.TAKE_BOB)) {
+        player.message("Your familiar cannot carry items for you.")
+        return
+    }
+    val stored = BeastOfBurden.storedCount(player)
+    if (stored == 0) {
+        player.message("Your familiar isn't carrying anything.")
+        return
+    }
+    val withdrawn = BeastOfBurden.withdrawAll(player)
+    when {
+        withdrawn == 0 -> player.message("You don't have enough inventory space to take those items.")
+        withdrawn < stored ->
+            player.message("You take $withdrawn item(s) from your familiar; you have no room for the rest.")
+        else -> player.message("You withdraw $withdrawn item(s) from your familiar.")
+    }
+}
+
+/**
+ * R07.7: authentic dismiss confirmation - real RS asks before dismissing a familiar (losing it
+ * forfeits the remaining life/points, an irreversible action worth guarding against misclicks).
+ *
+ * Renew gets the same treatment for the same reason (owner requirement H12): renewing consumes a
+ * second pouch, which is destroyed, and the old implementation consumed it on the first click with
+ * no way back. The confirmation is asked **before** anything is taken - [Familiar.renew] is only
+ * reached once the player has said yes.
+ */
+suspend fun QueueTask.confirmRenew(player: Player) {
+    if (!FamiliarCapabilityTable.activeSupports(player, FamiliarAction.RENEW)) {
+        return
+    }
+    if (options("Yes", "No", title = "Renew your familiar?") == 1) {
+        Familiar.renew(player)
+    }
+}
+
 var boundSummon = 0
 var skippedSummon = 0
 SummoningPouchData.values().forEach { data ->
@@ -257,6 +306,8 @@ on_world_init {
     SummoningCombatDefinitions.validate()
     SummoningSpecialMoves.validate()
     SummoningLedger.validate()
+    // H13: needs the loaded cache, so it cannot live in SummoningLedger.validate().
+    SummoningLedger.validateRenderData(world)
     println(
         "R07.1 familiar: bound Summon on $boundSummon/${boundSummon + skippedSummon} pouches, " +
             "Interact on $boundInteract/${boundInteract + skippedInteract} familiar npcs, " +
@@ -279,6 +330,13 @@ on_login {
     // (expiry while offline, a cleared save) would otherwise log back in with varp 448/1174 still
     // naming the old familiar and the tab drawing a follower that does not exist.
     Familiar.updateHud(player)
+    // H1: the Follower Details entry point is a sidebar tab now, and the spare tab slot is baked
+    // with no op and a hidden icon, so it has to be armed after every gameframe build.
+    FollowerDetailsTab.install(player)
+    // H6 removed varbit-6454 values 0 and 7 from the orb; an account still holding one of them
+    // would otherwise have no left-click action at all. Runs before applyLeftClickAction so the
+    // varp transmitted below already carries the corrected value.
+    player.migrateRemovedDefault()
     player.applyLeftClickAction()
     // The client is freshly rebuilt at this point and holds none of the IF_SETHIDE state the
     // server last sent, so the panel/orb gating has to be re-sent unconditionally.
@@ -350,16 +408,11 @@ on_button(662, 51) {
 }
 
 on_button(662, 69) { // "Renew Familiar"
-    Familiar.renew(player)
+    player.queue { confirmRenew(player) }
 }
 
-on_button(662, 67) { // "Take Beast of Burden items" - gated to real BoB familiars only
-    val npc = Familiar.current(player)
-    if (npc == null || !BeastOfBurden.isCarrierNpc(npc.id)) {
-        return@on_button
-    }
-    val withdrawn = BeastOfBurden.withdrawAll(player)
-    if (withdrawn > 0) player.message("You withdraw $withdrawn item(s) from your familiar.")
+on_button(662, 67) { // "Take Beast of Burden items" - capability-gated, see takeBeastOfBurdenItems
+    takeBeastOfBurdenItems(player)
 }
 
 // Interface-target packets for the follower-details attack action.
@@ -405,31 +458,29 @@ on_button(662, 65) { // "Order your familiar to attack a target"
  * meaning from the npc's own interact option). Left honestly unimplemented rather than guessed.
  */
 on_button(747, arrayOf(10, 19)) { // "Call Follower"
-    Familiar.call(player)
+    if (FamiliarCapabilityTable.activeSupports(player, FamiliarAction.CALL)) {
+        Familiar.call(player)
+    }
 }
 
 on_button(747, arrayOf(11, 20)) { // "Dismiss"
-    player.queue { confirmDismiss(player) }
+    if (FamiliarCapabilityTable.activeSupports(player, FamiliarAction.DISMISS)) {
+        player.queue { confirmDismiss(player) }
+    }
 }
 
 on_button(747, arrayOf(12, 21)) { // "Take BoB"
-    val npc = Familiar.current(player)
-    if (npc == null || !BeastOfBurden.isCarrierNpc(npc.id)) {
-        return@on_button
-    }
-    val withdrawn = BeastOfBurden.withdrawAll(player)
-    if (withdrawn > 0) player.message("You withdraw $withdrawn item(s) from your familiar.")
+    takeBeastOfBurdenItems(player)
 }
 
 on_button(747, arrayOf(13, 22)) { // "Renew Familiar"
-    Familiar.renew(player)
+    player.queue { confirmRenew(player) }
 }
 
 on_button(747, arrayOf(14, 23)) { // "Attack" - see R07.3b note on 662's Attack button above.
-    if (Familiar.current(player) == null) {
-        return@on_button
+    if (FamiliarCapabilityTable.activeSupports(player, FamiliarAction.ATTACK)) {
+        player.message("Select a target for your familiar.")
     }
-    player.message("Select a target for your familiar.")
 }
 
 /*
@@ -484,29 +535,23 @@ arrayOf(
     }
 }
 
-// 2026-09-06 owner human retest: "Select left-click option" displays choices but does not
-// actually configure the left-click behaviour. Completes the two actions the R08 correction
-// above left unbound ("Follower Details"/"Interact" had no clear distinct server effect at the
-// time) and wires interface 880 - see SummoningLeftClick.kt for the full design note on why this
-// is a server-driven IF_SETHIDE switch rather than a recovered client variable.
 /*
- * "Follower Details" - the authentic effect is simply to switch the sidebar to the Summoning tab,
- * and the cache does it client-side: 747:9 and 747:18 both carry `onOp=[2457, 95, ...]`, and
- * `disasm 2457` resolves the gameframe tab component through `GOSUB(8)` and writes the selected
- * tab into varc 168 - no server packet is involved at all. The server-side focus below is the
- * same operation through this engine's existing `focusTab` (client script 115 -> 71 -> the same
- * varc 168), so a client that does run its own onOp simply lands on the tab twice.
+ * Owner requirements H1 and H6: "Follower Details" (747:9 / 747:18) and "Interact" (747:15 /
+ * 747:26) are no longer orb actions and have **no bindings here at all**.
  *
- * This replaces the previous chat-message summary, which was a fabricated substitute for an
- * interface action.
+ * Follower Details moved to the sidebar tab strip - see [FollowerDetailsTab] for why it had to
+ * become a real tab button rather than a menu entry. Interact was a duplicate: the familiar's own
+ * npc option already opens the same conversation, and it is bound above.
+ *
+ * Both components are hidden on every orb refresh by [SummoningUi.refreshOrb], because the cache's
+ * own script 2671 shows them again whenever the left-click varp is transmitted. Leaving them
+ * unbound as well means that even if a client did surface one, it would do nothing.
  */
-on_button(747, arrayOf(9, 18)) { // "Follower Details"
-    player.focusTab(Tabs.SUMMONING)
+on_button(FollowerDetailsTab.buttons[0].first, FollowerDetailsTab.buttons[0].second) {
+    FollowerDetailsTab.open(player)
 }
-
-on_button(747, arrayOf(15, 26)) { // "Interact"
-    val npc = Familiar.current(player) ?: return@on_button
-    player.queue { familiarDialogue(player, npc.id) }
+on_button(FollowerDetailsTab.buttons[1].first, FollowerDetailsTab.buttons[1].second) {
+    FollowerDetailsTab.open(player)
 }
 
 on_button(747, 7) { // "Select left-click option" (op10 on 747:7, opens 880)
@@ -516,9 +561,14 @@ on_button(747, 7) { // "Select left-click option" (op10 on 747:7, opens 880)
     player.openInterface(880, InterfaceDestination.MAIN_SCREEN)
 }
 
-LeftClickAction.ORDERED.forEach { action ->
+FamiliarAction.ORDERED.forEach { action ->
     val (graphic, text) = action.selectRow
     on_button(880, arrayOf(graphic, text)) {
+        // H7: a row for an action this familiar cannot perform is not selectable. The rows are
+        // baked into 880 and cannot be removed, so the guard is here as well as in the redraw.
+        if (action !in player.selectableActions()) {
+            return@on_button
+        }
         // Real 2011 behaviour: selecting a row live-updates 880's own preview icon (component 3,
         // driven by the client's own onVarTransmit redraw off the varbit this writes) - the
         // interface shows the highlight itself, there is no chatbox feedback for this step.
@@ -547,12 +597,7 @@ on_interface_close(671) {
 }
 
 on_button(671, FamiliarInventory.TAKE_BOB_COMPONENT) { // "Take BoB, Take Beast of Burden items."
-    val npc = Familiar.current(player)
-    if (npc == null || !BeastOfBurden.isCarrierNpc(npc.id)) {
-        return@on_button
-    }
-    val withdrawn = BeastOfBurden.withdrawAll(player)
-    if (withdrawn > 0) player.message("You withdraw $withdrawn item(s) from your familiar.")
+    takeBeastOfBurdenItems(player)
 }
 
 /*

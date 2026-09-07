@@ -16,4 +16,11 @@ enum class ArchiveType(
     ANIM(20, modernArchive = true, archiveOperand = 7, fileOperand = 0x7f),
     SPOTANIM(21, modernArchive = true, archiveOperand = 8),
     VARBIT(22, modernArchive = true, archiveOperand = 10, fileOperand = 0x3FF),
+
+    /**
+     * Body animation sets - the npc/player "render animation" table. Not a modern paged index:
+     * it is config group 32 inside index 2 (`Js5ConfigGroup.BASTYPE = 32` in the revision 667
+     * client), which is where every npc's real ready/walk/run/crawl sequences live.
+     */
+    BAS(2, modernArchive = false, subId = 32),
 }

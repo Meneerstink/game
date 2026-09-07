@@ -1,9 +1,13 @@
 package gg.rsmod.plugins.content.skills.summoning
 
+import gg.rsmod.game.fs.def.BasDef
+import gg.rsmod.game.fs.def.NpcDef
 import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.api.ext.runClientScript
 import gg.rsmod.plugins.api.ext.setComponentHidden
+import gg.rsmod.plugins.api.ext.setComponentAnim
+import gg.rsmod.plugins.api.ext.setComponentSprite
 import gg.rsmod.plugins.api.ext.setComponentText
 import gg.rsmod.plugins.api.ext.setVarc
 
@@ -36,9 +40,9 @@ import gg.rsmod.plugins.api.ext.setVarc
  *
  * ## Capabilities
  *
- * Nothing in here is a per-npc special case; every decision reads existing sourced data:
- * [BeastOfBurden] for carrying, [SummoningCombatDefinitions] for fighting and
- * [SummoningSpecialMoves] for the special move.
+ * Nothing in here is a per-npc special case. Every decision is delegated to
+ * [FamiliarCapabilityTable], the one place that derives what a familiar can do from the sourced
+ * tables, so the panel, the orb, the npc options and the left-click selector cannot disagree.
  */
 object SummoningUi {
     /** Interface 662 - Follower Details, mounted on gameframe slot 95. */
@@ -102,22 +106,6 @@ object SummoningUi {
     /** The special-move button; like 662:74 its clickable child is created by script 606. */
     const val ORB_SPECIAL = 17
 
-    /** The baked special-move twin ("Spell"/"Cast"), 747:16 -> 24 -> 25. */
-    private const val ORB_SPECIAL_BAKED_LAYER = 16
-
-    /** op6 / op1 twins for "Take BoB". */
-    private val ORB_TAKE_BOB = intArrayOf(12, 21)
-
-    /** op10+target / target-only twins for "Attack". */
-    private val ORB_ATTACK = intArrayOf(14, 23)
-
-    /**
-     * Every per-familiar option component on the orb: the `op6` right-click set (9..15) and the
-     * `op1` left-click set (18..23, 26) that clientscript 2671 pairs them with. Hidden one by one
-     * when there is no familiar - see [refreshOrb].
-     */
-    private val ORB_OPTIONS = intArrayOf(9, 10, 11, 12, 13, 14, 15, 18, 19, 20, 21, 22, 23, 26)
-
     /**
      * The cache's own left-click pairing script, bound to 747:7 `onVarTransmit` on varp 1493.
      * Re-running it restores every op1/op6 twin to the state varbit 6454 asks for.
@@ -133,11 +121,25 @@ object SummoningUi {
      */
     private const val SPECIAL_IS_INSTANT_VARC = 1436
 
+    /**
+     * The Summoning orb's own icon, 747:3. The cache bakes sprite [ORB_SPRITE_INACTIVE] here and
+     * clientscript 751 overwrites it with [ORB_SPRITE_ACTIVE] on its has-familiar path - and has
+     * no branch anywhere that puts the baked value back. That is why the orb stayed lit after a
+     * dismiss (owner requirement H3): nothing in the client was ever going to un-light it.
+     */
+    private const val ORB_ICON = 3
+
+    /** Recovered from the cache: the value 747:3 is baked with, i.e. the authentic inactive orb. */
+    private const val ORB_SPRITE_INACTIVE = 1244
+
+    /** The value clientscript 751 writes to 747:3 when a familiar is out. */
+    private const val ORB_SPRITE_ACTIVE = 1802
+
     /** Whether this familiar can be ordered to attack - i.e. it has real, sourced combat data. */
-    fun canFight(npcId: Int): Boolean = SummoningCombatDefinitions.getByNpc(npcId)?.isExecutable == true
+    fun canFight(npcId: Int): Boolean = FamiliarCapabilityTable.forNpc(npcId)?.canFight == true
 
     /** Whether "Take BoB" / the Familiar Inventory apply - beasts of burden and foragers. */
-    fun carries(npcId: Int): Boolean = BeastOfBurden.isCarrierNpc(npcId)
+    fun carries(npcId: Int): Boolean = FamiliarCapabilityTable.forNpc(npcId)?.carries == true
 
     /**
      * The familiar the two surfaces are currently drawn for, so the ~15 `IF_SETHIDE` packets this
@@ -187,6 +189,34 @@ object SummoningUi {
         refreshSpecialMode(player)
     }
 
+    /**
+     * The familiar's own idle sequence, sent to the panel's model (662:1).
+     *
+     * Clientscript 751 animates that model with `ENUM(1276, varbit 4282)`, and varbit 4282 is the
+     * **pet** growth stage - so every familiar was being drawn with the same pet idle. The real
+     * per-familiar sequence is reachable from the cache: [gg.rsmod.game.fs.def.NpcDef.basId]
+     * (NPCType opcode 127) keys [gg.rsmod.game.fs.def.BasDef], whose `ready` (or weighted
+     * `readyAnimations` pool) is the animation the npc idles with in the world.
+     *
+     * All 78 familiars resolve to a real sequence this way - see
+     * `C:\RSPS\summoning_refs\familiar_bastypes.txt`. Nothing is substituted or guessed: a
+     * familiar whose set carried no idle at all would be left alone rather than given someone
+     * else's animation.
+     */
+    private fun refreshPanelAnimation(
+        player: Player,
+        npcId: Int,
+    ) {
+        val basId = player.world.definitions.get(NpcDef::class.java, npcId).basId
+        if (basId == -1) {
+            return
+        }
+        val idle = player.world.definitions.get(BasDef::class.java, basId).idleAnimation()
+        if (idle != -1) {
+            player.setComponentAnim(PANEL, PANEL_MODEL, idle)
+        }
+    }
+
     private fun refreshPanel(
         player: Player,
         npcId: Int?,
@@ -217,17 +247,33 @@ object SummoningUi {
 
         player.setComponentHidden(PANEL, PANEL_MODEL, false)
         player.setComponentHidden(PANEL, PANEL_SPECIAL_INFO, false)
-        val carries = carries(npcId!!)
+        // The same capability record the orb reads, so the two surfaces cannot disagree.
+        val capabilities = FamiliarCapabilityTable.forNpc(npcId!!)
+        val carries = capabilities?.supports(FamiliarAction.TAKE_BOB) == true
         PANEL_TAKE_BOB.forEach { player.setComponentHidden(PANEL, it, !carries) }
-        player.setComponentHidden(PANEL, PANEL_ATTACK_LAYER, !canFight(npcId))
-        player.setComponentHidden(PANEL, PANEL_SPECIAL, !hasSpecial(player))
+        player.setComponentHidden(PANEL, PANEL_ATTACK_LAYER, capabilities?.supports(FamiliarAction.ATTACK) != true)
+        player.setComponentHidden(PANEL, PANEL_SPECIAL, capabilities?.supports(FamiliarAction.SPECIAL_MOVE) != true)
+        refreshPanelAnimation(player, npcId)
     }
 
+    /**
+     * Draws the orb for the familiar that is out, or makes it inert when none is.
+     *
+     * Two owner requirements shape this and neither is negotiable from the cache's side:
+     *
+     * * **H6/H1** - "Follower Details" and "Interact" are removed outright. They are hidden on
+     *   every pass, familiar or not, because clientscript 2671 shows them again whenever the
+     *   left-click varp is transmitted.
+     * * **H3** - with no familiar the orb must not look active. Script 751 lights 747:3 with
+     *   sprite [ORB_SPRITE_ACTIVE] and never puts the baked [ORB_SPRITE_INACTIVE] back, so the
+     *   server has to.
+     */
     private fun refreshOrb(
         player: Player,
         npcId: Int?,
     ) {
-        if (npcId == null) {
+        val capabilities = npcId?.let { FamiliarCapabilityTable.forNpc(it) }
+        if (capabilities == null) {
             /*
              * Without a familiar the orb's authentic menu is "Select left-click option" and
              * nothing else; every entry under 747:8 would be an option with no subject.
@@ -238,10 +284,9 @@ object SummoningUi {
              * hidden flag, not from its ancestors'. So every option component is hidden
              * individually, and 747:8 with them.
              */
-            ORB_OPTIONS.forEach { player.setComponentHidden(ORB, it, true) }
-            player.setComponentHidden(ORB, ORB_SPECIAL, true)
-            player.setComponentHidden(ORB, ORB_SPECIAL_BAKED_LAYER, true)
+            FamiliarAction.ALL_ORB_COMPONENTS.forEach { player.setComponentHidden(ORB, it, true) }
             player.setComponentHidden(ORB, ORB_FAMILIAR_LAYER, true)
+            player.setComponentSprite(ORB, ORB_ICON, ORB_SPRITE_INACTIVE)
             return
         }
         player.setComponentHidden(ORB, ORB_FAMILIAR_LAYER, false)
@@ -249,15 +294,16 @@ object SummoningUi {
         // regains a capability gets its entry back without this object having to reimplement 2671.
         player.runClientScript(LEFT_CLICK_PAIRING_SCRIPT)
 
-        val special = hasSpecial(player)
-        player.setComponentHidden(ORB, ORB_SPECIAL, !special)
-        player.setComponentHidden(ORB, ORB_SPECIAL_BAKED_LAYER, !special)
-        if (!carries(npcId)) {
-            ORB_TAKE_BOB.forEach { player.setComponentHidden(ORB, it, true) }
+        // Then subtract, unconditionally and by capability. Order matters: 2671 has just re-shown
+        // everything it owns, including the two removed actions and any action this familiar
+        // cannot perform.
+        FamiliarAction.REMOVED_ORB_COMPONENTS.forEach { player.setComponentHidden(ORB, it, true) }
+        FamiliarAction.ORDERED.forEach { action ->
+            if (!capabilities.supports(action)) {
+                action.orbComponents.forEach { player.setComponentHidden(ORB, it, true) }
+            }
         }
-        if (!canFight(npcId)) {
-            ORB_ATTACK.forEach { player.setComponentHidden(ORB, it, true) }
-        }
+        player.setComponentSprite(ORB, ORB_ICON, ORB_SPRITE_ACTIVE)
     }
 
     /**

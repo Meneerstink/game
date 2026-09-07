@@ -270,7 +270,7 @@ class PlayerUpdateBlockSegment(
                     }
                 } else {
                     val def = other.world.definitions.get(NpcDef::class.java, other.getTransmogId())
-                    appBuf.put(DataType.SHORT, def.walkAnim)
+                    appBuf.put(DataType.SHORT, def.basId)
                 }
                 appBuf.putString(Misc.formatForDisplay(other.username))
                 appBuf.put(DataType.BYTE, other.combatLevel)

@@ -12,8 +12,13 @@ class NpcDef(
 ) : Definition(id) {
     var name = ""
     var size = 1
-    var standAnim = -1
-    var walkAnim = -1
+    /**
+     * The npc's body-animation-set id ("render animation"), NPCType opcode 127. Not an animation
+     * id: it keys BASType (config group 32), which is where the real ready/walk/run/crawl
+     * sequences live. Decoded as `walkAnim` until 2026-09-07, which is why nothing could find a
+     * familiar's idle animation - see FamiliarRenderProbeTool.
+     */
+    var basId = -1
     var render3 = -1
     var render4 = -1
     var render5 = -1
@@ -34,6 +39,20 @@ class NpcDef(
     var walkMask = -1
 
     var examine: String? = null
+
+    /**
+     * Ambient movement sound ids (opcode 134), -1 when none. Purely diagnostic on the server -
+     * the real client (`NPCEntity.currentSound()` in `2011scape-client`) reads these fields
+     * directly out of its own local copy of this same definition and autonomously plays the
+     * matching sound based on the npc's current animation state; the server sends no packet for
+     * this and never needs to. Stored (rather than discarded, as this decoder used to do) so
+     * `NpcDefProbeTool` can report whether a given npc's cache definition actually carries sound
+     * data at all, which is the real question for any "npc X is silent" report.
+     */
+    var readySound = -1
+    var walkSound = -1
+    var runSound = -1
+    var crawlSound = -1
 
     fun isAttackable(): Boolean = options.any { it == "Attack" }
 
@@ -138,12 +157,12 @@ class NpcDef(
             }
             122, 123, 137, 138, 139, 142 -> buf.readUnsignedShort()
             125, 128, 140, 163, 165, 168 -> buf.readByte()
-            127 -> walkAnim = buf.readUnsignedShort()
+            127 -> basId = buf.readUnsignedShort().let { if (it == 65535) -1 else it }
             134 -> {
-                buf.readUnsignedShort()
-                buf.readUnsignedShort()
-                buf.readUnsignedShort()
-                buf.readUnsignedShort()
+                readySound = buf.readUnsignedShort().let { if (it == 65535) -1 else it }
+                crawlSound = buf.readUnsignedShort().let { if (it == 65535) -1 else it }
+                walkSound = buf.readUnsignedShort().let { if (it == 65535) -1 else it }
+                runSound = buf.readUnsignedShort().let { if (it == 65535) -1 else it }
                 buf.readUnsignedByte()
             }
             135, 136 -> {

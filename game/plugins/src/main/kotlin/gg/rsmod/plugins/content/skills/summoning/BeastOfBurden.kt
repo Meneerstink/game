@@ -195,6 +195,19 @@ object BeastOfBurden {
         return added
     }
 
+    /**
+     * How many items the active familiar is holding, counting stack sizes.
+     *
+     * Needed to tell the three "Take BoB" outcomes apart (owner requirement H9): an empty store, a
+     * full inventory, and a partial withdrawal all end with [withdrawAll] returning a number that
+     * on its own cannot distinguish "nothing to take" from "nowhere to put it".
+     */
+    fun storedCount(player: Player): Int {
+        val key = activeKey(player) ?: return 0
+        val container = container(player, key)
+        return (0 until container.capacity).sumOf { container[it]?.amount ?: 0 }
+    }
+
     /** Withdraws everything from the active BoB container into the inventory, best-effort. */
     fun withdrawAll(player: Player): Int {
         val key = activeKey(player) ?: return 0

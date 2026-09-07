@@ -75,6 +75,195 @@ task extractDependencies(type: Copy) {
     into 'build/deps'
 }
 
+task runItemImportTool(type: JavaExec) {
+    group = 'tools'
+    description = 'LEGACY/MANUAL-ONLY, single-cache, no rollback - NOT the approved production ' +
+        'import path (use runItemTransactionTool for real dual-cache writes). Clone a donor item ' +
+        'into a new local id in ONE cache (RSPS_DECISIONS.md 2026-09-02 STANDING OWNER ' +
+        'AUTHORIZATION). Usage: ' +
+        './gradlew :game:runItemImportTool --args="<cachePath> <donorId> <newId> <newName>"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.ItemImportTool'
+}
+
+task runItemRemoveTool(type: JavaExec) {
+    group = 'tools'
+    description = 'LEGACY/MANUAL-ONLY, single-cache, no rollback - NOT the approved production ' +
+        'import path (use runItemTransactionTool\'s remove verb for real dual-cache removal). ' +
+        'Delete a wrongly-allocated cloned item from ONE cache so its id is free again ' +
+        '(RSPS_DECISIONS.md 2026-09-02 STANDING OWNER AUTHORIZATION). Usage: ' +
+        './gradlew :game:runItemRemoveTool --args="<cachePath> <itemId>"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.ItemRemoveTool'
+}
+
+task runCacheItemProbeTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Modern-content import pipeline: read-only probe of one or more caches\' item ' +
+        'index - real max contiguous id, gap detection, per-id presence/name/sha1. Usage: ' +
+        './gradlew :game:runCacheItemProbeTool --args="<cachePath>[;<cachePath>] [id ...]"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.CacheItemProbeTool'
+    systemProperty 'probe.hex', findProperty('probeHex') ?: 'false'
+    systemProperty 'probe.opcodes', findProperty('probeOpcodes') ?: 'false'
+}
+
+task runInterfaceHookProbeTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Read-only offline decoder for interface component CS2 hook bindings ' +
+        '(onVarTransmit/onInvTransmit/onClick/etc) and CS2 script bytecode, ported directly ' +
+        'from the real client Component.decode()/ClientScript.decode(). Usage: ' +
+        './gradlew :game:runInterfaceHookProbeTool --args="<cachePath> interface <interfaceId> [slot ...]"' +
+        ', --args="<cachePath> layout <interfaceId> [slot ...]" (component ops/events/parent layout)' +
+        ', --args="<cachePath> search <text>" (locate an interface by its baked user-visible text)' +
+        ', --args="<cachePath> compref <interfaceId> <componentId>" (which CS2 drives a component)' +
+        ' or --args="<cachePath> script <scriptId> [scriptId ...]"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.InterfaceHookProbeTool'
+    systemProperty 'probe.indexed', findProperty('probeIndexed') ?: 'false'
+}
+
+task runItemParamProbeTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Read-only diagnostic: dumps every ItemDef.params (opcode 249) key/value for one ' +
+        'or more item ids via the production DefinitionSet/ItemDef path. Usage: ' +
+        './gradlew :game:runItemParamProbeTool --args="<cachePath> <itemId> [itemId ...]"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.ItemParamProbeTool'
+}
+
+task runSpriteGroupProbeTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Read-only diagnostic: finds which cache index holds a named sprite group and ' +
+        'how many frames it has. Usage: ./gradlew :game:runSpriteGroupProbeTool --args="<cachePath> <groupName> [groupName ...]"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.SpriteGroupProbeTool'
+}
+
+task runVarbitDefProbeTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Read-only diagnostic: dumps VarbitDef varp/bit-range/state-count for one or ' +
+        'more varbit ids. Usage: ./gradlew :game:runVarbitDefProbeTool --args="<cachePath> <varbitId> [varbitId ...]"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.VarbitDefProbeTool'
+}
+
+task runNpcDefProbeTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Read-only diagnostic: dumps NpcDef interact-menu option strings, either for ' +
+        'explicit ids or for every npc matching a name/option substring. Usage: ' +
+        './gradlew :game:runNpcDefProbeTool --args="<cachePath> <npcId> [npcId ...]"' +
+        ' | --args="<cachePath> option <substring>" | --args="<cachePath> name <substring>"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.NpcDefProbeTool'
+}
+
+task runObjectDefProbeTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Read-only diagnostic: dumps ObjectDef names and 1-based option indices, either ' +
+        'for explicit ids or for every object matching a name/option substring. Usage: ' +
+        './gradlew :game:runObjectDefProbeTool --args="<cachePath> <objectId> [objectId ...]"' +
+        ' | --args="<cachePath> name <substring>" | --args="<cachePath> option <substring>"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.ObjectDefProbeTool'
+}
+
+task runObjectPlacementProbeTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Read-only diagnostic: decodes the landscape files to report where objects are ' +
+        'actually placed, by id, by name or by tile. Usage: ' +
+        './gradlew :game:runObjectPlacementProbeTool --args="<cachePath> <xteaPath> id <objectId> [objectId ...]"' +
+        ' | --args="<cachePath> <xteaPath> name <substring>"' +
+        ' | --args="<cachePath> <xteaPath> tile <x> <z> [plane] [radius]"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.ObjectPlacementProbeTool'
+}
+
+task runWornAppearanceRankTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Read-only diagnostic: replicates the client\'s initWornObjIds() ascending-id ' +
+        'wearable-item scan against a real cache to compute the correct ItemDef.appearanceId ' +
+        '(equip-appearance rank, sent as 0x8000+appearanceId) for one item id. Usage: ' +
+        './gradlew :game:runWornAppearanceRankTool --args="<cachePath> <itemId>"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.WornAppearanceRankTool'
+}
+
+task runItemTransactionTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Modern-content import pipeline: transactional, journalled, dual-cache item ' +
+        'write with preflight, post-write verification and automatic rollback. Usage: ' +
+        './gradlew :game:runItemTransactionTool --args="sync|put|remove ... --targets=<a>;<b> [--apply]"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.ItemTransactionTool'
+}
+
+task runSourceCacheProbeTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Modern-content import pipeline: read-only probe of the pinned upstream modern ' +
+        'OSRS cache (index/group/file listing, ASCII search, raw file dump). Usage: ' +
+        './gradlew :game:runSourceCacheProbeTool --args="indexes|groupinfo|find|dump <cachePath> ..."'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.SourceCacheProbeTool'
+}
+
+task runCacheIndexProbeTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Modern-content import pipeline: read-only survey of any rev-667 cache index - ' +
+        'group count, id range, holes and next free id - for collision-safe id allocation. Usage: ' +
+        './gradlew :game:runCacheIndexProbeTool --args="<cachePath>[;<cachePath>] <indexId> [groupId ...]"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.CacheIndexProbeTool'
+}
+
+task runConfigDefProbeTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Read-only diagnostic: dumps the cache enum and struct tables the clientscripts ' +
+        'read, or finds which table a piece of user-visible wording lives in. Usage: ' +
+        './gradlew :game:runConfigDefProbeTool --args="<cachePath> enum <id> [id ...]"' +
+        ' | --args="<cachePath> struct <id> [id ...]"' +
+        ' | --args="<cachePath> enumfind <substring>" | --args="<cachePath> structfind <substring>"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.ConfigDefProbeTool'
+}
+
+task runModelConvertTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Modern-content import pipeline: inspect a modern OSRS mesh and convert it into ' +
+        'the rev-667 decodeNew container, verified through a port of the 667 client reader. Usage: ' +
+        './gradlew :game:runModelConvertTool --args="inspect|convert <modelFile> [outFile]"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.ModelConvertTool'
+}
+
+task runModelTransactionTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Modern-content import pipeline: transactional write of a converted mesh into ' +
+        'index 7 of every target cache, verified by decoding it back out of each cache. Usage: ' +
+        './gradlew :game:runModelTransactionTool --args="put <modelFile> <groupId> --targets=<a>;<b> [--apply]"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.ModelTransactionTool'
+}
+
+task runModelNamespaceCensusTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Modern-content import pipeline: read-only model-id namespace/capacity census - ' +
+        'physical presence, item/spotanim references and existing import mappings across both ' +
+        'target caches, and the proven-safe free id range. Usage: ' +
+        './gradlew :game:runModelNamespaceCensusTool --args="<gameCachePath> <fileServerCachePath> [--asset-map=<path>]"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.ModelNamespaceCensusTool'
+}
+
+task runItemDefEditTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Modern-content import pipeline: derive new item-definition bytes from an ' +
+        'existing definition by overriding/removing specific opcodes; writes a file, never a cache. ' +
+        'Usage: ./gradlew :game:runItemDefEditTool --args="edit <cachePath> <itemId> <outFile> [--short=1:65517]"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.ItemDefEditTool'
+}
+
 task ktlint(type: JavaExec, group: "verification") {
     description = "Check Kotlin code style."
     classpath = configurations.ktlint
@@ -129,3 +318,70 @@ shadowDistTar {
 
 build.finalizedBy extractDependencies
 install.dependsOn build
+task runModernRegionProbeTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Modern-content import pipeline: read-only census of one modern OSRS map square ' +
+        '(tiles, floors, locs, models) from the pinned upstream cache. Usage: ' +
+        './gradlew :game:runModernRegionProbeTool --args="<modernCacheDir> <keysJson> <regionId> [minX minY maxX maxY] [outFile]"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.ModernRegionProbeTool'
+}
+
+task runRev667RegionProbeTool(type: JavaExec) {
+    group = 'tools'
+    description = 'World import pipeline: read-only rev-667 region/floor/loctype probes and the tile/loc codec ' +
+        'round-trip self-check. Usage: ./gradlew :game:runRev667RegionProbeTool --args="<cachePath> <xteaDir> roundtrip <regionId>..."'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.Rev667RegionProbeTool'
+}
+
+task runFeroxBarrierOptionTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Ferox follow-up: give the visible barrier field loc 62438 the "Pass-Through" option (A7 CacheTransaction on both caches). Usage: --args="plan|apply"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.FeroxBarrierOptionTool'
+}
+
+task runFeroxFollowupTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Ferox follow-up: remove BH + green FFA portal placements and rename the home teleport spell string (A7 CacheTransaction on both caches). Usage: --args="plan|apply"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.FeroxFollowupTool'
+}
+
+task runFeroxPortalCleanupTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Ferox portal-removal follow-up: remove the two leftover Bounty Hunter portal ' +
+        'flanking pieces (locs 62580/62581) left behind by FeroxFollowupTool (A7 CacheTransaction on ' +
+        'both caches). Usage: --args="plan|apply"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.FeroxPortalCleanupTool'
+}
+
+task runFeroxImportTool(type: JavaExec) {
+    group = 'tools'
+    description = 'World import pipeline: Ferox Enclave footprint import (plan = dry run + preflight, apply = A7 ' +
+        'CacheTransaction on both caches). Usage: ./gradlew :game:runFeroxImportTool --args="plan|apply"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.FeroxImportTool'
+}
+
+task runSpriteSheetDumpTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Read-only: decodes a named cache sprite sheet with this revision\'s own ' +
+        'IndexedImage decoder and writes every frame as a PNG, so a frame can be identified by ' +
+        'sight. Usage: ./gradlew :game:runSpriteSheetDumpTool --args="<cachePath> <groupName> <outDir>"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.SpriteSheetDumpTool'
+    systemProperties System.getProperties().findAll { it.key.toString().startsWith("sheet") }
+}
+
+task runBasTypeProbeTool(type: JavaExec) {
+    group = 'tools'
+    description = "Read-only recovery of an npc's real render animations: NPCType opcode 127 is a " +
+        'BASType id (config group 32), whose opcode 1 carries the ready/walk pair. Usage: ' +
+        './gradlew :game:runBasTypeProbeTool --args="<cachePath> npc <npcId> [npcId ...]" or ' +
+        '--args="<cachePath> bas <basId> [basId ...]"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.BasTypeProbeTool'
+}

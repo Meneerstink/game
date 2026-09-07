@@ -6,70 +6,46 @@ import gg.rsmod.plugins.api.ext.setVarbit
 import gg.rsmod.plugins.api.ext.syncVarp
 
 /**
- * "Select left-click option" - the real interface-880 mechanism, re-derived from this cache on
- * 2026-09-06 and recorded in `C:\RSPS\RSPS_SUMMONING_2011_EVIDENCE.md`.
+ * "Select left-click option" - which of the orb's actions a plain left-click performs.
  *
- * How the authentic flow actually works:
+ * ## How the cache's own mechanism works
  *
- *  1. 747:7 carries the real op `op10 = 'Select left-click option'` and opens 880.
- *  2. 880's eight rows each carry the real op `op1 = 'Select'` as a plain `IF_BUTTON1`, i.e. the
- *     click goes to the *server*; there is no `onOp` script on them. The server answers by writing
- *     880's preview varbit 6455 (varp 1494), which 880:3's `onVarTransmit` picks up
+ * Re-derived from this cache on 2026-09-06 and recorded in
+ * `C:\RSPS\RSPS_SUMMONING_2011_EVIDENCE.md`:
+ *
+ *  1. 747:7 carries the real op `op10 = 'Select left-click option'` and opens interface 880.
+ *  2. 880's rows each carry the real op `op1 = 'Select'` as a plain `IF_BUTTON1`, i.e. the click
+ *     goes to the *server*; there is no `onOp` script on them. The server answers by writing 880's
+ *     preview varbit 6455 (varp 1494), which 880:3's `onVarTransmit` picks up
  *     (`varpTriggers=[1494]` -> script 2672 -> `GOSUB(2674)`). `disasm 2674` paints sprite 2035 on
  *     the selected row and 2034 on the other seven, so the highlight is drawn by the interface
  *     itself. Nothing is committed yet.
- *  3. 880:21 carries the real op `op1 = 'Confirm Selection'`. That is genuinely part of the 2011
- *     interface - the two-step select-then-confirm flow is authentic; only the previous
- *     implementation's chatbox narration around it ("Highlighted: X. Click Confirm Selection to
- *     apply it.") was invented, and it is gone. Confirming writes the real varbit 6454 (varp 1493).
+ *  3. 880:21 carries the real op `op1 = 'Confirm Selection'`. Confirming writes the real varbit
+ *     6454 (varp 1493).
  *  4. 747:7's own `onVarTransmit` (`varpTriggers=[1493]`) then runs script 751, whose tail is
- *     `GOSUB_WITH_PARAMS(2671)`. `disasm 2671` is the real switch: per case it shows the chosen
- *     action's direct left-click component on 747 and hides that action's twin in the orb's
- *     right-click submenu, and in the *else* branch of the very same case it does the opposite -
- *     hides the direct component and **shows** the submenu twin.
+ *     `GOSUB_WITH_PARAMS(2671)`. `disasm 2671` shows the chosen action's direct left-click
+ *     component on 747 and hides that action's twin in the right-click submenu, and does the
+ *     opposite for every action it is not making the left-click.
  *
- * Two concrete defects in the previous implementation, both fixed here:
+ * ## What the owner's 2026-09-07 retest changed
  *
- *  - The varbit values were off by one. Decoding 2671's branch targets against 747's real op
- *    labels proves value **0** is Follower Details (`BRANCH_IF_FALSE` -> shows 48955410 = 747:18,
- *    whose op1 is 'Follower Details'), not 1; value 1 has no case at all and is Special move.
- *    The old table started Follower Details at 1 and treated Special move as "no value", so
- *    picking Follower Details configured a value the client draws nothing for, and picking
- *    Special move configured Follower Details.
- *  - It also replayed 2671's `IF_SETHIDE` pairs server-side with the same hidden flag for the
- *    direct component and its submenu twin. That is the opposite of what 2671 does to the twin,
- *    so it hid every unselected action from the orb's right-click menu - leaving the menu with
- *    only the one option that was already on left-click. The server now writes the varp and
- *    nothing else; the client's own script does the redraw, which is both authentic and the only
- *    way to keep the two halves consistent.
+ * The selector used to offer all eight actions the cache bakes. Requirement H6 reduces the orb to
+ * six - Special Move, Attack, Call, Dismiss, Take BoB, Renew - so "Follower Details" (varbit value
+ * 0, now on the Skills tab instead) and "Interact" (value 7, a duplicate of the familiar's own npc
+ * option) are no longer offered. Requirement H7 further restricts the list to the actions the
+ * **currently summoned** familiar can actually perform, which is why [selectableActions] takes a
+ * player rather than being a constant.
+ *
+ * The action set, the varbit values and the interface-880 row components all live on
+ * [FamiliarAction] now, so the selector, the orb gating and the server handlers read one
+ * declaration instead of three parallel ones.
+ *
+ * A consequence worth being explicit about: a never-configured account reads varbit 6454 = 0,
+ * which used to mean Follower Details and is no longer an orb action at all. [leftClickAction]
+ * therefore reports [DEFAULT_ACTION] for value 0, and [migrateRemovedDefault] rewrites the varbit
+ * once on login so client and server agree. That is a consequence of H1/H6, not invented RS
+ * behaviour, and it is the only value this file substitutes.
  */
-enum class LeftClickAction(
-    /** The real varbit-6454 value for this action. `null` for Special move, which script 2671 has
-     *  no case for: selecting it hides all seven direct components and leaves the orb's own
-     *  permanently-separate "Spell, Cast" button (747:24/25) as the only left-click target. */
-    val varbitValue: Int?,
-    /** The paired (graphic, text) "Select" row component ids on interface 880, proved by
-     *  `disasm 2674`'s argument -> component mapping. */
-    val selectRow: Pair<Int, Int>,
-    val label: String,
-) {
-    FOLLOWER_DETAILS(0, 7 to 8, "Follower Details"),
-    SPECIAL_MOVE(1, 9 to 10, "Special move"),
-    ATTACK(2, 11 to 12, "Attack"),
-    CALL(3, 13 to 14, "Call follower"),
-    DISMISS(4, 15 to 16, "Dismiss follower"),
-    TAKE_BOB(5, 17 to 18, "Take BoB"),
-    RENEW(6, 19 to 20, "Renew familiar"),
-    INTERACT(7, 25 to 26, "Interact"),
-    ;
-
-    companion object {
-        /** 880's eight rows, in the same top-to-bottom order as the interface itself. */
-        val ORDERED = arrayOf(FOLLOWER_DETAILS, SPECIAL_MOVE, ATTACK, CALL, DISMISS, TAKE_BOB, RENEW, INTERACT)
-
-        fun byVarbitValue(value: Int): LeftClickAction? = ORDERED.firstOrNull { it.varbitValue == value }
-    }
-}
 
 /** varbit 6454 (varp 1493 bits 0..3) - the persistent "configured left-click action". */
 private const val ACTIVE_ACTION_VARBIT = 6454
@@ -81,20 +57,51 @@ private const val LEFT_CLICK_VARP = 1493
 private const val PREVIEW_ACTION_VARBIT = 6455
 
 /**
- * The configured action. A never-configured account reads 0, which is authentically Follower
- * Details - the same thing the client draws for a fresh account, so no invented default is
- * needed and none is applied.
+ * The varbit-6454 values the cache bakes for the two actions H1/H6 removed from the orb:
+ * 0 = Follower Details, 7 = Interact. Kept named rather than inline so the migration below reads
+ * as "the removed ones" instead of as two magic numbers.
  */
-fun Player.leftClickAction(): LeftClickAction =
-    LeftClickAction.byVarbitValue(getVarbit(ACTIVE_ACTION_VARBIT)) ?: LeftClickAction.FOLLOWER_DETAILS
+private val REMOVED_ACTION_VALUES = setOf(0, 7)
 
-/** Live-previews a row selection on 880 (step 2 above). */
-fun Player.setPendingLeftClickAction(action: LeftClickAction) {
-    setVarbit(PREVIEW_ACTION_VARBIT, action.varbitValue ?: 0)
+/**
+ * What a left-click does when the stored choice is one of the removed actions. Call Follower is
+ * the least destructive of the six that remain: it has no cost, no confirmation and no target.
+ */
+private val DEFAULT_ACTION = FamiliarAction.CALL
+
+/** The configured action, with the two removed values folded onto [DEFAULT_ACTION]. */
+fun Player.leftClickAction(): FamiliarAction =
+    FamiliarAction.byLeftClickValue(getVarbit(ACTIVE_ACTION_VARBIT)) ?: DEFAULT_ACTION
+
+/**
+ * Rewrites a stored choice that is no longer an orb action. Run once on login so the client's own
+ * script 2671 and the server agree about which twin should be visible; without it an untouched
+ * account would keep asking the client to show 747:18 ("Follower Details"), which the orb gating
+ * then immediately hides, leaving the orb with no left-click at all.
+ */
+fun Player.migrateRemovedDefault() {
+    if (getVarbit(ACTIVE_ACTION_VARBIT) in REMOVED_ACTION_VALUES) {
+        setVarbit(ACTIVE_ACTION_VARBIT, DEFAULT_ACTION.leftClickValue)
+    }
 }
 
-fun Player.pendingLeftClickAction(): LeftClickAction =
-    LeftClickAction.byVarbitValue(getVarbit(PREVIEW_ACTION_VARBIT)) ?: leftClickAction()
+/**
+ * The rows "Select left-click option" should offer right now: the six allowed actions, filtered to
+ * the ones the summoned familiar supports (H7). With no familiar out, all six are offered - the
+ * choice is a persistent preference and configuring it without a familiar is legitimate.
+ */
+fun Player.selectableActions(): List<FamiliarAction> {
+    val capabilities = FamiliarCapabilityTable.active(this) ?: return FamiliarAction.ORDERED
+    return FamiliarAction.ORDERED.filter { capabilities.supports(it) }
+}
+
+/** Live-previews a row selection on 880 (step 2 above). */
+fun Player.setPendingLeftClickAction(action: FamiliarAction) {
+    setVarbit(PREVIEW_ACTION_VARBIT, action.leftClickValue)
+}
+
+fun Player.pendingLeftClickAction(): FamiliarAction =
+    FamiliarAction.byLeftClickValue(getVarbit(PREVIEW_ACTION_VARBIT)) ?: leftClickAction()
 
 /**
  * Commits the previewed selection (step 3 above). Writing the varp is the entire server side of
@@ -102,8 +109,7 @@ fun Player.pendingLeftClickAction(): LeftClickAction =
  * server. There is deliberately no chat feedback - the real interface gives none.
  */
 fun Player.confirmLeftClickAction() {
-    val action = pendingLeftClickAction()
-    setVarbit(ACTIVE_ACTION_VARBIT, action.varbitValue ?: 1)
+    setVarbit(ACTIVE_ACTION_VARBIT, pendingLeftClickAction().leftClickValue)
     // Script 2671 shows every op6 twin it is not making the left-click, including the ones this
     // familiar has no handler for, so the per-familiar gating has to be re-applied on top of it.
     SummoningUi.invalidate(this)

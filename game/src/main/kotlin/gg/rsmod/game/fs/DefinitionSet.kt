@@ -87,6 +87,13 @@ class DefinitionSet {
          */
         load(store, SpotAnimDef::class.java)
         logger.info("Loaded ${getCount(SpotAnimDef::class.java)} spotanim definitions.")
+
+        /*
+         * Load [BasDef]s - the body animation sets every npc's idle/walk/run/crawl sequences
+         * live in. NpcDef only carries the basId that points here.
+         */
+        load(store, BasDef::class.java)
+        logger.info("Loaded ${getCount(BasDef::class.java)} body animation set definitions.")
     }
 
     fun loadRegions(
@@ -122,6 +129,7 @@ class DefinitionSet {
                 ObjectDef::class.java -> ArchiveType.OBJECT
                 AnimDef::class.java -> ArchiveType.ANIM
                 NpcDef::class.java -> ArchiveType.NPC
+                BasDef::class.java -> ArchiveType.BAS
                 SpotAnimDef::class.java -> ArchiveType.SPOTANIM
                 else -> throw IllegalArgumentException("Unhandled class type ${type::class.java}.")
             }
@@ -175,6 +183,7 @@ class DefinitionSet {
                 ObjectDef::class.java -> ObjectDef(id)
                 AnimDef::class.java -> AnimDef(id)
                 NpcDef::class.java -> NpcDef(id)
+                BasDef::class.java -> BasDef(id)
                 SpotAnimDef::class.java -> SpotAnimDef(id)
                 else -> throw IllegalArgumentException("Unhandled class type ${type::class.java}.")
             }
