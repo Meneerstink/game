@@ -64,6 +64,51 @@ object SummoningLedger {
                 "Details panel would fall back to the client's pet default for them: $unresolved"
         }
         validateCombatLevels(world)
+        validatePathingData(world)
+    }
+
+    /**
+     * Owner requirement H16: following, pathing and collision must be correct for all 78.
+     *
+     * The movement code itself is generic - [Familiar.follow] chases the owner's end-of-cycle tile,
+     * mirrors the owner's speed, routes with `BFSPathFindingStrategy` against real collision, and
+     * subtracts the owner's own footprint so a familiar cannot stand inside its owner. It has no
+     * per-familiar branches. What it *does* depend on, per familiar, is two pieces of cache data:
+     *
+     * * **`NpcDef.size`** - fed to `PathRequest.setSourceSize` and to the footprint calculation. A
+     *   familiar whose size were wrong would either fail to path through gaps it should fit, or
+     *   overlap its owner despite the footprint subtraction.
+     * * **`BasDef.walk`** - the sequence the familiar plays while moving. Without it a familiar
+     *   slides to its destination in its idle pose.
+     *
+     * Neither is something the movement code can check for itself, and both are exactly the kind of
+     * data that used to be silently absent - `walk` was unreachable at all until the `basId` decode
+     * was fixed on 2026-09-07. This gate makes a regression in either fail the boot rather than
+     * surface later as an unexplained visual fault in one familiar out of 78.
+     *
+     * A familiar whose body-animation set genuinely carries no walk sequence is reported rather
+     * than tolerated, because as of 2026-09-07 all 78 resolve one
+     * (`C:\RSPS\summoning_refs\familiar_bastypes.txt`); the number may only go down by regression.
+     */
+    private fun validatePathingData(world: World) {
+        val faults =
+            SummoningPouchData.values.mapNotNull { pouch ->
+                val def = world.definitions.get(NpcDef::class.java, pouch.npc)
+                when {
+                    def.size < 1 ->
+                        "${pouch.name} (npc ${pouch.npc}) has size ${def.size}, which would break " +
+                            "its path request and its owner-overlap footprint"
+                    def.basId == -1 -> "${pouch.name} (npc ${pouch.npc}) has no basId, so it has no walk sequence"
+                    world.definitions.get(BasDef::class.java, def.basId).walk == -1 ->
+                        "${pouch.name} (npc ${pouch.npc}, bas ${def.basId}) has no walk sequence, so it " +
+                            "would slide while following"
+                    else -> null
+                }
+            }
+        check(faults.isEmpty()) {
+            "${faults.size} of 78 familiars are missing the cache data their following and " +
+                "collision depend on: $faults"
+        }
     }
 
     /**

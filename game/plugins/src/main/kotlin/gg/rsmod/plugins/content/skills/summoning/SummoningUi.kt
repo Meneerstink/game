@@ -4,6 +4,9 @@ import gg.rsmod.game.fs.def.BasDef
 import gg.rsmod.game.fs.def.NpcDef
 import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.entity.Player
+import gg.rsmod.plugins.api.InterfaceDestination
+import gg.rsmod.plugins.api.ext.focusTab
+import gg.rsmod.plugins.api.ext.openInterface
 import gg.rsmod.plugins.api.ext.runClientScript
 import gg.rsmod.plugins.api.ext.setComponentHidden
 import gg.rsmod.plugins.api.ext.setComponentAnim
@@ -134,6 +137,55 @@ object SummoningUi {
 
     /** The value clientscript 751 writes to 747:3 when a familiar is out. */
     private const val ORB_SPRITE_ACTIVE = 1802
+
+    /**
+     * Brings the Follower Details panel up in the sidebar region it is mounted on, and takes it
+     * away again.
+     *
+     * ## Where the panel lives, and why it is not a tab
+     *
+     * Interface 662 is mounted on **gameframe slot 95** (`548:221` fixed / `746:107` resizable).
+     * Probing the resizable gameframe shows 746:107 sharing parent 89 and the box `0,0 190x261`
+     * with every numbered sidebar tab, including the Skills tab at 746:92 - so slot 95 renders in
+     * exactly the same place a tab does: the sidebar panel region directly beneath the tab row.
+     * That region is what the owner means by the empty block underneath the Skills area, and it is
+     * where the authentic 2011 reference shots put the panel.
+     *
+     * The point of slot 95 is that, unlike slots 0..15, **it has no tab button of its own**. An
+     * earlier attempt armed the spare tab slot (`548:99` / `746:47`) as a Follower Details button;
+     * the owner rejected that outright - no separate tab, no separate follower tab button, no orb
+     * entry, no hidden duplicate. So nothing opens this panel by being clicked. It simply appears
+     * when a familiar is active and goes away when one is not, which is what [showPanel] and
+     * [hidePanel] do.
+     *
+     * [hidePanel] moves the sidebar to the inventory rather than merely blanking 662. Blanking
+     * alone would leave the player staring at an empty Summoning panel after a dismiss, which is
+     * the "blank/stale follower interface" the owner reported. There is no packet in this revision
+     * that reports which tab the player has selected, so the server cannot restore whatever they
+     * were looking at before; the inventory is the least surprising destination and the one the
+     * client itself defaults to.
+     */
+    fun showPanel(player: Player) {
+        player.focusTab(Tabs.SUMMONING)
+    }
+
+    fun hidePanel(player: Player) {
+        player.focusTab(Tabs.INVENTORY)
+    }
+
+    /**
+     * Puts interface 662 back on slot 95 after the "Select left-click option" panel has borrowed
+     * the slot, and then shows or hides it according to whether a familiar is actually out.
+     *
+     * Both halves matter. Re-mounting alone would leave the sidebar showing an empty Summoning
+     * panel for a player with no familiar; focusing alone would leave slot 95 still holding the
+     * selector, and since nothing else opens the Follower Details panel, the player would have no
+     * route back to it.
+     */
+    fun restorePanel(player: Player) {
+        player.openInterface(InterfaceDestination.SUMMONING_TAB)
+        if (Familiar.current(player) != null) showPanel(player) else hidePanel(player)
+    }
 
     /** Whether this familiar can be ordered to attack - i.e. it has real, sourced combat data. */
     fun canFight(npcId: Int): Boolean = FamiliarCapabilityTable.forNpc(npcId)?.canFight == true

@@ -451,6 +451,10 @@ object Familiar {
         player.addXp(Skills.SUMMONING, data.summonExperience)
         player.message("You summon your familiar.")
         updateHud(player)
+        // Owner requirement: with a familiar active the Follower Details panel appears in its
+        // sidebar region immediately. There is no tab button and no orb entry to reach it with -
+        // becoming visible on summon is the whole of how it is opened.
+        SummoningUi.showPanel(player)
         return true
     }
 
@@ -488,6 +492,10 @@ object Familiar {
         clearState(player)
         player.message("Your familiar is dismissed.")
         updateHud(player)
+        // The panel is blanked by SummoningUi.refreshPanel, but leaving the sidebar *showing* an
+        // empty Summoning panel is exactly the "blank/stale follower interface" the owner
+        // reported. Move off it as well.
+        SummoningUi.hidePanel(player)
     }
 
     /**
@@ -613,6 +621,8 @@ object Familiar {
         clearState(player)
         player.message("Your familiar has run out of time and returns home.")
         updateHud(player)
+        // Same reason as dismiss: expiry must not leave an empty Summoning panel on screen.
+        SummoningUi.hidePanel(player)
     }
 
     /** Called once/cycle per online player - see `familiar.plugin.kts`. */

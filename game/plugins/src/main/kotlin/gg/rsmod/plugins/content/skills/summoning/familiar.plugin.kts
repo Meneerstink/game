@@ -330,9 +330,6 @@ on_login {
     // (expiry while offline, a cleared save) would otherwise log back in with varp 448/1174 still
     // naming the old familiar and the tab drawing a follower that does not exist.
     Familiar.updateHud(player)
-    // H1: the Follower Details entry point is a sidebar tab now, and the spare tab slot is baked
-    // with no op and a hidden icon, so it has to be armed after every gameframe build.
-    FollowerDetailsTab.install(player)
     // H6 removed varbit-6454 values 0 and 7 from the orb; an account still holding one of them
     // would otherwise have no left-click action at all. Runs before applyLeftClickAction so the
     // varp transmitted below already carries the corrected value.
@@ -536,29 +533,37 @@ arrayOf(
 }
 
 /*
- * Owner requirements H1 and H6: "Follower Details" (747:9 / 747:18) and "Interact" (747:15 /
- * 747:26) are no longer orb actions and have **no bindings here at all**.
+ * Owner requirements: "Follower Details" (747:9 / 747:18) and "Interact" (747:15 / 747:26) are
+ * not orb actions and have **no bindings here at all**.
  *
- * Follower Details moved to the sidebar tab strip - see [FollowerDetailsTab] for why it had to
- * become a real tab button rather than a menu entry. Interact was a duplicate: the familiar's own
- * npc option already opens the same conversation, and it is bound above.
+ * Follower Details has no entry point that is clicked at all any more - not on the orb, not as a
+ * tab, not as a tab button. Its panel is mounted on gameframe slot 95 and simply appears in the
+ * sidebar while a familiar is active; see [SummoningUi.showPanel]. Interact was a duplicate: the
+ * familiar's own npc option already opens the same conversation, and it is bound above.
  *
  * Both components are hidden on every orb refresh by [SummoningUi.refreshOrb], because the cache's
  * own script 2671 shows them again whenever the left-click varp is transmitted. Leaving them
  * unbound as well means that even if a client did surface one, it would do nothing.
  */
-on_button(FollowerDetailsTab.buttons[0].first, FollowerDetailsTab.buttons[0].second) {
-    FollowerDetailsTab.open(player)
-}
-on_button(FollowerDetailsTab.buttons[1].first, FollowerDetailsTab.buttons[1].second) {
-    FollowerDetailsTab.open(player)
-}
 
-on_button(747, 7) { // "Select left-click option" (op10 on 747:7, opens 880)
-    // Real 2011 behaviour (see SummoningLeftClick.kt): 880's preview varbit (1494) starts the
-    // dialog showing whatever is already the real active choice (1493), not blank/unset.
+on_button(747, 7) { // "Select left-click option" - op10 on 747:7, an IF_BUTTON10 with no onOp
+    /*
+     * 747:7 has an `onVarTransmit` hook and no `onOp`, so the client does not open anything
+     * itself: op10 is delivered to the server and the server decides what to show.
+     *
+     * What it used to show was interface 880 on MAIN_SCREEN, and that is the whole of the
+     * owner's "it still opens a fake/custom GUI" report. 880 is genuine cache content - eight
+     * `op1='Select'` rows and a `Confirm Selection` button - but its root component is
+     * `190x261`, which is the **sidebar panel** size, the same box every gameframe tab slot and
+     * interfaces 320 and 662 use. Opening a sidebar panel as a modal over the game view is what
+     * made it look like a bolted-on custom window rather than part of the game frame.
+     *
+     * So it goes where its own dimensions say it belongs: the Summoning panel region, slot 95,
+     * temporarily in place of the Follower Details panel. Confirming or closing puts 662 back.
+     */
     player.setPendingLeftClickAction(player.leftClickAction())
-    player.openInterface(880, InterfaceDestination.MAIN_SCREEN)
+    player.openInterface(880, InterfaceDestination.SUMMONING_TAB)
+    SummoningUi.showPanel(player)
 }
 
 FamiliarAction.ORDERED.forEach { action ->
@@ -578,7 +583,16 @@ FamiliarAction.ORDERED.forEach { action ->
 
 on_button(880, 21) { // "Confirm Selection"
     player.confirmLeftClickAction()
-    player.closeInterface(880)
+    SummoningUi.restorePanel(player)
+}
+
+/*
+ * Closing the selector any other way - the Escape key, or the client rebuilding the pane - must
+ * also put the Follower Details panel back, or slot 95 would be left holding the selector and the
+ * player would have no way to reach their familiar's panel again.
+ */
+on_interface_close(880) {
+    SummoningUi.restorePanel(player)
 }
 
 /*
