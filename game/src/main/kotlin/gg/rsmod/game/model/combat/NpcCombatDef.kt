@@ -28,6 +28,8 @@ data class NpcCombatDef(
     val slayerAssignment: SlayerAssignment?,
     var attackStyleType: StyleType,
     var deathBlowLifepoints: Int,
+    val venomDamage: Int = 0,
+    val venomImmunity: Boolean = false,
 ) {
     companion object {
         private const val DEFAULT_LIFEPOINTS = 100

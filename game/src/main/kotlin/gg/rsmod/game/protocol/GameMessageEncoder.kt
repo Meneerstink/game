@@ -43,8 +43,16 @@ class GameMessageEncoder(
 
         val builder = GamePacketBuilder(structure.opcodes.first(), structure.type)
         encoder.encode(msg, builder, structure)
-        out.add(builder.toGamePacket())
+        val packet = builder.toGamePacket()
+        if (traceOutbound) {
+            logger.info("OUT opcode={} type={} size={} msg={}", packet.opcode, packet.type, packet.payload.readableBytes(), msg.javaClass.simpleName)
+        }
+        out.add(packet)
     }
 
-    companion object : KLogging()
+    companion object : KLogging() {
+        /** Runtime-toggled (`::packettrace`) outbound opcode/size trace for diagnosing client-side stream desyncs. */
+        @Volatile
+        var traceOutbound = false
+    }
 }

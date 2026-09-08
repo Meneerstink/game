@@ -37,6 +37,20 @@ class MessagePublicHandler : MessageHandler<MessagePublicMessage> {
             return
         }
 
+        /*
+         * The client has no protocol of its own for friends-chat text: the chatbox sends everything
+         * through MESSAGE_PUBLIC, and the leading '/' is what marks a line as belonging to the
+         * channel instead of to the players standing nearby.
+         */
+        if (unpacked.startsWith("/")) {
+            val player = client as Player
+            val text = formatSentence(unpacked.substring(1))
+            if (text.isNotBlank() && !world.friendsChat.talk(world, player, text)) {
+                player.writeMessage("You are not in a friends chat channel.")
+            }
+            return
+        }
+
         if (unpacked.startsWith(".")) {
             val player = client as Player
             val icon =

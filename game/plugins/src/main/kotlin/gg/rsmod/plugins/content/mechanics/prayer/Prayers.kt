@@ -21,12 +21,47 @@ object Prayers {
     private val DISABLE_OVERHEADS = TimerKey()
 
     private const val DEACTIVATE_PRAYER_SOUND = Sfx.CANCEL_PRAYER
-    private var QUICK_PRAYERS_SETTING = false
+
+    /**
+     * Whether this player currently has the prayer book in quick-prayer *selection* mode. This used
+     * to be a single `var` on this object, i.e. one flag shared by every player on the server.
+     */
+    private val QUICK_PRAYER_SELECT_MODE = AttributeKey<Boolean>()
 
     private const val PRAYER_POINTS_VARP = 2382
     const val ACTIVE_PRAYERS_VARP = 1395
-    private const val SELECTED_QUICK_PRAYERS_VARC = 181
-    private const val QUICK_PRAYERS_ACTIVE_VARC = 182
+
+    /**
+     * Varc 181 is the client's quick-prayer *selection-mode* flag, not a set of prayers. Interface
+     * 271's component 4 carries `onVarcTransmit` script 1236 with varc trigger 181; 1236 calls
+     * client script 1717, which branches on `varc 181 == 1` to decide whether to show component 42
+     * (the "Select Quick Prayers" checkbox grid, built by client script 1388) and hide component 0,
+     * or the other way around. Client scripts 1237, 1293 and 1704 branch on the same varc.
+     *
+     * The selected prayers themselves live in one varbit per prayer - see [Prayer.qpVarbit].
+     */
+    const val QUICK_PRAYER_SELECT_MODE_VARC = 181
+    const val QUICK_PRAYERS_ACTIVE_VARC = 182
+
+    /** Slot grid holding the "Activate" prayer buttons; built by client script 1237. */
+    private const val ACTIVATE_PRAYERS_COMPONENT = 8
+
+    /** Slot grid holding the "Select"/"Deselect" quick-prayer buttons; built by client script 1388. */
+    private const val SELECT_QUICK_PRAYERS_COMPONENT = 42
+
+    private const val PRAYER_BOOK_INTERFACE = 271
+
+    /** `1 shl 1` - enable op 1 only, which is the single op both grids' children are given. */
+    private const val OP1_ONLY = 2
+
+    /*
+     * `getInteractingOption()` is the index of the received opcode in the IfButtonMessage opcode
+     * list of data/packets.yml (`10,64,61,4,52,81,18,25,91,20`), plus one - it is NOT the client's
+     * op index. Component 749:1 bakes op1 = "Turn Quick Prayers On" (IF_BUTTON1, opcode 61 -> 3)
+     * and op2 = "Select Quick Prayers" (IF_BUTTON2, opcode 64 -> 2).
+     */
+    const val QUICK_PRAYERS_SELECT_OPTION = 2
+    const val QUICK_PRAYERS_TOGGLE_OPTION = 3
 
     // Unused
     private const val KING_RANSOMS_QUEST_VARBIT = 3909 // Used for chivalry/piety prayer.
@@ -44,32 +79,63 @@ object Prayers {
     fun init(player: Player) {
         // player.setvarp(if (curses) 1582 else 1395, 0)
         resetStatMods(player)
-        refreshSettingQuickPrayers(player)
-        unlockPrayerBookButtons(player)
+        setQuickPrayerSelectMode(player, false)
     }
 
-    private fun switchSettingQuickPrayer(player: Player) {
-        // player.setvarp(if (curses) 1582 else 1395, 0)
-        refreshSettingQuickPrayers(player)
-        unlockPrayerBookButtons(player)
-    }
+    private fun isSelectingQuickPrayers(player: Player): Boolean = player.attr.getOrDefault(QUICK_PRAYER_SELECT_MODE, false)
 
-    private fun refreshSettingQuickPrayers(player: Player) {
-        player.setVarc(SELECTED_QUICK_PRAYERS_VARC, if (QUICK_PRAYERS_SETTING) 1 else 0)
+    /**
+     * Enters or leaves quick-prayer selection mode. Both halves matter: the varc tells the client
+     * which of the two grids to build and show, and the events tell it which of the two grids may
+     * actually transmit a click. Neither grid has any baked events of its own - both component 8
+     * and component 42 decode as `events=0x000000` - so without the [Player.setEvents] call the
+     * client draws the menu entry and then silently drops the click.
+     */
+    private fun setQuickPrayerSelectMode(
+        player: Player,
+        selecting: Boolean,
+    ) {
+        player.attr[QUICK_PRAYER_SELECT_MODE] = selecting
+        player.setVarc(QUICK_PRAYER_SELECT_MODE_VARC, if (selecting) 1 else 0)
+        unlockPrayerBookButtons(player)
     }
 
     fun unlockPrayerBookButtons(player: Player) {
+        val selecting = isSelectingQuickPrayers(player)
+        setPrayerGridEvents(player, ACTIVATE_PRAYERS_COMPONENT, enabled = !selecting)
+        setPrayerGridEvents(player, SELECT_QUICK_PRAYERS_COMPONENT, enabled = selecting)
+    }
+
+    private fun setPrayerGridEvents(
+        player: Player,
+        component: Int,
+        enabled: Boolean,
+    ) {
         player.setEvents(
-            interfaceId = 271,
-            component = if (QUICK_PRAYERS_SETTING) 42 else 8,
+            interfaceId = PRAYER_BOOK_INTERFACE,
+            component = component,
             from = 0,
-            to = 29,
-            setting = 2,
+            to = if (AncientCurses.getBook(player) == AncientCurses.PrayerBook.ANCIENT) AncientCurse.TURMOIL_SLOT else Prayer.values.size - 1,
+            setting = if (enabled) OP1_ONLY else 0,
         )
     }
 
-    // Assuming the existence of a statMods array
-    private val statMods: IntArray = IntArray(StatMod.values().size)
+    fun isQuickPrayerSelected(
+        player: Player,
+        prayer: Prayer,
+    ): Boolean = player.getVarbit(prayer.qpVarbit) != 0
+
+    private fun selectedQuickPrayers(player: Player): List<Prayer> = Prayer.values.filter { isQuickPrayerSelected(player, it) }
+
+    /**
+     * The prayer stat modifiers backing varbits 6857-6861. These are per-player values, so they
+     * cannot live in a single array on this object - one player's modifiers would otherwise be
+     * transmitted to every other player's prayer interface.
+     */
+    private val STAT_MODS = AttributeKey<IntArray>()
+
+    private fun statMods(player: Player): IntArray =
+        player.attr[STAT_MODS] ?: IntArray(StatMod.values().size).also { player.attr[STAT_MODS] = it }
 
     fun decreaseStatModifier(
         player: Player,
@@ -77,6 +143,7 @@ object Prayers {
         bonus: Int,
         max: Int,
     ): Boolean {
+        val statMods = statMods(player)
         if (statMods[mod.ordinal] > max) {
             statMods[mod.ordinal]--
             updateStatMod(player, mod)
@@ -91,6 +158,7 @@ object Prayers {
         bonus: Int,
         max: Int,
     ): Boolean {
+        val statMods = statMods(player)
         if (statMods[mod.ordinal] < max) {
             statMods[mod.ordinal]++
             updateStatMod(player, mod)
@@ -105,16 +173,17 @@ object Prayers {
         }
     }
 
-    private fun getStatMod(mod: StatMod): Int {
-        return statMods[mod.ordinal]
-    }
+    private fun getStatMod(
+        player: Player,
+        mod: StatMod,
+    ): Int = statMods(player)[mod.ordinal]
 
     private fun setStatMod(
         player: Player,
         mod: StatMod,
         bonus: Int,
     ) {
-        statMods[mod.ordinal] = bonus
+        statMods(player)[mod.ordinal] = bonus
         updateStatMod(player, mod)
     }
 
@@ -122,7 +191,7 @@ object Prayers {
         player: Player,
         mod: StatMod,
     ) {
-        player.setVarbit(6857 + mod.ordinal, 30 + statMods[mod.ordinal])
+        player.setVarbit(6857 + mod.ordinal, 30 + statMods(player)[mod.ordinal])
     }
 
     private fun updateStatMods(player: Player) {
@@ -139,6 +208,7 @@ object Prayers {
     }
 
     fun deactivateAll(p: Player) {
+        p.setVarbit(AncientCurse.PROTECT_ITEM_VARBIT, 0)
         Prayer.values.forEach { prayer ->
             if (isActive(p, prayer)) {
                 deactivate(p, prayer)
@@ -218,6 +288,7 @@ object Prayers {
             setOverhead(p)
             if (prayer == Prayer.PROTECT_ITEM) {
                 p.attr[PROTECT_ITEM_ATTR] = true
+                if (AncientCurses.getBook(p) == AncientCurses.PrayerBook.ANCIENT) p.setVarbit(AncientCurse.PROTECT_ITEM_VARBIT, 1)
             }
         }
     }
@@ -233,6 +304,7 @@ object Prayers {
 
             if (prayer == Prayer.PROTECT_ITEM) {
                 p.attr[PROTECT_ITEM_ATTR] = false
+                p.setVarbit(AncientCurse.PROTECT_ITEM_VARBIT, 0)
             }
         }
     }
@@ -242,16 +314,15 @@ object Prayers {
     }
 
     fun drainPrayer(p: Player) {
-        if (p.isDead() ||
-            p.getVarp(ACTIVE_PRAYERS_VARP) == 0 ||
-            p.hasStorageBit(INFINITE_VARS_STORAGE, InfiniteVarsType.PRAY)
-        ) {
+        // The curse book keeps its active state in its own varps, so `ACTIVE_PRAYERS_VARP == 0` is
+        // not "nothing is on" for a player on the ancient book - gate on the real total instead.
+        val drainRate = calculateDrainRate(p)
+        if (p.isDead() || drainRate == 0 || p.hasStorageBit(INFINITE_VARS_STORAGE, InfiniteVarsType.PRAY)) {
             p.attr.remove(PRAYER_DRAIN_COUNTER)
             return
         }
-        // new correct calculation of prayer drain
         val drainResistance = getDrainResistance(p)
-        var prayerDrainCounter = p.attr.getOrDefault(PRAYER_DRAIN_COUNTER, 0) + calculateDrainRate(p)
+        var prayerDrainCounter = p.attr.getOrDefault(PRAYER_DRAIN_COUNTER, 0) + drainRate
         while (prayerDrainCounter >= drainResistance) {
             p.decreasePrayerPoints(1)
             prayerDrainCounter -= drainResistance
@@ -260,6 +331,7 @@ object Prayers {
 
         if (p.getVarp(PRAYER_POINTS_VARP) == 0) {
             deactivateAll(p)
+            AncientCurses.deactivateAllCurses(p)
             p.message("You have run out of prayer points, you can recharge at an altar.")
         }
     }
@@ -275,40 +347,36 @@ object Prayers {
             return
         }
 
-        val slot = prayer.slot
-        val enabled = (player.getVarc(SELECTED_QUICK_PRAYERS_VARC) and (1 shl slot)) != 0
+        val enabled = isQuickPrayerSelected(player, prayer)
 
         it.player.queue {
-            if (!enabled) {
-                if (checkRequirements(this, prayer)) {
-                    val others =
-                        Prayer.values.filter { other ->
-                            prayer != other &&
-                                other.group != null &&
-                                (prayer.group == other.group || prayer.overlap.contains(other.group))
-                        }
-                    others.forEach { other ->
-                        val otherEnabled = (player.getVarc(SELECTED_QUICK_PRAYERS_VARC) and (1 shl other.slot)) != 0
-                        if (otherEnabled) {
-                            player.setVarc(
-                                SELECTED_QUICK_PRAYERS_VARC,
-                                player.getVarc(SELECTED_QUICK_PRAYERS_VARC) and (1 shl other.slot).inv(),
-                            )
-                        }
-                    }
-                    QUICK_PRAYERS_SETTING = true
-                    player.setVarc(
-                        SELECTED_QUICK_PRAYERS_VARC,
-                        player.getVarc(SELECTED_QUICK_PRAYERS_VARC) or (1 shl slot),
-                    )
-                }
-            } else {
-                QUICK_PRAYERS_SETTING = false
-                player.setVarc(
-                    SELECTED_QUICK_PRAYERS_VARC,
-                    player.getVarc(SELECTED_QUICK_PRAYERS_VARC) and (1 shl slot).inv(),
-                )
+            if (enabled) {
+                player.setVarbit(prayer.qpVarbit, 0)
+                return@queue
             }
+            if (!checkRequirements(this, prayer)) {
+                /*
+                 * Client script 1388 optimistically ticks the box on click; re-transmitting the
+                 * varbit restores the real state through its onVarTransmit hook (script 2291).
+                 */
+                player.setVarbit(prayer.qpVarbit, 0)
+                return@queue
+            }
+            /*
+             * Same mutual-exclusion rule the live activation path uses: a quick-prayer set may not
+             * contain two prayers that could never be active at the same time.
+             */
+            Prayer.values
+                .filter { other ->
+                    prayer != other &&
+                        other.group != null &&
+                        (prayer.group == other.group || prayer.overlap.contains(other.group))
+                }.forEach { other ->
+                    if (isQuickPrayerSelected(player, other)) {
+                        player.setVarbit(other.qpVarbit, 0)
+                    }
+                }
+            player.setVarbit(prayer.qpVarbit, 1)
         }
     }
 
@@ -321,10 +389,15 @@ object Prayers {
             return
         }
 
-        if (option == 3) {
-            val quickPrayers = p.getVarc(SELECTED_QUICK_PRAYERS_VARC)
+        if (option == QUICK_PRAYERS_TOGGLE_OPTION) {
+            if (AncientCurses.getBook(p) == AncientCurses.PrayerBook.ANCIENT) {
+                AncientCurses.toggleQuickCurses(p)
+                return
+            }
+            val quickPrayers = selectedQuickPrayers(p)
+            val active = Prayer.values.filter { isActive(p, it) }
             when {
-                quickPrayers == 0 -> {
+                quickPrayers.isEmpty() -> {
                     p.setVarc(QUICK_PRAYERS_ACTIVE_VARC, 0)
                     p.message("You haven't selected any quick-prayers.")
                 }
@@ -332,7 +405,7 @@ object Prayers {
                     p.setVarc(QUICK_PRAYERS_ACTIVE_VARC, 0)
                     p.message("You have run out of prayer points, you can recharge at an altar.")
                 }
-                p.getVarp(ACTIVE_PRAYERS_VARP) == quickPrayers -> {
+                active.toSet() == quickPrayers.toSet() -> {
                     /*
                      * All active prayers are quick-prayers - so we turn them off.
                      */
@@ -341,15 +414,25 @@ object Prayers {
                     setOverhead(p)
                 }
                 else -> {
-                    p.setVarp(ACTIVE_PRAYERS_VARP, quickPrayers)
+                    /*
+                     * Every active-prayer varbit lives in varp 1395, so clearing the varp clears
+                     * them all in one transmission before the quick set is applied on top.
+                     */
+                    p.setVarp(ACTIVE_PRAYERS_VARP, 0)
+                    quickPrayers.forEach { p.setVarbit(it.varbit, 1) }
                     p.setVarc(QUICK_PRAYERS_ACTIVE_VARC, 1)
                     setOverhead(p)
                 }
             }
-        } else if (option == 2) {
-            switchSettingQuickPrayer(p)
+        } else if (option == QUICK_PRAYERS_SELECT_OPTION) {
+            setQuickPrayerSelectMode(p, !isSelectingQuickPrayers(p))
             p.focusTab(Tabs.PRAYER)
         }
+    }
+
+    /** Leaves selection mode, e.g. from 271:43 "Confirm Selection". */
+    fun confirmQuickPrayerSelection(player: Player) {
+        setQuickPrayerSelectMode(player, false)
     }
 
     fun isActive(
@@ -406,10 +489,15 @@ object Prayers {
         return true
     }
 
+    /**
+     * 2026-09-06: Protect from Summoning is not exclusive with the three combat protections, so
+     * the old top-of-the-chain `PROTECT_FROM_SUMMONING` branch silently hid whichever combat
+     * protection was also on. The decoded `headicons_prayer` sheet has a dedicated combined frame
+     * for each of those pairings (8/9/10 - see [PrayerIcon]), which is what real RS renders.
+     */
     private fun setOverhead(p: Player) {
-        val icon =
+        val combat =
             when {
-                isActive(p, Prayer.PROTECT_FROM_SUMMONING) -> PrayerIcon.PROTECT_FROM_SUMMONING
                 isActive(p, Prayer.PROTECT_FROM_MELEE) -> PrayerIcon.PROTECT_FROM_MELEE
                 isActive(p, Prayer.PROTECT_FROM_MISSILES) -> PrayerIcon.PROTECT_FROM_MISSILES
                 isActive(p, Prayer.PROTECT_FROM_MAGIC) -> PrayerIcon.PROTECT_FROM_MAGIC
@@ -418,6 +506,7 @@ object Prayers {
                 isActive(p, Prayer.REDEMPTION) -> PrayerIcon.REDEMPTION
                 else -> PrayerIcon.NONE
             }
+        val icon = PrayerIcon.combined(isActive(p, Prayer.PROTECT_FROM_SUMMONING), combat) ?: PrayerIcon.NONE
 
         if (p.prayerIcon != icon.id) {
             p.prayerIcon = icon.id
@@ -425,5 +514,24 @@ object Prayers {
         }
     }
 
-    private fun calculateDrainRate(p: Player): Int = Prayer.values.filter { isActive(p, it) }.sumOf { it.drainEffect }
+    /**
+     * 2026-09-06: Ancient Curses now drain through this same counter instead of each running its
+     * own `world.queue { while(...) wait(n); decreasePrayerPoints(...) }` loop.
+     *
+     * The old bespoke loops were the cause of the "Prayer/Curse drain remains FAR too fast" retest
+     * report. `AncientCurse.secondsPerPoint` held values like 0.24 for the Saps, which the loop
+     * read as "one whole Prayer point every 0.24 seconds" - about 4 points a second, draining a
+     * level-99 account in roughly 25 seconds - and Turmoil's own loop spent 15 points every 3
+     * seconds. Those numbers are the source's rate divided by ten; the corroboration is that the
+     * same source's Deflect value converts to exactly 3.0 seconds per point, which is precisely
+     * what a Protect prayer (`drainEffect = 120`) costs in this table.
+     *
+     * Routing everything through one counter also means curses finally respect prayer bonus, and
+     * that stacking a curse with Protect Item costs what stacking two prayers costs.
+     */
+    private fun calculateDrainRate(p: Player): Int {
+        var rate = Prayer.values.filter { isActive(p, it) }.sumOf { it.drainEffect }
+        rate += AncientCurses.activeCurseDrainEffect(p)
+        return rate
+    }
 }

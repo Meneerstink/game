@@ -1,6 +1,8 @@
 package gg.rsmod.plugins.content.mechanics.identitykit
 
 import gg.rsmod.plugins.content.mechanics.shops.CoinCurrency
+import gg.rsmod.game.model.shop.PurchasePolicy
+
 
 /**
  * @author Alycia <https://github.com/alycii>
@@ -175,7 +177,7 @@ on_interface_close(interfaceId = 729) {
 /**
  * Handle the npc
  */
-create_shop("Thessalia's Fine Clothes", CoinCurrency(), containsSamples = false) {
+create_shop("Thessalia's Fine Clothes", CoinCurrency(), containsSamples = false, purchasePolicy = PurchasePolicy.BUY_STOCK) {
     items[0] = ShopItem(Items.WHITE_APRON, 10)
     items[1] = ShopItem(Items.LEATHER_BODY, 10)
     items[2] = ShopItem(Items.LEATHER_GLOVES, 10)

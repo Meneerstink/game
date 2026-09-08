@@ -532,6 +532,14 @@ abstract class KotlinPlugin(
     fun on_world_init(logic: (Plugin).() -> Unit) = r.bindWorldInit(logic)
 
     /**
+     * Invoke [logic] once every [on_world_init] block has run.
+     *
+     * Reserved for gap-filling fallbacks that bind only what nobody else claimed: those have to see
+     * the finished binding tables, and binding the same slot twice throws.
+     */
+    fun on_world_init_late(logic: (Plugin).() -> Unit) = r.bindLateWorldInit(logic)
+
+    /**
      * Invoke [logic] when an [Event] is triggered.
      */
     @Suppress("UNCHECKED_CAST")

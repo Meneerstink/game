@@ -40,6 +40,8 @@ object BankObjects {
             Objs.BANK_CHEST_21301,
             Objs.BANK_CHEST_42192,
             Objs.BANK_CHEST_57437,
+            // Ferox Enclave bank chest (imported LocType; options [Use, -, Collect]).
+            gg.rsmod.plugins.content.areas.home.FeroxObjects.BANK_CHEST,
         )
 
     val CHESTS_BANK = setOf(Objs.BANK_CHEST_27663, Objs.CHEST_12309)

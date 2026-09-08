@@ -147,6 +147,23 @@ object ObjectPathAction {
             }
             if (!handled) {
                 player.writeMessage(Entity.NOTHING_INTERESTING_HAPPENS)
+                /*
+                 * The item-on-object path above has always reported what it failed to handle; the
+                 * plain option path never did, which is why every unbound door, gate, rift and
+                 * dungeon entrance reported the same untraceable "Nothing interesting happens."
+                 * The transformed id and the option index are both included because a multi-state
+                 * object (varbit/varp transform) is usually bound under one id and clicked as
+                 * another, and because the option index is what `on_obj_option` actually binds.
+                 */
+                if (player.world.devContext.debugObjects) {
+                    val def = player.world.definitions.get(ObjectDef::class.java, transformedId)
+                    val option = def.options.getOrNull(opt!! - 1)
+                    player.writeConsoleMessage(
+                        "Unhandled object action: [id=${obj.id}, transform=$transformedId, " +
+                            "name=${def.name}, opt=$opt, option=$option, type=${obj.type}, " +
+                            "rot=${obj.rot}, x=${obj.tile.x}, z=${obj.tile.z}, height=${obj.tile.height}]",
+                    )
+                }
             }
         }
     }

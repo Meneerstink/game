@@ -149,6 +149,38 @@ val RING_OF_FORGING_CHARGES = AttributeKey<Int>(persistenceKey = "ring_of_forgin
 val POISON_TICKS_LEFT_ATTR = AttributeKey<Int>(persistenceKey = "poison_ticks_left")
 
 /**
+ * The number of venom ticks that have already elapsed since a pawn was envenomed. Counts
+ * up (unlike poison's countdown) since venom damage escalates the longer it is active -
+ * see [gg.rsmod.plugins.content.mechanics.poison.Venom.damageForTick].
+ */
+val VENOM_TICKS_ELAPSED_ATTR = AttributeKey<Int>(persistenceKey = "venom_ticks_elapsed")
+
+/**
+ * True while a pawn's own reflected/recoiled damage-response is being resolved for the hit
+ * it just took - a defensive reentrancy guard for
+ * [gg.rsmod.plugins.content.mechanics.combatresponse.DamageResponse], on top of the
+ * structural guarantee that reflected hits use the raw [gg.rsmod.plugins.api.ext.hit]
+ * primitive and therefore never re-enter the dispatcher on their own.
+ */
+val REFLECTING_DAMAGE_ATTR = AttributeKey<Boolean>()
+
+/**
+ * Whether Vengeance is currently primed on this pawn - set by casting the spell, consumed
+ * (removed) the next time the pawn takes damage, at which point 75% of that damage is
+ * reflected back onto whoever dealt it. Sourced from the OSRS Wiki "Vengeance" page - see
+ * [gg.rsmod.plugins.content.mechanics.combatresponse.Vengeance] and RSPS_DECISIONS.md.
+ */
+val VENGEANCE_ACTIVE_ATTR = AttributeKey<Boolean>(persistenceKey = "vengeance_active")
+
+/**
+ * Cumulative damage a ring of recoil (or ring of suffering, once sourced) has reflected for
+ * this pawn since it last shattered. Tracked per-player rather than per physical ring -
+ * sourced from the OSRS Wiki "Ring of recoil" page ("a newly-equipped ring will have the
+ * same number of charges remaining as any other ring the player wears").
+ */
+val RING_OF_RECOIL_CHARGE_ATTR = AttributeKey<Int>(persistenceKey = "recoil_ring_charge")
+
+/**
  * The amount of antifire potion charges left.
  */
 val ANTIFIRE_POTION_CHARGES_ATTR = AttributeKey<Int>(persistenceKey = "antifire_potion_charges", resetOnDeath = true)

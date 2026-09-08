@@ -27,16 +27,29 @@ fun openEquipmentBonuses(
         player.openInterface(interfaceId = EQUIPMENT_BONUS_INTERFACE_ID, dest = InterfaceDestination.MAIN_SCREEN)
         player.setVarbit(Varbits.IS_BANK_EQUIPMENT_INTERFACE, if (bank) 1 else 0)
         player.openInterface(INVENTORY_INTERFACE_ID, dest = InterfaceDestination.TAB_AREA)
-        // Audit finding 8: these 3 lines (plus a 4th, `runClientScript(787, 1)//unknown`, already
-        // removed) are not an unfinished guess - they were real code, disabled 3+ years ago in
-        // commit 077ddfc4 ("chore: disable some equipment bonus screen configs, caused crash").
-        // No decoded interface-667/670 component layout exists in this environment (same
-        // interface-cache blocker as R03.4/GE - see OWNER_TASK_STATUS.md) to verify what actually
-        // changed between "crashes" and "correct", so re-enabling them here would be reintroducing
-        // a historically real crash on a guess, not a fix. Needs a live client to test safely.
-        // player.setInterfaceEvents(interfaceId = INVENTORY_INTERFACE_ID, component = 0, from = 0, to = 27, 1538)
-        // player.runClientScript(150, INVENTORY_INTERFACE_ID shl 16, 93, 0, 1, 2, 3)
-        // player.setInterfaceEvents(interfaceId = EQUIPMENT_BONUS_INTERFACE_ID, component = 7, from = 0, to = 15, 1538)
+        // Audit finding 8 / R05.1: two of these three lines were real code, disabled 3+ years ago
+        // in commit 077ddfc4 ("chore: disable some equipment bonus screen configs, caused crash").
+        // The interface-cache blocker that previously stopped us re-enabling them is gone: the
+        // `layout`/`compref` modes of InterfaceHookProbeTool now decode the real 667/670 component
+        // layout straight out of the production cache, and they prove:
+        //   * 667:7 (worn grid) and 670:0 (embedded inventory) both have a baked events mask of 0,
+        //     so InterfaceManager.ifButtonXSend() returns before transmitting anything - the CS2
+        //     onOp hook still draws the menu entry, which is exactly the reported symptom
+        //     ("menu appears, clicking does nothing").
+        //   * 667:0's onLoad (CS2 787 -> 2373) builds the worn grid over inv 94 with
+        //     cc_setop(1,"Remove"), cc_setop(9,"Stats"), cc_setop(10,"Examine"); 670:0's onLoad
+        //     (CS2 2737 -> 2739) builds the embedded inventory over inv 93 with
+        //     cc_setop(1,"Equip"), cc_setop(9,"Stats"), cc_setop(10,"Examine").
+        //   * cc_create gives each dynamic child `slot = parent.slot`, `id = child index`, and
+        //     IF_SETEVENTS keys on (idAndSlot << 32) + component - so these two calls address
+        //     exactly those children, and the delivered slot is the equipment-slot id (667:7) or
+        //     inventory index (670:0) the handlers below already assume.
+        // 1538 = 0b110_0000_0010 = bits 1|9|10 = ops 1, 9, 10 = IF_BUTTON1(61), IF_BUTTON9(20),
+        // IF_BUTTON10(25), matching the `when (opcode)` branches of both handlers below.
+        // The third line stays deleted: CS2 150 is CC_CREATE, not a callable script here, and
+        // 670:0's own onLoad already builds the grid - that call is the likely origin of the crash.
+        player.setInterfaceEvents(interfaceId = INVENTORY_INTERFACE_ID, component = 0, range = 0 until player.inventory.capacity, setting = 1538)
+        player.setInterfaceEvents(interfaceId = EQUIPMENT_BONUS_INTERFACE_ID, component = 7, range = 0 until player.equipment.capacity, setting = 1538)
         player.refreshBonuses()
     }
 }

@@ -288,6 +288,40 @@ enum class CombinationData(
         experience = 4.0,
         message = "You put some string on your emblem.",
     ),
+
+    /*
+     * Godsword assembly. The hilt is deliberately items[0] of each of the four entries: this enum
+     * is indexed by that first item, so keying them on the shared Godsword blade would collapse all
+     * four into one binding. No skill or level is involved - the requirement lives on the blade,
+     * which has to be smithed from the three shards first.
+     *
+     * The inverse action lives in content/items/godsword.plugin.kts; the two must stay in step, or
+     * "Dismantle" becomes a one-way item sink.
+     */
+    ARMADYL_GODSWORD(
+        items = intArrayOf(Items.ARMADYL_HILT, Items.GODSWORD_BLADE),
+        resultItem = Items.ARMADYL_GODSWORD,
+        experience = 0.0,
+        message = "You attach the hilt to the godsword blade.",
+    ),
+    BANDOS_GODSWORD(
+        items = intArrayOf(Items.BANDOS_HILT, Items.GODSWORD_BLADE),
+        resultItem = Items.BANDOS_GODSWORD,
+        experience = 0.0,
+        message = "You attach the hilt to the godsword blade.",
+    ),
+    SARADOMIN_GODSWORD(
+        items = intArrayOf(Items.SARADOMIN_HILT, Items.GODSWORD_BLADE),
+        resultItem = Items.SARADOMIN_GODSWORD,
+        experience = 0.0,
+        message = "You attach the hilt to the godsword blade.",
+    ),
+    ZAMORAK_GODSWORD(
+        items = intArrayOf(Items.ZAMORAK_HILT, Items.GODSWORD_BLADE),
+        resultItem = Items.ZAMORAK_GODSWORD,
+        experience = 0.0,
+        message = "You attach the hilt to the godsword blade.",
+    ),
     ;
 
     companion object {

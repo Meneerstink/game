@@ -2,12 +2,15 @@ package gg.rsmod.plugins.content.items.potion
 
 import gg.rsmod.game.model.attr.POISON_TICKS_LEFT_ATTR
 import gg.rsmod.game.model.entity.Player
+import gg.rsmod.game.model.timer.ANTIFIRE_TIMER
 import gg.rsmod.game.model.timer.POISON_IMMUNITY
 import gg.rsmod.game.model.timer.POISON_TIMER
+import gg.rsmod.game.model.timer.SUPER_ANTIFIRE_TIMER
 import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.api.ext.heal
 import gg.rsmod.plugins.api.ext.restorePrayer
 import gg.rsmod.plugins.content.mechanics.poison.Poison
+import gg.rsmod.plugins.content.mechanics.poison.Venom
 import gg.rsmod.plugins.content.mechanics.run.RunEnergy
 import gg.rsmod.plugins.content.skills.summoning.Familiar
 import kotlin.math.floor
@@ -69,6 +72,13 @@ enum class PotionType(
     },
     ANTIPOISON {
         override fun apply(p: Player) {
+            // Real rule (OSRS Wiki, "Venom"): any antipoison converts venom to regular
+            // poison at the same damage instead of curing it - a second dose is needed to
+            // clear the resulting poison. Only when the player isn't envenomed does this
+            // dose act as a normal poison cure + immunity grant.
+            if (Venom.downgradeToPoison(p)) {
+                return
+            }
             p.timers.remove(POISON_TIMER)
             p.attr.remove(POISON_TICKS_LEFT_ATTR)
             p.timers[POISON_IMMUNITY] = 1500
@@ -77,10 +87,29 @@ enum class PotionType(
     },
     SUPER_ANTIPOISON {
         override fun apply(p: Player) {
+            if (Venom.downgradeToPoison(p)) {
+                return
+            }
             p.timers.remove(POISON_TIMER)
             p.attr.remove(POISON_TICKS_LEFT_ATTR)
             p.timers[POISON_IMMUNITY] = 6000
             Poison.setPoisonVarp(p, Poison.OrbState.NONE)
+        }
+    },
+    ANTIFIRE {
+        override fun apply(p: Player) {
+            // Real duration (OSRS Wiki "Dragonfire"): 6 minutes / 600 ticks. Drinking a
+            // regular antifire while a stronger super antifire is still active would
+            // downgrade the protection, so leave the super timer alone if it's running.
+            if (!p.timers.has(SUPER_ANTIFIRE_TIMER)) {
+                p.timers[ANTIFIRE_TIMER] = 600
+            }
+        }
+    },
+    SUPER_ANTIFIRE {
+        override fun apply(p: Player) {
+            // Real duration (OSRS Wiki "Dragonfire"): 3 minutes / 300 ticks.
+            p.timers[SUPER_ANTIFIRE_TIMER] = 300
         }
     },
     HUNTER(alteredSkills = intArrayOf(Skills.HUNTER), alterStrategy = arrayOf("r_skill")) {

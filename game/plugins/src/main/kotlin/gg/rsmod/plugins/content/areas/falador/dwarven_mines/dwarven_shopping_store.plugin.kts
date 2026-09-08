@@ -1,6 +1,7 @@
 package gg.rsmod.plugins.content.areas.falador.dwarven_mines
 
 import gg.rsmod.plugins.content.mechanics.shops.CoinCurrency
+import gg.rsmod.game.model.shop.PurchasePolicy
 
 /**
  * @author Alycia <https://github.com/alycii>
@@ -8,7 +9,7 @@ import gg.rsmod.plugins.content.mechanics.shops.CoinCurrency
 
 val shopkeepers = arrayOf(Npcs.DWARF_582)
 
-create_shop("Dwarven Shopping Store", CoinCurrency(), containsSamples = false) {
+create_shop("Dwarven Shopping Store", CoinCurrency(), containsSamples = false, purchasePolicy = PurchasePolicy.BUY_STOCK) {
     items[0] = ShopItem(Items.EMPTY_POT, 5)
     items[1] = ShopItem(Items.JUG, 2)
     items[2] = ShopItem(Items.SHEARS, 2)

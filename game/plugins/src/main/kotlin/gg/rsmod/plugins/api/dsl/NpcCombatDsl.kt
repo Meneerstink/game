@@ -38,6 +38,7 @@ object NpcCombatDsl {
             combatBuilder.setRespawnDelay(builder.respawnDelay)
             combatBuilder.setDeathDelay(builder.deathDelay)
             combatBuilder.setPoisonDamage(builder.poisonDamage)
+            combatBuilder.setVenomDamage(builder.venomDamage)
             combatBuilder.setXpMultiplier(builder.xpMultiplier)
             combatBuilder.setAttackStyle(builder.attackStyle)
         }
@@ -121,6 +122,12 @@ object NpcCombatDsl {
          * The amount of initial poison damage the NPC will inflict
          */
         var poisonDamage = -1
+
+        /**
+         * The amount of initial venom damage the NPC will inflict. Mutually exclusive
+         * with [poisonDamage] on a given hit - see [gg.rsmod.plugins.content.combat.Combat].
+         */
+        var venomDamage = -1
 
         /**
          * The spell an NPC will use if one is set

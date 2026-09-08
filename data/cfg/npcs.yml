@@ -13996,3 +13996,159 @@
   examine: "He has seen better, happier days."
 - id: 14376
   examine: "Yep. Definitely a chicken."
+# 2026-09-06: Summoning familiar examine text (idle npc id only - see SummoningPouchData.npc;
+# the separate combat-transform ids are never spawned by this codebase). Sourced live via the
+# runescape.wiki API (infobox `examine` field), one WebFetch call per name. 6833 and 8575 already
+# had correct entries above from an earlier session and are not duplicated here.
+- id: 6794
+  examine: "A bird. Literally terrifying."
+- id: 6796
+  examine: "Is it a stone? Is it a crab? No! it's Granite Crab!"
+- id: 6798
+  examine: "Wax on, wax off, grab a butterfly and eat it... Wait, what?"
+- id: 6800
+  examine: "He ent such a bad guy."
+- id: 6802
+  examine: "Serpentine."
+- id: 6804
+  examine: "Face the thing that should not be!"
+- id: 6806
+  examine: "A hermit slug!"
+- id: 6808
+  examine: "Looks pretty eager!"
+- id: 6809
+  examine: "Kneel before squid!"
+- id: 6811
+  examine: "A very split personality."
+- id: 6813
+  examine: "Smells worse than he looks."
+- id: 6815
+  examine: "Definitely not teenaged, although the jury is out on its ninja skills."
+- id: 6817
+  examine: "Fruity and bat-shaped. A winning combination!"
+- id: 6818
+  examine: "It's an extra-planar little blood hoover."
+- id: 6820
+  examine: "Lurking like only a lurker can."
+- id: 6822
+  examine: "The pointiest horse on the planet."
+- id: 6824
+  examine: "Check your pockets!"
+- id: 6825
+  examine: "Southern fried please!"
+- id: 6827
+  examine: "It's mean and green!"
+- id: 6829
+  examine: "Man's significantly less domesticated friend."
+- id: 6831
+  examine: "Surprisingly slime-free."
+- id: 6835
+  examine: "It vants to suck my blood!"
+- id: 6837
+  examine: "Salt and vinegaroon."
+- id: 6839
+  examine: "Crikey! Look at the size of those teeth!"
+- id: 6841
+  examine: "Would scare anyone off their tuffet."
+- id: 6843
+  examine: "It's like a little suction pump with eyes."
+- id: 6845
+  examine: "Violent little so-and-so."
+- id: 6847
+  examine: "The big cheese."
+- id: 6849
+  examine: "Puts the 'crust' in 'crustacean'."
+- id: 6851
+  examine: "Check your pockets!"
+- id: 6853
+  examine: "He's just a big bully."
+- id: 6855
+  examine: "He's just a big bully."
+- id: 6857
+  examine: "He's just a big bully."
+- id: 6859
+  examine: "He's just a big bully."
+- id: 6861
+  examine: "He's just a big bully."
+- id: 6863
+  examine: "He's just a big bully."
+- id: 6865
+  examine: "Well, there's something you don't see every day."
+- id: 6867
+  examine: "Putting all three of its best feet forward."
+- id: 6869
+  examine: "It's just a harmless wee rabbit."
+- id: 6871
+  examine: "I suppose it could smell worse, I just can't think how."
+- id: 6873
+  examine: "Bulk haulage never smelled so bad."
+- id: 6875
+  examine: "If looks could kill... Wait, they do!"
+- id: 6877
+  examine: "If looks could kill... Wait, they do!"
+- id: 6879
+  examine: "If looks could kill... Wait, they do!"
+- id: 6881
+  examine: "If looks could kill... Wait, they do!"
+- id: 6883
+  examine: "If looks could kill... Wait, they do!"
+- id: 6885
+  examine: "If looks could kill... Wait, they do!"
+- id: 6887
+  examine: "If looks could kill... Wait, they do!"
+- id: 6889
+  examine: "The only creature with a mouth big enough to fit a cannon ball into."
+- id: 6991
+  examine: "I wonder if it uses the 'Crane' technique."
+- id: 6992
+  examine: "On Gielinor, acid gets indigestion from YOU!"
+- id: 6994
+  examine: "Hail to the Queen, baby."
+- id: 7329
+  examine: "Do you hear duelling banjos?"
+- id: 7331
+  examine: "It buzzes and bites. Nasty."
+- id: 7333
+  examine: "It spins."
+- id: 7335
+  examine: "This one will burn right through the net!"
+- id: 7337
+  examine: "Fast cat is fast."
+- id: 7339
+  examine: "It'll kill your enemies, and makes a great cup of tea."
+- id: 7341
+  examine: "Made of lava."
+- id: 7343
+  examine: "The King of the Titans!"
+- id: 7345
+  examine: "Four fists can make quite an impression IN someone..."
+- id: 7347
+  examine: "If a normal black cat is bad luck, what happens if this crosses your path?"
+- id: 7349
+  examine: "Big, mean, ugly, and from a different dimension."
+- id: 7351
+  examine: "It torches."
+- id: 7353
+  examine: "Looks a little...volatile."
+- id: 7355
+  examine: "Scorching!"
+- id: 7357
+  examine: "Gathers rolling stones to bash people with."
+- id: 7359
+  examine: "Frosty the highly violent snowman."
+- id: 7361
+  examine: "This bat burned down the belfry."
+- id: 7363
+  examine: "Those spikes are pretty big!"
+- id: 7365
+  examine: "Those teeth are pretty big!"
+- id: 7367
+  examine: "It shifts."
+- id: 7370
+  examine: "It ravages."
+- id: 7372
+  examine: "It's like a little stomach on wings."
+- id: 7375
+  examine: "He is an iron man!"
+- id: 7377
+  examine: "Where did I put the marshmallows?"

@@ -4,14 +4,21 @@ import gg.rsmod.game.message.MessageHandler
 import gg.rsmod.game.message.impl.ClanJoinChatLeaveChatMessage
 import gg.rsmod.game.model.World
 import gg.rsmod.game.model.entity.Client
+import gg.rsmod.game.model.entity.Player
+import gg.rsmod.util.Misc
 
 /**
- * Sent when the client leaves whatever channel is shown in the Friends Chat/Clan Chat tab
- * (e.g. clicking "Leave" on that tab). This server's clan chat
- * ([gg.rsmod.plugins.content.mechanics.clan.Clans]) is a `::cc` broadcast command rather than a
- * real channel with server-tracked membership (interface 1110's channel packet protocol is
- * net-layer work not implemented yet - see that object's kdoc), so there is no per-player
- * channel state to tear down here; this only needs to stop crashing when the client sends it.
+ * Joins or leaves the channel shown in the Friends Chat tab.
+ *
+ * The client sends this both when a channel name is typed into the join prompt and when `Leave` is
+ * clicked; an empty name means leave. Nothing happened here before, so the join prompt accepted a
+ * name and then appeared to do nothing - the client waits for
+ * [gg.rsmod.game.message.impl.UpdateFriendChatChannelFullMessage] before it shows a channel, and
+ * that was never sent.
+ *
+ * A channel is named after the player who owns it, so the name typed in is a player name. Joining
+ * the channel of somebody who has never played here would leave a member list nobody can moderate,
+ * so the owner has to be a real character.
  *
  * @author Tom <rspsmods@gmail.com>
  */
@@ -21,6 +28,25 @@ class ClanJoinChatLeaveHandler : MessageHandler<ClanJoinChatLeaveChatMessage> {
         world: World,
         message: ClanJoinChatLeaveChatMessage,
     ) {
-        // No-op until a real channel protocol exists to leave.
+        val player = client as? Player ?: return
+
+        if (message.name.isBlank()) {
+            if (world.friendsChat.channelOf(player) != null) {
+                world.friendsChat.leave(player)
+                player.writeMessage("You have left the channel.")
+            }
+            return
+        }
+
+        val owner = Misc.formatForDisplay(message.name)
+        if (!world.characterExists(owner)) {
+            player.writeMessage("The channel you tried to join does not exist.")
+            return
+        }
+
+        if (world.friendsChat.join(player, owner)) {
+            player.writeMessage("Now talking in friends chat channel $owner.")
+            player.writeMessage("To talk, start each line of chat with the / symbol.")
+        }
     }
 }

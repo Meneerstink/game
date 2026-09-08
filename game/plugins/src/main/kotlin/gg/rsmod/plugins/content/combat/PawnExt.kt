@@ -15,12 +15,17 @@ import gg.rsmod.game.model.entity.Projectile
 import gg.rsmod.game.model.queue.QueueTask
 import gg.rsmod.game.model.timer.ACTIVE_COMBAT_TIMER
 import gg.rsmod.game.model.timer.POISON_TIMER
+import gg.rsmod.game.model.timer.VENOM_TIMER
 import gg.rsmod.plugins.api.HitType
 import gg.rsmod.plugins.api.ProjectileType
 import gg.rsmod.plugins.api.ext.hit
 import gg.rsmod.plugins.content.combat.CombatConfigs.getCombatClass
 import gg.rsmod.plugins.content.combat.formula.CombatFormula
+import gg.rsmod.plugins.content.mechanics.combatresponse.DamageResponse
+import gg.rsmod.plugins.content.mechanics.lifesteal.GuthanLifesteal
 import gg.rsmod.plugins.content.mechanics.poison.Poison
+import gg.rsmod.plugins.content.mechanics.statdrain.AhrimBlightedAura
+import gg.rsmod.plugins.content.mechanics.poison.Venom
 import gg.rsmod.plugins.content.mechanics.prayer.AncientCurses
 import gg.rsmod.plugins.content.mechanics.pvp.AreaState
 import java.lang.ref.WeakReference
@@ -68,6 +73,8 @@ fun Pawn.combatRaycast(
 ): Boolean = Combat.raycast(this, target, distance, projectile)
 
 fun Pawn.isPoisoned(): Boolean = timers.has(POISON_TIMER)
+
+fun Pawn.isEnvenomed(): Boolean = timers.has(VENOM_TIMER)
 
 suspend fun Pawn.canAttackMelee(
     it: QueueTask,
@@ -220,7 +227,22 @@ fun Pawn.dealHit(
     if (landHit) {
         hit.addAction {
             val pawn = this@dealHit
-            AncientCurses.onDamageDealt(pawn, target, hit.hitmarks.sumOf { it.damage })
+            val totalDamage = hit.hitmarks.sumOf { it.damage }
+            AncientCurses.onDamageDealt(pawn, target, totalDamage)
+            // P6 (2026-09-02): reflect/recoil/vengeance now routed through one deterministic
+            // dispatcher instead of calling AncientCurses.onIncomingHit directly - Deflect
+            // curse is still evaluated first inside it, unchanged, just moved up a level so
+            // it shares an order with Vengeance/Ring of recoil. See DamageResponse.kt.
+            DamageResponse.onIncomingHit(pawn, target, getCombatClass(pawn), totalDamage)
+            // Lifesteal further-foundations pass (2026-09-02): Guthan's Infestation set effect,
+            // an attacker-side "on damage dealt" effect like Sap/Leech above it. See
+            // GuthanLifesteal.kt for the sourcing note.
+            GuthanLifesteal.onDamageDealt(pawn, getCombatClass(pawn), totalDamage)
+            // Stat-drain further-foundations pass (2026-09-02): Ahrim's Blighted Aura set
+            // effect (the "Barrows" entry of the master plan's "Stat drain" item; BGS's own
+            // drain is wired separately in its own special-attack plugin.kts, and DWH is
+            // blocked - absent from this cache). See AhrimBlightedAura.kt for the sourcing note.
+            AhrimBlightedAura.onDamageDealt(pawn, target, getCombatClass(pawn))
         }
     }
 
@@ -319,5 +341,11 @@ fun Pawn.poison(
     if (!Poison.isImmune(this) && Poison.poison(this, initialDamage)) {
         Poison.setPoisonVarp(this, Poison.OrbState.POISON)
         onPoison?.invoke()
+    }
+}
+
+fun Pawn.venom(onVenom: (() -> Unit)? = null) {
+    if (Venom.envenom(this)) {
+        onVenom?.invoke()
     }
 }

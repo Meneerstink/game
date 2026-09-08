@@ -1,101 +1,54 @@
 import gg.rsmod.game.model.attr.ANTI_CHEAT_EVENT_ACTIVE
-import gg.rsmod.game.model.attr.BOTTING_SCORE
 import gg.rsmod.game.model.attr.LAST_KNOWN_POSITION
 import gg.rsmod.game.model.timer.ANTI_CHEAT_TIMER
 import gg.rsmod.game.model.timer.LOGOUT_TIMER
-import gg.rsmod.plugins.content.combat.isAttacking
-import gg.rsmod.plugins.content.combat.isBeingAttacked
-import gg.rsmod.plugins.content.combat.isPoisoned
-import kotlin.random.Random
 
 /**
- * @author Harley <https://github.com/HarleyGilpin>
+ * Random events are DISABLED on this server.
+ *
+ * 2026-09-06, owner-reported and confirmed still live: "Random Events are still active. The player
+ * is still forcibly kidnapped/teleported." This file used to be the scheduler that did it - a
+ * three-hour `ANTI_CHEAT_TIMER` that, on expiry, spawned Sergeant Damien, locked the player, and
+ * teleported them into the Drill Demon instance at 3163,4821 with a 500-tick forced-logout timer
+ * attached. That whole trigger is removed rather than merely made unlikely.
+ *
+ * Three things are needed, not one, because [ANTI_CHEAT_TIMER] is a **persisted** timer
+ * (`persistenceKey = "anti_cheat"`): simply not scheduling it would leave every already-saved
+ * account carrying a live countdown that still fires.
+ *
+ *  1. Every login clears the persisted timer and the stale in-event flag.
+ *  2. The timer handler is kept, but only to defuse a timer that arrives from anywhere else
+ *     (an old save loaded before this change, `Player.addXp`'s countdown accelerator, a future
+ *     re-enable) - it never starts an event.
+ *  3. A player already stranded inside the Drill Demon region when this lands is sent back, so
+ *     the fix does not require them to relog out of a room they cannot leave.
+ *
+ * The Drill Demon content itself (`drill_demon.plugin.kts`) is deliberately left in place: its
+ * dialogue, exercise mats and reward handling are unreachable with no trigger, and deleting
+ * working content is not the same as disabling the forced event.
  */
 
-val spawnTimer = 16200 // 3 hrs in game ticks.
+/** The Drill Demon instance. A player logging in here got there through the removed event. */
+val drillDemonRegion = 12619
 
 on_login {
-    if (!player.timers.has(ANTI_CHEAT_TIMER)) {
-        player.timers[ANTI_CHEAT_TIMER] = spawnTimer
-    }
-}
-
-// Set up a timer event for the Drill Demon event
-on_timer(ANTI_CHEAT_TIMER) {
-
-    if (player.isAttacking() ||
-        player.isBeingAttacked() ||
-        player.isLocked() ||
-        player.isDead() ||
-        player.attr[ANTI_CHEAT_EVENT_ACTIVE] == true ||
-        player.isPoisoned() ||
-        player.interfaces.currentModal != -1
-    ) {
-        player.timers[ANTI_CHEAT_TIMER] = 10
-        return@on_timer
-    }
-
-    // TODO: Handle a random, random event when we've added more.
-    // Note: For now, as Drill Demon is the only one we have, we'll continue on...
-
-    // Create and spawn the NPC Sergeant Damien one step north of the player
-    val drillDemon = Npc(Npcs.SERGEANT_DAMIEN, player.findWesternTile(), world)
-
-    // Spawn the drill sergeant
-    world.spawn(drillDemon)
-
-    // Mark the event as active for the player
-    player.attr[ANTI_CHEAT_EVENT_ACTIVE] = true
-
-    // Apply a graphic effect to Sergeant Damien
-    drillDemon.graphic(Gfx.IMP_TELEPORT_POOF)
-
-    // Make Sergeant Damien face the player
-    drillDemon.facePawn(player)
-    // TODO: Find the actual dialogue here?
-    drillDemon.forceChat("Do you think you can be the best?")
-
-    player.interruptQueues()
-    player.stopMovement()
-    player.animate(Anims.RESET)
-    player.lockingQueue {
-        val lastKnownPosition: Tile = player.tile
-        val teleportToDrillDemon = Tile(3163, 4821)
-        player.attr[LAST_KNOWN_POSITION] = lastKnownPosition
-        wait(3)
-        player.moveTo(teleportToDrillDemon)
-        wait(3)
-        player.graphic(Gfx.IMP_TELEPORT_POOF)
-    }
-
-    drillDemon.queue {
-        wait(8)
-        world.spawn(TileGraphic(drillDemon.tile, id = Gfx.IMP_TELEPORT_POOF, height = 0,))
-        world.remove(drillDemon)
-    }
-
-    // Set a random delay for the next event occurrence
-    player.timers[ANTI_CHEAT_TIMER] = spawnTimer
-
-    // Add a logout timer
-    player.timers[LOGOUT_TIMER] = 500
-}
-
-on_logout {
-    if (player.tile.regionId == 12619 || player.attr[ANTI_CHEAT_EVENT_ACTIVE] == true) {
-        val lastKnownPosition: Tile? = player.attr[LAST_KNOWN_POSITION]
-        player.timers.remove(LOGOUT_TIMER)
-        if (lastKnownPosition != null) {
-            player.moveTo(lastKnownPosition)
-        } else {
-            player.moveTo(world.gameContext.home)
-        }
+    player.timers.remove(ANTI_CHEAT_TIMER)
+    player.timers.remove(LOGOUT_TIMER)
+    if (player.attr[ANTI_CHEAT_EVENT_ACTIVE] == true) {
         player.attr[ANTI_CHEAT_EVENT_ACTIVE] = false
-        player.timers[ANTI_CHEAT_TIMER] = Random.nextInt(3000, 10000)
-        player.attr[BOTTING_SCORE] = (player.attr[BOTTING_SCORE] ?: 0) + 1
+    }
+    if (player.tile.regionId == drillDemonRegion) {
+        val lastKnownPosition = player.attr[LAST_KNOWN_POSITION]
+        player.moveTo(lastKnownPosition ?: world.gameContext.home)
+        player.attr.remove(LAST_KNOWN_POSITION)
     }
 }
 
-on_timer(LOGOUT_TIMER) {
-    player.handleLogout()
+/**
+ * Defused. Anything that still manages to arm the timer is cancelled here instead of seizing the
+ * player; this is the single choke point every forced random event went through.
+ */
+on_timer(ANTI_CHEAT_TIMER) {
+    player.timers.remove(ANTI_CHEAT_TIMER)
+    player.attr[ANTI_CHEAT_EVENT_ACTIVE] = false
 }

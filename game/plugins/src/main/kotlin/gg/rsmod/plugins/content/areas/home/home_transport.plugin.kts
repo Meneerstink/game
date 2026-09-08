@@ -2,6 +2,7 @@ package gg.rsmod.plugins.content.areas.home
 
 import gg.rsmod.game.fs.def.NpcDef
 import gg.rsmod.plugins.content.mechanics.shops.CoinCurrency
+import gg.rsmod.game.model.shop.PurchasePolicy
 
 /**
  * R02.3/R02.4/HOME_DESIGN_2.png: home transport hub, in the SE quadrant ("VERVOER" in the
@@ -39,7 +40,7 @@ import gg.rsmod.plugins.content.mechanics.shops.CoinCurrency
 val transportNpc = Npcs.SHOPKEEPER_530
 val transportTile = HomeLayout.transport.tile(world.gameContext.home)
 
-create_shop("Home Travel Supplies", CoinCurrency(), containsSamples = false) {
+create_shop("Home Travel Supplies", CoinCurrency(), containsSamples = false, purchasePolicy = PurchasePolicy.BUY_STOCK) {
     items[0] = ShopItem(Items.GAMES_NECKLACE_8, 5, resupplyCycles = 500)
     items[1] = ShopItem(Items.COMBAT_BRACELET_4, 5, resupplyCycles = 500)
     items[2] = ShopItem(Items.AMULET_OF_GLORY_4, 5, resupplyCycles = 500)

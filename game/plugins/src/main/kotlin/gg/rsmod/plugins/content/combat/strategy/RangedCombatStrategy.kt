@@ -25,6 +25,7 @@ import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Knives
 import gg.rsmod.plugins.content.combat.strategy.ranged.weapon.BowType
 import gg.rsmod.plugins.content.combat.strategy.ranged.weapon.Bows
 import gg.rsmod.plugins.content.combat.strategy.ranged.weapon.CrossbowType
+import gg.rsmod.plugins.content.mechanics.weapons.HandCannon
 
 /**
  * @author Tom <rspsmods@gmail.com>
@@ -49,7 +50,10 @@ object RangedCombatStrategy : CombatStrategy {
                     Items.DORGESHUUN_CBOW -> 6
                     Items.SEERCULL -> 8
                     in Bows.LONG_BOWS, Items.CHINCHOMPA_10033, Items.RED_CHINCHOMPA_10034 -> 9
-                    in Bows.CRYSTAL_BOWS -> 10
+                    // S4, 2026-09-03: OSRS Wiki "Twisted bow" - "attack range of 10 tiles ...
+                    // matching the maximum range in the game", also matches A4's own sourced
+                    // param 13 = 10 read from the pinned upstream item def.
+                    Items.TWISTED_BOW, in Bows.CRYSTAL_BOWS -> 10
                     else -> DEFAULT_ATTACK_RANGE
                 }
 
@@ -186,6 +190,16 @@ object RangedCombatStrategy : CombatStrategy {
             }
         }
         pawn.animate(animation)
+
+        // P8, 2026-09-02: hand cannon explosion check, once per shot fired, before the
+        // damage roll (matches the sourced "explosion is always checked on autoattacks"
+        // rule) - see HandCannon.kt for the full sourcing note and its inferred numbers.
+        if (pawn is Player && pawn.getEquipment(EquipmentType.WEAPON)?.id == Items.HAND_CANNON) {
+            if (HandCannon.rollExplodes(world, HandCannon.firemakingLevel(pawn), isSpecialAttack = false)) {
+                HandCannon.explode(pawn)
+                return
+            }
+        }
 
         val formula = RangedCombatFormula
         val accuracy = formula.getAccuracy(pawn, target)

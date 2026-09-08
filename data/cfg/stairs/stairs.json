@@ -79,5 +79,19 @@
 	{
 		"objectId": 37117,
 		"horizontalMovementDistance": 4
+	},
+	{
+		"objectId": 62431,
+		"northFacingRotation": 2,
+		"horizontalMovementDistance": 0,
+		"climbUpOption": "climb",
+		"climbDialogueOption": "-"
+	},
+	{
+		"objectId": 62432,
+		"northFacingRotation": 2,
+		"horizontalMovementDistance": 0,
+		"climbDownOption": "climb",
+		"climbDialogueOption": "-"
 	}
 ]

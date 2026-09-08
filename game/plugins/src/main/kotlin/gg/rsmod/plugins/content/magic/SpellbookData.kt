@@ -20,7 +20,7 @@ enum class SpellbookData(
         component = 24,
         uniqueId = 356,
         spellType = SpellType.TELEPORT_SPELL_TYPE,
-        spellName = "Lumbridge Home Teleport",
+        spellName = "Home Teleport",
         level = 1,
         sound = -1,
         hitSound = -1,

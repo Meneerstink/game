@@ -372,13 +372,37 @@ on_login {
     player.setVarbit(Varbits.THE_BRANCHES_OF_DARKMEYER_PROGRESS, 170)
 }
 
+/*
+ * A row of the quest list.
+ *
+ * Reported as "quest journal entries do nothing when clicked". Root cause: `getQuest(slot)` only
+ * finds a quest that is registered in `Quest.quests`, which is the eleven quests under
+ * `content/quests/impl`. Every other row - the login block above sets roughly a hundred and seventy
+ * of them - fell out of the handler on the elvis and the click was swallowed in silence. That is
+ * unimplemented content rather than a broken wire, but silence is still the wrong answer, so a row
+ * without a quest behind it now says so.
+ *
+ * The two ops come from clientscript 2162, the list builder, which calls `cc_setop` with
+ * "View Quest Overview" and "View Quest Journal" - in that order for one branch and the other way
+ * round for the rest, always op1 then op2, with op3 "Toggle Map Hint". Which of the two op1 is
+ * therefore depends on the quest's state, and picking the page from `startedQuest` (as this handler
+ * already did) is what matches it: an unstarted quest offers the overview first, a started one the
+ * journal. op2 is always the other page.
+ *
+ * op3 is deliberately unbound: this server has no quest map-hint system for it to toggle, and the
+ * cache does not say which varp would carry one.
+ */
 on_button(interfaceId = 190, 18) {
-    val quest = getQuest(player.getInteractingSlot()) ?: return@on_button
-    if (!player.startedQuest(quest)) {
-        player.buildQuestOverview(quest)
+    val quest = getQuest(player.getInteractingSlot())
+    if (quest == null) {
+        player.message("That quest isn't available on this server yet.")
         return@on_button
     }
-    player.buildQuestStages(quest)
+    val started = player.startedQuest(quest)
+    when (player.getInteractingOpcode()) {
+        61 -> if (started) player.buildQuestStages(quest) else player.buildQuestOverview(quest)
+        64 -> if (started) player.buildQuestOverview(quest) else player.buildQuestStages(quest)
+    }
 }
 
 on_button(interfaceId = 178, component = 57) {

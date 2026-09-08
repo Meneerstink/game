@@ -4,6 +4,7 @@ import gg.rsmod.game.fs.DefinitionSet
 import gg.rsmod.game.fs.def.VarbitDef
 import gg.rsmod.game.model.World
 import gg.rsmod.game.model.attr.AttributeMap
+import gg.rsmod.game.model.combat.CombatClass
 import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.skill.SkillSet
@@ -14,6 +15,7 @@ import gg.rsmod.plugins.content.inter.attack.AttackTab
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkObject
+import io.mockk.slot
 import io.mockk.unmockkObject
 import io.mockk.verify
 import kotlin.test.Test
@@ -31,8 +33,11 @@ import kotlin.test.assertTrue
  *   mocking or a full Hit-queue simulation for no extra regression coverage beyond what the boot
  *   test already exercises; the damage-radius/self-exclusion logic it reuses
  *   ([gg.rsmod.game.model.Tile.isWithinRadius]) already has its own coverage.
- * - Deflect's "reflects a portion back" bonus and Berserker's boost-duration extension: neither is
- *   implemented this pass (disclosed gap), so there is nothing to test.
+ * - Berserker's boost-duration extension: still not implemented (disclosed gap - this codebase has
+ *   no boost-duration-timer system at all to extend), so there is nothing to test.
+ *
+ * Deflect's own "reflects a portion of the blocked damage back" bonus IS now implemented
+ * ([AncientCurses.onIncomingHit]) and is covered below.
  */
 class AncientCursesTests {
     private fun newPlayer(
@@ -53,6 +58,7 @@ class AncientCursesTests {
         val world = mockk<World>(relaxed = true)
         every { world.definitions } returns definitions
         every { player.world } returns world
+        every { world.percentChance(any()) } returns true
         // Prayers.deactivateAll also does p.setVarc(...), whose real body indexes into
         // Player.varcs (normally sized off the real VarbitDef count). The relaxed mock
         // otherwise hands back an empty list, so a real, generously-sized one is stubbed in.
@@ -114,13 +120,17 @@ class AncientCursesTests {
     // ---- mutual exclusion ----
 
     @Test
-    fun `activating a second OFFENSIVE curse deactivates the first`() {
+    fun `Saps stack with Saps but a Leech deactivates every active Sap`() {
         val player = newPlayer()
         AncientCurses.switchBook(player, AncientCurses.PrayerBook.ANCIENT)
         AncientCurses.toggleCurse(player, AncientCurse.SAP_WARRIOR)
         AncientCurses.toggleCurse(player, AncientCurse.SAP_RANGER)
-        assertFalse(AncientCurses.isCurseActive(player, AncientCurse.SAP_WARRIOR))
+        assertTrue(AncientCurses.isCurseActive(player, AncientCurse.SAP_WARRIOR))
         assertTrue(AncientCurses.isCurseActive(player, AncientCurse.SAP_RANGER))
+        AncientCurses.toggleCurse(player, AncientCurse.LEECH_ATTACK)
+        assertFalse(AncientCurses.isCurseActive(player, AncientCurse.SAP_WARRIOR))
+        assertFalse(AncientCurses.isCurseActive(player, AncientCurse.SAP_RANGER))
+        assertTrue(AncientCurses.isCurseActive(player, AncientCurse.LEECH_ATTACK))
     }
 
     @Test
@@ -190,7 +200,7 @@ class AncientCursesTests {
     }
 
     @Test
-    fun `Sap Warrior drains the target Player's combat triad by a flat 10 percent, floored at 1`() {
+    fun `Sap Warrior drains the target Player's combat triad by 10 percent on the first activation`() {
         val attacker = newPlayer().also { activate(it, AncientCurse.SAP_WARRIOR) }
         val target = newPlayer(skillLevels = mapOf(Skills.ATTACK to 50, Skills.STRENGTH to 50, Skills.DEFENCE to 50))
 
@@ -205,6 +215,7 @@ class AncientCursesTests {
     fun `Sap Warrior drains an Npc target through its Stats block, floored at 1`() {
         val attacker = newPlayer().also { activate(it, AncientCurse.SAP_WARRIOR) }
         val npc = mockk<Npc>(relaxed = true)
+        every { npc.attr } returns AttributeMap()
         val stats =
             Npc.Stats(5).apply {
                 setMaxLevel(NpcSkills.ATTACK, 4)
@@ -269,6 +280,55 @@ class AncientCursesTests {
         }
     }
 
+    // ---- Deflect reflect bonus (dealHit -> AncientCurses.onIncomingHit) ----
+
+    @Test
+    fun `Deflect Melee reflects 10 percent of the damage back to the attacker on a successful roll`() {
+        val target = newPlayer().also { activate(it, AncientCurse.DEFLECT_MELEE) }
+        every { target.world.percentChance(63.0) } returns true
+        val attacker = mockk<Player>(relaxed = true)
+
+        AncientCurses.onIncomingHit(attacker, target, CombatClass.MELEE, damage = 100)
+
+        val hitSlot = slot<gg.rsmod.game.model.Hit>()
+        verify { attacker.addHit(capture(hitSlot)) }
+        assertEquals(10, hitSlot.captured.hitmarks.sumOf { it.damage })
+    }
+
+    @Test
+    fun `Deflect reflect does not trigger when the chance roll fails`() {
+        val target = newPlayer().also { activate(it, AncientCurse.DEFLECT_MAGIC) }
+        every { target.world.percentChance(63.0) } returns false
+        val attacker = mockk<Player>(relaxed = true)
+
+        AncientCurses.onIncomingHit(attacker, target, CombatClass.MAGIC, damage = 100)
+
+        verify(exactly = 0) { attacker.addHit(any()) }
+    }
+
+    @Test
+    fun `Deflect reflect is skipped when 10 percent of the damage would be under 10`() {
+        val target = newPlayer().also { activate(it, AncientCurse.DEFLECT_MISSILES) }
+        every { target.world.percentChance(63.0) } returns true
+        val attacker = mockk<Player>(relaxed = true)
+
+        AncientCurses.onIncomingHit(attacker, target, CombatClass.RANGED, damage = 50) // 10% = 5, under 10
+
+        verify(exactly = 0) { attacker.addHit(any()) }
+    }
+
+    @Test
+    fun `Deflect reflect requires the matching Deflect curse to be active for that combat style`() {
+        val target = newPlayer().also { activate(it, AncientCurse.DEFLECT_MELEE) }
+        every { target.world.percentChance(63.0) } returns true
+        val attacker = mockk<Player>(relaxed = true)
+
+        // Deflect Melee is active, but the incoming hit is Magic - no matching curse.
+        AncientCurses.onIncomingHit(attacker, target, CombatClass.MAGIC, damage = 100)
+
+        verify(exactly = 0) { attacker.addHit(any()) }
+    }
+
     @Test
     fun `onDamageDealt ignores Npc attackers and zero or negative damage`() {
         val npcAttacker = mockk<Npc>(relaxed = true)
@@ -286,15 +346,23 @@ class AncientCursesTests {
 /** Pure math on [AncientCurse] itself - no [Player]/[Npc] fixture needed. */
 class AncientCurseTests {
     @Test
-    fun `drainPerInvocation matches secondsPerPoint at the documented 1_8-real-second loop cadence`() {
-        // 3 ticks (LOOP_TICKS) * 0.6s/tick = 1.8 real seconds per drain-loop invocation;
-        // the 10x converts real Prayer points to the internal *10 prayer-point scale.
-        assertEquals(75, AncientCurse.SAP_WARRIOR.drainPerInvocation) // 18 / 0.24
-        assertEquals(50, AncientCurse.LEECH_ATTACK.drainPerInvocation) // 18 / 0.36
-        assertEquals(60, AncientCurse.DEFLECT_MAGIC.drainPerInvocation) // 18 / 0.3
-        assertEquals(10, AncientCurse.BERSERKER.drainPerInvocation) // 18 / 1.8
-        assertEquals(15, AncientCurse.WRATH.drainPerInvocation) // 18 / 1.2
-        assertEquals(90, AncientCurse.SOUL_SPLIT.drainPerInvocation) // 18 / 0.2
+    fun `drain effects convert to the documented seconds per Prayer point`() {
+        // 2026-09-06: curses use the same drain-counter units as [Prayer.drainEffect]. At zero
+        // prayer bonus the counter advances by `drainEffect` per tick and spends a tenth of a
+        // point every 60, so seconds per whole point is `360 / drainEffect`.
+        fun secondsPerPoint(curse: AncientCurse) = 360.0 / curse.drainEffect
+        assertEquals(2.4, secondsPerPoint(AncientCurse.SAP_WARRIOR), 0.001)
+        assertEquals(3.6, secondsPerPoint(AncientCurse.LEECH_ATTACK), 0.001)
+        assertEquals(2.0, secondsPerPoint(AncientCurse.SOUL_SPLIT), 0.001)
+        assertEquals(12.0, secondsPerPoint(AncientCurse.WRATH), 0.001)
+        assertEquals(18.0, secondsPerPoint(AncientCurse.BERSERKER), 0.001)
+        // Every Deflect costs exactly what a Protect prayer costs - the cross-check that
+        // calibrates the whole table against an independently-sourced value.
+        assertEquals(Prayer.PROTECT_FROM_MELEE.drainEffect, AncientCurse.DEFLECT_MELEE.drainEffect)
+        assertEquals(Prayer.PROTECT_FROM_MELEE.drainEffect, AncientCurse.DEFLECT_MAGIC.drainEffect)
+        assertEquals(Prayer.PROTECT_FROM_MELEE.drainEffect, AncientCurse.DEFLECT_MISSILES.drainEffect)
+        assertEquals(Prayer.PROTECT_FROM_MELEE.drainEffect, AncientCurse.DEFLECT_SUMMONING.drainEffect)
+        assertEquals(3.0, secondsPerPoint(AncientCurse.DEFLECT_MELEE), 0.001)
     }
 
     @Test

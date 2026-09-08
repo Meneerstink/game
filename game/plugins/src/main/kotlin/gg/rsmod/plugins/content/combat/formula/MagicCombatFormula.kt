@@ -17,21 +17,6 @@ import gg.rsmod.plugins.content.mechanics.prayer.Prayers
  * @author Tom <rspsmods@gmail.com>
  */
 object MagicCombatFormula : CombatFormula {
-    private val BLACK_MASKS =
-        intArrayOf(
-            Items.BLACK_MASK,
-            Items.BLACK_MASK_1,
-            Items.BLACK_MASK_2,
-            Items.BLACK_MASK_3,
-            Items.BLACK_MASK_4,
-            Items.BLACK_MASK_5,
-            Items.BLACK_MASK_6,
-            Items.BLACK_MASK_7,
-            Items.BLACK_MASK_8,
-            Items.BLACK_MASK_9,
-            Items.BLACK_MASK_10,
-        )
-
     private val MAGE_VOID =
         intArrayOf(Items.VOID_MAGE_HELM, Items.VOID_KNIGHT_TOP, Items.VOID_KNIGHT_ROBE, Items.VOID_KNIGHT_GLOVES)
 
@@ -56,7 +41,7 @@ object MagicCombatFormula : CombatFormula {
         if (target.hasPrayerIcon(PrayerIcon.PROTECT_FROM_MAGIC) && pawn !is Player) {
             return 0.0 // Hits will never land
         }
-        val attack = getAttackRoll(pawn)
+        val attack = getAttackRoll(pawn, target)
         val defence =
             if (target is Player) {
                 getDefenceRoll(target)
@@ -117,7 +102,10 @@ object MagicCombatFormula : CombatFormula {
         return hit
     }
 
-    private fun getAttackRoll(pawn: Pawn): Int {
+    private fun getAttackRoll(
+        pawn: Pawn,
+        target: Pawn,
+    ): Int {
         val a =
             if (pawn is Player) {
                 getEffectiveAttackLevel(pawn)
@@ -130,7 +118,7 @@ object MagicCombatFormula : CombatFormula {
 
         var maxRoll = a * (b + 64.0)
         if (pawn is Player) {
-            maxRoll = applyAttackSpecials(pawn, maxRoll)
+            maxRoll = applyAttackSpecials(pawn, target, maxRoll)
         }
         return maxRoll.toInt()
     }
@@ -139,14 +127,11 @@ object MagicCombatFormula : CombatFormula {
         pawn: Pawn,
         target: Npc,
     ): Int {
-        val a =
-            if (pawn is Player) {
-                getEffectiveDefenceLevel(pawn)
-            } else if (pawn is Npc) {
-                getEffectiveDefenceLevel(pawn)
-            } else {
-                0.0
-            }
+        // S2, 2026-09-03: this must read the TARGET npc's effective Defence level, not the
+        // attacker's - `getEffectiveDefenceLevel(npc: Npc)` below existed but was never
+        // called by anything before this fix, which is itself evidence the target-based
+        // path was never wired in. See RSPS_DECISIONS.md.
+        val a = getEffectiveDefenceLevel(target)
         val b = getEquipmentDefenceBonus(target)
 
         val maxRoll = a * (b + 64.0)
@@ -175,11 +160,12 @@ object MagicCombatFormula : CombatFormula {
 
     private fun applyAttackSpecials(
         player: Player,
+        target: Pawn,
         base: Double,
     ): Double {
         var hit = base
 
-        hit *= getEquipmentMultiplier(player)
+        hit *= TargetModifiers.equipmentMultiplier(player, target)
         hit = Math.floor(hit)
 
         return hit
@@ -236,15 +222,6 @@ object MagicCombatFormula : CombatFormula {
     private fun getEquipmentDefenceBonus(target: Pawn): Double {
         return target.getBonus(BonusSlot.DEFENCE_MAGIC).toDouble()
     }
-
-    private fun getEquipmentMultiplier(player: Player): Double =
-        when {
-            player.hasEquipped(EquipmentType.AMULET, Items.SALVE_AMULET) -> 7.0 / 6.0
-            player.hasEquipped(EquipmentType.AMULET, Items.SALVE_AMULET_E) -> 1.2
-            // TODO: this should only apply when target is slayer task?
-            player.hasEquipped(EquipmentType.HEAD, *BLACK_MASKS) -> 7.0 / 6.0
-            else -> 1.0
-        }
 
     private fun getPrayerAttackMultiplier(player: Player): Double =
         when {

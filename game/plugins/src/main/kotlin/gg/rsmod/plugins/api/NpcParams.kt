@@ -63,9 +63,13 @@ class NpcCombatBuilder {
 
     private var poisonDamage = -1
 
+    private var venomDamage = -1
+
     private var xpMultiplier = -1.0
 
     private var poisonImmunity = false
+
+    private var venomImmunity = false
 
     private var slayerReq = -1
 
@@ -91,6 +95,7 @@ class NpcCombatBuilder {
             stats[index] = max(1, level)
         }
         poisonDamage = max(0, poisonDamage)
+        venomDamage = max(0, venomDamage)
         slayerReq = max(1, slayerReq)
         slayerXp = max(0.0, slayerXp)
         if (xpMultiplier < 0.0) {
@@ -124,6 +129,8 @@ class NpcCombatBuilder {
             slayerAssignment,
             attackStyle,
             deathBlowLifepoints,
+            venomDamage,
+            venomImmunity,
         )
     }
 
@@ -287,6 +294,18 @@ class NpcCombatBuilder {
     fun setPoisonImmunity(): NpcCombatBuilder {
         check(!poisonImmunity) { "Poison immunity already set." }
         poisonImmunity = true
+        return this
+    }
+
+    fun setVenomDamage(damage: Int): NpcCombatBuilder {
+        check(venomDamage == -1) { "Venom damage already set." }
+        venomDamage = damage
+        return this
+    }
+
+    fun setVenomImmunity(): NpcCombatBuilder {
+        check(!venomImmunity) { "Venom immunity already set." }
+        venomImmunity = true
         return this
     }
 

@@ -1,29 +1,18 @@
 package gg.rsmod.plugins.content.areas.home
 
 /**
- * R02.2/R14.8/HOME_DESIGN_2.png: home restoration pool, in the E quadrant ("POOL & ALTAR" in
- * the confirmed design) - due east of the bank, clearly separated from Shops (NE) and Vervoer
- * (SE). Restores HP, prayer, run energy and any lowered stats - NEVER special attack energy,
- * which is a deliberate deviation from the real Construction "Ornate rejuvenation pool" (which
- * DOES restore special energy) per R14.8's explicit rule.
+ * Ferox Enclave 'Pool of Refreshment' (imported LocType [FeroxObjects.POOL_OF_REFRESHMENT], two
+ * 2x2 placements at 3128,3633 and 3128,3638, real option "Drink").
  *
- * Uses [Objs.POOL_CLASS_5] (39562), verified live this session to be a real cache pool object
- * whose only real option is "Collect" - matching real 2011 Construction pool terminology, not
- * guessed (candidates without a real functional option, e.g. Objs.WATER_POOL's "Look"/
- * "Investigate" or Objs.POOL's blank options, were checked and rejected first).
+ * Restores Hitpoints, Prayer, run energy and every drained/boosted stat - and, per the standing
+ * owner rule "herstelpool zonder spec" (RSPS_VOLLEDIGE_AUDIT_2026-08-31.md), NEVER special attack
+ * energy, a deliberate deviation from the modern pool.
  *
- * Audit finding 2 fix: a boot-time [ObjectDef] dump confirmed this object's real footprint is
- * 2x2, not 1x1. BATCH 1: tile now comes from [HomeLayout.pool], which already declares this
- * 2x2 footprint for the boot-time no-overlap self-check in `home_verify.plugin.kts`.
+ * Abuse guard: the same item-interaction lock check the game's other consumable effects use, so the
+ * pool cannot be triggered mid-combat-lock or from an interrupted queue; entering the enclave already
+ * ends combat (`bounty_hunter_home.plugin.kts`).
  */
-val poolTile = HomeLayout.pool.tile(world.gameContext.home)
-
-spawn_obj(obj = Objs.POOL_CLASS_5, x = poolTile.x, z = poolTile.z, height = poolTile.height, type = 10, rot = 0)
-
-on_obj_option(obj = Objs.POOL_CLASS_5, option = "collect") {
-    // R14.8: "cannot be abused through boundaries during combat" - same lock check the game's
-    // other consumable-effect actions use, so it can't be triggered while mid-combat-lock or
-    // from an interrupted queue.
+on_obj_option(obj = FeroxObjects.POOL_OF_REFRESHMENT, option = "drink") {
     if (!player.lock.canItemInteract()) {
         return@on_obj_option
     }
@@ -31,5 +20,5 @@ on_obj_option(obj = Objs.POOL_CLASS_5, option = "collect") {
     player.restorePrayer(9999)
     player.runEnergy = 100.0
     player.skills.restoreAll()
-    player.message("You feel refreshed.")
+    player.message("You drink from the pool and feel refreshed.")
 }

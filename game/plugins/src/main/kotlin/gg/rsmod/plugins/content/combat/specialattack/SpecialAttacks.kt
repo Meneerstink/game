@@ -25,6 +25,12 @@ object SpecialAttacks {
         }
     }
 
+    /**
+     * Whether [itemId] has a registered special attack. Used to hide the special attack bar
+     * (interface 884, component 4) for weapons with no special attack, e.g. Twisted bow.
+     */
+    fun hasSpecialAttack(itemId: Int): Boolean = attacks.containsKey(itemId)
+
     fun execute(
         player: Player,
         target: Pawn?,

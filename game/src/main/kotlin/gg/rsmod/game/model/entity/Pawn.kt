@@ -286,23 +286,29 @@ abstract class Pawn(
      * Handle a single cycle for [timers].
      */
     fun timerCycle() {
-        val iterator = timers.getTimers().iterator()
-
-        while (iterator.hasNext()) {
-            val entry = iterator.next()
+        /*
+         * Tick every timer first and only run the expired ones afterwards: a timer plugin may
+         * add or remove *other* timers (combat reset, area transitions, ...), which threw a
+         * ConcurrentModificationException while the map was still being iterated and aborted
+         * the rest of the pawn's cycle for that tick.
+         */
+        var expired: MutableList<TimerKey>? = null
+        for (entry in timers.getTimers().entries) {
             val key = entry.key
-            val time = entry.value
-            val updatedTime = if (key.tickForward) time + 1 else time - 1
+            val updatedTime = if (key.tickForward) entry.value + 1 else entry.value - 1
             entry.setValue(updatedTime)
             if (updatedTime <= 0 && !key.tickForward) {
-                if (key == RESET_PAWN_FACING_TIMER) {
-                    resetFacePawn()
-                } else {
-                    world.plugins.executeTimer(this, key)
-                }
-                if (!timers.has(key) && key.removeOnZero) {
-                    iterator.remove()
-                }
+                (expired ?: ArrayList<TimerKey>(2).also { expired = it }).add(key)
+            }
+        }
+        expired?.forEach { key ->
+            if (key == RESET_PAWN_FACING_TIMER) {
+                resetFacePawn()
+            } else {
+                world.plugins.executeTimer(this, key)
+            }
+            if (!timers.has(key) && key.removeOnZero) {
+                timers.remove(key)
             }
         }
     }

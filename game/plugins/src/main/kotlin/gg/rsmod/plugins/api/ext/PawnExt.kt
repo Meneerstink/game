@@ -4,6 +4,7 @@ import gg.rsmod.game.model.Hit
 import gg.rsmod.game.model.attr.*
 import gg.rsmod.game.model.entity.*
 import gg.rsmod.game.model.item.Item
+import gg.rsmod.game.model.timer.FREEZE_IMMUNITY_TIMER
 import gg.rsmod.game.model.timer.FROZEN_TIMER
 import gg.rsmod.game.model.timer.STUN_TIMER
 import gg.rsmod.plugins.api.BonusSlot
@@ -93,15 +94,23 @@ fun Pawn.hit(
     return hit
 }
 
+// Sourced from the OSRS wiki's "Freeze" article — see FREEZE_IMMUNITY_TIMER's doc comment in
+// Timers.kt for the full sourcing note.
+private const val FREEZE_IMMUNITY_TICKS = 5
+
 fun Pawn.freeze(
     cycles: Int,
     onFreeze: () -> Unit,
 ): Boolean {
-    if (timers.has(FROZEN_TIMER)) {
+    if (timers.has(FROZEN_TIMER) || timers.has(FREEZE_IMMUNITY_TIMER)) {
         return false
     }
     stopMovement()
     timers[FROZEN_TIMER] = cycles
+    // Set to outlast the freeze itself by FREEZE_IMMUNITY_TICKS, so once FROZEN_TIMER expires
+    // this timer still has FREEZE_IMMUNITY_TICKS left — reproducing "X ticks of immunity after
+    // the freeze ends" with a single countdown and no separate on-expiry driver.
+    timers[FREEZE_IMMUNITY_TIMER] = cycles + FREEZE_IMMUNITY_TICKS
     onFreeze()
     return true
 }

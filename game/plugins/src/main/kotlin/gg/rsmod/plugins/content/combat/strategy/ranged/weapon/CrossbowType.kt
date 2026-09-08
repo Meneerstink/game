@@ -48,6 +48,11 @@ enum class CrossbowType(
     KARIL_CROSSBOW_50(item = Items.KARILS_CROSSBOW_50, ammo = BOLT_RACKS),
     KARIL_CROSSBOW_75(item = Items.KARILS_CROSSBOW_75, ammo = BOLT_RACKS),
     KARIL_CROSSBOW_100(item = Items.KARILS_CROSSBOW_100, ammo = BOLT_RACKS),
+
+    // P8, 2026-09-02: Hand cannon uses "Bolts" ranged attack style per the RS3 wiki (its
+    // ammo is "hand cannon shot", but the style classification is the same family this enum
+    // already covers, so it's added here rather than a new weapon-type table).
+    HAND_CANNON(item = Items.HAND_CANNON, ammo = arrayOf(Items.HAND_CANNON_SHOT)),
     ;
 
     companion object {

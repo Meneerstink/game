@@ -36,6 +36,7 @@ class MessageDecoderSet {
         put(ResumePCountDialogMessage::class.java, ResumePCountDialogDecoder(), ResumePCountDialogHandler(), structures)
         put(WindowStatusMessage::class.java, WindowStatusDecoder(), WindowStatusHandler(), structures)
         put(MapBuildCompleteMessage::class.java, MapBuildCompleteDecoder(), MapBuildCompleteHandler(), structures)
+        put(DetectModifiedClientMessage::class.java, DetectModifiedClientDecoder(), DetectModifiedClientHandler(), structures)
 
         put(OpLoc1Message::class.java, OpLoc1Decoder(), OpLoc1Handler(), structures)
         put(OpLoc2Message::class.java, OpLoc2Decoder(), OpLoc2Handler(), structures)
@@ -72,6 +73,7 @@ class MessageDecoderSet {
         put(ChatFilterMessage::class.java, ChatFilterDecoder(), ChatFilterHandler(), structures)
         put(IgnoreListAddMessage::class.java, IgnoreListAddDecoder(), IgnoreListAddHandler(), structures)
         put(IgnoreListDeleteMessage::class.java, IgnoreListDeleteDecoder(), IgnoreListDeleteHandler(), structures)
+        put(ClanJoinChatLeaveChatMessage::class.java, ClanJoinChatLeaveChatDecoder(), ClanJoinChatLeaveHandler(), structures)
         
         put(SoundSongEndMessage::class.java, SoundSongEndDecoder(), SoundSongEndHandler(), structures)
     }

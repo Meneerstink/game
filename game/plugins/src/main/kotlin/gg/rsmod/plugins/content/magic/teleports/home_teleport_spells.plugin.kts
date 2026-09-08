@@ -50,7 +50,11 @@ HomeTeleport.values.forEach { teleport ->
 
         if (player.canTeleport(TeleportType.MODERN)) {
             player.queue(TaskPriority.STRONG) {
-                teleport(teleport.endTile(world))
+                if (teleport.instant) {
+                    instantTeleport(teleport.endTile(world))
+                } else {
+                    teleport(teleport.endTile(world))
+                }
             }
         }
     }
@@ -77,7 +81,25 @@ suspend fun QueueTask.teleport(endTile: Tile) {
         waitAndCheckCombat(1)
     }
     player.animate(Anims.RESET)
-    player.moveTo(endTile)
+    // moveTo() only flags a real teleport (instant snap) when the destination is beyond normal
+    // view distance - casting Home Teleport from just outside/near Ferox (well within that
+    // distance of the arrival tile) rendered as a walk/glide into place instead of a teleport.
+    // teleportTo() always snaps, matching every other teleport spell (see magic/PawnExt.kt).
+    player.teleportTo(endTile)
+    player.timers[HOME_TELEPORT_TIMER] = HOME_TELEPORT_TIMER_DELAY
+}
+
+/**
+ * 2026-09-06 owner human retest: the Ferox Home Teleport destination is correct and must stay
+ * correct, but casting it must be INSTANT - no standard 17-stage animation/graphic sequence, no
+ * casting-time delay, no glide. Skips [teleport]'s whole cycle loop and its 2-tick pre-cast
+ * combat-interrupt window entirely rather than shortening either, since an instant teleport has
+ * no casting time for combat to interrupt in the first place - it simply fires.
+ */
+suspend fun QueueTask.instantTeleport(endTile: Tile) {
+    player.animate(Anims.RESET)
+    player.graphic(Gfx.RESET)
+    player.teleportTo(endTile)
     player.timers[HOME_TELEPORT_TIMER] = HOME_TELEPORT_TIMER_DELAY
 }
 
@@ -95,8 +117,12 @@ suspend fun QueueTask.waitAndCheckCombat(cycles: Int): Boolean {
 enum class HomeTeleport(
     val spellName: String,
     val endTile: World.() -> Tile,
+    /** True for a teleport that must fire with no animation/casting delay - see [instantTeleport]. */
+    val instant: Boolean = false,
 ) {
-    LUMBRIDGE("Lumbridge Home Teleport", { gameContext.home }),
+    // 2026-09-06 owner human retest: "the teleport must become INSTANT" - this project's home
+    // destination is Ferox Enclave, so this is the Ferox Home Teleport specifically.
+    HOME("Home Teleport", { gameContext.home }, instant = true),
     ;
 
     companion object {

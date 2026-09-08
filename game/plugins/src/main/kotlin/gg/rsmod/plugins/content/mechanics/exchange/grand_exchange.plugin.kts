@@ -155,42 +155,13 @@ on_command("ge_offers") {
     }
 }
 
+/*
+ * The payout itself lives in GrandExchangeCollection, because the bank booths' own `Collect`
+ * option has to pay out exactly the same way this command does.
+ */
 on_command("ge_collect") {
-    val args = player.getCommandArgs()
     val service = geService(player) ?: return@on_command
-    val targets =
-        args.getOrNull(0)?.toLongOrNull()?.let { listOf(it) }
-            ?: service.offersFor(geUsername(player)).map { it.id }
-    var collectedAny = false
-    for (offerId in targets) {
-        val owed = service.takeCollectable(geUsername(player), offerId) ?: continue
-        val (coins, items) = owed
-        var leftoverCoins = coins
-        var leftoverItems = items
-
-        if (coins > 0) {
-            val amount = minOf(coins, Int.MAX_VALUE.toLong()).toInt()
-            val result = player.inventory.add(item = Items.COINS_995, amount = amount)
-            leftoverCoins = coins - result.completed
-        }
-        if (items > 0) {
-            val offer = service.offersFor(geUsername(player)).find { it.id == offerId }
-            val itemId = offer?.itemId
-            if (itemId != null) {
-                val result = player.inventory.add(item = itemId, amount = items)
-                leftoverItems = items - result.completed
-            }
-        }
-        if (leftoverCoins > 0 || leftoverItems > 0) {
-            service.restoreCollectable(offerId, leftoverCoins, leftoverItems)
-            geMsg(player, "Not enough inventory space to collect everything from offer #$offerId - try again with space free.")
-        } else {
-            collectedAny = true
-        }
-    }
-    if (collectedAny) {
-        geMsg(player, "Collected your Grand Exchange proceeds.")
-    } else if (targets.isEmpty()) {
-        geMsg(player, "You have no Grand Exchange offers.")
-    }
+    val offerId = player.getCommandArgs().getOrNull(0)?.toLongOrNull()
+    val outcome = GrandExchangeCollection.collect(player, service, offerId)
+    GrandExchangeCollection.describe(outcome).forEach { geMsg(player, it) }
 }

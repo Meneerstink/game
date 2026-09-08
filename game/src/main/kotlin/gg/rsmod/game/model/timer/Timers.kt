@@ -62,6 +62,17 @@ val FORCE_DISCONNECTION_TIMER = TimerKey()
 val FROZEN_TIMER = TimerKey()
 
 /**
+ * Timer key set alongside [FROZEN_TIMER] (P9-followup further-foundations pass, 2026-09-02)
+ * for a longer duration than the freeze itself, so it naturally outlives it: the real freeze
+ * immunity mechanic grants a fixed grace period *after* a freeze wears off during which the
+ * pawn can't be frozen again (sourced from the OSRS wiki's "Freeze" article: 5 ticks for both
+ * Curse-book binds (Bind/Snare/Entangle) and Ice spells, the two freeze sources that existed
+ * in this server's ~2011/rev-667 era — Arceuus' Grasp spells and their separate 2-tick
+ * immunity are 2018+ content and not applicable here). See `Pawn.freeze()`.
+ */
+val FREEZE_IMMUNITY_TIMER = TimerKey()
+
+/**
  * Timer key set when stunned.
  */
 val STUN_TIMER = TimerKey()
@@ -77,9 +88,42 @@ val POISON_TIMER = TimerKey(persistenceKey = "poison", tickOffline = false, rese
 val POISON_IMMUNITY = TimerKey(persistenceKey = "poison_immunity", tickOffline = false, resetOnDeath = false)
 
 /**
- * Timer key for dragonfire protection ticking down.
+ * Timer key for venom ticks. Mutually exclusive with [POISON_TIMER] - a pawn can be
+ * poisoned or envenomed, never both at once.
+ */
+val VENOM_TIMER = TimerKey(persistenceKey = "venom", tickOffline = false, resetOnDeath = true)
+
+/**
+ * Timer key for venom immunity ticks (granted by a full anti-venom cure).
+ */
+val VENOM_IMMUNITY = TimerKey(persistenceKey = "venom_immunity", tickOffline = false, resetOnDeath = false)
+
+/**
+ * Vengeance's recast cooldown - 50 ticks (30 real-world seconds), sourced from the OSRS
+ * Wiki "Vengeance" page. Gates re-casting the spell, not the active reflect buff itself
+ * (that lives in [gg.rsmod.game.model.attr.VENGEANCE_ACTIVE_ATTR] and is consumed on the
+ * next hit taken instead of expiring on a timer). resetOnDeath follows the same convention
+ * already used for poison/venom's timers in this file - not independently sourced.
+ */
+val VENGEANCE_COOLDOWN = TimerKey(persistenceKey = "vengeance_cooldown", tickOffline = false, resetOnDeath = true)
+
+/**
+ * Timer key for regular antifire potion protection ticking down (6 minutes / 600 ticks,
+ * sourced from the OSRS Wiki "Dragonfire" page). Was declared but never wired to anything
+ * until the 2026-09-02 autonomous dragonfire pass - see [SUPER_ANTIFIRE_TIMER] for the
+ * stronger tier, which grants full immunity on its own where this one only reduces damage.
  */
 val ANTIFIRE_TIMER = TimerKey()
+
+/**
+ * Timer key for super antifire potion protection ticking down (3 minutes / 300 ticks,
+ * sourced from the OSRS Wiki "Dragonfire" page). Kept separate from [ANTIFIRE_TIMER]
+ * rather than reusing it with a "tier" attribute because the two grant different
+ * protection outright (super alone is full immunity; regular alone only cuts damage by
+ * 30%) - [gg.rsmod.plugins.content.combat.formula.DragonfireFormula] needs to distinguish
+ * them, not just know "some antifire is active".
+ */
+val SUPER_ANTIFIRE_TIMER = TimerKey()
 
 /**
  * Timer key for the delay in between a pawn's attack.

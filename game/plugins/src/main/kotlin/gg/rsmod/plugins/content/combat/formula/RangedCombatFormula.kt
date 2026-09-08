@@ -19,21 +19,6 @@ import kotlin.math.floor
  * @author Tom <rspsmods@gmail.com>
  */
 object RangedCombatFormula : CombatFormula {
-    private val BLACK_MASKS =
-        intArrayOf(
-            Items.BLACK_MASK,
-            Items.BLACK_MASK_1,
-            Items.BLACK_MASK_2,
-            Items.BLACK_MASK_3,
-            Items.BLACK_MASK_4,
-            Items.BLACK_MASK_5,
-            Items.BLACK_MASK_6,
-            Items.BLACK_MASK_7,
-            Items.BLACK_MASK_8,
-            Items.BLACK_MASK_9,
-            Items.BLACK_MASK_10,
-        )
-
     private val RANGED_VOID =
         intArrayOf(Items.VOID_RANGER_HELM, Items.VOID_KNIGHT_TOP, Items.VOID_KNIGHT_ROBE, Items.VOID_KNIGHT_GLOVES)
 
@@ -107,11 +92,17 @@ object RangedCombatFormula : CombatFormula {
         pawn: Pawn,
         target: Pawn,
     ): Int {
+        // S2, 2026-09-03: this must read the TARGET's effective Defence level, not the
+        // attacker's - `MeleeCombatFormula`'s equivalent function already does this
+        // correctly. Discovered while writing golden accuracy vectors: an existing
+        // S1 regression test masked this because it left both pawns at the default
+        // level-1 defence, making the (wrong) attacker-derived value and the (right)
+        // target-derived value coincidentally equal. See RSPS_DECISIONS.md.
         val a =
-            if (pawn is Player) {
-                getEffectiveDefenceLevel(pawn)
-            } else if (pawn is Npc) {
-                getEffectiveDefenceLevel(pawn)
+            if (target is Player) {
+                getEffectiveDefenceLevel(target)
+            } else if (target is Npc) {
+                getEffectiveDefenceLevel(target)
             } else {
                 0.0
             }
@@ -131,7 +122,11 @@ object RangedCombatFormula : CombatFormula {
     ): Double {
         var hit = base
 
-        hit *= getEquipmentMultiplier(player)
+        // S3, 2026-09-03: routes through the Ranged-specific damage composition (Salve/black
+        // mask plus the Twisted bow passive, applied only while the bow is actually equipped -
+        // see TargetModifiers.rangedDamageMultiplier) instead of the generic equipmentMultiplier
+        // directly, so the bow-specific scaling can never leak into Melee/Magic.
+        hit *= TargetModifiers.rangedDamageMultiplier(player, target)
         hit = floor(hit)
 
         hit *=
@@ -171,7 +166,9 @@ object RangedCombatFormula : CombatFormula {
     ): Double {
         var hit = base
 
-        hit *= getEquipmentMultiplier(player)
+        // S3, 2026-09-03: accuracy-stage counterpart of the damage-stage change above - see
+        // TargetModifiers.rangedAccuracyMultiplier.
+        hit *= TargetModifiers.rangedAccuracyMultiplier(player, target)
 
         if (specialAttackMultiplier == 1.0) {
             val multiplier = 1.0
@@ -320,15 +317,6 @@ object RangedCombatFormula : CombatFormula {
             Prayers.isActive(player, Prayer.PIETY) -> 1.25
             Prayers.isActive(player, Prayer.RIGOUR) -> 1.25
             Prayers.isActive(player, Prayer.AUGURY) -> 1.25
-            else -> 1.0
-        }
-
-    private fun getEquipmentMultiplier(player: Player): Double =
-        when {
-            player.hasEquipped(EquipmentType.AMULET, Items.SALVE_AMULET) -> 7.0 / 6.0
-            player.hasEquipped(EquipmentType.AMULET, Items.SALVE_AMULET_E) -> 1.2
-            // TODO: this should only apply when target is slayer task?
-            player.hasEquipped(EquipmentType.HEAD, *BLACK_MASKS) -> 7.0 / 6.0
             else -> 1.0
         }
 

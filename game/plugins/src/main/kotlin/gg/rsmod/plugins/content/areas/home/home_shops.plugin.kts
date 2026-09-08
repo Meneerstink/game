@@ -24,9 +24,15 @@ val runesTile = HomeLayout.shopRunes.tile(home)
 val armourTile = HomeLayout.shopArmour.tile(home)
 val archeryTile = HomeLayout.shopArchery.tile(home)
 val staffsTile = HomeLayout.shopStaffs.tile(home)
+val faridTile = HomeLayout.faridMorrisane.tile(home)
 
 spawn_npc(npc = Npcs.SHOPKEEPER_526, x = generalTile.x, z = generalTile.z, height = generalTile.height) // General Store
 spawn_npc(npc = Npcs.AUBURY, x = runesTile.x, z = runesTile.z, height = runesTile.height) // Rune Shop
 spawn_npc(npc = Npcs.HORVIK, x = armourTile.x, z = armourTile.z, height = armourTile.height) // Armour Shop
 spawn_npc(npc = Npcs.HICKTON, x = archeryTile.x, z = archeryTile.z, height = archeryTile.height) // Archery Emporium
 spawn_npc(npc = Npcs.ZAFF, x = staffsTile.x, z = staffsTile.z, height = staffsTile.height) // Superior Staffs
+
+// 2026-09-06 owner human retest: relocated from the Grand Exchange (spawns_12598.plugin.kts) -
+// his dialogue/options (`FaridMorrisane.plugin.kts`) are bound globally by npc id, so moving his
+// spawn is the whole fix; no duplicated logic needed.
+spawn_npc(npc = Npcs.FARID_MORRISANE_ORES, x = faridTile.x, z = faridTile.z, height = faridTile.height, direction = Direction.SOUTH)

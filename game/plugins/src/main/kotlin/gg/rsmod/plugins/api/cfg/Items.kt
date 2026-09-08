@@ -19298,5 +19298,19 @@ object Items {
     const val NULL_22320 = 22320
     const val NULL_22321 = 22321
     const val NULL_22322 = 22322
+    // Manually appended (not from a DumpEntityIdService re-run) - modern-content import pipeline,
+    // RSPS_DECISIONS.md 2026-09-02 "STANDING OWNER AUTHORIZATION". Donor-clone placeholder items;
+    // see the Step B import manifest entry for provenance (donor 10585 PARCHMENT, upstream OSRS id 24187).
+    // Ids 22323/22324 (not 22400/22401, their original allocation) because ItemMetadataService and
+    // DefinitionSet require item ids to be perfectly contiguous from 0 with no gaps - see
+    // RSPS_AUTONOMOUS_LOG.md 2026-09-02 for the boot-crash this caused and the id-allocation fix.
+    const val TROUVER_PARCHMENT = 22323
+    const val FIRE_CAPE_LOCKED_22324 = 22324
+    const val ABYSSAL_TENTACLE = 22325
+    // S3, 2026-09-03: added by hand (data/cfg/items.yml entry added in the same change) rather
+    // than by re-running DumpEntityIdService, which would regenerate this entire file from a
+    // live cache dump and touch far more than the one new id this task needs. Matches the cache
+    // name recorded since gate A0 ("Twisted bow" at 22326 in both caches).
+    const val TWISTED_BOW = 22326
     // Auto-generated file using class gg.rsmod.game.service.game.DumpEntityIdService
 }

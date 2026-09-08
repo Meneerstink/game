@@ -22,6 +22,7 @@ object Tabs {
     const val EQUIPMENT = 5
     const val PRAYER = 6
     const val SPELLBOOK = 7
+    /** The spare minigame tab ("Production" in Stealing Creation, "Microtutorial" in the tutorial). */
     const val BLANK_TAB = 8
     const val FRIENDS_IGNORE = 9
     const val FRIENDS_CHAT = 10
@@ -30,4 +31,13 @@ object Tabs {
     const val EMOTES = 13
     const val MUSIC = 14
     const val NOTES = 15
+
+    /**
+     * The Summoning "Follower Details" panel. Not a numbered sidebar tab: `disasm 8` in this
+     * cache maps the gameframe slots and puts it on slot **95** (pane 548:221 fixed / 746:107
+     * resizable), which has no tab button, and `disasm 1387` - the panel switcher reached through
+     * client script 115 -> 71 - has a real case for 95 alongside 0..15, 98 and 99 (Logout).
+     * See [gg.rsmod.plugins.api.InterfaceDestination.SUMMONING_TAB] for the full evidence.
+     */
+    const val SUMMONING = 95
 }

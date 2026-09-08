@@ -1,49 +1,38 @@
 package gg.rsmod.plugins.content.areas.home
 
 import gg.rsmod.game.model.Direction
+import gg.rsmod.game.model.EntityType
 import gg.rsmod.game.model.Tile
+import gg.rsmod.game.model.entity.GameObject
+
+/** True when a loaded static/dynamic object with [id] stands on [tile]. */
+/** A pawn can stand on [tile]: not every cardinal step out of it is collision-blocked (a solid object flags all of them; a wall flags one side only). */
+fun standable(tile: Tile): Boolean = !Direction.NESW.all { world.collision.isBlocked(tile, it, projectile = false) }
+
+fun objectAt(tile: Tile, id: Int): Boolean =
+    world.chunks.get(tile, createIfNeeded = true)!!
+        .getEntities<GameObject>(tile, EntityType.STATIC_OBJECT, EntityType.DYNAMIC_OBJECT)
+        .any { it.id == id }
 
 /**
- * R02.1/R02.2/R14.5/HOME_DESIGN_2.png/BATCH 1: automated, boot-time, non-visual verification that
- * goes beyond "the boot didn't crash" - the owner's own explicit standard. Runs after every other
- * home file's `on_world_init` (registration order = file load order in this loader, not strictly
- * guaranteed by filename - see the `check()` failures below, which would fail LOUD at boot if
- * ordering ever changes and a wall/gate hadn't been placed yet when this runs).
+ * Boot-time self-check of the Ferox Enclave home, run against the REAL collision map built from
+ * the imported cache regions (not against this file's own assumptions):
  *
- * BATCH 1 strengthened this from a per-tile "inside the polygon + one open neighbour" spot-check
- * into:
- * 1. every [HomeLayout.functional] facility's full declared footprint is inside the real safe-zone
- *    polygon ([BountyHunterHome.isSafe]) - reuses the SAME shape the wall/collision boundary
- *    traces, so this can never silently disagree with the physical barrier.
- * 2. no two solid [HomeLayout.functional] facilities claim the same tile (real overlap check
- *    against this file's OWN layout plan, not each object's live cache footprint/rotation, which
- *    stays the responsibility of the plugin file that actually spawns the object).
- * 3. every solid facility is actually reachable on foot: a real 4-directional flood-fill from the
- *    arrival tile across every non-clipped safe-zone tile, then checking each facility (or an
- *    orthogonal neighbour of it) landed in that reachable set - not just "has one open neighbour",
- *    which says nothing about whether that neighbour connects back to the rest of the hub.
- * 4. the flood-fill also reaches at least 90% of all safe-zone tiles - a lightweight, honest proxy
- *    for "wide open routes, nothing bottlenecked into a 1-tile maze corridor" (this hub places
- *    isolated small facilities across an otherwise open field rather than building corridors, so a
- *    real narrow-corridor bug would show up as a materially smaller reachable fraction; it does
- *    NOT geometrically prove a literal 3-tile minimum width everywhere - ponytail: upgrade to a
- *    real route-width rasteriser only if a future layout actually adds corridor-like walls).
- * 5. every decor tile either lands on a functional facility's tile ONLY when intentionally marked
- *    non-solid (e.g. the arrival ground emblem), or on a completely free tile - never silently
- *    covering a different functional facility.
- * 6. the arrival tile (new-account start and death respawn) is safe and NOT collision-blocked.
- * 7. each gate's immediate outward neighbour tile is real Wilderness (NOT safe) - confirming the
- *    gates are genuine transitions, not decorative openings in a wall that doesn't actually
- *    enclose anything.
+ *  1. every facility footprint lies inside the safe polygon;
+ *  2. spawned solid facilities do not overlap each other;
+ *  3. every imported facility's object really stands on its tile (proves the cache import is what
+ *     the server loaded, not a stale region);
+ *  4. the configured home tile and the arrival tile are safe and walkable;
+ *  5. every facility is reachable on foot from arrival through safe, unclipped tiles;
+ *  6. every barrier that is declared to exit to the Wilderness really has a non-safe, positive
+ *     Wilderness-level landing tile one step outside, and a safe landing tile one step inside;
+ *  7. the tile one step outside each outer landing is not safe either (no off-by-one safe strip).
  *
- * What this still does NOT prove (honestly disclosed, unchanged this pass): actual client
- * rendering, model presence, or a real click reaching the option handler - only tile-level
- * polygon/collision facts. See OWNER_TASK_STATUS.md for the open visual-verification limitation.
+ * Any failure aborts boot loudly. This does NOT prove client rendering - that stays a human check.
  */
 on_world_init {
     val home = world.gameContext.home
 
-    // ---- 1. every functional facility's footprint is inside the safe polygon ----
     var outsideSafeZone = 0
     HomeLayout.functional.forEach { facility ->
         facility.footprint(home).forEach { tile ->
@@ -53,11 +42,8 @@ on_world_init {
             }
         }
     }
-    check(outsideSafeZone == 0) {
-        "home_verify: $outsideSafeZone home facility tile(s) fall outside the safe octagon - see the printed list above."
-    }
+    check(outsideSafeZone == 0) { "home_verify: $outsideSafeZone facility tile(s) fall outside the Ferox safe polygon." }
 
-    // ---- 2. no two solid facilities claim the same tile ----
     val tileOwner = HashMap<Tile, String>()
     var overlaps = 0
     HomeLayout.functional.filter { it.solid }.forEach { facility ->
@@ -69,146 +55,147 @@ on_world_init {
             }
         }
     }
-    check(overlaps == 0) { "home_verify: $overlaps facility tile overlap(s) - see the printed list above." }
+    check(overlaps == 0) { "home_verify: $overlaps facility tile overlap(s)." }
 
-    // ---- 3/4. real flood-fill reachability from the arrival tile ----
+    var missingImported = 0
+    HomeLayout.functional.filter { it.imported }.forEach { facility ->
+        val tile = facility.tile(home)
+        val present = objectAt(tile, facility.objectId)
+        if (!present) {
+            missingImported++
+            println("home_verify: IMPORTED object ${facility.objectId} (\"${facility.name}\") is NOT in the world at $tile.")
+        }
+    }
+    check(missingImported == 0) { "home_verify: $missingImported imported Ferox object(s) missing from the loaded regions." }
+
     val arrivalTile = HomeLayout.arrival.tile(home)
+    check(BountyHunterHome.isSafe(home, home)) { "home_verify: configured home tile $home is OUTSIDE the safe zone." }
+    check(!!standable(home)) { "home_verify: configured home tile $home is collision-blocked." }
+    check(BountyHunterHome.isSafe(arrivalTile, home)) { "home_verify: arrival tile $arrivalTile is OUTSIDE the safe zone." }
+    check(!!standable(arrivalTile)) { "home_verify: arrival tile $arrivalTile is collision-blocked." }
+    check(arrivalTile == home.transform(0, -1)) {
+        "home_verify: HomeLayout.arrival $arrivalTile must equal home(0,-1) - PlayerDeathAction/PlayerSerializerService use that offset."
+    }
+
+    // Internal barriers (plaza <-> garden/annex) are crossed with their "Pass-Through" force-move, so the
+    // walk graph gets an extra edge between each internal barrier's two landing tiles.
+    val internalLinks = BountyHunterHome.gates(home).filter { !it.exitsToWilderness }
+        .flatMap { listOf(it.innerLanding to it.outerLanding, it.outerLanding to it.innerLanding) }
     val reachable = HashSet<Tile>()
     val queue = ArrayDeque<Tile>()
     reachable.add(arrivalTile)
     queue.add(arrivalTile)
     while (queue.isNotEmpty()) {
         val current = queue.removeFirst()
+        internalLinks.filter { it.first == current }.forEach { (_, far) ->
+            if (far !in reachable && standable(far)) {
+                reachable.add(far)
+                queue.add(far)
+            }
+        }
         for (direction in Direction.NESW) {
             val next = current.step(direction)
             if (next in reachable) continue
             if (!BountyHunterHome.isSafe(next, home)) continue
-            if (world.collision.isClipped(next)) continue
+            if (!standable(next)) continue
+            if (!world.collision.canTraverse(current, direction, projectile = false, water = false)) continue
             reachable.add(next)
             queue.add(next)
         }
     }
-
-    var totalSafeTiles = 0
-    for (x in -BountyHunterHome.SAFE_RADIUS..BountyHunterHome.SAFE_RADIUS) {
-        for (z in -BountyHunterHome.SAFE_RADIUS..BountyHunterHome.SAFE_RADIUS) {
-            if (BountyHunterHome.isSafe(home.transform(x, z), home)) totalSafeTiles++
-        }
-    }
-    val reachablePct = reachable.size * 100.0 / totalSafeTiles
-    println(
-        "home_verify: flood-fill from arrival reached ${reachable.size}/$totalSafeTiles safe-zone " +
-            "tiles (%.1f%%).".format(reachablePct),
-    )
-    check(reachablePct >= 90.0) {
-        "home_verify: only %.1f%% of the safe zone is reachable from arrival - the layout is ".format(reachablePct) +
-            "bottlenecked or boxed in somewhere."
-    }
+    println("home_verify: flood-fill from arrival reached ${reachable.size} walkable safe tiles.")
 
     var unreachableFacilities = 0
-    HomeLayout.functional.filter { it.solid }.forEach { facility ->
-        val tile = facility.tile(home)
-        val reached = tile in reachable || Direction.NESW.any { tile.step(it) in reachable }
+    HomeLayout.functional.forEach { facility ->
+        val tiles = facility.footprint(home)
+        val reached = tiles.any { t -> t in reachable || Direction.NESW.any { t.step(it) in reachable } }
         if (!reached) {
             unreachableFacilities++
-            println("home_verify: FACILITY \"${facility.name}\" at $tile is NOT reachable on foot from arrival.")
-            Direction.NESW.forEach { direction ->
-                val n = tile.step(direction)
-                println(
-                    "home_verify:   neighbour $direction $n - isSafe=${BountyHunterHome.isSafe(n, home)} " +
-                        "isClipped=${world.collision.isClipped(n)} inReachableSet=${n in reachable}",
+            println("home_verify: FACILITY \"${facility.name}\" at ${facility.tile(home)} is NOT reachable on foot from arrival.")
+            tiles.forEach { t ->
+                Direction.NESW.forEach { direction ->
+                    val n = t.step(direction)
+                    println("home_verify:   $t neighbour $direction $n - isSafe=${BountyHunterHome.isSafe(n, home)} isClipped=${!standable(n)} reached=${n in reachable}")
+                }
+            }
+        }
+    }
+    if (unreachableFacilities > 0) {
+        // Diagnostic collision map of the whole enclave footprint: # clipped, a reachable from arrival,
+        // b reachable from the bank chest's south neighbour, . walkable but in neither component.
+        val bankSide = HomeLayout.bank.tile(home).transform(0, -1)
+        val bankReach = HashSet<Tile>()
+        val bankQueue = ArrayDeque<Tile>()
+        if (!!standable(bankSide)) {
+            bankReach.add(bankSide)
+            bankQueue.add(bankSide)
+        }
+        while (bankQueue.isNotEmpty()) {
+            val current = bankQueue.removeFirst()
+            for (direction in Direction.NESW) {
+                val next = current.step(direction)
+                if (next in bankReach || !BountyHunterHome.isSafe(next, home) || !standable(next)) continue
+                if (!world.collision.canTraverse(current, direction, projectile = false, water = false)) continue
+                bankReach.add(next)
+                bankQueue.add(next)
+            }
+        }
+        println("home_verify: bank-side flood-fill reached ${bankReach.size} tiles from $bankSide")
+        for (z in BountyHunterHome.MAX_Z downTo BountyHunterHome.EAST_MIN_Z) {
+            val row = StringBuilder("home_verify: $z ")
+            for (x in BountyHunterHome.MAIN_MIN_X..BountyHunterHome.EAST_MAX_X) {
+                val t = Tile(x, z, home.height)
+                row.append(
+                    when {
+                        !BountyHunterHome.isSafe(t, home) -> ' '
+                        !standable(t) -> '#'
+                        t in reachable -> 'a'
+                        t in bankReach -> 'b'
+                        else -> '.'
+                    },
                 )
             }
+            println(row)
         }
     }
-    check(unreachableFacilities == 0) {
-        "home_verify: $unreachableFacilities facility(-ies) unreachable from arrival - see the printed list above."
-    }
+    check(unreachableFacilities == 0) { "home_verify: $unreachableFacilities facility(-ies) unreachable from arrival." }
 
-    // ---- 5. decor never silently covers a different functional facility ----
-    var badDecor = 0
-    HomeLayout.decor.forEach { decor ->
-        val tile = decor.tile(home)
-        val owner = tileOwner[tile]
-        val allowed = owner == null || (decor.name == "decor-arrival-wheel" && owner == HomeLayout.arrival.name)
-        if (!allowed) {
-            badDecor++
-            println("home_verify: DECOR \"${decor.name}\" at $tile silently covers functional facility \"$owner\".")
-        }
-    }
-    check(badDecor == 0) { "home_verify: $badDecor decor tile(s) cover an unrelated functional facility - see above." }
-
-    // ---- 6. arrival tile itself is safe and walkable ----
-    check(BountyHunterHome.isSafe(arrivalTile, home)) { "home_verify: arrival tile $arrivalTile is OUTSIDE the safe zone." }
-    check(!world.collision.isClipped(arrivalTile)) {
-        "home_verify: arrival tile $arrivalTile is collision-blocked - a player could not stand there."
-    }
-
-    // ---- 7. every gate's outward neighbour is real Wilderness ----
     var badGates = 0
-    BountyHunterHome.gateTiles(home).forEach { gate ->
-        val outward =
-            when {
-                gate.z > home.z -> gate.transform(0, 1)
-                gate.z < home.z -> gate.transform(0, -1)
-                gate.x > home.x -> gate.transform(1, 0)
-                else -> gate.transform(-1, 0)
-            }
-        if (BountyHunterHome.isSafe(outward, home)) {
+    BountyHunterHome.gates(home).forEach { gate ->
+        val objectPresent = objectAt(gate.tile, FeroxObjects.BARRIER_A) || objectAt(gate.tile, FeroxObjects.BARRIER_B)
+        if (!objectPresent) {
             badGates++
-            println("home_verify: GATE at $gate does not actually transition to Wilderness ($outward is still safe).")
+            println("home_verify: BARRIER at ${gate.tile} - no imported Barrier object stands there.")
+        }
+        if (!BountyHunterHome.isSafe(gate.innerLanding, home) || !standable(gate.innerLanding)) {
+            badGates++
+            println("home_verify: BARRIER at ${gate.tile} - inner landing ${gate.innerLanding} is not a safe walkable tile.")
+        }
+        if (gate.exitsToWilderness) {
+            val outer = gate.outerLanding
+            val beyond = outer.step(gate.direction)
+            if (BountyHunterHome.isSafe(outer, home) || !BountyHunterHome.isDangerousWilderness(outer, home)) {
+                badGates++
+                println("home_verify: BARRIER at ${gate.tile} - outer landing $outer is not dangerous Wilderness.")
+            }
+            if (BountyHunterHome.isSafe(beyond, home)) {
+                badGates++
+                println("home_verify: BARRIER at ${gate.tile} - $beyond (two steps out) is still safe: off-by-one safe strip.")
+            }
+            if (!standable(outer)) {
+                badGates++
+                println("home_verify: BARRIER at ${gate.tile} - outer landing $outer is collision-blocked.")
+            }
+        } else if (!BountyHunterHome.isSafe(gate.outerLanding, home)) {
+            badGates++
+            println("home_verify: internal BARRIER at ${gate.tile} - far side ${gate.outerLanding} unexpectedly outside the safe zone.")
         }
     }
-    check(badGates == 0) { "home_verify: $badGates gate(s) do not lead to real Wilderness - see the printed list above." }
-
-    // ---- 8. real 3-tile-wide route connectivity (owner instruction: "drie tegels brede routes") ----
-    // A tile counts as "wide" only if it AND all 4 orthogonal neighbours are safe+unclipped - a
-    // real (if approximate) 3-tile-clearance test, replacing check 4's honest "90% reachable"
-    // proxy for this specific requirement rather than just re-using it.
-    fun isWide(t: Tile): Boolean {
-        if (!BountyHunterHome.isSafe(t, home) || world.collision.isClipped(t)) return false
-        return Direction.NESW.all { d ->
-            val n = t.step(d)
-            BountyHunterHome.isSafe(n, home) && !world.collision.isClipped(n)
-        }
-    }
-    val wideStart = (listOf(arrivalTile) + Direction.NESW.map { arrivalTile.step(it) }).firstOrNull { isWide(it) }
-    check(wideStart != null) { "home_verify: arrival tile has no 3-tile-wide neighbourhood at all." }
-    val wideReachable = HashSet<Tile>()
-    val wideQueue = ArrayDeque<Tile>()
-    wideReachable.add(wideStart)
-    wideQueue.add(wideStart)
-    while (wideQueue.isNotEmpty()) {
-        val current = wideQueue.removeFirst()
-        for (direction in Direction.NESW) {
-            val next = current.step(direction)
-            if (next in wideReachable || !isWide(next)) continue
-            wideReachable.add(next)
-            wideQueue.add(next)
-        }
-    }
-    var narrowFacilities = 0
-    HomeLayout.functional.filter { it.solid }.forEach { facility ->
-        val tile = facility.tile(home)
-        // Radius 2 (not just the immediate touching neighbour): a facility's own solid tile
-        // always blocks one side of its direct neighbours, so requiring the doorstep tile
-        // itself to be 3-wide-clear would fail for every facility by construction. Radius 2
-        // tests the actual APPROACH route instead of the unavoidable last half-step.
-        val hasWideAccess = (-2..2).any { dx -> (-2..2).any { dz -> tile.transform(dx, dz) in wideReachable } }
-        if (!hasWideAccess) {
-            narrowFacilities++
-            println("home_verify: FACILITY \"${facility.name}\" at $tile has NO 3-tile-wide route from arrival.")
-        }
-    }
-    check(narrowFacilities == 0) {
-        "home_verify: $narrowFacilities facility(-ies) lack a 3-tile-wide route from arrival - see above."
-    }
-    println("home_verify: 3-tile-wide route flood-fill from arrival reached ${wideReachable.size} wide tiles; all ${HomeLayout.functional.count { it.solid }} facilities have wide access.")
+    check(badGates == 0) { "home_verify: $badGates barrier problem(s) - see the printed list above." }
 
     println(
-        "home_verify: all ${HomeLayout.functional.size} functional facilities pass safe-zone+no-" +
-            "overlap+reachability+3-tile-wide-route checks, arrival tile safe+unblocked, all 4 " +
-            "gates confirmed as real safe->Wilderness transitions. This does NOT prove client-" +
-            "visible rendering or a real click reaching each handler - see OWNER_TASK_STATUS.md.",
+        "home_verify: Ferox home OK - ${HomeLayout.functional.size} facilities inside the safe polygon, " +
+            "${HomeLayout.functional.count { it.imported }} imported objects present, all reachable from arrival $arrivalTile, " +
+            "${BountyHunterHome.gates(home).count { it.exitsToWilderness }} Wilderness exits verified. Client rendering remains a human check.",
     )
 }

@@ -5,6 +5,7 @@ import gg.rsmod.game.model.attr.KILLER_ATTR
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.service.log.LoggerService
 import gg.rsmod.plugins.api.ext.message
+import gg.rsmod.plugins.content.mechanics.trouver.Trouver
 
 /**
  * Wires the shared death-resolution model ([DeathResolver] /
@@ -14,18 +15,24 @@ import gg.rsmod.plugins.api.ext.message
  * reclaimed. Uses [DeathRecoveryConfig.PLACEHOLDER] and
  * [ItemDefCostValueProvider] - see their docs for why these are not final
  * production values/pricing.
+ *
+ * `alwaysProtected` is wired to [Trouver.protectedFromDeath] - the only production caller of that
+ * hook (`RSPS_DECISIONS.md` 2026-09-02 "STANDING OWNER AUTHORIZATION"). [Trouver.grantKillerCompensation]
+ * runs after execution so it sees the same resolved [DeathResolutionResult] the item removal used.
  */
 on_player_pre_death {
     val victim = player
     val world = victim.world
     val killer = victim.attr[KILLER_ATTR]?.get() as? Player
     val logger = world.getService(LoggerService::class.java, searchSubclasses = true)
+    val valueProvider = ItemDefCostValueProvider(world.definitions)
 
     val result =
         DeathResolver.resolve(
             victim = victim,
             killer = killer,
-            valueProvider = ItemDefCostValueProvider(world.definitions),
+            valueProvider = valueProvider,
+            alwaysProtected = Trouver::protectedFromDeath,
         )
     DeathExecutor.execute(
         world = world,
@@ -33,6 +40,7 @@ on_player_pre_death {
         recoveryConfig = DeathRecoveryConfig.PLACEHOLDER,
         logger = logger,
     )
+    Trouver.grantKillerCompensation(result, valueProvider)
 }
 
 on_command("reclaim") {

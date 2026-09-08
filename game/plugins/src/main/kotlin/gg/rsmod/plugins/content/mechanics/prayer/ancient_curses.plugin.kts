@@ -33,11 +33,16 @@ on_command("curse") {
 
 on_logout {
     AncientCurses.deactivateAllCurses(player)
+    AncientCurses.clearDrainState(player)
 }
+
+/** Sap/Leech escalation restarts from the base drain on a fresh target. */
+on_npc_killed { _, npc -> AncientCurses.clearDrainState(npc) }
 
 on_player_death {
     if (AncientCurses.isCurseActive(player, AncientCurse.WRATH)) {
         AncientCurses.wrathExplosion(player)
     }
     AncientCurses.deactivateAllCurses(player)
+    AncientCurses.clearDrainState(player)
 }

@@ -104,9 +104,13 @@ object Combat {
             }
         }
 
-        // TODO: Find proper poison chances
+        // TODO: Find proper poison/venom chances - both currently reuse the same
+        // unverified placeholder roll. Venom takes priority (real RS rule: a pawn is
+        // never simultaneously poisoned and envenomed, and venom is the stronger effect).
         if (pawn is Npc) {
-            if (pawn.combatDef.poisonDamage > 0 && pawn.world.random(10) < 4) {
+            if (pawn.combatDef.venomDamage > 0 && pawn.world.random(10) < 4) {
+                target.venom()
+            } else if (pawn.combatDef.poisonDamage > 0 && pawn.world.random(10) < 4) {
                 target.poison(pawn.combatDef.poisonDamage)
             }
         }

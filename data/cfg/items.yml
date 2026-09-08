@@ -179564,7 +179564,8 @@
     appearance_id: 3656
     equip_slot: 3
     equip_type: 5
-    weapon_type: -1
+    weapon_type: 17
+    attack_speed: 6
     remove_head: false
     remove_beard: false
     remove_arms: false
@@ -263746,3 +263747,113 @@
   tradeable: true
   weight: 0.0
   equipment: null
+- id: 22323
+  name: "Trouver parchment"
+  examine: "Take it to Perdu to help you avoid losing certain items."
+  destroy_message: ""
+  tradeable: false
+  weight: 0.0
+  equipment: null
+- id: 22324
+  name: "Fire cape (l)"
+  examine: "A cape of fire, locked with a Trouver parchment."
+  destroy_message: ""
+  tradeable: false
+  weight: 1.8
+  equipment:
+    equip_slot: 1
+    equip_type: -1
+    appearance_id: 1341
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 1
+    attack_slash: 1
+    attack_crush: 1
+    attack_magic: 1
+    attack_ranged: 1
+    defence_stab: 11
+    defence_slash: 11
+    defence_crush: 11
+    defence_magic: 11
+    defence_ranged: 11
+    summoning: 11
+    melee_strength: 4
+    prayer: 2
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22325
+  name: "Abyssal tentacle"
+  examine: "A weapon from the Abyss, embedded in a slimy tentacle."
+  destroy_message: ""
+  tradeable: false
+  weight: 0.453
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 756
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 11
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 90
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 86
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22326
+  name: "Twisted bow"
+  examine: "A mystical bow carved from the twisted remains of the Great Olm."
+  tradeable: true
+  weight: 1.814
+  equipment:
+    equip_slot: 3
+    equip_type: 5
+    appearance_id: 6293
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 16
+    attack_speed: 6
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 70
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 20
+    magic_damage: 0
+    attack_audio: 2700
+    skill_reqs: [{'skill': 4, 'level': 85}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0

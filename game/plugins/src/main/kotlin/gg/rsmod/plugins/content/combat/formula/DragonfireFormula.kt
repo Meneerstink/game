@@ -1,10 +1,11 @@
 package gg.rsmod.plugins.content.combat.formula
 
-import gg.rsmod.game.model.attr.ANTIFIRE_POTION_CHARGES_ATTR
 import gg.rsmod.game.model.attr.DRAGONFIRE_IMMUNITY_ATTR
 import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Pawn
 import gg.rsmod.game.model.entity.Player
+import gg.rsmod.game.model.timer.ANTIFIRE_TIMER
+import gg.rsmod.game.model.timer.SUPER_ANTIFIRE_TIMER
 import gg.rsmod.plugins.api.EquipmentType
 import gg.rsmod.plugins.api.PrayerIcon
 import gg.rsmod.plugins.api.cfg.Items
@@ -17,6 +18,17 @@ import kotlin.math.floor
  * @author Tom <rspsmods@gmail.com>
  *
  * @since 21/03/2023 -> Kevin Senez <ksenez94@gmail.com>
+ *
+ * Stacking percentages corrected 2026-09-02 (further-foundations autonomous pass) against
+ * the OSRS Wiki "Dragonfire" page's chromatic dragon table (50 base max hit): none = 100%,
+ * anti-dragon/dragonfire shield alone = 10%, Protect from Magic alone = 20%, shield+prayer
+ * together = 10% (no better than shield alone), antifire potion alone = 70%, super antifire
+ * potion alone = full immunity, and any potion (either tier) combined with a shield or
+ * prayer = full immunity. Previously this used incorrect ad-hoc values (20%/0%/66.5%/66.5%/
+ * 33.5%) and read a dead `ANTIFIRE_POTION_CHARGES_ATTR` attribute that nothing ever wrote -
+ * see `RSPS_DECISIONS.md` for the full write-up. Only verified against the chromatic dragon
+ * table; King Black Dragon's non-zero damage floors for its combo breath attacks are a
+ * separate, not-yet-sourced nuance left for a future pass (see `RSPS_DECISIONS.md`).
  */
 class DragonfireFormula(
     private val maxHit: Int,
@@ -40,43 +52,51 @@ class DragonfireFormula(
 
         if (target is Player) {
             val magicProtection = target.hasPrayerIcon(PrayerIcon.PROTECT_FROM_MAGIC)
-            val antiFirePotion = (target.attr[ANTIFIRE_POTION_CHARGES_ATTR] ?: 0) > 0
+            val antiFirePotion = target.timers.has(ANTIFIRE_TIMER)
+            val superAntiFirePotion = target.timers.has(SUPER_ANTIFIRE_TIMER)
             val dragonFireImmunity = target.attr[DRAGONFIRE_IMMUNITY_ATTR] ?: false
             val antiFireShield = target.hasEquipped(EquipmentType.SHIELD, *ANTI_DRAGON_SHIELDS)
             val dragonfireShield = target.hasEquipped(EquipmentType.SHIELD, *DRAGONFIRE_SHIELDS)
+            val anyShield = antiFireShield || dragonfireShield
 
             if (pawn is Npc) {
                 val message: String =
                     when {
                         /**
-                         * First check if full immunity.
+                         * Full immunity: an explicit immunity flag, a super antifire potion on
+                         * its own, or either potion tier stacked with a shield or the prayer.
                          */
-                        dragonFireImmunity || ((antiFireShield || dragonfireShield) && antiFirePotion) -> {
+                        dragonFireImmunity || superAntiFirePotion || (antiFirePotion && (anyShield || magicProtection)) -> {
                             max = minHit
                             "You are completely immune to dragonfire."
                         }
 
                         /**
-                         * Check for anti-fire shields & following conditions.
+                         * Shield alone (or shield + prayer, which adds nothing further).
                          */
-                        antiFireShield || dragonfireShield -> {
-                            max = if (magicProtection) minHit else (max * 0.20)
+                        anyShield -> {
+                            max *= 0.10
                             "Your shield absorbs most of the dragon's fiery breath."
                         }
 
                         /**
-                         * Check rest after (Potion, prayers or none)
+                         * Protect from Magic alone, no shield.
                          */
+                        magicProtection -> {
+                            max *= 0.20
+                            "Your prayer absorbs some of the dragonfire."
+                        }
+
+                        /**
+                         * Regular antifire potion alone, no shield or prayer.
+                         */
+                        antiFirePotion -> {
+                            max *= 0.70
+                            "You manage to resist some of the dragonfire."
+                        }
+
                         else -> {
-                            if (antiFirePotion) {
-                                max = if (magicProtection) max * 0.335 else max * 0.665
-                                if (magicProtection) "You are partially protected by your potion and prayer." else "You manage to resist some of the dragonfire."
-                            } else {
-                                if (magicProtection) {
-                                    max *= 0.665
-                                }
-                                if (magicProtection) "Your prayer absorbs some of the dragonfire." else "You are horribly burned by the dragon's breath!"
-                            }
+                            "You are horribly burned by the dragon's breath!"
                         }
                     }
 

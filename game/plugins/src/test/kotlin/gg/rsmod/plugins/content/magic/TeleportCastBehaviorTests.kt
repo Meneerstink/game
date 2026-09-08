@@ -13,6 +13,8 @@ import gg.rsmod.game.model.container.key.EQUIPMENT_KEY
 import gg.rsmod.game.model.container.key.INVENTORY_KEY
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.skill.SkillSet
+import gg.rsmod.game.model.timer.ACTIVE_COMBAT_TIMER
+import gg.rsmod.game.model.timer.TimerMap
 import gg.rsmod.game.model.varp.VarpSet
 import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.api.cfg.Items
@@ -126,6 +128,29 @@ class TeleportCastBehaviorTests {
         // Region 12087, wilderness level (3576 - 3520) / 8 + 1 = 8, within
         // MODERN's default wildLvlRestriction of 20.
         every { player.tile } returns Tile(3040, 3576)
+
+        assertTrue(player.canTeleport(TeleportType.MODERN))
+    }
+
+    @Test
+    fun `an active combat timer blocks teleporting, matching the PJ 10 second restriction`() {
+        // PvP zone/timers further-foundations pass (2026-09-02) - see RSPS_DECISIONS.md.
+        val player = newPlayer(magicLevel = 99)
+        every { player.lock } returns LockState.NONE
+        every { player.tile } returns Tile(3040, 3576) // shallow wilderness, otherwise allowed
+        val timers = TimerMap()
+        timers[ACTIVE_COMBAT_TIMER] = 17
+        every { player.timers } returns timers
+
+        assertFalse(player.canTeleport(TeleportType.MODERN))
+    }
+
+    @Test
+    fun `teleporting is allowed again once the active combat timer has cleared`() {
+        val player = newPlayer(magicLevel = 99)
+        every { player.lock } returns LockState.NONE
+        every { player.tile } returns Tile(3040, 3576)
+        every { player.timers } returns TimerMap()
 
         assertTrue(player.canTeleport(TeleportType.MODERN))
     }

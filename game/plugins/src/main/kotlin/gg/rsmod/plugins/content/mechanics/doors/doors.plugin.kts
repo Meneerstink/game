@@ -1,6 +1,10 @@
 package gg.rsmod.plugins.content.mechanics.doors
 
+import gg.rsmod.game.Server.Companion.logger
+import gg.rsmod.game.fs.def.ObjectDef
+import gg.rsmod.game.model.collision.ObjectGroup
 import gg.rsmod.game.model.collision.ObjectType
+import gg.rsmod.plugins.content.mechanics.gates.GateService
 
 val STICK_STATE = AttributeKey<DoorStickState>()
 
@@ -102,6 +106,115 @@ on_world_init {
         }
     }
 }
+
+on_world_init_late {
+    bind_cache_derived_doors()
+}
+
+/**
+ * Fills in the single doors the cache describes *unambiguously* and nobody has written behaviour
+ * for.
+ *
+ * `data/cfg/doors/single-doors.json` lists 35 pairs and `double-doors.json` 15 sets, against 211
+ * unambiguous Open/Close pairs in the production cache
+ * (`./gradlew :game:runObjectDefProbeTool --args="<cache> doorpairs"`). That gap is the "many doors
+ * and gates are non-functional" report: the mechanic was never missing, only the data was, and
+ * hand-maintaining a JSON list of every door in Gielinor was never going to converge.
+ *
+ * The pairing rule, and the ambiguity it refuses to resolve, live in [DoorPairing]. This function
+ * only decides which of the resulting pairs may be bound, and is deliberately conservative:
+ *  * runs from `on_world_init_late`, i.e. strictly after every ordinary world-init block, and skips
+ *    any option slot already bound. Hand-written area doors, quest doors, `gates.plugin.kts` and
+ *    the two JSON lists therefore always win, and this only reaches doors nobody has written
+ *    behaviour for. The late phase is not cosmetic: `bindObject` throws on a duplicate slot, so a
+ *    plain `on_world_init` block here would stop the server booting whenever plugin discovery
+ *    happened to order this file before `gates.plugin.kts`;
+ *  * every id belonging to a configured double door or gate set is excluded outright, even the
+ *    halves those configs happen not to bind. Swinging one leaf of a double door as though it were
+ *    a single door leaves the other leaf shut and the tile half-blocked;
+ *  * the 1480 definitions that advertise `Open` with no qualifying partner, and the 22 whose
+ *    opened half is contested, are never produced by [DoorPairing] in the first place. What they
+ *    should do is not derivable from the definitions, so they report through the `Unhandled object
+ *    action` diagnostic instead of being guessed at;
+ *  * the swing itself is refused at runtime for anything that is not a wall-group object, since
+ *    [World.openDoor]'s tile transform is only meaningful for walls.
+ */
+fun bind_cache_derived_doors() {
+    val multiLeaf = HashSet<Int>()
+    world.getService(DoorService::class.java)?.doubleDoors?.forEach { set ->
+        multiLeaf += listOf(set.opened.left, set.opened.right, set.closed.left, set.closed.right)
+    }
+    world.getService(GateService::class.java)?.gates?.forEach { set ->
+        multiLeaf += listOf(set.opened.hinge, set.opened.extension, set.closed.hinge, set.closed.extension)
+    }
+
+    val pairs =
+        DoorPairing.derive(
+            ids = world.definitions.getAllKeys(ObjectDef::class.java),
+            lookup = { world.definitions.getNullable(ObjectDef::class.java, it) },
+            excluded = multiLeaf,
+        )
+
+    var derived = 0
+    var skipped = 0
+
+    pairs.forEach { (closed, opened, slot) ->
+        if ((slot + 1) in world.plugins.boundObjectOptions(closed)) {
+            skipped++
+        } else {
+            on_obj_option(obj = closed, option = "open") {
+                val obj = player.getInteractingGameObj()
+                if (!is_wall_object(obj)) {
+                    return@on_obj_option
+                }
+                val newDoor =
+                    world.openDoor(
+                        obj,
+                        opened = opened,
+                        invertTransform = obj.type == ObjectType.DIAGONAL_WALL.value,
+                    )
+                copy_stick_vars(obj, newDoor)
+                add_stick_var(world, newDoor)
+                player.playSound(Sfx.DOOR_OPEN)
+            }
+            derived++
+        }
+
+        if ((slot + 1) in world.plugins.boundObjectOptions(opened)) {
+            skipped++
+        } else {
+            on_obj_option(obj = opened, option = "close") {
+                val obj = player.getInteractingGameObj()
+                if (!is_wall_object(obj)) {
+                    return@on_obj_option
+                }
+                if (is_stuck(world, obj)) {
+                    player.message("The door seems to be stuck.")
+                    player.playSound(Sfx.DOOR_CREAK)
+                    return@on_obj_option
+                }
+                val newDoor =
+                    world.closeDoor(
+                        obj,
+                        closed = closed,
+                        invertTransform = obj.type == ObjectType.DIAGONAL_WALL.value,
+                    )
+                copy_stick_vars(obj, newDoor)
+                add_stick_var(world, newDoor)
+                player.playSound(Sfx.DOOR_CLOSE)
+            }
+            derived++
+        }
+    }
+
+    logger.info(
+        "General Doors: bound $derived cache-derived door options from ${pairs.size} unambiguous " +
+            "pairs ($skipped already handled elsewhere).",
+    )
+}
+
+fun is_wall_object(obj: GameObject): Boolean =
+    ObjectType.values().firstOrNull { it.value == obj.type }?.group == ObjectGroup.WALL
 
 fun handle_double_doors(
     p: Player,

@@ -596,6 +596,25 @@ out-packets:
       - name: friends
         type: BYTES
 
+  # ServerProt UPDATE_FRIENDCHAT_CHANNEL_FULL(12, -2). Variable length because the member list is,
+  # so the whole payload is built in the encoder; a zero-length body clears the channel client-side.
+  - message: gg.rsmod.game.message.impl.UpdateFriendChatChannelFullMessage
+    type: VARIABLE_SHORT
+    opcode: 12
+    structure:
+      - name: channel
+        type: BYTES
+
+  # ServerProt MESSAGE_FRIENDCHANNEL(40, -1). One line of friends-chat text; the sender name, the
+  # base-37 channel, a de-duplication id and the huffman-compressed text are all built in the
+  # encoder, since the text length cannot be described declaratively.
+  - message: gg.rsmod.game.message.impl.MessageFriendChannelMessage
+    type: VARIABLE_BYTE
+    opcode: 40
+    structure:
+      - name: message
+        type: BYTES
+
   - message: gg.rsmod.game.message.impl.MessagePrivateReceivedMessage
     type: VARIABLE_SHORT
     opcode: 120
@@ -787,6 +806,14 @@ in-packets:
     type: FIXED
     opcode: 33
     length: 0
+
+  - message: gg.rsmod.game.message.impl.DetectModifiedClientMessage
+    type: FIXED
+    opcode: 71
+    length: 4
+    structure:
+      - name: dummy
+        type: INT
 
   - message: gg.rsmod.game.message.impl.IgnoreMessage # No data
     type: VARIABLE_BYTE
@@ -1362,6 +1389,21 @@ in-packets:
     opcode: 51
     structure:
         - name: username
+          type: STRING
+
+  # ClientProt FRIENDS_CHAT_CHANGE(1, -1): joining a friends-chat channel, and leaving it.
+  # Payload is a byte holding the length of the channel-owner name followed by that name; on leave
+  # the client writes only a zero byte and no name at all, so ClanJoinChatLeaveChatDecoder reads
+  # this by hand rather than through the declarative structure below.
+  #
+  # Registering it matters beyond the feature: GamePacketDecoder answers an unknown opcode by
+  # discarding every byte currently readable, so an unregistered packet silently eats whatever
+  # unrelated packets happened to arrive in the same read.
+  - message: gg.rsmod.game.message.impl.ClanJoinChatLeaveChatMessage
+    type: VARIABLE_BYTE
+    opcode: 1
+    structure:
+        - name: name
           type: STRING
 
   - message: gg.rsmod.game.message.impl.FriendListDeleteMessage

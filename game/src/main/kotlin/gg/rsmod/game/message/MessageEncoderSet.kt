@@ -69,6 +69,8 @@ class MessageEncoderSet {
         put(LocAnimEncoder(), LocAnimMessage::class.java)
         put(FriendListLoadedEncoder(), FriendListLoadedMessage::class.java)
         put(UpdateFriendListEncoder(), UpdateFriendListMessage::class.java)
+        put(UpdateFriendChatChannelFullEncoder(), UpdateFriendChatChannelFullMessage::class.java)
+        put(MessageFriendChannelEncoder(), MessageFriendChannelMessage::class.java)
         put(MessagePrivateReceivedEncoder(), MessagePrivateReceivedMessage::class.java)
         put(SetPublicTradeChatFilterEncoder(), SetPublicTradeChatFilterMessage::class.java)
         put(SetPrivateChatFilterEncoder(), SetPrivateChatFilterMessage::class.java)

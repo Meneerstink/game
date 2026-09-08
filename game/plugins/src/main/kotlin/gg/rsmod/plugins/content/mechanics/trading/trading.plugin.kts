@@ -1,5 +1,6 @@
 package gg.rsmod.plugins.content.mechanics.trading
 
+import gg.rsmod.plugins.content.inter.pricecheck.PriceChecker
 import gg.rsmod.plugins.content.mechanics.trading.impl.TradeSession
 import gg.rsmod.plugins.content.mechanics.trading.impl.TradeSession.Companion.ACCEPT_INTERFACE
 import gg.rsmod.plugins.content.mechanics.trading.impl.TradeSession.Companion.OVERLAY_INTERFACE
@@ -99,6 +100,31 @@ fun initiate(
 
 // Item Offer Event
 on_button(OVERLAY_INTERFACE, 0) {
+    /*
+     * The price checker shows the player's inventory in this same bare overlay, and the engine
+     * allows only one plugin per button hash, so this one binding has to dispatch. A price-check
+     * session and a trade session can never both be open, since each of them owns the main screen.
+     */
+    if (PriceChecker.isOpen(player)) {
+        val slot = player.getInteractingSlot()
+        val opt = player.getInteractingOpcode()
+        val item = player.inventory[slot] ?: return@on_button
+
+        player.queue(TaskPriority.WEAK) {
+            val amount =
+                when (opt) {
+                    61 -> 1
+                    64 -> 5
+                    4 -> 10
+                    52 -> player.inventory.getItemCount(item.id)
+                    81 -> inputInt("Enter amount:")
+                    else -> return@queue
+                }
+            PriceChecker.check(player, slot, amount)
+        }
+        return@on_button
+    }
+
     player.getTradeSession()?.let { trade ->
 
         // The player's inventory

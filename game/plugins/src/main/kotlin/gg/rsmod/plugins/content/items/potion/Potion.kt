@@ -391,6 +391,48 @@ enum class Potion(
         replacement = Items.VIAL,
         potionType = PotionType.SUPER_ANTIPOISON,
     ),
+    ANTIFIRE4(
+        item = Items.ANTIFIRE_4,
+        replacement = Items.ANTIFIRE_3,
+        potionType = PotionType.ANTIFIRE,
+    ),
+    ANTIFIRE3(
+        item = Items.ANTIFIRE_3,
+        replacement = Items.ANTIFIRE_2,
+        potionType = PotionType.ANTIFIRE,
+    ),
+    ANTIFIRE2(
+        item = Items.ANTIFIRE_2,
+        replacement = Items.ANTIFIRE_1,
+        potionType = PotionType.ANTIFIRE,
+    ),
+    ANTIFIRE1(
+        item = Items.ANTIFIRE_1,
+        replacement = Items.VIAL,
+        potionType = PotionType.ANTIFIRE,
+    ),
+
+    SUPER_ANTIFIRE4(
+        item = Items.SUPER_ANTIFIRE_4,
+        replacement = Items.SUPER_ANTIFIRE_3,
+        potionType = PotionType.SUPER_ANTIFIRE,
+    ),
+    SUPER_ANTIFIRE3(
+        item = Items.SUPER_ANTIFIRE_3,
+        replacement = Items.SUPER_ANTIFIRE_2,
+        potionType = PotionType.SUPER_ANTIFIRE,
+    ),
+    SUPER_ANTIFIRE2(
+        item = Items.SUPER_ANTIFIRE_2,
+        replacement = Items.SUPER_ANTIFIRE_1,
+        potionType = PotionType.SUPER_ANTIFIRE,
+    ),
+    SUPER_ANTIFIRE1(
+        item = Items.SUPER_ANTIFIRE_1,
+        replacement = Items.VIAL,
+        potionType = PotionType.SUPER_ANTIFIRE,
+    ),
+
     ENERGY4(
         item = Items.ENERGY_POTION_4,
         replacement = Items.ENERGY_POTION_3,

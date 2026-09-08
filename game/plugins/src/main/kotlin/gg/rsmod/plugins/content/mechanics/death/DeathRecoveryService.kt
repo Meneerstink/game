@@ -71,12 +71,15 @@ object DeathRecoveryService {
             }
         }
 
+        // A paid recovery batch stays paid when inventory space requires another visit.
+        player.attr[DEATH_RECOVERY_FEE_ATTR] = 0
         var reclaimedCount = 0
         for (slot in 0 until player.deathRecovery.capacity) {
             val item = player.deathRecovery[slot] ?: continue
             val transaction = player.inventory.add(item.id, item.amount, assureFullInsertion = false)
             if (transaction.completed > 0) {
-                player.deathRecovery[slot] = null
+                player.deathRecovery[slot] = if (transaction.completed == item.amount) null
+                    else Item(item.id, item.amount - transaction.completed).copyAttr(item)
                 reclaimedCount++
             }
         }

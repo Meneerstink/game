@@ -132,6 +132,16 @@ enum class BowType(
                 BROAD_ARROWS,
     ),
 
+    // S4, 2026-09-03: OSRS Wiki "Twisted bow" - "can fire any type of arrow, including dragon
+    // arrows" / comparison table "Uses arrows as ammunition up to and including dragon" - the
+    // same bronze-to-dragon-plus-broad tier already used by the Dark bow family above.
+    TWISTED_BOW(
+        item = Items.TWISTED_BOW,
+        ammo =
+            BRONZE_ARROWS + IRON_ARROWS + STEEL_ARROWS + MITHRIL_ARROWS + ADAMANT_ARROWS + RUNE_ARROWS + DRAGON_ARROWS +
+                BROAD_ARROWS,
+    ),
+
     CRYSTAL_BOW_110(item = Items.CRYSTAL_BOW_110, ammo = emptyArray()),
     CRYSTAL_BOW_210(item = Items.CRYSTAL_BOW_210, ammo = emptyArray()),
     CRYSTAL_BOW_310(item = Items.CRYSTAL_BOW_310, ammo = emptyArray()),

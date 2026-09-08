@@ -20,21 +20,6 @@ import kotlin.math.floor
  * @author Tom <rspsmods@gmail.com>
  */
 object MeleeCombatFormula : CombatFormula {
-    private val BLACK_MASKS =
-        intArrayOf(
-            Items.BLACK_MASK,
-            Items.BLACK_MASK_1,
-            Items.BLACK_MASK_2,
-            Items.BLACK_MASK_3,
-            Items.BLACK_MASK_4,
-            Items.BLACK_MASK_5,
-            Items.BLACK_MASK_6,
-            Items.BLACK_MASK_7,
-            Items.BLACK_MASK_8,
-            Items.BLACK_MASK_9,
-            Items.BLACK_MASK_10,
-        )
-
     private val MELEE_VOID =
         intArrayOf(Items.VOID_MELEE_HELM, Items.VOID_KNIGHT_TOP, Items.VOID_KNIGHT_ROBE, Items.VOID_KNIGHT_GLOVES)
 
@@ -75,9 +60,9 @@ object MeleeCombatFormula : CombatFormula {
     ): Double {
         val a =
             if (pawn is Player) {
-                getEffectiveStrengthLevel(pawn)
+                getEffectiveStrengthLevel(pawn, target)
             } else if (pawn is Npc) {
-                getEffectiveStrengthLevel(pawn)
+                getEffectiveStrengthLevel(pawn, target)
             } else {
                 0.0
             }
@@ -97,9 +82,9 @@ object MeleeCombatFormula : CombatFormula {
     ): Int {
         val a =
             if (pawn is Player) {
-                getEffectiveAttackLevel(pawn)
+                getEffectiveAttackLevel(pawn, target)
             } else if (pawn is Npc) {
-                getEffectiveAttackLevel(pawn)
+                getEffectiveAttackLevel(pawn, target)
             } else {
                 0.0
             }
@@ -140,7 +125,7 @@ object MeleeCombatFormula : CombatFormula {
     ): Double {
         var hit = base
 
-        hit *= getEquipmentMultiplier(player)
+        hit *= TargetModifiers.equipmentMultiplier(player, target)
 
         hit *= specialAttackMultiplier
 
@@ -166,7 +151,7 @@ object MeleeCombatFormula : CombatFormula {
         specialAttackMultiplier: Double,
     ): Double {
         var hit = base
-        hit *= getEquipmentMultiplier(player)
+        hit *= TargetModifiers.equipmentMultiplier(player, target)
         hit *= specialAttackMultiplier
         return hit
     }
@@ -221,14 +206,19 @@ object MeleeCombatFormula : CombatFormula {
         return target.getBonus(bonus).toDouble()
     }
 
-    private fun getEffectiveStrengthLevel(player: Player): Double {
-        var effectiveLevel = floor(player.skills.getCurrentLevel(Skills.STRENGTH) * getPrayerStrengthMultiplier(player))
+    private fun getEffectiveStrengthLevel(player: Player, opponent: Pawn? = null): Double {
+        var effectiveLevel = floor(player.skills.getCurrentLevel(Skills.STRENGTH) * getPrayerStrengthMultiplier(player, opponent))
 
         effectiveLevel +=
             when (CombatConfigs.getAttackStyle(player)) {
                 WeaponStyle.AGGRESSIVE -> 3.0
                 WeaponStyle.CONTROLLED -> 1.0
-                else -> 1.0
+                // S1, 2026-09-03: Accurate/Defensive (and any other style) give effective
+                // Strength +0, not +1 - see RSPS_DECISIONS.md for the sourced fix. The
+                // previous `else -> 1.0` silently over-applied a Controlled-sized bonus to
+                // every non-Aggressive/Controlled style, most commonly Accurate, inflating
+                // every melee max hit rolled under that style.
+                else -> 0.0
             }
 
         effectiveLevel += 8.0
@@ -240,8 +230,8 @@ object MeleeCombatFormula : CombatFormula {
         return effectiveLevel
     }
 
-    private fun getEffectiveAttackLevel(player: Player): Double {
-        var effectiveLevel = floor(player.skills.getCurrentLevel(Skills.ATTACK) * getPrayerAttackMultiplier(player))
+    private fun getEffectiveAttackLevel(player: Player, opponent: Pawn? = null): Double {
+        var effectiveLevel = floor(player.skills.getCurrentLevel(Skills.ATTACK) * getPrayerAttackMultiplier(player, opponent))
 
         effectiveLevel +=
             when (CombatConfigs.getAttackStyle(player)) {
@@ -260,8 +250,8 @@ object MeleeCombatFormula : CombatFormula {
         return effectiveLevel
     }
 
-    private fun getEffectiveDefenceLevel(player: Player): Double {
-        var effectiveLevel = floor(player.skills.getCurrentLevel(Skills.DEFENCE) * getPrayerDefenceMultiplier(player))
+    private fun getEffectiveDefenceLevel(player: Player, opponent: Pawn? = null): Double {
+        var effectiveLevel = floor(player.skills.getCurrentLevel(Skills.DEFENCE) * getPrayerDefenceMultiplier(player, opponent))
 
         effectiveLevel +=
             when (CombatConfigs.getAttackStyle(player)) {
@@ -276,27 +266,28 @@ object MeleeCombatFormula : CombatFormula {
         return effectiveLevel
     }
 
-    private fun getEffectiveStrengthLevel(npc: Npc): Double {
+    private fun getEffectiveStrengthLevel(npc: Npc, opponent: Pawn? = null): Double {
         var effectiveLevel = npc.stats.getCurrentLevel(NpcSkills.STRENGTH).toDouble()
         effectiveLevel += 8
         return effectiveLevel
     }
 
-    private fun getEffectiveAttackLevel(npc: Npc): Double {
+    private fun getEffectiveAttackLevel(npc: Npc, opponent: Pawn? = null): Double {
         var effectiveLevel = npc.stats.getCurrentLevel(NpcSkills.ATTACK).toDouble()
         effectiveLevel += 8
         return effectiveLevel
     }
 
-    private fun getEffectiveDefenceLevel(npc: Npc): Double {
+    private fun getEffectiveDefenceLevel(npc: Npc, opponent: Pawn? = null): Double {
         var effectiveLevel = npc.stats.getCurrentLevel(NpcSkills.DEFENCE).toDouble()
         effectiveLevel += 8
         return effectiveLevel
     }
 
-    private fun getPrayerStrengthMultiplier(player: Player): Double =
+    private fun getPrayerStrengthMultiplier(player: Player, opponent: Pawn? = null): Double =
         when {
-            gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.isTurmoilActive(player) -> 1.25
+            gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.isTurmoilActive(player) ->
+                gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.turmoilMultiplier(player, Skills.STRENGTH, opponent)
             Prayers.isActive(player, Prayer.BURST_OF_STRENGTH) -> 1.05
             Prayers.isActive(player, Prayer.SUPERHUMAN_STRENGTH) -> 1.10
             Prayers.isActive(player, Prayer.ULTIMATE_STRENGTH) -> 1.15
@@ -305,9 +296,10 @@ object MeleeCombatFormula : CombatFormula {
             else -> 1.0
         }
 
-    private fun getPrayerAttackMultiplier(player: Player): Double =
+    private fun getPrayerAttackMultiplier(player: Player, opponent: Pawn? = null): Double =
         when {
-            gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.isTurmoilActive(player) -> 1.22
+            gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.isTurmoilActive(player) ->
+                gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.turmoilMultiplier(player, Skills.ATTACK, opponent)
             Prayers.isActive(player, Prayer.CLARITY_OF_THOUGHT) -> 1.05
             Prayers.isActive(player, Prayer.IMPROVED_REFLEXES) -> 1.10
             Prayers.isActive(player, Prayer.INCREDIBLE_REFLEXES) -> 1.15
@@ -316,9 +308,10 @@ object MeleeCombatFormula : CombatFormula {
             else -> 1.0
         }
 
-    private fun getPrayerDefenceMultiplier(player: Player): Double =
+    private fun getPrayerDefenceMultiplier(player: Player, opponent: Pawn? = null): Double =
         when {
-            gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.isTurmoilActive(player) -> 1.15
+            gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.isTurmoilActive(player) ->
+                gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.turmoilMultiplier(player, Skills.DEFENCE, opponent)
             Prayers.isActive(player, Prayer.THICK_SKIN) -> 1.05
             Prayers.isActive(player, Prayer.ROCK_SKIN) -> 1.10
             Prayers.isActive(player, Prayer.STEEL_SKIN) -> 1.15
@@ -326,15 +319,6 @@ object MeleeCombatFormula : CombatFormula {
             Prayers.isActive(player, Prayer.PIETY) -> 1.25
             Prayers.isActive(player, Prayer.RIGOUR) -> 1.25
             Prayers.isActive(player, Prayer.AUGURY) -> 1.25
-            else -> 1.0
-        }
-
-    private fun getEquipmentMultiplier(player: Player): Double =
-        when {
-            player.hasEquipped(EquipmentType.AMULET, Items.SALVE_AMULET) -> 7.0 / 6.0
-            player.hasEquipped(EquipmentType.AMULET, Items.SALVE_AMULET_E) -> 1.2
-            // TODO: this should only apply when target is slayer task?
-            player.hasEquipped(EquipmentType.HEAD, *BLACK_MASKS) -> 7.0 / 6.0
             else -> 1.0
         }
 

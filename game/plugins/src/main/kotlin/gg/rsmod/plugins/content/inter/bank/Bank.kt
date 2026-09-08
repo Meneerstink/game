@@ -174,6 +174,14 @@ class Bank {
                 player.message("You can't access your bank while in a Practice PvP match.")
                 return
             }
+            /*
+             * The PIN is asked for here rather than at each booth, chest and banker, so that every
+             * way into the bank is behind it - including the ones added later.
+             */
+            if (BankPin.required(player)) {
+                BankPin.request(player) { open(it) }
+                return
+            }
             player.openInterface(BANK_INTERFACE_ID, InterfaceDestination.MAIN_SCREEN)
             player.openInterface(INV_INTERFACE_ID, InterfaceDestination.TAB_AREA)
             player.inventory.dirty = true

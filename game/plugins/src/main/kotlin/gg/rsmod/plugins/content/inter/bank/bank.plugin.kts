@@ -22,6 +22,14 @@ on_button(interfaceId = Bank.BANK_HELP_INTERFACE_ID, component = 54) {
     Bank.open(player)
 }
 
+/*
+ * 'Set a Bank PIN'. The cache bakes op1=IF_BUTTON1 into this component, so the click was already
+ * arriving here - there was simply nothing listening to it.
+ */
+on_button(interfaceId = Bank.BANK_INTERFACE_ID, component = 40) {
+    BankPin.manage(player)
+}
+
 on_button(interfaceId = Bank.BANK_INTERFACE_ID, component = 33) {
     Bank.depositInventory(player)
 }

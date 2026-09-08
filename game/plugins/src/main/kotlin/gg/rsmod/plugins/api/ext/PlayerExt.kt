@@ -20,6 +20,7 @@ import gg.rsmod.game.sync.block.UpdateBlockType
 import gg.rsmod.plugins.api.*
 import gg.rsmod.plugins.api.cfg.*
 import gg.rsmod.plugins.content.combat.createProjectile
+import gg.rsmod.plugins.content.combat.specialattack.SpecialAttacks
 import gg.rsmod.plugins.content.combat.strategy.MagicCombatStrategy
 import gg.rsmod.plugins.content.items.armor.BrawlingGloves
 import gg.rsmod.plugins.content.mechanics.music.RegionMusicService
@@ -138,11 +139,10 @@ fun Player.openShop(
 
         // Set the shop name in the interface
         setComponentText(interfaceId = shopInterface, component = 20, text = currentShop.name)
-
-        // Show the "Buy" button if the shop has a purchase policy of "BUY_TRADEABLES"
-        if (currentShop.purchasePolicy == PurchasePolicy.BUY_TRADEABLES) {
-            setComponentHidden(interfaceId = 620, component = 19, hidden = false)
-        }
+        // Keep the inventory/sell control synchronized with the shop being opened.
+        // The previous state leaked from a prior general store into specialist shops.
+        val acceptsPlayerItems = currentShop.purchasePolicy != PurchasePolicy.BUY_NONE
+        setComponentHidden(interfaceId = shopInterface, component = 19, hidden = !acceptsPlayerItems)
     } else {
         // Log a warning message if the shop does not exist
         World.logger.warn { "Player \"$username\" is unable to open shop \"$shop\" as it does not exist." }
@@ -970,6 +970,8 @@ fun Player.sendWeaponComponentInformation() {
     } else {
         attr[LAST_KNOWN_WEAPON_TYPE] = WeaponType.NONE.id
     }
+    // Hide the special attack bar (component 4) for weapons with no registered special attack.
+    setComponentHidden(interfaceId = 884, component = 4, hidden = weapon == null || !SpecialAttacks.hasSpecialAttack(weapon.id))
 }
 
 fun Player.getGnomeAgilityStage(): Int {

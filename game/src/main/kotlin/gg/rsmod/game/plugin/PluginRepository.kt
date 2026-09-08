@@ -49,6 +49,18 @@ class PluginRepository(
     private val worldInitPlugins = mutableListOf<Plugin.() -> Unit>()
 
     /**
+     * Plugins that get executed once every plugin in [worldInitPlugins] has finished.
+     *
+     * Gap-filling fallbacks - "bind this only where nobody has written real behaviour" - have to
+     * observe the complete set of bindings to be correct. [worldInitPlugins] run in plugin
+     * discovery order, so a fallback registered from an ordinary world-init block races every
+     * other world-init block: it either misses bindings it should have deferred to, or, since
+     * [bindObject]/[bindNpc]/[bindItem] all throw on a duplicate, prevents the server from booting
+     * at all. Registering the fallback here instead makes that deterministic.
+     */
+    private val lateWorldInitPlugins = mutableListOf<Plugin.() -> Unit>()
+
+    /**
      * The plugin that will executed when changing display modes.
      */
     private var windowStatusPlugin: (Plugin.() -> Unit)? = null
@@ -645,8 +657,13 @@ class PluginRepository(
         worldInitPlugins.add(plugin)
     }
 
+    fun bindLateWorldInit(plugin: Plugin.() -> Unit) {
+        lateWorldInitPlugins.add(plugin)
+    }
+
     fun executeWorldInit(world: World) {
         worldInitPlugins.forEach { logic -> world.executePlugin(world, logic) }
+        lateWorldInitPlugins.forEach { logic -> world.executePlugin(world, logic) }
     }
 
     fun bindSlayerLogic(plugin: Plugin.() -> Unit) {

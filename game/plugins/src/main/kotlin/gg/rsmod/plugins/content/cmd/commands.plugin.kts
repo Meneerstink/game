@@ -2016,3 +2016,13 @@ on_command("completequests", Privilege.OWNER_POWER) {
     }
     player.message("completequests: completed $count implemented quests.", type = ChatMessageType.CONSOLE)
 }
+
+/**
+ * Diagnostic: logs every outbound packet (opcode/type/size/message) at INFO so a client-side
+ * "Connection lost" caused by a stream desync can be traced to the exact packet.
+ */
+on_command("packettrace", Privilege.ADMIN_POWER) {
+    val enabled = !gg.rsmod.game.protocol.GameMessageEncoder.traceOutbound
+    gg.rsmod.game.protocol.GameMessageEncoder.traceOutbound = enabled
+    player.message("Outbound packet trace: ${if (enabled) "<col=178000>enabled</col>" else "<col=42C66C>disabled</col>"}", type = ChatMessageType.CONSOLE)
+}

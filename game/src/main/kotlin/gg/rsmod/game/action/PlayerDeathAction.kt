@@ -57,9 +57,12 @@ object PlayerDeathAction {
             // BATCH 1: offset updated from (0,-3) to (0,-10) alongside SAFE_RADIUS 5->24 - the
             // game module can't depend on the plugins module, so this must stay numerically in
             // sync with HomeLayout.arrival in gg.rsmod.plugins.content.areas.home.HomeLayout.kt.
-            player.moveTo(player.world.gameContext.home.transform(0, -10))
+            // teleportTo(), not moveTo(): moveTo() only snaps instantly when the destination is
+            // beyond normal view distance, so dying just outside Ferox (well within that distance
+            // of the respawn tile) rendered as a walk/glide into the enclave instead of a teleport.
+            player.teleportTo(player.world.gameContext.home.transform(0, -1))
         } else {
-            player.moveTo(instancedMap.exitTile)
+            player.teleportTo(instancedMap.exitTile)
             world.instanceAllocator.death(player)
         }
         player.writeMessage("Oh dear, you are dead!")

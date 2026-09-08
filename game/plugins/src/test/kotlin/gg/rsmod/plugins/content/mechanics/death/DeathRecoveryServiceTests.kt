@@ -85,6 +85,25 @@ class DeathRecoveryServiceTests {
         assertEquals(1, player.inventory.getItemCount(RECOVERED_ITEM), "item must not be duplicated")
     }
 
+    @Test
+    fun `partial collection preserves remainder and charges the batch only once`() {
+        val player = newPlayer()
+        player.deathRecovery[0] = Item(RECOVERED_ITEM, 3)
+        player.inventory[0] = Item(Items.COINS_995, 100)
+        for (slot in 1 until player.inventory.capacity - 1) player.inventory[slot] = Item(RECOVERED_ITEM)
+        player.attr[DEATH_RECOVERY_FEE_ATTR] = 40
+        val first = DeathRecoveryService.reclaim(player) as DeathReclaimOutcome.Reclaimed
+        assertEquals(40, first.feePaid)
+        assertEquals(2, player.deathRecovery.getItemCount(RECOVERED_ITEM))
+        assertEquals(60, player.inventory.getItemCount(Items.COINS_995))
+        player.inventory[1] = null
+        player.inventory[2] = null
+        val second = DeathRecoveryService.reclaim(player) as DeathReclaimOutcome.Reclaimed
+        assertEquals(0, second.feePaid)
+        assertTrue(player.deathRecovery.isEmpty)
+        assertEquals(60, player.inventory.getItemCount(Items.COINS_995))
+    }
+
     private fun newPlayer(): Player {
         val player = mockk<Player>(relaxed = true)
         every { player.attr } returns AttributeMap()

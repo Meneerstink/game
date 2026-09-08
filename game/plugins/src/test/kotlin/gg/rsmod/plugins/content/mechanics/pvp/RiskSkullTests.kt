@@ -1,0 +1,130 @@
+package gg.rsmod.plugins.content.mechanics.pvp
+
+import gg.rsmod.game.fs.DefinitionSet
+import gg.rsmod.game.model.attr.AttributeMap
+import gg.rsmod.game.model.attr.PROTECT_ITEM_ATTR
+import gg.rsmod.game.model.container.ItemContainer
+import gg.rsmod.game.model.container.key.EQUIPMENT_KEY
+import gg.rsmod.game.model.container.key.INVENTORY_KEY
+import gg.rsmod.game.model.entity.Player
+import gg.rsmod.game.model.item.Item
+import gg.rsmod.plugins.api.SkullIcon
+import gg.rsmod.plugins.content.mechanics.death.ItemRiskValueProvider
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
+import kotlin.test.Test
+import kotlin.test.assertEquals
+
+/**
+ * Coverage for [RiskSkull] (PvP zone/timers → skull/risk/death further-foundations pass,
+ * 2026-09-02 - see `RSPS_DECISIONS.md`): the tier thresholds match the master plan's
+ * Bronze/Iron/Green/Blue/Red table exactly, [RiskSkull.calculateRiskedValue] reuses
+ * [gg.rsmod.plugins.content.mechanics.death.DeathItemRiskCalculator] so it only counts stacks
+ * that would actually be lost, and [RiskSkull.refresh] never overwrites a real PK RED skull.
+ */
+class RiskSkullTests {
+    @Test
+    fun `tierFor maps every threshold boundary to the master plan's table`() {
+        assertEquals(SkullIcon.NONE, RiskSkull.tierFor(0))
+        assertEquals(SkullIcon.DMM_VERY_LOW_RISK, RiskSkull.tierFor(1))
+        assertEquals(SkullIcon.DMM_VERY_LOW_RISK, RiskSkull.tierFor(249_999))
+        assertEquals(SkullIcon.DMM_LOW_RISK, RiskSkull.tierFor(250_000))
+        assertEquals(SkullIcon.DMM_LOW_RISK, RiskSkull.tierFor(999_999))
+        assertEquals(SkullIcon.DMM_MEDIUM_RISK, RiskSkull.tierFor(1_000_000))
+        assertEquals(SkullIcon.DMM_MEDIUM_RISK, RiskSkull.tierFor(2_999_999))
+        assertEquals(SkullIcon.DMM_HIGH_RISK, RiskSkull.tierFor(3_000_000))
+        assertEquals(SkullIcon.DMM_HIGH_RISK, RiskSkull.tierFor(9_999_999))
+        assertEquals(SkullIcon.DMM_VERY_HIGH_RISK, RiskSkull.tierFor(10_000_000))
+        assertEquals(SkullIcon.DMM_VERY_HIGH_RISK, RiskSkull.tierFor(50_000_000))
+    }
+
+    @Test
+    fun `calculateRiskedValue sums only the item stacks that would actually be lost`() {
+        val player = newPlayer()
+        player.inventory[0] = Item(1, 1) // value 10 -> protected (top 3)
+        player.inventory[1] = Item(2, 1) // value 5 -> protected
+        player.inventory[2] = Item(3, 1) // value 20 -> protected
+        player.inventory[3] = Item(4, 1) // value 1 -> the 4th stack, lost
+
+        assertEquals(1L, RiskSkull.calculateRiskedValue(player, testValueProvider()))
+    }
+
+    @Test
+    fun `calculateRiskedValue counts everything for a skulled player, matching real risk`() {
+        val player = newPlayer(currentSkullIcon = SkullIcon.RED.id)
+        player.inventory[0] = Item(1, 1) // value 10
+        player.inventory[1] = Item(2, 1) // value 5
+
+        // Skulled with no active Protect Item keeps 0 stacks - both are lost.
+        assertEquals(15L, RiskSkull.calculateRiskedValue(player, testValueProvider()))
+    }
+
+    @Test
+    fun `refresh sets the risk-tier skull for an unskulled player`() {
+        val player = newPlayer()
+        // Four 500k stacks: an unskulled player without Protect Item keeps their top 3 highest-
+        // value stacks safe, so only the 4th is actually at risk of loss - 500_000 lands in the
+        // Iron/DMM_LOW_RISK band (250k-1m).
+        player.inventory[0] = Item(5, 1)
+        player.inventory[1] = Item(5, 1)
+        player.inventory[2] = Item(5, 1)
+        player.inventory[3] = Item(5, 1)
+
+        RiskSkull.refresh(player, testValueProvider())
+
+        verify { player.skullIcon = SkullIcon.DMM_LOW_RISK.id }
+    }
+
+    @Test
+    fun `refresh never overwrites a real PK RED skull`() {
+        val player = newPlayer(currentSkullIcon = SkullIcon.RED.id)
+        player.inventory[0] = Item(5, 1)
+
+        RiskSkull.refresh(player, testValueProvider())
+
+        verify(exactly = 0) { player.skullIcon = any() }
+    }
+
+    @Test
+    fun `refresh clears the risk skull when nothing is at risk`() {
+        // Start from a stale risk-tier icon so clearing it back to NONE is an observable change,
+        // rather than the already-NONE default (which correctly makes refresh a no-op).
+        val player = newPlayer(currentSkullIcon = SkullIcon.DMM_LOW_RISK.id)
+
+        RiskSkull.refresh(player, testValueProvider())
+
+        verify { player.skullIcon = SkullIcon.NONE.id }
+    }
+
+    private fun newPlayer(
+        protectItem: Boolean = false,
+        currentSkullIcon: Int = SkullIcon.NONE.id,
+    ): Player {
+        val player = mockk<Player>(relaxed = true)
+        every { player.skullIcon } returns currentSkullIcon
+        every { player.inventory } returns ItemContainer(DEFINITIONS, INVENTORY_KEY)
+        every { player.equipment } returns ItemContainer(DEFINITIONS, EQUIPMENT_KEY)
+        val attr = AttributeMap()
+        if (protectItem) attr[PROTECT_ITEM_ATTR] = true
+        every { player.attr } returns attr
+        return player
+    }
+
+    /** Fixture value provider: ids used in these tests map 1:1 to the value given here. */
+    private fun testValueProvider(): ItemRiskValueProvider =
+        ItemRiskValueProvider { id ->
+            when (id) {
+                1 -> 10L
+                2 -> 5L
+                3 -> 20L
+                4 -> 1L
+                5 -> 500_000L
+                else -> 0L
+            }
+        }
+
+    companion object {
+        private val DEFINITIONS = DefinitionSet()
+    }
+}

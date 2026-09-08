@@ -2,7 +2,7 @@ package gg.rsmod.plugins.content.skills.fishing
 
 import gg.rsmod.plugins.api.cfg.Npcs
 
-// TODO: make fishing spots move
+// Fishing spot NPC definitions grouped by the tool options exposed by the cache.
 enum class FishingSpot(
     val objectIds: List<Int>,
     val tools: List<FishingTool>,
@@ -12,51 +12,87 @@ enum class FishingSpot(
         tools = listOf(FishingTool.CRAYFISH_CAGE),
     ),
     NET_AND_BAIT(
-        objectIds =
-            listOf(
-                Npcs.FISHING_SPOT_NET_BAIT,
-                Npcs.FISHING_SPOT_316,
-                Npcs.FISHING_SPOT_327,
-                Npcs.FISHING_SPOT_1331,
-                Npcs.FISHING_SPOT_7045,
-            ),
+        objectIds = listOf(
+            Npcs.FISHING_SPOT_NET_BAIT,
+            Npcs.FISHING_SPOT,
+            Npcs.FISHING_SPOT_234,
+            Npcs.FISHING_SPOT_235,
+            Npcs.FISHING_SPOT_236,
+            Npcs.FISHING_SPOT_316,
+            Npcs.FISHING_SPOT_319,
+            Npcs.FISHING_SPOT_320,
+            Npcs.FISHING_SPOT_NET_BAIT,
+            Npcs.FISHING_SPOT_325,
+            Npcs.FISHING_SPOT_FROGSPAWN,
+            Npcs.FISHING_SPOT_327,
+            Npcs.FISHING_SPOT_330,
+            Npcs.FISHING_SPOT_800,
+            Npcs.FISHING_SPOT_1331,
+            Npcs.FISHING_SPOT_2067,
+            Npcs.FISHING_SPOT_2068,
+            Npcs.FISHING_SPOT_2724,
+            Npcs.FISHING_SPOT_4908,
+            Npcs.FISHING_SPOT_5748,
+            Npcs.FISHING_SPOT_5749,
+            Npcs.FISHING_SPOT_7045,
+            Npcs.FISHING_SPOT_1174,
+            Npcs.FISHING_SPOT_1236,
+            Npcs.FISHING_SPOT_1237,
+            Npcs.FISHING_SPOT_7636,
+        ),
         tools = listOf(FishingTool.SMALL_FISHING_NET, FishingTool.FISHING_ROD_SEA),
     ),
     LURE_AND_BAIT(
-        objectIds =
-            listOf(
-                Npcs.FISHING_SPOT_LURE_BAIT,
-                Npcs.FISHING_SPOT_311,
-                Npcs.FISHING_SPOT_328,
-                Npcs.FISHING_SPOT_315,
-                Npcs.FISHING_SPOT_1189,
-                Npcs.FISHING_SPOT_927,
-                Npcs.FISHING_SPOT_309,
-                Npcs.FISHING_SPOT_317,
-            ),
+        objectIds = listOf(
+            Npcs.FISHING_SPOT_LURE_BAIT,
+            Npcs.FISHING_SPOT_309,
+            Npcs.FISHING_SPOT_311,
+            Npcs.FISHING_SPOT_314,
+            Npcs.FISHING_SPOT_315,
+            Npcs.FISHING_SPOT_317,
+            Npcs.FISHING_SPOT_318,
+            Npcs.FISHING_SPOT_328,
+            Npcs.FISHING_SPOT_329,
+            Npcs.FISHING_SPOT_8647,
+            Npcs.FISHING_SPOT_1189,
+            Npcs.FISHING_SPOT_1190,
+            Npcs.FISHING_SPOT_3019,
+            Npcs.FISHING_SPOT_927,
+        ),
         tools = listOf(FishingTool.FISHING_ROD_RIVER, FishingTool.FLY_FISHING_ROD),
     ),
     NET_HARPOON(
-        objectIds =
-            listOf(
-                Npcs.FISHING_SPOT_NET_HARPOON,
-                Npcs.FISHING_SPOT_1333,
-                Npcs.FISHING_SPOT_7044,
-                Npcs.FISHING_SPOT_5471,
-                Npcs.FISHING_SPOT_1405,
-                Npcs.FISHING_SPOT_1406,
-            ),
+        objectIds = listOf(
+            Npcs.FISHING_SPOT_NET_HARPOON,
+            Npcs.FISHING_SPOT_NET_HARPOON,
+            Npcs.FISHING_SPOT_322,
+            Npcs.FISHING_SPOT_334,
+            Npcs.FISHING_SPOT_1333,
+            Npcs.FISHING_SPOT_1405,
+            Npcs.FISHING_SPOT_1406,
+            Npcs.FISHING_SPOT_3574,
+            Npcs.FISHING_SPOT_3575,
+            Npcs.FISHING_SPOT_1191,
+            Npcs.FISHING_SPOT_7044,
+            Npcs.FISHING_SPOT_5471,
+        ),
         tools = listOf(FishingTool.BIG_FISHING_NET, FishingTool.HARPOON_SHARK),
     ),
     CAGE_AND_HARPOON(
-        objectIds =
-            listOf(
-                Npcs.FISHING_SPOT_CAGE_HARPOON,
-                Npcs.FISHING_SPOT_1332,
-                Npcs.FISHING_SPOT_7046,
-                Npcs.FISHING_SPOT_3804,
-                Npcs.FISHING_SPOT_5470,
-            ),
+        objectIds = listOf(
+            Npcs.FISHING_SPOT_CAGE_HARPOON,
+            Npcs.FISHING_SPOT_CAGE_HARPOON,
+            Npcs.FISHING_SPOT_321,
+            Npcs.FISHING_SPOT_324,
+            Npcs.FISHING_SPOT_333,
+            Npcs.FISHING_SPOT_1332,
+            Npcs.FISHING_SPOT_1399,
+            Npcs.FISHING_SPOT_3804,
+            Npcs.FISHING_SPOT_5470,
+            Npcs.FISHING_SPOT_6996,
+            Npcs.FISHING_SPOT_7046,
+            Npcs.FISHING_SPOT_7862,
+        ),
         tools = listOf(FishingTool.LOBSTER_POT, FishingTool.HARPOON_NON_SHARK),
     ),
     FISHING_ROD_CAVEFISH(
@@ -67,27 +103,29 @@ enum class FishingSpot(
         objectIds = listOf(Npcs.ROCKTAIL_SHOAL),
         tools = listOf(FishingTool.FISHING_ROD_ROCKTAIL),
     ),
-
     SMALL_FISHING_NET_MONKFISH(
         objectIds = listOf(Npcs.FISHING_SPOT_952, Npcs.FISHING_SPOT_3848),
         tools = listOf(FishingTool.MONKFISH_NET),
     ),
-
     HAPOON_FISHING(
         objectIds = listOf(Npcs.FISHING_SPOT_3848),
         tools = listOf(FishingTool.HARPOON_NON_SHARK),
     ),
-
     KARAMBWAN(
-        objectIds = listOf(Npcs.FISHING_SPOT_1176, Npcs.FISHING_SPOT_1177),
+        objectIds = listOf(
+            Npcs.FISHING_SPOT_1176,
+            Npcs.FISHING_SPOT_1177,
+            Npcs.FISHING_SPOT_1178,
+            Npcs.FISHING_SPOT_2859,
+            Npcs.FISHING_SPOT_13274,
+            Npcs.FISHING_SPOT_13275,
+        ),
         tools = listOf(FishingTool.KARAMBWAN_VESSEL),
     ),
-
     MORTMYRE_ROD(
         objectIds = listOf(Npcs.FISHING_SPOT_1238),
         tools = listOf(FishingTool.MORTMYRE_ROD),
     ),
-
     BARBARIAN_ROD(
         objectIds = listOf(Npcs.BARBARIAN_FISHING_SPOT),
         tools = listOf(FishingTool.BARBARIAN_ROD),

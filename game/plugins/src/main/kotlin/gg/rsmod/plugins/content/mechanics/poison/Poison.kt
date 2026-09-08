@@ -91,6 +91,7 @@ object Poison {
                 when (state) {
                     OrbState.NONE -> 0
                     OrbState.POISON -> 1
+                    OrbState.VENOM -> 2
                 }
             pawn.setVarp(POISON_VARP, value)
         }
@@ -107,5 +108,14 @@ object Poison {
 
         /** The player is poisoned. */
         POISON,
+
+        /**
+         * The player is envenomed. Shares the same orb/varp as [POISON] (real RS only has
+         * one poison-family HP orb) - not independently cache-verified for this specific
+         * 667 cache, inferred by convention from the existing NONE=0/POISON=1 pattern this
+         * file already used. See `Venom` (mechanics.poison package) for the venom effect
+         * itself.
+         */
+        VENOM,
     }
 }
