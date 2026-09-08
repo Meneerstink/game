@@ -69,7 +69,7 @@ class BFSPathFindingStrategy(
                 val node = Node(tile = tile, parent = head)
                 if (!closed.contains(node) &&
                     start.isWithinRadius(tile, MAX_DISTANCE) &&
-                    !isStepBlocked(head.tile, tile, sourceWidth, sourceLength, clipNode, clipLink)
+                    !isStepBlocked(head.tile, direction, sourceWidth, sourceLength, clipNode, clipLink)
                 ) {
                     node.cost = head.cost + 1
                     nodes.add(node)
@@ -97,14 +97,26 @@ class BFSPathFindingStrategy(
         return Route(path = path, success = success, tail = last ?: start)
     }
 
-    private fun isTileBlocked(
-        node: Tile,
-        link: Tile,
-    ): Boolean = !collision.canTraverse(node, Direction.between(node, link), projectile = false, water = false)
-
+    /**
+     * Whether a [width]x[length] body at [node] is blocked from stepping in [direction].
+     *
+     * Previously this compared every footprint tile against the single-tile destination anchor
+     * via `Direction.between(transform, link)`. For any footprint tile other than the one nearest
+     * the destination that pair is not actually adjacent, and `Direction.between` silently derives
+     * a direction from the *sign* of the coordinate delta alone - it has no adjacency check - so a
+     * real collision flag on a corner of the body that has nothing to do with this particular step
+     * would veto the step anyway. For a size-2 familiar (43 of the 78 in this cache) that made
+     * every one of the 8 directions come back blocked from certain positions with no wall touching
+     * the tile actually being left, freezing the familiar in the open permanently.
+     *
+     * The fix mirrors [gg.rsmod.game.model.MovementQueue.canStep] and
+     * [SimplePathFindingStrategy.canTraverse], which check each footprint tile's own collision
+     * flag for the *actual* step direction rather than a direction re-derived from two arbitrary
+     * points.
+     */
     private fun isStepBlocked(
         node: Tile,
-        link: Tile,
+        direction: Direction,
         width: Int,
         length: Int,
         clipNode: Boolean,
@@ -117,10 +129,12 @@ class BFSPathFindingStrategy(
         for (x in 0 until width) {
             for (z in 0 until length) {
                 val transform = node.transform(x, z)
-                if (clipNode && isTileBlocked(transform, link)) {
+                if (clipNode && !collision.canTraverse(transform, direction, projectile = false, water = false)) {
                     return true
                 }
-                if (clipLink && isTileBlocked(link, transform)) {
+                if (clipLink &&
+                    !collision.canTraverse(transform.step(direction), direction.getOpposite(), projectile = false, water = false)
+                ) {
                     return true
                 }
             }

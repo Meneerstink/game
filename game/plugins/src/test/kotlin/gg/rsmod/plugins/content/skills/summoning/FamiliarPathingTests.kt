@@ -11,6 +11,8 @@ import gg.rsmod.game.model.World
 import gg.rsmod.game.model.collision.CollisionFlag
 import gg.rsmod.game.model.collision.CollisionManager
 import gg.rsmod.game.model.entity.Npc
+import gg.rsmod.game.model.path.PathRequest
+import gg.rsmod.game.model.path.strategy.BFSPathFindingStrategy
 import gg.rsmod.game.model.region.ChunkSet
 import io.mockk.every
 import io.mockk.mockk
@@ -129,6 +131,97 @@ class FamiliarPathingTests {
 
         assertEquals(origin.transform(0, 1), npc.tile, "a 1x1 npc was blocked by a wall it does not touch")
     }
+
+    // --- BFS route planning for multi-tile bodies (the real cause behind the reported freeze) -
+
+    /**
+     * This is what actually froze a Pack yak (size 2) in the live client: walked one tile from
+     * Lumbridge's fountain, it stopped dead in fully open ground and never moved again - every one
+     * of the 8 directions came back blocked, from a tile whose own collision flags were empty.
+     *
+     * [BFSPathFindingStrategy.isStepBlocked] used to compare every footprint tile of the *source*
+     * against the single-tile step destination via `Direction.between(transform, link)`, a
+     * direction derived purely from the sign of the coordinate delta, with no adjacency check. For
+     * a size-2 body's leading corner in the direction of travel, `transform` and `link` are the
+     * *same tile* - `Direction.between` has no "identical tile" case, so it falls through to its
+     * final branch and silently returns `NORTH`. A real wall on the north side of that one corner
+     * tile - ordinary, unremarkable collision data - then vetoed every direction whose leading
+     * corner happened to be that tile, including directions that have nothing to do with north at
+     * all.
+     *
+     * Here that wall sits on the north side of the body's south-east corner - the same shape as a
+     * short wall stub or a building corner would leave. East is the direction whose leading corner
+     * is exactly that tile, so the old code asked "can this tile go north?" instead of "can this
+     * tile go east?" and wrongly answered no.
+     */
+    @Test
+    fun `a size-2 npc is not blocked eastward by an unrelated north wall on its leading corner`() {
+        val world = newWorld()
+        val origin = Tile(3200, 3200, 0)
+
+        // A three-sided room open only to the east, so there is exactly one possible route out -
+        // a real BFS is otherwise perfectly capable of routing around a single bad direction, which
+        // would make this assertion pass even against the old, broken comparison.
+        listOf(0, 1).forEach { x -> block(world, origin.transform(x, 1), Direction.NORTH) }
+        listOf(0, 1).forEach { x -> block(world, origin.transform(x, 0), Direction.SOUTH) }
+        listOf(0, 1).forEach { z -> block(world, origin.transform(0, z), Direction.WEST) }
+
+        // The unrelated wall this test is really about: a stub on the north side of the body's own
+        // south-east corner, the same shape a short wall or a building corner would leave. It has
+        // nothing to do with the room's one real exit, which is due east.
+        val southEastCorner = origin.transform(1, 0)
+        block(world, southEastCorner, Direction.NORTH)
+
+        val east =
+            BFSPathFindingStrategy(world.collision).calculateRoute(
+                requestFor(origin, size = 2, target = origin.transform(3, 0)),
+            )
+        assertTrue(
+            east.success,
+            "a size-2 npc could not step out of its room's one real exit, blocked by an unrelated " +
+                "north-facing wall on its own leading corner: $east",
+        )
+    }
+
+    /**
+     * A control against the fix having gone too far and stopped [BFSPathFindingStrategy] from
+     * clipping anything at all: a body walled in on all four sides has no legal first step in any
+     * direction, so no route can leave, however far the search is allowed to look.
+     */
+    @Test
+    fun `a fully walled-in size-2 npc still finds no route out`() {
+        val world = newWorld()
+        val origin = Tile(3200, 3200, 0)
+        listOf(0, 1).forEach { x ->
+            block(world, origin.transform(x, 1), Direction.NORTH)
+            block(world, origin.transform(x, 0), Direction.SOUTH)
+        }
+        listOf(0, 1).forEach { z ->
+            block(world, origin.transform(1, z), Direction.EAST)
+            block(world, origin.transform(0, z), Direction.WEST)
+        }
+
+        val route =
+            BFSPathFindingStrategy(world.collision).calculateRoute(
+                requestFor(origin, size = 2, target = origin.transform(5, 0)),
+            )
+        assertFalse(route.success, "a size-2 npc walled in on all four sides still found a route out: $route")
+    }
+
+    /** Builds the exact [PathRequest] shape [Familiar.follow] uses, for a direct BFS assertion. */
+    private fun requestFor(
+        start: Tile,
+        size: Int,
+        target: Tile,
+    ): PathRequest =
+        PathRequest.Builder()
+            .setPoints(start, target)
+            .setSourceSize(size, size)
+            .setTargetSize(1, 1)
+            .setTouchRadius(1)
+            .clipPathNodes(node = true, link = true)
+            .clipOverlapTiles()
+            .build()
 
     // --- the follow slot, all 78 -------------------------------------------------------------
 
