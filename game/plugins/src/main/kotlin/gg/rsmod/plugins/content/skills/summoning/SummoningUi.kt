@@ -201,6 +201,16 @@ object SummoningUi {
      */
     private val RENDERED_FAMILIAR = AttributeKey<Int>()
 
+    /**
+     * The familiar the *panel* was last brought up for.
+     *
+     * Deliberately separate from [RENDERED_FAMILIAR], which [invalidate] clears to force a redraw
+     * of the gating. Those are two different questions - "does the client need the hides again"
+     * and "has the player's familiar actually changed" - and answering the second with the first
+     * makes every unrelated invalidation steal the sidebar.
+     */
+    private val SETTLED_FAMILIAR = AttributeKey<Int>()
+
     private const val NO_FAMILIAR = -1
 
     /**
@@ -265,11 +275,21 @@ object SummoningUi {
         if (player.attr[RENDERED_FAMILIAR] == npcId && !due) {
             return
         }
-        val familiarChanged = player.attr[RENDERED_FAMILIAR] != npcId
         player.attr[RENDERED_FAMILIAR] = npcId
         player.attr[RENDERED_ON_CYCLE] = now
         val active = npcId.takeIf { it != NO_FAMILIAR }
-        if (familiarChanged) {
+
+        /*
+         * Whether the *familiar itself* changed, which is a different question from whether the
+         * gating needs re-sending. [invalidate] is called for several reasons that have nothing to
+         * do with the familiar - configuring the orb's left-click, for one - and it works by
+         * clearing [RENDERED_FAMILIAR], so testing that attribute would report a change every
+         * time. Doing the two things below on that signal would yank the sidebar onto the
+         * Summoning panel while the player was looking at their inventory.
+         */
+        val previous = player.attr[SETTLED_FAMILIAR] ?: NO_FAMILIAR
+        if (previous != npcId) {
+            player.attr[SETTLED_FAMILIAR] = npcId
             // G4: a left-click the new familiar cannot perform is dropped rather than left to
             // fail silently on the next click. Done before the orb is redrawn so the redraw
             // already reflects the corrected value.
