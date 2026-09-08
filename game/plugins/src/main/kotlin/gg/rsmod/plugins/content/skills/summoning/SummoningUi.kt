@@ -327,18 +327,31 @@ object SummoningUi {
      * familiar whose set carried no idle at all would be left alone rather than given someone
      * else's animation.
      */
+    /**
+     * A familiar's real idle animation, the same [gg.rsmod.game.fs.def.NpcDef.basId] ->
+     * [BasDef.idleAnimation] resolution the Follower Details panel uses ([refreshPanelAnimation]),
+     * exposed so other surfaces showing this familiar's model - the "Interact" chatbox dialogue,
+     * for one - can animate it with its own real idle sequence instead of going still or borrowing
+     * an unrelated one.
+     */
+    fun resolveIdleAnimation(
+        player: Player,
+        npcId: Int,
+    ): Int? {
+        val basId = player.world.definitions.get(NpcDef::class.java, npcId).basId
+        if (basId == -1) {
+            return null
+        }
+        val idle = player.world.definitions.get(BasDef::class.java, basId).idleAnimation()
+        return idle.takeIf { it != -1 }
+    }
+
     private fun refreshPanelAnimation(
         player: Player,
         npcId: Int,
     ) {
-        val basId = player.world.definitions.get(NpcDef::class.java, npcId).basId
-        if (basId == -1) {
-            return
-        }
-        val idle = player.world.definitions.get(BasDef::class.java, basId).idleAnimation()
-        if (idle != -1) {
-            player.setComponentAnim(PANEL, PANEL_MODEL, idle)
-        }
+        val idle = resolveIdleAnimation(player, npcId) ?: return
+        player.setComponentAnim(PANEL, PANEL_MODEL, idle)
     }
 
     private fun refreshPanel(

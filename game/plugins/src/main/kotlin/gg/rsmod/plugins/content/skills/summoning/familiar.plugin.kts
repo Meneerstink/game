@@ -80,17 +80,46 @@ suspend fun QueueTask.familiarDialogue(
      * frames for a human expression rig, so the portrait was being driven by a sequence built for
      * a different model entirely.
      *
-     * [FacialExpression.NONE] is the client's own answer to that: `MainLogicManager` clears the
-     * component's animator outright on -1, leaving the chathead in its resting pose. The player's
+     * [FacialExpression.NONE] stopped the corruption - `MainLogicManager` clears the component's
+     * animator outright on -1 - but a resting, unmoving portrait for a live creature reads as
+     * wrong in its own way (owner report, this round: "the familiar animation when interacting
+     * with it is still wrong"). The chathead component takes any sequence, not just the named
+     * humanoid expressions, so [SummoningUi.resolveIdleAnimation] - the same real, sourced
+     * `NpcDef.basId` -> `BasDef.idleAnimation()` lookup the Follower Details panel already
+     * animates itself with - is used here too when the familiar has one. [FacialExpression.NONE]
+     * remains the fallback for the small number of familiars that resolve no idle animation at
+     * all, so a familiar is never given an animation that is not genuinely its own. The player's
      * own lines keep their expressions, because a player head is exactly what those sequences are
      * for.
      */
+    // `chatNpc`/`chatPlayer` default to `wrap = false`, i.e. exactly one dialogue line however
+    // long the text is. The sourced Knowledge Base conversation lines routinely run well past what
+    // that one line fits, and with no wrapping the overflow was simply clipped by the interface
+    // rather than continued on a further line - the "text doesn't get overridden" report this
+    // round. `wrap = true` is the same fix every other long NPC dialogue in this codebase already
+    // uses (see e.g. town_crier.plugin.kts): it splits the text with `TextWrapping.wrap` first and
+    // picks the dialogue interface with enough lines for the result.
+    val idleAnimation = SummoningUi.resolveIdleAnimation(player, npcId)
     conversations.random().forEach { line ->
         when {
-            line.speaker == SummoningDialogueData.Speaker.PLAYER -> chatPlayer(line.speech)
+            line.speaker == SummoningDialogueData.Speaker.PLAYER -> chatPlayer(line.speech, wrap = true)
             line.translation.isEmpty() || !understands ->
-                chatNpc(line.speech, npc = npcId, facialExpression = FacialExpression.NONE)
-            else -> chatNpc(line.speech, line.translation, npc = npcId, facialExpression = FacialExpression.NONE)
+                chatNpc(
+                    line.speech,
+                    npc = npcId,
+                    facialExpression = FacialExpression.NONE,
+                    animationOverride = idleAnimation,
+                    wrap = true,
+                )
+            else ->
+                chatNpc(
+                    line.speech,
+                    line.translation,
+                    npc = npcId,
+                    facialExpression = FacialExpression.NONE,
+                    animationOverride = idleAnimation,
+                    wrap = true,
+                )
         }
     }
 }
@@ -354,6 +383,9 @@ on_login {
     // The client is freshly rebuilt at this point and holds none of the IF_SETHIDE state the
     // server last sent, so the panel/orb gating has to be re-sent unconditionally.
     Familiar.redrawInterfaces(player)
+    // Owner requirement (2026-09-09): the Follower Details tab is a permanent fixture, armed the
+    // same way regardless of whether a familiar is currently out - see FollowerDetailsTab.
+    FollowerDetailsTab.install(player)
     // ...and again a few cycles in. The gameframe is still being assembled while login runs, and
     // every component an interface (re)builds comes back with its baked hidden flag, which would
     // silently undo the first pass. Cheap, one-shot, and it makes the login path behave like the
@@ -361,6 +393,7 @@ on_login {
     player.queue {
         wait(5)
         Familiar.redrawInterfaces(player)
+        FollowerDetailsTab.install(player)
     }
     // CUSTOM_SERVER_OVERRIDE (see BeastOfBurden.release): a familiar's cargo is rescued into
     // Death's Domain instead of being lost or floored, so the player is reminded on every login
@@ -368,6 +401,15 @@ on_login {
     val waiting = BeastOfBurden.deathsDomainCount(player)
     if (waiting > 0) {
         player.message("<col=ff0000>You have items stored at Death's Domain.")
+    }
+}
+
+// Owner requirement (2026-09-09): the Follower Details tab button, in both layout modes - see
+// FollowerDetailsTab. Always opens the panel slot; what that slot currently shows (a familiar, or
+// genuinely empty) is SummoningUi.refreshPanel's job, not this handler's.
+FollowerDetailsTab.buttons.forEach { (pane, button) ->
+    on_button(pane, button) {
+        FollowerDetailsTab.open(player)
     }
 }
 

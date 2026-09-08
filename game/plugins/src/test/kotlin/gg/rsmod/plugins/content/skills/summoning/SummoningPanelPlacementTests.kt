@@ -12,7 +12,8 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 /**
- * Where the two Summoning panels are allowed to be drawn (owner failures F2 and F3).
+ * Where the two Summoning panels are allowed to be drawn (owner failures F2 and F3), and, since
+ * 2026-09-09, that the Follower Details tab button the owner asked for again is really wired.
  *
  * The owner reported the Follower Details panel in the wrong place and the "Select left-click
  * option" selector opening as a "fake/custom GUI". Neither is a matter of taste: the cache states
@@ -54,9 +55,9 @@ class SummoningPanelPlacementTests {
     }
 
     /**
-     * Slot 95 is the point of the whole arrangement: a gameframe panel region with **no tab
-     * button of its own**. It is why the Follower Details panel can satisfy "no separate tab, no
-     * separate follower tab button" and still be shown somewhere real.
+     * Slot 95 itself still has no tab button baked into its own component - [FollowerDetailsTab]
+     * reaches it by focusing the tab from an unrelated spare button elsewhere in the strip, not by
+     * giving slot 95 a button of its own.
      */
     @Test
     fun `the Follower Details panel is mounted on the buttonless gameframe slot 95`() {
@@ -66,29 +67,22 @@ class SummoningPanelPlacementTests {
     }
 
     /**
-     * The rejected solution must stay deleted. An earlier run armed the spare tab slot as a
-     * Follower Details tab button; the owner rejected that outright. Nothing in the Summoning
-     * package may reference those components again.
+     * The reverse of what this test used to assert. An earlier round armed the spare tab slot as
+     * a Follower Details tab button, the owner rejected that outright, and this test was written
+     * to keep it deleted. The owner has since asked for exactly that placement again, explicitly
+     * and in this round (2026-09-09: "make sure to put the follower details always in the empty
+     * tab ... if the player has no familiar active the follower details still needs to be visible
+     * in the empty tab but it has to be empty") - a newer explicit owner decision supersedes the
+     * older one it contradicts, so [FollowerDetailsTab] is back and this test now pins the
+     * opposite fact: that it really is wired, in both layout modes, rather than only existing on
+     * paper.
      */
     @Test
-    fun `no Summoning source arms the spare tab slot as a follower tab button`() {
-        val sources =
-            Paths
-                .get("src", "main", "kotlin", "gg", "rsmod", "plugins", "content", "skills", "summoning")
-                .toFile()
-                .walkTopDown()
-                .filter { it.isFile && (it.extension == "kt" || it.extension == "kts") }
-                .toList()
-        assertTrue(sources.isNotEmpty(), "no Summoning sources found to scan")
-        sources.forEach { file ->
-            val text = file.readText()
-            SPARE_TAB_COMPONENTS.forEach { component ->
-                assertTrue(
-                    !text.contains(component),
-                    "${file.name} still references the rejected spare-tab component $component",
-                )
-            }
-        }
+    fun `the Follower Details tab is armed as a real button in both layout modes`() {
+        assertEquals(
+            listOf(FIXED_PANE to FIXED_BUTTON, RESIZABLE_PANE to RESIZABLE_BUTTON),
+            FollowerDetailsTab.buttons,
+        )
     }
 
     /**
@@ -122,11 +116,13 @@ class SummoningPanelPlacementTests {
         /** Interface 320 - the Skills tab. */
         private const val SKILLS_TAB_INTERFACE = 320
 
-        /**
-         * The spare tab button and icon pairs an earlier run armed, in both layout modes:
-         * `548:99` / `548:107` and `746:47` / `746:31`.
-         */
-        private val SPARE_TAB_COMPONENTS = listOf("FollowerDetailsTab", "FIXED_BUTTON", "RESIZABLE_BUTTON")
+        /** The Follower Details tab button, fixed gameframe: `548:99`, icon `548:107`. */
+        private const val FIXED_PANE = 548
+        private const val FIXED_BUTTON = 99
+
+        /** The Follower Details tab button, resizable gameframe: `746:47`, icon `746:31`. */
+        private const val RESIZABLE_PANE = 746
+        private const val RESIZABLE_BUTTON = 47
 
         private lateinit var store: CacheLibrary
 

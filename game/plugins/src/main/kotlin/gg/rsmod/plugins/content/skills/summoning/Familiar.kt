@@ -496,10 +496,9 @@ object Familiar {
         clearState(player)
         player.message("Your familiar is dismissed.")
         updateHud(player)
-        // The panel is blanked by SummoningUi.refreshPanel, but leaving the sidebar *showing* an
-        // empty Summoning panel is exactly the "blank/stale follower interface" the owner
-        // reported. Move off it as well.
-        SummoningUi.hidePanel(player)
+        // Owner requirement (2026-09-09): the Follower Details tab is a permanent fixture, always
+        // reachable - SummoningUi.refreshPanel blanks slot 95's content, but the player is no
+        // longer moved off it. See FollowerDetailsTab.
     }
 
     /**
@@ -629,8 +628,8 @@ object Familiar {
         clearState(player)
         player.message("Your familiar has run out of time and returns home.")
         updateHud(player)
-        // Same reason as dismiss: expiry must not leave an empty Summoning panel on screen.
-        SummoningUi.hidePanel(player)
+        // Same reason as dismiss: the Follower Details tab is permanent now, so expiry only needs
+        // to blank the panel content (SummoningUi.refreshPanel), not move the player off it.
     }
 
     /** Called once/cycle per online player - see `familiar.plugin.kts`. */

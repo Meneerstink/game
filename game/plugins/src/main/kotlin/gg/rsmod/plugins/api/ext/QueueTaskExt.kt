@@ -275,6 +275,13 @@ private suspend fun QueueTask.messageBox5(vararg message: String) {
  * @animation
  * The animation id of the npc's head model.
  *
+ * @animationOverride
+ * A raw sequence id to animate the head model with instead of [facialExpression]'s. Every named
+ * [FacialExpression] is a humanoid facial-expression sequence, which corrupts a non-humanoid
+ * model's head bust; a caller that already has a real, sourced animation for the specific npc
+ * being drawn (its own idle sequence, for instance) can supply it here rather than being limited
+ * to the humanoid set or to [FacialExpression.NONE]'s resting pose.
+ *
  * @title
  * The title of the dialog, if left as null, the npc's name will be used.
  */
@@ -284,6 +291,7 @@ suspend fun QueueTask.chatNpc(
     facialExpression: FacialExpression = FacialExpression.HAPPY_TALKING,
     title: String? = null,
     wrap: Boolean = false,
+    animationOverride: Int? = null,
 ) {
     var npcId =
         if (npc != -1) {
@@ -311,7 +319,11 @@ suspend fun QueueTask.chatNpc(
     val interfaceId = 240 + wrappedMessages.size
     player.openInterface(interfaceId = interfaceId, parent = 752, child = 13)
     player.setComponentNpcHead(interfaceId = interfaceId, component = 2, npc = npcId)
-    player.setComponentAnim(interfaceId = interfaceId, component = 2, anim = facialExpression.animationId)
+    player.setComponentAnim(
+        interfaceId = interfaceId,
+        component = 2,
+        anim = animationOverride ?: facialExpression.animationId,
+    )
     player.setComponentText(interfaceId = interfaceId, component = 3, text = dialogTitle)
     for (i in wrappedMessages.indices) {
         player.setComponentText(interfaceId = interfaceId, component = i + 4, text = wrappedMessages[i])
