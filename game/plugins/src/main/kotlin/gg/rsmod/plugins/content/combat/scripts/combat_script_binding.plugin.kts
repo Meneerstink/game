@@ -134,3 +134,21 @@ on_npc_combat(*TormentedDemonCombatScript.ids) {
         TormentedDemonCombatScript.handleSpecialCombat(this)
     }
 }
+
+/**
+ * Sets the [on_npc_combat] for the Chaos Elemental
+ */
+on_npc_combat(*ChaosElementalCombatScript.ids) {
+    npc.queue {
+        ChaosElementalCombatScript.handleSpecialCombat(this)
+    }
+}
+
+/**
+ * Sets the [on_npc_combat] for the Giant Mole
+ */
+on_npc_combat(*GiantMoleCombatScript.ids) {
+    npc.queue {
+        GiantMoleCombatScript.handleSpecialCombat(this)
+    }
+}
