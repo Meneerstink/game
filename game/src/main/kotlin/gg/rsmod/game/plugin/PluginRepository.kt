@@ -475,6 +475,12 @@ class PluginRepository(
     internal val npcCombatDefs = Int2ObjectOpenHashMap<NpcCombatDef>()
 
     /**
+     * Read-only view of every registered [NpcCombatDef], keyed by npc id. Exists so plugin-side
+     * audits/diagnostics can inspect combat data without being able to mutate the live map.
+     */
+    fun allNpcCombatDefs(): Map<Int, NpcCombatDef> = npcCombatDefs
+
+    /**
      * Holds all valid shops set from plugins for this [PluginRepository].
      */
     internal val shops = Object2ObjectOpenHashMap<String, Shop>()

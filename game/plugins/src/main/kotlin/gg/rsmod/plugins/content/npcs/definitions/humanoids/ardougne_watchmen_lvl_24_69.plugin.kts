@@ -31,7 +31,7 @@ set_combat_def(Npcs.WARRIOR_WOMAN) {
         attackStyle = StyleType.STAB
     }
     stats {
-        hitpoints = 20
+        hitpoints = 200 // 20 real HP (wiki), *10 for this codebase's internal lifepoints scale
         attack = 22
         strength = 22
         defence = 22
@@ -59,7 +59,7 @@ set_combat_def(Npcs.PALADIN) {
         attackStyle = StyleType.SLASH
     }
     stats {
-        hitpoints = 57
+        hitpoints = 570 // 57 real HP (wiki), *10 for this codebase's internal lifepoints scale
         attack = 54
         strength = 54
         defence = 54
@@ -87,7 +87,7 @@ set_combat_def(Npcs.HERO) {
         attackStyle = StyleType.SLASH
     }
     stats {
-        hitpoints = 82
+        hitpoints = 820 // 82 real HP (wiki), *10 for this codebase's internal lifepoints scale
         attack = 54
         strength = 55
         defence = 54
@@ -115,7 +115,7 @@ set_combat_def(Npcs.KNIGHT_OF_ARDOUGNE) {
         attackStyle = StyleType.SLASH
     }
     stats {
-        hitpoints = 52
+        hitpoints = 520 // 52 real HP (wiki), *10 for this codebase's internal lifepoints scale
         attack = 38
         strength = 40
         defence = 31
@@ -143,7 +143,7 @@ set_combat_def(Npcs.WATCHMAN) {
         attackStyle = StyleType.CRUSH
     }
     stats {
-        hitpoints = 22
+        hitpoints = 220 // 22 real HP (wiki), *10 for this codebase's internal lifepoints scale
         attack = 31
         strength = 31
         defence = 31
@@ -169,7 +169,7 @@ set_combat_def(Npcs.ARCHER) {
         attackStyle = StyleType.RANGED
     }
     stats {
-        hitpoints = 50
+        hitpoints = 500 // 50 real HP (wiki), *10 for this codebase's internal lifepoints scale
         attack = 20
         strength = 20
         defence = 20

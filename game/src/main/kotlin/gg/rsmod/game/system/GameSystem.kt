@@ -110,6 +110,14 @@ class GameSystem(
     }
 
     fun close() {
+        /*
+         * Netty does not send pending unflushed writes on disconnect/close - they are failed
+         * instead. Every caller of this method writes a message (e.g. LogoutFullMessage) it
+         * expects the client to actually receive before the connection drops, so that message
+         * must be flushed first or the client only ever sees the raw connection die and shows
+         * a "disconnected" state instead of a clean logout.
+         */
+        flush()
         channel.disconnect()
     }
 

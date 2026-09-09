@@ -59,7 +59,7 @@ set_combat_def(npc = KREEARRA) {
         respawnDelay = 60
     }
     stats {
-        hitpoints = 2255
+        hitpoints = 2250 // 225 real HP - was 2255, not a multiple of 10 like every other GWD general here
         attack = 300
         strength = 300
         defence = 240

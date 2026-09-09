@@ -183521,6 +183521,7 @@
     equip_slot: 3
     equip_type: -1
     weapon_type: 16
+    attack_speed: 9
     remove_head: false
     remove_beard: false
     remove_arms: false
@@ -183553,6 +183554,7 @@
     equip_slot: 3
     equip_type: -1
     weapon_type: 16
+    attack_speed: 9
     remove_head: false
     remove_beard: false
     remove_arms: false
@@ -183585,6 +183587,7 @@
     equip_slot: 3
     equip_type: -1
     weapon_type: 16
+    attack_speed: 9
     remove_head: false
     remove_beard: false
     remove_arms: false
@@ -183617,6 +183620,7 @@
     equip_slot: 3
     equip_type: -1
     weapon_type: 16
+    attack_speed: 9
     remove_head: false
     remove_beard: false
     remove_arms: false

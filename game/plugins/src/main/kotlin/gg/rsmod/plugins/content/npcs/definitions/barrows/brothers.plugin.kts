@@ -43,7 +43,7 @@ brotherConfigs.forEach { cfg ->
             respawnDelay = 200
         }
         stats {
-            hitpoints = cfg.hp
+            hitpoints = cfg.hp * 10 // cfg.hp is the real 255 HP; *10 for this codebase's internal lifepoints scale
             attack = cfg.atk
             strength = cfg.str
             defence = cfg.def

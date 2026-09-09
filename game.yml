@@ -11,8 +11,10 @@ commandServer:
 # BATCH 1: home-z moved from 3640 to 3616 so the enclave's centre sits 24 tiles further south
 # (SAFE_RADIUS grew 5->24) while the auto-derived north gate (home.z + SAFE_RADIUS) still lands
 # exactly on the preserved Tile(3140, 3640, 0) BH/Wilderness connection point.
-home-x: 3140
-home-z: 3616
+# Ferox Enclave (imported into map squares 12344/12600): arrival tile on the open plaza east of
+# the bank chest. The safe zone is the enclave footprint itself (plugins areas/home/BountyHunterHome.kt).
+home-x: 3137
+home-z: 3629
 home-height: 0
 
 # Privileges
