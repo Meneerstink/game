@@ -67,9 +67,10 @@ set_combat_def(npc = GRAARDOR) {
         defenceRanged = 60
     }
     anims {
-        attack = Anims.ATTACK_PUNCH
-        block = Anims.BLOCK_UNARMED
-        death = Anims.HUMAN_DEATH
+        // melee 7060 (ranged 7063). Matrix 718 NPCCombatDefinitions / combat script ids; each id verified present in the 667 cache AnimDefs.
+        attack = 7060
+        block = 7061
+        death = 7062
     }
     aggro {
         radius = 15

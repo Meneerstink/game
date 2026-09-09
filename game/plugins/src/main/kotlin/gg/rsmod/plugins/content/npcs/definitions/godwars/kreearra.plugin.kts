@@ -74,9 +74,10 @@ set_combat_def(npc = KREEARRA) {
         defenceRanged = 100
     }
     anims {
-        attack = Anims.ATTACK_PUNCH
-        block = Anims.BLOCK_UNARMED
-        death = Anims.HUMAN_DEATH
+        // melee flap 6997 (ranged/magic use 6976 in the script). Matrix 718 NPCCombatDefinitions / combat script ids; each id verified present in the 667 cache AnimDefs.
+        attack = 6997
+        block = 6974
+        death = 6975
     }
     aggro {
         radius = 15

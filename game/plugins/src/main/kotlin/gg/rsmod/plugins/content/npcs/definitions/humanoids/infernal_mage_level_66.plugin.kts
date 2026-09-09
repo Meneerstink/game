@@ -98,9 +98,11 @@ ids.forEach {
             defenceRanged = 0
         }
         anims {
-            attack = Anims.ATTACK_PUNCH
-            death = Anims.HUMAN_DEATH
-            block = Anims.BLOCK_ONE_HAND
+            // Matrix-family (2013 CollabScape) NPCCombatDefinitions ids, each verified present in
+            // the 667 cache AnimDefs: cast 7196, block 7187, death 7185.
+            attack = 7196
+            block = 7187
+            death = 7185
         }
         slayer {
             assignment = SlayerAssignment.INFERNAL_MAGE

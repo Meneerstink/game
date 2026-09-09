@@ -73,9 +73,10 @@ set_combat_def(npc = NEX) {
         defenceRanged = 120
     }
     anims {
-        attack = Anims.ATTACK_PUNCH
-        block = Anims.BLOCK_UNARMED
-        death = Anims.HUMAN_DEATH
+        // Matrix 718 NPCCombatDefinitions / combat script ids; each id verified present in the 667 cache AnimDefs.
+        attack = 6354
+        block = 6983
+        death = 6951
     }
     aggro {
         radius = 15

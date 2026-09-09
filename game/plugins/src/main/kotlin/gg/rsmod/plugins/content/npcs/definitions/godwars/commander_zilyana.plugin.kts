@@ -65,9 +65,10 @@ set_combat_def(npc = ZILYANA) {
         defenceRanged = 80
     }
     anims {
-        attack = Anims.ATTACK_PUNCH
-        block = Anims.BLOCK_UNARMED
-        death = Anims.HUMAN_DEATH
+        // melee 6964 (magic 6967). Matrix 718 NPCCombatDefinitions / combat script ids; each id verified present in the 667 cache AnimDefs.
+        attack = 6964
+        block = 6966
+        death = 6965
     }
     aggro {
         radius = 15

@@ -65,9 +65,10 @@ set_combat_def(npc = KRIL) {
         defenceRanged = 50
     }
     anims {
-        attack = Anims.ATTACK_PUNCH
-        block = Anims.BLOCK_UNARMED
-        death = Anims.HUMAN_DEATH
+        // melee 14962, special 14963, block 14965. Death: the donor carries none and 14964 is absent from the 667 cache - SOURCE_BLOCKED, so no animation rather than a human one. Matrix 718 NPCCombatDefinitions / combat script ids; each id verified present in the 667 cache AnimDefs.
+        attack = 14962
+        block = 14965
+        death = -1
     }
     aggro {
         radius = 15

@@ -66,9 +66,10 @@ set_combat_def(npc = CORP) {
         defenceRanged = 100
     }
     anims {
-        attack = Anims.ATTACK_PUNCH
-        block = Anims.BLOCK_UNARMED
-        death = Anims.HUMAN_DEATH
+        // melee 10057 (magic 10410, stomp 10496). Matrix 718 NPCCombatDefinitions / combat script ids; each id verified present in the 667 cache AnimDefs.
+        attack = 10057
+        block = 10386
+        death = 10385
     }
     aggro {
         radius = 15

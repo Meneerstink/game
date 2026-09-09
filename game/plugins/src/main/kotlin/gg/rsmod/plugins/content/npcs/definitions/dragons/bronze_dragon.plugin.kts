@@ -54,9 +54,10 @@ set_combat_def(npc = BRONZE_DRAGON) {
         defenceRanged = 10
     }
     anims {
-        attack = Anims.ATTACK_PUNCH
-        block = Anims.BLOCK_UNARMED
-        death = Anims.HUMAN_DEATH
+        // metal dragon melee 13158. Matrix 718 NPCCombatDefinitions / combat script ids; each id verified present in the 667 cache AnimDefs.
+        attack = 13158
+        block = 13163
+        death = 13159
     }
     aggro {
         radius = 3

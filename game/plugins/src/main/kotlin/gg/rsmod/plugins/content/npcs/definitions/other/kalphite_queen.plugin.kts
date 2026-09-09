@@ -212,9 +212,10 @@ set_combat_def(npc = FIRST_FORM) {
         defenceRanged = 100
     }
     anims {
-        attack = Anims.ATTACK_PUNCH
-        block = Anims.BLOCK_UNARMED
-        death = Anims.HUMAN_DEATH
+        // first (crawling) form: melee 6241, ranged/magic 6240. Matrix 718 NPCCombatDefinitions / combat script ids; each id verified present in the 667 cache AnimDefs.
+        attack = 6241
+        block = 6232
+        death = 6242
     }
     aggro {
         radius = 15
@@ -243,9 +244,10 @@ set_combat_def(npc = SECOND_FORM) {
         defenceRanged = 100
     }
     anims {
-        attack = Anims.ATTACK_PUNCH
-        block = Anims.BLOCK_UNARMED
-        death = Anims.HUMAN_DEATH
+        // second (airborne) form: melee 6235, ranged/magic 6234. Matrix 718 NPCCombatDefinitions / combat script ids; each id verified present in the 667 cache AnimDefs.
+        attack = 6235
+        block = 6237
+        death = 6233
     }
     aggro {
         radius = 15
