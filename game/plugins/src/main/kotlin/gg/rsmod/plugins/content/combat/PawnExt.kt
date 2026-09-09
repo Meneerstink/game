@@ -149,6 +149,10 @@ fun Pawn.dealHit(
 ): PawnHit {
     // Calculate the damage, applying a random factor
     var damage = if (landHit) (Random.nextDouble(from = minHit, until = maxHit) * 10) else 0.0
+    // Staff of light special (Power of Light): 50% chance that melee damage taken is halved.
+    if (hitType == HitType.MELEE && target.timers.has(gg.rsmod.game.model.timer.STAFF_OF_LIGHT_TIMER) && world.random(1) == 0) {
+        damage /= 2
+    }
     var type = hitType.id
     var executeHit = landHit
     val dmg = damage.toInt()

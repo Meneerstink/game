@@ -2,6 +2,7 @@ package gg.rsmod.plugins.content.inter.attack
 
 import gg.rsmod.game.model.attr.NEW_ACCOUNT_ATTR
 import gg.rsmod.game.model.timer.SPECIAL_ATTACK_TIMER
+import gg.rsmod.plugins.content.combat.specialattack.SpecialAttacks
 
 /**
  * First log-in logic (when accounts have just been made).
@@ -54,6 +55,9 @@ on_button(interfaceId = 884, component = 15) {
  * Toggle special attack.
  */
 on_button(interfaceId = 884, component = 4) {
+    if (SpecialAttacks.executeInstant(player)) {
+        return@on_button
+    }
     player.toggleVarp(AttackTab.SPECIAL_ATTACK_VARP)
 }
 

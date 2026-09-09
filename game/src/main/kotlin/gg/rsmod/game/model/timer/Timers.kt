@@ -240,3 +240,9 @@ val MIASMIC_IMMUNITY_TIMER = TimerKey()
  * out doesn't clear it.
  */
 val TELEBLOCK_TIMER = TimerKey(persistenceKey = "teleblock", tickOffline = true, resetOnDeath = true)
+
+/**
+ * Staff of light special (Power of Light): while active, melee damage taken has a 50% chance to
+ * be halved. One minute (100 ticks).
+ */
+val STAFF_OF_LIGHT_TIMER = TimerKey()
