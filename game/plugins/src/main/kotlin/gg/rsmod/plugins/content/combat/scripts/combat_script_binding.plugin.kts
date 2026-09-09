@@ -91,6 +91,15 @@ on_npc_combat(*KingBlackDragonCombatScript.ids) {
 }
 
 /**
+ * Sets the [on_npc_combat] for Kalphite Queen (both forms)
+ */
+on_npc_combat(*KalphiteQueenCombatScript.ids) {
+    npc.queue {
+        KalphiteQueenCombatScript.handleSpecialCombat(this)
+    }
+}
+
+/**
  * Sets the [on_npc_combat] for Revenants
  */
 on_npc_combat(*Revenants.ids) {
