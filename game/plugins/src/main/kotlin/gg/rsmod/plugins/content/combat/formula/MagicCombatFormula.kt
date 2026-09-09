@@ -76,6 +76,18 @@ object MagicCombatFormula : CombatFormula {
                 hit += 3
             }
 
+            // Charge spell: god spells hit up to 30 while charged and wearing the matching cape.
+            if (spell != null && pawn.attr[gg.rsmod.game.model.attr.GOD_SPELL_CHARGE_ATTR] == true) {
+                val cape = pawn.getEquipment(EquipmentType.CAPE)?.id
+                val charged =
+                    (spell == CombatSpell.SARADOMIN_STRIKE && cape == Items.SARADOMIN_CAPE) ||
+                        (spell == CombatSpell.CLAWS_OF_GUTHIX && cape == Items.GUTHIX_CAPE) ||
+                        (spell == CombatSpell.FLAMES_OF_ZAMORAK && cape == Items.ZAMORAK_CAPE)
+                if (charged) {
+                    hit += 10
+                }
+            }
+
             var multiplier = 1.0 + (pawn.getMagicDamageBonus() / 100.0)
 
             hit *= multiplier

@@ -707,3 +707,9 @@ val DISRUPTION_SHIELD_ATTR = AttributeKey<Boolean>()
  * Lunar Magic Imbue window: while set, combination runecrafting needs no talisman.
  */
 val MAGIC_IMBUE_ATTR = AttributeKey<Boolean>()
+
+/**
+ * Standard-book Charge spell: while true the three god spells hit up to 30 instead of 20 when the
+ * matching god cape is worn. Cleared when [gg.rsmod.game.model.timer.GOD_SPELL_CHARGE_TIMER] ends.
+ */
+val GOD_SPELL_CHARGE_ATTR = AttributeKey<Boolean>()

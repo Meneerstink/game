@@ -246,3 +246,8 @@ val TELEBLOCK_TIMER = TimerKey(persistenceKey = "teleblock", tickOffline = true,
  * be halved. One minute (100 ticks).
  */
 val STAFF_OF_LIGHT_TIMER = TimerKey()
+
+/**
+ * Standard-book Charge spell duration (7 minutes = 700 cycles).
+ */
+val GOD_SPELL_CHARGE_TIMER = TimerKey()
