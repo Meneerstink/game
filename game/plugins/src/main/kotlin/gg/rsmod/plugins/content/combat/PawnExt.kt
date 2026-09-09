@@ -153,6 +153,16 @@ fun Pawn.dealHit(
     if (hitType == HitType.MELEE && target.timers.has(gg.rsmod.game.model.timer.STAFF_OF_LIGHT_TIMER) && world.random(1) == 0) {
         damage /= 2
     }
+    // Tormented demons: fire shield and style prayer (see TormentedDemonCombatScript).
+    if (target is Npc && target.id in gg.rsmod.plugins.content.combat.scripts.impl.TormentedDemonCombatScript.ids && damage > 0) {
+        val weapon = (this as? Player)?.equipment?.get(3)?.id ?: -1
+        val style = when (hitType) {
+            HitType.RANGE -> CombatClass.RANGED
+            HitType.MAGIC -> CombatClass.MAGIC
+            else -> CombatClass.MELEE
+        }
+        damage = gg.rsmod.plugins.content.combat.scripts.impl.TormentedDemonCombatScript.modifyIncomingDamage(target, this, style, damage.toInt(), weapon).toDouble()
+    }
     var type = hitType.id
     var executeHit = landHit
     val dmg = damage.toInt()

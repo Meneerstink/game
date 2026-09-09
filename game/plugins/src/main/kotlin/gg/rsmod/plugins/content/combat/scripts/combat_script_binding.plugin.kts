@@ -116,3 +116,21 @@ on_npc_combat(*RockCrabsCombatScript.ids) {
         RockCrabsCombatScript.handleSpecialCombat(this)
     }
 }
+
+/**
+ * Sets the [on_npc_combat] for the Corporeal Beast
+ */
+on_npc_combat(*CorporealBeastCombatScript.ids) {
+    npc.queue {
+        CorporealBeastCombatScript.handleSpecialCombat(this)
+    }
+}
+
+/**
+ * Sets the [on_npc_combat] for Tormented demons
+ */
+on_npc_combat(*TormentedDemonCombatScript.ids) {
+    npc.queue {
+        TormentedDemonCombatScript.handleSpecialCombat(this)
+    }
+}
