@@ -1,6 +1,7 @@
 package gg.rsmod.plugins.content.areas.lumbridge
 
 import gg.rsmod.plugins.content.mechanics.shops.CoinCurrency
+import gg.rsmod.plugins.content.items.armor.BarrowsRepair
 
 create_shop("Bob's Brilliant Axes", currency = CoinCurrency(), purchasePolicy = PurchasePolicy.BUY_STOCK) {
     sampleItems[0] = ShopItem(Items.BRONZE_PICKAXE, 1, resupplyCycles = 1000)
@@ -39,6 +40,9 @@ suspend fun optionsDialogue(task: QueueTask) {
         }
         2 -> {
             shop(task)
+        }
+        3 -> {
+            BarrowsRepair.repair(task)
         }
     }
 }
