@@ -22,7 +22,9 @@ object GenericLadders {
 
     enum class Direction { UP, DOWN }
 
-    fun isLadder(def: ObjectDef): Boolean = def.name.contains("ladder", ignoreCase = true)
+    /** Ladders, and open trapdoors whose "Climb-down" leads to a ladder on the mirrored dungeon tile. */
+    fun isLadder(def: ObjectDef): Boolean =
+        def.name.contains("ladder", ignoreCase = true) || def.name.contains("trapdoor", ignoreCase = true)
 
     fun optionDirection(option: String?): Direction? =
         when (option?.lowercase()) {
