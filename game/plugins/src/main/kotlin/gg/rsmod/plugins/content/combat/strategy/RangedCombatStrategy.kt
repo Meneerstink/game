@@ -189,6 +189,16 @@ object RangedCombatStrategy : CombatStrategy {
                 }
             }
         }
+        if (pawn is Npc) {
+            // Data-sourced ranged npcs (BulkNpcCombatDefs): the projectile/launch gfx live on the
+            // combat def. Scripted npcs spawn their own projectiles and leave both at -1.
+            if (pawn.combatDef.attackGfx > -1) {
+                pawn.graphic(pawn.combatDef.attackGfx)
+            }
+            if (pawn.combatDef.attackProjectile > -1) {
+                world.spawn(pawn.createProjectile(target, pawn.combatDef.attackProjectile, ProjectileType.ARROW))
+            }
+        }
         pawn.animate(animation)
 
         // P8, 2026-09-02: hand cannon explosion check, once per shot fired, before the

@@ -120,6 +120,15 @@ abstract class KotlinPlugin(
     }
 
     /**
+     * Register [def] for [npc] as a data-sourced fallback: it is only used when no plugin calls
+     * [set_combat_def] for the same id, regardless of plugin load order.
+     */
+    fun set_combat_def_fallback(
+        npc: Int,
+        def: NpcCombatDef,
+    ) = r.bindNpcCombatDefFallback(npc, def)
+
+    /**
      * Set the [NpcCombatDef] for npcs with [Npc.id] of [npc] and [others].
      */
     fun set_combat_def(

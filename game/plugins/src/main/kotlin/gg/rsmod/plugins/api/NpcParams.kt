@@ -85,6 +85,10 @@ class NpcCombatBuilder {
 
     private var deathBlowLifepoints = -1
 
+    private var attackProjectile = -1
+
+    private var attackGfx = -1
+
     fun build(): NpcCombatDef {
         check(maxHealth != -1) { "Max health must be set." }
         check(attackSpeed != -1) { "Attack speed must be set." }
@@ -131,7 +135,21 @@ class NpcCombatBuilder {
             deathBlowLifepoints,
             venomDamage,
             venomImmunity,
+            attackProjectile = attackProjectile,
+            attackGfx = attackGfx,
         )
+    }
+
+    fun setAttackProjectile(gfx: Int): NpcCombatBuilder {
+        check(attackProjectile == -1) { "Attack projectile already set." }
+        attackProjectile = gfx
+        return this
+    }
+
+    fun setAttackGfx(gfx: Int): NpcCombatBuilder {
+        check(attackGfx == -1) { "Attack gfx already set." }
+        attackGfx = gfx
+        return this
     }
 
     fun setHitpoints(health: Int): NpcCombatBuilder {

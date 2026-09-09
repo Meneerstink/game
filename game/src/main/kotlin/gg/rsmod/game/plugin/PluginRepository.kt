@@ -481,6 +481,20 @@ class PluginRepository(
     fun allNpcCombatDefs(): Map<Int, NpcCombatDef> = npcCombatDefs
 
     /**
+     * Data-sourced combat definitions that only take effect for npc ids no hand-written
+     * definition claims. See [applyFallbackNpcCombatDefs].
+     */
+    internal val fallbackNpcCombatDefs = Int2ObjectOpenHashMap<NpcCombatDef>()
+
+    fun bindNpcCombatDefFallback(
+        npc: Int,
+        def: NpcCombatDef,
+    ) {
+        check(!fallbackNpcCombatDefs.containsKey(npc)) { "Fallback npc combat definition has been previously set: $npc" }
+        fallbackNpcCombatDefs[npc] = def
+    }
+
+    /**
      * Holds all valid shops set from plugins for this [PluginRepository].
      */
     internal val shops = Object2ObjectOpenHashMap<String, Shop>()
@@ -516,8 +530,38 @@ class PluginRepository(
         jarPluginsDirectory: String,
     ) {
         loadPlugins(server, jarPluginsDirectory)
+        applyFallbackNpcCombatDefs()
         loadServices(server, world)
         spawnEntities()
+    }
+
+    /**
+     * Merge every [fallbackNpcCombatDefs] entry whose npc id has no hand-written
+     * [KotlinPlugin.set_combat_def] into [npcCombatDefs]. Runs after *all* plugin scripts have
+     * loaded (script discovery order is unspecified, so a bulk data table cannot know at its own
+     * load time which ids a hand-written definition will still claim) and before [spawnEntities],
+     * because [World.spawn] copies the combat def onto each npc at spawn time.
+     */
+    private fun applyFallbackNpcCombatDefs() {
+        if (fallbackNpcCombatDefs.isEmpty()) {
+            return
+        }
+        var applied = 0
+        var overridden = 0
+        fallbackNpcCombatDefs.forEach { (npc, def) ->
+            if (npcCombatDefs.containsKey(npc)) {
+                overridden++
+            } else {
+                npcCombatDefs[npc] = def
+                applied++
+            }
+        }
+        logger.info(
+            "Npc combat defs: applied {} bulk fallback definitions ({} ids kept their hand-written definition).",
+            applied,
+            overridden,
+        )
+        fallbackNpcCombatDefs.clear()
     }
 
     /**
@@ -711,6 +755,8 @@ class PluginRepository(
         npcCombatPlugins[npc] = plugin
         pluginCount++
     }
+
+    fun hasNpcCombatPlugin(npc: Int): Boolean = npcCombatPlugins.containsKey(npc)
 
     fun executeNpcCombat(n: Npc): Boolean {
         val plugin = npcCombatPlugins[n.id] ?: return false

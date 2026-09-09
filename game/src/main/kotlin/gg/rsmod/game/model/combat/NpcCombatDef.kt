@@ -30,6 +30,15 @@ data class NpcCombatDef(
     var deathBlowLifepoints: Int,
     val venomDamage: Int = 0,
     val venomImmunity: Boolean = false,
+    /**
+     * Projectile gfx fired by this npc's standard attack when it fights at range, or -1 when the
+     * npc has no bulk-sourced projectile (hand-written combat scripts spawn their own).
+     */
+    val attackProjectile: Int = -1,
+    /**
+     * Gfx played on the npc itself when it launches its standard attack, or -1 for none.
+     */
+    val attackGfx: Int = -1,
 ) {
     companion object {
         private const val DEFAULT_LIFEPOINTS = 100
