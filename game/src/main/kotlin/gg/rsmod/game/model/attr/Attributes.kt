@@ -696,3 +696,14 @@ val DEATH_RECOVERY_FEE_ATTR = AttributeKey<Int>(persistenceKey = "death_recovery
  * is always clear again before the next death can begin.
  */
 val DEATH_LOOT_RESOLVED_ATTR = AttributeKey<Boolean>(resetOnDeath = true)
+
+/**
+ * Lunar Disruption Shield: while true, the next damaging hit from another player is nullified
+ * and the flag is consumed. Not persisted (the spell wears off on logout in RS as well).
+ */
+val DISRUPTION_SHIELD_ATTR = AttributeKey<Boolean>()
+
+/**
+ * Lunar Magic Imbue window: while set, combination runecrafting needs no talisman.
+ */
+val MAGIC_IMBUE_ATTR = AttributeKey<Boolean>()

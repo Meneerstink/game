@@ -2,6 +2,7 @@ package gg.rsmod.plugins.content.objs.prayeraltar
 
 import gg.rsmod.plugins.content.mechanics.prayer.Prayers
 import gg.rsmod.plugins.content.mechanics.prayer.AncientCurses
+import gg.rsmod.plugins.content.magic.Spellbooks
 import gg.rsmod.plugins.content.areas.home.FeroxObjects
 
 private val ALTARS_PRAY_AT =
@@ -25,10 +26,16 @@ ALTARS_PRAY_AT.forEach { altar ->
             player.playSound(Sfx.PRAYER_RECHARGE)
             Prayers.rechargePrayerPoints(player)
             if (altar == FeroxObjects.ALTAR) {
-                when (options("Use Normal Prayers.", "Use Ancient Curses.", "Unlock Ancient Curses (50,000 coins).", "Keep my prayer book.")) {
+                when (options("Use Normal Prayers.", "Use Ancient Curses.", "Unlock Ancient Curses (50,000 coins).", "Change my spellbook.", "Keep my books.")) {
                     1 -> AncientCurses.switchBook(player, AncientCurses.PrayerBook.NORMAL)
                     2 -> AncientCurses.switchBook(player, AncientCurses.PrayerBook.ANCIENT)
                     3 -> AncientCurses.unlock(player)
+                    4 ->
+                        when (options("Standard spellbook.", "Ancient Magicks.", "Lunar spellbook.")) {
+                            1 -> Spellbooks.select(player, Spellbook.STANDARD)
+                            2 -> Spellbooks.select(player, Spellbook.ANCIENT)
+                            3 -> Spellbooks.select(player, Spellbook.LUNAR)
+                        }
                 }
             }
         }

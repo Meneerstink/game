@@ -134,7 +134,9 @@ object MagicSpells {
             loadSpellRequirements()
         }
 
-        val spell = metadata.values.first { it.name == name }
+        // Prefer the standard book when a name exists in several books (e.g. "Trollheim Teleport").
+        val spell = metadata.values.filter { it.name == name }.minByOrNull { it.interfaceId }
+            ?: error("No spell named '$name'")
 
         on_button(spell.interfaceId, spell.component) {
             plugin(this, spell)

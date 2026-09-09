@@ -11,8 +11,8 @@ val FILTER_TELEPORT_SPELLS_VARBIT = 6462
 val FILTER_MISC_SPELLS_VARBIT = 6461
 val FILTER_SKILL_SPELLS_VARBIT = 6460
 
-CombatSpell.definitions.values.forEach { spell ->
-    on_button(interfaceId = 192, component = spell.componentId) {
+CombatSpell.definitions.values.filter { it.autoCastId != -1 }.forEach { spell ->
+    on_button(interfaceId = spell.interfaceId, component = spell.componentId) {
         if (player.getVarp(SELECTED_AUTOCAST_VARP) == spell.autoCastId) {
             player.attr.remove(Combat.CASTING_SPELL)
             player.setVarp(SELECTED_AUTOCAST_VARP, 0)
@@ -29,12 +29,16 @@ CombatSpell.definitions.values.forEach { spell ->
     }
 }
 
-on_button(interfaceId = 192, 2) {
-    if (player.getVarp(DEFENSIVE_CAST_VARP) > 0) {
-        player.setVarp(DEFENSIVE_CAST_VARP, 0)
-        return@on_button
+// Defensive Casting toggle: 192:2 standard, 193:18 Ancient Magicks, 430:20 Lunar (component ids
+// decoded from the production cache; all three share CS2 hook script 1128).
+listOf(192 to 2, 193 to 18, 430 to 20).forEach { (interfaceId, component) ->
+    on_button(interfaceId = interfaceId, component = component) {
+        if (player.getVarp(DEFENSIVE_CAST_VARP) > 0) {
+            player.setVarp(DEFENSIVE_CAST_VARP, 0)
+            return@on_button
+        }
+        player.setVarp(DEFENSIVE_CAST_VARP, 256)
     }
-    player.setVarp(DEFENSIVE_CAST_VARP, 256)
 }
 
 on_button(interfaceId = 192, 7) {

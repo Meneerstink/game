@@ -1,6 +1,7 @@
 package gg.rsmod.plugins.content.combat
 
 import gg.rsmod.game.model.combat.CombatClass
+import gg.rsmod.game.model.timer.MIASMIC_TIMER
 import gg.rsmod.game.model.combat.StyleType
 import gg.rsmod.game.model.combat.WeaponStyle
 import gg.rsmod.game.model.combat.XpMode
@@ -108,12 +109,17 @@ object CombatConfigs {
         if (pawn is Player) {
             val default = PLAYER_DEFAULT_ATTACK_SPEED
             val weapon = pawn.getEquipment(EquipmentType.WEAPON) ?: return default
-            var speed = weapon.getDef(pawn.world.definitions).attackSpeed
+            // Missing metadata is -1, not a one-tick weapon. Keep explicit custom speeds.
+            var speed = weapon.getDef(pawn.world.definitions).attackSpeed.takeIf { it > 0 } ?: default
             if (getCombatClass(pawn) == CombatClass.RANGED && getAttackStyle(pawn) == WeaponStyle.RAPID) {
                 speed -= 1
             }
             if (getCombatClass(pawn) == CombatClass.MAGIC) {
                 speed = 5
+            }
+            // Miasmic spells: attack speed is halved (doubled delay) for the effect duration.
+            if (pawn.timers.has(MIASMIC_TIMER)) {
+                speed *= 2
             }
             return Math.max(MIN_ATTACK_SPEED, speed)
         }

@@ -74,9 +74,11 @@ object RunecraftAction {
         val inventory = player.inventory
         val count = min(inventory.getItemCount(Items.PURE_ESSENCE), inventory.getItemCount(combo.rune))
 
-        val removeTalismanTrans = inventory.remove(combo.talisman)
+        // Lunar Magic Imbue: no talisman is needed (or consumed) while the charge is active.
+        val imbued = player.attr[gg.rsmod.game.model.attr.MAGIC_IMBUE_ATTR] == true
+        val removeTalismanTrans = if (imbued) null else inventory.remove(combo.talisman)
 
-        if (removeTalismanTrans.hasSucceeded()) {
+        if (imbued || removeTalismanTrans!!.hasSucceeded()) {
             val removeEssTrans = inventory.remove(item = Items.PURE_ESSENCE, amount = count)
             val removeRuneTrans = inventory.remove(item = combo.rune, amount = removeEssTrans.items.size)
 
@@ -211,7 +213,7 @@ object RunecraftAction {
             return false
         }
 
-        if (!player.inventory.contains(combo.talisman)) {
+        if (player.attr[gg.rsmod.game.model.attr.MAGIC_IMBUE_ATTR] != true && !player.inventory.contains(combo.talisman)) {
             player.message("You need a $talismanName to bind ${comboName}s.")
             return false
         }

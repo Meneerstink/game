@@ -123,6 +123,9 @@ enum class HomeTeleport(
     // 2026-09-06 owner human retest: "the teleport must become INSTANT" - this project's home
     // destination is Ferox Enclave, so this is the Ferox Home Teleport specifically.
     HOME("Home Teleport", { gameContext.home }, instant = true),
+    // The same Ferox home teleport from the Ancient Magicks (193:48) and Lunar (430:39) books.
+    ANCIENT_HOME("Edgeville Home Teleport", { gameContext.home }, instant = true),
+    LUNAR_HOME("Lunar Home Teleport", { gameContext.home }, instant = true),
     ;
 
     companion object {

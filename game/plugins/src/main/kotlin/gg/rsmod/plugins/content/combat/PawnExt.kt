@@ -19,6 +19,7 @@ import gg.rsmod.game.model.timer.VENOM_TIMER
 import gg.rsmod.plugins.api.HitType
 import gg.rsmod.plugins.api.ProjectileType
 import gg.rsmod.plugins.api.ext.hit
+import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.content.combat.CombatConfigs.getCombatClass
 import gg.rsmod.plugins.content.combat.formula.CombatFormula
 import gg.rsmod.plugins.content.mechanics.combatresponse.DamageResponse
@@ -188,6 +189,7 @@ fun Pawn.dealHit(
     val creditedPlayer = attr[DAMAGE_CREDIT_ATTR]?.get() as? Player
     hit.setCancelIf {
         isDead() ||
+            disruptionShieldAbsorbs(this, target, damage.toInt()) ||
             when {
                 this is Player && target is Player -> !AreaState.canPlayersFight(this, target)
                 creditedPlayer != null && target is Player -> !AreaState.canPlayersFight(creditedPlayer, target)
@@ -348,4 +350,22 @@ fun Pawn.venom(onVenom: (() -> Unit)? = null) {
     if (Venom.envenom(this)) {
         onVenom?.invoke()
     }
+}
+
+/**
+ * Lunar Disruption Shield: nullifies the next damaging hit a player takes from another player
+ * (2011 wiki: "Nullify the next hit you receive from another player"). Consumed on use.
+ */
+private fun disruptionShieldAbsorbs(
+    attacker: Pawn,
+    target: Pawn,
+    damage: Int,
+): Boolean {
+    if (damage <= 0 || attacker !is Player || target !is Player) return false
+    if (target.attr[gg.rsmod.game.model.attr.DISRUPTION_SHIELD_ATTR] != true) return false
+    target.attr.remove(gg.rsmod.game.model.attr.DISRUPTION_SHIELD_ATTR)
+    target.graphic(1841)
+    target.message("Your disruption shield absorbs the attack.")
+    attacker.message("${target.username}'s disruption shield absorbs your attack.")
+    return true
 }

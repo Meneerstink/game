@@ -530,7 +530,7 @@ fun Player.toggleDisplayInterface(newMode: DisplayMode) {
 
         openOverlayInterface(newMode)
         InterfaceDestination.values.filter { pane -> pane.interfaceId != -1 }.forEach { pane ->
-            openInterface(pane.interfaceId, pane)
+            openInterface(spellbookInterfaceId(pane), pane)
         }
     }
 }
@@ -1684,8 +1684,30 @@ fun Player.farmingManager(): FarmingManager {
 
 fun Player.sendTabs() {
     InterfaceDestination.values.filter { pane -> pane.interfaceId != -1 }.forEach { pane ->
-        openInterface(pane.interfaceId, pane)
+        openInterface(spellbookInterfaceId(pane), pane)
     }
+}
+
+/**
+ * The interface that belongs in [InterfaceDestination.MAGIC_TAB] for this player's current
+ * spellbook: 192 standard, 193 Ancient Magicks, 430 Lunar (ids decoded from the production cache).
+ */
+fun Player.spellbookInterfaceId(pane: InterfaceDestination = InterfaceDestination.MAGIC_TAB): Int =
+    if (pane != InterfaceDestination.MAGIC_TAB) pane.interfaceId else when (getSpellbook()) {
+        Spellbook.ANCIENT -> 193
+        Spellbook.LUNAR -> 430
+        else -> 192
+    }
+
+/**
+ * Switches the player to [book], clears any autocast/cast state and re-opens the magic tab.
+ */
+fun Player.switchSpellbook(book: Spellbook) {
+    setSpellbook(book)
+    setVarp(108, 0)
+    attr.remove(gg.rsmod.plugins.content.combat.Combat.CASTING_SPELL)
+    closeInterface(InterfaceDestination.MAGIC_TAB)
+    openInterface(spellbookInterfaceId(), InterfaceDestination.MAGIC_TAB)
 }
 
 fun Player.refreshBonuses() {

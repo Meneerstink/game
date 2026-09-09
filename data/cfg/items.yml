@@ -224922,6 +224922,7 @@
     remove_head: false
     remove_beard: false
     remove_arms: false
+    attack_speed: 4
     attack_audio: -1
 - id: 18350
   name: "Chaotic rapier (broken)"
@@ -224954,6 +224955,7 @@
     remove_head: false
     remove_beard: false
     remove_arms: false
+    attack_speed: 4
     attack_audio: -1
 - id: 18351
   name: "Chaotic longsword"
@@ -224986,6 +224988,7 @@
     remove_head: false
     remove_beard: false
     remove_arms: false
+    attack_speed: 5
     attack_audio: -1
 - id: 18352
   name: "Chaotic longsword (broken)"
@@ -225018,6 +225021,7 @@
     remove_head: false
     remove_beard: false
     remove_arms: false
+    attack_speed: 5
     attack_audio: -1
 - id: 18353
   name: "Chaotic maul"
@@ -225050,6 +225054,7 @@
     remove_head: false
     remove_beard: false
     remove_arms: false
+    attack_speed: 6
     attack_audio: -1
 - id: 18354
   name: "Chaotic maul (broken)"
@@ -225082,6 +225087,7 @@
     remove_head: false
     remove_beard: false
     remove_arms: false
+    attack_speed: 6
     attack_audio: -1
 - id: 18355
   name: "Chaotic staff"

@@ -222,3 +222,21 @@ val HAMSTRING_TIMER = TimerKey()
  *  Timer that counts down for bleed damage for Phantom Strike
  */
 val PHANTOM_STRIKE_TIMER = TimerKey()
+
+/**
+ * Timer key set while a pawn is slowed by a Miasmic spell (Ancient Magicks): attack delay is
+ * doubled for the duration. Set alongside [MIASMIC_IMMUNITY_TIMER].
+ */
+val MIASMIC_TIMER = TimerKey()
+
+/**
+ * Timer key that outlives [MIASMIC_TIMER]; while active the pawn can't be slowed again.
+ */
+val MIASMIC_IMMUNITY_TIMER = TimerKey()
+
+/**
+ * Timer key set by Teleport Block. While active every teleport method is refused with
+ * "A magical force has stopped you from teleporting." Persisted and ticked offline so logging
+ * out doesn't clear it.
+ */
+val TELEBLOCK_TIMER = TimerKey(persistenceKey = "teleblock", tickOffline = true, resetOnDeath = true)

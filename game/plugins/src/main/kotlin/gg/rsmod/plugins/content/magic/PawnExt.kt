@@ -7,6 +7,7 @@ import gg.rsmod.game.model.entity.Pawn
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.queue.TaskPriority
 import gg.rsmod.game.model.timer.ACTIVE_COMBAT_TIMER
+import gg.rsmod.game.model.timer.TELEBLOCK_TIMER
 import gg.rsmod.plugins.api.cfg.Anims
 import gg.rsmod.plugins.api.ext.getWildernessLevel
 import gg.rsmod.plugins.api.ext.message
@@ -31,6 +32,11 @@ fun Player.canTeleport(type: TeleportType): Boolean {
 
     if (timers.has(ACTIVE_COMBAT_TIMER)) {
         message("You can't teleport until 10 seconds after the end of combat.")
+        return false
+    }
+
+    if (timers.has(TELEBLOCK_TIMER)) {
+        message("A magical force has stopped you from teleporting.")
         return false
     }
 

@@ -307,7 +307,7 @@ object Combat {
     }
 
 
-    private fun getValidCombatLvlRange(player: Player, wildLvl: Int): IntRange {
+    fun getValidCombatLvlRange(player: Player, wildLvl: Int): IntRange {
         val minLvl = Math.max(Skills.MIN_COMBAT_LVL, player.combatLevel - wildLvl)
         val maxLvl = Math.min(Skills.MAX_COMBAT_LVL, player.combatLevel + wildLvl)
         return minLvl..maxLvl
