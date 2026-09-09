@@ -57,6 +57,14 @@ object DropTableFactory {
     }
 
     /**
+     * Whether a table is registered for [id], so data-sourced fallbacks can defer to hand-written ones.
+     */
+    fun hasTable(
+        id: Int,
+        type: DropTableType = DropTableType.KILL,
+    ): Boolean = tables[type]!!.containsKey(id)
+
+    /**
      * Gets a drop for a player killing an NPC.
      */
     fun getDrop(
