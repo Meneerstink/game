@@ -52,19 +52,23 @@ set_combat_def(npc = GRAARDOR) {
         respawnDelay = 60
     }
     stats {
+                // OSRS Wiki / 2007-era values (unchanged through 2011): 255 hp, att 280, str 350, def 250, mag 80, rng 350
         hitpoints = 2550
-        attack = 300
-        strength = 340
-        defence = 240
-        magic = 1
-        ranged = 1
+        attack = 280
+        strength = 350
+        defence = 250
+        magic = 80
+        ranged = 350
     }
     bonuses {
-        defenceStab = 60
-        defenceSlash = 60
-        defenceCrush = 60
-        defenceMagic = 0
-        defenceRanged = 60
+                // OSRS Wiki / 2007-era values (unchanged through 2011): stab/slash/crush/ranged 90, magic 298; attack 120, ranged attack 100
+        defenceStab = 90
+        defenceSlash = 90
+        defenceCrush = 90
+        defenceMagic = 298
+        defenceRanged = 90
+        attackBonus = 120
+        attackRanged = 100
     }
     anims {
         // melee 7060 (ranged 7063). Matrix 718 NPCCombatDefinitions / combat script ids; each id verified present in the 667 cache AnimDefs.

@@ -54,24 +54,28 @@ on_npc_death(KREEARRA) {
 
 set_combat_def(npc = KREEARRA) {
     configs {
-        attackSpeed = 5
+        attackSpeed = 3 // OSRS Wiki: 3 ticks
         attackStyle = StyleType.RANGED
         respawnDelay = 60
     }
     stats {
-        hitpoints = 2250 // 225 real HP - was 2255, not a multiple of 10 like every other GWD general here
+                // OSRS Wiki / 2007-era values (unchanged through 2011): 255 hp, att 300, str 200, def 260, mag 200, rng 380
+        hitpoints = 2550
         attack = 300
-        strength = 300
-        defence = 240
-        magic = 300
-        ranged = 300
+        strength = 200
+        defence = 260
+        magic = 200
+        ranged = 380
     }
     bonuses {
-        defenceStab = 0
-        defenceSlash = 0
-        defenceCrush = 0
-        defenceMagic = 150
-        defenceRanged = 100
+                // OSRS Wiki / 2007-era values (unchanged through 2011): stab/slash/crush 180, magic 200, ranged 200; attack 136, ranged attack 120
+        defenceStab = 180
+        defenceSlash = 180
+        defenceCrush = 180
+        defenceMagic = 200
+        defenceRanged = 200
+        attackBonus = 136
+        attackRanged = 120
     }
     anims {
         // melee flap 6997 (ranged/magic use 6976 in the script). Matrix 718 NPCCombatDefinitions / combat script ids; each id verified present in the 667 cache AnimDefs.

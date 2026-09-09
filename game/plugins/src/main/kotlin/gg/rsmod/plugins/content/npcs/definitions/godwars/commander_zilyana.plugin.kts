@@ -45,24 +45,28 @@ on_npc_death(ZILYANA) {
 
 set_combat_def(npc = ZILYANA) {
     configs {
-        attackSpeed = 4
+        attackSpeed = 2 // OSRS Wiki: 2 ticks
         attackStyle = StyleType.STAB
         respawnDelay = 60
     }
     stats {
-        hitpoints = 2150
-        attack = 270
-        strength = 270
-        defence = 240
-        magic = 260
-        ranged = 260
+                // OSRS Wiki / 2007-era values (unchanged through 2011): 255 hp, att 280, str 196, def 300, mag 300, rng 250
+        hitpoints = 2550
+        attack = 280
+        strength = 196
+        defence = 300
+        magic = 300
+        ranged = 250
     }
     bonuses {
-        defenceStab = 40
-        defenceSlash = 40
-        defenceCrush = 40
-        defenceMagic = 80
-        defenceRanged = 80
+                // OSRS Wiki / 2007-era values (unchanged through 2011): all defences 100; attack 195, magic attack 200
+        defenceStab = 100
+        defenceSlash = 100
+        defenceCrush = 100
+        defenceMagic = 100
+        defenceRanged = 100
+        attackBonus = 195
+        attackMagic = 200
     }
     anims {
         // melee 6964 (magic 6967). Matrix 718 NPCCombatDefinitions / combat script ids; each id verified present in the 667 cache AnimDefs.

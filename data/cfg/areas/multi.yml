@@ -39,6 +39,10 @@ regions:
 - 9551
 - 11346
 - 11347
+# God Wars Dungeon east half (Saradomin 11602, Zamorak 11603 chambers and the Ancient Prison 11601)
+- 11601
+- 11602
+- 11603
 - 13123
 - 13124
 - 9033
