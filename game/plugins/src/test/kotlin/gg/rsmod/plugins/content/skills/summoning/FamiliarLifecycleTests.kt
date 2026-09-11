@@ -19,6 +19,7 @@ import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.api.cfg.Npcs
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.spyk
 import io.mockk.verify
 import org.junit.BeforeClass
 import java.lang.ref.WeakReference
@@ -46,6 +47,44 @@ class FamiliarLifecycleTests {
     fun `a large familiar is placed on tiles its whole footprint fits on`() {
         assertPlacedBeside(Npcs.PACK_YAK)
         assertPlacedBeside(Npcs.STEEL_TITAN)
+    }
+
+    /**
+     * Owner directive (2026-09-11): calling/summoning a familiar must play a real appearance
+     * effect, sourced from Novite's rev-667 `Familiar.java` `call(boolean)` -
+     * `setNextGraphics(new Graphics(getDefinitions().size > 1 ? 1315 : 1314))`. Dreadfowl is this
+     * cache's one familiar with a real `NpcDef.size` of 1 and gets the small graphic; every other
+     * checked familiar (spirit wolf, pack yak, steel titan, albino rat) carries a real cache size
+     * of 2 or more and gets the large one - the same size-driven split Novite's own source uses,
+     * not two arbitrary ids or an assumption about which familiars "look" small.
+     */
+    @Test
+    fun `calling a familiar plays the real sourced appearance graphic for its footprint size`() {
+        assertAppearanceGraphic(Npcs.DREADFOWL, expectedGraphic = 1314)
+        assertAppearanceGraphic(Npcs.PACK_YAK, expectedGraphic = 1315)
+    }
+
+    private fun assertAppearanceGraphic(
+        familiarNpcId: Int,
+        expectedGraphic: Int,
+    ) {
+        val world = mockk<World>(relaxed = true)
+        every { world.npcUpdateBlocks } returns SummoningTestCache.npcUpdateBlocks
+        every { world.definitions } returns DEFINITIONS
+        val npcs = PawnList(arrayOfNulls<Npc>(10))
+        every { world.npcs } returns npcs
+        val player = mockk<Player>(relaxed = true)
+        every { player.attr } returns AttributeMap()
+        every { player.world } returns world
+        every { player.tile } returns Tile(3222, 3218, 0)
+
+        val npc = spyk(Npc(familiarNpcId, Tile(3222, 3219, 0), world))
+        npcs.add(npc)
+        player.attr[FAMILIAR_ATTR] = WeakReference(npc)
+
+        assertTrue(Familiar.call(player))
+
+        verify { npc.graphic(expectedGraphic) }
     }
 
     /**

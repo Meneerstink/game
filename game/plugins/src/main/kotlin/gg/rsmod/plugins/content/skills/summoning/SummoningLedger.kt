@@ -68,6 +68,24 @@ object SummoningLedger {
         validateCombatLevels(world)
         validatePathingData(world)
         validateCombatVisuals(world)
+        validateAppearanceGraphics(world)
+    }
+
+    /**
+     * The real summon-appearance graphic pair (owner directive, 2026-09-11) - sourced from
+     * Novite's rev-667 `Familiar.java` `call(boolean)`: `getDefinitions().size > 1 ? 1315 : 1314`.
+     * [Familiar.summon], [Familiar.call] and [Familiar.restoreOnLogin] all play one of these two
+     * ids, so a cache that dropped either would silently make every familiar of that footprint
+     * class appear with no visual effect at all - the same class of fault [validateCombatVisuals]
+     * guards against, for the two ids every one of the 78 shares instead of a per-familiar table.
+     */
+    private fun validateAppearanceGraphics(world: World) {
+        val gfxExists = { id: Int -> world.definitions.getNullable(SpotAnimDef::class.java, id) != null }
+        val missing = listOf(1314, 1315).filterNot(gfxExists)
+        check(missing.isEmpty()) {
+            "the summon-appearance graphic(s) $missing are not in this cache, so summoning/calling a " +
+                "familiar would render no appearance effect at all"
+        }
     }
 
     /**

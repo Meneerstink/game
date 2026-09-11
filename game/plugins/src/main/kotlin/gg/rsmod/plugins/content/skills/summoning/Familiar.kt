@@ -406,6 +406,20 @@ object Familiar {
         return true
     }
 
+    /**
+     * The real summon-appearance effect, sourced from Novite's rev-667 `Familiar.java`
+     * `call(boolean)`: `setNextGraphics(new Graphics(getDefinitions().size > 1 ? 1315 : 1314))`.
+     * Played whenever a familiar is placed or repositioned beside its owner - initial summon,
+     * "Call familiar", and login restore (Novite's own `respawnFamiliar` reaches this same
+     * `call(true)` path). Voluntary dismiss deliberately gets no matching effect: Novite's
+     * `dissmissFamiliar` plays none either, so that absence is a real sourced silence, not a gap
+     * (see [SummoningAudioTests]'s own note on this, now half-resolved rather than fully silent).
+     */
+    private fun playAppearanceGraphic(npc: Npc) {
+        val size = npc.world.definitions.get(NpcDef::class.java, npc.id).size
+        npc.graphic(if (size > 1) 1315 else 1314)
+    }
+
     fun summon(
         player: Player,
         data: SummoningPouchData,
@@ -447,6 +461,7 @@ object Familiar {
         // ones are left alone and keep showing none, which is correct for them.
         SummoningCombatLevels.forNpc(npc.id)?.let { npc.setCombatLevel(it) }
         player.world.spawn(npc)
+        playAppearanceGraphic(npc)
 
         player.attr[FAMILIAR_ATTR] = WeakReference(npc)
         player.attr[FAMILIAR_NPC_ID_ATTR] = data.npc
@@ -542,6 +557,7 @@ object Familiar {
         // ones are left alone and keep showing none, which is correct for them.
         SummoningCombatLevels.forNpc(npc.id)?.let { npc.setCombatLevel(it) }
         player.world.spawn(npc)
+        playAppearanceGraphic(npc)
         player.attr[FAMILIAR_ATTR] = WeakReference(npc)
         updateHud(player)
     }
@@ -560,6 +576,7 @@ object Familiar {
     fun call(player: Player): Boolean {
         val npc = current(player) ?: return false
         npc.teleportNpc(placementTile(player, npc.id))
+        playAppearanceGraphic(npc)
         player.message("You call your familiar to your side.")
         FamiliarCombat.recallToOwnerTarget(player)
         updateHud(player)
