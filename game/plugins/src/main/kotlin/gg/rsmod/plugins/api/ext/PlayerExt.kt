@@ -2024,3 +2024,11 @@ private fun excludedNames(
     }
     return false
 }
+
+fun Player.setComponentModel(
+    interfaceId: Int,
+    component: Int,
+    model: Int,
+) {
+    write(IfSetModelMessage(hash = ((interfaceId shl 16) or component), model = model))
+}

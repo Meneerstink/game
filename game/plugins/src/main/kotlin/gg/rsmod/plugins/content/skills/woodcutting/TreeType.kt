@@ -179,7 +179,7 @@ enum class TreeType(
     ),
     HOLLOW(
         level = 45,
-        xp = 82.0,
+        xp = 82.5,
         log = Items.BARK,
         depleteChance = 8,
         respawnTime = 44,

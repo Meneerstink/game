@@ -48,7 +48,7 @@ enum class GemData(
     EMERALD(
         uncut = Items.UNCUT_EMERALD,
         cut = Items.EMERALD,
-        experience = 67.0,
+        experience = 67.5,
         levelRequirement = 27,
         animation = 889,
     ),

@@ -19312,5 +19312,6 @@ object Items {
     // live cache dump and touch far more than the one new id this task needs. Matches the cache
     // name recorded since gate A0 ("Twisted bow" at 22326 in both caches).
     const val TWISTED_BOW = 22326
+    const val CROWN_OF_HELIOS = 22327
     // Auto-generated file using class gg.rsmod.game.service.game.DumpEntityIdService
 }

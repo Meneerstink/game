@@ -1437,3 +1437,14 @@ in-packets:
     structure:
         - name: username
           type: STRING
+
+  - message: gg.rsmod.game.message.impl.IfSetModelMessage
+    type: FIXED
+    opcode: 58
+    structure:
+      - name: hash
+        type: INT
+        order: MIDDLE
+      - name: model
+        type: SHORT
+        trans: ADD

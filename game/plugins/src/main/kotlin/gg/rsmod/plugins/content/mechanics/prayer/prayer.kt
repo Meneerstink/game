@@ -364,7 +364,7 @@ enum class Prayer(
         slot = 26,
         varbit = Varbits.RAPID_RENEWAL,
         qpVarbit = Varbits.RAPID_RENEWAL_QUICK_PRAYER,
-        level = 60,
+        level = 65,
         sound = -1 /*TODO*/,
         drainEffect = 240,
         group = PrayerGroup.DUNGEONEERING_RESTORATION,

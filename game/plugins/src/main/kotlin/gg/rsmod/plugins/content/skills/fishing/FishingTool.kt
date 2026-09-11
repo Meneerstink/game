@@ -37,7 +37,7 @@ enum class FishingTool(
         animation = Anims.FISH_BIG_FISHING_NET,
         baitId = null,
         option = "net",
-        fish = listOf(Fish.MACKEREL, Fish.COD, Fish.BASS),
+        fish = listOf(Fish.MACKEREL, Fish.COD, Fish.BASS, Fish.CASKET, Fish.OYSTER, Fish.SEAWEED, Fish.LEATHER_GLOVES, Fish.LEATHER_BOOTS),
         identifier = "Big fishing net",
     ),
     FISHING_ROD_SEA(

@@ -135,6 +135,31 @@ standardFurnaces.forEach { furnace ->
      * Lastly, if ores are used on the furnace, sends the ore smelting menu
      */
     oresList.forEach { on_item_on_obj(obj = furnace, item = it) { Smelting.smeltStandard(player) } }
+
+    /**
+     * If a steel bar is used on a furnace with an ammo mould in the inventory, makes cannonballs
+     */
+    on_item_on_obj(obj = furnace, item = Items.STEEL_BAR) {
+        val inventory = player.inventory
+        if (!inventory.contains(Items.AMMO_MOULD)) {
+            player.queue {
+                doubleItemMessageBox(
+                    "You need an ammo mould to make cannonballs.",
+                    item1 = Items.STEEL_BAR,
+                    item2 = Items.AMMO_MOULD,
+                )
+            }
+            return@on_item_on_obj
+        }
+        player.queue {
+            produceItemBox(
+                Items.CANNONBALL,
+                maxItems = inventory.getItemCount(Items.STEEL_BAR),
+                option = SkillDialogueOption.MAKE,
+                logic = ::handleCannonballs,
+            )
+        }
+    }
 }
 
 on_obj_option(obj = 21303, option = "smelt-ore") {
@@ -182,6 +207,34 @@ on_item_on_obj(obj = 21303, item = Items.SILVER_BAR) {
  * If ores are used on the furnace, sends the ore smelting menu
  */
 oresList.forEach { on_item_on_obj(obj = 21303, item = it) { Smelting.smeltStandard(player) } }
+
+fun handleCannonballs(
+    player: Player,
+    item: Int,
+    amount: Int,
+) {
+    val inventory = player.inventory
+    player.queue(TaskPriority.WEAK) {
+        wait(2)
+        repeat(amount) {
+            if (!inventory.contains(Items.STEEL_BAR) || !inventory.contains(Items.AMMO_MOULD)) {
+                return@queue
+            }
+            if (player.skills.getCurrentLevel(Skills.SMITHING) < 35) {
+                player.filterableMessage("You need a Smithing level of at least 35 to make cannonballs.")
+                return@queue
+            }
+            if (inventory.remove(Items.STEEL_BAR, assureFullRemoval = true).hasSucceeded()) {
+                player.animate(Anims.SMELT_FURNACE)
+                player.playSound(Sfx.FURNACE)
+                inventory.add(item = item, amount = 4, assureFullInsertion = true)
+                player.filterableMessage("The molten metal cools slowly to form 4 cannonballs.")
+                player.addXp(Skills.SMITHING, xp = 25.6)
+                wait(3)
+            }
+        }
+    }
+}
 
 fun handleMoltenGlass(
     player: Player,

@@ -92,6 +92,12 @@ abstract class Pawn(
     var lock = LockState.NONE
 
     /**
+     * Optional hook invoked right before a pending [Hit] is applied to this pawn, allowing
+     * content to alter the hitmarks (damage caps, immunity phases, damage redirection).
+     */
+    var hitModifier: ((Hit) -> Unit)? = null
+
+    /**
      * The attributes attached to the pawn.
      *
      * @see AttributeMap
@@ -331,6 +337,7 @@ abstract class Pawn(
 
             if (hit.damageDelay-- == 0) {
                 if (!hit.cancelCondition()) {
+                    hitModifier?.invoke(hit)
                     blockBuffer.hits.add(hit)
                     addBlock(UpdateBlockType.HITMARK)
 

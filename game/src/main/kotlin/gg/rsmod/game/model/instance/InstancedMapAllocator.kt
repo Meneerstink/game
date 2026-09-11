@@ -84,6 +84,15 @@ class InstancedMapAllocator {
             configs.attributes,
         )
 
+    /**
+     * Immediately de-allocates [map] (content that manages its own instance lifecycle, e.g.
+     * the Fight Cave, calls this once its activity ends).
+     */
+    fun release(
+        world: World,
+        map: InstancedMap,
+    ) = deallocate(world, map)
+
     private fun deallocate(
         world: World,
         map: InstancedMap,

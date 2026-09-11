@@ -74,7 +74,7 @@ object FiremakingAction {
                 world.queue {
                     world.remove(logItem)
                     world.spawn(fire)
-                    wait((100..200).random())
+                    wait(data.life ?: (100..200).random())
                     world.remove(fire)
                     val ashes = GroundItem(Items.ASHES, 1, fire.tile, player)
                     world.spawn(ashes)

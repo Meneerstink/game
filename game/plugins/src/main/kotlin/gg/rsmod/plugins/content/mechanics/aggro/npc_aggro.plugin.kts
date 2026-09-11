@@ -3,6 +3,7 @@ package gg.rsmod.plugins.content.mechanics.aggro
 import gg.rsmod.game.model.attr.AGGRESSOR
 import gg.rsmod.game.model.attr.LAST_MAP_BUILD_TIME
 import gg.rsmod.game.model.timer.ACTIVE_COMBAT_TIMER
+import gg.rsmod.plugins.content.areas.godwars.GodWars
 import gg.rsmod.plugins.content.combat.*
 import java.lang.ref.WeakReference
 import kotlin.math.abs
@@ -10,6 +11,13 @@ import kotlin.math.abs
 val AGGRO_CHECK_TIMER = TimerKey()
 
 val defaultAggressiveness: (Npc, Player) -> Boolean = boolean@{ n, p ->
+    /*
+     * God Wars Dungeon factions attack every player of any level unless the player wears an item
+     * of their god (2011 behaviour, see GodWars).
+     */
+    if (GodWars.inDungeon(n.tile)) {
+        GodWars.God.forNpc(n)?.let { god -> return@boolean !GodWars.isProtected(p, god) }
+    }
     if (n.combatDef.aggressiveTimer == Int.MAX_VALUE) {
         return@boolean true
     } else if (n.combatDef.aggressiveTimer == Int.MIN_VALUE) {

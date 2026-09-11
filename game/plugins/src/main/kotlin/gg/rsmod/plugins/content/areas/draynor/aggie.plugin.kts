@@ -1,6 +1,8 @@
 package gg.rsmod.plugins.content.areas.draynor
 
 import gg.rsmod.plugins.content.quests.finishedQuest
+import gg.rsmod.plugins.content.quests.getCurrentStage
+import gg.rsmod.plugins.content.quests.impl.PrinceAliRescue
 import gg.rsmod.plugins.content.quests.impl.VampyreSlayer
 import gg.rsmod.plugins.content.quests.startedQuest
 
@@ -107,37 +109,99 @@ suspend fun whatsNewDialogue(it: QueueTask) {
 }
 
 suspend fun moreOptions(it: QueueTask) {
+    val stage = it.player.getCurrentStage(PrinceAliRescue)
+    if (stage in 3..7) {
+        when (it.options(
+            "What could you make for me?",
+            "Can you make dyes for me please?",
+            "Talk about Prince Ali Rescue.",
+            "More..."
+        )) {
+            FIRST_OPTION -> whatCouldYouMakeDialogue(it)
+            SECOND_OPTION -> {
+                it.chatPlayer("Can you make dyes for me please?", facialExpression = FacialExpression.CONFUSED)
+                otherColors(it, true)
+            }
+            THIRD_OPTION -> princeAliRescueDialogue(it)
+            FOURTH_OPTION -> mainOptions(it)
+        }
+        return
+    }
     when (it.options(
         "What could you make for me?",
         "Can you make dyes for me please?",
         "More..."
     )) {
-        FIRST_OPTION -> {
-            it.chatPlayer("What could you make for me?", facialExpression = FacialExpression.CONFUSED)
-            it.chatNpc("I mostly just make what I find pretty. I sometimes make dye for the women's clothes to " +
-                "brighten the place up. I can make red, yellow and blue dyes. If you'd like some, just bring me the " +
-                "appropriate ingredients.", wrap = true)
-            when (it.options(
-                "What do you need to make red dye?",
-                "What do you need to make yellow dye?",
-                "What do you need to make blue dye?",
-                "No thanks, I am happy the colour I am."
-            )) {
-                FIRST_OPTION -> askAboutRed(it)
-                SECOND_OPTION -> askAboutYellow(it)
-                THIRD_OPTION -> askAboutBlue(it)
-                FOURTH_OPTION -> {
-                    it.chatPlayer("No thanks, I am happy the colour I am.")
-                    it.chatNpc("You are easily pleased with yourself then. When you need dyes, come to me.", wrap =
-                        true)
-                }
-            }
-        }
+        FIRST_OPTION -> whatCouldYouMakeDialogue(it)
         SECOND_OPTION -> {
             it.chatPlayer("Can you make dyes for me please?", facialExpression = FacialExpression.CONFUSED)
             otherColors(it, true)
         }
         THIRD_OPTION -> mainOptions(it)
+    }
+}
+
+suspend fun whatCouldYouMakeDialogue(it: QueueTask) {
+    it.chatPlayer("What could you make for me?", facialExpression = FacialExpression.CONFUSED)
+    it.chatNpc("I mostly just make what I find pretty. I sometimes make dye for the women's clothes to " +
+        "brighten the place up. I can make red, yellow and blue dyes. If you'd like some, just bring me the " +
+        "appropriate ingredients.", wrap = true)
+    when (it.options(
+        "What do you need to make red dye?",
+        "What do you need to make yellow dye?",
+        "What do you need to make blue dye?",
+        "No thanks, I am happy the colour I am."
+    )) {
+        FIRST_OPTION -> askAboutRed(it)
+        SECOND_OPTION -> askAboutYellow(it)
+        THIRD_OPTION -> askAboutBlue(it)
+        FOURTH_OPTION -> {
+            it.chatPlayer("No thanks, I am happy the colour I am.")
+            it.chatNpc("You are easily pleased with yourself then. When you need dyes, come to me.", wrap =
+                true)
+        }
+    }
+}
+
+suspend fun princeAliRescueDialogue(it: QueueTask) {
+    it.chatPlayer("Could you think of a way to make skin paste?", facialExpression = FacialExpression.CONFUSED)
+    val hasIngredients = it.player.inventory.getItemCount(Items.ASHES) > 0 &&
+        it.player.inventory.getItemCount(Items.POT_OF_FLOUR) > 0 &&
+        it.player.inventory.getItemCount(Items.BUCKET_OF_WATER) > 0 &&
+        it.player.inventory.getItemCount(Items.REDBERRIES) > 0
+    if (hasIngredients) {
+        it.chatNpc("Yes I can. I see you already have the ingredients. Would you like me to mix some for you " +
+            "now?", wrap = true)
+        when (it.options(
+            "Yes please. Mix me some skin paste.",
+            "No thank you. I don't need any skin paste right now."
+        )) {
+            FIRST_OPTION -> {
+                it.chatPlayer("Yes please. Mix me some skin paste.")
+                it.chatNpc("That should be simple. Hand the things to Aggie then.")
+                it.itemMessageBox("You hand the ash, flour, water and redberries to Aggie. She tips the " +
+                    "ingredients into a cauldron and mutters some words.", Items.REDBERRIES)
+                it.player.inventory.remove(Items.ASHES)
+                it.player.inventory.remove(Items.POT_OF_FLOUR)
+                it.player.inventory.remove(Items.BUCKET_OF_WATER)
+                it.player.inventory.remove(Items.REDBERRIES)
+                it.player.inventory.add(Items.PASTE)
+                it.itemMessageBox("Aggie hands you the skin paste.", Items.PASTE)
+                it.chatNpc("There you go dearie. That will make you look good at the Varrock dances.")
+            }
+            SECOND_OPTION -> {
+                it.chatPlayer("No thank you. I don't need any skin paste right now.")
+                it.chatNpc("Okay dearie, that's always your choice.")
+            }
+        }
+    } else {
+        it.chatNpc("Why, it's one of my most popular potions. The women here, they like to have smooth " +
+            "looking skin. And I must admit, some of the men buy it as well.", wrap = true)
+        it.chatNpc("I can make it for you, just get me what's needed.")
+        it.chatPlayer("What do you need to make it?", facialExpression = FacialExpression.CONFUSED)
+        it.chatNpc("Well dearie, you need a base for the paste. That's a mix of ash, flour and water. Then you " +
+            "need redberries to colour it as you want. Bring me those four items and I will make you some.",
+            wrap = true)
     }
 }
 

@@ -41,6 +41,17 @@ object MagicCombatFormula : CombatFormula {
         if (target.hasPrayerIcon(PrayerIcon.PROTECT_FROM_MAGIC) && pawn !is Player) {
             return 0.0 // Hits will never land
         }
+        return getUnprotectedAccuracy(pawn, target)
+    }
+
+    /**
+     * Accuracy roll without the protection-prayer short circuit, for npcs whose magic attacks are
+     * only partially blocked by Protect from Magic (e.g. the Corporeal Beast).
+     */
+    fun getUnprotectedAccuracy(
+        pawn: Pawn,
+        target: Pawn,
+    ): Double {
         val attack = getAttackRoll(pawn, target)
         val defence =
             if (target is Player) {

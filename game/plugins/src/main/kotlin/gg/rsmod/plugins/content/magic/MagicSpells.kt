@@ -104,6 +104,7 @@ object MagicSpells {
                 p.playSound(spellMetadata.sound)
             }
         }
+        SpellbookSwap.onSpellCast(p, spellId)
     }
 
     fun isLoaded(): Boolean = metadata.isNotEmpty()

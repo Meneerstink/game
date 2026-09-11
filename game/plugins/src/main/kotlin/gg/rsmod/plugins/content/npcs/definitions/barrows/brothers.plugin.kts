@@ -26,12 +26,12 @@ data class BrotherConfig(
 
 val brotherConfigs =
     listOf(
-        BrotherConfig(Npcs.AHRIM_THE_BLIGHTED, StyleType.MAGIC, hp = 255, atk = 75, str = 75, def = 70, mag = 150, rng = 1, attackAnim = 14223, blockAnim = 2079, deathAnim = 7197),
-        BrotherConfig(Npcs.DHAROK_THE_WRETCHED, StyleType.CRUSH, hp = 255, atk = 150, str = 150, def = 70, mag = 1, rng = 1, attackAnim = 2067, blockAnim = 2063, deathAnim = 7197),
-        BrotherConfig(Npcs.GUTHAN_THE_INFESTED, StyleType.STAB, hp = 255, atk = 105, str = 105, def = 90, mag = 1, rng = 1, attackAnim = 2080, blockAnim = 2063, deathAnim = 7197),
-        BrotherConfig(Npcs.KARIL_THE_TAINTED, StyleType.RANGED, hp = 255, atk = 75, str = 75, def = 70, mag = 1, rng = 150, attackAnim = 2075, blockAnim = 424, deathAnim = 7197),
-        BrotherConfig(Npcs.TORAG_THE_CORRUPTED, StyleType.CRUSH, hp = 255, atk = 105, str = 130, def = 90, mag = 1, rng = 1, attackAnim = 2068, blockAnim = 2063, deathAnim = 7197),
-        BrotherConfig(Npcs.VERAC_THE_DEFILED, StyleType.SLASH, hp = 255, atk = 130, str = 105, def = 100, mag = 1, rng = 1, attackAnim = 2067, blockAnim = 2063, deathAnim = 7197),
+        BrotherConfig(Npcs.AHRIM_THE_BLIGHTED, StyleType.MAGIC, hp = 1000, atk = 75, str = 75, def = 70, mag = 150, rng = 1, attackAnim = 14223, blockAnim = 2079, deathAnim = 7197),
+        BrotherConfig(Npcs.DHAROK_THE_WRETCHED, StyleType.CRUSH, hp = 1000, atk = 150, str = 150, def = 70, mag = 1, rng = 1, attackAnim = 2067, blockAnim = 2063, deathAnim = 7197),
+        BrotherConfig(Npcs.GUTHAN_THE_INFESTED, StyleType.STAB, hp = 1000, atk = 105, str = 105, def = 90, mag = 1, rng = 1, attackAnim = 2080, blockAnim = 2063, deathAnim = 7197),
+        BrotherConfig(Npcs.KARIL_THE_TAINTED, StyleType.RANGED, hp = 1000, atk = 75, str = 75, def = 70, mag = 1, rng = 150, attackAnim = 2075, blockAnim = 424, deathAnim = 7197),
+        BrotherConfig(Npcs.TORAG_THE_CORRUPTED, StyleType.CRUSH, hp = 1000, atk = 105, str = 130, def = 90, mag = 1, rng = 1, attackAnim = 2068, blockAnim = 2063, deathAnim = 7197),
+        BrotherConfig(Npcs.VERAC_THE_DEFILED, StyleType.SLASH, hp = 1000, atk = 130, str = 105, def = 100, mag = 1, rng = 1, attackAnim = 2067, blockAnim = 2063, deathAnim = 7197),
     )
 
 brotherConfigs.forEach { cfg ->

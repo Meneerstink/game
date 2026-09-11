@@ -5,6 +5,7 @@ import gg.rsmod.plugins.api.cfg.Varbits
 import gg.rsmod.plugins.api.ext.getVarbit
 import gg.rsmod.plugins.api.ext.messageBox
 import gg.rsmod.plugins.api.ext.setVarbit
+import gg.rsmod.plugins.content.scrolls.ClueScrollManager
 
 /**
  * @author Tom <rspsmods@gmail.com>
@@ -76,5 +77,7 @@ object EmotesTab {
         if (emote.gfx != -1) {
             p.graphic(emote.gfx)
         }
+
+        ClueScrollManager.tryEmote(p, emote.component)
     }
 }

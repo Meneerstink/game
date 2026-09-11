@@ -21,3 +21,15 @@ HunterCreatures.ALL.forEach { creature ->
         Hunter.collect(player, player.getInteractingGameObj())
     }
 }
+
+// Classic Puro-Puro impling capture. "Catch" on the npc and "Loot" on the jar (this cache's
+// impling jars carry [Loot, Destroy], not "Open"); on_npc_option and on_item_option validate the
+// exact string against the cache at plugin load time, so a mismatch here fails loudly at boot.
+ImplingData.TIERS.forEach { tier ->
+    on_npc_option(npc = tier.npcId, option = "catch") {
+        Impling.catch(player, player.getInteractingNpc())
+    }
+    on_item_option(item = tier.jarItem, option = "loot") {
+        Impling.openJar(player, tier.jarItem)
+    }
+}

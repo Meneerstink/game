@@ -1,7 +1,9 @@
 package gg.rsmod.plugins.content.areas.falador
 
+import gg.rsmod.plugins.content.npcs.definitions.barrows.Barrows
 import gg.rsmod.plugins.content.quests.getCurrentStage
 import gg.rsmod.plugins.content.quests.impl.PiratesTreasure
+import gg.rsmod.plugins.content.scrolls.ClueScrollManager
 
 /**
  * Whether gardener has been spawned
@@ -49,5 +51,7 @@ on_item_option(Items.SPADE, "Dig") {
                 gardener.attack(player)
             }
         }
+    } else if (!Barrows.digMound(player)) {
+        ClueScrollManager.tryDig(player)
     }
 }

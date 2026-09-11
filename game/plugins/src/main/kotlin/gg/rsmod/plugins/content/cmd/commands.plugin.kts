@@ -63,6 +63,14 @@ on_command("clear", Privilege.ADMIN_POWER) {
     }
 }
 
+on_command("empty", Privilege.ADMIN_POWER) {
+    for (item in player.inventory.toList()) {
+        if (item != null) {
+            player.inventory.remove(item)
+        }
+    }
+}
+
 on_command("pnpc", Privilege.ADMIN_POWER) {
     val args = player.getCommandArgs()
     tryWithUsage(player, args, "Invalid format! Example of proper command <col=42C66C>::pnpc 1</col>") { values ->
@@ -452,10 +460,15 @@ on_command("teletome", Privilege.ADMIN_POWER) {
     tryWithUsage(
         player,
         args,
-        "Invalid format! Example of proper command <col=42C66C>::teleto alycia</col>",
+        "Invalid format! Example of proper command <col=42C66C>::teletome alycia</col>",
     ) { values ->
-        val p = world.getPlayerForName(values[0].replace("_", " ")) ?: return@tryWithUsage
+        val p = world.getPlayerForName(values[0].replace("_", " "))
+        if (p == null) {
+            player.message("No such player.")
+            return@tryWithUsage
+        }
         p.teleport(player.tile, TeleportType.RING_OF_KINSHIP)
+        p.message("You have been teleported to ${player.username}")
     }
 }
 

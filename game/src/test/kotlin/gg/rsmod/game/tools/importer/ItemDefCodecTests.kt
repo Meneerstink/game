@@ -43,6 +43,29 @@ class ItemDefCodecTests {
     }
 
     @Test
+    fun stringOverridesForOpcodesTheDonorLacksAreAppendedAsNewMenuOptions() {
+        // The synthetic donor has no inventory-option opcodes (35..39) at all, like a real partyhat
+        // that only carries "Wear" - the clone must gain the extra options, keep everything else.
+        val edited =
+            ItemDefCodec.cloneWithOverrides(
+                source = donor(),
+                stringOverrides = mapOf(2 to "Crown of Helios", 36 to "Wear", 37 to "Command", 38 to "Teleport"),
+                removedOpcodes = setOf(97, 121),
+            )
+
+        val opcodes = ItemDefCodec.describeOpcodes(edited)
+        assertTrue("appended option opcodes expected, got $opcodes", opcodes.contains("37=\"Command\""))
+        assertTrue(opcodes.contains("38=\"Teleport\""))
+        assertTrue("untouched opcodes must survive, got $opcodes", opcodes.contains("4=1200"))
+        assertTrue("noted link must be dropped, got $opcodes", opcodes.none { it.startsWith("97=") })
+
+        val def = decodeServerSide(edited)
+        assertEquals("Crown of Helios", def.name)
+        assertEquals(listOf(null, "Wear", "Command", "Teleport", null), def.inventoryMenu.toList())
+        assertEquals(1600, def.cost)
+    }
+
+    @Test
     fun shortOverridesReplaceModelIdsWithoutDisturbingAnythingElse() {
         val edited =
             ItemDefCodec.cloneWithOverrides(

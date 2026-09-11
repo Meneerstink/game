@@ -8,6 +8,7 @@ enum class PotionData(
     val product: Int,
     val levelRequirement: Int,
     val experience: Double,
+    val secondaryAlt: Int? = null,
 ) {
     ATTACK_POTION(
         primary = Items.GUAM_POTION_UNF,
@@ -301,6 +302,7 @@ enum class PotionData(
     ATTACK_MIX(
         primary = Items.ATTACK_POTION_2,
         secondary = Items.CAVIAR,
+        secondaryAlt = Items.ROE,
         product = Items.ATTACK_MIX_2,
         levelRequirement = 4,
         experience = 7.0,
@@ -309,6 +311,7 @@ enum class PotionData(
     ANTIPOISON_MIX(
         primary = Items.ANTIPOISON_2,
         secondary = Items.CAVIAR,
+        secondaryAlt = Items.ROE,
         product = Items.ANTIPOISON_MIX_2,
         levelRequirement = 6,
         experience = 12.0,
@@ -405,6 +408,7 @@ enum class PotionData(
     RELICYMS_MIX(
         primary = Items.RELICYMS_BALM_2,
         secondary = Items.ROE,
+        secondaryAlt = Items.CAVIAR,
         product = Items.RELICYMS_MIX_2,
         levelRequirement = 9,
         experience = 14.0,
@@ -413,6 +417,7 @@ enum class PotionData(
     RESTORE_MIX(
         primary = Items.RESTORE_POTION_2,
         secondary = Items.ROE,
+        secondaryAlt = Items.CAVIAR,
         product = Items.RESTORE_MIX_2,
         levelRequirement = 24,
         experience = 21.0,
@@ -421,6 +426,7 @@ enum class PotionData(
     STRENGTH_MIX(
         primary = Items.STRENGTH_POTION_2,
         secondary = Items.CAVIAR,
+        secondaryAlt = Items.ROE,
         product = Items.STRENGTH_MIX_2,
         levelRequirement = 14,
         experience = 17.0,

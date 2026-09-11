@@ -28,6 +28,8 @@ import gg.rsmod.plugins.content.mechanics.poison.Poison
 import gg.rsmod.plugins.content.mechanics.statdrain.AhrimBlightedAura
 import gg.rsmod.plugins.content.mechanics.poison.Venom
 import gg.rsmod.plugins.content.mechanics.prayer.AncientCurses
+import gg.rsmod.plugins.content.mechanics.prayer.Redemption
+import gg.rsmod.plugins.content.mechanics.prayer.Smite
 import gg.rsmod.plugins.content.mechanics.pvp.AreaState
 import java.lang.ref.WeakReference
 import kotlin.random.Random
@@ -163,6 +165,10 @@ fun Pawn.dealHit(
         }
         damage = gg.rsmod.plugins.content.combat.scripts.impl.TormentedDemonCombatScript.modifyIncomingDamage(target, this, style, damage.toInt(), weapon).toDouble()
     }
+    // Corporeal Beast: damage is halved unless dealt with a spear or halberd on the stab style.
+    if (target is Npc && target.id == gg.rsmod.plugins.api.cfg.Npcs.CORPOREAL_BEAST && damage > 0) {
+        damage = gg.rsmod.plugins.content.combat.scripts.impl.CorporealBeastCombatScript.modifyIncomingDamage(this, hitType, damage.toInt()).toDouble()
+    }
     var type = hitType.id
     var executeHit = landHit
     val dmg = damage.toInt()
@@ -197,6 +203,12 @@ fun Pawn.dealHit(
         }
 
     val pawnHit = PawnHit(hit, executeHit)
+
+    if (target is Npc && target.id == gg.rsmod.plugins.api.cfg.Npcs.CORPOREAL_BEAST && executeHit) {
+        hit.addAction {
+            gg.rsmod.plugins.content.combat.scripts.impl.CorporealBeastCombatScript.onBeastDamaged(target, this@dealHit, hit.hitmarks.sumOf { it.damage })
+        }
+    }
 
     // Re-check PvP safety when a delayed hit lands. This closes the boundary
     // window for projectiles/spells fired before either player entered home.
@@ -259,6 +271,12 @@ fun Pawn.dealHit(
             // drain is wired separately in its own special-attack plugin.kts, and DWH is
             // blocked - absent from this cache). See AhrimBlightedAura.kt for the sourcing note.
             AhrimBlightedAura.onDamageDealt(pawn, target, getCombatClass(pawn))
+            // Prayer subsystem batch: Smite's prayer-drain effect (see Smite.kt for sourcing) -
+            // same once-per-landed-hit dispatcher as the effects above it.
+            Smite.onDamageDealt(pawn, target, totalDamage)
+            // Prayer subsystem batch 39: Redemption's auto-heal effect (see Redemption.kt for
+            // sourcing) - target-side, triggers on the victim rather than the attacker.
+            Redemption.onDamageDealt(target, totalDamage)
         }
     }
 

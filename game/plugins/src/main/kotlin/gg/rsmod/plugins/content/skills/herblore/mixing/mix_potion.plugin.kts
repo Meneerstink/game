@@ -32,6 +32,18 @@ finishedPotionDefinitions.values.forEach { potion ->
             )
         }
     }
+    potion.secondaryAlt?.let { alt ->
+        on_item_on_item(item1 = potion.primary, item2 = alt) {
+            player.queue(TaskPriority.STRONG) {
+                produceItemBox(
+                    potion.product,
+                    option = SkillDialogueOption.MAKE,
+                    title = "Choose how many you wish to make, then<br>click on the item to begin.",
+                    logic = ::startFinished,
+                )
+            }
+        }
+    }
 }
 
 fun startUnfinished(

@@ -7,6 +7,14 @@ on_player_death {
 }
 
 /**
+ * Retribution's explosion must fire before life points are restored/reset by
+ * [gg.rsmod.game.action.PlayerDeathAction] - see Retribution.kt for sourcing.
+ */
+on_player_pre_death {
+    Retribution.onPlayerDeath(player)
+}
+
+/**
  * Deactivate all prayers on log out.
  */
 on_logout {

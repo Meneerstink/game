@@ -28,11 +28,18 @@ class CreateFinishedPotionAction {
             if (!canMix(task, potion)) {
                 return
             }
+            val secondaryUsed =
+                if (inventory.contains(potion.secondary)) {
+                    potion.secondary
+                } else {
+                    potion.secondaryAlt
+                }
             val success =
-                inventory.remove(potion.primary, assureFullRemoval = true).hasSucceeded() &&
+                secondaryUsed != null &&
+                    inventory.remove(potion.primary, assureFullRemoval = true).hasSucceeded() &&
                     inventory
                         .remove(
-                            potion.secondary,
+                            secondaryUsed,
                             assureFullRemoval = true,
                         ).hasSucceeded()
             if (success) {
@@ -40,7 +47,7 @@ class CreateFinishedPotionAction {
                 player.inventory.add(potion.product)
                 val ingredientName =
                     player.world.definitions
-                        .get(ItemDef::class.java, potion.secondary)
+                        .get(ItemDef::class.java, secondaryUsed!!)
                         .name
                         .lowercase()
                 player.filterableMessage("You mix the $ingredientName into your potion.")
@@ -63,6 +70,7 @@ class CreateFinishedPotionAction {
             player.filterableMessage(message)
             return false
         }
-        return (inventory.contains(potion.primary) && inventory.contains(potion.secondary))
+        val hasSecondary = inventory.contains(potion.secondary) || (potion.secondaryAlt?.let { inventory.contains(it) } ?: false)
+        return inventory.contains(potion.primary) && hasSecondary
     }
 }

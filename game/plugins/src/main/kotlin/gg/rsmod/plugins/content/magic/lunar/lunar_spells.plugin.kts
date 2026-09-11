@@ -15,7 +15,9 @@ import gg.rsmod.plugins.content.magic.MagicSpells
 import gg.rsmod.plugins.content.magic.MagicSpells.on_magic_spell_button
 import gg.rsmod.plugins.content.magic.SpellMetadata
 import gg.rsmod.plugins.content.magic.SpellbookData
+import gg.rsmod.plugins.content.magic.SpellbookSwap
 import gg.rsmod.plugins.content.magic.TeleportType
+import gg.rsmod.plugins.api.Spellbook
 import gg.rsmod.plugins.content.mechanics.combatresponse.Vengeance
 import gg.rsmod.plugins.content.mechanics.poison.Poison
 import gg.rsmod.plugins.content.mechanics.poison.Venom
@@ -31,8 +33,8 @@ import gg.rsmod.plugins.content.skills.summoning.SummoningPouchData
  * LunarListeners/HealSpell/VengeanceSpell/MagicImbueSpell handlers (same-era ids) and the 2011
  * RuneScape Wiki for experience values.
  *
- * Out of scope / not implemented here: NPC Contact (needs per-NPC dialogue routing), Spellbook
- * Swap, Borrowed Power, Tune Bane Ore, Repair Rune Pouch, Fertile Soil/Cure Plant/Remote Farm
+ * Out of scope / not implemented here: NPC Contact (needs per-NPC dialogue routing), Borrowed
+ * Power, Tune Bane Ore, Repair Rune Pouch, Fertile Soil/Cure Plant/Remote Farm
  * (farming), Boost/Stat Restore Potion Share. Those buttons currently do nothing.
  */
 
@@ -559,8 +561,38 @@ on_spell_on_item(430, SpellbookData.SPIRITUALISE_FOOD.component) {
     }
 }
 
+/*
+ * Spellbook Swap: opens Ancient or Modern for one spell (or 2 minutes), bypassing the normal
+ * level gate - see SpellbookSwap.kt for the revert mechanics.
+ */
+on_magic_spell_button("Spellbook Swap") { metadata ->
+    player.queue {
+        if (!MagicSpells.canCast(player, metadata.lvl, metadata.runes)) {
+            return@queue
+        }
+        val book =
+            when (options("Ancient Magicks.", "Normal Magicks.", "Neither, thank you.", title = "Select a Spellbook")) {
+                1 -> Spellbook.ANCIENT
+                2 -> Spellbook.STANDARD
+                else -> return@queue
+            }
+        MagicSpells.removeRunes(player, metadata.runes, metadata.sprite)
+        player.addXp(Skills.MAGIC, 96.0, checkBrawlingGloves = true)
+        SpellbookSwap.start(player, book)
+        player.message("You have 2 minutes before your spellbook changes back to the Lunar spellbook!")
+    }
+}
+
+on_timer(SpellbookSwap.TIMER) {
+    SpellbookSwap.revert(player)
+}
+
+on_logout {
+    SpellbookSwap.revert(player)
+}
+
 // Spells with no implementation yet (see file header) - bind so the click is at least acknowledged.
-listOf("NPC Contact", "Spellbook Swap", "Fertile Soil", "Cure Plant", "Remote Farm", "Boost Potion Share", "Stat Restore Pot Share").forEach { name ->
+listOf("NPC Contact", "Fertile Soil", "Cure Plant", "Remote Farm", "Boost Potion Share", "Stat Restore Pot Share").forEach { name ->
     on_magic_spell_button(name) {
         player.message("This spell is not available yet.")
     }

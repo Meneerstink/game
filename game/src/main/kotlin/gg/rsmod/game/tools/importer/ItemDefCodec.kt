@@ -58,8 +58,9 @@ object ItemDefCodec {
      * identical byte stream, except that any opcode present as a key in [stringOverrides] has its
      * string payload replaced with the given value instead of copied from [source], and any opcode
      * present as a key in [shortOverrides] has its two-byte payload replaced with that value.
-     * Opcodes not present in [source] and not listed in [shortOverrides] are simply absent from the
-     * output too, exactly as with any TLV format - this never invents an opcode by accident.
+     * Opcodes not present in [source] and not listed in any override map are simply absent from the
+     * output too, exactly as with any TLV format - this never invents an opcode by accident; an
+     * override for an opcode the donor lacks is appended before the terminator.
      *
      * Valid override keys are [STRING_OPCODES] (name and the ground/inventory/equipment menu text)
      * and, for [shortOverrides], only [FIXED_2] opcodes - the ones whose payload really is a single
@@ -131,6 +132,13 @@ object ItemDefCodec {
                 intOverrides.filterKeys { it !in seen }.forEach { (missing, value) ->
                     output.writeByte(missing)
                     output.writeInt(value)
+                }
+                // Menu text the donor never carried (e.g. a second inventory option on an item that
+                // only had "Wear") is appended the same way; the name (opcode 2) is always present
+                // on a real donor so this only ever adds option slots.
+                stringOverrides.filterKeys { it !in seen }.forEach { (missing, value) ->
+                    output.writeByte(missing)
+                    writeNullTerminatedString(output, value)
                 }
                 output.writeByte(opcode)
                 break

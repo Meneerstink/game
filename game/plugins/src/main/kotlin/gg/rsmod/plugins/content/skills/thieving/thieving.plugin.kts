@@ -1,5 +1,6 @@
 package gg.rsmod.plugins.content.skills.thieving
 
+import gg.rsmod.game.Server.Companion.logger
 import gg.rsmod.plugins.content.drops.DropTableFactory
 import gg.rsmod.plugins.content.drops.DropTableType
 import gg.rsmod.plugins.content.skills.thieving.pickpocketing.PickpocketTarget
@@ -10,6 +11,13 @@ import gg.rsmod.plugins.content.skills.thieving.stalls.Stalls
 PickpocketTarget.values().forEach { target ->
     DropTableFactory.register(target.drops, *target.objectIds.toIntArray(), type = DropTableType.PICKPOCKET)
     target.objectIds.forEach { targetId ->
+        // Some ids in a target's list have no "Pickpocket" option in this cache (e.g. H.A.M. guards
+        // 1710-1712, Menaphite thug 1904, monkey knife fighters 13195/13213 only carry Talk-to/Attack).
+        // Binding those would abort the whole plugin scan at boot, so bind only where the option exists.
+        if (!if_npc_has_option(targetId, "pickpocket")) {
+            logger.warn("Pickpocket target {} npc {} has no Pickpocket option in the cache - skipped.", target.name, targetId)
+            return@forEach
+        }
         on_npc_option(targetId, "pickpocket") {
             val npc = player.getInteractingNpc()
             player.queue {

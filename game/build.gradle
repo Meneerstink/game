@@ -10,6 +10,10 @@ mainClassName = 'gg.rsmod.game.Launcher'
 
 run {
     workingDir = rootProject.projectDir
+    // Audit mode: `gradlew :game:run -Drsmod.tolerateDuplicateBinds=true` logs every duplicate
+    // plugin binding (DUPLICATE-BIND) in one boot instead of crashing on the first one.
+    def tolerateDups = System.getProperty('rsmod.tolerateDuplicateBinds')
+    if (tolerateDups != null) systemProperty 'rsmod.tolerateDuplicateBinds', tolerateDups
 }
 
 dependencies {

@@ -209,6 +209,18 @@ class Server {
                         "Player $username not found."
                     }
                 }
+                command == "shutdown" -> {
+                    // Used by Start-RSPS.ps1 for a real graceful stop: System.exit runs the
+                    // Launcher shutdown hook (player saves + service termination). taskkill
+                    // without /F cannot stop a windowless JVM on Windows, so the launcher used
+                    // to fall back to a hard kill that skipped the saves.
+                    logger.info { "Shutdown requested via command server - saving players and exiting." }
+                    thread(start = true, name = "CommandShutdown") {
+                        Thread.sleep(250)
+                        System.exit(0)
+                    }
+                    "Shutting down: players are being saved."
+                }
                 //TODO: Add moderation commands once report abuse interface is finished.
                 else -> "Unknown command: $command"
             }

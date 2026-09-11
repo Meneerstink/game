@@ -11,6 +11,8 @@ enum class CookingData(
     val lowChance: Int,
     val highChance: Int,
     val secondaryCooked: Int? = null,
+    val leftover: Int? = null,
+    val rangeOnly: Boolean = false,
 ) {
     SHRIMPS(
         raw = Items.RAW_SHRIMPS,
@@ -254,8 +256,9 @@ enum class CookingData(
         burnt = Items.BURNT_BREAD,
         levelRequirement = 1,
         experience = 40.0,
-        lowChance = 118,
+        lowChance = 11,
         highChance = 492,
+        rangeOnly = true,
     ),
     PITTA_BREAD(
         raw = Items.PITTA_DOUGH,
@@ -265,6 +268,7 @@ enum class CookingData(
         experience = 40.0,
         lowChance = 118,
         highChance = 492,
+        rangeOnly = true,
     ),
 
     REDBERRY_PIE(
@@ -275,6 +279,7 @@ enum class CookingData(
         experience = 78.0,
         lowChance = 98,
         highChance = 452,
+        rangeOnly = true,
     ),
     MEAT_PIE(
         raw = Items.UNCOOKED_MEAT_PIE,
@@ -284,6 +289,7 @@ enum class CookingData(
         experience = 110.0,
         lowChance = 78,
         highChance = 412,
+        rangeOnly = true,
     ),
     MUD_PIE(
         raw = Items.RAW_MUD_PIE,
@@ -293,6 +299,7 @@ enum class CookingData(
         experience = 128.0,
         lowChance = 58,
         highChance = 372,
+        rangeOnly = true,
     ),
     APPLE_PIE(
         raw = Items.UNCOOKED_APPLE_PIE,
@@ -302,6 +309,7 @@ enum class CookingData(
         experience = 130.0,
         lowChance = 58,
         highChance = 372,
+        rangeOnly = true,
     ),
     GARDEN_PIE(
         raw = Items.RAW_GARDEN_PIE,
@@ -311,6 +319,7 @@ enum class CookingData(
         experience = 138.0,
         lowChance = 48,
         highChance = 352,
+        rangeOnly = true,
     ),
     FISH_PIE(
         raw = Items.RAW_FISH_PIE,
@@ -320,6 +329,7 @@ enum class CookingData(
         experience = 164.0,
         lowChance = 38,
         highChance = 332,
+        rangeOnly = true,
     ),
     ADMIRAL_PIE(
         raw = Items.RAW_ADMIRAL_PIE,
@@ -329,6 +339,7 @@ enum class CookingData(
         experience = 210.0,
         lowChance = 15,
         highChance = 270,
+        rangeOnly = true,
     ),
     WILD_PIE(
         raw = Items.RAW_WILD_PIE,
@@ -338,6 +349,7 @@ enum class CookingData(
         experience = 240.0,
         lowChance = 1,
         highChance = 222,
+        rangeOnly = true,
     ),
     SUMMER_PIE(
         raw = Items.RAW_SUMMER_PIE,
@@ -347,6 +359,7 @@ enum class CookingData(
         experience = 260.0,
         lowChance = 1,
         highChance = 212,
+        rangeOnly = true,
     ),
 
     STEW(
@@ -367,6 +380,15 @@ enum class CookingData(
         lowChance = 68,
         highChance = 392,
     ),
+    NETTLE_TEA(
+        raw = Items.NETTLEWATER,
+        cooked = Items.NETTLE_TEA,
+        burnt = Items.NETTLEWATER,
+        levelRequirement = 20,
+        experience = 52.0,
+        lowChance = 255,
+        highChance = 255,
+    ),
 
     BAKED_POTATO(
         raw = Items.POTATO,
@@ -376,6 +398,7 @@ enum class CookingData(
         experience = 15.0,
         lowChance = 108,
         highChance = 472,
+        rangeOnly = true,
     ),
     SCRAMBLED_EGG(
         raw = Items.UNCOOKED_EGG,
@@ -385,6 +408,7 @@ enum class CookingData(
         experience = 50.0,
         lowChance = 90,
         highChance = 438,
+        rangeOnly = true,
     ),
     COOKED_SWEETCORN(
         raw = Items.SWEETCORN,
@@ -394,6 +418,7 @@ enum class CookingData(
         experience = 104.0,
         lowChance = 78,
         highChance = 412,
+        rangeOnly = true,
     ),
     FRIED_ONIONS(
         raw = Items.CHOPPED_ONION,
@@ -403,6 +428,7 @@ enum class CookingData(
         experience = 60.0,
         lowChance = 36,
         highChance = 322,
+        rangeOnly = true,
     ),
     FRIED_MUSHROOMS(
         raw = Items.SLICED_MUSHROOMS,
@@ -412,6 +438,7 @@ enum class CookingData(
         experience = 60.0,
         lowChance = 16,
         highChance = 282,
+        rangeOnly = true,
     ),
 
     PLAIN_PIZZA(
@@ -422,6 +449,19 @@ enum class CookingData(
         experience = 143.0,
         lowChance = 48,
         highChance = 352,
+        rangeOnly = true,
+    ),
+
+    CAKE(
+        raw = Items.UNCOOKED_CAKE,
+        cooked = Items.CAKE,
+        burnt = Items.BURNT_CAKE,
+        levelRequirement = 40,
+        experience = 180.0,
+        lowChance = 38,
+        highChance = 332,
+        leftover = Items.CAKE_TIN,
+        rangeOnly = true,
     ),
 
     RABBIT(

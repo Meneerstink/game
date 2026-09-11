@@ -242,12 +242,12 @@ abstract class KotlinPlugin(
         val def = world.definitions.get(ItemDef::class.java, item)
         val slot = def.inventoryMenu.indexOfFirst { it?.lowercase() == opt }
 
-        check(slot != -1) {
+        if (slot == -1 && missingOption(
             "Option \"$option\" not found for item $item [options=${def.inventoryMenu.filterNotNull().filter {
                 it
                     .isNotBlank()
             }}]"
-        }
+        )) return
 
         r.bindItem(item, slot + 1, logic)
     }
@@ -265,12 +265,12 @@ abstract class KotlinPlugin(
         val def = world.definitions.get(ItemDef::class.java, item)
         val slot = def.equipmentMenu.indexOfFirst { it?.lowercase() == opt }
 
-        check(slot != -1) {
+        if (slot == -1 && missingOption(
             "Option \"$option\" not found for item equipment $item [options=${def.equipmentMenu.filterNotNull().filter {
                 it
                     .isNotBlank()
             }}]"
-        }
+        )) return
 
         r.bindEquipmentOption(item, slot + 1, logic)
     }
@@ -291,12 +291,12 @@ abstract class KotlinPlugin(
         val def = world.definitions.get(ObjectDef::class.java, obj)
         val slot = def.options.indexOfFirst { it?.lowercase() == opt }
 
-        check(slot != -1) {
+        if (slot == -1 && missingOption(
             "Option \"$option\" not found for object $obj [options=${def.options.filterNotNull().filter {
                 it
                     .isNotBlank()
             }}]"
-        }
+        )) return
 
         r.bindObject(obj, slot + 1, lineOfSightDistance, logic)
     }
@@ -318,12 +318,12 @@ abstract class KotlinPlugin(
             val def = world.definitions.get(ObjectDef::class.java, o)
             val slot = getSlot(def, *options)
 
-            check(slot != -1) {
+            if (slot == -1 && missingOption(
                 "None of the supplied options were found for object $o [options=${def.options.filterNotNull().filter {
                     it
                         .isNotBlank()
                 }}]"
-            }
+            )) return@forEach
 
             r.bindObject(o, slot + 1, lineOfSightDistance, logic)
         }
@@ -340,6 +340,19 @@ abstract class KotlinPlugin(
             }
         }
         return -1
+    }
+
+    /**
+     * Checks if an [npc] has [option] in the cache. Use it to guard an [on_npc_option] bind for
+     * an npc id whose menu differs between caches, instead of failing the whole boot.
+     */
+    fun if_npc_has_option(
+        npc: Int,
+        option: String,
+    ): Boolean {
+        val opt = option.lowercase()
+        val def = world.definitions.get(NpcDef::class.java, npc)
+        return def.options.any { it?.lowercase() == opt }
     }
 
     /**
@@ -382,9 +395,9 @@ abstract class KotlinPlugin(
         val def = world.definitions.get(NpcDef::class.java, npc)
         val slot = def.options.indexOfFirst { it?.lowercase() == opt }
 
-        check(slot != -1) {
+        if (slot == -1 && missingOption(
             "Option \"$option\" not found for npc $npc [options=${def.options.filterNotNull().filter { it.isNotBlank() }}]"
-        }
+        )) return
 
         r.bindNpc(npc, slot + 1, lineOfSightDistance, logic)
     }
@@ -403,12 +416,12 @@ abstract class KotlinPlugin(
         val def = world.definitions.get(ItemDef::class.java, item)
         val slot = def.groundMenu.indexOfFirst { it?.lowercase() == opt }
 
-        check(slot != -1) {
+        if (slot == -1 && missingOption(
             "Option \"$option\" not found for ground item $item [options=${def.groundMenu.filterNotNull().filter {
                 it
                     .isNotBlank()
             }}]"
-        }
+        )) return
 
         r.bindGroundItem(item, slot + 1, logic)
     }
@@ -993,5 +1006,21 @@ abstract class KotlinPlugin(
 
     companion object {
         private val METADATA_PATH = Paths.get("./plugins", "configs")
+    }
+
+    /**
+     * A plugin asked for an option name the cache does not have on that entity. Normally that is a
+     * boot-blocking error (throws). With `-Drsmod.tolerateDuplicateBinds=true` (audit mode, see
+     * PluginRepository.rejectDuplicateBinding) it is logged as MISSING-OPTION with the plugin script
+     * that caused it and the binding is skipped, so one boot lists every such content bug at once.
+     */
+    private fun missingOption(message: String): Boolean {
+        if (System.getProperty("rsmod.tolerateDuplicateBinds") == "true") {
+            val culprit = Thread.currentThread().stackTrace.firstOrNull { it.className.startsWith("gg.rsmod.plugins.") }
+            val where = if (culprit != null) " <- ${culprit.className} (${culprit.fileName}:${culprit.lineNumber})" else ""
+            System.err.println("MISSING-OPTION: $message$where")
+            return true
+        }
+        throw IllegalStateException(message)
     }
 }

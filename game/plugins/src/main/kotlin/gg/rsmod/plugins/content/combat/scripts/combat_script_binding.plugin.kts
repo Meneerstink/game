@@ -152,3 +152,57 @@ on_npc_combat(*GiantMoleCombatScript.ids) {
         GiantMoleCombatScript.handleSpecialCombat(this)
     }
 }
+
+/**
+ * Sets the [on_npc_combat] for the Dagannoth Kings
+ */
+on_npc_combat(*DagannothKingsCombatScript.ids) {
+    npc.queue {
+        DagannothKingsCombatScript.handleSpecialCombat(this)
+    }
+}
+
+/**
+ * Sets the [on_npc_combat] for metallic dragons (bronze, iron, steel, mithril)
+ */
+on_npc_combat(*MetalDragonCombatScript.ids) {
+    npc.queue {
+        MetalDragonCombatScript.handleSpecialCombat(this)
+    }
+}
+
+/**
+ * Sets the [on_npc_combat] for Frost dragons
+ */
+on_npc_combat(*FrostDragonCombatScript.ids) {
+    npc.queue {
+        FrostDragonCombatScript.handleSpecialCombat(this)
+    }
+}
+
+/**
+ * Sets the [on_npc_combat] for Skeletal wyverns
+ */
+on_npc_combat(*SkeletalWyvernCombatScript.ids) {
+    npc.queue {
+        SkeletalWyvernCombatScript.handleSpecialCombat(this)
+    }
+}
+
+/**
+ * Sets the [on_npc_combat] for Spinolyps
+ */
+on_npc_combat(*SpinolypCombatScript.ids) {
+    npc.queue {
+        SpinolypCombatScript.handleSpecialCombat(this)
+    }
+}
+
+/**
+ * Sets the [on_npc_combat] for the WildyWyrm
+ */
+on_npc_combat(*WildyWyrmCombatScript.ids) {
+    npc.queue {
+        WildyWyrmCombatScript.handleSpecialCombat(this)
+    }
+}

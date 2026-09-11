@@ -39,6 +39,9 @@ object NpcCombatDsl {
             combatBuilder.setDeathDelay(builder.deathDelay)
             combatBuilder.setPoisonDamage(builder.poisonDamage)
             combatBuilder.setVenomDamage(builder.venomDamage)
+            if (builder.poisonImmune) {
+                combatBuilder.setPoisonImmunity()
+            }
             combatBuilder.setXpMultiplier(builder.xpMultiplier)
             combatBuilder.setAttackStyle(builder.attackStyle)
         }
@@ -128,6 +131,11 @@ object NpcCombatDsl {
          * with [poisonDamage] on a given hit - see [gg.rsmod.plugins.content.combat.Combat].
          */
         var venomDamage = -1
+
+        /**
+         * Whether the npc cannot be poisoned at all.
+         */
+        var poisonImmune = false
 
         /**
          * The spell an NPC will use if one is set

@@ -532,6 +532,160 @@ enum class PickpocketTarget(
             },
         damage = 40..40,
         stunnedTicks = 10,
+    ),
+    HamGuard(
+        objectIds = listOf(Npcs.HAM_GUARD, Npcs.HAM_GUARD_1711, Npcs.HAM_GUARD_1712),
+        level = 20,
+        minChance = 117,
+        maxChance = 240,
+        xp = 22.5,
+        drops =
+            DropTableFactory.build {
+                main {
+                    total(1100)
+                    obj(Items.BRONZE_ARROW, quantityRange = 1..13, slots = 33)
+                    obj(Items.BRONZE_HATCHET, slots = 33)
+                    obj(Items.BRONZE_DAGGER, slots = 33)
+                    obj(Items.BRONZE_PICKAXE, slots = 33)
+                    obj(Items.IRON_HATCHET, slots = 33)
+                    obj(Items.IRON_DAGGER, slots = 33)
+                    obj(Items.IRON_PICKAXE, slots = 33)
+                    obj(Items.LEATHER_BODY, slots = 33)
+                    obj(Items.STEEL_ARROW, quantityRange = 1..13, slots = 22)
+                    obj(Items.STEEL_HATCHET, slots = 22)
+                    obj(Items.STEEL_DAGGER, slots = 22)
+                    obj(Items.STEEL_PICKAXE, slots = 22)
+                    obj(Items.HAM_BOOTS, slots = 11)
+                    obj(Items.HAM_CLOAK, slots = 11)
+                    obj(Items.HAM_GLOVES, slots = 11)
+                    obj(Items.HAM_HOOD, slots = 11)
+                    obj(Items.HAM_LOGO, slots = 11)
+                    obj(Items.HAM_ROBE, slots = 11)
+                    obj(Items.HAM_SHIRT, slots = 11)
+                    obj(Items.COINS_995, quantityRange = 1..21, slots = 165)
+                    obj(Items.BUTTONS, slots = 44)
+                    obj(Items.DAMAGED_ARMOUR, slots = 44)
+                    obj(Items.RUSTY_SWORD, slots = 44)
+                    obj(Items.FEATHER, quantityRange = 1..7, slots = 33)
+                    obj(Items.LOGS, slots = 33)
+                    obj(Items.THREAD, quantityRange = 1..10, slots = 33)
+                    obj(Items.COWHIDE, slots = 33)
+                    obj(Items.KNIFE, slots = 22)
+                    obj(Items.NEEDLE, slots = 22)
+                    obj(Items.RAW_ANCHOVIES, slots = 22)
+                    obj(Items.RAW_CHICKEN, slots = 22)
+                    obj(Items.TINDERBOX_590, slots = 22)
+                    obj(Items.UNCUT_OPAL, slots = 22)
+                    obj(Items.CLUE_SCROLL_EASY, slots = 22)
+                    obj(Items.COAL, slots = 22)
+                    obj(Items.IRON_ORE, slots = 22)
+                    obj(Items.UNCUT_JADE, slots = 22)
+                    obj(Items.GRIMY_GUAM, slots = 12)
+                    obj(Items.GRIMY_MARRENTILL, slots = 6)
+                    obj(Items.GRIMY_TARROMIN, slots = 4)
+                    obj(Items.STEEL_KEY, slots = 4)
+                    obj(Items.BRONZE_KEY_8867, slots = 4)
+                    obj(Items.SILVER_KEY, slots = 4)
+                    obj(Items.IRON_KEY_8869, slots = 4)
+                }
+            },
+        damage = 10..30,
+        stunnedTicks = 7,
+        onCaught =
+            listOf(
+                "Stop! {name} is a thief!",
+                "Keep thine hands to thineself {name}.",
+                "What do you think you're doing!",
+                "We deal harshly with thieves around here!",
+            ),
+    ),
+    MenaphiteThug(
+        objectIds = listOf(Npcs.MENAPHITE_THUG, Npcs.MENAPHITE_THUG_1905),
+        level = 65,
+        minChance = 20,
+        maxChance = 180,
+        xp = 137.5,
+        drops =
+            DropTableFactory.build {
+                guaranteed {
+                    obj(Items.COINS_995, quantity = 60)
+                }
+            },
+        damage = 40..40,
+        stunnedTicks = 8,
+    ),
+    MonkeyKnifeFighter(
+        objectIds =
+            listOf(
+                Npcs.MONKEY_KNIFE_FIGHTER,
+                Npcs.MONKEY_KNIFE_FIGHTER_13212,
+                Npcs.MONKEY_KNIFE_FIGHTER_13213,
+            ),
+        level = 70,
+        minChance = 50,
+        maxChance = 240,
+        xp = 150.0,
+        drops =
+            DropTableFactory.build {
+                main {
+                    total(64)
+                    obj(Items.COINS_995, quantity = 1, slots = 27)
+                    obj(Items.COINS_995, quantity = 50, slots = 15)
+                    obj(Items.BLACK_KNIFE, quantity = 4, slots = 8)
+                    obj(Items.BLACK_KNIFE_P, quantity = 2, slots = 4)
+                    obj(Items.LOBSTER, slots = 4)
+                    obj(Items.ADAMANT_SCIMITAR, slots = 2)
+                    obj(Items.RUNE_SCIMITAR, slots = 2)
+                    obj(Items.DRAGON_SCIMITAR, slots = 2)
+                }
+            },
+        damage = 30..30,
+        stunnedTicks = 8,
+    ),
+    DwarfTrader(
+        objectIds =
+            listOf(
+                Npcs.TRADER,
+                Npcs.TRADER_2110,
+                Npcs.TRADER_2111,
+                Npcs.TRADER_2112,
+                Npcs.TRADER_2113,
+                Npcs.TRADER_2114,
+                Npcs.TRADER_2115,
+                Npcs.TRADER_2116,
+                Npcs.TRADER_2117,
+                Npcs.TRADER_2118,
+                Npcs.TRADER_2119,
+                Npcs.TRADER_2120,
+                Npcs.TRADER_2121,
+                Npcs.TRADER_2122,
+                Npcs.TRADER_2124,
+                Npcs.TRADER_2126,
+            ),
+        level = 90,
+        minChance = 30,
+        maxChance = 200,
+        xp = 556.5,
+        drops =
+            DropTableFactory.build {
+                main {
+                    total(64)
+                    obj(Items.COINS_995, quantity = 100, slots = 27)
+                    obj(Items.COINS_995, quantity = 400, slots = 10)
+                    obj(Items.BRONZE_BAR_NOTED, slots = 4)
+                    obj(Items.IRON_BAR_NOTED, slots = 4)
+                    obj(Items.STEEL_BAR_NOTED, slots = 4)
+                    obj(Items.MITHRIL_BAR_NOTED, slots = 3)
+                    obj(Items.ADAMANT_BAR_NOTED, slots = 3)
+                    obj(Items.RUNE_BAR_NOTED, slots = 3)
+                    obj(Items.COPPER_ORE_NOTED, slots = 2)
+                    obj(Items.TIN_ORE_NOTED, slots = 2)
+                    obj(Items.IRON_ORE_NOTED, slots = 1)
+                    obj(Items.MITHRIL_ORE_NOTED, slots = 1)
+                }
+            },
+        damage = 30..40,
+        stunnedTicks = 12,
     ), ;
 
     fun rollDamage() = damage.random()

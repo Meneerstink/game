@@ -32,8 +32,8 @@ on_login {
     // Done.
     // slot 9 - Pirate's Treasure
     // Done.
-    // slot 10
-    player.setVarp(Varps.PRINCE_ALI_RESCUE_PROGRESS, 110)
+    // slot 10 - Prince Ali Rescue
+    // Done.
     // slot 11
     // Done - player.setVarp(Varps.VARP_107, 5)
     // slot 13 - Rune Mysteries

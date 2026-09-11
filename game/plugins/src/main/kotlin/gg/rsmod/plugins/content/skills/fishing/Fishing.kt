@@ -11,6 +11,7 @@ import gg.rsmod.plugins.api.cfg.Anims
 import gg.rsmod.plugins.api.cfg.Npcs
 import gg.rsmod.plugins.api.cfg.Sfx
 import gg.rsmod.plugins.api.ext.*
+import gg.rsmod.util.Misc.formatWithIndefiniteArticle
 
 object Fishing {
     private const val waitTime = 2
@@ -134,9 +135,10 @@ object Fishing {
         }
 
     private fun caughtMessage(fish: Fish) =
-        if (fish == Fish.SHRIMP || fish == Fish.ANCHOVIES) {
-            "You catch some ${fish.name.lowercase().replace('_', ' ')}."
-        } else {
-            "You catch a ${fish.name.lowercase().replace('_', ' ')}."
+        when (fish) {
+            Fish.SHRIMP, Fish.ANCHOVIES, Fish.SEAWEED -> "You catch some ${fish.name.lowercase().replace('_', ' ')}."
+            Fish.CASKET, Fish.OYSTER, Fish.LEATHER_GLOVES, Fish.LEATHER_BOOTS ->
+                "You catch ${formatWithIndefiniteArticle(fish.name.lowercase().replace('_', ' '))}."
+            else -> "You catch a ${fish.name.lowercase().replace('_', ' ')}."
         }
 }

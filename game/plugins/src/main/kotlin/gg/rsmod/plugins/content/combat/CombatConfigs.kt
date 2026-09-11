@@ -17,6 +17,8 @@ import gg.rsmod.plugins.content.combat.strategy.CombatStrategy
 import gg.rsmod.plugins.content.combat.strategy.MagicCombatStrategy
 import gg.rsmod.plugins.content.combat.strategy.MeleeCombatStrategy
 import gg.rsmod.plugins.content.combat.strategy.RangedCombatStrategy
+import gg.rsmod.plugins.content.items.helios.CrownOfHelios
+import gg.rsmod.plugins.content.items.helios.CrownOfHeliosCombatStrategy
 
 /**
  * @author Tom <rspsmods@gmail.com>
@@ -72,7 +74,9 @@ object CombatConfigs {
         )
 
     fun getCombatStrategy(pawn: Pawn): CombatStrategy =
-        when (getCombatClass(pawn)) {
+        if (CrownOfHelios.isActive(pawn)) {
+            CrownOfHeliosCombatStrategy
+        } else when (getCombatClass(pawn)) {
             CombatClass.MELEE -> MeleeCombatStrategy
             CombatClass.MAGIC -> MagicCombatStrategy
             CombatClass.RANGED -> RangedCombatStrategy
@@ -86,6 +90,7 @@ object CombatConfigs {
 
         if (pawn is Player) {
             return when {
+                CrownOfHelios.isActive(pawn) -> CrownOfHelios.mode(pawn).combatClass
                 pawn.attr.has(Combat.CASTING_SPELL) -> CombatClass.MAGIC
                 pawn.hasWeaponType(
                     WeaponType.BOW,
@@ -107,6 +112,9 @@ object CombatConfigs {
         }
 
         if (pawn is Player) {
+            if (CrownOfHelios.isActive(pawn)) {
+                return MIN_ATTACK_SPEED
+            }
             val default = PLAYER_DEFAULT_ATTACK_SPEED
             val weapon = pawn.getEquipment(EquipmentType.WEAPON) ?: return default
             // Missing metadata is -1, not a one-tick weapon. Keep explicit custom speeds.

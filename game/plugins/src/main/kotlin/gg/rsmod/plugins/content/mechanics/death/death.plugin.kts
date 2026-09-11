@@ -22,6 +22,10 @@ import gg.rsmod.plugins.content.mechanics.trouver.Trouver
  */
 on_player_pre_death {
     val victim = player
+    if (SafeDeath.isSafe(victim)) {
+        // Safe minigame death: no item loss, no recovery, no killer compensation.
+        return@on_player_pre_death
+    }
     val world = victim.world
     val killer = victim.attr[KILLER_ATTR]?.get() as? Player
     val logger = world.getService(LoggerService::class.java, searchSubclasses = true)

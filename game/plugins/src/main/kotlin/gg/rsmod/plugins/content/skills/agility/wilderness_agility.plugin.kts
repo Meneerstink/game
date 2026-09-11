@@ -75,6 +75,7 @@ fun handleDoor(player: Player) {
         player.lock = LockState.NONE
         world.spawn(closedDoor)
         player.playSound(Sfx.DOOR_CLOSE)
+        player.addXp(Skills.AGILITY, 15.0, checkBrawlingGloves = true)
     }
 }
 

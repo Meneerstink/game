@@ -26,6 +26,10 @@ object CookingAction {
                     player.getInteractingGameObj().id,
                 ).name
                 .contains("Fire")
+        if (data.rangeOnly && usingFire) {
+            player.message("You can't cook this on a fire; you need a range or oven.")
+            return
+        }
         val maxCount = minOf(amount, inventory.getItemCount(data.raw))
         task.wait(if (amount > 1) 2 else 1)
         repeat(maxCount) {
@@ -49,6 +53,9 @@ object CookingAction {
                 player.addXp(Skills.COOKING, data.experience, checkBrawlingGloves = true)
             } else {
                 inventory.add(data.burnt)
+            }
+            if (data.leftover != null) {
+                inventory.add(data.leftover)
             }
             task.wait(2)
         }

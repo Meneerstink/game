@@ -54,6 +54,7 @@ class MessageEncoderSet {
         put(PublicChatEncoder(), PublicChatMessage::class.java)
         put(IfSetPlayerHeadEncoder(), IfSetPlayerHeadMessage::class.java)
         put(IfSetNpcHeadEncoder(), IfSetNpcHeadMessage::class.java)
+        put(IfSetModelEncoder(), IfSetModelMessage::class.java)
         put(IfSetAnimEncoder(), IfSetAnimMessage::class.java)
         put(UpdateRunWeightEncoder(), UpdateRunWeightMessage::class.java)
         put(MapProjAnimEncoder(), MapProjAnimMessage::class.java)

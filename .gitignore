@@ -15,3 +15,13 @@ game.yml
 first-launch
 first-launch-example
 game/plugins/build.gradle
+
+.codegraph/
+.claude/
+graphify-out/
+game/plugins/graphify-out/
+hs_err_pid*.log
+game/plugins/option_audit.txt
+game/plugins/option_dump.txt
+game/plugins/src/test/kotlin/gg/rsmod/plugins/tmp/
+npc_inventory.csv

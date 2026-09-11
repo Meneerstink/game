@@ -28,6 +28,14 @@ import java.io.File
  *
  *  - `remove <itemId> --targets=<a>[;<b>...] [--apply]`
  *      Delete an item from every target cache.
+ *
+ *  - `clone <sourceCachePath> <donorId> <newId> --str-2=<name> [--str-<opcode>=<text>...]
+ *     [--drop=<opcode>[,<opcode>...]] --targets=<a>[;<b>...] [--apply]`
+ *      Clone a donor item's archive bytes into a new id in every target cache, with
+ *      [ItemDefCodec.cloneWithOverrides] string overrides (opcode 2 = name, 30-34 ground options,
+ *      35-39 inventory options) and optionally dropped opcodes (97/121 = the donor's noted/lent
+ *      links, which a clone must not inherit). The dual-cache, journalled replacement for the
+ *      legacy single-cache [ItemImportTool].
  */
 object ItemTransactionTool {
     @JvmStatic
@@ -75,6 +83,30 @@ object ItemTransactionTool {
                 "remove" -> {
                     require(positional.isNotEmpty()) { USAGE }
                     positional[0].toInt() to null
+                }
+                "clone" -> {
+                    require(positional.size >= 3) { USAGE }
+                    val sourcePath = positional[0]
+                    val donorId = positional[1].toInt()
+                    val id = positional[2].toInt()
+                    val stringOverrides =
+                        flags.filterKeys { it.startsWith("str-") }
+                            .map { (key, value) -> key.removePrefix("str-").toInt() to value }
+                            .toMap()
+                    require(stringOverrides.containsKey(2)) { "clone requires --str-2=<new item name>.\n$USAGE" }
+                    val dropped = flags["drop"]?.split(',')?.filter { it.isNotBlank() }?.map { it.trim().toInt() }?.toSet() ?: emptySet()
+                    val library = CacheLibrary(sourcePath)
+                    val donorBytes =
+                        try {
+                            CacheItemProbeTool.itemData(library, donorId)
+                                ?: error("Source cache $sourcePath has no data for donor item $donorId - nothing to clone.")
+                        } finally {
+                            library.close()
+                        }
+                    val cloned = ItemDefCodec.cloneWithOverrides(donorBytes, stringOverrides, removedOpcodes = dropped)
+                    println("DONOR=$sourcePath item=$donorId bytes=${donorBytes.size} sha1=${CacheItemProbeTool.sha1(donorBytes)} name=${ItemDefCodec.readName(donorBytes)}")
+                    println("CLONE item=$id bytes=${cloned.size} sha1=${CacheItemProbeTool.sha1(cloned)} name=${ItemDefCodec.readName(cloned)} opcodes=${ItemDefCodec.describeOpcodes(cloned).joinToString(" ")}")
+                    id to cloned
                 }
                 else -> error("Unknown verb '$verb'.\n$USAGE")
             }
@@ -147,5 +179,6 @@ object ItemTransactionTool {
         "Usage:\n" +
             "  sync <sourceCachePath> <itemId> --targets=<a>[;<b>...] [--apply]\n" +
             "  put <itemBytesFile> <itemId> --targets=<a>[;<b>...] [--expect-sha1=<hex>] [--apply]\n" +
-            "  remove <itemId> --targets=<a>[;<b>...] [--apply]"
+            "  remove <itemId> --targets=<a>[;<b>...] [--apply]\n" +
+            "  clone <sourceCachePath> <donorId> <newId> --str-2=<name> [--str-<opcode>=<text>...] [--drop=97,121] --targets=<a>[;<b>...] [--apply]"
 }

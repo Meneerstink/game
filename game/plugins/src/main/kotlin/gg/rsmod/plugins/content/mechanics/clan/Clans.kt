@@ -12,6 +12,9 @@ private fun Player.findOnline(name: String): Player? {
     return found
 }
 
+/** Public wrapper of [findOnline], reused by full Clan Wars (`ClanWarsMatch`) to look up a challenge target. */
+fun Player.findOnlinePlayer(name: String): Player? = findOnline(name)
+
 enum class ClanRank {
     OWNER,
     DEPUTY,
@@ -155,6 +158,23 @@ object Clans {
     ): Boolean {
         val clanA = a.attr[CLAN_ATTR] ?: return false
         return clanA == b.attr[CLAN_ATTR]
+    }
+
+    fun clanOf(player: Player): String? = player.attr[CLAN_ATTR]
+
+    fun exists(name: String): Boolean {
+        load()
+        return clans.containsKey(name)
+    }
+
+    /** Every currently-online member of [name]'s clan - reused by full Clan Wars to build a war's team roster. */
+    fun onlineMembers(
+        anyOnlinePlayer: Player,
+        name: String,
+    ): List<Player> {
+        load()
+        val clan = clans[name] ?: return emptyList()
+        return clan.members.keys.mapNotNull { anyOnlinePlayer.findOnline(it) }
     }
 
     private fun broadcast(

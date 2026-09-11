@@ -21,14 +21,14 @@ enum class Tiara(
     WATER(Items.WATER_TIARA, Altar.WATER, 30.0),
     EARTH(Items.EARTH_TIARA, Altar.EARTH, 32.5),
     FIRE(Items.FIRE_TIARA, Altar.FIRE, 35.0),
-    ;
-
-    /* BODY(Items.BODY_TIARA, Altar.BODY, 37.5),
+    BODY(Items.BODY_TIARA, Altar.BODY, 37.5),
     COSMIC(Items.COSMIC_TIARA, Altar.COSMIC, 40.0),
     CHAOS(Items.CHAOS_TIARA, Altar.CHAOS, 42.5),
     NATURE(Items.NATURE_TIARA, Altar.NATURE, 45.0),
     LAW(Items.LAW_TIARA, Altar.LAW, 47.5),
-    DEATH(Items.DEATH_TIARA, Altar.DEATH, 50.0)*/
+    DEATH(Items.DEATH_TIARA, Altar.DEATH, 50.0),
+    BLOOD(Items.BLOOD_TIARA, Altar.BLOOD, 52.5),
+    ;
 
     companion object {
         val values = enumValues<Tiara>()
