@@ -79,7 +79,7 @@ enum class Emote(
     TASK_MASTER(
         component = 51,
         anim = Anims.EMOTE_TASK_MASTER,
-        gfx = 2930, // TODO find proper id, this is past GFX index
+        gfx = 2930, // Q-023: confirmed real, not a guess - Novite rev-667 EmotesManager.java id==51 (Taskmaster) uses anim 15034 + gfx 2930, matching this cache's own EMOTE_TASK_MASTER exactly
         varbit = EmotesTab.TASK_MASTER_EMOTE_VARBIT,
         requiredVarbitValue = 428,
     ),
