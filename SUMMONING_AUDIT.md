@@ -1,3 +1,20 @@
+## 2026-09-11 — staleness notice + one real gap closed (owner directive: finish Summoning)
+
+This file was last updated 2026-09-02 and does not reflect real work that happened afterward
+(`b95c33a4` "Summoning reconstruction checkpoint", 2026-09-07, plus several follow-up commits
+through 2026-09-09 - none of those were ever given an entry here either). Per this project's own
+`CLAUDE.md` authority ranking, real filesystem/test/commit state outranks this document; the
+authoritative current status is `RSPS_DONOR_PORT_PROGRESS.md`'s `## Q-031 Summoning full
+re-verification + real gap closed` entry (2026-09-11), not the entries below. That batch fresh-ran
+the whole `skills.summoning.*` test package (201/201 pass) and closed one real, previously-
+documented gap: `Familiar.summon`/`call`/`restoreOnLogin` now play the real sourced summon-
+appearance graphic (1314/1315, from Novite's `Familiar.java`), which used to play nothing.
+Everything else that entry checked (73/78 special moves, 72/73 native combat rows including Steel
+Titan, 9/9 BoB/forager containers, interfaces 662/747/880 left-click, interface 671's CS2 blocker)
+matched what this file already documented below - re-confirmed, not re-discovered. Read the
+progress-log entry first; use this file only for the detailed per-item sourcing history it still
+correctly documents.
+
 ## 2026-09-02 — the Summoning tab/orb slots, checked against the cache (owner: "no summoning icon")
 
 Evidence file: `gameframe_probe.txt` — every decodable component of the fixed (548) and resizable
