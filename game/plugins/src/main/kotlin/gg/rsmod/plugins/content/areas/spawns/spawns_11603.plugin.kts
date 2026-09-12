@@ -2,7 +2,7 @@ package gg.rsmod.plugins.content.areas.spawns
 
 spawn_npc(
     npc = Npcs.KRIL_TSUTSAROTH,
-    x = 2926,
+    x = 2925,
     z = 5322,
     height = 2,
     walkRadius = 5,

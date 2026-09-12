@@ -191,8 +191,8 @@ spawn_npc(
 ) // Aviansie
 spawn_npc(
     npc = Npcs.COMMANDER_ZILYANA,
-    x = 2900,
-    z = 5268,
+    x = 2899,
+    z = 5265,
     height = 0,
     walkRadius = 5,
     direction = Direction.NORTH,
