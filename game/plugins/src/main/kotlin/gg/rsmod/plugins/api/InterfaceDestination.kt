@@ -22,9 +22,10 @@ enum class InterfaceDestination(
 
     /*
      * The Summoning "Follower Details" panel (interface 662) is NOT one of the sixteen numbered
-     * sidebar tabs. It is gameframe *slot 95*, a panel with no tab button of its own, opened on
-     * demand - exactly as the 2011 Knowledge Base describes it ("The Summoning interface can be
-     * opened by selecting 'Follower details'"). Decoded from this cache on 2026-09-06:
+     * sidebar tabs. It is gameframe *slot 95*, a panel with no tab button of its own. This server
+     * keeps the sub-interface mounted so its owner-requested spare-tab entry can focus it even
+     * when the panel is empty; the cache's own orb entry still requires the mount. Decoded from
+     * this cache on 2026-09-06:
      *
      *  - `disasm 8` (slot -> gameframe pane) maps slot 95 to 548:221 (fixed) / 746:107 (resizable).
      *    Slots 0..15 are the numbered tabs (548:204..219), 99 is Logout (548:222).

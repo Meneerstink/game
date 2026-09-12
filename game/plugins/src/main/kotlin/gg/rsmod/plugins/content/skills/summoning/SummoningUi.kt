@@ -151,19 +151,22 @@ object SummoningUi {
      * That region is what the owner means by the empty block underneath the Skills area, and it is
      * where the authentic 2011 reference shots put the panel.
      *
-     * The point of slot 95 is that, unlike slots 0..15, **it has no tab button of its own**. An
-     * earlier attempt armed the spare tab slot (`548:99` / `746:47`) as a Follower Details button;
-     * the owner rejected that outright - no separate tab, no separate follower tab button, no orb
-     * entry, no hidden duplicate. So nothing opens this panel by being clicked. It simply appears
-     * when a familiar is active and goes away when one is not, which is what [showPanel] and
-     * [hidePanel] do.
+     * The point of slot 95 is that, unlike slots 0..15, **it has no tab button of its own**. This
+     * server mounts it for the whole session so the owner's spare-tab entry can focus it even when
+     * the panel is empty. A familiar becoming active focuses it; dismissing one only blanks the
+     * mounted panel and leaves the entry available.
      *
-     * [hidePanel] moves the sidebar to the inventory rather than merely blanking 662. Blanking
-     * alone would leave the player staring at an empty Summoning panel after a dismiss, which is
-     * the "blank/stale follower interface" the owner reported. There is no packet in this revision
-     * that reports which tab the player has selected, so the server cannot restore whatever they
-     * were looking at before; the inventory is the least surprising destination and the one the
-     * client itself defaults to.
+     * A stale note used to sit here claiming the owner had rejected arming the spare tab slot
+     * (`548:99` / `746:47`) as a Follower Details button. That was true of an earlier round and is
+     * no longer the standing instruction: the owner has since asked, repeatedly and with a marked
+     * client screenshot, for Follower Details to live in exactly that empty tab and to stay visible
+     * there even with no familiar out. [FollowerDetailsTab] implements that and is armed
+     * unconditionally at login and on every window-mode change; this object is only responsible for
+     * what the slot *contains*, which is a real familiar or a genuinely blank panel.
+     *
+     * [hidePanel] is retained for callers that explicitly want to leave the panel, but the
+     * familiar lifecycle does not call it: the owner's requirement is that the spare-tab entry
+     * remains visible with an empty panel when no familiar is out.
      */
     fun showPanel(player: Player) {
         player.focusTab(Tabs.SUMMONING)
@@ -174,17 +177,15 @@ object SummoningUi {
     }
 
     /**
-     * Re-mounts interface 662 on slot 95 and then shows or hides it according to whether a
-     * familiar is actually out.
+     * Mounts interface 662 on slot 95 for the session and focuses it only when a familiar is out.
      *
-     * Both halves matter. Re-mounting alone would leave the sidebar showing an empty Summoning
-     * panel for a player with no familiar; focusing alone would not survive anything that had
-     * taken the slot, and since nothing else opens the Follower Details panel, the player would
-     * have no route back to it.
+     * Mounting is deliberately unconditional: the spare-tab entry must open a genuinely empty
+     * Follower Details panel when the player has no familiar, rather than sending a focus request
+     * to an unmounted slot. The panel contents are blanked by [refreshPanel].
      */
     fun restorePanel(player: Player) {
         player.openInterface(InterfaceDestination.SUMMONING_TAB)
-        if (Familiar.current(player) != null) showPanel(player) else hidePanel(player)
+        if (Familiar.current(player) != null) showPanel(player)
     }
 
     /** Whether this familiar can be ordered to attack - i.e. it has real, sourced combat data. */

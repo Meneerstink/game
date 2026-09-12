@@ -470,10 +470,9 @@ object Familiar {
         player.addXp(Skills.SUMMONING, data.summonExperience)
         player.message("You summon your familiar.")
         updateHud(player)
-        // Owner requirement: with a familiar active the Follower Details panel appears in its
-        // sidebar region immediately. There is no tab button and no orb entry to reach it with -
-        // becoming visible on summon is the whole of how it is opened.
-        SummoningUi.showPanel(player)
+        // Mount the panel before focusing it. The same mount is kept when no familiar is out so
+        // the owner's permanent spare-tab entry can still open an empty Follower Details panel.
+        SummoningUi.restorePanel(player)
         return true
     }
 

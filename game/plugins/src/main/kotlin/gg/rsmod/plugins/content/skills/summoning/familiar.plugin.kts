@@ -385,6 +385,8 @@ on_login {
     Familiar.redrawInterfaces(player)
     // Owner requirement (2026-09-09): the Follower Details tab is a permanent fixture, armed the
     // same way regardless of whether a familiar is currently out - see FollowerDetailsTab.
+    // Mount its empty-or-populated panel as well; focusTab(95) cannot open an unmounted slot.
+    SummoningUi.restorePanel(player)
     FollowerDetailsTab.install(player)
     // ...and again a few cycles in. The gameframe is still being assembled while login runs, and
     // every component an interface (re)builds comes back with its baked hidden flag, which would
@@ -393,6 +395,7 @@ on_login {
     player.queue {
         wait(5)
         Familiar.redrawInterfaces(player)
+        SummoningUi.restorePanel(player)
         FollowerDetailsTab.install(player)
     }
     // CUSTOM_SERVER_OVERRIDE (see BeastOfBurden.release): a familiar's cargo is rescued into
