@@ -16,7 +16,13 @@ on_obj_option(obj = Objs.LADDER_32015, option = "climb-up") {
             player.handleLadder(x = 2842, z = 3423)
         }
         12192 -> { // King Black Dragon's Lair
-            player.handleLadder(x = 3017, z = 3850)
+            val obj = player.getInteractingGameObj()
+            when (obj.tile.x to obj.tile.z) {
+                // Cache placement: the west KBD ladder exits to the second surface ladder.
+                3017 to 10249 -> player.handleLadder(x = 3069, z = 3857)
+                // Cache placement: the east KBD ladder exits beside the 1765 surface ladder.
+                else -> player.handleLadder(x = 3017, z = 3850)
+            }
         }
         12439 -> { // Draynor Sewer
             player.handleLadder(x = player.tile.x, z = player.tile.z - 6400)
