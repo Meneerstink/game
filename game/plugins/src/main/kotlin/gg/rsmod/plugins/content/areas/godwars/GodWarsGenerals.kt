@@ -18,6 +18,7 @@ import gg.rsmod.plugins.api.cfg.Npcs
 import gg.rsmod.plugins.api.ext.hasPrayerIcon
 import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.api.ext.npc
+import gg.rsmod.plugins.api.ext.playSound
 import gg.rsmod.plugins.api.ext.prepareAttack
 import gg.rsmod.plugins.content.combat.canEngageCombat
 import gg.rsmod.plugins.content.combat.createProjectile
@@ -46,6 +47,19 @@ import gg.rsmod.plugins.content.mechanics.poison.Poison
  * rolled through this codebase's own formulas against the general's sourced stats.
  */
 object GodWarsGenerals {
+    // Exact sound IDs from the read-only Void 667 GWD sound tables.
+    private const val GRAARDOR_ATTACK_SOUND = 3860
+    private const val GRAARDOR_SLAM_SOUND = 3888
+    private const val ZILYANA_ATTACK_SOUND = 2503
+    private const val ZILYANA_MAGIC_SOUND = 3834
+    private const val ZILYANA_MAGIC_IMPACT_SOUND = 3853
+    private const val KRIL_ATTACK_SOUND = 3833
+    private const val KRIL_MAGIC_SOUND = 3888
+    private const val KRIL_MAGIC_IMPACT_SOUND = 3844
+    private const val KREEARRA_ATTACK_SOUND = 3871
+    private const val KREEARRA_MELEE_SOUND = 3837
+    private const val KREEARRA_IMPACT_SOUND = 3874
+
     /** Everyone a general's area attack reaches: players on the same plane inside the chamber. */
     private const val CHAMBER_RADIUS = 12
 
@@ -129,6 +143,7 @@ object GodWarsGenerals {
                 if (world.random(2) == 0) {
                     npc.prepareAttack(CombatClass.RANGED, StyleType.RANGED, WeaponStyle.NONE)
                     npc.animate(7063)
+                    areaSound(npc, GRAARDOR_SLAM_SOUND, delay = 20, radius = 7)
                     chamberPlayers(npc).forEach { p ->
                         val projectile = npc.createProjectile(p, gfx = 1200, type = ProjectileType.ARROW)
                         world.spawn(projectile)
@@ -138,6 +153,10 @@ object GodWarsGenerals {
                 } else {
                     npc.prepareAttack(CombatClass.MELEE, StyleType.CRUSH, WeaponStyle.NONE)
                     npc.animate(npc.combatDef.attackAnimation)
+                    if (target is Player) {
+                        target.playSound(GRAARDOR_ATTACK_SOUND)
+                        target.playSound(GRAARDOR_ATTACK_SOUND, delay = 20)
+                    }
                     npc.dealHit(target = target, maxHit = 60.0, landHit = rollAccuracy(npc, target, MeleeCombatFormula), delay = 1, hitType = HitType.MELEE)
                 }
             }
@@ -171,15 +190,18 @@ object GodWarsGenerals {
                 if (world.random(1) == 0) {
                     npc.prepareAttack(CombatClass.MAGIC, StyleType.MAGIC, WeaponStyle.NONE)
                     npc.animate(6967)
+                    areaSound(npc, ZILYANA_MAGIC_SOUND, delay = 1, radius = 5)
                     chamberPlayers(npc).filter { it.tile.isWithinRadius(npc.tile, 3) }.forEach { p ->
                         val hit = npc.dealHit(target = p, maxHit = 27.0, landHit = rollAccuracy(npc, p, MagicCombatFormula), delay = 1, hitType = HitType.MAGIC)
                         if (hit.hit.hitmarks.sumOf { h -> h.damage } > 0) {
                             p.graphic(1194)
+                            areaSound(npc, ZILYANA_MAGIC_IMPACT_SOUND, radius = 5)
                         }
                     }
                 } else {
                     npc.prepareAttack(CombatClass.MELEE, StyleType.CRUSH, WeaponStyle.NONE)
                     npc.animate(npc.combatDef.attackAnimation)
+                    if (target is Player) target.playSound(ZILYANA_ATTACK_SOUND)
                     npc.dealHit(target = target, maxHit = 27.0, landHit = rollAccuracy(npc, target, MeleeCombatFormula), delay = 1, hitType = HitType.MELEE)
                 }
             }
@@ -217,6 +239,7 @@ object GodWarsGenerals {
                     npc.prepareAttack(CombatClass.MAGIC, StyleType.MAGIC, WeaponStyle.NONE)
                     npc.animate(14962)
                     npc.graphic(1210)
+                    areaSound(npc, KRIL_MAGIC_SOUND, delay = 20, radius = 15)
                     chamberPlayers(npc).forEach { p ->
                         world.spawn(npc.createProjectile(p, gfx = 1211, type = ProjectileType.MAGIC))
                         val delay = MagicCombatStrategy.getHitDelay(npc.getCentreTile(), p.tile)
@@ -226,6 +249,7 @@ object GodWarsGenerals {
                             }
                         })
                     }
+                    areaSound(npc, KRIL_MAGIC_IMPACT_SOUND, radius = 15)
                 } else {
                     npc.prepareAttack(CombatClass.MELEE, StyleType.SLASH, WeaponStyle.NONE)
                     val praying =
@@ -244,6 +268,7 @@ object GodWarsGenerals {
                         })
                     } else {
                         npc.animate(14963)
+                        if (target is Player) target.playSound(KRIL_ATTACK_SOUND)
                         npc.dealHit(target = target, maxHit = 46.0, landHit = rollAccuracy(npc, target, MeleeCombatFormula), delay = 1, hitType = HitType.MELEE)
                     }
                 }
@@ -266,10 +291,12 @@ object GodWarsGenerals {
                 if (!underAttack && target.tile.isWithinRadius(npc.tile, 1 + npc.getSize())) {
                     npc.prepareAttack(CombatClass.MELEE, StyleType.CRUSH, WeaponStyle.NONE)
                     npc.animate(6997)
+                    if (target is Player) target.playSound(KREEARRA_MELEE_SOUND)
                     npc.dealHit(target = target, maxHit = 26.0, landHit = rollAccuracy(npc, target, MeleeCombatFormula), delay = 1, hitType = HitType.MELEE)
                     return@fight
                 }
                 npc.animate(6976)
+                areaSound(npc, KREEARRA_ATTACK_SOUND, delay = 1, radius = 5)
                 players.forEach { p ->
                     if (world.random(2) == 0) {
                         npc.prepareAttack(CombatClass.MAGIC, StyleType.MAGIC, WeaponStyle.NONE)
@@ -286,6 +313,7 @@ object GodWarsGenerals {
                         knockBack(p)
                     }
                 }
+                areaSound(npc, KREEARRA_IMPACT_SOUND, radius = 5)
             }
 
         private fun knockBack(player: Player) {
@@ -298,5 +326,9 @@ object GodWarsGenerals {
                 }
             }
         }
+    }
+
+    private fun areaSound(npc: Npc, id: Int, delay: Int = 0, radius: Int = 10) {
+        npc.world.spawn(AreaSound(tile = npc.tile, id = id, radius = radius, volume = 1, delay = delay))
     }
 }
