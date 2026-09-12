@@ -5,6 +5,8 @@ import gg.rsmod.game.model.attr.INTERACTING_ITEM_SLOT
 import gg.rsmod.game.model.attr.OTHER_ITEM_SLOT_ATTR
 import gg.rsmod.game.model.collision.ObjectType
 import gg.rsmod.game.model.interf.DisplayMode
+import gg.rsmod.plugins.content.skills.summoning.Familiar
+import gg.rsmod.plugins.content.skills.summoning.FollowerDetailsTab
 import gg.rsmod.game.model.timer.*
 import gg.rsmod.game.service.serializer.PlayerSerializerService
 import kotlinx.serialization.json.Json
@@ -64,12 +66,23 @@ set_menu_open_check {
 }
 
 set_window_status_logic {
+    // The client's WINDOW_STATUS carries `InterfaceManager.getWindowMode()`: WindowMode.FIXED = 1,
+    // RESIZABLE = 2, FULLSCREEN = 3 (client `com/jagex/core/constants/WindowMode.java`). Fullscreen
+    // used to fall through to the fixed 548 gameframe; it is a resizable layout and gets 746.
     val mode =
         when (player.attr[DISPLAY_MODE_CHANGE_ATTR]) {
-            2 -> DisplayMode.RESIZABLE_NORMAL
+            2, 3 -> DisplayMode.RESIZABLE_NORMAL
             else -> DisplayMode.FIXED
         }
+    val changed = player.interfaces.displayMode != mode
     player.toggleDisplayInterface(mode)
+    if (changed) {
+        // A new top-level gameframe rebuilds every component with its baked flags, which drops
+        // the server-sent Summoning state: orb/panel gating and the Follower Details tab
+        // (548:99 / 746:47 are baked hidden with no ops). Re-arm both, exactly as login does.
+        Familiar.redrawInterfaces(player)
+        FollowerDetailsTab.install(player)
+    }
 }
 
 /**
