@@ -26,11 +26,12 @@ import kotlin.test.assertTrue
  *   and any positional one is muted by the client's *background* volume rather than its
  *   sound-effect volume.
  *
- * What none of that explains is silence on the actions themselves, and that turned out to be the
- * real gap: the Summoning subsystem emits no audio anywhere, and `Familiar.summon` and
- * `Familiar.dismiss` play no animation either - so there is not even a sequence for the client's
- * own sound path to fire on. That is recorded in the ledger as downstream of the still-unrecovered
- * summon/dismiss visual rather than papered over with an invented sound id.
+ * What remains unproven is an explicit server-side sound for the summon/dismiss action itself.
+ * `Familiar.summon` and `Familiar.dismiss` now do play the source-backed per-familiar spawn and
+ * despawn animations, so the client has a genuine sequence through which attached audio can play.
+ * The cache census found attached audio only for Phoenix's pair; the other pairs are silent in the
+ * sequence data. No server sound id is invented for those silent pairs. The remaining question is
+ * therefore a source/cache boundary and human listening check, not a missing animation hook.
  *
  * What is testable here, and what these tests do, is that the audio the cache genuinely does carry
  * is still present. A cache import that dropped these groups would make the five audible familiars
