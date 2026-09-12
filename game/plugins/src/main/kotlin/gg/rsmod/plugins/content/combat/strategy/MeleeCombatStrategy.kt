@@ -15,6 +15,7 @@ import gg.rsmod.plugins.content.combat.Combat
 import gg.rsmod.plugins.content.combat.CombatConfigs
 import gg.rsmod.plugins.content.combat.dealHit
 import gg.rsmod.plugins.content.combat.formula.MeleeCombatFormula
+import gg.rsmod.plugins.content.areas.godwars.GodWarsMinionAudio
 import kotlin.math.min
 
 /**
@@ -53,6 +54,8 @@ object MeleeCombatStrategy : CombatStrategy {
             if (weapon != null && world.definitions.get(ItemDef::class.java, weapon.id).attackAudio > -1) {
                 pawn.playSound(world.definitions.get(ItemDef::class.java, weapon.id).attackAudio)
             }
+        } else if (pawn is Npc) {
+            GodWarsMinionAudio.playAttack(pawn, target)
         }
 
         val blockAnimation = CombatConfigs.getBlockAnimation(target)

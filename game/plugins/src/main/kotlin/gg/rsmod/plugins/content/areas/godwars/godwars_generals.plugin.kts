@@ -25,24 +25,10 @@ on_npc_combat(*GodWarsGenerals.Kreearra.ids) {
 }
 
 // Void 667 supplies these bodyguard death sounds. The shared NPC combat definition currently has
-// no audio fields, so this pre-death hook restores only the unambiguous death events without
-// replacing the generic attack path. Missing source keys (Steelwill, Starlight and Tstanon) stay
-// source-blocked rather than being filled with a guessed generic sound.
-val BODYGUARD_DEATH_SOUNDS = mapOf(
-    Npcs.SERGEANT_STRONGSTACK to 471, // goblin_death
-    Npcs.SERGEANT_GRIMSPIKE to 471, // goblin_death
-    Npcs.WINGMAN_SKREE to 3854, // aviansie_death
-    Npcs.FLOCKLEADER_GEERIN to 3854, // aviansie_death
-    Npcs.FLIGHT_KILISA to 3854, // aviansie_death
-    Npcs.GROWLER to 3867,
-    Npcs.BREE to 3827,
-    Npcs.BALFRUG_KREEYATH to 403,
-    Npcs.ZAKLN_GRITCH to 403,
-)
-
-BODYGUARD_DEATH_SOUNDS.forEach { (id, sound) ->
+// no audio fields, so the narrow overlay keeps the generic attack path and lifecycle intact.
+GodWarsMinionAudio.deathSounds().forEach { (id, _) ->
     on_npc_pre_death(id) {
-        npc.world.spawn(gg.rsmod.game.model.entity.AreaSound(tile = npc.tile, id = sound, radius = 10, volume = 1))
+        GodWarsMinionAudio.playDeath(npc)
     }
 }
 
