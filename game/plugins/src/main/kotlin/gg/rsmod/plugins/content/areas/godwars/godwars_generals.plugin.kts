@@ -24,34 +24,35 @@ on_npc_combat(*GodWarsGenerals.Kreearra.ids) {
     npc.queue { GodWarsGenerals.Kreearra.handleSpecialCombat(this) }
 }
 
-data class Bodyguards(
-    val generalX: Int,
-    val generalZ: Int,
+data class BodyguardSpawn(
+    val npc: Int,
+    val x: Int,
+    val z: Int,
     val height: Int,
-    val npcs: List<Int>,
 )
 
 listOf(
-    // General Graardor (2872, 5358, 2): Sergeant Strongstack, Steelwill, Grimspike
-    Bodyguards(2872, 5358, 2, listOf(Npcs.SERGEANT_STRONGSTACK, Npcs.SERGEANT_STEELWILL, Npcs.SERGEANT_GRIMSPIKE)),
-    // Kree'arra (2832, 5302, 2): Wingman Skree, Flockleader Geerin, Flight Kilisa
-    Bodyguards(2832, 5302, 2, listOf(Npcs.WINGMAN_SKREE, Npcs.FLOCKLEADER_GEERIN, Npcs.FLIGHT_KILISA)),
-    // Commander Zilyana (2900, 5268, 0): Starlight, Growler, Bree
-    Bodyguards(2900, 5268, 0, listOf(Npcs.STARLIGHT, Npcs.GROWLER, Npcs.BREE)),
-    // K'ril Tsutsaroth (2926, 5322, 2): Tstanon Karlak, Zakl'n Gritch, Balfrug Kreeyath
-    Bodyguards(2926, 5322, 2, listOf(Npcs.TSTANON_KARLAK, Npcs.ZAKLN_GRITCH, Npcs.BALFRUG_KREEYATH)),
-).forEach { group ->
-    val offsets = listOf(-2 to 2, 2 to 2, 0 to -2)
-    group.npcs.forEachIndexed { index, id ->
-        val (dx, dz) = offsets[index]
-        spawn_npc(
-            npc = id,
-            x = group.generalX + dx,
-            z = group.generalZ + dz,
-            height = group.height,
-            walkRadius = 5,
-            direction = Direction.NORTH,
-            static = false,
-        )
-    }
+    // Exact Void 667 GWD spawn tiles; these are independent world spawns and do not despawn with a boss.
+    BodyguardSpawn(Npcs.SERGEANT_STRONGSTACK, 2866, 5358, 2),
+    BodyguardSpawn(Npcs.SERGEANT_STEELWILL, 2872, 5352, 2),
+    BodyguardSpawn(Npcs.SERGEANT_GRIMSPIKE, 2868, 5362, 2),
+    BodyguardSpawn(Npcs.WINGMAN_SKREE, 2840, 5303, 2),
+    BodyguardSpawn(Npcs.FLOCKLEADER_GEERIN, 2828, 5299, 2),
+    BodyguardSpawn(Npcs.FLIGHT_KILISA, 2833, 5297, 2),
+    BodyguardSpawn(Npcs.STARLIGHT, 2903, 5260, 0),
+    BodyguardSpawn(Npcs.BREE, 2902, 5270, 0),
+    BodyguardSpawn(Npcs.GROWLER, 2898, 5262, 0),
+    BodyguardSpawn(Npcs.BALFRUG_KREEYATH, 2921, 5319, 2),
+    BodyguardSpawn(Npcs.TSTANON_KARLAK, 2932, 5328, 2),
+    BodyguardSpawn(Npcs.ZAKLN_GRITCH, 2919, 5327, 2),
+).forEach { spawn ->
+    spawn_npc(
+        npc = spawn.npc,
+        x = spawn.x,
+        z = spawn.z,
+        height = spawn.height,
+        walkRadius = 5,
+        direction = Direction.NORTH,
+        static = false,
+    )
 }
