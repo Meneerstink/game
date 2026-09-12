@@ -84,7 +84,9 @@ object CorporealBeastCombatScript : CombatScript() {
     private const val ANIM_CORE_TAKE_OFF = 10393
 
     private const val CORE_SPAWN_CHANCE = 8
-    private const val CORE_SPAWN_HIT_THRESHOLD = 320
+    // Void's source stores this rule as 320 in its historical x10 hitmark unit. The local
+    // runtime now passes 1:1 real damage from PawnExt, so the gameplay threshold is 32.
+    private const val CORE_SPAWN_HIT_THRESHOLD = 32
     private const val CORE_DRAIN_MIN = 10
     private const val CORE_DRAIN_MAX = 130
     private const val CORE_ATTACK_SPEED = 2
