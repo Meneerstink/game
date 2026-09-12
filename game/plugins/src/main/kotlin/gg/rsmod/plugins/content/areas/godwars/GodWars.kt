@@ -55,6 +55,13 @@ object GodWars {
             slots.indices.all { index -> player.equipment[slots[index]]?.id == ids[index] }
         }
     }
+
+    /** Exact orthogonal polygon from Void's `godwars_chill_area` definition. */
+    fun inGodWarsChillArea(tile: Tile): Boolean =
+        (tile.x in 2839..2943 && tile.z in 3712..3744) ||
+            (tile.x in 2816..2943 && tile.z in 3744..3775) ||
+            (tile.x in 2816..2879 && tile.z in 3775..3839)
+
     val PROTECTED_GODS = AttributeKey<Set<God>>()
 
     enum class God(

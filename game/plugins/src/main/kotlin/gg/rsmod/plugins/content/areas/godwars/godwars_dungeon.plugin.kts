@@ -5,8 +5,13 @@ import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.combat.CombatClass
 import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Player
+import gg.rsmod.game.model.timer.TimerKey
 import gg.rsmod.game.model.timer.ACTIVE_COMBAT_TIMER
 import gg.rsmod.plugins.api.WeaponType
+import gg.rsmod.plugins.api.HitType
+import gg.rsmod.plugins.api.Skills
+import gg.rsmod.plugins.api.cfg.Sfx
+import gg.rsmod.plugins.api.ext.sendRunEnergy
 import gg.rsmod.plugins.content.areas.godwars.GodWars.God
 import gg.rsmod.plugins.content.combat.CombatConfigs
 
@@ -21,6 +26,8 @@ import gg.rsmod.plugins.content.combat.CombatConfigs
 val OVERLAY_INTERFACE = 601
 val KILLCOUNT_REQUIRED = 40
 val GWD_REGIONS = intArrayOf(11346, 11347, 11602, 11603)
+val GWD_CHILL_REGIONS = intArrayOf(11322, 11323, 11578, 11579)
+val GWD_CHILL_TIMER = TimerKey()
 
 val ROPE_ENTRANCE_VARBIT = 3932
 val SARADOMIN_ROPE_TOP_VARBIT = 3933
@@ -63,6 +70,36 @@ GWD_REGIONS.forEach { region ->
 on_login {
     if (GodWars.inDungeon(player.tile)) {
         openOverlay(player)
+    }
+    if (player.tile.regionId in GWD_CHILL_REGIONS) {
+        player.timers[GWD_CHILL_TIMER] = 1
+    }
+}
+
+GWD_CHILL_REGIONS.forEach { regionId ->
+    on_enter_region(regionId) { player.timers[GWD_CHILL_TIMER] = 1 }
+    on_exit_region(regionId) { player.timers.remove(GWD_CHILL_TIMER) }
+}
+
+/** Void's 2011 Wind Chill: drain every ten ticks while in the sourced polygon. */
+on_timer(GWD_CHILL_TIMER) {
+    if (GodWars.inGodWarsChillArea(player.tile)) {
+        player.playSound(Sfx.WINDY)
+        player.runEnergy = 0.0
+        player.sendRunEnergy(0)
+        for (skill in 0..Skills.DUNGEONEERING) {
+            if (skill == Skills.CONSTITUTION) {
+                if (player.skills.getCurrentLevel(Skills.CONSTITUTION) > 10) {
+                    player.hit(damage = 10, type = HitType.REGULAR_HIT)
+                }
+            } else {
+                val level = player.skills.getCurrentLevel(skill)
+                player.skills.setCurrentLevel(skill, (level - 1).coerceAtLeast(0))
+            }
+        }
+    }
+    if (player.tile.regionId in GWD_CHILL_REGIONS) {
+        player.timers[GWD_CHILL_TIMER] = 10
     }
 }
 
