@@ -86,10 +86,7 @@ EquipmentType.values.forEach { slot ->
  * Aviansies (and Kree'arra's whole flock) fly too high to be hit with melee.
  */
 can_attack { attacker, target ->
-    if (attacker is Player && target is Npc && God.forNpc(target) == God.ARMADYL &&
-        target.id != Npcs.WINGMAN_SKREE && target.id != Npcs.FLOCKLEADER_GEERIN && target.id != Npcs.FLIGHT_KILISA &&
-        target.id !in 6229..6231
-    ) {
+    if (attacker is Player && target is Npc && GodWars.isFlyingArmadylNpc(target.id)) {
         if (CombatConfigs.getCombatClass(attacker) == CombatClass.MELEE) {
             attacker.message("The Aviansie is flying too high for you to attack using melee.")
             return@can_attack false
@@ -135,8 +132,8 @@ fun walkThroughDoor(player: Player, doorTile: Tile, destination: Tile) {
 
 God.values().filter { it.altarId != -1 }.forEach { god ->
     on_obj_option(obj = god.altarId, option = "Pray-at") {
-        val last = player.attr[GodWars.ALTAR_RECHARGE] ?: Int.MIN_VALUE
-        if (world.currentCycle - last < GodWars.ALTAR_RECHARGE_TICKS) {
+        val last = player.attr[GodWars.ALTAR_RECHARGE]
+        if (!GodWars.canRechargeAltar(world.currentCycle, last)) {
             player.message("The gods blessed you with their power not long ago. You must wait before they will do so again.")
             return@on_obj_option
         }

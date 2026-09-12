@@ -218,7 +218,7 @@ object NexCombatScript : CombatScript() {
         it.wait(1)
         for (player in victims) {
             player.animate(10070)
-            val damage = npc.world.random(700)
+            val damage = npc.world.random(70)
             player.hit(damage, HitType.REGULAR_HIT)
             soulSplit(npc, damage)
             player.moveTo(npc.world.findRandomTileAround(CENTRE, radius = 2) ?: CENTRE)
@@ -238,7 +238,7 @@ object NexCombatScript : CombatScript() {
         val farthest = NexEncounter.players().maxByOrNull { it.tile.getDistance(npc.tile) } ?: return
         NexEncounter.players().filter { it.tile.isWithinRadius(farthest.tile, 2) }.forEach { player ->
             player.forceChat("*Cough*")
-            player.hit(npc.world.random(100), HitType.REGULAR_HIT)
+            player.hit(npc.world.random(10), HitType.REGULAR_HIT)
             NexEncounter.infect(player)
         }
     }
@@ -250,10 +250,10 @@ object NexCombatScript : CombatScript() {
         npc.animate(ANIM_CALL_MINION)
         for (player in NexEncounter.players()) {
             val distance = player.tile.getDistance(npc.getCentreTile())
-            val max = if (distance <= 10) 400 - (distance * 400 / 11) else 300 + npc.world.random(75)
+            val max = if (distance <= 10) 40.0 - (distance * 40 / 11) else 30.0 + npc.world.random(7)
             npc.world.spawn(npc.createProjectile(player, PROJ_SHADOW, ProjectileType.ARROW))
             val land = RangedCombatFormula.getAccuracy(npc, player) >= npc.world.randomDouble()
-            npc.dealHit(target = player, maxHit = max / 10.0, landHit = land, delay = 2, hitType = HitType.RANGE, onHit = { hit ->
+            npc.dealHit(target = player, maxHit = max, landHit = land, delay = 2, hitType = HitType.RANGE, onHit = { hit ->
                 soulSplit(npc, hit.hit.hitmarks.sumOf { it.damage })
             })
         }
@@ -272,7 +272,7 @@ object NexCombatScript : CombatScript() {
             tiles.forEach { tile ->
                 world.spawn(gg.rsmod.game.model.TileGraphic(tile, GFX_SHADOW_TRAP, 0))
                 NexEncounter.players().filter { it.tile == tile }.forEach { player ->
-                    player.hit(400 + world.random(400), HitType.REGULAR_HIT)
+                    player.hit(40 + world.random(40), HitType.REGULAR_HIT)
                 }
             }
             wait(3)
@@ -364,7 +364,7 @@ object NexCombatScript : CombatScript() {
         npc.animate(ANIM_MAGIC)
         for (player in NexEncounter.players()) {
             npc.world.spawn(npc.createProjectile(player, PROJ_MAGIC, ProjectileType.MAGIC))
-            val protecting = player.hasPrayerIcon(PrayerIcon.PROTECT_FROM_MAGIC) || player.hasPrayerIcon(PrayerIcon.DEFLECT_MAGIC)
+            val protecting = player.isProtectedFrom(CombatClass.MAGIC)
             magicHit(npc, player, magicMax(npc), 1) { damage ->
                 player.alterPrayerPoints(-(damage / 4).coerceAtLeast(0))
                 if (npc.world.random(if (protecting) 6 else 3) == 0) {
@@ -397,7 +397,7 @@ object NexCombatScript : CombatScript() {
             if (player.tile == base) {
                 player.message("The centre of the ice prison freezes you to the bone!")
                 player.stopMovement()
-                player.hit(world.random(800), HitType.REGULAR_HIT)
+                player.hit(world.random(80), HitType.REGULAR_HIT)
             }
             prison.forEach { world.remove(it) }
         }

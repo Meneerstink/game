@@ -1,5 +1,6 @@
 package gg.rsmod.plugins.content.areas.godwars
 
+import gg.rsmod.plugins.api.ext.isProtectedFrom
 import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.combat.CombatClass
 import gg.rsmod.game.model.combat.CombatScript
@@ -229,7 +230,7 @@ object GodWarsGenerals {
                     npc.prepareAttack(CombatClass.MELEE, StyleType.SLASH, WeaponStyle.NONE)
                     val praying =
                         target is Player &&
-                            (target.hasPrayerIcon(PrayerIcon.PROTECT_FROM_MELEE) || target.hasPrayerIcon(PrayerIcon.DEFLECT_MELEE))
+                            target.isProtectedFrom(CombatClass.MELEE)
                     if (praying) {
                         val player = target as Player
                         shout(npc, "YARRRRRRR!")
@@ -237,8 +238,8 @@ object GodWarsGenerals {
                         player.message("K'ril Tsutsaroth slams through your protection prayer, leaving you feeling drained.")
                         // Protection prayers make npc melee accuracy 0, so this blow always lands.
                         npc.dealHit(target = player, maxHit = 49.0, landHit = true, delay = 1, hitType = HitType.MELEE, onHit = { hit ->
-                            val dealt = hit.hit.hitmarks.sumOf { h -> h.damage } / 10
-                            val drain = (dealt / 2) * 10
+                            val dealt = hit.hit.hitmarks.sumOf { h -> h.damage }
+                            val drain = dealt / 2
                             player.setCurrentPrayerPoints((player.getCurrentPrayerPoints() - drain).coerceAtLeast(0))
                         })
                     } else {

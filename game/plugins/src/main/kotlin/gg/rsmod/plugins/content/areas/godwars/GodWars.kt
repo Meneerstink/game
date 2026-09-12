@@ -25,6 +25,13 @@ object GodWars {
     val ALTAR_RECHARGE_TICKS = 1000 // 10 minutes
 
     val ALTAR_RECHARGE = AttributeKey<Int>()
+
+    fun canRechargeAltar(currentCycle: Int, lastCycle: Int?): Boolean =
+        lastCycle == null || currentCycle.toLong() - lastCycle.toLong() >= ALTAR_RECHARGE_TICKS
+
+    /** Novite PlayerCombat: Kree'arra and all three airborne bodyguards reject melee. */
+    fun isFlyingArmadylNpc(id: Int): Boolean =
+        id in God.ARMADYL.npcs && id !in 6229..6231
     val PROTECTED_GODS = AttributeKey<Set<God>>()
 
     enum class God(

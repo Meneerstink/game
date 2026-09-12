@@ -20,10 +20,10 @@ import gg.rsmod.plugins.api.ext.setVarp
  * Nex (Ancient Prison) encounter manager. One fight per world, started when the first player enters
  * the arena and torn down once the arena is empty.
  *
- * Phase model (2011): Nex has 30,000 life points split in five phases. When her life points drop to
+ * Phase model (2011): Nex has 3,000 runtime life points split in five phases. When her life points drop to
  * the next threshold she calls a minion ("Fumus, don't fail me!") and becomes immune until that
  * minion is killed, after which she switches element. In the final phase she shouts
- * "NOW, THE POWER OF ZAROS!", regains 6,000 life points and fights with Soul Split, Deflect Melee
+ * "NOW, THE POWER OF ZAROS!", regains 600 life points and fights with Soul Split, Deflect Melee
  * and Turmoil until she dies, unleashing Wrath around her.
  *
  * Ids, tiles, animations and graphics ported from the Novite donor (ZarosGodwars, Nex, NexCombat,
@@ -43,9 +43,9 @@ object NexEncounter {
     val MINION_SPAWNS = listOf(Tile(2913, 5215, 0), Tile(2937, 5215, 0), Tile(2937, 5191, 0), Tile(2913, 5191, 0))
     val MINION_IDS = intArrayOf(Npcs.FUMUS, Npcs.UMBRA, Npcs.CRUOR, Npcs.GLACIES)
 
-    const val MAX_LIFEPOINTS = 30000
-    const val PHASE_LIFEPOINTS = 6000
-    const val ZAROS_HEAL = 6000
+    const val MAX_LIFEPOINTS = 3000
+    const val PHASE_LIFEPOINTS = 600
+    const val ZAROS_HEAL = 600
 
     const val ANIM_START = 6355
     const val ANIM_CALL_MINION = 6987
@@ -307,7 +307,7 @@ object NexEncounter {
             }
         }
         players().filter { it.tile.isWithinRadius(centre, 10) }.forEach { player ->
-            player.hit(world.random(600), HitType.REGULAR_HIT, 1)
+            player.hit(world.random(60), HitType.REGULAR_HIT, 1)
         }
         minions.forEachIndexed { i, m -> m?.let { if (it.isSpawned()) world.remove(it) }; minions[i] = null }
         clearReavers()
@@ -336,7 +336,7 @@ object NexEncounter {
             player.attr[INFECTED] = remaining - 1
             if (remaining % 4 == 0) {
                 player.forceChat("*Cough*")
-                player.hit(world.random(10..30), HitType.REGULAR_HIT)
+                player.hit(world.random(1..3), HitType.REGULAR_HIT)
                 players().filter { it !== player && it.tile.isWithinRadius(player.tile, 1) && it.attr[INFECTED] == null }
                     .forEach { infect(it) }
             }
@@ -386,7 +386,7 @@ object NexEncounter {
                     if (world.collision.isClipped(tile)) continue
                     players().filter { it.tile == tile }.forEach { player ->
                         player.animate(1113)
-                        player.hit(world.random(350), HitType.REGULAR_HIT)
+                        player.hit(world.random(35), HitType.REGULAR_HIT)
                         player.message("The icicle spikes you to the spot!")
                         player.message("You've been injured and can't use protection prayers!")
                         player.stopMovement()
