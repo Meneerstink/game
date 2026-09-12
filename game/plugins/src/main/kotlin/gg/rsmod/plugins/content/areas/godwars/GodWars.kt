@@ -117,7 +117,7 @@ object GodWars {
             npcs = setOf(
                 Npcs.KREEARRA, Npcs.WINGMAN_SKREE, Npcs.FLOCKLEADER_GEERIN, Npcs.FLIGHT_KILISA,
                 6232, 6233, 6234, 6235, 6236, 6237, 6238, 6239, 6240, 6241, 6242, 6243, 6244, 6245, 6246,
-                6229, 6230, 6231, 6255, 6256, 6257,
+                6229, 6230, 6231,
             ),
         ),
         SARADOMIN(

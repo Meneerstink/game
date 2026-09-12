@@ -26,6 +26,23 @@ class GodWarsInteractionTests {
     }
 
     @Test
+    fun `every sourced GWD npc belongs to one faction`() {
+        val gods = GodWars.God.values()
+        for (index in gods.indices) {
+            for (otherIndex in index + 1 until gods.size) {
+                assertTrue(
+                    gods[index].npcs.intersect(gods[otherIndex].npcs).isEmpty(),
+                    "${gods[index]} and ${gods[otherIndex]} share a faction NPC",
+                )
+            }
+        }
+        assertTrue(GodWars.God.forNpcId(6255) == GodWars.God.SARADOMIN)
+        assertTrue(GodWars.God.forNpcId(6256) == GodWars.God.SARADOMIN)
+        assertTrue(GodWars.God.forNpcId(6257) == GodWars.God.SARADOMIN)
+        assertTrue(GodWars.God.forNpcId(6229) == GodWars.God.ARMADYL)
+    }
+
+    @Test
     fun `wind chill follows the sourced polygon boundaries`() {
         assertTrue(GodWars.inGodWarsChillArea(Tile(2943, 3712, 0)))
         assertTrue(GodWars.inGodWarsChillArea(Tile(2839, 3744, 0)))
