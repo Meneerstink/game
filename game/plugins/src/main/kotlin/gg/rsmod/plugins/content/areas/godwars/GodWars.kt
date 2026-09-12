@@ -22,6 +22,9 @@ object GodWars {
     /** Whole multi-combat dungeon (all planes). */
     val DUNGEON_X = 2816..2943
     val DUNGEON_Z = 5248..5375
+    /** Ancient Prison access/chamber area, which sits north of the main dungeon bounds. */
+    val ANCIENT_PRISON_X = 2899..2938
+    val ANCIENT_PRISON_Z = 5190..5222
 
     val ALTAR_RECHARGE_TICKS = 1000 // 10 minutes
 
@@ -190,7 +193,9 @@ object GodWars {
         }
     }
 
-    fun inDungeon(tile: Tile): Boolean = tile.x in DUNGEON_X && tile.z in DUNGEON_Z
+    fun inDungeon(tile: Tile): Boolean =
+        (tile.x in DUNGEON_X && tile.z in DUNGEON_Z) ||
+            (tile.x in ANCIENT_PRISON_X && tile.z in ANCIENT_PRISON_Z)
 
     fun getKillCount(player: Player, god: God): Int = player.attr[god.killCount] ?: 0
 

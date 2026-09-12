@@ -25,7 +25,7 @@ import gg.rsmod.plugins.content.combat.CombatConfigs
  */
 val OVERLAY_INTERFACE = 601
 val KILLCOUNT_REQUIRED = 40
-val GWD_REGIONS = intArrayOf(11346, 11347, 11602, 11603)
+val GWD_REGIONS = intArrayOf(11346, 11347, 11601, 11602, 11603)
 val GWD_CHILL_REGIONS = intArrayOf(11322, 11323, 11578, 11579)
 val GWD_CHILL_TIMER = TimerKey()
 

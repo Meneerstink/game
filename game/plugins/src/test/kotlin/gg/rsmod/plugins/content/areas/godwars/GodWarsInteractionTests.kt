@@ -34,4 +34,13 @@ class GodWarsInteractionTests {
         assertFalse(GodWars.inGodWarsChillArea(Tile(2880, 3839, 0)))
         assertFalse(GodWars.inGodWarsChillArea(Tile(2900, 3800, 0)))
     }
+
+    @Test
+    fun `ancient prison remains inside the God Wars lifecycle`() {
+        assertTrue(GodWars.inDungeon(Tile(2910, 5203, 0)))
+        assertTrue(GodWars.inDungeon(Tile(2899, 5203, 0)))
+        assertTrue(GodWars.inDungeon(Tile(2864, 5354, 2)))
+        assertFalse(GodWars.inDungeon(Tile(2900, 5189, 0)))
+        assertFalse(GodWars.inDungeon(Tile(3000, 5203, 0)))
+    }
 }
