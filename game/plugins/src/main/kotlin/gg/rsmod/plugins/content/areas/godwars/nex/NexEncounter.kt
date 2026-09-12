@@ -21,11 +21,12 @@ import gg.rsmod.plugins.api.ext.setVarp
  * Nex (Ancient Prison) encounter manager. One fight per world, started when the first player enters
  * the arena and torn down once the arena is empty.
  *
- * Phase model (2011): Nex has 3,000 displayed hitpoints, represented as 30,000 engine lifepoints,
- * split in five phases. When her life points drop to
+ * Phase model (2011): Nex has 3,000 runtime lifepoints, split in five phases. The hand-written
+ * combat DSL converts the donor's historical x10 values at the definition boundary. When her
+ * life points drop to
  * the next threshold she calls a minion ("Fumus, don't fail me!") and becomes immune until that
  * minion is killed, after which she switches element. In the final phase she shouts
- * "NOW, THE POWER OF ZAROS!", regains 600 life points and fights with Soul Split, Deflect Melee
+ * "NOW, THE POWER OF ZAROS!", regains 600 lifepoints and fights with Soul Split, Deflect Melee
  * and Turmoil until she dies, unleashing Wrath around her.
  *
  * Ids, tiles, animations and graphics ported from the Novite donor (ZarosGodwars, Nex, NexCombat,
@@ -45,11 +46,23 @@ object NexEncounter {
     val MINION_SPAWNS = listOf(Tile(2913, 5215, 0), Tile(2937, 5215, 0), Tile(2937, 5191, 0), Tile(2913, 5191, 0))
     val MINION_IDS = intArrayOf(Npcs.FUMUS, Npcs.UMBRA, Npcs.CRUOR, Npcs.GLACIES)
 
-    // NPC definitions use the engine's ten-times lifepoint unit (Nex = 30,000; each phase = 6,000).
-    const val MAX_LIFEPOINTS = 30000
-    const val PHASE_LIFEPOINTS = 6000
-    const val ZAROS_HEAL = 6000
+    // The DSL divides historical hand-written x10 source values by ten before runtime.
+    const val MAX_LIFEPOINTS = 3000
+    const val PHASE_LIFEPOINTS = 600
+    const val ZAROS_HEAL = 600
     const val SOUND_START = 3295
+    const val SOUND_DEATH = 3323
+    const val SOUND_VIRUS = 3296
+    const val SOUND_BLOOD_SACRIFICE = 3293
+    const val SOUND_NO_ESCAPE_START = 3294
+    const val SOUND_NO_ESCAPE_HIT = 3292
+    const val SOUND_SHADOW_TRAPS = 3314
+    const val SOUND_DARKNESS = 3322
+    const val SOUND_SIPHON = 3317
+    const val SOUND_ICE_PRISON = 3308
+    const val SOUND_ICE_BARRICADE = 3316
+    const val HIT_SOUND_THRESHOLD = 15
+    val HIT_SOUNDS = intArrayOf(3326, 3324, 3320, 3319, 3318, 3315, 3311, 3309, 3305, 3301, 3300, 3297)
 
     const val ANIM_START = 6355
     const val ANIM_CALL_MINION = 6987
@@ -110,6 +123,8 @@ object NexEncounter {
     /** True from the first "AT LAST!" until Nex begins attacking. */
     var intro = false
         private set
+    var firstStageAttack = false
+        private set
     var fightActive = false
         private set
     var restartCountdown = -1
@@ -166,6 +181,7 @@ object NexEncounter {
         if (fightActive) return
         fightActive = true
         intro = true
+        firstStageAttack = false
         awaitingMinion = false
         siphoning = false
         phase = Phase.SMOKE
@@ -201,6 +217,7 @@ object NexEncounter {
             if (!fightActive) return@queue
             boss.forceChat(Phase.SMOKE.callout)
             playSound(boss, Phase.SMOKE.transitionSound)
+            firstStageAttack = true
             intro = false
             engageRandomPlayer(boss)
         }
@@ -209,6 +226,7 @@ object NexEncounter {
     fun end() {
         fightActive = false
         intro = false
+        firstStageAttack = false
         awaitingMinion = false
         siphoning = false
         restartCountdown = -1
@@ -231,6 +249,10 @@ object NexEncounter {
      * dead, and every hit is capped at 500 (2011 damage cap) outside the Zaros phase.
      */
     private fun modifyHit(boss: Npc, hit: gg.rsmod.game.model.Hit) {
+        val damage = hit.hitmarks.sumOf { it.damage }
+        if (shouldPlayHitSound(damage)) {
+            playSound(boss, HIT_SOUNDS[boss.world.random(HIT_SOUNDS.lastIndex)])
+        }
         if (intro) {
             hit.hitmarks.forEach { it.damage = 0 }
             return
@@ -284,6 +306,7 @@ object NexEncounter {
             else -> {}
         }
         phase = Phase.values()[phase.ordinal + 1]
+        firstStageAttack = true
         boss.forceChat(phase.callout)
         playSound(boss, phase.transitionSound)
         boss.animate(ANIM_MAGIC)
@@ -310,9 +333,20 @@ object NexEncounter {
         if (id >= 0) npc.world.spawn(AreaSound(tile = npc.tile, id = id, radius = 10, volume = 1))
     }
 
+    internal fun playEncounterSound(npc: Npc, id: Int) = playSound(npc, id)
+
+    fun consumeFirstStageAttack(): Boolean {
+        if (!firstStageAttack) return false
+        firstStageAttack = false
+        return true
+    }
+
+    fun shouldPlayHitSound(damage: Int): Boolean = damage >= HIT_SOUND_THRESHOLD
+
     /** Nex death: Wrath burst, drops handled by the definition plugin, restart after a minute. */
     fun onNexDeath(boss: Npc) {
         if (!fightActive) return
+        playSound(boss, SOUND_DEATH)
         boss.forceChat("Taste my wrath!")
         boss.graphic(GFX_WRATH)
         val centre = boss.getCentreTile()

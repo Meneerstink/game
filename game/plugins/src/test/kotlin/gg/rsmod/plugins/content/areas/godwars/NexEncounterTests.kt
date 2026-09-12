@@ -9,13 +9,13 @@ import kotlin.test.assertEquals
 class NexEncounterTests {
     @Test
     fun `phase thresholds use the engine lifepoint unit`() {
-        assertEquals(30000, NexEncounter.MAX_LIFEPOINTS)
-        assertEquals(24000, NexEncounter.phaseFloor(Phase.SMOKE))
-        assertEquals(18000, NexEncounter.phaseFloor(Phase.SHADOW))
-        assertEquals(12000, NexEncounter.phaseFloor(Phase.BLOOD))
-        assertEquals(6000, NexEncounter.phaseFloor(Phase.ICE))
+        assertEquals(3000, NexEncounter.MAX_LIFEPOINTS)
+        assertEquals(2400, NexEncounter.phaseFloor(Phase.SMOKE))
+        assertEquals(1800, NexEncounter.phaseFloor(Phase.SHADOW))
+        assertEquals(1200, NexEncounter.phaseFloor(Phase.BLOOD))
+        assertEquals(600, NexEncounter.phaseFloor(Phase.ICE))
         assertEquals(0, NexEncounter.phaseFloor(Phase.ZAROS))
-        assertEquals(6000, NexEncounter.ZAROS_HEAL)
+        assertEquals(600, NexEncounter.ZAROS_HEAL)
     }
 
     @Test
@@ -38,5 +38,14 @@ class NexEncounterTests {
         assertEquals(0, NexCombatScript.nextIceAttackIndex(10))
         assertEquals(2, NexCombatScript.zarosAttackRoll(false, 2))
         assertEquals(13, NexCombatScript.zarosAttackRoll(true, 10))
+    }
+
+    @Test
+    fun `Nex source hit audio and Soul Split use the runtime scale`() {
+        assertEquals(12, NexEncounter.HIT_SOUNDS.size)
+        assertEquals(false, NexEncounter.shouldPlayHitSound(14))
+        assertEquals(true, NexEncounter.shouldPlayHitSound(15))
+        assertEquals(0, NexCombatScript.soulSplitAmount(4))
+        assertEquals(3, NexCombatScript.soulSplitAmount(19))
     }
 }

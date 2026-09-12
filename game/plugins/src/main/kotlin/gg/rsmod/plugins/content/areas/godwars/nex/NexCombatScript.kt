@@ -91,6 +91,20 @@ object NexCombatScript : CombatScript() {
             val inMelee = npc.getFrontFacingTile(target).getDistance(target.tile) <= 1
             npc.prayerIcon = if (enc.phase == Phase.ZAROS) PrayerIcon.SOUL_SPLIT.id else -1
 
+            if (enc.consumeFirstStageAttack()) {
+                when (enc.phase) {
+                    Phase.SMOKE -> {
+                        virusAttack(npc)
+                        npc.postAttackLogic(target)
+                        it.wait(npc.combatDef.attackSpeed)
+                        target = npc.getCombatTarget() ?: enc.players().randomOrNull() ?: break
+                        continue
+                    }
+                    Phase.SHADOW -> if (world.random(6) == 0) shadowTraps(npc) else embraceDarkness(npc)
+                    else -> {}
+                }
+            }
+
             when (enc.phase) {
                 Phase.SMOKE -> when (if (inMelee) world.random(10) else world.random(6)) {
                     0, 1, 2 -> magicAttack(npc, false)
@@ -117,7 +131,13 @@ object NexCombatScript : CombatScript() {
                     val attackIndex = iceCounter
                     when (attackIndex) {
                         0 -> icePrison(npc)
-                        6 -> { npc.forceChat("Contain this!"); npc.animate(ANIM_SPECIAL); npc.graphic(GFX_ICE_PRISON); enc.icePrison(npc) }
+                        6 -> {
+                            npc.forceChat("Contain this!")
+                            NexEncounter.playEncounterSound(npc, NexEncounter.SOUND_ICE_BARRICADE)
+                            npc.animate(ANIM_SPECIAL)
+                            npc.graphic(GFX_ICE_PRISON)
+                            enc.icePrison(npc)
+                        }
                         10 -> {
                             icePrison(npc)
                         }
@@ -146,9 +166,12 @@ object NexCombatScript : CombatScript() {
     /** Zaros phase: Nex heals herself for the damage she deals (Soul Split). */
     private fun soulSplit(npc: Npc, damage: Int) {
         if (NexEncounter.phase == Phase.ZAROS && damage > 0) {
-            NexEncounter.heal(npc, damage / 2)
+            NexEncounter.heal(npc, soulSplitAmount(damage))
         }
     }
+
+    /** Novite's Player.sendSoulSplit heals one fifth of the incoming damage. */
+    fun soulSplitAmount(damage: Int): Int = damage / 5
 
     private fun magicMax(npc: Npc): Double = if (NexEncounter.phase == Phase.ZAROS) MAGIC_MAX * 1.2 else MAGIC_MAX
 
@@ -211,6 +234,7 @@ object NexCombatScript : CombatScript() {
     private suspend fun noEscape(it: QueueTask, npc: Npc) {
         busy = true
         npc.forceChat("There is...")
+        NexEncounter.playEncounterSound(npc, NexEncounter.SOUND_NO_ESCAPE_START)
         npc.animate(ANIM_NO_ESCAPE)
         npc.graphic(GFX_NO_ESCAPE)
         it.wait(1)
@@ -218,6 +242,7 @@ object NexCombatScript : CombatScript() {
         val start = NO_ESCAPE_TILES[index]
         npc.moveTo(Tile(start.x - 1, start.z - 1, 0))
         npc.forceChat("NO ESCAPE!")
+        NexEncounter.playEncounterSound(npc, NexEncounter.SOUND_NO_ESCAPE_HIT)
         val vertical = index == 0 || index == 2
         val victims = NexEncounter.players().filter { player ->
             if (vertical) {
@@ -245,6 +270,7 @@ object NexCombatScript : CombatScript() {
     private fun virusAttack(npc: Npc) {
         virusCooldown = 12 + npc.world.random(4)
         npc.forceChat("Let the virus flow through you!")
+        NexEncounter.playEncounterSound(npc, NexEncounter.SOUND_VIRUS)
         npc.animate(ANIM_MAGIC)
         val farthest = NexEncounter.players().maxByOrNull { it.tile.getDistance(npc.tile) } ?: return
         NexEncounter.players().filter { it.tile.isWithinRadius(farthest.tile, 2) }.forEach { player ->
@@ -273,6 +299,7 @@ object NexCombatScript : CombatScript() {
     private fun shadowTraps(npc: Npc) {
         shadowTrapsActive = true
         npc.forceChat("Fear the shadow!")
+        NexEncounter.playEncounterSound(npc, NexEncounter.SOUND_SHADOW_TRAPS)
         npc.animate(ANIM_SPECIAL)
         npc.graphic(GFX_ICE_PRISON)
         val world = npc.world
@@ -293,6 +320,7 @@ object NexCombatScript : CombatScript() {
 
     private fun embraceDarkness(npc: Npc) {
         npc.forceChat("Embrace darkness!")
+        NexEncounter.playEncounterSound(npc, NexEncounter.SOUND_DARKNESS)
         npc.animate(ANIM_MAGIC)
         npc.graphic(GFX_DARKNESS)
         NexEncounter.applyDarkness(true)
@@ -326,6 +354,7 @@ object NexCombatScript : CombatScript() {
     private fun siphon(npc: Npc, target: Pawn) {
         NexEncounter.clearReavers()
         npc.forceChat("A siphon will solve this!")
+        NexEncounter.playEncounterSound(npc, NexEncounter.SOUND_SIPHON)
         npc.animate(ANIM_SIPHON)
         npc.graphic(GFX_SIPHON)
         NexEncounter.siphoning = true
@@ -339,6 +368,7 @@ object NexCombatScript : CombatScript() {
     private fun bloodSacrifice(npc: Npc, target: Pawn) {
         val player = target as? Player ?: return
         npc.forceChat("I demand a blood sacrifice!")
+        NexEncounter.playEncounterSound(npc, NexEncounter.SOUND_BLOOD_SACRIFICE)
         player.attr[NexEncounter.SACRIFICE_TARGET] = true
         player.graphic(GFX_PLAYER_SACRIFICE)
         player.message("<col=480000>Nex has marked you as a sacrifice, RUN!")
@@ -388,6 +418,7 @@ object NexCombatScript : CombatScript() {
 
     private fun icePrison(npc: Npc) {
         npc.forceChat("Die now, in a prison of ice!")
+        NexEncounter.playEncounterSound(npc, NexEncounter.SOUND_ICE_PRISON)
         npc.animate(ANIM_MAGIC)
         val world = npc.world
         val player = NexEncounter.players().filter { it.tile.isWithinRadius(npc.tile, 14) }.randomOrNull() ?: return
