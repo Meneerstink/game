@@ -6,6 +6,7 @@ import gg.rsmod.plugins.api.SkullIcon
 import gg.rsmod.plugins.api.ext.getVarbit
 import gg.rsmod.plugins.api.ext.hasSkullIcon
 import gg.rsmod.plugins.api.ext.setVarbit
+import gg.rsmod.plugins.api.ext.setVarcString
 
 /**
  * Server side of the "Items Kept on Death" screen (interface 17).
@@ -57,6 +58,10 @@ object ItemsKeptOnDeath {
         val keepCount = DeathItemRiskCalculator.protectedItemCount(skulled, protectItem)
         player.setVarbit(SKULLED_VARBIT, if (skulled) 1 else 0)
         player.setVarbit(KEEP_COUNT_VARBIT, keepCount)
+        // Novite PlayerDeathInformation.sendItemsKeptOnDeath publishes this string; CS2
+        // 4597 reads it for the right-hand panel. An unset varcstr renders literally "null".
+        // Do not copy Novite's gravestone/Edgeville text: this server uses Death's Domain.
+        player.setVarcString(352, "The number of items kept on<br>death is normally 3.")
         return keepCount
     }
 
