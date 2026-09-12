@@ -20,7 +20,8 @@ import gg.rsmod.plugins.api.ext.setVarp
  * Nex (Ancient Prison) encounter manager. One fight per world, started when the first player enters
  * the arena and torn down once the arena is empty.
  *
- * Phase model (2011): Nex has 3,000 runtime life points split in five phases. When her life points drop to
+ * Phase model (2011): Nex has 3,000 displayed hitpoints, represented as 30,000 engine lifepoints,
+ * split in five phases. When her life points drop to
  * the next threshold she calls a minion ("Fumus, don't fail me!") and becomes immune until that
  * minion is killed, after which she switches element. In the final phase she shouts
  * "NOW, THE POWER OF ZAROS!", regains 600 life points and fights with Soul Split, Deflect Melee
@@ -43,9 +44,10 @@ object NexEncounter {
     val MINION_SPAWNS = listOf(Tile(2913, 5215, 0), Tile(2937, 5215, 0), Tile(2937, 5191, 0), Tile(2913, 5191, 0))
     val MINION_IDS = intArrayOf(Npcs.FUMUS, Npcs.UMBRA, Npcs.CRUOR, Npcs.GLACIES)
 
-    const val MAX_LIFEPOINTS = 3000
-    const val PHASE_LIFEPOINTS = 600
-    const val ZAROS_HEAL = 600
+    // NPC definitions use the engine's ten-times lifepoint unit (Nex = 30,000; each phase = 6,000).
+    const val MAX_LIFEPOINTS = 30000
+    const val PHASE_LIFEPOINTS = 6000
+    const val ZAROS_HEAL = 6000
 
     const val ANIM_START = 6355
     const val ANIM_CALL_MINION = 6987
@@ -235,7 +237,7 @@ object NexEncounter {
             }
             return
         }
-        val floor = if (phase == Phase.ZAROS) 0 else MAX_LIFEPOINTS - PHASE_LIFEPOINTS * (phase.ordinal + 1)
+        val floor = phaseFloor(phase)
         hit.hitmarks.forEach { mark ->
             if (phase != Phase.ZAROS && mark.damage > 500) mark.damage = 500
             if (awaitingMinion) {
@@ -249,7 +251,7 @@ object NexEncounter {
 
     private fun checkPhaseThreshold(boss: Npc) {
         if (phase == Phase.ZAROS) return
-        val floor = MAX_LIFEPOINTS - PHASE_LIFEPOINTS * (phase.ordinal + 1)
+        val floor = phaseFloor(phase)
         if (boss.getCurrentLifepoints() <= floor) {
             awaitingMinion = true
             boss.forceChat("${phase.minionName}, don't fail me!")
@@ -293,6 +295,9 @@ object NexEncounter {
         val max = MAX_LIFEPOINTS
         boss.setCurrentLifepoints((boss.getCurrentLifepoints() + amount).coerceAtMost(max))
     }
+
+    fun phaseFloor(phase: Phase): Int =
+        if (phase == Phase.ZAROS) 0 else MAX_LIFEPOINTS - PHASE_LIFEPOINTS * (phase.ordinal + 1)
 
     /** Nex death: Wrath burst, drops handled by the definition plugin, restart after a minute. */
     fun onNexDeath(boss: Npc) {
