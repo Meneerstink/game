@@ -51,6 +51,10 @@ object GlacorCombatScript : CombatScript() {
     const val GFX_FREEZE = 369
     const val GFX_EXPLODE = 956
 
+    // Novite stores these caps in the historical x10 hitmark unit; this runtime is 1:1.
+    private const val GLACOR_DAMAGE_CAP = 250
+    private const val GLACYTE_DAMAGE_CAP = 90
+
     val GLACYTE_IDS = intArrayOf(Npcs.UNSTABLE_GLACYTE, Npcs.SAPPING_GLACYTE, Npcs.ENDURING_GLACYTE)
 
     override suspend fun handleSpecialCombat(it: QueueTask) {
@@ -89,7 +93,7 @@ object GlacorCombatScript : CombatScript() {
             } else if (npc.attr[LAST_GLACYTE] == Npcs.ENDURING_GLACYTE) {
                 hit.hitmarks.forEach { it.damage = (it.damage * 0.6).toInt() }
             }
-            hit.hitmarks.forEach { if (it.damage > 2500) it.damage = 2500 }
+            hit.hitmarks.forEach { if (it.damage > GLACOR_DAMAGE_CAP) it.damage = GLACOR_DAMAGE_CAP }
         }
     }
 
@@ -105,11 +109,12 @@ object GlacorCombatScript : CombatScript() {
             glacyte.respawns = false
             glacyte.walkRadius = 4
             glacyte.attr[GLACYTE_PARENT] = java.lang.ref.WeakReference(npc)
-            if (id == Npcs.ENDURING_GLACYTE) {
-                glacyte.hitModifier = { hit ->
+            glacyte.hitModifier = { hit ->
+                if (id == Npcs.ENDURING_GLACYTE) {
                     val near = npc.isSpawned() && glacyte.tile.isWithinRadius(npc.tile, 14)
                     hit.hitmarks.forEach { it.damage = (it.damage * if (near) 0.4 else 0.8).toInt() }
                 }
+                hit.hitmarks.forEach { if (it.damage > GLACYTE_DAMAGE_CAP) it.damage = GLACYTE_DAMAGE_CAP }
             }
             if (world.spawn(glacyte)) {
                 list.add(glacyte)
