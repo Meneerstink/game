@@ -22,6 +22,25 @@ import gg.rsmod.plugins.api.PrayerIcon
  * the 2011 Sap/Leech activation chances and Wrath's death-explosion multiplier - see
  * [AncientCurses] KDoc), not guessed: real per-curse anim/gfx/projectile ids appear inline in that
  * method's `usingPrayer(1, <slot>)` branches, one branch per curse in this enum.
+ *
+ * ## Independent corroboration of the level and drain columns (2026-09-12)
+ *
+ * Every `level` and `drainEffect` below was re-checked against a second, unrelated 2011-era
+ * server - Darkan (`jojo162/world-server`,
+ * `src/main/java/com/rs/game/content/skills/prayer/Prayer.java`), whose curse rows carry
+ * `(curse, activateSound, slotId, varBit, quickVarBit, levelReq, drain)`. Its varbits are this
+ * file's exact 6820..6839 / 6862..6881, its slot order is identical, its level requirements match
+ * all twenty, and its `drain` column is this file's `drainEffect` divided by exactly 60 for every
+ * single curse with no exceptions: Sap 150/2.5, Leech 100/(5/3), Deflect 120/2, Soul Split 180/3,
+ * Turmoil 180/3, Wrath 30/(1/2), Berserker 20/(1/3), Protect Item 20/(1/3). Two independent
+ * sources agreeing to the last row is what moves this table from "ported" to SOURCE VERIFIED.
+ *
+ * Darkan's `activateSound` column was deliberately **not** adopted. It maps Sap, every Leech and
+ * Soul Split alike onto 2675 (the normal book's Protect from Magic sound), the three combat
+ * Deflects onto the matching Protect from Melee/Missiles/Magic sounds, and Protect Item, Berserker
+ * and Turmoil onto 11000, which is not a sound id in this cache at all. That is a substitution
+ * table, not a recovered one, and this cache has genuinely curse-named tracks of its own - see
+ * [AncientCurses]' sound constants.
  */
 enum class AncientCurse(
     val curseName: String,
@@ -43,6 +62,9 @@ enum class AncientCurse(
      * no overhead icon in the real game.
      */
     val icon: PrayerIcon? = null,
+    /** Source-proven rev-667 activation visual; null means the slot remains unsourced. */
+    val activationAnimation: Int? = null,
+    val activationGraphic: Int? = null,
     /**
      * Caster-side activation animation played on a landed hit that triggers this curse (Sap uses
      * 12569, Leech uses 12575 - both PROVEN from Novite `Player.java` rev 667, `handleIngoingHit`,
@@ -54,8 +76,10 @@ enum class AncientCurse(
     val castGraphic: Int? = null,
     /** Projectile from caster to target on activation (PROVEN, same source). */
     val projectileGraphic: Int? = null,
-    /** Graphic shown on the target one tick after the projectile lands (PROVEN, same source). */
+    /** Primary graphic shown on the target one tick after the projectile lands (PROVEN, same source). */
     val targetGraphic: Int? = null,
+    /** Optional companion impact graphic listed by the 2011 curse visual table. */
+    val secondaryTargetGraphic: Int? = null,
     /**
      * Deflect Melee/Missiles/Magic only: animation+graphic played on the DEFENDER when a hit is
      * actually reflected (PROVEN from the same `handleIngoingHit`: anim 12573, gfx 2228/2229/2230
@@ -92,7 +116,10 @@ enum class AncientCurse(
         castAnimation = 12569, castGraphic = 2223, projectileGraphic = 2224, targetGraphic = 2225,
         activationChancePercent = 100.0 / 11.0,
     ),
-    BERSERKER("Berserker", 5, level = 59, drainEffect = 20, category = Category.FREE),
+    BERSERKER(
+        "Berserker", 5, level = 59, drainEffect = 20, category = Category.FREE,
+        activationAnimation = 12589, activationGraphic = 2266,
+    ),
     DEFLECT_SUMMONING("Deflect Summoning", 6, 62, 120, Category.DEFLECT_SUMMONING, PrayerIcon.DEFLECT_SUMMONING),
     DEFLECT_MAGIC(
         "Deflect Magic", 7, 65, 120, Category.DEFLECT_COMBAT, PrayerIcon.DEFLECT_MAGIC,
@@ -108,37 +135,37 @@ enum class AncientCurse(
     ),
     LEECH_ATTACK(
         "Leech Attack", 10, level = 74, drainEffect = 100, category = Category.LEECH,
-        castAnimation = 12575, projectileGraphic = 2231, targetGraphic = 2232,
+        castAnimation = 12575, projectileGraphic = 2231, targetGraphic = 2232, secondaryTargetGraphic = 2233,
         activationChancePercent = 12.5,
     ),
     LEECH_RANGED(
         "Leech Ranged", 11, level = 76, drainEffect = 100, category = Category.LEECH,
-        castAnimation = 12575, projectileGraphic = 2236, targetGraphic = 2238,
+        castAnimation = 12575, projectileGraphic = 2236, targetGraphic = 2238, secondaryTargetGraphic = 2237,
         activationChancePercent = 12.5,
     ),
     LEECH_MAGIC(
         "Leech Magic", 12, level = 78, drainEffect = 100, category = Category.LEECH,
-        castAnimation = 12575, projectileGraphic = 2240, targetGraphic = 2242,
+        castAnimation = 12575, projectileGraphic = 2240, targetGraphic = 2242, secondaryTargetGraphic = 2241,
         activationChancePercent = 12.5,
     ),
     LEECH_DEFENCE(
         "Leech Defence", 13, level = 80, drainEffect = 100, category = Category.LEECH,
-        castAnimation = 12575, projectileGraphic = 2244, targetGraphic = 2246,
+        castAnimation = 12575, projectileGraphic = 2244, targetGraphic = 2246, secondaryTargetGraphic = 2245,
         activationChancePercent = 100.0 / 11.0,
     ),
     LEECH_STRENGTH(
         "Leech Strength", 14, level = 82, drainEffect = 100, category = Category.LEECH,
-        castAnimation = 12575, projectileGraphic = 2248, targetGraphic = 2250,
+        castAnimation = 12575, projectileGraphic = 2248, targetGraphic = 2250, secondaryTargetGraphic = 2249,
         activationChancePercent = 12.5,
     ),
     LEECH_ENERGY(
         "Leech Energy", 15, level = 84, drainEffect = 100, category = Category.LEECH,
-        castAnimation = 12575, projectileGraphic = 2256, targetGraphic = 2258,
+        castAnimation = 12575, projectileGraphic = 2252, targetGraphic = 2254, secondaryTargetGraphic = 2253,
         activationChancePercent = 100.0 / 11.0,
     ),
     LEECH_SPECIAL_ATTACK(
         "Leech Special Attack", 16, level = 86, drainEffect = 100, category = Category.LEECH,
-        castAnimation = 12575, projectileGraphic = 2252, targetGraphic = 2254,
+        castAnimation = 12575, projectileGraphic = 2256, targetGraphic = 2258, secondaryTargetGraphic = 2257,
         activationChancePercent = 100.0 / 11.0,
     ),
     WRATH("Wrath", 17, level = 89, drainEffect = 30, category = Category.WRATH, icon = PrayerIcon.WRATH),

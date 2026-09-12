@@ -60,6 +60,9 @@ class AncientCursesVisualAudioTests {
         }
         assertEquals(leechCurses.size, leechCurses.map { it.projectileGraphic }.distinct().size)
         assertEquals(leechCurses.size, leechCurses.map { it.targetGraphic }.distinct().size)
+        assertEquals(listOf(2233, 2237, 2241, 2245, 2249, 2253, 2257), leechCurses.map { it.secondaryTargetGraphic })
+        assertEquals(2252, AncientCurse.LEECH_ENERGY.projectileGraphic)
+        assertEquals(2256, AncientCurse.LEECH_SPECIAL_ATTACK.projectileGraphic)
     }
 
     @Test
@@ -137,7 +140,7 @@ class AncientCursesVisualAudioTests {
 
         AncientCurses.onDamageDealt(fixture.player, target, damage = 100)
 
-        verify { target.decreasePrayerPoints(200) }
+        verify { target.decreasePrayerPoints(20) }
         verify { target.graphic(2264, delay = 1) }
         verify { fixture.world.spawn(any<gg.rsmod.game.model.entity.Projectile>()) }
         verify { fixture.player.write(SynthSoundMessage(sound = Sfx.CURSE_HIT, volume = 1, delay = 0)) }
@@ -158,6 +161,30 @@ class AncientCursesVisualAudioTests {
         verify(atLeast = 2) { fixture.player.write(SynthSoundMessage(sound = Sfx.CURSE_ALL, volume = 1, delay = 0)) }
         AncientCurses.toggleTurmoil(fixture.player)
         verify(atLeast = 2) { fixture.player.write(SynthSoundMessage(sound = Sfx.CURSE_LIFT, volume = 1, delay = 0)) }
+    }
+
+    @Test
+    fun `source-proven curse toggles play activation visuals and quick activation stays visual-free`() {
+        val fixture = RuntimeFixture()
+        AncientCurses.switchBook(fixture.player, AncientCurses.PrayerBook.ANCIENT)
+
+        assertEquals(12567, AncientCurses.PROTECT_ITEM_ACTIVATION_ANIMATION)
+        assertEquals(2213, AncientCurses.PROTECT_ITEM_ACTIVATION_GRAPHIC)
+        assertEquals(12589, AncientCurse.BERSERKER.activationAnimation)
+        assertEquals(2266, AncientCurse.BERSERKER.activationGraphic)
+
+        AncientCurses.toggleCurse(fixture.player, AncientCurse.BERSERKER)
+        verify { fixture.player.animate(12589) }
+        verify { fixture.player.graphic(2266) }
+
+        AncientCurses.toggleTurmoil(fixture.player)
+        verify { fixture.player.animate(12565) }
+        verify { fixture.player.graphic(2226) }
+
+        AncientCurses.toggleCurse(fixture.player, AncientCurse.BERSERKER)
+        AncientCurses.toggleCurse(fixture.player, AncientCurse.BERSERKER, playActivationVisual = false)
+        verify(exactly = 1) { fixture.player.animate(12589) }
+        verify(exactly = 1) { fixture.player.graphic(2266) }
     }
 
     @Test
@@ -201,7 +228,7 @@ class AncientCursesVisualAudioTests {
             every { player.varps } returns gg.rsmod.game.model.varp.VarpSet((0..8000).toSet())
             every { player.varcs } returns MutableList(2000) { 0 }
             every { player.skills } returns SkillSet(7).apply { setBaseLevel(Skills.PRAYER, 99) }
-            every { player.getCurrentPrayerPoints() } returns 990
+            every { player.getCurrentPrayerPoints() } returns 99
             every { player.isOnline } returns true
             every { player.isDead() } returns false
             every { player.lock.canUsePrayer() } returns true

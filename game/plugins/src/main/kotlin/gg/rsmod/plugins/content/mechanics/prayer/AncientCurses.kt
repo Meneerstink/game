@@ -59,15 +59,33 @@ object AncientCurses {
     const val LEECH_BOOST_CAP_PCT = 10
     const val TURMOIL_TARGET_LEVEL_CAP = 99
 
+    /** Source-proven rev-667 curse-book activation visuals from Novite's Prayer.java. */
+    const val PROTECT_ITEM_ACTIVATION_ANIMATION = 12567
+    const val PROTECT_ITEM_ACTIVATION_GRAPHIC = 2213
+
     /**
      * Toggle sounds shared by every curse (mirrors [Prayers]' own per-toggle sound pattern).
-     * `CURSE_ALL`/`CURSE_LIFT`/`CURSE_CAST_AND_FIRE`/`CURSE_HIT` are real, 667-cache-named sound
-     * track ids from the generated [Sfx] table (curse book activation, deactivation, an
-     * activation firing on a landed hit, and the effect landing on the target respectively) - the
-     * ids themselves are cache-proven; which curse-book *event* each one accompanies is this
-     * batch's own inference from the track names (there is no decoded client script proving the
-     * exact trigger), so the audible mapping stays PENDING_HUMAN_RETEST like every other audio
-     * claim in this file.
+     * `CURSE_ALL`/`CURSE_LIFT`/`CURSE_CAST_AND_FIRE`/`CURSE_HIT` are the only four curse-named
+     * tracks in the generated [Sfx] table, used here for curse book activation, deactivation, an
+     * activation firing on a landed hit, and the effect landing on the target respectively.
+     *
+     * 2026-09-12, all proven against the production cache by [AncientCurseSoundProvenanceTests]:
+     *
+     *  * The four ids are real. 125/126/127/1634 are present synth-sound groups (index 4, file 0)
+     *    in `data/cache` and the file-server cache alike.
+     *  * The server is the **only** possible source of curse audio. `runSeqSoundProbeTool` over
+     *    12565 (Turmoil activation), 12569 (Sap), 12573 (Deflect reflect) and 12575 (Leech) reports
+     *    every one SILENT - unlike the familiars, where e.g. the Phoenix's spawn sequence carries
+     *    its own frame sounds and plays without the server doing anything.
+     *  * No better per-curse source exists. Darkan's `Prayer.java` `activateSound` column collapses
+     *    Sap, every Leech and Soul Split onto 2675 (the normal book's Protect from Magic sound) and
+     *    puts Protect Item, Berserker and Turmoil on 11000, which is not a sound in this cache at
+     *    all; Novite's rev-667 `Prayer.java` plays one generic pair (2662 on, 2663 off) for every
+     *    prayer in both books. Neither is a recovered per-curse table, so neither was adopted.
+     *
+     * What is still not proven is which of the four tracks accompanies which curse-book event -
+     * there is no decoded client script pinning the trigger, and the names are the only evidence.
+     * That stays PENDING_HUMAN_RETEST, like every other audible claim in this file.
      */
     private const val CURSE_ACTIVATE_SOUND = Sfx.CURSE_ALL
     private const val CURSE_DEACTIVATE_SOUND = Sfx.CURSE_LIFT
@@ -97,7 +115,7 @@ object AncientCurses {
 
     fun isTurmoilActive(player: Player): Boolean = player.attr[TURMOIL_ACTIVE_ATTR] == true
 
-    fun toggleTurmoil(player: Player) {
+    fun toggleTurmoil(player: Player, playActivationVisual: Boolean = true) {
         if (isTurmoilActive(player)) {
             setTurmoil(player, false)
             player.playSound(CURSE_DEACTIVATE_SOUND)
@@ -123,6 +141,10 @@ object AncientCurses {
         // Turmoil never runs together with a Sap or Leech.
         activeCurses(player).filter { it.conflictsWithTurmoil }.forEach { deactivateCurse(player, it) }
         setTurmoil(player, true)
+        if (playActivationVisual) {
+            player.animate(12565)
+            player.graphic(2226)
+        }
         player.playSound(CURSE_ACTIVATE_SOUND)
         player.filterableMessage("You activate Turmoil.")
     }
@@ -230,7 +252,12 @@ object AncientCurses {
                 // out any curse overhead (e.g. an active Deflect Melee) that was genuinely still
                 // active. Re-apply the real curse overhead immediately afterward so toggling
                 // Protect Item under the curses book cannot silently clear a curse's icon.
+                val wasActive = Prayers.isActive(player, Prayer.PROTECT_ITEM)
                 Prayers.toggle(task, Prayer.PROTECT_ITEM)
+                if (!wasActive && Prayers.isActive(player, Prayer.PROTECT_ITEM)) {
+                    player.animate(PROTECT_ITEM_ACTIVATION_ANIMATION)
+                    player.graphic(PROTECT_ITEM_ACTIVATION_GRAPHIC)
+                }
                 player.setVarbit(AncientCurse.PROTECT_ITEM_VARBIT, if (Prayers.isActive(player, Prayer.PROTECT_ITEM)) 1 else 0)
                 refreshCurseOverhead(player)
             }
@@ -301,8 +328,8 @@ object AncientCurses {
         selected.filter { player.skills.getMaxLevel(Skills.PRAYER) >= (quickCurseLevel(it) ?: Int.MAX_VALUE) }.forEach { slot ->
             when (slot) {
                 AncientCurse.PROTECT_ITEM_SLOT -> Prayers.activate(player, Prayer.PROTECT_ITEM)
-                AncientCurse.TURMOIL_SLOT -> toggleTurmoil(player)
-                else -> AncientCurse.bySlot(slot)?.let { toggleCurse(player, it) }
+                AncientCurse.TURMOIL_SLOT -> toggleTurmoil(player, playActivationVisual = false)
+                else -> AncientCurse.bySlot(slot)?.let { toggleCurse(player, it, playActivationVisual = false) }
             }
         }
         val anyActive = activeCurses(player).isNotEmpty() || isTurmoilActive(player) || Prayers.isActive(player, Prayer.PROTECT_ITEM)
@@ -337,6 +364,7 @@ object AncientCurses {
     fun toggleCurse(
         player: Player,
         curse: AncientCurse,
+        playActivationVisual: Boolean = true,
     ) {
         if (isCurseActive(player, curse)) {
             deactivateCurse(player, curse)
@@ -365,6 +393,10 @@ object AncientCurses {
         }
         activeCurses(player).add(curse)
         player.setVarbit(curse.varbit, 1)
+        if (playActivationVisual) {
+            curse.activationAnimation?.let { player.animate(it) }
+            curse.activationGraphic?.let { player.graphic(it) }
+        }
         player.playSound(CURSE_ACTIVATE_SOUND)
         player.filterableMessage("You activate ${curse.curseName}.")
         refreshCurseOverhead(player)
@@ -570,7 +602,7 @@ object AncientCurses {
     ) {
         attacker.world.spawn(attacker.createProjectile(target, SOUL_SPLIT_PROJECTILE_GFX, ProjectileType.MAGIC))
         attacker.heal((damage * 0.2).toInt().coerceAtLeast(0))
-        if (target is Player) target.decreasePrayerPoints((damage * 0.2 * 10).toInt())
+        if (target is Player) target.decreasePrayerPoints((damage * 0.2).toInt())
         target.graphic(SOUL_SPLIT_TARGET_GFX, delay = 1)
         attacker.playSound(CURSE_LAND_SOUND)
         attacker.queue {
@@ -590,6 +622,7 @@ object AncientCurses {
         curse.castGraphic?.let { attacker.graphic(it) }
         curse.projectileGraphic?.let { attacker.world.spawn(attacker.createProjectile(target, it, ProjectileType.MAGIC)) }
         curse.targetGraphic?.let { target.graphic(it, delay = 1) }
+        curse.secondaryTargetGraphic?.let { target.graphic(it, delay = 1) }
         attacker.playSound(CURSE_CAST_SOUND)
         when (curse) {
             AncientCurse.SAP_WARRIOR ->
