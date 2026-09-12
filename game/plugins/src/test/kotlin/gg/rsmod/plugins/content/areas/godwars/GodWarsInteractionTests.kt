@@ -3,6 +3,7 @@ package gg.rsmod.plugins.content.areas.godwars
 import gg.rsmod.game.model.Tile
 import gg.rsmod.plugins.api.cfg.Npcs
 import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
@@ -59,5 +60,11 @@ class GodWarsInteractionTests {
         assertTrue(GodWars.inDungeon(Tile(2864, 5354, 2)))
         assertFalse(GodWars.inDungeon(Tile(2900, 5189, 0)))
         assertFalse(GodWars.inDungeon(Tile(3000, 5203, 0)))
+    }
+
+    @Test
+    fun `ancient prison obstacle pipe uses the sourced east and west destinations`() {
+        assertEquals(Tile(2863, 5219, 0), GodWars.ancientPrisonObstacleDestination(Tile(2862, 5219, 0)))
+        assertEquals(Tile(2860, 5219, 0), GodWars.ancientPrisonObstacleDestination(Tile(2863, 5219, 0)))
     }
 }

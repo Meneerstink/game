@@ -59,6 +59,12 @@ object GodWars {
         }
     }
 
+    /** Novite's 70 Agility obstacle-pipe route across the Ancient Prison approach. */
+    fun ancientPrisonObstacleDestination(tile: Tile): Tile {
+        val travelingEast = tile.x < 2863
+        return Tile(2863 + if (travelingEast) 0 else -3, 5219, 0)
+    }
+
     /** Exact orthogonal polygon from Void's `godwars_chill_area` definition. */
     fun inGodWarsChillArea(tile: Tile): Boolean =
         (tile.x in 2839..2943 && tile.z in 3712..3744) ||

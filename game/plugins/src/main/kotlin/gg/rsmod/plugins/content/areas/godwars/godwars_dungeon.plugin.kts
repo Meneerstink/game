@@ -381,6 +381,12 @@ on_obj_option(obj = Objs.ICE_BRIDGE, option = "climb-off") {
  * Saradomin rocks: tie a rope (70 Agility), then climb the ropes on both ledges.
  * ---------------------------------------------------------------------------------------- */
 
+// Novite's processObjectClick1 handles the placed bottom-rock base directly. The target cache
+// places this base as 26445 without a menu option, so bind the first object-click index explicitly.
+on_obj_option(obj = 26445, option = 1) {
+    player.moveTo(Tile(2920, 5273, 0))
+}
+
 data class RopeLedge(val rockId: Int, val ropeId: Int, val varbit: Int, val top: Tile, val bottom: Tile)
 
 val SARADOMIN_LEDGES = listOf(
@@ -497,6 +503,19 @@ on_obj_option(obj = Objs.CRATE_26440, option = "search") {
  * Ancient Prison (Zaros wing): stairs and the 40 kill door. The landslide (Nex arena entrance)
  * lives in nex/nex_arena.plugin.kts.
  * ---------------------------------------------------------------------------------------- */
+
+// Novite's 70 Agility obstacle-pipe shortcut; placement probe: 57234 at (2860,5219,0).
+on_obj_option(obj = Objs.OBSTACLE_PIPE_57234, option = "Squeeze-through") {
+    if (player.skills.getCurrentLevel(Skills.AGILITY) < 70) return@on_obj_option
+    val destination = GodWars.ancientPrisonObstacleDestination(player.tile)
+    player.queue {
+        player.lock()
+        player.animate(1133)
+        wait(1)
+        player.moveTo(destination)
+        player.unlock()
+    }
+}
 
 on_obj_option(obj = Objs.HOLE_57256, option = "climb-down") {
     player.queue {
