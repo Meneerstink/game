@@ -8,7 +8,8 @@ import gg.rsmod.plugins.api.cfg.Npcs
 import gg.rsmod.plugins.api.ext.playSound
 
 /**
- * Source-backed audio events for the four God Wars bodyguard groups.
+ * Source-backed audio events for the four God Wars bodyguard groups and the explicit spiritual
+ * warrior combat definitions.
  *
  * The Void 667 combat files distinguish target sounds from area sounds. The shared NPC combat
  * definition has no audio fields, so these events are kept in a narrow overlay: it does not
@@ -34,6 +35,9 @@ object GodWarsMinionAudio {
         Npcs.GROWLER to SourcedSound(3877, area = true), // growler_sonic_spell_cast
         Npcs.BREE to SourcedSound(2693, area = true), // bree_arrow_shoot
         Npcs.BALFRUG_KREEYATH to SourcedSound(3884, area = false), // balfrug_kreeyath_attack
+        Npcs.SPIRITUAL_WARRIOR to SourcedSound(2508, area = false), // spiritual_warrior_zamorak_attack
+        Npcs.SPIRITUAL_WARRIOR_6255 to SourcedSound(2548, area = false), // spiritual_warrior_saradomin_attack
+        Npcs.SPIRITUAL_WARRIOR_6277 to SourcedSound(2867, area = false), // gorak_attack
     )
 
     /** Explicit bodyguard death sounds from the Void 667 sound definitions. */
@@ -47,6 +51,8 @@ object GodWarsMinionAudio {
         Npcs.BREE to SourcedSound(3827, area = true), // bree_death
         Npcs.BALFRUG_KREEYATH to SourcedSound(403, area = true), // balfrug_kreeyath_death
         Npcs.ZAKLN_GRITCH to SourcedSound(403, area = true), // zakln_gritch_death
+        Npcs.SPIRITUAL_WARRIOR to SourcedSound(3880, area = true), // spiritual_warrior_zamorak_death
+        Npcs.SPIRITUAL_WARRIOR_6277 to SourcedSound(2868, area = true), // gorak_death
     )
 
     fun attackSoundFor(npcId: Int): SourcedSound? = attackSounds[npcId]

@@ -7,7 +7,7 @@ import kotlin.test.assertNull
 
 class GodWarsMinionAudioTests {
     @Test
-    fun `attack registry contains only explicit bodyguard source events`() {
+    fun `attack registry contains only explicit source events`() {
         assertEquals(GodWarsMinionAudio.SourcedSound(469, area = false), GodWarsMinionAudio.attackSoundFor(Npcs.SERGEANT_STRONGSTACK))
         assertEquals(GodWarsMinionAudio.SourcedSound(3870, area = true), GodWarsMinionAudio.attackSoundFor(Npcs.SERGEANT_STEELWILL))
         assertEquals(GodWarsMinionAudio.SourcedSound(3851, area = true), GodWarsMinionAudio.attackSoundFor(Npcs.SERGEANT_GRIMSPIKE))
@@ -16,6 +16,9 @@ class GodWarsMinionAudioTests {
         assertEquals(GodWarsMinionAudio.SourcedSound(3877, area = true), GodWarsMinionAudio.attackSoundFor(Npcs.GROWLER))
         assertEquals(GodWarsMinionAudio.SourcedSound(2693, area = true), GodWarsMinionAudio.attackSoundFor(Npcs.BREE))
         assertEquals(GodWarsMinionAudio.SourcedSound(3884, area = false), GodWarsMinionAudio.attackSoundFor(Npcs.BALFRUG_KREEYATH))
+        assertEquals(GodWarsMinionAudio.SourcedSound(2508, area = false), GodWarsMinionAudio.attackSoundFor(Npcs.SPIRITUAL_WARRIOR))
+        assertEquals(GodWarsMinionAudio.SourcedSound(2548, area = false), GodWarsMinionAudio.attackSoundFor(Npcs.SPIRITUAL_WARRIOR_6255))
+        assertEquals(GodWarsMinionAudio.SourcedSound(2867, area = false), GodWarsMinionAudio.attackSoundFor(Npcs.SPIRITUAL_WARRIOR_6277))
     }
 
     @Test
@@ -31,6 +34,9 @@ class GodWarsMinionAudioTests {
         assertEquals(GodWarsMinionAudio.SourcedSound(3854, area = true), GodWarsMinionAudio.deathSoundFor(Npcs.WINGMAN_SKREE))
         assertEquals(GodWarsMinionAudio.SourcedSound(3867, area = true), GodWarsMinionAudio.deathSoundFor(Npcs.GROWLER))
         assertEquals(GodWarsMinionAudio.SourcedSound(403, area = true), GodWarsMinionAudio.deathSoundFor(Npcs.ZAKLN_GRITCH))
+        assertEquals(GodWarsMinionAudio.SourcedSound(3880, area = true), GodWarsMinionAudio.deathSoundFor(Npcs.SPIRITUAL_WARRIOR))
+        assertEquals(GodWarsMinionAudio.SourcedSound(2868, area = true), GodWarsMinionAudio.deathSoundFor(Npcs.SPIRITUAL_WARRIOR_6277))
+        assertNull(GodWarsMinionAudio.deathSoundFor(Npcs.SPIRITUAL_WARRIOR_6255))
         assertNull(GodWarsMinionAudio.deathSoundFor(Npcs.SERGEANT_STEELWILL))
         assertNull(GodWarsMinionAudio.deathSoundFor(Npcs.STARLIGHT))
         assertNull(GodWarsMinionAudio.deathSoundFor(Npcs.TSTANON_KARLAK))
