@@ -269,7 +269,7 @@ on_obj_option(obj = Objs.ROPE_26293, option = "climb") {
         player.lock()
         player.animate(ANIM_CLIMB_UP)
         wait(2)
-        player.moveTo(Tile(2916, 3747, 0))
+        player.moveTo(Tile(2913, 3741, 0))
         player.unlock()
     }
 }
@@ -349,30 +349,30 @@ on_obj_option(obj = Objs.BIG_DOOR_26384, option = "bang") {
 }
 
 /* ------------------------------------------------------------------------------------------
- * Zamorak river: 70 Constitution, swimming into the evil side drains all prayer.
+ * Zamorak river: 70 Agility, swimming into the evil side drains all prayer.
  * ---------------------------------------------------------------------------------------- */
 
 on_obj_option(obj = Objs.ICE_BRIDGE, option = "climb-off") {
     val obj = player.getInteractingGameObj()
-    if (player.skills.getCurrentLevel(Skills.CONSTITUTION) < 70) {
-        player.message("You need a Constitution level of 70 to survive the river's freezing water.")
+    if (player.skills.getCurrentLevel(Skills.AGILITY) < 70) {
+        player.message("You need an Agility level of 70 to cross the river's freezing water.")
         return@on_obj_option
     }
-    val north = player.tile.z <= obj.tile.z
-    val step = if (north) 1 else -1
+    val withinZamorak = GodWars.inZamorakPrepare(player.tile)
+    val destination = GodWars.zamorakBridgeDestination(player.tile)
     player.queue {
         player.walkTo(this, obj.tile, detectCollision = false)
         wait(1)
         player.lock()
-        player.moveTo(Tile(obj.tile.x, obj.tile.z + step * 2, obj.tile.height))
+        player.moveTo(Tile(obj.tile.x, obj.tile.z, obj.tile.height))
         world.spawn(TileGraphic(player.tile, GFX_BIG_SPLASH, 0))
         wait(4)
         player.message("Dripping, you climb out of the water.")
-        if (north) {
+        if (!withinZamorak) {
             player.skills.setCurrentLevel(Skills.PRAYER, 0)
             player.message("The extreme evil of this area leaves your Prayer drained.")
         }
-        player.moveTo(Tile(obj.tile.x, obj.tile.z + step * 12, obj.tile.height))
+        player.moveTo(destination)
         player.unlock()
     }
 }

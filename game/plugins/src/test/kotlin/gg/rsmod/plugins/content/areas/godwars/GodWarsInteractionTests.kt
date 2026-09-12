@@ -67,4 +67,12 @@ class GodWarsInteractionTests {
         assertEquals(Tile(2863, 5219, 0), GodWars.ancientPrisonObstacleDestination(Tile(2862, 5219, 0)))
         assertEquals(Tile(2860, 5219, 0), GodWars.ancientPrisonObstacleDestination(Tile(2863, 5219, 0)))
     }
+
+    @Test
+    fun `zamorak bridge uses the sourced preparation side and plane zero destinations`() {
+        assertTrue(GodWars.inZamorakPrepare(Tile(2887, 5348, 0)))
+        assertFalse(GodWars.inZamorakPrepare(Tile(2887, 5333, 3)))
+        assertEquals(Tile(2887, 5336, 0), GodWars.zamorakBridgeDestination(Tile(2887, 5348, 0)))
+        assertEquals(Tile(2887, 5346, 0), GodWars.zamorakBridgeDestination(Tile(2887, 5333, 3)))
+    }
 }

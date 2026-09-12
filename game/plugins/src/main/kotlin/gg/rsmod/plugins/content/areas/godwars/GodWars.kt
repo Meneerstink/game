@@ -65,6 +65,13 @@ object GodWars {
         return Tile(2863 + if (travelingEast) 0 else -3, 5219, 0)
     }
 
+    /** Novite's preparation rectangle on the south side of the Zamorak bridge. */
+    fun inZamorakPrepare(tile: Tile): Boolean = tile.x in 2884..2890 && tile.z in 5343..5352
+
+    /** Exact Novite bridge destinations; both exits land on plane 0. */
+    fun zamorakBridgeDestination(tile: Tile): Tile =
+        Tile(2887, if (inZamorakPrepare(tile)) 5336 else 5346, 0)
+
     /** Exact orthogonal polygon from Void's `godwars_chill_area` definition. */
     fun inGodWarsChillArea(tile: Tile): Boolean =
         (tile.x in 2839..2943 && tile.z in 3712..3744) ||
