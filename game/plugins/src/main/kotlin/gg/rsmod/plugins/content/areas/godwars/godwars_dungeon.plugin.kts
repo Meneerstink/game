@@ -200,7 +200,31 @@ God.values().filter { it.altarId != -1 }.forEach { god ->
  * Entrance: rope on the hole outside, climb down; rope at the bottom to leave.
  * ---------------------------------------------------------------------------------------- */
 
+fun hasKnightsNotes(player: Player): Boolean =
+    player.getVarbit(Varbits.VARBIT_3936) == 1 ||
+        player.inventory.contains(Items.KNIGHTS_NOTES) ||
+        player.inventory.contains(Items.KNIGHTS_NOTES_11735)
+
+// Void's Sir Gerry route: searching the dying knight supplies the notes needed to prepare the
+// permanent entrance rope. A full dialogue implementation is not available in this cache build.
+on_obj_option(obj = Objs.KNIGHT, option = "search") {
+    if (hasKnightsNotes(player)) {
+        player.message("You find nothing of value on the knight.")
+        return@on_obj_option
+    }
+    if (player.inventory.freeSlotCount < 1) {
+        player.message("You need an empty inventory slot to take the knight's notes.")
+        return@on_obj_option
+    }
+    player.inventory.add(Items.KNIGHTS_NOTES)
+    player.message("You find some handwritten notes on the knight.")
+}
+
 on_item_on_obj(obj = Objs.HOLE_26340, item = Items.ROPE) {
+    if (!hasKnightsNotes(player)) {
+        player.message("Cough... Hey, over here.")
+        return@on_item_on_obj
+    }
     if (player.getVarbit(ROPE_ENTRANCE_VARBIT) == 1) {
         player.message("There is already a rope attached to the hole.")
         return@on_item_on_obj
@@ -212,6 +236,10 @@ on_item_on_obj(obj = Objs.HOLE_26340, item = Items.ROPE) {
 }
 
 on_obj_option(obj = Objs.HOLE_26340, option = "Tie-rope") {
+    if (!hasKnightsNotes(player)) {
+        player.message("Cough... Hey, over here.")
+        return@on_obj_option
+    }
     if (player.getVarbit(ROPE_ENTRANCE_VARBIT) != 1) {
         player.message("I'll need a rope to climb down there.")
         return@on_obj_option
