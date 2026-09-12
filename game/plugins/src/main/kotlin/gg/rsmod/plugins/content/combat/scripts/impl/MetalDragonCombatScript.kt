@@ -22,7 +22,8 @@ import gg.rsmod.plugins.content.combat.strategy.MagicCombatStrategy
 
 /**
  * Metallic dragons (bronze/iron/steel/mithril): melee when adjacent, otherwise long-range
- * dragonfire (Novite MetalDragonCombat: anim 13160, projectile 393). Dragonfire max hit 50
+ * dragonfire (Novite MetalDragonCombat: anim 13160, projectile 393). Void's rev-667 sound map
+ * uses 3750 for close breath and 3749 for the long-range metal fireball. Dragonfire max hit 50
  * (bronze/iron/steel) and 60 for mithril, the 2011 wiki values; the shared [DragonfireFormula]
  * applies shield/prayer/potion reduction.
  */
@@ -69,7 +70,7 @@ object MetalDragonCombatScript : CombatScript() {
         val projectile = npc.createProjectile(target, PROJ_FIRE, ProjectileType.FIERY_BREATH)
         npc.world.spawn(projectile)
         target.graphic(Graphic(Gfx.RESET, 110, projectile.lifespan))
-        if (target is Player) target.playSound(Sfx.TWOCATS_FRY_NOOB, delay = 2)
+        if (target is Player) target.playSound(Sfx.DRAGONSLAYER_DRAGONBALL, delay = 2)
         val delay = MagicCombatStrategy.getHitDelay(npc.getFrontFacingTile(target), target.getCentreTile())
         npc.dealHit(target = target, formula = DragonfireFormula(max), delay = delay)
     }
@@ -116,7 +117,7 @@ object FrostDragonCombatScript : CombatScript() {
         npc.prepareAttack(CombatClass.MAGIC, StyleType.MAGIC, WeaponStyle.ACCURATE)
         npc.animate(13152, priority = true)
         npc.graphic(2465)
-        if (target is Player) target.playSound(Sfx.TWOCATS_FRY_NOOB, delay = 2)
+        if (target is Player) target.playSound(Sfx.DRAGONSLAYER_DRAGONBREATH, delay = 2)
         npc.dealHit(target = target, formula = DragonfireFormula(65), delay = 2)
     }
 
@@ -126,7 +127,7 @@ object FrostDragonCombatScript : CombatScript() {
         val projectile = npc.createProjectile(target, 393, ProjectileType.FIERY_BREATH)
         npc.world.spawn(projectile)
         target.graphic(Graphic(Gfx.RESET, 110, projectile.lifespan))
-        if (target is Player) target.playSound(Sfx.TWOCATS_FRY_NOOB, delay = 2)
+        if (target is Player) target.playSound(Sfx.DRAGONSLAYER_DRAGONBREATH, delay = 2)
         val delay = MagicCombatStrategy.getHitDelay(npc.getFrontFacingTile(target), target.getCentreTile())
         npc.dealHit(target = target, formula = DragonfireFormula(65), delay = delay)
     }

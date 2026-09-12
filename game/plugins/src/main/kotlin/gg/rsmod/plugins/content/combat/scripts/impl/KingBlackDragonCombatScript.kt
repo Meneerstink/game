@@ -109,7 +109,7 @@ object KingBlackDragonCombatScript : CombatScript() {
         npc.animate(Anims.KBD_SPECIAL_ATTACK, priority = true)
         target.world.spawn(RED_FIRE)
         target.graphic(RED_FIRE_HIT_GFX)
-        if (target is Player) target.playSound(Sfx.TWOCATS_FRY_NOOB, delay = 2)
+        if (target is Player) target.playSound(Sfx.DRAGONSLAYER_DRAGONBREATH, delay = 2)
         npc.dealHit(target = target, formula = DragonfireFormula(65), delay = hitDelay)
     }
 
@@ -126,7 +126,7 @@ object KingBlackDragonCombatScript : CombatScript() {
         target.graphic(BLUE_FIRE_HIT_GFX)
         if (target is Player) {
             val player = target
-            target.playSound(Sfx.TWOCATS_FRY_NOOB, delay = 2)
+            target.playSound(Sfx.DRAGONSLAYER_DRAGONBREATH, delay = 2)
             npc.dealHit(target = target, formula = DragonfireFormula(maxHit = 15), delay = hitDelay)
             skills.forEach {
                 val drain = 2
@@ -172,7 +172,7 @@ object KingBlackDragonCombatScript : CombatScript() {
         npc.animate(Anims.KBD_SPECIAL_ATTACK, priority = true)
         target.world.spawn(GREEN_FIRE)
         target.graphic(GREEN_FIRE_HIT_GFX)
-        if (target is Player) target.playSound(Sfx.TWOCATS_FRY_NOOB, delay = 2)
+        if (target is Player) target.playSound(Sfx.DRAGONSLAYER_DRAGONBREATH, delay = 2)
         npc.dealHit(
             target = target,
             formula = DragonfireFormula(65),

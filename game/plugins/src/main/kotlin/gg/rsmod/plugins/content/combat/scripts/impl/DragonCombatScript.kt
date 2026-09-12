@@ -22,7 +22,7 @@ import gg.rsmod.plugins.content.combat.formula.MeleeCombatFormula
 
 /**
  * Handles the script for Regular Dragon Combat
- * TODO Add proper sounds to fire attack once found.
+ * Dragonfire sound: void's rev-667 dragon.sounds.toml maps dragon_breath to 3750.
  * @author Kevin Senez <ksenez94@gmail.com>
  */
 object DragonCombatScript : CombatScript() {
@@ -97,7 +97,7 @@ object DragonCombatScript : CombatScript() {
         npc.prepareAttack(CombatClass.MAGIC, StyleType.MAGIC, WeaponStyle.ACCURATE)
         npc.animate(id = Anims.DRAGON_DRAGONFIRE_ATTACK, priority = true)
         npc.graphic(Gfx.DRAGON_DRAGONFIRE_HOSE)
-        if (target is Player) target.playSound(Sfx.TWOCATS_FRY_NOOB, delay = 2) // TODO Make sure the sound is correct
+        if (target is Player) target.playSound(Sfx.DRAGONSLAYER_DRAGONBREATH, delay = 2)
         npc.dealHit(
             target = target,
             formula = DragonfireFormula(maxHit = 50),
