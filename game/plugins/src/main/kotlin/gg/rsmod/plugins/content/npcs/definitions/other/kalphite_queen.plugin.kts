@@ -219,6 +219,8 @@ set_combat_def(npc = FIRST_FORM) {
     }
     aggro {
         radius = 15
+        // The Queen is aggressive; keep her active after the map-build grace period.
+        alwaysAggro()
     }
 }
 
@@ -251,5 +253,7 @@ set_combat_def(npc = SECOND_FORM) {
     }
     aggro {
         radius = 15
+        // Both forms inherit the same aggressive boss behaviour.
+        alwaysAggro()
     }
 }
