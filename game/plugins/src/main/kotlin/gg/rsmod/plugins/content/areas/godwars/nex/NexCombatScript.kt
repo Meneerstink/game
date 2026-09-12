@@ -60,6 +60,10 @@ import gg.rsmod.plugins.content.mechanics.prayer.Prayers
 object NexCombatScript : CombatScript() {
     override val ids = intArrayOf(gg.rsmod.plugins.api.cfg.Npcs.NEX)
 
+    fun nextIceAttackIndex(index: Int): Int = if (index == 10) 0 else (index + 1) % 11
+
+    fun zarosAttackRoll(inMelee: Boolean, randomValue: Int): Int = if (inMelee) randomValue + 3 else randomValue
+
     private const val MAGIC_MAX = 36.9
     private const val MELEE_MAX = 30.0
     private const val ZAROS_MELEE_MAX = 55.0
@@ -110,18 +114,25 @@ object NexCombatScript : CombatScript() {
                     bloodCounter = (bloodCounter + 1) % 11
                 }
                 Phase.ICE -> {
-                    when (iceCounter) {
+                    val attackIndex = iceCounter
+                    when (attackIndex) {
                         0 -> icePrison(npc)
                         6 -> { npc.forceChat("Contain this!"); npc.animate(ANIM_SPECIAL); npc.graphic(GFX_ICE_PRISON); enc.icePrison(npc) }
+                        10 -> {
+                            icePrison(npc)
+                        }
                         else -> iceAttack(npc, target, inMelee)
                     }
-                    iceCounter = (iceCounter + 1) % 10
+                    iceCounter = nextIceAttackIndex(attackIndex)
                 }
-                Phase.ZAROS -> when (if (inMelee) world.random(10) else world.random(2)) {
+                // Matrix's Utils.random(max) is exclusive; World.random(bound) is inclusive.
+                // At range the source only selects magic (0..2), while in melee it selects the
+                // close-range table (3..13).
+                Phase.ZAROS -> when (zarosAttackRoll(inMelee, if (inMelee) world.random(10) else world.random(2))) {
                     0, 1 -> magicAttack(npc, true)
-                    2 -> pullAttack(npc)
-                    3, 4, 5, 6, 7, 8 -> meleeAttack(npc, target)
-                    else -> noEscape(it, npc)
+                    2 -> magicAttack(npc, false)
+                    3, 4, 5, 6, 7, 8, 9, 10, 11, 12 -> meleeAttack(npc, target)
+                    13 -> noEscape(it, npc)
                 }
             }
             npc.postAttackLogic(target)

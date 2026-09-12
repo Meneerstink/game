@@ -6,6 +6,7 @@ import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.entity.DynamicObject
 import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Player
+import gg.rsmod.game.model.entity.AreaSound
 import gg.rsmod.plugins.api.HitType
 import gg.rsmod.plugins.api.ProjectileType
 import gg.rsmod.plugins.content.combat.createProjectile
@@ -48,6 +49,7 @@ object NexEncounter {
     const val MAX_LIFEPOINTS = 30000
     const val PHASE_LIFEPOINTS = 6000
     const val ZAROS_HEAL = 6000
+    const val SOUND_START = 3295
 
     const val ANIM_START = 6355
     const val ANIM_CALL_MINION = 6987
@@ -84,12 +86,12 @@ object NexEncounter {
     val INFECTED = AttributeKey<Int>()
     val SACRIFICE_TARGET = AttributeKey<Boolean>()
 
-    enum class Phase(val minionName: String, val callout: String) {
-        SMOKE("Fumus", "Fill my soul with smoke!"),
-        SHADOW("Umbra", "Darken my shadow!"),
-        BLOOD("Cruor", "Flood my lungs with blood!"),
-        ICE("Glacies", "Infuse me with the power of ice!"),
-        ZAROS("", "NOW, THE POWER OF ZAROS!"),
+    enum class Phase(val minionName: String, val callout: String, val startSound: Int, val transitionSound: Int) {
+        SMOKE("Fumus", "Fill my soul with smoke!", 3325, 3310),
+        SHADOW("Umbra", "Darken my shadow!", 3313, 3307),
+        BLOOD("Cruor", "Flood my lungs with blood!", 3299, 3298),
+        ICE("Glacies", "Infuse me with the power of ice!", 3304, 3327),
+        ZAROS("", "NOW, THE POWER OF ZAROS!", -1, 3312),
     }
 
     lateinit var world: World
@@ -174,6 +176,7 @@ object NexEncounter {
         boss.hitModifier = { hit -> modifyHit(boss, hit) }
         world.spawn(boss)
         nex = boss
+        playSound(boss, SOUND_START)
         world.queue {
             boss.forceChat("AT LAST!")
             boss.animate(ANIM_START)
@@ -187,14 +190,17 @@ object NexEncounter {
                 minion.hitModifier = { hit -> if (awaitingMinion.not() || minionIndex(minion) != phase.ordinal) hit.hitmarks.forEach { it.damage = 0 } }
                 world.spawn(minion)
                 minions[index] = minion
-                boss.forceChat("${Phase.values()[index].minionName}!")
+                val phase = Phase.values()[index]
+                boss.forceChat("${phase.minionName}!")
                 boss.animate(ANIM_CALL_MINION)
                 minion.animate(ANIM_CALL_MINION)
-                world.spawn(minion.createProjectile(boss, PROJ_MINION_POWER, ProjectileType.MAGIC))
+                playSound(boss, phase.startSound)
+                world.spawn(boss.createProjectile(minion, PROJ_MINION_POWER, ProjectileType.MAGIC))
                 wait(5)
             }
             if (!fightActive) return@queue
             boss.forceChat(Phase.SMOKE.callout)
+            playSound(boss, Phase.SMOKE.transitionSound)
             intro = false
             engageRandomPlayer(boss)
         }
@@ -279,6 +285,7 @@ object NexEncounter {
         }
         phase = Phase.values()[phase.ordinal + 1]
         boss.forceChat(phase.callout)
+        playSound(boss, phase.transitionSound)
         boss.animate(ANIM_MAGIC)
         boss.graphic(GFX_MAGIC_CAST)
         if (phase == Phase.ZAROS) {
@@ -298,6 +305,10 @@ object NexEncounter {
 
     fun phaseFloor(phase: Phase): Int =
         if (phase == Phase.ZAROS) 0 else MAX_LIFEPOINTS - PHASE_LIFEPOINTS * (phase.ordinal + 1)
+
+    private fun playSound(npc: Npc, id: Int) {
+        if (id >= 0) npc.world.spawn(AreaSound(tile = npc.tile, id = id, radius = 10, volume = 1))
+    }
 
     /** Nex death: Wrath burst, drops handled by the definition plugin, restart after a minute. */
     fun onNexDeath(boss: Npc) {
