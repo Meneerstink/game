@@ -135,8 +135,8 @@ set_combat_def(npc = KBD) {
     }
     aggro {
         radius = 25
-        // KBD is an aggressive boss; without an explicit timer the shared aggro handler's
-        // default timer (0) makes the player ineligible after the map-build grace period.
+        // KBD is an aggressive boss; an explicit always-aggro timer prevents the shared
+        // time-limited map-build aggression policy from dropping target acquisition.
         alwaysAggro()
     }
     slayer {
