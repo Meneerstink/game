@@ -4,6 +4,7 @@ import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Player
+import gg.rsmod.plugins.api.EquipmentType
 import gg.rsmod.plugins.api.cfg.Npcs
 import gg.rsmod.plugins.api.ext.setVarbit
 
@@ -14,8 +15,8 @@ import gg.rsmod.plugins.api.ext.setVarbit
  * god makes that god's followers non-aggressive.
  *
  * Kill count varbits and object ids come from the Void donor data (634 cache, identical in 667);
- * Zaros kill count varbit 8725 from the Novite donor. Faction npc lists match the Void
- * god_wars npc definitions and the Novite faction classes.
+ * Zaros kill count varbit 8725 and the Ancient Prison access rules come from the Novite donor.
+ * Faction npc lists match the Void god_wars npc definitions and the Novite faction classes.
  */
 object GodWars {
     /** Whole multi-combat dungeon (all planes). */
@@ -32,6 +33,28 @@ object GodWars {
     /** Novite PlayerCombat: Kree'arra and all three airborne bodyguards reject melee. */
     fun isFlyingArmadylNpc(id: Int): Boolean =
         id in God.ARMADYL.npcs && id !in 6229..6231
+
+    /**
+     * Novite checks all five worn slots by item name. Void supplies the two complete 667 item
+     * sets, so keep the slot mapping explicit and accept either set without treating inventory
+     * pieces or noted items as ceremonial access.
+     */
+    fun hasFullAncientCeremonial(player: Player): Boolean {
+        val slots = intArrayOf(
+            EquipmentType.HEAD.id,
+            EquipmentType.CHEST.id,
+            EquipmentType.LEGS.id,
+            EquipmentType.GLOVES.id,
+            EquipmentType.BOOTS.id,
+        )
+        val sets = arrayOf(
+            intArrayOf(20115, 20116, 20117, 20118, 20119),
+            intArrayOf(20125, 20127, 20129, 20131, 20133),
+        )
+        return sets.any { ids ->
+            slots.indices.all { index -> player.equipment[slots[index]]?.id == ids[index] }
+        }
+    }
     val PROTECTED_GODS = AttributeKey<Set<God>>()
 
     enum class God(

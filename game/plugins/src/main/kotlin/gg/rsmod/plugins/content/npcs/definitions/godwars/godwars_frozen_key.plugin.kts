@@ -23,18 +23,3 @@ PIECES.forEach { piece ->
         tryCombine(player)
     }
 }
-
-// Fallback entry point for the Nex encounter in case the real Frozen Door object isn't
-// reachable in this map build - see nex.plugin.kts.
-on_command("nex") {
-    if (!player.inventory.remove(Items.FROZEN_KEY_20120, 1).hasSucceeded()) {
-        player.filterableMessage("You need a completed Frozen key to do this.")
-        return@on_command
-    }
-    player.filterableMessage("The Frozen Door grinds open. Nex awakens...")
-    val tile = gg.rsmod.game.model.Tile(player.tile)
-    val nex = gg.rsmod.game.model.entity.Npc(Npcs.NEX, tile, player.world)
-    nex.respawnOverride = false
-    nex.walkRadius = 0
-    player.world.spawn(nex)
-}

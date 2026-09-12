@@ -457,12 +457,17 @@ on_obj_option(obj = Objs.BIG_DOOR_57258, option = "open") {
     val obj = player.getInteractingGameObj()
     val insidePrison = player.tile.x >= 2900
     if (!insidePrison) {
+        val hasCeremonial = GodWars.hasFullAncientCeremonial(player)
         val kc = GodWars.getKillCount(player, God.ZAROS)
-        if (kc < KILLCOUNT_REQUIRED) {
+        if (kc < KILLCOUNT_REQUIRED && !hasCeremonial) {
             player.message("You don't have enough kills to enter the lair of Zaros.")
             return@on_obj_option
         }
-        GodWars.setKillCount(player, God.ZAROS, kc - KILLCOUNT_REQUIRED)
+        if (hasCeremonial) {
+            player.message("The door recognises your familiarity with the area and allows you to pass through.")
+        } else {
+            GodWars.setKillCount(player, God.ZAROS, kc - KILLCOUNT_REQUIRED)
+        }
     }
     walkThroughDoor(player, obj.tile, if (insidePrison) God.ZAROS.chamberExit else God.ZAROS.chamberEntry)
 }
