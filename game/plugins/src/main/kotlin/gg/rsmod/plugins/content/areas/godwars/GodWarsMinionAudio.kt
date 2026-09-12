@@ -40,6 +40,25 @@ object GodWarsMinionAudio {
         Npcs.SPIRITUAL_WARRIOR_6277 to SourcedSound(2867, area = false), // gorak_attack
     )
 
+    /** Explicit NPC defend sounds from the Void 667 combat/sound definitions. */
+    private val defendSounds = mapOf(
+        Npcs.SERGEANT_STRONGSTACK to SourcedSound(472, area = false), // goblin_defend
+        Npcs.SERGEANT_STEELWILL to SourcedSound(3874, area = true), // sergeant_steelwill_defend
+        Npcs.SERGEANT_GRIMSPIKE to SourcedSound(472, area = false), // goblin_defend
+        Npcs.WINGMAN_SKREE to SourcedSound(3859, area = true), // aviansie_defend
+        Npcs.FLOCKLEADER_GEERIN to SourcedSound(3859, area = true), // aviansie_defend
+        Npcs.FLIGHT_KILISA to SourcedSound(3859, area = true), // aviansie_defend
+        Npcs.SPIRITUAL_WARRIOR_6229 to SourcedSound(3859, area = true), // aviansie_defend
+        Npcs.STARLIGHT to SourcedSound(3859, area = true), // aviansie_defend
+        Npcs.GROWLER to SourcedSound(3869, area = false), // growler_defend
+        Npcs.BREE to SourcedSound(3866, area = false), // bree_defend
+        Npcs.BALFRUG_KREEYATH to SourcedSound(404, area = false), // balfrug_kreeyath_defend
+        Npcs.ZAKLN_GRITCH to SourcedSound(404, area = false), // zakln_gritch_defend
+        Npcs.SPIRITUAL_WARRIOR to SourcedSound(3841, area = false), // spiritual_warrior_zamorak_defend
+        Npcs.SPIRITUAL_WARRIOR_6255 to SourcedSound(29, area = false), // spiritual_warrior_saradomin_defend
+        Npcs.SPIRITUAL_WARRIOR_6277 to SourcedSound(2869, area = false), // gorak_defend
+    )
+
     /** Explicit bodyguard death sounds from the Void 667 sound definitions. */
     private val deathSounds = mapOf(
         Npcs.SERGEANT_STRONGSTACK to SourcedSound(471, area = true), // goblin_death
@@ -57,9 +76,13 @@ object GodWarsMinionAudio {
 
     fun attackSoundFor(npcId: Int): SourcedSound? = attackSounds[npcId]
 
+    fun defendSoundFor(npcId: Int): SourcedSound? = defendSounds[npcId]
+
     fun deathSoundFor(npcId: Int): SourcedSound? = deathSounds[npcId]
 
     fun deathSounds(): Map<Int, SourcedSound> = deathSounds
+
+    fun defendSounds(): Map<Int, SourcedSound> = defendSounds
 
     fun playAttack(
         npc: Npc,
@@ -70,6 +93,25 @@ object GodWarsMinionAudio {
 
     fun playDeath(npc: Npc) {
         play(npc, null, deathSoundFor(npc.id))
+    }
+
+    /**
+     * Void's NPC defend hook emits the sound through the attacking character. For a player
+     * attacker this is a direct player sound unless the source definition is explicitly an area
+     * sound, in which case the area is centered on that player's tile. Non-player attackers are
+     * intentionally ignored because Void's Character.sound also returns for non-players.
+     */
+    fun playDefend(
+        source: Pawn,
+        npc: Npc,
+    ) {
+        val sound = defendSoundFor(npc.id) ?: return
+        if (source !is Player) return
+        if (sound.area) {
+            source.world.spawn(AreaSound(tile = source.tile, id = sound.id, radius = 5, volume = 1))
+        } else {
+            source.playSound(sound.id)
+        }
     }
 
     private fun play(

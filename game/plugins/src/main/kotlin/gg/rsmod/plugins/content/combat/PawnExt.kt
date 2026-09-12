@@ -232,6 +232,14 @@ fun Pawn.dealHit(
         }
     }
 
+    // Void's combatDamage Block hook emits an NPC defend sound through the attacking player.
+    // Keep this in the shared hit pipeline so normal and special attacks use the same event point.
+    if (target is Npc) {
+        hit.addAction {
+            gg.rsmod.plugins.content.areas.godwars.GodWarsMinionAudio.playDefend(this@dealHit, target)
+        }
+    }
+
     // Execute the provided onHit lambda
     hit.addAction { onHit(pawnHit) }
 

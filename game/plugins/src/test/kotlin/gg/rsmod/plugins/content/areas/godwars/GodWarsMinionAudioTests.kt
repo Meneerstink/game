@@ -29,6 +29,25 @@ class GodWarsMinionAudioTests {
     }
 
     @Test
+    fun `defend registry contains only cache-backed Void events`() {
+        assertEquals(GodWarsMinionAudio.SourcedSound(472, area = false), GodWarsMinionAudio.defendSoundFor(Npcs.SERGEANT_STRONGSTACK))
+        assertEquals(GodWarsMinionAudio.SourcedSound(3874, area = true), GodWarsMinionAudio.defendSoundFor(Npcs.SERGEANT_STEELWILL))
+        assertEquals(GodWarsMinionAudio.SourcedSound(3859, area = true), GodWarsMinionAudio.defendSoundFor(Npcs.WINGMAN_SKREE))
+        assertEquals(GodWarsMinionAudio.SourcedSound(3859, area = true), GodWarsMinionAudio.defendSoundFor(Npcs.STARLIGHT))
+        assertEquals(GodWarsMinionAudio.SourcedSound(3869, area = false), GodWarsMinionAudio.defendSoundFor(Npcs.GROWLER))
+        assertEquals(GodWarsMinionAudio.SourcedSound(3866, area = false), GodWarsMinionAudio.defendSoundFor(Npcs.BREE))
+        assertEquals(GodWarsMinionAudio.SourcedSound(404, area = false), GodWarsMinionAudio.defendSoundFor(Npcs.ZAKLN_GRITCH))
+        assertEquals(GodWarsMinionAudio.SourcedSound(3841, area = false), GodWarsMinionAudio.defendSoundFor(Npcs.SPIRITUAL_WARRIOR))
+        assertEquals(GodWarsMinionAudio.SourcedSound(29, area = false), GodWarsMinionAudio.defendSoundFor(Npcs.SPIRITUAL_WARRIOR_6255))
+        assertEquals(GodWarsMinionAudio.SourcedSound(2869, area = false), GodWarsMinionAudio.defendSoundFor(Npcs.SPIRITUAL_WARRIOR_6277))
+    }
+
+    @Test
+    fun `defend registry leaves Tstanon without an invented donor event`() {
+        assertNull(GodWarsMinionAudio.defendSoundFor(Npcs.TSTANON_KARLAK))
+    }
+
+    @Test
     fun `death registry preserves the existing explicit bodyguard events`() {
         assertEquals(GodWarsMinionAudio.SourcedSound(471, area = true), GodWarsMinionAudio.deathSoundFor(Npcs.SERGEANT_STRONGSTACK))
         assertEquals(GodWarsMinionAudio.SourcedSound(3854, area = true), GodWarsMinionAudio.deathSoundFor(Npcs.WINGMAN_SKREE))
