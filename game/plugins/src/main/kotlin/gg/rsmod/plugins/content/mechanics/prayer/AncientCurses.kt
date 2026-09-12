@@ -50,6 +50,8 @@ object AncientCurses {
     val UNLOCKED_ATTR = AttributeKey<Boolean>(persistenceKey = "ancient_curses_unlocked")
     private const val UNLOCK_COST = 50_000
     const val TURMOIL_LEVEL = 95
+    /** Void/Novite 667: Ancient Protect Item is level 50, unlike normal Protect Item (25). */
+    const val PROTECT_ITEM_LEVEL = 50
 
     const val SAP_BASE_PCT = 10
     const val SAP_CAP_PCT = 20
@@ -234,8 +236,8 @@ object AncientCurses {
 
     /**
      * A click on the prayer grid (interface 271 component 8) while the curse book is shown.
-     * Slot 0 is Protect Item, which is the normal book's own shared effect: it is toggled through
-     * [Prayers] (same drain/death integration) and mirrored to the curse varbit for the icon.
+     * Slot 0 uses the normal book's shared Protect Item state for drain/death integration, but
+     * retains the Ancient-book level-50 and unlock requirements before entering that path.
      */
     suspend fun onBookButton(
         task: QueueTask,
@@ -244,8 +246,16 @@ object AncientCurses {
         val player = task.player
         when (slot) {
             AncientCurse.PROTECT_ITEM_SLOT -> {
-                // Protect Item is the normal book's shared effect (class KDoc), so `Prayers.toggle`
-                // runs the *normal* book's activate/deactivate path, which ends in
+                if (player.attr[UNLOCKED_ATTR] != true) {
+                    player.filterableMessage("You must perform the ritual first - see ::curse unlock.")
+                    return
+                }
+                if (player.skills.getMaxLevel(Skills.PRAYER) < PROTECT_ITEM_LEVEL) {
+                    player.filterableMessage("You need a Prayer level of $PROTECT_ITEM_LEVEL to use Protect Item.")
+                    return
+                }
+                // Protect Item is the normal book's shared state (class KDoc), so `Prayers.toggle`
+                // runs the normal activation path, which ends in
                 // `Prayers.setOverhead` - that function only knows about the 7 normal Protect/
                 // Retribution/Smite/Redemption prayers, none of which can be active while the
                 // curses book is shown, so it unconditionally computes PrayerIcon.NONE and wipes
@@ -268,7 +278,7 @@ object AncientCurses {
     }
 
     private fun quickCurseLevel(slot: Int): Int? = when (slot) {
-        AncientCurse.PROTECT_ITEM_SLOT -> Prayer.PROTECT_ITEM.level
+        AncientCurse.PROTECT_ITEM_SLOT -> PROTECT_ITEM_LEVEL
         AncientCurse.TURMOIL_SLOT -> TURMOIL_LEVEL
         else -> AncientCurse.bySlot(slot)?.level
     }
