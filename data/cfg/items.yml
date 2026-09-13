@@ -268122,3 +268122,43 @@
   tradeable: true
   weight: 0.0
   equipment: null
+- id: 22670
+  name: "Osmumten's fang"
+  examine: "A deadly sword created long ago."
+  tradeable: true
+  weight: 1.814
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 5701
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 5
+    attack_speed: 5
+    attack_stab: 105
+    attack_slash: 75
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 103
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: 2500
+    skill_reqs: [{'skill': 0, 'level': 82}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22671
+  name: "Osmumten's fang"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null

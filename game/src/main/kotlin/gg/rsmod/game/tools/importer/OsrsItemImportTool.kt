@@ -206,6 +206,12 @@ object OsrsItemImportTool {
             "quiver" to
                 listOf(28947, 28949, 28951, 28953, 28955, 28957).map { Spec(it, rev667Params = mapOf(749 to 4, 750 to 75)) } +
                     Spec(28924), // Sunfire splinters (wiki: one quiver charge per splinter)
+            // Osmumten's fang: one-handed stab weapon whose wiki styles (Stab/Lunge/Slash/Block) are the 667 sword style set
+            // 5, so it follows the Rune sword 1289 like Belle's folly (644 1381, audio 2500) plus 687 for Eviscerate.
+            "fang" to
+                listOf(
+                    Spec(26219, noted = true, rev667Params = mapOf(644 to 1381, 686 to 5, 687 to 1, 749 to 0, 750 to 82), weaponType = 5, attackAudio = 2500),
+                ),
         )
 
     /**

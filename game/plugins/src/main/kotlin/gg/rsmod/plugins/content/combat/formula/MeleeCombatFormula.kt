@@ -45,7 +45,10 @@ object MeleeCombatFormula : CombatFormula {
             }
 
         val accuracy: Double =
-            if (attack > defence) {
+            if (pawn is Player && gg.rsmod.plugins.content.items.osrs.OsmumtensFang.usesFangAccuracy(pawn)) {
+                // Osmumten's fang, stab styles: its own hit chance formula (OsmumtensFang).
+                gg.rsmod.plugins.content.items.osrs.OsmumtensFang.hitChance(attack.toDouble(), defence.toDouble())
+            } else if (attack > defence) {
                 1.0 - (defence + 2.0) / (2.0 * (attack + 1.0))
             } else {
                 attack / (2.0 * (defence + 1))

@@ -19530,5 +19530,8 @@ object Items {
     const val BLESSED_DIZANAS_QUIVER = 22664
     const val BLESSED_DIZANAS_QUIVER_L = 22665
     const val SUNFIRE_SPLINTERS = 22669
+    // OSRS-IMPORT batch fang (tx-20260913-232754).
+    const val OSMUMTENS_FANG = 22670
+    const val OSMUMTENS_FANG_NOTED = 22671
     // Auto-generated file using class gg.rsmod.game.service.game.DumpEntityIdService
 }

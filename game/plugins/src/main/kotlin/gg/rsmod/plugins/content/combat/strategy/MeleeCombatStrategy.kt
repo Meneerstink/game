@@ -65,12 +65,20 @@ object MeleeCombatStrategy : CombatStrategy {
         // and against monsters that attack does 1 extra damage.
         val defiler = pawn is Player && MeleeCombatFormula.isWearingVerac(pawn) && world.chance(1, 4)
         val landHit = defiler || accuracy >= world.randomDouble()
+        // Osmumten's fang: every successful hit rolls between 15% and 85% of the max hit (OsmumtensFang).
+        val fangRange =
+            if (pawn is Player && gg.rsmod.plugins.content.items.osrs.OsmumtensFang.isWielding(pawn)) {
+                gg.rsmod.plugins.content.items.osrs.OsmumtensFang.damageRange(maxHit, special = false)
+            } else {
+                null
+            }
 
         val damage =
             pawn
                 .dealHit(
                     target = target,
-                    maxHit = maxHit,
+                    minHit = gg.rsmod.plugins.content.items.osrs.OsmumtensFang.minHitArgument(fangRange?.first ?: 0),
+                    maxHit = fangRange?.second?.toDouble() ?: maxHit,
                     landHit = landHit,
                     delay = 1,
                     hitType = HitType.MELEE,
