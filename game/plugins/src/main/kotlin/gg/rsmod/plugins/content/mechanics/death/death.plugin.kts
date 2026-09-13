@@ -6,6 +6,7 @@ import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.service.log.LoggerService
 import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.content.mechanics.trouver.Trouver
+import gg.rsmod.plugins.content.items.helios.CrownOfHelios
 
 /**
  * Wires the shared death-resolution model ([DeathResolver] /
@@ -36,7 +37,9 @@ on_player_pre_death {
             victim = victim,
             killer = killer,
             valueProvider = valueProvider,
-            alwaysProtected = Trouver::protectedFromDeath,
+            alwaysProtected = { itemId ->
+                itemId == CrownOfHelios.ITEM || Trouver.protectedFromDeath(itemId)
+            },
         )
     DeathExecutor.execute(
         world = world,

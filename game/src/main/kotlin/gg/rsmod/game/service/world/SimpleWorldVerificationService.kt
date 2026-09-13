@@ -16,6 +16,7 @@ class SimpleWorldVerificationService : WorldVerificationService {
     ): LoginResultType? =
         when {
             world.rebootTimer != -1 && world.rebootTimer < World.REJECT_LOGIN_REBOOT_THRESHOLD -> LoginResultType.SERVER_UPDATE
+            BannedPlayers.isBanned(loginName) || BannedPlayers.isBanned(displayName) -> LoginResultType.ACCOUNT_BANNED
             world.getPlayerForName(displayName) != null -> LoginResultType.ALREADY_ONLINE
             world.players.count() >= world.players.capacity -> LoginResultType.MAX_PLAYERS
             else -> null

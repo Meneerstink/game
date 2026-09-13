@@ -1,5 +1,6 @@
 package gg.rsmod.plugins.content.items.helios
 
+import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.combat.CombatClass
 import gg.rsmod.game.model.entity.Pawn
@@ -42,7 +43,7 @@ object CrownOfHelios {
         MAGIC("Magic", CombatClass.MAGIC),
     }
 
-    /** Damage per hit, in the same "hitpoints" unit the combat formulas use (x10 lifepoints). */
+    /** Damage per hit in the server's 1:1 lifepoint unit. */
     enum class Power(
         val label: String,
         val maxHit: Double,
@@ -55,6 +56,32 @@ object CrownOfHelios {
 
     val MODE_ATTR = AttributeKey<Mode>()
     val POWER_ATTR = AttributeKey<Power>()
+
+    /** A named tile the crown's Teleport menu can jump back to (a favorite or a recent trip). */
+    data class SavedLocation(val label: String, val tile: Tile)
+
+    /** Admin-saved teleport shortcuts (Teleport > Favorites), kept for the session. */
+    val FAVORITES_ATTR = AttributeKey<MutableList<SavedLocation>>()
+
+    /** Auto-tracked last few Crown teleports (Teleport > Recent), newest first. */
+    val RECENT_ATTR = AttributeKey<MutableList<SavedLocation>>()
+
+    /** Ring buffer of the last Crown dev-tool actions (AV Tester plays, spawns, etc). */
+    val LAST_ACTIONS_ATTR = AttributeKey<MutableList<String>>()
+
+    /**
+     * Player-state snapshot (Dev Tools > Snapshot/Restore) - deliberately position/HP/run/skill
+     * levels only, never inventory or equipment: a bulk raw-slot restore of those risks an item
+     * duplication bug, which this dev tool must never be able to cause.
+     */
+    data class Snapshot(
+        val tile: Tile,
+        val hp: Int,
+        val runEnergy: Double,
+        val levels: IntArray,
+    )
+
+    val SNAPSHOT_ATTR = AttributeKey<Snapshot>()
 
     fun mode(player: Player): Mode = player.attr[MODE_ATTR] ?: Mode.MELEE
 
@@ -75,7 +102,7 @@ object CrownOfHelios {
         if (power != Power.OBLITERATE) {
             return power.maxHit
         }
-        return target.getCurrentLifepoints() / 10.0 + 1.0
+        return target.getCurrentLifepoints().toDouble() + 1.0
     }
 }
 
@@ -97,7 +124,7 @@ object CrownOfHeliosCombatStrategy : CombatStrategy {
         val world = player.world
         val maxHit = CrownOfHelios.maxHitAgainst(player, target)
         // dealHit rolls Random.nextDouble(minHit, maxHit), which needs minHit < maxHit; a 0.1
-        // window keeps every hit at the chosen max (999..1000 lifepoints for Overkill).
+        // window keeps every hit at the chosen max (99..100 lifepoints for Overkill).
         val minHit = maxHit - 0.1
 
         when (CrownOfHelios.mode(player)) {
