@@ -105,6 +105,15 @@ class VarpSet(
         value: Int,
     ) {
         val def = world.definitions.get(VarbitDef::class.java, id)
+        // RCV-012 B6: a value outside the varbit's bit range is silently masked (e.g. -78 or 434 in an 8-bit field reads
+        // back as 178). Trace every such write, for every varbit, with the writer's frame.
+        val max = gg.rsmod.util.DataConstants.BIT_SIZES[def.endBit - def.startBit]
+        if (value < 0 || value > max) {
+            gg.rsmod.game.model.AvTrace.log {
+                "varbit overflow id=$id value=$value bits=${def.startBit}..${def.endBit} max=$max stored=${value and max} " +
+                    "at=${Throwable().stackTrace.drop(1).take(3).joinToString(" < ") { "${it.className.substringAfterLast('.')}.${it.methodName}:${it.lineNumber}" }}"
+            }
+        }
         setBit(def.varp, def.startBit, def.endBit, value)
     }
 

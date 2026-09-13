@@ -88,6 +88,13 @@ class SkillSet(
         skill: Int,
         level: Int,
     ) {
+        // RCV-012 B6: the stat packet sends the level as one byte; anything outside 0..255 wraps on the client.
+        if (level < 0 || level > 255) {
+            gg.rsmod.game.model.AvTrace.log {
+                "stat overflow skill=$skill level=$level at=" +
+                    Throwable().stackTrace.drop(1).take(3).joinToString(" < ") { "${it.className.substringAfterLast('.')}.${it.methodName}:${it.lineNumber}" }
+            }
+        }
         get(skill).currentLevel = level
         dirty[skill] = true
     }
