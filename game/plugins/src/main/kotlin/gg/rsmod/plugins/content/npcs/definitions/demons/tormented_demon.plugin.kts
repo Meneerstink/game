@@ -45,19 +45,24 @@ on_npc_death(TD) {
     table.getDrop(world, npc.damageMap.getMostDamage()!! as Player, npc.id, npc.tile)
 }
 
-set_combat_def(npc = TD) {
+// RCV-012 B7: one definition for every cache demon id 8349-8369 (was 8349 only). HP 3260 (x10 DSL unit, real 326):
+// Novite unpackedCombatDefinitionsList (all ids) and Void guthix_temple.npcs.toml agree; the old 1200 gave 120 HP.
+// Levels from Void guthix_temple.npcs.toml (att/str/mage/range 255, def 150; Novite has no level data).
+// attackSpeed 4 and respawnDelay 40 are unchanged pending the owner's SOURCE_CONFLICT decision (Novite 6/60, Void 21).
+gg.rsmod.plugins.content.combat.scripts.impl.TormentedDemonCombatScript.ids.forEach { demonId ->
+set_combat_def(npc = demonId) {
     configs {
         attackSpeed = 4
         attackStyle = StyleType.SLASH
         respawnDelay = 40
     }
     stats {
-        hitpoints = 1200
-        attack = 300
-        strength = 300
-        defence = 250
-        magic = 300
-        ranged = 1
+        hitpoints = 3260
+        attack = 255
+        strength = 255
+        defence = 150
+        magic = 255
+        ranged = 255
     }
     bonuses {
         defenceStab = 70
@@ -75,4 +80,5 @@ set_combat_def(npc = TD) {
     aggro {
         radius = 8
     }
+}
 }

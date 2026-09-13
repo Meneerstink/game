@@ -158,7 +158,8 @@ fun Pawn.dealHit(
         damage /= 2
     }
     // Tormented demons: fire shield and style prayer (see TormentedDemonCombatScript).
-    if (target is Npc && target.id in gg.rsmod.plugins.content.combat.scripts.impl.TormentedDemonCombatScript.ids && damage > 0) {
+    // RCV-012 B7: misses reach the rule too - both donors count every hit, a miss included, toward the prayer switch.
+    if (target is Npc && target.id in gg.rsmod.plugins.content.combat.scripts.impl.TormentedDemonCombatScript.ids && damage >= 0) {
         val weapon = (this as? Player)?.equipment?.get(3)?.id ?: -1
         val style = when (hitType) {
             HitType.RANGE -> CombatClass.RANGED

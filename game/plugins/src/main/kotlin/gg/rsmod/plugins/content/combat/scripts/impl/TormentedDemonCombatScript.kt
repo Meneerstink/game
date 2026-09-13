@@ -142,24 +142,26 @@ object TormentedDemonCombatScript : CombatScript() {
     ): Int {
         val world = npc.world
         // RCV-005 root cause (owner: "tormented demon lijkt niet goed te prayen tegen mijn attack style"): the demon
-        // switched its protection on every single hit. Void TormentedDemon.kt + PrayerConfigs.praying: it only
-        // starts praying against a style after taking 31 damage from it (x10 source: 310, each hit counted as at
-        // least 2 / x10: 20), by transforming into the variant that shows that protection prayer
-        // (tormented_demon_melee 8352 / _magic 8353 / _range 8354); a player hit in the prayed style deals 0.
-        val prayed = PRAYER_VARIANTS[style]
-        var result = if (prayed != null && npc.getTransmogId() == prayed) 0 else damage
+        // switched its protection on every single hit. Void TormentedDemon.kt + Novite TormentedDemon.java: it only
+        // starts praying against a style after taking 31 damage from it (x10 source: 310, each hit - a miss included -
+        // counted as at least 2 / x10: 20), by transforming into the variant that shows that protection prayer.
+        // RCV-012 B7: the variant is the demon's own cache group (see [variantFor]); the old hard-coded Void 634 ids
+        // 8352-8354 ignored that id 8349 already shows the protect-melee icon at spawn, so melee did full damage under a
+        // visible melee prayer.
+        val shown = displayedId(npc)
+        var result = if (prayedStyle(shown) == style) 0 else damage
         val shieldDown = (npc.attr[SHIELD_DOWN_UNTIL] ?: 0) > world.currentCycle
-        if (weaponId == gg.rsmod.plugins.api.cfg.Items.DARKLIGHT || weaponId == gg.rsmod.plugins.api.cfg.Items.SILVERLIGHT) {
+        if (damage > 0 && (weaponId == gg.rsmod.plugins.api.cfg.Items.DARKLIGHT || weaponId == gg.rsmod.plugins.api.cfg.Items.SILVERLIGHT)) {
             npc.attr[SHIELD_DOWN_UNTIL] = world.currentCycle + 100
             if (attacker is Player) attacker.message("The demon is temporarily weakened by your weapon.")
         } else if (!shieldDown) {
             npc.graphic(SHIELD_GFX)
             result = result / 4
         }
-        if (result > 0 && prayed != null && npc.getTransmogId() != prayed) {
+        if (prayedStyle(shown) != style) {
             val counted = (npc.attr[STYLE_DAMAGE]?.get(style) ?: 0) + result.coerceAtLeast(2)
             if (counted >= PRAYER_SWITCH_DAMAGE) {
-                npc.setTransmogId(prayed)
+                npc.setTransmogId(variantFor(npc.id, style))
                 npc.attr[STYLE_DAMAGE] = HashMap()
                 if (attacker is Player) attacker.message("The Tormented demon regains its strength against your weapon.")
             } else {
@@ -169,9 +171,27 @@ object TormentedDemonCombatScript : CombatScript() {
         return result
     }
 
-    /** Void guthix_temple.npcs.toml: the variant that protects against each style. */
-    private val PRAYER_VARIANTS = mapOf(CombatClass.MELEE to 8352, CombatClass.MAGIC to 8353, CombatClass.RANGED to 8354)
-    private const val PRAYER_SWITCH_DAMAGE = 31
+    /** First and last cache id of the tormented demon definitions (pristine 667 NpcDefProbeTool 8349..8369). */
+    const val FIRST_ID = 8349
+    const val LAST_ID = 8369
+
+    /**
+     * The 667 cache stores each demon as a group of three definitions whose head icons repeat 0, 2, 1 (protect melee,
+     * protect magic, protect missiles); Novite `TormentedDemon.switchPrayers` transforms into exactly that offset.
+     */
+    private val OFFSET_STYLE = listOf(CombatClass.MELEE, CombatClass.MAGIC, CombatClass.RANGED)
+
+    fun displayedId(npc: Npc): Int = npc.getTransmogId().takeIf { it in FIRST_ID..LAST_ID } ?: npc.id
+
+    fun prayedStyle(displayedId: Int): CombatClass? =
+        if (displayedId in FIRST_ID..LAST_ID) OFFSET_STYLE[(displayedId - FIRST_ID) % 3] else null
+
+    fun variantFor(
+        npcId: Int,
+        style: CombatClass,
+    ): Int = FIRST_ID + (npcId - FIRST_ID) / 3 * 3 + OFFSET_STYLE.indexOf(style)
+
+    const val PRAYER_SWITCH_DAMAGE = 31
     private const val SHIELD_GFX = 1885 // Void tormented_demon_shield
     private val STYLE_DAMAGE = AttributeKey<HashMap<CombatClass, Int>>()
 }
