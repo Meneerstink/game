@@ -19542,5 +19542,11 @@ object Items {
     const val VOIDWAKER_BLADE_NOTED = 22677
     const val VOIDWAKER_GEM = 22678
     const val VOIDWAKER_GEM_NOTED = 22679
+    // OSRS-IMPORT batch noxious (tx-20260913-234110).
+    const val NOXIOUS_HALBERD = 22680
+    const val NOXIOUS_HALBERD_NOTED = 22681
+    const val NOXIOUS_POINT = 22682
+    const val NOXIOUS_BLADE = 22683
+    const val NOXIOUS_POMMEL = 22684
     // Auto-generated file using class gg.rsmod.game.service.game.DumpEntityIdService
 }

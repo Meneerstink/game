@@ -268238,3 +268238,61 @@
   tradeable: true
   weight: 0.0
   equipment: null
+- id: 22680
+  name: "Noxious halberd"
+  examine: "A venomous halberd created from the parts of an araxyte."
+  tradeable: true
+  weight: 2.721
+  equipment:
+    equip_slot: 3
+    equip_type: 5
+    appearance_id: 5703
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 15
+    attack_speed: 5
+    attack_stab: 80
+    attack_slash: 132
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 142
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 80}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22681
+  name: "Noxious halberd"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22682
+  name: "Noxious point"
+  examine: "A powerful piece of venomous weaponry."
+  tradeable: false
+  weight: 0.907
+  equipment: null
+- id: 22683
+  name: "Noxious blade"
+  examine: "A powerful piece of venomous weaponry."
+  tradeable: false
+  weight: 0.907
+  equipment: null
+- id: 22684
+  name: "Noxious pommel"
+  examine: "A powerful piece of venomous weaponry."
+  tradeable: false
+  weight: 0.907
+  equipment: null

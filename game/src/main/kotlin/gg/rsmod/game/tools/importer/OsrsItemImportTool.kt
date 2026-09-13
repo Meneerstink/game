@@ -221,6 +221,15 @@ object OsrsItemImportTool {
                     Spec(27684, noted = true), // Voidwaker blade
                     Spec(27687, noted = true), // Voidwaker gem
                 ),
+            // Noxious halberd: two-handed halberd, following the 667 Rune halberd 3202 (644 28, 686 15; weapon type 15, no
+            // attack audio) plus 687 for its special; single requirement 80 Attack.
+            "noxious" to
+                listOf(
+                    Spec(29796, noted = true, rev667Params = mapOf(644 to 28, 686 to 15, 687 to 1, 749 to 0, 750 to 80), weaponType = 15), // Noxious halberd
+                    Spec(29790), // Noxious point
+                    Spec(29792), // Noxious blade
+                    Spec(29794), // Noxious pommel
+                ),
         )
 
     /**

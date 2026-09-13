@@ -83,7 +83,12 @@ object MeleeCombatStrategy : CombatStrategy {
                     delay = 1,
                     hitType = HitType.MELEE,
                     bonusDamage = if (defiler && target is Npc) 1 else 0,
-                ).hit.hitmarks
+                ).also { pawnHit ->
+                    // Noxious halberd: 33% chance to envenom per attack (NoxiousHalberd).
+                    if (pawn is Player && gg.rsmod.plugins.content.items.osrs.NoxiousHalberd.isWielding(pawn)) {
+                        pawnHit.hit.addAction { gg.rsmod.plugins.content.items.osrs.NoxiousHalberd.rollVenom(pawn, target) }
+                    }
+                }.hit.hitmarks
                 .sumOf { it.damage }
 
         if (damage > 0 && pawn.entityType.isPlayer) {
