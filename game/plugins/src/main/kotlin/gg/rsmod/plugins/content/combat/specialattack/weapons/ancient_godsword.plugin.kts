@@ -15,7 +15,14 @@ SpecialAttacks.register(AncientGodsword.SPECIAL_ENERGY, Items.ANCIENT_GODSWORD) 
     val victim = target
     player.animate(CombatConfigs.getAttackAnimation(player))
     val maxHit = MeleeCombatFormula.getMaxHit(player, victim, specialAttackMultiplier = AncientGodsword.SPECIAL_DAMAGE)
-    val landHit = MeleeCombatFormula.getAccuracy(player, victim, specialAttackMultiplier = AncientGodsword.SPECIAL_ACCURACY) >= world.randomDouble()
+    // Godsword specials roll against the target's slash defence (wiki DPS calculator `defenceStyle = 'slash'`).
+    val landHit =
+        MeleeCombatFormula.getAccuracyAgainst(
+            player,
+            victim,
+            specialAttackMultiplier = AncientGodsword.SPECIAL_ACCURACY,
+            defenceStyle = gg.rsmod.game.model.combat.StyleType.SLASH,
+        ) >= world.randomDouble()
     player.dealHit(target = victim, maxHit = maxHit, landHit = landHit, delay = 1, hitType = HitType.MELEE)
     if (!landHit) return@register
     player.world.queue {

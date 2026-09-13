@@ -237,6 +237,13 @@ object OsrsItemImportTool {
                     Spec(26233, noted = true, rev667Params = mapOf(644 to 1579, 686 to 7, 687 to 1, 749 to 0, 750 to 75), weaponType = 7, attackAudio = 3846), // Ancient godsword
                     Spec(26370, noted = true), // Ancient hilt
                 ),
+            // Abyssal dagger and its poisoned variants, following the 667 Dragon dagger 1215 (686 5, 687 special bar, no 644
+            // render param; weapon type 5, attack audio 2517). 70 Attack for every variant (wiki; upstream only 13265 carries
+            // the requirement params, the poisoned copies have identical stats).
+            "abyssaldagger" to
+                listOf(13265, 13267, 13269, 13271).map {
+                    Spec(it, noted = true, rev667Params = mapOf(686 to 5, 687 to 1, 749 to 0, 750 to 70), weaponType = 5, attackAudio = 2517)
+                },
         )
 
     /**

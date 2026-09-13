@@ -19553,5 +19553,14 @@ object Items {
     const val ANCIENT_GODSWORD_NOTED = 22686
     const val ANCIENT_HILT = 22687
     const val ANCIENT_HILT_NOTED = 22688
+    // OSRS-IMPORT batch abyssaldagger (tx-20260913-235440).
+    const val ABYSSAL_DAGGER = 22689
+    const val ABYSSAL_DAGGER_NOTED = 22690
+    const val ABYSSAL_DAGGER_P = 22691
+    const val ABYSSAL_DAGGER_P_NOTED = 22692
+    const val ABYSSAL_DAGGER_P_PLUS = 22693
+    const val ABYSSAL_DAGGER_P_PLUS_NOTED = 22694
+    const val ABYSSAL_DAGGER_P_PLUS_PLUS = 22695
+    const val ABYSSAL_DAGGER_P_PLUS_PLUS_NOTED = 22696
     // Auto-generated file using class gg.rsmod.game.service.game.DumpEntityIdService
 }

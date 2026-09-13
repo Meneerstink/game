@@ -28,6 +28,25 @@ object MeleeCombatFormula : CombatFormula {
         pawn: Pawn,
         target: Pawn,
         specialAttackMultiplier: Double,
+    ): Double = accuracy(pawn, target, specialAttackMultiplier, defenceStyle = null)
+
+    /**
+     * Accuracy against a forced defence style. The wiki DPS calculator (weirdgloop/osrs-dps-calc `PlayerVsNPCCalc.ts`)
+     * sets `defenceStyle = 'slash'` for the special attacks of the Dragon claws/dagger/halberd/longsword/scimitar, Crystal
+     * halberd, Abyssal dagger, Saradomin sword, Arkan blade and every godsword.
+     */
+    fun getAccuracyAgainst(
+        pawn: Pawn,
+        target: Pawn,
+        specialAttackMultiplier: Double,
+        defenceStyle: StyleType,
+    ): Double = accuracy(pawn, target, specialAttackMultiplier, defenceStyle)
+
+    private fun accuracy(
+        pawn: Pawn,
+        target: Pawn,
+        specialAttackMultiplier: Double,
+        defenceStyle: StyleType?,
     ): Double {
         // Check if the target has the prayer protection and the attacker is not a player
         if (target.isProtectedFrom(CombatClass.MELEE) && pawn !is Player) {
@@ -41,7 +60,7 @@ object MeleeCombatFormula : CombatFormula {
                         .getDefenceRoll(
                             target,
                         )
-                else -> getDefenceRoll(pawn, target)
+                else -> getDefenceRoll(pawn, target, defenceStyle)
             }
 
         val accuracy: Double =
@@ -105,6 +124,7 @@ object MeleeCombatFormula : CombatFormula {
     private fun getDefenceRoll(
         pawn: Pawn,
         target: Pawn,
+        defenceStyle: StyleType? = null,
     ): Int {
         val a =
             if (target is Player) {
@@ -114,7 +134,7 @@ object MeleeCombatFormula : CombatFormula {
             } else {
                 0.0
             }
-        val b = getEquipmentDefenceBonus(pawn, target)
+        val b = getEquipmentDefenceBonus(pawn, target, defenceStyle)
 
         var maxRoll = a * (b + 64.0)
         maxRoll = applyDefenceSpecials(target, maxRoll)
@@ -206,9 +226,10 @@ object MeleeCombatFormula : CombatFormula {
     private fun getEquipmentDefenceBonus(
         pawn: Pawn,
         target: Pawn,
+        defenceStyle: StyleType? = null,
     ): Double {
         val bonus =
-            when (val combatStyle = CombatConfigs.getCombatStyle(pawn)) {
+            when (val combatStyle = defenceStyle ?: CombatConfigs.getCombatStyle(pawn)) {
                 StyleType.STAB -> BonusSlot.DEFENCE_STAB
                 StyleType.SLASH -> BonusSlot.DEFENCE_SLASH
                 StyleType.CRUSH -> BonusSlot.DEFENCE_CRUSH
