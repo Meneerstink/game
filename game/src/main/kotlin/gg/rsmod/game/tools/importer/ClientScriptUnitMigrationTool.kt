@@ -71,6 +71,8 @@ object ClientScriptUnitMigrationTool {
 
         val footerLength = readUnsignedShort(current, current.size - 2)
         val metadataOffset = current.size - footerLength - 2 - 16
+        // Switch tables hold absolute jump offsets in the script footer, which this tool does not rewrite.
+        check(decoded.none { it.opcode == SWITCH }) { "clientscript $scriptId has a switch table; removal would corrupt its jumps" }
         val removedInstructions = pairs.flatMap { (first, second) -> listOf(first, second) }.toSet()
         val removed = pairs.flatMap { (first, second) -> first.start until second.end }.toSet()
         val retained = ByteArrayOutputStream(current.size)
@@ -105,7 +107,10 @@ object ClientScriptUnitMigrationTool {
 
     private data class Instruction(val start: Int, val end: Int, val opcode: Int, val operand: Int?)
 
-    private val BRANCH_OPCODES = setOf(6, 7, 8, 9, 10)
+    // Every relative branch of the client's ClientScriptOpCode: BRANCH 6, BRANCH_NOT..GREATER_THAN 7-10, <= / >= 31-32,
+    // LONG_BRANCH_* 68-73, BRANCH_IF_TRUE/FALSE 86-87 (RCV-012 B6: the set used to stop at 10).
+    private val BRANCH_OPCODES = setOf(6, 7, 8, 9, 10, 31, 32, 68, 69, 70, 71, 72, 73, 86, 87)
+    private const val SWITCH = 51
 
     private fun decodeInstructionSpans(data: ByteArray): List<Instruction> {
         val footerLength = readUnsignedShort(data, data.size - 2)
