@@ -259,6 +259,12 @@ class Rev667LocType(val id: Int) {
     var sizeZ = 1
     val options = arrayOfNulls<String>(5)
     var animation = -1
+
+    /** Opcode 102: minimap map-scene (MSIType, config group 34); -1 = none (client `LocType.msi`). */
+    var msi = -1
+
+    /** Opcode 107: minimap/world-map icon (MapElementType, config group 36); -1 = none (client `LocType.mapelement`). */
+    var mapElement = -1
     val allModels: List<Int> get() = modelsByShape.values.flatten()
 
     companion object {
@@ -336,7 +342,7 @@ class Rev667LocType(val id: Int) {
                         buf.u16()
                     }
                     101 -> buf.u8()
-                    102 -> buf.u16()
+                    102 -> def.msi = buf.u16()
                     104 -> buf.u8()
                     106 -> {
                         val n = buf.u8()
@@ -345,7 +351,7 @@ class Rev667LocType(val id: Int) {
                             buf.u8()
                         }
                     }
-                    107 -> buf.u16()
+                    107 -> def.mapElement = buf.u16()
                     in 150..154 -> def.options[op - 150] = buf.string()
                     160 -> {
                         val n = buf.u8()

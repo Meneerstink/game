@@ -143,6 +143,30 @@ task runClientScriptUnitMigrationRepairTool(type: JavaExec) {
     main = 'gg.rsmod.game.tools.importer.ClientScriptUnitMigrationRepairTool'
 }
 
+task runFeroxMapDataProbeTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Read-only: Ferox locs OSRS mapScene/mapArea vs local msi/mapelement, and 667 reference values. ' +
+        'Usage: ./gradlew :game:runFeroxMapDataProbeTool --args="[outFile]"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.FeroxMapDataProbeTool'
+}
+
+task runFeroxMapSpriteProbeTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Read-only: matches OSRS mapscene/area sprites to 667 MSIType/MapElementType sprites by pixels. ' +
+        'Usage: ./gradlew :game:runFeroxMapSpriteProbeTool --args="[outFile]"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.FeroxMapSpriteProbeTool'
+}
+
+task runFeroxMinimapTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Adds pixel-proven LocType msi/mapelement to imported Ferox locs (CacheTransaction, both caches). ' +
+        'Usage: ./gradlew :game:runFeroxMinimapTool --args="plan|apply"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.FeroxMinimapTool'
+}
+
 task runItemParamProbeTool(type: JavaExec) {
     group = 'tools'
     description = 'Read-only diagnostic: dumps every ItemDef.params (opcode 249) key/value for one ' +
