@@ -201,6 +201,11 @@ object OsrsItemImportTool {
                     Spec(24222, rev667Params = mapOf(749 to 4, 750 to 70)), // Ava's assembler (l)
                     Spec(21907), // Vorkath's head
                 ),
+            // Dizana's quiver, all six upstream variants (uncharged, charged, blessed, each with its Trouver-locked (l)).
+            // Single requirement 75 Ranged (434/436) -> client 749/750 as on the Ava's assembler.
+            "quiver" to
+                listOf(28947, 28949, 28951, 28953, 28955, 28957).map { Spec(it, rev667Params = mapOf(749 to 4, 750 to 75)) } +
+                    Spec(28924), // Sunfire splinters (wiki: one quiver charge per splinter)
         )
 
     /**

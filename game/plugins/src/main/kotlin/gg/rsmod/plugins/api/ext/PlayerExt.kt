@@ -1377,7 +1377,8 @@ fun Player.getRangedStrengthBonus(): Int =
                 // OSRS Wiki "Toxic blowpipe": its +20 stacks with the loaded darts' ranged strength (dragon darts: +55).
                 gg.rsmod.plugins.content.items.osrs.Blowpipe.dartStrength(equipment[3])
         }
-        else -> equipmentBonuses[BonusSlot.RANGED_STRENGTH_BONUS.id]
+        // Dizana's Sunfire: +1 Ranged strength for arrows and bolts while the quiver is charged or blessed.
+        else -> equipmentBonuses[BonusSlot.RANGED_STRENGTH_BONUS.id] + gg.rsmod.plugins.content.items.osrs.DizanasQuiver.strengthBonus(this)
     }
 
 fun Player.getMagicDamageBonus(): Int = equipmentBonuses[BonusSlot.MAGIC_DAMAGE_BONUS.id]

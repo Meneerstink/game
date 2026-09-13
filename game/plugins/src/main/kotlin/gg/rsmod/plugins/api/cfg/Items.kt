@@ -19522,5 +19522,13 @@ object Items {
     const val AVAS_ASSEMBLER_BROKEN = 22657
     const val AVAS_ASSEMBLER_L = 22658
     const val VORKATHS_HEAD = 22659
+    // OSRS-IMPORT batch quiver (tx-20260913-232047). 22666-22668 are nameless Sunfire splinters stack visuals.
+    const val DIZANAS_QUIVER_UNCHARGED = 22660
+    const val DIZANAS_QUIVER_L_UNCHARGED = 22661
+    const val DIZANAS_QUIVER = 22662
+    const val DIZANAS_QUIVER_L = 22663
+    const val BLESSED_DIZANAS_QUIVER = 22664
+    const val BLESSED_DIZANAS_QUIVER_L = 22665
+    const val SUNFIRE_SPLINTERS = 22669
     // Auto-generated file using class gg.rsmod.game.service.game.DumpEntityIdService
 }

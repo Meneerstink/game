@@ -194,7 +194,9 @@ object RangedCombatFormula : CombatFormula {
         }
 
     private fun getEquipmentAttackBonus(pawn: Pawn): Double {
-        return pawn.getBonus(BonusSlot.ATTACK_RANGED).toDouble()
+        // Dizana's Sunfire: +10 Ranged accuracy for arrows and bolts while the quiver is charged or blessed.
+        val sunfire = if (pawn is Player) gg.rsmod.plugins.content.items.osrs.DizanasQuiver.accuracyBonus(pawn) else 0
+        return (pawn.getBonus(BonusSlot.ATTACK_RANGED) + sunfire).toDouble()
     }
 
     private fun getEquipmentDefenceBonus(target: Pawn): Double {

@@ -123,6 +123,9 @@ object SpecialAttackSupport {
                 bonusDamage = shot?.bonusDamage ?: 0,
             )
         val dealt = pawnHit.hit.hitmarks.sumOf { it.damage }
+        if (gg.rsmod.plugins.content.items.osrs.DizanasQuiver.applies(player)) {
+            gg.rsmod.plugins.content.items.osrs.DizanasQuiver.afterShot(player)
+        }
         shot?.bolt?.let { bolt ->
             pawnHit.hit.addAction {
                 gg.rsmod.plugins.content.combat.strategy.ranged.ammo.EnchantedBolts.afterHit(bolt, player, target, dealt)

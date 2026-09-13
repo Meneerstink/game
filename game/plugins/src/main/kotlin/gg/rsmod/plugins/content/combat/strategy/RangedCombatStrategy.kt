@@ -30,6 +30,7 @@ import gg.rsmod.plugins.content.combat.strategy.ranged.weapon.Bows
 import gg.rsmod.plugins.content.combat.strategy.ranged.weapon.CrossbowType
 import gg.rsmod.plugins.content.items.osrs.Blowpipe
 import gg.rsmod.plugins.content.items.osrs.BlowpipeCombat
+import gg.rsmod.plugins.content.items.osrs.DizanasQuiver
 import gg.rsmod.plugins.content.mechanics.weapons.HandCannon
 
 /**
@@ -266,6 +267,9 @@ object RangedCombatStrategy : CombatStrategy {
         val damage = pawnHit.hit.hitmarks.sumOf { it.damage }
         if (firedBlowpipe) {
             pawnHit.hit.addAction { BlowpipeCombat.rollVenom(pawn as Player, target) }
+        } else if (pawn is Player && DizanasQuiver.applies(pawn)) {
+            // The shot gained Dizana's Sunfire (bonuses read above): one 1/3 charge roll.
+            DizanasQuiver.afterShot(pawn)
         }
         val activated = shot?.bolt
         if (activated != null) {
