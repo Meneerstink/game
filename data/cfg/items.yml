@@ -268162,3 +268162,79 @@
   tradeable: true
   weight: 0.0
   equipment: null
+- id: 22672
+  name: "Voidwaker"
+  examine: "A truly fearsome weapon."
+  tradeable: true
+  weight: 1.814
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 5702
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 6
+    attack_speed: 4
+    attack_stab: 70
+    attack_slash: 80
+    attack_crush: -2
+    attack_magic: 5
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 1
+    defence_crush: 0
+    defence_magic: 2
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 80
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: 2500
+    skill_reqs: [{'skill': 0, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22673
+  name: "Voidwaker"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22674
+  name: "Voidwaker hilt"
+  examine: "The hilt of a broken sword."
+  tradeable: true
+  weight: 0.514
+  equipment: null
+- id: 22675
+  name: "Voidwaker hilt"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22676
+  name: "Voidwaker blade"
+  examine: "The blade of a broken sword."
+  tradeable: true
+  weight: 0.9
+  equipment: null
+- id: 22677
+  name: "Voidwaker blade"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22678
+  name: "Voidwaker gem"
+  examine: "The gem of a broken sword."
+  tradeable: true
+  weight: 0.3
+  equipment: null
+- id: 22679
+  name: "Voidwaker gem"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null

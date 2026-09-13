@@ -19533,5 +19533,14 @@ object Items {
     // OSRS-IMPORT batch fang (tx-20260913-232754).
     const val OSMUMTENS_FANG = 22670
     const val OSMUMTENS_FANG_NOTED = 22671
+    // OSRS-IMPORT batch voidwaker (tx-20260913-233456).
+    const val VOIDWAKER = 22672
+    const val VOIDWAKER_NOTED = 22673
+    const val VOIDWAKER_HILT = 22674
+    const val VOIDWAKER_HILT_NOTED = 22675
+    const val VOIDWAKER_BLADE = 22676
+    const val VOIDWAKER_BLADE_NOTED = 22677
+    const val VOIDWAKER_GEM = 22678
+    const val VOIDWAKER_GEM_NOTED = 22679
     // Auto-generated file using class gg.rsmod.game.service.game.DumpEntityIdService
 }

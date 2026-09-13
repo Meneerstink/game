@@ -212,6 +212,15 @@ object OsrsItemImportTool {
                 listOf(
                     Spec(26219, noted = true, rev667Params = mapOf(644 to 1381, 686 to 5, 687 to 1, 749 to 0, 750 to 82), weaponType = 5, attackAudio = 2500),
                 ),
+            // Voidwaker and its three pieces. The wiki's "slash sword" styles are the 667 scimitar style set 6: Rune scimitar
+            // 1333 (644 1582, 686 6, audio 2500) plus 687 for Disrupt; 75 Attack.
+            "voidwaker" to
+                listOf(
+                    Spec(27690, noted = true, rev667Params = mapOf(644 to 1582, 686 to 6, 687 to 1, 749 to 0, 750 to 75), weaponType = 6, attackAudio = 2500), // Voidwaker
+                    Spec(27681, noted = true), // Voidwaker hilt
+                    Spec(27684, noted = true), // Voidwaker blade
+                    Spec(27687, noted = true), // Voidwaker gem
+                ),
         )
 
     /**
