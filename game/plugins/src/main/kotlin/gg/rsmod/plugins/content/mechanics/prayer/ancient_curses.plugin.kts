@@ -1,8 +1,8 @@
 package gg.rsmod.plugins.content.mechanics.prayer
 
 /**
- * BATCH 2: extended from unlock/turmoil-only to the full book: `::curse book normal|ancient`
- * switches books, `::curse <name>` (e.g. `::curse sap warrior`, `::curse deflect melee`) toggles
+ * BATCH 2: extended from unlock/turmoil-only to the full book: `curse book normal|ancient`
+ * switches books, `curse <name>` (e.g. `curse sap warrior`, `curse deflect melee`) toggles
  * one of the 19 curses in [AncientCurse] by its display name (spaces allowed, case-insensitive).
  */
 on_command("curse") {
@@ -15,7 +15,7 @@ on_command("curse") {
             when (args.getOrNull(1)?.lowercase()) {
                 "normal" -> AncientCurses.switchBook(player, AncientCurses.PrayerBook.NORMAL)
                 "ancient" -> AncientCurses.switchBook(player, AncientCurses.PrayerBook.ANCIENT)
-                else -> player.filterableMessage("Usage: ::curse book normal | ::curse book ancient")
+                else -> player.filterableMessage("Usage: curse book normal | curse book ancient")
             }
         }
         else -> {
@@ -24,7 +24,7 @@ on_command("curse") {
                 AncientCurses.toggleCurse(player, curse)
             } else {
                 player.filterableMessage(
-                    "Usage: ::curse unlock | ::curse book <normal|ancient> | ::curse turmoil | ::curse <curse name>",
+                    "Usage: curse unlock | curse book <normal|ancient> | curse turmoil | curse <curse name>",
                 )
             }
         }

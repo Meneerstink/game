@@ -57,7 +57,7 @@ class AncientCursesRuntimeTests {
             every { player.varps } returns VarpSet((0..8000).toSet())
             every { player.varcs } returns MutableList(2000) { 0 }
             every { player.skills } returns SkillSet(7).apply { setBaseLevel(Skills.PRAYER, 99) }
-            every { player.getCurrentPrayerPoints() } returns 990
+            every { player.getCurrentPrayerPoints() } returns 99
             every { player.isOnline } returns true
             every { player.isDead() } returns false
             every { player.lock.canUsePrayer() } returns true
@@ -227,7 +227,7 @@ class AncientCursesRuntimeTests {
         // the actual class - on this relaxed mock that's a no-op, so set the real backing varp
         // directly (mirrors the private `Prayers.PRAYER_POINTS_VARP = 2382`) for `Prayers.toggle`'s
         // own points-remaining guard.
-        player.setVarp(2382, 990)
+        player.setVarp(2382, 99)
         AncientCurses.toggleCurse(player, AncientCurse.DEFLECT_MELEE)
         assertEquals(PrayerIcon.DEFLECT_MELEE.id, currentIcon)
 

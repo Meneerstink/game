@@ -1,7 +1,5 @@
 package gg.rsmod.plugins.content.skills.summoning
 
-import gg.rsmod.game.fs.def.BasDef
-import gg.rsmod.game.fs.def.NpcDef
 import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.api.InterfaceDestination
@@ -13,6 +11,7 @@ import gg.rsmod.plugins.api.ext.setComponentAnim
 import gg.rsmod.plugins.api.ext.setComponentSprite
 import gg.rsmod.plugins.api.ext.setComponentText
 import gg.rsmod.plugins.api.ext.setVarc
+import gg.rsmod.plugins.api.ext.setVarbit
 
 /**
  * The single capability model behind BOTH Summoning surfaces: the Follower Details panel
@@ -291,6 +290,10 @@ object SummoningUi {
         val previous = player.attr[SETTLED_FAMILIAR] ?: NO_FAMILIAR
         if (previous != npcId) {
             player.attr[SETTLED_FAMILIAR] = npcId
+            // A familiar-state varp can make the client rebuild the gameframe. That rebuild
+            // restores the cache's non-clickable spare-tab defaults, so re-arm both the tab
+            // graphic and its overlaid icon after the state transition (LR-03/LR-04).
+            FollowerDetailsTab.install(player)
             // G4: a left-click the new familiar cannot perform is dropped rather than left to
             // fail silently on the next click. Done before the orb is redrawn so the redraw
             // already reflects the corrected value.
@@ -315,44 +318,25 @@ object SummoningUi {
     }
 
     /**
-     * The familiar's own idle sequence, sent to the panel's model (662:1).
-     *
-     * Clientscript 751 animates that model with `ENUM(1276, varbit 4282)`, and varbit 4282 is the
-     * **pet** growth stage - so every familiar was being drawn with the same pet idle. The real
-     * per-familiar sequence is reachable from the cache: [gg.rsmod.game.fs.def.NpcDef.basId]
-     * (NPCType opcode 127) keys [gg.rsmod.game.fs.def.BasDef], whose `ready` (or weighted
-     * `readyAnimations` pool) is the animation the npc idles with in the world.
-     *
-     * All 78 familiars resolve to a real sequence this way - see
-     * `C:\RSPS\summoning_refs\familiar_bastypes.txt`. Nothing is substituted or guessed: a
-     * familiar whose set carried no idle at all would be left alone rather than given someone
-     * else's animation.
+     * Resolves the familiar chathead sequence through Void's varbit-4282 / enum-1275-or-1276 route.
+     * Shared by interface 662 and familiar dialogue so neither surface can drift back to a world
+     * BAS animation, which is a different model rig.
      */
-    /**
-     * A familiar's real idle animation, the same [gg.rsmod.game.fs.def.NpcDef.basId] ->
-     * [BasDef.idleAnimation] resolution the Follower Details panel uses ([refreshPanelAnimation]),
-     * exposed so other surfaces showing this familiar's model - the "Interact" chatbox dialogue,
-     * for one - can animate it with its own real idle sequence instead of going still or borrowing
-     * an unrelated one.
-     */
-    fun resolveIdleAnimation(
+    fun resolveChatheadAnimation(
         player: Player,
         npcId: Int,
-    ): Int? {
-        val basId = player.world.definitions.get(NpcDef::class.java, npcId).basId
-        if (basId == -1) {
-            return null
-        }
-        val idle = player.world.definitions.get(BasDef::class.java, basId).idleAnimation()
-        return idle.takeIf { it != -1 }
-    }
+    ): Int? = SummoningChatheadAnimations.resolve(player, npcId)
 
     private fun refreshPanelAnimation(
         player: Player,
         npcId: Int,
     ) {
-        val idle = resolveIdleAnimation(player, npcId) ?: return
-        player.setComponentAnim(PANEL, PANEL_MODEL, idle)
+        val pouch = SummoningPouchData.values.firstOrNull { it.npc == npcId }
+        val selector = pouch?.let { SummoningChatheadAnimations.selector(it) }
+        // Void's map variable sends -1 for an unmapped familiar (Phoenix); do the same so a prior
+        // familiar's selector cannot survive in client state even though the component is cleared.
+        player.setVarbit(SummoningChatheadAnimations.SELECTOR_VARBIT, selector ?: -1)
+        player.setComponentAnim(PANEL, PANEL_MODEL, resolveChatheadAnimation(player, npcId) ?: -1)
     }
 
     private fun refreshPanel(

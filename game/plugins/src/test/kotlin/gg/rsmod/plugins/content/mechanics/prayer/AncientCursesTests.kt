@@ -248,7 +248,7 @@ class AncientCursesTests {
         AncientCurses.onDamageDealt(attacker, target, damage = 100)
 
         verify { attacker.alterLifepoints(20, 0) }
-        verify { target.decreasePrayerPoints(200) }
+        verify { target.decreasePrayerPoints(20) }
     }
 
     @Test
@@ -307,14 +307,27 @@ class AncientCursesTests {
     }
 
     @Test
-    fun `Deflect reflect is skipped when 10 percent of the damage would be under 10`() {
+    fun `Deflect reflect is skipped only when 10 percent of the damage rounds to zero`() {
+        // Novite Player.java:1267-1297 reflects whenever the 10% is above zero; the old "under 10" rule was written for
+        // x10 life points and blocked every hit under 100 after the 1:1 migration.
         val target = newPlayer().also { activate(it, AncientCurse.DEFLECT_MISSILES) }
         every { target.world.percentChance(63.0) } returns true
         val attacker = mockk<Player>(relaxed = true)
 
-        AncientCurses.onIncomingHit(attacker, target, CombatClass.RANGED, damage = 50) // 10% = 5, under 10
+        AncientCurses.onIncomingHit(attacker, target, CombatClass.RANGED, damage = 9) // 10% = 0
 
         verify(exactly = 0) { attacker.addHit(any()) }
+    }
+
+    @Test
+    fun `Deflect reflect triggers for a small 1-to-1 hit whose 10 percent is above zero`() {
+        val target = newPlayer().also { activate(it, AncientCurse.DEFLECT_MISSILES) }
+        every { target.world.percentChance(63.0) } returns true
+        val attacker = mockk<Player>(relaxed = true)
+
+        AncientCurses.onIncomingHit(attacker, target, CombatClass.RANGED, damage = 50) // 10% = 5
+
+        verify(exactly = 1) { attacker.addHit(any()) }
     }
 
     @Test

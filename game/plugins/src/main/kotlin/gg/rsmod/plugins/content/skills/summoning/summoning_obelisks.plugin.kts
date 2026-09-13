@@ -1,5 +1,7 @@
 package gg.rsmod.plugins.content.skills.summoning
 
+import gg.rsmod.plugins.api.ext.playSound
+
 /**
  * "Renew-points" restores Summoning points, the only way back from an empty pool besides a
  * Summoning potion: "you will often find that you need to recharge. You can do this by heading
@@ -17,6 +19,10 @@ package gg.rsmod.plugins.content.skills.summoning
  * ways - "This will recharge over time" and "Summoning potions also restore a portion of your
  * special move bar" - and that "also" is what separates the potion from the obelisk, which it
  * describes as renewing points only.
+ *
+ * Presentation follows Void `renewSummoningPoints` (see [Familiar.RENEW_OBELISK_GRAPHIC]): the
+ * obelisk graphic, whose cache sequence carries its own sound, then the player's renew animation,
+ * graphic and sound once the obelisk graphic has played.
  */
 val renewPointObelisks =
     world.definitions
@@ -36,8 +42,16 @@ renewPointObelisks.forEach { obelisk ->
         if (Familiar.currentPoints(player) >= Familiar.maxPoints(player)) {
             player.message("You already have full Summoning points.")
         } else {
-            Familiar.restorePoints(player)
-            player.message("You renew your Summoning points.")
+            val obeliskTile = player.getInteractingGameObj().tile
+            world.spawn(TileGraphic(obeliskTile, id = Familiar.RENEW_OBELISK_GRAPHIC, height = 0))
+            player.queue {
+                wait(Familiar.RENEW_GRAPHIC_TICKS)
+                Familiar.restorePoints(player)
+                player.animate(Familiar.RENEW_ANIMATION)
+                world.spawn(TileGraphic(player.tile, id = Familiar.RENEW_PLAYER_GRAPHIC, height = 0))
+                player.playSound(Familiar.RENEW_SOUND)
+                player.message("You renew your Summoning points.")
+            }
         }
     }
 }

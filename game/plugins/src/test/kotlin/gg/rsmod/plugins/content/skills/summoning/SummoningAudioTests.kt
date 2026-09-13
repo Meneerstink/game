@@ -1,12 +1,14 @@
 package gg.rsmod.plugins.content.skills.summoning
 
 import com.displee.cache.CacheLibrary
+import gg.rsmod.game.tools.importer.SeqSoundProbeTool
 import org.junit.AfterClass
 import org.junit.BeforeClass
 import java.nio.file.Paths
 import kotlin.test.Test
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
+import kotlin.test.assertEquals
 
 /**
  * Familiar audio (owner failure F6).
@@ -26,12 +28,11 @@ import kotlin.test.assertTrue
  *   and any positional one is muted by the client's *background* volume rather than its
  *   sound-effect volume.
  *
- * What remains unproven is an explicit server-side sound for the summon/dismiss action itself.
- * `Familiar.summon` and `Familiar.dismiss` now do play the source-backed per-familiar spawn and
- * despawn animations, so the client has a genuine sequence through which attached audio can play.
- * The cache census found attached audio only for Phoenix's pair; the other pairs are silent in the
- * sequence data. No server sound id is invented for those silent pairs. The remaining question is
- * therefore a source/cache boundary and human listening check, not a missing animation hook.
+ * Void and Novite contain no explicit arrival SFX. The permitted fallback, 2009Scape's
+ * `Familiar.call()`, sends generic summon sound 188 on both first arrival and later calls and
+ * explicitly leaves individual first-summon sounds as TODO. The implementation follows that exact
+ * boundary: sound 188 roster-wide, never an invented per-familiar table. Dismiss remains driven by
+ * its real sequence; only Phoenix's dismiss sequence carries an attached cache sound.
  *
  * What is testable here, and what these tests do, is that the audio the cache genuinely does carry
  * is still present. A cache import that dropped these groups would make the five audible familiars
@@ -51,9 +52,13 @@ class SummoningAudioTests {
             "Spirit scorpion walk 6253" to listOf(7032, 7033, 7029, 7030, 7031),
             "Spirit scorpion npc ambient" to listOf(2901, 4334),
             "Phoenix idle/walk/combat" to listOf(5776, 5753, 5808, 5779, 5774, 5801),
-            "Vampyre bat" to listOf(7776, 7781),
+            // Revision-667 (openrs2 #1473) seq 4915/4916 sounds; the earlier 7776/7781 came from
+            // non-667 sequence bytes, restored by VampyreBatSeqRestoreTool (owner decision 2026-09-13).
+            "Vampyre bat" to listOf(6647, 6649),
             "Pack yak 5782" to listOf(6192, 6274),
             "Granite crab" to listOf(3795, 3785, 3778),
+            "Void summoning_special_cast / summoning_renew" to listOf(SummoningSpecialMoves.SPECIAL_CAST_SOUND, 4214),
+            "2009Scape generic familiar summon and call fallback" to listOf(Familiar.ARRIVAL_SOUND),
         )
 
     @Test
@@ -78,6 +83,24 @@ class SummoningAudioTests {
             val archives = store.index(index).archiveIds()
             assertTrue(archives.isNotEmpty(), "audio index $index is empty or absent")
         }
+    }
+
+    @Test
+    fun `Phoenix spawn and despawn sequences retain their attached cache sounds`() {
+        assertEquals(
+            listOf(
+                SeqSoundProbeTool.FrameSound(5, 5776, 1, listOf(5826, 5770, 5787, 5782)),
+                SeqSoundProbeTool.FrameSound(9, 5753, 1, listOf(5764, 5796)),
+            ),
+            SeqSoundProbeTool.seq(store, 11095)?.sounds,
+        )
+        assertEquals(
+            listOf(
+                SeqSoundProbeTool.FrameSound(0, 5753, 1, listOf(5764, 5796)),
+                SeqSoundProbeTool.FrameSound(1, 5776, 1, listOf(5826, 5770, 5787, 5782)),
+            ),
+            SeqSoundProbeTool.seq(store, 11096)?.sounds,
+        )
     }
 
     companion object {

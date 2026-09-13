@@ -1,6 +1,8 @@
 package gg.rsmod.plugins.content.mechanics.prayer
 
 import gg.rsmod.game.message.impl.SynthSoundMessage
+import gg.rsmod.game.message.impl.MessageGameMessage
+import gg.rsmod.plugins.api.ChatMessageType
 import gg.rsmod.game.model.World
 import gg.rsmod.game.model.attr.AttributeMap
 import gg.rsmod.game.model.entity.Npc
@@ -124,7 +126,8 @@ class AncientCursesVisualAudioTests {
         verify { fixture.player.graphic(2214) }
         verify { target.graphic(2216, delay = 1) }
         verify { fixture.world.spawn(any<gg.rsmod.game.model.entity.Projectile>()) }
-        verify { fixture.player.write(SynthSoundMessage(sound = Sfx.CURSE_CAST_AND_FIRE, volume = 1, delay = 0)) }
+        // No donor sources a Sap impact sound; the magic-spell "curse" track must not be borrowed.
+        verify(exactly = 0) { fixture.player.write(SynthSoundMessage(sound = Sfx.CURSE_CAST_AND_FIRE, loops = 1, delay = 0)) }
     }
 
     @Test
@@ -143,24 +146,94 @@ class AncientCursesVisualAudioTests {
         verify { target.decreasePrayerPoints(20) }
         verify { target.graphic(2264, delay = 1) }
         verify { fixture.world.spawn(any<gg.rsmod.game.model.entity.Projectile>()) }
-        verify { fixture.player.write(SynthSoundMessage(sound = Sfx.CURSE_HIT, volume = 1, delay = 0)) }
+        verify(exactly = 0) { fixture.player.write(SynthSoundMessage(sound = Sfx.CURSE_HIT, loops = 1, delay = 0)) }
     }
 
     @Test
-    fun `curse activation and deactivation play the real curse book toggle sounds`() {
+    /*
+     * Owner live retest 2026-09-13: Novite's generic 2662 was the one wrong sound heard on every curse
+     * (and doubled on Turmoil/Berserker). Void `Prayers.kt` plays no sound when a curse activates,
+     * only its activate animation/graphic; the lift sound (Novite 2663 / Void deactivate_prayer) stays.
+     */
+    fun `curse activation sends no shared sound and deactivation keeps the sourced lift sound`() {
         val fixture = RuntimeFixture()
         AncientCurses.switchBook(fixture.player, AncientCurses.PrayerBook.ANCIENT)
 
         AncientCurses.toggleCurse(fixture.player, AncientCurse.SAP_WARRIOR)
-        verify { fixture.player.write(SynthSoundMessage(sound = Sfx.CURSE_ALL, volume = 1, delay = 0)) }
+        verify(exactly = 0) { fixture.player.write(SynthSoundMessage(sound = NOVITE_PRAYER_ON, loops = 1, delay = 0)) }
 
         AncientCurses.toggleCurse(fixture.player, AncientCurse.SAP_WARRIOR)
-        verify { fixture.player.write(SynthSoundMessage(sound = Sfx.CURSE_LIFT, volume = 1, delay = 0)) }
+        verify(exactly = 1) { fixture.player.write(SynthSoundMessage(sound = NOVITE_PRAYER_OFF, loops = 1, delay = 0)) }
 
         AncientCurses.toggleTurmoil(fixture.player)
-        verify(atLeast = 2) { fixture.player.write(SynthSoundMessage(sound = Sfx.CURSE_ALL, volume = 1, delay = 0)) }
+        verify(exactly = 0) { fixture.player.write(SynthSoundMessage(sound = NOVITE_PRAYER_ON, loops = 1, delay = 0)) }
         AncientCurses.toggleTurmoil(fixture.player)
-        verify(atLeast = 2) { fixture.player.write(SynthSoundMessage(sound = Sfx.CURSE_LIFT, volume = 1, delay = 0)) }
+        verify(exactly = 2) { fixture.player.write(SynthSoundMessage(sound = NOVITE_PRAYER_OFF, loops = 1, delay = 0)) }
+
+        listOf(Sfx.CURSE_ALL, Sfx.CURSE_LIFT, Sfx.CURSE_HIT, Sfx.CURSE_CAST_AND_FIRE).forEach { spellTrack ->
+            verify(exactly = 0) { fixture.player.write(SynthSoundMessage(sound = spellTrack, loops = 1, delay = 0)) }
+        }
+    }
+
+    @Test
+    fun `every one of the eighteen ordinary curse slots sends its exact activation and deactivation messages`() {
+        val offenders = mutableListOf<String>()
+        AncientCurse.values.forEach { curse ->
+            val fixture = RuntimeFixture()
+            AncientCurses.switchBook(fixture.player, AncientCurses.PrayerBook.ANCIENT)
+            AncientCurses.toggleCurse(fixture.player, curse)
+            runCatching {
+                verify(exactly = 1) {
+                    fixture.player.write(
+                        MessageGameMessage(
+                            type = ChatMessageType.FILTERED.id,
+                            message = "You activate ${curse.curseName}.",
+                            username = null,
+                        ),
+                    )
+                }
+            }.onFailure { offenders += "$curse: missing activation message" }
+
+            AncientCurses.toggleCurse(fixture.player, curse)
+            runCatching {
+                verify(exactly = 1) {
+                    fixture.player.write(
+                        MessageGameMessage(
+                            type = ChatMessageType.FILTERED.id,
+                            message = "You deactivate ${curse.curseName}.",
+                            username = null,
+                        ),
+                    )
+                }
+            }.onFailure { offenders += "$curse: missing deactivation message" }
+        }
+        assertEquals(emptyList<String>(), offenders)
+    }
+
+    /**
+     * Owner live failure: one curse click produced overlapping sounds. Novite's `closePrayers`
+     * switches a replaced prayer off silently, so every replacement across the whole conflict table
+     * must send exactly one activation sound and no lift sound.
+     */
+    @Test
+    fun `replacing a conflicting curse plays one activation sound and no lift sound for every curse pair`() {
+        val offenders = mutableListOf<String>()
+        AncientCurse.values().forEach { first ->
+            AncientCurse.values().filter { it != first && it.conflictsWith(first) }.forEach { second ->
+                val fixture = RuntimeFixture()
+                AncientCurses.switchBook(fixture.player, AncientCurses.PrayerBook.ANCIENT)
+                AncientCurses.toggleCurse(fixture.player, first)
+                io.mockk.clearMocks(fixture.player, answers = false, recordedCalls = true, childMocks = false, verificationMarks = true, exclusionRules = false)
+                AncientCurses.toggleCurse(fixture.player, second)
+                runCatching {
+                    verify(exactly = 0) { fixture.player.write(SynthSoundMessage(sound = NOVITE_PRAYER_ON, loops = 1, delay = 0)) }
+                }.onFailure { offenders += "$first -> $second: played the shared wrong activation sound 2662" }
+                runCatching {
+                    verify(exactly = 0) { fixture.player.write(SynthSoundMessage(sound = NOVITE_PRAYER_OFF, loops = 1, delay = 0)) }
+                }.onFailure { offenders += "$first -> $second: replaced curse played the lift sound" }
+            }
+        }
+        assertEquals(emptyList<String>(), offenders)
     }
 
     @Test
@@ -200,6 +273,12 @@ class AncientCursesVisualAudioTests {
 
         verify { fixture.player.animate(12573) }
         verify { fixture.player.graphic(2230) }
+    }
+
+    private companion object {
+        /** Novite `Prayer.java:628` / `:493`, Void `prayer.sounds.toml` `deactivate_prayer`. */
+        const val NOVITE_PRAYER_ON = 2662
+        const val NOVITE_PRAYER_OFF = 2663
     }
 
     /** Minimal reusable fixture mirroring [AncientCursesRuntimeTests.Fixture]'s varbit wiring. */

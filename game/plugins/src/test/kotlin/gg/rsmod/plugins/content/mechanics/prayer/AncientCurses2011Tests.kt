@@ -53,6 +53,9 @@ class AncientCurses2011Tests {
 
     @Test
     fun `book slots and varbits follow the cache-proven enum 862 order`() {
+        assertEquals(18, AncientCurse.values.size)
+        assertEquals((1..18).toList(), AncientCurse.values.map { it.slot })
+        assertEquals((6821..6838).toList(), AncientCurse.values.map { it.varbit })
         assertEquals(1, AncientCurse.SAP_WARRIOR.slot)
         assertEquals(6, AncientCurse.DEFLECT_SUMMONING.slot)
         assertEquals(18, AncientCurse.SOUL_SPLIT.slot)

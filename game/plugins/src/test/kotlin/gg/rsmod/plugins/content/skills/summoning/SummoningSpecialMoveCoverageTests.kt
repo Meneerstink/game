@@ -42,6 +42,33 @@ class SummoningSpecialMoveCoverageTests {
      *
      * Pinned as an exact set rather than a count so that a familiar silently *losing* its binding
      * fails here, and so that filling one of these gaps has to be a deliberate edit to this list.
+     *
+     * ## A source exists for two of them and must NOT be adopted (checked 2026-09-12)
+     *
+     * Darkan (`jojo162/world-server`,
+     * `src/main/java/com/rs/game/content/skills/summoning/Scroll.java`) - the same file this
+     * project already trusts for the 78-familiar spawn/despawn animation table - does implement
+     * Howl and Venom Shot, with complete-looking ids:
+     *
+     * * `HOWL(12425, COMBAT, ...)` - `familiar.sync(8294, 1334)`, projectile 1333, a **magic**
+     *   hit for up to 20.
+     * * `VENOM_SHOT(12432, COMBAT, ...)` - `familiar.sync(8124, 1403)`, a **ranged** hit for up to
+     *   50, target spot-anim 1404 and `makePoisoned(50)`.
+     *
+     * Both were ported and then reverted, because they contradict the authoritative 2011 source.
+     * This project's own Knowledge Base capture (`C:\RSPS\summoning_refs1kb_scrolls_table.json`,
+     * the table every other row of [SummoningScrollData] is verified against) gives
+     * `["Howl", "Spirit wolf", "1", "0.1", "Causes NPC foes to flee", "3", "0.1"]` and
+     * `["Venom Shot", "Spirit scorpion", "19", "1", "Makes your next Ranged attack mildly
+     * poisonous, provided the ammunition you are using can be poisoned", "6", "1"]`. Howl is a
+     * fear effect and does no damage at all; Venom Shot is a buff on the **player's** next ranged
+     * attack and is not a familiar attack. Darkan's versions are Darkan's own inventions dressed
+     * in real animation ids, which is precisely the shape of source this project must refuse.
+     *
+     * So both stay blocked, now for a sharper reason than "unsourced": the numbers that exist are
+     * provably wrong, and the numbers the real behaviour needs (how long and how far a scared NPC
+     * flees; what "mildly" poisonous is, in a codebase whose player ranged attacks apply no weapon
+     * poison at all) still do not exist anywhere that has been checked.
      */
     private val knownUnbound =
         setOf(

@@ -14,7 +14,9 @@ import gg.rsmod.game.model.container.key.INVENTORY_KEY
 import gg.rsmod.game.model.entity.GroundItem
 import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Player
+import gg.rsmod.game.message.impl.SynthSoundMessage
 import gg.rsmod.game.model.item.Item
+import gg.rsmod.game.sync.task.NpcPostSynchronizationTask
 import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.api.cfg.Npcs
 import io.mockk.every
@@ -60,13 +62,14 @@ class FamiliarLifecycleTests {
      */
     @Test
     fun `calling a familiar plays the real sourced appearance graphic for its footprint size`() {
-        assertAppearanceGraphic(Npcs.DREADFOWL, expectedGraphic = 1314)
-        assertAppearanceGraphic(Npcs.PACK_YAK, expectedGraphic = 1315)
+        assertAppearanceGraphic(Npcs.DREADFOWL, expectedGraphic = 1314, expectedSpawnAnimation = 7807)
+        assertAppearanceGraphic(Npcs.PACK_YAK, expectedGraphic = 1315, expectedSpawnAnimation = 8058)
     }
 
     private fun assertAppearanceGraphic(
         familiarNpcId: Int,
         expectedGraphic: Int,
+        expectedSpawnAnimation: Int,
     ) {
         val world = mockk<World>(relaxed = true)
         every { world.npcUpdateBlocks } returns SummoningTestCache.npcUpdateBlocks
@@ -83,8 +86,18 @@ class FamiliarLifecycleTests {
         player.attr[FAMILIAR_ATTR] = WeakReference(npc)
 
         assertTrue(Familiar.call(player))
-
-        verify { npc.graphic(expectedGraphic) }
+        verify(exactly = 1) {
+            player.write(SynthSoundMessage(sound = Familiar.ARRIVAL_SOUND, loops = 1, delay = 0))
+        }
+        verify(exactly = 1) { npc.animate(expectedSpawnAnimation) }
+        verify(exactly = 0) { npc.graphic(any(), any(), any(), any()) }
+        Familiar.flushAppearanceGraphic(npc)
+        verify(exactly = 0) { npc.graphic(any(), any(), any(), any()) }
+        NpcPostSynchronizationTask.run(npc)
+        Familiar.flushAppearanceGraphic(npc)
+        verify(exactly = 1) { npc.graphic(expectedGraphic) }
+        Familiar.flushAppearanceGraphic(npc)
+        verify(exactly = 1) { npc.graphic(expectedGraphic) }
     }
 
     /**

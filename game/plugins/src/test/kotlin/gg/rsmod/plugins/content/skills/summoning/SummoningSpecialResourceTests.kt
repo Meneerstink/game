@@ -11,6 +11,7 @@ import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.game.model.skill.SkillSet
+import gg.rsmod.plugins.api.Skills
 import io.mockk.every
 import io.mockk.mockk
 import java.lang.ref.WeakReference
@@ -110,6 +111,68 @@ class SummoningSpecialResourceTests {
             }
         }
         assertEquals(emptyList<String>(), offenders, "special-move resource accounting broken")
+    }
+
+    @Test
+    fun `repeated instant casts exhaust the persisted special-point pool instead of staying free`() {
+        val pouch = SummoningPouchData.GRANITE_CRAB
+        val scroll = SummoningScrollData.STONY_SHELL_SCROLL
+        val player = newPlayer(pouch.npc)
+        player.inventory.add(scroll.scroll, 6)
+        player.attr[FAMILIAR_SPECIAL_POINTS_ATTR] = Familiar.MAX_SPECIAL_POINTS
+        player.skills.setCurrentLevel(Skills.DEFENCE, 1)
+
+        // Stony Shell costs twelve points. Starting from 60 therefore gives exactly five casts;
+        // calling updateHud between casts also guards the live tick path from restoring a stale bar.
+        repeat(Familiar.MAX_SPECIAL_POINTS / scroll.specialPoints) {
+            assertTrue(SummoningSpecialMoves.castInstant(player), "cast ${it + 1} should succeed")
+            Familiar.updateHud(player)
+        }
+
+        assertEquals(0, Familiar.currentSpecialPoints(player))
+        assertEquals(1, player.inventory.getItemCount(scroll.scroll))
+        assertEquals(false, SummoningSpecialMoves.castInstant(player))
+        assertEquals(0, Familiar.currentSpecialPoints(player))
+        assertEquals(1, player.inventory.getItemCount(scroll.scroll))
+    }
+
+    /**
+     * Owner live failure: special-move scrolls could be spammed. Void starts a 3-tick
+     * `familiar_special_delay` clock per cast; inside it every further cast of every instant
+     * special is refused and free, and the successful cast sends Void's player animation 7660,
+     * graphic 1316 and cast sound 4161.
+     */
+    @Test
+    fun `every instant special is refused and free inside the special-move delay and plays the cast sound`() {
+        val offenders = mutableListOf<String>()
+        instantFamiliars().forEach { pouch ->
+            val scroll = scrollFor(pouch) ?: return@forEach
+            val player = newPlayer(pouch.npc)
+            val timers = gg.rsmod.game.model.timer.TimerMap()
+            every { player.timers } returns timers
+            player.inventory.add(scroll.scroll, 5)
+            player.attr[FAMILIAR_SPECIAL_POINTS_ATTR] = Familiar.MAX_SPECIAL_POINTS
+
+            val first = SummoningSpecialMoves.castInstant(player)
+            if (!timers.has(SummoningSpecialMoves.SPECIAL_MOVE_DELAY_TIMER)) {
+                offenders += "${pouch.name}: no special-move delay started"
+                return@forEach
+            }
+            val scrolls = player.inventory.getItemCount(scroll.scroll)
+            val points = Familiar.currentSpecialPoints(player)
+            if (SummoningSpecialMoves.castInstant(player)) offenders += "${pouch.name}: second cast inside the delay succeeded"
+            if (player.inventory.getItemCount(scroll.scroll) != scrolls || Familiar.currentSpecialPoints(player) != points) {
+                offenders += "${pouch.name}: refused cast inside the delay consumed resources"
+            }
+            if (first) {
+                io.mockk.verify(exactly = 1) { player.animate(SummoningSpecialMoves.SPECIAL_CAST_ANIMATION) }
+                io.mockk.verify(exactly = 1) { player.graphic(SummoningSpecialMoves.SPECIAL_CAST_GRAPHIC) }
+                io.mockk.verify(exactly = 1) {
+                    player.write(gg.rsmod.game.message.impl.SynthSoundMessage(sound = SummoningSpecialMoves.SPECIAL_CAST_SOUND, loops = 1, delay = 0))
+                }
+            }
+        }
+        assertEquals(emptyList<String>(), offenders)
     }
 
     @Test
@@ -438,11 +501,11 @@ class SummoningSpecialResourceTests {
                 "ABYSSAL_TITAN (ESSENCE_SHIPMENT_SCROLL)",
             )
 
-        /** Hitpoints 99 on this revision's 1:1 scale: getMaximumLifepoints is skills.getMaxLevel(3) * 10. */
-        private const val MAX_LIFEPOINTS = 990
+        /** Hitpoints 99 on the server's 1:1 scale. */
+        private const val MAX_LIFEPOINTS = 99
 
         /** Start injured so a heal has room to be visible; a full-health player cannot show one. */
-        private const val HALF_LIFEPOINTS = 495
+        private const val HALF_LIFEPOINTS = 49
 
         /**
          * Instant specials whose real effect this **harness** cannot observe. Each is listed with

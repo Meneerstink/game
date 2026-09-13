@@ -4,6 +4,7 @@ import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.api.ext.focusTab
 import gg.rsmod.plugins.api.ext.setComponentHidden
 import gg.rsmod.plugins.api.ext.setComponentSprite
+import gg.rsmod.plugins.api.ext.setVarc
 
 /**
  * The Follower Details entry point, restored to the sidebar tab strip on the owner's direct
@@ -66,10 +67,13 @@ object FollowerDetailsTab {
     private const val RESIZABLE_ICON = 31
 
     /**
-     * The cache's own Summoning skill icon, as baked on interface 320's Summoning skill button
-     * (`320:153 sprite=3028`).
+     * The Summoning orb's own familiar-head icon, as baked on interface 747's orb (`747:6
+     * type=GRAPHIC box=6,7 20x20 sprite=1200`, read with `runInterfaceHookProbeTool layout 747`).
+     * Owner instruction 2026-09-11 (`C:\RSPS\SUMM ICON.png`): the red-marked tab showed the gold
+     * Summoning *skill* icon (320:153, sprite 3028) and must show a *summon* icon instead. 1200 is
+     * the only summon icon this cache draws anywhere, and at 20x20 it is already tab-button sized.
      */
-    private const val ICON_SPRITE = 3028
+    private const val ICON_SPRITE = 1200
 
     /**
      * `events` mask enabling op1 only. Bit 0 is the pause-button flag and op *i* is bit *i + 1*,
@@ -78,6 +82,10 @@ object FollowerDetailsTab {
      */
     private const val OP1_ONLY = 0x2
 
+    /** Clientscript 1766's gate for the spare ("Production") tab: icon + op1 only when it equals 2. */
+    private const val PRODUCTION_TAB_VARC = 823
+    private const val PRODUCTION_TAB_ENABLED = 2
+
     /** Every (pane, button, icon) triple, so both layout modes are armed together. */
     private val SURFACES =
         listOf(
@@ -85,8 +93,16 @@ object FollowerDetailsTab {
             Triple(RESIZABLE_PANE, RESIZABLE_BUTTON, RESIZABLE_ICON),
         )
 
-    /** The (pane, button) pairs, for `familiar.plugin.kts` to bind its click handlers to. */
+    /** The (pane, button) pairs, for callers that need the tab's primary surface. */
     val buttons: List<Pair<Int, Int>> = SURFACES.map { it.first to it.second }
+
+    /**
+     * Both the cache's tab graphic and its overlaid icon can receive the click. The icon is a
+     * sibling graphic, not a child of the button; activating only the button leaves the visible
+     * icon as a non-interactive hit target in the 667 client.
+     */
+    val clickTargets: List<Pair<Int, Int>> =
+        SURFACES.flatMap { (pane, button, icon) -> listOf(pane to button, pane to icon) }
 
     /**
      * Arms the tab in both layout modes, unconditionally - it stays available for the whole
@@ -96,8 +112,18 @@ object FollowerDetailsTab {
      * are "no op, icon hidden".
      */
     fun install(player: Player) {
+        /*
+         * Owner live report 2026-09-13: icon vanished on every tab refresh and was never clickable.
+         * Cache proof: gameframe clientscript 1766 treats this slot as the "Production" tab. Unless
+         * VARC 823 == 2 it sets 548:107/746:31 to graphic -1 and clears every op on 548:99/746:47
+         * (IF_CLEAROPS), on every tab refresh; the client only offers a click for a non-blank op label
+         * (InterfaceManager.getOp), so the tab could never be clicked. With 823 == 2 the script itself
+         * shows the icon and sets op1 (patched in both caches to the summon sprite and "Follower Details").
+         */
+        player.setVarc(PRODUCTION_TAB_VARC, PRODUCTION_TAB_ENABLED)
         SURFACES.forEach { (pane, button, icon) ->
             player.setEvents(interfaceId = pane, component = button, from = -1, to = -1, setting = OP1_ONLY)
+            player.setEvents(interfaceId = pane, component = icon, from = -1, to = -1, setting = OP1_ONLY)
             player.setComponentHidden(pane, button, false)
             player.setComponentHidden(pane, icon, false)
             player.setComponentSprite(pane, icon, ICON_SPRITE)

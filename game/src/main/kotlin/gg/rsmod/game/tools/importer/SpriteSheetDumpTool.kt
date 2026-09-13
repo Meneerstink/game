@@ -34,7 +34,10 @@ object SpriteSheetDumpTool {
             val groupName = args[1]
             val outDir = File(args[2]).apply { mkdirs() }
             var located = false
-            for (indexId in 0..40) {
+            // A bare number is a sprite group id in the sprite index (8), e.g. the ids interface
+            // components bake in their `sprite` field; a name is still looked up across indices.
+            val numericId = groupName.toIntOrNull()
+            for (indexId in (if (numericId != null) listOf(8) else (0..40).toList())) {
                 val index =
                     try {
                         library.index(indexId)
@@ -43,7 +46,7 @@ object SpriteSheetDumpTool {
                     }
                 val archive =
                     try {
-                        index.archive(groupName)
+                        if (numericId != null) index.archive(numericId) else index.archive(groupName)
                     } catch (e: Exception) {
                         null
                     } ?: continue
