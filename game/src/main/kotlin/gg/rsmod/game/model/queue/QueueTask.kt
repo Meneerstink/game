@@ -47,6 +47,26 @@ data class QueueTask(
     var lock = false
 
     /**
+     * RC-1 (RCV-005): a persistent task is an ongoing pawn state rather than a one-off action -
+     * the combat loop. It survives a [TaskPriority.STRONG] queue and the soft interruption of an
+     * unrelated action (prayer/curse toggle, eating, equipping, a familiar command, a dialog),
+     * keeps cycling while another task holds the head of the queue, and ends only on a hard
+     * interruption: [QueueTaskSet.terminateTasks] without `keepPersistent` (walking, a new
+     * entity interaction, a new attack, death, logout) or its own loop condition (teleport lock,
+     * lost target).
+     */
+    var persistent = false
+
+    /**
+     * True once [terminate] has run. A task keeps executing synchronously until its next
+     * suspension point after being terminated (for example the plugin that started a
+     * [TaskPriority.STRONG] teleport is still on the stack), so dialog helpers check this flag
+     * and refuse to open a prompt that could never be answered.
+     */
+    var terminated = false
+        private set
+
+    /**
      * The [CoroutineContext] implementation for our task.
      */
     override val context: CoroutineContext = EmptyCoroutineContext
@@ -78,6 +98,7 @@ data class QueueTask(
      * and invoke [terminateAction] if applicable (not null).
      */
     fun terminate() {
+        terminated = true
         nextStep = null
         requestReturnValue = null
         terminateAction?.invoke(this)

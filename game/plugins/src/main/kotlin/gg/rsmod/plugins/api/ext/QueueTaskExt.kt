@@ -86,6 +86,7 @@ suspend fun QueueTask.options(
     vararg options: String,
     title: String = "Select an Option",
 ): Int {
+    if (terminated) return -1
     val optionsFiltered = options.filterNot { it.isEmpty() || it == "" }
     val interfaceId = 224 + (2 * optionsFiltered.size)
 
@@ -105,15 +106,19 @@ suspend fun QueueTask.options(
     // keys after 5 (such as 6)
     // will just reset the option back to 1, 2.. etc
     val keyMsg = requestReturnValue as? KeyTypedMessage
-    if (keyMsg != null) {
-        return if (keyMsg.keycode in 16..20) {
-            keyMsg.keycode - 15
+    val choice =
+        if (keyMsg != null) {
+            if (keyMsg.keycode in 16..20) {
+                keyMsg.keycode - 15
+            } else {
+                keyMsg.keycode - 20
+            }
         } else {
-            keyMsg.keycode - 20
+            (requestReturnValue as? ResumePauseButtonMessage)?.let { it.button - 1 } ?: -1
         }
-    }
-
-    return (requestReturnValue as? ResumePauseButtonMessage)?.let { it.button - 1 } ?: -1
+    // A key or button outside the options that were actually shown is treated like an
+    // interrupted dialog (-1) instead of silently selecting an unrelated entry.
+    return if (choice in 1..optionsFiltered.size) choice else -1
 }
 
 /**
@@ -123,6 +128,7 @@ suspend fun QueueTask.options(
  * The integer input.
  */
 suspend fun QueueTask.inputInt(description: String = "Enter amount"): Int {
+    if (terminated) return -1
     player.runClientScript(108, description)
 
     terminateAction = closeInput
@@ -140,6 +146,7 @@ suspend fun QueueTask.inputInt(description: String = "Enter amount"): Int {
  * @return the string input.
  */
 suspend fun QueueTask.inputString(description: String = "Enter text"): String {
+    if (terminated) return ""
     player.runClientScript(110, description)
 
     terminateAction = closeInput
@@ -159,6 +166,7 @@ suspend fun QueueTask.inputString(description: String = "Enter text"): String {
  * online.
  */
 suspend fun QueueTask.inputPlayer(description: String = "Enter name"): Player? {
+    if (terminated) return null
     player.runClientScript(109, description)
 
     terminateAction = closeInput
@@ -176,6 +184,7 @@ suspend fun QueueTask.inputPlayer(description: String = "Enter name"): Player? {
  * The selected item's id.
  */
 suspend fun QueueTask.searchItemInput(message: String): Int {
+    if (terminated) return -1
     player.runClientScript(750, message, 1, -1)
 
     terminateAction = closeInput

@@ -8,6 +8,9 @@ import gg.rsmod.game.model.LockState
 import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.World
 import gg.rsmod.game.model.attr.AttributeMap
+import gg.rsmod.game.model.attr.LAST_HIT_BY_ATTR
+import gg.rsmod.game.model.entity.Npc
+import java.lang.ref.WeakReference
 import gg.rsmod.game.model.container.ItemContainer
 import gg.rsmod.game.model.container.key.EQUIPMENT_KEY
 import gg.rsmod.game.model.container.key.INVENTORY_KEY
@@ -133,7 +136,7 @@ class TeleportCastBehaviorTests {
     }
 
     @Test
-    fun `an active combat timer blocks teleporting, matching the PJ 10 second restriction`() {
+    fun `an active combat timer from a player hit blocks teleporting, matching the PJ 10 second restriction`() {
         // PvP zone/timers further-foundations pass (2026-09-02) - see RSPS_DECISIONS.md.
         val player = newPlayer(magicLevel = 99)
         every { player.lock } returns LockState.NONE
@@ -141,8 +144,23 @@ class TeleportCastBehaviorTests {
         val timers = TimerMap()
         timers[ACTIVE_COMBAT_TIMER] = 17
         every { player.timers } returns timers
+        player.attr[LAST_HIT_BY_ATTR] = WeakReference(mockk<Player>(relaxed = true))
 
         assertFalse(player.canTeleport(TeleportType.MODERN))
+    }
+
+    @Test
+    fun `an active combat timer from an npc hit does not block teleporting, as in OSRS`() {
+        // RCV-005 owner retest 2026-09-13: teleporting out of NPC combat must work.
+        val player = newPlayer(magicLevel = 99)
+        every { player.lock } returns LockState.NONE
+        every { player.tile } returns Tile(3040, 3576)
+        val timers = TimerMap()
+        timers[ACTIVE_COMBAT_TIMER] = 17
+        every { player.timers } returns timers
+        player.attr[LAST_HIT_BY_ATTR] = WeakReference(mockk<Npc>(relaxed = true))
+
+        assertTrue(player.canTeleport(TeleportType.MODERN))
     }
 
     @Test

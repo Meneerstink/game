@@ -54,6 +54,20 @@ class Hit private constructor(
     }
 
     /**
+     * Invokes every action in registration order. Actions may register further actions on this
+     * same hit while running (for example `dealHit`'s `onHit` callback adding a spell or special
+     * effect); iterating by index runs those in the same cycle instead of throwing a
+     * ConcurrentModificationException, which previously aborted the killing hit before the death
+     * plugin ran and left NPCs at 0 lifepoints and unattackable.
+     */
+    internal fun invokeActions() {
+        var index = 0
+        while (index < actions.size) {
+            actions[index++].invoke(this)
+        }
+    }
+
+    /**
      * @see actions
      */
     fun addActions(actions: Collection<Hit.() -> Unit>): Hit {

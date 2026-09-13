@@ -43,7 +43,10 @@ class OpNpcTHandler : MessageHandler<OpNpcTMessage> {
         }
 
         client.closeInterfaceModal()
-        client.fullInterruption(movement = true, interactions = true, queue = true)
+        // RC-1: using an inventory item on the npc walks to it - a new interaction that ends
+        // combat. A spell/interface target (familiar attack command, familiar special move, Lunar
+        // spell) does not; combat spells retarget through Pawn.attack, which interrupts fully.
+        client.fullInterruption(movement = true, interactions = true, queue = true, preserveCombat = parent != 679)
 
         client.attr[INTERACTING_NPC_ATTR] = WeakReference(npc)
         client.attr[INTERACTING_COMPONENT_PARENT] = parent

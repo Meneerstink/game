@@ -34,7 +34,8 @@ class OpPlayerTHandler : MessageHandler<OpPlayerTMessage> {
         }
 
         client.closeInterfaceModal()
-        client.fullInterruption(movement = true, interactions = true, queue = true)
+        // RC-1: same policy as OpNpcTHandler - item use walks (hard stop), interface targets keep combat.
+        client.fullInterruption(movement = true, interactions = true, queue = true, preserveCombat = parent != 679)
 
         client.attr[INTERACTING_PLAYER_ATTR] = WeakReference(player)
         client.attr[INTERACTING_COMPONENT_PARENT] = parent

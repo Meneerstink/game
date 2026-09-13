@@ -42,6 +42,14 @@ class IfButton1Handler : MessageHandler<IfButtonMessage> {
         val component = message.hash and 0xFFFF
         val option = message.option + 1
 
+        // Owner live report 2026-09-13: the Follower Details icon (548:99/107, 746:47/31) is not
+        // clickable. Trace every button packet, including ones dropped below as "not visible",
+        // so the client boundary shows whether the click arrives at all.
+        gg.rsmod.game.model.AvTrace.log {
+            "button recv component=$interfaceId:$component option=$option opcode=${message.opcode} " +
+                "visible=${client.interfaces.isVisible(interfaceId)} displayMode=${client.interfaces.displayMode}"
+        }
+
         if (!client.interfaces.isVisible(interfaceId)) {
             return
         }
@@ -148,7 +156,12 @@ class IfButton1Handler : MessageHandler<IfButtonMessage> {
                 return
             }
 
-            client.fullInterruption(movement = false, interactions = true, animations = false, queue = true)
+            // OSRS (owner decision 2026-09-12): eating and drinking do not stop combat - food only
+            // delays the next attack (OSRS Wiki Food; Void Eating.consume). Other inventory
+            // options still end it.
+            val menuOption = world.definitions.get(ItemDef::class.java, item.id).inventoryMenu.getOrNull(option - 1)?.lowercase()
+            val consumes = menuOption == "eat" || menuOption == "drink"
+            client.fullInterruption(movement = false, interactions = true, animations = false, queue = true, preserveCombat = consumes)
 
             val handled = world.plugins.executeItem(client, item.id, option)
 

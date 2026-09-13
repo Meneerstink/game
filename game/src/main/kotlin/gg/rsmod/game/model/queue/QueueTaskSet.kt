@@ -23,15 +23,18 @@ abstract class QueueTaskSet {
         priority: TaskPriority,
         block: suspend QueueTask.(CoroutineScope) -> Unit,
         lock: Boolean = false,
+        persistent: Boolean = false,
     ) {
         val task = QueueTask(ctx, priority)
         val suspendBlock = suspend { block(task, CoroutineScope(dispatcher)) }
 
         task.lock = lock
+        task.persistent = persistent
         task.coroutine = suspendBlock.createCoroutine(completion = task)
 
         if (priority == TaskPriority.STRONG) {
-            terminateTasks()
+            // A STRONG action replaces other actions, never the ongoing combat state (RC-1).
+            terminateTasks(keepPersistent = true)
         }
 
         queue.addFirst(task)
@@ -51,10 +54,17 @@ abstract class QueueTaskSet {
 
     /**
      * Remove all [QueueTask] from our [queue], invoking each task's [QueueTask.terminate]
-     * before-hand.
+     * before-hand. With [keepPersistent], [QueueTask.persistent] tasks are left running.
      */
-    fun terminateTasks() {
-        queue.forEach { it.terminate() }
-        queue.clear()
+    fun terminateTasks(keepPersistent: Boolean = false) {
+        val iterator = queue.iterator()
+        while (iterator.hasNext()) {
+            val task = iterator.next()
+            if (keepPersistent && task.persistent) {
+                continue
+            }
+            task.terminate()
+            iterator.remove()
+        }
     }
 }
