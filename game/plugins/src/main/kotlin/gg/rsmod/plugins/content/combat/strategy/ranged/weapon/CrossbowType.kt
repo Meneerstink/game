@@ -46,6 +46,8 @@ enum class CrossbowType(
     ARMADYL_CROSSBOW(item = Items.ARMADYL_CROSSBOW, ammo = UP_TO_DRAGON_BOLTS),
     ZARYTE_CROSSBOW(item = Items.ZARYTE_CROSSBOW, ammo = UP_TO_DRAGON_BOLTS),
     DRAGON_CROSSBOW(item = Items.DRAGON_CROSSBOW, ammo = UP_TO_DRAGON_BOLTS),
+    // OSRS Wiki "Dragon hunter crossbow": "can fire up to and including dragon bolts".
+    DRAGON_HUNTER_CROSSBOW(item = Items.DRAGON_HUNTER_CROSSBOW, ammo = UP_TO_DRAGON_BOLTS),
 
     // OSRS-IMPORT: the Heavy ballista fires only the OSRS javelins (ammo slot), never the 667 thrown javelins.
     HEAVY_BALLISTA(item = Items.HEAVY_BALLISTA, ammo = Javelins.BALLISTA_JAVELINS),

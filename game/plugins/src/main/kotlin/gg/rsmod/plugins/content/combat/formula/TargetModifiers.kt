@@ -179,8 +179,40 @@ object TargetModifiers {
         if (isWieldingTwistedBow(player)) {
             multiplier *= twistedBowAccuracyPercent(twistedBowMagicInput(target)) / 100.0
         }
+        if (isDragonbaneRanged(player, target)) {
+            multiplier *= DHCB_ACCURACY
+        }
         return multiplier
     }
+
+    /**
+     * OSRS-IMPORT dragonbane passives (OSRS Wiki item pages + "Draconic (attribute)", 2026-09-14):
+     * - Dragon hunter crossbow: "30% increase in ranged accuracy and 25% increase in damage" against draconic targets;
+     *   it "stacks additively with the Slayer helm (i)" (no imbued helm exists in this cache) and multiplicatively with
+     *   Void and salve amulets - applied in the ranged target-specific gear bonus stage ("Damage per second/Ranged").
+     * - Dragon hunter lance: "20% increased accuracy and damage", "stacks multiplicatively" with Void and the Slayer
+     *   helm - applied as its own floored step after the melee target-specific gear bonus ("Damage per second/Melee").
+     * Floor order: the wiki's own DPS calculator (weirdgloop/osrs-dps-calc `src/lib/PlayerVsNPCCalc.ts`, read 2026-09-14)
+     * applies the lance as a separate truncated factor [6, 5] on the attack roll and max hit, and the crossbow as
+     * `Math.trunc(attackRoll * 13 / 10)` and `Math.trunc(maxHit * 5 / 4)`. The crossbow shares this ranged stage only with
+     * the Twisted bow, which can never be wielded at the same time, so one floor here is identical.
+     */
+    const val DHCB_ACCURACY = 1.30
+    const val DHCB_DAMAGE = 1.25
+    const val LANCE_ACCURACY = 1.20
+    const val LANCE_DAMAGE = 1.20
+
+    fun isDragonbaneRanged(player: Player, target: Pawn): Boolean =
+        player.hasEquipped(EquipmentType.WEAPON, Items.DRAGON_HUNTER_CROSSBOW) && Draconic.isDraconic(target)
+
+    fun isDragonbaneMelee(player: Player, target: Pawn): Boolean =
+        player.hasEquipped(EquipmentType.WEAPON, Items.DRAGON_HUNTER_LANCE) && Draconic.isDraconic(target)
+
+    /** Melee dragonbane accuracy step (Dragon hunter lance), 1.0 otherwise. */
+    fun meleeDragonbaneAccuracy(player: Player, target: Pawn): Double = if (isDragonbaneMelee(player, target)) LANCE_ACCURACY else 1.0
+
+    /** Melee dragonbane damage step (Dragon hunter lance), 1.0 otherwise. */
+    fun meleeDragonbaneDamage(player: Player, target: Pawn): Double = if (isDragonbaneMelee(player, target)) LANCE_DAMAGE else 1.0
 
     /**
      * Composes the generic [equipmentMultiplier] (Salve/black mask) with the Twisted bow's
@@ -195,6 +227,9 @@ object TargetModifiers {
         var multiplier = 1.0
         if (isWieldingTwistedBow(player)) {
             multiplier *= twistedBowDamagePercent(twistedBowMagicInput(target)) / 100.0
+        }
+        if (isDragonbaneRanged(player, target)) {
+            multiplier *= DHCB_DAMAGE
         }
         return multiplier
     }

@@ -19501,5 +19501,12 @@ object Items {
     const val TANZANITE_FANG_NOTED = 22627
     const val ZULRAHS_SCALES = 22632
     const val AMETHYST_DART = 22633
+    // OSRS-IMPORT batch dragonhunter (tx-20260913-225240).
+    const val DRAGON_HUNTER_CROSSBOW = 22634
+    const val DRAGON_HUNTER_CROSSBOW_NOTED = 22635
+    const val DRAGON_HUNTER_LANCE = 22636
+    const val DRAGON_HUNTER_LANCE_NOTED = 22637
+    const val DRAGON_WARHAMMER = 22638
+    const val DRAGON_WARHAMMER_NOTED = 22639
     // Auto-generated file using class gg.rsmod.game.service.game.DumpEntityIdService
 }

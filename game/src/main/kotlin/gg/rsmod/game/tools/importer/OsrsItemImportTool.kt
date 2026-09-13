@@ -168,6 +168,17 @@ object OsrsItemImportTool {
                     Spec(12934), // Zulrah's scales
                     Spec(25849, rev667Params = mapOf(686 to 18, 23 to 50, 749 to 4, 750 to 50), weaponType = 18), // Amethyst dart
                 ),
+            // Dragon hunter weapons, each following a 667 weapon of the same class (ItemOpcodeProbe 2026-09-14):
+            // crossbow = Rune crossbow 9185 (644 175, 686 17), lance = Zamorakian spear 11716 (644 1581, 686 14; Lunge/
+            // Swipe/Pound/Block as the wiki), warhammer = Rune warhammer 1347 (644 1430, 686 10, audio 2504; Pound/Pummel/
+            // Block as the wiki) plus 687 special bar. Lance requirement 78 Attack: wiki item page ("now requires level 78
+            // Attack"), the cache's 75 is SOURCE_CONFLICT (item page wins; items.yml corrected after generation).
+            "dragonhunter" to
+                listOf(
+                    Spec(21012, noted = true, rev667Params = mapOf(644 to 175, 686 to 17, 23 to 70, 749 to 4, 750 to 70), weaponType = 17, attackAudio = 2700), // Dragon hunter crossbow
+                    Spec(22978, noted = true, rev667Params = mapOf(644 to 1581, 686 to 14, 749 to 0, 750 to 78), weaponType = 14), // Dragon hunter lance
+                    Spec(13576, noted = true, rev667Params = mapOf(644 to 1430, 686 to 10, 687 to 1, 749 to 2, 750 to 60), weaponType = 10, attackAudio = 2504), // Dragon warhammer
+                ),
         )
 
     /**

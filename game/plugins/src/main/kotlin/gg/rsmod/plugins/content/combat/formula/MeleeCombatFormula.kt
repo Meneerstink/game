@@ -129,6 +129,8 @@ object MeleeCombatFormula : CombatFormula {
         var hit = base
 
         hit = floor(hit * TargetModifiers.equipmentMultiplier(player, target))
+        // Dragon hunter lance: multiplicative with the target-specific gear bonus, its own floored step.
+        hit = floor(hit * TargetModifiers.meleeDragonbaneDamage(player, target))
 
         hit =
             if (specialPassiveMultiplier == 1.0) {
@@ -157,6 +159,7 @@ object MeleeCombatFormula : CombatFormula {
     ): Double {
         // Attack roll × target-specific gear bonus, floored, then the special attack accuracy multiplier.
         var hit = floor(base * TargetModifiers.equipmentMultiplier(player, target))
+        hit = floor(hit * TargetModifiers.meleeDragonbaneAccuracy(player, target))
         hit = floor(hit * specialAttackMultiplier)
         return hit
     }
