@@ -32,7 +32,7 @@ on_player_pre_death {
     val logger = world.getService(LoggerService::class.java, searchSubclasses = true)
     val valueProvider = ItemDefCostValueProvider(world.definitions)
 
-    val result =
+    val resolved =
         DeathResolver.resolve(
             victim = victim,
             killer = killer,
@@ -41,12 +41,15 @@ on_player_pre_death {
                 itemId == CrownOfHelios.ITEM || Trouver.protectedFromDeath(itemId)
             },
         )
-    DeathExecutor.execute(
-        world = world,
-        result = result,
-        recoveryConfig = DeathRecoveryConfig.PLACEHOLDER,
-        logger = logger,
-    )
+    val (result, breaking) = PvpDeathBreakables.split(resolved)
+    val executed =
+        DeathExecutor.execute(
+            world = world,
+            result = result,
+            recoveryConfig = DeathRecoveryConfig.PLACEHOLDER,
+            logger = logger,
+        )
+    if (executed) PvpDeathBreakables.execute(world, result, breaking)
     Trouver.grantKillerCompensation(result, valueProvider)
 }
 

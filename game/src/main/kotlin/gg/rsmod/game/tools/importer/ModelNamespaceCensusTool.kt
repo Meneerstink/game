@@ -142,9 +142,52 @@ object ModelNamespaceCensusTool {
             provenFreeHoles = provenFreeHoles,
             safeFreeRange = if (safeFreeCount > 0) safeFreeStart..safeFreeEnd else IntRange.EMPTY,
             safeFreeCount = safeFreeCount,
-            untracedReferenceTypes = listOf("graphics_defaults_profiling_model(archive 28)", "skybox_config(groups 29/30, id ambiguous)"),
+            // Graphics defaults are traced above. Skybox configs carry no model field: the 667 client's
+            // SkyBoxType decodes texture + sphere ids and SkyBoxSphereType only numeric parameters.
+            untracedReferenceTypes = emptyList(),
         )
     }
+
+    /**
+     * Model id in the graphics defaults file (archive 28 group 3, opcode 2 `profilingModel`), walked
+     * with the exact field widths of the 667 client's `GraphicsDefaults.decode`. The client downloads
+     * this model during loading, so it must never be treated as a free hole.
+     */
+    fun graphicsDefaultsProfilingModel(library: CacheLibrary): Int? {
+        // Synthetic test caches have no defaults index; every real 667 cache does.
+        if (!library.exists(DEFAULTS_INDEX)) return null
+        val data = library.data(DEFAULTS_INDEX, GRAPHICS_DEFAULTS_GROUP, 0) ?: return null
+        val buf: ByteBuf = Unpooled.wrappedBuffer(data)
+        var hitmarks = 4
+        var model: Int? = null
+        try {
+            while (true) {
+                when (val code = buf.readUnsignedByte().toInt()) {
+                    0 -> break
+                    1 -> buf.skipBytes(hitmarks * 4)
+                    2 -> model = buf.readUnsignedShort()
+                    3 -> hitmarks = buf.readUnsignedByte().toInt()
+                    4, 8, 10 -> {}
+                    5, 6 -> buf.skipBytes(3)
+                    7 ->
+                        repeat(10) {
+                            repeat(4) {
+                                buf.skipBytes(2)
+                                buf.skipBytes(buf.readUnsignedShort() * 2)
+                            }
+                        }
+                    9, 11 -> buf.skipBytes(1)
+                    else -> throw IllegalArgumentException("Unknown graphics defaults opcode $code")
+                }
+            }
+        } finally {
+            buf.release()
+        }
+        return model
+    }
+
+    const val DEFAULTS_INDEX = 28
+    const val GRAPHICS_DEFAULTS_GROUP = 3
 
     // ---- physical presence -------------------------------------------------------------------
 
@@ -235,6 +278,7 @@ object ModelNamespaceCensusTool {
             Rev667ModelReferenceWalkers.npcModelIds(library) { id, role -> record(id, role) }
             Rev667ModelReferenceWalkers.idkModelIds(library) { id, role -> record(id, role) }
             InterfaceModelReferences.collect(library) { id, role -> record(id, role) }
+            graphicsDefaultsProfilingModel(library)?.let { record(it, "graphics_defaults_profiling_model") }
         } finally {
             library.close()
         }

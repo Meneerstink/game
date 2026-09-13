@@ -22,18 +22,29 @@ object ModernModelDecoder {
         return data[data.size - 2].toInt() to data[data.size - 1].toInt()
     }
 
-    fun decode(data: ByteArray): ModelData {
+    /**
+     * @param flattenTextures accept complex (types 1-3) texture mappings for a caller that flattens
+     * every textured face to a plain colour afterwards ([stripTextures]); the mapping data and the
+     * type-3 tail behind it are then not parsed. Default strict behaviour is unchanged.
+     */
+    fun decode(
+        data: ByteArray,
+        flattenTextures: Boolean = false,
+    ): ModelData {
         val (penultimate, last) = footerOf(data)
         return when {
-            penultimate == -1 && last == -3 -> decodeType3(data)
-            penultimate == -1 && last == -1 -> decodeType1(data)
+            penultimate == -1 && last == -3 -> decodeType3(data, flattenTextures)
+            penultimate == -1 && last == -1 -> decodeType1(data, flattenTextures)
             penultimate == -1 && last == -2 -> decodeType2(data)
             else -> error("Model uses the pre-2008 old format, which this pipeline does not implement.")
         }
     }
 
     /** Modern type 3: type 1 plus an animaya flag, an explicit vertex-label block length and a tail. */
-    private fun decodeType3(data: ByteArray): ModelData {
+    private fun decodeType3(
+        data: ByteArray,
+        flattenTextures: Boolean,
+    ): ModelData {
         val header = ModelBuffer(data, data.size - 26)
         val vertexCount = header.u16()
         val faceCount = header.u16()
@@ -71,11 +82,15 @@ object ModernModelDecoder {
             vertexLabelSize = vertexLabelSize,
             animayaFlag = animayaFlag,
             modernType3 = true,
+            flattenTextures = flattenTextures,
         )
     }
 
     /** Modern type 1: the vertex-label block is implicitly one byte per vertex, no animaya. */
-    private fun decodeType1(data: ByteArray): ModelData {
+    private fun decodeType1(
+        data: ByteArray,
+        flattenTextures: Boolean,
+    ): ModelData {
         val header = ModelBuffer(data, data.size - 23)
         val vertexCount = header.u16()
         val faceCount = header.u16()
@@ -111,6 +126,7 @@ object ModernModelDecoder {
             vertexLabelSize = if (vertexLabelFlag == 1) vertexCount else 0,
             animayaFlag = 0,
             modernType3 = false,
+            flattenTextures = flattenTextures,
         )
     }
 
@@ -139,10 +155,12 @@ object ModernModelDecoder {
         vertexLabelSize: Int,
         animayaFlag: Int,
         modernType3: Boolean,
+        flattenTextures: Boolean = false,
     ): ModelData {
         val model = ModelData(vertexCount, faceCount, texSpaceCount)
 
         var planarMappingCount = 0
+        var complexMappingCount = 0
         if (texSpaceCount > 0) {
             val types = ByteArray(texSpaceCount)
             val typeBuffer = ModelBuffer(data, 0)
@@ -152,7 +170,8 @@ object ModernModelDecoder {
             }
             model.texMappingType = types
             val complex = types.count { it >= 1 && it <= 3 }
-            check(complex == 0) {
+            complexMappingCount = complex
+            check(complex == 0 || flattenTextures) {
                 "Model uses $complex complex texture mapping(s) (types 1-3); this pipeline only " +
                     "supports planar mapping, and refuses to import a mesh whose texture data it " +
                     "would silently drop."
@@ -316,7 +335,9 @@ object ModernModelDecoder {
         // Type 3 appends a particle/billboard descriptor and optional per-face z-offsets. Rev-667
         // stores its own particle and billboard sections in a different shape, and has no z-offset
         // concept at all, so the tail is parsed purely to record what the conversion will lose.
-        if (modernType3) {
+        // Complex mapping data sits between the planar block and the tail; its size is not modelled
+        // here, so the tail is only read when no complex mapping precedes it.
+        if (modernType3 && complexMappingCount == 0) {
             val tail = ModelBuffer(data, tailPtr)
             if (tail.u8() != 0) {
                 tail.u16()
@@ -329,7 +350,7 @@ object ModernModelDecoder {
             }
         }
 
-        check(planarMappingCount == texSpaceCount) {
+        check(planarMappingCount + complexMappingCount == texSpaceCount) {
             "Texture mapping type census disagreed: $planarMappingCount planar of $texSpaceCount."
         }
         return model

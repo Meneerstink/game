@@ -210,6 +210,20 @@ enum class CombinationData(
         experience = 0.0,
         message = "You attach the hilt to the godsword blade.",
     ),
+
+    /** OSRS-IMPORT pilot: Dragon defender + Avernic defender hilt (OSRS Wiki, no skill requirement). */
+    AVERNIC_DEFENDER(
+        items = intArrayOf(Items.AVERNIC_DEFENDER_HILT, Items.DRAGON_DEFENDER),
+        resultItem = Items.AVERNIC_DEFENDER,
+        experience = 0.0,
+    ),
+
+    /** OSRS-IMPORT pilot: cosmetic Occult ornament kit; "Dismantle" on the (or) returns both parts. */
+    OCCULT_NECKLACE_OR(
+        items = intArrayOf(Items.OCCULT_ORNAMENT_KIT, Items.OCCULT_NECKLACE),
+        resultItem = Items.OCCULT_NECKLACE_OR,
+        experience = 0.0,
+    ),
     PIE_SHELL(
         items = intArrayOf(Items.PASTRY_DOUGH, Items.PIE_DISH),
         resultItem = Items.PIE_SHELL,

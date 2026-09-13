@@ -38,6 +38,7 @@ object CombatConfigs {
             Items.ADAMANT_DEFENDER,
             Items.RUNE_DEFENDER,
             Items.DRAGON_DEFENDER,
+            Items.AVERNIC_DEFENDER,
         )
 
     val BOOKS =

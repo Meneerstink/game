@@ -91,6 +91,29 @@ object ModelIdAllocator {
         return candidate
     }
 
+    /**
+     * Strategy B (hole reuse): the same existing-mapping-first contract as [resolve], but the candidate
+     * pool is an explicit, ascending list of ids that a **fresh** [ModelNamespaceCensusTool] run proved
+     * free - `Report.provenFreeHoles` (absent in both caches and referenced by no traced definition
+     * type, graphics defaults included) plus `Report.safeFreeRange`. FeroxImportTool already allocates
+     * loc meshes from that same census list. Callers choose the order (e.g. item meshes above 32767 so
+     * the low holes stay available to spotanims, whose model field is a signed short).
+     */
+    fun resolveFromCandidates(
+        sourceIdentity: String,
+        role: String,
+        existingMapping: Map<String, Int>,
+        provenFreeCandidates: List<Int>,
+        batchReserved: Set<Int> = emptySet(),
+    ): Int {
+        existingMapping[mappingKey(sourceIdentity, role)]?.let { return it }
+        val candidate = provenFreeCandidates.firstOrNull { it in MIN_MODEL_ID..MAX_MODEL_ID && it !in batchReserved }
+        return checkNotNull(candidate) {
+            "No census-proven free model id remains for '${mappingKey(sourceIdentity, role)}' " +
+                "(${provenFreeCandidates.size} candidates, ${batchReserved.size} reserved this batch)."
+        }
+    }
+
     fun mappingKey(
         sourceIdentity: String,
         role: String,

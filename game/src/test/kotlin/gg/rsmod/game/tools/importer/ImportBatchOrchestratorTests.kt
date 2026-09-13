@@ -77,6 +77,32 @@ class ImportBatchOrchestratorTests {
     }
 
     @Test
+    fun aMeshSharedByTwoItemsOfOneBatchIsAllocatedAndWrittenOnce() {
+        val batch =
+            listOf(
+                item("upstream_item:1", "Avernic defender", listOf(model("upstream_model:10", "model"), model("upstream_model:11", "model"))),
+                item("upstream_item:2", "Avernic defender (broken)", listOf(model("upstream_model:10", "model"))),
+            )
+        val plan =
+            ImportBatchOrchestrator.plan(FAKE_TARGETS, batch, EMPTY_MAPPING, nextFreeItemId = 100, modelSafeFreeStart = 0, modelSafeFreeEnd = 0, modelCandidates = listOf(40000, 40007, 65530))
+
+        assertEquals(listOf(40000, 40007), plan.items[0].models.map { it.localId })
+        assertEquals("the second item must reference the already-allocated mesh", listOf(40000), plan.items[1].models.map { it.localId })
+        val modelWrites = plan.transaction.mutations.filter { it.indexId == ModelConvertTool.MODEL_INDEX }.map { it.groupId }
+        assertEquals("each distinct mesh is written exactly once", listOf(40000, 40007), modelWrites)
+    }
+
+    @Test
+    fun candidateAllocationIsExhaustionSafeAndNeverFallsBackToTheRange() {
+        val batch = listOf(item("upstream_item:1", "Item A", listOf(model("upstream_model:10", "model"), model("upstream_model:11", "model"))))
+        val exhaustion =
+            runCatching {
+                ImportBatchOrchestrator.plan(FAKE_TARGETS, batch, EMPTY_MAPPING, nextFreeItemId = 1, modelSafeFreeStart = 900, modelSafeFreeEnd = 910, modelCandidates = listOf(40000))
+            }.exceptionOrNull()
+        assertTrue("one candidate cannot hold two meshes: $exhaustion", exhaustion is IllegalStateException)
+    }
+
+    @Test
     fun anEmptyBatchAndDuplicateSourceIdentitiesAreRefused() {
         val empty = runCatching { ImportBatchOrchestrator.plan(FAKE_TARGETS, emptyList(), EMPTY_MAPPING, 1, 900, 910) }.exceptionOrNull()
         assertTrue(empty is IllegalArgumentException)

@@ -135,12 +135,17 @@ object ImportBatchOrchestrator {
         modelSafeFreeEnd: Int,
         journalRoot: File = File(CacheTransaction.DEFAULT_JOURNAL_ROOT),
         transactionId: String = CacheTransaction.newTransactionId(),
+        modelCandidates: List<Int>? = null,
     ): BatchPlan {
         require(batch.isNotEmpty()) { "an empty batch has nothing to plan." }
         val identities = batch.map { it.sourceIdentity }
         require(identities.size == identities.toSet().size) { "duplicate sourceIdentity within one batch: $identities" }
 
         val batchReservedModelIds = mutableSetOf<Int>()
+        // One upstream mesh shared by several items of the same batch (e.g. an item and its broken
+        // variant) is allocated and written once; every later item reuses that id.
+        val batchModelIds = mutableMapOf<String, Int>()
+        val emittedModelKeys = mutableSetOf<String>()
         var freeItemId = nextFreeItemId
         val plannedItems = mutableListOf<PlannedItem>()
         val mutations = mutableListOf<CacheMutation>()
@@ -148,15 +153,28 @@ object ImportBatchOrchestrator {
         for (item in batch) {
             val plannedModels =
                 item.models.map { model ->
+                    val key = ModelIdAllocator.mappingKey(model.sourceIdentity, model.role)
                     val localId =
-                        ModelIdAllocator.resolve(
-                            sourceIdentity = model.sourceIdentity,
-                            role = model.role,
-                            existingMapping = existing.modelLocalIdByMappingKey,
-                            provenSafeFreeStart = modelSafeFreeStart,
-                            provenSafeFreeEnd = modelSafeFreeEnd,
-                            batchReserved = batchReservedModelIds,
-                        )
+                        batchModelIds.getOrPut(key) {
+                            if (modelCandidates != null) {
+                                ModelIdAllocator.resolveFromCandidates(
+                                    sourceIdentity = model.sourceIdentity,
+                                    role = model.role,
+                                    existingMapping = existing.modelLocalIdByMappingKey,
+                                    provenFreeCandidates = modelCandidates,
+                                    batchReserved = batchReservedModelIds,
+                                )
+                            } else {
+                                ModelIdAllocator.resolve(
+                                    sourceIdentity = model.sourceIdentity,
+                                    role = model.role,
+                                    existingMapping = existing.modelLocalIdByMappingKey,
+                                    provenSafeFreeStart = modelSafeFreeStart,
+                                    provenSafeFreeEnd = modelSafeFreeEnd,
+                                    batchReserved = batchReservedModelIds,
+                                )
+                            }
+                        }
                     batchReservedModelIds += localId
                     PlannedModel(model, localId)
                 }
@@ -166,6 +184,8 @@ object ImportBatchOrchestrator {
             val itemBytes = item.buildItemBytes(modelLocalIdsBySourceIdentity)
 
             plannedModels.forEach { pm ->
+                val key = ModelIdAllocator.mappingKey(pm.source.sourceIdentity, pm.source.role)
+                if (!emittedModelKeys.add(key)) return@forEach
                 mutations +=
                     CacheMutation(
                         indexId = ModelConvertTool.MODEL_INDEX,
@@ -447,13 +467,20 @@ object ImportBatchOrchestrator {
         modelSafeFreeEnd: Int,
         apply: Boolean,
         journalRoot: File = File(CacheTransaction.DEFAULT_JOURNAL_ROOT),
+        modelCandidates: List<Int>? = null,
+        onPlanned: (BatchPlan) -> Unit = {},
     ): OrchestrationResult {
         val beforeRecovery = readExistingMapping(assetMapFile)
         val recovered = recoverUnfinalized(targets, beforeRecovery.mappedItemSourceIdentities, journalRoot)
         if (recovered.isNotEmpty()) finalizeDurableMapping(assetMapFile, recovered, beforeRecovery)
 
         val existing = readExistingMapping(assetMapFile)
-        val batchPlan = plan(targets, batch, existing, nextFreeItemId(targets), modelSafeFreeStart, modelSafeFreeEnd, journalRoot)
+        val batchPlan =
+            plan(
+                targets, batch, existing, nextFreeItemId(targets), modelSafeFreeStart, modelSafeFreeEnd, journalRoot,
+                modelCandidates = modelCandidates,
+            )
+        onPlanned(batchPlan)
 
         val preflight = batchPlan.transaction.preflight()
         val errors = batchPlan.transaction.blockingErrors(preflight)

@@ -19313,5 +19313,19 @@ object Items {
     // name recorded since gate A0 ("Twisted bow" at 22326 in both caches).
     const val TWISTED_BOW = 22326
     const val CROWN_OF_HELIOS = 22327
+    // OSRS-IMPORT pilot batch (tx-20260913-204038, OsrsItemImportTool "pilot"; RSPS_IMPORT_ASSET_MAP.yml).
+    const val OCCULT_NECKLACE = 22328
+    const val OCCULT_NECKLACE_NOTED = 22329
+    const val OCCULT_NECKLACE_OR = 22330
+    const val OCCULT_ORNAMENT_KIT = 22331
+    const val OCCULT_ORNAMENT_KIT_NOTED = 22332
+    const val AVERNIC_DEFENDER_HILT = 22333
+    const val AVERNIC_DEFENDER_HILT_NOTED = 22334
+    const val AVERNIC_DEFENDER = 22335
+    const val AVERNIC_DEFENDER_BROKEN = 22336
+    const val BELLES_FOLLY = 22337
+    const val BELLES_FOLLY_NOTED = 22338
+    const val BELLES_FOLLY_TARNISHED = 22339
+    const val BELLES_FOLLY_TARNISHED_NOTED = 22340
     // Auto-generated file using class gg.rsmod.game.service.game.DumpEntityIdService
 }
