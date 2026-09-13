@@ -61,7 +61,11 @@ class NpcSynchronizationTask(
         segments.add(NpcCountSegment(localNpcs.size))
         while (iterator.hasNext()) {
             val npc = iterator.next()
-            if (shouldRemove(player, npc)) {
+            // RCV-012 B3/B4: a moved (moveTo/teleportTo) npc was sent as update type 3, which the 667 client reads as
+            // REMOVE (client NpcUpdate.REMOVE, Novite LocalNPCUpdate removes teleported npcs the same way) while this
+            // list kept it, so every later npc entry in the packet was decoded against the wrong npc. Remove it on both
+            // sides; `shouldAdd` re-adds it at its new tile next cycle.
+            if (shouldRemove(player, npc) || npc.moved) {
                 segments.add(RemoveLocalNpcSegment())
                 iterator.remove()
                 continue
@@ -70,15 +74,12 @@ class NpcSynchronizationTask(
 
             val requiresBlockUpdate = npc.blockBuffer.isDirty()
 
-            if (npc.moved) {
-                segments.add(NpcSkipSegment(skip = false))
-                segments.add(NpcTeleportSegment())
-            } else if (npc.steps != null) {
+            if (npc.steps != null) {
                 segments.add(NpcSkipSegment(skip = false))
                 segments.add(
                     NpcWalkSegment(
                         Misc.getNpcMoveDirection(npc.steps!!.walkDirection!!.walkValue),
-                        -1,
+                        npc.steps!!.runDirection?.let { Misc.getNpcMoveDirection(it.walkValue) } ?: -1,
                         requiresBlockUpdate,
                     ),
                 )
@@ -129,6 +130,7 @@ class NpcSynchronizationTask(
     ): Boolean =
         npc.isSpawned() &&
             !npc.invisible &&
+            !npc.moved &&
             isWithinView(player, npc.tile) &&
             (npc.owner == null || npc.owner == player || npc.publicOwner)
 
