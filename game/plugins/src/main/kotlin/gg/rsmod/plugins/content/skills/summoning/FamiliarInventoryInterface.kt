@@ -130,8 +130,7 @@ object FamiliarInventory {
             player.setEvents(SIDE_INTERFACE, SIDE_COMPONENT, to = player.inventory.capacity, setting = ITEM_OPTION_EVENTS)
         }
         refresh(player)
-        // Mounting the side inventory over the tab area makes the client redraw the tab strip too.
-        FollowerDetailsTab.install(player)
+        // The tab-strip re-arm after mounting over the tab area is done once in PlayerExt.openInterface (RCV-012 B5).
     }
 
     /**
@@ -174,10 +173,7 @@ object FamiliarInventory {
         player.closeInterface(InterfaceDestination.TAB_AREA)
         player.openInterface(InterfaceDestination.INVENTORY_TAB)
         player.inventory.dirty = true
-        // Owner live report 2026-09-13: the Follower Details icon vanished after interacting with a
-        // beast of burden. Restoring the tab area rebuilds the tab strip with the cache's baked
-        // "hidden, no ops" spare-tab defaults, so re-arm it like every other rebuild path does.
-        FollowerDetailsTab.install(player)
+        // The re-arm after restoring the tab area is done once in PlayerExt.closeInterface (RCV-012 B5).
     }
 
     /**

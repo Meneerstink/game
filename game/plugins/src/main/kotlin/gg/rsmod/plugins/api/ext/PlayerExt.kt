@@ -387,6 +387,11 @@ fun Player.openInterface(
         if (dest.clickThrough) 1 else 0,
         isModal = dest == InterfaceDestination.MAIN_SCREEN || dest == InterfaceDestination.MAIN_SCREEN_FULL,
     )
+    // RCV-012 B5: mounting a side inventory over the tab area (bank, shop, GE, trade, duel, price checker, equipment
+    // stats, BoB) makes the client redraw the tab strip with the cache's baked flags - re-arm at this one shared point.
+    if (dest == InterfaceDestination.TAB_AREA) {
+        GameframeRebuild.rearm(this)
+    }
 }
 
 /**
@@ -396,6 +401,7 @@ fun Player.openInterface(
 fun Player.openFullscreenInterface(interfaceId: Int) {
     interfaces.open(0, 0, interfaceId)
     write(IfOpenTopMessage(interfaceId, 0))
+    GameframeRebuild.rearm(this)
 }
 
 fun Player.closeFullscreenInterface() {
@@ -496,6 +502,10 @@ fun Player.closeInterface(dest: InterfaceDestination) {
     val hash = interfaces.close(parent, child)
     if (hash != -1) {
         write(IfCloseSubMessage((parent shl 16) or child))
+        // RCV-012 B5: restoring the tab area (any modal close, bank/shop/GE/duel/BoB exit) redraws the tab strip too.
+        if (dest == InterfaceDestination.TAB_AREA) {
+            GameframeRebuild.rearm(this)
+        }
     }
 }
 
@@ -548,6 +558,7 @@ fun Player.openOverlayInterface(displayMode: DisplayMode) {
     val component = getDisplayComponentId(displayMode)
     interfaces.setVisible(parent = getDisplayComponentId(displayMode), child = 0, visible = true)
     write(IfOpenTopMessage(component, 1))
+    GameframeRebuild.rearm(this)
 }
 
 fun Player.sendItemContainer(
@@ -779,7 +790,9 @@ fun Player.setVarc(
     value: Int,
 ) {
     val message =
-        if (id in -Byte.MAX_VALUE..Byte.MAX_VALUE) VarcSmallMessage(id, value) else VarcLargeMessage(id, value)
+        // RCV-012: the small packet carries the VALUE as one byte, so the choice depends on the value (Novite
+        // DefaultGameEncoder.sendGlobalConfig); choosing by id truncated any low-id varc holding a larger value.
+        if (value in Byte.MIN_VALUE..Byte.MAX_VALUE) VarcSmallMessage(id, value) else VarcLargeMessage(id, value)
     write(message)
     varcs[id] = value
 }
