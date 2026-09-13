@@ -167,6 +167,14 @@ task runFeroxMinimapTool(type: JavaExec) {
     main = 'gg.rsmod.game.tools.importer.FeroxMinimapTool'
 }
 
+task runFeroxFloorRepairTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Re-matches Ferox tile overlays keeping the minimap colour (CacheTransaction, both caches). ' +
+        'Usage: ./gradlew :game:runFeroxFloorRepairTool --args="plan|apply"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.FeroxFloorRepairTool'
+}
+
 task runItemParamProbeTool(type: JavaExec) {
     group = 'tools'
     description = 'Read-only diagnostic: dumps every ItemDef.params (opcode 249) key/value for one ' +

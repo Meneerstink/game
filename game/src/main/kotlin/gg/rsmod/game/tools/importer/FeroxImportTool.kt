@@ -106,7 +106,7 @@ object FeroxImportTool {
                 val modernUnderlays = modern.files(2, 1).mapValues { ModernFloorDefs.decodeUnderlay(it.value) }
                 val modernOverlays = modern.files(2, 4).mapValues { ModernFloorDefs.decodeOverlay(it.value) }
                 val localUnderlays = decodeLocalFloors(library, Rev667RegionProbeTool.UNDERLAY_GROUP) { Rev667FloorCodec.decodeUnderlay(it).rgb }
-                val localOverlays = decodeLocalFloors(library, Rev667RegionProbeTool.OVERLAY_GROUP) { Rev667FloorCodec.decodeOverlay(it).rgb }
+                val localOverlays = decodeLocalFloors(library, Rev667RegionProbeTool.OVERLAY_GROUP) { Rev667FloorCodec.decodeOverlay(it) }
                 val underlayMap = HashMap<Int, Int>()
                 val overlayMap = HashMap<Int, Int>()
                 fun mapUnderlay(tileValue: Int): Int =
@@ -119,9 +119,12 @@ object FeroxImportTool {
                 fun mapOverlay(tileValue: Int): Int =
                     overlayMap.getOrPut(tileValue) {
                         val def = modernOverlays[tileValue - 1] ?: error("modern overlay ${tileValue - 1} missing")
-                        val best = localOverlays.minByOrNull { Rev667FloorCodec.colourDistance(it.value, def.rgb) }!!
-                        log("FLOOR overlay modern=${tileValue - 1} rgb=${"%06x".format(def.rgb)} tex=${def.texture} -> local=${best.key} rgb=${"%06x".format(best.value)}")
-                        best.key + 1
+                        val best = bestOverlay(def, localOverlays)
+                        log(
+                            "FLOOR overlay modern=${tileValue - 1} rgb=${"%06x".format(def.rgb)} tex=${def.texture} -> local=$best " +
+                                "rgb=${"%06x".format(localOverlays.getValue(best).rgb)} secondary=${def.secondaryRgb} blend=${localOverlays.getValue(best).blendRgb}",
+                        )
+                        best + 1
                     }
 
                 // ---- loc types ----
@@ -248,19 +251,48 @@ object FeroxImportTool {
         }
     }
 
-    private fun decodeLocalFloors(
+    fun <T> decodeLocalFloors(
         library: CacheLibrary,
         group: Int,
-        rgb: (ByteArray) -> Int,
-    ): Map<Int, Int> {
+        decode: (ByteArray) -> T,
+    ): Map<Int, T> {
         val archive = library.index(Rev667RegionProbeTool.CONFIG_INDEX).archive(group) ?: error("No floor group $group")
-        val result = HashMap<Int, Int>()
+        val result = HashMap<Int, T>()
         for (id in archive.fileIds()) {
             val data = archive.file(id)?.data ?: continue
-            result[id] = rgb(data)
+            result[id] = decode(data)
         }
         return result
     }
+
+    private const val FLAG_PENALTY = 3L * 255 * 255 + 1
+    private const val MINIMAP_PENALTY = 2 * FLAG_PENALTY
+
+    /**
+     * How differently local overlay [local] shows modern overlay [modern]. The minimap draws the op7 colour first
+     * (client `Static718.blendColour`; OSRS secondary colour), so losing or gaining it costs most; then the op5
+     * no-occlude flag; then colour distances. Textures are ignored: the two caches number textures differently.
+     * The original main-colour-only match sent every ff00ff overlay to local 41, blanking Ferox paths on the minimap.
+     */
+    fun overlayScore(
+        modern: ModernOverlayDef,
+        local: Rev667OverlayDef,
+    ): Long {
+        val minimap =
+            when {
+                modern.secondaryRgb == -1 && local.blendRgb == -1 -> 0L
+                modern.secondaryRgb == -1 || local.blendRgb == -1 -> MINIMAP_PENALTY
+                else -> Rev667FloorCodec.colourDistance(modern.secondaryRgb, local.blendRgb).toLong()
+            }
+        val flag = if (modern.hideUnderlay != local.occludes) FLAG_PENALTY else 0L
+        return minimap + flag + Rev667FloorCodec.colourDistance(modern.rgb, local.rgb)
+    }
+
+    /** Lowest [overlayScore], ties to the lowest local id. */
+    fun bestOverlay(
+        modern: ModernOverlayDef,
+        locals: Map<Int, Rev667OverlayDef>,
+    ): Int = locals.entries.minWithOrNull(compareBy({ overlayScore(modern, it.value) }, { it.key }))!!.key
 
     private fun zeroXteaKeys(
         regions: List<Int>,

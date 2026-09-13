@@ -18,6 +18,7 @@ import java.io.PrintStream
  */
 object FeroxMapDataProbeTool {
     const val ASSET_MAP = "C:/RSPS/RSPS_IMPORT_ASSET_MAP.yml"
+    const val IMPORT_LOG = "C:/RSPS/import-source/ferox/ferox_apply_tx-20260905-052852.txt"
     val REFERENCE_NAMES =
         listOf("bank booth", "bank chest", "altar", "staircase", "stairs", "tree", "bush", "flowers", "pool", "fountain", "ladder", "portal", "barrier", "roots")
 
@@ -33,7 +34,17 @@ object FeroxMapDataProbeTool {
     fun main(args: Array<String>) {
         val out = args.getOrNull(0)?.let { PrintStream(File(it)) } ?: System.out
         val entries = feroxEntries()
-        val modernDefs = ModernCacheReader(File(FeroxImportTool.MODERN_CACHE)).use { it.files(2, 6) }
+        val (modernDefs, modernOverlays) = ModernCacheReader(File(FeroxImportTool.MODERN_CACHE)).use { it.files(2, 6) to it.files(2, 4) }
+        // Floors: the import mapped each modern overlay (definition id = tile value - 1) by main colour only; print what
+        // the minimap actually uses (secondary colour / texture / hideUnderlay) for every overlay the import logged.
+        Regex("""FLOOR overlay modern=(\d+) rgb=(\w+) tex=(-?\d+) -> local=(\d+)""").findAll(File(IMPORT_LOG).readText()).forEach { m ->
+            val id = m.groupValues[1].toInt()
+            val def = modernOverlays[id]?.let { ModernFloorDefs.decodeOverlay(it) }
+            out.println(
+                "MODERN_OVERLAY id=$id rgb=${def?.rgb?.let { "%06x".format(it) }} texture=${def?.texture} " +
+                    "secondary=${def?.secondaryRgb?.let { if (it == -1) "-" else "%06x".format(it) }} hideUnderlay=${def?.hideUnderlay} importedAs=${m.groupValues[4]}",
+            )
+        }
         val library = CacheLibrary(FeroxImportTool.GAME_CACHE)
         try {
             val local = Rev667RegionProbeTool.locTypes(library)
