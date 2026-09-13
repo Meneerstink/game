@@ -51,7 +51,8 @@ object RangedCombatStrategy : CombatStrategy {
                     in Javelins.JAVELINS, Items.COMP_OGRE_BOW -> 5
                     Items.DORGESHUUN_CBOW -> 6
                     Items.SEERCULL -> 8
-                    in Bows.LONG_BOWS, Items.CHINCHOMPA_10033, Items.RED_CHINCHOMPA_10034 -> 9
+                    // OSRS Wiki "Heavy ballista": attack range 9 (10 on longrange).
+                    in Bows.LONG_BOWS, Items.CHINCHOMPA_10033, Items.RED_CHINCHOMPA_10034, Items.HEAVY_BALLISTA -> 9
                     // S4, 2026-09-03: OSRS Wiki "Twisted bow" - "attack range of 10 tiles ...
                     // matching the maximum range in the game", also matches A4's own sourced
                     // param 13 = 10 read from the pinned upstream item def.

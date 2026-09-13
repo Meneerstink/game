@@ -14,6 +14,7 @@ import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Bolts.KEBBIT_BOLTS
 import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Bolts.MITHRIL_BOLTS
 import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Bolts.RUNITE_BOLTS
 import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Bolts.STEEL_BOLTS
+import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Javelins
 
 /**
  * @author Tom <rspsmods@gmail.com>
@@ -45,6 +46,9 @@ enum class CrossbowType(
     ARMADYL_CROSSBOW(item = Items.ARMADYL_CROSSBOW, ammo = UP_TO_DRAGON_BOLTS),
     ZARYTE_CROSSBOW(item = Items.ZARYTE_CROSSBOW, ammo = UP_TO_DRAGON_BOLTS),
     DRAGON_CROSSBOW(item = Items.DRAGON_CROSSBOW, ammo = UP_TO_DRAGON_BOLTS),
+
+    // OSRS-IMPORT: the Heavy ballista fires only the OSRS javelins (ammo slot), never the 667 thrown javelins.
+    HEAVY_BALLISTA(item = Items.HEAVY_BALLISTA, ammo = Javelins.BALLISTA_JAVELINS),
 
     BLURITE_CROSSBOW(item = Items.BLURITE_CROSSBOW, ammo = BRONZE_BOLTS + BLURITE_BOLTS),
     DORGESHUUN_CROSSBOW(item = Items.DORGESHUUN_CBOW, ammo = BONE_BOLTS),

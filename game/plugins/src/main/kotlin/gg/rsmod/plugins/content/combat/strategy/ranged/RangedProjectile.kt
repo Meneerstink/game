@@ -22,6 +22,7 @@ import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Darts.IRON_DARTS
 import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Darts.MITHRIL_DARTS
 import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Darts.RUNE_DARTS
 import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Darts.STEEL_DARTS
+import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Javelins
 import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Javelins.ADAMANT_JAVELINS
 import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Javelins.BRONZE_JAVELINS
 import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Javelins.IRON_JAVELINS
@@ -286,6 +287,17 @@ enum class RangedProjectile(
         type = ProjectileType.THROWN,
         items = arrayOf(Items.SLING),
     ),
+    // OSRS-IMPORT ballista javelins: OSRS projectile spotanims are not in the 667 table, so each metal tier uses the 667
+    // javelin in-flight graphic of the same metal; amethyst and dragon have no 667 javelin and use the rune one
+    // (ADAPTED_TO_667, recorded in OSRS_IMPORT_STATUS.md).
+    OSRS_BRONZE_JAVELIN(gfx = Gfx.BRONZE_JAVELIN_IN_FLIGHT, type = ProjectileType.JAVELIN, items = Javelins.OSRS_BRONZE_JAVELINS),
+    OSRS_IRON_JAVELIN(gfx = Gfx.IRON_JAVELIN_IN_FLIGHT, type = ProjectileType.JAVELIN, items = Javelins.OSRS_IRON_JAVELINS),
+    OSRS_STEEL_JAVELIN(gfx = Gfx.STEEL_JAVELIN_IN_FLIGHT, type = ProjectileType.JAVELIN, items = Javelins.OSRS_STEEL_JAVELINS),
+    OSRS_MITHRIL_JAVELIN(gfx = Gfx.MITHRIL_JAVELIN_IN_FLIGHT, type = ProjectileType.JAVELIN, items = Javelins.OSRS_MITHRIL_JAVELINS),
+    OSRS_ADAMANT_JAVELIN(gfx = Gfx.ADAMANT_JAVELIN_IN_FLIGHT, type = ProjectileType.JAVELIN, items = Javelins.OSRS_ADAMANT_JAVELINS),
+    OSRS_RUNE_JAVELIN(gfx = Gfx.RUNE_JAVELIN_IN_FLIGHT, type = ProjectileType.JAVELIN, items = Javelins.OSRS_RUNE_JAVELINS),
+    OSRS_AMETHYST_JAVELIN(gfx = Gfx.RUNE_JAVELIN_IN_FLIGHT, type = ProjectileType.JAVELIN, items = Javelins.OSRS_AMETHYST_JAVELINS),
+    OSRS_DRAGON_JAVELIN(gfx = Gfx.RUNE_JAVELIN_IN_FLIGHT, type = ProjectileType.JAVELIN, items = Javelins.OSRS_DRAGON_JAVELINS),
     MORRIGANS_JAVELIN(
         gfx = Gfx.MORRIGANS_JAVELIN_IN_FLIGHT,
         //drawback = Graphic(Gfx.MORRIGANS_JAVELIN_DRAWBACK, 92),

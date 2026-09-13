@@ -140,9 +140,30 @@ object OsrsItemImportTool {
                 ) +
                     (21955..21973 step 2).map { Spec(it, rev667Params = boltParams(64)) } + // gem-tipped dragon bolts
                     (21932..21950 step 2).map { Spec(it, rev667Params = boltParams(64)) }, // dragon bolts (e)
+            // Heavy ballista and its javelins. The ballista follows the 667 Hand cannon 15241, the only 667 two-handed
+            // crossbow-class weapon with a special (644 render anim 1603, 686 style set 17, 687 special bar, 23/749/750
+            // requirement); weapon type 17 and attack audio 2700 as the imported crossbows (ADAPTED_TO_667). The OSRS
+            // javelins reuse the upstream ids of the 667 thrown javelins but are imported as separate ammo items; their
+            // upstream param 23 is not a wield requirement (Dragon javelin 23 = 60, wiki: none), so no client params.
+            "ballista" to
+                listOf(
+                    Spec(19481, noted = true, rev667Params = mapOf(644 to 1603, 686 to 17, 687 to 1, 23 to 75, 749 to 4, 750 to 75), weaponType = 17, attackAudio = 2700),
+                    Spec(19589, noted = true), // Heavy frame
+                    Spec(19592, noted = true), // Ballista limbs
+                    Spec(19601, noted = true), // Ballista spring
+                    Spec(19610, noted = true), // Monkey tail
+                    Spec(19584), // Javelin shaft
+                ) +
+                    (19570..19582 step 2).map { Spec(it) } + Spec(21352) + // javelin tips bronze..dragon, amethyst
+                    (825..830).flatMap { tier -> listOf(tier, tier + 6, tier + 4817, tier + 4823) }.map { Spec(it) } + // bronze..rune (p)(p+)(p++)
+                    listOf(21318, 21320, 21322, 21324, 19484, 19486, 19488, 19490).map { Spec(it) }, // amethyst, dragon
         )
 
-    private fun crossbowParams(requiredRanged: Int) = mapOf(644 to 175, 686 to 17, 23 to requiredRanged, 749 to 4, 750 to requiredRanged)
+    /**
+     * 687 = 1 shows the special attack bar (CS2 1136 / interface 884:19, proven at the Twisted bow gate; the 667 Hand
+     * cannon, which has a special, carries it) - every imported weapon with a special needs it.
+     */
+    private fun crossbowParams(requiredRanged: Int) = mapOf(644 to 175, 686 to 17, 687 to 1, 23 to requiredRanged, 749 to 4, 750 to requiredRanged)
 
     private fun boltParams(requiredRanged: Int) = mapOf(23 to requiredRanged, 749 to 4, 750 to requiredRanged)
 
@@ -205,6 +226,17 @@ object OsrsItemImportTool {
             val existing = ImportBatchOrchestrator.readExistingMapping(File(ASSET_MAP))
             var next = ImportBatchOrchestrator.nextFreeItemId(TARGETS)
             entries.forEach { it.localId = existing.itemLocalIdBySourceIdentity[it.identity] ?: next++ }
+            // Re-running a batch rewrites already-imported items in place: the orchestrator REPLACEs only when the live
+            // cache still holds exactly the bytes read here, identical rebuilds are NO_OPs.
+            val currentItemSha1 =
+                CacheLibrary(TARGETS[0]).let { library ->
+                    try {
+                        entries.filter { existing.itemLocalIdBySourceIdentity.containsKey(it.identity) }
+                            .associate { entry -> entry.identity to CacheItemProbeTool.itemData(library, entry.localId)?.let { CacheItemProbeTool.sha1(it) } }
+                    } finally {
+                        library.close()
+                    }
+                }
 
             val convertedModels = mutableMapOf<Int, ByteArray>()
             fun convertModel(modelId: Int): ByteArray =
@@ -239,12 +271,13 @@ object OsrsItemImportTool {
             val batch =
                 entries.map { entry ->
                     val base = entry.notedOf
+                    val expectedSha1 = currentItemSha1[entry.identity]
                     if (base != null) {
-                        ImportBatchOrchestrator.ItemSource(entry.identity, entry.name, emptyList()) { _ -> notedBytes(base.localId) }
+                        ImportBatchOrchestrator.ItemSource(entry.identity, entry.name, emptyList(), expectedSha1) { _ -> notedBytes(base.localId) }
                     } else {
                         val modelIds = entry.def.modelDependencies().values.distinct()
                         val models = modelIds.map { ImportBatchOrchestrator.ModelSource("upstream_model:$it", "model", convertModel(it)) }
-                        ImportBatchOrchestrator.ItemSource(entry.identity, entry.name, models) { local ->
+                        ImportBatchOrchestrator.ItemSource(entry.identity, entry.name, models, expectedSha1) { local ->
                             encodeItem(
                                 entry.def,
                                 { upstream -> local.getValue("upstream_model:$upstream") },

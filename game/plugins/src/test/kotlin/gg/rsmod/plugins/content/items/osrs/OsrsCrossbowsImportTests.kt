@@ -56,6 +56,15 @@ class OsrsCrossbowsImportTests {
     }
 
     @Test
+    fun `crossbows with a special show the special attack bar (client param 687)`() {
+        // Param 687 = 1 reveals interface 884:19 (CS2 1136); the 667 Hand cannon, which has a special, carries it.
+        listOf(Items.ARMADYL_CROSSBOW, Items.ZARYTE_CROSSBOW, Items.DRAGON_CROSSBOW).forEach { id ->
+            val params = ItemDefCodec.describeOpcodes(CacheItemProbeTool.itemData(STORE, id) ?: error("no data for $id")).first { it.startsWith("249=") }
+            assertTrue("000002af00000001" in params, "$id carries param 687 = 1: $params")
+        }
+    }
+
+    @Test
     fun `every dragon bolt has +122 ranged strength, 64 Ranged and four imported stack variants`() {
         (listOf(Items.OSRS_DRAGON_BOLTS) + gemBolts + enchantedBolts).forEach { id ->
             val eq = YML.getValue(id).path("equipment")

@@ -266287,3 +266287,1201 @@
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
+- id: 22536
+  name: "Heavy ballista"
+  examine: "A powerful weapon forged from the wreckage of an airship."
+  tradeable: true
+  weight: 6.0
+  equipment:
+    equip_slot: 3
+    equip_type: 5
+    appearance_id: 5685
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 17
+    attack_speed: 7
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 125
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 15
+    magic_damage: 0
+    attack_audio: 2700
+    skill_reqs: [{'skill': 4, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22537
+  name: "Heavy ballista"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22538
+  name: "Heavy frame"
+  examine: "A heavy wooden frame."
+  tradeable: true
+  weight: 5.25
+  equipment: null
+- id: 22539
+  name: "Heavy frame"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22540
+  name: "Ballista limbs"
+  examine: "Sturdy struts."
+  tradeable: true
+  weight: 0.25
+  equipment: null
+- id: 22541
+  name: "Ballista limbs"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22542
+  name: "Ballista spring"
+  examine: "A spring-loaded mechanism."
+  tradeable: true
+  weight: 0.25
+  equipment: null
+- id: 22543
+  name: "Ballista spring"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22544
+  name: "Monkey tail"
+  examine: "Smells like the south end of a northbound monkey, because it is."
+  tradeable: true
+  weight: 0.25
+  equipment: null
+- id: 22545
+  name: "Monkey tail"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22550
+  name: "Javelin shaft"
+  examine: "It's not very strong, but it could be pointy if you put a pointy tip on it."
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22555
+  name: "Bronze javelin tips"
+  examine: "Needs a shaft."
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22560
+  name: "Iron javelin tips"
+  examine: "Needs a shaft."
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22565
+  name: "Steel javelin tips"
+  examine: "Needs a shaft."
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22570
+  name: "Mithril javelin tips"
+  examine: "Needs a shaft."
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22575
+  name: "Adamant javelin tips"
+  examine: "Needs a shaft."
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22580
+  name: "Rune javelin tips"
+  examine: "Needs a shaft."
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22585
+  name: "Dragon javelin tips"
+  examine: "Needs a shaft."
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22590
+  name: "Amethyst javelin tips"
+  examine: "Needs a shaft."
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22591
+  name: "Bronze javelin"
+  examine: "A bronze tipped javelin."
+  tradeable: true
+  weight: 0.0
+  equipment:
+    equip_slot: 13
+    equip_type: -1
+    appearance_id: 5686
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 25
+    magic_damage: 0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22592
+  name: "Bronze javelin(p)"
+  examine: "A bronze tipped javelin."
+  tradeable: true
+  weight: 0.0
+  equipment:
+    equip_slot: 13
+    equip_type: -1
+    appearance_id: 5686
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 25
+    magic_damage: 0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22593
+  name: "Bronze javelin(p+)"
+  examine: "A bronze tipped javelin."
+  tradeable: true
+  weight: 0.0
+  equipment:
+    equip_slot: 13
+    equip_type: -1
+    appearance_id: 5686
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 25
+    magic_damage: 0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22594
+  name: "Bronze javelin(p++)"
+  examine: "A bronze tipped javelin."
+  tradeable: true
+  weight: 0.0
+  equipment:
+    equip_slot: 13
+    equip_type: -1
+    appearance_id: 5686
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 25
+    magic_damage: 0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22595
+  name: "Iron javelin"
+  examine: "An iron tipped javelin."
+  tradeable: true
+  weight: 0.0
+  equipment:
+    equip_slot: 13
+    equip_type: -1
+    appearance_id: 5686
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 42
+    magic_damage: 0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22596
+  name: "Iron javelin(p)"
+  examine: "An iron tipped javelin."
+  tradeable: true
+  weight: 0.0
+  equipment:
+    equip_slot: 13
+    equip_type: -1
+    appearance_id: 5686
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 42
+    magic_damage: 0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22597
+  name: "Iron javelin(p+)"
+  examine: "An iron tipped javelin."
+  tradeable: true
+  weight: 0.0
+  equipment:
+    equip_slot: 13
+    equip_type: -1
+    appearance_id: 5686
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 42
+    magic_damage: 0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22598
+  name: "Iron javelin(p++)"
+  examine: "An iron tipped javelin."
+  tradeable: true
+  weight: 0.0
+  equipment:
+    equip_slot: 13
+    equip_type: -1
+    appearance_id: 5686
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 42
+    magic_damage: 0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22599
+  name: "Steel javelin"
+  examine: "A steel tipped javelin."
+  tradeable: true
+  weight: 0.0
+  equipment:
+    equip_slot: 13
+    equip_type: -1
+    appearance_id: 5686
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 64
+    magic_damage: 0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22600
+  name: "Steel javelin(p)"
+  examine: "A steel tipped javelin."
+  tradeable: true
+  weight: 0.0
+  equipment:
+    equip_slot: 13
+    equip_type: -1
+    appearance_id: 5686
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 64
+    magic_damage: 0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22601
+  name: "Steel javelin(p+)"
+  examine: "A steel tipped javelin."
+  tradeable: true
+  weight: 0.0
+  equipment:
+    equip_slot: 13
+    equip_type: -1
+    appearance_id: 5686
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 64
+    magic_damage: 0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22602
+  name: "Steel javelin(p++)"
+  examine: "A steel tipped javelin."
+  tradeable: true
+  weight: 0.0
+  equipment:
+    equip_slot: 13
+    equip_type: -1
+    appearance_id: 5686
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 64
+    magic_damage: 0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22603
+  name: "Mithril javelin"
+  examine: "A mithril tipped javelin."
+  tradeable: true
+  weight: 0.0
+  equipment:
+    equip_slot: 13
+    equip_type: -1
+    appearance_id: 5686
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 85
+    magic_damage: 0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22604
+  name: "Mithril javelin(p)"
+  examine: "A mithril tipped javelin."
+  tradeable: true
+  weight: 0.0
+  equipment:
+    equip_slot: 13
+    equip_type: -1
+    appearance_id: 5686
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 85
+    magic_damage: 0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22605
+  name: "Mithril javelin(p+)"
+  examine: "A mithril tipped javelin."
+  tradeable: true
+  weight: 0.0
+  equipment:
+    equip_slot: 13
+    equip_type: -1
+    appearance_id: 5686
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 85
+    magic_damage: 0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22606
+  name: "Mithril javelin(p++)"
+  examine: "A mithril tipped javelin."
+  tradeable: true
+  weight: 0.0
+  equipment:
+    equip_slot: 13
+    equip_type: -1
+    appearance_id: 5686
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 85
+    magic_damage: 0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22607
+  name: "Adamant javelin"
+  examine: "An adamant tipped javelin."
+  tradeable: true
+  weight: 0.0
+  equipment:
+    equip_slot: 13
+    equip_type: -1
+    appearance_id: 5686
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 102
+    magic_damage: 0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22608
+  name: "Adamant javelin(p)"
+  examine: "An adamant tipped javelin."
+  tradeable: true
+  weight: 0.0
+  equipment:
+    equip_slot: 13
+    equip_type: -1
+    appearance_id: 5686
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 102
+    magic_damage: 0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22609
+  name: "Adamant javelin(p+)"
+  examine: "An adamant tipped javelin."
+  tradeable: true
+  weight: 0.0
+  equipment:
+    equip_slot: 13
+    equip_type: -1
+    appearance_id: 5686
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 102
+    magic_damage: 0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22610
+  name: "Adamant javelin(p++)"
+  examine: "An adamant tipped javelin."
+  tradeable: true
+  weight: 0.0
+  equipment:
+    equip_slot: 13
+    equip_type: -1
+    appearance_id: 5686
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 102
+    magic_damage: 0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22611
+  name: "Rune javelin"
+  examine: "A rune tipped javelin."
+  tradeable: true
+  weight: 0.0
+  equipment:
+    equip_slot: 13
+    equip_type: -1
+    appearance_id: 5686
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 124
+    magic_damage: 0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22612
+  name: "Rune javelin(p)"
+  examine: "A rune tipped javelin."
+  tradeable: true
+  weight: 0.0
+  equipment:
+    equip_slot: 13
+    equip_type: -1
+    appearance_id: 5686
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 124
+    magic_damage: 0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22613
+  name: "Rune javelin(p+)"
+  examine: "A rune tipped javelin."
+  tradeable: true
+  weight: 0.0
+  equipment:
+    equip_slot: 13
+    equip_type: -1
+    appearance_id: 5686
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 124
+    magic_damage: 0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22614
+  name: "Rune javelin(p++)"
+  examine: "A rune tipped javelin."
+  tradeable: true
+  weight: 0.0
+  equipment:
+    equip_slot: 13
+    equip_type: -1
+    appearance_id: 5686
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 124
+    magic_damage: 0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22615
+  name: "Amethyst javelin"
+  examine: "An amethyst tipped javelin."
+  tradeable: true
+  weight: 0.0
+  equipment:
+    equip_slot: 13
+    equip_type: -1
+    appearance_id: 5686
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 135
+    magic_damage: 0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22616
+  name: "Amethyst javelin(p)"
+  examine: "An amethyst tipped javelin."
+  tradeable: true
+  weight: 0.0
+  equipment:
+    equip_slot: 13
+    equip_type: -1
+    appearance_id: 5686
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 135
+    magic_damage: 0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22617
+  name: "Amethyst javelin(p+)"
+  examine: "An amethyst tipped javelin."
+  tradeable: true
+  weight: 0.0
+  equipment:
+    equip_slot: 13
+    equip_type: -1
+    appearance_id: 5686
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 135
+    magic_damage: 0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22618
+  name: "Amethyst javelin(p++)"
+  examine: "An amethyst tipped javelin."
+  tradeable: true
+  weight: 0.0
+  equipment:
+    equip_slot: 13
+    equip_type: -1
+    appearance_id: 5686
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 135
+    magic_damage: 0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22619
+  name: "Dragon javelin"
+  examine: "A dragon tipped javelin."
+  tradeable: true
+  weight: 0.0
+  equipment:
+    equip_slot: 13
+    equip_type: -1
+    appearance_id: 5686
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 150
+    magic_damage: 0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22620
+  name: "Dragon javelin(p)"
+  examine: "A dragon tipped javelin."
+  tradeable: true
+  weight: 0.0
+  equipment:
+    equip_slot: 13
+    equip_type: -1
+    appearance_id: 5686
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 150
+    magic_damage: 0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22621
+  name: "Dragon javelin(p+)"
+  examine: "A dragon tipped javelin."
+  tradeable: true
+  weight: 0.0
+  equipment:
+    equip_slot: 13
+    equip_type: -1
+    appearance_id: 5686
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 150
+    magic_damage: 0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22622
+  name: "Dragon javelin(p++)"
+  examine: "A dragon tipped javelin."
+  tradeable: true
+  weight: 0.0
+  equipment:
+    equip_slot: 13
+    equip_type: -1
+    appearance_id: 5686
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 150
+    magic_damage: 0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
