@@ -36,6 +36,20 @@ class TormentedDemonRulesTests {
     }
 
     @Test
+    fun `style rotation and splash special follow Void`() {
+        // Void TormentedDemon.kt tds_change_attack: magic -> range -> melee -> magic (0 melee, 1 magic, 2 ranged).
+        assertEquals(2, TormentedDemonCombatScript.nextStyle(1), "magic -> ranged")
+        assertEquals(0, TormentedDemonCombatScript.nextStyle(2), "ranged -> melee")
+        assertEquals(1, TormentedDemonCombatScript.nextStyle(0), "melee -> magic")
+        // guthix_temple.combat.toml: style section chance 20 + special chance 1; special hit 281 (x10).
+        assertEquals(21, TormentedDemonCombatScript.SPECIAL_ROLL)
+        assertEquals(28, TormentedDemonCombatScript.SPLASH_DAMAGE)
+        val script = File("src/main/kotlin/gg/rsmod/plugins/content/combat/scripts/impl/TormentedDemonCombatScript.kt").readText()
+        assertTrue(script.contains("Items.HOLY_WATER") && !script.contains("Items.SILVERLIGHT"), "owner decision 3: Darklight or holy water")
+        assertTrue(script.contains("npc.timers[STYLE_TIMER] = 26") && script.contains("ATTACK_DELAY] = 6"), "Void timer 26 + action delay 6")
+    }
+
+    @Test
     fun `one combat definition covers every demon id with the donors' hitpoints`() {
         val plugin = File("src/main/kotlin/gg/rsmod/plugins/content/npcs/definitions/demons/tormented_demon.plugin.kts").readText()
         assertTrue(plugin.contains("TormentedDemonCombatScript.ids.forEach { demonId ->") && plugin.contains("set_combat_def(npc = demonId)"))

@@ -1,0 +1,510 @@
+{
+    "source":  "Void area/misthalin/lumbridge/swamp/chasm_of_tears/guthix_temple/guthix_temple.drops.toml (npc drop_table tormented_demon); owner 2026-09-13 B7 decision 6: Void drops, 2011 filter = item present in the revision-667 cache; clue scrolls parked",
+    "npcs":  {
+                 "8349":  "tormented_demon_drop_table",
+                 "8350":  "tormented_demon_drop_table",
+                 "8351":  "tormented_demon_drop_table",
+                 "8352":  "tormented_demon_drop_table",
+                 "8353":  "tormented_demon_drop_table",
+                 "8354":  "tormented_demon_drop_table",
+                 "8355":  "tormented_demon_drop_table",
+                 "8356":  "tormented_demon_drop_table",
+                 "8357":  "tormented_demon_drop_table",
+                 "8358":  "tormented_demon_drop_table",
+                 "8359":  "tormented_demon_drop_table",
+                 "8360":  "tormented_demon_drop_table",
+                 "8361":  "tormented_demon_drop_table",
+                 "8362":  "tormented_demon_drop_table",
+                 "8363":  "tormented_demon_drop_table",
+                 "8364":  "tormented_demon_drop_table",
+                 "8365":  "tormented_demon_drop_table",
+                 "8366":  "tormented_demon_drop_table",
+                 "8367":  "tormented_demon_drop_table",
+                 "8368":  "tormented_demon_drop_table",
+                 "8369":  "tormented_demon_drop_table"
+             },
+    "tables":  {
+                   "tormented_demon_drop_table":  {
+                                                      "type":  "all",
+                                                      "roll":  1,
+                                                      "drops":  [
+                                                                    {
+                                                                        "key":  "ashes",
+                                                                        "item":  592,
+                                                                        "min":  1,
+                                                                        "max":  1,
+                                                                        "chance":  1
+                                                                    },
+                                                                    {
+                                                                        "table":  "tormented_demon_secondary",
+                                                                        "chance":  -1
+                                                                    },
+                                                                    {
+                                                                        "table":  "tormented_demon_tertiary",
+                                                                        "chance":  -1
+                                                                    },
+                                                                    {
+                                                                        "table":  "tormented_demon_charms",
+                                                                        "chance":  -1
+                                                                    }
+                                                                ]
+                                                  },
+                   "tormented_demon_secondary":  {
+                                                     "type":  "first",
+                                                     "roll":  512,
+                                                     "drops":  [
+                                                                   {
+                                                                       "key":  "dragon_claws",
+                                                                       "item":  14484,
+                                                                       "min":  1,
+                                                                       "max":  1,
+                                                                       "chance":  2
+                                                                   },
+                                                                   {
+                                                                       "key":  "adamant_battleaxe",
+                                                                       "item":  1371,
+                                                                       "min":  1,
+                                                                       "max":  1,
+                                                                       "chance":  12
+                                                                   },
+                                                                   {
+                                                                       "key":  "rune_mace",
+                                                                       "item":  1432,
+                                                                       "min":  1,
+                                                                       "max":  1,
+                                                                       "chance":  12
+                                                                   },
+                                                                   {
+                                                                       "key":  "rune_sword",
+                                                                       "item":  1289,
+                                                                       "min":  1,
+                                                                       "max":  1,
+                                                                       "chance":  12
+                                                                   },
+                                                                   {
+                                                                       "key":  "rune_battleaxe",
+                                                                       "item":  1373,
+                                                                       "min":  1,
+                                                                       "max":  1,
+                                                                       "chance":  1
+                                                                   },
+                                                                   {
+                                                                       "key":  "rune_2h_sword",
+                                                                       "item":  1319,
+                                                                       "min":  1,
+                                                                       "max":  1,
+                                                                       "chance":  1
+                                                                   },
+                                                                   {
+                                                                       "key":  "rune_sq_shield",
+                                                                       "item":  1185,
+                                                                       "min":  1,
+                                                                       "max":  1,
+                                                                       "chance":  12
+                                                                   },
+                                                                   {
+                                                                       "key":  "rune_chainbody",
+                                                                       "item":  1113,
+                                                                       "min":  1,
+                                                                       "max":  1,
+                                                                       "chance":  8
+                                                                   },
+                                                                   {
+                                                                       "key":  "rune_med_helm",
+                                                                       "item":  1147,
+                                                                       "min":  1,
+                                                                       "max":  1,
+                                                                       "chance":  8
+                                                                   },
+                                                                   {
+                                                                       "key":  "dragon_med_helm",
+                                                                       "item":  1149,
+                                                                       "min":  1,
+                                                                       "max":  1,
+                                                                       "chance":  1
+                                                                   },
+                                                                   {
+                                                                       "key":  "rune_kiteshield",
+                                                                       "item":  1201,
+                                                                       "min":  1,
+                                                                       "max":  1,
+                                                                       "chance":  1
+                                                                   },
+                                                                   {
+                                                                       "key":  "shark",
+                                                                       "item":  385,
+                                                                       "min":  5,
+                                                                       "max":  15,
+                                                                       "chance":  8
+                                                                   },
+                                                                   {
+                                                                       "key":  "super_defence_3",
+                                                                       "item":  163,
+                                                                       "min":  1,
+                                                                       "max":  6,
+                                                                       "chance":  12
+                                                                   },
+                                                                   {
+                                                                       "key":  "prayer_potion_3",
+                                                                       "item":  139,
+                                                                       "min":  1,
+                                                                       "max":  3,
+                                                                       "chance":  8
+                                                                   },
+                                                                   {
+                                                                       "key":  "avantoe_seed",
+                                                                       "item":  5298,
+                                                                       "min":  1,
+                                                                       "max":  2,
+                                                                       "chance":  12
+                                                                   },
+                                                                   {
+                                                                       "key":  "belladonna_seed",
+                                                                       "item":  5281,
+                                                                       "min":  1,
+                                                                       "max":  1,
+                                                                       "chance":  12
+                                                                   },
+                                                                   {
+                                                                       "key":  "harralander_seed",
+                                                                       "item":  5294,
+                                                                       "min":  1,
+                                                                       "max":  2,
+                                                                       "chance":  12
+                                                                   },
+                                                                   {
+                                                                       "key":  "jangerberry_seed",
+                                                                       "item":  5104,
+                                                                       "min":  1,
+                                                                       "max":  3,
+                                                                       "chance":  12
+                                                                   },
+                                                                   {
+                                                                       "key":  "marrentill_seed",
+                                                                       "item":  5292,
+                                                                       "min":  1,
+                                                                       "max":  2,
+                                                                       "chance":  12
+                                                                   },
+                                                                   {
+                                                                       "key":  "bittercap_mushroom_spore",
+                                                                       "item":  5282,
+                                                                       "min":  1,
+                                                                       "max":  1,
+                                                                       "chance":  12
+                                                                   },
+                                                                   {
+                                                                       "key":  "wildblood_seed",
+                                                                       "item":  5311,
+                                                                       "min":  1,
+                                                                       "max":  3,
+                                                                       "chance":  12
+                                                                   },
+                                                                   {
+                                                                       "key":  "kwuarm_seed",
+                                                                       "item":  5299,
+                                                                       "min":  1,
+                                                                       "max":  2,
+                                                                       "chance":  12
+                                                                   },
+                                                                   {
+                                                                       "key":  "cactus_seed",
+                                                                       "item":  5280,
+                                                                       "min":  4,
+                                                                       "max":  10,
+                                                                       "chance":  8
+                                                                   },
+                                                                   {
+                                                                       "key":  "limpwurt_seed",
+                                                                       "item":  5100,
+                                                                       "min":  1,
+                                                                       "max":  2,
+                                                                       "chance":  8
+                                                                   },
+                                                                   {
+                                                                       "key":  "ranarr_seed",
+                                                                       "item":  5295,
+                                                                       "min":  1,
+                                                                       "max":  3,
+                                                                       "chance":  8
+                                                                   },
+                                                                   {
+                                                                       "key":  "spirit_weed_seed",
+                                                                       "item":  12176,
+                                                                       "min":  1,
+                                                                       "max":  2,
+                                                                       "chance":  8
+                                                                   },
+                                                                   {
+                                                                       "key":  "strawberry_seed",
+                                                                       "item":  5323,
+                                                                       "min":  1,
+                                                                       "max":  4,
+                                                                       "chance":  8
+                                                                   },
+                                                                   {
+                                                                       "key":  "toadflax_seed",
+                                                                       "item":  5296,
+                                                                       "min":  1,
+                                                                       "max":  2,
+                                                                       "chance":  8
+                                                                   },
+                                                                   {
+                                                                       "key":  "whiteberry_seed",
+                                                                       "item":  5105,
+                                                                       "min":  1,
+                                                                       "max":  3,
+                                                                       "chance":  8
+                                                                   },
+                                                                   {
+                                                                       "key":  "dwarf_weed_seed",
+                                                                       "item":  5303,
+                                                                       "min":  1,
+                                                                       "max":  2,
+                                                                       "chance":  8
+                                                                   },
+                                                                   {
+                                                                       "key":  "lantadyme_seed",
+                                                                       "item":  5302,
+                                                                       "min":  1,
+                                                                       "max":  2,
+                                                                       "chance":  8
+                                                                   },
+                                                                   {
+                                                                       "key":  "cadantine_seed",
+                                                                       "item":  5301,
+                                                                       "min":  1,
+                                                                       "max":  2,
+                                                                       "chance":  2
+                                                                   },
+                                                                   {
+                                                                       "key":  "grimy_guam_noted",
+                                                                       "item":  200,
+                                                                       "min":  1,
+                                                                       "max":  11,
+                                                                       "chance":  12
+                                                                   },
+                                                                   {
+                                                                       "key":  "grimy_marrentill_noted",
+                                                                       "item":  202,
+                                                                       "min":  1,
+                                                                       "max":  11,
+                                                                       "chance":  12
+                                                                   },
+                                                                   {
+                                                                       "key":  "grimy_tarromin_noted",
+                                                                       "item":  204,
+                                                                       "min":  1,
+                                                                       "max":  11,
+                                                                       "chance":  12
+                                                                   },
+                                                                   {
+                                                                       "key":  "grimy_harralander_noted",
+                                                                       "item":  206,
+                                                                       "min":  1,
+                                                                       "max":  11,
+                                                                       "chance":  12
+                                                                   },
+                                                                   {
+                                                                       "key":  "grimy_irit_noted",
+                                                                       "item":  210,
+                                                                       "min":  1,
+                                                                       "max":  11,
+                                                                       "chance":  12
+                                                                   },
+                                                                   {
+                                                                       "key":  "grimy_avantoe_noted",
+                                                                       "item":  212,
+                                                                       "min":  1,
+                                                                       "max":  11,
+                                                                       "chance":  12
+                                                                   },
+                                                                   {
+                                                                       "key":  "grimy_kwuarm_noted",
+                                                                       "item":  214,
+                                                                       "min":  1,
+                                                                       "max":  11,
+                                                                       "chance":  12
+                                                                   },
+                                                                   {
+                                                                       "key":  "grimy_cadantine_noted",
+                                                                       "item":  216,
+                                                                       "min":  1,
+                                                                       "max":  11,
+                                                                       "chance":  12
+                                                                   },
+                                                                   {
+                                                                       "key":  "grimy_lantadyme_noted",
+                                                                       "item":  2486,
+                                                                       "min":  1,
+                                                                       "max":  11,
+                                                                       "chance":  12
+                                                                   },
+                                                                   {
+                                                                       "key":  "grimy_ranarr_noted",
+                                                                       "item":  208,
+                                                                       "min":  1,
+                                                                       "max":  11,
+                                                                       "chance":  8
+                                                                   },
+                                                                   {
+                                                                       "key":  "grimy_dwarf_weed_noted",
+                                                                       "item":  218,
+                                                                       "min":  1,
+                                                                       "max":  11,
+                                                                       "chance":  8
+                                                                   },
+                                                                   {
+                                                                       "key":  "diamond_noted",
+                                                                       "item":  1602,
+                                                                       "min":  3,
+                                                                       "max":  5,
+                                                                       "chance":  12
+                                                                   },
+                                                                   {
+                                                                       "key":  "adamant_bar",
+                                                                       "item":  2361,
+                                                                       "min":  3,
+                                                                       "max":  7,
+                                                                       "chance":  12
+                                                                   },
+                                                                   {
+                                                                       "key":  "death_rune",
+                                                                       "item":  560,
+                                                                       "min":  20,
+                                                                       "max":  40,
+                                                                       "chance":  12
+                                                                   },
+                                                                   {
+                                                                       "key":  "lava_rune",
+                                                                       "item":  4699,
+                                                                       "min":  20,
+                                                                       "max":  45,
+                                                                       "chance":  12
+                                                                   },
+                                                                   {
+                                                                       "key":  "law_rune",
+                                                                       "item":  563,
+                                                                       "min":  20,
+                                                                       "max":  45,
+                                                                       "chance":  12
+                                                                   },
+                                                                   {
+                                                                       "key":  "fire_talisman_noted",
+                                                                       "item":  1443,
+                                                                       "min":  2,
+                                                                       "max":  5,
+                                                                       "chance":  12
+                                                                   },
+                                                                   {
+                                                                       "key":  "blood_rune",
+                                                                       "item":  565,
+                                                                       "min":  10,
+                                                                       "max":  20,
+                                                                       "chance":  8
+                                                                   },
+                                                                   {
+                                                                       "key":  "soul_rune",
+                                                                       "item":  566,
+                                                                       "min":  20,
+                                                                       "max":  20,
+                                                                       "chance":  1
+                                                                   },
+                                                                   {
+                                                                       "key":  "coins",
+                                                                       "item":  995,
+                                                                       "min":  3000,
+                                                                       "max":  15000,
+                                                                       "chance":  12
+                                                                   }
+                                                               ]
+                                                 },
+                   "tormented_demon_tertiary":  {
+                                                    "type":  "first",
+                                                    "roll":  512,
+                                                    "drops":  [
+                                                                  {
+                                                                      "key":  "starved_ancient_effigy",
+                                                                      "item":  18778,
+                                                                      "min":  1,
+                                                                      "max":  1,
+                                                                      "chance":  8
+                                                                  },
+                                                                  {
+                                                                      "key":  "ruined_dragon_armour_slice",
+                                                                      "item":  14474,
+                                                                      "min":  1,
+                                                                      "max":  1,
+                                                                      "chance":  2
+                                                                  },
+                                                                  {
+                                                                      "key":  "ruined_dragon_armour_lump",
+                                                                      "item":  14472,
+                                                                      "min":  1,
+                                                                      "max":  1,
+                                                                      "chance":  2
+                                                                  },
+                                                                  {
+                                                                      "key":  "ruined_dragon_armour_shard",
+                                                                      "item":  14476,
+                                                                      "min":  1,
+                                                                      "max":  1,
+                                                                      "chance":  2
+                                                                  },
+                                                                  {
+                                                                      "key":  "court_summons",
+                                                                      "item":  18757,
+                                                                      "min":  1,
+                                                                      "max":  1,
+                                                                      "chance":  1
+                                                                  }
+                                                              ]
+                                                },
+                   "tormented_demon_charms":  {
+                                                  "type":  "first",
+                                                  "roll":  1000,
+                                                  "drops":  [
+                                                                {
+                                                                    "key":  "gold_charm",
+                                                                    "item":  12158,
+                                                                    "min":  3,
+                                                                    "max":  3,
+                                                                    "chance":  224
+                                                                },
+                                                                {
+                                                                    "key":  "green_charm",
+                                                                    "item":  12159,
+                                                                    "min":  3,
+                                                                    "max":  3,
+                                                                    "chance":  112
+                                                                },
+                                                                {
+                                                                    "key":  "crimson_charm",
+                                                                    "item":  12160,
+                                                                    "min":  3,
+                                                                    "max":  3,
+                                                                    "chance":  224
+                                                                },
+                                                                {
+                                                                    "key":  "blue_charm",
+                                                                    "item":  12163,
+                                                                    "min":  3,
+                                                                    "max":  3,
+                                                                    "chance":  358
+                                                                }
+                                                            ]
+                                              }
+               },
+    "excluded":  [
+                     {
+                         "table":  "tormented_demon_tertiary",
+                         "entry":  "hard_clue_scroll",
+                         "reason":  "PARKED: Treasure Trails (Q-057)"
+                     },
+                     {
+                         "table":  "tormented_demon_tertiary",
+                         "entry":  "elite_clue_scroll",
+                         "reason":  "PARKED: Treasure Trails (Q-057)"
+                     }
+                 ]
+}

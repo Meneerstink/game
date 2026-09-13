@@ -35,14 +35,36 @@ import gg.rsmod.plugins.content.combat.strategy.MagicCombatStrategy
 object TormentedDemonCombatScript : CombatScript() {
     override val ids = intArrayOf(Npcs.TORMENTED_DEMON, Npcs.TORMENTED_DEMON_8350, 8351, 8352, 8353, 8354, 8355, 8356, 8357, 8358, 8359, 8360, 8361, 8362, 8363, 8364, 8365, 8366, 8367, 8368, 8369)
 
+    /** Current attack style: 0 melee, 1 magic, 2 ranged. */
     val STYLE = AttributeKey<Int>()
-    val ATTACKS_IN_STYLE = AttributeKey<Int>()
     val SHIELD_DOWN_UNTIL = AttributeKey<Int>()
-    val PRAYING_AGAINST = AttributeKey<Int>()
+
+    /** RCV-012 B7 decision 2 ("15"): Void `tds_change_attack` soft timer. */
+    val STYLE_TIMER = gg.rsmod.game.model.timer.TimerKey()
 
     private const val MELEE_MAX = 18.0
     private const val MAGIC_MAX = 27.0
     private const val RANGED_MAX = 27.0
+
+    /** Void TormentedDemon.kt: a demon spawns in the magic style and first switches after 14-29 ticks. */
+    fun onSpawn(npc: Npc) {
+        npc.attr[STYLE] = 1
+        npc.timers[STYLE_TIMER] = 14 + npc.world.random(15)
+    }
+
+    /**
+     * Void `tds_change_attack` tick: plays the change animation, rotates magic -> ranged -> melee -> magic, blocks attacks
+     * for 6 ticks (`action_delay`) and re-arms for 26 ticks (~15.6 s).
+     */
+    fun switchStyle(npc: Npc) {
+        if (!npc.isAlive()) return
+        npc.animate(CHANGE_ANIM)
+        npc.attr[STYLE] = nextStyle(npc.attr[STYLE] ?: 1)
+        npc.timers[gg.rsmod.game.model.timer.ATTACK_DELAY] = 6
+        npc.timers[STYLE_TIMER] = 26
+    }
+
+    fun nextStyle(style: Int): Int = (style + 1) % 3
 
     override suspend fun handleSpecialCombat(it: QueueTask) {
         val npc = it.npc
@@ -51,26 +73,24 @@ object TormentedDemonCombatScript : CombatScript() {
 
         while (npc.canEngageCombat(target) && npc.isAttackDelayReady()) {
             npc.facePawn(target)
-            var style = npc.attr[STYLE] ?: world.random(2).also { npc.attr[STYLE] = it }
-            var count = npc.attr[ATTACKS_IN_STYLE] ?: 0
-            if (count >= 5) {
-                style = (style + 1 + world.random(1)) % 3
-                npc.attr[STYLE] = style
-                count = 0
-            }
-            npc.attr[ATTACKS_IN_STYLE] = count + 1
+            val style = npc.attr[STYLE] ?: 1
 
             val distance = npc.getFrontFacingTile(target).getDistance(target.tile)
-            when (style) {
-                0 -> {
-                    if (distance <= 2 || npc.moveToAttackRange(it, target, distance = 2, projectile = false)) {
-                        melee(npc, target)
-                    } else {
-                        magic(npc, target)
+            // Void guthix_temple.combat.toml: the active style's section (chance 20) or the splash special (chance 1).
+            if (world.random(SPECIAL_ROLL - 1) == 0) {
+                special(npc, target)
+            } else {
+                when (style) {
+                    0 -> {
+                        if (distance <= 2 || npc.moveToAttackRange(it, target, distance = 2, projectile = false)) {
+                            melee(npc, target)
+                        } else {
+                            magic(npc, target)
+                        }
                     }
+                    1 -> magic(npc, target)
+                    else -> ranged(npc, target)
                 }
-                1 -> magic(npc, target)
-                else -> ranged(npc, target)
             }
 
             npc.postAttackLogic(target)
@@ -130,6 +150,41 @@ object TormentedDemonCombatScript : CombatScript() {
     }
 
     /**
+     * Void TormentedDemon `npcAttack("tormented_demon", "special")`: magic projectile to a random tile within 4 of the
+     * target; on impact the impact gfx lands there and a target still within 1 tile takes 281 (x10) = 28 magic damage.
+     */
+    private fun special(
+        npc: Npc,
+        target: Pawn,
+    ) {
+        val world = npc.world
+        npc.animate(10918)
+        val tile = target.tile.transform(world.random(8) - 4, world.random(8) - 4)
+        world.spawn(npc.createProjectile(tile, 1884, ProjectileType.MAGIC))
+        val delay = MagicCombatStrategy.getHitDelay(npc.getCentreTile(), tile).coerceAtLeast(1)
+        world.queue {
+            wait(delay)
+            world.spawn(gg.rsmod.game.model.TileGraphic(tile, id = 1883, height = 0))
+            if (target.isAlive() && target.tile.height == tile.height && target.tile.isWithinRadius(tile, 1)) {
+                (target as? Player)?.message("The demon's magical attack splashes on you.")
+                target.hit(damage = SPLASH_DAMAGE, type = HitType.MAGIC, delay = 0)
+            }
+        }
+    }
+
+    /** Void combat.toml: the active style section weighs 20, the special 1. */
+    const val SPECIAL_ROLL = 21
+    const val SPLASH_DAMAGE = 28
+
+    /**
+     * Void guthix_temple.anims.toml: 10917 = style change, 10924 = death (Novite's 667 definitions use 10917 as death).
+     * 667 cache lengths (TormentedDemonDropTablesTests): 10917 = 5 ticks, covered by Void's 6-tick action delay after a
+     * change; 10924 = 9 ticks. Owner decision "you choose" (2026-09-13): Void, consistent with the other B7 choices.
+     */
+    const val CHANGE_ANIM = 10917
+    const val DEATH_ANIM = 10924
+
+    /**
      * Incoming-damage rule, applied from the damage pipeline: the demon's shield absorbs 75% of
      * damage while up, and it prays against the last style that hurt it.
      */
@@ -151,7 +206,8 @@ object TormentedDemonCombatScript : CombatScript() {
         val shown = displayedId(npc)
         var result = if (prayedStyle(shown) == style) 0 else damage
         val shieldDown = (npc.attr[SHIELD_DOWN_UNTIL] ?: 0) > world.currentCycle
-        if (damage > 0 && (weaponId == gg.rsmod.plugins.api.cfg.Items.DARKLIGHT || weaponId == gg.rsmod.plugins.api.cfg.Items.SILVERLIGHT)) {
+        // Owner decision 3 ("you choose"): Void - a damaging Darklight or holy water hit lowers the shield for 60 s.
+        if (damage > 0 && (weaponId == gg.rsmod.plugins.api.cfg.Items.DARKLIGHT || weaponId == gg.rsmod.plugins.api.cfg.Items.HOLY_WATER)) {
             npc.attr[SHIELD_DOWN_UNTIL] = world.currentCycle + 100
             if (attacker is Player) attacker.message("The demon is temporarily weakened by your weapon.")
         } else if (!shieldDown) {
