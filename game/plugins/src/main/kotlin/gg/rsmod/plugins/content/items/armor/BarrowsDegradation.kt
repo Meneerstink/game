@@ -1,19 +1,6 @@
 package gg.rsmod.plugins.content.items.armor
 
-import gg.rsmod.game.Server
-import gg.rsmod.game.fs.def.ItemDef
-import gg.rsmod.game.model.World
-import gg.rsmod.game.model.item.ItemAttribute
-import gg.rsmod.game.model.entity.Player
-import gg.rsmod.game.model.item.Item
-import gg.rsmod.game.model.timer.TimerKey
-import gg.rsmod.game.plugin.KotlinPlugin
-import gg.rsmod.game.plugin.PluginRepository
 import gg.rsmod.plugins.api.cfg.Items
-import gg.rsmod.plugins.api.ext.message
-import gg.rsmod.plugins.api.ext.player
-import gg.rsmod.plugins.content.combat.isAttacking
-import gg.rsmod.plugins.content.combat.isBeingAttacked
 
 /**
  * Barrows (and Akrisae's) equipment degradation.
@@ -29,61 +16,9 @@ import gg.rsmod.plugins.content.combat.isBeingAttacked
  * Every id is derived from the production cache constants: each Barrows piece has its base id
  * followed by five consecutive degraded ids (100/75/50/25/0), see [BarrowsPiece].
  */
-class BarrowsDegradation(r: PluginRepository, world: World, server: Server) : KotlinPlugin(r, world, server) {
-    private val degradeCheck = TimerKey()
-
-    init {
-        on_login {
-            player.timers[degradeCheck] = 1
-        }
-
-        on_timer(degradeCheck) {
-            if (player.isAttacking() || player.isBeingAttacked()) {
-                tick(player)
-            }
-            player.timers[degradeCheck] = 1
-        }
-    }
-
-    private fun tick(player: Player) {
-        for (slot in 0 until player.equipment.capacity) {
-            val item = player.equipment[slot] ?: continue
-            val piece = BarrowsPiece.forId(item.id) ?: continue
-            val stage = piece.stageOf(item.id)
-            val def = player.world.definitions.get(ItemDef::class.java, item.id)
-            when {
-                stage == BarrowsPiece.PRISTINE -> {
-                    val replacement = Item(piece.idForStage(BarrowsPiece.FULL), item.amount)
-                    player.equipment.remove(item)
-                    player.equipment.add(replacement, beginSlot = def.equipSlot)
-                    player.equipment[def.equipSlot]!!.attr[ItemAttribute.CHARGES] = STAGE_CYCLES - 1
-                }
-                stage == BarrowsPiece.BROKEN -> {}
-                else -> {
-                    val charges = (item.attr[ItemAttribute.CHARGES] ?: STAGE_CYCLES) - 1
-                    if (charges > 0) {
-                        item.attr[ItemAttribute.CHARGES] = charges
-                    } else {
-                        val next = stage + 1
-                        val replacement = Item(piece.idForStage(next), item.amount)
-                        player.equipment.remove(item)
-                        player.equipment.add(replacement, beginSlot = def.equipSlot)
-                        if (next == BarrowsPiece.BROKEN) {
-                            player.message("<col=ff0000>Your ${piece.displayName} has degraded completely and needs repairing.")
-                        } else {
-                            player.equipment[def.equipSlot]!!.attr[ItemAttribute.CHARGES] = STAGE_CYCLES
-                            player.message("<col=ff0000>Your ${piece.displayName} has degraded.")
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    companion object {
-        /** 15 hours / 4 stages = 3h45m of combat per stage, in 600ms game cycles. */
-        const val STAGE_CYCLES = 22_500
-    }
+object BarrowsDegradation {
+    /** 15 hours / 4 stages = 3h45m of combat per stage, in 600ms game cycles. Ticked by [EquipmentDegradation]. */
+    const val STAGE_CYCLES = 22_500
 }
 
 /**

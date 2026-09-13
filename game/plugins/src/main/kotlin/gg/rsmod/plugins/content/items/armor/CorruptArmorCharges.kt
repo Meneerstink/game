@@ -1,66 +1,12 @@
 package gg.rsmod.plugins.content.items.armor
 
-import gg.rsmod.game.Server
-import gg.rsmod.game.fs.def.ItemDef
-import gg.rsmod.game.model.World
-import gg.rsmod.game.model.item.Item
-import gg.rsmod.game.model.item.ItemAttribute
-import gg.rsmod.game.model.timer.TimerKey
-import gg.rsmod.game.plugin.KotlinPlugin
-import gg.rsmod.game.plugin.PluginRepository
 import gg.rsmod.plugins.api.cfg.Items
-import gg.rsmod.plugins.api.ext.message
-import gg.rsmod.plugins.api.ext.player
-import gg.rsmod.plugins.content.combat.isAttacking
-import gg.rsmod.plugins.content.combat.isBeingAttacked
 
-class CorruptArmorCharges(r: PluginRepository, world: World, server: Server) : KotlinPlugin(r, world, server) {
-
-    private val chargesCheck = TimerKey()
-
-    companion object {
-        const val SIXTY_MINUTE_CHARGE = 6_000
-        const val THIRTY_MINUTE_CHARGE = 3_000
-        const val FIFTEEN_MINUTE_CHARGE = 1_500
-    }
-
-    init {
-        on_login {
-            player.timers[chargesCheck] = 1
-        }
-
-        on_timer(chargesCheck) {
-            if (player.isAttacking() || player.isBeingAttacked()) {
-                player.equipment.forEach {
-                    CorruptArmor.values().forEach { corrupt ->
-                        if (corrupt.newId == it?.id) {
-                            val degradedItem = Item(corrupt.degradedId, it.amount)
-                            val def = player.world.definitions
-                                .get(ItemDef::class.java, it.id)
-                            player.equipment.remove(it)
-                            player.equipment.add(degradedItem, beginSlot = def.equipSlot)
-                            player.equipment[def.equipSlot]!!.attr[ItemAttribute.CHARGES] = corrupt.maxCharges - 1
-                        }
-                        else if (corrupt.degradedId == it?.id) {
-                            if (it.hasAnyAttr()) {
-                                val charges = it.attr[ItemAttribute.CHARGES]
-                                val newCharges = charges!! - 1
-                                it.attr[ItemAttribute.CHARGES] = newCharges
-                                val def = player.world.definitions
-                                    .get(ItemDef::class.java, it.id)
-                                if (newCharges <= 0) {
-                                    val itemName = def.name
-                                    player.message("<col=ff0000>Your $itemName has degraded into dust.")
-                                    player.equipment.remove(it)
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            player.timers[chargesCheck] = 1
-        }
-    }
+/** PvP / corrupt armour combat charge budgets; the degrading itself runs in [EquipmentDegradation] (RCV-011 Q-019). */
+object CorruptArmorCharges {
+    const val SIXTY_MINUTE_CHARGE = 6_000
+    const val THIRTY_MINUTE_CHARGE = 3_000
+    const val FIFTEEN_MINUTE_CHARGE = 1_500
 }
 
 enum class CorruptArmor(val newId: Int, val degradedId: Int, val maxCharges: Int) {
