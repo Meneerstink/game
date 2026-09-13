@@ -5,6 +5,12 @@ Food.values.forEach { food ->
         if (!Foods.canEat(player, food)) {
             return@on_item_option
         }
+        if (gg.rsmod.plugins.content.mechanics.restrictions.ActivityRestrictions.refuse(
+                player, gg.rsmod.plugins.content.mechanics.restrictions.RestrictedAction.EAT,
+            )
+        ) {
+            return@on_item_option
+        }
 
         val inventorySlot = player.getInteractingItemSlot()
         if (player.inventory.remove(item = food.item, beginSlot = inventorySlot).hasSucceeded()) {

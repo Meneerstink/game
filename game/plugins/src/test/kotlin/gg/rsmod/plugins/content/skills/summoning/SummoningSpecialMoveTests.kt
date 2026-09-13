@@ -17,8 +17,16 @@ import gg.rsmod.game.model.skill.SkillSet
 import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.api.cfg.Items
 import io.mockk.every
+import io.mockk.just
+import io.mockk.Runs
+import gg.rsmod.game.message.Message
+import gg.rsmod.game.message.impl.MessageGameMessage
 import io.mockk.mockk
 import io.mockk.verify
+import io.mockk.mockkStatic
+import io.mockk.unmockkStatic
+import gg.rsmod.plugins.api.HitType
+import gg.rsmod.plugins.content.combat.dealHit
 import org.junit.BeforeClass
 import java.lang.ref.WeakReference
 import java.nio.file.Paths
@@ -29,6 +37,37 @@ import kotlin.test.assertNotEquals
 import kotlin.test.assertTrue
 
 class SummoningSpecialMoveTests {
+    @Test
+    fun `steel of legends passes twenty four point four lifepoints per hit without multiplying damage by ten twice`() {
+        val player = newPlayer(SummoningPouchData.STEEL_TITAN.npc)
+        val familiar = Familiar.current(player)!!
+        val target = mockk<Npc>(relaxed = true)
+        every { target.isAlive() } returns true
+        every { target.tile } returns player.tile
+        // Stub on the world mock itself: a chained `every { player.world.x() }` makes MockK re-bind
+        // `player.world` to a fresh child mock, whose relaxed `npcs.contains` then returns false and
+        // Familiar.current() forgets the familiar ("You need a familiar summoned...").
+        val world = player.world
+        val plugins = world.plugins
+        every { world.plugins } returns plugins
+        every { world.getMultiCombatRegions() } returns setOf(player.tile.regionId)
+        every { plugins.canAttack(player, target) } returns true
+        player.inventory[0] = Item(SummoningScrollData.STEEL_OF_LEGENDS_SCROLL.scroll)
+        mockkStatic("gg.rsmod.plugins.content.combat.PawnExtKt")
+        try {
+            every { familiar.dealHit(target, any(), any(), any(), any(), any(), any()) } returns mockk(relaxed = true)
+            val sent = mutableListOf<Message>()
+            every { player.write(*varargAll { sent.add(it); true }) } just Runs
+            assertTrue(
+                SummoningSpecialMoves.castOnNpc(player, target),
+                "castOnNpc refused; player was told: " + sent.filterIsInstance<MessageGameMessage>().map { it.message },
+            )
+            verify(exactly = 4) { familiar.dealHit(target, 0.1, 24.4, true, any(), any(), HitType.RANGE) }
+        } finally {
+            unmockkStatic("gg.rsmod.plugins.content.combat.PawnExtKt")
+        }
+    }
+
     @Test
     fun `dispatcher resolves the right binding by active familiar, not a component id`() {
         // R08: 662/747 have no per-scroll component ids at all (confirmed against the real
@@ -79,18 +118,18 @@ class SummoningSpecialMoveTests {
     }
 
     @Test
-    fun `blood drain deals flat self-damage, cures poison and requires sixty lifepoints`() {
+    fun `blood drain deals flat self-damage, cures poison and requires six lifepoints`() {
         val player = newPlayer(SummoningPouchData.BLOATED_LEECH.npc)
-        every { player.getCurrentLifepoints() } returns 59
+        every { player.getCurrentLifepoints() } returns 5
         player.inventory[0] = Item(Items.BLOOD_DRAIN_SCROLL)
 
         assertFalse(SummoningSpecialMoves.castInstant(player))
         assertEquals(1, player.inventory.getItemCount(Items.BLOOD_DRAIN_SCROLL))
 
-        every { player.getCurrentLifepoints() } returns 60
+        every { player.getCurrentLifepoints() } returns 6
         assertTrue(SummoningSpecialMoves.castInstant(player))
         assertEquals(0, player.inventory.getItemCount(Items.BLOOD_DRAIN_SCROLL))
-        verify { player.alterLifepoints(value = -10) }
+        verify { player.alterLifepoints(value = -1) }
     }
 
     @Test
@@ -145,7 +184,8 @@ class SummoningSpecialMoveTests {
         assertEquals(0, player.inventory.getItemCount(Items.RAW_SHRIMPS))
         assertEquals(1, player.inventory.getItemCount(Items.SWALLOW_WHOLE_SCROLL))
         assertEquals(57, Familiar.currentSpecialPoints(player))
-        verify { player.alterLifepoints(value = 30, capValue = 0) }
+        // RCV-010: shrimps are 30 on the Food x10 ledger = 3 real lifepoints (lifepoints are 1:1).
+        verify { player.alterLifepoints(value = 3, capValue = 0) }
     }
 
     private fun newPlayer(familiarNpcId: Int): Player {
@@ -153,8 +193,9 @@ class SummoningSpecialMoveTests {
         // Real npc update-block table: a relaxed mock returns Objects that break Npc.addBlock.
         every { world.npcUpdateBlocks } returns SummoningTestCache.npcUpdateBlocks
         every { world.definitions } returns DEFINITIONS
-        val npcs = PawnList(arrayOfNulls<Npc>(10))
+        val npcs = mockk<PawnList<Npc>>(relaxed = true)
         every { world.npcs } returns npcs
+        every { npcs.contains(any()) } returns true
         every { world.gameContext.cycleTime } returns 600
         val skills = SkillSet(SkillSet.DEFAULT_SKILL_COUNT)
         for (skill in 0 until SkillSet.DEFAULT_SKILL_COUNT) {
@@ -177,7 +218,6 @@ class SummoningSpecialMoveTests {
         val npcAttributes = AttributeMap()
         every { npc.attr } returns npcAttributes
         every { npc.index } returns 0
-        npcs.entries[0] = npc
         player.attr[FAMILIAR_ATTR] = WeakReference(npc)
         return player
     }

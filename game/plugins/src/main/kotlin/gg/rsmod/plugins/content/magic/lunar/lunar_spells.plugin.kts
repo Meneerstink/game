@@ -223,7 +223,7 @@ on_spell_on_player(430, SpellbookData.HEAL_OTHER.component) {
     val target = player.getInteractingPlayer()
     val metadata = spell(SpellbookData.HEAL_OTHER)
     val transfer = (player.getCurrentLifepoints() * 0.75).toInt()
-    if (player.getCurrentLifepoints() <= 10 || transfer <= 0) {
+    if (player.getCurrentLifepoints() <= 1 || transfer <= 0) {
         player.message("You don't have enough life points to cast this spell.")
         return@on_spell_on_player
     }
@@ -247,7 +247,7 @@ on_magic_spell_button("Heal Group") { metadata ->
         return@on_magic_spell_button
     }
     val pool = (player.getCurrentLifepoints() * 0.75).toInt()
-    if (player.getCurrentLifepoints() <= 10 || pool <= 0) {
+    if (player.getCurrentLifepoints() <= 1 || pool <= 0) {
         player.message("You don't have enough life points to cast this spell.")
         return@on_magic_spell_button
     }
@@ -550,7 +550,7 @@ on_spell_on_item(430, SpellbookData.SPIRITUALISE_FOOD.component) {
     }
     if (player.castLunar(metadata, xp = 80.0, animation = 4413, graphic = 733, height = 130, sound = Sfx.LUNAR_CAST)) {
         if (player.inventory.remove(item.id, 1).hasSucceeded()) {
-            val heal = food.heal * 10
+            val heal = food.hitpoints // Food.heal is the x10 ledger; familiar lifepoints are 1:1
             familiar.setCurrentLifepoints(minOf(familiar.getCurrentLifepoints() + heal, familiar.getMaximumLifepoints()))
             if (player.timers.has(FAMILIAR_LIFETIME_TIMER)) {
                 player.timers[FAMILIAR_LIFETIME_TIMER] = player.timers[FAMILIAR_LIFETIME_TIMER] + 100

@@ -8,6 +8,8 @@ import gg.rsmod.game.model.timer.POISON_TIMER
 import gg.rsmod.game.model.timer.SUPER_ANTIFIRE_TIMER
 import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.api.ext.heal
+import gg.rsmod.plugins.api.ext.hit
+import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.api.ext.restorePrayer
 import gg.rsmod.plugins.content.mechanics.poison.Poison
 import gg.rsmod.plugins.content.mechanics.poison.Venom
@@ -79,10 +81,9 @@ enum class PotionType(
             if (Venom.downgradeToPoison(p)) {
                 return
             }
-            p.timers.remove(POISON_TIMER)
-            p.attr.remove(POISON_TICKS_LEFT_ATTR)
-            p.timers[POISON_IMMUNITY] = 1500
-            Poison.setPoisonVarp(p, Poison.OrbState.NONE)
+            // RCV-010 A3: 90 seconds = 150 ticks (Void `antiPoison(90, SECONDS)`; Novite 86 000 ms).
+            // The previous 1500 ticks was 15 minutes - ten times the 2011 duration.
+            cureAndImmunise(p, PotionEffects.ANTIPOISON_IMMUNITY_TICKS)
         }
     },
     SUPER_ANTIPOISON {
@@ -90,10 +91,8 @@ enum class PotionType(
             if (Venom.downgradeToPoison(p)) {
                 return
             }
-            p.timers.remove(POISON_TIMER)
-            p.attr.remove(POISON_TICKS_LEFT_ATTR)
-            p.timers[POISON_IMMUNITY] = 6000
-            Poison.setPoisonVarp(p, Poison.OrbState.NONE)
+            // 6 minutes = 600 ticks (Void `antiPoison(6)` minutes; Novite 346 000 ms); was 6000.
+            cureAndImmunise(p, PotionEffects.SUPER_ANTIPOISON_IMMUNITY_TICKS)
         }
     },
     ANTIFIRE {
@@ -315,9 +314,119 @@ enum class PotionType(
         override fun apply(p: Player) {
             RunEnergy.renew(p, 20.0)
         }
+    },
+
+    // ---- RCV-010 A3: drinkable 667 potions that had no handler ("Unhandled item action") ----
+
+    /** Novite 667 `Pots.SUPER_ENERGY`: +40 run energy. */
+    SUPER_ENERGY {
+        override fun apply(p: Player) {
+            RunEnergy.renew(p, 40.0)
+        }
+    },
+
+    /** Void 2011 `ZamorakBrew`/`PotionEffects` on its x10 unit, converted to 1:1 lifepoints. */
+    ZAMORAK_BREW {
+        override fun canDrink(p: Player): Boolean {
+            if (p.getCurrentLifepoints() - PotionEffects.zamorakBrewDamage(p) < 0) {
+                p.message("You need more hitpoints in order to survive the effects of the zamorak brew.")
+                return false
+            }
+            return true
+        }
+
+        override fun apply(p: Player) {
+            val damage = PotionEffects.zamorakBrewDamage(p)
+            PotionEffects.boostCapped(p, Skills.ATTACK, 2 + floor(p.skills.getMaxLevel(Skills.ATTACK) * 0.20).toInt())
+            PotionEffects.boostCapped(p, Skills.STRENGTH, 2 + floor(p.skills.getMaxLevel(Skills.STRENGTH) * 0.12).toInt())
+            p.skills.alterCurrentLevel(Skills.DEFENCE, -(2 + floor(p.skills.getMaxLevel(Skills.DEFENCE) * 0.10).toInt()), -124)
+            p.hit(damage)
+        }
+    },
+    EXTREME_ATTACK {
+        override fun canDrink(p: Player) = PotionEffects.notInWilderness(p)
+
+        override fun apply(p: Player) = PotionEffects.applyExtreme(p, Skills.ATTACK)
+    },
+    EXTREME_STRENGTH {
+        override fun canDrink(p: Player) = PotionEffects.notInWilderness(p)
+
+        override fun apply(p: Player) = PotionEffects.applyExtreme(p, Skills.STRENGTH)
+    },
+    EXTREME_DEFENCE {
+        override fun canDrink(p: Player) = PotionEffects.notInWilderness(p)
+
+        override fun apply(p: Player) = PotionEffects.applyExtreme(p, Skills.DEFENCE)
+    },
+    EXTREME_MAGIC {
+        override fun canDrink(p: Player) = PotionEffects.notInWilderness(p)
+
+        override fun apply(p: Player) = PotionEffects.applyExtreme(p, Skills.MAGIC)
+    },
+    EXTREME_RANGING {
+        override fun canDrink(p: Player) = PotionEffects.notInWilderness(p)
+
+        override fun apply(p: Player) = PotionEffects.applyExtreme(p, Skills.RANGED)
+    },
+    OVERLOAD {
+        override fun canDrink(p: Player) = PotionEffects.canDrinkOverload(p)
+
+        override fun apply(p: Player) = PotionEffects.startOverload(p)
+    },
+    PRAYER_RENEWAL {
+        override fun apply(p: Player) = PotionEffects.startPrayerRenewal(p)
+    },
+    RECOVER_SPECIAL {
+        override fun canDrink(p: Player) = PotionEffects.canDrinkRecoverSpecial(p)
+
+        override fun apply(p: Player) = PotionEffects.recoverSpecial(p)
+    },
+
+    /** Void 2011 `sanfew_serum`: super-antipoison cure/immunity plus a super restore. */
+    SANFEW_SERUM {
+        override fun apply(p: Player) {
+            SUPER_ANTIPOISON.apply(p)
+            SUPER_RESTORE.apply(p)
+        }
+    },
+
+    /** Void 2011 `antipoison+`: 9 minutes. */
+    ANTIPOISON_PLUS {
+        override fun apply(p: Player) {
+            if (Venom.downgradeToPoison(p)) return
+            cureAndImmunise(p, PotionEffects.ANTIPOISON_PLUS_IMMUNITY_TICKS)
+        }
+    },
+
+    /** Void 2011 `antipoison++`: 12 minutes. */
+    ANTIPOISON_PLUS_PLUS {
+        override fun apply(p: Player) {
+            if (Venom.downgradeToPoison(p)) return
+            cureAndImmunise(p, PotionEffects.ANTIPOISON_PLUS_PLUS_IMMUNITY_TICKS)
+        }
+    },
+
+    /** Void 2011 `magic_essence`: +3 Magic. */
+    MAGIC_ESSENCE(alteredSkills = intArrayOf(Skills.MAGIC), alterStrategy = arrayOf("r_skill")) {
+        override fun apply(p: Player) {
+            applyBoost(p, alteredSkills, alterStrategy)
+        }
     }, ;
 
     abstract fun apply(p: Player)
+
+    /** Pre-drink gate; a refusal consumes nothing (Novite 667 `Effects.canDrink`). */
+    open fun canDrink(p: Player): Boolean = true
+
+    protected fun cureAndImmunise(
+        p: Player,
+        ticks: Int,
+    ) {
+        p.timers.remove(POISON_TIMER)
+        p.attr.remove(POISON_TICKS_LEFT_ATTR)
+        p.timers[POISON_IMMUNITY] = ticks
+        Poison.setPoisonVarp(p, Poison.OrbState.NONE)
+    }
 
     fun applyBoost(
         p: Player,
@@ -331,13 +440,14 @@ enum class PotionType(
                     p.skills.getMaxLevel(i).toDouble(),
                     alterStrategy[index],
                 )
-            if (i == Skills.CONSTITUTION) {
-                p.heal(boost * 10, cap * 10)
-            }
-            if (i == Skills.PRAYER) {
-                p.restorePrayer(boost * 10, cap * 10)
-            } else {
-                p.skills.alterCurrentLevel(i, boost, cap)
+            // RCV-010 A2: Constitution used to fall through to alterCurrentLevel as well, so the heal
+            // was applied twice (once to the lifepoint varbit, once more to the skill level). Only the
+            // Saradomin brew is a sourced over-maximum heal (Novite `heal(15% + 20, 15%)` on x10); every
+            // other drink heals up to the maximum - capValue is an allowance ABOVE the maximum.
+            when (i) {
+                Skills.CONSTITUTION -> p.heal(boost, if (alterStrategy[index] == "brewHealth") cap else 0)
+                Skills.PRAYER -> p.restorePrayer(boost, cap)
+                else -> p.skills.alterCurrentLevel(i, boost, cap)
             }
         }
     }
@@ -395,6 +505,9 @@ enum class PotionType(
                     } else {
                         -124
                     }
+            // RCV-010 A3: skill potions boost ABOVE the base level (Void `levels.boost(skill, 3)`); cap 0
+            // meant "restore to base only", so fishing/agility/hunter/crafting/fletching did nothing at full level.
+            "r_skill" -> cap = 3
             "beerStrength" -> cap = (currentLevel * 0.04).toInt()
             "dwarvenBoost" -> cap = 1
             "dwarvenDrain" ->

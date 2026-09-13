@@ -27,6 +27,8 @@ enum class OfferStatus {
  * relogs/renames-of-display-name), used to look up a player's own offers.
  * @param pricePerItem the price offered per unit; for a resting order this is
  * also the price other offers can match against.
+ * @param slot the offer box (0..5) the offer occupies on the player's Grand Exchange screen until it has been
+ * finished and fully collected (RCV-010 C3).
  */
 data class GrandExchangeOffer(
     val id: Long,
@@ -40,6 +42,7 @@ data class GrandExchangeOffer(
     var collectableCoins: Long = 0,
     var collectableItems: Int = 0,
     val createdAtMs: Long = System.currentTimeMillis(),
+    val slot: Int = 0,
 ) {
     val remaining: Int
         get() = totalQuantity - quantityFilled

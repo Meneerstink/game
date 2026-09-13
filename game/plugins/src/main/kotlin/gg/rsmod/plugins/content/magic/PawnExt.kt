@@ -3,6 +3,7 @@ package gg.rsmod.plugins.content.magic
 import gg.rsmod.game.fs.def.AnimDef
 import gg.rsmod.game.model.LockState
 import gg.rsmod.game.model.Tile
+import gg.rsmod.game.model.attr.LAST_HIT_BY_ATTR
 import gg.rsmod.game.model.entity.Pawn
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.queue.TaskPriority
@@ -30,7 +31,17 @@ fun Player.canTeleport(type: TeleportType): Boolean {
         return false
     }
 
-    if (timers.has(ACTIVE_COMBAT_TIMER)) {
+    if (gg.rsmod.plugins.content.mechanics.restrictions.ActivityRestrictions.refuse(
+            this, gg.rsmod.plugins.content.mechanics.restrictions.RestrictedAction.TELEPORT,
+        )
+    ) {
+        return false
+    }
+
+    // RCV-005 owner retest 2026-09-13 ("je kunt nog steeds niet wegteleporteren als je in combat
+    // bent"): OSRS lets a player teleport out of NPC combat. The 10-second rule stays only for PvP
+    // (the original "PJ" restriction): it applies when the last hit came from another player.
+    if (timers.has(ACTIVE_COMBAT_TIMER) && attr[LAST_HIT_BY_ATTR]?.get() is Player) {
         message("You can't teleport until 10 seconds after the end of combat.")
         return false
     }

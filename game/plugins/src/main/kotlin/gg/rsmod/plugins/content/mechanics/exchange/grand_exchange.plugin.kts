@@ -59,6 +59,10 @@ on_command("ge_sell") {
         geMsg(player, "$name can't be sold on the Grand Exchange.")
         return@on_command
     }
+    if (service.freeSlot(geUsername(player)) == null) {
+        geMsg(player, "All ${GrandExchangeService.SLOTS} of your Grand Exchange offer slots are in use.")
+        return@on_command
+    }
     // Debit the stock up front so it can never be sold twice - the offer's
     // escrow is now the only place these units exist.
     val removed = player.inventory.remove(item = itemId, amount = quantity, assureFullRemoval = true)
@@ -66,7 +70,10 @@ on_command("ge_sell") {
         geMsg(player, "You don't have $quantity x $name to sell.")
         return@on_command
     }
-    val (offer, _) = service.submit(geUsername(player), OfferType.SELL, itemId, price, quantity)
+    val (offer, _) = service.submit(geUsername(player), OfferType.SELL, itemId, price, quantity) ?: run {
+        player.inventory.add(itemId, quantity)
+        return@on_command
+    }
     geMsg(
         player,
         "Placed sell offer #${offer.id}: $quantity x $name @ ${DecimalFormat().format(price)} gp each. " +
@@ -106,6 +113,10 @@ on_command("ge_buy") {
         geMsg(player, "That offer's total cost is too large.")
         return@on_command
     }
+    if (service.freeSlot(geUsername(player)) == null) {
+        geMsg(player, "All ${GrandExchangeService.SLOTS} of your Grand Exchange offer slots are in use.")
+        return@on_command
+    }
     // Escrow the full cost up front at the buyer's own listed price; any
     // price-improvement difference is refunded automatically on fill.
     val removed = player.inventory.remove(item = Items.COINS_995, amount = totalCost.toInt(), assureFullRemoval = true)
@@ -113,7 +124,10 @@ on_command("ge_buy") {
         geMsg(player, "You don't have ${DecimalFormat().format(totalCost)} gp to place that offer.")
         return@on_command
     }
-    val (offer, _) = service.submit(geUsername(player), OfferType.BUY, itemId, price, quantity)
+    val (offer, _) = service.submit(geUsername(player), OfferType.BUY, itemId, price, quantity) ?: run {
+        player.inventory.add(Items.COINS_995, totalCost.toInt())
+        return@on_command
+    }
     geMsg(
         player,
         "Placed buy offer #${offer.id}: $quantity x $name @ ${DecimalFormat().format(price)} gp each. " +

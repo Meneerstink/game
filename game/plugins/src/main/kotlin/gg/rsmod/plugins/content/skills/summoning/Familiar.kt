@@ -12,13 +12,16 @@ import gg.rsmod.game.model.path.PathRequest
 import gg.rsmod.game.model.path.strategy.BFSPathFindingStrategy
 import gg.rsmod.game.model.timer.TimerKey
 import gg.rsmod.plugins.api.Skills
+import gg.rsmod.plugins.api.cfg.Sfx
 import gg.rsmod.plugins.api.ext.addXp
 import gg.rsmod.plugins.api.ext.heal
 import gg.rsmod.plugins.api.ext.message
+import gg.rsmod.plugins.api.ext.playSound
 import gg.rsmod.plugins.api.ext.getVarbit
 import gg.rsmod.plugins.api.ext.getVarp
 import gg.rsmod.plugins.api.ext.setVarbit
 import gg.rsmod.plugins.api.ext.setVarp
+import gg.rsmod.plugins.content.combat.getCombatTarget
 import java.lang.ref.WeakReference
 
 /**
@@ -75,7 +78,21 @@ val FAMILIAR_LIFETIME_TIMER = TimerKey(persistenceKey = "familiar_lifetime", tic
 
 
 object Familiar {
+    private val APPEARANCE_PENDING = AttributeKey<Boolean>()
     const val MAX_SPECIAL_POINTS = 60
+    /** 2009Scape `Familiar.call()`, fallback source after Void/Novite contain no arrival SFX. */
+    internal const val ARRIVAL_SOUND = Sfx.SUMMON_NPC
+
+    /**
+     * Void `renewSummoningPoints`: obelisk gfx 1516, then after 2 ticks player anim 8502, gfx 1517
+     * and sound 4214. In the revision-667 cache (openrs2 #1473) gfx 1516 -> seq 12377 carries its
+     * own sound 7579; 8502 and 1517 carry none, so 4214 is not duplicated by an attached sound.
+     */
+    internal const val RENEW_OBELISK_GRAPHIC = 1516
+    internal const val RENEW_ANIMATION = 8502
+    internal const val RENEW_PLAYER_GRAPHIC = 1517
+    internal const val RENEW_SOUND = 4214
+    internal const val RENEW_GRAPHIC_TICKS = 2
     private const val SPECIAL_REGEN_SECONDS = 30
     private const val SPECIAL_REGEN_AMOUNT = 15
 
@@ -416,14 +433,33 @@ object Familiar {
      * (see [SummoningAudioTests]'s own note on this, now half-resolved rather than fully silent).
      */
     private fun playAppearanceGraphic(npc: Npc) {
+        // teleportNpc hides the NPC for one sync and that sync clears its update blocks.
+        // Novite also schedules this effect: send it only when the NPC can reappear.
+        if (npc.invisible) {
+            npc.attr[APPEARANCE_PENDING] = true
+            return
+        }
         val size = npc.world.definitions.get(NpcDef::class.java, npc.id).size
         npc.graphic(if (size > 1) 1315 else 1314)
+    }
+
+    internal fun flushAppearanceGraphic(npc: Npc) {
+        if (!npc.invisible && npc.attr[APPEARANCE_PENDING] == true) {
+            npc.attr.remove(APPEARANCE_PENDING)
+            playAppearanceGraphic(npc)
+        }
     }
 
     fun summon(
         player: Player,
         data: SummoningPouchData,
     ): Boolean {
+        if (gg.rsmod.plugins.content.mechanics.restrictions.ActivityRestrictions.refuse(
+                player, gg.rsmod.plugins.content.mechanics.restrictions.RestrictedAction.SUMMON,
+            )
+        ) {
+            return false
+        }
         if (player.skills.getMaxLevel(Skills.SUMMONING) < data.level) {
             player.message("You need a Summoning level of ${data.level} to summon this familiar.")
             return false
@@ -461,7 +497,7 @@ object Familiar {
         // ones are left alone and keep showing none, which is correct for them.
         SummoningCombatLevels.forNpc(npc.id)?.let { npc.setCombatLevel(it) }
         player.world.spawn(npc)
-        playAppearanceGraphic(npc)
+        playArrivalPresentation(player, npc, data)
 
         player.attr[FAMILIAR_ATTR] = WeakReference(npc)
         player.attr[FAMILIAR_NPC_ID_ATTR] = data.npc
@@ -506,7 +542,7 @@ object Familiar {
     fun dismiss(player: Player) {
         val npc = current(player) ?: return
         BeastOfBurden.release(player)
-        player.world.remove(npc)
+        despawnWithAnimation(npc)
         clearState(player)
         player.message("Your familiar is dismissed.")
         updateHud(player)
@@ -574,12 +610,30 @@ object Familiar {
      */
     fun call(player: Player): Boolean {
         val npc = current(player) ?: return false
+        val data = SummoningPouchData.values.firstOrNull { it.npc == npc.id } ?: return false
         npc.teleportNpc(placementTile(player, npc.id))
-        playAppearanceGraphic(npc)
+        playArrivalPresentation(player, npc, data)
         player.message("You call your familiar to your side.")
         FamiliarCombat.recallToOwnerTarget(player)
         updateHud(player)
         return true
+    }
+
+    /**
+     * Shared successful summon/call presentation. Void supplies the roster-wide spawn animation
+     * table and Novite supplies the size-sensitive 1314/1315 graphic. Neither donor contains an
+     * arrival sound; the generic sound 188 comes from 2009Scape's `Familiar.call()` fallback and
+     * is present in this production cache. Its own TODO explicitly records that per-familiar first-
+     * summon sounds were still unknown, so this intentionally does not invent a 78-row sound map.
+     */
+    private fun playArrivalPresentation(
+        player: Player,
+        npc: Npc,
+        data: SummoningPouchData,
+    ) {
+        playAppearanceGraphic(npc)
+        SummoningSpawnDespawnAnimations.spawnAnim(data).takeIf { it != -1 }?.let { npc.animate(it) }
+        player.playSound(ARRIVAL_SOUND)
     }
 
     /**
@@ -622,6 +676,29 @@ object Familiar {
         clearState(owner)
         updateHud(owner)
     }
+    /**
+     * Darkan Pouch.dismiss(): plays the familiar's sourced despawn animation, then removes the npc
+     * three ticks later so the animation has time to play on connected clients, instead of the npc
+     * vanishing instantly. Familiars with no sourced despawn animation (Albino rat only, -1) are
+     * removed immediately, unchanged from the prior behaviour.
+     */
+    private fun despawnWithAnimation(npc: Npc) {
+        val despawnAnim =
+            SummoningPouchData.values.firstOrNull { it.npc == npc.id }
+                ?.let { SummoningSpawnDespawnAnimations.despawnAnim(it) }
+                ?.takeIf { it != -1 }
+        if (despawnAnim == null) {
+            npc.world.remove(npc)
+            return
+        }
+        npc.animate(despawnAnim)
+        val world = npc.world
+        world.queue {
+            wait(3)
+            world.remove(npc)
+        }
+    }
+
     private fun clearState(player: Player) {
         // The Familiar Inventory window belongs to a familiar that no longer exists - close it
         // before the state it renders is gone, on every despawn route (dismiss, expiry, either
@@ -640,7 +717,7 @@ object Familiar {
         npc: Npc,
     ) {
         BeastOfBurden.release(player)
-        player.world.remove(npc)
+        despawnWithAnimation(npc)
         clearState(player)
         player.message("Your familiar has run out of time and returns home.")
         updateHud(player)
@@ -656,6 +733,7 @@ object Familiar {
         // the case the owner reported as "stale Steel titan graphics".
         SummoningUi.settle(player)
         val npc = current(player) ?: return
+        flushAppearanceGraphic(npc)
         regenerateSpecialPoints(player)
         applyPassiveHealing(player, npc)
         SummoningPouchData.values.firstOrNull { it.npc == npc.id }?.let { drainPoints(player, it) }
@@ -706,16 +784,44 @@ object Familiar {
      * different plane, or beyond the distance at which the client can even render it), which is
      * the same "your familiar reappears next to you" behaviour real RS has after a teleport.
      */
+    /** Void `Follow.tick`: a following NPC is only repositioned when it is further than this (Chebyshev) or on another plane. */
+    const val FOLLOW_RECOVERY_DISTANCE = 15
+
+    /**
+     * RCV-010 D2 root cause ("familiar noclips while following"): the recovery teleport used the rounded-up Euclidean
+     * `Tile.getDistance`, so a familiar trailing diagonally (e.g. 11 east + 11 north = 16) was teleported next to its
+     * owner while it could still walk - on screen, a jump through scenery. Void `Follow.kt` teleports a follower only
+     * when the planes differ or the Chebyshev distance (`Tile.distanceTo` → `Distance.chebyshev`) exceeds 15; this is
+     * that rule. Returns "plane", "distance" or null (keep walking).
+     */
+    fun followRecoveryReason(
+        npcTile: Tile,
+        ownerTile: Tile,
+    ): String? =
+        when {
+            npcTile.height != ownerTile.height -> "plane"
+            !npcTile.isWithinRadius(ownerTile, FOLLOW_RECOVERY_DISTANCE) -> "distance"
+            else -> null
+        }
+
     private fun follow(
         player: Player,
         npc: Npc,
     ) {
-        if (npc.tile.height != player.tile.height ||
-            npc.tile.getDistance(player.tile) > Player.NORMAL_VIEW_DISTANCE
-        ) {
+        val recovery = followRecoveryReason(npc.tile, player.tile)
+        if (recovery != null) {
+            // RCV-010 D2 evidence (owner "familiar noclips while following"): every recovery teleport is traced,
+            // so a live repro shows whether a "clip" is this jump or a walk.
+            gg.rsmod.game.model.AvTrace.log {
+                "familiar follow teleport npc=${npc.id} from=${npc.tile} to-owner=${player.tile} " +
+                    "reason=$recovery cycle=${player.world.currentCycle}"
+            }
             npc.teleportNpc(placementTile(player, npc.id))
+            playAppearanceGraphic(npc)
             return
         }
+        // Combat owns its chase path; following must not overwrite it every player tick.
+        if (npc.getCombatTarget()?.isAlive() == true) return
         val ownerRunning = player.isRunning()
         val ownerSteps = player.movementQueue.peekSteps(if (ownerRunning) 2 else 1)
         val target = ownerSteps.lastOrNull()?.tile ?: player.tile
@@ -733,6 +839,11 @@ object Familiar {
                 .clipOverlapTiles()
                 .build()
         val route = BFSPathFindingStrategy(npc.world.collision).calculateRoute(request)
+        if (!route.success) {
+            gg.rsmod.game.model.AvTrace.log {
+                "familiar follow no-route npc=${npc.id} at=${npc.tile} target=$target size=${npc.getSize()} cycle=${player.world.currentCycle}"
+            }
+        }
         /*
          * The familiar must not *stop* on its owner. It may legitimately pass over them - a
          * familiar does not collide with players, which is why [Npc.ignoresEntityCollision] is set

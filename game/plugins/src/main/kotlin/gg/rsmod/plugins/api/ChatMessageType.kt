@@ -27,6 +27,8 @@ enum class ChatMessageType(
     MOD_AUTO_TYPER(91),
     CONSOLE(99),
     TRADE_REQ(100),
+    /** Duel Arena challenge request (Novite 667 `sendDuelChallengeRequestMessage` → message type 101). */
+    DUEL_REQ(101),
     TRADE(102),
     CHALREQ_TRADE(103),
     CHALREQ_FRIENDS_CHAT(104),

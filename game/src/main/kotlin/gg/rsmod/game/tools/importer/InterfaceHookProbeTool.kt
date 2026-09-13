@@ -429,6 +429,9 @@ object InterfaceHookProbeTool {
     /** Model id of one raw component, -1 when the component is not a MODEL(6) or has none. */
     fun componentModelId(data: ByteArray): Int = decodeComponent(data).modelId
 
+    /** The baked right-click op labels of one raw component (index 0 = op1). */
+    fun componentOps(data: ByteArray): List<String?> = decodeComponent(data).ops
+
     /**
      * The baked `width x height` of one raw component. Exposed so a test can pin an interface's
      * own dimensions against the region the server chooses to open it in - a `190x261` root is a

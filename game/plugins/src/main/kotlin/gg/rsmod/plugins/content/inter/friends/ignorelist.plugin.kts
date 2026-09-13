@@ -13,7 +13,13 @@ on_add_ignore {
         return@on_add_ignore
     }
 
-    if (!player.ignoredPlayers.contains(ignoredUsername)) player.ignoredPlayers.add(ignoredUsername)
+    gg.rsmod.plugins.content.inter.friends.SocialListPolicy.addRefusal(
+        gg.rsmod.plugins.content.inter.friends.SocialListPolicy.ListType.IGNORES, ignoredUsername, player.ignoredPlayers,
+    )?.let {
+        player.message(it)
+        return@on_add_ignore
+    }
+    player.ignoredPlayers.add(ignoredUsername)
     player.updateIgnoreList()
     player.updateOthersFriendLists()
 }

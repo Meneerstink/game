@@ -69,6 +69,8 @@ object GrandExchangeCollection {
             } else {
                 collected++
             }
+            // RCV-010 C3: a finished offer that owes nothing gives its offer box back.
+            service.releaseIfDrained(username, id)
         }
 
         return CollectionOutcome(

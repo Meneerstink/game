@@ -28,13 +28,20 @@ import java.util.concurrent.locks.ReentrantLock
  * on a periodic timer: offer mutations are rare compared to game ticks, so
  * the simplicity and crash-safety of always-current data on disk outweighs
  * the cost, matching the hard economy-integrity requirement.
+ *
+ * RCV-010 C3: every offer now occupies one of the player's [SLOTS] offer boxes (the 667 screen has six), a slot is
+ * released only once its offer is finished and nothing is left to collect, and every executed trade feeds the guide
+ * price used by the ±5 % offer range.
  */
-class GrandExchangeService : Service {
+class GrandExchangeService(
+    private val saveFile: File = File("data/ge/offers.json"),
+) : Service {
     private val lock = ReentrantLock()
     private val offers = mutableListOf<GrandExchangeOffer>()
     private val nextId = AtomicLong(1)
     private val gson = GsonBuilder().setPrettyPrinting().create()
-    private val saveFile = File("data/ge/offers.json")
+    private val priceFile: File get() = File(saveFile.parentFile ?: File("."), "guide_prices.json")
+    private val tradePrices = mutableMapOf<Int, MutableList<Int>>()
 
     override fun init(
         server: Server,
@@ -63,17 +70,28 @@ class GrandExchangeService : Service {
         save()
     }
 
-    private fun load() {
-        if (!saveFile.exists()) return
+    fun load() {
         lock.lock()
         try {
-            saveFile.bufferedReader().use { reader ->
-                val type = object : TypeToken<MutableList<GrandExchangeOffer>>() {}.type
-                val loaded: MutableList<GrandExchangeOffer>? = gson.fromJson(reader, type)
-                if (loaded != null) {
-                    offers.clear()
-                    offers.addAll(loaded)
-                    nextId.set((offers.maxOfOrNull { it.id } ?: 0L) + 1)
+            if (saveFile.exists()) {
+                saveFile.bufferedReader().use { reader ->
+                    val type = object : TypeToken<MutableList<GrandExchangeOffer>>() {}.type
+                    val loaded: MutableList<GrandExchangeOffer>? = gson.fromJson(reader, type)
+                    if (loaded != null) {
+                        offers.clear()
+                        offers.addAll(loaded)
+                        nextId.set((offers.maxOfOrNull { it.id } ?: 0L) + 1)
+                    }
+                }
+            }
+            if (priceFile.exists()) {
+                priceFile.bufferedReader().use { reader ->
+                    val type = object : TypeToken<MutableMap<Int, MutableList<Int>>>() {}.type
+                    val loaded: MutableMap<Int, MutableList<Int>>? = gson.fromJson(reader, type)
+                    if (loaded != null) {
+                        tradePrices.clear()
+                        tradePrices.putAll(loaded)
+                    }
                 }
             }
         } catch (e: Exception) {
@@ -87,14 +105,48 @@ class GrandExchangeService : Service {
     private fun save() {
         saveFile.parentFile?.mkdirs()
         saveFile.bufferedWriter().use { writer -> gson.toJson(offers, writer) }
+        priceFile.bufferedWriter().use { writer -> gson.toJson(tradePrices, writer) }
+    }
+
+    /** The first free offer box of [username], or null when all [SLOTS] are in use. */
+    fun freeSlot(username: String): Int? {
+        lock.lock()
+        try {
+            return (0 until SLOTS).firstOrNull { slot -> offers.none { it.username == username && it.slot == slot } }
+        } finally {
+            lock.unlock()
+        }
+    }
+
+    fun offerInSlot(
+        username: String,
+        slot: Int,
+    ): GrandExchangeOffer? {
+        lock.lock()
+        try {
+            return offers.firstOrNull { it.username == username && it.slot == slot }
+        } finally {
+            lock.unlock()
+        }
+    }
+
+    fun ownerOf(offerId: Long): String? {
+        lock.lock()
+        try {
+            return offers.firstOrNull { it.id == offerId }?.username
+        } finally {
+            lock.unlock()
+        }
     }
 
     /**
-     * Submits a new offer and immediately attempts to match it against the
-     * resting book (and, for a buy order, system liquidity). Matching
-     * mutates escrow directly on both sides' [GrandExchangeOffer] objects, so
-     * the returned fills are informational (e.g. for messaging the other
+     * Submits a new offer into [slot] (or the first free slot when [slot] is -1) and immediately attempts to match it
+     * against the resting book (and, for a buy order, system liquidity). Matching mutates escrow directly on both
+     * sides' [GrandExchangeOffer] objects, so the returned fills are informational (e.g. for messaging the other
      * party if online) rather than something the caller needs to apply.
+     *
+     * Returns null, changing nothing, when the requested slot is taken or the player has no free slot left; the
+     * caller must then give back whatever it escrowed.
      */
     fun submit(
         username: String,
@@ -102,9 +154,12 @@ class GrandExchangeService : Service {
         itemId: Int,
         pricePerItem: Int,
         quantity: Int,
-    ): Pair<GrandExchangeOffer, List<GeFill>> {
+        slot: Int = -1,
+    ): Pair<GrandExchangeOffer, List<GeFill>>? {
         lock.lock()
         try {
+            val target = if (slot == -1) freeSlot(username) ?: return null else slot
+            if (target !in 0 until SLOTS || offers.any { it.username == username && it.slot == target }) return null
             val offer =
                 GrandExchangeOffer(
                     id = nextId.getAndIncrement(),
@@ -113,9 +168,11 @@ class GrandExchangeService : Service {
                     itemId = itemId,
                     pricePerItem = pricePerItem,
                     totalQuantity = quantity,
+                    slot = target,
                 )
             offers.add(offer)
             val fills = GrandExchangeBook.match(offers, offer)
+            fills.forEach { recordTrade(itemId, it.unitPrice) }
             save()
             return offer to fills
         } finally {
@@ -186,6 +243,30 @@ class GrandExchangeService : Service {
         }
     }
 
+    /** Zeroes and returns one half of what [offerId] owes: its coins when [coins] is true, otherwise its items. */
+    fun takePart(
+        username: String,
+        offerId: Long,
+        coins: Boolean,
+    ): Long {
+        lock.lock()
+        try {
+            val offer = offers.find { it.id == offerId && it.username == username } ?: return 0
+            val owed: Long
+            if (coins) {
+                owed = offer.collectableCoins
+                offer.collectableCoins = 0
+            } else {
+                owed = offer.collectableItems.toLong()
+                offer.collectableItems = 0
+            }
+            if (owed > 0) save()
+            return owed
+        } finally {
+            lock.unlock()
+        }
+    }
+
     fun restoreCollectable(
         offerId: Long,
         coins: Long,
@@ -200,5 +281,58 @@ class GrandExchangeService : Service {
         } finally {
             lock.unlock()
         }
+    }
+
+    /**
+     * Frees the offer box of [offerId] once the offer is no longer active and owes nothing, so a finished or aborted
+     * offer never keeps a slot (and never disappears while something is still owed). Returns true when released.
+     */
+    fun releaseIfDrained(
+        username: String,
+        offerId: Long,
+    ): Boolean {
+        lock.lock()
+        try {
+            val offer = offers.find { it.id == offerId && it.username == username } ?: return false
+            if (offer.status == OfferStatus.ACTIVE || offer.collectableCoins > 0 || offer.collectableItems > 0) return false
+            offers.remove(offer)
+            save()
+            return true
+        } finally {
+            lock.unlock()
+        }
+    }
+
+    /**
+     * The guide price of [itemId]: the average of its last [PRICE_HISTORY] executed trades, or [fallback] (the
+     * cache item value, the same fallback Void's `ExchangeHistory.marketPrice` uses) before any trade happened.
+     */
+    fun guidePrice(
+        itemId: Int,
+        fallback: Int,
+    ): Int {
+        lock.lock()
+        try {
+            val history = tradePrices[itemId]
+            val price = if (history.isNullOrEmpty()) fallback else (history.sumOf { it.toLong() } / history.size).toInt()
+            return price.coerceAtLeast(1)
+        } finally {
+            lock.unlock()
+        }
+    }
+
+    private fun recordTrade(
+        itemId: Int,
+        price: Int,
+    ) {
+        val history = tradePrices.getOrPut(itemId) { mutableListOf() }
+        history.add(price)
+        while (history.size > PRICE_HISTORY) history.removeAt(0)
+    }
+
+    companion object {
+        /** The revision-667 Grand Exchange screen shows six offer boxes (interface 105). */
+        const val SLOTS = 6
+        const val PRICE_HISTORY = 20
     }
 }

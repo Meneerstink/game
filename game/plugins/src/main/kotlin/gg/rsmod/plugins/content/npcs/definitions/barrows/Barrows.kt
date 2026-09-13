@@ -50,7 +50,9 @@ object Barrows {
     val KILL_LEVELS = AttributeKey<Int>(persistenceKey = "barrows_kill_levels")
     val LOOTED = AttributeKey<Boolean>(persistenceKey = "barrows_looted")
     val EXIT_CORNER = AttributeKey<String>(persistenceKey = "barrows_exit_corner")
-    val PUZZLE_DOOR = AttributeKey<Int>(persistenceKey = "barrows_puzzle_door")
+    /** RCV-010 C1: letters (a..p) of the tunnel doors locked for this run (Void `barrows_door_*` = true). */
+    val LOCKED_DOORS = AttributeKey<String>(persistenceKey = "barrows_locked_doors")
+    const val CHEST_VARBIT = 1394
     val PRAYER_DRAIN_STEP = AttributeKey<Int>()
     val CHEST_OPEN = AttributeKey<Boolean>()
     val COLLAPSE_TICKS = AttributeKey<Int>()
@@ -91,20 +93,41 @@ object Barrows {
 
     /** Corner rooms of the catacombs; the exit rope appears in one of them. */
     enum class Corner(val key: String, val tile: Tile, val ropeVarbit: Int) {
-        NORTH_EAST("north_east", Tile(3568, 9711), -1),
+        // RCV-010 C1: the 667 map's NE rope multiloc 6710 is on varbit 466 (Void barrows_rope_north_east); it was -1,
+        // so a run whose exit was north-east never showed a rope.
+        NORTH_EAST("north_east", Tile(3568, 9711), 466),
         NORTH_WEST("north_west", Tile(3534, 9711), 465),
         SOUTH_WEST("south_west", Tile(3534, 9677), 467),
         SOUTH_EAST("south_east", Tile(3568, 9677), 468),
     }
 
-    /** Tunnel door varbits a..p (469..484); all passable in this port. */
-    val DOOR_VARBITS = (469..484).toList()
+    /**
+     * RCV-010 C1 root cause of "stuck in the tunnels": every tunnel door on the 667 map is a varbit multiloc
+     * (parents 6716-6731 / 6735-6750, varbits 469-484 = Void barrows_door_a..p). Varbit 0 shows the door with
+     * "Open" (6714 / 6733), varbit 1 a door with no option. This port set all sixteen to 1, so no door could be
+     * opened and the solid walls trapped the player. Void `shufflePuzzle`: all doors open, except three of the
+     * exit corner room's four doors and three of the four inner-room puzzle doors.
+     */
+    fun doorVarbit(letter: Char): Int = 469 + (letter - 'a')
 
-    /** Puzzle door object ids (four locked doors into the inner room, two halves each). */
+    val DOOR_LETTERS = ('a'..'p').toList()
+
+    /** Void `barrows_doors` table: the four doors of each corner room. */
+    val CORNER_DOORS = mapOf(
+        "north_east" to listOf('h', 'a', 'g', 'f'),
+        "north_west" to listOf('a', 'b', 'd', 'c'),
+        "south_west" to listOf('p', 'b', 'n', 'k'),
+        "south_east" to listOf('h', 'p', 'm', 'o'),
+    )
+
+    /** Void `barrows_doors.puzzles`: the four inner-room doors. */
+    val PUZZLE_LETTERS = listOf('i', 'j', 'e', 'l')
+
+    /** Puzzle door map objects (multiloc parents on varbits 473/477/478/480, two halves each). */
     val PUZZLE_DOORS = intArrayOf(6739, 6720, 6725, 6744, 6724, 6743, 6727, 6746)
 
-    /** Regular tunnel doors. */
-    val TUNNEL_DOORS = intArrayOf(6714, 6733, 6713, 6732)
+    /** The door children that carry "Open" (6713/6732 are not placed on the 667 map). */
+    val TUNNEL_DOORS = intArrayOf(6714, 6733)
 
     class Puzzle(val options: IntArray, val choices: IntArray, val answer: Int)
 
@@ -155,10 +178,18 @@ object Barrows {
         }
     }
 
-    fun shufflePuzzle(player: Player) {
+    /** Void `shufflePuzzle`: pick the exit corner, one open door of its room and one open puzzle door. */
+    fun shufflePuzzle(player: Player, incorrect: Boolean = false) {
+        val previouslyOpenPuzzle = PUZZLE_LETTERS.firstOrNull { it !in (player.attr[LOCKED_DOORS] ?: "") }
         val corner = Corner.values().random()
         player.attr[EXIT_CORNER] = corner.key
-        player.attr[PUZZLE_DOOR] = PUZZLE_DOORS.random()
+        val cornerDoors = CORNER_DOORS.getValue(corner.key)
+        val validCornerDoor = cornerDoors.random()
+        // An incorrect answer can't pick the same puzzle door again.
+        val puzzleCandidates = if (incorrect && previouslyOpenPuzzle != null) PUZZLE_LETTERS - previouslyOpenPuzzle else PUZZLE_LETTERS
+        val openPuzzle = puzzleCandidates.random()
+        val locked = (cornerDoors.filter { it != validCornerDoor } + PUZZLE_LETTERS.filter { it != openPuzzle }).toSet()
+        player.attr[LOCKED_DOORS] = DOOR_LETTERS.filter { it in locked }.joinToString("")
         refreshVarbits(player)
     }
 
@@ -167,8 +198,10 @@ object Barrows {
         player.setVarbit(KILLS_VARBIT, player.attr[KILLS] ?: 0)
         player.setVarbit(KILLED_MONSTERS_VARBIT, player.attr[KILLED_MONSTERS] ?: 0)
         val corner = player.attr[EXIT_CORNER]
-        Corner.values().forEach { if (it.ropeVarbit != -1) player.setVarbit(it.ropeVarbit, if (it.key == corner) 1 else 0) }
-        DOOR_VARBITS.forEach { player.setVarbit(it, 1) }
+        Corner.values().forEach { player.setVarbit(it.ropeVarbit, if (it.key == corner) 1 else 0) }
+        val locked = player.attr[LOCKED_DOORS] ?: ""
+        DOOR_LETTERS.forEach { player.setVarbit(doorVarbit(it), if (it in locked) 1 else 0) }
+        player.setVarbit(CHEST_VARBIT, if (player.attr[CHEST_OPEN] == true) 1 else 0)
         player.setVarbit(IN_TUNNEL_VARBIT, if (inTunnels(player.tile)) 1 else 0)
     }
 
@@ -236,7 +269,7 @@ object Barrows {
         val step = (player.attr[PRAYER_DRAIN_STEP] ?: 0) + 1
         player.attr[PRAYER_DRAIN_STEP] = step
         val drain = (8 + step - 1).coerceAtMost(13)
-        player.alterPrayerPoints(-drain * 10)
+        player.alterPrayerPoints(-drain)
     }
 
     /** Doors in the tunnels: 12/128 chance to wake a remaining brother, else a crypt creature. */
@@ -328,6 +361,7 @@ object Barrows {
         player.attr.remove(PRAYER_DRAIN_STEP)
         player.attr.remove(CHEST_OPEN)
         player.attr.remove(COLLAPSE_TICKS)
+        player.setVarbit(CHEST_VARBIT, 0)
     }
 
     fun combatLevelOf(npc: Npc): Int = npc.def.combatLevel

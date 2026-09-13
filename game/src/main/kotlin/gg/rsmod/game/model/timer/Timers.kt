@@ -83,6 +83,18 @@ val STUN_TIMER = TimerKey()
 val POISON_TIMER = TimerKey(persistenceKey = "poison", tickOffline = false, resetOnDeath = true)
 
 /**
+ * RCV-010 A3: Overload refresh timer. Fires every 25 ticks (Novite 667 `Player.processEntity`:
+ * `(overloadDelay - 1) % 25 == 0`); the refreshes left are in `OVERLOAD_REFRESHES_ATTR`.
+ */
+val OVERLOAD_TIMER = TimerKey(persistenceKey = "overload", tickOffline = false, resetOnDeath = true)
+
+/** RCV-010 A3: Prayer renewal, ticked every game tick; ticks left in `PRAYER_RENEWAL_TICKS_ATTR`. */
+val PRAYER_RENEWAL_TIMER = TimerKey(persistenceKey = "prayer_renewal", tickOffline = false, resetOnDeath = true)
+
+/** RCV-010 A3: Recover special 30-second re-use delay (Novite 667 `Pots.RECOVER_SPECIAL`). */
+val RECOVER_SPECIAL_TIMER = TimerKey()
+
+/**
  * Timer key for poison immunity ticks.
  */
 val POISON_IMMUNITY = TimerKey(persistenceKey = "poison_immunity", tickOffline = false, resetOnDeath = false)

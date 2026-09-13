@@ -55,6 +55,12 @@ on_button(interfaceId = 884, component = 15) {
  * Toggle special attack.
  */
 on_button(interfaceId = 884, component = 4) {
+    if (gg.rsmod.plugins.content.mechanics.restrictions.ActivityRestrictions.refuse(
+            player, gg.rsmod.plugins.content.mechanics.restrictions.RestrictedAction.SPECIAL_ATTACK,
+        )
+    ) {
+        return@on_button
+    }
     if (SpecialAttacks.executeInstant(player)) {
         return@on_button
     }

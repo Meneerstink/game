@@ -267,7 +267,19 @@ enum class Food(
 
     ;
 
+    /**
+     * RCV-010 A2/B1: [heal] is recorded on the legacy x10 life-point unit (shark 200, rocktail 230 - Void
+     * `Eating`/`Rocktail` use the same figures). Player lifepoints are 1:1, so every consumer heals by
+     * this value, never by [heal] directly.
+     */
+    val hitpoints: Int get() = heal / LEDGER_UNITS_PER_HITPOINT
+
     companion object {
+        const val LEDGER_UNITS_PER_HITPOINT = 10
+
+        /** Rocktail may heal up to 10 life points above maximum (Void `Rocktail`: maximum = 100 on x10). */
+        const val ROCKTAIL_OVERHEAL_HITPOINTS = 10
+
         val values = enumValues<Food>()
     }
 }

@@ -401,6 +401,8 @@ fun Player.openFullscreenInterface(interfaceId: Int) {
 fun Player.closeFullscreenInterface() {
     val display = if (interfaces.displayMode.isResizable()) 746 else 548
     write(IfOpenTopMessage(display, 2))
+    // RCV-010 A4: the restored top level comes back with the cache's baked tab-strip flags.
+    GameframeRebuild.rearm(this)
 }
 
 /**
@@ -591,10 +593,13 @@ fun Player.sendRunEnergy(energy: Int) {
 
 fun Player.playSound(
     id: Int,
-    volume: Int = 1,
+    volume: Int = 255,
     delay: Int = 0,
+    rate: Int = 256,
+    loops: Int = 1,
 ) {
-    write(SynthSoundMessage(sound = id, volume = volume, delay = delay))
+    gg.rsmod.game.model.AvTrace.log { "sound player index=$index id=$id loops=$loops delay=$delay volume=$volume rate=$rate" }
+    write(SynthSoundMessage(sound = id, loops = loops, delay = delay, volume = volume, rate = rate))
 }
 
 fun Player.playJingle(

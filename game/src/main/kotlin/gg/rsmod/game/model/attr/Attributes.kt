@@ -149,6 +149,18 @@ val RING_OF_FORGING_CHARGES = AttributeKey<Int>(persistenceKey = "ring_of_forgin
 val POISON_TICKS_LEFT_ATTR = AttributeKey<Int>(persistenceKey = "poison_ticks_left")
 
 /**
+ * RCV-010 C2: while set, the pawn cannot walk and is told this reason (e.g. Duel Arena "No Movement").
+ * Checked by [gg.rsmod.game.model.entity.Pawn.walkPath]/[gg.rsmod.game.model.entity.Pawn.walkTo]; teleports are unaffected.
+ */
+val MOVEMENT_RESTRICTION_ATTR = AttributeKey<String>()
+
+/** RCV-010 A3: Overload boost refreshes still to come (20 per dose, one per 25 ticks). */
+val OVERLOAD_REFRESHES_ATTR = AttributeKey<Int>(persistenceKey = "overload_refreshes_remaining")
+
+/** RCV-010 A3: Prayer renewal ticks left (Novite 667 `prayerRenewalDelay`, 501 per dose). */
+val PRAYER_RENEWAL_TICKS_ATTR = AttributeKey<Int>(persistenceKey = "prayer_renewal_ticks")
+
+/**
  * The number of venom ticks that have already elapsed since a pawn was envenomed. Counts
  * up (unlike poison's countdown) since venom damage escalates the longer it is active -
  * see [gg.rsmod.plugins.content.mechanics.poison.Venom.damageForTick].
@@ -627,6 +639,11 @@ val NPC_KILL_COUNTS = AttributeKey<MutableMap<String, Int>>(persistenceKey = "np
 val ADDED_FRIEND = AttributeKey<String>()
 
 /**
+ * The item id most recently picked in the chatbox item search (client RESUME_P_OBJDIALOG).
+ */
+val OBJ_DIALOG_ITEM_ATTR = AttributeKey<Int>()
+
+/**
  * An [AttributeKey] containing the name of the player that was deleted
  */
 val DELETED_FRIEND = AttributeKey<String>()
@@ -713,3 +730,14 @@ val MAGIC_IMBUE_ATTR = AttributeKey<Boolean>()
  * matching god cape is worn. Cleared when [gg.rsmod.game.model.timer.GOD_SPELL_CHARGE_TIMER] ends.
  */
 val GOD_SPELL_CHARGE_ATTR = AttributeKey<Boolean>()
+
+/**
+ * Set once this character's persisted lifepoints/prayer-points have been checked against the
+ * legacy x10 storage unit and normalized to the server's 1:1 unit (see `on_login` in
+ * `runetek5.plugin.kts`). Before this flag existed, that check ran on every single login and
+ * inferred "this still looks like a x10 value" purely from magnitude (value greater than the
+ * real max and divisible by ten) - a heuristic that can never fire again once a value is
+ * genuinely 1:1 (current can never exceed max), so it is safe to gate behind a one-time flag
+ * rather than re-run indefinitely for the character's entire lifetime.
+ */
+val LIFEPOINT_SCALE_MIGRATED_ATTR = AttributeKey<Boolean>(persistenceKey = "lifepoint_scale_migrated")

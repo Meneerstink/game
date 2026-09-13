@@ -1,5 +1,6 @@
 package gg.rsmod.plugins.content.skills.summoning
 
+import gg.rsmod.plugins.api.ext.isProtectedFromSummoning
 import gg.rsmod.game.model.combat.CombatClass
 import gg.rsmod.game.model.combat.PawnHit
 import gg.rsmod.game.model.combat.StyleType
@@ -26,6 +27,7 @@ import gg.rsmod.plugins.content.combat.formula.RangedCombatFormula
 import gg.rsmod.plugins.content.combat.getCombatTarget
 import gg.rsmod.plugins.content.combat.getLastHitBy
 import gg.rsmod.plugins.content.combat.isAttackDelayReady
+import gg.rsmod.plugins.content.combat.isBeingAttacked
 import gg.rsmod.plugins.content.combat.moveToAttackRange
 import gg.rsmod.plugins.content.combat.postAttackLogic
 import gg.rsmod.plugins.content.combat.removeCombatTarget
@@ -33,6 +35,32 @@ import gg.rsmod.plugins.content.combat.strategy.MagicCombatStrategy
 
 /** Native combat-engine integration for player-owned Summoning familiars. */
 object FamiliarCombat {
+    /**
+     * RCV-010 A1: every familiar damage figure in this package (the [SummoningCombatDefinitions] ledger's
+     * maxHit and every special-move max hit) is sourced from Void, whose life-point unit is real HP x10
+     * (Vampyre bat 40, Pack yak 125). Hitpoints, hitsplats and [dealHit] are 1:1 real HP, so the
+     * figures are converted here, once, the same way `NpcAttacks` converts its x10 sections (max / 10.0).
+     */
+    const val LEDGER_UNITS_PER_HITPOINT = 10.0
+
+    fun ledgerToHitpoints(ledgerMaxHit: Double): Double = ledgerMaxHit / LEDGER_UNITS_PER_HITPOINT
+
+    /** The single familiar damage boundary: takes a ledger (x10) max hit and deals 1:1 damage. */
+    fun dealLedgerHit(
+        familiar: Npc,
+        target: Pawn,
+        ledgerMaxHit: Double,
+        landHit: Boolean,
+        delay: Int,
+        hitType: HitType,
+        onHit: (PawnHit) -> Unit = {},
+    ): PawnHit {
+        val maxHit = ledgerToHitpoints(ledgerMaxHit)
+        // dealHit rolls in [0.1, maxHit); a max below one real hitpoint can only ever splat 0.
+        val lands = landHit && maxHit > 0.1
+        return familiar.dealHit(target, 0.1, if (lands) maxHit else 1.0, lands, delay, onHit, hitType)
+    }
+
     fun commandAttack(player: Player, target: Pawn, silent: Boolean = false): Boolean {
         val familiar = Familiar.current(player) ?: return false
         val definition = SummoningCombatDefinitions.getByNpc(familiar.id)
@@ -86,10 +114,18 @@ object FamiliarCombat {
         if (current != null && !retarget) return
         val definition = SummoningCombatDefinitions.getByNpc(familiar.id) ?: return
         if (!definition.isExecutable || definition.assistMode == FamiliarAssistMode.NONE) return
-        val target = player.getCombatTarget() ?: return
+        val target = ownerAssistTarget(player, definition.assistMode) ?: return
         if (current === target) return
-        if (definition.assistMode == FamiliarAssistMode.DEFENSIVE_ONLY && player.getLastHitBy() !== target) return
         commandAttack(player, target, silent = true)
+    }
+
+    internal fun ownerAssistTarget(player: Player, mode: FamiliarAssistMode): Pawn? {
+        if (mode == FamiliarAssistMode.NONE) return null
+        // Novite Familiar.processNPC checks the owner's attacked-by delay; Void also assists
+        // from npcCombatStart. A last-hit reference alone can survive long after combat ends.
+        val attacker = player.getLastHitBy()?.takeIf { player.isBeingAttacked() && it.isAlive() }
+        if (mode == FamiliarAssistMode.DEFENSIVE_ONLY) return attacker
+        return player.getCombatTarget()?.takeIf { it.isAlive() } ?: attacker
     }
 
     suspend fun handleCombat(task: QueueTask) {
@@ -126,6 +162,15 @@ object FamiliarCombat {
         familiar.removeCombatTarget()
     }
 
+    /**
+     * Whether [target]'s current overhead is a Summoning protection and therefore stops familiar
+     * damage outright. Shared with [SummoningSpecialMoves] so an ordinary familiar attack and a
+     * special move cannot disagree about whether Deflect Summoning is doing anything - see the
+     * note inside [attack] for the source and for why "does not land" is the sourced outcome
+     * rather than a guessed percentage.
+     */
+    fun blockedBySummoningProtection(target: Pawn): Boolean = target is Player && target.isProtectedFromSummoning()
+
     private fun attack(
         familiar: Npc,
         owner: Player,
@@ -159,16 +204,32 @@ object FamiliarCombat {
             hitDelay = MagicCombatStrategy.getHitDelay(familiar.getCentreTile(), target.getCentreTile())
         }
 
+        /*
+         * Protect from Summoning (normal book, slot 16) and Deflect Summoning (curse book, slot 6)
+         * are the only two prayers in the game whose entire purpose is familiar damage, and until
+         * now neither one did anything at all: their overheads rendered and nothing else happened,
+         * so the curse the owner named as unfinished was cosmetic.
+         *
+         * SOURCE: the overhead itself is proven - Novite's rev-667 `Prayer.getPrayerHeadIcon`
+         * builds exactly this project's `PrayerIcon` ids (curse slot 6 alone -> 15, with Deflect
+         * Melee/Magic/Missiles -> 16/18/17; normal slot 16 alone -> 7, combined -> 8/10/9), and the
+         * 2011 knowledge base describes both as protecting against familiars. Neither donor nor
+         * Darkan implements a damage *number* for it, so none is invented here: this uses the same
+         * outcome this codebase already gives every other protection prayer against a non-player
+         * attacker - the hit does not land (`MeleeCombatFormula.getAccuracy` returns 0.0 when
+         * `pawn !is Player`). A familiar is always an Npc, so that branch is the whole rule and
+         * there is no percentage to guess.
+         */
+        val summoningProtected = target is Player && target.isProtectedFromSummoning()
         val accuracy = formula.getAccuracy(familiar, target)
-        familiar.dealHit(
+        dealLedgerHit(
+            familiar,
             target,
-            0.1,
             definition.maxHit.toDouble(),
-            accuracy >= familiar.world.randomDouble(),
+            !summoningProtected && accuracy >= familiar.world.randomDouble(),
             hitDelay,
-            { hit -> attachOwnerExperience(hit, familiar, owner, target) },
             hitType,
-        )
+        ) { hit -> attachOwnerExperience(hit, familiar, owner, target) }
     }
 
     /**

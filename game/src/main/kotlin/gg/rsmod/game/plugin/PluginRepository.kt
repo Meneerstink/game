@@ -287,6 +287,12 @@ class PluginRepository(
     private val objectPlugins = Int2ObjectOpenHashMap<Int2ObjectOpenHashMap<Plugin.() -> Unit>>()
 
     /**
+     * Data-driven handlers consulted, in registration order, only when no [objectPlugins] entry
+     * claimed an object option. Each returns true when it handled the click.
+     */
+    private val objectFallbacks = mutableListOf<(Player, gg.rsmod.game.model.entity.GameObject, Int) -> Boolean>()
+
+    /**
      * A map that contains items and any objects that they may be used on, and it's
      * respective plugin logic.
      */
@@ -421,6 +427,11 @@ class PluginRepository(
      * their friend list
      */
     private val addFriendPlugins = mutableListOf<Plugin.() -> Unit>()
+
+    /**
+     * Plugins invoked when the client answers a chatbox item search (RESUME_P_OBJDIALOG).
+     */
+    private val objDialogPlugins = mutableListOf<Plugin.() -> Unit>()
 
     /**
      * A list of plugins that will be invoked when a player deletes another player from
@@ -784,10 +795,34 @@ class PluginRepository(
         pluginCount++
     }
 
+    /**
+     * RCV-005 root cause (owner 2026-09-13: "the Aviansie is flying too high" spammed the chat without
+     * attacking): hooks message the player when they refuse an attack, but this check also runs for
+     * automatic attacks (auto-retaliate on every incoming hit). Hooks must only message while
+     * [notifyAttackRefusal] is true, i.e. for an attack the player actually started.
+     */
+    var notifyAttackRefusal: Boolean = true
+        private set
+
+    /**
+     * [notify] defaults to false: validity checks (familiar combat every tick, familiar specials, area scans)
+     * must stay silent. Only [gg.rsmod.game.model.entity.Pawn.attack] passes true, for an attack the player
+     * actually started - the first fix left the default at true, so a familiar fighting an Aviansie still
+     * spammed the owner's chat every tick (owner retest 2026-09-13).
+     */
     fun canAttack(
         attacker: Pawn,
         target: Pawn,
-    ): Boolean = canAttackPlugins.all { it(attacker, target) }
+        notify: Boolean = false,
+    ): Boolean {
+        val previous = notifyAttackRefusal
+        notifyAttackRefusal = notify
+        try {
+            return canAttackPlugins.all { it(attacker, target) }
+        } finally {
+            notifyAttackRefusal = previous
+        }
+    }
 
     fun bindPlayerPreDeath(plugin: Plugin.() -> Unit) {
         playerPreDeathPlugins.add(plugin)
@@ -1325,10 +1360,21 @@ class PluginRepository(
         pluginCount++
     }
 
+    /** RCV-010 C2: requirements that apply to every item (e.g. Duel Arena equipment locks). */
+    private val globalEquipRequirementPlugins = mutableListOf<(Player, Int) -> Boolean>()
+
+    fun bindGlobalEquipRequirement(plugin: (Player, Int) -> Boolean) {
+        globalEquipRequirementPlugins.add(plugin)
+        pluginCount++
+    }
+
     fun executeEquipItemRequirement(
         p: Player,
         item: Int,
     ): Boolean {
+        if (globalEquipRequirementPlugins.any { !it(p, item) }) {
+            return false
+        }
         val plugin = equipItemRequirementPlugins[item]
         if (plugin != null) {
             /*
@@ -1783,6 +1829,16 @@ class PluginRepository(
         return true
     }
 
+    fun bindObjectFallback(handler: (Player, gg.rsmod.game.model.entity.GameObject, Int) -> Boolean) {
+        objectFallbacks.add(handler)
+    }
+
+    fun executeObjectFallback(
+        p: Player,
+        obj: gg.rsmod.game.model.entity.GameObject,
+        opt: Int,
+    ): Boolean = objectFallbacks.any { it(p, obj, opt) }
+
     fun bindNpc(
         npc: Int,
         opt: Int,
@@ -1898,6 +1954,14 @@ class PluginRepository(
         globalGroundItemPickUp.forEach { plugin ->
             p.executePlugin(plugin)
         }
+    }
+
+    fun bindObjDialog(plugin: Plugin.() -> Unit) {
+        objDialogPlugins.add(plugin)
+    }
+
+    fun executeObjDialog(p: Player) {
+        objDialogPlugins.forEach { plugin -> p.executePlugin(plugin) }
     }
 
     fun bindAddFriend(plugin: Plugin.() -> Unit) {

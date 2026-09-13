@@ -233,6 +233,12 @@ object Prayers {
         if (p.isDead() || !p.lock.canUsePrayer()) {
             p.syncVarp(ACTIVE_PRAYERS_VARP)
             return
+        } else if (gg.rsmod.plugins.content.mechanics.restrictions.ActivityRestrictions.refuse(
+                p, gg.rsmod.plugins.content.mechanics.restrictions.RestrictedAction.PRAYER,
+            )
+        ) {
+            p.syncVarp(ACTIVE_PRAYERS_VARP)
+            return
         } else if (!checkRequirements(it, prayer)) {
             return
         } else if (prayer.group == PrayerGroup.OVERHEAD && p.timers.has(DISABLE_OVERHEADS)) {
@@ -321,7 +327,10 @@ object Prayers {
             p.attr.remove(PRAYER_DRAIN_COUNTER)
             return
         }
-        val drainResistance = getDrainResistance(p)
+        // Prayer points are now stored/displayed 1:1. The source drain counter still advances in
+        // tenths-of-a-point units, so one whole point must consume ten resistance thresholds.
+        // This preserves the sourced drain cadence while removing the old 990-point storage unit.
+        val drainResistance = getDrainResistance(p) * 10
         var prayerDrainCounter = p.attr.getOrDefault(PRAYER_DRAIN_COUNTER, 0) + drainRate
         while (prayerDrainCounter >= drainResistance) {
             p.decreasePrayerPoints(1)
@@ -384,6 +393,12 @@ object Prayers {
         p: Player,
         option: Int,
     ) {
+        if (gg.rsmod.plugins.content.mechanics.restrictions.ActivityRestrictions.refuse(
+                p, gg.rsmod.plugins.content.mechanics.restrictions.RestrictedAction.PRAYER,
+            )
+        ) {
+            return
+        }
         if (p.isDead() || !p.lock.canUsePrayer()) {
             p.setVarc(QUICK_PRAYERS_ACTIVE_VARC, 0)
             return
@@ -442,7 +457,7 @@ object Prayers {
 
     fun rechargePrayerPoints(player: Player) {
         player.skills.alterCurrentLevel(Skills.PRAYER, player.skills.getMaxLevel(Skills.PRAYER))
-        player.setCurrentPrayerPoints(player.skills.getMaxLevel(Skills.PRAYER) * 10)
+        player.setCurrentPrayerPoints(player.skills.getMaxLevel(Skills.PRAYER))
     }
 
     private suspend fun checkRequirements(

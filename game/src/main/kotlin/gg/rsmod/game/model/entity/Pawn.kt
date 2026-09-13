@@ -256,11 +256,15 @@ abstract class Pawn(
     /**
      * Initiate combat with [target].
      */
-    fun attack(target: Pawn) {
+    fun attack(
+        target: Pawn,
+        notifyRefusal: Boolean = true,
+    ) {
         if (isAlive() && !invisible) {
             // Audit finding 13 (R14.26): refuse the whole attack (either direction) if a
             // registered plugin blocks it - see PluginRepository.canAttack's doc comment.
-            if (!world.plugins.canAttack(this, target)) {
+            // [notifyRefusal] is false for automatic attacks (auto-retaliate), so a refusing hook stays silent.
+            if (!world.plugins.canAttack(this, target, notifyRefusal)) {
                 return
             }
 
@@ -323,12 +327,26 @@ abstract class Pawn(
      * Handle a single cycle for [pendingHits].
      */
     fun hitsCycle() {
-        val hitIterator = pendingHits.iterator()
-        iterator@ while (hitIterator.hasNext()) {
+        // Iterate a snapshot rather than pendingHits itself: hit.actions (Deflect/Vengeance/Ring
+        // of recoil and any future "on damage dealt/taken" hook - see
+        // gg.rsmod.plugins.content.combat.PawnExt.dealHit and DamageResponse.kt) can, in general,
+        // call addHit() again on this same pawn while its own actions are still running. That is
+        // a same-tick reentrant write into pendingHits while a *live* Iterator over it is active,
+        // which threw ConcurrentModificationException and broke this pawn's cycle (and every
+        // later pawn's, since GameService.cycle stops the whole task on an uncaught exception)
+        // for the rest of that tick. A hit added mid-cycle this way is simply picked up on the
+        // pawn's next cycle instead - at most one tick later, never dropped - rather than
+        // crashing the loop.
+        val hitsToProcess = ArrayList(pendingHits)
+        processing@ for (hit in hitsToProcess) {
             if (isDead()) {
                 break
             }
-            val hit = hitIterator.next()
+            if (hit !in pendingHits) {
+                // Already resolved (and removed) earlier in this same cycle - defensive only,
+                // should not normally happen since each hit in the snapshot is only visited once.
+                continue
+            }
 
             if (lock.delaysDamage()) {
                 hit.damageDelay = Math.max(0, hit.damageDelay - 1)
@@ -358,19 +376,19 @@ abstract class Pawn(
                          * terminate all queues and begin the death logic.
                          */
                         if (getCurrentLifepoints() <= 0) {
-                            hit.actions.forEach { action -> action(hit) }
+                            hit.invokeActions()
                             if (entityType.isPlayer) {
                                 executePlugin(PlayerDeathAction.deathPlugin)
                             } else {
                                 executePlugin(NpcDeathAction.deathPlugin)
                             }
-                            hitIterator.remove()
-                            break@iterator
+                            pendingHits.remove(hit)
+                            break@processing
                         }
                     }
-                    hit.actions.forEach { action -> action(hit) }
+                    hit.invokeActions()
                 }
-                hitIterator.remove()
+                pendingHits.remove(hit)
             }
         }
         if (isDead() && pendingHits.isNotEmpty()) {
@@ -402,6 +420,11 @@ abstract class Pawn(
             if (this is Player) {
                 write(SetMapFlagMessage(255, 255))
             }
+            return
+        }
+
+        attr[gg.rsmod.game.model.attr.MOVEMENT_RESTRICTION_ATTR]?.let { reason ->
+            if (this is Player) writeMessage(reason)
             return
         }
 
@@ -461,6 +484,11 @@ abstract class Pawn(
          * Already standing on requested destination.
          */
         if (tile.x == x && tile.z == z) {
+            return
+        }
+
+        attr[gg.rsmod.game.model.attr.MOVEMENT_RESTRICTION_ATTR]?.let { reason ->
+            if (this is Player) writeMessage(reason)
             return
         }
 
@@ -620,11 +648,15 @@ abstract class Pawn(
         delay: Int = 0,
         rotation: Int = 0,
     ) {
-        blockBuffer.graphicId = id
-        blockBuffer.graphicHeight = height
-        blockBuffer.graphicDelay = delay
-        blockBuffer.graphicRotation = rotation
-        addBlock(UpdateBlockType.GFX)
+        // Up to four graphics per tick, each in its own client spot-anim slot (see GraphicBlock).
+        val slot = blockBuffer.putGraphic(id, height, delay, rotation)
+        gg.rsmod.game.model.AvTrace.log {
+            "graphic ${entityType} index=$index at=$tile id=$id height=$height delay=$delay rot=$rotation slot=$slot" +
+                (if (slot < 0) " (duplicate this tick)" else "")
+        }
+        if (slot >= 0) {
+            addBlock(gg.rsmod.game.sync.block.GraphicBlock.SLOTS[slot])
+        }
     }
 
     fun graphic(graphic: Graphic) {
@@ -691,21 +723,33 @@ abstract class Pawn(
     /**
      * Resets any interaction this pawn had with another pawn.
      */
-    fun resetInteractions() {
-        attr.remove(COMBAT_TARGET_FOCUS_ATTR)
+    /**
+     * @param preserveCombat RC-1: keep the combat target and facing, for actions that do not end
+     * combat (eating, equipping, a familiar command or other interface-target action).
+     */
+    fun resetInteractions(preserveCombat: Boolean = false) {
+        if (!preserveCombat) {
+            attr.remove(COMBAT_TARGET_FOCUS_ATTR)
+        }
         attr.remove(INTERACTING_NPC_ATTR)
         attr.remove(INTERACTING_PLAYER_ATTR)
-        resetFacePawn()
+        if (!preserveCombat) {
+            resetFacePawn()
+        }
     }
 
+    /**
+     * @param persistent see [QueueTask.persistent]; only the combat loop should set it.
+     */
     fun queue(
         priority: TaskPriority = TaskPriority.STANDARD,
+        persistent: Boolean = false,
         logic: suspend QueueTask.(CoroutineScope) -> Unit,
     ) {
         if (this is Player && priority == TaskPriority.STRONG) {
             this.closeInterfaceModal()
         }
-        queues.queue(this, world.coroutineDispatcher, priority, logic)
+        queues.queue(this, world.coroutineDispatcher, priority, logic, persistent = persistent)
     }
 
     /**
@@ -743,12 +787,16 @@ abstract class Pawn(
     /**
      * Terminates specific interactions/queues
      * based on parameters given
+     *
+     * @param preserveCombat RC-1 soft interruption: the combat target and the persistent combat
+     * loop survive. Hard stops (walking, a new entity interaction, teleport) leave it false.
      */
     fun fullInterruption(
         movement: Boolean = false,
         interactions: Boolean = false,
         animations: Boolean = false,
         queue: Boolean = false,
+        preserveCombat: Boolean = false,
     ) {
         if (this is Player) {
             if (isResting()) {
@@ -760,13 +808,13 @@ abstract class Pawn(
             stopMovement()
         }
         if (interactions) {
-            resetInteractions()
+            resetInteractions(preserveCombat)
         }
         if (animations) {
             animate(-1)
         }
         if (queue) {
-            queues.terminateTasks()
+            queues.terminateTasks(keepPersistent = preserveCombat)
         }
     }
 

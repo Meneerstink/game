@@ -393,6 +393,25 @@ out-packets:
       - name: energy
         type: BYTE
 
+  - message: gg.rsmod.game.message.impl.UpdateStockmarketSlotMessage
+    type: FIXED
+    opcode: 61
+    structure:
+      - name: slot
+        type: BYTE
+      - name: status
+        type: BYTE
+      - name: item
+        type: SHORT
+      - name: price
+        type: INT
+      - name: count
+        type: INT
+      - name: completed_count
+        type: INT
+      - name: completed_gold
+        type: INT
+
   - message: gg.rsmod.game.message.impl.MessageGameMessage
     type: VARIABLE_BYTE
     opcode: 102
@@ -470,13 +489,13 @@ out-packets:
     structure:
       - name: sound
         type: SHORT
-      - name: volume
+      - name: loops
         type: BYTE
       - name: delay
         type: SHORT
-      - name: unknown_byte
+      - name: volume
         type: BYTE
-      - name: unknown_short
+      - name: rate
         type: SHORT
 
   - message: gg.rsmod.game.message.impl.SynthSoundRepeatMessage
@@ -491,6 +510,25 @@ out-packets:
         type: SHORT
       - name: volume
         type: BYTE
+
+  # ServerProt.SOUND_AREA(65, 8) / ZoneProt.SOUND_AREA in the revision-667 client.
+  # Void's 667 encoder independently confirms this exact untransformed field order.
+  - message: gg.rsmod.game.message.impl.SoundAreaMessage
+    type: FIXED
+    opcode: 65
+    structure:
+      - name: tile
+        type: BYTE
+      - name: sound
+        type: SHORT
+      - name: settings
+        type: BYTE
+      - name: delay
+        type: BYTE
+      - name: playback_volume
+        type: BYTE
+      - name: rate
+        type: SHORT
 
   - message: gg.rsmod.game.message.impl.UpdateZonePartialFollowsMessage
     type: FIXED
@@ -1360,6 +1398,31 @@ in-packets:
         type: BYTE
       - name: index
         type: SHORT
+
+  # Novite InputPacketHandler and the 667 client's ClientProt/ScriptRunner agree:
+  # both text responses have a byte payload length and a null-terminated string.
+  - message: gg.rsmod.game.message.impl.ResumePStringDialogMessage
+    type: VARIABLE_BYTE
+    opcode: 59
+    structure:
+      - name: input
+        type: STRING
+
+  - message: gg.rsmod.game.message.impl.ResumePNameDialogMessage
+    type: VARIABLE_BYTE
+    opcode: 7
+    structure:
+      - name: name
+        type: STRING
+
+  - message: gg.rsmod.game.message.impl.ResumeObjDialogMessage
+    type: FIXED
+    opcode: 13
+    length: 2
+    structure:
+      - name: item
+        type: SHORT
+        sign: UNSIGNED
 
   - message: gg.rsmod.game.message.impl.ResumePCountDialogMessage
     type: FIXED

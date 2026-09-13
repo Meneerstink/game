@@ -28,6 +28,7 @@ class MessageEncoderSet {
         put(UpdateInvFullEncoder(), UpdateInvFullMessage::class.java)
         put(MessageGameEncoder(), MessageGameMessage::class.java)
         put(UpdateRunEnergyEncoder(), UpdateRunEnergyMessage::class.java)
+        put(UpdateStockmarketSlotEncoder(), UpdateStockmarketSlotMessage::class.java)
         put(LogoutFullEncoder(), LogoutFullMessage::class.java)
         put(VarpSmallEncoder(), VarpSmallMessage::class.java)
         put(VarpLargeEncoder(), VarpLargeMessage::class.java)

@@ -39,7 +39,11 @@ on_add_friend {
         return@on_add_friend
     }
 
-    if (!player.friends.contains(newFriend)) player.friends.add(newFriend)
+    SocialListPolicy.addRefusal(SocialListPolicy.ListType.FRIENDS, newFriend, player.friends)?.let {
+        player.message(it)
+        return@on_add_friend
+    }
+    player.friends.add(newFriend)
     player.updateFriendList()
     player.updateOthersFriendLists()
 }

@@ -80,17 +80,11 @@ suspend fun QueueTask.familiarDialogue(
      * frames for a human expression rig, so the portrait was being driven by a sequence built for
      * a different model entirely.
      *
-     * [FacialExpression.NONE] stopped the corruption - `MainLogicManager` clears the component's
-     * animator outright on -1 - but a resting, unmoving portrait for a live creature reads as
-     * wrong in its own way (owner report, this round: "the familiar animation when interacting
-     * with it is still wrong"). The chathead component takes any sequence, not just the named
-     * humanoid expressions, so [SummoningUi.resolveIdleAnimation] - the same real, sourced
-     * `NpcDef.basId` -> `BasDef.idleAnimation()` lookup the Follower Details panel already
-     * animates itself with - is used here too when the familiar has one. [FacialExpression.NONE]
-     * remains the fallback for the small number of familiars that resolve no idle animation at
-     * all, so a familiar is never given an animation that is not genuinely its own. The player's
-     * own lines keep their expressions, because a player head is exactly what those sequences are
-     * for.
+     * The correct sequence is Void's own shared familiar-details route: the familiar selector from
+     * varbit 4282 keys cache enum 1276, or enum 1275 with 50 subtracted for values above 50. That is
+     * the same route clientscript 751 uses for interface 662, and it supplies chathead sequences
+     * rather than world BAS animations. Phoenix is absent from Void's selector map, so it stays on
+     * [FacialExpression.NONE] instead of receiving a guessed substitute.
      */
     // `chatNpc`/`chatPlayer` default to `wrap = false`, i.e. exactly one dialogue line however
     // long the text is. The sourced Knowledge Base conversation lines routinely run well past what
@@ -99,7 +93,7 @@ suspend fun QueueTask.familiarDialogue(
     // round. `wrap = true` is the same fix every other long NPC dialogue in this codebase already
     // uses (see e.g. town_crier.plugin.kts): it splits the text with `TextWrapping.wrap` first and
     // picks the dialogue interface with enough lines for the result.
-    val idleAnimation = SummoningUi.resolveIdleAnimation(player, npcId)
+    val chatheadAnimation = SummoningUi.resolveChatheadAnimation(player, npcId)
     conversations.random().forEach { line ->
         when {
             line.speaker == SummoningDialogueData.Speaker.PLAYER -> chatPlayer(line.speech, wrap = true)
@@ -108,7 +102,7 @@ suspend fun QueueTask.familiarDialogue(
                     line.speech,
                     npc = npcId,
                     facialExpression = FacialExpression.NONE,
-                    animationOverride = idleAnimation,
+                    animationOverride = chatheadAnimation,
                     wrap = true,
                 )
             else ->
@@ -117,7 +111,7 @@ suspend fun QueueTask.familiarDialogue(
                     line.translation,
                     npc = npcId,
                     facialExpression = FacialExpression.NONE,
-                    animationOverride = idleAnimation,
+                    animationOverride = chatheadAnimation,
                     wrap = true,
                 )
         }
@@ -223,6 +217,15 @@ SummoningCombatDefinitions.executableCombatValues.forEach { definition ->
                 }
             }
             stats {
+                // The sourced familiar ledger stores lifepoints on the historical x10 scale, same
+                // as every other hand-written NpcCombatDsl call site - NpcCombatDsl.stats{} itself
+                // is the single shared runtime boundary that converts to the 1:1 hitpoints unit.
+                // (Previously this line ALSO divided by 10 before handing the value to stats{},
+                // which then divided by 10 again - every familiar's live HP was 10x too low, e.g.
+                // a familiar with a sourced/real 150 HP was published with 15, and anything with
+                // real HP below 10 was floored to 1. Caught by NpcCombatDsl's new require() guard,
+                // which throws on this file's already-divided values because they are frequently
+                // not themselves multiples of ten.)
                 hitpoints = definition.hitpoints
                 attack = definition.attack
                 strength = definition.strength
@@ -239,7 +242,7 @@ SummoningCombatDefinitions.executableCombatValues.forEach { definition ->
                 attackBonus = definition.attack
                 strengthBonus = definition.strength
                 rangedStrengthBonus = definition.maxHit
-                magicDamageBonus = definition.maxHit / 10
+                magicDamageBonus = definition.maxHit
             }
             anims {
                 attack = definition.attackAnimation
@@ -383,6 +386,13 @@ on_login {
     // The client is freshly rebuilt at this point and holds none of the IF_SETHIDE state the
     // server last sent, so the panel/orb gating has to be re-sent unconditionally.
     Familiar.redrawInterfaces(player)
+    // RCV-010 A4: the same restore runs after every gameframe top-level rebuild (GameframeRebuild), e.g. closing the
+    // world map, not only on login and window-mode switches.
+    gg.rsmod.plugins.api.ext.GameframeRebuild.register("summoning") { p ->
+        Familiar.redrawInterfaces(p)
+        SummoningUi.restorePanel(p)
+        FollowerDetailsTab.install(p)
+    }
     // Owner requirement (2026-09-09): the Follower Details tab is a permanent fixture, armed the
     // same way regardless of whether a familiar is currently out - see FollowerDetailsTab.
     // Mount its empty-or-populated panel as well; focusTab(95) cannot open an unmounted slot.
@@ -410,7 +420,7 @@ on_login {
 // Owner requirement (2026-09-09): the Follower Details tab button, in both layout modes - see
 // FollowerDetailsTab. Always opens the panel slot; what that slot currently shows (a familiar, or
 // genuinely empty) is SummoningUi.refreshPanel's job, not this handler's.
-FollowerDetailsTab.buttons.forEach { (pane, button) ->
+FollowerDetailsTab.clickTargets.forEach { (pane, button) ->
     on_button(pane, button) {
         FollowerDetailsTab.open(player)
     }

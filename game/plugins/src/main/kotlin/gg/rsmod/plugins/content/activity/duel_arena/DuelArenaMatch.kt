@@ -32,6 +32,12 @@ class DuelArenaMatch(
     var stage = DuelStage.CONFIGURING
     var arenaTile: gg.rsmod.game.model.Tile? = null
 
+    /** RCV-010 C2-a: friendly duels use interfaces 637/639 and carry no stake. */
+    var friendly = false
+
+    /** True once both players accepted the rules screen and the confirmation screen (626/639) is shown. */
+    var confirming = false
+
     fun other(player: Player): Player = if (player == challenger) opponent else challenger
 
     fun stakeOf(player: Player): ItemContainer = if (player == challenger) challengerStake else opponentStake

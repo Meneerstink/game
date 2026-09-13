@@ -803,6 +803,9 @@ abstract class KotlinPlugin(
         logic: (Plugin).() -> Boolean,
     ) = r.bindEquipItemRequirement(item, logic)
 
+    /** Return false from [logic] to block equipping any item (checked before per-item requirements). */
+    fun can_equip_any_item(logic: (player: Player, item: Int) -> Boolean) = r.bindGlobalEquipRequirement(logic)
+
     /**
      * Invoke [logic] when [item] is equipped.
      */
@@ -988,6 +991,11 @@ abstract class KotlinPlugin(
      * Invoke [plugin] when a player is added to the friend list
      */
     fun on_add_friend(plugin: Plugin.() -> Unit) = r.bindAddFriend(plugin)
+
+    /**
+     * Invoke [plugin] when the client returns an item from the chatbox item search; the id is in OBJ_DIALOG_ITEM_ATTR.
+     */
+    fun on_obj_dialog(plugin: Plugin.() -> Unit) = r.bindObjDialog(plugin)
 
     /**
      * Invoke [plugin] when a player is deleted from the friend list

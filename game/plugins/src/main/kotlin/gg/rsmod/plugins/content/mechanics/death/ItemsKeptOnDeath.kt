@@ -37,7 +37,7 @@ import gg.rsmod.plugins.api.ext.setVarcString
 object ItemsKeptOnDeath {
     const val INTERFACE_ID = 17
 
-    /** 17:30 "What if I entered the Wilderness?" / "Back". */
+    /** 17:28, cache op1 "Toggle" (label "What if I entered the Wilderness?" / "Back" set by CS2 4597). */
     const val TOGGLE_COMPONENT = 28
 
     /** 17:13 "Close". */

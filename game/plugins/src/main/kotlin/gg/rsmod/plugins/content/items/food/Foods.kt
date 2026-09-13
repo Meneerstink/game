@@ -41,15 +41,18 @@ object Foods {
                 else -> null
             }
 
+        // Both the food table and the kebab roll are on the x10 ledger unit; lifepoints are 1:1.
         val heal =
             when {
-                food == Food.KEBAB -> kebabEffect?.first ?: 0
-                else -> food.heal
+                food == Food.KEBAB -> (kebabEffect?.first ?: 0) / Food.LEDGER_UNITS_PER_HITPOINT
+                else -> food.hitpoints
             }
 
+        // capValue is an allowance ABOVE the maximum (Player.alterLifepoints). The old value,
+        // current level + 10, let a rocktail raise HP to nearly twice the maximum.
         val overHeal =
             when (food) {
-                Food.ROCKTAIL -> p.skills.getCurrentLevel(Skills.CONSTITUTION) + 10
+                Food.ROCKTAIL -> Food.ROCKTAIL_OVERHEAL_HITPOINTS
                 else -> 0
             }
 
@@ -66,7 +69,12 @@ object Foods {
         }
 
         p.timers[delay] = food.tickDelay
-        p.timers[ATTACK_DELAY] = food.tickDelay
+        // OSRS: eating mid-attack delays the next attack by the food's delay on top of what is
+        // left; out of combat it adds no attack delay (OSRS Wiki Food; Void Eating.consume + tests).
+        // It used to overwrite the timer, which shortened a longer remaining attack delay.
+        if (p.timers.has(ATTACK_DELAY)) {
+            p.timers[ATTACK_DELAY] = p.timers[ATTACK_DELAY] + food.tickDelay
+        }
 
         if (food == Food.KARAMBWAN) {
             // Eating Karambwans also blocks drinking potions.
@@ -111,8 +119,8 @@ object Foods {
                 Pair(0, "That kebab didn't seem to do a lot.")
             }
             randomNumber < 69.95 -> {
-                // Common: Heals 10% of total health
-                val healAmount = (player.skills.getMaxLevel(Skills.CONSTITUTION) * 0.1).toInt()
+                // Common: Heals 10% of total health (x10 ledger: 10% of max*10 = the max level)
+                val healAmount = player.skills.getMaxLevel(Skills.CONSTITUTION)
                 Pair(healAmount, "It restores some health.")
             }
             randomNumber < 91.07 -> {

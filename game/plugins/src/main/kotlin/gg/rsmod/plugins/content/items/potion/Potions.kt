@@ -25,7 +25,12 @@ object Potions {
         player: Player,
         potion: Potion,
     ) {
-        if (!canDrink(player)) {
+        if (!canDrink(player) ||
+            gg.rsmod.plugins.content.mechanics.restrictions.ActivityRestrictions.refuse(
+                player, gg.rsmod.plugins.content.mechanics.restrictions.RestrictedAction.DRINK,
+            ) ||
+            !potion.potionType.canDrink(player)
+        ) {
             return
         }
         val slot = player.getInteractingItemSlot()

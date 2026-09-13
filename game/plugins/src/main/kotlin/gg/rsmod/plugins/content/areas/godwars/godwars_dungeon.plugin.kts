@@ -125,7 +125,9 @@ EquipmentType.values.forEach { slot ->
 can_attack { attacker, target ->
     if (attacker is Player && target is Npc && GodWars.isFlyingArmadylNpc(target.id)) {
         if (CombatConfigs.getCombatClass(attacker) == CombatClass.MELEE) {
-            attacker.message("The Aviansie is flying too high for you to attack using melee.")
+            if (attacker.world.plugins.notifyAttackRefusal) {
+                attacker.message("The Aviansie is flying too high for you to attack using melee.")
+            }
             return@can_attack false
         }
     }
@@ -140,7 +142,10 @@ God.values().filter { it.doorId != -1 && it != God.ZAROS }.forEach { god ->
     on_obj_option(obj = god.doorId, option = "open") {
         val obj = player.getInteractingGameObj()
         if (god.inChamber(player.tile)) {
-            walkThroughDoor(player, obj.tile, god.chamberExit)
+            // Owner decision RCV-005 2026-09-13: the chamber door is entered once and cannot be used
+            // to leave; the altar's Teleport option is the way out. (The old exit tiles also put the
+            // player inside a wall.) Message text is provisional - no 667 source found yet.
+            player.message("The door won't open from this side.")
             return@on_obj_option
         }
         val kc = GodWars.getKillCount(player, god)
@@ -175,7 +180,9 @@ God.values().filter { it.altarId != -1 }.forEach { god ->
             return@on_obj_option
         }
         if (player.timers.has(ACTIVE_COMBAT_TIMER)) {
-            player.message("You cannot recharge your prayer while under attack.")
+            // Void GodwarsAltars.kt:26-27 and Novite 667 controlers/impl/GodWars.java:97-98 both refuse while in combat,
+            // with exactly this text.
+            player.message("You cannot recharge your prayer while engaged in combat.")
             return@on_obj_option
         }
         player.attr[GodWars.ALTAR_RECHARGE] = world.currentCycle
@@ -278,6 +285,8 @@ on_obj_option(obj = Objs.ROPE_26293, option = "climb") {
  * Boulder (60 Strength, 60 Agility) and the little crack (60 Agility) on the surface route.
  * ---------------------------------------------------------------------------------------- */
 
+// REVISION_ABSENT (RCV-010 D8): Boulder 26338 is not placed anywhere on the revision-667 map (production and pristine openrs2
+// 667 caches, `GodWarsCacheProbeTests`); Void 634 binds it. Binding kept, unreachable in 667 - SOURCE_CONFLICT.
 on_obj_option(obj = Objs.BOULDER_26338, option = "move") {
     val obj = player.getInteractingGameObj()
     if (player.skills.getCurrentLevel(Skills.STRENGTH) < 60) {
@@ -303,6 +312,8 @@ on_obj_option(obj = Objs.BOULDER_26338, option = "move") {
     }
 }
 
+// REVISION_ABSENT (RCV-010 D8): Little crack 26305 is not placed anywhere on the revision-667 map (production and pristine openrs2
+// 667 caches, `GodWarsCacheProbeTests`); Void 634 binds it. Binding kept, unreachable in 667 - SOURCE_CONFLICT.
 on_obj_option(obj = Objs.LITTLE_CRACK, option = "crawl-through") {
     if (player.skills.getCurrentLevel(Skills.AGILITY) < 60) {
         player.message("You need an Agility level of 60 to squeeze through this crack.")
@@ -534,6 +545,30 @@ on_obj_option(obj = Objs.ROPE_57260, option = "climb") {
         wait(2)
         player.moveTo(Tile(2887, 5276, 0))
         player.unlock()
+    }
+}
+
+/*
+ * RCV-010 D8: the Frozen door. Novite 667 `GodWars.java` handles it under id 75089, which is not a revision-667 object
+ * (absent from both the production and the pristine openrs2 667 cache), so the door was never bound. The 667 map places
+ * `Frozen door` 57211 (op1 Open) at (2884,5276,2); Novite's semantics are applied to that id: with the Frozen key the
+ * player is flung into the Ancient Prison at (2887,5278,0), otherwise the key-hole message. Novite's inside-gate branch
+ * (y <= 5278 on its plane-0 object) cannot occur for the plane-2 667 door and is not ported.
+ */
+on_obj_option(obj = Objs.FROZEN_DOOR, option = "open") {
+    if (!player.inventory.contains(Items.FROZEN_KEY_20120)) {
+        player.queue { messageBox("You try to push the door open, but it wont budge.... It looks like there is some kind of key hole.") }
+        return@on_obj_option
+    }
+    player.message("You flash the key in front of the door")
+    player.queue {
+        player.lock()
+        player.animate(1133)
+        wait(1)
+        player.moveTo(Tile(2887, 5278, 0))
+        wait(1)
+        player.unlock()
+        player.message("...and a strange force flings you in.")
     }
 }
 

@@ -87,8 +87,9 @@ object CorporealBeastCombatScript : CombatScript() {
     // Void's source stores this rule as 320 in its historical x10 hitmark unit. The local
     // runtime now passes 1:1 real damage from PawnExt, so the gameplay threshold is 32.
     private const val CORE_SPAWN_HIT_THRESHOLD = 32
-    private const val CORE_DRAIN_MIN = 10
-    private const val CORE_DRAIN_MAX = 130
+    // RCV-010 B1: 10..130 is the donor x10 figure; the header's "steals 1-13 life points" is the 1:1 value.
+    private val CORE_DRAIN_MIN = LifepointUnits.fromLedger(10)
+    private val CORE_DRAIN_MAX = LifepointUnits.fromLedger(130)
     private const val CORE_ATTACK_SPEED = 2
     private const val CORE_POISONED_ATTACK_SPEED = 12
     private const val CORE_RETARGET_DELAY = 3
@@ -154,7 +155,7 @@ object CorporealBeastCombatScript : CombatScript() {
 
     /**
      * Damage dealt to the beast is halved unless the attacker is a player using a spear or halberd on the
-     * stab style. [damage] and the return value are in the x10 hitmark scale.
+     * stab style. [damage] and the return value use the local 1:1 real-damage scale.
      */
     fun modifyIncomingDamage(
         attacker: Pawn,
@@ -228,7 +229,8 @@ object CorporealBeastCombatScript : CombatScript() {
                         if (core.isSpawned() && !core.isDead()) world.remove(core)
                     }
                 } else if (count >= 8) {
-                    npc.setCurrentLifepoints(minOf(max, npc.getCurrentLifepoints() + 250 + count * 50))
+                    // Void `levels.restore(Constitution, 250 + count * 50)` is x10: 25 + 5 per player (header).
+                    npc.setCurrentLifepoints(minOf(max, npc.getCurrentLifepoints() + LifepointUnits.fromLedger(250 + count * 50)))
                 }
             }
         }
@@ -303,6 +305,10 @@ object CorporealBeastCombatScript : CombatScript() {
         target: Pawn,
         world: World,
     ) {
+        // RCV-005: melee comes from Void corporeal_beast.combat.toml via the shared model. The magic attacks stay
+        // in this script: Novite lets 60% of their damage through Protect/Deflect Magic, while Void's data hit
+        // would be fully blocked by the prayer (SOURCE_CONFLICT, owner to decide).
+        if (gg.rsmod.plugins.content.combat.attack.NpcAttacks.attackWith(npc, target, "melee")) return
         npc.prepareAttack(CombatClass.MELEE, StyleType.CRUSH, WeaponStyle.AGGRESSIVE)
         npc.animate(if (world.random(1) == 0) ANIM_SLAP else ANIM_SWIPE)
         val landHit = MeleeCombatFormula.getAccuracy(npc, target) >= world.randomDouble()
@@ -342,7 +348,7 @@ object CorporealBeastCombatScript : CombatScript() {
                         target.message("Your Summoning has been slightly drained!")
                     }
                     else -> {
-                        target.setCurrentPrayerPoints((target.getCurrentPrayerPoints() - (100 + world.random(400))).coerceAtLeast(0))
+                        target.setCurrentPrayerPoints((target.getCurrentPrayerPoints() - (10 + world.random(40))).coerceAtLeast(0))
                         target.message("Your Prayer has been slightly drained!")
                     }
                 }

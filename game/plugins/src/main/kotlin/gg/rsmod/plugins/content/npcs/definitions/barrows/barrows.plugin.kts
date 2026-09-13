@@ -68,9 +68,10 @@ on_obj_option(obj = Objs.ROPE_6708, option = "climb-up") {
     on_obj_option(obj = door, option = "open") {
         val obj = player.getInteractingGameObj()
         player.queue {
-            if (door in Barrows.PUZZLE_DOORS && !Barrows.inInnerRoom(player.tile)) {
+            // The click dispatches the transformed child (6714/6733); the puzzle doors are identified by the map object.
+            if (obj.id in Barrows.PUZZLE_DOORS && !Barrows.inInnerRoom(player.tile)) {
                 if (!solvePuzzle(this)) {
-                    Barrows.shufflePuzzle(player)
+                    Barrows.shufflePuzzle(player, incorrect = true)
                     player.message("You got the puzzle wrong! You can hear the catacombs moving around you.")
                     return@queue
                 }
@@ -144,6 +145,8 @@ intArrayOf(2, 3, 5).forEachIndexed { index, component ->
 
 on_obj_option(obj = Objs.CHEST_6774, option = "open") {
     player.attr[Barrows.CHEST_OPEN] = true
+    // RCV-010 C1: map chest 10284 is a multiloc on varbit 1394; without it the chest never became 6775 (Search).
+    player.setVarbit(Barrows.CHEST_VARBIT, 1)
     val brother = Brother.byKey(player.attr[Barrows.SELECTED_BROTHER] ?: Brother.DHAROK.key)
     if (!Barrows.isKilled(player, brother) && Barrows.liveBrother(player, brother) == null) {
         var tile = Barrows.CHEST_TILES.random()
@@ -168,6 +171,7 @@ on_obj_option(obj = Objs.CHEST_6775, option = "search") {
 
 on_obj_option(obj = Objs.CHEST_6775, option = "close") {
     player.attr.remove(Barrows.CHEST_OPEN)
+    player.setVarbit(Barrows.CHEST_VARBIT, 0)
 }
 
 /* ---------------------------------------- timers ---------------------------------------- */

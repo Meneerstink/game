@@ -9,6 +9,7 @@ import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.game.model.skill.SkillSet
 import gg.rsmod.game.model.timer.POISON_TIMER
+import gg.rsmod.game.model.timer.TimerKey
 import gg.rsmod.plugins.api.HitType
 import gg.rsmod.plugins.api.NpcSkills
 import gg.rsmod.plugins.api.ProjectileType
@@ -19,6 +20,7 @@ import gg.rsmod.plugins.api.ext.isMulti
 import gg.rsmod.plugins.api.ext.heal
 import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.api.ext.openJewelleryCraftingInterface
+import gg.rsmod.plugins.api.ext.playSound
 import gg.rsmod.plugins.api.ext.restorePrayer
 import gg.rsmod.plugins.api.ext.sendRunEnergy
 import gg.rsmod.plugins.api.ext.setVarbit
@@ -77,6 +79,36 @@ object SummoningSpecialMoves {
     /** Summoning orb overlay, and its permanently-separate "Spell, Cast" special-move button. */
     private const val ORB_INTERFACE = 747
     private const val SPECIAL_MOVE_COMPONENT = 25
+
+    /**
+     * Scroll-spam guard and successful-cast presentation from Void
+     * `Summoning.castFamiliarSpecial`: a 3-tick `familiar_special_delay`, then player animation
+     * 7660, graphic 1316 and `summoning_special_cast` sound 4161.
+     */
+    internal const val SPECIAL_MOVE_DELAY_TICKS = 3
+    internal const val SPECIAL_CAST_ANIMATION = 7660
+    internal const val SPECIAL_CAST_GRAPHIC = 1316
+    internal const val SPECIAL_CAST_SOUND = 4161
+
+    /**
+     * Void `FamiliarCombatSpecials`: Abyssal Drain plays `abyssal_drain` anim 7672, gfx 1422 and
+     * projectile 1423; Explode plays `chinchompa_explode` anim 7758 and gfx 1364. Their audio is
+     * attached in the revision-667 cache itself (openrs2 #1473): seq 7672 frames 0/3 carry sounds
+     * 6538(/6537) and 6540, gfx 1364 -> seq 7757 frame 1 carries 7164. The client plays those, so
+     * no server-side sound is sent for either special.
+     */
+    internal const val ABYSSAL_DRAIN_ANIMATION = 7672
+    internal const val ABYSSAL_DRAIN_GRAPHIC = 1422
+    internal const val ABYSSAL_DRAIN_PROJECTILE = 1423
+
+    /** Pre-6-Nov-2017 Abyssal Drain: "restores up to 5 prayer points" (1:1 prayer-point unit). */
+    internal const val ABYSSAL_DRAIN_PRAYER_RESTORE = 5
+
+    /** Titan's Constitution heal and above-maximum allowance: 80 life points (x10 scale) = 8 HP. */
+    internal const val TITANS_CONSTITUTION_HEAL = 8
+    internal const val EXPLODE_ANIMATION = 7758
+    internal const val EXPLODE_GRAPHIC = 1364
+    internal val SPECIAL_MOVE_DELAY_TIMER = TimerKey()
 
     /** 747:25's own baked `events`: op1 ("Cast") and op10. Preserved when a target mask is added. */
     private const val BAKED_EVENTS = 0x402
@@ -214,6 +246,10 @@ object SummoningSpecialMoves {
         FamiliarSpecialBinding(SummoningScrollData.SWALLOW_WHOLE_SCROLL, FamiliarSpecialTarget.INVENTORY_ITEM),
     )
 
+    /** Animation, source graphic and projectile of a direct combat special, for provenance tests. */
+    internal fun directSpecialVisuals(scroll: SummoningScrollData): Triple<Int, Int, Int>? =
+        directCombat[scroll]?.let { Triple(it.animation, it.sourceGraphic, it.projectile) }
+
     private val directCombat = mapOf(
         SummoningScrollData.DREADFOWL_STRIKE_SCROLL to DirectFamiliarSpecial(30.0, 5387, 1523, 1318),
         SummoningScrollData.SLIME_SPRAY_SCROLL to DirectFamiliarSpecial(80.0, 8148, 1385, 1386, 1387, HitType.RANGE),
@@ -236,17 +272,16 @@ object SummoningSpecialMoves {
         SummoningScrollData.MITHRIL_BULL_RUSH_SCROLL to DirectFamiliarSpecial(160.0, 8026, 1496, 1497, hitType = HitType.RANGE),
         SummoningScrollData.RUNE_BULL_RUSH_SCROLL to DirectFamiliarSpecial(240.0, 8026, 1496, 1497, hitType = HitType.RANGE),
         SummoningScrollData.EBON_THUNDER_SCROLL to DirectFamiliarSpecial(140.0, 7986, 1492, 1493, 1494),
-        // Toad Bark/Abyssal Drain: no unique special-move animation/graphic is published, so these
-        // reuse the familiar's own real, verified normal-attack animation from
-        // SummoningCombatDefinitions (Barker Toad 7260 / Abyssal Parasite 8910) rather than a
-        // guessed id. Abyssal Drain's own damage figure isn't published either, so it also reuses
-        // Abyssal Parasite's own normal max hit (70).
-        SummoningScrollData.TOAD_BARK_SCROLL to DirectFamiliarSpecial(1152.0, 7260, hitType = HitType.RANGE),
-        SummoningScrollData.ABYSSAL_DRAIN_SCROLL to DirectFamiliarSpecial(70.0, 8910),
-        // Vampyre Touch: no unique special-move animation/max hit is published either, so this
-        // reuses Vampyre Bat's own real, verified melee normal-attack animation and max hit from
-        // SummoningCombatDefinitions (4915 / 40) - same convention as Toad Bark/Abyssal Drain.
-        SummoningScrollData.VAMPIRE_TOUCH_SCROLL to DirectFamiliarSpecial(40.0, 4915, hitType = HitType.MELEE),
+        // Every max hit in this table is on the x10 ledger unit (FamiliarCombat.dealLedgerHit).
+        // RCV-010: Toad Bark 300, Abyssal Drain 95 and Vampyre Touch 120 are Void 2011
+        // `FamiliarCombatSpecials` figures; the previous 1152/70/40 were a modern-wiki figure and two
+        // reused normal-attack max hits. Toad Bark keeps Barker Toad's verified attack animation 7260;
+        // Abyssal Drain's presentation is Void's `abyssal_drain` (see ABYSSAL_DRAIN_ANIMATION);
+        // Vampyre Touch keeps Vampyre Bat's verified melee attack animation 4915.
+        SummoningScrollData.TOAD_BARK_SCROLL to DirectFamiliarSpecial(300.0, 7260, hitType = HitType.RANGE),
+        SummoningScrollData.ABYSSAL_DRAIN_SCROLL to
+            DirectFamiliarSpecial(95.0, ABYSSAL_DRAIN_ANIMATION, ABYSSAL_DRAIN_GRAPHIC, ABYSSAL_DRAIN_PROJECTILE),
+        SummoningScrollData.VAMPIRE_TOUCH_SCROLL to DirectFamiliarSpecial(120.0, 4915, hitType = HitType.MELEE),
     )
 
     fun validate() {
@@ -543,7 +578,9 @@ object SummoningSpecialMoves {
             SummoningScrollData.TITANS_CONSTITUTION_SCROLL -> {
                 val defenceBoost = ceil(player.skills.getMaxLevel(Skills.DEFENCE) * 0.125).toInt()
                 boost(player, Skills.DEFENCE, defenceBoost)
-                player.heal(80, capValue = 80)
+                // 80 life points on the historical x10 scale = 8 HP in the 1:1 unit; capValue is the
+                // allowance above maximum, so it is scaled the same way (was 80/80 = 10x overheal).
+                player.heal(TITANS_CONSTITUTION_HEAL, capValue = TITANS_CONSTITUTION_HEAL)
                 when (familiar.id) {
                     SummoningPouchData.FIRE_TITAN.npc -> animateSelf(player, familiar, 7835, 1514, 1307)
                     SummoningPouchData.ICE_TITAN.npc -> animateSelf(player, familiar, 7837, 1512, 1306)
@@ -566,11 +603,12 @@ object SummoningSpecialMoves {
                 executeAoe(player, familiar, maxTargets = 2, radius = 3, maxHit = 70.0, animation = 8257, targetGraphic = 1329)
             SummoningScrollData.SANDSTORM_SCROLL ->
                 executeAoe(player, familiar, maxTargets = 6, radius = 6, maxHit = 200.0, animation = 8517, sourceGraphic = 1350, projectile = 1349)
-            // Dust Cloud: wiki gives damage/target-count (791/6) but not a radius, so this reuses
-            // Sandstorm's own real radius (6) as the closest verified precedent rather than a
-            // guess; animation/projectile are Smoke Devil's own real normal-attack ids.
+            // Dust Cloud (instant cast): Void 2011 `FamiliarCombatSpecials` smoke_devil_familiar -
+            // up to 6 targets within radius 1, max 80 (x10 ledger). RCV-010 SOURCE_CONFLICT: the
+            // previous 791 came from a modern wiki page (post-2011 life-point figure), not 2011 data.
+            // Animation/projectile remain Smoke Devil's own real normal-attack ids.
             SummoningScrollData.DUST_CLOUD_SCROLL ->
-                executeAoe(player, familiar, maxTargets = 6, radius = 6, maxHit = 791.0, animation = 7816, projectile = 1376)
+                executeAoe(player, familiar, maxTargets = 6, radius = 1, maxHit = 80.0, animation = 7816, projectile = 1376)
             SummoningScrollData.EGG_SPAWN_SCROLL -> {
                 // Exact per-cast distribution isn't published beyond "up to 8" - uniform 1..8.
                 val count = player.world.random(1..8)
@@ -618,8 +656,8 @@ object SummoningSpecialMoves {
             }
             SummoningScrollData.BLOOD_DRAIN_SCROLL -> {
                 // Pre-6-Nov-2017 values (this cache predates that patch, which buffed the
-                // threshold 60 -> 600 and the damage 10 -> 100).
-                if (player.getCurrentLifepoints() < 60) {
+                // threshold 6 -> 60 and the damage 1 -> 10).
+                if (player.getCurrentLifepoints() < 6) {
                     player.message("Your leech needs you to have more life points to feed.")
                     false
                 } else {
@@ -634,7 +672,7 @@ object SummoningSpecialMoves {
                     }
                     player.timers.remove(POISON_TIMER)
                     player.attr.remove(POISON_TICKS_LEFT_ATTR)
-                    player.alterLifepoints(value = -10)
+                    player.alterLifepoints(value = -1)
                     familiar.animate(7657)
                     true
                 }
@@ -711,13 +749,10 @@ object SummoningSpecialMoves {
                 true
             }
             SummoningScrollData.EXPLODE_SCROLL -> {
-                // Wiki: "damaging up to 9 other targets" but no radius is published - reuses
-                // Sandstorm's own real radius (6) as the closest verified precedent. Also "has a
-                // higher max hit than the chinchompa's normal attacks" but no exact number -
-                // reuses the chinchompa's own real normal-attack max hit (38, from
-                // SummoningCombatDefinitions) as a disclosed floor, not the true higher value.
+                // Void 2011 `FamiliarCombatSpecials` chinchompa_explode: up to 9 targets, radius 6,
+                // max 120 (x10 ledger; wiki: higher than the chinchompa's normal max hit of 38).
                 // The familiar destroys itself in the process, per the wiki.
-                val exploded = executeAoe(player, familiar, maxTargets = 9, radius = 6, maxHit = 38.0, animation = 7758)
+                val exploded = executeAoe(player, familiar, maxTargets = 9, radius = 6, maxHit = 120.0, animation = EXPLODE_ANIMATION, sourceGraphic = EXPLODE_GRAPHIC)
                 if (exploded) Familiar.dismiss(player)
                 exploded
             }
@@ -811,7 +846,7 @@ object SummoningSpecialMoves {
             scroll == SummoningScrollData.PETRIFYING_GAZE_SCROLL -> {
                 val attackAnimation = SummoningCombatDefinitions.getByNpc(familiar.id)?.attackAnimation ?: -1
                 if (attackAnimation >= 0) familiar.animate(attackAnimation)
-                familiar.dealHit(target, maxHit = 100.0, landHit = true, delay = 1, hitType = HitType.MAGIC)
+                FamiliarCombat.dealLedgerHit(familiar, target, 100.0, !FamiliarCombat.blockedBySummoningProtection(target), 1, HitType.MAGIC)
                 target.stats.decrementCurrentLevel(NpcSkills.DEFENCE, player.world.random(1..3), capped = false)
             }
             scroll == SummoningScrollData.STEEL_OF_LEGENDS_SCROLL -> {
@@ -819,7 +854,8 @@ object SummoningSpecialMoves {
                 target.graphic(1449)
                 repeat(4) { index ->
                     player.world.spawn(familiar.createProjectile(target, 1445, ProjectileType.ARROW))
-                    familiar.dealHit(target, maxHit = 244.0, landHit = true, delay = index + 1, hitType = HitType.RANGE)
+                    // The source table stores 244 in the x10 ledger unit; dealLedgerHit converts to 1:1.
+                    FamiliarCombat.dealLedgerHit(familiar, target, 244.0, !FamiliarCombat.blockedBySummoningProtection(target), index + 1, HitType.RANGE)
                 }
             }
             else -> return false
@@ -945,9 +981,9 @@ object SummoningSpecialMoves {
             return false
         }
         familiar.setCurrentLifepoints(maxLife)
-        // "Damage is greater if the phoenix's health was lower": the missing life is the damage,
-        // with a small floor so a healthy phoenix's blast is not a no-op.
-        executeAoe(player, familiar, maxTargets = 9, radius = 1, maxHit = missing.coerceAtLeast(10).toDouble(), animation = -1)
+        // Void 2011 `familiar/Phoenix.kt`: max hit = (max - current life) / 4 on its x10 unit. `missing` is
+        // 1:1 real HP, so the ledger value is missing * 10 / 4 (a full-health phoenix can only splat 0).
+        executeAoe(player, familiar, maxTargets = 9, radius = 1, maxHit = missing * FamiliarCombat.LEDGER_UNITS_PER_HITPOINT / 4.0, animation = -1)
         return true
     }
 
@@ -1016,7 +1052,7 @@ object SummoningSpecialMoves {
     // so this implements the presumably-intended correct healing rather than guessing the bug.
     private fun executeSwallowWhole(player: Player, scroll: SummoningScrollData, slot: Int, selected: Item): Boolean {
         val cooking = CookingData.values().firstOrNull { it.raw == selected.id }
-        val healAmount = cooking?.let { data -> Food.values().firstOrNull { it.item == data.cooked }?.heal }
+        val healAmount = cooking?.let { data -> Food.values().firstOrNull { it.item == data.cooked }?.hitpoints }
         if (cooking == null || healAmount == null) {
             player.message("Your bunyip can't swallow that.")
             return false
@@ -1042,7 +1078,10 @@ object SummoningSpecialMoves {
         // binding.scrolls can hold several tiers (e.g. bull rush bronze..rune) sharing one
         // familiar, so the real scroll to consume is whichever tier the player is carrying -
         // not resolvable by familiar ownership alone since every tier shares the same familiar.
+        // RCV-010 A5: a worn charged helm supplies its stored scroll when the pack has none (Void cast gate).
+        val wornScroll = EnchantedHeadgear.wornScroll(player)
         val scroll = binding.scrolls.firstOrNull { player.inventory.contains(it.scroll) }
+            ?: binding.scrolls.firstOrNull { it.scroll == wornScroll }
         if (scroll == null) {
             player.message("You need the matching summoning scroll to use this special move.")
             return null
@@ -1051,16 +1090,32 @@ object SummoningSpecialMoves {
             player.message("You do not have enough familiar special-move energy.")
             return null
         }
+        // Void starts the clock before the effect so a re-entrant or repeated click cannot fire
+        // the special again inside the same window; a refused cast still consumes nothing.
+        if (player.timers.has(SPECIAL_MOVE_DELAY_TIMER)) return null
+        player.timers[SPECIAL_MOVE_DELAY_TIMER] = SPECIAL_MOVE_DELAY_TICKS
         return ResolvedSpecial(familiar, scroll)
     }
 
     private fun commitResources(player: Player, scroll: SummoningScrollData): Boolean {
-        if (!player.inventory.remove(scroll.scroll, 1, assureFullRemoval = true).hasSucceeded()) return false
+        gg.rsmod.game.model.AvTrace.log {
+            "summoning cast ${scroll.name} cost=${scroll.specialPoints} pointsBefore=${Familiar.currentSpecialPoints(player)} " +
+                "scrollsBefore=${player.inventory.getItemCount(scroll.scroll)} summoningLevel=${player.skills.getCurrentLevel(Skills.SUMMONING)} cycle=${player.world.currentCycle}"
+        }
+        val fromHelm = !player.inventory.contains(scroll.scroll) && EnchantedHeadgear.wornScroll(player) == scroll.scroll
+        if (fromHelm) {
+            EnchantedHeadgear.spendWornScroll(player)
+        } else if (!player.inventory.remove(scroll.scroll, 1, assureFullRemoval = true).hasSucceeded()) {
+            return false
+        }
         if (!Familiar.consumeSpecialPoints(player, scroll.specialPoints)) {
             player.inventory.add(scroll.scroll, 1, assureFullInsertion = true)
             return false
         }
         player.addXp(Skills.SUMMONING, scroll.useExperience)
+        player.animate(SPECIAL_CAST_ANIMATION)
+        player.graphic(SPECIAL_CAST_GRAPHIC)
+        player.playSound(SPECIAL_CAST_SOUND)
         return true
     }
 
@@ -1083,10 +1138,11 @@ object SummoningSpecialMoves {
             player.world.spawn(familiar.createProjectile(target, effect.projectile, projectileType))
         }
         if (effect.targetGraphic >= 0) target.graphic(effect.targetGraphic)
-        familiar.dealHit(
+        FamiliarCombat.dealLedgerHit(
+            familiar,
             target,
-            maxHit = effect.maxHit,
-            landHit = true,
+            ledgerMaxHit = effect.maxHit,
+            landHit = !FamiliarCombat.blockedBySummoningProtection(target),
             delay = if (effect.projectile >= 0) 2 else 1,
             onHit = { pawnHit ->
                 pawnHit.hit.addAction {
@@ -1095,8 +1151,9 @@ object SummoningSpecialMoves {
                         SummoningScrollData.ARCTIC_BLAST_SCROLL -> if (target.getSize() <= 1 && player.world.randomDouble() < 0.20) target.stun(3)
                         SummoningScrollData.MANTIS_STRIKE_SCROLL -> if (target.getSize() <= 1) target.stun(3)
                     SummoningScrollData.SPIKE_SHOT_SCROLL -> target.stun(5)
-                    SummoningScrollData.POISONOUS_BLAST_SCROLL -> if (player.world.randomDouble() < 0.50) target.poison(20)
-                    SummoningScrollData.SWAMP_PLAGUE_SCROLL -> target.poison(80)
+                    // Void `follower.poison(target, 20/80)` is on its x10 unit; Pawn.poison takes 1:1 damage.
+                    SummoningScrollData.POISONOUS_BLAST_SCROLL -> if (player.world.randomDouble() < 0.50) target.poison(FamiliarCombat.ledgerToHitpoints(20.0).toInt())
+                    SummoningScrollData.SWAMP_PLAGUE_SCROLL -> target.poison(FamiliarCombat.ledgerToHitpoints(80.0).toInt())
                     SummoningScrollData.BRONZE_BULL_RUSH_SCROLL,
                     SummoningScrollData.IRON_BULL_RUSH_SCROLL,
                     SummoningScrollData.STEEL_BULL_RUSH_SCROLL,
@@ -1115,8 +1172,10 @@ object SummoningSpecialMoves {
                         SummoningScrollData.ABYSSAL_DRAIN_SCROLL -> {
                             drainNpc(target, NpcSkills.MAGIC, 0.05)
                             // Pre-6-Nov-2017 value (this cache predates that patch, which buffed
-                            // 5 -> 50): restores up to 5 prayer points, x10 for internal units.
-                            player.restorePrayer(50, capValue = player.skills.getMaxLevel(Skills.PRAYER) * 10)
+                            // 5 -> 50): restores up to 5 prayer points. Prayer points are 1:1, and
+                            // restorePrayer's capValue is an allowance ABOVE the maximum, so none is
+                            // passed: the old (50, capValue = max) raised Prayer to 2x max (owner saw 198).
+                            player.restorePrayer(ABYSSAL_DRAIN_PRAYER_RESTORE)
                         }
                         // "Healing players for 50% of the damage dealt" - wiki's own wording.
                         SummoningScrollData.VAMPIRE_TOUCH_SCROLL -> {
@@ -1141,13 +1200,13 @@ object SummoningSpecialMoves {
             player.world.spawn(familiar.createProjectile(target, 1376, projectileType))
             target.graphic(1377)
         }
-        familiar.dealHit(target, maxHit = 240.0, landHit = true, delay = if (melee) 1 else 2, hitType = hitType)
+        FamiliarCombat.dealLedgerHit(familiar, target, 240.0, !FamiliarCombat.blockedBySummoningProtection(target), if (melee) 1 else 2, hitType)
     }
 
     private fun executeVolley(familiar: Npc, target: Npc, hits: Int, maxHit: Double, hitType: HitType) {
         if (hits == 3 && maxHit == 100.0) familiar.animate(7348)
         repeat(hits) { index ->
-            familiar.dealHit(target, maxHit = maxHit, landHit = true, delay = 1 + index / 2, hitType = hitType)
+            FamiliarCombat.dealLedgerHit(familiar, target, maxHit, !FamiliarCombat.blockedBySummoningProtection(target), 1 + index / 2, hitType)
         }
     }
 
@@ -1172,7 +1231,7 @@ object SummoningSpecialMoves {
         targets.forEach { target ->
             if (projectile >= 0) player.world.spawn(familiar.createProjectile(target, projectile, ProjectileType.MAGIC))
             if (targetGraphic >= 0) target.graphic(targetGraphic)
-            familiar.dealHit(target, maxHit = maxHit, landHit = true, delay = if (projectile >= 0) 2 else 1, hitType = HitType.MAGIC)
+            FamiliarCombat.dealLedgerHit(familiar, target, maxHit, true, if (projectile >= 0) 2 else 1, HitType.MAGIC)
             familiar.attack(target)
         }
         return true
@@ -1191,7 +1250,7 @@ object SummoningSpecialMoves {
         nearbyAttackableNpcs(player, familiar, primary, radius, maxTargets, excluded = primary).forEach { target ->
             if (projectile >= 0) player.world.spawn(familiar.createProjectile(target, projectile, ProjectileType.MAGIC))
             if (targetGraphic >= 0) target.graphic(targetGraphic)
-            familiar.dealHit(target, maxHit = maxHit, landHit = true, delay = if (projectile >= 0) 2 else 1, hitType = HitType.MAGIC)
+            FamiliarCombat.dealLedgerHit(familiar, target, maxHit, true, if (projectile >= 0) 2 else 1, HitType.MAGIC)
         }
     }
 

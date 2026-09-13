@@ -43,7 +43,7 @@ class Revenants(r: PluginRepository, world: World, server: Server) : KotlinPlugi
         on_global_npc_spawn {
             if (ids.contains(npc.id)) {
                 npc.queue {
-                    healsLeft[npc.id] = 10
+                    resetHeals(npc)
                     // Wait 1 cycle to avoid a race condition with the global aggro plugin to set it to normal
                     wait(1)
                     npc.aggroCheck = revenantAggressiveness
@@ -92,7 +92,23 @@ class Revenants(r: PluginRepository, world: World, server: Server) : KotlinPlugi
                 Npcs.REVENANT_DRAGON
             )
 
-        val healsLeft: HashMap<Int, Int> = HashMap()
+        /**
+         * RCV-010 D6: heals remaining for ONE revenant. This used to be a map keyed by npc id, so every revenant of the
+         * same type shared a single pool of heals and each respawn refilled it for all of them. The count itself (10)
+         * and the heal amount are pre-existing values with no donor source (SOURCE_BLOCKED) and are unchanged.
+         */
+        const val HEALS_PER_LIFE = 10
+        val HEALS_LEFT_ATTR = gg.rsmod.game.model.attr.AttributeKey<Int>()
+
+        fun resetHeals(npc: Npc) {
+            npc.attr[HEALS_LEFT_ATTR] = HEALS_PER_LIFE
+        }
+
+        fun healsLeft(npc: Npc): Int = npc.attr[HEALS_LEFT_ATTR] ?: HEALS_PER_LIFE
+
+        fun consumeHeal(npc: Npc) {
+            npc.attr[HEALS_LEFT_ATTR] = (healsLeft(npc) - 1).coerceAtLeast(0)
+        }
 
         suspend fun handleSpecialCombat(it: QueueTask) {
             val npc = it.npc
@@ -112,10 +128,7 @@ class Revenants(r: PluginRepository, world: World, server: Server) : KotlinPlugi
                             attack = "ranged"
                         }
                     }
-                    if (!healsLeft.containsKey(it.npc.id)) {
-                        healsLeft[it.npc.id] = 10
-                    }
-                    if (it.npc.getCurrentLifepoints() < it.npc.getMaximumLifepoints() / 2 && healsLeft[it.npc.id]!! > 0) {
+                    if (it.npc.getCurrentLifepoints() < it.npc.getMaximumLifepoints() / 2 && healsLeft(it.npc) > 0) {
                         attack = "heal"
                     }
                     val distance = if (attack == "melee") 1 else 6
@@ -211,8 +224,7 @@ class Revenants(r: PluginRepository, world: World, server: Server) : KotlinPlugi
                 target.playSound(Sfx.EAT)
                 val healAmt = it.npc.getMaximumLifepoints() / 6
                 it.npc.setCurrentLifepoints(it.npc.getCurrentLifepoints() + healAmt)
-                val leftNow = healsLeft[it.npc.id]!! - 1
-                healsLeft[it.npc.id] = leftNow
+                consumeHeal(it.npc)
             }
         }
     }
