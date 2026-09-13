@@ -174,22 +174,25 @@ fun walkThroughDoor(player: Player, doorTile: Tile, destination: Tile) {
 
 God.values().filter { it.altarId != -1 }.forEach { god ->
     on_obj_option(obj = god.altarId, option = "Pray-at") {
-        val last = player.attr[GodWars.ALTAR_RECHARGE]
-        if (!GodWars.canRechargeAltar(world.currentCycle, last)) {
-            player.message("The gods blessed you with their power not long ago. You must wait before they will do so again.")
+        // RCV-011 Q-043-b: Void GodwarsAltars.kt order and texts, persisted 10-minute clock (see GodWars).
+        val refusal =
+            GodWars.altarRefusal(
+                prayerFull = player.getCurrentPrayerPoints() >= player.getMaximumPrayerPoints(),
+                recharging = player.timers.has(GodWars.ALTAR_RECHARGE_TIMER),
+                underAttack = player.timers.has(ACTIVE_COMBAT_TIMER),
+            )
+        if (refusal != null) {
+            player.message(refusal)
             return@on_obj_option
         }
-        if (player.timers.has(ACTIVE_COMBAT_TIMER)) {
-            // Void GodwarsAltars.kt:26-27 and Novite 667 controlers/impl/GodWars.java:97-98 both refuse while in combat,
-            // with exactly this text.
-            player.message("You cannot recharge your prayer while engaged in combat.")
-            return@on_obj_option
-        }
-        player.attr[GodWars.ALTAR_RECHARGE] = world.currentCycle
+        val worn = (0 until player.equipment.capacity).mapNotNull { player.equipment[it]?.getName(world.definitions)?.lowercase() }
+        val bonus = GodWars.altarBonus(god, worn)
+        player.timers[GodWars.ALTAR_RECHARGE_TIMER] = GodWars.ALTAR_RECHARGE_TICKS
         player.queue {
             player.animate(ANIM_PRAYER_ALTAR)
-            player.restorePrayer(player.skills.getMaxLevel(Skills.PRAYER))
-            player.message("You recharge your prayer points.")
+            val restoreTo = player.getMaximumPrayerPoints() + bonus
+            player.alterPrayerPoints(value = (restoreTo - player.getCurrentPrayerPoints()).coerceAtLeast(0), capValue = bonus)
+            player.message(GodWars.MSG_ALTAR_DONE)
         }
     }
     on_obj_option(obj = god.altarId, option = "teleport") {
@@ -336,21 +339,22 @@ on_obj_option(obj = Objs.LITTLE_CRACK, option = "crawl-through") {
 
 on_obj_option(obj = Objs.BIG_DOOR_26384, option = "bang") {
     val obj = player.getInteractingGameObj()
-    val insideBandos = player.tile.x >= obj.tile.x
-    if (!insideBandos) {
+    // RCV-011 Q-043-b: the stronghold is west of the door; requirements apply from outside (Void + Novite).
+    val outside = GodWars.outsideBandosStronghold(player.tile.x, obj.tile.x)
+    if (outside) {
         if (player.skills.getCurrentLevel(Skills.STRENGTH) < 70) {
-            player.message("You need a Strength level of 70 to ring the gong.")
+            player.message(GodWars.MSG_BANDOS_STRENGTH)
             return@on_obj_option
         }
         if (!player.inventory.contains(Items.HAMMER)) {
-            player.message("You need a suitable hammer to ring the gong.")
+            player.message(GodWars.MSG_BANDOS_HAMMER)
             return@on_obj_option
         }
     }
-    val destination = Tile(if (insideBandos) 2850 else 2851, 5334, 2)
+    val destination = GodWars.bandosDoorDestination(outside)
     player.queue {
         player.lock()
-        if (!insideBandos) {
+        if (outside) {
             player.animate(ANIM_HAMMER_BANG)
             wait(3)
         }
@@ -360,13 +364,13 @@ on_obj_option(obj = Objs.BIG_DOOR_26384, option = "bang") {
 }
 
 /* ------------------------------------------------------------------------------------------
- * Zamorak river: 70 Agility, swimming into the evil side drains all prayer.
+ * Zamorak river: 70 Constitution (current life points), swimming into the evil side drains all prayer.
  * ---------------------------------------------------------------------------------------- */
 
 on_obj_option(obj = Objs.ICE_BRIDGE, option = "climb-off") {
     val obj = player.getInteractingGameObj()
-    if (player.skills.getCurrentLevel(Skills.AGILITY) < 70) {
-        player.message("You need an Agility level of 70 to cross the river's freezing water.")
+    if (!GodWars.canCrossZamorakRiver(player.getCurrentLifepoints())) {
+        player.message(GodWars.MSG_ZAMORAK_RIVER)
         return@on_obj_option
     }
     val withinZamorak = GodWars.inZamorakPrepare(player.tile)

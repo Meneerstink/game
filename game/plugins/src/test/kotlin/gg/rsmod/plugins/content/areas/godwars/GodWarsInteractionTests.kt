@@ -5,16 +5,18 @@ import gg.rsmod.plugins.api.cfg.Npcs
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 class GodWarsInteractionTests {
     @Test
     fun `unused altars allow first recharge without integer overflow`() {
-        for (cycle in listOf(0, 1, 1000, Int.MAX_VALUE)) {
-            assertTrue(GodWars.canRechargeAltar(cycle, null))
-        }
-        assertFalse(GodWars.canRechargeAltar(1099, 100))
-        assertTrue(GodWars.canRechargeAltar(1100, 100))
+        // RCV-011 Q-043-b: the world-cycle attribute became the persisted countdown ALTAR_RECHARGE_TIMER (no cycle
+        // arithmetic left to overflow). A never-used altar has no running clock, so the first recharge is allowed;
+        // a running clock refuses; the window stays 1000 ticks.
+        assertNull(GodWars.altarRefusal(prayerFull = false, recharging = false, underAttack = false))
+        assertEquals(GodWars.MSG_ALTAR_WAIT, GodWars.altarRefusal(prayerFull = false, recharging = true, underAttack = false))
+        assertEquals(1000, GodWars.ALTAR_RECHARGE_TICKS)
     }
 
     @Test

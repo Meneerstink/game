@@ -6,12 +6,13 @@ import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.api.EquipmentType
 import gg.rsmod.plugins.api.cfg.Npcs
+import gg.rsmod.game.model.timer.TimerKey
 import gg.rsmod.plugins.api.ext.setVarbit
 
 /**
  * God Wars Dungeon faction model (2011): each faction npc counts towards a per-god kill count
- * shown on overlay interface 601, boss chamber doors consume 40 kills (20 for Zaros in the
- * Ancient Prison with the 667 client's 40 kill requirement), and wearing an item aligned with a
+ * shown on overlay interface 601, boss chamber doors consume 40 kills (the Ancient Prison door
+ * included, with the 667 client's 40 kill requirement), and wearing an item aligned with a
  * god makes that god's followers non-aggressive.
  *
  * Kill count varbits and object ids come from the Void donor data (634 cache, identical in 667);
@@ -26,12 +27,65 @@ object GodWars {
     val ANCIENT_PRISON_X = 2899..2938
     val ANCIENT_PRISON_Z = 5190..5222
 
-    val ALTAR_RECHARGE_TICKS = 1000 // 10 minutes
+    /*
+     * RCV-011 Q-043-b altars. Void `GodwarsAltars.kt` + `god_wars_dungeon.vars.toml`: refuse at full Prayer, then while
+     * the persisted 10-minute `godwars_altar_recharge` clock runs, then while under attack; restore to maximum plus one
+     * point per worn item of the altar's god. The recharge used to be a non-saved world-cycle attribute (lost on
+     * relog/restart) and had no full-Prayer refusal. Wait/combat texts: Void and Novite `GodWars.java` agree.
+     */
+    const val ALTAR_RECHARGE_TICKS = 1000 // 10 minutes
 
-    val ALTAR_RECHARGE = AttributeKey<Int>()
+    /** Persisted like Void's clock and counting down while offline. */
+    val ALTAR_RECHARGE_TIMER = TimerKey(persistenceKey = "gwd_altar_recharge", tickOffline = true)
 
-    fun canRechargeAltar(currentCycle: Int, lastCycle: Int?): Boolean =
-        lastCycle == null || currentCycle.toLong() - lastCycle.toLong() >= ALTAR_RECHARGE_TICKS
+    const val MSG_ALTAR_FULL = "You already have full Prayer points."
+    const val MSG_ALTAR_WAIT = "You must wait a total of 10 minutes before being able to recharge your prayer points."
+    const val MSG_ALTAR_COMBAT = "You cannot recharge your prayer while engaged in combat."
+    const val MSG_ALTAR_DONE = "Your prayer points feel rejuvenated."
+
+    /** Void's check order; null when the altar may recharge. */
+    fun altarRefusal(
+        prayerFull: Boolean,
+        recharging: Boolean,
+        underAttack: Boolean,
+    ): String? =
+        when {
+            prayerFull -> MSG_ALTAR_FULL
+            recharging -> MSG_ALTAR_WAIT
+            underAttack -> MSG_ALTAR_COMBAT
+            else -> null
+        }
+
+    /** Void: one Prayer point above maximum per worn item of [god] (lower-case item names). */
+    fun altarBonus(
+        god: God,
+        wornNames: List<String>,
+    ): Int = wornNames.count { god.protects(it) }
+
+    /*
+     * RCV-011 Q-043-b Bandos big door (26384). Novite `inBandosPrepare` puts the stronghold at x 2823..2850, west of the
+     * door, and walks an entering player to 2850 and a leaving player to 2851; Void `BandosDoor.kt` asks for 70 Strength
+     * and a hammer only when `tile.x >= door.x`, i.e. from outside. The port had both reversed (free entry, gated exit).
+     */
+    fun outsideBandosStronghold(
+        playerX: Int,
+        doorX: Int,
+    ): Boolean = playerX >= doorX
+
+    fun bandosDoorDestination(outside: Boolean): Tile = Tile(if (outside) 2850 else 2851, 5334, 2)
+
+    const val MSG_BANDOS_STRENGTH = "You need to have a Strength level of 70."
+    const val MSG_BANDOS_HAMMER = "You need a suitable hammer to ring the gong."
+
+    /*
+     * RCV-011 Q-043-b Zamorak river. Void `ZamorakBridge.kt` gates on Constitution 700 life points (70 at this
+     * server's 1:1 scale, current level, both directions) with the `Level.has` text; the owner GWD audit names the same
+     * 70 Hitpoints rule. SOURCE_CONFLICT recorded: Novite `GodWars.java` uses Agility 70, which the port had copied.
+     */
+    const val ZAMORAK_RIVER_LIFEPOINTS = 70
+    const val MSG_ZAMORAK_RIVER = "You need to have a Constitution level of 70."
+
+    fun canCrossZamorakRiver(currentLifepoints: Int): Boolean = currentLifepoints >= ZAMORAK_RIVER_LIFEPOINTS
 
     /** Novite PlayerCombat: Kree'arra and all three airborne bodyguards reject melee. */
     fun isFlyingArmadylNpc(id: Int): Boolean =
