@@ -44,7 +44,9 @@ class FeroxEnclaveTests {
                 }
             }
         }
-        assertTrue(File(content, "areas/home/bounty_hunter_home.plugin.kts").readText().contains("BountyHunterHome.barrierRefusesEntry("))
+        val barrier = File(content, "areas/home/bounty_hunter_home.plugin.kts").readText()
+        assertTrue(barrier.contains("BountyHunterHome.barrierRefusesEntry(") && barrier.contains("player.message(BountyHunterHome.BARRIER_TELEBLOCK_MESSAGE)"))
+        assertEquals("A magical force prevents you from passing through the barrier while you are tele-blocked.", BountyHunterHome.BARRIER_TELEBLOCK_MESSAGE)
     }
 
     /** Ray casting over Void's integer polygon. */
@@ -59,13 +61,13 @@ class FeroxEnclaveTests {
     }
 
     @Test
-    fun `region 12344 is single-way by Void 2011 and OSRS, 12600 keeps the recorded 2011 multi`() {
+    fun `Ferox regions 12344 and 12600 are single-way like OSRS, 12344 also by Void 2011`() {
         val yml = File("../../data/cfg/areas/multi.yml").readLines()
         val regions = yml.takeWhile { !it.startsWith("chunks:") }.mapNotNull { Regex("""^- (\d+)""").find(it)?.groupValues?.get(1)?.toInt() }.toSet()
         val chunks = yml.dropWhile { !it.startsWith("chunks:") }.mapNotNull { Regex("""^- (\d+)""").find(it)?.groupValues?.get(1)?.toInt() }.toSet()
         assertFalse(12344 in regions, "12344 removed")
-        assertTrue(12600 in regions, "12600 kept (SOURCE_CONFLICT recorded)")
-        for (x in 3072..3135) for (z in 3584..3647) {
+        assertFalse(12600 in regions, "12600 removed (owner decision, OSRS)")
+        for (x in 3072..3199) for (z in 3584..3647) {
             assertFalse(Tile(x, z, 0).chunkCoords.hashCode() in chunks, "chunk of $x,$z listed as multi")
         }
 

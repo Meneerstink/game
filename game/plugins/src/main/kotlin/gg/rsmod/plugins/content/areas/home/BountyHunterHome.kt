@@ -124,11 +124,14 @@ object BountyHunterHome {
 
     fun gateTiles(home: Tile): List<Tile> = gates(home).map { it.tile }
 
-    /** Ground floor only: the enclave's upper floors are not part of the protected hub. */
+    /**
+     * Every floor inside the enclave walls is protected (owner decision 2026-09-13, "fix the upper floors" - no source
+     * states otherwise). The south-east tower is outside the walls and stays Wilderness (OSRS Wiki).
+     */
     fun isSafe(
         tile: Tile,
         home: Tile,
-    ): Boolean = tile.height == home.height && SAFE_POLYGON.containsTile(tile)
+    ): Boolean = SAFE_POLYGON.containsTile(Tile(tile.x, tile.z, 0))
 
     fun isSafe(player: Player): Boolean = isSafe(player.tile, player.world.gameContext.home)
 
@@ -149,14 +152,17 @@ object BountyHunterHome {
     /**
      * RCV-011 (owner: Ferox like OSRS). OSRS Wiki "Barrier (Ferox Enclave)" / "Tele Block": a tele-blocked player cannot
      * enter the enclave through a barrier; leaving is allowed and being in combat does not stop entry. Only the
-     * Wilderness-facing barriers are an entry; the internal plaza/garden pair is not. SOURCE_BLOCKED: no refusal text is
-     * quoted by any source, so none is invented.
+     * Wilderness-facing barriers are an entry; the internal plaza/garden pair is not. No source quotes the refusal text;
+     * [BARRIER_TELEBLOCK_MESSAGE] was chosen by the owner (2026-09-13).
      */
     fun barrierRefusesEntry(
         goingOutward: Boolean,
         gate: GateInfo,
         teleblocked: Boolean,
     ): Boolean = teleblocked && !goingOutward && gate.exitsToWilderness
+
+    /** Owner decision 2026-09-13 (no source text exists). */
+    const val BARRIER_TELEBLOCK_MESSAGE = "A magical force prevents you from passing through the barrier while you are tele-blocked."
 
     /** OSRS Wiki "Pool of Refreshment". */
     const val POOL_MESSAGE = "You feel reinvigorated after drinking from the pool."

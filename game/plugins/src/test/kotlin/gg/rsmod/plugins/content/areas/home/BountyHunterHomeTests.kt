@@ -58,10 +58,14 @@ class BountyHunterHomeTests {
     }
 
     @Test
-    fun `different height is never protected by the ground-floor hub`() {
-        val upstairs = Tile(home.x, home.z, 1)
-        assertFalse(BountyHunterHome.isSafe(upstairs, home))
-        assertTrue(BountyHunterHome.isDangerousWilderness(upstairs, home))
+    fun `every floor inside the walls is protected and outside the walls stays Wilderness on every floor`() {
+        // Owner decision 2026-09-13 ("fix the upper floors"): the requirement changed from ground floor only.
+        for (plane in 1..3) {
+            assertTrue(BountyHunterHome.isSafe(Tile(home.x, home.z, plane), home))
+            assertTrue(BountyHunterHome.isSafe(Tile(3175, 3610, plane), home))
+            assertTrue(BountyHunterHome.isDangerousWilderness(Tile(3122, 3629, plane), home))
+            assertTrue(BountyHunterHome.isDangerousWilderness(Tile(3188, 3620, plane), home))
+        }
     }
 
     @Test
