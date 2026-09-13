@@ -8,7 +8,14 @@ enum class UpdateBlockType {
 
     ANIMATION,
 
+    /** Spot-anim slot 0; [GFX_2]..[GFX_4] are slots 1..3 - see [GraphicBlock]. */
     GFX,
+
+    GFX_2,
+
+    GFX_3,
+
+    GFX_4,
 
     FACE_TILE,
 

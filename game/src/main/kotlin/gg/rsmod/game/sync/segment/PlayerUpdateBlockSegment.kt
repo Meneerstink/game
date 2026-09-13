@@ -4,6 +4,7 @@ import gg.rsmod.game.fs.def.NpcDef
 import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.sync.SynchronizationSegment
+import gg.rsmod.game.sync.block.GraphicBlock
 import gg.rsmod.game.sync.block.UpdateBlockType
 import gg.rsmod.net.packet.DataType
 import gg.rsmod.net.packet.GamePacketBuilder
@@ -372,21 +373,8 @@ class PlayerUpdateBlockSegment(
                 )
             }
 
-            UpdateBlockType.GFX -> {
-                val structure = blocks.updateBlocks[blockType]!!.values
-                buf.put(structure[0].type, structure[0].order, structure[0].transformation, other.blockBuffer.graphicId)
-                buf.put(
-                    structure[1].type,
-                    structure[1].order,
-                    structure[1].transformation,
-                    (other.blockBuffer.graphicDelay and 0xffff) or (other.blockBuffer.graphicHeight shl 16),
-                )
-                buf.put(
-                    structure[2].type,
-                    structure[2].order,
-                    structure[2].transformation,
-                    other.blockBuffer.graphicRotation and 0x7,
-                )
+            UpdateBlockType.GFX, UpdateBlockType.GFX_2, UpdateBlockType.GFX_3, UpdateBlockType.GFX_4 -> {
+                GraphicBlock.write(buf, blocks.updateBlocks[blockType]!!, other.blockBuffer.graphics[GraphicBlock.slotOf(blockType)])
             }
 
             UpdateBlockType.FORCE_MOVEMENT -> {

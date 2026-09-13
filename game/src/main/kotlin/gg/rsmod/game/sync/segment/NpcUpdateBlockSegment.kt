@@ -2,6 +2,7 @@ package gg.rsmod.game.sync.segment
 
 import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.sync.SynchronizationSegment
+import gg.rsmod.game.sync.block.GraphicBlock
 import gg.rsmod.game.sync.block.UpdateBlockBuffer
 import gg.rsmod.game.sync.block.UpdateBlockType
 import gg.rsmod.net.packet.DataType
@@ -137,21 +138,8 @@ class NpcUpdateBlockSegment(
                 )
             }
 
-            UpdateBlockType.GFX -> {
-                val structure = blocks.updateBlocks[blockType]!!.values
-                buf.put(structure[0].type, structure[0].order, structure[0].transformation, npc.blockBuffer.graphicId)
-                buf.put(
-                    structure[1].type,
-                    structure[1].order,
-                    structure[1].transformation,
-                    (npc.blockBuffer.graphicDelay and 0xffff) or (npc.blockBuffer.graphicHeight shl 16),
-                )
-                buf.put(
-                    structure[2].type,
-                    structure[2].order,
-                    structure[2].transformation,
-                    npc.blockBuffer.graphicRotation and 0x7,
-                )
+            UpdateBlockType.GFX, UpdateBlockType.GFX_2, UpdateBlockType.GFX_3, UpdateBlockType.GFX_4 -> {
+                GraphicBlock.write(buf, blocks.updateBlocks[blockType]!!, npc.blockBuffer.graphics[GraphicBlock.slotOf(blockType)])
             }
 
             UpdateBlockType.FORCE_CHAT -> {

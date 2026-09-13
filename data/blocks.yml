@@ -3,17 +3,22 @@ players:
   updating-opcode: 69
   excess-mask: 0x80
 
+  # Exact read order of the 667 client, PlayerList.processExtendedInfo (flag names from
+  # com.jagex.core.constants.PlayerExtendedInfoFlag). Blocks the server does not send are omitted.
   order:
-    - ANIMATION # 1
-    - MOVEMENT # 4
-    - FORCE_CHAT # 6
-    - HITMARK # 8
-    - APPEARANCE # 10
-    - MOVEMENT_TYPE # 13
-    - FACE_PAWN #14
-    - FACE_TILE # 16
-    - FORCE_MOVEMENT # 17
-    - GFX # 18
+    - ANIMATION # ANIMATION 0x40
+    - GFX_3 # SPOTANIM2 0x40000
+    - MOVEMENT # TEMP_SPEED 0x200
+    - GFX_4 # SPOTANIM3 0x80000
+    - HITMARK # HITMARK 0x4
+    - APPEARANCE # APPEARANCE 0x8
+    - FORCE_CHAT # CHAT 0x4000
+    - MOVEMENT_TYPE # SPEED 0x1
+    - FACE_PAWN # TARGET 0x10
+    - FORCE_MOVEMENT # EXACT_MOVE 0x1000
+    - FACE_TILE # TURN 0x20
+    - GFX # SPOTANIM0 0x2
+    - GFX_2 # SPOTANIM1 0x100
 
   blocks:
 
@@ -109,6 +114,8 @@ players:
           type: BYTE
           trans: ADD
 
+    # Four spot-anim slots (client PlayerList: SPOTANIM0..3). id / heightAndDelay / data byte.
+    # SPOTANIM0 reads g2, g4_alt1, g1_alt1 (the data byte was NEGATE here; the client subtracts 128).
     - block: GFX
       bit: 0x2
       structure:
@@ -119,20 +126,68 @@ players:
           type: INT
         - name: rotation
           type: BYTE
+          trans: ADD
+
+    # SPOTANIM1: g2_alt3, g4_alt3, g1_alt2
+    - block: GFX_2
+      bit: 0x100
+      structure:
+        - name: gfx
+          type: SHORT
+          order: LITTLE
+          trans: ADD
+        - name: settings
+          type: INT
+          order: INVERSED_MIDDLE
+        - name: rotation
+          type: BYTE
+          trans: NEGATE
+
+    # SPOTANIM2: g2_alt3, g4_alt3, g1_alt2
+    - block: GFX_3
+      bit: 0x40000
+      structure:
+        - name: gfx
+          type: SHORT
+          order: LITTLE
+          trans: ADD
+        - name: settings
+          type: INT
+          order: INVERSED_MIDDLE
+        - name: rotation
+          type: BYTE
+          trans: NEGATE
+
+    # SPOTANIM3: ig2, g4_alt3, g1_alt2
+    - block: GFX_4
+      bit: 0x80000
+      structure:
+        - name: gfx
+          type: SHORT
+          order: LITTLE
+        - name: settings
+          type: INT
+          order: INVERSED_MIDDLE
+        - name: rotation
+          type: BYTE
           trans: NEGATE
 
 npcs:
 
   updating-opcode: 6
 
+  # Exact read order of the 667 client, NPCList.processExtendedInfo (NpcExtendedInfoFlag).
   order:
+    - GFX_3 # SPOTANIM_2 0x100000
     - FACE_PAWN # 1
+    - GFX_4 # SPOTANIM3 0x20000
     - HITMARK # 3
     - APPEARANCE # 6
     - FORCE_CHAT # 7
     - FACE_TILE # 8
     - COMBAT_LEVEL # 10
     - ANIMATION # 11
+    - GFX_2 # SPOTANIM1 0x1000
     - GFX # 15
 
   blocks:
@@ -197,6 +252,7 @@ npcs:
         - name: delay
           type: BYTE
 
+    # Four spot-anim slots (client NPCList: SPOTANIM0..3). SPOTANIM0: ig2, g4_alt3, g1_alt2
     - block: GFX
       bit: 0x4
       structure:
@@ -209,3 +265,38 @@ npcs:
         - name: rotation
           type: BYTE
           trans: NEGATE
+
+    # SPOTANIM1: g2_alt2, g4, g1
+    - block: GFX_2
+      bit: 0x1000
+      structure:
+        - name: gfx
+          type: SHORT
+          trans: ADD
+        - name: settings
+          type: INT
+        - name: rotation
+          type: BYTE
+
+    # SPOTANIM_2: g2, g4, g1_alt1
+    - block: GFX_3
+      bit: 0x100000
+      structure:
+        - name: gfx
+          type: SHORT
+        - name: settings
+          type: INT
+        - name: rotation
+          type: BYTE
+          trans: ADD
+
+    # SPOTANIM3: g2, g4, g1
+    - block: GFX_4
+      bit: 0x20000
+      structure:
+        - name: gfx
+          type: SHORT
+        - name: settings
+          type: INT
+        - name: rotation
+          type: BYTE
