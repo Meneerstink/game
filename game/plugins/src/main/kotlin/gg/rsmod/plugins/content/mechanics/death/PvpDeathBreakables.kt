@@ -38,6 +38,9 @@ object PvpDeathBreakables {
             Breakable(Items.IMBUED_SARADOMIN_CAPE, Items.IMBUED_SARADOMIN_CAPE_BROKEN, 0),
             Breakable(Items.IMBUED_GUTHIX_CAPE, Items.IMBUED_GUTHIX_CAPE_BROKEN, 0),
             Breakable(Items.IMBUED_ZAMORAK_CAPE, Items.IMBUED_ZAMORAK_CAPE_BROKEN, 0),
+            // Ava's assembler (raw wiki): unprotected in PvP it "will remain in the player's inventory, but will become
+            // broken"; repair 240,000 coins at Perdu. Coins for the killer are not stated: none are dropped (SOURCE_GAP).
+            Breakable(Items.AVAS_ASSEMBLER, Items.AVAS_ASSEMBLER_BROKEN, 0),
         ).associateBy { it.itemId }
 
     val ALL: Collection<Breakable> get() = entries.values

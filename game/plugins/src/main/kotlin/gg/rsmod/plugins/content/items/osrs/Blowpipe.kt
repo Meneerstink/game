@@ -64,7 +64,8 @@ object Blowpipe {
     }
 
     /** Wiki "Scale to dart ratio": the share of darts an Ava's device saves (cape slot item id -> chance). */
-    val DART_SAVE_CHANCE: Map<Int, Double> = mapOf(Items.AVAS_ATTRACTOR to 0.60, Items.AVAS_ACCUMULATOR to 0.72)
+    val DART_SAVE_CHANCE: Map<Int, Double> =
+        mapOf(Items.AVAS_ATTRACTOR to 0.60, Items.AVAS_ACCUMULATOR to 0.72, Items.AVAS_ASSEMBLER to 0.80, Items.AVAS_ASSEMBLER_L to 0.80)
 
     fun isBlowpipe(itemId: Int): Boolean = itemId == Items.TOXIC_BLOWPIPE || itemId == Items.TOXIC_BLOWPIPE_EMPTY
 

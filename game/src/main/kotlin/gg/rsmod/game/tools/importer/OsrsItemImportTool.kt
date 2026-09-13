@@ -191,6 +191,16 @@ object OsrsItemImportTool {
                     Spec(28884, noted = true), // Sunlight antler
                     Spec(28887, noted = true), // Moonlight antler
                 ),
+            // Ava's assembler with its broken and locked variants and Vorkath's head. Client requirement 70 Ranged only:
+            // the raw wiki page states no Defence requirement, so the cache's second requirement (Defence 35) is not
+            // shown or enforced (the Heavy ballista Defence 33 case).
+            "assembler" to
+                listOf(
+                    Spec(22109, rev667Params = mapOf(749 to 4, 750 to 70)), // Ava's assembler
+                    Spec(21914), // Ava's assembler (broken)
+                    Spec(24222, rev667Params = mapOf(749 to 4, 750 to 70)), // Ava's assembler (l)
+                    Spec(21907), // Vorkath's head
+                ),
         )
 
     /**

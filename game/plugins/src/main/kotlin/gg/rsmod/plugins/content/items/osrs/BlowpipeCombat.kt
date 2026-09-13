@@ -9,6 +9,7 @@ import gg.rsmod.plugins.api.ext.getEquipment
 import gg.rsmod.plugins.api.ext.playSound
 import gg.rsmod.plugins.api.ext.refreshBonuses
 import gg.rsmod.plugins.content.combat.createProjectile
+import gg.rsmod.plugins.content.combat.strategy.ranged.AvasDevices
 import gg.rsmod.plugins.content.combat.strategy.ranged.RangedProjectile
 import gg.rsmod.plugins.content.combat.venom
 
@@ -39,7 +40,9 @@ object BlowpipeCombat {
         val world = player.world
         RangedProjectile.values.firstOrNull { dart.itemId in it.items }?.let { world.spawn(player.createProjectile(target, it.gfx, it.type)) }
         player.playSound(Sfx.THROWN)
-        val cost = Blowpipe.spendShot(pipe, world.randomDouble(), world.randomDouble(), player.getEquipment(EquipmentType.CAPE)?.id)
+        // Ava's devices do not work through metallic torso armour (AvasDevices).
+        val capeId = if (AvasDevices.interferes(player)) null else player.getEquipment(EquipmentType.CAPE)?.id
+        val cost = Blowpipe.spendShot(pipe, world.randomDouble(), world.randomDouble(), capeId)
         player.equipment[WEAPON_SLOT] = cost.result
         if (cost.result.id != pipe.id) player.refreshBonuses()
         return true

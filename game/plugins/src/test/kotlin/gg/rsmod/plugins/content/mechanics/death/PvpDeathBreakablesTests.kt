@@ -84,7 +84,11 @@ class PvpDeathBreakablesTests {
     @Test
     fun `every breakable item breaks in place and pays exactly its sourced repair cost`() {
         assertEquals(
-            mapOf(Items.AVERNIC_DEFENDER to 600_000, Items.INFERNAL_CAPE to 225_000, Items.IMBUED_SARADOMIN_CAPE to 0, Items.IMBUED_GUTHIX_CAPE to 0, Items.IMBUED_ZAMORAK_CAPE to 0),
+            mapOf(
+                Items.AVERNIC_DEFENDER to 600_000, Items.INFERNAL_CAPE to 225_000, Items.IMBUED_SARADOMIN_CAPE to 0, Items.IMBUED_GUTHIX_CAPE to 0, Items.IMBUED_ZAMORAK_CAPE to 0,
+                // Ava's assembler (raw wiki): becomes broken and stays with the player; no coins for the killer are stated.
+                Items.AVAS_ASSEMBLER to 0,
+            ),
             PvpDeathBreakables.ALL.associate { it.itemId to it.killerCoins },
         )
         PvpDeathBreakables.ALL.forEach { breakable ->

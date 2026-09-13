@@ -19,6 +19,7 @@ import gg.rsmod.plugins.content.combat.DEFAULT_MIN_HIT
 import gg.rsmod.plugins.content.combat.createProjectile
 import gg.rsmod.plugins.content.combat.dealHit
 import gg.rsmod.plugins.content.combat.formula.RangedCombatFormula
+import gg.rsmod.plugins.content.combat.strategy.ranged.AvasDevices
 import gg.rsmod.plugins.content.combat.strategy.ranged.RangedProjectile
 import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Darts
 import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.EnchantedBolts
@@ -177,10 +178,15 @@ object RangedCombatStrategy : CombatStrategy {
             if (ammo != null) {
                 val chance = world.random(99)
                 val breakAmmo = chance in 0..19
+                // OSRS Wiki "Ava's device": metallic torso armour stops the retrieval effect (AvasDevices).
+                val device = !AvasDevices.interferes(pawn)
                 val dropAmmo =
                     when {
-                        pawn.hasEquipped(EquipmentType.CAPE, Items.AVAS_ATTRACTOR) -> chance in 30..39
-                        pawn.hasEquipped(EquipmentType.CAPE, Items.AVAS_ACCUMULATOR) -> chance in 20..27
+                        // Attractor 60 % saved / 20 % dropped / 20 % broken (was 10 % dropped); accumulator 72 / 8 / 20;
+                        // assembler 80 / 0 / 20 ("will never drop any ammo on the ground").
+                        device && pawn.hasEquipped(EquipmentType.CAPE, Items.AVAS_ATTRACTOR) -> chance in 20..39
+                        device && pawn.hasEquipped(EquipmentType.CAPE, Items.AVAS_ACCUMULATOR) -> chance in 20..27
+                        device && pawn.hasEquipped(EquipmentType.CAPE, Items.AVAS_ASSEMBLER, Items.AVAS_ASSEMBLER_L) -> false
                         else -> !breakAmmo
                     }
                 val amount = 1

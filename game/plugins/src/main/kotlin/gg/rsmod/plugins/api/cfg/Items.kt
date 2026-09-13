@@ -19517,5 +19517,10 @@ object Items {
     const val SUNLIGHT_ANTLER_NOTED = 22653
     const val MOONLIGHT_ANTLER = 22654
     const val MOONLIGHT_ANTLER_NOTED = 22655
+    // OSRS-IMPORT batch assembler (tx-20260913-231239).
+    const val AVAS_ASSEMBLER = 22656
+    const val AVAS_ASSEMBLER_BROKEN = 22657
+    const val AVAS_ASSEMBLER_L = 22658
+    const val VORKATHS_HEAD = 22659
     // Auto-generated file using class gg.rsmod.game.service.game.DumpEntityIdService
 }
