@@ -3,11 +3,37 @@ package gg.rsmod.plugins.content.mechanics.ladders
 import gg.rsmod.game.Server.Companion.logger
 import gg.rsmod.game.fs.def.ObjectDef
 import gg.rsmod.game.model.LockState
+import gg.rsmod.game.model.attr.INTERACTING_OPT_ATTR
+import gg.rsmod.game.model.entity.Entity
+import gg.rsmod.plugins.content.mechanics.objteleports.ObjectTeleports
+
+/*
+ * These ids are shared by ladders all over the world; tiles without a case here fall through to the
+ * sourced object-teleport table and then the cache-derived rule instead of silently doing nothing.
+ */
+fun climbElsewhere(player: Player, slot: Int, direction: GenericLadders.Direction) {
+    val obj = player.getInteractingGameObj()
+    if (ObjectTeleports.tryTeleport(player, obj, slot)) {
+        return
+    }
+    val destination = GenericLadders.destination(world, obj, player.tile, direction)
+    if (destination == null) {
+        player.message(Entity.NOTHING_INTERESTING_HAPPENS)
+        return
+    }
+    player.lockingQueue(lockState = LockState.FULL) {
+        wait(1)
+        player.animate(Anims.LADDER_CLIMB, idleOnly = true)
+        wait(2)
+        player.moveTo(destination)
+    }
+}
 
 on_obj_option(obj = Objs.LADDER_1747, option = "climb-up") {
     val obj = player.getInteractingGameObj()
     when (obj.tile.x) {
         2895, 2890 -> player.handleLadder(player.tile.x, player.tile.z, 2)
+        else -> climbElsewhere(player, player.attr[INTERACTING_OPT_ATTR]!!, GenericLadders.Direction.UP)
     }
 }
 
@@ -16,6 +42,7 @@ on_obj_option(obj = Objs.LADDER_1746, option = "climb-down") {
     when (obj.tile.x) {
         2895, 2890 -> player.handleLadder(player.tile.x, player.tile.z, 1)
         2725, 2732 -> player.handleLadder(player.tile.x, player.tile.z, player.tile.height - 1)
+        else -> climbElsewhere(player, player.attr[INTERACTING_OPT_ATTR]!!, GenericLadders.Direction.DOWN)
     }
 }
 
@@ -24,6 +51,7 @@ on_obj_option(obj = Objs.LADDER_1754, option = "climb-down") {
     when (obj.tile.x) {
         2594 -> player.handleLadder(2594, 9486, 0) // Wizards' Tower Basement
         2892 -> player.handleLadder(2893, 9907, 0) // Heroes' Guild Basement
+        else -> climbElsewhere(player, player.attr[INTERACTING_OPT_ATTR]!!, GenericLadders.Direction.DOWN)
     }
 }
 
@@ -32,6 +60,7 @@ on_obj_option(obj = Objs.LADDER_1757, option = "climb-up") {
     when (obj.tile.x) {
         2594 -> player.handleLadder(2594, 3086, 0) // Wizards' Tower Basement
         2892 -> player.handleLadder(2892, 3508, 0) // Heroes' Guild Basement
+        else -> climbElsewhere(player, player.attr[INTERACTING_OPT_ATTR]!!, GenericLadders.Direction.UP)
     }
 }
 
@@ -56,6 +85,9 @@ on_world_init_late {
             }
             on_obj_option(obj = id, option = option!!) {
                 val obj = player.getInteractingGameObj()
+                if (ObjectTeleports.tryTeleport(player, obj, slot + 1)) {
+                    return@on_obj_option
+                }
                 val destination = GenericLadders.destination(world, obj, player.tile, direction)
                 if (destination == null) {
                     logger.info("Generic ladders: no counterpart for object {} ({}) at {} [{}]", obj.id, def.name, obj.tile, option)

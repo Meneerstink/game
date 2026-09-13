@@ -104,7 +104,7 @@ on_obj_option(obj = Objs.STAIRS_47643, option = "Walk-down") {
         3115 -> {
             player.handleStairs(x = 3081, z = 9776)
         } else ->
-            player.message("Nothing interesting happens.")
+            gg.rsmod.plugins.content.mechanics.objteleports.ObjectTeleports.fallback(player)
     }
 }
 
@@ -115,7 +115,7 @@ on_obj_option(obj = Objs.STAIRS_164, option = "Climb-up") {
         3080 -> {
             player.handleStairs(x = 3116, z = 3355)
         } else ->
-            player.message("Nothing interesting happens.")
+            gg.rsmod.plugins.content.mechanics.objteleports.ObjectTeleports.fallback(player)
     }
 }
 

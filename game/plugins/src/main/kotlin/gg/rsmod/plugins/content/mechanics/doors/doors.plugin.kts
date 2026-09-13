@@ -109,6 +109,131 @@ on_world_init {
 
 on_world_init_late {
     bind_cache_derived_doors()
+    bind_void_sourced_doors()
+}
+
+/**
+ * Single doors [DoorPairing] declines as ambiguous but Void names explicitly (`<name>_closed` /
+ * `<name>_opened` in its `*.objs.toml`, converted to `data/cfg/doors/void-door-pairs.json`, quest/
+ * minigame/activity excluded). Void's single-door swing (tile rotated one step anticlockwise,
+ * rotation +1 on open; the reverse on close) is exactly [World.openDoor]/[World.closeDoor], so the
+ * binding matches [bind_cache_derived_doors]. Each pair is only bound when this cache gives the
+ * closed id `Open` and the opened id `Close`, neither id belongs to a configured double door or gate,
+ * and no plugin already binds that slot. Void "single" doors (hinge-less, replaced in place) keep
+ * their tile and rotation. Gates and double doors need the two-leaf logic and are not bound here.
+ */
+fun bind_void_sourced_doors() {
+    val path = java.nio.file.Paths.get("./data/cfg/doors/void-door-pairs.json")
+    if (!java.nio.file.Files.exists(path)) {
+        logger.info("Void doors: {} missing; skipped.", path)
+        return
+    }
+    val root =
+        java.nio.file.Files.newBufferedReader(path).use {
+            com.google.gson.JsonParser().parse(it).asJsonObject
+        }
+    val multiLeaf = HashSet<Int>()
+    world.getService(DoorService::class.java)?.doubleDoors?.forEach { set ->
+        multiLeaf += listOf(set.opened.left, set.opened.right, set.closed.left, set.closed.right)
+    }
+    world.getService(GateService::class.java)?.gates?.forEach { set ->
+        multiLeaf += listOf(set.opened.hinge, set.opened.extension, set.closed.hinge, set.closed.extension)
+    }
+
+    val closedToOpened = HashMap<Int, Int>()
+    val openedToClosed = HashMap<Int, Int>()
+    val singleNamed = HashSet<Int>()
+    for (element in root.getAsJsonArray("pairs")) {
+        val pair = element.asJsonObject
+        val closed: Int = pair.get("closed").asInt
+        val opened: Int = pair.get("opened").asInt
+        closedToOpened[closed] = opened
+        openedToClosed[opened] = closed
+        if (pair.get("name").asString.contains("single")) {
+            singleNamed.add(closed)
+            singleNamed.add(opened)
+        }
+    }
+
+    fun swing(
+        player: Player,
+        obj: GameObject,
+        open: Boolean,
+    ) {
+        if (!is_wall_object(obj)) {
+            return
+        }
+        if (!open && is_stuck(world, obj)) {
+            player.message("The door seems to be stuck.")
+            player.playSound(Sfx.DOOR_CREAK)
+            return
+        }
+        val plan =
+            VoidDoors.plan(
+                obj = obj,
+                open = open,
+                closedToOpened = closedToOpened,
+                openedToClosed = openedToClosed,
+                objectAt = { tile, type ->
+                    ObjectType.values().firstOrNull { it.value == type }?.let { world.getObject(tile, type = it) }
+                },
+                defOf = { world.definitions.getNullable(ObjectDef::class.java, it) },
+                inPlace = { it in singleNamed },
+            )
+        if (plan == null) {
+            val name = world.definitions.getNullable(ObjectDef::class.java, obj.id)?.name?.lowercase() ?: "door"
+            player.message("The $name won't budge.")
+            return
+        }
+        plan.forEach { world.remove(it.original) }
+        plan.forEach { replacement ->
+            val spawned = DynamicObject(id = replacement.id, type = replacement.original.type, rot = replacement.rot, tile = replacement.tile)
+            world.spawn(spawned)
+            copy_stick_vars(replacement.original, spawned)
+            add_stick_var(world, spawned)
+        }
+        player.playSound(if (open) Sfx.DOOR_OPEN else Sfx.DOOR_CLOSE)
+    }
+
+    var bound = 0
+    var skipped = 0
+    var rejected = 0
+    for (element in root.getAsJsonArray("pairs")) {
+        val pair = element.asJsonObject
+        val closed: Int = pair.get("closed").asInt
+        val opened: Int = pair.get("opened").asInt
+        if (closed in multiLeaf || opened in multiLeaf) {
+            skipped++
+            continue
+        }
+        val closedDef = world.definitions.getNullable(ObjectDef::class.java, closed)
+        val openedDef = world.definitions.getNullable(ObjectDef::class.java, opened)
+        val openSlot = closedDef?.options?.indexOfFirst { it.equals("open", ignoreCase = true) } ?: -1
+        val closeSlot = openedDef?.options?.indexOfFirst { it.equals("close", ignoreCase = true) } ?: -1
+        if (openSlot == -1 || closeSlot == -1) {
+            rejected++
+            continue
+        }
+
+        if ((openSlot + 1) in world.plugins.boundObjectOptions(closed)) {
+            skipped++
+        } else {
+            on_obj_option(obj = closed, option = "open") {
+                swing(player, player.getInteractingGameObj(), open = true)
+            }
+            bound++
+        }
+
+        if ((closeSlot + 1) in world.plugins.boundObjectOptions(opened)) {
+            skipped++
+        } else {
+            on_obj_option(obj = opened, option = "close") {
+                swing(player, player.getInteractingGameObj(), open = false)
+            }
+            bound++
+        }
+    }
+    logger.info("Void doors: bound {} sourced door options ({} already handled or multi-leaf, {} not in this cache).", bound, skipped, rejected)
 }
 
 /**

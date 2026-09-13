@@ -62,6 +62,7 @@ on_obj_option(obj = Objs.STAIRCASE_24360, option = "climb-down") {
     val obj = player.getInteractingGameObj()
     when (obj.tile.x) {
         3189 -> player.handleStairs(x = 3190, underground = true)
+        else -> gg.rsmod.plugins.content.mechanics.objteleports.ObjectTeleports.fallback(player)
     }
 }
 
@@ -69,6 +70,7 @@ on_obj_option(obj = Objs.STAIRCASE_24365, option = "climb-up") {
     val obj = player.getInteractingGameObj()
     when (obj.tile.x) {
         3187 -> player.handleStairs(3188, 3433, height = 0)
+        else -> gg.rsmod.plugins.content.mechanics.objteleports.ObjectTeleports.fallback(player)
     }
 }
 

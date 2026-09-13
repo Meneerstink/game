@@ -189,6 +189,7 @@ on_obj_option(obj = Objs.TRAPDOOR_30572, option = "climb-down") {
     when (obj.tile.x) {
         3405 -> player.handleLadder(height = 0, underground = true)
         3422 -> player.handleLadder(x = 3440, z = 9887, height = 0, underground = true)
+        else -> gg.rsmod.plugins.content.mechanics.objteleports.ObjectTeleports.fallback(player)
     }
 }
 

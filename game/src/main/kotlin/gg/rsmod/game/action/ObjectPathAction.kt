@@ -144,7 +144,7 @@ object ObjectPathAction {
         walk(player, obj, lineOfSightRange) {
             val handled = executeWithObjectIdFallback(obj.id, transformedId) { id ->
                 player.world.plugins.executeObject(player, id, opt!!)
-            }
+            } || player.world.plugins.executeObjectFallback(player, obj, opt!!)
             if (!handled) {
                 player.writeMessage(Entity.NOTHING_INTERESTING_HAPPENS)
                 /*

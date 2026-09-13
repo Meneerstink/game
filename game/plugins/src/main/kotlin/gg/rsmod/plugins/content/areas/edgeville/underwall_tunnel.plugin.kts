@@ -18,21 +18,8 @@ package gg.rsmod.plugins.content.areas.edgeville
  * mouth's side of the wall. The mouths themselves are `INTERACTABLE` objects and block their own
  * tile, so the player cannot be put on one.
  *
- * PROVISIONAL, no cache source: this revision's caches carry no level requirement, experience award
- * or animation for a shortcut, so none is applied - the tunnel is a plain passage. The two remaining
- * underwall tunnel pairs (9301/9302 at 2575,3108 and 9309/9310 at 2948,3310) are deliberately left
- * unbound: they are separate shortcuts elsewhere in the world whose requirements are not derivable
- * from the cache either, and guessing a requirement is worse than leaving them reported.
+ * SUPERSEDED (RCV-007): the earlier provisional plain passage is replaced by the Void-sourced
+ * tunnel (level 21, climb-into/crawl/climb-out animations and the donor's start/end tiles) in
+ * skills/agility/sourced_shortcuts.plugin.kts, together with the Yanille (9301/9302) and Falador
+ * (9309/9310) tunnels. No bindings remain in this file.
  */
-
-private val NORTH_WEST_MOUTH = Tile(3139, 3516)
-
-private val SOUTH_EAST_MOUTH = Tile(3143, 3514)
-
-on_obj_option(obj = Objs.UNDERWALL_TUNNEL_9311, option = "climb-into") {
-    player.moveTo(SOUTH_EAST_MOUTH.x + 1, SOUTH_EAST_MOUTH.z)
-}
-
-on_obj_option(obj = Objs.UNDERWALL_TUNNEL_9312, option = "climb-into") {
-    player.moveTo(NORTH_WEST_MOUTH.x - 1, NORTH_WEST_MOUTH.z)
-}
