@@ -16,6 +16,16 @@ import java.io.File
  */
 class MessageRegistrationTests {
     @Test
+    fun `text and name input dialogs have decoders and handlers`() {
+        val structures = MessageStructureSet().load(packets)
+        val decoders = MessageDecoderSet().apply { init(structures) }
+        for (opcode in listOf(59, 7)) {
+            assertNotNull("Missing input decoder $opcode", decoders.get(opcode))
+            assertNotNull("Missing input handler $opcode", decoders.getHandler(opcode))
+        }
+    }
+
+    @Test
     fun `every registered message has a structure and every structure a registration`() {
         val structures = MessageStructureSet().load(packets)
 

@@ -14,7 +14,7 @@ val rat =
 
 table.register(rat, *ids)
 
-on_npc_pre_death(*ids) {
+on_npc_pre_death(Npcs.RAT_4415, Npcs.RAT_4396) {
     val p = npc.damageMap.getMostDamage()!! as Player
     p.playSound(Sfx.RAT_DEATH)
 }

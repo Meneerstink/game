@@ -105,9 +105,8 @@ object StrykewyrmCombatScript : CombatScript() {
         target.hit(300, HitType.REGULAR_HIT, 1)
         when (wyrm.wyrm) {
             Npcs.JUNGLE_STRYKEWYRM -> { target.graphic(GFX_JUNGLE_IMPACT); target.poison(6) }
-            Npcs.DESERT_STRYKEWYRM -> { target.graphic(GFX_DESERT_IMPACT); target.hit(npc.world.random(30) * 10, HitType.REGULAR_HIT, 2) }
+            Npcs.DESERT_STRYKEWYRM -> { target.graphic(GFX_DESERT_IMPACT); target.hit(npc.world.random(30), HitType.REGULAR_HIT, 2) }
             else -> target.graphic(GFX_ICE_IMPACT)
         }
     }
 }
-

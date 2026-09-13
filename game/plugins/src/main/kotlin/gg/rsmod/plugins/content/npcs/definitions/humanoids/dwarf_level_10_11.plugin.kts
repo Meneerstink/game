@@ -59,7 +59,7 @@ on_npc_death(*ids) {
     table.getDrop(world, npc.damageMap.getMostDamage()!! as Player, npc.id, npc.tile)
 }
 
-on_npc_pre_death(*ids) {
+on_npc_pre_death(Npcs.DWARF_3221, Npcs.DWARF_3272, Npcs.DWARF_3220, Npcs.DWARF_3268, Npcs.DWARF_3269, Npcs.DWARF_3270, Npcs.DWARF_3273) {
     val p = npc.damageMap.getMostDamage()!! as Player
     p.playSound(Sfx.DWARF_DEATH)
 }

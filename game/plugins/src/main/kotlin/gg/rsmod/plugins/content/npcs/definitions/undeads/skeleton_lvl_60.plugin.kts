@@ -54,7 +54,7 @@ val skeleton =
 
 table.register(skeleton, *ids)
 
-on_npc_pre_death(*ids) {
+on_npc_pre_death(Npcs.SKELETON_5365, Npcs.SKELETON_5366) {
     val p = npc.damageMap.getMostDamage()!! as Player
     p.playSound(Sfx.SKELETON_DEATH)
 }

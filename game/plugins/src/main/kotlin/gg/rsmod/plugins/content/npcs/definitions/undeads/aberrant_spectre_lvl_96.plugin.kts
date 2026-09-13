@@ -60,7 +60,7 @@ val aberrantSpectre =
 
 table.register(aberrantSpectre, *ids)
 
-on_npc_pre_death(*ids) {
+on_npc_pre_death(Npcs.ABERRANT_SPECTRE_1605, Npcs.ABERRANT_SPECTRE_1607, Npcs.ABERRANT_SPECTRE_7802, Npcs.ABERRANT_SPECTRE_7803, Npcs.ABERRANT_SPECTRE_7804) {
     val p = npc.damageMap.getMostDamage()!! as Player
     p.playSound(Sfx.SPECTRE_DEATH)
 }

@@ -9,7 +9,7 @@ val ghosts =
         Npcs.GHOST_5345, Npcs.GHOST_6094, Npcs.GHOST_6095, Npcs.GHOST_6096, Npcs.GHOST_6097, Npcs.GHOST_6098,
     )
 
-on_npc_pre_death(*ghosts) {
+on_npc_pre_death(Npcs.GHOST_5349, Npcs.GHOST_5350, Npcs.GHOST_5351, Npcs.GHOST_5352, Npcs.GHOST_5345) {
     val p = npc.damageMap.getMostDamage()!! as Player
     p.playSound(Sfx.GHOST_DEATH)
 }

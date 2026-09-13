@@ -25,7 +25,6 @@ import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Knives
 import gg.rsmod.plugins.content.combat.strategy.ranged.weapon.BowType
 import gg.rsmod.plugins.content.combat.strategy.ranged.weapon.Bows
 import gg.rsmod.plugins.content.combat.strategy.ranged.weapon.CrossbowType
-import gg.rsmod.plugins.content.areas.godwars.GodWarsMinionAudio
 import gg.rsmod.plugins.content.mechanics.weapons.HandCannon
 
 /**
@@ -199,7 +198,6 @@ object RangedCombatStrategy : CombatStrategy {
             if (pawn.combatDef.attackProjectile > -1) {
                 world.spawn(pawn.createProjectile(target, pawn.combatDef.attackProjectile, ProjectileType.ARROW))
             }
-            GodWarsMinionAudio.playAttack(pawn, target)
         }
         pawn.animate(animation)
 

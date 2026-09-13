@@ -73,7 +73,7 @@ val cockatrice =
 
 table.register(cockatrice, *ids)
 
-on_npc_pre_death(*ids) {
+on_npc_pre_death(Npcs.COCKATRICE_4227) {
     val p = npc.damageMap.getMostDamage()!! as Player
     p.playSound(Sfx.COCKATRICE_DEATH)
 }

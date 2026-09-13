@@ -48,7 +48,7 @@ val iceWarrior =
 
 table.register(iceWarrior, *ids)
 
-on_npc_pre_death(*ids) {
+on_npc_pre_death(Npcs.ICE_WARRIOR_3073) {
     val p = npc.damageMap.getMostDamage()!! as Player
     p.playSound(Sfx.ICE_WARRIOR_DEATH)
 }

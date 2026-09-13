@@ -2,10 +2,6 @@ package gg.rsmod.plugins.content.npcs.definitions.critters
 
 import gg.rsmod.game.model.combat.SlayerAssignment
 
-on_npc_pre_death(Npcs.PIT_SCORPION) {
-    val p = npc.damageMap.getMostDamage()!! as Player
-    p.playSound(Sfx.SCORPION_DEATH)
-}
 
 set_combat_def(npc = Npcs.PIT_SCORPION) {
     configs {

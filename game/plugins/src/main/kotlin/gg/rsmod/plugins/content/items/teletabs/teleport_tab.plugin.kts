@@ -39,7 +39,8 @@ suspend fun Player.teleport(
         prepareForTeleport()
         lock = LockState.FULL_WITH_DAMAGE_IMMUNITY
         animate(id = Anims.USE_TELETAB_1, delay = 16)
-        playSound(Sfx.POH_TABLET_BREAK_TELEPORT, volume = 1, delay = 15)
+        // SYNTH_SOUND volume is a 0..255 mixer value; Void/Novite use 255 for normal effects.
+        playSound(Sfx.POH_TABLET_BREAK_TELEPORT, delay = 15)
         it.wait(cycles = 3)
         graphic(Gfx.TAB_TELEPORT)
         animate(id = Anims.USE_TELETAB_2)

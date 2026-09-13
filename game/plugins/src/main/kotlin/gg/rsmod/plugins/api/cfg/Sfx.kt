@@ -3829,8 +3829,13 @@ object Sfx {
     const val KR_PIETY = 3825
     const val KR_CHIVALRY = 3826
 
+    // Void's rev-667 prayer.sounds.toml names these existing synth groups explicitly.
+    const val RAPID_RENEWAL = 2678
+    const val RIGOUR = 2685
+    const val AUGURY = 2670
+
     // End of OSRS Sounds
     const val BANDOS_GODSWORD_SPEC = 3834
     const val PET_DOG_BARK = 4255
-    const val PROTECT_FROM_SUMMONING = 4262
+    const val PROTECT_FROM_SUMMONING = 4265
 }

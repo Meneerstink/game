@@ -174,7 +174,7 @@ WYRMS.forEach { wyrm ->
  */
 can_attack { attacker, target ->
     if (target is Npc && wyrmFor(target) != null && target.getTransmogId() == -1) {
-        if (attacker is Player) attacker.message("The mound stirs, but nothing emerges. Try stomping on it.")
+        if (attacker is Player && attacker.world.plugins.notifyAttackRefusal) attacker.message("The mound stirs, but nothing emerges. Try stomping on it.")
         false
     } else {
         true

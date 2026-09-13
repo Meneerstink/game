@@ -365,7 +365,7 @@ enum class Prayer(
         varbit = Varbits.RAPID_RENEWAL,
         qpVarbit = Varbits.RAPID_RENEWAL_QUICK_PRAYER,
         level = 65,
-        sound = -1 /*TODO*/,
+        sound = Sfx.RAPID_RENEWAL,
         drainEffect = 240,
         group = PrayerGroup.DUNGEONEERING_RESTORATION,
         curse = false,
@@ -398,7 +398,7 @@ enum class Prayer(
         varbit = Varbits.RIGOUR,
         qpVarbit = Varbits.RIGOUR_QUICK_PRAYER,
         level = 74,
-        sound = -1 /*TODO*/,
+        sound = Sfx.RIGOUR,
         drainEffect = 240, // TODO MAKE SURE FINE
         group = PrayerGroup.RANGED,
         curse = false,
@@ -418,7 +418,7 @@ enum class Prayer(
         varbit = Varbits.AUGURY,
         qpVarbit = Varbits.AUGURY_QUICK_PRAYER,
         level = 77,
-        sound = -1 /*TODO*/,
+        sound = Sfx.AUGURY,
         drainEffect = 240, // TODO MAKE SURE FINE
         group = PrayerGroup.MAGIC,
         curse = false,

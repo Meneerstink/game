@@ -61,7 +61,7 @@ val lesserDemon =
 
 table.register(lesserDemon, *ids)
 
-on_npc_pre_death(*ids) {
+on_npc_pre_death(Npcs.LESSER_DEMON_4694, Npcs.LESSER_DEMON_4695, Npcs.LESSER_DEMON_4696, Npcs.LESSER_DEMON_4697) {
     val p = npc.damageMap.getMostDamage()!! as Player
     p.playSound(Sfx.DEMON_DEATH)
 }

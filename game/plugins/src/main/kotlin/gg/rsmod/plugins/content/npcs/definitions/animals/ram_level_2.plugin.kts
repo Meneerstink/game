@@ -18,7 +18,7 @@ val ram =
 
 table.register(ram, *ids)
 
-on_npc_pre_death(*ids) {
+on_npc_pre_death(Npcs.RAM, Npcs.RAM_12370, Npcs.RAM_12371) {
     val p = npc.damageMap.getMostDamage()!! as Player
     p.playSound(Sfx.RAM_DEATH)
 }

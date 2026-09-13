@@ -66,7 +66,7 @@ val hillgiant =
 
 table.register(hillgiant, *ids)
 
-on_npc_pre_death(*ids) {
+on_npc_pre_death(Npcs.HILL_GIANT_4689, Npcs.HILL_GIANT_4690, Npcs.HILL_GIANT_4691, Npcs.HILL_GIANT_4692, Npcs.HILL_GIANT_4693) {
     val p = npc.damageMap.getMostDamage()!! as Player
     p.playSound(Sfx.GIANT_DEATH)
 }

@@ -1,36 +1,18 @@
 package gg.rsmod.plugins.content.areas.godwars
 
 /**
- * Binds the four generals' combat scripts (see [GodWarsGenerals]) and spawns their bodyguards.
+ * Installs the four generals' boss mechanics and spawns their bodyguards.
+ *
+ * RCV-005 root cause: the generals used hand-written attack scripts; they now fight through the shared
+ * data-driven attack model (NpcAttacks, Void bandos/saradomin/zamorak/armadyl `*.combat.toml`) in the generic
+ * combat cycle, and only their real mechanics are hooks (see [GodWarsGenerals.installAttackHooks]).
  *
  * Bodyguard combat stats and drops come from the bulk data tables (OSRS/2007-era values matched by
  * name + combat level). Placement: the cache carries no npc spawns, so each bodyguard is placed
  * two tiles from its general's spawn tile inside the chamber, on the same plane, with the same
  * walk radius the general uses.
  */
-on_npc_combat(*GodWarsGenerals.Graardor.ids) {
-    npc.queue { GodWarsGenerals.Graardor.handleSpecialCombat(this) }
-}
-
-on_npc_combat(*GodWarsGenerals.Zilyana.ids) {
-    npc.queue { GodWarsGenerals.Zilyana.handleSpecialCombat(this) }
-}
-
-on_npc_combat(*GodWarsGenerals.Kril.ids) {
-    npc.queue { GodWarsGenerals.Kril.handleSpecialCombat(this) }
-}
-
-on_npc_combat(*GodWarsGenerals.Kreearra.ids) {
-    npc.queue { GodWarsGenerals.Kreearra.handleSpecialCombat(this) }
-}
-
-// Void 667 supplies these bodyguard death sounds. The shared NPC combat definition currently has
-// no audio fields, so the narrow overlay keeps the generic attack path and lifecycle intact.
-GodWarsMinionAudio.deathSounds().forEach { (id, _) ->
-    on_npc_pre_death(id) {
-        GodWarsMinionAudio.playDeath(npc)
-    }
-}
+GodWarsGenerals.installAttackHooks()
 
 data class BodyguardSpawn(
     val npc: Int,

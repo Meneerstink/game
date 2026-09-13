@@ -42,7 +42,7 @@ val thief =
 
 table.register(thief, *ids)
 
-on_npc_pre_death(*ids) {
+on_npc_pre_death(Npcs.THIEF_5926, Npcs.THIEF_5928, Npcs.THIEF_5929) {
     val p = npc.damageMap.getMostDamage()!! as Player
     p.playSound(Sfx.HUMAN_DEATH)
 }

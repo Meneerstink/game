@@ -59,7 +59,7 @@ val thug =
 
 table.register(thug, *ids)
 
-on_npc_pre_death(*ids) {
+on_npc_pre_death(Npcs.THUG_7107, Npcs.THUG_7109, Npcs.THUG_7110, Npcs.THUG_7112, Npcs.THUG_7113, Npcs.THUG_7114, Npcs.THUG) {
     val p = npc.damageMap.getMostDamage()!! as Player
     p.playSound(Sfx.HUMAN_DEATH)
 }

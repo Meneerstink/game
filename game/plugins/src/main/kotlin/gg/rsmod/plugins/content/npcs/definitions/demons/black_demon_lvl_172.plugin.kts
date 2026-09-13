@@ -58,7 +58,7 @@ val blackDemon =
 
 table.register(blackDemon, *ids)
 
-on_npc_pre_death(*ids) {
+on_npc_pre_death(Npcs.BLACK_DEMON_4702, Npcs.BLACK_DEMON_4703, Npcs.BLACK_DEMON_4705) {
     val p = npc.damageMap.getMostDamage()!! as Player
     p.playSound(Sfx.BLACK_DEMON_DEATH)
 }

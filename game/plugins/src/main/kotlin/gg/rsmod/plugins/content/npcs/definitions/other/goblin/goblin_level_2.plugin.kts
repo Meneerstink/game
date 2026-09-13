@@ -93,7 +93,7 @@ table.register(goblin, *ids)
 
 on_npc_pre_death(*ids) {
     val p = npc.damageMap.getMostDamage()!! as Player
-    p.playSound(Sfx.GOBLIN_DEATH)
+    if (!gg.rsmod.plugins.content.combat.audio.NpcCombatAudio.hasDeathSound(npc.id)) p.playSound(Sfx.GOBLIN_DEATH)
 }
 
 on_npc_death(*ids) {

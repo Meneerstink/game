@@ -7,8 +7,11 @@ import gg.rsmod.game.message.Message
  */
 data class SynthSoundMessage(
     val sound: Int,
-    val volume: Int,
+    /** Number of times the client repeats the synth sound; this is the packet's second byte. */
+    val loops: Int,
     val delay: Int,
-    val unknownByte: Int = 255,
-    val unknownShort: Int = 256,
+    /** Playback volume in the client sound mixer. */
+    val volume: Int = 255,
+    /** Playback rate/speed used by the revision-667 client. */
+    val rate: Int = 256,
 ) : Message

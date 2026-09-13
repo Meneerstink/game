@@ -63,7 +63,7 @@ val iceGiant =
 
 table.register(iceGiant, *ids)
 
-on_npc_pre_death(*ids) {
+on_npc_pre_death(Npcs.ICE_GIANT_3072, Npcs.ICE_GIANT_4685, Npcs.ICE_GIANT_4686, Npcs.ICE_GIANT_4687) {
     val p = npc.damageMap.getMostDamage()!! as Player
     p.playSound(Sfx.GIANT_DEATH)
 }

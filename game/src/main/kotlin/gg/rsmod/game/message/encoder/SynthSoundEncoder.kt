@@ -13,10 +13,10 @@ class SynthSoundEncoder : MessageEncoder<SynthSoundMessage>() {
     ): Number =
         when (key) {
             "sound" -> message.sound
-            "volume" -> message.volume
+            "loops" -> message.loops
             "delay" -> message.delay
-            "unknown_byte" -> message.unknownByte
-            "unknown_short" -> message.unknownShort
+            "volume" -> message.volume
+            "rate" -> message.rate
             else -> throw Exception("Unhandled value key.")
         }
 

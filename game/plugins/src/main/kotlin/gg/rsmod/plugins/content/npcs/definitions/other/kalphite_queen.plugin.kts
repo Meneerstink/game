@@ -32,9 +32,6 @@ val FIRST_FORM = Npcs.KALPHITE_QUEEN // 1158 - crawling, magic/ranged-dominant
 val TRANSITION = Npcs.KALPHITE_QUEEN_1159 // 1159 - ~20-tick legs-shedding frame, not attackable
 val SECOND_FORM = Npcs.KALPHITE_QUEEN_1160 // 1160 - airborne, melee-dominant
 
-/** 20 game ticks (12 seconds): OSRS Wiki-stated duration of the legs-shedding transformation. */
-val TRANSFORM_TICKS = 20
-
 /** 2000 game ticks (20 minutes): OSRS Wiki-stated duration the second form can survive without
  * dying before reverting to the first form, keeping its remaining HP. */
 val REVERT_TICKS = 2000
@@ -127,48 +124,31 @@ on_npc_pre_death(SECOND_FORM) {
     p?.filterableMessage("The Kalphite Queen finally falls.")
 }
 
-/**
- * [TRANSITION] (npc 1159, no options - never a real combat target) is reused as a plain marker
- * that survives past a real npc's own removal, exactly so a [TimerKey] set on it can fire later.
- * A timer set directly on a dying npc is a no-op: [gg.rsmod.game.action.NpcDeathAction.death]
- * calls `world.remove(npc)` immediately after `on_npc_death` returns (both forms have
- * `respawnDelay = 0`, so `npc.respawns` is false and no wait/reset happens first), which stops
- * that npc from ever being ticked again.
+/*
+ * RCV-005 owner retest 2026-09-13 (screenshot C:\RSPS\KQ.png): the old code spawned npc 1159 as a
+ * visible "timer marker" after each death, which showed as a bugged un-animated queen for the whole
+ * transform and respawn wait. Delays now run as world queue tasks, so no stand-in npc is ever spawned.
  */
-fun spawnMarker(
-    world: World,
-    tile: Tile,
-): Npc = Npc(TRANSITION, tile, world).also { it.respawnOverride = false; world.spawn(it) }
 
-/** Real kill: the second form's own death. Loot, then a fresh first form after the real 50-tick
- * respawn delay - not the standard engine respawn cycle, since both forms have `respawnDelay = 0`
- * (this plugin owns every transition manually; see class-level comment). */
+/** Real kill: the second form's own death. Loot, then a fresh first form after the 50-tick respawn
+ * delay - not the standard engine respawn cycle, since both forms have `respawnDelay = 0`. */
 on_npc_death(SECOND_FORM) {
     table.getDrop(world, npc.damageMap.getMostDamage()!! as Player, npc.id, npc.tile)
-    spawnMarker(world, npc.tile).timers[RESPAWN_TIMER] = RESPAWN_TICKS
-}
-
-on_timer(RESPAWN_TIMER) {
-    if (npc.id == TRANSITION) {
-        val tile = npc.tile
-        world.remove(npc)
+    val tile = Tile(npc.tile)
+    world.queue {
+        wait(RESPAWN_TICKS)
         world.spawn(Npc(FIRST_FORM, tile, world).also { it.respawnOverride = false })
     }
 }
 
-/** First form "death" is really the transformation trigger, not a real kill: no loot, no real
- * respawn cycle (respawnDelay = 0 on her combat def), just the ~20-tick legs-shedding frame then
- * the second form spawns with full HP. */
+/** First form "death" is the transformation trigger, not a real kill: no loot. Novite 667
+ * `npc/others/KalphiteQueen.java:40-44`: once the death animation has played, the queen becomes 1160
+ * straight away with graphic 1055 and animation 6270 (the emerge). */
 on_npc_death(FIRST_FORM) {
-    spawnMarker(world, npc.tile).timers[TRANSFORM_TIMER] = TRANSFORM_TICKS
-}
-
-on_timer(TRANSFORM_TIMER) {
-    if (npc.id == TRANSITION) {
-        val tile = npc.tile
-        world.remove(npc)
-        world.spawn(Npc(SECOND_FORM, tile, world).also { it.respawnOverride = false })
-    }
+    val second = Npc(SECOND_FORM, Tile(npc.tile), world).also { it.respawnOverride = false }
+    world.spawn(second)
+    second.graphic(1055)
+    second.animate(6270)
 }
 
 on_npc_spawn(SECOND_FORM) {

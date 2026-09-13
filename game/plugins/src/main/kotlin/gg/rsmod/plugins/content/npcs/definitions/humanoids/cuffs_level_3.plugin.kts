@@ -48,10 +48,6 @@ val cuffs =
 
 table.register(cuffs, Npcs.CUFFS)
 
-on_npc_pre_death(Npcs.CUFFS) {
-    val p = npc.damageMap.getMostDamage()!! as Player
-    p.playSound(Sfx.HUMAN_DEATH)
-}
 
 on_npc_death(Npcs.CUFFS) {
     table.getDrop(world, npc.damageMap.getMostDamage()!! as Player, npc.id, npc.tile)

@@ -18,7 +18,6 @@ import gg.rsmod.plugins.content.combat.dealHit
 import gg.rsmod.plugins.content.combat.formula.MagicCombatFormula
 import gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell
 import gg.rsmod.plugins.content.combat.strategy.magic.SpellEffect
-import gg.rsmod.plugins.content.areas.godwars.GodWarsMinionAudio
 import gg.rsmod.plugins.content.magic.MagicSpells
 import gg.rsmod.plugins.content.mechanics.poison.Poison
 import gg.rsmod.plugins.content.mechanics.prayer.Prayer
@@ -138,10 +137,6 @@ object MagicCombatStrategy : CombatStrategy {
             animation = spell.castAnimation.getOrNull(2) ?: spell.castAnimation[0]
         }
         pawn.animate(animation)
-
-        if (pawn is Npc) {
-            GodWarsMinionAudio.playAttack(pawn, target)
-        }
 
         if (pawn is Player) {
             MagicSpells

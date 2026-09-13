@@ -60,7 +60,7 @@ val gargoyle =
 
 table.register(gargoyle, *ids)
 
-on_npc_pre_death(*ids) {
+on_npc_pre_death(Npcs.GARGOYLE_9087) {
     val p = npc.damageMap.getMostDamage()!! as Player
     p.playSound(Sfx.GARGOYLE_DEATH)
 }

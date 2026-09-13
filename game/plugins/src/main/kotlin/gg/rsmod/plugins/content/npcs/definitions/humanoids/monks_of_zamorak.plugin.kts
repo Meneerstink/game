@@ -37,7 +37,7 @@ val monkOfZamorak =
 
 table.register(monkOfZamorak, *ids)
 
-on_npc_pre_death(*ids) {
+on_npc_pre_death(Npcs.MONK_OF_ZAMORAK_1044, Npcs.MONK_OF_ZAMORAK_1045, Npcs.MONK_OF_ZAMORAK_1046) {
     val p = npc.damageMap.getMostDamage()!! as Player
     p.playSound(Sfx.HUMAN_DEATH)
 }

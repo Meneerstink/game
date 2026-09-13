@@ -56,10 +56,6 @@ val bansheeTable =
 
 table.register(bansheeTable, banshee)
 
-on_npc_pre_death(banshee) {
-    val p = npc.damageMap.getMostDamage()!! as Player
-    p.playSound(Sfx.BANSHEE_DEATH)
-}
 
 on_npc_death(banshee) {
     table.getDrop(world, npc.damageMap.getMostDamage()!! as Player, npc.id, npc.tile)

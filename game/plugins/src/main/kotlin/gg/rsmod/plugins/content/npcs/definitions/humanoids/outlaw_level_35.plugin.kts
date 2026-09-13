@@ -53,7 +53,7 @@ val outlaw =
 
 table.register(outlaw, *ids)
 
-on_npc_pre_death(*ids) {
+on_npc_pre_death(Npcs.OUTLAW_5843, Npcs.OUTLAW_5844, Npcs.OUTLAW_5845, Npcs.OUTLAW_5846, Npcs.OUTLAW_5847, Npcs.OUTLAW_5848, Npcs.OUTLAW_5849, Npcs.OUTLAW_5850, Npcs.OUTLAW_5851) {
     val p = npc.damageMap.getMostDamage()!! as Player
     p.playSound(Sfx.HUMAN_DEATH)
 }

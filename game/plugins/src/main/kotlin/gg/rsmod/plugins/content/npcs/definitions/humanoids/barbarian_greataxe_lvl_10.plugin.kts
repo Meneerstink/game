@@ -57,7 +57,7 @@ val barbarian =
 
 table.register(barbarian, *ids)
 
-on_npc_pre_death(*ids) {
+on_npc_pre_death(Npcs.BARBARIAN_3258, Npcs.BARBARIAN_3257) {
     val p = npc.damageMap.getMostDamage()!! as Player
     p.playSound(Sfx.BARBARIAN_DEATH)
 }

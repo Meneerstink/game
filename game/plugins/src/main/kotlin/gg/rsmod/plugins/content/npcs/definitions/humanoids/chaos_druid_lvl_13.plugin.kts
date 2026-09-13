@@ -41,7 +41,7 @@ val chaosDruid =
 
 table.register(chaosDruid, *ids)
 
-on_npc_pre_death(*ids) {
+on_npc_pre_death(Npcs.CHAOS_DRUID_2547, Npcs.CHAOS_DRUID_7105) {
     val p = npc.damageMap.getMostDamage()!! as Player
     p.playSound(Sfx.HUMAN_DEATH)
 }

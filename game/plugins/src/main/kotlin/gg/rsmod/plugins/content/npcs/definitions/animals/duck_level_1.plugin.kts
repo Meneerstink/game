@@ -17,7 +17,7 @@ val landDuckTable =
 
 table.register(landDuckTable, *landDucks)
 
-on_npc_pre_death(*ids) {
+on_npc_pre_death(Npcs.DUCK_6113, Npcs.DUCK_2693) {
     val p = npc.damageMap.getMostDamage()!! as Player
     p.playSound(Sfx.DUCK_DEATH)
 }

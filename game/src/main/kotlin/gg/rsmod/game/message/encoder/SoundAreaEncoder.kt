@@ -16,6 +16,8 @@ class SoundAreaEncoder : MessageEncoder<SoundAreaMessage>() {
             "tile" -> message.tileHash
             "settings" -> ((message.radius and 0xf) shl 4) or (message.volume and 0x7)
             "delay" -> message.delay
+            "playback_volume" -> message.playbackVolume
+            "rate" -> message.rate
             else -> throw Exception("Unhandled value key.")
         }
 

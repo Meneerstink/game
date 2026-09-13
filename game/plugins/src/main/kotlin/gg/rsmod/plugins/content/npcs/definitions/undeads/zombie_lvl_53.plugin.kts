@@ -54,7 +54,7 @@ val zombie =
 
 table.register(zombie, *ids)
 
-on_npc_pre_death(*ids) {
+on_npc_pre_death(Npcs.ZOMBIE_4394) {
     val p = npc.damageMap.getMostDamage()!! as Player
     p.playSound(Sfx.ZOMBIE_DEATH)
 }

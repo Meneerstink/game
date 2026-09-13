@@ -93,10 +93,6 @@ val dragon =
 
 table.register(dragon, KBD)
 
-on_npc_pre_death(KBD) {
-    val p = npc.damageMap.getMostDamage()!! as Player
-    p.playSound(Sfx.DRAGON_DEATH)
-}
 
 on_npc_death(KBD) {
     table.getDrop(world, npc.damageMap.getMostDamage()!! as Player, npc.id, npc.tile)

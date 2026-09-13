@@ -18,7 +18,7 @@ table.register(countTable)
 
 on_npc_pre_death(count) {
     val p = npc.damageMap.getMostDamage()!! as Player
-    p.playSound(Sfx.VAMPIRE_DEATH)
+    if (!gg.rsmod.plugins.content.combat.audio.NpcCombatAudio.hasDeathSound(npc.id)) p.playSound(Sfx.VAMPIRE_DEATH)
     npc.animate(Anims.COUNT_DRAYNOR_WEAKENED)
     npc.queue {
         wait(2)

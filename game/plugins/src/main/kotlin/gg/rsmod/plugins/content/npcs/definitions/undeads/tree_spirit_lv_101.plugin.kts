@@ -21,7 +21,7 @@ table.register(treeSpiritTable, treeSpirit)
 
 on_npc_pre_death(treeSpirit) {
     val p = npc.damageMap.getMostDamage()!! as Player
-    p.playSound(Sfx.BANSHEE_DEATH)
+    if (!gg.rsmod.plugins.content.combat.audio.NpcCombatAudio.hasDeathSound(npc.id)) p.playSound(Sfx.BANSHEE_DEATH)
     when (p.getCurrentStage(LostCity)) {
         LostCity.ENTRANA_DUNGEON -> {
             p.queue {

@@ -45,7 +45,7 @@ val mugger =
 
 table.register(mugger, *ids)
 
-on_npc_pre_death(*ids) {
+on_npc_pre_death(Npcs.MUGGER_7162) {
     val p = npc.damageMap.getMostDamage()!! as Player
     p.playSound(Sfx.HUMAN_DEATH)
 }

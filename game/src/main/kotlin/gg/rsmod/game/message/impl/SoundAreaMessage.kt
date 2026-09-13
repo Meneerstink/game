@@ -11,4 +11,6 @@ data class SoundAreaMessage(
     val radius: Int,
     val volume: Int,
     val delay: Int,
+    val playbackVolume: Int,
+    val rate: Int,
 ) : Message

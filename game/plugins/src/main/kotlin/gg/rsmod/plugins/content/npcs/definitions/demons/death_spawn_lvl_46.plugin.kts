@@ -19,10 +19,6 @@ on_npc_spawn(npc = Npcs.DEATH_SPAWN) {
     npc.graphic(Gfx.DEATH_SPAWN_SPAWN, 0)
 }
 
-on_npc_pre_death(*ids) {
-    val p = npc.damageMap.getMostDamage()!! as Player
-    p.playSound(Sfx.IMP_DEATH)
-}
 
 on_npc_death(*ids) {
     table.getDrop(world, npc.damageMap.getMostDamage()!! as Player, npc.id, npc.tile)

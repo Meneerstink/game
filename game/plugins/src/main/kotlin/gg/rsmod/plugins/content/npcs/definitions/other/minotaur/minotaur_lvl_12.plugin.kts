@@ -50,10 +50,6 @@ val minotaurTable =
 
 table.register(minotaurTable, npc)
 
-on_npc_pre_death(npc) {
-    val p = npc.damageMap.getMostDamage()!! as Player
-    p.playSound(Sfx.MINOTAUR_DEATH)
-}
 
 on_npc_death(npc) {
     table.getDrop(world, npc.damageMap.getMostDamage()!! as Player, npc.id, npc.tile)

@@ -44,7 +44,7 @@ val pyrefiend =
 
 table.register(pyrefiend, *ids)
 
-on_npc_pre_death(*ids) {
+on_npc_pre_death(Npcs.PYREFIEND_1634, Npcs.PYREFIEND_1635, Npcs.PYREFIEND_1636) {
     val p = npc.damageMap.getMostDamage()!! as Player
     p.playSound(Sfx.PYREFIEND_DEATH)
 }

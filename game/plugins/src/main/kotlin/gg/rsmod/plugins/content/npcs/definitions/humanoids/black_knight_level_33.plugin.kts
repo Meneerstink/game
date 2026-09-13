@@ -57,7 +57,7 @@ val guard =
 
 table.register(guard, *ids)
 
-on_npc_pre_death(*ids) {
+on_npc_pre_death(Npcs.BLACK_KNIGHT_179, Npcs.BLACK_KNIGHT_6189) {
     val p = npc.damageMap.getMostDamage()!! as Player
     p.playSound(Sfx.HUMAN_DEATH)
 }

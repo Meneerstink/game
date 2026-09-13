@@ -132,7 +132,7 @@ val imp =
 
 table.register(imp, *ids)
 
-on_npc_pre_death(*ids) {
+on_npc_pre_death(Npcs.IMP_709) {
     val p = npc.damageMap.getMostDamage()!! as Player
     p.playSound(Sfx.IMP_DEATH)
 }

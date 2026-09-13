@@ -61,7 +61,7 @@ val caveCrawler =
 
 table.register(caveCrawler, *ids)
 
-on_npc_pre_death(*ids) {
+on_npc_pre_death(Npcs.CAVE_CRAWLER_1601, Npcs.CAVE_CRAWLER_1602, Npcs.CAVE_CRAWLER_1603) {
     val p = npc.damageMap.getMostDamage()!! as Player
     p.playSound(Sfx.CAVE_CRAWLER_DEATH)
 }

@@ -85,7 +85,7 @@ table.register(guard, *allIds)
 
 on_npc_pre_death(*allIds) {
     val p = npc.damageMap.getMostDamage()!! as Player
-    p.playSound(Sfx.HUMAN_DEATH)
+    if (!gg.rsmod.plugins.content.combat.audio.NpcCombatAudio.hasDeathSound(npc.id)) p.playSound(Sfx.HUMAN_DEATH)
 }
 
 on_npc_death(*allIds) {

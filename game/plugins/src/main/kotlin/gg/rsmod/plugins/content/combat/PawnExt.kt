@@ -149,8 +149,10 @@ fun Pawn.dealHit(
     onHit: (PawnHit) -> Unit = {},
     hitType: HitType,
 ): PawnHit {
-    // Calculate the damage, applying a random factor
-    var damage = if (landHit) (Random.nextDouble(from = minHit, until = maxHit) * 10) else 0.0
+    // Calculate the 1:1 real damage, applying a random factor.
+    // Combat formulas and hitpoints use the same 1:1 real-damage unit. Keep the hitmark value
+    // identical to the rolled damage so server state, hitbars and client hit splats agree.
+    var damage = if (landHit) Random.nextDouble(from = minHit, until = maxHit) else 0.0
     // Staff of light special (Power of Light): 50% chance that melee damage taken is halved.
     if (hitType == HitType.MELEE && target.timers.has(gg.rsmod.game.model.timer.STAFF_OF_LIGHT_TIMER) && world.random(1) == 0) {
         damage /= 2
@@ -174,7 +176,7 @@ fun Pawn.dealHit(
     val dmg = damage.toInt()
 
     // Handles critical hit markers for Npc targets
-    if (damage >= ((maxHit * 10) * 0.90) && target is Npc) {
+    if (damage >= (maxHit * 0.90) && target is Npc) {
         type += 10
     }
 
@@ -232,11 +234,16 @@ fun Pawn.dealHit(
         }
     }
 
-    // Void's combatDamage Block hook emits an NPC defend sound through the attacking player.
-    // Keep this in the shared hit pipeline so normal and special attacks use the same event point.
+    // RCV-005 shared NPC combat audio (NpcCombatAudio): every strategy and every scripted npc attack
+    // deals its damage through here, so this is the one dispatch point. Void Attack.kt plays the
+    // attack sound when the npc attacks; Block.kt plays the npc defend sound through the attacker.
+    // A data-driven attack (NpcAttacks) already played its own section sounds this tick.
+    if (this is Npc && !gg.rsmod.plugins.content.combat.attack.NpcAttacks.isDataAttackThisCycle(this)) {
+        gg.rsmod.plugins.content.combat.audio.NpcCombatAudio.onAttack(this, target)
+    }
     if (target is Npc) {
         hit.addAction {
-            gg.rsmod.plugins.content.areas.godwars.GodWarsMinionAudio.playDefend(this@dealHit, target)
+            gg.rsmod.plugins.content.combat.audio.NpcCombatAudio.onDefend(this@dealHit, target)
         }
     }
 

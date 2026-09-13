@@ -26,7 +26,7 @@ val whiteWolf =
 
 table.register(whiteWolf, *ids)
 
-on_npc_pre_death(*ids) {
+on_npc_pre_death(Npcs.WOLF_4413, Npcs.WOLF_6047) {
     val p = npc.damageMap.getMostDamage()!! as Player
     p.playSound(Sfx.WOLF_DEATH)
 }

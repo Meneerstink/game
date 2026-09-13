@@ -17,7 +17,7 @@ val cowCalf =
 
 table.register(cowCalf, *ids)
 
-on_npc_pre_death(*ids) {
+on_npc_pre_death(Npcs.COW_CALF_12364, Npcs.COW_CALF_12366) {
     val p = npc.damageMap.getMostDamage()!! as Player
     p.playSound(Sfx.CALF_DEATH)
 }

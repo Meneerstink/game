@@ -65,7 +65,7 @@ val dragon =
 
 table.register(dragon, *ids)
 
-on_npc_pre_death(*ids) {
+on_npc_pre_death(Npcs.BLACK_DRAGON_4673) {
     val p = npc.damageMap.getMostDamage()!! as Player
     p.playSound(Sfx.DRAGON_DEATH)
 }

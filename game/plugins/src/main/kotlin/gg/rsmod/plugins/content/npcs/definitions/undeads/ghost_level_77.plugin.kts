@@ -5,7 +5,7 @@ import gg.rsmod.game.model.combat.StyleType
 
 val ids = intArrayOf(Npcs.GHOST_4387, Npcs.GHOST_5369, Npcs.GHOST_5370, Npcs.GHOST_5371)
 
-on_npc_pre_death(*ids) {
+on_npc_pre_death(Npcs.GHOST_5370, Npcs.GHOST_5371) {
     val p = npc.damageMap.getMostDamage()!! as Player
     p.playSound(Sfx.GHOST_DEATH)
 }

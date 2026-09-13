@@ -68,7 +68,7 @@ val citizen =
 
 table.register(citizen, *ids)
 
-on_npc_pre_death(*ids) {
+on_npc_pre_death(Npcs.MAN_2, Npcs.MAN_3, Npcs.WOMAN_BRUNETTE_PONYTAIL_5, Npcs.WOMAN_WOMAN_BLOND_PONYTAIL_6, Npcs.MAN_3915) {
     val p = npc.damageMap.getMostDamage()!! as Player
     p.playSound(Sfx.HUMAN_DEATH)
 }

@@ -58,7 +58,7 @@ val goblin =
 
 table.register(goblin, *ids)
 
-on_npc_pre_death(*ids) {
+on_npc_pre_death(Npcs.GOBLIN_4412) {
     val p = npc.damageMap.getMostDamage()!! as Player
     p.playSound(Sfx.GOBLIN_DEATH)
 }

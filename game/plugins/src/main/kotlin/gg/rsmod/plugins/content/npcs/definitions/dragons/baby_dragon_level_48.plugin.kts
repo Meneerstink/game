@@ -23,7 +23,7 @@ val baby_dragon =
 
 table.register(baby_dragon, *ids)
 
-on_npc_pre_death(*ids) {
+on_npc_pre_death(Npcs.BABY_RED_DRAGON_3588, Npcs.BABY_BLUE_DRAGON_4665, Npcs.BABY_BLUE_DRAGON_4666, Npcs.BABY_RED_DRAGON_4667, Npcs.BABY_RED_DRAGON_4668) {
     val p = npc.damageMap.getMostDamage()!! as Player
     p.playSound(Sfx.BABYDRAGON_DEATH)
 }

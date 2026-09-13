@@ -58,7 +58,7 @@ val mossGiant =
 
 table.register(mossGiant, *ids)
 
-on_npc_pre_death(*ids) {
+on_npc_pre_death(Npcs.MOSS_GIANT_1587, Npcs.MOSS_GIANT_1588, Npcs.MOSS_GIANT_4688) {
     val p = npc.damageMap.getMostDamage()!! as Player
     p.playSound(Sfx.GIANT_DEATH)
 }

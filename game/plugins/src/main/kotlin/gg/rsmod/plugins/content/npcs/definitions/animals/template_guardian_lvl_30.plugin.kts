@@ -22,7 +22,7 @@ table.register(templeGuardian, Npcs.TEMPLE_GUARDIAN)
 
 on_npc_pre_death(Npcs.TEMPLE_GUARDIAN) {
     val p = npc.damageMap.getMostDamage()!! as Player
-    p.playSound(Sfx.DOG_DEATH)
+    if (!gg.rsmod.plugins.content.combat.audio.NpcCombatAudio.hasDeathSound(npc.id)) p.playSound(Sfx.DOG_DEATH)
     if (p.getCurrentStage(PriestInPeril) == 2) {
         p.advanceToNextStage(PriestInPeril)
     }
