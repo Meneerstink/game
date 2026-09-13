@@ -25,6 +25,8 @@ suspend fun mainChat(it: QueueTask) {
     ) {
         FIRST_OPTION -> {
             it.chatPlayer("Can you heal me?")
+            // RCV-012 B12: the choice used to end here without healing (Void SurgeonGeneralTafani.menu -> heal).
+            DuelArenaNurses.heal(it, it.player.getInteractingNpc())
         }
         SECOND_OPTION -> {
             it.chatPlayer("Do you see a lot of injured fighters?")
@@ -61,6 +63,8 @@ suspend fun mainChatWith99(it: QueueTask) {
     ) {
         FIRST_OPTION -> {
             it.chatPlayer("Can you heal me?")
+            // RCV-012 B12: the choice used to end here without healing (Void SurgeonGeneralTafani.menu -> heal).
+            DuelArenaNurses.heal(it, it.player.getInteractingNpc())
         }
         SECOND_OPTION -> {
             it.chatPlayer("Do you see a lot of injured fighters?")
