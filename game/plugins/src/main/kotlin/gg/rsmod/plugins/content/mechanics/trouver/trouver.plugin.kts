@@ -15,6 +15,9 @@ import gg.rsmod.plugins.api.ext.message
  * separate, later product-curation task, not a technical blocker to the engine itself.
  */
 TrouverRegistry.register(TrouverLockable(baseItemId = Items.FIRE_CAPE, lockedItemId = Items.FIRE_CAPE_LOCKED_22324))
+// OSRS-IMPORT capesrings: Infernal cape page - a Trouver parchment plus 500,000 coins locks the cape into Infernal cape (l).
+// Its "mangled"/"(l) (broken)" variants are not imported yet, so the engine's documented keep-whole fallback applies.
+TrouverRegistry.register(TrouverLockable(baseItemId = Items.INFERNAL_CAPE, lockedItemId = Items.INFERNAL_CAPE_L))
 
 TrouverRegistry.all().forEach { lockable ->
     on_item_on_item(item1 = Items.TROUVER_PARCHMENT, item2 = lockable.baseItemId) {

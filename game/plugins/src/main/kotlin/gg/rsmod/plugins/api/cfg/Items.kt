@@ -19373,5 +19373,29 @@ object Items {
     const val MASORI_CHAPS_F_NOTED = 22383
     const val ARMADYLEAN_PLATE = 22384
     const val ARMADYLEAN_PLATE_NOTED = 22385
+    // OSRS-IMPORT batch capesrings (OsrsItemImportTool "capesrings"; RSPS_IMPORT_ASSET_MAP.yml).
+    const val INFERNAL_CAPE = 22386
+    const val INFERNAL_CAPE_BROKEN = 22387
+    const val INFERNAL_CAPE_L = 22388
+    const val IMBUED_SARADOMIN_CAPE = 22389
+    const val IMBUED_GUTHIX_CAPE = 22390
+    const val IMBUED_ZAMORAK_CAPE = 22391
+    const val IMBUED_SARADOMIN_CAPE_BROKEN = 22392
+    const val IMBUED_GUTHIX_CAPE_BROKEN = 22393
+    const val IMBUED_ZAMORAK_CAPE_BROKEN = 22394
+    const val RING_OF_THE_GODS = 22395
+    const val RING_OF_THE_GODS_NOTED = 22396
+    const val TYRANNICAL_RING = 22397
+    const val TYRANNICAL_RING_NOTED = 22398
+    const val TREASONOUS_RING = 22399
+    const val TREASONOUS_RING_NOTED = 22400
+    const val RING_OF_THE_GODS_I = 22401
+    const val TYRANNICAL_RING_I = 22402
+    const val TREASONOUS_RING_I = 22403
+    const val RING_OF_SUFFERING = 22404
+    const val RING_OF_SUFFERING_NOTED = 22405
+    const val RING_OF_SUFFERING_I = 22406
+    const val RING_OF_SUFFERING_R = 22407
+    const val RING_OF_SUFFERING_RI = 22408
     // Auto-generated file using class gg.rsmod.game.service.game.DumpEntityIdService
 }

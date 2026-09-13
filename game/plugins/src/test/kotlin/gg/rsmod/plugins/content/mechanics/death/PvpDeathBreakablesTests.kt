@@ -82,6 +82,29 @@ class PvpDeathBreakablesTests {
     }
 
     @Test
+    fun `every breakable item breaks in place and pays exactly its sourced repair cost`() {
+        assertEquals(
+            mapOf(Items.AVERNIC_DEFENDER to 600_000, Items.INFERNAL_CAPE to 225_000, Items.IMBUED_SARADOMIN_CAPE to 0, Items.IMBUED_GUTHIX_CAPE to 0, Items.IMBUED_ZAMORAK_CAPE to 0),
+            PvpDeathBreakables.ALL.associate { it.itemId to it.killerCoins },
+        )
+        PvpDeathBreakables.ALL.forEach { breakable ->
+            val victim = newPlayer()
+            val killer = newPlayer()
+            val world = mockk<World>(relaxed = true)
+            victim.inventory[2] = Item(breakable.itemId, 1)
+            val lost = listOf(DeathSlotItem(DeathContainerSource.INVENTORY, 2, Item(breakable.itemId, 1)))
+            val (result, converting) = PvpDeathBreakables.split(DeathResolutionResult(DeathContext.WILDERNESS_PVP, victim, killer, DeathItemRiskResult(0, emptyList(), lost)))
+
+            PvpDeathBreakables.execute(world, result, converting)
+
+            assertEquals(breakable.brokenId, victim.inventory[2]?.id, "${breakable.itemId} breaks in place")
+            val coinDrops = if (breakable.killerCoins > 0) 1 else 0
+            verify(exactly = coinDrops) { world.spawn(match<GroundItem> { it.item == Items.COINS_995 && it.amount == breakable.killerCoins }) }
+            verify(exactly = 0) { world.spawn(match<GroundItem> { it.item == breakable.itemId }) }
+        }
+    }
+
+    @Test
     fun `every ornamented item is dropped as base item plus kit on a wilderness death`() {
         gg.rsmod.plugins.content.items.osrs.OsrsOrnamentKits.ALL.forEach { ornament ->
             val victim = newPlayer()

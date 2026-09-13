@@ -93,6 +93,30 @@ object OsrsItemImportTool {
                     Spec(27241, noted = true), // Masori chaps (f)
                     Spec(27269, noted = true), // Armadylean plate
                 ),
+            // Batch 3: Infernal cape, Mage Arena II imbued god capes, Wilderness rings and their (i), Ring of suffering.
+            // Canonical ids only (no Deadman/LMS copies carrying params 59/403).
+            "capesrings" to
+                listOf(
+                    Spec(21295), // Infernal cape
+                    Spec(21287), // Infernal cape (broken)
+                    Spec(24224), // Infernal cape (l)
+                    Spec(21791, rev667Params = mapOf(749 to 6, 750 to 75)), // Imbued saradomin cape
+                    Spec(21793, rev667Params = mapOf(749 to 6, 750 to 75)), // Imbued guthix cape
+                    Spec(21795, rev667Params = mapOf(749 to 6, 750 to 75)), // Imbued zamorak cape
+                    Spec(24236), // Imbued saradomin cape (broken)
+                    Spec(24240), // Imbued guthix cape (broken)
+                    Spec(24244), // Imbued zamorak cape (broken)
+                    Spec(12601, noted = true), // Ring of the gods
+                    Spec(12603, noted = true), // Tyrannical ring
+                    Spec(12605, noted = true), // Treasonous ring
+                    Spec(13202), // Ring of the gods (i)
+                    Spec(12691), // Tyrannical ring (i)
+                    Spec(12692), // Treasonous ring (i)
+                    Spec(19550, noted = true, rev667Params = mapOf(749 to 3, 750 to 75)), // Ring of suffering
+                    Spec(19710, rev667Params = mapOf(749 to 3, 750 to 75)), // Ring of suffering (i)
+                    Spec(20655, rev667Params = mapOf(749 to 3, 750 to 75)), // Ring of suffering (r)
+                    Spec(20657, rev667Params = mapOf(749 to 3, 750 to 75)), // Ring of suffering (ri)
+                ),
         )
 
     private class Entry(
@@ -261,6 +285,9 @@ object OsrsItemImportTool {
         when (def.stackable) {
             0 -> {}
             1 -> out.writeByte(11)
+            // ModernItemDefDecoder stores OSRS opcode 160 as stackable=2. Its meaning is not established (it appears on
+            // Deadman/LMS copies and on Ring of suffering (r)/(ri), which do not stack in-game), so it is not encoded.
+            2 -> dropped += "${def.name}: OSRS opcode 160 (meaning unverified) not encoded"
             else -> error("${def.name}: stackable=${def.stackable} has no 667 equivalent")
         }
         out.writeByte(12)

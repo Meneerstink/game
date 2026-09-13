@@ -22,10 +22,24 @@ object PvpDeathBreakables {
         val killerCoins: Int,
     )
 
+    /**
+     * - Avernic defender: item page, broken + 600,000 coins (the repair cost) for the killer.
+     * - Infernal cape: "Items Kept on Death" below level 20 - kept broken, the PKer receives the repair cost;
+     *   item page repair cost 225,000 (since 20 September 2023). Above level 20 the page says it turns into a
+     *   pile of coins for the PKer, but no amount is sourced: PROVISIONAL, the below-20 rule applies everywhere.
+     * - Imbued god capes: item page - broken below level 20, "no coins go to the killer"; above-20 behaviour is
+     *   not sourced (same PROVISIONAL rule).
+     */
     private val entries =
         listOf(
             Breakable(Items.AVERNIC_DEFENDER, Items.AVERNIC_DEFENDER_BROKEN, 600_000),
+            Breakable(Items.INFERNAL_CAPE, Items.INFERNAL_CAPE_BROKEN, 225_000),
+            Breakable(Items.IMBUED_SARADOMIN_CAPE, Items.IMBUED_SARADOMIN_CAPE_BROKEN, 0),
+            Breakable(Items.IMBUED_GUTHIX_CAPE, Items.IMBUED_GUTHIX_CAPE_BROKEN, 0),
+            Breakable(Items.IMBUED_ZAMORAK_CAPE, Items.IMBUED_ZAMORAK_CAPE_BROKEN, 0),
         ).associateBy { it.itemId }
+
+    val ALL: Collection<Breakable> get() = entries.values
 
     fun breakableFor(itemId: Int): Breakable? = entries[itemId]
 
@@ -79,6 +93,7 @@ object PvpDeathBreakables {
             }
             broken++
             val killer = result.killer ?: continue
+            if (breakable.killerCoins <= 0) continue
             world.spawn(GroundItem(Item(Items.COINS_995, breakable.killerCoins * slotItem.item.amount), victim.tile, killer))
         }
         if (equipmentChanged) victim.refreshBonuses()
