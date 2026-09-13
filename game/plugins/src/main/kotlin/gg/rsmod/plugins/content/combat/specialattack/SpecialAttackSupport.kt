@@ -30,7 +30,8 @@ import gg.rsmod.plugins.content.mechanics.pvp.AreaState
 object SpecialAttackSupport {
     /**
      * Rolls and deals one melee hit. [accuracy]/[damage] are the special multipliers; [minFraction]
-     * sets a guaranteed floor as a fraction of the max hit. Returns the damage dealt in lifepoints (x10).
+     * sets a guaranteed floor as a fraction of the max hit. Returns the damage dealt in real
+     * hitpoints.
      */
     fun meleeHit(
         player: Player,

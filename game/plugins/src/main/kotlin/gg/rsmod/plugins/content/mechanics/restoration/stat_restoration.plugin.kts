@@ -43,7 +43,7 @@ on_timer(key = STAT_RESTORE) {
     }
 
     if (player.getMaximumLifepoints() > player.getCurrentLifepoints()) {
-        player.alterLifepoints(value = 10, capValue = 0)
+        player.alterLifepoints(value = 1, capValue = 0)
     }
 
     // Berserker curse: boosted/drained combat stats take 15% longer to tick back toward base

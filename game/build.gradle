@@ -127,6 +127,22 @@ task runInterfaceHookProbeTool(type: JavaExec) {
     systemProperty 'probe.indexed', findProperty('probeIndexed') ?: 'false'
 }
 
+task runClientScriptUnitMigrationTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Dual-cache transaction that removes the proven x10 max-total multipliers from' +
+        ' client scripts 2915, 2916 and 5255. Usage: ' +
+        './gradlew :game:runClientScriptUnitMigrationTool --args="<gameCache>;<fileServerCache> <journalRoot>"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.ClientScriptUnitMigrationTool'
+}
+
+task runClientScriptUnitMigrationRepairTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Dual-cache repair for clientscript 2916 relative branches after the x10 unit migration.'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.ClientScriptUnitMigrationRepairTool'
+}
+
 task runItemParamProbeTool(type: JavaExec) {
     group = 'tools'
     description = 'Read-only diagnostic: dumps every ItemDef.params (opcode 249) key/value for one ' +

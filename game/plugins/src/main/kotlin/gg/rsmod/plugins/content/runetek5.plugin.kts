@@ -2,11 +2,13 @@ package gg.rsmod.plugins.content
 
 import gg.rsmod.game.model.attr.DISPLAY_MODE_CHANGE_ATTR
 import gg.rsmod.game.model.attr.INTERACTING_ITEM_SLOT
+import gg.rsmod.game.model.attr.LIFEPOINT_SCALE_MIGRATED_ATTR
 import gg.rsmod.game.model.attr.OTHER_ITEM_SLOT_ATTR
 import gg.rsmod.game.model.collision.ObjectType
 import gg.rsmod.game.model.interf.DisplayMode
 import gg.rsmod.plugins.content.skills.summoning.Familiar
 import gg.rsmod.plugins.content.skills.summoning.FollowerDetailsTab
+import gg.rsmod.plugins.content.skills.summoning.SummoningUi
 import gg.rsmod.game.model.timer.*
 import gg.rsmod.game.service.serializer.PlayerSerializerService
 import kotlinx.serialization.json.Json
@@ -74,13 +76,21 @@ set_window_status_logic {
             2, 3 -> DisplayMode.RESIZABLE_NORMAL
             else -> DisplayMode.FIXED
         }
-    val changed = player.interfaces.displayMode != mode
     player.toggleDisplayInterface(mode)
-    if (changed) {
-        // A new top-level gameframe rebuilds every component with its baked flags, which drops
-        // the server-sent Summoning state: orb/panel gating and the Follower Details tab
-        // (548:99 / 746:47 are baked hidden with no ops). Re-arm both, exactly as login does.
+    // A client window-mode switch rebuilds the gameframe with its baked flags, which drops the
+    // server-sent Summoning state: orb/panel gating and the Follower Details tab (548:99 / 746:47
+    // are baked hidden with no ops). Owner live report 2026-09-13: the icon vanished when switching
+    // to fixed or fullscreen. The old `changed` guard skipped resizable <-> fullscreen (both map to
+    // RESIZABLE_NORMAL here) although the client still rebuilds, so re-arm on every report, and
+    // again a few ticks later the same way login does, in case the client rebuild lands after the
+    // first re-arm.
+    Familiar.redrawInterfaces(player)
+    SummoningUi.restorePanel(player)
+    FollowerDetailsTab.install(player)
+    player.queue {
+        wait(3)
         Familiar.redrawInterfaces(player)
+        SummoningUi.restorePanel(player)
         FollowerDetailsTab.install(player)
     }
 }
@@ -136,10 +146,37 @@ on_login {
 
     player.checkEquipment()
 
-    // Updates the players lifepoints
-    if (player.getVarbit(player.skills.LIFEPOINTS_VARBIT) == 0) {
-        player.setVarbit(player.skills.LIFEPOINTS_VARBIT, player.skills.getMaxLevel(Skills.CONSTITUTION) * 10)
+    // Normalize the old persisted 990/9900-style values on login, then initialize new characters
+    // directly in the server's 1:1 lifepoint/prayer-point unit. Gated behind
+    // LIFEPOINT_SCALE_MIGRATED_ATTR so this only ever runs once per character: the "value is
+    // greater than the real max and divisible by ten" check can never fire again once a value is
+    // genuinely 1:1 (current can never exceed max by construction), so re-running it forever was
+    // unnecessary. Known residual gap: a character whose real current HP/prayer at the moment of
+    // the original x10-to-1:1 cutover was already <= ~10% of max is indistinguishable from an
+    // already-correct 1:1 value by magnitude alone and will not be caught here; fixing that
+    // requires a save-format migration tool, not a login heuristic, and is tracked separately.
+    if (!player.attr.has(LIFEPOINT_SCALE_MIGRATED_ATTR)) {
+        val maxLifepoints = player.skills.getMaxLevel(Skills.CONSTITUTION)
+        val storedLifepoints = player.getVarbit(player.skills.LIFEPOINTS_VARBIT)
+        when {
+            storedLifepoints == 0 -> player.setVarbit(player.skills.LIFEPOINTS_VARBIT, maxLifepoints)
+            storedLifepoints > maxLifepoints && storedLifepoints % 10 == 0 ->
+                player.setVarbit(player.skills.LIFEPOINTS_VARBIT, (storedLifepoints / 10).coerceAtMost(maxLifepoints))
+        }
+
+        val maxPrayerPoints = player.getMaximumPrayerPoints()
+        val storedPrayerPoints = player.getCurrentPrayerPoints()
+        if (storedPrayerPoints > maxPrayerPoints && storedPrayerPoints % 10 == 0) {
+            player.setCurrentPrayerPoints((storedPrayerPoints / 10).coerceAtMost(maxPrayerPoints))
+        }
+
+        player.attr[LIFEPOINT_SCALE_MIGRATED_ATTR] = true
     }
+
+    // The 667 gameframe reads current HP from varbit 7198, while the Skills tab and the orb's
+    // onStatTransmit dependency read Constitution's current level. Keep both client inputs equal
+    // after loading older saves as well as during live damage/healing.
+    player.setCurrentLifepoints(player.getCurrentLifepoints())
 
     val timersToInitialize = listOf(TIME_ONLINE, DAILY_TIMER, SAVE_TIMER, STAT_RESTORE)
     timersToInitialize.forEach { timer ->

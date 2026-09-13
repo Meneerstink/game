@@ -118,7 +118,7 @@ set_level_up_logic {
     }
 
     if (skill == Skills.CONSTITUTION) {
-        player.heal(10 * increment)
+        player.heal(increment)
     }
 
     val totalArray = Skills.TOTAL_MILESTONE_ARRAY

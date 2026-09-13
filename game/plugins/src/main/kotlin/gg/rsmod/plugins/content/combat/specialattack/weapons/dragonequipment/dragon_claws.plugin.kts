@@ -25,7 +25,7 @@ SpecialAttacks.register(
 
     val maxHit = MeleeCombatFormula.getMaxHit(player, target)
     val accuracy = MeleeCombatFormula.getAccuracy(player, target, specialAttackMultiplier = 1.5)
-    val consolationHit = (maxHit * 10 * 0.2).toInt().coerceAtLeast(1)
+    val consolationHit = (maxHit * 0.2).toInt().coerceAtLeast(1)
 
     val hit1Lands = accuracy >= world.randomDouble()
     val hit1 = player.dealHit(target = target, maxHit = maxHit, landHit = hit1Lands, delay = 1, hitType = HitType.MELEE)

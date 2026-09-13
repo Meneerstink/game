@@ -62,6 +62,8 @@ fun currentDay(): Long = TimeUnit.MILLISECONDS.toDays(System.currentTimeMillis()
 on_obj_option(obj = Objs.PORTAL_28779, option = "enter") {
     val obj = player.getInteractingGameObj()
     if (obj.tile != PORTAL_TILE) {
+        // The other 108 Chaos Tunnels portals share this id; their pairs are sourced table data.
+        gg.rsmod.plugins.content.mechanics.objteleports.ObjectTeleports.fallback(player)
         return@on_obj_option
     }
     val day = currentDay()
@@ -394,7 +396,7 @@ on_npc_combat(npc = DAGONHAI_ELITE) {
             world.queue {
                 wait(3)
                 victim.graphic(GFX_CURSE_IMPACT)
-                victim.hit((10 + world.random(15)) * 10, HitType.MAGIC)
+                victim.hit(10 + world.random(15), HitType.MAGIC)
             }
             elite.postAttackLogic(target)
             wait(elite.combatDef.attackSpeed)

@@ -302,11 +302,11 @@ abstract class Player(
     override fun getCurrentLifepoints(): Int = varps.getVarbit(world, skills.LIFEPOINTS_VARBIT)
 
     /**
-     * Returns the player's maximum lifepoints, calculated as 10 times their maximum level in the Constitution skill (skill ID 3).
+     * Returns the player's maximum lifepoints in the same 1:1 unit used by the client display.
      *
      * @return The maximum lifepoints of the player.
      */
-    override fun getMaximumLifepoints(): Int = skills.getMaxLevel(3) * 10
+    override fun getMaximumLifepoints(): Int = skills.getMaxLevel(3)
 
     /**
      * Sets the player's current lifepoints to the specified value.
@@ -315,6 +315,7 @@ abstract class Player(
      */
     override fun setCurrentLifepoints(level: Int) {
         varps.setVarbit(world, skills.LIFEPOINTS_VARBIT, level)
+        skills.setCurrentLevel(3, level)
     }
 
     /**
@@ -324,12 +325,8 @@ abstract class Player(
      */
     fun getCurrentPrayerPoints(): Int = varps.getVarbit(world, skills.PRAYER_POINTS_VARBIT)
 
-    /**
-     * Returns the player's maximum prayer points, calculated as 10 times their maximum level in the Prayer skill (skill ID 5).
-     *
-     * @return The maximum prayer points of the player.
-     */
-    fun getMaximumPrayerPoints(): Int = skills.getMaxLevel(5) * 10
+    /** Returns the player's maximum prayer points in the server's 1:1 prayer-point unit. */
+    fun getMaximumPrayerPoints(): Int = skills.getMaxLevel(5)
 
     /**
      * Sets the player's current prayer points to the specified value.

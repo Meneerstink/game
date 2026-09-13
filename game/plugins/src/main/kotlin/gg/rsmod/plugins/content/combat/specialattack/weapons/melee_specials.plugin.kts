@@ -184,7 +184,7 @@ SpecialAttacks.register(50, Items.BARRELCHEST_ANCHOR) {
     player.animate(5870)
     player.graphic(1027)
     meleeHit(player, victim, damage = 1.1) { dealt ->
-        val amount = dealt / 100
+        val amount = dealt / 10
         listOf(Skills.DEFENCE, Skills.ATTACK, Skills.RANGED, Skills.MAGIC).forEach { drain(victim, it, amount) }
     }
 }
@@ -196,7 +196,7 @@ SpecialAttacks.register(75, Items.BONE_DAGGER, Items.BONE_DAGGER_P, Items.BONE_D
     player.graphic(704)
     player.playSound(Sfx.DTTD_BONE_DAGGER_STAB)
     val unaware = victim.attr[gg.rsmod.game.model.attr.COMBAT_TARGET_FOCUS_ATTR]?.get() !== player
-    meleeHit(player, victim, forceLand = unaware) { dealt -> drain(victim, Skills.DEFENCE, dealt / 10) }
+    meleeHit(player, victim, forceLand = unaware) { dealt -> drain(victim, Skills.DEFENCE, dealt) }
 }
 
 /* Rune claws - Impale: 25%, +10% accuracy and damage. */
@@ -229,7 +229,7 @@ SpecialAttacks.register(75, Items.BRINE_SABRE) {
     player.animate(6118)
     player.graphic(1048)
     meleeHit(player, victim, accuracy = 1.25, damage = 1.25) { dealt ->
-        val boost = dealt / 40
+        val boost = dealt / 4
         if (boost > 0) {
             listOf(Skills.ATTACK, Skills.STRENGTH, Skills.DEFENCE).forEach { skill ->
                 player.skills.alterCurrentLevel(skill, boost, capValue = boost)

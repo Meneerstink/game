@@ -16,11 +16,8 @@ import kotlin.math.ceil
  * instead, since the pre-reduction value isn't exposed by this combat pipeline. Simpler, honest,
  * and correct in the overwhelming majority of real fights.
  *
- * Player Prayer points AND lifepoints (HP) are both stored internally at x10 the real displayed
- * scale, and hitmark damage is in that same x10 scale (see bandos_godsword.plugin.kts for the
- * full verified detail) - so the real-HP percentages/minimums below are computed against the
- * damage divided back down by 10, then the heal/restore is converted back up by 10 before being
- * added to the (also x10-scale) lifepoints/prayer totals.
+ * Player Prayer points, lifepoints and hitmark damage all use the same 1:1 real-value unit, so the
+ * sourced percentages and minimums can be applied directly.
  */
 SpecialAttacks.register(50, Items.SARADOMIN_GODSWORD) {
     val maxHit = MeleeCombatFormula.getMaxHit(player, target, specialAttackMultiplier = 1.10)
@@ -35,15 +32,14 @@ SpecialAttacks.register(50, Items.SARADOMIN_GODSWORD) {
     )
 
     if (landHit) {
-        // Real (displayed) HP-equivalent damage - see doc comment above for why /10 is required.
-        val realDamage = hit.hit.hitmarks.sumOf { it.damage } / 10
+        val realDamage = hit.hit.hitmarks.sumOf { it.damage }
 
         val healRealHp = ceil(realDamage * 0.5).toInt().coerceAtLeast(10)
-        val newLifepoints = (player.getCurrentLifepoints() + healRealHp * 10).coerceAtMost(player.getMaximumLifepoints())
+        val newLifepoints = (player.getCurrentLifepoints() + healRealHp).coerceAtMost(player.getMaximumLifepoints())
         player.setCurrentLifepoints(newLifepoints)
 
         val prayerRestoreRealPoints = ceil(realDamage * 0.25).toInt().coerceAtLeast(5)
-        val newPrayerPoints = (player.getCurrentPrayerPoints() + prayerRestoreRealPoints * 10).coerceAtMost(player.getMaximumPrayerPoints())
+        val newPrayerPoints = (player.getCurrentPrayerPoints() + prayerRestoreRealPoints).coerceAtMost(player.getMaximumPrayerPoints())
         player.setCurrentPrayerPoints(newPrayerPoints)
     }
 }

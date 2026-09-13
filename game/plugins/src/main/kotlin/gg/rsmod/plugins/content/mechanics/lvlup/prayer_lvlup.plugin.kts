@@ -13,7 +13,7 @@ set_level_up_logic {
     if (skill == Skills.PRAYER) {
         val prayerPoints = player.getCurrentPrayerPoints()
         if (prayerPoints < player.getMaximumPrayerPoints()) {
-            val newPrayerPoints = (prayerPoints + increment * 10).coerceAtMost(player.getMaximumPrayerPoints())
+    val newPrayerPoints = (prayerPoints + increment).coerceAtMost(player.getMaximumPrayerPoints())
             player.setCurrentPrayerPoints(newPrayerPoints)
         }
     }

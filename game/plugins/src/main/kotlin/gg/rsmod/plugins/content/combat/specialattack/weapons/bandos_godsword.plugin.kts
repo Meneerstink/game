@@ -15,12 +15,7 @@ import gg.rsmod.plugins.content.combat.specialattack.SpecialAttacks
  * the Npc drain order skips Prayer: Defence -> Strength -> Attack -> Magic -> Ranged. Disclosed
  * simplification, not a guess - NpcSkills was checked directly.
  *
- * Player Prayer points are stored internally at x10 the real 1-99 displayed scale (verified via
- * Player.getMaximumPrayerPoints()/decreasePrayerPoints() vs. real usage in Prayers.kt), so the
- * real-points drain amount is multiplied by 10 before calling decreasePrayerPoints. Lifepoints
- * (HP) are stored the same way (getMaximumLifepoints() = HP level * 10, confirmed in Player.kt),
- * and hitmark damage is in that same x10 scale (PawnExt.kt's dealHit multiplies by 10), so the
- * real per-level drain amount used below is the hitmark damage divided back down by 10.
+ * Player Prayer points, lifepoints and hitmark damage all use the same 1:1 real-value unit.
  */
 SpecialAttacks.register(50, Items.BANDOS_GODSWORD) {
     val maxHit = MeleeCombatFormula.getMaxHit(player, target, specialAttackMultiplier = 1.21)
@@ -35,20 +30,17 @@ SpecialAttacks.register(50, Items.BANDOS_GODSWORD) {
     )
 
     if (landHit) {
-        // Real (displayed) HP-equivalent damage - see doc comment above for why /10 is required.
-        var remaining = hit.hit.hitmarks.sumOf { it.damage } / 10
+        var remaining = hit.hit.hitmarks.sumOf { it.damage }
         if (target is Player) {
             val p = target as Player
             val order = intArrayOf(Skills.DEFENCE, Skills.STRENGTH, Skills.PRAYER, Skills.ATTACK, Skills.MAGIC, Skills.RANGED)
             for (skill in order) {
                 if (remaining <= 0) break
                 if (skill == Skills.PRAYER) {
-                    // getCurrentPrayerPoints() is raw x10 scale; convert to real points to drain
-                    // 1:1 against `remaining` (also real units), then convert back for the call.
-                    val currentRealPoints = p.getCurrentPrayerPoints() / 10
+                    val currentRealPoints = p.getCurrentPrayerPoints()
                     if (currentRealPoints <= 0) continue
                     val drain = currentRealPoints.coerceAtMost(remaining)
-                    p.decreasePrayerPoints(drain * 10)
+                    p.decreasePrayerPoints(drain)
                     remaining -= drain
                 } else {
                     val currentLevel = p.skills.getCurrentLevel(skill)

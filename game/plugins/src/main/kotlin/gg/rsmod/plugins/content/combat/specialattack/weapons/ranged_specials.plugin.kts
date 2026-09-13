@@ -66,7 +66,7 @@ SpecialAttacks.register(100, Items.SEERCULL) {
     player.playSound(Sfx.SOULSHOT)
     rangedShot(player, victim, forceLand = true, projectileGfx = 473) { dealt ->
         victim.graphic(474)
-        drain(victim, Skills.MAGIC, dealt / 10)
+        drain(victim, Skills.MAGIC, dealt)
     }
 }
 
@@ -76,7 +76,7 @@ SpecialAttacks.register(75, Items.DORGESHUUN_CBOW) {
     player.animate(4230)
     player.playSound(Sfx.DTTD_BONE_CROSSBOW_SA)
     val unaware = victim.attr[gg.rsmod.game.model.attr.COMBAT_TARGET_FOCUS_ATTR]?.get() !== player
-    rangedShot(player, victim, forceLand = unaware, projectileGfx = 698) { dealt -> drain(victim, Skills.DEFENCE, dealt / 10) }
+    rangedShot(player, victim, forceLand = unaware, projectileGfx = 698) { dealt -> drain(victim, Skills.DEFENCE, dealt) }
 }
 
 /* Zanik's crossbow - Defiance: 50%; the bolt deals 30-150 extra damage on top of a normal hit and is stronger against prayer users. */

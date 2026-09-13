@@ -30,7 +30,7 @@ object Poison {
      * @return the damage that will be dealt after the specified number of ticks
      * @since 1.0
      */
-    fun getDamageForTicks(ticks: Int) = ((ticks / 5) + 1) * 10
+    fun getDamageForTicks(ticks: Int) = (ticks / 5) + 1
 
     /**
      * Checks if a given pawn is immune to poison.
