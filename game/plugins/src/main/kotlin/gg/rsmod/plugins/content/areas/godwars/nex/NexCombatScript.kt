@@ -89,7 +89,7 @@ object NexCombatScript : CombatScript() {
             }
             if (virusCooldown > 0) virusCooldown--
             val inMelee = npc.getFrontFacingTile(target).getDistance(target.tile) <= 1
-            npc.prayerIcon = if (enc.phase == Phase.ZAROS) PrayerIcon.SOUL_SPLIT.id else -1
+            // RCV-011: the overhead follows the Zaros-phase form (NexZarosForms, ticked by NexEncounter.cycle).
 
             if (enc.consumeFirstStageAttack()) {
                 when (enc.phase) {
@@ -163,9 +163,9 @@ object NexCombatScript : CombatScript() {
         npc.removeCombatTarget()
     }
 
-    /** Zaros phase: Nex heals herself for the damage she deals (Soul Split). */
+    /** Zaros phase, Soul Split form only (Novite NexCombat.sendSoulSplit: id 13448): Nex heals from the damage she deals. */
     private fun soulSplit(npc: Npc, damage: Int) {
-        if (NexEncounter.phase == Phase.ZAROS && damage > 0) {
+        if (NexEncounter.phase == Phase.ZAROS && NexZarosForms.soulSplitActive(NexZarosForms.formOf(npc)) && damage > 0) {
             NexEncounter.heal(npc, soulSplitAmount(damage))
         }
     }

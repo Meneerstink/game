@@ -174,7 +174,21 @@ object NexEncounter {
         if (!awaitingMinion && !intro && boss.isAlive()) {
             checkPhaseThreshold(boss)
         }
+        if (phase == Phase.ZAROS && boss.isAlive()) {
+            tickZarosForm(boss)
+        }
         cycleInfection()
+    }
+
+    /** Remaining ticks of the current Zaros-phase form ([NexZarosForms]); 0 transforms on the next tick. */
+    var zarosFormTicks = 0
+        private set
+
+    private fun tickZarosForm(boss: Npc) {
+        val current = NexZarosForms.formOf(boss)
+        val (form, ticks) = NexZarosForms.step(current, zarosFormTicks)
+        if (form != current) NexZarosForms.apply(boss, form)
+        zarosFormTicks = ticks
     }
 
     fun start() {
@@ -314,6 +328,8 @@ object NexEncounter {
         if (phase == Phase.ZAROS) {
             boss.graphic(GFX_ZAROS)
             heal(boss, ZAROS_HEAL)
+            // Novite's prayer counter starts at 0: the first Zaros tick turns Nex into her Soul Split form.
+            zarosFormTicks = 0
         }
         world.queue {
             wait(2)
@@ -346,6 +362,8 @@ object NexEncounter {
     /** Nex death: Wrath burst, drops handled by the definition plugin, restart after a minute. */
     fun onNexDeath(boss: Npc) {
         if (!fightActive) return
+        // Novite Nex.sendDeath: the Wrath form (667 headIcon 19) for the death animation.
+        NexZarosForms.apply(boss, NexZarosForms.DEATH_FORM)
         playSound(boss, SOUND_DEATH)
         boss.forceChat("Taste my wrath!")
         boss.graphic(GFX_WRATH)

@@ -51,6 +51,8 @@ object DamageResponse {
             // 1) Deflect curses - existing implementation, logic unchanged, just moved one
             //    call site up so it participates in this single deterministic order.
             AncientCurses.onIncomingHit(attacker, target, style, damage)
+            //    RCV-011: the same deflect for npcs showing a Deflect overhead (Nex), see NpcDeflect.
+            NpcDeflect.onIncomingHit(attacker, target, style, damage)
             // 2) Vengeance - single-use, 75% of damage, consumes itself on trigger.
             Vengeance.onIncomingHit(attacker, target, damage)
             // 3) Ring of recoil / Ring of suffering - floor(10% damage) + 1, 40-damage
