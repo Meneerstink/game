@@ -24,6 +24,7 @@ class ClickMinimapHandler : MessageHandler<MoveMinimapClickMessage> {
         message: MoveMinimapClickMessage,
     ) {
         if (!client.lock.canMove()) {
+            gg.rsmod.game.model.AvTrace.log { "walk refused gate=lock lock=${client.lock} from=${client.tile} (minimap)" }
             return
         }
 

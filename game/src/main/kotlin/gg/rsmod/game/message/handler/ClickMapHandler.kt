@@ -24,6 +24,8 @@ class ClickMapHandler : MessageHandler<MoveGameClickMessage> {
         message: MoveGameClickMessage,
     ) {
         if (!client.lock.canMove()) {
+            // RCV-012 B1/B2/B13: silent movement refusals are traced so a live "cannot walk" names its gate.
+            gg.rsmod.game.model.AvTrace.log { "walk refused gate=lock lock=${client.lock} from=${client.tile} to=${message.x},${message.z}" }
             return
         }
 

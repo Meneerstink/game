@@ -28,6 +28,7 @@ class OpLoc1Handler : MessageHandler<OpLoc1Message> {
          */
         val tile = Tile(message.x, message.z, client.tile.height)
         if (!tile.viewableFrom(client.tile, Player.TILE_VIEW_DISTANCE)) {
+            gg.rsmod.game.model.AvTrace.log { "loc-op1 refused gate=view id=${message.id} at=$tile from=${client.tile}" }
             return
         }
 
@@ -35,6 +36,7 @@ class OpLoc1Handler : MessageHandler<OpLoc1Message> {
          * If player can't move, we don't do anything.
          */
         if (!client.lock.canMove()) {
+            gg.rsmod.game.model.AvTrace.log { "loc-op1 refused gate=lock lock=${client.lock} id=${message.id} at=$tile" }
             return
         }
 
@@ -47,7 +49,10 @@ class OpLoc1Handler : MessageHandler<OpLoc1Message> {
                 it.id ==
                     message.id
             }
-                ?: return
+                ?: run {
+                    gg.rsmod.game.model.AvTrace.log { "loc-op1 refused gate=no-object id=${message.id} at=$tile" }
+                    return
+                }
 
         log(
             client,
