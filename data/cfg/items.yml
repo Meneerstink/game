@@ -267702,3 +267702,133 @@
   tradeable: true
   weight: 0.0
   equipment: null
+- id: 22640
+  name: "Hunters' sunlight crossbow"
+  examine: "A weapon made of horn and bone."
+  tradeable: true
+  weight: 6.0
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 5692
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 17
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 79
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: 2700
+    skill_reqs: [{'skill': 4, 'level': 66}, {'skill': 21, 'level': 50}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22641
+  name: "Hunters' sunlight crossbow"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22646
+  name: "Sunlight antler bolts"
+  examine: "Bolts made from the antlers of a sunlight antelope."
+  tradeable: true
+  weight: 0.0
+  equipment:
+    equip_slot: 13
+    equip_type: -1
+    appearance_id: 5693
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 55
+    magic_damage: 0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22651
+  name: "Moonlight antler bolts"
+  examine: "Bolts made from the antlers of a moonlight antelope."
+  tradeable: true
+  weight: 0.0
+  equipment:
+    equip_slot: 13
+    equip_type: -1
+    appearance_id: 5693
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 60
+    magic_damage: 0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22652
+  name: "Sunlight antler"
+  examine: "Antler of a sunlight antelope."
+  tradeable: true
+  weight: 0.005
+  equipment: null
+- id: 22653
+  name: "Sunlight antler"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22654
+  name: "Moonlight antler"
+  examine: "Antler of a moonlight antelope."
+  tradeable: true
+  weight: 0.005
+  equipment: null
+- id: 22655
+  name: "Moonlight antler"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null

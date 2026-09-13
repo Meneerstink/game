@@ -179,6 +179,18 @@ object OsrsItemImportTool {
                     Spec(22978, noted = true, rev667Params = mapOf(644 to 1581, 686 to 14, 749 to 0, 750 to 78), weaponType = 14), // Dragon hunter lance
                     Spec(13576, noted = true, rev667Params = mapOf(644 to 1430, 686 to 10, 687 to 1, 749 to 2, 750 to 60), weaponType = 10, attackAudio = 2504), // Dragon warhammer
                 ),
+            // Hunters' sunlight crossbow and its antler bolts. Client params follow the 667 Hunters' crossbow 10156 (644 175,
+            // 686 17, 23/749/750 requirement; weapon type 17, attack audio 2700). The client shows the 66 Ranged requirement;
+            // the wiki's second requirement (50 Hunter) is server-side only in items.yml. The bolts' upstream param 23 = 50 is
+            // not a wield requirement (wiki: 66 Ranged "effectively", through the crossbow), so they carry no client params.
+            "sunlight" to
+                listOf(
+                    Spec(28869, noted = true, rev667Params = mapOf(644 to 175, 686 to 17, 23 to 66, 749 to 4, 750 to 66), weaponType = 17, attackAudio = 2700), // Hunters' sunlight crossbow
+                    Spec(28872), // Sunlight antler bolts
+                    Spec(28878), // Moonlight antler bolts
+                    Spec(28884, noted = true), // Sunlight antler
+                    Spec(28887, noted = true), // Moonlight antler
+                ),
         )
 
     /**
@@ -350,6 +362,15 @@ object OsrsItemImportTool {
         }
     }
 
+    /**
+     * Item opcode 114 (contrast). OSRS stores the signed byte as-is and lights the item model with `contrast + 768`
+     * (RuneLite cache `ItemLoader`: `def.contrast = stream.readByte()`; `ItemSpriteFactory`: `item.contrast + 768`). The
+     * 667 client multiplies the byte by 5 before the same term (2011scape-client `ObjType.decode`: `contrast =
+     * packet.g1b() * 5`; `createModel(..., this.ambient + 64, this.contrast + 768)`). The 667 byte is therefore the OSRS
+     * value divided by 5, rounded to the nearest integer and kept inside a signed byte.
+     */
+    fun rev667Contrast(osrsContrast: Int): Int = (osrsContrast / 5.0).roundToInt().coerceIn(-128, 127)
+
     private fun notedBytes(baseLocalId: Int): ByteArray =
         byteArrayOf(97, (baseLocalId ushr 8).toByte(), baseLocalId.toByte(), 98, (NOTE_TEMPLATE ushr 8).toByte(), NOTE_TEMPLATE.toByte(), 0)
 
@@ -374,7 +395,6 @@ object OsrsItemImportTool {
         }
 
         check(def.textureFind.isEmpty()) { "${def.name}: retexture tables use OSRS texture ids and are not mapped yet" }
-        check(def.contrast == 0) { "${def.name}: contrast unit between OSRS and 667 is not verified yet" }
 
         if (def.inventoryModel > 0) u16(1, model(def.inventoryModel))
         str(2, def.name)
@@ -424,6 +444,14 @@ object OsrsItemImportTool {
         if (def.ambient != 0) {
             out.writeByte(113)
             out.writeByte(def.ambient)
+        }
+        if (def.contrast != 0) {
+            val contrast = rev667Contrast(def.contrast)
+            if (contrast * 5 != def.contrast) dropped += "${def.name}: contrast ${def.contrast} rounded to ${contrast * 5}"
+            if (contrast != 0) {
+                out.writeByte(114)
+                out.writeByte(contrast)
+            }
         }
         if (def.team != 0) {
             out.writeByte(115)

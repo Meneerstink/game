@@ -52,6 +52,8 @@ object RangedCombatStrategy : CombatStrategy {
                     in Knives.KNIVES -> 4
                     in Javelins.JAVELINS, Items.COMP_OGRE_BOW -> 5
                     Items.DORGESHUUN_CBOW -> 6
+                    // OSRS Wiki "Hunters' sunlight crossbow": 8 tiles (10 on longrange).
+                    Items.HUNTERS_SUNLIGHT_CROSSBOW -> 8
                     Items.SEERCULL -> 8
                     // OSRS Wiki "Heavy ballista": attack range 9 (10 on longrange).
                     in Bows.LONG_BOWS, Items.CHINCHOMPA_10033, Items.RED_CHINCHOMPA_10034, Items.HEAVY_BALLISTA -> 9

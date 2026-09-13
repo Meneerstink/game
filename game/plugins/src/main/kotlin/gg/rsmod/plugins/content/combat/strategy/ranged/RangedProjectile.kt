@@ -54,7 +54,9 @@ enum class RangedProjectile(
         items =
             Bolts.BRONZE_BOLTS + Bolts.IRON_BOLTS + Bolts.STEEL_BOLTS + Bolts.MITHRIL_BOLTS +
                 Bolts.ADAMANT_BOLTS + Bolts.RUNITE_BOLTS + Bolts.DRAGON_BOLTS + Bolts.BLURITE_BOLTS + Bolts.KEBBIT_BOLTS +
-                Bolts.BONE_BOLTS + Bolts.OSRS_DRAGON_BOLT_FAMILY,
+                Bolts.BONE_BOLTS + Bolts.OSRS_DRAGON_BOLT_FAMILY +
+                // OSRS-IMPORT antler bolts: no 667 antler bolt graphic exists, the 667 bolt projectile is used (ADAPTED_TO_667).
+                arrayOf(Items.SUNLIGHT_ANTLER_BOLTS, Items.MOONLIGHT_ANTLER_BOLTS),
     ),
     TRAINING_ARROW(
         gfx = Gfx.TRAINING_ARROW_IN_FLIGHT,

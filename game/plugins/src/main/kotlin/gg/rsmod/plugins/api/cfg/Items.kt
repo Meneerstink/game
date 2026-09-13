@@ -19508,5 +19508,14 @@ object Items {
     const val DRAGON_HUNTER_LANCE_NOTED = 22637
     const val DRAGON_WARHAMMER = 22638
     const val DRAGON_WARHAMMER_NOTED = 22639
+    // OSRS-IMPORT batch sunlight (tx-20260913-230535). 22642-22645 and 22647-22650 are nameless bolt stack visuals.
+    const val HUNTERS_SUNLIGHT_CROSSBOW = 22640
+    const val HUNTERS_SUNLIGHT_CROSSBOW_NOTED = 22641
+    const val SUNLIGHT_ANTLER_BOLTS = 22646
+    const val MOONLIGHT_ANTLER_BOLTS = 22651
+    const val SUNLIGHT_ANTLER = 22652
+    const val SUNLIGHT_ANTLER_NOTED = 22653
+    const val MOONLIGHT_ANTLER = 22654
+    const val MOONLIGHT_ANTLER_NOTED = 22655
     // Auto-generated file using class gg.rsmod.game.service.game.DumpEntityIdService
 }

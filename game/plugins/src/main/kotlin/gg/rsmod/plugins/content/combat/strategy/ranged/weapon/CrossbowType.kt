@@ -48,6 +48,9 @@ enum class CrossbowType(
     DRAGON_CROSSBOW(item = Items.DRAGON_CROSSBOW, ammo = UP_TO_DRAGON_BOLTS),
     // OSRS Wiki "Dragon hunter crossbow": "can fire up to and including dragon bolts".
     DRAGON_HUNTER_CROSSBOW(item = Items.DRAGON_HUNTER_CROSSBOW, ammo = UP_TO_DRAGON_BOLTS),
+    // OSRS Wiki "Hunters' sunlight crossbow": "uses sunlight or moonlight antler bolts"; it "cannot be used to fire kebbit
+    // or long kebbit bolts".
+    HUNTERS_SUNLIGHT_CROSSBOW(item = Items.HUNTERS_SUNLIGHT_CROSSBOW, ammo = arrayOf(Items.SUNLIGHT_ANTLER_BOLTS, Items.MOONLIGHT_ANTLER_BOLTS)),
 
     // OSRS-IMPORT: the Heavy ballista fires only the OSRS javelins (ammo slot), never the 667 thrown javelins.
     HEAVY_BALLISTA(item = Items.HEAVY_BALLISTA, ammo = Javelins.BALLISTA_JAVELINS),
