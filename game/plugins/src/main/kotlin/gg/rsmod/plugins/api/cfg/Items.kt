@@ -19397,5 +19397,8 @@ object Items {
     const val RING_OF_SUFFERING_I = 22406
     const val RING_OF_SUFFERING_R = 22407
     const val RING_OF_SUFFERING_RI = 22408
+    // OSRS-IMPORT batch lightbearer (OsrsItemImportTool "lightbearer"; RSPS_IMPORT_ASSET_MAP.yml).
+    const val LIGHTBEARER = 22409
+    const val LIGHTBEARER_NOTED = 22410
     // Auto-generated file using class gg.rsmod.game.service.game.DumpEntityIdService
 }

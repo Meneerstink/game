@@ -117,6 +117,11 @@ object OsrsItemImportTool {
                     Spec(20655, rev667Params = mapOf(749 to 3, 750 to 75)), // Ring of suffering (r)
                     Spec(20657, rev667Params = mapOf(749 to 3, 750 to 75)), // Ring of suffering (ri)
                 ),
+            // Lightbearer: no stats or requirements (item page); special energy regeneration lives in SpecialEnergyRegen.
+            "lightbearer" to
+                listOf(
+                    Spec(25975, noted = true), // Lightbearer
+                ),
         )
 
     private class Entry(

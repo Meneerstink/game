@@ -12,17 +12,24 @@ on_login {
         AttackTab.setEnergy(player, 100)
     }
 
-    player.timers[SPECIAL_ATTACK_TIMER] = 50
+    SpecialEnergyRegen.onLogin(player.timers, SpecialEnergyRegen.wearingLightbearer(player))
 }
 
 /**
- * Raise spec by 10% every 30 seconds, capping at 100
+ * Raise spec by 10% every 30 seconds (15 seconds with the Lightbearer), capping at 100 - see [SpecialEnergyRegen].
  */
 on_timer(SPECIAL_ATTACK_TIMER) {
     val spec = AttackTab.getEnergy(player)
-    val newSpec = 100.coerceAtMost(spec + 10)
+    val newSpec = SpecialEnergyRegen.onTimer(player.timers, spec, SpecialEnergyRegen.wearingLightbearer(player))
     AttackTab.setEnergy(player, newSpec)
-    player.timers[SPECIAL_ATTACK_TIMER] = 50
+}
+
+on_item_equip(item = Items.LIGHTBEARER) {
+    SpecialEnergyRegen.onLightbearerEquipped(player.timers)
+}
+
+on_item_unequip(item = Items.LIGHTBEARER) {
+    SpecialEnergyRegen.onLightbearerUnequipped(player.timers)
 }
 
 /**
