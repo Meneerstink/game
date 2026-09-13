@@ -1,25 +1,26 @@
 package gg.rsmod.plugins.content.items.osrs
 
 /**
- * OSRS-IMPORT pilot item actions (`C:\RSPS\OSRS_IMPORT_STATUS.md`). Combining is registered in
- * `CombinationData` (AVERNIC_DEFENDER, OCCULT_NECKLACE_OR); this file binds the cache "Dismantle"
- * options of the imported definitions.
+ * OSRS-IMPORT item actions (`C:\RSPS\OSRS_IMPORT_STATUS.md`). Combining is registered in
+ * `CombinationData`; this file binds the cache "Dismantle" options of the imported definitions.
  *
- * - Occult necklace (or): Dismantle returns the necklace and the ornament kit (OSRS Wiki).
+ * - Ornamented items ([OsrsOrnamentKits]): Dismantle returns the base item and the ornament kit.
  * - Avernic defender: Dismantle returns the Dragon defender; the hilt is destroyed (OSRS Wiki), so
  *   the player confirms first.
  */
 
-on_item_option(item = Items.OCCULT_NECKLACE_OR, option = "Dismantle") {
-    if (player.inventory.freeSlotCount < 1) {
-        player.message("You don't have enough inventory space to do that.")
-        return@on_item_option
+OsrsOrnamentKits.ALL.forEach { ornament ->
+    on_item_option(item = ornament.ornamented, option = "Dismantle") {
+        if (player.inventory.freeSlotCount < 1) {
+            player.message("You don't have enough inventory space to do that.")
+            return@on_item_option
+        }
+        if (!player.inventory.remove(item = ornament.ornamented, beginSlot = player.getInteractingItemSlot()).hasSucceeded()) {
+            return@on_item_option
+        }
+        player.inventory.add(item = ornament.base, assureFullInsertion = true)
+        player.inventory.add(item = ornament.kit, assureFullInsertion = true)
     }
-    if (!player.inventory.remove(item = Items.OCCULT_NECKLACE_OR, beginSlot = player.getInteractingItemSlot()).hasSucceeded()) {
-        return@on_item_option
-    }
-    player.inventory.add(item = Items.OCCULT_NECKLACE, assureFullInsertion = true)
-    player.inventory.add(item = Items.OCCULT_ORNAMENT_KIT, assureFullInsertion = true)
 }
 
 on_item_option(item = Items.AVERNIC_DEFENDER, option = "Dismantle") {

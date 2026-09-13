@@ -63,6 +63,36 @@ object OsrsItemImportTool {
                     Spec(31248, noted = true, rev667Params = mapOf(644 to 1381, 686 to 5, 749 to 0, 750 to 65), weaponType = 5, attackAudio = 2500),
                     Spec(31245, noted = true), // Belle's folly (tarnished)
                 ),
+            // Batch 2: zenyte jewellery, ornaments, Rancour, Ferocious gloves, Zaryte vambraces, Masori.
+            // Client requirement params only where the item has exactly one wield requirement.
+            "equipment2" to
+                listOf(
+                    Spec(19547, noted = true, rev667Params = mapOf(749 to 3, 750 to 75)), // Necklace of anguish
+                    Spec(22246, noted = true), // Anguish ornament kit
+                    Spec(22249, rev667Params = mapOf(749 to 3, 750 to 75)), // Necklace of anguish (or)
+                    Spec(19553, noted = true, rev667Params = mapOf(749 to 3, 750 to 75)), // Amulet of torture
+                    Spec(20062, noted = true), // Torture ornament kit
+                    Spec(20366, rev667Params = mapOf(749 to 3, 750 to 75)), // Amulet of torture (or)
+                    Spec(19544, noted = true, rev667Params = mapOf(749 to 3, 750 to 75)), // Tormented bracelet
+                    Spec(23348, noted = true), // Tormented ornament kit
+                    Spec(23444, rev667Params = mapOf(749 to 3, 750 to 75)), // Tormented bracelet (or)
+                    Spec(29801, noted = true, rev667Params = mapOf(749 to 3, 750 to 90)), // Amulet of rancour
+                    Spec(29804), // Amulet of rancour (s)
+                    Spec(33534, noted = true), // Etched araxyte fang
+                    Spec(22981), // Ferocious gloves
+                    Spec(22983, noted = true), // Hydra leather
+                    Spec(26235, noted = true), // Zaryte vambraces
+                    Spec(19529, noted = true), // Zenyte shard
+                    Spec(19496, noted = true), // Uncut zenyte
+                    Spec(19493, noted = true), // Zenyte
+                    Spec(27226, noted = true), // Masori mask
+                    Spec(27229, noted = true), // Masori body
+                    Spec(27232, noted = true), // Masori chaps
+                    Spec(27235, noted = true), // Masori mask (f)
+                    Spec(27238, noted = true), // Masori body (f)
+                    Spec(27241, noted = true), // Masori chaps (f)
+                    Spec(27269, noted = true), // Armadylean plate
+                ),
         )
 
     private class Entry(
@@ -328,9 +358,13 @@ object OsrsItemImportTool {
                 .joinToString(", ") { "{'skill': ${p(it.first)}, 'level': ${p(it.second)}}" }
         sb.append("  equipment:\n")
         sb.append("    equip_slot: ${def.wearPos1}\n")
-        sb.append("    equip_type: ${def.wearPos2}\n")
+        // OSRS wearPos2/3 name the body parts a worn item hides: 5 = shield slot (two-handed, 667 equip_type 5 as on
+        // the Twisted bow), 6 = arms, 8 = hair, 11 = jaw - the 667 remove_arms/remove_head/remove_beard flags
+        // (Rune platebody: arms; Rune full helm: head + beard; Berserker helm: head).
+        val hidden = setOf(def.wearPos2, def.wearPos3)
+        sb.append("    equip_type: ${if (5 in hidden) 5 else -1}\n")
         sb.append("    appearance_id: ${checkNotNull(appearanceId)}\n")
-        sb.append("    remove_head: false\n    remove_beard: false\n    remove_arms: false\n")
+        sb.append("    remove_head: ${8 in hidden}\n    remove_beard: ${11 in hidden}\n    remove_arms: ${6 in hidden}\n")
         sb.append("    weapon_type: ${entry.spec.weaponType}\n")
         sb.append("    attack_speed: ${if (def.params.containsKey(14)) p(14) else 4}\n")
         listOf("attack_stab", "attack_slash", "attack_crush", "attack_magic", "attack_ranged", "defence_stab", "defence_slash", "defence_crush", "defence_magic", "defence_ranged")

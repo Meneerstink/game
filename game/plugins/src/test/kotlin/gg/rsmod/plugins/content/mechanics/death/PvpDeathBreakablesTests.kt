@@ -82,6 +82,26 @@ class PvpDeathBreakablesTests {
     }
 
     @Test
+    fun `every ornamented item is dropped as base item plus kit on a wilderness death`() {
+        gg.rsmod.plugins.content.items.osrs.OsrsOrnamentKits.ALL.forEach { ornament ->
+            val victim = newPlayer()
+            val killer = newPlayer()
+            val world = mockk<World>(relaxed = true)
+            victim.inventory[0] = Item(ornament.ornamented, 1)
+            val lost = listOf(DeathSlotItem(DeathContainerSource.INVENTORY, 0, Item(ornament.ornamented, 1)))
+            val (result, converting) = PvpDeathBreakables.split(DeathResolutionResult(DeathContext.WILDERNESS_PVP, victim, killer, DeathItemRiskResult(0, emptyList(), lost)))
+            assertTrue(result.itemRisk.lost.isEmpty(), "${ornament.ornamented} must not drop as the ornamented item")
+
+            PvpDeathBreakables.execute(world, result, converting)
+
+            assertNull(victim.inventory[0])
+            verify(exactly = 1) { world.spawn(match<GroundItem> { it.item == ornament.base && it.amount == 1 }) }
+            verify(exactly = 1) { world.spawn(match<GroundItem> { it.item == ornament.kit && it.amount == 1 }) }
+            verify(exactly = 0) { world.spawn(match<GroundItem> { it.item == ornament.ornamented }) }
+        }
+    }
+
+    @Test
     fun `PvM deaths and protected defenders are untouched`() {
         val victim = newPlayer()
         val lost = listOf(DeathSlotItem(DeathContainerSource.INVENTORY, 0, Item(Items.AVERNIC_DEFENDER, 1)))

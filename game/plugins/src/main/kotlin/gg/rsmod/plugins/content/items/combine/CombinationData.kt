@@ -224,6 +224,30 @@ enum class CombinationData(
         resultItem = Items.OCCULT_NECKLACE_OR,
         experience = 0.0,
     ),
+    NECKLACE_OF_ANGUISH_OR(
+        items = intArrayOf(Items.ANGUISH_ORNAMENT_KIT, Items.NECKLACE_OF_ANGUISH),
+        resultItem = Items.NECKLACE_OF_ANGUISH_OR,
+        experience = 0.0,
+    ),
+    AMULET_OF_TORTURE_OR(
+        items = intArrayOf(Items.TORTURE_ORNAMENT_KIT, Items.AMULET_OF_TORTURE),
+        resultItem = Items.AMULET_OF_TORTURE_OR,
+        experience = 0.0,
+    ),
+    TORMENTED_BRACELET_OR(
+        items = intArrayOf(Items.TORMENTED_ORNAMENT_KIT, Items.TORMENTED_BRACELET),
+        resultItem = Items.TORMENTED_BRACELET_OR,
+        experience = 0.0,
+    ),
+
+    /** OSRS Wiki "Etched araxyte fang": 86 Crafting, 500 XP, non-reversible (the wiki's confirmation dialog is not ported). */
+    AMULET_OF_RANCOUR(
+        items = intArrayOf(Items.ETCHED_ARAXYTE_FANG, Items.AMULET_OF_TORTURE),
+        resultItem = Items.AMULET_OF_RANCOUR,
+        levelRequired = 86,
+        experience = 500.0,
+        message = "You successfully create an amulet of rancour.",
+    ),
     PIE_SHELL(
         items = intArrayOf(Items.PASTRY_DOUGH, Items.PIE_DISH),
         resultItem = Items.PIE_SHELL,

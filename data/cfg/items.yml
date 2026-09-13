@@ -264087,3 +264087,720 @@
   tradeable: true
   weight: 0.0
   equipment: null
+- id: 22341
+  name: "Necklace of anguish"
+  examine: "A deep sense of anguish burns within this powerful necklace."
+  tradeable: true
+  weight: 0.01
+  equipment:
+    equip_slot: 2
+    equip_type: -1
+    appearance_id: 5657
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 15
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 2
+    ranged_strength: 5
+    magic_damage: 0
+    attack_audio: -1
+    skill_reqs: [{'skill': 3, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22342
+  name: "Necklace of anguish"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22343
+  name: "Anguish ornament kit"
+  examine: "Use on a necklace of anguish to make it look fancier!"
+  tradeable: true
+  weight: 0.5
+  equipment: null
+- id: 22344
+  name: "Anguish ornament kit"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22345
+  name: "Necklace of anguish (or)"
+  examine: "A deep sense of anguish burns within this powerful necklace."
+  tradeable: false
+  weight: 0.01
+  equipment:
+    equip_slot: 2
+    equip_type: -1
+    appearance_id: 5658
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 15
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 2
+    ranged_strength: 5
+    magic_damage: 0
+    attack_audio: -1
+    skill_reqs: [{'skill': 3, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22346
+  name: "Amulet of torture"
+  examine: "A deep sense of torture burns within this powerful amulet."
+  tradeable: true
+  weight: 0.01
+  equipment:
+    equip_slot: 2
+    equip_type: -1
+    appearance_id: 5659
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 15
+    attack_slash: 15
+    attack_crush: 15
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 10
+    prayer: 2
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
+    skill_reqs: [{'skill': 3, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22347
+  name: "Amulet of torture"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22348
+  name: "Torture ornament kit"
+  examine: "Use on an amulet of torture to make it look fancier!"
+  tradeable: true
+  weight: 0.5
+  equipment: null
+- id: 22349
+  name: "Torture ornament kit"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22350
+  name: "Amulet of torture (or)"
+  examine: "A deep sense of torture burns within this powerful amulet."
+  tradeable: false
+  weight: 0.01
+  equipment:
+    equip_slot: 2
+    equip_type: -1
+    appearance_id: 5660
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 15
+    attack_slash: 15
+    attack_crush: 15
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 10
+    prayer: 2
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
+    skill_reqs: [{'skill': 3, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22351
+  name: "Tormented bracelet"
+  examine: "A deep sense of torment burns within this powerful bracelet."
+  tradeable: true
+  weight: 0.25
+  equipment:
+    equip_slot: 9
+    equip_type: -1
+    appearance_id: 5661
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 10
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 2
+    ranged_strength: 0
+    magic_damage: 5
+    attack_audio: -1
+    skill_reqs: [{'skill': 3, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22352
+  name: "Tormented bracelet"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22353
+  name: "Tormented ornament kit"
+  examine: "Use on a tormented bracelet to make it look fancier!"
+  tradeable: true
+  weight: 0.5
+  equipment: null
+- id: 22354
+  name: "Tormented ornament kit"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22355
+  name: "Tormented bracelet (or)"
+  examine: "A deep sense of torment burns within this powerful bracelet."
+  tradeable: false
+  weight: 0.25
+  equipment:
+    equip_slot: 9
+    equip_type: -1
+    appearance_id: 5662
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 10
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 2
+    ranged_strength: 0
+    magic_damage: 5
+    attack_audio: -1
+    skill_reqs: [{'skill': 3, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22356
+  name: "Amulet of rancour"
+  examine: "A very powerful zenyte amulet, infused with araxyte venom."
+  tradeable: true
+  weight: 0.012
+  equipment:
+    equip_slot: 2
+    equip_type: -1
+    appearance_id: 5663
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 25
+    attack_slash: 25
+    attack_crush: 25
+    attack_magic: -6
+    attack_ranged: -8
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 12
+    prayer: 2
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
+    skill_reqs: [{'skill': 3, 'level': 90}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22357
+  name: "Amulet of rancour"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22358
+  name: "Amulet of rancour (s)"
+  examine: "A very powerful zenyte amulet, infused with araxyte venom."
+  tradeable: false
+  weight: 0.011
+  equipment:
+    equip_slot: 2
+    equip_type: -1
+    appearance_id: 5664
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 25
+    attack_slash: 25
+    attack_crush: 25
+    attack_magic: -6
+    attack_ranged: -8
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 12
+    prayer: 2
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22359
+  name: "Etched araxyte fang"
+  examine: "A still dripping venomous fang from a powerful araxyte etched with powerful runes."
+  tradeable: true
+  weight: 0.001
+  equipment: null
+- id: 22360
+  name: "Etched araxyte fang"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22361
+  name: "Ferocious gloves"
+  examine: "A pair of very very nice gloves."
+  tradeable: false
+  weight: 0.226
+  equipment:
+    equip_slot: 9
+    equip_type: -1
+    appearance_id: 5665
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 16
+    attack_slash: 16
+    attack_crush: 16
+    attack_magic: -16
+    attack_ranged: -16
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 14
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 80}, {'skill': 1, 'level': 80}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22362
+  name: "Hydra leather"
+  examine: "Hide from a ferocious Hydra. It looks pretty tough."
+  tradeable: true
+  weight: 0.226
+  equipment: null
+- id: 22363
+  name: "Hydra leather"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22364
+  name: "Zaryte vambraces"
+  examine: "A pair of ancient vambraces."
+  tradeable: true
+  weight: 1.0
+  equipment:
+    equip_slot: 9
+    equip_type: -1
+    appearance_id: 5666
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: -8
+    attack_slash: -8
+    attack_crush: -8
+    attack_magic: 0
+    attack_ranged: 18
+    defence_stab: 8
+    defence_slash: 8
+    defence_crush: 8
+    defence_magic: 5
+    defence_ranged: 8
+    summoning: 0
+    melee_strength: 0
+    prayer: 1
+    ranged_strength: 2
+    magic_damage: 0
+    attack_audio: -1
+    skill_reqs: [{'skill': 4, 'level': 80}, {'skill': 1, 'level': 45}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22365
+  name: "Zaryte vambraces"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22366
+  name: "Zenyte shard"
+  examine: "A shard of unstable zenyte."
+  tradeable: true
+  weight: 0.028
+  equipment: null
+- id: 22367
+  name: "Zenyte shard"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22368
+  name: "Uncut zenyte"
+  examine: "This would be worth more cut."
+  tradeable: true
+  weight: 0.003
+  equipment: null
+- id: 22369
+  name: "Uncut zenyte"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22370
+  name: "Zenyte"
+  examine: "This looks valuable."
+  tradeable: true
+  weight: 0.002
+  equipment: null
+- id: 22371
+  name: "Zenyte"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22372
+  name: "Masori mask"
+  examine: "An ancient mask once worn by a powerful ranger."
+  tradeable: true
+  weight: 1.0
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 5668
+    remove_head: true
+    remove_beard: true
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -1
+    attack_ranged: 12
+    defence_stab: 3
+    defence_slash: 4
+    defence_crush: 3
+    defence_magic: 6
+    defence_ranged: 4
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 2
+    magic_damage: 0
+    attack_audio: -1
+    skill_reqs: [{'skill': 4, 'level': 80}, {'skill': 1, 'level': 30}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22373
+  name: "Masori mask"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22374
+  name: "Masori body"
+  examine: "Ancient armour once worn by a powerful ranger."
+  tradeable: true
+  weight: 8.0
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 5669
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -4
+    attack_ranged: 43
+    defence_stab: 37
+    defence_slash: 35
+    defence_crush: 38
+    defence_magic: 25
+    defence_ranged: 33
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 4
+    magic_damage: 0
+    attack_audio: -1
+    skill_reqs: [{'skill': 4, 'level': 80}, {'skill': 1, 'level': 30}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22375
+  name: "Masori body"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22376
+  name: "Masori chaps"
+  examine: "Ancient armour once worn by a powerful ranger."
+  tradeable: true
+  weight: 7.0
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 5670
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -2
+    attack_ranged: 27
+    defence_stab: 26
+    defence_slash: 24
+    defence_crush: 29
+    defence_magic: 19
+    defence_ranged: 22
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 2
+    magic_damage: 0
+    attack_audio: -1
+    skill_reqs: [{'skill': 4, 'level': 80}, {'skill': 1, 'level': 30}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22377
+  name: "Masori chaps"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22378
+  name: "Masori mask (f)"
+  examine: "A fortified mask once worn by a powerful ranger."
+  tradeable: true
+  weight: 1.5
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 5671
+    remove_head: true
+    remove_beard: true
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -1
+    attack_ranged: 12
+    defence_stab: 8
+    defence_slash: 10
+    defence_crush: 12
+    defence_magic: 12
+    defence_ranged: 9
+    summoning: 0
+    melee_strength: 0
+    prayer: 1
+    ranged_strength: 2
+    magic_damage: 0
+    attack_audio: -1
+    skill_reqs: [{'skill': 4, 'level': 80}, {'skill': 1, 'level': 80}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22379
+  name: "Masori mask (f)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22380
+  name: "Masori body (f)"
+  examine: "Fortified armour once worn by a powerful ranger."
+  tradeable: true
+  weight: 10.0
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 5672
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -4
+    attack_ranged: 43
+    defence_stab: 59
+    defence_slash: 52
+    defence_crush: 64
+    defence_magic: 74
+    defence_ranged: 60
+    summoning: 0
+    melee_strength: 0
+    prayer: 1
+    ranged_strength: 4
+    magic_damage: 0
+    attack_audio: -1
+    skill_reqs: [{'skill': 4, 'level': 80}, {'skill': 1, 'level': 80}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22381
+  name: "Masori body (f)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22382
+  name: "Masori chaps (f)"
+  examine: "Fortified armour once worn by a powerful ranger."
+  tradeable: true
+  weight: 8.5
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 5673
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -2
+    attack_ranged: 27
+    defence_stab: 35
+    defence_slash: 30
+    defence_crush: 39
+    defence_magic: 46
+    defence_ranged: 37
+    summoning: 0
+    melee_strength: 0
+    prayer: 1
+    ranged_strength: 2
+    magic_damage: 0
+    attack_audio: -1
+    skill_reqs: [{'skill': 4, 'level': 80}, {'skill': 1, 'level': 80}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22383
+  name: "Masori chaps (f)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22384
+  name: "Armadylean plate"
+  examine: "High grade material."
+  tradeable: true
+  weight: 0.5
+  equipment: null
+- id: 22385
+  name: "Armadylean plate"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null

@@ -91,7 +91,11 @@ class OsrsPilotImportTests {
         assertTrue("Dismantle" in DEFINITIONS.get(ItemDef::class.java, Items.OCCULT_NECKLACE_OR).inventoryMenu)
         assertTrue("Dismantle" in DEFINITIONS.get(ItemDef::class.java, Items.AVERNIC_DEFENDER).inventoryMenu)
         val script = File("src/main/kotlin/gg/rsmod/plugins/content/items/osrs/osrs_pilot_items.plugin.kts").readText()
-        assertTrue("item = Items.OCCULT_NECKLACE_OR, option = \"Dismantle\"" in script)
+        assertEquals(
+            OsrsOrnamentKits.Ornament(Items.OCCULT_NECKLACE_OR, Items.OCCULT_NECKLACE, Items.OCCULT_ORNAMENT_KIT),
+            OsrsOrnamentKits.forOrnamented(Items.OCCULT_NECKLACE_OR),
+        )
+        assertTrue("OsrsOrnamentKits.ALL.forEach" in script && "item = ornament.ornamented, option = \"Dismantle\"" in script)
         assertTrue("item = Items.AVERNIC_DEFENDER, option = \"Dismantle\"" in script)
     }
 

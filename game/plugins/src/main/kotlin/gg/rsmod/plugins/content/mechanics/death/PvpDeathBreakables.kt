@@ -5,6 +5,7 @@ import gg.rsmod.game.model.entity.GroundItem
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.api.ext.refreshBonuses
+import gg.rsmod.plugins.content.items.osrs.OsrsOrnamentKits
 
 /**
  * Untradeable combat items that break instead of dropping on an unprotected PvP death.
@@ -29,14 +30,15 @@ object PvpDeathBreakables {
     fun breakableFor(itemId: Int): Breakable? = entries[itemId]
 
     /**
-     * Removes breakable stacks from a Wilderness death's lost list so [DeathExecutor] never drops
-     * them; returns the filtered result and the removed stacks for [execute].
+     * Removes breakable and ornamented stacks from a Wilderness death's lost list so [DeathExecutor]
+     * never drops them as-is; returns the filtered result and the removed stacks for [execute].
      */
     fun split(result: DeathResolutionResult): Pair<DeathResolutionResult, List<DeathSlotItem>> {
         if (result.context != DeathContext.WILDERNESS_PVP) return result to emptyList()
-        val (breaking, rest) = result.itemRisk.lost.partition { entries.containsKey(it.item.id) }
-        if (breaking.isEmpty()) return result to emptyList()
-        return result.copy(itemRisk = result.itemRisk.copy(lost = rest)) to breaking
+        val (converting, rest) =
+            result.itemRisk.lost.partition { entries.containsKey(it.item.id) || OsrsOrnamentKits.forOrnamented(it.item.id) != null }
+        if (converting.isEmpty()) return result to emptyList()
+        return result.copy(itemRisk = result.itemRisk.copy(lost = rest)) to converting
     }
 
     /** Swaps each stack for its broken id on the victim and drops the repair cost for the killer. */
@@ -49,13 +51,22 @@ object PvpDeathBreakables {
         var broken = 0
         var equipmentChanged = false
         for (slotItem in breaking) {
-            val breakable = entries.getValue(slotItem.item.id)
             val container =
                 when (slotItem.source) {
                     DeathContainerSource.INVENTORY -> victim.inventory
                     DeathContainerSource.EQUIPMENT -> victim.equipment
                 }
             if (container[slotItem.slot]?.id != slotItem.item.id) continue
+            val ornament = OsrsOrnamentKits.forOrnamented(slotItem.item.id)
+            if (ornament != null) {
+                // "Items Kept on Death": dropped to the PKer as the non-ornamented item plus the ornament kit.
+                container[slotItem.slot] = null
+                if (slotItem.source == DeathContainerSource.EQUIPMENT) equipmentChanged = true
+                world.spawn(GroundItem(Item(ornament.base, slotItem.item.amount), victim.tile, result.killer))
+                world.spawn(GroundItem(Item(ornament.kit, slotItem.item.amount), victim.tile, result.killer))
+                continue
+            }
+            val breakable = entries.getValue(slotItem.item.id)
             when (slotItem.source) {
                 DeathContainerSource.INVENTORY -> container[slotItem.slot] = Item(breakable.brokenId, slotItem.item.amount)
                 DeathContainerSource.EQUIPMENT -> {
