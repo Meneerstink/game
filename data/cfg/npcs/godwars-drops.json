@@ -1,0 +1,1386 @@
+{
+    "source":  "Void god_wars_dungeon/{armadyl,bandos,saradomin,zamorak}.drops.toml + entity/npc/misc.drops.toml; owner option Void 2011-filtered (2026-09-13)",
+    "npcs":  {
+                 "6260":  "general_graardor_drop_table",
+                 "6261":  "bandos_bodyguard_drop_table",
+                 "6263":  "bandos_bodyguard_drop_table",
+                 "6265":  "bandos_bodyguard_drop_table",
+                 "6222":  "kree_arra_drop_table",
+                 "6223":  "armadyl_bodyguard_drop_table",
+                 "6225":  "armadyl_bodyguard_drop_table",
+                 "6227":  "armadyl_bodyguard_drop_table",
+                 "6247":  "commander_zilyana_drop_table",
+                 "6248":  "saradomin_bodyguard_drop_table",
+                 "6250":  "saradomin_bodyguard_drop_table",
+                 "6252":  "saradomin_bodyguard_drop_table",
+                 "6203":  "kril_tsutsaroth_drop_table",
+                 "6204":  "zamorak_bodyguard_drop_table",
+                 "6206":  "zamorak_bodyguard_drop_table",
+                 "6208":  "zamorak_bodyguard_drop_table"
+             },
+    "tables":  {
+                   "general_graardor_drop_table":  {
+                                                       "type":  "all",
+                                                       "roll":  1,
+                                                       "drops":  [
+                                                                     {
+                                                                         "table":  "big_bones",
+                                                                         "chance":  -1
+                                                                     },
+                                                                     {
+                                                                         "table":  "general_graardor_secondary",
+                                                                         "chance":  -1
+                                                                     },
+                                                                     {
+                                                                         "table":  "general_graardor_tertiary",
+                                                                         "chance":  -1
+                                                                     }
+                                                                 ]
+                                                   },
+                   "bandos_bodyguard_drop_table":  {
+                                                       "type":  "all",
+                                                       "roll":  1,
+                                                       "drops":  [
+                                                                     {
+                                                                         "table":  "bones",
+                                                                         "chance":  -1
+                                                                     },
+                                                                     {
+                                                                         "table":  "bandos_bodyguard_secondary",
+                                                                         "chance":  -1
+                                                                     },
+                                                                     {
+                                                                         "table":  "bandos_bodyguard_tertiary",
+                                                                         "chance":  -1
+                                                                     }
+                                                                 ]
+                                                   },
+                   "kree_arra_drop_table":  {
+                                                "type":  "all",
+                                                "roll":  1,
+                                                "drops":  [
+                                                              {
+                                                                  "table":  "kree_arra_primary",
+                                                                  "chance":  -1
+                                                              },
+                                                              {
+                                                                  "table":  "kree_arra_secondary",
+                                                                  "chance":  -1
+                                                              },
+                                                              {
+                                                                  "table":  "kree_arra_tertiary",
+                                                                  "chance":  -1
+                                                              }
+                                                          ]
+                                            },
+                   "armadyl_bodyguard_drop_table":  {
+                                                        "type":  "all",
+                                                        "roll":  1,
+                                                        "drops":  [
+                                                                      {
+                                                                          "table":  "armadyl_bodyguard_primary",
+                                                                          "chance":  -1
+                                                                      },
+                                                                      {
+                                                                          "table":  "armadyl_bodyguard_secondary",
+                                                                          "chance":  -1
+                                                                      }
+                                                                  ]
+                                                    },
+                   "commander_zilyana_drop_table":  {
+                                                        "type":  "all",
+                                                        "roll":  1,
+                                                        "drops":  [
+                                                                      {
+                                                                          "table":  "bones",
+                                                                          "chance":  -1
+                                                                      },
+                                                                      {
+                                                                          "table":  "commander_zilyana_secondary",
+                                                                          "chance":  -1
+                                                                      }
+                                                                  ]
+                                                    },
+                   "saradomin_bodyguard_drop_table":  {
+                                                          "type":  "all",
+                                                          "roll":  1,
+                                                          "drops":  [
+                                                                        {
+                                                                            "key":  "bones",
+                                                                            "item":  526,
+                                                                            "min":  1,
+                                                                            "max":  1,
+                                                                            "chance":  1
+                                                                        },
+                                                                        {
+                                                                            "table":  "saradomin_bodyguard_secondary",
+                                                                            "chance":  -1
+                                                                        }
+                                                                    ]
+                                                      },
+                   "kril_tsutsaroth_drop_table":  {
+                                                      "type":  "all",
+                                                      "roll":  1,
+                                                      "drops":  [
+                                                                    {
+                                                                        "key":  "ashes",
+                                                                        "item":  592,
+                                                                        "min":  1,
+                                                                        "max":  1,
+                                                                        "chance":  1
+                                                                    },
+                                                                    {
+                                                                        "table":  "kril_tsutsaroth_secondary",
+                                                                        "chance":  -1
+                                                                    }
+                                                                ]
+                                                  },
+                   "zamorak_bodyguard_drop_table":  {
+                                                        "type":  "all",
+                                                        "roll":  1,
+                                                        "drops":  [
+                                                                      {
+                                                                          "key":  "ashes",
+                                                                          "item":  592,
+                                                                          "min":  1,
+                                                                          "max":  1,
+                                                                          "chance":  1
+                                                                      },
+                                                                      {
+                                                                          "table":  "zamorak_bodyguard_secondary",
+                                                                          "chance":  -1
+                                                                      }
+                                                                  ]
+                                                    },
+                   "big_bones":  {
+                                     "type":  "all",
+                                     "roll":  1,
+                                     "drops":  [
+                                                   {
+                                                       "key":  "big_bones",
+                                                       "item":  532,
+                                                       "min":  1,
+                                                       "max":  1,
+                                                       "chance":  1
+                                                   }
+                                               ]
+                                 },
+                   "general_graardor_secondary":  {
+                                                      "type":  "first",
+                                                      "roll":  762,
+                                                      "drops":  [
+                                                                    {
+                                                                        "key":  "bandos_chestplate",
+                                                                        "item":  11724,
+                                                                        "min":  1,
+                                                                        "max":  1,
+                                                                        "chance":  2
+                                                                    },
+                                                                    {
+                                                                        "key":  "bandos_tassets",
+                                                                        "item":  11726,
+                                                                        "min":  1,
+                                                                        "max":  1,
+                                                                        "chance":  2
+                                                                    },
+                                                                    {
+                                                                        "key":  "bandos_boots",
+                                                                        "item":  11728,
+                                                                        "min":  1,
+                                                                        "max":  1,
+                                                                        "chance":  2
+                                                                    },
+                                                                    {
+                                                                        "key":  "bandos_hilt",
+                                                                        "item":  11704,
+                                                                        "min":  1,
+                                                                        "max":  1,
+                                                                        "chance":  1
+                                                                    },
+                                                                    {
+                                                                        "key":  "godsword_shard_1",
+                                                                        "item":  11710,
+                                                                        "min":  1,
+                                                                        "max":  1,
+                                                                        "chance":  1
+                                                                    },
+                                                                    {
+                                                                        "key":  "godsword_shard_2",
+                                                                        "item":  11712,
+                                                                        "min":  1,
+                                                                        "max":  1,
+                                                                        "chance":  1
+                                                                    },
+                                                                    {
+                                                                        "key":  "godsword_shard_3",
+                                                                        "item":  11714,
+                                                                        "min":  1,
+                                                                        "max":  1,
+                                                                        "chance":  1
+                                                                    },
+                                                                    {
+                                                                        "key":  "rune_longsword",
+                                                                        "item":  1303,
+                                                                        "min":  1,
+                                                                        "max":  1,
+                                                                        "chance":  48
+                                                                    },
+                                                                    {
+                                                                        "key":  "rune_2h_sword",
+                                                                        "item":  1319,
+                                                                        "min":  1,
+                                                                        "max":  1,
+                                                                        "chance":  48
+                                                                    },
+                                                                    {
+                                                                        "key":  "rune_platebody",
+                                                                        "item":  1127,
+                                                                        "min":  1,
+                                                                        "max":  1,
+                                                                        "chance":  48
+                                                                    },
+                                                                    {
+                                                                        "key":  "rune_pickaxe",
+                                                                        "item":  1275,
+                                                                        "min":  1,
+                                                                        "max":  1,
+                                                                        "chance":  36
+                                                                    },
+                                                                    {
+                                                                        "key":  "coins",
+                                                                        "item":  995,
+                                                                        "min":  19500,
+                                                                        "max":  20000,
+                                                                        "chance":  186
+                                                                    },
+                                                                    {
+                                                                        "key":  "grimy_snapdragon_noted",
+                                                                        "item":  3052,
+                                                                        "min":  3,
+                                                                        "max":  3,
+                                                                        "chance":  48
+                                                                    },
+                                                                    {
+                                                                        "key":  "snapdragon_seed",
+                                                                        "item":  5300,
+                                                                        "min":  1,
+                                                                        "max":  1,
+                                                                        "chance":  48
+                                                                    },
+                                                                    {
+                                                                        "key":  "super_restore_4",
+                                                                        "item":  3024,
+                                                                        "min":  3,
+                                                                        "max":  3,
+                                                                        "chance":  48
+                                                                    },
+                                                                    {
+                                                                        "key":  "adamantite_ore_noted",
+                                                                        "item":  450,
+                                                                        "min":  15,
+                                                                        "max":  20,
+                                                                        "chance":  48
+                                                                    },
+                                                                    {
+                                                                        "key":  "coal_noted",
+                                                                        "item":  454,
+                                                                        "min":  115,
+                                                                        "max":  120,
+                                                                        "chance":  48
+                                                                    },
+                                                                    {
+                                                                        "key":  "magic_logs_noted",
+                                                                        "item":  1514,
+                                                                        "min":  15,
+                                                                        "max":  20,
+                                                                        "chance":  48
+                                                                    },
+                                                                    {
+                                                                        "key":  "nature_rune",
+                                                                        "item":  561,
+                                                                        "min":  65,
+                                                                        "max":  70,
+                                                                        "chance":  48
+                                                                    },
+                                                                    {
+                                                                        "key":  "coins",
+                                                                        "item":  995,
+                                                                        "min":  20100,
+                                                                        "max":  20600,
+                                                                        "chance":  6
+                                                                    }
+                                                                ]
+                                                  },
+                   "general_graardor_tertiary":  {
+                                                     "type":  "first",
+                                                     "roll":  5000,
+                                                     "drops":  [
+
+                                                               ]
+                                                 },
+                   "bones":  {
+                                 "type":  "all",
+                                 "roll":  1,
+                                 "drops":  [
+                                               {
+                                                   "key":  "bones",
+                                                   "item":  526,
+                                                   "min":  1,
+                                                   "max":  1,
+                                                   "chance":  1
+                                               }
+                                           ]
+                             },
+                   "bandos_bodyguard_secondary":  {
+                                                      "type":  "first",
+                                                      "roll":  16256,
+                                                      "drops":  [
+                                                                    {
+                                                                        "key":  "bandos_chestplate",
+                                                                        "item":  11724,
+                                                                        "min":  1,
+                                                                        "max":  1,
+                                                                        "chance":  1
+                                                                    },
+                                                                    {
+                                                                        "key":  "bandos_tassets",
+                                                                        "item":  11726,
+                                                                        "min":  1,
+                                                                        "max":  1,
+                                                                        "chance":  1
+                                                                    },
+                                                                    {
+                                                                        "key":  "bandos_boots",
+                                                                        "item":  11728,
+                                                                        "min":  1,
+                                                                        "max":  1,
+                                                                        "chance":  1
+                                                                    },
+                                                                    {
+                                                                        "key":  "coins",
+                                                                        "item":  995,
+                                                                        "min":  1400,
+                                                                        "max":  1500,
+                                                                        "chance":  125
+                                                                    },
+                                                                    {
+                                                                        "key":  "godsword_shard_1",
+                                                                        "item":  11710,
+                                                                        "min":  1,
+                                                                        "max":  1,
+                                                                        "chance":  10
+                                                                    },
+                                                                    {
+                                                                        "key":  "godsword_shard_2",
+                                                                        "item":  11712,
+                                                                        "min":  1,
+                                                                        "max":  1,
+                                                                        "chance":  10
+                                                                    },
+                                                                    {
+                                                                        "key":  "godsword_shard_3",
+                                                                        "item":  11714,
+                                                                        "min":  1,
+                                                                        "max":  1,
+                                                                        "chance":  10
+                                                                    },
+                                                                    {
+                                                                        "key":  "coins",
+                                                                        "item":  995,
+                                                                        "min":  1400,
+                                                                        "max":  1500,
+                                                                        "chance":  90
+                                                                    },
+                                                                    {
+                                                                        "key":  "steel_arrow",
+                                                                        "item":  886,
+                                                                        "min":  95,
+                                                                        "max":  100,
+                                                                        "chance":  896
+                                                                    },
+                                                                    {
+                                                                        "key":  "steel_dart",
+                                                                        "item":  808,
+                                                                        "min":  95,
+                                                                        "max":  100,
+                                                                        "chance":  1024
+                                                                    },
+                                                                    {
+                                                                        "key":  "nature_rune",
+                                                                        "item":  561,
+                                                                        "min":  15,
+                                                                        "max":  20,
+                                                                        "chance":  1024
+                                                                    },
+                                                                    {
+                                                                        "key":  "cosmic_rune",
+                                                                        "item":  564,
+                                                                        "min":  25,
+                                                                        "max":  30,
+                                                                        "chance":  1024
+                                                                    },
+                                                                    {
+                                                                        "key":  "shark",
+                                                                        "item":  385,
+                                                                        "min":  2,
+                                                                        "max":  2,
+                                                                        "chance":  1024
+                                                                    },
+                                                                    {
+                                                                        "key":  "chilli_potato",
+                                                                        "item":  7054,
+                                                                        "min":  3,
+                                                                        "max":  3,
+                                                                        "chance":  1024
+                                                                    },
+                                                                    {
+                                                                        "key":  "coins",
+                                                                        "item":  995,
+                                                                        "min":  1400,
+                                                                        "max":  1500,
+                                                                        "chance":  8448
+                                                                    },
+                                                                    {
+                                                                        "key":  "limpwurt_root_noted",
+                                                                        "item":  226,
+                                                                        "min":  5,
+                                                                        "max":  5,
+                                                                        "chance":  1024
+                                                                    },
+                                                                    {
+                                                                        "key":  "combat_potion_3",
+                                                                        "item":  9741,
+                                                                        "min":  1,
+                                                                        "max":  1,
+                                                                        "chance":  256
+                                                                    },
+                                                                    {
+                                                                        "key":  "super_strength_3",
+                                                                        "item":  157,
+                                                                        "min":  1,
+                                                                        "max":  1,
+                                                                        "chance":  256
+                                                                    }
+                                                                ]
+                                                  },
+                   "bandos_bodyguard_tertiary":  {
+                                                     "type":  "first",
+                                                     "roll":  5000,
+                                                     "drops":  [
+                                                                   {
+                                                                       "key":  "kebab",
+                                                                       "item":  1971,
+                                                                       "min":  1,
+                                                                       "max":  1,
+                                                                       "chance":  833
+                                                                   }
+                                                               ]
+                                                 },
+                   "kree_arra_primary":  {
+                                             "type":  "all",
+                                             "roll":  1,
+                                             "drops":  [
+                                                           {
+                                                               "key":  "big_bones",
+                                                               "item":  532,
+                                                               "min":  1,
+                                                               "max":  1,
+                                                               "chance":  1
+                                                           },
+                                                           {
+                                                               "key":  "feather",
+                                                               "item":  314,
+                                                               "min":  1,
+                                                               "max":  16,
+                                                               "chance":  1
+                                                           }
+                                                       ]
+                                         },
+                   "kree_arra_secondary":  {
+                                               "type":  "first",
+                                               "roll":  762,
+                                               "drops":  [
+                                                             {
+                                                                 "key":  "armadyl_helmet",
+                                                                 "item":  11718,
+                                                                 "min":  1,
+                                                                 "max":  1,
+                                                                 "chance":  2
+                                                             },
+                                                             {
+                                                                 "key":  "armadyl_chestplate",
+                                                                 "item":  11720,
+                                                                 "min":  1,
+                                                                 "max":  1,
+                                                                 "chance":  2
+                                                             },
+                                                             {
+                                                                 "key":  "armadyl_chainskirt",
+                                                                 "item":  11722,
+                                                                 "min":  1,
+                                                                 "max":  1,
+                                                                 "chance":  2
+                                                             },
+                                                             {
+                                                                 "key":  "armadyl_hilt",
+                                                                 "item":  11702,
+                                                                 "min":  1,
+                                                                 "max":  1,
+                                                                 "chance":  1
+                                                             },
+                                                             {
+                                                                 "key":  "godsword_shard_1",
+                                                                 "item":  11710,
+                                                                 "min":  1,
+                                                                 "max":  1,
+                                                                 "chance":  1
+                                                             },
+                                                             {
+                                                                 "key":  "godsword_shard_2",
+                                                                 "item":  11712,
+                                                                 "min":  1,
+                                                                 "max":  1,
+                                                                 "chance":  1
+                                                             },
+                                                             {
+                                                                 "key":  "godsword_shard_3",
+                                                                 "item":  11714,
+                                                                 "min":  1,
+                                                                 "max":  1,
+                                                                 "chance":  1
+                                                             },
+                                                             {
+                                                                 "key":  "black_dragonhide_body",
+                                                                 "item":  2503,
+                                                                 "min":  1,
+                                                                 "max":  1,
+                                                                 "chance":  48
+                                                             },
+                                                             {
+                                                                 "key":  "rune_crossbow",
+                                                                 "item":  9185,
+                                                                 "min":  1,
+                                                                 "max":  1,
+                                                                 "chance":  48
+                                                             },
+                                                             {
+                                                                 "key":  "mind_rune",
+                                                                 "item":  558,
+                                                                 "min":  586,
+                                                                 "max":  601,
+                                                                 "chance":  48
+                                                             },
+                                                             {
+                                                                 "key":  "rune_arrow",
+                                                                 "item":  892,
+                                                                 "min":  100,
+                                                                 "max":  105,
+                                                                 "chance":  48
+                                                             },
+                                                             {
+                                                                 "key":  "runite_bolts",
+                                                                 "item":  9144,
+                                                                 "min":  20,
+                                                                 "max":  25,
+                                                                 "chance":  48
+                                                             },
+                                                             {
+                                                                 "key":  "dragon_bolts_e",
+                                                                 "item":  9244,
+                                                                 "min":  5,
+                                                                 "max":  10,
+                                                                 "chance":  48
+                                                             },
+                                                             {
+                                                                 "key":  "coins",
+                                                                 "item":  995,
+                                                                 "min":  19500,
+                                                                 "max":  20000,
+                                                                 "chance":  254
+                                                             },
+                                                             {
+                                                                 "key":  "super_ranging_potion_3",
+                                                                 "item":  169,
+                                                                 "min":  3,
+                                                                 "max":  3,
+                                                                 "chance":  48
+                                                             },
+                                                             {
+                                                                 "key":  "super_defence_3",
+                                                                 "item":  163,
+                                                                 "min":  3,
+                                                                 "max":  3,
+                                                                 "chance":  48
+                                                             },
+                                                             {
+                                                                 "key":  "grimy_dwarf_weed_noted",
+                                                                 "item":  218,
+                                                                 "min":  8,
+                                                                 "max":  13,
+                                                                 "chance":  48
+                                                             },
+                                                             {
+                                                                 "key":  "dwarf_weed_seed",
+                                                                 "item":  5303,
+                                                                 "min":  3,
+                                                                 "max":  3,
+                                                                 "chance":  48
+                                                             },
+                                                             {
+                                                                 "key":  "coins",
+                                                                 "item":  995,
+                                                                 "min":  20500,
+                                                                 "max":  21000,
+                                                                 "chance":  6
+                                                             },
+                                                             {
+                                                                 "key":  "crystal_key",
+                                                                 "item":  989,
+                                                                 "min":  1,
+                                                                 "max":  1,
+                                                                 "chance":  6
+                                                             },
+                                                             {
+                                                                 "key":  "yew_seed",
+                                                                 "item":  5315,
+                                                                 "min":  1,
+                                                                 "max":  1,
+                                                                 "chance":  6
+                                                             }
+                                                         ]
+                                           },
+                   "kree_arra_tertiary":  {
+                                              "type":  "first",
+                                              "roll":  5000,
+                                              "drops":  [
+
+                                                        ]
+                                          },
+                   "armadyl_bodyguard_primary":  {
+                                                     "type":  "all",
+                                                     "roll":  1,
+                                                     "drops":  [
+                                                                   {
+                                                                       "key":  "bones",
+                                                                       "item":  526,
+                                                                       "min":  1,
+                                                                       "max":  1,
+                                                                       "chance":  1
+                                                                   },
+                                                                   {
+                                                                       "key":  "feather",
+                                                                       "item":  314,
+                                                                       "min":  1,
+                                                                       "max":  11,
+                                                                       "chance":  1
+                                                                   }
+                                                               ]
+                                                 },
+                   "armadyl_bodyguard_secondary":  {
+                                                       "type":  "first",
+                                                       "roll":  16129,
+                                                       "drops":  [
+                                                                     {
+                                                                         "key":  "armadyl_helmet",
+                                                                         "item":  11718,
+                                                                         "min":  1,
+                                                                         "max":  1,
+                                                                         "chance":  1
+                                                                     },
+                                                                     {
+                                                                         "key":  "armadyl_chestplate",
+                                                                         "item":  11720,
+                                                                         "min":  1,
+                                                                         "max":  1,
+                                                                         "chance":  1
+                                                                     },
+                                                                     {
+                                                                         "key":  "armadyl_chainskirt",
+                                                                         "item":  11722,
+                                                                         "min":  1,
+                                                                         "max":  1,
+                                                                         "chance":  1
+                                                                     },
+                                                                     {
+                                                                         "key":  "coins",
+                                                                         "item":  995,
+                                                                         "min":  1000,
+                                                                         "max":  1100,
+                                                                         "chance":  124
+                                                                     },
+                                                                     {
+                                                                         "key":  "godsword_shard_1",
+                                                                         "item":  11710,
+                                                                         "min":  1,
+                                                                         "max":  1,
+                                                                         "chance":  10
+                                                                     },
+                                                                     {
+                                                                         "key":  "godsword_shard_2",
+                                                                         "item":  11712,
+                                                                         "min":  1,
+                                                                         "max":  1,
+                                                                         "chance":  10
+                                                                     },
+                                                                     {
+                                                                         "key":  "godsword_shard_3",
+                                                                         "item":  11714,
+                                                                         "min":  1,
+                                                                         "max":  1,
+                                                                         "chance":  10
+                                                                     },
+                                                                     {
+                                                                         "key":  "coins",
+                                                                         "item":  995,
+                                                                         "min":  1000,
+                                                                         "max":  1100,
+                                                                         "chance":  90
+                                                                     },
+                                                                     {
+                                                                         "key":  "steel_arrow",
+                                                                         "item":  886,
+                                                                         "min":  91,
+                                                                         "max":  101,
+                                                                         "chance":  889
+                                                                     },
+                                                                     {
+                                                                         "key":  "steel_dart",
+                                                                         "item":  808,
+                                                                         "min":  91,
+                                                                         "max":  101,
+                                                                         "chance":  1016
+                                                                     },
+                                                                     {
+                                                                         "key":  "smoke_rune",
+                                                                         "item":  4697,
+                                                                         "min":  10,
+                                                                         "max":  15,
+                                                                         "chance":  1016
+                                                                     },
+                                                                     {
+                                                                         "key":  "manta_ray",
+                                                                         "item":  391,
+                                                                         "min":  2,
+                                                                         "max":  2,
+                                                                         "chance":  1016
+                                                                     },
+                                                                     {
+                                                                         "key":  "mushroom_potato",
+                                                                         "item":  7058,
+                                                                         "min":  3,
+                                                                         "max":  3,
+                                                                         "chance":  1016
+                                                                     },
+                                                                     {
+                                                                         "key":  "coins",
+                                                                         "item":  995,
+                                                                         "min":  1000,
+                                                                         "max":  1100,
+                                                                         "chance":  8890
+                                                                     },
+                                                                     {
+                                                                         "key":  "crushed_nest_noted",
+                                                                         "item":  6694,
+                                                                         "min":  2,
+                                                                         "max":  2,
+                                                                         "chance":  1016
+                                                                     },
+                                                                     {
+                                                                         "key":  "grimy_kwuarm_noted",
+                                                                         "item":  214,
+                                                                         "min":  1,
+                                                                         "max":  1,
+                                                                         "chance":  1016
+                                                                     }
+                                                                 ]
+                                                   },
+                   "commander_zilyana_secondary":  {
+                                                       "type":  "first",
+                                                       "roll":  762,
+                                                       "drops":  [
+                                                                     {
+                                                                         "key":  "saradomin_sword",
+                                                                         "item":  11730,
+                                                                         "min":  1,
+                                                                         "max":  1,
+                                                                         "chance":  6
+                                                                     },
+                                                                     {
+                                                                         "key":  "saradomin_hilt",
+                                                                         "item":  11706,
+                                                                         "min":  1,
+                                                                         "max":  1,
+                                                                         "chance":  1
+                                                                     },
+                                                                     {
+                                                                         "key":  "godsword_shard_1",
+                                                                         "item":  11710,
+                                                                         "min":  1,
+                                                                         "max":  1,
+                                                                         "chance":  1
+                                                                     },
+                                                                     {
+                                                                         "key":  "godsword_shard_2",
+                                                                         "item":  11712,
+                                                                         "min":  1,
+                                                                         "max":  1,
+                                                                         "chance":  1
+                                                                     },
+                                                                     {
+                                                                         "key":  "godsword_shard_3",
+                                                                         "item":  11714,
+                                                                         "min":  1,
+                                                                         "max":  1,
+                                                                         "chance":  1
+                                                                     },
+                                                                     {
+                                                                         "key":  "adamant_platebody",
+                                                                         "item":  1123,
+                                                                         "min":  1,
+                                                                         "max":  1,
+                                                                         "chance":  48
+                                                                     },
+                                                                     {
+                                                                         "key":  "rune_dart",
+                                                                         "item":  811,
+                                                                         "min":  35,
+                                                                         "max":  40,
+                                                                         "chance":  48
+                                                                     },
+                                                                     {
+                                                                         "key":  "rune_kiteshield",
+                                                                         "item":  1201,
+                                                                         "min":  1,
+                                                                         "max":  1,
+                                                                         "chance":  48
+                                                                     },
+                                                                     {
+                                                                         "key":  "rune_plateskirt",
+                                                                         "item":  1093,
+                                                                         "min":  1,
+                                                                         "max":  1,
+                                                                         "chance":  48
+                                                                     },
+                                                                     {
+                                                                         "key":  "prayer_potion_4",
+                                                                         "item":  2434,
+                                                                         "min":  3,
+                                                                         "max":  3,
+                                                                         "chance":  48
+                                                                     },
+                                                                     {
+                                                                         "key":  "saradomin_brew_3",
+                                                                         "item":  6687,
+                                                                         "min":  3,
+                                                                         "max":  3,
+                                                                         "chance":  36
+                                                                     },
+                                                                     {
+                                                                         "key":  "super_restore_4",
+                                                                         "item":  3024,
+                                                                         "min":  3,
+                                                                         "max":  3,
+                                                                         "chance":  36
+                                                                     },
+                                                                     {
+                                                                         "key":  "super_defence_3",
+                                                                         "item":  163,
+                                                                         "min":  3,
+                                                                         "max":  3,
+                                                                         "chance":  48
+                                                                     },
+                                                                     {
+                                                                         "key":  "super_magic_potion_3",
+                                                                         "item":  3042,
+                                                                         "min":  3,
+                                                                         "max":  3,
+                                                                         "chance":  48
+                                                                     },
+                                                                     {
+                                                                         "key":  "coins",
+                                                                         "item":  995,
+                                                                         "min":  19500,
+                                                                         "max":  20000,
+                                                                         "chance":  146
+                                                                     },
+                                                                     {
+                                                                         "key":  "diamond_noted",
+                                                                         "item":  1602,
+                                                                         "min":  6,
+                                                                         "max":  6,
+                                                                         "chance":  48
+                                                                     },
+                                                                     {
+                                                                         "key":  "law_rune",
+                                                                         "item":  563,
+                                                                         "min":  95,
+                                                                         "max":  100,
+                                                                         "chance":  48
+                                                                     },
+                                                                     {
+                                                                         "key":  "grimy_ranarr_noted",
+                                                                         "item":  208,
+                                                                         "min":  5,
+                                                                         "max":  5,
+                                                                         "chance":  48
+                                                                     },
+                                                                     {
+                                                                         "key":  "ranarr_seed",
+                                                                         "item":  5295,
+                                                                         "min":  2,
+                                                                         "max":  2,
+                                                                         "chance":  48
+                                                                     },
+                                                                     {
+                                                                         "key":  "magic_seed",
+                                                                         "item":  5316,
+                                                                         "min":  1,
+                                                                         "max":  1,
+                                                                         "chance":  6
+                                                                     }
+                                                                 ]
+                                                   },
+                   "saradomin_bodyguard_secondary":  {
+                                                         "type":  "first",
+                                                         "roll":  16129,
+                                                         "drops":  [
+                                                                       {
+                                                                           "key":  "saradomin_sword",
+                                                                           "item":  11730,
+                                                                           "min":  1,
+                                                                           "max":  1,
+                                                                           "chance":  3
+                                                                       },
+                                                                       {
+                                                                           "key":  "coins",
+                                                                           "item":  995,
+                                                                           "min":  1400,
+                                                                           "max":  1500,
+                                                                           "chance":  124
+                                                                       },
+                                                                       {
+                                                                           "key":  "godsword_shard_1",
+                                                                           "item":  11710,
+                                                                           "min":  1,
+                                                                           "max":  1,
+                                                                           "chance":  10
+                                                                       },
+                                                                       {
+                                                                           "key":  "godsword_shard_2",
+                                                                           "item":  11712,
+                                                                           "min":  1,
+                                                                           "max":  1,
+                                                                           "chance":  10
+                                                                       },
+                                                                       {
+                                                                           "key":  "godsword_shard_3",
+                                                                           "item":  11714,
+                                                                           "min":  1,
+                                                                           "max":  1,
+                                                                           "chance":  10
+                                                                       },
+                                                                       {
+                                                                           "key":  "coins",
+                                                                           "item":  995,
+                                                                           "min":  1300,
+                                                                           "max":  1400,
+                                                                           "chance":  90
+                                                                       },
+                                                                       {
+                                                                           "key":  "steel_arrow",
+                                                                           "item":  886,
+                                                                           "min":  95,
+                                                                           "max":  100,
+                                                                           "chance":  1016
+                                                                       },
+                                                                       {
+                                                                           "key":  "steel_dart",
+                                                                           "item":  808,
+                                                                           "min":  95,
+                                                                           "max":  100,
+                                                                           "chance":  1016
+                                                                       },
+                                                                       {
+                                                                           "key":  "law_rune",
+                                                                           "item":  563,
+                                                                           "min":  5,
+                                                                           "max":  10,
+                                                                           "chance":  1016
+                                                                       },
+                                                                       {
+                                                                           "key":  "monkfish",
+                                                                           "item":  7946,
+                                                                           "min":  3,
+                                                                           "max":  3,
+                                                                           "chance":  1016
+                                                                       },
+                                                                       {
+                                                                           "key":  "summer_pie",
+                                                                           "item":  7218,
+                                                                           "min":  1,
+                                                                           "max":  1,
+                                                                           "chance":  1016
+                                                                       },
+                                                                       {
+                                                                           "key":  "coins",
+                                                                           "item":  995,
+                                                                           "min":  1300,
+                                                                           "max":  1400,
+                                                                           "chance":  7874
+                                                                       },
+                                                                       {
+                                                                           "key":  "grimy_ranarr_noted",
+                                                                           "item":  208,
+                                                                           "min":  1,
+                                                                           "max":  1,
+                                                                           "chance":  1016
+                                                                       },
+                                                                       {
+                                                                           "key":  "snape_grass_noted",
+                                                                           "item":  232,
+                                                                           "min":  5,
+                                                                           "max":  5,
+                                                                           "chance":  889
+                                                                       },
+                                                                       {
+                                                                           "key":  "unicorn_horn_noted",
+                                                                           "item":  238,
+                                                                           "min":  6,
+                                                                           "max":  6,
+                                                                           "chance":  1016
+                                                                       }
+                                                                   ]
+                                                     },
+                   "kril_tsutsaroth_secondary":  {
+                                                     "type":  "first",
+                                                     "roll":  762,
+                                                     "drops":  [
+                                                                   {
+                                                                       "key":  "steam_battlestaff",
+                                                                       "item":  11736,
+                                                                       "min":  1,
+                                                                       "max":  1,
+                                                                       "chance":  6
+                                                                   },
+                                                                   {
+                                                                       "key":  "zamorakian_spear",
+                                                                       "item":  11716,
+                                                                       "min":  1,
+                                                                       "max":  1,
+                                                                       "chance":  6
+                                                                   },
+                                                                   {
+                                                                       "key":  "zamorak_hilt",
+                                                                       "item":  11708,
+                                                                       "min":  1,
+                                                                       "max":  1,
+                                                                       "chance":  1
+                                                                   },
+                                                                   {
+                                                                       "key":  "godsword_shard_1",
+                                                                       "item":  11710,
+                                                                       "min":  1,
+                                                                       "max":  1,
+                                                                       "chance":  1
+                                                                   },
+                                                                   {
+                                                                       "key":  "godsword_shard_2",
+                                                                       "item":  11712,
+                                                                       "min":  1,
+                                                                       "max":  1,
+                                                                       "chance":  1
+                                                                   },
+                                                                   {
+                                                                       "key":  "godsword_shard_3",
+                                                                       "item":  11714,
+                                                                       "min":  1,
+                                                                       "max":  1,
+                                                                       "chance":  1
+                                                                   },
+                                                                   {
+                                                                       "key":  "adamant_arrow_p++",
+                                                                       "item":  5626,
+                                                                       "min":  295,
+                                                                       "max":  300,
+                                                                       "chance":  48
+                                                                   },
+                                                                   {
+                                                                       "key":  "rune_scimitar",
+                                                                       "item":  1333,
+                                                                       "min":  1,
+                                                                       "max":  1,
+                                                                       "chance":  48
+                                                                   },
+                                                                   {
+                                                                       "key":  "adamant_platebody",
+                                                                       "item":  1123,
+                                                                       "min":  1,
+                                                                       "max":  1,
+                                                                       "chance":  48
+                                                                   },
+                                                                   {
+                                                                       "key":  "rune_platelegs",
+                                                                       "item":  1079,
+                                                                       "min":  1,
+                                                                       "max":  1,
+                                                                       "chance":  42
+                                                                   },
+                                                                   {
+                                                                       "key":  "dragon_dagger_p++",
+                                                                       "item":  5698,
+                                                                       "min":  1,
+                                                                       "max":  1,
+                                                                       "chance":  12
+                                                                   },
+                                                                   {
+                                                                       "key":  "super_attack_3",
+                                                                       "item":  145,
+                                                                       "min":  3,
+                                                                       "max":  3,
+                                                                       "chance":  48
+                                                                   },
+                                                                   {
+                                                                       "key":  "super_strength_3",
+                                                                       "item":  157,
+                                                                       "min":  3,
+                                                                       "max":  3,
+                                                                       "chance":  48
+                                                                   },
+                                                                   {
+                                                                       "key":  "super_restore_3",
+                                                                       "item":  3026,
+                                                                       "min":  3,
+                                                                       "max":  3,
+                                                                       "chance":  48
+                                                                   },
+                                                                   {
+                                                                       "key":  "zamorak_brew_3",
+                                                                       "item":  189,
+                                                                       "min":  3,
+                                                                       "max":  3,
+                                                                       "chance":  48
+                                                                   },
+                                                                   {
+                                                                       "key":  "coins",
+                                                                       "item":  995,
+                                                                       "min":  19500,
+                                                                       "max":  20000,
+                                                                       "chance":  164
+                                                                   },
+                                                                   {
+                                                                       "key":  "grimy_lantadyme_noted",
+                                                                       "item":  2486,
+                                                                       "min":  10,
+                                                                       "max":  10,
+                                                                       "chance":  48
+                                                                   },
+                                                                   {
+                                                                       "key":  "lantadyme_seed",
+                                                                       "item":  5302,
+                                                                       "min":  3,
+                                                                       "max":  3,
+                                                                       "chance":  48
+                                                                   },
+                                                                   {
+                                                                       "key":  "death_rune",
+                                                                       "item":  560,
+                                                                       "min":  120,
+                                                                       "max":  125,
+                                                                       "chance":  48
+                                                                   },
+                                                                   {
+                                                                       "key":  "blood_rune",
+                                                                       "item":  565,
+                                                                       "min":  80,
+                                                                       "max":  85,
+                                                                       "chance":  48
+                                                                   }
+                                                               ]
+                                                 },
+                   "zamorak_bodyguard_secondary":  {
+                                                       "type":  "first",
+                                                       "roll":  16129,
+                                                       "drops":  [
+                                                                     {
+                                                                         "key":  "zamorakian_spear",
+                                                                         "item":  11716,
+                                                                         "min":  1,
+                                                                         "max":  1,
+                                                                         "chance":  3
+                                                                     },
+                                                                     {
+                                                                         "key":  "coins",
+                                                                         "item":  995,
+                                                                         "min":  1300,
+                                                                         "max":  1400,
+                                                                         "chance":  124
+                                                                     },
+                                                                     {
+                                                                         "key":  "godsword_shard_1",
+                                                                         "item":  11710,
+                                                                         "min":  1,
+                                                                         "max":  1,
+                                                                         "chance":  10
+                                                                     },
+                                                                     {
+                                                                         "key":  "godsword_shard_2",
+                                                                         "item":  11712,
+                                                                         "min":  1,
+                                                                         "max":  1,
+                                                                         "chance":  10
+                                                                     },
+                                                                     {
+                                                                         "key":  "godsword_shard_3",
+                                                                         "item":  11714,
+                                                                         "min":  1,
+                                                                         "max":  1,
+                                                                         "chance":  10
+                                                                     },
+                                                                     {
+                                                                         "key":  "coins",
+                                                                         "item":  995,
+                                                                         "min":  1300,
+                                                                         "max":  1400,
+                                                                         "chance":  90
+                                                                     },
+                                                                     {
+                                                                         "key":  "steel_arrow",
+                                                                         "item":  886,
+                                                                         "min":  95,
+                                                                         "max":  100,
+                                                                         "chance":  889
+                                                                     },
+                                                                     {
+                                                                         "key":  "steel_dart",
+                                                                         "item":  808,
+                                                                         "min":  95,
+                                                                         "max":  100,
+                                                                         "chance":  1016
+                                                                     },
+                                                                     {
+                                                                         "key":  "death_rune",
+                                                                         "item":  560,
+                                                                         "min":  5,
+                                                                         "max":  10,
+                                                                         "chance":  1016
+                                                                     },
+                                                                     {
+                                                                         "key":  "blood_rune",
+                                                                         "item":  565,
+                                                                         "min":  5,
+                                                                         "max":  10,
+                                                                         "chance":  1016
+                                                                     },
+                                                                     {
+                                                                         "key":  "coins",
+                                                                         "item":  995,
+                                                                         "min":  1300,
+                                                                         "max":  1400,
+                                                                         "chance":  8382
+                                                                     },
+                                                                     {
+                                                                         "key":  "shark",
+                                                                         "item":  385,
+                                                                         "min":  3,
+                                                                         "max":  3,
+                                                                         "chance":  1016
+                                                                     },
+                                                                     {
+                                                                         "key":  "tuna_potato",
+                                                                         "item":  7060,
+                                                                         "min":  2,
+                                                                         "max":  2,
+                                                                         "chance":  1016
+                                                                     },
+                                                                     {
+                                                                         "key":  "wine_of_zamorak_noted",
+                                                                         "item":  246,
+                                                                         "min":  5,
+                                                                         "max":  10,
+                                                                         "chance":  1016
+                                                                     },
+                                                                     {
+                                                                         "key":  "super_attack_3",
+                                                                         "item":  145,
+                                                                         "min":  1,
+                                                                         "max":  1,
+                                                                         "chance":  254
+                                                                     },
+                                                                     {
+                                                                         "key":  "super_strength_3",
+                                                                         "item":  157,
+                                                                         "min":  1,
+                                                                         "max":  1,
+                                                                         "chance":  254
+                                                                     }
+                                                                 ]
+                                                   }
+               },
+    "excluded":  [
+                     {
+                         "table":  "armadyl_bodyguard_drop_table",
+                         "entry":  "hard_clue_scroll",
+                         "reason":  "PARKED: Treasure Trails (Q-057)"
+                     },
+                     {
+                         "table":  "commander_zilyana_drop_table",
+                         "entry":  "elite_clue_scroll",
+                         "reason":  "post-2011 (owner option)"
+                     },
+                     {
+                         "table":  "saradomin_bodyguard_drop_table",
+                         "entry":  "hard_clue_scroll",
+                         "reason":  "PARKED: Treasure Trails (Q-057)"
+                     },
+                     {
+                         "table":  "kril_tsutsaroth_drop_table",
+                         "entry":  "elite_clue_scroll",
+                         "reason":  "post-2011 (owner option)"
+                     },
+                     {
+                         "table":  "zamorak_bodyguard_drop_table",
+                         "entry":  "hard_clue_scroll",
+                         "reason":  "PARKED: Treasure Trails (Q-057)"
+                     },
+                     {
+                         "table":  "general_graardor_tertiary",
+                         "entry":  "elite_clue_scroll",
+                         "reason":  "post-2011 (owner option)"
+                     },
+                     {
+                         "table":  "general_graardor_tertiary",
+                         "entry":  "long_bone",
+                         "reason":  "post-2011 (owner option)"
+                     },
+                     {
+                         "table":  "general_graardor_tertiary",
+                         "entry":  "curved_bone",
+                         "reason":  "post-2011 (owner option)"
+                     },
+                     {
+                         "table":  "bandos_bodyguard_tertiary",
+                         "entry":  "hard_clue_scroll",
+                         "reason":  "PARKED: Treasure Trails (Q-057)"
+                     },
+                     {
+                         "table":  "bandos_bodyguard_tertiary",
+                         "entry":  "goblin_champions_scroll",
+                         "reason":  "PARKED: Champions Challenge minigame"
+                     },
+                     {
+                         "table":  "kree_arra_tertiary",
+                         "entry":  "elite_clue_scroll",
+                         "reason":  "post-2011 (owner option)"
+                     },
+                     {
+                         "table":  "kree_arra_tertiary",
+                         "entry":  "long_bone",
+                         "reason":  "post-2011 (owner option)"
+                     },
+                     {
+                         "table":  "kree_arra_tertiary",
+                         "entry":  "curved_bone",
+                         "reason":  "post-2011 (owner option)"
+                     }
+                 ]
+}
