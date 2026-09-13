@@ -9,7 +9,8 @@ set_combat_def(npc = KRIL) {
     configs {
         attackSpeed = 6 // OSRS Wiki: 6 ticks
         attackStyle = StyleType.SLASH
-        respawnDelay = 60
+        // Owner decision 2026-09-13: Void zamorak.npcs.toml respawn_delay 150 (Novite 60 not used).
+        respawnDelay = 150
     }
     stats {
                 // OSRS Wiki / 2007-era values (unchanged through 2011): 255 hp, att 340, str 300, def 270, mag 200, rng 1

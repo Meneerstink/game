@@ -67,8 +67,10 @@ class GodWarsBodyguardsTests {
         assertFalse(plugin.contains("spawn_npc("), "no independent bodyguard spawns")
         assertTrue(plugin.contains("GodWarsBodyguards.BY_GENERAL") && plugin.contains("on_npc_spawn(") && plugin.contains("respawnOverride = false"))
         val defs = File(content, "npcs/definitions/godwars")
-        listOf("general_graardor.plugin.kts", "commander_zilyana.plugin.kts").forEach {
-            assertTrue(File(defs, it).readText().contains("respawnDelay = 150"), "$it: Void and Novite both 150")
+        // Graardor/Zilyana: Void and Novite both 150; Kree'arra/K'ril: Void 150 by owner decision 2026-09-13.
+        listOf("general_graardor.plugin.kts", "commander_zilyana.plugin.kts", "kreearra.plugin.kts", "kril_tsutsaroth.plugin.kts").forEach {
+            val text = File(defs, it).readText()
+            assertTrue(text.contains("respawnDelay = 150") && !text.contains("respawnDelay = 60"), "$it respawns after 150 ticks")
         }
     }
 }

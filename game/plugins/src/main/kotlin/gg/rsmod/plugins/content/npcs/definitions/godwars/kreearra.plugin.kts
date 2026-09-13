@@ -12,7 +12,8 @@ set_combat_def(npc = KREEARRA) {
     configs {
         attackSpeed = 3 // OSRS Wiki: 3 ticks
         attackStyle = StyleType.RANGED
-        respawnDelay = 60
+        // Owner decision 2026-09-13: Void armadyl.npcs.toml respawn_delay 150 (Novite 60 not used).
+        respawnDelay = 150
     }
     stats {
                 // OSRS Wiki / 2007-era values (unchanged through 2011): 255 hp, att 300, str 200, def 260, mag 200, rng 380
