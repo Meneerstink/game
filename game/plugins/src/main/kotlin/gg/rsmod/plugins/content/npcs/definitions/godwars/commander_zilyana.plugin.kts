@@ -47,7 +47,8 @@ set_combat_def(npc = ZILYANA) {
     configs {
         attackSpeed = 2 // OSRS Wiki: 2 ticks
         attackStyle = StyleType.STAB
-        respawnDelay = 60
+        // RCV-011 Q-043-a: Void saradomin.npcs.toml respawn_delay 150 and Novite 667 combat definitions 6247 150 agree.
+        respawnDelay = 150
     }
     stats {
                 // OSRS Wiki / 2007-era values (unchanged through 2011): 255 hp, att 280, str 196, def 300, mag 300, rng 250

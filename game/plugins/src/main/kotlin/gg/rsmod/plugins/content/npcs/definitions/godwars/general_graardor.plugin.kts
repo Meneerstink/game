@@ -49,7 +49,8 @@ set_combat_def(npc = GRAARDOR) {
     configs {
         attackSpeed = 6
         attackStyle = StyleType.CRUSH
-        respawnDelay = 60
+        // RCV-011 Q-043-a: Void bandos.npcs.toml respawn_delay 150 and Novite 667 combat definitions 6260 150 agree.
+        respawnDelay = 150
     }
     stats {
                 // OSRS Wiki / 2007-era values (unchanged through 2011): 255 hp, att 280, str 350, def 250, mag 80, rng 350
