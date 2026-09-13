@@ -157,6 +157,17 @@ object OsrsItemImportTool {
                     (19570..19582 step 2).map { Spec(it) } + Spec(21352) + // javelin tips bronze..dragon, amethyst
                     (825..830).flatMap { tier -> listOf(tier, tier + 6, tier + 4817, tier + 4823) }.map { Spec(it) } + // bronze..rune (p)(p+)(p++)
                     listOf(21318, 21320, 21322, 21324, 19484, 19486, 19488, 19490).map { Spec(it) }, // amethyst, dragon
+            // Toxic blowpipe. Client params follow the 667 Rune dart 811 (686 thrown style set 18, 23/749/750 requirement,
+            // no render anim param) plus 687 = 1 for the special bar (Hand cannon). Weapon type 18 as the 667 darts.
+            // The empty blowpipe has no Wield option upstream and gets no client params.
+            "blowpipe" to
+                listOf(
+                    Spec(12926, rev667Params = mapOf(686 to 18, 687 to 1, 23 to 75, 749 to 4, 750 to 75), weaponType = 18), // Toxic blowpipe
+                    Spec(12924, noted = true), // Toxic blowpipe (empty)
+                    Spec(12922, noted = true), // Tanzanite fang
+                    Spec(12934), // Zulrah's scales
+                    Spec(25849, rev667Params = mapOf(686 to 18, 23 to 50, 749 to 4, 750 to 50), weaponType = 18), // Amethyst dart
+                ),
         )
 
     /**
@@ -487,7 +498,9 @@ object OsrsItemImportTool {
         sb.append("    prayer: ${p(11)}\n")
         // Gear carries ranged strength in param 189 (Twisted bow 20, Necklace of anguish 5); ammunition (wearPos 13) in
         // param 12 (Dragon bolts 122 = OSRS Wiki "Dragon bolts" +122).
-        val rangedStrength = if (def.wearPos1 == 13 && !def.params.containsKey(189)) p(12) else p(189)
+        // Thrown weapons and the Toxic blowpipe carry it in param 12 on the weapon slot too (Dragon dart 35, Amethyst dart
+        // 28, Toxic blowpipe 20 = OSRS Wiki item pages), so 189 wins only when present.
+        val rangedStrength = if (def.params.containsKey(189)) p(189) else p(12)
         sb.append("    ranged_strength: $rangedStrength\n")
         sb.append("    magic_damage: ${p(299) / 10}\n")
         sb.append("    attack_audio: ${entry.spec.attackAudio}\n")

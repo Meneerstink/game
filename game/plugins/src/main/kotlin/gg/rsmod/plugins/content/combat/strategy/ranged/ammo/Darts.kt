@@ -25,7 +25,10 @@ object Darts {
     val DRAGON_DARTS =
         arrayOf(Items.DRAGON_DART, Items.DRAGON_DART_P, Items.DRAGON_DART_P_11233, Items.DRAGON_DART_P_11234)
 
+    /** OSRS-IMPORT: Amethyst dart (OSRS item, no 667 counterpart; unpoisoned only in this batch). */
+    val AMETHYST_DARTS = arrayOf(Items.AMETHYST_DART)
+
     val DARTS =
         BRONZE_DARTS + IRON_DARTS + STEEL_DARTS + BLACK_DARTS + MITHRIL_DARTS + ADAMANT_DARTS + RUNE_DARTS +
-            DRAGON_DARTS
+            DRAGON_DARTS + AMETHYST_DARTS
 }

@@ -14,6 +14,7 @@ import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Arrows.RUNE_ARROWS
 import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Arrows.STEEL_ARROWS
 import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Arrows.TRAINING_ARROWS
 import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Bolts
+import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Darts
 import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Darts.ADAMANT_DARTS
 import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Darts.BLACK_DARTS
 import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Darts.BRONZE_DARTS
@@ -227,6 +228,13 @@ enum class RangedProjectile(
         drawback = Graphic(Gfx.DRAGON_DART_DRAWBACK, 96),
         type = ProjectileType.THROWN,
         items = DRAGON_DARTS,
+    ),
+    // OSRS-IMPORT: no 667 amethyst dart graphics exist; the rune dart graphics are used (ADAPTED_TO_667).
+    AMETHYST_DART(
+        gfx = Gfx.RUNE_DART_IN_FLIGHT,
+        drawback = Graphic(Gfx.RUNE_DART_DRAWBACK, 96),
+        type = ProjectileType.THROWN,
+        items = Darts.AMETHYST_DARTS,
     ),
     BRONZE_THROWING_AXE(
         gfx = Gfx.BRONZE_THROWNAXE_IN_FLIGHT,

@@ -27,6 +27,8 @@ import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Knives
 import gg.rsmod.plugins.content.combat.strategy.ranged.weapon.BowType
 import gg.rsmod.plugins.content.combat.strategy.ranged.weapon.Bows
 import gg.rsmod.plugins.content.combat.strategy.ranged.weapon.CrossbowType
+import gg.rsmod.plugins.content.items.osrs.Blowpipe
+import gg.rsmod.plugins.content.items.osrs.BlowpipeCombat
 import gg.rsmod.plugins.content.mechanics.weapons.HandCannon
 
 /**
@@ -78,6 +80,12 @@ object RangedCombatStrategy : CombatStrategy {
             val weapon = pawn.getEquipment(EquipmentType.WEAPON)
             val ammo = pawn.getEquipment(EquipmentType.AMMO)
 
+            if (weapon?.id == Items.TOXIC_BLOWPIPE && !Blowpipe.canFire(weapon)) {
+                pawn.message(if (Blowpipe.scales(weapon) <= 0) Blowpipe.NO_SCALES_MESSAGE else Blowpipe.NO_DARTS_MESSAGE)
+                pawn.resetFacePawn()
+                return false
+            }
+
             val crossbow = CrossbowType.values.firstOrNull { it.item == weapon?.id }
             if (crossbow != null && ammo?.id !in crossbow.ammo) {
                 val message =
@@ -128,7 +136,10 @@ object RangedCombatStrategy : CombatStrategy {
         var ammoDropAction: ((PawnHit).() -> Unit) = {}
         var boltAmmoId: Int? = null
 
-        if (pawn is Player) {
+        // The Toxic blowpipe fires its stored darts (charges on the item), never the weapon slot itself.
+        val firedBlowpipe = pawn is Player && BlowpipeCombat.fire(pawn, target)
+
+        if (pawn is Player && !firedBlowpipe) {
             /*
              * Get the [EquipmentType] for the ranged weapon you're using.
              */
@@ -221,7 +232,11 @@ object RangedCombatStrategy : CombatStrategy {
         val maxHit = formula.getMaxHit(pawn, target)
         val landHit = accuracy >= world.randomDouble()
         val hitDelay =
-            getHitDelay(pawn.getCentreTile(), target.tile.transform(target.getSize() / 2, target.getSize() / 2))
+            if (firedBlowpipe) {
+                BlowpipeCombat.hitDelay(pawn.tile.getDistance(target.tile), special = false)
+            } else {
+                getHitDelay(pawn.getCentreTile(), target.tile.transform(target.getSize() / 2, target.getSize() / 2))
+            }
         // Enchanted dragon bolts roll their effect on every normal crossbow shot (EnchantedBolts).
         val shot =
             if (pawn is Player) {
@@ -241,6 +256,9 @@ object RangedCombatStrategy : CombatStrategy {
                 bonusDamage = shot?.bonusDamage ?: 0,
             )
         val damage = pawnHit.hit.hitmarks.sumOf { it.damage }
+        if (firedBlowpipe) {
+            pawnHit.hit.addAction { BlowpipeCombat.rollVenom(pawn as Player, target) }
+        }
         val activated = shot?.bolt
         if (activated != null) {
             pawnHit.hit.addAction { EnchantedBolts.afterHit(activated, pawn as Player, target, damage) }

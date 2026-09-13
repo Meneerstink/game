@@ -19493,5 +19493,13 @@ object Items {
     const val OSRS_DRAGON_JAVELIN_P = 22620
     const val OSRS_DRAGON_JAVELIN_P_PLUS = 22621
     const val OSRS_DRAGON_JAVELIN_P_PLUS_PLUS = 22622
+    // OSRS-IMPORT batch blowpipe (tx-20260913-223749). 22628-22631 are nameless Zulrah's scales stack visuals.
+    const val TOXIC_BLOWPIPE = 22623
+    const val TOXIC_BLOWPIPE_EMPTY = 22624
+    const val TOXIC_BLOWPIPE_EMPTY_NOTED = 22625
+    const val TANZANITE_FANG = 22626
+    const val TANZANITE_FANG_NOTED = 22627
+    const val ZULRAHS_SCALES = 22632
+    const val AMETHYST_DART = 22633
     // Auto-generated file using class gg.rsmod.game.service.game.DumpEntityIdService
 }

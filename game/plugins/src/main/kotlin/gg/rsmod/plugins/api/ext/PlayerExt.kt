@@ -1373,7 +1373,9 @@ fun Player.getRangedStrengthBonus(): Int =
                 .get(
                     ItemDef::class.java,
                     equipment[3]?.id ?: -1,
-                ).bonuses[BonusSlot.RANGED_STRENGTH_BONUS.id]
+                ).bonuses[BonusSlot.RANGED_STRENGTH_BONUS.id] +
+                // OSRS Wiki "Toxic blowpipe": its +20 stacks with the loaded darts' ranged strength (dragon darts: +55).
+                gg.rsmod.plugins.content.items.osrs.Blowpipe.dartStrength(equipment[3])
         }
         else -> equipmentBonuses[BonusSlot.RANGED_STRENGTH_BONUS.id]
     }

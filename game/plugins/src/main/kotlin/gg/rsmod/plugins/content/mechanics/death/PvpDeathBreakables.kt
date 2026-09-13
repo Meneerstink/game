@@ -5,6 +5,7 @@ import gg.rsmod.game.model.entity.GroundItem
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.api.ext.refreshBonuses
+import gg.rsmod.plugins.content.items.osrs.Blowpipe
 import gg.rsmod.plugins.content.items.osrs.OsrsOrnamentKits
 
 /**
@@ -50,7 +51,9 @@ object PvpDeathBreakables {
     fun split(result: DeathResolutionResult): Pair<DeathResolutionResult, List<DeathSlotItem>> {
         if (result.context != DeathContext.WILDERNESS_PVP) return result to emptyList()
         val (converting, rest) =
-            result.itemRisk.lost.partition { entries.containsKey(it.item.id) || OsrsOrnamentKits.forOrnamented(it.item.id) != null }
+            result.itemRisk.lost.partition {
+                entries.containsKey(it.item.id) || OsrsOrnamentKits.forOrnamented(it.item.id) != null || it.item.id == Items.TOXIC_BLOWPIPE
+            }
         if (converting.isEmpty()) return result to emptyList()
         return result.copy(itemRisk = result.itemRisk.copy(lost = rest)) to converting
     }
@@ -71,6 +74,17 @@ object PvpDeathBreakables {
                     DeathContainerSource.EQUIPMENT -> victim.equipment
                 }
             if (container[slotItem.slot]?.id != slotItem.item.id) continue
+            if (slotItem.item.id == Items.TOXIC_BLOWPIPE) {
+                // OSRS Wiki "Toxic blowpipe": unprotected, "all scale and dart charges will appear on the floor alongside
+                // the blowpipe" - the empty blowpipe, its darts and its scales drop for the killer.
+                val blowpipe = container[slotItem.slot]!!
+                container[slotItem.slot] = null
+                if (slotItem.source == DeathContainerSource.EQUIPMENT) equipmentChanged = true
+                world.spawn(GroundItem(Item(Items.TOXIC_BLOWPIPE_EMPTY, 1), victim.tile, result.killer))
+                Blowpipe.dart(blowpipe)?.let { world.spawn(GroundItem(Item(it.itemId, Blowpipe.darts(blowpipe)), victim.tile, result.killer)) }
+                Blowpipe.scales(blowpipe).takeIf { it > 0 }?.let { world.spawn(GroundItem(Item(Items.ZULRAHS_SCALES, it), victim.tile, result.killer)) }
+                continue
+            }
             val ornament = OsrsOrnamentKits.forOrnamented(slotItem.item.id)
             if (ornament != null) {
                 // "Items Kept on Death": dropped to the PKer as the non-ornamented item plus the ornament kit.
