@@ -119,7 +119,9 @@ class ItemMetadataService : Service {
                         equipment.meleeStrength,
                         equipment.rangedStrength,
                         equipment.prayer,
-                        equipment.magicDamage,
+                        // magic_damage is a percentage with OSRS precision (e.g. 0.5 for Seers ring (i)); the bonus slot
+                        // stores tenths of a percent so it stays an integer.
+                        Math.round(equipment.magicDamage * 10.0).toInt(),
                     )
             }
         }
@@ -162,7 +164,7 @@ class ItemMetadataService : Service {
         @JsonProperty("absorb_ranged") val absorbRanged: Int = 0,
         @JsonProperty("melee_strength") val meleeStrength: Int = 0,
         @JsonProperty("ranged_strength") val rangedStrength: Int = 0,
-        @JsonProperty("magic_damage") val magicDamage: Int = 0,
+        @JsonProperty("magic_damage") val magicDamage: Double = 0.0,
         @JsonProperty("prayer") val prayer: Int = 0,
         @JsonProperty("attack_audio") val attackAudio: Int = 0,
         @JsonProperty("skill_reqs") val skillReqs: Array<SkillRequirement>? = null,
@@ -218,7 +220,7 @@ class ItemMetadataService : Service {
             result = 31 * result + summoning
             result = 31 * result + meleeStrength
             result = 31 * result + rangedStrength
-            result = 31 * result + magicDamage
+            result = 31 * result + magicDamage.hashCode()
             result = 31 * result + prayer
             result = 31 * result + (skillReqs?.contentHashCode() ?: 0)
             return result

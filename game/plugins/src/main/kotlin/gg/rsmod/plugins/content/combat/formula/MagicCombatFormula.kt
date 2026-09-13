@@ -18,8 +18,6 @@ import gg.rsmod.plugins.content.mechanics.prayer.Prayers
  * @author Tom <rspsmods@gmail.com>
  */
 object MagicCombatFormula : CombatFormula {
-    private val MAGE_VOID =
-        intArrayOf(Items.VOID_MAGE_HELM, Items.VOID_KNIGHT_TOP, Items.VOID_KNIGHT_ROBE, Items.VOID_KNIGHT_GLOVES)
 
     private val BOLT_SPELLS =
         enumSetOf(CombatSpell.WIND_BOLT, CombatSpell.WATER_BOLT, CombatSpell.EARTH_BOLT, CombatSpell.FIRE_BOLT)
@@ -100,10 +98,10 @@ object MagicCombatFormula : CombatFormula {
                 }
             }
 
-            var multiplier = 1.0 + (pawn.getMagicDamageBonus() / 100.0)
-
-            hit *= multiplier
-            hit = Math.floor(hit)
+            // OSRS Wiki "Maximum magic hit": ⌊⌊Base + Gauntlets + Charge⌋ × (1 + Visible bonuses + Void + Prayer)⌋ -
+            // the percentages add up before multiplying. The player bonus slot holds tenths of a percent.
+            val additive = pawn.getMagicDamageBonus() / 1000.0 + getEliteVoidMagicDamage(pawn) + getPrayerMagicDamage(pawn)
+            hit = Math.floor(Math.floor(hit) * (1.0 + additive))
         } else if (pawn is Npc) {
             val spell = pawn.attr[Combat.CASTING_SPELL]
             if (spell == null) {
@@ -155,7 +153,9 @@ object MagicCombatFormula : CombatFormula {
         // attacker's - `getEffectiveDefenceLevel(npc: Npc)` below existed but was never
         // called by anything before this fix, which is itself evidence the target-based
         // path was never wired in. See RSPS_DECISIONS.md.
-        val a = getEffectiveDefenceLevel(target)
+        // "Damage per second/Magic": NPC magic defence roll = (9 + NPC Magic level) × (NPC magic defence + 64);
+        // a monster's Defence level plays no part.
+        val a = target.stats.getCurrentLevel(NpcSkills.MAGIC) + 9.0
         val b = getEquipmentDefenceBonus(target)
 
         val maxRoll = a * (b + 64.0)
@@ -187,12 +187,9 @@ object MagicCombatFormula : CombatFormula {
         target: Pawn,
         base: Double,
     ): Double {
-        var hit = base
-
-        hit *= TargetModifiers.equipmentMultiplier(player, target)
-        hit = Math.floor(hit)
-
-        return hit
+        // The plain Salve amulet and black mask/Slayer helmet are melee-only; magic needs their imbued versions
+        // ("Damage per second/Magic": 1.15 slayer helm (i) / salve (i)), none of which exist in this cache.
+        return Math.floor(base)
     }
 
     private fun getEffectiveAttackLevel(player: Player): Double {
@@ -200,13 +197,24 @@ object MagicCombatFormula : CombatFormula {
 
         effectiveLevel += 8.0
 
-        if (player.hasEquipped(MAGE_VOID)) {
-            effectiveLevel *= 1.45
-            effectiveLevel = Math.floor(effectiveLevel)
+        if (VoidKnight.wearing(player, VoidKnight.MAGE_HELMS)) {
+            effectiveLevel = Math.floor(effectiveLevel * 1.45)
         }
 
         return Math.floor(effectiveLevel)
     }
+
+    /** Void Knight equipment: elite magic void adds +5 % magic damage. */
+    private fun getEliteVoidMagicDamage(player: Player): Double = if (VoidKnight.wearingElite(player, VoidKnight.MAGE_HELMS)) 0.05 else 0.0
+
+    /** "Maximum magic hit": Mystic Lore +1 %, Mystic Might +2 %, Augury +4 % magic damage. */
+    private fun getPrayerMagicDamage(player: Player): Double =
+        when {
+            Prayers.isActive(player, Prayer.MYSTIC_LORE) -> 0.01
+            Prayers.isActive(player, Prayer.MYSTIC_MIGHT) -> 0.02
+            Prayers.isActive(player, Prayer.AUGURY) -> 0.04
+            else -> 0.0
+        }
 
     private fun getEffectiveDefenceLevel(player: Player): Double {
         var effectiveLevel =
@@ -229,12 +237,6 @@ object MagicCombatFormula : CombatFormula {
 
     private fun getEffectiveAttackLevel(npc: Npc): Double {
         var effectiveLevel = npc.stats.getCurrentLevel(NpcSkills.MAGIC).toDouble()
-        effectiveLevel += 8
-        return effectiveLevel
-    }
-
-    private fun getEffectiveDefenceLevel(npc: Npc): Double {
-        var effectiveLevel = npc.stats.getCurrentLevel(NpcSkills.DEFENCE).toDouble()
         effectiveLevel += 8
         return effectiveLevel
     }

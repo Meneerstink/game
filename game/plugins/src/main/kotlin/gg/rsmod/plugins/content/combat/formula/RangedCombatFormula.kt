@@ -20,8 +20,6 @@ import kotlin.math.floor
  * @author Tom <rspsmods@gmail.com>
  */
 object RangedCombatFormula : CombatFormula {
-    private val RANGED_VOID =
-        intArrayOf(Items.VOID_RANGER_HELM, Items.VOID_KNIGHT_TOP, Items.VOID_KNIGHT_ROBE, Items.VOID_KNIGHT_GLOVES)
 
     override fun getAccuracy(
         pawn: Pawn,
@@ -60,7 +58,8 @@ object RangedCombatFormula : CombatFormula {
             }
         val b = getEquipmentRangedBonus(pawn)
 
-        var base = 0.5 + a * (b + 64.0) / 640.0
+        // OSRS Wiki "Maximum ranged hit": ⌊⌊0.5 + Effective Ranged Strength × (Ranged Strength + 64) / 640⌋ × Gear⌋.
+        var base = floor(0.5 + a * (b + 64.0) / 640.0)
         if (pawn is Player) {
             base = applyRangedSpecials(pawn, target, base, specialAttackMultiplier, specialPassiveMultiplier)
         }
@@ -127,34 +126,28 @@ object RangedCombatFormula : CombatFormula {
         // mask plus the Twisted bow passive, applied only while the bow is actually equipped -
         // see TargetModifiers.rangedDamageMultiplier) instead of the generic equipmentMultiplier
         // directly, so the bow-specific scaling can never leak into Melee/Magic.
-        hit *= TargetModifiers.rangedDamageMultiplier(player, target)
-        hit = floor(hit)
+        hit = floor(hit * TargetModifiers.rangedDamageMultiplier(player, target))
 
-        hit *=
-            if (specialAttackMultiplier == 1.0) {
-                val multiplier = 1.0
-                multiplier
-            } else {
-                specialAttackMultiplier
-            }
+        // Step three ("⌊Base Damage × Special Bonus⌋"): every later multiplier is floored in turn.
+        hit = floor(hit * specialAttackMultiplier)
 
         if (target.isProtectedFrom(CombatClass.RANGED)) {
-            hit *= 0.6
+            hit = floor(hit * 0.6)
         }
 
         if (player.hasEquipped(EquipmentType.WEAPON, Items.SLING)) {
-            hit *= 0.9
+            hit = floor(hit * 0.9)
         }
 
-        if (specialPassiveMultiplier == 1.0) {
-            hit = applyPassiveMultiplier(player, target, hit)
-        } else {
-            hit *= specialPassiveMultiplier
-        }
+        hit =
+            if (specialPassiveMultiplier == 1.0) {
+                floor(applyPassiveMultiplier(player, target, hit))
+            } else {
+                floor(hit * specialPassiveMultiplier)
+            }
 
-        hit *= getDamageDealMultiplier(player)
-
-        hit *= getDamageTakeMultiplier(target)
+        hit = floor(hit * getDamageDealMultiplier(player))
+        hit = floor(hit * getDamageTakeMultiplier(target))
 
         return hit
     }
@@ -169,14 +162,9 @@ object RangedCombatFormula : CombatFormula {
 
         // S3, 2026-09-03: accuracy-stage counterpart of the damage-stage change above - see
         // TargetModifiers.rangedAccuracyMultiplier.
-        hit *= TargetModifiers.rangedAccuracyMultiplier(player, target)
-
-        if (specialAttackMultiplier == 1.0) {
-            val multiplier = 1.0
-            hit *= multiplier
-        } else {
-            hit *= specialAttackMultiplier
-        }
+        // "Damage per second/Ranged": ⌊Effective Ranged Attack × (Ranged Attack + 64) × Gear Bonus⌋.
+        hit = floor(hit * TargetModifiers.rangedAccuracyMultiplier(player, target))
+        hit = floor(hit * specialAttackMultiplier)
 
         return hit
     }
@@ -224,9 +212,10 @@ object RangedCombatFormula : CombatFormula {
 
         effectiveLevel += 8.0
 
-        if (player.hasEquipped(RANGED_VOID)) {
-            effectiveLevel *= 1.10
-            effectiveLevel = Math.floor(effectiveLevel)
+        // Void Knight equipment: ranged void +10 % damage, elite ranged void 12.5 %; "⌊(…) × Void Modifier⌋".
+        if (VoidKnight.wearing(player, VoidKnight.RANGER_HELMS)) {
+            val modifier = if (VoidKnight.wearingElite(player, VoidKnight.RANGER_HELMS)) 1.125 else 1.10
+            effectiveLevel = floor(effectiveLevel * modifier)
         }
 
         return effectiveLevel
@@ -246,9 +235,9 @@ object RangedCombatFormula : CombatFormula {
 
         effectiveLevel += 8.0
 
-        if (player.hasEquipped(RANGED_VOID)) {
-            effectiveLevel *= 1.10
-            effectiveLevel = Math.floor(effectiveLevel)
+        // Void accuracy is 1.1 for both ranged void variants.
+        if (VoidKnight.wearing(player, VoidKnight.RANGER_HELMS)) {
+            effectiveLevel = floor(effectiveLevel * 1.10)
         }
 
         return effectiveLevel
@@ -286,8 +275,9 @@ object RangedCombatFormula : CombatFormula {
     }
 
     private fun getEffectiveDefenceLevel(npc: Npc): Double {
+        // "Damage per second/Ranged": NPC ranged defence roll = (Defence level + 9) × (ranged defence bonus + 64).
         var effectiveLevel = npc.stats.getCurrentLevel(NpcSkills.DEFENCE).toDouble()
-        effectiveLevel += 8
+        effectiveLevel += 9
         return effectiveLevel
     }
 

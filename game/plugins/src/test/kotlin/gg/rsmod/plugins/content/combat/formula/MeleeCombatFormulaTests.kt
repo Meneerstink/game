@@ -70,24 +70,28 @@ class MeleeCombatFormulaTests {
         val accurate = getMaxHit(newPlayer(strengthLevel = 99, style = WeaponStyle.ACCURATE))
         val defensive = getMaxHit(newPlayer(strengthLevel = 99, style = WeaponStyle.DEFENSIVE))
         assertEquals(accurate, defensive, 1e-9)
-        // effectiveLevel = floor(99 * 1.0) + 0 + 8 = 107
-        assertEquals(0.5 + 107.0 * 64.0 / 640.0, accurate, 1e-9)
+        // effectiveLevel = floor(99 * 1.0) + 0 + 8 = 107; ⌊0.5 + 107 × 64 / 640⌋ = ⌊11.2⌋ = 11
+        assertEquals(11.0, accurate, 1e-9)
     }
 
     @Test
     fun `Controlled style gives effective Strength a plus 1 bonus`() {
-        val hit = getMaxHit(newPlayer(strengthLevel = 99, style = WeaponStyle.CONTROLLED))
-        // effectiveLevel = floor(99 * 1.0) + 1 + 8 = 108
-        assertEquals(0.5 + 108.0 * 64.0 / 640.0, hit, 1e-9)
+        // Level 96 so the +1 crosses a whole point after OSRS's floor.
+        val hit = getMaxHit(newPlayer(strengthLevel = 96, style = WeaponStyle.CONTROLLED))
+        // effectiveLevel = 96 + 1 + 8 = 105; ⌊0.5 + 105 × 64 / 640⌋ = ⌊11.0⌋ = 11 (Accurate: ⌊10.9⌋ = 10)
+        assertEquals(11.0, hit, 1e-9)
+        assertTrue(hit > getMaxHit(newPlayer(strengthLevel = 96, style = WeaponStyle.ACCURATE)))
     }
 
     @Test
     fun `Aggressive style gives effective Strength the largest, plus 3, bonus`() {
-        val aggressive = getMaxHit(newPlayer(strengthLevel = 99, style = WeaponStyle.AGGRESSIVE))
-        // effectiveLevel = floor(99 * 1.0) + 3 + 8 = 110
-        assertEquals(0.5 + 110.0 * 64.0 / 640.0, aggressive, 1e-9)
-        assertTrue(aggressive > getMaxHit(newPlayer(strengthLevel = 99, style = WeaponStyle.CONTROLLED)))
-        assertTrue(aggressive > getMaxHit(newPlayer(strengthLevel = 99, style = WeaponStyle.ACCURATE)))
+        // Strength bonus 192 (step 0.4 per effective level) so +3 beats +1 after the floor.
+        val aggressive = getMaxHit(newPlayer(strengthLevel = 99, strengthBonus = 192, style = WeaponStyle.AGGRESSIVE))
+        // effectiveLevel = 99 + 3 + 8 = 110; ⌊0.5 + 110 × 256 / 640⌋ = ⌊44.5⌋ = 44
+        assertEquals(44.0, aggressive, 1e-9)
+        // Controlled 108 -> ⌊43.7⌋ = 43, Accurate 107 -> ⌊43.3⌋ = 43
+        assertTrue(aggressive > getMaxHit(newPlayer(strengthLevel = 99, strengthBonus = 192, style = WeaponStyle.CONTROLLED)))
+        assertTrue(aggressive > getMaxHit(newPlayer(strengthLevel = 99, strengthBonus = 192, style = WeaponStyle.ACCURATE)))
     }
 
     // ---- getMaxHit: generic equipment-bonus / prayer / void composition ----
@@ -98,7 +102,8 @@ class MeleeCombatFormulaTests {
         val withBonus = getMaxHit(newPlayer(strengthLevel = 99, strengthBonus = 80))
         // effectiveLevel is unchanged at 107; only the (bonus + 64) / 640 term differs -
         // this is the generic modern-gear path (item's melee_strength -> BonusSlot(14)).
-        assertEquals(0.5 + 107.0 * 144.0 / 640.0, withBonus, 1e-9)
+        // OSRS Wiki "Maximum melee hit": Max hit = ⌊0.5 + Effective Strength × (bonus + 64) / 640⌋.
+        assertEquals(kotlin.math.floor(0.5 + 107.0 * 144.0 / 640.0), withBonus, 1e-9)
         assertTrue(withBonus > noBonus)
     }
 
@@ -106,15 +111,14 @@ class MeleeCombatFormulaTests {
     fun `Piety's Strength prayer multiplier composes into effective Strength`() {
         val hit = getMaxHit(newPlayer(strengthLevel = 99, prayer = Prayer.PIETY))
         // effectiveLevel = floor(99 * 1.23) + 0 + 8 = floor(121.77) + 8 = 129
-        assertEquals(0.5 + 129.0 * 64.0 / 640.0, hit, 1e-9)
+        assertEquals(kotlin.math.floor(0.5 + 129.0 * 64.0 / 640.0), hit, 1e-9)
     }
 
     @Test
-    fun `void melee multiplies effective Strength by 1_10`() {
+    fun `void melee multiplies effective Strength by 1_10 and floors it`() {
         val hit = getMaxHit(newPlayer(strengthLevel = 99, void = true))
-        // effectiveLevel = (floor(99 * 1.0) + 0 + 8) * 1.10 = 107 * 1.10 = 117.7
-        // (unlike Attack, Strength is not re-floored after the void multiplier)
-        assertEquals(0.5 + 117.7 * 64.0 / 640.0, hit, 1e-9)
+        // OSRS: Effective Strength = ⌊(⌊99 × 1.0⌋ + 0 + 8) × 1.1⌋ = ⌊117.7⌋ = 117; max = ⌊0.5 + 117 × 64 / 640⌋ = 12
+        assertEquals(kotlin.math.floor(0.5 + 117.0 * 64.0 / 640.0), hit, 1e-9)
     }
 
     // ---- getMaxHit: TargetModifiers composition ----
@@ -124,9 +128,9 @@ class MeleeCombatFormulaTests {
         val player = newPlayer(strengthLevel = 99, strengthBonus = 20, amulet = Items.SALVE_AMULET)
         val undead = newNpc(species = setOf(NpcSpecies.UNDEAD))
         val hit = MeleeCombatFormula.getMaxHit(player, undead, 1.0, 1.0)
-        // effectiveLevel = 107; base = 0.5 + 107 * (20 + 64) / 640; Salve amulet = 7/6
-        val base = 0.5 + 107.0 * 84.0 / 640.0
-        assertEquals(base * (7.0 / 6.0), hit, 1e-9)
+        // effectiveLevel = 107; base = ⌊0.5 + 107 × 84 / 640⌋ = 14; Salve amulet 7/6 floored: ⌊16.33⌋ = 16
+        val base = kotlin.math.floor(0.5 + 107.0 * 84.0 / 640.0)
+        assertEquals(kotlin.math.floor(base * (7.0 / 6.0)), hit, 1e-9)
     }
 
     // ---- getMaxHit: baseline/control ----
@@ -134,8 +138,8 @@ class MeleeCombatFormulaTests {
     @Test
     fun `a level 1, unequipped, un-prayed attacker deals the minimum baseline hit`() {
         val hit = getMaxHit(newPlayer(strengthLevel = 1))
-        // effectiveLevel = floor(1 * 1.0) + 0 + 8 = 9
-        assertEquals(0.5 + 9.0 * 64.0 / 640.0, hit, 1e-9)
+        // effectiveLevel = floor(1 * 1.0) + 0 + 8 = 9; ⌊0.5 + 9 × 64 / 640⌋ = ⌊1.4⌋ = 1
+        assertEquals(1.0, hit, 1e-9)
     }
 
     // ---- getAccuracy: regression coverage for the sibling effective-level functions ----

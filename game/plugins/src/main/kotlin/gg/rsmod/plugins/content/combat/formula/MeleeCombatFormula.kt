@@ -21,8 +21,8 @@ import kotlin.math.floor
  * @author Tom <rspsmods@gmail.com>
  */
 object MeleeCombatFormula : CombatFormula {
-    private val MELEE_VOID =
-        intArrayOf(Items.VOID_MELEE_HELM, Items.VOID_KNIGHT_TOP, Items.VOID_KNIGHT_ROBE, Items.VOID_KNIGHT_GLOVES)
+    /** OSRS Wiki "Berserker necklace": +20 % damage only with these obsidian melee weapons. */
+    private val OBSIDIAN_MELEE_WEAPONS = intArrayOf(Items.TOKTZXILAK, Items.TZHAARKETOM, Items.TZHAARKETEM, Items.TOKTZXILEK)
 
     override fun getAccuracy(
         pawn: Pawn,
@@ -69,7 +69,8 @@ object MeleeCombatFormula : CombatFormula {
             }
         val b = getEquipmentStrengthBonus(pawn)
 
-        var base = 0.5 + a * (b + 64.0) / 640.0
+        // OSRS Wiki "Maximum melee hit": Max hit = ⌊0.5 + Effective Strength × (Strength bonus + 64) / 640⌋.
+        var base = floor(0.5 + a * (b + 64.0) / 640.0)
         if (pawn is Player) {
             base = applyStrengthSpecials(pawn, target, base, specialAttackMultiplier, specialPassiveMultiplier)
         }
@@ -124,24 +125,27 @@ object MeleeCombatFormula : CombatFormula {
         specialAttackMultiplier: Double,
         specialPassiveMultiplier: Double,
     ): Double {
+        // OSRS Wiki "Maximum melee hit" step three: ⌊⌊Base⌋ × Special Bonus⌋ - every multiplier is floored before the next.
         var hit = base
 
-        hit *= TargetModifiers.equipmentMultiplier(player, target)
+        hit = floor(hit * TargetModifiers.equipmentMultiplier(player, target))
 
-        hit *= specialAttackMultiplier
+        hit =
+            if (specialPassiveMultiplier == 1.0) {
+                applyPassiveMultiplier(player, target, hit)
+            } else {
+                floor(hit * specialPassiveMultiplier)
+            }
 
+        hit = floor(hit * specialAttackMultiplier)
+
+        // "Damage per second/Melee": against a player praying Protect from Melee, multiply by 6/10.
         if (target.isProtectedFrom(CombatClass.MELEE)) {
-            hit *= 0.6
+            hit = floor(hit * 0.6)
         }
 
-        if (specialPassiveMultiplier == 1.0) {
-            hit = applyPassiveMultiplier(player, target, hit)
-        } else {
-            hit *= specialPassiveMultiplier
-        }
-
-        hit *= getDamageDealMultiplier(player)
-        hit *= getDamageTakeMultiplier(target)
+        hit = floor(hit * getDamageDealMultiplier(player))
+        hit = floor(hit * getDamageTakeMultiplier(target))
         return hit
     }
 
@@ -151,9 +155,9 @@ object MeleeCombatFormula : CombatFormula {
         base: Double,
         specialAttackMultiplier: Double,
     ): Double {
-        var hit = base
-        hit *= TargetModifiers.equipmentMultiplier(player, target)
-        hit *= specialAttackMultiplier
+        // Attack roll × target-specific gear bonus, floored, then the special attack accuracy multiplier.
+        var hit = floor(base * TargetModifiers.equipmentMultiplier(player, target))
+        hit = floor(hit * specialAttackMultiplier)
         return hit
     }
 
@@ -224,8 +228,9 @@ object MeleeCombatFormula : CombatFormula {
 
         effectiveLevel += 8.0
 
-        if (player.hasEquipped(MELEE_VOID)) {
-            effectiveLevel *= 1.10
+        // "Maximum melee hit": ⌊(⌊Strength × Prayer⌋ + Style + 8) × Void⌋.
+        if (VoidKnight.wearing(player, VoidKnight.MELEE_HELMS)) {
+            effectiveLevel = floor(effectiveLevel * 1.10)
         }
 
         return effectiveLevel
@@ -243,9 +248,8 @@ object MeleeCombatFormula : CombatFormula {
 
         effectiveLevel += 8.0
 
-        if (player.hasEquipped(MELEE_VOID)) {
-            effectiveLevel *= 1.10
-            effectiveLevel = floor(effectiveLevel)
+        if (VoidKnight.wearing(player, VoidKnight.MELEE_HELMS)) {
+            effectiveLevel = floor(effectiveLevel * 1.10)
         }
 
         return effectiveLevel
@@ -280,8 +284,9 @@ object MeleeCombatFormula : CombatFormula {
     }
 
     private fun getEffectiveDefenceLevel(npc: Npc, opponent: Pawn? = null): Double {
+        // "Damage per second/Melee": NPC defence roll = (Defence level + 9) × (style defence bonus + 64).
         var effectiveLevel = npc.stats.getCurrentLevel(NpcSkills.DEFENCE).toDouble()
-        effectiveLevel += 8
+        effectiveLevel += 9
         return effectiveLevel
     }
 
@@ -332,7 +337,8 @@ object MeleeCombatFormula : CombatFormula {
             val world = pawn.world
             val multiplier =
                 when {
-                    pawn.hasEquipped(EquipmentType.AMULET, Items.BERSERKER_NECKLACE) -> 1.2
+                    pawn.hasEquipped(EquipmentType.AMULET, Items.BERSERKER_NECKLACE) &&
+                        pawn.hasEquipped(EquipmentType.WEAPON, *OBSIDIAN_MELEE_WEAPONS) -> 1.2
                     isWearingDharok(pawn) -> {
                         val lost = (pawn.getMaximumLifepoints() - pawn.getCurrentLifepoints()) / 100.0
                         val max = pawn.getMaximumLifepoints() / 100.0
@@ -347,10 +353,9 @@ object MeleeCombatFormula : CombatFormula {
                         (isKalphite(target) || isScarab(target)) -> if (world.chance(1, 51)) 3.0 else (4.0 / 3.0)
                     else -> 1.0
                 }
-            if (multiplier == 1.0 && isWearingVerac(pawn)) {
-                return base + 1.0
-            }
-            return base * multiplier
+            // Verac's "Defiler" (25 % guaranteed hit, +1 damage against monsters) is a proc on the hit roll, not a
+            // max-hit bonus: it lives in MeleeCombatStrategy, never here.
+            return floor(base * multiplier)
         }
         return base
     }
@@ -426,7 +431,7 @@ object MeleeCombatFormula : CombatFormula {
         return false
     }
 
-    private fun isWearingVerac(pawn: Pawn): Boolean {
+    fun isWearingVerac(pawn: Pawn): Boolean {
         if (pawn.entityType.isPlayer) {
             val player = pawn as Player
             return player.hasEquipped(

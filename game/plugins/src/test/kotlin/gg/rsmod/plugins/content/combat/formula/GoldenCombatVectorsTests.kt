@@ -75,8 +75,8 @@ class GoldenCombatVectorsTests {
         val attacker = newPlayer(attackLevel = 1, strengthLevel = 1, style = WeaponStyle.ACCURATE)
         val target = newPlayer(defenceLevel = 1, style = WeaponStyle.ACCURATE)
 
-        // maxHit: effStr = floor(1*1.0) + 0(Accurate) + 8 = 9; base = 0.5 + 9*(0+64)/640
-        assertEquals(0.5 + 9.0 * 64.0 / 640.0, MeleeCombatFormula.getMaxHit(attacker, target, 1.0, 1.0), 1e-9)
+        // maxHit: effStr = floor(1*1.0) + 0(Accurate) + 8 = 9; ⌊0.5 + 9*(0+64)/640⌋ = ⌊1.4⌋ = 1
+        assertEquals(1.0, MeleeCombatFormula.getMaxHit(attacker, target, 1.0, 1.0), 1e-9)
 
         // accuracy: attackRoll = (floor(1*1.0)+3+8)*(0+64) = 12*64 = 768
         //           defenceRoll = (floor(1*1.0)+0+8)*(0+64) = 9*64 = 576
@@ -98,8 +98,8 @@ class GoldenCombatVectorsTests {
         val target =
             newPlayer(defenceLevel = 70, style = WeaponStyle.DEFENSIVE, combatStyle = StyleType.SLASH, meleeDefenceBonus = 50)
 
-        // effStr = floor(85*1.0) + 0(Accurate) + 8 = 93; base = 0.5 + 93*(89+64)/640
-        assertEquals(0.5 + 93.0 * 153.0 / 640.0, MeleeCombatFormula.getMaxHit(attacker, target, 1.0, 1.0), 1e-9)
+        // effStr = floor(85*1.0) + 0(Accurate) + 8 = 93; ⌊0.5 + 93*(89+64)/640⌋ = ⌊22.73⌋ = 22
+        assertEquals(22.0, MeleeCombatFormula.getMaxHit(attacker, target, 1.0, 1.0), 1e-9)
 
         // attackRoll = (floor(90*1.0)+3+8)*(67+64) = 101*131 = 13231
         // defenceRoll = (floor(70*1.0)+3(Defensive)+8)*(50+64) = 81*114 = 9234
@@ -124,48 +124,46 @@ class GoldenCombatVectorsTests {
             newNpc(defenceLevel = 50, species = setOf(NpcSpecies.UNDEAD), defenceBonusSlot = BonusSlot.DEFENCE_CRUSH, defenceBonusValue = 40)
 
         // effStr = floor(99*1.23[Piety]) + 3(Aggressive) + 8 = 121+3+8 = 132
-        // base = 0.5 + 132*(100+64)/640 = 34.325; Salve amulet (undead target) = 7/6
-        val base = 0.5 + 132.0 * 164.0 / 640.0
-        assertEquals(base * (7.0 / 6.0), MeleeCombatFormula.getMaxHit(attacker, target, 1.0, 1.0), 1e-9)
+        // base = ⌊0.5 + 132*(100+64)/640⌋ = ⌊34.325⌋ = 34; Salve amulet (undead target) ⌊34 × 7/6⌋ = ⌊39.67⌋ = 39
+        assertEquals(39.0, MeleeCombatFormula.getMaxHit(attacker, target, 1.0, 1.0), 1e-9)
 
         // attackRoll = (floor(99*1.20[Piety])+0(Aggressive)+8)*(80+64) = 126*144 = 18144,
         // then the Salve amulet's 7/6 (undead target) also multiplies the attack roll
-        // itself (not just max hit): trunc(18144*7/6) = 21168
-        // defenceRoll (npc target, correct target-based path) = (50+8)*(40+64) = 58*104 = 6032
-        val expected = 1.0 - (6032.0 + 2.0) / (2.0 * (21168.0 + 1.0))
+        // itself (not just max hit): ⌊18144*7/6⌋ = 21168
+        // OSRS npc defence roll = (Defence + 9) × (bonus + 64) = (50+9)*(40+64) = 59*104 = 6136
+        val expected = 1.0 - (6136.0 + 2.0) / (2.0 * (21168.0 + 1.0))
         assertEquals(expected, MeleeCombatFormula.getAccuracy(attacker, target, 1.0), 1e-9)
     }
 
     @Test
     fun `melee golden 4 - the S1 style-bonus fix holds inside a full Strength-prayer plus gear composition`() {
-        val accurate =
-            newPlayer(strengthLevel = 99, style = WeaponStyle.ACCURATE, meleeStrengthBonus = 100, prayer = Prayer.PIETY)
-        val controlled =
-            newPlayer(strengthLevel = 99, style = WeaponStyle.CONTROLLED, meleeStrengthBonus = 100, prayer = Prayer.PIETY)
+        // Levels chosen so the +1 of Controlled crosses a whole point after OSRS's floor (Piety removed: with the
+        // floored max hit, 99 Str + Piety + 100 bonus gives 33 for both styles and would no longer guard the fix).
+        val accurate = newPlayer(strengthLevel = 96, style = WeaponStyle.ACCURATE, meleeStrengthBonus = 0)
+        val controlled = newPlayer(strengthLevel = 96, style = WeaponStyle.CONTROLLED, meleeStrengthBonus = 0)
 
-        // effStr(Accurate)   = floor(99*1.23) + 0 + 8 = 129; base = 0.5 + 129*164/640 = 33.55625
-        // effStr(Controlled) = floor(99*1.23) + 1 + 8 = 130; base = 0.5 + 130*164/640 = 33.8125
+        // effStr(Accurate)   = 96 + 0 + 8 = 104; ⌊0.5 + 104*64/640⌋ = ⌊10.9⌋ = 10
+        // effStr(Controlled) = 96 + 1 + 8 = 105; ⌊0.5 + 105*64/640⌋ = ⌊11.0⌋ = 11
         // If the S1 fix regressed (else -> 1.0 again), Accurate would silently equal Controlled.
         val accurateHit = getMaxHit(accurate)
         val controlledHit = getMaxHit(controlled)
-        assertEquals(0.5 + 129.0 * 164.0 / 640.0, accurateHit, 1e-9)
-        assertEquals(0.5 + 130.0 * 164.0 / 640.0, controlledHit, 1e-9)
+        assertEquals(10.0, accurateHit, 1e-9)
+        assertEquals(11.0, controlledHit, 1e-9)
         assertNotEquals(accurateHit, controlledHit)
     }
 
     @Test
-    fun `melee golden 5 - getMaxHit never floors internally, unlike Ranged's mid-pipeline floor (control)`() {
-        // Same effective level and equipment-bonus inputs as the Ranged floor vector below,
-        // deliberately, so the two tests are a direct side-by-side contrast of the two
-        // formulas' documented, intentionally different pipeline shapes.
-        val attacker = newPlayer(strengthLevel = 99, style = WeaponStyle.ACCURATE, meleeStrengthBonus = 20, amulet = Items.SALVE_AMULET)
+    fun `melee golden 5 - the base hit is floored before the Salve multiplier (OSRS Maximum melee hit)`() {
+        // OSRS: Max hit = ⌊⌊Base Damage⌋ × Gear Bonus⌋. Inputs chosen so flooring first changes the answer.
+        val attacker =
+            newPlayer(strengthLevel = 88, style = WeaponStyle.ACCURATE, meleeStrengthBonus = 32, prayer = Prayer.PIETY, amulet = Items.SALVE_AMULET)
         val target = newNpc(species = setOf(NpcSpecies.UNDEAD))
 
-        val base = 0.5 + 107.0 * 84.0 / 640.0 // 14.54375
+        // effStr = floor(88*1.23) + 0 + 8 = 108 + 8 = 116; base = 0.5 + 116*96/640 = 17.9 -> ⌊17.9⌋ = 17
         val hit = MeleeCombatFormula.getMaxHit(attacker, target, 1.0, 1.0)
-        // 14.54375 * 7/6 = 16.9677083... - NOT floored to 16, unlike Ranged's equivalent below.
-        assertEquals(base * (7.0 / 6.0), hit, 1e-9)
-        assertNotEquals(floor(base * (7.0 / 6.0)), hit)
+        // ⌊17 × 7/6⌋ = ⌊19.83⌋ = 19; the old unfloored pipeline gave 17.9 × 7/6 = 20.88.
+        assertEquals(19.0, hit, 1e-9)
+        assertNotEquals(floor(17.9 * 7.0 / 6.0), hit)
     }
 
     @Test
@@ -178,39 +176,26 @@ class GoldenCombatVectorsTests {
                 rangedStrengthBonus = 90,
                 magicDamageBonus = 90,
             )
-        // effStr = floor(70*1.0)+0+8 = 78; base = 0.5 + 78*(0+64)/640 - identical to a totally
+        // effStr = floor(70*1.0)+0+8 = 78; ⌊0.5 + 78*(0+64)/640⌋ = 8 - identical to a totally
         // clean player, proving Ranged/Magic bonus slots are never read by Melee's max hit.
-        assertEquals(0.5 + 78.0 * 64.0 / 640.0, getMaxHit(contaminated), 1e-9)
+        assertEquals(8.0, getMaxHit(contaminated), 1e-9)
     }
 
     // ==== RANGED ====
 
     @Test
-    fun `ranged golden 1 - TargetModifiers floors before a later multiplier applies (rounding boundary)`() {
-        val attacker =
-            newPlayer(
-                rangedLevel = 99,
-                style = WeaponStyle.RAPID,
-                rangedStrengthBonus = 20,
-                head = Items.BLACK_MASK,
-                slayerAssignment = SlayerAssignment.BANSHEE,
-            )
-        val target = newNpc(assignment = SlayerAssignment.BANSHEE)
-        // Protect from Missiles' 0.6x is the multiplier used here to prove the floor-before-
-        // later-multiplier ordering, rather than the Sling's 0.9x: the Sling triggers
-        // `getRangedStrengthBonus()`'s special-case branch that reads the weapon item's own
-        // definition through `world.definitions` instead of `equipmentBonuses`, which needs a
-        // real/definition-backed world this test harness deliberately doesn't provide.
+    fun `ranged golden 1 - the base hit is floored before a later multiplier applies (rounding boundary)`() {
+        val attacker = newPlayer(rangedLevel = 98, style = WeaponStyle.RAPID, rangedStrengthBonus = 18, prayer = Prayer.RIGOUR)
+        val target = newNpc()
+        // Protect from Missiles' 0.6x is the later multiplier here rather than the Sling's 0.9x: the Sling triggers
+        // `getRangedStrengthBonus()`'s weapon-definition branch, which needs a definition-backed world.
         every { target.prayerIcon } returns PrayerIcon.PROTECT_FROM_MISSILES.id
 
-        // effLevel = floor(99*1.0)+0(Rapid)+8 = 107; base = 0.5 + 107*(20+64)/640 = 14.54375
-        // black mask on-task = 7/6: 14.54375 * 7/6 = 16.9677... -> floor()'d to 16 immediately
-        // (`applyRangedSpecials` floors right after the TargetModifiers multiply), THEN Protect
-        // from Missiles' 0.6x is applied to that already-floored 16, not to the raw 16.9677...
-        // 16 * 0.6 = 9.6. A refactor that floored only once at the very end would instead give
-        // floor(14.54375 * 7/6 * 0.6) = floor(10.180625...) = 10 - a different result.
+        // effLevel = floor(98*1.23[Rigour]) + 0(Rapid) + 8 = 120 + 8 = 128; base = 0.5 + 128*(18+64)/640 = 16.9
+        // OSRS floors the base first: ⌊16.9⌋ = 16, then ⌊16 × 0.6⌋ = ⌊9.6⌋ = 9. Flooring only at the end would give
+        // ⌊16.9 × 0.6⌋ = ⌊10.14⌋ = 10.
         val hit = RangedCombatFormula.getMaxHit(attacker, target, 1.0, 1.0)
-        assertEquals(9.6, hit, 1e-9)
+        assertEquals(9.0, hit, 1e-9)
         assertNotEquals(10.0, hit)
     }
 
@@ -235,9 +220,9 @@ class GoldenCombatVectorsTests {
         val target = newNpc(defenceLevel = 10, defenceBonusSlot = BonusSlot.DEFENCE_RANGED, defenceBonusValue = 6)
 
         // attackRoll = (floor(99*1.0)+0+8)*(0+64) = 107*64 = 6848
-        // defenceRoll, FIXED (target npc's level 10): (10+8)*(6+64) = 18*70 = 1260
+        // defenceRoll, target npc's level 10, OSRS "(Defence + 9) × (bonus + 64)": (10+9)*(6+64) = 19*70 = 1330
         // defenceRoll, pre-fix bug (attacker's level 30): (floor(30*1.0)+0+8)*(6+64) = 38*70 = 2660
-        val fixed = 1.0 - (1260.0 + 2.0) / (2.0 * (6848.0 + 1.0))
+        val fixed = 1.0 - (1330.0 + 2.0) / (2.0 * (6848.0 + 1.0))
         val preFixBug = 1.0 - (2660.0 + 2.0) / (2.0 * (6848.0 + 1.0))
         val accuracy = RangedCombatFormula.getAccuracy(attacker, target, 1.0)
         assertEquals(fixed, accuracy, 1e-9)
@@ -245,7 +230,7 @@ class GoldenCombatVectorsTests {
     }
 
     @Test
-    fun `ranged golden 4 - removing the black mask's slayer-task condition returns exactly the floored baseline`() {
+    fun `ranged golden 4 - the plain black mask never boosts ranged, on or off task (imbued mask only)`() {
         val onTask =
             newPlayer(
                 rangedLevel = 99,
@@ -265,12 +250,9 @@ class GoldenCombatVectorsTests {
         val onTaskTarget = newNpc(assignment = SlayerAssignment.BANSHEE)
         val offTaskTarget = newNpc(assignment = SlayerAssignment.BANSHEE)
 
-        // base = 0.5 + 107*(20+64)/640 = 14.54375
-        // on task: 14.54375 * 7/6 = 16.9677... -> floor -> 16
-        // off task: multiplier is neutral 1.0, but the formula still floors unconditionally
-        // -> floor(14.54375) = 14, NOT the raw 14.54375 - the floor is not conditional on the
-        // multiplier actually changing anything.
-        assertEquals(16.0, RangedCombatFormula.getMaxHit(onTask, onTaskTarget, 1.0, 1.0), 1e-9)
+        // base = ⌊0.5 + 107*(20+64)/640⌋ = ⌊14.54375⌋ = 14 in both cases: OSRS "Maximum ranged hit" lists only
+        // Black mask (i)/Slayer helmet (i) as ranged gear bonuses.
+        assertEquals(14.0, RangedCombatFormula.getMaxHit(onTask, onTaskTarget, 1.0, 1.0), 1e-9)
         assertEquals(14.0, RangedCombatFormula.getMaxHit(offTask, offTaskTarget, 1.0, 1.0), 1e-9)
     }
 
@@ -303,22 +285,22 @@ class GoldenCombatVectorsTests {
                 defenceLevel = 40,
                 style = WeaponStyle.DEFENSIVE,
                 magicAttackBonus = 76,
-                magicDamageBonus = 15,
+                magicDamageBonus = 150,
                 spell = CombatSpell.FIRE_BOLT,
                 gauntlets = true,
                 prayer = Prayer.MYSTIC_MIGHT,
             )
-        val target = newNpc(defenceLevel = 25, defenceBonusSlot = BonusSlot.DEFENCE_MAGIC, defenceBonusValue = 10)
+        val target = newNpc(defenceLevel = 25, magicLevel = 30, defenceBonusSlot = BonusSlot.DEFENCE_MAGIC, defenceBonusValue = 10)
 
-        // hit = (12[FIRE_BOLT] + 3[gauntlets, bolt spell]) * (1.0 + 15/100) = 15 * 1.15 = 17.25
-        // -> floor 17; damage-deal multiplier defaults to 1.0 -> floor(17.0) = 17
+        // "Maximum magic hit": ⌊(12[FIRE_BOLT] + 3[gauntlets]) × (1 + 0.15 gear + 0.02 Mystic Might)⌋ = ⌊17.55⌋ = 17
         assertEquals(17.0, MagicCombatFormula.getMaxHit(attacker, target, 1.0, 1.0), 1e-9)
 
         // effAtk = floor(94*1.15[Mystic Might]) + 8 = 108+8 = 116; attackRoll = 116*(76+64) = 16240
-        // defenceRoll, FIXED (target npc's level 25): (25+8)*(10+64) = 33*74 = 2442
+        // OSRS npc magic defence roll = (9 + Magic level) × (magic defence + 64) = (9+30)*74 = 2886 - the npc's
+        // Defence level (25) plays no part.
         // defenceRoll, pre-fix bug would have used the attacker's own effective defence level
         // (floor(40*1.0)+3[Defensive]+8 = 51) instead: 51*(10+64) = 3774
-        val fixed = 1.0 - (2442.0 + 2.0) / (2.0 * (16240.0 + 1.0))
+        val fixed = 1.0 - (2886.0 + 2.0) / (2.0 * (16240.0 + 1.0))
         val preFixBug = 1.0 - (3774.0 + 2.0) / (2.0 * (16240.0 + 1.0))
         val accuracy = MagicCombatFormula.getAccuracy(attacker, target, 1.0)
         assertEquals(fixed, accuracy, 1e-9)
@@ -481,6 +463,7 @@ class GoldenCombatVectorsTests {
 
     private fun newNpc(
         defenceLevel: Int = 1,
+        magicLevel: Int = 1,
         species: Set<Any> = emptySet(),
         assignment: SlayerAssignment? = null,
         defenceBonusSlot: BonusSlot? = null,
@@ -496,6 +479,8 @@ class GoldenCombatVectorsTests {
             Npc.Stats(5).apply {
                 setMaxLevel(NpcSkills.DEFENCE, defenceLevel)
                 setCurrentLevel(NpcSkills.DEFENCE, defenceLevel)
+                setMaxLevel(NpcSkills.MAGIC, magicLevel)
+                setCurrentLevel(NpcSkills.MAGIC, magicLevel)
             }
         every { npc.stats } returns stats
 

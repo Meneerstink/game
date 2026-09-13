@@ -62,22 +62,19 @@ class MagicCombatFormulaTests {
     // ---- getMaxHit: magic damage % composition ----
 
     @Test
-    fun `magic damage bonus (BonusSlot MAGIC_DAMAGE_BONUS) composes into max hit as a percentage`() {
+    fun `magic damage bonus (BonusSlot MAGIC_DAMAGE_BONUS, tenths of a percent) composes into max hit`() {
         val noBonus = getMaxHit(newPlayer(spell = CombatSpell.WIND_STRIKE, magicDamageBonus = 0))
-        val withBonus = getMaxHit(newPlayer(spell = CombatSpell.WIND_STRIKE, magicDamageBonus = 20))
+        val withBonus = getMaxHit(newPlayer(spell = CombatSpell.WIND_STRIKE, magicDamageBonus = 200))
         assertEquals(2.0, noBonus)
-        // hit = floor(2 * (1.0 + 20/100.0)) = floor(2.4) = 2 (floored twice, once after the
-        // magic damage multiplier and once more after the damage-deal multiplier - both no-ops
-        // here since neither changes an already-integral value).
+        // 200 tenths = 20 %: ⌊2 × 1.2⌋ = 2
         assertEquals(floor(2.0 * 1.2), withBonus)
     }
 
     @Test
     fun `a larger magic damage bonus produces a strictly larger max hit once it crosses a whole point`() {
-        // WIND_BOLT has maxHit 9; +50% crosses a whole additional point, unlike the +20%
-        // case above which stays within the same floored integer.
+        // WIND_BOLT has maxHit 9; +50 % (500 tenths) crosses a whole additional point.
         val noBonus = getMaxHit(newPlayer(spell = CombatSpell.WIND_BOLT, magicDamageBonus = 0))
-        val withBonus = getMaxHit(newPlayer(spell = CombatSpell.WIND_BOLT, magicDamageBonus = 50))
+        val withBonus = getMaxHit(newPlayer(spell = CombatSpell.WIND_BOLT, magicDamageBonus = 500))
         assertEquals(9.0, noBonus)
         assertEquals(floor(9.0 * 1.5), withBonus)
         assertTrue(withBonus > noBonus)
@@ -86,9 +83,21 @@ class MagicCombatFormulaTests {
     @Test
     fun `chaos gauntlets add a flat plus 3 to bolt spells before the magic damage multiplier`() {
         val withGauntlets =
-            getMaxHit(newPlayer(spell = CombatSpell.FIRE_BOLT, magicDamageBonus = 10, gauntlets = true))
+            getMaxHit(newPlayer(spell = CombatSpell.FIRE_BOLT, magicDamageBonus = 100, gauntlets = true))
         // hit = floor((12 + 3) * 1.10) = floor(16.5) = 16
         assertEquals(floor(15.0 * 1.10), withGauntlets)
+    }
+
+    @Test
+    fun `gear, elite void and prayer magic damage add up before multiplying (OSRS Maximum magic hit)`() {
+        // FIRE_BOLT 12, 15 % gear + 4 % Augury: additive ⌊12 × 1.19⌋ = 14; a chained ⌊⌊12 × 1.15⌋ × 1.04⌋ would give 13.
+        val additive = getMaxHit(newPlayer(spell = CombatSpell.FIRE_BOLT, magicDamageBonus = 150, prayer = Prayer.AUGURY))
+        assertEquals(14.0, additive)
+        // Elite magic void adds +5 %: ⌊12 × 1.20⌋ = 14, the plain void set adds nothing to damage: ⌊12 × 1.15⌋ = 13.
+        assertEquals(14.0, getMaxHit(newPlayer(spell = CombatSpell.FIRE_BOLT, magicDamageBonus = 150, eliteVoid = true)))
+        assertEquals(13.0, getMaxHit(newPlayer(spell = CombatSpell.FIRE_BOLT, magicDamageBonus = 150, void = true)))
+        // Seers ring (i) precision: 5 tenths = 0.5 % is kept, not rounded away (⌊12 × 1.155⌋ = 13 with 15 % gear).
+        assertEquals(13.0, getMaxHit(newPlayer(spell = CombatSpell.FIRE_BOLT, magicDamageBonus = 155)))
     }
 
     @Test
@@ -127,13 +136,12 @@ class MagicCombatFormulaTests {
     }
 
     @Test
-    fun `TargetModifiers composes into the attack roll even though it does not affect max hit`() {
+    fun `the plain Salve amulet does not change magic accuracy (only Salve (i) and (ei) do)`() {
+        // OSRS Wiki "Damage per second/Magic": the magic accuracy gear bonus is the imbued Salve/slayer helm (1.15).
         val plain = newPlayer(magicLevel = 99)
         val withSalve = newPlayer(magicLevel = 99, amulet = Items.SALVE_AMULET)
         val undead = newNpc(species = setOf(NpcSpecies.UNDEAD))
-        val plainAccuracy = MagicCombatFormula.getAccuracy(plain, undead, 1.0)
-        val salveAccuracy = MagicCombatFormula.getAccuracy(withSalve, undead, 1.0)
-        assertTrue(salveAccuracy > plainAccuracy)
+        assertEquals(MagicCombatFormula.getAccuracy(plain, undead, 1.0), MagicCombatFormula.getAccuracy(withSalve, undead, 1.0), 1e-12)
     }
 
     @Test
@@ -171,6 +179,7 @@ class MagicCombatFormulaTests {
         magicDamageBonus: Int = 0,
         gauntlets: Boolean = false,
         void: Boolean = false,
+        eliteVoid: Boolean = false,
         prayer: Prayer? = null,
         amulet: Int? = null,
     ): Player {
@@ -200,6 +209,12 @@ class MagicCombatFormulaTests {
             equipment[EquipmentType.HEAD.id] = Item(Items.VOID_MAGE_HELM)
             equipment[EquipmentType.CHEST.id] = Item(Items.VOID_KNIGHT_TOP)
             equipment[EquipmentType.LEGS.id] = Item(Items.VOID_KNIGHT_ROBE)
+            equipment[EquipmentType.GLOVES.id] = Item(Items.VOID_KNIGHT_GLOVES)
+        }
+        if (eliteVoid) {
+            equipment[EquipmentType.HEAD.id] = Item(Items.VOID_MAGE_HELM)
+            equipment[EquipmentType.CHEST.id] = Item(Items.ELITE_VOID_KNIGHT_TOP)
+            equipment[EquipmentType.LEGS.id] = Item(Items.ELITE_VOID_KNIGHT_ROBE)
             equipment[EquipmentType.GLOVES.id] = Item(Items.VOID_KNIGHT_GLOVES)
         }
         amulet?.let { equipment[EquipmentType.AMULET.id] = Item(it) }

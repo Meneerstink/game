@@ -61,7 +61,10 @@ object MeleeCombatStrategy : CombatStrategy {
         val formula = MeleeCombatFormula
         val accuracy = formula.getAccuracy(pawn, target)
         val maxHit = formula.getMaxHit(pawn, target)
-        val landHit = accuracy >= world.randomDouble()
+        // OSRS Wiki Verac the Defiled's equipment ("Defiler"): 25 % chance of a guaranteed hit ignoring accuracy,
+        // and against monsters that attack does 1 extra damage.
+        val defiler = pawn is Player && MeleeCombatFormula.isWearingVerac(pawn) && world.chance(1, 4)
+        val landHit = defiler || accuracy >= world.randomDouble()
 
         val damage =
             pawn
@@ -71,6 +74,7 @@ object MeleeCombatStrategy : CombatStrategy {
                     landHit = landHit,
                     delay = 1,
                     hitType = HitType.MELEE,
+                    bonusDamage = if (defiler && target is Npc) 1 else 0,
                 ).hit.hitmarks
                 .sumOf { it.damage }
 

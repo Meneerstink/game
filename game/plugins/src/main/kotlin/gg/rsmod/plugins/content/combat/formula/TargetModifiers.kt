@@ -166,11 +166,16 @@ object TargetModifiers {
      * the ONLY function `RangedCombatFormula`'s accuracy/attack-roll stage should call; it must
      * not also call [equipmentMultiplier] directly, or Salve/black mask would apply twice.
      */
+    /**
+     * OSRS-exact audit 2026-09-13: the plain Salve amulet, Salve amulet (e), black mask and Slayer helmet are
+     * melee-only ("Maximum ranged hit": ranged needs the imbued (i)/(ei) versions, 1.15 / 7/6 / 1.2). No imbued
+     * variant exists in this cache, so ranged starts from 1.0 and only the Twisted bow passive applies.
+     */
     fun rangedAccuracyMultiplier(
         player: Player,
         target: Pawn,
     ): Double {
-        var multiplier = equipmentMultiplier(player, target)
+        var multiplier = 1.0
         if (isWieldingTwistedBow(player)) {
             multiplier *= twistedBowAccuracyPercent(twistedBowMagicInput(target)) / 100.0
         }
@@ -187,7 +192,7 @@ object TargetModifiers {
         player: Player,
         target: Pawn,
     ): Double {
-        var multiplier = equipmentMultiplier(player, target)
+        var multiplier = 1.0
         if (isWieldingTwistedBow(player)) {
             multiplier *= twistedBowDamagePercent(twistedBowMagicInput(target)) / 100.0
         }

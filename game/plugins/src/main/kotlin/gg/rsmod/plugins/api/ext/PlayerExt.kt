@@ -1750,7 +1750,9 @@ fun Player.refreshBonuses() {
     for (i in 0..17) {
         var bonusName: String = StringBuilder(names[if (i <= 4) i else i - 5]).append(": ").toString()
         val bonus: Int = equipmentBonuses[i]
-        bonusName = StringBuilder(bonusName).append(if (bonus >= 0) "+" else "").append(bonus).toString()
+        // Slot 17 (magic damage) holds tenths of a percent: 5 -> "0.5", 150 -> "15".
+        val value = if (i == 17 && bonus % 10 != 0) String.format(java.util.Locale.ROOT, "%.1f", bonus / 10.0) else if (i == 17) (bonus / 10).toString() else bonus.toString()
+        bonusName = StringBuilder(bonusName).append(if (bonus >= 0) "+" else "").append(value).toString()
         if (i == 17 || i in 11..13) {
             // component 42-44 absorb bonuses
             bonusName = StringBuilder(bonusName).append("%").toString()

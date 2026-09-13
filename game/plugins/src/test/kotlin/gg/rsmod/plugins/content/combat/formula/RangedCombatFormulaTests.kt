@@ -86,9 +86,9 @@ class RangedCombatFormulaTests {
     // ---- getMaxHit: TargetModifiers composition ----
 
     @Test
-    fun `TargetModifiers' black mask bonus multiplies the base hit rather than replacing it`() {
-        // (Ranged shares the black mask's on-task multiplier with melee per `TargetModifiers`;
-        // this proves the shared architecture composes identically for the ranged formula.)
+    fun `the plain black mask does not boost ranged, even on task (only the imbued mask does)`() {
+        // OSRS Wiki "Maximum ranged hit": the ranged gear bonus is Black mask (i)/Slayer helmet (i) 1.15; the plain mask
+        // is melee-only. No imbued mask exists in this cache.
         val player = newPlayer(rangedLevel = 99, rangedStrengthBonus = 20, head = Items.BLACK_MASK)
         val onTask = newNpc(assignment = gg.rsmod.game.model.combat.SlayerAssignment.BANSHEE)
         every { player.attr } returns
@@ -97,10 +97,8 @@ class RangedCombatFormulaTests {
                     gg.rsmod.game.model.combat.SlayerAssignment.BANSHEE.identifier
             }
         val hit = RangedCombatFormula.getMaxHit(player, onTask, 1.0, 1.0)
-        // effectiveLevel = 107; base = floor(0.5 + 107 * (20 + 64) / 640) after the black mask's
-        // 7/6 multiplier is applied and the result is floored (ranged floors post-TargetModifiers).
-        val base = 0.5 + 107.0 * 84.0 / 640.0
-        assertEquals(floor(base * (7.0 / 6.0)), hit, 1e-9)
+        // effectiveLevel = 107; max = ⌊0.5 + 107 × 84 / 640⌋ = 14, unchanged by the plain mask.
+        assertEquals(floor(0.5 + 107.0 * 84.0 / 640.0), hit, 1e-9)
     }
 
     // ---- getMaxHit: baseline/control ----

@@ -228,11 +228,12 @@ class TwistedBowPassiveTests {
         val noStrengthBonus = newPlayer(weapon = Items.TWISTED_BOW, rangedLevel = 99, rangedStrengthBonus = 0)
         val withStrengthBonus = newPlayer(weapon = Items.TWISTED_BOW, rangedLevel = 99, rangedStrengthBonus = 20)
 
-        // base(bonus=0)  = 0.5 + 107*(0+64)/640  = 0.5 + 10.7   = 11.2
-        // base(bonus=20) = 0.5 + 107*(20+64)/640 = 0.5 + 14.04375 = 14.54375
+        // OSRS "Maximum ranged hit": ⌊⌊0.5 + eff × (bonus + 64) / 640⌋ × Gear Bonus⌋ - the base is floored first.
+        // base(bonus=0)  = ⌊0.5 + 107*(0+64)/640⌋  = ⌊11.2⌋ = 11
+        // base(bonus=20) = ⌊0.5 + 107*(20+64)/640⌋ = ⌊14.54375⌋ = 14
         // Magic-99 damage multiplier = 131.1691% -> 1.311691 (see the high-Magic vector above)
-        val expectedNoBonus = floor((0.5 + 107.0 * 64.0 / 640.0) * 1.311691)
-        val expectedWithBonus = floor((0.5 + 107.0 * 84.0 / 640.0) * 1.311691)
+        val expectedNoBonus = floor(11.0 * 1.311691) // 14
+        val expectedWithBonus = floor(14.0 * 1.311691) // 18 (flooring only at the end would give 19)
 
         val hitNoBonus = RangedCombatFormula.getMaxHit(noStrengthBonus, target, 1.0, 1.0)
         val hitWithBonus = RangedCombatFormula.getMaxHit(withStrengthBonus, target, 1.0, 1.0)

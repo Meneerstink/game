@@ -178026,12 +178026,12 @@
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
-    attack_magic: 8
+    attack_magic: 12
     attack_ranged: 0
     defence_stab: 0
     defence_slash: 0
     defence_crush: 0
-    defence_magic: 8
+    defence_magic: 12
     defence_ranged: 0
     summoning: 0
     absorb_melee: 0
@@ -178040,7 +178040,7 @@
     melee_strength: 0
     ranged_strength: 0
     prayer: 0
-    magic_damage: 0
+    magic_damage: 0.5
     equip_slot: 12
     equip_type: -1
     weapon_type: -1

@@ -38,6 +38,27 @@ import kotlin.random.Random
  * @author Tom <rspsmods@gmail.com>
  */
 
+/** Default `minHit` of every [dealHit] overload: the formula-driven hit with no caller-set minimum. */
+const val DEFAULT_MIN_HIT = 0.1
+
+/**
+ * OSRS damage roll (OSRS Wiki "Damage per second/Melee", "/Ranged", "/Magic"): a successful hit deals a uniformly
+ * random whole number from 0 up to and including the floored max hit, and a successful hit that rolls 0 is changed
+ * to 1 (the pages' average "Max hit/2 + 1/(Max hit+1)"). A caller-set minimum (special attacks, scripted damage)
+ * becomes the lowest whole damage instead, so an exact hit (`minHit = maxHit - 0.1`) stays exact.
+ */
+fun rollDamage(
+    minHit: Double,
+    maxHit: Double,
+    random: Random = Random.Default,
+): Int {
+    val high = kotlin.math.floor(maxHit + 1e-9).toInt()
+    if (high <= 0) return 0
+    if (minHit <= DEFAULT_MIN_HIT) return maxOf(1, random.nextInt(0, high + 1))
+    val low = kotlin.math.ceil(minHit - 1e-9).toInt().coerceIn(0, high)
+    return random.nextInt(low, high + 1)
+}
+
 fun Pawn.isAttacking(): Boolean = attr[COMBAT_TARGET_FOCUS_ATTR]?.get() != null
 
 fun Pawn.isBeingAttacked(): Boolean = timers.has(ACTIVE_COMBAT_TIMER)
@@ -148,11 +169,12 @@ fun Pawn.dealHit(
     delay: Int,
     onHit: (PawnHit) -> Unit = {},
     hitType: HitType,
+    bonusDamage: Int = 0,
 ): PawnHit {
     // Calculate the 1:1 real damage, applying a random factor.
     // Combat formulas and hitpoints use the same 1:1 real-damage unit. Keep the hitmark value
     // identical to the rolled damage so server state, hitbars and client hit splats agree.
-    var damage = if (landHit) Random.nextDouble(from = minHit, until = maxHit) else 0.0
+    var damage = if (landHit) (rollDamage(minHit, maxHit) + bonusDamage).toDouble() else 0.0
     // Staff of light special (Power of Light): 50% chance that melee damage taken is halved.
     if (hitType == HitType.MELEE && target.timers.has(gg.rsmod.game.model.timer.STAFF_OF_LIGHT_TIMER) && world.random(1) == 0) {
         damage /= 2
