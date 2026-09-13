@@ -2,6 +2,7 @@
 
 package gg.rsmod.plugins.content.combat.formula
 
+import gg.rsmod.game.model.combat.CombatClass
 import gg.rsmod.game.model.combat.WeaponStyle
 import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Pawn
@@ -28,7 +29,7 @@ object RangedCombatFormula : CombatFormula {
         specialAttackMultiplier: Double,
     ): Double {
         // Check if the target has the prayer protection and the attacker is not a player
-        if (target.hasPrayerIcon(PrayerIcon.PROTECT_FROM_MISSILES) && pawn !is Player) {
+        if (target.isProtectedFrom(CombatClass.RANGED) && pawn !is Player) {
             return 0.0 // Hits will never land
         }
         val attack = getAttackRoll(pawn, target, specialAttackMultiplier)
@@ -137,7 +138,7 @@ object RangedCombatFormula : CombatFormula {
                 specialAttackMultiplier
             }
 
-        if (target.hasPrayerIcon(PrayerIcon.PROTECT_FROM_MISSILES)) {
+        if (target.isProtectedFrom(CombatClass.RANGED)) {
             hit *= 0.6
         }
 

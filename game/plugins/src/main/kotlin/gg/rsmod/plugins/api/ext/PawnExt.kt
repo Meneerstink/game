@@ -1,5 +1,6 @@
 package gg.rsmod.plugins.api.ext
 
+import gg.rsmod.game.model.combat.CombatClass
 import gg.rsmod.game.model.Hit
 import gg.rsmod.game.model.attr.*
 import gg.rsmod.game.model.entity.*
@@ -43,6 +44,22 @@ fun Pawn.getInteractingNpc(): Npc = attr[INTERACTING_NPC_ATTR]!!.get()!!
 fun Pawn.getInteractingPlayer(): Player = attr[INTERACTING_PLAYER_ATTR]!!.get()!!
 
 fun Pawn.hasPrayerIcon(icon: PrayerIcon): Boolean = prayerIcon == icon.id
+
+/**
+ * Whether this pawn's current overhead protects against [style].
+ *
+ * Always prefer this to `hasPrayerIcon(PrayerIcon.PROTECT_FROM_X)`: eight different frames in this
+ * cache's `headicons_prayer` sheet block melee, and an exact-id test recognises exactly one of
+ * them. See [PrayerIcon.protects] for the full list and for what that cost the player.
+ */
+fun Pawn.isProtectedFrom(style: CombatClass): Boolean = PrayerIcon.protectsAgainst(prayerIcon, style)
+
+/**
+ * Whether this pawn's current overhead is a Summoning protection - normal-book Protect from
+ * Summoning or curse-book Deflect Summoning, including every combined frame. This is what makes a
+ * familiar's damage bounce; see [PrayerIcon.protectsSummoning].
+ */
+fun Pawn.isProtectedFromSummoning(): Boolean = PrayerIcon.protectsAgainstSummoning(prayerIcon)
 
 fun Pawn.getBonus(slot: BonusSlot): Int = equipmentBonuses[slot.id]
 

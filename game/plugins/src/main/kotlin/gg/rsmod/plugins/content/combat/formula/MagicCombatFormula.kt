@@ -1,5 +1,6 @@
 package gg.rsmod.plugins.content.combat.formula
 
+import gg.rsmod.game.model.combat.CombatClass
 import gg.rsmod.game.model.combat.WeaponStyle
 import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Pawn
@@ -38,7 +39,7 @@ object MagicCombatFormula : CombatFormula {
         specialAttackMultiplier: Double,
     ): Double {
         // Check if the target has the prayer protection and the attacker is not a player
-        if (target.hasPrayerIcon(PrayerIcon.PROTECT_FROM_MAGIC) && pawn !is Player) {
+        if (target.isProtectedFrom(CombatClass.MAGIC) && pawn !is Player) {
             return 0.0 // Hits will never land
         }
         return getUnprotectedAccuracy(pawn, target)

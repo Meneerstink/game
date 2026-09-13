@@ -1,5 +1,7 @@
 package gg.rsmod.plugins.content.combat.formula
 
+import gg.rsmod.game.model.combat.CombatClass
+import gg.rsmod.plugins.api.ext.isProtectedFrom
 import gg.rsmod.game.model.attr.DRAGONFIRE_IMMUNITY_ATTR
 import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Pawn
@@ -51,7 +53,7 @@ class DragonfireFormula(
         var max = maxHit.toDouble()
 
         if (target is Player) {
-            val magicProtection = target.hasPrayerIcon(PrayerIcon.PROTECT_FROM_MAGIC)
+            val magicProtection = target.isProtectedFrom(CombatClass.MAGIC)
             val antiFirePotion = target.timers.has(ANTIFIRE_TIMER)
             val superAntiFirePotion = target.timers.has(SUPER_ANTIFIRE_TIMER)
             val dragonFireImmunity = target.attr[DRAGONFIRE_IMMUNITY_ATTR] ?: false

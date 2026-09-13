@@ -2,6 +2,7 @@
 
 package gg.rsmod.plugins.content.combat.formula
 
+import gg.rsmod.game.model.combat.CombatClass
 import gg.rsmod.game.model.combat.StyleType
 import gg.rsmod.game.model.combat.WeaponStyle
 import gg.rsmod.game.model.entity.Npc
@@ -29,7 +30,7 @@ object MeleeCombatFormula : CombatFormula {
         specialAttackMultiplier: Double,
     ): Double {
         // Check if the target has the prayer protection and the attacker is not a player
-        if (target.hasPrayerIcon(PrayerIcon.PROTECT_FROM_MELEE) && pawn !is Player) {
+        if (target.isProtectedFrom(CombatClass.MELEE) && pawn !is Player) {
             return 0.0 // Hits will never land
         }
         val attack = getAttackRoll(pawn, target, specialAttackMultiplier)
@@ -129,7 +130,7 @@ object MeleeCombatFormula : CombatFormula {
 
         hit *= specialAttackMultiplier
 
-        if (target.hasPrayerIcon(PrayerIcon.PROTECT_FROM_MELEE)) {
+        if (target.isProtectedFrom(CombatClass.MELEE)) {
             hit *= 0.6
         }
 
