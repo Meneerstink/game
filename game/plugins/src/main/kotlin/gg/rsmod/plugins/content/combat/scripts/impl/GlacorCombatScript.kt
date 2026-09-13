@@ -219,7 +219,7 @@ object GlacorCombatScript : CombatScript() {
     /** Sapping glacyte killed last: every glacor hit drains 20 prayer points. */
     private fun sapping(npc: Npc, target: Pawn, damage: Int) {
         if (damage > 0 && npc.attr[LAST_GLACYTE] == Npcs.SAPPING_GLACYTE && target is Player) {
-            target.alterPrayerPoints(-200)
+            target.alterPrayerPoints(-20)
         }
     }
 }
@@ -242,7 +242,7 @@ object GlacyteCombatScript : CombatScript() {
                 val victim = target
                 npc.dealHit(target = victim, formula = MeleeCombatFormula, delay = 1, type = HitType.MELEE, onHit = { hit ->
                     if (npc.id == Npcs.SAPPING_GLACYTE && victim is Player && hit.hit.hitmarks.sumOf { h -> h.damage } > 0) {
-                        victim.alterPrayerPoints(-200)
+                        victim.alterPrayerPoints(-20)
                     }
                 })
             }

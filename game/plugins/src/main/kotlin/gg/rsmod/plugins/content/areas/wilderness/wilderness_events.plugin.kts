@@ -23,7 +23,7 @@ can_attack { attacker, target ->
     } else {
         val self = attacker as? Player ?: target as? Player
         if (self != null && BeginnerProtection.isProtected(self)) {
-            if (attacker is Player) {
+            if (attacker is Player && world.plugins.notifyAttackRefusal) {
                 self.filterableMessage("You can't take part in a Wilderness Breach while under Beginner Protection.")
             }
             false

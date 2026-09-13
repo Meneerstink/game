@@ -766,6 +766,12 @@ on_command("sound", Privilege.ADMIN_POWER) {
     }
 }
 
+on_command("avtrace", Privilege.ADMIN_POWER) {
+    val trace = gg.rsmod.game.model.AvTrace
+    trace.enabled = !trace.enabled
+    player.message("AV trace (graphics, sounds, summoning casts) is now ${if (trace.enabled) "on" else "off"}.", type = ChatMessageType.CONSOLE)
+}
+
 on_command("jingle", Privilege.ADMIN_POWER) {
     val args = player.getCommandArgs()
     tryWithUsage(player, args, "Invalid format! Example of proper command <col=42C66C>::jingle 1</col>") { values ->

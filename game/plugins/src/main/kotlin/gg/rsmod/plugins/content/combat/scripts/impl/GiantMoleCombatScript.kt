@@ -48,10 +48,14 @@ object GiantMoleCombatScript : CombatScript() {
                 break
             }
             if (npc.moveToAttackRange(it, target, distance = 1, projectile = false)) {
-                npc.prepareAttack(CombatClass.MELEE, StyleType.CRUSH, WeaponStyle.AGGRESSIVE)
-                npc.animate(npc.combatDef.attackAnimation)
-                val landHit = MeleeCombatFormula.getAccuracy(npc, target) >= world.randomDouble()
-                npc.dealHit(target = target, maxHit = MAX_HIT, landHit = landHit, delay = 1, hitType = HitType.MELEE)
+                // RCV-005: the attack itself is Void giant_mole.combat.toml (anim, sound, hit) via the shared model;
+                // this script keeps only the burrowing mechanic. Fallback only if the table is missing.
+                if (!gg.rsmod.plugins.content.combat.attack.NpcAttacks.attackWith(npc, target, "melee")) {
+                    npc.prepareAttack(CombatClass.MELEE, StyleType.CRUSH, WeaponStyle.AGGRESSIVE)
+                    npc.animate(npc.combatDef.attackAnimation)
+                    val landHit = MeleeCombatFormula.getAccuracy(npc, target) >= world.randomDouble()
+                    npc.dealHit(target = target, maxHit = MAX_HIT, landHit = landHit, delay = 1, hitType = HitType.MELEE)
+                }
             }
             npc.postAttackLogic(target)
             it.wait(npc.combatDef.attackSpeed)

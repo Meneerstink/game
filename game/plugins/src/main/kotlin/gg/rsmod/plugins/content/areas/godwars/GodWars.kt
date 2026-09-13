@@ -38,6 +38,48 @@ object GodWars {
         id in God.ARMADYL.npcs && id !in 6229..6231
 
     /**
+     * RCV-005 root cause (owner: GWD minions not aggressive). Player aggression used the bulk table's `aggressive`
+     * flag and radius 4, which is false for every spiritual creature, aviansie, imp, werewolf and vampyre, so those
+     * followers never hunted. Void (rev 634) gives every GWD npc its own hunt mode instead (god_wars *.npcs.toml,
+     * entity/npc/hunt_modes.toml, Hunting.kt), which this model follows:
+     * - [HuntMode.GENERAL] (`aggressive`): the four generals and their bodyguards attack every player they can see,
+     *   god items or not;
+     * - [HuntMode.FOLLOWER] (`zamorak_aggressive` / `anti_zamorak_aggressive`, both with `godwars_aggressive`
+     *   against players): attack every player they can see who wears no item of their god and no Zaros item;
+     * - [HuntMode.COWARDLY] (Ancient Prison `cowardly`): attack a seen player of at most twice their combat level.
+     * All modes need line of sight; `check_not_combat` never blocks inside the multi-combat dungeon.
+     * SOURCE_CONFLICT (recorded, not ported): Void picks at random per spawn whether a follower hunts players or rival
+     * faction npcs; the OSRS reference makes every follower aggressive to players, so followers always hunt players.
+     */
+    enum class HuntMode { GENERAL, FOLLOWER, COWARDLY }
+
+    /** Void hunt_mode "aggressive": generals and bodyguards of all four chambers. */
+    val GENERAL_HUNTERS = setOf(6203, 6204, 6206, 6208, 6222, 6223, 6225, 6227, 6247, 6248, 6250, 6252, 6260, 6261, 6263, 6265)
+
+    /** Void faction npcs without a hunt_mode (goblin_god_wars_flag). */
+    val PASSIVE_FACTION_NPCS = setOf(6281)
+
+    /** Void hunt_mode "cowardly": the Ancient Prison followers. */
+    val COWARDLY_HUNTERS = 13456..13459
+
+    /** The hunt mode of a faction npc id, or null when it does not hunt players through this model (Nex and her mages). */
+    fun huntMode(id: Int): HuntMode? {
+        val god = God.forNpcId(id) ?: return null
+        return when {
+            id in GENERAL_HUNTERS -> HuntMode.GENERAL
+            id in COWARDLY_HUNTERS -> HuntMode.COWARDLY
+            god == God.ZAROS || id in PASSIVE_FACTION_NPCS -> null
+            else -> HuntMode.FOLLOWER
+        }
+    }
+
+    /** Void `hunt_range`: default 5 (Hunting.kt), 8 for Graardor and his sergeants (bandos.npcs.toml). */
+    fun huntRange(id: Int): Int = if (id in 6260..6265) 8 else 5
+
+    /** Void `check_same_god` (Hunting.wearsGodArmour): an item of the follower's god or of Zaros. */
+    fun followerIgnores(player: Player, god: God): Boolean = isProtected(player, god) || isProtected(player, God.ZAROS)
+
+    /**
      * Novite checks all five worn slots by item name. Void supplies the two complete 667 item
      * sets, so keep the slot mapping explicit and accept either set without treating inventory
      * pieces or noted items as ceremonial access.
@@ -105,7 +147,7 @@ object GodWars {
             chamberZ = 5351..5369,
             chamberHeight = 2,
             chamberEntry = Tile(2864, 5354, 2),
-            chamberExit = Tile(2862, 5357, 2),
+            chamberExit = Tile(2863, 5354, 2), // Void god_wars.areas.toml bandos_entrance
             doorId = 26425,
             altarId = 26289,
             npcs = setOf(
@@ -124,7 +166,7 @@ object GodWars {
             chamberZ = 5296..5308,
             chamberHeight = 2,
             chamberEntry = Tile(2839, 5296, 2),
-            chamberExit = Tile(2835, 5294, 2),
+            chamberExit = Tile(2839, 5295, 2), // Void god_wars.areas.toml armadyl_entrance
             doorId = 26426,
             altarId = 26288,
             npcs = setOf(
@@ -143,7 +185,7 @@ object GodWars {
             chamberZ = 5258..5272,
             chamberHeight = 0,
             chamberEntry = Tile(2907, 5265, 0),
-            chamberExit = Tile(2909, 5265, 0),
+            chamberExit = Tile(2908, 5265, 0), // Void god_wars.areas.toml saradomin_entrance
             doorId = 26427,
             altarId = 26287,
             npcs = setOf(
@@ -161,7 +203,7 @@ object GodWars {
             chamberZ = 5318..5331,
             chamberHeight = 2,
             chamberEntry = Tile(2925, 5331, 2),
-            chamberExit = Tile(2925, 5333, 2),
+            chamberExit = Tile(2925, 5332, 2), // Void god_wars.areas.toml zamorak_entrance
             doorId = 26428,
             altarId = 26286,
             npcs = setOf(

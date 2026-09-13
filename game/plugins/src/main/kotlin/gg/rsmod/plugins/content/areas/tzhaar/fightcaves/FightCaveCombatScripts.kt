@@ -57,7 +57,7 @@ object FightCaveCombatScripts {
                 if (npc.moveToAttackRange(it, target, distance = 1, projectile = false)) {
                     val victim = target
                     melee(npc, victim, 4.0, StyleType.STAB) { damage ->
-                        if (victim is Player) victim.alterPrayerPoints(-(damage / 10 + 1) * 10)
+                        if (victim is Player) victim.alterPrayerPoints(-(damage + 1))
                     }
 
 

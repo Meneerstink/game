@@ -90,6 +90,7 @@ on_obj_option(obj = Objs.ENTRANCE_37749, option = "go-through") {
 on_obj_option(obj = Objs.EXIT_37928, option = "go-through") {
     val obj = player.getInteractingGameObj()
     if (obj.tile.x != CORP_EXIT_TILE.x || obj.tile.z != CORP_EXIT_TILE.z) {
+        gg.rsmod.plugins.content.mechanics.objteleports.ObjectTeleports.fallback(player)
         return@on_obj_option
     }
     player.goThroughPassage(CORP_WILDERNESS_ARRIVAL)

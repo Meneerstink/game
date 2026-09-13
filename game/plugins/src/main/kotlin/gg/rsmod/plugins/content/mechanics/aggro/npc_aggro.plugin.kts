@@ -12,11 +12,22 @@ val AGGRO_CHECK_TIMER = TimerKey()
 
 val defaultAggressiveness: (Npc, Player) -> Boolean = boolean@{ n, p ->
     /*
-     * God Wars Dungeon factions attack every player of any level unless the player wears an item
-     * of their god (2011 behaviour, see GodWars).
+     * God Wars Dungeon npcs hunt through their own Void hunt mode (see GodWars.HuntMode), not the bulk table's
+     * aggressive flag or combat-level tolerance.
      */
     if (GodWars.inDungeon(n.tile)) {
-        GodWars.God.forNpc(n)?.let { god -> return@boolean !GodWars.isProtected(p, god) }
+        val god = GodWars.God.forNpc(n)
+        if (god != null) {
+            // Void check_visual "line_of_sight" (CollisionManager.raycast requires one height level)
+            val seen = { n.tile.height == p.tile.height && world.collision.raycast(n.tile, p.tile, projectile = true) }
+            when (GodWars.huntMode(n.id)) {
+                GodWars.HuntMode.GENERAL -> return@boolean seen()
+                GodWars.HuntMode.FOLLOWER -> return@boolean !GodWars.followerIgnores(p, god) && seen()
+                GodWars.HuntMode.COWARDLY -> return@boolean p.combatLevel <= n.def.combatLevel * 2 && seen()
+                null -> if (god != GodWars.God.ZAROS) return@boolean false // Nex's encounter keeps its own rule below
+            }
+            return@boolean !GodWars.isProtected(p, god)
+        }
     }
     if (n.combatDef.aggressiveTimer == Int.MAX_VALUE) {
         return@boolean true
@@ -32,8 +43,12 @@ val defaultAggressiveness: (Npc, Player) -> Boolean = boolean@{ n, p ->
     return@boolean p.combatLevel <= npcLvl * 2
 }
 
+/** GWD hunters use Void's hunt range; everything else the combat definition's aggressive radius. */
+fun aggroRadius(npc: Npc): Int =
+    if (GodWars.inDungeon(npc.tile) && GodWars.huntMode(npc.id) != null) GodWars.huntRange(npc.id) else npc.combatDef.aggressiveRadius
+
 on_global_npc_spawn {
-    if (npc.combatDef.aggressiveRadius > 0) {
+    if (aggroRadius(npc) > 0) {
         npc.aggroCheck = defaultAggressiveness
         npc.timers[AGGRO_CHECK_TIMER] = 1
     }
@@ -55,7 +70,7 @@ on_timer(AGGRO_CHECK_TIMER) {
 }
 
 fun checkRadius(npc: Npc): Boolean {
-    val radius = npc.combatDef.aggressiveRadius
+    val radius = aggroRadius(npc)
     for (x in -radius..radius) {
         for (z in -radius..radius) {
             val tile = npc.tile.transform(x, z)

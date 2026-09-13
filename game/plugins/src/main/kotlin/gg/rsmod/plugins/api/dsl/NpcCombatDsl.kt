@@ -60,7 +60,18 @@ object NpcCombatDsl {
             val builder = StatsBuilder(stats)
             init(builder)
 
-            combatBuilder.setHitpoints(builder.hitpoints)
+            // Existing hand-written 667 definitions record real HP multiplied by ten. Convert at
+            // this single runtime boundary so NpcCombatDef.lifepoints is now a 1:1 real value.
+            // Mirrors the same guard BulkNpcCombatDefs already applies to its JSON source rows:
+            // fail the boot loudly if a definition is not expressed in that unit, instead of
+            // silently truncating (e.g. an already-1:1 value that is not a multiple of ten) or
+            // silently publishing a value ten times too small (an already-1:1 value that happens
+            // to also be a multiple of ten).
+            require(builder.hitpoints > 0 && builder.hitpoints % 10 == 0) {
+                "NpcCombatDsl hitpoints must be a real HP value times ten (hand-written 667 " +
+                    "definitions record real HP * 10); was ${builder.hitpoints}."
+            }
+            combatBuilder.setHitpoints((builder.hitpoints / 10).coerceAtLeast(1))
             stats.forEach { stat ->
                 combatBuilder.setLevel(stat.first, stat.second)
             }

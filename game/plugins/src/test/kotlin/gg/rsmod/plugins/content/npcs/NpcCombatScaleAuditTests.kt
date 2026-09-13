@@ -10,25 +10,22 @@ import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 
 /**
- * Regression coverage for the audit that caught the Ardougne Watchmen roster (six npcs, real wiki
- * hitpoints entered without the *10 conversion), the Barrows brothers (same defect), and Kree'arra
- * (`2255` instead of `2250`) - see `NpcCombatScaleAudit`'s own doc comment for the full mechanism.
+ * Regression coverage for the runtime audit. Runtime definitions use real 1:1 hitpoints; the
+ * historical x10 source conversion is tested at the DSL and bulk-loader boundaries instead.
  */
 class NpcCombatScaleAuditTests {
     @Test
-    fun `passes when every lifepoints value is a positive multiple of ten`() {
-        val world = worldWith(mapOf(1 to combatDef(250), 2 to combatDef(10), 3 to combatDef(2550)))
+    fun `passes when every runtime lifepoints value is positive`() {
+        val world = worldWith(mapOf(1 to combatDef(25), 2 to combatDef(1), 3 to combatDef(255)))
 
         NpcCombatScaleAudit.validate(world)
     }
 
     @Test
-    fun `fails and names the offending npc when lifepoints is not a multiple of ten`() {
+    fun `accepts a non-multiple runtime lifepoints value`() {
         val world = worldWith(mapOf(7344 to combatDef(2255)))
 
-        val error = assertFailsWith<IllegalStateException> { NpcCombatScaleAudit.validate(world) }
-        assertTrue(error.message!!.contains("7344"), "must name the offending npc id, not just fail generically")
-        assertTrue(error.message!!.contains("2255"))
+        NpcCombatScaleAudit.validate(world)
     }
 
     @Test
@@ -38,25 +35,6 @@ class NpcCombatScaleAuditTests {
         val error = assertFailsWith<IllegalStateException> { NpcCombatScaleAudit.validate(world) }
         assertTrue(error.message!!.contains("100"))
         assertTrue(error.message!!.contains("200"))
-    }
-
-    @Test
-    fun `reproduces the real Ardougne Watchmen and Barrows regressions this audit was built for`() {
-        // Values exactly as found before the fix: real wiki HP entered with no *10 conversion.
-        val world =
-            worldWith(
-                mapOf(
-                    1 to combatDef(20), // Warrior woman
-                    2 to combatDef(57), // Paladin
-                    3 to combatDef(82), // Hero
-                    4 to combatDef(52), // Knight of Ardougne
-                    5 to combatDef(22), // Watchman
-                    6 to combatDef(50), // Archer
-                    7 to combatDef(255), // any Barrows brother, pre-fix
-                ),
-            )
-
-        assertFailsWith<IllegalStateException> { NpcCombatScaleAudit.validate(world) }
     }
 
     private fun worldWith(defs: Map<Int, NpcCombatDef>): World {

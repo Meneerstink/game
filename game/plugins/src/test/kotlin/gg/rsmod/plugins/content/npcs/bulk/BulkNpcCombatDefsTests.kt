@@ -19,7 +19,7 @@ import kotlin.test.assertTrue
 /**
  * Loads the real `data/cfg/npcs/combat-defs.json` against the real rev-667 cache. This is the
  * whole-roster check the project's completeness rule asks for: every row must be a cache npc,
- * every lifepoints value must be real HP * 10 (the NpcCombatScaleAudit rule), every animation
+ * every source lifepoints value must be real HP * 10 and is converted to 1:1 runtime HP, every animation
  * left on a definition must exist in the cache, and the table must actually cover the
  * attackable npcs it was generated for rather than a handful of exemplars.
  */
@@ -31,8 +31,8 @@ class BulkNpcCombatDefsTests {
         assertEquals(0, result.skippedUnknownNpc, "every row must refer to an npc id present in the 667 cache")
         assertTrue(result.defs.size > 4000, "expected the table to cover thousands of attackable npcs, got ${result.defs.size}")
 
-        val badLifepoints = result.defs.filter { (_, def) -> def.lifepoints <= 0 || def.lifepoints % 10 != 0 }
-        assertTrue(badLifepoints.isEmpty(), "lifepoints must be real HP * 10: ${badLifepoints.keys.take(10)}")
+        val badLifepoints = result.defs.filter { (_, def) -> def.lifepoints <= 0 }
+        assertTrue(badLifepoints.isEmpty(), "runtime lifepoints must be positive: ${badLifepoints.keys.take(10)}")
 
         val badAnims =
             result.defs.filter { (_, def) ->
@@ -49,7 +49,7 @@ class BulkNpcCombatDefsTests {
     fun `sourced rows reproduce the donor max hit through this codebase's melee formula`() {
         // Fire giant (110): OSRS/2007 stats hp 111, str 65, max hit 11; Matrix anims 4652/4651/4653.
         val def = BulkNpcCombatDefs.load(definitions, TABLE).defs.getValue(110)
-        assertEquals(1110, def.lifepoints)
+        assertEquals(111, def.lifepoints)
         assertEquals(65, def.stats[NpcSkills.STRENGTH])
         assertEquals(4652, def.attackAnimation)
         assertEquals(4651, def.blockAnimation)

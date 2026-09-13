@@ -16,6 +16,9 @@ class AnimDef(
     private var lengthInCycles = 0
 
     val cycleLength: Int get() = lengthInCycles
+
+    /** Frame ids (`frameset archive << 16 | frame file`); a frame file's bytes 1-2 name its skeleton (AnimBase). */
+    val frames: IntArray get() = if (::frameIds.isInitialized) frameIds else IntArray(0)
     val frameLength: Int get() = frameLengths.sum()
 
     override fun decode(

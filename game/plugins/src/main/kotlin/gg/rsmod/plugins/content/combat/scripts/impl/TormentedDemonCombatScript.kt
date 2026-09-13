@@ -82,10 +82,18 @@ object TormentedDemonCombatScript : CombatScript() {
         npc.removeCombatTarget()
     }
 
+    /**
+     * RCV-005: the attack visuals, projectiles, sounds and hits come from Void guthix_temple tormented_demon
+     * sections (the shared data-driven model). Void only defines ids 8352-8354, so every tormented demon id
+     * uses that sourced row; this script keeps the style rotation and the damage/shield rules.
+     */
+    private const val VOID_ROW_ID = 8352
+
     private fun melee(
         npc: Npc,
         target: Pawn,
     ) {
+        if (gg.rsmod.plugins.content.combat.attack.NpcAttacks.attackWith(npc, target, "melee", VOID_ROW_ID)) return
         npc.prepareAttack(CombatClass.MELEE, StyleType.SLASH, WeaponStyle.AGGRESSIVE)
         npc.animate(10922)
         npc.graphic(1886)
@@ -97,6 +105,7 @@ object TormentedDemonCombatScript : CombatScript() {
         npc: Npc,
         target: Pawn,
     ) {
+        if (gg.rsmod.plugins.content.combat.attack.NpcAttacks.attackWith(npc, target, "magic", VOID_ROW_ID)) return
         npc.prepareAttack(CombatClass.MAGIC, StyleType.MAGIC, WeaponStyle.ACCURATE)
         npc.animate(10918)
         npc.graphic(1883, 96)
@@ -110,6 +119,7 @@ object TormentedDemonCombatScript : CombatScript() {
         npc: Npc,
         target: Pawn,
     ) {
+        if (gg.rsmod.plugins.content.combat.attack.NpcAttacks.attackWith(npc, target, "range", VOID_ROW_ID)) return
         npc.prepareAttack(CombatClass.RANGED, StyleType.RANGED, WeaponStyle.ACCURATE)
         npc.animate(10919)
         npc.graphic(1888)
@@ -131,27 +141,37 @@ object TormentedDemonCombatScript : CombatScript() {
         weaponId: Int,
     ): Int {
         val world = npc.world
-        var result = damage
-        val praying = npc.attr[PRAYING_AGAINST]
-        if (praying != null && praying == style.ordinal) {
-            result = 0
-            if (attacker is Player) attacker.filterableMessage("The demon is protecting itself against your attack style.")
-        }
+        // RCV-005 root cause (owner: "tormented demon lijkt niet goed te prayen tegen mijn attack style"): the demon
+        // switched its protection on every single hit. Void TormentedDemon.kt + PrayerConfigs.praying: it only
+        // starts praying against a style after taking 31 damage from it (x10 source: 310, each hit counted as at
+        // least 2 / x10: 20), by transforming into the variant that shows that protection prayer
+        // (tormented_demon_melee 8352 / _magic 8353 / _range 8354); a player hit in the prayed style deals 0.
+        val prayed = PRAYER_VARIANTS[style]
+        var result = if (prayed != null && npc.getTransmogId() == prayed) 0 else damage
         val shieldDown = (npc.attr[SHIELD_DOWN_UNTIL] ?: 0) > world.currentCycle
         if (weaponId == gg.rsmod.plugins.api.cfg.Items.DARKLIGHT || weaponId == gg.rsmod.plugins.api.cfg.Items.SILVERLIGHT) {
             npc.attr[SHIELD_DOWN_UNTIL] = world.currentCycle + 100
             if (attacker is Player) attacker.message("The demon is temporarily weakened by your weapon.")
         } else if (!shieldDown) {
+            npc.graphic(SHIELD_GFX)
             result = result / 4
         }
-        if (result > 0) {
-            // NPC overhead prayer icons are not part of this server's npc sync, so the switch is
-            // announced in chat instead of drawn above the demon.
-            if (npc.attr[PRAYING_AGAINST] != style.ordinal && attacker is Player) {
-                attacker.filterableMessage("The demon starts praying against your attack style.")
+        if (result > 0 && prayed != null && npc.getTransmogId() != prayed) {
+            val counted = (npc.attr[STYLE_DAMAGE]?.get(style) ?: 0) + result.coerceAtLeast(2)
+            if (counted >= PRAYER_SWITCH_DAMAGE) {
+                npc.setTransmogId(prayed)
+                npc.attr[STYLE_DAMAGE] = HashMap()
+                if (attacker is Player) attacker.message("The Tormented demon regains its strength against your weapon.")
+            } else {
+                npc.attr[STYLE_DAMAGE] = HashMap(npc.attr[STYLE_DAMAGE] ?: emptyMap()).also { it[style] = counted }
             }
-            npc.attr[PRAYING_AGAINST] = style.ordinal
         }
         return result
     }
+
+    /** Void guthix_temple.npcs.toml: the variant that protects against each style. */
+    private val PRAYER_VARIANTS = mapOf(CombatClass.MELEE to 8352, CombatClass.MAGIC to 8353, CombatClass.RANGED to 8354)
+    private const val PRAYER_SWITCH_DAMAGE = 31
+    private const val SHIELD_GFX = 1885 // Void tormented_demon_shield
+    private val STYLE_DAMAGE = AttributeKey<HashMap<CombatClass, Int>>()
 }

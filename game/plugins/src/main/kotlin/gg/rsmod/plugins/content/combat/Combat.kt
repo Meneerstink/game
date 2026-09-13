@@ -100,7 +100,7 @@ object Combat {
             if (target.getVarp(AttackTab.DISABLE_AUTO_RETALIATE_VARP) == 0) {
                 target.interruptQueues()
                 target.closeComponent(parent = 752, child = 13)
-                target.attack(pawn)
+                target.attack(pawn, notifyRefusal = false) // auto-retaliate: never a player-started attack
             }
         }
 
@@ -128,17 +128,20 @@ object Combat {
         }
         if (target.lock.canAttack()) {
             if (target.entityType.isNpc) {
-                if (!target.attr.has(COMBAT_TARGET_FOCUS_ATTR) ||
-                    target.attr[COMBAT_TARGET_FOCUS_ATTR]!!.get() != pawn
-                ) {
-                    target.attack(pawn)
+                // RCV-005 root cause (owner 2026-09-13: "alle bosses en monsters focussen nu op mijn summoning monster
+                // en negeren mij"): an npc switched to whoever hit it last, so a familiar's hit always stole it from
+                // its owner. Void Combat.retaliate: an npc that is already attacking while under attack keeps its
+                // target; it only retaliates when it has no living target of its own.
+                val current = target.attr[COMBAT_TARGET_FOCUS_ATTR]?.get()
+                if (current == null || current.isDead() || (current is Npc && !current.isSpawned())) {
+                    target.attack(pawn, notifyRefusal = false) // npc retaliation
                 }
             } else if (target is Player) {
                 if (target.getVarp(AttackTab.DISABLE_AUTO_RETALIATE_VARP) == 0 &&
                     target.getCombatTarget() == null &&
                     !target.hasMoveDestination()
                 ) {
-                    target.attack(pawn)
+                    target.attack(pawn, notifyRefusal = false) // auto-retaliate
                 }
             }
         }
@@ -264,7 +267,11 @@ object Combat {
             if (!target.isSpawned()) {
                 return false
             }
-            if (!target.def.isAttackable() ||
+            // RCV-005 root cause: the cache "Attack" menu option is what lets a *player* attack an npc.
+            // It was applied to every attacker, so an npc could never fight back against a summoned
+            // familiar (a familiar deliberately has no "Attack" option). Void `Target.attackable:56-63`:
+            // players need the option; npc attackers need it too unless the target is an owned familiar.
+            if ((!target.def.isAttackable() && (pawn is Player || target.owner == null)) ||
             target.combatDef.lifepoints == -1) {
                 (pawn as? Player)?.message("You can't attack this npc.")
                 (pawn as? Player)?.message(

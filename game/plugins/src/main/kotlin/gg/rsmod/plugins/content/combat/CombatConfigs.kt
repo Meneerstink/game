@@ -85,7 +85,21 @@ object CombatConfigs {
 
     fun getCombatClass(pawn: Pawn): CombatClass {
         if (pawn is Npc) {
-            return if (pawn.combatDef.spell > -1) CombatClass.MAGIC else pawn.combatClass
+            if (pawn.combatDef.spell > -1) return CombatClass.MAGIC
+            // pawn.combatClass defaults to MELEE and is a mutable var some custom combat scripts
+            // toggle per-attack (a multi-style boss switching to MAGIC for one specific hit) - if
+            // something has already moved it off that default, trust it fully, unchanged from
+            // before. But a simple NPC with no custom script that just declares
+            // configs { attackStyle = StyleType.MAGIC/RANGED } in its combat def never touches
+            // combatClass at all, so it silently stayed at the MELEE default and got routed into
+            // MeleeCombatStrategy - which only understands StyleType.{STAB,SLASH,CRUSH,MAGIC_MELEE}
+            // and threw on the mismatch (same class of bug as the Player/Salamander case above).
+            if (pawn.combatClass != CombatClass.MELEE) return pawn.combatClass
+            return when (pawn.combatDef.attackStyleType) {
+                StyleType.MAGIC -> CombatClass.MAGIC
+                StyleType.RANGED -> CombatClass.RANGED
+                else -> CombatClass.MELEE
+            }
         }
 
         if (pawn is Player) {
@@ -99,7 +113,26 @@ object CombatConfigs {
                     WeaponType.CROSSBOW,
                     WeaponType.THROWN,
                 ) -> CombatClass.RANGED
-                else -> CombatClass.MELEE
+                else -> {
+                    // Some weapon families carry a hybrid attack-style option whose resolved
+                    // StyleType (see AttackStyleData/WeaponCombatData) diverges from what their
+                    // WeaponType alone implies - e.g. the Salamander family's third ("Scorch")
+                    // style is StyleType.MAGIC even though salamanders are melee-equippable and
+                    // not caught by the ranged-weapon-type check above. Defaulting those to
+                    // CombatClass.MELEE routed them into MeleeCombatStrategy, which then crashed
+                    // in MeleeCombatFormula (it only understands STAB/SLASH/CRUSH/MAGIC_MELEE) -
+                    // aborting that whole cycle's queued-task processing for every pawn, not just
+                    // this one. Mirrors the same weapon+style-button lookup getCombatStyle(Pawn)
+                    // below already does, so both stay consistent with each other.
+                    val style = pawn.getAttackStyle()
+                    val option = getCombatStyle(style)
+                    val data = getWeaponType(pawn)?.let { WeaponCombatData.getAttackStyleType(it, option) }
+                    when (data?.styleType) {
+                        StyleType.MAGIC -> CombatClass.MAGIC
+                        StyleType.RANGED -> CombatClass.RANGED
+                        else -> CombatClass.MELEE
+                    }
+                }
             }
         }
 

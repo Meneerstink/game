@@ -131,11 +131,13 @@ object BulkNpcCombatDefs {
                 return@forEach
             }
             require(row.lifepoints > 0 && row.lifepoints % 10 == 0) {
-                "combat-defs.json row ${row.id} (${row.name}): lifepoints must be real HP * 10, was ${row.lifepoints}"
+                "combat-defs.json row ${row.id} (${row.name}): source lifepoints must be real HP * 10, was ${row.lifepoints}"
             }
             val style = StyleType.valueOf(row.style)
             val builder = NpcCombatBuilder()
-            builder.setHitpoints(row.lifepoints)
+            // The generated source table keeps its historical x10 values; runtime combat defs do
+            // not. Convert before publishing the definition so hitpoints and hitmarks share 1:1.
+            builder.setHitpoints((row.lifepoints / 10).coerceAtLeast(1))
             builder.setAttackSpeed(row.attackSpeed.coerceAtLeast(1))
             builder.setLevels(
                 // A magic-style npc without a scripted spell fights through the melee strategy
