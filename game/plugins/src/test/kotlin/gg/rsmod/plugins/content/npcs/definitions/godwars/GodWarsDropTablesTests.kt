@@ -85,9 +85,15 @@ class GodWarsDropTablesTests {
                     File(voidData, "entity/npc/misc.drops.toml"),
             )
         val ids = voidItemIds()
-        val allowedReasons = setOf("post-2011 (owner option)", "PARKED: Treasure Trails (Q-057)", "PARKED: Champions Challenge minigame")
+        val allowedReasons = setOf("post-2011 (owner option)", "PARKED: Treasure Trails (Q-057)", "PARKED: Champions Challenge minigame", "OSRS-only row (owner 2026-09-13)")
         DOC.excluded.forEach { assertTrue(it.reason in allowedReasons, "exclusion reason '${it.reason}'") }
-        assertEquals(setOf("elite_clue_scroll", "hard_clue_scroll", "long_bone", "curved_bone", "goblin_champions_scroll"), DOC.excluded.map { it.entry }.toSet())
+        assertEquals(
+            setOf("elite_clue_scroll", "hard_clue_scroll", "long_bone", "curved_bone", "goblin_champions_scroll", "manta_ray", "crushed_nest_noted", "zamorakian_spear", "dragon_bolts_e"),
+            DOC.excluded.map { it.entry }.toSet(),
+        )
+        // Owner 2026-09-13 "remove the osrs items": none of them is left in any table.
+        val osrsOnly = setOf(391, 6694, 11716, 9244)
+        assertTrue(DOC.tables.values.flatMap { it.drops }.none { it.table == null && it.item in osrsOnly }, "OSRS-only rows removed")
 
         DOC.tables.forEach { (name, table) ->
             val source = toml[name] ?: error("table $name not in Void")

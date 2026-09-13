@@ -585,13 +585,6 @@
                                                                  "chance":  48
                                                              },
                                                              {
-                                                                 "key":  "dragon_bolts_e",
-                                                                 "item":  9244,
-                                                                 "min":  5,
-                                                                 "max":  10,
-                                                                 "chance":  48
-                                                             },
-                                                             {
                                                                  "key":  "coins",
                                                                  "item":  995,
                                                                  "min":  19500,
@@ -758,13 +751,6 @@
                                                                          "chance":  1016
                                                                      },
                                                                      {
-                                                                         "key":  "manta_ray",
-                                                                         "item":  391,
-                                                                         "min":  2,
-                                                                         "max":  2,
-                                                                         "chance":  1016
-                                                                     },
-                                                                     {
                                                                          "key":  "mushroom_potato",
                                                                          "item":  7058,
                                                                          "min":  3,
@@ -777,13 +763,6 @@
                                                                          "min":  1000,
                                                                          "max":  1100,
                                                                          "chance":  8890
-                                                                     },
-                                                                     {
-                                                                         "key":  "crushed_nest_noted",
-                                                                         "item":  6694,
-                                                                         "min":  2,
-                                                                         "max":  2,
-                                                                         "chance":  1016
                                                                      },
                                                                      {
                                                                          "key":  "grimy_kwuarm_noted",
@@ -1063,13 +1042,6 @@
                                                                        "chance":  6
                                                                    },
                                                                    {
-                                                                       "key":  "zamorakian_spear",
-                                                                       "item":  11716,
-                                                                       "min":  1,
-                                                                       "max":  1,
-                                                                       "chance":  6
-                                                                   },
-                                                                   {
                                                                        "key":  "zamorak_hilt",
                                                                        "item":  11708,
                                                                        "min":  1,
@@ -1201,13 +1173,6 @@
                                                        "type":  "first",
                                                        "roll":  16129,
                                                        "drops":  [
-                                                                     {
-                                                                         "key":  "zamorakian_spear",
-                                                                         "item":  11716,
-                                                                         "min":  1,
-                                                                         "max":  1,
-                                                                         "chance":  3
-                                                                     },
                                                                      {
                                                                          "key":  "coins",
                                                                          "item":  995,
@@ -1368,6 +1333,11 @@
                          "reason":  "PARKED: Champions Challenge minigame"
                      },
                      {
+                         "table":  "kree_arra_secondary",
+                         "entry":  "dragon_bolts_e",
+                         "reason":  "OSRS-only row (owner 2026-09-13)"
+                     },
+                     {
                          "table":  "kree_arra_tertiary",
                          "entry":  "elite_clue_scroll",
                          "reason":  "post-2011 (owner option)"
@@ -1381,6 +1351,26 @@
                          "table":  "kree_arra_tertiary",
                          "entry":  "curved_bone",
                          "reason":  "post-2011 (owner option)"
+                     },
+                     {
+                         "table":  "armadyl_bodyguard_secondary",
+                         "entry":  "manta_ray",
+                         "reason":  "OSRS-only row (owner 2026-09-13)"
+                     },
+                     {
+                         "table":  "armadyl_bodyguard_secondary",
+                         "entry":  "crushed_nest_noted",
+                         "reason":  "OSRS-only row (owner 2026-09-13)"
+                     },
+                     {
+                         "table":  "kril_tsutsaroth_secondary",
+                         "entry":  "zamorakian_spear",
+                         "reason":  "OSRS-only row (owner 2026-09-13)"
+                     },
+                     {
+                         "table":  "zamorak_bodyguard_secondary",
+                         "entry":  "zamorakian_spear",
+                         "reason":  "OSRS-only row (owner 2026-09-13)"
                      }
                  ]
 }

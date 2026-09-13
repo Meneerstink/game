@@ -14,8 +14,9 @@ import gg.rsmod.plugins.content.drops.VoidDropTables
  * 2026-09-13 ("Void, 2011-filtered"): Void's GWD tables (`data/cfg/npcs/godwars-drops.json`, generated from Void
  * `*.drops.toml`), keeping only 667 items and removing post-2011 rows (elite clue scrolls, long/curved bone) and rows of
  * parked content (hard clue scrolls: Treasure Trails; goblin champion scroll: Champions' Challenge) — every removal is
- * listed in the JSON `excluded` block. OSRS-flavoured rows kept for owner review: manta ray and crushed nest (Armadyl
- * bodyguards), Zamorakian spear (K'ril and Zamorak bodyguards), dragon bolts (e) (Kree'arra).
+ * listed in the JSON `excluded` block. Owner 2026-09-13 "remove the osrs items": the OSRS-only rows manta ray and
+ * crushed nest (Armadyl bodyguards), Zamorakian spear (K'ril and Zamorak bodyguards) and dragon bolts (e) (Kree'arra)
+ * are excluded too; their roll share becomes nothing, every other rate is unchanged.
  *
  * SOURCE_BLOCKED: Frozen key pieces have no rate in any donor (Void leaves the bodyguard piece commented out). The
  * generals keep the pre-existing 3/1000 piece roll, labelled legacy, so the Ancient Prison stays reachable until the
