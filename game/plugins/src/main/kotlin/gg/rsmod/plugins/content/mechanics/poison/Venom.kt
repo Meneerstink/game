@@ -71,8 +71,7 @@ object Venom {
         if (isImmune(pawn) || pawn.attr.has(VENOM_TICKS_ELAPSED_ATTR)) {
             return false
         }
-        pawn.timers.remove(POISON_TIMER)
-        pawn.attr.remove(POISON_TICKS_LEFT_ATTR)
+        Poison.cure(pawn)
         pawn.timers[VENOM_TIMER] = VENOM_TICK_DELAY
         pawn.attr[VENOM_TICKS_ELAPSED_ATTR] = 0
         Poison.setPoisonVarp(pawn, Poison.OrbState.VENOM)
@@ -93,6 +92,7 @@ object Venom {
     fun cure(
         pawn: Pawn,
         immunityTicks: Int,
+        announce: Boolean = true,
     ): Boolean {
         if (!pawn.attr.has(VENOM_TICKS_ELAPSED_ATTR)) {
             return false
@@ -103,7 +103,7 @@ object Venom {
             pawn.timers[VENOM_IMMUNITY] = immunityTicks
         }
         Poison.setPoisonVarp(pawn, Poison.OrbState.NONE)
-        if (pawn is Player) {
+        if (announce && pawn is Player) {
             pawn.message("You have been cured of the venom coursing through your veins.")
         }
         return true

@@ -40,6 +40,9 @@ listOf(FeroxObjects.BARRIER_A, FeroxObjects.BARRIER_B, FeroxObjects.BARRIER_FIEL
         }
         // Standing on the inner side means the player is leaving the enclave.
         val goingOutward = player.tile.getDistance(gate.innerLanding) <= player.tile.getDistance(gate.outerLanding)
+        if (BountyHunterHome.barrierRefusesEntry(goingOutward, gate, player.timers.has(gg.rsmod.game.model.timer.TELEBLOCK_TIMER))) {
+            return@on_obj_option
+        }
         val endTile = if (goingOutward) gate.outerLanding else gate.innerLanding
         if (goingOutward && gate.exitsToWilderness) {
             player.message("You pass through the barrier into the Wilderness.")

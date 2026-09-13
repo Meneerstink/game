@@ -67,7 +67,10 @@ regions:
 - 12089
 - 12345
 - 12088
-- 12344
+# RCV-011 home (owner: Ferox Enclave like OSRS): region 12344 (x 3072-3135, z 3584-3647, west half of Ferox Enclave and
+# the Wilderness west of it) removed - single-way in Void 2011 wilderness.areas.toml (outside wilderness_main_multi_area
+# and the bandit camp) and not a multicombat area on the OSRS Wiki. Region 12600 stays: SOURCE_CONFLICT, Void 2011 marks
+# it multi (main multi area x >= 3136), OSRS does not list it.
 - 12600
 - 12856
 - 13112

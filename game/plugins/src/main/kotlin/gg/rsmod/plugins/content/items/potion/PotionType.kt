@@ -422,10 +422,8 @@ enum class PotionType(
         p: Player,
         ticks: Int,
     ) {
-        p.timers.remove(POISON_TIMER)
-        p.attr.remove(POISON_TICKS_LEFT_ATTR)
+        Poison.cure(p)
         p.timers[POISON_IMMUNITY] = ticks
-        Poison.setPoisonVarp(p, Poison.OrbState.NONE)
     }
 
     fun applyBoost(

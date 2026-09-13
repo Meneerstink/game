@@ -75,6 +75,21 @@ object Poison {
     }
 
     /**
+     * Cures regular poison: stops the poison timer, clears the remaining ticks and resets the HP orb. The one poison
+     * cure every caller uses (antipoison potions, the Ferox Enclave pool, Summoning, the Crown dev tool) - RCV-011: the
+     * copies each cleared state by hand and one of them left the orb showing poison.
+     *
+     * @return true if the pawn was poisoned.
+     */
+    fun cure(pawn: Pawn): Boolean {
+        val poisoned = pawn.attr.has(POISON_TICKS_LEFT_ATTR) || pawn.timers.has(POISON_TIMER)
+        pawn.timers.remove(POISON_TIMER)
+        pawn.attr.remove(POISON_TICKS_LEFT_ATTR)
+        setPoisonVarp(pawn, OrbState.NONE)
+        return poisoned
+    }
+
+    /**
      * Sets the state of the player's HP orb to indicate whether they
      * are currently poisoned or not.
      *

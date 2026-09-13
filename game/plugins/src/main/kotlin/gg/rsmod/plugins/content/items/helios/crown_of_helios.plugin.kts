@@ -906,9 +906,7 @@ suspend fun QueueTask.playerStateMenu() {
             playerStateMenu()
         }
         2 -> {
-            player.timers.remove(POISON_TIMER)
-            player.attr.remove(POISON_TICKS_LEFT_ATTR)
-            Poison.setPoisonVarp(player, Poison.OrbState.NONE)
+            Poison.cure(player)
             Venom.cure(player, 0)
             player.logAction("Cured poison/venom")
             player.crownMessage("Poison/venom cured.")

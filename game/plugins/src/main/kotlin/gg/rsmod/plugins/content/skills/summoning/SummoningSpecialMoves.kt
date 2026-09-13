@@ -670,8 +670,7 @@ object SummoningSpecialMoves {
                             player.skills.setCurrentLevel(skill, (current + restore).coerceAtMost(max))
                         }
                     }
-                    player.timers.remove(POISON_TIMER)
-                    player.attr.remove(POISON_TICKS_LEFT_ATTR)
+                    gg.rsmod.plugins.content.mechanics.poison.Poison.cure(player)
                     player.alterLifepoints(value = -1)
                     familiar.animate(7657)
                     true

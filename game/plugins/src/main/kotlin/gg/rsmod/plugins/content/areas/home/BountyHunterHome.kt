@@ -145,4 +145,19 @@ object BountyHunterHome {
     ): Boolean =
         (isDangerousWilderness(attacker) && isDangerousWilderness(target)) ||
             gg.rsmod.plugins.content.mechanics.practicepvp.PracticePvp.areMatched(attacker, target)
+
+    /**
+     * RCV-011 (owner: Ferox like OSRS). OSRS Wiki "Barrier (Ferox Enclave)" / "Tele Block": a tele-blocked player cannot
+     * enter the enclave through a barrier; leaving is allowed and being in combat does not stop entry. Only the
+     * Wilderness-facing barriers are an entry; the internal plaza/garden pair is not. SOURCE_BLOCKED: no refusal text is
+     * quoted by any source, so none is invented.
+     */
+    fun barrierRefusesEntry(
+        goingOutward: Boolean,
+        gate: GateInfo,
+        teleblocked: Boolean,
+    ): Boolean = teleblocked && !goingOutward && gate.exitsToWilderness
+
+    /** OSRS Wiki "Pool of Refreshment". */
+    const val POOL_MESSAGE = "You feel reinvigorated after drinking from the pool."
 }

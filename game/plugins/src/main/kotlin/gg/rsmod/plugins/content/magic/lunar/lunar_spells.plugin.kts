@@ -170,12 +170,7 @@ on_magic_spell_button("Vengeance Group") { metadata ->
  */
 fun curePoison(p: Player): Boolean {
     var cured = false
-    if (p.attr.has(POISON_TICKS_LEFT_ATTR)) {
-        p.timers.remove(POISON_TIMER)
-        p.attr.remove(POISON_TICKS_LEFT_ATTR)
-        Poison.setPoisonVarp(p, Poison.OrbState.NONE)
-        cured = true
-    }
+    if (Poison.cure(p)) cured = true
     if (Venom.cure(p, immunityTicks = 0)) cured = true
     return cured
 }
