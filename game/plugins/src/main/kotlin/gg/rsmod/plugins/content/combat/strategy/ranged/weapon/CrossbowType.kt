@@ -7,6 +7,8 @@ import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Bolts.BOLT_RACKS
 import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Bolts.BONE_BOLTS
 import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Bolts.BROAD_BOLTS
 import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Bolts.BRONZE_BOLTS
+import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Bolts.DRAGON_BOLTS
+import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Bolts.OSRS_DRAGON_BOLT_FAMILY
 import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Bolts.IRON_BOLTS
 import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Bolts.KEBBIT_BOLTS
 import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Bolts.MITHRIL_BOLTS
@@ -38,6 +40,12 @@ enum class CrossbowType(
             BRONZE_BOLTS + IRON_BOLTS + STEEL_BOLTS + MITHRIL_BOLTS + ADAMANT_BOLTS + RUNITE_BOLTS + BROAD_BOLTS,
     ),
 
+    // OSRS-IMPORT: Armadyl, Zaryte and Dragon crossbow fire every bolt up to dragon bolts (OSRS Wiki item pages),
+    // including the 667 dragonstone "Dragon bolts" and the OSRS dragon-metal bolt family.
+    ARMADYL_CROSSBOW(item = Items.ARMADYL_CROSSBOW, ammo = UP_TO_DRAGON_BOLTS),
+    ZARYTE_CROSSBOW(item = Items.ZARYTE_CROSSBOW, ammo = UP_TO_DRAGON_BOLTS),
+    DRAGON_CROSSBOW(item = Items.DRAGON_CROSSBOW, ammo = UP_TO_DRAGON_BOLTS),
+
     BLURITE_CROSSBOW(item = Items.BLURITE_CROSSBOW, ammo = BRONZE_BOLTS + BLURITE_BOLTS),
     DORGESHUUN_CROSSBOW(item = Items.DORGESHUUN_CBOW, ammo = BONE_BOLTS),
     HUNTER_CROSSBOW(item = Items.HUNTERS_CROSSBOW, ammo = KEBBIT_BOLTS),
@@ -59,3 +67,9 @@ enum class CrossbowType(
         val values = enumValues<CrossbowType>()
     }
 }
+
+/** Computed (not stored) so the enum entries above can use it regardless of top-level initialisation order. */
+private val UP_TO_DRAGON_BOLTS: Array<Int>
+    get() =
+        BRONZE_BOLTS + IRON_BOLTS + STEEL_BOLTS + MITHRIL_BOLTS + ADAMANT_BOLTS + RUNITE_BOLTS + BROAD_BOLTS +
+            DRAGON_BOLTS + OSRS_DRAGON_BOLT_FAMILY

@@ -79,6 +79,8 @@ object SpecialAttackSupport {
         projectileGfx: Int = -1,
         projectileDelayOffset: Int = 0,
         consumeAmmo: Boolean = true,
+        /** Non-null for crossbow specials that interact with enchanted bolt effects (Armadyl Eye, Evoke). */
+        boltSpecial: gg.rsmod.plugins.content.combat.strategy.ranged.ammo.EnchantedBolts.Special? = null,
         onHit: (Int) -> Unit = {},
     ): Int {
         val world = player.world
@@ -103,17 +105,29 @@ object SpecialAttackSupport {
 
         val maxHit = RangedCombatFormula.getMaxHit(player, target, specialAttackMultiplier = damage)
         val acc = RangedCombatFormula.getAccuracy(player, target, specialAttackMultiplier = accuracy)
-        val landHit = forceLand || acc >= world.randomDouble()
+        val rolledHit = forceLand || acc >= world.randomDouble()
+        val shot =
+            boltSpecial?.let {
+                gg.rsmod.plugins.content.combat.strategy.ranged.ammo.EnchantedBolts
+                    .resolve(player, target, ammo.id, rolledHit, maxHit, it, world.randomDouble())
+            }
+        val landHit = shot?.landHit ?: rolledHit
         val pawnHit =
             player.dealHit(
                 target = target,
-                minHit = (maxHit * minFraction).coerceAtLeast(0.1),
-                maxHit = maxHit.coerceAtLeast(0.2),
+                minHit = if (shot?.bolt != null) shot.minHit else (maxHit * minFraction).coerceAtLeast(0.1),
+                maxHit = if (shot?.bolt != null) shot.maxHit else maxHit.coerceAtLeast(0.2),
                 landHit = landHit,
                 delay = hitDelay,
                 hitType = HitType.RANGE,
+                bonusDamage = shot?.bonusDamage ?: 0,
             )
         val dealt = pawnHit.hit.hitmarks.sumOf { it.damage }
+        shot?.bolt?.let { bolt ->
+            pawnHit.hit.addAction {
+                gg.rsmod.plugins.content.combat.strategy.ranged.ammo.EnchantedBolts.afterHit(bolt, player, target, dealt)
+            }
+        }
         if (landHit && dealt > 0) {
             pawnHit.hit.addAction { onHit(dealt) }
         }

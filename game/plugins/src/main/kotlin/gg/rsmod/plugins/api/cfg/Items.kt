@@ -19400,5 +19400,45 @@ object Items {
     // OSRS-IMPORT batch lightbearer (OsrsItemImportTool "lightbearer"; RSPS_IMPORT_ASSET_MAP.yml).
     const val LIGHTBEARER = 22409
     const val LIGHTBEARER_NOTED = 22410
+    // OSRS-IMPORT batch crossbows (OsrsItemImportTool "crossbows"; RSPS_IMPORT_ASSET_MAP.yml). The OSRS dragon-metal bolts are
+    // OSRS_DRAGON_BOLTS: the 667 DRAGON_BOLTS 9341 / DRAGON_BOLTS_E 9244 are dragonstone bolts and stay separate items.
+    // Count (stack-size) variants 22426-22534 have no constants.
+    const val ARMADYL_CROSSBOW = 22411
+    const val ARMADYL_CROSSBOW_NOTED = 22412
+    const val ZARYTE_CROSSBOW = 22413
+    const val ZARYTE_CROSSBOW_NOTED = 22414
+    const val DRAGON_CROSSBOW = 22415
+    const val DRAGON_CROSSBOW_NOTED = 22416
+    const val DRAGON_CROSSBOW_U = 22417
+    const val DRAGON_CROSSBOW_U_NOTED = 22418
+    const val DRAGON_LIMBS = 22419
+    const val DRAGON_LIMBS_NOTED = 22420
+    const val MAGIC_STOCK = 22421
+    const val MAGIC_STOCK_NOTED = 22422
+    const val NIHIL_HORN = 22423
+    const val NIHIL_HORN_NOTED = 22424
+    const val NIHIL_SHARD = 22425
+    const val OSRS_DRAGON_BOLTS = 22430
+    const val OSRS_DRAGON_BOLTS_UNF = 22435
+    const val OPAL_DRAGON_BOLTS = 22440
+    const val JADE_DRAGON_BOLTS = 22445
+    const val PEARL_DRAGON_BOLTS = 22450
+    const val TOPAZ_DRAGON_BOLTS = 22455
+    const val SAPPHIRE_DRAGON_BOLTS = 22460
+    const val EMERALD_DRAGON_BOLTS = 22465
+    const val RUBY_DRAGON_BOLTS = 22470
+    const val DIAMOND_DRAGON_BOLTS = 22475
+    const val DRAGONSTONE_DRAGON_BOLTS = 22480
+    const val ONYX_DRAGON_BOLTS = 22485
+    const val OPAL_DRAGON_BOLTS_E = 22490
+    const val JADE_DRAGON_BOLTS_E = 22495
+    const val PEARL_DRAGON_BOLTS_E = 22500
+    const val TOPAZ_DRAGON_BOLTS_E = 22505
+    const val SAPPHIRE_DRAGON_BOLTS_E = 22510
+    const val EMERALD_DRAGON_BOLTS_E = 22515
+    const val RUBY_DRAGON_BOLTS_E = 22520
+    const val DIAMOND_DRAGON_BOLTS_E = 22525
+    const val DRAGONSTONE_DRAGON_BOLTS_E = 22530
+    const val ONYX_DRAGON_BOLTS_E = 22535
     // Auto-generated file using class gg.rsmod.game.service.game.DumpEntityIdService
 }

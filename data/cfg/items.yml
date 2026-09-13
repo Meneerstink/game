@@ -265393,3 +265393,897 @@
   tradeable: true
   weight: 0.0
   equipment: null
+- id: 22411
+  name: "Armadyl crossbow"
+  examine: "A weapon originally developed for Armadyl's forces."
+  tradeable: true
+  weight: 6.0
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 5679
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 17
+    attack_speed: 6
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 100
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 1
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: 2700
+    skill_reqs: [{'skill': 4, 'level': 70}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22412
+  name: "Armadyl crossbow"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22413
+  name: "Zaryte crossbow"
+  examine: "A weapon born out of conflict."
+  tradeable: true
+  weight: 6.001
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 5680
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 17
+    attack_speed: 6
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 110
+    defence_stab: 14
+    defence_slash: 14
+    defence_crush: 12
+    defence_magic: 15
+    defence_ranged: 16
+    summoning: 0
+    melee_strength: 0
+    prayer: 1
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: 2700
+    skill_reqs: [{'skill': 4, 'level': 80}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22414
+  name: "Zaryte crossbow"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22415
+  name: "Dragon crossbow"
+  examine: "A dragon crossbow."
+  tradeable: true
+  weight: 6.0
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 5681
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 17
+    attack_speed: 6
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 94
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: 2700
+    skill_reqs: [{'skill': 4, 'level': 64}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22416
+  name: "Dragon crossbow"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22417
+  name: "Dragon crossbow (u)"
+  examine: "An unstrung dragon crossbow."
+  tradeable: true
+  weight: 8.0
+  equipment: null
+- id: 22418
+  name: "Dragon crossbow (u)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22419
+  name: "Dragon limbs"
+  examine: "A pair of dragon crossbow limbs."
+  tradeable: true
+  weight: 3.2
+  equipment: null
+- id: 22420
+  name: "Dragon limbs"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22421
+  name: "Magic stock"
+  examine: "A magic crossbow stock."
+  tradeable: true
+  weight: 3.0
+  equipment: null
+- id: 22422
+  name: "Magic stock"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22423
+  name: "Nihil horn"
+  examine: "The horn of a proud nihil."
+  tradeable: true
+  weight: 0.006
+  equipment: null
+- id: 22424
+  name: "Nihil horn"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22425
+  name: "Nihil shard"
+  examine: "An ancient magical shard."
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22430
+  name: "Dragon bolts"
+  examine: "Dragon crossbow bolts."
+  tradeable: true
+  weight: 0.0
+  equipment:
+    equip_slot: 13
+    equip_type: -1
+    appearance_id: 5685
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 122
+    magic_damage: 0
+    attack_audio: -1
+    skill_reqs: [{'skill': 4, 'level': 64}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22435
+  name: "Dragon bolts (unf)"
+  examine: "Unfeathered dragon crossbow bolts."
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22440
+  name: "Opal dragon bolts"
+  examine: "Dragon crossbow bolts, tipped with opal."
+  tradeable: true
+  weight: 0.0
+  equipment:
+    equip_slot: 13
+    equip_type: -1
+    appearance_id: 5685
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 122
+    magic_damage: 0
+    attack_audio: -1
+    skill_reqs: [{'skill': 4, 'level': 64}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22445
+  name: "Jade dragon bolts"
+  examine: "Dragon crossbow bolts, tipped with jade."
+  tradeable: true
+  weight: 0.0
+  equipment:
+    equip_slot: 13
+    equip_type: -1
+    appearance_id: 5685
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 122
+    magic_damage: 0
+    attack_audio: -1
+    skill_reqs: [{'skill': 4, 'level': 64}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22450
+  name: "Pearl dragon bolts"
+  examine: "Dragon crossbow bolts, tipped with pearl."
+  tradeable: true
+  weight: 0.0
+  equipment:
+    equip_slot: 13
+    equip_type: -1
+    appearance_id: 5685
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 122
+    magic_damage: 0
+    attack_audio: -1
+    skill_reqs: [{'skill': 4, 'level': 64}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22455
+  name: "Topaz dragon bolts"
+  examine: "Dragon crossbow bolts, tipped with red topaz."
+  tradeable: true
+  weight: 0.0
+  equipment:
+    equip_slot: 13
+    equip_type: -1
+    appearance_id: 5685
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 122
+    magic_damage: 0
+    attack_audio: -1
+    skill_reqs: [{'skill': 4, 'level': 64}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22460
+  name: "Sapphire dragon bolts"
+  examine: "Dragon crossbow bolts, tipped with sapphire."
+  tradeable: true
+  weight: 0.0
+  equipment:
+    equip_slot: 13
+    equip_type: -1
+    appearance_id: 5685
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 122
+    magic_damage: 0
+    attack_audio: -1
+    skill_reqs: [{'skill': 4, 'level': 64}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22465
+  name: "Emerald dragon bolts"
+  examine: "Dragon crossbow bolts, tipped with emerald."
+  tradeable: true
+  weight: 0.0
+  equipment:
+    equip_slot: 13
+    equip_type: -1
+    appearance_id: 5685
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 122
+    magic_damage: 0
+    attack_audio: -1
+    skill_reqs: [{'skill': 4, 'level': 64}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22470
+  name: "Ruby dragon bolts"
+  examine: "Dragon crossbow bolts, tipped with ruby."
+  tradeable: true
+  weight: 0.0
+  equipment:
+    equip_slot: 13
+    equip_type: -1
+    appearance_id: 5685
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 122
+    magic_damage: 0
+    attack_audio: -1
+    skill_reqs: [{'skill': 4, 'level': 64}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22475
+  name: "Diamond dragon bolts"
+  examine: "Dragon crossbow bolts, tipped with diamond."
+  tradeable: true
+  weight: 0.0
+  equipment:
+    equip_slot: 13
+    equip_type: -1
+    appearance_id: 5685
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 122
+    magic_damage: 0
+    attack_audio: -1
+    skill_reqs: [{'skill': 4, 'level': 64}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22480
+  name: "Dragonstone dragon bolts"
+  examine: "Dragon crossbow bolts, tipped with dragonstone. Double dragon!"
+  tradeable: true
+  weight: 0.0
+  equipment:
+    equip_slot: 13
+    equip_type: -1
+    appearance_id: 5685
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 122
+    magic_damage: 0
+    attack_audio: -1
+    skill_reqs: [{'skill': 4, 'level': 64}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22485
+  name: "Onyx dragon bolts"
+  examine: "Dragon crossbow bolts, tipped with onyx."
+  tradeable: true
+  weight: 0.0
+  equipment:
+    equip_slot: 13
+    equip_type: -1
+    appearance_id: 5685
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 122
+    magic_damage: 0
+    attack_audio: -1
+    skill_reqs: [{'skill': 4, 'level': 64}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22490
+  name: "Opal dragon bolts (e)"
+  examine: "Enchanted Dragon crossbow bolts, tipped with opal."
+  tradeable: true
+  weight: 0.0
+  equipment:
+    equip_slot: 13
+    equip_type: -1
+    appearance_id: 5685
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 122
+    magic_damage: 0
+    attack_audio: -1
+    skill_reqs: [{'skill': 4, 'level': 64}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22495
+  name: "Jade dragon bolts (e)"
+  examine: "Enchanted Dragon crossbow bolts, tipped with jade."
+  tradeable: true
+  weight: 0.0
+  equipment:
+    equip_slot: 13
+    equip_type: -1
+    appearance_id: 5685
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 122
+    magic_damage: 0
+    attack_audio: -1
+    skill_reqs: [{'skill': 4, 'level': 64}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22500
+  name: "Pearl dragon bolts (e)"
+  examine: "Enchanted Dragon crossbow bolts, tipped with pearl."
+  tradeable: true
+  weight: 0.0
+  equipment:
+    equip_slot: 13
+    equip_type: -1
+    appearance_id: 5685
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 122
+    magic_damage: 0
+    attack_audio: -1
+    skill_reqs: [{'skill': 4, 'level': 64}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22505
+  name: "Topaz dragon bolts (e)"
+  examine: "Enchanted Dragon crossbow bolts, tipped with red topaz."
+  tradeable: true
+  weight: 0.0
+  equipment:
+    equip_slot: 13
+    equip_type: -1
+    appearance_id: 5685
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 122
+    magic_damage: 0
+    attack_audio: -1
+    skill_reqs: [{'skill': 4, 'level': 64}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22510
+  name: "Sapphire dragon bolts (e)"
+  examine: "Enchanted Dragon crossbow bolts, tipped with sapphire."
+  tradeable: true
+  weight: 0.0
+  equipment:
+    equip_slot: 13
+    equip_type: -1
+    appearance_id: 5685
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 122
+    magic_damage: 0
+    attack_audio: -1
+    skill_reqs: [{'skill': 4, 'level': 64}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22515
+  name: "Emerald dragon bolts (e)"
+  examine: "Enchanted Dragon crossbow bolts, tipped with emerald."
+  tradeable: true
+  weight: 0.0
+  equipment:
+    equip_slot: 13
+    equip_type: -1
+    appearance_id: 5685
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 122
+    magic_damage: 0
+    attack_audio: -1
+    skill_reqs: [{'skill': 4, 'level': 64}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22520
+  name: "Ruby dragon bolts (e)"
+  examine: "Enchanted Dragon crossbow bolts, tipped with ruby."
+  tradeable: true
+  weight: 0.0
+  equipment:
+    equip_slot: 13
+    equip_type: -1
+    appearance_id: 5685
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 122
+    magic_damage: 0
+    attack_audio: -1
+    skill_reqs: [{'skill': 4, 'level': 64}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22525
+  name: "Diamond dragon bolts (e)"
+  examine: "Enchanted Dragon crossbow bolts, tipped with diamond."
+  tradeable: true
+  weight: 0.0
+  equipment:
+    equip_slot: 13
+    equip_type: -1
+    appearance_id: 5685
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 122
+    magic_damage: 0
+    attack_audio: -1
+    skill_reqs: [{'skill': 4, 'level': 64}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22530
+  name: "Dragonstone dragon bolts (e)"
+  examine: "Enchanted Dragon crossbow bolts, tipped with dragonstone. Double dragon!"
+  tradeable: true
+  weight: 0.0
+  equipment:
+    equip_slot: 13
+    equip_type: -1
+    appearance_id: 5685
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 122
+    magic_damage: 0
+    attack_audio: -1
+    skill_reqs: [{'skill': 4, 'level': 64}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22535
+  name: "Onyx dragon bolts (e)"
+  examine: "Enchanted Dragon crossbow bolts, tipped with onyx."
+  tradeable: true
+  weight: 0.0
+  equipment:
+    equip_slot: 13
+    equip_type: -1
+    appearance_id: 5685
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 122
+    magic_damage: 0
+    attack_audio: -1
+    skill_reqs: [{'skill': 4, 'level': 64}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0

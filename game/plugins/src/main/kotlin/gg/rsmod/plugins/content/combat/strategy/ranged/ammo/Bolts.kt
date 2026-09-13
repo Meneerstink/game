@@ -20,6 +20,21 @@ object Bolts {
         arrayOf(Items.RUNITE_BOLTS, Items.RUNITE_BOLTS_P, Items.RUNITE_BOLTS_P_9298, Items.RUNITE_BOLTS_P_9305)
     val DRAGON_BOLTS = arrayOf(Items.DRAGON_BOLTS)
 
+    /**
+     * OSRS-IMPORT: OSRS dragon-metal bolts with their gem-tipped and enchanted variants (OSRS Wiki "Dragon bolts": fired by
+     * crossbows that take dragon bolts, not by the Rune crossbow). Separate from the 667 [DRAGON_BOLTS] (dragonstone bolts).
+     */
+    val OSRS_DRAGON_BOLT_FAMILY =
+        arrayOf(
+            Items.OSRS_DRAGON_BOLTS,
+            Items.OPAL_DRAGON_BOLTS, Items.JADE_DRAGON_BOLTS, Items.PEARL_DRAGON_BOLTS, Items.TOPAZ_DRAGON_BOLTS,
+            Items.SAPPHIRE_DRAGON_BOLTS, Items.EMERALD_DRAGON_BOLTS, Items.RUBY_DRAGON_BOLTS, Items.DIAMOND_DRAGON_BOLTS,
+            Items.DRAGONSTONE_DRAGON_BOLTS, Items.ONYX_DRAGON_BOLTS,
+            Items.OPAL_DRAGON_BOLTS_E, Items.JADE_DRAGON_BOLTS_E, Items.PEARL_DRAGON_BOLTS_E, Items.TOPAZ_DRAGON_BOLTS_E,
+            Items.SAPPHIRE_DRAGON_BOLTS_E, Items.EMERALD_DRAGON_BOLTS_E, Items.RUBY_DRAGON_BOLTS_E, Items.DIAMOND_DRAGON_BOLTS_E,
+            Items.DRAGONSTONE_DRAGON_BOLTS_E, Items.ONYX_DRAGON_BOLTS_E,
+        )
+
     val BLURITE_BOLTS =
         arrayOf(Items.BLURITE_BOLTS, Items.BLURITE_BOLTS_P, Items.BLURITE_BOLTS_P_9293, Items.BLURITE_BOLTS_P_9300)
     val BONE_BOLTS = arrayOf(Items.BONE_BOLTS)

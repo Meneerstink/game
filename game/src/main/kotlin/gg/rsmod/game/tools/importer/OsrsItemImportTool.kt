@@ -122,7 +122,32 @@ object OsrsItemImportTool {
                 listOf(
                     Spec(25975, noted = true), // Lightbearer
                 ),
+            // Crossbows and dragon bolts. Client params follow the 667 Rune crossbow 9185 (644 render anim 175, 686 crossbow
+            // style set 17, 749/750 requirement) and 667 bolts (23/749/750 requirement); OSRS param 23 carries the same
+            // requirement level upstream. Weapon type 17 and attack audio 2700 as on the Rune crossbow (ADAPTED_TO_667).
+            "crossbows" to
+                listOf(
+                    Spec(11785, noted = true, rev667Params = crossbowParams(70), weaponType = 17, attackAudio = 2700), // Armadyl crossbow
+                    Spec(26374, noted = true, rev667Params = crossbowParams(80), weaponType = 17, attackAudio = 2700), // Zaryte crossbow
+                    Spec(21902, noted = true, rev667Params = crossbowParams(64), weaponType = 17, attackAudio = 2700), // Dragon crossbow
+                    Spec(21921, noted = true), // Dragon crossbow (u)
+                    Spec(21918, noted = true), // Dragon limbs
+                    Spec(21952, noted = true), // Magic stock
+                    Spec(26372, noted = true), // Nihil horn
+                    Spec(26231), // Nihil shard
+                    Spec(21905, rev667Params = boltParams(64)), // Dragon bolts
+                    Spec(21930), // Dragon bolts (unf)
+                ) +
+                    (21955..21973 step 2).map { Spec(it, rev667Params = boltParams(64)) } + // gem-tipped dragon bolts
+                    (21932..21950 step 2).map { Spec(it, rev667Params = boltParams(64)) }, // dragon bolts (e)
         )
+
+    private fun crossbowParams(requiredRanged: Int) = mapOf(644 to 175, 686 to 17, 23 to requiredRanged, 749 to 4, 750 to requiredRanged)
+
+    private fun boltParams(requiredRanged: Int) = mapOf(23 to requiredRanged, 749 to 4, 750 to requiredRanged)
+
+    /** Worn in-game only when a Wear/Wield option exists; OSRS materials such as Magic stock carry a wearPos without one. */
+    fun isWearable(def: ModernItemDef): Boolean = def.wearPos1 >= 0 && def.inventoryOptions.any { it == "Wear" || it == "Wield" }
 
     private class Entry(
         val identity: String,
@@ -130,6 +155,8 @@ object OsrsItemImportTool {
         val def: ModernItemDef,
         val spec: Spec,
         val notedOf: Entry? = null,
+        /** A nameless OSRS count (stack-size) variant referenced by a parent's opcodes 100-109. */
+        val isCount: Boolean = false,
     ) {
         var localId = -1
         var noted: Entry? = null
@@ -148,8 +175,15 @@ object OsrsItemImportTool {
             fun decodeItem(id: Int) = ModernItemDefDecoder.decode(id, itemFiles[id] ?: error("upstream item $id missing"))
 
             val entries = mutableListOf<Entry>()
+            val countUpstreamIds = mutableSetOf<Int>()
             specs.forEach { spec ->
                 val def = decodeItem(spec.upstreamId)
+                // Count variants are real OSRS item definitions (their own stack meshes); they are imported as
+                // nameless local items before their parent so the parent's opcodes 100-109 can point at them.
+                def.countObj.filter { it != 0 && countUpstreamIds.add(it) }.forEach { countId ->
+                    val countDef = decodeItem(countId)
+                    entries += Entry("upstream_item:$countId", "${def.name} count $countId", countDef, Spec(countId), isCount = true)
+                }
                 val base = Entry("upstream_item:${spec.upstreamId}", def.name, def, spec)
                 entries += base
                 if (spec.noted) {
@@ -211,7 +245,14 @@ object OsrsItemImportTool {
                         val modelIds = entry.def.modelDependencies().values.distinct()
                         val models = modelIds.map { ImportBatchOrchestrator.ModelSource("upstream_model:$it", "model", convertModel(it)) }
                         ImportBatchOrchestrator.ItemSource(entry.identity, entry.name, models) { local ->
-                            encodeItem(entry.def, { upstream -> local.getValue("upstream_model:$upstream") }, entry.noted?.localId, entry.spec.rev667Params, dropped)
+                            encodeItem(
+                                entry.def,
+                                { upstream -> local.getValue("upstream_model:$upstream") },
+                                entry.noted?.localId,
+                                entry.spec.rev667Params,
+                                dropped,
+                                countItem = { upstream -> entries.first { it.identity == "upstream_item:$upstream" }.localId },
+                            )
                         }
                     }
                 }
@@ -242,12 +283,13 @@ object OsrsItemImportTool {
                 val library = CacheLibrary(TARGETS[0])
                 val ranks =
                     try {
-                        entries.filter { it.notedOf == null && it.def.wearPos1 >= 0 }
+                        entries.filter { it.notedOf == null && !it.isCount && isWearable(it.def) }
                             .associate { it.localId to WornAppearanceRankTool.rank(library, it.localId).rank }
                     } finally {
                         library.close()
                     }
-                File(ymlOut).writeText(entries.joinToString("") { itemsYml(it, ranks[it.localId]) })
+                // Count variants are client-side stack visuals, not player-facing items: no items.yml metadata.
+                File(ymlOut).writeText(entries.filterNot { it.isCount }.joinToString("") { itemsYml(it, ranks[it.localId]) })
                 println("YML_WRITTEN $ymlOut ranks=$ranks")
             }
         }
@@ -263,6 +305,7 @@ object OsrsItemImportTool {
         notedLocalId: Int?,
         rev667Params: Map<Int, Int>,
         dropped: MutableList<String>,
+        countItem: (Int) -> Int = { error("count variant $it has no local item") },
     ): ByteArray {
         val out: ByteBuf = Unpooled.buffer()
         fun u16(code: Int, value: Int) {
@@ -276,7 +319,6 @@ object OsrsItemImportTool {
         }
 
         check(def.textureFind.isEmpty()) { "${def.name}: retexture tables use OSRS texture ids and are not mapped yet" }
-        check(def.countObj.all { it == 0 }) { "${def.name}: count variants are not supported yet" }
         check(def.contrast == 0) { "${def.name}: contrast unit between OSRS and 667 is not verified yet" }
 
         if (def.inventoryModel > 0) u16(1, model(def.inventoryModel))
@@ -313,6 +355,12 @@ object OsrsItemImportTool {
                 out.writeShort(def.colorReplace[it])
             }
         }
+        // Opcodes 100-109 (ObjType.decode: countobj u16 + countco u16) -> local ids of the imported count variants.
+        def.countObj.indices.filter { def.countObj[it] != 0 }.forEach { i ->
+            out.writeByte(100 + i)
+            out.writeShort(countItem(def.countObj[i]))
+            out.writeShort(def.countCo[i])
+        }
         if (def.geTradeable) out.writeByte(65)
         if (notedLocalId != null) u16(97, notedLocalId)
         if (def.resizeX != 128) u16(110, def.resizeX)
@@ -335,7 +383,7 @@ object OsrsItemImportTool {
             out.writeByte(quarters)
             out.writeByte(0)
         }
-        if (def.wearPos1 >= 0) {
+        if (isWearable(def)) {
             // Cursor opcodes every wearable 667 item carries (Rune sword, Amulet of fury, Dragon defender).
             out.writeByte(127)
             out.writeByte(2)
@@ -380,7 +428,7 @@ object OsrsItemImportTool {
         sb.append("  examine: \"${def.examine ?: ""}\"\n")
         sb.append("  tradeable: ${def.tradeable}\n")
         sb.append("  weight: ${def.weight / 1000.0}\n")
-        if (def.wearPos1 < 0) {
+        if (!isWearable(def)) {
             sb.append("  equipment: null\n")
             return sb.toString()
         }
@@ -404,7 +452,10 @@ object OsrsItemImportTool {
         sb.append("    summoning: 0\n")
         sb.append("    melee_strength: ${p(10)}\n")
         sb.append("    prayer: ${p(11)}\n")
-        sb.append("    ranged_strength: ${p(189)}\n")
+        // Gear carries ranged strength in param 189 (Twisted bow 20, Necklace of anguish 5); ammunition (wearPos 13) in
+        // param 12 (Dragon bolts 122 = OSRS Wiki "Dragon bolts" +122).
+        val rangedStrength = if (def.wearPos1 == 13 && !def.params.containsKey(189)) p(12) else p(189)
+        sb.append("    ranged_strength: $rangedStrength\n")
         sb.append("    magic_damage: ${p(299) / 10}\n")
         sb.append("    attack_audio: ${entry.spec.attackAudio}\n")
         if (reqs.isNotEmpty()) sb.append("    skill_reqs: [$reqs]\n")

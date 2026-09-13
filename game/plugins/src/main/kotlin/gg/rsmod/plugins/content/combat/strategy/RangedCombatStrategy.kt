@@ -15,11 +15,13 @@ import gg.rsmod.plugins.api.cfg.Sfx
 import gg.rsmod.plugins.api.ext.*
 import gg.rsmod.plugins.content.combat.Combat
 import gg.rsmod.plugins.content.combat.CombatConfigs
+import gg.rsmod.plugins.content.combat.DEFAULT_MIN_HIT
 import gg.rsmod.plugins.content.combat.createProjectile
 import gg.rsmod.plugins.content.combat.dealHit
 import gg.rsmod.plugins.content.combat.formula.RangedCombatFormula
 import gg.rsmod.plugins.content.combat.strategy.ranged.RangedProjectile
 import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Darts
+import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.EnchantedBolts
 import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Javelins
 import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Knives
 import gg.rsmod.plugins.content.combat.strategy.ranged.weapon.BowType
@@ -123,6 +125,7 @@ object RangedCombatStrategy : CombatStrategy {
          * to the [target].
          */
         var ammoDropAction: ((PawnHit).() -> Unit) = {}
+        var boltAmmoId: Int? = null
 
         if (pawn is Player) {
             /*
@@ -140,6 +143,7 @@ object RangedCombatStrategy : CombatStrategy {
                 }
 
             val ammo = pawn.getEquipment(ammoSlot)
+            boltAmmoId = ammo?.id
             /*
              * Create a projectile based on ammo.
              */
@@ -217,17 +221,29 @@ object RangedCombatStrategy : CombatStrategy {
         val landHit = accuracy >= world.randomDouble()
         val hitDelay =
             getHitDelay(pawn.getCentreTile(), target.tile.transform(target.getSize() / 2, target.getSize() / 2))
-        val damage =
-            pawn
-                .dealHit(
-                    target = target,
-                    maxHit = maxHit,
-                    landHit = landHit,
-                    delay = hitDelay,
-                    onHit = ammoDropAction,
-                    hitType = HitType.RANGE,
-                ).hit.hitmarks
-                .sumOf { it.damage }
+        // Enchanted dragon bolts roll their effect on every normal crossbow shot (EnchantedBolts).
+        val shot =
+            if (pawn is Player) {
+                EnchantedBolts.resolve(pawn, target, boltAmmoId, landHit, maxHit, EnchantedBolts.Special.NONE, world.randomDouble())
+            } else {
+                null
+            }
+        val pawnHit =
+            pawn.dealHit(
+                target = target,
+                minHit = shot?.minHit ?: DEFAULT_MIN_HIT,
+                maxHit = shot?.maxHit ?: maxHit,
+                landHit = shot?.landHit ?: landHit,
+                delay = hitDelay,
+                onHit = ammoDropAction,
+                hitType = HitType.RANGE,
+                bonusDamage = shot?.bonusDamage ?: 0,
+            )
+        val damage = pawnHit.hit.hitmarks.sumOf { it.damage }
+        val activated = shot?.bolt
+        if (activated != null) {
+            pawnHit.hit.addAction { EnchantedBolts.afterHit(activated, pawn as Player, target, damage) }
+        }
 
         if (damage > 0 && pawn.entityType.isPlayer) {
             addCombatXp(pawn as Player, target, damage)
