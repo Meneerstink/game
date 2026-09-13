@@ -6,13 +6,17 @@ import gg.rsmod.game.model.queue.QueueTask
  * RCV-010 C3: Grand Exchange clerk and tutor. Options come from the 667 cache (clerks 1419/2240/2241/2593 carry
  * Talk-to, Exchange, History, Sets — `GrandExchangeInterfaceTests`); dialogue text is Void `GrandExchangeClerk.kt` /
  * `GrandExchangeTutor.kt`. Chathead expressions: SOURCE_BLOCKED (Void's expression ids are not in its data), so the
- * repo default is used. History (interface 643) is not implemented and stays unbound. Sets stays in inter/ge.
+ * repo default is used. Sets stays in inter/ge. RCV-011: History opens interface 643 ([GrandExchangeHistory]) from the
+ * History option and from the Void dialogue line "Can I see a history of my offers?".
  */
 val CLERKS = listOf(Npcs.GRAND_EXCHANGE_CLERK, Npcs.GRAND_EXCHANGE_CLERK_2240, Npcs.GRAND_EXCHANGE_CLERK_2241, Npcs.GRAND_EXCHANGE_CLERK_2593)
 
 CLERKS.forEach { clerk ->
     if (if_npc_has_option(clerk, "Exchange")) {
         on_npc_option(npc = clerk, option = "Exchange", lineOfSightDistance = 2) { GrandExchangeInterface.openMain(player) }
+    }
+    if (if_npc_has_option(clerk, "History")) {
+        on_npc_option(npc = clerk, option = "History", lineOfSightDistance = 2) { GrandExchangeHistory.open(player) }
     }
     if (if_npc_has_option(clerk, "Talk-to")) {
         on_npc_option(npc = clerk, option = "Talk-to", lineOfSightDistance = 2) {
@@ -28,7 +32,9 @@ suspend fun clerkDialogue(task: QueueTask) {
 
 suspend fun clerkMenu(task: QueueTask, explained: Boolean) {
     val first = if (explained) "" else "How do I use the Grand Exchange?"
-    val choices = listOf(first, "I'd like to set up trade offers please.", "Can you help me with item sets?", "I'm fine, thanks.").filter { it.isNotEmpty() }
+    val choices =
+        listOf(first, "I'd like to set up trade offers please.", "Can I see a history of my offers?", "Can you help me with item sets?", "I'm fine, thanks.")
+            .filter { it.isNotEmpty() }
     when (choices.getOrNull(task.options(*choices.toTypedArray()) - 1)) {
         "How do I use the Grand Exchange?" -> {
             task.chatNpc("My colleague and I can let you set up trade offers. You can offer to Sell items or Buy items.", wrap = true)
@@ -41,6 +47,10 @@ suspend fun clerkMenu(task: QueueTask, explained: Boolean) {
             clerkMenu(task, explained = true)
         }
         "I'd like to set up trade offers please." -> GrandExchangeInterface.openMain(task.player)
+        "Can I see a history of my offers?" -> {
+            task.chatNpc("If that is your wish.")
+            GrandExchangeHistory.open(task.player)
+        }
         "Can you help me with item sets?" -> task.player.message("Use the Sets option on a clerk to exchange item sets.")
         else -> {}
     }

@@ -43,6 +43,8 @@ data class GrandExchangeOffer(
     var collectableItems: Int = 0,
     val createdAtMs: Long = System.currentTimeMillis(),
     val slot: Int = 0,
+    /** Coins exchanged so far at execution prices (Void `ExchangeOffer.coins`); 0 for offers saved before RCV-011. */
+    var coinsTraded: Long = 0,
 ) {
     val remaining: Int
         get() = totalQuantity - quantityFilled

@@ -50,11 +50,16 @@ data class GeFill(
  * `DeathResolver`) since a partially-filled offer's state IS the escrow
  * ledger - callers only need to react to the returned [GeFill] list to know
  * what to persist/notify.
+ *
+ * RCV-011: every fill is capped by the buyer's [GeBuyAllowance] (Void `GrandExchange.exchange`: `traded` is coerced
+ * to the buyer's remaining limit and nothing trades at 0). A new buy offer stops at its limit and rests; a new sell
+ * offer skips a buyer who is at their limit and moves on to the next one.
  */
 object GrandExchangeBook {
     fun match(
         book: List<GrandExchangeOffer>,
         newOffer: GrandExchangeOffer,
+        allowance: GeBuyAllowance = GeBuyAllowance.UNLIMITED,
     ): List<GeFill> {
         val fills = mutableListOf<GeFill>()
         val opposite =
@@ -78,18 +83,22 @@ object GrandExchangeBook {
 
         for (resting in opposite) {
             if (newOffer.remaining <= 0) break
-            val quantity = minOf(newOffer.remaining, resting.remaining)
-            if (quantity <= 0) continue
+            val buyOffer = if (newOffer.type == OfferType.BUY) newOffer else resting
+            val sellOffer = if (newOffer.type == OfferType.SELL) newOffer else resting
+            val allowed = allowance.remaining(buyOffer.username, newOffer.itemId)
+            val quantity = minOf(newOffer.remaining, resting.remaining, allowed)
+            if (quantity <= 0) {
+                if (newOffer.type == OfferType.BUY && allowed <= 0) break
+                continue
+            }
 
             // The resting (already-queued) offer's price is the execution
             // price, matching standard exchange convention.
             val execPrice = resting.pricePerItem
 
-            val buyOffer = if (newOffer.type == OfferType.BUY) newOffer else resting
-            val sellOffer = if (newOffer.type == OfferType.SELL) newOffer else resting
-
             buyOffer.quantityFilled += quantity
             buyOffer.collectableItems += quantity
+            buyOffer.coinsTraded += execPrice.toLong() * quantity
             // Price-improvement refund: the buyer only ever pays the lower
             // resting price, so any excess already escrowed at their own
             // listed price comes straight back rather than being destroyed.
@@ -99,21 +108,27 @@ object GrandExchangeBook {
 
             sellOffer.quantityFilled += quantity
             sellOffer.collectableCoins += quantity.toLong() * execPrice
+            sellOffer.coinsTraded += execPrice.toLong() * quantity
             if (sellOffer.remaining <= 0) sellOffer.status = OfferStatus.COMPLETED
 
+            allowance.record(buyOffer.username, newOffer.itemId, quantity)
             fills.add(GeFill(buyOffer.id, sellOffer.id, quantity, execPrice, fromSystem = false))
         }
 
         if (newOffer.type == OfferType.BUY && newOffer.remaining > 0) {
             val systemPrice = GeSystemLiquidity.UNIT_PRICE[newOffer.itemId]
             if (systemPrice != null && newOffer.pricePerItem >= systemPrice) {
-                val quantity = newOffer.remaining
-                newOffer.quantityFilled += quantity
-                newOffer.collectableItems += quantity
-                val refund = (newOffer.pricePerItem - systemPrice).toLong() * quantity
-                if (refund > 0) newOffer.collectableCoins += refund
-                newOffer.status = OfferStatus.COMPLETED
-                fills.add(GeFill(newOffer.id, null, quantity, systemPrice, fromSystem = true))
+                val quantity = minOf(newOffer.remaining, allowance.remaining(newOffer.username, newOffer.itemId))
+                if (quantity > 0) {
+                    newOffer.quantityFilled += quantity
+                    newOffer.collectableItems += quantity
+                    newOffer.coinsTraded += systemPrice.toLong() * quantity
+                    val refund = (newOffer.pricePerItem - systemPrice).toLong() * quantity
+                    if (refund > 0) newOffer.collectableCoins += refund
+                    if (newOffer.remaining <= 0) newOffer.status = OfferStatus.COMPLETED
+                    allowance.record(newOffer.username, newOffer.itemId, quantity)
+                    fills.add(GeFill(newOffer.id, null, quantity, systemPrice, fromSystem = true))
+                }
             }
         }
 

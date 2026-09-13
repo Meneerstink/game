@@ -32,22 +32,30 @@ import java.util.concurrent.locks.ReentrantLock
  * RCV-010 C3: every offer now occupies one of the player's [SLOTS] offer boxes (the 667 screen has six), a slot is
  * released only once its offer is finished and nothing is left to collect, and every executed trade feeds the guide
  * price used by the ±5 % offer range.
+ *
+ * RCV-011: every match is capped by the buyers' [GeBuyLedger] ([GeBuyLimits]), and releasing a finished offer that
+ * traded anything adds it to the owner's History ([GrandExchangeHistory], newest first, [HISTORY_ROWS] kept).
  */
 class GrandExchangeService(
     private val saveFile: File = File("data/ge/offers.json"),
+    clock: () -> Long = System::currentTimeMillis,
 ) : Service {
     private val lock = ReentrantLock()
     private val offers = mutableListOf<GrandExchangeOffer>()
     private val nextId = AtomicLong(1)
     private val gson = GsonBuilder().setPrettyPrinting().create()
     private val priceFile: File get() = File(saveFile.parentFile ?: File("."), "guide_prices.json")
+    private val historyFile: File get() = File(saveFile.parentFile ?: File("."), "history.json")
     private val tradePrices = mutableMapOf<Int, MutableList<Int>>()
+    private val history = mutableMapOf<String, MutableList<GeHistoryEntry>>()
+    private val buyLedger = GeBuyLedger(clock)
 
     override fun init(
         server: Server,
         world: World,
         serviceProperties: ServerProperties,
     ) {
+        GeBuyLimits.load()
         load()
     }
 
@@ -94,6 +102,16 @@ class GrandExchangeService(
                     }
                 }
             }
+            if (historyFile.exists()) {
+                historyFile.bufferedReader().use { reader ->
+                    val type = object : TypeToken<MutableMap<String, MutableList<GeHistoryEntry>>>() {}.type
+                    val loaded: MutableMap<String, MutableList<GeHistoryEntry>>? = gson.fromJson(reader, type)
+                    if (loaded != null) {
+                        history.clear()
+                        history.putAll(loaded)
+                    }
+                }
+            }
         } catch (e: Exception) {
             // A corrupt/missing save file should never block startup - the
             // book simply starts empty rather than crashing the server.
@@ -106,6 +124,7 @@ class GrandExchangeService(
         saveFile.parentFile?.mkdirs()
         saveFile.bufferedWriter().use { writer -> gson.toJson(offers, writer) }
         priceFile.bufferedWriter().use { writer -> gson.toJson(tradePrices, writer) }
+        historyFile.bufferedWriter().use { writer -> gson.toJson(history, writer) }
     }
 
     /** The first free offer box of [username], or null when all [SLOTS] are in use. */
@@ -171,10 +190,23 @@ class GrandExchangeService(
                     slot = target,
                 )
             offers.add(offer)
-            val fills = GrandExchangeBook.match(offers, offer)
+            val fills = GrandExchangeBook.match(offers, offer, buyLedger)
             fills.forEach { recordTrade(itemId, it.unitPrice) }
             save()
             return offer to fills
+        } finally {
+            lock.unlock()
+        }
+    }
+
+    /** How many more of [itemId] [username] may buy in the current buy-limit window (Int.MAX_VALUE: no limit). */
+    fun buyAllowance(
+        username: String,
+        itemId: Int,
+    ): Int {
+        lock.lock()
+        try {
+            return buyLedger.remaining(username, itemId)
         } finally {
             lock.unlock()
         }
@@ -286,6 +318,7 @@ class GrandExchangeService(
     /**
      * Frees the offer box of [offerId] once the offer is no longer active and owes nothing, so a finished or aborted
      * offer never keeps a slot (and never disappears while something is still owed). Returns true when released.
+     * An offer that traded anything is added to the owner's History first (Void `GrandExchangeCollection`).
      */
     fun releaseIfDrained(
         username: String,
@@ -295,9 +328,24 @@ class GrandExchangeService(
         try {
             val offer = offers.find { it.id == offerId && it.username == username } ?: return false
             if (offer.status == OfferStatus.ACTIVE || offer.collectableCoins > 0 || offer.collectableItems > 0) return false
+            if (offer.quantityFilled > 0) {
+                val entries = history.getOrPut(username) { mutableListOf() }
+                entries.add(0, GeHistoryEntry(offer.itemId, offer.quantityFilled, offer.coinsTraded, offer.type == OfferType.SELL))
+                while (entries.size > HISTORY_ROWS) entries.removeAt(entries.size - 1)
+            }
             offers.remove(offer)
             save()
             return true
+        } finally {
+            lock.unlock()
+        }
+    }
+
+    /** [username]'s finished offers, newest first. */
+    fun historyFor(username: String): List<GeHistoryEntry> {
+        lock.lock()
+        try {
+            return history[username]?.toList() ?: emptyList()
         } finally {
             lock.unlock()
         }
@@ -334,5 +382,8 @@ class GrandExchangeService(
         /** The revision-667 Grand Exchange screen shows six offer boxes (interface 105). */
         const val SLOTS = 6
         const val PRICE_HISTORY = 20
+
+        /** Rows on the History screen (interface 643). */
+        const val HISTORY_ROWS = GrandExchangeHistory.ROWS
     }
 }
