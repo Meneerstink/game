@@ -22,6 +22,7 @@ class OpHeld5Handler : MessageHandler<OpHeld5Message> {
         message: OpHeld5Message,
     ) {
         if (!client.lock.canDropItems()) {
+            gg.rsmod.game.model.AvTrace.log { "drop refused gate=lock lock=${client.lock} slot=${message.slot} (OpHeld5)" }
             return
         }
         val hash = message.hash

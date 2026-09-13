@@ -122,12 +122,15 @@ class IfButton1Handler : MessageHandler<IfButtonMessage> {
         option: Int,
     ) {
         if (!client.lock.canItemInteract()) {
+            // RCV-012 B11: every silent refusal is traced so a live retest names the gate that blocked the click.
+            gg.rsmod.game.model.AvTrace.log { "item-action refused gate=lock lock=${client.lock} item=$itemId slot=$slot option=$option" }
             return
         }
 
         if (itemId > -1) {
-            val item = client.inventory[slot] ?: return
-            if (item.id != itemId) {
+            val item = client.inventory[slot]
+            if (item == null || item.id != itemId) {
+                gg.rsmod.game.model.AvTrace.log { "item-action refused gate=slot item=$itemId slot=$slot has=${item?.id}" }
                 return
             }
 
@@ -184,13 +187,15 @@ class IfButton1Handler : MessageHandler<IfButtonMessage> {
         slot: Int,
     ) {
         if (!client.lock.canDropItems()) {
+            gg.rsmod.game.model.AvTrace.log { "drop refused gate=lock lock=${client.lock} item=$itemId slot=$slot" }
             return
         }
 
         if (itemId > -1) {
-            val item = client.inventory[slot] ?: return
+            val item = client.inventory[slot]
 
-            if (item.id != itemId) {
+            if (item == null || item.id != itemId) {
+                gg.rsmod.game.model.AvTrace.log { "drop refused gate=slot item=$itemId slot=$slot has=${item?.id}" }
                 return
             }
 
@@ -210,8 +215,11 @@ class IfButton1Handler : MessageHandler<IfButtonMessage> {
 
             client.fullInterruption(interactions = true, queue = true)
 
-            if (world.plugins.canDropItem(client, item.id)) {
+            if (!world.plugins.canDropItem(client, item.id)) {
+                gg.rsmod.game.model.AvTrace.log { "drop refused gate=can_drop_item plugin item=${item.id}" }
+            } else {
                 val remove = client.inventory.remove(item, assureFullRemoval = false, beginSlot = slot)
+                gg.rsmod.game.model.AvTrace.log { "drop item=${item.id} removed=${remove.completed} combat=${client.attr.has(COMBAT_TARGET_FOCUS_ATTR)}" }
                 if (remove.completed > 0) {
                     val floor = GroundItem(item.id, remove.completed, client.tile, client)
                     remove.firstOrNull()?.let { removed ->

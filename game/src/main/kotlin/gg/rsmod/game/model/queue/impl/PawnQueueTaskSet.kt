@@ -55,12 +55,18 @@ class PawnQueueTaskSet : QueueTaskSet() {
      * Runs one cycle of [task]; returns true while it is still suspended.
      */
     private fun step(task: QueueTask): Boolean {
-        if (!task.invoked) {
-            task.invoked = true
-            task.coroutine.resume(Unit)
-        }
+        val previous = running
+        running = task
+        try {
+            if (!task.invoked) {
+                task.invoked = true
+                task.coroutine.resume(Unit)
+            }
 
-        task.cycle()
+            task.cycle()
+        } finally {
+            running = previous
+        }
 
         if (task.suspended()) {
             return true
@@ -68,15 +74,19 @@ class PawnQueueTaskSet : QueueTaskSet() {
 
         /*
          * Task is no longer in a suspended state, which means its job is
-         * complete.
+         * complete - finished normally, or ended by a plugin exception.
          */
         queue.remove(task)
 
         /*
-         * If the task locked the player, then unlock them on complete
+         * RCV-012 B11: a lock the task owned ends with it, including a `lock()` whose trailing `unlock()` never ran.
          */
-        if (task.lock && task.ctx is Player) {
-            task.ctx.unlock()
+        if (task.ownsLock) {
+            task.ownsLock = false
+            if (!task.lock) {
+                gg.rsmod.game.model.AvTrace.log { "lock released at task end (lock set in task without unlock) ctx=${task.ctx}" }
+            }
+            releaseLockIfUnowned()
         }
         return false
     }

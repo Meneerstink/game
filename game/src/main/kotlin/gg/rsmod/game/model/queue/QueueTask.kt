@@ -47,6 +47,13 @@ data class QueueTask(
     var lock = false
 
     /**
+     * RCV-012 B11: this task owns the pawn's current lock - it was queued as a locking queue, the lock was set while
+     * this task executed, or it replaced (STRONG) a task that owned it. The lock is released when the last owner
+     * leaves the queue for any reason: completion, a plugin exception, termination or replacement.
+     */
+    var ownsLock = false
+
+    /**
      * RC-1 (RCV-005): a persistent task is an ongoing pawn state rather than a one-off action -
      * the combat loop. It survives a [TaskPriority.STRONG] queue and the soft interruption of an
      * unrelated action (prayer/curse toggle, eating, equipping, a familiar command, a dialog),

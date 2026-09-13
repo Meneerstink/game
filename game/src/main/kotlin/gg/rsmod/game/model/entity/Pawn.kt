@@ -90,6 +90,13 @@ abstract class Pawn(
      * The current [LockState] which filters what actions this pawn can perform.
      */
     var lock = LockState.NONE
+        set(value) {
+            field = value
+            // RCV-012 B11: a player's lock belongs to the queue task that set it (see QueueTaskSet.onLockChanged).
+            if (this is Player) {
+                queues.onLockChanged(value != LockState.NONE)
+            }
+        }
 
     /**
      * Optional hook invoked right before a pending [Hit] is applied to this pawn, allowing
@@ -111,7 +118,12 @@ abstract class Pawn(
      */
     val timers = TimerMap()
 
-    internal val queues: QueueTaskSet = PawnQueueTaskSet()
+    internal val queues: QueueTaskSet =
+        PawnQueueTaskSet().also { set ->
+            if (this is Player) {
+                set.releaseLock = { lock = LockState.NONE }
+            }
+        }
 
     /**
      * The equipment bonus for the pawn.

@@ -15,6 +15,15 @@ abstract class QueueTaskSet {
 
     val size: Int get() = queue.size
 
+    /**
+     * RCV-012 B11: releases the owning pawn's lock. Only set for players; npc locks (Corporeal Beast core,
+     * Giant Mole burrow) are held without a task and keep their own explicit unlock.
+     */
+    var releaseLock: (() -> Unit)? = null
+
+    /** The task whose coroutine is currently executing inside [cycle], if any. */
+    protected var running: QueueTask? = null
+
     abstract fun cycle()
 
     fun queue(
@@ -29,12 +38,18 @@ abstract class QueueTaskSet {
         val suspendBlock = suspend { block(task, CoroutineScope(dispatcher)) }
 
         task.lock = lock
+        task.ownsLock = lock
         task.persistent = persistent
         task.coroutine = suspendBlock.createCoroutine(completion = task)
 
         if (priority == TaskPriority.STRONG) {
             // A STRONG action replaces other actions, never the ongoing combat state (RC-1).
-            terminateTasks(keepPersistent = true)
+            // RCV-012 B11: the lock a replaced task held passes to the replacing task, so it is released when that
+            // task ends - never left stuck, and never dropped while a teleport/death started from the replaced task
+            // still needs it.
+            if (terminate(keepPersistent = true)) {
+                task.ownsLock = true
+            }
         }
 
         queue.addFirst(task)
@@ -55,8 +70,41 @@ abstract class QueueTaskSet {
     /**
      * Remove all [QueueTask] from our [queue], invoking each task's [QueueTask.terminate]
      * before-hand. With [keepPersistent], [QueueTask.persistent] tasks are left running.
+     * A lock owned by a removed task is released unless a remaining task still owns it.
      */
     fun terminateTasks(keepPersistent: Boolean = false) {
+        if (terminate(keepPersistent)) {
+            releaseLockIfUnowned()
+        }
+    }
+
+    /**
+     * RCV-012 B11 lock ownership. Called by the pawn whenever its lock changes. A non-NONE lock set while one of
+     * this set's tasks is executing belongs to that task; setting NONE explicitly clears every ownership.
+     * A lock set outside any of this pawn's tasks (trade session, an npc script, a message handler) stays unowned
+     * and keeps its explicit unlock.
+     */
+    fun onLockChanged(locked: Boolean) {
+        if (!locked) {
+            queue.forEach { it.ownsLock = false }
+            return
+        }
+        val task = running ?: return
+        if (!task.terminated) {
+            task.ownsLock = true
+        }
+    }
+
+    /** Called when an owning task leaves the queue; the lock ends with its last owner. */
+    protected fun releaseLockIfUnowned() {
+        if (queue.none { it.ownsLock }) {
+            releaseLock?.invoke()
+        }
+    }
+
+    /** @return true when a removed task owned the pawn's lock. */
+    private fun terminate(keepPersistent: Boolean): Boolean {
+        var ownerRemoved = false
         val iterator = queue.iterator()
         while (iterator.hasNext()) {
             val task = iterator.next()
@@ -65,6 +113,11 @@ abstract class QueueTaskSet {
             }
             task.terminate()
             iterator.remove()
+            if (task.ownsLock) {
+                ownerRemoved = true
+                task.ownsLock = false
+            }
         }
+        return ownerRemoved
     }
 }
