@@ -268296,3 +268296,55 @@
   tradeable: false
   weight: 0.907
   equipment: null
+- id: 22685
+  name: "Ancient godsword"
+  examine: "A mysterious, heavy sword."
+  tradeable: true
+  weight: 10.0
+  equipment:
+    equip_slot: 3
+    equip_type: 5
+    appearance_id: 5704
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 7
+    attack_speed: 6
+    attack_stab: 0
+    attack_slash: 132
+    attack_crush: 80
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 132
+    prayer: 8
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: 3846
+    skill_reqs: [{'skill': 0, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22686
+  name: "Ancient godsword"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22687
+  name: "Ancient hilt"
+  examine: "Brimming with potential."
+  tradeable: true
+  weight: 2.5
+  equipment: null
+- id: 22688
+  name: "Ancient hilt"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null

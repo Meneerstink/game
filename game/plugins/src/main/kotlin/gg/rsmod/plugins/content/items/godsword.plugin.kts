@@ -18,6 +18,8 @@ val godswordHilts =
         Items.BANDOS_GODSWORD to Items.BANDOS_HILT,
         Items.SARADOMIN_GODSWORD to Items.SARADOMIN_HILT,
         Items.ZAMORAK_GODSWORD to Items.ZAMORAK_HILT,
+        // OSRS-IMPORT: the Ancient godsword carries Dismantle upstream (option 3) and splits into the Ancient hilt + blade.
+        Items.ANCIENT_GODSWORD to Items.ANCIENT_HILT,
     )
 
 godswordHilts.forEach { (godsword, hilt) ->

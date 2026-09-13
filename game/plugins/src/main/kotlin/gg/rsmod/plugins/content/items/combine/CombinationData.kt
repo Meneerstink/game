@@ -210,6 +210,13 @@ enum class CombinationData(
         experience = 0.0,
         message = "You attach the hilt to the godsword blade.",
     ),
+    // OSRS-IMPORT: OSRS Wiki "Ancient godsword" - made by combining the Godsword blade with the Ancient hilt.
+    ANCIENT_GODSWORD(
+        items = intArrayOf(Items.ANCIENT_HILT, Items.GODSWORD_BLADE),
+        resultItem = Items.ANCIENT_GODSWORD,
+        experience = 0.0,
+        message = "You attach the hilt to the godsword blade.",
+    ),
 
     /** OSRS-IMPORT pilot: Dragon defender + Avernic defender hilt (OSRS Wiki, no skill requirement). */
     AVERNIC_DEFENDER(

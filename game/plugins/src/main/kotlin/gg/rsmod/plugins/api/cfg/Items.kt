@@ -19548,5 +19548,10 @@ object Items {
     const val NOXIOUS_POINT = 22682
     const val NOXIOUS_BLADE = 22683
     const val NOXIOUS_POMMEL = 22684
+    // OSRS-IMPORT batch ancientgs (tx-20260913-234640).
+    const val ANCIENT_GODSWORD = 22685
+    const val ANCIENT_GODSWORD_NOTED = 22686
+    const val ANCIENT_HILT = 22687
+    const val ANCIENT_HILT_NOTED = 22688
     // Auto-generated file using class gg.rsmod.game.service.game.DumpEntityIdService
 }

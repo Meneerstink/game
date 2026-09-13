@@ -230,6 +230,13 @@ object OsrsItemImportTool {
                     Spec(29792), // Noxious blade
                     Spec(29794), // Noxious pommel
                 ),
+            // Ancient godsword and the Ancient hilt. Two-handed godsword class of the 667 Armadyl godsword 11694 (644 1579,
+            // 686 7, 687 special bar; weapon type 7, attack audio 3846); 75 Attack. The blade is the existing 667 Godsword blade.
+            "ancientgs" to
+                listOf(
+                    Spec(26233, noted = true, rev667Params = mapOf(644 to 1579, 686 to 7, 687 to 1, 749 to 0, 750 to 75), weaponType = 7, attackAudio = 3846), // Ancient godsword
+                    Spec(26370, noted = true), // Ancient hilt
+                ),
         )
 
     /**
