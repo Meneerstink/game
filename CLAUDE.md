@@ -40,11 +40,23 @@ filesystem/cache/test/runtime state.
 
 Never treat missing implementation as cancellation of an owner-approved requirement.
 
+For the current donor/import run, `HANDOFF_CURRENT.md` supplies the current checkpoint and
+`RSPS_2DAY_DONOR_IMPORT_PLAN.md` supplies queue order. The active owner order is split Q-033,
+then Q-040 through Q-043, then active-scope regression. Q-044, all minigames, all quests and
+Phase 5 feature work are parked unless a later explicit owner instruction reopens them.
+Existing quest gates may be verified for boss routes, but must not be bypassed or implemented
+as part of this run.
+Barrows remains the Q-040 boss encounter and is not parked merely because donor code stores it
+under a `minigame` package.
+
 ## Session orientation
 
 For development work, start with:
 
 C:\RSPS\RSPS_CURRENT_SPRINT.json
+
+Use it as a compact orientation index. For this donor/import run, a conflicting older sprint entry
+does not override the newer owner checkpoint at the top of `HANDOFF_CURRENT.md` or real state.
 
 Then retrieve only information directly relevant to the active task from:
 
@@ -113,14 +125,20 @@ Prefer the smallest reusable architecture-compatible solution that satisfies the
 
 ## Writer discipline
 
-The main agent is the exclusive writer for:
+Writer choice is model-independent and follows available usage. Before production changes, the
+current checkpoint must claim `queue_id`, writer/model, claimed paths, start time, status and next
+action. Only the claiming agent is the writer for that repository and batch; all other agents are
+read-only reviewers until an explicit handoff clears the claim. Never run two writers concurrently
+in the same repository.
+
+The claimed writer is the exclusive writer for:
 - source code;
 - production caches;
 - manifests;
 - sprint state;
 - durable project documentation.
 
-Do not create agent teams.
+Do not create writing agent teams.
 
 Use subagents only when an investigation is genuinely independent, read-only, context-heavy, and meaningfully reduces main-agent context usage.
 

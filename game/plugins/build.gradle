@@ -18,7 +18,9 @@ dependencies {
 // cache-backed class and the suite started failing with OutOfMemoryError in a different, random
 // class on each run.
 test {
-    maxHeapSize = '3g'
+    // Extra headroom for cache-backed suites; keep a single test worker on the 16 GB host.
+    maxHeapSize = '4g'
+    maxParallelForks = 1
 }
 
 dokka {
