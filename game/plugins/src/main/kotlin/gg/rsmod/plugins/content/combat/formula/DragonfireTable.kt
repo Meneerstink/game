@@ -111,6 +111,23 @@ object DragonfireTable {
     /** The King Black Dragon's icy / toxic / shocking breaths (npc-attacks.json attack ids). */
     val KBD_SPECIAL_ATTACKS = setOf("toxic", "ice", "shock")
 
+    const val FROST_DRAGON_COMBAT_DEF = "frost_dragon"
+
+    /** Owner answer Q13 (2026-09-14): a frost dragon's dragonfire freezes like the King Black Dragon's ice breath (npc-attacks.json 10). */
+    const val FROST_DRAGON_FREEZE_TICKS = 10
+
+    /**
+     * OSRS Wiki "Dragonfire": "Frost dragons use plain dragonfire like common chromatic dragons, except that this dragonfire can also
+     * freeze players. The freezing effect can be blocked with an anti-dragon shield or its variants combined with an antifire potion, or
+     * with a super antifire potion alone." Other freezing attacks have no sourced block here.
+     */
+    fun blocksFreeze(
+        combatDef: String,
+        protection: DragonfireFormula.Protection,
+    ): Boolean =
+        combatDef == FROST_DRAGON_COMBAT_DEF &&
+            (protection.potion == Potion.SUPER_ANTIFIRE || (protection.shield && protection.potion == Potion.ANTIFIRE))
+
     /** The dragonfire type of an npc attack from the data-driven attack table. */
     fun typeFor(
         combatDef: String,

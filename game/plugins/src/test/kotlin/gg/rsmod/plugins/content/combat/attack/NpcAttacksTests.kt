@@ -47,6 +47,24 @@ class NpcAttacksTests {
     }
 
     @Test
+    fun `frost dragon dragonfire freezes like the KBD ice breath and no other attack changes`() {
+        val kbdIce = NpcAttacks.rows().single { it.combatDef == "king_black_dragon" }.attacks.single { it.id == "ice" }.freeze
+        assertEquals(kbdIce, gg.rsmod.plugins.content.combat.formula.DragonfireTable.FROST_DRAGON_FREEZE_TICKS)
+        var frostFreezing = 0
+        NpcAttacks.rows().forEach { row ->
+            row.attacks.forEach { a ->
+                val frostFire = row.combatDef == "frost_dragon" && a.hits.any { it.offense == "dragonfire" }
+                val expected = if (frostFire) kbdIce else a.freeze
+                if (frostFire) frostFreezing++
+                assertEquals(expected, NpcAttacks.freezeTicks(row.combatDef, a), "npc ${row.id} ${row.combatDef}.${a.id}")
+            }
+        }
+        assertEquals(5 * 2, frostFreezing, "five frost dragon rows (51, 11633-11636) x breath_swipe + dragonfire_ranged")
+        val source = Paths.get("src", "main", "kotlin", "gg", "rsmod", "plugins", "content", "combat", "attack", "NpcAttacks.kt").toFile().readText()
+        assertTrue("DragonfireTable.blocksFreeze(row.combatDef, DragonfireFormula.protectionOf(target))" in source)
+    }
+
+    @Test
     fun `every row names its 667 npc`() {
         val failures =
             NpcAttacks.rows().mapNotNull { row ->

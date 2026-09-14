@@ -69,6 +69,20 @@ class DragonfireFormulaTests {
     }
 
     @Test
+    fun `the frost dragon freeze is blocked by shield plus antifire or a super antifire alone`() {
+        val frost = DragonfireTable.FROST_DRAGON_COMBAT_DEF
+        fun blocks(target: Player) = DragonfireTable.blocksFreeze(frost, protectionOf(target))
+        assertFalse(blocks(newTarget()))
+        assertFalse(blocks(newTarget(shield = Items.ANTIDRAGON_SHIELD)), "shield alone")
+        assertFalse(blocks(newTarget(antifire = true)), "antifire alone")
+        assertFalse(blocks(newTarget(prayer = true, antifire = true)), "prayer is not a shield")
+        assertTrue(blocks(newTarget(shield = Items.ANTIDRAGON_SHIELD, antifire = true)))
+        assertTrue(blocks(newTarget(shield = Items.DRAGONFIRE_SHIELD, antifire = true)), "shield variant")
+        assertTrue(blocks(newTarget(superAntifire = true)))
+        assertFalse(DragonfireTable.blocksFreeze("king_black_dragon", protectionOf(newTarget(superAntifire = true))), "no sourced KBD block")
+    }
+
+    @Test
     fun `the explicit dragonfire immunity attribute overrides every table`() {
         val immune = protectionOf(newTarget(immune = true))
         Type.values().forEach { assertEquals(DragonfireFormula.Outcome(0, null), resolve(it, immune) { error("roll consulted") }, "$it") }

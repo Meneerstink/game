@@ -230,6 +230,21 @@ object NpcAttacks {
 
     fun rows(): Collection<Row> = rows.values
 
+    /**
+     * The freeze an attack applies on impact: the table's own value, or for a frost dragon's dragonfire the King Black Dragon's
+     * ice breath freeze ([DragonfireTable.FROST_DRAGON_FREEZE_TICKS], owner answer Q13 2026-09-14; the wiki gives no duration).
+     */
+    fun freezeTicks(
+        combatDef: String,
+        attack: Attack,
+    ): Int =
+        when {
+            attack.freeze != 0 -> attack.freeze
+            combatDef == DragonfireTable.FROST_DRAGON_COMBAT_DEF && attack.hits.any { it.offense == "dragonfire" } ->
+                DragonfireTable.FROST_DRAGON_FREEZE_TICKS
+            else -> 0
+        }
+
     /** True when an attack's condition is ported (or is one Void itself never registers). */
     fun isRunnable(attack: Attack): Boolean =
         attack.condition.isEmpty() || conditions.containsKey(attack.condition) || attack.condition in VOID_UNREGISTERED_CONDITIONS
@@ -583,7 +598,10 @@ object NpcAttacks {
         if (attack.impactAnim >= 0) target.animate(attack.impactAnim)
         if (!attack.impactRegardless && !landed) return
         attack.drains.forEach { drain(target, it) }
-        if (attack.freeze != 0) target.freeze(attack.freeze)
+        val freeze = freezeTicks(row.combatDef, attack)
+        if (freeze != 0 && !(target is Player && DragonfireTable.blocksFreeze(row.combatDef, DragonfireFormula.protectionOf(target)))) {
+            target.freeze(freeze)
+        }
         if (attack.poison != 0) target.poison((attack.poison / 10).coerceAtLeast(1))
         if (attack.message.isNotEmpty() && target is Player) target.message(attack.message)
     }
