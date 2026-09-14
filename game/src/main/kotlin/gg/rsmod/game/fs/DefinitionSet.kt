@@ -240,8 +240,7 @@ class DefinitionSet {
                 .Region(id)
         cacheRegion.loadTerrain(mapDefinition)
 
-        val blocked = hashSetOf<Tile>()
-        val bridges = hashSetOf<Tile>()
+        val blocked = blockedTerrain(cacheRegion)
         val water = hashSetOf<Tile>()
         val roofs = hashSetOf<Tile>()
         for (height in 0 until 4) {
@@ -252,16 +251,8 @@ class DefinitionSet {
                     val tileOverlayPath = cacheRegion.getOverlayPath(height, lx, lz)
                     val tile = Tile(cacheRegion.baseX + lx, cacheRegion.baseY + lz, height)
 
-                    if ((tileSetting.toInt() and CollisionManager.BLOCKED_TILE) == CollisionManager.BLOCKED_TILE) {
-                        blocked.add(tile)
-                    }
-
                     if ((tileSetting.toInt() and CollisionManager.ROOF_TILE) == CollisionManager.ROOF_TILE) {
                         roofs.add(tile)
-                    }
-
-                    if ((tileSetting.toInt() and CollisionManager.UNKNOWN_TILE) == CollisionManager.UNKNOWN_TILE) {
-                        blocked.add(tile.transform(-1))
                     }
 
                     // Note, Alycia* Grabbing the tile setting (0x200000) should be the "proper" way to do this, but tileSetting
@@ -272,15 +263,7 @@ class DefinitionSet {
                     }
 
                     if ((tileSetting.toInt() and CollisionManager.BRIDGE_TILE) == CollisionManager.BRIDGE_TILE) {
-                        bridges.add(tile)
                         water.remove(tile)
-                        /*
-                         * We don't want the bottom of the bridge to be blocked,
-                         * so remove the blocked tile if applicable.
-                         */
-                        if (tileSetting.toInt() != 3) {
-                            blocked.remove(tile.transform(-1))
-                        }
                         water.remove(tile.transform(-1))
                     }
                 }
@@ -332,17 +315,8 @@ class DefinitionSet {
             cacheRegion.loadLocations(locDef)
 
             cacheRegion.locations.forEach { loc ->
-                val tile = Tile(loc.position.x, loc.position.y, loc.position.z)
-                if (bridges.contains(tile.transform(1))) {
-                    return@forEach
-                }
-                val obj =
-                    StaticObject(
-                        loc.id,
-                        loc.type,
-                        loc.orientation,
-                        if (bridges.contains(tile)) tile.transform(-1) else tile,
-                    )
+                val tile = collisionTile(cacheRegion, loc.position.x, loc.position.y, loc.position.z) ?: return@forEach
+                val obj = StaticObject(loc.id, loc.type, loc.orientation, tile)
                 world.chunks.getOrCreate(tile).addEntity(world, obj, obj.tile)
             }
             return true
@@ -350,6 +324,37 @@ class DefinitionSet {
             logger.error("Could not decrypt map region {}.", id)
             return false
         }
+    }
+
+    /**
+     * The 667 client's collision level (Class306.method7881 for terrain, MapRegion loc loading): a blocked terrain flag or a loc
+     * on level L belongs to collision level L - 1 when level 1 of that tile carries the bridge flag (0x2); below level 0 it is
+     * dropped. The flag is always read from level 1, never from the loc's own level.
+     */
+    fun collisionTile(
+        region: net.runelite.cache.region.Region,
+        x: Int,
+        z: Int,
+        level: Int,
+    ): Tile? {
+        val bridged = (region.getTileSetting(1, x - region.baseX, z - region.baseY).toInt() and CollisionManager.BRIDGE_TILE) != 0
+        val actual = if (bridged) level - 1 else level
+        return if (actual >= 0) Tile(x, z, actual) else null
+    }
+
+    /** Every blocked terrain tile of [region] on its client collision level ([collisionTile]). */
+    fun blockedTerrain(region: net.runelite.cache.region.Region): MutableSet<Tile> {
+        val blocked = hashSetOf<Tile>()
+        for (level in 0 until 4) {
+            for (lx in 0 until 64) {
+                for (lz in 0 until 64) {
+                    if ((region.getTileSetting(level, lx, lz).toInt() and CollisionManager.BLOCKED_TILE) != 0) {
+                        collisionTile(region, region.baseX + lx, region.baseY + lz, level)?.let { blocked.add(it) }
+                    }
+                }
+            }
+        }
+        return blocked
     }
 
     /**
