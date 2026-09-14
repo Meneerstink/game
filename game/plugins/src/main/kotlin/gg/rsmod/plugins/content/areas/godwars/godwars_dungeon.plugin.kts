@@ -63,6 +63,7 @@ GWD_REGIONS.forEach { region ->
         if (!GodWars.inDungeon(player.tile)) {
             player.closeInterface(dest = InterfaceDestination.PVP_OVERLAY)
             GodWars.resetKillCounts(player)
+            player.message(FrozenKey.MSG_KILLCOUNT_DRAINED)
         }
     }
 }
@@ -560,10 +561,14 @@ on_obj_option(obj = Objs.ROPE_57260, option = "climb") {
  * (y <= 5278 on its plane-0 object) cannot occur for the plane-2 667 door and is not ported.
  */
 on_obj_option(obj = Objs.FROZEN_DOOR, option = "open") {
-    if (!player.inventory.contains(Items.FROZEN_KEY_20120)) {
+    // Q-043-e: one charge per opening; a key without charges needs recharging (FrozenKey, 2011 wiki).
+    val keySlot = FrozenKey.chargedSlot(player)
+    if (keySlot == null) {
         player.queue { messageBox("You try to push the door open, but it wont budge.... It looks like there is some kind of key hole.") }
         return@on_obj_option
     }
+    val key = player.inventory[keySlot]!!
+    player.inventory[keySlot] = FrozenKey.withCharges(key, FrozenKey.charges(key) - 1)
     player.message("You flash the key in front of the door")
     player.queue {
         player.lock()

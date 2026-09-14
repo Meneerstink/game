@@ -2,6 +2,7 @@ package gg.rsmod.plugins.content.areas.lumbridge
 
 import gg.rsmod.plugins.content.mechanics.shops.CoinCurrency
 import gg.rsmod.plugins.content.items.armor.BarrowsRepair
+import gg.rsmod.plugins.content.areas.godwars.FrozenKey
 
 create_shop("Bob's Brilliant Axes", currency = CoinCurrency(), purchasePolicy = PurchasePolicy.BUY_STOCK) {
     sampleItems[0] = ShopItem(Items.BRONZE_PICKAXE, 1, resupplyCycles = 1000)
@@ -42,7 +43,12 @@ suspend fun optionsDialogue(task: QueueTask) {
             shop(task)
         }
         3 -> {
-            BarrowsRepair.repair(task)
+            // Bob (smith), 2011 wiki: repairs Barrows equipment and recharges the frozen key (FrozenKey).
+            if (FrozenKey.rechargeSlot(task.player) != null) {
+                FrozenKey.recharge(task)
+            } else {
+                BarrowsRepair.repair(task)
+            }
         }
     }
 }

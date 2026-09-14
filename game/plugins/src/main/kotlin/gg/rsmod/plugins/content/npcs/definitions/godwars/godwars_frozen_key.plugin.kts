@@ -11,6 +11,7 @@ val PIECES =
 fun tryCombine(player: gg.rsmod.game.model.entity.Player) {
     if (PIECES.all { player.inventory.getItemCount(it) >= 1 }) {
         PIECES.forEach { player.inventory.remove(it, 1) }
+        // Q-043-e: "Once created, the key has five charges" - a key without a charge attribute counts as full (FrozenKey.charges).
         player.inventory.add(Items.FROZEN_KEY_20120)
         player.filterableMessage("The four frozen key pieces bind together into a whole key.")
     } else {
