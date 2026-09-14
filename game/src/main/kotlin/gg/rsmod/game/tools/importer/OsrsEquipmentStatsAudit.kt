@@ -44,7 +44,6 @@ object OsrsEquipmentStatsAudit {
             828 to "667 thrown javelin; OSRS ballista ammunition value",
             829 to "667 thrown javelin; OSRS ballista ammunition value",
             830 to "667 thrown javelin; OSRS ballista ammunition value",
-            9341 to "667 Dragon bolts 9341 are dragonstone bolts; the name matches the OSRS dragon metal bolts 21905",
             10146 to "salamander: OSRS 0 belongs to the level-based OSRS salamander formula, not implemented here",
             10147 to "salamander: OSRS level-based formula not implemented",
             10148 to "salamander: OSRS level-based formula not implemented",
@@ -67,6 +66,18 @@ object OsrsEquipmentStatsAudit {
         } + (4212..4234).associateWith {
             "legacy crystal bow/shield definition: build 240 keeps it with all-zero stats (the OSRS crystal bow/shield are 23983/23991)"
         } + mapOf(10566 to "build 240 10566 'Fire cape' has all-zero stats; the OSRS combat Fire cape is 6570")
+
+    /**
+     * 667 items that are the same item as the build-240 definition with the same id but are spelled differently (verified pair by pair
+     * 2026-09-14 from the MISSING roster: "Bronze dart (p)" = "Bronze dart(p)", "Bronze fire arrows" = "Bronze fire arrow" and its
+     * lit copy, "Ahrim's robe top" = "Ahrim's robetop", "Seers' ring", "Mages' book", "Third-age robe top" = "3rd Age robe top",
+     * 667 "Dragon bolts (e)"/"Dragon bolts" 9244/9341 = OSRS "Dragonstone bolts (e)"/"Dragonstone bolts"). Ids from 11770 up
+     * diverge (667 11770 is Root cutting, OSRS 11770 Seers ring (i)) and are never matched by id alone.
+     */
+    val SAME_ITEM_BY_ID: Set<Int> =
+        (listOf(598, 942, 3094, 6731, 6889, 9244, 9341, 10338, 10340, 10342, 11217, 11222, 11227, 11228, 11229, 11231, 11233, 11234) +
+            (812..817) + (870..876) + listOf(883, 885, 887, 889, 891, 893) + (2532..2541) + listOf(4712, 4714) + (4868..4871) +
+            (4874..4877) + (5616..5641) + (5654..5667)).toSet()
 
     data class Mismatch(val localId: Int, val name: String, val upstreamId: Int, val field: String, val local: Int?, val osrs: Int?) {
         override fun toString() = "$localId \"$name\" (osrs $upstreamId) $field: items.yml=${format(field, local)} osrs=${format(field, osrs)}"
@@ -173,6 +184,10 @@ object OsrsEquipmentStatsAudit {
             val equipment = node.path("equipment")
             if (local in imported || equipment.isMissingNode || equipment.isNull) return@mapNotNull null
             val name = node.path("name").asText()
+            if (local in SAME_ITEM_BY_ID) {
+                val def = source[local]?.takeIf(::osrsWearable) ?: return@mapNotNull null
+                return@mapNotNull NameMatch(local, name, def.id, true, diff(local, name, def.id, localStats(equipment), osrsStats(def)))
+            }
             val candidates = osrsByName[name.lowercase(Locale.ROOT)] ?: return@mapNotNull null
             val same = candidates.firstOrNull { it.id == local }
             val chosen = if (same != null) listOf(same) else candidates
@@ -237,6 +252,20 @@ object OsrsEquipmentStatsAudit {
         byName.forEach { m -> m.diffs.filter { it.field !in RANGED_MAGIC_FIELDS }.forEach { sb.append("  ${if (m.sameId) "ID " else "NAME "}$it\n") } }
         sb.append("AMBIGUOUS ${ambiguous.size}\n")
         ambiguous.forEach { sb.append("  $it\n") }
+        // Owner scope 2026-09-14 ~05:30: every OSRS item that gives magic damage or ranged strength must exist here. MISSING =
+        // decodable build-240 wearables with either stat whose id is not imported and whose name matches no items.yml entry.
+        val localNames = yml.map { it.path("name").asText().lowercase(Locale.ROOT) }.toSet()
+        val importedUpstream = mapping.values.toSet()
+        val missing =
+            source.values.filter(::osrsWearable)
+                .filter { it.id !in importedUpstream && it.id !in SAME_ITEM_BY_ID && it.name.lowercase(Locale.ROOT) !in localNames }
+                .filter { def -> osrsStats(def).let { it.getValue("magic_damage") > 0 || it.getValue("ranged_strength") > 0 } }
+                .sortedBy { it.id }
+        sb.append("MISSING magic damage / ranged strength items=${missing.size}\n")
+        missing.forEach { def ->
+            val s = osrsStats(def)
+            sb.append("  ${def.id} \"${def.name}\" slot=${def.wearPos1} magic_damage=${format("magic_damage", s["magic_damage"])} ranged_strength=${s["ranged_strength"]}\n")
+        }
         sb.append("UNDECODABLE source items ${undecodable.size}: $undecodable\n")
         report.writeText(sb.toString(), Charsets.UTF_8)
         println("report: ${report.absolutePath} imported mismatches=${imported.size} ranged/magic=${rangedMagic.size}")

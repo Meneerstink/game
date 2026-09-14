@@ -7392,7 +7392,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: 0
-    attack_ranged: 3
+    attack_ranged: 0
     defence_stab: 0
     defence_slash: 0
     defence_crush: 0
@@ -7458,7 +7458,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: 0
-    attack_ranged: 5
+    attack_ranged: 0
     defence_stab: 0
     defence_slash: 0
     defence_crush: 0
@@ -7467,7 +7467,7 @@
     summoning: 0
     melee_strength: 0
     prayer: 0
-    ranged_strength: 4
+    ranged_strength: 3
     magic_damage: 0
     attack_audio: 2547
     skill_reqs: [{'skill': 4, 'level': 5}]
@@ -7492,7 +7492,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: 0
-    attack_ranged: 8
+    attack_ranged: 0
     defence_stab: 0
     defence_slash: 0
     defence_crush: 0
@@ -7501,7 +7501,7 @@
     summoning: 0
     melee_strength: 0
     prayer: 0
-    ranged_strength: 7
+    ranged_strength: 9
     magic_damage: 0
     attack_audio: 2547
     skill_reqs: [{'skill': 4, 'level': 20}]
@@ -7526,7 +7526,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: 0
-    attack_ranged: 11
+    attack_ranged: 0
     defence_stab: 0
     defence_slash: 0
     defence_crush: 0
@@ -7535,7 +7535,7 @@
     summoning: 0
     melee_strength: 0
     prayer: 0
-    ranged_strength: 10
+    ranged_strength: 17
     magic_damage: 0
     attack_audio: 2547
     skill_reqs: [{'skill': 4, 'level': 30}]
@@ -7560,7 +7560,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: 0
-    attack_ranged: 15
+    attack_ranged: 0
     defence_stab: 0
     defence_slash: 0
     defence_crush: 0
@@ -7569,7 +7569,7 @@
     summoning: 0
     melee_strength: 0
     prayer: 0
-    ranged_strength: 14
+    ranged_strength: 26
     magic_damage: 0
     attack_audio: 2547
     skill_reqs: [{'skill': 4, 'level': 40}]
@@ -34169,7 +34169,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: 0
-    attack_ranged: 7
+    attack_ranged: 0
     defence_stab: 0
     defence_slash: 0
     defence_crush: 0
@@ -51225,7 +51225,7 @@
     melee_strength: 0
     prayer: 0
     ranged_strength: 0
-    magic_damage: 0
+    magic_damage: 1.0
     attack_audio: -1
     skill_reqs: [{'skill': 1, 'level': 70}, {'skill': 6, 'level': 70}]
     absorb_melee: 10
@@ -51265,7 +51265,7 @@
     melee_strength: 0
     prayer: 0
     ranged_strength: 0
-    magic_damage: 0
+    magic_damage: 1.0
     attack_audio: -1
     skill_reqs: [{'skill': 1, 'level': 70}, {'skill': 6, 'level': 70}]
     absorb_melee: 7
@@ -53253,7 +53253,7 @@
     melee_strength: 0
     prayer: 0
     ranged_strength: 0
-    magic_damage: 0
+    magic_damage: 1.0
     attack_audio: -1
     skill_reqs: [{'skill': 1, 'level': 70}, {'skill': 6, 'level': 70}]
     absorb_melee: 10
@@ -53287,7 +53287,7 @@
     melee_strength: 0
     prayer: 0
     ranged_strength: 0
-    magic_damage: 0
+    magic_damage: 1.0
     attack_audio: -1
     skill_reqs: [{'skill': 1, 'level': 70}, {'skill': 6, 'level': 70}]
     absorb_melee: 10
@@ -53321,7 +53321,7 @@
     melee_strength: 0
     prayer: 0
     ranged_strength: 0
-    magic_damage: 0
+    magic_damage: 1.0
     attack_audio: -1
     skill_reqs: [{'skill': 1, 'level': 70}, {'skill': 6, 'level': 70}]
     absorb_melee: 10
@@ -53355,7 +53355,7 @@
     melee_strength: 0
     prayer: 0
     ranged_strength: 0
-    magic_damage: 0
+    magic_damage: 1.0
     attack_audio: -1
     skill_reqs: [{'skill': 1, 'level': 70}, {'skill': 6, 'level': 70}]
     absorb_melee: 10
@@ -53401,7 +53401,7 @@
     melee_strength: 0
     prayer: 0
     ranged_strength: 0
-    magic_damage: 0
+    magic_damage: 1.0
     attack_audio: -1
     skill_reqs: [{'skill': 1, 'level': 70}, {'skill': 6, 'level': 70}]
     absorb_melee: 7
@@ -53435,7 +53435,7 @@
     melee_strength: 0
     prayer: 0
     ranged_strength: 0
-    magic_damage: 0
+    magic_damage: 1.0
     attack_audio: -1
     skill_reqs: [{'skill': 1, 'level': 70}, {'skill': 6, 'level': 70}]
     absorb_melee: 7
@@ -53469,7 +53469,7 @@
     melee_strength: 0
     prayer: 0
     ranged_strength: 0
-    magic_damage: 0
+    magic_damage: 1.0
     attack_audio: -1
     skill_reqs: [{'skill': 1, 'level': 70}, {'skill': 6, 'level': 70}]
     absorb_melee: 7
@@ -53503,7 +53503,7 @@
     melee_strength: 0
     prayer: 0
     ranged_strength: 0
-    magic_damage: 0
+    magic_damage: 1.0
     attack_audio: -1
     skill_reqs: [{'skill': 1, 'level': 70}, {'skill': 6, 'level': 70}]
     absorb_melee: 7
@@ -61935,7 +61935,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: 0
-    attack_ranged: 3
+    attack_ranged: 0
     defence_stab: 0
     defence_slash: 0
     defence_crush: 0
@@ -61968,7 +61968,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: 0
-    attack_ranged: 4
+    attack_ranged: 0
     defence_stab: 0
     defence_slash: 0
     defence_crush: 0
@@ -61977,7 +61977,7 @@
     summoning: 0
     melee_strength: 0
     prayer: 0
-    ranged_strength: 3
+    ranged_strength: 2
     magic_damage: 0
     attack_audio: 2547
     absorb_melee: 0
@@ -62001,7 +62001,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: 0
-    attack_ranged: 5
+    attack_ranged: 0
     defence_stab: 0
     defence_slash: 0
     defence_crush: 0
@@ -62010,7 +62010,7 @@
     summoning: 0
     melee_strength: 0
     prayer: 0
-    ranged_strength: 4
+    ranged_strength: 3
     magic_damage: 0
     attack_audio: 2547
     skill_reqs: [{'skill': 4, 'level': 5}]
@@ -62035,7 +62035,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: 0
-    attack_ranged: 7
+    attack_ranged: 0
     defence_stab: 0
     defence_slash: 0
     defence_crush: 0
@@ -62069,7 +62069,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: 0
-    attack_ranged: 8
+    attack_ranged: 0
     defence_stab: 0
     defence_slash: 0
     defence_crush: 0
@@ -62078,7 +62078,7 @@
     summoning: 0
     melee_strength: 0
     prayer: 0
-    ranged_strength: 7
+    ranged_strength: 9
     magic_damage: 0
     attack_audio: 2547
     skill_reqs: [{'skill': 4, 'level': 20}]
@@ -62103,7 +62103,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: 0
-    attack_ranged: 11
+    attack_ranged: 0
     defence_stab: 0
     defence_slash: 0
     defence_crush: 0
@@ -62112,7 +62112,7 @@
     summoning: 0
     melee_strength: 0
     prayer: 0
-    ranged_strength: 10
+    ranged_strength: 17
     magic_damage: 0
     attack_audio: 2547
     skill_reqs: [{'skill': 4, 'level': 30}]
@@ -62137,7 +62137,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: 0
-    attack_ranged: 15
+    attack_ranged: 0
     defence_stab: 0
     defence_slash: 0
     defence_crush: 0
@@ -62146,7 +62146,7 @@
     summoning: 0
     melee_strength: 0
     prayer: 0
-    ranged_strength: 14
+    ranged_strength: 26
     magic_damage: 0
     attack_audio: 2547
     skill_reqs: [{'skill': 4, 'level': 40}]
@@ -62171,7 +62171,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: 0
-    attack_ranged: 3
+    attack_ranged: 0
     defence_stab: 0
     defence_slash: 0
     defence_crush: 0
@@ -62204,7 +62204,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: 0
-    attack_ranged: 4
+    attack_ranged: 0
     defence_stab: 0
     defence_slash: 0
     defence_crush: 0
@@ -62213,7 +62213,7 @@
     summoning: 0
     melee_strength: 0
     prayer: 0
-    ranged_strength: 3
+    ranged_strength: 2
     magic_damage: 0
     attack_audio: 2547
     absorb_melee: 0
@@ -62237,7 +62237,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: 0
-    attack_ranged: 5
+    attack_ranged: 0
     defence_stab: 0
     defence_slash: 0
     defence_crush: 0
@@ -62246,7 +62246,7 @@
     summoning: 0
     melee_strength: 0
     prayer: 0
-    ranged_strength: 4
+    ranged_strength: 3
     magic_damage: 0
     attack_audio: 2547
     skill_reqs: [{'skill': 4, 'level': 5}]
@@ -62271,7 +62271,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: 0
-    attack_ranged: 7
+    attack_ranged: 0
     defence_stab: 0
     defence_slash: 0
     defence_crush: 0
@@ -62305,7 +62305,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: 0
-    attack_ranged: 8
+    attack_ranged: 0
     defence_stab: 0
     defence_slash: 0
     defence_crush: 0
@@ -62314,7 +62314,7 @@
     summoning: 0
     melee_strength: 0
     prayer: 0
-    ranged_strength: 7
+    ranged_strength: 9
     magic_damage: 0
     attack_audio: 2547
     skill_reqs: [{'skill': 4, 'level': 20}]
@@ -62339,7 +62339,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: 0
-    attack_ranged: 11
+    attack_ranged: 0
     defence_stab: 0
     defence_slash: 0
     defence_crush: 0
@@ -62348,7 +62348,7 @@
     summoning: 0
     melee_strength: 0
     prayer: 0
-    ranged_strength: 10
+    ranged_strength: 17
     magic_damage: 0
     attack_audio: 2547
     skill_reqs: [{'skill': 4, 'level': 30}]
@@ -62373,7 +62373,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: 0
-    attack_ranged: 15
+    attack_ranged: 0
     defence_stab: 0
     defence_slash: 0
     defence_crush: 0
@@ -62382,7 +62382,7 @@
     summoning: 0
     melee_strength: 0
     prayer: 0
-    ranged_strength: 14
+    ranged_strength: 26
     magic_damage: 0
     attack_audio: 2547
     skill_reqs: [{'skill': 4, 'level': 40}]
@@ -63206,7 +63206,7 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 18
-    attack_speed: 4
+    attack_speed: 3
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
@@ -75476,18 +75476,18 @@
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
-    attack_magic: 4
+    attack_magic: 6
     attack_ranged: 0
     defence_stab: 0
     defence_slash: 0
     defence_crush: 0
-    defence_magic: 4
+    defence_magic: 6
     defence_ranged: 0
     summoning: 0
     melee_strength: 0
     prayer: 0
     ranged_strength: 0
-    magic_damage: 0
+    magic_damage: 0.2
     attack_audio: -1
     absorb_melee: 0
     absorb_magic: 0
@@ -77459,7 +77459,7 @@
     melee_strength: 0
     prayer: 0
     ranged_strength: 0
-    magic_damage: 0
+    magic_damage: 2.0
     attack_audio: -1
     skill_reqs: [{'skill': 6, 'level': 60}]
     absorb_melee: 0
@@ -112756,7 +112756,7 @@
     melee_strength: 0
     prayer: 0
     ranged_strength: 0
-    magic_damage: 0
+    magic_damage: 1.0
     attack_audio: -1
     skill_reqs: [{'skill': 1, 'level': 65}, {'skill': 6, 'level': 30}]
     absorb_melee: 4
@@ -112796,7 +112796,7 @@
     melee_strength: 0
     prayer: 0
     ranged_strength: 0
-    magic_damage: 0
+    magic_damage: 1.0
     attack_audio: -1
     skill_reqs: [{'skill': 1, 'level': 65}, {'skill': 6, 'level': 30}]
     absorb_melee: 4
@@ -112836,7 +112836,7 @@
     melee_strength: 0
     prayer: 0
     ranged_strength: 0
-    magic_damage: 0
+    magic_damage: 1.0
     attack_audio: -1
     skill_reqs: [{'skill': 1, 'level': 65}, {'skill': 6, 'level': 30}]
     absorb_melee: 2
@@ -127464,7 +127464,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: 0
-    attack_ranged: 18
+    attack_ranged: 0
     defence_stab: 0
     defence_slash: 0
     defence_crush: 0
@@ -127473,7 +127473,7 @@
     summoning: 0
     melee_strength: 0
     prayer: 0
-    ranged_strength: 20
+    ranged_strength: 35
     magic_damage: 0
     attack_audio: 2547
     skill_reqs: [{'skill': 4, 'level': 60}]
@@ -127504,7 +127504,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: 0
-    attack_ranged: 18
+    attack_ranged: 0
     defence_stab: 0
     defence_slash: 0
     defence_crush: 0
@@ -127513,7 +127513,7 @@
     summoning: 0
     melee_strength: 0
     prayer: 0
-    ranged_strength: 20
+    ranged_strength: 35
     magic_damage: 0
     attack_audio: 2547
     skill_reqs: [{'skill': 4, 'level': 60}]
@@ -127538,7 +127538,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: 0
-    attack_ranged: 18
+    attack_ranged: 0
     defence_stab: 0
     defence_slash: 0
     defence_crush: 0
@@ -127547,7 +127547,7 @@
     summoning: 0
     melee_strength: 0
     prayer: 0
-    ranged_strength: 20
+    ranged_strength: 35
     magic_damage: 0
     attack_audio: 2547
     skill_reqs: [{'skill': 4, 'level': 60}]
