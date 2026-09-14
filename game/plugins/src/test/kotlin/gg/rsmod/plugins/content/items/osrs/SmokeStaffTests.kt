@@ -27,7 +27,8 @@ class SmokeStaffTests {
         assertFalse(SmokeStaves.appliesTo(null), "powered staff built-in spells excluded")
         val formula = File("src/main/kotlin/gg/rsmod/plugins/content/combat/formula/MagicCombatFormula.kt").readText()
         assertTrue("SmokeStaves.magicDamageBonus(pawn, spell)" in formula, "part of the additive magic damage bonus")
-        val smoke = formula.indexOf("SmokeStaves.accuracyMultiplier(player, player.attr[Combat.CASTING_SPELL])")
-        assertTrue(smoke in 0 until formula.indexOf("Tomes.accuracyMultiplier(player, target, player.attr[Combat.CASTING_SPELL])"), "before the tome factor")
+        // The formula reads the spell through castingSpell(player) since the tome batch; the order (smoke, then tome) is the rule.
+        val smoke = formula.indexOf("SmokeStaves.accuracyMultiplier(player, castingSpell(player))")
+        assertTrue(smoke in 0 until formula.indexOf("Tomes.accuracyMultiplier(player, target, castingSpell(player))"), "before the tome factor")
     }
 }

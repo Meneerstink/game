@@ -30,11 +30,14 @@ import org.junit.Test
  * change, which is why a fullscreen switch used to lose the tab.
  */
 class FollowerDetailsTabTests {
+    private data class Varc(val id: Int, val value: Int)
+
     private class Captured {
         val events = mutableListOf<IfSetEventsMessage>()
         val hides = mutableListOf<IfSetHideMessage>()
         val sprites = mutableListOf<IfSetSpriteMessage>()
-        val varcs = mutableListOf<gg.rsmod.game.message.impl.VarcLargeMessage>()
+        // RCV-012: setVarc sends VarcSmallMessage whenever the value fits a byte (varc 823 = 2), VarcLargeMessage otherwise.
+        val varcs = mutableListOf<Varc>()
     }
 
     private fun install(): Captured {
@@ -59,7 +62,8 @@ class FollowerDetailsTabTests {
                     is IfSetHideMessage -> captured.hides += message
                     is IfSetSpriteMessage -> captured.sprites += message
                     is IfSetEventsMessage -> captured.events += message
-                    is gg.rsmod.game.message.impl.VarcLargeMessage -> captured.varcs += message
+                    is gg.rsmod.game.message.impl.VarcLargeMessage -> captured.varcs += Varc(message.id, message.value)
+                    is gg.rsmod.game.message.impl.VarcSmallMessage -> captured.varcs += Varc(message.id, message.value)
                     else -> Unit
                 }
             }

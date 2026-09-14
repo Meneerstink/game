@@ -43,8 +43,9 @@ class OsrsCrossbowSpecialsTests {
     @Test
     fun `Concentrated Shot costs 65 percent and raises accuracy and damage by 25 percent`() {
         val ballista = File("src/main/kotlin/gg/rsmod/plugins/content/combat/specialattack/weapons/heavy_ballista.plugin.kts").readText()
-        val start = ballista.indexOf("SpecialAttacks.register(65, Items.HEAVY_BALLISTA)")
-        assertTrue(start >= 0, "missing Heavy ballista registration")
+        // The (or) ornament variant shares the special (casket-ornaments batch), so both ids are registered together.
+        val start = ballista.indexOf("SpecialAttacks.register(65, Items.HEAVY_BALLISTA, Items.HEAVY_BALLISTA_OR)")
+        assertTrue(start >= 0, "missing Heavy ballista + (or) registration")
         assertTrue("rangedShot(player, target, accuracy = 1.25, damage = 1.25)" in ballista.substring(start))
     }
 }

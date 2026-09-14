@@ -128,12 +128,20 @@ class BossRosterTests {
             text.contains("Npcs.$constant") && (text.contains("DropTableFactory.register") || text.contains("table.register"))
         }
 
-    private fun bulkDropTableHasId(id: Int): Boolean = BULK_DROP_TABLE_TEXT.contains("\"id\":$id,")
+    private fun bulkDropTableHasId(id: Int): Boolean = BULK_DROP_TABLE_TEXT.contains("\"id\":$id,") || dedicatedDropTableHasId(id)
+
+    /**
+     * Dedicated per-npc drop files keyed by npc id (RCV-012.B7 moved the Tormented Demon to Void's guthix_temple table in
+     * `tormented-demon-drops.json`, covered by TormentedDemonDropTablesTests).
+     */
+    private fun dedicatedDropTableHasId(id: Int): Boolean = DEDICATED_DROP_TABLE_TEXTS.any { it.contains("\"$id\"") }
 
     companion object {
         private val CONTENT_ROOT = File("src/main/kotlin/gg/rsmod/plugins/content")
         private val NPCS_FILE = File("src/main/kotlin/gg/rsmod/plugins/api/cfg/Npcs.kt")
         private val BULK_DROP_TABLE_FILE = File("../../data/cfg/npcs/drop-tables.json")
+        private val DEDICATED_DROP_TABLE_TEXTS: List<String> =
+            File("../../data/cfg/npcs").listFiles { f -> f.isFile && f.name.endsWith("-drops.json") }.orEmpty().map { it.readText() }
 
         private val NPCS_SOURCE: List<String> = NPCS_FILE.readLines()
         private val CONTENT_FILES: List<String> =

@@ -32,6 +32,7 @@ class GrandExchangeCollectorsTests {
                 44, 45, 166, 494, 495, 496, 497, 498, 499, 553, 902, 909, 958, 1036, 1360, 1702, 2163, 2164, 2271, 2354, 2355, 2619, 2718,
                 2759, 3046, 3198, 3199, 3293, 3416, 3418, 3824, 4296, 4456, 4457, 4458, 4459, 4519, 4907, 5257, 5258, 5259, 5260, 5383, 5488,
                 5776, 5777, 5898, 6200, 6362, 7049, 7050, 7605, 8948, 9710, 11299, 14163,
+                14389, // RCV-012 decision 3a: imported OSRS Ferox Enclave banker (options Talk-to, Bank, Collect)
             )
         assertEquals(expected, collectors)
         // Ghost disciple (ectotokens), Advisor Ghrim (Miscellania) and Head Guard ("Collect-Bank") are not bank collectors.
