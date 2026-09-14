@@ -277045,3 +277045,177 @@
   tradeable: true
   weight: 0.0
   equipment: null
+- id: 23271
+  name: "Stamina potion(4)"
+  examine: "4 doses of stamina potion."
+  tradeable: true
+  weight: 0.035
+  equipment: null
+- id: 23272
+  name: "Stamina potion(4)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23273
+  name: "Stamina potion(3)"
+  examine: "3 doses of stamina potion."
+  tradeable: true
+  weight: 0.03
+  equipment: null
+- id: 23274
+  name: "Stamina potion(3)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23275
+  name: "Stamina potion(2)"
+  examine: "2 doses of stamina potion."
+  tradeable: true
+  weight: 0.025
+  equipment: null
+- id: 23276
+  name: "Stamina potion(2)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23277
+  name: "Stamina potion(1)"
+  examine: "1 dose of stamina potion."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 23278
+  name: "Stamina potion(1)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23279
+  name: "Stamina mix(2)"
+  examine: "Two doses of fishy stamina potion."
+  tradeable: true
+  weight: 0.075
+  equipment: null
+- id: 23280
+  name: "Stamina mix(2)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23281
+  name: "Stamina mix(1)"
+  examine: "One dose of fishy stamina potion."
+  tradeable: true
+  weight: 0.045
+  equipment: null
+- id: 23282
+  name: "Stamina mix(1)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23283
+  name: "Extended stamina potion(4)"
+  examine: "4 doses of extended stamina potion."
+  tradeable: true
+  weight: 0.035
+  equipment: null
+- id: 23284
+  name: "Extended stamina potion(4)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23285
+  name: "Extended stamina potion(3)"
+  examine: "3 doses of extended stamina potion."
+  tradeable: true
+  weight: 0.03
+  equipment: null
+- id: 23286
+  name: "Extended stamina potion(3)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23287
+  name: "Extended stamina potion(2)"
+  examine: "2 doses of extended stamina potion."
+  tradeable: true
+  weight: 0.03
+  equipment: null
+- id: 23288
+  name: "Extended stamina potion(2)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23289
+  name: "Extended stamina potion(1)"
+  examine: "1 dose of extended stamina potion."
+  tradeable: true
+  weight: 0.03
+  equipment: null
+- id: 23290
+  name: "Extended stamina potion(1)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23291
+  name: "Extreme energy potion(4)"
+  examine: "4 doses of extreme energy potion."
+  tradeable: true
+  weight: 0.035
+  equipment: null
+- id: 23292
+  name: "Extreme energy potion(4)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23293
+  name: "Extreme energy potion(3)"
+  examine: "3 doses of extreme energy potion."
+  tradeable: true
+  weight: 0.03
+  equipment: null
+- id: 23294
+  name: "Extreme energy potion(3)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23295
+  name: "Extreme energy potion(2)"
+  examine: "2 doses of extreme energy potion."
+  tradeable: true
+  weight: 0.03
+  equipment: null
+- id: 23296
+  name: "Extreme energy potion(2)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23297
+  name: "Extreme energy potion(1)"
+  examine: "1 dose of extreme energy potion."
+  tradeable: true
+  weight: 0.03
+  equipment: null
+- id: 23298
+  name: "Extreme energy potion(1)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23303
+  name: "Amylase crystal"
+  examine: "Good for enhancing a super energy potion."
+  tradeable: true
+  weight: 0.0
+  equipment: null

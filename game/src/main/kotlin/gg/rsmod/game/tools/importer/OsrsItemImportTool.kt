@@ -683,6 +683,11 @@ object OsrsItemImportTool {
             // Step 4 batch "potions-venom" (OSRS Wiki infobox ids, ascending = 4 to 1 doses): Anti-venom, Anti-venom+, Extended anti-venom+.
             "potions-venom" to
                 listOf(12905, 12907, 12909, 12911, 12913, 12915, 12917, 12919, 29824, 29827, 29830, 29833).map { Spec(it, noted = true) },
+            // Step 4 batch "potions-stamina" (OSRS Wiki infobox ids, ascending = most doses first): Stamina potion, Stamina mix (2 doses),
+            // Extended stamina potion, Extreme energy potion, and the Amylase crystal ingredient.
+            "potions-stamina" to
+                (listOf(12625, 12627, 12629, 12631, 12633, 12635, 31638, 31641, 31644, 31647, 31614, 31617, 31620, 31623).map { Spec(it, noted = true) } +
+                    listOf(Spec(12640))),
             "deadstaves" to
                 listOf(
                     Spec(11791, noted = true, rev667Params = deadStaffParams()), // Staff of the dead

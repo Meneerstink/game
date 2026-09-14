@@ -477,6 +477,20 @@ enum class PotionType(
     EXTENDED_ANTI_VENOM_PLUS {
         override fun apply(p: Player) =
             cureVenomAndPoison(p, PotionEffects.EXTENDED_ANTI_VENOM_PLUS_POISON_IMMUNITY_TICKS, PotionEffects.EXTENDED_ANTI_VENOM_PLUS_VENOM_IMMUNITY_TICKS)
+    },
+
+    // OSRS-IMPORT potions-stamina (StaminaPotions).
+    STAMINA {
+        override fun apply(p: Player) = StaminaPotions.drink(p, StaminaPotions.STAMINA_RESTORE, StaminaPotions.STAMINA_TICKS)
+    },
+    STAMINA_MIX(message = StaminaPotions.MIX_MESSAGE) {
+        override fun apply(p: Player) = StaminaPotions.drinkMix(p)
+    },
+    EXTENDED_STAMINA {
+        override fun apply(p: Player) = StaminaPotions.drink(p, StaminaPotions.EXTENDED_RESTORE, StaminaPotions.EXTENDED_STAMINA_TICKS)
+    },
+    EXTREME_ENERGY {
+        override fun apply(p: Player) = StaminaPotions.drink(p, StaminaPotions.EXTENDED_RESTORE, 0)
     }, ;
 
     protected fun cureVenomAndPoison(

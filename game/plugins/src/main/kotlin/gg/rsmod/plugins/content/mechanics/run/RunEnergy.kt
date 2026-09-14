@@ -46,6 +46,8 @@ object RunEnergy {
                 if (p.attr.has(HAMSTRING)) {
                     decrement *= 4
                 }
+                // OSRS stamina potions: "a 70% reduction in run energy depletion" while the effect lasts (StaminaPotions).
+                decrement *= gg.rsmod.plugins.content.items.potion.StaminaPotions.drainMultiplier(p)
 
                 p.runEnergy = 0.0.coerceAtLeast((p.runEnergy - decrement))
                 if (p.runEnergy <= 0) {

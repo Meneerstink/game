@@ -572,4 +572,20 @@ enum class Potion(
     EXTENDED_ANTI_VENOM_PLUS3(item = Items.EXTENDED_ANTI_VENOM_PLUS_3, replacement = Items.EXTENDED_ANTI_VENOM_PLUS_2, potionType = PotionType.EXTENDED_ANTI_VENOM_PLUS),
     EXTENDED_ANTI_VENOM_PLUS2(item = Items.EXTENDED_ANTI_VENOM_PLUS_2, replacement = Items.EXTENDED_ANTI_VENOM_PLUS_1, potionType = PotionType.EXTENDED_ANTI_VENOM_PLUS),
     EXTENDED_ANTI_VENOM_PLUS1(item = Items.EXTENDED_ANTI_VENOM_PLUS_1, replacement = Items.VIAL, potionType = PotionType.EXTENDED_ANTI_VENOM_PLUS),
+
+    // OSRS-IMPORT potions-stamina.
+    STAMINA4(item = Items.STAMINA_POTION_4, replacement = Items.STAMINA_POTION_3, potionType = PotionType.STAMINA),
+    STAMINA3(item = Items.STAMINA_POTION_3, replacement = Items.STAMINA_POTION_2, potionType = PotionType.STAMINA),
+    STAMINA2(item = Items.STAMINA_POTION_2, replacement = Items.STAMINA_POTION_1, potionType = PotionType.STAMINA),
+    STAMINA1(item = Items.STAMINA_POTION_1, replacement = Items.VIAL, potionType = PotionType.STAMINA),
+    STAMINA_MIX2(item = Items.STAMINA_MIX_2, replacement = Items.STAMINA_MIX_1, potionType = PotionType.STAMINA_MIX),
+    STAMINA_MIX1(item = Items.STAMINA_MIX_1, replacement = Items.VIAL, potionType = PotionType.STAMINA_MIX),
+    EXTENDED_STAMINA4(item = Items.EXTENDED_STAMINA_POTION_4, replacement = Items.EXTENDED_STAMINA_POTION_3, potionType = PotionType.EXTENDED_STAMINA),
+    EXTENDED_STAMINA3(item = Items.EXTENDED_STAMINA_POTION_3, replacement = Items.EXTENDED_STAMINA_POTION_2, potionType = PotionType.EXTENDED_STAMINA),
+    EXTENDED_STAMINA2(item = Items.EXTENDED_STAMINA_POTION_2, replacement = Items.EXTENDED_STAMINA_POTION_1, potionType = PotionType.EXTENDED_STAMINA),
+    EXTENDED_STAMINA1(item = Items.EXTENDED_STAMINA_POTION_1, replacement = Items.VIAL, potionType = PotionType.EXTENDED_STAMINA),
+    EXTREME_ENERGY4(item = Items.EXTREME_ENERGY_POTION_4, replacement = Items.EXTREME_ENERGY_POTION_3, potionType = PotionType.EXTREME_ENERGY),
+    EXTREME_ENERGY3(item = Items.EXTREME_ENERGY_POTION_3, replacement = Items.EXTREME_ENERGY_POTION_2, potionType = PotionType.EXTREME_ENERGY),
+    EXTREME_ENERGY2(item = Items.EXTREME_ENERGY_POTION_2, replacement = Items.EXTREME_ENERGY_POTION_1, potionType = PotionType.EXTREME_ENERGY),
+    EXTREME_ENERGY1(item = Items.EXTREME_ENERGY_POTION_1, replacement = Items.VIAL, potionType = PotionType.EXTREME_ENERGY),
 }

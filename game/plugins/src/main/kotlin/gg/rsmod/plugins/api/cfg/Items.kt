@@ -20009,5 +20009,23 @@ object Items {
     const val EXTENDED_ANTI_VENOM_PLUS_3 = 23265
     const val EXTENDED_ANTI_VENOM_PLUS_2 = 23267
     const val EXTENDED_ANTI_VENOM_PLUS_1 = 23269
+
+    // OSRS-IMPORT step 4 batch potions-stamina (tx-20260914-075708); each dose is followed by its noted id. 23299-23302 are Amylase
+    // crystal stack-count visuals.
+    const val STAMINA_POTION_4 = 23271
+    const val STAMINA_POTION_3 = 23273
+    const val STAMINA_POTION_2 = 23275
+    const val STAMINA_POTION_1 = 23277
+    const val STAMINA_MIX_2 = 23279
+    const val STAMINA_MIX_1 = 23281
+    const val EXTENDED_STAMINA_POTION_4 = 23283
+    const val EXTENDED_STAMINA_POTION_3 = 23285
+    const val EXTENDED_STAMINA_POTION_2 = 23287
+    const val EXTENDED_STAMINA_POTION_1 = 23289
+    const val EXTREME_ENERGY_POTION_4 = 23291
+    const val EXTREME_ENERGY_POTION_3 = 23293
+    const val EXTREME_ENERGY_POTION_2 = 23295
+    const val EXTREME_ENERGY_POTION_1 = 23297
+    const val AMYLASE_CRYSTAL = 23303
     // Auto-generated file using class gg.rsmod.game.service.game.DumpEntityIdService
 }
