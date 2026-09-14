@@ -5,6 +5,8 @@ import gg.rsmod.game.model.timer.FREEZE_IMMUNITY_TIMER
 import gg.rsmod.game.model.timer.FROZEN_TIMER
 import gg.rsmod.plugins.api.EquipmentType
 import gg.rsmod.plugins.api.ext.isProtectedFrom
+import gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell
+import gg.rsmod.plugins.content.combat.strategy.magic.StatDrainRule
 import kotlin.math.abs
 import kotlin.math.max
 
@@ -12,8 +14,7 @@ import kotlin.math.max
  * Generic npc attack conditions (NpcAttacks.condition), ported from Void's `npcCondition` registrations.
  * Each condition decides whether a data-driven attack section may be chosen (Void `Attack.valid`).
  *
- * Boss-specific conditions live with their boss (God Wars, Chaos Elemental). Not ported yet: Wizards
- * `not_confused/not_weakened/not_cursed/not_vulnerable` (Spell.canDrain), Ghast pouch/food, TzHaar healers,
+ * Boss-specific conditions live with their boss (God Wars, Chaos Elemental). Not ported yet: Ghast pouch/food, TzHaar healers,
  * frost dragon and tormented demon style state; attacks using them are never selected until they are.
  */
 
@@ -60,7 +61,11 @@ NpcAttacks.condition("no_protect_magic") { _, target -> !target.isProtectedFrom(
 NpcAttacks.condition("no_protect_range") { _, target -> !target.isProtectedFrom(CombatClass.RANGED) }
 NpcAttacks.condition("target_protect_magic") { _, target -> target is Player && target.isProtectedFrom(CombatClass.MAGIC) }
 
-// Void Wizards.kt
+// Void Wizards.kt: Spell.canDrain, on the rule shared with player casts (Ahrim, dark wizards, chaos druids, skeleton mages)
+NpcAttacks.condition("not_confused") { _, target -> StatDrainRule.canDrain(target, CombatSpell.CONFUSE) }
+NpcAttacks.condition("not_weakened") { _, target -> StatDrainRule.canDrain(target, CombatSpell.WEAKEN) }
+NpcAttacks.condition("not_cursed") { _, target -> StatDrainRule.canDrain(target, CombatSpell.CURSE) }
+NpcAttacks.condition("not_vulnerable") { _, target -> StatDrainRule.canDrain(target, CombatSpell.VULNERABILITY) }
 NpcAttacks.condition("not_frozen") { _, target -> !target.timers.has(FROZEN_TIMER) && !target.timers.has(FREEZE_IMMUNITY_TIMER) }
 
 // Void Catablepon.kt: target Strength above 3 + 92% of its level

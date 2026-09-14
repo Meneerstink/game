@@ -51,6 +51,9 @@ class TomesTests {
         val strategy = File("src/main/kotlin/gg/rsmod/plugins/content/combat/strategy/MagicCombatStrategy.kt").readText()
         assertTrue("Tomes.afterCast(pawn, spell)" in strategy)
         assertTrue("Tomes.drainBoost(pawn, spell)" in strategy)
-        assertTrue("val amount = (base * percent * boost / 100.0).toInt()" in strategy)
+        // The floored boosted drain lives in the rule shared with npc curse conditions (DrainSpellConditionsTests).
+        assertTrue("val amount = StatDrainRule.drainAmount(base, percent, boost)" in strategy)
+        val rule = File("src/main/kotlin/gg/rsmod/plugins/content/combat/strategy/magic/StatDrainRule.kt").readText()
+        assertTrue("): Int = (base * percent * boost / 100.0).toInt()" in rule)
     }
 }

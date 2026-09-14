@@ -18,6 +18,7 @@ import gg.rsmod.plugins.content.combat.dealHit
 import gg.rsmod.plugins.content.combat.formula.MagicCombatFormula
 import gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell
 import gg.rsmod.plugins.content.combat.strategy.magic.SpellEffect
+import gg.rsmod.plugins.content.combat.strategy.magic.StatDrainRule
 import gg.rsmod.plugins.content.magic.MagicSpells
 import gg.rsmod.plugins.content.mechanics.poison.Poison
 import gg.rsmod.plugins.content.mechanics.prayer.Prayer
@@ -405,11 +406,11 @@ object MagicCombatStrategy : CombatStrategy {
             }
             else -> return
         }
-        val amount = (base * percent * boost / 100.0).toInt()
-        val floor = base - amount
-        if (current <= floor) {
+        if (!StatDrainRule.canDrain(base, current, percent, boost)) {
             return
         }
+        val amount = StatDrainRule.drainAmount(base, percent, boost)
+        val floor = base - amount
         val drain = minOf(amount, current - floor).coerceAtLeast(1)
         val cap = -(base - floor).coerceAtLeast(1)
         when (target) {

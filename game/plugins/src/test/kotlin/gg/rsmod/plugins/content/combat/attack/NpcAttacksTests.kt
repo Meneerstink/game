@@ -134,7 +134,6 @@ class NpcAttacksTests {
         // Void script conditions whose mechanics are not ported yet; their attacks are never selected.
         val notPortedYet =
             setOf(
-                "not_confused", "not_weakened", "not_cursed", "not_vulnerable", // Wizards: Spell.canDrain
                 "has_food", "has_no_food", "has_druid_pouch", "has_no_druid_pouch", // Ghasts
                 "weakened_nearby_monsters", // TzHaar healers
                 "insulated", "not_insulated",
