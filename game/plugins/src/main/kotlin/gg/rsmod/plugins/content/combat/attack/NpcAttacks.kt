@@ -183,6 +183,19 @@ object NpcAttacks {
     private val attackHooks = HashMap<String, (Npc, Pawn) -> Unit>()
     private val impactHooks = HashMap<String, (Npc, Pawn) -> Boolean>()
     private val swingHooks = HashMap<String, (Npc, Pawn, Attack) -> Unit>()
+    private val rollHooks = HashMap<String, (Npc, Pawn, HitRoll) -> Unit>()
+    private val dealtHooks = HashMap<String, (Npc, Pawn, HitRoll, Int) -> Unit>()
+
+    /**
+     * One npc hit after the accuracy roll and before it is dealt. Roll hooks may change [maxHit] or force [landHit];
+     * [landsIgnoringPrayer] is the same roll without the protection-prayer short circuit (magic/ranged), else [landHit].
+     */
+    class HitRoll(
+        val offense: String,
+        var maxHit: Double,
+        var landHit: Boolean,
+        val landsIgnoringPrayer: Boolean,
+    )
 
     @Volatile
     private var rows: Map<Int, Row> = emptyMap()
@@ -225,6 +238,22 @@ object NpcAttacks {
         hook: (npc: Npc, target: Pawn, attack: Attack) -> Unit,
     ) {
         swingHooks[combatDef] = hook
+    }
+
+    /** Runs for every hit of [combatDef] after the accuracy roll and before the hit is dealt. */
+    fun onHitRoll(
+        combatDef: String,
+        hook: (npc: Npc, target: Pawn, roll: HitRoll) -> Unit,
+    ) {
+        rollHooks[combatDef] = hook
+    }
+
+    /** Runs when a hit of [combatDef] is applied to its target, with the final damage. */
+    fun onHitDealt(
+        combatDef: String,
+        hook: (npc: Npc, target: Pawn, roll: HitRoll, damage: Int) -> Unit,
+    ) {
+        dealtHooks[combatDef] = hook
     }
 
     fun rowFor(npcId: Int): Row? = rows[npcId]
@@ -368,7 +397,7 @@ object NpcAttacks {
                     delay = if (isMelee(h.offense) || h.offense == "damage") 0 else 64
                 }
                 h.delay?.let { delay += it }
-                val pawnHit = hit(npc, target, h, delay, DragonfireTable.typeFor(row.combatDef, attack.id)) ?: return@forEachIndexed
+                val pawnHit = hit(npc, target, h, delay, DragonfireTable.typeFor(row.combatDef, attack.id), row.combatDef) ?: return@forEachIndexed
                 if (pawnHit.hit.hitmarks.sumOf { it.damage } > 0) landed = true
                 if (firstHit == null) firstHit = pawnHit
             }
@@ -537,6 +566,7 @@ object NpcAttacks {
         h: HitDef,
         clientDelay: Int,
         dragonfireType: DragonfireTable.Type,
+        combatDef: String,
     ): PawnHit? {
         var offense = h.offense
         if (offense == "random") offense = listOf("crush", "range", "magic").random()
@@ -588,16 +618,31 @@ object NpcAttacks {
         if (maxHit <= 0.0) return null
         // Void Damage.roll: dragonfire and accuracy_roll = false never miss on accuracy.
         val rollAccuracy = h.accuracyRoll && formula != null && offense != "dragonfire"
-        val landHit = !rollAccuracy || formula!!.getAccuracy(npc, target) >= npc.world.randomDouble()
-        val minHit = (h.min / 10.0).coerceAtMost(maxHit - 0.01).coerceAtLeast(0.0)
-        return npc.dealHit(
-            target = target,
-            minHit = minHit,
-            maxHit = maxHit,
-            landHit = landHit,
-            delay = hitDelayTicks(clientDelay),
-            hitType = hitType,
-        )
+        val rollValue = npc.world.randomDouble()
+        val landHit = !rollAccuracy || formula!!.getAccuracy(npc, target) >= rollValue
+        val landsIgnoringPrayer =
+            when {
+                !rollAccuracy -> true
+                formula === MagicCombatFormula -> MagicCombatFormula.getUnprotectedAccuracy(npc, target) >= rollValue
+                formula === RangedCombatFormula -> RangedCombatFormula.getUnprotectedAccuracy(npc, target) >= rollValue
+                else -> landHit
+            }
+        val roll = HitRoll(offense = offense, maxHit = maxHit, landHit = landHit, landsIgnoringPrayer = landsIgnoringPrayer)
+        rollHooks[combatDef]?.invoke(npc, target, roll)
+        val minHit = (h.min / 10.0).coerceAtMost(roll.maxHit - 0.01).coerceAtLeast(0.0)
+        val pawnHit =
+            npc.dealHit(
+                target = target,
+                minHit = minHit,
+                maxHit = roll.maxHit,
+                landHit = roll.landHit,
+                delay = hitDelayTicks(clientDelay),
+                hitType = hitType,
+            )
+        dealtHooks[combatDef]?.let { hook ->
+            pawnHit.hit.addAction { hook(npc, target, roll, pawnHit.hit.hitmarks.sumOf { it.damage }) }
+        }
+        return pawnHit
     }
 
     // ---- impact (Void Attack.kt npcCombatAttack) ----------------------------------------------------------

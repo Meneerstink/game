@@ -30,6 +30,18 @@ object RangedCombatFormula : CombatFormula {
         if (target.isProtectedFrom(CombatClass.RANGED) && pawn !is Player) {
             return 0.0 // Hits will never land
         }
+        return getUnprotectedAccuracy(pawn, target, specialAttackMultiplier)
+    }
+
+    /**
+     * Accuracy roll without the protection-prayer short circuit, for npc effects that trigger when a hit "would have been
+     * successful" through Protect from Missiles (OSRS Wiki Karil the Tainted set effect).
+     */
+    fun getUnprotectedAccuracy(
+        pawn: Pawn,
+        target: Pawn,
+        specialAttackMultiplier: Double = 1.0,
+    ): Double {
         val attack = getAttackRoll(pawn, target, specialAttackMultiplier)
         val defence = getDefenceRoll(pawn, target)
 

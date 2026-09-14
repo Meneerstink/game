@@ -6,9 +6,8 @@ import gg.rsmod.game.model.combat.StyleType
  * Combat defs for the six Barrows brothers = OSRS Wiki infoboxes (raw wikitext 2026-09-14, "Ahrim the Blighted" ... "Verac the Defiled"):
  * hitpoints 100 each, attack style and speed, att/str/def/mage/range, attbns/strbns/amagic/mbns/arange/rngbns and defences. Max hits
  * (20/29/24/20/23/23) live in npc-attacks.json. ADAPTED: 667 has one ranged defence (wiki dlight/dstandard/dheavy; dstandard used) and
- * levels below 1 are raised to 1 by NpcCombatBuilder. NOT YET BUILT (adjacent gap, recorded in HANDOFF): the OSRS NPC set effects -
- * Dharok +1% max hit per missing hitpoint, Verac 25% defence-ignoring hits (max 15 through Protect from Melee), Guthan 25% heal,
- * Torag 25% run-energy drain, Karil and Ahrim 25% effects. See Barrows.kt for the run/reward flow.
+ * levels below 1 are raised to 1 by NpcCombatBuilder. The OSRS npc set effects (Dharok, Verac, Guthan, Torag, Karil, Ahrim) are in
+ * [BarrowsSetEffects] / barrows_set_effects.plugin.kts. See Barrows.kt for the run/reward flow.
  */
 
 data class BrotherConfig(
