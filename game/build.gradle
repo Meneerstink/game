@@ -159,6 +159,14 @@ task runFeroxMapSpriteProbeTool(type: JavaExec) {
     main = 'gg.rsmod.game.tools.importer.FeroxMapSpriteProbeTool'
 }
 
+task runOsrsMusicImportTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Imports the OSRS track The Enclave into index 6 + music enums 1345/1351 (CacheTransaction, both caches). ' +
+        'Usage: ./gradlew :game:runOsrsMusicImportTool --args="plan|apply"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.OsrsMusicImportTool'
+}
+
 task runFeroxMinimapTool(type: JavaExec) {
     group = 'tools'
     description = 'Adds pixel-proven LocType msi/mapelement to imported Ferox locs (CacheTransaction, both caches). ' +

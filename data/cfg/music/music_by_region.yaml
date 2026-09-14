@@ -543,6 +543,11 @@ talking_forest:
   index: 119
   areas:
     - region: 10550
+the_enclave:
+  index: 1016
+  areas:
+    - region: 12344
+    - region: 12600
 the_desert:
   index: 120
   areas:
