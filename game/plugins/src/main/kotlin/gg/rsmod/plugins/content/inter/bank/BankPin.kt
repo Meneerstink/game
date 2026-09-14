@@ -1,6 +1,5 @@
 package gg.rsmod.plugins.content.inter.bank
 
-import gg.rsmod.game.message.impl.ResumePauseButtonMessage
 import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.queue.QueueTask
@@ -11,8 +10,12 @@ import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.api.ext.openInterface
 import gg.rsmod.plugins.api.ext.options
 import gg.rsmod.plugins.api.ext.player
+import gg.rsmod.plugins.api.ext.runClientScript
 import gg.rsmod.plugins.api.ext.setComponentText
+import gg.rsmod.plugins.api.ext.setInterfaceEvents
+import gg.rsmod.plugins.api.ext.setVarbit
 import gg.rsmod.plugins.api.ext.setVarc
+import gg.rsmod.plugins.api.ext.setVarp
 import java.security.MessageDigest
 import java.security.SecureRandom
 
@@ -20,29 +23,39 @@ import java.security.SecureRandom
  * The bank PIN: setting one, changing it, deleting it, and being asked for it before the bank
  * opens.
  *
- * Cache contract (`./gradlew :game:runInterfaceHookProbeTool --args="../data/cache layout 13"`):
- * interface 13 is the PIN keypad. Components 6-15 are the ten digit buttons, each a `pauseButton`
- * (`events=0x000001`) baked into the cache, so a click arrives as [ResumePauseButtonMessage] with no
- * `IfSetEvents` needed. Component 25 is `Exit` (`op1=IF_BUTTON1`, also baked), component 26 carries
- * "Please enter your FOUR DIGIT PIN using the buttons below." and component 27 the deletion notice.
+ * Cache contract (RCV-012.B17, `InterfaceHookProbeTool data\cache layout|interface 13|759`, `script 1271|1110|696`):
+ * - Interface 13 is the keypad frame. Components 6-15 are empty 64x64 layers under the layer 13:5 (no sprite, text or op); the
+ *   visible digit buttons are interface 759, mounted into 13:5 - Novite `BankPinManager.showEnterPin`:
+ *   `sendInterface(true, 13, 5, 759)`. The old keypad opened 13 alone and waited for pause buttons on those empty layers, so the
+ *   player saw no digits and nothing could be entered (owner live: "bank PINs do not work").
+ * - Interface 759 has ten digit cells; the clickable child of cell k (k = 0..9) is component 4 * (k + 1) (`Select digit`,
+ *   op1 = IF_BUTTON1), so the digit is `component / 4 - 1` (Novite `BankPinListener`: `buttonId / 4 - 1`). Each click runs client
+ *   script 1110, which advances varbit 1010 (varp 563 bits 0-2, the digit stage, capped at 3), plays sound 1041 and re-runs script
+ *   1271; script 1271 draws "First click the FIRST digit." .. "Finally, the FOURTH digit." / "Please wait...", the four entry
+ *   markers on 13:1-4 ("?" before, "*" after each digit), and moves the ten cells to shuffled positions - the digit on a cell
+ *   stays the same, only its place changes.
+ * - 13:25 is `Exit` (op1 = IF_BUTTON1, client script 696 prints "Cancelled." and plays sound 1042); 13:26 carries the prompt and
+ *   13:27 the title line.
+ * - Opening the keypad resets the client state as Novite does: varp 163 = 0, varc 98 = 0, varc 199 = -1, 13:24 events 0,
+ *   varbit 1010 = 0, then script 1271 with argument 1.
  *
- * The entered PIN is recorded as the sequence of *button components* rather than as digits. The
- * client sends no digit value - only which button was pressed - and the keypad's digit sprites are
- * static in the cache, so a button always shows the same digit and the two forms are equivalent. The
- * one thing this cannot do is print the PIN back to the player, which nothing should ever do anyway.
+ * The PIN is stored as a salted SHA-256 of its four digits, so a player save never carries a PIN that could be read out of it and
+ * tried on another account. (Before RCV-012.B17 the hash covered keypad component ids; no PIN could ever be entered through that
+ * keypad, so no stored PIN uses the old form.)
  *
- * The PIN is stored as a salted SHA-256 of that sequence, so a player save never carries a PIN that
- * could be read out of it and tried on another account.
- *
- * NOT IMPLEMENTED, and deliberately so: interface 14 ("Bank PIN Settings") and the recovery delay it
- * offers. Its three action buttons are labelled by clientscript 4146 from varc 98, and which label
- * lands on which button in which state is not established from the cache; binding them on a guess
- * would be worse than the dialogue used here, which cannot mislabel itself. Recovery delay - the
- * "your PIN will be deleted in N days" flow behind varp 563 - needs a real timer and an owner
- * decision about its length, and is recorded as pending rather than approximated.
+ * NOT IMPLEMENTED, and deliberately so: interface 14 ("Bank PIN Settings") and the recovery delay it offers - the dialogue used here
+ * cannot mislabel itself, and the delay needs an owner decision about its length.
  */
 object BankPin {
     const val PIN_INTERFACE_ID = 13
+
+    /** Interface 759: the ten digit cells, mounted into [PIN_INTERFACE_ID] component [KEYPAD_SLOT]. */
+    const val DIGITS_INTERFACE_ID = 759
+    const val KEYPAD_SLOT = 5
+    const val EXIT_COMPONENT = 25
+
+    /** The clickable child of each 759 digit cell: 4, 8, .., 40. */
+    val DIGIT_COMPONENTS = (1..10).map { it * 4 }
 
     /** The PIN itself, salted and hashed; both halves persist with the player. */
     val PIN_HASH = AttributeKey<String>(persistenceKey = "bank_pin_hash")
@@ -54,18 +67,64 @@ object BankPin {
      */
     private val VERIFIED = AttributeKey<Boolean>()
 
-    private val DIGIT_COMPONENTS = 6..15
-    private const val EXIT_COMPONENT = 25
+    /** Presses waiting to be read by the keypad task; kept per player and never persisted. */
+    private val INPUT = AttributeKey<KeypadInput>()
+
     private const val PROMPT_COMPONENT = 26
-    private const val NOTICE_COMPONENT = 27
+    private const val TITLE_COMPONENT = 27
+    private const val EVENTS_COMPONENT = 24
 
     /** varc 98 is the PIN state clientscript 4146 switches on: 0 = no PIN, 3 = a PIN is set. */
     private const val STATE_VARC = 98
     private const val STATE_NO_PIN = 0
     private const val STATE_HAS_PIN = 3
 
+    private const val STAGE_VARBIT = 1010
+    private const val KEYPAD_VARP = 163
+    private const val KEYPAD_VARC = 199
+    private const val KEYPAD_SCRIPT = 1271
+
     private const val PIN_LENGTH = 4
     private const val MAX_ATTEMPTS = 3
+
+    /**
+     * Keypad presses in click order. The button handlers only record presses here and the keypad task waits until one is
+     * available (`QueueTask.wait { .. }`), so several clicks in one game cycle are all kept and no queue hand-off is needed.
+     */
+    class KeypadInput {
+        private val digits = ArrayDeque<Int>()
+        var exited = false
+            private set
+
+        val hasDigit: Boolean get() = digits.isNotEmpty()
+
+        fun press(digit: Int) {
+            digits.addLast(digit)
+        }
+
+        fun exit() {
+            exited = true
+        }
+
+        fun takeDigit(): Int? = digits.removeFirstOrNull()
+    }
+
+    /** The digit behind interface 759 component [component], or null for anything that is not a digit button. */
+    fun digitForComponent(component: Int): Int? = if (component in DIGIT_COMPONENTS) component / 4 - 1 else null
+
+    /** A 759 digit click (bank.plugin.kts). */
+    fun pressDigit(
+        player: Player,
+        component: Int,
+    ) {
+        val digit = digitForComponent(component) ?: return
+        player.attr[INPUT]?.press(digit)
+    }
+
+    /** The keypad's Exit button (bank.plugin.kts). */
+    fun pressExit(player: Player) {
+        player.attr[INPUT]?.exit()
+    }
 
     fun isSet(player: Player): Boolean = !player.attr[PIN_HASH].isNullOrEmpty()
 
@@ -85,7 +144,7 @@ object BankPin {
         player.queue(TaskPriority.STRONG) {
             var attempts = 0
             while (attempts < MAX_ATTEMPTS) {
-                val entered = enterPin(player, "Please enter your bank PIN.") ?: return@queue
+                val entered = enterPin(player, "Bank PIN", "Please enter your bank PIN.") ?: return@queue
                 if (matches(player, entered)) {
                     player.attr[VERIFIED] = true
                     onVerified(player)
@@ -185,8 +244,8 @@ object BankPin {
     }
 
     private suspend fun QueueTask.setNewPin(player: Player) {
-        val first = enterPin(player, "Choose a bank PIN.") ?: return
-        val second = enterPin(player, "Enter the same PIN again to confirm it.") ?: return
+        val first = enterPin(player, "Set new PIN", "Please choose a new FOUR DIGIT PIN using the buttons below.") ?: return
+        val second = enterPin(player, "Confirm new PIN", "Now please enter that number again.") ?: return
         if (first != second) {
             player.message("Those PINs don't match. Your PIN has not been changed.")
             return
@@ -197,7 +256,7 @@ object BankPin {
     }
 
     private suspend fun QueueTask.confirmCurrentPin(player: Player): Boolean {
-        val entered = enterPin(player, "Please enter your current bank PIN.") ?: return false
+        val entered = enterPin(player, "Bank PIN", "Please enter your current bank PIN.") ?: return false
         if (!matches(player, entered)) {
             player.message("That PIN is incorrect.")
             return false
@@ -206,35 +265,37 @@ object BankPin {
     }
 
     /**
-     * Opens the keypad and collects [PIN_LENGTH] presses, or null when the player exits, closes the
-     * keypad or is interrupted.
+     * Opens the keypad and collects [PIN_LENGTH] digits, or null when the player exits or the task is
+     * interrupted (which closes the keypad through [terminateAction]).
      */
     private suspend fun QueueTask.enterPin(
         player: Player,
+        title: String,
         prompt: String,
     ): List<Int>? {
+        val input = KeypadInput()
+        player.attr[INPUT] = input
         player.openInterface(interfaceId = PIN_INTERFACE_ID, dest = InterfaceDestination.MAIN_SCREEN)
+        player.openInterface(parent = PIN_INTERFACE_ID, child = KEYPAD_SLOT, interfaceId = DIGITS_INTERFACE_ID, type = 1)
+        player.setVarp(KEYPAD_VARP, 0)
+        player.setVarc(STATE_VARC, 0)
+        player.setVarc(KEYPAD_VARC, -1)
+        player.setInterfaceEvents(interfaceId = PIN_INTERFACE_ID, component = EVENTS_COMPONENT, range = -1..-1, setting = 0)
+        player.setComponentText(PIN_INTERFACE_ID, TITLE_COMPONENT, title)
         player.setComponentText(PIN_INTERFACE_ID, PROMPT_COMPONENT, prompt)
-        player.setComponentText(PIN_INTERFACE_ID, NOTICE_COMPONENT, "")
-        player.setVarc(STATE_VARC, if (isSet(player)) STATE_HAS_PIN else STATE_NO_PIN)
+        player.setVarbit(STAGE_VARBIT, 0)
+        player.runClientScript(KEYPAD_SCRIPT, 1)
 
         terminateAction = closeKeypad
         val digits = mutableListOf<Int>()
         while (digits.size < PIN_LENGTH) {
-            waitReturnValue()
-            val message = requestReturnValue as? ResumePauseButtonMessage
-            if (message == null || message.interfaceId != PIN_INTERFACE_ID) {
+            wait { input.hasDigit || input.exited }
+            if (input.exited) {
                 terminateAction!!(this)
                 return null
             }
-            when (message.component) {
-                EXIT_COMPONENT -> {
-                    terminateAction!!(this)
-                    return null
-                }
-                in DIGIT_COMPONENTS -> digits += message.component
-                /* Anything else on the keypad is decoration; ignore it and keep waiting. */
-                else -> {}
+            while (digits.size < PIN_LENGTH) {
+                digits += input.takeDigit() ?: break
             }
         }
         terminateAction!!(this)
@@ -242,6 +303,7 @@ object BankPin {
     }
 
     private val closeKeypad: QueueTask.() -> Unit = {
+        player.attr.remove(INPUT)
         player.closeInterface(PIN_INTERFACE_ID)
     }
 

@@ -30,6 +30,20 @@ on_button(interfaceId = Bank.BANK_INTERFACE_ID, component = 40) {
     BankPin.manage(player)
 }
 
+/*
+ * RCV-012.B17: the PIN keypad's digit cells are interface 759 (mounted into 13:5) and its Exit is 13:25, both op1 = IF_BUTTON1 in
+ * the cache - not pause buttons (BankPin cache contract).
+ */
+BankPin.DIGIT_COMPONENTS.forEach { component ->
+    on_button(interfaceId = BankPin.DIGITS_INTERFACE_ID, component = component) {
+        BankPin.pressDigit(player, component)
+    }
+}
+
+on_button(interfaceId = BankPin.PIN_INTERFACE_ID, component = BankPin.EXIT_COMPONENT) {
+    BankPin.pressExit(player)
+}
+
 on_button(interfaceId = Bank.BANK_INTERFACE_ID, component = 33) {
     Bank.depositInventory(player)
 }
