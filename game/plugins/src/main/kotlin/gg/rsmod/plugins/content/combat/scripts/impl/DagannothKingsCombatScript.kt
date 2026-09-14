@@ -29,9 +29,10 @@ import gg.rsmod.plugins.content.combat.strategy.RangedCombatStrategy
 object DagannothKingsCombatScript : CombatScript() {
     override val ids = intArrayOf(Npcs.DAGANNOTH_SUPREME, Npcs.DAGANNOTH_PRIME, Npcs.DAGANNOTH_REX)
 
+    // Not bound (the kings run on the shared NpcAttacks model, npc-attacks.json 300/500/260); kept equal to the OSRS Wiki max hits.
     private const val SUPREME_MAX = 30.0
-    private const val PRIME_MAX = 61.0
-    private const val REX_MAX = 28.0
+    private const val PRIME_MAX = 50.0
+    private const val REX_MAX = 26.0
 
     override suspend fun handleSpecialCombat(it: QueueTask) {
         val npc = it.npc
