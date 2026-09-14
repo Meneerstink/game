@@ -5,6 +5,7 @@ import gg.rsmod.plugins.content.combat.isBeingAttacked
 import gg.rsmod.plugins.content.magic.MagicSpells.on_magic_spell_button
 import gg.rsmod.plugins.content.magic.TeleportType
 import gg.rsmod.plugins.content.magic.canTeleport
+import gg.rsmod.game.model.timer.ACTIVE_COMBAT_TIMER
 
 val TERMINATE_HOME_TELEPORT_NEUTRAL: QueueTask.() -> Unit = {
     player.animate(Anims.RESET)
@@ -45,6 +46,11 @@ HomeTeleport.values.forEach { teleport ->
             } else {
                 player.message("You need to wait another couple of seconds to cast this spell.")
             }
+            return@on_magic_spell_button
+        }
+
+        if (player.timers.has(ACTIVE_COMBAT_TIMER)) {
+            player.message("You can't home teleport until 10 seconds after the end of combat.")
             return@on_magic_spell_button
         }
 

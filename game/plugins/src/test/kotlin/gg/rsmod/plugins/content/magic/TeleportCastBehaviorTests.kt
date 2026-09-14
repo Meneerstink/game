@@ -136,8 +136,8 @@ class TeleportCastBehaviorTests {
     }
 
     @Test
-    fun `an active combat timer from a player hit blocks teleporting, matching the PJ 10 second restriction`() {
-        // PvP zone/timers further-foundations pass (2026-09-02) - see RSPS_DECISIONS.md.
+    fun `ordinary teleport is allowed during player combat unless teleblocked or above the wilderness limit`() {
+        // Novite's ten-second combat wait is in HomeTeleport.process, not ordinary teleport checks.
         val player = newPlayer(magicLevel = 99)
         every { player.lock } returns LockState.NONE
         every { player.tile } returns Tile(3040, 3576) // shallow wilderness, otherwise allowed
@@ -146,7 +146,7 @@ class TeleportCastBehaviorTests {
         every { player.timers } returns timers
         player.attr[LAST_HIT_BY_ATTR] = WeakReference(mockk<Player>(relaxed = true))
 
-        assertFalse(player.canTeleport(TeleportType.MODERN))
+        assertTrue(player.canTeleport(TeleportType.MODERN))
     }
 
     @Test
