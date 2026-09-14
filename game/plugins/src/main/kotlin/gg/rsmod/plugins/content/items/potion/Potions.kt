@@ -57,7 +57,8 @@ object Potions {
                 player.world.definitions
                     .get(ItemDef::class.java, potion.item)
                     .name
-            var message = "You drink some of your ${potionName.replace(Regex(" \\(([1234])\\)$"), "").lowercase()}."
+            // OSRS-imported potions are named without a space before the dose ("Super combat potion(4)").
+            var message = "You drink some of your ${potionName.replace(Regex(" ?\\(([1234])\\)$"), "").lowercase()}."
             if (potion.potionType.message.isNotEmpty()) {
                 message = potion.potionType.message
                 player.filterableMessage(message)

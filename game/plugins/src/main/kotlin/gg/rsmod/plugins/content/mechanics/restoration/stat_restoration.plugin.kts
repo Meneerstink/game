@@ -36,7 +36,10 @@ on_timer(key = STAT_RESTORE) {
                     // what made a familiar look free - the owner's "points do not keep draining".
                 }
                 else -> {
-                    player.skills.alterCurrentLevel(skill = index, value = boost, capValue = cap)
+                    // Divine potions: a boosted level "will not drain below the maximum boost" for five minutes (DivinePotions).
+                    if (!(boost < 0 && gg.rsmod.plugins.content.items.potion.DivinePotions.protects(player, index))) {
+                        player.skills.alterCurrentLevel(skill = index, value = boost, capValue = cap)
+                    }
                 }
             }
         }

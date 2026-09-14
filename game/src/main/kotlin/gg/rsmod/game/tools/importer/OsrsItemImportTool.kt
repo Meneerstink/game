@@ -674,6 +674,12 @@ object OsrsItemImportTool {
                     Spec(25407, noted = true, rev667Params = mapOf(749 to 6, 750 to 60, 751 to 1, 752 to 60)), // Bloodbark gauntlets
                     Spec(25410, noted = true, rev667Params = mapOf(749 to 6, 750 to 60, 751 to 1, 752 to 60)), // Bloodbark boots
                 ),
+            // Step 4 batch "potions-combat" (OSRS Wiki infobox ids, ascending = 4 to 1 doses; RuneLite gameval _4DOSEBASTION etc.): Super
+            // combat potion, the eight divine potions, Bastion and Battlemage potions. Noted variants follow automatically.
+            "potions-combat" to
+                listOf(12695, 12697, 12699, 12701, 23685, 23688, 23691, 23694, 23697, 23700, 23703, 23706, 23709, 23712, 23715, 23718,
+                    23721, 23724, 23727, 23730, 23733, 23736, 23739, 23742, 23745, 23748, 23751, 23754, 22449, 22452, 22455, 22458,
+                    22461, 22464, 22467, 22470, 24623, 24626, 24629, 24632, 24635, 24638, 24641, 24644).map { Spec(it, noted = true) },
             "deadstaves" to
                 listOf(
                     Spec(11791, noted = true, rev667Params = deadStaffParams()), // Staff of the dead

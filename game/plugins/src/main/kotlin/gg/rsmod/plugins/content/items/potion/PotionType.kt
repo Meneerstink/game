@@ -411,6 +411,57 @@ enum class PotionType(
         override fun apply(p: Player) {
             applyBoost(p, alteredSkills, alterStrategy)
         }
+    },
+
+    // OSRS-IMPORT potions-combat (DivinePotions).
+    SUPER_COMBAT {
+        override fun apply(p: Player) = DivinePotions.boost(p, intArrayOf(Skills.ATTACK, Skills.STRENGTH, Skills.DEFENCE))
+    },
+    BASTION {
+        override fun apply(p: Player) = DivinePotions.boost(p, intArrayOf(Skills.RANGED, Skills.DEFENCE))
+    },
+    BATTLEMAGE {
+        override fun apply(p: Player) = DivinePotions.boost(p, intArrayOf(Skills.MAGIC, Skills.DEFENCE))
+    },
+    DIVINE_SUPER_COMBAT {
+        override fun canDrink(p: Player) = DivinePotions.canDrinkDivine(p)
+
+        override fun apply(p: Player) = DivinePotions.drinkDivine(p, intArrayOf(Skills.ATTACK, Skills.STRENGTH, Skills.DEFENCE))
+    },
+    DIVINE_SUPER_ATTACK {
+        override fun canDrink(p: Player) = DivinePotions.canDrinkDivine(p)
+
+        override fun apply(p: Player) = DivinePotions.drinkDivine(p, intArrayOf(Skills.ATTACK))
+    },
+    DIVINE_SUPER_STRENGTH {
+        override fun canDrink(p: Player) = DivinePotions.canDrinkDivine(p)
+
+        override fun apply(p: Player) = DivinePotions.drinkDivine(p, intArrayOf(Skills.STRENGTH))
+    },
+    DIVINE_SUPER_DEFENCE {
+        override fun canDrink(p: Player) = DivinePotions.canDrinkDivine(p)
+
+        override fun apply(p: Player) = DivinePotions.drinkDivine(p, intArrayOf(Skills.DEFENCE))
+    },
+    DIVINE_RANGING {
+        override fun canDrink(p: Player) = DivinePotions.canDrinkDivine(p)
+
+        override fun apply(p: Player) = DivinePotions.drinkDivine(p, intArrayOf(Skills.RANGED))
+    },
+    DIVINE_MAGIC {
+        override fun canDrink(p: Player) = DivinePotions.canDrinkDivine(p)
+
+        override fun apply(p: Player) = DivinePotions.drinkDivine(p, intArrayOf(Skills.MAGIC))
+    },
+    DIVINE_BASTION {
+        override fun canDrink(p: Player) = DivinePotions.canDrinkDivine(p)
+
+        override fun apply(p: Player) = DivinePotions.drinkDivine(p, intArrayOf(Skills.RANGED, Skills.DEFENCE))
+    },
+    DIVINE_BATTLEMAGE {
+        override fun canDrink(p: Player) = DivinePotions.canDrinkDivine(p)
+
+        override fun apply(p: Player) = DivinePotions.drinkDivine(p, intArrayOf(Skills.MAGIC, Skills.DEFENCE))
     }, ;
 
     abstract fun apply(p: Player)

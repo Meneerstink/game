@@ -276373,3 +276373,531 @@
   tradeable: true
   weight: 0.0
   equipment: null
+- id: 23159
+  name: "Super combat potion(4)"
+  examine: "4 doses of super combat potion."
+  tradeable: true
+  weight: 0.035
+  equipment: null
+- id: 23160
+  name: "Super combat potion(4)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23161
+  name: "Super combat potion(3)"
+  examine: "3 doses of super combat potion."
+  tradeable: true
+  weight: 0.03
+  equipment: null
+- id: 23162
+  name: "Super combat potion(3)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23163
+  name: "Super combat potion(2)"
+  examine: "2 doses of super combat potion."
+  tradeable: true
+  weight: 0.03
+  equipment: null
+- id: 23164
+  name: "Super combat potion(2)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23165
+  name: "Super combat potion(1)"
+  examine: "1 dose of super combat potion."
+  tradeable: true
+  weight: 0.03
+  equipment: null
+- id: 23166
+  name: "Super combat potion(1)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23167
+  name: "Divine super combat potion(4)"
+  examine: "4 doses of divine super combat potion."
+  tradeable: true
+  weight: 0.035
+  equipment: null
+- id: 23168
+  name: "Divine super combat potion(4)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23169
+  name: "Divine super combat potion(3)"
+  examine: "3 doses of divine super combat potion."
+  tradeable: true
+  weight: 0.03
+  equipment: null
+- id: 23170
+  name: "Divine super combat potion(3)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23171
+  name: "Divine super combat potion(2)"
+  examine: "2 doses of divine super combat potion."
+  tradeable: true
+  weight: 0.03
+  equipment: null
+- id: 23172
+  name: "Divine super combat potion(2)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23173
+  name: "Divine super combat potion(1)"
+  examine: "1 dose of divine super combat potion."
+  tradeable: true
+  weight: 0.03
+  equipment: null
+- id: 23174
+  name: "Divine super combat potion(1)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23175
+  name: "Divine super attack potion(4)"
+  examine: "4 doses of divine super attack potion."
+  tradeable: true
+  weight: 0.035
+  equipment: null
+- id: 23176
+  name: "Divine super attack potion(4)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23177
+  name: "Divine super attack potion(3)"
+  examine: "3 doses of divine super attack potion."
+  tradeable: true
+  weight: 0.03
+  equipment: null
+- id: 23178
+  name: "Divine super attack potion(3)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23179
+  name: "Divine super attack potion(2)"
+  examine: "2 doses of divine super attack potion."
+  tradeable: true
+  weight: 0.03
+  equipment: null
+- id: 23180
+  name: "Divine super attack potion(2)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23181
+  name: "Divine super attack potion(1)"
+  examine: "1 dose of divine super attack potion."
+  tradeable: true
+  weight: 0.03
+  equipment: null
+- id: 23182
+  name: "Divine super attack potion(1)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23183
+  name: "Divine super strength potion(4)"
+  examine: "4 doses of divine super strength potion."
+  tradeable: true
+  weight: 0.035
+  equipment: null
+- id: 23184
+  name: "Divine super strength potion(4)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23185
+  name: "Divine super strength potion(3)"
+  examine: "3 doses of divine super strength potion."
+  tradeable: true
+  weight: 0.03
+  equipment: null
+- id: 23186
+  name: "Divine super strength potion(3)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23187
+  name: "Divine super strength potion(2)"
+  examine: "2 doses of divine super strength potion."
+  tradeable: true
+  weight: 0.03
+  equipment: null
+- id: 23188
+  name: "Divine super strength potion(2)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23189
+  name: "Divine super strength potion(1)"
+  examine: "1 dose of divine super strength potion."
+  tradeable: true
+  weight: 0.03
+  equipment: null
+- id: 23190
+  name: "Divine super strength potion(1)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23191
+  name: "Divine super defence potion(4)"
+  examine: "4 doses of divine super defence potion."
+  tradeable: true
+  weight: 0.035
+  equipment: null
+- id: 23192
+  name: "Divine super defence potion(4)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23193
+  name: "Divine super defence potion(3)"
+  examine: "3 doses of divine super defence potion."
+  tradeable: true
+  weight: 0.03
+  equipment: null
+- id: 23194
+  name: "Divine super defence potion(3)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23195
+  name: "Divine super defence potion(2)"
+  examine: "2 doses of divine super defence potion."
+  tradeable: true
+  weight: 0.03
+  equipment: null
+- id: 23196
+  name: "Divine super defence potion(2)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23197
+  name: "Divine super defence potion(1)"
+  examine: "1 dose of divine super defence potion."
+  tradeable: true
+  weight: 0.03
+  equipment: null
+- id: 23198
+  name: "Divine super defence potion(1)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23199
+  name: "Divine ranging potion(4)"
+  examine: "4 doses of divine ranging potion."
+  tradeable: true
+  weight: 0.035
+  equipment: null
+- id: 23200
+  name: "Divine ranging potion(4)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23201
+  name: "Divine ranging potion(3)"
+  examine: "3 doses of divine ranging potion."
+  tradeable: true
+  weight: 0.03
+  equipment: null
+- id: 23202
+  name: "Divine ranging potion(3)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23203
+  name: "Divine ranging potion(2)"
+  examine: "2 doses of divine ranging potion."
+  tradeable: true
+  weight: 0.03
+  equipment: null
+- id: 23204
+  name: "Divine ranging potion(2)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23205
+  name: "Divine ranging potion(1)"
+  examine: "1 dose of divine ranging potion."
+  tradeable: true
+  weight: 0.03
+  equipment: null
+- id: 23206
+  name: "Divine ranging potion(1)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23207
+  name: "Divine magic potion(4)"
+  examine: "4 doses of divine magic potion."
+  tradeable: true
+  weight: 0.035
+  equipment: null
+- id: 23208
+  name: "Divine magic potion(4)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23209
+  name: "Divine magic potion(3)"
+  examine: "3 doses of divine magic potion."
+  tradeable: true
+  weight: 0.03
+  equipment: null
+- id: 23210
+  name: "Divine magic potion(3)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23211
+  name: "Divine magic potion(2)"
+  examine: "2 doses of divine magic potion."
+  tradeable: true
+  weight: 0.03
+  equipment: null
+- id: 23212
+  name: "Divine magic potion(2)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23213
+  name: "Divine magic potion(1)"
+  examine: "1 dose of divine magic potion."
+  tradeable: true
+  weight: 0.03
+  equipment: null
+- id: 23214
+  name: "Divine magic potion(1)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23215
+  name: "Battlemage potion(4)"
+  examine: "4 doses of battlemage potion."
+  tradeable: true
+  weight: 0.135
+  equipment: null
+- id: 23216
+  name: "Battlemage potion(4)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23217
+  name: "Battlemage potion(3)"
+  examine: "3 doses of battlemage potion."
+  tradeable: true
+  weight: 0.03
+  equipment: null
+- id: 23218
+  name: "Battlemage potion(3)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23219
+  name: "Battlemage potion(2)"
+  examine: "2 doses of battlemage potion."
+  tradeable: true
+  weight: 0.03
+  equipment: null
+- id: 23220
+  name: "Battlemage potion(2)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23221
+  name: "Battlemage potion(1)"
+  examine: "1 dose of battlemage potion."
+  tradeable: true
+  weight: 0.03
+  equipment: null
+- id: 23222
+  name: "Battlemage potion(1)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23223
+  name: "Bastion potion(4)"
+  examine: "4 doses of bastion potion."
+  tradeable: true
+  weight: 0.135
+  equipment: null
+- id: 23224
+  name: "Bastion potion(4)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23225
+  name: "Bastion potion(3)"
+  examine: "3 doses of bastion potion."
+  tradeable: true
+  weight: 0.03
+  equipment: null
+- id: 23226
+  name: "Bastion potion(3)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23227
+  name: "Bastion potion(2)"
+  examine: "2 doses of bastion potion."
+  tradeable: true
+  weight: 0.03
+  equipment: null
+- id: 23228
+  name: "Bastion potion(2)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23229
+  name: "Bastion potion(1)"
+  examine: "1 dose of bastion potion."
+  tradeable: true
+  weight: 0.03
+  equipment: null
+- id: 23230
+  name: "Bastion potion(1)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23231
+  name: "Divine battlemage potion(4)"
+  examine: "4 doses of divine battlemage potion."
+  tradeable: true
+  weight: 0.135
+  equipment: null
+- id: 23232
+  name: "Divine battlemage potion(4)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23233
+  name: "Divine battlemage potion(3)"
+  examine: "3 doses of divine battlemage potion."
+  tradeable: true
+  weight: 0.03
+  equipment: null
+- id: 23234
+  name: "Divine battlemage potion(3)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23235
+  name: "Divine battlemage potion(2)"
+  examine: "2 doses of divine battlemage potion."
+  tradeable: true
+  weight: 0.03
+  equipment: null
+- id: 23236
+  name: "Divine battlemage potion(2)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23237
+  name: "Divine battlemage potion(1)"
+  examine: "1 dose of divine battlemage potion."
+  tradeable: true
+  weight: 0.03
+  equipment: null
+- id: 23238
+  name: "Divine battlemage potion(1)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23239
+  name: "Divine bastion potion(4)"
+  examine: "4 doses of divine bastion potion."
+  tradeable: true
+  weight: 0.135
+  equipment: null
+- id: 23240
+  name: "Divine bastion potion(4)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23241
+  name: "Divine bastion potion(3)"
+  examine: "3 doses of divine bastion potion."
+  tradeable: true
+  weight: 0.03
+  equipment: null
+- id: 23242
+  name: "Divine bastion potion(3)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23243
+  name: "Divine bastion potion(2)"
+  examine: "2 doses of divine bastion potion."
+  tradeable: true
+  weight: 0.03
+  equipment: null
+- id: 23244
+  name: "Divine bastion potion(2)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23245
+  name: "Divine bastion potion(1)"
+  examine: "1 dose of divine bastion potion."
+  tradeable: true
+  weight: 0.03
+  equipment: null
+- id: 23246
+  name: "Divine bastion potion(1)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
