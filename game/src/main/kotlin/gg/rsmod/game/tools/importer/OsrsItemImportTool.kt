@@ -527,6 +527,32 @@ object OsrsItemImportTool {
                     Spec(30070, noted = true, rev667Params = mapOf(644 to 1955, 686 to 1, 749 to 6, 750 to 65), weaponType = 1), // Dragon hunter wand
                     Spec(29594, noted = true, rev667Params = mapOf(644 to 28, 686 to 1), weaponType = 1, attackAudio = 2555), // Purging staff
                 ),
+            // Step 3 roster batch "bows" (ids by Jagex name, RuneLite gameval ItemID): main-game bows and thrown weapons with ranged
+            // strength plus their charge/creation items. Classes: Magic shortbow 861 (686 16, 687 1, 749/750 Ranged) for bows, Dragon
+            // knife class for the Tonalztics, Heavy ballista 19481 for the (or). Not imported: Starter bow (Deadman), Nature's recurve/
+            // reprisal and King's barrage (League), Spine 33790 and Silvthrill ballista/javelin 33800/33801 (quest-only, The Blood Moon
+            // Rises) - owner questions.
+            "bows" to
+                listOf(
+                    Spec(23983, rev667Params = bowParams(70) + mapOf(751 to 16, 752 to 50), weaponType = 16, attackAudio = 2700, rev667StringParams = mapOf(528 to "Check")), // Crystal bow
+                    Spec(23985, noted = true, rev667Params = bowParams(70) + mapOf(751 to 16, 752 to 50), weaponType = 16, attackAudio = 2700), // Crystal bow (inactive)
+                    Spec(22547, noted = true, rev667Params = bowParams(60), weaponType = 16, attackAudio = 2700), // Craw's bow (u)
+                    Spec(22550, rev667Params = bowParams(60), weaponType = 16, attackAudio = 2700, rev667StringParams = mapOf(528 to "Check")), // Craw's bow
+                    Spec(27652, noted = true, rev667Params = bowParams(70), weaponType = 16, attackAudio = 2700), // Webweaver bow (u)
+                    Spec(27655, rev667Params = bowParams(70), weaponType = 16, attackAudio = 2700, rev667StringParams = mapOf(528 to "Check")), // Webweaver bow
+                    Spec(27670, noted = true), // Fangs of Venenatis
+                    Spec(21820), // Revenant ether
+                    Spec(27610, rev667Params = bowParams(80), weaponType = 16, attackAudio = 2700, rev667StringParams = mapOf(528 to "Check")), // Venator bow
+                    Spec(27612, noted = true, rev667Params = bowParams(80), weaponType = 16, attackAudio = 2700), // Venator bow (uncharged)
+                    Spec(27614, noted = true), // Venator shard
+                    Spec(27616), // Ancient essence
+                    Spec(29591, noted = true, rev667Params = bowParams(77), weaponType = 16, attackAudio = 2700), // Scorching bow
+                    Spec(29580, noted = true), // Tormented synapse
+                    Spec(28919, noted = true, rev667Params = mapOf(686 to 18, 687 to 1, 749 to 4, 750 to 75), weaponType = 18), // Tonalztics of Ralos (uncharged)
+                    Spec(28922, rev667Params = mapOf(686 to 18, 687 to 1, 749 to 4, 750 to 75), weaponType = 18, rev667StringParams = mapOf(528 to "Check")), // Tonalztics of Ralos
+                    Spec(26711), // Heavy ballista ornament kit
+                    Spec(26712, rev667Params = mapOf(644 to 1603, 686 to 17, 687 to 1, 23 to 75, 749 to 4, 750 to 75), weaponType = 17, attackAudio = 2700), // Heavy ballista (or)
+                ),
             "deadstaves" to
                 listOf(
                     Spec(11791, noted = true, rev667Params = deadStaffParams()), // Staff of the dead
@@ -549,6 +575,9 @@ object OsrsItemImportTool {
      * cannon, which has a special, carries it) - every imported weapon with a special needs it.
      */
     private fun crossbowParams(requiredRanged: Int) = mapOf(644 to 175, 686 to 17, 687 to 1, 23 to requiredRanged, 749 to 4, 750 to requiredRanged)
+
+    /** 667 Magic shortbow 861 class (ItemParamProbeTool 2026-09-14): bow style set 16, special bar, one Ranged requirement. */
+    private fun bowParams(requiredRanged: Int) = mapOf(686 to 16, 687 to 1, 23 to requiredRanged, 749 to 4, 750 to requiredRanged)
 
     private fun boltParams(requiredRanged: Int) = mapOf(23 to requiredRanged, 749 to 4, 750 to requiredRanged)
 

@@ -50,7 +50,8 @@ object CrystalEquipment {
 
     /** Charged item -> inactive item, for everything that uses crystal shard charges. */
     val INACTIVE_FOR: Map<Int, Int> =
-        mapOf(Items.BOW_OF_FAERDHINEN to Items.BOW_OF_FAERDHINEN_INACTIVE) + ARMOUR.associate { it.active to it.inactive }
+        mapOf(Items.BOW_OF_FAERDHINEN to Items.BOW_OF_FAERDHINEN_INACTIVE, Items.CRYSTAL_BOW_OSRS to Items.CRYSTAL_BOW_OSRS_INACTIVE) +
+            ARMOUR.associate { it.active to it.inactive }
 
     val CHARGED_FOR: Map<Int, Int> = INACTIVE_FOR.entries.associate { (charged, inactive) -> inactive to charged }
 
@@ -105,7 +106,9 @@ object CrystalEquipment {
     /** "one charge being depleted for each hit, whether it is a successful one or not" (the corrupted bow never). */
     fun afterBowShot(player: Player) {
         val weapon = player.getEquipment(EquipmentType.WEAPON) ?: return
-        if (weapon.id != Items.BOW_OF_FAERDHINEN) return
+        // OSRS-IMPORT bows: the crystal bow degrades one charge per shot too ("will last for ... 2,500 shots", "Crystal shards can be
+        // used to recharge the weapon to a maximum of 20,000 charges, with each shard providing 100 charges").
+        if (weapon.id != Items.BOW_OF_FAERDHINEN && weapon.id != Items.CRYSTAL_BOW_OSRS) return
         player.equipment[EquipmentType.WEAPON.id] = withCharges(weapon, charges(weapon) - 1)
     }
 

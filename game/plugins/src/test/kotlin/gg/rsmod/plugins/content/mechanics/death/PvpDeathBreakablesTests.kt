@@ -137,7 +137,9 @@ class PvpDeathBreakablesTests {
         val untradeableKits = gg.rsmod.plugins.content.items.osrs.OsrsOrnamentKits.ALL.filterNot { it.pvpConvert }
         // + Elidinis' ward (or): OSRS Wiki "Elidinis' ward (or)" - on a PvP death "the Menaphite ornament kit will be placed in their
         // gravestone" (no base + kit drop to the PKer).
-        assertEquals(7, untradeableKits.size, "3 elder chaos (or) + 3 Dagon'hai (or) + Elidinis' ward (or)")
+        // + Heavy ballista (or): the Heavy ballista ornament kit is an untradeable Bounty Hunter reward (same SOURCE_GAP as above).
+        assertEquals(8, untradeableKits.size, "3 elder chaos (or) + 3 Dagon'hai (or) + Elidinis' ward (or) + Heavy ballista (or)")
+        assertTrue(untradeableKits.any { it.ornamented == gg.rsmod.plugins.api.cfg.Items.HEAVY_BALLISTA_OR })
         untradeableKits.forEach { ornament ->
             val lost = listOf(DeathSlotItem(DeathContainerSource.INVENTORY, 0, Item(ornament.ornamented, 1)))
             val (result, converting) = PvpDeathBreakables.split(DeathResolutionResult(DeathContext.WILDERNESS_PVP, newPlayer(), newPlayer(), DeathItemRiskResult(0, emptyList(), lost)))

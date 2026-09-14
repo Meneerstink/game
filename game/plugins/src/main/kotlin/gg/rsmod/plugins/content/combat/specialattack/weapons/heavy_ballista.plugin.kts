@@ -9,7 +9,7 @@ import gg.rsmod.plugins.content.combat.specialattack.SpecialAttacks
  * increased accuracy and damage. The OSRS ballista animation and graphics are not in the 667 tables, so the shot uses the
  * normal crossbow animation, sound and javelin projectile (ADAPTED_TO_667, recorded in `C:\RSPS\OSRS_IMPORT_STATUS.md`).
  */
-SpecialAttacks.register(65, Items.HEAVY_BALLISTA) {
+SpecialAttacks.register(65, Items.HEAVY_BALLISTA, Items.HEAVY_BALLISTA_OR) {
     player.animate(CombatConfigs.getAttackAnimation(player))
     player.graphic(gg.rsmod.plugins.content.items.osrs.OsrsGfx.BALLISTA_SPECIAL) // OSRS BALLISTA_SPECIAL (fxpilot)
     player.playSound(Sfx.CROSSBOW)

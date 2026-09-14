@@ -19802,5 +19802,31 @@ object Items {
     const val DRAGON_HUNTER_WAND = 23000
     const val DRAGON_HUNTER_WAND_NOTED = 23001
     const val PURGING_STAFF = 23002
+
+    // OSRS-IMPORT batch bows (tx-20260914-062424). 23013-23016 / 23022-23025 are the ether / essence stack-count visuals.
+    const val CRYSTAL_BOW_OSRS = 23003
+    const val CRYSTAL_BOW_OSRS_INACTIVE = 23004
+    const val CRAWS_BOW_U = 23005
+    const val CRAWS_BOW_U_NOTED = 23006
+    const val CRAWS_BOW = 23007
+    const val WEBWEAVER_BOW_U = 23008
+    const val WEBWEAVER_BOW_U_NOTED = 23009
+    const val WEBWEAVER_BOW = 23010
+    const val FANGS_OF_VENENATIS = 23011
+    const val FANGS_OF_VENENATIS_NOTED = 23012
+    const val REVENANT_ETHER = 23017
+    const val VENATOR_BOW = 23018
+    const val VENATOR_BOW_UNCHARGED = 23019
+    const val VENATOR_BOW_UNCHARGED_NOTED = 23020
+    const val VENATOR_SHARD = 23021
+    const val ANCIENT_ESSENCE = 23026
+    const val SCORCHING_BOW = 23027
+    const val TORMENTED_SYNAPSE = 23028
+    const val TORMENTED_SYNAPSE_NOTED = 23029
+    const val TONALZTICS_OF_RALOS_UNCHARGED = 23030
+    const val TONALZTICS_OF_RALOS_UNCHARGED_NOTED = 23031
+    const val TONALZTICS_OF_RALOS = 23032
+    const val HEAVY_BALLISTA_ORNAMENT_KIT = 23033
+    const val HEAVY_BALLISTA_OR = 23034
     // Auto-generated file using class gg.rsmod.game.service.game.DumpEntityIdService
 }

@@ -54,6 +54,8 @@ enum class CrossbowType(
 
     // OSRS-IMPORT: the Heavy ballista fires only the OSRS javelins (ammo slot), never the 667 thrown javelins.
     HEAVY_BALLISTA(item = Items.HEAVY_BALLISTA, ammo = Javelins.BALLISTA_JAVELINS),
+    // OSRS Wiki "Heavy ballista (or)": "a cosmetic variant of the heavy ballista".
+    HEAVY_BALLISTA_OR(item = Items.HEAVY_BALLISTA_OR, ammo = Javelins.BALLISTA_JAVELINS),
 
     BLURITE_CROSSBOW(item = Items.BLURITE_CROSSBOW, ammo = BRONZE_BOLTS + BLURITE_BOLTS),
     DORGESHUUN_CROSSBOW(item = Items.DORGESHUUN_CBOW, ammo = BONE_BOLTS),

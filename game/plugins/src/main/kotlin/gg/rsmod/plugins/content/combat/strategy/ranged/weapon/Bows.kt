@@ -23,6 +23,8 @@ object Bows {
             Items.BOW_OF_FAERDHINEN,
             Items.BOW_OF_FAERDHINEN_INACTIVE,
             Items.BOW_OF_FAERDHINEN_C,
+            Items.CRYSTAL_BOW_OSRS,
+            Items.CRYSTAL_BOW_OSRS_INACTIVE,
         )
 
     val LONG_BOWS =

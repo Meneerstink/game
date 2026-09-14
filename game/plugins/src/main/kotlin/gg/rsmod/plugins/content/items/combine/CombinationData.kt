@@ -262,6 +262,7 @@ enum class CombinationData(
     ELDER_CHAOS_HOOD_OR(items = intArrayOf(Items.ELDER_CHAOS_ROBES_ORNAMENT_KIT, Items.ELDER_CHAOS_HOOD), resultItem = Items.ELDER_CHAOS_HOOD_OR, experience = 0.0),
     DAGONHAI_HAT_OR(items = intArrayOf(Items.DAGONHAI_ROBES_ORNAMENT_KIT, Items.DAGONHAI_HAT), resultItem = Items.DAGONHAI_HAT_OR, experience = 0.0),
     DAGONHAI_ROBE_TOP_OR(items = intArrayOf(Items.DAGONHAI_ROBES_ORNAMENT_KIT, Items.DAGONHAI_ROBE_TOP), resultItem = Items.DAGONHAI_ROBE_TOP_OR, experience = 0.0),
+    HEAVY_BALLISTA_OR(items = intArrayOf(Items.HEAVY_BALLISTA_ORNAMENT_KIT, Items.HEAVY_BALLISTA), resultItem = Items.HEAVY_BALLISTA_OR, experience = 0.0),
     DAGONHAI_ROBE_BOTTOM_OR(items = intArrayOf(Items.DAGONHAI_ROBES_ORNAMENT_KIT, Items.DAGONHAI_ROBE_BOTTOM), resultItem = Items.DAGONHAI_ROBE_BOTTOM_OR, experience = 0.0),
 
     /**

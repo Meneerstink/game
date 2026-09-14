@@ -1,0 +1,84 @@
+package gg.rsmod.plugins.content.combat.specialattack.weapons
+
+import gg.rsmod.game.model.entity.Npc
+import gg.rsmod.game.model.entity.Pawn
+import gg.rsmod.plugins.content.combat.CombatConfigs
+import gg.rsmod.plugins.content.combat.createProjectile
+import gg.rsmod.plugins.content.combat.dealHit
+import gg.rsmod.plugins.content.combat.formula.RangedCombatFormula
+import gg.rsmod.plugins.content.combat.specialattack.SpecialAttacks
+import gg.rsmod.plugins.content.combat.strategy.RangedCombatStrategy
+import gg.rsmod.plugins.content.combat.strategy.ranged.RangedProjectile
+import gg.rsmod.plugins.content.inter.attack.AttackTab
+import gg.rsmod.plugins.content.items.osrs.RevenantBows
+import gg.rsmod.plugins.content.items.osrs.ScorchingBow
+import gg.rsmod.plugins.content.items.osrs.Tonalztics
+
+/*
+ * OSRS-IMPORT batch bows specials (rules and sources in RevenantBows, ScorchingBow, Tonalztics). Looks: the 667 bow / thrown attack
+ * animation, 667 crystal bow arrow and rune thrownaxe projectiles (ADAPTED_TO_667; OSRS FX_WEBWEAVER01_*, VFX_SCORCHING_BOW_* and the
+ * Tonalztics graphics are not imported). Successive hits land one tick apart (ADAPTED, spacing unsourced).
+ */
+
+/* Webweaver bow - Swarm: 50 %, four hits with doubled accuracy, each up to 40 % of the max hit rounded up; one ether charge. */
+SpecialAttacks.register(RevenantBows.SWARM_ENERGY, Items.WEBWEAVER_BOW) {
+    val victim = target
+    player.animate(CombatConfigs.getAttackAnimation(player))
+    player.playSound(Sfx.SHORTBOW)
+    val delay = RangedCombatStrategy.getHitDelay(player.getCentreTile(), victim.getCentreTile())
+    val maxHit = RevenantBows.swarmMaxHit(RangedCombatFormula.getMaxHit(player, victim))
+    repeat(RevenantBows.SWARM_HITS) { index ->
+        world.spawn(player.createProjectile(victim, 249, RangedProjectile.RUNE_ARROW.type))
+        val landHit = RangedCombatFormula.getAccuracy(player, victim, RevenantBows.SWARM_ACCURACY) >= world.randomDouble()
+        player.dealHit(target = victim, maxHit = maxHit, landHit = landHit, delay = delay + index, hitType = HitType.RANGE)
+    }
+    RevenantBows.afterShot(player)
+}
+
+/* Scorching bow - Scorching shackles: 25 %, demons only; a normal shot, a 20-tick bind and 5 burn damage (1 every 4 ticks). */
+SpecialAttacks.register(ScorchingBow.SHACKLES_ENERGY, Items.SCORCHING_BOW) {
+    val victim = target
+    if (!ScorchingBow.isDemon(victim)) {
+        player.message(ScorchingBow.NOT_DEMON_MESSAGE)
+        // ADAPTED: this engine drains the energy before the special runs; the special does not work, so the energy is returned.
+        AttackTab.setEnergy(player, minOf(100, AttackTab.getEnergy(player) + ScorchingBow.SHACKLES_ENERGY))
+        return@register
+    }
+    player.animate(CombatConfigs.getAttackAnimation(player))
+    player.playSound(Sfx.SHORTBOW)
+    val delay = RangedCombatStrategy.getHitDelay(player.getCentreTile(), victim.getCentreTile())
+    if (gg.rsmod.plugins.content.combat.specialattack.SpecialAttackSupport.rangedShot(player, victim, delay = delay, projectileGfx = 249) == -1) {
+        return@register
+    }
+    victim.freeze(ScorchingBow.BIND_TICKS)
+    repeat(ScorchingBow.BURN_HITS) { index -> victim.hit(damage = 1, delay = delay + index * ScorchingBow.BURN_INTERVAL_TICKS) }
+}
+
+fun divisionDrain(victim: Pawn) {
+    when (victim) {
+        is Npc -> {
+            val drain = Tonalztics.divisionDrain(victim.stats.getCurrentLevel(NpcSkills.MAGIC))
+            val level = victim.stats.getCurrentLevel(NpcSkills.DEFENCE)
+            victim.stats.setCurrentLevel(NpcSkills.DEFENCE, maxOf(0, level - drain))
+        }
+        is Player -> victim.skills.alterCurrentLevel(Skills.DEFENCE, -Tonalztics.divisionDrain(victim.skills.getCurrentLevel(Skills.MAGIC)))
+    }
+}
+
+/* Tonalztics of Ralos - Division: 50 %, accuracy x1.5, each successful hit lowers Defence by 1/8 of the target's Magic level. */
+Tonalztics.ALL.forEach { weapon ->
+    SpecialAttacks.register(Tonalztics.DIVISION_ENERGY, weapon) {
+        val victim = target
+        player.animate(CombatConfigs.getAttackAnimation(player))
+        player.playSound(Sfx.THROWN)
+        val delay = RangedCombatStrategy.getHitDelay(player.getCentreTile(), victim.getCentreTile())
+        repeat(Tonalztics.hits(player.getEquipment(EquipmentType.WEAPON))) { index ->
+            world.spawn(player.createProjectile(victim, RangedProjectile.DRAGON_THROWNAXE.gfx, RangedProjectile.DRAGON_THROWNAXE.type))
+            val landHit = RangedCombatFormula.getAccuracy(player, victim, Tonalztics.DIVISION_ACCURACY) >= world.randomDouble()
+            player.dealHit(target = victim, maxHit = RangedCombatFormula.getMaxHit(player, victim), landHit = landHit, delay = delay + index, hitType = HitType.RANGE)
+            // The calculator applies the first hit's reduction to the second hit's roll, so it is applied at once.
+            if (landHit) divisionDrain(victim)
+        }
+        Tonalztics.afterThrow(player)
+    }
+}

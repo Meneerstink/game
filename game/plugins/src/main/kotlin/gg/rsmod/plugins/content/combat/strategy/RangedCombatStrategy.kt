@@ -63,7 +63,12 @@ object RangedCombatStrategy : CombatStrategy {
                     Items.HUNTERS_SUNLIGHT_CROSSBOW -> 8
                     Items.SEERCULL -> 8
                     // OSRS Wiki "Heavy ballista": attack range 9 (10 on longrange).
-                    in Bows.LONG_BOWS, Items.CHINCHOMPA_10033, Items.RED_CHINCHOMPA_10034, Items.BLACK_CHINCHOMPA, Items.HEAVY_BALLISTA -> 9
+                    // OSRS-IMPORT bows (wiki item pages): Craw's/Webweaver 9, Venator 6, Scorching 10, Tonalztics 6 (7 charged).
+                    Items.CRAWS_BOW_U, Items.CRAWS_BOW, Items.WEBWEAVER_BOW_U, Items.WEBWEAVER_BOW -> 9
+                    Items.VENATOR_BOW, Items.VENATOR_BOW_UNCHARGED, Items.TONALZTICS_OF_RALOS_UNCHARGED -> 6
+                    Items.TONALZTICS_OF_RALOS -> 7
+                    Items.SCORCHING_BOW -> 10
+                    in Bows.LONG_BOWS, Items.CHINCHOMPA_10033, Items.RED_CHINCHOMPA_10034, Items.BLACK_CHINCHOMPA, Items.HEAVY_BALLISTA, Items.HEAVY_BALLISTA_OR -> 9
                     // S4, 2026-09-03: OSRS Wiki "Twisted bow" - "attack range of 10 tiles ...
                     // matching the maximum range in the game", also matches A4's own sourced
                     // param 13 = 10 read from the pinned upstream item def.
@@ -91,6 +96,15 @@ object RangedCombatStrategy : CombatStrategy {
 
             if (weapon?.id == Items.TOXIC_BLOWPIPE && !Blowpipe.canFire(weapon)) {
                 pawn.message(if (Blowpipe.scales(weapon) <= 0) Blowpipe.NO_SCALES_MESSAGE else Blowpipe.NO_DARTS_MESSAGE)
+                pawn.resetFacePawn()
+                return false
+            }
+
+            // Craw's bow / Webweaver bow: "It has to be charged with revenant ether to be fired" (RevenantBows).
+            if (weapon != null && weapon.id in gg.rsmod.plugins.content.items.osrs.RevenantBows.ALL &&
+                !gg.rsmod.plugins.content.items.osrs.RevenantBows.canFire(weapon)
+            ) {
+                pawn.message(gg.rsmod.plugins.content.items.osrs.RevenantBows.NO_ETHER_MESSAGE)
                 pawn.resetFacePawn()
                 return false
             }
@@ -166,7 +180,13 @@ object RangedCombatStrategy : CombatStrategy {
                 }
 
             val fired = if (ammoSlot == EquipmentType.AMMO) RangedAmmo.fired(pawn) else null
-            val ammo = if (ammoSlot == EquipmentType.AMMO) fired?.item else pawn.getEquipment(ammoSlot)
+            // The Tonalztics of Ralos is thrown but never used up ("effectively provides unlimited ammo").
+            val ammo =
+                if (ammoSlot == EquipmentType.AMMO) {
+                    fired?.item
+                } else {
+                    pawn.getEquipment(ammoSlot)?.takeUnless { gg.rsmod.plugins.content.items.osrs.Tonalztics.isTonalztics(it.id) }
+                }
             boltAmmoId = ammo?.id
             /*
              * Create a projectile based on ammo.
@@ -177,7 +197,13 @@ object RangedCombatStrategy : CombatStrategy {
                 ammoProjectile.drawback?.let { drawback -> pawn.graphic(drawback) }
                 ammoProjectile.impact?.let { impact -> target.graphic(impact.id, impact.height, projectile.lifespan) }
                 world.spawn(projectile)
-            } else if (gg.rsmod.plugins.content.items.osrs.CrystalEquipment.isCrystalBow(pawn.getEquipment(EquipmentType.WEAPON)?.id)) {
+            } else if (gg.rsmod.plugins.content.items.osrs.Tonalztics.isTonalztics(pawn.getEquipment(EquipmentType.WEAPON)?.id)) {
+                // ADAPTED_TO_667: the 667 rune thrownaxe projectile (OSRS Tonalztics graphics not imported).
+                world.spawn(pawn.createProjectile(target, RangedProjectile.DRAGON_THROWNAXE.gfx, RangedProjectile.DRAGON_THROWNAXE.type))
+            } else if (gg.rsmod.plugins.content.items.osrs.CrystalEquipment.isCrystalBow(pawn.getEquipment(EquipmentType.WEAPON)?.id) ||
+                pawn.getEquipment(EquipmentType.WEAPON)?.id in gg.rsmod.plugins.content.items.osrs.RevenantBows.ALL
+            ) {
+                // Craw's / Webweaver bow shots: ADAPTED_TO_667 crystal bow arrow (OSRS WILD_CAVE_BOW_ARROW_* not imported).
                 // Crystal bows fire their own arrow: Void donor arrows.gfx.toml special_arrow_shoot 250 (drawback, height 60) and
                 // special_arrow 249 (projectile). Bow of Faerdhinen: OSRS SP_ATTACK_ARROW_LAUNCH/TRAVEL_FAERDHINEN imported (fxpilot),
                 // same height as the crystal bow (ADAPTED).
@@ -331,6 +357,53 @@ object RangedCombatStrategy : CombatStrategy {
             val secondDamage = secondHit.hit.hitmarks.sumOf { it.damage }
             second.bolt?.let { bolt -> secondHit.hit.addAction { EnchantedBolts.afterHit(bolt, pawn, target, secondDamage) } }
             if (secondDamage > 0) addCombatXp(pawn, target, secondDamage)
+        }
+        // Tonalztics of Ralos (charged): a second hit with its own accuracy and damage rolls.
+        if (pawn is Player && gg.rsmod.plugins.content.items.osrs.Tonalztics.hits(pawn.getEquipment(EquipmentType.WEAPON)) == 2) {
+            val second =
+                pawn.dealHit(
+                    target = target,
+                    maxHit = maxHit,
+                    landHit = formula.getAccuracy(pawn, target) >= world.randomDouble(),
+                    delay = hitDelay,
+                    hitType = HitType.RANGE,
+                )
+            val secondDamage = second.hit.hitmarks.sumOf { it.damage }
+            if (secondDamage > 0) addCombatXp(pawn, target, secondDamage)
+        }
+        // Venator bow (charged, multicombat): up to two bounces, each rolling its own accuracy at 2/3 of the original max hit.
+        if (pawn is Player && gg.rsmod.plugins.content.items.osrs.VenatorBow.active(pawn)) {
+            var from: Pawn = target
+            var delay = hitDelay
+            repeat(gg.rsmod.plugins.content.items.osrs.VenatorBow.BOUNCES) {
+                val options =
+                    gg.rsmod.plugins.content.combat.specialattack.SpecialAttackSupport.adjacentTargets(
+                        pawn,
+                        from,
+                        gg.rsmod.plugins.content.items.osrs.VenatorBow.BOUNCE_RADIUS,
+                    )
+                if (options.isEmpty()) return@repeat
+                val next = options[world.random(options.size - 1)]
+                // ADAPTED_TO_667: crystal bow arrow graphic for the ricochet (OSRS ARROW_VENATOR01_* not imported).
+                world.spawn(from.createProjectile(next, 249, ProjectileType.ARROW))
+                delay += getHitDelay(from.getCentreTile(), next.getCentreTile())
+                val bounce =
+                    pawn.dealHit(
+                        target = next,
+                        maxHit = gg.rsmod.plugins.content.items.osrs.VenatorBow.bounceMaxHit(maxHit),
+                        landHit = formula.getAccuracy(pawn, next) >= world.randomDouble(),
+                        delay = delay,
+                        hitType = HitType.RANGE,
+                    )
+                val bounceDamage = bounce.hit.hitmarks.sumOf { it.damage }
+                if (bounceDamage > 0) addCombatXp(pawn, next, bounceDamage)
+                from = next
+            }
+        }
+        if (pawn is Player) {
+            gg.rsmod.plugins.content.items.osrs.RevenantBows.afterShot(pawn)
+            gg.rsmod.plugins.content.items.osrs.VenatorBow.afterShot(pawn)
+            gg.rsmod.plugins.content.items.osrs.Tonalztics.afterThrow(pawn)
         }
         if (firedBlowpipe) {
             pawnHit.hit.addAction { BlowpipeCombat.rollVenom(pawn as Player, target) }

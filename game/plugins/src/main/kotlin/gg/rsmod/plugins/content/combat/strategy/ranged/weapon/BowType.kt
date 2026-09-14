@@ -172,6 +172,18 @@ enum class BowType(
     BOW_OF_FAERDHINEN_C(item = Items.BOW_OF_FAERDHINEN_C, ammo = emptyArray()),
     SLING(item = Items.SLING, ammo = emptyArray()),
 
+    // OSRS-IMPORT bows: the crystal bow and the revenant bows make their own arrows; Venator bow ("can fire any type of arrow,
+    // including dragon arrows") and Scorching bow ("arrows up to dragon arrows") use the Twisted bow tier.
+    CRYSTAL_BOW_OSRS(item = Items.CRYSTAL_BOW_OSRS, ammo = emptyArray()),
+    CRYSTAL_BOW_OSRS_INACTIVE(item = Items.CRYSTAL_BOW_OSRS_INACTIVE, ammo = emptyArray()),
+    CRAWS_BOW_U(item = Items.CRAWS_BOW_U, ammo = emptyArray()),
+    CRAWS_BOW(item = Items.CRAWS_BOW, ammo = emptyArray()),
+    WEBWEAVER_BOW_U(item = Items.WEBWEAVER_BOW_U, ammo = emptyArray()),
+    WEBWEAVER_BOW(item = Items.WEBWEAVER_BOW, ammo = emptyArray()),
+    VENATOR_BOW(item = Items.VENATOR_BOW, ammo = TWISTED_BOW.ammo),
+    VENATOR_BOW_UNCHARGED(item = Items.VENATOR_BOW_UNCHARGED, ammo = TWISTED_BOW.ammo),
+    SCORCHING_BOW(item = Items.SCORCHING_BOW, ammo = TWISTED_BOW.ammo),
+
     ;
 
     companion object {
