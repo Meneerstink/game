@@ -209,6 +209,8 @@ set_combat_def(npc = SECOND_FORM) {
         attackSpeed = 4
         attackStyle = StyleType.STAB
         respawnDelay = 0
+        // OSRS Wiki "Kalphite Queen" infobox version2 (Airborne): dstab2/dslash2/dcrush2 100, dmagic2 10, dlight2/dstandard2/dheavy2 10
+        // (raw wikitext 2026-09-14); the crawling form's 50/50/10/100/100 had been copied here.
     }
     stats {
         hitpoints = 2550
@@ -219,11 +221,11 @@ set_combat_def(npc = SECOND_FORM) {
         ranged = 1
     }
     bonuses {
-        defenceStab = 50
-        defenceSlash = 50
-        defenceCrush = 10
-        defenceMagic = 100
-        defenceRanged = 100
+        defenceStab = 100
+        defenceSlash = 100
+        defenceCrush = 100
+        defenceMagic = 10
+        defenceRanged = 10
     }
     anims {
         // second (airborne) form: melee 6235, ranged/magic 6234. Matrix 718 NPCCombatDefinitions / combat script ids; each id verified present in the 667 cache AnimDefs.
