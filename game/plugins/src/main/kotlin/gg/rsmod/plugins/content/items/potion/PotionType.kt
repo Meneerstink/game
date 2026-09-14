@@ -491,6 +491,34 @@ enum class PotionType(
     },
     EXTREME_ENERGY {
         override fun apply(p: Player) = StaminaPotions.drink(p, StaminaPotions.EXTENDED_RESTORE, 0)
+    },
+
+    // OSRS-IMPORT potions-brews (BrewPotions).
+    ANCIENT_BREW {
+        override fun apply(p: Player) = BrewPotions.drinkAncient(p, forgotten = false)
+    },
+    ANCIENT_MIX {
+        override fun apply(p: Player) = BrewPotions.drinkAncientMix(p)
+    },
+    FORGOTTEN_BREW {
+        override fun apply(p: Player) = BrewPotions.drinkAncient(p, forgotten = true)
+    },
+    ARMADYL_BREW {
+        override fun apply(p: Player) = BrewPotions.drinkArmadyl(p)
+    },
+    MENAPHITE_REMEDY {
+        override fun apply(p: Player) = BrewPotions.drinkMenaphite(p)
+    },
+    PRAYER_REGENERATION {
+        override fun apply(p: Player) = BrewPotions.drinkPrayerRegeneration(p)
+    },
+    SURGE {
+        override fun canDrink(p: Player) = BrewPotions.canDrinkSurge(p)
+
+        override fun apply(p: Player) = BrewPotions.drinkSurge(p)
+    },
+    GOADING {
+        override fun apply(p: Player) = BrewPotions.drinkGoading(p)
     }, ;
 
     protected fun cureVenomAndPoison(

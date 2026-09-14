@@ -277219,3 +277219,363 @@
   tradeable: true
   weight: 0.0
   equipment: null
+- id: 23304
+  name: "Ancient brew(4)"
+  examine: "4 doses of ancient brew."
+  tradeable: true
+  weight: 0.035
+  equipment: null
+- id: 23305
+  name: "Ancient brew(4)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23306
+  name: "Ancient brew(3)"
+  examine: "3 doses of ancient brew."
+  tradeable: true
+  weight: 0.03
+  equipment: null
+- id: 23307
+  name: "Ancient brew(3)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23308
+  name: "Ancient brew(2)"
+  examine: "2 doses of ancient brew."
+  tradeable: true
+  weight: 0.025
+  equipment: null
+- id: 23309
+  name: "Ancient brew(2)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23310
+  name: "Ancient brew(1)"
+  examine: "1 dose of ancient brew."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 23311
+  name: "Ancient brew(1)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23312
+  name: "Ancient mix(2)"
+  examine: "Two doses of fishy ancient brew."
+  tradeable: true
+  weight: 0.075
+  equipment: null
+- id: 23313
+  name: "Ancient mix(2)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23314
+  name: "Ancient mix(1)"
+  examine: "One dose of fishy ancient brew."
+  tradeable: true
+  weight: 0.045
+  equipment: null
+- id: 23315
+  name: "Ancient mix(1)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23316
+  name: "Forgotten brew(4)"
+  examine: "4 doses of forgotten brew."
+  tradeable: true
+  weight: 0.035
+  equipment: null
+- id: 23317
+  name: "Forgotten brew(4)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23318
+  name: "Forgotten brew(3)"
+  examine: "3 doses of forgotten brew."
+  tradeable: true
+  weight: 0.035
+  equipment: null
+- id: 23319
+  name: "Forgotten brew(3)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23320
+  name: "Forgotten brew(2)"
+  examine: "2 doses of forgotten brew."
+  tradeable: true
+  weight: 0.035
+  equipment: null
+- id: 23321
+  name: "Forgotten brew(2)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23322
+  name: "Forgotten brew(1)"
+  examine: "1 dose of forgotten brew."
+  tradeable: true
+  weight: 0.035
+  equipment: null
+- id: 23323
+  name: "Forgotten brew(1)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23324
+  name: "Armadyl brew(4)"
+  examine: "4 doses of Armadyl brew."
+  tradeable: true
+  weight: 0.035
+  equipment: null
+- id: 23325
+  name: "Armadyl brew(4)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23326
+  name: "Armadyl brew(3)"
+  examine: "3 doses of Armadyl brew."
+  tradeable: true
+  weight: 0.03
+  equipment: null
+- id: 23327
+  name: "Armadyl brew(3)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23328
+  name: "Armadyl brew(2)"
+  examine: "2 doses of Armadyl brew."
+  tradeable: true
+  weight: 0.03
+  equipment: null
+- id: 23329
+  name: "Armadyl brew(2)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23330
+  name: "Armadyl brew(1)"
+  examine: "1 dose of Armadyl brew."
+  tradeable: true
+  weight: 0.03
+  equipment: null
+- id: 23331
+  name: "Armadyl brew(1)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23332
+  name: "Menaphite remedy(4)"
+  examine: "4 doses of Menaphite remedy."
+  tradeable: true
+  weight: 0.035
+  equipment: null
+- id: 23333
+  name: "Menaphite remedy(4)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23334
+  name: "Menaphite remedy(3)"
+  examine: "3 doses of Menaphite remedy."
+  tradeable: true
+  weight: 0.035
+  equipment: null
+- id: 23335
+  name: "Menaphite remedy(3)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23336
+  name: "Menaphite remedy(2)"
+  examine: "2 doses of Menaphite remedy."
+  tradeable: true
+  weight: 0.035
+  equipment: null
+- id: 23337
+  name: "Menaphite remedy(2)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23338
+  name: "Menaphite remedy(1)"
+  examine: "1 dose of Menaphite remedy."
+  tradeable: true
+  weight: 0.035
+  equipment: null
+- id: 23339
+  name: "Menaphite remedy(1)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23340
+  name: "Prayer regeneration potion(4)"
+  examine: "4 doses of Prayer Regeneration potion."
+  tradeable: true
+  weight: 0.035
+  equipment: null
+- id: 23341
+  name: "Prayer regeneration potion(4)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23342
+  name: "Prayer regeneration potion(3)"
+  examine: "3 doses of Prayer Regeneration potion."
+  tradeable: true
+  weight: 0.03
+  equipment: null
+- id: 23343
+  name: "Prayer regeneration potion(3)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23344
+  name: "Prayer regeneration potion(2)"
+  examine: "2 doses of Prayer Regeneration potion."
+  tradeable: true
+  weight: 0.025
+  equipment: null
+- id: 23345
+  name: "Prayer regeneration potion(2)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23346
+  name: "Prayer regeneration potion(1)"
+  examine: "1 dose of Prayer Regeneration potion."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 23347
+  name: "Prayer regeneration potion(1)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23348
+  name: "Surge potion(4)"
+  examine: "4 doses of surge potion."
+  tradeable: false
+  weight: 0.035
+  equipment: null
+- id: 23349
+  name: "Surge potion(4)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: false
+  weight: 0.0
+  equipment: null
+- id: 23350
+  name: "Surge potion(3)"
+  examine: "3 doses of surge potion."
+  tradeable: false
+  weight: 0.03
+  equipment: null
+- id: 23351
+  name: "Surge potion(3)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: false
+  weight: 0.0
+  equipment: null
+- id: 23352
+  name: "Surge potion(2)"
+  examine: "2 doses of surge potion."
+  tradeable: false
+  weight: 0.03
+  equipment: null
+- id: 23353
+  name: "Surge potion(2)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: false
+  weight: 0.0
+  equipment: null
+- id: 23354
+  name: "Surge potion(1)"
+  examine: "1 dose of surge potion."
+  tradeable: false
+  weight: 0.03
+  equipment: null
+- id: 23355
+  name: "Surge potion(1)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: false
+  weight: 0.0
+  equipment: null
+- id: 23356
+  name: "Goading potion(4)"
+  examine: "4 doses of Goading potion."
+  tradeable: true
+  weight: 0.035
+  equipment: null
+- id: 23357
+  name: "Goading potion(4)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23358
+  name: "Goading potion(3)"
+  examine: "3 doses of Goading potion."
+  tradeable: true
+  weight: 0.03
+  equipment: null
+- id: 23359
+  name: "Goading potion(3)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23360
+  name: "Goading potion(2)"
+  examine: "2 doses of Goading potion."
+  tradeable: true
+  weight: 0.025
+  equipment: null
+- id: 23361
+  name: "Goading potion(2)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23362
+  name: "Goading potion(1)"
+  examine: "1 dose of Goading potion."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 23363
+  name: "Goading potion(1)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null

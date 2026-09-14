@@ -20027,5 +20027,37 @@ object Items {
     const val EXTREME_ENERGY_POTION_2 = 23295
     const val EXTREME_ENERGY_POTION_1 = 23297
     const val AMYLASE_CRYSTAL = 23303
+
+    // OSRS-IMPORT step 4 batch potions-brews (tx-20260914-080345); each dose is followed by its noted id.
+    const val ANCIENT_BREW_4 = 23304
+    const val ANCIENT_BREW_3 = 23306
+    const val ANCIENT_BREW_2 = 23308
+    const val ANCIENT_BREW_1 = 23310
+    const val ANCIENT_MIX_2 = 23312
+    const val ANCIENT_MIX_1 = 23314
+    const val FORGOTTEN_BREW_4 = 23316
+    const val FORGOTTEN_BREW_3 = 23318
+    const val FORGOTTEN_BREW_2 = 23320
+    const val FORGOTTEN_BREW_1 = 23322
+    const val ARMADYL_BREW_4 = 23324
+    const val ARMADYL_BREW_3 = 23326
+    const val ARMADYL_BREW_2 = 23328
+    const val ARMADYL_BREW_1 = 23330
+    const val MENAPHITE_REMEDY_4 = 23332
+    const val MENAPHITE_REMEDY_3 = 23334
+    const val MENAPHITE_REMEDY_2 = 23336
+    const val MENAPHITE_REMEDY_1 = 23338
+    const val PRAYER_REGENERATION_POTION_4 = 23340
+    const val PRAYER_REGENERATION_POTION_3 = 23342
+    const val PRAYER_REGENERATION_POTION_2 = 23344
+    const val PRAYER_REGENERATION_POTION_1 = 23346
+    const val SURGE_POTION_4 = 23348
+    const val SURGE_POTION_3 = 23350
+    const val SURGE_POTION_2 = 23352
+    const val SURGE_POTION_1 = 23354
+    const val GOADING_POTION_4 = 23356
+    const val GOADING_POTION_3 = 23358
+    const val GOADING_POTION_2 = 23360
+    const val GOADING_POTION_1 = 23362
     // Auto-generated file using class gg.rsmod.game.service.game.DumpEntityIdService
 }

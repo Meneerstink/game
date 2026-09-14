@@ -292,6 +292,15 @@ enum class PotionData(
 
     /** Barbarian Mixes  */
     // OSRS-IMPORT potions-stamina (OSRS Wiki "Stamina mix" Recipe): stamina potion(2) + caviar, 86 Herblore, 60 experience.
+    // OSRS-IMPORT potions-brews (OSRS Wiki "Ancient mix" Recipe): ancient brew(2) + caviar, 92 Herblore, 63 experience.
+    ANCIENT_MIX(
+        primary = Items.ANCIENT_BREW_2,
+        secondary = Items.CAVIAR,
+        product = Items.ANCIENT_MIX_2,
+        levelRequirement = 92,
+        experience = 63.0,
+    ),
+
     STAMINA_MIX(
         primary = Items.STAMINA_POTION_2,
         secondary = Items.CAVIAR,

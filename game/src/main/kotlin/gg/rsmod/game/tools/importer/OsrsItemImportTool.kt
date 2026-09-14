@@ -688,6 +688,11 @@ object OsrsItemImportTool {
             "potions-stamina" to
                 (listOf(12625, 12627, 12629, 12631, 12633, 12635, 31638, 31641, 31644, 31647, 31614, 31617, 31620, 31623).map { Spec(it, noted = true) } +
                     listOf(Spec(12640))),
+            // Step 4 batch "potions-brews" (OSRS Wiki infobox ids, ascending = most doses first): Ancient brew, Ancient mix (2 doses),
+            // Forgotten brew, Armadyl brew, Menaphite remedy, Prayer regeneration potion, Surge potion, Goading potion.
+            "potions-brews" to
+                listOf(26340, 26342, 26344, 26346, 26350, 26353, 27629, 27632, 27635, 27638, 31650, 31653, 31656, 31659, 27202, 27205,
+                    27208, 27211, 30125, 30128, 30131, 30134, 30875, 30878, 30881, 30884, 30137, 30140, 30143, 30146).map { Spec(it, noted = true) },
             "deadstaves" to
                 listOf(
                     Spec(11791, noted = true, rev667Params = deadStaffParams()), // Staff of the dead
