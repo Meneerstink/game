@@ -11,41 +11,27 @@ import org.junit.Test
 
 /**
  * Where curse audio actually comes from, proven against the production cache rather than reasoned
- * about.
+ * about (CURSES-2011, 2026-09-14; supersedes the RCV-002 "Novite 2662 on / 2663 off" model).
  *
- * ## The question this settles
+ * ## The model this pins
  *
- * [AncientCurses] plays four sounds - curse activated, curse lifted, an activation firing on a
- * landed hit, and the effect landing - and the class used to record honestly that *which* event
- * each track accompanies was inference. Two things were unknown: whether those ids are even real
- * in this cache, and whether the server needs to send them at all, since in this revision a sound
- * can also ride on an animation frame ([SeqSoundProbeTool]) and would then play by itself.
- *
- * Both are now answered:
- *
- *  * **The ids are real.** 125/126/127/1634 are present synth-sound groups (index 4, one file each)
- *    in both `data/cache` and the file-server cache, which are byte-identical for this index. They
- *    are also the only four curse-named tracks in the generated [Sfx] table.
- *  * **The server is the only possible source.** Every sequence the curse book plays - 12565
- *    (Turmoil activation), 12569 (Sap), 12573 (the Deflect reflect) and 12575 (Leech) - decodes as
- *    a real `SeqType` and carries **no** frame sounds at all. So unlike the familiars, where a
- *    Phoenix's spawn animation brings its own audio, nothing about a curse is audible unless the
- *    server sends it.
+ * In this revision a sound can ride on a sequence frame ([SeqSoundProbeTool]) and then plays
+ * client-side by itself when the animation or spot-animation renders. For the curse book that is
+ * the *only* authentic audio: every curse graphic that has a sound carries it on its own sequence,
+ * every player body sequence is silent, and the server sends no activation sound at all. The one
+ * server-sent track is the explicit toggle-off 2663 (Novite `Prayer.java:493/499`, Void
+ * `deactivate_prayer`).
  *
  * ## What was rejected, and why
  *
- * Darkan's `Prayer.java` carries an `activateSound` column for all twenty curses. It is a
- * substitution table, not a recovered one: Sap, every Leech and Soul Split all map to 2675, the
- * normal book's Protect from Magic sound, and Protect Item, Berserker and Turmoil map to 11000 -
- * which this test proves is not a sound in this cache at all. Novite's rev-667 `Prayer.java` is no
- * better a source for per-curse audio: it plays one generic pair for every prayer in both books
- * (2662 on, 2663 off) and has no per-curse sound of any kind.
- *
- * Superseded 2026-09-12 (RCV-002, owner live report of wrong/overlapping curse sounds): the four
- * "curse" tracks are Void's `curse_all`/`curse_impact`/`curse_cast` entries in `magic.sounds.toml`,
- * i.e. the *Curse* spell, not the prayer book, and were chosen by name alone. The curse book now
- * sends the donor-backed toggle pair instead - Novite rev-667 2662 on / 2663 off, with Void's
- * `deactivate_prayer` corroborating 2663 - and no impact sound, because none is sourced.
+ *  * Novite/Matrix 2662 on every activation: a generic normal-book track (Improved Reflexes) played
+ *    for every prayer in both books. The owner's live retest heard it as the same wrong extra sound
+ *    on every curse, and the 2026-09-14 client trace shows it queued right before Turmoil's 2226,
+ *    whose own sequence then queued the real 8111.
+ *  * Darkan's `activateSound` column: Sap, every Leech and Soul Split all map to 2675 (Protect from
+ *    Magic) and Protect Item, Berserker and Turmoil to 11000, which this test proves is not a sound
+ *    in this cache at all.
+ *  * Void's 125/126/127/1634 `curse_*` tracks: the *Curse* magic spell, chosen by name alone.
  */
 class AncientCurseSoundProvenanceTests {
     private fun <T> withCache(block: (CacheLibrary) -> T): T {
@@ -60,42 +46,112 @@ class AncientCurseSoundProvenanceTests {
     /** Index 4 is `Js5Archive.SYNTH_SOUNDS`; a sound id is a group and the sound is its file 0. */
     private val synthSoundIndex = 4
 
-    private val curseSounds =
+    /** Index 21 holds the spot-animation types in this cache (`reference/curses-audio-research/CurseAudioProbe.java`). */
+    private val spotAnimIndex = 21
+
+    /**
+     * Graphic -> the sequence its spotanim type must reference -> the synth that sequence must carry.
+     * Every entry is what the running code sends (see [AncientCurse]/[AncientCurses]).
+     */
+    private val graphicAudio =
         mapOf(
-            "curse activated (Novite Prayer.java:628)" to Sfx.IMPROVED_REFLEXES,
-            "curse lifted (Novite Prayer.java:493, Void deactivate_prayer)" to Sfx.CANCEL_PRAYER,
+            AncientCurses.PROTECT_ITEM_ACTIVATION_GRAPHIC to (12568 to 8117),
+            AncientCurse.SAP_WARRIOR.castGraphic!! to (12570 to 8115),
+            AncientCurse.SAP_RANGER.castGraphic!! to (12570 to 8115),
+            AncientCurse.SAP_MAGE.castGraphic!! to (12570 to 8115),
+            AncientCurse.SAP_SPIRIT.castGraphic!! to (12570 to 8115),
+            AncientCurses.TURMOIL_ACTIVATION_GRAPHIC to (12566 to 8111),
+            AncientCurse.DEFLECT_MAGIC.reflectGraphic!! to (12574 to 8107),
+            AncientCurse.DEFLECT_MISSILES.reflectGraphic!! to (12574 to 8107),
+            AncientCurse.DEFLECT_MELEE.reflectGraphic!! to (12574 to 8107),
+            AncientCurse.LEECH_ENERGY.castGraphic!! to (12576 to 8116),
+            AncientCurse.LEECH_SPECIAL_ATTACK.castGraphic!! to (12576 to 8116),
+            AncientCurses.WRATH_RING_GFX to (12581 to 8118),
+            AncientCurse.BERSERKER.activationGraphic!! to (12590 to 8106),
         )
 
-    /** The animations the curse book plays; named here so a silent-check failure says which. */
-    private val curseSequences =
+    /** Player body sequences the curse book plays; all silent, so the graphic is the only audio. */
+    private val bodySequences =
         mapOf(
             12565 to "Turmoil activation",
+            12567 to "Protect Item activation",
             12569 to "Sap cast",
             12573 to "Deflect reflect",
             12575 to "Leech cast",
+            12589 to "Berserker activation",
         )
 
-    @Test
-    fun `every curse sound this project sends is a real synth sound in the production cache`() {
-        withCache { library ->
-            val index = library.index(synthSoundIndex)
-            curseSounds.forEach { (event, id) ->
-                val archive = index.archive(id)
-                assertNotNull("sound $id ($event) is absent from synth-sound index $synthSoundIndex", archive)
-                assertTrue("sound $id ($event) has no file 0", archive!!.fileIds().contains(0))
+    private fun spotAnimSequence(library: CacheLibrary, graphic: Int): Int {
+        val data = library.data(spotAnimIndex, graphic ushr 8, graphic and 0xff)
+        assertNotNull("graphic $graphic is absent from spotanim index $spotAnimIndex", data)
+        // Same opcode walk as the read-only research probe (op 2 = sequence).
+        val buf = io.netty.buffer.Unpooled.wrappedBuffer(data)
+        var seq = -1
+        while (buf.isReadable) {
+            when (val opcode = buf.readUnsignedByte().toInt()) {
+                0 -> return seq
+                2 -> seq = buf.readUnsignedShort()
+                1, 4, 5, 6, 15 -> buf.readUnsignedShort()
+                7, 8, 14 -> buf.readUnsignedByte()
+                16 -> buf.readInt()
+                9, 10, 11, 12, 13 -> {}
+                40, 41 -> buf.skipBytes(buf.readUnsignedByte().toInt() * 4)
+                else -> throw IllegalStateException("graphic $graphic: unknown spotanim opcode $opcode")
             }
+        }
+        return seq
+    }
+
+    @Test
+    fun `every curse graphic with audio references the sequence that carries its synth in the production cache`() {
+        withCache { library ->
+            val offenders = mutableListOf<String>()
+            graphicAudio.forEach { (graphic, expected) ->
+                val (seqId, synth) = expected
+                val actualSeq = spotAnimSequence(library, graphic)
+                if (actualSeq != seqId) offenders += "graphic $graphic references seq $actualSeq, expected $seqId"
+                val seq = SeqSoundProbeTool.seq(library, seqId)
+                if (seq == null) {
+                    offenders += "seq $seqId (graphic $graphic) absent"
+                } else if (seq.sounds.none { it.soundId == synth }) {
+                    offenders += "seq $seqId (graphic $graphic) sounds ${seq.sounds.map { it.soundId }} lack $synth"
+                }
+                val archive = library.index(synthSoundIndex).archive(synth)
+                if (archive == null || !archive.fileIds().contains(0)) offenders += "synth $synth (graphic $graphic) absent"
+            }
+            assertEquals(emptyList<String>(), offenders)
         }
     }
 
     /**
-     * Pins the exact ids as well as their existence, so a future edit cannot quietly swap one
-     * curse-named track for another and still pass the existence check above.
+     * The reason the server must NOT add an activation sound: the graphic already brings it. If a
+     * body sequence ever gains a frame sound, a graphic-borne sound for the same event becomes a
+     * duplicate that has to be reconsidered.
      */
     @Test
-    fun `the donor prayer toggle pair keeps its sourced ids`() {
-        assertEquals(listOf(2662, 2663), curseSounds.values.toList())
-        assertEquals(2662, Sfx.IMPROVED_REFLEXES)
+    fun `no curse body animation carries a frame sound, so the graphic sequence is the only audio`() {
+        withCache { library ->
+            bodySequences.forEach { (id, label) ->
+                val seq = SeqSoundProbeTool.seq(library, id)
+                assertNotNull("sequence $id ($label) is absent from this cache", seq)
+                assertEquals(
+                    "sequence $id ($label) gained frame sounds: ${seq!!.sounds}",
+                    emptyList<SeqSoundProbeTool.FrameSound>(),
+                    seq.sounds,
+                )
+            }
+        }
+    }
+
+    /** The only server-sent curse track keeps its sourced id and is real in the production cache. */
+    @Test
+    fun `the explicit toggle-off sound is 2663 and exists`() {
         assertEquals(2663, Sfx.CANCEL_PRAYER)
+        withCache { library ->
+            val archive = library.index(synthSoundIndex).archive(Sfx.CANCEL_PRAYER)
+            assertNotNull("2663 is absent from synth-sound index $synthSoundIndex", archive)
+            assertTrue("2663 has no file 0", archive!!.fileIds().contains(0))
+        }
     }
 
     /**
@@ -111,26 +167,6 @@ class AncientCurseSoundProvenanceTests {
                 null,
                 library.index(synthSoundIndex).archive(11000),
             )
-        }
-    }
-
-    /**
-     * The reason the server has to send curse audio at all. If a future cache edit ever attaches a
-     * frame sound to one of these, this fails and the server-sent sound for that event becomes a
-     * duplicate that has to be reconsidered.
-     */
-    @Test
-    fun `no curse animation carries a frame sound, so nothing plays client-side on its own`() {
-        withCache { library ->
-            curseSequences.forEach { (id, label) ->
-                val seq = SeqSoundProbeTool.seq(library, id)
-                assertNotNull("sequence $id ($label) is absent from this cache", seq)
-                assertEquals(
-                    "sequence $id ($label) gained frame sounds: ${seq!!.sounds}",
-                    emptyList<SeqSoundProbeTool.FrameSound>(),
-                    seq.sounds,
-                )
-            }
         }
     }
 }

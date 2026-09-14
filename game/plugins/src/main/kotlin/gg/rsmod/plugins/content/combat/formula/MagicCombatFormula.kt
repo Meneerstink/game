@@ -37,7 +37,7 @@ object MagicCombatFormula : CombatFormula {
         specialAttackMultiplier: Double,
     ): Double {
         // Check if the target has the prayer protection and the attacker is not a player
-        if (target.isProtectedFrom(CombatClass.MAGIC) && pawn !is Player) {
+        if ((target.isProtectedFrom(CombatClass.MAGIC) && !gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.deflects(target, CombatClass.MAGIC)) && pawn !is Player) {
             return 0.0 // Hits will never land
         }
         return getUnprotectedAccuracy(pawn, target, specialAttackMultiplier)
@@ -289,6 +289,8 @@ object MagicCombatFormula : CombatFormula {
 
     private fun getPrayerAttackMultiplier(player: Player): Double =
         when {
+            gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.getBook(player) == gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.PrayerBook.ANCIENT && !gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.isTurmoilActive(player) ->
+                gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.leechMultiplier(player, Skills.MAGIC)
             Prayers.isActive(player, Prayer.MYSTIC_WILL) -> 1.05
             Prayers.isActive(player, Prayer.MYSTIC_LORE) -> 1.10
             Prayers.isActive(player, Prayer.MYSTIC_MIGHT) -> 1.15
@@ -298,6 +300,8 @@ object MagicCombatFormula : CombatFormula {
 
     private fun getPrayerDefenceMultiplier(player: Player): Double =
         when {
+            gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.getBook(player) == gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.PrayerBook.ANCIENT && !gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.isTurmoilActive(player) ->
+                gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.leechMultiplier(player, Skills.DEFENCE)
             Prayers.isActive(player, Prayer.THICK_SKIN) -> 1.05
             Prayers.isActive(player, Prayer.ROCK_SKIN) -> 1.10
             Prayers.isActive(player, Prayer.STEEL_SKIN) -> 1.15

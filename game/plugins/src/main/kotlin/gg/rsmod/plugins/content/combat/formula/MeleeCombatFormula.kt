@@ -53,7 +53,7 @@ object MeleeCombatFormula : CombatFormula {
         defenceStyle: StyleType?,
     ): Double {
         // Check if the target has the prayer protection and the attacker is not a player
-        if (target.isProtectedFrom(CombatClass.MELEE) && pawn !is Player) {
+        if ((target.isProtectedFrom(CombatClass.MELEE) && !gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.deflects(target, CombatClass.MELEE)) && pawn !is Player) {
             return 0.0 // Hits will never land
         }
         val attack = getAttackRoll(pawn, target, specialAttackMultiplier)
@@ -170,7 +170,7 @@ object MeleeCombatFormula : CombatFormula {
         hit = floor(hit * specialAttackMultiplier)
 
         // "Damage per second/Melee": against a player praying Protect from Melee, multiply by 6/10.
-        if (target.isProtectedFrom(CombatClass.MELEE)) {
+        if ((target.isProtectedFrom(CombatClass.MELEE) && !gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.deflects(target, CombatClass.MELEE))) {
             hit = floor(hit * 0.6)
         }
 
@@ -325,6 +325,8 @@ object MeleeCombatFormula : CombatFormula {
 
     private fun getPrayerStrengthMultiplier(player: Player, opponent: Pawn? = null): Double =
         when {
+            gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.getBook(player) == gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.PrayerBook.ANCIENT && !gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.isTurmoilActive(player) ->
+                gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.leechMultiplier(player, Skills.STRENGTH)
             gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.isTurmoilActive(player) ->
                 gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.turmoilMultiplier(player, Skills.STRENGTH, opponent)
             Prayers.isActive(player, Prayer.BURST_OF_STRENGTH) -> 1.05
@@ -337,6 +339,8 @@ object MeleeCombatFormula : CombatFormula {
 
     private fun getPrayerAttackMultiplier(player: Player, opponent: Pawn? = null): Double =
         when {
+            gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.getBook(player) == gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.PrayerBook.ANCIENT && !gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.isTurmoilActive(player) ->
+                gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.leechMultiplier(player, Skills.ATTACK)
             gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.isTurmoilActive(player) ->
                 gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.turmoilMultiplier(player, Skills.ATTACK, opponent)
             Prayers.isActive(player, Prayer.CLARITY_OF_THOUGHT) -> 1.05
@@ -349,6 +353,8 @@ object MeleeCombatFormula : CombatFormula {
 
     private fun getPrayerDefenceMultiplier(player: Player, opponent: Pawn? = null): Double =
         when {
+            gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.getBook(player) == gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.PrayerBook.ANCIENT && !gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.isTurmoilActive(player) ->
+                gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.leechMultiplier(player, Skills.DEFENCE)
             gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.isTurmoilActive(player) ->
                 gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.turmoilMultiplier(player, Skills.DEFENCE, opponent)
             Prayers.isActive(player, Prayer.THICK_SKIN) -> 1.05

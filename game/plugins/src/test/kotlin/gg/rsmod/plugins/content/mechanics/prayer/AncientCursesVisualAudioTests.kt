@@ -52,11 +52,10 @@ class AncientCursesVisualAudioTests {
     }
 
     @Test
-    fun `every Leech curse has a real cast animation, projectile and target graphic but no cast graphic`() {
+    fun `every Leech curse has a real cast animation, projectile and target graphic, and only Energy and Special have a caster graphic`() {
         leechCurses.forEach { curse ->
             assertNotNull("$curse missing castAnimation", curse.castAnimation)
             assertEquals("$curse cast animation", 12575, curse.castAnimation)
-            assertNull("$curse should not have a cast graphic (source has none for Leech)", curse.castGraphic)
             assertNotNull("$curse missing projectileGraphic", curse.projectileGraphic)
             assertNotNull("$curse missing targetGraphic", curse.targetGraphic)
         }
@@ -65,6 +64,13 @@ class AncientCursesVisualAudioTests {
         assertEquals(leechCurses.size, leechCurses.count { it.secondaryTargetGraphic == null })
         assertEquals(2252, AncientCurse.LEECH_ENERGY.projectileGraphic)
         assertEquals(2256, AncientCurse.LEECH_SPECIAL_ATTACK.projectileGraphic)
+        // Cache layout (caster gfx / projectile / impact) + Divergent 667: 2251/2255 belong to
+        // Leech Energy / Leech Special Attack; the slot before every other Leech projectile is absent.
+        assertEquals(2251, AncientCurse.LEECH_ENERGY.castGraphic)
+        assertEquals(2255, AncientCurse.LEECH_SPECIAL_ATTACK.castGraphic)
+        leechCurses.filter { it != AncientCurse.LEECH_ENERGY && it != AncientCurse.LEECH_SPECIAL_ATTACK }.forEach { curse ->
+            assertNull("$curse has no caster graphic in any source or in the cache layout", curse.castGraphic)
+        }
     }
 
     @Test
@@ -100,14 +106,15 @@ class AncientCursesVisualAudioTests {
     }
 
     @Test
-    fun `Wrath's death explosion uses the real 300 percent multiplier, not the old 250 percent bug`() {
+    fun `Wrath's death explosion uses the real 300 percent multiplier in 1 to 1 hitpoint units`() {
+        // Novite: prayer level * 3.0 in x10 units (297 at 99) = level * 3 / 10 after the 1:1 migration.
         val player = mockk<Player>(relaxed = true)
         every { player.skills } returns SkillSet(7).apply { setBaseLevel(Skills.PRAYER, 99) }
-        assertEquals(297, AncientCurses.wrathMaxDamage(player))
+        assertEquals(29, AncientCurses.wrathMaxDamage(player))
 
         val lowLevel = mockk<Player>(relaxed = true)
         every { lowLevel.skills } returns SkillSet(7).apply { setBaseLevel(Skills.PRAYER, 50) }
-        assertEquals(150, AncientCurses.wrathMaxDamage(lowLevel))
+        assertEquals(15, AncientCurses.wrathMaxDamage(lowLevel))
     }
 
     @Test
@@ -124,10 +131,12 @@ class AncientCursesVisualAudioTests {
 
         verify { fixture.player.animate(12569) }
         verify { fixture.player.graphic(2214) }
-        verify { target.graphic(2216, delay = 1) }
+        // Novite shows the impact one game tick after the projectile; the spotanim delay is counted
+        // in 20 ms client cycles (client Static50.animationTick -> Animator.tick(1)), 30 per tick.
+        verify { target.graphic(2216, delay = ONE_TICK_CLIENT_CYCLES) }
         verify { fixture.world.spawn(any<gg.rsmod.game.model.entity.Projectile>()) }
-        // No donor sources a Sap impact sound; the magic-spell "curse" track must not be borrowed.
-        verify(exactly = 0) { fixture.player.write(SynthSoundMessage(sound = Sfx.CURSE_CAST_AND_FIRE, loops = 1, delay = 0)) }
+        // The Sap caster graphic's own sequence (12570 -> 8115) is the audio; nothing is server-sent.
+        verify(exactly = 0) { fixture.player.write(match<gg.rsmod.game.message.Message> { it is SynthSoundMessage }) }
     }
 
     @Test
@@ -144,30 +153,34 @@ class AncientCursesVisualAudioTests {
         AncientCurses.onDamageDealt(fixture.player, target, damage = 100)
 
         verify { target.decreasePrayerPoints(20) }
-        verify { target.graphic(2264, delay = 1) }
+        verify { target.graphic(2264, delay = ONE_TICK_CLIENT_CYCLES) }
         verify { fixture.world.spawn(any<gg.rsmod.game.model.entity.Projectile>()) }
-        verify(exactly = 0) { fixture.player.write(SynthSoundMessage(sound = Sfx.CURSE_HIT, loops = 1, delay = 0)) }
+        // Soul Split's 2263/2264 sequences are silent and no source maps 8112/8113/8119 to a phase.
+        verify(exactly = 0) { fixture.player.write(match<gg.rsmod.game.message.Message> { it is SynthSoundMessage }) }
     }
 
     @Test
-    fun `every curse activation sends the Novite sound and deactivation sends the lift sound`() {
+    fun `no curse activation sends a server sound and every explicit deactivation sends the lift sound`() {
+        val offenders = mutableListOf<String>()
+        AncientCurse.values().forEach { curse ->
+            val fixture = RuntimeFixture()
+            AncientCurses.switchBook(fixture.player, AncientCurses.PrayerBook.ANCIENT)
+            AncientCurses.toggleCurse(fixture.player, curse)
+            runCatching { verify(exactly = 0) { fixture.player.write(match<gg.rsmod.game.message.Message> { it is SynthSoundMessage }) } }
+                .onFailure { offenders += "$curse: activation sent a server sound (the graphic sequence is the audio)" }
+            AncientCurses.toggleCurse(fixture.player, curse)
+            runCatching { verify(exactly = 1) { fixture.player.write(SynthSoundMessage(sound = LIFT_SOUND, loops = 1, delay = 0)) } }
+                .onFailure { offenders += "$curse: explicit deactivation did not send 2663 exactly once" }
+        }
         val fixture = RuntimeFixture()
         AncientCurses.switchBook(fixture.player, AncientCurses.PrayerBook.ANCIENT)
-
-        AncientCurses.toggleCurse(fixture.player, AncientCurse.SAP_WARRIOR)
-        verify(exactly = 1) { fixture.player.write(SynthSoundMessage(sound = NOVITE_PRAYER_ON, loops = 1, delay = 0)) }
-
-        AncientCurses.toggleCurse(fixture.player, AncientCurse.SAP_WARRIOR)
-        verify(exactly = 1) { fixture.player.write(SynthSoundMessage(sound = NOVITE_PRAYER_OFF, loops = 1, delay = 0)) }
-
         AncientCurses.toggleTurmoil(fixture.player)
-        verify(exactly = 2) { fixture.player.write(SynthSoundMessage(sound = NOVITE_PRAYER_ON, loops = 1, delay = 0)) }
+        runCatching { verify(exactly = 0) { fixture.player.write(match<gg.rsmod.game.message.Message> { it is SynthSoundMessage }) } }
+            .onFailure { offenders += "Turmoil: activation sent a server sound" }
         AncientCurses.toggleTurmoil(fixture.player)
-        verify(exactly = 2) { fixture.player.write(SynthSoundMessage(sound = NOVITE_PRAYER_OFF, loops = 1, delay = 0)) }
-
-        listOf(Sfx.CURSE_ALL, Sfx.CURSE_LIFT, Sfx.CURSE_HIT, Sfx.CURSE_CAST_AND_FIRE).forEach { spellTrack ->
-            verify(exactly = 0) { fixture.player.write(SynthSoundMessage(sound = spellTrack, loops = 1, delay = 0)) }
-        }
+        runCatching { verify(exactly = 1) { fixture.player.write(SynthSoundMessage(sound = LIFT_SOUND, loops = 1, delay = 0)) } }
+            .onFailure { offenders += "Turmoil: explicit deactivation did not send 2663 exactly once" }
+        assertEquals(emptyList<String>(), offenders)
     }
 
     @Test
@@ -207,7 +220,7 @@ class AncientCursesVisualAudioTests {
 
     /** Novite's `closePrayers` switches a replaced prayer off silently. */
     @Test
-    fun `replacing a conflicting curse plays one activation sound and no lift sound for every curse pair`() {
+    fun `replacing a conflicting curse is silent for every curse pair`() {
         val offenders = mutableListOf<String>()
         AncientCurse.values().forEach { first ->
             AncientCurse.values().filter { it != first && it.conflictsWith(first) }.forEach { second ->
@@ -217,11 +230,8 @@ class AncientCursesVisualAudioTests {
                 io.mockk.clearMocks(fixture.player, answers = false, recordedCalls = true, childMocks = false, verificationMarks = true, exclusionRules = false)
                 AncientCurses.toggleCurse(fixture.player, second)
                 runCatching {
-                    verify(exactly = 1) { fixture.player.write(SynthSoundMessage(sound = NOVITE_PRAYER_ON, loops = 1, delay = 0)) }
-                }.onFailure { offenders += "$first -> $second: missing activation sound 2662" }
-                runCatching {
-                    verify(exactly = 0) { fixture.player.write(SynthSoundMessage(sound = NOVITE_PRAYER_OFF, loops = 1, delay = 0)) }
-                }.onFailure { offenders += "$first -> $second: replaced curse played the lift sound" }
+                    verify(exactly = 0) { fixture.player.write(match<gg.rsmod.game.message.Message> { it is SynthSoundMessage }) }
+                }.onFailure { offenders += "$first -> $second: replacing sent a server sound (activation is graphic-borne, replacement is silent)" }
             }
         }
         assertEquals(emptyList<String>(), offenders)
@@ -267,9 +277,11 @@ class AncientCursesVisualAudioTests {
     }
 
     private companion object {
-        /** Novite `Prayer.java:628` / `:493`, Void `prayer.sounds.toml` `deactivate_prayer`. */
-        const val NOVITE_PRAYER_ON = 2662
-        const val NOVITE_PRAYER_OFF = 2663
+        /** Novite `Prayer.java:493/499`, Void `prayer.sounds.toml` `deactivate_prayer`. */
+        const val LIFT_SOUND = 2663
+
+        /** Client spotanim delay unit is one 20 ms cycle; a 600 ms game tick is 30 of them. */
+        const val ONE_TICK_CLIENT_CYCLES = 30
     }
 
     /** Minimal reusable fixture mirroring [AncientCursesRuntimeTests.Fixture]'s varbit wiring. */

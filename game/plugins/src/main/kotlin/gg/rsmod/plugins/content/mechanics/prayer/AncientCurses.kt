@@ -66,26 +66,36 @@ object AncientCurses {
     /** Source-proven rev-667 curse-book activation visuals from Novite's Prayer.java. */
     const val PROTECT_ITEM_ACTIVATION_ANIMATION = 12567
     const val PROTECT_ITEM_ACTIVATION_GRAPHIC = 2213
+    const val TURMOIL_ACTIVATION_ANIMATION = 12565
+    const val TURMOIL_ACTIVATION_GRAPHIC = 2226
 
     /**
-     * Curse-book toggle audio, RCV-002 (2026-09-12), from the project's designated donors:
+     * Curse audio model, CURSES-2011 (2026-09-14), PROVEN from the revision-667 cache itself
+     * (`reference/curses-audio-research/FINDINGS.md`, OpenRS2 #1473 and the production cache are
+     * byte-identical for every curse spotanim/seq/synth) and from the client source:
      *
-     *  * Activation 2662 - Novite rev-667 `Prayer.switchPrayer` sends `sendSound(2662, 0, 1)` for
-     *    every prayer it turns on, curses included (`Prayer.java:628`).
+     *  * The server sends **no** activation sound. Every authentic curse sound is a frame sound on the
+     *    *graphic's* sequence, which the client plays by itself when the spotanim renders
+     *    (`EntitySpotAnimation` -> `Animator.newFrame` -> `Static431`): Protect Item 2213/seq 12568
+     *    -> synth 8117, Sap caster 2214/2217/2220/2223 -> 12570 -> 8115, Turmoil 2226 -> 12566 ->
+     *    8111, Deflect reflect 2227..2230 -> 12574 -> 8107, Leech Energy/Special caster 2251/2255 ->
+     *    12576 -> 8116, Wrath ring 2260 -> 12581 -> 8118 (radius 5), Berserker 2266 -> 12590 -> 8106.
+     *    Every player body sequence (12565/12567/12569/12573/12575/12589) and every projectile/impact
+     *    sequence is silent, and curses without an activation graphic (Sap, Leech, Deflect, Wrath,
+     *    Soul Split) have no activation visual in Novite rev-667 `Prayer.switchPrayer` or Divergent
+     *    667 `Prayer.java` either, so they are silent on activation.
+     *  * Novite's generic 2662 (`Prayer.java:628`, the normal book's Improved Reflexes track) was the
+     *    owner's live "same wrong extra sound on every curse" (client trace 2026-09-14: 2662 packet,
+     *    then 2226 -> 8111 from the sequence). It is no longer sent for any curse.
      *  * Deactivation 2663 - Novite sends 2663 on an explicit toggle-off (`Prayer.java:493/499`) and
      *    Void's `prayerStop` plays `deactivate_prayer` = 2663 for both books.
      *  * A curse switched off *because another curse replaced it* is silent: Novite's `closePrayers`
-     *    sends no sound. Playing the lift sound there as well was the owner's live double/overlapping
-     *    activation sound.
+     *    sends no sound.
      *
-     * The previous 125/126/127/1634 were Void's `curse_all`/`curse_impact`/`curse_cast` tracks,
-     * which belong to the *Curse* magic spell (`magic.sounds.toml`), not to the prayer book; they
-     * were chosen by name only. Sap/Leech/Soul Split impact audio has no Novite or Void source and
-     * every curse sequence (12565/12569/12573/12575) is frame-silent, so no impact sound is sent
-     * rather than a borrowed one - recorded as SOURCE_BLOCKED in the handoff.
+     * Still unsourced (SOURCE_BLOCKED, nothing sent rather than guessed): synths 8108/8109/8110/8112/
+     * 8113/8114/8119 in the same curse range have no name hash and no sequence owner; a 2018
+     * rune-server post names 8112/8113/8119 as Soul Split files without a phase mapping.
      */
-    /** Novite rev-667 sends the normal prayer activation sound for every curse toggle. */
-    private const val CURSE_ACTIVATE_SOUND = Sfx.IMPROVED_REFLEXES
     private const val CURSE_DEACTIVATE_SOUND = Sfx.CANCEL_PRAYER
 
     /** Novite's Sap/Leech projectile packet: start/end 35, speed 20, delay 5, curve 0. */
@@ -145,10 +155,9 @@ object AncientCurses {
         activeCurses(player).filter { it.conflictsWithTurmoil }.forEach { deactivateCurse(player, it, playSound = false) }
         setTurmoil(player, true)
         player.attr[TURMOIL_BONUS_ATTR] = mutableMapOf()
-        player.playSound(CURSE_ACTIVATE_SOUND)
         if (playActivationVisual) {
-            player.animate(12565)
-            player.graphic(2226)
+            player.animate(TURMOIL_ACTIVATION_ANIMATION)
+            player.graphic(TURMOIL_ACTIVATION_GRAPHIC)
         }
         player.filterableMessage("You activate Turmoil.")
     }
@@ -179,6 +188,8 @@ object AncientCurses {
                 Skills.DEFENCE -> 15
                 else -> return 1.0
             }
+        // [establishTurmoilBonus] already stores percentage points (opponent level, capped at 99,
+        // times 15/10/15 %), so both terms are percentages here.
         val opponentBonus = player.attr[TURMOIL_BONUS_ATTR]?.get(skill) ?: 0
         return 1.0 + (base + opponentBonus) / 100.0
     }
@@ -334,6 +345,9 @@ object AncientCurses {
         }
         selected.filter { player.skills.getMaxLevel(Skills.PRAYER) >= (quickCurseLevel(it) ?: Int.MAX_VALUE) }.forEach { slot ->
             when (slot) {
+                // Novite rev-667 `Prayer.switchPrayer`: every curse activation visual is inside
+                // `if (!usingQuickPrayer)`, so quick-curse activation is visual-free (and, with no
+                // graphic, silent - see the audio KDoc above).
                 AncientCurse.PROTECT_ITEM_SLOT -> Prayers.activate(player, Prayer.PROTECT_ITEM)
                 AncientCurse.TURMOIL_SLOT -> toggleTurmoil(player, playActivationVisual = false)
                 else -> AncientCurse.bySlot(slot)?.let { toggleCurse(player, it, playActivationVisual = false) }
@@ -411,7 +425,6 @@ object AncientCurses {
             curse.activationAnimation?.let { player.animate(it) }
             curse.activationGraphic?.let { player.graphic(it) }
         }
-        player.playSound(CURSE_ACTIVATE_SOUND)
         player.filterableMessage("You activate ${curse.curseName}.")
         refreshCurseOverhead(player)
     }
@@ -426,7 +439,7 @@ object AncientCurses {
             if (playSound) player.playSound(CURSE_DEACTIVATE_SOUND)
             player.filterableMessage("You deactivate ${curse.curseName}.")
             refreshCurseOverhead(player)
-            if (curse.category == AncientCurse.Category.LEECH) resetLeechBoosts(player)
+            // Other active Leeches keep their accumulated boost; only this curse loses its base 5%.
         }
     }
 
@@ -438,7 +451,6 @@ object AncientCurses {
         player.attr.remove(TURMOIL_BONUS_ATTR)
         // Bulk shutdowns (death, logout, book switch, zero prayer, pool) mirror Novite's
         // closePrayers path and are silent. Sound 2663 belongs to an explicit toggle-off only.
-        resetLeechBoosts(player)
         refreshCurseOverhead(player)
     }
 
@@ -564,21 +576,33 @@ object AncientCurses {
         return true
     }
 
-    /** Leech self-boost: first activation +5%, then +1% per activation up to +10% of the caster's max level. */
+    private val leechSkills = mapOf(
+        Skills.ATTACK to AncientCurse.LEECH_ATTACK,
+        Skills.STRENGTH to AncientCurse.LEECH_STRENGTH,
+        Skills.DEFENCE to AncientCurse.LEECH_DEFENCE,
+        Skills.RANGED to AncientCurse.LEECH_RANGED,
+        Skills.MAGIC to AncientCurse.LEECH_MAGIC,
+    )
+
+    /** Prayer bonuses are separate from potion/visible levels (Void PrayerBonus and the 2011 KB). */
+    fun leechMultiplier(player: Player, skill: Int): Double {
+        val curse = leechSkills[skill] ?: return 1.0
+        val base = if (isCurseActive(player, curse)) LEECH_BOOST_BASE_PCT else 0
+        return 1.0 + (base + (player.attr[LEECH_BOOST_PCT_ATTR]?.get(skill) ?: 0)) / 100.0
+    }
+
+    /** Void Leech.prayer_bonus_drain: accumulated bonuses fall by one every 50 ticks. */
+    fun decayLeechBoosts(player: Player) {
+        player.attr[LEECH_BOOST_PCT_ATTR]?.replaceAll { _, value -> (value - 1).coerceAtLeast(0) }
+    }
+
     private fun escalateBoost(
         player: Player,
         skill: Int,
     ) {
-        val max = player.skills.getMaxLevel(skill)
         val state = boostState(player)
         val current = state[skill] ?: 0
-        val next = if (current == 0) LEECH_BOOST_BASE_PCT else (current + 1).coerceAtMost(LEECH_BOOST_CAP_PCT)
-        state[skill] = next
-        val cap = (max * next / 100.0).toInt().coerceAtLeast(1)
-        val now = player.skills.getCurrentLevel(skill)
-        val wanted = max + cap
-        if (now >= wanted) return
-        player.skills.alterCurrentLevel(skill, wanted - now, capValue = cap)
+        state[skill] = (current + 1).coerceAtMost(LEECH_BOOST_CAP_PCT - LEECH_BOOST_BASE_PCT)
     }
 
     private fun sap(
@@ -700,8 +724,9 @@ object AncientCurses {
             ),
         )
         attacker.heal((damage * 0.2).toInt().coerceAtLeast(0))
-        if (target is Player) target.decreasePrayerPoints((damage * 0.2).toInt())
-        target.graphic(SOUL_SPLIT_TARGET_GFX, delay = 1)
+        if (target is Player) target.decreasePrayerPoints(damage / 5)
+        // Graphic packet delays are 20 ms client cycles; one game tick is 30 cycles.
+        target.graphic(SOUL_SPLIT_TARGET_GFX, delay = 30)
         attacker.queue {
             wait(1)
             if (!attacker.isDead()) {
@@ -742,7 +767,7 @@ object AncientCurses {
                 ),
             )
         }
-        curse.targetGraphic?.let { target.graphic(it, delay = 1) }
+        curse.targetGraphic?.let { target.graphic(it, delay = 30) }
         when (curse) {
             AncientCurse.SAP_WARRIOR ->
                 if (sap(target, Skills.ATTACK to NpcSkills.ATTACK, Skills.STRENGTH to NpcSkills.STRENGTH, Skills.DEFENCE to NpcSkills.DEFENCE)) {
@@ -823,7 +848,7 @@ object AncientCurses {
 
     /** Wrath's death-explosion graphic (centre, PROVEN from Novite `Player.sendDeath`). */
     private const val WRATH_CENTRE_GFX = 2259
-    private const val WRATH_RING_GFX = 2260
+    const val WRATH_RING_GFX = 2260
 
     /** Exact Novite `World.sendProjectile` values for Wrath's expanding ring. */
     private const val WRATH_PROJECTILE_START_HEIGHT = 41
@@ -862,7 +887,7 @@ object AncientCurses {
      * which was a bug carried over from documentation rather than this source.
      */
     /** Exposed for deterministic testing of the sourced 300% multiplier without mocking world dispatch. */
-    internal fun wrathMaxDamage(player: Player): Int = (player.skills.getMaxLevel(Skills.PRAYER) * 3.0).toInt()
+    internal fun wrathMaxDamage(player: Player): Int = player.skills.getMaxLevel(Skills.PRAYER) * 3 / 10
 
     fun wrathExplosion(player: Player) {
         val damage = wrathMaxDamage(player)
@@ -925,6 +950,13 @@ object AncientCurses {
             CombatClass.RANGED to AncientCurse.DEFLECT_MISSILES,
             CombatClass.MAGIC to AncientCurse.DEFLECT_MAGIC,
         )
+
+    fun deflects(target: Pawn, style: CombatClass): Boolean =
+        target is Player && DEFLECT_STYLE[style]?.let { isCurseActive(target, it) } == true
+
+    /** Called with the roll BEFORE protection. NPC protection must not discard that roll. */
+    fun deflectDamageTaken(attacker: Pawn, target: Pawn, style: CombatClass, damage: Int): Int =
+        if (!deflects(target, style)) damage else if (attacker is Player) damage * 6 / 10 else 0
 
     /**
      * Deflect reflection: reflect 10% of qualifying damage, with no random roll and no recoil

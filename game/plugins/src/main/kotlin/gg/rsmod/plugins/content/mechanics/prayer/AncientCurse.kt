@@ -72,7 +72,10 @@ enum class AncientCurse(
      * no per-hit animation (Deflects/Wrath/Soul Split/Turmoil, handled directly in [AncientCurses]).
      */
     val castAnimation: Int? = null,
-    /** Sap-only immediate caster graphic (Leech has none - PROVEN, same source as [castAnimation]). */
+    /**
+     * Immediate caster graphic: every Sap (PROVEN, same source as [castAnimation]) plus Leech Energy
+     * and Leech Special Attack (see the note above those two entries); null for the other Leeches.
+     */
     val castGraphic: Int? = null,
     /** Projectile from caster to target on activation (PROVEN, same source). */
     val projectileGraphic: Int? = null,
@@ -158,14 +161,27 @@ enum class AncientCurse(
         castAnimation = 12575, projectileGraphic = 2248, targetGraphic = 2250,
         activationChancePercent = 12.5,
     ),
+    /*
+     * Leech Energy and Leech Special Attack are the only Leeches with a caster graphic (2251/2255).
+     * Association SOURCE VERIFIED: Divergent 667 `Prayer.java:107-108` uses 2251/2255 for exactly
+     * these two curses, and the cache lays each curse out as caster gfx / projectile / impact
+     * (Sap: 2214/2215/2216 ... ; Leech Energy: 2251/2252/2254; Leech Special: 2255/2256/2258) with
+     * the slot before the projectile ABSENT for the five stat Leeches. Placement: Divergent sends
+     * them as the target's end graphic (its Leech constructor has no start-gfx slot; its Sap Spirit
+     * row has the same off-by-one sloppiness, end gfx 2224 = the projectile), Novite omits them. The
+     * cache decides: 2251/2255 use seq 12576, which sits between the Leech body seq 12575 and the
+     * Leech projectile seq 12577 exactly as the Sap caster-gfx seq 12570 sits between 12569 and
+     * 12571, and it carries the radius-0 (self-only) sound 8116 - a sound only the caster can hear
+     * belongs on the caster. SOURCE_CONFLICT on placement recorded in HANDOFF_CURRENT.md.
+     */
     LEECH_ENERGY(
         "Leech Energy", 15, level = 84, drainEffect = 100, category = Category.LEECH,
-        castAnimation = 12575, projectileGraphic = 2252, targetGraphic = 2254,
+        castAnimation = 12575, castGraphic = 2251, projectileGraphic = 2252, targetGraphic = 2254,
         activationChancePercent = 100.0 / 11.0,
     ),
     LEECH_SPECIAL_ATTACK(
         "Leech Special Attack", 16, level = 86, drainEffect = 100, category = Category.LEECH,
-        castAnimation = 12575, projectileGraphic = 2256, targetGraphic = 2258,
+        castAnimation = 12575, castGraphic = 2255, projectileGraphic = 2256, targetGraphic = 2258,
         activationChancePercent = 100.0 / 11.0,
     ),
     WRATH("Wrath", 17, level = 89, drainEffect = 30, category = Category.WRATH, icon = PrayerIcon.WRATH),

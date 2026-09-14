@@ -287,7 +287,7 @@ object Prayers {
                 prayer.varbit,
                 1,
             )
-            if (prayer.sound != -1) {
+            if (prayer.sound != -1 && AncientCurses.getBook(p) != AncientCurses.PrayerBook.ANCIENT) {
                 p.playSound(prayer.sound)
             }
 

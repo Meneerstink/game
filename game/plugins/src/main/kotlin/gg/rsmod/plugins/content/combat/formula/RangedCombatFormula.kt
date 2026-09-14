@@ -27,7 +27,7 @@ object RangedCombatFormula : CombatFormula {
         specialAttackMultiplier: Double,
     ): Double {
         // Check if the target has the prayer protection and the attacker is not a player
-        if (target.isProtectedFrom(CombatClass.RANGED) && pawn !is Player) {
+        if ((target.isProtectedFrom(CombatClass.RANGED) && !gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.deflects(target, CombatClass.RANGED)) && pawn !is Player) {
             return 0.0 // Hits will never land
         }
         return getUnprotectedAccuracy(pawn, target, specialAttackMultiplier)
@@ -159,7 +159,7 @@ object RangedCombatFormula : CombatFormula {
         // Step three ("⌊Base Damage × Special Bonus⌋"): every later multiplier is floored in turn.
         hit = floor(hit * specialAttackMultiplier)
 
-        if (target.isProtectedFrom(CombatClass.RANGED)) {
+        if ((target.isProtectedFrom(CombatClass.RANGED) && !gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.deflects(target, CombatClass.RANGED))) {
             hit = floor(hit * 0.6)
         }
 
@@ -328,6 +328,8 @@ object RangedCombatFormula : CombatFormula {
 
     private fun getPrayerRangedMultiplier(player: Player): Double =
         when {
+            gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.getBook(player) == gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.PrayerBook.ANCIENT && !gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.isTurmoilActive(player) ->
+                gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.leechMultiplier(player, Skills.RANGED)
             Prayers.isActive(player, Prayer.SHARP_EYE) -> 1.05
             Prayers.isActive(player, Prayer.HAWK_EYE) -> 1.10
             Prayers.isActive(player, Prayer.EAGLE_EYE) -> 1.15
@@ -337,6 +339,8 @@ object RangedCombatFormula : CombatFormula {
 
     private fun getPrayerAttackMultiplier(player: Player): Double =
         when {
+            gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.getBook(player) == gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.PrayerBook.ANCIENT && !gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.isTurmoilActive(player) ->
+                gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.leechMultiplier(player, Skills.RANGED)
             Prayers.isActive(player, Prayer.SHARP_EYE) -> 1.05
             Prayers.isActive(player, Prayer.HAWK_EYE) -> 1.10
             Prayers.isActive(player, Prayer.EAGLE_EYE) -> 1.15
@@ -346,6 +350,8 @@ object RangedCombatFormula : CombatFormula {
 
     private fun getPrayerDefenceMultiplier(player: Player): Double =
         when {
+            gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.getBook(player) == gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.PrayerBook.ANCIENT && !gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.isTurmoilActive(player) ->
+                gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.leechMultiplier(player, Skills.DEFENCE)
             Prayers.isActive(player, Prayer.THICK_SKIN) -> 1.05
             Prayers.isActive(player, Prayer.ROCK_SKIN) -> 1.10
             Prayers.isActive(player, Prayer.STEEL_SKIN) -> 1.15

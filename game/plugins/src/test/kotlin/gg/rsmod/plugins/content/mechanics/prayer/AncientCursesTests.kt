@@ -237,7 +237,9 @@ class AncientCursesTests {
         AncientCurses.onDamageDealt(attacker, target, damage = 20)
 
         assertEquals(45, target.skills.getCurrentLevel(Skills.ATTACK)) // -5%
-        assertEquals(63, attacker.skills.getCurrentLevel(Skills.ATTACK)) // +5%, capped 3 levels above max
+        // Self boost is a prayer multiplier (Void Leech model), not a visible level change.
+        assertEquals(60, attacker.skills.getCurrentLevel(Skills.ATTACK))
+        assertEquals(1.06, AncientCurses.leechMultiplier(attacker, Skills.ATTACK), 1e-9) // 5% base + 1% first proc
     }
 
     @Test

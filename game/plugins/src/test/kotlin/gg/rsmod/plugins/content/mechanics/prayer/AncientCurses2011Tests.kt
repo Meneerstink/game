@@ -131,10 +131,15 @@ class AncientCurses2011Tests {
         val target = newPlayer(mapOf(Skills.ATTACK to 99))
         AncientCurses.onDamageDealt(attacker, target, damage = 10)
         assertEquals(90, target.skills.getCurrentLevel(Skills.ATTACK))
-        assertEquals(103, attacker.skills.getCurrentLevel(Skills.ATTACK))
+        // The self boost is an invisible prayer multiplier (Void Leech.kt / Prayer.kt:46 adds the
+        // leech levels to the prayer bonus), never a visible level change: base 5 % once active,
+        // then +1 % per proc up to 10 %.
+        assertEquals(99, attacker.skills.getCurrentLevel(Skills.ATTACK))
+        assertEquals(1.06, AncientCurses.leechMultiplier(attacker, Skills.ATTACK), 1e-9)
         repeat(30) { AncientCurses.onDamageDealt(attacker, target, damage = 10) }
         assertEquals(75, target.skills.getCurrentLevel(Skills.ATTACK))
-        assertEquals(108, attacker.skills.getCurrentLevel(Skills.ATTACK))
+        assertEquals(99, attacker.skills.getCurrentLevel(Skills.ATTACK))
+        assertEquals(1.10, AncientCurses.leechMultiplier(attacker, Skills.ATTACK), 1e-9)
     }
 
     @Test
