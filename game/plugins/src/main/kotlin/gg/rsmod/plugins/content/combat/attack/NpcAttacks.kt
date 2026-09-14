@@ -28,6 +28,7 @@ import gg.rsmod.plugins.content.combat.formula.DragonfireTable
 import gg.rsmod.plugins.content.combat.formula.MagicCombatFormula
 import gg.rsmod.plugins.content.combat.formula.MeleeCombatFormula
 import gg.rsmod.plugins.content.combat.formula.RangedCombatFormula
+import gg.rsmod.plugins.content.combat.formula.WyvernIcyBreath
 import gg.rsmod.plugins.content.combat.poison
 import java.io.File
 import java.io.FileReader
@@ -239,10 +240,24 @@ object NpcAttacks {
         attack: Attack,
     ): Int =
         when {
+            // Wyvern icy breath: OSRS Wiki "freeze the player for 6.6 seconds" (the Void table's 10 is replaced).
+            attack.hits.any { it.offense == "icy_breath" } -> WyvernIcyBreath.FREEZE_TICKS
             attack.freeze != 0 -> attack.freeze
             combatDef == DragonfireTable.FROST_DRAGON_COMBAT_DEF && attack.hits.any { it.offense == "dragonfire" } ->
                 DragonfireTable.FROST_DRAGON_FREEZE_TICKS
             else -> 0
+        }
+
+    /** Sourced freeze blocks: frost dragon dragonfire ([DragonfireTable.blocksFreeze]) and wyvern icy breath ([WyvernIcyBreath.blocksFreeze]). */
+    fun freezeBlocked(
+        combatDef: String,
+        attack: Attack,
+        target: Player,
+    ): Boolean =
+        if (attack.hits.any { it.offense == "icy_breath" }) {
+            WyvernIcyBreath.blocksFreeze(target)
+        } else {
+            DragonfireTable.blocksFreeze(combatDef, DragonfireFormula.protectionOf(target))
         }
 
     /** True when an attack's condition is ported (or is one Void itself never registers). */
@@ -565,6 +580,7 @@ object NpcAttacks {
         val maxHit =
             when {
                 offense == "dragonfire" -> if (h.max > 0) formula!!.getMaxHit(npc, target) else 0.0
+                offense == "icy_breath" && h.max > 0 && target is Player -> WyvernIcyBreath.maxHit(target, h.max / 10.0)
                 h.max > 0 -> h.max / 10.0
                 formula != null -> formula.getMaxHit(npc, target)
                 else -> 0.0
@@ -599,7 +615,7 @@ object NpcAttacks {
         if (!attack.impactRegardless && !landed) return
         attack.drains.forEach { drain(target, it) }
         val freeze = freezeTicks(row.combatDef, attack)
-        if (freeze != 0 && !(target is Player && DragonfireTable.blocksFreeze(row.combatDef, DragonfireFormula.protectionOf(target)))) {
+        if (freeze != 0 && !(target is Player && freezeBlocked(row.combatDef, attack, target))) {
             target.freeze(freeze)
         }
         if (attack.poison != 0) target.poison((attack.poison / 10).coerceAtLeast(1))

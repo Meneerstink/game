@@ -51,17 +51,23 @@ class NpcAttacksTests {
         val kbdIce = NpcAttacks.rows().single { it.combatDef == "king_black_dragon" }.attacks.single { it.id == "ice" }.freeze
         assertEquals(kbdIce, gg.rsmod.plugins.content.combat.formula.DragonfireTable.FROST_DRAGON_FREEZE_TICKS)
         var frostFreezing = 0
+        var icyBreaths = 0
         NpcAttacks.rows().forEach { row ->
             row.attacks.forEach { a ->
                 val frostFire = row.combatDef == "frost_dragon" && a.hits.any { it.offense == "dragonfire" }
-                val expected = if (frostFire) kbdIce else a.freeze
+                val icyBreath = a.hits.any { it.offense == "icy_breath" }
+                // Wyvern icy breath: OSRS Wiki "Dragonfire" 6.6 seconds = 11 ticks (replaces the Void table value).
+                val expected = if (icyBreath) 11 else if (frostFire) kbdIce else a.freeze
                 if (frostFire) frostFreezing++
+                if (icyBreath) icyBreaths++
                 assertEquals(expected, NpcAttacks.freezeTicks(row.combatDef, a), "npc ${row.id} ${row.combatDef}.${a.id}")
             }
         }
         assertEquals(5 * 2, frostFreezing, "five frost dragon rows (51, 11633-11636) x breath_swipe + dragonfire_ranged")
+        assertEquals(4, icyBreaths, "skeletal wyverns 3068-3071 ice_breath")
         val source = Paths.get("src", "main", "kotlin", "gg", "rsmod", "plugins", "content", "combat", "attack", "NpcAttacks.kt").toFile().readText()
-        assertTrue("DragonfireTable.blocksFreeze(row.combatDef, DragonfireFormula.protectionOf(target))" in source)
+        assertTrue("DragonfireTable.blocksFreeze(combatDef, DragonfireFormula.protectionOf(target))" in source)
+        assertTrue("WyvernIcyBreath.blocksFreeze(target)" in source && "WyvernIcyBreath.maxHit(target, h.max / 10.0)" in source)
     }
 
     @Test
