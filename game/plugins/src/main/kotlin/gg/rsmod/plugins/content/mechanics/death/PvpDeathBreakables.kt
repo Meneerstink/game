@@ -57,7 +57,8 @@ object PvpDeathBreakables {
         val (converting, rest) =
             result.itemRisk.lost.partition {
                 entries.containsKey(it.item.id) || OsrsOrnamentKits.forPvpConversion(it.item.id) != null || it.item.id == Items.TOXIC_BLOWPIPE ||
-                    it.item.id == Items.BOW_OF_FAERDHINEN || it.item.id == Items.AMULET_OF_BLOOD_FURY || it.item.id == Items.TOXIC_STAFF_OF_THE_DEAD
+                    it.item.id == Items.BOW_OF_FAERDHINEN || it.item.id == Items.AMULET_OF_BLOOD_FURY || it.item.id == Items.TOXIC_STAFF_OF_THE_DEAD ||
+                    it.item.id in gg.rsmod.plugins.content.items.osrs.AvernicTreads.UPGRADED
             }
         if (converting.isEmpty()) return result to emptyList()
         return result.copy(itemRisk = result.itemRisk.copy(lost = rest)) to converting
@@ -104,6 +105,17 @@ object PvpDeathBreakables {
                 container[slotItem.slot] = null
                 if (slotItem.source == DeathContainerSource.EQUIPMENT) equipmentChanged = true
                 world.spawn(GroundItem(Item(Items.AMULET_OF_FURY, 1), victim.tile, result.killer))
+                continue
+            }
+            if (slotItem.item.id in gg.rsmod.plugins.content.items.osrs.AvernicTreads.UPGRADED) {
+                // OSRS Wiki "Avernic treads": "the base avernic treads and any applied boots will be dropped for the killer and all
+                // used tears will be lost."
+                container[slotItem.slot] = null
+                if (slotItem.source == DeathContainerSource.EQUIPMENT) equipmentChanged = true
+                world.spawn(GroundItem(Item(Items.AVERNIC_TREADS, 1), victim.tile, result.killer))
+                gg.rsmod.plugins.content.items.osrs.AvernicTreads.appliedBoots(slotItem.item.id).forEach { boots ->
+                    world.spawn(GroundItem(Item(boots, 1), victim.tile, result.killer))
+                }
                 continue
             }
             if (slotItem.item.id == Items.TOXIC_STAFF_OF_THE_DEAD) {

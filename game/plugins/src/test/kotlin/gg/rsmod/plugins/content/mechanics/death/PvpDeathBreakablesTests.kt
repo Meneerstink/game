@@ -135,7 +135,9 @@ class PvpDeathBreakablesTests {
         // No "Items Kept on Death" rule covers a tradeable item carrying an untradeable kit (SOURCE_GAP, OSRS_IMPORT_STATUS.md):
         // the elder chaos (or) and Dagon'hai (or) pieces stay in the normal lost list instead of being converted.
         val untradeableKits = gg.rsmod.plugins.content.items.osrs.OsrsOrnamentKits.ALL.filterNot { it.pvpConvert }
-        assertEquals(6, untradeableKits.size, "3 elder chaos (or) + 3 Dagon'hai (or)")
+        // + Elidinis' ward (or): OSRS Wiki "Elidinis' ward (or)" - on a PvP death "the Menaphite ornament kit will be placed in their
+        // gravestone" (no base + kit drop to the PKer).
+        assertEquals(7, untradeableKits.size, "3 elder chaos (or) + 3 Dagon'hai (or) + Elidinis' ward (or)")
         untradeableKits.forEach { ornament ->
             val lost = listOf(DeathSlotItem(DeathContainerSource.INVENTORY, 0, Item(ornament.ornamented, 1)))
             val (result, converting) = PvpDeathBreakables.split(DeathResolutionResult(DeathContext.WILDERNESS_PVP, newPlayer(), newPlayer(), DeathItemRiskResult(0, emptyList(), lost)))

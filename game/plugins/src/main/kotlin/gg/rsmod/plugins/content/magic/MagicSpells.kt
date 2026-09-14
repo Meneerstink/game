@@ -90,9 +90,10 @@ object MagicSpells {
     ) {
         if (p.getVarbit(INF_RUNES_VARBIT) == 0) {
             // Staff of the dead family: a combat spell uses no runes 1 time in 7 (StaffOfTheDead).
+            // Kodai wand: 15 % for offensive spells (KodaiWand).
             val savedByStaff =
                 getMetadata(spellId)?.spellType == SpellType.COMBAT_SPELL_TYPE &&
-                    gg.rsmod.plugins.content.items.osrs.StaffOfTheDead.savesRunes(p)
+                    (gg.rsmod.plugins.content.items.osrs.StaffOfTheDead.savesRunes(p) || gg.rsmod.plugins.content.items.osrs.KodaiWand.savesRunes(p))
             // A usable Blighted sack is used up instead of the runes ("It is consumed upon cast").
             if (!savedByStaff && !gg.rsmod.plugins.content.items.osrs.BlightedSacks.consume(p, spellId)) {
                 for (item in items) {

@@ -83,7 +83,7 @@ object OsrsEquipmentStatsAudit {
      * 667 item -> the build-240 item it is, where both id and name differ (verified 2026-09-14): 667 "Virtus robe legs" = OSRS
      * "Virtus robe bottom"; 667 "Broad-tipped bolts" = OSRS "Broad bolts" (Slayer broad bolts, +100 ranged strength in both).
      */
-    val SAME_ITEM_BY_NAME: Map<Int, Int> = mapOf(20167 to 26245, 20169 to 26245, 13280 to 11875)
+    val SAME_ITEM_BY_NAME: Map<Int, Int> = mapOf(20167 to 26245, 20169 to 26245, 13280 to 11875, 15018 to 11770)
 
     data class Mismatch(val localId: Int, val name: String, val upstreamId: Int, val field: String, val local: Int?, val osrs: Int?) {
         override fun toString() = "$localId \"$name\" (osrs $upstreamId) $field: items.yml=${format(field, local)} osrs=${format(field, osrs)}"

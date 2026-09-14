@@ -46,6 +46,9 @@ object OsrsOrnamentKits {
             Ornament(Items.DAGONHAI_HAT_OR, Items.DAGONHAI_HAT, Items.DAGONHAI_ROBES_ORNAMENT_KIT, pvpConvert = false),
             Ornament(Items.DAGONHAI_ROBE_TOP_OR, Items.DAGONHAI_ROBE_TOP, Items.DAGONHAI_ROBES_ORNAMENT_KIT, pvpConvert = false),
             Ornament(Items.DAGONHAI_ROBE_BOTTOM_OR, Items.DAGONHAI_ROBE_BOTTOM, Items.DAGONHAI_ROBES_ORNAMENT_KIT, pvpConvert = false),
+            // magegeara: "Elidinis' ward (f)" + "Menaphite ornament kit" (both untradeable); "Dismantle" separates them; on a PvP death
+            // "the Menaphite ornament kit will be placed in their gravestone" (no base + kit drop to the PKer).
+            Ornament(Items.ELIDINIS_WARD_OR, Items.ELIDINIS_WARD_F, Items.MENAPHITE_ORNAMENT_KIT, pvpConvert = false),
         )
 
     private val byOrnamented = ALL.associateBy { it.ornamented }

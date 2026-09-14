@@ -17,7 +17,8 @@ enum class MagicStaves(
     /**
      * Represents the water rune staves.
      */
-    WATER_RUNE(Items.WATER_RUNE, arrayOf(Items.STAFF_OF_WATER, Items.WATER_BATTLESTAFF)),
+    // OSRS-IMPORT Kodai wand: "provides unlimited water runes when equipped" (OSRS Wiki).
+    WATER_RUNE(Items.WATER_RUNE, arrayOf(Items.STAFF_OF_WATER, Items.WATER_BATTLESTAFF, Items.KODAI_WAND)),
 
     /**
      * Represents the air rune staves.

@@ -264,6 +264,20 @@ enum class CombinationData(
     DAGONHAI_ROBE_TOP_OR(items = intArrayOf(Items.DAGONHAI_ROBES_ORNAMENT_KIT, Items.DAGONHAI_ROBE_TOP), resultItem = Items.DAGONHAI_ROBE_TOP_OR, experience = 0.0),
     DAGONHAI_ROBE_BOTTOM_OR(items = intArrayOf(Items.DAGONHAI_ROBES_ORNAMENT_KIT, Items.DAGONHAI_ROBE_BOTTOM), resultItem = Items.DAGONHAI_ROBE_BOTTOM_OR, experience = 0.0),
 
+    /**
+     * OSRS-IMPORT magegeara. Kodai wand: "created by using a Kodai insignia ... on a master wand", "cannot be reverted" (no skill
+     * stated). Ward upgrade kit: creates the ward (or), "It can be reverted, but the kit will not be returned". Menaphite ornament
+     * kit on Elidinis' ward (f) (Dismantle in OsrsOrnamentKits).
+     */
+    KODAI_WAND(items = intArrayOf(Items.KODAI_INSIGNIA, Items.MASTER_WAND), resultItem = Items.KODAI_WAND, experience = 0.0),
+    MALEDICTION_WARD_OR(items = intArrayOf(Items.WARD_UPGRADE_KIT, Items.MALEDICTION_WARD), resultItem = Items.MALEDICTION_WARD_OR, experience = 0.0),
+    ODIUM_WARD_OR(items = intArrayOf(Items.WARD_UPGRADE_KIT, Items.ODIUM_WARD), resultItem = Items.ODIUM_WARD_OR, experience = 0.0),
+    ELIDINIS_WARD_OR(items = intArrayOf(Items.MENAPHITE_ORNAMENT_KIT, Items.ELIDINIS_WARD_F), resultItem = Items.ELIDINIS_WARD_OR, experience = 0.0),
+
+    /** OSRS Wiki "Seers icon" / "Archer icon": a chisel on the ring, 80 Crafting, 400 experience. */
+    SEERS_ICON(items = intArrayOf(Items.SEERS_RING), tool = CombinationTool.CHISEL, resultItem = Items.SEERS_ICON, levelRequired = 80, experience = 400.0),
+    ARCHER_ICON(items = intArrayOf(Items.ARCHERS_RING), tool = CombinationTool.CHISEL, resultItem = Items.ARCHER_ICON, levelRequired = 80, experience = 400.0),
+
     /** OSRS Wiki "Etched araxyte fang": 86 Crafting, 500 XP, non-reversible (the wiki's confirmation dialog is not ported). */
     AMULET_OF_RANCOUR(
         items = intArrayOf(Items.ETCHED_ARAXYTE_FANG, Items.AMULET_OF_TORTURE),

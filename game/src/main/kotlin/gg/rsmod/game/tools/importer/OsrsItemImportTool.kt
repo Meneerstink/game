@@ -414,6 +414,59 @@ object OsrsItemImportTool {
                     Spec(24666), // Twisted ancestral robe top
                     Spec(24668), // Twisted ancestral robe bottom
                 ),
+            // Step 3 roster batch "magegeara" (ids by Jagex name, RuneLite gameval ItemID): wilderness wards + shards + (or) + ward
+            // upgrade kit, boot crystals + Eternal/Pegasian/Primordial boots, Avernic treads + all upgrades + demon tears, Twisted
+            // buckler, Elidinis' ward family (broken, ward, (f), (or), Menaphite ornament kit), Magus/Venator ring chain (chromium
+            // ingot, vestiges, seer/archer icons, magus/venator icons, rings). Kodai wand lines are added with the Master wand class.
+            // One client requirement (749/750) only where the item has exactly one wear requirement (wards: 60 Defence).
+            "magegeara" to
+                listOf(
+                    Spec(11924, noted = true, rev667Params = mapOf(749 to 1, 750 to 60)), // Malediction ward
+                    Spec(11926, noted = true, rev667Params = mapOf(749 to 1, 750 to 60)), // Odium ward
+                    Spec(11928, noted = true), // Odium shard 1
+                    Spec(11929, noted = true), // Odium shard 2
+                    Spec(11930, noted = true), // Odium shard 3
+                    Spec(11931, noted = true), // Malediction shard 1
+                    Spec(11932, noted = true), // Malediction shard 2
+                    Spec(11933, noted = true), // Malediction shard 3
+                    Spec(12802), // Ward upgrade kit
+                    Spec(12806, rev667Params = mapOf(749 to 1, 750 to 60)), // Malediction ward (or)
+                    Spec(12807, rev667Params = mapOf(749 to 1, 750 to 60)), // Odium ward (or)
+                    Spec(13227, noted = true), // Eternal crystal
+                    Spec(13229, noted = true), // Pegasian crystal
+                    Spec(13231, noted = true), // Primordial crystal
+                    Spec(13235, noted = true), // Eternal boots
+                    Spec(13237, noted = true), // Pegasian boots
+                    Spec(13239, noted = true), // Primordial boots
+                    Spec(31088, noted = true), // Avernic treads
+                    Spec(31091), // Avernic treads (pr)
+                    Spec(31092), // Avernic treads (pe)
+                    Spec(31093), // Avernic treads (et)
+                    Spec(31094), // Avernic treads (pr)(pe)
+                    Spec(31095), // Avernic treads (pr)(et)
+                    Spec(31096), // Avernic treads (pe)(et)
+                    Spec(31097), // Avernic treads (max)
+                    Spec(31111), // Demon tear
+                    // Kodai wand: the 667 Master wand 6914 class (ItemParamProbeTool 2026-09-14: 644 1955, 686 1, weapon type 1) with
+                    // its one wear requirement 80 Magic; the insignia is used on a 667 Master wand.
+                    Spec(21043, noted = true), // Kodai insignia
+                    Spec(21006, noted = true, rev667Params = mapOf(644 to 1955, 686 to 1, 749 to 6, 750 to 80), weaponType = 1), // Kodai wand
+                    Spec(21000, noted = true), // Twisted buckler
+                    // 25983 (gameval ELIDINIS_BROKEN_WARD) decodes as a nameless "Null" definition in build 240: not imported.
+                    Spec(25985, noted = true), // Elidinis' ward
+                    Spec(27251), // Elidinis' ward (f)
+                    Spec(27253), // Elidinis' ward (or)
+                    Spec(27255), // Menaphite ornament kit
+                    Spec(28276, noted = true), // Chromium ingot
+                    Spec(28281), // Magus vestige
+                    Spec(28283), // Venator vestige
+                    Spec(28304), // Seer icon
+                    Spec(28298), // Archer icon
+                    Spec(28291), // Magus icon
+                    Spec(28289), // Venator icon
+                    Spec(28313, noted = true), // Magus ring
+                    Spec(28310, noted = true), // Venator ring
+                ),
             "deadstaves" to
                 listOf(
                     Spec(11791, noted = true, rev667Params = deadStaffParams()), // Staff of the dead
