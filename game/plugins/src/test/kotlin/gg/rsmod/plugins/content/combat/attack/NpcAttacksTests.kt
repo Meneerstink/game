@@ -113,6 +113,14 @@ class NpcAttacksTests {
     }
 
     @Test
+    fun `legacy generic post-attack poison placeholder is not used beside sourced attack impacts`() {
+        val source = Paths.get("src", "main", "kotlin", "gg", "rsmod", "plugins", "content", "combat", "Combat.kt").toFile().readText()
+        assertFalse(source.contains("random(10) < 4"), "unverified 40% poison/venom roll still present")
+        assertTrue(source.contains("sourced attack-impact entry"), "the remaining legacy poison fields must stay explicitly gated")
+        assertTrue(NpcAttacks.rows().flatMap { it.attacks }.any { it.poison > 0 }, "the sourced impact poison path must remain populated")
+    }
+
+    @Test
     fun `Kalphite Queen is no longer bound to the placeholder combat script`() {
         val binding =
             Paths.get("src", "main", "kotlin", "gg", "rsmod", "plugins", "content", "combat", "scripts", "combat_script_binding.plugin.kts")

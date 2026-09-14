@@ -74,17 +74,20 @@ object Poison {
         pawn: Pawn,
         ticks: Int,
     ): Boolean {
-        if (!pawn.attr.has(POISON_TICKS_LEFT_ATTR)) {
-            val oldDamage = getDamageForTicks(pawn.attr[POISON_TICKS_LEFT_ATTR] ?: 0)
-            val newDamage = getDamageForTicks(ticks)
-            if (oldDamage > newDamage) {
-                return false
-            }
-            pawn.timers[POISON_TIMER] = 30
-            pawn.attr[POISON_TICKS_LEFT_ATTR] = ticks
-            if (pawn is Player) {
-                pawn.message("You have been poisoned!")
-            }
+        if (isImmune(pawn)) return false
+
+        // OSRS/ Void/ Novite all keep the stronger poison and restart its 30-cycle timer when
+        // an equal or stronger application lands. The old guard was inverted: it only entered
+        // when no poison existed, so poisoned targets could never be refreshed or upgraded.
+        val oldTicks = pawn.attr[POISON_TICKS_LEFT_ATTR]
+        val oldDamage = oldTicks?.let(::getDamageForTicks) ?: 0
+        val newDamage = getDamageForTicks(ticks)
+        if (oldDamage > newDamage) return false
+
+        pawn.timers[POISON_TIMER] = 30
+        pawn.attr[POISON_TICKS_LEFT_ATTR] = ticks
+        if (oldTicks == null && pawn is Player) {
+            pawn.message("You have been poisoned!")
         }
         return true
     }

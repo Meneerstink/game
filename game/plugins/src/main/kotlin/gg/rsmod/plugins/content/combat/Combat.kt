@@ -114,16 +114,11 @@ object Combat {
             }
         }
 
-        // TODO: Find proper poison/venom chances - both currently reuse the same
-        // unverified placeholder roll. Venom takes priority (real RS rule: a pawn is
-        // never simultaneously poisoned and envenomed, and venom is the stronger effect).
-        if (pawn is Npc) {
-            if (pawn.combatDef.venomDamage > 0 && pawn.world.random(10) < 4) {
-                target.venom()
-            } else if (pawn.combatDef.poisonDamage > 0 && pawn.world.random(10) < 4) {
-                target.poison(pawn.combatDef.poisonDamage)
-            }
-        }
+        // Data-driven NPC attacks apply poison/venom on their sourced impact section. The old
+        // generic fallback used an unverified 40% roll after every swing, could poison on a miss,
+        // and double-applied effects beside a real impact rule. Until each remaining hand-written
+        // definition has a sourced attack-impact entry, it must stay explicitly unimplemented;
+        // a guessed chance is not OSRS parity.
     }
 
     fun postDamage(

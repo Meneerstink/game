@@ -1,12 +1,14 @@
 package gg.rsmod.plugins.content.mechanics.poison
 
 import gg.rsmod.game.model.attr.AttributeMap
+import gg.rsmod.game.model.attr.POISON_TICKS_LEFT_ATTR
 import gg.rsmod.game.model.attr.VENOM_TICKS_ELAPSED_ATTR
 import gg.rsmod.game.model.combat.NpcCombatDef
 import gg.rsmod.game.model.combat.StyleType
 import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.timer.POISON_IMMUNITY
+import gg.rsmod.game.model.timer.POISON_TIMER
 import gg.rsmod.game.model.timer.TimerMap
 import gg.rsmod.game.model.timer.VENOM_IMMUNITY
 import gg.rsmod.plugins.content.combat.isEnvenomed
@@ -79,6 +81,26 @@ class VenomTests {
 
         assertFalse(player.isPoisoned())
         assertTrue(player.isEnvenomed())
+    }
+
+    @Test
+    fun `poison keeps the stronger dose and refreshes an equal or stronger dose`() {
+        val player = newPlayer()
+
+        assertTrue(Poison.poison(player, 4))
+        val firstTicks = player.attr[POISON_TICKS_LEFT_ATTR]
+        assertEquals(16, firstTicks)
+        assertEquals(30, player.timers[POISON_TIMER])
+
+        player.attr[POISON_TICKS_LEFT_ATTR] = 10
+        player.timers[POISON_TIMER] = 3
+        assertFalse(Poison.poison(player, 2))
+        assertEquals(10, player.attr[POISON_TICKS_LEFT_ATTR])
+        assertEquals(3, player.timers[POISON_TIMER])
+
+        assertTrue(Poison.poison(player, 4))
+        assertEquals(firstTicks, player.attr[POISON_TICKS_LEFT_ATTR])
+        assertEquals(30, player.timers[POISON_TIMER])
     }
 
     @Test
