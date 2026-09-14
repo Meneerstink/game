@@ -53,10 +53,13 @@ object DeathExecutor {
         // unreclaimed and near-full) must simply stay with the player rather
         // than being destroyed. Wilderness/PvP loot has no such constraint;
         // ground loot is uncapped, so every lost item is always removed.
+        // RCV-012 decision 3b: loot keys never go to death recovery - "If a player dies a PvM death with loot keys in the inventory,
+        // they are removed instead" - and on a PvP death LootKeys decides where they go.
+        val lostKeys = result.itemRisk.lost.filter { gg.rsmod.plugins.content.mechanics.pvp.LootKeys.isKey(it.item.id) }
         val toRemove =
             when (result.context) {
                 DeathContext.WILDERNESS_PVP -> result.itemRisk.lost
-                DeathContext.PVM_SAFE -> partitionRecoverable(victim, result.itemRisk.lost).fitsInRecovery
+                DeathContext.PVM_SAFE -> partitionRecoverable(victim, result.itemRisk.lost - lostKeys.toSet()).fitsInRecovery + lostKeys
             }
 
         var removedEquipment = false
@@ -98,7 +101,11 @@ object DeathExecutor {
 
         when (result.context) {
             DeathContext.WILDERNESS_PVP -> spawnPvpLoot(world, result, toRemove, logger)
-            DeathContext.PVM_SAFE -> createDeathRecovery(victim, toRemove, recoveryConfig, logger)
+            DeathContext.PVM_SAFE -> {
+                gg.rsmod.plugins.content.mechanics.pvp.LootKeys.removeKeys(victim, lostKeys.map { it.item.id })
+                val recoverable = toRemove - lostKeys.toSet()
+                if (recoverable.isNotEmpty()) createDeathRecovery(victim, recoverable, recoveryConfig, logger)
+            }
         }
         return true
     }
@@ -150,8 +157,9 @@ object DeathExecutor {
         val victim = result.victim
         val lostItems = lost.map { it.item }
         // No gravestone and no GP printing for Wilderness/PvP deaths - the
-        // ground loot itself is the entire PK reward.
-        lostItems.forEach { item ->
+        // ground loot itself is the entire PK reward, unless loot keys take it (RCV-012 decision 3b).
+        val groundItems = gg.rsmod.plugins.content.mechanics.pvp.LootKeys.onWildernessPvpDeath(world, victim, result.killer, lostItems)
+        groundItems.forEach { item ->
             world.spawn(GroundItem(Item(item), victim.tile, result.killer))
         }
         logger?.logDeathLootTransfer(victim, result.killer, lostItems)

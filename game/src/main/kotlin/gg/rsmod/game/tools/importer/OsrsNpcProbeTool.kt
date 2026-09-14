@@ -241,6 +241,18 @@ object OsrsNpcProbeTool {
                     library.close()
                 }
             }
+            "loc2499" ->
+                ModernCacheReader(File(FeroxImportTool.MODERN_CACHE)).use { reader ->
+                    val locs = reader.files(ModernCacheReader.INDEX_CONFIG, 6)
+                    ids.forEach { id ->
+                        val bytes = locs[id] ?: return@forEach println("LOC2499_$id ABSENT")
+                        val d = ModernObjectDef.decode(id, bytes)
+                        println(
+                            "LOC2499_$id name='${d.name}' options=${d.options.toList()} models=${d.models} types=${d.modelTypes} size=${d.sizeX}x${d.sizeY} " +
+                                "interact=${d.interactType} anim=${d.animationId} varbit=${d.varbitId} varp=${d.varpId} transforms=${d.transforms?.toList()}",
+                        )
+                    }
+                }
             "npc667" -> {
                 val library = CacheLibrary(OsrsItemImportTool.TARGETS[0])
                 try {

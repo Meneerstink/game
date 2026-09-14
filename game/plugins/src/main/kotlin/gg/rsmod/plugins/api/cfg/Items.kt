@@ -20138,5 +20138,12 @@ object Items {
     const val IORWERTH_CAMP_TELEPORT = 23687
     const val MOS_LEHARMLESS_TELEPORT = 23688
     const val LUMBERYARD_TELEPORT = 23689
+
+    // RCV-012 decision 3b: Wilderness loot keys (OSRS 26651-26655, OsrsItemImportTool batch "lootkeys", tx-20260914-104631).
+    const val LOOT_KEY = 23696
+    const val LOOT_KEY_23697 = 23697
+    const val LOOT_KEY_23698 = 23698
+    const val LOOT_KEY_23699 = 23699
+    const val LOOT_KEY_23700 = 23700
     // Auto-generated file using class gg.rsmod.game.service.game.DumpEntityIdService
 }

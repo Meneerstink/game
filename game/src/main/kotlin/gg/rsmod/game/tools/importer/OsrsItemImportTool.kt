@@ -772,6 +772,9 @@ object OsrsItemImportTool {
                     Spec(20017, noted = true), // Ring of coins
                     Spec(20005, noted = true), // Ring of nature
                 ),
+            // RCV-012 decision 3b: Wilderness loot keys (OSRS Wiki "Loot key": tradeable No, noteable No, options Check/Destroy,
+            // ids 26651-26655).
+            "lootkeys" to listOf(26651, 26652, 26653, 26654, 26655).map { Spec(it) },
             "deadstaves" to
                 listOf(
                     Spec(11791, noted = true, rev667Params = deadStaffParams()), // Staff of the dead

@@ -207,6 +207,20 @@ object PriceChecker {
      */
     fun refresh(player: Player) {
         val container = container(player) ?: return
+        sendGrid(player, container)
+    }
+
+    /** Opens interface 206 with its item grid enabled but without the inventory overlay (the Loot Chest reuses the grid, ADAPTED). */
+    fun openGrid(player: Player) {
+        player.openInterface(INTERFACE_ID, InterfaceDestination.MAIN_SCREEN)
+        player.setInterfaceEvents(INTERFACE_ID, GRID_COMPONENT, 0 until CAPACITY, GRID_OPS)
+    }
+
+    /** Sends [container] as the grid's items plus the per-slot and total value varcs. */
+    fun sendGrid(
+        player: Player,
+        container: ItemContainer,
+    ) {
         val definitions = player.world.definitions
         player.sendItemContainer(CONTAINER_KEY, container)
 

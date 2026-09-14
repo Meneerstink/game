@@ -283019,3 +283019,33 @@
   tradeable: true
   weight: 0.0
   equipment: null
+- id: 23696
+  name: "Loot key"
+  examine: "Contains the loot from a fallen enemy. Use it at the Loot Chest in the Ferox Enclave."
+  tradeable: false
+  weight: 0.01
+  equipment: null
+- id: 23697
+  name: "Loot key"
+  examine: "Contains the loot from a fallen enemy. Use it at the Loot Chest in the Ferox Enclave."
+  tradeable: false
+  weight: 0.01
+  equipment: null
+- id: 23698
+  name: "Loot key"
+  examine: "Contains the loot from a fallen enemy. Use it at the Loot Chest in the Ferox Enclave."
+  tradeable: false
+  weight: 0.01
+  equipment: null
+- id: 23699
+  name: "Loot key"
+  examine: "Contains the loot from a fallen enemy. Use it at the Loot Chest in the Ferox Enclave."
+  tradeable: false
+  weight: 0.01
+  equipment: null
+- id: 23700
+  name: "Loot key"
+  examine: "Contains the loot from a fallen enemy. Use it at the Loot Chest in the Ferox Enclave."
+  tradeable: false
+  weight: 0.01
+  equipment: null

@@ -88,6 +88,7 @@ object DeathItemRiskCalculator {
         itemProtectionActive: Boolean,
         valueProvider: ItemRiskValueProvider,
         alwaysProtected: (itemId: Int) -> Boolean = { false },
+        alwaysLost: (itemId: Int) -> Boolean = { false },
     ): DeathItemRiskResult {
         val slots = mutableListOf<DeathSlotItem>()
         inventory.forEachIndexed { slot, item ->
@@ -98,7 +99,10 @@ object DeathItemRiskCalculator {
         }
 
         val forcedProtected = slots.filter { alwaysProtected(it.item.id) }
-        val remaining = slots.filterNot { alwaysProtected(it.item.id) }
+        // RCV-012 decision 3b: loot keys are always lost ("The effects of being unskulled and the Protect Item prayer apply only to
+        // the items in the inventory, but not associated with the loot keys themselves").
+        val forcedLost = slots.filter { !alwaysProtected(it.item.id) && alwaysLost(it.item.id) }
+        val remaining = slots.filterNot { alwaysProtected(it.item.id) || alwaysLost(it.item.id) }
 
         val keepCount = protectedItemCount(skulled, itemProtectionActive)
 
@@ -111,7 +115,7 @@ object DeathItemRiskCalculator {
         return DeathItemRiskResult(
             protectedItemCount = forcedProtected.size + kept.size,
             protected = forcedProtected + kept,
-            lost = lostRemaining,
+            lost = lostRemaining + forcedLost,
         )
     }
 }

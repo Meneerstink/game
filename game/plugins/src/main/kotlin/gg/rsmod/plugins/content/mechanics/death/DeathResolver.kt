@@ -97,6 +97,7 @@ object DeathResolver {
                 itemProtectionActive = itemProtectionActive,
                 valueProvider = valueProvider,
                 alwaysProtected = alwaysProtected,
+                alwaysLost = gg.rsmod.plugins.content.mechanics.pvp.LootKeys::isKey,
             )
         return DeathResolutionResult(context, victim, killer, itemRisk)
     }
