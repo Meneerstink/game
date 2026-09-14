@@ -282902,3 +282902,120 @@
   tradeable: true
   weight: 0.0
   equipment: null
+- id: 23690
+  name: "Ale of the gods"
+  examine: "Ale of the gods."
+  tradeable: true
+  weight: 0.06
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6658
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 0
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23691
+  name: "Ale of the gods"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23692
+  name: "Ring of coins"
+  examine: "A valuable ring."
+  tradeable: true
+  weight: 0.004
+  equipment:
+    equip_slot: 12
+    equip_type: -1
+    appearance_id: 6659
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23693
+  name: "Ring of coins"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23694
+  name: "Ring of nature"
+  examine: "A ring shaped like the nature rune symbol."
+  tradeable: true
+  weight: 0.004
+  equipment:
+    equip_slot: 12
+    equip_type: -1
+    appearance_id: 6659
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23695
+  name: "Ring of nature"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null

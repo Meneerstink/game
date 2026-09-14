@@ -762,6 +762,16 @@ object OsrsItemImportTool {
             // Casket sub-batch "casket-teleports": the Treasure Trail teleport scrolls (stackable, "Teleport", no noted variants upstream):
             // Digsite, Feldip hills, Lunar isle, Mort'ton, Pest control, Piscatoris, Iorwerth camp, Mos le'harmless, Lumberyard.
             "casket-teleports" to listOf(12403, 12404, 12405, 12406, 12407, 12408, 12410, 12411, 12642).map { Spec(it) },
+            // Casket sub-batch "casket-misc": cosmetic rewards without stats (OSRS Wiki). Ale of the gods: weapon slot, "combatstyle =
+            // Unarmed", speed 4 - 667 WeaponType.NONE (0), no style-set param (ADAPTED); its sway render has no 667 analogue (SOURCE_GAP, no
+            // 644). Ring of coins / Ring of nature: ring slot; the transformation into a coin pile / bush needs NPC appearance data that
+            // this importer set cannot bring in (BLOCKED), so they import as wearables only.
+            "casket-misc" to
+                listOf(
+                    Spec(20056, noted = true, weaponType = 0), // Ale of the gods
+                    Spec(20017, noted = true), // Ring of coins
+                    Spec(20005, noted = true), // Ring of nature
+                ),
             "deadstaves" to
                 listOf(
                     Spec(11791, noted = true, rev667Params = deadStaffParams()), // Staff of the dead
