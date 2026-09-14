@@ -310,7 +310,7 @@ object GrandExchangeInterface {
             return
         }
         selection.itemId = real.id
-        selection.guide = service.guidePrice(real.id, real.cost)
+        selection.guide = service.guidePrice(real.id, OsrsGuidePrices.seed(real))
         selection.price = clampPrice(selection, selection.guide)
         selection.quantity = 1
         sendSelection(player, selection)
