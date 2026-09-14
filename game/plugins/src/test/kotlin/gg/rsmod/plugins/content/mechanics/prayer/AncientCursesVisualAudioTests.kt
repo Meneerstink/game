@@ -123,6 +123,7 @@ class AncientCursesVisualAudioTests {
         every { fixture.world.percentChance(any()) } returns true
         AncientCurses.switchBook(fixture.player, AncientCurses.PrayerBook.ANCIENT)
         AncientCurses.toggleCurse(fixture.player, AncientCurse.SAP_WARRIOR)
+        io.mockk.clearMocks(fixture.player, answers = false, recordedCalls = true, childMocks = false, verificationMarks = true, exclusionRules = false)
 
         val target = mockk<Npc>(relaxed = true)
         every { target.attr } returns AttributeMap()
@@ -155,19 +156,26 @@ class AncientCursesVisualAudioTests {
         verify { target.decreasePrayerPoints(20) }
         verify { target.graphic(2264, delay = ONE_TICK_CLIENT_CYCLES) }
         verify { fixture.world.spawn(any<gg.rsmod.game.model.entity.Projectile>()) }
-        // Soul Split's 2263/2264 sequences are silent and no source maps 8112/8113/8119 to a phase.
-        verify(exactly = 0) { fixture.player.write(match<gg.rsmod.game.message.Message> { it is SynthSoundMessage }) }
+        // Soul Split's 2263/2264 sequences are silent; the hit sound is the PROVISIONAL owner choice.
+        verify(exactly = 1) { fixture.player.write(SynthSoundMessage(sound = AncientCurses.SOUL_SPLIT_HIT_SOUND, loops = 1, delay = 0)) }
     }
 
     @Test
-    fun `no curse activation sends a server sound and every explicit deactivation sends the lift sound`() {
+    fun `curse activation sends only its owner-chosen group sound (none for graphic-borne curses) and every explicit deactivation sends the lift sound`() {
         val offenders = mutableListOf<String>()
         AncientCurse.values().forEach { curse ->
             val fixture = RuntimeFixture()
             AncientCurses.switchBook(fixture.player, AncientCurses.PrayerBook.ANCIENT)
             AncientCurses.toggleCurse(fixture.player, curse)
-            runCatching { verify(exactly = 0) { fixture.player.write(match<gg.rsmod.game.message.Message> { it is SynthSoundMessage }) } }
-                .onFailure { offenders += "$curse: activation sent a server sound (the graphic sequence is the audio)" }
+            val expected = if (curse.activationGraphic == null) AncientCurses.activationSound(curse) else null
+            runCatching {
+                if (expected == null) {
+                    verify(exactly = 0) { fixture.player.write(match<gg.rsmod.game.message.Message> { it is SynthSoundMessage }) }
+                } else {
+                    verify(exactly = 1) { fixture.player.write(SynthSoundMessage(sound = expected, loops = 1, delay = 0)) }
+                    verify(exactly = 1) { fixture.player.write(match<gg.rsmod.game.message.Message> { it is SynthSoundMessage }) }
+                }
+            }.onFailure { offenders += "$curse: activation sound mismatch (expected ${expected ?: "none"})" }
             AncientCurses.toggleCurse(fixture.player, curse)
             runCatching { verify(exactly = 1) { fixture.player.write(SynthSoundMessage(sound = LIFT_SOUND, loops = 1, delay = 0)) } }
                 .onFailure { offenders += "$curse: explicit deactivation did not send 2663 exactly once" }
@@ -229,9 +237,11 @@ class AncientCursesVisualAudioTests {
                 AncientCurses.toggleCurse(fixture.player, first)
                 io.mockk.clearMocks(fixture.player, answers = false, recordedCalls = true, childMocks = false, verificationMarks = true, exclusionRules = false)
                 AncientCurses.toggleCurse(fixture.player, second)
+                val own = if (second.activationGraphic == null) AncientCurses.activationSound(second) else null
                 runCatching {
-                    verify(exactly = 0) { fixture.player.write(match<gg.rsmod.game.message.Message> { it is SynthSoundMessage }) }
-                }.onFailure { offenders += "$first -> $second: replacing sent a server sound (activation is graphic-borne, replacement is silent)" }
+                    verify(exactly = 0) { fixture.player.write(SynthSoundMessage(sound = LIFT_SOUND, loops = 1, delay = 0)) }
+                    verify(exactly = if (own == null) 0 else 1) { fixture.player.write(match<gg.rsmod.game.message.Message> { it is SynthSoundMessage }) }
+                }.onFailure { offenders += "$first -> $second: replacement must be silent apart from the new curse's own activation sound (${own ?: "none"})" }
             }
         }
         assertEquals(emptyList<String>(), offenders)

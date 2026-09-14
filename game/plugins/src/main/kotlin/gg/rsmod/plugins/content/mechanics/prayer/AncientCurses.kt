@@ -98,17 +98,111 @@ object AncientCurses {
      */
     private const val CURSE_DEACTIVATE_SOUND = Sfx.CANCEL_PRAYER
 
+    /**
+     * Server-sent activation sound per curse group for the 17 curses that have no activation
+     * graphic (Sap, Leech, Deflect, Wrath, Soul Split). The real 2011 server sent one, like the
+     * normal book's per-prayer 2660-2690 tracks; the ids are the 7 synths of the curse block that
+     * no sequence owns (8108/8109/8110/8112/8113/8114/8119). No source labels them, so an entry is
+     * only filled by explicit owner decision after auditioning in game (`sound <id>`), and is
+     * PROVISIONAL (owner choice), never SOURCE VERIFIED. A missing entry means silent.
+     * Berserker (FREE) and Turmoil/Protect Item are graphic-borne and never listed here.
+     *
+     * PROVISIONAL (owner choice by ear, 2026-09-14 ~21:10): Sap 8108, Leech 8109, Deflect 8110,
+     * Wrath 8114, Soul Split 8112 (toggle) with 8113/8119 for the Soul Split hit/return below.
+     */
+    private val ACTIVATION_SOUND_BY_CATEGORY: Map<AncientCurse.Category, Int> =
+        mapOf(
+            AncientCurse.Category.SAP to 8108,
+            AncientCurse.Category.LEECH to 8109,
+            AncientCurse.Category.DEFLECT_COMBAT to 8110,
+            AncientCurse.Category.DEFLECT_SUMMONING to 8110,
+            AncientCurse.Category.WRATH to 8114,
+            AncientCurse.Category.SOUL_SPLIT to 8112,
+        )
+
+    /** PROVISIONAL (owner delegated, same date): Soul Split souls leaving the target / returning to heal. */
+    const val SOUL_SPLIT_HIT_SOUND = 8113
+    const val SOUL_SPLIT_RETURN_SOUND = 8119
+
+    fun activationSound(curse: AncientCurse): Int? = ACTIVATION_SOUND_BY_CATEGORY[curse.category]
+
     /** Novite's Sap/Leech projectile packet: start/end 35, speed 20, delay 5, curve 0. */
     private const val CURSE_PROJECTILE_START_HEIGHT = 35
     private const val CURSE_PROJECTILE_END_HEIGHT = 35
     private const val CURSE_PROJECTILE_DELAY = 5
     private const val CURSE_PROJECTILE_LIFESPAN = 20
 
-    /** Per-target escalation state: skill -> drain percentage currently applied by curses. */
+    /**
+     * Sap/Leech stat model, from the owner-supplied 2011 Knowledge Base text (2026-09-14), which Void
+     * (`Leech.kt`, `Prayer.effectiveLevelModifier`) and Novite (`adjustStat` -> varbits 6857+)
+     * implement the same way:
+     *
+     *  * "Once a sap or leech curse is activated, it immediately drains your opponent's stat by
+     *    10%": the first proc registers a **base drain**, an invisible combat modifier
+     *    ([drainMultiplier]) that lasts exactly as long as the caster's curse stays active.
+     *  * "Keeping the curse activated will slowly continue to drain ... up to 20% (sap) / 25%
+     *    (leech)": every later proc removes one more percent of the max level as a **real level
+     *    drain** ([CURSE_DRAIN_PCT_ATTR] counts the steps), so it "regenerates over time as usual".
+     *  * "When the curse is deactivated, the initial 10% ... will be immediately restored":
+     *    [releaseCurseEffects] drops the caster from every target's base-drain set.
+     *  * "The boost to your own stat when using a leech curse works in the same way": base 5 % is a
+     *    modifier while the Leech is active ([leechMultiplier]); +1 % per proc up to +10 % is a real
+     *    level boost that decays like a potion.
+     *
+     * Player casters and victims see it in the prayer tab through varbits 6857..6861 (varp 1583,
+     * 6 bits each, cache-proven; 30 = 0 %, Void: 11..42 = -25..+15 %).
+     */
+    /** Per-target: skill -> escalated drain steps (percent of max already removed as real levels). */
     private val CURSE_DRAIN_PCT_ATTR = AttributeKey<MutableMap<Int, Int>>()
 
-    /** Per-caster escalation state: skill -> self-boost percentage currently applied by Leeches. */
+    /** Per-target: skill -> casters whose active Sap/Leech currently applies the base 10 % modifier. */
+    private val CURSE_BASE_DRAIN_ATTR = AttributeKey<MutableMap<Int, MutableSet<Player>>>()
+
+    /** Per-caster: curse -> targets it has cursed, so deactivation can release their base drain. */
+    private val CURSED_TARGETS_ATTR = AttributeKey<MutableMap<AncientCurse, MutableSet<Pawn>>>()
+
+    /** Per-caster: skill -> escalated self-boost steps already applied as real levels by Leeches. */
     private val LEECH_BOOST_PCT_ATTR = AttributeKey<MutableMap<Int, Int>>()
+
+    private val STAT_MODIFIER_VARBITS =
+        mapOf(Skills.ATTACK to 6857, Skills.STRENGTH to 6858, Skills.DEFENCE to 6859, Skills.RANGED to 6860, Skills.MAGIC to 6861)
+
+    /** Combat modifier for [target]'s [skill] level while any caster's Sap/Leech base drain applies. */
+    fun drainMultiplier(target: Pawn, skill: Int): Double =
+        if (target.attr[CURSE_BASE_DRAIN_ATTR]?.get(skill)?.isNotEmpty() == true) 1.0 - SAP_BASE_PCT / 100.0 else 1.0
+
+    /** Pushes the prayer-tab stat modifiers (boost minus drain) for a player caster or victim. */
+    fun syncStatVarbits(player: Player) {
+        STAT_MODIFIER_VARBITS.forEach { (skill, varbit) ->
+            val boost =
+                (if (leechSkills[skill]?.let { isCurseActive(player, it) } == true) LEECH_BOOST_BASE_PCT else 0) +
+                    (player.attr[LEECH_BOOST_PCT_ATTR]?.get(skill) ?: 0)
+            val drain =
+                (if (player.attr[CURSE_BASE_DRAIN_ATTR]?.get(skill)?.isNotEmpty() == true) SAP_BASE_PCT else 0) +
+                    (player.attr[CURSE_DRAIN_PCT_ATTR]?.get(skill) ?: 0)
+            val value = 30 + Math.round(boost * 12.0 / 15.0).toInt() - Math.round(drain * 19.0 / 25.0).toInt()
+            player.setVarbit(varbit, value.coerceIn(0, 63))
+        }
+    }
+
+    /** Immediate release of everything bound to [curse] staying active (KB: the initial 10 % / 5 %). */
+    private fun releaseCurseEffects(player: Player, curse: AncientCurse) {
+        val stillDrained = activeCurses(player).filter { it != curse }.flatMap { it.drains }.toSet()
+        val targets = player.attr[CURSED_TARGETS_ATTR]?.remove(curse) ?: emptySet<Pawn>()
+        for (target in targets) {
+            val sets = target.attr[CURSE_BASE_DRAIN_ATTR] ?: continue
+            for (skill in curse.drains) {
+                if (skill in stillDrained) continue
+                sets[skill]?.let { casters ->
+                    casters.remove(player)
+                    if (casters.isEmpty()) sets.remove(skill)
+                }
+            }
+            if (target is Player) syncStatVarbits(target)
+        }
+        player.attr[LEECH_BOOST_PCT_ATTR]?.let { state -> curse.drains.forEach { state.remove(it) } }
+        syncStatVarbits(player)
+    }
 
     fun unlock(player: Player) {
         if (player.attr[UNLOCKED_ATTR] == true) {
@@ -424,6 +518,8 @@ object AncientCurses {
         if (playActivationVisual) {
             curse.activationAnimation?.let { player.animate(it) }
             curse.activationGraphic?.let { player.graphic(it) }
+            // Graphic-borne sounds play client-side; only graphic-less curses get a server sound.
+            if (curse.activationGraphic == null) activationSound(curse)?.let { player.playSound(it) }
         }
         player.filterableMessage("You activate ${curse.curseName}.")
         refreshCurseOverhead(player)
@@ -439,14 +535,16 @@ object AncientCurses {
             if (playSound) player.playSound(CURSE_DEACTIVATE_SOUND)
             player.filterableMessage("You deactivate ${curse.curseName}.")
             refreshCurseOverhead(player)
-            // Other active Leeches keep their accumulated boost; only this curse loses its base 5%.
+            releaseCurseEffects(player, curse)
         }
     }
 
     fun deactivateAllCurses(player: Player) {
         if (activeCurses(player).isEmpty() && !isTurmoilActive(player)) return
         activeCurses(player).forEach { player.setVarbit(it.varbit, 0) }
+        val released = activeCurses(player).toList()
         activeCurses(player).clear()
+        released.forEach { releaseCurseEffects(player, it) }
         setTurmoil(player, false)
         player.attr.remove(TURMOIL_BONUS_ATTR)
         // Bulk shutdowns (death, logout, book switch, zero prayer, pool) mirror Novite's
@@ -498,7 +596,15 @@ object AncientCurses {
     /** Called when the target dies/logs out so the next fight starts from the base drain again. */
     fun clearDrainState(target: Pawn) {
         target.attr.remove(CURSE_DRAIN_PCT_ATTR)
+        target.attr.remove(CURSE_BASE_DRAIN_ATTR)
+        if (target is Player) syncStatVarbits(target)
     }
+
+    private fun baseDrainState(target: Pawn): MutableMap<Int, MutableSet<Player>> =
+        target.attr[CURSE_BASE_DRAIN_ATTR] ?: mutableMapOf<Int, MutableSet<Player>>().also { target.attr[CURSE_BASE_DRAIN_ATTR] = it }
+
+    private fun cursedTargets(caster: Player): MutableMap<AncientCurse, MutableSet<Pawn>> =
+        caster.attr[CURSED_TARGETS_ATTR] ?: mutableMapOf<AncientCurse, MutableSet<Pawn>>().also { caster.attr[CURSED_TARGETS_ATTR] = it }
 
     private fun resetLeechBoosts(player: Player) {
         player.attr.remove(LEECH_BOOST_PCT_ATTR)
@@ -545,12 +651,14 @@ object AncientCurses {
         }
 
     /**
-     * One escalation step of a Sap/Leech drain on [target]'s stat: the first activation applies
-     * [basePct], every later one adds one point up to [capPct]. The target's current level is never
-     * pushed below `max * (1 - capPct)` by curses, so a stale state after natural restoration
-     * cannot over-drain. Returns true when a level was actually removed.
+     * One escalation step of a Sap/Leech drain on [target]'s stat (see the stat-model KDoc above):
+     * the first proc from [caster] applies the base modifier; every later proc removes one percent
+     * of the max level as a real drain, up to `capPct - basePct` percent, never below that floor.
+     * Returns false only when the target is already fully drained ("has no effect").
      */
     private fun escalateDrain(
+        caster: Player,
+        curse: AncientCurse,
         target: Pawn,
         playerSkill: Int,
         npcSkill: Int,
@@ -559,21 +667,32 @@ object AncientCurses {
     ): Boolean {
         val max = maxLevel(target, playerSkill, npcSkill)
         if (max <= 0) return false
+        val firstFromThisCaster = baseDrainState(target).getOrPut(playerSkill) { mutableSetOf() }.add(caster)
+        cursedTargets(caster).getOrPut(curse) { mutableSetOf() }.add(target)
         val state = drainState(target)
-        val current = state[playerSkill] ?: 0
-        val next = if (current == 0) basePct else (current + 1).coerceAtMost(capPct)
-        state[playerSkill] = next
-        val floor = max - (max * capPct / 100.0).toInt().coerceAtLeast(1)
-        val targetLevel = max - (max * next / 100.0).toInt().coerceAtLeast(1)
-        val now = currentLevel(target, playerSkill, npcSkill)
-        val wanted = maxOf(targetLevel, floor).coerceAtLeast(0)
-        if (now <= wanted) return false
-        val amount = now - wanted
-        when (target) {
-            is Player -> target.skills.alterCurrentLevel(playerSkill, -amount)
-            is Npc -> target.stats.alterCurrentLevel(npcSkill, -amount)
-        }
-        return true
+        val extra = state[playerSkill] ?: 0
+        val maxExtra = capPct - basePct
+        val changed =
+            when {
+                firstFromThisCaster && extra == 0 -> true
+                extra >= maxExtra -> false
+                else -> {
+                    state[playerSkill] = extra + 1
+                    val floor = max - (max * maxExtra / 100.0).toInt().coerceAtLeast(1)
+                    val step = (max / 100.0).toInt().coerceAtLeast(1)
+                    val now = currentLevel(target, playerSkill, npcSkill)
+                    val wanted = maxOf(floor, now - step)
+                    if (now > wanted) {
+                        when (target) {
+                            is Player -> target.skills.alterCurrentLevel(playerSkill, -(now - wanted))
+                            is Npc -> target.stats.alterCurrentLevel(npcSkill, -(now - wanted))
+                        }
+                    }
+                    true
+                }
+            }
+        if (target is Player) syncStatVarbits(target)
+        return changed
     }
 
     private val leechSkills = mapOf(
@@ -584,39 +703,51 @@ object AncientCurses {
         Skills.MAGIC to AncientCurse.LEECH_MAGIC,
     )
 
-    /** Prayer bonuses are separate from potion/visible levels (Void PrayerBonus and the 2011 KB). */
+    /** The Leech's base 5 % self-boost: a combat modifier that exists exactly while the Leech is active. */
     fun leechMultiplier(player: Player, skill: Int): Double {
         val curse = leechSkills[skill] ?: return 1.0
-        val base = if (isCurseActive(player, curse)) LEECH_BOOST_BASE_PCT else 0
-        return 1.0 + (base + (player.attr[LEECH_BOOST_PCT_ATTR]?.get(skill) ?: 0)) / 100.0
+        return if (isCurseActive(player, curse)) 1.0 + LEECH_BOOST_BASE_PCT / 100.0 else 1.0
     }
 
-    /** Void Leech.prayer_bonus_drain: accumulated bonuses fall by one every 50 ticks. */
-    fun decayLeechBoosts(player: Player) {
-        player.attr[LEECH_BOOST_PCT_ATTR]?.replaceAll { _, value -> (value - 1).coerceAtLeast(0) }
-    }
-
+    /**
+     * Escalated self-boost: the first proc only establishes the base modifier; each later proc adds
+     * one real level up to `(cap - base)` percent of the max level, which then decays like a potion.
+     */
     private fun escalateBoost(
         player: Player,
         skill: Int,
     ) {
         val state = boostState(player)
-        val current = state[skill] ?: 0
-        state[skill] = (current + 1).coerceAtMost(LEECH_BOOST_CAP_PCT - LEECH_BOOST_BASE_PCT)
+        val maxExtra = LEECH_BOOST_CAP_PCT - LEECH_BOOST_BASE_PCT
+        val current = state[skill]
+        when {
+            current == null -> state[skill] = 0
+            current >= maxExtra -> {}
+            else -> {
+                state[skill] = current + 1
+                val max = player.skills.getMaxLevel(skill)
+                val cap = (max * maxExtra / 100.0).toInt().coerceAtLeast(1)
+                if (player.skills.getCurrentLevel(skill) < max + cap) player.skills.alterCurrentLevel(skill, 1, capValue = cap)
+            }
+        }
+        syncStatVarbits(player)
     }
 
     private fun sap(
+        attacker: Player,
+        curse: AncientCurse,
         target: Pawn,
         vararg skills: Pair<Int, Int>,
-    ): Boolean = skills.map { (p, n) -> escalateDrain(target, p, n, SAP_BASE_PCT, SAP_CAP_PCT) }.any { it }
+    ): Boolean = skills.map { (p, n) -> escalateDrain(attacker, curse, target, p, n, SAP_BASE_PCT, SAP_CAP_PCT) }.any { it }
 
     private fun leech(
         attacker: Player,
+        curse: AncientCurse,
         target: Pawn,
         playerSkill: Int,
         npcSkill: Int,
     ) {
-        escalateDrain(target, playerSkill, npcSkill, LEECH_DRAIN_BASE_PCT, LEECH_DRAIN_CAP_PCT)
+        escalateDrain(attacker, curse, target, playerSkill, npcSkill, LEECH_DRAIN_BASE_PCT, LEECH_DRAIN_CAP_PCT)
         escalateBoost(attacker, playerSkill)
     }
 
@@ -725,11 +856,13 @@ object AncientCurses {
         )
         attacker.heal((damage * 0.2).toInt().coerceAtLeast(0))
         if (target is Player) target.decreasePrayerPoints(damage / 5)
+        attacker.playSound(SOUL_SPLIT_HIT_SOUND)
         // Graphic packet delays are 20 ms client cycles; one game tick is 30 cycles.
         target.graphic(SOUL_SPLIT_TARGET_GFX, delay = 30)
         attacker.queue {
             wait(1)
             if (!attacker.isDead()) {
+                attacker.playSound(SOUL_SPLIT_RETURN_SOUND)
                 attacker.world.spawn(
                     target.createProjectile(
                         attacker,
@@ -770,15 +903,15 @@ object AncientCurses {
         curse.targetGraphic?.let { target.graphic(it, delay = 30) }
         when (curse) {
             AncientCurse.SAP_WARRIOR ->
-                if (sap(target, Skills.ATTACK to NpcSkills.ATTACK, Skills.STRENGTH to NpcSkills.STRENGTH, Skills.DEFENCE to NpcSkills.DEFENCE)) {
+                if (sap(attacker, curse, target, Skills.ATTACK to NpcSkills.ATTACK, Skills.STRENGTH to NpcSkills.STRENGTH, Skills.DEFENCE to NpcSkills.DEFENCE)) {
                     curseMessages(attacker, target, "Attack, Strength and Defence")
                 }
             AncientCurse.SAP_RANGER ->
-                if (sap(target, Skills.RANGED to NpcSkills.RANGED, Skills.DEFENCE to NpcSkills.DEFENCE)) {
+                if (sap(attacker, curse, target, Skills.RANGED to NpcSkills.RANGED, Skills.DEFENCE to NpcSkills.DEFENCE)) {
                     curseMessages(attacker, target, "Ranged and Defence")
                 }
             AncientCurse.SAP_MAGE ->
-                if (sap(target, Skills.MAGIC to NpcSkills.MAGIC, Skills.DEFENCE to NpcSkills.DEFENCE)) {
+                if (sap(attacker, curse, target, Skills.MAGIC to NpcSkills.MAGIC, Skills.DEFENCE to NpcSkills.DEFENCE)) {
                     curseMessages(attacker, target, "Magic and Defence")
                 }
             AncientCurse.SAP_SPIRIT ->
@@ -789,11 +922,11 @@ object AncientCurses {
                         curseMessages(attacker, target, "special attack energy")
                     }
                 }
-            AncientCurse.LEECH_ATTACK -> leech(attacker, target, Skills.ATTACK, NpcSkills.ATTACK).also { leechMessages(attacker, target, "Attack") }
-            AncientCurse.LEECH_RANGED -> leech(attacker, target, Skills.RANGED, NpcSkills.RANGED).also { leechMessages(attacker, target, "Ranged") }
-            AncientCurse.LEECH_MAGIC -> leech(attacker, target, Skills.MAGIC, NpcSkills.MAGIC).also { leechMessages(attacker, target, "Magic") }
-            AncientCurse.LEECH_DEFENCE -> leech(attacker, target, Skills.DEFENCE, NpcSkills.DEFENCE).also { leechMessages(attacker, target, "Defence") }
-            AncientCurse.LEECH_STRENGTH -> leech(attacker, target, Skills.STRENGTH, NpcSkills.STRENGTH).also { leechMessages(attacker, target, "Strength") }
+            AncientCurse.LEECH_ATTACK -> leech(attacker, curse, target, Skills.ATTACK, NpcSkills.ATTACK).also { leechMessages(attacker, target, "Attack") }
+            AncientCurse.LEECH_RANGED -> leech(attacker, curse, target, Skills.RANGED, NpcSkills.RANGED).also { leechMessages(attacker, target, "Ranged") }
+            AncientCurse.LEECH_MAGIC -> leech(attacker, curse, target, Skills.MAGIC, NpcSkills.MAGIC).also { leechMessages(attacker, target, "Magic") }
+            AncientCurse.LEECH_DEFENCE -> leech(attacker, curse, target, Skills.DEFENCE, NpcSkills.DEFENCE).also { leechMessages(attacker, target, "Defence") }
+            AncientCurse.LEECH_STRENGTH -> leech(attacker, curse, target, Skills.STRENGTH, NpcSkills.STRENGTH).also { leechMessages(attacker, target, "Strength") }
             AncientCurse.LEECH_ENERGY ->
                 if (target is Player) {
                     if (target.runEnergy <= 0.0) {

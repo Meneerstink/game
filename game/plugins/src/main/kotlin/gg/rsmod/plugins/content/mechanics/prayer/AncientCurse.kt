@@ -1,6 +1,11 @@
 package gg.rsmod.plugins.content.mechanics.prayer
 
 import gg.rsmod.plugins.api.PrayerIcon
+import gg.rsmod.plugins.api.Skills
+
+/** Non-skill drain targets used in [AncientCurse.drains]. */
+const val CURSE_DRAIN_SPECIAL = -1
+const val CURSE_DRAIN_RUN_ENERGY = -2
 
 /**
  * The 19 toggleable Ancient Curses of the 2011 book (Turmoil keeps its own implementation in
@@ -98,26 +103,33 @@ enum class AncientCurse(
      * which the 2011 wiki reference never actually published. Meaningless for non-Sap/Leech curses.
      */
     val activationChancePercent: Double = 100.0,
+    /**
+     * What this Sap/Leech drains on the target: player skill ids, or [DRAIN_SPECIAL] /
+     * [DRAIN_RUN_ENERGY]. Owner-supplied 2011 Knowledge Base text (2026-09-14): "you cannot have a
+     * Sap and Leech curse of the same type active at the same time (e.g. Sap Ranger and Leech
+     * Ranged)" - "same type" is decided by an overlap of these sets.
+     */
+    val drains: Set<Int> = emptySet(),
 ) {
     SAP_WARRIOR(
         "Sap Warrior", 1, level = 50, drainEffect = 150, category = Category.SAP,
         castAnimation = 12569, castGraphic = 2214, projectileGraphic = 2215, targetGraphic = 2216,
-        activationChancePercent = 20.0,
+        activationChancePercent = 20.0, drains = setOf(Skills.ATTACK, Skills.STRENGTH, Skills.DEFENCE),
     ),
     SAP_RANGER(
         "Sap Ranger", 2, level = 52, drainEffect = 150, category = Category.SAP,
         castAnimation = 12569, castGraphic = 2217, projectileGraphic = 2218, targetGraphic = 2219,
-        activationChancePercent = 20.0,
+        activationChancePercent = 20.0, drains = setOf(Skills.RANGED, Skills.DEFENCE),
     ),
     SAP_MAGE(
         "Sap Mage", 3, level = 54, drainEffect = 150, category = Category.SAP,
         castAnimation = 12569, castGraphic = 2220, projectileGraphic = 2221, targetGraphic = 2222,
-        activationChancePercent = 20.0,
+        activationChancePercent = 20.0, drains = setOf(Skills.MAGIC, Skills.DEFENCE),
     ),
     SAP_SPIRIT(
         "Sap Spirit", 4, level = 56, drainEffect = 150, category = Category.SAP,
         castAnimation = 12569, castGraphic = 2223, projectileGraphic = 2224, targetGraphic = 2225,
-        activationChancePercent = 100.0 / 11.0,
+        activationChancePercent = 100.0 / 11.0, drains = setOf(CURSE_DRAIN_SPECIAL),
     ),
     BERSERKER(
         "Berserker", 5, level = 59, drainEffect = 20, category = Category.FREE,
@@ -139,27 +151,27 @@ enum class AncientCurse(
     LEECH_ATTACK(
         "Leech Attack", 10, level = 74, drainEffect = 100, category = Category.LEECH,
         castAnimation = 12575, projectileGraphic = 2231, targetGraphic = 2232,
-        activationChancePercent = 12.5,
+        activationChancePercent = 12.5, drains = setOf(Skills.ATTACK),
     ),
     LEECH_RANGED(
         "Leech Ranged", 11, level = 76, drainEffect = 100, category = Category.LEECH,
         castAnimation = 12575, projectileGraphic = 2236, targetGraphic = 2238,
-        activationChancePercent = 12.5,
+        activationChancePercent = 12.5, drains = setOf(Skills.RANGED),
     ),
     LEECH_MAGIC(
         "Leech Magic", 12, level = 78, drainEffect = 100, category = Category.LEECH,
         castAnimation = 12575, projectileGraphic = 2240, targetGraphic = 2242,
-        activationChancePercent = 12.5,
+        activationChancePercent = 12.5, drains = setOf(Skills.MAGIC),
     ),
     LEECH_DEFENCE(
         "Leech Defence", 13, level = 80, drainEffect = 100, category = Category.LEECH,
         castAnimation = 12575, projectileGraphic = 2244, targetGraphic = 2246,
-        activationChancePercent = 100.0 / 11.0,
+        activationChancePercent = 100.0 / 11.0, drains = setOf(Skills.DEFENCE),
     ),
     LEECH_STRENGTH(
         "Leech Strength", 14, level = 82, drainEffect = 100, category = Category.LEECH,
         castAnimation = 12575, projectileGraphic = 2248, targetGraphic = 2250,
-        activationChancePercent = 12.5,
+        activationChancePercent = 12.5, drains = setOf(Skills.STRENGTH),
     ),
     /*
      * Leech Energy and Leech Special Attack are the only Leeches with a caster graphic (2251/2255).
@@ -177,12 +189,12 @@ enum class AncientCurse(
     LEECH_ENERGY(
         "Leech Energy", 15, level = 84, drainEffect = 100, category = Category.LEECH,
         castAnimation = 12575, castGraphic = 2251, projectileGraphic = 2252, targetGraphic = 2254,
-        activationChancePercent = 100.0 / 11.0,
+        activationChancePercent = 100.0 / 11.0, drains = setOf(CURSE_DRAIN_RUN_ENERGY),
     ),
     LEECH_SPECIAL_ATTACK(
         "Leech Special Attack", 16, level = 86, drainEffect = 100, category = Category.LEECH,
         castAnimation = 12575, castGraphic = 2255, projectileGraphic = 2256, targetGraphic = 2258,
-        activationChancePercent = 100.0 / 11.0,
+        activationChancePercent = 100.0 / 11.0, drains = setOf(CURSE_DRAIN_SPECIAL),
     ),
     WRATH("Wrath", 17, level = 89, drainEffect = 30, category = Category.WRATH, icon = PrayerIcon.WRATH),
     SOUL_SPLIT("Soul Split", 18, level = 92, drainEffect = 180, category = Category.SOUL_SPLIT, icon = PrayerIcon.SOUL_SPLIT),
@@ -193,11 +205,12 @@ enum class AncientCurse(
 
 
     /**
-     * 2011 mutual-exclusion rules (wiki.darkan.org key): Saps stack with Saps and Leeches with
-     * Leeches, but a Sap and a Leech never run together and neither runs with Turmoil; the three
-     * combat Deflects, Wrath and Soul Split are mutually exclusive overheads; Deflect Summoning pairs
-     * with the combat Deflects but not with Wrath or Soul Split; Berserker (and Protect Item)
-     * combine with anything.
+     * 2011 mutual-exclusion rules (owner-supplied Knowledge Base text, 2026-09-14): Saps stack with
+     * Saps and Leeches with Leeches; a Sap and a Leech of the same type ([drains] overlap) never run
+     * together; neither runs with Turmoil. Only one Soul Split, Wrath or combat Deflect at a time;
+     * Deflect Summoning pairs with the combat Deflects but not with Wrath or Soul Split; Berserker
+     * (and Protect Item) combine with anything. (Novite closed every Leech on any Sap and vice
+     * versa; the Jagex text is narrower and wins.)
      */
     enum class Category { SAP, LEECH, DEFLECT_COMBAT, DEFLECT_SUMMONING, WRATH, SOUL_SPLIT, FREE }
 
@@ -206,8 +219,8 @@ enum class AncientCurse(
         val a = category
         val b = other.category
         return when {
-            a == Category.SAP && b == Category.LEECH -> true
-            a == Category.LEECH && b == Category.SAP -> true
+            a == Category.SAP && b == Category.LEECH -> drains.intersect(other.drains).isNotEmpty()
+            a == Category.LEECH && b == Category.SAP -> drains.intersect(other.drains).isNotEmpty()
             a == Category.DEFLECT_COMBAT && b == Category.DEFLECT_COMBAT -> true
             a.isOverhead() && b.isOverhead() && (a != Category.DEFLECT_COMBAT || b != Category.DEFLECT_COMBAT) &&
                 !(a.isDeflect() && b.isDeflect()) -> true
@@ -225,6 +238,10 @@ enum class AncientCurse(
          * zero prayer bonus, matching Soul Split.
          */
         const val TURMOIL_DRAIN_EFFECT = 180
+
+        /** Non-skill drain targets for [drains] (file-level values; enum entries cannot read the companion). */
+        const val DRAIN_SPECIAL = CURSE_DRAIN_SPECIAL
+        const val DRAIN_RUN_ENERGY = CURSE_DRAIN_RUN_ENERGY
 
         /** Cache-proven contract (see class KDoc). */
         const val ACTIVE_VARBIT_BASE = 6820

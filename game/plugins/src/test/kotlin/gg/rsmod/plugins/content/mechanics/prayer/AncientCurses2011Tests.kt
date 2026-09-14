@@ -110,17 +110,47 @@ class AncientCurses2011Tests {
     }
 
     @Test
-    fun `Sap Warrior escalates one point per activation up to 20 percent and never below the cap`() {
+    fun `Sap Warrior applies the base 10 percent as a modifier, drains one percent per proc up to 20 percent, and releases the base on deactivation`() {
+        // Owner-supplied 2011 Knowledge Base: immediate 10 %, slow drain to 20 %, initial 10 % restored
+        // immediately on deactivation, the rest regenerates as usual.
         val attacker = newPlayer()
         AncientCurses.switchBook(attacker, AncientCurses.PrayerBook.ANCIENT)
         AncientCurses.toggleCurse(attacker, AncientCurse.SAP_WARRIOR)
         val target = newPlayer(mapOf(Skills.ATTACK to 99))
         AncientCurses.onDamageDealt(attacker, target, damage = 10)
-        assertEquals(90, target.skills.getCurrentLevel(Skills.ATTACK))
+        assertEquals(99, target.skills.getCurrentLevel(Skills.ATTACK))
+        assertEquals(0.9, AncientCurses.drainMultiplier(target, Skills.ATTACK), 1e-9)
         AncientCurses.onDamageDealt(attacker, target, damage = 10)
-        assertEquals(89, target.skills.getCurrentLevel(Skills.ATTACK))
+        assertEquals(98, target.skills.getCurrentLevel(Skills.ATTACK))
         repeat(20) { AncientCurses.onDamageDealt(attacker, target, damage = 10) }
-        assertEquals(80, target.skills.getCurrentLevel(Skills.ATTACK))
+        assertEquals(90, target.skills.getCurrentLevel(Skills.ATTACK)) // 99 - 9 (extra 10 % of 99)
+        assertEquals(0.9, AncientCurses.drainMultiplier(target, Skills.ATTACK), 1e-9)
+        AncientCurses.toggleCurse(attacker, AncientCurse.SAP_WARRIOR)
+        assertEquals(1.0, AncientCurses.drainMultiplier(target, Skills.ATTACK), 1e-9)
+        assertEquals(90, target.skills.getCurrentLevel(Skills.ATTACK))
+    }
+
+    @Test
+    fun `a Sap and a Leech conflict only when they drain the same type`() {
+        val offenders = mutableListOf<String>()
+        fun expect(a: AncientCurse, b: AncientCurse, conflict: Boolean) {
+            if (a.conflictsWith(b) != conflict || b.conflictsWith(a) != conflict) offenders += "$a vs $b expected conflict=$conflict"
+        }
+        expect(AncientCurse.SAP_RANGER, AncientCurse.LEECH_RANGED, true)
+        expect(AncientCurse.SAP_RANGER, AncientCurse.LEECH_DEFENCE, true)
+        expect(AncientCurse.SAP_RANGER, AncientCurse.LEECH_ATTACK, false)
+        expect(AncientCurse.SAP_WARRIOR, AncientCurse.LEECH_ATTACK, true)
+        expect(AncientCurse.SAP_WARRIOR, AncientCurse.LEECH_STRENGTH, true)
+        expect(AncientCurse.SAP_WARRIOR, AncientCurse.LEECH_MAGIC, false)
+        expect(AncientCurse.SAP_MAGE, AncientCurse.LEECH_MAGIC, true)
+        expect(AncientCurse.SAP_MAGE, AncientCurse.LEECH_RANGED, false)
+        expect(AncientCurse.SAP_SPIRIT, AncientCurse.LEECH_SPECIAL_ATTACK, true)
+        expect(AncientCurse.SAP_SPIRIT, AncientCurse.LEECH_ENERGY, false)
+        AncientCurse.values().filter { it.category == AncientCurse.Category.SAP }.forEach { expect(it, AncientCurse.LEECH_ENERGY, false) }
+        listOf(AncientCurse.SAP_WARRIOR, AncientCurse.SAP_RANGER, AncientCurse.SAP_MAGE, AncientCurse.SAP_SPIRIT).forEach { a ->
+            listOf(AncientCurse.SAP_WARRIOR, AncientCurse.SAP_RANGER, AncientCurse.SAP_MAGE, AncientCurse.SAP_SPIRIT).forEach { b -> if (a != b) expect(a, b, false) }
+        }
+        assertEquals(emptyList<String>(), offenders)
     }
 
     @Test
@@ -130,16 +160,20 @@ class AncientCurses2011Tests {
         AncientCurses.toggleCurse(attacker, AncientCurse.LEECH_ATTACK)
         val target = newPlayer(mapOf(Skills.ATTACK to 99))
         AncientCurses.onDamageDealt(attacker, target, damage = 10)
-        assertEquals(90, target.skills.getCurrentLevel(Skills.ATTACK))
-        // The self boost is an invisible prayer multiplier (Void Leech.kt / Prayer.kt:46 adds the
-        // leech levels to the prayer bonus), never a visible level change: base 5 % once active,
-        // then +1 % per proc up to 10 %.
+        // KB: base 10 % drain / 5 % boost are modifiers while the Leech is active; later procs are
+        // real +-1 % level steps (drain to 25 %, boost to 10 %) that regenerate as usual.
+        assertEquals(99, target.skills.getCurrentLevel(Skills.ATTACK))
+        assertEquals(0.9, AncientCurses.drainMultiplier(target, Skills.ATTACK), 1e-9)
         assertEquals(99, attacker.skills.getCurrentLevel(Skills.ATTACK))
-        assertEquals(1.06, AncientCurses.leechMultiplier(attacker, Skills.ATTACK), 1e-9)
+        assertEquals(1.05, AncientCurses.leechMultiplier(attacker, Skills.ATTACK), 1e-9)
         repeat(30) { AncientCurses.onDamageDealt(attacker, target, damage = 10) }
-        assertEquals(75, target.skills.getCurrentLevel(Skills.ATTACK))
-        assertEquals(99, attacker.skills.getCurrentLevel(Skills.ATTACK))
-        assertEquals(1.10, AncientCurses.leechMultiplier(attacker, Skills.ATTACK), 1e-9)
+        assertEquals(85, target.skills.getCurrentLevel(Skills.ATTACK)) // 99 - 14 (extra 15 % of 99)
+        assertEquals(103, attacker.skills.getCurrentLevel(Skills.ATTACK)) // 99 + 4 (extra 5 % of 99)
+        AncientCurses.toggleCurse(attacker, AncientCurse.LEECH_ATTACK)
+        assertEquals(1.0, AncientCurses.leechMultiplier(attacker, Skills.ATTACK), 1e-9)
+        assertEquals(1.0, AncientCurses.drainMultiplier(target, Skills.ATTACK), 1e-9)
+        assertEquals(103, attacker.skills.getCurrentLevel(Skills.ATTACK))
+        assertEquals(85, target.skills.getCurrentLevel(Skills.ATTACK))
     }
 
     @Test
@@ -163,10 +197,11 @@ class AncientCurses2011Tests {
         val target = newPlayer(mapOf(Skills.ATTACK to 99, Skills.RANGED to 99))
 
         AncientCurses.onDamageDealt(attacker, target, damage = 10, style = CombatClass.RANGED)
-        assertEquals(99, target.skills.getCurrentLevel(Skills.ATTACK))
-        assertEquals(90, target.skills.getCurrentLevel(Skills.RANGED))
+        assertEquals(1.0, AncientCurses.drainMultiplier(target, Skills.ATTACK), 1e-9)
+        assertEquals(0.9, AncientCurses.drainMultiplier(target, Skills.RANGED), 1e-9)
+        assertEquals(99, target.skills.getCurrentLevel(Skills.RANGED))
 
         AncientCurses.onDamageDealt(attacker, target, damage = 10, style = CombatClass.MELEE)
-        assertEquals(90, target.skills.getCurrentLevel(Skills.ATTACK))
+        assertEquals(0.9, AncientCurses.drainMultiplier(target, Skills.ATTACK), 1e-9)
     }
 }

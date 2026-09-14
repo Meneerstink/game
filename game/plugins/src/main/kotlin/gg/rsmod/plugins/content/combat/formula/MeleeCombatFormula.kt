@@ -13,6 +13,7 @@ import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.api.ext.*
 import gg.rsmod.plugins.content.combat.Combat
 import gg.rsmod.plugins.content.combat.CombatConfigs
+import gg.rsmod.plugins.content.mechanics.prayer.AncientCurses
 import gg.rsmod.plugins.content.mechanics.prayer.Prayer
 import gg.rsmod.plugins.content.mechanics.prayer.Prayers
 import kotlin.math.floor
@@ -245,7 +246,7 @@ object MeleeCombatFormula : CombatFormula {
     }
 
     private fun getEffectiveStrengthLevel(player: Player, opponent: Pawn? = null): Double {
-        var effectiveLevel = floor(player.skills.getCurrentLevel(Skills.STRENGTH) * getPrayerStrengthMultiplier(player, opponent))
+        var effectiveLevel = floor(player.skills.getCurrentLevel(Skills.STRENGTH) * getPrayerStrengthMultiplier(player, opponent) * AncientCurses.drainMultiplier(player, Skills.STRENGTH))
 
         effectiveLevel +=
             when (CombatConfigs.getAttackStyle(player)) {
@@ -270,7 +271,7 @@ object MeleeCombatFormula : CombatFormula {
     }
 
     private fun getEffectiveAttackLevel(player: Player, opponent: Pawn? = null): Double {
-        var effectiveLevel = floor(player.skills.getCurrentLevel(Skills.ATTACK) * getPrayerAttackMultiplier(player, opponent))
+        var effectiveLevel = floor(player.skills.getCurrentLevel(Skills.ATTACK) * getPrayerAttackMultiplier(player, opponent) * AncientCurses.drainMultiplier(player, Skills.ATTACK))
 
         effectiveLevel +=
             when (CombatConfigs.getAttackStyle(player)) {
@@ -289,7 +290,7 @@ object MeleeCombatFormula : CombatFormula {
     }
 
     private fun getEffectiveDefenceLevel(player: Player, opponent: Pawn? = null): Double {
-        var effectiveLevel = floor(player.skills.getCurrentLevel(Skills.DEFENCE) * getPrayerDefenceMultiplier(player, opponent))
+        var effectiveLevel = floor(player.skills.getCurrentLevel(Skills.DEFENCE) * getPrayerDefenceMultiplier(player, opponent) * AncientCurses.drainMultiplier(player, Skills.DEFENCE))
 
         effectiveLevel +=
             when (CombatConfigs.getAttackStyle(player)) {
@@ -305,20 +306,20 @@ object MeleeCombatFormula : CombatFormula {
     }
 
     private fun getEffectiveStrengthLevel(npc: Npc, opponent: Pawn? = null): Double {
-        var effectiveLevel = npc.stats.getCurrentLevel(NpcSkills.STRENGTH).toDouble()
+        var effectiveLevel = floor(npc.stats.getCurrentLevel(NpcSkills.STRENGTH) * AncientCurses.drainMultiplier(npc, Skills.STRENGTH))
         effectiveLevel += 8
         return effectiveLevel
     }
 
     private fun getEffectiveAttackLevel(npc: Npc, opponent: Pawn? = null): Double {
-        var effectiveLevel = npc.stats.getCurrentLevel(NpcSkills.ATTACK).toDouble()
+        var effectiveLevel = floor(npc.stats.getCurrentLevel(NpcSkills.ATTACK) * AncientCurses.drainMultiplier(npc, Skills.ATTACK))
         effectiveLevel += 8
         return effectiveLevel
     }
 
     private fun getEffectiveDefenceLevel(npc: Npc, opponent: Pawn? = null): Double {
         // "Damage per second/Melee": NPC defence roll = (Defence level + 9) × (style defence bonus + 64).
-        var effectiveLevel = npc.stats.getCurrentLevel(NpcSkills.DEFENCE).toDouble()
+        var effectiveLevel = floor(npc.stats.getCurrentLevel(NpcSkills.DEFENCE) * AncientCurses.drainMultiplier(npc, Skills.DEFENCE))
         effectiveLevel += 9
         return effectiveLevel
     }

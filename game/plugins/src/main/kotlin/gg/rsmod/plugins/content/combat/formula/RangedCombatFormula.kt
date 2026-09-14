@@ -12,6 +12,7 @@ import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.api.ext.*
 import gg.rsmod.plugins.content.combat.Combat
 import gg.rsmod.plugins.content.combat.CombatConfigs
+import gg.rsmod.plugins.content.mechanics.prayer.AncientCurses
 import gg.rsmod.plugins.content.mechanics.prayer.Prayer
 import gg.rsmod.plugins.content.mechanics.prayer.Prayers
 import kotlin.math.floor
@@ -247,7 +248,7 @@ object RangedCombatFormula : CombatFormula {
     private fun getEffectiveRangedLevel(player: Player): Double {
         // Eclipse atlatl: the Strength level (visible boosts) replaces the Ranged level for the max hit, with ranged prayers (MoonSets).
         val damageSkill = if (gg.rsmod.plugins.content.items.osrs.MoonSets.wieldingAtlatl(player)) Skills.STRENGTH else Skills.RANGED
-        var effectiveLevel = floor(player.skills.getCurrentLevel(damageSkill) * getPrayerRangedMultiplier(player))
+        var effectiveLevel = floor(player.skills.getCurrentLevel(damageSkill) * getPrayerRangedMultiplier(player) * AncientCurses.drainMultiplier(player, damageSkill))
 
         effectiveLevel +=
             when (CombatConfigs.getAttackStyle(player)) {
@@ -269,7 +270,7 @@ object RangedCombatFormula : CombatFormula {
     private fun getEffectiveAttackLevel(player: Player): Double {
         var effectiveLevel =
             Math.floor(
-                player.skills.getCurrentLevel(Skills.RANGED) * getPrayerAttackMultiplier(player),
+                player.skills.getCurrentLevel(Skills.RANGED) * getPrayerAttackMultiplier(player) * AncientCurses.drainMultiplier(player, Skills.RANGED),
             )
 
         effectiveLevel +=
@@ -291,7 +292,7 @@ object RangedCombatFormula : CombatFormula {
     private fun getEffectiveDefenceLevel(player: Player): Double {
         var effectiveLevel =
             Math.floor(
-                player.skills.getCurrentLevel(Skills.DEFENCE) * getPrayerDefenceMultiplier(player),
+                player.skills.getCurrentLevel(Skills.DEFENCE) * getPrayerDefenceMultiplier(player) * AncientCurses.drainMultiplier(player, Skills.DEFENCE),
             )
 
         effectiveLevel +=
@@ -308,20 +309,20 @@ object RangedCombatFormula : CombatFormula {
     }
 
     private fun getEffectiveRangedLevel(npc: Npc): Double {
-        var effectiveLevel = npc.stats.getCurrentLevel(NpcSkills.RANGED).toDouble()
+        var effectiveLevel = floor(npc.stats.getCurrentLevel(NpcSkills.RANGED) * AncientCurses.drainMultiplier(npc, Skills.RANGED))
         effectiveLevel += 8
         return effectiveLevel
     }
 
     private fun getEffectiveAttackLevel(npc: Npc): Double {
-        var effectiveLevel = npc.stats.getCurrentLevel(NpcSkills.RANGED).toDouble()
+        var effectiveLevel = floor(npc.stats.getCurrentLevel(NpcSkills.RANGED) * AncientCurses.drainMultiplier(npc, Skills.RANGED))
         effectiveLevel += 8
         return effectiveLevel
     }
 
     private fun getEffectiveDefenceLevel(npc: Npc): Double {
         // "Damage per second/Ranged": NPC ranged defence roll = (Defence level + 9) × (ranged defence bonus + 64).
-        var effectiveLevel = npc.stats.getCurrentLevel(NpcSkills.DEFENCE).toDouble()
+        var effectiveLevel = floor(npc.stats.getCurrentLevel(NpcSkills.DEFENCE) * AncientCurses.drainMultiplier(npc, Skills.DEFENCE))
         effectiveLevel += 9
         return effectiveLevel
     }

@@ -11,6 +11,7 @@ import gg.rsmod.plugins.api.ext.*
 import gg.rsmod.plugins.content.combat.Combat
 import gg.rsmod.plugins.content.combat.CombatConfigs
 import gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell
+import gg.rsmod.plugins.content.mechanics.prayer.AncientCurses
 import gg.rsmod.plugins.content.mechanics.prayer.Prayer
 import gg.rsmod.plugins.content.mechanics.prayer.Prayers
 
@@ -174,7 +175,7 @@ object MagicCombatFormula : CombatFormula {
         // path was never wired in. See RSPS_DECISIONS.md.
         // "Damage per second/Magic": NPC magic defence roll = (9 + NPC Magic level) × (NPC magic defence + 64);
         // a monster's Defence level plays no part.
-        val a = target.stats.getCurrentLevel(NpcSkills.MAGIC) + 9.0
+        val a = Math.floor(target.stats.getCurrentLevel(NpcSkills.MAGIC) * AncientCurses.drainMultiplier(target, Skills.MAGIC)) + 9.0
         val b = getEquipmentDefenceBonus(target)
 
         val maxRoll = a * (b + 64.0)
@@ -188,7 +189,7 @@ object MagicCombatFormula : CombatFormula {
         effectiveLvl = Math.floor(effectiveLvl)
 
         var magicLvl = target.skills.getCurrentLevel(Skills.MAGIC).toDouble()
-        magicLvl *= getPrayerAttackMultiplier(target)
+        magicLvl *= getPrayerAttackMultiplier(target) * AncientCurses.drainMultiplier(target, Skills.MAGIC)
         magicLvl = Math.floor(magicLvl)
 
         magicLvl *= 0.7
@@ -229,7 +230,7 @@ object MagicCombatFormula : CombatFormula {
     }
 
     private fun getEffectiveAttackLevel(player: Player): Double {
-        var effectiveLevel = Math.floor(player.skills.getCurrentLevel(Skills.MAGIC) * getPrayerAttackMultiplier(player))
+        var effectiveLevel = Math.floor(player.skills.getCurrentLevel(Skills.MAGIC) * getPrayerAttackMultiplier(player) * AncientCurses.drainMultiplier(player, Skills.MAGIC))
 
         // Owner decision 2026-09-14 (b) = wiki DPS calculator `getPlayerMaxMagicAttackRoll`: Accurate stance +2 (powered staves),
         // +9, then Void magic trunc(x * 29 / 20) after the stance bonus.
@@ -257,7 +258,7 @@ object MagicCombatFormula : CombatFormula {
     private fun getEffectiveDefenceLevel(player: Player): Double {
         var effectiveLevel =
             Math.floor(
-                player.skills.getCurrentLevel(Skills.DEFENCE) * getPrayerDefenceMultiplier(player),
+                player.skills.getCurrentLevel(Skills.DEFENCE) * getPrayerDefenceMultiplier(player) * AncientCurses.drainMultiplier(player, Skills.DEFENCE),
             )
 
         effectiveLevel +=
@@ -274,7 +275,7 @@ object MagicCombatFormula : CombatFormula {
     }
 
     private fun getEffectiveAttackLevel(npc: Npc): Double {
-        var effectiveLevel = npc.stats.getCurrentLevel(NpcSkills.MAGIC).toDouble()
+        var effectiveLevel = Math.floor(npc.stats.getCurrentLevel(NpcSkills.MAGIC) * AncientCurses.drainMultiplier(npc, Skills.MAGIC))
         effectiveLevel += 8
         return effectiveLevel
     }

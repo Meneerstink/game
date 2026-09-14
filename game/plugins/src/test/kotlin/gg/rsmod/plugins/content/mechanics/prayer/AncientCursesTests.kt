@@ -120,7 +120,9 @@ class AncientCursesTests {
     // ---- mutual exclusion ----
 
     @Test
-    fun `Saps stack with Saps but a Leech deactivates every active Sap`() {
+    fun `Saps stack with Saps and a Leech only deactivates the Sap of the same type`() {
+        // Owner-supplied 2011 KB: "you cannot have a Sap and Leech curse of the same type active at
+        // the same time (e.g. Sap Ranger and Leech Ranged)"; other Saps stay on.
         val player = newPlayer()
         AncientCurses.switchBook(player, AncientCurses.PrayerBook.ANCIENT)
         AncientCurses.toggleCurse(player, AncientCurse.SAP_WARRIOR)
@@ -129,8 +131,12 @@ class AncientCursesTests {
         assertTrue(AncientCurses.isCurseActive(player, AncientCurse.SAP_RANGER))
         AncientCurses.toggleCurse(player, AncientCurse.LEECH_ATTACK)
         assertFalse(AncientCurses.isCurseActive(player, AncientCurse.SAP_WARRIOR))
+        assertTrue(AncientCurses.isCurseActive(player, AncientCurse.SAP_RANGER))
+        assertTrue(AncientCurses.isCurseActive(player, AncientCurse.LEECH_ATTACK))
+        AncientCurses.toggleCurse(player, AncientCurse.LEECH_RANGED)
         assertFalse(AncientCurses.isCurseActive(player, AncientCurse.SAP_RANGER))
         assertTrue(AncientCurses.isCurseActive(player, AncientCurse.LEECH_ATTACK))
+        assertTrue(AncientCurses.isCurseActive(player, AncientCurse.LEECH_RANGED))
     }
 
     @Test
@@ -206,9 +212,16 @@ class AncientCursesTests {
 
         AncientCurses.onDamageDealt(attacker, target, damage = 30)
 
-        assertEquals(45, target.skills.getCurrentLevel(Skills.ATTACK))
-        assertEquals(45, target.skills.getCurrentLevel(Skills.STRENGTH))
-        assertEquals(45, target.skills.getCurrentLevel(Skills.DEFENCE))
+        // KB: the immediate 10 % is a modifier on all three, levels untouched...
+        listOf(Skills.ATTACK, Skills.STRENGTH, Skills.DEFENCE).forEach { skill ->
+            assertEquals(50, target.skills.getCurrentLevel(skill))
+            assertEquals(0.9, AncientCurses.drainMultiplier(target, skill), 1e-9)
+        }
+        // ...and every later proc removes one percent of the max level as a real drain.
+        AncientCurses.onDamageDealt(attacker, target, damage = 30)
+        listOf(Skills.ATTACK, Skills.STRENGTH, Skills.DEFENCE).forEach { skill ->
+            assertEquals(49, target.skills.getCurrentLevel(skill))
+        }
     }
 
     @Test
@@ -223,9 +236,14 @@ class AncientCursesTests {
             }
         every { npc.stats } returns stats
 
-        // 4 * 10% = 0.4 -> floored to 0, coerced up to the documented floor of 1.
+        // First proc: base modifier only. Second proc: 1 % of 4 = 0.04 -> floored to 0, coerced up to
+        // the documented step of 1, floor = 4 - max(1, 4 * 10 %) = 3.
         AncientCurses.onDamageDealt(attacker, npc, damage = 30)
-
+        assertEquals(4, stats.getCurrentLevel(NpcSkills.ATTACK))
+        assertEquals(0.9, AncientCurses.drainMultiplier(npc, Skills.ATTACK), 1e-9)
+        AncientCurses.onDamageDealt(attacker, npc, damage = 30)
+        assertEquals(3, stats.getCurrentLevel(NpcSkills.ATTACK))
+        AncientCurses.onDamageDealt(attacker, npc, damage = 30)
         assertEquals(3, stats.getCurrentLevel(NpcSkills.ATTACK))
     }
 
@@ -236,10 +254,11 @@ class AncientCursesTests {
 
         AncientCurses.onDamageDealt(attacker, target, damage = 20)
 
-        assertEquals(45, target.skills.getCurrentLevel(Skills.ATTACK)) // -5%
-        // Self boost is a prayer multiplier (Void Leech model), not a visible level change.
+        // KB model: the immediate 10 % drain and 5 % boost are combat modifiers, not level changes.
+        assertEquals(50, target.skills.getCurrentLevel(Skills.ATTACK))
+        assertEquals(0.9, AncientCurses.drainMultiplier(target, Skills.ATTACK), 1e-9)
         assertEquals(60, attacker.skills.getCurrentLevel(Skills.ATTACK))
-        assertEquals(1.06, AncientCurses.leechMultiplier(attacker, Skills.ATTACK), 1e-9) // 5% base + 1% first proc
+        assertEquals(1.05, AncientCurses.leechMultiplier(attacker, Skills.ATTACK), 1e-9)
     }
 
     @Test

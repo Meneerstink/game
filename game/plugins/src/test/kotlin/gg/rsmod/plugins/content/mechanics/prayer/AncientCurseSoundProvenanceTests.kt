@@ -143,7 +143,27 @@ class AncientCurseSoundProvenanceTests {
         }
     }
 
-    /** The only server-sent curse track keeps its sourced id and is real in the production cache. */
+    /**
+     * The owner-chosen PROVISIONAL activation/Soul Split sounds must be the seven curse-block synths
+     * that no sequence owns (so none doubles a graphic-borne sound) and must exist in the cache.
+     */
+    @Test
+    fun `provisional owner-chosen curse sounds are the seven unowned curse-block synths and exist`() {
+        val chosen =
+            AncientCurse.values().filter { it.activationGraphic == null }.mapNotNull { AncientCurses.activationSound(it) }.toSet() +
+                setOf(AncientCurses.SOUL_SPLIT_HIT_SOUND, AncientCurses.SOUL_SPLIT_RETURN_SOUND)
+        assertEquals(setOf(8108, 8109, 8110, 8112, 8113, 8114, 8119), chosen)
+        val graphicBorne = graphicAudio.values.map { it.second }.toSet()
+        assertTrue("a chosen sound doubles a graphic-borne sound", chosen.intersect(graphicBorne).isEmpty())
+        withCache { library ->
+            chosen.forEach { id ->
+                val archive = library.index(synthSoundIndex).archive(id)
+                assertTrue("sound $id absent from synth index", archive != null && archive.fileIds().contains(0))
+            }
+        }
+    }
+
+    /** The only sourced server-sent curse track keeps its id and is real in the production cache. */
     @Test
     fun `the explicit toggle-off sound is 2663 and exists`() {
         assertEquals(2663, Sfx.CANCEL_PRAYER)
