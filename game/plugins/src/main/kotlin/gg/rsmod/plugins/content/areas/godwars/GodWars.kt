@@ -306,6 +306,13 @@ object GodWars {
         (tile.x in DUNGEON_X && tile.z in DUNGEON_Z) ||
             (tile.x in ANCIENT_PRISON_X && tile.z in ANCIENT_PRISON_Z)
 
+    /**
+     * Q-043-f: faction gates that ignore boosts (RuneScape Wiki "God Wars Dungeon" revision 2011-12-30): Bandos "Strength potions have
+     * no effect for the 70 strength requirement", Saradomin "70 Agility ... (You cannot use boosts)", Armadyl "70 Ranged ... (You
+     * cannot use boosts.)". The Trollheim boulder allows boosts ("Note that you can use boosts") and stays on the current level.
+     */
+    fun hasUnboostedLevel(player: Player, skill: Int, level: Int): Boolean = player.skills.getMaxLevel(skill) >= level
+
     fun getKillCount(player: Player, god: God): Int = player.attr[god.killCount] ?: 0
 
     fun setKillCount(player: Player, god: God, amount: Int) {

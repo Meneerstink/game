@@ -343,7 +343,7 @@ on_obj_option(obj = Objs.BIG_DOOR_26384, option = "bang") {
     // RCV-011 Q-043-b: the stronghold is west of the door; requirements apply from outside (Void + Novite).
     val outside = GodWars.outsideBandosStronghold(player.tile.x, obj.tile.x)
     if (outside) {
-        if (player.skills.getCurrentLevel(Skills.STRENGTH) < 70) {
+        if (!GodWars.hasUnboostedLevel(player, Skills.STRENGTH, 70)) {
             player.message(GodWars.MSG_BANDOS_STRENGTH)
             return@on_obj_option
         }
@@ -415,7 +415,7 @@ fun tieSaradominRope(player: Player, ledge: RopeLedge) {
         player.message("There is already a rope tied to this rock.")
         return
     }
-    if (player.skills.getCurrentLevel(Skills.AGILITY) < 70) {
+    if (!GodWars.hasUnboostedLevel(player, Skills.AGILITY, 70)) {
         player.message("You need an Agility level of 70 to climb down these rocks.")
         return
     }
@@ -432,7 +432,7 @@ fun climbSaradominRope(player: Player, ledge: RopeLedge) {
         player.message("You need to tie a rope to the rock before you can climb down.")
         return
     }
-    if (player.skills.getCurrentLevel(Skills.AGILITY) < 70) {
+    if (!GodWars.hasUnboostedLevel(player, Skills.AGILITY, 70)) {
         player.message("You need an Agility level of 70 to climb these ropes.")
         return
     }
@@ -468,7 +468,7 @@ on_obj_option(obj = Objs.ROPE_26297, option = "Climb-up") {
 
 on_obj_option(obj = Objs.PILLAR_26303, option = "grapple") {
     val obj = player.getInteractingGameObj()
-    if (player.skills.getCurrentLevel(Skills.RANGED) < 70) {
+    if (!GodWars.hasUnboostedLevel(player, Skills.RANGED, 70)) {
         player.message("You need a Ranged level of 70 to fire a grapple across the chasm.")
         return@on_obj_option
     }
