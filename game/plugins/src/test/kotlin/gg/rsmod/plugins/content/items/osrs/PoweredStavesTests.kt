@@ -92,7 +92,7 @@ class PoweredStavesTests {
     fun `the built-in spell is routed through the magic formula, strategy, speed and autocast rules`() {
         val formula = File("src/main/kotlin/gg/rsmod/plugins/content/combat/formula/MagicCombatFormula.kt").readText()
         assertTrue("PoweredStaves.wielded(p)?.baseMaxHit(p.skills.getCurrentLevel(Skills.MAGIC))" in formula)
-        assertTrue("effectiveLevel += 8.0 + gg.rsmod.plugins.content.items.osrs.PoweredStaves.stanceMagicBonus(player)" in formula)
+        assertTrue("effectiveLevel += 9.0 + gg.rsmod.plugins.content.items.osrs.PoweredStaves.stanceMagicBonus(player)" in formula)
         val configs = File("src/main/kotlin/gg/rsmod/plugins/content/combat/CombatConfigs.kt").readText()
         assertTrue("PoweredStaves.usingBuiltInSpell(pawn)) {\n            gg.rsmod.plugins.content.combat.strategy.PoweredStaffCombatStrategy" in configs)
         assertTrue("PoweredStaves.wielded(pawn) != null -> CombatClass.MAGIC" in configs)

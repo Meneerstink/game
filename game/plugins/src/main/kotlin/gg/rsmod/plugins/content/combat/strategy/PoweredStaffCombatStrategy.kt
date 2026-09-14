@@ -109,6 +109,15 @@ object PoweredStaffCombatStrategy : CombatStrategy {
     ) {
         val modDamage = if (target is Npc) target.getCurrentLifepoints().coerceAtMost(damage) else damage
         val multiplier = if (target is Npc) Combat.getNpcXpMultiplier(target) else 1.0
+        // Owner decision 2026-09-14 (a): Longrange gives "Magic / Defence / Hitpoints" (wiki combat styles table of the Trident of
+        // the Seas) at the defensive-casting rates 1.33 Magic, 1 Defence, 1.33 Hitpoints per damage ("Combat Options"); the wiki
+        // gives no powered-staff-specific split (recorded). Same units as MagicCombatStrategy defensive casting.
+        if (PoweredStaves.isLongrange(player)) {
+            val longrangeRate = player.addXp(Skills.MAGIC, modDamage * 0.133 * multiplier, checkBrawlingGloves = true)
+            player.addXp(Skills.DEFENCE, modDamage * 0.1 * multiplier * longrangeRate)
+            player.addXp(Skills.CONSTITUTION, modDamage * 0.133 * multiplier * longrangeRate)
+            return
+        }
         // Same unit as MagicCombatStrategy (0.2 Magic / 0.133 Hitpoints per damage point there = 2 / 1.33).
         val bonusRate = player.addXp(Skills.MAGIC, modDamage * PoweredStaves.MAGIC_XP_PER_DAMAGE / 10.0 * multiplier, checkBrawlingGloves = true)
         player.addXp(Skills.CONSTITUTION, modDamage * 0.133 * multiplier * bonusRate)

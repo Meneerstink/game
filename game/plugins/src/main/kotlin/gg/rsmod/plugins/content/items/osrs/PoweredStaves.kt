@@ -155,8 +155,8 @@ object PoweredStaves {
     fun stanceMagicBonus(player: Player): Int =
         when {
             !usingBuiltInSpell(player) -> 0
-            isLongrange(player) -> 1
-            else -> 3
+            isLongrange(player) -> 0
+            else -> 2
         }
 
     /** Staff style set 1 has three buttons: the last one is Longrange (owner decision option a). */

@@ -65,10 +65,11 @@ class OsrsCombatExactnessTests {
         val attacker = newPlayer(attack = 1, ranged = 1, magic = 1)
         val npc = newNpc(defence = 40, magic = 70, stab = 20, ranged = 30, magicDef = 10)
         every { CombatConfigs.getCombatStyle(attacker) } returns StyleType.STAB
-        // attack rolls: melee (1+0+8)*(0+64)=576 (Accurate +3 -> 12*64=768); ranged 12*64=768; magic 9*64=576
+        // attack rolls: melee (1+0+8)*(0+64)=576 (Accurate +3 -> 12*64=768); ranged 12*64=768; magic (1+9)*64=640 (owner
+        // decision (b): the wiki DPS calculator adds 9 to the magic level)
         assertEquals(hitChance(768, (40 + 9) * (20 + 64)), MeleeCombatFormula.getAccuracy(attacker, npc, 1.0), 1e-12)
         assertEquals(hitChance(768, (40 + 9) * (30 + 64)), RangedCombatFormula.getAccuracy(attacker, npc, 1.0), 1e-12)
-        assertEquals(hitChance(576, (70 + 9) * (10 + 64)), MagicCombatFormula.getAccuracy(attacker, npc, 1.0), 1e-12)
+        assertEquals(hitChance(640, (70 + 9) * (10 + 64)), MagicCombatFormula.getAccuracy(attacker, npc, 1.0), 1e-12)
     }
 
     @Test

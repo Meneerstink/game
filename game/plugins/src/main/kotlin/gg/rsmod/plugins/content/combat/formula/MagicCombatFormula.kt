@@ -208,11 +208,12 @@ object MagicCombatFormula : CombatFormula {
     private fun getEffectiveAttackLevel(player: Player): Double {
         var effectiveLevel = Math.floor(player.skills.getCurrentLevel(Skills.MAGIC) * getPrayerAttackMultiplier(player))
 
-        // Powered staff built-in spell: Accurate +3, Longrange +1 invisible Magic levels ("Combat Options"; rsmod 11 / 9).
-        effectiveLevel += 8.0 + gg.rsmod.plugins.content.items.osrs.PoweredStaves.stanceMagicBonus(player)
+        // Owner decision 2026-09-14 (b) = wiki DPS calculator `getPlayerMaxMagicAttackRoll`: Accurate stance +2 (powered staves),
+        // +9, then Void magic trunc(x * 29 / 20) after the stance bonus.
+        effectiveLevel += 9.0 + gg.rsmod.plugins.content.items.osrs.PoweredStaves.stanceMagicBonus(player)
 
         if (VoidKnight.wearing(player, VoidKnight.MAGE_HELMS)) {
-            effectiveLevel = Math.floor(effectiveLevel * 1.45)
+            effectiveLevel = (effectiveLevel.toInt() * 29 / 20).toDouble()
         }
 
         return Math.floor(effectiveLevel)

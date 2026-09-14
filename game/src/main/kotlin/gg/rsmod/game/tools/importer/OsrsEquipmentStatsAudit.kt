@@ -53,6 +53,21 @@ object OsrsEquipmentStatsAudit {
             21581 to "Blisterwood stake: name-only match to OSRS 33716, identity not proven",
         )
 
+    /**
+     * Owner decision 2026-09-14 (d): every name-matched 667 item that exists in OSRS takes the OSRS stats on every field, except
+     * these 667 items (different items sharing a name or id, or owner-kept 667 behaviour).
+     */
+    val ALL_FIELDS_EXCLUDED: Map<Int, String> =
+        RANGED_MAGIC_EXCLUDED.mapValues { (id, reason) ->
+            when (id) {
+                in 825..830 -> "owner decision (g): 667 thrown javelins keep 667 values; $reason"
+                in 10146..10149 -> "owner decision (f): salamanders keep 667 values; $reason"
+                else -> reason
+            }
+        } + (4212..4234).associateWith {
+            "legacy crystal bow/shield definition: build 240 keeps it with all-zero stats (the OSRS crystal bow/shield are 23983/23991)"
+        } + mapOf(10566 to "build 240 10566 'Fire cape' has all-zero stats; the OSRS combat Fire cape is 6570")
+
     data class Mismatch(val localId: Int, val name: String, val upstreamId: Int, val field: String, val local: Int?, val osrs: Int?) {
         override fun toString() = "$localId \"$name\" (osrs $upstreamId) $field: items.yml=${format(field, local)} osrs=${format(field, osrs)}"
     }
@@ -90,8 +105,15 @@ object OsrsEquipmentStatsAudit {
         return out
     }
 
+    /**
+     * Attack speed is compared only when both sides are weapon-slot items: a 667 entry whose `equip_slot` is not the weapon
+     * slot (e.g. the 13444 "Abyssal whip" copy with slot 0) has no attack speed to compare (slot differences are recorded
+     * separately in OSRS_IMPORT_STATUS.md, not rewritten by this audit).
+     */
     private fun diff(localId: Int, name: String, upstreamId: Int, local: Map<String, Int>, osrs: Map<String, Int>) =
-        FIELDS.filter { local[it] != osrs[it] }.map { Mismatch(localId, name, upstreamId, it, local[it], osrs[it]) }
+        FIELDS.filter { local[it] != osrs[it] }
+            .filterNot { it == "attack_speed" && (local[it] == null || osrs[it] == null) }
+            .map { Mismatch(localId, name, upstreamId, it, local[it], osrs[it]) }
 
     fun loadYml(file: File = File(ITEMS_YML)): List<JsonNode> = ObjectMapper(YAMLFactory()).readTree(file).toList()
 
@@ -225,6 +247,10 @@ object OsrsEquipmentStatsAudit {
         }
         if ("--apply-ranged-magic" in args) {
             rangedMagic.flatMap { it.diffs }.filter { it.field in RANGED_MAGIC_FIELDS && it.localId !in RANGED_MAGIC_EXCLUDED }
+                .forEach { changes.getOrPut(it.localId) { LinkedHashMap() }[it.field] = it.osrs!! }
+        }
+        if ("--apply-all" in args) {
+            byName.flatMap { it.diffs }.filter { it.localId !in ALL_FIELDS_EXCLUDED && it.osrs != null }
                 .forEach { changes.getOrPut(it.localId) { LinkedHashMap() }[it.field] = it.osrs!! }
         }
         if (changes.isNotEmpty()) {

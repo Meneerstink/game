@@ -295,13 +295,14 @@ class GoldenCombatVectorsTests {
         // "Maximum magic hit": ⌊(12[FIRE_BOLT] + 3[gauntlets]) × (1 + 0.15 gear + 0.02 Mystic Might)⌋ = ⌊17.55⌋ = 17
         assertEquals(17.0, MagicCombatFormula.getMaxHit(attacker, target, 1.0, 1.0), 1e-9)
 
-        // effAtk = floor(94*1.15[Mystic Might]) + 8 = 108+8 = 116; attackRoll = 116*(76+64) = 16240
+        // effAtk = floor(94*1.15[Mystic Might]) + 9 = 108+9 = 117 (owner decision (b), wiki DPS calculator
+        // getPlayerMaxMagicAttackRoll: +9, no stance bonus for a spell); attackRoll = 117*(76+64) = 16380
         // OSRS npc magic defence roll = (9 + Magic level) × (magic defence + 64) = (9+30)*74 = 2886 - the npc's
         // Defence level (25) plays no part.
         // defenceRoll, pre-fix bug would have used the attacker's own effective defence level
         // (floor(40*1.0)+3[Defensive]+8 = 51) instead: 51*(10+64) = 3774
-        val fixed = 1.0 - (2886.0 + 2.0) / (2.0 * (16240.0 + 1.0))
-        val preFixBug = 1.0 - (3774.0 + 2.0) / (2.0 * (16240.0 + 1.0))
+        val fixed = 1.0 - (2886.0 + 2.0) / (2.0 * (16380.0 + 1.0))
+        val preFixBug = 1.0 - (3774.0 + 2.0) / (2.0 * (16380.0 + 1.0))
         val accuracy = MagicCombatFormula.getAccuracy(attacker, target, 1.0)
         assertEquals(fixed, accuracy, 1e-9)
         assertNotEquals(preFixBug, accuracy)
@@ -318,16 +319,17 @@ class GoldenCombatVectorsTests {
         // un-pinned SOURCE_CONFLICT - see RSPS_DECISIONS.md - so this vector avoids it entirely).
         val target = newPlayer(defenceLevel = 80, magicLevel = 60, style = WeaponStyle.ACCURATE, magicDefenceBonus = 20, prayer = Prayer.ROCK_SKIN)
 
-        // effAtk = floor(99*1.25[Augury]) + 8 = 123+8 = 131; void mage 1.45x -> floor(131*1.45) = 189
+        // effAtk = floor(99*1.25[Augury]) + 9 = 123+9 = 132; void mage after the +9: trunc(132*29/20) = 191 (owner decision
+        // (b), wiki DPS calculator); Accurate gives no +2 here (that stance bonus belongs to powered staves)
         // TargetModifiers vs a Player target: isUndead requires an Npc, so Salve is neutral (1.0)
-        // attackRoll = floor(189*(0+64)*1.0) = 12096
+        // attackRoll = floor(191*(0+64)*1.0) = 12224
         val accuracy = MagicCombatFormula.getAccuracy(attacker, target, 1.0)
 
         // target defence roll (untouched Player-target path):
         //   effectiveLvl = floor(80*1.10[Rock Skin]) + 0(Accurate) + 8 = 88+8 = 96; *0.3 -> floor(28.8) = 28
         //   magicLvl = floor(60*1.0) = 60; *0.7 -> floor(42.0) = 42
         //   a = floor(28+42) = 70; defenceRoll = 70*(20+64) = 70*84 = 5880
-        val expected = 1.0 - (5880.0 + 2.0) / (2.0 * (12096.0 + 1.0))
+        val expected = 1.0 - (5880.0 + 2.0) / (2.0 * (12224.0 + 1.0))
         assertEquals(expected, accuracy, 1e-9)
     }
 

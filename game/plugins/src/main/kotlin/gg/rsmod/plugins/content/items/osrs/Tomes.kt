@@ -23,8 +23,8 @@ import gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell
  *   "do not receive the increase ... and do not consume any charges". "Stat-draining curse spells (i.e. Confuse, Weaken, Curse,
  *   Vulnerability, Enfeeble, and Stun) also gain a 50% boost to their effectiveness." Soaked pages "act as a source of water
  *   runes whilst equipped".
- * SOURCE_CONFLICT (owner question): the wiki DPS calculator multiplies water-spell accuracy by 6/5 against NPCs (its line is
- * marked "todo"); the item page says 10% - the item page is used. SOURCE_GAP (ADAPTED): drain rounding (the boosted drain is
+ * SOURCE_CONFLICT resolved by the owner (decision (c), 2026-09-14): the wiki DPS calculator multiplies water-spell accuracy by
+ * 6/5 against NPCs while the item page says 10 %; the owner chose the calculator's 20 % (damage stays 10 % / 20 %). SOURCE_GAP (ADAPTED): drain rounding (the boosted drain is
  * floored); the "Pages" option shows the page count (its OSRS behaviour is not described); messages.
  */
 object Tomes {
@@ -99,7 +99,8 @@ object Tomes {
     ): Double =
         when {
             spell == null || chargedWorn(player) != Tome.WATER -> 1.0
-            spell in WATER_SPELLS -> if (target is Player) 1.2 else 1.1
+            // Owner decision 2026-09-14 (c): water spells +20 % accuracy against NPCs too, as the wiki DPS calculator (6/5).
+            spell in WATER_SPELLS -> 1.2
             spell in CURSE_SPELLS -> 1.2
             else -> 1.0
         }

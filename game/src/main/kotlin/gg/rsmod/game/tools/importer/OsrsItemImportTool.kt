@@ -116,8 +116,9 @@ object OsrsItemImportTool {
                     Spec(12692), // Treasonous ring (i)
                     Spec(19550, noted = true, rev667Params = mapOf(749 to 3, 750 to 75)), // Ring of suffering
                     Spec(19710, rev667Params = mapOf(749 to 3, 750 to 75)), // Ring of suffering (i)
-                    Spec(20655, rev667Params = mapOf(749 to 3, 750 to 75)), // Ring of suffering (r)
-                    Spec(20657, rev667Params = mapOf(749 to 3, 750 to 75)), // Ring of suffering (ri)
+                    // Worn "Check" / "Recoil settings" (OSRS Wiki infobox worn options, owner decision (h) 2026-09-14).
+                    Spec(20655, rev667Params = mapOf(749 to 3, 750 to 75), rev667StringParams = mapOf(528 to "Check", 529 to "Recoil settings")), // Ring of suffering (r)
+                    Spec(20657, rev667Params = mapOf(749 to 3, 750 to 75), rev667StringParams = mapOf(528 to "Check", 529 to "Recoil settings")), // Ring of suffering (ri)
                 ),
             // Lightbearer: no stats or requirements (item page); special energy regeneration lives in SpecialEnergyRegen.
             "lightbearer" to

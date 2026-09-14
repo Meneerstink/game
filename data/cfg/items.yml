@@ -4155,7 +4155,7 @@
     defence_ranged: 0
     summoning: 0
     melee_strength: 0
-    prayer: 6
+    prayer: 5
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -4191,7 +4191,7 @@
     defence_ranged: 0
     summoning: 0
     melee_strength: 0
-    prayer: 9
+    prayer: 4
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -4230,7 +4230,7 @@
     defence_ranged: 0
     summoning: 0
     melee_strength: 0
-    prayer: 9
+    prayer: 4
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -6233,12 +6233,12 @@
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
-    attack_magic: 3
+    attack_magic: 2
     attack_ranged: 0
     defence_stab: 0
     defence_slash: 0
     defence_crush: 0
-    defence_magic: 3
+    defence_magic: 2
     defence_ranged: 0
     summoning: 0
     melee_strength: 0
@@ -6325,7 +6325,7 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 5
-    attack_speed: 6
+    attack_speed: 4
     attack_stab: 5
     attack_slash: 3
     attack_crush: -4
@@ -6548,7 +6548,7 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 17
-    attack_speed: 4
+    attack_speed: 6
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
@@ -7190,7 +7190,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: 0
-    attack_ranged: 3
+    attack_ranged: 0
     defence_stab: 0
     defence_slash: 0
     defence_crush: 0
@@ -7223,7 +7223,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: 0
-    attack_ranged: 4
+    attack_ranged: 0
     defence_stab: 0
     defence_slash: 0
     defence_crush: 0
@@ -7256,7 +7256,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: 0
-    attack_ranged: 5
+    attack_ranged: 0
     defence_stab: 0
     defence_slash: 0
     defence_crush: 0
@@ -7290,7 +7290,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: 0
-    attack_ranged: 8
+    attack_ranged: 0
     defence_stab: 0
     defence_slash: 0
     defence_crush: 0
@@ -7324,7 +7324,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: 0
-    attack_ranged: 11
+    attack_ranged: 0
     defence_stab: 0
     defence_slash: 0
     defence_crush: 0
@@ -7358,7 +7358,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: 0
-    attack_ranged: 15
+    attack_ranged: 0
     defence_stab: 0
     defence_slash: 0
     defence_crush: 0
@@ -7425,7 +7425,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: 0
-    attack_ranged: 4
+    attack_ranged: 0
     defence_stab: 0
     defence_slash: 0
     defence_crush: 0
@@ -10453,12 +10453,12 @@
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
-    attack_magic: 1
+    attack_magic: 0
     attack_ranged: 0
     defence_stab: 0
     defence_slash: 0
     defence_crush: 0
-    defence_magic: 1
+    defence_magic: 0
     defence_ranged: 0
     summoning: 0
     melee_strength: 0
@@ -10492,12 +10492,12 @@
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
-    attack_magic: 1
+    attack_magic: 0
     attack_ranged: 0
     defence_stab: 0
     defence_slash: 0
     defence_crush: 0
-    defence_magic: 1
+    defence_magic: 0
     defence_ranged: 0
     summoning: 0
     melee_strength: 0
@@ -10531,12 +10531,12 @@
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
-    attack_magic: 1
+    attack_magic: 0
     attack_ranged: 0
     defence_stab: 0
     defence_slash: 0
     defence_crush: 0
-    defence_magic: 1
+    defence_magic: 0
     defence_ranged: 0
     summoning: 0
     melee_strength: 0
@@ -11496,9 +11496,9 @@
     attack_crush: 0
     attack_magic: -10
     attack_ranged: 8
-    defence_stab: 3
+    defence_stab: 1
     defence_slash: 2
-    defence_crush: 4
+    defence_crush: 2
     defence_magic: 2
     defence_ranged: 0
     summoning: 3
@@ -11535,7 +11535,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 11
     defence_slash: 10
     defence_crush: 10
@@ -11574,7 +11574,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 17
     defence_slash: 16
     defence_crush: 15
@@ -11614,7 +11614,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 24
     defence_slash: 22
     defence_crush: 20
@@ -11654,7 +11654,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 33
     defence_slash: 31
     defence_crush: 29
@@ -11694,7 +11694,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 8
     defence_slash: 7
     defence_crush: 6
@@ -11733,7 +11733,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 21
     defence_slash: 20
     defence_crush: 19
@@ -11773,7 +11773,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 51
     defence_slash: 49
     defence_crush: 47
@@ -11813,7 +11813,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 11
     defence_slash: 10
     defence_crush: 10
@@ -11852,7 +11852,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 17
     defence_slash: 16
     defence_crush: 15
@@ -11892,7 +11892,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 24
     defence_slash: 22
     defence_crush: 20
@@ -11932,7 +11932,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 8
     defence_slash: 7
     defence_crush: 6
@@ -11971,7 +11971,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 21
     defence_slash: 20
     defence_crush: 19
@@ -12011,7 +12011,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 33
     defence_slash: 31
     defence_crush: 29
@@ -12051,7 +12051,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 51
     defence_slash: 49
     defence_crush: 47
@@ -12171,11 +12171,11 @@
     attack_crush: 0
     attack_magic: -10
     attack_ranged: 8
-    defence_stab: 22
-    defence_slash: 16
-    defence_crush: 24
+    defence_stab: 12
+    defence_slash: 15
+    defence_crush: 18
     defence_magic: 8
-    defence_ranged: 22
+    defence_ranged: 17
     summoning: 15
     melee_strength: 0
     prayer: 0
@@ -12488,7 +12488,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -30
-    attack_ranged: -10
+    attack_ranged: -15
     defence_stab: 21
     defence_slash: 20
     defence_crush: 12
@@ -12527,7 +12527,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -30
-    attack_ranged: -10
+    attack_ranged: -15
     defence_stab: 15
     defence_slash: 14
     defence_crush: 9
@@ -12566,7 +12566,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -30
-    attack_ranged: -10
+    attack_ranged: -15
     defence_stab: 32
     defence_slash: 31
     defence_crush: 24
@@ -12606,7 +12606,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -30
-    attack_ranged: -10
+    attack_ranged: -15
     defence_stab: 46
     defence_slash: 44
     defence_crush: 38
@@ -12646,7 +12646,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -30
-    attack_ranged: -10
+    attack_ranged: -15
     defence_stab: 65
     defence_slash: 63
     defence_crush: 55
@@ -12686,7 +12686,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -30
-    attack_ranged: -10
+    attack_ranged: -15
     defence_stab: 41
     defence_slash: 40
     defence_crush: 30
@@ -12726,7 +12726,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -30
-    attack_ranged: -10
+    attack_ranged: -15
     defence_stab: 82
     defence_slash: 80
     defence_crush: 72
@@ -12884,13 +12884,13 @@
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
-    attack_magic: -20
+    attack_magic: -15
     attack_ranged: 15
-    defence_stab: 40
-    defence_slash: 32
-    defence_crush: 45
+    defence_stab: 18
+    defence_slash: 27
+    defence_crush: 24
     defence_magic: 20
-    defence_ranged: 40
+    defence_ranged: 35
     summoning: 40
     melee_strength: 0
     prayer: 0
@@ -12925,7 +12925,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -3
-    attack_ranged: -1
+    attack_ranged: 0
     defence_stab: 4
     defence_slash: 5
     defence_crush: 3
@@ -12964,12 +12964,12 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -3
-    attack_ranged: -1
+    attack_ranged: 0
     defence_stab: 3
     defence_slash: 4
     defence_crush: 2
     defence_magic: -1
-    defence_ranged: 4
+    defence_ranged: 3
     summoning: 0
     melee_strength: 0
     prayer: 0
@@ -13003,7 +13003,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -3
-    attack_ranged: -1
+    attack_ranged: 0
     defence_stab: 7
     defence_slash: 8
     defence_crush: 6
@@ -13043,7 +13043,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -3
-    attack_ranged: -1
+    attack_ranged: 0
     defence_stab: 10
     defence_slash: 11
     defence_crush: 9
@@ -13083,7 +13083,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -3
-    attack_ranged: -1
+    attack_ranged: 0
     defence_stab: 14
     defence_slash: 15
     defence_crush: 13
@@ -13123,7 +13123,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -3
-    attack_ranged: -1
+    attack_ranged: 0
     defence_stab: 22
     defence_slash: 23
     defence_crush: 21
@@ -13163,7 +13163,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -3
-    attack_ranged: -1
+    attack_ranged: 0
     defence_stab: 33
     defence_slash: 35
     defence_crush: 32
@@ -13203,7 +13203,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -3
-    attack_ranged: -1
+    attack_ranged: 0
     defence_stab: 9
     defence_slash: 10
     defence_crush: 8
@@ -13243,7 +13243,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 6
     defence_slash: 7
     defence_crush: 5
@@ -13282,7 +13282,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 4
     defence_slash: 5
     defence_crush: 3
@@ -13321,7 +13321,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 9
     defence_slash: 10
     defence_crush: 7
@@ -13361,7 +13361,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 13
     defence_slash: 14
     defence_crush: 11
@@ -13401,7 +13401,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 19
     defence_slash: 21
     defence_crush: 16
@@ -13441,7 +13441,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 30
     defence_slash: 32
     defence_crush: 27
@@ -13481,7 +13481,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 12
     defence_slash: 13
     defence_crush: 10
@@ -13639,7 +13639,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: 0
     defence_stab: 5
     defence_slash: 6
     defence_crush: 4
@@ -13678,7 +13678,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: 0
     defence_stab: 8
     defence_slash: 9
     defence_crush: 7
@@ -13717,7 +13717,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: 0
     defence_stab: 12
     defence_slash: 13
     defence_crush: 11
@@ -13757,7 +13757,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: 0
     defence_stab: 15
     defence_slash: 16
     defence_crush: 14
@@ -13797,7 +13797,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: 0
     defence_stab: 17
     defence_slash: 19
     defence_crush: 15
@@ -13837,7 +13837,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: 0
     defence_stab: 24
     defence_slash: 26
     defence_crush: 22
@@ -13877,7 +13877,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: 0
     defence_stab: 38
     defence_slash: 40
     defence_crush: 36
@@ -13917,7 +13917,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: 0
     defence_stab: 50
     defence_slash: 52
     defence_crush: 48
@@ -13957,7 +13957,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 5
     defence_slash: 7
     defence_crush: 6
@@ -13996,7 +13996,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 8
     defence_slash: 10
     defence_crush: 9
@@ -14035,7 +14035,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 13
     defence_slash: 15
     defence_crush: 14
@@ -14075,7 +14075,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 17
     defence_slash: 19
     defence_crush: 18
@@ -14115,7 +14115,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 18
     defence_slash: 22
     defence_crush: 20
@@ -14155,7 +14155,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 27
     defence_slash: 31
     defence_crush: 29
@@ -14195,7 +14195,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 44
     defence_slash: 48
     defence_crush: 46
@@ -14902,7 +14902,7 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 14
-    attack_speed: 5
+    attack_speed: 4
     attack_stab: 5
     attack_slash: 5
     attack_crush: 5
@@ -14941,7 +14941,7 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 14
-    attack_speed: 5
+    attack_speed: 4
     attack_stab: 8
     attack_slash: 8
     attack_crush: 8
@@ -14980,7 +14980,7 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 14
-    attack_speed: 5
+    attack_speed: 4
     attack_stab: 12
     attack_slash: 12
     attack_crush: 12
@@ -15020,7 +15020,7 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 14
-    attack_speed: 5
+    attack_speed: 4
     attack_stab: 17
     attack_slash: 17
     attack_crush: 17
@@ -15060,7 +15060,7 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 14
-    attack_speed: 5
+    attack_speed: 4
     attack_stab: 24
     attack_slash: 24
     attack_crush: 24
@@ -15068,7 +15068,7 @@
     attack_ranged: 0
     defence_stab: 1
     defence_slash: 1
-    defence_crush: 1
+    defence_crush: 0
     defence_magic: 0
     defence_ranged: 0
     summoning: 0
@@ -15100,7 +15100,7 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 14
-    attack_speed: 5
+    attack_speed: 4
     attack_stab: 36
     attack_slash: 36
     attack_crush: 36
@@ -15140,7 +15140,7 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 14
-    attack_speed: 5
+    attack_speed: 4
     attack_stab: 55
     attack_slash: 55
     attack_crush: 55
@@ -15462,7 +15462,7 @@
     attack_stab: 4
     attack_slash: -2
     attack_crush: 2
-    attack_magic: -1
+    attack_magic: 0
     attack_ranged: 0
     defence_stab: 0
     defence_slash: 1
@@ -15543,7 +15543,7 @@
     attack_magic: 0
     attack_ranged: 0
     defence_stab: 0
-    defence_slash: 2
+    defence_slash: 1
     defence_crush: 0
     defence_magic: 0
     defence_ranged: 0
@@ -16860,7 +16860,7 @@
     defence_magic: 0
     defence_ranged: 0
     summoning: 0
-    melee_strength: 9
+    melee_strength: 11
     prayer: 0
     ranged_strength: 0
     magic_damage: 0
@@ -16938,7 +16938,7 @@
     defence_magic: 0
     defence_ranged: 0
     summoning: 0
-    melee_strength: 16
+    melee_strength: 18
     prayer: 0
     ranged_strength: 0
     magic_damage: 0
@@ -16978,7 +16978,7 @@
     defence_magic: 0
     defence_ranged: 0
     summoning: 0
-    melee_strength: 19
+    melee_strength: 22
     prayer: 0
     ranged_strength: 0
     magic_damage: 0
@@ -17018,7 +17018,7 @@
     defence_magic: 0
     defence_ranged: 0
     summoning: 0
-    melee_strength: 20
+    melee_strength: 27
     prayer: 0
     ranged_strength: 0
     magic_damage: 0
@@ -17049,7 +17049,7 @@
     attack_speed: 6
     attack_stab: -4
     attack_slash: -4
-    attack_crush: 33
+    attack_crush: 35
     attack_magic: -4
     attack_ranged: 0
     defence_stab: 0
@@ -17058,7 +17058,7 @@
     defence_magic: 0
     defence_ranged: 0
     summoning: 0
-    melee_strength: 31
+    melee_strength: 39
     prayer: 0
     ranged_strength: 0
     magic_damage: 0
@@ -17098,7 +17098,7 @@
     defence_magic: 0
     defence_ranged: 0
     summoning: 0
-    melee_strength: 48
+    melee_strength: 62
     prayer: 0
     ranged_strength: 0
     magic_damage: 0
@@ -17960,12 +17960,12 @@
     attack_stab: 7
     attack_slash: -1
     attack_crush: 25
-    attack_magic: 10
+    attack_magic: 12
     attack_ranged: 0
     defence_stab: 2
     defence_slash: 3
     defence_crush: 1
-    defence_magic: 10
+    defence_magic: 12
     defence_ranged: 0
     summoning: 0
     melee_strength: 32
@@ -17997,15 +17997,15 @@
     remove_arms: false
     weapon_type: 1
     attack_speed: 5
-    attack_stab: 10
+    attack_stab: 7
     attack_slash: -1
     attack_crush: 28
-    attack_magic: 10
+    attack_magic: 12
     attack_ranged: 0
     defence_stab: 2
     defence_slash: 3
     defence_crush: 1
-    defence_magic: 10
+    defence_magic: 12
     defence_ranged: 0
     summoning: 0
     melee_strength: 35
@@ -18037,15 +18037,15 @@
     remove_arms: false
     weapon_type: 1
     attack_speed: 5
-    attack_stab: 10
+    attack_stab: 7
     attack_slash: -1
     attack_crush: 28
-    attack_magic: 10
+    attack_magic: 12
     attack_ranged: 0
     defence_stab: 2
     defence_slash: 3
     defence_crush: 1
-    defence_magic: 10
+    defence_magic: 12
     defence_ranged: 0
     summoning: 0
     melee_strength: 35
@@ -18077,15 +18077,15 @@
     remove_arms: false
     weapon_type: 1
     attack_speed: 5
-    attack_stab: 10
+    attack_stab: 7
     attack_slash: -1
     attack_crush: 28
-    attack_magic: 10
+    attack_magic: 12
     attack_ranged: 0
     defence_stab: 2
     defence_slash: 3
     defence_crush: 1
-    defence_magic: 10
+    defence_magic: 12
     defence_ranged: 0
     summoning: 0
     melee_strength: 35
@@ -18117,15 +18117,15 @@
     remove_arms: false
     weapon_type: 1
     attack_speed: 5
-    attack_stab: 10
+    attack_stab: 7
     attack_slash: -1
     attack_crush: 28
-    attack_magic: 10
+    attack_magic: 12
     attack_ranged: 0
     defence_stab: 2
     defence_slash: 3
     defence_crush: 1
-    defence_magic: 10
+    defence_magic: 12
     defence_ranged: 0
     summoning: 0
     melee_strength: 35
@@ -18160,12 +18160,12 @@
     attack_stab: 10
     attack_slash: -1
     attack_crush: 40
-    attack_magic: 10
+    attack_magic: 14
     attack_ranged: 0
     defence_stab: 2
     defence_slash: 3
     defence_crush: 1
-    defence_magic: 10
+    defence_magic: 14
     defence_ranged: 0
     summoning: 0
     melee_strength: 50
@@ -18200,12 +18200,12 @@
     attack_stab: 10
     attack_slash: -1
     attack_crush: 40
-    attack_magic: 10
+    attack_magic: 14
     attack_ranged: 0
     defence_stab: 2
     defence_slash: 3
     defence_crush: 1
-    defence_magic: 10
+    defence_magic: 14
     defence_ranged: 0
     summoning: 0
     melee_strength: 50
@@ -18240,12 +18240,12 @@
     attack_stab: 10
     attack_slash: -1
     attack_crush: 40
-    attack_magic: 10
+    attack_magic: 14
     attack_ranged: 0
     defence_stab: 2
     defence_slash: 3
     defence_crush: 1
-    defence_magic: 10
+    defence_magic: 14
     defence_ranged: 0
     summoning: 0
     melee_strength: 50
@@ -18280,12 +18280,12 @@
     attack_stab: 10
     attack_slash: -1
     attack_crush: 40
-    attack_magic: 10
+    attack_magic: 14
     attack_ranged: 0
     defence_stab: 2
     defence_slash: 3
     defence_crush: 1
-    defence_magic: 10
+    defence_magic: 14
     defence_ranged: 0
     summoning: 0
     melee_strength: 50
@@ -18407,7 +18407,7 @@
     attack_stab: 3
     attack_slash: 8
     attack_crush: 3
-    attack_magic: 1
+    attack_magic: 0
     attack_ranged: 0
     defence_stab: 0
     defence_slash: 3
@@ -18436,7 +18436,7 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 8
-    attack_speed: 5
+    attack_speed: 4
     attack_stab: 4
     attack_slash: -2
     attack_crush: 9
@@ -18475,7 +18475,7 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 8
-    attack_speed: 5
+    attack_speed: 4
     attack_stab: 1
     attack_slash: -2
     attack_crush: 6
@@ -18514,7 +18514,7 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 8
-    attack_speed: 5
+    attack_speed: 4
     attack_stab: 7
     attack_slash: -2
     attack_crush: 13
@@ -18554,7 +18554,7 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 8
-    attack_speed: 5
+    attack_speed: 4
     attack_stab: 8
     attack_slash: -2
     attack_crush: 16
@@ -18594,7 +18594,7 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 8
-    attack_speed: 5
+    attack_speed: 4
     attack_stab: 11
     attack_slash: -2
     attack_crush: 18
@@ -18634,7 +18634,7 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 8
-    attack_speed: 5
+    attack_speed: 4
     attack_stab: 13
     attack_slash: -2
     attack_crush: 25
@@ -18674,7 +18674,7 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 8
-    attack_speed: 5
+    attack_speed: 4
     attack_stab: 20
     attack_slash: -2
     attack_crush: 39
@@ -18714,7 +18714,7 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 8
-    attack_speed: 5
+    attack_speed: 4
     attack_stab: 40
     attack_slash: -2
     attack_crush: 60
@@ -26468,7 +26468,7 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 12
-    attack_speed: 5
+    attack_speed: 4
     attack_stab: -100
     attack_slash: -100
     attack_crush: -50
@@ -26504,7 +26504,7 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 12
-    attack_speed: 5
+    attack_speed: 4
     attack_stab: -100
     attack_slash: -100
     attack_crush: -50
@@ -26540,7 +26540,7 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 12
-    attack_speed: 5
+    attack_speed: 4
     attack_stab: -100
     attack_slash: -100
     attack_crush: -50
@@ -26579,7 +26579,7 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 12
-    attack_speed: 5
+    attack_speed: 4
     attack_stab: -100
     attack_slash: -100
     attack_crush: -50
@@ -26618,7 +26618,7 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 12
-    attack_speed: 5
+    attack_speed: 4
     attack_stab: -100
     attack_slash: -100
     attack_crush: -50
@@ -26696,7 +26696,7 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 12
-    attack_speed: 5
+    attack_speed: 4
     attack_stab: -100
     attack_slash: -100
     attack_crush: -50
@@ -26735,7 +26735,7 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 12
-    attack_speed: 5
+    attack_speed: 4
     attack_stab: -100
     attack_slash: -100
     attack_crush: -50
@@ -26858,9 +26858,9 @@
     attack_crush: 0
     attack_magic: -10
     attack_ranged: 9
-    defence_stab: 4
+    defence_stab: 2
     defence_slash: 3
-    defence_crush: 5
+    defence_crush: 3
     defence_magic: 4
     defence_ranged: 0
     summoning: 4
@@ -26898,9 +26898,9 @@
     attack_crush: 0
     attack_magic: -10
     attack_ranged: 10
-    defence_stab: 5
+    defence_stab: 3
     defence_slash: 4
-    defence_crush: 6
+    defence_crush: 4
     defence_magic: 6
     defence_ranged: 0
     summoning: 5
@@ -26938,9 +26938,9 @@
     attack_crush: 0
     attack_magic: -10
     attack_ranged: 11
-    defence_stab: 6
+    defence_stab: 4
     defence_slash: 5
-    defence_crush: 7
+    defence_crush: 5
     defence_magic: 8
     defence_ranged: 0
     summoning: 6
@@ -26978,11 +26978,11 @@
     attack_crush: 0
     attack_magic: -10
     attack_ranged: 11
-    defence_stab: 25
-    defence_slash: 19
-    defence_crush: 27
+    defence_stab: 13
+    defence_slash: 16
+    defence_crush: 20
     defence_magic: 14
-    defence_ranged: 25
+    defence_ranged: 20
     summoning: 20
     melee_strength: 0
     prayer: 0
@@ -27018,11 +27018,11 @@
     attack_crush: 0
     attack_magic: -10
     attack_ranged: 14
-    defence_stab: 28
-    defence_slash: 22
-    defence_crush: 30
-    defence_magic: 20
-    defence_ranged: 28
+    defence_stab: 15
+    defence_slash: 18
+    defence_crush: 22
+    defence_magic: 18
+    defence_ranged: 20
     summoning: 25
     melee_strength: 0
     prayer: 0
@@ -27058,11 +27058,11 @@
     attack_crush: 0
     attack_magic: -10
     attack_ranged: 17
-    defence_stab: 31
-    defence_slash: 25
-    defence_crush: 33
-    defence_magic: 28
-    defence_ranged: 31
+    defence_stab: 18
+    defence_slash: 20
+    defence_crush: 26
+    defence_magic: 23
+    defence_ranged: 26
     summoning: 30
     melee_strength: 0
     prayer: 0
@@ -27098,11 +27098,11 @@
     attack_crush: 0
     attack_magic: -15
     attack_ranged: 20
-    defence_stab: 45
-    defence_slash: 37
-    defence_crush: 50
-    defence_magic: 30
-    defence_ranged: 45
+    defence_stab: 23
+    defence_slash: 30
+    defence_crush: 30
+    defence_magic: 28
+    defence_ranged: 40
     summoning: 45
     melee_strength: 0
     prayer: 0
@@ -27138,11 +27138,11 @@
     attack_crush: 0
     attack_magic: -15
     attack_ranged: 25
-    defence_stab: 50
-    defence_slash: 42
-    defence_crush: 55
-    defence_magic: 40
-    defence_ranged: 50
+    defence_stab: 26
+    defence_slash: 34
+    defence_crush: 36
+    defence_magic: 36
+    defence_ranged: 45
     summoning: 50
     melee_strength: 0
     prayer: 0
@@ -27178,11 +27178,11 @@
     attack_crush: 0
     attack_magic: -15
     attack_ranged: 30
-    defence_stab: 55
-    defence_slash: 47
-    defence_crush: 60
-    defence_magic: 50
-    defence_ranged: 55
+    defence_stab: 30
+    defence_slash: 38
+    defence_crush: 45
+    defence_magic: 45
+    defence_ranged: 50
     summoning: 55
     melee_strength: 0
     prayer: 0
@@ -28386,7 +28386,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -30
-    attack_ranged: -10
+    attack_ranged: -15
     defence_stab: 41
     defence_slash: 40
     defence_crush: 30
@@ -28426,7 +28426,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 21
     defence_slash: 20
     defence_crush: 19
@@ -28466,7 +28466,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 12
     defence_slash: 13
     defence_crush: 10
@@ -28546,7 +28546,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -30
-    attack_ranged: -10
+    attack_ranged: -15
     defence_stab: 41
     defence_slash: 40
     defence_crush: 30
@@ -28586,7 +28586,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 21
     defence_slash: 20
     defence_crush: 19
@@ -28626,7 +28626,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 12
     defence_slash: 13
     defence_crush: 10
@@ -28706,7 +28706,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -30
-    attack_ranged: -10
+    attack_ranged: -15
     defence_stab: 65
     defence_slash: 63
     defence_crush: 55
@@ -28746,7 +28746,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 33
     defence_slash: 31
     defence_crush: 29
@@ -28826,7 +28826,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 19
     defence_slash: 21
     defence_crush: 16
@@ -28866,7 +28866,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -30
-    attack_ranged: -10
+    attack_ranged: -15
     defence_stab: 65
     defence_slash: 63
     defence_crush: 55
@@ -28906,7 +28906,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 33
     defence_slash: 31
     defence_crush: 29
@@ -28986,7 +28986,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 19
     defence_slash: 21
     defence_crush: 16
@@ -29026,7 +29026,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -30
-    attack_ranged: -10
+    attack_ranged: -15
     defence_stab: 82
     defence_slash: 80
     defence_crush: 72
@@ -29066,7 +29066,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 51
     defence_slash: 49
     defence_crush: 47
@@ -29106,7 +29106,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 30
     defence_slash: 32
     defence_crush: 27
@@ -29186,7 +29186,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -30
-    attack_ranged: -10
+    attack_ranged: -15
     defence_stab: 82
     defence_slash: 80
     defence_crush: 72
@@ -29226,7 +29226,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 51
     defence_slash: 49
     defence_crush: 47
@@ -29266,7 +29266,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 30
     defence_slash: 32
     defence_crush: 27
@@ -29742,7 +29742,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -30
-    attack_ranged: -10
+    attack_ranged: -15
     defence_stab: 82
     defence_slash: 80
     defence_crush: 72
@@ -29750,7 +29750,7 @@
     defence_ranged: 80
     summoning: 40
     melee_strength: 0
-    prayer: 0
+    prayer: 1
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -29782,7 +29782,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 51
     defence_slash: 49
     defence_crush: 47
@@ -29790,7 +29790,7 @@
     defence_ranged: 49
     summoning: 15
     melee_strength: 0
-    prayer: 0
+    prayer: 1
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -29822,7 +29822,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 30
     defence_slash: 32
     defence_crush: 27
@@ -29830,7 +29830,7 @@
     defence_ranged: 30
     summoning: 7
     melee_strength: 0
-    prayer: 0
+    prayer: 1
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -29870,7 +29870,7 @@
     defence_ranged: 46
     summoning: 40
     melee_strength: 0
-    prayer: 0
+    prayer: 1
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -29902,7 +29902,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -30
-    attack_ranged: -10
+    attack_ranged: -15
     defence_stab: 82
     defence_slash: 80
     defence_crush: 72
@@ -29910,7 +29910,7 @@
     defence_ranged: 80
     summoning: 40
     melee_strength: 0
-    prayer: 0
+    prayer: 1
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -29942,7 +29942,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 51
     defence_slash: 49
     defence_crush: 47
@@ -29950,7 +29950,7 @@
     defence_ranged: 49
     summoning: 15
     melee_strength: 0
-    prayer: 0
+    prayer: 1
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -29982,7 +29982,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 30
     defence_slash: 32
     defence_crush: 27
@@ -29990,7 +29990,7 @@
     defence_ranged: 30
     summoning: 7
     melee_strength: 0
-    prayer: 0
+    prayer: 1
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -30030,7 +30030,7 @@
     defence_ranged: 46
     summoning: 40
     melee_strength: 0
-    prayer: 0
+    prayer: 1
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -30062,7 +30062,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -30
-    attack_ranged: -10
+    attack_ranged: -15
     defence_stab: 82
     defence_slash: 80
     defence_crush: 72
@@ -30070,7 +30070,7 @@
     defence_ranged: 80
     summoning: 40
     melee_strength: 0
-    prayer: 0
+    prayer: 1
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -30102,7 +30102,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 51
     defence_slash: 49
     defence_crush: 47
@@ -30110,7 +30110,7 @@
     defence_ranged: 49
     summoning: 15
     melee_strength: 0
-    prayer: 0
+    prayer: 1
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -30142,7 +30142,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 30
     defence_slash: 32
     defence_crush: 27
@@ -30150,7 +30150,7 @@
     defence_ranged: 30
     summoning: 7
     melee_strength: 0
-    prayer: 0
+    prayer: 1
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -30190,7 +30190,7 @@
     defence_ranged: 46
     summoning: 40
     melee_strength: 0
-    prayer: 0
+    prayer: 1
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -32649,7 +32649,7 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 6
-    attack_speed: 4
+    attack_speed: 5
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
@@ -32688,7 +32688,7 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 6
-    attack_speed: 4
+    attack_speed: 5
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
@@ -33715,15 +33715,15 @@
     remove_arms: false
     weapon_type: 1
     attack_speed: 5
-    attack_stab: 10
+    attack_stab: 7
     attack_slash: -1
     attack_crush: 28
-    attack_magic: 10
+    attack_magic: 12
     attack_ranged: 0
     defence_stab: 2
     defence_slash: 3
     defence_crush: 1
-    defence_magic: 10
+    defence_magic: 12
     defence_ranged: 0
     summoning: 0
     melee_strength: 35
@@ -33752,12 +33752,12 @@
     attack_stab: 10
     attack_slash: -1
     attack_crush: 40
-    attack_magic: 10
+    attack_magic: 14
     attack_ranged: 0
     defence_stab: 2
     defence_slash: 3
     defence_crush: 1
-    defence_magic: 10
+    defence_magic: 14
     defence_ranged: 0
     summoning: 0
     melee_strength: 50
@@ -34135,7 +34135,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: 0
-    attack_ranged: 7
+    attack_ranged: 0
     defence_stab: 0
     defence_slash: 0
     defence_crush: 0
@@ -37589,7 +37589,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 21
     defence_slash: 20
     defence_crush: 19
@@ -37623,7 +37623,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 21
     defence_slash: 20
     defence_crush: 19
@@ -37657,7 +37657,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 33
     defence_slash: 31
     defence_crush: 29
@@ -37691,7 +37691,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 33
     defence_slash: 31
     defence_crush: 29
@@ -37725,7 +37725,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 51
     defence_slash: 49
     defence_crush: 47
@@ -37759,7 +37759,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 51
     defence_slash: 49
     defence_crush: 47
@@ -37793,7 +37793,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 51
     defence_slash: 49
     defence_crush: 47
@@ -37801,7 +37801,7 @@
     defence_ranged: 49
     summoning: 15
     melee_strength: 0
-    prayer: 0
+    prayer: 1
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -37827,7 +37827,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 51
     defence_slash: 49
     defence_crush: 47
@@ -37835,7 +37835,7 @@
     defence_ranged: 49
     summoning: 15
     melee_strength: 0
-    prayer: 0
+    prayer: 1
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -37861,7 +37861,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 51
     defence_slash: 49
     defence_crush: 47
@@ -37869,7 +37869,7 @@
     defence_ranged: 49
     summoning: 15
     melee_strength: 0
-    prayer: 0
+    prayer: 1
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -37894,8 +37894,8 @@
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
-    attack_magic: -6
-    attack_ranged: -10
+    attack_magic: -30
+    attack_ranged: -15
     defence_stab: 82
     defence_slash: 80
     defence_crush: 72
@@ -37935,7 +37935,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 51
     defence_slash: 49
     defence_crush: 47
@@ -37975,7 +37975,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 51
     defence_slash: 49
     defence_crush: 47
@@ -38009,7 +38009,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 30
     defence_slash: 32
     defence_crush: 27
@@ -38049,7 +38049,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 44
     defence_slash: 48
     defence_crush: 46
@@ -41701,7 +41701,7 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 6
-    attack_speed: 4
+    attack_speed: 5
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
@@ -43209,7 +43209,7 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 12
-    attack_speed: 5
+    attack_speed: 4
     attack_stab: -100
     attack_slash: -100
     attack_crush: -50
@@ -43247,7 +43247,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 68
     defence_slash: 66
     defence_crush: 63
@@ -44429,18 +44429,18 @@
     remove_arms: false
     weapon_type: -1
     attack_speed: 5
-    attack_stab: 0
-    attack_slash: 0
-    attack_crush: 0
+    attack_stab: 47
+    attack_slash: 42
+    attack_crush: 36
     attack_magic: 0
     attack_ranged: 0
-    defence_stab: 0
-    defence_slash: 0
+    defence_stab: 1
+    defence_slash: 1
     defence_crush: 0
     defence_magic: 0
     defence_ranged: 0
     summoning: 0
-    melee_strength: 0
+    melee_strength: 50
     prayer: 0
     ranged_strength: 0
     magic_damage: 0
@@ -50068,7 +50068,7 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 14
-    attack_speed: 5
+    attack_speed: 4
     attack_stab: 15
     attack_slash: 15
     attack_crush: 15
@@ -50187,7 +50187,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 68
     defence_slash: 66
     defence_crush: 63
@@ -51415,7 +51415,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 85
     defence_slash: 82
     defence_crush: 83
@@ -51575,7 +51575,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -14
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 75
     defence_slash: 72
     defence_crush: 73
@@ -51615,7 +51615,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -1
-    attack_ranged: 3
+    attack_ranged: 7
     defence_stab: 6
     defence_slash: 9
     defence_crush: 12
@@ -51953,7 +51953,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 85
     defence_slash: 82
     defence_crush: 83
@@ -52113,7 +52113,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 85
     defence_slash: 82
     defence_crush: 83
@@ -53983,7 +53983,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 85
     defence_slash: 82
     defence_crush: 83
@@ -54017,7 +54017,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 85
     defence_slash: 82
     defence_crush: 83
@@ -54051,7 +54051,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 85
     defence_slash: 82
     defence_crush: 83
@@ -54085,7 +54085,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 85
     defence_slash: 82
     defence_crush: 83
@@ -54575,7 +54575,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -14
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 75
     defence_slash: 72
     defence_crush: 73
@@ -54609,7 +54609,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -14
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 75
     defence_slash: 72
     defence_crush: 73
@@ -54643,7 +54643,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -14
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 75
     defence_slash: 72
     defence_crush: 73
@@ -54677,7 +54677,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -14
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 75
     defence_slash: 72
     defence_crush: 73
@@ -54723,7 +54723,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -1
-    attack_ranged: 3
+    attack_ranged: 7
     defence_stab: 6
     defence_slash: 9
     defence_crush: 12
@@ -54757,7 +54757,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -1
-    attack_ranged: 3
+    attack_ranged: 7
     defence_stab: 6
     defence_slash: 9
     defence_crush: 12
@@ -54791,7 +54791,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -1
-    attack_ranged: 3
+    attack_ranged: 7
     defence_stab: 6
     defence_slash: 9
     defence_crush: 12
@@ -54825,7 +54825,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -1
-    attack_ranged: 3
+    attack_ranged: 7
     defence_stab: 6
     defence_slash: 9
     defence_crush: 12
@@ -55759,7 +55759,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 85
     defence_slash: 82
     defence_crush: 83
@@ -55793,7 +55793,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 85
     defence_slash: 82
     defence_crush: 83
@@ -55827,7 +55827,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 85
     defence_slash: 82
     defence_crush: 83
@@ -55861,7 +55861,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 85
     defence_slash: 82
     defence_crush: 83
@@ -56351,7 +56351,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 85
     defence_slash: 82
     defence_crush: 83
@@ -56385,7 +56385,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 85
     defence_slash: 82
     defence_crush: 83
@@ -56419,7 +56419,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 85
     defence_slash: 82
     defence_crush: 83
@@ -56453,7 +56453,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 85
     defence_slash: 82
     defence_crush: 83
@@ -56654,7 +56654,7 @@
     defence_stab: 1
     defence_slash: 1
     defence_crush: 0
-    defence_magic: 1
+    defence_magic: 0
     defence_ranged: 0
     summoning: 0
     melee_strength: 13
@@ -61123,7 +61123,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 13
     defence_slash: 14
     defence_crush: 11
@@ -61157,7 +61157,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -30
-    attack_ranged: -10
+    attack_ranged: -15
     defence_stab: 46
     defence_slash: 44
     defence_crush: 38
@@ -61191,7 +61191,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 24
     defence_slash: 22
     defence_crush: 20
@@ -67125,12 +67125,12 @@
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
-    attack_magic: 21
+    attack_magic: 5
     attack_ranged: 0
     defence_stab: 0
     defence_slash: 0
     defence_crush: 0
-    defence_magic: 21
+    defence_magic: 5
     defence_ranged: 0
     summoning: 5
     melee_strength: 0
@@ -67158,12 +67158,12 @@
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
-    attack_magic: 21
+    attack_magic: 4
     attack_ranged: 0
     defence_stab: 0
     defence_slash: 0
     defence_crush: 0
-    defence_magic: 21
+    defence_magic: 4
     defence_ranged: 0
     summoning: 5
     melee_strength: 0
@@ -67488,7 +67488,7 @@
     remove_arms: false
     weapon_type: -1
     attack_speed: 4
-    attack_stab: 0
+    attack_stab: -6
     attack_slash: -6
     attack_crush: -6
     attack_magic: -6
@@ -67733,9 +67733,9 @@
     attack_crush: 0
     attack_magic: 0
     attack_ranged: 0
-    defence_stab: 1
+    defence_stab: 0
     defence_slash: 1
-    defence_crush: 0
+    defence_crush: 1
     defence_magic: 0
     defence_ranged: 0
     summoning: 1
@@ -67850,9 +67850,9 @@
     attack_crush: 0
     attack_magic: 0
     attack_ranged: 0
-    defence_stab: 1
-    defence_slash: 2
-    defence_crush: 0
+    defence_stab: 0
+    defence_slash: 1
+    defence_crush: 2
     defence_magic: 0
     defence_ranged: 0
     summoning: 0
@@ -70261,7 +70261,7 @@
     defence_slash: 1
     defence_crush: 1
     defence_magic: 0
-    defence_ranged: 1
+    defence_ranged: 0
     summoning: 0
     melee_strength: 10
     prayer: 0
@@ -73315,15 +73315,15 @@
     remove_arms: false
     weapon_type: 1
     attack_speed: 5
-    attack_stab: 10
+    attack_stab: 7
     attack_slash: -1
     attack_crush: 28
-    attack_magic: 10
+    attack_magic: 12
     attack_ranged: 0
     defence_stab: 2
     defence_slash: 3
     defence_crush: 1
-    defence_magic: 10
+    defence_magic: 12
     defence_ranged: 0
     summoning: 0
     melee_strength: 35
@@ -73352,12 +73352,12 @@
     attack_stab: 10
     attack_slash: -1
     attack_crush: 40
-    attack_magic: 10
+    attack_magic: 14
     attack_ranged: 0
     defence_stab: 2
     defence_slash: 3
     defence_crush: 1
-    defence_magic: 10
+    defence_magic: 14
     defence_ranged: 0
     summoning: 0
     melee_strength: 50
@@ -73977,7 +73977,7 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 8
-    attack_speed: 5
+    attack_speed: 4
     attack_stab: 8
     attack_slash: -2
     attack_crush: 16
@@ -74017,7 +74017,7 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 1
-    attack_speed: 4
+    attack_speed: 5
     attack_stab: 2
     attack_slash: -1
     attack_crush: 10
@@ -74029,7 +74029,7 @@
     defence_magic: 10
     defence_ranged: 0
     summoning: 0
-    melee_strength: 13
+    melee_strength: 7
     prayer: 1
     ranged_strength: 0
     magic_damage: 0
@@ -74229,7 +74229,7 @@
     defence_magic: 0
     defence_ranged: 0
     summoning: 0
-    melee_strength: 19
+    melee_strength: 22
     prayer: 1
     ranged_strength: 0
     magic_damage: 0
@@ -74302,7 +74302,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -30
-    attack_ranged: -10
+    attack_ranged: -15
     defence_stab: 41
     defence_slash: 40
     defence_crush: 30
@@ -74382,7 +74382,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -3
-    attack_ranged: -1
+    attack_ranged: 0
     defence_stab: 9
     defence_slash: 10
     defence_crush: 8
@@ -74422,7 +74422,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 12
     defence_slash: 13
     defence_crush: 10
@@ -74462,7 +74462,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 21
     defence_slash: 20
     defence_crush: 19
@@ -74502,7 +74502,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 21
     defence_slash: 20
     defence_crush: 19
@@ -74582,7 +74582,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: 0
     defence_stab: 15
     defence_slash: 16
     defence_crush: 14
@@ -74622,7 +74622,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 17
     defence_slash: 19
     defence_crush: 18
@@ -77534,7 +77534,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 27
     defence_slash: 31
     defence_crush: 29
@@ -77567,7 +77567,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -3
-    attack_ranged: -1
+    attack_ranged: 0
     defence_stab: 14
     defence_slash: 15
     defence_crush: 13
@@ -78346,7 +78346,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -3
-    attack_ranged: -1
+    attack_ranged: 0
     defence_stab: 33
     defence_slash: 35
     defence_crush: 32
@@ -80128,9 +80128,9 @@
     remove_arms: false
     weapon_type: 13
     attack_speed: 4
-    attack_stab: 0
-    attack_slash: 0
-    attack_crush: 0
+    attack_stab: -100
+    attack_slash: -100
+    attack_crush: -50
     attack_magic: 0
     attack_ranged: 0
     defence_stab: 0
@@ -80139,7 +80139,7 @@
     defence_magic: 0
     defence_ranged: 0
     summoning: 0
-    melee_strength: 0
+    melee_strength: -10
     prayer: 0
     ranged_strength: 0
     magic_damage: 0
@@ -81248,7 +81248,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 17
     defence_slash: 19
     defence_crush: 18
@@ -81288,7 +81288,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 27
     defence_slash: 31
     defence_crush: 29
@@ -81328,7 +81328,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 44
     defence_slash: 48
     defence_crush: 46
@@ -81368,7 +81368,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 17
     defence_slash: 19
     defence_crush: 18
@@ -81408,7 +81408,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 27
     defence_slash: 31
     defence_crush: 29
@@ -81448,7 +81448,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 44
     defence_slash: 48
     defence_crush: 46
@@ -81488,7 +81488,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 17
     defence_slash: 19
     defence_crush: 18
@@ -81528,7 +81528,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 27
     defence_slash: 31
     defence_crush: 29
@@ -81568,7 +81568,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 44
     defence_slash: 48
     defence_crush: 46
@@ -81608,7 +81608,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 17
     defence_slash: 19
     defence_crush: 18
@@ -81648,7 +81648,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 27
     defence_slash: 31
     defence_crush: 29
@@ -81688,7 +81688,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 44
     defence_slash: 48
     defence_crush: 46
@@ -81728,7 +81728,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 17
     defence_slash: 19
     defence_crush: 18
@@ -81768,7 +81768,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 27
     defence_slash: 31
     defence_crush: 29
@@ -81808,7 +81808,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 44
     defence_slash: 48
     defence_crush: 46
@@ -82303,12 +82303,12 @@
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
-    attack_magic: 1
+    attack_magic: 0
     attack_ranged: 0
     defence_stab: 0
     defence_slash: 0
     defence_crush: 0
-    defence_magic: 1
+    defence_magic: 0
     defence_ranged: 0
     summoning: 0
     melee_strength: 0
@@ -82342,12 +82342,12 @@
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
-    attack_magic: 1
+    attack_magic: 0
     attack_ranged: 0
     defence_stab: 0
     defence_slash: 0
     defence_crush: 0
-    defence_magic: 1
+    defence_magic: 0
     defence_ranged: 0
     summoning: 0
     melee_strength: 0
@@ -82888,9 +82888,9 @@
     attack_crush: -2
     attack_magic: 0
     attack_ranged: 0
-    defence_stab: 3
-    defence_slash: 2
-    defence_crush: 0
+    defence_stab: 0
+    defence_slash: 3
+    defence_crush: 2
     defence_magic: 0
     defence_ranged: 0
     summoning: 0
@@ -84160,8 +84160,8 @@
     attack_crush: 0
     attack_magic: -3
     attack_ranged: -1
-    defence_stab: 5
-    defence_slash: 4
+    defence_stab: 4
+    defence_slash: 5
     defence_crush: 3
     defence_magic: -1
     defence_ranged: 4
@@ -84913,7 +84913,7 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 1
-    attack_speed: 4
+    attack_speed: 5
     attack_stab: 0
     attack_slash: -1
     attack_crush: 7
@@ -84946,7 +84946,7 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 1
-    attack_speed: 4
+    attack_speed: 5
     attack_stab: 0
     attack_slash: -1
     attack_crush: 7
@@ -85012,7 +85012,7 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 1
-    attack_speed: 4
+    attack_speed: 5
     attack_stab: 0
     attack_slash: -1
     attack_crush: 7
@@ -85045,7 +85045,7 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 1
-    attack_speed: 4
+    attack_speed: 5
     attack_stab: 0
     attack_slash: -1
     attack_crush: 7
@@ -85078,7 +85078,7 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 1
-    attack_speed: 4
+    attack_speed: 5
     attack_stab: 0
     attack_slash: -1
     attack_crush: 7
@@ -85111,7 +85111,7 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 1
-    attack_speed: 4
+    attack_speed: 5
     attack_stab: 0
     attack_slash: -1
     attack_crush: 7
@@ -85144,7 +85144,7 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 1
-    attack_speed: 4
+    attack_speed: 5
     attack_stab: 0
     attack_slash: -1
     attack_crush: 7
@@ -85177,7 +85177,7 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 1
-    attack_speed: 4
+    attack_speed: 5
     attack_stab: 0
     attack_slash: -1
     attack_crush: 7
@@ -85210,7 +85210,7 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 1
-    attack_speed: 4
+    attack_speed: 5
     attack_stab: 0
     attack_slash: -1
     attack_crush: 7
@@ -85568,11 +85568,11 @@
     attack_crush: 0
     attack_magic: 0
     attack_ranged: 0
-    defence_stab: 4
-    defence_slash: 5
-    defence_crush: 3
-    defence_magic: 1
-    defence_ranged: 4
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
     summoning: 0
     melee_strength: 0
     prayer: 0
@@ -86420,10 +86420,10 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 5
-    attack_speed: 3
-    attack_stab: 20
-    attack_slash: 20
-    attack_crush: 20
+    attack_speed: 4
+    attack_stab: 2
+    attack_slash: 2
+    attack_crush: 2
     attack_magic: 0
     attack_ranged: 0
     defence_stab: 0
@@ -86432,7 +86432,7 @@
     defence_magic: 0
     defence_ranged: 0
     summoning: 0
-    melee_strength: 5
+    melee_strength: 0
     prayer: 0
     ranged_strength: 0
     magic_damage: 0
@@ -86453,10 +86453,10 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 2
-    attack_speed: 4
-    attack_stab: 20
-    attack_slash: 20
-    attack_crush: 20
+    attack_speed: 6
+    attack_stab: 2
+    attack_slash: 2
+    attack_crush: 2
     attack_magic: 0
     attack_ranged: 0
     defence_stab: 0
@@ -86465,7 +86465,7 @@
     defence_magic: 0
     defence_ranged: -1
     summoning: 0
-    melee_strength: 13
+    melee_strength: 0
     prayer: 0
     ranged_strength: 0
     magic_damage: 0
@@ -86486,10 +86486,10 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 8
-    attack_speed: 4
-    attack_stab: 20
-    attack_slash: 20
-    attack_crush: 20
+    attack_speed: 5
+    attack_stab: 2
+    attack_slash: 2
+    attack_crush: 2
     attack_magic: 0
     attack_ranged: 0
     defence_stab: 0
@@ -86498,7 +86498,7 @@
     defence_magic: 0
     defence_ranged: 0
     summoning: 0
-    melee_strength: 5
+    melee_strength: 0
     prayer: 1
     ranged_strength: 0
     magic_damage: 0
@@ -86519,10 +86519,10 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 14
-    attack_speed: 4
-    attack_stab: 20
-    attack_slash: 20
-    attack_crush: 20
+    attack_speed: 5
+    attack_stab: 2
+    attack_slash: 2
+    attack_crush: 2
     attack_magic: 0
     attack_ranged: 0
     defence_stab: 1
@@ -86531,7 +86531,7 @@
     defence_magic: 0
     defence_ranged: 0
     summoning: 0
-    melee_strength: 6
+    melee_strength: 0
     prayer: 0
     ranged_strength: 0
     magic_damage: 0
@@ -90589,7 +90589,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 30
     defence_slash: 32
     defence_crush: 27
@@ -90625,7 +90625,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 30
     defence_slash: 32
     defence_crush: 27
@@ -90661,7 +90661,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 30
     defence_slash: 32
     defence_crush: 27
@@ -90697,7 +90697,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 30
     defence_slash: 32
     defence_crush: 27
@@ -90733,7 +90733,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 30
     defence_slash: 32
     defence_crush: 27
@@ -90769,7 +90769,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 30
     defence_slash: 32
     defence_crush: 27
@@ -90805,7 +90805,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 30
     defence_slash: 32
     defence_crush: 27
@@ -90841,7 +90841,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 30
     defence_slash: 32
     defence_crush: 27
@@ -90877,7 +90877,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 30
     defence_slash: 32
     defence_crush: 27
@@ -90913,7 +90913,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 30
     defence_slash: 32
     defence_crush: 27
@@ -90949,7 +90949,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 30
     defence_slash: 32
     defence_crush: 27
@@ -90985,7 +90985,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 30
     defence_slash: 32
     defence_crush: 27
@@ -91021,7 +91021,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 30
     defence_slash: 32
     defence_crush: 27
@@ -91057,7 +91057,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 30
     defence_slash: 32
     defence_crush: 27
@@ -91093,7 +91093,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 30
     defence_slash: 32
     defence_crush: 27
@@ -91129,7 +91129,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 30
     defence_slash: 32
     defence_crush: 27
@@ -92665,7 +92665,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 9
     defence_slash: 10
     defence_crush: 7
@@ -92701,7 +92701,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 9
     defence_slash: 10
     defence_crush: 7
@@ -92737,7 +92737,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 9
     defence_slash: 10
     defence_crush: 7
@@ -92773,7 +92773,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 9
     defence_slash: 10
     defence_crush: 7
@@ -92809,7 +92809,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 9
     defence_slash: 10
     defence_crush: 7
@@ -92845,7 +92845,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 9
     defence_slash: 10
     defence_crush: 7
@@ -92881,7 +92881,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 9
     defence_slash: 10
     defence_crush: 7
@@ -92917,7 +92917,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 9
     defence_slash: 10
     defence_crush: 7
@@ -92953,7 +92953,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 9
     defence_slash: 10
     defence_crush: 7
@@ -92989,7 +92989,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 9
     defence_slash: 10
     defence_crush: 7
@@ -93025,7 +93025,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 9
     defence_slash: 10
     defence_crush: 7
@@ -93061,7 +93061,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 9
     defence_slash: 10
     defence_crush: 7
@@ -93097,7 +93097,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 9
     defence_slash: 10
     defence_crush: 7
@@ -93133,7 +93133,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 9
     defence_slash: 10
     defence_crush: 7
@@ -93169,7 +93169,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 9
     defence_slash: 10
     defence_crush: 7
@@ -93205,7 +93205,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 9
     defence_slash: 10
     defence_crush: 7
@@ -93241,7 +93241,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 44
     defence_slash: 48
     defence_crush: 46
@@ -93280,7 +93280,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 44
     defence_slash: 48
     defence_crush: 46
@@ -93319,7 +93319,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 44
     defence_slash: 48
     defence_crush: 46
@@ -93358,7 +93358,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 44
     defence_slash: 48
     defence_crush: 46
@@ -93397,7 +93397,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 44
     defence_slash: 48
     defence_crush: 46
@@ -93436,7 +93436,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 44
     defence_slash: 48
     defence_crush: 46
@@ -93475,7 +93475,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 44
     defence_slash: 48
     defence_crush: 46
@@ -93514,7 +93514,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 44
     defence_slash: 48
     defence_crush: 46
@@ -93553,7 +93553,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 44
     defence_slash: 48
     defence_crush: 46
@@ -93592,7 +93592,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 44
     defence_slash: 48
     defence_crush: 46
@@ -93631,7 +93631,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 44
     defence_slash: 48
     defence_crush: 46
@@ -93670,7 +93670,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 44
     defence_slash: 48
     defence_crush: 46
@@ -93709,7 +93709,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 44
     defence_slash: 48
     defence_crush: 46
@@ -93748,7 +93748,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 44
     defence_slash: 48
     defence_crush: 46
@@ -93787,7 +93787,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 44
     defence_slash: 48
     defence_crush: 46
@@ -93826,7 +93826,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 44
     defence_slash: 48
     defence_crush: 46
@@ -93865,7 +93865,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 13
     defence_slash: 15
     defence_crush: 14
@@ -93904,7 +93904,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 13
     defence_slash: 15
     defence_crush: 14
@@ -93943,7 +93943,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 13
     defence_slash: 15
     defence_crush: 14
@@ -93982,7 +93982,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 13
     defence_slash: 15
     defence_crush: 14
@@ -94021,7 +94021,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 13
     defence_slash: 15
     defence_crush: 14
@@ -94060,7 +94060,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 13
     defence_slash: 15
     defence_crush: 14
@@ -94099,7 +94099,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 13
     defence_slash: 15
     defence_crush: 14
@@ -94138,7 +94138,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 13
     defence_slash: 15
     defence_crush: 14
@@ -94177,7 +94177,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 13
     defence_slash: 15
     defence_crush: 14
@@ -94216,7 +94216,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 13
     defence_slash: 15
     defence_crush: 14
@@ -94255,7 +94255,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 13
     defence_slash: 15
     defence_crush: 14
@@ -94294,7 +94294,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 13
     defence_slash: 15
     defence_crush: 14
@@ -94333,7 +94333,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 13
     defence_slash: 15
     defence_crush: 14
@@ -94372,7 +94372,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 13
     defence_slash: 15
     defence_crush: 14
@@ -94411,7 +94411,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 13
     defence_slash: 15
     defence_crush: 14
@@ -94450,7 +94450,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 13
     defence_slash: 15
     defence_crush: 14
@@ -95026,7 +95026,7 @@
     attack_slash: 4
     attack_crush: 3
     attack_magic: -3
-    attack_ranged: -3
+    attack_ranged: -2
     defence_stab: 5
     defence_slash: 4
     defence_crush: 3
@@ -95264,7 +95264,7 @@
     defence_slash: 9
     defence_crush: 7
     defence_magic: 0
-    defence_ranged: 7
+    defence_ranged: 8
     summoning: 0
     melee_strength: 0
     prayer: 0
@@ -97651,7 +97651,7 @@
     attack_stab: 0
     attack_slash: -1
     attack_crush: 7
-    attack_magic: 4
+    attack_magic: 10
     attack_ranged: 0
     defence_stab: 2
     defence_slash: 3
@@ -97981,19 +97981,19 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 3
-    attack_speed: 5
-    attack_stab: 7
-    attack_slash: -1
-    attack_crush: 25
-    attack_magic: 10
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
     attack_ranged: 0
-    defence_stab: 2
-    defence_slash: 3
-    defence_crush: 1
-    defence_magic: 10
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
     defence_ranged: 0
     summoning: 0
-    melee_strength: 32
+    melee_strength: 0
     prayer: 0
     ranged_strength: 0
     magic_damage: 0
@@ -104118,7 +104118,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 19
     defence_slash: 21
     defence_crush: 16
@@ -104158,7 +104158,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -30
-    attack_ranged: -10
+    attack_ranged: -15
     defence_stab: 65
     defence_slash: 63
     defence_crush: 55
@@ -104198,7 +104198,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 33
     defence_slash: 31
     defence_crush: 29
@@ -104206,7 +104206,7 @@
     defence_ranged: 31
     summoning: 10
     melee_strength: 0
-    prayer: 5
+    prayer: 6
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -104238,7 +104238,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 33
     defence_slash: 31
     defence_crush: 29
@@ -104246,7 +104246,7 @@
     defence_ranged: 31
     summoning: 10
     melee_strength: 0
-    prayer: 5
+    prayer: 6
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -104424,7 +104424,7 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 5
-    attack_speed: 6
+    attack_speed: 4
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
@@ -104456,14 +104456,14 @@
     weapon_type: 5
     attack_speed: 4
     attack_stab: 4
-    attack_slash: 5
+    attack_slash: 3
     attack_crush: -2
     attack_magic: 0
     attack_ranged: 0
     defence_stab: 0
-    defence_slash: 3
-    defence_crush: 2
-    defence_magic: 1
+    defence_slash: 2
+    defence_crush: 1
+    defence_magic: 0
     defence_ranged: 0
     summoning: 0
     melee_strength: 5
@@ -104920,7 +104920,7 @@
     defence_ranged: 9
     summoning: 9
     melee_strength: 0
-    prayer: 4
+    prayer: 0
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -105016,7 +105016,7 @@
     defence_ranged: 9
     summoning: 9
     melee_strength: 0
-    prayer: 4
+    prayer: 0
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -105112,7 +105112,7 @@
     defence_ranged: 9
     summoning: 9
     melee_strength: 0
-    prayer: 4
+    prayer: 0
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -105208,7 +105208,7 @@
     defence_ranged: 9
     summoning: 9
     melee_strength: 0
-    prayer: 4
+    prayer: 0
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -105304,7 +105304,7 @@
     defence_ranged: 9
     summoning: 9
     melee_strength: 0
-    prayer: 4
+    prayer: 0
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -105496,7 +105496,7 @@
     defence_ranged: 9
     summoning: 9
     melee_strength: 0
-    prayer: 4
+    prayer: 0
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -105688,7 +105688,7 @@
     defence_ranged: 9
     summoning: 9
     melee_strength: 0
-    prayer: 4
+    prayer: 0
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -105784,7 +105784,7 @@
     defence_ranged: 9
     summoning: 9
     melee_strength: 0
-    prayer: 4
+    prayer: 0
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -105880,7 +105880,7 @@
     defence_ranged: 9
     summoning: 9
     melee_strength: 0
-    prayer: 4
+    prayer: 0
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -105976,7 +105976,7 @@
     defence_ranged: 9
     summoning: 9
     melee_strength: 0
-    prayer: 4
+    prayer: 0
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -106072,7 +106072,7 @@
     defence_ranged: 9
     summoning: 9
     melee_strength: 0
-    prayer: 4
+    prayer: 0
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -106168,7 +106168,7 @@
     defence_ranged: 9
     summoning: 9
     melee_strength: 0
-    prayer: 4
+    prayer: 0
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -106360,7 +106360,7 @@
     defence_ranged: 9
     summoning: 9
     melee_strength: 0
-    prayer: 4
+    prayer: 0
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -106456,7 +106456,7 @@
     defence_ranged: 9
     summoning: 9
     melee_strength: 0
-    prayer: 4
+    prayer: 0
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -106552,7 +106552,7 @@
     defence_ranged: 9
     summoning: 9
     melee_strength: 0
-    prayer: 4
+    prayer: 0
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -106648,7 +106648,7 @@
     defence_ranged: 9
     summoning: 9
     melee_strength: 0
-    prayer: 4
+    prayer: 0
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -106744,7 +106744,7 @@
     defence_ranged: 9
     summoning: 9
     melee_strength: 0
-    prayer: 4
+    prayer: 0
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -106840,7 +106840,7 @@
     defence_ranged: 9
     summoning: 9
     melee_strength: 0
-    prayer: 4
+    prayer: 0
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -106936,7 +106936,7 @@
     defence_ranged: 9
     summoning: 9
     melee_strength: 0
-    prayer: 4
+    prayer: 0
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -109209,7 +109209,7 @@
     defence_slash: 5
     defence_crush: 3
     defence_magic: 0
-    defence_ranged: 1
+    defence_ranged: 4
     summoning: 5
     melee_strength: 0
     prayer: 0
@@ -110314,7 +110314,7 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 5
-    attack_speed: 5
+    attack_speed: 4
     attack_stab: 9
     attack_slash: 4
     attack_crush: -4
@@ -111782,7 +111782,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 30
     defence_slash: 32
     defence_crush: 27
@@ -111822,7 +111822,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 30
     defence_slash: 32
     defence_crush: 27
@@ -111862,7 +111862,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 30
     defence_slash: 32
     defence_crush: 27
@@ -111902,7 +111902,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 30
     defence_slash: 32
     defence_crush: 27
@@ -111942,7 +111942,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 30
     defence_slash: 32
     defence_crush: 27
@@ -111982,7 +111982,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 19
     defence_slash: 21
     defence_crush: 16
@@ -112022,7 +112022,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 19
     defence_slash: 21
     defence_crush: 16
@@ -112062,7 +112062,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 19
     defence_slash: 21
     defence_crush: 16
@@ -112102,7 +112102,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 19
     defence_slash: 21
     defence_crush: 16
@@ -112142,7 +112142,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 19
     defence_slash: 21
     defence_crush: 16
@@ -112182,7 +112182,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 12
     defence_slash: 13
     defence_crush: 10
@@ -112222,7 +112222,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 12
     defence_slash: 13
     defence_crush: 10
@@ -112262,7 +112262,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 12
     defence_slash: 13
     defence_crush: 10
@@ -112302,7 +112302,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 12
     defence_slash: 13
     defence_crush: 10
@@ -112342,7 +112342,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 12
     defence_slash: 13
     defence_crush: 10
@@ -113427,7 +113427,7 @@
     defence_ranged: 31
     summoning: 30
     melee_strength: 0
-    prayer: 0
+    prayer: 1
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -113467,7 +113467,7 @@
     defence_ranged: 8
     summoning: 8
     melee_strength: 0
-    prayer: 0
+    prayer: 1
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -113587,7 +113587,7 @@
     defence_ranged: 31
     summoning: 30
     melee_strength: 0
-    prayer: 0
+    prayer: 1
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -113627,7 +113627,7 @@
     defence_ranged: 8
     summoning: 8
     melee_strength: 0
-    prayer: 0
+    prayer: 1
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -113747,7 +113747,7 @@
     defence_ranged: 31
     summoning: 30
     melee_strength: 0
-    prayer: 0
+    prayer: 1
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -113787,7 +113787,7 @@
     defence_ranged: 8
     summoning: 8
     melee_strength: 0
-    prayer: 0
+    prayer: 1
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -115051,7 +115051,7 @@
     defence_ranged: 0
     summoning: 4
     melee_strength: 0
-    prayer: 4
+    prayer: 6
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -115091,7 +115091,7 @@
     defence_ranged: 0
     summoning: 4
     melee_strength: 0
-    prayer: 4
+    prayer: 6
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -115131,7 +115131,7 @@
     defence_ranged: 0
     summoning: 4
     melee_strength: 0
-    prayer: 4
+    prayer: 6
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -115171,7 +115171,7 @@
     defence_ranged: 0
     summoning: 4
     melee_strength: 0
-    prayer: 4
+    prayer: 5
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -115211,7 +115211,7 @@
     defence_ranged: 0
     summoning: 4
     melee_strength: 0
-    prayer: 4
+    prayer: 5
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -115251,7 +115251,7 @@
     defence_ranged: 0
     summoning: 4
     melee_strength: 0
-    prayer: 4
+    prayer: 5
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -116034,12 +116034,12 @@
     attack_stab: -5
     attack_slash: -5
     attack_crush: -5
-    attack_magic: 7
+    attack_magic: 6
     attack_ranged: -5
     defence_stab: 6
     defence_slash: 8
     defence_crush: 10
-    defence_magic: 8
+    defence_magic: 7
     defence_ranged: 0
     summoning: 7
     melee_strength: 0
@@ -116070,9 +116070,9 @@
     attack_crush: 5
     attack_magic: -7
     attack_ranged: -7
-    defence_stab: 30
-    defence_slash: 32
-    defence_crush: 28
+    defence_stab: 27
+    defence_slash: 29
+    defence_crush: 26
     defence_magic: -3
     defence_ranged: 28
     summoning: 7
@@ -116137,12 +116137,12 @@
     attack_slash: -5
     attack_crush: -5
     attack_magic: -5
-    attack_ranged: 7
+    attack_ranged: 6
     defence_stab: 7
     defence_slash: 10
     defence_crush: 11
     defence_magic: 5
-    defence_ranged: 9
+    defence_ranged: 8
     summoning: 7
     melee_strength: 0
     prayer: 0
@@ -116170,12 +116170,12 @@
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
-    attack_magic: -30
+    attack_magic: -40
     attack_ranged: 0
-    defence_stab: 66
+    defence_stab: 62
     defence_slash: 85
     defence_crush: 62
-    defence_magic: -6
+    defence_magic: -10
     defence_ranged: 67
     summoning: 40
     melee_strength: 4
@@ -116204,15 +116204,15 @@
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
-    attack_magic: -3
-    attack_ranged: -1
-    defence_stab: 12
-    defence_slash: 13
-    defence_crush: 14
+    attack_magic: 1
+    attack_ranged: 1
+    defence_stab: 8
+    defence_slash: 8
+    defence_crush: 8
     defence_magic: 0
     defence_ranged: 0
     summoning: 10
-    melee_strength: 2
+    melee_strength: 0
     prayer: 0
     ranged_strength: 0
     magic_damage: 0
@@ -116246,7 +116246,7 @@
     defence_magic: 0
     defence_ranged: 2
     summoning: 2
-    melee_strength: 4
+    melee_strength: 0
     prayer: 0
     ranged_strength: 0
     magic_damage: 0
@@ -116280,7 +116280,7 @@
     defence_magic: 0
     defence_ranged: 2
     summoning: 2
-    melee_strength: 4
+    melee_strength: 0
     prayer: 0
     ranged_strength: 0
     magic_damage: 0
@@ -116307,12 +116307,12 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -10
-    attack_ranged: 16
+    attack_ranged: 15
     defence_stab: 26
     defence_slash: 21
     defence_crush: 28
     defence_magic: 19
-    defence_ranged: 27
+    defence_ranged: 26
     summoning: 15
     melee_strength: 0
     prayer: 0
@@ -117440,7 +117440,7 @@
     remove_arms: false
     weapon_type: -1
     attack_speed: 4
-    attack_stab: 0
+    attack_stab: -6
     attack_slash: -6
     attack_crush: -6
     attack_magic: -6
@@ -117567,7 +117567,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -30
-    attack_ranged: -10
+    attack_ranged: -15
     defence_stab: 41
     defence_slash: 40
     defence_crush: 30
@@ -117600,7 +117600,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -30
-    attack_ranged: -10
+    attack_ranged: -15
     defence_stab: 46
     defence_slash: 44
     defence_crush: 38
@@ -118085,7 +118085,7 @@
     defence_ranged: 0
     summoning: 0
     melee_strength: 0
-    prayer: 9
+    prayer: 4
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -118250,7 +118250,7 @@
     defence_ranged: 9
     summoning: 9
     melee_strength: 0
-    prayer: 4
+    prayer: 0
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -118283,7 +118283,7 @@
     defence_ranged: 9
     summoning: 9
     melee_strength: 0
-    prayer: 4
+    prayer: 0
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -118316,7 +118316,7 @@
     defence_ranged: 9
     summoning: 9
     melee_strength: 0
-    prayer: 4
+    prayer: 0
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -118349,7 +118349,7 @@
     defence_ranged: 9
     summoning: 9
     melee_strength: 0
-    prayer: 4
+    prayer: 0
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -118382,7 +118382,7 @@
     defence_ranged: 9
     summoning: 9
     melee_strength: 0
-    prayer: 4
+    prayer: 0
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -118448,7 +118448,7 @@
     defence_ranged: 9
     summoning: 9
     melee_strength: 0
-    prayer: 4
+    prayer: 0
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -118547,7 +118547,7 @@
     defence_ranged: 9
     summoning: 9
     melee_strength: 0
-    prayer: 4
+    prayer: 0
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -118580,7 +118580,7 @@
     defence_ranged: 9
     summoning: 9
     melee_strength: 0
-    prayer: 4
+    prayer: 0
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -118613,7 +118613,7 @@
     defence_ranged: 9
     summoning: 9
     melee_strength: 0
-    prayer: 4
+    prayer: 0
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -118646,7 +118646,7 @@
     defence_ranged: 9
     summoning: 9
     melee_strength: 0
-    prayer: 4
+    prayer: 0
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -118679,7 +118679,7 @@
     defence_ranged: 9
     summoning: 9
     melee_strength: 0
-    prayer: 4
+    prayer: 0
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -118712,7 +118712,7 @@
     defence_ranged: 9
     summoning: 9
     melee_strength: 0
-    prayer: 4
+    prayer: 0
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -118778,7 +118778,7 @@
     defence_ranged: 9
     summoning: 9
     melee_strength: 0
-    prayer: 4
+    prayer: 0
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -118811,7 +118811,7 @@
     defence_ranged: 9
     summoning: 9
     melee_strength: 0
-    prayer: 4
+    prayer: 0
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -118844,7 +118844,7 @@
     defence_ranged: 9
     summoning: 9
     melee_strength: 0
-    prayer: 4
+    prayer: 0
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -118877,7 +118877,7 @@
     defence_ranged: 9
     summoning: 9
     melee_strength: 0
-    prayer: 4
+    prayer: 0
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -118910,7 +118910,7 @@
     defence_ranged: 9
     summoning: 9
     melee_strength: 0
-    prayer: 4
+    prayer: 0
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -118943,7 +118943,7 @@
     defence_ranged: 9
     summoning: 9
     melee_strength: 0
-    prayer: 4
+    prayer: 0
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -118976,7 +118976,7 @@
     defence_ranged: 9
     summoning: 9
     melee_strength: 0
-    prayer: 4
+    prayer: 0
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -119100,7 +119100,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 17
     defence_slash: 19
     defence_crush: 18
@@ -119133,7 +119133,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 27
     defence_slash: 31
     defence_crush: 29
@@ -119166,7 +119166,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 44
     defence_slash: 48
     defence_crush: 46
@@ -119199,7 +119199,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 17
     defence_slash: 19
     defence_crush: 18
@@ -119232,7 +119232,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 27
     defence_slash: 31
     defence_crush: 29
@@ -119265,7 +119265,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 44
     defence_slash: 48
     defence_crush: 46
@@ -119298,7 +119298,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 17
     defence_slash: 19
     defence_crush: 18
@@ -119331,7 +119331,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 27
     defence_slash: 31
     defence_crush: 29
@@ -119364,7 +119364,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 44
     defence_slash: 48
     defence_crush: 46
@@ -119397,7 +119397,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 17
     defence_slash: 19
     defence_crush: 18
@@ -119430,7 +119430,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 27
     defence_slash: 31
     defence_crush: 29
@@ -119463,7 +119463,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 44
     defence_slash: 48
     defence_crush: 46
@@ -119496,7 +119496,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 17
     defence_slash: 19
     defence_crush: 18
@@ -119529,7 +119529,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 27
     defence_slash: 31
     defence_crush: 29
@@ -119562,7 +119562,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 44
     defence_slash: 48
     defence_crush: 46
@@ -119913,7 +119913,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -30
-    attack_ranged: -10
+    attack_ranged: -15
     defence_stab: 41
     defence_slash: 40
     defence_crush: 30
@@ -119946,7 +119946,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -30
-    attack_ranged: -10
+    attack_ranged: -15
     defence_stab: 41
     defence_slash: 40
     defence_crush: 30
@@ -120198,7 +120198,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 12
     defence_slash: 13
     defence_crush: 10
@@ -120231,7 +120231,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 12
     defence_slash: 13
     defence_crush: 10
@@ -120264,7 +120264,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 12
     defence_slash: 13
     defence_crush: 10
@@ -120297,7 +120297,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 12
     defence_slash: 13
     defence_crush: 10
@@ -120330,7 +120330,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 12
     defence_slash: 13
     defence_crush: 10
@@ -120363,7 +120363,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 30
     defence_slash: 32
     defence_crush: 27
@@ -120396,7 +120396,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 30
     defence_slash: 32
     defence_crush: 27
@@ -120429,7 +120429,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 30
     defence_slash: 32
     defence_crush: 27
@@ -120462,7 +120462,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 30
     defence_slash: 32
     defence_crush: 27
@@ -120495,7 +120495,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 30
     defence_slash: 32
     defence_crush: 27
@@ -120528,7 +120528,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 19
     defence_slash: 21
     defence_crush: 16
@@ -120561,7 +120561,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 19
     defence_slash: 21
     defence_crush: 16
@@ -120594,7 +120594,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 19
     defence_slash: 21
     defence_crush: 16
@@ -120627,7 +120627,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 19
     defence_slash: 21
     defence_crush: 16
@@ -120660,7 +120660,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 19
     defence_slash: 21
     defence_crush: 16
@@ -121267,7 +121267,7 @@
     attack_stab: 3
     attack_slash: 8
     attack_crush: 3
-    attack_magic: 1
+    attack_magic: 0
     attack_ranged: 0
     defence_stab: 0
     defence_slash: 3
@@ -122027,7 +122027,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -30
-    attack_ranged: -10
+    attack_ranged: -15
     defence_stab: 82
     defence_slash: 80
     defence_crush: 72
@@ -122035,7 +122035,7 @@
     defence_ranged: 80
     summoning: 40
     melee_strength: 0
-    prayer: 0
+    prayer: 1
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -122105,7 +122105,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -30
-    attack_ranged: -10
+    attack_ranged: -15
     defence_stab: 82
     defence_slash: 80
     defence_crush: 72
@@ -122113,7 +122113,7 @@
     defence_ranged: 80
     summoning: 40
     melee_strength: 0
-    prayer: 0
+    prayer: 1
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -122143,8 +122143,8 @@
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
-    attack_magic: -6
-    attack_ranged: -10
+    attack_magic: -30
+    attack_ranged: -15
     defence_stab: 82
     defence_slash: 80
     defence_crush: 72
@@ -122191,7 +122191,7 @@
     defence_ranged: 0
     summoning: 4
     melee_strength: 0
-    prayer: 4
+    prayer: 6
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -122230,7 +122230,7 @@
     defence_ranged: 0
     summoning: 4
     melee_strength: 0
-    prayer: 4
+    prayer: 6
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -122269,7 +122269,7 @@
     defence_ranged: 0
     summoning: 4
     melee_strength: 0
-    prayer: 4
+    prayer: 6
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -122450,7 +122450,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -30
-    attack_ranged: -10
+    attack_ranged: -15
     defence_stab: 82
     defence_slash: 80
     defence_crush: 72
@@ -122489,7 +122489,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -30
-    attack_ranged: -10
+    attack_ranged: -15
     defence_stab: 82
     defence_slash: 80
     defence_crush: 72
@@ -126624,7 +126624,7 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 17
-    attack_speed: 4
+    attack_speed: 6
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
@@ -126663,7 +126663,7 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 17
-    attack_speed: 4
+    attack_speed: 6
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
@@ -127430,7 +127430,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: 0
-    attack_ranged: 18
+    attack_ranged: 0
     defence_stab: 0
     defence_slash: 0
     defence_crush: 0
@@ -128050,11 +128050,11 @@
     attack_crush: 0
     attack_magic: -10
     attack_ranged: -5
-    defence_stab: 70
-    defence_slash: 75
-    defence_crush: 72
+    defence_stab: 20
+    defence_slash: 25
+    defence_crush: 22
     defence_magic: 10
-    defence_ranged: 72
+    defence_ranged: 22
     summoning: 17
     melee_strength: 7
     prayer: 0
@@ -128417,7 +128417,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 45
     defence_slash: 48
     defence_crush: 41
@@ -128662,7 +128662,7 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 14
-    attack_speed: 5
+    attack_speed: 4
     attack_stab: 5
     attack_slash: 5
     attack_crush: 5
@@ -128701,7 +128701,7 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 14
-    attack_speed: 5
+    attack_speed: 4
     attack_stab: 8
     attack_slash: 8
     attack_crush: 8
@@ -128740,7 +128740,7 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 14
-    attack_speed: 5
+    attack_speed: 4
     attack_stab: 12
     attack_slash: 12
     attack_crush: 12
@@ -128780,7 +128780,7 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 14
-    attack_speed: 5
+    attack_speed: 4
     attack_stab: 17
     attack_slash: 17
     attack_crush: 17
@@ -128820,7 +128820,7 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 14
-    attack_speed: 5
+    attack_speed: 4
     attack_stab: 24
     attack_slash: 24
     attack_crush: 24
@@ -128860,7 +128860,7 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 14
-    attack_speed: 5
+    attack_speed: 4
     attack_stab: 36
     attack_slash: 36
     attack_crush: 36
@@ -132331,7 +132331,7 @@
     defence_slash: 18
     defence_crush: 19
     defence_magic: 0
-    defence_ranged: 0
+    defence_ranged: 15
     summoning: 15
     melee_strength: 0
     prayer: 1
@@ -132459,12 +132459,12 @@
     attack_stab: 7
     attack_slash: -1
     attack_crush: 28
-    attack_magic: 10
+    attack_magic: 12
     attack_ranged: 0
     defence_stab: 2
     defence_slash: 3
     defence_crush: 1
-    defence_magic: 10
+    defence_magic: 12
     defence_ranged: 0
     summoning: 0
     melee_strength: 35
@@ -132496,15 +132496,15 @@
     remove_arms: false
     weapon_type: 1
     attack_speed: 5
-    attack_stab: 7
+    attack_stab: 10
     attack_slash: -1
     attack_crush: 40
-    attack_magic: 10
+    attack_magic: 14
     attack_ranged: 0
     defence_stab: 2
     defence_slash: 3
     defence_crush: 1
-    defence_magic: 10
+    defence_magic: 14
     defence_ranged: 0
     summoning: 0
     melee_strength: 50
@@ -132645,11 +132645,11 @@
     attack_crush: 0
     attack_magic: -30
     attack_ranged: -10
-    defence_stab: 15
-    defence_slash: 14
-    defence_crush: 9
+    defence_stab: 32
+    defence_slash: 31
+    defence_crush: 24
     defence_magic: -6
-    defence_ranged: 14
+    defence_ranged: 31
     summoning: 5
     melee_strength: 0
     prayer: 0
@@ -132679,11 +132679,11 @@
     attack_crush: 0
     attack_magic: -30
     attack_ranged: -10
-    defence_stab: 21
-    defence_slash: 20
-    defence_crush: 12
+    defence_stab: 41
+    defence_slash: 40
+    defence_crush: 30
     defence_magic: -6
-    defence_ranged: 20
+    defence_ranged: 40
     summoning: 5
     melee_strength: 0
     prayer: 0
@@ -132713,11 +132713,11 @@
     attack_crush: 0
     attack_magic: -30
     attack_ranged: -10
-    defence_stab: 32
-    defence_slash: 31
-    defence_crush: 24
+    defence_stab: 46
+    defence_slash: 44
+    defence_crush: 38
     defence_magic: -6
-    defence_ranged: 31
+    defence_ranged: 44
     summoning: 5
     melee_strength: 0
     prayer: 0
@@ -145386,18 +145386,18 @@
     remove_arms: false
     weapon_type: -1
     attack_speed: 4
-    attack_stab: 0
-    attack_slash: 0
-    attack_crush: 0
-    attack_magic: -1
-    attack_ranged: -1
-    defence_stab: 4
-    defence_slash: 5
-    defence_crush: 5
-    defence_magic: -1
-    defence_ranged: 4
+    attack_stab: 2
+    attack_slash: 2
+    attack_crush: 2
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 8
+    defence_slash: 9
+    defence_crush: 7
+    defence_magic: 0
+    defence_ranged: 0
     summoning: 4
-    melee_strength: 0
+    melee_strength: 2
     prayer: 0
     ranged_strength: 0
     magic_damage: 0
@@ -146499,7 +146499,7 @@
     remove_arms: false
     weapon_type: 10
     attack_speed: 5
-    attack_stab: 0
+    attack_stab: 8
     attack_slash: -2
     attack_crush: 16
     attack_magic: 0
@@ -146538,8 +146538,8 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 10
-    attack_speed: 4
-    attack_stab: 0
+    attack_speed: 5
+    attack_stab: 13
     attack_slash: -2
     attack_crush: 25
     attack_magic: 0
@@ -146579,7 +146579,7 @@
     remove_arms: false
     weapon_type: 10
     attack_speed: 5
-    attack_stab: 0
+    attack_stab: 20
     attack_slash: -2
     attack_crush: 39
     attack_magic: 0
@@ -148038,7 +148038,7 @@
     remove_arms: false
     weapon_type: 10
     attack_speed: 5
-    attack_stab: 0
+    attack_stab: 8
     attack_slash: -2
     attack_crush: 16
     attack_magic: 0
@@ -148070,8 +148070,8 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 10
-    attack_speed: 4
-    attack_stab: 0
+    attack_speed: 5
+    attack_stab: 13
     attack_slash: -2
     attack_crush: 25
     attack_magic: 0
@@ -148104,7 +148104,7 @@
     remove_arms: false
     weapon_type: 10
     attack_speed: 5
-    attack_stab: 0
+    attack_stab: 20
     attack_slash: -2
     attack_crush: 39
     attack_magic: 0
@@ -149456,12 +149456,12 @@
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
-    attack_magic: 0
-    attack_ranged: 0
+    attack_magic: -6
+    attack_ranged: -2
     defence_stab: 30
     defence_slash: 32
     defence_crush: 27
-    defence_magic: 0
+    defence_magic: -1
     defence_ranged: 30
     summoning: 7
     melee_strength: 0
@@ -151926,7 +151926,7 @@
     remove_arms: false
     weapon_type: -1
     attack_speed: 4
-    attack_stab: 0
+    attack_stab: -6
     attack_slash: -6
     attack_crush: -6
     attack_magic: -6
@@ -152129,9 +152129,9 @@
     attack_crush: 0
     attack_magic: 0
     attack_ranged: 0
-    defence_stab: 1
+    defence_stab: 0
     defence_slash: 1
-    defence_crush: 0
+    defence_crush: 1
     defence_magic: 0
     defence_ranged: 0
     summoning: 1
@@ -152228,9 +152228,9 @@
     attack_crush: 0
     attack_magic: 0
     attack_ranged: 0
-    defence_stab: 1
-    defence_slash: 2
-    defence_crush: 0
+    defence_stab: 0
+    defence_slash: 1
+    defence_crush: 2
     defence_magic: 0
     defence_ranged: 0
     summoning: 0
@@ -152712,7 +152712,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 45
     defence_slash: 48
     defence_crush: 41
@@ -153080,7 +153080,7 @@
     defence_slash: 18
     defence_crush: 19
     defence_magic: 0
-    defence_ranged: 0
+    defence_ranged: 15
     summoning: 15
     melee_strength: 0
     prayer: 1
@@ -153460,7 +153460,7 @@
     defence_magic: 0
     defence_ranged: 0
     summoning: 0
-    melee_strength: 48
+    melee_strength: 62
     prayer: 0
     ranged_strength: 0
     magic_damage: 0
@@ -153646,7 +153646,7 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 8
-    attack_speed: 5
+    attack_speed: 4
     attack_stab: 40
     attack_slash: -2
     attack_crush: 60
@@ -153751,7 +153751,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -30
-    attack_ranged: -10
+    attack_ranged: -15
     defence_stab: 82
     defence_slash: 80
     defence_crush: 72
@@ -153780,13 +153780,13 @@
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
-    attack_magic: -20
+    attack_magic: -15
     attack_ranged: 15
-    defence_stab: 40
-    defence_slash: 32
-    defence_crush: 45
+    defence_stab: 18
+    defence_slash: 27
+    defence_crush: 24
     defence_magic: 20
-    defence_ranged: 40
+    defence_ranged: 35
     summoning: 40
     melee_strength: 0
     prayer: 0
@@ -153872,11 +153872,11 @@
     attack_crush: 0
     attack_magic: -15
     attack_ranged: 30
-    defence_stab: 55
-    defence_slash: 47
-    defence_crush: 60
-    defence_magic: 50
-    defence_ranged: 55
+    defence_stab: 30
+    defence_slash: 38
+    defence_crush: 45
+    defence_magic: 45
+    defence_ranged: 50
     summoning: 55
     melee_strength: 0
     prayer: 0
@@ -153901,7 +153901,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 51
     defence_slash: 49
     defence_crush: 47
@@ -153961,7 +153961,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 51
     defence_slash: 49
     defence_crush: 47
@@ -153991,7 +153991,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 68
     defence_slash: 66
     defence_crush: 63
@@ -154022,11 +154022,11 @@
     attack_crush: 0
     attack_magic: -10
     attack_ranged: 8
-    defence_stab: 22
-    defence_slash: 16
-    defence_crush: 24
+    defence_stab: 12
+    defence_slash: 15
+    defence_crush: 18
     defence_magic: 8
-    defence_ranged: 22
+    defence_ranged: 17
     summoning: 15
     melee_strength: 0
     prayer: 0
@@ -154112,11 +154112,11 @@
     attack_crush: 0
     attack_magic: -10
     attack_ranged: 17
-    defence_stab: 31
-    defence_slash: 25
-    defence_crush: 33
-    defence_magic: 28
-    defence_ranged: 31
+    defence_stab: 18
+    defence_slash: 20
+    defence_crush: 26
+    defence_magic: 23
+    defence_ranged: 26
     summoning: 30
     melee_strength: 0
     prayer: 0
@@ -154141,7 +154141,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -3
-    attack_ranged: -1
+    attack_ranged: 0
     defence_stab: 33
     defence_slash: 35
     defence_crush: 32
@@ -154171,7 +154171,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 30
     defence_slash: 32
     defence_crush: 27
@@ -154205,9 +154205,9 @@
     attack_crush: 0
     attack_magic: -10
     attack_ranged: 8
-    defence_stab: 3
+    defence_stab: 1
     defence_slash: 2
-    defence_crush: 4
+    defence_crush: 2
     defence_magic: 2
     defence_ranged: 0
     summoning: 3
@@ -154238,9 +154238,9 @@
     attack_crush: 0
     attack_magic: -10
     attack_ranged: 9
-    defence_stab: 4
+    defence_stab: 2
     defence_slash: 3
-    defence_crush: 5
+    defence_crush: 3
     defence_magic: 4
     defence_ranged: 0
     summoning: 4
@@ -154271,9 +154271,9 @@
     attack_crush: 0
     attack_magic: -10
     attack_ranged: 10
-    defence_stab: 5
+    defence_stab: 3
     defence_slash: 4
-    defence_crush: 6
+    defence_crush: 4
     defence_magic: 6
     defence_ranged: 0
     summoning: 5
@@ -154304,9 +154304,9 @@
     attack_crush: 0
     attack_magic: -10
     attack_ranged: 11
-    defence_stab: 6
+    defence_stab: 4
     defence_slash: 5
-    defence_crush: 7
+    defence_crush: 5
     defence_magic: 8
     defence_ranged: 0
     summoning: 6
@@ -154501,7 +154501,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: 0
     defence_stab: 50
     defence_slash: 52
     defence_crush: 48
@@ -154534,7 +154534,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 44
     defence_slash: 48
     defence_crush: 46
@@ -156226,7 +156226,7 @@
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
-    attack_magic: 1
+    attack_magic: 0
     attack_ranged: 0
     defence_stab: 0
     defence_slash: 0
@@ -160117,7 +160117,7 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 14
-    attack_speed: 5
+    attack_speed: 4
     attack_stab: 36
     attack_slash: 36
     attack_crush: 36
@@ -160150,7 +160150,7 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 14
-    attack_speed: 5
+    attack_speed: 4
     attack_stab: 55
     attack_slash: 55
     attack_crush: 55
@@ -160480,7 +160480,7 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 8
-    attack_speed: 5
+    attack_speed: 4
     attack_stab: 20
     attack_slash: -2
     attack_crush: 39
@@ -160584,7 +160584,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -3
-    attack_ranged: -1
+    attack_ranged: 0
     defence_stab: 22
     defence_slash: 23
     defence_crush: 21
@@ -160716,7 +160716,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: 0
     defence_stab: 38
     defence_slash: 40
     defence_crush: 36
@@ -160898,7 +160898,7 @@
     remove_arms: false
     weapon_type: 8
     attack_speed: 5
-    attack_stab: 0
+    attack_stab: 20
     attack_slash: -2
     attack_crush: 39
     attack_magic: 0
@@ -161115,7 +161115,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -30
-    attack_ranged: -10
+    attack_ranged: -15
     defence_stab: 82
     defence_slash: 80
     defence_crush: 72
@@ -161148,7 +161148,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 51
     defence_slash: 49
     defence_crush: 47
@@ -161181,7 +161181,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 51
     defence_slash: 49
     defence_crush: 47
@@ -161214,7 +161214,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 30
     defence_slash: 32
     defence_crush: 27
@@ -161280,7 +161280,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -30
-    attack_ranged: -10
+    attack_ranged: -15
     defence_stab: 82
     defence_slash: 80
     defence_crush: 72
@@ -161313,7 +161313,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 51
     defence_slash: 49
     defence_crush: 47
@@ -161346,7 +161346,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 51
     defence_slash: 49
     defence_crush: 47
@@ -161379,7 +161379,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 30
     defence_slash: 32
     defence_crush: 27
@@ -161745,7 +161745,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -30
-    attack_ranged: -10
+    attack_ranged: -15
     defence_stab: 82
     defence_slash: 80
     defence_crush: 72
@@ -161753,7 +161753,7 @@
     defence_ranged: 80
     summoning: 40
     melee_strength: 0
-    prayer: 0
+    prayer: 1
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -161778,7 +161778,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 51
     defence_slash: 49
     defence_crush: 47
@@ -161786,7 +161786,7 @@
     defence_ranged: 49
     summoning: 15
     melee_strength: 0
-    prayer: 0
+    prayer: 1
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -161811,7 +161811,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 51
     defence_slash: 49
     defence_crush: 47
@@ -161819,7 +161819,7 @@
     defence_ranged: 49
     summoning: 15
     melee_strength: 0
-    prayer: 0
+    prayer: 1
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -161844,7 +161844,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 30
     defence_slash: 32
     defence_crush: 27
@@ -161852,7 +161852,7 @@
     defence_ranged: 30
     summoning: 7
     melee_strength: 0
-    prayer: 0
+    prayer: 1
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -161885,7 +161885,7 @@
     defence_ranged: 46
     summoning: 40
     melee_strength: 0
-    prayer: 0
+    prayer: 1
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -161910,7 +161910,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -30
-    attack_ranged: -10
+    attack_ranged: -15
     defence_stab: 82
     defence_slash: 80
     defence_crush: 72
@@ -161918,7 +161918,7 @@
     defence_ranged: 80
     summoning: 40
     melee_strength: 0
-    prayer: 0
+    prayer: 1
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -161943,7 +161943,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 51
     defence_slash: 49
     defence_crush: 47
@@ -161951,7 +161951,7 @@
     defence_ranged: 49
     summoning: 15
     melee_strength: 0
-    prayer: 0
+    prayer: 1
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -161976,7 +161976,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 51
     defence_slash: 49
     defence_crush: 47
@@ -161984,7 +161984,7 @@
     defence_ranged: 49
     summoning: 15
     melee_strength: 0
-    prayer: 0
+    prayer: 1
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -162009,7 +162009,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 30
     defence_slash: 32
     defence_crush: 27
@@ -162017,7 +162017,7 @@
     defence_ranged: 30
     summoning: 7
     melee_strength: 0
-    prayer: 0
+    prayer: 1
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -162050,7 +162050,7 @@
     defence_ranged: 46
     summoning: 40
     melee_strength: 0
-    prayer: 0
+    prayer: 1
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -162075,7 +162075,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -30
-    attack_ranged: -10
+    attack_ranged: -15
     defence_stab: 82
     defence_slash: 80
     defence_crush: 72
@@ -162083,7 +162083,7 @@
     defence_ranged: 80
     summoning: 40
     melee_strength: 0
-    prayer: 0
+    prayer: 1
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -162108,7 +162108,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 51
     defence_slash: 49
     defence_crush: 47
@@ -162116,7 +162116,7 @@
     defence_ranged: 49
     summoning: 15
     melee_strength: 0
-    prayer: 0
+    prayer: 1
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -162141,7 +162141,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 51
     defence_slash: 49
     defence_crush: 47
@@ -162149,7 +162149,7 @@
     defence_ranged: 49
     summoning: 15
     melee_strength: 0
-    prayer: 0
+    prayer: 1
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -162174,7 +162174,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 30
     defence_slash: 32
     defence_crush: 27
@@ -162182,7 +162182,7 @@
     defence_ranged: 30
     summoning: 7
     melee_strength: 0
-    prayer: 0
+    prayer: 1
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -162215,7 +162215,7 @@
     defence_ranged: 46
     summoning: 40
     melee_strength: 0
-    prayer: 0
+    prayer: 1
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -162239,8 +162239,8 @@
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
-    attack_magic: -6
-    attack_ranged: -10
+    attack_magic: -30
+    attack_ranged: -15
     defence_stab: 82
     defence_slash: 80
     defence_crush: 72
@@ -162273,7 +162273,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 51
     defence_slash: 49
     defence_crush: 47
@@ -162306,7 +162306,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 51
     defence_slash: 49
     defence_crush: 47
@@ -162339,7 +162339,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 30
     defence_slash: 32
     defence_crush: 27
@@ -162372,7 +162372,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -8
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 44
     defence_slash: 48
     defence_crush: 46
@@ -162837,12 +162837,12 @@
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
-    attack_magic: 35
+    attack_magic: 33
     attack_ranged: -10
-    defence_stab: 63
-    defence_slash: 45
-    defence_crush: 74
-    defence_magic: 35
+    defence_stab: 11
+    defence_slash: 7
+    defence_crush: 13
+    defence_magic: 12
     defence_ranged: 0
     summoning: 60
     melee_strength: 0
@@ -162910,12 +162910,12 @@
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
-    attack_magic: 25
+    attack_magic: 24
     attack_ranged: -7
-    defence_stab: 38
-    defence_slash: 35
-    defence_crush: 44
-    defence_magic: 24
+    defence_stab: 7
+    defence_slash: 5
+    defence_crush: 11
+    defence_magic: 8
     defence_ranged: 0
     summoning: 30
     melee_strength: 0
@@ -162983,12 +162983,12 @@
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
-    attack_magic: 8
+    attack_magic: 7
     attack_ranged: -2
-    defence_stab: 20
-    defence_slash: 16
-    defence_crush: 22
-    defence_magic: 8
+    defence_stab: 3
+    defence_slash: 2
+    defence_crush: 6
+    defence_magic: 4
     defence_ranged: 0
     summoning: 15
     melee_strength: 0
@@ -163052,7 +163052,7 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 1
-    attack_speed: 6
+    attack_speed: 5
     attack_stab: 13
     attack_slash: -1
     attack_crush: 65
@@ -163130,12 +163130,12 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -15
-    attack_ranged: 36
-    defence_stab: 61
-    defence_slash: 53
-    defence_crush: 66
-    defence_magic: 75
-    defence_ranged: 62
+    attack_ranged: 40
+    defence_stab: 11
+    defence_slash: 13
+    defence_crush: 16
+    defence_magic: 50
+    defence_ranged: 20
     summoning: 60
     melee_strength: 0
     prayer: 0
@@ -163203,12 +163203,12 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -10
-    attack_ranged: 23
-    defence_stab: 35
-    defence_slash: 29
-    defence_crush: 37
-    defence_magic: 46
-    defence_ranged: 35
+    attack_ranged: 24
+    defence_stab: 7
+    defence_slash: 9
+    defence_crush: 11
+    defence_magic: 30
+    defence_ranged: 13
     summoning: 30
     melee_strength: 0
     prayer: 0
@@ -163276,12 +163276,12 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -5
-    attack_ranged: 13
-    defence_stab: 8
-    defence_slash: 11
-    defence_crush: 14
-    defence_magic: 8
-    defence_ranged: 12
+    attack_ranged: 10
+    defence_stab: 3
+    defence_slash: 6
+    defence_crush: 8
+    defence_magic: 20
+    defence_ranged: 7
     summoning: 15
     melee_strength: 0
     prayer: 0
@@ -163510,16 +163510,16 @@
     remove_arms: true
     weapon_type: -1
     attack_speed: 4
-    attack_stab: 5
-    attack_slash: 5
-    attack_crush: 7
-    attack_magic: -30
-    attack_ranged: -10
-    defence_stab: 154
-    defence_slash: 145
-    defence_crush: 121
-    defence_magic: -6
-    defence_ranged: 157
+    attack_stab: 6
+    attack_slash: 6
+    attack_crush: 35
+    attack_magic: -6
+    attack_ranged: -2
+    defence_stab: 35
+    defence_slash: 38
+    defence_crush: 36
+    defence_magic: -10
+    defence_ranged: 40
     summoning: 60
     melee_strength: 5
     prayer: 0
@@ -163583,18 +163583,18 @@
     remove_arms: true
     weapon_type: -1
     attack_speed: 4
-    attack_stab: 5
-    attack_slash: 7
-    attack_crush: 7
-    attack_magic: -15
-    attack_ranged: 0
-    defence_stab: 120
-    defence_slash: 131
-    defence_crush: 145
-    defence_magic: -3
-    defence_ranged: 140
+    attack_stab: 35
+    attack_slash: 35
+    attack_crush: 6
+    attack_magic: -6
+    attack_ranged: -2
+    defence_stab: 35
+    defence_slash: 38
+    defence_crush: 36
+    defence_magic: -10
+    defence_ranged: 40
     summoning: 60
-    melee_strength: 6
+    melee_strength: 5
     prayer: 0
     ranged_strength: 0
     magic_damage: 0
@@ -163656,16 +163656,16 @@
     remove_arms: false
     weapon_type: -1
     attack_speed: 4
-    attack_stab: 3
-    attack_slash: 3
-    attack_crush: 5
-    attack_magic: -21
-    attack_ranged: -7
-    defence_stab: 110
-    defence_slash: 106
-    defence_crush: 97
-    defence_magic: -4
-    defence_ranged: 121
+    attack_stab: 6
+    attack_slash: 6
+    attack_crush: 30
+    attack_magic: -6
+    attack_ranged: -2
+    defence_stab: 27
+    defence_slash: 30
+    defence_crush: 28
+    defence_magic: -7
+    defence_ranged: 34
     summoning: 30
     melee_strength: 3
     prayer: 0
@@ -163729,16 +163729,16 @@
     remove_arms: false
     weapon_type: -1
     attack_speed: 4
-    attack_stab: 3
-    attack_slash: 5
-    attack_crush: 5
-    attack_magic: -17
-    attack_ranged: -4
-    defence_stab: 86
-    defence_slash: 100
-    defence_crush: 112
-    defence_magic: -2
-    defence_ranged: 118
+    attack_stab: 30
+    attack_slash: 30
+    attack_crush: 6
+    attack_magic: -6
+    attack_ranged: -2
+    defence_stab: 27
+    defence_slash: 30
+    defence_crush: 28
+    defence_magic: -7
+    defence_ranged: 34
     summoning: 30
     melee_strength: 3
     prayer: 0
@@ -163802,18 +163802,18 @@
     remove_arms: false
     weapon_type: -1
     attack_speed: 4
-    attack_stab: 3
-    attack_slash: 3
-    attack_crush: 4
+    attack_stab: 15
+    attack_slash: 15
+    attack_crush: 15
     attack_magic: -6
     attack_ranged: -2
-    defence_stab: 65
-    defence_slash: 70
-    defence_crush: 63
+    defence_stab: 20
+    defence_slash: 25
+    defence_crush: 23
     defence_magic: -1
-    defence_ranged: 71
+    defence_ranged: 28
     summoning: 15
-    melee_strength: 3
+    melee_strength: 5
     prayer: 0
     ranged_strength: 0
     magic_damage: 0
@@ -163948,7 +163948,7 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 10
-    attack_speed: 6
+    attack_speed: 5
     attack_stab: -4
     attack_slash: -4
     attack_crush: 123
@@ -164021,7 +164021,7 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 14
-    attack_speed: 4
+    attack_speed: 5
     attack_stab: 133
     attack_slash: 113
     attack_crush: 120
@@ -172518,7 +172518,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -30
-    attack_ranged: 0
+    attack_ranged: -15
     defence_stab: 109
     defence_slash: 107
     defence_crush: 97
@@ -172557,7 +172557,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -30
-    attack_ranged: 0
+    attack_ranged: -15
     defence_stab: 109
     defence_slash: 107
     defence_crush: 97
@@ -172696,16 +172696,16 @@
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
-    attack_magic: -14
-    attack_ranged: -6
-    defence_stab: 52
-    defence_slash: 50
-    defence_crush: 25
-    defence_magic: -1
-    defence_ranged: 49
+    attack_magic: -21
+    attack_ranged: -11
+    defence_stab: 24
+    defence_slash: 22
+    defence_crush: 20
+    defence_magic: -4
+    defence_ranged: 22
     summoning: 15
     melee_strength: 0
-    prayer: 0
+    prayer: 6
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -172735,16 +172735,16 @@
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
-    attack_magic: -20
-    attack_ranged: -8
-    defence_stab: 80
-    defence_slash: 85
-    defence_crush: 40
-    defence_magic: -2
-    defence_ranged: 80
+    attack_magic: -30
+    attack_ranged: -15
+    defence_stab: 46
+    defence_slash: 44
+    defence_crush: 38
+    defence_magic: -6
+    defence_ranged: 44
     summoning: 40
     melee_strength: 0
-    prayer: 0
+    prayer: 8
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -172774,16 +172774,16 @@
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
-    attack_magic: -4
-    attack_ranged: -2
-    defence_stab: 31
-    defence_slash: 33
-    defence_crush: 15
-    defence_magic: 0
-    defence_ranged: 30
+    attack_magic: -6
+    attack_ranged: -3
+    defence_stab: 13
+    defence_slash: 14
+    defence_crush: 11
+    defence_magic: -1
+    defence_ranged: 13
     summoning: 7
     melee_strength: 0
-    prayer: 0
+    prayer: 4
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -172820,12 +172820,12 @@
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
-    attack_magic: 20
+    attack_magic: 25
     attack_ranged: 0
     defence_stab: 0
     defence_slash: 0
     defence_crush: 0
-    defence_magic: 20
+    defence_magic: 21
     defence_ranged: 0
     summoning: 20
     melee_strength: 0
@@ -172859,16 +172859,16 @@
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
-    attack_magic: 4
+    attack_magic: 5
     attack_ranged: 0
     defence_stab: 0
     defence_slash: 0
     defence_crush: 0
-    defence_magic: 4
+    defence_magic: 5
     defence_ranged: 0
     summoning: 4
     melee_strength: 0
-    prayer: 0
+    prayer: 2
     ranged_strength: 0
     magic_damage: 1.0
     attack_audio: -1
@@ -172898,12 +172898,12 @@
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
-    attack_magic: 15
+    attack_magic: 18
     attack_ranged: 0
     defence_stab: 0
     defence_slash: 0
     defence_crush: 0
-    defence_magic: 15
+    defence_magic: 14
     defence_ranged: 0
     summoning: 15
     melee_strength: 0
@@ -173405,9 +173405,9 @@
     attack_crush: 0
     attack_magic: -3
     attack_ranged: -1
-    defence_stab: 8
-    defence_slash: 9
-    defence_crush: 10
+    defence_stab: 5
+    defence_slash: 6
+    defence_crush: 7
     defence_magic: 0
     defence_ranged: 0
     summoning: 8
@@ -173439,13 +173439,13 @@
     attack_crush: 0
     attack_magic: -3
     attack_ranged: -1
-    defence_stab: 10
-    defence_slash: 11
-    defence_crush: 12
+    defence_stab: 7
+    defence_slash: 8
+    defence_crush: 9
     defence_magic: 0
     defence_ranged: 0
     summoning: 9
-    melee_strength: 1
+    melee_strength: 0
     prayer: 0
     ranged_strength: 0
     magic_damage: 0
@@ -173494,14 +173494,14 @@
     attack_crush: 0
     attack_magic: -8
     attack_ranged: -2
-    defence_stab: 17
-    defence_slash: 19
-    defence_crush: 18
+    defence_stab: 8
+    defence_slash: 10
+    defence_crush: 9
     defence_magic: -1
-    defence_ranged: 18
+    defence_ranged: 9
     summoning: 10
     melee_strength: 0
-    prayer: 3
+    prayer: 1
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -173528,14 +173528,14 @@
     attack_crush: 0
     attack_magic: -8
     attack_ranged: -2
-    defence_stab: 18
-    defence_slash: 22
-    defence_crush: 20
+    defence_stab: 13
+    defence_slash: 15
+    defence_crush: 14
     defence_magic: -1
-    defence_ranged: 20
+    defence_ranged: 14
     summoning: 20
     melee_strength: 0
-    prayer: 5
+    prayer: 3
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -173562,14 +173562,14 @@
     attack_crush: 0
     attack_magic: -8
     attack_ranged: -2
-    defence_stab: 27
-    defence_slash: 31
-    defence_crush: 29
+    defence_stab: 18
+    defence_slash: 22
+    defence_crush: 20
     defence_magic: -1
-    defence_ranged: 29
+    defence_ranged: 20
     summoning: 30
     melee_strength: 0
-    prayer: 7
+    prayer: 4
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -173669,16 +173669,16 @@
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
-    attack_magic: -14
-    attack_ranged: -6
-    defence_stab: 52
-    defence_slash: 50
-    defence_crush: 25
-    defence_magic: -1
-    defence_ranged: 49
+    attack_magic: -21
+    attack_ranged: -11
+    defence_stab: 24
+    defence_slash: 22
+    defence_crush: 20
+    defence_magic: -4
+    defence_ranged: 22
     summoning: 15
     melee_strength: 0
-    prayer: 0
+    prayer: 6
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -173702,16 +173702,16 @@
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
-    attack_magic: -20
-    attack_ranged: -8
-    defence_stab: 80
-    defence_slash: 85
-    defence_crush: 40
-    defence_magic: -2
-    defence_ranged: 80
+    attack_magic: -30
+    attack_ranged: -15
+    defence_stab: 46
+    defence_slash: 44
+    defence_crush: 38
+    defence_magic: -6
+    defence_ranged: 44
     summoning: 40
     melee_strength: 0
-    prayer: 0
+    prayer: 8
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -173735,16 +173735,16 @@
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
-    attack_magic: -4
-    attack_ranged: -2
-    defence_stab: 31
-    defence_slash: 33
-    defence_crush: 15
-    defence_magic: 0
-    defence_ranged: 30
+    attack_magic: -6
+    attack_ranged: -3
+    defence_stab: 13
+    defence_slash: 14
+    defence_crush: 11
+    defence_magic: -1
+    defence_ranged: 13
     summoning: 7
     melee_strength: 0
-    prayer: 0
+    prayer: 4
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -174610,6 +174610,7 @@
     remove_head: false
     remove_beard: false
     remove_arms: false
+    attack_speed: 4
     attack_audio: -1
 - id: 14662
   name: "Seer's headband 2"
@@ -175198,20 +175199,20 @@
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
-    attack_magic: -14
-    attack_ranged: -6
-    defence_stab: 52
-    defence_slash: 50
-    defence_crush: 25
-    defence_magic: -1
-    defence_ranged: 49
+    attack_magic: -21
+    attack_ranged: -11
+    defence_stab: 24
+    defence_slash: 22
+    defence_crush: 20
+    defence_magic: -4
+    defence_ranged: 22
     summoning: 15
     absorb_melee: 2
     absorb_magic: 0
     absorb_ranged: 4
     melee_strength: 0
     ranged_strength: 0
-    prayer: 0
+    prayer: 6
     magic_damage: 0
     appearance_id: 3568
     equip_slot: 7
@@ -175230,20 +175231,20 @@
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
-    attack_magic: -20
-    attack_ranged: -8
-    defence_stab: 80
-    defence_slash: 85
-    defence_crush: 40
-    defence_magic: -2
-    defence_ranged: 80
+    attack_magic: -30
+    attack_ranged: -15
+    defence_stab: 46
+    defence_slash: 44
+    defence_crush: 38
+    defence_magic: -6
+    defence_ranged: 44
     summoning: 40
     absorb_melee: 3
     absorb_magic: 0
     absorb_ranged: 6
     melee_strength: 0
     ranged_strength: 0
-    prayer: 0
+    prayer: 8
     magic_damage: 0
     appearance_id: 3569
     equip_slot: 4
@@ -175262,20 +175263,20 @@
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
-    attack_magic: -4
-    attack_ranged: -2
-    defence_stab: 31
-    defence_slash: 33
-    defence_crush: 15
-    defence_magic: 0
-    defence_ranged: 30
+    attack_magic: -6
+    attack_ranged: -3
+    defence_stab: 13
+    defence_slash: 14
+    defence_crush: 11
+    defence_magic: -1
+    defence_ranged: 13
     summoning: 7
     absorb_melee: 1
     absorb_magic: 0
     absorb_ranged: 3
     melee_strength: 0
     ranged_strength: 0
-    prayer: 0
+    prayer: 4
     magic_damage: 0
     appearance_id: 3570
     equip_slot: 0
@@ -175294,12 +175295,12 @@
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
-    attack_magic: 20
+    attack_magic: 25
     attack_ranged: 0
     defence_stab: 0
     defence_slash: 0
     defence_crush: 0
-    defence_magic: 20
+    defence_magic: 21
     defence_ranged: 0
     summoning: 20
     absorb_melee: 3
@@ -175326,12 +175327,12 @@
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
-    attack_magic: 4
+    attack_magic: 5
     attack_ranged: 0
     defence_stab: 0
     defence_slash: 0
     defence_crush: 0
-    defence_magic: 4
+    defence_magic: 5
     defence_ranged: 0
     summoning: 4
     absorb_melee: 1
@@ -175339,7 +175340,7 @@
     absorb_ranged: 0
     melee_strength: 0
     ranged_strength: 0
-    prayer: 0
+    prayer: 2
     magic_damage: 1.0
     appearance_id: 3572
     equip_slot: 0
@@ -175358,12 +175359,12 @@
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
-    attack_magic: 15
+    attack_magic: 18
     attack_ranged: 0
     defence_stab: 0
     defence_slash: 0
     defence_crush: 0
-    defence_magic: 15
+    defence_magic: 14
     defence_ranged: 0
     summoning: 15
     absorb_melee: 2
@@ -179711,7 +179712,7 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 4
-    attack_speed: 4
+    attack_speed: 5
     attack_stab: 38
     attack_slash: -2
     attack_crush: 32
@@ -179768,6 +179769,7 @@
     remove_head: false
     remove_beard: false
     remove_arms: false
+    attack_speed: 5
     attack_audio: -1
 - id: 15262
   name: "Spirit shard pack"
@@ -180302,7 +180304,7 @@
     attack_stab: 2
     attack_slash: 0
     attack_crush: 0
-    attack_magic: 1
+    attack_magic: 2
     attack_ranged: 0
     defence_stab: 2
     defence_slash: 0
@@ -180375,15 +180377,15 @@
   tradeable: true
   weight: 0.4
   equipment:
-    attack_stab: 6
+    attack_stab: 5
     attack_slash: 0
     attack_crush: 0
-    attack_magic: 6
+    attack_magic: 5
     attack_ranged: 0
-    defence_stab: 6
+    defence_stab: 5
     defence_slash: 0
     defence_crush: 0
-    defence_magic: 6
+    defence_magic: 5
     defence_ranged: 0
     summoning: 0
     absorb_melee: 0
@@ -180391,7 +180393,7 @@
     absorb_ranged: 0
     melee_strength: 0
     ranged_strength: 0
-    prayer: 6
+    prayer: 5
     magic_damage: 0
     appearance_id: 3673
     equip_slot: 1
@@ -180939,21 +180941,21 @@
   tradeable: true
   weight: 3.1
   equipment:
-    attack_stab: 0
-    attack_slash: 0
-    attack_crush: 3
+    attack_stab: -100
+    attack_slash: -100
+    attack_crush: -50
     attack_magic: 0
     attack_ranged: 0
     defence_stab: 0
-    defence_slash: 3
-    defence_crush: 1
+    defence_slash: 0
+    defence_crush: 0
     defence_magic: 0
     defence_ranged: 0
     summoning: 0
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
-    melee_strength: 10
+    melee_strength: -10
     ranged_strength: 0
     prayer: 0
     magic_damage: 0
@@ -180964,6 +180966,7 @@
     remove_head: false
     remove_beard: false
     remove_arms: false
+    attack_speed: 4
     attack_audio: -1
 - id: 15427
   name: "Bucket of icy water"
@@ -181210,6 +181213,7 @@
     remove_head: false
     remove_beard: false
     remove_arms: false
+    attack_speed: 4
     attack_audio: -1
 - id: 15442
   name: "Abyssal whip"
@@ -181242,6 +181246,7 @@
     remove_head: false
     remove_beard: false
     remove_arms: false
+    attack_speed: 4
     attack_audio: -1
 - id: 15443
   name: "Abyssal whip"
@@ -181274,6 +181279,7 @@
     remove_head: false
     remove_beard: false
     remove_arms: false
+    attack_speed: 4
     attack_audio: -1
 - id: 15444
   name: "Abyssal whip"
@@ -181306,6 +181312,7 @@
     remove_head: false
     remove_beard: false
     remove_arms: false
+    attack_speed: 4
     attack_audio: -1
 - id: 15445
   name: "Attacker lvl 1"
@@ -181618,7 +181625,7 @@
     attack_ranged: 0
     defence_stab: 0
     defence_slash: 3
-    defence_crush: 2
+    defence_crush: 3
     defence_magic: 17
     defence_ranged: 0
     summoning: 0
@@ -181636,6 +181643,7 @@
     remove_head: false
     remove_beard: false
     remove_arms: false
+    attack_speed: 4
     attack_audio: -1
 - id: 15487
   name: "Staff of light"
@@ -181870,7 +181878,7 @@
     attack_ranged: 0
     defence_stab: 0
     defence_slash: 3
-    defence_crush: 2
+    defence_crush: 3
     defence_magic: 17
     defence_ranged: 0
     summoning: 0
@@ -181888,6 +181896,7 @@
     remove_head: false
     remove_beard: false
     remove_arms: false
+    attack_speed: 4
     attack_audio: -1
 - id: 15503
   name: "Royal shirt"
@@ -228411,7 +228420,7 @@
     defence_ranged: -1
     summoning: 0
     melee_strength: 0
-    prayer: 0
+    prayer: 3
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -228444,7 +228453,7 @@
     defence_ranged: -1
     summoning: 0
     melee_strength: 0
-    prayer: 0
+    prayer: 3
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -228477,7 +228486,7 @@
     defence_ranged: -1
     summoning: 0
     melee_strength: 0
-    prayer: 0
+    prayer: 3
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -231222,7 +231231,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -30
-    attack_ranged: -10
+    attack_ranged: -15
     defence_stab: 41
     defence_slash: 40
     defence_crush: 30
@@ -231336,7 +231345,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -30
-    attack_ranged: -10
+    attack_ranged: -15
     defence_stab: 65
     defence_slash: 63
     defence_crush: 55
@@ -231450,7 +231459,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -30
-    attack_ranged: -10
+    attack_ranged: -15
     defence_stab: 82
     defence_slash: 80
     defence_crush: 72
@@ -231488,7 +231497,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -30
-    attack_ranged: -10
+    attack_ranged: -15
     defence_stab: 82
     defence_slash: 80
     defence_crush: 72
@@ -231660,7 +231669,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -30
-    attack_ranged: -10
+    attack_ranged: -15
     defence_stab: 41
     defence_slash: 40
     defence_crush: 30
@@ -231774,7 +231783,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -30
-    attack_ranged: -10
+    attack_ranged: -15
     defence_stab: 65
     defence_slash: 63
     defence_crush: 55
@@ -231888,7 +231897,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -30
-    attack_ranged: -10
+    attack_ranged: -15
     defence_stab: 82
     defence_slash: 80
     defence_crush: 72
@@ -231926,7 +231935,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -30
-    attack_ranged: -10
+    attack_ranged: -15
     defence_stab: 82
     defence_slash: 80
     defence_crush: 72
@@ -232098,7 +232107,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -30
-    attack_ranged: -10
+    attack_ranged: -15
     defence_stab: 41
     defence_slash: 40
     defence_crush: 30
@@ -232212,7 +232221,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -30
-    attack_ranged: -10
+    attack_ranged: -15
     defence_stab: 65
     defence_slash: 63
     defence_crush: 55
@@ -232326,7 +232335,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -30
-    attack_ranged: -10
+    attack_ranged: -15
     defence_stab: 82
     defence_slash: 80
     defence_crush: 72
@@ -232364,7 +232373,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -30
-    attack_ranged: -10
+    attack_ranged: -15
     defence_stab: 82
     defence_slash: 80
     defence_crush: 72
@@ -232536,7 +232545,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -30
-    attack_ranged: -10
+    attack_ranged: -15
     defence_stab: 41
     defence_slash: 40
     defence_crush: 30
@@ -232650,7 +232659,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -30
-    attack_ranged: -10
+    attack_ranged: -15
     defence_stab: 65
     defence_slash: 63
     defence_crush: 55
@@ -232764,7 +232773,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -30
-    attack_ranged: -10
+    attack_ranged: -15
     defence_stab: 82
     defence_slash: 80
     defence_crush: 72
@@ -232802,7 +232811,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -30
-    attack_ranged: -10
+    attack_ranged: -15
     defence_stab: 82
     defence_slash: 80
     defence_crush: 72
@@ -232974,7 +232983,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -30
-    attack_ranged: -10
+    attack_ranged: -15
     defence_stab: 41
     defence_slash: 40
     defence_crush: 30
@@ -233088,7 +233097,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -30
-    attack_ranged: -10
+    attack_ranged: -15
     defence_stab: 65
     defence_slash: 63
     defence_crush: 55
@@ -233202,7 +233211,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -30
-    attack_ranged: -10
+    attack_ranged: -15
     defence_stab: 82
     defence_slash: 80
     defence_crush: 72
@@ -233240,7 +233249,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -30
-    attack_ranged: -10
+    attack_ranged: -15
     defence_stab: 82
     defence_slash: 80
     defence_crush: 72
@@ -234649,6 +234658,7 @@
     remove_head: false
     remove_beard: false
     remove_arms: false
+    attack_speed: 5
     attack_audio: -1
 - id: 19363
   name: "Armadyl crozier"
@@ -234687,6 +234697,7 @@
     remove_head: false
     remove_beard: false
     remove_arms: false
+    attack_speed: 5
     attack_audio: -1
 - id: 19365
   name: "Bandos crozier"
@@ -234725,6 +234736,7 @@
     remove_head: false
     remove_beard: false
     remove_arms: false
+    attack_speed: 5
     attack_audio: -1
 - id: 19367
   name: "Ancient crozier"
@@ -234982,7 +234994,7 @@
     absorb_ranged: 0
     melee_strength: 0
     ranged_strength: 0
-    prayer: 4
+    prayer: 6
     magic_damage: 0
     appearance_id: 4908
     equip_slot: 4
@@ -235020,7 +235032,7 @@
     absorb_ranged: 0
     melee_strength: 0
     ranged_strength: 0
-    prayer: 4
+    prayer: 6
     magic_damage: 0
     appearance_id: 4909
     equip_slot: 4
@@ -235058,7 +235070,7 @@
     absorb_ranged: 0
     melee_strength: 0
     ranged_strength: 0
-    prayer: 4
+    prayer: 6
     magic_damage: 0
     appearance_id: 4910
     equip_slot: 4
@@ -235096,7 +235108,7 @@
     absorb_ranged: 0
     melee_strength: 0
     ranged_strength: 0
-    prayer: 4
+    prayer: 5
     magic_damage: 0
     appearance_id: 4911
     equip_slot: 7
@@ -235134,7 +235146,7 @@
     absorb_ranged: 0
     melee_strength: 0
     ranged_strength: 0
-    prayer: 4
+    prayer: 5
     magic_damage: 0
     appearance_id: 4912
     equip_slot: 7
@@ -235172,7 +235184,7 @@
     absorb_ranged: 0
     melee_strength: 0
     ranged_strength: 0
-    prayer: 4
+    prayer: 5
     magic_damage: 0
     appearance_id: 4913
     equip_slot: 7
@@ -235312,7 +235324,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -30
-    attack_ranged: -10
+    attack_ranged: -15
     defence_stab: 82
     defence_slash: 80
     defence_crush: 72
@@ -235324,7 +235336,7 @@
     absorb_ranged: 6
     melee_strength: 0
     ranged_strength: 0
-    prayer: 0
+    prayer: 1
     magic_damage: 0
     appearance_id: 4917
     equip_slot: 4
@@ -235350,7 +235362,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -30
-    attack_ranged: -10
+    attack_ranged: -15
     defence_stab: 82
     defence_slash: 80
     defence_crush: 72
@@ -235362,7 +235374,7 @@
     absorb_ranged: 6
     melee_strength: 0
     ranged_strength: 0
-    prayer: 0
+    prayer: 1
     magic_damage: 0
     appearance_id: 4918
     equip_slot: 4
@@ -235382,7 +235394,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 51
     defence_slash: 49
     defence_crush: 47
@@ -235394,7 +235406,7 @@
     absorb_ranged: 4
     melee_strength: 0
     ranged_strength: 0
-    prayer: 0
+    prayer: 1
     magic_damage: 0
     appearance_id: 4919
     equip_slot: 7
@@ -235420,7 +235432,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 51
     defence_slash: 49
     defence_crush: 47
@@ -235432,7 +235444,7 @@
     absorb_ranged: 4
     melee_strength: 0
     ranged_strength: 0
-    prayer: 0
+    prayer: 1
     magic_damage: 0
     appearance_id: 4920
     equip_slot: 7
@@ -235452,7 +235464,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 51
     defence_slash: 49
     defence_crush: 47
@@ -235464,7 +235476,7 @@
     absorb_ranged: 4
     melee_strength: 0
     ranged_strength: 0
-    prayer: 0
+    prayer: 1
     magic_damage: 0
     appearance_id: 4921
     equip_slot: 7
@@ -235490,7 +235502,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 51
     defence_slash: 49
     defence_crush: 47
@@ -235502,7 +235514,7 @@
     absorb_ranged: 4
     melee_strength: 0
     ranged_strength: 0
-    prayer: 0
+    prayer: 1
     magic_damage: 0
     appearance_id: 4922
     equip_slot: 7
@@ -235522,7 +235534,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 30
     defence_slash: 32
     defence_crush: 27
@@ -235534,7 +235546,7 @@
     absorb_ranged: 3
     melee_strength: 0
     ranged_strength: 0
-    prayer: 0
+    prayer: 1
     magic_damage: 0
     appearance_id: 4923
     equip_slot: 0
@@ -235560,7 +235572,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 30
     defence_slash: 32
     defence_crush: 27
@@ -235572,7 +235584,7 @@
     absorb_ranged: 3
     melee_strength: 0
     ranged_strength: 0
-    prayer: 0
+    prayer: 1
     magic_damage: 0
     appearance_id: 4924
     equip_slot: 0
@@ -235604,7 +235616,7 @@
     absorb_ranged: 7
     melee_strength: 0
     ranged_strength: 0
-    prayer: 0
+    prayer: 1
     magic_damage: 0
     appearance_id: 4925
     equip_slot: 5
@@ -235642,7 +235654,7 @@
     absorb_ranged: 7
     melee_strength: 0
     ranged_strength: 0
-    prayer: 0
+    prayer: 1
     magic_damage: 0
     appearance_id: 4926
     equip_slot: 5
@@ -235662,7 +235674,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -30
-    attack_ranged: -10
+    attack_ranged: -15
     defence_stab: 82
     defence_slash: 80
     defence_crush: 72
@@ -235674,7 +235686,7 @@
     absorb_ranged: 6
     melee_strength: 0
     ranged_strength: 0
-    prayer: 0
+    prayer: 1
     magic_damage: 0
     appearance_id: 4927
     equip_slot: 4
@@ -235700,7 +235712,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -30
-    attack_ranged: -10
+    attack_ranged: -15
     defence_stab: 82
     defence_slash: 80
     defence_crush: 72
@@ -235712,7 +235724,7 @@
     absorb_ranged: 6
     melee_strength: 0
     ranged_strength: 0
-    prayer: 0
+    prayer: 1
     magic_damage: 0
     appearance_id: 4928
     equip_slot: 4
@@ -235732,7 +235744,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 51
     defence_slash: 49
     defence_crush: 47
@@ -235744,7 +235756,7 @@
     absorb_ranged: 4
     melee_strength: 0
     ranged_strength: 0
-    prayer: 0
+    prayer: 1
     magic_damage: 0
     appearance_id: 4929
     equip_slot: 7
@@ -235770,7 +235782,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 51
     defence_slash: 49
     defence_crush: 47
@@ -235782,7 +235794,7 @@
     absorb_ranged: 4
     melee_strength: 0
     ranged_strength: 0
-    prayer: 0
+    prayer: 1
     magic_damage: 0
     appearance_id: 4930
     equip_slot: 7
@@ -235802,7 +235814,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 51
     defence_slash: 49
     defence_crush: 47
@@ -235814,7 +235826,7 @@
     absorb_ranged: 4
     melee_strength: 0
     ranged_strength: 0
-    prayer: 0
+    prayer: 1
     magic_damage: 0
     appearance_id: 4931
     equip_slot: 7
@@ -235840,7 +235852,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 51
     defence_slash: 49
     defence_crush: 47
@@ -235852,7 +235864,7 @@
     absorb_ranged: 4
     melee_strength: 0
     ranged_strength: 0
-    prayer: 0
+    prayer: 1
     magic_damage: 0
     appearance_id: 4932
     equip_slot: 7
@@ -235872,7 +235884,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 30
     defence_slash: 32
     defence_crush: 27
@@ -235884,7 +235896,7 @@
     absorb_ranged: 3
     melee_strength: 0
     ranged_strength: 0
-    prayer: 0
+    prayer: 1
     magic_damage: 0
     appearance_id: 4933
     equip_slot: 0
@@ -235910,7 +235922,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 30
     defence_slash: 32
     defence_crush: 27
@@ -235922,7 +235934,7 @@
     absorb_ranged: 3
     melee_strength: 0
     ranged_strength: 0
-    prayer: 0
+    prayer: 1
     magic_damage: 0
     appearance_id: 4934
     equip_slot: 0
@@ -235954,7 +235966,7 @@
     absorb_ranged: 7
     melee_strength: 0
     ranged_strength: 0
-    prayer: 0
+    prayer: 1
     magic_damage: 0
     appearance_id: 4935
     equip_slot: 5
@@ -235992,7 +236004,7 @@
     absorb_ranged: 7
     melee_strength: 0
     ranged_strength: 0
-    prayer: 0
+    prayer: 1
     magic_damage: 0
     appearance_id: 4936
     equip_slot: 5
@@ -236012,7 +236024,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -30
-    attack_ranged: -10
+    attack_ranged: -15
     defence_stab: 82
     defence_slash: 80
     defence_crush: 72
@@ -236024,7 +236036,7 @@
     absorb_ranged: 6
     melee_strength: 0
     ranged_strength: 0
-    prayer: 0
+    prayer: 1
     magic_damage: 0
     appearance_id: 4937
     equip_slot: 4
@@ -236050,7 +236062,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -30
-    attack_ranged: -10
+    attack_ranged: -15
     defence_stab: 82
     defence_slash: 80
     defence_crush: 72
@@ -236062,7 +236074,7 @@
     absorb_ranged: 6
     melee_strength: 0
     ranged_strength: 0
-    prayer: 0
+    prayer: 1
     magic_damage: 0
     appearance_id: 4938
     equip_slot: 4
@@ -236082,7 +236094,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 51
     defence_slash: 49
     defence_crush: 47
@@ -236094,7 +236106,7 @@
     absorb_ranged: 4
     melee_strength: 0
     ranged_strength: 0
-    prayer: 0
+    prayer: 1
     magic_damage: 0
     appearance_id: 4939
     equip_slot: 7
@@ -236120,7 +236132,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 51
     defence_slash: 49
     defence_crush: 47
@@ -236132,7 +236144,7 @@
     absorb_ranged: 4
     melee_strength: 0
     ranged_strength: 0
-    prayer: 0
+    prayer: 1
     magic_damage: 0
     appearance_id: 4940
     equip_slot: 7
@@ -236152,7 +236164,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 51
     defence_slash: 49
     defence_crush: 47
@@ -236164,7 +236176,7 @@
     absorb_ranged: 4
     melee_strength: 0
     ranged_strength: 0
-    prayer: 0
+    prayer: 1
     magic_damage: 0
     appearance_id: 4941
     equip_slot: 7
@@ -236190,7 +236202,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -21
-    attack_ranged: -7
+    attack_ranged: -11
     defence_stab: 51
     defence_slash: 49
     defence_crush: 47
@@ -236202,7 +236214,7 @@
     absorb_ranged: 4
     melee_strength: 0
     ranged_strength: 0
-    prayer: 0
+    prayer: 1
     magic_damage: 0
     appearance_id: 4942
     equip_slot: 7
@@ -236222,7 +236234,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 30
     defence_slash: 32
     defence_crush: 27
@@ -236234,7 +236246,7 @@
     absorb_ranged: 3
     melee_strength: 0
     ranged_strength: 0
-    prayer: 0
+    prayer: 1
     magic_damage: 0
     appearance_id: 4943
     equip_slot: 0
@@ -236260,7 +236272,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: -6
-    attack_ranged: -2
+    attack_ranged: -3
     defence_stab: 30
     defence_slash: 32
     defence_crush: 27
@@ -236272,7 +236284,7 @@
     absorb_ranged: 3
     melee_strength: 0
     ranged_strength: 0
-    prayer: 0
+    prayer: 1
     magic_damage: 0
     appearance_id: 4944
     equip_slot: 0
@@ -236304,7 +236316,7 @@
     absorb_ranged: 7
     melee_strength: 0
     ranged_strength: 0
-    prayer: 0
+    prayer: 1
     magic_damage: 0
     appearance_id: 4945
     equip_slot: 5
@@ -236342,7 +236354,7 @@
     absorb_ranged: 7
     melee_strength: 0
     ranged_strength: 0
-    prayer: 0
+    prayer: 1
     magic_damage: 0
     appearance_id: 4946
     equip_slot: 5
@@ -236450,7 +236462,7 @@
     absorb_ranged: 2
     melee_strength: 0
     ranged_strength: 0
-    prayer: 0
+    prayer: 1
     magic_damage: 0
     appearance_id: 4949
     equip_slot: 7
@@ -236488,7 +236500,7 @@
     absorb_ranged: 1
     melee_strength: 0
     ranged_strength: 0
-    prayer: 0
+    prayer: 1
     magic_damage: 0
     appearance_id: 4950
     equip_slot: 0
@@ -236602,7 +236614,7 @@
     absorb_ranged: 2
     melee_strength: 0
     ranged_strength: 0
-    prayer: 0
+    prayer: 1
     magic_damage: 0
     appearance_id: 4953
     equip_slot: 7
@@ -236640,7 +236652,7 @@
     absorb_ranged: 1
     melee_strength: 0
     ranged_strength: 0
-    prayer: 0
+    prayer: 1
     magic_damage: 0
     appearance_id: 4954
     equip_slot: 0
@@ -236754,7 +236766,7 @@
     absorb_ranged: 2
     melee_strength: 0
     ranged_strength: 0
-    prayer: 0
+    prayer: 1
     magic_damage: 0
     appearance_id: 4957
     equip_slot: 7
@@ -236792,7 +236804,7 @@
     absorb_ranged: 1
     melee_strength: 0
     ranged_strength: 0
-    prayer: 0
+    prayer: 1
     magic_damage: 0
     appearance_id: 4958
     equip_slot: 0
@@ -238756,7 +238768,7 @@
     absorb_ranged: 0
     melee_strength: 0
     ranged_strength: 0
-    prayer: 7
+    prayer: 5
     magic_damage: 0
     appearance_id: 5007
     equip_slot: 5
@@ -238845,11 +238857,11 @@
     attack_crush: 0
     attack_magic: -30
     attack_ranged: -10
-    defence_stab: 32
-    defence_slash: 31
-    defence_crush: 24
+    defence_stab: 65
+    defence_slash: 63
+    defence_crush: 55
     defence_magic: -6
-    defence_ranged: 31
+    defence_ranged: 63
     summoning: 5
     absorb_melee: 0
     absorb_magic: 0
@@ -238975,8 +238987,8 @@
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
-    attack_magic: -3
-    attack_ranged: -1
+    attack_magic: 1
+    attack_ranged: 1
     defence_stab: 10
     defence_slash: 11
     defence_crush: 12
@@ -242608,13 +242620,13 @@
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
-    attack_magic: 9
+    attack_magic: 8
     attack_ranged: -3
-    defence_stab: 20
-    defence_slash: 18
-    defence_crush: 20
-    defence_magic: 9
-    defence_ranged: -1
+    defence_stab: 15
+    defence_slash: 14
+    defence_crush: 16
+    defence_magic: 6
+    defence_ranged: 0
     summoning: 17
     absorb_melee: 6
     absorb_magic: 3
@@ -242646,13 +242658,13 @@
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
-    attack_magic: 9
+    attack_magic: 8
     attack_ranged: -3
-    defence_stab: 20
-    defence_slash: 18
-    defence_crush: 20
-    defence_magic: 9
-    defence_ranged: -1
+    defence_stab: 15
+    defence_slash: 14
+    defence_crush: 16
+    defence_magic: 6
+    defence_ranged: 0
     summoning: 17
     absorb_melee: 6
     absorb_magic: 3
@@ -242710,12 +242722,12 @@
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
-    attack_magic: 36
+    attack_magic: 35
     attack_ranged: -11
-    defence_stab: 63
-    defence_slash: 50
-    defence_crush: 70
-    defence_magic: 36
+    defence_stab: 47
+    defence_slash: 36
+    defence_crush: 56
+    defence_magic: 31
     defence_ranged: 0
     summoning: 65
     absorb_melee: 12
@@ -242723,7 +242735,7 @@
     absorb_ranged: 0
     melee_strength: 0
     ranged_strength: 0
-    prayer: 1
+    prayer: 2
     magic_damage: 2.0
     appearance_id: 5093
     equip_slot: 4
@@ -242748,12 +242760,12 @@
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
-    attack_magic: 36
+    attack_magic: 35
     attack_ranged: -11
-    defence_stab: 63
-    defence_slash: 50
-    defence_crush: 70
-    defence_magic: 36
+    defence_stab: 47
+    defence_slash: 36
+    defence_crush: 56
+    defence_magic: 31
     defence_ranged: 0
     summoning: 65
     absorb_melee: 12
@@ -242761,7 +242773,7 @@
     absorb_ranged: 0
     melee_strength: 0
     ranged_strength: 0
-    prayer: 1
+    prayer: 2
     magic_damage: 2.0
     appearance_id: 5094
     equip_slot: 4
@@ -247431,10 +247443,10 @@
     attack_magic: 0
     attack_ranged: 0
     defence_stab: 0
-    defence_slash: 1
-    defence_crush: 1
+    defence_slash: 0
+    defence_crush: 0
     defence_magic: 0
-    defence_ranged: 2
+    defence_ranged: 0
     summoning: 0
     absorb_melee: 0
     absorb_magic: 0
@@ -247709,23 +247721,23 @@
   tradeable: true
   weight: 0.4
   equipment:
-    attack_stab: 5
-    attack_slash: 5
-    attack_crush: 5
-    attack_magic: 5
-    attack_ranged: 5
-    defence_stab: 11
-    defence_slash: 11
-    defence_crush: 11
-    defence_magic: 11
-    defence_ranged: 11
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
     summoning: 11
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
-    melee_strength: 4
+    melee_strength: 0
     ranged_strength: 0
-    prayer: 10
+    prayer: 0
     magic_damage: 0
     appearance_id: 5231
     equip_slot: 0
@@ -247909,23 +247921,23 @@
   tradeable: true
   weight: 0.4
   equipment:
-    attack_stab: 5
-    attack_slash: 5
-    attack_crush: 5
-    attack_magic: 5
-    attack_ranged: 5
-    defence_stab: 11
-    defence_slash: 11
-    defence_crush: 11
-    defence_magic: 11
-    defence_ranged: 11
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 9
+    defence_slash: 9
+    defence_crush: 9
+    defence_magic: 9
+    defence_ranged: 9
     summoning: 11
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
-    melee_strength: 4
+    melee_strength: 0
     ranged_strength: 0
-    prayer: 10
+    prayer: 4
     magic_damage: 0
     appearance_id: 5247
     equip_slot: 1
@@ -247941,23 +247953,23 @@
   tradeable: true
   weight: 0.4
   equipment:
-    attack_stab: 5
-    attack_slash: 5
-    attack_crush: 5
-    attack_magic: 5
-    attack_ranged: 5
-    defence_stab: 11
-    defence_slash: 11
-    defence_crush: 11
-    defence_magic: 11
-    defence_ranged: 11
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
     summoning: 11
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
-    melee_strength: 4
+    melee_strength: 0
     ranged_strength: 0
-    prayer: 10
+    prayer: 0
     magic_damage: 0
     appearance_id: 5248
     equip_slot: 0
@@ -261618,7 +261630,7 @@
     attack_ranged: 0
     defence_stab: 0
     defence_slash: 3
-    defence_crush: 2
+    defence_crush: 3
     defence_magic: 17
     defence_ranged: 0
     summoning: 0
@@ -261636,6 +261648,7 @@
     remove_head: false
     remove_beard: false
     remove_arms: false
+    attack_speed: 4
     attack_audio: -1
 - id: 22208
   name: "null"
@@ -261682,7 +261695,7 @@
     attack_ranged: 0
     defence_stab: 0
     defence_slash: 3
-    defence_crush: 2
+    defence_crush: 3
     defence_magic: 17
     defence_ranged: 0
     summoning: 0
@@ -261700,6 +261713,7 @@
     remove_head: false
     remove_beard: false
     remove_arms: false
+    attack_speed: 4
     attack_audio: -1
 - id: 22210
   name: "null"
@@ -261746,7 +261760,7 @@
     attack_ranged: 0
     defence_stab: 0
     defence_slash: 3
-    defence_crush: 2
+    defence_crush: 3
     defence_magic: 17
     defence_ranged: 0
     summoning: 0
@@ -261764,6 +261778,7 @@
     remove_head: false
     remove_beard: false
     remove_arms: false
+    attack_speed: 4
     attack_audio: -1
 - id: 22212
   name: "null"
@@ -261810,7 +261825,7 @@
     attack_ranged: 0
     defence_stab: 0
     defence_slash: 3
-    defence_crush: 2
+    defence_crush: 3
     defence_magic: 17
     defence_ranged: 0
     summoning: 0
@@ -261828,6 +261843,7 @@
     remove_head: false
     remove_beard: false
     remove_arms: false
+    attack_speed: 4
     attack_audio: -1
 - id: 22214
   name: "null"

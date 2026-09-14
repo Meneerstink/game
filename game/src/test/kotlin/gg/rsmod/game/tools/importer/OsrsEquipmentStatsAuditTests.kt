@@ -35,6 +35,18 @@ class OsrsEquipmentStatsAuditTests {
     }
 
     @Test
+    fun `OSRS items keep every OSRS stat except the recorded 667 exclusions`() {
+        val ambiguous = mutableListOf<String>()
+        val offenders =
+            OsrsEquipmentStatsAudit.auditByName(YML, SOURCE, MAPPING.keys, ambiguous)
+                .flatMap { it.diffs }
+                .filter { it.localId !in OsrsEquipmentStatsAudit.ALL_FIELDS_EXCLUDED && it.osrs != null }
+        assertTrue(offenders.isEmpty(), "stats differ from OSRS (owner decision (d)):\n" + offenders.joinToString("\n"))
+        // Owner decisions (f)/(g): salamanders and 667 thrown javelins stay excluded.
+        assertTrue((10146..10149).all { it in OsrsEquipmentStatsAudit.ALL_FIELDS_EXCLUDED } && (825..830).all { it in OsrsEquipmentStatsAudit.ALL_FIELDS_EXCLUDED })
+    }
+
+    @Test
     fun `magic damage keeps OSRS tenth-of-a-percent precision`() {
         val byId = YML.associateBy { it.path("id").asInt() }
         // Occult necklace 5 %, Seers ring (i) 0.5 %, Ahrim's staff 5 % (build 240 params 50 / 5 / 50).

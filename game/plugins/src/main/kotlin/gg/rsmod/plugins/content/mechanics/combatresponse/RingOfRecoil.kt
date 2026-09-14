@@ -37,6 +37,16 @@ object RingOfRecoil {
         damage: Int,
     ) {
         if (target !is Player) return
+        // Ring of suffering (r)/(ri): the same reflect, paid from the ring's own charges (RingOfSuffering).
+        val ring = target.getEquipment(EquipmentType.RING)
+        if (ring != null && gg.rsmod.plugins.content.items.osrs.RingOfSuffering.isCharged(ring.id)) {
+            val reflect = (damage / 10) + 1
+            val after = gg.rsmod.plugins.content.items.osrs.RingOfSuffering.afterRecoil(ring, reflect) ?: return
+            attacker.hit(damage = reflect, type = HitType.REFLECTED)
+            attacker.damageMap.add(target, reflect)
+            target.equipment[EquipmentType.RING.id] = after
+            return
+        }
         if (!target.hasEquipped(EquipmentType.RING, *RECOIL_RING_IDS)) return
 
         val reflected = (damage / 10) + 1

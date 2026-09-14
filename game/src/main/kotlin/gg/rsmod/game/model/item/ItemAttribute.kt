@@ -46,4 +46,9 @@ enum class ItemAttribute {
      * The current tab this item might be residing in the bank
      */
     BANK_TAB,
+
+    /**
+     * 1 when an item's toggleable effect is switched off (e.g. the Ring of suffering recoil setting, stored per ring).
+     */
+    TOGGLED_OFF,
 }
