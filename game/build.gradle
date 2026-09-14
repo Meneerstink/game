@@ -167,6 +167,14 @@ task runOsrsItemImportTool(type: JavaExec) {
     main = 'gg.rsmod.game.tools.importer.OsrsItemImportTool'
 }
 
+task runWatsonHouseImportTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Owner answer Q10: imports OSRS map square 6455 (Watson\'s house) as new named groups m25_55/l25_55 ' +
+        '(CacheTransaction, both caches). Usage: ./gradlew :game:runWatsonHouseImportTool --args="plan|apply"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.WatsonHouseImportTool'
+}
+
 task runOsrsMusicImportTool(type: JavaExec) {
     group = 'tools'
     description = 'Imports the OSRS track The Enclave into index 6 + music enums 1345/1351 (CacheTransaction, both caches). ' +
