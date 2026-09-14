@@ -19891,5 +19891,41 @@ object Items {
     const val VOLATILE_ORB_NOTED = 23089
     const val ELDRITCH_ORB = 23090
     const val ELDRITCH_ORB_NOTED = 23091
+
+    // OSRS-IMPORT step 4 batch moons (tx-20260914-071856). 23130-23133 are the atlatl dart stack-count visuals.
+    const val ECLIPSE_MOON_HELM = 23092
+    const val ECLIPSE_MOON_CHESTPLATE = 23093
+    const val ECLIPSE_MOON_TASSETS = 23094
+    const val BLUE_MOON_HELM = 23095
+    const val BLUE_MOON_CHESTPLATE = 23096
+    const val BLUE_MOON_TASSETS = 23097
+    const val BLOOD_MOON_HELM = 23098
+    const val BLOOD_MOON_CHESTPLATE = 23099
+    const val BLOOD_MOON_TASSETS = 23100
+    const val ECLIPSE_MOON_HELM_DEGRADED = 23101
+    const val ECLIPSE_MOON_CHESTPLATE_DEGRADED = 23102
+    const val ECLIPSE_MOON_TASSETS_DEGRADED = 23103
+    const val BLUE_MOON_HELM_DEGRADED = 23104
+    const val BLUE_MOON_CHESTPLATE_DEGRADED = 23105
+    const val BLUE_MOON_TASSETS_DEGRADED = 23106
+    const val BLOOD_MOON_HELM_DEGRADED = 23107
+    const val BLOOD_MOON_CHESTPLATE_DEGRADED = 23108
+    const val BLOOD_MOON_TASSETS_DEGRADED = 23109
+    const val ECLIPSE_MOON_HELM_BROKEN = 23110
+    const val ECLIPSE_MOON_CHESTPLATE_BROKEN = 23112
+    const val ECLIPSE_MOON_TASSETS_BROKEN = 23114
+    const val BLUE_MOON_HELM_BROKEN = 23116
+    const val BLUE_MOON_CHESTPLATE_BROKEN = 23118
+    const val BLUE_MOON_TASSETS_BROKEN = 23120
+    const val BLOOD_MOON_HELM_BROKEN = 23122
+    const val BLOOD_MOON_CHESTPLATE_BROKEN = 23124
+    const val BLOOD_MOON_TASSETS_BROKEN = 23126
+    const val ECLIPSE_ATLATL = 23128
+    const val ECLIPSE_ATLATL_NOTED = 23129
+    const val ATLATL_DART = 23134
+    const val DUAL_MACUAHUITL = 23135
+    const val DUAL_MACUAHUITL_NOTED = 23136
+    const val BLUE_MOON_SPEAR = 23137
+    const val BLUE_MOON_SPEAR_NOTED = 23138
     // Auto-generated file using class gg.rsmod.game.service.game.DumpEntityIdService
 }

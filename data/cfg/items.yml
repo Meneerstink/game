@@ -275100,3 +275100,876 @@
   tradeable: true
   weight: 0.0
   equipment: null
+- id: 23092
+  name: "Eclipse moon helm"
+  examine: "The helm of the Eclipse Moon."
+  tradeable: true
+  weight: 0.907
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6501
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -6
+    attack_ranged: 8
+    defence_stab: 2
+    defence_slash: 3
+    defence_crush: 14
+    defence_magic: 10
+    defence_ranged: 4
+    summoning: 0
+    melee_strength: 3
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 1, 'level': 50}, {'skill': 4, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23093
+  name: "Eclipse moon chestplate"
+  examine: "The chestplate of the Eclipse Moon."
+  tradeable: true
+  weight: 3.0
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6502
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -15
+    attack_ranged: 31
+    defence_stab: 15
+    defence_slash: 18
+    defence_crush: 57
+    defence_magic: 55
+    defence_ranged: 32
+    summoning: 0
+    melee_strength: 3
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 1, 'level': 50}, {'skill': 4, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23094
+  name: "Eclipse moon tassets"
+  examine: "The tassets of the Eclipse Moon."
+  tradeable: true
+  weight: 1.0
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 6503
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -15
+    attack_ranged: 17
+    defence_stab: 9
+    defence_slash: 13
+    defence_crush: 37
+    defence_magic: 31
+    defence_ranged: 17
+    summoning: 0
+    melee_strength: 1
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 1, 'level': 50}, {'skill': 4, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23095
+  name: "Blue moon helm"
+  examine: "The helm of the Blue Moon."
+  tradeable: true
+  weight: 0.453
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6504
+    remove_head: true
+    remove_beard: true
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 6
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 10
+    defence_magic: 6
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 3
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 1.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 1, 'level': 50}, {'skill': 6, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23096
+  name: "Blue moon chestplate"
+  examine: "The chestplate of the Blue Moon."
+  tradeable: true
+  weight: 3.175
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6505
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 30
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 51
+    defence_magic: 28
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 2
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 1.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 1, 'level': 50}, {'skill': 6, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23097
+  name: "Blue moon tassets"
+  examine: "The tassets of the Blue Moon."
+  tradeable: true
+  weight: 1.36
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 6506
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 22
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 23
+    defence_magic: 32
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 1
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 1.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 1, 'level': 50}, {'skill': 6, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23098
+  name: "Blood moon helm"
+  examine: "The helm of the Blood Moon."
+  tradeable: true
+  weight: 1.0
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6507
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -6
+    attack_ranged: -2
+    defence_stab: 20
+    defence_slash: 31
+    defence_crush: 34
+    defence_magic: 7
+    defence_ranged: 29
+    summoning: 0
+    melee_strength: 4
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 1, 'level': 50}, {'skill': 2, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23099
+  name: "Blood moon chestplate"
+  examine: "The chestplate of the Blood Moon."
+  tradeable: true
+  weight: 5.443
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6508
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -15
+    attack_ranged: -10
+    defence_stab: 60
+    defence_slash: 80
+    defence_crush: 80
+    defence_magic: 40
+    defence_ranged: 79
+    summoning: 0
+    melee_strength: 4
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 1, 'level': 50}, {'skill': 2, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23100
+  name: "Blood moon tassets"
+  examine: "The tassets of the Blood Moon."
+  tradeable: true
+  weight: 4.082
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 6509
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -21
+    attack_ranged: -7
+    defence_stab: 30
+    defence_slash: 50
+    defence_crush: 49
+    defence_magic: 32
+    defence_ranged: 46
+    summoning: 0
+    melee_strength: 2
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 1, 'level': 50}, {'skill': 2, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23101
+  name: "Eclipse moon helm"
+  examine: "The helm of the Eclipse Moon."
+  tradeable: false
+  weight: 0.907
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6510
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -6
+    attack_ranged: 8
+    defence_stab: 2
+    defence_slash: 3
+    defence_crush: 14
+    defence_magic: 10
+    defence_ranged: 4
+    summoning: 0
+    melee_strength: 3
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 1, 'level': 50}, {'skill': 4, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23102
+  name: "Eclipse moon chestplate"
+  examine: "The chestplate of the Eclipse Moon."
+  tradeable: false
+  weight: 3.0
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6511
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -15
+    attack_ranged: 31
+    defence_stab: 15
+    defence_slash: 18
+    defence_crush: 57
+    defence_magic: 55
+    defence_ranged: 32
+    summoning: 0
+    melee_strength: 3
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 1, 'level': 50}, {'skill': 4, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23103
+  name: "Eclipse moon tassets"
+  examine: "The tassets of the Eclipse Moon."
+  tradeable: false
+  weight: 1.0
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 6512
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -15
+    attack_ranged: 17
+    defence_stab: 9
+    defence_slash: 13
+    defence_crush: 37
+    defence_magic: 31
+    defence_ranged: 17
+    summoning: 0
+    melee_strength: 1
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 1, 'level': 50}, {'skill': 4, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23104
+  name: "Blue moon helm"
+  examine: "The helm of the Blue Moon."
+  tradeable: false
+  weight: 0.453
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6513
+    remove_head: true
+    remove_beard: true
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 6
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 10
+    defence_magic: 6
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 3
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 1.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 1, 'level': 50}, {'skill': 6, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23105
+  name: "Blue moon chestplate"
+  examine: "The chestplate of the Blue Moon."
+  tradeable: false
+  weight: 3.175
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6514
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 30
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 51
+    defence_magic: 28
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 2
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 1.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 1, 'level': 50}, {'skill': 6, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23106
+  name: "Blue moon tassets"
+  examine: "The tassets of the Blue Moon."
+  tradeable: false
+  weight: 1.36
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 6515
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 22
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 23
+    defence_magic: 32
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 1
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 1.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 1, 'level': 50}, {'skill': 6, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23107
+  name: "Blood moon helm"
+  examine: "The helm of the Blood Moon."
+  tradeable: false
+  weight: 0.907
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6516
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -6
+    attack_ranged: -2
+    defence_stab: 20
+    defence_slash: 31
+    defence_crush: 34
+    defence_magic: 7
+    defence_ranged: 29
+    summoning: 0
+    melee_strength: 4
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 1, 'level': 50}, {'skill': 2, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23108
+  name: "Blood moon chestplate"
+  examine: "The chestplate of the Blood Moon."
+  tradeable: false
+  weight: 5.443
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6517
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -15
+    attack_ranged: -10
+    defence_stab: 60
+    defence_slash: 80
+    defence_crush: 80
+    defence_magic: 40
+    defence_ranged: 79
+    summoning: 0
+    melee_strength: 4
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 1, 'level': 50}, {'skill': 2, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23109
+  name: "Blood moon tassets"
+  examine: "The tassets of the Blood Moon."
+  tradeable: false
+  weight: 4.082
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 6518
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -21
+    attack_ranged: -7
+    defence_stab: 30
+    defence_slash: 50
+    defence_crush: 49
+    defence_magic: 32
+    defence_ranged: 46
+    summoning: 0
+    melee_strength: 2
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 1, 'level': 50}, {'skill': 2, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23110
+  name: "Eclipse moon helm (broken)"
+  examine: "The helm of the Eclipse Moon."
+  tradeable: true
+  weight: 0.907
+  equipment: null
+- id: 23111
+  name: "Eclipse moon helm (broken)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23112
+  name: "Eclipse moon chestplate (broken)"
+  examine: "The chestplate of the Eclipse Moon."
+  tradeable: true
+  weight: 3.0
+  equipment: null
+- id: 23113
+  name: "Eclipse moon chestplate (broken)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23114
+  name: "Eclipse moon tassets (broken)"
+  examine: "The tassets of the Eclipse Moon."
+  tradeable: true
+  weight: 1.0
+  equipment: null
+- id: 23115
+  name: "Eclipse moon tassets (broken)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23116
+  name: "Blue moon helm (broken)"
+  examine: "The helm of the Blue Moon."
+  tradeable: true
+  weight: 0.453
+  equipment: null
+- id: 23117
+  name: "Blue moon helm (broken)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23118
+  name: "Blue moon chestplate (broken)"
+  examine: "The chestplate of the Blue Moon."
+  tradeable: true
+  weight: 3.175
+  equipment: null
+- id: 23119
+  name: "Blue moon chestplate (broken)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23120
+  name: "Blue moon tassets (broken)"
+  examine: "The tassets of the Blue Moon."
+  tradeable: true
+  weight: 1.36
+  equipment: null
+- id: 23121
+  name: "Blue moon tassets (broken)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23122
+  name: "Blood moon helm (broken)"
+  examine: "The helm of the Blood Moon."
+  tradeable: true
+  weight: 0.907
+  equipment: null
+- id: 23123
+  name: "Blood moon helm (broken)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23124
+  name: "Blood moon chestplate (broken)"
+  examine: "The chestplate of the Blood Moon."
+  tradeable: true
+  weight: 5.443
+  equipment: null
+- id: 23125
+  name: "Blood moon chestplate (broken)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23126
+  name: "Blood moon tassets (broken)"
+  examine: "The tassets of the Blood Moon."
+  tradeable: true
+  weight: 4.082
+  equipment: null
+- id: 23127
+  name: "Blood moon tassets (broken)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23128
+  name: "Eclipse atlatl"
+  examine: "A powerful thrown weapon forged from an eclipse."
+  tradeable: true
+  weight: 3.628
+  equipment:
+    equip_slot: 3
+    equip_type: 5
+    appearance_id: 6528
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 16
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 87
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 40
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 4, 'level': 75}, {'skill': 0, 'level': 50}, {'skill': 2, 'level': 50}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23129
+  name: "Eclipse atlatl"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23134
+  name: "Atlatl dart"
+  examine: "Quite big for a dart."
+  tradeable: true
+  weight: 0.0
+  equipment:
+    equip_slot: 13
+    equip_type: -1
+    appearance_id: 6529
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23135
+  name: "Dual macuahuitl"
+  examine: "A brutal pair."
+  tradeable: true
+  weight: 3.628
+  equipment:
+    equip_slot: 3
+    equip_type: 5
+    appearance_id: 6529
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 8
+    attack_speed: 4
+    attack_stab: 115
+    attack_slash: -4
+    attack_crush: 121
+    attack_magic: -4
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 81
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 70}, {'skill': 2, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23136
+  name: "Dual macuahuitl"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23137
+  name: "Blue moon spear"
+  examine: "A magical staff of ancient origin..."
+  tradeable: true
+  weight: 3.0
+  equipment:
+    equip_slot: 3
+    equip_type: 5
+    appearance_id: 6530
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 1
+    attack_speed: 5
+    attack_stab: 70
+    attack_slash: 62
+    attack_crush: 62
+    attack_magic: 30
+    attack_ranged: 0
+    defence_stab: 2
+    defence_slash: 3
+    defence_crush: 1
+    defence_magic: 15
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 71
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 5.0
+    attack_audio: 2555
+    skill_reqs: [{'skill': 0, 'level': 70}, {'skill': 6, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23138
+  name: "Blue moon spear"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null

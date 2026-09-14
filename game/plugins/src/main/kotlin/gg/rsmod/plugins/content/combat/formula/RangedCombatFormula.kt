@@ -131,6 +131,9 @@ object RangedCombatFormula : CombatFormula {
         // directly, so the bow-specific scaling can never leak into Melee/Magic.
         hit = floor(hit * TargetModifiers.rangedDamageMultiplier(player, target))
 
+        // Eclipse atlatl: "it uses the melee bonuses from the slayer helmet and salve amulets" (wiki calculator: melee salve / black mask).
+        if (gg.rsmod.plugins.content.items.osrs.MoonSets.wieldingAtlatl(player)) hit = floor(hit * TargetModifiers.equipmentMultiplier(player, target))
+
         // OSRS-IMPORT bows (wiki DPS calculator order): revenant bows x3/2 in the Wilderness, Scorching bow demonbane +30 %, then the
         // Tonalztics of Ralos x3/4.
         if (gg.rsmod.plugins.content.items.osrs.RevenantBows.wildernessBuff(player, target)) hit = floor(hit * 3 / 2)
@@ -209,7 +212,9 @@ object RangedCombatFormula : CombatFormula {
 
     private fun getEquipmentRangedBonus(pawn: Pawn): Double =
         when (pawn) {
-            is Player -> pawn.getRangedStrengthBonus().toDouble()
+            // Eclipse atlatl: the melee strength bonus replaces the ranged strength bonus (MoonSets).
+            is Player ->
+                if (gg.rsmod.plugins.content.items.osrs.MoonSets.wieldingAtlatl(pawn)) pawn.getStrengthBonus().toDouble() else pawn.getRangedStrengthBonus().toDouble()
             is Npc -> pawn.getRangedStrengthBonus().toDouble()
             else -> throw IllegalArgumentException("Invalid pawn type. $pawn")
         }
@@ -228,7 +233,9 @@ object RangedCombatFormula : CombatFormula {
     }
 
     private fun getEffectiveRangedLevel(player: Player): Double {
-        var effectiveLevel = floor(player.skills.getCurrentLevel(Skills.RANGED) * getPrayerRangedMultiplier(player))
+        // Eclipse atlatl: the Strength level (visible boosts) replaces the Ranged level for the max hit, with ranged prayers (MoonSets).
+        val damageSkill = if (gg.rsmod.plugins.content.items.osrs.MoonSets.wieldingAtlatl(player)) Skills.STRENGTH else Skills.RANGED
+        var effectiveLevel = floor(player.skills.getCurrentLevel(damageSkill) * getPrayerRangedMultiplier(player))
 
         effectiveLevel +=
             when (CombatConfigs.getAttackStyle(player)) {

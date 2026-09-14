@@ -184,6 +184,9 @@ enum class BowType(
     VENATOR_BOW_UNCHARGED(item = Items.VENATOR_BOW_UNCHARGED, ammo = TWISTED_BOW.ammo),
     SCORCHING_BOW(item = Items.SCORCHING_BOW, ammo = TWISTED_BOW.ammo),
 
+    // OSRS-IMPORT moons: "It uses Atlatl darts as ammunition" / "ammunition used exclusively by the eclipse atlatl".
+    ECLIPSE_ATLATL(item = Items.ECLIPSE_ATLATL, ammo = arrayOf(Items.ATLATL_DART)),
+
     ;
 
     companion object {

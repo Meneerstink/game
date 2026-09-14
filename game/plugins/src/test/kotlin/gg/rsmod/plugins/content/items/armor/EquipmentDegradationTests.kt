@@ -35,7 +35,11 @@ class EquipmentDegradationTests {
 
     @Test
     fun `table covers every family once and ids are unique`() {
-        val expected = BarrowsPiece.values.size * 5 + CorruptArmor.values().size * 2 + ChaoticWeapon.values().size + NexArmour.values().size * 2
+        // OSRS-IMPORT moons: nine moon armour pieces, each new -> degraded -> broken.
+        val expected =
+            BarrowsPiece.values.size * 5 + CorruptArmor.values().size * 2 + ChaoticWeapon.values().size + NexArmour.values().size * 2 +
+                MoonArmour.values().size * 2
+        assertEquals(9, MoonArmour.values().size)
         assertEquals(expected, DegradeTable.rows.size)
         assertEquals(DegradeTable.rows.size, DegradeTable.rows.map { it.id }.toSet().size, "one row per item id")
         assertEquals(10, NexArmour.values().size)
@@ -85,6 +89,10 @@ class EquipmentDegradationTests {
         }
         NexArmour.values().forEach { armour ->
             assertEquals(1 + DegradeTable.NEX_USED_CHARGES to armour.brokenId, lifetime(armour.pristineId), armour.name)
+        }
+        // "3000 degradable points": one point on entering combat, the other 2,999 at 90 combat ticks each.
+        MoonArmour.values().forEach { armour ->
+            assertEquals(1 + 2_999 * 90 to armour.brokenId, lifetime(armour.newId), armour.name)
         }
     }
 

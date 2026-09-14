@@ -61,6 +61,9 @@ data class DegradeStep(
 object DegradeTable {
     const val NEX_USED_CHARGES = 60_000
 
+    /** Moon armour: 2,999 remaining degrade points x 90 combat ticks each. */
+    const val MOON_DEGRADED_CHARGES = 2_999 * 90
+
     val rows: List<DegradeRow> =
         buildList {
             BarrowsPiece.values.forEach { piece ->
@@ -88,6 +91,15 @@ object DegradeTable {
             NexArmour.values().forEach { armour ->
                 add(DegradeRow(armour.pristineId, armour.usedId, 1) { name -> "Your $name degraded." })
                 add(DegradeRow(armour.usedId, armour.brokenId, NEX_USED_CHARGES) { name -> "Your $name degraded." })
+            }
+            // OSRS-IMPORT moons (OSRS Wiki "Moon equipment"): "The status of each item consists of 3000 degradable points"; "A piece of Moon
+            // equipment will immediately degrade when the player enters combat, and deduct one more point from the total if the player is
+            // still in combat after 90 ticks"; at 0 it "will lose all stat bonuses" (broken). ADAPTED to this per-combat-tick table: the
+            // first point turns the new piece into its degraded id, the other 2,999 points take 90 combat ticks each (a new combat session
+            // does not spend an extra point). No message is sourced.
+            MoonArmour.values().forEach { armour ->
+                add(DegradeRow(armour.newId, armour.degradedId, 1) { null })
+                add(DegradeRow(armour.degradedId, armour.brokenId, MOON_DEGRADED_CHARGES) { null })
             }
         }
 
@@ -125,6 +137,23 @@ enum class NexArmour(
     VIRTUS_ROBE_TOP(Items.VIRTUS_ROBE_TOP, Items.VIRTUS_ROBE_TOP_20165, Items.VIRTUS_ROBE_TOP_BROKEN),
     VIRTUS_ROBE_LEGS(Items.VIRTUS_ROBE_LEGS, Items.VIRTUS_ROBE_LEGS_20169, Items.VIRTUS_ROBE_LEGS_BROKEN),
     ZARYTE_BOW(Items.ZARYTE_BOW, Items.ZARYTE_BOW_20173, Items.ZARYTE_BOW_BROKEN),
+}
+
+/** Moon armour: new, degraded and broken ids (OSRS-IMPORT moons). */
+enum class MoonArmour(
+    val newId: Int,
+    val degradedId: Int,
+    val brokenId: Int,
+) {
+    ECLIPSE_MOON_HELM(Items.ECLIPSE_MOON_HELM, Items.ECLIPSE_MOON_HELM_DEGRADED, Items.ECLIPSE_MOON_HELM_BROKEN),
+    ECLIPSE_MOON_CHESTPLATE(Items.ECLIPSE_MOON_CHESTPLATE, Items.ECLIPSE_MOON_CHESTPLATE_DEGRADED, Items.ECLIPSE_MOON_CHESTPLATE_BROKEN),
+    ECLIPSE_MOON_TASSETS(Items.ECLIPSE_MOON_TASSETS, Items.ECLIPSE_MOON_TASSETS_DEGRADED, Items.ECLIPSE_MOON_TASSETS_BROKEN),
+    BLUE_MOON_HELM(Items.BLUE_MOON_HELM, Items.BLUE_MOON_HELM_DEGRADED, Items.BLUE_MOON_HELM_BROKEN),
+    BLUE_MOON_CHESTPLATE(Items.BLUE_MOON_CHESTPLATE, Items.BLUE_MOON_CHESTPLATE_DEGRADED, Items.BLUE_MOON_CHESTPLATE_BROKEN),
+    BLUE_MOON_TASSETS(Items.BLUE_MOON_TASSETS, Items.BLUE_MOON_TASSETS_DEGRADED, Items.BLUE_MOON_TASSETS_BROKEN),
+    BLOOD_MOON_HELM(Items.BLOOD_MOON_HELM, Items.BLOOD_MOON_HELM_DEGRADED, Items.BLOOD_MOON_HELM_BROKEN),
+    BLOOD_MOON_CHESTPLATE(Items.BLOOD_MOON_CHESTPLATE, Items.BLOOD_MOON_CHESTPLATE_DEGRADED, Items.BLOOD_MOON_CHESTPLATE_BROKEN),
+    BLOOD_MOON_TASSETS(Items.BLOOD_MOON_TASSETS, Items.BLOOD_MOON_TASSETS_DEGRADED, Items.BLOOD_MOON_TASSETS_BROKEN),
 }
 
 class EquipmentDegradation(

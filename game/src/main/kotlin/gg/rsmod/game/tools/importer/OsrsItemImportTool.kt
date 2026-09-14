@@ -620,6 +620,45 @@ object OsrsItemImportTool {
                     Spec(24514, noted = true), // Volatile orb
                     Spec(24517, noted = true), // Eldritch orb
                 ),
+            // Step 4 batch "moons" (ids by Jagex name, RuneLite gameval ItemID ECLIPSE_MOON_*, FROST_MOON_* = Blue moon, BLOOD_MOON_*, each
+            // new / _DEGRADED / _BROKEN; FROSTMOON_SPEAR, DUAL_MACUAHUITL, ECLIPSE_ATLATL, ATLATL_DART). Client requirement params from the
+            // wiki set pages (75 Ranged / Magic / Strength + 50 Defence). Weapon classes (ItemParamProbeTool 2026-09-14): Dark bow 11235 for
+            // the atlatl (a bow), Verac's flail 4755 (spiked style set) for the dual macuahuitl, the Purging staff staff class for the spear
+            // (ADAPTED: the 667 staff style set instead of the OSRS bladed staff set).
+            "moons" to
+                listOf(
+                    Spec(29010, rev667Params = mapOf(749 to 4, 750 to 75, 751 to 1, 752 to 50)), // Eclipse moon helm
+                    Spec(29004, rev667Params = mapOf(749 to 4, 750 to 75, 751 to 1, 752 to 50)), // Eclipse moon chestplate
+                    Spec(29007, rev667Params = mapOf(749 to 4, 750 to 75, 751 to 1, 752 to 50)), // Eclipse moon tassets
+                    Spec(29019, rev667Params = mapOf(749 to 6, 750 to 75, 751 to 1, 752 to 50)), // Blue moon helm
+                    Spec(29013, rev667Params = mapOf(749 to 6, 750 to 75, 751 to 1, 752 to 50)), // Blue moon chestplate
+                    Spec(29016, rev667Params = mapOf(749 to 6, 750 to 75, 751 to 1, 752 to 50)), // Blue moon tassets
+                    Spec(29028, rev667Params = mapOf(749 to 2, 750 to 75, 751 to 1, 752 to 50)), // Blood moon helm
+                    Spec(29022, rev667Params = mapOf(749 to 2, 750 to 75, 751 to 1, 752 to 50)), // Blood moon chestplate
+                    Spec(29025, rev667Params = mapOf(749 to 2, 750 to 75, 751 to 1, 752 to 50)), // Blood moon tassets
+                    Spec(29035, rev667Params = mapOf(749 to 4, 750 to 75, 751 to 1, 752 to 50)), // Eclipse moon helm (degraded)
+                    Spec(29031, rev667Params = mapOf(749 to 4, 750 to 75, 751 to 1, 752 to 50)), // Eclipse moon chestplate (degraded)
+                    Spec(29033, rev667Params = mapOf(749 to 4, 750 to 75, 751 to 1, 752 to 50)), // Eclipse moon tassets (degraded)
+                    Spec(29041, rev667Params = mapOf(749 to 6, 750 to 75, 751 to 1, 752 to 50)), // Blue moon helm (degraded)
+                    Spec(29037, rev667Params = mapOf(749 to 6, 750 to 75, 751 to 1, 752 to 50)), // Blue moon chestplate (degraded)
+                    Spec(29039, rev667Params = mapOf(749 to 6, 750 to 75, 751 to 1, 752 to 50)), // Blue moon tassets (degraded)
+                    Spec(29047, rev667Params = mapOf(749 to 2, 750 to 75, 751 to 1, 752 to 50)), // Blood moon helm (degraded)
+                    Spec(29043, rev667Params = mapOf(749 to 2, 750 to 75, 751 to 1, 752 to 50)), // Blood moon chestplate (degraded)
+                    Spec(29045, rev667Params = mapOf(749 to 2, 750 to 75, 751 to 1, 752 to 50)), // Blood moon tassets (degraded)
+                    Spec(29055, noted = true, rev667Params = mapOf(749 to 4, 750 to 75, 751 to 1, 752 to 50)), // Eclipse moon helm (broken)
+                    Spec(29049, noted = true, rev667Params = mapOf(749 to 4, 750 to 75, 751 to 1, 752 to 50)), // Eclipse moon chestplate (broken)
+                    Spec(29052, noted = true, rev667Params = mapOf(749 to 4, 750 to 75, 751 to 1, 752 to 50)), // Eclipse moon tassets (broken)
+                    Spec(29064, noted = true, rev667Params = mapOf(749 to 6, 750 to 75, 751 to 1, 752 to 50)), // Blue moon helm (broken)
+                    Spec(29058, noted = true, rev667Params = mapOf(749 to 6, 750 to 75, 751 to 1, 752 to 50)), // Blue moon chestplate (broken)
+                    Spec(29061, noted = true, rev667Params = mapOf(749 to 6, 750 to 75, 751 to 1, 752 to 50)), // Blue moon tassets (broken)
+                    Spec(29073, noted = true, rev667Params = mapOf(749 to 2, 750 to 75, 751 to 1, 752 to 50)), // Blood moon helm (broken)
+                    Spec(29067, noted = true, rev667Params = mapOf(749 to 2, 750 to 75, 751 to 1, 752 to 50)), // Blood moon chestplate (broken)
+                    Spec(29070, noted = true, rev667Params = mapOf(749 to 2, 750 to 75, 751 to 1, 752 to 50)), // Blood moon tassets (broken)
+                    Spec(29000, noted = true, rev667Params = mapOf(644 to 303, 686 to 16, 687 to 1, 749 to 4, 750 to 75, 751 to 0, 752 to 50), weaponType = 16), // Eclipse atlatl
+                    Spec(28991), // Atlatl dart
+                    Spec(28997, noted = true, rev667Params = mapOf(644 to 373, 686 to 8, 687 to 1, 749 to 0, 750 to 70, 751 to 2, 752 to 75), weaponType = 8), // Dual macuahuitl
+                    Spec(28988, noted = true, rev667Params = mapOf(644 to 28, 686 to 1, 687 to 1, 749 to 0, 750 to 70, 751 to 6, 752 to 75), weaponType = 1, attackAudio = 2555), // Blue moon spear
+                ),
             "deadstaves" to
                 listOf(
                     Spec(11791, noted = true, rev667Params = deadStaffParams()), // Staff of the dead

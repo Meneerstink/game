@@ -68,6 +68,7 @@ object RangedCombatStrategy : CombatStrategy {
                     Items.VENATOR_BOW, Items.VENATOR_BOW_UNCHARGED, Items.TONALZTICS_OF_RALOS_UNCHARGED -> 6
                     Items.TONALZTICS_OF_RALOS -> 7
                     Items.SCORCHING_BOW -> 10
+                    Items.ECLIPSE_ATLATL -> gg.rsmod.plugins.content.items.osrs.MoonSets.ATLATL_RANGE
                     in Bows.LONG_BOWS, Items.CHINCHOMPA_10033, Items.RED_CHINCHOMPA_10034, Items.BLACK_CHINCHOMPA, Items.HEAVY_BALLISTA, Items.HEAVY_BALLISTA_OR -> 9
                     // S4, 2026-09-03: OSRS Wiki "Twisted bow" - "attack range of 10 tiles ...
                     // matching the maximum range in the game", also matches A4's own sourced
@@ -357,6 +358,12 @@ object RangedCombatStrategy : CombatStrategy {
             val secondDamage = secondHit.hit.hitmarks.sumOf { it.damage }
             second.bolt?.let { bolt -> secondHit.hit.addAction { EnchantedBolts.afterHit(bolt, pawn, target, secondDamage) } }
             if (secondDamage > 0) addCombatXp(pawn, target, secondDamage)
+        }
+        // Eclipse moon armour set effect: a successful eclipse atlatl attack has a 20 % chance to start a burn (MoonSets, Burns).
+        if (pawn is Player && landHit && gg.rsmod.plugins.content.items.osrs.MoonSets.eclipseBurnActive(pawn) &&
+            world.randomDouble() < gg.rsmod.plugins.content.items.osrs.MoonSets.BURN_CHANCE
+        ) {
+            pawnHit.hit.addAction { gg.rsmod.plugins.content.items.osrs.Burns.apply(target) }
         }
         // Tonalztics of Ralos (charged): a second hit with its own accuracy and damage rolls.
         if (pawn is Player && gg.rsmod.plugins.content.items.osrs.Tonalztics.hits(pawn.getEquipment(EquipmentType.WEAPON)) == 2) {

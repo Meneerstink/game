@@ -81,6 +81,11 @@ object Combat {
         target: Pawn,
     ) {
         pawn.timers[ATTACK_DELAY] = CombatConfigs.getAttackDelay(pawn)
+        // Blood moon armour Bloodrager: the dual macuahuitl attacks one tick earlier after a trigger (MoonSets).
+        if (pawn.attr[gg.rsmod.plugins.content.items.osrs.MoonSets.BLOODRAGER] == true) {
+            pawn.attr.remove(gg.rsmod.plugins.content.items.osrs.MoonSets.BLOODRAGER)
+            pawn.timers[ATTACK_DELAY] = maxOf(1, CombatConfigs.getAttackDelay(pawn) - 1)
+        }
         // Granite maul homing: "for 5 ticks after attacking a target with any weapon" (GraniteMaul).
         pawn.attr[gg.rsmod.plugins.content.items.osrs.GraniteMaul.LAST_ATTACK_CYCLE] = pawn.world.currentCycle
         target.timers[ACTIVE_COMBAT_TIMER] = 17 // 10,2 seconds

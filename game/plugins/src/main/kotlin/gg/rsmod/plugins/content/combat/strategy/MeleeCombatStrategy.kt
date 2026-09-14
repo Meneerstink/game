@@ -59,6 +59,18 @@ object MeleeCombatStrategy : CombatStrategy {
         target.animate(blockAnimation, priority = false)
 
         val formula = MeleeCombatFormula
+        // Dual macuahuitl: two hits one tick apart with halved max hits; the second accuracy check only follows a successful first (MoonSets).
+        if (pawn is Player && pawn.equipment[gg.rsmod.plugins.api.EquipmentType.WEAPON.id]?.id == gg.rsmod.plugins.api.cfg.Items.DUAL_MACUAHUITL) {
+            val (firstMax, secondMax) = gg.rsmod.plugins.content.items.osrs.MoonSets.macuahuitlSplit(formula.getMaxHit(pawn, target).toInt())
+            val firstLand = formula.getAccuracy(pawn, target) >= world.randomDouble()
+            val secondLand = firstLand && formula.getAccuracy(pawn, target) >= world.randomDouble()
+            val first = pawn.dealHit(target = target, maxHit = firstMax.toDouble(), landHit = firstLand, delay = 1, hitType = HitType.MELEE)
+            val second = pawn.dealHit(target = target, maxHit = secondMax.toDouble(), landHit = secondLand, delay = 2, hitType = HitType.MELEE)
+            gg.rsmod.plugins.content.items.osrs.MoonSets.rollBloodrager(pawn, listOf(firstLand, secondLand)) { world.randomDouble() }
+            val total = first.hit.hitmarks.sumOf { it.damage } + second.hit.hitmarks.sumOf { it.damage }
+            if (total > 0) addCombatXp(pawn, target, total)
+            return
+        }
         val accuracy = formula.getAccuracy(pawn, target)
         val maxHit = formula.getMaxHit(pawn, target)
         // OSRS Wiki Verac the Defiled's equipment ("Defiler"): 25 % chance of a guaranteed hit ignoring accuracy,

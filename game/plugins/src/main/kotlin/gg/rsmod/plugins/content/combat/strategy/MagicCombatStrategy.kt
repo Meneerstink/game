@@ -144,6 +144,8 @@ object MagicCombatStrategy : CombatStrategy {
                 ?.let { requirement -> MagicSpells.removeRunes(pawn, requirement.runes, spellId = spell.uniqueId) }
             // Charged tomes use one charge per qualifying combat cast (Tomes).
             gg.rsmod.plugins.content.items.osrs.Tomes.afterCast(pawn, spell)
+            // Blue moon armour Frostweaver: a chance for an instant spear melee attack after a bind or ice spell (MoonSets).
+            gg.rsmod.plugins.content.items.osrs.MoonSets.frostweaver(pawn, target, spell)
         }
 
         val targets = collectTargets(pawn, target, spell)

@@ -164,6 +164,10 @@ object CombatConfigs {
             ) {
                 speed = 4
             }
+            // Eclipse atlatl: "During player versus player combat, the Atlatl has an attack speed of 3."
+            if (weapon.id == gg.rsmod.plugins.api.cfg.Items.ECLIPSE_ATLATL && pawn.attr[gg.rsmod.game.model.attr.COMBAT_TARGET_FOCUS_ATTR]?.get() is Player) {
+                speed = gg.rsmod.plugins.content.items.osrs.MoonSets.ATLATL_PVP_SPEED
+            }
             if (getCombatClass(pawn) == CombatClass.RANGED && getAttackStyle(pawn) == WeaponStyle.RAPID) {
                 speed -= 1
             }
