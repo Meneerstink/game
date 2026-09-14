@@ -759,6 +759,9 @@ object OsrsItemImportTool {
                         Spec(22244, rev667Params = mapOf(749 to 1, 750 to 60)), // Dragon kiteshield (g)
                         Spec(22242, rev667Params = mapOf(749 to 1, 750 to 60)), // Dragon platebody (g)
                     ),
+            // Casket sub-batch "casket-teleports": the Treasure Trail teleport scrolls (stackable, "Teleport", no noted variants upstream):
+            // Digsite, Feldip hills, Lunar isle, Mort'ton, Pest control, Piscatoris, Iorwerth camp, Mos le'harmless, Lumberyard.
+            "casket-teleports" to listOf(12403, 12404, 12405, 12406, 12407, 12408, 12410, 12411, 12642).map { Spec(it) },
             "deadstaves" to
                 listOf(
                     Spec(11791, noted = true, rev667Params = deadStaffParams()), // Staff of the dead

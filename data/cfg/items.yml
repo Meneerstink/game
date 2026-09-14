@@ -282848,3 +282848,57 @@
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
+- id: 23681
+  name: "Digsite teleport"
+  examine: "Teleports you to the Digsite."
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23682
+  name: "Feldip hills teleport"
+  examine: "Teleports you to Feldip hills."
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23683
+  name: "Lunar isle teleport"
+  examine: "Teleports you to Lunar isle."
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23684
+  name: "Mort'ton teleport"
+  examine: "Teleports you to Mort'ton."
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23685
+  name: "Pest control teleport"
+  examine: "Teleports you to Pest control."
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23686
+  name: "Piscatoris teleport"
+  examine: "Teleports you to Piscatoris."
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23687
+  name: "Iorwerth camp teleport"
+  examine: "Teleports you to the Iorwerth Camp."
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23688
+  name: "Mos le'harmless teleport"
+  examine: "Teleports you to Mos Le'Harmless."
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23689
+  name: "Lumberyard teleport"
+  examine: "Teleports you to the Lumberyard."
+  tradeable: true
+  weight: 0.0
+  equipment: null

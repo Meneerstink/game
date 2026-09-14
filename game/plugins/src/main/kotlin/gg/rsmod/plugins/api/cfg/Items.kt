@@ -20129,5 +20129,14 @@ object Items {
     const val DRAGON_KITESHIELD = 23677
     const val DRAGON_KITESHIELD_G = 23679
     const val DRAGON_PLATEBODY_G = 23680
+    const val DIGSITE_TELEPORT = 23681
+    const val FELDIP_HILLS_TELEPORT = 23682
+    const val LUNAR_ISLE_TELEPORT = 23683
+    const val MORTTON_TELEPORT = 23684
+    const val PEST_CONTROL_TELEPORT = 23685
+    const val PISCATORIS_TELEPORT = 23686
+    const val IORWERTH_CAMP_TELEPORT = 23687
+    const val MOS_LEHARMLESS_TELEPORT = 23688
+    const val LUMBERYARD_TELEPORT = 23689
     // Auto-generated file using class gg.rsmod.game.service.game.DumpEntityIdService
 }
