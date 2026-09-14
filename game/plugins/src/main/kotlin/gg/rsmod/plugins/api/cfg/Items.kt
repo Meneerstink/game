@@ -19927,5 +19927,27 @@ object Items {
     const val DUAL_MACUAHUITL_NOTED = 23136
     const val BLUE_MOON_SPEAR = 23137
     const val BLUE_MOON_SPEAR_NOTED = 23138
+
+    // OSRS-IMPORT step 4 batch barks (tx-20260914-073132).
+    const val SWAMPBARK_HELM = 23139
+    const val SWAMPBARK_HELM_NOTED = 23140
+    const val SWAMPBARK_BODY = 23141
+    const val SWAMPBARK_BODY_NOTED = 23142
+    const val SWAMPBARK_LEGS = 23143
+    const val SWAMPBARK_LEGS_NOTED = 23144
+    const val SWAMPBARK_GAUNTLETS = 23145
+    const val SWAMPBARK_GAUNTLETS_NOTED = 23146
+    const val SWAMPBARK_BOOTS = 23147
+    const val SWAMPBARK_BOOTS_NOTED = 23148
+    const val BLOODBARK_HELM = 23149
+    const val BLOODBARK_HELM_NOTED = 23150
+    const val BLOODBARK_BODY = 23151
+    const val BLOODBARK_BODY_NOTED = 23152
+    const val BLOODBARK_LEGS = 23153
+    const val BLOODBARK_LEGS_NOTED = 23154
+    const val BLOODBARK_GAUNTLETS = 23155
+    const val BLOODBARK_GAUNTLETS_NOTED = 23156
+    const val BLOODBARK_BOOTS = 23157
+    const val BLOODBARK_BOOTS_NOTED = 23158
     // Auto-generated file using class gg.rsmod.game.service.game.DumpEntityIdService
 }

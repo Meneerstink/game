@@ -314,7 +314,10 @@ object MagicCombatStrategy : CombatStrategy {
             is SpellEffect.Freeze -> {
                 // Ancient sceptres: freeze duration +10 %, rounded down (AncientSceptres); curse binds are not Ancient Magicks.
                 val sceptreBoost = spell in gg.rsmod.plugins.content.items.osrs.AncientSceptres.ICE_SPELLS && gg.rsmod.plugins.content.items.osrs.AncientSceptres.boosted(pawn)
-                val ticks = gg.rsmod.plugins.content.items.osrs.AncientSceptres.freezeTicks(effect.ticks, sceptreBoost)
+                // Swampbark helm, body and legs: +2 ticks each to standard bind spells (BarkArmour).
+                val ticks =
+                    gg.rsmod.plugins.content.items.osrs.AncientSceptres.freezeTicks(effect.ticks, sceptreBoost) +
+                        gg.rsmod.plugins.content.items.osrs.BarkArmour.bindBonus(pawn, spell)
                 val frozen = target.freeze(ticks) { if (target is Player) target.message("You have been frozen.") }
                 if (!frozen && spell == CombatSpell.ICE_BARRAGE) {
                     // Already frozen / immune: barrage shows the frozen-orb graphic instead.
@@ -334,7 +337,9 @@ object MagicCombatStrategy : CombatStrategy {
             }
             is SpellEffect.BloodHeal -> {
                 val sceptres = gg.rsmod.plugins.content.items.osrs.AncientSceptres
-                val heal = sceptres.bloodHeal(damage, sceptres.boosted(pawn))
+                // Bloodbark armour: +2 % of the damage per piece, scaled after the rounded-down quarter (BarkArmour).
+                val bark = gg.rsmod.plugins.content.items.osrs.BarkArmour
+                val heal = bark.bloodHeal(damage, bark.bloodbarkPieces(pawn), sceptres.boosted(pawn))
                 if (heal > 0) {
                     when (pawn) {
                         is Player -> pawn.heal(heal, capValue = sceptres.overhealCap(pawn, pawn.getMaximumLifepoints()))

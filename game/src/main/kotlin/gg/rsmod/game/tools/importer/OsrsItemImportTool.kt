@@ -659,6 +659,21 @@ object OsrsItemImportTool {
                     Spec(28997, noted = true, rev667Params = mapOf(644 to 373, 686 to 8, 687 to 1, 749 to 0, 750 to 70, 751 to 2, 752 to 75), weaponType = 8), // Dual macuahuitl
                     Spec(28988, noted = true, rev667Params = mapOf(644 to 28, 686 to 1, 687 to 1, 749 to 0, 750 to 70, 751 to 6, 752 to 75), weaponType = 1, attackAudio = 2555), // Blue moon spear
                 ),
+            // Step 4 batch "barks" (ids by Jagex name SWAMPBARK_* / BLOODBARK_*, "greaves" = boots): Swampbark 50 Magic + 50 Defence,
+            // Bloodbark 60 Magic + 60 Defence (wiki set pages), client requirement params 749/750 Magic and 751/752 Defence.
+            "barks" to
+                listOf(
+                    Spec(25398, noted = true, rev667Params = mapOf(749 to 6, 750 to 50, 751 to 1, 752 to 50)), // Swampbark helm
+                    Spec(25389, noted = true, rev667Params = mapOf(749 to 6, 750 to 50, 751 to 1, 752 to 50)), // Swampbark body
+                    Spec(25401, noted = true, rev667Params = mapOf(749 to 6, 750 to 50, 751 to 1, 752 to 50)), // Swampbark legs
+                    Spec(25392, noted = true, rev667Params = mapOf(749 to 6, 750 to 50, 751 to 1, 752 to 50)), // Swampbark gauntlets
+                    Spec(25395, noted = true, rev667Params = mapOf(749 to 6, 750 to 50, 751 to 1, 752 to 50)), // Swampbark boots
+                    Spec(25413, noted = true, rev667Params = mapOf(749 to 6, 750 to 60, 751 to 1, 752 to 60)), // Bloodbark helm
+                    Spec(25404, noted = true, rev667Params = mapOf(749 to 6, 750 to 60, 751 to 1, 752 to 60)), // Bloodbark body
+                    Spec(25416, noted = true, rev667Params = mapOf(749 to 6, 750 to 60, 751 to 1, 752 to 60)), // Bloodbark legs
+                    Spec(25407, noted = true, rev667Params = mapOf(749 to 6, 750 to 60, 751 to 1, 752 to 60)), // Bloodbark gauntlets
+                    Spec(25410, noted = true, rev667Params = mapOf(749 to 6, 750 to 60, 751 to 1, 752 to 60)), // Bloodbark boots
+                ),
             "deadstaves" to
                 listOf(
                     Spec(11791, noted = true, rev667Params = deadStaffParams()), // Staff of the dead

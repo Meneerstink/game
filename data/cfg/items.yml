@@ -275973,3 +275973,403 @@
   tradeable: true
   weight: 0.0
   equipment: null
+- id: 23139
+  name: "Swampbark helm"
+  examine: "A rather interesting smelling helmet."
+  tradeable: true
+  weight: 0.907
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6531
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 4
+    attack_ranged: 0
+    defence_stab: 13
+    defence_slash: 11
+    defence_crush: 14
+    defence_magic: 5
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 50}, {'skill': 1, 'level': 50}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23140
+  name: "Swampbark helm"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23141
+  name: "Swampbark body"
+  examine: "Keeps my chest protected."
+  tradeable: true
+  weight: 4.535
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6532
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 15
+    attack_ranged: 0
+    defence_stab: 38
+    defence_slash: 44
+    defence_crush: 48
+    defence_magic: 21
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 50}, {'skill': 1, 'level': 50}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23142
+  name: "Swampbark body"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23143
+  name: "Swampbark legs"
+  examine: "Strong leg protection."
+  tradeable: true
+  weight: 3.628
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 6533
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 10
+    attack_ranged: 0
+    defence_stab: 20
+    defence_slash: 22
+    defence_crush: 24
+    defence_magic: 15
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 50}, {'skill': 1, 'level': 50}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23144
+  name: "Swampbark legs"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23145
+  name: "Swampbark gauntlets"
+  examine: "These should protect my hands."
+  tradeable: true
+  weight: 0.907
+  equipment:
+    equip_slot: 9
+    equip_type: -1
+    appearance_id: 6534
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 3
+    attack_ranged: 0
+    defence_stab: 4
+    defence_slash: 3
+    defence_crush: 5
+    defence_magic: 4
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 50}, {'skill': 1, 'level': 50}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23146
+  name: "Swampbark gauntlets"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23147
+  name: "Swampbark boots"
+  examine: "Great foot protection."
+  tradeable: true
+  weight: 0.907
+  equipment:
+    equip_slot: 10
+    equip_type: -1
+    appearance_id: 6535
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 3
+    attack_ranged: 0
+    defence_stab: 4
+    defence_slash: 3
+    defence_crush: 5
+    defence_magic: 4
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 50}, {'skill': 1, 'level': 50}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23148
+  name: "Swampbark boots"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23149
+  name: "Bloodbark helm"
+  examine: "A rather interesting smelling helmet."
+  tradeable: true
+  weight: 0.907
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6536
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 5
+    attack_ranged: 0
+    defence_stab: 16
+    defence_slash: 14
+    defence_crush: 17
+    defence_magic: 6
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 1.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 60}, {'skill': 1, 'level': 60}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23150
+  name: "Bloodbark helm"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23151
+  name: "Bloodbark body"
+  examine: "Keeps my chest protected."
+  tradeable: true
+  weight: 4.535
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6537
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 21
+    attack_ranged: 0
+    defence_stab: 53
+    defence_slash: 39
+    defence_crush: 64
+    defence_magic: 24
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 1.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 60}, {'skill': 1, 'level': 60}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23152
+  name: "Bloodbark body"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23153
+  name: "Bloodbark legs"
+  examine: "Strong leg protection."
+  tradeable: true
+  weight: 3.628
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 6538
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 16
+    attack_ranged: 0
+    defence_stab: 33
+    defence_slash: 31
+    defence_crush: 38
+    defence_magic: 17
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 1.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 60}, {'skill': 1, 'level': 60}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23154
+  name: "Bloodbark legs"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23155
+  name: "Bloodbark gauntlets"
+  examine: "These should protect my hands."
+  tradeable: true
+  weight: 0.907
+  equipment:
+    equip_slot: 9
+    equip_type: -1
+    appearance_id: 6539
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 4
+    attack_ranged: 0
+    defence_stab: 5
+    defence_slash: 4
+    defence_crush: 6
+    defence_magic: 5
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 60}, {'skill': 1, 'level': 60}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23156
+  name: "Bloodbark gauntlets"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23157
+  name: "Bloodbark boots"
+  examine: "Great foot protection."
+  tradeable: true
+  weight: 0.907
+  equipment:
+    equip_slot: 10
+    equip_type: -1
+    appearance_id: 6540
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 4
+    attack_ranged: 0
+    defence_stab: 5
+    defence_slash: 4
+    defence_crush: 6
+    defence_magic: 5
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 60}, {'skill': 1, 'level': 60}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23158
+  name: "Bloodbark boots"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
