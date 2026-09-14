@@ -7,6 +7,7 @@ import gg.rsmod.plugins.api.*
 import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.api.ext.*
 import gg.rsmod.plugins.content.skills.slayer.getSlayerAssignment
+import kotlin.math.floor
 
 /**
  * Shared target-condition-gated equipment damage/accuracy multiplier (P9, 2026-09-02
@@ -197,6 +198,25 @@ object TargetModifiers {
      * `Math.trunc(attackRoll * 13 / 10)` and `Math.trunc(maxHit * 5 / 4)`. The crossbow shares this ranged stage only with
      * the Twisted bow, which can never be wielded at the same time, so one floor here is identical.
      */
+    /**
+     * Demonbane melee weapons present in this cache. OSRS Wiki "Silverlight": "the player's maximum hit and accuracy are
+     * increased by 60%"; "Darklight": "a 60% increase in accuracy and damage" against demonic monsters (2026-09-14). The
+     * wiki DPS calculator applies it as `trackAddFactor(x, demonbaneFactor(60))` = x + trunc(x × 60 / 100), after the
+     * Salve / black mask step and before the Dragon hunter lance. No monster here has a modified demonbane effectiveness
+     * (e.g. Duke Sucellus 70 %), so the calculator's default 100 % applies.
+     */
+    const val SILVERLIGHT_DEMONBANE_PERCENT = 60
+
+    fun meleeDemonbanePercent(player: Player, target: Pawn): Int =
+        if (target is Npc && target.isSpecies(NpcSpecies.DEMON) && player.hasEquipped(EquipmentType.WEAPON, Items.SILVERLIGHT, Items.DARKLIGHT)) {
+            SILVERLIGHT_DEMONBANE_PERCENT
+        } else {
+            0
+        }
+
+    /** `trackAddFactor`: value + trunc(value × percent / 100), truncated. */
+    fun addPercent(value: Double, percent: Int): Double = floor(value + floor(value * percent / 100.0))
+
     const val DHCB_ACCURACY = 1.30
     const val DHCB_DAMAGE = 1.25
     const val LANCE_ACCURACY = 1.20

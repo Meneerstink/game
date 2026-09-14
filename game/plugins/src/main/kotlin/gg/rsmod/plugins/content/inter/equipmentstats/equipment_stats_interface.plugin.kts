@@ -139,10 +139,23 @@ fun showStats(
     if (def.equipSlot == -1) {
         return
     }
+    // OSRS Wiki "Equipment Stats" units: slot 17 stores magic damage in tenths of a percent (Occult necklace 50 ->
+    // "+5%", Seers ring (i) 5 -> "+0.5%"), the absorb slots are percentages.
+    fun value(
+        i: Int,
+        bonus: Int,
+    ): String {
+        val sign = if (bonus >= 0) "+" else ""
+        return when (i) {
+            17 -> sign + (if (bonus % 10 != 0) String.format(java.util.Locale.ROOT, "%.1f", bonus / 10.0) else (bonus / 10).toString()) + "%"
+            in 11..13 -> "$sign$bonus%"
+            else -> "$sign$bonus"
+        }
+    }
     val lines =
         def.bonuses
             .toList()
-            .mapIndexedNotNull { i, bonus -> if (bonus != 0) "${BONUS_NAMES[i]}: ${if (bonus >= 0) "+" else ""}$bonus" else null }
+            .mapIndexedNotNull { i, bonus -> if (bonus != 0) "${BONUS_NAMES[i]}: ${value(i, bonus)}" else null }
     player.message(
         if (lines.isEmpty()) "${def.name} has no bonuses." else "${def.name}: ${lines.joinToString(", ")}",
         type = ChatMessageType.CONSOLE,

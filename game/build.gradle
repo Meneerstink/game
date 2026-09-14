@@ -241,6 +241,15 @@ task runWornAppearanceRankTool(type: JavaExec) {
     main = 'gg.rsmod.game.tools.importer.WornAppearanceRankTool'
 }
 
+task runOsrsEquipmentStatsAudit(type: JavaExec) {
+    group = 'tools'
+    description = 'OSRS-IMPORT: items.yml equipment bonuses vs the pinned build-240 item params (imported items, and ' +
+        'ranged strength / magic damage of name-matched OSRS items). Usage: ' +
+        './gradlew :game:runOsrsEquipmentStatsAudit --args="<report> [--apply-imported] [--apply-ranged-magic]"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.OsrsEquipmentStatsAudit'
+}
+
 task runItemTransactionTool(type: JavaExec) {
     group = 'tools'
     description = 'Modern-content import pipeline: transactional, journalled, dual-cache item ' +

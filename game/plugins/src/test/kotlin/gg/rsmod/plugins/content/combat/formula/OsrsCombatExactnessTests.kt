@@ -96,15 +96,32 @@ class OsrsCombatExactnessTests {
 
     @Test
     fun `the berserker necklace boosts only obsidian melee weapons`() {
-        // Berserker necklace: +20 % with Toktz-xil-ak, Tzhaar-ket-om, Tzhaar-ket-em, Toktz-xil-ek.
+        // Berserker necklace: +20 % with the wiki DPS calculator's isWearingTzhaarWeapon roster (Tzhaar-ket-om (t) absent).
         val target = newNpc()
-        listOf(Items.TOKTZXILAK, Items.TZHAARKETOM, Items.TZHAARKETEM, Items.TOKTZXILEK).forEach { weapon ->
+        listOf(Items.TOKTZXILAK, Items.TZHAARKETOM, Items.TZHAARKETEM, Items.TOKTZXILEK, Items.TOKTZMEJTAL).forEach { weapon ->
             val player = newPlayer(strength = 99, strengthBonus = 100, weapon = weapon, amulet = Items.BERSERKER_NECKLACE)
             // base ⌊0.5 + 107*164/640⌋ = ⌊27.92⌋ = 27; ⌊27 × 1.2⌋ = 32
             assertEquals(32.0, MeleeCombatFormula.getMaxHit(player, target, 1.0, 1.0), "weapon $weapon")
         }
         val whip = newPlayer(strength = 99, strengthBonus = 100, weapon = Items.ABYSSAL_WHIP, amulet = Items.BERSERKER_NECKLACE)
         assertEquals(27.0, MeleeCombatFormula.getMaxHit(whip, target, 1.0, 1.0))
+    }
+
+    @Test
+    fun `Silverlight and Darklight add 60 percent accuracy and max hit against demons only`() {
+        // OSRS Wiki "Silverlight"/"Darklight" 60 %; wiki DPS calculator trackAddFactor: x + trunc(x × 60 / 100).
+        val demon = newNpc(species = setOf(gg.rsmod.plugins.api.NpcSpecies.DEMON))
+        val other = newNpc()
+        listOf(Items.SILVERLIGHT, Items.DARKLIGHT).forEach { weapon ->
+            val player = newPlayer(strength = 99, strengthBonus = 100, weapon = weapon)
+            // base 27 -> 27 + ⌊16.2⌋ = 43; attack roll (1 + 3 + 8) × 64 = 768 -> 768 + 460 = 1228; defence (1 + 9) × 64
+            assertEquals(43.0, MeleeCombatFormula.getMaxHit(player, demon, 1.0, 1.0), "weapon $weapon")
+            assertEquals(27.0, MeleeCombatFormula.getMaxHit(player, other, 1.0, 1.0), "weapon $weapon vs non-demon")
+            assertEquals(hitChance(1228, 640), MeleeCombatFormula.getAccuracy(player, demon, 1.0), 1e-12)
+            assertEquals(hitChance(768, 640), MeleeCombatFormula.getAccuracy(player, other, 1.0), 1e-12)
+        }
+        val whip = newPlayer(strength = 99, strengthBonus = 100, weapon = Items.ABYSSAL_WHIP)
+        assertEquals(27.0, MeleeCombatFormula.getMaxHit(whip, demon, 1.0, 1.0))
     }
 
     @Test
@@ -173,10 +190,11 @@ class OsrsCombatExactnessTests {
         stab: Int = 0,
         ranged: Int = 0,
         magicDef: Int = 0,
+        species: Set<Any> = emptySet(),
     ): Npc {
         val npc = mockk<Npc>(relaxed = true)
         every { npc.prayerIcon } returns PrayerIcon.NONE.id
-        every { npc.species } returns emptySet()
+        every { npc.species } returns species
         every { npc.combatDef } returns NpcCombatDef.DEFAULT
         every { npc.attr } returns AttributeMap()
         val stats =

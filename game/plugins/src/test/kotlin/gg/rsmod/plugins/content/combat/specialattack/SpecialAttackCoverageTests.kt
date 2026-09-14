@@ -38,7 +38,8 @@ class SpecialAttackCoverageTests {
             Required("Dragon claws (dclaws)", "dragonequipment/dragon_claws.plugin.kts", "Items.DRAGON_CLAWS"),
             Required("Dragon scimitar (dscim)", "melee_specials.plugin.kts", "Items.DRAGON_SCIMITAR"),
             Required("Abyssal whip", "melee_specials.plugin.kts", "Items.ABYSSAL_WHIP"),
-            Required("Granite maul (gmaul)", "melee_specials.plugin.kts", "Items.GRANITE_MAUL"),
+            // OSRS-IMPORT granitemaul (2026-09-14): the OSRS Quick Smash moved the special to the shared maul plugin.
+            Required("Granite maul (gmaul)", "../../../items/osrs/granite_maul.plugin.kts", "Items.GRANITE_MAUL"),
             Required("Armadyl godsword (ags)", "armadyl_godsword.plugin.kts", "Items.ARMADYL_GODSWORD"),
             Required("Bandos godsword (bgs)", "bandos_godsword.plugin.kts", "Items.BANDOS_GODSWORD"),
             Required("Saradomin godsword (sgs)", "saradomin_godsword.plugin.kts", "Items.SARADOMIN_GODSWORD"),

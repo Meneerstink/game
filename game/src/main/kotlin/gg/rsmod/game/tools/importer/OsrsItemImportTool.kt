@@ -704,7 +704,6 @@ object OsrsItemImportTool {
             sb.append("  equipment: null\n")
             return sb.toString()
         }
-        check(p(299) % 10 == 0) { "${def.name}: magic damage ${p(299)} tenths of a percent is not a whole percent" }
         val reqs =
             listOf(434 to 436, 435 to 437).filter { def.params.containsKey(it.first) && def.params.containsKey(it.second) }
                 .joinToString(", ") { "{'skill': ${p(it.first)}, 'level': ${p(it.second)}}" }
@@ -730,7 +729,9 @@ object OsrsItemImportTool {
         // 28, Toxic blowpipe 20 = OSRS Wiki item pages), so 189 wins only when present.
         val rangedStrength = if (def.params.containsKey(189)) p(189) else p(12)
         sb.append("    ranged_strength: $rangedStrength\n")
-        sb.append("    magic_damage: ${p(299) / 10}\n")
+        // Param 299 is magic damage in tenths of a percent (Occult necklace 50 = 5 %, Seers ring (i) 5 = 0.5 %);
+        // items.yml keeps that precision as a decimal percentage.
+        sb.append("    magic_damage: ${p(299) / 10.0}\n")
         sb.append("    attack_audio: ${entry.spec.attackAudio}\n")
         if (reqs.isNotEmpty()) sb.append("    skill_reqs: [$reqs]\n")
         sb.append("    absorb_melee: 0\n    absorb_magic: 0\n    absorb_ranged: 0\n")

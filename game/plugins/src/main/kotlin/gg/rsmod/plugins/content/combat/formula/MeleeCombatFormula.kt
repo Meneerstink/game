@@ -21,8 +21,12 @@ import kotlin.math.floor
  * @author Tom <rspsmods@gmail.com>
  */
 object MeleeCombatFormula : CombatFormula {
-    /** OSRS Wiki "Berserker necklace": +20 % damage only with these obsidian melee weapons. */
-    private val OBSIDIAN_MELEE_WEAPONS = intArrayOf(Items.TOKTZXILAK, Items.TZHAARKETOM, Items.TZHAARKETEM, Items.TOKTZXILEK)
+    /**
+     * OSRS Wiki "Berserker necklace": +20 % damage only with obsidian weapons; the wiki DPS calculator's
+     * `isWearingTzhaarWeapon` lists Tzhaar-ket-em, Tzhaar-ket-om (+ (t), absent here), Toktz-xil-ak, Toktz-xil-ek and
+     * Toktz-mej-tal.
+     */
+    private val OBSIDIAN_MELEE_WEAPONS = intArrayOf(Items.TOKTZXILAK, Items.TZHAARKETOM, Items.TZHAARKETEM, Items.TOKTZXILEK, Items.TOKTZMEJTAL)
 
     override fun getAccuracy(
         pawn: Pawn,
@@ -152,6 +156,7 @@ object MeleeCombatFormula : CombatFormula {
         var hit = base
 
         hit = floor(hit * TargetModifiers.equipmentMultiplier(player, target))
+        hit = TargetModifiers.addPercent(hit, TargetModifiers.meleeDemonbanePercent(player, target))
         // Dragon hunter lance: multiplicative with the target-specific gear bonus, its own floored step.
         hit = floor(hit * TargetModifiers.meleeDragonbaneDamage(player, target))
 
@@ -182,6 +187,7 @@ object MeleeCombatFormula : CombatFormula {
     ): Double {
         // Attack roll × target-specific gear bonus, floored, then the special attack accuracy multiplier.
         var hit = floor(base * TargetModifiers.equipmentMultiplier(player, target))
+        hit = TargetModifiers.addPercent(hit, TargetModifiers.meleeDemonbanePercent(player, target))
         hit = floor(hit * TargetModifiers.meleeDragonbaneAccuracy(player, target))
         hit = floor(hit * specialAttackMultiplier)
         return hit
@@ -377,7 +383,8 @@ object MeleeCombatFormula : CombatFormula {
                     ) &&
                         isShade(target) -> if (world.chance(1, 20)) 2.0 else 1.25
                     pawn.hasEquipped(EquipmentType.WEAPON, Items.KERIS, Items.KERIS_P) &&
-                        (isKalphite(target) || isScarab(target)) -> if (world.chance(1, 51)) 3.0 else (4.0 / 3.0)
+                        // OSRS Wiki "Keris": "33% bonus damage against all kalphites and scabarites", 1/51 triple damage.
+                        (isKalphite(target) || isScarab(target)) -> if (world.chance(1, 51)) 3.0 else 1.33
                     else -> 1.0
                 }
             // Verac's "Defiler" (25 % guaranteed hit, +1 damage against monsters) is a proc on the hit roll, not a

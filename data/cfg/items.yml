@@ -7232,7 +7232,7 @@
     summoning: 0
     melee_strength: 0
     prayer: 0
-    ranged_strength: 3
+    ranged_strength: 2
     magic_damage: 0
     attack_audio: 2547
     absorb_melee: 0
@@ -7265,7 +7265,7 @@
     summoning: 0
     melee_strength: 0
     prayer: 0
-    ranged_strength: 4
+    ranged_strength: 3
     magic_damage: 0
     attack_audio: 2547
     skill_reqs: [{'skill': 4, 'level': 5}]
@@ -7299,7 +7299,7 @@
     summoning: 0
     melee_strength: 0
     prayer: 0
-    ranged_strength: 7
+    ranged_strength: 9
     magic_damage: 0
     attack_audio: 2547
     skill_reqs: [{'skill': 4, 'level': 20}]
@@ -7333,7 +7333,7 @@
     summoning: 0
     melee_strength: 0
     prayer: 0
-    ranged_strength: 10
+    ranged_strength: 17
     magic_damage: 0
     attack_audio: 2547
     skill_reqs: [{'skill': 4, 'level': 30}]
@@ -7367,7 +7367,7 @@
     summoning: 0
     melee_strength: 0
     prayer: 0
-    ranged_strength: 14
+    ranged_strength: 26
     magic_damage: 0
     attack_audio: 2547
     skill_reqs: [{'skill': 4, 'level': 40}]
@@ -7434,7 +7434,7 @@
     summoning: 0
     melee_strength: 0
     prayer: 0
-    ranged_strength: 3
+    ranged_strength: 2
     magic_damage: 0
     attack_audio: 2547
     absorb_melee: 0
@@ -45167,7 +45167,7 @@
     summoning: 0
     melee_strength: 0
     prayer: 0
-    ranged_strength: 70
+    ranged_strength: 0
     magic_damage: 0
     attack_audio: 2700
     skill_reqs: [{'skill': 16, 'level': 50}, {'skill': 4, 'level': 70}]
@@ -45198,7 +45198,7 @@
     summoning: 0
     melee_strength: 0
     prayer: 0
-    ranged_strength: 68
+    ranged_strength: 0
     magic_damage: 0
     attack_audio: 2700
     skill_reqs: [{'skill': 16, 'level': 50}, {'skill': 4, 'level': 70}]
@@ -45229,7 +45229,7 @@
     summoning: 0
     melee_strength: 0
     prayer: 0
-    ranged_strength: 66
+    ranged_strength: 0
     magic_damage: 0
     attack_audio: 2700
     skill_reqs: [{'skill': 16, 'level': 50}, {'skill': 4, 'level': 70}]
@@ -45260,7 +45260,7 @@
     summoning: 0
     melee_strength: 0
     prayer: 0
-    ranged_strength: 64
+    ranged_strength: 0
     magic_damage: 0
     attack_audio: 2700
     skill_reqs: [{'skill': 16, 'level': 70}, {'skill': 4, 'level': 50}]
@@ -45291,7 +45291,7 @@
     summoning: 0
     melee_strength: 0
     prayer: 0
-    ranged_strength: 62
+    ranged_strength: 0
     magic_damage: 0
     attack_audio: 2700
     skill_reqs: [{'skill': 16, 'level': 70}, {'skill': 4, 'level': 50}]
@@ -45322,7 +45322,7 @@
     summoning: 0
     melee_strength: 0
     prayer: 0
-    ranged_strength: 60
+    ranged_strength: 0
     magic_damage: 0
     attack_audio: 2700
     skill_reqs: [{'skill': 16, 'level': 70}, {'skill': 4, 'level': 50}]
@@ -45353,7 +45353,7 @@
     summoning: 0
     melee_strength: 0
     prayer: 0
-    ranged_strength: 58
+    ranged_strength: 0
     magic_damage: 0
     attack_audio: 2700
     skill_reqs: [{'skill': 16, 'level': 70}, {'skill': 4, 'level': 50}]
@@ -45384,7 +45384,7 @@
     summoning: 0
     melee_strength: 0
     prayer: 0
-    ranged_strength: 56
+    ranged_strength: 0
     magic_damage: 0
     attack_audio: 2700
     skill_reqs: [{'skill': 16, 'level': 70}, {'skill': 4, 'level': 50}]
@@ -45415,7 +45415,7 @@
     summoning: 0
     melee_strength: 0
     prayer: 0
-    ranged_strength: 54
+    ranged_strength: 0
     magic_damage: 0
     attack_audio: 2700
     skill_reqs: [{'skill': 16, 'level': 50}, {'skill': 4, 'level': 70}]
@@ -45446,7 +45446,7 @@
     summoning: 0
     melee_strength: 0
     prayer: 0
-    ranged_strength: 52
+    ranged_strength: 0
     magic_damage: 0
     attack_audio: 2700
     skill_reqs: [{'skill': 16, 'level': 50}, {'skill': 4, 'level': 70}]
@@ -50895,7 +50895,7 @@
     melee_strength: 50
     prayer: -1
     ranged_strength: 0
-    magic_damage: 10
+    magic_damage: 0.0
     attack_audio: 2555
     skill_reqs: [{'skill': 0, 'level': 50}, {'skill': 6, 'level': 50}]
     absorb_melee: 0
@@ -51145,7 +51145,7 @@
     melee_strength: 0
     prayer: 0
     ranged_strength: 0
-    magic_damage: 0
+    magic_damage: 1.0
     attack_audio: -1
     skill_reqs: [{'skill': 1, 'level': 70}, {'skill': 6, 'level': 70}]
     absorb_melee: 5
@@ -51185,7 +51185,7 @@
     melee_strength: 68
     prayer: 0
     ranged_strength: 0
-    magic_damage: 10
+    magic_damage: 5.0
     attack_audio: 2555
     skill_reqs: [{'skill': 0, 'level': 70}, {'skill': 6, 'level': 70}]
     absorb_melee: 0
@@ -52957,7 +52957,7 @@
     melee_strength: 0
     prayer: 0
     ranged_strength: 0
-    magic_damage: 0
+    magic_damage: 1.0
     attack_audio: -1
     skill_reqs: [{'skill': 1, 'level': 70}, {'skill': 6, 'level': 70}]
     absorb_melee: 5
@@ -52991,7 +52991,7 @@
     melee_strength: 0
     prayer: 0
     ranged_strength: 0
-    magic_damage: 0
+    magic_damage: 1.0
     attack_audio: -1
     skill_reqs: [{'skill': 1, 'level': 70}, {'skill': 6, 'level': 70}]
     absorb_melee: 5
@@ -53025,7 +53025,7 @@
     melee_strength: 0
     prayer: 0
     ranged_strength: 0
-    magic_damage: 0
+    magic_damage: 1.0
     attack_audio: -1
     skill_reqs: [{'skill': 1, 'level': 70}, {'skill': 6, 'level': 70}]
     absorb_melee: 5
@@ -53059,7 +53059,7 @@
     melee_strength: 0
     prayer: 0
     ranged_strength: 0
-    magic_damage: 0
+    magic_damage: 1.0
     attack_audio: -1
     skill_reqs: [{'skill': 1, 'level': 70}, {'skill': 6, 'level': 70}]
     absorb_melee: 5
@@ -53105,7 +53105,7 @@
     melee_strength: 68
     prayer: 0
     ranged_strength: 0
-    magic_damage: 10
+    magic_damage: 5.0
     attack_audio: 2555
     skill_reqs: [{'skill': 0, 'level': 70}, {'skill': 6, 'level': 70}]
     absorb_melee: 0
@@ -53139,7 +53139,7 @@
     melee_strength: 68
     prayer: 0
     ranged_strength: 0
-    magic_damage: 10
+    magic_damage: 5.0
     attack_audio: 2555
     skill_reqs: [{'skill': 0, 'level': 70}, {'skill': 6, 'level': 70}]
     absorb_melee: 0
@@ -53173,7 +53173,7 @@
     melee_strength: 68
     prayer: 0
     ranged_strength: 0
-    magic_damage: 10
+    magic_damage: 5.0
     attack_audio: 2555
     skill_reqs: [{'skill': 0, 'level': 70}, {'skill': 6, 'level': 70}]
     absorb_melee: 0
@@ -53207,7 +53207,7 @@
     melee_strength: 68
     prayer: 0
     ranged_strength: 0
-    magic_damage: 10
+    magic_damage: 5.0
     attack_audio: 2555
     skill_reqs: [{'skill': 0, 'level': 70}, {'skill': 6, 'level': 70}]
     absorb_melee: 0
@@ -77869,7 +77869,7 @@
     melee_strength: 0
     prayer: 0
     ranged_strength: 0
-    magic_damage: 0
+    magic_damage: 1.0
     attack_audio: -1
     skill_reqs: [{'skill': 1, 'level': 50}, {'skill': 6, 'level': 25}]
     absorb_melee: 3
@@ -77909,7 +77909,7 @@
     melee_strength: 0
     prayer: 0
     ranged_strength: 0
-    magic_damage: 0
+    magic_damage: 1.0
     attack_audio: -1
     skill_reqs: [{'skill': 1, 'level': 50}, {'skill': 6, 'level': 25}]
     absorb_melee: 1
@@ -78029,7 +78029,7 @@
     melee_strength: 0
     prayer: 0
     ranged_strength: 0
-    magic_damage: 0
+    magic_damage: 1.0
     attack_audio: -1
     skill_reqs: [{'skill': 1, 'level': 50}, {'skill': 6, 'level': 25}]
     absorb_melee: 2
@@ -94931,7 +94931,7 @@
     melee_strength: 38
     prayer: 6
     ranged_strength: 0
-    magic_damage: 10
+    magic_damage: 0.0
     attack_audio: -1
     absorb_melee: 0
     absorb_magic: 0
@@ -117156,7 +117156,7 @@
     melee_strength: 0
     prayer: 0
     ranged_strength: 0
-    magic_damage: 0
+    magic_damage: 1.0
     attack_audio: -1
     absorb_melee: 3
     absorb_magic: 1
@@ -127439,7 +127439,7 @@
     summoning: 0
     melee_strength: 0
     prayer: 0
-    ranged_strength: 20
+    ranged_strength: 35
     magic_damage: 0
     attack_audio: 2547
     skill_reqs: [{'skill': 4, 'level': 60}]
@@ -151676,7 +151676,7 @@
     melee_strength: 50
     prayer: -1
     ranged_strength: 0
-    magic_damage: 10
+    magic_damage: 0.0
     attack_audio: -1
     absorb_melee: 0
     absorb_magic: 0
@@ -159676,7 +159676,7 @@
     melee_strength: 0
     prayer: 3
     ranged_strength: 0
-    magic_damage: 0
+    magic_damage: 3.0
     attack_audio: -1
     absorb_melee: 0
     absorb_magic: 0
@@ -162848,7 +162848,7 @@
     melee_strength: 0
     prayer: 0
     ranged_strength: 0
-    magic_damage: 0
+    magic_damage: 3.0
     attack_audio: -1
     absorb_melee: 12
     absorb_magic: 6
@@ -162921,7 +162921,7 @@
     melee_strength: 0
     prayer: 0
     ranged_strength: 0
-    magic_damage: 0
+    magic_damage: 3.0
     attack_audio: -1
     absorb_melee: 8
     absorb_magic: 4
@@ -162994,7 +162994,7 @@
     melee_strength: 0
     prayer: 0
     ranged_strength: 0
-    magic_damage: 0
+    magic_damage: 3.0
     attack_audio: -1
     absorb_melee: 6
     absorb_magic: 3
@@ -163139,7 +163139,7 @@
     summoning: 60
     melee_strength: 0
     prayer: 0
-    ranged_strength: 0
+    ranged_strength: 2
     magic_damage: 0
     attack_audio: -1
     absorb_melee: 0
@@ -163212,7 +163212,7 @@
     summoning: 30
     melee_strength: 0
     prayer: 0
-    ranged_strength: 0
+    ranged_strength: 1
     magic_damage: 0
     attack_audio: -1
     absorb_melee: 0
@@ -163285,7 +163285,7 @@
     summoning: 15
     melee_strength: 0
     prayer: 0
-    ranged_strength: 0
+    ranged_strength: 1
     magic_damage: 0
     attack_audio: -1
     absorb_melee: 0
@@ -172831,7 +172831,7 @@
     melee_strength: 0
     prayer: 2
     ranged_strength: 0
-    magic_damage: 0
+    magic_damage: 1.0
     attack_audio: -1
     absorb_melee: 3
     absorb_magic: 1
@@ -172870,7 +172870,7 @@
     melee_strength: 0
     prayer: 0
     ranged_strength: 0
-    magic_damage: 0
+    magic_damage: 1.0
     attack_audio: -1
     absorb_melee: 1
     absorb_magic: 0
@@ -172909,7 +172909,7 @@
     melee_strength: 0
     prayer: 2
     ranged_strength: 0
-    magic_damage: 0
+    magic_damage: 1.0
     attack_audio: -1
     absorb_melee: 2
     absorb_magic: 1
@@ -175308,7 +175308,7 @@
     melee_strength: 0
     ranged_strength: 0
     prayer: 2
-    magic_damage: 0
+    magic_damage: 1.0
     appearance_id: 3571
     equip_slot: 4
     equip_type: -1
@@ -175340,7 +175340,7 @@
     melee_strength: 0
     ranged_strength: 0
     prayer: 0
-    magic_damage: 0
+    magic_damage: 1.0
     appearance_id: 3572
     equip_slot: 0
     equip_type: -1
@@ -175372,7 +175372,7 @@
     melee_strength: 0
     ranged_strength: 0
     prayer: 2
-    magic_damage: 0
+    magic_damage: 1.0
     appearance_id: 3573
     equip_slot: 7
     equip_type: -1
@@ -182598,7 +182598,7 @@
     melee_strength: 0
     ranged_strength: 0
     prayer: 0
-    magic_damage: 0
+    magic_damage: 1.0
     appearance_id: 3744
     equip_slot: 4
     equip_type: -1
@@ -182636,7 +182636,7 @@
     melee_strength: 0
     ranged_strength: 0
     prayer: 0
-    magic_damage: 0
+    magic_damage: 1.0
     appearance_id: 3745
     equip_slot: 0
     equip_type: -1
@@ -182674,7 +182674,7 @@
     melee_strength: 0
     ranged_strength: 0
     prayer: 0
-    magic_damage: 0
+    magic_damage: 1.0
     appearance_id: 3746
     equip_slot: 7
     equip_type: -1
@@ -182712,7 +182712,7 @@
     melee_strength: 0
     ranged_strength: 0
     prayer: 0
-    magic_damage: 0
+    magic_damage: 1.0
     appearance_id: 3747
     equip_slot: 4
     equip_type: -1
@@ -182750,7 +182750,7 @@
     melee_strength: 0
     ranged_strength: 0
     prayer: 0
-    magic_damage: 0
+    magic_damage: 1.0
     appearance_id: 3748
     equip_slot: 0
     equip_type: -1
@@ -182788,7 +182788,7 @@
     melee_strength: 0
     ranged_strength: 0
     prayer: 0
-    magic_damage: 0
+    magic_damage: 1.0
     appearance_id: 3749
     equip_slot: 7
     equip_type: -1
@@ -182826,7 +182826,7 @@
     melee_strength: 0
     ranged_strength: 0
     prayer: 0
-    magic_damage: 0
+    magic_damage: 1.0
     appearance_id: 3750
     equip_slot: 4
     equip_type: -1
@@ -182864,7 +182864,7 @@
     melee_strength: 0
     ranged_strength: 0
     prayer: 0
-    magic_damage: 0
+    magic_damage: 1.0
     appearance_id: 3751
     equip_slot: 0
     equip_type: -1
@@ -182902,7 +182902,7 @@
     melee_strength: 0
     ranged_strength: 0
     prayer: 0
-    magic_damage: 0
+    magic_damage: 1.0
     appearance_id: 3752
     equip_slot: 7
     equip_type: -1
@@ -182940,7 +182940,7 @@
     melee_strength: 0
     ranged_strength: 0
     prayer: 0
-    magic_damage: 0
+    magic_damage: 1.0
     appearance_id: 3753
     equip_slot: 4
     equip_type: -1
@@ -182978,7 +182978,7 @@
     melee_strength: 0
     ranged_strength: 0
     prayer: 0
-    magic_damage: 0
+    magic_damage: 1.0
     appearance_id: 3754
     equip_slot: 0
     equip_type: -1
@@ -183016,7 +183016,7 @@
     melee_strength: 0
     ranged_strength: 0
     prayer: 0
-    magic_damage: 0
+    magic_damage: 1.0
     appearance_id: 3755
     equip_slot: 7
     equip_type: -1
@@ -242622,7 +242622,7 @@
     melee_strength: 0
     ranged_strength: 0
     prayer: 1
-    magic_damage: 0
+    magic_damage: 2.0
     appearance_id: 5090
     equip_slot: 0
     equip_type: -1
@@ -242660,7 +242660,7 @@
     melee_strength: 0
     ranged_strength: 0
     prayer: 1
-    magic_damage: 0
+    magic_damage: 2.0
     appearance_id: 5091
     equip_slot: 0
     equip_type: -1
@@ -242724,7 +242724,7 @@
     melee_strength: 0
     ranged_strength: 0
     prayer: 1
-    magic_damage: 0
+    magic_damage: 2.0
     appearance_id: 5093
     equip_slot: 4
     equip_type: -1
@@ -242762,7 +242762,7 @@
     melee_strength: 0
     ranged_strength: 0
     prayer: 1
-    magic_damage: 0
+    magic_damage: 2.0
     appearance_id: 5094
     equip_slot: 4
     equip_type: -1

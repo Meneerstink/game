@@ -70,6 +70,9 @@ class ModernItemDef(val id: Int) {
     val countCo: IntArray = IntArray(10)
     val params: MutableMap<Int, Any> = LinkedHashMap()
 
+    /** Bytes left after the terminating opcode 0; non-zero means an opcode length differs from this decoder's table. */
+    var trailingBytes: Int = 0
+
     /** Every opcode actually present in the source bytes, in order - the input to compatibility analysis. */
     val opcodesSeen: MutableList<Int> = mutableListOf()
 
@@ -136,6 +139,7 @@ object ModernItemDefDecoder {
             decodeOpcode(def, buf, opcode)
         }
         if (def.stackable == 1) def.weight = 0
+        def.trailingBytes = data.size - buf.position
         return def
     }
 
