@@ -87,7 +87,13 @@ object SpecialAttacks {
 
         val combatContext = CombatContext(world, player)
         target?.let { combatContext.target = it }
-        special.attack(combatContext)
+        // The special's hits are dealt inside attack(); WeaponPoison reads this for the Abyssal tentacle's 1/2 poison chance.
+        player.attr[gg.rsmod.plugins.content.mechanics.poison.WeaponPoison.SPECIAL_ATTACK_IN_PROGRESS] = true
+        try {
+            special.attack(combatContext)
+        } finally {
+            player.attr.remove(gg.rsmod.plugins.content.mechanics.poison.WeaponPoison.SPECIAL_ATTACK_IN_PROGRESS)
+        }
 
         return true
     }

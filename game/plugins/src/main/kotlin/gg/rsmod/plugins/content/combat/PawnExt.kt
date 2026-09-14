@@ -235,6 +235,11 @@ fun Pawn.dealHit(
         hit.addAction { gg.rsmod.plugins.content.items.osrs.BloodFury.onMeleeHit(attacker, hit.hitmarks.sumOf { it.damage }) }
     }
 
+    // Poisoned weapons and ammunition: 1/4 melee, 1/8 ranged on a landed non-zero hit (WeaponPoison, OSRS Wiki "Poison").
+    if (this is Player) {
+        gg.rsmod.plugins.content.mechanics.poison.WeaponPoison.onPlayerHit(this, target, pawnHit, hitType)
+    }
+
     // Crystal armour: "One charge is depleted for each successful hit that is received from combat" - monster hits only,
     // nothing when a protection prayer negated the damage (CrystalEquipment).
     if (target is Player && this is Npc && executeHit) {
