@@ -190,7 +190,7 @@ fun Pawn.dealHit(
         }
         damage = gg.rsmod.plugins.content.combat.scripts.impl.TormentedDemonCombatScript.modifyIncomingDamage(target, this, style, damage.toInt(), weapon).toDouble()
     }
-    // Corporeal Beast: damage is halved unless dealt with a spear or halberd on the stab style.
+    // Corporeal Beast: melee and ranged damage is halved unless dealt with a Corpbane weapon on the stab style (OSRS Wiki).
     if (target is Npc && target.id == gg.rsmod.plugins.api.cfg.Npcs.CORPOREAL_BEAST && damage > 0) {
         damage = gg.rsmod.plugins.content.combat.scripts.impl.CorporealBeastCombatScript.modifyIncomingDamage(this, hitType, damage.toInt()).toDouble()
     }

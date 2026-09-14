@@ -41,26 +41,28 @@ import java.lang.ref.WeakReference
  *   (10057 slap / 10058 swipe, magic instead when out of reach), 1/5 spiky ball (proj 1825, max 65),
  *   1/5 stat-drain ball (proj 1823, max 55, drains Magic/Summoning/Prayer), 1/5 scatter ball (proj 1824,
  *   impact gfx 1806; Void damage: centre 40 / adjacent 30, six splashes 30 / adjacent 20).
- * - Stomp hits 30-51 (Void 300..510). Melee max 51 (Novite max hit 513).
- * - Its magic is only partially blocked by Protect from / Deflect Magic: 60% gets through (Novite
- *   getMagePrayerMultiplier = 0.6).
- * - All damage dealt to it is halved unless it comes from a spear or halberd used on the stab style
- *   (Void Target.damageModifiers / Equipment.isCorpbaneWeapon, corrected to apply to damage dealt TO the
- *   beast rather than by it).
- * - Regeneration (Void corp_stomp timer, every 7 ticks): with nobody in the lair it heals to full (Novite
- *   processNPC), with 8+ players in the lair it restores 25 + 5 per player life points.
- * - Dark energy core (Void spawnDarkCore): 1/8 chance whenever the beast attacks while damaged or takes a
- *   hit of 32+, one core at a time. It flies to a player (proj 1828), sits on their tile and every 2 ticks
- *   (12 while poisoned) steals 1-13 life points for its master with the Void message. When its victim
- *   moves it hops (anim 10393, proj 1828) to a random player in the lair. It has 25 lifepoints and can be
- *   killed; it vanishes when the beast dies or the lair empties.
+ * - OSRS Wiki "Corporeal Beast/Strategies" (2026-09-14): the stomp "will always deal 30–51 damage" and cannot be blocked by
+ *   protection prayers; melee "can hit up to 33" (Void table); the drain ball "has a chance to drain Magic or Prayer by 1 or 2"
+ *   (SOURCE_GAP: the chance is unquantified, so it drains on every cast); "Protect from Magic will block 1/3 of the damage from
+ *   the magic attacks" (Deflect Magic treated the same, ADAPTED: 667 curse).
+ * - "50% damage reduction against any melee and ranged weapon that is not a Corpbane weapon. These weapons must also be on the
+ *   stab attack style." Magic deals full damage. Corpbane = the OSRS Wiki "Corpbane weapons" list ([CORPBANE_WEAPONS]).
+ * - Regeneration + stomp share one 7-tick timer (OSRS Wiki Strategies): stomp every player underneath; empty lair heals 75, then
+ *   +10 cumulatively per tick (75, 85, ...); full heal once nobody has attacked it for 300 ticks; 8+ players restore 25 + 5 per
+ *   player (Void; the wiki names only the 5 per player). SOURCE_GAP: drained-stat regeneration every 20 ticks not built here.
+ * - Dark energy core (OSRS Wiki "Dark energy core", 2026-09-14; visuals from Void spawnDarkCore): 1/8 chance after a hit
+ *   of 32+ or when the beast attacks below 1,000 hitpoints, one core at a time. It flies to a player (proj 1828) and every
+ *   2 ticks (12 while poisoned, Void value: SOURCE_GAP) deals 5-13 to every player in its 3x3 area, healing the beast 50%
+ *   rounded down. With nobody in range it jumps (anim 10393, proj 1828), northernmost player first, then east. Killed
+ *   mid-jump, it does not return for the rest of the fight. It has 25 hitpoints; it vanishes when the beast dies or the
+ *   lair empties.
  */
 object CorporealBeastCombatScript : CombatScript() {
     override val ids = intArrayOf(Npcs.CORPOREAL_BEAST)
 
     const val DARK_ENERGY_CORE = Npcs.DARK_ENERGY_CORE_8127
 
-    private const val MELEE_MAX = 51.3
+    private const val MELEE_MAX = 33.0
     private const val STOMP_MIN = 30.0
     private const val STOMP_MAX = 51.0
     private const val MAGIC_MAX = 65.0
@@ -69,7 +71,33 @@ object CorporealBeastCombatScript : CombatScript() {
     private const val SCATTER_CENTRE_ADJACENT_MAX = 30.0
     private const val SCATTER_SPLASH_MAX = 30.0
     private const val SCATTER_SPLASH_ADJACENT_MAX = 20.0
-    private const val MAGIC_PRAYER_MULTIPLIER = 0.6
+    const val MAGIC_PRAYER_MULTIPLIER = 2.0 / 3.0
+    const val DRAIN_MIN = 1
+    const val DRAIN_MAX_POINTS = 2
+
+    /**
+     * OSRS Wiki "Corpbane weapons" (2026-09-14): spears, halberds and others; "The poisoned variants of these weapons are also Corpbane".
+     * Crystal halberd is listed as the active variant only. ADAPTED names: 667 degrade suffixes (Guthan's "100".."0", Vesta's "(deg)")
+     * are the same weapon. Not listed, so not Corpbane: hastae, Dungeoneering spears, corrupt PvP spears, "Halberd", "Anger spear"
+     * (owner question 18).
+     */
+    val CORPBANE_WEAPONS = setOf(
+        "Bronze spear", "Iron spear", "Steel spear", "Black spear", "Mithril spear", "Adamant spear", "Rune spear", "Dragon spear",
+        "Bone spear", "Gilded spear", "Leaf-bladed spear", "Guthan's warspear", "Zamorakian spear", "Sunspear", "Vesta's spear",
+        "Bronze halberd", "Iron halberd", "Steel halberd", "Black halberd", "White halberd", "Mithril halberd", "Adamant halberd",
+        "Rune halberd", "Dragon halberd", "Crystal halberd", "Noxious halberd",
+        "Osmumten's fang", "Thunder khopesh", "King's barrage",
+    )
+
+    private val POISON_OR_DEGRADE_SUFFIX = Regex("""( \((p|p\+|p\+\+|kp|deg)\)| (100|75|50|25|0))$""")
+
+    fun isCorpbaneWeapon(name: String): Boolean = name.replace(POISON_OR_DEGRADE_SUFFIX, "") in CORPBANE_WEAPONS
+
+    /** Only melee and ranged damage is halved, and not from a Corpbane weapon on the stab style. */
+    fun halvesDamage(
+        hitType: HitType,
+        corpbaneOnStab: Boolean,
+    ): Boolean = (hitType == HitType.MELEE || hitType == HitType.RANGE) && !corpbaneOnStab
 
     private const val ANIM_SLAP = 10057
     private const val ANIM_SWIPE = 10058
@@ -83,17 +111,30 @@ object CorporealBeastCombatScript : CombatScript() {
     private const val GFX_MAGIC_IMPACT = 1806
     private const val ANIM_CORE_TAKE_OFF = 10393
 
-    private const val CORE_SPAWN_CHANCE = 8
-    // Void's source stores this rule as 320 in its historical x10 hitmark unit. The local
-    // runtime now passes 1:1 real damage from PawnExt, so the gameplay threshold is 32.
-    private const val CORE_SPAWN_HIT_THRESHOLD = 32
-    // RCV-010 B1: 10..130 is the donor x10 figure; the header's "steals 1-13 life points" is the 1:1 value.
-    private val CORE_DRAIN_MIN = LifepointUnits.fromLedger(10)
-    private val CORE_DRAIN_MAX = LifepointUnits.fromLedger(130)
-    private const val CORE_ATTACK_SPEED = 2
-    private const val CORE_POISONED_ATTACK_SPEED = 12
-    private const val CORE_RETARGET_DELAY = 3
-    private const val REGEN_INTERVAL = 7
+    // OSRS Wiki Dark energy core (raw wikitext 2026-09-14): "The dark core has a 1 in 8 chance of spawning after the Corporeal Beast
+    // receives 32 or more damage from a hit, or when it attacks while below 1,000 Hitpoints." World.random(bound) is inclusive,
+    // so the roll is random(CORE_SPAWN_CHANCE - 1) == 0.
+    const val CORE_SPAWN_CHANCE = 8
+    const val CORE_SPAWN_HIT_THRESHOLD = 32
+    const val CORE_ATTACK_SPAWN_BELOW_LIFEPOINTS = 1000
+    // "damage players within a 3x3 (1 tile) radius of it, dealing 5–13 damage every 2 ticks (1.2 seconds) and healing the
+    // Corporeal beast for 50% (rounded down) of the damage dealt."
+    const val CORE_DAMAGE_MIN = 5
+    const val CORE_DAMAGE_MAX = 13
+    const val CORE_RADIUS = 1
+    const val CORE_ATTACK_SPEED = 2
+    // SOURCE_GAP: the wiki only says a poisoned core's attacks "become significantly slower"; 12 ticks is Void's donor value.
+    const val CORE_POISONED_ATTACK_SPEED = 12
+    // OSRS Wiki "Corporeal Beast/Strategies" (2026-09-14): "If there are no players in the cave, it will heal 75 hitpoints every 7 game
+    // ticks (4.2 seconds), and heals an additional 10 hitpoints cumulatively every 7 ticks thereafter. This timer is shared with the
+    // Corporeal Beast's stomp attack timer. It will fully heal after three minutes if no one has attacked it."
+    const val REGEN_INTERVAL = 7
+    const val EMPTY_LAIR_FIRST_HEAL = 75
+    const val EMPTY_LAIR_HEAL_STEP = 10
+    const val FULL_HEAL_AFTER_TICKS = 300
+
+    /** Heal on the [step]-th consecutive empty-lair timer tick (0-based): 75, 85, 95, ... */
+    fun emptyLairHeal(step: Int): Int = EMPTY_LAIR_FIRST_HEAL + EMPTY_LAIR_HEAL_STEP * step
 
     val LAIR_X = 2972..3001
     val LAIR_Z = 4370..4397
@@ -102,6 +143,9 @@ object CorporealBeastCombatScript : CombatScript() {
     private val CORE = AttributeKey<WeakReference<Npc>>()
     private val CORE_OWNER = AttributeKey<WeakReference<Npc>>()
     private val REGEN_TOKEN = AttributeKey<Any>()
+    private val LAST_ATTACKED_CYCLE = AttributeKey<Int>()
+    private val CORE_JUMPING = AttributeKey<Boolean>()
+    private val CORE_DISABLED = AttributeKey<Boolean>()
 
     fun inLair(tile: Tile): Boolean = tile.height == LAIR_HEIGHT && tile.x in LAIR_X && tile.z in LAIR_Z
 
@@ -123,25 +167,21 @@ object CorporealBeastCombatScript : CombatScript() {
         while (npc.canEngageCombat(target) && npc.isAttackDelayReady()) {
             npc.facePawn(target)
             val nearby = nearbyPlayers(npc)
-            if (npc.getCurrentLifepoints() < npc.getMaximumLifepoints()) {
+            if (npc.getCurrentLifepoints() < CORE_ATTACK_SPAWN_BELOW_LIFEPOINTS) {
                 trySpawnCore(npc, target)
             }
 
-            val underneath = nearby.filter { isUnder(npc, it) }
-            if (underneath.isNotEmpty()) {
-                stomp(npc, underneath)
-            } else {
-                val distance = npc.getFrontFacingTile(target).getDistance(target.tile)
-                val inMelee = distance <= 1
-                when (if (inMelee) world.random(4) else 2 + world.random(2)) {
-                    0, 1 -> melee(npc, target, world)
-                    2 -> spikyBall(npc, target)
-                    3 -> drainBall(npc, target, world)
-                    else -> scatterBall(npc, target, nearby, world)
-                }
-                if (!inMelee) {
-                    npc.moveToAttackRange(it, target, distance = 8, projectile = true)
-                }
+            // The stomp is not part of the attack cycle: it runs on the shared 7-tick timer (startRegeneration).
+            val distance = npc.getFrontFacingTile(target).getDistance(target.tile)
+            val inMelee = distance <= 1
+            when (if (inMelee) world.random(4) else 2 + world.random(2)) {
+                0, 1 -> melee(npc, target, world)
+                2 -> spikyBall(npc, target)
+                3 -> drainBall(npc, target, world)
+                else -> scatterBall(npc, target, nearby, world)
+            }
+            if (!inMelee) {
+                npc.moveToAttackRange(it, target, distance = 8, projectile = true)
             }
 
             npc.postAttackLogic(target)
@@ -163,18 +203,13 @@ object CorporealBeastCombatScript : CombatScript() {
         damage: Int,
     ): Int {
         if (damage <= 0) return damage
-        if (attacker is Player && hitType == HitType.MELEE && isCorpbaneWeapon(attacker) &&
-            CombatConfigs.getCombatStyle(attacker) == StyleType.STAB
-        ) {
-            return damage
-        }
-        return damage / 2
+        val corpbaneOnStab = attacker is Player && isCorpbaneWeapon(attacker) && CombatConfigs.getCombatStyle(attacker) == StyleType.STAB
+        return if (halvesDamage(hitType, corpbaneOnStab)) damage / 2 else damage
     }
 
     private fun isCorpbaneWeapon(player: Player): Boolean {
         val weapon = player.equipment[3] ?: return false
-        val name = player.world.definitions.get(ItemDef::class.java, weapon.id).name.lowercase()
-        return name.contains("spear") || name.contains("halberd")
+        return isCorpbaneWeapon(player.world.definitions.get(ItemDef::class.java, weapon.id).name)
     }
 
     /** Called from the beast's death hook: the core dies with its master. */
@@ -186,20 +221,28 @@ object CorporealBeastCombatScript : CombatScript() {
         }
     }
 
-    /** Called from the core's death hook so the beast may summon a new one. */
+    /**
+     * Called from the core's death hook so the beast may summon a new one. OSRS Wiki: "if it is killed during a jump (such as by
+     * ranged/mage projectile or by a dwarf multicannon), it will not respawn for the remaining duration of the fight." The flag
+     * lives in the beast's attributes, which the engine clears on death/respawn; an empty lair (the fight ending) clears it too.
+     */
     fun onCoreDeath(core: Npc) {
         val beast = core.attr[CORE_OWNER]?.get() ?: return
         if (beast.attr[CORE]?.get() === core) {
             beast.attr.remove(CORE)
         }
+        if (core.attr[CORE_JUMPING] == true) {
+            beast.attr[CORE_DISABLED] = true
+        }
     }
 
-    /** Void: a hit of 32+ on the beast has a 1/8 chance of summoning the core onto the attacker. */
+    /** OSRS Wiki: a hit of 32+ on the beast has a 1/8 chance of summoning the core. */
     fun onBeastDamaged(
         npc: Npc,
         attacker: Pawn,
         damage: Int,
     ) {
+        npc.attr[LAST_ATTACKED_CYCLE] = npc.world.currentCycle
         if (damage < CORE_SPAWN_HIT_THRESHOLD) return
         trySpawnCore(npc, attacker)
     }
@@ -214,23 +257,40 @@ object CorporealBeastCombatScript : CombatScript() {
         val token = Any()
         npc.attr[REGEN_TOKEN] = token
         world.queue {
+            var emptyStep = 0
             while (npc.isSpawned() && !npc.isDead() && npc.attr[REGEN_TOKEN] === token) {
                 wait(REGEN_INTERVAL)
                 if (!npc.isSpawned() || npc.isDead() || npc.attr[REGEN_TOKEN] !== token) break
-                val count = playersInLair(world).size
+                val players = playersInLair(world)
+                val count = players.size
                 val max = npc.getMaximumLifepoints()
+                // "a timer that checks if any players are under the Corporeal Beast every 7 ticks"; SOURCE_GAP: "may perform" is
+                // unquantified, so it stomps on every check that finds a player underneath.
+                val underneath = players.filter { isUnder(npc, it) }
+                if (underneath.isNotEmpty()) {
+                    stomp(npc, underneath)
+                }
+                val lastAttacked = npc.attr[LAST_ATTACKED_CYCLE]
+                val sinceAttack = if (lastAttacked == null) Int.MAX_VALUE else world.currentCycle - lastAttacked
+                if (npc.getCurrentLifepoints() < max && (sinceAttack < 0 || sinceAttack >= FULL_HEAL_AFTER_TICKS)) {
+                    npc.setCurrentLifepoints(max)
+                }
                 if (count == 0) {
-                    if (npc.getCurrentLifepoints() < max) {
-                        npc.setCurrentLifepoints(max)
-                    }
+                    npc.setCurrentLifepoints(minOf(max, npc.getCurrentLifepoints() + emptyLairHeal(emptyStep)))
+                    emptyStep++
+                    npc.attr.remove(CORE_DISABLED)
                     val core = npc.attr[CORE]?.get()
                     if (core != null) {
                         npc.attr.remove(CORE)
                         if (core.isSpawned() && !core.isDead()) world.remove(core)
                     }
-                } else if (count >= 8) {
-                    // Void `levels.restore(Constitution, 250 + count * 50)` is x10: 25 + 5 per player (header).
-                    npc.setCurrentLifepoints(minOf(max, npc.getCurrentLifepoints() + LifepointUnits.fromLedger(250 + count * 50)))
+                } else {
+                    emptyStep = 0
+                    if (count >= 8) {
+                        // Wiki: "eight or more players ... an additional 5 Hitpoints per player every 7 ticks". Void
+                        // `levels.restore(Constitution, 250 + count * 50)` is x10 = 25 + 5 per player; the 25 base is Void-only (wiki silent).
+                        npc.setCurrentLifepoints(minOf(max, npc.getCurrentLifepoints() + LifepointUnits.fromLedger(250 + count * 50)))
+                    }
                 }
             }
         }
@@ -269,8 +329,8 @@ object CorporealBeastCombatScript : CombatScript() {
             (Prayers.isActive(target, Prayer.PROTECT_FROM_MAGIC) || AncientCurses.isCurseActive(target, AncientCurse.DEFLECT_MAGIC))
 
     /**
-     * The beast's magic ignores the prayer short circuit in the formula; 60% of the damage passes
-     * through Protect from / Deflect Magic instead (Novite).
+     * The beast's magic ignores the prayer short circuit in the formula; OSRS Wiki: "Protect from Magic will block 1/3 of the damage
+     * from the magic attacks", so 2/3 of the max hit passes.
      */
     private fun magicHit(
         npc: Npc,
@@ -294,9 +354,10 @@ object CorporealBeastCombatScript : CombatScript() {
         npc.prepareAttack(CombatClass.MELEE, StyleType.CRUSH, WeaponStyle.AGGRESSIVE)
         npc.animate(ANIM_STOMP)
         npc.graphic(GFX_STOMP)
+        // OSRS Wiki: "will always deal 30–51 damage" and cannot be blocked by protection prayers (the melee accuracy roll returns 0
+        // against Protect from Melee, so the stomp does not roll accuracy).
         victims.forEach { victim ->
-            val landHit = MeleeCombatFormula.getAccuracy(npc, victim) >= npc.world.randomDouble()
-            npc.dealHit(target = victim, minHit = STOMP_MIN, maxHit = STOMP_MAX, landHit = landHit, delay = 0, hitType = HitType.MELEE)
+            npc.dealHit(target = victim, minHit = STOMP_MIN, maxHit = STOMP_MAX, landHit = true, delay = 0, hitType = HitType.MELEE)
         }
     }
 
@@ -338,19 +399,14 @@ object CorporealBeastCombatScript : CombatScript() {
         val hit = magicHit(npc, target, DRAIN_MAX, delay)
         if (target is Player) {
             hit.hit.addAction {
-                when (world.random(2)) {
-                    0 -> {
-                        target.skills.decrementCurrentLevel(Skills.MAGIC, 1 + world.random(4), capped = false)
-                        target.message("Your Magic has been slightly drained!")
-                    }
-                    1 -> {
-                        target.skills.decrementCurrentLevel(Skills.SUMMONING, 1 + world.random(4), capped = false)
-                        target.message("Your Summoning has been slightly drained!")
-                    }
-                    else -> {
-                        target.setCurrentPrayerPoints((target.getCurrentPrayerPoints() - (10 + world.random(40))).coerceAtLeast(0))
-                        target.message("Your Prayer has been slightly drained!")
-                    }
+                // OSRS Wiki: "drain Magic or Prayer by 1 or 2" (prayer points are 1:1). Messages: Novite/Void donor text.
+                val amount = world.random(DRAIN_MIN..DRAIN_MAX_POINTS)
+                if (world.random(1) == 0) {
+                    target.skills.decrementCurrentLevel(Skills.MAGIC, amount, capped = false)
+                    target.message("Your Magic has been slightly drained!")
+                } else {
+                    target.setCurrentPrayerPoints((target.getCurrentPrayerPoints() - amount).coerceAtLeast(0))
+                    target.message("Your Prayer has been slightly drained!")
                 }
             }
         }
@@ -405,12 +461,38 @@ object CorporealBeastCombatScript : CombatScript() {
         }
     }
 
+    /** OSRS Wiki: the core damages players "within a 3x3 (1 tile) radius of it". */
+    fun inCoreRange(
+        core: Tile,
+        player: Tile,
+    ): Boolean = core.isWithinRadius(player, CORE_RADIUS)
+
+    /** OSRS Wiki: "healing the Corporeal beast for 50% (rounded down) of the damage dealt". */
+    fun coreHeal(damage: Int): Int = damage / 2
+
+    /**
+     * OSRS Wiki: "The dark energy core will usually jump toward the player standing at the northernmost position relative to the
+     * Corporeal Beast. If no players are on the northern side, it will instead prioritise players to the east of the Corporeal Beast."
+     * ADAPTED: "usually" and the east ordering are not quantified, so this picks the northernmost player north of the beast's centre,
+     * else the easternmost player east of it; null means neither side is occupied and the caller picks a random player.
+     */
+    fun jumpTargetIndex(
+        beastCentre: Tile,
+        candidates: List<Tile>,
+    ): Int? {
+        val north = candidates.indices.filter { candidates[it].z > beastCentre.z }
+        if (north.isNotEmpty()) return north.maxByOrNull { candidates[it].z }
+        val east = candidates.indices.filter { candidates[it].x > beastCentre.x }
+        return east.maxByOrNull { candidates[it].x }
+    }
+
     private fun trySpawnCore(
         npc: Npc,
         target: Pawn,
     ) {
         val world = npc.world
-        if (world.random(CORE_SPAWN_CHANCE) != 0) return
+        if (npc.attr[CORE_DISABLED] == true) return
+        if (world.random(CORE_SPAWN_CHANCE - 1) != 0) return
         val existing = npc.attr[CORE]?.get()
         if (existing != null && existing.isSpawned() && !existing.isDead()) return
         val victim = target as? Player ?: playersInLair(world).randomOrNull() ?: return
@@ -442,40 +524,41 @@ object CorporealBeastCombatScript : CombatScript() {
     ) {
         val world = beast.world
         world.queue {
-            var victim: Player? = initial
-            var awayTicks = 0
             var cooldown = 0
             while (core.isSpawned() && !core.isDead() && beast.isSpawned() && !beast.isDead()) {
-                val current = victim
-                if (current != null && current.isOnline && !current.isDead() && current.tile.sameAs(core.tile)) {
-                    awayTicks = 0
-                    if (cooldown <= 0) {
-                        val damage = CORE_DRAIN_MIN + world.random(CORE_DRAIN_MAX - CORE_DRAIN_MIN)
-                        current.hit(damage = damage, type = HitType.REGULAR_HIT.id)
-                        current.message("The dark core creature steals some life from you for its master.")
-                        beast.setCurrentLifepoints(minOf(beast.getCurrentLifepoints() + damage, beast.getMaximumLifepoints()))
+                if (cooldown <= 0) {
+                    val inRange = playersInLair(world).filter { inCoreRange(core.tile, it.tile) }
+                    if (inRange.isNotEmpty()) {
+                        inRange.forEach { victim ->
+                            val damage = world.random(CORE_DAMAGE_MIN..CORE_DAMAGE_MAX)
+                            victim.hit(damage = damage, type = HitType.REGULAR_HIT.id)
+                            // Void donor message (the OSRS Wiki page quotes none).
+                            victim.message("The dark core creature steals some life from you for its master.")
+                            beast.setCurrentLifepoints(minOf(beast.getCurrentLifepoints() + coreHeal(damage), beast.getMaximumLifepoints()))
+                        }
                         cooldown = if (core.attr.has(POISON_TICKS_LEFT_ATTR)) CORE_POISONED_ATTACK_SPEED else CORE_ATTACK_SPEED
+                    } else {
+                        // "If no player is actively being damaged by the core, it will instead jump towards a player in the arena."
+                        val candidates = playersInLair(world)
+                        if (candidates.isEmpty()) break
+                        val next = candidates[jumpTargetIndex(beast.getCentreTile(), candidates.map { it.tile }) ?: world.random(candidates.size - 1)]
+                        val destination = Tile(next.tile)
+                        core.facePawn(next)
+                        core.animate(ANIM_CORE_TAKE_OFF)
+                        wait(1)
+                        if (!core.isSpawned() || core.isDead()) break
+                        val travel = MagicCombatStrategy.getHitDelay(core.tile, destination)
+                        world.spawn(core.createProjectile(destination, PROJ_CORE_TRAVEL, ProjectileType.MAGIC))
+                        core.invisible = true
+                        core.attr[CORE_JUMPING] = true
+                        wait(travel)
+                        if (!core.isSpawned() || core.isDead()) break
+                        core.moveTo(destination)
+                        core.invisible = false
+                        core.attr.remove(CORE_JUMPING)
+                        core.resetFacePawn()
+                        continue
                     }
-                } else if (++awayTicks >= CORE_RETARGET_DELAY) {
-                    awayTicks = 0
-                    val candidates = playersInLair(world)
-                    if (candidates.isEmpty()) break
-                    val next = candidates.random()
-                    victim = next
-                    val destination = Tile(next.tile)
-                    core.facePawn(next)
-                    core.animate(ANIM_CORE_TAKE_OFF)
-                    wait(1)
-                    if (!core.isSpawned() || core.isDead()) break
-                    val travel = MagicCombatStrategy.getHitDelay(core.tile, destination)
-                    world.spawn(core.createProjectile(destination, PROJ_CORE_TRAVEL, ProjectileType.MAGIC))
-                    core.invisible = true
-                    wait(travel)
-                    if (!core.isSpawned() || core.isDead()) break
-                    core.moveTo(destination)
-                    core.invisible = false
-                    core.resetFacePawn()
-                    continue
                 }
                 cooldown--
                 wait(1)
