@@ -60,12 +60,9 @@ class AncientCurseSoundProvenanceTests {
     /** Index 4 is `Js5Archive.SYNTH_SOUNDS`; a sound id is a group and the sound is its file 0. */
     private val synthSoundIndex = 4
 
-    /*
-     * Activation sends no sound since the 2026-09-13 owner retest: Novite's generic 2662 was the shared
-     * wrong curse sound, and Void plays none on curse activation (see AncientCurses).
-     */
     private val curseSounds =
         mapOf(
+            "curse activated (Novite Prayer.java:628)" to Sfx.IMPROVED_REFLEXES,
             "curse lifted (Novite Prayer.java:493, Void deactivate_prayer)" to Sfx.CANCEL_PRAYER,
         )
 
@@ -96,7 +93,8 @@ class AncientCurseSoundProvenanceTests {
      */
     @Test
     fun `the donor prayer toggle pair keeps its sourced ids`() {
-        assertEquals(listOf(2663), curseSounds.values.toList())
+        assertEquals(listOf(2662, 2663), curseSounds.values.toList())
+        assertEquals(2662, Sfx.IMPROVED_REFLEXES)
         assertEquals(2663, Sfx.CANCEL_PRAYER)
     }
 

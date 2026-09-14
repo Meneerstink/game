@@ -283,9 +283,8 @@ class AncientCursesTests {
     // ---- Deflect reflect bonus (dealHit -> AncientCurses.onIncomingHit) ----
 
     @Test
-    fun `Deflect Melee reflects 10 percent of the damage back to the attacker on a successful roll`() {
+    fun `Deflect Melee reflects 10 percent of the damage back to the attacker`() {
         val target = newPlayer().also { activate(it, AncientCurse.DEFLECT_MELEE) }
-        every { target.world.percentChance(63.0) } returns true
         val attacker = mockk<Player>(relaxed = true)
 
         AncientCurses.onIncomingHit(attacker, target, CombatClass.MELEE, damage = 100)
@@ -296,14 +295,15 @@ class AncientCursesTests {
     }
 
     @Test
-    fun `Deflect reflect does not trigger when the chance roll fails`() {
+    fun `Deflect reflect has no chance roll in the 667 source`() {
         val target = newPlayer().also { activate(it, AncientCurse.DEFLECT_MAGIC) }
-        every { target.world.percentChance(63.0) } returns false
         val attacker = mockk<Player>(relaxed = true)
 
         AncientCurses.onIncomingHit(attacker, target, CombatClass.MAGIC, damage = 100)
 
-        verify(exactly = 0) { attacker.addHit(any()) }
+        val hitSlot = slot<gg.rsmod.game.model.Hit>()
+        verify { attacker.addHit(capture(hitSlot)) }
+        assertEquals(10, hitSlot.captured.hitmarks.sumOf { it.damage })
     }
 
     @Test
@@ -311,7 +311,6 @@ class AncientCursesTests {
         // Novite Player.java:1267-1297 reflects whenever the 10% is above zero; the old "under 10" rule was written for
         // x10 life points and blocked every hit under 100 after the 1:1 migration.
         val target = newPlayer().also { activate(it, AncientCurse.DEFLECT_MISSILES) }
-        every { target.world.percentChance(63.0) } returns true
         val attacker = mockk<Player>(relaxed = true)
 
         AncientCurses.onIncomingHit(attacker, target, CombatClass.RANGED, damage = 9) // 10% = 0

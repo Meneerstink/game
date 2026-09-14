@@ -5,11 +5,12 @@ import gg.rsmod.game.model.combat.CombatClass
 import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Pawn
 import gg.rsmod.game.model.entity.Player
+import gg.rsmod.game.model.Tile
+import gg.rsmod.game.model.TileGraphic
 import gg.rsmod.game.model.queue.QueueTask
 import gg.rsmod.game.sync.block.UpdateBlockType
 import gg.rsmod.plugins.api.NpcSkills
 import gg.rsmod.plugins.api.PrayerIcon
-import gg.rsmod.plugins.api.ProjectileType
 import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.api.cfg.Sfx
@@ -37,11 +38,12 @@ import gg.rsmod.plugins.content.inter.attack.AttackTab
  *  * Soul Split heals 20% of the hit and drains a player target's prayer by 20% of the hit;
  *    Wrath deals up to 300% of the Prayer level in a 5x5 area on the wearer's death (PROVEN from
  *    the same Novite source - `Utils.getRandom(level * 3)` - this file previously had 250%, which
- *    was a bug, not a sourced value); Deflects block like Protect prayers and reflect 10% on ~63%
+ *    was a bug, not a sourced value); Deflects block like Protect prayers and reflect 10% of qualifying
  *    of hits; Berserker extends boosts by 15% (in `stat_restoration.plugin.kts`).
  */
 object AncientCurses {
     private val TURMOIL_ACTIVE_ATTR = AttributeKey<Boolean>()
+    private val TURMOIL_BONUS_ATTR = AttributeKey<MutableMap<Int, Int>>()
 
     /**
      * Stands in for the real "Temple at Senntisten" unlock quest (PROJECT_PLAN SS18/SS7 confirms an
@@ -82,15 +84,15 @@ object AncientCurses {
      * every curse sequence (12565/12569/12573/12575) is frame-silent, so no impact sound is sent
      * rather than a borrowed one - recorded as SOURCE_BLOCKED in the handoff.
      */
-    /*
-     * No shared activation sound (owner live retest 2026-09-13). 2662 is Novite's generic
-     * prayer-activate sound (`Prayer.java` sends it for every prayer in both books); Void
-     * `content/skill/prayer/Prayers.kt` plays `anim/gfx("activate_<curse>")` for curses and a
-     * sound only for the normal book. Live: every curse played the same wrong sound, Turmoil and
-     * Berserker played it on top of their own, and Protect Item - routed through the normal
-     * prayer path, never 2662 - was the only curse that sounded right.
-     */
+    /** Novite rev-667 sends the normal prayer activation sound for every curse toggle. */
+    private const val CURSE_ACTIVATE_SOUND = Sfx.IMPROVED_REFLEXES
     private const val CURSE_DEACTIVATE_SOUND = Sfx.CANCEL_PRAYER
+
+    /** Novite's Sap/Leech projectile packet: start/end 35, speed 20, delay 5, curve 0. */
+    private const val CURSE_PROJECTILE_START_HEIGHT = 35
+    private const val CURSE_PROJECTILE_END_HEIGHT = 35
+    private const val CURSE_PROJECTILE_DELAY = 5
+    private const val CURSE_PROJECTILE_LIFESPAN = 20
 
     /** Per-target escalation state: skill -> drain percentage currently applied by curses. */
     private val CURSE_DRAIN_PCT_ATTR = AttributeKey<MutableMap<Int, Int>>()
@@ -118,6 +120,7 @@ object AncientCurses {
     fun toggleTurmoil(player: Player, playActivationVisual: Boolean = true) {
         if (isTurmoilActive(player)) {
             setTurmoil(player, false)
+            resetTurmoilBonus(player)
             player.playSound(CURSE_DEACTIVATE_SOUND)
             player.filterableMessage("You deactivate Turmoil.")
             return
@@ -141,6 +144,8 @@ object AncientCurses {
         // Turmoil never runs together with a Sap or Leech.
         activeCurses(player).filter { it.conflictsWithTurmoil }.forEach { deactivateCurse(player, it, playSound = false) }
         setTurmoil(player, true)
+        player.attr[TURMOIL_BONUS_ATTR] = mutableMapOf()
+        player.playSound(CURSE_ACTIVATE_SOUND)
         if (playActivationVisual) {
             player.animate(12565)
             player.graphic(2226)
@@ -160,33 +165,22 @@ object AncientCurses {
      * Turmoil multiplier for one of Attack/Strength/Defence against [target] (2011: base% plus a
      * share of the opponent's corresponding level). Without a target only the base applies.
      */
+    @Suppress("UNUSED_PARAMETER")
     fun turmoilMultiplier(
         player: Player,
         skill: Int,
         target: Pawn?,
     ): Double {
         if (!isTurmoilActive(player)) return 1.0
-        val (base, share) =
+        val base =
             when (skill) {
-                Skills.ATTACK -> 15.0 to 0.15
-                Skills.STRENGTH -> 23.0 to 0.10
-                Skills.DEFENCE -> 15.0 to 0.15
+                Skills.ATTACK -> 15
+                Skills.STRENGTH -> 23
+                Skills.DEFENCE -> 15
                 else -> return 1.0
             }
-        val targetLevel =
-            when (target) {
-                is Player -> target.skills.getCurrentLevel(skill)
-                is Npc ->
-                    target.stats.getCurrentLevel(
-                        when (skill) {
-                            Skills.ATTACK -> NpcSkills.ATTACK
-                            Skills.STRENGTH -> NpcSkills.STRENGTH
-                            else -> NpcSkills.DEFENCE
-                        },
-                    )
-                else -> 0
-            }.coerceIn(0, TURMOIL_TARGET_LEVEL_CAP)
-        return 1.0 + (base + share * targetLevel) / 100.0
+        val opponentBonus = player.attr[TURMOIL_BONUS_ATTR]?.get(skill) ?: 0
+        return 1.0 + (base + opponentBonus) / 100.0
     }
 
     // ---- book -----------------------------------------------------------------------------
@@ -408,6 +402,7 @@ object AncientCurses {
         activeCurses(player).filter { curse.conflictsWith(it) }.forEach { deactivateCurse(player, it, playSound = false) }
         if (curse.conflictsWithTurmoil && isTurmoilActive(player)) {
             setTurmoil(player, false)
+            resetTurmoilBonus(player)
             player.filterableMessage("You deactivate Turmoil.")
         }
         activeCurses(player).add(curse)
@@ -416,6 +411,7 @@ object AncientCurses {
             curse.activationAnimation?.let { player.animate(it) }
             curse.activationGraphic?.let { player.graphic(it) }
         }
+        player.playSound(CURSE_ACTIVATE_SOUND)
         player.filterableMessage("You activate ${curse.curseName}.")
         refreshCurseOverhead(player)
     }
@@ -439,7 +435,9 @@ object AncientCurses {
         activeCurses(player).forEach { player.setVarbit(it.varbit, 0) }
         activeCurses(player).clear()
         setTurmoil(player, false)
-        player.playSound(CURSE_DEACTIVATE_SOUND)
+        player.attr.remove(TURMOIL_BONUS_ATTR)
+        // Bulk shutdowns (death, logout, book switch, zero prayer, pool) mirror Novite's
+        // closePrayers path and are silent. Sound 2663 belongs to an explicit toggle-off only.
         resetLeechBoosts(player)
         refreshCurseOverhead(player)
     }
@@ -492,6 +490,24 @@ object AncientCurses {
 
     private fun resetLeechBoosts(player: Player) {
         player.attr.remove(LEECH_BOOST_PCT_ATTR)
+    }
+
+    private fun resetTurmoilBonus(player: Player) {
+        player.attr.remove(TURMOIL_BONUS_ATTR)
+    }
+
+    /** Novite's first successful Turmoil melee hit snapshots the opponent's base levels. */
+    private fun establishTurmoilBonus(
+        player: Player,
+        target: Pawn,
+    ) {
+        val bonuses = player.attr[TURMOIL_BONUS_ATTR] ?: mutableMapOf<Int, Int>().also { player.attr[TURMOIL_BONUS_ATTR] = it }
+        val attack = maxLevel(target, Skills.ATTACK, NpcSkills.ATTACK).coerceAtMost(TURMOIL_TARGET_LEVEL_CAP)
+        val strength = maxLevel(target, Skills.STRENGTH, NpcSkills.STRENGTH).coerceAtMost(TURMOIL_TARGET_LEVEL_CAP)
+        val defence = maxLevel(target, Skills.DEFENCE, NpcSkills.DEFENCE).coerceAtMost(TURMOIL_TARGET_LEVEL_CAP)
+        bonuses[Skills.ATTACK] = attack * 15 / 100
+        bonuses[Skills.STRENGTH] = strength * 10 / 100
+        bonuses[Skills.DEFENCE] = defence * 15 / 100
     }
 
     private fun maxLevel(
@@ -582,24 +598,77 @@ object AncientCurses {
 
     /**
      * Combat hook for Sap/Leech/Soul Split, called once per landed hit from the single shared
-     * `dealHit` entry point every combat style routes through (see combat/PawnExt.kt). Soul Split
-     * fires on every hit; Sap/Leech roll [SAP_LEECH_ACTIVATION_CHANCE] per landed hit and then take
-     * one escalation step. Wrath's on-death explosion fires from the curse plugin's `on_player_death`.
+     * `dealHit` entry point every combat style routes through (see combat/PawnExt.kt). Novite's
+     * order is important: Soul Split always fires; only one style-matching Sap/Leech/Turmoil
+     * effect can fire; Defence/Energy/Special and Sap Spirit are checked afterward.
      */
     fun onDamageDealt(
         attacker: Pawn,
         target: Pawn,
         damage: Int,
+        style: CombatClass = CombatClass.MELEE,
     ) {
         if (attacker !is Player || damage <= 0) return
         val active = activeCurses(attacker)
-        if (active.isEmpty()) return
+        if (active.isEmpty() && !isTurmoilActive(attacker)) return
         if (active.contains(AncientCurse.SOUL_SPLIT)) {
             applySoulSplit(attacker, target, damage)
         }
-        val sapLeech = active.filter { it.category == AncientCurse.Category.SAP || it.category == AncientCurse.Category.LEECH }
-        sapLeech.forEach { curse ->
-            if (attacker.world.percentChance(curse.activationChancePercent)) applySapLeech(attacker, target, curse)
+
+        fun tryCurse(curse: AncientCurse): Boolean {
+            if (!active.contains(curse) || !attacker.world.percentChance(curse.activationChancePercent)) return false
+            applySapLeech(attacker, target, curse)
+            return true
+        }
+
+        // Novite Prayer.java: Turmoil is evaluated first on a melee hit and snapshots the
+        // opponent's base levels after its 1-in-5 roll succeeds.
+        if (style == CombatClass.MELEE && isTurmoilActive(attacker)) {
+            if (attacker.world.percentChance(20.0)) {
+                establishTurmoilBonus(attacker, target)
+                return
+            }
+        }
+
+        val styleEffectTriggered =
+            when (style) {
+                CombatClass.MELEE ->
+                    // The donor uses an else-if chain: when Sap Warrior is active, a failed Sap
+                    // roll does not fall through to Leech Attack/Strength. Turmoil has the same
+                    // gate above; only the style-independent curses may follow a failed roll.
+                    if (isTurmoilActive(attacker)) {
+                        false
+                    } else {
+                        when {
+                            active.contains(AncientCurse.SAP_WARRIOR) -> tryCurse(AncientCurse.SAP_WARRIOR)
+                            active.contains(AncientCurse.LEECH_ATTACK) -> tryCurse(AncientCurse.LEECH_ATTACK)
+                            active.contains(AncientCurse.LEECH_STRENGTH) -> tryCurse(AncientCurse.LEECH_STRENGTH)
+                            else -> false
+                        }
+                    }
+                CombatClass.RANGED ->
+                    when {
+                        active.contains(AncientCurse.SAP_RANGER) -> tryCurse(AncientCurse.SAP_RANGER)
+                        active.contains(AncientCurse.LEECH_RANGED) -> tryCurse(AncientCurse.LEECH_RANGED)
+                        else -> false
+                    }
+                CombatClass.MAGIC ->
+                    when {
+                        active.contains(AncientCurse.SAP_MAGE) -> tryCurse(AncientCurse.SAP_MAGE)
+                        active.contains(AncientCurse.LEECH_MAGIC) -> tryCurse(AncientCurse.LEECH_MAGIC)
+                        else -> false
+                    }
+                else -> false
+            }
+        if (styleEffectTriggered) return
+
+        // Novite's style-independent fall-through order. This intentionally permits only one
+        // proc per landed hit, even when several compatible curses are active.
+        when {
+            tryCurse(AncientCurse.LEECH_DEFENCE) -> Unit
+            tryCurse(AncientCurse.LEECH_ENERGY) -> Unit
+            tryCurse(AncientCurse.LEECH_SPECIAL_ATTACK) -> Unit
+            tryCurse(AncientCurse.SAP_SPIRIT) -> Unit
         }
     }
 
@@ -607,9 +676,8 @@ object AncientCurses {
      * Soul Split's real visual, PROVEN from Novite `Player.handleSoulSplit`: an outgoing
      * projectile (2263) from caster to target, a graphic (2264) on the target one tick later, and
      * a return projectile (2263) from target back to caster - the "souls" travelling out and back.
-     * Timing/arc reuses [ProjectileType.MAGIC] (the closest existing preset); only the gfx id
-     * itself is source-proven, not the exact tick-for-tick flight parameters (see [AncientCurse]
-     * class KDoc on this file's general anim/gfx sourcing).
+     * Timing is the exact fixed 667 projectile route used by Novite's `handleSoulSplit`; the
+     * outgoing and one-tick-later return packets use the same start/end heights and delay.
      */
     private const val SOUL_SPLIT_PROJECTILE_GFX = 2263
     private const val SOUL_SPLIT_TARGET_GFX = 2264
@@ -619,14 +687,36 @@ object AncientCurses {
         target: Pawn,
         damage: Int,
     ) {
-        attacker.world.spawn(attacker.createProjectile(target, SOUL_SPLIT_PROJECTILE_GFX, ProjectileType.MAGIC))
+        attacker.world.spawn(
+            attacker.createProjectile(
+                target,
+                SOUL_SPLIT_PROJECTILE_GFX,
+                CURSE_PROJECTILE_START_HEIGHT,
+                CURSE_PROJECTILE_END_HEIGHT,
+                angle = 0,
+                steepness = 0,
+                delay = CURSE_PROJECTILE_DELAY,
+                lifespan = CURSE_PROJECTILE_LIFESPAN,
+            ),
+        )
         attacker.heal((damage * 0.2).toInt().coerceAtLeast(0))
         if (target is Player) target.decreasePrayerPoints((damage * 0.2).toInt())
         target.graphic(SOUL_SPLIT_TARGET_GFX, delay = 1)
         attacker.queue {
             wait(1)
             if (!attacker.isDead()) {
-                attacker.world.spawn(target.createProjectile(attacker, SOUL_SPLIT_PROJECTILE_GFX, ProjectileType.MAGIC))
+                attacker.world.spawn(
+                    target.createProjectile(
+                        attacker,
+                        SOUL_SPLIT_PROJECTILE_GFX,
+                        CURSE_PROJECTILE_START_HEIGHT,
+                        CURSE_PROJECTILE_END_HEIGHT,
+                        angle = 0,
+                        steepness = 0,
+                        delay = CURSE_PROJECTILE_DELAY,
+                        lifespan = CURSE_PROJECTILE_LIFESPAN,
+                    ),
+                )
             }
         }
     }
@@ -638,9 +728,21 @@ object AncientCurses {
     ) {
         curse.castAnimation?.let { attacker.animate(it) }
         curse.castGraphic?.let { attacker.graphic(it) }
-        curse.projectileGraphic?.let { attacker.world.spawn(attacker.createProjectile(target, it, ProjectileType.MAGIC)) }
+        curse.projectileGraphic?.let {
+            attacker.world.spawn(
+                attacker.createProjectile(
+                    target,
+                    it,
+                    CURSE_PROJECTILE_START_HEIGHT,
+                    CURSE_PROJECTILE_END_HEIGHT,
+                    angle = 0,
+                    steepness = 0,
+                    delay = CURSE_PROJECTILE_DELAY,
+                    lifespan = CURSE_PROJECTILE_LIFESPAN,
+                ),
+            )
+        }
         curse.targetGraphic?.let { target.graphic(it, delay = 1) }
-        curse.secondaryTargetGraphic?.let { target.graphic(it, delay = 1) }
         when (curse) {
             AncientCurse.SAP_WARRIOR ->
                 if (sap(target, Skills.ATTACK to NpcSkills.ATTACK, Skills.STRENGTH to NpcSkills.STRENGTH, Skills.DEFENCE to NpcSkills.DEFENCE)) {
@@ -668,18 +770,22 @@ object AncientCurses {
             AncientCurse.LEECH_DEFENCE -> leech(attacker, target, Skills.DEFENCE, NpcSkills.DEFENCE).also { leechMessages(attacker, target, "Defence") }
             AncientCurse.LEECH_STRENGTH -> leech(attacker, target, Skills.STRENGTH, NpcSkills.STRENGTH).also { leechMessages(attacker, target, "Strength") }
             AncientCurse.LEECH_ENERGY ->
-                if (target is Player && target.runEnergy > 0) {
-                    val stolen = target.runEnergy.coerceAtMost(10.0)
-                    target.runEnergy = (target.runEnergy - stolen).coerceIn(0.0, 100.0)
-                    attacker.runEnergy = (attacker.runEnergy + stolen).coerceIn(0.0, 100.0)
-                    leechMessages(attacker, target, "run energy")
+                if (target is Player) {
+                    if (target.runEnergy <= 0.0) {
+                        curseNoEffectMessage(attacker, target)
+                    } else {
+                        attacker.runEnergy = if (attacker.runEnergy > 90.0) 100.0 else attacker.runEnergy + 10.0
+                        target.runEnergy = if (target.runEnergy > 10.0) target.runEnergy - 10.0 else 0.0
+                        leechMessages(attacker, target, "run energy")
+                    }
                 }
             AncientCurse.LEECH_SPECIAL_ATTACK ->
                 if (target is Player) {
-                    val stolen = AttackTab.getEnergy(target).coerceIn(0, 10)
-                    if (stolen > 0) {
-                        AttackTab.setEnergy(target, AttackTab.getEnergy(target) - stolen)
-                        AttackTab.setEnergy(attacker, (AttackTab.getEnergy(attacker) + stolen).coerceAtMost(100))
+                    if (AttackTab.getEnergy(target) <= 0) {
+                        curseNoEffectMessage(attacker, target)
+                    } else {
+                        AttackTab.setEnergy(target, (AttackTab.getEnergy(target) - 10).coerceAtLeast(0))
+                        AttackTab.setEnergy(attacker, (AttackTab.getEnergy(attacker) + 10).coerceAtMost(100))
                         leechMessages(attacker, target, "special attack energy")
                     }
                 }
@@ -705,10 +811,47 @@ object AncientCurses {
         if (target is Player) target.filterableMessage("Your $what has been leeched by an enemy curse.")
     }
 
+    private fun curseNoEffectMessage(
+        attacker: Player,
+        target: Pawn,
+    ) {
+        attacker.filterableMessage("Your opponent has been weakened so much that your curse has no effect.")
+        if (target is Player) target.filterableMessage("Your opponent's curse has no effect.")
+    }
+
     // ---- Wrath / Deflect -------------------------------------------------------------------
 
     /** Wrath's death-explosion graphic (centre, PROVEN from Novite `Player.sendDeath`). */
     private const val WRATH_CENTRE_GFX = 2259
+    private const val WRATH_RING_GFX = 2260
+
+    /** Exact Novite `World.sendProjectile` values for Wrath's expanding ring. */
+    private const val WRATH_PROJECTILE_START_HEIGHT = 41
+    private const val WRATH_PROJECTILE_DIAGONAL_START_HEIGHT = 24
+    private const val WRATH_PROJECTILE_END_HEIGHT = 0
+    private const val WRATH_PROJECTILE_DELAY = 35
+    private const val WRATH_PROJECTILE_LIFESPAN = 41
+    private const val WRATH_PROJECTILE_ANGLE = 30
+
+    private val WRATH_OUTER_OFFSETS =
+        listOf(
+            2 to 2,
+            2 to 0,
+            2 to -2,
+            -2 to 2,
+            -2 to 0,
+            -2 to -2,
+            0 to 2,
+            0 to -2,
+        )
+
+    private val WRATH_INNER_OFFSETS =
+        listOf(
+            1 to 1,
+            1 to -1,
+            -1 to 1,
+            -1 to -1,
+        )
 
     /**
      * Wrath: on the WEARER's own death, up to 300% of the Prayer level in a 5x5 area - called from
@@ -724,19 +867,55 @@ object AncientCurses {
     fun wrathExplosion(player: Player) {
         val damage = wrathMaxDamage(player)
         if (damage <= 0) return
-        player.graphic(WRATH_CENTRE_GFX)
-        val tile = player.tile
         val world = player.world
-        val targets = mutableListOf<Pawn>()
-        world.npcs.forEach { if (it.tile.isWithinRadius(tile, 2) && !it.isDead()) targets.add(it) }
-        world.players.forEach {
-            if (it != player && it.tile.isWithinRadius(tile, 2) && !it.isDead() &&
-                gg.rsmod.plugins.content.mechanics.pvp.AreaState.canPlayersFight(player, it)
-            ) {
-                targets.add(it)
+        val origin = Tile(player.tile)
+
+        // Novite sends the outer ring as eight map projectiles immediately on death. The first
+        // diagonal uses start height 24; the remaining seven use 41.
+        WRATH_OUTER_OFFSETS.forEachIndexed { index, (dx, dz) ->
+            val destination = origin.transform(dx, dz)
+            val startHeight = if (index == 0) WRATH_PROJECTILE_DIAGONAL_START_HEIGHT else WRATH_PROJECTILE_START_HEIGHT
+            world.spawn(
+                player.createProjectile(
+                    destination,
+                    WRATH_RING_GFX,
+                    startHeight,
+                    WRATH_PROJECTILE_END_HEIGHT,
+                    WRATH_PROJECTILE_ANGLE,
+                    0,
+                    WRATH_PROJECTILE_DELAY,
+                    WRATH_PROJECTILE_LIFESPAN,
+                ),
+            )
+        }
+
+        // Novite schedules the actual blast one world tick later. This timing matters: the centre
+        // graphic, hit and twelve impact tiles are all part of the delayed explosion, not the
+        // initial projectile launch.
+        player.queue {
+            wait(1)
+            player.graphic(WRATH_CENTRE_GFX)
+
+            world.npcs.forEach {
+                if (!it.isDead() && it.def.isAttackable() && it.combatDef.lifepoints != -1 &&
+                    it.tile.isWithinRadius(origin, 2)
+                ) {
+                    it.hit(damage = world.random(damage))
+                }
+            }
+            world.players.forEach {
+                if (it != player && !it.isDead() &&
+                    it.tile.isWithinRadius(origin, 2) &&
+                    gg.rsmod.plugins.content.mechanics.pvp.AreaState.canPlayersFight(player, it)
+                ) {
+                    it.hit(damage = world.random(damage))
+                }
+            }
+
+            (WRATH_OUTER_OFFSETS + WRATH_INNER_OFFSETS).forEach { (dx, dz) ->
+                world.spawn(TileGraphic(origin.transform(dx, dz), id = WRATH_RING_GFX, height = 0))
             }
         }
-        targets.forEach { it.hit(damage = world.random(damage)) }
     }
 
     /** Melee/Ranged/Magic only - Deflect Summoning keeps its block-only behaviour. */
@@ -748,9 +927,9 @@ object AncientCurses {
         )
 
     /**
-     * Deflect reflection: ~63% chance per landed hit to reflect 10% of the damage back, no recoil
-     * below 10 reflected damage. Reflected damage is dealt raw so it can never re-trigger a Deflect
-     * on the original attacker (no recursion).
+     * Deflect reflection: reflect 10% of qualifying damage, with no random roll and no recoil
+     * threshold. Reflected damage is dealt raw so it can never re-trigger a Deflect on the original
+     * attacker (no recursion).
      */
     fun onIncomingHit(
         attacker: Pawn,
@@ -761,7 +940,6 @@ object AncientCurses {
         if (target !is Player || damage <= 0) return
         val curse = DEFLECT_STYLE[style] ?: return
         if (!isCurseActive(target, curse)) return
-        if (!target.world.percentChance(63.0)) return
         val reflected = (damage * 0.10).toInt()
         // Novite Player.java:1267-1297 reflects whenever the 10% is above zero. The old `< 10` was
         // written for x10 life points and, after the 1:1 migration, blocked every hit under 100.

@@ -318,7 +318,7 @@ fun Pawn.dealHit(
         hit.addAction {
             val pawn = this@dealHit
             val totalDamage = hit.hitmarks.sumOf { it.damage }
-            AncientCurses.onDamageDealt(pawn, target, totalDamage)
+            AncientCurses.onDamageDealt(pawn, target, totalDamage, getCombatClass(pawn))
             // P6 (2026-09-02): reflect/recoil/vengeance now routed through one deterministic
             // dispatcher instead of calling AncientCurses.onIncomingHit directly - Deflect
             // curse is still evaluated first inside it, unchanged, just moved up a level so
@@ -406,6 +406,28 @@ fun Pawn.createProjectile(
             .setSlope(angle = type.angle, steepness = type.steepness)
             .setTimes(delay = type.delay, lifespan = type.delay + Combat.getProjectileLifespan(this, target.tile, type))
 
+    return builder.build()
+}
+
+/** Explicit projectile timing for rev-667 donor routes that do not use a preset projectile type. */
+fun Pawn.createProjectile(
+    target: Pawn,
+    gfx: Int,
+    startHeight: Int,
+    endHeight: Int,
+    angle: Int,
+    steepness: Int,
+    delay: Int,
+    lifespan: Int,
+): Projectile {
+    val builder =
+        Projectile
+            .Builder()
+            .setTiles(start = getFrontFacingTile(target), target = target)
+            .setGfx(gfx = gfx)
+            .setHeights(startHeight = startHeight, endHeight = endHeight)
+            .setSlope(angle = angle, steepness = steepness)
+            .setTimes(delay = delay, lifespan = lifespan)
     return builder.build()
 }
 

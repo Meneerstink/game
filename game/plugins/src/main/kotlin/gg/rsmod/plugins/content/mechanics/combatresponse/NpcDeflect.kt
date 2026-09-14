@@ -10,7 +10,7 @@ import gg.rsmod.plugins.api.ext.hit
  * RCV-011 Q-043-c: deflect overheads on npcs. [gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.onIncomingHit]
  * only reflects for players, so an npc showing a Deflect overhead (Nex's 13449 form) protected but never reflected.
  * Novite 667 `Nex.handleIngoingHit`: a hit of the deflected style sends 10 % of its damage back to the attacker, with
- * no chance roll (the player curse keeps its own 63 % roll). The damage reduction itself is the shared protection check
+ * no chance roll. The damage reduction itself is the shared protection check
  * in the combat formulas ([PrayerIcon.protects]).
  */
 object NpcDeflect {

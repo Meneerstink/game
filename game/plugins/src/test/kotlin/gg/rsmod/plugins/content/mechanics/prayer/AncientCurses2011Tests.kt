@@ -4,6 +4,7 @@ import gg.rsmod.game.fs.DefinitionSet
 import gg.rsmod.game.fs.def.VarbitDef
 import gg.rsmod.game.model.World
 import gg.rsmod.game.model.attr.AttributeMap
+import gg.rsmod.game.model.combat.CombatClass
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.skill.SkillSet
 import gg.rsmod.plugins.api.Skills
@@ -93,15 +94,16 @@ class AncientCurses2011Tests {
     }
 
     @Test
-    fun `Turmoil scales with the opponent level and is capped at 99`() {
+    fun `Turmoil starts at its base boost and snapshots the opponent level after a melee proc`() {
         val player = newPlayer()
         AncientCurses.switchBook(player, AncientCurses.PrayerBook.ANCIENT)
         AncientCurses.toggleTurmoil(player)
         assertEquals(1.15, AncientCurses.turmoilMultiplier(player, Skills.ATTACK, null), 1e-9)
         val opponent = newPlayer(mapOf(Skills.ATTACK to 99, Skills.STRENGTH to 80, Skills.DEFENCE to 40))
-        assertEquals(1.0 + (15.0 + 0.15 * 99) / 100.0, AncientCurses.turmoilMultiplier(player, Skills.ATTACK, opponent), 1e-9)
-        assertEquals(1.0 + (23.0 + 0.10 * 80) / 100.0, AncientCurses.turmoilMultiplier(player, Skills.STRENGTH, opponent), 1e-9)
-        assertEquals(1.0 + (15.0 + 0.15 * 40) / 100.0, AncientCurses.turmoilMultiplier(player, Skills.DEFENCE, opponent), 1e-9)
+        AncientCurses.onDamageDealt(player, opponent, damage = 1)
+        assertEquals(1.0 + (15.0 + 14) / 100.0, AncientCurses.turmoilMultiplier(player, Skills.ATTACK, opponent), 1e-9)
+        assertEquals(1.0 + (23.0 + 8) / 100.0, AncientCurses.turmoilMultiplier(player, Skills.STRENGTH, opponent), 1e-9)
+        assertEquals(1.0 + (15.0 + 6) / 100.0, AncientCurses.turmoilMultiplier(player, Skills.DEFENCE, opponent), 1e-9)
         assertEquals(1.0, AncientCurses.turmoilMultiplier(player, Skills.RANGED, opponent), 1e-9)
         val inactive = newPlayer()
         assertEquals(1.0, AncientCurses.turmoilMultiplier(inactive, Skills.ATTACK, opponent), 1e-9)
@@ -144,5 +146,22 @@ class AncientCurses2011Tests {
         val target = newPlayer(mapOf(Skills.ATTACK to 99))
         AncientCurses.onDamageDealt(attacker, target, damage = 10)
         assertEquals(99, target.skills.getCurrentLevel(Skills.ATTACK))
+    }
+
+    @Test
+    fun `Sap effects follow the incoming combat style and only one style curse procs`() {
+        val attacker = newPlayer().also {
+            AncientCurses.switchBook(it, AncientCurses.PrayerBook.ANCIENT)
+            AncientCurses.toggleCurse(it, AncientCurse.SAP_WARRIOR)
+            AncientCurses.toggleCurse(it, AncientCurse.SAP_RANGER)
+        }
+        val target = newPlayer(mapOf(Skills.ATTACK to 99, Skills.RANGED to 99))
+
+        AncientCurses.onDamageDealt(attacker, target, damage = 10, style = CombatClass.RANGED)
+        assertEquals(99, target.skills.getCurrentLevel(Skills.ATTACK))
+        assertEquals(90, target.skills.getCurrentLevel(Skills.RANGED))
+
+        AncientCurses.onDamageDealt(attacker, target, damage = 10, style = CombatClass.MELEE)
+        assertEquals(90, target.skills.getCurrentLevel(Skills.ATTACK))
     }
 }

@@ -78,7 +78,7 @@ enum class AncientCurse(
     val projectileGraphic: Int? = null,
     /** Primary graphic shown on the target one tick after the projectile lands (PROVEN, same source). */
     val targetGraphic: Int? = null,
-    /** Optional companion impact graphic listed by the 2011 curse visual table. */
+    /** Reserved only for a separately sourced companion impact; Novite's 667 combat routes use none. */
     val secondaryTargetGraphic: Int? = null,
     /**
      * Deflect Melee/Missiles/Magic only: animation+graphic played on the DEFENDER when a hit is
@@ -135,37 +135,37 @@ enum class AncientCurse(
     ),
     LEECH_ATTACK(
         "Leech Attack", 10, level = 74, drainEffect = 100, category = Category.LEECH,
-        castAnimation = 12575, projectileGraphic = 2231, targetGraphic = 2232, secondaryTargetGraphic = 2233,
+        castAnimation = 12575, projectileGraphic = 2231, targetGraphic = 2232,
         activationChancePercent = 12.5,
     ),
     LEECH_RANGED(
         "Leech Ranged", 11, level = 76, drainEffect = 100, category = Category.LEECH,
-        castAnimation = 12575, projectileGraphic = 2236, targetGraphic = 2238, secondaryTargetGraphic = 2237,
+        castAnimation = 12575, projectileGraphic = 2236, targetGraphic = 2238,
         activationChancePercent = 12.5,
     ),
     LEECH_MAGIC(
         "Leech Magic", 12, level = 78, drainEffect = 100, category = Category.LEECH,
-        castAnimation = 12575, projectileGraphic = 2240, targetGraphic = 2242, secondaryTargetGraphic = 2241,
+        castAnimation = 12575, projectileGraphic = 2240, targetGraphic = 2242,
         activationChancePercent = 12.5,
     ),
     LEECH_DEFENCE(
         "Leech Defence", 13, level = 80, drainEffect = 100, category = Category.LEECH,
-        castAnimation = 12575, projectileGraphic = 2244, targetGraphic = 2246, secondaryTargetGraphic = 2245,
+        castAnimation = 12575, projectileGraphic = 2244, targetGraphic = 2246,
         activationChancePercent = 100.0 / 11.0,
     ),
     LEECH_STRENGTH(
         "Leech Strength", 14, level = 82, drainEffect = 100, category = Category.LEECH,
-        castAnimation = 12575, projectileGraphic = 2248, targetGraphic = 2250, secondaryTargetGraphic = 2249,
+        castAnimation = 12575, projectileGraphic = 2248, targetGraphic = 2250,
         activationChancePercent = 12.5,
     ),
     LEECH_ENERGY(
         "Leech Energy", 15, level = 84, drainEffect = 100, category = Category.LEECH,
-        castAnimation = 12575, projectileGraphic = 2252, targetGraphic = 2254, secondaryTargetGraphic = 2253,
+        castAnimation = 12575, projectileGraphic = 2252, targetGraphic = 2254,
         activationChancePercent = 100.0 / 11.0,
     ),
     LEECH_SPECIAL_ATTACK(
         "Leech Special Attack", 16, level = 86, drainEffect = 100, category = Category.LEECH,
-        castAnimation = 12575, projectileGraphic = 2256, targetGraphic = 2258, secondaryTargetGraphic = 2257,
+        castAnimation = 12575, projectileGraphic = 2256, targetGraphic = 2258,
         activationChancePercent = 100.0 / 11.0,
     ),
     WRATH("Wrath", 17, level = 89, drainEffect = 30, category = Category.WRATH, icon = PrayerIcon.WRATH),
