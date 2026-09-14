@@ -12,6 +12,7 @@ import gg.rsmod.plugins.content.items.osrs.AncientGodsword
  * (ADAPTED_TO_667). The sacrifice hit uses the server's typeless hitsplat.
  */
 SpecialAttacks.register(AncientGodsword.SPECIAL_ENERGY, Items.ANCIENT_GODSWORD) {
+    val attacker = player
     val victim = target
     player.animate(CombatConfigs.getAttackAnimation(player))
     val maxHit = MeleeCombatFormula.getMaxHit(player, victim, specialAttackMultiplier = AncientGodsword.SPECIAL_DAMAGE)
@@ -25,14 +26,14 @@ SpecialAttacks.register(AncientGodsword.SPECIAL_ENERGY, Items.ANCIENT_GODSWORD) 
         ) >= world.randomDouble()
     player.dealHit(target = victim, maxHit = maxHit, landHit = landHit, delay = 1, hitType = HitType.MELEE)
     if (!landHit) return@register
-    player.world.queue {
+    attacker.world.queue {
         wait(AncientGodsword.MARK_TICKS)
-        if (victim.isDead() || player.isDead()) return@queue
-        if (victim.tile.height != player.tile.height || victim.tile.getDistance(player.tile) >= AncientGodsword.ESCAPE_DISTANCE) return@queue
+        if (victim.isDead() || attacker.isDead()) return@queue
+        if (victim.tile.height != attacker.tile.height || victim.tile.getDistance(attacker.tile) >= AncientGodsword.ESCAPE_DISTANCE) return@queue
         val before = victim.getCurrentLifepoints()
         victim.hit(damage = AncientGodsword.SACRIFICE_DAMAGE, type = HitType.REGULAR_HIT)
         val dealt = minOf(AncientGodsword.SACRIFICE_DAMAGE, before)
         val heal = AncientGodsword.heal(victim.getMaximumLifepoints(), victim is Player, dealt)
-        if (heal > 0) player.heal(heal)
+        if (heal > 0) attacker.heal(heal)
     }
 }

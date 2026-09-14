@@ -125,17 +125,18 @@ SpecialAttacks.register(50, Items.ABYSSAL_WHIP) {
 
 /* Abyssal vine whip - Vine Call: 60%, +20% damage plus a vine that hits the victim for 10 damage every 2 ticks (up to 5 times). */
 SpecialAttacks.register(60, Items.ABYSSAL_VINE_WHIP) {
+    val attacker = player
     val victim = target
     player.animate(11971)
     player.graphic(2108)
     meleeHit(player, victim, damage = 1.2) {
         victim.graphic(2109)
-        player.world.queue {
+        attacker.world.queue {
             repeat(5) {
                 wait(2)
-                if (victim.isDead() || player.isDead()) return@queue
+                if (victim.isDead() || attacker.isDead()) return@queue
                 victim.hit(damage = 10, type = HitType.MELEE.id)
-                victim.damageMap.add(player, 10)
+                victim.damageMap.add(attacker, 10)
             }
         }
     }

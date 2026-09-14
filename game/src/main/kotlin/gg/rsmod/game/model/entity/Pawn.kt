@@ -339,6 +339,9 @@ abstract class Pawn(
      * Handle a single cycle for [pendingHits].
      */
     fun hitsCycle() {
+        // Most NPCs have no pending hit on a given tick. Avoid allocating a snapshot for each
+        // idle NPC; the reentrant-hit protection below is only needed when there is work.
+        if (pendingHits.isEmpty()) return
         // Iterate a snapshot rather than pendingHits itself: hit.actions (Deflect/Vengeance/Ring
         // of recoil and any future "on damage dealt/taken" hook - see
         // gg.rsmod.plugins.content.combat.PawnExt.dealHit and DamageResponse.kt) can, in general,
