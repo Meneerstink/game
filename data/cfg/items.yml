@@ -277579,3 +277579,351 @@
   tradeable: true
   weight: 0.0
   equipment: null
+- id: 23364
+  name: "Super fishing potion(4)"
+  examine: "4 doses of super fishing potion."
+  tradeable: true
+  weight: 0.035
+  equipment: null
+- id: 23365
+  name: "Super fishing potion(4)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23366
+  name: "Super fishing potion(3)"
+  examine: "3 doses of super fishing potion."
+  tradeable: true
+  weight: 0.03
+  equipment: null
+- id: 23367
+  name: "Super fishing potion(3)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23368
+  name: "Super fishing potion(2)"
+  examine: "2 doses of super fishing potion."
+  tradeable: true
+  weight: 0.03
+  equipment: null
+- id: 23369
+  name: "Super fishing potion(2)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23370
+  name: "Super fishing potion(1)"
+  examine: "1 dose of super fishing potion."
+  tradeable: true
+  weight: 0.03
+  equipment: null
+- id: 23371
+  name: "Super fishing potion(1)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23372
+  name: "Super hunter potion(4)"
+  examine: "4 doses of super hunter potion."
+  tradeable: true
+  weight: 0.035
+  equipment: null
+- id: 23373
+  name: "Super hunter potion(4)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23374
+  name: "Super hunter potion(3)"
+  examine: "3 doses of super hunter potion."
+  tradeable: true
+  weight: 0.03
+  equipment: null
+- id: 23375
+  name: "Super hunter potion(3)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23376
+  name: "Super hunter potion(2)"
+  examine: "2 doses of super hunter potion."
+  tradeable: true
+  weight: 0.03
+  equipment: null
+- id: 23377
+  name: "Super hunter potion(2)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23378
+  name: "Super hunter potion(1)"
+  examine: "1 dose of super hunter potion."
+  tradeable: true
+  weight: 0.03
+  equipment: null
+- id: 23379
+  name: "Super hunter potion(1)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23380
+  name: "Haemostatic dressing (4)"
+  examine: "4 applications of haemostatic dressing."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 23381
+  name: "Haemostatic dressing (4)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23382
+  name: "Haemostatic dressing (3)"
+  examine: "3 applications of haemostatic dressing."
+  tradeable: true
+  weight: 0.015
+  equipment: null
+- id: 23383
+  name: "Haemostatic dressing (3)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23384
+  name: "Haemostatic dressing (2)"
+  examine: "3 applications of haemostatic dressing."
+  tradeable: true
+  weight: 0.01
+  equipment: null
+- id: 23385
+  name: "Haemostatic dressing (2)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23386
+  name: "Haemostatic dressing (1)"
+  examine: "1 application of haemostatic dressing."
+  tradeable: true
+  weight: 0.005
+  equipment: null
+- id: 23387
+  name: "Haemostatic dressing (1)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23388
+  name: "Haemostatic poultice"
+  examine: "A healing poultice, can be applied to cotton yarn to create a haemostatic dressing."
+  tradeable: true
+  weight: 0.03
+  equipment: null
+- id: 23389
+  name: "Haemostatic poultice"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23390
+  name: "Sapphire glacialis mix (2)"
+  examine: "There's a sapphire glacialis butterfly in here."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 23391
+  name: "Sapphire glacialis mix (2)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23392
+  name: "Sapphire glacialis mix (1)"
+  examine: "There's a sapphire glacialis butterfly in here."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 23393
+  name: "Sapphire glacialis mix (1)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23394
+  name: "Snowy knight mix (2)"
+  examine: "There's a snowy knight butterfly in here."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 23395
+  name: "Snowy knight mix (2)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23396
+  name: "Snowy knight mix (1)"
+  examine: "There's a snowy knight butterfly in here."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 23397
+  name: "Snowy knight mix (1)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23398
+  name: "Ruby harvest mix (2)"
+  examine: "There's a ruby harvest butterfly in here."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 23399
+  name: "Ruby harvest mix (2)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23400
+  name: "Ruby harvest mix (1)"
+  examine: "There's a ruby harvest butterfly in here."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 23401
+  name: "Ruby harvest mix (1)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23402
+  name: "Black warlock mix (2)"
+  examine: "There's a black warlock butterfly in here."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 23403
+  name: "Black warlock mix (2)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23404
+  name: "Black warlock mix (1)"
+  examine: "There's a black warlock butterfly in here."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 23405
+  name: "Black warlock mix (1)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23406
+  name: "Sunlight moth mix (2)"
+  examine: "There's a sunlight moth in here."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 23407
+  name: "Sunlight moth mix (2)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23408
+  name: "Sunlight moth mix (1)"
+  examine: "There's a sunlight moth in here."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 23409
+  name: "Sunlight moth mix (1)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23410
+  name: "Moonlight moth mix (2)"
+  examine: "There's a moonlight moth in here."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 23411
+  name: "Moonlight moth mix (2)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23412
+  name: "Moonlight moth mix (1)"
+  examine: "There's a moonlight moth in here."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 23413
+  name: "Moonlight moth mix (1)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23414
+  name: "Sunlight moth"
+  examine: "There's a sunlight moth in here."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 23415
+  name: "Sunlight moth"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23416
+  name: "Moonlight moth"
+  examine: "There's a moonlight moth in here."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 23417
+  name: "Moonlight moth"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23418
+  name: "Bottled dragonbreath (unpowered)"
+  examine: "Several dragonfruit were squeezed into this vial."
+  tradeable: true
+  weight: 0.08
+  equipment: null
+- id: 23419
+  name: "Bottled dragonbreath (unpowered)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23420
+  name: "Bottled dragonbreath"
+  examine: "Several dragonfruit were squeezed into this vial and it has been powered by the fires of Mount Karuulm."
+  tradeable: true
+  weight: 0.08
+  equipment: null
+- id: 23421
+  name: "Bottled dragonbreath"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null

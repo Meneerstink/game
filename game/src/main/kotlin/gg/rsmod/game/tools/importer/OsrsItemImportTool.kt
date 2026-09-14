@@ -693,6 +693,12 @@ object OsrsItemImportTool {
             "potions-brews" to
                 listOf(26340, 26342, 26344, 26346, 26350, 26353, 27629, 27632, 27635, 27638, 31650, 31653, 31656, 31659, 27202, 27205,
                     27208, 27211, 30125, 30128, 30131, 30134, 30875, 30878, 30881, 30884, 30137, 30140, 30143, 30146).map { Spec(it, noted = true) },
+            // Step 4 batch "potions-skill" (OSRS Wiki infobox ids): Super fishing potion, Super hunter potion, Haemostatic dressing (4 doses),
+            // Haemostatic poultice; hunter's mixes (2 doses) Sapphire glacialis, Snowy knight, Ruby harvest, Black warlock, Sunlight moth,
+            // Moonlight moth; Sunlight / Moonlight moth items; Bottled dragonbreath (unpowered) and (powered).
+            "potions-skill" to
+                listOf(31602, 31605, 31608, 31611, 31626, 31629, 31632, 31635, 31590, 31593, 31596, 31599, 31587, 29180, 29198, 29183, 29201,
+                    29186, 29204, 29189, 29207, 29192, 29210, 29195, 29213, 28890, 28893, 22999, 23002).map { Spec(it, noted = true) },
             "deadstaves" to
                 listOf(
                     Spec(11791, noted = true, rev667Params = deadStaffParams()), // Staff of the dead

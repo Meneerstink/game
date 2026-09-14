@@ -20059,5 +20059,34 @@ object Items {
     const val GOADING_POTION_3 = 23358
     const val GOADING_POTION_2 = 23360
     const val GOADING_POTION_1 = 23362
+    const val SUPER_FISHING_POTION_4 = 23364
+    const val SUPER_FISHING_POTION_3 = 23366
+    const val SUPER_FISHING_POTION_2 = 23368
+    const val SUPER_FISHING_POTION_1 = 23370
+    const val SUPER_HUNTER_POTION_4 = 23372
+    const val SUPER_HUNTER_POTION_3 = 23374
+    const val SUPER_HUNTER_POTION_2 = 23376
+    const val SUPER_HUNTER_POTION_1 = 23378
+    const val HAEMOSTATIC_DRESSING_4 = 23380
+    const val HAEMOSTATIC_DRESSING_3 = 23382
+    const val HAEMOSTATIC_DRESSING_2 = 23384
+    const val HAEMOSTATIC_DRESSING_1 = 23386
+    const val HAEMOSTATIC_POULTICE = 23388
+    const val SAPPHIRE_GLACIALIS_MIX_2 = 23390
+    const val SAPPHIRE_GLACIALIS_MIX_1 = 23392
+    const val SNOWY_KNIGHT_MIX_2 = 23394
+    const val SNOWY_KNIGHT_MIX_1 = 23396
+    const val RUBY_HARVEST_MIX_2 = 23398
+    const val RUBY_HARVEST_MIX_1 = 23400
+    const val BLACK_WARLOCK_MIX_2 = 23402
+    const val BLACK_WARLOCK_MIX_1 = 23404
+    const val SUNLIGHT_MOTH_MIX_2 = 23406
+    const val SUNLIGHT_MOTH_MIX_1 = 23408
+    const val MOONLIGHT_MOTH_MIX_2 = 23410
+    const val MOONLIGHT_MOTH_MIX_1 = 23412
+    const val SUNLIGHT_MOTH = 23414
+    const val MOONLIGHT_MOTH = 23416
+    const val BOTTLED_DRAGONBREATH_UNPOWERED = 23418
+    const val BOTTLED_DRAGONBREATH = 23420
     // Auto-generated file using class gg.rsmod.game.service.game.DumpEntityIdService
 }

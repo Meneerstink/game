@@ -519,6 +519,32 @@ enum class PotionType(
     },
     GOADING {
         override fun apply(p: Player) = BrewPotions.drinkGoading(p)
+    },
+
+    // OSRS-IMPORT potions-skill (SkillPotions).
+    SUPER_FISHING {
+        override fun apply(p: Player) = SkillPotions.superSkill(p, Skills.FISHING)
+    },
+    SUPER_HUNTER {
+        override fun apply(p: Player) = SkillPotions.superSkill(p, Skills.HUNTER)
+    },
+    RUBY_HARVEST_MIX {
+        override fun apply(p: Player) = SkillPotions.hunterBoost(p, Skills.ATTACK)
+    },
+    SAPPHIRE_GLACIALIS_MIX {
+        override fun apply(p: Player) = SkillPotions.hunterBoost(p, Skills.DEFENCE)
+    },
+    BLACK_WARLOCK_MIX {
+        override fun apply(p: Player) = SkillPotions.hunterBoost(p, Skills.STRENGTH)
+    },
+    SNOWY_KNIGHT_MIX {
+        override fun apply(p: Player) = p.heal(SkillPotions.MIX_HEAL)
+    },
+    MOONLIGHT_MOTH_MIX {
+        override fun apply(p: Player) = SkillPotions.moonlight(p)
+    },
+    SUNLIGHT_MOTH_MIX {
+        override fun apply(p: Player) = SkillPotions.sunlight(p)
     }, ;
 
     protected fun cureVenomAndPoison(
