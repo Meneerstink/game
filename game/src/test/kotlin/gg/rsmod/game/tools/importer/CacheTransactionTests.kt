@@ -325,6 +325,75 @@ class CacheTransactionTests {
         assertTrue(runCatching { transaction.apply(plan) }.exceptionOrNull() is IllegalStateException)
     }
 
+    /** Q10 pipeline extension: a new map square is a NAMED group; create, verify, re-run and roll back through the transaction. */
+    @Test
+    fun aNamedGroupIsCreatedWithItsNameAndRolledBackWhole() {
+        val targets = scratchTargets(seed = null)
+        val mapIndex = 5
+        targets.forEach { target ->
+            CacheLibrary(target).use {
+                // The real rev-667 map index is named; a scratch index has to be flagged the same way.
+                it.index(mapIndex).flagMask(com.displee.cache.index.ReferenceTable.FLAG_NAME)
+                it.put(mapIndex, "m1_1", "EXISTING-SQUARE".toByteArray())
+                it.update()
+            }
+        }
+        val groupId = CacheLibrary(targets[0]).use { lib -> lib.index(mapIndex).archiveIds().maxOrNull()!! + 1 }
+        val bytes = "NEW-SQUARE-TILES".toByteArray()
+        fun transaction(id: String) =
+            CacheTransaction(
+                targets = targets,
+                mutations = listOf(CacheMutation(mapIndex, groupId, 0, bytes, "named create test", groupName = "m25_55")),
+                journalRoot = scratch.newFolder("journal-named-$id"),
+                id = id,
+            )
+
+        val first = transaction("tx-test-named-1")
+        assertTrue(first.preflight().all { it.outcome == MutationOutcome.CREATE })
+        assertEquals(2, first.apply().applied)
+        assertEquals(emptyList<String>(), first.verify())
+        targets.forEach { target ->
+            CacheLibrary(target).use { lib ->
+                assertEquals("$target: the name resolves to the created group", groupId, lib.index(mapIndex).archive("m25_55")?.id)
+                assertEquals("m25_55".hashCode(), lib.index(mapIndex).archive(groupId)!!.hashName)
+                assertArrayEquals("$target holds the bytes", bytes, lib.data(mapIndex, groupId, 0))
+            }
+        }
+        assertTrue("a re-run is a no-op", transaction("tx-test-named-2").preflight().all { it.outcome == MutationOutcome.NO_OP })
+
+        assertEquals(2, first.rollback())
+        targets.forEach { target ->
+            CacheLibrary(target).use { lib ->
+                assertEquals("$target: the created group is gone", null, lib.index(mapIndex).archive("m25_55"))
+                assertEquals(null, lib.data(mapIndex, groupId, 0))
+                assertEquals("$target: the existing square is untouched", "EXISTING-SQUARE", lib.data(mapIndex, "m1_1")?.let { String(it) })
+            }
+        }
+    }
+
+    @Test
+    fun aGroupNameAlreadyCarriedByAnotherGroupIsAConflict() {
+        val targets = scratchTargets(seed = null)
+        targets.forEach { target ->
+            CacheLibrary(target).use {
+                it.index(5).flagMask(com.displee.cache.index.ReferenceTable.FLAG_NAME)
+                it.put(5, "m1_1", "EXISTING-SQUARE".toByteArray())
+                it.update()
+            }
+        }
+        val otherId = CacheLibrary(targets[0]).use { lib -> lib.index(5).archiveIds().maxOrNull()!! + 1 }
+        val transaction =
+            CacheTransaction(
+                targets = targets,
+                mutations = listOf(CacheMutation(5, otherId, 0, "X".toByteArray(), "taken name", groupName = "m1_1")),
+                journalRoot = scratch.newFolder("journal-taken"),
+                id = "tx-test-named-taken",
+            )
+        val plan = transaction.preflight()
+        assertTrue("a taken name must be a CONFLICT, got ${plan.map { it.outcome }}", plan.all { it.outcome == MutationOutcome.CONFLICT })
+        assertTrue(runCatching { transaction.apply(plan) }.exceptionOrNull() is IllegalStateException)
+    }
+
     private fun transactionFor(
         targets: List<String>,
         newBytes: ByteArray?,

@@ -64,12 +64,16 @@ class CacheTransaction(
             withLibrary(target) { library ->
                 mutations.map { mutation ->
                     val current = library.data(mutation.indexId, mutation.groupId, mutation.fileId, mutation.xtea)
+                    // A named group may only be created under a name no other group of the index already carries.
+                    val nameTaken =
+                        mutation.groupName != null && current == null &&
+                            library.index(mutation.indexId).archive(mutation.groupName)?.let { it.id != mutation.groupId } == true
                     PreflightEntry(
                         target = target,
                         mutation = mutation,
                         currentSha1 = current?.let { CacheItemProbeTool.sha1(it) },
                         currentSize = current?.size,
-                        outcome = classify(mutation, current),
+                        outcome = if (nameTaken) MutationOutcome.CONFLICT else classify(mutation, current),
                     )
                 }
             }
@@ -157,6 +161,10 @@ class CacheTransaction(
                             library.remove(mutation.indexId, mutation.groupId, mutation.fileId)
                         } else {
                             library.put(mutation.indexId, mutation.groupId, mutation.fileId, mutation.newBytes, mutation.xtea)
+                            mutation.groupName?.let { name ->
+                                val index = library.index(mutation.indexId)
+                                index.archive(mutation.groupId)!!.hashName = index.toHash(name)
+                            }
                         }
                         committed += entry
                         applied++
@@ -221,7 +229,7 @@ class CacheTransaction(
                     entries.forEach { entry ->
                         val mutation = entry.mutation
                         if (absentMarker(target, mutation).isFile) {
-                            library.remove(mutation.indexId, mutation.groupId, mutation.fileId)
+                            removeCreated(library, mutation)
                         } else {
                             library.put(mutation.indexId, mutation.groupId, mutation.fileId, journalFile(target, mutation).readBytes(), mutation.xtea)
                         }
@@ -257,6 +265,12 @@ class CacheTransaction(
                                 "expected sha1=${intendedSha ?: "ABSENT"}, actual sha1=${actualSha ?: "ABSENT"}"
                     }
                     perLocation.getOrPut(mutation.describeLocation()) { mutableMapOf() }[target] = actualSha
+                    if (mutation.groupName != null && mutation.newBytes != null) {
+                        val named = library.index(mutation.indexId).archive(mutation.groupName)?.id
+                        if (named != mutation.groupId) {
+                            problems += "NAME_MISMATCH at $target ${mutation.describeLocation()}: group name '${mutation.groupName}' resolves to ${named ?: "nothing"}"
+                        }
+                    }
                 }
             }
         }
@@ -283,7 +297,7 @@ class CacheTransaction(
             withLibrary(target) { library ->
                 forTarget.forEach { mutation ->
                     if (absentMarker(target, mutation).isFile) {
-                        library.remove(mutation.indexId, mutation.groupId, mutation.fileId)
+                        removeCreated(library, mutation)
                     } else {
                         library.put(mutation.indexId, mutation.groupId, mutation.fileId, journalFile(target, mutation).readBytes(), mutation.xtea)
                     }
@@ -321,6 +335,18 @@ class CacheTransaction(
     ) = File(journalDir, "${targetSlug(target)}__${mutation.describeLocation()}.absent")
 
     private fun targetSlug(target: String) = target.replace(Regex("[^A-Za-z0-9]+"), "_").trim('_')
+
+    /** Undoes a CREATE: a named group created by this transaction is removed whole (name included), otherwise only the file. */
+    private fun removeCreated(
+        library: CacheLibrary,
+        mutation: CacheMutation,
+    ) {
+        if (mutation.groupName != null) {
+            library.remove(mutation.indexId, mutation.groupId)
+        } else {
+            library.remove(mutation.indexId, mutation.groupId, mutation.fileId)
+        }
+    }
 
     private fun <T> withLibrary(
         path: String,
@@ -366,6 +392,13 @@ class CacheMutation(
      * same key - the server's xteas.json therefore needs no change. Null = unencrypted group.
      */
     val xtea: IntArray? = null,
+    /**
+     * Name of a group this mutation CREATES in a named index (rev-667 map squares `m<x>_<z>` / `l<x>_<z>`, resolved by the client through
+     * the name hash). Applied as the archive's hash name (displee `toHash`, = `String.hashCode`, e.g. m48_57 -> -1124605456); preflight
+     * refuses a name another group already carries; rollback of the CREATE removes the whole group; verify checks the name resolves to
+     * [groupId] on every target. Null = unnamed / existing group.
+     */
+    val groupName: String? = null,
 ) {
     fun describeLocation(): String = "idx${indexId}_grp${groupId}_file$fileId"
 
