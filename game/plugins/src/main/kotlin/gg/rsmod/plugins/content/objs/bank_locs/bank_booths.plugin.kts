@@ -2,7 +2,7 @@ package gg.rsmod.plugins.content.objs.bank_locs
 
 import gg.rsmod.game.fs.def.ObjectDef
 import gg.rsmod.plugins.content.inter.bank.openBank
-import gg.rsmod.plugins.content.mechanics.exchange.GrandExchangeCollection
+import gg.rsmod.plugins.content.mechanics.exchange.GrandExchangeInterface
 import gg.rsmod.plugins.content.mechanics.exchange.GrandExchangeService
 
 private val BOOTHS = BankObjects.BOOTHS
@@ -38,20 +38,18 @@ BOOTHS.forEach { booth ->
 }
 
 /*
- * `Collect` pays out Grand Exchange proceeds. Retail opens the collection box interface here; this
- * server has no Grand Exchange interface yet, so the same payout the ::ge_collect command performs
- * goes straight into the inventory. See GrandExchangeCollection for why.
+ * RCV-012.B16: `Collect` opens the Grand Exchange collection box (Novite ObjectHandler "counter" ->
+ * ExchangeManagement.openCollectionBox; native interface 109, GrandExchangeInterface). The instant
+ * payout it used before the box existed stays on the ::ge_collect command (GrandExchangeCollection).
  */
 COLLECTORS.forEach { collector ->
 
     on_obj_option(obj = collector, option = "collect") {
-        val service = player.world.getService(GrandExchangeService::class.java)
-        if (service == null) {
+        if (player.world.getService(GrandExchangeService::class.java) == null) {
             player.message("The Grand Exchange is unavailable right now.")
             return@on_obj_option
         }
-        val outcome = GrandExchangeCollection.collect(player, service)
-        GrandExchangeCollection.describe(outcome).forEach { player.message(it) }
+        GrandExchangeInterface.openCollectionBox(player)
     }
 }
 

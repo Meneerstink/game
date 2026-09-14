@@ -28,13 +28,10 @@ data class Leftover(
 /**
  * Paying out Grand Exchange proceeds, shared by every way of asking for them.
  *
- * There are two: the `::ge_collect` command and the `Collect` option that every bank booth, counter
- * and the Grand Exchange bank chest carries in the cache. Retail routes the second through the
- * collection-box interface, which this server deliberately does not implement (see the note at the
- * top of `grand_exchange.plugin.kts`), so the option pays straight into the inventory instead of
- * opening a screen. That is a visible departure from retail, and the honest one while the interface
- * is absent: the alternative leaves the option answering "Nothing interesting happens" while the
- * player's proceeds sit unreachable inside the offer.
+ * Used by the `::ge_collect` command. The `Collect` option on bank booths, counters, the Grand Exchange
+ * bank chest and bank npcs no longer comes here: since the native collection box exists
+ * (`GrandExchangeInterface.openCollectionBox`, interface 109) they open it, as Novite does
+ * (RCV-012.B16, [GrandExchangeCollectors]).
  */
 object GrandExchangeCollection {
     /**
