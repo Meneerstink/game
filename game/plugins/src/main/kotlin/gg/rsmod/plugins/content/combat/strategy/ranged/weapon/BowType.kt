@@ -84,6 +84,12 @@ enum class BowType(
         ammo =
             BRONZE_ARROWS + IRON_ARROWS + STEEL_ARROWS + MITHRIL_ARROWS + ADAMANT_ARROWS + RUNE_ARROWS + BROAD_ARROWS,
     ),
+    // OSRS-IMPORT Magic shortbow (i): the Magic shortbow with a higher ranged attack, same arrows.
+    MAGIC_SHORTBOW_I(
+        item = Items.MAGIC_SHORTBOW_I,
+        ammo =
+            BRONZE_ARROWS + IRON_ARROWS + STEEL_ARROWS + MITHRIL_ARROWS + ADAMANT_ARROWS + RUNE_ARROWS + BROAD_ARROWS,
+    ),
     MAGIC_LONGBOW(
         item = Items.MAGIC_LONGBOW,
         ammo =

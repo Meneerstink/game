@@ -81,6 +81,8 @@ object SpecialAttackSupport {
         consumeAmmo: Boolean = true,
         /** Non-null for crossbow specials that interact with enchanted bolt effects (Armadyl Eye, Evoke). */
         boltSpecial: gg.rsmod.plugins.content.combat.strategy.ranged.ammo.EnchantedBolts.Special? = null,
+        /** A special with its own max hit formula (Snapshot) replaces the formula's max hit; [damage] is then ignored. */
+        maxHitOverride: ((ammoId: Int) -> Double)? = null,
         onHit: (Int) -> Unit = {},
     ): Int {
         val world = player.world
@@ -105,7 +107,7 @@ object SpecialAttackSupport {
             }
         }
 
-        val maxHit = RangedCombatFormula.getMaxHit(player, target, specialAttackMultiplier = damage)
+        val maxHit = maxHitOverride?.invoke(ammo.id) ?: RangedCombatFormula.getMaxHit(player, target, specialAttackMultiplier = damage)
         val acc = RangedCombatFormula.getAccuracy(player, target, specialAttackMultiplier = accuracy)
         val rolledHit = forceLand || acc >= world.randomDouble()
         val shot =

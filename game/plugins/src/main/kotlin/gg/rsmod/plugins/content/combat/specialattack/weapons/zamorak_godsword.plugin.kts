@@ -17,7 +17,12 @@ import gg.rsmod.plugins.content.combat.specialattack.SpecialAttacks
  * substance) is implemented and correct. Mirrors the same disclose-don't-guess precedent already
  * used in armadyl_godsword.plugin.kts.
  */
+// Special look: animation 7070 + graphic 1221 (Novite PlayerCombat case 11700; Void `ice_cleave_special` = 1221), sound 3865 (Void).
+// Not added: the freeze impact graphic 2104 (Void `ice_cleave_impact`) - needs the freeze hook of this special, checked at build time.
 SpecialAttacks.register(50, Items.ZAMORAK_GODSWORD) {
+    player.animate(7070)
+    player.graphic(1221)
+    player.playSound(3865)
     val maxHit = MeleeCombatFormula.getMaxHit(player, target, specialAttackMultiplier = 1.10)
     val accuracy = MeleeCombatFormula.getAccuracy(player, target, specialAttackMultiplier = 2.0)
     val landHit = accuracy >= world.randomDouble()

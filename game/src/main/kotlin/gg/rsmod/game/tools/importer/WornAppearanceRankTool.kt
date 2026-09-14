@@ -50,8 +50,26 @@ import gg.rsmod.game.fs.def.ItemDef
  * whether targetItemId itself currently qualifies (has `manwear >= 0` or `womanwear >= 0`).
  */
 object WornAppearanceRankTool {
-    /** Whether the real client would append this item to `wornObjIds[]` - `manwear >= 0 || womanwear >= 0`. */
+    /** The item's own worn models - `manwear >= 0 || womanwear >= 0`. */
     fun isWearable(def: ItemDef): Boolean = def.maleWornModel >= 0 || def.maleWornModel2 >= 0
+
+    /**
+     * Whether the real client appends this item to `wornObjIds[]`. The client's `ObjTypeList.list` post-processes every
+     * definition before `initWornObjIds` reads it: `genLent(list(lentlink), list(lenttemplate))` and
+     * `genBought(list(boughttemplate), list(boughtlink))` both copy `manwear` / `womanwear` from the original item
+     * (2011scape-client `ObjType.genLent` / `genBought`). Lent (opcodes 121/122) and bought (139/140) variants of a wearable
+     * item are therefore wearable in the client too. Ignoring them undercounted every rank above the first lent item (owner
+     * report 2026-09-14: all imported items invisible when worn; Twisted bow, whose rank was set from the live client, works).
+     */
+    fun isWearableInClient(
+        def: ItemDef,
+        items: Map<Int, ItemDef>,
+    ): Boolean {
+        if (isWearable(def)) return true
+        if (def.lendTemplateId > 0) items[def.lendId]?.let { if (isWearable(it)) return true }
+        if (def.recolourTemplateId > 0) items[def.recolourId]?.let { if (isWearable(it)) return true }
+        return false
+    }
 
     data class Rank(
         val itemDefinitionCount: Int,
@@ -86,20 +104,48 @@ object WornAppearanceRankTool {
                     val def = items.getValue(id)
                     targetManwear = def.maleWornModel
                     targetWomanwear = def.maleWornModel2
-                    targetQualifies = isWearable(def)
+                    targetQualifies = isWearableInClient(def, items)
                 }
                 continue
             }
-            if (isWearable(items.getValue(id))) {
+            if (isWearableInClient(items.getValue(id), items)) {
                 rank++
             }
         }
         return Rank(items.size, targetManwear, targetWomanwear, targetQualifies, rank)
     }
 
+    /** Every client-wearable item id >= [fromId] mapped to its `appearance_id` rank, from one cache load. */
+    fun ranksFrom(
+        library: CacheLibrary,
+        fromId: Int,
+    ): Map<Int, Int> {
+        val definitions = DefinitionSet()
+        definitions.load(library, ItemDef::class.java)
+        @Suppress("UNCHECKED_CAST")
+        val items = definitions.getAll(ItemDef::class.java) as Map<Int, ItemDef>
+        val result = linkedMapOf<Int, Int>()
+        var rank = 0
+        for (id in items.keys.sorted()) {
+            val wearable = isWearableInClient(items.getValue(id), items)
+            if (id >= fromId && wearable) result[id] = rank
+            if (wearable) rank++
+        }
+        return result
+    }
+
     @JvmStatic
     fun main(args: Array<String>) {
-        require(args.size == 2) { "Usage: <cachePath> <targetItemId>" }
+        if (args.size == 3 && args[1] == "from") {
+            val library = CacheLibrary(args[0])
+            try {
+                ranksFrom(library, args[2].toInt()).forEach { (id, rank) -> println("RANK $id=$rank") }
+            } finally {
+                library.close()
+            }
+            return
+        }
+        require(args.size == 2) { "Usage: <cachePath> <targetItemId> | <cachePath> from <firstItemId>" }
         val cachePath = args[0]
         val targetId = args[1].toInt()
 

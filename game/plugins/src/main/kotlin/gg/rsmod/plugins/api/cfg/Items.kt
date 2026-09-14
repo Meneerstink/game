@@ -19613,5 +19613,13 @@ object Items {
     const val CRYSTAL_SHARD = 22750
     const val ENHANCED_CRYSTAL_WEAPON_SEED = 22751
     const val ENHANCED_CRYSTAL_WEAPON_SEED_NOTED = 22752
+    // Predicted from the importer order (dry run pending before apply): Magic shortbow (i), Magic shortbow scroll (+noted).
+    const val MAGIC_SHORTBOW_I = 22753
+    const val MAGIC_SHORTBOW_SCROLL = 22754
+    const val MAGIC_SHORTBOW_SCROLL_NOTED = 22755
+    // Predicted from the importer order (dry run pending before apply): Amulet of blood fury, Blood shard (+noted).
+    const val AMULET_OF_BLOOD_FURY = 22756
+    const val BLOOD_SHARD = 22757
+    const val BLOOD_SHARD_NOTED = 22758
     // Auto-generated file using class gg.rsmod.game.service.game.DumpEntityIdService
 }

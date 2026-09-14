@@ -56,7 +56,7 @@ object PvpDeathBreakables {
         val (converting, rest) =
             result.itemRisk.lost.partition {
                 entries.containsKey(it.item.id) || OsrsOrnamentKits.forOrnamented(it.item.id) != null || it.item.id == Items.TOXIC_BLOWPIPE ||
-                    it.item.id == Items.BOW_OF_FAERDHINEN
+                    it.item.id == Items.BOW_OF_FAERDHINEN || it.item.id == Items.AMULET_OF_BLOOD_FURY
             }
         if (converting.isEmpty()) return result to emptyList()
         return result.copy(itemRisk = result.itemRisk.copy(lost = rest)) to converting
@@ -95,6 +95,14 @@ object PvpDeathBreakables {
                 container[slotItem.slot] = null
                 if (slotItem.source == DeathContainerSource.EQUIPMENT) equipmentChanged = true
                 world.spawn(GroundItem(Item(Items.BOW_OF_FAERDHINEN_INACTIVE, 1), victim.tile, result.killer))
+                continue
+            }
+            if (slotItem.item.id == Items.AMULET_OF_BLOOD_FURY) {
+                // OSRS Wiki "Amulet of blood fury": unprotected PvP death - "the amulet is converted to a normal amulet of fury;
+                // the blood shard and any remaining charges are lost" (the fury is lost to the killer as usual).
+                container[slotItem.slot] = null
+                if (slotItem.source == DeathContainerSource.EQUIPMENT) equipmentChanged = true
+                world.spawn(GroundItem(Item(Items.AMULET_OF_FURY, 1), victim.tile, result.killer))
                 continue
             }
             val ornament = OsrsOrnamentKits.forOrnamented(slotItem.item.id)

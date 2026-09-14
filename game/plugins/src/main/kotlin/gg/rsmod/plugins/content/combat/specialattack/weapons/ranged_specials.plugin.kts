@@ -22,14 +22,21 @@ import gg.rsmod.plugins.content.mechanics.prayer.Prayers
 private val DARK_BOWS = intArrayOf(Items.DARK_BOW, Items.DARK_BOW_15701, Items.DARK_BOW_15702, Items.DARK_BOW_15703, Items.DARK_BOW_15704)
 private val DRAGON_ARROWS = intArrayOf(Items.DRAGON_ARROW, Items.DRAGON_ARROW_P, Items.DRAGON_ARROW_P_11229, Items.DRAGON_FIRE_ARROWS, Items.DRAGON_FIRE_ARROWS_11222)
 
-/* Magic shortbow - Snapshot: 55%, fires two arrows in quick succession at +43% accuracy... wiki: two arrows, slightly reduced accuracy (x0.9). */
-SpecialAttacks.register(55, Items.MAGIC_SHORTBOW) {
-    val victim = target
-    player.animate(1074)
-    player.graphic(250, 96)
-    player.playSound(Sfx.SNAPSHOT)
-    if (rangedShot(player, victim, accuracy = 0.9, projectileGfx = 249) == -1) return@register
-    rangedShot(player, victim, accuracy = 0.9, projectileGfx = 249, projectileDelayOffset = 1)
+/* Magic shortbow / Magic shortbow (i) - Snapshot (OSRS rules in MagicShortbowSnapshot): 55 % / 50 %, two arrows, accuracy ×10/7, own max hit. */
+listOf(Items.MAGIC_SHORTBOW, Items.MAGIC_SHORTBOW_I).forEach { bow ->
+    SpecialAttacks.register(gg.rsmod.plugins.content.items.osrs.MagicShortbowSnapshot.energy(bow)!!, bow) {
+        val victim = target
+        player.animate(1074)
+        player.graphic(250, 96)
+        player.playSound(Sfx.SNAPSHOT)
+        val snapshotMax = { ammoId: Int ->
+            val ammoStrength = world.definitions.get(gg.rsmod.game.fs.def.ItemDef::class.java, ammoId).bonuses[BonusSlot.RANGED_STRENGTH_BONUS.id]
+            gg.rsmod.plugins.content.items.osrs.MagicShortbowSnapshot.maxHit(player.skills.getCurrentLevel(Skills.RANGED), ammoStrength)
+        }
+        val accuracy = gg.rsmod.plugins.content.items.osrs.MagicShortbowSnapshot.ACCURACY
+        if (rangedShot(player, victim, accuracy = accuracy, projectileGfx = 249, maxHitOverride = snapshotMax) == -1) return@register
+        rangedShot(player, victim, accuracy = accuracy, projectileGfx = 249, projectileDelayOffset = 1, maxHitOverride = snapshotMax)
+    }
 }
 
 /* Magic longbow / Magic composite bow - Powershot: 35%, a single arrow that always hits. */

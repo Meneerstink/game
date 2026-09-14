@@ -229,6 +229,12 @@ fun Pawn.dealHit(
 
     val pawnHit = PawnHit(hit, executeHit)
 
+    // Amulet of blood fury: every successful melee hit (specials and multi-hits included) uses a charge and may heal (BloodFury).
+    if (this is Player && hitType == HitType.MELEE && executeHit) {
+        val attacker = this
+        hit.addAction { gg.rsmod.plugins.content.items.osrs.BloodFury.onMeleeHit(attacker, hit.hitmarks.sumOf { it.damage }) }
+    }
+
     // Crystal armour: "One charge is depleted for each successful hit that is received from combat" - monster hits only,
     // nothing when a protection prayer negated the damage (CrystalEquipment).
     if (target is Player && this is Npc && executeHit) {

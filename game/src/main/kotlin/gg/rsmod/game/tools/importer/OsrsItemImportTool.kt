@@ -327,6 +327,19 @@ object OsrsItemImportTool {
                     Spec(23962), // Crystal shard
                     Spec(25859, noted = true), // Enhanced crystal weapon seed
                 ),
+            // Magic shortbow (i) and the Magic shortbow scroll. The bow follows the 667 Magic shortbow 861 (ItemParamProbeTool
+            // 2026-09-14: 686 16, 687 special bar, 23/749/750 = 50 Ranged), weapon type 16, attack audio 2700.
+            "msbi" to
+                listOf(
+                    Spec(12788, rev667Params = mapOf(686 to 16, 687 to 1, 23 to 50, 749 to 4, 750 to 50), weaponType = 16, attackAudio = 2700), // Magic shortbow (i)
+                    Spec(12786, noted = true), // Magic shortbow scroll
+                ),
+            // Amulet of blood fury and the Blood shard. No wield requirement upstream, no client params.
+            "bloodfury" to
+                listOf(
+                    Spec(24780), // Amulet of blood fury
+                    Spec(24777, noted = true), // Blood shard
+                ),
             // Blighted sacks (owner addition 2026-09-14): stackable, tradeable consumables without inventory options upstream;
             // they replace the runes of the spells named on their wiki pages (MagicSpells). No client params.
             "blightedsacks" to

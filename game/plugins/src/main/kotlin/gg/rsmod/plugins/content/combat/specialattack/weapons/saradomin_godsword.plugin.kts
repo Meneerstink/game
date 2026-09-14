@@ -19,7 +19,11 @@ import kotlin.math.ceil
  * Player Prayer points, lifepoints and hitmark damage all use the same 1:1 real-value unit, so the
  * sourced percentages and minimums can be applied directly.
  */
+// Special look: animation 12019 + graphic 2109 (Novite PlayerCombat case 11698; Void `healing_blade_special` = 2109), sound 3865 (Void).
 SpecialAttacks.register(50, Items.SARADOMIN_GODSWORD) {
+    player.animate(12019)
+    player.graphic(2109)
+    player.playSound(3865)
     val maxHit = MeleeCombatFormula.getMaxHit(player, target, specialAttackMultiplier = 1.10)
     val accuracy = MeleeCombatFormula.getAccuracy(player, target, specialAttackMultiplier = 2.0)
     val landHit = accuracy >= world.randomDouble()
