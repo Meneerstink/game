@@ -558,4 +558,18 @@ enum class Potion(
     DIVINE_BASTION3(item = Items.DIVINE_BASTION_POTION_3, replacement = Items.DIVINE_BASTION_POTION_2, potionType = PotionType.DIVINE_BASTION),
     DIVINE_BASTION2(item = Items.DIVINE_BASTION_POTION_2, replacement = Items.DIVINE_BASTION_POTION_1, potionType = PotionType.DIVINE_BASTION),
     DIVINE_BASTION1(item = Items.DIVINE_BASTION_POTION_1, replacement = Items.VIAL, potionType = PotionType.DIVINE_BASTION),
+
+    // OSRS-IMPORT potions-venom.
+    ANTI_VENOM4(item = Items.ANTI_VENOM_4, replacement = Items.ANTI_VENOM_3, potionType = PotionType.ANTI_VENOM),
+    ANTI_VENOM3(item = Items.ANTI_VENOM_3, replacement = Items.ANTI_VENOM_2, potionType = PotionType.ANTI_VENOM),
+    ANTI_VENOM2(item = Items.ANTI_VENOM_2, replacement = Items.ANTI_VENOM_1, potionType = PotionType.ANTI_VENOM),
+    ANTI_VENOM1(item = Items.ANTI_VENOM_1, replacement = Items.VIAL, potionType = PotionType.ANTI_VENOM),
+    ANTI_VENOM_PLUS4(item = Items.ANTI_VENOM_PLUS_4, replacement = Items.ANTI_VENOM_PLUS_3, potionType = PotionType.ANTI_VENOM_PLUS),
+    ANTI_VENOM_PLUS3(item = Items.ANTI_VENOM_PLUS_3, replacement = Items.ANTI_VENOM_PLUS_2, potionType = PotionType.ANTI_VENOM_PLUS),
+    ANTI_VENOM_PLUS2(item = Items.ANTI_VENOM_PLUS_2, replacement = Items.ANTI_VENOM_PLUS_1, potionType = PotionType.ANTI_VENOM_PLUS),
+    ANTI_VENOM_PLUS1(item = Items.ANTI_VENOM_PLUS_1, replacement = Items.VIAL, potionType = PotionType.ANTI_VENOM_PLUS),
+    EXTENDED_ANTI_VENOM_PLUS4(item = Items.EXTENDED_ANTI_VENOM_PLUS_4, replacement = Items.EXTENDED_ANTI_VENOM_PLUS_3, potionType = PotionType.EXTENDED_ANTI_VENOM_PLUS),
+    EXTENDED_ANTI_VENOM_PLUS3(item = Items.EXTENDED_ANTI_VENOM_PLUS_3, replacement = Items.EXTENDED_ANTI_VENOM_PLUS_2, potionType = PotionType.EXTENDED_ANTI_VENOM_PLUS),
+    EXTENDED_ANTI_VENOM_PLUS2(item = Items.EXTENDED_ANTI_VENOM_PLUS_2, replacement = Items.EXTENDED_ANTI_VENOM_PLUS_1, potionType = PotionType.EXTENDED_ANTI_VENOM_PLUS),
+    EXTENDED_ANTI_VENOM_PLUS1(item = Items.EXTENDED_ANTI_VENOM_PLUS_1, replacement = Items.VIAL, potionType = PotionType.EXTENDED_ANTI_VENOM_PLUS),
 }

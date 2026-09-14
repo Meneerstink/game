@@ -403,6 +403,8 @@ enum class PotionType(
         override fun apply(p: Player) {
             if (Venom.downgradeToPoison(p)) return
             cureAndImmunise(p, PotionEffects.ANTIPOISON_PLUS_PLUS_IMMUNITY_TICKS)
+            // OSRS-IMPORT potions-venom ADJACENT FIX: "one dose of antidote++ will provide immunity to venom for 18-36 seconds" (PotionEffects).
+            p.timers[gg.rsmod.game.model.timer.VENOM_IMMUNITY] = PotionEffects.ANTIDOTE_PLUS_PLUS_VENOM_IMMUNITY_TICKS
         }
     },
 
@@ -462,7 +464,30 @@ enum class PotionType(
         override fun canDrink(p: Player) = DivinePotions.canDrinkDivine(p)
 
         override fun apply(p: Player) = DivinePotions.drinkDivine(p, intArrayOf(Skills.MAGIC, Skills.DEFENCE))
+    },
+
+    // OSRS-IMPORT potions-venom: "instantly cures venom and poison" with the immunity windows in PotionEffects.
+    ANTI_VENOM {
+        override fun apply(p: Player) = cureVenomAndPoison(p, PotionEffects.ANTI_VENOM_POISON_IMMUNITY_TICKS, PotionEffects.ANTI_VENOM_VENOM_IMMUNITY_TICKS)
+    },
+    ANTI_VENOM_PLUS {
+        override fun apply(p: Player) =
+            cureVenomAndPoison(p, PotionEffects.ANTI_VENOM_PLUS_POISON_IMMUNITY_TICKS, PotionEffects.ANTI_VENOM_PLUS_VENOM_IMMUNITY_TICKS)
+    },
+    EXTENDED_ANTI_VENOM_PLUS {
+        override fun apply(p: Player) =
+            cureVenomAndPoison(p, PotionEffects.EXTENDED_ANTI_VENOM_PLUS_POISON_IMMUNITY_TICKS, PotionEffects.EXTENDED_ANTI_VENOM_PLUS_VENOM_IMMUNITY_TICKS)
     }, ;
+
+    protected fun cureVenomAndPoison(
+        p: Player,
+        poisonImmunityTicks: Int,
+        venomImmunityTicks: Int,
+    ) {
+        Venom.cure(p, venomImmunityTicks)
+        cureAndImmunise(p, poisonImmunityTicks)
+        p.timers[gg.rsmod.game.model.timer.VENOM_IMMUNITY] = venomImmunityTicks
+    }
 
     abstract fun apply(p: Player)
 

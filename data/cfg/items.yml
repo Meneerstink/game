@@ -276901,3 +276901,147 @@
   tradeable: true
   weight: 0.0
   equipment: null
+- id: 23247
+  name: "Anti-venom(4)"
+  examine: "4 doses of antivenom potion."
+  tradeable: true
+  weight: 0.035
+  equipment: null
+- id: 23248
+  name: "Anti-venom(4)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23249
+  name: "Anti-venom(3)"
+  examine: "3 doses of antivenom potion."
+  tradeable: true
+  weight: 0.035
+  equipment: null
+- id: 23250
+  name: "Anti-venom(3)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23251
+  name: "Anti-venom(2)"
+  examine: "2 doses of antivenom potion."
+  tradeable: true
+  weight: 0.035
+  equipment: null
+- id: 23252
+  name: "Anti-venom(2)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23253
+  name: "Anti-venom(1)"
+  examine: "1 dose of antivenom potion."
+  tradeable: true
+  weight: 0.035
+  equipment: null
+- id: 23254
+  name: "Anti-venom(1)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23255
+  name: "Anti-venom+(4)"
+  examine: "4 doses of super antivenom potion."
+  tradeable: true
+  weight: 0.035
+  equipment: null
+- id: 23256
+  name: "Anti-venom+(4)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23257
+  name: "Anti-venom+(3)"
+  examine: "3 doses of super antivenom potion."
+  tradeable: true
+  weight: 0.035
+  equipment: null
+- id: 23258
+  name: "Anti-venom+(3)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23259
+  name: "Anti-venom+(2)"
+  examine: "2 doses of super antivenom potion."
+  tradeable: true
+  weight: 0.035
+  equipment: null
+- id: 23260
+  name: "Anti-venom+(2)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23261
+  name: "Anti-venom+(1)"
+  examine: "1 dose of super antivenom potion."
+  tradeable: true
+  weight: 0.035
+  equipment: null
+- id: 23262
+  name: "Anti-venom+(1)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23263
+  name: "Extended anti-venom+(4)"
+  examine: "4 doses of extended super antivenom potion."
+  tradeable: true
+  weight: 0.035
+  equipment: null
+- id: 23264
+  name: "Extended anti-venom+(4)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23265
+  name: "Extended anti-venom+(3)"
+  examine: "3 doses of extended super antivenom potion."
+  tradeable: true
+  weight: 0.035
+  equipment: null
+- id: 23266
+  name: "Extended anti-venom+(3)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23267
+  name: "Extended anti-venom+(2)"
+  examine: "2 doses of extended super antivenom potion."
+  tradeable: true
+  weight: 0.035
+  equipment: null
+- id: 23268
+  name: "Extended anti-venom+(2)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23269
+  name: "Extended anti-venom+(1)"
+  examine: "1 dose of extended super antivenom potion."
+  tradeable: true
+  weight: 0.035
+  equipment: null
+- id: 23270
+  name: "Extended anti-venom+(1)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null

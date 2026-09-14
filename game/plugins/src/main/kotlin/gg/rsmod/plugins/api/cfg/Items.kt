@@ -19995,5 +19995,19 @@ object Items {
     const val DIVINE_BASTION_POTION_3 = 23241
     const val DIVINE_BASTION_POTION_2 = 23243
     const val DIVINE_BASTION_POTION_1 = 23245
+
+    // OSRS-IMPORT step 4 batch potions-venom (tx-20260914-075001); each dose is followed by its noted id.
+    const val ANTI_VENOM_4 = 23247
+    const val ANTI_VENOM_3 = 23249
+    const val ANTI_VENOM_2 = 23251
+    const val ANTI_VENOM_1 = 23253
+    const val ANTI_VENOM_PLUS_4 = 23255
+    const val ANTI_VENOM_PLUS_3 = 23257
+    const val ANTI_VENOM_PLUS_2 = 23259
+    const val ANTI_VENOM_PLUS_1 = 23261
+    const val EXTENDED_ANTI_VENOM_PLUS_4 = 23263
+    const val EXTENDED_ANTI_VENOM_PLUS_3 = 23265
+    const val EXTENDED_ANTI_VENOM_PLUS_2 = 23267
+    const val EXTENDED_ANTI_VENOM_PLUS_1 = 23269
     // Auto-generated file using class gg.rsmod.game.service.game.DumpEntityIdService
 }

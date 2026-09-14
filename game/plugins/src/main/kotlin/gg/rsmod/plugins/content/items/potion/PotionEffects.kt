@@ -29,6 +29,25 @@ object PotionEffects {
     const val ANTIPOISON_PLUS_IMMUNITY_TICKS = 900
     const val ANTIPOISON_PLUS_PLUS_IMMUNITY_TICKS = 1200
 
+    /**
+     * OSRS-IMPORT potions-venom. OSRS keeps poison and venom immunity in one negative poison counter ticking every 30 game ticks; RuneLite
+     * `TimersAndBuffsPlugin` (2026-09-14): `VENOM_VALUE_CUTOFF = -38; // Antivenom < -38 <= Antipoison < 0`, poison immunity
+     * |(v + 1) x 30| and venom immunity |(v + 1 - (-38)) x 30| ticks, each plus the part of the running 30-tick cycle. The counter values
+     * are DERIVED from the wiki durations and match both durations of every potion: antidote++ -40 (12 minutes; venom "18-36 seconds"),
+     * anti-venom -41 (12 minutes / Poison table 12.3; venom "36-54 seconds"), anti-venom+ -50 (15 minutes; venom "approximately 3.6
+     * minutes"), extended anti-venom+ -59 (17.7 minutes; venom "approximately 6.3 minutes"). This engine keeps two timers without the
+     * shared cycle, so each uses the upper bound (|v| x 30 poison, (|v| - 38) x 30 venom) - the convention of the existing 1200-tick
+     * antidote++ value. SOURCE_CONFLICT (recorded): the "Venom" page says anti-venom+ gives "three minutes"; the item page and the counter
+     * give 3.6.
+     */
+    const val ANTIDOTE_PLUS_PLUS_VENOM_IMMUNITY_TICKS = (40 - 38) * 30
+    const val ANTI_VENOM_POISON_IMMUNITY_TICKS = 41 * 30
+    const val ANTI_VENOM_VENOM_IMMUNITY_TICKS = (41 - 38) * 30
+    const val ANTI_VENOM_PLUS_POISON_IMMUNITY_TICKS = 50 * 30
+    const val ANTI_VENOM_PLUS_VENOM_IMMUNITY_TICKS = (50 - 38) * 30
+    const val EXTENDED_ANTI_VENOM_PLUS_POISON_IMMUNITY_TICKS = 59 * 30
+    const val EXTENDED_ANTI_VENOM_PLUS_VENOM_IMMUNITY_TICKS = (59 - 38) * 30
+
     const val OVERLOAD_REFRESH_TICKS = 25
     const val OVERLOAD_REFRESHES = 20
     /** "You need more than 500 life points" - 500 on the x10 unit. */

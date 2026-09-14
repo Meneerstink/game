@@ -680,6 +680,9 @@ object OsrsItemImportTool {
                 listOf(12695, 12697, 12699, 12701, 23685, 23688, 23691, 23694, 23697, 23700, 23703, 23706, 23709, 23712, 23715, 23718,
                     23721, 23724, 23727, 23730, 23733, 23736, 23739, 23742, 23745, 23748, 23751, 23754, 22449, 22452, 22455, 22458,
                     22461, 22464, 22467, 22470, 24623, 24626, 24629, 24632, 24635, 24638, 24641, 24644).map { Spec(it, noted = true) },
+            // Step 4 batch "potions-venom" (OSRS Wiki infobox ids, ascending = 4 to 1 doses): Anti-venom, Anti-venom+, Extended anti-venom+.
+            "potions-venom" to
+                listOf(12905, 12907, 12909, 12911, 12913, 12915, 12917, 12919, 29824, 29827, 29830, 29833).map { Spec(it, noted = true) },
             "deadstaves" to
                 listOf(
                     Spec(11791, noted = true, rev667Params = deadStaffParams()), // Staff of the dead
