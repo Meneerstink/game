@@ -35,7 +35,7 @@ object BlowpipeCombat {
         player: Player,
         target: Pawn,
     ): Boolean {
-        val pipe = player.getEquipment(EquipmentType.WEAPON)?.takeIf { it.id == Items.TOXIC_BLOWPIPE } ?: return false
+        val pipe = player.getEquipment(EquipmentType.WEAPON)?.takeIf { Blowpipe.isCharged(it.id) } ?: return false
         val dart = Blowpipe.dart(pipe) ?: return false
         val world = player.world
         RangedProjectile.values.firstOrNull { dart.itemId in it.items }?.let { world.spawn(player.createProjectile(target, it.gfx, it.type)) }
@@ -48,11 +48,12 @@ object BlowpipeCombat {
         return true
     }
 
-    /** OSRS Wiki "Toxic blowpipe": a 25% chance of inflicting venom per attack. */
+    /** OSRS Wiki "Toxic blowpipe": a 25% chance of inflicting venom per attack (toxic / blazing blowpipe only). */
     fun rollVenom(
         player: Player,
         target: Pawn,
     ) {
+        if (Blowpipe.Pipe.forItem(player.getEquipment(EquipmentType.WEAPON)?.id)?.toxic != true) return
         if (player.world.randomDouble() < Blowpipe.VENOM_CHANCE) target.venom()
     }
 }

@@ -99,8 +99,12 @@ object OsrsEquipmentStatsAudit {
             else -> value.toString()
         }
 
+    /**
+     * Same wear rule as the importer ([OsrsItemImportTool.isWearable]): a wear position alone is not enough - OSRS materials and the
+     * empty Blazing/Sailing blowpipes ("options = Drop") carry one without a Wear/Wield option and cannot be worn.
+     */
     fun osrsWearable(def: ModernItemDef) =
-        def.wearPos1 >= 0 && def.notedTemplate < 0 && def.placeholderTemplateId < 0 && def.boughtTemplateId < 0 && def.name != "null"
+        OsrsItemImportTool.isWearable(def) && def.notedTemplate < 0 && def.placeholderTemplateId < 0 && def.boughtTemplateId < 0 && def.name != "null"
 
     fun osrsStats(def: ModernItemDef): Map<String, Int> {
         fun p(id: Int) = (def.params[id] as? Int) ?: 0

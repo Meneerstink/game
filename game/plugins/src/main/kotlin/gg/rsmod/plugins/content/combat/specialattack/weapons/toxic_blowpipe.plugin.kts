@@ -12,10 +12,28 @@ import gg.rsmod.plugins.content.items.osrs.BlowpipeCombat
  * damage +50%, heals half the damage dealt (rounded down); hit delay 2 ticks at distance 4 or 5 ("Hit delay"). The OSRS
  * special graphics are not in 667: the dart throw animation and dart projectile are used (ADAPTED_TO_667).
  */
-SpecialAttacks.register(Blowpipe.SPECIAL_ENERGY, Items.TOXIC_BLOWPIPE) {
+/* Rosewood blowpipe - Rapid Burst: 25 %, "shoot two darts in rapid succession" (normal accuracy and damage since 22 July 2026). */
+SpecialAttacks.register(Blowpipe.RAPID_BURST_ENERGY, Items.ROSEWOOD_BLOWPIPE) {
+    val victim = target
+    player.animate(CombatConfigs.getAttackAnimation(player))
+    val delay = BlowpipeCombat.hitDelay(player.tile.getDistance(victim.tile), special = false)
+    repeat(2) { index ->
+        val pipe = player.getEquipment(EquipmentType.WEAPON) ?: return@register
+        if (!Blowpipe.canFire(pipe)) {
+            player.message(Blowpipe.noChargesMessage(pipe))
+            return@register
+        }
+        if (!BlowpipeCombat.fire(player, victim)) return@register
+        val landHit = RangedCombatFormula.getAccuracy(player, victim) >= world.randomDouble()
+        // ADAPTED: the second dart lands one tick after the first (spacing unsourced).
+        player.dealHit(target = victim, maxHit = RangedCombatFormula.getMaxHit(player, victim), landHit = landHit, delay = delay + index, hitType = HitType.RANGE)
+    }
+}
+
+SpecialAttacks.register(Blowpipe.SPECIAL_ENERGY, Items.TOXIC_BLOWPIPE, Items.BLAZING_BLOWPIPE) {
     val pipe = player.getEquipment(EquipmentType.WEAPON) ?: return@register
     if (!Blowpipe.canFire(pipe)) {
-        player.message(if (Blowpipe.scales(pipe) <= 0) Blowpipe.NO_SCALES_MESSAGE else Blowpipe.NO_DARTS_MESSAGE)
+        player.message(Blowpipe.noChargesMessage(pipe))
         return@register
     }
     val victim = target

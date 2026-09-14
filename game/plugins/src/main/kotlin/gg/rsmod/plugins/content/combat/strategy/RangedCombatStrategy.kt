@@ -94,8 +94,8 @@ object RangedCombatStrategy : CombatStrategy {
             val weapon = pawn.getEquipment(EquipmentType.WEAPON)
             val ammo = pawn.getEquipment(EquipmentType.AMMO)
 
-            if (weapon?.id == Items.TOXIC_BLOWPIPE && !Blowpipe.canFire(weapon)) {
-                pawn.message(if (Blowpipe.scales(weapon) <= 0) Blowpipe.NO_SCALES_MESSAGE else Blowpipe.NO_DARTS_MESSAGE)
+            if (weapon != null && Blowpipe.isBlowpipe(weapon.id) && !Blowpipe.canFire(weapon)) {
+                pawn.message(Blowpipe.noChargesMessage(weapon))
                 pawn.resetFacePawn()
                 return false
             }

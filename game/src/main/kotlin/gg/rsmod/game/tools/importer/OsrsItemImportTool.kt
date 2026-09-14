@@ -553,6 +553,21 @@ object OsrsItemImportTool {
                     Spec(26711), // Heavy ballista ornament kit
                     Spec(26712, rev667Params = mapOf(644 to 1603, 686 to 17, 687 to 1, 23 to 75, 749 to 4, 750 to 75), weaponType = 17, attackAudio = 2700), // Heavy ballista (or)
                 ),
+            // Step 3 roster batch "blowpipes" (ids by Jagex name, RuneLite gameval ItemID): Blazing blowpipe (TOXIC_BLOWPIPE_ORNAMENT /
+            // _LOADED_ORNAMENT) + TOXIC_BLOWPIPE_ORNAMENT_KIT, and the Sailing camphor/ironwood/rosewood blowpipes (charged + _EMPTY). Class:
+            // the Toxic blowpipe spec above. Not imported: Drygore blowpipe 30373/30374 (Demonic Pacts League only - owner question 4).
+            "blowpipes" to
+                listOf(
+                    Spec(28688, rev667Params = mapOf(686 to 18, 687 to 1, 23 to 75, 749 to 4, 750 to 75), weaponType = 18, rev667StringParams = mapOf(528 to "Check")), // Blazing blowpipe
+                    Spec(28687, rev667Params = mapOf(686 to 18, 687 to 1, 23 to 75, 749 to 4, 750 to 75), weaponType = 18), // Blazing blowpipe (empty)
+                    Spec(28690, noted = true), // Trailblazer reloaded blowpipe ornament kit
+                    Spec(31575, rev667Params = mapOf(686 to 18, 23 to 45, 749 to 4, 750 to 45), weaponType = 18, rev667StringParams = mapOf(528 to "Check")), // Camphor blowpipe
+                    Spec(31577, noted = true, rev667Params = mapOf(686 to 18, 23 to 45, 749 to 4, 750 to 45), weaponType = 18), // Camphor blowpipe (empty)
+                    Spec(31579, rev667Params = mapOf(686 to 18, 23 to 55, 749 to 4, 750 to 55), weaponType = 18, rev667StringParams = mapOf(528 to "Check")), // Ironwood blowpipe
+                    Spec(31581, noted = true, rev667Params = mapOf(686 to 18, 23 to 55, 749 to 4, 750 to 55), weaponType = 18), // Ironwood blowpipe (empty)
+                    Spec(31583, rev667Params = mapOf(686 to 18, 687 to 1, 23 to 65, 749 to 4, 750 to 65), weaponType = 18, rev667StringParams = mapOf(528 to "Check")), // Rosewood blowpipe
+                    Spec(31585, noted = true, rev667Params = mapOf(686 to 18, 687 to 1, 23 to 65, 749 to 4, 750 to 65), weaponType = 18), // Rosewood blowpipe (empty)
+                ),
             "deadstaves" to
                 listOf(
                     Spec(11791, noted = true, rev667Params = deadStaffParams()), // Staff of the dead

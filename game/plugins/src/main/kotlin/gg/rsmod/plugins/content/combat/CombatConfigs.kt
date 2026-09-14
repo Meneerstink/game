@@ -158,7 +158,8 @@ object CombatConfigs {
             // Missing metadata is -1, not a one-tick weapon. Keep explicit custom speeds.
             var speed = weapon.getDef(pawn.world.definitions).attackSpeed.takeIf { it > 0 } ?: default
             // OSRS Wiki "Toxic blowpipe": "During player versus player combat, its attack speed is 4, or equal to a shortbow."
-            if (weapon.id == gg.rsmod.plugins.api.cfg.Items.TOXIC_BLOWPIPE &&
+            // "Rosewood blowpipe" etc.: "As with all blowpipes ... During player versus player combat, its attack speed is 4".
+            if (gg.rsmod.plugins.content.items.osrs.Blowpipe.isBlowpipe(weapon.id) &&
                 pawn.attr[gg.rsmod.game.model.attr.COMBAT_TARGET_FOCUS_ATTR]?.get() is Player
             ) {
                 speed = 4

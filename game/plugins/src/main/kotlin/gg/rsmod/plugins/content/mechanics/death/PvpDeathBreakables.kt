@@ -57,6 +57,7 @@ object PvpDeathBreakables {
         val (converting, rest) =
             result.itemRisk.lost.partition {
                 entries.containsKey(it.item.id) || OsrsOrnamentKits.forPvpConversion(it.item.id) != null || it.item.id == Items.TOXIC_BLOWPIPE ||
+                    it.item.id == Items.BLAZING_BLOWPIPE ||
                     it.item.id == Items.BOW_OF_FAERDHINEN || it.item.id == Items.AMULET_OF_BLOOD_FURY || it.item.id == Items.TOXIC_STAFF_OF_THE_DEAD ||
                     it.item.id in gg.rsmod.plugins.content.items.osrs.AvernicTreads.UPGRADED || it.item.id == Items.ANCIENT_SCEPTRE
             }
@@ -80,13 +81,15 @@ object PvpDeathBreakables {
                     DeathContainerSource.EQUIPMENT -> victim.equipment
                 }
             if (container[slotItem.slot]?.id != slotItem.item.id) continue
-            if (slotItem.item.id == Items.TOXIC_BLOWPIPE) {
+            if (slotItem.item.id == Items.TOXIC_BLOWPIPE || slotItem.item.id == Items.BLAZING_BLOWPIPE) {
                 // OSRS Wiki "Toxic blowpipe": unprotected, "all scale and dart charges will appear on the floor alongside
-                // the blowpipe" - the empty blowpipe, its darts and its scales drop for the killer.
+                // the blowpipe" - the empty blowpipe, its darts and its scales drop for the killer. Blazing blowpipe: the
+                // tradeable ornament kit rule ("Items Kept on Death") also applies - the Toxic blowpipe plus the kit.
                 val blowpipe = container[slotItem.slot]!!
                 container[slotItem.slot] = null
                 if (slotItem.source == DeathContainerSource.EQUIPMENT) equipmentChanged = true
                 world.spawn(GroundItem(Item(Items.TOXIC_BLOWPIPE_EMPTY, 1), victim.tile, result.killer))
+                if (slotItem.item.id == Items.BLAZING_BLOWPIPE) world.spawn(GroundItem(Item(Items.BLOWPIPE_ORNAMENT_KIT, 1), victim.tile, result.killer))
                 Blowpipe.dart(blowpipe)?.let { world.spawn(GroundItem(Item(it.itemId, Blowpipe.darts(blowpipe)), victim.tile, result.killer)) }
                 Blowpipe.scales(blowpipe).takeIf { it > 0 }?.let { world.spawn(GroundItem(Item(Items.ZULRAHS_SCALES, it), victim.tile, result.killer)) }
                 continue

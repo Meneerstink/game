@@ -242027,18 +242027,18 @@
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
-    attack_magic: -7
-    attack_ranged: -3
-    defence_stab: 68
-    defence_slash: 73
-    defence_crush: 65
+    attack_magic: -5
+    attack_ranged: -5
+    defence_stab: 59
+    defence_slash: 60
+    defence_crush: 62
     defence_magic: -2
-    defence_ranged: 74
+    defence_ranged: 57
     summoning: 17
     absorb_melee: 3
     absorb_magic: 0
     absorb_ranged: 6
-    melee_strength: 3
+    melee_strength: 8
     ranged_strength: 0
     prayer: 1
     magic_damage: 0
@@ -242065,18 +242065,18 @@
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
-    attack_magic: -7
-    attack_ranged: -3
-    defence_stab: 68
-    defence_slash: 73
-    defence_crush: 65
+    attack_magic: -5
+    attack_ranged: -5
+    defence_stab: 59
+    defence_slash: 60
+    defence_crush: 62
     defence_magic: -2
-    defence_ranged: 74
+    defence_ranged: 57
     summoning: 17
     absorb_melee: 3
     absorb_magic: 0
     absorb_ranged: 6
-    melee_strength: 3
+    melee_strength: 8
     ranged_strength: 0
     prayer: 1
     magic_damage: 0
@@ -242129,18 +242129,18 @@
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
-    attack_magic: -31
-    attack_ranged: -11
-    defence_stab: 156
-    defence_slash: 140
-    defence_crush: 120
-    defence_magic: -10
-    defence_ranged: 160
+    attack_magic: -18
+    attack_ranged: -14
+    defence_stab: 117
+    defence_slash: 111
+    defence_crush: 117
+    defence_magic: -11
+    defence_ranged: 142
     summoning: 65
     absorb_melee: 6
     absorb_magic: 0
     absorb_ranged: 12
-    melee_strength: 4
+    melee_strength: 6
     ranged_strength: 0
     prayer: 1
     magic_damage: 0
@@ -242167,18 +242167,18 @@
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
-    attack_magic: -31
-    attack_ranged: -11
-    defence_stab: 156
-    defence_slash: 140
-    defence_crush: 120
-    defence_magic: -10
-    defence_ranged: 160
+    attack_magic: -18
+    attack_ranged: -14
+    defence_stab: 117
+    defence_slash: 111
+    defence_crush: 117
+    defence_magic: -11
+    defence_ranged: 142
     summoning: 65
     absorb_melee: 6
     absorb_magic: 0
     absorb_ranged: 12
-    melee_strength: 4
+    melee_strength: 6
     ranged_strength: 0
     prayer: 1
     magic_damage: 0
@@ -242231,18 +242231,18 @@
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
-    attack_magic: -21
-    attack_ranged: -8
-    defence_stab: 112
-    defence_slash: 100
-    defence_crush: 95
-    defence_magic: -5
-    defence_ranged: 125
+    attack_magic: -24
+    attack_ranged: -11
+    defence_stab: 87
+    defence_slash: 78
+    defence_crush: 79
+    defence_magic: -9
+    defence_ranged: 102
     summoning: 65
     absorb_melee: 4
     absorb_magic: 0
     absorb_ranged: 8
-    melee_strength: 2
+    melee_strength: 4
     ranged_strength: 0
     prayer: 1
     magic_damage: 0
@@ -242269,18 +242269,18 @@
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
-    attack_magic: -21
-    attack_ranged: -8
-    defence_stab: 112
-    defence_slash: 100
-    defence_crush: 95
-    defence_magic: -5
-    defence_ranged: 125
+    attack_magic: -24
+    attack_ranged: -11
+    defence_stab: 87
+    defence_slash: 78
+    defence_crush: 79
+    defence_magic: -9
+    defence_ranged: 102
     summoning: 65
     absorb_melee: 4
     absorb_magic: 0
     absorb_ranged: 8
-    melee_strength: 2
+    melee_strength: 4
     ranged_strength: 0
     prayer: 1
     magic_damage: 0
@@ -273912,3 +273912,193 @@
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
+- id: 23035
+  name: "Blazing blowpipe"
+  examine: "A Toxic Blowpipe that fires darts coated with venom... And fire."
+  tradeable: false
+  weight: 0.5
+  equipment:
+    equip_slot: 3
+    equip_type: 5
+    appearance_id: 6466
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 18
+    attack_speed: 3
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 30
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 20
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 4, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23036
+  name: "Blazing blowpipe (empty)"
+  examine: "An uncharged Toxic Blowpipe that fires darts coated with venom... And fire."
+  tradeable: false
+  weight: 0.3
+  equipment: null
+- id: 23037
+  name: "Trailblazer reloaded blowpipe ornament kit"
+  examine: "Used on an uncharged Toxic Blowpipe to give it the a theme from Leagues IV: Trailblazer Reloaded."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 23038
+  name: "Trailblazer reloaded blowpipe ornament kit"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23039
+  name: "Camphor blowpipe"
+  examine: "Breath powered dart delivering system with a hint of camphor."
+  tradeable: false
+  weight: 0.5
+  equipment:
+    equip_slot: 3
+    equip_type: 5
+    appearance_id: 6468
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 18
+    attack_speed: 3
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 12
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 2
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 4, 'level': 45}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23040
+  name: "Camphor blowpipe (empty)"
+  examine: "Breath powered dart delivering system with a hint of camphor."
+  tradeable: true
+  weight: 0.3
+  equipment: null
+- id: 23041
+  name: "Camphor blowpipe (empty)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23042
+  name: "Ironwood blowpipe"
+  examine: "Breath powered dart delivering system with a hint of ironwood."
+  tradeable: false
+  weight: 0.5
+  equipment:
+    equip_slot: 3
+    equip_type: 5
+    appearance_id: 6470
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 18
+    attack_speed: 3
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 16
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 4
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 4, 'level': 55}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23043
+  name: "Ironwood blowpipe (empty)"
+  examine: "Breath powered dart delivering system with a hint of ironwood."
+  tradeable: true
+  weight: 0.3
+  equipment: null
+- id: 23044
+  name: "Ironwood blowpipe (empty)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23045
+  name: "Rosewood blowpipe"
+  examine: "Breath powered dart delivering system with a hint of rosewood."
+  tradeable: false
+  weight: 0.5
+  equipment:
+    equip_slot: 3
+    equip_type: 5
+    appearance_id: 6472
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 18
+    attack_speed: 3
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 22
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 6
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 4, 'level': 65}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23046
+  name: "Rosewood blowpipe (empty)"
+  examine: "Breath powered dart delivering system with a hint of rosewood."
+  tradeable: true
+  weight: 0.3
+  equipment: null
+- id: 23047
+  name: "Rosewood blowpipe (empty)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null

@@ -53,7 +53,8 @@ class OsrsBlowpipeImportTests {
     @Test
     fun `Toxic Siphon and the combat strategy are wired to the blowpipe charge model`() {
         val special = File("src/main/kotlin/gg/rsmod/plugins/content/combat/specialattack/weapons/toxic_blowpipe.plugin.kts").readText()
-        assertTrue("SpecialAttacks.register(Blowpipe.SPECIAL_ENERGY, Items.TOXIC_BLOWPIPE)" in special)
+        // Batch blowpipes: the Blazing blowpipe ("a toxic blowpipe with a ... ornament kit") shares Toxic Siphon.
+        assertTrue("SpecialAttacks.register(Blowpipe.SPECIAL_ENERGY, Items.TOXIC_BLOWPIPE, Items.BLAZING_BLOWPIPE)" in special)
         assertTrue("specialAttackMultiplier = Blowpipe.SIPHON_DAMAGE" in special && "specialAttackMultiplier = Blowpipe.SIPHON_ACCURACY" in special)
         assertTrue("Blowpipe.siphonHeal(dealt)" in special && "BlowpipeCombat.rollVenom" in special)
         val strategy = File("src/main/kotlin/gg/rsmod/plugins/content/combat/strategy/RangedCombatStrategy.kt").readText()

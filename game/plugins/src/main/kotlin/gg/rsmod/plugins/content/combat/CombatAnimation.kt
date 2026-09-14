@@ -174,7 +174,7 @@ enum class CombatAnimation(
         style(CombatStyle.THIRD, Animations.THROWING_DART.default),
         weaponType = WeaponType.THROWN,
         // OSRS-IMPORT: the OSRS blowpipe animation is not in 667; the dart throw is used (ADAPTED_TO_667).
-        itemIds = listOf(*Darts.DARTS, Items.TOXIC_BLOWPIPE),
+        itemIds = listOf(*Darts.DARTS, *gg.rsmod.plugins.content.items.osrs.Blowpipe.CHARGED_IDS.toTypedArray()),
     ),
 
     DEFENDERS(

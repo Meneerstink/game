@@ -19828,5 +19828,20 @@ object Items {
     const val TONALZTICS_OF_RALOS = 23032
     const val HEAVY_BALLISTA_ORNAMENT_KIT = 23033
     const val HEAVY_BALLISTA_OR = 23034
+
+    // OSRS-IMPORT batch blowpipes (tx applied 2026-09-14).
+    const val BLAZING_BLOWPIPE = 23035
+    const val BLAZING_BLOWPIPE_EMPTY = 23036
+    const val BLOWPIPE_ORNAMENT_KIT = 23037
+    const val BLOWPIPE_ORNAMENT_KIT_NOTED = 23038
+    const val CAMPHOR_BLOWPIPE = 23039
+    const val CAMPHOR_BLOWPIPE_EMPTY = 23040
+    const val CAMPHOR_BLOWPIPE_EMPTY_NOTED = 23041
+    const val IRONWOOD_BLOWPIPE = 23042
+    const val IRONWOOD_BLOWPIPE_EMPTY = 23043
+    const val IRONWOOD_BLOWPIPE_EMPTY_NOTED = 23044
+    const val ROSEWOOD_BLOWPIPE = 23045
+    const val ROSEWOOD_BLOWPIPE_EMPTY = 23046
+    const val ROSEWOOD_BLOWPIPE_EMPTY_NOTED = 23047
     // Auto-generated file using class gg.rsmod.game.service.game.DumpEntityIdService
 }

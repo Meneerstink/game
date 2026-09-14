@@ -47,6 +47,8 @@ object OsrsOrnamentKits {
             Ornament(Items.DAGONHAI_ROBE_TOP_OR, Items.DAGONHAI_ROBE_TOP, Items.DAGONHAI_ROBES_ORNAMENT_KIT, pvpConvert = false),
             // Heavy ballista (or): "It can be dismantled at any time, returning both parts"; untradeable Bounty Hunter kit (no PvP rule).
             Ornament(Items.HEAVY_BALLISTA_OR, Items.HEAVY_BALLISTA, Items.HEAVY_BALLISTA_ORNAMENT_KIT, pvpConvert = false),
+            // Blazing blowpipe (empty): tradeable Trailblazer reloaded kit on the emptied Toxic blowpipe; "reverted anytime".
+            Ornament(Items.BLAZING_BLOWPIPE_EMPTY, Items.TOXIC_BLOWPIPE_EMPTY, Items.BLOWPIPE_ORNAMENT_KIT, pvpConvert = true),
             Ornament(Items.DAGONHAI_ROBE_BOTTOM_OR, Items.DAGONHAI_ROBE_BOTTOM, Items.DAGONHAI_ROBES_ORNAMENT_KIT, pvpConvert = false),
             // magegeara: "Elidinis' ward (f)" + "Menaphite ornament kit" (both untradeable); "Dismantle" separates them; on a PvP death
             // "the Menaphite ornament kit will be placed in their gravestone" (no base + kit drop to the PKer).
