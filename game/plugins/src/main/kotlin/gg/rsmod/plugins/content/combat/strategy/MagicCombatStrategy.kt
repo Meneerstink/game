@@ -298,7 +298,7 @@ object MagicCombatStrategy : CombatStrategy {
         }
 
         if (damage >= 0 && pawn.entityType.isPlayer) {
-            addCombatXp(pawn as Player, target, damage, spell, primary)
+            addCombatXp(pawn as Player, target, damage, if (primary) spell.experience else 0.0)
         }
     }
 
@@ -427,17 +427,18 @@ object MagicCombatStrategy : CombatStrategy {
         return 2 + floor((1.0 + distance) / 3.0).toInt()
     }
 
-    private fun addCombatXp(
+    /**
+     * [baseXp]: the spell's cast experience, awarded once per cast (0 for further victims and for magic special attack hits, see
+     * [gg.rsmod.plugins.content.combat.specialattack.SpecialAttackXp]); every victim adds its damage experience.
+     */
+    internal fun addCombatXp(
         player: Player,
         target: Pawn,
         damage: Int,
-        spell: CombatSpell,
-        primary: Boolean,
+        baseXp: Double,
     ) {
         val modDamage = if (target.entityType.isNpc) target.getCurrentLifepoints().coerceAtMost(damage) else damage
         val multiplier = if (target is Npc) Combat.getNpcXpMultiplier(target) else 1.0
-        // Base spell experience is awarded once per cast; every victim adds its damage experience.
-        val baseXp = if (primary) spell.experience else 0.0
         val experience = baseXp + (modDamage * 0.2) * multiplier
         val sharedExperience = baseXp + (modDamage * 0.133) * multiplier
         val hitpointsExperience = (modDamage * 0.133) * multiplier

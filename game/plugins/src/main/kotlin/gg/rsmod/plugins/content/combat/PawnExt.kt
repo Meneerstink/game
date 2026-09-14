@@ -229,6 +229,11 @@ fun Pawn.dealHit(
 
     val pawnHit = PawnHit(hit, executeHit)
 
+    // Special attacks give the normal combat experience for their damage (SpecialAttackXp, OSRS Wiki "Combat").
+    if (this is Player && executeHit) {
+        gg.rsmod.plugins.content.combat.specialattack.SpecialAttackXp.award(this, target, hit.hitmarks.sumOf { it.damage }, hitType)
+    }
+
     // Amulet of blood fury: every successful melee hit (specials and multi-hits included) uses a charge and may heal (BloodFury).
     if (this is Player && hitType == HitType.MELEE && executeHit) {
         val attacker = this

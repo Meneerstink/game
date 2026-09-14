@@ -119,7 +119,8 @@ object MeleeCombatStrategy : CombatStrategy {
         }
     }
 
-    private fun addCombatXp(
+    /** Also used for melee special attack hits ([gg.rsmod.plugins.content.combat.specialattack.SpecialAttackXp]). */
+    internal fun addCombatXp(
         player: Player,
         target: Pawn,
         damage: Int,

@@ -442,7 +442,8 @@ object RangedCombatStrategy : CombatStrategy {
         return 2 + (Math.floor((3.0 + distance) / 6.0)).toInt()
     }
 
-    private fun addCombatXp(
+    /** Also used for ranged special attack hits ([gg.rsmod.plugins.content.combat.specialattack.SpecialAttackXp]). */
+    internal fun addCombatXp(
         player: Player,
         target: Pawn,
         damage: Int,

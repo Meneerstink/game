@@ -31,23 +31,28 @@ SpecialAttacks.register(
     val hit1 = player.dealHit(target = target, maxHit = maxHit, landHit = hit1Lands, delay = 1, hitType = HitType.MELEE)
     val dmg1 = hit1.hit.hitmarks.firstOrNull()?.damage ?: 0
 
+    // The follow-up claw hits are fixed values dealt directly; they get the same special attack experience as the rolled hits.
+    fun clawHit(damage: Int, delay: Int) {
+        target.hit(damage = damage, type = HitType.MELEE.id, delay = delay)
+        gg.rsmod.plugins.content.combat.specialattack.SpecialAttackXp.award(player, target, damage, HitType.MELEE)
+    }
     if (hit1Lands) {
-        target.hit(damage = dmg1 / 2, type = HitType.MELEE.id, delay = 2)
+        clawHit(dmg1 / 2, 2)
 
         val hit3Lands = accuracy >= world.randomDouble()
         val hit3 = player.dealHit(target = target, maxHit = maxHit, landHit = hit3Lands, delay = 3, hitType = HitType.MELEE)
         val dmg3 = hit3.hit.hitmarks.firstOrNull()?.damage ?: 0
-        target.hit(damage = dmg3 / 2, type = HitType.MELEE.id, delay = 4)
+        clawHit(dmg3 / 2, 4)
     } else {
-        target.hit(damage = consolationHit, type = HitType.MELEE.id, delay = 2)
+        clawHit(consolationHit, 2)
 
         val hit3Lands = accuracy >= world.randomDouble()
         val hit3 = player.dealHit(target = target, maxHit = maxHit, landHit = hit3Lands, delay = 3, hitType = HitType.MELEE)
         val dmg3 = hit3.hit.hitmarks.firstOrNull()?.damage ?: 0
         if (hit3Lands) {
-            target.hit(damage = dmg3 / 2, type = HitType.MELEE.id, delay = 4)
+            clawHit(dmg3 / 2, 4)
         } else {
-            target.hit(damage = consolationHit, type = HitType.MELEE.id, delay = 4)
+            clawHit(consolationHit, 4)
         }
     }
 }

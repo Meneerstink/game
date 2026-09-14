@@ -40,6 +40,12 @@ class VoidwakerTests {
         val script = File("src/main/kotlin/gg/rsmod/plugins/content/combat/specialattack/weapons/voidwaker.plugin.kts").readText()
         assertTrue("SpecialAttacks.register(Voidwaker.SPECIAL_ENERGY, Items.VOIDWAKER)" in script)
         assertTrue("landHit = true" in script && "hitType = HitType.MAGIC" in script)
-        assertTrue("player.addXp(Skills.MAGIC, counted * 0.2 * multiplier, checkBrawlingGloves = true)" in script)
+        // 2026-09-14: the Magic experience now comes from the shared special attack experience (SpecialAttackXp -> the magic strategy's
+        // damage experience, 0.2 Magic + 0.133 Hitpoints per damage point with the NPC multiplier, the values this plugin added by hand).
+        assertTrue("addXp" !in script, "no hand-written experience left in the plugin")
+        val shared = File("src/main/kotlin/gg/rsmod/plugins/content/combat/specialattack/SpecialAttackXp.kt").readText()
+        assertTrue("HitType.MAGIC -> MagicCombatStrategy.addCombatXp(player, target, damage, baseXp = 0.0)" in shared)
+        val magic = File("src/main/kotlin/gg/rsmod/plugins/content/combat/strategy/MagicCombatStrategy.kt").readText()
+        assertTrue("val experience = baseXp + (modDamage * 0.2) * multiplier" in magic && "val hitpointsExperience = (modDamage * 0.133) * multiplier" in magic)
     }
 }

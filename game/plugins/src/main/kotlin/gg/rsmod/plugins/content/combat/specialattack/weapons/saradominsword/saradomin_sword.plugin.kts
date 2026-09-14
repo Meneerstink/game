@@ -25,18 +25,15 @@ SpecialAttacks.register(SPECIAL_REQUIREMENT, Items.SARADOMIN_SWORD) {
     val accuracy = MeleeCombatFormula.getAccuracy(player, target)
     val landHit = accuracy >= world.randomDouble()
     val delay = 1
-    var lifepoints = target.getCurrentLifepoints()
 
-    var totalMeleeDamage =
-        player
-            .dealHit(
-                target = target,
-                maxHit = maxHit,
-                landHit = landHit,
-                delay = delay,
-                hitType = HitType.MELEE,
-            ).hit.hitmarks
-            .sumOf { x -> x.damage }
+    // Melee and magic experience for both hits come from the shared special attack experience (SpecialAttackXp).
+    player.dealHit(
+        target = target,
+        maxHit = maxHit,
+        landHit = landHit,
+        delay = delay,
+        hitType = HitType.MELEE,
+    )
 
     // Magic special attack
     world.spawn(AreaSound(tile = player.tile, id = SARASWORD_SPEC_SFX_ID, radius = 10, volume = 1))
@@ -45,26 +42,12 @@ SpecialAttacks.register(SPECIAL_REQUIREMENT, Items.SARADOMIN_SWORD) {
     player.graphic(Gfx.SARADOMIN_SWORD_SPECIAL)
     target.graphic(Gfx.SARADOMIN_SWORD_SPECIAL_TARGET_EFFECT)
 
-    var totalMagicDamage =
-        player
-            .dealHit(
-                target = target,
-                maxHit = MAGIC_DAMAGE_MAX_HIT,
-                minHit = MAGIC_DAMAGE_MIN_HIT,
-                landHit = true,
-                delay = 1,
-                hitType = HitType.MAGIC,
-            ).hit.hitmarks
-            .sumOf { x -> x.damage }
-
-    /*
-     * Keeping track of the damage dealt to the target
-     * Sum of the hitmarks can return higher damage than the target has remaining, so we need to keep track of the
-     * target's HP.
-     */
-    totalMeleeDamage = if (lifepoints > totalMeleeDamage) totalMeleeDamage else lifepoints
-    lifepoints -= totalMeleeDamage
-    totalMagicDamage = if (lifepoints > totalMagicDamage) totalMagicDamage else lifepoints
-
-    player.addXp(Skills.MAGIC, 0.2 * totalMagicDamage, modifiers = false)
+    player.dealHit(
+        target = target,
+        maxHit = MAGIC_DAMAGE_MAX_HIT,
+        minHit = MAGIC_DAMAGE_MIN_HIT,
+        landHit = true,
+        delay = 1,
+        hitType = HitType.MAGIC,
+    )
 }
