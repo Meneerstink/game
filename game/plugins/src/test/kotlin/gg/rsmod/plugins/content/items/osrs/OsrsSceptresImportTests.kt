@@ -52,5 +52,9 @@ class OsrsSceptresImportTests {
         assertTrue("AncientSceptres.iceAccuracyMultiplier" in formula)
         val strategy = File("src/main/kotlin/gg/rsmod/plugins/content/combat/strategy/MagicCombatStrategy.kt").readText()
         assertTrue("Poison.poisonSeverity(target" in strategy && "capValue = sceptres.overhealCap" in strategy)
+        assertEquals(Items.SMOKE_ANCIENT_SCEPTRE, AncientSceptres.QUARTZ_UPGRADES[Items.SMOKE_QUARTZ])
+        assertEquals(4, AncientSceptres.QUARTZ_UPGRADES.size)
+        val plugin = File("src/main/kotlin/gg/rsmod/plugins/content/items/osrs/osrs_sceptres.plugin.kts").readText()
+        assertTrue("item2 = Items.ANCIENT_SCEPTRE" in plugin && "option = \"Dismantle\"" in plugin)
     }
 }

@@ -35,6 +35,18 @@ object AncientSceptres {
 
     val ALL: Set<Int> = byWeapon.keys
 
+    /**
+     * Quartz item -> unlocked quartz sceptre. "Blood ancient sceptre" Recipe: Ancient sceptre + Blood quartz, 0 ticks, no skill; "this
+     * process can be reversed" and "the regular, non-locked variant of the sceptre can now be dismantled to return the component items".
+     */
+    val QUARTZ_UPGRADES =
+        mapOf(
+            Items.BLOOD_QUARTZ to Items.BLOOD_ANCIENT_SCEPTRE,
+            Items.ICE_QUARTZ to Items.ICE_ANCIENT_SCEPTRE,
+            Items.SMOKE_QUARTZ to Items.SMOKE_ANCIENT_SCEPTRE,
+            Items.SHADOW_QUARTZ to Items.SHADOW_ANCIENT_SCEPTRE,
+        )
+
     const val SMOKE_HEAL_REDUCTION_TICKS = 10
     const val SMOKE_HEAL_MULTIPLIER = 0.8
 
