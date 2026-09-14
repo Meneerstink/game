@@ -699,6 +699,19 @@ object OsrsItemImportTool {
             "potions-skill" to
                 listOf(31602, 31605, 31608, 31611, 31626, 31629, 31632, 31635, 31590, 31593, 31596, 31599, 31587, 29180, 29198, 29183, 29201,
                     29186, 29204, 29189, 29207, 29192, 29210, 29195, 29213, 28890, 28893, 22999, 23002).map { Spec(it, noted = true) },
+            // Step 4 casket sub-batch "casket-cosmetics": elite / master / Mimic reward wearables absent in 667 that have no item mechanics
+            // (OSRS Wiki Reward casket (elite) / (master) / The Mimic drop tables; ids RuneLite gameval ItemID, noted = cert in the nested class).
+            "casket-cosmetics" to
+                listOf(12437, 23339, 23242, 23270, 12430, 20101, 20095, 20107, 20098, 20104, 20113, 19943, 12355, 20026, 12381, 12385, 12383, 12387,
+                    19988, 20140, 20110, 19991, 20059, 19970, 19964, 19961, 19958, 19967, 12540, 20008, 23246, 23252, 12391, 20149, 23258, 23264, 23267,
+                    23261, 20146, 20152, 20134, 20023, 20053, 19997, 20128, 20116, 19946, 20032, 12371, 19724, 20020, 19985, 19979, 19976, 19973, 19982,
+                    20119, 19949, 12353, 20083, 20092, 20086, 20080, 20089, 12351, 12443, 12441, 20050, 20029, 20122, 19952, 19994, 23249, 12596, 23185,
+                    20137, 20131, 12395, 12393, 23273, 12337, 20047, 20041, 20044, 20035, 20038, 20125, 19955, 23255)
+                    .map { Spec(it, noted = true, rev667Params = casketCosmeticParams(it)) },
+            // The six blessings were first applied with casket-cosmetics (tx-20260914-083647, 23600-23611) while isWearable still ignored
+            // their "Equip" option: no wearable cursor opcodes and no items.yml equipment. They were removed through ItemTransactionTool
+            // and re-imported here: Holy, Unholy, Peaceful, Honourable, War, Ancient blessing (ammo slot, +1 Prayer).
+            "casket-blessings" to listOf(20220, 20223, 20226, 20229, 20232, 20235).map { Spec(it, noted = true) },
             "deadstaves" to
                 listOf(
                     Spec(11791, noted = true, rev667Params = deadStaffParams()), // Staff of the dead
@@ -723,6 +736,23 @@ object OsrsItemImportTool {
     private fun crossbowParams(requiredRanged: Int) = mapOf(644 to 175, 686 to 17, 687 to 1, 23 to requiredRanged, 749 to 4, 750 to requiredRanged)
 
     /** 667 Magic shortbow 861 class (ItemParamProbeTool 2026-09-14): bow style set 16, special bar, one Ranged requirement. */
+    /**
+     * Client wield requirement (749 skill / 750 level) for casket cosmetics with exactly one requirement (OSRS Wiki item pages): gilded
+     * boots / chainbody / med helm / sq shield 40 Defence; gilded coif, gilded d'hide chaps / vambraces, Rangers' tunic / tights, Ranger
+     * gloves 40 Ranged; 3rd Age plateskirt 65 Defence; 3rd Age druidic robe bottoms and 3rd Age cloak 65 Prayer; Holy wraps 31 Prayer;
+     * Black d'hide chaps (g) / (t) 70 Ranged. Two-requirement bodies (Black d'hide body (g) / (t), Gilded d'hide body) stay server-side.
+     */
+    private fun casketCosmeticParams(upstreamId: Int): Map<Int, Int> =
+        when (upstreamId) {
+            12391, 20149, 20146, 20152 -> mapOf(749 to 1, 750 to 40)
+            23258, 23267, 23261, 12596, 23249, 19994 -> mapOf(749 to 4, 750 to 40)
+            23242 -> mapOf(749 to 1, 750 to 65)
+            23339, 12437 -> mapOf(749 to 5, 750 to 65)
+            19997 -> mapOf(749 to 5, 750 to 31)
+            12383, 12387 -> mapOf(749 to 4, 750 to 70)
+            else -> emptyMap()
+        }
+
     private fun bowParams(requiredRanged: Int) = mapOf(686 to 16, 687 to 1, 23 to requiredRanged, 749 to 4, 750 to requiredRanged)
 
     private fun boltParams(requiredRanged: Int) = mapOf(23 to requiredRanged, 749 to 4, 750 to requiredRanged)
@@ -751,8 +781,12 @@ object OsrsItemImportTool {
     /** 667 Staff of air 1381 class: render animation 28, staff style set 1, one Magic requirement shown client side. */
     private fun staffParams(requiredMagic: Int) = mapOf(644 to 28, 686 to 1, 749 to 6, 750 to requiredMagic)
 
-    /** Worn in-game only when a Wear/Wield option exists; OSRS materials such as Magic stock carry a wearPos without one. */
-    fun isWearable(def: ModernItemDef): Boolean = def.wearPos1 >= 0 && def.inventoryOptions.any { it == "Wear" || it == "Wield" }
+    /**
+     * Worn in-game only when a Wear/Wield/Equip option exists; OSRS materials such as Magic stock carry a wearPos without one. OSRS
+     * blessings use "Equip" (OSRS Wiki Holy blessing: "equipable = Yes", "options = Equip, Drop", slot ammo); the Ring of 3rd Age
+     * has "Wear" but no wearPos ("equipable = No").
+     */
+    fun isWearable(def: ModernItemDef): Boolean = def.wearPos1 >= 0 && def.inventoryOptions.any { it == "Wear" || it == "Wield" || it == "Equip" }
 
     private class Entry(
         val identity: String,
