@@ -12928,5 +12928,31 @@ object Npcs {
     const val SHEEP_14374 = 14374
     const val SHEEP_14375 = 14375
     const val CHICKEN_14376 = 14376
+
+    // RCV-012 decision 3: OSRS Ferox Enclave npcs imported by OsrsNpcImportTool batch "ferox" (tx-20260914-103151); OSRS id in the comment.
+    const val FEROX = 14377 // 10377
+    const val SIGISMUND = 14378 // 10378
+    const val ZAMORAKIAN_ACOLYTE = 14379 // 10379
+    const val ZAMORAKIAN_ACOLYTE_14380 = 14380 // 10380
+    const val ZAMORAKIAN_ACOLYTE_14381 = 14381 // 10381
+    const val SKULLY = 14382 // 10382
+    const val REFUGEE_14383 = 14383 // 10383
+    const val REFUGEE_14384 = 14384 // 10384
+    const val REFUGEE_14385 = 14385 // 10385
+    const val PHABELLE_BILE = 14386 // 10386
+    const val DERSE_VENATOR = 14387 // 10387
+    const val ANDROS_MAI = 14388 // 10388
+    const val BANKER_FEROX_ENCLAVE = 14389 // 10389
+    const val MERCENARY_FEROX_ENCLAVE = 14390 // 10390
+    const val CAMARST = 14391 // 10392
+    const val MARTEN = 14392 // 10370
+    const val SISTER_SCAROPHIA = 14393 // 6590
+    const val PERDU = 14394 // 7456
+    const val JUSTINE = 14395 // 8721
+    const val LISA = 14396 // 7316
+    const val LISA_14397 = 14397 // 7317
+    const val WIZARD_LMS_14398 = 14398 // 10371
+    const val WIZARD_LMS_14399 = 14399 // 10372
+    const val WIZARD_LMS_14400 = 14400 // 10373
     // Auto-generated file using class gg.rsmod.game.service.game.DumpEntityIdService
 }
