@@ -41,15 +41,6 @@ import gg.rsmod.plugins.content.mechanics.weapons.HandCannon
 object RangedCombatStrategy : CombatStrategy {
     private const val DEFAULT_ATTACK_RANGE = 7
 
-    /** OSRS salamanders and swamp lizards can only attack an adjacent target. */
-    private val SALAMANDERS: Set<Int?> =
-        setOf(
-            Items.SWAMP_LIZARD,
-            Items.ORANGE_SALAMANDER,
-            Items.RED_SALAMANDER,
-            Items.BLACK_SALAMANDER,
-        )
-
     /** OSRS Wiki "Aquanite hopper": "crossbows are given an 11% chance to fire a second shot". */
     private const val AQUANITE_SECOND_SHOT_CHANCE = 0.11
 
@@ -62,7 +53,7 @@ object RangedCombatStrategy : CombatStrategy {
 
             var range =
                 when (weapon?.id) {
-                    in SALAMANDERS -> 1
+                    Items.BLACK_SALAMANDER -> 1 // TODO ADD ALL SALAMANDERS
                     in Darts.DARTS -> 3
                     Items.SLING, Items.KAYLES_SLING -> 2
                     in Knives.KNIVES -> 4
