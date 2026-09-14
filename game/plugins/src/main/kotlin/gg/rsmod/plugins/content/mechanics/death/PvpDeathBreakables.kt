@@ -42,6 +42,18 @@ object PvpDeathBreakables {
             // Ava's assembler (raw wiki): unprotected in PvP it "will remain in the player's inventory, but will become
             // broken"; repair 240,000 coins at Perdu. Coins for the killer are not stated: none are dropped (SOURCE_GAP).
             Breakable(Items.AVAS_ASSEMBLER, Items.AVAS_ASSEMBLER_BROKEN, 0),
+            // OSRS-IMPORT capes (item pages): "it will remain in the player's inventory; however, the item will be in a broken, unusable
+            // state" (repair at Perdu: imbued max capes 99,000, assembler max capes and Masori assembler 240,000, Dizana's max cape
+            // 400,000). Coins for the killer are not stated (none). Dizana's max cape above level 20 ("converted to coins", amount
+            // unstated) uses the below-20 rule everywhere (PROVISIONAL, like the Infernal cape). SOURCE_GAP: the Masori crafting kit
+            // "placed in their gravestone" is not modelled (no gravestone here).
+            Breakable(Items.IMBUED_SARADOMIN_MAX_CAPE, Items.IMBUED_SARADOMIN_MAX_CAPE_BROKEN, 0),
+            Breakable(Items.IMBUED_GUTHIX_MAX_CAPE, Items.IMBUED_GUTHIX_MAX_CAPE_BROKEN, 0),
+            Breakable(Items.IMBUED_ZAMORAK_MAX_CAPE, Items.IMBUED_ZAMORAK_MAX_CAPE_BROKEN, 0),
+            Breakable(Items.ASSEMBLER_MAX_CAPE, Items.ASSEMBLER_MAX_CAPE_BROKEN, 0),
+            Breakable(Items.MASORI_ASSEMBLER, Items.MASORI_ASSEMBLER_BROKEN, 0),
+            Breakable(Items.MASORI_ASSEMBLER_MAX_CAPE, Items.MASORI_ASSEMBLER_MAX_CAPE_BROKEN, 0),
+            Breakable(Items.DIZANAS_MAX_CAPE, Items.DIZANAS_MAX_CAPE_BROKEN, 0),
         ).associateBy { it.itemId }
 
     val ALL: Collection<Breakable> get() = entries.values

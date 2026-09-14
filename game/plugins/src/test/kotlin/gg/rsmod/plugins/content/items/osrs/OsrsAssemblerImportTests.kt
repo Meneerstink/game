@@ -51,7 +51,9 @@ class OsrsAssemblerImportTests {
         val strategy = File("src/main/kotlin/gg/rsmod/plugins/content/combat/strategy/RangedCombatStrategy.kt").readText()
         assertTrue("device && pawn.hasEquipped(EquipmentType.CAPE, Items.AVAS_ATTRACTOR) -> chance in 20..39" in strategy)
         assertTrue("device && pawn.hasEquipped(EquipmentType.CAPE, Items.AVAS_ACCUMULATOR) -> chance in 20..27" in strategy)
-        assertTrue("device && pawn.hasEquipped(EquipmentType.CAPE, Items.AVAS_ASSEMBLER, Items.AVAS_ASSEMBLER_L) -> false" in strategy)
+        // Batch capes: every assembler (Masori assembler, assembler max capes, each (l)) shares the rule through AvasDevices.ASSEMBLERS.
+        assertTrue("device && pawn.getEquipment(EquipmentType.CAPE)?.id in AvasDevices.ASSEMBLERS -> false" in strategy)
+        assertTrue(Items.AVAS_ASSEMBLER in AvasDevices.ASSEMBLERS && Items.AVAS_ASSEMBLER_L in AvasDevices.ASSEMBLERS)
         assertTrue("val breakAmmo = chance in 0..19" in strategy, "20 % of ammunition breaks with every device")
         assertEquals(0.80, Blowpipe.DART_SAVE_CHANCE[Items.AVAS_ASSEMBLER])
         assertEquals(0.80, Blowpipe.DART_SAVE_CHANCE[Items.AVAS_ASSEMBLER_L])

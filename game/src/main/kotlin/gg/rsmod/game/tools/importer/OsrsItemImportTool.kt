@@ -568,6 +568,45 @@ object OsrsItemImportTool {
                     Spec(31583, rev667Params = mapOf(686 to 18, 687 to 1, 23 to 65, 749 to 4, 750 to 65), weaponType = 18, rev667StringParams = mapOf(528 to "Check")), // Rosewood blowpipe
                     Spec(31585, noted = true, rev667Params = mapOf(686 to 18, 687 to 1, 23 to 65, 749 to 4, 750 to 65), weaponType = 18), // Rosewood blowpipe (empty)
                 ),
+            // Step 3 roster batch "capes" (ids by Jagex name, RuneLite gameval ItemID SKILLCAPE_MAX_*, MA2_*_CAPE_*, AVAS_ASSEMBLER_*): the
+            // max cape variants of the imbued god capes, Ava's assembler, the Masori assembler and blessed Dizana's quiver, their hoods,
+            // broken and Trouver-locked forms, the imbued god capes (l) and the Masori crafting kit.
+            "capes" to
+                listOf(
+                    Spec(21776), // Imbued saradomin max cape
+                    Spec(21778), // Imbued saradomin max hood
+                    Spec(21780), // Imbued zamorak max cape
+                    Spec(21782), // Imbued zamorak max hood
+                    Spec(21784), // Imbued guthix max cape
+                    Spec(21786), // Imbued guthix max hood
+                    Spec(24238), // Imbued saradomin max cape (broken)
+                    Spec(24242), // Imbued guthix max cape (broken)
+                    Spec(24246), // Imbued zamorak max cape (broken)
+                    Spec(24232), // Imbued saradomin max cape (l)
+                    Spec(24233), // Imbued zamorak max cape (l)
+                    Spec(24234), // Imbued guthix max cape (l)
+                    Spec(24248), // Imbued saradomin cape (l)
+                    Spec(24249), // Imbued guthix cape (l)
+                    Spec(24250), // Imbued zamorak cape (l)
+                    Spec(21898), // Assembler max cape
+                    Spec(21900), // Assembler max hood
+                    Spec(21916), // Assembler max cape (broken)
+                    Spec(24135), // Assembler max cape (l)
+                    Spec(27372, noted = true), // Masori crafting kit
+                    Spec(27374, rev667Params = mapOf(749 to 4, 750 to 70, 751 to 1, 752 to 35)), // Masori assembler (434-437: Ranged 70, Defence 35)
+                    Spec(27359), // Masori assembler (broken)
+                    Spec(27376), // Masori assembler (l)
+                    Spec(27363), // Masori assembler max cape
+                    Spec(27366), // Masori assembler max hood
+                    Spec(27361), // Masori assembler max cape (broken)
+                    Spec(27365), // Masori assembler max cape (l)
+                    Spec(28902), // Dizana's max cape
+                    Spec(28904), // Dizana's max hood
+                    Spec(28906), // Dizana's max cape (l)
+                    Spec(28830), // Dizana's max cape (broken)
+                    Spec(33532), // Dizana's max cape (l) (broken)
+                    Spec(33533), // Dizana's max cape (l) (mangled)
+                ),
             "deadstaves" to
                 listOf(
                     Spec(11791, noted = true, rev667Params = deadStaffParams()), // Staff of the dead

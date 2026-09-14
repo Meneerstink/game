@@ -229,7 +229,7 @@ object RangedCombatStrategy : CombatStrategy {
                         // assembler 80 / 0 / 20 ("will never drop any ammo on the ground").
                         device && pawn.hasEquipped(EquipmentType.CAPE, Items.AVAS_ATTRACTOR) -> chance in 20..39
                         device && pawn.hasEquipped(EquipmentType.CAPE, Items.AVAS_ACCUMULATOR) -> chance in 20..27
-                        device && pawn.hasEquipped(EquipmentType.CAPE, Items.AVAS_ASSEMBLER, Items.AVAS_ASSEMBLER_L) -> false
+                        device && pawn.getEquipment(EquipmentType.CAPE)?.id in AvasDevices.ASSEMBLERS -> false
                         else -> !breakAmmo
                     }
                 val amount = 1

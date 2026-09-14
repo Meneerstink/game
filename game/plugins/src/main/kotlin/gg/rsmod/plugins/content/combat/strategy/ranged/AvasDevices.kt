@@ -18,6 +18,18 @@ import gg.rsmod.plugins.api.ext.getEquipment
  * it is the same armour. Names absent from this cache simply never match.
  */
 object AvasDevices {
+    /**
+     * Every item that works as Ava's assembler: the assembler and its (l), the Masori assembler ("a cosmetic variant of Ava's
+     * assembler") and the assembler max capes ("it only acts as a cosmetic upgrade to Ava's assembler"), each with its (l).
+     */
+    val ASSEMBLERS: Set<Int> =
+        setOf(
+            gg.rsmod.plugins.api.cfg.Items.AVAS_ASSEMBLER, gg.rsmod.plugins.api.cfg.Items.AVAS_ASSEMBLER_L,
+            gg.rsmod.plugins.api.cfg.Items.MASORI_ASSEMBLER, gg.rsmod.plugins.api.cfg.Items.MASORI_ASSEMBLER_L,
+            gg.rsmod.plugins.api.cfg.Items.ASSEMBLER_MAX_CAPE, gg.rsmod.plugins.api.cfg.Items.ASSEMBLER_MAX_CAPE_L,
+            gg.rsmod.plugins.api.cfg.Items.MASORI_ASSEMBLER_MAX_CAPE, gg.rsmod.plugins.api.cfg.Items.MASORI_ASSEMBLER_MAX_CAPE_L,
+        )
+
     val INTERFERING_TORSOS: Set<String> =
         setOf(
             "adamant chainbody", "adamant platebody", "adamant platebody (g)", "adamant platebody (t)", "ahrim's robetop",

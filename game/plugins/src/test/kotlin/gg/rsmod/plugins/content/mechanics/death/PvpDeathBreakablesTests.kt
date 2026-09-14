@@ -88,6 +88,10 @@ class PvpDeathBreakablesTests {
                 Items.AVERNIC_DEFENDER to 600_000, Items.INFERNAL_CAPE to 225_000, Items.IMBUED_SARADOMIN_CAPE to 0, Items.IMBUED_GUTHIX_CAPE to 0, Items.IMBUED_ZAMORAK_CAPE to 0,
                 // Ava's assembler (raw wiki): becomes broken and stays with the player; no coins for the killer are stated.
                 Items.AVAS_ASSEMBLER to 0,
+                // Batch capes (item pages): imbued max capes, assembler max capes, Masori assembler and Dizana's max cape break in place;
+                // only Perdu's repair cost is stated, no coins for the killer.
+                Items.IMBUED_SARADOMIN_MAX_CAPE to 0, Items.IMBUED_GUTHIX_MAX_CAPE to 0, Items.IMBUED_ZAMORAK_MAX_CAPE to 0,
+                Items.ASSEMBLER_MAX_CAPE to 0, Items.MASORI_ASSEMBLER to 0, Items.MASORI_ASSEMBLER_MAX_CAPE to 0, Items.DIZANAS_MAX_CAPE to 0,
             ),
             PvpDeathBreakables.ALL.associate { it.itemId to it.killerCoins },
         )

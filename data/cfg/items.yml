@@ -274102,3 +274102,823 @@
   tradeable: true
   weight: 0.0
   equipment: null
+- id: 23048
+  name: "Imbued Saradomin max cape"
+  examine: "The cape worn by only the most experienced players."
+  tradeable: false
+  weight: 0.453
+  equipment:
+    equip_slot: 1
+    equip_type: -1
+    appearance_id: 6474
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 15
+    attack_ranged: 0
+    defence_stab: 3
+    defence_slash: 3
+    defence_crush: 3
+    defence_magic: 15
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 2.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23049
+  name: "Imbued Saradomin max hood"
+  examine: "The hood worn by only the most experienced players."
+  tradeable: false
+  weight: 0.453
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6475
+    remove_head: true
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23050
+  name: "Imbued Zamorak max cape"
+  examine: "The cape worn by only the most experienced players."
+  tradeable: false
+  weight: 0.453
+  equipment:
+    equip_slot: 1
+    equip_type: -1
+    appearance_id: 6476
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 15
+    attack_ranged: 0
+    defence_stab: 3
+    defence_slash: 3
+    defence_crush: 3
+    defence_magic: 15
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 2.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23051
+  name: "Imbued Zamorak max hood"
+  examine: "The hood worn by only the most experienced players."
+  tradeable: false
+  weight: 0.453
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6477
+    remove_head: true
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23052
+  name: "Imbued Guthix max cape"
+  examine: "The cape worn by only the most experienced players."
+  tradeable: false
+  weight: 0.453
+  equipment:
+    equip_slot: 1
+    equip_type: -1
+    appearance_id: 6478
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 15
+    attack_ranged: 0
+    defence_stab: 3
+    defence_slash: 3
+    defence_crush: 3
+    defence_magic: 15
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 2.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23053
+  name: "Imbued Guthix max hood"
+  examine: "The hood worn by only the most experienced players."
+  tradeable: false
+  weight: 0.453
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6479
+    remove_head: true
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23054
+  name: "Imbued Saradomin max cape (broken)"
+  examine: "The cape worn by only the most experienced players. This one is broken."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 23055
+  name: "Imbued Guthix max cape (broken)"
+  examine: "The cape worn by only the most experienced players. This one is broken."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 23056
+  name: "Imbued Zamorak max cape (broken)"
+  examine: "The cape worn by only the most experienced players. This one is broken."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 23057
+  name: "Imbued Saradomin max cape (l)"
+  examine: "The cape worn by only the most experienced players."
+  tradeable: false
+  weight: 0.453
+  equipment:
+    equip_slot: 1
+    equip_type: -1
+    appearance_id: 6480
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 15
+    attack_ranged: 0
+    defence_stab: 3
+    defence_slash: 3
+    defence_crush: 3
+    defence_magic: 15
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 2.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23058
+  name: "Imbued Zamorak max cape (l)"
+  examine: "The cape worn by only the most experienced players."
+  tradeable: false
+  weight: 0.453
+  equipment:
+    equip_slot: 1
+    equip_type: -1
+    appearance_id: 6481
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 15
+    attack_ranged: 0
+    defence_stab: 3
+    defence_slash: 3
+    defence_crush: 3
+    defence_magic: 15
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 2.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23059
+  name: "Imbued Guthix max cape (l)"
+  examine: "The cape worn by only the most experienced players."
+  tradeable: false
+  weight: 0.453
+  equipment:
+    equip_slot: 1
+    equip_type: -1
+    appearance_id: 6482
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 15
+    attack_ranged: 0
+    defence_stab: 3
+    defence_slash: 3
+    defence_crush: 3
+    defence_magic: 15
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 2.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23060
+  name: "Imbued Saradomin cape (l)"
+  examine: "A cape from the almighty god Saradomin, imbued with great power."
+  tradeable: false
+  weight: 0.453
+  equipment:
+    equip_slot: 1
+    equip_type: -1
+    appearance_id: 6483
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 15
+    attack_ranged: 0
+    defence_stab: 3
+    defence_slash: 3
+    defence_crush: 3
+    defence_magic: 15
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 2.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23061
+  name: "Imbued Guthix cape (l)"
+  examine: "A cape from the almighty god Guthix, imbued with great power."
+  tradeable: false
+  weight: 0.453
+  equipment:
+    equip_slot: 1
+    equip_type: -1
+    appearance_id: 6484
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 15
+    attack_ranged: 0
+    defence_stab: 3
+    defence_slash: 3
+    defence_crush: 3
+    defence_magic: 15
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 2.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23062
+  name: "Imbued Zamorak cape (l)"
+  examine: "A cape from the almighty god Zamorak, imbued with great power."
+  tradeable: false
+  weight: 0.453
+  equipment:
+    equip_slot: 1
+    equip_type: -1
+    appearance_id: 6485
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 15
+    attack_ranged: 0
+    defence_stab: 3
+    defence_slash: 3
+    defence_crush: 3
+    defence_magic: 15
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 2.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23063
+  name: "Assembler max cape"
+  examine: "The cape worn by only the most experienced players."
+  tradeable: false
+  weight: 0.453
+  equipment:
+    equip_slot: 1
+    equip_type: -1
+    appearance_id: 6486
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 8
+    defence_stab: 1
+    defence_slash: 1
+    defence_crush: 1
+    defence_magic: 8
+    defence_ranged: 2
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 2
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23064
+  name: "Assembler max hood"
+  examine: "The hood worn by only the most experienced players."
+  tradeable: false
+  weight: 0.453
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6487
+    remove_head: true
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23065
+  name: "Assembler max cape (broken)"
+  examine: "A broken Assembler Max Cape."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 23066
+  name: "Assembler max cape (l)"
+  examine: "The cape worn by only the most experienced players."
+  tradeable: false
+  weight: 0.453
+  equipment:
+    equip_slot: 1
+    equip_type: -1
+    appearance_id: 6488
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 8
+    defence_stab: 1
+    defence_slash: 1
+    defence_crush: 1
+    defence_magic: 8
+    defence_ranged: 2
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 2
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23067
+  name: "Masori crafting kit"
+  examine: "Supplies that could be used to make Masori-themed equipment."
+  tradeable: false
+  weight: 0.5
+  equipment: null
+- id: 23068
+  name: "Masori assembler"
+  examine: "A superior bagged chicken empowered by Vorkath, ready to serve you, magnet in claw."
+  tradeable: false
+  weight: 5.896
+  equipment:
+    equip_slot: 1
+    equip_type: -1
+    appearance_id: 6489
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 8
+    defence_stab: 1
+    defence_slash: 1
+    defence_crush: 1
+    defence_magic: 8
+    defence_ranged: 2
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 2
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 4, 'level': 70}, {'skill': 1, 'level': 35}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23069
+  name: "Masori assembler (broken)"
+  examine: "A broken Masori Assembler."
+  tradeable: false
+  weight: 5.896
+  equipment: null
+- id: 23070
+  name: "Masori assembler (l)"
+  examine: "A superior bagged chicken empowered by Vorkath, ready to serve you, magnet in claw."
+  tradeable: false
+  weight: 5.896
+  equipment:
+    equip_slot: 1
+    equip_type: -1
+    appearance_id: 6490
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 8
+    defence_stab: 1
+    defence_slash: 1
+    defence_crush: 1
+    defence_magic: 8
+    defence_ranged: 2
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 2
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23071
+  name: "Masori assembler max cape"
+  examine: "The cape worn by only the most experienced players."
+  tradeable: false
+  weight: 0.453
+  equipment:
+    equip_slot: 1
+    equip_type: -1
+    appearance_id: 6491
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 8
+    defence_stab: 1
+    defence_slash: 1
+    defence_crush: 1
+    defence_magic: 8
+    defence_ranged: 2
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 2
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23072
+  name: "Masori assembler max hood"
+  examine: "The hood worn by only the most experienced players."
+  tradeable: false
+  weight: 0.453
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6492
+    remove_head: true
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23073
+  name: "Masori assembler max cape (broken)"
+  examine: "A broken Masori Assembler Max Cape."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 23074
+  name: "Masori assembler max cape (l)"
+  examine: "The cape worn by only the most experienced players."
+  tradeable: false
+  weight: 0.453
+  equipment:
+    equip_slot: 1
+    equip_type: -1
+    appearance_id: 6493
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 8
+    defence_stab: 1
+    defence_slash: 1
+    defence_crush: 1
+    defence_magic: 8
+    defence_ranged: 2
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 2
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23075
+  name: "Dizana's max cape"
+  examine: "The cape worn by only the most experienced players."
+  tradeable: false
+  weight: 0.453
+  equipment:
+    equip_slot: 1
+    equip_type: -1
+    appearance_id: 6494
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 0
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 18
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 3
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23076
+  name: "Dizana's max hood"
+  examine: "The hood worn by only the most experienced players."
+  tradeable: false
+  weight: 0.453
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6495
+    remove_head: true
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23077
+  name: "Dizana's max cape (l)"
+  examine: "The cape worn by only the most experienced players."
+  tradeable: false
+  weight: 0.453
+  equipment:
+    equip_slot: 1
+    equip_type: -1
+    appearance_id: 6496
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 0
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 18
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 3
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23078
+  name: "Dizana's max cape (broken)"
+  examine: "The cape worn by only the most experienced players."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 23079
+  name: "Dizana's max cape (l) (broken)"
+  examine: "The cape worn by only the most experienced players, if it wasn't broken."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 23080
+  name: "Dizana's max cape (l) (mangled)"
+  examine: "The cape worn by only the most experienced players, if it wasn't mangled."
+  tradeable: false
+  weight: 0.453
+  equipment: null

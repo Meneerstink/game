@@ -28,6 +28,18 @@ TrouverRegistry.register(TrouverLockable(baseItemId = Items.BLOOD_ANCIENT_SCEPTR
 TrouverRegistry.register(TrouverLockable(baseItemId = Items.ICE_ANCIENT_SCEPTRE, lockedItemId = Items.ICE_ANCIENT_SCEPTRE_L, brokenItemId = Items.ICE_ANCIENT_SCEPTRE_L_BROKEN))
 TrouverRegistry.register(TrouverLockable(baseItemId = Items.SMOKE_ANCIENT_SCEPTRE, lockedItemId = Items.SMOKE_ANCIENT_SCEPTRE_L, brokenItemId = Items.SMOKE_ANCIENT_SCEPTRE_L_BROKEN))
 TrouverRegistry.register(TrouverLockable(baseItemId = Items.SHADOW_ANCIENT_SCEPTRE, lockedItemId = Items.SHADOW_ANCIENT_SCEPTRE_L, brokenItemId = Items.SHADOW_ANCIENT_SCEPTRE_L_BROKEN))
+// OSRS-IMPORT capes: each infobox lists a Trouver-locked "(l)" version (imbued god capes and max capes, assembler max capes, Masori
+// assembler); Dizana's max cape (l) also has "(l) (broken)" ("Locked Dizana's max cape now breaks on death below level 20").
+TrouverRegistry.register(TrouverLockable(baseItemId = Items.IMBUED_SARADOMIN_CAPE, lockedItemId = Items.IMBUED_SARADOMIN_CAPE_L))
+TrouverRegistry.register(TrouverLockable(baseItemId = Items.IMBUED_GUTHIX_CAPE, lockedItemId = Items.IMBUED_GUTHIX_CAPE_L))
+TrouverRegistry.register(TrouverLockable(baseItemId = Items.IMBUED_ZAMORAK_CAPE, lockedItemId = Items.IMBUED_ZAMORAK_CAPE_L))
+TrouverRegistry.register(TrouverLockable(baseItemId = Items.IMBUED_SARADOMIN_MAX_CAPE, lockedItemId = Items.IMBUED_SARADOMIN_MAX_CAPE_L))
+TrouverRegistry.register(TrouverLockable(baseItemId = Items.IMBUED_GUTHIX_MAX_CAPE, lockedItemId = Items.IMBUED_GUTHIX_MAX_CAPE_L))
+TrouverRegistry.register(TrouverLockable(baseItemId = Items.IMBUED_ZAMORAK_MAX_CAPE, lockedItemId = Items.IMBUED_ZAMORAK_MAX_CAPE_L))
+TrouverRegistry.register(TrouverLockable(baseItemId = Items.ASSEMBLER_MAX_CAPE, lockedItemId = Items.ASSEMBLER_MAX_CAPE_L))
+TrouverRegistry.register(TrouverLockable(baseItemId = Items.MASORI_ASSEMBLER, lockedItemId = Items.MASORI_ASSEMBLER_L))
+TrouverRegistry.register(TrouverLockable(baseItemId = Items.MASORI_ASSEMBLER_MAX_CAPE, lockedItemId = Items.MASORI_ASSEMBLER_MAX_CAPE_L))
+TrouverRegistry.register(TrouverLockable(baseItemId = Items.DIZANAS_MAX_CAPE, lockedItemId = Items.DIZANAS_MAX_CAPE_L, brokenItemId = Items.DIZANAS_MAX_CAPE_L_BROKEN))
 
 TrouverRegistry.all().forEach { lockable ->
     on_item_on_item(item1 = Items.TROUVER_PARCHMENT, item2 = lockable.baseItemId) {

@@ -35,7 +35,7 @@ chargeableQuivers.forEach { quiverId ->
  */
 fun ammoName(id: Int) = world.definitions.get(gg.rsmod.game.fs.def.ItemDef::class.java, id).name
 
-DizanasQuiver.QUIVERS.forEach { quiverId ->
+DizanasQuiver.AMMO_HOLDERS.forEach { quiverId ->
     val def = world.definitions.get(gg.rsmod.game.fs.def.ItemDef::class.java, quiverId)
     if (def.equipmentMenu.any { it.equals("Fill", ignoreCase = true) }) {
         on_equipment_option(item = quiverId, option = "Fill") {

@@ -41,7 +41,16 @@ object DizanasQuiver {
 
     val UNCHARGED_FOR: Map<Int, Int> = CHARGED_FOR.entries.associate { (uncharged, charged) -> charged to uncharged }
 
-    val BLESSED: Set<Int> = setOf(Items.BLESSED_DIZANAS_QUIVER, Items.BLESSED_DIZANAS_QUIVER_L)
+    val BLESSED_QUIVERS: Set<Int> = setOf(Items.BLESSED_DIZANAS_QUIVER, Items.BLESSED_DIZANAS_QUIVER_L)
+
+    /**
+     * OSRS Wiki "Dizana's max cape": "The cape retains the perks of the blessed Dizana's quiver" (with its (l)); its menu is "Wear, Open,
+     * Empty, Destroy" - it keeps Sunfire and the stored ammunition, but no worn Fill option is listed (not a quiver item).
+     */
+    val MAX_CAPES: Set<Int> = setOf(Items.DIZANAS_MAX_CAPE, Items.DIZANAS_MAX_CAPE_L)
+
+    /** Everything with permanent Dizana's Sunfire. */
+    val BLESSED: Set<Int> = BLESSED_QUIVERS + MAX_CAPES
 
     fun charges(quiver: Item): Int = quiver.attr[ItemAttribute.CHARGES] ?: 0
 
@@ -60,11 +69,14 @@ object DizanasQuiver {
     const val NOTHING_TO_FILL_MESSAGE = "You have nothing in your worn quiver to fill your Dizana's Quiver with."
 
     /** All six quiver items (uncharged, charged, blessed, each with its (l)). */
-    val QUIVERS: Set<Int> = CHARGED_FOR.keys + CHARGED_FOR.values + BLESSED
+    val QUIVERS: Set<Int> = CHARGED_FOR.keys + CHARGED_FOR.values + BLESSED_QUIVERS
+
+    /** The quivers plus Dizana's max cape and its (l): everything that stores the second ammunition. */
+    val AMMO_HOLDERS: Set<Int> = QUIVERS + MAX_CAPES
 
     /** The arrows or bolts stored in [quiver], or null when it holds none (or is not a quiver). */
     fun storedAmmo(quiver: Item?): Item? {
-        if (quiver == null || quiver.id !in QUIVERS) return null
+        if (quiver == null || quiver.id !in AMMO_HOLDERS) return null
         val id = quiver.attr[ItemAttribute.ATTACHED_ITEM_ID] ?: return null
         val count = quiver.attr[ItemAttribute.ATTACHED_ITEM_COUNT] ?: 0
         return if (count > 0) Item(id, count) else null
