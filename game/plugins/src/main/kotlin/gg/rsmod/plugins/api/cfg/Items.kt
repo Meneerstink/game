@@ -20103,5 +20103,31 @@ object Items {
     const val KATANA = 23636
     const val DRAGON_CANE = 23638
     const val BRIEFCASE = 23640
+    const val ARMADYL_GODSWORD_ORNAMENT_KIT = 23642
+    const val BANDOS_GODSWORD_ORNAMENT_KIT = 23644
+    const val SARADOMIN_GODSWORD_ORNAMENT_KIT = 23646
+    const val ZAMORAK_GODSWORD_ORNAMENT_KIT = 23648
+    const val DRAGON_CHAINBODY_ORNAMENT_KIT = 23650
+    const val DRAGON_LEGS_SKIRT_ORNAMENT_KIT = 23652
+    const val DRAGON_FULL_HELM_ORNAMENT_KIT = 23654
+    const val DRAGON_SQ_SHIELD_ORNAMENT_KIT = 23656
+    const val DRAGON_KITESHIELD_ORNAMENT_KIT = 23658
+    const val DRAGON_PLATEBODY_ORNAMENT_KIT = 23660
+    const val DRAGON_DEFENDER_ORNAMENT_KIT = 23662
+    const val DRAGON_SCIMITAR_ORNAMENT_KIT = 23664
+    const val ARMADYL_GODSWORD_OR = 23666
+    const val BANDOS_GODSWORD_OR = 23667
+    const val SARADOMIN_GODSWORD_OR = 23668
+    const val ZAMORAK_GODSWORD_OR = 23669
+    const val DRAGON_SCIMITAR_OR = 23670
+    const val DRAGON_DEFENDER_T = 23671
+    const val DRAGON_CHAINBODY_G = 23672
+    const val DRAGON_PLATELEGS_G = 23673
+    const val DRAGON_PLATESKIRT_G = 23674
+    const val DRAGON_FULL_HELM_G = 23675
+    const val DRAGON_SQ_SHIELD_G = 23676
+    const val DRAGON_KITESHIELD = 23677
+    const val DRAGON_KITESHIELD_G = 23679
+    const val DRAGON_PLATEBODY_G = 23680
     // Auto-generated file using class gg.rsmod.game.service.game.DumpEntityIdService
 }

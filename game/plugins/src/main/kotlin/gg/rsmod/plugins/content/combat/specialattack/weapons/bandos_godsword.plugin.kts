@@ -18,7 +18,7 @@ import gg.rsmod.plugins.content.combat.specialattack.SpecialAttacks
  * Player Prayer points, lifepoints and hitmark damage all use the same 1:1 real-value unit.
  */
 // Special look: animation 11991 + graphic 2114 (Novite PlayerCombat case 11696; Void `warstrike_special` = 2114), sound 3865 (Void).
-SpecialAttacks.register(50, Items.BANDOS_GODSWORD) {
+SpecialAttacks.register(50, Items.BANDOS_GODSWORD, Items.BANDOS_GODSWORD_OR) {
     player.animate(11991)
     player.graphic(2114)
     player.playSound(3865)

@@ -738,6 +738,27 @@ object OsrsItemImportTool {
                     Spec(12373, noted = true, rev667Params = mapOf(686 to 10, 749 to 0, 750 to 60), weaponType = 10), // Dragon cane
                     Spec(12335, noted = true), // Briefcase (shield slot, no stats)
                 ),
+            // Casket sub-batch "casket-ornaments": the elite / master ornament kits, their ornamented items (OSRS Wiki: untradeable,
+            // "gives no additional bonuses", Dismantle returns base + kit) and the Dragon kiteshield the kiteshield kit needs (absent in 667;
+            // "requires 60 Defence"). Ornamented client params copy the 667 base item (ItemParamProbeTool: godswords 644 1579 / 686 7 /
+            // 687 1 / 75 Attack, Dragon scimitar 644 1928 / 686 6 / 687 1 / 743 73 / 60 Attack, Dragon sq shield 743 67 / 60 Defence,
+            // dragon armour 60 Defence, Dragon defender none - two requirements, server-side). Only the tradeable kits and Dragon kiteshield
+            // are noted: the ornamented items are untradeable (the importer notes no untradeable item, as OSRS banks cannot note them).
+            "casket-ornaments" to
+                listOf(20068, 20071, 20074, 20077, 12534, 12536, 12538, 12532, 22239, 22236, 20143, 20002).map { Spec(it, noted = true) } +
+                    listOf(20368, 20370, 20372, 20374).map { Spec(it, rev667Params = mapOf(644 to 1579, 686 to 7, 687 to 1, 749 to 0, 750 to 75), weaponType = 7, attackAudio = 3846) } +
+                    listOf(
+                        Spec(20000, rev667Params = mapOf(644 to 1928, 686 to 6, 687 to 1, 743 to 73, 749 to 0, 750 to 60), weaponType = 6, attackAudio = 2500), // Dragon scimitar (or)
+                        Spec(19722, rev667Params = mapOf(749 to 1, 750 to 60)), // Dragon defender (t): OSRS Wiki "requires level 60 Defence to equip"
+                        Spec(12414, rev667Params = mapOf(749 to 1, 750 to 60)), // Dragon chainbody (g)
+                        Spec(12415, rev667Params = mapOf(749 to 1, 750 to 60)), // Dragon platelegs (g)
+                        Spec(12416, rev667Params = mapOf(749 to 1, 750 to 60)), // Dragon plateskirt (g)
+                        Spec(12417, rev667Params = mapOf(749 to 1, 750 to 60)), // Dragon full helm (g)
+                        Spec(12418, rev667Params = mapOf(743 to 67, 749 to 1, 750 to 60)), // Dragon sq shield (g)
+                        Spec(21895, noted = true, rev667Params = mapOf(749 to 1, 750 to 60)), // Dragon kiteshield
+                        Spec(22244, rev667Params = mapOf(749 to 1, 750 to 60)), // Dragon kiteshield (g)
+                        Spec(22242, rev667Params = mapOf(749 to 1, 750 to 60)), // Dragon platebody (g)
+                    ),
             "deadstaves" to
                 listOf(
                     Spec(11791, noted = true, rev667Params = deadStaffParams()), // Staff of the dead

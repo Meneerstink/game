@@ -279,6 +279,21 @@ enum class CombinationData(
     ODIUM_WARD_OR(items = intArrayOf(Items.WARD_UPGRADE_KIT, Items.ODIUM_WARD), resultItem = Items.ODIUM_WARD_OR, experience = 0.0),
     ELIDINIS_WARD_OR(items = intArrayOf(Items.MENAPHITE_ORNAMENT_KIT, Items.ELIDINIS_WARD_F), resultItem = Items.ELIDINIS_WARD_OR, experience = 0.0),
 
+    /** OSRS-IMPORT casket-ornaments: elite / master ornament kits attached to their base item (OsrsOrnamentKits; no skill stated). */
+    ARMADYL_GODSWORD_OR(items = intArrayOf(Items.ARMADYL_GODSWORD_ORNAMENT_KIT, Items.ARMADYL_GODSWORD), resultItem = Items.ARMADYL_GODSWORD_OR, experience = 0.0),
+    BANDOS_GODSWORD_OR(items = intArrayOf(Items.BANDOS_GODSWORD_ORNAMENT_KIT, Items.BANDOS_GODSWORD), resultItem = Items.BANDOS_GODSWORD_OR, experience = 0.0),
+    SARADOMIN_GODSWORD_OR(items = intArrayOf(Items.SARADOMIN_GODSWORD_ORNAMENT_KIT, Items.SARADOMIN_GODSWORD), resultItem = Items.SARADOMIN_GODSWORD_OR, experience = 0.0),
+    ZAMORAK_GODSWORD_OR(items = intArrayOf(Items.ZAMORAK_GODSWORD_ORNAMENT_KIT, Items.ZAMORAK_GODSWORD), resultItem = Items.ZAMORAK_GODSWORD_OR, experience = 0.0),
+    DRAGON_CHAINBODY_G(items = intArrayOf(Items.DRAGON_CHAINBODY_ORNAMENT_KIT, Items.DRAGON_CHAINBODY), resultItem = Items.DRAGON_CHAINBODY_G, experience = 0.0),
+    DRAGON_PLATELEGS_G(items = intArrayOf(Items.DRAGON_LEGS_SKIRT_ORNAMENT_KIT, Items.DRAGON_PLATELEGS), resultItem = Items.DRAGON_PLATELEGS_G, experience = 0.0),
+    DRAGON_PLATESKIRT_G(items = intArrayOf(Items.DRAGON_LEGS_SKIRT_ORNAMENT_KIT, Items.DRAGON_PLATESKIRT), resultItem = Items.DRAGON_PLATESKIRT_G, experience = 0.0),
+    DRAGON_FULL_HELM_G(items = intArrayOf(Items.DRAGON_FULL_HELM_ORNAMENT_KIT, Items.DRAGON_FULL_HELM), resultItem = Items.DRAGON_FULL_HELM_G, experience = 0.0),
+    DRAGON_SQ_SHIELD_G(items = intArrayOf(Items.DRAGON_SQ_SHIELD_ORNAMENT_KIT, Items.DRAGON_SQ_SHIELD), resultItem = Items.DRAGON_SQ_SHIELD_G, experience = 0.0),
+    DRAGON_KITESHIELD_G(items = intArrayOf(Items.DRAGON_KITESHIELD_ORNAMENT_KIT, Items.DRAGON_KITESHIELD), resultItem = Items.DRAGON_KITESHIELD_G, experience = 0.0),
+    DRAGON_PLATEBODY_G(items = intArrayOf(Items.DRAGON_PLATEBODY_ORNAMENT_KIT, Items.DRAGON_PLATEBODY), resultItem = Items.DRAGON_PLATEBODY_G, experience = 0.0),
+    DRAGON_DEFENDER_T(items = intArrayOf(Items.DRAGON_DEFENDER_ORNAMENT_KIT, Items.DRAGON_DEFENDER), resultItem = Items.DRAGON_DEFENDER_T, experience = 0.0),
+    DRAGON_SCIMITAR_OR(items = intArrayOf(Items.DRAGON_SCIMITAR_ORNAMENT_KIT, Items.DRAGON_SCIMITAR), resultItem = Items.DRAGON_SCIMITAR_OR, experience = 0.0),
+
     /** OSRS Wiki "Necklace of rupture": Necklace of anguish + Etched elder venator fang, 84 Crafting, 500 experience. */
     NECKLACE_OF_RUPTURE(items = intArrayOf(Items.ETCHED_ELDER_VENATOR_FANG, Items.NECKLACE_OF_ANGUISH), resultItem = Items.NECKLACE_OF_RUPTURE, levelRequired = 84, experience = 500.0),
 

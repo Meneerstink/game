@@ -38,6 +38,7 @@ object CombatConfigs {
             Items.ADAMANT_DEFENDER,
             Items.RUNE_DEFENDER,
             Items.DRAGON_DEFENDER,
+            Items.DRAGON_DEFENDER_T,
             Items.AVERNIC_DEFENDER,
         )
 
@@ -62,6 +63,11 @@ object CombatConfigs {
             Items.BANDOS_GODSWORD,
             Items.SARADOMIN_GODSWORD,
             Items.ZAMORAK_GODSWORD,
+            // OSRS-IMPORT casket-ornaments: the (or) godswords are the same weapons with a cosmetic kit.
+            Items.ARMADYL_GODSWORD_OR,
+            Items.BANDOS_GODSWORD_OR,
+            Items.SARADOMIN_GODSWORD_OR,
+            Items.ZAMORAK_GODSWORD_OR,
         )
 
     private val DRAGON_DAGGERS =

@@ -189,6 +189,7 @@ enum class CombatAnimation(
                 Items.ADAMANT_DEFENDER,
                 Items.RUNE_DEFENDER,
                 Items.DRAGON_DEFENDER,
+                Items.DRAGON_DEFENDER_T,
                 Items.AVERNIC_DEFENDER,
             ),
     ),

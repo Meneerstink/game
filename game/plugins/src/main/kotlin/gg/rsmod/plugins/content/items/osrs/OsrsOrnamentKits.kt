@@ -59,6 +59,23 @@ object OsrsOrnamentKits {
             // magegeara: "Elidinis' ward (f)" + "Menaphite ornament kit" (both untradeable); "Dismantle" separates them; on a PvP death
             // "the Menaphite ornament kit will be placed in their gravestone" (no base + kit drop to the PKer).
             Ornament(Items.ELIDINIS_WARD_OR, Items.ELIDINIS_WARD_F, Items.MENAPHITE_ORNAMENT_KIT, pvpConvert = false),
+            // casket-ornaments (OSRS Wiki kit and ornamented item pages): tradeable elite / master kits; the ornamented item is untradeable
+            // and "can be dismantled anytime, returning the tradeable [base] and ornament kit". The legs/skirt kit fits both leg pieces.
+            Ornament(Items.ARMADYL_GODSWORD_OR, Items.ARMADYL_GODSWORD, Items.ARMADYL_GODSWORD_ORNAMENT_KIT),
+            Ornament(Items.BANDOS_GODSWORD_OR, Items.BANDOS_GODSWORD, Items.BANDOS_GODSWORD_ORNAMENT_KIT),
+            Ornament(Items.SARADOMIN_GODSWORD_OR, Items.SARADOMIN_GODSWORD, Items.SARADOMIN_GODSWORD_ORNAMENT_KIT),
+            Ornament(Items.ZAMORAK_GODSWORD_OR, Items.ZAMORAK_GODSWORD, Items.ZAMORAK_GODSWORD_ORNAMENT_KIT),
+            Ornament(Items.DRAGON_CHAINBODY_G, Items.DRAGON_CHAINBODY, Items.DRAGON_CHAINBODY_ORNAMENT_KIT),
+            Ornament(Items.DRAGON_PLATELEGS_G, Items.DRAGON_PLATELEGS, Items.DRAGON_LEGS_SKIRT_ORNAMENT_KIT),
+            Ornament(Items.DRAGON_PLATESKIRT_G, Items.DRAGON_PLATESKIRT, Items.DRAGON_LEGS_SKIRT_ORNAMENT_KIT),
+            Ornament(Items.DRAGON_FULL_HELM_G, Items.DRAGON_FULL_HELM, Items.DRAGON_FULL_HELM_ORNAMENT_KIT),
+            Ornament(Items.DRAGON_SQ_SHIELD_G, Items.DRAGON_SQ_SHIELD, Items.DRAGON_SQ_SHIELD_ORNAMENT_KIT),
+            Ornament(Items.DRAGON_KITESHIELD_G, Items.DRAGON_KITESHIELD, Items.DRAGON_KITESHIELD_ORNAMENT_KIT),
+            Ornament(Items.DRAGON_PLATEBODY_G, Items.DRAGON_PLATEBODY, Items.DRAGON_PLATEBODY_ORNAMENT_KIT),
+            Ornament(Items.DRAGON_SCIMITAR_OR, Items.DRAGON_SCIMITAR, Items.DRAGON_SCIMITAR_ORNAMENT_KIT),
+            // Dragon defender (t): on a PvP death "it will remain in the player's inventory, but will become broken" (repair at Perdu) -
+            // the defender rule, not the base + kit drop. SOURCE_GAP / ADJACENT: no defender breaks on death here, so default handling.
+            Ornament(Items.DRAGON_DEFENDER_T, Items.DRAGON_DEFENDER, Items.DRAGON_DEFENDER_ORNAMENT_KIT, pvpConvert = false),
         )
 
     private val byOrnamented = ALL.associateBy { it.ornamented }

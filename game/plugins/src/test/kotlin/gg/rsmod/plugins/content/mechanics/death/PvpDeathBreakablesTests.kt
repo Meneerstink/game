@@ -135,16 +135,26 @@ class PvpDeathBreakablesTests {
     }
 
     @Test
-    fun `items with an untradeable Bounty Hunter kit keep the default death handling`() {
-        // No "Items Kept on Death" rule covers a tradeable item carrying an untradeable kit (SOURCE_GAP, OSRS_IMPORT_STATUS.md):
-        // the elder chaos (or) and Dagon'hai (or) pieces stay in the normal lost list instead of being converted.
-        val untradeableKits = gg.rsmod.plugins.content.items.osrs.OsrsOrnamentKits.ALL.filterNot { it.pvpConvert }
-        // + Elidinis' ward (or): OSRS Wiki "Elidinis' ward (or)" - on a PvP death "the Menaphite ornament kit will be placed in their
-        // gravestone" (no base + kit drop to the PKer).
-        // + Heavy ballista (or): the Heavy ballista ornament kit is an untradeable Bounty Hunter reward (same SOURCE_GAP as above).
-        assertEquals(8, untradeableKits.size, "3 elder chaos (or) + 3 Dagon'hai (or) + Elidinis' ward (or) + Heavy ballista (or)")
-        assertTrue(untradeableKits.any { it.ornamented == gg.rsmod.plugins.api.cfg.Items.HEAVY_BALLISTA_OR })
-        untradeableKits.forEach { ornament ->
+    fun `ornamented items without the base plus kit rule keep the default death handling`() {
+        val kept = gg.rsmod.plugins.content.items.osrs.OsrsOrnamentKits.ALL.filterNot { it.pvpConvert }
+        assertEquals(
+            setOf(
+                // No "Items Kept on Death" rule covers a tradeable item carrying an untradeable kit (SOURCE_GAP, OSRS_IMPORT_STATUS.md):
+                // the elder chaos (or) and Dagon'hai (or) pieces stay in the normal lost list instead of being converted.
+                Items.ELDER_CHAOS_TOP_OR, Items.ELDER_CHAOS_ROBE_OR, Items.ELDER_CHAOS_HOOD_OR,
+                Items.DAGONHAI_HAT_OR, Items.DAGONHAI_ROBE_TOP_OR, Items.DAGONHAI_ROBE_BOTTOM_OR,
+                // Heavy ballista (or): the Heavy ballista ornament kit is an untradeable Bounty Hunter reward (same SOURCE_GAP as above).
+                Items.HEAVY_BALLISTA_OR,
+                // Elidinis' ward (or): OSRS Wiki "Elidinis' ward (or)" - on a PvP death "the Menaphite ornament kit will be placed in their
+                // gravestone" (no base + kit drop to the PKer).
+                Items.ELIDINIS_WARD_OR,
+                // Dragon defender (t): tradeable kit, but OSRS Wiki "Dragon defender (t)" - on a PvP death "it will remain in the player's
+                // inventory, but will become broken" (the defender rule, not the base + kit drop); no defender breaks here yet.
+                Items.DRAGON_DEFENDER_T,
+            ),
+            kept.map { it.ornamented }.toSet(),
+        )
+        kept.forEach { ornament ->
             val lost = listOf(DeathSlotItem(DeathContainerSource.INVENTORY, 0, Item(ornament.ornamented, 1)))
             val (result, converting) = PvpDeathBreakables.split(DeathResolutionResult(DeathContext.WILDERNESS_PVP, newPlayer(), newPlayer(), DeathItemRiskResult(0, emptyList(), lost)))
             assertTrue(converting.isEmpty(), "${ornament.ornamented} is not converted")

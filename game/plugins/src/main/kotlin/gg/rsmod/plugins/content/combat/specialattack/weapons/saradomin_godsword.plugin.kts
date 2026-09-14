@@ -20,7 +20,7 @@ import kotlin.math.ceil
  * sourced percentages and minimums can be applied directly.
  */
 // Special look: animation 12019 + graphic 2109 (Novite PlayerCombat case 11698; Void `healing_blade_special` = 2109), sound 3865 (Void).
-SpecialAttacks.register(50, Items.SARADOMIN_GODSWORD) {
+SpecialAttacks.register(50, Items.SARADOMIN_GODSWORD, Items.SARADOMIN_GODSWORD_OR) {
     player.animate(12019)
     player.graphic(2109)
     player.playSound(3865)

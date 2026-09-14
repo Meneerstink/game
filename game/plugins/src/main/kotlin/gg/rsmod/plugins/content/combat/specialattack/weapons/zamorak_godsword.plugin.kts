@@ -19,7 +19,7 @@ import gg.rsmod.plugins.content.combat.specialattack.SpecialAttacks
  */
 // Special look: animation 7070 + graphic 1221 (Novite PlayerCombat case 11700; Void `ice_cleave_special` = 1221), sound 3865 (Void).
 // Not added: the freeze impact graphic 2104 (Void `ice_cleave_impact`) - needs the freeze hook of this special, checked at build time.
-SpecialAttacks.register(50, Items.ZAMORAK_GODSWORD) {
+SpecialAttacks.register(50, Items.ZAMORAK_GODSWORD, Items.ZAMORAK_GODSWORD_OR) {
     player.animate(7070)
     player.graphic(1221)
     player.playSound(3865)

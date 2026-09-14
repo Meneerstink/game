@@ -33,7 +33,7 @@ SpecialAttacks.register(25, Items.DRAGON_MACE) {
 }
 
 /* Dragon scimitar - Sever: 55%, +25% accuracy; a landed hit turns off the victim's protection prayers for 5 seconds. */
-SpecialAttacks.register(55, Items.DRAGON_SCIMITAR) {
+SpecialAttacks.register(55, Items.DRAGON_SCIMITAR, Items.DRAGON_SCIMITAR_OR) {
     val victim = target
     player.animate(1872)
     player.graphic(347, 96)

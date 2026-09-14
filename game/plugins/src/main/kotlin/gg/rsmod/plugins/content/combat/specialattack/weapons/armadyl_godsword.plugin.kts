@@ -14,7 +14,7 @@ import gg.rsmod.plugins.content.combat.specialattack.SpecialAttacks
  * Novite 667 donor (`PlayerCombat` case 11694), graphic confirmed by the Void donor (`the_judgement_special` = 2113); sound
  * 3865 from the Void donor (`godwars_godsword_special_attack`). LIVE/AV PENDING.
  */
-SpecialAttacks.register(50, Items.ARMADYL_GODSWORD) {
+SpecialAttacks.register(50, Items.ARMADYL_GODSWORD, Items.ARMADYL_GODSWORD_OR) {
     player.animate(11989)
     player.graphic(2113)
     player.playSound(3865)

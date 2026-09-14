@@ -282222,3 +282222,629 @@
   tradeable: true
   weight: 0.0
   equipment: null
+- id: 23642
+  name: "Armadyl godsword ornament kit"
+  examine: "Use on an Armadyl godsword to make it look fancier!"
+  tradeable: true
+  weight: 0.5
+  equipment: null
+- id: 23643
+  name: "Armadyl godsword ornament kit"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23644
+  name: "Bandos godsword ornament kit"
+  examine: "Use on a Bandos godsword to make it look fancier!"
+  tradeable: true
+  weight: 0.5
+  equipment: null
+- id: 23645
+  name: "Bandos godsword ornament kit"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23646
+  name: "Saradomin godsword ornament kit"
+  examine: "Use on a Saradomin godsword to make it look fancier!"
+  tradeable: true
+  weight: 0.5
+  equipment: null
+- id: 23647
+  name: "Saradomin godsword ornament kit"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23648
+  name: "Zamorak godsword ornament kit"
+  examine: "Use on a Zamorak godsword to make it look fancier!"
+  tradeable: true
+  weight: 0.5
+  equipment: null
+- id: 23649
+  name: "Zamorak godsword ornament kit"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23650
+  name: "Dragon chainbody ornament kit"
+  examine: "Use on a dragon chainbody to make it look fancier!"
+  tradeable: true
+  weight: 0.5
+  equipment: null
+- id: 23651
+  name: "Dragon chainbody ornament kit"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23652
+  name: "Dragon legs/skirt ornament kit"
+  examine: "Use on dragon platelegs or plateskirt to make them look fancier!"
+  tradeable: true
+  weight: 0.5
+  equipment: null
+- id: 23653
+  name: "Dragon legs/skirt ornament kit"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23654
+  name: "Dragon full helm ornament kit"
+  examine: "Use on a dragon full helm to make it look fancier!"
+  tradeable: true
+  weight: 0.5
+  equipment: null
+- id: 23655
+  name: "Dragon full helm ornament kit"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23656
+  name: "Dragon sq shield ornament kit"
+  examine: "Use on a dragon square shield to make it look fancier!"
+  tradeable: true
+  weight: 0.5
+  equipment: null
+- id: 23657
+  name: "Dragon sq shield ornament kit"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23658
+  name: "Dragon kiteshield ornament kit"
+  examine: "Use on a dragon kiteshield to make it look fancier!"
+  tradeable: true
+  weight: 0.5
+  equipment: null
+- id: 23659
+  name: "Dragon kiteshield ornament kit"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23660
+  name: "Dragon platebody ornament kit"
+  examine: "Use on a dragon platebody to make it look fancier!"
+  tradeable: true
+  weight: 0.5
+  equipment: null
+- id: 23661
+  name: "Dragon platebody ornament kit"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23662
+  name: "Dragon defender ornament kit"
+  examine: "Use on the dragon defender to trim it with gold."
+  tradeable: true
+  weight: 0.5
+  equipment: null
+- id: 23663
+  name: "Dragon defender ornament kit"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23664
+  name: "Dragon scimitar ornament kit"
+  examine: "Use on the dragon scimitar to trim it with gold."
+  tradeable: true
+  weight: 0.5
+  equipment: null
+- id: 23665
+  name: "Dragon scimitar ornament kit"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23666
+  name: "Armadyl godsword (or)"
+  examine: "An ornamented, beautiful, heavy sword."
+  tradeable: false
+  weight: 10.0
+  equipment:
+    equip_slot: 3
+    equip_type: 5
+    appearance_id: 6644
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 7
+    attack_speed: 6
+    attack_stab: 0
+    attack_slash: 132
+    attack_crush: 80
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 132
+    prayer: 8
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: 3846
+    skill_reqs: [{'skill': 0, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23667
+  name: "Bandos godsword (or)"
+  examine: "An ornamented, brutally heavy sword."
+  tradeable: false
+  weight: 10.0
+  equipment:
+    equip_slot: 3
+    equip_type: 5
+    appearance_id: 6645
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 7
+    attack_speed: 6
+    attack_stab: 0
+    attack_slash: 132
+    attack_crush: 80
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 132
+    prayer: 8
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: 3846
+    skill_reqs: [{'skill': 0, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23668
+  name: "Saradomin godsword (or)"
+  examine: "An ornamented, gracious, heavy sword."
+  tradeable: false
+  weight: 10.0
+  equipment:
+    equip_slot: 3
+    equip_type: 5
+    appearance_id: 6646
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 7
+    attack_speed: 6
+    attack_stab: 0
+    attack_slash: 132
+    attack_crush: 80
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 132
+    prayer: 8
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: 3846
+    skill_reqs: [{'skill': 0, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23669
+  name: "Zamorak godsword (or)"
+  examine: "An ornamented, terrifying, heavy sword."
+  tradeable: false
+  weight: 10.0
+  equipment:
+    equip_slot: 3
+    equip_type: 5
+    appearance_id: 6647
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 7
+    attack_speed: 6
+    attack_stab: 0
+    attack_slash: 132
+    attack_crush: 80
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 132
+    prayer: 8
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: 3846
+    skill_reqs: [{'skill': 0, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23670
+  name: "Dragon scimitar (or)"
+  examine: "A vicious, curved and stylish sword."
+  tradeable: false
+  weight: 1.814
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6648
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 6
+    attack_speed: 4
+    attack_stab: 8
+    attack_slash: 67
+    attack_crush: -2
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 1
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 66
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: 2500
+    skill_reqs: [{'skill': 0, 'level': 60}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23671
+  name: "Dragon defender (t)"
+  examine: "A defensive weapon trimmed with gold."
+  tradeable: false
+  weight: 0.453
+  equipment:
+    equip_slot: 5
+    equip_type: -1
+    appearance_id: 6649
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 25
+    attack_slash: 24
+    attack_crush: 23
+    attack_magic: -3
+    attack_ranged: -2
+    defence_stab: 25
+    defence_slash: 24
+    defence_crush: 23
+    defence_magic: -3
+    defence_ranged: -2
+    summoning: 0
+    melee_strength: 6
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 1, 'level': 60}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23672
+  name: "Dragon chainbody (g)"
+  examine: "A series of connected metal rings with gold trim."
+  tradeable: false
+  weight: 6.803
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6650
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -15
+    attack_ranged: 0
+    defence_stab: 81
+    defence_slash: 93
+    defence_crush: 98
+    defence_magic: -3
+    defence_ranged: 82
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 1, 'level': 60}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23673
+  name: "Dragon platelegs (g)"
+  examine: "Heavy protective legwear with a gold trim."
+  tradeable: false
+  weight: 9.071
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 6651
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -21
+    attack_ranged: -11
+    defence_stab: 68
+    defence_slash: 66
+    defence_crush: 63
+    defence_magic: -4
+    defence_ranged: 65
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 1, 'level': 60}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23674
+  name: "Dragon plateskirt (g)"
+  examine: "Heavy protective legwear with a gold trim."
+  tradeable: false
+  weight: 9.071
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 6652
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -21
+    attack_ranged: -11
+    defence_stab: 68
+    defence_slash: 66
+    defence_crush: 63
+    defence_magic: -4
+    defence_ranged: 65
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 1, 'level': 60}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23675
+  name: "Dragon full helm (g)"
+  examine: "Protects your head and looks impressive too."
+  tradeable: false
+  weight: 2.0
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6653
+    remove_head: true
+    remove_beard: true
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -6
+    attack_ranged: -3
+    defence_stab: 45
+    defence_slash: 48
+    defence_crush: 41
+    defence_magic: -1
+    defence_ranged: 46
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 1, 'level': 60}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23676
+  name: "Dragon sq shield (g)"
+  examine: "An ancient and powerful looking Dragon Square shield with gold trim."
+  tradeable: false
+  weight: 3.175
+  equipment:
+    equip_slot: 5
+    equip_type: -1
+    appearance_id: 6654
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -6
+    attack_ranged: 0
+    defence_stab: 50
+    defence_slash: 52
+    defence_crush: 48
+    defence_magic: 0
+    defence_ranged: 50
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 1, 'level': 60}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23677
+  name: "Dragon kiteshield"
+  examine: "An ancient and powerful looking Dragon Kiteshield."
+  tradeable: true
+  weight: 6.803
+  equipment:
+    equip_slot: 5
+    equip_type: -1
+    appearance_id: 6655
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -8
+    attack_ranged: -3
+    defence_stab: 56
+    defence_slash: 60
+    defence_crush: 58
+    defence_magic: -1
+    defence_ranged: 58
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 1, 'level': 60}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23678
+  name: "Dragon kiteshield"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23679
+  name: "Dragon kiteshield (g)"
+  examine: "An ancient and powerful looking Dragon Kiteshield with a gold trim."
+  tradeable: false
+  weight: 6.803
+  equipment:
+    equip_slot: 5
+    equip_type: -1
+    appearance_id: 6656
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -8
+    attack_ranged: -2
+    defence_stab: 56
+    defence_slash: 60
+    defence_crush: 58
+    defence_magic: -1
+    defence_ranged: 58
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 1, 'level': 60}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23680
+  name: "Dragon platebody (g)"
+  examine: "A Dragon platebody with a gold trim."
+  tradeable: false
+  weight: 11.339
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6657
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -30
+    attack_ranged: -15
+    defence_stab: 109
+    defence_slash: 107
+    defence_crush: 97
+    defence_magic: -6
+    defence_ranged: 106
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 1, 'level': 60}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
