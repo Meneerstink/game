@@ -22,8 +22,8 @@ import gg.rsmod.plugins.api.cfg.Items
  * - The roster is every cache item whose name carries the (p), (p+), (p++) or (kp) marker (Dungeoneering (b) copies included); the
  *   poison comes from the melee weapon, the thrown weapon, or the arrows/bolts in the ammunition slot.
  *
- * ADAPTED: the shared Poison model only poisons a pawn that is not already poisoned, so "the poison's duration can be reset while the
- * enemy is poisoned" is not reproduced.
+ * The shared Poison model keeps a stronger dose, upgrades a weaker dose, and restarts the poison
+ * timer for an equal or stronger landed application, matching the donor state model.
  */
 object WeaponPoison {
     const val WEAPON_POISON = 20
