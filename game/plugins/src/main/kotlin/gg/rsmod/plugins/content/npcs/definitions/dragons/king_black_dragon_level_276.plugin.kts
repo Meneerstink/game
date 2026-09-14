@@ -98,12 +98,15 @@ on_npc_death(KBD) {
     table.getDrop(world, npc.damageMap.getMostDamage()!! as Player, npc.id, npc.tile)
 }
 
+// OSRS Wiki "King Black Dragon" infobox (raw wikitext 2026-09-14): hitpoints 240, att/str/def/mage 240, range 1, attack speed 4,
+// respawn 16, dstab 40, dslash 90, dcrush 90, dmagic 80, dlight 70 / dstandard 70 / dheavy 40 (ADAPTED: one 667 ranged defence, 70),
+// max hit 25 melee / 65 dragonfire and poison 8 in npc-attacks.json.
 set_combat_def(npc = KBD) {
     configs {
         attackSpeed = 4
         attackStyle = StyleType.STAB
         xpMultiplier = 1.075
-        respawnDelay = 30
+        respawnDelay = 16
     }
     species {
         NpcSpecies.BASIC_DRAGON
@@ -118,7 +121,7 @@ set_combat_def(npc = KBD) {
         ranged = 1
     }
     bonuses {
-        defenceStab = 70
+        defenceStab = 40
         defenceSlash = 90
         defenceCrush = 90
         defenceMagic = 80
