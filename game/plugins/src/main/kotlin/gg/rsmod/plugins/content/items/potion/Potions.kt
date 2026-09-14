@@ -11,6 +11,7 @@ import gg.rsmod.plugins.api.cfg.Sfx
 import gg.rsmod.plugins.api.ext.filterableMessage
 import gg.rsmod.plugins.api.ext.getInteractingItemSlot
 import gg.rsmod.plugins.api.ext.hasEquipped
+import gg.rsmod.plugins.api.ext.heal
 import gg.rsmod.plugins.api.ext.playSound
 
 /**
@@ -53,6 +54,12 @@ object Potions {
             potion.potionType.apply(player)
             player.timers[POTION_DELAY] = TICK_DELAY
             player.timers[FOOD_DELAY] = TICK_DELAY
+            // 667 barbarian mixes: the base potion's effect, then the mix heal and the OSRS mix message (BarbarianMixes).
+            if (potion.mixHeal > 0) {
+                player.heal(potion.mixHeal)
+                player.filterableMessage(BarbarianMixes.MESSAGE)
+                return
+            }
             val potionName =
                 player.world.definitions
                     .get(ItemDef::class.java, potion.item)
