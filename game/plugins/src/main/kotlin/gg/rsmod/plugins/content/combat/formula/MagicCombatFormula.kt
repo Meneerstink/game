@@ -77,7 +77,13 @@ object MagicCombatFormula : CombatFormula {
         specialPassiveMultiplier: Double,
     ): Double {
         val spell = pawn.attr[Combat.CASTING_SPELL]
-        var hit = spell?.maxHit?.toDouble() ?: 1.0
+        // Powered staff built-in spell (PoweredStaves): max(1, ⌊current Magic/3⌋ + offset) replaces the spell base.
+        var hit =
+            spell?.maxHit?.toDouble()
+                ?: (pawn as? Player)?.let { p ->
+                    gg.rsmod.plugins.content.items.osrs.PoweredStaves.wielded(p)?.baseMaxHit(p.skills.getCurrentLevel(Skills.MAGIC))?.toDouble()
+                }
+                ?: 1.0
         if (pawn is Player) {
             if (pawn.hasEquipped(EquipmentType.GLOVES, Items.CHAOS_GAUNTLETS) &&
                 spell != null &&
@@ -195,7 +201,8 @@ object MagicCombatFormula : CombatFormula {
     private fun getEffectiveAttackLevel(player: Player): Double {
         var effectiveLevel = Math.floor(player.skills.getCurrentLevel(Skills.MAGIC) * getPrayerAttackMultiplier(player))
 
-        effectiveLevel += 8.0
+        // Powered staff built-in spell: Accurate +3, Longrange +1 invisible Magic levels ("Combat Options"; rsmod 11 / 9).
+        effectiveLevel += 8.0 + gg.rsmod.plugins.content.items.osrs.PoweredStaves.stanceMagicBonus(player)
 
         if (VoidKnight.wearing(player, VoidKnight.MAGE_HELMS)) {
             effectiveLevel = Math.floor(effectiveLevel * 1.45)

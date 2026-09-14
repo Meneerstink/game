@@ -275,6 +275,10 @@ object MagicCombatStrategy : CombatStrategy {
         val damage = pawnHit.hit.hitmarks.sumOf { it.damage }
         if (landHit) {
             pawnHit.hit.addAction { applyEffect(pawn, target, spell, damage) }
+            // Trident of the Swamp: manually cast combat spells also roll its 25 % venom while it holds a charge.
+            if (pawn is Player) {
+                pawnHit.hit.addAction { gg.rsmod.plugins.content.items.osrs.PoweredStaves.rollVenom(pawn, target) }
+            }
         } else {
             spell.impactGfx?.let { target.graphic(Graphic(85, 96, hitDelay * 30)) }
         }

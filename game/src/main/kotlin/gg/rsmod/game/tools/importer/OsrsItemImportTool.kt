@@ -252,6 +252,23 @@ object OsrsItemImportTool {
                 listOf(13265, 13267, 13269, 13271).map {
                     Spec(it, noted = true, rev667Params = mapOf(686 to 5, 687 to 1, 749 to 0, 750 to 70), weaponType = 5, attackAudio = 2517)
                 },
+            // Tridents (OWNER DECISION 2026-09-14 powered staves option a): the 667 Staff of air 1381 class (644 render 28, 686
+            // staff style set 1, weapon type 1; ItemParamProbeTool 2026-09-14), single requirement Magic 75 (Seas) / 78 (Swamp)
+            // from upstream 434/436, the upstream worn op 451 "Check" -> 667 worn option 528. No attack audio (built-in spell).
+            // Magic fang: Swamp creation component. Kraken tentacle not imported ((e) creation needs Lieve McCracken, absent).
+            "tridents" to
+                listOf(
+                    tridentSpec(11907, 75), // Trident of the Seas (charged)
+                    tridentSpec(11905, 75, noted = true), // Trident of the Seas (full)
+                    tridentSpec(11908, 75, noted = true), // Uncharged trident
+                    tridentSpec(12899, 78), // Trident of the Swamp
+                    tridentSpec(12900, 78, noted = true), // Uncharged toxic trident
+                    Spec(12932, noted = true), // Magic fang
+                    tridentSpec(22288, 75), // Trident of the Seas (e)
+                    tridentSpec(22290, 75, noted = true), // Uncharged trident (e)
+                    tridentSpec(22292, 78), // Trident of the Swamp (e)
+                    tridentSpec(22294, 78, noted = true), // Uncharged toxic trident (e)
+                ),
         )
 
     /**
@@ -261,6 +278,18 @@ object OsrsItemImportTool {
     private fun crossbowParams(requiredRanged: Int) = mapOf(644 to 175, 686 to 17, 687 to 1, 23 to requiredRanged, 749 to 4, 750 to requiredRanged)
 
     private fun boltParams(requiredRanged: Int) = mapOf(23 to requiredRanged, 749 to 4, 750 to requiredRanged)
+
+    private fun tridentSpec(
+        upstreamId: Int,
+        requiredMagic: Int,
+        noted: Boolean = false,
+    ) = Spec(
+        upstreamId,
+        noted = noted,
+        rev667Params = mapOf(644 to 28, 686 to 1, 749 to 6, 750 to requiredMagic),
+        weaponType = 1,
+        rev667StringParams = mapOf(528 to "Check"),
+    )
 
     /** Worn in-game only when a Wear/Wield option exists; OSRS materials such as Magic stock carry a wearPos without one. */
     fun isWearable(def: ModernItemDef): Boolean = def.wearPos1 >= 0 && def.inventoryOptions.any { it == "Wear" || it == "Wield" }

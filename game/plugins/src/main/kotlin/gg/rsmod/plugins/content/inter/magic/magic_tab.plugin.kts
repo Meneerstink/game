@@ -19,6 +19,13 @@ CombatSpell.definitions.values.filter { it.autoCastId != -1 }.forEach { spell ->
             return@on_button
         }
 
+        // Powered staves "cannot be used to autocast spells" (OSRS Wiki "Powered staff"); message ADAPTED.
+        if (gg.rsmod.plugins.content.items.osrs.PoweredStaves.wielded(player) != null) {
+            player.message(gg.rsmod.plugins.content.items.osrs.PoweredStaves.NO_AUTOCAST_MESSAGE)
+            player.setVarp(SELECTED_AUTOCAST_VARP, 0)
+            return@on_button
+        }
+
         val metadata = MagicSpells.getMetadata(spell.uniqueId)
         if (metadata != null && MagicSpells.canCast(player, metadata.lvl, metadata.runes)) {
             player.attr[Combat.CASTING_SPELL] = spell

@@ -77,6 +77,8 @@ object CombatConfigs {
     fun getCombatStrategy(pawn: Pawn): CombatStrategy =
         if (CrownOfHelios.isActive(pawn)) {
             CrownOfHeliosCombatStrategy
+        } else if (gg.rsmod.plugins.content.items.osrs.PoweredStaves.usingBuiltInSpell(pawn)) {
+            gg.rsmod.plugins.content.combat.strategy.PoweredStaffCombatStrategy
         } else when (getCombatClass(pawn)) {
             CombatClass.MELEE -> MeleeCombatStrategy
             CombatClass.MAGIC -> MagicCombatStrategy
@@ -107,6 +109,8 @@ object CombatConfigs {
             return when {
                 CrownOfHelios.isActive(pawn) -> CrownOfHelios.mode(pawn).combatClass
                 pawn.attr.has(Combat.CASTING_SPELL) -> CombatClass.MAGIC
+                // Powered staves always attack with their built-in spell (owner decision option a: magic class forced).
+                gg.rsmod.plugins.content.items.osrs.PoweredStaves.wielded(pawn) != null -> CombatClass.MAGIC
                 pawn.hasWeaponType(
                     WeaponType.BOW,
                     WeaponType.SLING,
@@ -162,7 +166,8 @@ object CombatConfigs {
             if (getCombatClass(pawn) == CombatClass.RANGED && getAttackStyle(pawn) == WeaponStyle.RAPID) {
                 speed -= 1
             }
-            if (getCombatClass(pawn) == CombatClass.MAGIC) {
+            // "Powered staff": attack speed 4 for the built-in spell; spellbook casts keep 5.
+            if (getCombatClass(pawn) == CombatClass.MAGIC && !gg.rsmod.plugins.content.items.osrs.PoweredStaves.usingBuiltInSpell(pawn)) {
                 speed = 5
             }
             // Miasmic spells: attack speed is halved (doubled delay) for the effect duration.

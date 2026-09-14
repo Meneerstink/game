@@ -19562,5 +19562,21 @@ object Items {
     const val ABYSSAL_DAGGER_P_PLUS_NOTED = 22694
     const val ABYSSAL_DAGGER_P_PLUS_PLUS = 22695
     const val ABYSSAL_DAGGER_P_PLUS_PLUS_NOTED = 22696
+    const val TRIDENT_OF_THE_SEAS = 22697
+    const val TRIDENT_OF_THE_SEAS_FULL = 22698
+    const val TRIDENT_OF_THE_SEAS_FULL_NOTED = 22699
+    const val UNCHARGED_TRIDENT = 22700
+    const val UNCHARGED_TRIDENT_NOTED = 22701
+    const val TRIDENT_OF_THE_SWAMP = 22702
+    const val UNCHARGED_TOXIC_TRIDENT = 22703
+    const val UNCHARGED_TOXIC_TRIDENT_NOTED = 22704
+    const val MAGIC_FANG = 22705
+    const val MAGIC_FANG_NOTED = 22706
+    const val TRIDENT_OF_THE_SEAS_E = 22707
+    const val UNCHARGED_TRIDENT_E = 22708
+    const val UNCHARGED_TRIDENT_E_NOTED = 22709
+    const val TRIDENT_OF_THE_SWAMP_E = 22710
+    const val UNCHARGED_TOXIC_TRIDENT_E = 22711
+    const val UNCHARGED_TOXIC_TRIDENT_E_NOTED = 22712
     // Auto-generated file using class gg.rsmod.game.service.game.DumpEntityIdService
 }
