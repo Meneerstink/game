@@ -65,7 +65,11 @@ object OsrsEquipmentStatsAudit {
             }
         } + (4212..4234).associateWith {
             "legacy crystal bow/shield definition: build 240 keeps it with all-zero stats (the OSRS crystal bow/shield are 23983/23991)"
-        } + mapOf(10566 to "build 240 10566 'Fire cape' has all-zero stats; the OSRS combat Fire cape is 6570")
+        } + mapOf(10566 to "build 240 10566 'Fire cape' has all-zero stats; the OSRS combat Fire cape is 6570") +
+            listOf(14641, 14642, 14645, 15432, 15433, 15434, 15435).associateWith {
+                "667 team cape (+12 prayer, +8 defences; own examine such as \"It's a cape, and it's red.\"), a different item from the OSRS " +
+                    "plain Red/Blue cape 1007/1021 (= the 667 zero-stat \"Cape\" 1007/1021)"
+            }
 
     /**
      * 667 items that are the same item as the build-240 definition with the same id but are spelled differently (verified pair by pair
@@ -187,6 +191,14 @@ object OsrsEquipmentStatsAudit {
         }
     }
 
+    /**
+     * A same-name copy of a main OSRS item, proven from the build-2686 definitions of every ambiguous name (2026-09-14): the Last Man Standing /
+     * world-copy definitions (20429 Dragon platelegs, 20564 Proselyte hauberk, 20593 Armadyl godsword, 20417 / 20566 d'hide bodies, 20418 /
+     * 20567 d'hide chaps, 25195 / 25207 / 25208 capes) carry param 59 = 1 and a token cost, and the arena copies (22665 Armadyl godsword, 22666
+     * Rubber chicken) have the "Kill Area" option; the main items (4087, 9674, 11802, 2499, 2501, 2493, 2495, 1007, 1021, 4566) have neither.
+     */
+    fun isCopyDefinition(def: ModernItemDef): Boolean = def.params[59] == 1 || def.inventoryOptions.any { it == "Kill Area" }
+
     fun auditByName(yml: List<JsonNode>, source: Map<Int, ModernItemDef>, imported: Set<Int>, ambiguous: MutableList<String>): List<NameMatch> {
         val osrsByName = source.values.filter(::osrsWearable).groupBy { it.name.lowercase(Locale.ROOT) }
         return yml.mapNotNull { node ->
@@ -200,7 +212,9 @@ object OsrsEquipmentStatsAudit {
             }
             val candidates = osrsByName[name.lowercase(Locale.ROOT)] ?: return@mapNotNull null
             val same = candidates.firstOrNull { it.id == local }
-            val chosen = if (same != null) listOf(same) else candidates
+            // Owner answer 2026-09-14 "same-name duplicate copies map to the main item": drop copy definitions when a main remains.
+            val mains = candidates.filterNot(::isCopyDefinition)
+            val chosen = if (same != null) listOf(same) else if (mains.isNotEmpty()) mains else candidates
             val statSets = chosen.map { osrsStats(it) }.distinct()
             if (statSets.size > 1) {
                 ambiguous += "$local \"$name\": OSRS ${chosen.map { it.id }} carry different stats"
