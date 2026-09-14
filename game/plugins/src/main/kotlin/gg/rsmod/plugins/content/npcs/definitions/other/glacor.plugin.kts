@@ -107,7 +107,8 @@ GlacorCombatScript.GLACYTE_IDS.forEach { id ->
             death = 9961
         }
         aggro {
-            radius = 8
+            // RuneScape Wiki 2012 revisions: unstable and sapping glacytes "aggressive = Yes", enduring glacyte "aggressive = No".
+            radius = if (id == Npcs.ENDURING_GLACYTE) 0 else 8
         }
     }
 }

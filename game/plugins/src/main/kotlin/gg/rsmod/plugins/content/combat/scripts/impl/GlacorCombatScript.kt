@@ -51,6 +51,12 @@ object GlacorCombatScript : CombatScript() {
     const val GFX_FREEZE = 369
     const val GFX_EXPLODE = 956
 
+    /**
+     * RuneScape Wiki "Glacor" revision 2012-09-23 (pre-EoC): "Glacor will take 60% less damage if Enduring Glacyte is killed last";
+     * "Enduring glacyte" revision 2012-07-31: "approximately 60% less damage". Novite's 0.6 kept 60% of the damage instead.
+     */
+    const val ENDURING_LAST_DAMAGE_MULTIPLIER = 0.4
+
     // Novite stores these caps in the historical x10 hitmark unit; this runtime is 1:1.
     private const val GLACOR_DAMAGE_CAP = 250
     private const val GLACYTE_DAMAGE_CAP = 90
@@ -91,7 +97,7 @@ object GlacorCombatScript : CombatScript() {
             if (glacytes != null && glacytes.any { it.isSpawned() && !it.isDead() }) {
                 hit.hitmarks.forEach { it.damage = 0 }
             } else if (npc.attr[LAST_GLACYTE] == Npcs.ENDURING_GLACYTE) {
-                hit.hitmarks.forEach { it.damage = (it.damage * 0.6).toInt() }
+                hit.hitmarks.forEach { it.damage = (it.damage * ENDURING_LAST_DAMAGE_MULTIPLIER).toInt() }
             }
             hit.hitmarks.forEach { if (it.damage > GLACOR_DAMAGE_CAP) it.damage = GLACOR_DAMAGE_CAP }
         }
@@ -191,7 +197,9 @@ object GlacorCombatScript : CombatScript() {
             npc.dealHit(target = target, maxHit = 26.4, landHit = land, delay = delay, hitType = HitType.MAGIC, onHit = { hit ->
                 val damage = hit.hit.hitmarks.sumOf { h -> h.damage }
                 sapping(npc, target, damage)
-                if (damage > 0 && world.random(5) == 0) {
+                // 2012 wiki: the freeze "will only occur if the player is not praying against magic". SOURCE_GAP: "Occasionally" is
+                // unquantified, Novite's 1/6 is kept.
+                if (damage > 0 && !target.isProtectedFrom(CombatClass.MAGIC) && world.random(5) == 0) {
                     target.graphic(GFX_FREEZE)
                     target.freeze(16)
                 }
