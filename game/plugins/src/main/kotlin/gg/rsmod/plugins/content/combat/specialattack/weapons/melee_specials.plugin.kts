@@ -105,14 +105,7 @@ SpecialAttacks.register(60, Items.DRAGON_2H_SWORD) {
     adjacentTargets(player, victim).forEach { other -> meleeHit(player, other) }
 }
 
-/* Granite maul - Quick Smash: 50%, an immediate extra hit on the current victim. */
-SpecialAttacks.register(50, Items.GRANITE_MAUL) {
-    val victim = target
-    player.animate(1667)
-    player.graphic(340, 96)
-    player.playSound(Sfx.QUICKSMASH)
-    meleeHit(player, victim, delay = 0)
-}
+/* Granite maul - Quick Smash: OSRS rules (60 % / 50 % ornate handle, instant, homing) live in GraniteMaul / granite_maul.plugin.kts. */
 
 /* Abyssal whip - Energy Drain: 50%, +25% accuracy; steals 10 run energy from a player victim. */
 SpecialAttacks.register(50, Items.ABYSSAL_WHIP) {

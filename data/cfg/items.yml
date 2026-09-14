@@ -268954,3 +268954,49 @@
   tradeable: true
   weight: 0.0
   equipment: null
+- id: 22720
+  name: "Granite maul"
+  examine: "Simplicity is the best weapon."
+  tradeable: false
+  weight: 4.535
+  equipment:
+    equip_slot: 3
+    equip_type: 5
+    appearance_id: 5720
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 10
+    attack_speed: 7
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 81
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 79
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: 2714
+    skill_reqs: [{'skill': 0, 'level': 50}, {'skill': 2, 'level': 50}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22721
+  name: "Ornate maul handle"
+  examine: "This handle can be applied to the granite maul."
+  tradeable: true
+  weight: 0.5
+  equipment: null
+- id: 22722
+  name: "Ornate maul handle"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null

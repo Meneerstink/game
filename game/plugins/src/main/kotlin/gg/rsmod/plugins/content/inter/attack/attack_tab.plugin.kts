@@ -68,6 +68,11 @@ on_button(interfaceId = 884, component = 4) {
     ) {
         return@on_button
     }
+    // Granite maul: bar clicks drive Quick Smash homing and the deselect window (GraniteMaul).
+    if (gg.rsmod.plugins.content.items.osrs.GraniteMaul.isWielding(player)) {
+        gg.rsmod.plugins.content.items.osrs.GraniteMaul.onBarClick(player)
+        return@on_button
+    }
     if (SpecialAttacks.executeInstant(player)) {
         return@on_button
     }

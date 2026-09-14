@@ -277,6 +277,15 @@ object OsrsItemImportTool {
                     Spec(22323, rev667Params = staffParams(82), weaponType = 1, rev667StringParams = mapOf(528 to "Check")), // Sanguinesti staff
                     Spec(22481, noted = true, rev667Params = staffParams(82), weaponType = 1), // Sanguinesti staff (uncharged)
                 ),
+            // Granite maul (ornate handle) and the Ornate maul handle. The 667 Granite maul 4153 already exists with the OSRS stats;
+            // the handle version copies its client params (ItemParamProbeTool 2026-09-14: 644 27, 686 10, 687 1, 749/750 0/50,
+            // 751/752 2/50) with weapon type 10 and attack audio 2714. The granite clamp ornament versions (12848, 24227) are not
+            // in the plan and are not imported; 20557 is a Last Man Standing copy.
+            "granitemaul" to
+                listOf(
+                    Spec(24225, rev667Params = mapOf(644 to 27, 686 to 10, 687 to 1, 749 to 0, 750 to 50, 751 to 2, 752 to 50), weaponType = 10, attackAudio = 2714), // Granite maul (ornate handle)
+                    Spec(24229, noted = true), // Ornate maul handle
+                ),
             // Blighted sacks (owner addition 2026-09-14): stackable, tradeable consumables without inventory options upstream;
             // they replace the runes of the spells named on their wiki pages (MagicSpells). No client params.
             "blightedsacks" to

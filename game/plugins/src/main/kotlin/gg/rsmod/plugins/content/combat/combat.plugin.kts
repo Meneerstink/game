@@ -162,6 +162,11 @@ suspend fun cycle(it: QueueTask): Boolean {
         return false
     }
 
+    // Granite maul Quick Smash is instant and gives no attack cooldown, so it fires before the attack delay check.
+    if (pawn is Player && gg.rsmod.plugins.content.items.osrs.GraniteMaul.onCombatCycle(pawn, target)) {
+        return true
+    }
+
     if (Combat.isAttackDelayReady(pawn)) {
         if (Combat.canAttack(pawn, target, strategy)) {
             if (pawn is Npc && dataAttackRange != null && !gg.rsmod.plugins.content.combat.attack.NpcAttacks.hasValidAttack(pawn, target)) {

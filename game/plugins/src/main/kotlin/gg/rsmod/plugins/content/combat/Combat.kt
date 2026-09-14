@@ -81,6 +81,8 @@ object Combat {
         target: Pawn,
     ) {
         pawn.timers[ATTACK_DELAY] = CombatConfigs.getAttackDelay(pawn)
+        // Granite maul homing: "for 5 ticks after attacking a target with any weapon" (GraniteMaul).
+        pawn.attr[gg.rsmod.plugins.content.items.osrs.GraniteMaul.LAST_ATTACK_CYCLE] = pawn.world.currentCycle
         target.timers[ACTIVE_COMBAT_TIMER] = 17 // 10,2 seconds
         pawn.attr[BOLT_ENCHANTMENT_EFFECT] = false
 

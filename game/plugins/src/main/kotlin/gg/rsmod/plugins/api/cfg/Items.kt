@@ -19585,5 +19585,8 @@ object Items {
     const val BLIGHTED_ENTANGLE_SACK = 22717
     const val BLIGHTED_TELEPORT_SPELL_SACK = 22718
     const val BLIGHTED_VENGEANCE_SACK = 22719
+    const val GRANITE_MAUL_ORNATE_HANDLE = 22720
+    const val ORNATE_MAUL_HANDLE = 22721
+    const val ORNATE_MAUL_HANDLE_NOTED = 22722
     // Auto-generated file using class gg.rsmod.game.service.game.DumpEntityIdService
 }
