@@ -283,6 +283,5 @@ enum class CombinationData(
 
     companion object {
         val values = enumValues<CombinationData>()
-        val combinationDefinitions = values.associateBy { it.items[0] }
     }
 }

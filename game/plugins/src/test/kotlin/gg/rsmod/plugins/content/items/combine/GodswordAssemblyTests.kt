@@ -36,16 +36,22 @@ class GodswordAssemblyTests {
     }
 
     @Test
-    fun `no combination is shadowed by another sharing its first ingredient`() {
-        // `combinationDefinitions` is an associateBy on items[0], so two entries with the same
-        // first ingredient leave only the later one reachable - the failure mode that would hit
-        // the four godswords first, since they all share the Godsword blade as their other half.
-        val duplicated =
-            CombinationData.values
-                .groupBy { it.items[0] }
-                .filterValues { it.size > 1 }
-        assertTrue("first ingredient reused by $duplicated", duplicated.isEmpty())
-        assertEquals(CombinationData.values.size, CombinationData.combinationDefinitions.size)
+    fun `every combination binds its own item pairs and no pair is bound twice`() {
+        // The plugin binds one row at a time: `on_item_on_item(itemUsed = items[0], itemsList = items)` for each row, so rows may
+        // share a first ingredient (one colour kit on three robe pieces, OSRS-IMPORT magearmour) as long as no two rows produce
+        // the same (item used, item) pair - a repeated pair is rejected at boot as a duplicate binding.
+        val pairs =
+            CombinationData.values.flatMap { row ->
+                if (row.tool != CombinationTool.NONE) {
+                    listOf(row.items[0] to row.tool.item)
+                } else {
+                    row.items.filterNot { it == row.items[0] }.map { row.items[0] to it }
+                }
+            }
+        val repeated = pairs.groupingBy { it }.eachCount().filterValues { it > 1 }
+        assertTrue("item pairs bound twice: $repeated", repeated.isEmpty())
+        val plugin = java.io.File("src/main/kotlin/gg/rsmod/plugins/content/items/combine/item_combination.plugin.kts").readText()
+        assertTrue("the plugin binds per row", "CombinationData.values.forEach { def ->" in plugin)
     }
 
     @Test
