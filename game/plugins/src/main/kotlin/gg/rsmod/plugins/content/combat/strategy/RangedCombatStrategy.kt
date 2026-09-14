@@ -174,10 +174,13 @@ object RangedCombatStrategy : CombatStrategy {
                 ammoProjectile.impact?.let { impact -> target.graphic(impact.id, impact.height, projectile.lifespan) }
                 world.spawn(projectile)
             } else if (gg.rsmod.plugins.content.items.osrs.CrystalEquipment.isCrystalBow(pawn.getEquipment(EquipmentType.WEAPON)?.id)) {
-                // Crystal bows / Bow of Faerdhinen fire their own arrow: Void donor arrows.gfx.toml special_arrow_shoot 250
-                // (drawback, height 60) and special_arrow 249 (projectile). ADAPTED_TO_667 for the Bow of Faerdhinen.
-                pawn.graphic(250, 60)
-                world.spawn(pawn.createProjectile(target, 249, ProjectileType.ARROW))
+                // Crystal bows fire their own arrow: Void donor arrows.gfx.toml special_arrow_shoot 250 (drawback, height 60) and
+                // special_arrow 249 (projectile). Bow of Faerdhinen: OSRS SP_ATTACK_ARROW_LAUNCH/TRAVEL_FAERDHINEN imported (fxpilot),
+                // same height as the crystal bow (ADAPTED).
+                val bowfa = pawn.getEquipment(EquipmentType.WEAPON)?.id in
+                    setOf(gg.rsmod.plugins.api.cfg.Items.BOW_OF_FAERDHINEN, gg.rsmod.plugins.api.cfg.Items.BOW_OF_FAERDHINEN_C)
+                pawn.graphic(if (bowfa) gg.rsmod.plugins.content.items.osrs.OsrsGfx.FAERDHINEN_ARROW_LAUNCH else 250, 60)
+                world.spawn(pawn.createProjectile(target, if (bowfa) gg.rsmod.plugins.content.items.osrs.OsrsGfx.FAERDHINEN_ARROW_TRAVEL else 249, ProjectileType.ARROW))
             }
 
             /*

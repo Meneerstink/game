@@ -51,7 +51,9 @@ class CrystalEquipmentTests {
         assertTrue(formula.indexOf("CrystalEquipment.applyAccuracy(player, hit)") in 0 until formula.indexOf("TargetModifiers.rangedAccuracyMultiplier(player, target)"))
         assertTrue("CrystalEquipment.isCrystalBow(player.getEquipment(EquipmentType.WEAPON)?.id)) return null" in File("src/main/kotlin/gg/rsmod/plugins/content/combat/strategy/ranged/RangedAmmo.kt").readText())
         val strategy = File("src/main/kotlin/gg/rsmod/plugins/content/combat/strategy/RangedCombatStrategy.kt").readText()
-        assertTrue("pawn.createProjectile(target, 249, ProjectileType.ARROW)" in strategy && "CrystalEquipment.afterBowShot(pawn)" in strategy)
+        // Crystal bows keep the 667 special arrow 249/250; the Bow of Faerdhinen uses the imported OSRS arrow (owner decision (e)).
+        assertTrue("OsrsGfx.FAERDHINEN_ARROW_TRAVEL else 249, ProjectileType.ARROW)" in strategy && "CrystalEquipment.afterBowShot(pawn)" in strategy)
+        assertTrue("OsrsGfx.FAERDHINEN_ARROW_LAUNCH else 250, 60)" in strategy)
         assertTrue("CrystalEquipment.onHitReceived(target)" in File("src/main/kotlin/gg/rsmod/plugins/content/combat/PawnExt.kt").readText())
         assertTrue("Item(Items.BOW_OF_FAERDHINEN_INACTIVE, 1)" in File("src/main/kotlin/gg/rsmod/plugins/content/mechanics/death/PvpDeathBreakables.kt").readText())
         assertTrue(Items.BOW_OF_FAERDHINEN in gg.rsmod.plugins.content.combat.strategy.ranged.weapon.Bows.CRYSTAL_BOWS, "range 10")

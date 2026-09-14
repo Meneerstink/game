@@ -15,6 +15,7 @@ import gg.rsmod.plugins.content.combat.specialattack.SpecialAttacks
 SpecialAttacks.register(50, Items.DRAGON_WARHAMMER) {
     val victim = target
     player.animate(CombatConfigs.getAttackAnimation(player))
+    player.graphic(gg.rsmod.plugins.content.items.osrs.OsrsGfx.DRAGON_WARHAMMER_SPECIAL) // OSRS DRAGON_WARHAMMER_SA_SPOTANIM (fxpilot)
     val maxHit = MeleeCombatFormula.getMaxHit(player, victim, specialAttackMultiplier = 1.5)
     val landHit = MeleeCombatFormula.getAccuracy(player, victim) >= world.randomDouble()
     val pawnHit = player.dealHit(target = victim, maxHit = maxHit, landHit = landHit, delay = 1, hitType = HitType.MELEE)

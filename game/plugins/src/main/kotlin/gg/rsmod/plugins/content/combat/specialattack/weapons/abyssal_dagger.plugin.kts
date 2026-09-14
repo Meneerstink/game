@@ -16,6 +16,7 @@ import gg.rsmod.plugins.content.items.osrs.AbyssalDagger
 SpecialAttacks.register(AbyssalDagger.SPECIAL_ENERGY, *AbyssalDagger.IDS) {
     val victim = target
     player.animate(CombatConfigs.getAttackAnimation(player))
+    player.graphic(gg.rsmod.plugins.content.items.osrs.OsrsGfx.ABYSSAL_DAGGER_SPECIAL) // OSRS ABYSSAL_DAGGER_SPECIAL_SPOTANIM (fxpilot)
     val maxHit = MeleeCombatFormula.getMaxHit(player, victim, specialAttackMultiplier = AbyssalDagger.SPECIAL_DAMAGE)
     val landHit =
         MeleeCombatFormula.getAccuracyAgainst(

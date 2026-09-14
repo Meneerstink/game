@@ -11,6 +11,7 @@ import gg.rsmod.plugins.content.combat.specialattack.SpecialAttacks
  */
 SpecialAttacks.register(65, Items.HEAVY_BALLISTA) {
     player.animate(CombatConfigs.getAttackAnimation(player))
+    player.graphic(gg.rsmod.plugins.content.items.osrs.OsrsGfx.BALLISTA_SPECIAL) // OSRS BALLISTA_SPECIAL (fxpilot)
     player.playSound(Sfx.CROSSBOW)
     rangedShot(player, target, accuracy = 1.25, damage = 1.25)
 }

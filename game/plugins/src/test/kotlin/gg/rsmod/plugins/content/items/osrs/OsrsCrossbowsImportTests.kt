@@ -95,7 +95,12 @@ class OsrsCrossbowsImportTests {
             }
         }
         assertTrue(Items.OSRS_DRAGON_BOLTS !in CrossbowType.RUNE_CROSSBOW.ammo)
-        Bolts.OSRS_DRAGON_BOLT_FAMILY.forEach { assertTrue(it in RangedProjectile.BOLTS.items, "$it has the bolt projectile") }
+        // Owner decision (e): OSRS dragon bolts fly with the imported OSRS DRAGON_CROSSBOWBOLT_TRAVEL spotanim (fxpilot), not the 667 bolt.
+        Bolts.OSRS_DRAGON_BOLT_FAMILY.forEach {
+            assertTrue(it in RangedProjectile.OSRS_DRAGON_BOLTS.items, "$it has the OSRS dragon bolt projectile")
+            assertTrue(it !in RangedProjectile.BOLTS.items, "$it is not also mapped to the 667 bolt projectile")
+        }
+        assertEquals(OsrsGfx.DRAGON_CROSSBOWBOLT_TRAVEL, RangedProjectile.OSRS_DRAGON_BOLTS.gfx)
         assertEquals((listOf(Items.OSRS_DRAGON_BOLTS) + gemBolts + enchantedBolts).toSet(), Bolts.OSRS_DRAGON_BOLT_FAMILY.toSet())
     }
 

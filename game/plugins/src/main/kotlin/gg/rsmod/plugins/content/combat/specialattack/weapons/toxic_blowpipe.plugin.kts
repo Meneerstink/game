@@ -20,6 +20,7 @@ SpecialAttacks.register(Blowpipe.SPECIAL_ENERGY, Items.TOXIC_BLOWPIPE) {
     }
     val victim = target
     player.animate(CombatConfigs.getAttackAnimation(player))
+    player.graphic(gg.rsmod.plugins.content.items.osrs.OsrsGfx.TOXIC_BLOWPIPE_SPECIALATTACK) // OSRS TOXIC_BLOWPIPE_SPECIALATTACK (fxpilot)
     if (!BlowpipeCombat.fire(player, victim)) return@register
     val delay = BlowpipeCombat.hitDelay(player.tile.getDistance(victim.tile), special = true)
     val maxHit = RangedCombatFormula.getMaxHit(player, victim, specialAttackMultiplier = Blowpipe.SIPHON_DAMAGE)

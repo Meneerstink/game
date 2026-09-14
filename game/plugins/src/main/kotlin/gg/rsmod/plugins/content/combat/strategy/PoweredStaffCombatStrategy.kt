@@ -12,6 +12,7 @@ import gg.rsmod.plugins.content.combat.dealHit
 import gg.rsmod.plugins.content.combat.formula.MagicCombatFormula
 import gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell
 import gg.rsmod.plugins.content.combat.venom
+import gg.rsmod.plugins.content.items.osrs.OsrsGfx
 import gg.rsmod.plugins.content.items.osrs.PoweredStaves
 
 /**
@@ -26,7 +27,25 @@ import gg.rsmod.plugins.content.items.osrs.PoweredStaves
  * Longrange, rsmod gives none; the rsmod amounts are used until the owner decides.
  */
 object PoweredStaffCombatStrategy : CombatStrategy {
-    fun look(staff: PoweredStaves.Staff): CombatSpell = if (staff.leech) CombatSpell.BLOOD_BLITZ else CombatSpell.WATER_BLAST
+    /** Cast / travel / impact spotanims; heights and the cast animation stay those of the former 667 look (ADAPTED). */
+    data class Look(val castGfx: Graphic, val projectile: Int, val impactGfx: Graphic, val castAnimation: Int, val healGfx: Int? = null)
+
+    /**
+     * OSRS spotanims imported by batch fxpilot (owner decision (e)): Seas SLAYER_TOTS_* 1251/1252/1253, Swamp TOXIC_TOTS_*
+     * 665/1040/1042, Sanguinesti SANGUINESTI_STAFF_* 1540/1539/1541 + heal 1542. The OSRS cast animation 1167 is a player
+     * sequence and stays the 667 spell animation (skeleton incompatible, ADAPTED).
+     */
+    fun look(staff: PoweredStaves.Staff): Look {
+        val base = if (staff.leech) CombatSpell.BLOOD_BLITZ else CombatSpell.WATER_BLAST
+        val castHeight = base.castGfx?.height ?: 0
+        val impactHeight = base.impactGfx?.height ?: 0
+        val animation = base.castAnimation[1]
+        return when {
+            staff.leech -> Look(Graphic(OsrsGfx.SANGUINESTI_STAFF_CASTING, castHeight), OsrsGfx.SANGUINESTI_STAFF_TRAVEL, Graphic(OsrsGfx.SANGUINESTI_STAFF_IMPACT, impactHeight), animation, OsrsGfx.SANGUINESTI_STAFF_HEAL)
+            staff.venomChance > 0.0 -> Look(Graphic(OsrsGfx.TOXIC_TOTS_CASTING, castHeight), OsrsGfx.TOXIC_TOTS_PROJECTILE, Graphic(OsrsGfx.TOXIC_TOTS_IMPACT, impactHeight), animation)
+            else -> Look(Graphic(OsrsGfx.SLAYER_TOTS_CASTING, castHeight), OsrsGfx.SLAYER_TOTS_PROJECTILE, Graphic(OsrsGfx.SLAYER_TOTS_IMPACT, impactHeight), animation)
+        }
+    }
 
     override fun getAttackRange(pawn: Pawn): Int {
         val player = pawn as? Player ?: return PoweredStaves.ATTACK_RANGE
@@ -63,8 +82,8 @@ object PoweredStaffCombatStrategy : CombatStrategy {
         val look = look(staff)
 
         player.stopMovement()
-        look.castGfx?.let { player.graphic(it) }
-        player.animate(look.castAnimation[1])
+        player.graphic(look.castGfx)
+        player.animate(look.castAnimation)
         // "One charge is consumed each time you cast the built-in spell."
         player.equipment[EquipmentType.WEAPON.id] = PoweredStaves.withCharges(weapon, PoweredStaves.charges(weapon) - 1)
 
@@ -73,7 +92,7 @@ object PoweredStaffCombatStrategy : CombatStrategy {
         val hitDelay = MagicCombatStrategy.getHitDelay(player.getCentreTile(), target.getCentreTile())
         val landHit = MagicCombatFormula.getAccuracy(player, target) >= world.randomDouble()
         if (landHit) {
-            look.impactGfx?.let { target.graphic(Graphic(it.id, it.height, projectile.lifespan)) }
+            target.graphic(Graphic(look.impactGfx.id, look.impactGfx.height, projectile.lifespan))
         } else {
             target.graphic(Graphic(85, 96, projectile.lifespan))
         }
@@ -92,7 +111,10 @@ object PoweredStaffCombatStrategy : CombatStrategy {
             )
         val damage = pawnHit.hit.hitmarks.sumOf { it.damage }
         if (leech) {
-            pawnHit.hit.addAction { PoweredStaves.leechHeal(damage).takeIf { it > 0 }?.let { player.heal(it) } }
+            pawnHit.hit.addAction {
+                look.healGfx?.let { player.graphic(it) }
+                PoweredStaves.leechHeal(damage).takeIf { it > 0 }?.let { player.heal(it) }
+            }
         }
         // Trident of the Swamp: 25 % venom on successful hits.
         if (landHit && staff.venomChance > 0.0) {

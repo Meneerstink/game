@@ -17,6 +17,7 @@ import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.EnchantedBolts
 /* Armadyl crossbow - Armadyl Eye: 50%, doubled accuracy and double the base chance of the enchanted bolt effect. */
 SpecialAttacks.register(50, Items.ARMADYL_CROSSBOW) {
     player.animate(CombatConfigs.getAttackAnimation(player))
+    player.graphic(gg.rsmod.plugins.content.items.osrs.OsrsGfx.ACB_SPECIALATTACK) // OSRS ACB_SPECIALATTACK (fxpilot)
     player.playSound(Sfx.CROSSBOW)
     rangedShot(player, target, accuracy = 2.0, boltSpecial = EnchantedBolts.Special.ARMADYL_EYE)
 }
@@ -24,6 +25,7 @@ SpecialAttacks.register(50, Items.ARMADYL_CROSSBOW) {
 /* Zaryte crossbow - Evoke: 75%, doubled accuracy; a successful hit guarantees the enchanted bolt effect (stronger values). */
 SpecialAttacks.register(75, Items.ZARYTE_CROSSBOW) {
     player.animate(CombatConfigs.getAttackAnimation(player))
+    player.graphic(gg.rsmod.plugins.content.items.osrs.OsrsGfx.ZCB_SPECIALATTACK) // OSRS ZCB_SPECIALATTACK (fxpilot)
     player.playSound(Sfx.CROSSBOW)
     rangedShot(player, target, accuracy = 2.0, boltSpecial = EnchantedBolts.Special.ZARYTE_EVOKE)
 }

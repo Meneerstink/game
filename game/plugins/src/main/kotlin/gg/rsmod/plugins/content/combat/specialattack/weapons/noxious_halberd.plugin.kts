@@ -9,7 +9,9 @@ import gg.rsmod.plugins.content.items.osrs.NoxiousHalberd
  * animation/graphic are not in 667, so none is played (ADAPTED_TO_667).
  */
 SpecialAttacks.registerInstant(NoxiousHalberd.VIRULENCE_ENERGY, Items.NOXIOUS_HALBERD) { p ->
-    NoxiousHalberd.activateVirulence(p)
+    NoxiousHalberd.activateVirulence(p).also { activated ->
+        if (activated) p.graphic(gg.rsmod.plugins.content.items.osrs.OsrsGfx.NOXIOUS_HALBERD_SPECIAL) // OSRS VFX_NOXIOUS_HALBERD_SPEC (fxpilot)
+    }
 }
 
 // "This effect is lost if the player changes weapon or logs out." (logout: the attribute is not persisted)

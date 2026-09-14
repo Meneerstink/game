@@ -14,7 +14,8 @@ import gg.rsmod.plugins.content.combat.specialattack.SpecialAttacks
 StaffOfTheDead.POWER_OF_DEATH_STAVES.forEach { staff ->
     SpecialAttacks.registerInstant(StaffOfTheDead.POWER_OF_DEATH_ENERGY, staff) { p ->
         p.animate(12804)
-        p.graphic(2319)
+        // Staff of the dead family: OSRS SOTD_SPECIAL_START (fxpilot); the Staff of light keeps its 667 graphic.
+        p.graphic(if (staff == Items.STAFF_OF_LIGHT) 2319 else OsrsGfx.SOTD_SPECIAL_START)
         StaffOfTheDead.activatePowerOfDeath(p)
     }
 }

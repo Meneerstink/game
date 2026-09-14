@@ -48,13 +48,19 @@ enum class RangedProjectile(
     val type: ProjectileType,
     val items: Array<Int>,
 ) {
+    // OSRS-IMPORT (e): every OSRS dragon bolt (plain, gem-tipped, enchanted) uses the imported DRAGON_CROSSBOWBOLT_TRAVEL (fxpilot).
+    OSRS_DRAGON_BOLTS(
+        gfx = gg.rsmod.plugins.content.items.osrs.OsrsGfx.DRAGON_CROSSBOWBOLT_TRAVEL,
+        type = ProjectileType.BOLT,
+        items = Bolts.OSRS_DRAGON_BOLT_FAMILY,
+    ),
     BOLTS(
         gfx = Gfx.BOLT_IN_FLIGHT,
         type = ProjectileType.BOLT,
         items =
             Bolts.BRONZE_BOLTS + Bolts.IRON_BOLTS + Bolts.STEEL_BOLTS + Bolts.MITHRIL_BOLTS +
                 Bolts.ADAMANT_BOLTS + Bolts.RUNITE_BOLTS + Bolts.DRAGON_BOLTS + Bolts.BLURITE_BOLTS + Bolts.KEBBIT_BOLTS +
-                Bolts.BONE_BOLTS + Bolts.OSRS_DRAGON_BOLT_FAMILY +
+                Bolts.BONE_BOLTS +
                 // OSRS-IMPORT antler bolts: no 667 antler bolt graphic exists, the 667 bolt projectile is used (ADAPTED_TO_667).
                 arrayOf(Items.SUNLIGHT_ANTLER_BOLTS, Items.MOONLIGHT_ANTLER_BOLTS),
     ),
@@ -231,10 +237,10 @@ enum class RangedProjectile(
         type = ProjectileType.THROWN,
         items = DRAGON_DARTS,
     ),
-    // OSRS-IMPORT: no 667 amethyst dart graphics exist; the rune dart graphics are used (ADAPTED_TO_667).
+    // OSRS-IMPORT (e): OSRS AMETHYST_DART_TRAVEL / LAUNCH imported (fxpilot); drawback height kept from the 667 darts (ADAPTED).
     AMETHYST_DART(
-        gfx = Gfx.RUNE_DART_IN_FLIGHT,
-        drawback = Graphic(Gfx.RUNE_DART_DRAWBACK, 96),
+        gfx = gg.rsmod.plugins.content.items.osrs.OsrsGfx.AMETHYST_DART_TRAVEL,
+        drawback = Graphic(gg.rsmod.plugins.content.items.osrs.OsrsGfx.AMETHYST_DART_LAUNCH, 96),
         type = ProjectileType.THROWN,
         items = Darts.AMETHYST_DARTS,
     ),
@@ -306,8 +312,9 @@ enum class RangedProjectile(
     OSRS_MITHRIL_JAVELIN(gfx = Gfx.MITHRIL_JAVELIN_IN_FLIGHT, type = ProjectileType.JAVELIN, items = Javelins.OSRS_MITHRIL_JAVELINS),
     OSRS_ADAMANT_JAVELIN(gfx = Gfx.ADAMANT_JAVELIN_IN_FLIGHT, type = ProjectileType.JAVELIN, items = Javelins.OSRS_ADAMANT_JAVELINS),
     OSRS_RUNE_JAVELIN(gfx = Gfx.RUNE_JAVELIN_IN_FLIGHT, type = ProjectileType.JAVELIN, items = Javelins.OSRS_RUNE_JAVELINS),
-    OSRS_AMETHYST_JAVELIN(gfx = Gfx.RUNE_JAVELIN_IN_FLIGHT, type = ProjectileType.JAVELIN, items = Javelins.OSRS_AMETHYST_JAVELINS),
-    OSRS_DRAGON_JAVELIN(gfx = Gfx.RUNE_JAVELIN_IN_FLIGHT, type = ProjectileType.JAVELIN, items = Javelins.OSRS_DRAGON_JAVELINS),
+    // OSRS-IMPORT (e): OSRS AMETHYST_JAVELIN_TRAVEL 1386 / DRAGON_JAVELIN_TRAVEL 1301 imported (fxpilot).
+    OSRS_AMETHYST_JAVELIN(gfx = gg.rsmod.plugins.content.items.osrs.OsrsGfx.AMETHYST_JAVELIN_TRAVEL, type = ProjectileType.JAVELIN, items = Javelins.OSRS_AMETHYST_JAVELINS),
+    OSRS_DRAGON_JAVELIN(gfx = gg.rsmod.plugins.content.items.osrs.OsrsGfx.DRAGON_JAVELIN_TRAVEL, type = ProjectileType.JAVELIN, items = Javelins.OSRS_DRAGON_JAVELINS),
     MORRIGANS_JAVELIN(
         gfx = Gfx.MORRIGANS_JAVELIN_IN_FLIGHT,
         //drawback = Graphic(Gfx.MORRIGANS_JAVELIN_DRAWBACK, 92),

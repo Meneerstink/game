@@ -17,6 +17,9 @@ import gg.rsmod.plugins.content.items.osrs.Voidwaker
 SpecialAttacks.register(Voidwaker.SPECIAL_ENERGY, Items.VOIDWAKER) {
     val victim = target
     player.animate(CombatConfigs.getAttackAnimation(player))
+    // OSRS FX_VOIDWAKER02_SPECIAL on the attacker and FX_VOIDWAKER_IMPACT on the target (fxpilot); heights ADAPTED (0).
+    player.graphic(gg.rsmod.plugins.content.items.osrs.OsrsGfx.VOIDWAKER_SPECIAL)
+    victim.graphic(gg.rsmod.plugins.content.items.osrs.OsrsGfx.VOIDWAKER_IMPACT)
     val (minimum, maximum) = Voidwaker.disruptRange(MeleeCombatFormula.getMaxHit(player, victim))
     val modDamageCap = if (victim is Npc) victim.getCurrentLifepoints() else Int.MAX_VALUE
     val pawnHit =
