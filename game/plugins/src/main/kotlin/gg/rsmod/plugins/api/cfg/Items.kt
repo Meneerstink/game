@@ -19581,5 +19581,9 @@ object Items {
     const val SANGUINESTI_STAFF = 22713
     const val SANGUINESTI_STAFF_UNCHARGED = 22714
     const val SANGUINESTI_STAFF_UNCHARGED_NOTED = 22715
+    const val BLIGHTED_ANCIENT_ICE_SACK = 22716
+    const val BLIGHTED_ENTANGLE_SACK = 22717
+    const val BLIGHTED_TELEPORT_SPELL_SACK = 22718
+    const val BLIGHTED_VENGEANCE_SACK = 22719
     // Auto-generated file using class gg.rsmod.game.service.game.DumpEntityIdService
 }

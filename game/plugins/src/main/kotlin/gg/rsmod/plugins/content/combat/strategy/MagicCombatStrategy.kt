@@ -75,7 +75,7 @@ object MagicCombatStrategy : CombatStrategy {
                 }
             }
             val requirements = MagicSpells.getMetadata(spell.uniqueId)
-            if (requirements != null && !MagicSpells.canCast(pawn, requirements.lvl, requirements.runes)) {
+            if (requirements != null && !MagicSpells.canCast(pawn, requirements.lvl, requirements.runes, spellId = spell.uniqueId)) {
                 return false
             }
         }

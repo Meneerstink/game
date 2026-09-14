@@ -102,7 +102,7 @@ fun Player.castLunar(
     height: Int = 0,
     sound: Int = -1,
 ): Boolean {
-    if (!MagicSpells.canCast(this, metadata.lvl, metadata.runes)) {
+    if (!MagicSpells.canCast(this, metadata.lvl, metadata.runes, spellId = metadata.sprite)) {
         return false
     }
     MagicSpells.removeRunes(this, metadata.runes, metadata.sprite)

@@ -277,6 +277,15 @@ object OsrsItemImportTool {
                     Spec(22323, rev667Params = staffParams(82), weaponType = 1, rev667StringParams = mapOf(528 to "Check")), // Sanguinesti staff
                     Spec(22481, noted = true, rev667Params = staffParams(82), weaponType = 1), // Sanguinesti staff (uncharged)
                 ),
+            // Blighted sacks (owner addition 2026-09-14): stackable, tradeable consumables without inventory options upstream;
+            // they replace the runes of the spells named on their wiki pages (MagicSpells). No client params.
+            "blightedsacks" to
+                listOf(
+                    Spec(24607), // Blighted ancient ice sack
+                    Spec(24613), // Blighted entangle sack
+                    Spec(24615), // Blighted teleport spell sack
+                    Spec(24621), // Blighted vengeance sack
+                ),
         )
 
     /**

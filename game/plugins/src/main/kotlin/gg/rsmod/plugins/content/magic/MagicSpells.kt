@@ -50,6 +50,8 @@ object MagicSpells {
         p: Player,
         lvl: Int,
         items: List<Item>,
+        /** The spell's unique id; lets a Blighted sack replace the runes (`BlightedSacks`). -1 = no sack applies. */
+        spellId: Int = -1,
     ): Boolean {
         if (p.skills.getCurrentLevel(Skills.MAGIC) < lvl) {
             p.message("Your Magic level is not high enough for this spell.")
@@ -57,7 +59,7 @@ object MagicSpells {
             p.attr.remove(Combat.CASTING_SPELL)
             return false
         }
-        if (p.getVarbit(INF_RUNES_VARBIT) == 0) {
+        if (p.getVarbit(INF_RUNES_VARBIT) == 0 && !gg.rsmod.plugins.content.items.osrs.BlightedSacks.usable(p, spellId)) {
             for (item in items) {
                 if (usingStaff(p, item.id)) {
                     continue
@@ -85,17 +87,20 @@ object MagicSpells {
         spellId: Int,
     ) {
         if (p.getVarbit(INF_RUNES_VARBIT) == 0) {
-            for (item in items) {
-                /*
-                 * Do not remove staff item requirements.
-                 */
-                if (item.id in STAFF_ITEMS) {
-                    continue
+            // A usable Blighted sack is used up instead of the runes ("It is consumed upon cast").
+            if (!gg.rsmod.plugins.content.items.osrs.BlightedSacks.consume(p, spellId)) {
+                for (item in items) {
+                    /*
+                     * Do not remove staff item requirements.
+                     */
+                    if (item.id in STAFF_ITEMS) {
+                        continue
+                    }
+                    if (usingStaff(p, item.id)) {
+                        continue
+                    }
+                    p.inventory.remove(item)
                 }
-                if (usingStaff(p, item.id)) {
-                    continue
-                }
-                p.inventory.remove(item)
             }
 
             // Play the sound associated with the spell

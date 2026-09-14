@@ -27,7 +27,7 @@ CombatSpell.definitions.values.filter { it.autoCastId != -1 }.forEach { spell ->
         }
 
         val metadata = MagicSpells.getMetadata(spell.uniqueId)
-        if (metadata != null && MagicSpells.canCast(player, metadata.lvl, metadata.runes)) {
+        if (metadata != null && MagicSpells.canCast(player, metadata.lvl, metadata.runes, spellId = spell.uniqueId)) {
             player.attr[Combat.CASTING_SPELL] = spell
             player.setVarp(SELECTED_AUTOCAST_VARP, spell.autoCastId)
         } else {
