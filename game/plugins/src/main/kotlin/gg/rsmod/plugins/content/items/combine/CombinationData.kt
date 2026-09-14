@@ -264,6 +264,9 @@ enum class CombinationData(
     DAGONHAI_ROBE_TOP_OR(items = intArrayOf(Items.DAGONHAI_ROBES_ORNAMENT_KIT, Items.DAGONHAI_ROBE_TOP), resultItem = Items.DAGONHAI_ROBE_TOP_OR, experience = 0.0),
     HEAVY_BALLISTA_OR(items = intArrayOf(Items.HEAVY_BALLISTA_ORNAMENT_KIT, Items.HEAVY_BALLISTA), resultItem = Items.HEAVY_BALLISTA_OR, experience = 0.0),
     BLAZING_BLOWPIPE_EMPTY(items = intArrayOf(Items.BLOWPIPE_ORNAMENT_KIT, Items.TOXIC_BLOWPIPE_EMPTY), resultItem = Items.BLAZING_BLOWPIPE_EMPTY, experience = 0.0),
+    HARMONISED_NIGHTMARE_STAFF(items = intArrayOf(Items.HARMONISED_ORB, Items.NIGHTMARE_STAFF), resultItem = Items.HARMONISED_NIGHTMARE_STAFF, experience = 0.0),
+    VOLATILE_NIGHTMARE_STAFF(items = intArrayOf(Items.VOLATILE_ORB, Items.NIGHTMARE_STAFF), resultItem = Items.VOLATILE_NIGHTMARE_STAFF, experience = 0.0),
+    ELDRITCH_NIGHTMARE_STAFF(items = intArrayOf(Items.ELDRITCH_ORB, Items.NIGHTMARE_STAFF), resultItem = Items.ELDRITCH_NIGHTMARE_STAFF, experience = 0.0),
     DAGONHAI_ROBE_BOTTOM_OR(items = intArrayOf(Items.DAGONHAI_ROBES_ORNAMENT_KIT, Items.DAGONHAI_ROBE_BOTTOM), resultItem = Items.DAGONHAI_ROBE_BOTTOM_OR, experience = 0.0),
 
     /**

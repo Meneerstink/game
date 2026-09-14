@@ -40,7 +40,7 @@ object MagicCombatFormula : CombatFormula {
         if (target.isProtectedFrom(CombatClass.MAGIC) && pawn !is Player) {
             return 0.0 // Hits will never land
         }
-        return getUnprotectedAccuracy(pawn, target)
+        return getUnprotectedAccuracy(pawn, target, specialAttackMultiplier)
     }
 
     /**
@@ -50,8 +50,9 @@ object MagicCombatFormula : CombatFormula {
     fun getUnprotectedAccuracy(
         pawn: Pawn,
         target: Pawn,
+        specialAttackMultiplier: Double = 1.0,
     ): Double {
-        val attack = getAttackRoll(pawn, target)
+        val attack = getAttackRoll(pawn, target, specialAttackMultiplier)
         val defence =
             if (target is Player) {
                 getDefenceRoll(target)
@@ -76,10 +77,13 @@ object MagicCombatFormula : CombatFormula {
         specialAttackMultiplier: Double,
         specialPassiveMultiplier: Double,
     ): Double {
-        val spell = pawn.attr[Combat.CASTING_SPELL]
+        // Nightmare staff specials supply their own spell base; the autocast spell's effects then do not apply (NightmareStaves).
+        val specialBase = pawn.attr[gg.rsmod.plugins.content.items.osrs.NightmareStaves.SPECIAL_BASE_MAX_HIT]
+        val spell = if (specialBase != null) null else pawn.attr[Combat.CASTING_SPELL]
         // Powered staff built-in spell (PoweredStaves): max(1, ⌊current Magic/3⌋ + offset) replaces the spell base.
         var hit =
-            spell?.maxHit?.toDouble()
+            specialBase?.toDouble()
+                ?: spell?.maxHit?.toDouble()
                 ?: (pawn as? Player)?.let { p ->
                     gg.rsmod.plugins.content.items.osrs.PoweredStaves.wielded(p)?.baseMaxHit(p.skills.getCurrentLevel(Skills.MAGIC))?.toDouble()
                 }
@@ -141,6 +145,7 @@ object MagicCombatFormula : CombatFormula {
     private fun getAttackRoll(
         pawn: Pawn,
         target: Pawn,
+        specialAttackMultiplier: Double = 1.0,
     ): Int {
         val a =
             if (pawn is Player) {
@@ -154,7 +159,7 @@ object MagicCombatFormula : CombatFormula {
 
         var maxRoll = a * (b + 64.0)
         if (pawn is Player) {
-            maxRoll = applyAttackSpecials(pawn, target, maxRoll)
+            maxRoll = applyAttackSpecials(pawn, target, maxRoll, specialAttackMultiplier)
         }
         return maxRoll.toInt()
     }
@@ -196,23 +201,30 @@ object MagicCombatFormula : CombatFormula {
         return maxRoll.toInt()
     }
 
+    /** The spell whose effects apply: none while a Nightmare staff special supplies its own base ([NightmareStaves.SPECIAL_BASE_MAX_HIT]). */
+    private fun castingSpell(player: Player): CombatSpell? =
+        if (player.attr.has(gg.rsmod.plugins.content.items.osrs.NightmareStaves.SPECIAL_BASE_MAX_HIT)) null else player.attr[Combat.CASTING_SPELL]
+
     private fun applyAttackSpecials(
         player: Player,
         target: Pawn,
         base: Double,
+        specialAttackMultiplier: Double = 1.0,
     ): Double {
         // The plain Salve amulet and black mask/Slayer helmet are melee-only; magic needs their imbued versions
         // ("Damage per second/Magic": 1.15 slayer helm (i) / salve (i)), none of which exist in this cache.
         // Tome of Water: water spells +10 % (NPC) / +20 % (player), curse spells +20 % accuracy (Tomes).
         // Mystic smoke staff: +10 % additive magic accuracy for standard spells, before the tome factor (wiki DPS calculator order).
-        val smoke = Math.floor(base * gg.rsmod.plugins.content.items.osrs.SmokeStaves.accuracyMultiplier(player, player.attr[Combat.CASTING_SPELL]))
-        var roll = Math.floor(smoke * gg.rsmod.plugins.content.items.osrs.Tomes.accuracyMultiplier(player, target, player.attr[Combat.CASTING_SPELL]))
+        val smoke = Math.floor(base * gg.rsmod.plugins.content.items.osrs.SmokeStaves.accuracyMultiplier(player, castingSpell(player)))
+        var roll = Math.floor(smoke * gg.rsmod.plugins.content.items.osrs.Tomes.accuracyMultiplier(player, target, castingSpell(player)))
         // Ice ancient sceptre: +10 % for ice spells on freezable, not frozen targets (AncientSceptres).
-        roll = Math.floor(roll * gg.rsmod.plugins.content.items.osrs.AncientSceptres.iceAccuracyMultiplier(player, target, player.attr[Combat.CASTING_SPELL]))
+        roll = Math.floor(roll * gg.rsmod.plugins.content.items.osrs.AncientSceptres.iceAccuracyMultiplier(player, target, castingSpell(player)))
         // Dragon hunter wand: attack roll x7/4 against draconic targets (wiki DPS calculator trackFactor [7, 4]).
         if (player.hasEquipped(EquipmentType.WEAPON, Items.DRAGON_HUNTER_WAND) && Draconic.isDraconic(target)) {
             roll = Math.floor(roll * 7 / 4)
         }
+        // Special attack accuracy factor (Volatile Nightmare staff Immolate [3, 2] in the wiki DPS calculator), applied last.
+        roll = Math.floor(roll * specialAttackMultiplier)
         return roll
     }
 

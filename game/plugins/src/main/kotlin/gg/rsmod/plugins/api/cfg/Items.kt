@@ -19878,5 +19878,18 @@ object Items {
     const val DIZANAS_MAX_CAPE_BROKEN = 23078
     const val DIZANAS_MAX_CAPE_L_BROKEN = 23079
     const val DIZANAS_MAX_CAPE_L_MANGLED = 23080
+
+    // OSRS-IMPORT step 4 batch nightmare (tx-20260914-070807).
+    const val NIGHTMARE_STAFF = 23081
+    const val NIGHTMARE_STAFF_NOTED = 23082
+    const val HARMONISED_NIGHTMARE_STAFF = 23083
+    const val VOLATILE_NIGHTMARE_STAFF = 23084
+    const val ELDRITCH_NIGHTMARE_STAFF = 23085
+    const val HARMONISED_ORB = 23086
+    const val HARMONISED_ORB_NOTED = 23087
+    const val VOLATILE_ORB = 23088
+    const val VOLATILE_ORB_NOTED = 23089
+    const val ELDRITCH_ORB = 23090
+    const val ELDRITCH_ORB_NOTED = 23091
     // Auto-generated file using class gg.rsmod.game.service.game.DumpEntityIdService
 }

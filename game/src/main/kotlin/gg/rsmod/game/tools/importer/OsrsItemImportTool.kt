@@ -607,6 +607,19 @@ object OsrsItemImportTool {
                     Spec(33532), // Dizana's max cape (l) (broken)
                     Spec(33533), // Dizana's max cape (l) (mangled)
                 ),
+            // Step 4 batch "nightmare" (ids by Jagex name NIGHTMARE_STAFF*, *_ORB): Nightmare staff (72 Magic + 50 Hitpoints), harmonised/
+            // volatile/eldritch staves (82 Magic + 50 Hitpoints, untradeable) and the three orbs. Class: the Purging staff / Battlestaff spec
+            // (644 28, 686 1, weapon type 1, audio 2555); 687 1 on the two staves with a special attack.
+            "nightmare" to
+                listOf(
+                    Spec(24422, noted = true, rev667Params = mapOf(644 to 28, 686 to 1, 749 to 6, 750 to 72, 751 to 3, 752 to 50), weaponType = 1, attackAudio = 2555), // Nightmare staff
+                    Spec(24423, rev667Params = mapOf(644 to 28, 686 to 1, 749 to 6, 750 to 82, 751 to 3, 752 to 50), weaponType = 1, attackAudio = 2555), // Harmonised nightmare staff
+                    Spec(24424, rev667Params = mapOf(644 to 28, 686 to 1, 687 to 1, 749 to 6, 750 to 82, 751 to 3, 752 to 50), weaponType = 1, attackAudio = 2555), // Volatile nightmare staff
+                    Spec(24425, rev667Params = mapOf(644 to 28, 686 to 1, 687 to 1, 749 to 6, 750 to 82, 751 to 3, 752 to 50), weaponType = 1, attackAudio = 2555), // Eldritch nightmare staff
+                    Spec(24511, noted = true), // Harmonised orb
+                    Spec(24514, noted = true), // Volatile orb
+                    Spec(24517, noted = true), // Eldritch orb
+                ),
             "deadstaves" to
                 listOf(
                     Spec(11791, noted = true, rev667Params = deadStaffParams()), // Staff of the dead

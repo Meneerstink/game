@@ -44,7 +44,9 @@ class TomesTests {
         val additive = formula.indexOf("hit = Math.floor(Math.floor(hit) * (1.0 + additive))")
         val tome = formula.indexOf("Tomes.damageMultiplier(pawn, target, spell)")
         assertTrue(additive in 0 until tome, "tome after the additive magic damage (multiplicative)")
-        assertTrue("Tomes.accuracyMultiplier(player, target, player.attr[Combat.CASTING_SPELL])" in formula)
+        // Step 4 nightmare: the casting spell is read through castingSpell(player), which hides it only during a Nightmare staff special.
+        assertTrue("Tomes.accuracyMultiplier(player, target, castingSpell(player))" in formula)
+        assertTrue("NightmareStaves.SPECIAL_BASE_MAX_HIT)) null else player.attr[Combat.CASTING_SPELL]" in formula)
         assertTrue("Tomes.suppliesRune(p, rune)" in File("src/main/kotlin/gg/rsmod/plugins/content/magic/MagicSpells.kt").readText())
         val strategy = File("src/main/kotlin/gg/rsmod/plugins/content/combat/strategy/MagicCombatStrategy.kt").readText()
         assertTrue("Tomes.afterCast(pawn, spell)" in strategy)

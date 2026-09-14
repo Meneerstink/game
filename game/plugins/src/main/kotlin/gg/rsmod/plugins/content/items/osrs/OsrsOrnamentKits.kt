@@ -49,6 +49,12 @@ object OsrsOrnamentKits {
             Ornament(Items.HEAVY_BALLISTA_OR, Items.HEAVY_BALLISTA, Items.HEAVY_BALLISTA_ORNAMENT_KIT, pvpConvert = false),
             // Blazing blowpipe (empty): tradeable Trailblazer reloaded kit on the emptied Toxic blowpipe; "reverted anytime".
             Ornament(Items.BLAZING_BLOWPIPE_EMPTY, Items.TOXIC_BLOWPIPE_EMPTY, Items.BLOWPIPE_ORNAMENT_KIT, pvpConvert = true),
+            // Nightmare staff orbs (OSRS Wiki orb staff pages): the untradeable staff "can be reverted to its tradeable components at any
+            // time" (Dismantle) and "If lost on death in the Wilderness, the killer will receive the staff and the orb" - the same base +
+            // attachment behaviour as a tradeable ornament kit.
+            Ornament(Items.HARMONISED_NIGHTMARE_STAFF, Items.NIGHTMARE_STAFF, Items.HARMONISED_ORB, pvpConvert = true),
+            Ornament(Items.VOLATILE_NIGHTMARE_STAFF, Items.NIGHTMARE_STAFF, Items.VOLATILE_ORB, pvpConvert = true),
+            Ornament(Items.ELDRITCH_NIGHTMARE_STAFF, Items.NIGHTMARE_STAFF, Items.ELDRITCH_ORB, pvpConvert = true),
             Ornament(Items.DAGONHAI_ROBE_BOTTOM_OR, Items.DAGONHAI_ROBE_BOTTOM, Items.DAGONHAI_ROBES_ORNAMENT_KIT, pvpConvert = false),
             // magegeara: "Elidinis' ward (f)" + "Menaphite ornament kit" (both untradeable); "Dismantle" separates them; on a PvP death
             // "the Menaphite ornament kit will be placed in their gravestone" (no base + kit drop to the PKer).

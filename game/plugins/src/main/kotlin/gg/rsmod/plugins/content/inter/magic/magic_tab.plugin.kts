@@ -27,7 +27,10 @@ CombatSpell.definitions.values.filter { it.autoCastId != -1 }.forEach { spell ->
         }
 
         // Staff of the dead family autocasts standard spells, "not Ancient Magicks" (OSRS Wiki); message ADAPTED.
-        if (spell.interfaceId == 193 && gg.rsmod.plugins.content.items.osrs.StaffOfTheDead.isWieldingDeadStaff(player)) {
+        // Harmonised Nightmare staff: "cannot autocast any other spells (including Ancient Magicks ...)" (OSRS Wiki).
+        if (spell.interfaceId == 193 && (gg.rsmod.plugins.content.items.osrs.StaffOfTheDead.isWieldingDeadStaff(player) ||
+                player.getEquipment(EquipmentType.WEAPON)?.id == Items.HARMONISED_NIGHTMARE_STAFF)
+        ) {
             player.message("You can't autocast Ancient Magicks with this staff.")
             player.setVarp(SELECTED_AUTOCAST_VARP, 0)
             return@on_button
