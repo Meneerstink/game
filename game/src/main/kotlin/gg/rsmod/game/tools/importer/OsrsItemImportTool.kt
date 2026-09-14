@@ -345,6 +345,42 @@ object OsrsItemImportTool {
             // 644 28, 686 26, 687 1 special bar, 749/750 0/75, 751/752 6/75 = 75 Attack + 75 Magic as upstream 434-437), server
             // weapon type -1 and attack audio -1 exactly like the 667 Staff of light entry. Worn "Check" on the charged staff
             // (upstream worn ops). Order: SotD 11791 + noted, uncharged 12902 + noted, charged 12904.
+            // Step 3 roster batch "ammo2": OSRS ranged ammunition and thrown weapons with ranged strength that have no 667 item.
+            // Thrown classes from ItemParamProbeTool 2026-09-14: Rune knife 868 (686 18, weapon type 18, audio 2704), Rune thrownaxe
+            // 805 (686 18, 687 1), Red chinchompa 10034 (644 234, 686 19, weapon type 19), Dragon dart 11230 (weapon type 18, audio
+            // 2547); one client-side Ranged requirement each (749/750 = upstream 434/436). Ammunition carries no client params.
+            // Broad bolts 11875 are not imported: the 667 Broad-tipped bolts 13280 are the same Slayer item.
+            "ammo2" to
+                listOf(
+                    Spec(21316), // Amethyst broad bolts
+                    Spec(21326), // Amethyst arrow
+                    Spec(21328), // Amethyst fire arrow
+                    Spec(21330), // Amethyst fire arrow (lit)
+                    Spec(21332), // Amethyst arrow(p)
+                    Spec(21334), // Amethyst arrow(p+)
+                    Spec(21336), // Amethyst arrow(p++)
+                    Spec(21924), // Dragon bolts (p)
+                    Spec(21926), // Dragon bolts (p+)
+                    Spec(21928), // Dragon bolts (p++)
+                    Spec(22804, rev667Params = mapOf(686 to 18, 687 to 1, 749 to 4, 750 to 60), weaponType = 18, attackAudio = 2704), // Dragon knife
+                    Spec(22806, rev667Params = mapOf(686 to 18, 687 to 1, 749 to 4, 750 to 60), weaponType = 18, attackAudio = 2704), // Dragon knife(p)
+                    Spec(22808, rev667Params = mapOf(686 to 18, 687 to 1, 749 to 4, 750 to 60), weaponType = 18, attackAudio = 2704), // Dragon knife(p+)
+                    Spec(22810, rev667Params = mapOf(686 to 18, 687 to 1, 749 to 4, 750 to 60), weaponType = 18, attackAudio = 2704), // Dragon knife(p++)
+                    Spec(20849, rev667Params = mapOf(686 to 18, 687 to 1, 749 to 4, 750 to 61), weaponType = 18), // Dragon thrownaxe
+                    Spec(11959, rev667Params = mapOf(644 to 234, 686 to 19, 749 to 4, 750 to 65), weaponType = 19), // Black chinchompa
+                    Spec(25851, rev667Params = mapOf(686 to 18, 749 to 4, 750 to 50), weaponType = 18, attackAudio = 2547), // Amethyst dart(p)
+                    Spec(25855, rev667Params = mapOf(686 to 18, 749 to 4, 750 to 50), weaponType = 18, attackAudio = 2547), // Amethyst dart(p+)
+                    Spec(25857, rev667Params = mapOf(686 to 18, 749 to 4, 750 to 50), weaponType = 18, attackAudio = 2547), // Amethyst dart(p++)
+                    Spec(33553), // Seeking bronze arrow
+                    Spec(33559), // Seeking iron arrow
+                    Spec(33565), // Seeking steel arrow
+                    Spec(33571), // Seeking mithril arrow
+                    Spec(33577), // Seeking adamant arrow
+                    Spec(33583), // Seeking rune arrow
+                    Spec(33589), // Seeking amethyst arrow
+                    Spec(33595), // Seeking dragon arrow
+                    Spec(33601), // Seeking broad arrows
+                ),
             "deadstaves" to
                 listOf(
                     Spec(11791, noted = true, rev667Params = deadStaffParams()), // Staff of the dead

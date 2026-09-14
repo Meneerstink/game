@@ -101,7 +101,9 @@ class OsrsCrossbowsImportTests {
             assertTrue(it !in RangedProjectile.BOLTS.items, "$it is not also mapped to the 667 bolt projectile")
         }
         assertEquals(OsrsGfx.DRAGON_CROSSBOWBOLT_TRAVEL, RangedProjectile.OSRS_DRAGON_BOLTS.gfx)
-        assertEquals((listOf(Items.OSRS_DRAGON_BOLTS) + gemBolts + enchantedBolts).toSet(), Bolts.OSRS_DRAGON_BOLT_FAMILY.toSet())
+        // ammo2 adds the poisoned OSRS dragon bolts to the same family (same crossbows, same projectile).
+        val poisoned = listOf(Items.OSRS_DRAGON_BOLTS_P, Items.OSRS_DRAGON_BOLTS_P_PLUS, Items.OSRS_DRAGON_BOLTS_P_PLUS_PLUS)
+        assertEquals((listOf(Items.OSRS_DRAGON_BOLTS) + gemBolts + enchantedBolts + poisoned).toSet(), Bolts.OSRS_DRAGON_BOLT_FAMILY.toSet())
     }
 
     private fun stats(

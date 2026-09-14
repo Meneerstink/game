@@ -79,26 +79,32 @@ enum class BowType(
             BRONZE_ARROWS + IRON_ARROWS + STEEL_ARROWS + MITHRIL_ARROWS + ADAMANT_ARROWS + RUNE_ARROWS,
     ),
 
+    // OSRS-IMPORT ammo2: amethyst arrows fire from "any bow made with magic logs or stronger" (OSRS Wiki "Amethyst arrow").
+    // Seercull is not listed there and keeps rune arrows (SOURCE_GAP).
     MAGIC_SHORTBOW(
         item = Items.MAGIC_SHORTBOW,
         ammo =
-            BRONZE_ARROWS + IRON_ARROWS + STEEL_ARROWS + MITHRIL_ARROWS + ADAMANT_ARROWS + RUNE_ARROWS + BROAD_ARROWS,
+            BRONZE_ARROWS + IRON_ARROWS + STEEL_ARROWS + MITHRIL_ARROWS + ADAMANT_ARROWS + RUNE_ARROWS + BROAD_ARROWS +
+                gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Arrows.AMETHYST_ARROWS,
     ),
     // OSRS-IMPORT Magic shortbow (i): the Magic shortbow with a higher ranged attack, same arrows.
     MAGIC_SHORTBOW_I(
         item = Items.MAGIC_SHORTBOW_I,
         ammo =
-            BRONZE_ARROWS + IRON_ARROWS + STEEL_ARROWS + MITHRIL_ARROWS + ADAMANT_ARROWS + RUNE_ARROWS + BROAD_ARROWS,
+            BRONZE_ARROWS + IRON_ARROWS + STEEL_ARROWS + MITHRIL_ARROWS + ADAMANT_ARROWS + RUNE_ARROWS + BROAD_ARROWS +
+                gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Arrows.AMETHYST_ARROWS,
     ),
     MAGIC_LONGBOW(
         item = Items.MAGIC_LONGBOW,
         ammo =
-            BRONZE_ARROWS + IRON_ARROWS + STEEL_ARROWS + MITHRIL_ARROWS + ADAMANT_ARROWS + RUNE_ARROWS + BROAD_ARROWS,
+            BRONZE_ARROWS + IRON_ARROWS + STEEL_ARROWS + MITHRIL_ARROWS + ADAMANT_ARROWS + RUNE_ARROWS + BROAD_ARROWS +
+                gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Arrows.AMETHYST_ARROWS,
     ),
     MAGIC_COMP_BOW(
         item = Items.MAGIC_COMPOSITE_BOW,
         ammo =
-            BRONZE_ARROWS + IRON_ARROWS + STEEL_ARROWS + MITHRIL_ARROWS + ADAMANT_ARROWS + RUNE_ARROWS + BROAD_ARROWS,
+            BRONZE_ARROWS + IRON_ARROWS + STEEL_ARROWS + MITHRIL_ARROWS + ADAMANT_ARROWS + RUNE_ARROWS + BROAD_ARROWS +
+                gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Arrows.AMETHYST_ARROWS,
     ),
 
     SEERCULL(
@@ -111,31 +117,31 @@ enum class BowType(
         item = Items.DARK_BOW,
         ammo =
             BRONZE_ARROWS + IRON_ARROWS + STEEL_ARROWS + MITHRIL_ARROWS + ADAMANT_ARROWS + RUNE_ARROWS + DRAGON_ARROWS +
-                BROAD_ARROWS,
+                BROAD_ARROWS + gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Arrows.AMETHYST_ARROWS,
     ),
     BLUE_DARK_BOW(
         item = Items.DARK_BOW_15701,
         ammo =
             BRONZE_ARROWS + IRON_ARROWS + STEEL_ARROWS + MITHRIL_ARROWS + ADAMANT_ARROWS + RUNE_ARROWS + DRAGON_ARROWS +
-                BROAD_ARROWS,
+                BROAD_ARROWS + gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Arrows.AMETHYST_ARROWS,
     ),
     GREEN_DARK_BOW(
         item = Items.DARK_BOW_15702,
         ammo =
             BRONZE_ARROWS + IRON_ARROWS + STEEL_ARROWS + MITHRIL_ARROWS + ADAMANT_ARROWS + RUNE_ARROWS + DRAGON_ARROWS +
-                BROAD_ARROWS,
+                BROAD_ARROWS + gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Arrows.AMETHYST_ARROWS,
     ),
     WHITE_DARK_BOW(
         item = Items.DARK_BOW_15703,
         ammo =
             BRONZE_ARROWS + IRON_ARROWS + STEEL_ARROWS + MITHRIL_ARROWS + ADAMANT_ARROWS + RUNE_ARROWS + DRAGON_ARROWS +
-                BROAD_ARROWS,
+                BROAD_ARROWS + gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Arrows.AMETHYST_ARROWS,
     ),
     YELLOW_DARK_BOW(
         item = Items.DARK_BOW_15704,
         ammo =
             BRONZE_ARROWS + IRON_ARROWS + STEEL_ARROWS + MITHRIL_ARROWS + ADAMANT_ARROWS + RUNE_ARROWS + DRAGON_ARROWS +
-                BROAD_ARROWS,
+                BROAD_ARROWS + gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Arrows.AMETHYST_ARROWS,
     ),
 
     // S4, 2026-09-03: OSRS Wiki "Twisted bow" - "can fire any type of arrow, including dragon
@@ -145,7 +151,7 @@ enum class BowType(
         item = Items.TWISTED_BOW,
         ammo =
             BRONZE_ARROWS + IRON_ARROWS + STEEL_ARROWS + MITHRIL_ARROWS + ADAMANT_ARROWS + RUNE_ARROWS + DRAGON_ARROWS +
-                BROAD_ARROWS,
+                BROAD_ARROWS + gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Arrows.AMETHYST_ARROWS,
     ),
 
     CRYSTAL_BOW_110(item = Items.CRYSTAL_BOW_110, ammo = emptyArray()),

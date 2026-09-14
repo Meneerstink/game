@@ -19627,5 +19627,34 @@ object Items {
     const val TOXIC_STAFF_UNCHARGED = 22761
     const val TOXIC_STAFF_UNCHARGED_NOTED = 22762
     const val TOXIC_STAFF_OF_THE_DEAD = 22763
+    // OSRS-IMPORT ammo2 (step 3 roster); nameless stack-count visuals in between are cache-only.
+    const val AMETHYST_BROAD_BOLTS = 22768
+    const val AMETHYST_ARROW = 22773
+    const val AMETHYST_FIRE_ARROW = 22778
+    const val AMETHYST_FIRE_ARROW_LIT = 22783
+    const val AMETHYST_ARROW_P = 22788
+    const val AMETHYST_ARROW_P_PLUS = 22789
+    const val AMETHYST_ARROW_P_PLUS_PLUS = 22790
+    const val OSRS_DRAGON_BOLTS_P = 22795
+    const val OSRS_DRAGON_BOLTS_P_PLUS = 22796
+    const val OSRS_DRAGON_BOLTS_P_PLUS_PLUS = 22797
+    const val DRAGON_KNIFE = 22798
+    const val DRAGON_KNIFE_P = 22799
+    const val DRAGON_KNIFE_P_PLUS = 22800
+    const val DRAGON_KNIFE_P_PLUS_PLUS = 22801
+    const val DRAGON_THROWNAXE = 22802
+    const val BLACK_CHINCHOMPA = 22803
+    const val AMETHYST_DART_P = 22804
+    const val AMETHYST_DART_P_PLUS = 22805
+    const val AMETHYST_DART_P_PLUS_PLUS = 22806
+    const val SEEKING_BRONZE_ARROW = 22811
+    const val SEEKING_IRON_ARROW = 22816
+    const val SEEKING_STEEL_ARROW = 22821
+    const val SEEKING_MITHRIL_ARROW = 22826
+    const val SEEKING_ADAMANT_ARROW = 22831
+    const val SEEKING_RUNE_ARROW = 22836
+    const val SEEKING_AMETHYST_ARROW = 22841
+    const val SEEKING_DRAGON_ARROW = 22846
+    const val SEEKING_BROAD_ARROWS = 22851
     // Auto-generated file using class gg.rsmod.game.service.game.DumpEntityIdService
 }

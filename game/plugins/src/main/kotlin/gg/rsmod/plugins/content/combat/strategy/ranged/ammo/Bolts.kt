@@ -15,7 +15,8 @@ object Bolts {
         arrayOf(Items.MITHRIL_BOLTS, Items.MITHRIL_BOLTS_P, Items.MITHRIL_BOLTS_P_9296, Items.MITHRIL_BOLTS_P_9303)
     val ADAMANT_BOLTS =
         arrayOf(Items.ADAMANT_BOLTS, Items.ADAMANT_BOLTS_P, Items.ADAMANT_BOLTS_P_9297, Items.ADAMANT_BOLTS_P_9304)
-    val BROAD_BOLTS = arrayOf(Items.BROADTIPPED_BOLTS)
+    /** 667 Broad-tipped bolts (= OSRS Broad bolts) and the OSRS Amethyst broad bolts (ammo2), fired by the same crossbows. */
+    val BROAD_BOLTS = arrayOf(Items.BROADTIPPED_BOLTS, Items.AMETHYST_BROAD_BOLTS)
     val RUNITE_BOLTS =
         arrayOf(Items.RUNITE_BOLTS, Items.RUNITE_BOLTS_P, Items.RUNITE_BOLTS_P_9298, Items.RUNITE_BOLTS_P_9305)
     val DRAGON_BOLTS = arrayOf(Items.DRAGON_BOLTS)
@@ -33,6 +34,8 @@ object Bolts {
             Items.OPAL_DRAGON_BOLTS_E, Items.JADE_DRAGON_BOLTS_E, Items.PEARL_DRAGON_BOLTS_E, Items.TOPAZ_DRAGON_BOLTS_E,
             Items.SAPPHIRE_DRAGON_BOLTS_E, Items.EMERALD_DRAGON_BOLTS_E, Items.RUBY_DRAGON_BOLTS_E, Items.DIAMOND_DRAGON_BOLTS_E,
             Items.DRAGONSTONE_DRAGON_BOLTS_E, Items.ONYX_DRAGON_BOLTS_E,
+            // ammo2: poisoned OSRS dragon bolts.
+            Items.OSRS_DRAGON_BOLTS_P, Items.OSRS_DRAGON_BOLTS_P_PLUS, Items.OSRS_DRAGON_BOLTS_P_PLUS_PLUS,
         )
 
     val BLURITE_BOLTS =

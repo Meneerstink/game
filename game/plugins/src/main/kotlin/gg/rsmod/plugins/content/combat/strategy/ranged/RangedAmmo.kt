@@ -27,7 +27,12 @@ object RangedAmmo {
     /** Ammo item ids the wielded weapon accepts, or null when the weapon has no ammo list. */
     fun validAmmo(weaponId: Int?): Array<Int>? =
         CrossbowType.values.firstOrNull { it.item == weaponId }?.ammo
-            ?: BowType.values.firstOrNull { it.item == weaponId }?.ammo?.takeIf { it.isNotEmpty() }
+            ?: BowType.values.firstOrNull { it.item == weaponId }?.ammo?.takeIf { it.isNotEmpty() }?.let(::withSeekingArrows)
+
+    /** A bow that fires a base arrow tier also fires that tier's seeking arrow (ammo2, [Arrows.SEEKING_ARROWS]). */
+    fun withSeekingArrows(ammo: Array<Int>): Array<Int> =
+        ammo + gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Arrows.SEEKING_ARROWS
+            .filterValues { base -> base.any { it in ammo } }.keys
 
     fun fired(player: Player): Fired? {
         // Crystal bows and the Bow of Faerdhinen generate their own arrows: worn ammo is never fired or used.

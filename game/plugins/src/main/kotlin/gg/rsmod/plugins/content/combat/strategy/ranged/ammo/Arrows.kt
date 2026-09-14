@@ -23,6 +23,30 @@ object Arrows {
         arrayOf(Items.DRAGON_ARROW, Items.DRAGON_ARROW_P, Items.DRAGON_ARROW_P_11228, Items.DRAGON_ARROW_P_11229)
     val BROAD_ARROWS = arrayOf(Items.BROAD_ARROW)
 
+    /**
+     * OSRS-IMPORT ammo2. OSRS Wiki "Amethyst arrow": fired from "any bow made with magic logs or stronger". Fire arrows (lit or
+     * not) follow the 667 fire arrows, which are not in any bow's ammo list here.
+     */
+    val AMETHYST_ARROWS = arrayOf(Items.AMETHYST_ARROW, Items.AMETHYST_ARROW_P, Items.AMETHYST_ARROW_P_PLUS, Items.AMETHYST_ARROW_P_PLUS_PLUS)
+
+    /**
+     * OSRS Wiki "Seeking rune arrow" (30 June 2026): bloodwood-treated arrows that raise the minimum hit of a successful hit from 1
+     * to 3; each tier is fired by the bows of its base arrow.
+     */
+    val SEEKING_ARROWS =
+        mapOf(
+            Items.SEEKING_BRONZE_ARROW to BRONZE_ARROWS,
+            Items.SEEKING_IRON_ARROW to IRON_ARROWS,
+            Items.SEEKING_STEEL_ARROW to STEEL_ARROWS,
+            Items.SEEKING_MITHRIL_ARROW to MITHRIL_ARROWS,
+            Items.SEEKING_ADAMANT_ARROW to ADAMANT_ARROWS,
+            Items.SEEKING_RUNE_ARROW to RUNE_ARROWS,
+            Items.SEEKING_AMETHYST_ARROW to AMETHYST_ARROWS,
+            Items.SEEKING_DRAGON_ARROW to DRAGON_ARROWS,
+            Items.SEEKING_BROAD_ARROWS to BROAD_ARROWS,
+        )
+    const val SEEKING_MIN_HIT = 3
+
     val BRUTAL_BRONZE_ARROWS = arrayOf(Items.BRONZE_BRUTAL)
     val BRUTAL_IRON_ARROWS = arrayOf(Items.IRON_BRUTAL)
     val BRUTAL_STEEL_ARROWS = arrayOf(Items.STEEL_BRUTAL)

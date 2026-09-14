@@ -183,6 +183,39 @@ enum class RangedProjectile(
         type = ProjectileType.THROWN,
         items = ADAMANT_KNIVES,
     ),
+    // OSRS-IMPORT ammo2: OSRS DRAGON_TKNIFE_* / DRAGON_TAXE_* / BLACK_CHINCHOMPA_GRENADE / AMETHYST_ARROW_* spotanims are not
+    // imported yet: the 667 rune knife / rune thrownaxe / red chinchompa / rune arrow graphics are used (ADAPTED_TO_667).
+    DRAGON_KNIFE(
+        gfx = Gfx.RUNE_KNIFE_IN_FLIGHT,
+        drawback = Graphic(Gfx.RUNE_KNIFE_DRAWBACK, 96),
+        type = ProjectileType.THROWN,
+        items = gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Knives.DRAGON_KNIVES,
+    ),
+    DRAGON_THROWNAXE(
+        gfx = Gfx.RUNE_THROWNAXE_IN_FLIGHT,
+        drawback = Graphic(Gfx.RUNE_THROWNAXE_DRAWBACK, 96),
+        type = ProjectileType.THROWN,
+        items = arrayOf(Items.DRAGON_THROWNAXE),
+    ),
+    BLACK_CHINCHOMPA(
+        gfx = Gfx.RED_CHINCHOMPA_IN_FLIGHT,
+        impact = Graphic(Gfx.CHINCHOMPA_IMPACT, 92),
+        type = ProjectileType.CHINCHOMPA,
+        items = arrayOf(Items.BLACK_CHINCHOMPA),
+    ),
+    AMETHYST_ARROW(
+        gfx = Gfx.RUNE_ARROW_IN_FLIGHT,
+        drawback = Graphic(Gfx.RUNE_ARROW_DRAWBACK, 96),
+        type = ProjectileType.ARROW,
+        items = gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Arrows.AMETHYST_ARROWS,
+    ),
+    // Seeking arrows (OSRS 2026) have no 667 graphic: the rune arrow graphics are used for every tier (ADAPTED_TO_667).
+    SEEKING_ARROW(
+        gfx = Gfx.RUNE_ARROW_IN_FLIGHT,
+        drawback = Graphic(Gfx.RUNE_ARROW_DRAWBACK, 96),
+        type = ProjectileType.ARROW,
+        items = gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Arrows.SEEKING_ARROWS.keys.toTypedArray(),
+    ),
     RUNE_KNIFE(
         gfx = Gfx.RUNE_KNIFE_IN_FLIGHT,
         drawback = Graphic(Gfx.RUNE_KNIFE_DRAWBACK, 96),

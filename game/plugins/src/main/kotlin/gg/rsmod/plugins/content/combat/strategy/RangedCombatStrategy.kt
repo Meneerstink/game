@@ -20,6 +20,7 @@ import gg.rsmod.plugins.content.combat.createProjectile
 import gg.rsmod.plugins.content.combat.dealHit
 import gg.rsmod.plugins.content.combat.formula.RangedCombatFormula
 import gg.rsmod.plugins.content.combat.strategy.ranged.AvasDevices
+import gg.rsmod.plugins.content.combat.strategy.ranged.Chinchompas
 import gg.rsmod.plugins.content.combat.strategy.ranged.RangedAmmo
 import gg.rsmod.plugins.content.combat.strategy.ranged.RangedProjectile
 import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Darts
@@ -59,7 +60,7 @@ object RangedCombatStrategy : CombatStrategy {
                     Items.HUNTERS_SUNLIGHT_CROSSBOW -> 8
                     Items.SEERCULL -> 8
                     // OSRS Wiki "Heavy ballista": attack range 9 (10 on longrange).
-                    in Bows.LONG_BOWS, Items.CHINCHOMPA_10033, Items.RED_CHINCHOMPA_10034, Items.HEAVY_BALLISTA -> 9
+                    in Bows.LONG_BOWS, Items.CHINCHOMPA_10033, Items.RED_CHINCHOMPA_10034, Items.BLACK_CHINCHOMPA, Items.HEAVY_BALLISTA -> 9
                     // S4, 2026-09-03: OSRS Wiki "Twisted bow" - "attack range of 10 tiles ...
                     // matching the maximum range in the game", also matches A4's own sourced
                     // param 13 = 10 read from the pinned upstream item def.
@@ -249,7 +250,16 @@ object RangedCombatStrategy : CombatStrategy {
         }
 
         val formula = RangedCombatFormula
-        val accuracy = formula.getAccuracy(pawn, target)
+        // Chinchompas: attack roll x n/4 by fuse and distance to the target's closest tile (Chinchompas).
+        val chinchompa = pawn is Player && Chinchompas.isChinchompa(pawn.getEquipment(EquipmentType.WEAPON)?.id)
+        val fuseFactor =
+            if (chinchompa) {
+                val distance = Chinchompas.distanceToClosestTile(pawn.tile, target.tile, target.getSize())
+                Chinchompas.accuracyNumerator((pawn as Player).getAttackStyle(), distance) / 4.0
+            } else {
+                1.0
+            }
+        val accuracy = formula.getAccuracy(pawn, target, fuseFactor)
         val maxHit = formula.getMaxHit(pawn, target)
         val landHit = accuracy >= world.randomDouble()
         val hitDelay =
@@ -265,10 +275,17 @@ object RangedCombatStrategy : CombatStrategy {
             } else {
                 null
             }
+        // Seeking arrows: "increase the player's minimum hit from 1 to 3 upon a successful hit" (capped at the max hit, SOURCE_GAP).
+        val seekingMinimum =
+            if (landHit && boltAmmoId in gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Arrows.SEEKING_ARROWS) {
+                minOf(gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Arrows.SEEKING_MIN_HIT.toDouble(), maxHit)
+            } else {
+                null
+            }
         val pawnHit =
             pawn.dealHit(
                 target = target,
-                minHit = shot?.minHit ?: DEFAULT_MIN_HIT,
+                minHit = shot?.minHit ?: seekingMinimum ?: DEFAULT_MIN_HIT,
                 maxHit = shot?.maxHit ?: maxHit,
                 landHit = shot?.landHit ?: landHit,
                 delay = hitDelay,
@@ -277,6 +294,17 @@ object RangedCombatStrategy : CombatStrategy {
                 bonusDamage = shot?.bonusDamage ?: 0,
             )
         val damage = pawnHit.hit.hitmarks.sumOf { it.damage }
+        // Chinchompas: up to 11/12 targets (9/10 in PvP) in the 3x3 around the target; secondary targets hit exactly when the
+        // primary target is hit, each with its own damage roll (Chinchompas).
+        if (chinchompa) {
+            val weaponId = (pawn as Player).getEquipment(EquipmentType.WEAPON)?.id
+            val cap = Chinchompas.maxTargets(weaponId, pvp = target is Player) - 1
+            gg.rsmod.plugins.content.combat.specialattack.SpecialAttackSupport.adjacentTargets(pawn as Player, target).take(cap).forEach { other ->
+                val splash = pawn.dealHit(target = other, maxHit = formula.getMaxHit(pawn, other), landHit = landHit, delay = hitDelay, hitType = HitType.RANGE)
+                val splashDamage = splash.hit.hitmarks.sumOf { it.damage }
+                if (splashDamage > 0) addCombatXp(pawn, other, splashDamage)
+            }
+        }
         if (firedBlowpipe) {
             pawnHit.hit.addAction { BlowpipeCombat.rollVenom(pawn as Player, target) }
         } else if (pawn is Player && DizanasQuiver.applies(pawn)) {
