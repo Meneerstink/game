@@ -20175,5 +20175,8 @@ object Items {
     const val EXTENDED_SUPER_ANTIFIRE_MIX_2_NOTED = 23726
     const val EXTENDED_SUPER_ANTIFIRE_MIX_1 = 23727
     const val EXTENDED_SUPER_ANTIFIRE_MIX_1_NOTED = 23728
+
+    // Owner answer Q10: the Mimic casket (OSRS 23184, OsrsItemImportTool batch "mimic-casket", tx-20260914-142009).
+    const val MIMIC = 23729
     // Auto-generated file using class gg.rsmod.game.service.game.DumpEntityIdService
 }

@@ -683,6 +683,8 @@ object OsrsItemImportTool {
             // Step 4 batch "potions-venom" (OSRS Wiki infobox ids, ascending = 4 to 1 doses): Anti-venom, Anti-venom+, Extended anti-venom+.
             "potions-venom" to
                 listOf(12905, 12907, 12909, 12911, 12913, 12915, 12917, 12919, 29824, 29827, 29830, 29833).map { Spec(it, noted = true) },
+            // Owner answer Q10: the Mimic casket (OSRS Wiki "Mimic" infobox id 23184, RuneLite gameval TRAIL_MIMIC_CASKET; untradeable, no note).
+            "mimic-casket" to listOf(Spec(23184)),
             // Step 4 batch "potions-antifire" (owner answer Q8; OSRS Wiki infobox ids, most doses first): Extended antifire, Extended antifire
             // mix (2 doses), Super antifire mix (2), Extended super antifire, Extended super antifire mix (2). The OSRS "Super antifire potion"
             // is the 667 Super antifire (same-name rule: mapped to the main item, not imported).
