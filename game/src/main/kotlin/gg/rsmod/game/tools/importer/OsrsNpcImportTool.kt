@@ -43,7 +43,16 @@ object OsrsNpcImportTool {
                     10377, 10378, 10379, 10380, 10381, 10382, 10383, 10384, 10385, 10386, 10387, 10388, 10389, 10390, 10392,
                     10370, 6590, 7456, 8721, 7316, 7317, 10371, 10372, 10373,
                 ),
+            // Owner answer Q10: The Mimic encounter (RuneLite gameval NpcID TRAIL_MIMIC_NONCOMBAT 7979, TRAIL_MIMIC_COMBAT 8633,
+            // TRAIL_MIMIC_SPAWN_MELEE / RANGER / MAGE 8635-8637) and Watson (TRAIL_WATSON_PRE_TALK 7303, OSRS Wiki infobox 7303,7304).
+            "mimic" to listOf(7979, 8633, 8635, 8636, 8637, 7303),
         )
+
+    /**
+     * Sequences a batch needs that no npc definition references (attacks, death), imported with the same conversion as the movement sets.
+     * mimic: RuneLite gameval AnimationID MIMIC_MELEE 8308, MIMIC_CHARGE_RANGED 8309 (candy attack), MIMIC_DEATH 8310.
+     */
+    val EXTRA_SEQS: Map<String, List<Int>> = mapOf("mimic" to listOf(8308, 8309, 8310))
 
     private fun ByteArrayOutputStream.u8(v: Int) = write(v and 0xFF)
 
@@ -263,6 +272,7 @@ object OsrsNpcImportTool {
                 put(INDEX_NPC, localNpc ushr 7, localNpc and 0x7F, npcBytes, "osrs npc $npcId ${n.name}")
                 plans += "PLAN npc $npcId '${n.name}' -> $localNpc bas=$basId models=${n.models.toList()}->$localModels heads=${n.chatheads.toList()}->$localHeads seqs=$seqMap ops=${n.ops.toList()}"
             }
+            EXTRA_SEQS[batchName]?.forEach { seqId -> plans += "PLAN seq $seqId -> ${importSeq(seqId)}" }
         } finally {
             library.close()
             reader.close()

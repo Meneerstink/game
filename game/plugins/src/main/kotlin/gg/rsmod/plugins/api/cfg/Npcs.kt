@@ -12954,5 +12954,13 @@ object Npcs {
     const val WIZARD_LMS_14398 = 14398 // 10371
     const val WIZARD_LMS_14399 = 14399 // 10372
     const val WIZARD_LMS_14400 = 14400 // 10373
+
+    // Owner answer Q10: The Mimic and Watson imported by OsrsNpcImportTool batch "mimic" (tx-20260914-140716); OSRS id in the comment.
+    const val THE_MIMIC = 14401 // 7979 (Challenge)
+    const val THE_MIMIC_14402 = 14402 // 8633 (Attack)
+    const val THIRD_AGE_WARRIOR = 14403 // 8635
+    const val THIRD_AGE_RANGER = 14404 // 8636
+    const val THIRD_AGE_MAGE = 14405 // 8637
+    const val WATSON = 14406 // 7303
     // Auto-generated file using class gg.rsmod.game.service.game.DumpEntityIdService
 }

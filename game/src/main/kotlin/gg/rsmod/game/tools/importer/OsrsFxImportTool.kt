@@ -47,6 +47,9 @@ object OsrsFxImportTool {
                     2363, 2834, 2930, // FX_VOIDWAKER_IMPACT, FX_VOIDWAKER02_SPECIAL, VFX_NOXIOUS_HALBERD_SPEC
                     1887, 1888, 1936, 1937, // SP_ATTACK_ARROW_TRAVEL/LAUNCH_FAERDHINEN, AMETHYST_DART_TRAVEL/LAUNCH
                 ),
+            // Owner answer Q10, The Mimic: TRAIL_MIMIC_SWEET_PURPLE / GREEN / RED / BLUE 1670-1673 and TRAIL_MIMIC_EXPLOSION (+ GREEN /
+            // RED / BLUE) 1674-1677 (RuneLite gameval SpotanimID).
+            "mimic" to listOf(1670, 1671, 1672, 1673, 1674, 1675, 1676, 1677),
         )
 
     // ---- smart values ---------------------------------------------------------------------------

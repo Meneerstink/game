@@ -167,6 +167,22 @@ task runOsrsItemImportTool(type: JavaExec) {
     main = 'gg.rsmod.game.tools.importer.OsrsItemImportTool'
 }
 
+task runOsrsNpcImportTool(type: JavaExec) {
+    group = 'tools'
+    description = 'OSRS npc definition import batches with their models, BAS and sequences (CacheTransaction, both caches). ' +
+        'Usage: ./gradlew :game:runOsrsNpcImportTool --args="<batch> [--apply]"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.OsrsNpcImportTool'
+}
+
+task runOsrsFxImportTool(type: JavaExec) {
+    group = 'tools'
+    description = 'OSRS spotanim import batches with their models and sequences (CacheTransaction, both caches). ' +
+        'Usage: ./gradlew :game:runOsrsFxImportTool --args="<batch> [--apply]"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.OsrsFxImportTool'
+}
+
 task runWatsonHouseImportTool(type: JavaExec) {
     group = 'tools'
     description = 'Owner answer Q10: imports OSRS map square 6455 (Watson\'s house) as new named groups m25_55/l25_55 ' +
