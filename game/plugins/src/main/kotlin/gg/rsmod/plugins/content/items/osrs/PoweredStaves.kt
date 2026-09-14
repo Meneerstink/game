@@ -24,13 +24,18 @@ import gg.rsmod.plugins.content.combat.venom
  *   will not use up any charges"); max hit ⌊Magic/3⌋ - 2.
  * - "(e)" versions: "holds 20,000 charges instead of 2,500"; created by Lieve McCracken with 10 kraken tentacles (NPC absent:
  *   CONTEXT_UNAVAILABLE, not built).
+ * - "Sanguinesti staff" (22 July 2026 rebalance included): "Each cast requires 2 blood runes", "holding up to 20,000 charges",
+ *   "Players can uncharge the staff whenever and wherever they choose, getting all of the blood runes back"; max hit
+ *   "⌊MagicLevel/3⌋" ("starting at 27 with level 82 Magic"); "Successful hits with the spell have a 1/5 (20%) chance of dealing
+ *   8 additional damage and healing the user half the amount of hitpoints dealt to a target"; 82 Magic to wield.
  * - "Powered staff": "2 Magic experience per damage dealt", "cannot be used to autocast", attack speed 4, "cannot be cast upon
  *   other players in the Wilderness". "Combat Options": Accurate "+3 invisible bonus to their Magic level", Longrange "+1
  *   invisible bonus to their Magic level and a +3 invisible bonus to their Defence level" (rsmod and the wiki DPS calculator
  *   agree: Accurate 11, other styles 9 including the +8).
  * Charges live in [ItemAttribute.CHARGES]; the (full) item carries its 2,500 charges implicitly.
- * SOURCE_GAP (recorded, ADAPTED): charging/uncharge/check wording; how many charges one use of the runes adds (all that the
- * inventory and the cap allow); whether an uncharged staff can attack (it cannot here, message ADAPTED).
+ * SOURCE_GAP (recorded, ADAPTED): charging/uncharge/check wording; how many charges one use adds (all that the inventory and
+ * the cap allow); whether an uncharged staff can attack (it cannot here); Sanguinesti heal rounding (floor) and overheal (the
+ * normal heal cap).
  */
 object PoweredStaves {
     enum class Staff(
@@ -47,6 +52,8 @@ object PoweredStaves {
         /** Built-in spell max hit: max(1, ⌊Magic/3⌋ + [maxHitOffset]). */
         val maxHitOffset: Int,
         val venomChance: Double,
+        /** Sanguinesti life leech on successful hits. */
+        val leech: Boolean = false,
     ) {
         SEAS(
             Items.TRIDENT_OF_THE_SEAS, Items.UNCHARGED_TRIDENT, Items.TRIDENT_OF_THE_SEAS_FULL, 2_500, 75,
@@ -64,6 +71,10 @@ object PoweredStaves {
             Items.TRIDENT_OF_THE_SWAMP_E, Items.UNCHARGED_TOXIC_TRIDENT_E, null, 20_000, 78,
             swampCost(), setOf(Items.DEATH_RUNE, Items.CHAOS_RUNE, Items.FIRE_RUNE, Items.ZULRAHS_SCALES), -2, 0.25,
         ),
+        SANGUINESTI(
+            Items.SANGUINESTI_STAFF, Items.SANGUINESTI_STAFF_UNCHARGED, null, 20_000, 82,
+            listOf(Item(Items.BLOOD_RUNE, 2)), setOf(Items.BLOOD_RUNE), 0, 0.0, leech = true,
+        ),
         ;
 
         val ids: Set<Int> get() = setOfNotNull(charged, uncharged, full)
@@ -80,20 +91,12 @@ object PoweredStaves {
 
     const val SWAMP_CRAFTING_LEVEL = 59
 
+    const val LEECH_CHANCE = 0.2
+    const val LEECH_BONUS_DAMAGE = 8
+
     const val NO_AUTOCAST_MESSAGE = "You can't autocast spells with this weapon."
     const val NO_CHARGES_MESSAGE = "Your weapon has no charges left."
     const val WILDERNESS_PLAYER_MESSAGE = "You can't use this weapon's spell on players in the Wilderness."
-
-    /** Swamp venom on a successful hit (built-in or manual spell); needs at least one charge, which is not used. */
-    fun rollVenom(
-        player: Player,
-        target: Pawn,
-    ) {
-        val weapon = player.getEquipment(EquipmentType.WEAPON) ?: return
-        val staff = staffFor(weapon.id) ?: return
-        if (staff.venomChance <= 0.0 || charges(weapon) <= 0) return
-        if (player.world.randomDouble() < staff.venomChance) target.venom()
-    }
 
     /** Magic fang + uncharged trident (normal and (e)) -> uncharged toxic trident; Dismantle reverses it. */
     val TOXIC_UPGRADE: Map<Int, Int> =
@@ -145,6 +148,9 @@ object PoweredStaves {
         charges: Int,
     ): List<Item> = staff.chargeCost.filter { it.id in staff.refunded }.map { Item(it.id, it.amount * charges) }
 
+    /** Sanguinesti heal for a leeching hit that dealt [dealt] damage: half, rounded down (SOURCE_GAP rounding). */
+    fun leechHeal(dealt: Int): Int = (dealt / 2).coerceAtLeast(0)
+
     /** Accurate (first and second style) +3, Longrange (last style) +1 invisible Magic levels for the built-in spell. */
     fun stanceMagicBonus(player: Player): Int =
         when {
@@ -155,6 +161,17 @@ object PoweredStaves {
 
     /** Staff style set 1 has three buttons: the last one is Longrange (owner decision option a). */
     fun isLongrange(player: Player): Boolean = player.getAttackStyle() >= 2
+
+    /** Swamp venom on a successful hit (built-in or manual spell); needs at least one charge, which is not used. */
+    fun rollVenom(
+        player: Player,
+        target: Pawn,
+    ) {
+        val weapon = player.getEquipment(EquipmentType.WEAPON) ?: return
+        val staff = staffFor(weapon.id) ?: return
+        if (staff.venomChance <= 0.0 || charges(weapon) <= 0) return
+        if (player.world.randomDouble() < staff.venomChance) target.venom()
+    }
 
     private fun seasCost() = listOf(Item(Items.DEATH_RUNE, 1), Item(Items.CHAOS_RUNE, 1), Item(Items.FIRE_RUNE, 5), Item(Items.COINS_995, 10))
 

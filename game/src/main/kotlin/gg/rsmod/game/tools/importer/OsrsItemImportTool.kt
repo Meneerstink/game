@@ -269,6 +269,14 @@ object OsrsItemImportTool {
                     tridentSpec(22292, 78), // Trident of the Swamp (e)
                     tridentSpec(22294, 78, noted = true), // Uncharged toxic trident (e)
                 ),
+            // Sanguinesti staff: same powered-staff class as the tridents. Wiki: "requires level 82 Magic to wield" - the upstream
+            // uncharged staff carries no 434/436 requirement params, so both get 82 Magic here. Worn Check only on the charged
+            // staff (upstream 451 "Check"; the uncharged staff has no worn op).
+            "sanguinesti" to
+                listOf(
+                    Spec(22323, rev667Params = staffParams(82), weaponType = 1, rev667StringParams = mapOf(528 to "Check")), // Sanguinesti staff
+                    Spec(22481, noted = true, rev667Params = staffParams(82), weaponType = 1), // Sanguinesti staff (uncharged)
+                ),
         )
 
     /**
@@ -286,10 +294,13 @@ object OsrsItemImportTool {
     ) = Spec(
         upstreamId,
         noted = noted,
-        rev667Params = mapOf(644 to 28, 686 to 1, 749 to 6, 750 to requiredMagic),
+        rev667Params = staffParams(requiredMagic),
         weaponType = 1,
         rev667StringParams = mapOf(528 to "Check"),
     )
+
+    /** 667 Staff of air 1381 class: render animation 28, staff style set 1, one Magic requirement shown client side. */
+    private fun staffParams(requiredMagic: Int) = mapOf(644 to 28, 686 to 1, 749 to 6, 750 to requiredMagic)
 
     /** Worn in-game only when a Wear/Wield option exists; OSRS materials such as Magic stock carry a wearPos without one. */
     fun isWearable(def: ModernItemDef): Boolean = def.wearPos1 >= 0 && def.inventoryOptions.any { it == "Wear" || it == "Wield" }

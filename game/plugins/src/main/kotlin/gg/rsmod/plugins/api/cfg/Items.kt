@@ -19578,5 +19578,8 @@ object Items {
     const val TRIDENT_OF_THE_SWAMP_E = 22710
     const val UNCHARGED_TOXIC_TRIDENT_E = 22711
     const val UNCHARGED_TOXIC_TRIDENT_E_NOTED = 22712
+    const val SANGUINESTI_STAFF = 22713
+    const val SANGUINESTI_STAFF_UNCHARGED = 22714
+    const val SANGUINESTI_STAFF_UNCHARGED_NOTED = 22715
     // Auto-generated file using class gg.rsmod.game.service.game.DumpEntityIdService
 }

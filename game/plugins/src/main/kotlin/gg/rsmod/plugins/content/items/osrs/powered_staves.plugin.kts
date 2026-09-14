@@ -6,9 +6,10 @@ import gg.rsmod.game.model.attr.OTHER_ITEM_SLOT_ATTR
 import gg.rsmod.plugins.content.combat.Combat
 
 /**
- * OSRS-IMPORT powered staves: charging, Check, Uncharge, the Magic fang upgrade and Dismantle (rules and sources in
- * [PoweredStaves]). Messages are ADAPTED (no sourced OSRS text on the pages read). SOURCE_GAP: Crafting experience for the
- * Magic fang upgrade (not stated on the Magic fang or Trident of the Swamp pages) - none is given.
+ * OSRS-IMPORT powered staves: charging (use a charge item on the staff, or the Sanguinesti staff's Charge option), Check,
+ * Uncharge, the Magic fang upgrade and Dismantle (rules and sources in [PoweredStaves]). Messages are ADAPTED (no sourced OSRS
+ * text on the pages read). SOURCE_GAP: Crafting experience for the Magic fang upgrade (not stated on the Magic fang or Trident
+ * of the Swamp pages) - none is given; the amount prompt of Charge (all affordable charges are added).
  */
 
 fun hasOption(
@@ -23,6 +24,29 @@ fun hasOption(
 
 fun chargesMessage(item: gg.rsmod.game.model.item.Item): String = "Your weapon has ${PoweredStaves.charges(item)} charges."
 
+/** Adds every affordable charge to the staff in inventory [slot]. */
+fun chargeStaff(
+    player: gg.rsmod.game.model.entity.Player,
+    staff: PoweredStaves.Staff,
+    slot: Int,
+) {
+    val item = player.inventory[slot]?.takeIf { it.id in staff.ids } ?: return
+    if (player.skills.getCurrentLevel(Skills.MAGIC) < staff.requiredMagic) {
+        player.message("You need a Magic level of ${staff.requiredMagic} to charge this weapon.")
+        return
+    }
+    val current = PoweredStaves.charges(item)
+    val added = PoweredStaves.chargesAffordable(staff, current) { id -> player.inventory.getItemCount(id) }
+    if (added <= 0) {
+        player.message(if (current >= staff.maxCharges) "Your weapon is already fully charged." else "You don't have the items needed to charge this weapon.")
+        return
+    }
+    staff.chargeCost.forEach { cost -> player.inventory.remove(cost.id, cost.amount * added) }
+    val charged = PoweredStaves.withCharges(item, current + added)
+    player.inventory[slot] = charged
+    player.message(chargesMessage(charged))
+}
+
 PoweredStaves.Staff.values().forEach { staff ->
     // Charging: use any charge item on an uncharged or partially charged staff ((full) is at the cap).
     listOf(staff.uncharged, staff.charged).forEach { staffId ->
@@ -30,22 +54,12 @@ PoweredStaves.Staff.values().forEach { staff ->
             on_item_on_item(item1 = costId, item2 = staffId) {
                 val first = player.attr[INTERACTING_ITEM_SLOT] ?: return@on_item_on_item
                 val second = player.attr[OTHER_ITEM_SLOT_ATTR] ?: return@on_item_on_item
-                val slot = if (player.inventory[first]?.id in staff.ids) first else second
-                val item = player.inventory[slot] ?: return@on_item_on_item
-                if (player.skills.getCurrentLevel(Skills.MAGIC) < staff.requiredMagic) {
-                    player.message("You need a Magic level of ${staff.requiredMagic} to charge this weapon.")
-                    return@on_item_on_item
-                }
-                val current = PoweredStaves.charges(item)
-                val added = PoweredStaves.chargesAffordable(staff, current) { id -> player.inventory.getItemCount(id) }
-                if (added <= 0) {
-                    player.message(if (current >= staff.maxCharges) "Your weapon is already fully charged." else "You don't have the items needed to charge this weapon.")
-                    return@on_item_on_item
-                }
-                staff.chargeCost.forEach { cost -> player.inventory.remove(cost.id, cost.amount * added) }
-                val charged = PoweredStaves.withCharges(item, current + added)
-                player.inventory[slot] = charged
-                player.message(chargesMessage(charged))
+                chargeStaff(player, staff, if (player.inventory[first]?.id in staff.ids) first else second)
+            }
+        }
+        if (hasOption(staffId, "Charge")) {
+            on_item_option(item = staffId, option = "Charge") {
+                chargeStaff(player, staff, player.getInteractingItemSlot())
             }
         }
     }

@@ -17,7 +17,7 @@ class PoweredStavesTests {
         assertEquals(2_500, staves.getValue(PoweredStaves.Staff.SWAMP).maxCharges)
         assertEquals(20_000, staves.getValue(PoweredStaves.Staff.SEAS_E).maxCharges)
         assertEquals(20_000, staves.getValue(PoweredStaves.Staff.SWAMP_E).maxCharges)
-        PoweredStaves.Staff.values().forEach { staff ->
+        PoweredStaves.Staff.values().filterNot { it.leech }.forEach { staff ->
             val cost = staff.chargeCost.associate { it.id to it.amount }
             assertEquals(1, cost[Items.DEATH_RUNE], "$staff")
             assertEquals(1, cost[Items.CHAOS_RUNE], "$staff")
@@ -35,6 +35,28 @@ class PoweredStavesTests {
         assertEquals(24, PoweredStaves.Staff.SWAMP.baseMaxHit(78))
         assertEquals(31, PoweredStaves.Staff.SWAMP_E.baseMaxHit(99))
         assertEquals(1, PoweredStaves.Staff.SEAS.baseMaxHit(3))
+    }
+
+    @Test
+    fun `the Sanguinesti staff uses 2 blood runes per charge, Magic over 3 and the 1 in 5 life leech`() {
+        val sang = PoweredStaves.Staff.SANGUINESTI
+        assertEquals(listOf(Items.BLOOD_RUNE to 2), sang.chargeCost.map { it.id to it.amount })
+        assertEquals(setOf(Items.BLOOD_RUNE), sang.refunded, "all blood runes back")
+        assertEquals(20_000, sang.maxCharges)
+        assertEquals(82, sang.requiredMagic)
+        assertEquals(27, sang.baseMaxHit(82), "wiki: 27 at 82 Magic")
+        assertEquals(33, sang.baseMaxHit(99))
+        assertEquals(41, sang.baseMaxHit(123), "wiki: 41 at level 123")
+        assertTrue(sang.leech)
+        assertEquals(0.2, PoweredStaves.LEECH_CHANCE)
+        assertEquals(8, PoweredStaves.LEECH_BONUS_DAMAGE)
+        assertEquals(17, PoweredStaves.leechHeal(35))
+        assertEquals(1000, PoweredStaves.chargesAffordable(sang, 0) { if (it == Items.BLOOD_RUNE) 2_001 else 0 })
+        assertEquals(Items.SANGUINESTI_STAFF_UNCHARGED, PoweredStaves.withCharges(Item(Items.SANGUINESTI_STAFF), 0).id)
+        assertEquals(gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell.BLOOD_BLITZ, gg.rsmod.plugins.content.combat.strategy.PoweredStaffCombatStrategy.look(sang))
+        val strategy = File("src/main/kotlin/gg/rsmod/plugins/content/combat/strategy/PoweredStaffCombatStrategy.kt").readText()
+        assertTrue("bonusDamage = if (leech) PoweredStaves.LEECH_BONUS_DAMAGE else 0" in strategy)
+        assertTrue("PoweredStaves.leechHeal(damage)" in strategy)
     }
 
     @Test

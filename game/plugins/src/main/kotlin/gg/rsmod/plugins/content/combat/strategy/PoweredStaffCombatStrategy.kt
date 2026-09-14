@@ -9,23 +9,24 @@ import gg.rsmod.plugins.api.ext.*
 import gg.rsmod.plugins.content.combat.Combat
 import gg.rsmod.plugins.content.combat.createProjectile
 import gg.rsmod.plugins.content.combat.dealHit
-import gg.rsmod.plugins.content.combat.venom
 import gg.rsmod.plugins.content.combat.formula.MagicCombatFormula
 import gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell
+import gg.rsmod.plugins.content.combat.venom
 import gg.rsmod.plugins.content.items.osrs.PoweredStaves
 
 /**
  * OSRS-IMPORT powered staff built-in spell (rules and sources in [PoweredStaves]). Accuracy and max hit come from
  * [MagicCombatFormula] (stance bonus and ⌊Magic/3⌋ + offset base), speed 4 from [gg.rsmod.plugins.content.combat.CombatConfigs].
  *
- * ADAPTED_TO_667 (owner decision option a): the OSRS trident cast animation 1167 and spotanims (Seas 1251/1252/1253, Swamp
- * 665/1040/1042) are not in the 667 cache, so the built-in spell shows the 667 Water Blast look with the staff cast animation.
+ * ADAPTED_TO_667 (owner decision option a): the OSRS cast animation 1167 and spotanims (Seas 1251/1252/1253, Swamp 665/1040/
+ * 1042, Sanguinesti 1540/1539/1541) are not in the 667 cache, so the tridents show the 667 Water Blast look and the
+ * Sanguinesti staff the 667 Blood Blitz look.
  * Experience: rsmod `PlayerAttackManager.giveStaffCombatXp` - 2 Magic and 1.33 Hitpoints per damage on every style, in this
  * server's existing magic strategy units. SOURCE_CONFLICT (owner question): the wiki style table lists Defence experience for
  * Longrange, rsmod gives none; the rsmod amounts are used until the owner decides.
  */
 object PoweredStaffCombatStrategy : CombatStrategy {
-    private val LOOK = CombatSpell.WATER_BLAST
+    fun look(staff: PoweredStaves.Staff): CombatSpell = if (staff.leech) CombatSpell.BLOOD_BLITZ else CombatSpell.WATER_BLAST
 
     override fun getAttackRange(pawn: Pawn): Int {
         val player = pawn as? Player ?: return PoweredStaves.ATTACK_RANGE
@@ -58,34 +59,45 @@ object PoweredStaffCombatStrategy : CombatStrategy {
         val player = pawn as? Player ?: return
         val world = player.world
         val weapon = player.getEquipment(EquipmentType.WEAPON) ?: return
-        if (PoweredStaves.staffFor(weapon.id) == null) return
+        val staff = PoweredStaves.staffFor(weapon.id) ?: return
+        val look = look(staff)
 
         player.stopMovement()
-        LOOK.castGfx?.let { player.graphic(it) }
-        player.animate(LOOK.castAnimation[1])
+        look.castGfx?.let { player.graphic(it) }
+        player.animate(look.castAnimation[1])
         // "One charge is consumed each time you cast the built-in spell."
         player.equipment[EquipmentType.WEAPON.id] = PoweredStaves.withCharges(weapon, PoweredStaves.charges(weapon) - 1)
 
-        val projectile = player.createProjectile(target, gfx = LOOK.projectile, type = ProjectileType.MAGIC)
+        val projectile = player.createProjectile(target, gfx = look.projectile, type = ProjectileType.MAGIC)
         world.spawn(projectile)
         val hitDelay = MagicCombatStrategy.getHitDelay(player.getCentreTile(), target.getCentreTile())
         val landHit = MagicCombatFormula.getAccuracy(player, target) >= world.randomDouble()
         if (landHit) {
-            LOOK.impactGfx?.let { target.graphic(Graphic(it.id, it.height, projectile.lifespan)) }
+            look.impactGfx?.let { target.graphic(Graphic(it.id, it.height, projectile.lifespan)) }
         } else {
             target.graphic(Graphic(85, 96, projectile.lifespan))
         }
 
+        // Sanguinesti: successful hits have a 1/5 chance of +8 damage and healing half the damage dealt.
+        val leech = staff.leech && landHit && world.randomDouble() < PoweredStaves.LEECH_CHANCE
         val maxHit = MagicCombatFormula.getMaxHit(player, target)
-        val pawnHit = player.dealHit(target = target, maxHit = maxHit, landHit = landHit, delay = hitDelay, hitType = HitType.MAGIC)
-        if (landHit) {
-            // Trident of the Swamp: 25 % venom on successful hits (the charge used above is not needed again).
-            val staff = PoweredStaves.staffFor(weapon.id)
-            if (staff != null && staff.venomChance > 0.0) {
-                pawnHit.hit.addAction { if (world.randomDouble() < staff.venomChance) target.venom() }
-            }
-        }
+        val pawnHit =
+            player.dealHit(
+                target = target,
+                maxHit = maxHit,
+                landHit = landHit,
+                delay = hitDelay,
+                hitType = HitType.MAGIC,
+                bonusDamage = if (leech) PoweredStaves.LEECH_BONUS_DAMAGE else 0,
+            )
         val damage = pawnHit.hit.hitmarks.sumOf { it.damage }
+        if (leech) {
+            pawnHit.hit.addAction { PoweredStaves.leechHeal(damage).takeIf { it > 0 }?.let { player.heal(it) } }
+        }
+        // Trident of the Swamp: 25 % venom on successful hits.
+        if (landHit && staff.venomChance > 0.0) {
+            pawnHit.hit.addAction { if (world.randomDouble() < staff.venomChance) target.venom() }
+        }
         if (damage > 0) addCombatXp(player, target, damage)
     }
 
