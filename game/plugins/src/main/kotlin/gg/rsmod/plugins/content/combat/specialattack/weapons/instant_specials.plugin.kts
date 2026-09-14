@@ -51,8 +51,11 @@ SpecialAttacks.registerInstant(100, Items.DRAGON_BATTLEAXE) { p ->
     true
 }
 
-/* Dragon hatchet - Clobber: 100%; Woodcutting +3 for a short time. */
-SpecialAttacks.registerInstant(100, Items.DRAGON_HATCHET) { p ->
+/*
+ * Dragon hatchet - Clobber: 100%; Woodcutting +3 for a short time. OSRS-IMPORT: the 3rd Age axe shares the dragon axe special (OSRS Wiki
+ * "Lumber Up": Woodcutting +3, 100 % energy); ADAPTED: the 667 visuals and message.
+ */
+SpecialAttacks.registerInstant(100, Items.DRAGON_HATCHET, Items.THIRDAGE_AXE) { p ->
     p.animate(2876)
     p.graphic(479, 96)
     p.playSound(Sfx.CLOBBER)
@@ -61,8 +64,11 @@ SpecialAttacks.registerInstant(100, Items.DRAGON_HATCHET) { p ->
     true
 }
 
-/* Dragon pickaxe - Rock Crusher: 100%; Mining +3 for a short time. */
-SpecialAttacks.registerInstant(100, Items.DRAGON_PICKAXE) { p ->
+/*
+ * Dragon pickaxe - Rock Crusher: 100%; Mining +3 for a short time. OSRS-IMPORT: the 3rd Age pickaxe shares the dragon pickaxe special
+ * (OSRS Wiki "Rock Knocker": Mining +3, 100 % energy); ADAPTED: the 667 visuals and message.
+ */
+SpecialAttacks.registerInstant(100, Items.DRAGON_PICKAXE, Items.THIRDAGE_PICKAXE) { p ->
     p.animate(12031)
     p.graphic(2109)
     p.skills.alterCurrentLevel(Skills.MINING, 3, capValue = 3)

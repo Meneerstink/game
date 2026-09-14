@@ -281624,3 +281624,601 @@
   tradeable: true
   weight: 0.0
   equipment: null
+- id: 23612
+  name: "3rd Age bow"
+  examine: "A beautifully crafted bow carved by ancient archers."
+  tradeable: true
+  weight: 3.175
+  equipment:
+    equip_slot: 3
+    equip_type: 5
+    appearance_id: 6629
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 16
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 80
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: 2700
+    skill_reqs: [{'skill': 4, 'level': 65}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23613
+  name: "3rd Age bow"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23614
+  name: "3rd Age longsword"
+  examine: "A beautifully crafted sword forged by ancient blacksmiths."
+  tradeable: true
+  weight: 1.0
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6630
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 6
+    attack_speed: 5
+    attack_stab: 0
+    attack_slash: 72
+    attack_crush: 60
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 3
+    defence_crush: 2
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 75
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: 2500
+    skill_reqs: [{'skill': 0, 'level': 65}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23615
+  name: "3rd Age longsword"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23616
+  name: "3rd Age wand"
+  examine: "A beautifully crafted wand infused by ancient wizards."
+  tradeable: true
+  weight: 3.175
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6631
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 20
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 20
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 65}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23617
+  name: "3rd Age wand"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23618
+  name: "3rd Age axe"
+  examine: "A beautifully crafted axe, shaped by ancient smiths."
+  tradeable: true
+  weight: 1.36
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6632
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 2
+    attack_speed: 5
+    attack_stab: -2
+    attack_slash: 38
+    attack_crush: 32
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 1
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 42
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 65}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23619
+  name: "3rd Age axe"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23620
+  name: "3rd Age pickaxe"
+  examine: "A beautifully crafted pickaxe, shaped by ancient smiths."
+  tradeable: true
+  weight: 2.4
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6633
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 4
+    attack_speed: 5
+    attack_stab: 38
+    attack_slash: -2
+    attack_crush: 32
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 1
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 42
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 65}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23621
+  name: "3rd Age pickaxe"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23622
+  name: "Gilded scimitar"
+  examine: "Rune scimitar with gold plate."
+  tradeable: true
+  weight: 1.814
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6634
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 6
+    attack_speed: 4
+    attack_stab: 7
+    attack_slash: 45
+    attack_crush: -2
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 1
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 44
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: 2500
+    skill_reqs: [{'skill': 0, 'level': 40}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23623
+  name: "Gilded scimitar"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23624
+  name: "Gilded 2h sword"
+  examine: "A two handed sword with gold plate."
+  tradeable: true
+  weight: 3.628
+  equipment:
+    equip_slot: 3
+    equip_type: 5
+    appearance_id: 6635
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 7
+    attack_speed: 7
+    attack_stab: -4
+    attack_slash: 69
+    attack_crush: 50
+    attack_magic: -4
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: -1
+    summoning: 0
+    melee_strength: 70
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: 2503
+    skill_reqs: [{'skill': 0, 'level': 40}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23625
+  name: "Gilded 2h sword"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23626
+  name: "Gilded spear"
+  examine: "A rune tipped spear with gold plate."
+  tradeable: true
+  weight: 2.267
+  equipment:
+    equip_slot: 3
+    equip_type: 5
+    appearance_id: 6636
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 14
+    attack_speed: 4
+    attack_stab: 36
+    attack_slash: 36
+    attack_crush: 36
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 1
+    defence_slash: 1
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 42
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 40}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23627
+  name: "Gilded spear"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23628
+  name: "Gilded hasta"
+  examine: "A rune-tipped, one-handed hasta, with gold plate."
+  tradeable: true
+  weight: 2.267
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6637
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 14
+    attack_speed: 4
+    attack_stab: 36
+    attack_slash: 36
+    attack_crush: 36
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: -10
+    defence_slash: -10
+    defence_crush: -9
+    defence_magic: 0
+    defence_ranged: -10
+    summoning: 0
+    melee_strength: 42
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 40}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23629
+  name: "Gilded hasta"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23630
+  name: "Gilded axe"
+  examine: "A powerful axe."
+  tradeable: true
+  weight: 1.36
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6638
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 2
+    attack_speed: 5
+    attack_stab: -2
+    attack_slash: 26
+    attack_crush: 24
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 1
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 29
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 40}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23631
+  name: "Gilded axe"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23632
+  name: "Gilded pickaxe"
+  examine: "Used for mining and very stylish."
+  tradeable: true
+  weight: 2.267
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6639
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 4
+    attack_speed: 5
+    attack_stab: 26
+    attack_slash: -2
+    attack_crush: 24
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 1
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 29
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: 2508
+    skill_reqs: [{'skill': 0, 'level': 40}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23633
+  name: "Gilded pickaxe"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23634
+  name: "Gilded spade"
+  examine: "Oh, I'm a gold digger?"
+  tradeable: true
+  weight: 3.0
+  equipment:
+    equip_slot: 3
+    equip_type: 5
+    appearance_id: 6640
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 10
+    attack_speed: 4
+    attack_stab: -100
+    attack_slash: -100
+    attack_crush: -50
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: -10
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23635
+  name: "Gilded spade"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23636
+  name: "Katana"
+  examine: "Created by Hattori Hanzo in the Eastern Lands."
+  tradeable: true
+  weight: 0.453
+  equipment:
+    equip_slot: 3
+    equip_type: 5
+    appearance_id: 6641
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 6
+    attack_speed: 4
+    attack_stab: 7
+    attack_slash: 45
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 3
+    defence_slash: 7
+    defence_crush: 7
+    defence_magic: 0
+    defence_ranged: -3
+    summoning: 0
+    melee_strength: 40
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: 2500
+    skill_reqs: [{'skill': 0, 'level': 40}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23637
+  name: "Katana"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23638
+  name: "Dragon cane"
+  examine: "An onyx topped cane."
+  tradeable: true
+  weight: 1.814
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6642
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 10
+    attack_speed: 5
+    attack_stab: 40
+    attack_slash: -2
+    attack_crush: 60
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 55
+    prayer: 5
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 60}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23639
+  name: "Dragon cane"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23640
+  name: "Briefcase"
+  examine: "For your first day in the big city."
+  tradeable: true
+  weight: 0.005
+  equipment:
+    equip_slot: 5
+    equip_type: -1
+    appearance_id: 6643
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23641
+  name: "Briefcase"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null

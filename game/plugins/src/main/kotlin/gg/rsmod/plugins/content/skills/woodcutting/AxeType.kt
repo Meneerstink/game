@@ -58,6 +58,19 @@ enum class AxeType(
         animation = Anims.CHOP_INFERNO_ADZE,
         ivyAnimation = Anims.IVY_INFERNO_ADZE,
         ratio = 3.75),
+    // OSRS-IMPORT casket-weapons-tools (OSRS Wiki): the gilded axe "is a cosmetic variant of the rune axe" (41 Woodcutting to chop); the
+    // 3rd Age axe "shares the same cutting speed, special attack, and stats as a dragon axe" (61 Woodcutting). ADAPTED: the 667 rune /
+    // dragon hatchet animations (the OSRS animations are not imported).
+    GILDED(item = Items.GILDED_AXE,
+        level = 41,
+        animation = Anims.CHOP_RUNE_HATCHET,
+        ivyAnimation = Anims.IVY_RUNE_HATCHET,
+        ratio = 3.5),
+    THIRD_AGE(item = Items.THIRDAGE_AXE,
+        level = 61,
+        animation = Anims.CHOP_DRAGON_HATCHET,
+        ivyAnimation = Anims.IVY_DRAGON_HATCHET,
+        ratio = 3.75),
     ;
 
     companion object {

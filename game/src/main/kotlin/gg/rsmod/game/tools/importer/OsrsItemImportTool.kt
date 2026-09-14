@@ -712,6 +712,32 @@ object OsrsItemImportTool {
             // their "Equip" option: no wearable cursor opcodes and no items.yml equipment. They were removed through ItemTransactionTool
             // and re-imported here: Holy, Unholy, Peaceful, Honourable, War, Ancient blessing (ammo slot, +1 Prayer).
             "casket-blessings" to listOf(20220, 20223, 20226, 20229, 20232, 20235).map { Spec(it, noted = true) },
+            // Casket sub-batch "casket-weapons-tools". Client params follow the 667 analogue of each OSRS combat style (ItemParamProbeTool
+            // 2026-09-14): Magic shortbow 861 (bow), Rune longsword 1303 / scimitar 1333 (slash sword), Master wand 6914 (wand), Dragon hatchet
+            // 6739 / Rune hatchet 1359 (axe, 770/771 tool skill + level), Dragon pickaxe 15259 / Rune pickaxe 1275, Rune 2h sword 1319, Rune
+            // spear 1247, Rune hasta 1247/11377 (741 = 2), Dragon warhammer class 686 10 for the crush-only Blunt / Polestaff styles
+            // (ADAPTED_TO_667: 667 has no polestaff or spade style set). Wield requirements from the wiki item pages: 3rd Age 65 Ranged /
+            // Attack / Magic, 3rd Age axe and pickaxe 65 Attack (61 Woodcutting / Mining to use), gilded weapons and tools and the Katana 40
+            // Attack (41 to use the tools), Dragon cane 60 Attack. SOURCE_GAP: Katana, Gilded spade and Dragon cane have no 667 render
+            // analogue, so no 644 is set. Attack audio as the 667 analogue.
+            "casket-weapons-tools" to
+                listOf(
+                    Spec(12424, noted = true, rev667Params = mapOf(686 to 16, 23 to 65, 749 to 4, 750 to 65), weaponType = 16, attackAudio = 2700), // 3rd Age bow
+                    Spec(12426, noted = true, rev667Params = mapOf(644 to 1582, 686 to 6, 749 to 0, 750 to 65), weaponType = 6, attackAudio = 2500), // 3rd Age longsword
+                    Spec(12422, noted = true, rev667Params = mapOf(644 to 1955, 686 to 1, 749 to 6, 750 to 65), weaponType = 1), // 3rd Age wand
+                    Spec(20011, noted = true, rev667Params = mapOf(686 to 2, 687 to 1, 749 to 0, 750 to 65, 770 to 8, 771 to 61), weaponType = 2), // 3rd Age axe
+                    Spec(20014, noted = true, rev667Params = mapOf(686 to 4, 687 to 1, 749 to 0, 750 to 65, 770 to 14, 771 to 61), weaponType = 4), // 3rd Age pickaxe
+                    Spec(12389, noted = true, rev667Params = mapOf(644 to 1582, 686 to 6, 749 to 0, 750 to 40), weaponType = 6, attackAudio = 2500), // Gilded scimitar
+                    Spec(20155, noted = true, rev667Params = mapOf(644 to 124, 686 to 7, 749 to 0, 750 to 40), weaponType = 7, attackAudio = 2503), // Gilded 2h sword
+                    Spec(20158, noted = true, rev667Params = mapOf(644 to 28, 686 to 14, 749 to 0, 750 to 40), weaponType = 14), // Gilded spear
+                    Spec(20161, noted = true, rev667Params = mapOf(644 to 28, 686 to 14, 741 to 2, 749 to 0, 750 to 40), weaponType = 14), // Gilded hasta
+                    Spec(23279, noted = true, rev667Params = mapOf(686 to 2, 749 to 0, 750 to 40, 770 to 8, 771 to 41), weaponType = 2), // Gilded axe
+                    Spec(23276, noted = true, rev667Params = mapOf(686 to 4, 749 to 0, 750 to 40, 770 to 14, 771 to 41), weaponType = 4, attackAudio = 2508), // Gilded pickaxe
+                    Spec(23282, noted = true, rev667Params = mapOf(686 to 10), weaponType = 10), // Gilded spade
+                    Spec(12357, noted = true, rev667Params = mapOf(686 to 6, 749 to 0, 750 to 40), weaponType = 6, attackAudio = 2500), // Katana
+                    Spec(12373, noted = true, rev667Params = mapOf(686 to 10, 749 to 0, 750 to 60), weaponType = 10), // Dragon cane
+                    Spec(12335, noted = true), // Briefcase (shield slot, no stats)
+                ),
             "deadstaves" to
                 listOf(
                     Spec(11791, noted = true, rev667Params = deadStaffParams()), // Staff of the dead

@@ -68,6 +68,8 @@ object RangedCombatStrategy : CombatStrategy {
                     Items.VENATOR_BOW, Items.VENATOR_BOW_UNCHARGED, Items.TONALZTICS_OF_RALOS_UNCHARGED -> 6
                     Items.TONALZTICS_OF_RALOS -> 7
                     Items.SCORCHING_BOW -> 10
+                    // OSRS Wiki "3rd Age bow": attack range 9 ("a longer attack range" than a shortbow at the same speed).
+                    Items.THIRDAGE_BOW -> 9
                     Items.ECLIPSE_ATLATL -> gg.rsmod.plugins.content.items.osrs.MoonSets.ATLATL_RANGE
                     in Bows.LONG_BOWS, Items.CHINCHOMPA_10033, Items.RED_CHINCHOMPA_10034, Items.BLACK_CHINCHOMPA, Items.HEAVY_BALLISTA, Items.HEAVY_BALLISTA_OR -> 9
                     // S4, 2026-09-03: OSRS Wiki "Twisted bow" - "attack range of 10 tiles ...

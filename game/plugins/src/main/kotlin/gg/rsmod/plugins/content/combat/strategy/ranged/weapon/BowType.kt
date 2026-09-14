@@ -119,6 +119,13 @@ enum class BowType(
             BRONZE_ARROWS + IRON_ARROWS + STEEL_ARROWS + MITHRIL_ARROWS + ADAMANT_ARROWS + RUNE_ARROWS + DRAGON_ARROWS +
                 BROAD_ARROWS + gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Arrows.AMETHYST_ARROWS,
     ),
+    // OSRS-IMPORT casket-weapons-tools: the 3rd Age bow "can fire arrows up to dragon arrows" (OSRS Wiki); the same arrow set as the dark bow.
+    THIRDAGE_BOW(
+        item = Items.THIRDAGE_BOW,
+        ammo =
+            BRONZE_ARROWS + IRON_ARROWS + STEEL_ARROWS + MITHRIL_ARROWS + ADAMANT_ARROWS + RUNE_ARROWS + DRAGON_ARROWS +
+                BROAD_ARROWS + gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Arrows.AMETHYST_ARROWS,
+    ),
     BLUE_DARK_BOW(
         item = Items.DARK_BOW_15701,
         ammo =

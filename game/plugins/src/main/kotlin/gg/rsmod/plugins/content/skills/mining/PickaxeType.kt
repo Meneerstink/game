@@ -102,6 +102,21 @@ enum class PickaxeType(
         animation = Anims.MINE_GILDED_DRAGON_PICKAXE,
         ticksBetweenRolls = 3,
     ),
+    // OSRS-IMPORT casket-weapons-tools (OSRS Wiki): the OSRS Gilded pickaxe "is a cosmetic variant of the rune pickaxe" (a different item
+    // from the 667 gilded pickaxes above); the 3rd Age pickaxe "shares the same mining speed and special attack as a dragon pickaxe" (61
+    // Mining). ADAPTED: the 667 rune / dragon pickaxe animations.
+    OSRS_GILDED(
+        item = Items.GILDED_PICKAXE,
+        level = 41,
+        animation = Anims.MINE_RUNE_PICKAXE,
+        ticksBetweenRolls = 3,
+    ),
+    THIRD_AGE(
+        item = Items.THIRDAGE_PICKAXE,
+        level = 61,
+        animation = Anims.MINE_DRAGON_PICKAXE,
+        ticksBetweenRolls = 3,
+    ),
     ;
 
     companion object {

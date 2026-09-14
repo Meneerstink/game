@@ -20088,5 +20088,20 @@ object Items {
     const val MOONLIGHT_MOTH = 23416
     const val BOTTLED_DRAGONBREATH_UNPOWERED = 23418
     const val BOTTLED_DRAGONBREATH = 23420
+    const val THIRDAGE_BOW = 23612
+    const val THIRDAGE_LONGSWORD = 23614
+    const val THIRDAGE_WAND = 23616
+    const val THIRDAGE_AXE = 23618
+    const val THIRDAGE_PICKAXE = 23620
+    const val GILDED_SCIMITAR = 23622
+    const val GILDED_2H_SWORD = 23624
+    const val GILDED_SPEAR = 23626
+    const val GILDED_HASTA = 23628
+    const val GILDED_AXE = 23630
+    const val GILDED_PICKAXE = 23632
+    const val GILDED_SPADE = 23634
+    const val KATANA = 23636
+    const val DRAGON_CANE = 23638
+    const val BRIEFCASE = 23640
     // Auto-generated file using class gg.rsmod.game.service.game.DumpEntityIdService
 }
