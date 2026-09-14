@@ -19,6 +19,10 @@ object Bows {
             Items.CRYSTAL_BOW_710,
             Items.CRYSTAL_BOW_810,
             Items.CRYSTAL_BOW_910,
+            // OSRS-IMPORT Bow of Faerdhinen: attack range 10 (wiki infobox), built-in arrows like the crystal bow.
+            Items.BOW_OF_FAERDHINEN,
+            Items.BOW_OF_FAERDHINEN_INACTIVE,
+            Items.BOW_OF_FAERDHINEN_C,
         )
 
     val LONG_BOWS =

@@ -153,6 +153,11 @@ enum class BowType(
     CRYSTAL_BOW_910(item = Items.CRYSTAL_BOW_910, ammo = emptyArray()),
     CRYSTAL_BOW_FULL(item = Items.CRYSTAL_BOW_FULL, ammo = emptyArray()),
     CRYSTAL_BOW_NEW(item = Items.NEW_CRYSTAL_BOW, ammo = emptyArray()),
+
+    // OSRS-IMPORT Bow of Faerdhinen: "does not require any arrows to use, as it generates its own when fired".
+    BOW_OF_FAERDHINEN(item = Items.BOW_OF_FAERDHINEN, ammo = emptyArray()),
+    BOW_OF_FAERDHINEN_INACTIVE(item = Items.BOW_OF_FAERDHINEN_INACTIVE, ammo = emptyArray()),
+    BOW_OF_FAERDHINEN_C(item = Items.BOW_OF_FAERDHINEN_C, ammo = emptyArray()),
     SLING(item = Items.SLING, ammo = emptyArray()),
 
     ;

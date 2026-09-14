@@ -30,6 +30,8 @@ object RangedAmmo {
             ?: BowType.values.firstOrNull { it.item == weaponId }?.ammo?.takeIf { it.isNotEmpty() }
 
     fun fired(player: Player): Fired? {
+        // Crystal bows and the Bow of Faerdhinen generate their own arrows: worn ammo is never fired or used.
+        if (gg.rsmod.plugins.content.items.osrs.CrystalEquipment.isCrystalBow(player.getEquipment(EquipmentType.WEAPON)?.id)) return null
         val slot = player.getEquipment(EquipmentType.AMMO)
         val valid = validAmmo(player.getEquipment(EquipmentType.WEAPON)?.id) ?: return slot?.let { Fired(it, false) }
         if (slot != null && slot.id in valid) return Fired(slot, false)

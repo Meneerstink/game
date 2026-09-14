@@ -122,6 +122,9 @@ object RangedCombatFormula : CombatFormula {
     ): Double {
         var hit = base
 
+        // Crystal armour with a crystal bow / Bow of Faerdhinen: ×(40 + n) / 40, before the Salve / Slayer factor (CrystalEquipment).
+        hit = gg.rsmod.plugins.content.items.osrs.CrystalEquipment.applyDamage(player, hit)
+
         // S3, 2026-09-03: routes through the Ranged-specific damage composition (Salve/black
         // mask plus the Twisted bow passive, applied only while the bow is actually equipped -
         // see TargetModifiers.rangedDamageMultiplier) instead of the generic equipmentMultiplier
@@ -159,6 +162,9 @@ object RangedCombatFormula : CombatFormula {
         specialAttackMultiplier: Double,
     ): Double {
         var hit = base
+
+        // Crystal armour with a crystal bow / Bow of Faerdhinen: ×(20 + n) / 20, before the Salve / Slayer factor (CrystalEquipment).
+        hit = gg.rsmod.plugins.content.items.osrs.CrystalEquipment.applyAccuracy(player, hit)
 
         // S3, 2026-09-03: accuracy-stage counterpart of the damage-stage change above - see
         // TargetModifiers.rangedAccuracyMultiplier.

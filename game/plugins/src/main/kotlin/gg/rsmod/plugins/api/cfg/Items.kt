@@ -19598,5 +19598,20 @@ object Items {
     const val TOME_SOAKED_PAGE = 22730
     const val MYSTIC_SMOKE_STAFF = 22731
     const val MYSTIC_SMOKE_STAFF_NOTED = 22732
+    const val BOW_OF_FAERDHINEN = 22733
+    const val BOW_OF_FAERDHINEN_INACTIVE = 22734
+    const val BOW_OF_FAERDHINEN_INACTIVE_NOTED = 22735
+    const val BOW_OF_FAERDHINEN_C = 22736
+    const val CRYSTAL_HELM = 22737
+    const val CRYSTAL_HELM_INACTIVE = 22738
+    const val CRYSTAL_BODY = 22739
+    const val CRYSTAL_BODY_INACTIVE = 22740
+    const val CRYSTAL_LEGS = 22741
+    const val CRYSTAL_LEGS_INACTIVE = 22742
+    const val CRYSTAL_ARMOUR_SEED = 22743
+    const val CRYSTAL_ARMOUR_SEED_NOTED = 22744
+    const val CRYSTAL_SHARD = 22750
+    const val ENHANCED_CRYSTAL_WEAPON_SEED = 22751
+    const val ENHANCED_CRYSTAL_WEAPON_SEED_NOTED = 22752
     // Auto-generated file using class gg.rsmod.game.service.game.DumpEntityIdService
 }

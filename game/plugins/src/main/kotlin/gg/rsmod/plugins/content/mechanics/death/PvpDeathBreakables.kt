@@ -55,7 +55,8 @@ object PvpDeathBreakables {
         if (result.context != DeathContext.WILDERNESS_PVP) return result to emptyList()
         val (converting, rest) =
             result.itemRisk.lost.partition {
-                entries.containsKey(it.item.id) || OsrsOrnamentKits.forOrnamented(it.item.id) != null || it.item.id == Items.TOXIC_BLOWPIPE
+                entries.containsKey(it.item.id) || OsrsOrnamentKits.forOrnamented(it.item.id) != null || it.item.id == Items.TOXIC_BLOWPIPE ||
+                    it.item.id == Items.BOW_OF_FAERDHINEN
             }
         if (converting.isEmpty()) return result to emptyList()
         return result.copy(itemRisk = result.itemRisk.copy(lost = rest)) to converting
@@ -86,6 +87,14 @@ object PvpDeathBreakables {
                 world.spawn(GroundItem(Item(Items.TOXIC_BLOWPIPE_EMPTY, 1), victim.tile, result.killer))
                 Blowpipe.dart(blowpipe)?.let { world.spawn(GroundItem(Item(it.itemId, Blowpipe.darts(blowpipe)), victim.tile, result.killer)) }
                 Blowpipe.scales(blowpipe).takeIf { it > 0 }?.let { world.spawn(GroundItem(Item(Items.ZULRAHS_SCALES, it), victim.tile, result.killer)) }
+                continue
+            }
+            if (slotItem.item.id == Items.BOW_OF_FAERDHINEN) {
+                // OSRS Wiki "Bow of Faerdhinen": "On unprotected death in PvP, the inactive bow is dropped, and all shards used
+                // to charge it will be lost."
+                container[slotItem.slot] = null
+                if (slotItem.source == DeathContainerSource.EQUIPMENT) equipmentChanged = true
+                world.spawn(GroundItem(Item(Items.BOW_OF_FAERDHINEN_INACTIVE, 1), victim.tile, result.killer))
                 continue
             }
             val ornament = OsrsOrnamentKits.forOrnamented(slotItem.item.id)

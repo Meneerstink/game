@@ -269200,3 +269200,342 @@
   tradeable: true
   weight: 0.0
   equipment: null
+- id: 22733
+  name: "Bow of Faerdhinen"
+  examine: "A magical elven bow."
+  tradeable: false
+  weight: 1.5
+  equipment:
+    equip_slot: 3
+    equip_type: 5
+    appearance_id: 5726
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 16
+    attack_speed: 5
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 128
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 106
+    magic_damage: 0
+    attack_audio: 2700
+    skill_reqs: [{'skill': 4, 'level': 80}, {'skill': 16, 'level': 70}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22734
+  name: "Bow of Faerdhinen (inactive)"
+  examine: "A magical elven bow."
+  tradeable: true
+  weight: 1.5
+  equipment:
+    equip_slot: 3
+    equip_type: 5
+    appearance_id: 5727
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 16
+    attack_speed: 5
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: 2700
+    skill_reqs: [{'skill': 4, 'level': 80}, {'skill': 16, 'level': 70}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22735
+  name: "Bow of Faerdhinen (inactive)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22736
+  name: "Bow of Faerdhinen (c)"
+  examine: "A magical elven bow, corrupted through the addition of too many shards."
+  tradeable: false
+  weight: 1.5
+  equipment:
+    equip_slot: 3
+    equip_type: 5
+    appearance_id: 5728
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 16
+    attack_speed: 5
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 128
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 106
+    magic_damage: 0
+    attack_audio: 2700
+    skill_reqs: [{'skill': 4, 'level': 80}, {'skill': 16, 'level': 70}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22737
+  name: "Crystal helm"
+  examine: "This helmet shines bright, like a diamond."
+  tradeable: false
+  weight: 0.5
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 5729
+    remove_head: true
+    remove_beard: true
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -10
+    attack_ranged: 9
+    defence_stab: 12
+    defence_slash: 8
+    defence_crush: 14
+    defence_magic: 10
+    defence_ranged: 18
+    summoning: 0
+    melee_strength: 0
+    prayer: 2
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
+    skill_reqs: [{'skill': 1, 'level': 70}, {'skill': 16, 'level': 50}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22738
+  name: "Crystal helm (inactive)"
+  examine: "This helmet shines bright, like a diamond."
+  tradeable: false
+  weight: 0.5
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 5730
+    remove_head: true
+    remove_beard: true
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22739
+  name: "Crystal body"
+  examine: "Sturdier than it looks."
+  tradeable: false
+  weight: 2.0
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 5731
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -18
+    attack_ranged: 31
+    defence_stab: 46
+    defence_slash: 38
+    defence_crush: 48
+    defence_magic: 44
+    defence_ranged: 68
+    summoning: 0
+    melee_strength: 0
+    prayer: 3
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
+    skill_reqs: [{'skill': 1, 'level': 70}, {'skill': 16, 'level': 50}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22740
+  name: "Crystal body (inactive)"
+  examine: "Sturdier than it looks."
+  tradeable: false
+  weight: 2.0
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 5732
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22741
+  name: "Crystal legs"
+  examine: "A bright, shiny set of leg armour."
+  tradeable: false
+  weight: 1.0
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 5733
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -12
+    attack_ranged: 18
+    defence_stab: 26
+    defence_slash: 21
+    defence_crush: 30
+    defence_magic: 34
+    defence_ranged: 38
+    summoning: 0
+    melee_strength: 0
+    prayer: 2
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
+    skill_reqs: [{'skill': 1, 'level': 70}, {'skill': 16, 'level': 50}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22742
+  name: "Crystal legs (inactive)"
+  examine: "A bright, shiny set of leg armour."
+  tradeable: false
+  weight: 1.0
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 5734
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22743
+  name: "Crystal armour seed"
+  examine: "A seed to be sung into the finest crystal armour."
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22744
+  name: "Crystal armour seed"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22750
+  name: "Crystal shard"
+  examine: "A shard of the finest crystal, from the crystal city itself."
+  tradeable: false
+  weight: 0.0
+  equipment: null
+- id: 22751
+  name: "Enhanced crystal weapon seed"
+  examine: "A seed to be sung into the most powerful crystal weaponry."
+  tradeable: true
+  weight: 0.018
+  equipment: null
+- id: 22752
+  name: "Enhanced crystal weapon seed"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null

@@ -173,6 +173,11 @@ object RangedCombatStrategy : CombatStrategy {
                 ammoProjectile.drawback?.let { drawback -> pawn.graphic(drawback) }
                 ammoProjectile.impact?.let { impact -> target.graphic(impact.id, impact.height, projectile.lifespan) }
                 world.spawn(projectile)
+            } else if (gg.rsmod.plugins.content.items.osrs.CrystalEquipment.isCrystalBow(pawn.getEquipment(EquipmentType.WEAPON)?.id)) {
+                // Crystal bows / Bow of Faerdhinen fire their own arrow: Void donor arrows.gfx.toml special_arrow_shoot 250
+                // (drawback, height 60) and special_arrow 249 (projectile). ADAPTED_TO_667 for the Bow of Faerdhinen.
+                pawn.graphic(250, 60)
+                world.spawn(pawn.createProjectile(target, 249, ProjectileType.ARROW))
             }
 
             /*
@@ -274,6 +279,10 @@ object RangedCombatStrategy : CombatStrategy {
         } else if (pawn is Player && DizanasQuiver.applies(pawn)) {
             // The shot gained Dizana's Sunfire (bonuses read above): one 1/3 charge roll.
             DizanasQuiver.afterShot(pawn)
+        }
+        // Bow of Faerdhinen: one charge per attack, hit or miss (CrystalEquipment).
+        if (pawn is Player && !firedBlowpipe) {
+            gg.rsmod.plugins.content.items.osrs.CrystalEquipment.afterBowShot(pawn)
         }
         val activated = shot?.bolt
         if (activated != null) {

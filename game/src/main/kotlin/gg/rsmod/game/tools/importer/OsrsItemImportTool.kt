@@ -305,6 +305,28 @@ object OsrsItemImportTool {
                 listOf(
                     Spec(12000, noted = true, rev667Params = mapOf(644 to 28, 686 to 1, 749 to 6, 750 to 40, 751 to 0, 752 to 40), weaponType = 1, attackAudio = 2555), // Mystic smoke staff
                 ),
+            // Bow of Faerdhinen and crystal armour. The bow follows the 667 crystal bow 4212 (ItemParamProbeTool 2026-09-14: 686 16,
+            // 23 requirement, no 644 render param, two requirements 749/750 + 751/752) with upstream 434-437 = 80 Ranged + 70
+            // Agility; weapon type 16 and attack audio 2700 as the 667 crystal bow. Crystal armour: upstream 434/436 = Defence
+            // 70, 435/437 = Agility 50 on the active pieces only (the inactive pieces carry no requirement params upstream).
+            // Worn "Check" (upstream op 451) on the charged bow and active armour. Canonical ids only: the (c) colour variants
+            // 25884-25896 / 33021, the LMS copies 27187 / 33166-33170, the recoloured armour 27697+ and the Gauntlet items are
+            // not imported.
+            "crystal" to
+                listOf(
+                    Spec(25865, rev667Params = bowfaParams(), weaponType = 16, attackAudio = 2700, rev667StringParams = mapOf(528 to "Check")), // Bow of Faerdhinen
+                    Spec(25862, noted = true, rev667Params = bowfaParams(), weaponType = 16, attackAudio = 2700), // Bow of Faerdhinen (inactive)
+                    Spec(25867, rev667Params = bowfaParams(), weaponType = 16, attackAudio = 2700), // Bow of Faerdhinen (c)
+                    Spec(23971, rev667Params = crystalArmourParams(), rev667StringParams = mapOf(528 to "Check")), // Crystal helm
+                    Spec(23973), // Crystal helm (inactive)
+                    Spec(23975, rev667Params = crystalArmourParams(), rev667StringParams = mapOf(528 to "Check")), // Crystal body
+                    Spec(23977), // Crystal body (inactive)
+                    Spec(23979, rev667Params = crystalArmourParams(), rev667StringParams = mapOf(528 to "Check")), // Crystal legs
+                    Spec(23981), // Crystal legs (inactive)
+                    Spec(23956, noted = true), // Crystal armour seed
+                    Spec(23962), // Crystal shard
+                    Spec(25859, noted = true), // Enhanced crystal weapon seed
+                ),
             // Blighted sacks (owner addition 2026-09-14): stackable, tradeable consumables without inventory options upstream;
             // they replace the runes of the spells named on their wiki pages (MagicSpells). No client params.
             "blightedsacks" to
@@ -335,6 +357,12 @@ object OsrsItemImportTool {
         weaponType = 1,
         rev667StringParams = mapOf(528 to "Check"),
     )
+
+    /** 667 crystal bow 4212 class: bow style set 16, requirement 23, 80 Ranged + 70 Agility (Bow of Faerdhinen wiki). */
+    private fun bowfaParams() = mapOf(686 to 16, 23 to 80, 749 to 4, 750 to 80, 751 to 16, 752 to 70)
+
+    /** Crystal armour: 70 Defence + 50 Agility (upstream 434-437) shown client side. */
+    private fun crystalArmourParams() = mapOf(749 to 1, 750 to 70, 751 to 16, 752 to 50)
 
     /** 667 Staff of air 1381 class: render animation 28, staff style set 1, one Magic requirement shown client side. */
     private fun staffParams(requiredMagic: Int) = mapOf(644 to 28, 686 to 1, 749 to 6, 750 to requiredMagic)

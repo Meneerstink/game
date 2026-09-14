@@ -229,6 +229,14 @@ fun Pawn.dealHit(
 
     val pawnHit = PawnHit(hit, executeHit)
 
+    // Crystal armour: "One charge is depleted for each successful hit that is received from combat" - monster hits only,
+    // nothing when a protection prayer negated the damage (CrystalEquipment).
+    if (target is Player && this is Npc && executeHit) {
+        hit.addAction {
+            if (hit.hitmarks.sumOf { it.damage } > 0) gg.rsmod.plugins.content.items.osrs.CrystalEquipment.onHitReceived(target)
+        }
+    }
+
     if (target is Npc && target.id == gg.rsmod.plugins.api.cfg.Npcs.CORPOREAL_BEAST && executeHit) {
         hit.addAction {
             gg.rsmod.plugins.content.combat.scripts.impl.CorporealBeastCombatScript.onBeastDamaged(target, this@dealHit, hit.hitmarks.sumOf { it.damage })
