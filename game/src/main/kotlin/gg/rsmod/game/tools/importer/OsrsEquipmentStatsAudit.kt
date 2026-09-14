@@ -79,6 +79,12 @@ object OsrsEquipmentStatsAudit {
             (812..817) + (870..876) + listOf(883, 885, 887, 889, 891, 893) + (2532..2541) + listOf(4712, 4714) + (4868..4871) +
             (4874..4877) + (5616..5641) + (5654..5667)).toSet()
 
+    /**
+     * 667 item -> the build-240 item it is, where both id and name differ (verified 2026-09-14): 667 "Virtus robe legs" = OSRS
+     * "Virtus robe bottom"; 667 "Broad-tipped bolts" = OSRS "Broad bolts" (Slayer broad bolts, +100 ranged strength in both).
+     */
+    val SAME_ITEM_BY_NAME: Map<Int, Int> = mapOf(20167 to 26245, 20169 to 26245, 13280 to 11875)
+
     data class Mismatch(val localId: Int, val name: String, val upstreamId: Int, val field: String, val local: Int?, val osrs: Int?) {
         override fun toString() = "$localId \"$name\" (osrs $upstreamId) $field: items.yml=${format(field, local)} osrs=${format(field, osrs)}"
     }
@@ -184,8 +190,8 @@ object OsrsEquipmentStatsAudit {
             val equipment = node.path("equipment")
             if (local in imported || equipment.isMissingNode || equipment.isNull) return@mapNotNull null
             val name = node.path("name").asText()
-            if (local in SAME_ITEM_BY_ID) {
-                val def = source[local]?.takeIf(::osrsWearable) ?: return@mapNotNull null
+            if (local in SAME_ITEM_BY_ID || local in SAME_ITEM_BY_NAME) {
+                val def = source[SAME_ITEM_BY_NAME[local] ?: local]?.takeIf(::osrsWearable) ?: return@mapNotNull null
                 return@mapNotNull NameMatch(local, name, def.id, true, diff(local, name, def.id, localStats(equipment), osrsStats(def)))
             }
             val candidates = osrsByName[name.lowercase(Locale.ROOT)] ?: return@mapNotNull null
@@ -258,7 +264,7 @@ object OsrsEquipmentStatsAudit {
         val importedUpstream = mapping.values.toSet()
         val missing =
             source.values.filter(::osrsWearable)
-                .filter { it.id !in importedUpstream && it.id !in SAME_ITEM_BY_ID && it.name.lowercase(Locale.ROOT) !in localNames }
+                .filter { it.id !in importedUpstream && it.id !in SAME_ITEM_BY_ID && it.id !in SAME_ITEM_BY_NAME.values && it.name.lowercase(Locale.ROOT) !in localNames }
                 .filter { def -> osrsStats(def).let { it.getValue("magic_damage") > 0 || it.getValue("ranged_strength") > 0 } }
                 .sortedBy { it.id }
         sb.append("MISSING magic damage / ranged strength items=${missing.size}\n")

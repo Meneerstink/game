@@ -77871,7 +77871,7 @@
     ranged_strength: 0
     magic_damage: 1.0
     attack_audio: -1
-    skill_reqs: [{'skill': 1, 'level': 50}, {'skill': 6, 'level': 25}]
+    skill_reqs: [{'skill': 6, 'level': 50}, {'skill': 1, 'level': 25}]
     absorb_melee: 3
     absorb_magic: 1
     absorb_ranged: 0
@@ -77911,7 +77911,7 @@
     ranged_strength: 0
     magic_damage: 1.0
     attack_audio: -1
-    skill_reqs: [{'skill': 1, 'level': 50}, {'skill': 6, 'level': 25}]
+    skill_reqs: [{'skill': 6, 'level': 50}, {'skill': 1, 'level': 25}]
     absorb_melee: 1
     absorb_magic: 0
     absorb_ranged: 0
@@ -78031,7 +78031,7 @@
     ranged_strength: 0
     magic_damage: 1.0
     attack_audio: -1
-    skill_reqs: [{'skill': 1, 'level': 50}, {'skill': 6, 'level': 25}]
+    skill_reqs: [{'skill': 6, 'level': 50}, {'skill': 1, 'level': 25}]
     absorb_melee: 2
     absorb_magic: 1
     absorb_ranged: 0
@@ -117158,6 +117158,7 @@
     ranged_strength: 0
     magic_damage: 1.0
     attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 50}, {'skill': 1, 'level': 25}]
     absorb_melee: 3
     absorb_magic: 1
     absorb_ranged: 0
@@ -172833,6 +172834,7 @@
     ranged_strength: 0
     magic_damage: 1.0
     attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 70}, {'skill': 1, 'level': 40}]
     absorb_melee: 3
     absorb_magic: 1
     absorb_ranged: 0
@@ -172872,6 +172874,7 @@
     ranged_strength: 0
     magic_damage: 1.0
     attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 70}, {'skill': 1, 'level': 40}]
     absorb_melee: 1
     absorb_magic: 0
     absorb_ranged: 0
@@ -172911,6 +172914,7 @@
     ranged_strength: 0
     magic_damage: 1.0
     attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 70}, {'skill': 1, 'level': 40}]
     absorb_melee: 2
     absorb_magic: 1
     absorb_ranged: 0
@@ -175318,6 +175322,7 @@
     remove_beard: false
     remove_arms: false
     attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 70}, {'skill': 1, 'level': 40}]
 - id: 14733
   name: "Dagon'hai hat"
   examine: "It's an Dagon'hai hat."
@@ -175350,6 +175355,7 @@
     remove_beard: false
     remove_arms: false
     attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 70}, {'skill': 1, 'level': 40}]
 - id: 14734
   name: "Dagon'hai robe bottom"
   examine: "It's an Dagon'hai robe bottom."
@@ -175382,6 +175388,7 @@
     remove_beard: false
     remove_arms: false
     attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 70}, {'skill': 1, 'level': 40}]
 - id: 14735
   name: "Driftwood"
   examine: "It's an Driftwood."
@@ -182616,6 +182623,7 @@
     remove_beard: false
     remove_arms: false
     attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 50}, {'skill': 1, 'level': 25}]
 - id: 15601
   name: "Picture"
   examine: "A picture of a lady called Elena."
@@ -182654,6 +182662,7 @@
     remove_beard: false
     remove_arms: false
     attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 50}, {'skill': 1, 'level': 25}]
 - id: 15603
   name: "Picture"
   examine: "A picture of a lady called Elena."
@@ -182692,6 +182701,7 @@
     remove_beard: false
     remove_arms: false
     attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 50}, {'skill': 1, 'level': 25}]
 - id: 15605
   name: "Picture"
   examine: "A picture of a lady called Elena."
@@ -182730,6 +182740,7 @@
     remove_beard: false
     remove_arms: false
     attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 50}, {'skill': 1, 'level': 25}]
 - id: 15607
   name: "Picture"
   examine: "A picture of a lady called Elena."
@@ -182768,6 +182779,7 @@
     remove_beard: false
     remove_arms: false
     attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 50}, {'skill': 1, 'level': 25}]
 - id: 15609
   name: "Picture"
   examine: "A picture of a lady called Elena."
@@ -182806,6 +182818,7 @@
     remove_beard: false
     remove_arms: false
     attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 50}, {'skill': 1, 'level': 25}]
 - id: 15611
   name: "Picture"
   examine: "A picture of a lady called Elena."
@@ -182844,6 +182857,7 @@
     remove_beard: false
     remove_arms: false
     attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 50}, {'skill': 1, 'level': 25}]
 - id: 15613
   name: "Picture"
   examine: "A picture of a lady called Elena."
@@ -182882,6 +182896,7 @@
     remove_beard: false
     remove_arms: false
     attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 50}, {'skill': 1, 'level': 25}]
 - id: 15615
   name: "Picture"
   examine: "A picture of a lady called Elena."
@@ -182920,6 +182935,7 @@
     remove_beard: false
     remove_arms: false
     attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 50}, {'skill': 1, 'level': 25}]
 - id: 15617
   name: "Picture"
   examine: "A picture of a lady called Elena."
@@ -182958,6 +182974,7 @@
     remove_beard: false
     remove_arms: false
     attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 50}, {'skill': 1, 'level': 25}]
 - id: 15619
   name: "Picture"
   examine: "A picture of a lady called Elena."
@@ -182996,6 +183013,7 @@
     remove_beard: false
     remove_arms: false
     attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 50}, {'skill': 1, 'level': 25}]
 - id: 15621
   name: "Picture"
   examine: "A picture of a lady called Elena."
@@ -183034,6 +183052,7 @@
     remove_beard: false
     remove_arms: false
     attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 50}, {'skill': 1, 'level': 25}]
 - id: 15623
   name: "Picture"
   examine: "A picture of a lady called Elena."
@@ -242825,11 +242844,11 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: 26
-    attack_ranged: -8
-    defence_stab: 38
-    defence_slash: 40
-    defence_crush: 40
-    defence_magic: 26
+    attack_ranged: -9
+    defence_stab: 31
+    defence_slash: 28
+    defence_crush: 34
+    defence_magic: 22
     defence_ranged: 0
     summoning: 32
     absorb_melee: 8
@@ -242838,7 +242857,7 @@
     melee_strength: 0
     ranged_strength: 0
     prayer: 1
-    magic_damage: 0
+    magic_damage: 2.0
     appearance_id: 5096
     equip_slot: 7
     equip_type: -1
@@ -242863,11 +242882,11 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: 26
-    attack_ranged: -8
-    defence_stab: 38
-    defence_slash: 40
-    defence_crush: 40
-    defence_magic: 26
+    attack_ranged: -9
+    defence_stab: 31
+    defence_slash: 28
+    defence_crush: 34
+    defence_magic: 22
     defence_ranged: 0
     summoning: 32
     absorb_melee: 8
@@ -242876,7 +242895,7 @@
     melee_strength: 0
     ranged_strength: 0
     prayer: 1
-    magic_damage: 0
+    magic_damage: 2.0
     appearance_id: 5097
     equip_slot: 7
     equip_type: -1
@@ -270687,6 +270706,798 @@
     magic_damage: 0.0
     attack_audio: -1
     skill_reqs: [{'skill': 4, 'level': 50}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22852
+  name: "Light infinity hat"
+  examine: "A mystic hat with a light recolour."
+  tradeable: false
+  weight: 0.453
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6391
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 6
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 6
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 1.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 50}, {'skill': 1, 'level': 25}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22853
+  name: "Light infinity top"
+  examine: "Mystical robes with a light recolour."
+  tradeable: false
+  weight: 2.267
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6392
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 22
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 22
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 1.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 50}, {'skill': 1, 'level': 25}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22854
+  name: "Light infinity bottoms"
+  examine: "Mystical robes with a light recolour."
+  tradeable: false
+  weight: 1.814
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 6393
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 17
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 17
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 1.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 50}, {'skill': 1, 'level': 25}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22855
+  name: "Dark infinity hat"
+  examine: "A mystic hat with a dark recolour."
+  tradeable: false
+  weight: 0.453
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6394
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 6
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 6
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 1.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 50}, {'skill': 1, 'level': 25}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22856
+  name: "Dark infinity top"
+  examine: "Mystical robes with a dark recolour."
+  tradeable: false
+  weight: 2.267
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6395
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 22
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 22
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 1.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 50}, {'skill': 1, 'level': 25}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22857
+  name: "Dark infinity bottoms"
+  examine: "Mystical robes with a dark recolour."
+  tradeable: false
+  weight: 1.814
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 6396
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 17
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 17
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 1.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 50}, {'skill': 1, 'level': 25}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22858
+  name: "Light infinity colour kit"
+  examine: "Use on infinity pieces to recolour them!"
+  tradeable: true
+  weight: 0.5
+  equipment: null
+- id: 22859
+  name: "Light infinity colour kit"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22860
+  name: "Dark infinity colour kit"
+  examine: "Use on infinity pieces to recolour them!"
+  tradeable: true
+  weight: 0.5
+  equipment: null
+- id: 22861
+  name: "Dark infinity colour kit"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22862
+  name: "Elder chaos top"
+  examine: "The robes worn by the dangerous elder druids."
+  tradeable: true
+  weight: 0.2
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6397
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 10
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 8
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 1.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 40}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22863
+  name: "Elder chaos top"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22864
+  name: "Elder chaos robe"
+  examine: "The robes worn by the dangerous elder druids."
+  tradeable: true
+  weight: 0.18
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 6398
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 6
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 6
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 1.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 40}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22865
+  name: "Elder chaos robe"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22866
+  name: "Elder chaos hood"
+  examine: "The hood worn by the dangerous elder druids."
+  tradeable: true
+  weight: 0.18
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6399
+    remove_head: true
+    remove_beard: true
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 5
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 4
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 1.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 40}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22867
+  name: "Elder chaos hood"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22868
+  name: "Elder chaos robes ornament kit"
+  examine: "Use on an Elder chaos robe piece to make it look fancier!"
+  tradeable: false
+  weight: 0.5
+  equipment: null
+- id: 22869
+  name: "Elder chaos top (or)"
+  examine: "The robes worn by the dangerous elder druids, tastefully decorated."
+  tradeable: false
+  weight: 0.2
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6400
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 10
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 8
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 1.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 40}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22870
+  name: "Elder chaos robe (or)"
+  examine: "The robes worn by the dangerous elder druids, tastefully decorated."
+  tradeable: false
+  weight: 0.18
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 6401
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 6
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 6
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 1.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 40}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22871
+  name: "Elder chaos hood (or)"
+  examine: "The hood worn by the dangerous elder druids, tastefully decorated."
+  tradeable: false
+  weight: 0.18
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6402
+    remove_head: true
+    remove_beard: true
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 5
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 4
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 1.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 40}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22872
+  name: "Dagon'hai robes ornament kit"
+  examine: "Use on a Dagon'hai robe piece to make it look fancier!"
+  tradeable: false
+  weight: 0.5
+  equipment: null
+- id: 22873
+  name: "Dagon'hai hat (or)"
+  examine: "A hat worn by members of the Dagon'hai, tastefully decorated."
+  tradeable: false
+  weight: 0.453
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6403
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 5
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 5
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 2
+    ranged_strength: 0
+    magic_damage: 1.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 70}, {'skill': 1, 'level': 40}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22874
+  name: "Dagon'hai robe top (or)"
+  examine: "A robe worn by members of the Dagon'hai, tastefully decorated."
+  tradeable: false
+  weight: 2.267
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6404
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 25
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 21
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 2
+    ranged_strength: 0
+    magic_damage: 1.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 70}, {'skill': 1, 'level': 40}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22875
+  name: "Dagon'hai robe bottom (or)"
+  examine: "A robe worn by members of the Dagon'hai, tastefully decorated."
+  tradeable: false
+  weight: 1.814
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 6405
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 18
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 14
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 2
+    ranged_strength: 0
+    magic_damage: 1.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 70}, {'skill': 1, 'level': 40}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22876
+  name: "Ancestral hat"
+  examine: "The hat of a powerful sorceress from a bygone era."
+  tradeable: true
+  weight: 0.453
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6406
+    remove_head: true
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 8
+    attack_ranged: -2
+    defence_stab: 12
+    defence_slash: 11
+    defence_crush: 13
+    defence_magic: 5
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 3.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 75}, {'skill': 1, 'level': 65}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22877
+  name: "Ancestral hat"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22878
+  name: "Ancestral robe top"
+  examine: "The robe top of a powerful sorceress from a bygone era."
+  tradeable: true
+  weight: 2.721
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6407
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 35
+    attack_ranged: -8
+    defence_stab: 42
+    defence_slash: 31
+    defence_crush: 51
+    defence_magic: 28
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 3.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 75}, {'skill': 1, 'level': 65}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22879
+  name: "Ancestral robe top"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22880
+  name: "Ancestral robe bottom"
+  examine: "The robe bottoms of a powerful sorceress from a bygone era."
+  tradeable: true
+  weight: 1.814
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 6408
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 26
+    attack_ranged: -7
+    defence_stab: 27
+    defence_slash: 24
+    defence_crush: 30
+    defence_magic: 20
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 3.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 75}, {'skill': 1, 'level': 65}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22881
+  name: "Ancestral robe bottom"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22882
+  name: "Twisted ancestral colour kit"
+  examine: "Use on ancestral pieces to recolour them!"
+  tradeable: false
+  weight: 0.5
+  equipment: null
+- id: 22883
+  name: "Twisted ancestral hat"
+  examine: "The hat of a powerful sorceress from a bygone era."
+  tradeable: false
+  weight: 0.453
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6409
+    remove_head: true
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 8
+    attack_ranged: -2
+    defence_stab: 12
+    defence_slash: 11
+    defence_crush: 13
+    defence_magic: 5
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 3.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 75}, {'skill': 1, 'level': 65}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22884
+  name: "Twisted ancestral robe top"
+  examine: "The robe top of a powerful sorceress from a bygone era."
+  tradeable: false
+  weight: 2.721
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6410
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 35
+    attack_ranged: -8
+    defence_stab: 42
+    defence_slash: 31
+    defence_crush: 51
+    defence_magic: 28
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 3.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 75}, {'skill': 1, 'level': 65}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22885
+  name: "Twisted ancestral robe bottom"
+  examine: "The robe bottoms of a powerful sorceress from a bygone era."
+  tradeable: false
+  weight: 1.814
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 6411
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 26
+    attack_ranged: -7
+    defence_stab: 27
+    defence_slash: 24
+    defence_crush: 30
+    defence_magic: 20
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 3.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 75}, {'skill': 1, 'level': 65}]
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0

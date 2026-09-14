@@ -381,6 +381,39 @@ object OsrsItemImportTool {
                     Spec(33595), // Seeking dragon arrow
                     Spec(33601), // Seeking broad arrows
                 ),
+            // Step 3 roster batch "magearmour": light/dark infinity (colour kits 12530/12528), elder chaos druid robes (+ Bounty Hunter
+            // (or) kit 27113), Dagon'hai (or) (kit 27121; the base robes exist in 667), ancestral robes (+ twisted kit 24670). Kit ids by
+            // Jagex name (RuneLite gameval ItemID). Client requirement params are added after the dry run shows upstream 434-437.
+            "magearmour" to
+                listOf(
+                    Spec(12419), // Light infinity hat
+                    Spec(12420), // Light infinity top
+                    Spec(12421), // Light infinity bottoms
+                    Spec(12457), // Dark infinity hat
+                    Spec(12458), // Dark infinity top
+                    Spec(12459), // Dark infinity bottoms
+                    Spec(12530, noted = true), // Light infinity colour kit
+                    Spec(12528, noted = true), // Dark infinity colour kit
+                    // Elder chaos pieces: one requirement (upstream 434/436 = 40 Magic) -> client params 749/750.
+                    Spec(20517, noted = true, rev667Params = mapOf(749 to 6, 750 to 40)), // Elder chaos top
+                    Spec(20520, noted = true, rev667Params = mapOf(749 to 6, 750 to 40)), // Elder chaos robe
+                    Spec(20595, noted = true, rev667Params = mapOf(749 to 6, 750 to 40)), // Elder chaos hood
+                    Spec(27113), // Elder chaos robes ornament kit
+                    Spec(27115, rev667Params = mapOf(749 to 6, 750 to 40)), // Elder chaos top (or)
+                    Spec(27117, rev667Params = mapOf(749 to 6, 750 to 40)), // Elder chaos robe (or)
+                    Spec(27119, rev667Params = mapOf(749 to 6, 750 to 40)), // Elder chaos hood (or)
+                    Spec(27121), // Dagon'hai robes ornament kit
+                    Spec(27123), // Dagon'hai hat (or)
+                    Spec(27125), // Dagon'hai robe top (or)
+                    Spec(27127), // Dagon'hai robe bottom (or)
+                    Spec(21018, noted = true), // Ancestral hat
+                    Spec(21021, noted = true), // Ancestral robe top
+                    Spec(21024, noted = true), // Ancestral robe bottom
+                    Spec(24670), // Twisted ancestral colour kit (no upstream noted variant)
+                    Spec(24664), // Twisted ancestral hat
+                    Spec(24666), // Twisted ancestral robe top
+                    Spec(24668), // Twisted ancestral robe bottom
+                ),
             "deadstaves" to
                 listOf(
                     Spec(11791, noted = true, rev667Params = deadStaffParams()), // Staff of the dead

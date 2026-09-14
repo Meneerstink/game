@@ -56,7 +56,7 @@ object PvpDeathBreakables {
         if (result.context != DeathContext.WILDERNESS_PVP) return result to emptyList()
         val (converting, rest) =
             result.itemRisk.lost.partition {
-                entries.containsKey(it.item.id) || OsrsOrnamentKits.forOrnamented(it.item.id) != null || it.item.id == Items.TOXIC_BLOWPIPE ||
+                entries.containsKey(it.item.id) || OsrsOrnamentKits.forPvpConversion(it.item.id) != null || it.item.id == Items.TOXIC_BLOWPIPE ||
                     it.item.id == Items.BOW_OF_FAERDHINEN || it.item.id == Items.AMULET_OF_BLOOD_FURY || it.item.id == Items.TOXIC_STAFF_OF_THE_DEAD
             }
         if (converting.isEmpty()) return result to emptyList()
@@ -116,7 +116,7 @@ object PvpDeathBreakables {
                 if (scales > 0) world.spawn(GroundItem(Item(Items.ZULRAHS_SCALES, scales), victim.tile, result.killer))
                 continue
             }
-            val ornament = OsrsOrnamentKits.forOrnamented(slotItem.item.id)
+            val ornament = OsrsOrnamentKits.forPvpConversion(slotItem.item.id)
             if (ornament != null) {
                 // "Items Kept on Death": dropped to the PKer as the non-ornamented item plus the ornament kit.
                 container[slotItem.slot] = null

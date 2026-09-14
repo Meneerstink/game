@@ -247,6 +247,23 @@ enum class CombinationData(
         experience = 0.0,
     ),
 
+    /** OSRS-IMPORT magearmour: light/dark infinity, twisted ancestral, elder chaos (or) and Dagon'hai (or) kits (OsrsOrnamentKits). */
+    LIGHT_INFINITY_HAT(items = intArrayOf(Items.LIGHT_INFINITY_COLOUR_KIT, Items.INFINITY_HAT), resultItem = Items.LIGHT_INFINITY_HAT, experience = 0.0),
+    LIGHT_INFINITY_TOP(items = intArrayOf(Items.LIGHT_INFINITY_COLOUR_KIT, Items.INFINITY_TOP), resultItem = Items.LIGHT_INFINITY_TOP, experience = 0.0),
+    LIGHT_INFINITY_BOTTOMS(items = intArrayOf(Items.LIGHT_INFINITY_COLOUR_KIT, Items.INFINITY_BOTTOMS), resultItem = Items.LIGHT_INFINITY_BOTTOMS, experience = 0.0),
+    DARK_INFINITY_HAT(items = intArrayOf(Items.DARK_INFINITY_COLOUR_KIT, Items.INFINITY_HAT), resultItem = Items.DARK_INFINITY_HAT, experience = 0.0),
+    DARK_INFINITY_TOP(items = intArrayOf(Items.DARK_INFINITY_COLOUR_KIT, Items.INFINITY_TOP), resultItem = Items.DARK_INFINITY_TOP, experience = 0.0),
+    DARK_INFINITY_BOTTOMS(items = intArrayOf(Items.DARK_INFINITY_COLOUR_KIT, Items.INFINITY_BOTTOMS), resultItem = Items.DARK_INFINITY_BOTTOMS, experience = 0.0),
+    TWISTED_ANCESTRAL_HAT(items = intArrayOf(Items.TWISTED_ANCESTRAL_COLOUR_KIT, Items.ANCESTRAL_HAT), resultItem = Items.TWISTED_ANCESTRAL_HAT, experience = 0.0),
+    TWISTED_ANCESTRAL_ROBE_TOP(items = intArrayOf(Items.TWISTED_ANCESTRAL_COLOUR_KIT, Items.ANCESTRAL_ROBE_TOP), resultItem = Items.TWISTED_ANCESTRAL_ROBE_TOP, experience = 0.0),
+    TWISTED_ANCESTRAL_ROBE_BOTTOM(items = intArrayOf(Items.TWISTED_ANCESTRAL_COLOUR_KIT, Items.ANCESTRAL_ROBE_BOTTOM), resultItem = Items.TWISTED_ANCESTRAL_ROBE_BOTTOM, experience = 0.0),
+    ELDER_CHAOS_TOP_OR(items = intArrayOf(Items.ELDER_CHAOS_ROBES_ORNAMENT_KIT, Items.ELDER_CHAOS_TOP), resultItem = Items.ELDER_CHAOS_TOP_OR, experience = 0.0),
+    ELDER_CHAOS_ROBE_OR(items = intArrayOf(Items.ELDER_CHAOS_ROBES_ORNAMENT_KIT, Items.ELDER_CHAOS_ROBE), resultItem = Items.ELDER_CHAOS_ROBE_OR, experience = 0.0),
+    ELDER_CHAOS_HOOD_OR(items = intArrayOf(Items.ELDER_CHAOS_ROBES_ORNAMENT_KIT, Items.ELDER_CHAOS_HOOD), resultItem = Items.ELDER_CHAOS_HOOD_OR, experience = 0.0),
+    DAGONHAI_HAT_OR(items = intArrayOf(Items.DAGONHAI_ROBES_ORNAMENT_KIT, Items.DAGONHAI_HAT), resultItem = Items.DAGONHAI_HAT_OR, experience = 0.0),
+    DAGONHAI_ROBE_TOP_OR(items = intArrayOf(Items.DAGONHAI_ROBES_ORNAMENT_KIT, Items.DAGONHAI_ROBE_TOP), resultItem = Items.DAGONHAI_ROBE_TOP_OR, experience = 0.0),
+    DAGONHAI_ROBE_BOTTOM_OR(items = intArrayOf(Items.DAGONHAI_ROBES_ORNAMENT_KIT, Items.DAGONHAI_ROBE_BOTTOM), resultItem = Items.DAGONHAI_ROBE_BOTTOM_OR, experience = 0.0),
+
     /** OSRS Wiki "Etched araxyte fang": 86 Crafting, 500 XP, non-reversible (the wiki's confirmation dialog is not ported). */
     AMULET_OF_RANCOUR(
         items = intArrayOf(Items.ETCHED_ARAXYTE_FANG, Items.AMULET_OF_TORTURE),

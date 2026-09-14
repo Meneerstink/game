@@ -109,8 +109,10 @@ class PvpDeathBreakablesTests {
     }
 
     @Test
-    fun `every ornamented item is dropped as base item plus kit on a wilderness death`() {
-        gg.rsmod.plugins.content.items.osrs.OsrsOrnamentKits.ALL.forEach { ornament ->
+    fun `every item with a tradeable ornament or colour kit is dropped as base item plus kit on a wilderness death`() {
+        // "Items Kept on Death": tradeable ornament kits -> "Dropped to the PKer as the tradeable, non-ornamented item. Also drops
+        // the tradeable ornament kit to the PKer." Rows with an untradeable kit are covered by the next test.
+        gg.rsmod.plugins.content.items.osrs.OsrsOrnamentKits.ALL.filter { it.pvpConvert }.forEach { ornament ->
             val victim = newPlayer()
             val killer = newPlayer()
             val world = mockk<World>(relaxed = true)
@@ -125,6 +127,20 @@ class PvpDeathBreakablesTests {
             verify(exactly = 1) { world.spawn(match<GroundItem> { it.item == ornament.base && it.amount == 1 }) }
             verify(exactly = 1) { world.spawn(match<GroundItem> { it.item == ornament.kit && it.amount == 1 }) }
             verify(exactly = 0) { world.spawn(match<GroundItem> { it.item == ornament.ornamented }) }
+        }
+    }
+
+    @Test
+    fun `items with an untradeable Bounty Hunter kit keep the default death handling`() {
+        // No "Items Kept on Death" rule covers a tradeable item carrying an untradeable kit (SOURCE_GAP, OSRS_IMPORT_STATUS.md):
+        // the elder chaos (or) and Dagon'hai (or) pieces stay in the normal lost list instead of being converted.
+        val untradeableKits = gg.rsmod.plugins.content.items.osrs.OsrsOrnamentKits.ALL.filterNot { it.pvpConvert }
+        assertEquals(6, untradeableKits.size, "3 elder chaos (or) + 3 Dagon'hai (or)")
+        untradeableKits.forEach { ornament ->
+            val lost = listOf(DeathSlotItem(DeathContainerSource.INVENTORY, 0, Item(ornament.ornamented, 1)))
+            val (result, converting) = PvpDeathBreakables.split(DeathResolutionResult(DeathContext.WILDERNESS_PVP, newPlayer(), newPlayer(), DeathItemRiskResult(0, emptyList(), lost)))
+            assertTrue(converting.isEmpty(), "${ornament.ornamented} is not converted")
+            assertEquals(lost, result.itemRisk.lost)
         }
     }
 

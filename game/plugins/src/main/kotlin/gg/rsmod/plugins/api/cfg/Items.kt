@@ -19656,5 +19656,40 @@ object Items {
     const val SEEKING_AMETHYST_ARROW = 22841
     const val SEEKING_DRAGON_ARROW = 22846
     const val SEEKING_BROAD_ARROWS = 22851
+    // OSRS-IMPORT magearmour (step 3 roster).
+    const val LIGHT_INFINITY_HAT = 22852
+    const val LIGHT_INFINITY_TOP = 22853
+    const val LIGHT_INFINITY_BOTTOMS = 22854
+    const val DARK_INFINITY_HAT = 22855
+    const val DARK_INFINITY_TOP = 22856
+    const val DARK_INFINITY_BOTTOMS = 22857
+    const val LIGHT_INFINITY_COLOUR_KIT = 22858
+    const val LIGHT_INFINITY_COLOUR_KIT_NOTED = 22859
+    const val DARK_INFINITY_COLOUR_KIT = 22860
+    const val DARK_INFINITY_COLOUR_KIT_NOTED = 22861
+    const val ELDER_CHAOS_TOP = 22862
+    const val ELDER_CHAOS_TOP_NOTED = 22863
+    const val ELDER_CHAOS_ROBE = 22864
+    const val ELDER_CHAOS_ROBE_NOTED = 22865
+    const val ELDER_CHAOS_HOOD = 22866
+    const val ELDER_CHAOS_HOOD_NOTED = 22867
+    const val ELDER_CHAOS_ROBES_ORNAMENT_KIT = 22868
+    const val ELDER_CHAOS_TOP_OR = 22869
+    const val ELDER_CHAOS_ROBE_OR = 22870
+    const val ELDER_CHAOS_HOOD_OR = 22871
+    const val DAGONHAI_ROBES_ORNAMENT_KIT = 22872
+    const val DAGONHAI_HAT_OR = 22873
+    const val DAGONHAI_ROBE_TOP_OR = 22874
+    const val DAGONHAI_ROBE_BOTTOM_OR = 22875
+    const val ANCESTRAL_HAT = 22876
+    const val ANCESTRAL_HAT_NOTED = 22877
+    const val ANCESTRAL_ROBE_TOP = 22878
+    const val ANCESTRAL_ROBE_TOP_NOTED = 22879
+    const val ANCESTRAL_ROBE_BOTTOM = 22880
+    const val ANCESTRAL_ROBE_BOTTOM_NOTED = 22881
+    const val TWISTED_ANCESTRAL_COLOUR_KIT = 22882
+    const val TWISTED_ANCESTRAL_HAT = 22883
+    const val TWISTED_ANCESTRAL_ROBE_TOP = 22884
+    const val TWISTED_ANCESTRAL_ROBE_BOTTOM = 22885
     // Auto-generated file using class gg.rsmod.game.service.game.DumpEntityIdService
 }
