@@ -284473,3 +284473,171 @@
   tradeable: false
   weight: 0.01
   equipment: null
+- id: 23701
+  name: "Extended antifire(4)"
+  examine: "4 doses of extended anti-firebreath potion."
+  tradeable: true
+  weight: 0.035
+  equipment: null
+- id: 23702
+  name: "Extended antifire(4)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23703
+  name: "Extended antifire(3)"
+  examine: "3 doses of extended anti-firebreath potion."
+  tradeable: true
+  weight: 0.03
+  equipment: null
+- id: 23704
+  name: "Extended antifire(3)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23705
+  name: "Extended antifire(2)"
+  examine: "2 doses of extended anti-firebreath potion."
+  tradeable: true
+  weight: 0.025
+  equipment: null
+- id: 23706
+  name: "Extended antifire(2)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23707
+  name: "Extended antifire(1)"
+  examine: "1 dose of extended anti-firebreath potion."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 23708
+  name: "Extended antifire(1)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23709
+  name: "Extended antifire mix(2)"
+  examine: "Two doses of fishy extended anti-firebreath potion."
+  tradeable: true
+  weight: 0.08
+  equipment: null
+- id: 23710
+  name: "Extended antifire mix(2)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23711
+  name: "Extended antifire mix(1)"
+  examine: "One dose of fishy extended anti-firebreath potion."
+  tradeable: true
+  weight: 0.05
+  equipment: null
+- id: 23712
+  name: "Extended antifire mix(1)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23713
+  name: "Super antifire mix(2)"
+  examine: "Two doses of fishy super anti-firebreath potion."
+  tradeable: true
+  weight: 0.075
+  equipment: null
+- id: 23714
+  name: "Super antifire mix(2)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23715
+  name: "Super antifire mix(1)"
+  examine: "One dose of fishy super anti-firebreath potion."
+  tradeable: true
+  weight: 0.045
+  equipment: null
+- id: 23716
+  name: "Super antifire mix(1)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23717
+  name: "Extended super antifire(4)"
+  examine: "4 doses of extended super anti-firebreath potion."
+  tradeable: true
+  weight: 0.035
+  equipment: null
+- id: 23718
+  name: "Extended super antifire(4)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23719
+  name: "Extended super antifire(3)"
+  examine: "3 doses of extended super anti-firebreath potion."
+  tradeable: true
+  weight: 0.03
+  equipment: null
+- id: 23720
+  name: "Extended super antifire(3)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23721
+  name: "Extended super antifire(2)"
+  examine: "2 doses of extended super anti-firebreath potion."
+  tradeable: true
+  weight: 0.025
+  equipment: null
+- id: 23722
+  name: "Extended super antifire(2)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23723
+  name: "Extended super antifire(1)"
+  examine: "1 dose of extended super anti-firebreath potion."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 23724
+  name: "Extended super antifire(1)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23725
+  name: "Extended super antifire mix(2)"
+  examine: "Two doses of fishy extended super anti-firebreath potion."
+  tradeable: true
+  weight: 0.08
+  equipment: null
+- id: 23726
+  name: "Extended super antifire mix(2)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23727
+  name: "Extended super antifire mix(1)"
+  examine: "One dose of fishy extended super anti-firebreath potion."
+  tradeable: true
+  weight: 0.05
+  equipment: null
+- id: 23728
+  name: "Extended super antifire mix(1)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null

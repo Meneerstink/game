@@ -642,4 +642,20 @@ enum class Potion(
     MOONLIGHT_MOTH_MIX1(item = Items.MOONLIGHT_MOTH_MIX_1, replacement = Items.VIAL, potionType = PotionType.MOONLIGHT_MOTH_MIX),
     SUNLIGHT_MOTH_MIX2(item = Items.SUNLIGHT_MOTH_MIX_2, replacement = Items.SUNLIGHT_MOTH_MIX_1, potionType = PotionType.SUNLIGHT_MOTH_MIX),
     SUNLIGHT_MOTH_MIX1(item = Items.SUNLIGHT_MOTH_MIX_1, replacement = Items.VIAL, potionType = PotionType.SUNLIGHT_MOTH_MIX),
+
+    // OSRS-IMPORT step 4 batch potions-antifire (owner answer Q8).
+    EXTENDED_ANTIFIRE4(item = Items.EXTENDED_ANTIFIRE_4, replacement = Items.EXTENDED_ANTIFIRE_3, potionType = PotionType.EXTENDED_ANTIFIRE),
+    EXTENDED_ANTIFIRE3(item = Items.EXTENDED_ANTIFIRE_3, replacement = Items.EXTENDED_ANTIFIRE_2, potionType = PotionType.EXTENDED_ANTIFIRE),
+    EXTENDED_ANTIFIRE2(item = Items.EXTENDED_ANTIFIRE_2, replacement = Items.EXTENDED_ANTIFIRE_1, potionType = PotionType.EXTENDED_ANTIFIRE),
+    EXTENDED_ANTIFIRE1(item = Items.EXTENDED_ANTIFIRE_1, replacement = Items.VIAL, potionType = PotionType.EXTENDED_ANTIFIRE),
+    EXTENDED_ANTIFIRE_MIX2(item = Items.EXTENDED_ANTIFIRE_MIX_2, replacement = Items.EXTENDED_ANTIFIRE_MIX_1, potionType = PotionType.EXTENDED_ANTIFIRE_MIX),
+    EXTENDED_ANTIFIRE_MIX1(item = Items.EXTENDED_ANTIFIRE_MIX_1, replacement = Items.VIAL, potionType = PotionType.EXTENDED_ANTIFIRE_MIX),
+    SUPER_ANTIFIRE_MIX2(item = Items.SUPER_ANTIFIRE_MIX_2, replacement = Items.SUPER_ANTIFIRE_MIX_1, potionType = PotionType.SUPER_ANTIFIRE_MIX),
+    SUPER_ANTIFIRE_MIX1(item = Items.SUPER_ANTIFIRE_MIX_1, replacement = Items.VIAL, potionType = PotionType.SUPER_ANTIFIRE_MIX),
+    EXTENDED_SUPER_ANTIFIRE4(item = Items.EXTENDED_SUPER_ANTIFIRE_4, replacement = Items.EXTENDED_SUPER_ANTIFIRE_3, potionType = PotionType.EXTENDED_SUPER_ANTIFIRE),
+    EXTENDED_SUPER_ANTIFIRE3(item = Items.EXTENDED_SUPER_ANTIFIRE_3, replacement = Items.EXTENDED_SUPER_ANTIFIRE_2, potionType = PotionType.EXTENDED_SUPER_ANTIFIRE),
+    EXTENDED_SUPER_ANTIFIRE2(item = Items.EXTENDED_SUPER_ANTIFIRE_2, replacement = Items.EXTENDED_SUPER_ANTIFIRE_1, potionType = PotionType.EXTENDED_SUPER_ANTIFIRE),
+    EXTENDED_SUPER_ANTIFIRE1(item = Items.EXTENDED_SUPER_ANTIFIRE_1, replacement = Items.VIAL, potionType = PotionType.EXTENDED_SUPER_ANTIFIRE),
+    EXTENDED_SUPER_ANTIFIRE_MIX2(item = Items.EXTENDED_SUPER_ANTIFIRE_MIX_2, replacement = Items.EXTENDED_SUPER_ANTIFIRE_MIX_1, potionType = PotionType.EXTENDED_SUPER_ANTIFIRE_MIX),
+    EXTENDED_SUPER_ANTIFIRE_MIX1(item = Items.EXTENDED_SUPER_ANTIFIRE_MIX_1, replacement = Items.VIAL, potionType = PotionType.EXTENDED_SUPER_ANTIFIRE_MIX),
 }

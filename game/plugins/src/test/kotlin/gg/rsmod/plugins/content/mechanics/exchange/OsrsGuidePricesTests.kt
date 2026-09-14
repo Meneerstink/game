@@ -68,8 +68,10 @@ class OsrsGuidePricesTests {
         println("OSRS_GUIDE_PRICES exchangeable=${items.size} matched=$matched unmatched=${unmatched.size}")
         val whip = items.first { it.id == Items.ABYSSAL_WHIP }
         assertEquals(809253, OsrsGuidePrices.seed(whip, table))
-        assertEquals(12192, items.size, "exchangeable items (tradeable, unnoted, not coins)")
-        assertEquals(3272, matched, "items seeded from the 13 September 2026 OSRS snapshot; the unmatched list is build/osrs-guide-price-unmatched.txt")
+        // 2026-09-14 batch potions-antifire added 14 tradeable doses (Extended antifire, the mixes, Extended super antifire), all named as
+        // in the OSRS snapshot: exchangeable 12192 -> 12206, seeded 3272 -> 3286, unmatched unchanged at 8920.
+        assertEquals(12206, items.size, "exchangeable items (tradeable, unnoted, not coins)")
+        assertEquals(3286, matched, "items seeded from the 13 September 2026 OSRS snapshot; the unmatched list is build/osrs-guide-price-unmatched.txt")
     }
 
     @Test

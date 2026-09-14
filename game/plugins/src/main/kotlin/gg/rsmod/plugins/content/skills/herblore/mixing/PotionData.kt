@@ -309,6 +309,31 @@ enum class PotionData(
         experience = 60.0,
     ),
 
+    // OSRS-IMPORT potions-antifire (OSRS Wiki mix pages): caviar on the 2-dose potion.
+    SUPER_ANTIFIRE_MIX(
+        primary = Items.SUPER_ANTIFIRE_2,
+        secondary = Items.CAVIAR,
+        product = Items.SUPER_ANTIFIRE_MIX_2,
+        levelRequirement = 98,
+        experience = 70.0,
+    ),
+
+    EXTENDED_ANTIFIRE_MIX(
+        primary = Items.EXTENDED_ANTIFIRE_2,
+        secondary = Items.CAVIAR,
+        product = Items.EXTENDED_ANTIFIRE_MIX_2,
+        levelRequirement = 91,
+        experience = 61.0,
+    ),
+
+    EXTENDED_SUPER_ANTIFIRE_MIX(
+        primary = Items.EXTENDED_SUPER_ANTIFIRE_2,
+        secondary = Items.CAVIAR,
+        product = Items.EXTENDED_SUPER_ANTIFIRE_MIX_2,
+        levelRequirement = 99,
+        experience = 78.0,
+    ),
+
     AGILITY_MIX(
         primary = Items.AGILITY_POTION_2,
         secondary = Items.CAVIAR,

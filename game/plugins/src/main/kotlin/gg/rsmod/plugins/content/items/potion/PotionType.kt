@@ -52,12 +52,14 @@ enum class PotionType(
             applyBoost(p, alteredSkills, alterStrategy)
         }
     },
-    MAGIC(alteredSkills = intArrayOf(Skills.MAGIC), alterStrategy = arrayOf("r")) {
+    // OSRS Wiki "Magic potion": "temporarily raises the player's Magic level by 4" (was the 667 floor(10 %) + 3).
+    MAGIC(alteredSkills = intArrayOf(Skills.MAGIC), alterStrategy = arrayOf("magic_potion")) {
         override fun apply(p: Player) {
             applyBoost(p, alteredSkills, alterStrategy)
         }
     },
-    RANGING(alteredSkills = intArrayOf(Skills.RANGED), alterStrategy = arrayOf("r")) {
+    // OSRS Wiki "Ranging potion": "4 + 10% of the player's current Ranged level, rounded down" (was the 667 floor(10 %) + 3).
+    RANGING(alteredSkills = intArrayOf(Skills.RANGED), alterStrategy = arrayOf("ranging_potion")) {
         override fun apply(p: Player) {
             applyBoost(p, alteredSkills, alterStrategy)
         }
@@ -96,20 +98,12 @@ enum class PotionType(
         }
     },
     ANTIFIRE {
-        override fun apply(p: Player) {
-            // Real duration (OSRS Wiki "Dragonfire"): 6 minutes / 600 ticks. Drinking a
-            // regular antifire while a stronger super antifire is still active would
-            // downgrade the protection, so leave the super timer alone if it's running.
-            if (!p.timers.has(SUPER_ANTIFIRE_TIMER)) {
-                p.timers[ANTIFIRE_TIMER] = 600
-            }
-        }
+        // OSRS Wiki "Antifire potion": 6 minutes, expiry warning and message ([AntifirePotions]).
+        override fun apply(p: Player) = AntifirePotions.drinkAntifire(p, AntifirePotions.ANTIFIRE_TICKS)
     },
     SUPER_ANTIFIRE {
-        override fun apply(p: Player) {
-            // Real duration (OSRS Wiki "Dragonfire"): 3 minutes / 300 ticks.
-            p.timers[SUPER_ANTIFIRE_TIMER] = 300
-        }
+        // Owner answer Q8: the 667 Super antifire is the OSRS super antifire potion (3 minutes of complete regular dragonfire immunity).
+        override fun apply(p: Player) = AntifirePotions.drinkSuperAntifire(p, AntifirePotions.SUPER_ANTIFIRE_TICKS)
     },
     HUNTER(alteredSkills = intArrayOf(Skills.HUNTER), alterStrategy = arrayOf("r_skill")) {
         override fun apply(p: Player) {
@@ -545,6 +539,30 @@ enum class PotionType(
     },
     SUNLIGHT_MOTH_MIX {
         override fun apply(p: Player) = SkillPotions.sunlight(p)
+    },
+    EXTENDED_ANTIFIRE {
+        override fun apply(p: Player) = AntifirePotions.drinkAntifire(p, AntifirePotions.EXTENDED_ANTIFIRE_TICKS)
+    },
+    EXTENDED_ANTIFIRE_MIX(message = AntifirePotions.MIX_MESSAGE) {
+        override fun apply(p: Player) {
+            AntifirePotions.drinkAntifire(p, AntifirePotions.EXTENDED_ANTIFIRE_TICKS)
+            AntifirePotions.heal(p)
+        }
+    },
+    SUPER_ANTIFIRE_MIX(message = AntifirePotions.MIX_MESSAGE) {
+        override fun apply(p: Player) {
+            AntifirePotions.drinkSuperAntifire(p, AntifirePotions.SUPER_ANTIFIRE_TICKS)
+            AntifirePotions.heal(p)
+        }
+    },
+    EXTENDED_SUPER_ANTIFIRE {
+        override fun apply(p: Player) = AntifirePotions.drinkSuperAntifire(p, AntifirePotions.EXTENDED_SUPER_ANTIFIRE_TICKS)
+    },
+    EXTENDED_SUPER_ANTIFIRE_MIX(message = AntifirePotions.MIX_MESSAGE) {
+        override fun apply(p: Player) {
+            AntifirePotions.drinkSuperAntifire(p, AntifirePotions.EXTENDED_SUPER_ANTIFIRE_TICKS)
+            AntifirePotions.heal(p)
+        }
     }, ;
 
     protected fun cureVenomAndPoison(
@@ -594,13 +612,15 @@ enum class PotionType(
         }
     }
 
-    private fun boostQuantity(
+    internal fun boostQuantity(
         currentLevel: Double,
         boostStrategy: String,
     ): Int {
         var boost = 0
         when (boostStrategy) {
             "r" -> boost = floor(currentLevel / 10).toInt() + 3
+            "ranging_potion" -> boost = floor(currentLevel / 10).toInt() + 4
+            "magic_potion" -> boost = 4
             "s" -> boost = floor(15 * (currentLevel / 100)).toInt() + 5
             "restore" -> boost = floor((currentLevel * 3) / 10).toInt() + 10
             "s_restore" -> boost = floor(currentLevel / 4).toInt() + 8
@@ -636,7 +656,7 @@ enum class PotionType(
     ): Int {
         var cap = 0
         when (boostStrategy) {
-            "r" -> cap = boostQuantity(currentLevel.toDouble(), boostStrategy)
+            "r", "ranging_potion", "magic_potion" -> cap = boostQuantity(currentLevel.toDouble(), boostStrategy)
             "s" -> cap = boostQuantity(currentLevel.toDouble(), boostStrategy)
             "brewHealth" -> cap = boostQuantity(currentLevel.toDouble(), boostStrategy)
             "brewDef" -> cap = boostQuantity(currentLevel.toDouble(), boostStrategy)

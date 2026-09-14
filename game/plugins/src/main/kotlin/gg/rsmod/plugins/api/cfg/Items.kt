@@ -20145,5 +20145,35 @@ object Items {
     const val LOOT_KEY_23698 = 23698
     const val LOOT_KEY_23699 = 23699
     const val LOOT_KEY_23700 = 23700
+
+    // OSRS-IMPORT step 4 batch "potions-antifire" (owner answer Q8; OsrsItemImportTool, tx-20260914-125907).
+    const val EXTENDED_ANTIFIRE_4 = 23701
+    const val EXTENDED_ANTIFIRE_4_NOTED = 23702
+    const val EXTENDED_ANTIFIRE_3 = 23703
+    const val EXTENDED_ANTIFIRE_3_NOTED = 23704
+    const val EXTENDED_ANTIFIRE_2 = 23705
+    const val EXTENDED_ANTIFIRE_2_NOTED = 23706
+    const val EXTENDED_ANTIFIRE_1 = 23707
+    const val EXTENDED_ANTIFIRE_1_NOTED = 23708
+    const val EXTENDED_ANTIFIRE_MIX_2 = 23709
+    const val EXTENDED_ANTIFIRE_MIX_2_NOTED = 23710
+    const val EXTENDED_ANTIFIRE_MIX_1 = 23711
+    const val EXTENDED_ANTIFIRE_MIX_1_NOTED = 23712
+    const val SUPER_ANTIFIRE_MIX_2 = 23713
+    const val SUPER_ANTIFIRE_MIX_2_NOTED = 23714
+    const val SUPER_ANTIFIRE_MIX_1 = 23715
+    const val SUPER_ANTIFIRE_MIX_1_NOTED = 23716
+    const val EXTENDED_SUPER_ANTIFIRE_4 = 23717
+    const val EXTENDED_SUPER_ANTIFIRE_4_NOTED = 23718
+    const val EXTENDED_SUPER_ANTIFIRE_3 = 23719
+    const val EXTENDED_SUPER_ANTIFIRE_3_NOTED = 23720
+    const val EXTENDED_SUPER_ANTIFIRE_2 = 23721
+    const val EXTENDED_SUPER_ANTIFIRE_2_NOTED = 23722
+    const val EXTENDED_SUPER_ANTIFIRE_1 = 23723
+    const val EXTENDED_SUPER_ANTIFIRE_1_NOTED = 23724
+    const val EXTENDED_SUPER_ANTIFIRE_MIX_2 = 23725
+    const val EXTENDED_SUPER_ANTIFIRE_MIX_2_NOTED = 23726
+    const val EXTENDED_SUPER_ANTIFIRE_MIX_1 = 23727
+    const val EXTENDED_SUPER_ANTIFIRE_MIX_1_NOTED = 23728
     // Auto-generated file using class gg.rsmod.game.service.game.DumpEntityIdService
 }
