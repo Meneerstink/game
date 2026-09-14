@@ -32,6 +32,8 @@ object Poison {
      */
     fun getDamageForTicks(ticks: Int) = (ticks / 5) + 1
 
+    fun isPoisoned(pawn: Pawn): Boolean = pawn.attr.has(POISON_TICKS_LEFT_ATTR)
+
     /**
      * Checks if a given pawn is immune to poison.
      *
@@ -54,12 +56,25 @@ object Poison {
      * @return true if the poison was applied successfully, false otherwise
      * @since 1.0
      */
+    /**
+     * Poisons [pawn] at an OSRS poison severity: a hit deals ceil(severity / 5) and the severity drops by one per hit, which is this
+     * model's `ticks = severity - 1` (severity 10 -> first hit 2, 11 -> 3, 20 -> 4, 22 -> 5; OSRS Wiki "Ancient sceptre" smoke table).
+     */
+    fun poisonSeverity(
+        pawn: Pawn,
+        severity: Int,
+    ): Boolean = applyPoisonTicks(pawn, severity - 1)
+
     fun poison(
         pawn: Pawn,
         initialDamage: Int,
+    ): Boolean = applyPoisonTicks(pawn, (initialDamage * 5) - 4)
+
+    private fun applyPoisonTicks(
+        pawn: Pawn,
+        ticks: Int,
     ): Boolean {
         if (!pawn.attr.has(POISON_TICKS_LEFT_ATTR)) {
-            val ticks = (initialDamage * 5) - 4
             val oldDamage = getDamageForTicks(pawn.attr[POISON_TICKS_LEFT_ATTR] ?: 0)
             val newDamage = getDamageForTicks(ticks)
             if (oldDamage > newDamage) {

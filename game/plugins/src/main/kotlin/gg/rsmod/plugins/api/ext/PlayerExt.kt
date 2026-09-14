@@ -904,7 +904,14 @@ fun Player.heal(
     amount: Int,
     capValue: Int = 0,
 ) {
-    alterLifepoints(value = amount, capValue = capValue)
+    // Smoke ancient sceptre: 20 % less healing for 6 seconds after smoke spell damage while poisoned (AncientSceptres).
+    val healed =
+        if (timers.has(gg.rsmod.game.model.timer.SMOKE_SCEPTRE_HEAL_REDUCTION_TIMER)) {
+            kotlin.math.floor(amount * gg.rsmod.plugins.content.items.osrs.AncientSceptres.SMOKE_HEAL_MULTIPLIER).toInt()
+        } else {
+            amount
+        }
+    alterLifepoints(value = healed, capValue = capValue)
 }
 
 fun Player.restorePrayer(

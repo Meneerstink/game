@@ -20,6 +20,14 @@ TrouverRegistry.register(TrouverLockable(baseItemId = Items.FIRE_CAPE, lockedIte
 TrouverRegistry.register(TrouverLockable(baseItemId = Items.INFERNAL_CAPE, lockedItemId = Items.INFERNAL_CAPE_L))
 // OSRS-IMPORT assembler: the Ava's assembler infobox lists "Ava's assembler (l)" (24222) as its locked variant.
 TrouverRegistry.register(TrouverLockable(baseItemId = Items.AVAS_ASSEMBLER, lockedItemId = Items.AVAS_ASSEMBLER_L))
+// OSRS-IMPORT sceptres: "pay 500,000 coins plus a Trouver parchment to lock the item at Perdu"; below level 20 a locked sceptre becomes
+// its broken form (OSRS Wiki "Ancient sceptre"). The mangled forms (above level 20, 500,000 coins to the PKer) are imported but this
+// engine holds one broken id per pair (SOURCE_GAP recorded).
+TrouverRegistry.register(TrouverLockable(baseItemId = Items.ANCIENT_SCEPTRE, lockedItemId = Items.ANCIENT_SCEPTRE_L, brokenItemId = Items.ANCIENT_SCEPTRE_L_BROKEN))
+TrouverRegistry.register(TrouverLockable(baseItemId = Items.BLOOD_ANCIENT_SCEPTRE, lockedItemId = Items.BLOOD_ANCIENT_SCEPTRE_L, brokenItemId = Items.BLOOD_ANCIENT_SCEPTRE_L_BROKEN))
+TrouverRegistry.register(TrouverLockable(baseItemId = Items.ICE_ANCIENT_SCEPTRE, lockedItemId = Items.ICE_ANCIENT_SCEPTRE_L, brokenItemId = Items.ICE_ANCIENT_SCEPTRE_L_BROKEN))
+TrouverRegistry.register(TrouverLockable(baseItemId = Items.SMOKE_ANCIENT_SCEPTRE, lockedItemId = Items.SMOKE_ANCIENT_SCEPTRE_L, brokenItemId = Items.SMOKE_ANCIENT_SCEPTRE_L_BROKEN))
+TrouverRegistry.register(TrouverLockable(baseItemId = Items.SHADOW_ANCIENT_SCEPTRE, lockedItemId = Items.SHADOW_ANCIENT_SCEPTRE_L, brokenItemId = Items.SHADOW_ANCIENT_SCEPTRE_L_BROKEN))
 
 TrouverRegistry.all().forEach { lockable ->
     on_item_on_item(item1 = Items.TROUVER_PARCHMENT, item2 = lockable.baseItemId) {

@@ -310,23 +310,41 @@ object MagicCombatStrategy : CombatStrategy {
         if (target.isDead()) return
         when (val effect = spell.effect) {
             is SpellEffect.Freeze -> {
-                val frozen = target.freeze(effect.ticks) { if (target is Player) target.message("You have been frozen.") }
+                // Ancient sceptres: freeze duration +10 %, rounded down (AncientSceptres); curse binds are not Ancient Magicks.
+                val sceptreBoost = spell in gg.rsmod.plugins.content.items.osrs.AncientSceptres.ICE_SPELLS && gg.rsmod.plugins.content.items.osrs.AncientSceptres.boosted(pawn)
+                val ticks = gg.rsmod.plugins.content.items.osrs.AncientSceptres.freezeTicks(effect.ticks, sceptreBoost)
+                val frozen = target.freeze(ticks) { if (target is Player) target.message("You have been frozen.") }
                 if (!frozen && spell == CombatSpell.ICE_BARRAGE) {
                     // Already frozen / immune: barrage shows the frozen-orb graphic instead.
                     target.graphic(Graphic(1677, 96))
                 }
             }
-            is SpellEffect.Poison -> if (damage > 0) Poison.poison(target, effect.damage)
+            is SpellEffect.Poison -> {
+                if (damage > 0) {
+                    // Smoke spells poison at OSRS severity 10 / 20 (22 / 11 with an ancient sceptre) - AncientSceptres, Poison.
+                    val sceptres = gg.rsmod.plugins.content.items.osrs.AncientSceptres
+                    Poison.poisonSeverity(target, sceptres.smokeSeverity(effect.damage, sceptres.boosted(pawn)))
+                    // Smoke quartz: 20 % less healing for 6 seconds on a poisoned target.
+                    if (sceptres.quartz(pawn) == gg.rsmod.plugins.content.items.osrs.AncientSceptres.Quartz.SMOKE && Poison.isPoisoned(target)) {
+                        target.timers[gg.rsmod.game.model.timer.SMOKE_SCEPTRE_HEAL_REDUCTION_TIMER] = sceptres.SMOKE_HEAL_REDUCTION_TICKS
+                    }
+                }
+            }
             is SpellEffect.BloodHeal -> {
-                val heal = damage / 4
+                val sceptres = gg.rsmod.plugins.content.items.osrs.AncientSceptres
+                val heal = sceptres.bloodHeal(damage, sceptres.boosted(pawn))
                 if (heal > 0) {
                     when (pawn) {
-                        is Player -> pawn.heal(heal)
+                        is Player -> pawn.heal(heal, capValue = sceptres.overhealCap(pawn, pawn.getMaximumLifepoints()))
                         is Npc -> pawn.setCurrentLifepoints(minOf(pawn.getCurrentLifepoints() + heal, pawn.getMaximumLifepoints()))
                     }
                 }
             }
-            is SpellEffect.ShadowDrain -> drainSkill(target, Skills.ATTACK, 10)
+            is SpellEffect.ShadowDrain -> {
+                // OSRS Wiki "Ancient sceptre": Rush/Burst 10 %, Blitz/Barrage 15 % of Attack, +10 % with a sceptre.
+                val sceptres = gg.rsmod.plugins.content.items.osrs.AncientSceptres
+                drainSkill(target, Skills.ATTACK, sceptres.shadowDrainPercent(spell), if (sceptres.boosted(pawn)) 1.1 else 1.0)
+            }
             is SpellEffect.StatDrain -> drainSkill(target, effect.skill, effect.percent, gg.rsmod.plugins.content.items.osrs.Tomes.drainBoost(pawn, spell))
             is SpellEffect.Miasmic -> {
                 if (!target.timers.has(MIASMIC_IMMUNITY_TIMER)) {

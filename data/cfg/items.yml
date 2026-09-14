@@ -272904,3 +272904,531 @@
   tradeable: true
   weight: 0.0
   equipment: null
+- id: 22971
+  name: "Ancient sceptre"
+  examine: "A very old and powerful stick."
+  tradeable: false
+  weight: 2.267
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6442
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 1
+    attack_speed: 4
+    attack_stab: 20
+    attack_slash: -1
+    attack_crush: 50
+    attack_magic: 20
+    attack_ranged: 0
+    defence_stab: 2
+    defence_slash: 3
+    defence_crush: 1
+    defence_magic: 15
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 60
+    prayer: -1
+    ranged_strength: 0
+    magic_damage: 10.0
+    attack_audio: 2555
+    skill_reqs: [{'skill': 6, 'level': 70}, {'skill': 2, 'level': 60}, {'skill': 0, 'level': 50}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22972
+  name: "Ancient sceptre (l)"
+  examine: "A very old and powerful stick."
+  tradeable: false
+  weight: 2.267
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6443
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 1
+    attack_speed: 4
+    attack_stab: 20
+    attack_slash: -1
+    attack_crush: 50
+    attack_magic: 20
+    attack_ranged: 0
+    defence_stab: 2
+    defence_slash: 3
+    defence_crush: 1
+    defence_magic: 15
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 60
+    prayer: -1
+    ranged_strength: 0
+    magic_damage: 10.0
+    attack_audio: 2555
+    skill_reqs: [{'skill': 6, 'level': 70}, {'skill': 2, 'level': 60}, {'skill': 0, 'level': 50}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22973
+  name: "Ancient icon"
+  examine: "A mysterious icon of ancient origin."
+  tradeable: false
+  weight: 0.02
+  equipment: null
+- id: 22974
+  name: "Blood ancient sceptre"
+  examine: "A very old and powerful stick, enhanced with the power of blood magic."
+  tradeable: false
+  weight: 2.267
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6444
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 1
+    attack_speed: 4
+    attack_stab: 20
+    attack_slash: -1
+    attack_crush: 50
+    attack_magic: 20
+    attack_ranged: 0
+    defence_stab: 2
+    defence_slash: 3
+    defence_crush: 1
+    defence_magic: 15
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 60
+    prayer: -1
+    ranged_strength: 0
+    magic_damage: 10.0
+    attack_audio: 2555
+    skill_reqs: [{'skill': 6, 'level': 75}, {'skill': 2, 'level': 60}, {'skill': 0, 'level': 50}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22975
+  name: "Ice ancient sceptre"
+  examine: "A very old and powerful stick, enhanced with the power of ice magic."
+  tradeable: false
+  weight: 2.267
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6445
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 1
+    attack_speed: 4
+    attack_stab: 20
+    attack_slash: -1
+    attack_crush: 50
+    attack_magic: 20
+    attack_ranged: 0
+    defence_stab: 2
+    defence_slash: 3
+    defence_crush: 1
+    defence_magic: 15
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 60
+    prayer: -1
+    ranged_strength: 0
+    magic_damage: 10.0
+    attack_audio: 2555
+    skill_reqs: [{'skill': 6, 'level': 75}, {'skill': 2, 'level': 60}, {'skill': 0, 'level': 50}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22976
+  name: "Smoke ancient sceptre"
+  examine: "A very old and powerful stick, enhanced with the power of smoke magic."
+  tradeable: false
+  weight: 2.267
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6446
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 1
+    attack_speed: 4
+    attack_stab: 20
+    attack_slash: -1
+    attack_crush: 50
+    attack_magic: 20
+    attack_ranged: 0
+    defence_stab: 2
+    defence_slash: 3
+    defence_crush: 1
+    defence_magic: 15
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 60
+    prayer: -1
+    ranged_strength: 0
+    magic_damage: 10.0
+    attack_audio: 2555
+    skill_reqs: [{'skill': 6, 'level': 75}, {'skill': 2, 'level': 60}, {'skill': 0, 'level': 50}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22977
+  name: "Shadow ancient sceptre"
+  examine: "A very old and powerful stick, enhanced with the power of shadow magic."
+  tradeable: false
+  weight: 2.267
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6447
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 1
+    attack_speed: 4
+    attack_stab: 20
+    attack_slash: -1
+    attack_crush: 50
+    attack_magic: 20
+    attack_ranged: 0
+    defence_stab: 2
+    defence_slash: 3
+    defence_crush: 1
+    defence_magic: 15
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 60
+    prayer: -1
+    ranged_strength: 0
+    magic_damage: 10.0
+    attack_audio: 2555
+    skill_reqs: [{'skill': 6, 'level': 75}, {'skill': 2, 'level': 60}, {'skill': 0, 'level': 50}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22978
+  name: "Blood ancient sceptre (l)"
+  examine: "A very old and powerful stick, enhanced with the power of blood magic."
+  tradeable: false
+  weight: 2.267
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6448
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 1
+    attack_speed: 4
+    attack_stab: 20
+    attack_slash: -1
+    attack_crush: 50
+    attack_magic: 20
+    attack_ranged: 0
+    defence_stab: 2
+    defence_slash: 3
+    defence_crush: 1
+    defence_magic: 15
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 60
+    prayer: -1
+    ranged_strength: 0
+    magic_damage: 10.0
+    attack_audio: 2555
+    skill_reqs: [{'skill': 6, 'level': 75}, {'skill': 2, 'level': 60}, {'skill': 0, 'level': 50}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22979
+  name: "Ice ancient sceptre (l)"
+  examine: "A very old and powerful stick, enhanced with the power of ice magic."
+  tradeable: false
+  weight: 2.267
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6449
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 1
+    attack_speed: 4
+    attack_stab: 20
+    attack_slash: -1
+    attack_crush: 50
+    attack_magic: 20
+    attack_ranged: 0
+    defence_stab: 2
+    defence_slash: 3
+    defence_crush: 1
+    defence_magic: 15
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 60
+    prayer: -1
+    ranged_strength: 0
+    magic_damage: 10.0
+    attack_audio: 2555
+    skill_reqs: [{'skill': 6, 'level': 75}, {'skill': 2, 'level': 60}, {'skill': 0, 'level': 50}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22980
+  name: "Smoke ancient sceptre (l)"
+  examine: "A very old and powerful stick, enhanced with the power of smoke magic."
+  tradeable: false
+  weight: 2.267
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6450
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 1
+    attack_speed: 4
+    attack_stab: 20
+    attack_slash: -1
+    attack_crush: 50
+    attack_magic: 20
+    attack_ranged: 0
+    defence_stab: 2
+    defence_slash: 3
+    defence_crush: 1
+    defence_magic: 15
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 60
+    prayer: -1
+    ranged_strength: 0
+    magic_damage: 10.0
+    attack_audio: 2555
+    skill_reqs: [{'skill': 6, 'level': 75}, {'skill': 2, 'level': 60}, {'skill': 0, 'level': 50}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22981
+  name: "Shadow ancient sceptre (l)"
+  examine: "A very old and powerful stick, enhanced with the power of shadow magic."
+  tradeable: false
+  weight: 2.267
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6451
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 1
+    attack_speed: 4
+    attack_stab: 20
+    attack_slash: -1
+    attack_crush: 50
+    attack_magic: 20
+    attack_ranged: 0
+    defence_stab: 2
+    defence_slash: 3
+    defence_crush: 1
+    defence_magic: 15
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 60
+    prayer: -1
+    ranged_strength: 0
+    magic_damage: 10.0
+    attack_audio: 2555
+    skill_reqs: [{'skill': 6, 'level': 75}, {'skill': 2, 'level': 60}, {'skill': 0, 'level': 50}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22982
+  name: "Blood quartz"
+  examine: "Made of condensed blood energy."
+  tradeable: false
+  weight: 0.02
+  equipment: null
+- id: 22983
+  name: "Ice quartz"
+  examine: "Made of condensed ice energy."
+  tradeable: false
+  weight: 0.02
+  equipment: null
+- id: 22984
+  name: "Shadow quartz"
+  examine: "Made of condensed shadow energy."
+  tradeable: false
+  weight: 0.02
+  equipment: null
+- id: 22985
+  name: "Smoke quartz"
+  examine: "Made of condensed smoke energy."
+  tradeable: false
+  weight: 0.02
+  equipment: null
+- id: 22986
+  name: "Blood ancient sceptre (broken)"
+  examine: "A very old and powerful stick, enhanced with the power of blood magic."
+  tradeable: false
+  weight: 2.267
+  equipment: null
+- id: 22987
+  name: "Smoke ancient sceptre (broken)"
+  examine: "A very old and powerful stick, enhanced with the power of smoke magic."
+  tradeable: false
+  weight: 2.267
+  equipment: null
+- id: 22988
+  name: "Ice ancient sceptre (broken)"
+  examine: "A very old and powerful stick, enhanced with the power of ice magic."
+  tradeable: false
+  weight: 2.267
+  equipment: null
+- id: 22989
+  name: "Shadow ancient sceptre (broken)"
+  examine: "A very old and powerful stick, enhanced with the power of shadow magic."
+  tradeable: false
+  weight: 2.267
+  equipment: null
+- id: 22990
+  name: "Ancient sceptre (l) (broken)"
+  examine: "A very old and powerful stick."
+  tradeable: false
+  weight: 2.267
+  equipment: null
+- id: 22991
+  name: "Ancient sceptre (l) (mangled)"
+  examine: "A very old and powerful stick."
+  tradeable: false
+  weight: 2.267
+  equipment: null
+- id: 22992
+  name: "Blood ancient sceptre (l) (broken)"
+  examine: "A very old broken but powerful stick, enhanced with the power of blood magic."
+  tradeable: false
+  weight: 2.267
+  equipment: null
+- id: 22993
+  name: "Blood ancient sceptre (l) (mangled)"
+  examine: "A very old mangled but powerful stick, enhanced with the power of blood magic."
+  tradeable: false
+  weight: 2.267
+  equipment: null
+- id: 22994
+  name: "Ice ancient sceptre (l) (broken)"
+  examine: "A very old broken but powerful stick, enhanced with the power of ice magic."
+  tradeable: false
+  weight: 2.267
+  equipment: null
+- id: 22995
+  name: "Ice ancient sceptre (l) (mangled)"
+  examine: "A very old mangled but powerful stick, enhanced with the power of ice magic."
+  tradeable: false
+  weight: 2.267
+  equipment: null
+- id: 22996
+  name: "Smoke ancient sceptre (l) (broken)"
+  examine: "A very old broken but powerful stick, enhanced with the power of smoke magic."
+  tradeable: false
+  weight: 2.267
+  equipment: null
+- id: 22997
+  name: "Smoke ancient sceptre (l) (mangled)"
+  examine: "A very old mangled but powerful stick, enhanced with the power of smoke magic."
+  tradeable: false
+  weight: 2.267
+  equipment: null
+- id: 22998
+  name: "Shadow ancient sceptre (l) (broken)"
+  examine: "A very old broken but powerful stick, enhanced with the power of shadow magic."
+  tradeable: false
+  weight: 2.267
+  equipment: null
+- id: 22999
+  name: "Shadow ancient sceptre (l) (mangled)"
+  examine: "A very old mangled but powerful stick, enhanced with the power of shadow magic."
+  tradeable: false
+  weight: 2.267
+  equipment: null
+- id: 23000
+  name: "Dragon hunter wand"
+  examine: "A wand that is uniquely attuned to draconic creatures."
+  tradeable: true
+  weight: 2.0
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6452
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 16
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 16
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 10.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 65}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23001
+  name: "Dragon hunter wand"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23002
+  name: "Purging staff"
+  examine: "Fire and lightning sizzle in the brazier."
+  tradeable: false
+  weight: 2.721
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6453
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 1
+    attack_speed: 5
+    attack_stab: 10
+    attack_slash: -5
+    attack_crush: 83
+    attack_magic: 37
+    attack_ranged: 0
+    defence_stab: 1
+    defence_slash: 1
+    defence_crush: 0
+    defence_magic: 25
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 62
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 10.0
+    attack_audio: 2555
+    skill_reqs: [{'skill': 6, 'level': 77}, {'skill': 0, 'level': 50}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0

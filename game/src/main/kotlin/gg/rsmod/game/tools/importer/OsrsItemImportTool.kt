@@ -488,6 +488,45 @@ object OsrsItemImportTool {
                     Spec(31109), // Mokhaiotl cloth
                     Spec(31106, noted = true, rev667Params = mapOf(749 to 3, 750 to 90)), // Confliction gauntlets
                 ),
+            // Step 3 roster batch "sceptres" (ids by Jagex name, RuneLite gameval ItemID): Ancient sceptre + Trouver (l) + icon, blood/ice/
+            // smoke/shadow ancient sceptres + (l) + quartzes + ANCIENT_SCEPTRE_*_BROKEN, the (l) broken/mangled forms, Dragon hunter wand,
+            // Purging staff. Classes from ItemParamProbeTool 2026-09-14: Ancient staff 4675 (644 28, 686 1, weapon type 1, audio 2555) for the
+            // sceptres (three wear requirements: no client requirement params), Master wand 6914 for the wand (one requirement: 65 Magic),
+            // Battlestaff 1391 (644 28, 686 1, audio 2555) for the Purging staff (two requirements).
+            "sceptres" to
+                listOf(
+                    Spec(27624, noted = true, rev667Params = mapOf(644 to 28, 686 to 1), weaponType = 1, attackAudio = 2555), // Ancient sceptre
+                    Spec(27626, rev667Params = mapOf(644 to 28, 686 to 1), weaponType = 1, attackAudio = 2555), // Ancient sceptre (l)
+                    Spec(27627), // Ancient icon
+                    Spec(28260, noted = true, rev667Params = mapOf(644 to 28, 686 to 1), weaponType = 1, attackAudio = 2555), // Blood ancient sceptre
+                    Spec(28262, noted = true, rev667Params = mapOf(644 to 28, 686 to 1), weaponType = 1, attackAudio = 2555), // Ice ancient sceptre
+                    Spec(28264, noted = true, rev667Params = mapOf(644 to 28, 686 to 1), weaponType = 1, attackAudio = 2555), // Smoke ancient sceptre
+                    Spec(28266, noted = true, rev667Params = mapOf(644 to 28, 686 to 1), weaponType = 1, attackAudio = 2555), // Shadow ancient sceptre
+                    Spec(28473, rev667Params = mapOf(644 to 28, 686 to 1), weaponType = 1, attackAudio = 2555), // Blood ancient sceptre (l)
+                    Spec(28474, rev667Params = mapOf(644 to 28, 686 to 1), weaponType = 1, attackAudio = 2555), // Ice ancient sceptre (l)
+                    Spec(28475, rev667Params = mapOf(644 to 28, 686 to 1), weaponType = 1, attackAudio = 2555), // Smoke ancient sceptre (l)
+                    Spec(28476, rev667Params = mapOf(644 to 28, 686 to 1), weaponType = 1, attackAudio = 2555), // Shadow ancient sceptre (l)
+                    Spec(28268, noted = true), // Blood quartz
+                    Spec(28270, noted = true), // Ice quartz
+                    Spec(28272, noted = true), // Shadow quartz
+                    Spec(28274, noted = true), // Smoke quartz
+                    Spec(28238), // ANCIENT_SCEPTRE_BLOOD_BROKEN
+                    Spec(28240), // ANCIENT_SCEPTRE_SMOKE_BROKEN
+                    Spec(28242), // ANCIENT_SCEPTRE_ICE_BROKEN
+                    Spec(28244), // ANCIENT_SCEPTRE_SHADOW_BROKEN
+                    Spec(33827), // Ancient sceptre (l) broken
+                    Spec(33829), // Ancient sceptre (l) mangled
+                    Spec(33504), // Blood ancient sceptre (l) broken
+                    Spec(33506), // Blood ancient sceptre (l) mangled
+                    Spec(33508), // Ice ancient sceptre (l) broken
+                    Spec(33510), // Ice ancient sceptre (l) mangled
+                    Spec(33512), // Smoke ancient sceptre (l) broken
+                    Spec(33514), // Smoke ancient sceptre (l) mangled
+                    Spec(33516), // Shadow ancient sceptre (l) broken
+                    Spec(33518), // Shadow ancient sceptre (l) mangled
+                    Spec(30070, noted = true, rev667Params = mapOf(644 to 1955, 686 to 1, 749 to 6, 750 to 65), weaponType = 1), // Dragon hunter wand
+                    Spec(29594, noted = true, rev667Params = mapOf(644 to 28, 686 to 1), weaponType = 1, attackAudio = 2555), // Purging staff
+                ),
             "deadstaves" to
                 listOf(
                     Spec(11791, noted = true, rev667Params = deadStaffParams()), // Staff of the dead
@@ -577,8 +616,10 @@ object OsrsItemImportTool {
                 }
                 val base = Entry("upstream_item:${spec.upstreamId}", def.name, def, spec)
                 entries += base
-                if (spec.noted) {
-                    check(def.notedId >= 0) { "${def.name} (${spec.upstreamId}) has no upstream noted variant" }
+                if (spec.noted && def.notedId < 0) {
+                    // Untradeable items have no noted variant upstream: nothing to import for the note, reported instead of stopping.
+                    println("NOTE ${def.name} (${spec.upstreamId}) has no upstream noted variant; only the item is imported")
+                } else if (spec.noted) {
                     val notedDef = decodeItem(def.notedId)
                     check(notedDef.notedTemplate >= 0) { "upstream ${def.notedId} is not a note of ${spec.upstreamId}" }
                     val note = Entry("upstream_item:${def.notedId}", "${def.name} (noted)", notedDef, spec, notedOf = base)

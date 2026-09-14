@@ -58,7 +58,7 @@ object PvpDeathBreakables {
             result.itemRisk.lost.partition {
                 entries.containsKey(it.item.id) || OsrsOrnamentKits.forPvpConversion(it.item.id) != null || it.item.id == Items.TOXIC_BLOWPIPE ||
                     it.item.id == Items.BOW_OF_FAERDHINEN || it.item.id == Items.AMULET_OF_BLOOD_FURY || it.item.id == Items.TOXIC_STAFF_OF_THE_DEAD ||
-                    it.item.id in gg.rsmod.plugins.content.items.osrs.AvernicTreads.UPGRADED
+                    it.item.id in gg.rsmod.plugins.content.items.osrs.AvernicTreads.UPGRADED || it.item.id == Items.ANCIENT_SCEPTRE
             }
         if (converting.isEmpty()) return result to emptyList()
         return result.copy(itemRisk = result.itemRisk.copy(lost = rest)) to converting
@@ -105,6 +105,13 @@ object PvpDeathBreakables {
                 container[slotItem.slot] = null
                 if (slotItem.source == DeathContainerSource.EQUIPMENT) equipmentChanged = true
                 world.spawn(GroundItem(Item(Items.AMULET_OF_FURY, 1), victim.tile, result.killer))
+                continue
+            }
+            if (slotItem.item.id == Items.ANCIENT_SCEPTRE) {
+                // OSRS Wiki "Ancient sceptre": "Unprotected PvP deaths convert it to an Ancient staff for the killer" (the icon is lost).
+                container[slotItem.slot] = null
+                if (slotItem.source == DeathContainerSource.EQUIPMENT) equipmentChanged = true
+                world.spawn(GroundItem(Item(Items.ANCIENT_STAFF, 1), victim.tile, result.killer))
                 continue
             }
             if (slotItem.item.id in gg.rsmod.plugins.content.items.osrs.AvernicTreads.UPGRADED) {

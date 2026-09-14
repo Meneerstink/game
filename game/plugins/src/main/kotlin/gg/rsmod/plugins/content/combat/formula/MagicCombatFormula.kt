@@ -112,6 +112,10 @@ object MagicCombatFormula : CombatFormula {
             hit = Math.floor(Math.floor(hit) * (1.0 + additive))
             // Charged tomes: "stacking multiplicatively with Magic damage bonuses" (Tomes).
             hit = Math.floor(hit * gg.rsmod.plugins.content.items.osrs.Tomes.damageMultiplier(pawn, target, spell))
+            // Dragon hunter wand: max hit x7/5 against draconic targets (wiki DPS calculator trackFactor [7, 5]).
+            if (pawn.hasEquipped(EquipmentType.WEAPON, Items.DRAGON_HUNTER_WAND) && Draconic.isDraconic(target)) {
+                hit = Math.floor(hit * 7 / 5)
+            }
         } else if (pawn is Npc) {
             val spell = pawn.attr[Combat.CASTING_SPELL]
             if (spell == null) {
@@ -202,7 +206,14 @@ object MagicCombatFormula : CombatFormula {
         // Tome of Water: water spells +10 % (NPC) / +20 % (player), curse spells +20 % accuracy (Tomes).
         // Mystic smoke staff: +10 % additive magic accuracy for standard spells, before the tome factor (wiki DPS calculator order).
         val smoke = Math.floor(base * gg.rsmod.plugins.content.items.osrs.SmokeStaves.accuracyMultiplier(player, player.attr[Combat.CASTING_SPELL]))
-        return Math.floor(smoke * gg.rsmod.plugins.content.items.osrs.Tomes.accuracyMultiplier(player, target, player.attr[Combat.CASTING_SPELL]))
+        var roll = Math.floor(smoke * gg.rsmod.plugins.content.items.osrs.Tomes.accuracyMultiplier(player, target, player.attr[Combat.CASTING_SPELL]))
+        // Ice ancient sceptre: +10 % for ice spells on freezable, not frozen targets (AncientSceptres).
+        roll = Math.floor(roll * gg.rsmod.plugins.content.items.osrs.AncientSceptres.iceAccuracyMultiplier(player, target, player.attr[Combat.CASTING_SPELL]))
+        // Dragon hunter wand: attack roll x7/4 against draconic targets (wiki DPS calculator trackFactor [7, 4]).
+        if (player.hasEquipped(EquipmentType.WEAPON, Items.DRAGON_HUNTER_WAND) && Draconic.isDraconic(target)) {
+            roll = Math.floor(roll * 7 / 4)
+        }
+        return roll
     }
 
     private fun getEffectiveAttackLevel(player: Player): Double {

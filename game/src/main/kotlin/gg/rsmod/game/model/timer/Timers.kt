@@ -267,6 +267,11 @@ val STAFF_OF_LIGHT_TIMER = TimerKey()
 val TOXIC_STAFF_SCALE_TIMER = TimerKey()
 
 /**
+ * Smoke ancient sceptre: "reducing a poisoned target's healing by 20% for 6 seconds after taking damage from smoke spells" (OSRS Wiki).
+ */
+val SMOKE_SCEPTRE_HEAL_REDUCTION_TIMER = TimerKey()
+
+/**
  * Standard-book Charge spell duration (7 minutes = 700 cycles).
  */
 val GOD_SPELL_CHARGE_TIMER = TimerKey()
