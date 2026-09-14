@@ -12,7 +12,7 @@ enum class MagicStaves(
     /**
      * Represents the fire rune staves.
      */
-    FIRE_RUNE(Items.FIRE_RUNE, arrayOf(Items.STAFF_OF_FIRE, Items.FIRE_BATTLESTAFF)),
+    FIRE_RUNE(Items.FIRE_RUNE, arrayOf(Items.STAFF_OF_FIRE, Items.FIRE_BATTLESTAFF, Items.MYSTIC_SMOKE_STAFF)),
 
     /**
      * Represents the water rune staves.
@@ -22,7 +22,7 @@ enum class MagicStaves(
     /**
      * Represents the air rune staves.
      */
-    AIR_RUNE(Items.AIR_RUNE, arrayOf(Items.STAFF_OF_AIR, Items.AIR_BATTLESTAFF)),
+    AIR_RUNE(Items.AIR_RUNE, arrayOf(Items.STAFF_OF_AIR, Items.AIR_BATTLESTAFF, Items.MYSTIC_SMOKE_STAFF)),
 
     /**
      * Represents the earth rune staves.

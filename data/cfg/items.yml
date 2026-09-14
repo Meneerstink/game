@@ -269160,3 +269160,43 @@
   tradeable: true
   weight: 0.0
   equipment: null
+- id: 22731
+  name: "Mystic smoke staff"
+  examine: "It gives a 10% accuracy and damage bonus for spells on the standard spellbook."
+  tradeable: true
+  weight: 2.267
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 5725
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 1
+    attack_speed: 5
+    attack_stab: 10
+    attack_slash: -1
+    attack_crush: 40
+    attack_magic: 14
+    attack_ranged: 0
+    defence_stab: 2
+    defence_slash: 3
+    defence_crush: 1
+    defence_magic: 14
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 50
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: 2555
+    skill_reqs: [{'skill': 6, 'level': 40}, {'skill': 0, 'level': 40}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22732
+  name: "Mystic smoke staff"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null

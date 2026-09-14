@@ -298,6 +298,13 @@ object OsrsItemImportTool {
                     Spec(25576, noted = true, rev667Params = mapOf(749 to 6, 750 to 50), rev667StringParams = mapOf(528 to "Pages")), // Tome of Water (empty)
                     Spec(25578), // Soaked page
                 ),
+            // Mystic smoke staff: the 667 Mystic fire staff 1401 class (ItemParamProbeTool 2026-09-14: 644 28, 686 1, 749/750
+            // 6/40, 751/752 0/40 = 40 Magic and 40 Attack as upstream 434-437), weapon type 1, staff attack audio 2555.
+            // The Smoke battlestaff 11998 is not in the plan and is not imported.
+            "smokestaff" to
+                listOf(
+                    Spec(12000, noted = true, rev667Params = mapOf(644 to 28, 686 to 1, 749 to 6, 750 to 40, 751 to 0, 752 to 40), weaponType = 1, attackAudio = 2555), // Mystic smoke staff
+                ),
             // Blighted sacks (owner addition 2026-09-14): stackable, tradeable consumables without inventory options upstream;
             // they replace the runes of the spells named on their wiki pages (MagicSpells). No client params.
             "blightedsacks" to

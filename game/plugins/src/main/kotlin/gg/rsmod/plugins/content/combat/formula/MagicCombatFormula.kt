@@ -106,7 +106,9 @@ object MagicCombatFormula : CombatFormula {
 
             // OSRS Wiki "Maximum magic hit": ⌊⌊Base + Gauntlets + Charge⌋ × (1 + Visible bonuses + Void + Prayer)⌋ -
             // the percentages add up before multiplying. The player bonus slot holds tenths of a percent.
-            val additive = pawn.getMagicDamageBonus() / 1000.0 + getEliteVoidMagicDamage(pawn) + getPrayerMagicDamage(pawn)
+            val additive =
+                pawn.getMagicDamageBonus() / 1000.0 + getEliteVoidMagicDamage(pawn) + getPrayerMagicDamage(pawn) +
+                    gg.rsmod.plugins.content.items.osrs.SmokeStaves.magicDamageBonus(pawn, spell)
             hit = Math.floor(Math.floor(hit) * (1.0 + additive))
             // Charged tomes: "stacking multiplicatively with Magic damage bonuses" (Tomes).
             hit = Math.floor(hit * gg.rsmod.plugins.content.items.osrs.Tomes.damageMultiplier(pawn, target, spell))
@@ -198,7 +200,9 @@ object MagicCombatFormula : CombatFormula {
         // The plain Salve amulet and black mask/Slayer helmet are melee-only; magic needs their imbued versions
         // ("Damage per second/Magic": 1.15 slayer helm (i) / salve (i)), none of which exist in this cache.
         // Tome of Water: water spells +10 % (NPC) / +20 % (player), curse spells +20 % accuracy (Tomes).
-        return Math.floor(base * gg.rsmod.plugins.content.items.osrs.Tomes.accuracyMultiplier(player, target, player.attr[Combat.CASTING_SPELL]))
+        // Mystic smoke staff: +10 % additive magic accuracy for standard spells, before the tome factor (wiki DPS calculator order).
+        val smoke = Math.floor(base * gg.rsmod.plugins.content.items.osrs.SmokeStaves.accuracyMultiplier(player, player.attr[Combat.CASTING_SPELL]))
+        return Math.floor(smoke * gg.rsmod.plugins.content.items.osrs.Tomes.accuracyMultiplier(player, target, player.attr[Combat.CASTING_SPELL]))
     }
 
     private fun getEffectiveAttackLevel(player: Player): Double {

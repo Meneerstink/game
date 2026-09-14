@@ -19596,5 +19596,7 @@ object Items {
     const val TOME_OF_WATER_EMPTY = 22728
     const val TOME_OF_WATER_EMPTY_NOTED = 22729
     const val TOME_SOAKED_PAGE = 22730
+    const val MYSTIC_SMOKE_STAFF = 22731
+    const val MYSTIC_SMOKE_STAFF_NOTED = 22732
     // Auto-generated file using class gg.rsmod.game.service.game.DumpEntityIdService
 }
