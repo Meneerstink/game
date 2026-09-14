@@ -13,14 +13,23 @@ import kotlin.test.assertTrue
 
 /**
  * Equip requirements come from `items.yml` `skill_reqs` (ItemMetadataService); the 667 cache carries the client's wield requirements
- * as param pairs 749/750 .. 757/758 (skill id, level). The 2026-09-14 regression audit found native 667 equipment whose yml had no
- * requirement although the cache has one (e.g. Dragon platebody 60 Defence) and entries with skill and level values swapped (e.g.
- * Third-age range top: yml 65 Defence / 45 Ranged, cache 45 Defence / 65 Ranged). Both are fixed and enforced here over the whole
- * roster. Entries that differ in value (Mystic 20 vs 40 Magic, Dagon'hai from the OSRS Wiki, pickaxe Mining gates, ...) need a
- * per-item source decision and are not rewritten from the cache (HANDOFF "REQUIREMENT FIX"). OSRS imports keep their own sourced
- * requirements. OSRS item params 434-437 are not used: on 667 items they are production levels (Fire battlestaff 12 = 62 Crafting).
+ * as param pairs 749/750 .. 757/758 (skill id, level). The 2026-09-14 regression audit found native 667 equipment without the cache
+ * requirement (1,423, e.g. Dragon platebody 60 Defence), with skill and level swapped (126, e.g. Third-age range top) and 29 value
+ * conflicts. The conflicts were decided per OSRS Wiki item page (decision (d)): Mystic robes "require 40 Magic and 20 Defence",
+ * pickaxes/axes need only Attack to wield ("41 Mining to use, and 40 Attack to equip"), Spiny helmet "5 Defence", lit bug lantern
+ * "33 Slayer to wield" - all equal to the cache - while the Dagon'hai robes ("70 Magic and 40 Defence") and the Abyssal tentacle
+ * ("75 Attack") differ from the 2011 cache and keep the OSRS values below, as does the param-less Dragon defender ("60 Defence").
+ * OSRS item params 434-437 are not used: on 667 items they are production levels (Fire battlestaff 12 = 62 Crafting).
  */
 class ItemSkillRequirementsCacheAuditTests {
+    private val osrsOverrides: Map<Int, Map<Int, Int>> =
+        mapOf(
+            14497 to mapOf(1 to 40, 6 to 70), 14499 to mapOf(1 to 40, 6 to 70), 14501 to mapOf(1 to 40, 6 to 70),
+            14732 to mapOf(1 to 40, 6 to 70), 14733 to mapOf(1 to 40, 6 to 70), 14734 to mapOf(1 to 40, 6 to 70),
+            Items.ABYSSAL_TENTACLE to mapOf(0 to 75),
+            Items.DRAGON_DEFENDER to mapOf(1 to 60),
+        )
+
     private val library = CacheLibrary(Paths.get("..", "..", "data", "cache").toFile().toString())
 
     @AfterTest
@@ -51,7 +60,7 @@ class ItemSkillRequirementsCacheAuditTests {
     }
 
     @Test
-    fun `no native equipment item lacks or swaps its cache wield requirements`() {
+    fun `every native equipment item requires exactly its cache wield requirements or its sourced OSRS override`() {
         val definitions = DefinitionSet()
         definitions.load(library, ItemDef::class.java)
         val imported = Regex("(?m)^  - local_item_id: (\\d+)").findAll(File("C:/RSPS/RSPS_IMPORT_ASSET_MAP.yml").readText()).map { it.groupValues[1].toInt() }.toSet()
@@ -59,25 +68,22 @@ class ItemSkillRequirementsCacheAuditTests {
         @Suppress("UNCHECKED_CAST")
         val items = definitions.getAll(ItemDef::class.java) as Map<Int, ItemDef>
         var withRequirements = 0
-        val missing = mutableListOf<String>()
-        val swapped = mutableListOf<String>()
+        val offenders = mutableListOf<String>()
         items.values.sortedBy { it.id }.forEach { def ->
             if (def.noted || def.id >= 22753 || def.id in imported) return@forEach
             val block = blocks[def.id]?.takeIf { it.contains("    equip_slot:") } ?: return@forEach
-            val cache = cacheRequirements(def)?.takeIf { it.isNotEmpty() } ?: return@forEach
-            withRequirements++
             val yml = ymlRequirements(block)
-            if (yml.isEmpty()) missing += "${def.id} ${def.name}: cache=$cache"
-            if (yml.isNotEmpty() && yml != cache && yml.keys == cache.keys && yml.values.sorted() == cache.values.sorted()) swapped += "${def.id} ${def.name}: yml=$yml cache=$cache"
+            val expected = osrsOverrides[def.id] ?: cacheRequirements(def)?.takeIf { it.isNotEmpty() } ?: return@forEach
+            withRequirements++
+            if (yml != expected) offenders += "${def.id} ${def.name}: yml=$yml expected=$expected"
         }
-        assertTrue(withRequirements > 2500, "native equipment with cache requirements: $withRequirements")
-        assertTrue(missing.isEmpty(), "${missing.size} items without their cache requirement, first: ${missing.take(15)}")
-        assertTrue(swapped.isEmpty(), "${swapped.size} items with skill/level swapped, first: ${swapped.take(15)}")
+        assertTrue(withRequirements > 2500, "native equipment with requirements: $withRequirements")
+        assertTrue(offenders.isEmpty(), "${offenders.size} items differ, first: ${offenders.take(15)}")
     }
 
     @Test
-    fun `the Dragon defender carries the OSRS Wiki Defence requirement`() {
-        // No cache params; OSRS Wiki "Dragon defender": "It requires level 60 Defence to equip."
-        assertEquals(mapOf(1 to 60), ymlRequirements(ymlBlocks().getValue(Items.DRAGON_DEFENDER)))
+    fun `the OSRS overrides are present in items yml`() {
+        val blocks = ymlBlocks()
+        osrsOverrides.forEach { (id, reqs) -> assertEquals(reqs, ymlRequirements(blocks.getValue(id)), "item $id") }
     }
 }

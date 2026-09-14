@@ -15593,7 +15593,7 @@
     ranged_strength: 0
     magic_damage: 0
     attack_audio: 2508
-    skill_reqs: [{'skill': 0, 'level': 30}, {'skill': 14, 'level': 31}]
+    skill_reqs: [{'skill': 0, 'level': 30}]
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
@@ -15673,7 +15673,7 @@
     ranged_strength: 0
     magic_damage: 0
     attack_audio: 2508
-    skill_reqs: [{'skill': 0, 'level': 40}, {'skill': 14, 'level': 41}]
+    skill_reqs: [{'skill': 0, 'level': 40}]
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
@@ -17301,7 +17301,7 @@
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
-    skill_reqs: [{'skill': 0, 'level': 30}, {'skill': 8, 'level': 31}]
+    skill_reqs: [{'skill': 0, 'level': 30}]
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
@@ -17341,7 +17341,7 @@
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
-    skill_reqs: [{'skill': 0, 'level': 40}, {'skill': 8, 'level': 41}]
+    skill_reqs: [{'skill': 0, 'level': 40}]
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
@@ -43299,7 +43299,7 @@
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
-    skill_reqs: [{'skill': 1, 'level': 20}, {'skill': 6, 'level': 20}]
+    skill_reqs: [{'skill': 1, 'level': 20}, {'skill': 6, 'level': 40}]
     absorb_melee: 3
     absorb_magic: 1
     absorb_ranged: 0
@@ -43339,7 +43339,7 @@
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
-    skill_reqs: [{'skill': 1, 'level': 20}, {'skill': 6, 'level': 20}]
+    skill_reqs: [{'skill': 1, 'level': 20}, {'skill': 6, 'level': 40}]
     absorb_melee: 3
     absorb_magic: 1
     absorb_ranged: 0
@@ -43379,7 +43379,7 @@
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
-    skill_reqs: [{'skill': 1, 'level': 20}, {'skill': 6, 'level': 20}]
+    skill_reqs: [{'skill': 1, 'level': 20}, {'skill': 6, 'level': 40}]
     absorb_melee: 4
     absorb_magic: 2
     absorb_ranged: 0
@@ -43419,7 +43419,7 @@
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
-    skill_reqs: [{'skill': 1, 'level': 20}, {'skill': 6, 'level': 20}]
+    skill_reqs: [{'skill': 1, 'level': 20}, {'skill': 6, 'level': 40}]
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
@@ -43459,7 +43459,7 @@
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
-    skill_reqs: [{'skill': 1, 'level': 20}, {'skill': 6, 'level': 20}]
+    skill_reqs: [{'skill': 1, 'level': 20}, {'skill': 6, 'level': 40}]
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
@@ -43499,7 +43499,7 @@
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
-    skill_reqs: [{'skill': 1, 'level': 20}, {'skill': 6, 'level': 20}]
+    skill_reqs: [{'skill': 1, 'level': 20}, {'skill': 6, 'level': 40}]
     absorb_melee: 3
     absorb_magic: 1
     absorb_ranged: 0
@@ -43539,7 +43539,7 @@
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
-    skill_reqs: [{'skill': 1, 'level': 20}, {'skill': 6, 'level': 20}]
+    skill_reqs: [{'skill': 1, 'level': 20}, {'skill': 6, 'level': 40}]
     absorb_melee: 3
     absorb_magic: 1
     absorb_ranged: 0
@@ -43579,7 +43579,7 @@
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
-    skill_reqs: [{'skill': 1, 'level': 20}, {'skill': 6, 'level': 20}]
+    skill_reqs: [{'skill': 1, 'level': 20}, {'skill': 6, 'level': 40}]
     absorb_melee: 4
     absorb_magic: 2
     absorb_ranged: 0
@@ -43619,7 +43619,7 @@
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
-    skill_reqs: [{'skill': 1, 'level': 20}, {'skill': 6, 'level': 20}]
+    skill_reqs: [{'skill': 1, 'level': 20}, {'skill': 6, 'level': 40}]
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
@@ -43659,7 +43659,7 @@
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
-    skill_reqs: [{'skill': 1, 'level': 20}, {'skill': 6, 'level': 20}]
+    skill_reqs: [{'skill': 1, 'level': 20}, {'skill': 6, 'level': 40}]
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
@@ -43699,7 +43699,7 @@
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
-    skill_reqs: [{'skill': 1, 'level': 20}, {'skill': 6, 'level': 20}]
+    skill_reqs: [{'skill': 1, 'level': 20}, {'skill': 6, 'level': 40}]
     absorb_melee: 3
     absorb_magic: 1
     absorb_ranged: 0
@@ -43739,7 +43739,7 @@
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
-    skill_reqs: [{'skill': 1, 'level': 20}, {'skill': 6, 'level': 20}]
+    skill_reqs: [{'skill': 1, 'level': 20}, {'skill': 6, 'level': 40}]
     absorb_melee: 3
     absorb_magic: 1
     absorb_ranged: 0
@@ -43779,7 +43779,7 @@
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
-    skill_reqs: [{'skill': 1, 'level': 20}, {'skill': 6, 'level': 20}]
+    skill_reqs: [{'skill': 1, 'level': 20}, {'skill': 6, 'level': 40}]
     absorb_melee: 4
     absorb_magic: 2
     absorb_ranged: 0
@@ -43819,7 +43819,7 @@
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
-    skill_reqs: [{'skill': 1, 'level': 20}, {'skill': 6, 'level': 20}]
+    skill_reqs: [{'skill': 1, 'level': 20}, {'skill': 6, 'level': 40}]
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
@@ -43859,7 +43859,7 @@
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
-    skill_reqs: [{'skill': 1, 'level': 20}, {'skill': 6, 'level': 20}]
+    skill_reqs: [{'skill': 1, 'level': 20}, {'skill': 6, 'level': 40}]
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
@@ -49805,7 +49805,7 @@
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
-    skill_reqs: [{'skill': 1, 'level': 5}, {'skill': 18, 'level': 35}]
+    skill_reqs: [{'skill': 1, 'level': 5}]
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
@@ -75645,7 +75645,7 @@
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
-    skill_reqs: [{'skill': 0, 'level': 60}, {'skill': 8, 'level': 61}]
+    skill_reqs: [{'skill': 0, 'level': 60}]
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
@@ -78931,7 +78931,7 @@
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
-    skill_reqs: [{'skill': 18, 'level': 33}, {'skill': 11, 'level': 33}]
+    skill_reqs: [{'skill': 18, 'level': 33}]
 - id: 7052
   name: "Unlit bug lantern"
   examine: "Swamp this note at any bank for the equivalent item"
