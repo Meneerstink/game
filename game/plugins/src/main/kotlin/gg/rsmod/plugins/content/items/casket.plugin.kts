@@ -397,93 +397,48 @@ val hardCasketRewards =
 
 table.register(hardCasketRewards, Items.CASKET_HARD, type = DropTableType.CHEST)
 
+/*
+ * Owner answer Q9: the elite reward casket works like OSRS (EliteCasketTable: the OSRS Wiki slot tree, 4-6 reward rolls). ADAPTED: the 667
+ * client has no clue reward interface (interface 364 is the Barrows chest), so the rewards go to the inventory (ground when full, as
+ * before) and are listed in the existing casket message box. Not in the rolls yet: master clue 1/5 (owner question 15), Mimic 1/35 (Q10).
+ */
 on_item_option(item = Items.CASKET_ELITE, option = "open") {
-    if (player.inventory
-            .remove(
-                player.getInteractingItem(),
-                beginSlot = player.getInteractingItemSlot(),
-            ).hasSucceeded()
-    ) {
-        val drop =
-            DropTableFactory.createDropInventory(player, Items.CASKET_ELITE, DropTableType.CHEST)
-                ?: return@on_item_option
-        val item = drop[0]
-        player.queue {
-            val name =
-                world.definitions
-                    .get(ItemDef::class.java, item.id)
-                    .name
-                    .lowercase()
-            itemMessageBox(
-                "You open the casket. Inside you find ${formatWithIndefiniteArticle(name)}.",
-                item = item.id,
-                amountOrZoom = item.amount,
-            )
-        }
+    if (!player.inventory.remove(player.getInteractingItem(), beginSlot = player.getInteractingItemSlot()).hasSucceeded()) {
+        return@on_item_option
+    }
+    val rolls = kotlin.random.Random.nextInt(EliteCasketTable.MIN_ROLLS, EliteCasketTable.MAX_ROLLS + 1)
+    val rewards = mutableListOf<gg.rsmod.game.model.item.Item>()
+    repeat(rolls) { DropTableFactory.createDropInventory(player, Items.CASKET_ELITE, DropTableType.CHEST)?.let { rewards += it } }
+    if (rewards.isEmpty()) return@on_item_option
+    val first = rewards.first()
+    player.queue {
+        val names =
+            rewards.joinToString(", ") { reward ->
+                val name = world.definitions.get(ItemDef::class.java, reward.id).name.lowercase()
+                if (reward.amount > 1) "${reward.amount} x $name" else formatWithIndefiniteArticle(name)
+            }
+        itemMessageBox("You open the casket. Inside you find $names.", item = first.id, amountOrZoom = first.amount)
     }
 }
 
-// Treasure Trail casket (Elite tier) reward table, ported from Novite's Treasures.ELITE item list
-// (46 ids, recounted directly from the donor source - batch 46's original estimate of 47 was an
-// eyeball miscount, same recurring pattern as the Hard/Medium tiers; all 46 are unique, no
-// repeated ids in Novite's flat list, so slots=1 throughout, total=46).
-// All 46 ids cross-checked against target's own Items.kt: full Armadyl/Bandos/Ancient (Elite God
-// Wars) armour sets including vambraces/body/chaps/coif and mitre, 3rd age druidic set, god
-// croziers/stoles, Saradomin/Guthix/Zamorak god bows, and the six metal dragon masks (black,
-// frost, bronze, iron, steel, mithril) - all authentic elite-clue reward categories.
-// Junk gate: Treasures.ELITE chance=10.0 -> 46 rare slots / 460 total = 10% rare, 414 junk = 90%.
-val eliteCasketRewards =
+/** One OSRS elite reward roll as a drop table, built from [EliteCasketTable] node by node. */
+fun eliteCasketTable(node: EliteCasketTable.Node): DropTableBuilder.() -> Unit =
     table.build {
         main {
-            total(460)
-            obj(Items.ARMADYL_FULL_HELM, slots = 1)
-            obj(Items.ARMADYL_PLATEBODY, slots = 1)
-            obj(Items.ARMADYL_PLATELEGS, slots = 1)
-            obj(Items.ARMADYL_PLATESKIRT, slots = 1)
-            obj(Items.ARMADYL_KITESHIELD, slots = 1)
-            obj(Items.THIRDAGE_DRUIDIC_STAFF, slots = 1)
-            obj(Items.THIRDAGE_DRUIDIC_CLOAK, slots = 1)
-            obj(Items.THIRDAGE_DRUIDIC_WREATH, slots = 1)
-            obj(Items.THIRDAGE_DRUIDIC_ROBE_TOP, slots = 1)
-            obj(Items.THIRDAGE_DRUIDIC_ROBE, slots = 1)
-            obj(Items.BANDOS_FULL_HELM, slots = 1)
-            obj(Items.BANDOS_PLATEBODY, slots = 1)
-            obj(Items.BANDOS_PLATELEGS, slots = 1)
-            obj(Items.BANDOS_KITESHIELD, slots = 1)
-            obj(Items.ANCIENT_FULL_HELM, slots = 1)
-            obj(Items.ANCIENT_PLATELEGS, slots = 1)
-            obj(Items.ANCIENT_PLATEBODY, slots = 1)
-            obj(Items.ANCIENT_PLATESKIRT, slots = 1)
-            obj(Items.ANCIENT_KITESHIELD, slots = 1)
-            obj(Items.ANCIENT_VAMBRACES, slots = 1)
-            obj(Items.ANCIENT_BODY, slots = 1)
-            obj(Items.ANCIENT_CHAPS, slots = 1)
-            obj(Items.ANCIENT_COIF, slots = 1)
-            obj(Items.BANDOS_VAMBRACES, slots = 1)
-            obj(Items.BANDOS_BODY, slots = 1)
-            obj(Items.BANDOS_CHAPS, slots = 1)
-            obj(Items.BANDOS_COIF, slots = 1)
-            obj(Items.ARMADYL_VAMBRACES, slots = 1)
-            obj(Items.ARMADYL_BODY, slots = 1)
-            obj(Items.ARMADYL_CHAPS, slots = 1)
-            obj(Items.ARMADYL_COIF, slots = 1)
-            obj(Items.ARMADYL_CROZIER, slots = 1)
-            obj(Items.BANDOS_CROZIER, slots = 1)
-            obj(Items.ANCIENT_CROZIER, slots = 1)
-            obj(Items.ARMADYL_STOLE, slots = 1)
-            obj(Items.BANDOS_STOLE, slots = 1)
-            obj(Items.ANCIENT_STOLE, slots = 1)
-            obj(Items.ZAMORAK_BOW, slots = 1)
-            obj(Items.GUTHIX_BOW, slots = 1)
-            obj(Items.SARADOMIN_BOW, slots = 1)
-            obj(Items.BLACK_DRAGON_MASK, slots = 1)
-            obj(Items.FROST_DRAGON_MASK, slots = 1)
-            obj(Items.BRONZE_DRAGON_MASK, slots = 1)
-            obj(Items.IRON_DRAGON_MASK, slots = 1)
-            obj(Items.STEEL_DRAGON_MASK, slots = 1)
-            obj(Items.MITHRIL_DRAGON_MASK, slots = 1)
-            table(treasureTrailJunk, slots = 414)
+            total(node.total)
+            node.entries.forEach { entry ->
+                when (entry) {
+                    is EliteCasketTable.Entry.Obj ->
+                        if (entry.amount.first == entry.amount.last) {
+                            obj(entry.id, quantity = entry.amount.first, slots = entry.slots)
+                        } else {
+                            obj(entry.id, quantityRange = entry.amount, slots = entry.slots)
+                        }
+                    is EliteCasketTable.Entry.Table -> table(eliteCasketTable(entry.node), slots = entry.slots)
+                    is EliteCasketTable.Entry.Nothing -> nothing(entry.slots)
+                }
+            }
         }
     }
 
-table.register(eliteCasketRewards, Items.CASKET_ELITE, type = DropTableType.CHEST)
+table.register(eliteCasketTable(EliteCasketTable.ROLL), Items.CASKET_ELITE, type = DropTableType.CHEST)
