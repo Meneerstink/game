@@ -280,6 +280,8 @@ object MagicCombatStrategy : CombatStrategy {
             // Trident of the Swamp: manually cast combat spells also roll its 25 % venom while it holds a charge.
             if (pawn is Player) {
                 pawnHit.hit.addAction { gg.rsmod.plugins.content.items.osrs.PoweredStaves.rollVenom(pawn, target) }
+                // Toxic staff of the dead: 25 % venom for spells cast while the charged staff is wielded.
+                pawnHit.hit.addAction { gg.rsmod.plugins.content.items.osrs.StaffOfTheDead.rollVenom(pawn, target) }
             }
         } else {
             spell.impactGfx?.let { target.graphic(Graphic(85, 96, hitDelay * 30)) }

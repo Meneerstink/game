@@ -95,6 +95,10 @@ object MeleeCombatStrategy : CombatStrategy {
                     if (pawn is Player && gg.rsmod.plugins.content.items.osrs.NoxiousHalberd.isWielding(pawn)) {
                         pawnHit.hit.addAction { gg.rsmod.plugins.content.items.osrs.NoxiousHalberd.rollVenom(pawn, target) }
                     }
+                    // Toxic staff of the dead: 25 % venom on opponents struck by the charged staff (StaffOfTheDead).
+                    if (pawn is Player && landHit) {
+                        pawnHit.hit.addAction { gg.rsmod.plugins.content.items.osrs.StaffOfTheDead.rollVenom(pawn, target) }
+                    }
                 }.hit.hitmarks
                 .sumOf { it.damage }
 

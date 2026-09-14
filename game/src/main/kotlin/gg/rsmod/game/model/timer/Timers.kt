@@ -260,6 +260,13 @@ val TELEBLOCK_TIMER = TimerKey(persistenceKey = "teleblock", tickOffline = true,
 val STAFF_OF_LIGHT_TIMER = TimerKey()
 
 /**
+ * Toxic staff of the dead: "the staff will immediately use 10 scales when the player enters combat and will use another
+ * 10 if the player is still in combat after a minute has passed" (OSRS Wiki). Runs for one minute (100 ticks) after each
+ * 10-scale charge use.
+ */
+val TOXIC_STAFF_SCALE_TIMER = TimerKey()
+
+/**
  * Standard-book Charge spell duration (7 minutes = 700 cycles).
  */
 val GOD_SPELL_CHARGE_TIMER = TimerKey()

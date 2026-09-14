@@ -340,6 +340,16 @@ object OsrsItemImportTool {
                     Spec(24780), // Amulet of blood fury
                     Spec(24777, noted = true), // Blood shard
                 ),
+            // Staff of the dead and Toxic staff of the dead: the 667 Staff of light 15486 class (ItemParamProbeTool 2026-09-14:
+            // 644 28, 686 26, 687 1 special bar, 749/750 0/75, 751/752 6/75 = 75 Attack + 75 Magic as upstream 434-437), server
+            // weapon type -1 and attack audio -1 exactly like the 667 Staff of light entry. Worn "Check" on the charged staff
+            // (upstream worn ops). Order: SotD 11791 + noted, uncharged 12902 + noted, charged 12904.
+            "deadstaves" to
+                listOf(
+                    Spec(11791, noted = true, rev667Params = deadStaffParams()), // Staff of the dead
+                    Spec(12902, noted = true, rev667Params = deadStaffParams()), // Toxic staff (uncharged)
+                    Spec(12904, rev667Params = deadStaffParams(), rev667StringParams = mapOf(528 to "Check")), // Toxic staff of the dead
+                ),
             // Blighted sacks (owner addition 2026-09-14): stackable, tradeable consumables without inventory options upstream;
             // they replace the runes of the spells named on their wiki pages (MagicSpells). No client params.
             "blightedsacks" to
@@ -376,6 +386,9 @@ object OsrsItemImportTool {
 
     /** Crystal armour: 70 Defence + 50 Agility (upstream 434-437) shown client side. */
     private fun crystalArmourParams() = mapOf(749 to 1, 750 to 70, 751 to 16, 752 to 50)
+
+    /** 667 Staff of light 15486 class (ItemParamProbeTool 2026-09-14). */
+    private fun deadStaffParams() = mapOf(644 to 28, 686 to 26, 687 to 1, 749 to 0, 750 to 75, 751 to 6, 752 to 75)
 
     /** 667 Staff of air 1381 class: render animation 28, staff style set 1, one Magic requirement shown client side. */
     private fun staffParams(requiredMagic: Int) = mapOf(644 to 28, 686 to 1, 749 to 6, 750 to requiredMagic)

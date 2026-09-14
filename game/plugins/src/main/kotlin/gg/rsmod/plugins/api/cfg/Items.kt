@@ -19621,5 +19621,11 @@ object Items {
     const val AMULET_OF_BLOOD_FURY = 22756
     const val BLOOD_SHARD = 22757
     const val BLOOD_SHARD_NOTED = 22758
+    // OSRS-IMPORT deadstaves tx-20260914-032812: Staff of the dead (+noted), Toxic staff (uncharged) (+noted), Toxic staff of the dead.
+    const val STAFF_OF_THE_DEAD = 22759
+    const val STAFF_OF_THE_DEAD_NOTED = 22760
+    const val TOXIC_STAFF_UNCHARGED = 22761
+    const val TOXIC_STAFF_UNCHARGED_NOTED = 22762
+    const val TOXIC_STAFF_OF_THE_DEAD = 22763
     // Auto-generated file using class gg.rsmod.game.service.game.DumpEntityIdService
 }

@@ -92,6 +92,9 @@ object Combat {
         if (pawn is Player && target is Player) {
             PvpSkull.markAggression(attacker = pawn, victim = target)
         }
+        // Toxic staff of the dead: 10 scales on entering combat and every further minute in combat (StaffOfTheDead).
+        (pawn as? Player)?.let { gg.rsmod.plugins.content.items.osrs.StaffOfTheDead.onCombat(it) }
+        (target as? Player)?.let { gg.rsmod.plugins.content.items.osrs.StaffOfTheDead.onCombat(it) }
 
         if (target is Player && target.interfaces.getModal() !in COMBAT_PERSISTENT_MODALS) {
             target.closeInterface(target.interfaces.getModal())

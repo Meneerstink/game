@@ -269630,3 +269630,117 @@
   tradeable: true
   weight: 0.0
   equipment: null
+- id: 22759
+  name: "Staff of the Dead"
+  examine: "A ghastly weapon with evil origins."
+  tradeable: true
+  weight: 1.5
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6379
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 55
+    attack_slash: 70
+    attack_crush: 0
+    attack_magic: 17
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 3
+    defence_crush: 3
+    defence_magic: 17
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 72
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 15.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 75}, {'skill': 6, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22760
+  name: "Staff of the Dead"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22761
+  name: "Toxic staff (uncharged)"
+  examine: "It needs to be charged with Zulrah's scales."
+  tradeable: true
+  weight: 1.5
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6380
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 55
+    attack_slash: 70
+    attack_crush: 0
+    attack_magic: 17
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 3
+    defence_crush: 3
+    defence_magic: 17
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 72
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 15.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 75}, {'skill': 6, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22762
+  name: "Toxic staff (uncharged)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22763
+  name: "Toxic staff of the dead"
+  examine: "A ghastly weapon with evil origins, with a toxic fang attached."
+  tradeable: false
+  weight: 1.5
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6381
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 55
+    attack_slash: 70
+    attack_crush: 0
+    attack_magic: 25
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 3
+    defence_crush: 3
+    defence_magic: 17
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 72
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 15.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 75}, {'skill': 6, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0

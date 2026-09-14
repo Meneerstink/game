@@ -1,7 +1,6 @@
 package gg.rsmod.plugins.content.combat.specialattack.weapons
 
 
-import gg.rsmod.game.model.timer.STAFF_OF_LIGHT_TIMER
 import gg.rsmod.plugins.content.combat.dealHit
 import gg.rsmod.plugins.content.combat.formula.MagicCombatFormula
 import gg.rsmod.plugins.content.combat.formula.MeleeCombatFormula
@@ -231,12 +230,4 @@ SpecialAttacks.register(75, Items.BRINE_SABRE) {
     }
 }
 
-/* Staff of light - Power of Light: 100%, instant; for one minute melee damage taken has a 50% chance to be halved. */
-SpecialAttacks.registerInstant(100, Items.STAFF_OF_LIGHT) { p ->
-    p.animate(12804)
-    p.graphic(2319)
-    p.timers[STAFF_OF_LIGHT_TIMER] = 100
-
-    p.message("You are surrounded by the power of light.")
-    true
-}
+/* Staff of light: OSRS Power of Death, registered with the staff of the dead family in items/osrs/staff_of_the_dead.plugin.kts. */

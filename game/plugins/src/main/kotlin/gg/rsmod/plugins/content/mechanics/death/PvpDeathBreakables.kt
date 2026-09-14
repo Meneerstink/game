@@ -7,6 +7,7 @@ import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.api.ext.refreshBonuses
 import gg.rsmod.plugins.content.items.osrs.Blowpipe
 import gg.rsmod.plugins.content.items.osrs.OsrsOrnamentKits
+import gg.rsmod.plugins.content.items.osrs.StaffOfTheDead
 
 /**
  * Untradeable combat items that break instead of dropping on an unprotected PvP death.
@@ -56,7 +57,7 @@ object PvpDeathBreakables {
         val (converting, rest) =
             result.itemRisk.lost.partition {
                 entries.containsKey(it.item.id) || OsrsOrnamentKits.forOrnamented(it.item.id) != null || it.item.id == Items.TOXIC_BLOWPIPE ||
-                    it.item.id == Items.BOW_OF_FAERDHINEN || it.item.id == Items.AMULET_OF_BLOOD_FURY
+                    it.item.id == Items.BOW_OF_FAERDHINEN || it.item.id == Items.AMULET_OF_BLOOD_FURY || it.item.id == Items.TOXIC_STAFF_OF_THE_DEAD
             }
         if (converting.isEmpty()) return result to emptyList()
         return result.copy(itemRisk = result.itemRisk.copy(lost = rest)) to converting
@@ -103,6 +104,16 @@ object PvpDeathBreakables {
                 container[slotItem.slot] = null
                 if (slotItem.source == DeathContainerSource.EQUIPMENT) equipmentChanged = true
                 world.spawn(GroundItem(Item(Items.AMULET_OF_FURY, 1), victim.tile, result.killer))
+                continue
+            }
+            if (slotItem.item.id == Items.TOXIC_STAFF_OF_THE_DEAD) {
+                // OSRS Wiki "Toxic staff of the dead": "any scales that were used to charge it will appear on the floor along with
+                // the uncharged staff."
+                val scales = StaffOfTheDead.scales(container[slotItem.slot]!!)
+                container[slotItem.slot] = null
+                if (slotItem.source == DeathContainerSource.EQUIPMENT) equipmentChanged = true
+                world.spawn(GroundItem(Item(Items.TOXIC_STAFF_UNCHARGED, 1), victim.tile, result.killer))
+                if (scales > 0) world.spawn(GroundItem(Item(Items.ZULRAHS_SCALES, scales), victim.tile, result.killer))
                 continue
             }
             val ornament = OsrsOrnamentKits.forOrnamented(slotItem.item.id)

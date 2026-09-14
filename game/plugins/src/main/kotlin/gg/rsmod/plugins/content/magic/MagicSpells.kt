@@ -89,8 +89,12 @@ object MagicSpells {
         spellId: Int,
     ) {
         if (p.getVarbit(INF_RUNES_VARBIT) == 0) {
+            // Staff of the dead family: a combat spell uses no runes 1 time in 7 (StaffOfTheDead).
+            val savedByStaff =
+                getMetadata(spellId)?.spellType == SpellType.COMBAT_SPELL_TYPE &&
+                    gg.rsmod.plugins.content.items.osrs.StaffOfTheDead.savesRunes(p)
             // A usable Blighted sack is used up instead of the runes ("It is consumed upon cast").
-            if (!gg.rsmod.plugins.content.items.osrs.BlightedSacks.consume(p, spellId)) {
+            if (!savedByStaff && !gg.rsmod.plugins.content.items.osrs.BlightedSacks.consume(p, spellId)) {
                 for (item in items) {
                     /*
                      * Do not remove staff item requirements.

@@ -512,7 +512,8 @@ enum class CombatSpell(
         impactGfx = Graphic(329, 96),
         autoCastId = 37,
         experience = 30.0,
-        requiredWeapons = intArrayOf(Items.SLAYERS_STAFF, Items.STAFF_OF_LIGHT),
+        // OSRS Wiki "Staff of the Dead": it can autocast Magic Dart; the toxic staff "shares the same features".
+        requiredWeapons = intArrayOf(Items.SLAYERS_STAFF, Items.STAFF_OF_LIGHT, Items.STAFF_OF_THE_DEAD, Items.TOXIC_STAFF_UNCHARGED, Items.TOXIC_STAFF_OF_THE_DEAD),
         requiredWeaponMessage = "You need to be wielding a slayer's staff or staff of light to cast this spell.",
     ),
     STORM_OF_ARMADYL(

@@ -175,9 +175,9 @@ fun Pawn.dealHit(
     // Combat formulas and hitpoints use the same 1:1 real-damage unit. Keep the hitmark value
     // identical to the rolled damage so server state, hitbars and client hit splats agree.
     var damage = if (landHit) (rollDamage(minHit, maxHit) + bonusDamage).toDouble() else 0.0
-    // Staff of light special (Power of Light): 50% chance that melee damage taken is halved.
-    if (hitType == HitType.MELEE && target.timers.has(gg.rsmod.game.model.timer.STAFF_OF_LIGHT_TIMER) && world.random(1) == 0) {
-        damage /= 2
+    // Power of Death (staff of the dead, toxic staff, staff of light): halves melee damage taken; ends on damage without the staff.
+    if (target is Player) {
+        damage = gg.rsmod.plugins.content.items.osrs.StaffOfTheDead.modifyIncomingDamage(target, hitType, damage.toInt()).toDouble()
     }
     // Tormented demons: fire shield and style prayer (see TormentedDemonCombatScript).
     // RCV-012 B7: misses reach the rule too - both donors count every hit, a miss included, toward the prayer switch.

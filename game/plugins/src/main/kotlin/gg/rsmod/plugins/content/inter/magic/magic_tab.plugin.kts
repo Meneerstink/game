@@ -26,6 +26,13 @@ CombatSpell.definitions.values.filter { it.autoCastId != -1 }.forEach { spell ->
             return@on_button
         }
 
+        // Staff of the dead family autocasts standard spells, "not Ancient Magicks" (OSRS Wiki); message ADAPTED.
+        if (spell.interfaceId == 193 && gg.rsmod.plugins.content.items.osrs.StaffOfTheDead.isWieldingDeadStaff(player)) {
+            player.message("You can't autocast Ancient Magicks with this staff.")
+            player.setVarp(SELECTED_AUTOCAST_VARP, 0)
+            return@on_button
+        }
+
         val metadata = MagicSpells.getMetadata(spell.uniqueId)
         if (metadata != null && MagicSpells.canCast(player, metadata.lvl, metadata.runes, spellId = spell.uniqueId)) {
             player.attr[Combat.CASTING_SPELL] = spell
