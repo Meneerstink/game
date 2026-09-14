@@ -21,6 +21,7 @@ import gg.rsmod.plugins.api.cfg.Sfx
 import gg.rsmod.plugins.api.ext.*
 import gg.rsmod.plugins.content.combat.*
 import gg.rsmod.plugins.content.combat.formula.DragonfireFormula
+import gg.rsmod.plugins.content.combat.formula.DragonfireTable
 import gg.rsmod.plugins.content.combat.formula.MeleeCombatFormula
 import gg.rsmod.plugins.content.combat.strategy.MagicCombatStrategy
 
@@ -110,7 +111,7 @@ object KingBlackDragonCombatScript : CombatScript() {
         target.world.spawn(RED_FIRE)
         target.graphic(RED_FIRE_HIT_GFX)
         if (target is Player) target.playSound(Sfx.DRAGONSLAYER_DRAGONBREATH, delay = 2)
-        npc.dealHit(target = target, formula = DragonfireFormula(65), delay = hitDelay)
+        npc.dealHit(target = target, formula = DragonfireFormula(DragonfireTable.Type.KING_BLACK_DRAGON_FIERY), delay = hitDelay)
     }
 
     private fun sendBlueFireAttack(
@@ -127,7 +128,7 @@ object KingBlackDragonCombatScript : CombatScript() {
         if (target is Player) {
             val player = target
             target.playSound(Sfx.DRAGONSLAYER_DRAGONBREATH, delay = 2)
-            npc.dealHit(target = target, formula = DragonfireFormula(maxHit = 15), delay = hitDelay)
+            npc.dealHit(target = target, formula = DragonfireFormula(DragonfireTable.Type.KING_BLACK_DRAGON_SPECIAL), delay = hitDelay)
             skills.forEach {
                 val drain = 2
                 player.skills.decrementCurrentLevel(it, drain, capped = false)
@@ -150,7 +151,7 @@ object KingBlackDragonCombatScript : CombatScript() {
         target.graphic(WHITE_FIRE_HIT_GFX)
         npc.dealHit(
             target = target,
-            formula = DragonfireFormula(65),
+            formula = DragonfireFormula(DragonfireTable.Type.KING_BLACK_DRAGON_SPECIAL),
             delay = hitDelay,
         ) {
             target.freeze(cycles = 6) {
@@ -175,7 +176,7 @@ object KingBlackDragonCombatScript : CombatScript() {
         if (target is Player) target.playSound(Sfx.DRAGONSLAYER_DRAGONBREATH, delay = 2)
         npc.dealHit(
             target = target,
-            formula = DragonfireFormula(65),
+            formula = DragonfireFormula(DragonfireTable.Type.KING_BLACK_DRAGON_SPECIAL),
             delay = hitDelay,
             type = HitType.REGULAR_HIT,
         )

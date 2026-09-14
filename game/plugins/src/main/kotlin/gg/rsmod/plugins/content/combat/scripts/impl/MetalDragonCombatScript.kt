@@ -17,6 +17,7 @@ import gg.rsmod.plugins.api.cfg.Sfx
 import gg.rsmod.plugins.api.ext.*
 import gg.rsmod.plugins.content.combat.*
 import gg.rsmod.plugins.content.combat.formula.DragonfireFormula
+import gg.rsmod.plugins.content.combat.formula.DragonfireTable
 import gg.rsmod.plugins.content.combat.formula.MeleeCombatFormula
 import gg.rsmod.plugins.content.combat.strategy.MagicCombatStrategy
 
@@ -64,7 +65,7 @@ object MetalDragonCombatScript : CombatScript() {
     }
 
     private fun fire(npc: Npc, target: Pawn) {
-        val max = if (npc.id == Npcs.MITHRIL_DRAGON || npc.id == Npcs.MITHRIL_DRAGON_8424) 60 else 50
+        // RCV-012: dragonfire max now comes from the OSRS metallic table (DragonfireTable).
         npc.prepareAttack(CombatClass.MAGIC, StyleType.MAGIC, WeaponStyle.ACCURATE)
         npc.animate(ANIM_RANGED_FIRE, priority = true)
         val projectile = npc.createProjectile(target, PROJ_FIRE, ProjectileType.FIERY_BREATH)
@@ -72,7 +73,7 @@ object MetalDragonCombatScript : CombatScript() {
         target.graphic(Graphic(Gfx.RESET, 110, projectile.lifespan))
         if (target is Player) target.playSound(Sfx.DRAGONSLAYER_DRAGONBALL, delay = 2)
         val delay = MagicCombatStrategy.getHitDelay(npc.getFrontFacingTile(target), target.getCentreTile())
-        npc.dealHit(target = target, formula = DragonfireFormula(max), delay = delay)
+        npc.dealHit(target = target, formula = DragonfireFormula(DragonfireTable.Type.METALLIC), delay = delay)
     }
 }
 
@@ -118,7 +119,7 @@ object FrostDragonCombatScript : CombatScript() {
         npc.animate(13152, priority = true)
         npc.graphic(2465)
         if (target is Player) target.playSound(Sfx.DRAGONSLAYER_DRAGONBREATH, delay = 2)
-        npc.dealHit(target = target, formula = DragonfireFormula(65), delay = 2)
+        npc.dealHit(target = target, formula = DragonfireFormula(DragonfireTable.Type.METALLIC), delay = 2)
     }
 
     private fun rangedFire(npc: Npc, target: Pawn) {
@@ -129,7 +130,7 @@ object FrostDragonCombatScript : CombatScript() {
         target.graphic(Graphic(Gfx.RESET, 110, projectile.lifespan))
         if (target is Player) target.playSound(Sfx.DRAGONSLAYER_DRAGONBREATH, delay = 2)
         val delay = MagicCombatStrategy.getHitDelay(npc.getFrontFacingTile(target), target.getCentreTile())
-        npc.dealHit(target = target, formula = DragonfireFormula(65), delay = delay)
+        npc.dealHit(target = target, formula = DragonfireFormula(DragonfireTable.Type.METALLIC), delay = delay)
     }
 
     private fun iceArrows(npc: Npc, target: Pawn) {

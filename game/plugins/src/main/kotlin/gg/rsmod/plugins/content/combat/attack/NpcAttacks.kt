@@ -24,6 +24,7 @@ import gg.rsmod.plugins.content.combat.Combat
 import gg.rsmod.plugins.content.combat.dealHit
 import gg.rsmod.plugins.content.combat.formula.CombatFormula
 import gg.rsmod.plugins.content.combat.formula.DragonfireFormula
+import gg.rsmod.plugins.content.combat.formula.DragonfireTable
 import gg.rsmod.plugins.content.combat.formula.MagicCombatFormula
 import gg.rsmod.plugins.content.combat.formula.MeleeCombatFormula
 import gg.rsmod.plugins.content.combat.formula.RangedCombatFormula
@@ -337,7 +338,7 @@ object NpcAttacks {
                     delay = if (isMelee(h.offense) || h.offense == "damage") 0 else 64
                 }
                 h.delay?.let { delay += it }
-                val pawnHit = hit(npc, target, h, delay) ?: return@forEachIndexed
+                val pawnHit = hit(npc, target, h, delay, DragonfireTable.typeFor(row.combatDef, attack.id)) ?: return@forEachIndexed
                 if (pawnHit.hit.hitmarks.sumOf { it.damage } > 0) landed = true
                 if (firstHit == null) firstHit = pawnHit
             }
@@ -505,6 +506,7 @@ object NpcAttacks {
         target: Pawn,
         h: HitDef,
         clientDelay: Int,
+        dragonfireType: DragonfireTable.Type,
     ): PawnHit? {
         var offense = h.offense
         if (offense == "random") offense = listOf("crush", "range", "magic").random()
@@ -530,9 +532,9 @@ object NpcAttacks {
             }
             offense == "dragonfire" -> {
                 npc.prepareAttack(CombatClass.MAGIC, StyleType.MAGIC, WeaponStyle.ACCURATE)
-                // The section's max (x10) is the unprotected dragonfire max; DragonfireFormula applies
-                // antifire / anti-dragon shield / protect from magic reductions on top of it.
-                formula = DragonfireFormula(maxHit = h.max / 10)
+                // RCV-012 decision "dragonfire = OSRS model": the max comes from the OSRS Wiki table for the dragon's
+                // category (DragonfireTable), not from the section's max; a zero section max still disables the hit.
+                formula = DragonfireFormula(dragonfireType)
                 hitType = HitType.REGULAR_HIT
             }
             offense == "damage" -> {

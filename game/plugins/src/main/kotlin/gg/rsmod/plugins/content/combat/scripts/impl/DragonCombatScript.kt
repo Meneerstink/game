@@ -18,6 +18,7 @@ import gg.rsmod.plugins.api.ext.playSound
 import gg.rsmod.plugins.api.ext.prepareAttack
 import gg.rsmod.plugins.content.combat.*
 import gg.rsmod.plugins.content.combat.formula.DragonfireFormula
+import gg.rsmod.plugins.content.combat.formula.DragonfireTable
 import gg.rsmod.plugins.content.combat.formula.MeleeCombatFormula
 
 /**
@@ -100,7 +101,7 @@ object DragonCombatScript : CombatScript() {
         if (target is Player) target.playSound(Sfx.DRAGONSLAYER_DRAGONBREATH, delay = 2)
         npc.dealHit(
             target = target,
-            formula = DragonfireFormula(maxHit = 50),
+            formula = DragonfireFormula(DragonfireTable.Type.CHROMATIC),
             delay = 2,
         )
     }

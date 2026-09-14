@@ -1,48 +1,41 @@
 package gg.rsmod.plugins.content.combat.formula
 
-import gg.rsmod.game.model.combat.CombatClass
-import gg.rsmod.plugins.api.ext.isProtectedFrom
 import gg.rsmod.game.model.attr.DRAGONFIRE_IMMUNITY_ATTR
+import gg.rsmod.game.model.combat.CombatClass
 import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Pawn
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.timer.ANTIFIRE_TIMER
 import gg.rsmod.game.model.timer.SUPER_ANTIFIRE_TIMER
 import gg.rsmod.plugins.api.EquipmentType
-import gg.rsmod.plugins.api.PrayerIcon
 import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.api.ext.filterableMessage
 import gg.rsmod.plugins.api.ext.hasEquipped
-import gg.rsmod.plugins.api.ext.hasPrayerIcon
-import kotlin.math.floor
+import gg.rsmod.plugins.api.ext.isProtectedFrom
 
 /**
  * @author Tom <rspsmods@gmail.com>
  *
  * @since 21/03/2023 -> Kevin Senez <ksenez94@gmail.com>
  *
- * Stacking percentages corrected 2026-09-02 (further-foundations autonomous pass) against
- * the OSRS Wiki "Dragonfire" page's chromatic dragon table (50 base max hit): none = 100%,
- * anti-dragon/dragonfire shield alone = 10%, Protect from Magic alone = 20%, shield+prayer
- * together = 10% (no better than shield alone), antifire potion alone = 70%, super antifire
- * potion alone = full immunity, and any potion (either tier) combined with a shield or
- * prayer = full immunity. Previously this used incorrect ad-hoc values (20%/0%/66.5%/66.5%/
- * 33.5%) and read a dead `ANTIFIRE_POTION_CHARGES_ATTR` attribute that nothing ever wrote -
- * see `RSPS_DECISIONS.md` for the full write-up. Only verified against the chromatic dragon
- * table; King Black Dragon's non-zero damage floors for its combo breath attacks are a
- * separate, not-yet-sourced nuance left for a future pass (see `RSPS_DECISIONS.md`).
+ * RCV-012 owner decision "dragonfire = OSRS model" (2026-09-14): the max hit for every protection combination comes from
+ * [DragonfireTable] (OSRS Wiki "Dragonfire", Damage reduction) instead of percentages of a per-npc data max. Dragonfire always lands;
+ * where the wiki row is split, the dragon's Magic accuracy against the player's Magic defence decides between the "failed" and "won"
+ * max, and the player gets the sourced chatbox message for that outcome. Rows without a split have no sourced message (SOURCE_GAP).
+ *
+ * ADAPTED: OSRS subtracts the (super) antifire potion's protection after the damage roll (Mod Ash, cited on the wiki page); the wiki
+ * gives only the resulting maxima, so the hit is rolled uniformly up to the tabled max.
  */
 class DragonfireFormula(
-    private val maxHit: Int,
+    private val type: DragonfireTable.Type = DragonfireTable.Type.CHROMATIC,
     private val minHit: Double = 0.0,
 ) : CombatFormula {
+    /** Dragonfire never misses on accuracy; the Magic accuracy roll only selects the failed / won max in [getMaxHit]. */
     override fun getAccuracy(
         pawn: Pawn,
         target: Pawn,
         specialAttackMultiplier: Double,
-    ): Double {
-        return MagicCombatFormula.getAccuracy(pawn, target, specialAttackMultiplier)
-    }
+    ): Double = 1.0
 
     override fun getMaxHit(
         pawn: Pawn,
@@ -50,66 +43,25 @@ class DragonfireFormula(
         specialAttackMultiplier: Double,
         specialPassiveMultiplier: Double,
     ): Double {
-        var max = maxHit.toDouble()
-
-        if (target is Player) {
-            val magicProtection = target.isProtectedFrom(CombatClass.MAGIC)
-            val antiFirePotion = target.timers.has(ANTIFIRE_TIMER)
-            val superAntiFirePotion = target.timers.has(SUPER_ANTIFIRE_TIMER)
-            val dragonFireImmunity = target.attr[DRAGONFIRE_IMMUNITY_ATTR] ?: false
-            val antiFireShield = target.hasEquipped(EquipmentType.SHIELD, *ANTI_DRAGON_SHIELDS)
-            val dragonfireShield = target.hasEquipped(EquipmentType.SHIELD, *DRAGONFIRE_SHIELDS)
-            val anyShield = antiFireShield || dragonfireShield
-
-            if (pawn is Npc) {
-                val message: String =
-                    when {
-                        /**
-                         * Full immunity: an explicit immunity flag, a super antifire potion on
-                         * its own, or either potion tier stacked with a shield or the prayer.
-                         */
-                        dragonFireImmunity || superAntiFirePotion || (antiFirePotion && (anyShield || magicProtection)) -> {
-                            max = minHit
-                            "You are completely immune to dragonfire."
-                        }
-
-                        /**
-                         * Shield alone (or shield + prayer, which adds nothing further).
-                         */
-                        anyShield -> {
-                            max *= 0.10
-                            "Your shield absorbs most of the dragon's fiery breath."
-                        }
-
-                        /**
-                         * Protect from Magic alone, no shield.
-                         */
-                        magicProtection -> {
-                            max *= 0.20
-                            "Your prayer absorbs some of the dragonfire."
-                        }
-
-                        /**
-                         * Regular antifire potion alone, no shield or prayer.
-                         */
-                        antiFirePotion -> {
-                            max *= 0.70
-                            "You manage to resist some of the dragonfire."
-                        }
-
-                        else -> {
-                            "You are horribly burned by the dragon's breath!"
-                        }
-                    }
-
-                /**
-                 * Send the filterable message to the player on dragonfire attack.
-                 */
-                target.filterableMessage(message)
-            }
+        if (pawn !is Npc || target !is Player) {
+            return DragonfireTable.max(type, shield = false, prayer = false, potion = DragonfireTable.Potion.NONE).failed.toDouble()
         }
-        return minHit.coerceAtLeast(floor(max))
+        val outcome =
+            resolve(type, protectionOf(target)) {
+                MagicCombatFormula.getAccuracy(pawn, target, specialAttackMultiplier) < pawn.world.randomDouble()
+            }
+        outcome.message?.let { target.filterableMessage(it) }
+        return outcome.max.toDouble().coerceAtLeast(minHit)
     }
+
+    data class Outcome(val max: Int, val message: String?)
+
+    data class Protection(
+        val shield: Boolean,
+        val prayer: Boolean,
+        val potion: DragonfireTable.Potion,
+        val immune: Boolean,
+    )
 
     companion object {
         private val ANTI_DRAGON_SHIELDS = intArrayOf(Items.ANTIDRAGON_SHIELD)
@@ -119,6 +71,32 @@ class DragonfireFormula(
             intArrayOf(
                 Items.DRAGONFIRE_SHIELD, Items.DRAGONFIRE_SHIELD_11284, Items.DRAGONFIRE_WARD, Items.DRAGONFIRE_WARD_UNCHARGED,
                 Items.ANCIENT_WYVERN_SHIELD, Items.ANCIENT_WYVERN_SHIELD_UNCHARGED,
+            )
+
+        /** The tabled max and sourced message; [playerWonRoll] is only consulted when the wiki row is split by the accuracy roll. */
+        fun resolve(
+            type: DragonfireTable.Type,
+            protection: Protection,
+            playerWonRoll: () -> Boolean,
+        ): Outcome {
+            if (protection.immune) return Outcome(0, null)
+            val max = DragonfireTable.max(type, protection.shield, protection.prayer, protection.potion)
+            if (!max.splitByAccuracy) return Outcome(max.failed, null)
+            return if (playerWonRoll()) Outcome(max.won, DragonfireTable.RESIST_MESSAGE) else Outcome(max.failed, DragonfireTable.BURNT_MESSAGE)
+        }
+
+        /** The player's dragonfire protection layers; a super antifire outranks a regular one when both timers run. */
+        fun protectionOf(target: Player): Protection =
+            Protection(
+                shield = target.hasEquipped(EquipmentType.SHIELD, *ANTI_DRAGON_SHIELDS) || target.hasEquipped(EquipmentType.SHIELD, *DRAGONFIRE_SHIELDS),
+                prayer = target.isProtectedFrom(CombatClass.MAGIC),
+                potion =
+                    when {
+                        target.timers.has(SUPER_ANTIFIRE_TIMER) -> DragonfireTable.Potion.SUPER_ANTIFIRE
+                        target.timers.has(ANTIFIRE_TIMER) -> DragonfireTable.Potion.ANTIFIRE
+                        else -> DragonfireTable.Potion.NONE
+                    },
+                immune = target.attr[DRAGONFIRE_IMMUNITY_ATTR] ?: false,
             )
     }
 }
