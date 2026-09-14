@@ -10,6 +10,10 @@ import kotlin.math.abs
 
 val AGGRO_CHECK_TIMER = TimerKey()
 
+// RCV-012.B14: load data/cfg/npcs/hunt-modes.json when the plugin loads, so a missing or malformed table fails at boot instead of
+// inside every aggressive npc's AGGRO_CHECK_TIMER.
+val huntModeTable = NpcHuntModes.table
+
 val defaultAggressiveness: (Npc, Player) -> Boolean = boolean@{ n, p ->
     /*
      * God Wars Dungeon npcs hunt through their own Void hunt mode (see GodWars.HuntMode), not the bulk table's
@@ -40,12 +44,36 @@ val defaultAggressiveness: (Npc, Player) -> Boolean = boolean@{ n, p ->
     }
 
     val npcLvl = n.def.combatLevel
-    return@boolean p.combatLevel <= npcLvl * 2
+    // RCV-012.B14: an npc that also has a Void player hunt mode applies that mode's checks (Void Hunting.canHunt) - e.g. "aggressive"
+    // has no level cap - instead of the one "cowardly" level rule every other npc keeps (NpcHuntModes).
+    val mode = NpcHuntModes.table.mode(n.id) ?: return@boolean p.combatLevel <= npcLvl * 2
+    val visible =
+        when (mode.checkVisual) {
+            "line_of_sight" -> n.tile.height == p.tile.height && world.collision.raycast(n.tile, p.tile, projectile = true)
+            "line_of_walk" -> n.tile.height == p.tile.height && world.collision.raycast(n.tile, p.tile, projectile = false)
+            else -> true
+        }
+    return@boolean NpcHuntModes.allows(
+        mode,
+        playerCombatLevel = p.combatLevel,
+        npcCombatLevel = npcLvl,
+        playerUnderAttack = p.timers.has(ACTIVE_COMBAT_TIMER),
+        playerInMulti = p.tile.isMulti(world),
+        playerMenuOpen = world.plugins.isMenuOpened(p),
+        visible = visible,
+    )
 }
 
-/** GWD hunters use Void's hunt range; everything else the combat definition's aggressive radius. */
+/**
+ * GWD hunters use Void's hunt range; an aggressive npc with a Void player hunt mode uses its Void hunt_range (default 5, RCV-012.B14);
+ * everything else the combat definition's aggressive radius. A Void hunt mode never makes a non-aggressive npc aggressive here.
+ */
 fun aggroRadius(npc: Npc): Int =
-    if (GodWars.inDungeon(npc.tile) && GodWars.huntMode(npc.id) != null) GodWars.huntRange(npc.id) else npc.combatDef.aggressiveRadius
+    if (GodWars.inDungeon(npc.tile) && GodWars.huntMode(npc.id) != null) {
+        GodWars.huntRange(npc.id)
+    } else {
+        if (npc.combatDef.aggressiveRadius <= 0) 0 else NpcHuntModes.table.range(npc.id) ?: npc.combatDef.aggressiveRadius
+    }
 
 on_global_npc_spawn {
     if (aggroRadius(npc) > 0) {
