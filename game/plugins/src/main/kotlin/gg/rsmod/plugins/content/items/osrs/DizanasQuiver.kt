@@ -9,6 +9,7 @@ import gg.rsmod.plugins.api.WeaponType
 import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.api.ext.getEquipment
 import gg.rsmod.plugins.api.ext.hasWeaponType
+import gg.rsmod.plugins.content.combat.strategy.ranged.RangedAmmo
 import gg.rsmod.plugins.content.combat.strategy.ranged.RangedProjectile
 
 /**
@@ -19,8 +20,14 @@ import gg.rsmod.plugins.content.combat.strategy.ranged.RangedProjectile
  * determined by a random 1/3 roll"; at most 20,000 charges; one charge per Sunfire splinter.
  *
  * Charges live in [ItemAttribute.CHARGES]. SOURCE_GAP (not stated on the pages): whether a charged quiver reverts to the
- * uncharged item at 0 charges - it does here, like the other charged items; the Open/Empty/Uncharge option behaviour, the
- * second ammunition slot and the Ava's device upgrade are owner questions and not built.
+ * uncharged item at 0 charges - it does here, like the other charged items; the Ava's device upgrade is not built.
+ *
+ * Second ammunition slot (OWNER DECISION 2026-09-14: build it, server-side storage, real ammo slot first): "an additional
+ * ammunition slot, which can only be filled with arrows or bolts", filled "using the Fill option from the Worn Equipment
+ * tab" (message quoted in [NOTHING_TO_FILL_MESSAGE]); which ammo fires is decided by `RangedAmmo`. The stored ammo lives on
+ * the quiver item ([ItemAttribute.ATTACHED_ITEM_ID] / [ItemAttribute.ATTACHED_ITEM_COUNT]), so it follows the item through
+ * equip, bank, relog and death. SOURCE_GAP (ADAPTED, recorded): filling while a different ammo type is stored (refused,
+ * nothing lost), the Open interface (a message listing the contents) and the Empty wording.
  */
 object DizanasQuiver {
     const val MAX_CHARGES = 20_000
@@ -47,8 +54,64 @@ object DizanasQuiver {
     /** True while a bow or crossbow shot with arrows or bolts gains Dizana's Sunfire. */
     fun applies(player: Player): Boolean =
         (player.hasWeaponType(WeaponType.BOW) || player.hasWeaponType(WeaponType.CROSSBOW)) &&
-            isArrowOrBolt(player.getEquipment(EquipmentType.AMMO)?.id) &&
+            isArrowOrBolt(RangedAmmo.fired(player)?.item?.id) &&
             sunfireActive(player.getEquipment(EquipmentType.CAPE))
+
+    const val NOTHING_TO_FILL_MESSAGE = "You have nothing in your worn quiver to fill your Dizana's Quiver with."
+
+    /** All six quiver items (uncharged, charged, blessed, each with its (l)). */
+    val QUIVERS: Set<Int> = CHARGED_FOR.keys + CHARGED_FOR.values + BLESSED
+
+    /** The arrows or bolts stored in [quiver], or null when it holds none (or is not a quiver). */
+    fun storedAmmo(quiver: Item?): Item? {
+        if (quiver == null || quiver.id !in QUIVERS) return null
+        val id = quiver.attr[ItemAttribute.ATTACHED_ITEM_ID] ?: return null
+        val count = quiver.attr[ItemAttribute.ATTACHED_ITEM_COUNT] ?: 0
+        return if (count > 0) Item(id, count) else null
+    }
+
+    /** [quiver] holding [id] x [count] (none when [count] is 0); every other attribute (charges) is kept. */
+    fun withStored(quiver: Item, id: Int, count: Int): Item =
+        Item(quiver.id, quiver.amount).copyAttr(quiver).also {
+            if (count > 0) {
+                it.attr[ItemAttribute.ATTACHED_ITEM_ID] = id
+                it.attr[ItemAttribute.ATTACHED_ITEM_COUNT] = count
+            } else {
+                it.attr.remove(ItemAttribute.ATTACHED_ITEM_ID)
+                it.attr.remove(ItemAttribute.ATTACHED_ITEM_COUNT)
+            }
+        }
+
+    sealed class FillResult {
+        data class Filled(val quiver: Item, val moved: Int) : FillResult()
+
+        object NothingWorn : FillResult()
+
+        object NotArrowOrBolt : FillResult()
+
+        object DifferentAmmo : FillResult()
+
+        object Full : FillResult()
+    }
+
+    /** Moves worn [ammo] into [quiver]: same type only, arrows or bolts only, never above Int.MAX_VALUE in total. */
+    fun fill(quiver: Item, ammo: Item?): FillResult {
+        if (ammo == null) return FillResult.NothingWorn
+        if (!isArrowOrBolt(ammo.id)) return FillResult.NotArrowOrBolt
+        val stored = storedAmmo(quiver)
+        if (stored != null && stored.id != ammo.id) return FillResult.DifferentAmmo
+        val current = stored?.amount ?: 0
+        val moved = minOf(ammo.amount.toLong(), Int.MAX_VALUE.toLong() - current).toInt()
+        if (moved <= 0) return FillResult.Full
+        return FillResult.Filled(withStored(quiver, ammo.id, current + moved), moved)
+    }
+
+    /** Removes [amount] stored ammo from the worn quiver (a quiver shot). */
+    fun removeStored(player: Player, amount: Int) {
+        val quiver = player.getEquipment(EquipmentType.CAPE) ?: return
+        val stored = storedAmmo(quiver) ?: return
+        player.equipment[EquipmentType.CAPE.id] = withStored(quiver, stored.id, stored.amount - amount)
+    }
 
     fun accuracyBonus(player: Player): Int = if (applies(player)) ACCURACY_BONUS else 0
 

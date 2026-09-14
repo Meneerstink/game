@@ -28,11 +28,30 @@ class NoxiousHalberdTests {
     }
 
     @Test
-    fun `the passive venom chance is wired into melee hits and Virulence is not invented`() {
+    fun `the passive venom chance and Virulence are wired into melee hits`() {
         assertEquals(0.33, NoxiousHalberd.VENOM_CHANCE)
         val strategy = File("src/main/kotlin/gg/rsmod/plugins/content/combat/strategy/MeleeCombatStrategy.kt").readText()
         assertTrue("NoxiousHalberd.rollVenom(pawn, target)" in strategy)
-        val specials = File("src/main/kotlin/gg/rsmod/plugins/content/combat/specialattack/weapons")
-        assertFalse(specials.walkTopDown().filter { it.isFile }.any { "Items.NOXIOUS_HALBERD" in it.readText() }, "Virulence awaits the owner decision")
+        assertTrue("NoxiousHalberd.takeMinimum(pawn, landHit)" in strategy)
+        assertTrue("maxOf(fangRange?.first ?: 0, virulenceMinimum)" in strategy)
+        val script = File("src/main/kotlin/gg/rsmod/plugins/content/combat/specialattack/weapons/noxious_halberd.plugin.kts").readText()
+        assertTrue("SpecialAttacks.registerInstant(NoxiousHalberd.VIRULENCE_ENERGY, Items.NOXIOUS_HALBERD)" in script, "instant special, energy only on success")
+        assertTrue("on_item_unequip(item = Items.NOXIOUS_HALBERD)" in script && "NoxiousHalberd.clearVirulence(player)" in script, "lost on weapon change")
+        assertFalse(NoxiousHalberd.VIRULENCE_MINIMUM.persistenceKey != null, "lost on logout: not persisted")
+    }
+
+    @Test
+    fun `Virulence uses the next poison or venom hit and stays armed until an accurate attack`() {
+        assertEquals(50, NoxiousHalberd.VIRULENCE_ENERGY)
+        assertEquals("You can only use this special attack whilst you are poisoned.", NoxiousHalberd.VIRULENCE_FAIL_MESSAGE)
+        // Poison: next hit = ticksLeft / 5 + 1 (a fresh poison of 6 has 26 ticks left -> 6).
+        assertEquals(6, gg.rsmod.plugins.content.mechanics.poison.Poison.getDamageForTicks(6 * 5 - 4))
+        assertEquals(1, gg.rsmod.plugins.content.mechanics.poison.Poison.getDamageForTicks(0))
+        // Venom: next hit 6, 8, ... capped at 20.
+        assertEquals(listOf(6, 8, 20, 20), listOf(0, 1, 7, 50).map { gg.rsmod.plugins.content.mechanics.poison.Venom.damageForTick(it) })
+        // A minimum above the max hit is clamped to the max hit by the damage roll.
+        val random = kotlin.random.Random(1)
+        repeat(50) { assertEquals(12, gg.rsmod.plugins.content.combat.rollDamage(16.0, 12.0, random)) }
+        repeat(200) { assertTrue(gg.rsmod.plugins.content.combat.rollDamage(16.0, 40.0, random) in 16..40) }
     }
 }

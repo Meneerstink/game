@@ -44,7 +44,7 @@ SpecialAttacks.register(35, Items.MAGIC_LONGBOW, Items.MAGIC_COMPOSITE_BOW) {
 /* Dark bow - Descent of Darkness: 55%, two arrows at x1.3 damage (min 5 each), x1.5 and min 8 with dragon arrows. */
 SpecialAttacks.register(55, *DARK_BOWS) {
     val victim = target
-    val ammo = player.getEquipment(EquipmentType.AMMO)
+    val ammo = gg.rsmod.plugins.content.combat.strategy.ranged.RangedAmmo.fired(player)?.item
     val dragon = ammo != null && ammo.id in DRAGON_ARROWS
     val projectile = if (dragon) 1099 else 1101
     val impact = if (dragon) 1100 else 1103

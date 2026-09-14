@@ -20,6 +20,7 @@ import gg.rsmod.plugins.content.combat.createProjectile
 import gg.rsmod.plugins.content.combat.dealHit
 import gg.rsmod.plugins.content.combat.formula.RangedCombatFormula
 import gg.rsmod.plugins.content.combat.strategy.ranged.AvasDevices
+import gg.rsmod.plugins.content.combat.strategy.ranged.RangedAmmo
 import gg.rsmod.plugins.content.combat.strategy.ranged.RangedProjectile
 import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Darts
 import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.EnchantedBolts
@@ -90,8 +91,10 @@ object RangedCombatStrategy : CombatStrategy {
                 return false
             }
 
+            // Ammo slot first, then a worn Dizana's quiver's stored ammo (RangedAmmo).
+            val fired = RangedAmmo.fired(pawn)
             val crossbow = CrossbowType.values.firstOrNull { it.item == weapon?.id }
-            if (crossbow != null && ammo?.id !in crossbow.ammo) {
+            if (crossbow != null && fired == null) {
                 val message =
                     if (ammo !=
                         null
@@ -107,7 +110,7 @@ object RangedCombatStrategy : CombatStrategy {
 
             val bow = BowType.values.firstOrNull { it.item == weapon?.id }
             if (bow != null && bow.ammo.isNotEmpty()) {
-                if (ammo?.id !in bow.ammo) {
+                if (fired == null) {
                     val message =
                         if (ammo !=
                             null
@@ -158,7 +161,8 @@ object RangedCombatStrategy : CombatStrategy {
                     else -> EquipmentType.AMMO
                 }
 
-            val ammo = pawn.getEquipment(ammoSlot)
+            val fired = if (ammoSlot == EquipmentType.AMMO) RangedAmmo.fired(pawn) else null
+            val ammo = if (ammoSlot == EquipmentType.AMMO) fired?.item else pawn.getEquipment(ammoSlot)
             boltAmmoId = ammo?.id
             /*
              * Create a projectile based on ammo.
@@ -193,7 +197,7 @@ object RangedCombatStrategy : CombatStrategy {
                 val amount = 1
                 if (ammoNeeded == true) {
                     if (breakAmmo || dropAmmo) {
-                        pawn.equipment.remove(ammo.id, amount)
+                        if (fired != null) RangedAmmo.consume(pawn, fired, amount) else pawn.equipment.remove(ammo.id, amount)
                     }
                     if (dropAmmo && breakOnImpact == false) {
                         ammoDropAction = { world.spawn(GroundItem(ammo.id, amount, target.tile, pawn)) }

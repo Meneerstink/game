@@ -72,12 +72,19 @@ object MeleeCombatStrategy : CombatStrategy {
             } else {
                 null
             }
+        // Noxious halberd Virulence: the next accurate attack gets the cured poison/venom hit as its minimum (NoxiousHalberd).
+        val virulenceMinimum =
+            if (pawn is Player && gg.rsmod.plugins.content.items.osrs.NoxiousHalberd.isWielding(pawn)) {
+                gg.rsmod.plugins.content.items.osrs.NoxiousHalberd.takeMinimum(pawn, landHit)
+            } else {
+                0
+            }
 
         val damage =
             pawn
                 .dealHit(
                     target = target,
-                    minHit = gg.rsmod.plugins.content.items.osrs.OsmumtensFang.minHitArgument(fangRange?.first ?: 0),
+                    minHit = gg.rsmod.plugins.content.items.osrs.OsmumtensFang.minHitArgument(maxOf(fangRange?.first ?: 0, virulenceMinimum)),
                     maxHit = fangRange?.second?.toDouble() ?: maxHit,
                     landHit = landHit,
                     delay = 1,

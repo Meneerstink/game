@@ -39,6 +39,8 @@ object OsrsItemImportTool {
         val weaponType: Int = -1,
         /** Server `attack_audio` (items.yml); -1 when none. */
         val attackAudio: Int = -1,
+        /** Rev-667 client string params (opcode 249), e.g. worn-equipment menu options 528.. (server `ItemDef.equipmentMenu`). */
+        val rev667StringParams: Map<Int, String> = emptyMap(),
     )
 
     /**
@@ -203,8 +205,14 @@ object OsrsItemImportTool {
                 ),
             // Dizana's quiver, all six upstream variants (uncharged, charged, blessed, each with its Trouver-locked (l)).
             // Single requirement 75 Ranged (434/436) -> client 749/750 as on the Ava's assembler.
+            // Worn menu (667 param 528.. = worn option 1.., evidence: 667 Ring of wealth 2572 PARAM_528=Rub = EQUIP_MENU[0]):
+            // the charged quivers carry OSRS worn op 451 "Check" in build 240 -> 528; "Fill" is the wiki's Worn Equipment
+            // option for the second ammunition slot, absent from the cache params (client-side in OSRS) -> ADAPTED_TO_667.
             "quiver" to
-                listOf(28947, 28949, 28951, 28953, 28955, 28957).map { Spec(it, rev667Params = mapOf(749 to 4, 750 to 75)) } +
+                listOf(28947, 28949, 28951, 28953, 28955, 28957).map {
+                    val worn = if (it == 28951 || it == 28953) mapOf(528 to "Check", 529 to "Fill") else mapOf(528 to "Fill")
+                    Spec(it, rev667Params = mapOf(749 to 4, 750 to 75), rev667StringParams = worn)
+                } +
                     Spec(28924), // Sunfire splinters (wiki: one quiver charge per splinter)
             // Osmumten's fang: one-handed stab weapon whose wiki styles (Stab/Lunge/Slash/Block) are the 667 sword style set
             // 5, so it follows the Rune sword 1289 like Belle's folly (644 1381, audio 2500) plus 687 for Eviscerate.
@@ -372,6 +380,7 @@ object OsrsItemImportTool {
                                 entry.spec.rev667Params,
                                 dropped,
                                 countItem = { upstream -> entries.first { it.identity == "upstream_item:$upstream" }.localId },
+                                rev667StringParams = entry.spec.rev667StringParams,
                             )
                         }
                     }
@@ -394,6 +403,7 @@ object OsrsItemImportTool {
                                 "models=${planned.models.map { "${it.source.sourceIdentity}->${it.localId}" }}",
                         )
                         println("  OPCODES ${ItemDefCodec.describeOpcodes(planned.bytes).joinToString(" ")}")
+                        if (entry.notedOf == null && !entry.isCount) println("  UPSTREAM_PARAMS ${entry.def.params.toSortedMap()}")
                     }
                 }
             dropped.distinct().forEach { println("DROPPED $it") }
@@ -435,6 +445,7 @@ object OsrsItemImportTool {
         rev667Params: Map<Int, Int>,
         dropped: MutableList<String>,
         countItem: (Int) -> Int = { error("count variant $it has no local item") },
+        rev667StringParams: Map<Int, String> = emptyMap(),
     ): ByteArray {
         val out: ByteBuf = Unpooled.buffer()
         fun u16(code: Int, value: Int) {
@@ -528,13 +539,20 @@ object OsrsItemImportTool {
             out.writeByte(1)
             out.writeShort(51)
         }
-        if (rev667Params.isNotEmpty()) {
+        if (rev667Params.isNotEmpty() || rev667StringParams.isNotEmpty()) {
+            // 667 ObjType opcode 249: count, then per param a string flag (1 = string), a medium id and the value.
             out.writeByte(249)
-            out.writeByte(rev667Params.size)
+            out.writeByte(rev667Params.size + rev667StringParams.size)
             rev667Params.forEach { (id, value) ->
                 out.writeByte(0)
                 out.writeMedium(id)
                 out.writeInt(value)
+            }
+            rev667StringParams.forEach { (id, value) ->
+                out.writeByte(1)
+                out.writeMedium(id)
+                out.writeBytes(value.toByteArray(Charsets.ISO_8859_1))
+                out.writeByte(0)
             }
         }
         out.writeByte(0)

@@ -1378,7 +1378,10 @@ fun Player.getRangedStrengthBonus(): Int =
                 gg.rsmod.plugins.content.items.osrs.Blowpipe.dartStrength(equipment[3])
         }
         // Dizana's Sunfire: +1 Ranged strength for arrows and bolts while the quiver is charged or blessed.
-        else -> equipmentBonuses[BonusSlot.RANGED_STRENGTH_BONUS.id] + gg.rsmod.plugins.content.items.osrs.DizanasQuiver.strengthBonus(this)
+        // A shot from Dizana's quiver's second slot uses the stored ammo's strength instead of the unused slot ammo's.
+        else ->
+            equipmentBonuses[BonusSlot.RANGED_STRENGTH_BONUS.id] + gg.rsmod.plugins.content.items.osrs.DizanasQuiver.strengthBonus(this) +
+                gg.rsmod.plugins.content.combat.strategy.ranged.RangedAmmo.quiverBonusCorrection(this, BonusSlot.RANGED_STRENGTH_BONUS)
     }
 
 fun Player.getMagicDamageBonus(): Int = equipmentBonuses[BonusSlot.MAGIC_DAMAGE_BONUS.id]

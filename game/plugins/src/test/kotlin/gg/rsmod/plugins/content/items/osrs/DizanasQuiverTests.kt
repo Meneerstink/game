@@ -70,4 +70,61 @@ class DizanasQuiverTests {
         assertTrue("DizanasQuiver.afterShot(pawn)" in File("src/main/kotlin/gg/rsmod/plugins/content/combat/strategy/RangedCombatStrategy.kt").readText())
         assertTrue("DizanasQuiver.afterShot(player)" in File("src/main/kotlin/gg/rsmod/plugins/content/combat/specialattack/SpecialAttackSupport.kt").readText())
     }
+
+    @Test
+    fun `the second ammunition slot holds one type of arrows or bolts and keeps the charges`() {
+        val charged = DizanasQuiver.charge(Item(Items.DIZANAS_QUIVER_UNCHARGED), 40).result
+        assertEquals(DizanasQuiver.FillResult.NothingWorn, DizanasQuiver.fill(charged, null))
+        assertEquals("You have nothing in your worn quiver to fill your Dizana's Quiver with.", DizanasQuiver.NOTHING_TO_FILL_MESSAGE)
+        assertEquals(DizanasQuiver.FillResult.NotArrowOrBolt, DizanasQuiver.fill(charged, Item(Items.DRAGON_DART, 10)))
+        assertEquals(DizanasQuiver.FillResult.NotArrowOrBolt, DizanasQuiver.fill(charged, Item(Items.OSRS_DRAGON_JAVELIN, 10)))
+        val filled = DizanasQuiver.fill(charged, Item(Items.RUNE_ARROW, 500)) as DizanasQuiver.FillResult.Filled
+        assertEquals(500, filled.moved)
+        assertEquals(Item(Items.RUNE_ARROW, 500).id, DizanasQuiver.storedAmmo(filled.quiver)!!.id)
+        assertEquals(500, DizanasQuiver.storedAmmo(filled.quiver)!!.amount)
+        assertEquals(40, DizanasQuiver.charges(filled.quiver), "charges survive filling")
+        val more = DizanasQuiver.fill(filled.quiver, Item(Items.RUNE_ARROW, 25)) as DizanasQuiver.FillResult.Filled
+        assertEquals(525, DizanasQuiver.storedAmmo(more.quiver)!!.amount)
+        assertEquals(DizanasQuiver.FillResult.DifferentAmmo, DizanasQuiver.fill(more.quiver, Item(Items.OSRS_DRAGON_BOLTS, 5)))
+        assertEquals(null, DizanasQuiver.storedAmmo(DizanasQuiver.withStored(more.quiver, Items.RUNE_ARROW, 0)), "emptied")
+        assertEquals(null, DizanasQuiver.storedAmmo(Item(Items.RUNE_ARROW, 5)), "only quivers store ammo")
+        assertEquals(525, DizanasQuiver.storedAmmo(DizanasQuiver.spendShot(more.quiver, 0.0))!!.amount, "a charge roll keeps the stored ammo")
+        assertEquals(6, DizanasQuiver.QUIVERS.size)
+    }
+
+    @Test
+    fun `the real ammo slot fires first and every ammo path reads the resolved ammunition`() {
+        val ranged = "src/main/kotlin/gg/rsmod/plugins/content/combat/strategy/ranged/RangedAmmo.kt"
+        val source = File(ranged).readText()
+        assertTrue("if (slot != null && slot.id in valid) return Fired(slot, false)" in source, "ammo slot prioritised")
+        assertTrue("DizanasQuiver.storedAmmo(player.getEquipment(EquipmentType.CAPE))" in source, "only a worn quiver")
+        assertTrue(
+            gg.rsmod.plugins.content.combat.strategy.ranged.RangedAmmo.validAmmo(Items.ZARYTE_CROSSBOW)!!.contains(Items.OSRS_DRAGON_BOLTS),
+        )
+        val strategy = File("src/main/kotlin/gg/rsmod/plugins/content/combat/strategy/RangedCombatStrategy.kt").readText()
+        assertTrue("RangedAmmo.fired(pawn)" in strategy && "RangedAmmo.consume(pawn, fired, amount)" in strategy)
+        val support = File("src/main/kotlin/gg/rsmod/plugins/content/combat/specialattack/SpecialAttackSupport.kt").readText()
+        assertTrue("RangedAmmo.fired(player)" in support && "RangedAmmo.consume(player, fired!!, 1)" in support)
+        assertTrue("RangedAmmo.quiverBonusCorrection(this, BonusSlot.RANGED_STRENGTH_BONUS)" in File("src/main/kotlin/gg/rsmod/plugins/api/ext/PlayerExt.kt").readText())
+        assertTrue("RangedAmmo.quiverBonusCorrection(pawn, BonusSlot.ATTACK_RANGED)" in File("src/main/kotlin/gg/rsmod/plugins/content/combat/formula/RangedCombatFormula.kt").readText())
+        val plugin = File("src/main/kotlin/gg/rsmod/plugins/content/items/osrs/dizanas_quiver.plugin.kts").readText()
+        assertTrue("on_equipment_option(item = quiverId, option = \"Fill\")" in plugin)
+        assertTrue("DizanasQuiver.NOTHING_TO_FILL_MESSAGE" in plugin)
+    }
+
+    @Test
+    fun `every quiver has the worn Fill option and the charged ones keep the cache's worn Check`() {
+        val store = com.displee.cache.CacheLibrary(Paths.get("..", "..", "data", "cache").toFile().toString())
+        try {
+            val definitions = gg.rsmod.game.fs.DefinitionSet()
+            definitions.load(store, gg.rsmod.game.fs.def.ItemDef::class.java)
+            DizanasQuiver.QUIVERS.forEach { id ->
+                val menu = definitions.get(gg.rsmod.game.fs.def.ItemDef::class.java, id).equipmentMenu.filterNotNull()
+                val expected = if (id == Items.DIZANAS_QUIVER || id == Items.DIZANAS_QUIVER_L) listOf("Check", "Fill") else listOf("Fill")
+                assertEquals(expected, menu, "worn menu of $id")
+            }
+        } finally {
+            store.close()
+        }
+    }
 }

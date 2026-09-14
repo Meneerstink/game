@@ -9,9 +9,10 @@ import kotlin.math.floor
  * eight ticks (4.8 seconds) to move at least five tiles away from the attacker." "If the target fails to do so, they will
  * take 25 typeless magic damage, and the attacker will be healed for 15% of the target's max Hitpoints level, up to a cap
  * of 25 against NPCs and 15 against players." "The sacrifice must deal the full 25 damage in order to receive the full
- * healing effect."
- *
- * PROVISIONAL (not stated): with less than 25 damage dealt the heal is limited to the damage actually dealt.
+ * healing effect, otherwise the attacker will only be healed for the damage done by the sacrifice up to the max of 15%."
+ * Changelog 29 May 2024: "reduced from 25 to 15% of the target's base hitpoints, up to a cap of 25 against NPCs and 14
+ * against players" (players: floor(15 % of 99) = 14). OWNER DECISION 2026-09-14 "net als OSRS": this sourced sentence
+ * replaces the earlier provisional rule; the heal is min(damage dealt, floor(15 % max hitpoints), cap).
  */
 object AncientGodsword {
     const val SPECIAL_ENERGY = 50

@@ -84,7 +84,9 @@ object SpecialAttackSupport {
         onHit: (Int) -> Unit = {},
     ): Int {
         val world = player.world
-        val ammo = player.getEquipment(EquipmentType.AMMO)
+        // Ammo slot first, then a worn Dizana's quiver's stored ammo (RangedAmmo).
+        val fired = gg.rsmod.plugins.content.combat.strategy.ranged.RangedAmmo.fired(player)
+        val ammo = fired?.item
         val ammoProjectile = ammo?.let { a -> RangedProjectile.values.firstOrNull { a.id in it.items } }
         if (ammo == null || ammoProjectile == null) {
             player.message("You have no ammo left in your quiver.")
@@ -97,7 +99,7 @@ object SpecialAttackSupport {
         val hitDelay = if (delay > -1) delay else 1 + Math.ceil(player.tile.getDistance(target.tile) * 0.3).toInt() + projectileDelayOffset
 
         if (consumeAmmo) {
-            player.equipment.remove(ammo.id, 1)
+            gg.rsmod.plugins.content.combat.strategy.ranged.RangedAmmo.consume(player, fired!!, 1)
             if (world.random(99) >= 20) {
                 world.spawn(GroundItem(ammo.id, 1, target.tile, player))
             }
