@@ -683,6 +683,11 @@ object OsrsItemImportTool {
             // Step 4 batch "potions-venom" (OSRS Wiki infobox ids, ascending = 4 to 1 doses): Anti-venom, Anti-venom+, Extended anti-venom+.
             "potions-venom" to
                 listOf(12905, 12907, 12909, 12911, 12913, 12915, 12917, 12919, 29824, 29827, 29830, 29833).map { Spec(it, noted = true) },
+            // Step 4 batch "potions-antifire" (owner answer Q8; OSRS Wiki infobox ids, most doses first): Extended antifire, Extended antifire
+            // mix (2 doses), Super antifire mix (2), Extended super antifire, Extended super antifire mix (2). The OSRS "Super antifire potion"
+            // is the 667 Super antifire (same-name rule: mapped to the main item, not imported).
+            "potions-antifire" to
+                listOf(11951, 11953, 11955, 11957, 11960, 11962, 21994, 21997, 22209, 22212, 22215, 22218, 22221, 22224).map { Spec(it, noted = true) },
             // Step 4 batch "potions-stamina" (OSRS Wiki infobox ids, ascending = most doses first): Stamina potion, Stamina mix (2 doses),
             // Extended stamina potion, Extreme energy potion, and the Amylase crystal ingredient.
             "potions-stamina" to
@@ -864,10 +869,40 @@ object OsrsItemImportTool {
         var noted: Entry? = null
     }
 
+    /**
+     * Owner answer 2026-09-14 "same-name duplicate copies: map to the main item (do not import each copy)". OSRS copy definition ->
+     * the local main item (LMS / cosmetic copies, the beta-world Magus / Venator ring definitions, moon-armour copies). The 667 spelling
+     * differs for a few ("3rd Age" = "Third-age", "Ahrim's robetop" = "Ahrim's robe top", "Mage's book" = "Mages' book",
+     * "Seers ring (i)" = "Seers' ring (i)"). Not copies: 12806 / 12807 (Malediction / Odium ward (or)), 28310 / 28313 (the real rings).
+     */
+    val SAME_NAME_COPIES: Map<Int, Int> =
+        mapOf(
+            20576 to 10338, 20577 to 10340, 20598 to 4712, 20599 to 4714, 21207 to 22802, 23624 to 15018, 25258 to 15018,
+            26767 to 15018, 23626 to 22929, 23644 to 22911, 23652 to 6889, 24123 to 23003, 25517 to 23084, 25518 to 22876,
+            27157 to 22798, 27174 to 22862, 27175 to 22864, 27176 to 22866, 27177 to 23482, 27179 to 23568, 27180 to 10380,
+            27181 to 10372, 27182 to 10388, 27183 to 10342, 27184 to 22685, 27185 to 8850, 27186 to 22413, 27187 to 22736,
+            27189 to 4755, 27190 to 4757, 27191 to 3842, 27192 to 22490, 27193 to 22878, 27194 to 22880, 29843 to 23096,
+            29844 to 23097, 29845 to 23095, 29846 to 23099, 29847 to 23100, 29848 to 23098, 29849 to 23137, 25486 to 22946,
+            25487 to 22948,
+        )
+    // Not copies although the planning roster listed them: 21634 (Ancient wyvern shield), 22003 (Dragonfire ward) and 29037-29045
+    // (moon armour) are the definitions batches magegearb and moons imported (OsrsSameNameCopiesTests).
+
+    /** Same-name copies whose main item does not exist on this server (nothing to map to; not imported either). */
+    val SAME_NAME_COPIES_WITHOUT_MAIN: Map<Int, String> =
+        mapOf(
+            27178 to "Spiked manacles: no main item in items.yml",
+            27188 to "Light ballista: no main item in items.yml",
+            28555 to "Starter bow: no main item in items.yml",
+        )
+
     @JvmStatic
     fun main(args: Array<String>) {
         val batchName = args.firstOrNull { !it.startsWith("--") } ?: error("Usage: <batch> [--apply] [--yml-out=<file>]")
         val specs = BATCHES[batchName] ?: error("Unknown batch '$batchName' (known: ${BATCHES.keys}).")
+        specs.firstOrNull { it.upstreamId in SAME_NAME_COPIES || it.upstreamId in SAME_NAME_COPIES_WITHOUT_MAIN }?.let {
+            error("upstream ${it.upstreamId} is a same-name copy (owner answer: map to the main item, do not import)")
+        }
         val apply = "--apply" in args
         val ymlOut = args.firstOrNull { it.startsWith("--yml-out=") }?.substringAfter('=')
         val dropped = mutableListOf<String>()
