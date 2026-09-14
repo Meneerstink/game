@@ -274,6 +274,9 @@ enum class CombinationData(
     ODIUM_WARD_OR(items = intArrayOf(Items.WARD_UPGRADE_KIT, Items.ODIUM_WARD), resultItem = Items.ODIUM_WARD_OR, experience = 0.0),
     ELIDINIS_WARD_OR(items = intArrayOf(Items.MENAPHITE_ORNAMENT_KIT, Items.ELIDINIS_WARD_F), resultItem = Items.ELIDINIS_WARD_OR, experience = 0.0),
 
+    /** OSRS Wiki "Necklace of rupture": Necklace of anguish + Etched elder venator fang, 84 Crafting, 500 experience. */
+    NECKLACE_OF_RUPTURE(items = intArrayOf(Items.ETCHED_ELDER_VENATOR_FANG, Items.NECKLACE_OF_ANGUISH), resultItem = Items.NECKLACE_OF_RUPTURE, levelRequired = 84, experience = 500.0),
+
     /** OSRS Wiki "Seers icon" / "Archer icon": a chisel on the ring, 80 Crafting, 400 experience. */
     SEERS_ICON(items = intArrayOf(Items.SEERS_RING), tool = CombinationTool.CHISEL, resultItem = Items.SEERS_ICON, levelRequired = 80, experience = 400.0),
     ARCHER_ICON(items = intArrayOf(Items.ARCHERS_RING), tool = CombinationTool.CHISEL, resultItem = Items.ARCHER_ICON, levelRequired = 80, experience = 400.0),

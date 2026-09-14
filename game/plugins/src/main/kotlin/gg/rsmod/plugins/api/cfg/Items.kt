@@ -19747,5 +19747,27 @@ object Items {
     const val MAGUS_RING_NOTED = 22947
     const val VENATOR_RING = 22948
     const val VENATOR_RING_NOTED = 22949
+    // OSRS-IMPORT magegearb (step 3 roster).
+    const val STAFF_OF_BALANCE = 22950
+    const val STAFF_OF_BALANCE_NOTED = 22951
+    const val ANCIENT_WYVERN_SHIELD = 22952
+    const val ANCIENT_WYVERN_SHIELD_UNCHARGED = 22953
+    const val DRAGONFIRE_WARD = 22954
+    const val DRAGONFIRE_WARD_UNCHARGED = 22955
+    const val ANTLER_GUARD = 22956
+    const val ANTLER_GUARD_NOTED = 22957
+    const val NECKLACE_OF_FANGS = 22958
+    const val NECKLACE_OF_FANGS_NOTED = 22959
+    const val ETCHED_ELDER_VENATOR_FANG = 22960
+    const val ETCHED_ELDER_VENATOR_FANG_NOTED = 22961
+    const val NECKLACE_OF_RUPTURE = 22962
+    const val NECKLACE_OF_RUPTURE_NOTED = 22963
+    const val AQUANITE_TENDON = 22964
+    const val AQUANITE_TENDON_NOTED = 22965
+    const val AQUANITE_HOPPER = 22966
+    const val AQUANITE_HOPPER_NOTED = 22967
+    const val MOKHAIOTL_CLOTH = 22968
+    const val CONFLICTION_GAUNTLETS = 22969
+    const val CONFLICTION_GAUNTLETS_NOTED = 22970
     // Auto-generated file using class gg.rsmod.game.service.game.DumpEntityIdService
 }

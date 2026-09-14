@@ -45,9 +45,10 @@ object StaffOfTheDead {
     const val POWER_OF_DEATH_MESSAGE = "Spirits of deceased evildoers offer you their protection."
 
     /** Staves with the rune-saving passive and no Ancient Magicks autocast. */
-    val DEAD_STAVES = setOf(Items.STAFF_OF_THE_DEAD, Items.TOXIC_STAFF_UNCHARGED, Items.TOXIC_STAFF_OF_THE_DEAD)
+    // OSRS Wiki "Staff of Balance": it "inherits all of the staff of the dead's effects" (imported in batch magegearb).
+    val DEAD_STAVES = setOf(Items.STAFF_OF_THE_DEAD, Items.TOXIC_STAFF_UNCHARGED, Items.TOXIC_STAFF_OF_THE_DEAD, Items.STAFF_OF_BALANCE)
 
-    /** Staves sharing Power of Death that exist in this cache (the Staff of balance does not). */
+    /** Staves sharing Power of Death (staff of the dead, toxic staff, staff of light, staff of balance). */
     val POWER_OF_DEATH_STAVES = DEAD_STAVES + Items.STAFF_OF_LIGHT
 
     fun scales(item: Item): Int = if (item.id == Items.TOXIC_STAFF_OF_THE_DEAD) item.attr[ItemAttribute.CHARGES] ?: 0 else 0

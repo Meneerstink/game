@@ -113,6 +113,12 @@ class DragonfireFormula(
 
     companion object {
         private val ANTI_DRAGON_SHIELDS = intArrayOf(Items.ANTIDRAGON_SHIELD)
-        private val DRAGONFIRE_SHIELDS = intArrayOf(Items.DRAGONFIRE_SHIELD, Items.DRAGONFIRE_SHIELD_11284)
+        // OSRS-IMPORT magegearb: the Dragonfire ward "acts like a regular anti-dragon shield in terms of dragonfire protection" and the
+        // Ancient wyvern shield "provides both dragonfire protection" and wyvern icy breath protection (OSRS Wiki), charged or not.
+        private val DRAGONFIRE_SHIELDS =
+            intArrayOf(
+                Items.DRAGONFIRE_SHIELD, Items.DRAGONFIRE_SHIELD_11284, Items.DRAGONFIRE_WARD, Items.DRAGONFIRE_WARD_UNCHARGED,
+                Items.ANCIENT_WYVERN_SHIELD, Items.ANCIENT_WYVERN_SHIELD_UNCHARGED,
+            )
     }
 }

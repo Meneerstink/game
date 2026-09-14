@@ -32,7 +32,8 @@ class StaffOfTheDeadTests {
         assertEquals(0 to true, StaffOfTheDead.powerOfDeathDamage(active = true, wieldingStaff = false, melee = true, damage = 0))
         assertEquals(25 to false, StaffOfTheDead.powerOfDeathDamage(active = false, wieldingStaff = true, melee = true, damage = 25))
         assertEquals(
-            setOf(Items.STAFF_OF_THE_DEAD, Items.TOXIC_STAFF_UNCHARGED, Items.TOXIC_STAFF_OF_THE_DEAD, Items.STAFF_OF_LIGHT),
+            // The wiki lists the staff of the dead, toxic staff, staff of light and staff of balance (imported in batch magegearb).
+            setOf(Items.STAFF_OF_THE_DEAD, Items.TOXIC_STAFF_UNCHARGED, Items.TOXIC_STAFF_OF_THE_DEAD, Items.STAFF_OF_LIGHT, Items.STAFF_OF_BALANCE),
             StaffOfTheDead.POWER_OF_DEATH_STAVES,
         )
         assertFalse(Items.STAFF_OF_LIGHT in StaffOfTheDead.DEAD_STAVES, "the rune save and autocast rule belong to the dead staves")

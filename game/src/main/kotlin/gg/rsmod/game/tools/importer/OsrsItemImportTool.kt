@@ -467,6 +467,27 @@ object OsrsItemImportTool {
                     Spec(28313, noted = true), // Magus ring
                     Spec(28310, noted = true), // Venator ring
                 ),
+            // Step 3 roster batch "magegearb" (ids by Jagex name, RuneLite gameval ItemID): Staff of Balance (Staff of light class, as
+            // the dead staves), Ancient wyvern shield + uncharged, Dragonfire ward + uncharged, Antler guard, Necklace of fangs, Etched
+            // elder venator fang + Necklace of rupture, Aquanite tendon + hopper, Mokhaiotl cloth + Confliction gauntlets. Client
+            // requirement params only where the wiki gives exactly one wear requirement (antler guard 50 Prayer, rupture 90 Hitpoints,
+            // hopper 60 Ranged, gauntlets 90 Hitpoints); the shields and the staff have two.
+            "magegearb" to
+                listOf(
+                    Spec(24144, noted = true, rev667Params = deadStaffParams()), // Staff of Balance
+                    Spec(21633), // Ancient wyvern shield
+                    Spec(21634), // Ancient wyvern shield (uncharged)
+                    Spec(22002), // Dragonfire ward
+                    Spec(22003), // Dragonfire ward (uncharged)
+                    Spec(31081, noted = true, rev667Params = mapOf(749 to 5, 750 to 50)), // Antler guard
+                    Spec(34401, noted = true), // Necklace of fangs
+                    Spec(33636, noted = true), // Etched elder venator fang
+                    Spec(33639, noted = true, rev667Params = mapOf(749 to 3, 750 to 90)), // Necklace of rupture
+                    Spec(32876, noted = true), // Aquanite tendon
+                    Spec(32879, noted = true, rev667Params = mapOf(749 to 4, 750 to 60)), // Aquanite hopper
+                    Spec(31109), // Mokhaiotl cloth
+                    Spec(31106, noted = true, rev667Params = mapOf(749 to 3, 750 to 90)), // Confliction gauntlets
+                ),
             "deadstaves" to
                 listOf(
                     Spec(11791, noted = true, rev667Params = deadStaffParams()), // Staff of the dead

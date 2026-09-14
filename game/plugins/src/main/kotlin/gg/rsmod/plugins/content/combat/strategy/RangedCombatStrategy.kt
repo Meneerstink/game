@@ -41,6 +41,9 @@ import gg.rsmod.plugins.content.mechanics.weapons.HandCannon
 object RangedCombatStrategy : CombatStrategy {
     private const val DEFAULT_ATTACK_RANGE = 7
 
+    /** OSRS Wiki "Aquanite hopper": "crossbows are given an 11% chance to fire a second shot". */
+    private const val AQUANITE_SECOND_SHOT_CHANCE = 0.11
+
     private const val MAX_ATTACK_RANGE = 10
 
     override fun getAttackRange(pawn: Pawn): Int {
@@ -304,6 +307,30 @@ object RangedCombatStrategy : CombatStrategy {
                 val splashDamage = splash.hit.hitmarks.sumOf { it.damage }
                 if (splashDamage > 0) addCombatXp(pawn, other, splashDamage)
             }
+        }
+        // Aquanite hopper: "crossbows are given an 11% chance to fire a second shot" with "33.3% reduced accuracy, 66.7% reduced damage,
+        // and 66.7% reduced enchanted bolt proc chance", and no bolt effect when the first shot's already triggered (OSRS Wiki).
+        // ADAPTED: no second projectile graphic; SOURCE_GAP: whether the second bolt is used up (it is not).
+        if (pawn is Player && pawn.hasWeaponType(WeaponType.CROSSBOW) && pawn.getEquipment(EquipmentType.SHIELD)?.id == Items.AQUANITE_HOPPER &&
+            world.randomDouble() < AQUANITE_SECOND_SHOT_CHANCE
+        ) {
+            val secondLand = formula.getAccuracy(pawn, target, 2.0 / 3.0) >= world.randomDouble()
+            val secondMax = formula.getMaxHit(pawn, target, 1.0 / 3.0)
+            val procRoll = if (shot?.bolt != null) 1.0 else world.randomDouble() * 3.0
+            val second = EnchantedBolts.resolve(pawn, target, boltAmmoId, secondLand, secondMax, EnchantedBolts.Special.NONE, procRoll)
+            val secondHit =
+                pawn.dealHit(
+                    target = target,
+                    minHit = second.minHit,
+                    maxHit = second.maxHit,
+                    landHit = second.landHit,
+                    delay = hitDelay,
+                    hitType = HitType.RANGE,
+                    bonusDamage = second.bonusDamage,
+                )
+            val secondDamage = secondHit.hit.hitmarks.sumOf { it.damage }
+            second.bolt?.let { bolt -> secondHit.hit.addAction { EnchantedBolts.afterHit(bolt, pawn, target, secondDamage) } }
+            if (secondDamage > 0) addCombatXp(pawn, target, secondDamage)
         }
         if (firedBlowpipe) {
             pawnHit.hit.addAction { BlowpipeCombat.rollVenom(pawn as Player, target) }

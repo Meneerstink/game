@@ -110,6 +110,23 @@ on_item_option(item = Items.ELIDINIS_WARD_F, option = "Dismantle") {
     player.inventory.add(Items.ARCANE_SIGIL, 1)
 }
 
+// Confliction gauntlets (magegearb): "made with level 83 Crafting and level 70 Smithing by attaching the Mokhaiotl cloth ... to a
+// tormented bracelet alongside 10,000 demon tears"; "not reversible". NOT ENFORCED: "must be done at a bank" (no bank-location check).
+on_item_on_item(item1 = Items.MOKHAIOTL_CLOTH, item2 = Items.TORMENTED_BRACELET) {
+    if (!player.has(Skills.CRAFTING, 83, boostable = true) || !player.has(Skills.SMITHING, 70, boostable = true)) {
+        player.message("You need level 83 Crafting and 70 Smithing to do that.")
+        return@on_item_on_item
+    }
+    if (player.inventory.getItemCount(Items.DEMON_TEAR) < 10_000) {
+        player.message("You need 10,000 demon tears to do that.")
+        return@on_item_on_item
+    }
+    if (!player.inventory.remove(Items.MOKHAIOTL_CLOTH, 1).hasSucceeded()) return@on_item_on_item
+    player.inventory.remove(Items.TORMENTED_BRACELET, 1)
+    player.inventory.remove(Items.DEMON_TEAR, 10_000)
+    player.inventory.add(Items.CONFLICTION_GAUNTLETS, 1)
+}
+
 // Magus and venator icons.
 listOf(
     Triple(Items.SEERS_ICON, Items.MAGUS_VESTIGE, Items.MAGUS_ICON),

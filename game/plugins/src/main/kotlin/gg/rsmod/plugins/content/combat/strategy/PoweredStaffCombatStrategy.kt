@@ -90,7 +90,9 @@ object PoweredStaffCombatStrategy : CombatStrategy {
         val projectile = player.createProjectile(target, gfx = look.projectile, type = ProjectileType.MAGIC)
         world.spawn(projectile)
         val hitDelay = MagicCombatStrategy.getHitDelay(player.getCentreTile(), target.getCentreTile())
-        val landHit = MagicCombatFormula.getAccuracy(player, target) >= world.randomDouble()
+        // Confliction gauntlets: a powered staff's next attack on the same enemy after a miss rolls accuracy twice.
+        val landHit =
+            gg.rsmod.plugins.content.items.osrs.ConflictionGauntlets.roll(player, target, weapon.id, MagicCombatFormula.getAccuracy(player, target), eligible = true) { world.randomDouble() }
         if (landHit) {
             target.graphic(Graphic(look.impactGfx.id, look.impactGfx.height, projectile.lifespan))
         } else {

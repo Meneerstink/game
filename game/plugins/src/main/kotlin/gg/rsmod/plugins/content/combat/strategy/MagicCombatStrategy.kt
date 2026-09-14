@@ -244,7 +244,15 @@ object MagicCombatStrategy : CombatStrategy {
 
         val formula = MagicCombatFormula
         val accuracy = formula.getAccuracy(pawn, target)
-        val landHit = accuracy >= world.randomDouble()
+        // Confliction gauntlets: after a miss the next cast of this spell on the same primary target rolls accuracy twice; never for
+        // secondary targets or ice spells against players (ConflictionGauntlets).
+        val iceAgainstPlayer = target is Player && spell in setOf(CombatSpell.ICE_RUSH, CombatSpell.ICE_BURST, CombatSpell.ICE_BLITZ, CombatSpell.ICE_BARRAGE)
+        val landHit =
+            if (pawn is Player) {
+                gg.rsmod.plugins.content.items.osrs.ConflictionGauntlets.roll(pawn, target, spell.uniqueId, accuracy, primary && !iceAgainstPlayer) { world.randomDouble() }
+            } else {
+                accuracy >= world.randomDouble()
+            }
 
         if (!spell.damaging) {
             // Effect-only spell: no damage hit is shown; the effect lands on a successful roll,
