@@ -49,6 +49,24 @@ class FeroxEnclaveTests {
         assertEquals("A magical force prevents you from passing through the barrier while you are tele-blocked.", BountyHunterHome.BARRIER_TELEBLOCK_MESSAGE)
     }
 
+    @Test
+    fun `Ferox respawn switch charges 5M once and death uses the chosen tile`() {
+        assertEquals(5_000_000, gg.rsmod.plugins.content.areas.wilderness.FeroxRespawn.PRICE)
+        val npcs = File(content, "areas/wilderness/ferox_enclave_npcs.plugin.kts").readText()
+        listOf(
+            "Okay, switch my respawn to Ferox Enclave.", "Thank you, you'll respawn in the Enclave from here on out.",
+            "Ask about your respawn point.", "Would you like to respawn back in Ferox Enclave again?", "Fair enough, it has been done.",
+            "How are you finding our sanctuary?", "Yes, switch my respawn to Lumbridge.",
+            "inventory.remove(Items.COINS_995, FeroxRespawn.PRICE).hasSucceeded()", "FeroxRespawn.activate(it.player)",
+            "FeroxRespawn.deactivate(it.player)",
+        ).forEach { assertTrue(it in npcs, "ferox dialogue lacks $it") }
+        val death = File("../src/main/kotlin/gg/rsmod/game/action/PlayerDeathAction.kt").readText()
+        assertTrue("player.attr[RESPAWN_TILE_ATTR]?.let { Tile.from30BitHash(it) }" in death)
+        val tile = gg.rsmod.plugins.content.areas.wilderness.FeroxRespawn.TILE
+        assertEquals(tile, Tile.from30BitHash(tile.as30BitInteger))
+        assertTrue("feroxRespawn in reachable" in File(content, "areas/home/home_verify.plugin.kts").readText())
+    }
+
     /** Ray casting over Void's integer polygon. */
     private fun inPolygon(x: Double, y: Double, xs: List<Int>, ys: List<Int>): Boolean {
         var inside = false

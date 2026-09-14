@@ -31,6 +31,12 @@ val NEW_ACCOUNT_ATTR = AttributeKey<Boolean>()
 val PROTECTION_FORFEITED_ATTR = AttributeKey<Boolean>(persistenceKey = "protection_forfeited")
 
 /**
+ * Owner answer Q12 (2026-09-14): a chosen respawn tile ([gg.rsmod.game.model.Tile.as30BitInteger]) that
+ * [gg.rsmod.game.action.PlayerDeathAction] uses instead of the home arrival tile, e.g. Ferox's paid Enclave respawn.
+ */
+val RESPAWN_TILE_ATTR = AttributeKey<Int>(persistenceKey = "respawn_tile")
+
+/**
  * R14.24: the [gg.rsmod.game.model.World.currentCycle] of the last real client-originated
  * packet this player sent - real RS clients send an explicit "mouse became idle" event
  * ([gg.rsmod.game.message.impl.EventMouseIdleMessage]) after a period of no input, which is

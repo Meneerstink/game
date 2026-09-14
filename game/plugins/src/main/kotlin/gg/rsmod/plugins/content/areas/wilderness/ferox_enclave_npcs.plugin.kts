@@ -11,8 +11,9 @@ import gg.rsmod.plugins.content.mechanics.exchange.GrandExchangeInterface
  * fixed tile). Not spawned (SOURCE_GAP): the three Refugees (their map is the whole-enclave overview, no tile) and Perdu (map = No).
  * Dialogue: the "Standard dialogue" sections of the OSRS Wiki transcripts, verbatim. Branches for content this server does not have are
  * taken as the wiki's own condition decides: Vet'ion, Callisto and Venenatis do not exist here, so the "with no kills" lines are used;
- * Last Man Standing is parked, so Lisa and Justine use their "not on an official LMS world" lines. BLOCKED (recorded): Ferox's paid
- * respawn switch (no sourced respawn tile), Marten's Store-axe, the Mercenary's banknote exchange, Skully (loot keys batch).
+ * Last Man Standing is parked, so Lisa and Justine use their "not on an official LMS world" lines. Ferox's paid respawn switch uses the
+ * owner-approved tile next to the Old Nite pub ([FeroxRespawn], owner answer Q12). BLOCKED (recorded): Marten's Store-axe, the
+ * Mercenary's banknote exchange.
  */
 
 // ---- spawns (x, z from the wiki map; plane 0) ----
@@ -43,13 +44,66 @@ on_npc_option(npc = Npcs.FEROX, option = "talk-to") {
 
 suspend fun ferox(it: QueueTask) {
     it.chatNpc("Welcome wanderer.", wrap = true)
-    when (it.options("What is this place?", "What can you do for me?", "Nevermind.")) {
+    val paid = it.player.attr[FeroxRespawn.PAID] == true
+    when (it.options("What is this place?", if (paid) "Ask about your respawn point." else "What can you do for me?", "Nevermind.")) {
         1 -> feroxWhatIsThisPlace(it)
-        2 -> feroxWhatCanYouDo(it)
+        2 -> if (paid) feroxRespawnPoint(it) else feroxWhatCanYouDo(it)
         3 -> {
             it.chatPlayer("Never mind, I'm just looking around.", wrap = true)
             it.chatNpc("So be it.", wrap = true)
         }
+    }
+}
+
+// Transcript:Ferox "If the player has paid Ferox to switch their respawn point before". ADAPTED: "Lumbridge" is this server's home
+// respawn (gameContext.home, itself inside the Enclave); the lines stay verbatim.
+suspend fun feroxRespawnPoint(it: QueueTask) {
+    it.chatPlayer("Can I talk to you about my respawn location?", wrap = true)
+    val soul = if (it.player.appearance.gender == Gender.MALE) "man's" else "woman's"
+    if (!FeroxRespawn.isActive(it.player)) {
+        it.chatNpc("Would you like to respawn back in Ferox Enclave again?", wrap = true)
+        when (it.options("Please switch my respawn back to the Enclave.", "No, I don't want to respawn in the Enclave")) {
+            1 -> {
+                it.chatPlayer("Please switch my respawn back to the Enclave.", wrap = true)
+                it.chatNpc("The Wilderness takes a toll on a $soul soul. Are you sure you can handle it?", wrap = true)
+                when (it.options("Yes, switch my respawn to the Enclave.", "No, maybe another time.")) {
+                    1 -> {
+                        it.chatPlayer("Yes, switch my respawn to the Enclave.", wrap = true)
+                        FeroxRespawn.activate(it.player)
+                        it.chatNpc("Fair enough, it has been done.", wrap = true)
+                    }
+                    2 -> {
+                        it.chatPlayer("No, maybe another time.", wrap = true)
+                        it.chatNpc("Understandable.", wrap = true)
+                    }
+                }
+            }
+            2 -> {
+                it.chatPlayer("No, I don't want to respawn in the Enclave.", wrap = true)
+                it.chatNpc("Understandable.", wrap = true)
+            }
+        }
+        return
+    }
+    it.chatNpc("How are you finding our sanctuary?", wrap = true)
+    when (it.options("Please switch my respawn back to Lumbridge.", "It's working for me so far, thanks.")) {
+        1 -> {
+            it.chatPlayer("Please switch my respawn back to Lumbridge.", wrap = true)
+            it.chatNpc("Can't say I blame you, the Wilderness starts to wear down the soul after a while.", wrap = true)
+            it.chatNpc("But are you sure? Come and see me if you want to respawn in our Enclave again; I won't need any more money from you.", wrap = true)
+            when (it.options("Yes, switch my respawn to Lumbridge.", "No, I'll keep the Enclave respawn.")) {
+                1 -> {
+                    it.chatPlayer("Yes, switch my respawn to Lumbridge.", wrap = true)
+                    FeroxRespawn.deactivate(it.player)
+                    it.chatNpc("Done.", wrap = true)
+                }
+                2 -> {
+                    it.chatPlayer("No, I'll keep the Enclave respawn.", wrap = true)
+                    it.chatNpc("Fine.", wrap = true)
+                }
+            }
+        }
+        2 -> it.chatPlayer("It's working for me so far, thanks.", wrap = true)
     }
 }
 
@@ -98,10 +152,20 @@ suspend fun feroxWhatCanYouDo(it: QueueTask) {
                 val gender = if (it.player.appearance.gender == Gender.MALE) "man" else "woman"
                 it.chatNpc("Understandable, you'd have to be a brave $gender to be carrying that much gold out here.", wrap = true)
             } else {
-                // BLOCKED: "Okay, switch my respawn to Ferox Enclave." needs the respawn tile, which no source gives.
-                it.options("I'm not interested.")
-                it.chatPlayer("I'm not interested.", wrap = true)
-                it.chatNpc("Can't say I blame you, this wouldn't be my choice either.", wrap = true)
+                when (it.options("Okay, switch my respawn to Ferox Enclave.", "I'm not interested.")) {
+                    1 -> {
+                        it.chatPlayer("Okay, switch my respawn to Ferox Enclave.", wrap = true)
+                        if (it.player.inventory.remove(Items.COINS_995, FeroxRespawn.PRICE).hasSucceeded()) {
+                            it.player.attr[FeroxRespawn.PAID] = true
+                            FeroxRespawn.activate(it.player)
+                            it.chatNpc("Thank you, you'll respawn in the Enclave from here on out.", wrap = true)
+                        }
+                    }
+                    2 -> {
+                        it.chatPlayer("I'm not interested.", wrap = true)
+                        it.chatNpc("Can't say I blame you, this wouldn't be my choice either.", wrap = true)
+                    }
+                }
             }
         }
         2 -> {

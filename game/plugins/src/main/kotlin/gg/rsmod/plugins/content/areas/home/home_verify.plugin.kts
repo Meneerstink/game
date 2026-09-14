@@ -160,6 +160,21 @@ on_world_init {
     }
     check(unreachableFacilities == 0) { "home_verify: $unreachableFacilities facility(-ies) unreachable from arrival." }
 
+    // Owner answer Q12: the paid Ferox respawn tile next to The Old Nite must be a safe, standable tile reachable from arrival.
+    val feroxRespawn = gg.rsmod.plugins.content.areas.wilderness.FeroxRespawn.TILE
+    for (z in 3648 downTo 3638) {
+        val row = StringBuilder("home_verify: pub $z ")
+        for (x in 3144..3158) {
+            val t = Tile(x, z, 0)
+            row.append(if (t == feroxRespawn) 'R' else if (!standable(t)) '#' else if (t in reachable) 'a' else '.')
+        }
+        println(row)
+    }
+    check(BountyHunterHome.isSafe(feroxRespawn, home) && standable(feroxRespawn) && feroxRespawn in reachable) {
+        "home_verify: Ferox respawn tile $feroxRespawn is not a safe, standable tile reachable from arrival."
+    }
+    println("home_verify: Ferox respawn tile $feroxRespawn safe, standable and reachable from arrival.")
+
     var badGates = 0
     BountyHunterHome.gates(home).forEach { gate ->
         val objectPresent = objectAt(gate.tile, FeroxObjects.BARRIER_A) || objectAt(gate.tile, FeroxObjects.BARRIER_B)

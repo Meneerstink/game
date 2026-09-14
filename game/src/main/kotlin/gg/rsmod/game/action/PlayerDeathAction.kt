@@ -4,6 +4,8 @@ import gg.rsmod.game.fs.def.AnimDef
 import gg.rsmod.game.message.impl.MusicEffectMessage
 import gg.rsmod.game.model.attr.DEATH_FLAG
 import gg.rsmod.game.model.attr.KILLER_ATTR
+import gg.rsmod.game.model.attr.RESPAWN_TILE_ATTR
+import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.queue.QueueTask
 import gg.rsmod.game.model.queue.TaskPriority
@@ -60,7 +62,8 @@ object PlayerDeathAction {
             // teleportTo(), not moveTo(): moveTo() only snaps instantly when the destination is
             // beyond normal view distance, so dying just outside Ferox (well within that distance
             // of the respawn tile) rendered as a walk/glide into the enclave instead of a teleport.
-            player.teleportTo(player.world.gameContext.home.transform(0, -1))
+            val chosen = player.attr[RESPAWN_TILE_ATTR]?.let { Tile.from30BitHash(it) }
+            player.teleportTo(chosen ?: player.world.gameContext.home.transform(0, -1))
         } else {
             player.teleportTo(instancedMap.exitTile)
             world.instanceAllocator.death(player)
