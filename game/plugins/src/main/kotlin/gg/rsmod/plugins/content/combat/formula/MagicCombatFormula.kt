@@ -108,6 +108,8 @@ object MagicCombatFormula : CombatFormula {
             // the percentages add up before multiplying. The player bonus slot holds tenths of a percent.
             val additive = pawn.getMagicDamageBonus() / 1000.0 + getEliteVoidMagicDamage(pawn) + getPrayerMagicDamage(pawn)
             hit = Math.floor(Math.floor(hit) * (1.0 + additive))
+            // Charged tomes: "stacking multiplicatively with Magic damage bonuses" (Tomes).
+            hit = Math.floor(hit * gg.rsmod.plugins.content.items.osrs.Tomes.damageMultiplier(pawn, target, spell))
         } else if (pawn is Npc) {
             val spell = pawn.attr[Combat.CASTING_SPELL]
             if (spell == null) {
@@ -195,7 +197,8 @@ object MagicCombatFormula : CombatFormula {
     ): Double {
         // The plain Salve amulet and black mask/Slayer helmet are melee-only; magic needs their imbued versions
         // ("Damage per second/Magic": 1.15 slayer helm (i) / salve (i)), none of which exist in this cache.
-        return Math.floor(base)
+        // Tome of Water: water spells +10 % (NPC) / +20 % (player), curse spells +20 % accuracy (Tomes).
+        return Math.floor(base * gg.rsmod.plugins.content.items.osrs.Tomes.accuracyMultiplier(player, target, player.attr[Combat.CASTING_SPELL]))
     }
 
     private fun getEffectiveAttackLevel(player: Player): Double {

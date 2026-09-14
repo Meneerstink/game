@@ -269000,3 +269000,163 @@
   tradeable: true
   weight: 0.0
   equipment: null
+- id: 22723
+  name: "Tome of Fire"
+  examine: "An ancient tome containing the secrets of fire magic."
+  tradeable: false
+  weight: 1.0
+  equipment:
+    equip_slot: 5
+    equip_type: -1
+    appearance_id: 5721
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 8
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 8
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 50}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22724
+  name: "Tome of Fire (empty)"
+  examine: "An ancient tome containing the secrets of fire magic."
+  tradeable: true
+  weight: 1.0
+  equipment:
+    equip_slot: 5
+    equip_type: -1
+    appearance_id: 5722
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 8
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 8
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 50}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22725
+  name: "Tome of Fire (empty)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22726
+  name: "Burnt page"
+  examine: "It's still warm to the touch."
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22727
+  name: "Tome of Water"
+  examine: "An ancient tome containing the secrets of water magic."
+  tradeable: false
+  weight: 1.0
+  equipment:
+    equip_slot: 5
+    equip_type: -1
+    appearance_id: 5723
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 8
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 8
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 50}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22728
+  name: "Tome of Water (empty)"
+  examine: "An ancient tome containing the secrets of water magic."
+  tradeable: true
+  weight: 1.0
+  equipment:
+    equip_slot: 5
+    equip_type: -1
+    appearance_id: 5724
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 8
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 8
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 50}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 22729
+  name: "Tome of Water (empty)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 22730
+  name: "Soaked page"
+  examine: "It feels clammy, like second-hand toilet paper."
+  tradeable: true
+  weight: 0.0
+  equipment: null

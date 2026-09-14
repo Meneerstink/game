@@ -286,6 +286,18 @@ object OsrsItemImportTool {
                     Spec(24225, rev667Params = mapOf(644 to 27, 686 to 10, 687 to 1, 749 to 0, 750 to 50, 751 to 2, 752 to 50), weaponType = 10, attackAudio = 2714), // Granite maul (ornate handle)
                     Spec(24229, noted = true), // Ornate maul handle
                 ),
+            // Tome of Fire / Tome of Water, empty versions and pages. Shield-slot books; "requires level 50 in Magic to wield"
+            // (wiki; upstream 434/436 only on the charged tomes, the client requirement is given to both). Worn menu from the
+            // upstream worn ops: charged 451 "Check" + 452 "Pages", empty 451 "Pages" -> 667 params 528/529.
+            "tomes" to
+                listOf(
+                    Spec(20714, rev667Params = mapOf(749 to 6, 750 to 50), rev667StringParams = mapOf(528 to "Check", 529 to "Pages")), // Tome of Fire
+                    Spec(20716, noted = true, rev667Params = mapOf(749 to 6, 750 to 50), rev667StringParams = mapOf(528 to "Pages")), // Tome of Fire (empty)
+                    Spec(20718), // Burnt page
+                    Spec(25574, rev667Params = mapOf(749 to 6, 750 to 50), rev667StringParams = mapOf(528 to "Check", 529 to "Pages")), // Tome of Water
+                    Spec(25576, noted = true, rev667Params = mapOf(749 to 6, 750 to 50), rev667StringParams = mapOf(528 to "Pages")), // Tome of Water (empty)
+                    Spec(25578), // Soaked page
+                ),
             // Blighted sacks (owner addition 2026-09-14): stackable, tradeable consumables without inventory options upstream;
             // they replace the runes of the spells named on their wiki pages (MagicSpells). No client params.
             "blightedsacks" to

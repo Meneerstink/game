@@ -142,6 +142,8 @@ object MagicCombatStrategy : CombatStrategy {
             MagicSpells
                 .getMetadata(spell.uniqueId)
                 ?.let { requirement -> MagicSpells.removeRunes(pawn, requirement.runes, spellId = spell.uniqueId) }
+            // Charged tomes use one charge per qualifying combat cast (Tomes).
+            gg.rsmod.plugins.content.items.osrs.Tomes.afterCast(pawn, spell)
         }
 
         val targets = collectTargets(pawn, target, spell)
@@ -315,7 +317,7 @@ object MagicCombatStrategy : CombatStrategy {
                 }
             }
             is SpellEffect.ShadowDrain -> drainSkill(target, Skills.ATTACK, 10)
-            is SpellEffect.StatDrain -> drainSkill(target, effect.skill, effect.percent)
+            is SpellEffect.StatDrain -> drainSkill(target, effect.skill, effect.percent, gg.rsmod.plugins.content.items.osrs.Tomes.drainBoost(pawn, spell))
             is SpellEffect.Miasmic -> {
                 if (!target.timers.has(MIASMIC_IMMUNITY_TIMER)) {
                     target.timers[MIASMIC_TIMER] = effect.ticks
@@ -344,6 +346,8 @@ object MagicCombatStrategy : CombatStrategy {
         target: Pawn,
         skill: Int,
         percent: Int,
+        /** Tome of Water: stat-draining curses are 50 % more effective (drain floored). */
+        boost: Double = 1.0,
     ) {
         val base: Int
         val current: Int
@@ -366,11 +370,12 @@ object MagicCombatStrategy : CombatStrategy {
             }
             else -> return
         }
-        val floor = base - (base * percent / 100)
+        val amount = (base * percent * boost / 100.0).toInt()
+        val floor = base - amount
         if (current <= floor) {
             return
         }
-        val drain = minOf(base * percent / 100, current - floor).coerceAtLeast(1)
+        val drain = minOf(amount, current - floor).coerceAtLeast(1)
         val cap = -(base - floor).coerceAtLeast(1)
         when (target) {
             is Player -> target.skills.alterCurrentLevel(index, -drain, capValue = cap)

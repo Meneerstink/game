@@ -19588,5 +19588,13 @@ object Items {
     const val GRANITE_MAUL_ORNATE_HANDLE = 22720
     const val ORNATE_MAUL_HANDLE = 22721
     const val ORNATE_MAUL_HANDLE_NOTED = 22722
+    const val TOME_OF_FIRE = 22723
+    const val TOME_OF_FIRE_EMPTY = 22724
+    const val TOME_OF_FIRE_EMPTY_NOTED = 22725
+    const val TOME_BURNT_PAGE = 22726
+    const val TOME_OF_WATER = 22727
+    const val TOME_OF_WATER_EMPTY = 22728
+    const val TOME_OF_WATER_EMPTY_NOTED = 22729
+    const val TOME_SOAKED_PAGE = 22730
     // Auto-generated file using class gg.rsmod.game.service.game.DumpEntityIdService
 }
