@@ -27,8 +27,12 @@ object RangedCombatFormula : CombatFormula {
         target: Pawn,
         specialAttackMultiplier: Double,
     ): Double {
-        // Check if the target has the prayer protection and the attacker is not a player
-        if ((target.isProtectedFrom(CombatClass.RANGED) && !gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.deflects(target, CombatClass.RANGED)) && pawn !is Player) {
+        // Check if the target has the prayer protection and the attacker is not a player. Level-
+        // 1337 city guards (Deadman PvP guards plan, 2026-09-16) are exempt: their damage ignores
+        // protection prayers entirely, per gg.rsmod.plugins.content.mechanics.pvp.CityGuards.
+        if ((target.isProtectedFrom(CombatClass.RANGED) && !gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.deflects(target, CombatClass.RANGED)) &&
+            pawn !is Player &&
+            !gg.rsmod.plugins.content.mechanics.pvp.CityGuards.bypassesProtectionPrayer(pawn)) {
             return 0.0 // Hits will never land
         }
         return getUnprotectedAccuracy(pawn, target, specialAttackMultiplier)
@@ -61,6 +65,11 @@ object RangedCombatFormula : CombatFormula {
         specialAttackMultiplier: Double,
         specialPassiveMultiplier: Double,
     ): Double {
+        // Deadman PvP guards plan (2026-09-16): a level-1337 city guard's max hit is the
+        // consecutive-hit damage ramp, not the normal weapon-stat formula below.
+        if (pawn is Npc && target is Player && gg.rsmod.plugins.content.mechanics.pvp.CityGuards.isGuard(pawn)) {
+            return gg.rsmod.plugins.content.mechanics.pvp.CityGuards.rampedMaxHit(pawn, target).toDouble()
+        }
         val a =
             if (pawn is Player) {
                 getEffectiveRangedLevel(pawn)

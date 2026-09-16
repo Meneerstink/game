@@ -26,6 +26,7 @@ import gg.rsmod.plugins.content.combat.strategy.RangedCombatStrategy
 import gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell
 import gg.rsmod.plugins.content.inter.attack.AttackTab
 import gg.rsmod.plugins.content.mechanics.pvp.AreaState
+import gg.rsmod.plugins.content.mechanics.pvp.CityGuards
 import gg.rsmod.plugins.content.mechanics.pvp.PvpSkull
 import gg.rsmod.plugins.content.mechanics.practicepvp.PracticePvp
 import java.lang.ref.WeakReference
@@ -273,6 +274,17 @@ object Combat {
             if (!target.isSpawned()) {
                 return false
             }
+            // Deadman PvP guards plan (2026-09-16): "guards can only be attacked while the
+            // intruder is skulled and inside the area" - symmetric with the guard-attacking-
+            // player gate below, reusing the same predicate. Re-checked every combat cycle here
+            // too, so a player mid-fight loses the ability to keep hitting a guard the instant
+            // they unskull or step outside the zone.
+            if (pawn is Player && CityGuards.isGuard(target)) {
+                if (!CityGuards.mayAttack(target, pawn)) {
+                    pawn.message("You can't attack this npc.")
+                    return false
+                }
+            }
             // Summoning familiars have no player-facing cache "Attack" option, but a public
             // familiar is still a valid PvP target in a multi-way area. The owner may never
             // attack their own familiar, and single-way combat must not open a second target.
@@ -323,6 +335,13 @@ object Combat {
 
                 if (!AreaState.canPlayersFight(pawn, target)) {
                     pawn.message("You can't attack players here.")
+                    return false
+                }
+            } else if (pawn is Npc && CityGuards.isGuard(pawn)) {
+                // Deadman PvP guards plan (2026-09-16): re-checked every combat cycle (this
+                // function, not only at initial aggro pick), so a guard stops attacking the
+                // instant the target is no longer skulled or leaves the guarded zone.
+                if (!CityGuards.mayAttack(pawn, target)) {
                     return false
                 }
             }
