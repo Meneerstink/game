@@ -51,6 +51,7 @@ class DragonfireFormula(
                 MagicCombatFormula.getAccuracy(pawn, target, specialAttackMultiplier) < pawn.world.randomDouble()
             }
         outcome.message?.let { target.filterableMessage(it) }
+        gg.rsmod.plugins.content.items.osrs.DragonfireShield.gainChargeFromDragonfire(target)
         return outcome.max.toDouble().coerceAtLeast(minHit)
     }
 
