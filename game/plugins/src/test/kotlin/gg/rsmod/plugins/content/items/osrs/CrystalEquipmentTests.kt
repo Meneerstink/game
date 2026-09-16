@@ -58,4 +58,26 @@ class CrystalEquipmentTests {
         assertTrue("Item(Items.BOW_OF_FAERDHINEN_INACTIVE, 1)" in File("src/main/kotlin/gg/rsmod/plugins/content/mechanics/death/PvpDeathBreakables.kt").readText())
         assertTrue(Items.BOW_OF_FAERDHINEN in gg.rsmod.plugins.content.combat.strategy.ranged.weapon.Bows.CRYSTAL_BOWS, "range 10")
     }
+
+    @Test
+    fun `Revert returns exactly one crystal armour seed per piece, active or inactive, and nothing else`() {
+        // Wiki "Crystal equipment#Reverting": "Dismantling a crystal armour piece will return the crystal armour seeds to
+        // the player but all crystal shard charges that were previously loaded will be lost."
+        val expectedIds =
+            setOf(
+                Items.CRYSTAL_HELM,
+                Items.CRYSTAL_HELM_INACTIVE,
+                Items.CRYSTAL_BODY,
+                Items.CRYSTAL_BODY_INACTIVE,
+                Items.CRYSTAL_LEGS,
+                Items.CRYSTAL_LEGS_INACTIVE,
+            )
+        assertEquals(expectedIds, CrystalEquipment.REVERT_SEED.keys)
+        assertTrue(CrystalEquipment.REVERT_SEED.values.all { it == Items.CRYSTAL_ARMOUR_SEED }, "every piece reverts to the same generic seed")
+        // The classic Crystal bow's inactive Revert is already bound in osrs_bows.plugin.kts; its charged Revert and the
+        // Bow of Faerdhinen's Uncharge are unsourced (not the armour's one-seed shape) and must stay out of this map.
+        assertTrue(Items.CRYSTAL_BOW_OSRS !in CrystalEquipment.REVERT_SEED)
+        assertTrue(Items.CRYSTAL_BOW_OSRS_INACTIVE !in CrystalEquipment.REVERT_SEED)
+        assertTrue(Items.BOW_OF_FAERDHINEN !in CrystalEquipment.REVERT_SEED)
+    }
 }

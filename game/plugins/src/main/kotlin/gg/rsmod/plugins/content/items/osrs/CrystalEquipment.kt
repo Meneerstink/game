@@ -24,9 +24,12 @@ import kotlin.math.floor
  * - Stacking (wiki DPS calculator `isWearingCrystalBow`: "Crystal bow" or any "Bow of Faerdhinen" name, inactive included):
  *   accuracy trunc(roll × (20 + n) / 20) and max hit trunc(max × (40 + n) / 40) with helm 1, legs 2, body 3, applied before the
  *   Salve / Slayer factors ("would be 37 if placed after slayer helm", tested in-game).
- * SOURCE_GAP (not built, recorded): the Bow of Faerdhinen "Uncharge" result; the number of crystal armour seeds Revert returns;
- * seed singing (Prifddinas singing bowl) and corruption progress. "Non-monster sources" is read as: only NPC hits use armour
- * charges.
+ * Uncharge/Revert (OSRS Wiki "Bow of faerdhinen#Reverting", "Crystal equipment#Reverting", "Crystal bow#Reverting", fetched
+ * 2026-09-16): the Bow of Faerdhinen's "Uncharge" only discharges it to the inactive item, shards lost, no seed (a direct
+ * seed reversion needs a Prifddinas singing bowl, not implemented); crystal armour's "Revert" returns exactly one Crystal
+ * armour seed per piece, charges lost; the classic Crystal bow's "Revert" returns exactly one Crystal seed. SOURCE_GAP (not
+ * built, recorded): seed singing itself and Bow of Faerdhinen (c)'s own Uncharge result (it "stays charged permanently", so
+ * what discharging it produces is unstated). "Non-monster sources" is read as: only NPC hits use armour charges.
  */
 object CrystalEquipment {
     const val CHARGES_PER_SHARD = 100
@@ -54,6 +57,14 @@ object CrystalEquipment {
             ARMOUR.associate { it.active to it.inactive }
 
     val CHARGED_FOR: Map<Int, Int> = INACTIVE_FOR.entries.associate { (charged, inactive) -> inactive to charged }
+
+    /**
+     * "Revert" target seed for crystal armour, active or inactive. The classic Crystal bow's inactive-only Revert is a
+     * separate, already-bound route in `osrs_bows.plugin.kts`; its charged-bow Revert stays an open SOURCE_GAP (see
+     * [crystal.plugin.kts's][gg.rsmod.plugins.content.items.osrs] header) rather than being folded in here unsourced.
+     */
+    val REVERT_SEED: Map<Int, Int> =
+        ARMOUR.flatMap { listOf(it.active to Items.CRYSTAL_ARMOUR_SEED, it.inactive to Items.CRYSTAL_ARMOUR_SEED) }.toMap()
 
     fun isCrystalBow(weaponId: Int?): Boolean = weaponId != null && (weaponId in Bows.CRYSTAL_BOWS || weaponId in BOWFA)
 
