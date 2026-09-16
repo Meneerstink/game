@@ -155,6 +155,29 @@ class MeleeCombatFormulaTests {
     }
 
     @Test
+    fun `getAccuracyAgainstReducedDefence rolls the normal attack against a fraction of the defence roll`() {
+        // Vesta's longsword "Feint": "rolled against 25% of the opponent's defence, using the attack
+        // bonus of the player's currently selected combat style against the target's stab defence."
+        val attacker = newPlayer(attackLevel = 99, style = WeaponStyle.ACCURATE, combatStyle = StyleType.CRUSH)
+        val target = newPlayer(defenceLevel = 40, style = WeaponStyle.ACCURATE, combatStyle = StyleType.CRUSH)
+        // attackRoll = (floor(99*1.0) + 3 + 8) * (0 + 64) = 110 * 64 = 7040 (specialAttackMultiplier 1.0, unaffected)
+        // defenceRoll = (floor(40*1.0) + 0 + 8) * (0 + 64) = 48 * 64 = 3072; reduced to 25% = 768
+        val expected = 1.0 - (768.0 + 2.0) / (2.0 * (7040.0 + 1.0))
+        assertEquals(expected, MeleeCombatFormula.getAccuracyAgainstReducedDefence(attacker, target, defenceMultiplier = 0.25), 1e-9)
+        // Sanity: the reduced roll is strictly more accurate than the normal, unreduced roll.
+        assertTrue(
+            MeleeCombatFormula.getAccuracyAgainstReducedDefence(attacker, target, defenceMultiplier = 0.25) >
+                MeleeCombatFormula.getAccuracy(attacker, target, 1.0),
+        )
+        // defenceMultiplier = 1.0 must reproduce the normal roll exactly (no behaviour change for every other caller).
+        assertEquals(
+            MeleeCombatFormula.getAccuracy(attacker, target, 1.0),
+            MeleeCombatFormula.getAccuracyAgainstReducedDefence(attacker, target, defenceMultiplier = 1.0),
+            1e-9,
+        )
+    }
+
+    @Test
     fun `protect from melee only zeroes accuracy against a non-player attacker`() {
         val npcAttacker = mockk<Npc>(relaxed = true)
         val target = newPlayer(defenceLevel = 1)

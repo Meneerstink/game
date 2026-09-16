@@ -4,33 +4,44 @@ import gg.rsmod.plugins.content.combat.dealHit
 import gg.rsmod.plugins.content.combat.formula.MeleeCombatFormula
 import gg.rsmod.plugins.content.combat.specialattack.SpecialAttacks
 
+/**
+ * OSRS Wiki "Statius's warhammer" (fetched 2026-09-16): "Smash" costs 35% special attack energy and
+ * "deals between 25% and 125% of the user's max hit, while lowering the target's current Defence
+ * level by 75% on a successful hit"; "Defence reductions stack across multiple successful hits, with
+ * each subsequent reduction calculated from the temporarily lowered level"; the page states no
+ * accuracy bonus, so accuracy uses the normal (unmultiplied) roll.
+ *
+ * Previously this rolled 0%-125% (a flat 1.25x max-hit multiplier through the standard 0..maxHit
+ * roll, not a 25%..125% range), reduced Defence by 30% (the Dragon warhammer's percentage, not this
+ * weapon's 75%), and boosted accuracy by an unsourced 1.25x. Fixed to match the wiki exactly.
+ */
 SpecialAttacks.register(35, Items.STATIUSS_WARHAMMER, Items.STATIUS_WARHAMMER_DEG) {
+    val victim = target
     player.animate(Anims.STATIUSS_WARHAMMER_SPECIAL)
     player.graphic(Gfx.STATIUSS_WARHAMMER_SPECIAL, 0, 0)
     player.playSound(Sfx.SHATTER)
 
-    val maxHit = MeleeCombatFormula.getMaxHit(player, target, specialAttackMultiplier = 1.25)
-    val accuracy = MeleeCombatFormula.getAccuracy(player, target, specialAttackMultiplier = 1.25)
+    val normalMax = MeleeCombatFormula.getMaxHit(player, victim)
+    val minHit = normalMax * 0.25
+    val maxHit = normalMax * 1.25
+    val accuracy = MeleeCombatFormula.getAccuracy(player, victim)
     val landHit = accuracy >= world.randomDouble()
-    val delay = 1
-    player.dealHit(target = target, maxHit = maxHit, landHit = landHit, delay = delay, hitType = HitType.MELEE)
+    val pawnHit = player.dealHit(target = victim, minHit = minHit, maxHit = maxHit, landHit = landHit, delay = 1, hitType = HitType.MELEE)
+    val dealt = pawnHit.hit.hitmarks.sumOf { it.damage }
 
-    if (landHit) {
-        if (target is Player) {
-            val p = target as Player
-            val defenceLevel = p.skills.getCurrentLevel(Skills.DEFENCE)
-            val thirtyPercentDefence = defenceLevel * 0.3
-            // We take away another 1% because the formula is 1 + 30%
-            val newLevel = 0.coerceAtLeast((defenceLevel - (1 + thirtyPercentDefence)).toInt())
-            p.skills.setCurrentLevel(Skills.DEFENCE, newLevel)
-        }
-        else {
-            val npc = target as Npc
-            val defenceLevel = npc.stats.getCurrentLevel(NpcSkills.DEFENCE)
-            val thirtyPercentDefence = defenceLevel * 0.3
-            // We take away another 1% because the formula is 1 + 30%
-            val newLevel = 0.coerceAtLeast((defenceLevel - (1 + thirtyPercentDefence)).toInt())
-            npc.stats.setCurrentLevel(NpcSkills.DEFENCE, newLevel)
+    if (landHit && dealt > 0) {
+        when (victim) {
+            is Player -> {
+                val level = victim.skills.getCurrentLevel(Skills.DEFENCE)
+                victim.skills.setCurrentLevel(Skills.DEFENCE, level - smashDefenceReduction(level))
+            }
+            is Npc -> {
+                val level = victim.stats.getCurrentLevel(NpcSkills.DEFENCE)
+                victim.stats.setCurrentLevel(NpcSkills.DEFENCE, level - smashDefenceReduction(level))
+            }
         }
     }
 }
+
+/** 75% of the current Defence level, rounded down. */
+fun smashDefenceReduction(level: Int): Int = level * 75 / 100

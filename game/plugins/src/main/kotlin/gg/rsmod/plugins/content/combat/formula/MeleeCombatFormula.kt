@@ -47,11 +47,25 @@ object MeleeCombatFormula : CombatFormula {
         defenceStyle: StyleType,
     ): Double = accuracy(pawn, target, specialAttackMultiplier, defenceStyle)
 
+    /**
+     * Accuracy rolled against a fraction of the target's normal defence roll. Vesta's longsword's
+     * "Feint" (OSRS Wiki, fetched 2026-09-16): "rolled against 25% of the opponent's defence, using
+     * the attack bonus of the player's currently selected combat style against the target's stab
+     * defence" - i.e. the normal attack roll, but the target's defence roll is reduced to 25% before
+     * the standard hit-chance formula, not a multiplier on the attacker's own roll.
+     */
+    fun getAccuracyAgainstReducedDefence(
+        pawn: Pawn,
+        target: Pawn,
+        defenceMultiplier: Double,
+    ): Double = accuracy(pawn, target, specialAttackMultiplier = 1.0, defenceStyle = null, defenceMultiplier = defenceMultiplier)
+
     private fun accuracy(
         pawn: Pawn,
         target: Pawn,
         specialAttackMultiplier: Double,
         defenceStyle: StyleType?,
+        defenceMultiplier: Double = 1.0,
     ): Double {
         // Check if the target has the prayer protection and the attacker is not a player. Level-
         // 1337 city guards (Deadman PvP guards plan, 2026-09-16) are exempt: their damage ignores
@@ -64,14 +78,14 @@ object MeleeCombatFormula : CombatFormula {
         }
         val attack = getAttackRoll(pawn, target, specialAttackMultiplier)
         val defence =
-            when {
+            (when {
                 (pawn is Npc && target is Player) && pawn.combatDef.attackStyleType == StyleType.MAGIC_MELEE ->
                     MagicCombatFormula
                         .getDefenceRoll(
                             target,
                         )
                 else -> getDefenceRoll(pawn, target, defenceStyle)
-            }
+            } * defenceMultiplier).toInt()
 
         val accuracy: Double =
             if (pawn is Player && gg.rsmod.plugins.content.items.osrs.OsmumtensFang.usesFangAccuracy(pawn)) {
