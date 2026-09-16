@@ -45,11 +45,11 @@ object CityGuards {
      * ordinary [npcs] elsewhere", the same principle [MELEE_GUARD_ID] already follows. */
     const val RANGED_GUARD_ID = Npcs.TOWER_ARCHER
 
-    /** Dedicated, previously-unused cache id for the "Wizguard" freeze variant. LIVE/AV note:
-     * this id's cache model is an archer, not a robed mage - functionally correct (freeze +
-     * combat def) but cosmetically a placeholder until a wizard-styled unused id is sourced and
-     * swapped in; flagged in the M1 handoff rather than silently presented as final. */
-    const val WIZGUARD_ID = Npcs.TOWER_ARCHER_690
+    /** Dedicated, previously-unused (confirmed: only its own Npcs.kt definition references it)
+     * cache id for the "Wizguard" freeze variant. Deadman PvP guards plan Batch 6 (2026-09-16)
+     * follow-up: replaced the earlier archer-model placeholder (TOWER_ARCHER_690) with a real
+     * wizard-robed npc model, matching the "Wizguard" name/flavour instead of just the mechanic. */
+    const val WIZGUARD_ID = Npcs.WIZARD_12231
 
     val GUARD_IDS = setOf(MELEE_GUARD_ID, RANGED_GUARD_ID, WIZGUARD_ID)
 
