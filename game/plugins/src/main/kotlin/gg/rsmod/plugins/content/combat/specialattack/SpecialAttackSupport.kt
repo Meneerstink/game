@@ -10,8 +10,6 @@ import gg.rsmod.plugins.api.HitType
 import gg.rsmod.plugins.api.NpcSkills
 import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.api.ext.getEquipment
-import gg.rsmod.plugins.api.ext.getWildernessLevel
-
 import gg.rsmod.plugins.api.ext.isMulti
 import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.content.combat.Combat
@@ -181,9 +179,10 @@ object SpecialAttackSupport {
         return when (other) {
             is Npc -> other.isSpawned() && other.def.isAttackable() && other.combatDef.lifepoints != -1
             is Player -> {
+                // AreaState.canPlayersFight already enforces the shared +/-12 combat-level range
+                // (Deadman PvP guards plan, 2026-09-16); no separate check needed here.
                 if (!other.isOnline || !other.lock.canBeAttacked() || !AreaState.canPlayersFight(player, other)) return false
-                val wildLvl = player.tile.getWildernessLevel()
-                wildLvl <= 0 || other.combatLevel in Combat.getValidCombatLvlRange(player, wildLvl)
+                true
             }
             else -> false
         }

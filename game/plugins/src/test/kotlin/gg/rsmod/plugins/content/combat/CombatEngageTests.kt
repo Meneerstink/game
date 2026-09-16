@@ -2,16 +2,18 @@ package gg.rsmod.plugins.content.combat
 
 import gg.rsmod.game.GameContext
 import gg.rsmod.game.fs.DefinitionSet
+import gg.rsmod.game.fs.def.NpcDef
 import gg.rsmod.game.model.EntityType
 import gg.rsmod.game.model.LockState
 import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.World
+import gg.rsmod.game.model.combat.NpcCombatDef
 import gg.rsmod.game.model.container.ItemContainer
 import gg.rsmod.game.model.container.key.EQUIPMENT_KEY
+import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.timer.ACTIVE_COMBAT_TIMER
 import gg.rsmod.game.model.timer.TimerMap
-import gg.rsmod.plugins.content.areas.home.BountyHunterHome
 import io.mockk.every
 import io.mockk.mockk
 import kotlin.test.Test
@@ -25,7 +27,7 @@ import kotlin.test.assertTrue
  * the two fundamentals the milestone asks for that were not yet covered by
  * [gg.rsmod.plugins.content.areas.home.BountyHunterHomeTests] (which only
  * exercises the tile-level `BountyHunterHome` predicates, not their use
- * inside actual combat gating): the central safe-home exclusion applied to a
+ * inside actual combat gating): the bank-only Ferox exclusion applied to a
  * real fight attempt, and the standard Wilderness combat-level-range
  * restriction. Also verifies `postAttack`'s existing combat-escape/logout
  * integration (`ACTIVE_COMBAT_TIMER`), so this file exercises Package 3's
@@ -34,42 +36,111 @@ import kotlin.test.assertTrue
  */
 class CombatEngageTests {
     @Test
-    fun `players cannot fight inside the safe home hub`() {
+    fun `an opponent can attack a public familiar in multi combat even without an Attack cache option`() {
         val home = Tile(3140, 3640, 0)
+        val owner = newPlayer(tile = home, combatLevel = 100, home = home)
         val attacker = newPlayer(tile = home, combatLevel = 100, home = home)
-        val target = newPlayer(tile = home.transform(1, 0), combatLevel = 100, home = home)
+        val world = attacker.world
+        every { world.getMultiCombatChunks() } returns setOf(home.chunkCoords.hashCode())
+        val familiar = publicFamiliar(owner, world, home)
 
-        assertFalse(Combat.canEngage(attacker, target))
+        assertTrue(Combat.canEngage(attacker, familiar))
     }
 
     @Test
-    fun `players can fight in dangerous wilderness within the wilderness combat level range`() {
+    fun `an owner cannot attack their own familiar and an opponent cannot attack one in single combat`() {
         val home = Tile(3140, 3640, 0)
-        // (3528 - 3520) / 8 + 1 = wilderness level 2, far outside the safe hub.
-        val attacker = newPlayer(tile = Tile(3040, 3528), combatLevel = 50, home = home)
-        val target = newPlayer(tile = Tile(3040, 3530), combatLevel = 51, home = home)
+        val owner = newPlayer(tile = home, combatLevel = 100, home = home)
+        val attacker = newPlayer(tile = home, combatLevel = 100, home = home)
+        val world = attacker.world
+        every { world.getMultiCombatChunks() } returns emptySet()
+        val familiar = publicFamiliar(owner, world, home)
+
+        assertFalse(Combat.canEngage(owner, familiar))
+        assertFalse(Combat.canEngage(attacker, familiar))
+    }
+
+    @Test
+    fun `an ordinary non attackable npc remains blocked for a player`() {
+        val home = Tile(3140, 3640, 0)
+        val attacker = newPlayer(tile = home, combatLevel = 100, home = home)
+        val npc = mockk<Npc>(relaxed = true)
+        every { npc.world } returns attacker.world
+        every { npc.tile } returns home
+        every { npc.entityType } returns EntityType.NPC
+        every { npc.isDead() } returns false
+        every { npc.isSpawned() } returns true
+        every { npc.invisible } returns false
+        every { npc.def } returns NpcDef(99998)
+        every { npc.combatDef } returns NpcCombatDef.DEFAULT
+
+        assertFalse(Combat.canEngage(attacker, npc))
+    }
+
+    @Test
+    fun `players can fight in Ferox outside the bank`() {
+        val home = Tile(3140, 3640, 0)
+        val attacker = newPlayer(tile = home, combatLevel = 100, home = home)
+        val target = newPlayer(tile = home.transform(1, 0), combatLevel = 100, home = home)
 
         assertTrue(Combat.canEngage(attacker, target))
     }
 
     @Test
-    fun `wilderness combat level range still blocks a fight when the level gap exceeds the wilderness level`() {
+    fun `players can fight in dangerous wilderness within the flat +-12 combat level range`() {
         val home = Tile(3140, 3640, 0)
-        // Same wilderness level 2 as above, so the valid range is only +/-2.
+        // (3528 - 3520) / 8 + 1 = wilderness level 2, far outside the safe hub. The flat
+        // +/-12 range (Deadman PvP guards plan, 2026-09-16) allows an 11-level gap here even
+        // though the old Wilderness-level-scaled formula (+/-2 at level 2) would have blocked
+        // it - this is the regression check that the scaled formula was actually replaced.
         val attacker = newPlayer(tile = Tile(3040, 3528), combatLevel = 50, home = home)
-        val target = newPlayer(tile = Tile(3040, 3530), combatLevel = 100, home = home)
+        val target = newPlayer(tile = Tile(3040, 3530), combatLevel = 61, home = home)
+
+        assertTrue(Combat.canEngage(attacker, target))
+    }
+
+    @Test
+    fun `flat +-12 combat level range blocks a fight when the gap exceeds 12`() {
+        val home = Tile(3140, 3640, 0)
+        val attacker = newPlayer(tile = Tile(3040, 3528), combatLevel = 50, home = home)
+        val target = newPlayer(tile = Tile(3040, 3530), combatLevel = 63, home = home)
 
         assertFalse(Combat.canEngage(attacker, target))
     }
 
     @Test
-    fun `one player standing in the safe hub still blocks the fight even if the other is in the wilderness`() {
+    fun `flat +-12 combat level range applies at exactly the boundary`() {
         val home = Tile(3140, 3640, 0)
-        val attacker = newPlayer(tile = home, combatLevel = 50, home = home)
-        // Ferox: the tile immediately outside the west barrier is real Wilderness.
-        val target = newPlayer(tile = BountyHunterHome.gates(home).first().outerLanding, combatLevel = 50, home = home)
+        val attackerAt12 = newPlayer(tile = Tile(3040, 3528), combatLevel = 50, home = home)
+        val targetAt12 = newPlayer(tile = Tile(3040, 3530), combatLevel = 62, home = home)
+        assertTrue(Combat.canEngage(attackerAt12, targetAt12), "exactly 12 levels apart must be allowed")
+
+        val attackerAt13 = newPlayer(tile = Tile(3040, 3528), combatLevel = 50, home = home)
+        val targetAt13 = newPlayer(tile = Tile(3040, 3530), combatLevel = 63, home = home)
+        assertFalse(Combat.canEngage(attackerAt13, targetAt13), "13 levels apart must be blocked")
+    }
+
+    @Test
+    fun `flat +-12 combat level range also applies outside the Wilderness since PvP is dangerous everywhere`() {
+        val home = Tile(3140, 3640, 0)
+        // Ordinary overworld tile, not a Wilderness region and not the Ferox bank - dangerous
+        // under R03.1 (PvP allowed everywhere outside explicit bank safe zones), so the range
+        // gate must still apply here, not only inside the Wilderness regions.
+        val attacker = newPlayer(tile = Tile(3200, 3200, 0), combatLevel = 50, home = home)
+        val target = newPlayer(tile = Tile(3200, 3201, 0), combatLevel = 100, home = home)
 
         assertFalse(Combat.canEngage(attacker, target))
+    }
+
+    @Test
+    fun `Ferox outside the bank can fight the Wilderness side of a barrier`() {
+        val home = Tile(3140, 3640, 0)
+        val attacker = newPlayer(tile = home, combatLevel = 50, home = home)
+        // One tile beyond the south Ferox boundary is real Wilderness and remains within
+        // the normal combat view distance of the non-bank Ferox tile.
+        val target = newPlayer(tile = Tile(3140, 3647, 0), combatLevel = 50, home = home)
+
+        assertTrue(Combat.canEngage(attacker, target))
     }
 
     @Test
@@ -113,6 +184,22 @@ class CombatEngageTests {
         // relaxed-mocked ItemContainer.
         every { player.equipment } returns ItemContainer(DEFINITIONS, EQUIPMENT_KEY)
         return player
+    }
+
+    private fun publicFamiliar(owner: Player, world: World, tile: Tile): Npc {
+        val def = NpcDef(99999)
+        val familiar = mockk<Npc>(relaxed = true)
+        every { familiar.world } returns world
+        every { familiar.tile } returns tile
+        every { familiar.entityType } returns EntityType.NPC
+        every { familiar.owner } returns owner
+        every { familiar.publicOwner } returns true
+        every { familiar.isDead() } returns false
+        every { familiar.isSpawned() } returns true
+        every { familiar.invisible } returns false
+        every { familiar.def } returns def
+        every { familiar.combatDef } returns NpcCombatDef.DEFAULT
+        return familiar
     }
 
     companion object {

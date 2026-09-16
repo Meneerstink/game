@@ -27,6 +27,7 @@ import gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell
 import gg.rsmod.plugins.content.inter.attack.AttackTab
 import gg.rsmod.plugins.content.mechanics.pvp.AreaState
 import gg.rsmod.plugins.content.mechanics.pvp.PvpSkull
+import gg.rsmod.plugins.content.mechanics.practicepvp.PracticePvp
 import java.lang.ref.WeakReference
 
 /**
@@ -272,11 +273,24 @@ object Combat {
             if (!target.isSpawned()) {
                 return false
             }
+            // Summoning familiars have no player-facing cache "Attack" option, but a public
+            // familiar is still a valid PvP target in a multi-way area. The owner may never
+            // attack their own familiar, and single-way combat must not open a second target.
+            // `publicOwner` is the existing familiar visibility marker; private owner-bound NPCs
+            // keep the ordinary cache-option gate below.
+            val publicFamiliar = target.owner != null && target.publicOwner
+            if (publicFamiliar && pawn is Player) {
+                if (target.owner === pawn || !pawn.tile.isMulti(pawn.world) || !target.tile.isMulti(pawn.world)) {
+                    if (pawn.world.plugins.notifyAttackRefusal) pawn.message("You can't attack this npc.")
+                    return false
+                }
+            }
             // RCV-005 root cause: the cache "Attack" menu option is what lets a *player* attack an npc.
             // It was applied to every attacker, so an npc could never fight back against a summoned
             // familiar (a familiar deliberately has no "Attack" option). Void `Target.attackable:56-63`:
-            // players need the option; npc attackers need it too unless the target is an owned familiar.
-            if ((!target.def.isAttackable() && (pawn is Player || target.owner == null)) ||
+            // ordinary players need the option; public familiars are the explicit multi-combat
+            // exception above, while npc attackers may still fight an owned familiar.
+            if ((!target.def.isAttackable() && !publicFamiliar && (pawn is Player || target.owner == null)) ||
             target.combatDef.lifepoints == -1) {
                 (pawn as? Player)?.message("You can't attack this npc.")
                 (pawn as? Player)?.message(
@@ -297,32 +311,23 @@ object Combat {
             if (pvp) {
                 pawn as Player
 
+                // Deadman PvP guards plan (2026-09-16): the flat +/-12 combat-level range now
+                // lives in the shared AreaState.canPlayersFight gate (every attack entrypoint
+                // inherits it), checked here first only so this specific, more helpful message
+                // fires instead of the generic "can't attack players here" one when the range is
+                // the actual reason. Superseded the old per-tile Wilderness-level-scaled formula.
+                if (!AreaState.isWithinCombatLevelRange(pawn, target) && !PracticePvp.areMatched(pawn, target)) {
+                    pawn.message("The level difference between you and your opponent is too great.")
+                    return false
+                }
+
                 if (!AreaState.canPlayersFight(pawn, target)) {
                     pawn.message("You can't attack players here.")
                     return false
                 }
-
-                // R03.3: the level-difference range is a Wilderness-specific mechanic (it scales
-                // with Wilderness level); global PvP outside the Wilderness (R03.1) has no such
-                // restriction, matching this codebase's other non-Wilderness PvP (Clan Wars etc).
-                val wildLvl = pawn.tile.getWildernessLevel()
-                if (wildLvl > 0) {
-                    val combatLvlRange = getValidCombatLvlRange(pawn, wildLvl)
-                    if (target.combatLevel !in combatLvlRange) {
-                        pawn.message("The level difference between you and your opponent is too great.")
-                        return false
-                    }
-                }
             }
         }
         return true
-    }
-
-
-    fun getValidCombatLvlRange(player: Player, wildLvl: Int): IntRange {
-        val minLvl = Math.max(Skills.MIN_COMBAT_LVL, player.combatLevel - wildLvl)
-        val maxLvl = Math.min(Skills.MAX_COMBAT_LVL, player.combatLevel + wildLvl)
-        return minLvl..maxLvl
     }
 
     private fun getStrategy(combatClass: CombatClass): CombatStrategy =

@@ -11,6 +11,7 @@ import gg.rsmod.game.model.timer.MIASMIC_IMMUNITY_TIMER
 import gg.rsmod.game.model.timer.MIASMIC_TIMER
 import gg.rsmod.game.model.timer.TELEBLOCK_TIMER
 import gg.rsmod.plugins.api.*
+import gg.rsmod.plugins.api.cfg.Gfx
 import gg.rsmod.plugins.api.ext.*
 import gg.rsmod.plugins.content.combat.Combat
 import gg.rsmod.plugins.content.combat.createProjectile
@@ -40,13 +41,21 @@ object MagicCombatStrategy : CombatStrategy {
     /** Undead npc names Crumble Undead may be cast on (2011 wiki: skeletons, zombies, ghosts, shades and their variants). */
     private val UNDEAD_NAMES = listOf("skeleton", "zombie", "ghost", "shade", "ghast", "revenant", "mummy", "zogre", "banshee", "ankou", "crawling hand", "aberrant spectre", "undead", "skeletal", "spectre", "wight", "zombified")
 
-    override fun getAttackRange(pawn: Pawn): Int = 10
+    override fun getAttackRange(pawn: Pawn): Int =
+        if (pawn is Player && gg.rsmod.plugins.content.combat.strategy.ranged.RangedAmmo.isSalamander(pawn.getEquipment(EquipmentType.WEAPON)?.id)) {
+            1
+        } else {
+            10
+        }
 
     override fun canAttack(
         pawn: Pawn,
         target: Pawn,
     ): Boolean {
         if (pawn is Player) {
+            if (gg.rsmod.plugins.content.combat.strategy.ranged.RangedAmmo.isSalamander(pawn.getEquipment(EquipmentType.WEAPON)?.id)) {
+                return RangedCombatStrategy.canAttack(pawn, target)
+            }
             val spell = pawn.attr[Combat.CASTING_SPELL]!!
             if (spell.requiredWeapons.isNotEmpty()) {
                 val weapon = pawn.getEquipment(EquipmentType.WEAPON)
@@ -125,7 +134,14 @@ object MagicCombatStrategy : CombatStrategy {
         pawn: Pawn,
         target: Pawn,
     ) {
-        val world = pawn.world
+        // Salamander style 3 is exposed as MAGIC by the weapon-style table, but Void runs all
+        // salamander attacks through the ranged combat preparation. Reuse that complete path so
+        // the style gets its hit, tar consumption, gfx and MAGIC XP instead of returning below
+        // merely because no spell is being cast.
+        if (pawn is Player && gg.rsmod.plugins.content.combat.strategy.ranged.RangedAmmo.isSalamander(pawn.getEquipment(EquipmentType.WEAPON)?.id)) {
+            RangedCombatStrategy.attack(pawn, target)
+            return
+        }
 
         val spell = pawn.attr[Combat.CASTING_SPELL] ?: return
         pawn.stopMovement()
@@ -202,9 +218,9 @@ object MagicCombatStrategy : CombatStrategy {
                     return false
                 }
                 if (pawn is Player) {
+                    // AreaState.canPlayersFight already enforces the shared +/-12 combat-level
+                    // range (Deadman PvP guards plan, 2026-09-16); no separate check needed here.
                     if (!AreaState.canPlayersFight(pawn, other)) return false
-                    val wildLvl = pawn.tile.getWildernessLevel()
-                    if (wildLvl > 0 && other.combatLevel !in Combat.getValidCombatLvlRange(pawn, wildLvl)) return false
                 }
                 true
             }
@@ -264,6 +280,7 @@ object MagicCombatStrategy : CombatStrategy {
                 target.graphic(Graphic(spell.impactGfx?.id ?: 85, spell.impactGfx?.height ?: 96, hitDelay * 30))
                 world.queue {
                     wait(hitDelay)
+                    if (target.isDead() || (target is Player && !target.isOnline) || (pawn is Player && !pawn.isOnline)) return@queue
                     applyEffect(pawn, target, spell, 0)
                 }
             } else {

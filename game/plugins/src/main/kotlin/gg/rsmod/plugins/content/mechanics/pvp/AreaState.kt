@@ -247,23 +247,41 @@ object BankZones {
 /**
  * The single authoritative area-state predicate for PvP permission (R03.3), replacing the
  * old Wilderness-only [BountyHunterHome.isDangerousWilderness] check as the gate for whether
- * two players are allowed to fight. Death/loot-risk classification ([gg.rsmod.plugins.content.mechanics.death.DeathResolver])
- * deliberately still keys off Wilderness specifically - R08.1 requires preserving established
- * Wilderness location-risk rules and treating non-Wilderness PvP death policy as provisional,
- * so widening combat permission here does NOT change item-risk on death.
+ * two players are allowed to fight. Death/loot-risk classification is deliberately separate:
+ * [gg.rsmod.plugins.content.mechanics.death.DeathResolver] follows credited player cause, while
+ * this area predicate remains responsible for safe-bank/home permission and location-only rules
+ * such as loot-key destruction.
  */
 object AreaState {
-    /** True if [tile] is inside any safe zone: the home enclave or a real bank building. */
+    /** True if [tile] is inside an explicit real-bank safe zone. Ferox outside its bank is PvP-dangerous. */
+    @Suppress("UNUSED_PARAMETER")
     fun isSafe(
         tile: Tile,
         home: Tile,
-    ): Boolean = BountyHunterHome.isSafe(tile, home) || BankZones.isSafe(tile)
+    ): Boolean = BankZones.isSafe(tile)
 
     /** R03.1: PvP is allowed everywhere outside safe zones - not only in the Wilderness. */
     fun isPvpAllowed(
         tile: Tile,
         home: Tile,
     ): Boolean = !isSafe(tile, home)
+
+    /**
+     * Deadman PvP guards plan (owner-approved 2026-09-16): a player may only attack another
+     * player up to [MAX_COMBAT_LEVEL_DIFFERENCE] combat levels above or below them. This is a
+     * flat, location-independent range - not the traditional OSRS Wilderness-level-scaled range
+     * - because PvP in this build is allowed everywhere outside explicit bank safe zones (R03.1),
+     * not only in the Wilderness, so a range that scales with Wilderness depth would give no
+     * protection at all outside the Wilderness. Superseded here: the previous per-tile
+     * Wilderness-level-scaled check in [gg.rsmod.plugins.content.combat.Combat] now delegates to
+     * this single shared constant/comparison instead of running its own formula.
+     */
+    const val MAX_COMBAT_LEVEL_DIFFERENCE = 12
+
+    fun isWithinCombatLevelRange(
+        attacker: gg.rsmod.game.model.entity.Player,
+        target: gg.rsmod.game.model.entity.Player,
+    ): Boolean = abs(attacker.combatLevel - target.combatLevel) <= MAX_COMBAT_LEVEL_DIFFERENCE
 
     fun canPlayersFight(
         attacker: gg.rsmod.game.model.entity.Player,
@@ -277,7 +295,10 @@ object AreaState {
         }
         val world = attacker.world
         val home = world.gameContext.home
-        return (isPvpAllowed(attacker.tile, home) && isPvpAllowed(target.tile, home)) ||
+        // Practice PvP matches are randomly queued (no level-matching) and are a consequence-free
+        // sandbox, so a matched pair bypasses both the safe-zone gate and the level-range gate -
+        // the same exemption the safe-zone gate already had.
+        return (isPvpAllowed(attacker.tile, home) && isPvpAllowed(target.tile, home) && isWithinCombatLevelRange(attacker, target)) ||
             PracticePvp.areMatched(attacker, target)
     }
 }
