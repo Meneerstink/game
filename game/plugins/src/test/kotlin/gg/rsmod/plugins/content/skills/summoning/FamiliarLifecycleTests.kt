@@ -87,7 +87,9 @@ class FamiliarLifecycleTests {
 
         assertTrue(Familiar.call(player))
         verify(exactly = 1) {
-            player.write(SynthSoundMessage(sound = Familiar.ARRIVAL_SOUND, loops = 1, delay = 0))
+            player.write(
+                SynthSoundMessage(sound = Familiar.ARRIVAL_SOUND, loops = 1, delay = 0, volume = FamiliarAudio.SERVER_SOUND_VOLUME),
+            )
         }
         verify(exactly = 1) { npc.animate(expectedSpawnAnimation) }
         verify(exactly = 0) { npc.graphic(any(), any(), any(), any()) }

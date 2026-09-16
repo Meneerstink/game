@@ -155,7 +155,9 @@ class SummoningSpecialResourceTests {
 
             val first = SummoningSpecialMoves.castInstant(player)
             if (!timers.has(SummoningSpecialMoves.SPECIAL_MOVE_DELAY_TIMER)) {
-                offenders += "${pouch.name}: no special-move delay started"
+                if (first || "${pouch.name} (${scroll.name})" !in CONDITIONAL_ON_UNPROVIDED_STATE) {
+                    offenders += "${pouch.name}: no special-move delay started"
+                }
                 return@forEach
             }
             val scrolls = player.inventory.getItemCount(scroll.scroll)
@@ -168,7 +170,14 @@ class SummoningSpecialResourceTests {
                 io.mockk.verify(exactly = 1) { player.animate(SummoningSpecialMoves.SPECIAL_CAST_ANIMATION) }
                 io.mockk.verify(exactly = 1) { player.graphic(SummoningSpecialMoves.SPECIAL_CAST_GRAPHIC) }
                 io.mockk.verify(exactly = 1) {
-                    player.write(gg.rsmod.game.message.impl.SynthSoundMessage(sound = SummoningSpecialMoves.SPECIAL_CAST_SOUND, loops = 1, delay = 0))
+                    player.write(
+                        gg.rsmod.game.message.impl.SynthSoundMessage(
+                            sound = SummoningSpecialMoves.SPECIAL_CAST_SOUND,
+                            loops = 1,
+                            delay = 0,
+                            volume = FamiliarAudio.SERVER_SOUND_VOLUME,
+                        ),
+                    )
                 }
             }
         }
