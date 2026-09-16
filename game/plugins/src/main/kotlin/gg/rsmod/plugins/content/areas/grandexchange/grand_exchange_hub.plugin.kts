@@ -135,10 +135,16 @@ set_combat_def(CityGuards.RANGED_GUARD_ID) {
  * this def exists only so combatDef/aggro lookups elsewhere never see a missing definition. */
 set_combat_def(CityGuards.WIZGUARD_ID) {
     configs {
+        // NpcCombatBuilder requires attackSpeed even though this npc never actually attacks
+        // (spawned and despawned in the same tick) - caught by an actual server boot.
+        attackSpeed = CityGuards.ATTACK_SPEED_CYCLES
         respawnDelay = 50
     }
     stats {
-        hitpoints = 75
+        // NpcCombatDsl.stats requires real-HP-times-ten (750 = 75 real hitpoints); a bare 75
+        // failed the boot-time validation and crashed plugin loading - caught by an actual
+        // server boot, not by compile or unit tests alone.
+        hitpoints = 750
         defence = 13
         magic = 20
     }
