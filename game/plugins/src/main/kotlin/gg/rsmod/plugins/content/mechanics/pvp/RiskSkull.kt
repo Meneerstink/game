@@ -101,9 +101,14 @@ object RiskSkull {
             changed = true
         }
         if (!player.hasSkullIcon(SkullIcon.RED)) {
-            var tier = tierFor(calculateRiskedValue(player, valueProvider))
-            if (tier == SkullIcon.NONE && keys > 0) {
-                tier = SkullIcon.DMM_VERY_LOW_RISK
+            // Owner 2026-09-17: an unskulled player must show no skull at all ("als een player
+            // unskulled is geeft die nu een witte skull aan, dit mag niet"). The risk-tier colour
+            // therefore only appears as the carrier of a loot-key count (the owner's own example:
+            // "1 key above his head and a brown skull"); without keys the head icon is empty.
+            var tier = SkullIcon.NONE
+            if (keys > 0) {
+                tier = tierFor(calculateRiskedValue(player, valueProvider))
+                if (tier == SkullIcon.NONE) tier = SkullIcon.DMM_VERY_LOW_RISK
             }
             if (!player.hasSkullIcon(tier)) {
                 player.setSkullIcon(tier)

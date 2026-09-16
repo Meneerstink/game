@@ -46,6 +46,19 @@ object OsrsNpcImportTool {
             // Owner answer Q10: The Mimic encounter (RuneLite gameval NpcID TRAIL_MIMIC_NONCOMBAT 7979, TRAIL_MIMIC_COMBAT 8633,
             // TRAIL_MIMIC_SPAWN_MELEE / RANGER / MAGE 8635-8637) and Watson (TRAIL_WATSON_PRE_TALK 7303, OSRS Wiki infobox 7303,7304).
             "mimic" to listOf(7979, 8633, 8635, 8636, 8637, 7303),
+            // Owner 2026-09-17 ("gebruik exact de deadmanmode guard van osrs"): OSRS Wiki "Guard (Deadman Mode)" Varrock
+            // variants 6582 (slash) and 11203 (ranged), and "Wizguard" 14792. Combat stats/anims are server-side (city_guards.plugin.kts).
+            "deadman-guard" to listOf(6582, 11203, 14792),
+        )
+
+    /**
+     * Batches whose entries are renamed clones of an OSRS npc: the same models, BAS and options, only the cache name changed.
+     * skully-family (owner 2026-09-17): Skully 10382 (already imported as 14382) cloned as Skully Jr / Sr / Max / Bob.
+     * Each clone is keyed `npc:<osrsId>#<name>` in the asset map so it is never confused with the original import.
+     */
+    val CLONE_BATCHES: Map<String, List<Pair<Int, String>>> =
+        mapOf(
+            "skully-family" to listOf(10382 to "Skully Jr", 10382 to "Skully Sr", 10382 to "Skully Max", 10382 to "Skully Bob"),
         )
 
     /**
@@ -179,7 +192,10 @@ object OsrsNpcImportTool {
     @JvmStatic
     fun main(args: Array<String>) {
         val batchName = args.firstOrNull { !it.startsWith("--") } ?: error("Usage: <batch> [--apply]")
-        val npcIds = BATCHES[batchName] ?: error("Unknown batch '$batchName' (known: ${BATCHES.keys})")
+        val entries: List<Pair<Int, String?>> =
+            BATCHES[batchName]?.map { it to null }
+                ?: CLONE_BATCHES[batchName]?.map { (id, name) -> id to name }
+                ?: error("Unknown batch '$batchName' (known: ${BATCHES.keys + CLONE_BATCHES.keys})")
         val apply = "--apply" in args
         val assetMap = File(OsrsItemImportTool.ASSET_MAP)
         val reader = ModernCacheReader(File(OsrsItemImportTool.SOURCE_CACHE))
@@ -256,8 +272,21 @@ object OsrsNpcImportTool {
 
             val npcFiles = reader.files(ModernCacheReader.INDEX_CONFIG, OsrsNpcProbeTool.CONFIG_GROUP_NPC)
             val basBySet = mutableMapOf<String, Int>()
-            for (npcId in npcIds) {
+            for ((npcId, nameOverride) in entries) {
                 val n = OsrsNpcProbeTool.decodeOsrs(npcId, npcFiles[npcId] ?: error("OSRS npc $npcId missing"))
+                if (nameOverride != null) n.name = nameOverride
+                if (OsrsNpcProbeTool.movementSeqs(n).isEmpty() && n.size == 1) {
+                    // The OSRS definition carries no stand/walk sequences at all (e.g. the Deadman guards 6582/11203):
+                    // the client then shows the model in its rest pose. 667 needs a BAS, so the humanoid default set
+                    // proven by the Man pair (667 BAS 4 = OSRS Man 3106: 808/819/820/821/822) is applied - the same
+                    // ids the OSRS Wizguard 14792 declares explicitly.
+                    n.stand = 808
+                    n.walk = 819
+                    n.walk180 = 820
+                    n.walkLeft = 821
+                    n.walkRight = 822
+                    dropped += "npc $npcId: no OSRS movement sequences; humanoid default set 808/819/820/821/822 applied"
+                }
                 val localModels = n.models.map { m -> local("npc_model", m) { modelCandidates.removeAt(0) }.also { put(ModelConvertTool.MODEL_INDEX, it, 0, OsrsModelConversion.convert(reader, m, dropped), "osrs npc model $m") } }
                 val localHeads = n.chatheads.map { m -> local("npc_model", m) { modelCandidates.removeAt(0) }.also { put(ModelConvertTool.MODEL_INDEX, it, 0, OsrsModelConversion.convert(reader, m, dropped), "osrs npc model $m") } }
                 val seqMap = OsrsNpcProbeTool.movementSeqs(n).values.distinct().associateWith { importSeq(it) }
@@ -267,7 +296,12 @@ object OsrsNpcImportTool {
                     basBySet.getOrPut(movementKey) {
                         local("bas", npcId) { nextBas++ }.also { put(INDEX_CONFIG, GROUP_BAS, it, basBytes, "bas for osrs npc $npcId") }
                     }
-                val localNpc = local("npc", npcId) { nextNpc++ }
+                val localNpc =
+                    if (nameOverride == null) {
+                        local("npc", npcId) { nextNpc++ }
+                    } else {
+                        localIds.getOrPut("npc:$npcId#$nameOverride") { (nextNpc++).also { records += "npc_clone|$npcId#$nameOverride|$it" } }
+                    }
                 val npcBytes = encode667Npc(n, localModels.toIntArray(), localHeads.toIntArray(), basId, dropped)
                 put(INDEX_NPC, localNpc ushr 7, localNpc and 0x7F, npcBytes, "osrs npc $npcId ${n.name}")
                 plans += "PLAN npc $npcId '${n.name}' -> $localNpc bas=$basId models=${n.models.toList()}->$localModels heads=${n.chatheads.toList()}->$localHeads seqs=$seqMap ops=${n.ops.toList()}"
@@ -302,7 +336,13 @@ object OsrsNpcImportTool {
             val block = StringBuilder()
             records.forEach { r ->
                 val (kind, upstream, localId) = r.split('|')
-                block.append("  - fx_kind: $kind\n    upstream_fx_id: $upstream\n    local_fx_id: $localId\n    status: IMPORTED_BY_OSRS_NPC_TOOL\n    transaction: ${transaction.id}\n")
+                if (kind == "npc_clone") {
+                    // A renamed clone: keep the numeric upstream id (existingFx needs an int) and record the name separately.
+                    val (osrsId, name) = upstream.split('#', limit = 2)
+                    block.append("  - fx_kind: npc_clone\n    upstream_fx_id: $osrsId\n    clone_name: \"$name\"\n    local_fx_id: $localId\n    status: IMPORTED_BY_OSRS_NPC_TOOL\n    transaction: ${transaction.id}\n")
+                } else {
+                    block.append("  - fx_kind: $kind\n    upstream_fx_id: $upstream\n    local_fx_id: $localId\n    status: IMPORTED_BY_OSRS_NPC_TOOL\n    transaction: ${transaction.id}\n")
+                }
             }
             val text = assetMap.readText()
             assetMap.writeText(if (text.endsWith("\n")) text + block else "$text\n$block")

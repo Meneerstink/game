@@ -1,8 +1,7 @@
 package gg.rsmod.plugins.content.areas.wilderness
 
 import gg.rsmod.plugins.content.inter.bank.BankPin
-import gg.rsmod.plugins.content.mechanics.death.DeathContext
-import gg.rsmod.plugins.content.mechanics.death.DeathResolver
+import gg.rsmod.plugins.content.areas.home.BountyHunterHome
 import gg.rsmod.plugins.content.mechanics.pvp.BEST_KILLSTREAK_ATTR
 import gg.rsmod.plugins.content.mechanics.pvp.LootKeys
 
@@ -14,21 +13,23 @@ import gg.rsmod.plugins.content.mechanics.pvp.LootKeys
 
 val LOOT_CHEST = 62582
 
-// ---- Skully ----
-on_npc_option(npc = Npcs.SKULLY, option = "talk-to") {
-    player.queue { skully(this) }
-}
+// ---- Skully (and his renamed brothers, see mechanics/pvp/SkullyRoster) ----
+gg.rsmod.plugins.content.mechanics.pvp.SkullyRoster.NPC_IDS.forEach { skullyId ->
+    on_npc_option(npc = skullyId, option = "talk-to") {
+        player.queue { skully(this) }
+    }
 
-on_npc_option(npc = Npcs.SKULLY, option = "value") {
-    player.queue { skullyClaimed(this, thenOptions = false) }
-}
+    on_npc_option(npc = skullyId, option = "value") {
+        player.queue { skullyClaimed(this, thenOptions = false) }
+    }
 
-on_npc_option(npc = Npcs.SKULLY, option = "settings") {
-    player.queue {
-        if (player.attr[LootKeys.UNLOCKED] != true) {
-            chatNpc("Don't waste my time trying to change settings on a thing you haven't bought yet!", wrap = true)
-        } else {
-            skullySettings(this)
+    on_npc_option(npc = skullyId, option = "settings") {
+        player.queue {
+            if (player.attr[LootKeys.UNLOCKED] != true) {
+                chatNpc("Don't waste my time trying to change settings on a thing you haven't bought yet!", wrap = true)
+            } else {
+                skullySettings(this)
+            }
         }
     }
 }
@@ -241,7 +242,11 @@ fun openLootChest(
 on_obj_option(obj = LOOT_CHEST, option = "loot") {
     val held = LootKeys.heldKeyIndexes(player)
     // A key-less chest still opens loot left inside (OSRS Wiki "Loot Chest"); several keys open the first one (ADAPTED).
-    val index = held.firstOrNull() ?: LootKeys.KEY_IDS.indices.firstOrNull { LootKeys.slotItems(player, it).isNotEmpty() } ?: return@on_obj_option
+    val index = held.firstOrNull() ?: LootKeys.KEY_IDS.indices.firstOrNull { LootKeys.slotItems(player, it).isNotEmpty() }
+    if (index == null) {
+        player.message("You don't have any key.")
+        return@on_obj_option
+    }
     openLootChest(player, index)
 }
 
@@ -252,7 +257,10 @@ LootKeys.KEY_IDS.forEachIndexed { index, key ->
 
     on_item_option(item = key, option = 10) {
         val value = LootKeys.value(world.definitions, LootKeys.slotItems(player, index))
-        val dangerous = DeathResolver.resolveContext(player) == DeathContext.WILDERNESS_PVP
+        // Loot-key destruction is a location rule, unlike death loot/recovery which is now
+        // cause-based. Keep the wilderness-only Skully restriction explicit rather than asking
+        // DeathResolver to infer a missing killer from geography.
+        val dangerous = BountyHunterHome.isDangerousWilderness(player)
         if (!LootKeys.canDestroyHere(value, dangerous)) {
             player.message(LootKeys.DESTROY_TOO_VALUABLE_MESSAGE)
             return@on_item_option

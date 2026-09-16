@@ -21,6 +21,8 @@ dependencies {
     implementation project(':net')
 
     runtimeClasspath project(":game:plugins")
+    runtimeClasspath project(":game:plugins:scripts")
+    runtimeClasspath project(":game:plugins:spawns")
 
     implementation "org.jetbrains.kotlin:kotlin-scripting-common:$kotlinVersion"
     implementation "org.jetbrains.kotlin:kotlin-script-runtime:$kotlinVersion"
@@ -167,6 +169,13 @@ task runOsrsItemImportTool(type: JavaExec) {
     main = 'gg.rsmod.game.tools.importer.OsrsItemImportTool'
 }
 
+task runOsrsNpcProbeTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Read-only OSRS/667 npc definition probe. Usage: ./gradlew :game:runOsrsNpcProbeTool --args="osrs <npcId>..." | --args="npc667 <npcId>..." | --args="bas667 <basId>..."'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.OsrsNpcProbeTool'
+}
+
 task runOsrsNpcImportTool(type: JavaExec) {
     group = 'tools'
     description = 'OSRS npc definition import batches with their models, BAS and sequences (CacheTransaction, both caches). ' +
@@ -269,6 +278,13 @@ task runObjectPlacementProbeTool(type: JavaExec) {
         ' | --args="<cachePath> <xteaPath> tile <x> <z> [plane] [radius]"'
     classpath = sourceSets.main.runtimeClasspath
     main = 'gg.rsmod.game.tools.importer.ObjectPlacementProbeTool'
+}
+
+task runTraversalCacheAuditTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Read-only full rev-667 cache/maps census of traversal-capable object definitions and placements. Usage: --args="<cachePath> <xteaPath> [outputPath]"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.TraversalCacheAuditTool'
 }
 
 task runWornAppearanceRankTool(type: JavaExec) {

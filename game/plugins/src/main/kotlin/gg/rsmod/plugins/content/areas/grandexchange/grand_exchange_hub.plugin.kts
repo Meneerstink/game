@@ -1,33 +1,16 @@
 package gg.rsmod.plugins.content.areas.grandexchange
 
 import gg.rsmod.game.model.Direction
-import gg.rsmod.game.model.EntityType
-import gg.rsmod.game.model.entity.Npc
-import gg.rsmod.game.model.entity.StaticObject
-import gg.rsmod.plugins.content.mechanics.pvp.BankSecurity
-import gg.rsmod.plugins.content.mechanics.pvp.CityGuards
-import gg.rsmod.plugins.content.objs.bank_locs.BankObjects
+import gg.rsmod.plugins.content.mechanics.death.BrokenItemRepair
+import gg.rsmod.plugins.content.mechanics.pvp.SkullyRoster
 import gg.rsmod.plugins.content.mechanics.trouver.Trouver
 import gg.rsmod.plugins.content.mechanics.trouver.TrouverRegistry
 
-/* GE service hub and bank-side Skully roster. Bank coordinates are taken from the existing
- * revision-667 banker spawn files; chest id 62582 is the already-wired Loot Keys chest. */
-val geSkullySites = listOf(
-    Triple(3164, 3487, 0), // Grand Exchange
-    Triple(3258, 3419, 0), // Varrock east
-    Triple(3178, 3439, 0), // Varrock west
-    Triple(3094, 3491, 0), // Edgeville
-    Triple(2720, 3494, 0), // Camelot
-    Triple(3008, 3354, 0), // Falador
-    Triple(2943, 3367, 0), // Draynor
-    Triple(3265, 3166, 0), // Al Kharid
-    Triple(2805, 3443, 0), // Catherby
-    Triple(3207, 3222, 0), // Lumbridge
-)
-
-geSkullySites.forEach { (x, z, height) ->
-    spawn_npc(npc = Npcs.SKULLY, x = x, z = z, height = height, static = true)
-    spawn_obj(obj = 62582, x = x + 1, z = z, height = height, type = 10, rot = 0)
+/* GE service hub. The bank-side Skully roster (Skully / Skully Jr / Sr / Max / Bob + Loot Chest at
+ * each bank) lives in mechanics/pvp/SkullyRoster: owner 2026-09-16/17 - never inside a booth or
+ * behind a counter, always on a tile reachable from the customer side, no combat level. */
+on_world_init {
+    println(SkullyRoster.spawnAll(world))
 }
 
 // GE services requested by the owner. Existing global handlers provide their real functions.
@@ -39,6 +22,10 @@ spawn_npc(npc = Npcs.MAX, x = 3170, z = 3490, direction = Direction.WEST)
 spawn_npc(npc = Npcs.MANDRITH, x = 3170, z = 3493, direction = Direction.WEST)
 spawn_npc(npc = Npcs.SIR_TIFFY_CASHIEN, x = 3175, z = 3487, direction = Direction.WEST)
 spawn_npc(npc = Npcs.PARTY_PETE, x = 3175, z = 3490, direction = Direction.WEST)
+// Owner request 2026-09-16: an Ava's-device upgrade convenience spawn at the GE, alongside her
+// existing real Draynor Village placement (not moved/removed) - same "also spawn at the GE hub"
+// pattern already used for Bob above.
+spawn_npc(npc = Npcs.AVA, x = 3175, z = 3493, direction = Direction.WEST)
 spawn_npc(npc = Npcs.EVIL_DAVE, x = 3175, z = 3493, direction = Direction.WEST)
 spawn_npc(npc = Npcs.WISE_OLD_MAN, x = 3180, z = 3487, direction = Direction.WEST)
 spawn_npc(npc = Npcs.TOOL_LEPRECHAUN, x = 3180, z = 3490, walkRadius = 8, direction = Direction.WEST)
@@ -57,166 +44,22 @@ spawn_obj(obj = 50205, x = 3164, z = 3497, type = 10, rot = 0)
 // `crystal_singing_bowl.plugin.kts`), not an invented tradeable item.
 spawn_obj(obj = Objs.SINGING_BOWL, x = 3163, z = 3494, type = 10, rot = 0)
 
-// A dedicated market-guard cache id prevents changing ordinary guards elsewhere in the world.
-val bankGuardId = BankSecurity.BANK_GUARD_ID
-set_combat_def(bankGuardId) {
-    configs {
-        // Owner spec (Deadman PvP guards plan, 2026-09-16): 1.2s attack speed = 2 game cycles.
-        attackSpeed = CityGuards.ATTACK_SPEED_CYCLES
-        respawnDelay = 50
-    }
-    aggro {
-        radius = 8
-        searchDelay = 1
-        alwaysAggro()
-    }
-    stats {
-        hitpoints = 220
-        attack = 17
-        strength = 18
-        defence = 13
-        magic = 1
-        ranged = 1
-    }
-    bonuses {
-        attackStab = 9
-        attackCrush = 7
-        defenceStab = 24
-        defenceSlash = 14
-        defenceCrush = 19
-        defenceMagic = 4
-        defenceRanged = 16
-    }
-    anims {
-        attack = Anims.ATTACK_SLASH
-        death = Anims.HUMAN_DEATH
-        block = Anims.BLOCK_SHIELD
-    }
-}
+// Deadman guard definitions and stationed spawns live in mechanics/pvp/city_guards.plugin.kts
+// (owner instruction 2026-09-16: guards stand on the owner-pinned posts, not at every bank cluster).
 
-/**
- * Ranged guard variant (Deadman PvP guards plan, 2026-09-16). Stats/bonuses mirror the melee
- * guard's power level; anims reuse Anims.ATTACK_CROSSBOW/836/424 - the same real, cache-sourced
- * ranged-human-guard animation set already used by the Falador crossbow guards
- * (`npcs/definitions/humanoids/guard_level_21.plugin.kts`), not invented ids.
- */
-set_combat_def(CityGuards.RANGED_GUARD_ID) {
-    configs {
-        attackSpeed = CityGuards.ATTACK_SPEED_CYCLES
-        attackStyle = gg.rsmod.game.model.combat.StyleType.RANGED
-        respawnDelay = 50
-    }
-    aggro {
-        radius = 8
-        searchDelay = 1
-        alwaysAggro()
-    }
-    stats {
-        hitpoints = 220
-        attack = 1
-        strength = 1
-        defence = 13
-        magic = 1
-        ranged = 18
-    }
-    bonuses {
-        attackRanged = 10
-        rangedStrengthBonus = 10
-        defenceStab = 24
-        defenceSlash = 14
-        defenceCrush = 19
-        defenceMagic = 4
-        defenceRanged = 16
-    }
-    anims {
-        attack = Anims.ATTACK_CROSSBOW
-        death = 836
-        block = 424
-    }
-}
-
-/** Wizguard freeze-flavour spawn (Deadman PvP guards plan, 2026-09-16): CityGuards.spawnWizguardFreeze
- * spawns and immediately despawns this NPC in the same tick, so it never actually enters combat -
- * this def exists only so combatDef/aggro lookups elsewhere never see a missing definition. */
-set_combat_def(CityGuards.WIZGUARD_ID) {
-    configs {
-        // NpcCombatBuilder requires attackSpeed even though this npc never actually attacks
-        // (spawned and despawned in the same tick) - caught by an actual server boot.
-        attackSpeed = CityGuards.ATTACK_SPEED_CYCLES
-        respawnDelay = 50
-    }
-    stats {
-        // NpcCombatDsl.stats requires real-HP-times-ten (750 = 75 real hitpoints); a bare 75
-        // failed the boot-time validation and crashed plugin loading - caught by an actual
-        // server boot, not by compile or unit tests alone.
-        hitpoints = 750
-        defence = 13
-        magic = 20
-    }
-    bonuses {
-        defenceMagic = 10
-    }
-    anims {
-        death = Anims.HUMAN_DEATH
-    }
-}
-
-// Add one dedicated melee + one dedicated ranged 1337 guard to every real bank cluster in the
-// loaded map, not only the ten Skully showcase banks above. A live boot-time diagnostic (M1
-// Batch 3, 2026-09-16) confirmed all ten owner-named guarded cities - including the Warrior
-// Guild, which turned out to have a real bank chest in this cache at region 11575 (matching
-// Donors/Novite's WARRIORS_GUILD tile exactly) - are covered by this generic real-bank-cluster
-// scan; no per-city hardcoding needed. Nearby booths/chests are grouped so a large bank does not
-// receive a guard pair per individual booth.
-on_world_init {
-    val guardedBanks = ArrayList<gg.rsmod.game.model.Tile>()
-
-    fun spawnGuardPair(anchor: gg.rsmod.game.model.Tile) {
-        val guardTiles =
-            Direction.NESW
-                .map { anchor.step(it) }
-                .filter { !world.collision.isClipped(it) }
-        val meleeTile = guardTiles.getOrNull(0) ?: return
-        val rangedTile = guardTiles.getOrNull(1) ?: meleeTile
-        val melee =
-            Npc(bankGuardId, meleeTile, world).also {
-                it.respawns = true
-                it.walkRadius = 4
-            }
-        world.spawn(melee)
-        melee.setCombatLevel(CityGuards.DISPLAYED_COMBAT_LEVEL)
-        val ranged =
-            Npc(CityGuards.RANGED_GUARD_ID, rangedTile, world).also {
-                it.respawns = true
-                it.walkRadius = 4
-            }
-        world.spawn(ranged)
-        ranged.setCombatLevel(CityGuards.DISPLAYED_COMBAT_LEVEL)
-    }
-
-    world.chunks.allChunks().forEach { chunk ->
-        chunk.getEntities<StaticObject>(EntityType.STATIC_OBJECT)
-            .filter { it.id in BankObjects.ALL }
-            .forEach { bankObject ->
-                if (guardedBanks.any { kotlin.math.abs(it.x - bankObject.tile.x) <= 12 && kotlin.math.abs(it.z - bankObject.tile.z) <= 12 && it.height == bankObject.tile.height }) {
-                    return@forEach
-                }
-                guardedBanks += bankObject.tile
-                spawnGuardPair(bankObject.tile)
-            }
-    }
-    println("CityGuards: spawned melee+ranged guard pairs at ${guardedBanks.size} real bank clusters")
-}
-
-on_global_npc_spawn {
-    if (npc.id == bankGuardId) {
-        npc.aggroCheck = { _, player -> BankSecurity.guardMayAttack(player) }
-    }
-}
-
+// Perdu (upstream OSRS npc 7456) is a real import (RCV-012 "ferox" batch, tx-20260914-103151, local
+// npc id 14394) - not a placeholder. She fronts both her real OSRS services: repairing every
+// PvpDeathBreakables broken item at its sourced cost, and the Trouver lock/unlock engine below.
 on_npc_option(npc = Npcs.PERDU, option = "talk-to") {
     player.queue {
-        chatNpc("I can repair and protect eligible equipment. Use a Trouver parchment on an eligible item, then return to me for its repair service.", wrap = true)
+        val hasBroken =
+            (player.inventory.rawItems.filterNotNull() + player.equipment.rawItems.filterNotNull())
+                .any { gg.rsmod.plugins.content.mechanics.death.PvpDeathBreakables.forBroken(it.id) != null }
+        if (!hasBroken) {
+            chatNpc("I can repair and protect eligible equipment. Bring me a broken item and I'll fix it for a fee.", wrap = true)
+            return@queue
+        }
+        BrokenItemRepair.repair(this)
     }
 }
 

@@ -7,6 +7,7 @@ import gg.rsmod.game.model.timer.TimerKey
 import gg.rsmod.plugins.api.ext.closeComponent
 import gg.rsmod.plugins.api.ext.filterableMessage
 import gg.rsmod.plugins.api.ext.openInterface
+import gg.rsmod.plugins.api.ext.setComponentHidden
 import gg.rsmod.plugins.api.ext.setComponentText
 
 /**
@@ -32,6 +33,11 @@ object SevenSecondAction {
 
     const val CHATBOX_INTERFACE = 210
     const val CHATBOX_TEXT_COMPONENT = 1
+
+    /** Interface 210's baked "Click here to continue" line (cache layout probe 2026-09-17: component 2,
+     * the pause button with onMouseOver/onMouseLeave hooks). Owner 2026-09-17: it must not show on
+     * the countdown, so it is hidden every time the countdown interface opens. */
+    const val CHATBOX_CONTINUE_COMPONENT = 2
 
     val COUNTDOWN_TIMER = TimerKey(tickOffline = false, resetOnDeath = true)
 
@@ -103,6 +109,7 @@ object SevenSecondAction {
         if (player.attr[LAST_SHOWN_SECONDS_ATTR] == seconds) return
         if (player.attr[LAST_SHOWN_SECONDS_ATTR] == null) {
             player.openInterface(interfaceId = CHATBOX_INTERFACE, parent = 752, child = 13)
+            player.setComponentHidden(CHATBOX_INTERFACE, CHATBOX_CONTINUE_COMPONENT, hidden = true)
         }
         player.attr[LAST_SHOWN_SECONDS_ATTR] = seconds
         player.setComponentText(CHATBOX_INTERFACE, CHATBOX_TEXT_COMPONENT, countdownText(kind, seconds))
@@ -111,6 +118,10 @@ object SevenSecondAction {
     private fun hideInterface(player: Player) {
         if (player.attr.has(LAST_SHOWN_SECONDS_ATTR) && player.interfaces.isVisible(CHATBOX_INTERFACE)) {
             player.closeComponent(parent = 752, child = 13)
+        }
+        if (player.attr.has(LAST_SHOWN_SECONDS_ATTR)) {
+            // Give ordinary message boxes their "Click here to continue" line back.
+            player.setComponentHidden(CHATBOX_INTERFACE, CHATBOX_CONTINUE_COMPONENT, hidden = false)
         }
         player.attr.remove(LAST_SHOWN_SECONDS_ATTR)
     }

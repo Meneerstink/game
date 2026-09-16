@@ -135,14 +135,10 @@ class TeleportCastBehaviorTests {
     }
 
     @Test
-    fun `an unskulled player recently hit by another player cannot instantly teleport`() {
-        // Deadman PvP guards plan (owner-approved 2026-09-16) supersedes RCV-005 (2026-09-13,
-        // owner-retested "ordinary teleport allowed during combat"): the new spec is explicit -
-        // "instant teleport if not hit by a player or NPC in the last 7 seconds", otherwise
-        // blocked with a message (no interface). TELEPORT_COMBAT_TIMER is the dedicated timer
-        // Combat.postAttack arms on every landed hit, separate from ACTIVE_COMBAT_TIMER (which
-        // keeps its own unrelated 10.2s duration for the logout lock and other existing
-        // consumers, untouched by this change).
+    fun `an unskulled player recently hit by another player gets the 7-second countdown instead of an instant teleport`() {
+        // Owner 2026-09-17 (supersedes the 2026-09-16 "blocked with a message" rule and RCV-005):
+        // the countdown interface "moet alleen gaan komen als je geskulled bent of in combat bent".
+        // TELEPORT_COMBAT_TIMER is the dedicated timer Combat.postAttack arms on every landed hit.
         val player = newPlayer(magicLevel = 99)
         every { player.lock } returns LockState.NONE
         every { player.tile } returns Tile(3040, 3576) // shallow wilderness, otherwise allowed
@@ -152,12 +148,11 @@ class TeleportCastBehaviorTests {
         player.attr[LAST_HIT_BY_ATTR] = WeakReference(mockk<Player>(relaxed = true))
 
         assertFalse(player.canTeleport(TeleportType.MODERN))
+        assertTrue(timers.exists(gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction.COUNTDOWN_TIMER), "the countdown must be armed")
     }
 
     @Test
-    fun `an unskulled player recently hit by an npc also cannot instantly teleport`() {
-        // The owner's new wording explicitly names NPC hits too ("hit by a player or NPC"),
-        // reversing the old RCV-005 "NPC combat must not block teleport" decision on purpose.
+    fun `an unskulled player recently hit by an ordinary npc also gets the countdown`() {
         val player = newPlayer(magicLevel = 99)
         every { player.lock } returns LockState.NONE
         every { player.tile } returns Tile(3040, 3576)
@@ -167,6 +162,23 @@ class TeleportCastBehaviorTests {
         player.attr[LAST_HIT_BY_ATTR] = WeakReference(mockk<Npc>(relaxed = true))
 
         assertFalse(player.canTeleport(TeleportType.MODERN))
+        assertTrue(timers.exists(gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction.COUNTDOWN_TIMER), "the countdown must be armed")
+    }
+
+    @Test
+    fun `an unskulled player fighting a boss teleports instantly - met uitzondering van alle bosses`() {
+        val player = newPlayer(magicLevel = 99)
+        every { player.lock } returns LockState.NONE
+        every { player.tile } returns Tile(3040, 3576)
+        val timers = TimerMap()
+        timers[gg.rsmod.game.model.timer.TELEPORT_COMBAT_TIMER] = 12
+        every { player.timers } returns timers
+        val boss = mockk<Npc>(relaxed = true)
+        every { boss.id } returns gg.rsmod.plugins.api.cfg.Npcs.KING_BLACK_DRAGON
+        player.attr[LAST_HIT_BY_ATTR] = WeakReference(boss)
+
+        assertTrue(player.canTeleport(TeleportType.MODERN))
+        assertFalse(timers.exists(gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction.COUNTDOWN_TIMER))
     }
 
     @Test

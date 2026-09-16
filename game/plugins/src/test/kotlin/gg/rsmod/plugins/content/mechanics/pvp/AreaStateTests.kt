@@ -57,16 +57,21 @@ class AreaStateTests {
     }
 
     @Test
-    fun `all ten owner-named guarded zones are present`() {
-        assertEquals(10, GuardedZones.ZONES.size)
+    fun `every wiki Deadman area that exists in this world plus the Warriors' Guild is present`() {
+        assertEquals(
+            listOf(
+                "Varrock", "Falador", "Lumbridge", "Catherby bank", "Seers' Village bank", "East Ardougne", "Rellekka",
+                "Tree Gnome Stronghold", "Yanille", "Jatizso", "Neitiznot", "Port Phasmatys", "Sophanem", "Tutorial Island",
+                "Void Knights' Outpost", "Warriors' Guild",
+            ),
+            GuardedZones.ZONES.map { it.name },
+        )
     }
 
     @Test
-    fun `every guard post lies inside the zone it belongs to`() {
-        GuardPosts.ALL.forEach { post ->
-            val zone = GuardedZones.zoneAt(post.tile)
-            assertEquals(post.city, zone?.name, "guard post ${post.tile} of ${post.city} is outside its zone")
-        }
+    fun `streets outside the Varrock wall are death zones even though the old rectangle covered them`() {
+        assertTrue(AreaState.isPvpAllowed(Tile(3300, 3500, 0), home), "Lumber Yard must be a death zone")
+        assertTrue(AreaState.isPvpAllowed(Tile(3190, 3360, 0), home), "Champions' Guild must be a death zone")
     }
 
     @Test

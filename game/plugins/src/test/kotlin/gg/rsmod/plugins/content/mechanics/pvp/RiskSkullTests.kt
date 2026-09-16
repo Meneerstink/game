@@ -61,11 +61,10 @@ class RiskSkullTests {
     }
 
     @Test
-    fun `refresh sets the risk-tier skull for an unskulled player`() {
-        val player = newPlayer()
-        // Four 500k stacks: an unskulled player without Protect Item keeps their top 3 highest-
-        // value stacks safe, so only the 4th is actually at risk of loss - 500_000 lands in the
-        // Iron/DMM_LOW_RISK band (200,001-800,000).
+    fun `refresh shows no skull at all for an unskulled player without loot keys, whatever the risk`() {
+        // Owner 2026-09-17: "als een player unskulled is geeft die nu een witte skull aan, dit mag
+        // niet" - value at risk alone never puts a skull above the head any more.
+        val player = newPlayer(currentSkullIcon = SkullIcon.DMM_LOW_RISK.id)
         player.inventory[0] = Item(5, 1)
         player.inventory[1] = Item(5, 1)
         player.inventory[2] = Item(5, 1)
@@ -73,7 +72,24 @@ class RiskSkullTests {
 
         RiskSkull.refresh(player, testValueProvider())
 
+        verify { player.skullIcon = SkullIcon.NONE.id }
+        verify(exactly = 0) { player.skullIcon = SkullIcon.DMM_LOW_RISK.id }
+    }
+
+    @Test
+    fun `refresh colours the key-carrier skull by the value at risk`() {
+        val player = newPlayer()
+        player.inventory[0] = Item(gg.rsmod.plugins.api.cfg.Items.LOOT_KEY, 1)
+        player.inventory[1] = Item(5, 1)
+        player.inventory[2] = Item(5, 1)
+        player.inventory[3] = Item(5, 1)
+        player.inventory[4] = Item(5, 1)
+
+        RiskSkull.refresh(player, testValueProvider())
+
+        // 3 stacks protected, the 4th 500k stack (plus the worthless key) at risk -> Iron tier.
         verify { player.skullIcon = SkullIcon.DMM_LOW_RISK.id }
+        verify { player.lootKeyIcons = 1 }
     }
 
     @Test

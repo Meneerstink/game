@@ -6,7 +6,9 @@ import gg.rsmod.game.model.combat.StyleType
  * Deadman guard combat definitions + stationed spawns (OSRS Wiki "Guard (Deadman Mode)": level 1337,
  * 800 hitpoints, 2-tick attack speed, slash or ranged, attack +60, strength +7, stab/slash/crush
  * defence +8/+9/+7, ranged defence +8, aggressive). Damage is not taken from these stats but from
- * the sourced ramp in [CityGuards.rampedMaxHit].
+ * the sourced ramp in [CityGuards.rampedMaxHit]. The npc ids are the OSRS Deadman guards imported
+ * into the 667 caches (see [CityGuards]); their humanoid models animate with the shared 667 human
+ * attack/block/death sequences, the same way the imported Ferox npcs reuse the 667 Man movement set.
  */
 set_combat_def(CityGuards.MELEE_GUARD_ID) {
     configs {
@@ -73,7 +75,7 @@ set_combat_def(CityGuards.RANGED_GUARD_ID) {
         defenceRanged = 8
     }
     anims {
-        // Real cache-sourced crossbow-guard set already used by the Falador crossbow guards.
+        // Real cache-sourced crossbow set already used by the Falador crossbow guards.
         attack = Anims.ATTACK_CROSSBOW
         death = 836
         block = 424
@@ -105,9 +107,23 @@ on_world_init {
     println(CityGuards.spawnStationedGuards(world))
 }
 
-/** Keeps the 1337 level + skulled-only aggro on every (re)spawn of a Deadman guard. */
+/** Keeps the 1337 level, skulled-only aggro and the zone leash on every (re)spawn of a Deadman guard. */
 on_global_npc_spawn {
     if (CityGuards.isGuard(npc)) {
         CityGuards.configure(npc)
     }
+}
+
+/** Owner 2026-09-17: guards never leave a safe zone and stop the moment their target is no longer a
+ * skulled intruder inside one. */
+on_timer(CityGuards.GUARD_LEASH_TIMER) {
+    if (npc.isActive()) {
+        CityGuards.leash(npc)
+        npc.timers[CityGuards.GUARD_LEASH_TIMER] = 2
+    }
+}
+
+/** A skulled player logging out under the guards: the reactive guards must not linger. */
+on_logout {
+    CityGuards.release(player)
 }

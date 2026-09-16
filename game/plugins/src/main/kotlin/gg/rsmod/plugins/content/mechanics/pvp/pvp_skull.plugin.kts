@@ -31,3 +31,16 @@ on_login {
         player.timers[PvpSkull.SKULL_PAUSE_CHECK_TIMER] = 1
     }
 }
+
+/**
+ * Owner 2026-09-17: "Als een player doodgaat moet de skull volledig verdwijnen." PlayerDeathAction
+ * only removes the SKULL_ICON_DURATION_TIMER (resetOnDeath) - silently, without its expiry hook -
+ * so the head icon itself stayed red after a death. Clear it here, at the end of the death
+ * lifecycle, and drop the loot-key count with it (the keys are lost on death); the guards let go
+ * of the now unskulled player on the next zone poll.
+ */
+on_player_death {
+    player.setSkullIcon(SkullIcon.NONE)
+    player.lootKeyIcons = 0
+    CityGuards.release(player)
+}
