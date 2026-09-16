@@ -23,30 +23,42 @@ private val LOCATIONS =
 
 LOCATIONS.forEach { item, endTile ->
     on_item_option(item = item, option = "break") {
-        player.queue(TaskPriority.STRONG) {
-            player.teleport(this, endTile, item)
-        }
+        player.teleport(endTile, item)
     }
 }
 
-suspend fun Player.teleport(
-    it: QueueTask,
+fun Player.teleport(
     endArea: Area,
     tab: Int,
 ) {
-    if (canTeleport(TeleportType.MODERN) && inventory.contains(tab)) {
-        inventory.remove(item = tab)
-        prepareForTeleport()
-        lock = LockState.FULL_WITH_DAMAGE_IMMUNITY
-        animate(id = Anims.USE_TELETAB_1, delay = 16)
-        // SYNTH_SOUND volume is a 0..255 mixer value; Void/Novite use 255 for normal effects.
-        playSound(Sfx.POH_TABLET_BREAK_TELEPORT, delay = 15)
-        it.wait(cycles = 3)
-        graphic(Gfx.TAB_TELEPORT)
-        animate(id = Anims.USE_TELETAB_2)
-        it.wait(cycles = 2)
-        animate(id = Anims.RESET)
-        unlock()
-        moveTo(tile = endArea.randomTile)
+    if (!inventory.contains(tab)) {
+        return
+    }
+    val self = this
+    // Deadman PvP guards plan (2026-09-16): the two-arg canTeleport overload makes a skulled
+    // player's 7-second countdown complete this action automatically. This callback cannot be
+    // suspend (it runs later, outside this queue task's own coroutine), so it re-queues its own
+    // short animation sequence. Everything inside is qualified with `self.` (not left implicit)
+    // because the queue{} lambda's own receiver is QueueTask, not Player - an unqualified `lock`
+    // here would otherwise try to resolve against QueueTask's own member instead of Player's.
+    self.canTeleport(TeleportType.MODERN) {
+        self.queue(TaskPriority.STRONG) {
+            if (!self.inventory.contains(tab)) {
+                return@queue
+            }
+            self.inventory.remove(item = tab)
+            self.prepareForTeleport()
+            self.lock = LockState.FULL_WITH_DAMAGE_IMMUNITY
+            self.animate(id = Anims.USE_TELETAB_1, delay = 16)
+            // SYNTH_SOUND volume is a 0..255 mixer value; Void/Novite use 255 for normal effects.
+            self.playSound(Sfx.POH_TABLET_BREAK_TELEPORT, delay = 15)
+            wait(cycles = 3)
+            self.graphic(Gfx.TAB_TELEPORT)
+            self.animate(id = Anims.USE_TELETAB_2)
+            wait(cycles = 2)
+            self.animate(id = Anims.RESET)
+            self.unlock()
+            self.moveTo(tile = endArea.randomTile)
+        }
     }
 }

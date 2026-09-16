@@ -190,6 +190,44 @@ class TeleportCastBehaviorTests {
         assertFalse(player.canTeleport(TeleportType.MODERN), "must not teleport instantly while skulled")
     }
 
+    @Test
+    fun `the two-arg canTeleport overload runs onConfirmed immediately for an unskulled out-of-combat player`() {
+        val player = newPlayer(magicLevel = 99)
+        every { player.lock } returns LockState.NONE
+        every { player.tile } returns Tile(3040, 3576)
+        every { player.timers } returns TimerMap()
+        var ran = false
+
+        val result = player.canTeleport(TeleportType.MODERN) { ran = true }
+
+        assertTrue(result)
+        assertTrue(ran, "onConfirmed must run immediately when the gate already passes")
+    }
+
+    @Test
+    fun `the two-arg canTeleport overload defers onConfirmed for a skulled player until the 7-second countdown finishes`() {
+        val player = newPlayer(magicLevel = 99)
+        every { player.lock } returns LockState.NONE
+        every { player.tile } returns Tile(3040, 3576)
+        val timers = TimerMap()
+        every { player.timers } returns timers
+        every { player.skullIcon } returns gg.rsmod.plugins.api.SkullIcon.RED.id
+        var ran = false
+
+        val result = player.canTeleport(TeleportType.MODERN) { ran = true }
+
+        assertFalse(result, "must return false while the countdown is running")
+        assertFalse(ran, "onConfirmed must not run yet - it is deferred, not skipped")
+        assertTrue(
+            timers.exists(gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction.COUNTDOWN_TIMER),
+            "the 7-second countdown must actually be armed",
+        )
+
+        gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction.complete(player)
+
+        assertTrue(ran, "onConfirmed must run automatically once the countdown completes - no extra click needed")
+    }
+
     private fun newPlayer(magicLevel: Int): Player {
         val player = mockk<Player>(relaxed = true)
         val world = mockk<World>(relaxed = true)

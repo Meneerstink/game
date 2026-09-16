@@ -18,17 +18,20 @@ CasketTeleportScrolls.REFUSALS.forEach { (scroll, message) ->
 
 CasketTeleportScrolls.DESTINATIONS.forEach { (scroll, destination) ->
     on_item_option(item = scroll, option = "Teleport") {
-        if (!player.canTeleport(TeleportType.TAB)) return@on_item_option
-        val slot = player.getInteractingItemSlot()
-        if (!player.inventory.remove(item = scroll, amount = 1, beginSlot = slot).hasSucceeded()) return@on_item_option
-        val area = Area(destination.centreX - destination.radius, destination.centreZ - destination.radius, destination.centreX + destination.radius, destination.centreZ + destination.radius)
-        var tile = area.randomTile
-        var attempts = 1
-        while (world.getObject(tile, ObjectType.INTERACTABLE) != null && attempts < CasketTeleportScrolls.LANDING_ATTEMPTS) {
-            tile = area.randomTile
-            attempts++
+        // Deadman PvP guards plan (2026-09-16): the two-arg canTeleport overload makes a skulled
+        // player's 7-second countdown complete this action automatically.
+        player.canTeleport(TeleportType.TAB) {
+            val slot = player.getInteractingItemSlot()
+            if (!player.inventory.remove(item = scroll, amount = 1, beginSlot = slot).hasSucceeded()) return@canTeleport
+            val area = Area(destination.centreX - destination.radius, destination.centreZ - destination.radius, destination.centreX + destination.radius, destination.centreZ + destination.radius)
+            var tile = area.randomTile
+            var attempts = 1
+            while (world.getObject(tile, ObjectType.INTERACTABLE) != null && attempts < CasketTeleportScrolls.LANDING_ATTEMPTS) {
+                tile = area.randomTile
+                attempts++
+            }
+            if (world.getObject(tile, ObjectType.INTERACTABLE) != null) tile = Tile(destination.centreX, destination.centreZ, 0)
+            player.teleport(tile, TeleportType.TAB)
         }
-        if (world.getObject(tile, ObjectType.INTERACTABLE) != null) tile = Tile(destination.centreX, destination.centreZ, 0)
-        player.teleport(tile, TeleportType.TAB)
     }
 }

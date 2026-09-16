@@ -3,6 +3,7 @@ package gg.rsmod.plugins.content.mechanics.travel
 import gg.rsmod.game.model.Tile
 import gg.rsmod.plugins.content.magic.TeleportType
 import gg.rsmod.plugins.content.magic.teleport
+import gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction
 
 /**
  * R02.3: the Gnome Glider network. All 6 pilot npcs and their real cache `"Glider"` option were
@@ -47,7 +48,14 @@ STATIONS.forEach { origin ->
                 return@queue
             }
             val dest = destinations[choice - 1]
-            player.teleport(dest.tile.transform(1, 0), TeleportType.MODERN)
+            // Deadman PvP guards plan (2026-09-16): a real "non-teleport transport" network -
+            // the Gnome Glider bypassed player.canTeleport entirely before this (it called
+            // player.teleport(...) directly), so it also had no combat-recency/skull gate at all.
+            // Owner spec: this category always gets the unconditional 7-second countdown, for
+            // everyone, regardless of skull state - unlike ordinary teleport spells.
+            SevenSecondAction.start(player, SevenSecondAction.Kind.TRANSPORT) {
+                player.teleport(dest.tile.transform(1, 0), TeleportType.MODERN)
+            }
         }
     }
 }

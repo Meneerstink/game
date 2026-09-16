@@ -99,9 +99,15 @@ object SevenSecondAction {
         }
     }
 
-    /** Runs and clears the pending action; called by the countdown timer's own expiry hook. */
+    /**
+     * Runs and clears the pending action; called by the countdown timer's own expiry hook.
+     * Explicitly clears [COUNTDOWN_TIMER] too (not just the attribute-backed state) so
+     * [isActive] is correct immediately regardless of whether the real per-cycle timer engine
+     * has also processed this key's own removeOnZero cleanup yet.
+     */
     fun complete(player: Player) {
         val action = player.attr[PENDING_ACTION_ATTR]
+        player.timers.remove(COUNTDOWN_TIMER)
         player.attr.remove(PENDING_ACTION_ATTR)
         player.attr.remove(isActiveAttr)
         player.attr.remove(LAST_TILE_ATTR)

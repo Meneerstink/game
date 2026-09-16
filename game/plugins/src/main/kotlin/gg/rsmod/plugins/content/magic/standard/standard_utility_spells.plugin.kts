@@ -79,10 +79,11 @@ TELEOTHER.forEach { (data, dest) ->
         val metadata = spell(data)
         val (tile, xp, place) = dest
         if (!MagicSpells.canCast(player, metadata.lvl, metadata.runes)) return@on_spell_on_player
-        if (!target.canTeleport(TeleportType.MODERN)) {
-            player.message("That player can't be teleported right now.")
-            return@on_spell_on_player
-        }
+        // Deadman PvP guards plan (2026-09-16): the old pre-flight target.canTeleport(...) check
+        // here (before the accept prompt even showed) already had the pre-existing side effect
+        // of starting a skulled target's countdown prematurely, before they had even accepted -
+        // removed; the real gate below (after consent, at the actual teleport attempt) is the
+        // correct, sufficient one and avoids double-triggering SevenSecondAction.
         MagicSpells.removeRunes(player, metadata.runes, metadata.sprite)
         player.animate(1818)
         player.graphic(343, 96)
@@ -90,11 +91,11 @@ TELEOTHER.forEach { (data, dest) ->
         player.addXp(Skills.MAGIC, xp, checkBrawlingGloves = true)
         target.queue {
             target.message("${player.username} is attempting to teleport you to $place.")
-            if (options("Accept the teleport.", "Decline.", title = "${player.username} wishes to teleport you to $place.") == 1 &&
-                target.canTeleport(TeleportType.MODERN)
-            ) {
-                target.graphic(342, 0)
-                target.teleport(tile, TeleportType.MODERN)
+            if (options("Accept the teleport.", "Decline.", title = "${player.username} wishes to teleport you to $place.") == 1) {
+                target.canTeleport(TeleportType.MODERN) {
+                    target.graphic(342, 0)
+                    target.teleport(tile, TeleportType.MODERN)
+                }
             } else {
                 player.message("${target.username} declined the teleport.")
             }

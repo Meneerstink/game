@@ -67,7 +67,9 @@ fun Player.teleport(
     isEquipped: Boolean,
 ) {
     // Check if the player can teleport using items
-    if (canTeleport(TeleportType.JEWELRY)) {
+    // Deadman PvP guards plan (2026-09-16): two-arg canTeleport - a skulled player's 7-second
+    // countdown completes this action automatically.
+    canTeleport(TeleportType.JEWELRY) {
         // Play a sound effect in the area around the player
         world.spawn(AreaSound(tile, SOUNDAREA_ID, SOUNDAREA_RADIUS, SOUNDAREA_VOLUME))
 

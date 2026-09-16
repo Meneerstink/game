@@ -54,22 +54,26 @@ private val GROUP_TELEPORTS =
 GROUP_TELEPORTS.forEach { (name, data) ->
     on_magic_spell_button(name) { metadata ->
         val (tile, xp, place) = data
-        if (!MagicSpells.canCast(player, metadata.lvl, metadata.runes) || !player.canTeleport(TeleportType.LUNAR)) {
+        if (!MagicSpells.canCast(player, metadata.lvl, metadata.runes)) {
             return@on_magic_spell_button
         }
-        MagicSpells.removeRunes(player, metadata.runes, metadata.sprite)
-        player.addXp(Skills.MAGIC, xp, checkBrawlingGloves = true)
-        nearbyPlayers(player, radius = 1).forEach { other ->
-            other.queue {
-                other.message("${player.username} is attempting to teleport you to $place.")
-                if (options("Accept the teleport.", "Decline.", title = "${player.username} wishes to teleport you to $place.") == 1 &&
-                    other.canTeleport(TeleportType.LUNAR)
-                ) {
-                    other.teleport(tile, TeleportType.LUNAR)
+        // Deadman PvP guards plan (2026-09-16): two-arg canTeleport - a skulled caster's or
+        // accepting player's 7-second countdown completes their own teleport automatically.
+        player.canTeleport(TeleportType.LUNAR) {
+            MagicSpells.removeRunes(player, metadata.runes, metadata.sprite)
+            player.addXp(Skills.MAGIC, xp, checkBrawlingGloves = true)
+            nearbyPlayers(player, radius = 1).forEach { other ->
+                other.queue {
+                    other.message("${player.username} is attempting to teleport you to $place.")
+                    if (options("Accept the teleport.", "Decline.", title = "${player.username} wishes to teleport you to $place.") == 1) {
+                        other.canTeleport(TeleportType.LUNAR) {
+                            other.teleport(tile, TeleportType.LUNAR)
+                        }
+                    }
                 }
             }
+            player.teleport(tile, TeleportType.LUNAR)
         }
-        player.teleport(tile, TeleportType.LUNAR)
     }
 }
 

@@ -5,14 +5,15 @@ import gg.rsmod.plugins.content.magic.canTeleport
 import gg.rsmod.plugins.content.magic.teleport
 
 on_item_option(item = Items.RING_OF_KINSHIP, option = 4) {
-    if (!player.canTeleport(TeleportType.RING_OF_KINSHIP)) {
-        return@on_item_option
-    }
-    val tile = Tile(x = 3449, z = 3696)
-    val rx = world.random(-3..3)
-    val rz = world.random(-3..3)
-    tile.transform(rx, rz)
-    player.queue(TaskPriority.STRONG) {
-        player.teleport(tile, TeleportType.RING_OF_KINSHIP)
+    // Deadman PvP guards plan (2026-09-16): the two-arg canTeleport overload makes a skulled
+    // player's 7-second countdown complete this action automatically.
+    player.canTeleport(TeleportType.RING_OF_KINSHIP) {
+        val tile = Tile(x = 3449, z = 3696)
+        val rx = world.random(-3..3)
+        val rz = world.random(-3..3)
+        tile.transform(rx, rz)
+        player.queue(TaskPriority.STRONG) {
+            player.teleport(tile, TeleportType.RING_OF_KINSHIP)
+        }
     }
 }

@@ -19,8 +19,36 @@ import gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction
 /**
  * Shared teleport restrictions. The 2011 ten-second combat wait belongs to Home Teleport
  * (Novite HomeTeleport.process), not to ordinary teleports.
+ *
+ * Deadman PvP guards plan (owner-approved 2026-09-16), Batch 6 follow-up: this legacy one-arg
+ * overload keeps the original "one-shot confirm flag consumed on the caller's next attempt"
+ * behaviour for any call site not yet updated to the two-arg overload below. Prefer
+ * [canTeleport] with an [onConfirmed] callback in new/updated call sites - it makes a skulled
+ * player's teleport complete truly automatically after the 7-second countdown, matching the
+ * owner's spec literally, instead of needing one extra click.
  */
 fun Player.canTeleport(type: TeleportType): Boolean {
+    if (SevenSecondAction.consumeTeleportConfirmation(this)) {
+        return true
+    }
+    return canTeleport(type) {
+        attr[SevenSecondAction.TELEPORT_CONFIRMED_ATTR] = true
+        filterableMessage("You may now complete your teleport.")
+    }
+}
+
+/**
+ * [onConfirmed] runs automatically once a skulled player's 7-second countdown finishes
+ * uninterrupted - call sites that pass their whole post-check teleport action here get true
+ * automatic completion instead of the legacy "click again" fallback the one-arg overload uses.
+ * Returns false (and starts/continues the countdown) for as long as the countdown is running;
+ * [onConfirmed] is invoked directly by [SevenSecondAction], not by this function's return value,
+ * so a caller must not also run its teleport logic itself when this returns false.
+ */
+fun Player.canTeleport(
+    type: TeleportType,
+    onConfirmed: () -> Unit,
+): Boolean {
     val currWildLvl = tile.getWildernessLevel()
     val wildLvlRestriction = type.wildLvlRestriction
     val randomEvent = tile.regionId
@@ -57,16 +85,11 @@ fun Player.canTeleport(type: TeleportType): Boolean {
     // decision for the UNSKULLED path specifically - the new spec explicitly says "if not hit by
     // a player or NPC in the last 7 seconds", naming NPC hits too. Recorded here rather than
     // silently overridden; TeleportCastBehaviorTests updated to match. Skulled players instead
-    // always go through the 7-second countdown interface below, even out of combat.
+    // always go through the 7-second countdown interface below, even out of combat, and
+    // [onConfirmed] fires automatically when it finishes - no extra click needed.
     if (hasSkullIcon(SkullIcon.RED)) {
-        if (SevenSecondAction.consumeTeleportConfirmation(this)) {
-            return true
-        }
         if (!SevenSecondAction.isActive(this)) {
-            SevenSecondAction.start(this, SevenSecondAction.Kind.TELEPORT) {
-                attr[SevenSecondAction.TELEPORT_CONFIRMED_ATTR] = true
-                filterableMessage("You may now complete your teleport.")
-            }
+            SevenSecondAction.start(this, SevenSecondAction.Kind.TELEPORT, onConfirmed)
         }
         return false
     } else if (timers.has(TELEPORT_COMBAT_TIMER)) {
@@ -75,6 +98,7 @@ fun Player.canTeleport(type: TeleportType): Boolean {
         return false
     }
 
+    onConfirmed()
     return true
 }
 

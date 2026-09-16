@@ -54,7 +54,9 @@ HomeTeleport.values.forEach { teleport ->
             return@on_magic_spell_button
         }
 
-        if (player.canTeleport(TeleportType.MODERN)) {
+        // Deadman PvP guards plan (2026-09-16): the two-arg canTeleport overload makes a skulled
+        // player's 7-second countdown complete this action automatically.
+        player.canTeleport(TeleportType.MODERN) {
             player.queue(TaskPriority.STRONG) {
                 if (teleport.instant) {
                     instantTeleport(teleport.endTile(world))

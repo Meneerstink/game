@@ -20,11 +20,12 @@ import gg.rsmod.plugins.content.magic.teleport
 private val DESTINATION = Area(3654, 3521, 3665, 3524)
 
 on_item_option(item = Items.ECTOPHIAL, option = "empty") {
-    if (!player.canTeleport(TeleportType.ECTOPHIAL)) {
-        return@on_item_option
+    // Deadman PvP guards plan (2026-09-16): the two-arg canTeleport overload makes a skulled
+    // player's 7-second countdown complete this action automatically.
+    player.canTeleport(TeleportType.ECTOPHIAL) {
+        player.inventory.remove(Items.ECTOPHIAL)
+        player.inventory.add(Items.ECTOPHIAL_4252)
+        player.teleport(DESTINATION.randomTile, TeleportType.ECTOPHIAL)
+        player.message("You pour some ectoplasm from the vial, and it explodes in a rush of magical energy...")
     }
-    player.inventory.remove(Items.ECTOPHIAL)
-    player.inventory.add(Items.ECTOPHIAL_4252)
-    player.teleport(DESTINATION.randomTile, TeleportType.ECTOPHIAL)
-    player.message("You pour some ectoplasm from the vial, and it explodes in a rush of magical energy...")
 }

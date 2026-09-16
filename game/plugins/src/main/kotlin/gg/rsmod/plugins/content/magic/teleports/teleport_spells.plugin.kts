@@ -9,12 +9,13 @@ private val SOUNDAREA_RADIUS = 10
 private val SOUNDAREA_VOLUME = 1
 
 TeleportSpell.values.forEach { teleport ->
-    if (teleport.spriteId == null) {
+    val spriteId = teleport.spriteId
+    if (spriteId == null) {
         on_magic_spell_button(teleport.spellName) { metadata ->
             player.teleport(teleport, metadata)
         }
     } else {
-        val metadata = MagicSpells.getMetadata(teleport.spriteId)!!
+        val metadata = MagicSpells.getMetadata(spriteId)!!
         on_button(metadata.interfaceId, metadata.component) {
             player.teleport(teleport, metadata)
         }
@@ -48,7 +49,10 @@ fun Player.teleport(
         return
     }
 
-    if (canTeleport(type)) {
+    // Deadman PvP guards plan (2026-09-16): the two-arg canTeleport overload makes a skulled
+    // player's 7-second countdown complete this whole action automatically, instead of needing
+    // one extra click (the one-arg overload's fallback behaviour).
+    canTeleport(type) {
         MagicSpells.removeRunes(this, itemRequirements, data.sprite)
         teleport(endTile, type)
         addXp(Skills.MAGIC, xp, checkBrawlingGloves = true)
