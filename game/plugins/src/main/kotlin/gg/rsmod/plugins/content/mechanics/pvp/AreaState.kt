@@ -293,6 +293,12 @@ object AreaState {
         if (BeginnerProtection.isProtected(attacker) || BeginnerProtection.isProtected(target)) {
             return false
         }
+        // Deadman PvP guards plan (2026-09-16): a player currently protected by the post-kill
+        // grace period cannot be attacked at all, by anyone - checked unconditionally like
+        // BeginnerProtection above, not folded into the practice-PvP-exempt clause below.
+        if (KillGrace.isProtected(target)) {
+            return false
+        }
         val world = attacker.world
         val home = world.gameContext.home
         // Practice PvP matches are randomly queued (no level-matching) and are a consequence-free

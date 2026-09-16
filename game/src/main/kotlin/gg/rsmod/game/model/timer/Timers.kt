@@ -50,6 +50,16 @@ val NEW_PLAYER_PROTECTION_TIMER =
 val ACTIVE_COMBAT_TIMER = TimerKey()
 
 /**
+ * Deadman PvP guards plan (owner-approved 2026-09-16): "instant teleport if not hit by a player
+ * or NPC in the last 7 seconds" for an unskulled player. Deliberately separate from
+ * [ACTIVE_COMBAT_TIMER] (10.2s, used for the unrelated combat-escape/logout lock and other
+ * existing consumers) so retuning this gate's exact duration can never change those other
+ * features' behaviour. Set on the target whenever a hit lands, same event as
+ * [ACTIVE_COMBAT_TIMER].
+ */
+val TELEPORT_COMBAT_TIMER = TimerKey()
+
+/**
  * Timer key used to force a player disconnect, usually used so that if a
  * player's channel has been inactive (disconnected) for X amount of time,
  * we disconnect them so that they can play again.
@@ -81,18 +91,6 @@ val STUN_TIMER = TimerKey()
  * Timer key for poison ticks.
  */
 val POISON_TIMER = TimerKey(persistenceKey = "poison", tickOffline = false, resetOnDeath = true)
-
-/**
- * RCV-010 A3: Overload refresh timer. Fires every 25 ticks (Novite 667 `Player.processEntity`:
- * `(overloadDelay - 1) % 25 == 0`); the refreshes left are in `OVERLOAD_REFRESHES_ATTR`.
- */
-val OVERLOAD_TIMER = TimerKey(persistenceKey = "overload", tickOffline = false, resetOnDeath = true)
-
-/** RCV-010 A3: Prayer renewal, ticked every game tick; ticks left in `PRAYER_RENEWAL_TICKS_ATTR`. */
-val PRAYER_RENEWAL_TIMER = TimerKey(persistenceKey = "prayer_renewal", tickOffline = false, resetOnDeath = true)
-
-/** RCV-010 A3: Recover special 30-second re-use delay (Novite 667 `Pots.RECOVER_SPECIAL`). */
-val RECOVER_SPECIAL_TIMER = TimerKey()
 
 /**
  * Timer key for poison immunity ticks.

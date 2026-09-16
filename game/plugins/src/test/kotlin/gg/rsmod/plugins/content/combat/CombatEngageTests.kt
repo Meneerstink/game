@@ -133,6 +133,19 @@ class CombatEngageTests {
     }
 
     @Test
+    fun `a player protected by the post-kill grace period cannot be attacked`() {
+        val home = Tile(3140, 3640, 0)
+        val attacker = newPlayer(tile = Tile(3200, 3200, 0), combatLevel = 50, home = home)
+        val target = newPlayer(tile = Tile(3200, 3201, 0), combatLevel = 50, home = home)
+        val realTimers = TimerMap()
+        every { target.timers } returns realTimers
+
+        gg.rsmod.plugins.content.mechanics.pvp.KillGrace.grant(target)
+
+        assertFalse(Combat.canEngage(attacker, target))
+    }
+
+    @Test
     fun `Ferox outside the bank can fight the Wilderness side of a barrier`() {
         val home = Tile(3140, 3640, 0)
         val attacker = newPlayer(tile = home, combatLevel = 50, home = home)

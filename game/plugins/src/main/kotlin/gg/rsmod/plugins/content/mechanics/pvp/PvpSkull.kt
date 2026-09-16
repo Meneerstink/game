@@ -76,6 +76,9 @@ object PvpSkull {
             attacker.skull(SkullIcon.RED, SKULL_DURATION_CYCLES)
             armPauseTracking(attacker)
         }
+        // Deadman PvP guards plan (2026-09-16): "attacking ... ends it early" - the attacker's
+        // own post-kill grace period, if any, ends the moment they initiate a new attack.
+        KillGrace.endEarly(attacker)
         markAggression(attacker, victim)
     }
 

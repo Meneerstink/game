@@ -14,6 +14,7 @@ import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.queue.QueueTask
 import gg.rsmod.game.model.timer.ACTIVE_COMBAT_TIMER
 import gg.rsmod.game.model.timer.ATTACK_DELAY
+import gg.rsmod.game.model.timer.TELEPORT_COMBAT_TIMER
 import gg.rsmod.plugins.api.BonusSlot
 import gg.rsmod.plugins.api.NpcSkills
 import gg.rsmod.plugins.api.ProjectileType
@@ -91,6 +92,13 @@ object Combat {
         // Granite maul homing: "for 5 ticks after attacking a target with any weapon" (GraniteMaul).
         pawn.attr[gg.rsmod.plugins.content.items.osrs.GraniteMaul.LAST_ATTACK_CYCLE] = pawn.world.currentCycle
         target.timers[ACTIVE_COMBAT_TIMER] = 17 // 10,2 seconds
+        // Deadman PvP guards plan (2026-09-16): the out-of-combat teleport gate's own 7-second
+        // window, and "being attacked" cancels an in-progress 7-second logout/teleport/portal/
+        // transport countdown.
+        target.timers[TELEPORT_COMBAT_TIMER] = gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction.DURATION_CYCLES
+        if (target is Player) {
+            gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction.cancel(target, "You have been attacked!")
+        }
         pawn.attr[BOLT_ENCHANTMENT_EFFECT] = false
 
         pawn.attr[LAST_HIT_ATTR] = WeakReference(target)

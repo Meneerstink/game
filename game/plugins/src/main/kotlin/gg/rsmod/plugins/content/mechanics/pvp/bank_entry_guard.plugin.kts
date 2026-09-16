@@ -11,5 +11,8 @@ on_timer(BankSecurity.BANK_ENTRY_MONITOR) {
     // Wizguard freeze cover every guarded zone (not only literal bank tiles), so this runs on the
     // same existing per-cycle poll rather than adding a second timer.
     CityGuards.onZoneCheck(player)
+    // Movement-interruption check for an in-progress 7-second logout/teleport/portal/transport
+    // countdown - same existing per-cycle poll, no dedicated timer added.
+    SevenSecondAction.onZoneCheck(player)
     player.timers[BankSecurity.BANK_ENTRY_MONITOR] = 1
 }

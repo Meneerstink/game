@@ -16,7 +16,6 @@ import gg.rsmod.game.model.container.key.EQUIPMENT_KEY
 import gg.rsmod.game.model.container.key.INVENTORY_KEY
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.skill.SkillSet
-import gg.rsmod.game.model.timer.ACTIVE_COMBAT_TIMER
 import gg.rsmod.game.model.timer.TimerMap
 import gg.rsmod.game.model.varp.VarpSet
 import gg.rsmod.plugins.api.Skills
@@ -136,41 +135,59 @@ class TeleportCastBehaviorTests {
     }
 
     @Test
-    fun `ordinary teleport is allowed during player combat unless teleblocked or above the wilderness limit`() {
-        // Novite's ten-second combat wait is in HomeTeleport.process, not ordinary teleport checks.
+    fun `an unskulled player recently hit by another player cannot instantly teleport`() {
+        // Deadman PvP guards plan (owner-approved 2026-09-16) supersedes RCV-005 (2026-09-13,
+        // owner-retested "ordinary teleport allowed during combat"): the new spec is explicit -
+        // "instant teleport if not hit by a player or NPC in the last 7 seconds", otherwise
+        // blocked with a message (no interface). TELEPORT_COMBAT_TIMER is the dedicated timer
+        // Combat.postAttack arms on every landed hit, separate from ACTIVE_COMBAT_TIMER (which
+        // keeps its own unrelated 10.2s duration for the logout lock and other existing
+        // consumers, untouched by this change).
         val player = newPlayer(magicLevel = 99)
         every { player.lock } returns LockState.NONE
         every { player.tile } returns Tile(3040, 3576) // shallow wilderness, otherwise allowed
         val timers = TimerMap()
-        timers[ACTIVE_COMBAT_TIMER] = 17
+        timers[gg.rsmod.game.model.timer.TELEPORT_COMBAT_TIMER] = 12
         every { player.timers } returns timers
         player.attr[LAST_HIT_BY_ATTR] = WeakReference(mockk<Player>(relaxed = true))
 
-        assertTrue(player.canTeleport(TeleportType.MODERN))
+        assertFalse(player.canTeleport(TeleportType.MODERN))
     }
 
     @Test
-    fun `an active combat timer from an npc hit does not block teleporting, as in OSRS`() {
-        // RCV-005 owner retest 2026-09-13: teleporting out of NPC combat must work.
+    fun `an unskulled player recently hit by an npc also cannot instantly teleport`() {
+        // The owner's new wording explicitly names NPC hits too ("hit by a player or NPC"),
+        // reversing the old RCV-005 "NPC combat must not block teleport" decision on purpose.
         val player = newPlayer(magicLevel = 99)
         every { player.lock } returns LockState.NONE
         every { player.tile } returns Tile(3040, 3576)
         val timers = TimerMap()
-        timers[ACTIVE_COMBAT_TIMER] = 17
+        timers[gg.rsmod.game.model.timer.TELEPORT_COMBAT_TIMER] = 12
         every { player.timers } returns timers
         player.attr[LAST_HIT_BY_ATTR] = WeakReference(mockk<Npc>(relaxed = true))
 
-        assertTrue(player.canTeleport(TeleportType.MODERN))
+        assertFalse(player.canTeleport(TeleportType.MODERN))
     }
 
     @Test
-    fun `teleporting is allowed again once the active combat timer has cleared`() {
+    fun `teleporting is allowed again once the 7-second combat-recency timer has cleared`() {
         val player = newPlayer(magicLevel = 99)
         every { player.lock } returns LockState.NONE
         every { player.tile } returns Tile(3040, 3576)
         every { player.timers } returns TimerMap()
 
         assertTrue(player.canTeleport(TeleportType.MODERN))
+    }
+
+    @Test
+    fun `a skulled player never gets an instant teleport, even out of combat - the 7-second countdown starts instead`() {
+        val player = newPlayer(magicLevel = 99)
+        every { player.lock } returns LockState.NONE
+        every { player.tile } returns Tile(3040, 3576)
+        every { player.timers } returns TimerMap()
+        every { player.skullIcon } returns gg.rsmod.plugins.api.SkullIcon.RED.id
+
+        assertFalse(player.canTeleport(TeleportType.MODERN), "must not teleport instantly while skulled")
     }
 
     private fun newPlayer(magicLevel: Int): Player {
@@ -182,6 +199,7 @@ class TeleportCastBehaviorTests {
         every { player.varps } returns VARPS
         every { player.inventory } returns ItemContainer(DEFINITIONS, INVENTORY_KEY)
         every { player.equipment } returns ItemContainer(DEFINITIONS, EQUIPMENT_KEY)
+        every { player.timers } returns TimerMap()
         val skills = SkillSet(maxSkills = Skills.MAGIC + 1)
         skills.setBaseLevel(Skills.MAGIC, magicLevel)
         skills.setCurrentLevel(Skills.MAGIC, magicLevel)
