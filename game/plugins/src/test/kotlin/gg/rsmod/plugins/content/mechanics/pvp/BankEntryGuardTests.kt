@@ -5,10 +5,10 @@ import java.nio.file.Path
 import kotlin.test.Test
 import kotlin.test.assertTrue
 
-/** M1 source contract: every bank interface entry remains behind the shared PvP bank gate. */
+/** Deadman source contract: every bank interface entry remains behind the shared guarded-city bank gate. */
 class BankEntryGuardTests {
     @Test
-    fun `bank and deposit box reject blocked players before opening`() {
+    fun `bank and deposit box reject skulled players inside a guarded city before opening`() {
         val source =
             Files.readString(
                 Path.of(
@@ -34,7 +34,7 @@ class BankEntryGuardTests {
     }
 
     @Test
-    fun `blocked entry closes an already open bank modal before guards attack`() {
+    fun `skulled entry into a guarded city closes an already open bank modal before guards spawn`() {
         val source =
             Files.readString(
                 Path.of(
@@ -47,13 +47,13 @@ class BankEntryGuardTests {
                     "content",
                     "mechanics",
                     "pvp",
-                    "BankSecurity.kt",
+                    "CityGuards.kt",
                 ),
             )
-        val entry = source.substringAfter("if (!inBank || wasInBank || !isBankBlocked(player)) return")
-        val guard = entry.indexOf("player.timers[BANK_ENTRY_TIMER]")
-        assertTrue(guard >= 0)
-        assertTrue(entry.indexOf("InterfaceDestination.MAIN_SCREEN") in 0 until guard)
-        assertTrue(entry.indexOf("InterfaceDestination.TAB_AREA") in 0 until guard)
+        val entry = source.substringAfter("if (existing.isEmpty()) {")
+        val spawn = entry.indexOf("spawnReactiveGuards(world, player)")
+        assertTrue(spawn >= 0)
+        assertTrue(entry.indexOf("InterfaceDestination.MAIN_SCREEN") in 0 until spawn)
+        assertTrue(entry.indexOf("InterfaceDestination.TAB_AREA") in 0 until spawn)
     }
 }

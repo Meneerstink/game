@@ -1,18 +1,17 @@
 package gg.rsmod.plugins.content.mechanics.pvp
 
-/** Polling is used because this revision has no generic player-step event. */
+/** Per-cycle Deadman zone poll (this revision has no generic player-step event). */
+val ZONE_MONITOR = TimerKey()
+
 on_login {
-    player.timers[BankSecurity.BANK_ENTRY_MONITOR] = 1
+    player.timers[ZONE_MONITOR] = 1
 }
 
-on_timer(BankSecurity.BANK_ENTRY_MONITOR) {
-    BankSecurity.monitor(player)
-    // Deadman PvP guards plan (2026-09-16): the reactive spawn-on-skulled-entry guard pair and
-    // Wizguard freeze cover every guarded zone (not only literal bank tiles), so this runs on the
-    // same existing per-cycle poll rather than adding a second timer.
+on_timer(ZONE_MONITOR) {
+    // Reactive guard pair + Wizguard for a skulled player inside a guarded city, and their
+    // despawn the moment the player leaves or unskulls.
     CityGuards.onZoneCheck(player)
-    // Movement-interruption check for an in-progress 7-second logout/teleport/portal/transport
-    // countdown - same existing per-cycle poll, no dedicated timer added.
+    // Movement / interface-close interruption of an in-progress 7-second countdown.
     SevenSecondAction.onZoneCheck(player)
-    player.timers[BankSecurity.BANK_ENTRY_MONITOR] = 1
+    player.timers[ZONE_MONITOR] = 1
 }

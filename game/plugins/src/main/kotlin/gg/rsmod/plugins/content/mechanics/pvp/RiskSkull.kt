@@ -2,6 +2,7 @@ package gg.rsmod.plugins.content.mechanics.pvp
 
 import gg.rsmod.game.model.attr.PROTECT_ITEM_ATTR
 import gg.rsmod.game.model.entity.Player
+import gg.rsmod.game.sync.block.UpdateBlockType
 import gg.rsmod.plugins.api.SkullIcon
 import gg.rsmod.plugins.api.ext.hasSkullIcon
 import gg.rsmod.plugins.api.ext.setSkullIcon
@@ -77,21 +78,40 @@ object RiskSkull {
         return result.lost.sumOf { valueProvider.getValue(it.item.id) * it.item.amount }
     }
 
-    /** Refreshes [player]'s skull icon to match their current risk tier, unless they are
-     * currently PK-skulled ([SkullIcon.RED] always wins - see class doc). A no-op when the
-     * icon already matches, so it is safe to call every cycle without spamming appearance
-     * updates. [valueProvider] is threaded through to [calculateRiskedValue] for the same
-     * cache-free testability reason. */
+    /** Loot keys carried in the inventory (0-5); OSRS Deadman: "The number of keys on the icon
+     * reflects the number of keys a player has in their inventory." */
+    fun heldKeys(player: Player): Int = LootKeys.heldKeyIndexes(player).size.coerceIn(0, LootKeys.MAX_KEYS)
+
+    /**
+     * Refreshes [player]'s head icon: the risk-tier skull (unless PK-skulled - [SkullIcon.RED]
+     * always wins, see class doc) plus the loot-key count. A player carrying keys always shows at
+     * least the Bronze skull, so the key count has a skull to sit on (owner example: "1 player
+     * kill ... 200,000gp or less ... 1 key above his head and a brown skull"). A no-op when
+     * nothing changed, so it is safe to call every cycle. [valueProvider] is threaded through to
+     * [calculateRiskedValue] for cache-free testability.
+     */
     fun refresh(
         player: Player,
         valueProvider: ItemRiskValueProvider = ItemDefCostValueProvider(player.world.definitions),
     ) {
-        if (player.hasSkullIcon(SkullIcon.RED)) {
-            return
+        val keys = heldKeys(player)
+        var changed = false
+        if (player.lootKeyIcons != keys) {
+            player.lootKeyIcons = keys
+            changed = true
         }
-        val tier = tierFor(calculateRiskedValue(player, valueProvider))
-        if (!player.hasSkullIcon(tier)) {
-            player.setSkullIcon(tier)
+        if (!player.hasSkullIcon(SkullIcon.RED)) {
+            var tier = tierFor(calculateRiskedValue(player, valueProvider))
+            if (tier == SkullIcon.NONE && keys > 0) {
+                tier = SkullIcon.DMM_VERY_LOW_RISK
+            }
+            if (!player.hasSkullIcon(tier)) {
+                player.setSkullIcon(tier)
+                changed = false // setSkullIcon already queued the appearance update
+            }
+        }
+        if (changed) {
+            player.addBlock(UpdateBlockType.APPEARANCE)
         }
     }
 }

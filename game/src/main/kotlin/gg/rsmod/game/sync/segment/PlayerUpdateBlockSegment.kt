@@ -154,7 +154,11 @@ class PlayerUpdateBlockSegment(
                 val settings = 0
                 appBuf.put(DataType.BYTE, settings or other.appearance.gender.id) // flag
                 appBuf.put(DataType.BYTE, 0) // title
-                appBuf.put(DataType.BYTE, other.skullIcon)
+                // Deadman head icon: low nibble = skull icon id (-1 = none), high bits = loot key
+                // count (0-5); decoded by the 2011scape client's PlayerEntity appearance reader.
+                val pkIcon =
+                    if (other.skullIcon < 0) -1 else (other.skullIcon and 0xF) or (other.lootKeyIcons.coerceIn(0, 5) shl 4)
+                appBuf.put(DataType.BYTE, pkIcon)
                 appBuf.put(DataType.BYTE, other.prayerIcon)
                 appBuf.put(DataType.BYTE, if (other.invisible) 1 else 0) // hidden
 

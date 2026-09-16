@@ -77,6 +77,10 @@ set_window_status_logic {
             else -> DisplayMode.FIXED
         }
     player.toggleDisplayInterface(mode)
+    // The Deadman zone/skull overlay (interface 381) is mounted in a gameframe slot that
+    // toggleDisplayInterface does not re-open (PVP_OVERLAY has no interfaceId of its own); reset
+    // its bookkeeping so the next tick re-mounts and re-sends it for the new window mode.
+    gg.rsmod.plugins.content.mechanics.pvp.DeadmanHud.reset(player)
     // A client window-mode switch rebuilds the gameframe with its baked flags, which drops the
     // server-sent Summoning state: orb/panel gating and the Follower Details tab (548:99 / 746:47
     // are baked hidden with no ops). Owner live report 2026-09-13: the icon vanished when switching

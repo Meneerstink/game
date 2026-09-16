@@ -153,6 +153,17 @@ class Npc private constructor(
      */
     val def: NpcDef = world.definitions.get(NpcDef::class.java, id)
 
+    init {
+        // An npc whose cache NPCType carries no combat level (opcode 95 absent, e.g. every OSRS
+        // import such as Skully/Perdu/Mandrith) decodes as -1 in the client's NPCType too, and the
+        // client's MiniMenu only suppresses the "(level N)" suffix for exactly 0 - so such an npc
+        // showed a nonsense level. Publish 0 through the COMBAT_LEVEL block (sent with every add
+        // update, see NpcUpdateBlockSegment) so the client shows no level, as the cache intends.
+        if (def.combatLevel < 0) {
+            blockBuffer.combatLevel = 0
+        }
+    }
+
     /**
      * Getter property for our npc name.
      */

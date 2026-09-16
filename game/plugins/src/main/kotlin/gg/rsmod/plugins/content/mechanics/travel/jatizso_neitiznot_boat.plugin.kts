@@ -1,8 +1,10 @@
 package gg.rsmod.plugins.content.mechanics.travel
 
 import gg.rsmod.game.model.Tile
+import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.content.magic.TeleportType
 import gg.rsmod.plugins.content.magic.teleport
+import gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction
 
 /**
  * R02.3: the Rellekka<->Jatizso and Rellekka<->Neitiznot boat legs, extending the same
@@ -25,18 +27,28 @@ val jatizsoTile = Tile(2421, 3781, 0)
 val neitiznotTile = Tile(2311, 3781, 0)
 val rellekkaDockTile = Tile(2644, 3709, 0)
 
+// Deadman (OSRS Wiki): non-teleport transport always opens the 7-second timer interface first.
+fun sail(
+    player: Player,
+    dest: Tile,
+) {
+    SevenSecondAction.start(player, SevenSecondAction.Kind.TRANSPORT) {
+        player.teleport(dest.transform(1, 0), TeleportType.MODERN)
+    }
+}
+
 on_npc_option(Npcs.MORD_GUNNARS, "Travel-Jatizso") {
-    player.teleport(jatizsoTile.transform(1, 0), TeleportType.MODERN)
+    sail(player, jatizsoTile)
 }
 
 on_npc_option(Npcs.MORD_GUNNARS_5482, "Travel-Rellekka") {
-    player.teleport(rellekkaDockTile.transform(1, 0), TeleportType.MODERN)
+    sail(player, rellekkaDockTile)
 }
 
 on_npc_option(Npcs.MARIA_GUNNARS_5508, "Travel-Neitiznot") {
-    player.teleport(neitiznotTile.transform(1, 0), TeleportType.MODERN)
+    sail(player, neitiznotTile)
 }
 
 on_npc_option(Npcs.MARIA_GUNNARS, "Travel-Rellekka") {
-    player.teleport(rellekkaDockTile.transform(1, 0), TeleportType.MODERN)
+    sail(player, rellekkaDockTile)
 }

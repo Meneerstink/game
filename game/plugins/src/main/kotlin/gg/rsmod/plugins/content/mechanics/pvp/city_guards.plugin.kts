@@ -1,0 +1,113 @@
+package gg.rsmod.plugins.content.mechanics.pvp
+
+import gg.rsmod.game.model.combat.StyleType
+
+/**
+ * Deadman guard combat definitions + stationed spawns (OSRS Wiki "Guard (Deadman Mode)": level 1337,
+ * 800 hitpoints, 2-tick attack speed, slash or ranged, attack +60, strength +7, stab/slash/crush
+ * defence +8/+9/+7, ranged defence +8, aggressive). Damage is not taken from these stats but from
+ * the sourced ramp in [CityGuards.rampedMaxHit].
+ */
+set_combat_def(CityGuards.MELEE_GUARD_ID) {
+    configs {
+        attackSpeed = CityGuards.ATTACK_SPEED_CYCLES
+        respawnDelay = 50
+    }
+    aggro {
+        radius = 8
+        searchDelay = 1
+        alwaysAggro()
+    }
+    stats {
+        hitpoints = CityGuards.HITPOINTS_TIMES_TEN
+        attack = 200
+        strength = 200
+        defence = 150
+        magic = 1
+        ranged = 1
+    }
+    bonuses {
+        attackStab = 60
+        attackSlash = 60
+        attackCrush = 60
+        strengthBonus = 7
+        defenceStab = 8
+        defenceSlash = 9
+        defenceCrush = 7
+        defenceMagic = 8
+        defenceRanged = 8
+    }
+    anims {
+        attack = Anims.ATTACK_SLASH
+        death = Anims.HUMAN_DEATH
+        block = Anims.BLOCK_SHIELD
+    }
+}
+
+set_combat_def(CityGuards.RANGED_GUARD_ID) {
+    configs {
+        attackSpeed = CityGuards.ATTACK_SPEED_CYCLES
+        attackStyle = StyleType.RANGED
+        respawnDelay = 50
+    }
+    aggro {
+        radius = 8
+        searchDelay = 1
+        alwaysAggro()
+    }
+    stats {
+        hitpoints = CityGuards.HITPOINTS_TIMES_TEN
+        attack = 1
+        strength = 1
+        defence = 150
+        magic = 1
+        ranged = 200
+    }
+    bonuses {
+        attackRanged = 60
+        rangedStrengthBonus = 7
+        defenceStab = 8
+        defenceSlash = 9
+        defenceCrush = 7
+        defenceMagic = 8
+        defenceRanged = 8
+    }
+    anims {
+        // Real cache-sourced crossbow-guard set already used by the Falador crossbow guards.
+        attack = Anims.ATTACK_CROSSBOW
+        death = 836
+        block = 424
+    }
+}
+
+/** The Wizguard never fights through the combat engine (it casts once and vanishes, see
+ * [CityGuards.wizguardStrike]); this def only keeps combatDef/aggro lookups from seeing a missing
+ * definition. */
+set_combat_def(CityGuards.WIZGUARD_ID) {
+    configs {
+        attackSpeed = CityGuards.ATTACK_SPEED_CYCLES
+        respawnDelay = 0
+    }
+    stats {
+        hitpoints = CityGuards.HITPOINTS_TIMES_TEN
+        defence = 150
+        magic = 200
+    }
+    bonuses {
+        defenceMagic = 8
+    }
+    anims {
+        death = Anims.HUMAN_DEATH
+    }
+}
+
+on_world_init {
+    println(CityGuards.spawnStationedGuards(world))
+}
+
+/** Keeps the 1337 level + skulled-only aggro on every (re)spawn of a Deadman guard. */
+on_global_npc_spawn {
+    if (CityGuards.isGuard(npc)) {
+        CityGuards.configure(npc)
+    }
+}

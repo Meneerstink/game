@@ -10,6 +10,7 @@ import gg.rsmod.game.model.timer.FROZEN_TIMER
 import gg.rsmod.game.model.timer.STUN_TIMER
 import gg.rsmod.plugins.content.combat.specialattack.SpecialAttacks
 import gg.rsmod.plugins.content.mechanics.pvp.BeginnerProtection
+import gg.rsmod.plugins.content.mechanics.pvp.CityGuards
 import gg.rsmod.plugins.content.mechanics.pvp.PvpSkull
 import gg.rsmod.plugins.content.combat.strategy.MeleeCombatStrategy
 import gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell
@@ -177,7 +178,13 @@ suspend fun cycle(it: QueueTask): Boolean {
             val pawnInMulti = pawn.tile.isMulti(pawn.world)
             val targetInMulti = target.tile.isMulti(target.world)
 
-            if (pawnInMulti || targetInMulti) {
+            // Deadman guards (OSRS Wiki): "Multiple guards are able to attack the player regardless
+            // of the location's multicombat area status" - a guard is never held back by, and never
+            // holds back, the single-combat "already under attack" rule.
+            val guardInvolved = CityGuards.ignoresSingleCombat(pawn) || CityGuards.ignoresSingleCombat(target)
+            if (guardInvolved) {
+                // no single-combat restriction
+            } else if (pawnInMulti || targetInMulti) {
                 if (!pawnInMulti && pawn.isBeingAttacked() && pawn.getLastHitBy() != target) {
                     if (pawn is Player) {
                         pawn.message("I'm already under attack!")

@@ -82,6 +82,13 @@ object PvpSkull {
         markAggression(attacker, victim)
     }
 
+    /** Owner retest helper (`skullme` command): the same 5-minute skull + pause tracking a real
+     * unprovoked attack gives, without needing a second account. */
+    fun applyTestSkull(player: Player) {
+        player.skull(SkullIcon.RED, SKULL_DURATION_CYCLES)
+        armPauseTracking(player)
+    }
+
     /**
      * Refreshes [victim]'s memory of [attacker] as their current PvP
      * aggressor, keeping retaliation recognized for as long as the fight

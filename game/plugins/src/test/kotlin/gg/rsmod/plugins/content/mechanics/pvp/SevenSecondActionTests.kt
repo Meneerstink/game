@@ -3,6 +3,7 @@ package gg.rsmod.plugins.content.mechanics.pvp
 import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.attr.AttributeMap
 import gg.rsmod.game.model.entity.Player
+import gg.rsmod.game.model.interf.InterfaceSet
 import gg.rsmod.game.model.timer.TimerMap
 import io.mockk.every
 import io.mockk.mockk
@@ -12,8 +13,8 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 /**
- * Deadman PvP guards plan (2026-09-16) coverage for [SevenSecondAction]: the shared 7-second
- * countdown used by logout, non-teleport transport and skulled teleports.
+ * Deadman 7-second timer interface coverage for [SevenSecondAction]: the shared countdown used by
+ * logout, non-teleport transport and skulled teleports.
  */
 class SevenSecondActionTests {
     @Test
@@ -25,7 +26,14 @@ class SevenSecondActionTests {
 
         assertTrue(SevenSecondAction.isActive(player))
         assertEquals(SevenSecondAction.DURATION_CYCLES, player.timers[SevenSecondAction.COUNTDOWN_TIMER])
+        assertEquals(7, SevenSecondAction.secondsLeft(player))
         assertFalse(ran)
+    }
+
+    @Test
+    fun `countdown text counts whole seconds in the chatbox`() {
+        assertEquals("Logging out in 7 seconds...", SevenSecondAction.countdownText(SevenSecondAction.Kind.LOGOUT, 7))
+        assertEquals("Teleporting in 1 second...", SevenSecondAction.countdownText(SevenSecondAction.Kind.TELEPORT, 1))
     }
 
     @Test
@@ -87,8 +95,24 @@ class SevenSecondActionTests {
     }
 
     @Test
-    fun `onZoneCheck does not cancel a countdown while the player stays on the same tile`() {
-        val player = newPlayer(Tile(3200, 3200, 0))
+    fun `onZoneCheck cancels the countdown when the chatbox timer interface is closed or replaced`() {
+        val interfaces = newInterfaces()
+        val player = newPlayer(Tile(3200, 3200, 0), interfaces)
+        var ran = false
+        SevenSecondAction.start(player, SevenSecondAction.Kind.LOGOUT) { ran = true }
+        assertTrue(interfaces.isVisible(SevenSecondAction.CHATBOX_INTERFACE), "start must open the chatbox timer interface")
+
+        interfaces.close(752, 13)
+        SevenSecondAction.onZoneCheck(player)
+
+        assertFalse(SevenSecondAction.isActive(player), "closing the interface must cancel the countdown")
+        assertFalse(ran)
+    }
+
+    @Test
+    fun `onZoneCheck does not cancel a countdown while the player stays on the same tile with the interface open`() {
+        val interfaces = newInterfaces()
+        val player = newPlayer(Tile(3200, 3200, 0), interfaces)
         SevenSecondAction.start(player, SevenSecondAction.Kind.LOGOUT) {}
 
         SevenSecondAction.onZoneCheck(player)
@@ -96,11 +120,17 @@ class SevenSecondActionTests {
         assertTrue(SevenSecondAction.isActive(player))
     }
 
-    private fun newPlayer(tile: Tile): Player {
+    private fun newInterfaces(): InterfaceSet = InterfaceSet(mockk(relaxed = true))
+
+    private fun newPlayer(
+        tile: Tile,
+        interfaces: InterfaceSet = newInterfaces(),
+    ): Player {
         val player = mockk<Player>(relaxed = true)
         every { player.tile } returns tile
         every { player.attr } returns AttributeMap()
         every { player.timers } returns TimerMap()
+        every { player.interfaces } returns interfaces
         return player
     }
 }

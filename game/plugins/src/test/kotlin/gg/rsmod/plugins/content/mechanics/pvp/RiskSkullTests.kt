@@ -87,6 +87,18 @@ class RiskSkullTests {
     }
 
     @Test
+    fun `refresh shows at least a bronze skull plus the key count for a player carrying loot keys`() {
+        val player = newPlayer()
+        player.inventory[0] = Item(gg.rsmod.plugins.api.cfg.Items.LOOT_KEY, 1)
+        player.inventory[1] = Item(gg.rsmod.plugins.api.cfg.Items.LOOT_KEY_23697, 1)
+
+        RiskSkull.refresh(player, testValueProvider())
+
+        verify { player.skullIcon = SkullIcon.DMM_VERY_LOW_RISK.id }
+        verify { player.lootKeyIcons = 2 }
+    }
+
+    @Test
     fun `refresh clears the risk skull when nothing is at risk`() {
         // Start from a stale risk-tier icon so clearing it back to NONE is an observable change,
         // rather than the already-NONE default (which correctly makes refresh a no-op).

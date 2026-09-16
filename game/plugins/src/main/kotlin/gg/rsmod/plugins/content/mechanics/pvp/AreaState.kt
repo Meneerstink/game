@@ -253,14 +253,19 @@ object BankZones {
  * such as loot-key destruction.
  */
 object AreaState {
-    /** True if [tile] is inside an explicit real-bank safe zone. Ferox outside its bank is PvP-dangerous. */
+    /**
+     * True if [tile] is inside a Deadman guarded city ([GuardedZones]). Owner instruction
+     * 2026-09-16: safe/death zones follow the OSRS Deadman Mode map - whole guarded cities are
+     * safe, every other place (Wilderness, Ferox, Edgeville/Draynor/Al Kharid banks, ...) is a
+     * death zone. Supersedes the earlier bank-room-only model.
+     */
     @Suppress("UNUSED_PARAMETER")
     fun isSafe(
         tile: Tile,
         home: Tile,
-    ): Boolean = BankZones.isSafe(tile)
+    ): Boolean = GuardedZones.contains(tile)
 
-    /** R03.1: PvP is allowed everywhere outside safe zones - not only in the Wilderness. */
+    /** PvP is allowed everywhere outside the guarded cities - not only in the Wilderness. */
     fun isPvpAllowed(
         tile: Tile,
         home: Tile,

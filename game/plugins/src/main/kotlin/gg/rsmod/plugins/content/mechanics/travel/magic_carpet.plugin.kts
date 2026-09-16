@@ -41,7 +41,13 @@ STATIONS.forEach { origin ->
                 return@queue
             }
             val dest = destinations[choice - 1]
-            player.teleport(dest.tile.transform(1, 0), TeleportType.MODERN)
+            // Deadman (OSRS Wiki): non-teleport transport always opens the 7-second timer interface first.
+            gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction.start(
+                player,
+                gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction.Kind.TRANSPORT,
+            ) {
+                player.teleport(dest.tile.transform(1, 0), TeleportType.MODERN)
+            }
         }
     }
 }

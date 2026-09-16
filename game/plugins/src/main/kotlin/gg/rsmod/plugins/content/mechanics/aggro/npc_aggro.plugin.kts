@@ -5,7 +5,6 @@ import gg.rsmod.game.model.attr.LAST_MAP_BUILD_TIME
 import gg.rsmod.game.model.timer.ACTIVE_COMBAT_TIMER
 import gg.rsmod.plugins.content.areas.godwars.GodWars
 import gg.rsmod.plugins.content.combat.*
-import gg.rsmod.plugins.content.mechanics.pvp.BankSecurity
 import gg.rsmod.plugins.content.mechanics.pvp.CityGuards
 import java.lang.ref.WeakReference
 import kotlin.math.abs
@@ -80,9 +79,7 @@ fun aggroRadius(npc: Npc): Int =
 on_global_npc_spawn {
     if (aggroRadius(npc) > 0) {
         npc.aggroCheck =
-            if (npc.id == BankSecurity.BANK_GUARD_ID) {
-                { _, player -> BankSecurity.guardMayAttack(player) }
-            } else if (CityGuards.isGuard(npc)) {
+            if (CityGuards.isGuard(npc)) {
                 { guard, player -> CityGuards.mayAttack(guard, player) }
             } else {
                 defaultAggressiveness

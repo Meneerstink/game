@@ -4,47 +4,48 @@ import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.timer.TimerKey
+import gg.rsmod.plugins.api.ext.closeComponent
 import gg.rsmod.plugins.api.ext.filterableMessage
+import gg.rsmod.plugins.api.ext.openInterface
+import gg.rsmod.plugins.api.ext.setComponentText
 
 /**
- * Deadman PvP guards plan (owner-approved 2026-09-16), Batch 4: the shared 7-second countdown
- * used by logout, portal/POH entry, non-teleport transport (minecarts) and a skulled player's
- * teleports. "logging out, entering a portal (player-owned house) or using most non-teleport
- * transport (e.g. minecarts) opens a 7-second countdown in the chatbox; any action or being
- * attacked while it is open cancels it; after 7 uninterrupted seconds the action happens
- * automatically."
+ * Deadman 7-second timer interface (OSRS Wiki "Deadman Mode", owner instruction 2026-09-16):
+ * "attempting to log out, enter a portal (Player-owned house), or use most forms of non-teleport
+ * transportation such as minecarts will bring up a 7 second timer interface that will begin
+ * counting down in the chatbox. While this interface is active, the player must not perform any
+ * further actions or be attacked. After the timer interface stays open without interruption for 7
+ * seconds, the player will automatically perform the requested action." Skulled players get the
+ * same interface for every teleport ([gg.rsmod.plugins.content.magic.canTeleport]).
  *
- * Disclosed scope boundary (unhandled-route census): "any action" is wired for the two triggers
- * that matter for every use of this countdown - moving (tile change) and being attacked
- * ([Combat.postAttack] calls [cancel] on the target) - via the same per-cycle poll pattern
- * already used by [BankSecurity.monitor]/[CityGuards.onZoneCheck] (this revision has no generic
- * player-action event). Opening an interface, using an item, or other non-movement actions are
- * NOT exhaustively wired to cancellation; recorded here rather than silently claimed complete.
+ * The 667 cache has no Deadman-specific widget, so the countdown is shown in the chatbox on the
+ * single-line message interface 210 (the same chatbox slot every dialogue uses, so it works in
+ * fixed, resizable and fullscreen alike). The text is refreshed every cycle with the seconds left.
+ *
+ * Interruption: moving (tile change), being attacked ([gg.rsmod.plugins.content.combat.Combat.postAttack])
+ * and any action that closes or replaces the chatbox interface (clicking it away, opening another
+ * dialogue, a shop, the bank, ...) cancel the countdown; the pending action is dropped.
  */
 object SevenSecondAction {
-    /** 7 seconds, rounded up to the nearest 0.6s cycle - same rounding convention already used
-     * elsewhere in this codebase (e.g. BankSecurity.BANK_TIMER_TICKS for "10 seconds"). */
+    /** 7 seconds, rounded up to the nearest 0.6s cycle. */
     const val DURATION_CYCLES = 12
+
+    const val CHATBOX_INTERFACE = 210
+    const val CHATBOX_TEXT_COMPONENT = 1
 
     val COUNTDOWN_TIMER = TimerKey(tickOffline = false, resetOnDeath = true)
 
     private val PENDING_ACTION_ATTR = AttributeKey<() -> Unit>()
     private val LAST_TILE_ATTR = AttributeKey<Tile>()
+    private val LAST_SHOWN_SECONDS_ATTR = AttributeKey<Int>()
 
     /**
-     * A skulled player's teleport (owner spec: "Skulled players always get this interface for
-     * teleports too, even out of combat") is gated by [gg.rsmod.plugins.content.magic.canTeleport],
-     * which every existing teleport entrypoint (spellbook, tabs, jewellery, portals, NPC teleports,
-     * ...) already funnels through - see the class doc on that function. Disclosed simplification:
-     * true "happens automatically" completion (owner spec) would need a completion-callback plumbed
-     * through all ~15 call sites; instead, [canTeleport] returns false while the countdown runs and
-     * sets this flag once it finishes, so the SAME action becomes an instant pass on the player's
-     * next attempt (one extra click) rather than firing on its own. Recorded here, not silently
-     * presented as the fully automatic behaviour the owner described.
+     * Legacy one-click confirmation flag for the single-argument
+     * [gg.rsmod.plugins.content.magic.canTeleport] overload; every teleport entrypoint now passes
+     * its action to the two-argument overload, so the automatic completion path is the normal one.
      */
     val TELEPORT_CONFIRMED_ATTR = AttributeKey<Boolean>()
 
-    /** Consumes (clears) the confirmation flag and reports whether it was set. */
     fun consumeTeleportConfirmation(player: Player): Boolean {
         val confirmed = player.attr[TELEPORT_CONFIRMED_ATTR] == true
         if (confirmed) {
@@ -56,15 +57,25 @@ object SevenSecondAction {
     enum class Kind(
         val verb: String,
     ) {
-        LOGOUT("You will log out"),
-        PORTAL("You will enter the portal"),
-        TRANSPORT("You will board"),
-        TELEPORT("You will teleport"),
+        LOGOUT("Logging out"),
+        PORTAL("Entering the portal"),
+        TRANSPORT("Boarding"),
+        TELEPORT("Teleporting"),
     }
 
     val isActiveAttr = AttributeKey<Kind>()
 
     fun isActive(player: Player): Boolean = player.timers.exists(COUNTDOWN_TIMER)
+
+    /** Whole seconds for a cycle count (12 cycles = 7.2 s -> 7; 1 cycle = 0.6 s -> 1). */
+    fun secondsFor(cycles: Int): Int = Math.round(cycles * 0.6).toInt().coerceAtLeast(1)
+
+    fun secondsLeft(player: Player): Int = if (isActive(player)) secondsFor(player.timers[COUNTDOWN_TIMER]) else 0
+
+    fun countdownText(
+        kind: Kind,
+        seconds: Int,
+    ): String = "${kind.verb} in $seconds second${if (seconds == 1) "" else "s"}..."
 
     /** Starts the countdown, or is a no-op if one is already running. */
     fun start(
@@ -79,7 +90,29 @@ object SevenSecondAction {
         player.attr[isActiveAttr] = kind
         player.attr[LAST_TILE_ATTR] = player.tile
         player.timers[COUNTDOWN_TIMER] = DURATION_CYCLES
-        player.filterableMessage("${kind.verb} in 7 seconds. Any action or being attacked will cancel this.")
+        showInterface(player, kind, DURATION_CYCLES)
+        player.filterableMessage("Any action or being attacked will cancel this.")
+    }
+
+    private fun showInterface(
+        player: Player,
+        kind: Kind,
+        cyclesLeft: Int,
+    ) {
+        val seconds = secondsFor(cyclesLeft)
+        if (player.attr[LAST_SHOWN_SECONDS_ATTR] == seconds) return
+        if (player.attr[LAST_SHOWN_SECONDS_ATTR] == null) {
+            player.openInterface(interfaceId = CHATBOX_INTERFACE, parent = 752, child = 13)
+        }
+        player.attr[LAST_SHOWN_SECONDS_ATTR] = seconds
+        player.setComponentText(CHATBOX_INTERFACE, CHATBOX_TEXT_COMPONENT, countdownText(kind, seconds))
+    }
+
+    private fun hideInterface(player: Player) {
+        if (player.attr.has(LAST_SHOWN_SECONDS_ATTR) && player.interfaces.isVisible(CHATBOX_INTERFACE)) {
+            player.closeComponent(parent = 752, child = 13)
+        }
+        player.attr.remove(LAST_SHOWN_SECONDS_ATTR)
     }
 
     /** Cancels an in-progress countdown, if any. Safe/idempotent to call when none is active. */
@@ -94,29 +127,28 @@ object SevenSecondAction {
         player.attr.remove(PENDING_ACTION_ATTR)
         player.attr.remove(isActiveAttr)
         player.attr.remove(LAST_TILE_ATTR)
+        hideInterface(player)
         if (reason != null) {
             player.filterableMessage(reason)
         }
     }
 
-    /**
-     * Runs and clears the pending action; called by the countdown timer's own expiry hook.
-     * Explicitly clears [COUNTDOWN_TIMER] too (not just the attribute-backed state) so
-     * [isActive] is correct immediately regardless of whether the real per-cycle timer engine
-     * has also processed this key's own removeOnZero cleanup yet.
-     */
+    /** Runs and clears the pending action; called by the countdown timer's own expiry hook. */
     fun complete(player: Player) {
         val action = player.attr[PENDING_ACTION_ATTR]
         player.timers.remove(COUNTDOWN_TIMER)
         player.attr.remove(PENDING_ACTION_ATTR)
         player.attr.remove(isActiveAttr)
         player.attr.remove(LAST_TILE_ATTR)
+        hideInterface(player)
         action?.invoke()
     }
 
-    /** Movement-interruption poll, called every cycle from the same existing per-cycle timer
-     * [bank_entry_guard.plugin.kts] already polls (this revision has no generic player-step
-     * event). Cancels the moment the player's tile changes while a countdown is active. */
+    /**
+     * Per-cycle poll (from the shared zone monitor): cancels the moment the player moves or the
+     * chatbox interface is no longer the countdown (closed or replaced by another action), and
+     * otherwise refreshes the seconds shown.
+     */
     fun onZoneCheck(player: Player) {
         if (!isActive(player)) {
             return
@@ -124,6 +156,14 @@ object SevenSecondAction {
         val lastTile = player.attr[LAST_TILE_ATTR]
         if (lastTile != null && lastTile != player.tile) {
             cancel(player, "Your action was cancelled.")
+            return
         }
+        if (player.attr.has(LAST_SHOWN_SECONDS_ATTR) && !player.interfaces.isVisible(CHATBOX_INTERFACE)) {
+            player.attr.remove(LAST_SHOWN_SECONDS_ATTR)
+            cancel(player, "Your action was cancelled.")
+            return
+        }
+        val kind = player.attr[isActiveAttr] ?: return
+        showInterface(player, kind, player.timers[COUNTDOWN_TIMER])
     }
 }

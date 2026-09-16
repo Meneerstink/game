@@ -6,7 +6,8 @@ import gg.rsmod.plugins.content.drops.global.Seeds.allotmentSeedTable
 
 val varrockId = listOf(Npcs.GUARD_5919, Npcs.GUARD_5920)
 val faladorSwordId =
-    listOf(Npcs.GUARD, Npcs.GUARD_32, Npcs.GUARD_3228, Npcs.GUARD_3231, Npcs.GUARD_3232, Npcs.GUARD_3233)
+    // GUARD_3231 is the dedicated Deadman ranged guard (mechanics/pvp/CityGuards) and is defined there.
+    listOf(Npcs.GUARD, Npcs.GUARD_32, Npcs.GUARD_3228, Npcs.GUARD_3232, Npcs.GUARD_3233)
 val faladorBattleaxeId = listOf(Npcs.GUARD_3230, Npcs.GUARD_3241)
 val faladorCrossbowId = listOf(Npcs.GUARD_3229) // ranged npc combat is now supported (see Kree'arra), wired below
 val edgevilleId =
