@@ -77,14 +77,25 @@ fun crystalStatus(item: gg.rsmod.game.model.item.Item): String = "It has ${Cryst
     }
 }
 
+// "crystal items need to give a warning when your try to revert" (owner instruction, `cRYSTAL.rtf`, 2026-09-16).
 CrystalEquipment.REVERT_SEED.forEach { (id, seed) ->
     if (crystalHasOption(id, "Revert", worn = false)) {
         on_item_option(item = id, option = "Revert") {
             val slot = player.getInteractingItemSlot()
-            player.inventory[slot] ?: return@on_item_option
-            player.inventory[slot] = gg.rsmod.game.model.item.Item(seed, 1)
+            player.inventory[slot]?.takeIf { it.id == id } ?: return@on_item_option
             val itemName = world.definitions.get(ItemDef::class.java, seed).name.lowercase()
-            player.message("You revert the item back into a $itemName. Any crystal shard charges are lost.")
+            player.queue {
+                val choice =
+                    options(
+                        "Yes, revert it.",
+                        "No, cancel.",
+                        title = "Revert this item back into a $itemName? Any crystal shard charges are lost.",
+                    )
+                if (choice != 1) return@queue
+                player.inventory[slot]?.takeIf { it.id == id } ?: return@queue
+                player.inventory[slot] = gg.rsmod.game.model.item.Item(seed, 1)
+                player.message("You revert the item back into a $itemName. Any crystal shard charges are lost.")
+            }
         }
     }
 }

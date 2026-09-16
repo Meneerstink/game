@@ -27,9 +27,28 @@ import kotlin.math.floor
  * Uncharge/Revert (OSRS Wiki "Bow of faerdhinen#Reverting", "Crystal equipment#Reverting", "Crystal bow#Reverting", fetched
  * 2026-09-16): the Bow of Faerdhinen's "Uncharge" only discharges it to the inactive item, shards lost, no seed (a direct
  * seed reversion needs a Prifddinas singing bowl, not implemented); crystal armour's "Revert" returns exactly one Crystal
- * armour seed per piece, charges lost; the classic Crystal bow's "Revert" returns exactly one Crystal seed. SOURCE_GAP (not
- * built, recorded): seed singing itself and Bow of Faerdhinen (c)'s own Uncharge result (it "stays charged permanently", so
- * what discharging it produces is unstated). "Non-monster sources" is read as: only NPC hits use armour charges.
+ * armour seed per piece, charges lost; the classic Crystal bow's "Revert" returns exactly one Crystal seed.
+ *
+ * SEED SINGING (owner document `cRYSTAL.rtf`, 2026-09-16, quoting OSRS Wiki "Crystal equipment#Creation" and "Bow of
+ * Faerdhinen#Creation" verbatim - the singing bowl gap above is now closed by [ARMOUR_CREATION]/[BowfaCreation]):
+ * - Helm: 50 shards + 1 crystal armour seed, 70 Smithing + 70 Crafting (boostable), 2,500 XP in both, starts at 2,500 charges.
+ * - Legs: 100 shards + 2 seeds, 72 Smithing + 72 Crafting (boostable), 5,000 XP in both, starts at 2,500 charges.
+ * - Body: 150 shards + 3 seeds, 74 Smithing + 74 Crafting (boostable), 7,500 XP in both, starts at 2,500 charges.
+ * - Bow of Faerdhinen: 100 shards + 1 enhanced crystal weapon seed, requires completion of Song of the Elves (stubbed
+ *   completed - see [gg.rsmod.plugins.content.items.osrs.QuestStubs] - not built as a real quest, per owner instruction),
+ *   82 Smithing + 82 Crafting (boostable), 5,000 XP in both, starts at 10,000 charges.
+ * - If the player doesn't meet the Smithing/Crafting requirement, "Conwenna or Reese" can sing it for an extra 60 shards
+ *   (50 for the bow), no XP granted. Conwenna is not present anywhere in this cache (SOURCE_GAP, not invented); Reese
+ *   (NPC 9623) is, so only her assist route is wired.
+ * - Upgrading: bow + 2,000 shards at the singing bowl -> Bow of Faerdhinen (c), 82 Smithing[b]/Crafting[b], no XP; Reese's
+ *   fee for this is an extra 1,000 shards. Passive corruption progress from consuming charges ("Check" option, 1% per
+ *   2,000 charges used) is SOURCE_GAP/NOT BUILT - only the direct 2,000-shard singing-bowl route is implemented.
+ * - Reverting the bow to its seed: inactive bow + 250 shards at the singing bowl -> enhanced crystal weapon seed (the
+ *   existing plain "Uncharge" stays a shard-losing discharge only, per the Wiki's "not recommended" framing).
+ * SOURCE_GAP (not built, recorded): Bow of Faerdhinen (c)'s own Uncharge result (stated to stay charged permanently, so
+ * discharging it is unstated); crystal/Elven-Clan armour recolouring via Lliann's Wares and the crystal of Meilyr revert
+ * (needs colour-variant item ids this cache does not carry - not invented). "Non-monster sources" is read as: only NPC
+ * hits use armour charges.
  */
 object CrystalEquipment {
     const val CHARGES_PER_SHARD = 100
@@ -130,5 +149,38 @@ object CrystalEquipment {
             if (ARMOUR.none { it.active == item.id }) return@forEach
             player.equipment[type.id] = withCharges(item, charges(item) - 1)
         }
+    }
+
+    /** Singing bowl creation recipe for one crystal armour piece (see the class doc's "SEED SINGING" section). */
+    data class CreationRecipe(
+        val active: Int,
+        val shards: Int,
+        val seeds: Int,
+        val smithing: Int,
+        val crafting: Int,
+        val xp: Double,
+        /** Extra shards Reese charges instead of the level requirement. */
+        val npcFeeShards: Int,
+        val startCharges: Int,
+    )
+
+    val ARMOUR_CREATION: Map<Int, CreationRecipe> =
+        mapOf(
+            Items.CRYSTAL_HELM to CreationRecipe(Items.CRYSTAL_HELM, shards = 50, seeds = 1, smithing = 70, crafting = 70, xp = 2500.0, npcFeeShards = 60, startCharges = 2500),
+            Items.CRYSTAL_LEGS to CreationRecipe(Items.CRYSTAL_LEGS, shards = 100, seeds = 2, smithing = 72, crafting = 72, xp = 5000.0, npcFeeShards = 60, startCharges = 2500),
+            Items.CRYSTAL_BODY to CreationRecipe(Items.CRYSTAL_BODY, shards = 150, seeds = 3, smithing = 74, crafting = 74, xp = 7500.0, npcFeeShards = 60, startCharges = 2500),
+        )
+
+    /** Bow of Faerdhinen singing-bowl creation, corruption and seed-revert constants (see the class doc). */
+    object BowfaCreation {
+        const val SHARDS = 100
+        const val SMITHING = 82
+        const val CRAFTING = 82
+        const val XP = 5000.0
+        const val NPC_FEE_SHARDS = 50
+        const val START_CHARGES = 10_000
+        const val CORRUPT_SHARDS = 2000
+        const val CORRUPT_NPC_FEE_SHARDS = 1000
+        const val REVERT_SHARDS = 250
     }
 }

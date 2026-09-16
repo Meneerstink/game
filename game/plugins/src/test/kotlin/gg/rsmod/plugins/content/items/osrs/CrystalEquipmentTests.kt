@@ -80,4 +80,53 @@ class CrystalEquipmentTests {
         assertTrue(Items.CRYSTAL_BOW_OSRS_INACTIVE !in CrystalEquipment.REVERT_SEED)
         assertTrue(Items.BOW_OF_FAERDHINEN !in CrystalEquipment.REVERT_SEED)
     }
+
+    @Test
+    fun `singing bowl creation recipes match the owner's cRYSTAL document (OSRS Wiki quoted verbatim)`() {
+        // Enumerates all three armour pieces, not one exemplar - a wrong entry names itself in the assertion message.
+        val expected =
+            mapOf(
+                Items.CRYSTAL_HELM to CrystalEquipment.CreationRecipe(Items.CRYSTAL_HELM, shards = 50, seeds = 1, smithing = 70, crafting = 70, xp = 2500.0, npcFeeShards = 60, startCharges = 2500),
+                Items.CRYSTAL_LEGS to CrystalEquipment.CreationRecipe(Items.CRYSTAL_LEGS, shards = 100, seeds = 2, smithing = 72, crafting = 72, xp = 5000.0, npcFeeShards = 60, startCharges = 2500),
+                Items.CRYSTAL_BODY to CrystalEquipment.CreationRecipe(Items.CRYSTAL_BODY, shards = 150, seeds = 3, smithing = 74, crafting = 74, xp = 7500.0, npcFeeShards = 60, startCharges = 2500),
+            )
+        expected.forEach { (active, recipe) ->
+            assertEquals(recipe, CrystalEquipment.ARMOUR_CREATION[active], "recipe mismatch for item $active")
+        }
+        assertEquals(expected.keys, CrystalEquipment.ARMOUR_CREATION.keys)
+
+        assertEquals(100, CrystalEquipment.BowfaCreation.SHARDS)
+        assertEquals(82, CrystalEquipment.BowfaCreation.SMITHING)
+        assertEquals(82, CrystalEquipment.BowfaCreation.CRAFTING)
+        assertEquals(5000.0, CrystalEquipment.BowfaCreation.XP)
+        assertEquals(50, CrystalEquipment.BowfaCreation.NPC_FEE_SHARDS)
+        assertEquals(10_000, CrystalEquipment.BowfaCreation.START_CHARGES)
+        assertEquals(2000, CrystalEquipment.BowfaCreation.CORRUPT_SHARDS)
+        assertEquals(1000, CrystalEquipment.BowfaCreation.CORRUPT_NPC_FEE_SHARDS)
+        assertEquals(250, CrystalEquipment.BowfaCreation.REVERT_SHARDS)
+    }
+
+    @Test
+    fun `singing bowl, corruption, bow seed-revert and revert warnings are wired in`() {
+        val bowlPlugin = File("src/main/kotlin/gg/rsmod/plugins/content/items/osrs/crystal_singing_bowl.plugin.kts").readText()
+        assertTrue("check(singingBowls.size == 50)" in bowlPlugin, "the real cache singing bowl roster must be enumerated, not one hardcoded id")
+        assertTrue("Items.CRYSTAL_ARMOUR_SEED, obj = bowl" in bowlPlugin)
+        assertTrue("Items.ENHANCED_CRYSTAL_WEAPON_SEED, obj = bowl" in bowlPlugin)
+        assertTrue("fun corruptBow(" in bowlPlugin && "CORRUPT_SHARDS" in bowlPlugin)
+        assertTrue("fun revertBowToSeed(" in bowlPlugin && "REVERT_SHARDS" in bowlPlugin)
+        assertTrue("Npcs.REESE" in bowlPlugin, "Conwenna is absent from this cache; only Reese's assist route is wired")
+        assertTrue("QuestStubs.songOfTheElvesCompleted()" in bowlPlugin, "bow creation must check the Song of the Elves stub")
+
+        val questStub = File("src/main/kotlin/gg/rsmod/plugins/content/items/osrs/QuestStubs.kt").readText()
+        assertTrue("fun songOfTheElvesCompleted(): Boolean = true" in questStub)
+
+        // "crystal items need to give a warning when your try to revert" (owner instruction) - every Revert path confirms first.
+        val crystalPlugin = File("src/main/kotlin/gg/rsmod/plugins/content/items/osrs/crystal.plugin.kts").readText()
+        val revertBlockStart = crystalPlugin.indexOf("REVERT_SEED.forEach")
+        val revertAssignment = crystalPlugin.indexOf("player.inventory[slot] = gg.rsmod.game.model.item.Item(seed, 1)")
+        val revertConfirm = crystalPlugin.indexOf("options(", revertBlockStart)
+        assertTrue(revertBlockStart in 0 until revertConfirm && revertConfirm in 0 until revertAssignment, "armour Revert must ask before executing")
+        val bowsPlugin = File("src/main/kotlin/gg/rsmod/plugins/content/items/osrs/osrs_bows.plugin.kts").readText()
+        assertTrue("Revert this item back into a crystal seed?" in bowsPlugin, "classic crystal bow Revert must also warn")
+    }
 }

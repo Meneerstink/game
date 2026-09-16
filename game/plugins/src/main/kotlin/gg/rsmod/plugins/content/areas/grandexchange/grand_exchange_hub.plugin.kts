@@ -52,6 +52,11 @@ spawn_npc(npc = Npcs.PENGUIN_5428, x = 3176, z = 3500, walkRadius = 8, direction
 // A cache-backed obelisk definition with the existing Infuse-pouch/Renew-points handlers.
 spawn_obj(obj = 50205, x = 3164, z = 3497, type = 10, rot = 0)
 
+// Owner instruction (`cRYSTAL.rtf`, 2026-09-16): "put the singing bowl in grand exchange" for convenient access, instead
+// of only Prifddinas (not built here - Phase-5-style scope). The real cache object/options are used (see
+// `crystal_singing_bowl.plugin.kts`), not an invented tradeable item.
+spawn_obj(obj = Objs.SINGING_BOWL, x = 3163, z = 3494, type = 10, rot = 0)
+
 // A dedicated market-guard cache id prevents changing ordinary guards elsewhere in the world.
 val bankGuardId = BankSecurity.BANK_GUARD_ID
 set_combat_def(bankGuardId) {

@@ -206,11 +206,18 @@ on_item_option(item = Items.VENATOR_SHARD, option = "Combine") {
     player.inventory.add(Items.VENATOR_BOW_UNCHARGED, 1)
 }
 
-// Crystal bow: "When uncharged, it can also be converted back into a crystal weapon seed" (the charged bow's Revert is not sourced).
+// Crystal bow: "When uncharged, it can also be converted back into a crystal weapon seed" (the charged bow's Revert is not
+// sourced). Warns before reverting, per the owner's "crystal items need to give a warning when your try to revert"
+// instruction (`cRYSTAL.rtf`, 2026-09-16).
 if (bowHasOption(Items.CRYSTAL_BOW_OSRS_INACTIVE, "Revert", worn = false)) {
     on_item_option(item = Items.CRYSTAL_BOW_OSRS_INACTIVE, option = "Revert") {
         val slot = player.getInteractingItemSlot()
         if (player.inventory[slot]?.id != Items.CRYSTAL_BOW_OSRS_INACTIVE) return@on_item_option
-        player.inventory[slot] = Item(Items.CRYSTAL_SEED)
+        player.queue {
+            val choice = options("Yes, revert it.", "No, cancel.", title = "Revert this item back into a crystal seed?")
+            if (choice != 1) return@queue
+            if (player.inventory[slot]?.id != Items.CRYSTAL_BOW_OSRS_INACTIVE) return@queue
+            player.inventory[slot] = Item(Items.CRYSTAL_SEED)
+        }
     }
 }
