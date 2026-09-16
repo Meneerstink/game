@@ -10,7 +10,7 @@ import gg.rsmod.plugins.content.mechanics.death.ItemDefCostValueProvider
 import gg.rsmod.plugins.content.mechanics.death.ItemRiskValueProvider
 
 /**
- * Risk-coloured skulls (master plan section 5 "Deadman-elementen"): a five-tier icon showing
+ * Risk-coloured skulls (master plan section 1C "Deadman-style onderdelen"): a five-tier icon showing
  * how much value a player currently has at risk of loss on death, distinct from the real PK
  * [SkullIcon.RED] skull ([PvpSkull]). Wires up [SkullIcon.DMM_VERY_HIGH_RISK]..
  * [SkullIcon.DMM_VERY_LOW_RISK] - real cache-verified Deadman Mode icon ids that already
@@ -22,17 +22,16 @@ import gg.rsmod.plugins.content.mechanics.death.ItemRiskValueProvider
  * now (i.e. excluded by Protect Item/skull-based protected-stack count), not raw total held
  * wealth, matching the real Deadman Mode concept this table is sourced from.
  *
- * Thresholds are the master plan's own confirmed starting values (its table is explicitly
- * marked "Exacte bedragen later balancen" - provisional but authoritative until an owner
- * decision retunes them):
+ * Thresholds are the owner's explicit 2026-09-16 values (Deadman PvP guards plan), superseding
+ * the master plan's earlier provisional table ("Exacte bedragen later balancen"):
  *
- * | Tier   | Risk        |
- * |--------|-------------|
- * | Bronze | < 250k      |
- * | Iron   | 250k - 1m   |
- * | Green  | 1m - 3m     |
- * | Blue   | 3m - 10m    |
- * | Red    | 10m+        |
+ * | Tier   | Risk                  |
+ * |--------|-----------------------|
+ * | Bronze | <= 200,000            |
+ * | Iron   | 200,001 - 800,000     |
+ * | Green  | 800,001 - 2,000,000   |
+ * | Blue   | 2,000,001 - 8,000,000 |
+ * | Red    | 8,000,001+            |
  *
  * A player with nothing at risk (e.g. an empty inventory/equipment) shows no risk skull at all
  * ([SkullIcon.NONE]) - not in the plan's table, but the only sane behaviour for the zero case.
@@ -42,18 +41,18 @@ import gg.rsmod.plugins.content.mechanics.death.ItemRiskValueProvider
  * Mode shows RED instead of the risk-tier icon while genuinely PK-skulled.
  */
 object RiskSkull {
-    const val BRONZE_MAX = 250_000L
-    const val IRON_MAX = 1_000_000L
-    const val GREEN_MAX = 3_000_000L
-    const val BLUE_MAX = 10_000_000L
+    const val BRONZE_MAX = 200_000L
+    const val IRON_MAX = 800_000L
+    const val GREEN_MAX = 2_000_000L
+    const val BLUE_MAX = 8_000_000L
 
     fun tierFor(riskedValue: Long): SkullIcon =
         when {
             riskedValue <= 0L -> SkullIcon.NONE
-            riskedValue < BRONZE_MAX -> SkullIcon.DMM_VERY_LOW_RISK
-            riskedValue < IRON_MAX -> SkullIcon.DMM_LOW_RISK
-            riskedValue < GREEN_MAX -> SkullIcon.DMM_MEDIUM_RISK
-            riskedValue < BLUE_MAX -> SkullIcon.DMM_HIGH_RISK
+            riskedValue <= BRONZE_MAX -> SkullIcon.DMM_VERY_LOW_RISK
+            riskedValue <= IRON_MAX -> SkullIcon.DMM_LOW_RISK
+            riskedValue <= GREEN_MAX -> SkullIcon.DMM_MEDIUM_RISK
+            riskedValue <= BLUE_MAX -> SkullIcon.DMM_HIGH_RISK
             else -> SkullIcon.DMM_VERY_HIGH_RISK
         }
 

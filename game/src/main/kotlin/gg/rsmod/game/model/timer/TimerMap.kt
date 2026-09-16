@@ -11,6 +11,27 @@ import com.fasterxml.jackson.annotation.JsonProperty
 class TimerMap {
     private var timers: MutableMap<TimerKey, Int> = HashMap(0)
 
+    /**
+     * Keys that should not tick down on the owning pawn's per-cycle [gg.rsmod.game.model.entity.Pawn.timerCycle]
+     * pass this cycle (Deadman PvP guards plan, 2026-09-16: the PK skull timer pauses while the
+     * player is in an instanced area or has been standing on the same tile for about a minute).
+     * Deliberately a small, generic, opt-in set on the existing timer map rather than a new
+     * parallel timer system: every other [TimerKey] consumer is unaffected unless it explicitly
+     * pauses a key. Not persisted - pause state is re-derived from live player state every cycle
+     * by whichever plugin owns the paused key, so it does not need to survive logout/reconnect.
+     */
+    private val pausedKeys: MutableSet<TimerKey> = HashSet(0)
+
+    fun pause(key: TimerKey) {
+        pausedKeys.add(key)
+    }
+
+    fun resume(key: TimerKey) {
+        pausedKeys.remove(key)
+    }
+
+    fun isPaused(key: TimerKey): Boolean = key in pausedKeys
+
     operator fun get(key: TimerKey): Int = timers[key]!!
 
     operator fun set(
@@ -29,10 +50,12 @@ class TimerMap {
         if (timers.containsKey(key)) {
             timers.remove(key)
         }
+        pausedKeys.remove(key)
     }
 
     fun clear() {
         timers.clear()
+        pausedKeys.clear()
     }
 
     fun removeIf(predicate: (TimerKey) -> Boolean) {

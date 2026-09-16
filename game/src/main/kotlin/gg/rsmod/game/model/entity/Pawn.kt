@@ -314,9 +314,19 @@ abstract class Pawn(
          * ConcurrentModificationException while the map was still being iterated and aborted
          * the rest of the pawn's cycle for that tick.
          */
+        // Most pawns have no timers. Avoid creating a HashMap iterator for every idle NPC.
+        if (!timers.isNotEmpty) return
+
         var expired: MutableList<TimerKey>? = null
         for (entry in timers.getTimers().entries) {
             val key = entry.key
+            // Deadman PvP guards plan (2026-09-16): a paused key (see TimerMap.pause) does not
+            // tick this cycle at all - neither decremented nor eligible to expire - so whichever
+            // plugin paused it (e.g. PvpSkull while the player is instanced/same-tile-stalled)
+            // can freeze the countdown without a race against this same decrement pass.
+            if (timers.isPaused(key)) {
+                continue
+            }
             val updatedTime = if (key.tickForward) entry.value + 1 else entry.value - 1
             entry.setValue(updatedTime)
             if (updatedTime <= 0 && !key.tickForward) {

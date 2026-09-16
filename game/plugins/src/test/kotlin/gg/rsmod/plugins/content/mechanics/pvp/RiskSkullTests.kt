@@ -17,25 +17,25 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 /**
- * Coverage for [RiskSkull] (PvP zone/timers → skull/risk/death further-foundations pass,
- * 2026-09-02 - see `RSPS_DECISIONS.md`): the tier thresholds match the master plan's
- * Bronze/Iron/Green/Blue/Red table exactly, [RiskSkull.calculateRiskedValue] reuses
+ * Coverage for [RiskSkull] (Deadman PvP guards plan, 2026-09-16, superseding the earlier
+ * provisional master-plan table): the tier thresholds match the owner's explicit
+ * Bronze/Iron/Green/Blue/Red values exactly, [RiskSkull.calculateRiskedValue] reuses
  * [gg.rsmod.plugins.content.mechanics.death.DeathItemRiskCalculator] so it only counts stacks
  * that would actually be lost, and [RiskSkull.refresh] never overwrites a real PK RED skull.
  */
 class RiskSkullTests {
     @Test
-    fun `tierFor maps every threshold boundary to the master plan's table`() {
+    fun `tierFor maps every threshold boundary to the owner's 2026-09-16 table`() {
         assertEquals(SkullIcon.NONE, RiskSkull.tierFor(0))
         assertEquals(SkullIcon.DMM_VERY_LOW_RISK, RiskSkull.tierFor(1))
-        assertEquals(SkullIcon.DMM_VERY_LOW_RISK, RiskSkull.tierFor(249_999))
-        assertEquals(SkullIcon.DMM_LOW_RISK, RiskSkull.tierFor(250_000))
-        assertEquals(SkullIcon.DMM_LOW_RISK, RiskSkull.tierFor(999_999))
-        assertEquals(SkullIcon.DMM_MEDIUM_RISK, RiskSkull.tierFor(1_000_000))
-        assertEquals(SkullIcon.DMM_MEDIUM_RISK, RiskSkull.tierFor(2_999_999))
-        assertEquals(SkullIcon.DMM_HIGH_RISK, RiskSkull.tierFor(3_000_000))
-        assertEquals(SkullIcon.DMM_HIGH_RISK, RiskSkull.tierFor(9_999_999))
-        assertEquals(SkullIcon.DMM_VERY_HIGH_RISK, RiskSkull.tierFor(10_000_000))
+        assertEquals(SkullIcon.DMM_VERY_LOW_RISK, RiskSkull.tierFor(200_000))
+        assertEquals(SkullIcon.DMM_LOW_RISK, RiskSkull.tierFor(200_001))
+        assertEquals(SkullIcon.DMM_LOW_RISK, RiskSkull.tierFor(800_000))
+        assertEquals(SkullIcon.DMM_MEDIUM_RISK, RiskSkull.tierFor(800_001))
+        assertEquals(SkullIcon.DMM_MEDIUM_RISK, RiskSkull.tierFor(2_000_000))
+        assertEquals(SkullIcon.DMM_HIGH_RISK, RiskSkull.tierFor(2_000_001))
+        assertEquals(SkullIcon.DMM_HIGH_RISK, RiskSkull.tierFor(8_000_000))
+        assertEquals(SkullIcon.DMM_VERY_HIGH_RISK, RiskSkull.tierFor(8_000_001))
         assertEquals(SkullIcon.DMM_VERY_HIGH_RISK, RiskSkull.tierFor(50_000_000))
     }
 
@@ -65,7 +65,7 @@ class RiskSkullTests {
         val player = newPlayer()
         // Four 500k stacks: an unskulled player without Protect Item keeps their top 3 highest-
         // value stacks safe, so only the 4th is actually at risk of loss - 500_000 lands in the
-        // Iron/DMM_LOW_RISK band (250k-1m).
+        // Iron/DMM_LOW_RISK band (200,001-800,000).
         player.inventory[0] = Item(5, 1)
         player.inventory[1] = Item(5, 1)
         player.inventory[2] = Item(5, 1)
