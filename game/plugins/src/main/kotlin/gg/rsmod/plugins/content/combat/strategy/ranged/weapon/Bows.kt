@@ -27,6 +27,14 @@ object Bows {
             Items.CRYSTAL_BOW_OSRS_INACTIVE,
         )
 
+    /** The dark bow and its 667 recoloured copies (two arrows per attack, Descent of Darkness). */
+    val DARK_BOWS =
+        setOf(
+            Items.DARK_BOW, Items.DARK_BOW_15701, Items.DARK_BOW_15702, Items.DARK_BOW_15703, Items.DARK_BOW_15704,
+            // OSRS painted dark bows (batch kits2).
+            Items.DARK_BOW_GREEN, Items.DARK_BOW_BLUE, Items.DARK_BOW_YELLOW, Items.DARK_BOW_WHITE,
+        )
+
     val LONG_BOWS =
         arrayOf(
             Items.LONGBOW,
@@ -35,6 +43,5 @@ object Bows {
             Items.WILLOW_LONGBOW,
             Items.YEW_LONGBOW,
             Items.MAGIC_LONGBOW,
-            Items.DARK_BOW,
         )
 }

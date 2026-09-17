@@ -11,6 +11,7 @@ import gg.rsmod.game.model.entity.Pawn
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.api.*
 import gg.rsmod.plugins.api.cfg.Items
+import gg.rsmod.plugins.api.cfg.Gfx
 import gg.rsmod.plugins.api.cfg.Sfx
 import gg.rsmod.plugins.api.ext.*
 import gg.rsmod.plugins.content.combat.Combat
@@ -53,7 +54,10 @@ object RangedCombatStrategy : CombatStrategy {
 
             var range =
                 when (weapon?.id) {
-                    Items.BLACK_SALAMANDER -> 1 // TODO ADD ALL SALAMANDERS
+                    Items.ORANGE_SALAMANDER,
+                    Items.RED_SALAMANDER,
+                    Items.BLACK_SALAMANDER,
+                    Items.SWAMP_LIZARD -> 1
                     in Darts.DARTS -> 3
                     Items.SLING, Items.KAYLES_SLING -> 2
                     in Knives.KNIVES -> 4
@@ -75,7 +79,12 @@ object RangedCombatStrategy : CombatStrategy {
                     // S4, 2026-09-03: OSRS Wiki "Twisted bow" - "attack range of 10 tiles ...
                     // matching the maximum range in the game", also matches A4's own sourced
                     // param 13 = 10 read from the pinned upstream item def.
-                    Items.TWISTED_BOW, in Bows.CRYSTAL_BOWS -> 10
+                    // Audit round 2026-09-17b: OSRS Wiki "Dark bow" infobox `attackrange = 10` plus "It has the
+                    // maximum possible attack range of 10, so the longrange attack style will not increase its
+                    // attack range" - the previous fix (2026-09-17, tx kits2) corrected the recolours' range from
+                    // the 667 default 7 to 9, but the sourced OSRS value is 10, one range tile short for every
+                    // dark bow variant (base, 667 recolours 15701-15704, OSRS painted green/blue/yellow/white).
+                    Items.TWISTED_BOW, in Bows.CRYSTAL_BOWS, in Bows.DARK_BOWS -> 10
                     else -> DEFAULT_ATTACK_RANGE
                 }
 
@@ -114,6 +123,11 @@ object RangedCombatStrategy : CombatStrategy {
 
             // Ammo slot first, then a worn Dizana's quiver's stored ammo (RangedAmmo).
             val fired = RangedAmmo.fired(pawn)
+            if (RangedAmmo.isSalamander(weapon?.id) && fired == null) {
+                pawn.message("You need swamp tar to use that salamander.")
+                pawn.resetFacePawn()
+                return false
+            }
             val crossbow = CrossbowType.values.firstOrNull { it.item == weapon?.id }
             if (crossbow != null && fired == null) {
                 val message =
@@ -164,6 +178,9 @@ object RangedCombatStrategy : CombatStrategy {
         var ammoDropAction: ((PawnHit).() -> Unit) = {}
         var boltAmmoId: Int? = null
 
+        // Dark bow: arrows available before the first arrow is used (a second arrow only fires when at least two were equipped).
+        val darkBowArrows = if (pawn is Player && pawn.getEquipment(EquipmentType.WEAPON)?.id in Bows.DARK_BOWS) RangedAmmo.fired(pawn)?.item?.amount ?: 0 else 0
+
         // The Toxic blowpipe fires its stored darts (charges on the item), never the weapon slot itself.
         val firedBlowpipe = pawn is Player && BlowpipeCombat.fire(pawn, target)
 
@@ -183,6 +200,11 @@ object RangedCombatStrategy : CombatStrategy {
                 }
 
             val fired = if (ammoSlot == EquipmentType.AMMO) RangedAmmo.fired(pawn) else null
+            val salamander = RangedAmmo.isSalamander(pawn.getEquipment(EquipmentType.WEAPON)?.id)
+            if (salamander) {
+                // Void's salamander_scorch/flare/blaze gfx entries all resolve to spotanim 953.
+                pawn.graphic(Gfx.GFX_953, height = 40)
+            }
             // The Tonalztics of Ralos is thrown but never used up ("effectively provides unlimited ammo").
             val ammo =
                 if (ammoSlot == EquipmentType.AMMO) {
@@ -190,7 +212,7 @@ object RangedCombatStrategy : CombatStrategy {
                 } else {
                     pawn.getEquipment(ammoSlot)?.takeUnless { gg.rsmod.plugins.content.items.osrs.Tonalztics.isTonalztics(it.id) }
                 }
-            boltAmmoId = ammo?.id
+            boltAmmoId = ammo?.id?.takeUnless { salamander }
             /*
              * Create a projectile based on ammo.
              */
@@ -222,26 +244,31 @@ object RangedCombatStrategy : CombatStrategy {
             val ammoNeeded = if (ammoProjectile != null) ammoProjectile?.noAmmoNeeded() else true
             val breakOnImpact = if (ammoProjectile != null) ammoProjectile?.breakOnImpact() else false
             if (ammo != null) {
-                val chance = world.random(99)
-                val breakAmmo = chance in 0..19
-                // OSRS Wiki "Ava's device": metallic torso armour stops the retrieval effect (AvasDevices).
-                val device = !AvasDevices.interferes(pawn)
-                val dropAmmo =
-                    when {
-                        // Attractor 60 % saved / 20 % dropped / 20 % broken (was 10 % dropped); accumulator 72 / 8 / 20;
-                        // assembler 80 / 0 / 20 ("will never drop any ammo on the ground").
-                        device && pawn.hasEquipped(EquipmentType.CAPE, Items.AVAS_ATTRACTOR) -> chance in 20..39
-                        device && pawn.hasEquipped(EquipmentType.CAPE, Items.AVAS_ACCUMULATOR) -> chance in 20..27
-                        device && pawn.getEquipment(EquipmentType.CAPE)?.id in AvasDevices.ASSEMBLERS -> false
-                        else -> !breakAmmo
-                    }
-                val amount = 1
-                if (ammoNeeded == true) {
-                    if (breakAmmo || dropAmmo) {
-                        if (fired != null) RangedAmmo.consume(pawn, fired, amount) else pawn.equipment.remove(ammo.id, amount)
-                    }
-                    if (dropAmmo && breakOnImpact == false) {
-                        ammoDropAction = { world.spawn(GroundItem(ammo.id, amount, target.tile, pawn)) }
+                if (salamander) {
+                    // Void's salamander route consumes one swamp tar directly; it is not Ava-recoverable ammo.
+                    if (fired != null) RangedAmmo.consume(pawn, fired, 1) else pawn.equipment.remove(ammo.id, 1)
+                } else {
+                    val chance = world.random(99)
+                    val breakAmmo = chance in 0..19
+                    // OSRS Wiki "Ava's device": metallic torso armour stops the retrieval effect (AvasDevices).
+                    val device = !AvasDevices.interferes(pawn)
+                    val dropAmmo =
+                        when {
+                            // Attractor 60 % saved / 20 % dropped / 20 % broken (was 10 % dropped); accumulator 72 / 8 / 20;
+                            // assembler 80 / 0 / 20 ("will never drop any ammo on the ground").
+                            device && pawn.hasEquipped(EquipmentType.CAPE, Items.AVAS_ATTRACTOR) -> chance in 20..39
+                            device && pawn.hasEquipped(EquipmentType.CAPE, Items.AVAS_ACCUMULATOR) -> chance in 20..27
+                            device && pawn.getEquipment(EquipmentType.CAPE)?.id in AvasDevices.ASSEMBLERS -> false
+                            else -> !breakAmmo
+                        }
+                    val amount = 1
+                    if (ammoNeeded == true) {
+                        if (breakAmmo || dropAmmo) {
+                            if (fired != null) RangedAmmo.consume(pawn, fired, amount) else pawn.equipment.remove(ammo.id, amount)
+                        }
+                        if (dropAmmo && breakOnImpact == false) {
+                            ammoDropAction = { world.spawn(GroundItem(ammo.id, amount, target.tile, pawn)) }
+                        }
                     }
                 }
             }
@@ -326,6 +353,29 @@ object RangedCombatStrategy : CombatStrategy {
                 bonusDamage = shot?.bonusDamage ?: 0,
             )
         val damage = pawnHit.hit.hitmarks.sumOf { it.damage }
+        // Dark bow (OSRS Wiki "Dark bow", 2026-09-17): it fires two arrows per attack - "Each arrow fired has an independent chance to be saved
+        // by an Ava's device, and the bow may also be fired with only one arrow equipped". The second arrow rolls its own accuracy and damage.
+        // SOURCE_GAP: the second arrow's projectile/hitsplat offset (fired and landing with the first here).
+        if (pawn is Player && !firedBlowpipe && darkBowArrows >= 2) {
+            val secondFired = RangedAmmo.fired(pawn)
+            val secondArrow = secondFired?.item
+            val secondProjectile = secondArrow?.let { arrow -> RangedProjectile.values.firstOrNull { arrow.id in it.items } }
+            if (secondFired != null && secondArrow != null && secondProjectile != null) {
+                world.spawn(pawn.createProjectile(target, secondProjectile.gfx, secondProjectile.type))
+                val dropSecond = spendArrow(pawn, target, secondFired, secondArrow.id)
+                val secondHit =
+                    pawn.dealHit(
+                        target = target,
+                        maxHit = formula.getMaxHit(pawn, target),
+                        landHit = formula.getAccuracy(pawn, target) >= world.randomDouble(),
+                        delay = hitDelay,
+                        onHit = dropSecond,
+                        hitType = HitType.RANGE,
+                    )
+                val secondDamage = secondHit.hit.hitmarks.sumOf { it.damage }
+                if (secondDamage > 0) addCombatXp(pawn, target, secondDamage)
+            }
+        }
         // Chinchompas: up to 11/12 targets (9/10 in PvP) in the 3x3 around the target; secondary targets hit exactly when the
         // primary target is hit, each with its own damage roll (Chinchompas).
         if (chinchompa) {
@@ -443,6 +493,31 @@ object RangedCombatStrategy : CombatStrategy {
     }
 
     /** Also used for ranged special attack hits ([gg.rsmod.plugins.content.combat.specialattack.SpecialAttackXp]). */
+    /**
+     * Uses or drops one extra arrow exactly like the first arrow of an attack (20 % broken, otherwise dropped under the target unless an
+     * Ava's device saves it: attractor 60 % saved / 20 % dropped, accumulator 72 / 8, assembler 80 / 0). Returns the drop action.
+     */
+    private fun spendArrow(
+        pawn: Player,
+        target: Pawn,
+        fired: RangedAmmo.Fired,
+        arrowId: Int,
+    ): (PawnHit).() -> Unit {
+        val world = pawn.world
+        val chance = world.random(99)
+        val breakAmmo = chance in 0..19
+        val device = !AvasDevices.interferes(pawn)
+        val dropAmmo =
+            when {
+                device && pawn.hasEquipped(EquipmentType.CAPE, Items.AVAS_ATTRACTOR) -> chance in 20..39
+                device && pawn.hasEquipped(EquipmentType.CAPE, Items.AVAS_ACCUMULATOR) -> chance in 20..27
+                device && pawn.getEquipment(EquipmentType.CAPE)?.id in AvasDevices.ASSEMBLERS -> false
+                else -> !breakAmmo
+            }
+        if (breakAmmo || dropAmmo) RangedAmmo.consume(pawn, fired, 1)
+        return if (dropAmmo) ({ world.spawn(GroundItem(arrowId, 1, target.tile, pawn)) }) else ({})
+    }
+
     internal fun addCombatXp(
         player: Player,
         target: Pawn,
@@ -456,11 +531,17 @@ object RangedCombatStrategy : CombatStrategy {
         val combatExperience = (modDamage * 0.4) * multiplier
         val sharedExperience = (modDamage * 0.2) * multiplier
         var bonusRate = 1.0
-        if (mode == XpMode.RANGED_XP) {
-            bonusRate = player.addXp(Skills.RANGED, combatExperience, checkBrawlingGloves = true)
-        } else if (mode == XpMode.SHARED_XP) {
-            bonusRate = player.addXp(Skills.RANGED, sharedExperience, checkBrawlingGloves = true)
-            player.addXp(Skills.DEFENCE, sharedExperience * bonusRate)
+        when (mode) {
+            // Salamanders use this shared ranged combat path for all three style buttons; the
+            // selected button still determines the skill receiving combat XP.
+            XpMode.ATTACK_XP, XpMode.DEFENCE_XP -> Unit
+            XpMode.STRENGTH_XP -> bonusRate = player.addXp(Skills.STRENGTH, combatExperience, checkBrawlingGloves = true)
+            XpMode.RANGED_XP -> bonusRate = player.addXp(Skills.RANGED, combatExperience, checkBrawlingGloves = true)
+            XpMode.MAGIC_XP -> bonusRate = player.addXp(Skills.MAGIC, combatExperience, checkBrawlingGloves = true)
+            XpMode.SHARED_XP -> {
+                bonusRate = player.addXp(Skills.RANGED, sharedExperience, checkBrawlingGloves = true)
+                player.addXp(Skills.DEFENCE, sharedExperience * bonusRate)
+            }
         }
         player.addXp(Skills.CONSTITUTION, hitpointsExperience * bonusRate)
     }
