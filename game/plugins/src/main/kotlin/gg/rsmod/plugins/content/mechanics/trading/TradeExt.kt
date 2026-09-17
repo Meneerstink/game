@@ -1,6 +1,7 @@
 package gg.rsmod.plugins.content.mechanics.trading
 
 import gg.rsmod.game.model.attr.AttributeKey
+import gg.rsmod.game.model.attr.DEATH_FLAG
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.api.InterfaceDestination
 import gg.rsmod.plugins.api.ext.closeInterface
@@ -45,7 +46,10 @@ fun Player.removeTradeSession() {
     this.attr.remove(TRADE_ACCEPTED_ATTR)
     closeInterface(InterfaceDestination.MAIN_SCREEN)
     closeInterface(TradeSession.OVERLAY_INTERFACE)
-    this.unlock()
+    // A trade ended by death must not release the death sequence's own lock.
+    if (attr[DEATH_FLAG] != true) {
+        this.unlock()
+    }
 }
 
 /**

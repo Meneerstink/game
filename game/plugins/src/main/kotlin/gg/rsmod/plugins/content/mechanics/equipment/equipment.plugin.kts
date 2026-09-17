@@ -112,10 +112,17 @@ fun bind_unequip(
 ) {
     on_button(interfaceId = 387, component = child) {
         val opt = player.getInteractingOpcode()
-        if (player.getTradeSession() != null) {
-            val partner = player.attr[INTERACTING_PLAYER_ATTR]?.get()
-            partner!!.removeTradeSession()
-            player.removeTradeSession()
+        /*
+         * Unequipping mid-trade puts an item into the real inventory that the trade's snapshot
+         * inventory does not know about; completing the trade would then overwrite it. The old
+         * code dropped both session attributes silently (leaving the partner's window open on a
+         * dead session, and NPE'd if the interacting player was no longer set). Decline properly
+         * for both sides instead - the same path the Decline button uses.
+         */
+        player.getTradeSession()?.let { session ->
+            session.decline(forced = true)
+            player.message("The trade has been cancelled.")
+            return@on_button
         }
         when (opt) {
             61 -> {

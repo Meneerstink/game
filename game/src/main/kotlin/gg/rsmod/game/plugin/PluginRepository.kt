@@ -1029,8 +1029,20 @@ class PluginRepository(
         pluginCount++
     }
 
+    /*
+     * Login and logout hooks are lifecycle-critical: one throwing hook must not skip the hooks
+     * after it (friend lists, familiars, trade sessions), and on logout it must not prevent the
+     * save and unregister that follow - which previously left the player stuck "online" and
+     * re-throwing every tick without ever being saved.
+     */
     fun executeLogin(p: Player) {
-        loginPlugins.forEach { logic -> p.executePlugin(logic) }
+        loginPlugins.forEach { logic ->
+            try {
+                p.executePlugin(logic)
+            } catch (e: Exception) {
+                logger.error("Login hook failed for username=${p.username}; continuing lifecycle.", e)
+            }
+        }
     }
 
     fun bindLogout(plugin: Plugin.() -> Unit) {
@@ -1039,7 +1051,13 @@ class PluginRepository(
     }
 
     fun executeLogout(p: Player) {
-        logoutPlugins.forEach { logic -> p.executePlugin(logic) }
+        logoutPlugins.forEach { logic ->
+            try {
+                p.executePlugin(logic)
+            } catch (e: Exception) {
+                logger.error("Logout hook failed for username=${p.username}; continuing lifecycle.", e)
+            }
+        }
     }
 
     fun bindComponentItemSwap(

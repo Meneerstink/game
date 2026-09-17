@@ -142,10 +142,22 @@ class Bank {
             val to = player.inventory
             val tab = BankTabs.getCurrentTab(player, fromSlot)
 
+            /*
+             * Withdraw-X resumes after an input dialog, by which time the bank may have shifted
+             * (another withdrawal, tab move, deposit). Only act if the slot still holds the exact
+             * item the click was made on; otherwise this withdrew a different item, or threw on an
+             * empty slot.
+             */
+            val slotItem = from[fromSlot]
+            if (fromSlot !in 0 until from.capacity || slotItem == null || slotItem.id != id) {
+                player.bank.dirty = true
+                return
+            }
+
             val amount = from.getItemCount(id).coerceAtMost(amt)
             val note = player.getVarp(WITHDRAW_AS_VARB) == 1
 
-            val copy = Item(from[fromSlot]!!, amount)
+            val copy = Item(slotItem, amount)
             val withdrawn =
                 from.transfer(to, item = copy, fromSlot = fromSlot, note = note, unnote = !note)?.completed ?: 0
             if (withdrawn > 0) {
@@ -170,6 +182,7 @@ class Bank {
         }
 
         fun open(player: Player) {
+            if (gg.rsmod.plugins.content.mechanics.pvp.BankSecurity.denyBank(player)) return
             if (gg.rsmod.plugins.content.mechanics.practicepvp.PracticePvp.isHoldingTempGear(player)) {
                 player.message("You can't access your bank while in a Practice PvP match.")
                 return
@@ -201,6 +214,7 @@ class Bank {
         }
 
         fun openDepositBox(player: Player) {
+            if (gg.rsmod.plugins.content.mechanics.pvp.BankSecurity.denyBank(player)) return
             if (gg.rsmod.plugins.content.mechanics.practicepvp.PracticePvp.isHoldingTempGear(player)) {
                 player.message("You can't access your bank while in a Practice PvP match.")
                 return

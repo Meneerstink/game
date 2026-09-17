@@ -26,6 +26,7 @@ import java.io.FileReader
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
+import java.nio.file.StandardCopyOption
 import java.util.*
 import kotlin.math.max
 
@@ -213,10 +214,20 @@ class JsonPlayerSerializer : PlayerSerializerService() {
                 privateFilterSetting = client.privateFilterSetting.settingId,
                 tradeFilterSetting = client.tradeFilterSetting.settingId,
             )
-        val writer = Files.newBufferedWriter(path.resolve(client.loginUsername))
+        /*
+         * Write to a sibling temp file and move it over the real save atomically. A JVM crash,
+         * native OOM or disk error mid-write used to leave a truncated save behind, which loads as
+         * MALFORMED and locks the account out with all progress gone.
+         */
+        val save = path.resolve(client.loginUsername)
+        val temp = path.resolve(client.loginUsername + ".tmp")
         val json = GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create()
-        json.toJson(data, writer)
-        writer.close()
+        Files.newBufferedWriter(temp).use { writer -> json.toJson(data, writer) }
+        try {
+            Files.move(temp, save, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE)
+        } catch (e: java.nio.file.AtomicMoveNotSupportedException) {
+            Files.move(temp, save, StandardCopyOption.REPLACE_EXISTING)
+        }
         return true
     }
 

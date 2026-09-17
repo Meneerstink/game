@@ -216,3 +216,10 @@ on_interface_close(ACCEPT_INTERFACE) {
 
 // Decline the trade when a player logs out
 on_logout { player.getTradeSession()?.decline() }
+
+/*
+ * Death removes items from the real inventory and drops them as loot; the open trade still holds a
+ * pre-death snapshot of that inventory, and completing it afterwards would hand the items back.
+ * End the trade before the loot is resolved, for both players.
+ */
+on_player_pre_death { player.getTradeSession()?.decline(forced = true) }

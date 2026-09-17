@@ -230,6 +230,8 @@ class TradeSession(
         amount: Int,
     ) {
         if (stage != TradeStage.TRADE_SCREEN) return
+        // A cancelled/invalid "Offer-X" input yields -1; a negative count would corrupt the stacks.
+        if (amount <= 0 || slot !in 0 until inventory.capacity) return
 
         val item = inventory[slot] ?: return
         val unnoted = Item(item).toUnnoted(player.world.definitions)
@@ -263,6 +265,7 @@ class TradeSession(
         amount: Int,
     ) {
         if (stage != TradeStage.TRADE_SCREEN) return
+        if (amount <= 0 || slot !in 0 until container.capacity) return
 
         val item = container[slot] ?: return
         val count = Math.min(amount, container.getItemCount(item.id))
@@ -377,20 +380,40 @@ class TradeSession(
      */
     private fun complete() {
         if (stage != TradeStage.ACCEPT_SCREEN) return
+        val partnerSession = partner.getTradeSession()
+        if (partnerSession == null || partnerSession.stage != TradeStage.ACCEPT_SCREEN) {
+            decline(forced = true)
+            return
+        }
+
+        /*
+         * The trade works on a snapshot of each inventory taken when the screen opened, and
+         * completing writes that snapshot back over the real inventory. If the real inventory
+         * changed in between (death removed the items and dropped them as loot, a queued task
+         * consumed or granted something, an unequip landed an item in it), writing the snapshot
+         * back would either duplicate items or destroy them. Refuse to complete unless both real
+         * inventories still equal snapshot + offer, and unless every incoming item actually fits.
+         */
+        if (!matchesSnapshot(player.inventory, this) || !matchesSnapshot(partner.inventory, partnerSession) ||
+            !fits(this, partnerSession) || !fits(partnerSession, this)
+        ) {
+            player.message("The trade was cancelled because an inventory changed during the trade.")
+            partner.message("The trade was cancelled because an inventory changed during the trade.")
+            decline(forced = true)
+            return
+        }
+
         stage = TradeStage.COMPLETED
+        partnerSession.stage = TradeStage.COMPLETED
 
         // Assign the trade containers for this player
         val playerInv = player.inventory
         inventory.forEachIndexed { index, item -> playerInv[index] = item }
-        partner
-            .getTradeSession()
-            ?.container
-            ?.filterNotNull()
-            ?.forEach { playerInv.add(it) }
+        partnerSession.container.filterNotNull().forEach { playerInv.add(it) }
 
         // Assign the trade containers for the partner
         val partnerInv = partner.inventory
-        partner.getTradeSession()?.inventory?.forEachIndexed { index, item -> partnerInv[index] = item }
+        partnerSession.inventory.forEachIndexed { index, item -> partnerInv[index] = item }
         container.filterNotNull().forEach { partnerInv.add(it) }
 
         // Finalise the trade session
@@ -404,6 +427,32 @@ class TradeSession(
      *
      * @param player    The player to finalise the trade session for
      */
+    /** Per-id totals of [real] must equal the session's snapshot inventory plus its offer. */
+    private fun matchesSnapshot(
+        real: ItemContainer,
+        session: TradeSession,
+    ): Boolean {
+        fun ItemContainer.totals(into: MutableMap<Int, Long>) =
+            rawItems.forEach { item -> if (item != null) into.merge(item.id, item.amount.toLong(), Long::plus) }
+        val expected = HashMap<Int, Long>()
+        session.inventory.totals(expected)
+        session.container.totals(expected)
+        val actual = HashMap<Int, Long>()
+        real.totals(actual)
+        return expected == actual
+    }
+
+    /** Every item [giver] offers must fully fit into [receiver]'s post-trade inventory, simulated on a copy. */
+    private fun fits(
+        receiver: TradeSession,
+        giver: TradeSession,
+    ): Boolean {
+        val simulated = ItemContainer(receiver.inventory)
+        return giver.container.filterNotNull().all { item ->
+            simulated.add(item.id, item.amount, assureFullInsertion = true).hasSucceeded()
+        }
+    }
+
     private fun finalise(player: Player) {
         // Clear the containers
         container.removeAll()
