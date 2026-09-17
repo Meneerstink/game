@@ -18,6 +18,36 @@ import gg.rsmod.plugins.content.drops.DropTableType
 
 object Pickpocketing {
     private const val waitTime = 2
+
+    /**
+     * OSRS-audit 2026-09-17b, "armour" family - Rogue equipment (top/mask/trousers/gloves/boots, ids 5553-5557,
+     * native, from the Rogues' Den minigame's equipment crates): OSRS Wiki "Thieving" raw wikitext - "The rogue
+     * outfit grants a chance of getting double loot when pickpocketing NPCs. Wearing the full set guarantees
+     * getting double loot. It does not increase success rate." OSRS Wiki "Rogue equipment" raw wikitext - "Each
+     * piece increases the chance of receiving double loot by 15%, unless all five components are worn together,
+     * in which case the odds of doubling the loot becomes 100%." This was grep-confirmed completely unwired
+     * anywhere in this codebase before this fix (every stat on the 5 items already matched the wiki exactly;
+     * only this set-effect was missing).
+     * SOURCE_GAP, deliberately NOT changed here: this codebase's pre-existing `getMultiplier` (thieving/agility
+     * level-overshoot 1-in-8 lucky x2/x3/x4) has no equivalent anywhere in the current OSRS Wiki "Thieving"
+     * article (searched for "lucky"/"triple"/"quadruple"/"overshoot" - zero matches), which only ever describes
+     * double loot as the Rogue outfit's own effect. This strongly suggests `getMultiplier`'s mechanic may not be
+     * OSRS-authentic (possibly a legacy/donor-only feature), but removing or reworking an entire pre-existing,
+     * independently-functioning Thieving mechanic is a materially larger, separate change than this armour-family
+     * fix and is left untouched pending an explicit owner decision - recorded here rather than silently deleted
+     * or silently left conflated with the Rogue outfit's own, clearly-sourced effect. The two are therefore kept
+     * as two independent, stacking rolls below (the conservative default when no source states otherwise): the
+     * Rogue outfit's guaranteed/chance double always multiplies whatever the existing roll already produced.
+     */
+    private val ROGUE_EQUIPMENT =
+        intArrayOf(Items.ROGUE_TOP, Items.ROGUE_MASK, Items.ROGUE_TROUSERS, Items.ROGUE_GLOVES, Items.ROGUE_BOOTS)
+    private const val ROGUE_PIECE_CHANCE = 0.15
+
+    /** 15% per piece worn, but guaranteed (100%) once all 5 are worn - not simply 5 x 15%. */
+    fun rogueOutfitDoubleLootChance(player: Player): Double {
+        val worn = ROGUE_EQUIPMENT.count { player.hasEquipped(intArrayOf(it)) }
+        return if (worn >= ROGUE_EQUIPMENT.size) 1.0 else worn * ROGUE_PIECE_CHANCE
+    }
     private val multiplierAnimations =
         mapOf(
             2 to Anims.DOUBLE_PICKPOCKET,
@@ -76,14 +106,23 @@ object Pickpocketing {
         task.wait(waitTime)
         player.playSound(2581)
         val multiplier = getMultiplier(player, targetInfo)
-        if (multiplier > 1) {
-            player.animate(multiplierAnimations[multiplier]!!)
-            player.graphic(multiplierGfx[multiplier]!!)
+        // Rogue equipment (see rogueOutfitDoubleLootChance's source note): an independent roll that doubles
+        // whatever `multiplier` already produced - not exclusive with, and not the same roll as, `getMultiplier`.
+        val rogueDoubled = player.world.randomDouble() < rogueOutfitDoubleLootChance(player)
+        val totalMultiplier = if (rogueDoubled) multiplier * 2 else multiplier
+        // Display is capped at the quadruple tier: the wiki never documents the visual/message result of both
+        // an existing lucky proc AND the Rogue outfit's own double triggering on the same pickpocket (a rare
+        // simultaneous-procs edge case with no sourced wording), so the closest existing tier is shown while the
+        // actual loot below always matches `totalMultiplier` exactly.
+        val displayMultiplier = totalMultiplier.coerceAtMost(4)
+        if (displayMultiplier > 1) {
+            player.animate(multiplierAnimations[displayMultiplier]!!)
+            player.graphic(multiplierGfx[displayMultiplier]!!)
         }
-        repeat(multiplier) { DropTableFactory.createDropInventory(player, target.id, DropTableType.PICKPOCKET) }
+        repeat(totalMultiplier) { DropTableFactory.createDropInventory(player, target.id, DropTableType.PICKPOCKET) }
         player.addXp(Skills.THIEVING, targetInfo.xp, checkBrawlingGloves = true)
         player.filterableMessage(
-            messages[multiplier]!!.replace(
+            messages[displayMultiplier]!!.replace(
                 "{npc}",
                 player.world.definitions
                     .get(NpcDef::class.java, target.id)
