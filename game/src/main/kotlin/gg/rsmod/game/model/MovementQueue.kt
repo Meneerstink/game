@@ -101,7 +101,11 @@ class MovementQueue(
                 val running =
                     when (next.type) {
                         StepType.NORMAL -> pawn.isRunning()
-                        StepType.FORCED_RUN -> true
+                        // Ctrl-click run comes straight from the client (ClickMap/ClickMinimap
+                        // movementType 1). The 667 client only runs it while energy is left; the
+                        // server must apply the same rule, or a client sending type 1 runs for free
+                        // at 0% forever. NPC forced runs have no energy and are unaffected.
+                        StepType.FORCED_RUN -> pawn !is Player || pawn.runEnergy >= 1.0
                         StepType.FORCED_WALK -> false
                     }
                 if (running) {
