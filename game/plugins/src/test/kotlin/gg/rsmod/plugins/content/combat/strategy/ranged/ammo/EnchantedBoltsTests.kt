@@ -143,7 +143,9 @@ class EnchantedBoltsTests {
         ranged: Int = 1,
         hp: Int = 10,
         weapon: Int? = null,
+        shield: Int? = null,
         prayerIcon: PrayerIcon = PrayerIcon.NONE,
+        timers: TimerMap = TimerMap(),
     ): Player {
         val player = mockk<Player>(relaxed = true)
         val skills = SkillSet(maxSkills = 25)
@@ -152,11 +154,32 @@ class EnchantedBoltsTests {
         every { player.getCurrentLifepoints() } returns hp
         every { player.prayerIcon } returns prayerIcon.id
         every { player.attr } returns AttributeMap()
-        every { player.timers } returns TimerMap()
+        every { player.timers } returns timers
         val equipment = ItemContainer(DEFINITIONS, EQUIPMENT_KEY)
         weapon?.let { equipment[EquipmentType.WEAPON.id] = Item(it) }
+        shield?.let { equipment[EquipmentType.SHIELD.id] = Item(it) }
         every { player.equipment } returns equipment
         return player
+    }
+
+    /**
+     * OSRS-IMPORT audit round 2026-09-17b: OSRS Wiki "Dragonstone dragon bolts (e)" - Dragon's Breath does not
+     * activate against a dragonfire-immune target; this server models regular-antifire-potion immunity as needing
+     * one of the anti-dragon-tier shields. Guards the fix: Dragonfire ward and Ancient wyvern shield (both sourced
+     * as equivalent-tier protection in `DragonfireFormula`) now qualify, where before only three older shields did.
+     */
+    @Test
+    fun `Dragon's Breath is negated by Dragonfire ward and Ancient wyvern shield with a regular antifire potion`() {
+        val attacker = player(ranged = 99, hp = 99)
+        val dragonstone = EnchantedBolts.ROSTER.getValue(Items.DRAGONSTONE_DRAGON_BOLTS_E)
+        listOf(Items.DRAGONFIRE_WARD, Items.DRAGONFIRE_WARD_UNCHARGED, Items.ANCIENT_WYVERN_SHIELD, Items.ANCIENT_WYVERN_SHIELD_UNCHARGED).forEach { shield ->
+            val timers = TimerMap().also { it[gg.rsmod.game.model.timer.ANTIFIRE_TIMER] = 10 }
+            val protected = player(shield = shield, timers = timers)
+            assertFalse(EnchantedBolts.applicable(dragonstone, attacker, protected), "shield $shield + regular antifire must block Dragon's Breath")
+        }
+        // Without any antifire potion timer, even a qualifying shield must not grant immunity.
+        val noPotion = player(shield = Items.DRAGONFIRE_WARD)
+        assertTrue(EnchantedBolts.applicable(dragonstone, attacker, noPotion), "shield alone, no potion, must not block Dragon's Breath")
     }
 
     private fun npc(

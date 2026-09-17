@@ -74,6 +74,15 @@ class DragonfireFormula(
                 Items.ANCIENT_WYVERN_SHIELD, Items.ANCIENT_WYVERN_SHIELD_UNCHARGED,
             )
 
+        /**
+         * Every shield this server treats as anti-dragon-tier dragonfire protection ([ANTI_DRAGON_SHIELDS] +
+         * [DRAGONFIRE_SHIELDS]), exposed for other dragonfire-adjacent mechanics (e.g. the Dragonstone dragon
+         * bolts (e) "Dragon's Breath" effect in `EnchantedBolts`) so the shield roster is defined once, not
+         * duplicated and left to drift - audit round 2026-09-17b found the bolt effect's own copy missing
+         * Dragonfire ward and Ancient wyvern shield.
+         */
+        val ALL_ANTI_DRAGON_SHIELDS: IntArray = ANTI_DRAGON_SHIELDS + DRAGONFIRE_SHIELDS
+
         /** The tabled max and sourced message; [playerWonRoll] is only consulted when the wiki row is split by the accuracy roll. */
         fun resolve(
             type: DragonfireTable.Type,

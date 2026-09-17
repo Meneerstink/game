@@ -27,7 +27,7 @@ import kotlin.math.floor
 
 /**
  * Enchanted dragon bolt special effects, one shared model for the whole roster (OSRS Wiki item pages of the ten
- * "<gem> dragon bolts (e)", fetched 2026-09-13; see `C:\RSPS\OSRS_IMPORT_STATUS.md`). Gfx 749-758 and sounds 2910-2920
+ * "<gem> dragon bolts (e)", fetched 2026-09-13; see `C:\RSPS\OSRS_IMPORT_MASTER.yml`). Gfx 749-758 and sounds 2910-2920
  * are the 667 cache ids (Void donor `bolts.gfx.toml` / `bolt_special.sounds.toml`, cache-verified). The Kandarin hard
  * diary does not exist here, so base chances apply. The Armadyl crossbow special doubles the base chance; the Zaryte
  * crossbow special guarantees the effect on a successful hit and raises the ruby, diamond, onyx and dragonstone values.
@@ -237,7 +237,13 @@ object EnchantedBolts {
 
     private fun isFiery(target: Pawn): Boolean = target is Npc && target.isSpecies(NpcSpecies.FIERY)
 
-    /** Dragonstone page: not against dragonfire-immune targets or players praying Protect from Magic. */
+    /**
+     * Dragonstone page: not against dragonfire-immune targets or players praying Protect from Magic.
+     * Audit round 2026-09-17b: the shield roster now reuses [DragonfireFormula.ALL_ANTI_DRAGON_SHIELDS] instead of
+     * its own copy, which was missing Dragonfire ward and Ancient wyvern shield - both sourced (OSRS Wiki) as
+     * equivalent-tier anti-dragon protection in `DragonfireFormula`, so a player wearing either was wrongly denied
+     * this bolt effect's immunity even with a regular antifire potion active.
+     */
     private fun immuneToDragonfire(target: Pawn): Boolean =
         when (target) {
             is Npc -> target.isSpecies(NpcSpecies.DRAGON)
@@ -245,7 +251,7 @@ object EnchantedBolts {
                 target.isProtectedFrom(CombatClass.MAGIC) ||
                     target.attr[DRAGONFIRE_IMMUNITY_ATTR] == true ||
                     target.timers.has(SUPER_ANTIFIRE_TIMER) ||
-                    (target.timers.has(ANTIFIRE_TIMER) && target.hasEquipped(EquipmentType.SHIELD, Items.ANTIDRAGON_SHIELD, Items.DRAGONFIRE_SHIELD, Items.DRAGONFIRE_SHIELD_11284))
+                    (target.timers.has(ANTIFIRE_TIMER) && target.hasEquipped(EquipmentType.SHIELD, *gg.rsmod.plugins.content.combat.formula.DragonfireFormula.ALL_ANTI_DRAGON_SHIELDS))
             else -> false
         }
 }
