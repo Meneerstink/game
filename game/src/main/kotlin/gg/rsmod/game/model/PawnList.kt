@@ -22,7 +22,8 @@ class PawnList<T : Pawn>(
      */
     private var count = 0
 
-    operator fun get(index: Int): T? = pawns[index]
+    // Client packets carry the index; a crafted or stale one must not throw out of every handler.
+    operator fun get(index: Int): T? = pawns.getOrNull(index)
 
     fun contains(pawn: T): Boolean = pawns[pawn.index] == pawn
 

@@ -8,6 +8,7 @@ import gg.rsmod.game.model.combat.CombatClass
 import gg.rsmod.game.model.entity.GroundItem
 import gg.rsmod.game.model.entity.Pawn
 import gg.rsmod.game.model.entity.Player
+import gg.rsmod.game.model.item.Item
 import gg.rsmod.plugins.api.EquipmentType
 import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.content.mechanics.restrictions.RestrictedAction
@@ -139,13 +140,20 @@ object DuelArenaRules {
     /** Winner receives both stakes; anything that does not fit is dropped under the winner (Novite `addDroppable`). */
     fun payout(match: DuelArenaMatch, winner: Player) {
         listOf(match.challengerStake, match.opponentStake).forEach { stake ->
-            stake.rawItems.filterNotNull().forEach { item ->
-                val result = winner.inventory.add(item.id, item.amount)
-                val left = item.amount - result.completed
-                if (left > 0) winner.world.spawn(GroundItem(item.id, left, winner.tile, winner))
-            }
+            stake.rawItems.filterNotNull().forEach { item -> giveOrDrop(winner, item) }
             stake.removeAll()
         }
+    }
+
+    /**
+     * Hands [item] to [player], dropping under them whatever the inventory has no room for. Every
+     * path that gives stake back (payout, decline, logout while configuring) must use this: a plain
+     * `inventory.add` silently destroys the stake when the inventory filled up in the meantime.
+     */
+    fun giveOrDrop(player: Player, item: Item) {
+        val result = player.inventory.add(item.id, item.amount, assureFullInsertion = false)
+        val left = item.amount - result.completed
+        if (left > 0) player.world.spawn(GroundItem(item.id, left, player.tile, player))
     }
 
     fun lostMessage(winner: Player) = "Oh dear, it seems you have lost to ${winner.username}."

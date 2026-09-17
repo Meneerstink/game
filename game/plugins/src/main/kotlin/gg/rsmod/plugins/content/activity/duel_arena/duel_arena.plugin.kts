@@ -149,8 +149,8 @@ fun challengerAndOpponentMessage(match: DuelArenaMatch, message: String) {
 }
 
 fun returnStakes(match: DuelArenaMatch) {
-    match.challengerStake.rawItems.filterNotNull().forEach { match.challenger.inventory.add(it.id, it.amount) }
-    match.opponentStake.rawItems.filterNotNull().forEach { match.opponent.inventory.add(it.id, it.amount) }
+    match.challengerStake.rawItems.filterNotNull().forEach { DuelArenaRules.giveOrDrop(match.challenger, it) }
+    match.opponentStake.rawItems.filterNotNull().forEach { DuelArenaRules.giveOrDrop(match.opponent, it) }
     match.challengerStake.removeAll()
     match.opponentStake.removeAll()
 }
@@ -175,13 +175,18 @@ fun startDuel(match: DuelArenaMatch) {
     // Novite beginBattle: "3", "2", "1" then "FIGHT!", two ticks apart; attacks are refused until then.
     world.queue {
         for (count in 3 downTo 1) {
-            listOf(match.challenger, match.opponent).forEach { it.forceChat("$count") }
+            if (match.stage != DuelStage.FIGHTING) return@queue
+            listOf(match.challenger, match.opponent).forEach {
+                if (it.isOnline) it.forceChat("$count")
+            }
             wait(2)
         }
         if (match.stage == DuelStage.FIGHTING) {
             listOf(match.challenger, match.opponent).forEach {
-                it.attr[DuelArenaRules.CAN_FIGHT_ATTR] = true
-                it.forceChat("FIGHT!")
+                if (it.isOnline) {
+                    it.attr[DuelArenaRules.CAN_FIGHT_ATTR] = true
+                    it.forceChat("FIGHT!")
+                }
             }
         }
     }
