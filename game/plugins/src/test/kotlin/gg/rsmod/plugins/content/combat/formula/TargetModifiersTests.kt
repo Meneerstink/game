@@ -132,6 +132,55 @@ class TargetModifiersTests {
         assertEquals(1.0, TargetModifiers.equipmentMultiplier(player, target))
     }
 
+    /**
+     * OSRS-audit 2026-09-17b: the imbued Slayer helmet lineage (`SLAYER_HELMET_E`/`SLAYER_HELMET_CHARGED`/every
+     * `FULL_SLAYER_HELMET*`) previously had zero ranged/magic wiring anywhere (every formula's own comment said
+     * "no imbued helm exists in this cache" - false; those 5 ids were sitting unwired). The plain, unimbued
+     * `SLAYER_HELMET` must NOT get the ranged/magic boost - only the melee 7/6 via [equipmentMultiplier].
+     */
+    @Test
+    fun `hasImbuedSlayerHelmetTaskBoost is true for every imbued variant on the matching task`() {
+        val onTask = newNpc(assignment = SlayerAssignment.BANSHEE)
+        val imbuedIds =
+            intArrayOf(
+                Items.SLAYER_HELMET_E,
+                Items.SLAYER_HELMET_CHARGED,
+                Items.FULL_SLAYER_HELMET,
+                Items.FULL_SLAYER_HELMET_E,
+                Items.FULL_SLAYER_HELMET_CHARGED,
+            )
+        imbuedIds.forEach { id ->
+            val player = newPlayer(head = id, assignment = SlayerAssignment.BANSHEE)
+            assertTrue(TargetModifiers.hasImbuedSlayerHelmetTaskBoost(player, onTask), "item $id")
+        }
+    }
+
+    @Test
+    fun `hasImbuedSlayerHelmetTaskBoost is false for the plain unimbued slayer helmet`() {
+        val player = newPlayer(head = Items.SLAYER_HELMET, assignment = SlayerAssignment.BANSHEE)
+        val onTask = newNpc(assignment = SlayerAssignment.BANSHEE)
+        assertFalse(TargetModifiers.hasImbuedSlayerHelmetTaskBoost(player, onTask))
+    }
+
+    @Test
+    fun `hasImbuedSlayerHelmetTaskBoost is false off task even while wearing the imbued helmet`() {
+        val player = newPlayer(head = Items.SLAYER_HELMET_CHARGED, assignment = SlayerAssignment.BANSHEE)
+        val offTask = newNpc(assignment = SlayerAssignment.ZOMBIE)
+        assertFalse(TargetModifiers.hasImbuedSlayerHelmetTaskBoost(player, offTask))
+    }
+
+    @Test
+    fun `rangedAccuracyMultiplier and rangedDamageMultiplier apply the imbued slayer helmet 1_15 boost on task`() {
+        val player = newPlayer(head = Items.FULL_SLAYER_HELMET_CHARGED, assignment = SlayerAssignment.BANSHEE)
+        val onTask = newNpc(assignment = SlayerAssignment.BANSHEE)
+        val offTask = newNpc(assignment = SlayerAssignment.ZOMBIE)
+
+        assertEquals(1.15, TargetModifiers.rangedAccuracyMultiplier(player, onTask), 1e-9)
+        assertEquals(1.15, TargetModifiers.rangedDamageMultiplier(player, onTask), 1e-9)
+        assertEquals(1.0, TargetModifiers.rangedAccuracyMultiplier(player, offTask), 1e-9)
+        assertEquals(1.0, TargetModifiers.rangedDamageMultiplier(player, offTask), 1e-9)
+    }
+
     private fun newPlayer(
         amulet: Int? = null,
         head: Int? = null,

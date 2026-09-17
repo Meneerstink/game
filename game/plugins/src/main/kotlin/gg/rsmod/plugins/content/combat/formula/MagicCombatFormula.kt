@@ -126,6 +126,11 @@ object MagicCombatFormula : CombatFormula {
                     gg.rsmod.plugins.content.items.osrs.SmokeStaves.magicDamageBonus(pawn, spell) +
                     gg.rsmod.plugins.content.items.osrs.VirtusRobes.ancientMagicksBonus(pawn, spell)
             hit = Math.floor(Math.floor(hit) * (1.0 + additive))
+            // Imbued Slayer helmet (OSRS-audit 2026-09-17b, see TargetModifiers.IMBUED_SLAYER_HELMETS):
+            // "a 15% boost to Magic accuracy and Magic damage" against the player's current Slayer task.
+            if (TargetModifiers.hasImbuedSlayerHelmetTaskBoost(pawn, target)) {
+                hit = Math.floor(hit * TargetModifiers.IMBUED_SLAYER_HELMET_BOOST)
+            }
             // Charged tomes: "stacking multiplicatively with Magic damage bonuses" (Tomes).
             hit = Math.floor(hit * gg.rsmod.plugins.content.items.osrs.Tomes.damageMultiplier(pawn, target, spell))
             // Dragon hunter wand: max hit x7/5 against draconic targets (wiki DPS calculator trackFactor [7, 5]).
@@ -224,10 +229,15 @@ object MagicCombatFormula : CombatFormula {
         specialAttackMultiplier: Double = 1.0,
     ): Double {
         // The plain Salve amulet and black mask/Slayer helmet are melee-only; magic needs their imbued versions
-        // ("Damage per second/Magic": 1.15 slayer helm (i) / salve (i)), none of which exist in this cache.
+        // ("Damage per second/Magic": 1.15 slayer helm (i) / salve (i)). Salve (i)/(ei) have no item ids anywhere
+        // in this cache and stay unimplemented; the imbued Slayer helmet DOES exist (TargetModifiers.
+        // IMBUED_SLAYER_HELMETS, fixed 2026-09-17b) and applies its 1.15 task-gated factor below.
         // Tome of Water: water spells +10 % (NPC) / +20 % (player), curse spells +20 % accuracy (Tomes).
         // Mystic smoke staff: +10 % additive magic accuracy for standard spells, before the tome factor (wiki DPS calculator order).
-        val smoke = Math.floor(base * gg.rsmod.plugins.content.items.osrs.SmokeStaves.accuracyMultiplier(player, castingSpell(player)))
+        var smoke = Math.floor(base * gg.rsmod.plugins.content.items.osrs.SmokeStaves.accuracyMultiplier(player, castingSpell(player)))
+        if (TargetModifiers.hasImbuedSlayerHelmetTaskBoost(player, target)) {
+            smoke = Math.floor(smoke * TargetModifiers.IMBUED_SLAYER_HELMET_BOOST)
+        }
         var roll = Math.floor(smoke * gg.rsmod.plugins.content.items.osrs.Tomes.accuracyMultiplier(player, target, castingSpell(player)))
         // Ice ancient sceptre: +10 % for ice spells on freezable, not frozen targets (AncientSceptres).
         roll = Math.floor(roll * gg.rsmod.plugins.content.items.osrs.AncientSceptres.iceAccuracyMultiplier(player, target, castingSpell(player)))

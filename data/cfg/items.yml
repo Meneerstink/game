@@ -116156,7 +116156,7 @@
     absorb_ranged: 1
 - id: 10551
   name: "Fighter torso"
-  examine: "Penance Fighter torso armour."
+  examine: "A Penance Fighter torso armour."
   tradeable: false
   weight: 4.0
   equipment:
@@ -174413,12 +174413,12 @@
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
-    attack_magic: 0
-    attack_ranged: 0
+    attack_magic: 3
+    attack_ranged: 3
     defence_stab: 30
     defence_slash: 32
     defence_crush: 27
-    defence_magic: 0
+    defence_magic: 10
     defence_ranged: 30
     summoning: 7
     melee_strength: 0
@@ -174426,6 +174426,7 @@
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
+    skill_reqs: [{'skill': 1, 'level': 10}]
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
@@ -174446,12 +174447,12 @@
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
-    attack_magic: 0
-    attack_ranged: 0
+    attack_magic: 3
+    attack_ranged: 3
     defence_stab: 30
     defence_slash: 32
     defence_crush: 27
-    defence_magic: 0
+    defence_magic: 10
     defence_ranged: 30
     summoning: 7
     melee_strength: 0
@@ -174459,6 +174460,7 @@
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
+    skill_reqs: [{'skill': 1, 'level': 10}]
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
@@ -181933,6 +181935,7 @@
     remove_beard: false
     remove_arms: false
     attack_audio: -1
+    skill_reqs: [{'skill': 1, 'level': 10}]
 - id: 15497
   name: "Full slayer helmet (charged)"
   examine: "You don't want to wear it inside-out."
@@ -181965,6 +181968,7 @@
     remove_beard: false
     remove_arms: false
     attack_audio: -1
+    skill_reqs: [{'skill': 1, 'level': 10}]
 - id: 15498
   name: "Desert strykewyrm"
   examine: "I dread to think of how many of these are in the sand."

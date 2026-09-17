@@ -55,6 +55,34 @@ object TargetModifiers {
             Items.FULL_SLAYER_HELMET_CHARGED,
         )
 
+    /**
+     * OSRS-audit 2026-09-17b: `Items.SLAYER_HELMET_E`/`SLAYER_HELMET_CHARGED` (14636/14637) and every
+     * `FULL_SLAYER_HELMET*` variant (15492/15496/15497) are the imbued Slayer helmet lineage, not the
+     * plain melee-only helmet - OSRS Wiki "Slayer helmet (i)" raw wikitext: amagic +3/arange +3/dmagic
+     * +10 (all confirmed matching `items.yml` for these 5 ids after this round's fix; plain
+     * `Items.SLAYER_HELMET` correctly keeps the unimbued -6/-2/-1 values) and "an extra 15% boost to
+     * Ranged accuracy and Ranged damage, and a 15% boost to Magic accuracy and Magic damage, against
+     * monsters assigned as the player's Slayer task" (Full slayer helmet is always this imbued tier -
+     * OSRS Wiki "Full slayer helmet": made from a Slayer helmet (i), so no unimbued Full helmet exists).
+     * Previously every combat formula's own comment incorrectly stated "no imbued helm exists in this
+     * cache" and skipped the boost entirely for ranged/magic; the melee 7/6 boost already applied
+     * correctly via the generic [SLAYER_HELMETS] list above, which is unaffected by this fix.
+     */
+    private val IMBUED_SLAYER_HELMETS =
+        intArrayOf(
+            Items.SLAYER_HELMET_E,
+            Items.SLAYER_HELMET_CHARGED,
+            Items.FULL_SLAYER_HELMET,
+            Items.FULL_SLAYER_HELMET_E,
+            Items.FULL_SLAYER_HELMET_CHARGED,
+        )
+
+    const val IMBUED_SLAYER_HELMET_BOOST = 1.15
+
+    /** True while [player] wears an imbued Slayer helmet AND [target] matches their current Slayer task. */
+    fun hasImbuedSlayerHelmetTaskBoost(player: Player, target: Pawn): Boolean =
+        isCurrentSlayerTask(player, target) && player.hasEquipped(EquipmentType.HEAD, *IMBUED_SLAYER_HELMETS)
+
     fun isUndead(target: Pawn): Boolean = target is Npc && target.isSpecies(NpcSpecies.UNDEAD)
 
     /**
@@ -169,8 +197,9 @@ object TargetModifiers {
      */
     /**
      * OSRS-exact audit 2026-09-13: the plain Salve amulet, Salve amulet (e), black mask and Slayer helmet are
-     * melee-only ("Maximum ranged hit": ranged needs the imbued (i)/(ei) versions, 1.15 / 7/6 / 1.2). No imbued
-     * variant exists in this cache, so ranged starts from 1.0 and only the Twisted bow passive applies.
+     * melee-only ("Maximum ranged hit": ranged needs the imbued (i)/(ei) versions, 1.15 / 7/6 / 1.2). Salve (i)/(ei)
+     * have no item ids anywhere in this cache and stay unimplemented; the imbued Slayer helmet DOES exist in this
+     * cache (see [IMBUED_SLAYER_HELMETS], fixed 2026-09-17b) and gets its 1.15 task-gated boost below.
      */
     fun rangedAccuracyMultiplier(
         player: Player,
@@ -182,6 +211,9 @@ object TargetModifiers {
         }
         if (isDragonbaneRanged(player, target)) {
             multiplier *= DHCB_ACCURACY
+        }
+        if (hasImbuedSlayerHelmetTaskBoost(player, target)) {
+            multiplier *= IMBUED_SLAYER_HELMET_BOOST
         }
         return multiplier
     }
@@ -207,12 +239,12 @@ object TargetModifiers {
      */
     const val SILVERLIGHT_DEMONBANE_PERCENT = 60
 
-    fun meleeDemonbanePercent(player: Player, target: Pawn): Int =
-        if (target is Npc && target.isSpecies(NpcSpecies.DEMON) && player.hasEquipped(EquipmentType.WEAPON, Items.SILVERLIGHT, Items.DARKLIGHT)) {
-            SILVERLIGHT_DEMONBANE_PERCENT
-        } else {
-            0
-        }
+    /**
+     * OSRS import run 2026-09-17: the calculator applies Arclight/Emberlight (70), Silverlight/Darklight (60, also the inactive Arclight,
+     * which "functions identically to Darklight") and Bone/Burning claws (5) at this same trackAddFactor step - one weapon at a time,
+     * so a single percentage is exact. Rules and sources in [gg.rsmod.plugins.content.items.osrs.Demonbane].
+     */
+    fun meleeDemonbanePercent(player: Player, target: Pawn): Int = gg.rsmod.plugins.content.items.osrs.Demonbane.meleePercent(player, target)
 
     /** `trackAddFactor`: value + trunc(value × percent / 100), truncated. */
     fun addPercent(value: Double, percent: Int): Double = floor(value + floor(value * percent / 100.0))
@@ -250,6 +282,9 @@ object TargetModifiers {
         }
         if (isDragonbaneRanged(player, target)) {
             multiplier *= DHCB_DAMAGE
+        }
+        if (hasImbuedSlayerHelmetTaskBoost(player, target)) {
+            multiplier *= IMBUED_SLAYER_HELMET_BOOST
         }
         return multiplier
     }
