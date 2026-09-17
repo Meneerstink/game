@@ -106,6 +106,36 @@ class MagicCombatFormulaTests {
         assertEquals(2.0, withGauntlets)
     }
 
+    // ---- getMaxHit: Virtus robes' Ancient Magicks-only extra magic damage (audit round 2026-09-17b) ----
+
+    @Test
+    fun `full Virtus gives 15 percent extra magic damage on an Ancient Magicks spell, not the flat 6 percent spellbook`() {
+        // OSRS Wiki "Virtus robes": "an additional 3% magic damage is given per piece... 15% for the full set" when
+        // using Ancient Magicks (SMOKE_RUSH, interfaceId 193). The flat 6% (2% per piece, any spellbook) is applied
+        // generically elsewhere through each piece's own items.yml magic_damage field, not through this bonus, so
+        // this test isolates the new conditional +3%-per-piece with the mocked equipmentBonuses left at 0.
+        val ancient = getMaxHit(newPlayer(spell = CombatSpell.SMOKE_RUSH, virtusPieces = 3))
+        // hit = floor(15 * 1.15) with the flat 6% already-generic bonus == this test's baseline (0 mocked), so here
+        // only the +9% (3 pieces x 3%) from VirtusRobes shows up: floor(15 * 1.09) = 16.
+        assertEquals(floor(15.0 * 1.09), ancient)
+    }
+
+    @Test
+    fun `Virtus gives no Ancient Magicks bonus on a standard-spellbook spell`() {
+        val standard = getMaxHit(newPlayer(spell = CombatSpell.WIND_STRIKE, virtusPieces = 3))
+        assertEquals(2.0, standard)
+    }
+
+    @Test
+    fun `Virtus' Ancient Magicks bonus scales per piece worn, not just full set`() {
+        val onePiece = getMaxHit(newPlayer(spell = CombatSpell.SMOKE_RUSH, virtusPieces = 1))
+        val twoPieces = getMaxHit(newPlayer(spell = CombatSpell.SMOKE_RUSH, virtusPieces = 2))
+        val threePieces = getMaxHit(newPlayer(spell = CombatSpell.SMOKE_RUSH, virtusPieces = 3))
+        assertEquals(floor(15.0 * 1.03), onePiece)
+        assertEquals(floor(15.0 * 1.06), twoPieces)
+        assertEquals(floor(15.0 * 1.09), threePieces)
+    }
+
     // ---- getMaxHit: TargetModifiers deliberately excluded (documented decision, not a bug) ----
 
     @Test
@@ -182,6 +212,7 @@ class MagicCombatFormulaTests {
         eliteVoid: Boolean = false,
         prayer: Prayer? = null,
         amulet: Int? = null,
+        virtusPieces: Int = 0,
     ): Player {
         val player = mockk<Player>(relaxed = true)
         every { player.prayerIcon } returns PrayerIcon.NONE.id
@@ -218,6 +249,9 @@ class MagicCombatFormulaTests {
             equipment[EquipmentType.GLOVES.id] = Item(Items.VOID_KNIGHT_GLOVES)
         }
         amulet?.let { equipment[EquipmentType.AMULET.id] = Item(it) }
+        if (virtusPieces >= 1) equipment[EquipmentType.HEAD.id] = Item(Items.VIRTUS_MASK)
+        if (virtusPieces >= 2) equipment[EquipmentType.CHEST.id] = Item(Items.VIRTUS_ROBE_TOP)
+        if (virtusPieces >= 3) equipment[EquipmentType.LEGS.id] = Item(Items.VIRTUS_ROBE_LEGS)
         every { player.equipment } returns equipment
 
         if (prayer != null) {

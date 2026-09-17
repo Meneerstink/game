@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.content.items.combine.CombinationData
+import java.io.File
 import java.nio.file.Paths
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -83,4 +84,34 @@ class OsrsMagearmourImportTests {
         assertEquals(listOf(18, 14, 1, 2), bonuses(Items.DAGONHAI_ROBE_BOTTOM), "Dagon'hai robe bottom")
         assertEquals(listOf(18, 14, 0, 2), bonuses(Items.DAGONHAI_ROBE_BOTTOM_OR), "Dagon'hai robe bottom (or)")
     }
+
+    @Test
+    fun `Virtus robes match the wiki bonuses - the wear requirement deliberately keeps the native 667 cache's 80 80 80`() {
+        // Virtus is pre-existing native 667 content (no `local_item_id` entry in OSRS_IMPORT_MASTER.yml), not a
+        // freshly OSRS-imported item - unlike a fresh import, its wield requirement is baked into the actual
+        // revision-667 client cache (params 749-758) and is enforced there regardless of what items.yml says, so
+        // `ItemSkillRequirementsCacheAuditTests` requires items.yml to match the cache's own {1=80, 3=80, 6=80}
+        // (Defence/Hitpoints/Magic) by default. The OSRS Wiki instead gives "level 78 in Magic and 75 Defence, no
+        // Hitpoints" for the modern item - a real SOURCE_CONFLICT between the native cache and modern OSRS, same
+        // category as this project's existing decision (d) overrides (Dagon'hai robes, Abyssal tentacle) in that
+        // test file, but NOT resolved here: an audit-round attempt to "fix" this to the wiki value broke the cache
+        // audit test, which is the correct, more specific arbiter for native (non-imported) equipment. Left at the
+        // cache value; a genuine wiki override would need an explicit addition to `osrsOverrides` there, which is
+        // an owner-level call this round did not make.
+        val virtusReqs = mapOf(1 to 80, 3 to 80, 6 to 80)
+        val intact = listOf(Items.VIRTUS_MASK, Items.VIRTUS_MASK_20161, Items.VIRTUS_ROBE_TOP, Items.VIRTUS_ROBE_TOP_20165, Items.VIRTUS_ROBE_LEGS, Items.VIRTUS_ROBE_LEGS_20169)
+        val broken = listOf(Items.VIRTUS_MASK_BROKEN, Items.VIRTUS_ROBE_TOP_BROKEN, Items.VIRTUS_ROBE_LEGS_BROKEN)
+        (intact + broken).forEach { assertEquals(virtusReqs, reqsById(it), "$it wear requirement") }
+        assertEquals(listOf(8, 6, 2, 1), bonuses(Items.VIRTUS_MASK), "Virtus mask")
+        assertEquals(listOf(35, 31, 2, 2), bonuses(Items.VIRTUS_ROBE_TOP), "Virtus robe top")
+        assertEquals(listOf(26, 22, 2, 1), bonuses(Items.VIRTUS_ROBE_LEGS), "Virtus robe legs")
+        // "Each piece of Virtus robes gives a 2% magic damage bonus... an additional 3% magic damage is given per
+        // piece [with Ancient Magicks], taking the bonus to 5% per piece for a total of 15% for the full set."
+        assertEquals(0.03, VirtusRobes.ANCIENT_MAGICKS_BONUS_PER_PIECE)
+        assertEquals(setOf(Items.VIRTUS_MASK, Items.VIRTUS_MASK_20161, Items.VIRTUS_ROBE_TOP, Items.VIRTUS_ROBE_TOP_20165, Items.VIRTUS_ROBE_LEGS, Items.VIRTUS_ROBE_LEGS_20169), VirtusRobes.PIECES)
+        val formula = File("src/main/kotlin/gg/rsmod/plugins/content/combat/formula/MagicCombatFormula.kt").readText()
+        assertTrue("VirtusRobes.ancientMagicksBonus(pawn, spell)" in formula, "the Ancient Magicks bonus must be wired into the max hit additive")
+    }
+
+    private fun reqsById(id: Int) = yml.first { it.path("id").asInt() == id }.path("equipment").path("skill_reqs").associate { it.path("skill").asInt() to it.path("level").asInt() }
 }

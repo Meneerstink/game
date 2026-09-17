@@ -38,7 +38,11 @@ object MagicCombatFormula : CombatFormula {
         specialAttackMultiplier: Double,
     ): Double {
         // Check if the target has the prayer protection and the attacker is not a player
-        if ((target.isProtectedFrom(CombatClass.MAGIC) && !gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.deflects(target, CombatClass.MAGIC)) && pawn !is Player) {
+        // Deadman guards (CityGuards) are exempt: "Protection prayers are ineffective against their damage."
+        if ((target.isProtectedFrom(CombatClass.MAGIC) && !gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.deflects(target, CombatClass.MAGIC)) &&
+            pawn !is Player &&
+            !gg.rsmod.plugins.content.mechanics.pvp.CityGuards.bypassesProtectionPrayer(pawn)
+        ) {
             return 0.0 // Hits will never land
         }
         return getUnprotectedAccuracy(pawn, target, specialAttackMultiplier)
@@ -78,6 +82,12 @@ object MagicCombatFormula : CombatFormula {
         specialAttackMultiplier: Double,
         specialPassiveMultiplier: Double,
     ): Double {
+        // Deadman guards: every guard kind (melee, ranged, mage) deals the same sourced consecutive-hit
+        // ramp (CityGuards.rampedMaxHit) instead of its spell's base - the owner wants all guards on
+        // identical stats, and the melee/ranged formulas already route through the same ramp.
+        if (pawn is Npc && target is Player && gg.rsmod.plugins.content.mechanics.pvp.CityGuards.isGuard(pawn)) {
+            return gg.rsmod.plugins.content.mechanics.pvp.CityGuards.rampedMaxHit(pawn, target).toDouble()
+        }
         // Nightmare staff specials supply their own spell base; the autocast spell's effects then do not apply (NightmareStaves).
         val specialBase = pawn.attr[gg.rsmod.plugins.content.items.osrs.NightmareStaves.SPECIAL_BASE_MAX_HIT]
         val spell = if (specialBase != null) null else pawn.attr[Combat.CASTING_SPELL]
@@ -113,7 +123,8 @@ object MagicCombatFormula : CombatFormula {
             // the percentages add up before multiplying. The player bonus slot holds tenths of a percent.
             val additive =
                 pawn.getMagicDamageBonus() / 1000.0 + getEliteVoidMagicDamage(pawn) + getPrayerMagicDamage(pawn) +
-                    gg.rsmod.plugins.content.items.osrs.SmokeStaves.magicDamageBonus(pawn, spell)
+                    gg.rsmod.plugins.content.items.osrs.SmokeStaves.magicDamageBonus(pawn, spell) +
+                    gg.rsmod.plugins.content.items.osrs.VirtusRobes.ancientMagicksBonus(pawn, spell)
             hit = Math.floor(Math.floor(hit) * (1.0 + additive))
             // Charged tomes: "stacking multiplicatively with Magic damage bonuses" (Tomes).
             hit = Math.floor(hit * gg.rsmod.plugins.content.items.osrs.Tomes.damageMultiplier(pawn, target, spell))
