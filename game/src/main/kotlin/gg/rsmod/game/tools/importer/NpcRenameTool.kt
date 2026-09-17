@@ -32,6 +32,7 @@ object NpcRenameTool {
     fun rename(
         bytes: ByteArray,
         newName: String,
+        newLevel: Int? = null,
     ): Result {
         val out = ByteArrayOutputStream(bytes.size + newName.length + 2)
         var oldName: String? = null
@@ -52,11 +53,20 @@ object NpcRenameTool {
             out.write(newName.toByteArray(Charsets.ISO_8859_1))
             out.write(0)
         }
+        var levelWritten = false
+        fun writeLevel() {
+            val level = newLevel ?: return
+            out.write(95)
+            out.write((level shr 8) and 0xFF)
+            out.write(level and 0xFF)
+            levelWritten = true
+        }
         while (true) {
             val segmentStart = pos
             val opcode = u8()
             if (opcode == 0) {
                 if (oldName == null) writeName()
+                if (newLevel != null && !levelWritten) writeLevel()
                 out.write(0)
                 break
             }
@@ -74,7 +84,14 @@ object NpcRenameTool {
                 42 -> skip(u8())
                 60, 160 -> skip(u8() * 2)
                 93, 99, 107, 158, 159, 162 -> {}
-                95, 97, 98, 102, 103, 122, 123, 137, 138, 139, 142, 127 -> skip(2)
+                95 -> {
+                    skip(2)
+                    if (newLevel != null) {
+                        writeLevel()
+                        replaced = true
+                    }
+                }
+                97, 98, 102, 103, 122, 123, 137, 138, 139, 142, 127 -> skip(2)
                 100, 101, 125, 128, 140, 163, 165, 168, 119 -> skip(1)
                 106, 118 -> {
                     skip(4)
@@ -116,13 +133,14 @@ object NpcRenameTool {
         id: Int,
         result: Result,
         newName: String,
+        newLevel: Int? = null,
     ): List<String> {
         val before = decode(id, result.original)
         val after = decode(id, result.renamed)
         val problems = ArrayList<String>()
         if (after.name != newName) problems += "name '${after.name}' != '$newName'"
         if (before.size != after.size) problems += "size"
-        if (before.combatLevel != after.combatLevel) problems += "combatLevel"
+        if (after.combatLevel != (newLevel ?: before.combatLevel)) problems += "combatLevel ${before.combatLevel} -> ${after.combatLevel}"
         if (before.basId != after.basId) problems += "basId"
         if (before.walkMask != after.walkMask) problems += "walkMask"
         if (before.interactable != after.interactable) problems += "interactable"
@@ -134,10 +152,11 @@ object NpcRenameTool {
     @JvmStatic
     fun main(args: Array<String>) {
         val positional = args.filter { !it.startsWith("--") }
-        require(positional.size >= 2) { "Usage: <newName> <npcId> [npcId ...] [--apply]" }
+        require(positional.size >= 2) { "Usage: <newName> <npcId> [npcId ...] [--level=N] [--apply]" }
         val newName = positional[0].replace('_', ' ')
         val ids = positional.drop(1).map { it.toInt() }
         val apply = "--apply" in args
+        val newLevel = args.firstOrNull { it.startsWith("--level=") }?.substringAfter('=')?.toInt()
         val library = CacheLibrary(TARGETS[0])
         val mutations = ArrayList<CacheMutation>()
         try {
@@ -145,21 +164,22 @@ object NpcRenameTool {
                 val group = id ushr 7
                 val file = id and 0x7F
                 val current = library.data(INDEX_NPC, group, file) ?: error("npc $id missing from ${TARGETS[0]}")
-                val result = rename(current, newName)
-                val problems = verifyEquivalent(id, result, newName)
+                val result = rename(current, newName, newLevel)
+                val problems = verifyEquivalent(id, result, newName, newLevel)
                 check(problems.isEmpty()) { "npc $id re-encode mismatch: $problems" }
-                if (result.oldName == newName) {
-                    println("PLAN npc $id: already named '$newName', nothing to do")
+                val oldLevel = decode(id, current).combatLevel
+                if (result.oldName == newName && (newLevel == null || oldLevel == newLevel)) {
+                    println("PLAN npc $id: already named '$newName' (level $oldLevel), nothing to do")
                     return@forEach
                 }
-                println("PLAN npc $id: rename '${result.oldName}' -> '$newName' (${current.size} -> ${result.renamed.size} bytes)")
+                println("PLAN npc $id: rename '${result.oldName}' -> '$newName', level $oldLevel -> ${newLevel ?: oldLevel} (${current.size} -> ${result.renamed.size} bytes)")
                 mutations +=
                     CacheMutation(
                         INDEX_NPC,
                         group,
                         file,
                         result.renamed,
-                        "rename npc $id '${result.oldName}' -> '$newName'",
+                        "rename npc $id '${result.oldName}' -> '$newName'" + (if (newLevel != null) " level $newLevel" else ""),
                         expectedCurrentSha1 = CacheItemProbeTool.sha1(current),
                     )
             }

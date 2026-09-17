@@ -317,6 +317,9 @@ object CityGuards {
             val guard =
                 Npc(id, tile, world).also {
                     it.respawnOverride = true
+                    // Before spawn: the random-walk plugin arms its timer in the spawn hook only
+                    // when walkRadius is already > 0 (owner live retest: guards "still not roaming").
+                    it.walkRadius = PATROL_RADIUS
                 }
             world.spawn(guard)
             configure(guard)
@@ -495,6 +498,7 @@ object CityGuards {
             Npc(id, tile, world).also {
                 it.respawnOverride = false
                 it.attr[REACTIVE_GUARD_ATTR] = true
+                it.walkRadius = PATROL_RADIUS
             }
         world.spawn(guard)
         configure(guard)

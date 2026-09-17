@@ -157,6 +157,8 @@ object DeadmanHud {
                 player.setComponentText(INTERFACE_ID, SKULL_TEXT, skull)
                 player.setComponentHidden(INTERFACE_ID, SKULL_PARENT, hidden = false)
             } else {
+                // Clear the text too: the client draws the timer row from the text alone.
+                player.setComponentText(INTERFACE_ID, SKULL_TEXT, "")
                 player.setComponentHidden(INTERFACE_ID, SKULL_PARENT, hidden = true)
             }
         }

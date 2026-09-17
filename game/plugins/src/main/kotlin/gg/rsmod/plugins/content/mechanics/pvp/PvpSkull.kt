@@ -43,6 +43,10 @@ object PvpSkull {
     /** ~1 minute of standing on the same tile pauses the skull countdown (owner spec, 2026-09-16). */
     const val SAME_TILE_STALL_CYCLES = 100
 
+    /** Set on a pawn for the duration of an engine auto-retaliation `attack` call, so the shared
+     * combat-start hook can tell it apart from a deliberate attack. */
+    val AUTO_RETALIATING_ATTR = AttributeKey<Boolean>()
+
     /** Per-cycle driver for [tickPauseTracking]; session-local, cleared on death like the skull itself. */
     val SKULL_PAUSE_CHECK_TIMER = TimerKey(tickOffline = false, resetOnDeath = true)
 
@@ -79,10 +83,11 @@ object PvpSkull {
             return
         }
 
-        val isRetaliation = attacker.attr[PVP_AGGRESSOR_ATTR]?.get() == victim
-        if (!isRetaliation) {
-            applySkull(attacker)
-        }
+        // Owner 2026-09-17 (live retest): "when a player attacks another player it needs to always
+        // give you a skull" - every deliberate attack of any style (melee, ranged, magic, special)
+        // skulls and resets the timer; only the engine's automatic retaliation is exempt
+        // ([AUTO_RETALIATING_ATTR], set by Combat.postAttack around the auto-retaliate call).
+        applySkull(attacker)
         // Deadman PvP guards plan (2026-09-16): "attacking ... ends it early" - the attacker's
         // own post-kill grace period, if any, ends the moment they initiate a new attack.
         KillGrace.endEarly(attacker)

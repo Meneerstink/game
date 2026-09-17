@@ -121,7 +121,12 @@ object Combat {
             if (target.getVarp(AttackTab.DISABLE_AUTO_RETALIATE_VARP) == 0) {
                 target.interruptQueues()
                 target.closeComponent(parent = 752, child = 13)
-                target.attack(pawn, notifyRefusal = false) // auto-retaliate: never a player-started attack
+                target.attr[PvpSkull.AUTO_RETALIATING_ATTR] = true
+                try {
+                    target.attack(pawn, notifyRefusal = false) // auto-retaliate: never a player-started attack
+                } finally {
+                    target.attr.remove(PvpSkull.AUTO_RETALIATING_ATTR)
+                }
             }
         }
 
@@ -157,7 +162,12 @@ object Combat {
                     target.getCombatTarget() == null &&
                     !target.hasMoveDestination()
                 ) {
-                    target.attack(pawn, notifyRefusal = false) // auto-retaliate
+                    target.attr[PvpSkull.AUTO_RETALIATING_ATTR] = true
+                    try {
+                        target.attack(pawn, notifyRefusal = false) // auto-retaliate
+                    } finally {
+                        target.attr.remove(PvpSkull.AUTO_RETALIATING_ATTR)
+                    }
                 }
             }
         }

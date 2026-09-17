@@ -18,6 +18,14 @@ import gg.rsmod.plugins.content.inter.attack.AttackTab
 
 set_combat_logic {
     if (pawn.getCombatTarget() != null) {
+        // Deadman (owner 2026-09-17): every deliberate player-on-player attack - whatever started
+        // it (Attack option, spell, special, ranged) - skulls the attacker; engine auto-retaliation
+        // is the only exemption. This is the single entry point every attack style passes through.
+        val attacker = pawn
+        val target = attacker.getCombatTarget()
+        if (attacker is Player && target is Player && attacker.attr[PvpSkull.AUTO_RETALIATING_ATTR] != true) {
+            PvpSkull.onPlayerInitiatedAttack(attacker = attacker, victim = target)
+        }
         // RC-1: a player's combat loop is persistent - it survives prayers, eating, equipping,
         // familiar commands and other STRONG/soft actions; only a hard interruption (walk, new
         // interaction, teleport, death) ends it. NPC loops keep the old head-only scheduling so

@@ -11,6 +11,8 @@ import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.plugins.api.InterfaceDestination
 import gg.rsmod.plugins.api.ext.*
+import gg.rsmod.plugins.content.mechanics.exchange.GrandExchangeService
+import gg.rsmod.plugins.content.mechanics.exchange.OsrsGuidePrices
 
 /**
  * The Price Checker, opened from the "Show Price-checker" button on the worn-equipment tab.
@@ -46,8 +48,10 @@ import gg.rsmod.plugins.api.ext.*
  *    inventory overlay, so the player's items are shown in the same bare, entirely server-driven
  *    overlay the trade screen uses ([OVERLAY_INTERFACE_ID], a single component with no cache
  *    hooks). Its op labels ("Check", "Check-5", ...) are ours;
- *  - an item's value is `ItemDef.cost`, the same valuation `TradeSession` already uses for the
- *    trade screen's wealth figures. This server has no Grand Exchange guide price to read.
+ *  - the price checker uses the same market-price source as the Grand Exchange: an executed-trade
+ *    average when one exists, otherwise the OSRS guide-price seed, and finally the local cache
+ *    value for items without an OSRS name match. This keeps the checker and GE offer screen on
+ *    one economic valuation instead of making the checker silently use stale cache costs.
  */
 object PriceChecker {
     const val INTERFACE_ID = 206
@@ -214,6 +218,23 @@ object PriceChecker {
     fun openGrid(player: Player) {
         player.openInterface(INTERFACE_ID, InterfaceDestination.MAIN_SCREEN)
         player.setInterfaceEvents(INTERFACE_ID, GRID_COMPONENT, 0 until CAPACITY, GRID_OPS)
+        // Owner 2026-09-17: the loot must be withdrawable from the grid - give its slots explicit
+        // right-click ops (the same clientscript the inventory overlay uses; op n maps to the same
+        // amounts the button handler already understands).
+        player.runClientScript(
+            INTERFACE_INV_INIT_BIG,
+            (INTERFACE_ID shl 16) or GRID_COMPONENT,
+            CONTAINER_KEY,
+            4,
+            7,
+            0,
+            -1,
+            "Withdraw-1",
+            "Withdraw-5",
+            "Withdraw-10",
+            "Withdraw-All",
+            "Withdraw-X",
+        )
     }
 
     /** Sends [container] as the grid's items plus the per-slot and total value varcs. */
@@ -221,18 +242,18 @@ object PriceChecker {
         player: Player,
         container: ItemContainer,
     ) {
-        val definitions = player.world.definitions
         player.sendItemContainer(CONTAINER_KEY, container)
 
         for (slot in 0 until CAPACITY) {
-            player.setVarc(SLOT_VALUE_VARC + slot, value(definitions, container[slot]))
+            player.setVarc(SLOT_VALUE_VARC + slot, value(player, container[slot]))
         }
-        player.setVarc(TOTAL_VALUE_VARC, total(definitions, container))
+        player.setVarc(TOTAL_VALUE_VARC, total(player, container))
     }
 
     /**
-     * An item is worth its shop value times its amount, taken from the unnoted form so that a note
-     * is worth what the item is - the same valuation the trade screen uses.
+     * The static/fallback valuation used by callers without a world service. The value starts with
+     * the OSRS guide-price snapshot when the local item has the same name, then falls back to the
+     * cache cost for a 667-only item. Notes are valued as their unnoted form.
      *
      * A varc carries an int, and a checked stack can be far larger than one: 2,147,483,647 coins
      * held as a single stack is already worth more than an int can hold once multiplied out. The
@@ -247,8 +268,9 @@ object PriceChecker {
             return 0
         }
         val unnoted = Item(item).toUnnoted(definitions)
-        val cost = definitions.get(ItemDef::class.java, unnoted.id).cost
-        return clamp(cost.toLong() * item.amount)
+        val definition = definitions.get(ItemDef::class.java, unnoted.id)
+        val guide = OsrsGuidePrices.seed(definition)
+        return clamp(guide.toLong() * item.amount)
     }
 
     /** The "Total value:" figure: every slot's [value], clamped the same way. */
@@ -256,6 +278,36 @@ object PriceChecker {
         definitions: DefinitionSet,
         container: ItemContainer,
     ): Int = clamp(container.rawItems.sumOf { value(definitions, it).toLong() })
+
+    /**
+     * The live player-facing valuation. Once the GE has executed trades for this item, its
+     * rolling trade average wins; before that, [OsrsGuidePrices.seed] supplies the chosen OSRS
+     * starting value and the cache cost remains the explicit fallback for 667-only items.
+     */
+    fun value(
+        player: Player,
+        item: Item?,
+    ): Int {
+        if (item == null) {
+            return 0
+        }
+        val definitions = player.world.definitions
+        val unnoted = Item(item).toUnnoted(definitions)
+        val definition = definitions.get(ItemDef::class.java, unnoted.id)
+        val seed = OsrsGuidePrices.seed(definition)
+        val guide =
+            player.world
+                .getService(GrandExchangeService::class.java)
+                ?.guidePrice(unnoted.id, seed)
+                ?: seed
+        return clamp(guide.toLong() * item.amount)
+    }
+
+    /** The live player-facing total, using the same market source for every checked stack. */
+    fun total(
+        player: Player,
+        container: ItemContainer,
+    ): Int = clamp(container.rawItems.sumOf { value(player, it).toLong() })
 
     private fun clamp(value: Long): Int = Math.max(0L, Math.min(value, Int.MAX_VALUE.toLong())).toInt()
 }
