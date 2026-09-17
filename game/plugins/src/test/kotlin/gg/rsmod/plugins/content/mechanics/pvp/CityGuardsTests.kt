@@ -6,6 +6,8 @@ import gg.rsmod.game.model.attr.AttributeMap
 import gg.rsmod.game.model.attr.COMBAT_TARGET_FOCUS_ATTR
 import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Player
+import gg.rsmod.game.model.timer.SKULL_ICON_DURATION_TIMER
+import gg.rsmod.game.model.timer.TimerMap
 import gg.rsmod.plugins.api.SkullIcon
 import io.mockk.every
 import io.mockk.mockk
@@ -25,13 +27,45 @@ class CityGuardsTests {
     private val grandExchange = Tile(3165, 3487, 0)
 
     @Test
-    fun `isGuard recognises the three imported OSRS Deadman guard ids and nothing else`() {
+    fun `isGuard recognises the imported OSRS Deadman guards and the owner's three named posts, nothing else`() {
         assertTrue(CityGuards.isGuard(npc(CityGuards.MELEE_GUARD_ID)))
         assertTrue(CityGuards.isGuard(npc(CityGuards.RANGED_GUARD_ID)))
         assertTrue(CityGuards.isGuard(npc(CityGuards.WIZGUARD_ID)))
+        assertTrue(CityGuards.isGuard(npc(CityGuards.THIRD_AGE_RANGER_ID)), "owner pin list: npc 14404 third age ranger")
+        assertTrue(CityGuards.isGuard(npc(CityGuards.THIRD_AGE_MAGE_ID)), "owner pin list: npc 14405 third age mage")
+        assertTrue(CityGuards.isGuard(npc(CityGuards.LUCIEN_ID)), "owner pin list: 14256 Lucien")
         assertFalse(CityGuards.isGuard(npc(1145)), "the ordinary 667 Ardougne guard is no longer a Deadman guard")
         assertFalse(CityGuards.isGuard(npc(3231)))
         assertFalse(CityGuards.isGuard(npc(9999)))
+    }
+
+    @Test
+    fun `every guard id has exactly one attack style and the owner's nine tiles are all posted`() {
+        val styled = CityGuards.MELEE_GUARD_IDS + CityGuards.RANGED_GUARD_IDS + CityGuards.MAGE_GUARD_IDS
+        assertEquals(styled.size, CityGuards.MELEE_GUARD_IDS.size + CityGuards.RANGED_GUARD_IDS.size + CityGuards.MAGE_GUARD_IDS.size, "an id must not sit in two style sets")
+        assertEquals(CityGuards.GUARD_IDS, styled + CityGuards.WIZGUARD_ID)
+        val owner =
+            listOf(
+                Triple(3187, 3446, CityGuards.THIRD_AGE_RANGER_ID), Triple(3186, 3432, CityGuards.THIRD_AGE_MAGE_ID),
+                Triple(3164, 3469, CityGuards.THIRD_AGE_RANGER_ID), Triple(2939, 3356, CityGuards.THIRD_AGE_MAGE_ID),
+                Triple(2966, 3399, CityGuards.THIRD_AGE_RANGER_ID), Triple(3006, 3388, null), Triple(3006, 3326, null),
+                Triple(3237, 3225, CityGuards.LUCIEN_ID), Triple(3218, 3251, null),
+            )
+        owner.forEach { (x, z, id) ->
+            val post = GuardPosts.ALL.firstOrNull { it.tile.x == x && it.tile.z == z }
+            assertTrue(post != null, "owner tile $x,$z must be a guard post")
+            assertEquals(id, post!!.npcId, "owner tile $x,$z npc")
+        }
+        assertEquals(8, CityGuards.PATROL_RADIUS, "owner: alle guards 8 tiles kunnen roamen")
+    }
+
+    @Test
+    fun `mayPursue keeps a guard on a skulled intruder anywhere inside the zone and drops it outside`() {
+        val guard = npc(CityGuards.MELEE_GUARD_ID, tile = grandExchange)
+        assertTrue(CityGuards.mayPursue(guard, newPlayer(tile = Tile(3200, 3430, 0), skulled = true)), "far side of Varrock, still the same zone")
+        assertFalse(CityGuards.mayPursue(guard, newPlayer(tile = Tile(3094, 3491, 0), skulled = true)), "Edgeville is a death zone")
+        assertFalse(CityGuards.mayPursue(guard, newPlayer(tile = grandExchange, skulled = false)), "unskulled: let go")
+        assertFalse(CityGuards.mayPursue(guard, npc(9999, tile = grandExchange)), "npcs are never pursued")
     }
 
     @Test
@@ -229,7 +263,9 @@ class CityGuardsTests {
         every { world.currentCycle } returns 0
         every { player.world } returns world
         every { player.tile } returns tile
-        every { player.skullIcon } returns if (skulled) SkullIcon.RED.id else SkullIcon.NONE.id
+        // The skull state is the running skull timer (PvpSkull.isSkulled), never an icon id.
+        every { player.timers } returns TimerMap().also { if (skulled) it[SKULL_ICON_DURATION_TIMER] = PvpSkull.SKULL_DURATION_CYCLES }
+        every { player.skullIcon } returns if (skulled) SkullIcon.DMM_VERY_LOW_RISK.id else SkullIcon.NONE.id
         every { player.getMaximumLifepoints() } returns maxLifepoints
         every { player.attr } returns AttributeMap()
         return player

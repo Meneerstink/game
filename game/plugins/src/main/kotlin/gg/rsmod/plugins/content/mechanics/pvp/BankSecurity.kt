@@ -1,8 +1,6 @@
 package gg.rsmod.plugins.content.mechanics.pvp
 
 import gg.rsmod.game.model.entity.Player
-import gg.rsmod.plugins.api.SkullIcon
-import gg.rsmod.plugins.api.ext.hasSkullIcon
 import gg.rsmod.plugins.api.ext.message
 
 /**
@@ -18,7 +16,7 @@ import gg.rsmod.plugins.api.ext.message
  */
 object BankSecurity {
     fun isBankBlocked(player: Player): Boolean =
-        player.hasSkullIcon(SkullIcon.RED) && GuardedZones.contains(player.tile)
+        PvpSkull.isSkulled(player) && GuardedZones.contains(player.tile)
 
     fun denyBank(player: Player): Boolean {
         if (!isBankBlocked(player)) return false

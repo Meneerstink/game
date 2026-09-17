@@ -4,11 +4,16 @@ import gg.rsmod.game.model.attr.PVP_AGGRESSOR_ATTR
 import gg.rsmod.game.model.timer.PVP_AGGRESSOR_WINDOW_TIMER
 import gg.rsmod.game.model.timer.SKULL_ICON_DURATION_TIMER
 import gg.rsmod.plugins.api.SkullIcon
-import gg.rsmod.plugins.api.ext.hasSkullIcon
 import gg.rsmod.plugins.api.ext.setSkullIcon
 
+/**
+ * The skull timer ran out: the skull STATE is the timer itself ([PvpSkull.isSkulled]), so drop the
+ * key first (the timer is still present, at 0, while its expiry hook runs) and then let the risk
+ * refresh derive the head icon again - no skull unless loot keys are carried.
+ */
 on_timer(SKULL_ICON_DURATION_TIMER) {
-    player.setSkullIcon(SkullIcon.NONE)
+    player.timers.remove(SKULL_ICON_DURATION_TIMER)
+    RiskSkull.refresh(player)
 }
 
 on_timer(PVP_AGGRESSOR_WINDOW_TIMER) {
@@ -27,7 +32,7 @@ on_timer(PvpSkull.SKULL_PAUSE_CHECK_TIMER) {
  * again until the next fresh attack.
  */
 on_login {
-    if (player.hasSkullIcon(SkullIcon.RED) && player.timers.exists(SKULL_ICON_DURATION_TIMER)) {
+    if (PvpSkull.isSkulled(player)) {
         player.timers[PvpSkull.SKULL_PAUSE_CHECK_TIMER] = 1
     }
 }
@@ -40,6 +45,7 @@ on_login {
  * of the now unskulled player on the next zone poll.
  */
 on_player_death {
+    player.timers.remove(SKULL_ICON_DURATION_TIMER)
     player.setSkullIcon(SkullIcon.NONE)
     player.lootKeyIcons = 0
     CityGuards.release(player)

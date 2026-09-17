@@ -21,6 +21,8 @@ object GuardPosts {
         val city: String,
         val tile: Tile,
         val ranged: Boolean,
+        /** A specific npc for this post (owner 2026-09-17 list); null = the ordinary Deadman guard. */
+        val npcId: Int? = null,
     )
 
     private fun city(
@@ -28,7 +30,27 @@ object GuardPosts {
         vararg xz: Pair<Int, Int>,
     ): List<Post> = xz.mapIndexed { index, (x, z) -> Post(name, Tile(x, z, 0), ranged = index % 2 == 1) }
 
-    val ALL: List<Post> =
+    /**
+     * Owner 2026-09-17 ("Place a guard on this exact tiles"), verbatim. Where the owner named an npc
+     * it is used; "voor de open coordinaten laat je de normale guards" - the others alternate the
+     * ordinary melee/ranged Deadman guard. A tile that turns out clipped or just outside the wiki
+     * polygon (2966,3399 lies a few tiles north of the Falador wall line) is snapped to the nearest
+     * walkable guarded tile at boot and reported in the boot line.
+     */
+    val OWNER_TILES_2026_09_17: List<Post> =
+        listOf(
+            Post("Varrock", Tile(3187, 3446, 0), ranged = true, npcId = CityGuards.THIRD_AGE_RANGER_ID),
+            Post("Varrock", Tile(3186, 3432, 0), ranged = false, npcId = CityGuards.THIRD_AGE_MAGE_ID),
+            Post("Varrock", Tile(3164, 3469, 0), ranged = true, npcId = CityGuards.THIRD_AGE_RANGER_ID),
+            Post("Falador", Tile(2939, 3356, 0), ranged = false, npcId = CityGuards.THIRD_AGE_MAGE_ID),
+            Post("Falador", Tile(2966, 3399, 0), ranged = true, npcId = CityGuards.THIRD_AGE_RANGER_ID),
+            Post("Falador", Tile(3006, 3388, 0), ranged = false),
+            Post("Falador", Tile(3006, 3326, 0), ranged = true),
+            Post("Lumbridge", Tile(3237, 3225, 0), ranged = false, npcId = CityGuards.LUCIEN_ID),
+            Post("Lumbridge", Tile(3218, 3251, 0), ranged = false),
+        )
+
+    private val CALIBRATED: List<Post> =
         // Varrock + GE: 4 px/tile, anchored on the GE "$" (3165,3487), checked against the west bank
         // (bankers x 3180/3191, z 3433-3445) and the east bank (bankers 3251-3256, z 3418).
         city(
@@ -89,4 +111,7 @@ object GuardPosts {
                 "Lumbridge",
                 3220 to 3238, 3207 to 3235, 3231 to 3231, 3220 to 3222, 3235 to 3217, 3208 to 3204,
             )
+
+    /** Declared last: an object's properties initialise in declaration order. */
+    val ALL: List<Post> = CALIBRATED + OWNER_TILES_2026_09_17
 }

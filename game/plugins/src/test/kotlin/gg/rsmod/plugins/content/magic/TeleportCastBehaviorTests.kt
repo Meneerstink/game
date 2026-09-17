@@ -135,9 +135,10 @@ class TeleportCastBehaviorTests {
     }
 
     @Test
-    fun `an unskulled player recently hit by another player gets the 7-second countdown instead of an instant teleport`() {
-        // Owner 2026-09-17 (supersedes the 2026-09-16 "blocked with a message" rule and RCV-005):
-        // the countdown interface "moet alleen gaan komen als je geskulled bent of in combat bent".
+    fun `an unskulled player recently hit by another player is refused with the remaining-seconds message, no countdown`() {
+        // Owner "deadmanmode vervijning" 2026-09-17 (OSRS Deadman wording): "If a unskulled player has
+        // been attacked recently and attempts to teleport, they will instead receive the following
+        // game message: You must be out of combat for another X seconds to teleport." - no interface.
         // TELEPORT_COMBAT_TIMER is the dedicated timer Combat.postAttack arms on every landed hit.
         val player = newPlayer(magicLevel = 99)
         every { player.lock } returns LockState.NONE
@@ -148,11 +149,12 @@ class TeleportCastBehaviorTests {
         player.attr[LAST_HIT_BY_ATTR] = WeakReference(mockk<Player>(relaxed = true))
 
         assertFalse(player.canTeleport(TeleportType.MODERN))
-        assertTrue(timers.exists(gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction.COUNTDOWN_TIMER), "the countdown must be armed")
+        assertFalse(timers.exists(gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction.COUNTDOWN_TIMER), "no countdown interface for an unskulled player")
+        assertEquals("You must be out of combat for another 7 seconds to teleport.", gg.rsmod.plugins.content.mechanics.pvp.DeadmanTimerGate.blockedMessage(player))
     }
 
     @Test
-    fun `an unskulled player recently hit by an ordinary npc also gets the countdown`() {
+    fun `an unskulled player recently hit by an ordinary npc is refused the same way`() {
         val player = newPlayer(magicLevel = 99)
         every { player.lock } returns LockState.NONE
         every { player.tile } returns Tile(3040, 3576)
@@ -160,6 +162,19 @@ class TeleportCastBehaviorTests {
         timers[gg.rsmod.game.model.timer.TELEPORT_COMBAT_TIMER] = 12
         every { player.timers } returns timers
         player.attr[LAST_HIT_BY_ATTR] = WeakReference(mockk<Npc>(relaxed = true))
+
+        assertFalse(player.canTeleport(TeleportType.MODERN))
+        assertFalse(timers.exists(gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction.COUNTDOWN_TIMER), "no countdown interface for an unskulled player")
+    }
+
+    @Test
+    fun `a skulled player gets the 7-second countdown interface even out of combat`() {
+        val player = newPlayer(magicLevel = 99)
+        every { player.lock } returns LockState.NONE
+        every { player.tile } returns Tile(3040, 3576)
+        val timers = TimerMap()
+        timers[gg.rsmod.game.model.timer.SKULL_ICON_DURATION_TIMER] = gg.rsmod.plugins.content.mechanics.pvp.PvpSkull.SKULL_DURATION_CYCLES
+        every { player.timers } returns timers
 
         assertFalse(player.canTeleport(TeleportType.MODERN))
         assertTrue(timers.exists(gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction.COUNTDOWN_TIMER), "the countdown must be armed")
@@ -196,8 +211,8 @@ class TeleportCastBehaviorTests {
         val player = newPlayer(magicLevel = 99)
         every { player.lock } returns LockState.NONE
         every { player.tile } returns Tile(3040, 3576)
-        every { player.timers } returns TimerMap()
-        every { player.skullIcon } returns gg.rsmod.plugins.api.SkullIcon.RED.id
+        // Skulled = the running PK skull timer (PvpSkull.isSkulled); the head icon is derived from it.
+        every { player.timers } returns TimerMap().also { it[gg.rsmod.game.model.timer.SKULL_ICON_DURATION_TIMER] = 500 }
 
         assertFalse(player.canTeleport(TeleportType.MODERN), "must not teleport instantly while skulled")
     }
@@ -222,8 +237,8 @@ class TeleportCastBehaviorTests {
         every { player.lock } returns LockState.NONE
         every { player.tile } returns Tile(3040, 3576)
         val timers = TimerMap()
+        timers[gg.rsmod.game.model.timer.SKULL_ICON_DURATION_TIMER] = 500
         every { player.timers } returns timers
-        every { player.skullIcon } returns gg.rsmod.plugins.api.SkullIcon.RED.id
         var ran = false
 
         val result = player.canTeleport(TeleportType.MODERN) { ran = true }

@@ -1,37 +1,72 @@
 package gg.rsmod.plugins.content.mechanics.pvp
 
+import gg.rsmod.game.model.Tile
+import gg.rsmod.game.model.World
 import gg.rsmod.game.model.attr.LAST_HIT_BY_ATTR
 import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Pawn
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.timer.TELEPORT_COMBAT_TIMER
-import gg.rsmod.plugins.api.SkullIcon
 import gg.rsmod.plugins.api.cfg.Npcs
-import gg.rsmod.plugins.api.ext.hasSkullIcon
+import gg.rsmod.plugins.content.areas.godwars.GodWars
 import gg.rsmod.plugins.content.combat.getCombatTarget
 import gg.rsmod.plugins.content.npcs.Constants
 
 /**
  * When the Deadman 7-second countdown ([SevenSecondAction]) applies to logging out and teleporting.
  *
- * Owner instruction 2026-09-17 (supersedes the 2026-09-16 "always a countdown on logout" and the
- * "blocked with a message when hit in the last 7 seconds" teleport rule):
- * - logout: no countdown when you are not skulled and not in combat - you log out at once;
- * - teleport: the countdown "moet alleen gaan komen als je geskulled bent of in combat bent (met
- *   uitzondering van alle bosses)".
+ * Owner "deadmanmode vervijning" (2026-09-17, OSRS Deadman Mode wiki wording):
+ * - "Skulled players will not be able to teleport instantly even if they are out of combat, as they
+ *   will receive the 7 second timer interface when they attempt to teleport."
+ * - "Unskulled players will be able to teleport instantly as long as they have not been attacked by a
+ *   player or NPC in the last 7 seconds. If a unskulled player has been attacked recently and attempts
+ *   to teleport, they will instead receive the following game message: You must be out of combat for
+ *   another X seconds to teleport." - no interface, the player keeps acting freely.
+ * - "Players who are in a boss area ... can teleport instantly without a timer": inside a boss area
+ *   ([BossAreas]) recent hits never delay a teleport; a hit by any boss npc never counts anywhere.
+ * - Logout keeps the earlier rule: a countdown only when skulled or in (non-boss) combat.
  *
- * "In combat" means a player or npc hit you within the last 7 seconds ([TELEPORT_COMBAT_TIMER], armed
- * by [gg.rsmod.plugins.content.combat.Combat.postAttack] on every landed hit) or you are currently
- * attacking someone. A fight with a boss npc never counts ([BossNpcs]).
+ * "Attacked in the last 7 seconds" is [TELEPORT_COMBAT_TIMER], armed for [SevenSecondAction.DURATION_CYCLES]
+ * by [gg.rsmod.plugins.content.combat.Combat.postAttack] on every landed hit.
  */
 object DeadmanTimerGate {
-    fun needsCountdown(player: Player): Boolean = player.hasSkullIcon(SkullIcon.RED) || inNonBossCombat(player)
+    enum class Teleport {
+        /** Teleport at once. */
+        INSTANT,
+
+        /** Skulled: the 7-second countdown interface. */
+        COUNTDOWN,
+
+        /** Unskulled but hit in the last 7 seconds: refuse with the remaining-seconds message. */
+        BLOCKED_IN_COMBAT,
+    }
+
+    fun teleportDecision(player: Player): Teleport =
+        when {
+            PvpSkull.isSkulled(player) -> Teleport.COUNTDOWN
+            BossAreas.isBossArea(player.world, player.tile) -> Teleport.INSTANT
+            recentlyHitByNonBoss(player) -> Teleport.BLOCKED_IN_COMBAT
+            else -> Teleport.INSTANT
+        }
+
+    /** Logout: countdown when skulled or in combat with a player / non-boss npc. */
+    fun needsCountdown(player: Player): Boolean = PvpSkull.isSkulled(player) || inNonBossCombat(player)
+
+    /** Whole seconds the player must still stay out of combat, for the owner's message. */
+    fun combatSecondsLeft(player: Player): Int =
+        if (player.timers.has(TELEPORT_COMBAT_TIMER)) SevenSecondAction.secondsFor(player.timers[TELEPORT_COMBAT_TIMER]) else 0
+
+    fun blockedMessage(player: Player): String = "You must be out of combat for another ${combatSecondsLeft(player)} seconds to teleport."
+
+    /** Hit within the last 7 seconds by something that is not a boss. */
+    fun recentlyHitByNonBoss(player: Player): Boolean {
+        if (!player.timers.has(TELEPORT_COMBAT_TIMER)) return false
+        val attacker = player.attr[LAST_HIT_BY_ATTR]?.get()
+        return attacker == null || !BossNpcs.isBoss(attacker)
+    }
 
     fun inNonBossCombat(player: Player): Boolean {
-        if (player.timers.has(TELEPORT_COMBAT_TIMER)) {
-            val attacker = player.attr[LAST_HIT_BY_ATTR]?.get()
-            if (attacker == null || !BossNpcs.isBoss(attacker)) return true
-        }
+        if (recentlyHitByNonBoss(player)) return true
         val target = player.getCombatTarget()
         if (target != null && !BossNpcs.isBoss(target)) return true
         return false
@@ -80,5 +115,43 @@ object BossNpcs {
         if (pawn !is Npc) return false
         if (pawn.id in IDS) return true
         return pawn.def.name.lowercase() in NAMES
+    }
+}
+
+/**
+ * Boss areas (owner 2026-09-17: "all godwars bosses dungeons ... corporal beast cave king black dragon
+ * cave tormented demon and other bosses we have is safe" for teleporting). Derived from the existing
+ * boss definitions instead of a hand-typed list: a 64x64 map region is a boss area when
+ * - a [BossNpcs] npc stood in it when the world finished loading ([init], so a boss in its respawn
+ *   gap still counts), or
+ * - a [BossNpcs] npc is standing in it right now (script-spawned bosses such as Nex or Bork), or
+ * - it is one of the four God Wars generals' chambers ([GodWars.God]) - the whole GWD dungeon.
+ *
+ * The live check only walks the npcs of the player's own region and runs once per teleport attempt,
+ * never per cycle.
+ */
+object BossAreas {
+    private val bootRegions = HashSet<Int>()
+
+    /** Called once from the world-init hook after every spawn file has been applied. */
+    fun init(world: World): String {
+        bootRegions.clear()
+        world.npcs.forEach { npc -> if (npc != null && BossNpcs.isBoss(npc)) bootRegions += npc.tile.regionId }
+        GodWars.God.values().forEach { god ->
+            for (x in god.chamberX step 8) for (z in god.chamberZ step 8) bootRegions += Tile(x, z, god.chamberHeight).regionId
+            bootRegions += Tile(god.chamberX.last, god.chamberZ.last, god.chamberHeight).regionId
+        }
+        return "BossAreas: ${bootRegions.size} boss regions derived from the boss npc spawns and the God Wars chambers"
+    }
+
+    fun bootRegionCount(): Int = bootRegions.size
+
+    fun isBossArea(
+        world: World,
+        tile: Tile,
+    ): Boolean {
+        val region = tile.regionId
+        if (region in bootRegions) return true
+        return world.npcs.any { npc -> npc != null && npc.tile.regionId == region && BossNpcs.isBoss(npc) }
     }
 }

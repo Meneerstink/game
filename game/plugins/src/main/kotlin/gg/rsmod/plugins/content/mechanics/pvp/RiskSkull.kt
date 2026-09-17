@@ -11,17 +11,27 @@ import gg.rsmod.plugins.content.mechanics.death.ItemDefCostValueProvider
 import gg.rsmod.plugins.content.mechanics.death.ItemRiskValueProvider
 
 /**
- * Risk-coloured skulls (master plan section 1C "Deadman-style onderdelen"): a five-tier icon showing
- * how much value a player currently has at risk of loss on death, distinct from the real PK
- * [SkullIcon.RED] skull ([PvpSkull]). Wires up [SkullIcon.DMM_VERY_HIGH_RISK]..
- * [SkullIcon.DMM_VERY_LOW_RISK] - real cache-verified Deadman Mode icon ids that already
- * existed in [SkullIcon] with zero usages anywhere in this codebase before this pass.
+ * Risk-coloured skulls (master plan section 1C "Deadman-style onderdelen"; owner 2026-09-17: "the
+ * skull above the head colour needs to be updating with the skull in the timerskull hud, so when
+ * the risk changes of a player it needs to recalculate and change colors depending on risk").
  *
- * "Risked value" reuses the same centralized death/risk engine
- * ([gg.rsmod.plugins.content.mechanics.death.DeathItemRiskCalculator]) death itself resolves
- * against - it is specifically the value of the item stacks that would actually be LOST right
- * now (i.e. excluded by Protect Item/skull-based protected-stack count), not raw total held
- * wealth, matching the real Deadman Mode concept this table is sourced from.
+ * The head icon is DERIVED state, recomputed every cycle from two facts:
+ * - whether the player is PK-skulled ([PvpSkull.isSkulled] - the running skull timer), and
+ * - how many loot keys they carry ([LootKeys]).
+ *
+ * A skulled player always shows a skull, coloured by the value currently at risk (bronze when
+ * nothing is at risk, so the skull never vanishes while the timer runs). An unskulled player shows
+ * no skull at all (owner 2026-09-17: "als een player unskulled is geeft die nu een witte skull aan,
+ * dit mag niet") unless they carry loot keys, in which case the risk-coloured skull is the carrier
+ * of the key count (owner example: "1 key above his head and a brown skull"). The five tiers are
+ * the cache-verified Deadman icon ids [SkullIcon.DMM_VERY_HIGH_RISK]..[SkullIcon.DMM_VERY_LOW_RISK];
+ * the plain red [SkullIcon.RED] frame is never used, so the client's skull-timer HUD (which draws
+ * the local player's own head icon) shows exactly the same colour as the icon above the head.
+ *
+ * "Risked value" reuses the same centralized death/risk engine ([DeathItemRiskCalculator]) death
+ * itself resolves against - it is specifically the value of the item stacks that would actually be
+ * LOST right now (i.e. excluded by Protect Item/skull-based protected-stack count), not raw total
+ * held wealth, matching the real Deadman Mode concept this table is sourced from.
  *
  * Thresholds are the owner's explicit 2026-09-16 values (Deadman PvP guards plan), superseding
  * the master plan's earlier provisional table ("Exacte bedragen later balancen"):
@@ -33,13 +43,6 @@ import gg.rsmod.plugins.content.mechanics.death.ItemRiskValueProvider
  * | Green  | 800,001 - 2,000,000   |
  * | Blue   | 2,000,001 - 8,000,000 |
  * | Red    | 8,000,001+            |
- *
- * A player with nothing at risk (e.g. an empty inventory/equipment) shows no risk skull at all
- * ([SkullIcon.NONE]) - not in the plan's table, but the only sane behaviour for the zero case.
- *
- * A real PK [SkullIcon.RED] skull always takes priority and is never overwritten here: a
- * player only has one skull-icon client slot ([Player.skullIcon]), matching how real Deadman
- * Mode shows RED instead of the risk-tier icon while genuinely PK-skulled.
  */
 object RiskSkull {
     const val BRONZE_MAX = 200_000L
@@ -71,7 +74,7 @@ object RiskSkull {
             DeathItemRiskCalculator.calculate(
                 inventory = player.inventory.items.copyOf(),
                 equipment = player.equipment.items.copyOf(),
-                skulled = player.hasSkullIcon(SkullIcon.RED),
+                skulled = PvpSkull.isSkulled(player),
                 itemProtectionActive = player.attr[PROTECT_ITEM_ATTR] == true,
                 valueProvider = valueProvider,
             )
@@ -82,13 +85,22 @@ object RiskSkull {
      * reflects the number of keys a player has in their inventory." */
     fun heldKeys(player: Player): Int = LootKeys.heldKeyIndexes(player).size.coerceIn(0, LootKeys.MAX_KEYS)
 
+    /** The icon [player] should show right now (see the class doc). */
+    fun iconFor(
+        player: Player,
+        valueProvider: ItemRiskValueProvider = ItemDefCostValueProvider(player.world.definitions),
+    ): SkullIcon {
+        val skulled = PvpSkull.isSkulled(player)
+        val keys = heldKeys(player)
+        if (!skulled && keys == 0) return SkullIcon.NONE
+        val tier = tierFor(calculateRiskedValue(player, valueProvider))
+        return if (tier == SkullIcon.NONE) SkullIcon.DMM_VERY_LOW_RISK else tier
+    }
+
     /**
-     * Refreshes [player]'s head icon: the risk-tier skull (unless PK-skulled - [SkullIcon.RED]
-     * always wins, see class doc) plus the loot-key count. A player carrying keys always shows at
-     * least the Bronze skull, so the key count has a skull to sit on (owner example: "1 player
-     * kill ... 200,000gp or less ... 1 key above his head and a brown skull"). A no-op when
-     * nothing changed, so it is safe to call every cycle. [valueProvider] is threaded through to
-     * [calculateRiskedValue] for cache-free testability.
+     * Refreshes [player]'s head icon and loot-key count from the current skull state and risk. A
+     * no-op when nothing changed, so it is safe to call every cycle. [valueProvider] is threaded
+     * through to [calculateRiskedValue] for cache-free testability.
      */
     fun refresh(
         player: Player,
@@ -100,20 +112,10 @@ object RiskSkull {
             player.lootKeyIcons = keys
             changed = true
         }
-        if (!player.hasSkullIcon(SkullIcon.RED)) {
-            // Owner 2026-09-17: an unskulled player must show no skull at all ("als een player
-            // unskulled is geeft die nu een witte skull aan, dit mag niet"). The risk-tier colour
-            // therefore only appears as the carrier of a loot-key count (the owner's own example:
-            // "1 key above his head and a brown skull"); without keys the head icon is empty.
-            var tier = SkullIcon.NONE
-            if (keys > 0) {
-                tier = tierFor(calculateRiskedValue(player, valueProvider))
-                if (tier == SkullIcon.NONE) tier = SkullIcon.DMM_VERY_LOW_RISK
-            }
-            if (!player.hasSkullIcon(tier)) {
-                player.setSkullIcon(tier)
-                changed = false // setSkullIcon already queued the appearance update
-            }
+        val icon = iconFor(player, valueProvider)
+        if (!player.hasSkullIcon(icon)) {
+            player.setSkullIcon(icon)
+            changed = false // setSkullIcon already queued the appearance update
         }
         if (changed) {
             player.addBlock(UpdateBlockType.APPEARANCE)

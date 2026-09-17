@@ -8,4 +8,6 @@ package gg.rsmod.plugins.content.mechanics.pvp
  */
 on_world_init {
     println(BankZones.init(world))
+    println(BossAreas.init(world))
+    println(DangerSigns.place(world))
 }

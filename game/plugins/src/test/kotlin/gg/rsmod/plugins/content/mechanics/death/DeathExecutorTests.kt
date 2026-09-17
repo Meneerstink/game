@@ -53,6 +53,9 @@ class DeathExecutorTests {
         // Seeded above the streak this kill produces so the leaderboard's best-streak branch,
         // which writes data/killstreak_leaderboard.txt, stays out of a unit test.
         killer.attr[BEST_KILLSTREAK_ATTR] = 5
+        // Deadman (owner 2026-09-17): every kill produces a loot key by default; this test covers
+        // the ground-loot path a killer gets after asking Skully to switch the keys off.
+        killer.attr[gg.rsmod.plugins.content.mechanics.pvp.LootKeys.ENABLED] = false
         val world = mockk<World>(relaxed = true)
 
         victim.inventory[0] = Item(LOST_ITEM, 3)
@@ -251,6 +254,33 @@ class DeathExecutorTests {
         assertTrue(expiry in (before + config.recoveryDurationMs)..(after + config.recoveryDurationMs))
         assertEquals(250, victim.attr[DEATH_RECOVERY_FEE_ATTR])
         verify(exactly = 1) { logger.logDeathRecoveryCreated(victim, 1, expiry, 250) }
+    }
+
+    @Test
+    fun `a new PvM death purges expired recovery before checking capacity`() {
+        val victim = newPlayer()
+        val world = mockk<World>(relaxed = true)
+        victim.deathRecovery[0] = Item(FILLER_ITEM, 1)
+        victim.attr[DEATH_RECOVERY_EXPIRY_ATTR] = System.currentTimeMillis() - 1
+        victim.attr[DEATH_RECOVERY_FEE_ATTR] = 250
+        victim.inventory[0] = Item(LOST_ITEM, 1)
+
+        val result =
+            DeathResolutionResult(
+                DeathContext.PVM_SAFE,
+                victim,
+                null,
+                DeathItemRiskResult(
+                    protectedItemCount = 0,
+                    protected = emptyList(),
+                    lost = listOf(DeathSlotItem(DeathContainerSource.INVENTORY, 0, Item(LOST_ITEM, 1))),
+                ),
+            )
+
+        assertTrue(DeathExecutor.execute(world, result, DeathRecoveryConfig.PLACEHOLDER))
+        assertEquals(0, victim.deathRecovery.getItemCount(FILLER_ITEM), "expired recovery must not consume capacity")
+        assertEquals(1, victim.deathRecovery.getItemCount(LOST_ITEM), "new loss must enter fresh recovery")
+        assertTrue((victim.attr[DEATH_RECOVERY_EXPIRY_ATTR] ?: 0L) > System.currentTimeMillis())
     }
 
     private fun newPlayer(): Player {

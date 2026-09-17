@@ -7,10 +7,6 @@ import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.timer.PVP_AGGRESSOR_WINDOW_TIMER
 import gg.rsmod.game.model.timer.SKULL_ICON_DURATION_TIMER
 import gg.rsmod.game.model.timer.TimerKey
-import gg.rsmod.plugins.api.SkullIcon
-import gg.rsmod.plugins.api.ext.filterableMessage
-import gg.rsmod.plugins.api.ext.hasSkullIcon
-import gg.rsmod.plugins.api.ext.skull
 import java.lang.ref.WeakReference
 
 /**
@@ -47,15 +43,27 @@ object PvpSkull {
     /** ~1 minute of standing on the same tile pauses the skull countdown (owner spec, 2026-09-16). */
     const val SAME_TILE_STALL_CYCLES = 100
 
-    /** HUD remaining-time refresh cadence: 30 seconds (owner spec, 2026-09-16). */
-    const val HUD_REFRESH_CYCLES = 50
-
     /** Per-cycle driver for [tickPauseTracking]; session-local, cleared on death like the skull itself. */
     val SKULL_PAUSE_CHECK_TIMER = TimerKey(tickOffline = false, resetOnDeath = true)
 
     private val SKULL_STALL_TILE_ATTR = AttributeKey<Tile>()
     private val SKULL_STALL_CYCLES_ATTR = AttributeKey<Int>()
-    private val SKULL_HUD_CYCLES_ATTR = AttributeKey<Int>()
+
+    /**
+     * Whether [player] is PK-skulled. The skull STATE is the running (persisted, death-reset)
+     * [SKULL_ICON_DURATION_TIMER]; the head ICON is derived from it by [RiskSkull.refresh] every
+     * cycle in the risk-tier colour (owner 2026-09-17: "the skull above the head colour needs to be
+     * updating ... when the risk changes of a player it needs to recalculate and change colors
+     * depending on risk"). Nothing may test the icon id to learn whether a player is skulled.
+     */
+    fun isSkulled(player: Player): Boolean = player.timers.exists(SKULL_ICON_DURATION_TIMER)
+
+    /** Starts (or restarts) the 5-minute skull and shows the risk-coloured icon at once. */
+    private fun applySkull(player: Player) {
+        player.timers[SKULL_ICON_DURATION_TIMER] = SKULL_DURATION_CYCLES
+        RiskSkull.refresh(player)
+        armPauseTracking(player)
+    }
 
     /**
      * Call when [attacker] player-initiates an attack against [victim] via
@@ -73,8 +81,7 @@ object PvpSkull {
 
         val isRetaliation = attacker.attr[PVP_AGGRESSOR_ATTR]?.get() == victim
         if (!isRetaliation) {
-            attacker.skull(SkullIcon.RED, SKULL_DURATION_CYCLES)
-            armPauseTracking(attacker)
+            applySkull(attacker)
         }
         // Deadman PvP guards plan (2026-09-16): "attacking ... ends it early" - the attacker's
         // own post-kill grace period, if any, ends the moment they initiate a new attack.
@@ -85,8 +92,7 @@ object PvpSkull {
     /** Owner retest helper (`skullme` command): the same 5-minute skull + pause tracking a real
      * unprovoked attack gives, without needing a second account. */
     fun applyTestSkull(player: Player) {
-        player.skull(SkullIcon.RED, SKULL_DURATION_CYCLES)
-        armPauseTracking(player)
+        applySkull(player)
     }
 
     /**
@@ -112,7 +118,6 @@ object PvpSkull {
     private fun armPauseTracking(player: Player) {
         player.attr[SKULL_STALL_TILE_ATTR] = player.tile
         player.attr[SKULL_STALL_CYCLES_ATTR] = 0
-        player.attr[SKULL_HUD_CYCLES_ATTR] = 0
         player.timers.resume(SKULL_ICON_DURATION_TIMER)
         player.timers[SKULL_PAUSE_CHECK_TIMER] = 1
     }
@@ -123,11 +128,10 @@ object PvpSkull {
      * stops rescheduling itself (and clears its bookkeeping attributes) once the skull clears.
      */
     fun tickPauseTracking(player: Player) {
-        if (!player.hasSkullIcon(SkullIcon.RED) || !player.timers.exists(SKULL_ICON_DURATION_TIMER)) {
+        if (!isSkulled(player)) {
             player.timers.resume(SKULL_ICON_DURATION_TIMER)
             player.attr.remove(SKULL_STALL_TILE_ATTR)
             player.attr.remove(SKULL_STALL_CYCLES_ATTR)
-            player.attr.remove(SKULL_HUD_CYCLES_ATTR)
             return
         }
 
@@ -149,33 +153,8 @@ object PvpSkull {
             player.timers.resume(SKULL_ICON_DURATION_TIMER)
         }
 
-        val hudCycles = (player.attr[SKULL_HUD_CYCLES_ATTR] ?: 0) + 1
-        if (hudCycles >= HUD_REFRESH_CYCLES) {
-            player.attr[SKULL_HUD_CYCLES_ATTR] = 0
-            sendSkullTimeRemaining(player)
-        } else {
-            player.attr[SKULL_HUD_CYCLES_ATTR] = hudCycles
-        }
-
+        // The remaining time itself is shown on the HUD ([DeadmanHud.skullText], rounded to the
+        // half minute), not in the chatbox: no 30-second chat spam.
         player.timers[SKULL_PAUSE_CHECK_TIMER] = 1
-    }
-
-    /**
-     * SOURCE_BLOCKED (2026-09-16): the owner's reference screenshot ("skull timer and icon.png")
-     * shows a dedicated "5:00"-style countdown display, but pinning the exact interface/component
-     * id it lives on needs the same read-only cache-decode investigation that produced
-     * `2011scape-client/2011scape-client/NIGHT_WILDERNESS_HANDOFF.md` for interface 381 - not yet
-     * done for the skull timer. Until that investigation identifies the real component, the
-     * remaining time is surfaced through the existing filterable chat message channel (a real,
-     * always-safe mechanism already used throughout this codebase) instead of guessing a cache
-     * component id. Replace this with the correct setComponentText call once sourced - see the M1
-     * handoff for the open follow-up.
-     */
-    private fun sendSkullTimeRemaining(player: Player) {
-        val cyclesLeft = if (player.timers.exists(SKULL_ICON_DURATION_TIMER)) player.timers[SKULL_ICON_DURATION_TIMER] else 0
-        val secondsLeft = (cyclesLeft * 0.6).toInt().coerceAtLeast(0)
-        val minutes = secondsLeft / 60
-        val seconds = secondsLeft % 60
-        player.filterableMessage("Your skull will disappear in %d:%02d.".format(minutes, seconds))
     }
 }

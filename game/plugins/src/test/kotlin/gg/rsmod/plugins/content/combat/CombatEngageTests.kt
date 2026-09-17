@@ -14,9 +14,11 @@ import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.timer.ACTIVE_COMBAT_TIMER
 import gg.rsmod.game.model.timer.TimerMap
+import gg.rsmod.plugins.content.mechanics.pvp.AreaState
 import io.mockk.every
 import io.mockk.mockk
 import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
@@ -87,41 +89,42 @@ class CombatEngageTests {
     }
 
     @Test
-    fun `players can fight in dangerous wilderness within the flat +-12 combat level range`() {
+    fun `players can fight in dangerous wilderness within the flat +-14 combat level range`() {
         val home = Tile(3140, 3640, 0)
         // (3528 - 3520) / 8 + 1 = wilderness level 2, far outside the safe hub. The flat
-        // +/-12 range (Deadman PvP guards plan, 2026-09-16) allows an 11-level gap here even
-        // though the old Wilderness-level-scaled formula (+/-2 at level 2) would have blocked
-        // it - this is the regression check that the scaled formula was actually replaced.
+        // +/-14 range (owner "deadmanmode vervijning" 2026-09-17, "also in the wilderness") allows
+        // a 13-level gap here even though the old Wilderness-level-scaled formula (+/-2 at level
+        // 2) would have blocked it - the regression check that the scaled formula was replaced.
         val attacker = newPlayer(tile = Tile(3040, 3528), combatLevel = 50, home = home)
-        val target = newPlayer(tile = Tile(3040, 3530), combatLevel = 61, home = home)
+        val target = newPlayer(tile = Tile(3040, 3530), combatLevel = 63, home = home)
 
         assertTrue(Combat.canEngage(attacker, target))
     }
 
     @Test
-    fun `flat +-12 combat level range blocks a fight when the gap exceeds 12`() {
+    fun `flat +-14 combat level range blocks a fight when the gap exceeds 14`() {
         val home = Tile(3140, 3640, 0)
         val attacker = newPlayer(tile = Tile(3040, 3528), combatLevel = 50, home = home)
-        val target = newPlayer(tile = Tile(3040, 3530), combatLevel = 63, home = home)
+        val target = newPlayer(tile = Tile(3040, 3530), combatLevel = 50 + AreaState.MAX_COMBAT_LEVEL_DIFFERENCE + 1, home = home)
 
         assertFalse(Combat.canEngage(attacker, target))
     }
 
     @Test
-    fun `flat +-12 combat level range applies at exactly the boundary`() {
+    fun `flat +-14 combat level range applies at exactly the boundary`() {
         val home = Tile(3140, 3640, 0)
-        val attackerAt12 = newPlayer(tile = Tile(3040, 3528), combatLevel = 50, home = home)
-        val targetAt12 = newPlayer(tile = Tile(3040, 3530), combatLevel = 62, home = home)
-        assertTrue(Combat.canEngage(attackerAt12, targetAt12), "exactly 12 levels apart must be allowed")
+        assertEquals(14, AreaState.MAX_COMBAT_LEVEL_DIFFERENCE)
+        val attackerAt14 = newPlayer(tile = Tile(3040, 3528), combatLevel = 50, home = home)
+        val targetAt14 = newPlayer(tile = Tile(3040, 3530), combatLevel = 64, home = home)
+        assertTrue(Combat.canEngage(attackerAt14, targetAt14), "exactly 14 levels apart must be allowed")
 
-        val attackerAt13 = newPlayer(tile = Tile(3040, 3528), combatLevel = 50, home = home)
-        val targetAt13 = newPlayer(tile = Tile(3040, 3530), combatLevel = 63, home = home)
-        assertFalse(Combat.canEngage(attackerAt13, targetAt13), "13 levels apart must be blocked")
+        val attackerAt15 = newPlayer(tile = Tile(3040, 3528), combatLevel = 50, home = home)
+        val targetAt15 = newPlayer(tile = Tile(3040, 3530), combatLevel = 65, home = home)
+        assertFalse(Combat.canEngage(attackerAt15, targetAt15), "15 levels apart must be blocked")
     }
 
     @Test
-    fun `flat +-12 combat level range also applies outside the Wilderness since PvP is dangerous everywhere`() {
+    fun `flat +-14 combat level range also applies outside the Wilderness since PvP is dangerous everywhere`() {
         val home = Tile(3140, 3640, 0)
         // Ordinary overworld tile, not a Wilderness region and not the Ferox bank - dangerous
         // under R03.1 (PvP allowed everywhere outside explicit bank safe zones), so the range

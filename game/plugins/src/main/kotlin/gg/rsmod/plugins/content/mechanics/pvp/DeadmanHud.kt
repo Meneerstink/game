@@ -4,10 +4,9 @@ import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.timer.SKULL_ICON_DURATION_TIMER
 import gg.rsmod.plugins.api.InterfaceDestination
-import gg.rsmod.plugins.api.SkullIcon
 import gg.rsmod.plugins.api.ext.closeInterface
 import gg.rsmod.plugins.api.ext.getWildernessLevel
-import gg.rsmod.plugins.api.ext.hasSkullIcon
+import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.api.ext.openInterface
 import gg.rsmod.plugins.api.ext.removeOption
 import gg.rsmod.plugins.api.ext.sendOption
@@ -15,25 +14,28 @@ import gg.rsmod.plugins.api.ext.setComponentHidden
 import gg.rsmod.plugins.api.ext.setComponentText
 
 /**
- * Deadman HUD (owner instruction 2026-09-16: "a dangerous area icon like deadmanmode", the skull
- * timer "shown on the game HUD and it refreshes every half a minute", Wilderness levels "only in
- * the wilderness", and everything "running correctly in fixed size, resizable and full screen").
+ * Deadman HUD - server side of the owner's reference screenshots ("deadmanmode vervijning",
+ * 2026-09-17: the HUD "needs to be exactly visually the same"):
  *
- * Built on interface 381, the revision-667 Wilderness/PvP overlay (verified cache decode in
- * `2011scape-client/2011scape-client/NIGHT_WILDERNESS_HANDOFF.md`): component 0 is the visible
- * parent with skull graphic 1 and text 2; component 3 is a second parent with graphic 4 and text 5.
- * The overlay is mounted through [InterfaceDestination.PVP_OVERLAY], which resolves to the fixed
- * (548:19) or resizable/fullscreen (746:10) slot, and is re-mounted after every client
- * window-mode change ([reset] is called from the WINDOW_STATUS handler).
+ * <pre>
+ *        [skull-and-crossbones] [!]        (Guarded: the crossed-out skull instead)
+ *              Deadman                     ("Guarded" / "Level: N" in the Wilderness)
+ *               81-95                      (the +/-14 combat bracket, everywhere)
+ *           [own skull] 5:00               (only while PK-skulled; refreshes every 30 s)
+ * </pre>
  *
- * Presentation:
- * - Wilderness: skull + "Level: N" (the real level, pushed by the server - the client never
- *   computes it itself, which is what produced the old "-2" readings).
- * - Guarded city: text "Guarded", skull graphic hidden (no PvP here).
- * - Anywhere else: skull + "Dangerous".
- * - PK-skulled: the second parent (component 3) is shown with the remaining skull time as m:ss,
- *   rounded up to the next half minute so it changes every 30 seconds like the OSRS HUD.
- *   PENDING_HUMAN_RETEST: whether the client draws 381:3 next to 381:0 in every window mode.
+ * Built on interface 381, the revision-667 Wilderness/PvP overlay: component 0 is the zone layer
+ * whose text component 2 carries `"<state>|<lo>-<hi>"`; component 3 is the skull-timer layer whose
+ * text component 5 carries `m:ss`. The client (`DeadmanSkullHud`) never draws the cache layouts of
+ * either layer; it renders the screenshot layout from these two strings at the zone layer's own
+ * screen position, so the HUD is identical in fixed, resizable and fullscreen mode and in every
+ * graphics mode. The overlay is mounted through [InterfaceDestination.PVP_OVERLAY] and re-mounted
+ * after every window-mode change ([reset] runs from the WINDOW_STATUS handler).
+ *
+ * Every number here comes from the same shared predicates the gameplay uses: the zone from
+ * [GuardedZones] (also the PvP gate, the guards and the danger signs), the bracket from
+ * [AreaState.bracketOf] (also the attack gate), the timer from [PvpSkull.isSkulled] (also the guards,
+ * the logout/teleport gate and the risk skull). The HUD can therefore never disagree with the rules.
  *
  * The client "Attack" player option follows the same state: available in every death zone,
  * removed inside a guarded city.
@@ -47,13 +49,22 @@ object DeadmanHud {
     const val SKULL_TEXT = 5
 
     const val TEXT_GUARDED = "Guarded"
-    const val TEXT_DANGEROUS = "Dangerous"
+
+    /** Owner screenshot: a dangerous (non-Wilderness) zone is labelled "Deadman". */
+    const val TEXT_DANGEROUS = "Deadman"
+
+    /** Separator between the zone label and the combat bracket in component 381:2. */
+    const val FIELD_SEPARATOR = '|'
+
+    /** Owner 2026-09-17: shown once on every guarded -> dangerous transition. */
+    const val DANGER_WARNING = "Warning: You are entering a dangerous zone."
 
     /** Owner spec: the HUD skull timer refreshes every half a minute. */
     const val SKULL_HUD_STEP_SECONDS = 30
 
     private val LAST_ZONE_TEXT_ATTR = AttributeKey<String>()
     private val LAST_SKULL_TEXT_ATTR = AttributeKey<String>()
+    private val LAST_STATE_ATTR = AttributeKey<State>()
     private val OVERLAY_OPEN_ATTR = AttributeKey<Boolean>()
 
     enum class State {
@@ -64,28 +75,37 @@ object DeadmanHud {
 
     fun stateOf(player: Player): State =
         when {
+            !AreaState.isDangerous(player.tile) -> State.GUARDED
             player.tile.getWildernessLevel() > 0 -> State.WILDERNESS
-            GuardedZones.contains(player.tile) -> State.GUARDED
             else -> State.DANGEROUS
         }
 
-    fun zoneText(player: Player): String =
+    fun zoneLabel(player: Player): String =
         when (stateOf(player)) {
             State.WILDERNESS -> "Level: ${player.tile.getWildernessLevel()}"
             State.GUARDED -> TEXT_GUARDED
             State.DANGEROUS -> TEXT_DANGEROUS
         }
 
+    /** "81-95": the levels this player may attack and be attacked by, the same everywhere. */
+    fun bracketText(combatLevel: Int): String {
+        val bracket = AreaState.bracketOf(combatLevel)
+        return "${bracket.first}-${bracket.last}"
+    }
+
+    /** The full component-381:2 payload: label, separator, bracket. */
+    fun zoneText(player: Player): String = zoneLabel(player) + FIELD_SEPARATOR + bracketText(player.combatLevel)
+
     /** Remaining skull time as shown on the HUD, or null when not PK-skulled. */
     fun skullText(player: Player): String? {
-        if (!player.hasSkullIcon(SkullIcon.RED)) return null
+        if (!PvpSkull.isSkulled(player)) return null
         val cyclesLeft = if (player.timers.exists(SKULL_ICON_DURATION_TIMER)) player.timers[SKULL_ICON_DURATION_TIMER] else 0
         return formatHalfMinutes(cyclesLeft)
     }
 
     /** m:ss rounded UP to the next 30-second step (5:00, 4:30, 4:00, ... 0:30). */
     fun formatHalfMinutes(cyclesLeft: Int): String {
-        val secondsLeft = (cyclesLeft * 0.6).toInt().coerceAtLeast(0)
+        val secondsLeft = Math.ceil(cyclesLeft * 0.6).toInt().coerceAtLeast(0)
         val stepped = ((secondsLeft + SKULL_HUD_STEP_SECONDS - 1) / SKULL_HUD_STEP_SECONDS) * SKULL_HUD_STEP_SECONDS
         return "%d:%02d".format(stepped / 60, stepped % 60)
     }
@@ -102,6 +122,14 @@ object DeadmanHud {
         val state = stateOf(player)
         val zone = zoneText(player)
         val skull = skullText(player)
+
+        val previousState = player.attr[LAST_STATE_ATTR]
+        if (previousState != state) {
+            player.attr[LAST_STATE_ATTR] = state
+            if (previousState == State.GUARDED) {
+                player.message(DANGER_WARNING)
+            }
+        }
 
         val zoneChanged = player.attr[LAST_ZONE_TEXT_ATTR] != zone
         val skullChanged = player.attr[LAST_SKULL_TEXT_ATTR] != (skull ?: "")

@@ -249,6 +249,22 @@ task runVarbitDefProbeTool(type: JavaExec) {
     main = 'gg.rsmod.game.tools.importer.VarbitDefProbeTool'
 }
 
+task runNpcAttackOptionStripTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Removes the "Attack" interact option from npc definitions in both production caches ' +
+        '(CacheTransaction). Usage: ./gradlew :game:runNpcAttackOptionStripTool --args="<npcId> [npcId ...] [--apply]"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.NpcAttackOptionStripTool'
+}
+
+task runNpcRenameTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Rewrites the cache name (NPCType opcode 2) of npc definitions in both production caches ' +
+        '(CacheTransaction). Usage: ./gradlew :game:runNpcRenameTool --args="<newName> <npcId> [npcId ...] [--apply]"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.NpcRenameTool'
+}
+
 task runNpcDefProbeTool(type: JavaExec) {
     group = 'tools'
     description = 'Read-only diagnostic: dumps NpcDef interact-menu option strings, either for ' +

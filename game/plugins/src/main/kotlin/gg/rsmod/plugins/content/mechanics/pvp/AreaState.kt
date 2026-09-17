@@ -272,21 +272,35 @@ object AreaState {
     ): Boolean = !isSafe(tile, home)
 
     /**
-     * Deadman PvP guards plan (owner-approved 2026-09-16): a player may only attack another
-     * player up to [MAX_COMBAT_LEVEL_DIFFERENCE] combat levels above or below them. This is a
-     * flat, location-independent range - not the traditional OSRS Wilderness-level-scaled range
-     * - because PvP in this build is allowed everywhere outside explicit bank safe zones (R03.1),
-     * not only in the Wilderness, so a range that scales with Wilderness depth would give no
-     * protection at all outside the Wilderness. Superseded here: the previous per-tile
-     * Wilderness-level-scaled check in [gg.rsmod.plugins.content.combat.Combat] now delegates to
-     * this single shared constant/comparison instead of running its own formula.
+     * Deadman combat bracket (owner "deadmanmode vervijning" 2026-09-17: "combat bracket 14 levels
+     * higher or lower also in the wilderness! everywhere", superseding the 2026-09-16 +/-12): a
+     * player may only attack another player up to [MAX_COMBAT_LEVEL_DIFFERENCE] combat levels above
+     * or below them. Flat and location-independent - the Wilderness uses the very same bracket, never
+     * the classic Wilderness-depth formula. The HUD bracket ([bracketOf]) and this gate are the
+     * same numbers by construction: every attack entrypoint runs through [canPlayersFight].
      */
-    const val MAX_COMBAT_LEVEL_DIFFERENCE = 12
+    const val MAX_COMBAT_LEVEL_DIFFERENCE = 14
+
+    /** Lowest and highest combat level a player can ever have (3 - 138). */
+    const val MIN_COMBAT_LEVEL = 3
+    const val MAX_COMBAT_LEVEL = 138
 
     fun isWithinCombatLevelRange(
         attacker: gg.rsmod.game.model.entity.Player,
         target: gg.rsmod.game.model.entity.Player,
     ): Boolean = abs(attacker.combatLevel - target.combatLevel) <= MAX_COMBAT_LEVEL_DIFFERENCE
+
+    /** The attackable bracket for [combatLevel], clamped to real combat levels, e.g. 88 -> 74..102. */
+    fun bracketOf(combatLevel: Int): IntRange =
+        (combatLevel - MAX_COMBAT_LEVEL_DIFFERENCE).coerceAtLeast(MIN_COMBAT_LEVEL)..
+            (combatLevel + MAX_COMBAT_LEVEL_DIFFERENCE).coerceAtMost(MAX_COMBAT_LEVEL)
+
+    /** True when [tile] is a PvP-enabled (dangerous) tile - the single predicate the HUD, the guards,
+     * the PvP gate and the danger warning share. */
+    fun isDangerous(tile: Tile): Boolean = !GuardedZones.contains(tile)
+
+    /** Owner-specified message when a player tries to attack inside a guarded (safe) zone. */
+    const val SAFE_ZONE_ATTACK_MESSAGE = "The guards might get annoyed at you if you did that here."
 
     fun canPlayersFight(
         attacker: gg.rsmod.game.model.entity.Player,

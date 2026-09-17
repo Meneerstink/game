@@ -50,9 +50,11 @@ class BankEntryGuardTests {
                     "CityGuards.kt",
                 ),
             )
-        val entry = source.substringAfter("if (existing.isEmpty()) {")
-        val spawn = entry.indexOf("spawnReactiveGuards(world, player)")
-        assertTrue(spawn >= 0)
+        val anchor = "if (!player.attr.has(REACTIVE_PLAN_ATTR)) {"
+        assertTrue(source.contains(anchor), "CityGuards.onZoneCheck first-entry branch must exist")
+        val entry = source.substringAfter(anchor)
+        val spawn = entry.indexOf("engageReactiveGuards(world, player)")
+        assertTrue(spawn >= 0, "the first-entry branch must bring the guards in")
         assertTrue(entry.indexOf("InterfaceDestination.MAIN_SCREEN") in 0 until spawn)
         assertTrue(entry.indexOf("InterfaceDestination.TAB_AREA") in 0 until spawn)
     }

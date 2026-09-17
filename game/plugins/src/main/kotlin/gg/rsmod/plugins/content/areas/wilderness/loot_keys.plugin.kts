@@ -24,29 +24,44 @@ gg.rsmod.plugins.content.mechanics.pvp.SkullyRoster.NPC_IDS.forEach { skullyId -
     }
 
     on_npc_option(npc = skullyId, option = "settings") {
-        player.queue {
-            if (player.attr[LootKeys.UNLOCKED] != true) {
-                chatNpc("Don't waste my time trying to change settings on a thing you haven't bought yet!", wrap = true)
-            } else {
-                skullySettings(this)
-            }
+        player.queue { skullySettings(this) }
+    }
+
+    // Deadman (owner 2026-09-17: "lootkeys can be opened at skully"): a key used on any Skully opens it.
+    LootKeys.KEY_IDS.forEachIndexed { index, key ->
+        on_item_on_npc(item = key, npc = skullyId) {
+            openLootChest(player, index)
         }
     }
 }
 
+/** Opens the first loot key the player carries (or the first stored loot), the same as the Loot Chest. */
+fun openFirstKey(player: Player): Boolean {
+    val held = LootKeys.heldKeyIndexes(player)
+    val index = held.firstOrNull() ?: LootKeys.KEY_IDS.indices.firstOrNull { LootKeys.slotItems(player, it).isNotEmpty() }
+    if (index == null) {
+        return false
+    }
+    openLootChest(player, index)
+    return true
+}
+
 suspend fun skully(it: QueueTask) {
-    it.chatNpc("Eyup. They call me Skully. I run this Wilderness Loot Chest. What can I do for you?", wrap = true)
+    it.chatNpc("Eyup. They call me Skully. I open loot keys. What can I do for you?", wrap = true)
     skullyOptions(it)
 }
 
 suspend fun skullyOptions(it: QueueTask) {
-    val unlocked = it.player.attr[LootKeys.UNLOCKED] == true
-    val access = if (unlocked) "Can I change how these loot keys work?" else "Can I have access to the chest?"
-    when (it.options("How does the chest work?", access, "How much loot have I claimed?", "Who are you, exactly?", "Goodbye.")) {
-        1 -> skullyHowItWorks(it)
-        2 -> if (unlocked) skullyChangeKeys(it) else skullyAccess(it)
-        3 -> skullyClaimed(it, thenOptions = true)
-        4 -> skullyWhoAreYou(it)
+    when (it.options("Open a loot key.", "How do loot keys work?", "Can I change how these loot keys work?", "How much loot have I claimed?", "Goodbye.")) {
+        1 -> {
+            it.chatPlayer("I'd like to open a loot key.", wrap = true)
+            if (!openFirstKey(it.player)) {
+                it.chatNpc("You haven't got any loot keys on you. Come back when you've killed someone out there.", wrap = true)
+            }
+        }
+        2 -> skullyHowItWorks(it)
+        3 -> skullyChangeKeys(it)
+        4 -> skullyClaimed(it, thenOptions = true)
         5 -> {
             it.chatPlayer("Goodbye.", wrap = true)
             it.chatNpc("I'll be here if you need anything.", wrap = true)
@@ -82,58 +97,8 @@ suspend fun skullyHowItWorks(it: QueueTask) {
     it.chatNpc("I got nothing better to do, so I'll keep track of the value of the stuff you unlock.", wrap = true)
     it.chatNpc("And anything you don't want, you can have the chest destroy it.", wrap = true)
     it.chatNpc("Except the food. I'll eat that instead.", wrap = true)
-    it.chatNpc(
-        "Now, if you want your own keys instead of relying on the misfortune of others, I can put the enchantment on you as well, but it's gonna cost ya.",
-        wrap = true,
-    )
+    it.chatNpc("Every kill you make out there puts the loot in a key for you - one kill, one key, up to five. Bring them to me and I'll open them.", wrap = true)
     skullyOptions(it)
-}
-
-suspend fun skullyAccess(it: QueueTask) {
-    it.chatPlayer("Can I have access to the chest?", wrap = true)
-    it.chatNpc("So, if you have keys from someone else, you're more than welcome to put them in the chest and see what comes out.", wrap = true)
-    it.chatNpc("If you want the enchantment that makes the keys, I'm afraid it's gonna cost you 1 million coins.", wrap = true)
-    when (it.options("Sure, I'll pay for that.", "Not right now, thanks.", "How much?!")) {
-        1 -> {
-            it.chatPlayer("Sure, I'll pay for that.", wrap = true)
-            it.chatNpc("Are you sure? 1 million is a lot of coins, and you won't get them back!", wrap = true)
-            when (it.options("Yes, pay 1 million coins!", "No, I've changed my mind!", title = "Pay 1 million coins to unlock Loot Keys?")) {
-                1 -> {
-                    val inventory = it.player.inventory
-                    if (inventory.getItemCount(Items.COINS_995) < LootKeys.UNLOCK_COST ||
-                        !inventory.remove(Items.COINS_995, LootKeys.UNLOCK_COST, assureFullRemoval = true).hasSucceeded()
-                    ) {
-                        it.chatNpc("Hmm... I don't think you have enough money on you there, mate.", wrap = true)
-                        return
-                    }
-                    it.player.attr[LootKeys.UNLOCKED] = true
-                    it.player.attr[LootKeys.ENABLED] = true
-                    it.chatNpc(
-                        "Ok, let me just... and a bit of... and we're done! You'll now get loot keys whenever you kill someone in the Wilderness. Talk to me again if you have any questions.",
-                        wrap = true,
-                    )
-                }
-                2 -> it.chatNpc("Fair enough mate, talk to me again if you change your mind.", wrap = true)
-            }
-        }
-        2 -> {
-            it.chatPlayer("Not right now, thanks.", wrap = true)
-            it.chatNpc("Fair enough mate, want to talk about something else?", wrap = true)
-            skullyOptions(it)
-        }
-        3 -> {
-            it.chatPlayer("How much?!", wrap = true)
-            it.chatNpc("1 million coins.", wrap = true)
-            it.chatPlayer("Why do you charge so much?!", wrap = true)
-            it.chatNpc("Runes. People don't wanna deliver across the Wilderness, and I'm in no shape to go to them, so I have to pay through the nose.", wrap = true)
-            it.chatNpc("I make maybe a couple hundred coins of profit, which at least lets me buy a few beers.", wrap = true)
-            it.chatPlayer("Why is the beer so cheap if it's so expensive to get deliveries out here?", wrap = true)
-            it.chatNpc("The barman makes it himself with whatever scraps he can get his hands on.", wrap = true)
-            it.chatNpc("You'd think it'd turn out horrible, but compared to every other 2 coin beer out there, it's not half bad.", wrap = true)
-            it.chatNpc("But enough about beer. If you want access to the loot keys, it's gonna cost you 1 million coins.", wrap = true)
-            skullyOptions(it)
-        }
-    }
 }
 
 suspend fun skullyChangeKeys(it: QueueTask) {
@@ -147,7 +112,7 @@ suspend fun skullyChangeKeys(it: QueueTask) {
 /** Skully's settings menu. The valuables options are BLOCKED (no sourced default threshold) and not offered. */
 suspend fun skullySettings(it: QueueTask) {
     val player = it.player
-    val enabled = player.attr[LootKeys.ENABLED] == true
+    val enabled = LootKeys.receivesKeys(player)
     val foodToFloor = player.attr[LootKeys.FOOD_TO_FLOOR] == true
     val toggle = if (enabled) "Turn loot keys off" else "Turn loot keys on"
     val food = if (foodToFloor) "Send food to loot key" else "Drop food to floor"
@@ -240,14 +205,10 @@ fun openLootChest(
 }
 
 on_obj_option(obj = LOOT_CHEST, option = "loot") {
-    val held = LootKeys.heldKeyIndexes(player)
     // A key-less chest still opens loot left inside (OSRS Wiki "Loot Chest"); several keys open the first one (ADAPTED).
-    val index = held.firstOrNull() ?: LootKeys.KEY_IDS.indices.firstOrNull { LootKeys.slotItems(player, it).isNotEmpty() }
-    if (index == null) {
+    if (!openFirstKey(player)) {
         player.message("You don't have any key.")
-        return@on_obj_option
     }
-    openLootChest(player, index)
 }
 
 LootKeys.KEY_IDS.forEachIndexed { index, key ->

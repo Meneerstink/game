@@ -43,21 +43,28 @@ object SkullyRoster {
         val anchor: Tile,
         /** Preferred Skully tile; the nearest reachable walkable tile to it is used. */
         val wanted: Tile,
+        /** Owner-named tile (2026-09-17): used as-is whenever it is walkable, no snapping. */
+        val exact: Boolean = false,
     )
 
-    /** Ten sites (owner 2026-09-16 bank list), five names cycling through them. */
+    /**
+     * Eleven sites (owner 2026-09-16 bank list + 2026-09-17: "plaats skully van edgeville op deze
+     * coordinaten 3095,3499,0" and "plaats nog 1 skully op deze coordinaten 2943,3370,0"), five
+     * names cycling through them.
+     */
     val SITES: List<Site> =
         listOf(
             Site("Grand Exchange", Npcs.SKULLY, anchor = Tile(3165, 3487, 0), wanted = Tile(3161, 3484, 0)),
             Site("Varrock east bank", SKULLY_JR, anchor = Tile(3253, 3420, 0), wanted = Tile(3255, 3419, 0)),
             Site("Varrock west bank", SKULLY_SR, anchor = Tile(3185, 3436, 0), wanted = Tile(3187, 3435, 0)),
-            Site("Edgeville bank", SKULLY_MAX, anchor = Tile(3094, 3491, 0), wanted = Tile(3093, 3496, 0)),
+            Site("Edgeville bank", SKULLY_MAX, anchor = Tile(3094, 3491, 0), wanted = Tile(3095, 3499, 0), exact = true),
             Site("Seers' Village bank", SKULLY_BOB, anchor = Tile(2725, 3491, 0), wanted = Tile(2729, 3491, 0)),
             Site("Falador east bank", Npcs.SKULLY, anchor = Tile(3013, 3355, 0), wanted = Tile(3011, 3356, 0)),
             Site("Draynor bank", SKULLY_JR, anchor = Tile(3092, 3243, 0), wanted = Tile(3090, 3245, 0)),
             Site("Al Kharid bank", SKULLY_SR, anchor = Tile(3269, 3167, 0), wanted = Tile(3271, 3165, 0)),
             Site("Catherby bank", SKULLY_MAX, anchor = Tile(2809, 3441, 0), wanted = Tile(2811, 3440, 0)),
             Site("Lumbridge castle bank", SKULLY_BOB, anchor = Tile(3208, 3220, 2), wanted = Tile(3208, 3222, 2)),
+            Site("Falador west bank", Npcs.SKULLY, anchor = Tile(2946, 3368, 0), wanted = Tile(2943, 3370, 0), exact = true),
         )
 
     const val SEARCH_RADIUS = 8
@@ -97,6 +104,15 @@ object SkullyRoster {
         world: World,
         site: Site,
     ): Placement? {
+        if (site.exact && !world.collision.isClipped(site.wanted)) {
+            // Owner-named tile: stand exactly there; the chest takes any walkable neighbour.
+            val chest =
+                Direction.NESW
+                    .map { site.wanted.step(it) }
+                    .firstOrNull { !world.collision.isClipped(it) && it != site.anchor }
+                    ?: return null
+            return Placement(site, site.wanted, chest)
+        }
         val reachable = reachableFrom(world, site.anchor)
         if (reachable.isEmpty()) return null
         val skullyTile =
@@ -132,6 +148,9 @@ object SkullyRoster {
                     it.walkRadius = 0
                 }
             world.spawn(skully)
+            // Owner 2026-09-17: "haal alle combat levels weg bij alle skullys" - publish level 0
+            // explicitly (the client suppresses "(level N)" only for exactly 0) whatever the cache says.
+            skully.setCombatLevel(0)
             world.spawn(DynamicObject(LOOT_CHEST, 10, 0, placement.chest))
             placed++
             lines += "${site.label}: npc ${site.npcId} at ${placement.skully.x},${placement.skully.z},${placement.skully.height} chest ${placement.chest.x},${placement.chest.z}"

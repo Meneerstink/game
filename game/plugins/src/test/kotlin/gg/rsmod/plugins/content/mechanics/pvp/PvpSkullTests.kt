@@ -41,7 +41,10 @@ class PvpSkullTests {
 
         PvpSkull.onPlayerInitiatedAttack(attacker, victim)
 
-        verify { attacker.skullIcon = SkullIcon.RED.id }
+        assertTrue(PvpSkull.isSkulled(attacker))
+        // Nothing at risk (empty containers): the skull is still shown, in the lowest tier colour.
+        verify { attacker.skullIcon = SkullIcon.DMM_VERY_LOW_RISK.id }
+        verify(exactly = 0) { attacker.skullIcon = SkullIcon.RED.id }
         assertEquals(PvpSkull.SKULL_DURATION_CYCLES, attacker.timers[SKULL_ICON_DURATION_TIMER])
         assertTrue(attacker.timers.exists(PvpSkull.SKULL_PAUSE_CHECK_TIMER), "pause-tracking driver must be armed")
     }
@@ -115,7 +118,6 @@ class PvpSkullTests {
         // Sentinel: the early-return path must leave this untouched (not re-arm it to 1),
         // proving it stops rescheduling once the skull clears.
         player.timers[PvpSkull.SKULL_PAUSE_CHECK_TIMER] = 99
-        every { player.skullIcon } returns SkullIcon.NONE.id
         player.timers.remove(SKULL_ICON_DURATION_TIMER)
 
         PvpSkull.tickPauseTracking(player)
@@ -126,7 +128,6 @@ class PvpSkullTests {
     private fun newSkulledPlayer(tile: Tile): Player {
         val home = Tile(3140, 3640, 0)
         val player = newPlayer(tile = tile, home = home)
-        every { player.skullIcon } returns SkullIcon.RED.id
         player.timers[SKULL_ICON_DURATION_TIMER] = PvpSkull.SKULL_DURATION_CYCLES
         return player
     }
@@ -149,6 +150,7 @@ class PvpSkullTests {
         every { player.invisible } returns false
         every { player.lock } returns LockState.NONE
         every { player.combatLevel } returns 100
+        every { player.inventory } returns ItemContainer(DEFINITIONS, gg.rsmod.game.model.container.key.INVENTORY_KEY)
         every { player.equipment } returns ItemContainer(DEFINITIONS, EQUIPMENT_KEY)
         every { player.attr } returns AttributeMap()
         every { player.timers } returns TimerMap()

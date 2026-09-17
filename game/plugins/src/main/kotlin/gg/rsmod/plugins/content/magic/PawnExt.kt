@@ -83,11 +83,19 @@ fun Player.canTeleport(
     // only when the player is PK-skulled or in combat with a player or a non-boss npc
     // (DeadmanTimerGate); a fight with any boss never delays a teleport. Otherwise the teleport is
     // instant. [onConfirmed] fires automatically when the countdown finishes - no extra click.
-    if (DeadmanTimerGate.needsCountdown(this)) {
-        if (!SevenSecondAction.isActive(this)) {
-            SevenSecondAction.start(this, SevenSecondAction.Kind.TELEPORT, onConfirmed)
+    when (DeadmanTimerGate.teleportDecision(this)) {
+        DeadmanTimerGate.Teleport.COUNTDOWN -> {
+            if (!SevenSecondAction.isActive(this)) {
+                SevenSecondAction.start(this, SevenSecondAction.Kind.TELEPORT, onConfirmed)
+            }
+            return false
         }
-        return false
+        DeadmanTimerGate.Teleport.BLOCKED_IN_COMBAT -> {
+            // Unskulled and hit in the last 7 seconds: a plain message, no interface to keep open.
+            message(DeadmanTimerGate.blockedMessage(this))
+            return false
+        }
+        DeadmanTimerGate.Teleport.INSTANT -> {}
     }
 
     onConfirmed()

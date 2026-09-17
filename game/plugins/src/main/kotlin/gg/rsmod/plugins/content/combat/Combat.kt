@@ -28,6 +28,7 @@ import gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell
 import gg.rsmod.plugins.content.inter.attack.AttackTab
 import gg.rsmod.plugins.content.mechanics.pvp.AreaState
 import gg.rsmod.plugins.content.mechanics.pvp.CityGuards
+import gg.rsmod.plugins.content.mechanics.pvp.KillGrace
 import gg.rsmod.plugins.content.mechanics.pvp.PvpSkull
 import gg.rsmod.plugins.content.mechanics.practicepvp.PracticePvp
 import java.lang.ref.WeakReference
@@ -282,16 +283,12 @@ object Combat {
             if (!target.isSpawned()) {
                 return false
             }
-            // Deadman PvP guards plan (2026-09-16): "guards can only be attacked while the
-            // intruder is skulled and inside the area" - symmetric with the guard-attacking-
-            // player gate below, reusing the same predicate. Re-checked every combat cycle here
-            // too, so a player mid-fight loses the ability to keep hitting a guard the instant
-            // they unskull or step outside the zone.
+            // Deadman guards are never attackable by players (owner 2026-09-17; the cache "Attack"
+            // option is stripped, this closes the spell / special / queued-attack routes with the
+            // owner's message instead of the generic "missing combat definitions" text).
             if (pawn is Player && CityGuards.isGuard(target)) {
-                if (!CityGuards.mayAttack(target, pawn)) {
-                    pawn.message("You can't attack this npc.")
-                    return false
-                }
+                pawn.message(CityGuards.ATTACK_REFUSED_MESSAGE)
+                return false
             }
             // Summoning familiars have no player-facing cache "Attack" option, but a public
             // familiar is still a valid PvP target in a multi-way area. The owner may never
@@ -336,13 +333,26 @@ object Combat {
                 // inherits it), checked here first only so this specific, more helpful message
                 // fires instead of the generic "can't attack players here" one when the range is
                 // the actual reason. Superseded the old per-tile Wilderness-level-scaled formula.
-                if (!AreaState.isWithinCombatLevelRange(pawn, target) && !PracticePvp.areMatched(pawn, target)) {
-                    pawn.message("The level difference between you and your opponent is too great.")
-                    return false
+                if (!PracticePvp.areMatched(pawn, target)) {
+                    // Deadman (owner 2026-09-17): inside a guarded city the guards' message wins over
+                    // every other reason - the zone is what forbids the attack there.
+                    val home = pawn.world.gameContext.home
+                    if (!AreaState.isPvpAllowed(pawn.tile, home) || !AreaState.isPvpAllowed(target.tile, home)) {
+                        pawn.message(AreaState.SAFE_ZONE_ATTACK_MESSAGE)
+                        return false
+                    }
+                    if (!AreaState.isWithinCombatLevelRange(pawn, target)) {
+                        pawn.message("The level difference between you and your opponent is too great.")
+                        return false
+                    }
                 }
 
                 if (!AreaState.canPlayersFight(pawn, target)) {
-                    pawn.message("You can't attack players here.")
+                    if (KillGrace.isProtected(target)) {
+                        pawn.message("That player has just won a fight and can't be attacked for a moment.")
+                    } else {
+                        pawn.message("You can't attack players here.")
+                    }
                     return false
                 }
             } else if (pawn is Npc && CityGuards.isGuard(pawn)) {

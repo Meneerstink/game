@@ -113,7 +113,12 @@ object LootKeys {
     /** A key slot is free when it stores nothing and its key is not in the inventory. */
     fun freeSlots(player: Player): List<Int> = KEY_IDS.indices.filter { slots(player)[it].isEmpty() && !player.inventory.contains(KEY_IDS[it]) }
 
-    fun receivesKeys(player: Player): Boolean = player.attr[UNLOCKED] == true && player.attr[ENABLED] == true
+    /**
+     * Deadman Mode (owner 2026-09-17: "1 kill = 1 key ... 5 kill = 5 keys"): every player receives a
+     * loot key for every kill - there is no enchantment to buy any more. Skully can still switch the
+     * keys off ([ENABLED] false) or send food to the floor; [UNLOCKED] is kept only for old saves.
+     */
+    fun receivesKeys(player: Player): Boolean = player.attr[ENABLED] != false
 
     // ---- value ----
 

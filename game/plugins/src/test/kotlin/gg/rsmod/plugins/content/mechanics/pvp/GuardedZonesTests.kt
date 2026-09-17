@@ -78,7 +78,17 @@ class GuardedZonesTests {
 
     @Test
     fun `every stationed guard post lies inside its own zone`() {
+        // Owner 2026-09-17 named 2966,3399 verbatim; it lies 4 tiles north of the wiki's Falador
+        // wall line and is snapped to the nearest walkable guarded tile at boot (CityGuards.
+        // spawnStationedGuards, reported in the boot line). Every other post must be inside.
+        val ownerTilesOutsidePolygon = setOf(gg.rsmod.game.model.Tile(2966, 3399, 0))
         GuardPosts.ALL.forEach { post ->
+            if (post.tile in ownerTilesOutsidePolygon) {
+                val zone = GuardedZones.ZONES.first { it.name == post.city }
+                val near = (-6..6).any { dx -> (-6..6).any { dz -> zone.contains(post.tile.transform(dx, dz)) } }
+                assertTrue(near, "owner tile ${post.tile} must be within snapping distance of ${post.city}")
+                return@forEach
+            }
             assertEquals(post.city, GuardedZones.zoneAt(post.tile)?.name, "guard post ${post.tile} of ${post.city} is outside its zone")
         }
     }
