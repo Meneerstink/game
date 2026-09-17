@@ -158,6 +158,16 @@ enum class CombatAnimation(
         weaponType = WeaponType.CLAWS,
     ),
 
+    // Staff of light class (Void donor weapon.anims.toml: staff_of_light_jab 15072, _swipe 15071, _fend 414, _defend 12806). The imported
+    // OSRS bladed staves share the class; their own OSRS attack sequences are not documented by any source read so far (SOURCE_GAP).
+    BLADED_STAFF(
+        style(CombatStyle.FIRST, Animation(15072)),
+        style(CombatStyle.SECOND, Animation(15071)),
+        style(CombatStyle.THIRD, Animation(414)),
+        blockAnimation = Animation(12806),
+        weaponType = WeaponType.BLADED_STAFF,
+    ),
+
     // NON DEFAULTS, additions under here
 
     KNIFE(

@@ -19,7 +19,8 @@ import gg.rsmod.plugins.content.combat.specialattack.SpecialAttacks
  */
 // Special look: animation 11991 + graphic 2114 (Novite PlayerCombat case 11696; Void `warstrike_special` = 2114), sound 3865 (Void).
 SpecialAttacks.register(50, Items.BANDOS_GODSWORD, Items.BANDOS_GODSWORD_OR) {
-    player.animate(11991)
+    // The (or) godsword plays the OSRS ornate special (gameval BGS_SPECIAL_ORNATE_PLAYER, imported); the 667 godsword keeps its 667 special.
+    player.animate(if (player.getEquipment(EquipmentType.WEAPON)?.id == Items.BANDOS_GODSWORD_OR) gg.rsmod.plugins.content.items.osrs.OsrsSeq.BGS_SPECIAL_ORNATE_PLAYER else 11991)
     player.graphic(2114)
     player.playSound(3865)
     val maxHit = MeleeCombatFormula.getMaxHit(player, target, specialAttackMultiplier = 1.21)

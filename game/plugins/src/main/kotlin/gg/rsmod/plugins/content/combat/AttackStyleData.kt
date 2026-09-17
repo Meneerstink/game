@@ -143,6 +143,15 @@ enum class WeaponCombatData(
         AttackStyleData(CombatStyle.THIRD, WeaponStyle.DEFENSIVE, StyleType.SLASH, XpMode.DEFENCE_XP),
     ),
 
+    // Jab / Swipe / Fend (Void donor weapon_styles.toml [staff_of_light]: accurate stab, aggressive slash, defensive crush; the OSRS
+    // Wiki "Bladed staff" combat options are the same three).
+    BLADED_STAFF(
+        arrayOf(WeaponType.BLADED_STAFF),
+        AttackStyleData(CombatStyle.FIRST, WeaponStyle.ACCURATE, StyleType.STAB, XpMode.ATTACK_XP),
+        AttackStyleData(CombatStyle.SECOND, WeaponStyle.AGGRESSIVE, StyleType.SLASH, XpMode.STRENGTH_XP),
+        AttackStyleData(CombatStyle.THIRD, WeaponStyle.DEFENSIVE, StyleType.CRUSH, XpMode.DEFENCE_XP),
+    ),
+
     SLING(
         arrayOf(WeaponType.SLING),
         AttackStyleData(CombatStyle.FIRST, WeaponStyle.ACCURATE, StyleType.RANGED, XpMode.RANGED_XP),

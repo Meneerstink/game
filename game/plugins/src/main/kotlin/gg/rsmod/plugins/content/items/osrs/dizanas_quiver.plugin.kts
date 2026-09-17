@@ -107,3 +107,39 @@ DizanasQuiver.AMMO_HOLDERS.forEach { quiverId ->
         }
     }
 }
+
+/*
+ * Owner live report 2026-09-17c: "u cannot store arrows bolts ... in the dizana quiver". Filling only worked through the worn Fill
+ * option (and only when the cache lists it); OSRS also takes ammunition used on the quiver in the inventory. Every arrow and bolt the
+ * ranged engine knows can now be used on any quiver / Dizana's max cape: same rules as Fill (arrows or bolts only, one type at a time).
+ */
+val storableAmmo: Set<Int> =
+    gg.rsmod.plugins.content.combat.strategy.ranged.RangedProjectile.values
+        .filter { it.type == ProjectileType.ARROW || it.type == ProjectileType.BOLT }
+        .flatMap { it.items.toList() }
+        .toSet()
+
+DizanasQuiver.AMMO_HOLDERS.forEach { quiverId ->
+    storableAmmo.forEach { ammoId ->
+        on_item_on_item(item1 = ammoId, item2 = quiverId) {
+            val first = player.attr[INTERACTING_ITEM_SLOT] ?: return@on_item_on_item
+            val second = player.attr[OTHER_ITEM_SLOT_ATTR] ?: return@on_item_on_item
+            val quiverSlot = if (player.inventory[first]?.id == quiverId) first else second
+            val ammoSlot = if (quiverSlot == first) second else first
+            val quiver = player.inventory[quiverSlot]?.takeIf { it.id == quiverId } ?: return@on_item_on_item
+            val ammo = player.inventory[ammoSlot]?.takeIf { it.id == ammoId } ?: return@on_item_on_item
+            when (val result = DizanasQuiver.fill(quiver, ammo)) {
+                is DizanasQuiver.FillResult.Filled -> {
+                    player.inventory.remove(ammoId, result.moved, beginSlot = ammoSlot)
+                    player.inventory[quiverSlot] = result.quiver
+                    val stored = DizanasQuiver.storedAmmo(result.quiver)!!
+                    player.message("Your quiver now holds ${stored.amount} x ${ammoName(stored.id)}.")
+                }
+                DizanasQuiver.FillResult.NothingWorn -> Unit
+                DizanasQuiver.FillResult.NotArrowOrBolt -> player.message("Dizana's quiver can only hold arrows or bolts.")
+                DizanasQuiver.FillResult.DifferentAmmo -> player.message("Empty your quiver before filling it with a different type of ammunition.")
+                DizanasQuiver.FillResult.Full -> player.message("Your quiver cannot hold any more ammunition.")
+            }
+        }
+    }
+}

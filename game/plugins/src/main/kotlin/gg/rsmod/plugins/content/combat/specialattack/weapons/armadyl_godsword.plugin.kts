@@ -15,7 +15,8 @@ import gg.rsmod.plugins.content.combat.specialattack.SpecialAttacks
  * 3865 from the Void donor (`godwars_godsword_special_attack`). LIVE/AV PENDING.
  */
 SpecialAttacks.register(50, Items.ARMADYL_GODSWORD, Items.ARMADYL_GODSWORD_OR) {
-    player.animate(11989)
+    // The (or) godsword plays the OSRS ornate special (gameval AGS_SPECIAL_ORNATE_PLAYER, imported); the 667 godsword keeps its 667 special.
+    player.animate(if (player.getEquipment(EquipmentType.WEAPON)?.id == Items.ARMADYL_GODSWORD_OR) gg.rsmod.plugins.content.items.osrs.OsrsSeq.AGS_SPECIAL_ORNATE_PLAYER else 11989)
     player.graphic(2113)
     player.playSound(3865)
     val maxHit = MeleeCombatFormula.getMaxHit(player, target, specialAttackMultiplier = 1.10)

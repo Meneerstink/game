@@ -31,4 +31,10 @@ enum class WeaponType(
     SCYTHE(id = 22),
     FLAIL(id = 23),
     SLING(id = 24),
+
+    /**
+     * Client style set 26 (item param 686): Jab / Swipe / Fend - the 667 Staff of light, and the imported OSRS bladed staves cloned
+     * from it (Staff of the dead, Toxic staff of the dead, Staff of Balance). Without this entry the server read them as unarmed.
+     */
+    BLADED_STAFF(id = 26),
 }

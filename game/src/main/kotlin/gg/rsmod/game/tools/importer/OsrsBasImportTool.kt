@@ -37,6 +37,8 @@ object OsrsBasImportTool {
         val walkBack: Int? = null,
         val walkLeft: Int? = null,
         val walkRight: Int? = null,
+        /** The 667 BAS the rest is taken from: the default human set, or the item's own 667 class set (28 = staff) when only the stand changes. */
+        val template: Int = TEMPLATE,
     )
 
     val STANCES =
@@ -44,6 +46,12 @@ object OsrsBasImportTool {
             Stance("ballista", ready = 7220, walk = 7223, run = 7221, walkBack = 7223, walkLeft = 7223, walkRight = 7223),
             Stance("venator_bow", ready = 9857, walk = 9859, run = 9860, readyTurn = 9863, walkLeft = 9861, walkRight = 9862),
             Stance("abyssal_dagger", ready = 3296),
+            // DH_SWORD_UPDATE_READY / WALK / RUN / TURNONSPOT / WALK_LEFT / WALK_RIGHT: the imported godswords and the gilded 2h sword.
+            Stance("godsword_osrs", ready = 7053, walk = 7052, run = 7043, readyTurn = 7044, walkLeft = 7048, walkRight = 7047),
+            // HUMAN_NIGHTMARE_STAFF_READY on the 667 staff set (Zenyte-lineage table: stand 4504, walk 1205, run 1210 = the staff set).
+            Stance("nightmare_staff", ready = 4504, template = 28),
+            // HUMAN_ZAMORAKSPEAR_READY / WALK_F / RUN / TURNONSPOT / WALK_B / WALKLEFT / WALKRIGHT: Blue moon spear.
+            Stance("zamorak_spear_osrs", ready = 1713, walk = 1703, run = 1707, readyTurn = 1702, walkBack = 1704, walkLeft = 1706, walkRight = 1705),
         )
 
     /** Payload width of every fixed-size BASType opcode (`BASType.decode`, rev-667 client). */
@@ -116,10 +124,9 @@ object OsrsBasImportTool {
         val mutations = mutableListOf<CacheMutation>()
         val records = mutableListOf<Pair<String, Int>>()
         try {
-            val template = library.data(INDEX_CONFIG, GROUP_BAS, TEMPLATE) ?: error("BAS $TEMPLATE missing")
-            println("TEMPLATE $TEMPLATE ops=${decode(template).keys}")
             var next = (library.index(INDEX_CONFIG).archive(GROUP_BAS)?.fileIds()?.maxOrNull() ?: error("no BAS group")) + 1
             STANCES.forEach { stance ->
+                val template = library.data(INDEX_CONFIG, GROUP_BAS, stance.template) ?: error("BAS ${stance.template} missing")
                 val bytes = build(template, stance) { osrs -> existing["seq:$osrs"] ?: error("OSRS sequence $osrs is not imported") }
                 val known = existing["bas:${stance.ready ?: stance.walk}"]
                 val id = known ?: next++

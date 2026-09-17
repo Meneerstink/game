@@ -72,6 +72,14 @@ object NpcLeash {
     ): Boolean {
         if (npc.owner != null) return true
         if (target is Npc && target.owner != null) return true
+        // Deadman guards (owner 2026-09-17: "they need to be always aggro in a safezone when a player
+        // enters with a skull, so even if a barrier or object is in the way the guard needs to walk
+        // behind it and still attack the player"): a guard is leashed to its safe zone, not to a
+        // radius around its post - it pursues anywhere inside the zone and stops the moment the
+        // intruder steps out or loses the skull (CityGuards.mayPursue).
+        if (gg.rsmod.plugins.content.mechanics.pvp.CityGuards.isGuard(npc)) {
+            return gg.rsmod.plugins.content.mechanics.pvp.CityGuards.mayPursue(npc, target)
+        }
         return withinAggro(npc.spawnTile, target.tile, maxRange(npc.id), attackRange)
     }
 }

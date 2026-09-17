@@ -39,11 +39,18 @@ object SpecialAttackSupport {
         delay: Int = 1,
         minFraction: Double = 0.0,
         forceLand: Boolean = false,
+        /** Forced defence style of the accuracy roll (OSRS DPS calculator `getNPCDefenceRoll`); `null` = the current style. */
+        defenceStyle: gg.rsmod.game.model.combat.StyleType? = null,
         onHit: (Int) -> Unit = {},
     ): Int {
         val world = player.world
         val maxHit = MeleeCombatFormula.getMaxHit(player, target, specialAttackMultiplier = damage)
-        val acc = MeleeCombatFormula.getAccuracy(player, target, specialAttackMultiplier = accuracy)
+        val acc =
+            if (defenceStyle != null) {
+                MeleeCombatFormula.getAccuracyAgainst(player, target, accuracy, defenceStyle)
+            } else {
+                MeleeCombatFormula.getAccuracy(player, target, specialAttackMultiplier = accuracy)
+            }
         val landHit = forceLand || acc >= world.randomDouble()
         val pawnHit =
             player.dealHit(
@@ -215,6 +222,25 @@ object SpecialAttackSupport {
             }
         }
     }
+
+    /** Base (unboosted, undrained) level of [skill] (player skill index) for any pawn. */
+    fun baseLevel(
+        target: Pawn,
+        skill: Int,
+    ): Int =
+        when (target) {
+            is Player -> target.skills.getMaxLevel(skill)
+            is Npc ->
+                when (skill) {
+                    Skills.ATTACK -> target.stats.getMaxLevel(NpcSkills.ATTACK)
+                    Skills.STRENGTH -> target.stats.getMaxLevel(NpcSkills.STRENGTH)
+                    Skills.DEFENCE -> target.stats.getMaxLevel(NpcSkills.DEFENCE)
+                    Skills.MAGIC -> target.stats.getMaxLevel(NpcSkills.MAGIC)
+                    Skills.RANGED -> target.stats.getMaxLevel(NpcSkills.RANGED)
+                    else -> 0
+                }
+            else -> 0
+        }
 
     /** Current level of [skill] (player skill index) for any pawn. */
     fun currentLevel(

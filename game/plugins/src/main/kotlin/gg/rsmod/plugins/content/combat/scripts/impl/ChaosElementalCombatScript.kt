@@ -85,7 +85,7 @@ object ChaosElementalCombatScript : CombatScript() {
         val world = npc.world
         world.queue {
             wait(delay)
-            if (target.isDead() || !target.tile.isWithinRadius(npc.tile, 16)) return@queue
+            if (target.isDead() || (target is Player && !target.isOnline) || !target.tile.isWithinRadius(npc.tile, 16)) return@queue
             val dest = world.findRandomTileAround(target.tile, radius = 10) ?: return@queue
             if (target is Player) {
                 target.stopMovement()
@@ -105,7 +105,7 @@ object ChaosElementalCombatScript : CombatScript() {
         target.playSound(Sfx.CHAOS_ELEMENTAL_MADNESS_IMPACT, delay = delay * 30)
         world.queue {
             wait(delay)
-            if (target.isDead() || target.inventory.freeSlotCount == 0) return@queue
+            if (target.isDead() || !target.isOnline || target.inventory.freeSlotCount == 0) return@queue
             val wornSlots = (0 until target.equipment.capacity).filter { target.equipment[it] != null }
             if (wornSlots.isEmpty()) return@queue
             val slot = wornSlots.random()

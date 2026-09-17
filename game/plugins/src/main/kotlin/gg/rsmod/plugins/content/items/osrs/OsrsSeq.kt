@@ -64,6 +64,34 @@ object OsrsSeq {
     const val HUMAN_HALBERD_VIRULENCE_02 = 15463 // OSRS 11514 - the special: its frames play noxious_halberd_special_attack_build/impact
     const val HUMAN_HALBERD_VIRULENCE_03 = 15464 // OSRS 11515
     const val HUMAN_HALBERD_VIRULENCE_04 = 15465 // OSRS 11517
+
+    // Batch "weaponseq2" (tx-20260917-195156): OSRS ids that are a different animation in the 667 cache.
+    const val DH_SWORD_UPDATE_RUN = 15492 // OSRS 7043
+    const val DH_SWORD_UPDATE_TURNONSPOT = 15493 // OSRS 7044
+    const val DH_SWORD_UPDATE_SLASH = 15494 // OSRS 7045
+    const val DH_SWORD_UPDATE_CHOP = 15495 // OSRS 7046
+    const val DH_SWORD_UPDATE_WALK_RIGHT = 15496 // OSRS 7047
+    const val DH_SWORD_UPDATE_WALK_LEFT = 15497 // OSRS 7048
+    const val DH_SWORD_UPDATE_WALK = 15498 // OSRS 7052
+    const val DH_SWORD_UPDATE_READY = 15499 // OSRS 7053
+    const val DH_SWORD_UPDATE_SMASH = 15500 // OSRS 7054
+    const val DH_SWORD_UPDATE_BLOCK = 15501 // OSRS 7055
+    const val DH_SWORD_UPDATE_DEFEND = 15502 // OSRS 7056
+    const val ZGS_SPECIAL_PLAYER = 15503 // OSRS 7638
+    const val ZGS_SPECIAL_ORNATE_PLAYER = 15504 // OSRS 7639
+    const val SGS_SPECIAL_PLAYER = 15505 // OSRS 7640
+    const val SGS_SPECIAL_ORNATE_PLAYER = 15506 // OSRS 7641
+    const val BGS_SPECIAL_PLAYER = 15507 // OSRS 7642
+    const val BGS_SPECIAL_ORNATE_PLAYER = 15508 // OSRS 7643
+    const val AGS_SPECIAL_PLAYER = 15509 // OSRS 7644
+    const val AGS_SPECIAL_ORNATE_PLAYER = 15510 // OSRS 7645
+    const val HUMAN_NIGHTMARE_STAFF_READY = 15511 // OSRS 4504
+    const val HUMAN_NIGHTMARE_STAFF_CRUSH = 15512 // OSRS 4505
+    const val HUMAN_ZAMORAKSPEAR_BLOCK = 15519 // OSRS 1709
+    const val HUMAN_ZAMORAKSPEAR_LUNGE = 15520 // OSRS 1710
+    const val HUMAN_ZAMORAKSPEAR_STAB = 15521 // OSRS 1711
+    const val HUMAN_ZAMORAKSPEAR_SLASH = 15522 // OSRS 1712
+    const val HUMAN_CAST_SURGE = 15524 // OSRS 7855
 }
 
 /** OSRS synth sounds of the same batch; names from the OSRS Wiki "List of sound IDs" (Jagex config names). */
@@ -84,4 +112,7 @@ object OsrsBas {
     const val BALLISTA = 2212 // BALLISTA_READY / _WALK / _RUN
     const val VENATOR_BOW = 2213 // HUMAN_WEAPON_BOW_VENATOR01_READY / _WALK / _RUN / _TURN / _STEPLEFT / _STEPRIGHT
     const val ABYSSAL_DAGGER = 2214 // ABYSSAL_DAGGER_IDLE
+    const val GODSWORD = 2215 // DH_SWORD_UPDATE_READY / WALK / RUN / TURNONSPOT / WALK_LEFT / WALK_RIGHT
+    const val NIGHTMARE_STAFF = 2216 // HUMAN_NIGHTMARE_STAFF_READY on the 667 staff set
+    const val ZAMORAK_SPEAR = 2217 // HUMAN_ZAMORAKSPEAR_READY / WALK_F / RUN / TURNONSPOT / WALK_B / WALKLEFT / WALKRIGHT
 }

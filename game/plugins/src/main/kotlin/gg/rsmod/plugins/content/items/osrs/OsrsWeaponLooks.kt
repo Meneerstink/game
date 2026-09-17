@@ -22,6 +22,18 @@ object OsrsWeaponLooks {
 
     private fun all(seq: Int) = intArrayOf(seq, seq, seq, seq)
 
+    /** Sequences that carry the same id and animation in the 667 cache and in OSRS (RuneLite gameval names). */
+    const val HUMAN_SPEAR_SPIKE = 428
+    const val HUMAN_SCYTHE_SWEEP = 440
+
+    val OSRS_GODSWORDS =
+        intArrayOf(
+            Items.ANCIENT_GODSWORD, Items.ARMADYL_GODSWORD_OR, Items.BANDOS_GODSWORD_OR, Items.SARADOMIN_GODSWORD_OR, Items.ZAMORAK_GODSWORD_OR,
+            Items.GILDED_2H_SWORD,
+        )
+    val NIGHTMARE_STAVES =
+        intArrayOf(Items.NIGHTMARE_STAFF, Items.HARMONISED_NIGHTMARE_STAFF, Items.VOLATILE_NIGHTMARE_STAFF, Items.ELDRITCH_NIGHTMARE_STAFF)
+
     private val looks = mutableMapOf<Int, Look>()
 
     private fun register(
@@ -68,12 +80,32 @@ object OsrsWeaponLooks {
         register(Look(all(OsrsSeq.HUMAN_ATLATL_ATTACK_RANGED_01)), Items.ECLIPSE_ATLATL)
         register(Look(all(OsrsSeq.HUMAN_GLAIVE_RALOS01_CHARGED_THROW)), Items.TONALZTICS_OF_RALOS)
         register(Look(all(OsrsSeq.HUMAN_GLAIVE_RALOS01_UNCHARGED_THROW)), Items.TONALZTICS_OF_RALOS_UNCHARGED)
-        // Noxious halberd: Jab / Swipe / Fend. HUMAN_HALBERD_VIRULENCE_02 is the special (its frames carry the special's sounds).
-        // SOURCE_GAP: no source ties 01 / 03 / 04 to a style button; they are assigned in Jagex's own numbering order.
+        // Imported godswords and the gilded 2h sword: Chop / Slash / Smash / Block. The RuneLite combat-logger observes exactly three
+        // godsword attack sequences - DH_SWORD_UPDATE_SLASH, _SMASH and _BLOCK (the Block style swings the "block" sequence);
+        // _DEFEND is the block animation (Zenyte-lineage table: blockAnimation 7056).
         register(
-            Look(intArrayOf(OsrsSeq.HUMAN_HALBERD_VIRULENCE_01, OsrsSeq.HUMAN_HALBERD_VIRULENCE_03, OsrsSeq.HUMAN_HALBERD_VIRULENCE_04, OsrsSeq.HUMAN_HALBERD_VIRULENCE_04)),
-            Items.NOXIOUS_HALBERD,
+            Look(
+                intArrayOf(OsrsSeq.DH_SWORD_UPDATE_SLASH, OsrsSeq.DH_SWORD_UPDATE_SLASH, OsrsSeq.DH_SWORD_UPDATE_SMASH, OsrsSeq.DH_SWORD_UPDATE_BLOCK),
+                block = OsrsSeq.DH_SWORD_UPDATE_DEFEND,
+            ),
+            *OSRS_GODSWORDS,
         )
+        register(Look(all(OsrsSeq.HUMAN_NIGHTMARE_STAFF_CRUSH)), *NIGHTMARE_STAVES)
+        // Blue moon spear (combat-logger: HUMAN_ZAMORAKSPEAR_STAB / _SLASH / _LUNGE; "LUNGE" is the spear class's crush): Lunge / Swipe /
+        // Pound / Block.
+        register(
+            Look(
+                intArrayOf(OsrsSeq.HUMAN_ZAMORAKSPEAR_STAB, OsrsSeq.HUMAN_ZAMORAKSPEAR_SLASH, OsrsSeq.HUMAN_ZAMORAKSPEAR_LUNGE, OsrsSeq.HUMAN_ZAMORAKSPEAR_STAB),
+                block = OsrsSeq.HUMAN_ZAMORAKSPEAR_BLOCK,
+            ),
+            Items.BLUE_MOON_SPEAR,
+        )
+        // Noxious halberd: Jab / Swipe / Fend = the OSRS halberd pair HUMAN_SPEAR_SPIKE 428 / HUMAN_SCYTHE_SWEEP 440 - the RuneLite
+        // combat-logger's observed attack table lists exactly those two for ItemID.NOXIOUS_HALBERD, and the Zenyte-lineage table agrees.
+        // Both sequences exist under the same id in 667 (the 667 halberd class plays 438 for the jab, which is what looked wrong).
+        // "Virulence" is the NAME OF ITS SPECIAL: HUMAN_HALBERD_VIRULENCE_01-04 are special-attack sequences, not normal attacks (the
+        // first build of this table misread them); _02 carries the special's sounds and is what the special plays.
+        register(Look(intArrayOf(HUMAN_SPEAR_SPIKE, HUMAN_SCYTHE_SWEEP, HUMAN_SPEAR_SPIKE, HUMAN_SPEAR_SPIKE)), Items.NOXIOUS_HALBERD)
     }
 
     /** Osmumten's fang: only the stab styles have their own sequence; Slash keeps the sword slash (combat-logger: HUMAN_SWORD_SLASH). */

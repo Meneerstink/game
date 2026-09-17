@@ -71,7 +71,7 @@ fun performAlchemy(
         return false
     }
 
-    val hasStaff = player.hasWeaponType(WeaponType.STAFF)
+    val hasStaff = player.hasWeaponType(WeaponType.STAFF, WeaponType.BLADED_STAFF)
     val (animation, graphic) =
         when {
             hasStaff -> Anims.SPELL_ALCH_WITH_STAFF to Gfx.ALCHEMY_WTIH_STAFF

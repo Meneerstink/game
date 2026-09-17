@@ -147,11 +147,15 @@ object MagicCombatStrategy : CombatStrategy {
         pawn.stopMovement()
         spell.castGfx?.let { gfx -> pawn.graphic(gfx) }
         var animation = spell.castAnimation[0]
-        if (pawn is Player && pawn.hasWeaponType(WeaponType.STAFF)) {
+        if (pawn is Player && pawn.hasWeaponType(WeaponType.STAFF, WeaponType.BLADED_STAFF)) {
             animation = spell.castAnimation[1]
         }
         if (pawn is Npc) {
             animation = spell.castAnimation.getOrNull(2) ?: spell.castAnimation[0]
+        }
+        // OSRS-IMPORT Harmonised nightmare staff (RuneLite combat-logger: HUMAN_CAST_SURGE "Surge, Harmonised nightmare staff").
+        if (pawn is Player && pawn.getEquipment(EquipmentType.WEAPON)?.id == gg.rsmod.plugins.api.cfg.Items.HARMONISED_NIGHTMARE_STAFF) {
+            animation = gg.rsmod.plugins.content.items.osrs.OsrsSeq.HUMAN_CAST_SURGE
         }
         pawn.animate(animation)
 

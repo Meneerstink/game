@@ -27,7 +27,7 @@ object MeleeCombatFormula : CombatFormula {
      * `isWearingTzhaarWeapon` lists Tzhaar-ket-em, Tzhaar-ket-om (+ (t), absent here), Toktz-xil-ak, Toktz-xil-ek and
      * Toktz-mej-tal.
      */
-    private val OBSIDIAN_MELEE_WEAPONS = intArrayOf(Items.TOKTZXILAK, Items.TZHAARKETOM, Items.TZHAARKETEM, Items.TOKTZXILEK, Items.TOKTZMEJTAL)
+    private val OBSIDIAN_MELEE_WEAPONS = intArrayOf(Items.TOKTZXILAK, Items.TZHAARKETOM, Items.TZHAARKETEM, Items.TOKTZXILEK, Items.TOKTZMEJTAL, Items.TZHAAR_KET_OM_T)
 
     override fun getAccuracy(
         pawn: Pawn,
@@ -401,7 +401,7 @@ object MeleeCombatFormula : CombatFormula {
             val world = pawn.world
             val multiplier =
                 when {
-                    pawn.hasEquipped(EquipmentType.AMULET, Items.BERSERKER_NECKLACE) &&
+                    pawn.hasEquipped(EquipmentType.AMULET, Items.BERSERKER_NECKLACE, Items.BERSERKER_NECKLACE_OR) &&
                         pawn.hasEquipped(EquipmentType.WEAPON, *OBSIDIAN_MELEE_WEAPONS) -> 1.2
                     isWearingDharok(pawn) -> {
                         val lost = (pawn.getMaximumLifepoints() - pawn.getCurrentLifepoints()) / 100.0

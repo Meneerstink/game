@@ -46,4 +46,11 @@ class GraniteMaulTests {
         assertTrue("if (remaining != null) player.timers[ATTACK_DELAY] = remaining else player.timers.remove(ATTACK_DELAY)" in model, "no attack cooldown")
         assertTrue("SpecialAttackSupport.meleeHit(player, target, delay = 0)" in model, "no accuracy increase, instant hit")
     }
+
+    @Test
+    fun `delayed homing rejects offline attacker and player target`() {
+        val model = File("src/main/kotlin/gg/rsmod/plugins/content/items/osrs/GraniteMaul.kt").readText()
+        assertTrue(model.contains("if (!player.isOnline || player.isDead()) return@queue"))
+        assertTrue(model.contains("if (target is Player && !target.isOnline) return"))
+    }
 }

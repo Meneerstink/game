@@ -19,7 +19,7 @@ import kotlin.test.assertTrue
 
 /**
  * OSRS-IMPORT batch "equipment2" (tx-20260913-205509): cache, items.yml and item actions agree with
- * the pinned build-240 definitions and the OSRS Wiki values in `C:\RSPS\OSRS_IMPORT_STATUS.md`.
+ * the pinned build-240 definitions and the OSRS Wiki values in `C:\RSPS\OSRS_IMPORT_MASTER.yml`.
  */
 class OsrsEquipment2ImportTests {
     /** name -> (id, noted id or null). */

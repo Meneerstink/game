@@ -30,17 +30,30 @@ class OsrsPlayerSeqImportTests {
     }
 
     @Test
-    fun `a 667-only label joins the OSRS group of the same body part and an OSRS-articulated label keeps the OSRS grouping`() {
+    fun `a 667-only label rides with its companions wherever the OSRS rig put them and an OSRS-known label keeps the OSRS grouping`() {
         val wholeBody = (1..120).toList()
-        val osrs = osrsBase(1 to wholeBody, 2 to listOf(35, 36, 37), 2 to listOf(31, 32, 168), 0 to listOf(63))
-        val local = base667(1 to wholeBody + 240, 2 to listOf(35, 36, 37, 168, 236), 2 to listOf(31, 32, 217), 0 to listOf(156))
+        // The OSRS limb groups sit at OTHER indexes than the 667 ones (only ~70 of 205 groups line up by index in the real rigs).
+        val osrs = osrsBase(1 to wholeBody, 0 to listOf(63), 2 to listOf(31, 32, 168), 2 to listOf(35, 36, 37), 5 to listOf(3, 18))
+        val local = base667(1 to wholeBody + 240, 2 to listOf(35, 36, 37, 168, 236), 2 to listOf(31, 32, 217), 0 to listOf(156), 5 to listOf(3, 250))
         val merged = labels(OsrsFxImportTool.mergePlayerBase(osrs, local))
-        assertEquals(wholeBody + 240, merged[0], "whole-body group also moves the 667-only label")
-        // 236 is 667-only -> follows the arm; 168 is articulated by OSRS in group 2 -> OSRS grouping wins, it is not added here.
-        assertEquals(listOf(35, 36, 37, 236), merged[1])
+        assertEquals(wholeBody + listOf(217, 236, 240), merged[0], "whole-body groups move every 667-only vertex label")
+        assertEquals(listOf(63), merged[1], "origin (pivot) groups keep the OSRS labels")
+        // 217's companions {31, 32} are all here; 236's companions {35, 36, 37, 168} are not (only 168) -> not added.
         assertEquals(listOf(31, 32, 168, 217), merged[2])
-        // Group 3 diverged (no shared label): the OSRS group is kept as it is.
-        assertEquals(listOf(63), merged[3])
+        // 236 joins the group with more than half of its companions; 168 is OSRS-known and stays where OSRS put it.
+        assertEquals(listOf(35, 36, 37, 236), merged[3])
+        assertEquals(listOf(3, 18), merged[4], "alpha groups hold face labels and are never touched (250 is not added)")
+    }
+
+    @Test
+    fun `a player frame loses its alpha channel and keeps every other value`() {
+        // base: group 0 translate, group 1 alpha, group 2 rotation; frame: header base 0, 3 groups, flags x / x / x+y, values 5, 9, 1, 2
+        val types = intArrayOf(1, 5, 2)
+        val frame = byteArrayOf(0, 0, 3, 1, 1, 3, (5 + 64).toByte(), (9 + 64).toByte(), (1 + 64).toByte(), (2 + 64).toByte())
+        val kept = OsrsFxImportTool.convertFrame(frame, types, 7)
+        val dropped = OsrsFxImportTool.convertFrame(frame, types, 7, dropAlpha = true)
+        assertContentEquals(byteArrayOf(1, 0, 7, 3, 1, 1, 3, (20 + 64).toByte(), (9 + 64).toByte(), (16 + 64).toByte(), (32 + 64).toByte()), kept)
+        assertContentEquals(byteArrayOf(1, 0, 7, 3, 1, 0, 3, (20 + 64).toByte(), (16 + 64).toByte(), (32 + 64).toByte()), dropped)
     }
 
     @Test

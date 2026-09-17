@@ -26,6 +26,15 @@ object Potions {
         player: Player,
         potion: Potion,
     ) {
+        drinkAt(player, potion, player.getInteractingItemSlot())
+    }
+
+    /** Same potion path for non-inventory controls such as the HP orb's Cure option. */
+    fun drinkAt(
+        player: Player,
+        potion: Potion,
+        slot: Int,
+    ) {
         if (!canDrink(player) ||
             gg.rsmod.plugins.content.mechanics.restrictions.ActivityRestrictions.refuse(
                 player, gg.rsmod.plugins.content.mechanics.restrictions.RestrictedAction.DRINK,
@@ -34,7 +43,6 @@ object Potions {
         ) {
             return
         }
-        val slot = player.getInteractingItemSlot()
         if (player.inventory.remove(item = potion.item, beginSlot = slot).hasSucceeded()) {
             if (potion.replacement != -1) {
                 player.inventory.add(item = potion.replacement, beginSlot = slot)
@@ -51,7 +59,14 @@ object Potions {
                 }
             player.animate(anim)
             player.playSound(Sfx.LIQUID)
+            // Owner live report 2026-09-17c ("super combat if u drink it doesnt give stats"): the path reads correct, so the levels around
+            // the effect are traced - the next live sip shows whether the boost is applied and something undoes it, or it never applies.
+            val combat = intArrayOf(0, 1, 2, 4, 6)
+            val before = combat.map { player.skills.getCurrentLevel(it) }
             potion.potionType.apply(player)
+            gg.rsmod.game.model.AvTrace.log {
+                "potion drink item=${potion.item} type=${potion.potionType} att/def/str/rng/mag before=$before after=${combat.map { player.skills.getCurrentLevel(it) }}"
+            }
             player.timers[POTION_DELAY] = TICK_DELAY
             player.timers[FOOD_DELAY] = TICK_DELAY
             // 667 barbarian mixes: the base potion's effect, then the mix heal and the OSRS mix message (BarbarianMixes).

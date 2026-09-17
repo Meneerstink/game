@@ -59,7 +59,9 @@ class PoweredStavesTests {
         assertEquals(OsrsGfx.SANGUINESTI_STAFF_TRAVEL, look.projectile)
         assertEquals(OsrsGfx.SANGUINESTI_STAFF_IMPACT, look.impactGfx.id)
         assertEquals(OsrsGfx.SANGUINESTI_STAFF_HEAL, look.healGfx)
-        assertEquals(gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell.BLOOD_BLITZ.castAnimation[1], look.castAnimation)
+        // Owner 2026-09-17c (exactly like OSRS): the powered staves cast with HUMAN_CASTWAVE_STAFF 1167 (RuneLite combat-logger:
+        // "Wave with staff, Sanguinesti staff, Tridents"), no longer with the 667 Blood Blitz cast this assertion used to pin.
+        assertEquals(1167, look.castAnimation)
         val strategy = File("src/main/kotlin/gg/rsmod/plugins/content/combat/strategy/PoweredStaffCombatStrategy.kt").readText()
         assertTrue("bonusDamage = if (leech) PoweredStaves.LEECH_BONUS_DAMAGE else 0" in strategy)
         assertTrue("PoweredStaves.leechHeal(damage)" in strategy)

@@ -54,4 +54,12 @@ class AncientGodswordTests {
         assertTrue("SpecialAttacks.register(AncientGodsword.SPECIAL_ENERGY, Items.ANCIENT_GODSWORD)" in script)
         assertTrue("wait(AncientGodsword.MARK_TICKS)" in script && "if (!landHit) return@register" in script)
     }
+
+    @Test
+    fun `delayed Blood Sacrifice rejects offline victim and attacker`() {
+        val script = File("src/main/kotlin/gg/rsmod/plugins/content/combat/specialattack/weapons/ancient_godsword.plugin.kts").readText()
+        assertTrue("victim is Player && !victim.isOnline" in script)
+        assertTrue("!attacker.isOnline" in script)
+        assertTrue(script.indexOf("isOnline") < script.indexOf("victim.hit"))
+    }
 }

@@ -1,10 +1,15 @@
 package gg.rsmod.plugins.content.items.osrs
 
+import com.displee.cache.CacheLibrary
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
+import gg.rsmod.game.fs.DefinitionSet
+import gg.rsmod.game.fs.def.ItemDef
 import gg.rsmod.plugins.api.cfg.Items
+import gg.rsmod.plugins.content.mechanics.poison.WeaponPoison
 import java.io.File
 import java.nio.file.Paths
+import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -14,6 +19,13 @@ import kotlin.test.assertTrue
  * slash defence roll the wiki DPS calculator uses for dagger and godsword specials.
  */
 class AbyssalDaggerTests {
+    private val library = CacheLibrary(Paths.get("..", "..", "data", "cache").toFile().toString())
+
+    @AfterTest
+    fun close() {
+        library.close()
+    }
+
     @Test
     fun `all four daggers share the item page stats and the 70 Attack requirement`() {
         val root = ObjectMapper(YAMLFactory()).readTree(Paths.get("..", "..", "data", "cfg", "items.yml").toFile())
@@ -26,6 +38,15 @@ class AbyssalDaggerTests {
             assertEquals(4, eq.path("attack_speed").asInt(), "$id speed")
             assertEquals(5, eq.path("weapon_type").asInt(), "$id dagger class")
             assertEquals(mapOf(0 to 70), eq.path("skill_reqs").associate { it.path("skill").asInt() to it.path("level").asInt() }, "$id requirement")
+        }
+    }
+
+    @Test
+    fun `all poisoned dagger variants are covered by the shared weapon poison roster`() {
+        val definitions = DefinitionSet()
+        definitions.load(library, ItemDef::class.java)
+        AbyssalDagger.IDS.drop(1).forEach { id ->
+            assertTrue(WeaponPoison.severity(definitions, id) >= WeaponPoison.WEAPON_POISON, "$id should carry weapon poison")
         }
     }
 

@@ -416,7 +416,8 @@ object NpcAttacks {
             } else {
                 npc.world.queue {
                     wait(delayTicks)
-                    if (!target.isDead()) impact(npc, row, target, attack, landed)
+                    if (target.isDead() || (target is Player && !target.isOnline)) return@queue
+                    impact(npc, row, target, attack, landed)
                 }
             }
         }

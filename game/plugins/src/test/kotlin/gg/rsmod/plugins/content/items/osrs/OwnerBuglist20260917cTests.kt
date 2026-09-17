@@ -51,7 +51,7 @@ class OwnerBuglist20260917cTests {
             Items.HEAVY_BALLISTA, Items.HEAVY_BALLISTA_OR, Items.TOXIC_BLOWPIPE, Items.BLAZING_BLOWPIPE, Items.CAMPHOR_BLOWPIPE,
             Items.IRONWOOD_BLOWPIPE, Items.ROSEWOOD_BLOWPIPE, Items.DRAGON_HUNTER_LANCE, Items.DUAL_MACUAHUITL, Items.DRAGON_KNIFE,
             Items.DRAGON_KNIFE_P, Items.DRAGON_KNIFE_P_PLUS, Items.DRAGON_KNIFE_P_PLUS_PLUS, Items.ZARYTE_CROSSBOW, Items.VENATOR_BOW,
-            Items.ECLIPSE_ATLATL, Items.TONALZTICS_OF_RALOS, Items.TONALZTICS_OF_RALOS_UNCHARGED, Items.NOXIOUS_HALBERD,
+            Items.ECLIPSE_ATLATL, Items.TONALZTICS_OF_RALOS, Items.TONALZTICS_OF_RALOS_UNCHARGED,
         ).forEach { weapon ->
             for (style in 0..3) {
                 for (npc in listOf(true, false)) {
@@ -61,6 +61,8 @@ class OwnerBuglist20260917cTests {
                 }
             }
         }
+        // Noxious halberd: the OSRS halberd jab / swipe (combat-logger's observed table), never a "Virulence" special sequence.
+        assertEquals(listOf(428, 440, 428), (0..2).map { OsrsWeaponLooks.attackAnimation(Items.NOXIOUS_HALBERD, it, againstNpc = true, stabStyle = false) })
         // Heavy ballista: OSRS plays a different sequence against npcs (BALLISTA_ATTACK_PVN) than against players.
         assertEquals(OsrsSeq.BALLISTA_ATTACK_PVN, OsrsWeaponLooks.attackAnimation(Items.HEAVY_BALLISTA, 0, againstNpc = true, stabStyle = false))
         assertEquals(OsrsSeq.BALLISTA_ATTACK, OsrsWeaponLooks.attackAnimation(Items.HEAVY_BALLISTA, 0, againstNpc = false, stabStyle = false))

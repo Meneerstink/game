@@ -20,7 +20,8 @@ import gg.rsmod.plugins.content.combat.specialattack.SpecialAttacks
 // Special look: animation 7070 + graphic 1221 (Novite PlayerCombat case 11700; Void `ice_cleave_special` = 1221), sound 3865 (Void).
 // Not added: the freeze impact graphic 2104 (Void `ice_cleave_impact`) - needs the freeze hook of this special, checked at build time.
 SpecialAttacks.register(50, Items.ZAMORAK_GODSWORD, Items.ZAMORAK_GODSWORD_OR) {
-    player.animate(7070)
+    // The (or) godsword plays the OSRS ornate special (gameval ZGS_SPECIAL_ORNATE_PLAYER, imported); the 667 godsword keeps its 667 special.
+    player.animate(if (player.getEquipment(EquipmentType.WEAPON)?.id == Items.ZAMORAK_GODSWORD_OR) gg.rsmod.plugins.content.items.osrs.OsrsSeq.ZGS_SPECIAL_ORNATE_PLAYER else 7070)
     player.graphic(1221)
     player.playSound(3865)
     val maxHit = MeleeCombatFormula.getMaxHit(player, target, specialAttackMultiplier = 1.10)

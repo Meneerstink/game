@@ -8,6 +8,7 @@ import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Pawn
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.api.ext.playSound
+import gg.rsmod.plugins.content.skills.summoning.FamiliarAudio
 import java.io.File
 import java.io.FileReader
 
@@ -85,7 +86,7 @@ object NpcCombatAudio {
         val cycle = npc.world.currentCycle
         if (npc.attr[LAST_ATTACK_SOUND_CYCLE] == cycle) return
         npc.attr[LAST_ATTACK_SOUND_CYCLE] = cycle
-        row.attack.forEach { sound -> play(if (sound.on == NPC) npc else target, sound) }
+        row.attack.forEach { sound -> play(if (sound.on == NPC) npc else target, sound, FamiliarAudio.isFamiliarNpc(npc.id)) }
     }
 
     fun onDefend(
@@ -94,7 +95,7 @@ object NpcCombatAudio {
     ) {
         val id = rows[npc.id]?.defend ?: return
         if (id >= 0 && source is Player) {
-            source.playSound(id)
+            if (FamiliarAudio.isFamiliarNpc(npc.id)) FamiliarAudio.play(source, id) else source.playSound(id)
         }
     }
 
@@ -104,19 +105,20 @@ object NpcCombatAudio {
     ) {
         val id = rows[npc.id]?.death ?: return
         if (id >= 0) {
-            killer.playSound(id)
+            if (FamiliarAudio.isFamiliarNpc(npc.id)) FamiliarAudio.play(killer, id) else killer.playSound(id)
         }
     }
 
     private fun play(
         at: Pawn,
         sound: Sound,
+        familiar: Boolean,
     ) {
         if (sound.id < 0) return
         if (sound.radius > 0) {
-            at.world.spawn(AreaSound(tile = at.tile, id = sound.id, radius = sound.radius.coerceAtMost(MAX_RADIUS), volume = 1, delay = sound.delay))
+            at.world.spawn(AreaSound(tile = at.tile, id = sound.id, radius = sound.radius.coerceAtMost(MAX_RADIUS), volume = 1, delay = sound.delay, playbackVolume = if (familiar) FamiliarAudio.SERVER_SOUND_VOLUME else 255))
         } else if (at is Player) {
-            at.playSound(sound.id, delay = sound.delay)
+            if (familiar) FamiliarAudio.play(at, sound.id, delay = sound.delay) else at.playSound(sound.id, delay = sound.delay)
         }
     }
 }

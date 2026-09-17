@@ -9,3 +9,6 @@ import gg.rsmod.game.model.RenderAnimations
 RenderAnimations.register(OsrsBas.BALLISTA, Items.HEAVY_BALLISTA, Items.HEAVY_BALLISTA_OR)
 RenderAnimations.register(OsrsBas.VENATOR_BOW, Items.VENATOR_BOW, Items.VENATOR_BOW_UNCHARGED)
 RenderAnimations.register(OsrsBas.ABYSSAL_DAGGER, *AbyssalDagger.IDS)
+RenderAnimations.register(OsrsBas.GODSWORD, *OsrsWeaponLooks.OSRS_GODSWORDS)
+RenderAnimations.register(OsrsBas.NIGHTMARE_STAFF, *OsrsWeaponLooks.NIGHTMARE_STAVES)
+RenderAnimations.register(OsrsBas.ZAMORAK_SPEAR, Items.BLUE_MOON_SPEAR)

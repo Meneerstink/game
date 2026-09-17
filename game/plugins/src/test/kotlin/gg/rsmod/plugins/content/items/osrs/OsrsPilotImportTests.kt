@@ -20,7 +20,7 @@ import kotlin.test.assertTrue
 /**
  * OSRS-IMPORT pilot (tx-20260913-204038): the real production cache and `data/cfg/items.yml` agree
  * with the pinned OSRS build-240 definitions and the OSRS Wiki values recorded in
- * `C:\RSPS\OSRS_IMPORT_STATUS.md`, across the whole pilot roster rather than one exemplar.
+ * `C:\RSPS\OSRS_IMPORT_MASTER.yml`, across the whole pilot roster rather than one exemplar.
  */
 class OsrsPilotImportTests {
     private data class Expected(val id: Int, val name: String, val noteOf: Int? = null)

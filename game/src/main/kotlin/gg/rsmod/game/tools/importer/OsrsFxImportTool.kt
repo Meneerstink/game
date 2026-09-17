@@ -95,7 +95,16 @@ object OsrsFxImportTool {
                     11057, 11060, // HUMAN_ATLATL_ATTACK_RANGED_01, HUMAN_SPECIAL_ATLATL_01
                     10914, 10916, 10922, 10923, // HUMAN_GLAIVE_RALOS01_CHARGED_SPECIAL/UNCHARGED_SPECIAL/UNCHARGED_THROW/CHARGED_THROW
                     8532, // NIGHTMARE_STAFF_SPECIAL
-                    11513, 11514, 11515, 11517, // HUMAN_HALBERD_VIRULENCE_01-04 (Noxious halberd)
+                    11513, 11514, 11515, 11517, // HUMAN_HALBERD_VIRULENCE_01-04 (Noxious halberd special "Virulence" variants)
+                ),
+            // Tick 2 (2026-09-17c): OSRS ids that exist in 667 as a DIFFERENT animation (SeqProbe: frame counts differ) or not at all.
+            "weaponseq2" to
+                listOf(
+                    7043, 7044, 7045, 7046, 7047, 7048, 7052, 7053, 7054, 7055, 7056, // DH_SWORD_UPDATE_RUN/TURNONSPOT/SLASH/CHOP/WALK_RIGHT/WALK_LEFT/WALK/READY/SMASH/BLOCK/DEFEND (godswords, 2h)
+                    7638, 7639, 7640, 7641, 7642, 7643, 7644, 7645, // ZGS / SGS / BGS / AGS _SPECIAL_PLAYER and _SPECIAL_ORNATE_PLAYER
+                    4504, 4505, // HUMAN_NIGHTMARE_STAFF_READY / _CRUSH
+                    1702, 1703, 1704, 1705, 1706, 1707, 1709, 1710, 1711, 1712, 1713, // HUMAN_ZAMORAKSPEAR_* (Blue moon spear: combat-logger)
+                    7855, // HUMAN_CAST_SURGE (Harmonised nightmare staff: combat-logger)
                 ),
         )
 
@@ -193,15 +202,22 @@ object OsrsFxImportTool {
         return BaseGroups(types, sizes.map { size -> List(size) { c.u8() } })
     }
 
+    /** Base type of an alpha (face transparency) group; its labels are FACE labels, a different label space from vertex labels. */
+    const val TYPE_ALPHA = 5
+    private const val TYPE_ORIGIN = 0
+    private const val WHOLE_BODY = 100
+
     /**
      * OSRS human framemap -> rev-667 AnimBase that also moves the 667-only vertex labels.
      *
-     * Both rigs descend from the 2007 rig: group i has the same type and the same core body-part labels in both caches up to the
-     * point where the two lineages appended their own groups (BaseProbe 2026-09-17). Rev 667 added HD-only labels (213+, fingers,
-     * cape and shoulder pieces) to those shared groups; an OSRS frame knows nothing about them, so with a plain conversion those
-     * vertices of 667 body kits/armour would stay behind while the limb moves. Rule: a label the OSRS rig articulates (it is in
-     * at least one non-whole-body OSRS group) keeps the OSRS grouping; a label only the 667 rig articulates joins the OSRS group
-     * at the same index when that group is the same body part (same type, at least half of the OSRS labels shared).
+     * Both rigs descend from the 2007 rig and share the body-part vertex labels; rev 667 added HD-only labels (218+: fingers, cape,
+     * shoulder and head pieces). An OSRS frame knows nothing about them, so with a plain conversion those vertices of 667 body kits
+     * and armour stay behind while the limb moves. Only the first ~70 groups of the two framemaps line up by index (MergeAudit
+     * 2026-09-17c: 74 of 205), and the finer OSRS head / leg groups come later - owner live test: "head and legs skeleton seems to
+     * bug" with the first, index-based rule. The rule is therefore by CONTENT: a 667-only label x rides with its companions K = the
+     * OSRS-known labels of the smallest 667 limb group that holds x; x joins every OSRS limb group that holds all of K or more than
+     * half of it, and every whole-body group. Origin (pivot) groups keep the OSRS labels, alpha groups are face labels and are
+     * never touched. A label the OSRS rig knows keeps the OSRS grouping.
      */
     fun mergePlayerBase(
         osrsBase: ByteArray,
@@ -209,18 +225,29 @@ object OsrsFxImportTool {
     ): ByteArray {
         val osrs = readGroups(osrsBase, false)
         val local = readGroups(base667, true)
-        val wholeBody = 100
-        val osrsArticulated = osrs.labels.filter { it.size < wholeBody }.flatten().toSet()
+        val osrsKnown = osrs.labels.filterIndexed { i, _ -> osrs.types[i] != TYPE_ALPHA }.flatten().toSet()
+        val localLimbs =
+            local.labels.filterIndexed { i, g -> local.types[i] != TYPE_ALPHA && local.types[i] != TYPE_ORIGIN && g.size < WHOLE_BODY }
+        val localOnly =
+            local.labels.filterIndexed { i, _ -> local.types[i] != TYPE_ALPHA && local.types[i] != TYPE_ORIGIN }.flatten().toSet() - osrsKnown
+        val companions: Map<Int, Set<Int>> =
+            localOnly.associateWith { x ->
+                localLimbs.filter { x in it }.sortedBy { it.size }.map { g -> g.filter { it in osrsKnown }.toSet() }.firstOrNull { it.isNotEmpty() } ?: emptySet()
+            }
         val merged =
             osrs.labels.mapIndexed { i, labels ->
-                val other = local.labels.getOrNull(i)
-                val sameType = local.types.getOrNull(i) == osrs.types[i]
-                val shared = other?.count { it in labels } ?: 0
-                if (other == null || !sameType || labels.isEmpty() || shared * 2 < labels.size) {
-                    labels
-                } else {
-                    labels + other.filter { it !in labels && it !in osrsArticulated }
-                }
+                val type = osrs.types[i]
+                if (type == TYPE_ALPHA || type == TYPE_ORIGIN || labels.isEmpty()) return@mapIndexed labels
+                val own = labels.toSet()
+                val extra =
+                    localOnly.filter { x ->
+                        if (labels.size >= WHOLE_BODY) return@filter true
+                        val k = companions.getValue(x)
+                        if (k.isEmpty()) return@filter false
+                        val shared = k.count { it in own }
+                        shared == k.size || shared * 2 > k.size
+                    }
+                labels + extra.sorted()
             }
         osrs.types.forEach { check(it in SCALE_BY_TYPE) { "unsupported base type $it" } }
         val out = ByteArrayOutputStream()
@@ -241,21 +268,27 @@ object OsrsFxImportTool {
         osrsFrame: ByteArray,
         types: IntArray,
         localBaseId: Int,
+        dropAlpha: Boolean = false,
     ): ByteArray {
         val c = Cursor(osrsFrame)
         c.u16()
         val length = c.u8()
-        val flags = IntArray(length) { c.u8() }
+        val sourceFlags = IntArray(length) { c.u8() }
+        // Player frames: OSRS fades FACE labels that mean something else on 667 equipment models (owner live test: "my gear
+        // dissapears"), so the alpha channel of a human frame is not carried over. The values are still consumed from the source.
+        val flags = IntArray(length) { if (dropAlpha && types.getOrNull(it) == TYPE_ALPHA) 0 else sourceFlags[it] }
         val out = ByteArrayOutputStream()
         out.u8(1)
         out.u16(localBaseId)
         out.u8(length)
         flags.forEach { out.u8(it) }
         for (i in 0 until length) {
-            if (flags[i] == 0) continue
+            if (sourceFlags[i] == 0) continue
             val scale = SCALE_BY_TYPE[types.getOrElse(i) { -1 }] ?: error("frame group $i has unsupported base type ${types.getOrNull(i)}")
             for (bit in 0..2) {
-                if (flags[i] and (1 shl bit) != 0) out.smarts(c.smarts() * scale)
+                if (sourceFlags[i] and (1 shl bit) == 0) continue
+                val value = c.smarts() * scale
+                if (flags[i] != 0) out.smarts(value)
             }
         }
         check(c.remaining == 0) { "frame has ${c.remaining} trailing bytes" }
@@ -619,7 +652,7 @@ object OsrsFxImportTool {
                         // 667 body kits and armour follow the limb the OSRS frames move; every other base converts 1:1.
                         val player = osrsBase == PLAYER_BASE
                         val localBase = local(if (player) "playerbase" else "base", osrsBase) { nextBase++ }
-                        val converted = convertFrame(frameBytes, baseTypes(baseBytes), localBase)
+                        val converted = convertFrame(frameBytes, baseTypes(baseBytes), localBase, dropAlpha = player)
                         val base667 = if (player) mergePlayerBase(baseBytes, playerBase667) else convertBase(baseBytes)
                         check667Frame(converted, base667)
                         staged += { put(INDEX_BASES, localBase, 0, base667, "osrs base $osrsBase") }
