@@ -37,6 +37,7 @@ object CombatConfigs {
             Items.BLACK_DEFENDER,
             Items.ADAMANT_DEFENDER,
             Items.RUNE_DEFENDER,
+            Items.RUNE_DEFENDER_T,
             Items.DRAGON_DEFENDER,
             Items.DRAGON_DEFENDER_T,
             Items.AVERNIC_DEFENDER,
@@ -170,9 +171,10 @@ object CombatConfigs {
             ) {
                 speed = 4
             }
-            // Eclipse atlatl: "During player versus player combat, the Atlatl has an attack speed of 3."
+            // Eclipse atlatl: "During player versus player combat, its base attack speed is 5, unless the full Eclipse
+            // armour set is worn" (then 3).
             if (weapon.id == gg.rsmod.plugins.api.cfg.Items.ECLIPSE_ATLATL && pawn.attr[gg.rsmod.game.model.attr.COMBAT_TARGET_FOCUS_ATTR]?.get() is Player) {
-                speed = gg.rsmod.plugins.content.items.osrs.MoonSets.ATLATL_PVP_SPEED
+                speed = gg.rsmod.plugins.content.items.osrs.MoonSets.atlatlPvpSpeed(pawn)
             }
             if (getCombatClass(pawn) == CombatClass.RANGED && getAttackStyle(pawn) == WeaponStyle.RAPID) {
                 speed -= 1
@@ -224,6 +226,10 @@ object CombatConfigs {
             val style = pawn.getAttackStyle()
             val option = getCombatStyle(style)
             var weaponId = pawn.getEquipment(EquipmentType.WEAPON)?.id
+            // Void's revision-667 salamander animation table uses the same scorch sequence
+            // for the weapon's three hybrid style buttons. The local cache contains that exact
+            // sequence (5247); do this before the generic weapon-type fallbacks below.
+            if (pawn.hasWeaponType(WeaponType.SALAMANDER)) return Anims.HUMANOID_5247
             val itemAnimation = CombatAnimation.getItemAnimation(weaponId ?: -1, pawn.getWeaponType())
             if (itemAnimation != null) {
                 val style = CombatAnimation.getCorrectStyle(itemAnimation, option)

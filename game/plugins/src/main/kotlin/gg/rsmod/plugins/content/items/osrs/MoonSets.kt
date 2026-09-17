@@ -44,7 +44,12 @@ object MoonSets {
     }
 
     const val ATLATL_RANGE = 5
-    const val ATLATL_PVP_SPEED = 3
+
+    /** OSRS Wiki "Eclipse atlatl": "During player versus player combat, its base attack speed is 5, unless the full
+     * Eclipse armour set is worn" - "the Atlatl has an attack speed of 3" only then (audit round 2026-09-17b: the
+     * old code applied speed 3 to every PvP attack regardless of the armour set, an unearned buff without it). */
+    const val ATLATL_PVP_SPEED_NO_SET = 5
+    const val ATLATL_PVP_SPEED_FULL_SET = 3
     const val BURN_CHANCE = 0.20
     const val ECLIPSE_ENERGY = 50
     const val ECLIPSE_ACCURACY = 1.5
@@ -72,6 +77,9 @@ object MoonSets {
     fun wieldingAtlatl(player: Player): Boolean = player.getEquipment(EquipmentType.WEAPON)?.id == Items.ECLIPSE_ATLATL
 
     fun eclipseBurnActive(player: Player): Boolean = wieldingAtlatl(player) && wearing(player, MoonSet.ECLIPSE)
+
+    /** The atlatl's PvP attack speed: 5 normally, 3 only with the full Eclipse set worn. */
+    fun atlatlPvpSpeed(player: Player): Int = if (wearing(player, MoonSet.ECLIPSE)) ATLATL_PVP_SPEED_FULL_SET else ATLATL_PVP_SPEED_NO_SET
 
     /** Max hit and minimum hit of Eclipse after consuming [burnDamage]: +burn (capped at 50) and +half of it. */
     fun eclipseHit(

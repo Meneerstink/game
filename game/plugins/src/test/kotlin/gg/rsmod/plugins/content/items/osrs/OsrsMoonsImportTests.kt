@@ -61,4 +61,33 @@ class OsrsMoonsImportTests {
         val specials = File("src/main/kotlin/gg/rsmod/plugins/content/combat/specialattack/weapons/moon_specials.plugin.kts").readText()
         assertTrue("Items.ECLIPSE_ATLATL" in specials && "Items.DUAL_MACUAHUITL" in specials && "Items.BLUE_MOON_SPEAR" in specials)
     }
+
+    /**
+     * OSRS-IMPORT audit round 2026-09-17b: the Eclipse atlatl's PvP speed used to be hardcoded to 3 for every PvP
+     * attack. OSRS Wiki "Eclipse atlatl" (three independent sentences on the page, re-fetched this round): "During
+     * player versus player combat, its base attack speed is 5, unless the full Eclipse armour set is worn" - only
+     * then does it become 3. `CombatConfigs.getAttackDelay` gave speed 3 in PvP regardless of armour, an unearned
+     * buff for anyone wielding the atlatl without the full set.
+     */
+    @Test
+    fun `the atlatl's PvP speed is 5 without the full Eclipse set and 3 with it`() {
+        assertEquals(5, MoonSets.ATLATL_PVP_SPEED_NO_SET)
+        assertEquals(3, MoonSets.ATLATL_PVP_SPEED_FULL_SET)
+        val configs = File("src/main/kotlin/gg/rsmod/plugins/content/combat/CombatConfigs.kt").readText()
+        assertTrue("speed = gg.rsmod.plugins.content.items.osrs.MoonSets.atlatlPvpSpeed(pawn)" in configs, "speed must be looked up per-attack, not hardcoded")
+        assertTrue(
+            "speed = gg.rsmod.plugins.content.items.osrs.MoonSets.ATLATL_PVP_SPEED" !in configs,
+            "no lingering hardcoded single-value PvP-speed assignment",
+        )
+    }
+
+    @Test
+    fun `delayed burn damage stops for an offline player`() {
+        val source = File("src/main/kotlin/gg/rsmod/plugins/content/items/osrs/Burns.kt").readText()
+        assertTrue(
+            "target.isDead() || (target is Player && !target.isOnline)" in source,
+            "burn tick must not hit a logged-out player",
+        )
+        assertTrue(source.indexOf("target.isOnline") < source.indexOf("target.hit"))
+    }
 }
