@@ -17,7 +17,9 @@ import org.junit.BeforeClass
 import java.nio.file.Paths
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertNotEquals
+import kotlin.test.assertTrue
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 
@@ -120,6 +122,36 @@ class TradeSessionIntegrityTests {
 
         val received = b.inventory.filterNotNull().first { it.id == WHIP }
         assertEquals(42, received.attr[gg.rsmod.game.model.item.ItemAttribute.CHARGES], "charges kept by the receiver")
+    }
+
+    @Test
+    fun `trade requests expire, drop offline senders and are capped`() {
+        val (a, b) = pair()
+        val world = a.world
+        var cycle = 1000
+        every { world.currentCycle } answers { cycle }
+        every { a.isOnline } returns true
+        every { b.isOnline } returns true
+
+        b.addTradeRequest(a)
+        assertTrue(b.hasTradeRequestFrom(a), "fresh request is open")
+        cycle += TRADE_REQUEST_TICKS
+        assertTrue(b.hasTradeRequestFrom(a), "still open at the limit")
+        cycle += 1
+        assertFalse(b.hasTradeRequestFrom(a), "expired one tick past the limit")
+
+        b.addTradeRequest(a)
+        every { a.isOnline } returns false
+        assertFalse(b.hasTradeRequestFrom(a), "a logged-out sender is forgotten")
+        every { a.isOnline } returns true
+
+        repeat(TRADE_REQUEST_CAPACITY + 5) { i ->
+            val sender = newPlayer(world, "s$i")
+            every { sender.isOnline } returns true
+            cycle += 1
+            b.addTradeRequest(sender)
+        }
+        assertEquals(TRADE_REQUEST_CAPACITY, b.getTradeRequests().size, "only the newest requests are kept")
     }
 
     @Test

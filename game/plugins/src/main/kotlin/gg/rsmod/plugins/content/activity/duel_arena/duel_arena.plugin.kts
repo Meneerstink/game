@@ -230,6 +230,19 @@ can_equip_any_item { player, item ->
     false
 }
 
+/*
+ * Dying while a duel is still being configured (the lobby is not a safe zone under Deadman rules)
+ * used to leave the match open with both stakes in escrow. Treat it like a decline, before the
+ * loot is resolved, so the stake is back with its owner - the same rule the trade session applies.
+ */
+on_player_pre_death {
+    val match = player.getDuelMatch() ?: return@on_player_pre_death
+    if (match.stage != DuelStage.CONFIGURING) return@on_player_pre_death
+    returnStakes(match)
+    match.other(player).message("<col=ff0000>Other player declined the duel!")
+    match.clear()
+}
+
 on_player_death {
     val match = player.getDuelMatch() ?: return@on_player_death
     if (match.stage != DuelStage.FIGHTING) return@on_player_death

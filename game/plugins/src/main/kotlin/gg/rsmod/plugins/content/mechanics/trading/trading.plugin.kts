@@ -9,11 +9,6 @@ import gg.rsmod.plugins.content.mechanics.trading.impl.TradeSession.Companion.TR
 import gg.rsmod.util.Misc
 
 /**
- * The number of trade requests
- */
-val REQUEST_CAPACITY = 10
-
-/**
  * The message sent when a player requests to trade.
  */
 val TRADE_REQ_STRING = "wishes to trade with you."
@@ -21,7 +16,7 @@ val TRADE_REQ_STRING = "wishes to trade with you."
 /**
  * Initiate the set of trade requests
  */
-on_login { player.attr[TRADE_REQUESTS] = HashSet(REQUEST_CAPACITY) }
+on_login { player.attr[TRADE_REQUESTS] = HashMap() }
 
 /**
  * When a player requests to trade a user, we should first check to see if the player they
@@ -48,14 +43,18 @@ on_player_option(option = "Trade with") {
         return@on_player_option
     }
 
-    // The set of players who have requested the player
-    val requests = player.getTradeRequests()
+    // Requests are only meaningful between players who can actually trade right now: the same
+    // distance initiate() enforces, checked here so a request cannot be parked from across the map.
+    if (!player.tile.isWithinRadius(partner.tile, 15)) {
+        player.message("Other player is too far away.")
+        return@on_player_option
+    }
 
-    // If the partner hasn't recently requested a trade
-    if (!requests.contains(partner)) {
+    // If the partner hasn't recently requested a trade (requests expire, see TRADE_REQUEST_TICKS)
+    if (!player.hasTradeRequestFrom(partner)) {
 
         // Add the player to the partner's requests
-        partner.getTradeRequests().add(player)
+        partner.addTradeRequest(player)
 
         // Send the trade request
         player.message("Sending trade request...")
@@ -63,8 +62,8 @@ on_player_option(option = "Trade with") {
     } else {
 
         // Remove the requests
-        player.getTradeRequests().remove(partner)
-        partner.getTradeRequests().remove(player)
+        player.removeTradeRequest(partner)
+        partner.removeTradeRequest(player)
 
         // Initiate the trade
         initiate(player, partner)
