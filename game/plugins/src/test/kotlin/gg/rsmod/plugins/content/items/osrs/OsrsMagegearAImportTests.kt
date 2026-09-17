@@ -43,7 +43,11 @@ class OsrsMagegearAImportTests {
         assertEquals(mapOf(6 to 80), reqs(Items.KODAI_WAND))
         assertEquals(mapOf(1 to 60), reqs(Items.MALEDICTION_WARD))
         assertEquals(mapOf(1 to 60), reqs(Items.ODIUM_WARD_OR), "the (or) ward keeps the 60 Defence requirement")
-        assertEquals(mapOf(4 to 80, 1 to 80), reqs(Items.AVERNIC_TREADS_MAX).filterKeys { it == 4 || it == 1 })
+        // OSRS Wiki raw wikitext, audited 2026-09-17b: "Avernic treads are boots that require level 80 in Defence,
+        // Strength, Ranged, and Magic to wear" - all four skills, on every variant (was missing Strength/Magic
+        // before this audit; the old test only checked Ranged+Defence and silently ignored the rest, masking it).
+        val avernicWearReqs = mapOf(4 to 80, 1 to 80, 2 to 80, 6 to 80)
+        AvernicTreads.ALL.forEach { treads -> assertEquals(avernicWearReqs, reqs(treads), "treads $treads wear requirement") }
         val combos = CombinationData.values.associateBy { it.resultItem }
         assertEquals(setOf(Items.KODAI_INSIGNIA, Items.MASTER_WAND), combos.getValue(Items.KODAI_WAND).items.toSet())
         assertEquals(80, combos.getValue(Items.SEERS_ICON).levelRequired)

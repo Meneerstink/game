@@ -265216,13 +265216,6 @@
   tradeable: true
   weight: 0.0
   equipment: null
-- id: 22323
-  name: "Trouver parchment"
-  examine: "Take it to Perdu to help you avoid losing certain items."
-  destroy_message: ""
-  tradeable: false
-  weight: 0.0
-  equipment: null
 - id: 22324
   name: "Fire cape (l)"
   examine: "A cape of fire, locked with a Trouver parchment."
@@ -272657,7 +272650,7 @@
     melee_strength: 0
     prayer: 2
     ranged_strength: 0
-    magic_damage: 1.0
+    magic_damage: 0.0
     attack_audio: -1
     skill_reqs: [{'skill': 6, 'level': 70}, {'skill': 1, 'level': 40}]
     absorb_melee: 0
@@ -272691,7 +272684,7 @@
     melee_strength: 0
     prayer: 2
     ranged_strength: 0
-    magic_damage: 1.0
+    magic_damage: 0.0
     attack_audio: -1
     skill_reqs: [{'skill': 6, 'level': 70}, {'skill': 1, 'level': 40}]
     absorb_melee: 0
@@ -273337,7 +273330,7 @@
     ranged_strength: 2
     magic_damage: 1.0
     attack_audio: -1
-    skill_reqs: [{'skill': 4, 'level': 80}, {'skill': 1, 'level': 80}]
+    skill_reqs: [{'skill': 4, 'level': 80}, {'skill': 1, 'level': 80}, {'skill': 2, 'level': 80}, {'skill': 6, 'level': 80}]
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
@@ -273377,7 +273370,7 @@
     ranged_strength: 2
     magic_damage: 1.0
     attack_audio: -1
-    skill_reqs: [{'skill': 4, 'level': 80}, {'skill': 1, 'level': 80}]
+    skill_reqs: [{'skill': 4, 'level': 80}, {'skill': 1, 'level': 80}, {'skill': 2, 'level': 80}, {'skill': 6, 'level': 80}]
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
@@ -273411,7 +273404,7 @@
     ranged_strength: 3
     magic_damage: 1.0
     attack_audio: -1
-    skill_reqs: [{'skill': 4, 'level': 80}, {'skill': 1, 'level': 80}]
+    skill_reqs: [{'skill': 4, 'level': 80}, {'skill': 1, 'level': 80}, {'skill': 2, 'level': 80}, {'skill': 6, 'level': 80}]
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
@@ -273445,7 +273438,7 @@
     ranged_strength: 2
     magic_damage: 2.0
     attack_audio: -1
-    skill_reqs: [{'skill': 4, 'level': 80}, {'skill': 1, 'level': 80}]
+    skill_reqs: [{'skill': 4, 'level': 80}, {'skill': 1, 'level': 80}, {'skill': 2, 'level': 80}, {'skill': 6, 'level': 80}]
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
@@ -273479,7 +273472,7 @@
     ranged_strength: 3
     magic_damage: 1.0
     attack_audio: -1
-    skill_reqs: [{'skill': 4, 'level': 80}, {'skill': 1, 'level': 80}]
+    skill_reqs: [{'skill': 4, 'level': 80}, {'skill': 1, 'level': 80}, {'skill': 2, 'level': 80}, {'skill': 6, 'level': 80}]
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
@@ -273513,7 +273506,7 @@
     ranged_strength: 2
     magic_damage: 2.0
     attack_audio: -1
-    skill_reqs: [{'skill': 4, 'level': 80}, {'skill': 1, 'level': 80}]
+    skill_reqs: [{'skill': 4, 'level': 80}, {'skill': 1, 'level': 80}, {'skill': 2, 'level': 80}, {'skill': 6, 'level': 80}]
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
@@ -273547,7 +273540,7 @@
     ranged_strength: 3
     magic_damage: 2.0
     attack_audio: -1
-    skill_reqs: [{'skill': 4, 'level': 80}, {'skill': 1, 'level': 80}]
+    skill_reqs: [{'skill': 4, 'level': 80}, {'skill': 1, 'level': 80}, {'skill': 2, 'level': 80}, {'skill': 6, 'level': 80}]
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
@@ -273581,7 +273574,7 @@
     ranged_strength: 3
     magic_damage: 2.0
     attack_audio: -1
-    skill_reqs: [{'skill': 4, 'level': 80}, {'skill': 1, 'level': 80}]
+    skill_reqs: [{'skill': 4, 'level': 80}, {'skill': 1, 'level': 80}, {'skill': 2, 'level': 80}, {'skill': 6, 'level': 80}]
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
@@ -284647,3 +284640,1244 @@
   tradeable: false
   weight: 5.0
   equipment: null
+- id: 23730
+  name: "Trouver parchment"
+  examine: "Take it to Perdu to help you avoid losing certain items."
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23731
+  name: "Incomplete heavy ballista"
+  examine: "The limbs have been attached to the frame."
+  tradeable: true
+  weight: 5.5
+  equipment: null
+- id: 23732
+  name: "Incomplete heavy ballista"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23733
+  name: "Unstrung heavy ballista"
+  examine: "Needs a suitably simian rope."
+  tradeable: true
+  weight: 5.75
+  equipment: null
+- id: 23734
+  name: "Unstrung heavy ballista"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23735
+  name: "Arclight"
+  examine: "The magical sword 'Silverlight', enhanced with the blood of Agrith-Naar and ancient shards."
+  tradeable: false
+  weight: 1.814
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6659
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 6
+    attack_speed: 4
+    attack_stab: 10
+    attack_slash: 38
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 3
+    defence_crush: 2
+    defence_magic: 2
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 8
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23736
+  name: "Arclight (inactive)"
+  examine: "The magical sword is inactive and requires more ancient shards to regain its power."
+  tradeable: false
+  weight: 1.814
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6660
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 6
+    attack_speed: 5
+    attack_stab: 10
+    attack_slash: 16
+    attack_crush: -2
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 3
+    defence_crush: 2
+    defence_magic: 2
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 13
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23737
+  name: "Ancient shard"
+  examine: "You're not sure what this is, but it feels powerful."
+  tradeable: false
+  weight: 0.0
+  equipment: null
+- id: 23738
+  name: "Emberlight"
+  examine: "Silver, blood and crystal smelted in tormenting flames."
+  tradeable: false
+  weight: 0.907
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6661
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 6
+    attack_speed: 4
+    attack_stab: 63
+    attack_slash: 70
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 3
+    defence_crush: 2
+    defence_magic: 5
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 13
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 77}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23739
+  name: "Burning claws"
+  examine: "Torn from the hands of ancient demons."
+  tradeable: true
+  weight: 0.907
+  equipment:
+    equip_slot: 3
+    equip_type: 5
+    appearance_id: 6662
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 9
+    attack_speed: 4
+    attack_stab: 43
+    attack_slash: 54
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 3
+    defence_slash: 6
+    defence_crush: 1
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 32
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 60}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23740
+  name: "Burning claws"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23741
+  name: "Burning claw"
+  examine: "An intact, lightly smouldering claw."
+  tradeable: true
+  weight: 0.8
+  equipment: null
+- id: 23742
+  name: "Burning claw"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23743
+  name: "Wrath rune"
+  examine: "Used for very high level missile spells."
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23744
+  name: "Aether rune"
+  examine: "A combined cosmic and soul rune."
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23745
+  name: "Aether catalyst"
+  examine: "A piece of the cosmos' soul? Or souls belonging to the cosmos?"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23746
+  name: "Rune pouch"
+  examine: "You can store runes in here."
+  tradeable: false
+  weight: 1.0
+  equipment: null
+- id: 23747
+  name: "Divine rune pouch"
+  examine: "A vessel used to store runes that's been imbued with the powers of Elidinis."
+  tradeable: false
+  weight: 0.878
+  equipment: null
+- id: 23748
+  name: "Thread of Elidinis"
+  examine: "A spool of thread that gives off a divine energy."
+  tradeable: false
+  weight: 0.003
+  equipment: null
+- id: 23749
+  name: "Smoke battlestaff"
+  examine: "It gives a 10% accuracy and damage bonus for spells on the standard spellbook."
+  tradeable: true
+  weight: 2.267
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6663
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 1
+    attack_speed: 5
+    attack_stab: 7
+    attack_slash: -1
+    attack_crush: 28
+    attack_magic: 12
+    attack_ranged: 0
+    defence_stab: 2
+    defence_slash: 3
+    defence_crush: 1
+    defence_magic: 12
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 35
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: 2555
+    skill_reqs: [{'skill': 0, 'level': 30}, {'skill': 6, 'level': 30}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23750
+  name: "Smoke battlestaff"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23751
+  name: "Mist battlestaff"
+  examine: "It's a slightly magical stick."
+  tradeable: true
+  weight: 2.267
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6664
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 1
+    attack_speed: 5
+    attack_stab: 7
+    attack_slash: -1
+    attack_crush: 28
+    attack_magic: 12
+    attack_ranged: 0
+    defence_stab: 2
+    defence_slash: 3
+    defence_crush: 1
+    defence_magic: 12
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 35
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: 2555
+    skill_reqs: [{'skill': 0, 'level': 30}, {'skill': 6, 'level': 30}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23752
+  name: "Mist battlestaff"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23753
+  name: "Mystic mist staff"
+  examine: "It's a slightly more magical stick."
+  tradeable: true
+  weight: 2.267
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6665
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 1
+    attack_speed: 5
+    attack_stab: 10
+    attack_slash: -1
+    attack_crush: 40
+    attack_magic: 14
+    attack_ranged: 0
+    defence_stab: 2
+    defence_slash: 3
+    defence_crush: 1
+    defence_magic: 14
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 50
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: 2555
+    skill_reqs: [{'skill': 0, 'level': 40}, {'skill': 6, 'level': 40}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23754
+  name: "Mystic mist staff"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23755
+  name: "Dust battlestaff"
+  examine: "It's a slightly magical stick."
+  tradeable: true
+  weight: 2.267
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6666
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 1
+    attack_speed: 5
+    attack_stab: 7
+    attack_slash: -1
+    attack_crush: 28
+    attack_magic: 12
+    attack_ranged: 0
+    defence_stab: 2
+    defence_slash: 3
+    defence_crush: 1
+    defence_magic: 12
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 35
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: 2555
+    skill_reqs: [{'skill': 0, 'level': 30}, {'skill': 6, 'level': 30}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23756
+  name: "Dust battlestaff"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23757
+  name: "Mystic dust staff"
+  examine: "It's a slightly more magical stick."
+  tradeable: true
+  weight: 2.267
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6667
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 1
+    attack_speed: 5
+    attack_stab: 10
+    attack_slash: -1
+    attack_crush: 40
+    attack_magic: 14
+    attack_ranged: 0
+    defence_stab: 2
+    defence_slash: 3
+    defence_crush: 1
+    defence_magic: 14
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 50
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: 2555
+    skill_reqs: [{'skill': 0, 'level': 40}, {'skill': 6, 'level': 40}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23758
+  name: "Mystic dust staff"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23759
+  name: "Dragon boots ornament kit"
+  examine: "Use on some dragon boots to make them look fancier!"
+  tradeable: true
+  weight: 0.5
+  equipment: null
+- id: 23760
+  name: "Dragon boots ornament kit"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23761
+  name: "Dragon boots (g)"
+  examine: "These fancy boots will protect my feet."
+  tradeable: false
+  weight: 1.0
+  equipment:
+    equip_slot: 10
+    equip_type: -1
+    appearance_id: 6668
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -3
+    attack_ranged: -1
+    defence_stab: 16
+    defence_slash: 17
+    defence_crush: 18
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 4
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 1, 'level': 60}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23762
+  name: "Berserker necklace ornament kit"
+  examine: "Use on the Berserker necklace to make it look fancier!"
+  tradeable: true
+  weight: 0.5
+  equipment: null
+- id: 23763
+  name: "Berserker necklace ornament kit"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23764
+  name: "Berserker necklace (or)"
+  examine: "Makes obsidian weapons even stronger and has a nice glow to boot!"
+  tradeable: false
+  weight: 0.01
+  equipment:
+    equip_slot: 2
+    equip_type: -1
+    appearance_id: 6669
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: -10
+    attack_slash: -10
+    attack_crush: -10
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: -20
+    defence_slash: -20
+    defence_crush: -20
+    defence_magic: -20
+    defence_ranged: -20
+    summoning: 0
+    melee_strength: 7
+    prayer: 3
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23765
+  name: "Rune defender ornament kit"
+  examine: "Use on the rune defender to trim it with gold."
+  tradeable: true
+  weight: 0.5
+  equipment: null
+- id: 23766
+  name: "Rune defender ornament kit"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23767
+  name: "Rune defender (t)"
+  examine: "A defensive weapon trimmed with gold."
+  tradeable: false
+  weight: 0.453
+  equipment:
+    equip_slot: 5
+    equip_type: -1
+    appearance_id: 6670
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 20
+    attack_slash: 19
+    attack_crush: 18
+    attack_magic: -3
+    attack_ranged: -2
+    defence_stab: 20
+    defence_slash: 19
+    defence_crush: 18
+    defence_magic: -3
+    defence_ranged: -2
+    summoning: 0
+    melee_strength: 5
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 40}, {'skill': 1, 'level': 40}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23768
+  name: "Tzhaar-ket-om ornament kit"
+  examine: "Use on the TzHaar-ket-om to trim and spike it."
+  tradeable: true
+  weight: 0.5
+  equipment: null
+- id: 23769
+  name: "Tzhaar-ket-om ornament kit"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23770
+  name: "Tzhaar-ket-om (t)"
+  examine: "A maul of obsidian with trim and spikes."
+  tradeable: false
+  weight: 3.628
+  equipment:
+    equip_slot: 3
+    equip_type: 5
+    appearance_id: 6671
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 10
+    attack_speed: 7
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 80
+    attack_magic: -4
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 85
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: 2520
+    skill_reqs: [{'skill': 2, 'level': 60}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23771
+  name: "Rune scimitar ornament kit (Guthix)"
+  examine: "Use on a rune scimitar to make it look fancier!"
+  tradeable: true
+  weight: 0.5
+  equipment: null
+- id: 23772
+  name: "Rune scimitar ornament kit (Guthix)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23773
+  name: "Rune scimitar ornament kit (Saradomin)"
+  examine: "Use on a rune scimitar to make it look fancier!"
+  tradeable: true
+  weight: 0.5
+  equipment: null
+- id: 23774
+  name: "Rune scimitar ornament kit (Saradomin)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23775
+  name: "Rune scimitar ornament kit (Zamorak)"
+  examine: "Use on a rune scimitar to make it look fancier!"
+  tradeable: true
+  weight: 0.5
+  equipment: null
+- id: 23776
+  name: "Rune scimitar ornament kit (Zamorak)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23777
+  name: "Rune scimitar"
+  examine: "A vicious, curved sword."
+  tradeable: false
+  weight: 1.814
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6672
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 6
+    attack_speed: 4
+    attack_stab: 7
+    attack_slash: 45
+    attack_crush: -2
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 1
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 44
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: 2500
+    skill_reqs: [{'skill': 0, 'level': 40}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23778
+  name: "Rune scimitar"
+  examine: "A vicious, curved sword."
+  tradeable: false
+  weight: 1.814
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6673
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 6
+    attack_speed: 4
+    attack_stab: 7
+    attack_slash: 45
+    attack_crush: -2
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 1
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 44
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: 2500
+    skill_reqs: [{'skill': 0, 'level': 40}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23779
+  name: "Rune scimitar"
+  examine: "A vicious, curved sword."
+  tradeable: false
+  weight: 1.814
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6674
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 6
+    attack_speed: 4
+    attack_stab: 7
+    attack_slash: 45
+    attack_crush: -2
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 1
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 44
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: 2500
+    skill_reqs: [{'skill': 0, 'level': 40}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23780
+  name: "Frozen whip mix"
+  examine: "Cold to the touch."
+  tradeable: true
+  weight: 0.001
+  equipment: null
+- id: 23781
+  name: "Frozen whip mix"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23782
+  name: "Volcanic whip mix"
+  examine: "How has lava been stored like this...?"
+  tradeable: true
+  weight: 0.001
+  equipment: null
+- id: 23783
+  name: "Volcanic whip mix"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23784
+  name: "Frozen abyssal whip"
+  examine: "A weapon from the frozen abyss."
+  tradeable: false
+  weight: 0.453
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6675
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 11
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 82
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 82
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 70}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23785
+  name: "Volcanic abyssal whip"
+  examine: "A weapon from the volcanic abyss."
+  tradeable: false
+  weight: 0.453
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6676
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 11
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 82
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 82
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 70}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23786
+  name: "Lava staff upgrade kit"
+  examine: "Makes a lava battlestaff or mystic lava staff more beautiful."
+  tradeable: true
+  weight: 0.5
+  equipment: null
+- id: 23787
+  name: "Lava staff upgrade kit"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23788
+  name: "Lava battlestaff"
+  examine: "It's a slightly magical but highly beautiful stick."
+  tradeable: false
+  weight: 2.267
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6677
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 1
+    attack_speed: 5
+    attack_stab: 7
+    attack_slash: -1
+    attack_crush: 28
+    attack_magic: 12
+    attack_ranged: 0
+    defence_stab: 2
+    defence_slash: 3
+    defence_crush: 1
+    defence_magic: 12
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 35
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: 2555
+    skill_reqs: [{'skill': 0, 'level': 30}, {'skill': 6, 'level': 30}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23789
+  name: "Steam staff upgrade kit"
+  examine: "Makes a steam battlestaff or mystic steam staff more beautiful."
+  tradeable: true
+  weight: 0.5
+  equipment: null
+- id: 23790
+  name: "Steam staff upgrade kit"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23791
+  name: "Steam battlestaff"
+  examine: "It's a beautiful and slightly magical stick."
+  tradeable: false
+  weight: 2.267
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6678
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 1
+    attack_speed: 5
+    attack_stab: 7
+    attack_slash: -1
+    attack_crush: 28
+    attack_magic: 12
+    attack_ranged: 0
+    defence_stab: 2
+    defence_slash: 3
+    defence_crush: 1
+    defence_magic: 12
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 35
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: 2555
+    skill_reqs: [{'skill': 0, 'level': 30}, {'skill': 6, 'level': 30}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23792
+  name: "Mystic steam staff"
+  examine: "It's a beautiful and slightly magical stick."
+  tradeable: false
+  weight: 2.267
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6679
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 1
+    attack_speed: 5
+    attack_stab: 10
+    attack_slash: -1
+    attack_crush: 40
+    attack_magic: 14
+    attack_ranged: 0
+    defence_stab: 2
+    defence_slash: 3
+    defence_crush: 1
+    defence_magic: 14
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 50
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: 2555
+    skill_reqs: [{'skill': 0, 'level': 40}, {'skill': 6, 'level': 40}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23793
+  name: "Blue dark bow paint"
+  examine: "Paints things blue!"
+  tradeable: true
+  weight: 0.001
+  equipment: null
+- id: 23794
+  name: "Blue dark bow paint"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23795
+  name: "Green dark bow paint"
+  examine: "Paints things green!"
+  tradeable: true
+  weight: 0.001
+  equipment: null
+- id: 23796
+  name: "Green dark bow paint"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23797
+  name: "Yellow dark bow paint"
+  examine: "Paints things yellow!"
+  tradeable: true
+  weight: 0.001
+  equipment: null
+- id: 23798
+  name: "Yellow dark bow paint"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23799
+  name: "White dark bow paint"
+  examine: "Paints things white!"
+  tradeable: true
+  weight: 0.001
+  equipment: null
+- id: 23800
+  name: "White dark bow paint"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23801
+  name: "Dark bow"
+  examine: "A bow from a darker dimension, painted green."
+  tradeable: false
+  weight: 1.814
+  equipment:
+    equip_slot: 3
+    equip_type: 5
+    appearance_id: 6680
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 16
+    attack_speed: 9
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 95
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: 3731
+    skill_reqs: [{'skill': 4, 'level': 60}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23802
+  name: "Dark bow"
+  examine: "A bow from a darker dimension, painted blue."
+  tradeable: false
+  weight: 1.814
+  equipment:
+    equip_slot: 3
+    equip_type: 5
+    appearance_id: 6681
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 16
+    attack_speed: 9
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 95
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: 3731
+    skill_reqs: [{'skill': 4, 'level': 60}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23803
+  name: "Dark bow"
+  examine: "A bow from a darker dimension, painted yellow."
+  tradeable: false
+  weight: 1.814
+  equipment:
+    equip_slot: 3
+    equip_type: 5
+    appearance_id: 6682
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 16
+    attack_speed: 9
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 95
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: 3731
+    skill_reqs: [{'skill': 4, 'level': 60}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23804
+  name: "Dark bow"
+  examine: "A bow from a darker dimension, painted white."
+  tradeable: false
+  weight: 1.814
+  equipment:
+    equip_slot: 3
+    equip_type: 5
+    appearance_id: 6683
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 16
+    attack_speed: 9
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 95
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: 3731
+    skill_reqs: [{'skill': 4, 'level': 60}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23805
+  name: "Dragon pickaxe upgrade kit"
+  examine: "Makes a dragon pickaxe more beautiful."
+  tradeable: true
+  weight: 0.5
+  equipment: null
+- id: 23806
+  name: "Dragon pickaxe upgrade kit"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23807
+  name: "Dragon pickaxe"
+  examine: "If rocks could feel fear, they'd fear this while admiring its beauty."
+  tradeable: false
+  weight: 2.4
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6684
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 4
+    attack_speed: 5
+    attack_stab: 38
+    attack_slash: -2
+    attack_crush: 32
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 1
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 42
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 60}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23808
+  name: "Zalcano shard"
+  examine: "Makes a dragon pickaxe more beautiful."
+  tradeable: true
+  weight: 0.5
+  equipment: null
+- id: 23809
+  name: "Zalcano shard"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23810
+  name: "Dragon pickaxe (or)"
+  examine: "A dragon pickaxe infused with a fragment of Zalcano."
+  tradeable: false
+  weight: 2.4
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6685
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 4
+    attack_speed: 5
+    attack_stab: 38
+    attack_slash: -2
+    attack_crush: 32
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 1
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 42
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 60}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0

@@ -50,4 +50,37 @@ class OsrsMagearmourImportTests {
         assertEquals(listOf(mapOf(6 to 75, 1 to 65)), reqsByName("Ancestral hat"))
         assertEquals(listOf(mapOf(6 to 40)), reqsByName("Elder chaos top"))
     }
+
+    /** id -> (attack_magic, defence_magic, magic_damage as a whole percent, prayer). items.yml already stores magic_damage as whole percent (1.0 = 1%). */
+    private fun bonuses(id: Int): List<Int> {
+        val eq = yml.first { it.path("id").asInt() == id }.path("equipment")
+        return listOf(eq.path("attack_magic").asInt(), eq.path("defence_magic").asInt(), eq.path("magic_damage").asDouble().toInt(), eq.path("prayer").asInt())
+    }
+
+    @Test
+    fun `audit round 2026-09-17b remaining armour matches the sourced OSRS Wiki infobox bonuses exactly`() {
+        // Swampbark (OSRS Wiki raw wikitext, audited 2026-09-17): amagic/dmagic/mdmg/prayer per piece.
+        assertEquals(listOf(4, 5, 0, 0), bonuses(Items.SWAMPBARK_HELM), "Swampbark helm")
+        assertEquals(listOf(15, 21, 0, 0), bonuses(Items.SWAMPBARK_BODY), "Swampbark body")
+        assertEquals(listOf(10, 15, 0, 0), bonuses(Items.SWAMPBARK_LEGS), "Swampbark legs")
+        assertEquals(listOf(3, 4, 0, 0), bonuses(Items.SWAMPBARK_GAUNTLETS), "Swampbark gauntlets")
+        assertEquals(listOf(3, 4, 0, 0), bonuses(Items.SWAMPBARK_BOOTS), "Swampbark boots")
+        // Elder chaos (base + (or), identical - ornament kits are cosmetic only).
+        listOf(Items.ELDER_CHAOS_TOP to 10, Items.ELDER_CHAOS_TOP_OR to 10).forEach { (id, amagic) -> assertEquals(listOf(amagic, 8, 1, 0), bonuses(id), "$id") }
+        listOf(Items.ELDER_CHAOS_ROBE to 6, Items.ELDER_CHAOS_ROBE_OR to 6).forEach { (id, amagic) -> assertEquals(listOf(amagic, 6, 1, 0), bonuses(id), "$id") }
+        listOf(Items.ELDER_CHAOS_HOOD to 5, Items.ELDER_CHAOS_HOOD_OR to 5).forEach { (id, amagic) -> assertEquals(listOf(amagic, 4, 1, 0), bonuses(id), "$id") }
+        // Infinity robes (pre-existing 667 content, re-confirmed against the wiki).
+        assertEquals(listOf(22, 22, 1, 0), bonuses(Items.INFINITY_TOP), "Infinity top")
+        assertEquals(listOf(6, 6, 1, 0), bonuses(Items.INFINITY_HAT), "Infinity hat")
+        assertEquals(listOf(17, 17, 1, 0), bonuses(Items.INFINITY_BOTTOMS), "Infinity bottoms")
+        assertEquals(listOf(5, 5, 0, 0), bonuses(Items.INFINITY_GLOVES), "Infinity gloves")
+        assertEquals(listOf(5, 5, 0, 0), bonuses(Items.INFINITY_BOOTS), "Infinity boots")
+        // Dagon'hai robe top/bottom: OSRS Wiki raw wikitext confirms (verified twice, independently, per side) a real
+        // asymmetry between the base pieces (mdmg 1) and the (or) ornamented pieces (mdmg 0) - not a fetch error,
+        // fixed in items.yml 2026-09-17b (was wrongly 1.0 on both (or) pieces before this audit).
+        assertEquals(listOf(25, 21, 1, 2), bonuses(Items.DAGONHAI_ROBE_TOP), "Dagon'hai robe top")
+        assertEquals(listOf(25, 21, 0, 2), bonuses(Items.DAGONHAI_ROBE_TOP_OR), "Dagon'hai robe top (or)")
+        assertEquals(listOf(18, 14, 1, 2), bonuses(Items.DAGONHAI_ROBE_BOTTOM), "Dagon'hai robe bottom")
+        assertEquals(listOf(18, 14, 0, 2), bonuses(Items.DAGONHAI_ROBE_BOTTOM_OR), "Dagon'hai robe bottom (or)")
+    }
 }
