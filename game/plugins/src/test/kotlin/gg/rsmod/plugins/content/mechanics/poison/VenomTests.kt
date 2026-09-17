@@ -11,6 +11,7 @@ import gg.rsmod.game.model.timer.POISON_IMMUNITY
 import gg.rsmod.game.model.timer.POISON_TIMER
 import gg.rsmod.game.model.timer.TimerMap
 import gg.rsmod.game.model.timer.VENOM_IMMUNITY
+import gg.rsmod.game.model.varp.VarpSet
 import gg.rsmod.plugins.content.combat.isEnvenomed
 import gg.rsmod.plugins.content.combat.isPoisoned
 import gg.rsmod.plugins.content.combat.poison
@@ -186,6 +187,7 @@ class VenomTests {
         val player = mockk<Player>(relaxed = true)
         every { player.attr } returns AttributeMap()
         every { player.timers } returns TimerMap()
+        every { player.varps } returns VarpSet((0..8000).toSet())
         return player
     }
 

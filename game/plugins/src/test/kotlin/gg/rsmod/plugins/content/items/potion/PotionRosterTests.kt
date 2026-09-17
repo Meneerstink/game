@@ -2,49 +2,38 @@ package gg.rsmod.plugins.content.items.potion
 
 import com.displee.cache.CacheLibrary
 import gg.rsmod.game.fs.DefinitionSet
-import gg.rsmod.game.fs.def.AnimDef
 import gg.rsmod.game.fs.def.ItemDef
-import gg.rsmod.game.fs.def.SpotAnimDef
 import gg.rsmod.game.message.Message
 import gg.rsmod.game.message.impl.MessageGameMessage
 import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.World
 import gg.rsmod.game.model.attr.AttributeMap
-import gg.rsmod.game.model.attr.OVERLOAD_REFRESHES_ATTR
-import gg.rsmod.game.model.attr.PRAYER_RENEWAL_TICKS_ATTR
 import gg.rsmod.game.model.container.ItemContainer
 import gg.rsmod.game.model.container.key.INVENTORY_KEY
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.game.model.skill.SkillSet
-import gg.rsmod.game.model.timer.OVERLOAD_TIMER
 import gg.rsmod.game.model.timer.POISON_IMMUNITY
-import gg.rsmod.game.model.timer.RECOVER_SPECIAL_TIMER
 import gg.rsmod.game.model.timer.TimerMap
 import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.api.cfg.Items
-import gg.rsmod.plugins.content.inter.attack.AttackTab
+import gg.rsmod.plugins.content.skills.herblore.mixing.PotionData
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
-import io.mockk.mockkObject
-import io.mockk.unmockkObject
-import io.mockk.verify
 import org.junit.BeforeClass
 import java.nio.file.Paths
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
-import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 /**
  * RCV-010 A3 (owner live 2026-09-13: Overload "item unhandled", decanting does nothing).
  *
- * Shared path: every potion is a [Potion] row -> `potionDrinking.plugin.kts` binds "Drink" from that table,
- * and [PotionDecanting] derives its families from the same table. The roster is enumerated from the real 667
- * cache so a drinkable potion without a row is named here.
+ * Drink effects are deliberately enumerated by [Potion]. Decant and Empty are instead enumerated from the
+ * real 667 cache, so those container interactions do not disappear when a drink effect is parked or removed.
  */
 class PotionRosterTests {
     private val sent = mutableListOf<String>()
@@ -89,6 +78,7 @@ class PotionRosterTests {
         Blocked("SOURCE_BLOCKED: Herblore Habitat juju/scentless/god potions have no donor effect", named("Juju", "Scentless potion", "Saradomin's blessing", "Guthix's gift", "Zamorak's favour")),
         Blocked("BLOCKED: Relicym's balm cures disease; the disease mechanic does not exist server-side", named("Relicym's balm")),
         Blocked("SOURCE_CONFLICT: Guthix rest empty container (Void data: empty = vial, excess = empty_cup)", named("Guthix rest")),
+        Blocked("OWNER_REMOVED: extreme 125-stat/ranged, overload, prayer renewal and recover special") { it.id in RemovedPotions.itemIds },
     )
 
     @Test
@@ -116,70 +106,15 @@ class PotionRosterTests {
     }
 
     @Test
-    fun `extreme potions and overload use the Novite 667 formulas`() {
-        val expected = mapOf(Skills.ATTACK to 125, Skills.STRENGTH to 125, Skills.DEFENCE to 125, Skills.MAGIC to 106, Skills.RANGED to 122)
-        listOf(PotionType.EXTREME_ATTACK to Skills.ATTACK, PotionType.EXTREME_STRENGTH to Skills.STRENGTH, PotionType.EXTREME_DEFENCE to Skills.DEFENCE,
-            PotionType.EXTREME_MAGIC to Skills.MAGIC, PotionType.EXTREME_RANGING to Skills.RANGED).forEach { (type, skill) ->
-            val p = player()
-            assertTrue(type.canDrink(p))
-            type.apply(p)
-            assertEquals(expected[skill], p.skills.getCurrentLevel(skill), type.name)
-        }
-        val p = player()
-        PotionType.OVERLOAD.apply(p)
-        expected.forEach { (skill, level) -> assertEquals(level, p.skills.getCurrentLevel(skill), "overload skill $skill") }
-    }
+    fun `owner removed potion families have no drink row or herblore recipe`() {
+        assertEquals(28, RemovedPotions.doseItemIds.size)
+        assertEquals(32, RemovedPotions.itemIds.size)
+        assertTrue(Potion.values().none { it.item in RemovedPotions.itemIds })
+        assertTrue(PotionData.values().none { it.product in RemovedPotions.recipeProducts })
 
-    @Test
-    fun `overload refuses while active and at 50 life points or less, then runs twenty refreshes and restores`() {
-        val low = player(lifepoints = 50)
-        assertFalse(PotionType.OVERLOAD.canDrink(low))
-        assertTrue(sent.last().contains("more than 500 life points"))
-
-        val p = player()
-        assertTrue(PotionType.OVERLOAD.canDrink(p))
-        PotionType.OVERLOAD.apply(p)
-        assertEquals(PotionEffects.OVERLOAD_REFRESH_TICKS, p.timers[OVERLOAD_TIMER])
-        assertFalse(PotionType.OVERLOAD.canDrink(p))
-        assertEquals("You may only use this potion every five minutes.", sent.last())
-
-        var ticks = 0
-        while (p.attr.has(OVERLOAD_REFRESHES_ATTR)) {
-            PotionEffects.tickOverload(p)
-            ticks++
-        }
-        assertEquals(PotionEffects.OVERLOAD_REFRESHES, ticks)
-        PotionEffects.OVERLOAD_SKILLS.forEach { assertEquals(99, p.skills.getCurrentLevel(it)) }
-        verify(exactly = 1) { p.alterLifepoints(PotionEffects.OVERLOAD_END_HEAL, 0) }
-        assertEquals(PotionEffects.OVERLOAD_END_MESSAGE, sent.last())
-    }
-
-    @Test
-    fun `prayer renewal restores one real point per ten ticks and warns and ends with the Novite messages`() {
-        val p = player()
-        PotionType.PRAYER_RENEWAL.apply(p)
-        while (p.attr.has(PRAYER_RENEWAL_TICKS_ATTR)) PotionEffects.tickPrayerRenewal(p)
-        verify(exactly = 50) { p.alterPrayerPoints(1, 0) }
-        assertEquals(1, sent.count { it == PotionEffects.RENEWAL_WARNING_MESSAGE })
-        assertEquals(PotionEffects.RENEWAL_END_MESSAGE, sent.last())
-    }
-
-    @Test
-    fun `recover special restores 25 percent and refuses for 30 seconds`() {
-        mockkObject(AttackTab)
-        try {
-            val p = player()
-            every { AttackTab.getEnergy(p) } returns 60
-            every { AttackTab.setEnergy(p, any()) } just Runs
-            assertTrue(PotionType.RECOVER_SPECIAL.canDrink(p))
-            PotionType.RECOVER_SPECIAL.apply(p)
-            verify { AttackTab.setEnergy(p, 85) }
-            assertEquals(PotionEffects.RECOVER_SPECIAL_COOLDOWN_TICKS, p.timers[RECOVER_SPECIAL_TIMER])
-            assertFalse(PotionType.RECOVER_SPECIAL.canDrink(p))
-            assertEquals("You may only use this pot every 30 seconds.", sent.last())
-        } finally {
-            unmockkObject(AttackTab)
-        }
+        val magic = player()
+        PotionType.EXTREME_MAGIC.apply(magic)
+        assertEquals(106, magic.skills.getCurrentLevel(Skills.MAGIC), "Extreme magic was not part of the removal request")
     }
 
     @Test
@@ -226,20 +161,16 @@ class PotionRosterTests {
 
     @Test
     fun `decanting pours, splits and refuses correctly for every potion family`() {
-        val families = PotionDecanting.families
-        // Derived, not a magic number: every four-dose row in the table starts exactly one family.
-        val fourDoseRows = Potion.values().filter { DEFINITIONS.get(ItemDef::class.java, it.item).name.endsWith("(4)") }
-            .filterNot { row -> Potion.values().any { it.replacement == row.item } }
-        val unfamilied = fourDoseRows.filter { row -> families.none { it[0] == row.item } }.map { it.name }
-        assertTrue(unfamilied.isEmpty(), "four-dose potions without a decanting family: $unfamilied")
-        assertEquals(fourDoseRows.size, families.size)
+        val families = PotionDecanting.cacheFamilies(DEFINITIONS)
+        assertTrue(families.size > PotionDecanting.families.size, "decanting is still limited to implemented drink effects")
+        assertTrue(families.flatMap { it.toList() }.none { it in RemovedPotions.itemIds })
         families.forEach { family ->
             fun id(doses: Int) = family[4 - doses]
             for (a in 1..4) for (b in 1..4) {
                 val p = player()
                 p.inventory[0] = Item(id(a))
                 p.inventory[1] = Item(id(b))
-                val handled = PotionDecanting.decant(p, 0, 1)
+                val handled = PotionDecanting.decant(p, 0, 1, families)
                 if (b == 4) {
                     assertFalse(handled, "${family[0]} $a on full $b")
                     assertEquals(id(a), p.inventory[0]!!.id)
@@ -253,7 +184,7 @@ class PotionRosterTests {
                 val p = player()
                 p.inventory[0] = Item(id(d))
                 p.inventory[1] = Item(Items.VIAL)
-                assertTrue(PotionDecanting.decant(p, 1, 0))
+                assertTrue(PotionDecanting.decant(p, 1, 0, families))
                 if (d == 1) {
                     assertEquals(Items.VIAL, p.inventory[0]!!.id)
                     assertEquals(id(1), p.inventory[1]!!.id)
@@ -263,15 +194,20 @@ class PotionRosterTests {
                 }
             }
         }
-        val pairs = PotionDecanting.bindingPairs()
+        val pairs = PotionDecanting.bindingPairs(families)
         assertEquals(pairs.size, pairs.map { minOf(it.first, it.second) to maxOf(it.first, it.second) }.toSet().size, "duplicate bindings")
-    }
 
-    @Test
-    fun `overload and renewal presentation ids exist in the 667 cache`() {
-        assertNotNull(DEFINITIONS.getNullable(AnimDef::class.java, PotionEffects.OVERLOAD_ANIMATION))
-        assertNotNull(DEFINITIONS.getNullable(SpotAnimDef::class.java, PotionEffects.OVERLOAD_GRAPHIC))
-        assertNotNull(DEFINITIONS.getNullable(SpotAnimDef::class.java, PotionEffects.PRAYER_RENEWAL_GRAPHIC))
+        val emptyable = PotionDecanting.emptyableDoseItems(DEFINITIONS)
+        assertTrue(emptyable.isNotEmpty())
+        assertTrue(emptyable.none { it in RemovedPotions.itemIds })
+        emptyable.forEach { item ->
+            val p = player()
+            p.inventory[0] = Item(item)
+            val name = DEFINITIONS.get(ItemDef::class.java, item).name
+            assertTrue(PotionDecanting.empty(p, 0, forcedContainer = Items.VIAL), name)
+            assertEquals(Items.VIAL, p.inventory[0]!!.id, name)
+        }
+        println("PotionRosterTests: decantFamilies=${families.size} emptyableDoseItems=${emptyable.size}")
     }
 
     companion object {

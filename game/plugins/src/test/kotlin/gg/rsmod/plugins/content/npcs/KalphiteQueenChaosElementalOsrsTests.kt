@@ -36,4 +36,11 @@ class KalphiteQueenChaosElementalOsrsTests {
         listOf("defence_stab", "defence_slash", "defence_crush", "defence_magic", "defence_ranged").forEach { assertEquals(70, bonuses[it].asInt(), it) }
         assertEquals(0, bonuses["strength_bonus"].asInt())
     }
+
+    @Test
+    fun `Chaos Elemental delayed player effects reject stale targets`() {
+        val script = File("src/main/kotlin/gg/rsmod/plugins/content/combat/scripts/impl/ChaosElementalCombatScript.kt").readText()
+        assertTrue("target.isDead() || (target is Player && !target.isOnline)" in script)
+        assertTrue("target.isDead() || !target.isOnline || target.inventory.freeSlotCount == 0" in script)
+    }
 }

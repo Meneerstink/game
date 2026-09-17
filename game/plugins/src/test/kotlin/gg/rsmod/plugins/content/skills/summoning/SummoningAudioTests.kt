@@ -2,6 +2,7 @@ package gg.rsmod.plugins.content.skills.summoning
 
 import com.displee.cache.CacheLibrary
 import gg.rsmod.game.tools.importer.SeqSoundProbeTool
+import gg.rsmod.plugins.content.combat.audio.NpcCombatAudio
 import org.junit.AfterClass
 import org.junit.BeforeClass
 import java.nio.file.Paths
@@ -39,6 +40,11 @@ import kotlin.test.assertEquals
  * silent with nothing else failing.
  */
 class SummoningAudioTests {
+    @Test
+    fun `shared familiar server cues use the owner approved five percent lower volume`() {
+        assertEquals(116, FamiliarAudio.SERVER_SOUND_VOLUME)
+    }
+
     /**
      * Every sound id reached from the sequences the 78 familiars actually play, recovered by
      * `SeqSoundProbeTool` and recorded in `C:\RSPS\summoning_refs\familiar_seq_sounds.txt`, plus
@@ -101,6 +107,72 @@ class SummoningAudioTests {
             ),
             SeqSoundProbeTool.seq(store, 11096)?.sounds,
         )
+    }
+
+    @Test
+    fun `QC3 familiar hit and death cues are wired through the shared NPC combat route`() {
+        val table = Paths.get("..", "..", "data", "cfg", "npcs", "combat-sounds.json").toFile()
+        NpcCombatAudio.load(table)
+        val expected =
+            mapOf(
+                6807 to (4298 to 4303), 7332 to (4600 to 4615), 6832 to (4308 to 4313),
+                6838 to (4305 to 4317), 7362 to (4669 to 4703), 6848 to (4188 to 4230),
+                6872 to (4134 to 4162), 7354 to (4716 to -1), 6846 to (4184 to 4210),
+                7371 to (4625 to 4629), 7368 to (4606 to 4649), 7334 to (4672 to 4690),
+                7352 to (4651 to 4634), 6854 to (4338 to 4335), 6856 to (4338 to 4335),
+                6858 to (4338 to 4335), 6860 to (4338 to 4335), 6862 to (4338 to 4335),
+                6864 to (4338 to 4335), 6868 to (4212 to 4229), 6834 to (4324 to 4307),
+                7378 to (4641 to 4597), 6993 to (4242 to 4252), 7364 to (4702 to 4652),
+                7366 to (4687 to 4664), 7338 to (4674 to 4696), 6810 to (4191 to 4169),
+                6866 to (4318 to 4284), 6821 to (4221 to 4267), 6803 to (4283 to 4327),
+                6828 to (4234 to 4192), 6890 to (4328 to 4289), 6816 to (4287 to 4281),
+                6814 to (4198 to 4147), 6840 to (4232 to 4206), 7346 to (4632 to 4692),
+                6850 to (4216 to 4201), 6799 to (4306 to 4285), 7336 to (4667 to 4628),
+                7348 to (4636 to 4658), 6801 to (4294 to 4295), 7356 to (4604 to 4688),
+                7360 to (4684 to 4635), 7358 to (4607 to 4663), 6812 to (4223 to 4257),
+                6805 to (4323 to 4291), 7342 to (4714 to 4710), 7330 to (4715 to 4673),
+                6823 to (4135 to 4195), 7340 to (4697 to 4642), 6870 to (4163 to 4243),
+                7350 to (4660 to 4717), 7376 to (4612 to 4666), 6874 to (4175 to 4207),
+                7344 to (4704 to 4668),
+            )
+        expected.forEach { (npcId, sounds) ->
+            val row = NpcCombatAudio.rowFor(npcId)
+            assertNotNull(row, "QC3 familiar $npcId has no shared combat-audio row")
+            assertEquals(sounds.first, row!!.defend, "QC3 hit cue mismatch for familiar $npcId")
+            assertEquals(sounds.second, row.death, "QC3 death cue mismatch for familiar $npcId")
+            listOf(row.defend, row.death).filter { it >= 0 }.forEach { soundId ->
+                val data = store.data(SYNTH_SOUNDS_INDEX, soundId, 0)
+                assertNotNull(data, "QC3 familiar $npcId references missing sound $soundId")
+                assertTrue(data!!.isNotEmpty(), "QC3 familiar $npcId references empty sound $soundId")
+            }
+        }
+    }
+
+    @Test
+    fun `QC3 familiar spawn cues are wired only to actual summon arrival presentation`() {
+        val expected =
+            mapOf(
+                SummoningPouchData.SPIRIT_TZ_KIH to 4677,
+                SummoningPouchData.KARAMTHULHU_OVERLORD to 4254,
+                SummoningPouchData.VOID_TORCHER to 4694,
+                SummoningPouchData.PYRELORD to 4620,
+                SummoningPouchData.OBSIDIAN_GOLEM to 4682,
+                SummoningPouchData.FIRE_TITAN to 4699,
+                SummoningPouchData.ICE_TITAN to 4706,
+                SummoningPouchData.MOSS_TITAN to 4626,
+                SummoningPouchData.LAVA_TITAN to 4647,
+                SummoningPouchData.SWAMP_TITAN to 4683,
+                SummoningPouchData.GEYSER_TITAN to 4659,
+                SummoningPouchData.ABYSSAL_TITAN to 4656,
+                SummoningPouchData.IRON_TITAN to 4646,
+                SummoningPouchData.STEEL_TITAN to 4638,
+            )
+        assertEquals(expected, expected.keys.associateWith(FamiliarAudio::spawnSound))
+        expected.values.forEach { soundId ->
+            val data = store.data(SYNTH_SOUNDS_INDEX, soundId, 0)
+            assertNotNull(data, "QC3 familiar spawn sound $soundId is missing from the cache")
+            assertTrue(data!!.isNotEmpty(), "QC3 familiar spawn sound $soundId is empty")
+        }
     }
 
     companion object {

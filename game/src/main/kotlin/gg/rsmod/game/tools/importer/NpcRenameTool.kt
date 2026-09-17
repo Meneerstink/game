@@ -33,6 +33,8 @@ object NpcRenameTool {
         bytes: ByteArray,
         newName: String,
         newLevel: Int? = null,
+        /** Opcode 103 rotation speed (client turn rate, default 32); an imported 0 leaves an npc unable to face its target. */
+        newTurn: Int? = null,
     ): Result {
         val out = ByteArrayOutputStream(bytes.size + newName.length + 2)
         var oldName: String? = null
@@ -61,12 +63,21 @@ object NpcRenameTool {
             out.write(level and 0xFF)
             levelWritten = true
         }
+        var turnWritten = false
+        fun writeTurn() {
+            val turn = newTurn ?: return
+            out.write(103)
+            out.write((turn shr 8) and 0xFF)
+            out.write(turn and 0xFF)
+            turnWritten = true
+        }
         while (true) {
             val segmentStart = pos
             val opcode = u8()
             if (opcode == 0) {
                 if (oldName == null) writeName()
                 if (newLevel != null && !levelWritten) writeLevel()
+                if (newTurn != null && !turnWritten) writeTurn()
                 out.write(0)
                 break
             }
@@ -91,7 +102,14 @@ object NpcRenameTool {
                         replaced = true
                     }
                 }
-                97, 98, 102, 103, 122, 123, 137, 138, 139, 142, 127 -> skip(2)
+                103 -> {
+                    skip(2)
+                    if (newTurn != null) {
+                        writeTurn()
+                        replaced = true
+                    }
+                }
+                97, 98, 102, 122, 123, 137, 138, 139, 142, 127 -> skip(2)
                 100, 101, 125, 128, 140, 163, 165, 168, 119 -> skip(1)
                 106, 118 -> {
                     skip(4)
@@ -157,6 +175,7 @@ object NpcRenameTool {
         val ids = positional.drop(1).map { it.toInt() }
         val apply = "--apply" in args
         val newLevel = args.firstOrNull { it.startsWith("--level=") }?.substringAfter('=')?.toInt()
+        val newTurn = args.firstOrNull { it.startsWith("--turn=") }?.substringAfter('=')?.toInt()
         val library = CacheLibrary(TARGETS[0])
         val mutations = ArrayList<CacheMutation>()
         try {
@@ -164,11 +183,11 @@ object NpcRenameTool {
                 val group = id ushr 7
                 val file = id and 0x7F
                 val current = library.data(INDEX_NPC, group, file) ?: error("npc $id missing from ${TARGETS[0]}")
-                val result = rename(current, newName, newLevel)
+                val result = rename(current, newName, newLevel, newTurn)
                 val problems = verifyEquivalent(id, result, newName, newLevel)
                 check(problems.isEmpty()) { "npc $id re-encode mismatch: $problems" }
                 val oldLevel = decode(id, current).combatLevel
-                if (result.oldName == newName && (newLevel == null || oldLevel == newLevel)) {
+                if (result.oldName == newName && (newLevel == null || oldLevel == newLevel) && newTurn == null) {
                     println("PLAN npc $id: already named '$newName' (level $oldLevel), nothing to do")
                     return@forEach
                 }
@@ -179,7 +198,7 @@ object NpcRenameTool {
                         group,
                         file,
                         result.renamed,
-                        "rename npc $id '${result.oldName}' -> '$newName'" + (if (newLevel != null) " level $newLevel" else ""),
+                        "rename npc $id '${result.oldName}' -> '$newName'" + (if (newLevel != null) " level $newLevel" else "") + (if (newTurn != null) " turn $newTurn" else ""),
                         expectedCurrentSha1 = CacheItemProbeTool.sha1(current),
                     )
             }

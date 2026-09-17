@@ -118,6 +118,14 @@ object OsrsFxImportTool {
                     9365, 9366, 9367, 9368, // a_r_osmumtens_fang_sword_metallic_woosh_01 / stab_01 / woosh_02 / woosh_01
                     9403, 9404, // noxious_halberd_special_attack_build_01 / impact_01
                 ),
+            "weaponsfx2" to
+                listOf(
+                    7918, 7932, // varlamore_pm_atlatl_special_impact_01 / _cast_01
+                    7936, 7946, // varlamore_glaive_remove_charge_01 / _add_charge_01 (Tonalztics of Ralos)
+                    7937, 7938, 7945, // varlamore_glaive_uncharged_special_throw_spin_01 / _whoosh_01 / _impact_01
+                    7939, 7942, 7943, 7944, // varlamore_glaive_charged_special_throw_01 / _whoosh_01 / _spin_01 / _impact_01
+                    7940, 7941, // varlamore_glaive_regular_throw_whoosh_01, varlamore_glaive_projectile_01
+                ),
         )
 
     // ---- smart values ---------------------------------------------------------------------------
@@ -208,6 +216,44 @@ object OsrsFxImportTool {
     private const val WHOLE_BODY = 100
 
     /**
+     * The labels the 667 rig uses for the same pivot as OSRS origin group [origin].
+     *
+     * A pivot is the centroid of the vertices that carry the origin group's labels. OSRS pivots the right-hand weapon on label 27; the
+     * 667 rig pivots the same limb group on 196, 200 and 27 - the HD body kits carry the pivot on 196 / 200, so with the OSRS labels alone
+     * no vertex is found, the pivot falls to the model origin and the weapon swings away from the hands (owner screenshots 2026-09-17c:
+     * godsword, blue moon spear and ballista floating beside the character). The 667 origin group is found through the limb it serves:
+     * the first limb group after the OSRS origin is matched to the 667 limb group of the same type with the most labels in common (at
+     * least half), and that group's own origin supplies the extra pivot labels.
+     */
+    private fun pivotCompanions(
+        osrs: BaseGroups,
+        local: BaseGroups,
+        origin: Int,
+    ): List<Int> {
+        val served =
+            (origin + 1 until osrs.types.size)
+                .takeWhile { osrs.types[it] != TYPE_ORIGIN }
+                .firstOrNull { osrs.types[it] != TYPE_ALPHA && osrs.labels[it].size in 1 until WHOLE_BODY } ?: return emptyList()
+        val limb = osrs.labels[served].toSet()
+        var best = -1
+        var bestScore = 0.0
+        for (j in local.types.indices) {
+            if (local.types[j] != osrs.types[served] || local.labels[j].size >= WHOLE_BODY) continue
+            val other = local.labels[j].toSet()
+            val score = limb.count { it in other }.toDouble() / (limb.size + other.size - limb.count { it in other })
+            if (score > bestScore) {
+                bestScore = score
+                best = j
+            }
+        }
+        if (best < 0 || bestScore < 0.5) return emptyList()
+        val localOrigin = (best - 1 downTo 0).firstOrNull { local.types[it] == TYPE_ORIGIN } ?: return emptyList()
+        // Only when the two origins are the same pivot to begin with (they share a label).
+        if (local.labels[localOrigin].none { it in osrs.labels[origin] }) return emptyList()
+        return local.labels[localOrigin]
+    }
+
+    /**
      * OSRS human framemap -> rev-667 AnimBase that also moves the 667-only vertex labels.
      *
      * Both rigs descend from the 2007 rig and share the body-part vertex labels; rev 667 added HD-only labels (218+: fingers, cape,
@@ -216,8 +262,8 @@ object OsrsFxImportTool {
      * 2026-09-17c: 74 of 205), and the finer OSRS head / leg groups come later - owner live test: "head and legs skeleton seems to
      * bug" with the first, index-based rule. The rule is therefore by CONTENT: a 667-only label x rides with its companions K = the
      * OSRS-known labels of the smallest 667 limb group that holds x; x joins every OSRS limb group that holds all of K or more than
-     * half of it, and every whole-body group. Origin (pivot) groups keep the OSRS labels, alpha groups are face labels and are
-     * never touched. A label the OSRS rig knows keeps the OSRS grouping.
+     * half of it, and every whole-body group. Alpha groups are face labels and are
+     * never touched. A label the OSRS rig knows keeps the OSRS grouping. Origin (pivot) groups gain the 667 pivot labels ([pivotCompanions]).
      */
     fun mergePlayerBase(
         osrsBase: ByteArray,
@@ -237,7 +283,8 @@ object OsrsFxImportTool {
         val merged =
             osrs.labels.mapIndexed { i, labels ->
                 val type = osrs.types[i]
-                if (type == TYPE_ALPHA || type == TYPE_ORIGIN || labels.isEmpty()) return@mapIndexed labels
+                if (type == TYPE_ORIGIN) return@mapIndexed labels + pivotCompanions(osrs, local, i).filter { it !in labels }
+                if (type == TYPE_ALPHA || labels.isEmpty()) return@mapIndexed labels
                 val own = labels.toSet()
                 val extra =
                     localOnly.filter { x ->

@@ -46,9 +46,10 @@ class CityGuardsTests {
         assertEquals(CityGuards.GUARD_IDS, styled + CityGuards.WIZGUARD_ID)
         val owner =
             listOf(
-                Triple(3187, 3446, CityGuards.THIRD_AGE_RANGER_ID), Triple(3186, 3432, CityGuards.THIRD_AGE_MAGE_ID),
-                Triple(3164, 3469, CityGuards.THIRD_AGE_RANGER_ID), Triple(2939, 3356, CityGuards.THIRD_AGE_MAGE_ID),
-                Triple(2966, 3399, CityGuards.THIRD_AGE_RANGER_ID), Triple(3006, 3388, null), Triple(3006, 3326, null),
+                // Ranger posts use the OSRS Deadman ranged guard (owner live retest 2026-09-17: 14404 never turns).
+                Triple(3187, 3446, null), Triple(3186, 3432, CityGuards.THIRD_AGE_MAGE_ID),
+                Triple(3164, 3469, null), Triple(2939, 3356, CityGuards.THIRD_AGE_MAGE_ID),
+                Triple(2966, 3399, null), Triple(3006, 3388, null), Triple(3006, 3326, null),
                 Triple(3237, 3225, CityGuards.LUCIEN_ID), Triple(3218, 3251, null),
             )
         owner.forEach { (x, z, id) ->

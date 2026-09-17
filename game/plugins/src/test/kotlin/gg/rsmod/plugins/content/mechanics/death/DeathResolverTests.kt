@@ -9,17 +9,18 @@ import gg.rsmod.game.model.container.key.EQUIPMENT_KEY
 import gg.rsmod.game.model.container.key.INVENTORY_KEY
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
+import gg.rsmod.game.model.attr.PVP_AGGRESSOR_ATTR
+import gg.rsmod.game.model.timer.PVP_AGGRESSOR_WINDOW_TIMER
 import io.mockk.every
 import io.mockk.mockk
+import java.lang.ref.WeakReference
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 /**
- * Package-3 Wilderness/PvP foundation: proves [DeathResolver.resolveContext]
- * actually classifies a death using the real [gg.rsmod.plugins.content.areas.home.BountyHunterHome]
- * safe-hub boundary (not a duplicate/parallel notion of "safe"), so a real
- * fight resolved by [gg.rsmod.plugins.content.combat.Combat.canEngage] and a
- * death resolved by [DeathResolver] agree on the same danger boundary.
+ * M1 PvP/PvM death policy: proves [DeathResolver.resolveContext] follows the
+ * actual credited cause rather than the victim's Wilderness coordinates.
  *
  * `skulled` is deliberately left at its default (`victim.hasSkullIcon(SkullIcon.RED)`)
  * in every test here, which currently always evaluates to `false`: nothing in
@@ -33,9 +34,14 @@ import kotlin.test.assertEquals
  */
 class DeathResolverTests {
     @Test
-    fun `a death in dangerous wilderness resolves as a real-risk PvP death, not a PvM death`() {
+    fun `pvp aggressor attribution is cleared by the player death lifecycle`() {
+        assertTrue(PVP_AGGRESSOR_ATTR.resetOnDeath)
+    }
+
+    @Test
+    fun `a player-caused death outside the wilderness resolves as PvP loot`() {
         val home = Tile(3140, 3640, 0)
-        val victim = newPlayer(tile = Tile(3040, 3528), home = home)
+        val victim = newPlayer(tile = Tile(3200, 3200), home = home)
         val killer = mockk<Player>(relaxed = true)
         // Four distinct stacks so the unskulled keep-3 cap is actually
         // exercised (protectedItemCount is capped by available stacks, not
@@ -50,6 +56,29 @@ class DeathResolverTests {
         assertEquals(DeathContext.WILDERNESS_PVP, result.context)
         assertEquals(3, result.itemRisk.protectedItemCount, "unskulled Wilderness deaths keep the 3 most valuable stacks")
         assertEquals(1, result.itemRisk.lost.size, "the 4th, lowest-ranked stack must be lost")
+    }
+
+    @Test
+    fun `a monster-caused death in the wilderness resolves as PvM recovery`() {
+        val home = Tile(3140, 3640, 0)
+        val victim = newPlayer(tile = Tile(3040, 3528), home = home)
+
+        val result = DeathResolver.resolve(victim, killer = null, valueProvider = { _ -> 1L })
+
+        assertEquals(DeathContext.PVM_SAFE, result.context)
+    }
+
+    @Test
+    fun `a recent player aggressor keeps an NPC last hit in PvP loot context`() {
+        val home = Tile(3140, 3640, 0)
+        val victim = newPlayer(tile = Tile(3040, 3528), home = home)
+        val aggressor = mockk<Player>(relaxed = true)
+        every { victim.timers.has(PVP_AGGRESSOR_WINDOW_TIMER) } returns true
+        victim.attr[PVP_AGGRESSOR_ATTR] = WeakReference(aggressor)
+
+        val result = DeathResolver.resolve(victim, killer = null, valueProvider = { _ -> 1L })
+
+        assertEquals(DeathContext.WILDERNESS_PVP, result.context)
     }
 
     @Test

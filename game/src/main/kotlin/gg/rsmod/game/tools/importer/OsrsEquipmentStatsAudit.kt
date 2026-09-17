@@ -13,7 +13,7 @@ import java.util.Locale
  * 14 on the weapon slot.
  *
  * Two audits:
- * - every imported item (`RSPS_IMPORT_ASSET_MAP.yml` `upstream_item:<id>` identities) on every field;
+ * - every imported item (`OSRS_IMPORT_MASTER.yml` `upstream_item:<id>` identities) on every field;
  * - every other wearable `items.yml` entry whose name is an OSRS wearable item (same id first, else a unique stat set
  *   among the OSRS items of that name), used for the owner's "all OSRS items ranged strength and magic damage" rule.
  *
@@ -34,7 +34,7 @@ object OsrsEquipmentStatsAudit {
 
     /**
      * Name-matched 667 items whose OSRS ranged strength / magic damage is not applied, with the reason (recorded in
-     * OSRS_IMPORT_STATUS.md). Everything else in the ranged/magic list takes the build-240 value.
+     * OSRS_IMPORT_MASTER.yml). Everything else in the ranged/magic list takes the build-240 value.
      */
     val RANGED_MAGIC_EXCLUDED =
         mapOf(
@@ -133,7 +133,7 @@ object OsrsEquipmentStatsAudit {
     /**
      * Attack speed is compared only when both sides are weapon-slot items: a 667 entry whose `equip_slot` is not the weapon
      * slot (e.g. the 13444 "Abyssal whip" copy with slot 0) has no attack speed to compare (slot differences are recorded
-     * separately in OSRS_IMPORT_STATUS.md, not rewritten by this audit).
+     * separately in OSRS_IMPORT_MASTER.yml, not rewritten by this audit).
      */
     private fun diff(localId: Int, name: String, upstreamId: Int, local: Map<String, Int>, osrs: Map<String, Int>) =
         FIELDS.filter { local[it] != osrs[it] }

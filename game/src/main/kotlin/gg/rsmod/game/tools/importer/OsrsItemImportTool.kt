@@ -9,7 +9,7 @@ import kotlin.math.roundToInt
 /**
  * Imports complete OSRS item definitions (inventory, worn and head meshes, icon camera, menu text,
  * recolours, noted variants) from the pinned OpenRS2 2686 cache into both rev-667 caches
- * (`C:\RSPS\OSRS_IMPORT_CLAUDE_PLAN_2026-09-13.md`, writer claim OSRS-IMPORT).
+ * (`C:\RSPS\archive\historical-agent-documents\plans\OSRS_IMPORT_CLAUDE_PLAN_2026-09-13.md`, writer claim OSRS-IMPORT).
  *
  * Every write goes through [ImportBatchOrchestrator] -> [CacheTransaction]. Meshes are allocated from
  * a fresh [ModelNamespaceCensusTool] run (proven-free holes above 32767 first, then the append range),
@@ -21,7 +21,7 @@ import kotlin.math.roundToInt
 object OsrsItemImportTool {
     const val SOURCE_CACHE = "C:\\RSPS\\import-source\\openrs2-2686\\cache"
     val TARGETS = listOf("C:\\RSPS\\game\\game\\data\\cache", "C:\\RSPS\\file-server\\cache")
-    const val ASSET_MAP = "C:\\RSPS\\RSPS_IMPORT_ASSET_MAP.yml"
+    const val ASSET_MAP = "C:\\RSPS\\OSRS_IMPORT_MASTER.yml"
 
     /** Rev-667 bank-note template (item 1216 = `97=1215 98=799`). */
     const val NOTE_TEMPLATE = 799
@@ -148,6 +148,9 @@ object OsrsItemImportTool {
             // requirement); weapon type 17 and attack audio 2700 as the imported crossbows (ADAPTED_TO_667). The OSRS
             // javelins reuse the upstream ids of the 667 thrown javelins but are imported as separate ammo items; their
             // upstream param 23 is not a wield requirement (Dragon javelin 23 = 60, wiki: none), so no client params.
+            // Incomplete/unstrung heavy ballista (19598/19607, OSRS Wiki 2026-09-16 fetch) are the two intermediate
+            // steps of the real 3-step assembly (limbs+frame -> incomplete -> +spring -> unstrung -> +tail -> heavy
+            // ballista, 30/30/600 XP at 72 Fletching); the original single 4-item CombinationData entry was wrong.
             "ballista" to
                 listOf(
                     Spec(19481, noted = true, rev667Params = mapOf(644 to 1603, 686 to 17, 687 to 1, 23 to 75, 749 to 4, 750 to 75), weaponType = 17, attackAudio = 2700),
@@ -155,6 +158,8 @@ object OsrsItemImportTool {
                     Spec(19592, noted = true), // Ballista limbs
                     Spec(19601, noted = true), // Ballista spring
                     Spec(19610, noted = true), // Monkey tail
+                    Spec(19598, noted = true), // Incomplete heavy ballista
+                    Spec(19607, noted = true), // Unstrung heavy ballista
                     Spec(19584), // Javelin shaft
                 ) +
                     (19570..19582 step 2).map { Spec(it) } + Spec(21352) + // javelin tips bronze..dragon, amethyst
@@ -350,6 +355,14 @@ object OsrsItemImportTool {
             // 805 (686 18, 687 1), Red chinchompa 10034 (644 234, 686 19, weapon type 19), Dragon dart 11230 (weapon type 18, audio
             // 2547); one client-side Ranged requirement each (749/750 = upstream 434/436). Ammunition carries no client params.
             // Broad bolts 11875 are not imported: the 667 Broad-tipped bolts 13280 are the same Slayer item.
+            // Display-only items that OSRS sequences put in the player's hands (sequence opcodes 6 / 7, OsrsFxImportTool): the off-hand
+            // knives of the Dragon knife special "Duality" (HUMAN_DRAGON_TKNIVES_SPEC / _POISON) and the dart of HUMAN_ATLATL_ATTACK_RANGED_01.
+            "handitems" to
+                listOf(
+                    Spec(22812), // Dragon knife (Duality off-hand)
+                    Spec(22814), // Dragon knife(p) (Duality off-hand)
+                    Spec(29003), // Atlatl dart (in hand during the atlatl attack)
+                ),
             "ammo2" to
                 listOf(
                     Spec(21316), // Amethyst broad bolts
@@ -526,6 +539,14 @@ object OsrsItemImportTool {
                     Spec(33518), // Shadow ancient sceptre (l) mangled
                     Spec(30070, noted = true, rev667Params = mapOf(644 to 1955, 686 to 1, 749 to 6, 750 to 65), weaponType = 1), // Dragon hunter wand
                     Spec(29594, noted = true, rev667Params = mapOf(644 to 28, 686 to 1), weaponType = 1, attackAudio = 2555), // Purging staff
+                ),
+            // Owner-reported bug (2026-09-16): the hand-authored Trouver parchment (local item 22323, items.yml)
+            // was never actually run through this import tool, so it never got a real OSRS icon/model - only its
+            // name/examine text were authored by hand. OSRS Wiki (fetched 2026-09-16, Exchange:Trouver_parchment):
+            // item id 24187, tradeable, noteable, no equip slot.
+            "trouver" to
+                listOf(
+                    Spec(24187, noted = true), // Trouver parchment
                 ),
             // Step 3 roster batch "bows" (ids by Jagex name, RuneLite gameval ItemID): main-game bows and thrown weapons with ranged
             // strength plus their charge/creation items. Classes: Magic shortbow 861 (686 16, 687 1, 749/750 Ranged) for bows, Dragon
@@ -796,6 +817,86 @@ object OsrsItemImportTool {
                     Spec(24613), // Blighted entangle sack
                     Spec(24615), // Blighted teleport spell sack
                     Spec(24621), // Blighted vengeance sack
+                ),
+            // Demonbane melee (OSRS import run 2026-09-17, OSRS Wiki item pages): client class of the 667 Darklight 6746
+            // (686 = 6 slash-sword style set, 687 = 1 special bar; ItemParamProbeTool 2026-09-17) and the 667 Dragon claws 14484
+            // (686 = 9 claw style set, 687 = 1). Weapon types as items.yml for those two (6 / 9). Wield requirements from the
+            // item pages: Arclight 75 Attack, Emberlight 77 Attack, Burning claws 60 Attack.
+            "demonbane" to
+                listOf(
+                    Spec(19675, rev667Params = mapOf(686 to 6, 687 to 1, 749 to 0, 750 to 75), weaponType = 6, rev667StringParams = mapOf(528 to "Check")), // Arclight
+                    Spec(30305, rev667Params = mapOf(686 to 6, 687 to 1, 749 to 0, 750 to 75), weaponType = 6, rev667StringParams = mapOf(528 to "Check")), // Arclight (inactive)
+                    Spec(19677, noted = true), // Ancient shard
+                    Spec(29589, rev667Params = mapOf(686 to 6, 687 to 1, 749 to 0, 750 to 77), weaponType = 6), // Emberlight
+                    Spec(29577, noted = true, rev667Params = mapOf(686 to 9, 687 to 1, 749 to 0, 750 to 60), weaponType = 9), // Burning claws
+                    Spec(29574, noted = true), // Burning claw
+                ),
+            // Runes and rune storage (OSRS import run 2026-09-17, OSRS Wiki item pages): wrath and aether runes, aether catalyst,
+            // rune pouch, divine rune pouch, thread of Elidinis, and the combination battlestaves missing from 667 (smoke, mist, dust
+            // and their mystic staves). Staves use the client class of the imported Mystic smoke staff (667 Lava battlestaff class:
+            // 644 = 28 render, 686 = 1 staff styles, Magic + Attack requirement pair), weapon type 1 and staff audio 2555 as items.yml
+            // 3053/3054. Levels: battlestaves 30 Attack + 30 Magic, mystic staves 40 + 40 (upstream params 434-437, checked in the plan).
+            "runes" to
+                listOf(
+                    Spec(21880), // Wrath rune
+                    Spec(30843), // Aether rune
+                    Spec(30771), // Aether catalyst
+                    Spec(12791), // Rune pouch
+                    Spec(27281), // Divine rune pouch
+                    Spec(27279), // Thread of Elidinis
+                    Spec(11998, noted = true, rev667Params = mapOf(644 to 28, 686 to 1, 749 to 6, 750 to 30, 751 to 0, 752 to 30), weaponType = 1, attackAudio = 2555), // Smoke battlestaff
+                    Spec(20730, noted = true, rev667Params = mapOf(644 to 28, 686 to 1, 749 to 6, 750 to 30, 751 to 0, 752 to 30), weaponType = 1, attackAudio = 2555), // Mist battlestaff
+                    Spec(20733, noted = true, rev667Params = mapOf(644 to 28, 686 to 1, 749 to 6, 750 to 40, 751 to 0, 752 to 40), weaponType = 1, attackAudio = 2555), // Mystic mist staff
+                    Spec(20736, noted = true, rev667Params = mapOf(644 to 28, 686 to 1, 749 to 6, 750 to 30, 751 to 0, 752 to 30), weaponType = 1, attackAudio = 2555), // Dust battlestaff
+                    Spec(20739, noted = true, rev667Params = mapOf(644 to 28, 686 to 1, 749 to 6, 750 to 40, 751 to 0, 752 to 40), weaponType = 1, attackAudio = 2555), // Mystic dust staff
+                ),
+            // Ornament kits whose base item exists on this server (OSRS import run 2026-09-17, diff of OSRS Wiki "Category:Ornament kits"
+            // against items.yml). Each ornamented item copies the client params, weapon type and attack audio of its 667 base item
+            // (ItemParamProbeTool 2026-09-17: Dragon boots 11732, Tzhaar-ket-om 6528, Rune scimitar 1333, Abyssal whip 4151, Lava
+            // battlestaff 3053, Steam battlestaff 11736, Mystic steam staff 11738; Berserker necklace 11128 and Rune defender 8850 carry none).
+            "kits" to
+                listOf(
+                    Spec(22231, noted = true), // Dragon boots ornament kit
+                    Spec(22234, rev667Params = mapOf(749 to 1, 750 to 60)), // Dragon boots (g)
+                    Spec(23237, noted = true), // Berserker necklace ornament kit
+                    Spec(23240), // Berserker necklace (or)
+                    Spec(23227, noted = true), // Rune defender ornament kit
+                    Spec(23230), // Rune defender (t)
+                    Spec(23232, noted = true), // Tzhaar-ket-om ornament kit
+                    Spec(23235, rev667Params = mapOf(644 to 27, 686 to 10, 749 to 2, 750 to 60), weaponType = 10, attackAudio = 2520), // Tzhaar-ket-om (t)
+                    Spec(23321, noted = true), // Rune scimitar ornament kit (guthix)
+                    Spec(23324, noted = true), // Rune scimitar ornament kit (saradomin)
+                    Spec(23327, noted = true), // Rune scimitar ornament kit (zamorak)
+                    Spec(23330, rev667Params = mapOf(644 to 1582, 686 to 6, 749 to 0, 750 to 40), weaponType = 6, attackAudio = 2500), // Rune scimitar (guthix)
+                    Spec(23332, rev667Params = mapOf(644 to 1582, 686 to 6, 749 to 0, 750 to 40), weaponType = 6, attackAudio = 2500), // Rune scimitar (saradomin)
+                    Spec(23334, rev667Params = mapOf(644 to 1582, 686 to 6, 749 to 0, 750 to 40), weaponType = 6, attackAudio = 2500), // Rune scimitar (zamorak)
+                    Spec(12769, noted = true), // Frozen whip mix
+                    Spec(12771, noted = true), // Volcanic whip mix
+                    Spec(12774, rev667Params = mapOf(644 to 1578, 686 to 11, 687 to 1, 749 to 0, 750 to 70), weaponType = 11), // Frozen abyssal whip
+                    Spec(12773, rev667Params = mapOf(644 to 1578, 686 to 11, 687 to 1, 749 to 0, 750 to 70), weaponType = 11), // Volcanic abyssal whip
+                    Spec(21202, noted = true), // Lava staff upgrade kit
+                    Spec(21198, rev667Params = mapOf(644 to 28, 686 to 1, 749 to 6, 750 to 30, 751 to 0, 752 to 30), weaponType = 1, attackAudio = 2555), // Lava battlestaff (or)
+                    Spec(12798, noted = true), // Steam staff upgrade kit
+                    Spec(12795, rev667Params = mapOf(644 to 28, 686 to 1, 749 to 0, 750 to 30, 751 to 6, 752 to 30), weaponType = 1, attackAudio = 2555), // Steam battlestaff (or)
+                    Spec(12796, rev667Params = mapOf(644 to 28, 686 to 1, 749 to 0, 750 to 40, 751 to 6, 752 to 40), weaponType = 1, attackAudio = 2555), // Mystic steam staff (or)
+                ),
+            // Kits 2 (OSRS import run 2026-09-17): dark bow paints and the painted dark bows (client class of the 667 Dark bow 11235: 23/749/750
+            // 60 Ranged, 644 = 303, 686 = 16, 687 = 1; weapon type 16, attack audio 3731), dragon pickaxe upgrade kit / Zalcano shard and both
+            // Dragon pickaxe (or) (class of the 667 Dragon pickaxe 15259: 686 = 4, 687 = 1, 749/750 60 Attack, 770/771 = 14/61 Mining; weapon type 4).
+            "kits2" to
+                listOf(
+                    Spec(12757, noted = true), // Blue dark bow paint
+                    Spec(12759, noted = true), // Green dark bow paint
+                    Spec(12761, noted = true), // Yellow dark bow paint
+                    Spec(12763, noted = true), // White dark bow paint
+                    Spec(12765, rev667Params = mapOf(23 to 60, 644 to 303, 686 to 16, 687 to 1, 749 to 4, 750 to 60), weaponType = 16, attackAudio = 3731), // Dark bow (green)
+                    Spec(12766, rev667Params = mapOf(23 to 60, 644 to 303, 686 to 16, 687 to 1, 749 to 4, 750 to 60), weaponType = 16, attackAudio = 3731), // Dark bow (blue)
+                    Spec(12767, rev667Params = mapOf(23 to 60, 644 to 303, 686 to 16, 687 to 1, 749 to 4, 750 to 60), weaponType = 16, attackAudio = 3731), // Dark bow (yellow)
+                    Spec(12768, rev667Params = mapOf(23 to 60, 644 to 303, 686 to 16, 687 to 1, 749 to 4, 750 to 60), weaponType = 16, attackAudio = 3731), // Dark bow (white)
+                    Spec(12800, noted = true), // Dragon pickaxe upgrade kit
+                    Spec(12797, rev667Params = mapOf(686 to 4, 687 to 1, 749 to 0, 750 to 60, 770 to 14, 771 to 61), weaponType = 4), // Dragon pickaxe (or) (upgrade kit)
+                    Spec(23908, noted = true), // Zalcano shard
+                    Spec(23677, rev667Params = mapOf(686 to 4, 687 to 1, 749 to 0, 750 to 60, 770 to 14, 771 to 61), weaponType = 4), // Dragon pickaxe (or) (Zalcano)
                 ),
         )
 

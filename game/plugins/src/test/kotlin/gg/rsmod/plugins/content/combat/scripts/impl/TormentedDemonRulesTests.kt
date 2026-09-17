@@ -57,4 +57,10 @@ class TormentedDemonRulesTests {
         val pipeline = File("src/main/kotlin/gg/rsmod/plugins/content/combat/PawnExt.kt").readText()
         assertTrue(pipeline.contains("TormentedDemonCombatScript.ids && damage >= 0"), "misses must reach the prayer counter")
     }
+
+    @Test
+    fun `delayed splash rejects an offline player target`() {
+        val script = File("src/main/kotlin/gg/rsmod/plugins/content/combat/scripts/impl/TormentedDemonCombatScript.kt").readText()
+        assertTrue("target.isAlive() && (target !is Player || target.isOnline)" in script)
+    }
 }

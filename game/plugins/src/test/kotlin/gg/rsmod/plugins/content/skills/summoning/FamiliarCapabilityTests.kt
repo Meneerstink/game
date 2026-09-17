@@ -101,8 +101,8 @@ class FamiliarCapabilityTests {
                 capabilities.canFight,
             )
             assertEquals(
-                "${pouch.name}: Attack is offered exactly when the familiar has executable combat data",
-                executable,
+                "${pouch.name}: Attack is offered only when the familiar is commandable",
+                capabilities.canReceiveAttackCommand,
                 capabilities.supports(FamiliarAction.ATTACK),
             )
         }

@@ -114,4 +114,17 @@ class BarrowsMapBindingTests {
             io.mockk.unmockkStatic("gg.rsmod.plugins.api.ext.PlayerExtKt")
         }
     }
+
+    @Test
+    fun `puzzle is required only while entering the central room and door crossing stays bounded`() {
+        val outside = gg.rsmod.game.model.Tile(3534, 9711, 0)
+        val inside = gg.rsmod.game.model.Tile(3551, 9695, 0)
+        assertTrue(Barrows.shouldSolvePuzzle(outside, Barrows.PUZZLE_DOORS.first()))
+        assertTrue(!Barrows.shouldSolvePuzzle(inside, Barrows.PUZZLE_DOORS.first()))
+        assertTrue(!Barrows.shouldSolvePuzzle(outside, Barrows.TUNNEL_DOORS.first()))
+
+        val door = gg.rsmod.game.model.Tile(3541, 9695, 0)
+        assertTrue(Barrows.isAtDoor(door.transform(0, 1), door))
+        assertTrue(!Barrows.isAtDoor(door.transform(0, 3), door))
+    }
 }

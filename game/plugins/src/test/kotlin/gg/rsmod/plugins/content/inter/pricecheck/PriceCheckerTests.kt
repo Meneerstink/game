@@ -7,6 +7,7 @@ import gg.rsmod.game.model.container.ContainerStackType
 import gg.rsmod.game.model.container.ItemContainer
 import gg.rsmod.game.model.item.Item
 import org.junit.BeforeClass
+import java.io.File
 import java.nio.file.Paths
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -30,11 +31,16 @@ class PriceCheckerTests {
     }
 
     @Test
-    fun `an item is worth its shop value times its amount`() {
+    fun `an item value scales with its amount`() {
         val single = PriceChecker.value(definitions, Item(WHIP, 1))
 
         assertNotEquals(0, single, "the test item needs a non-zero cost for this to prove anything")
         assertEquals(single * 3, PriceChecker.value(definitions, Item(WHIP, 3)))
+    }
+
+    @Test
+    fun `an OSRS-matched item uses the guide-price seed instead of the cache cost`() {
+        assertEquals(809253, PriceChecker.value(definitions, Item(WHIP, 1)))
     }
 
     @Test
@@ -80,6 +86,16 @@ class PriceCheckerTests {
         // Clientscript 2185 is a 28-case switch over varcs 700..727, with 728 as the total. A
         // container larger than 28 slots would silently write over the total.
         assertTrue(PriceChecker.CAPACITY == 28)
+    }
+
+    @Test
+    fun `the live grid uses the Grand Exchange market valuation`() {
+        val source = File("src/main/kotlin/gg/rsmod/plugins/content/inter/pricecheck/PriceChecker.kt").readText()
+
+        assertTrue("value(player, container[slot])" in source)
+        assertTrue("total(player, container)" in source)
+        assertTrue("GrandExchangeService::class.java" in source)
+        assertTrue("OsrsGuidePrices.seed" in source)
     }
 
     companion object {

@@ -104,16 +104,16 @@ class SummoningPassiveCoverageTests {
 
     /**
      * What "defensive-only" actually means, which is worth stating because it is easy to get
-     * backwards: it governs **auto-assist**, not whether the player may order an attack.
+     * backwards: it governs **auto-assist**, not whether the familiar is attackable in combat.
      *
      * `FamiliarCombat.assist` returns early for a `DEFENSIVE_ONLY` familiar unless the target is
      * the pawn that last hit the owner, so those four never join a fight the owner picks - they
-     * only hit back. They are still combat-capable familiars with real stats, and the orb's Attack
-     * command still applies to them, exactly as in 2011.
+     * only hit back. They are still combat-capable familiars with real stats, but the manual
+     * offensive Attack command is not available to them.
      *
-     * So the rule to assert is that defensive-only implies *fightable*, and that the assist gate is
-     * the thing carrying the restriction. A defensive-only familiar that could not fight at all
-     * would be miscategorised - it would belong in `NONE`.
+     * So the rule to assert is that defensive-only implies *fightable* and *retaliating*, while
+     * the command gate rejects an owner-selected offensive target. A defensive-only familiar that
+     * could not fight at all would be miscategorised - it would belong in `NONE`.
      */
     @Test
     fun `defensive-only familiars are combat-capable, and the restriction lives in the assist gate`() {
@@ -125,8 +125,10 @@ class SummoningPassiveCoverageTests {
                 when {
                     !definition.canFight ->
                         "${definition.pouch.name} is defensive-only but cannot fight; it belongs in NONE"
-                    FamiliarCapabilityTable.forNpc(definition.pouch.npc)?.supports(FamiliarAction.ATTACK) != true ->
-                        "${definition.pouch.name} is a combat familiar but is not offered Attack"
+                    FamiliarCapabilityTable.forNpc(definition.pouch.npc)?.retaliates != true ->
+                        "${definition.pouch.name} is defensive-only but does not retaliate"
+                    FamiliarCapabilityTable.forNpc(definition.pouch.npc)?.canReceiveAttackCommand == true ->
+                        "${definition.pouch.name} is defensive-only but accepts an offensive Attack command"
                     else -> null
                 }
             }

@@ -10,14 +10,14 @@ import java.io.PrintStream
  * The Ferox import (tx-20260905-052852) dropped the modern map-scene (OSRS op68) and map-area/icon (op82) of every
  * imported loc, and the 667 client draws minimap sprites from LocType op102 (msi) and icons from op107 (mapelement).
  * OSRS and 667 number those tables differently, so values must come from 667 locs that show the same thing.
- * This prints, for every Ferox loc in `RSPS_IMPORT_ASSET_MAP.yml`, its OSRS mapScene/mapArea and current local
+ * This prints, for every Ferox loc in `OSRS_IMPORT_MASTER.yml`, its OSRS mapScene/mapArea and current local
  * msi/mapelement; for reference names, the (msi, mapelement) pairs 667 locs of that name use; and every mapelement
  * value in the 667 cache with the loc names that carry it. Writes nothing to any cache.
  *
  * Usage: `./gradlew :game:runFeroxMapDataProbeTool --args="[outFile]"`
  */
 object FeroxMapDataProbeTool {
-    const val ASSET_MAP = "C:/RSPS/RSPS_IMPORT_ASSET_MAP.yml"
+    const val ASSET_MAP = "C:/RSPS/OSRS_IMPORT_MASTER.yml"
     const val IMPORT_LOG = "C:/RSPS/import-source/ferox/ferox_apply_tx-20260905-052852.txt"
     val REFERENCE_NAMES =
         listOf("bank booth", "bank chest", "altar", "staircase", "stairs", "tree", "bush", "flowers", "pool", "fountain", "ladder", "portal", "barrier", "roots")

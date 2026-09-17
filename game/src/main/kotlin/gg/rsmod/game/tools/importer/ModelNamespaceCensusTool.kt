@@ -55,7 +55,7 @@ import java.io.File
  * capacity, because this tool cannot rule out an NPC/object/identity-kit reference pointing at one.
  *
  * ### Usage
- * `<gameCachePath> <fileServerCachePath> [--asset-map=<path to RSPS_IMPORT_ASSET_MAP.yml>]`
+ * `<gameCachePath> <fileServerCachePath> [--asset-map=<path to OSRS_IMPORT_MASTER.yml>]`
  */
 object ModelNamespaceCensusTool {
     const val MODEL_INDEX = ModelConvertTool.MODEL_INDEX
@@ -427,7 +427,7 @@ object ModelNamespaceCensusTool {
         }
     }
 
-    private const val DEFAULT_ASSET_MAP_PATH = "C:\\RSPS\\RSPS_IMPORT_ASSET_MAP.yml"
+    private const val DEFAULT_ASSET_MAP_PATH = "C:\\RSPS\\OSRS_IMPORT_MASTER.yml"
     private const val USAGE =
         "Usage: <gameCachePath> <fileServerCachePath> [--asset-map=<path>]"
 }

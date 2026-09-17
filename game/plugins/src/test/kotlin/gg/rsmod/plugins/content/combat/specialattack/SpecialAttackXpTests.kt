@@ -42,9 +42,14 @@ class SpecialAttackXpTests {
     fun `direct hits on the target outside dealHit either award the experience or are recorded effects`() {
         val direct = Regex("""(victim|target|other)\.hit\(\s*damage\s*=""")
         val withDirect = specialPlugins().filter { direct.containsMatchIn(it.readText()) }
-        assertTrue("dragon_claws.plugin.kts" in withDirect.map { it.name }, "the claw follow-up hits are direct")
+        // OSRS import run 2026-09-17: every Dragon/Burning claws hitsplat now goes through dealHit (special experience included) instead
+        // of the former direct follow-up hits.
+        assertTrue("dragon_claws.plugin.kts" !in withDirect.map { it.name }, "claw hitsplats are no longer direct hits")
+        val claws = specialPlugins().first { it.name == "dragon_claws.plugin.kts" }.readText()
+        assertTrue("player.dealHit(" in claws, "claw hitsplats use the shared dealHit route")
         val offenders = withDirect.filter { "SpecialAttackXp.award(" !in it.readText() }.map { it.name }.sorted()
-        // SOURCE_GAP (no experience, unchanged): Ancient godsword blood sacrifice, Abyssal vine whip vine hits, Scorching bow burn hits.
-        assertEquals(listOf("ancient_godsword.plugin.kts", "melee_specials.plugin.kts", "osrs_bow_specials.plugin.kts"), offenders)
+        // SOURCE_GAP (no experience, unchanged): Ancient godsword blood sacrifice, Abyssal vine whip vine hits. The Scorching bow's burn
+        // left this list on 2026-09-17c: it is a normal burn stack now (Burns.apply), like the Burning claws and Eclipse burns.
+        assertEquals(listOf("ancient_godsword.plugin.kts", "melee_specials.plugin.kts"), offenders)
     }
 }

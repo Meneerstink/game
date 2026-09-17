@@ -41,6 +41,8 @@ DragonfireShield.FAMILIES.forEach { family ->
                     return@on_item_option
                 }
                 player.inventory[slot] = DragonfireShield.withCharges(item, 0)
+                // Jagex config name "dragonslayer_shield_empty" (OSRS Wiki sound list; same id in the 667 cache).
+                player.playSound(Sfx.DRAGONSLAYER_SHIELD_EMPTY)
                 player.message(family.emptyMessage)
             }
         }

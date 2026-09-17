@@ -5,6 +5,7 @@ import kotlin.math.abs
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 /**
  * RCV-010 D2: the follow recovery teleport fires exactly when Void `Follow.kt` repositions a follower - another plane,
@@ -36,5 +37,14 @@ class FamiliarFollowRecoveryTests {
             assertNull(Familiar.followRecoveryReason(Tile(owner.x + dx, owner.z + dz, 0), owner), "($dx,$dz)")
         }
         assertEquals("distance", Familiar.followRecoveryReason(Tile(owner.x + 16, owner.z, 0), owner))
+    }
+
+    @Test
+    fun `automatic recovery has a generic spawn cue for every familiar`() {
+        SummoningPouchData.values.forEach { data ->
+            val cues = Familiar.arrivalSoundIds(data)
+            assertTrue(cues.isNotEmpty(), "${data.name} has no recovery-arrival sound")
+            assertEquals(Familiar.ARRIVAL_SOUND, cues.first(), "${data.name} lost the generic recovery cue")
+        }
     }
 }

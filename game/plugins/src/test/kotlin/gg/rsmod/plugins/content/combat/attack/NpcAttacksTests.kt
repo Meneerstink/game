@@ -121,6 +121,12 @@ class NpcAttacksTests {
     }
 
     @Test
+    fun `delayed shared attack impacts reject offline player targets`() {
+        val source = Paths.get("src", "main", "kotlin", "gg", "rsmod", "plugins", "content", "combat", "attack", "NpcAttacks.kt").toFile().readText()
+        assertTrue("if (target.isDead() || (target is Player && !target.isOnline)) return@queue" in source)
+    }
+
+    @Test
     fun `Kalphite Queen is no longer bound to the placeholder combat script`() {
         val binding =
             Paths.get("src", "main", "kotlin", "gg", "rsmod", "plugins", "content", "combat", "scripts", "combat_script_binding.plugin.kts")

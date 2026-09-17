@@ -77,4 +77,33 @@ class NexZarosFormsTests {
         val response = File("src/main/kotlin/gg/rsmod/plugins/content/mechanics/combatresponse/DamageResponse.kt").readText()
         assertTrue(response.contains("NpcDeflect.onIncomingHit("))
     }
+
+    @Test
+    fun `nex pull owns its delayed player lock and rejects stale victims`() {
+        val script =
+            File(
+                "src/main/kotlin/gg/rsmod/plugins/content/areas/godwars/nex/NexCombatScript.kt",
+            ).readText()
+
+        assertTrue(script.contains("player.lockingQueue(priority = TaskPriority.STRONG)"))
+        assertTrue(script.contains("!npc.isSpawned() || npc.isDead() || !player.isOnline || player.isDead() || !NexEncounter.inArena(player.tile)"))
+        assertFalse(script.contains("player.lock()"), "pull attack must not create an unowned world-queue lock")
+        assertFalse(script.contains("player.unlock()"), "player-owned lockingQueue releases its lock on completion/termination")
+    }
+
+    @Test
+    fun `delayed sacrifice and ice prison callbacks reject stale players`() {
+        val script =
+            File(
+                "src/main/kotlin/gg/rsmod/plugins/content/areas/godwars/nex/NexCombatScript.kt",
+            ).readText()
+
+        assertTrue(
+            script.contains(
+                "if (!NexEncounter.fightActive || !player.isOnline || player.isDead() || !npc.isSpawned() || npc.isDead()) return@queue",
+            ),
+        )
+        assertTrue(script.contains("if (!player.isOnline || player.isDead()) {") )
+        assertTrue(script.contains("prison.forEach { world.remove(it) }"))
+    }
 }

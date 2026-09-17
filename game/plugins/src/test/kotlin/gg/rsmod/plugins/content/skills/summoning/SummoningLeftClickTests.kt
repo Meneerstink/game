@@ -63,7 +63,7 @@ class SummoningLeftClickTests {
         )
 
     /** Requirement H6: these two cache values are deliberately not orb actions any more. */
-    private val removedValues = setOf(0, 7)
+    private val removedValues = setOf(2, 7)
 
     @Test
     fun `the orb offers exactly the six allowed actions`() {
@@ -71,7 +71,7 @@ class SummoningLeftClickTests {
         assertEquals(
             setOf(
                 FamiliarAction.SPECIAL_MOVE,
-                FamiliarAction.ATTACK,
+                FamiliarAction.FOLLOWER_DETAILS,
                 FamiliarAction.CALL,
                 FamiliarAction.DISMISS,
                 FamiliarAction.TAKE_BOB,
@@ -82,7 +82,7 @@ class SummoningLeftClickTests {
     }
 
     @Test
-    fun `follower details and interact are the two values no longer offered`() {
+    fun `attack and interact are the two values no longer offered`() {
         removedValues.forEach { value ->
             assertNull(
                 "varbit value $value (${cacheLabels[value]}) must not resolve to an orb action",
@@ -154,7 +154,7 @@ class SummoningLeftClickTests {
             )
         }
         // Follower Details op6 twin 747:9 and Interact op6 twin 747:15, alongside their op1 twins.
-        assertEquals(setOf(9, 18, 15, 26), FamiliarAction.REMOVED_ORB_COMPONENTS.toSet())
+        assertEquals(setOf(14, 23, 15, 26), FamiliarAction.REMOVED_ORB_COMPONENTS.toSet())
     }
 
     @Test

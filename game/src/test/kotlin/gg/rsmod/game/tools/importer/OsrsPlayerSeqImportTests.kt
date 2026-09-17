@@ -46,6 +46,17 @@ class OsrsPlayerSeqImportTests {
     }
 
     @Test
+    fun `an OSRS pivot gains the labels the 667 rig uses for the same pivot`() {
+        // Owner screenshots 2026-09-17c: OSRS pivots the hand weapon on label 27, the 667 rig on 196 / 200 / 27 (HD body kits carry the
+        // pivot on 196 / 200). The 667 pivot is found through the limb group it serves, wherever that group sits.
+        val osrs = osrsBase(0 to listOf(27), 2 to listOf(50, 51, 52), 0 to listOf(9), 2 to listOf(12, 13))
+        val local = base667(2 to listOf(12, 13, 14), 0 to listOf(196, 200, 27), 2 to listOf(50, 51, 52, 53), 0 to listOf(77), 2 to listOf(90, 91))
+        val merged = labels(OsrsFxImportTool.mergePlayerBase(osrs, local))
+        assertEquals(listOf(27, 196, 200), merged[0], "the weapon-hand pivot")
+        assertEquals(listOf(9), merged[2], "a 667 limb without an origin before it, or an origin sharing no label, adds nothing")
+    }
+
+    @Test
     fun `a player frame loses its alpha channel and keeps every other value`() {
         // base: group 0 translate, group 1 alpha, group 2 rotation; frame: header base 0, 3 groups, flags x / x / x+y, values 5, 9, 1, 2
         val types = intArrayOf(1, 5, 2)

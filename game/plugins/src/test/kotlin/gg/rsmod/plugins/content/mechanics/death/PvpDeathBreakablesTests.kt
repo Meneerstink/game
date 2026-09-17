@@ -95,6 +95,18 @@ class PvpDeathBreakablesTests {
             ),
             PvpDeathBreakables.ALL.associate { it.itemId to it.killerCoins },
         )
+        assertEquals(
+            // Sourced Perdu repair costs (OSRS_IMPORT_MASTER.yml "Batch capesrings" / "Batch assembler" / "Batch capes" / pilot).
+            mapOf(
+                Items.AVERNIC_DEFENDER to 600_000, Items.INFERNAL_CAPE to 225_000,
+                Items.IMBUED_SARADOMIN_CAPE to 96_000, Items.IMBUED_GUTHIX_CAPE to 96_000, Items.IMBUED_ZAMORAK_CAPE to 96_000,
+                Items.AVAS_ASSEMBLER to 240_000,
+                Items.IMBUED_SARADOMIN_MAX_CAPE to 99_000, Items.IMBUED_GUTHIX_MAX_CAPE to 99_000, Items.IMBUED_ZAMORAK_MAX_CAPE to 99_000,
+                Items.ASSEMBLER_MAX_CAPE to 240_000, Items.MASORI_ASSEMBLER to 240_000, Items.MASORI_ASSEMBLER_MAX_CAPE to 240_000,
+                Items.DIZANAS_MAX_CAPE to 400_000,
+            ),
+            PvpDeathBreakables.ALL.associate { it.itemId to it.repairCost },
+        )
         PvpDeathBreakables.ALL.forEach { breakable ->
             val victim = newPlayer()
             val killer = newPlayer()
@@ -139,7 +151,7 @@ class PvpDeathBreakablesTests {
         val kept = gg.rsmod.plugins.content.items.osrs.OsrsOrnamentKits.ALL.filterNot { it.pvpConvert }
         assertEquals(
             setOf(
-                // No "Items Kept on Death" rule covers a tradeable item carrying an untradeable kit (SOURCE_GAP, OSRS_IMPORT_STATUS.md):
+                // No "Items Kept on Death" rule covers a tradeable item carrying an untradeable kit (SOURCE_GAP, OSRS_IMPORT_MASTER.yml):
                 // the elder chaos (or) and Dagon'hai (or) pieces stay in the normal lost list instead of being converted.
                 Items.ELDER_CHAOS_TOP_OR, Items.ELDER_CHAOS_ROBE_OR, Items.ELDER_CHAOS_HOOD_OR,
                 Items.DAGONHAI_HAT_OR, Items.DAGONHAI_ROBE_TOP_OR, Items.DAGONHAI_ROBE_BOTTOM_OR,
@@ -160,6 +172,45 @@ class PvpDeathBreakablesTests {
             assertTrue(converting.isEmpty(), "${ornament.ornamented} is not converted")
             assertEquals(lost, result.itemRisk.lost)
         }
+    }
+
+    @Test
+    fun `a charged or full powered staff drops as its uncharged id on an unprotected wilderness death, charges lost`() {
+        listOf(
+            Items.TRIDENT_OF_THE_SEAS to Items.UNCHARGED_TRIDENT,
+            Items.TRIDENT_OF_THE_SEAS_FULL to Items.UNCHARGED_TRIDENT,
+            Items.TRIDENT_OF_THE_SEAS_E to Items.UNCHARGED_TRIDENT_E,
+            Items.TRIDENT_OF_THE_SWAMP to Items.UNCHARGED_TOXIC_TRIDENT,
+            Items.SANGUINESTI_STAFF to Items.SANGUINESTI_STAFF_UNCHARGED,
+        ).forEach { (charged, uncharged) ->
+            val victim = newPlayer()
+            val killer = newPlayer()
+            val world = mockk<World>(relaxed = true)
+            victim.equipment[3] = Item(charged, 1)
+            val lost = listOf(DeathSlotItem(DeathContainerSource.EQUIPMENT, 3, Item(charged, 1)))
+            val (result, breaking) = PvpDeathBreakables.split(DeathResolutionResult(DeathContext.WILDERNESS_PVP, victim, killer, DeathItemRiskResult(0, emptyList(), lost)))
+            assertTrue(result.itemRisk.lost.isEmpty(), "$charged must never drop charged/intact")
+
+            mockkStatic("gg.rsmod.plugins.api.ext.PlayerExtKt")
+            try {
+                every { victim.refreshBonuses() } just Runs
+                PvpDeathBreakables.execute(world, result, breaking)
+                assertNull(victim.equipment[3])
+                verify(exactly = 1) { world.spawn(match<GroundItem> { it.item == uncharged && it.amount == 1 }) }
+                verify(exactly = 0) { world.spawn(match<GroundItem> { it.item == charged }) }
+            } finally {
+                unmockkStatic("gg.rsmod.plugins.api.ext.PlayerExtKt")
+            }
+        }
+    }
+
+    @Test
+    fun `forBroken round-trips every breakable's broken id back to its Breakable, and rejects anything else`() {
+        PvpDeathBreakables.ALL.forEach { breakable ->
+            assertEquals(breakable, PvpDeathBreakables.forBroken(breakable.brokenId))
+        }
+        assertNull(PvpDeathBreakables.forBroken(Items.AVERNIC_DEFENDER), "the unbroken item is not itself a broken id")
+        assertNull(PvpDeathBreakables.forBroken(Items.COINS_995))
     }
 
     @Test

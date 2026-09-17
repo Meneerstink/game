@@ -29,7 +29,7 @@ object ModelIdAllocator {
      * ```
      * resolve existing mapping -> determine candidate (THIS METHOD) -> provisional reservation
      *   (the caller's batchReserved set) -> CacheTransaction PREFLIGHT -> JOURNAL -> APPLY -> VERIFY
-     *   -> durable mapping commit (the caller writes RSPS_IMPORT_ASSET_MAP.yml only AFTER `verify()`
+     *   -> durable mapping commit (the caller writes OSRS_IMPORT_MASTER.yml only AFTER `verify()`
      *   reports no problems)
      * ```
      * A failed or not-yet-applied transaction must never cause a durable mapping to be written for
@@ -44,7 +44,7 @@ object ModelIdAllocator {
      *   `"inventory"`, `"male worn"`, `"female worn"`) - part of the mapping key, since one source
      *   item legitimately owns several distinct model ids.
      * @param existingMapping every durably committed `(sourceIdentity, role) -> local id` pair this
-     *   project already knows about (in production, read from `RSPS_IMPORT_ASSET_MAP.yml`). Checked
+     *   project already knows about (in production, read from `OSRS_IMPORT_MASTER.yml`). Checked
      *   FIRST and unconditionally wins - an existing mapping is never re-allocated, and this method
      *   never validates or second-guesses it (a mapping pointing at unsafe/occupied/inconsistent
      *   state is an integrity conflict for the caller's census/transaction step to catch, not this

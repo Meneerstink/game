@@ -21,6 +21,7 @@ import io.mockk.just
 import io.mockk.Runs
 import gg.rsmod.game.message.Message
 import gg.rsmod.game.message.impl.MessageGameMessage
+import gg.rsmod.game.message.impl.SynthSoundMessage
 import io.mockk.mockk
 import io.mockk.verify
 import io.mockk.mockkStatic
@@ -38,7 +39,7 @@ import kotlin.test.assertTrue
 
 class SummoningSpecialMoveTests {
     @Test
-    fun `steel of legends passes twenty four point four lifepoints per hit without multiplying damage by ten twice`() {
+    fun `steel of legends queues four ranged strikes and consumes once`() {
         val player = newPlayer(SummoningPouchData.STEEL_TITAN.npc)
         val familiar = Familiar.current(player)!!
         val target = mockk<Npc>(relaxed = true)
@@ -62,7 +63,34 @@ class SummoningSpecialMoveTests {
                 SummoningSpecialMoves.castOnNpc(player, target),
                 "castOnNpc refused; player was told: " + sent.filterIsInstance<MessageGameMessage>().map { it.message },
             )
+            assertTrue(FamiliarCombat.hasQueuedNextAttack(familiar))
+            assertEquals(0, player.inventory.getItemCount(SummoningScrollData.STEEL_OF_LEGENDS_SCROLL.scroll))
+            assertEquals(48, Familiar.currentSpecialPoints(player))
+            verify(exactly = 0) { familiar.dealHit(target, any(), any(), any(), any(), any(), any()) }
+            assertEquals(
+                listOf(
+                    SummoningSpecialMoves.SPECIAL_CAST_SOUND,
+                    SummoningSpecialMoves.STEEL_OF_LEGENDS_SCROLL_SOUND,
+                ),
+                sent.filterIsInstance<SynthSoundMessage>().map { it.sound },
+                "queueing must not play the attack/impact cue before the next attack boundary",
+            )
+            SummoningSpecialMoves.executeNextAttack(
+                player,
+                familiar,
+                target,
+                SummoningScrollData.STEEL_OF_LEGENDS_SCROLL,
+            )
             verify(exactly = 4) { familiar.dealHit(target, 0.1, 24.4, true, any(), any(), HitType.RANGE) }
+            assertEquals(
+                listOf(
+                    SummoningSpecialMoves.SPECIAL_CAST_SOUND,
+                    SummoningSpecialMoves.STEEL_OF_LEGENDS_SCROLL_SOUND,
+                    SummoningSpecialMoves.STEEL_TITAN_SPECIAL_ATTACK_SOUND,
+                ),
+                sent.filterIsInstance<SynthSoundMessage>().map { it.sound },
+                "A successful Steel of Legends cast must send the generic cast, Steel of Legends and Steel Titan launch sounds exactly once; its impact sound is queued on first impact.",
+            )
         } finally {
             unmockkStatic("gg.rsmod.plugins.content.combat.PawnExtKt")
         }

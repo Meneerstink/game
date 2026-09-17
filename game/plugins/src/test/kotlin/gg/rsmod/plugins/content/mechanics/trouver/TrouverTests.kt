@@ -56,6 +56,22 @@ class TrouverTests {
     }
 
     @Test
+    fun `locking with the real aliased inventory item (as the item-on-item handler passes it) still works`() {
+        // Regression: ItemContainer.remove mutates a matched slot's Item.amount to 0 in place, so a lock()
+        // that re-read item.amount after removing used to request 0 of the locked variant and everything below.
+        TrouverRegistry.register(TrouverLockable(Items.FIRE_CAPE, Items.FIRE_CAPE_LOCKED_22324))
+        val player = newPlayer()
+        player.inventory.add(Items.FIRE_CAPE, 1)
+        player.inventory.add(Items.TROUVER_PARCHMENT, 1)
+        player.inventory.add(Items.COINS_995, Trouver.LOCK_FEE)
+        val aliased = player.inventory.items.filterNotNull().first { it.id == Items.FIRE_CAPE }
+
+        assertEquals(Trouver.LockResult.Success, Trouver.lock(player, aliased))
+
+        assertEquals(1, player.inventory.getItemCount(Items.FIRE_CAPE_LOCKED_22324))
+    }
+
+    @Test
     fun `locking an unregistered item is rejected without touching the inventory`() {
         val player = newPlayer()
         player.inventory.add(Items.FIRE_CAPE, 1)
@@ -121,6 +137,27 @@ class TrouverTests {
         assertEquals(1, player.inventory.getItemCount(Items.FIRE_CAPE))
         assertEquals(1, player.inventory.getItemCount(Items.TROUVER_PARCHMENT))
         assertEquals(expectedRefund.toInt(), player.inventory.getItemCount(Items.COINS_995))
+    }
+
+    @Test
+    fun `locking and unlocking round-trip an item's attributes, such as a Dizana's quiver's charges`() {
+        TrouverRegistry.register(TrouverLockable(Items.DIZANAS_QUIVER, Items.DIZANAS_QUIVER_L))
+        val player = newPlayer()
+        val quiver = gg.rsmod.plugins.content.items.osrs.DizanasQuiver.charge(Item(Items.DIZANAS_QUIVER), 500).result
+        player.inventory.add(quiver)
+        player.inventory.add(Items.TROUVER_PARCHMENT, 1)
+        player.inventory.add(Items.COINS_995, Trouver.LOCK_FEE)
+
+        assertEquals(Trouver.LockResult.Success, Trouver.lock(player, quiver))
+        val locked = player.inventory.items.filterNotNull().first { it.id == Items.DIZANAS_QUIVER_L }
+        assertEquals(500, gg.rsmod.plugins.content.items.osrs.DizanasQuiver.charges(locked), "charges survive locking")
+
+        // Unlock with the REAL aliased inventory reference (as `trouverunlock` and the lock item-on-item
+        // handler both do) - regression for a real bug: ItemContainer.remove mutates a matched slot's
+        // Item.amount to 0 in place, so re-reading amount after removing used to request 0 of everything.
+        assertEquals(Trouver.UnlockResult.Success, Trouver.unlock(player, locked))
+        val unlocked = player.inventory.items.filterNotNull().first { it.id == Items.DIZANAS_QUIVER }
+        assertEquals(500, gg.rsmod.plugins.content.items.osrs.DizanasQuiver.charges(unlocked), "charges survive unlocking")
     }
 
     @Test

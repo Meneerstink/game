@@ -18,19 +18,27 @@ object Burns {
     const val MAX_STACKS = 5
 
     class Burn(
-        var remaining: Int = DAMAGE,
+        var remaining: Int,
     )
 
     val ACTIVE = AttributeKey<MutableList<Burn>>()
 
     fun active(target: Pawn): List<Burn> = target.attr[ACTIVE]?.filter { it.remaining > 0 } ?: emptyList()
 
-    /** Starts a burn on [target] unless five are already active; returns whether it started. */
-    fun apply(target: Pawn): Boolean {
+    /**
+     * Starts a burn of [damage] on [target] unless five are already active; returns whether it started. Every burning weapon goes
+     * through here (Burning claws, Eclipse set, Scorching bow's 5-damage shackles burn), so the stack cap applies across them and
+     * the Eclipse special can consume any of them ("a burn, such as from the armour's set effect or the special attack of the Burning
+     * claws, Arkan blade, or Scorching bow").
+     */
+    fun apply(
+        target: Pawn,
+        damage: Int = DAMAGE,
+    ): Boolean {
         val burns = target.attr[ACTIVE] ?: mutableListOf<Burn>().also { target.attr[ACTIVE] = it }
         burns.removeIf { it.remaining <= 0 }
         if (burns.size >= MAX_STACKS) return false
-        val burn = Burn()
+        val burn = Burn(damage)
         burns.add(burn)
         target.world.queue {
             while (burn.remaining > 0) {

@@ -20,7 +20,7 @@ import java.io.File
  *  - [CacheTransaction] decides HOW a write actually lands, safely, on both real caches.
  *  - [ImportBatchOrchestrator] only sequences those two proven pieces around a batch of items and
  *    models, and owns exactly one problem neither of them owns: keeping the durable
- *    `RSPS_IMPORT_ASSET_MAP.yml` mapping in lockstep with what the caches actually hold, even
+ *    `OSRS_IMPORT_MASTER.yml` mapping in lockstep with what the caches actually hold, even
  *    across a crash.
  *
  * ## The crash window

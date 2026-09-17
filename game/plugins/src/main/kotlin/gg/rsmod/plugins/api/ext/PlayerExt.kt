@@ -1377,11 +1377,13 @@ fun Player.getStrengthBonus(): Int = equipmentBonuses[BonusSlot.STRENGTH_BONUS.i
 fun Player.getRangedStrengthBonus(): Int =
     when {
         hasWeaponType(WeaponType.THROWN) || hasWeaponType(WeaponType.CHINCHOMPA) || hasWeaponType(WeaponType.SLING) -> {
-            world.definitions
-                .get(
-                    ItemDef::class.java,
-                    equipment[3]?.id ?: -1,
-                ).bonuses[BonusSlot.RANGED_STRENGTH_BONUS.id] +
+            // The weapon is its own ammunition, so whatever sits in the ammo slot does not count - but every OTHER worn item does.
+            // The 667 rule here was "the weapon's own bonus only", which was equivalent in 2011 (only ammunition carried ranged strength)
+            // and silently dropped the ranged strength of the imported OSRS gear (Necklace of anguish, Masori, Zaryte vambraces,
+            // Dizana's quiver, ...) for knives, darts, blowpipes, chinchompas and the Tonalztics (combat audit 2026-09-17c).
+            val ammoSlot =
+                equipment[EquipmentType.AMMO.id]?.let { world.definitions.get(ItemDef::class.java, it.id).bonuses[BonusSlot.RANGED_STRENGTH_BONUS.id] } ?: 0
+            equipmentBonuses[BonusSlot.RANGED_STRENGTH_BONUS.id] - ammoSlot +
                 // OSRS Wiki "Toxic blowpipe": its +20 stacks with the loaded darts' ranged strength (dragon darts: +55).
                 gg.rsmod.plugins.content.items.osrs.Blowpipe.dartStrength(equipment[3])
         }

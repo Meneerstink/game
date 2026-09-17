@@ -35,7 +35,7 @@ object FeroxImportTool {
     const val GAME_CACHE = "C:/RSPS/game/game/data/cache"
     const val FILE_SERVER_CACHE = "C:/RSPS/file-server/cache"
     const val XTEAS_FILE = "C:/RSPS/game/game/data/xteas/xteas.json"
-    const val ASSET_MAP = "C:/RSPS/RSPS_IMPORT_ASSET_MAP.yml"
+    const val ASSET_MAP = "C:/RSPS/OSRS_IMPORT_MASTER.yml"
     const val OUT_DIR = "C:/RSPS/import-source/ferox"
     val REGIONS = listOf(12344, 12600)
 

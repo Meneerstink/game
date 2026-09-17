@@ -33,7 +33,7 @@ object FeroxMinimapTool {
     val BLOCKED_SCENES = setOf(22, 101, 102)
     val BLOCKED_AREAS = setOf(66, 652)
 
-    /** local loc id -> msi, from the Ferox section of RSPS_IMPORT_ASSET_MAP.yml via [FeroxMapDataProbeTool]. */
+    /** local loc id -> msi, from the Ferox section of OSRS_IMPORT_MASTER.yml via [FeroxMapDataProbeTool]. */
     val MSI =
         mapOf(
             62366 to 4,

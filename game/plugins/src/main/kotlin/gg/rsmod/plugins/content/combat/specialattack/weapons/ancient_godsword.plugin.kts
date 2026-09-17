@@ -8,7 +8,8 @@ import gg.rsmod.plugins.content.items.osrs.AncientGodsword
 
 /**
  * OSRS-IMPORT Ancient godsword - Blood Sacrifice (rules and sources in [AncientGodsword]). Look: the imported OSRS sequence
- * NGS_SPECIAL_PLAYER and spotanim NGS_SPECIAL_SPOTANIM, with the godsword special sound 3869 every OSRS godsword special plays.
+ * NGS_SPECIAL_PLAYER and spotanim NGS_SPECIAL_SPOTANIM. Sound: synth 2911, Jagex config name "blood_sacrifice" = the name of this
+ * special (OSRS Wiki sound list; same id in the 667 cache). Owner live test: the generic godsword special sound 3869 was wrong.
  * The sacrifice hit uses the server's typeless hitsplat.
  */
 SpecialAttacks.register(AncientGodsword.SPECIAL_ENERGY, Items.ANCIENT_GODSWORD) {
@@ -16,7 +17,7 @@ SpecialAttacks.register(AncientGodsword.SPECIAL_ENERGY, Items.ANCIENT_GODSWORD) 
     val victim = target
     player.animate(gg.rsmod.plugins.content.items.osrs.OsrsSeq.NGS_SPECIAL_PLAYER)
     player.graphic(gg.rsmod.plugins.content.items.osrs.OsrsGfx.NGS_SPECIAL)
-    player.playSound(3869) // godwars_godsword_special_attack
+    player.playSound(Sfx.BLOOD_SACRIFICE)
     val maxHit = MeleeCombatFormula.getMaxHit(player, victim, specialAttackMultiplier = AncientGodsword.SPECIAL_DAMAGE)
     // Godsword specials roll against the target's slash defence (wiki DPS calculator `defenceStyle = 'slash'`).
     val landHit =

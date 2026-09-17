@@ -168,6 +168,19 @@ class GrandExchangeInterfaceTests {
     }
 
     @Test
+    fun `failed sell rollback preserves unnoted and noted inventory forms`() {
+        val lobster = DEFINITIONS.get(ItemDef::class.java, Items.LOBSTER)
+        assertEquals(
+            listOf(Items.LOBSTER to 2, lobster.noteLinkId to 3),
+            GrandExchangeInterface.restoredSellItems(lobster, unnotedRemoved = 2, notedRemoved = 3),
+        )
+        assertEquals(
+            listOf(lobster.noteLinkId to 3),
+            GrandExchangeInterface.restoredSellItems(lobster, unnotedRemoved = 0, notedRemoved = 3),
+        )
+    }
+
+    @Test
     fun `grand exchange clerks expose the options the plugins bind`() {
         val clerks = listOf(Npcs.GRAND_EXCHANGE_CLERK, Npcs.GRAND_EXCHANGE_CLERK_2240, Npcs.GRAND_EXCHANGE_CLERK_2241, Npcs.GRAND_EXCHANGE_CLERK_2593)
         val report = clerks.map { id -> "$id=${DEFINITIONS.get(NpcDef::class.java, id).options.toList()}" }

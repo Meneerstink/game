@@ -10,6 +10,7 @@ import gg.rsmod.plugins.content.combat.specialattack.SpecialAttacks
 import gg.rsmod.plugins.content.combat.strategy.RangedCombatStrategy
 import gg.rsmod.plugins.content.combat.strategy.ranged.RangedProjectile
 import gg.rsmod.plugins.content.inter.attack.AttackTab
+import gg.rsmod.plugins.content.items.osrs.Burns
 import gg.rsmod.plugins.content.items.osrs.RevenantBows
 import gg.rsmod.plugins.content.items.osrs.ScorchingBow
 import gg.rsmod.plugins.content.items.osrs.Tonalztics
@@ -61,7 +62,11 @@ SpecialAttacks.register(ScorchingBow.SHACKLES_ENERGY, Items.SCORCHING_BOW) {
     }
     victim.graphic(gg.rsmod.plugins.content.items.osrs.OsrsGfx.SCORCHING_BOW_IMPACT, delay = delay * 30)
     victim.freeze(ScorchingBow.BIND_TICKS)
-    repeat(ScorchingBow.BURN_HITS) { index -> victim.hit(damage = 1, delay = delay + index * ScorchingBow.BURN_INTERVAL_TICKS) }
+    // The shackles burn is a normal burn stack (Burns): it counts toward the five-burn cap and the Eclipse special can consume it.
+    world.queue {
+        wait(delay)
+        if (!victim.isDead()) Burns.apply(victim, ScorchingBow.BURN_HITS)
+    }
 }
 
 fun divisionDrain(victim: Pawn) {
