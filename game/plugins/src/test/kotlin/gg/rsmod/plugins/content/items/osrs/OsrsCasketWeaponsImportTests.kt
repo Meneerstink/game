@@ -1,10 +1,13 @@
 package gg.rsmod.plugins.content.items.osrs
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.content.combat.strategy.ranged.weapon.BowType
 import gg.rsmod.plugins.content.skills.mining.PickaxeType
 import gg.rsmod.plugins.content.skills.woodcutting.AxeType
 import java.io.File
+import java.nio.file.Paths
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -15,6 +18,30 @@ import kotlin.test.assertTrue
  * bow "can fire arrows up to dragon arrows" with attack range 9.
  */
 class OsrsCasketWeaponsImportTests {
+    /**
+     * OSRS-IMPORT audit round 2026-09-17b: the family's other two weapons (3rd Age longsword and 3rd Age wand) were
+     * never enumerated by a test, only the axe/pickaxe/bow trio was. Independently re-verified against fresh OSRS
+     * Wiki pages this round; no deviation found, this test only closes the coverage gap.
+     */
+    @Test
+    fun `3rd Age longsword and wand match the OSRS item pages`() {
+        val root = ObjectMapper(YAMLFactory()).readTree(Paths.get("..", "..", "data", "cfg", "items.yml").toFile())
+        val yml = root.filter { it.path("id").asInt() in Items.THIRDAGE_BOW..Items.THIRDAGE_PICKAXE }.associateBy { it.path("id").asInt() }
+        val sword = yml.getValue(Items.THIRDAGE_LONGSWORD).path("equipment")
+        assertEquals(listOf(0, 72, 60), listOf("attack_stab", "attack_slash", "attack_crush").map { sword.path(it).asInt() })
+        assertEquals(listOf(0, 3, 2), listOf("defence_stab", "defence_slash", "defence_crush").map { sword.path(it).asInt() })
+        assertEquals(75, sword.path("melee_strength").asInt())
+        assertEquals(5, sword.path("attack_speed").asInt())
+        assertEquals(mapOf(0 to 65), sword.path("skill_reqs").associate { it.path("skill").asInt() to it.path("level").asInt() })
+
+        val wand = yml.getValue(Items.THIRDAGE_WAND).path("equipment")
+        assertEquals(20, wand.path("attack_magic").asInt())
+        assertEquals(20, wand.path("defence_magic").asInt())
+        assertEquals(4, wand.path("attack_speed").asInt())
+        assertEquals(1, wand.path("weapon_type").asInt(), "staff class, so it autocasts through the shared MagicStaves route")
+        assertEquals(mapOf(6 to 65), wand.path("skill_reqs").associate { it.path("skill").asInt() to it.path("level").asInt() })
+    }
+
     @Test
     fun `reward tools use the tier they are variants of`() {
         val gildedAxe = AxeType.values().single { it.item == Items.GILDED_AXE }
@@ -38,6 +65,8 @@ class OsrsCasketWeaponsImportTests {
         assertTrue("Items.THIRDAGE_BOW -> 9" in ranged)
         val specials = File("src/main/kotlin/gg/rsmod/plugins/content/combat/specialattack/weapons/instant_specials.plugin.kts").readText()
         assertTrue("SpecialAttacks.registerInstant(100, Items.DRAGON_HATCHET, Items.THIRDAGE_AXE)" in specials)
-        assertTrue("SpecialAttacks.registerInstant(100, Items.DRAGON_PICKAXE, Items.THIRDAGE_PICKAXE)" in specials)
+        // Batch kits2 (2026-09-17) added both Dragon pickaxe (or) variants to the same Dragon pickaxe special registration.
+        val pickaxeSpecial = specials.lines().single { "SpecialAttacks.registerInstant(100, Items.DRAGON_PICKAXE," in it }
+        assertTrue("Items.THIRDAGE_PICKAXE" in pickaxeSpecial && "Items.DRAGON_PICKAXE_OR" in pickaxeSpecial, pickaxeSpecial)
     }
 }
