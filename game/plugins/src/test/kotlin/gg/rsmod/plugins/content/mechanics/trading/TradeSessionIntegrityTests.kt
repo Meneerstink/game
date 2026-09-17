@@ -102,6 +102,27 @@ class TradeSessionIntegrityTests {
     }
 
     @Test
+    fun `item attributes such as charges survive offer, remove and completion`() {
+        val (a, b) = pair()
+        a.inventory[0] = Item(WHIP, 1).apply { attr[gg.rsmod.game.model.item.ItemAttribute.CHARGES] = 42 }
+        val sa = TradeSession(a, b)
+        val sb = TradeSession(b, a)
+        a.attr[TRADE_SESSION_ATTR] = sa
+        b.attr[TRADE_SESSION_ATTR] = sb
+
+        sa.offer(0, 1)
+        assertEquals(42, sa.container[0]?.attr?.get(gg.rsmod.game.model.item.ItemAttribute.CHARGES), "charges kept in the offer")
+        sa.remove(0, 1)
+        assertEquals(42, sa.inventory.filterNotNull().first().attr[gg.rsmod.game.model.item.ItemAttribute.CHARGES], "charges kept after remove")
+        sa.offer(0, 1)
+        acceptBoth(a, b)
+        acceptBoth(a, b)
+
+        val received = b.inventory.filterNotNull().first { it.id == WHIP }
+        assertEquals(42, received.attr[gg.rsmod.game.model.item.ItemAttribute.CHARGES], "charges kept by the receiver")
+    }
+
+    @Test
     fun `negative offer amounts are ignored`() {
         val (a, b) = pair()
         a.inventory[0] = Item(COINS, 1000)

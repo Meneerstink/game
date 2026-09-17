@@ -6,12 +6,16 @@ import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.game.service.log.LoggerService
 import gg.rsmod.plugins.api.cfg.Items
+import gg.rsmod.plugins.api.ext.addPreservingAttr
 
 /**
  * The outcome of a [DeathRecoveryService.reclaim] attempt.
  */
 sealed class DeathReclaimOutcome {
     object NothingToReclaim : DeathReclaimOutcome()
+
+    /** The recovery deadline passed; its unreclaimed contents were forfeited. */
+    object Expired : DeathReclaimOutcome()
 
     object InsufficientFunds : DeathReclaimOutcome()
 
@@ -25,6 +29,27 @@ sealed class DeathReclaimOutcome {
  * dispatch.
  */
 object DeathRecoveryService {
+    /**
+     * Removes a recovery batch whose explicit deadline has passed. Expiry is
+     * deliberately lazy: the player may be offline, so there is no live tick
+     * that can be relied on to perform this cleanup at the exact instant.
+     *
+     * @return `true` when an expired batch was purged.
+     */
+    fun expireIfNeeded(
+        player: Player,
+        nowMs: Long = System.currentTimeMillis(),
+    ): Boolean {
+        val expiry = player.attr[DEATH_RECOVERY_EXPIRY_ATTR] ?: return false
+        if (expiry > nowMs) return false
+
+        val hadItems = !player.deathRecovery.isEmpty
+        player.deathRecovery.removeAll()
+        player.attr.remove(DEATH_RECOVERY_EXPIRY_ATTR)
+        player.attr.remove(DEATH_RECOVERY_FEE_ATTR)
+        return hadItems
+    }
+
     /**
      * Attempts to reclaim every item in [player]'s death-recovery container
      * for the coin fee stored in
@@ -50,7 +75,11 @@ object DeathRecoveryService {
         player: Player,
         coinItemId: Int = Items.COINS_995,
         logger: LoggerService? = null,
+        nowMs: Long = System.currentTimeMillis(),
     ): DeathReclaimOutcome {
+        if (expireIfNeeded(player, nowMs)) {
+            return DeathReclaimOutcome.Expired
+        }
         if (player.deathRecovery.isEmpty) {
             return DeathReclaimOutcome.NothingToReclaim
         }
@@ -76,7 +105,7 @@ object DeathRecoveryService {
         var reclaimedCount = 0
         for (slot in 0 until player.deathRecovery.capacity) {
             val item = player.deathRecovery[slot] ?: continue
-            val transaction = player.inventory.add(item.id, item.amount, assureFullInsertion = false)
+            val transaction = player.inventory.addPreservingAttr(item, assureFullInsertion = false)
             if (transaction.completed > 0) {
                 player.deathRecovery[slot] = if (transaction.completed == item.amount) null
                     else Item(item.id, item.amount - transaction.completed).copyAttr(item)

@@ -11,9 +11,18 @@ package gg.rsmod.plugins.content.inter.friends
  * Void's "remove from your ignore list first" cross-list check (Novite has none).
  */
 object SocialListPolicy {
-    enum class ListType(val label: String) {
-        FRIENDS("friends"),
-        IGNORES("ignores"),
+    /**
+     * The revision-667 client holds at most 200 friends and 100 ignores; both donors use the same
+     * sizes (Novite `FriendsIgnores` 200/100). Without a cap the persisted lists grow without bound
+     * and every login/update fans out over all of them. The refusal wording differs between donors,
+     * so a neutral line is used here.
+     */
+    enum class ListType(
+        val label: String,
+        val capacity: Int,
+    ) {
+        FRIENDS("friends", 200),
+        IGNORES("ignores", 100),
     }
 
     fun addRefusal(
@@ -21,5 +30,9 @@ object SocialListPolicy {
         name: String,
         current: Collection<String>,
     ): String? =
-        if (current.any { it.equals(name, ignoreCase = true) }) "$name is already on your ${list.label} list." else null
+        when {
+            current.any { it.equals(name, ignoreCase = true) } -> "$name is already on your ${list.label} list."
+            current.size >= list.capacity -> "Your ${list.label} list is full."
+            else -> null
+        }
 }

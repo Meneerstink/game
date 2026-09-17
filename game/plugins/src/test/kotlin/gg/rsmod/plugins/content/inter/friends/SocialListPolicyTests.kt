@@ -18,4 +18,16 @@ class SocialListPolicyTests {
         assertEquals("friends", SocialListPolicy.ListType.FRIENDS.label)
         assertEquals("ignores", SocialListPolicy.ListType.IGNORES.label)
     }
+
+    /** The 667 client holds 200 friends / 100 ignores (Novite `FriendsIgnores`); a full list refuses new names. */
+    @Test
+    fun `a full list refuses new names at the client capacity`() {
+        assertEquals(200, SocialListPolicy.ListType.FRIENDS.capacity)
+        assertEquals(100, SocialListPolicy.ListType.IGNORES.capacity)
+        SocialListPolicy.ListType.values().forEach { list ->
+            val full = (1..list.capacity).map { "Player $it" }
+            assertEquals("Your ${list.label} list is full.", SocialListPolicy.addRefusal(list, "Durial321", full), "$list full")
+            assertNull(SocialListPolicy.addRefusal(list, "Durial321", full.dropLast(1)), "$list one below capacity")
+        }
+    }
 }

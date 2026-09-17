@@ -247,7 +247,7 @@ class TradeSession(
 
         val transaction = inventory.remove(item.id, count, assureFullRemoval = true, beginSlot = slot)
         if (transaction.hasSucceeded()) {
-            container.add(item.id, count)
+            container.addPreservingAttr(Item(item.id, count).copyAttr(item))
         }
 
         refresh()
@@ -272,7 +272,7 @@ class TradeSession(
 
         val transaction = container.remove(item.id, count, assureFullRemoval = true)
         if (transaction.hasSucceeded()) {
-            inventory.add(item.id, count)
+            inventory.addPreservingAttr(Item(item.id, count).copyAttr(item))
 
             // Loop over the remove items
             transaction.items.forEach {
@@ -409,12 +409,12 @@ class TradeSession(
         // Assign the trade containers for this player
         val playerInv = player.inventory
         inventory.forEachIndexed { index, item -> playerInv[index] = item }
-        partnerSession.container.filterNotNull().forEach { playerInv.add(it) }
+        partnerSession.container.filterNotNull().forEach { playerInv.addPreservingAttr(it) }
 
         // Assign the trade containers for the partner
         val partnerInv = partner.inventory
         partnerSession.inventory.forEachIndexed { index, item -> partnerInv[index] = item }
-        container.filterNotNull().forEach { partnerInv.add(it) }
+        container.filterNotNull().forEach { partnerInv.addPreservingAttr(it) }
 
         // Finalise the trade session
         finalise(player)

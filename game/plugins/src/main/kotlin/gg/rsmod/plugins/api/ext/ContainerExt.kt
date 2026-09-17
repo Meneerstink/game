@@ -70,6 +70,23 @@ fun ItemContainer.transfer(
     return remove
 }
 
+/**
+ * Adds [item] and carries its attributes (charges, degrade state) onto every slot the add created.
+ * `ItemContainer.add(Item)` only copies id and amount, so a charged item handed over by trade or
+ * given back by death recovery silently lost its charges.
+ */
+fun ItemContainer.addPreservingAttr(
+    item: Item,
+    assureFullInsertion: Boolean = true,
+    beginSlot: Int = -1,
+): ItemTransaction {
+    val transaction = add(item.id, item.amount, assureFullInsertion = assureFullInsertion, beginSlot = beginSlot)
+    if (item.hasAnyAttr()) {
+        transaction.items.forEach { it.item.copyAttr(item) }
+    }
+    return transaction
+}
+
 fun ItemTransaction.revert(from: ItemContainer) {
     items.forEach {
         from.remove(item = it.item, beginSlot = it.slot)
