@@ -28,6 +28,16 @@ class ItemSkillRequirementsCacheAuditTests {
             14732 to mapOf(1 to 40, 6 to 70), 14733 to mapOf(1 to 40, 6 to 70), 14734 to mapOf(1 to 40, 6 to 70),
             Items.ABYSSAL_TENTACLE to mapOf(0 to 75),
             Items.DRAGON_DEFENDER to mapOf(1 to 60),
+            // OSRS-audit 2026-09-17b: Initiate sallet/hauberk/cuisse (Recruitment Drive reward). The 2011 cache only
+            // encodes 20 Defence for these 3 ids; OSRS Wiki "Initiate sallet"/"hauberk"/"cuisse" (fetched 2026-09-17b)
+            // all state "requires 20 Defence, 10 Prayer... to equip". The sibling Proselyte armour set (same "Temple
+            // Knight" lineage, ids 9672/9674/9676/9678) already has BOTH skills baked into this same cache
+            // (`skill_reqs: [{'skill': 1, 'level': 30}, {'skill': 5, 'level': 20}]`), which is strong corroborating
+            // evidence the missing Prayer requirement on Initiate is a genuine omission, not a deliberate 667 design
+            // difference - kept as a sourced override (like Dagon'hai/Abyssal tentacle above) rather than guessed.
+            Items.INITIATE_SALLET to mapOf(1 to 20, 5 to 10),
+            Items.INITIATE_HAUBERK to mapOf(1 to 20, 5 to 10),
+            Items.INITIATE_CUISSE to mapOf(1 to 20, 5 to 10),
         )
 
     private val library = CacheLibrary(Paths.get("..", "..", "data", "cache").toFile().toString())
@@ -63,7 +73,7 @@ class ItemSkillRequirementsCacheAuditTests {
     fun `every native equipment item requires exactly its cache wield requirements or its sourced OSRS override`() {
         val definitions = DefinitionSet()
         definitions.load(library, ItemDef::class.java)
-        val imported = Regex("(?m)^  - local_item_id: (\\d+)").findAll(File("C:/RSPS/RSPS_IMPORT_ASSET_MAP.yml").readText()).map { it.groupValues[1].toInt() }.toSet()
+        val imported = Regex("(?m)^  - local_item_id: (\\d+)").findAll(File("C:/RSPS/OSRS_IMPORT_MASTER.yml").readText()).map { it.groupValues[1].toInt() }.toSet()
         val blocks = ymlBlocks()
         @Suppress("UNCHECKED_CAST")
         val items = definitions.getAll(ItemDef::class.java) as Map<Int, ItemDef>
