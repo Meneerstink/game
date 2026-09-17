@@ -144,6 +144,7 @@ class EnchantedBoltsTests {
         hp: Int = 10,
         weapon: Int? = null,
         shield: Int? = null,
+        cape: Int? = null,
         prayerIcon: PrayerIcon = PrayerIcon.NONE,
         timers: TimerMap = TimerMap(),
     ): Player {
@@ -158,8 +159,29 @@ class EnchantedBoltsTests {
         val equipment = ItemContainer(DEFINITIONS, EQUIPMENT_KEY)
         weapon?.let { equipment[EquipmentType.WEAPON.id] = Item(it) }
         shield?.let { equipment[EquipmentType.SHIELD.id] = Item(it) }
+        cape?.let { equipment[EquipmentType.CAPE.id] = Item(it) }
         every { player.equipment } returns equipment
         return player
+    }
+
+    /**
+     * OSRS-IMPORT audit round 2026-09-17b: OSRS Wiki "Fire cape" - "When worn, players are granted the fiery
+     * attribute and will therefore receive additional damage in PvP from the special effects of Pearl bolts (e) and
+     * Pearl dragon bolts (e)." Sea Curse's bonus damage was 1/15 of Ranged level against a fiery target instead of
+     * 1/20 - the old check only ever matched NPCs with the FIERY species tag, so a Fire-cape-wearing player target
+     * always got the weaker 1/20 rate.
+     */
+    @Test
+    fun `Sea Curse deals the fiery 1 in 15 bonus against a player wearing a Fire cape, not the plain 1 in 20`() {
+        val attacker = player(ranged = 99, hp = 99)
+        val pearl = EnchantedBolts.ROSTER.getValue(Items.PEARL_DRAGON_BOLTS_E)
+        val plainPlayer = player()
+        assertEquals(4, EnchantedBolts.shotChange(pearl, attacker, plainPlayer, Special.NONE).bonusDamage, "99 / 20, not fiery")
+        val fireCapePlayer = player(cape = Items.FIRE_CAPE)
+        assertEquals(6, EnchantedBolts.shotChange(pearl, attacker, fireCapePlayer, Special.NONE).bonusDamage, "99 / 15, fiery via Fire cape")
+        // The Infernal cape explicitly does NOT grant the fiery attribute (the wiki's own point of distinction).
+        val infernalCapePlayer = player(cape = Items.INFERNAL_CAPE)
+        assertEquals(4, EnchantedBolts.shotChange(pearl, attacker, infernalCapePlayer, Special.NONE).bonusDamage, "99 / 20, Infernal cape is not fiery")
     }
 
     /**

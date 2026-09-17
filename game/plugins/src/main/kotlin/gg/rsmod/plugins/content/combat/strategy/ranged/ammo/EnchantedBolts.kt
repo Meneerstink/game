@@ -235,7 +235,19 @@ object EnchantedBolts {
     /** "Costs 10% of the player's current Hitpoints" (rounded down as the Void donor does). */
     fun bloodForfeitCost(attacker: Player): Int = attacker.getCurrentLifepoints() / 10
 
-    private fun isFiery(target: Pawn): Boolean = target is Npc && target.isSpecies(NpcSpecies.FIERY)
+    /**
+     * Audit round 2026-09-17b: OSRS Wiki "Fire cape" - "When worn, players are granted the fiery attribute and will
+     * therefore receive additional damage in PvP from the special effects of Pearl bolts (e) and Pearl dragon bolts
+     * (e)." The Infernal cape explicitly does NOT grant this (wiki "Infernal cape", the point of the distinction).
+     * The old check only ever matched NPCs with the [NpcSpecies.FIERY] species tag, so a Fire-cape-wearing player
+     * target in PvP always got the non-fiery (1/20) rate instead of the sourced fiery (1/15) one.
+     */
+    private fun isFiery(target: Pawn): Boolean =
+        when (target) {
+            is Npc -> target.isSpecies(NpcSpecies.FIERY)
+            is Player -> target.hasEquipped(EquipmentType.CAPE, Items.FIRE_CAPE)
+            else -> false
+        }
 
     /**
      * Dragonstone page: not against dragonfire-immune targets or players praying Protect from Magic.
