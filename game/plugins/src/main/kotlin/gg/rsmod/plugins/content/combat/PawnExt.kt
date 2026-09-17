@@ -26,6 +26,8 @@ import gg.rsmod.plugins.content.mechanics.combatresponse.DamageResponse
 import gg.rsmod.plugins.content.mechanics.lifesteal.GuthanLifesteal
 import gg.rsmod.plugins.content.mechanics.poison.Poison
 import gg.rsmod.plugins.content.mechanics.statdrain.AhrimBlightedAura
+import gg.rsmod.plugins.content.mechanics.statdrain.KarilAgilityDrain
+import gg.rsmod.plugins.content.mechanics.statdrain.ToragEnergyDrain
 import gg.rsmod.plugins.content.mechanics.poison.Venom
 import gg.rsmod.plugins.content.mechanics.prayer.AncientCurses
 import gg.rsmod.plugins.content.mechanics.prayer.Redemption
@@ -170,6 +172,7 @@ fun Pawn.dealHit(
     onHit: (PawnHit) -> Unit = {},
     hitType: HitType,
     bonusDamage: Int = 0,
+    applyDeflectProtection: Boolean = true,
 ): PawnHit {
     // Calculate the 1:1 real damage, applying a random factor.
     // Combat formulas and hitpoints use the same 1:1 real-damage unit. Keep the hitmark value
@@ -193,6 +196,18 @@ fun Pawn.dealHit(
     // Corporeal Beast: melee and ranged damage is halved unless dealt with a Corpbane weapon on the stab style (OSRS Wiki).
     if (target is Npc && target.id == gg.rsmod.plugins.api.cfg.Npcs.CORPOREAL_BEAST && damage > 0) {
         damage = gg.rsmod.plugins.content.combat.scripts.impl.CorporealBeastCombatScript.modifyIncomingDamage(this, hitType, damage.toInt()).toDouble()
+    }
+    // Preserve the hit's declared style and the damage before Deflect reduces it to zero.
+    // Reading getCombatClass again on impact can use a different style after a weapon switch.
+    val curseHitStyle = when (hitType) {
+        HitType.MELEE -> CombatClass.MELEE
+        HitType.RANGE -> CombatClass.RANGED
+        HitType.MAGIC -> CombatClass.MAGIC
+        else -> getCombatClass(this)
+    }
+    val deflectDamage = damage.toInt()
+    if (applyDeflectProtection) {
+        damage = AncientCurses.deflectDamageTaken(this, target, curseHitStyle, deflectDamage).toDouble()
     }
     var type = hitType.id
     var executeHit = landHit
@@ -318,12 +333,12 @@ fun Pawn.dealHit(
         hit.addAction {
             val pawn = this@dealHit
             val totalDamage = hit.hitmarks.sumOf { it.damage }
-            AncientCurses.onDamageDealt(pawn, target, totalDamage, getCombatClass(pawn))
+            AncientCurses.onDamageDealt(pawn, target, totalDamage, curseHitStyle)
             // P6 (2026-09-02): reflect/recoil/vengeance now routed through one deterministic
             // dispatcher instead of calling AncientCurses.onIncomingHit directly - Deflect
             // curse is still evaluated first inside it, unchanged, just moved up a level so
             // it shares an order with Vengeance/Ring of recoil. See DamageResponse.kt.
-            DamageResponse.onIncomingHit(pawn, target, getCombatClass(pawn), totalDamage)
+            DamageResponse.onIncomingHit(pawn, target, curseHitStyle, totalDamage, deflectDamage)
             // Lifesteal further-foundations pass (2026-09-02): Guthan's Infestation set effect,
             // an attacker-side "on damage dealt" effect like Sap/Leech above it. See
             // GuthanLifesteal.kt for the sourcing note.
@@ -333,6 +348,11 @@ fun Pawn.dealHit(
             // drain is wired separately in its own special-attack plugin.kts, and DWH is
             // blocked - absent from this cache). See AhrimBlightedAura.kt for the sourcing note.
             AhrimBlightedAura.onDamageDealt(pawn, target, getCombatClass(pawn))
+            // Barrows set-effect audit 2026-09-17b: the player-worn Torag/Karil set effects were entirely
+            // missing (only the NPC brothers' own attacks used them) - see ToragEnergyDrain.kt /
+            // KarilAgilityDrain.kt for sourcing, both reusing BarrowsSetEffects' shared formula.
+            ToragEnergyDrain.onDamageDealt(pawn, target, getCombatClass(pawn))
+            KarilAgilityDrain.onDamageDealt(pawn, target, getCombatClass(pawn))
             // Prayer subsystem batch: Smite's prayer-drain effect (see Smite.kt for sourcing) -
             // same once-per-landed-hit dispatcher as the effects above it.
             Smite.onDamageDealt(pawn, target, totalDamage)
