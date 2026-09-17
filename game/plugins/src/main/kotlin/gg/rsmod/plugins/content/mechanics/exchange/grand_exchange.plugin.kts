@@ -74,6 +74,7 @@ on_command("ge_sell") {
         player.inventory.add(itemId, quantity)
         return@on_command
     }
+    player.persistNow()
     geMsg(
         player,
         "Placed sell offer #${offer.id}: $quantity x $name @ ${DecimalFormat().format(price)} gp each. " +
@@ -128,6 +129,7 @@ on_command("ge_buy") {
         player.inventory.add(Items.COINS_995, totalCost.toInt())
         return@on_command
     }
+    player.persistNow()
     geMsg(
         player,
         "Placed buy offer #${offer.id}: $quantity x $name @ ${DecimalFormat().format(price)} gp each. " +

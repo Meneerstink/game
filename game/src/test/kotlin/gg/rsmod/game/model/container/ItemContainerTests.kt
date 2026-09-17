@@ -21,6 +21,31 @@ class ItemContainerTests {
         assertEquals(container.occupiedSlotCount, 0)
     }
 
+    /*
+     * A negative amount reached add()/remove() through overflowed or client-controlled amounts.
+     * add() then inserted one item (`++completed >= amount` was immediately true) and remove()
+     * *grew* a stack (`min(cur, negative)` subtracted a negative). Both must be no-ops.
+     */
+    @Test
+    fun negativeOrZeroAmountsAreNoOps() {
+        val container = ItemContainer(definitions, CAPACITY, ContainerStackType.NORMAL)
+        assertTrue(container.add(item = 995, amount = 1000).hasSucceeded())
+        assertTrue(container.add(item = 4151, amount = 1).hasSucceeded())
+
+        assertEquals(0, container.remove(item = 995, amount = -500, assureFullRemoval = true).completed)
+        assertEquals(0, container.remove(item = 995, amount = -500).completed)
+        assertEquals(0, container.remove(item = 4151, amount = 0).completed)
+        assertEquals(1000, container.getItemCount(995))
+        assertEquals(1, container.getItemCount(4151))
+
+        assertEquals(0, container.add(item = 4151, amount = -3).completed)
+        assertEquals(0, container.add(item = 995, amount = -3).completed)
+        assertEquals(0, container.add(item = 4151, amount = 0).completed)
+        assertEquals(1000, container.getItemCount(995))
+        assertEquals(1, container.getItemCount(4151))
+        assertEquals(2, container.occupiedSlotCount)
+    }
+
     @Test
     fun addNoted() {
         val container = ItemContainer(definitions, CAPACITY, ContainerStackType.NORMAL)

@@ -70,8 +70,11 @@ class OsrsGuidePricesTests {
         assertEquals(809253, OsrsGuidePrices.seed(whip, table))
         // 2026-09-14 batch potions-antifire added 14 tradeable doses (Extended antifire, the mixes, Extended super antifire), all named as
         // in the OSRS snapshot: exchangeable 12192 -> 12206, seeded 3272 -> 3286, unmatched unchanged at 8920.
-        assertEquals(12206, items.size, "exchangeable items (tradeable, unnoted, not coins)")
-        assertEquals(3286, matched, "items seeded from the 13 September 2026 OSRS snapshot; the unmatched list is build/osrs-guide-price-unmatched.txt")
+        // 2026-09-16 OSRS item parity batch added three tradeable unnoted items, all named as in the OSRS snapshot:
+        // Trouver parchment (23730), Incomplete heavy ballista (23731), Unstrung heavy ballista (23733):
+        // exchangeable 12206 -> 12209, seeded 3286 -> 3289, unmatched unchanged at 8920.
+        assertEquals(12209, items.size, "exchangeable items (tradeable, unnoted, not coins)")
+        assertEquals(3289, matched, "items seeded from the 13 September 2026 OSRS snapshot; the unmatched list is build/osrs-guide-price-unmatched.txt")
     }
 
     @Test

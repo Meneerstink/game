@@ -333,9 +333,11 @@ class ItemContainer(
         }
 
         /*
-         *  Check if amount given is 0, don't add
+         * A zero or negative amount is never a valid add. A negative amount used to add one item
+         * in the non-stacking loop (`++completed >= amount` is immediately true) or subtract from a
+         * stack, so any caller fed a client-controlled or overflowed amount became an exploit.
          */
-        if (amount == 0) {
+        if (amount <= 0) {
             return ItemTransaction(amount, 0, emptyList())
         }
 
@@ -494,6 +496,14 @@ class ItemContainer(
         assureFullRemoval: Boolean = false,
         beginSlot: Int = -1,
     ): ItemTransaction {
+        /*
+         * A zero or negative amount must be a no-op: `min(curItem.amount, amount - totalRemoved)`
+         * with a negative amount *increased* the stack (e.g. an overflowed price * quantity).
+         */
+        if (amount <= 0) {
+            return ItemTransaction(amount, 0, emptyList())
+        }
+
         val hasAmount = getItemCount(item)
 
         if (assureFullRemoval && hasAmount < amount) {

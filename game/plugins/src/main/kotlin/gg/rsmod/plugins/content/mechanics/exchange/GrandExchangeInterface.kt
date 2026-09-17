@@ -14,6 +14,7 @@ import gg.rsmod.plugins.api.ext.INVENTORY_INTERFACE_KEY
 import gg.rsmod.plugins.api.ext.closeInterface
 import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.api.ext.openInterface
+import gg.rsmod.plugins.api.ext.persistNow
 import gg.rsmod.plugins.api.ext.runClientScript
 import gg.rsmod.plugins.api.ext.sendItemContainer
 import gg.rsmod.plugins.api.ext.setInterfaceEvents
@@ -325,6 +326,22 @@ object GrandExchangeInterface {
         return minOf(player.inventory.getItemCount(itemId).toLong() + noted, Int.MAX_VALUE.toLong()).toInt()
     }
 
+    /**
+     * Inventory forms removed for a sell offer must be restored in their original forms when the
+     * service rejects the submit (for example because the selected slot was taken meanwhile).
+     * The offer itself remains unnoted, but a failed transaction must not silently turn notes into
+     * ordinary items.
+     */
+    fun restoredSellItems(
+        def: ItemDef,
+        unnotedRemoved: Int,
+        notedRemoved: Int,
+    ): List<Pair<Int, Int>> =
+        buildList {
+            if (unnotedRemoved > 0) add(def.id to unnotedRemoved)
+            if (notedRemoved > 0 && def.noteLinkId > 0) add(def.noteLinkId to notedRemoved)
+        }
+
     /** Novite/Void confirm: escrow the coins or items first, then submit; anything refused is handed straight back. */
     fun confirm(player: Player): Boolean {
         val service = service(player) ?: return false
@@ -337,12 +354,21 @@ object GrandExchangeInterface {
         val username = username(player)
         if (service.offerInSlot(username, selection.slot) != null) return false
         if (selection.type == OfferType.BUY) {
-            val total = selection.price * selection.quantity
+            // Long: price * quantity overflowed Int for large offers, and a negative "total" passed
+            // the coin check and then *added* coins on remove.
+            val totalCost = selection.price.toLong() * selection.quantity
+            if (totalCost <= 0 || totalCost > Int.MAX_VALUE) {
+                player.message("That offer's total cost is too large.")
+                return false
+            }
+            val total = totalCost.toInt()
             if (player.inventory.getItemCount(Items.COINS_995) < total) {
                 player.message("You don't have enough coins.")
                 return false
             }
-            player.inventory.remove(Items.COINS_995, total, assureFullRemoval = true)
+            if (player.inventory.remove(Items.COINS_995, total, assureFullRemoval = true).hasFailed()) {
+                return false
+            }
             if (service.submit(username, OfferType.BUY, selection.itemId, selection.price, selection.quantity, selection.slot) == null) {
                 player.inventory.add(Items.COINS_995, total)
                 return false
@@ -350,14 +376,23 @@ object GrandExchangeInterface {
         } else {
             if (ownedCount(player, selection.itemId) < selection.quantity) return false
             val def = player.world.definitions.get(ItemDef::class.java, selection.itemId)
-            var removed = player.inventory.remove(selection.itemId, selection.quantity, assureFullRemoval = false).completed
-            if (removed < selection.quantity && def.noteLinkId > 0) {
-                removed += player.inventory.remove(def.noteLinkId, selection.quantity - removed, assureFullRemoval = false).completed
+            val unnotedRemoved = player.inventory.remove(selection.itemId, selection.quantity, assureFullRemoval = false).completed
+            val notedRemoved =
+                if (unnotedRemoved < selection.quantity && def.noteLinkId > 0) {
+                    player.inventory.remove(def.noteLinkId, selection.quantity - unnotedRemoved, assureFullRemoval = false).completed
+                } else {
+                    0
+                }
+            val removed = unnotedRemoved + notedRemoved
+            val restore = {
+                restoredSellItems(def, unnotedRemoved, notedRemoved).forEach { (itemId, amount) ->
+                    player.inventory.add(itemId, amount)
+                }
             }
             if (removed < selection.quantity ||
                 service.submit(username, OfferType.SELL, selection.itemId, selection.price, selection.quantity, selection.slot) == null
             ) {
-                player.inventory.add(selection.itemId, removed)
+                restore()
                 return false
             }
             player.closeInterface(dest = InterfaceDestination.TAB_AREA)
@@ -367,6 +402,8 @@ object GrandExchangeInterface {
         player.runClientScript(SCRIPT_CLOSE_SEARCH)
         refreshAll(player, service)
         notifyCounterparties(player, service)
+        // The escrow is on disk in the book; the debited inventory must be on disk as well.
+        player.persistNow()
         return true
     }
 
@@ -436,6 +473,7 @@ object GrandExchangeInterface {
         service.releaseIfDrained(username, offer.id)
         refresh(player, service, slot)
         player.sendItemContainer(collectContainerKey(slot), collectItems(player.world.definitions, service.offerInSlot(username, slot)))
+        if (added > 0) player.persistNow()
         return added > 0
     }
 

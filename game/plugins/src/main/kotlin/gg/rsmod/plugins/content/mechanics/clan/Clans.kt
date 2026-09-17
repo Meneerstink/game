@@ -68,13 +68,12 @@ object Clans {
     private fun save() {
         load()
         runCatching {
-            file.parentFile?.mkdirs()
             val lines = ArrayList<String>()
             clans.values.forEach { clan ->
                 lines.add("clan|${clan.name}")
                 clan.members.forEach { (member, rank) -> lines.add("member|${clan.name}|$member|$rank") }
             }
-            file.writeText(lines.joinToString("\n"))
+            gg.rsmod.util.io.AtomicFiles.writeText(file, lines.joinToString("\n"))
         }
     }
 

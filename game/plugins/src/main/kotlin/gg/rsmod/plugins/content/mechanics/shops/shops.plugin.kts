@@ -55,7 +55,7 @@ on_button(interfaceId = SHOP_INTERFACE_ID, component = 25) {
         if (slot != 0) {
             slot = player.getInteractingSlot() / 6
         }
-        val shopItem = shop.items[slot] ?: return@on_button
+        val shopItem = shop.items.getOrNull(slot) ?: return@on_button
 
         when (opcode) {
             61 -> {
@@ -114,7 +114,7 @@ on_button(interfaceId = SHOP_INTERFACE_ID, component = 26) {
         if (slot != 0) {
             slot = player.getInteractingSlot() / 4
         }
-        val shopItem = shop.sampleItems[slot] ?: return@on_button
+        val shopItem = shop.sampleItems.getOrNull(slot) ?: return@on_button
 
         when (opcode) {
             61 -> {

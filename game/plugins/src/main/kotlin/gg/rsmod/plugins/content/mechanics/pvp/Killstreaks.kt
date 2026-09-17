@@ -51,8 +51,7 @@ object Killstreaks {
 
     private fun save() {
         runCatching {
-            leaderboardFile.parentFile?.mkdirs()
-            leaderboardFile.writeText(leaderboard.entries.joinToString("\n") { "${it.key}:${it.value}" })
+            gg.rsmod.util.io.AtomicFiles.writeText(leaderboardFile, leaderboard.entries.joinToString("\n") { "${it.key}:${it.value}" })
         }
     }
 

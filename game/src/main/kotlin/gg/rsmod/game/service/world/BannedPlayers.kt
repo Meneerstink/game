@@ -21,7 +21,7 @@ object BannedPlayers {
         }
 
     private fun persist() {
-        file.writeText(banned.sorted().joinToString("\n"))
+        gg.rsmod.util.io.AtomicFiles.writeText(file, banned.sorted().joinToString("\n"))
     }
 
     fun isBanned(username: String): Boolean = banned.contains(username.trim().lowercase())

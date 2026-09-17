@@ -419,6 +419,11 @@ class TradeSession(
         // Finalise the trade session
         finalise(player)
         finalise(partner)
+
+        // Both saves land now, so a crash before the next autosave can never replay the trade
+        // for one side and roll it back for the other.
+        player.persistNow()
+        partner.persistNow()
     }
 
     /**

@@ -6,6 +6,8 @@ import gg.rsmod.game.Server
 import gg.rsmod.game.model.World
 import gg.rsmod.game.service.Service
 import gg.rsmod.util.ServerProperties
+import gg.rsmod.util.io.AtomicFiles
+import mu.KLogging
 import java.io.File
 import java.util.concurrent.atomic.AtomicLong
 import java.util.concurrent.locks.ReentrantLock
@@ -113,18 +115,22 @@ class GrandExchangeService(
                 }
             }
         } catch (e: Exception) {
-            // A corrupt/missing save file should never block startup - the
-            // book simply starts empty rather than crashing the server.
+            // A corrupt save file must not block startup, but starting with an empty book means
+            // every escrowed item and coin is gone - that must never happen silently.
+            logger.error("Grand Exchange book could not be loaded from ${saveFile.absolutePath}; starting EMPTY. Restore the file before players trade.", e)
         } finally {
             lock.unlock()
         }
     }
 
+    /*
+     * The offer book is the only record of every escrowed item and coin; a truncated offers.json
+     * would silently wipe all of it at the next boot (see load). Every file is replaced atomically.
+     */
     private fun save() {
-        saveFile.parentFile?.mkdirs()
-        saveFile.bufferedWriter().use { writer -> gson.toJson(offers, writer) }
-        priceFile.bufferedWriter().use { writer -> gson.toJson(tradePrices, writer) }
-        historyFile.bufferedWriter().use { writer -> gson.toJson(history, writer) }
+        AtomicFiles.write(saveFile.toPath()) { writer -> gson.toJson(offers, writer) }
+        AtomicFiles.write(priceFile.toPath()) { writer -> gson.toJson(tradePrices, writer) }
+        AtomicFiles.write(historyFile.toPath()) { writer -> gson.toJson(history, writer) }
     }
 
     /** The first free offer box of [username], or null when all [SLOTS] are in use. */
@@ -378,7 +384,7 @@ class GrandExchangeService(
         while (history.size > PRICE_HISTORY) history.removeAt(0)
     }
 
-    companion object {
+    companion object : KLogging() {
         /** The revision-667 Grand Exchange screen shows six offer boxes (interface 105). */
         const val SLOTS = 6
         const val PRICE_HISTORY = 20

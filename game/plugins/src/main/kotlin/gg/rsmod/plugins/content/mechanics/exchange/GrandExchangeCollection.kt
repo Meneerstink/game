@@ -3,6 +3,7 @@ package gg.rsmod.plugins.content.mechanics.exchange
 import gg.rsmod.game.model.entity.Client
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.api.cfg.Items
+import gg.rsmod.plugins.api.ext.persistNow
 
 /**
  * What a collection attempt actually did, so the caller can say something truthful about it.
@@ -68,6 +69,11 @@ object GrandExchangeCollection {
             }
             // RCV-010 C3: a finished offer that owes nothing gives its offer box back.
             service.releaseIfDrained(username, id)
+        }
+        // The book has already forgotten what was just paid out; the inventory that received it
+        // must be on disk too, or a crash before the next autosave loses the proceeds.
+        if (collected > 0 || partial > 0) {
+            player.persistNow()
         }
 
         return CollectionOutcome(
