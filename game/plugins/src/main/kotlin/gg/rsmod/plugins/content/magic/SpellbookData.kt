@@ -449,6 +449,13 @@ enum class SpellbookData(
         sound = Sfx.FIREWAVE_CAST_AND_FIRE,
         hitSound = Sfx.FIREWAVE_HIT,
     ),
+    // OWNER DECISION 2026-09-17 (wrath rune option A, built 2026-09-17b): the 667 Surge spells previously used a
+    // Death rune + Blood rune combination that does not exist in OSRS. OSRS Wiki "Wind Surge"/"Water Surge"/
+    // "Earth Surge"/"Fire Surge" raw wikitext infoboxes give the exact costs below - no Blood rune on any of the
+    // four, and a single Wrath rune replaces the Death rune. RunePayment (canCast/removeRunes) is entirely
+    // data-driven from this `runes` list, so this single change is what makes wrath runes get consumed by every
+    // consumer at once: manual combat-cast, autocast and the rune pouch (blighted sacks do not cover any Surge
+    // spell, so there is no separate wiring needed there).
     WIND_SURGE(
         interfaceId = 192,
         component = 84,
@@ -456,7 +463,7 @@ enum class SpellbookData(
         spellType = SpellType.COMBAT_SPELL_TYPE,
         spellName = "Wind Surge",
         level = 81,
-        runes = listOf(Item(Items.AIR_RUNE, 7), Item(Items.DEATH_RUNE, 1), Item(Items.BLOOD_RUNE, 1)),
+        runes = listOf(Item(Items.AIR_RUNE, 7), Item(Items.WRATH_RUNE, 1)),
         sound = -1,
         hitSound = -1,
     ),
@@ -471,8 +478,7 @@ enum class SpellbookData(
             listOf(
                 Item(Items.AIR_RUNE, 7),
                 Item(Items.WATER_RUNE, 10),
-                Item(Items.DEATH_RUNE, 1),
-                Item(Items.BLOOD_RUNE, 1),
+                Item(Items.WRATH_RUNE, 1),
             ),
         sound = -1,
         hitSound = -1,
@@ -499,8 +505,7 @@ enum class SpellbookData(
             listOf(
                 Item(Items.AIR_RUNE, 7),
                 Item(Items.EARTH_RUNE, 10),
-                Item(Items.DEATH_RUNE, 1),
-                Item(Items.BLOOD_RUNE, 1),
+                Item(Items.WRATH_RUNE, 1),
             ),
         sound = -1,
         hitSound = -1,
@@ -516,8 +521,7 @@ enum class SpellbookData(
             listOf(
                 Item(Items.AIR_RUNE, 7),
                 Item(Items.FIRE_RUNE, 10),
-                Item(Items.DEATH_RUNE, 1),
-                Item(Items.BLOOD_RUNE, 1),
+                Item(Items.WRATH_RUNE, 1),
             ),
         sound = -1,
         hitSound = -1,
