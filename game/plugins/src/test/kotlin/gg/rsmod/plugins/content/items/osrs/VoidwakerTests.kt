@@ -48,4 +48,22 @@ class VoidwakerTests {
         val magic = File("src/main/kotlin/gg/rsmod/plugins/content/combat/strategy/MagicCombatStrategy.kt").readText()
         assertTrue("val experience = baseXp + (modDamage * 0.2) * multiplier" in magic && "val hitpointsExperience = (modDamage * 0.133) * multiplier" in magic)
     }
+
+    /**
+     * OSRS-IMPORT audit round 2026-09-17b: the "voidwaker" batch imported the hilt/blade/gem but never wired their
+     * assembly, so the finished weapon was spawn-only. OSRS Wiki "Voidwaker": assembled from all three pieces for
+     * 500,000 coins (Madam Sikaro, absent from this cache - ADAPTED to a direct player combine, same pattern as the
+     * crystal singing bowl's Grand Exchange placement).
+     */
+    @Test
+    fun `the assembly plugin consumes all three pieces and 500,000 coins for the finished Voidwaker`() {
+        val script = File("src/main/kotlin/gg/rsmod/plugins/content/items/osrs/voidwaker_assembly.plugin.kts").readText()
+        assertTrue("ASSEMBLY_COST = 500_000" in script)
+        listOf(
+            "Items.VOIDWAKER_HILT to Items.VOIDWAKER_BLADE", "Items.VOIDWAKER_HILT to Items.VOIDWAKER_GEM", "Items.VOIDWAKER_BLADE to Items.VOIDWAKER_GEM",
+        ).forEach { pair -> assertTrue(pair in script, "missing combine pair: $pair") }
+        assertTrue("Item(Items.VOIDWAKER_HILT, 1)" in script && "Item(Items.VOIDWAKER_BLADE, 1)" in script && "Item(Items.VOIDWAKER_GEM, 1)" in script)
+        assertTrue("Item(Items.COINS_995, ASSEMBLY_COST)" in script)
+        assertTrue("player.grantOrRefund(Item(Items.VOIDWAKER), consumed)" in script)
+    }
 }
