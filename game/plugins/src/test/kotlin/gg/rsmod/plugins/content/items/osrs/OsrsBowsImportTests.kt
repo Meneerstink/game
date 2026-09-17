@@ -67,4 +67,32 @@ class OsrsBowsImportTests {
         val specials = File("src/main/kotlin/gg/rsmod/plugins/content/combat/specialattack/weapons/osrs_bow_specials.plugin.kts").readText()
         assertTrue("Items.WEBWEAVER_BOW" in specials && "Items.SCORCHING_BOW" in specials && "Tonalztics.DIVISION_ENERGY" in specials)
     }
+
+    /**
+     * OSRS-IMPORT audit round 2026-09-17b: Division's defence-reduction only compounds onto the special's own second
+     * hit against NPCs (OSRS Wiki "Tonalztics of Ralos", Mod Ash quote: "on an NPC ... any defence reduction from the
+     * 1st calculated hit can help with the 2nd roll ... on a player ... the target's effective defence would not be
+     * recalculated within that tick"). Guards the fix: NPC drains apply inline (so the live stat read inside the next
+     * roll sees it), Player drains are deferred until after both rolls.
+     */
+    @Test
+    fun `Division only compounds its defence drain onto the second hit against NPCs, not players`() {
+        val specials = File("src/main/kotlin/gg/rsmod/plugins/content/combat/specialattack/weapons/osrs_bow_specials.plugin.kts").readText()
+        val divisionBlock = specials.substringAfter("Tonalztics.ALL.forEach")
+        assertTrue("deferredPlayerDrains" in divisionBlock, "player drains must be tracked separately from the inline NPC drain")
+        assertTrue(
+            "victim is Player) deferredPlayerDrains++ else divisionDrain(victim)" in divisionBlock,
+            "NPC targets must drain immediately inside the hit loop so the next roll's live stat read sees it",
+        )
+        assertTrue(
+            "repeat(deferredPlayerDrains) { divisionDrain(victim) }" in divisionBlock,
+            "player drains must apply only after both accuracy rolls have already been computed",
+        )
+        // The deferred repeat call must come after the hit-loop's own repeat(...) block, never inside it.
+        val loopStart = divisionBlock.indexOf("repeat(Tonalztics.hits(")
+        val loopEnd = divisionBlock.indexOf("\n        }\n", loopStart)
+        val deferredCallIndex = divisionBlock.indexOf("repeat(deferredPlayerDrains)")
+        assertTrue(loopStart in 0 until loopEnd, "hit loop must be found")
+        assertTrue(deferredCallIndex > loopEnd, "the deferred player drain must run after the hit loop closes, not inside it")
+    }
 }

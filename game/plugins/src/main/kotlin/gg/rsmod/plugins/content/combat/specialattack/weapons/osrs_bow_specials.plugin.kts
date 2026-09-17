@@ -65,20 +65,32 @@ fun divisionDrain(victim: Pawn) {
     }
 }
 
-/* Tonalztics of Ralos - Division: 50 %, accuracy x1.5, each successful hit lowers Defence by 1/8 of the target's Magic level. */
+/*
+ * Tonalztics of Ralos - Division: 50 %, accuracy x1.5, each successful hit lowers Defence by 1/8 of the target's Magic
+ * level. OSRS Wiki "Tonalztics of Ralos" (raw wikitext, re-checked 2026-09-17), quoting Mod Ash: "When used on NPCs, the
+ * defence reduction from a successful first hit will apply for the calculation of the second hit. However, this is not
+ * the case when used in PvP" - "on an NPC ... any defence reduction from the 1st calculated hit can help with the 2nd
+ * roll even though it's in the same tick. However, on a player ... the target's effective defence would not be
+ * recalculated within that tick, so the 2nd roll may not be helped." NPC targets therefore drain immediately (so the
+ * live stat read inside the next accuracy roll sees it); Player targets defer every landed hit's drain until after
+ * both accuracy rolls, so neither roll reads the other hit's reduction.
+ */
 Tonalztics.ALL.forEach { weapon ->
     SpecialAttacks.register(Tonalztics.DIVISION_ENERGY, weapon) {
         val victim = target
         player.animate(CombatConfigs.getAttackAnimation(player))
         player.playSound(Sfx.THROWN)
         val delay = RangedCombatStrategy.getHitDelay(player.getCentreTile(), victim.getCentreTile())
+        var deferredPlayerDrains = 0
         repeat(Tonalztics.hits(player.getEquipment(EquipmentType.WEAPON))) { index ->
             world.spawn(player.createProjectile(victim, RangedProjectile.DRAGON_THROWNAXE.gfx, RangedProjectile.DRAGON_THROWNAXE.type))
             val landHit = RangedCombatFormula.getAccuracy(player, victim, Tonalztics.DIVISION_ACCURACY) >= world.randomDouble()
             player.dealHit(target = victim, maxHit = RangedCombatFormula.getMaxHit(player, victim), landHit = landHit, delay = delay + index, hitType = HitType.RANGE)
-            // The calculator applies the first hit's reduction to the second hit's roll, so it is applied at once.
-            if (landHit) divisionDrain(victim)
+            if (landHit) {
+                if (victim is Player) deferredPlayerDrains++ else divisionDrain(victim)
+            }
         }
+        repeat(deferredPlayerDrains) { divisionDrain(victim) }
         Tonalztics.afterThrow(player)
     }
 }
