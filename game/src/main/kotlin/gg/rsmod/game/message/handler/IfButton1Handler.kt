@@ -33,6 +33,9 @@ class IfButton1Handler : MessageHandler<IfButtonMessage> {
     val FIFTH_OPTION = 10
     val EIGHT_OPTION = 25
 
+    /** First item id appended by the OSRS import (Occult necklace, the pilot batch); the 667 cache ends at 22327. */
+    val FIRST_IMPORTED_ITEM = 22328
+
     override fun handle(
         client: Client,
         world: World,
@@ -96,10 +99,19 @@ class IfButton1Handler : MessageHandler<IfButtonMessage> {
 
                 FIFTH_OPTION -> {
                     val def = world.definitions.get(ItemDef::class.java, message.item)
-                    if (def.inventoryMenu.getOrNull(4)?.lowercase() == "destroy") {
-                        handleItemAction(client, world, message.item, message.slot, 10)
-                    } else {
-                        handleDropItem(client, world, interfaceId, component, message.item, message.slot)
+                    // The fifth slot is "Drop" by default, but imported OSRS items put their own option there ("Uncharge" on the
+                    // Webweaver bow, "Empty" on Dizana's quiver, "Dismantle", ...). Only a real Drop may drop the item.
+                    when (def.inventoryMenu.getOrNull(4)?.lowercase()) {
+                        "destroy" -> handleItemAction(client, world, message.item, message.slot, 10)
+                        null, "", "drop" -> handleDropItem(client, world, interfaceId, component, message.item, message.slot)
+                        // A native 667 custom fifth option nobody handles ("Release" toads, puzzle "Move", ...) keeps the old
+                        // behaviour; an imported item (ids from FIRST_IMPORTED_ITEM) never drops through a non-Drop option.
+                        else ->
+                            if (message.item >= FIRST_IMPORTED_ITEM || world.plugins.hasItemOption(message.item, 5)) {
+                                handleItemAction(client, world, message.item, message.slot, 5)
+                            } else {
+                                handleDropItem(client, world, interfaceId, component, message.item, message.slot)
+                            }
                     }
                 }
 

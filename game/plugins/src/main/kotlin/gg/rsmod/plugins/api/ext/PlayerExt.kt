@@ -37,6 +37,7 @@ import gg.rsmod.plugins.content.skills.smithing.data.SmithingType
 import gg.rsmod.util.BitManipulation
 import gg.rsmod.util.Misc
 import java.lang.ref.WeakReference
+import java.util.Arrays
 import kotlin.math.floor
 import kotlin.math.max
 
@@ -1470,7 +1471,7 @@ fun Player.setSkillTarget(
 fun Player.getWeaponRenderAnimation(): Int {
     val weapon = equipment[3]
     if (weapon != null) {
-        val def: Any = weapon.getDef(world.definitions).params.get(644) ?: 1426
+        val def: Any = gg.rsmod.game.model.RenderAnimations.forWeapon(weapon.id) ?: weapon.getDef(world.definitions).params.get(644) ?: 1426
         return def as Int
     }
     return 1
@@ -1742,35 +1743,43 @@ fun Player.switchSpellbook(book: Spellbook) {
 }
 
 fun Player.refreshBonuses() {
+    // EquipAction mutates the container before the next Player.cycle() marks the cached array
+    // clean. Recalculate here as well so the equipment interface cannot display one cycle of
+    // stale values after an equip, unequip, death cleanup, or OSRS weapon ammo swap.
+    Arrays.fill(equipmentBonuses, 0)
+    equipment.filterNotNull().forEach { item ->
+        item.getDef(world.definitions).bonuses.forEachIndexed { index, bonus ->
+            equipmentBonuses[index] += bonus
+        }
+    }
+    calculateBonuses = false
+
     val names =
         listOf(
-            "Stab",
-            "Slash",
-            "Crush",
-            "Magic",
-            "Ranged",
-            "Summoning",
-            "Absorb Melee",
-            "Absorb Magic",
-            "Absorb Ranged",
-            "Strength",
-            "Ranged Strength",
-            "Prayer",
-            "Magic Damage",
+            "Stab", "Slash", "Crush", "Magic", "Ranged",
+            "Stab", "Slash", "Crush", "Magic", "Ranged",
+            "Strength", "Ranged Strength", "Prayer", "Magic Damage",
         )
+    val bonusIndices = intArrayOf(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 14, 15, 16, 17)
+    val components = intArrayOf(31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 45, 46, 47, 48)
 
     setVarc(779, getWeaponRenderAnimation())
-    for (i in 0..17) {
-        var bonusName: String = StringBuilder(names[if (i <= 4) i else i - 5]).append(": ").toString()
-        val bonus: Int = equipmentBonuses[i]
+    for (i in bonusIndices.indices) {
+        val bonusIndex = bonusIndices[i]
+        var bonusName: String = StringBuilder(names[i]).append(": ").toString()
+        val bonus: Int = equipmentBonuses[bonusIndex]
         // Slot 17 (magic damage) holds tenths of a percent: 5 -> "0.5", 150 -> "15".
-        val value = if (i == 17 && bonus % 10 != 0) String.format(java.util.Locale.ROOT, "%.1f", bonus / 10.0) else if (i == 17) (bonus / 10).toString() else bonus.toString()
+        val value = if (bonusIndex == 17 && bonus % 10 != 0) String.format(java.util.Locale.ROOT, "%.1f", bonus / 10.0) else if (bonusIndex == 17) (bonus / 10).toString() else bonus.toString()
         bonusName = StringBuilder(bonusName).append(if (bonus >= 0) "+" else "").append(value).toString()
-        if (i == 17 || i in 11..13) {
-            // component 42-44 absorb bonuses
+        if (bonusIndex == 17) {
             bonusName = StringBuilder(bonusName).append("%").toString()
         }
-        setComponentText(667, 31 + i, bonusName) // 31 to 48 is bonuses
+        setComponentText(667, components[i], bonusName)
+    }
+    // These are valid combat-internal fields but are not part of the OSRS equipment-bonus
+    // screen. Clear their old 667 text so an earlier cached value can never remain visible.
+    for (component in 41..44) {
+        setComponentText(667, component, "")
     }
 }
 

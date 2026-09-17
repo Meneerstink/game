@@ -1,58 +1,67 @@
 package gg.rsmod.plugins.content.combat.specialattack.weapons.dragonequipment
 
+import gg.rsmod.game.model.combat.StyleType
 import gg.rsmod.plugins.content.combat.dealHit
 import gg.rsmod.plugins.content.combat.formula.MeleeCombatFormula
 import gg.rsmod.plugins.content.combat.specialattack.SpecialAttacks
+import gg.rsmod.plugins.content.items.osrs.BurningClaws
+import gg.rsmod.plugins.content.items.osrs.Burns
+import gg.rsmod.plugins.content.items.osrs.DragonClaws
 
 /**
- * Dragon claws: a 50% energy, four-hit special.
+ * Dragon claws "Slice and Dice" (50 %) and Burning claws "Burning barrage" (35 %), both exactly as the OSRS Wiki item pages and the
+ * wiki DPS calculator (`dists/claws.ts`, read 2026-09-17): no accuracy multiplier, every accuracy roll against slash defence, the
+ * hitsplats of [DragonClaws.sliceAndDice] / [BurningClaws.barrage]. Every hitsplat goes through the shared [dealHit] route
+ * (protection prayers, Deflect, special experience). A zero hitsplat is dealt as a non-landing hit.
  *
- * Real mechanic (unverified against this exact cache, but the standard/documented
- * behaviour used consistently since the weapon's introduction): hit 1 is a normal
- * accuracy roll. If it lands, hit 2 is guaranteed and deals half of hit 1's damage,
- * hit 3 is a fresh guaranteed-to-land roll, and hit 4 deals half of hit 3's damage.
- * If hit 1 misses, hit 2 is a small guaranteed consolation hit, hit 3 rolls accuracy
- * again, and hit 4 either halves hit 3 (if it landed) or repeats the consolation hit.
- * This ensures the weapon can never fully whiff all four swings.
+ * Replaces the earlier approximation (1.5x accuracy, half-damage follow-ups, 20 % consolation hit) that did not match OSRS.
+ * Hitsplat timing is not sourced (SOURCE_GAP): the four Dragon claws hits keep their previous delays 1-4; Burning claws uses 1, 1, 2
+ * (ADAPTED). Look: Dragon claws keep the 667 special; Burning claws play the imported OSRS HUMAN_WEAPON_BURNING_CLAWS_02_SPEC,
+ * VFX_BURNING_CLAWS_SPEC_02 and burning_claws_swipe_01.
  */
-val CLAWS_SPECIAL_REQUIREMENT = 50
+fun splat(
+    player: gg.rsmod.game.model.entity.Player,
+    target: gg.rsmod.game.model.entity.Pawn,
+    damage: Int,
+    delay: Int,
+) = player.dealHit(
+    target = target,
+    minHit = damage.toDouble(),
+    maxHit = damage.toDouble(),
+    landHit = damage > 0,
+    delay = delay,
+    hitType = HitType.MELEE,
+).let { hit -> if (damage > 0) hit.hit.hitmarks.firstOrNull()?.damage ?: 0 else 0 }
 
-SpecialAttacks.register(
-    CLAWS_SPECIAL_REQUIREMENT,
-    Items.DRAGON_CLAWS,
-) {
+SpecialAttacks.register(50, Items.DRAGON_CLAWS) {
     player.animate(Anims.DRAGON_CLAWS_SPECIAL)
-
     val maxHit = MeleeCombatFormula.getMaxHit(player, target)
-    val accuracy = MeleeCombatFormula.getAccuracy(player, target, specialAttackMultiplier = 1.5)
-    val consolationHit = (maxHit * 0.2).toInt().coerceAtLeast(1)
+    val accuracy = MeleeCombatFormula.getAccuracyAgainst(player, target, 1.0, StyleType.SLASH)
+    val splats = DragonClaws.sliceAndDice(maxHit.toInt(), { accuracy >= world.randomDouble() }, kotlin.random.Random.Default)
+    splats.forEachIndexed { i, damage -> splat(player, target, damage, i + 1) }
+}
 
-    val hit1Lands = accuracy >= world.randomDouble()
-    val hit1 = player.dealHit(target = target, maxHit = maxHit, landHit = hit1Lands, delay = 1, hitType = HitType.MELEE)
-    val dmg1 = hit1.hit.hitmarks.firstOrNull()?.damage ?: 0
-
-    // The follow-up claw hits are fixed values dealt directly; they get the same special attack experience as the rolled hits.
-    fun clawHit(damage: Int, delay: Int) {
-        target.hit(damage = damage, type = HitType.MELEE.id, delay = delay)
-        gg.rsmod.plugins.content.combat.specialattack.SpecialAttackXp.award(player, target, damage, HitType.MELEE)
-    }
-    if (hit1Lands) {
-        clawHit(dmg1 / 2, 2)
-
-        val hit3Lands = accuracy >= world.randomDouble()
-        val hit3 = player.dealHit(target = target, maxHit = maxHit, landHit = hit3Lands, delay = 3, hitType = HitType.MELEE)
-        val dmg3 = hit3.hit.hitmarks.firstOrNull()?.damage ?: 0
-        clawHit(dmg3 / 2, 4)
-    } else {
-        clawHit(consolationHit, 2)
-
-        val hit3Lands = accuracy >= world.randomDouble()
-        val hit3 = player.dealHit(target = target, maxHit = maxHit, landHit = hit3Lands, delay = 3, hitType = HitType.MELEE)
-        val dmg3 = hit3.hit.hitmarks.firstOrNull()?.damage ?: 0
-        if (hit3Lands) {
-            clawHit(dmg3 / 2, 4)
-        } else {
-            clawHit(consolationHit, 4)
+SpecialAttacks.register(BurningClaws.ENERGY, Items.BURNING_CLAWS) {
+    player.animate(gg.rsmod.plugins.content.items.osrs.OsrsSeq.HUMAN_WEAPON_BURNING_CLAWS_02_SPEC)
+    player.graphic(gg.rsmod.plugins.content.items.osrs.OsrsGfx.BURNING_CLAWS_SPEC)
+    player.playSound(gg.rsmod.plugins.content.items.osrs.OsrsSfx.BURNING_CLAWS_SWIPE)
+    val maxHit = MeleeCombatFormula.getMaxHit(player, target)
+    val accuracy = MeleeCombatFormula.getAccuracyAgainst(player, target, 1.0, StyleType.SLASH)
+    val barrage = BurningClaws.barrage(maxHit.toInt(), { accuracy >= world.randomDouble() }, kotlin.random.Random.Default)
+    val delays = intArrayOf(1, 1, 2)
+    barrage.hitsplats.forEachIndexed { i, damage ->
+        val hit =
+            player.dealHit(
+                target = target,
+                minHit = damage.toDouble(),
+                maxHit = damage.toDouble(),
+                landHit = damage > 0,
+                delay = delays[i],
+                hitType = HitType.MELEE,
+            )
+        // "Each of the three hits also has a chance to inflict a burn" - per hitsplat, only when one of the three rolls succeeded.
+        if (barrage.successfulRoll >= 0 && world.randomDouble() < barrage.burnChance) {
+            hit.hit.addAction { if (!target.isDead()) Burns.apply(target) }
         }
     }
 }

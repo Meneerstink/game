@@ -8,7 +8,7 @@ import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Darts
 
 /**
  * OSRS-IMPORT blowpipe item actions for every [Blowpipe.Pipe] (rules and sources in [Blowpipe]). Messages without an OSRS source are
- * recorded as ADAPTED in `C:\RSPS\OSRS_IMPORT_STATUS.md`. Options are bound only where the item definition carries them.
+ * recorded as ADAPTED in `C:\RSPS\OSRS_IMPORT_MASTER.yml`. Options are bound only where the item definition carries them.
  */
 
 fun Player.itemName(id: Int): String = world.definitions.get(ItemDef::class.java, id).name
@@ -38,6 +38,13 @@ Blowpipe.Pipe.values().forEach { type ->
     if (pipeHasOption(charged, "Check")) {
         on_item_option(item = charged, option = "Check") {
             val pipe = player.inventory[player.getInteractingItemSlot()] ?: return@on_item_option
+            player.checkBlowpipe(pipe)
+        }
+    }
+    // The worn Check of the blowpipes that list one (option census 2026-09-17c: Blazing, Camphor, Ironwood, Rosewood had none bound).
+    if (world.definitions.get(gg.rsmod.game.fs.def.ItemDef::class.java, charged).equipmentMenu.any { it.equals("Check", ignoreCase = true) }) {
+        on_equipment_option(item = charged, option = "Check") {
+            val pipe = player.getEquipment(EquipmentType.WEAPON)?.takeIf { it.id == charged } ?: return@on_equipment_option
             player.checkBlowpipe(pipe)
         }
     }

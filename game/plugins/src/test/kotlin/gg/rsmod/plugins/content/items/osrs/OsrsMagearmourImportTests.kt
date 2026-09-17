@@ -76,13 +76,15 @@ class OsrsMagearmourImportTests {
         assertEquals(listOf(17, 17, 1, 0), bonuses(Items.INFINITY_BOTTOMS), "Infinity bottoms")
         assertEquals(listOf(5, 5, 0, 0), bonuses(Items.INFINITY_GLOVES), "Infinity gloves")
         assertEquals(listOf(5, 5, 0, 0), bonuses(Items.INFINITY_BOOTS), "Infinity boots")
-        // Dagon'hai robe top/bottom: OSRS Wiki raw wikitext confirms (verified twice, independently, per side) a real
-        // asymmetry between the base pieces (mdmg 1) and the (or) ornamented pieces (mdmg 0) - not a fetch error,
-        // fixed in items.yml 2026-09-17b (was wrongly 1.0 on both (or) pieces before this audit).
+        // Dagon'hai robe top/bottom (or) - SOURCE_CONFLICT, resolved 2026-09-17c: the wiki's (or) item pages list `mdmg = 0`
+        // (re-read 2026-09-17c, still 0), but the OSRS cache (build 240, param 299) gives both (or) pieces 1 like the base pieces,
+        // and `OsrsEquipmentStatsAuditTests` (game module) fails on 0. OSRS_IMPORT_MASTER.yml: "Cache params of build 240 are the
+        // primary stat source; wiki cross-checks them" - the hand-typed infobox loses; an ornament kit does not change stats. The
+        // 2026-09-17b change to 0.0 made the two test suites contradict each other; items.yml is back to 1.0.
         assertEquals(listOf(25, 21, 1, 2), bonuses(Items.DAGONHAI_ROBE_TOP), "Dagon'hai robe top")
-        assertEquals(listOf(25, 21, 0, 2), bonuses(Items.DAGONHAI_ROBE_TOP_OR), "Dagon'hai robe top (or)")
+        assertEquals(listOf(25, 21, 1, 2), bonuses(Items.DAGONHAI_ROBE_TOP_OR), "Dagon'hai robe top (or)")
         assertEquals(listOf(18, 14, 1, 2), bonuses(Items.DAGONHAI_ROBE_BOTTOM), "Dagon'hai robe bottom")
-        assertEquals(listOf(18, 14, 0, 2), bonuses(Items.DAGONHAI_ROBE_BOTTOM_OR), "Dagon'hai robe bottom (or)")
+        assertEquals(listOf(18, 14, 1, 2), bonuses(Items.DAGONHAI_ROBE_BOTTOM_OR), "Dagon'hai robe bottom (or)")
     }
 
     @Test

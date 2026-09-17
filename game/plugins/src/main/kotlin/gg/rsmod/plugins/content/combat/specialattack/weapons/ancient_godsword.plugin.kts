@@ -7,14 +7,16 @@ import gg.rsmod.plugins.content.combat.specialattack.SpecialAttacks
 import gg.rsmod.plugins.content.items.osrs.AncientGodsword
 
 /**
- * OSRS-IMPORT Ancient godsword - Blood Sacrifice (rules and sources in [AncientGodsword]). The OSRS special
- * animation/graphics are not in 667: the normal godsword attack animation is used and no mark graphic is shown
- * (ADAPTED_TO_667). The sacrifice hit uses the server's typeless hitsplat.
+ * OSRS-IMPORT Ancient godsword - Blood Sacrifice (rules and sources in [AncientGodsword]). Look: the imported OSRS sequence
+ * NGS_SPECIAL_PLAYER and spotanim NGS_SPECIAL_SPOTANIM, with the godsword special sound 3869 every OSRS godsword special plays.
+ * The sacrifice hit uses the server's typeless hitsplat.
  */
 SpecialAttacks.register(AncientGodsword.SPECIAL_ENERGY, Items.ANCIENT_GODSWORD) {
     val attacker = player
     val victim = target
-    player.animate(CombatConfigs.getAttackAnimation(player))
+    player.animate(gg.rsmod.plugins.content.items.osrs.OsrsSeq.NGS_SPECIAL_PLAYER)
+    player.graphic(gg.rsmod.plugins.content.items.osrs.OsrsGfx.NGS_SPECIAL)
+    player.playSound(3869) // godwars_godsword_special_attack
     val maxHit = MeleeCombatFormula.getMaxHit(player, victim, specialAttackMultiplier = AncientGodsword.SPECIAL_DAMAGE)
     // Godsword specials roll against the target's slash defence (wiki DPS calculator `defenceStyle = 'slash'`).
     val landHit =
@@ -28,7 +30,7 @@ SpecialAttacks.register(AncientGodsword.SPECIAL_ENERGY, Items.ANCIENT_GODSWORD) 
     if (!landHit) return@register
     attacker.world.queue {
         wait(AncientGodsword.MARK_TICKS)
-        if (victim.isDead() || attacker.isDead()) return@queue
+        if (victim.isDead() || attacker.isDead() || (victim is Player && !victim.isOnline) || !attacker.isOnline) return@queue
         if (victim.tile.height != attacker.tile.height || victim.tile.getDistance(attacker.tile) >= AncientGodsword.ESCAPE_DISTANCE) return@queue
         val before = victim.getCurrentLifepoints()
         victim.hit(damage = AncientGodsword.SACRIFICE_DAMAGE, type = HitType.REGULAR_HIT)

@@ -272655,7 +272655,7 @@
     melee_strength: 0
     prayer: 2
     ranged_strength: 0
-    magic_damage: 0.0
+    magic_damage: 1.0
     attack_audio: -1
     skill_reqs: [{'skill': 6, 'level': 70}, {'skill': 1, 'level': 40}]
     absorb_melee: 0
@@ -272689,7 +272689,7 @@
     melee_strength: 0
     prayer: 2
     ranged_strength: 0
-    magic_damage: 0.0
+    magic_damage: 1.0
     attack_audio: -1
     skill_reqs: [{'skill': 6, 'level': 70}, {'skill': 1, 'level': 40}]
     absorb_melee: 0

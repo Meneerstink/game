@@ -5,10 +5,19 @@ import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.plugins.api.BonusSlot
 import gg.rsmod.plugins.api.EquipmentType
+import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.api.ext.getEquipment
 import gg.rsmod.plugins.content.combat.strategy.ranged.weapon.BowType
 import gg.rsmod.plugins.content.combat.strategy.ranged.weapon.CrossbowType
 import gg.rsmod.plugins.content.items.osrs.DizanasQuiver
+
+private val SALAMANDER_WEAPONS = setOf(
+    Items.ORANGE_SALAMANDER,
+    Items.RED_SALAMANDER,
+    Items.BLACK_SALAMANDER,
+    Items.SWAMP_LIZARD,
+)
+private val SALAMANDER_AMMO = arrayOf(Items.SWAMP_TAR)
 
 /**
  * The ammunition a bow or crossbow shot fires. OSRS Wiki "Dizana's quiver": the quiver is "an additional ammunition slot,
@@ -19,15 +28,20 @@ import gg.rsmod.plugins.content.items.osrs.DizanasQuiver
  * Weapons without an ammo list here keep the old behaviour (the ammo slot as it is). Ranged attack/strength bonuses of the
  * fired quiver ammo replace those of the unused slot ammo only for a quiver shot (the wiki DPS calculator
  * `ammoApplicability` counts ammo bonuses only for ammo the weapon uses); the general 667 rule that an unused ammo slot
- * still adds its bonuses is an ADJACENT GAP recorded in OSRS_IMPORT_STATUS.md, not changed here.
+ * still adds its bonuses is an ADJACENT GAP recorded in OSRS_IMPORT_MASTER.yml, not changed here.
  */
 object RangedAmmo {
     data class Fired(val item: Item, val fromQuiver: Boolean)
 
     /** Ammo item ids the wielded weapon accepts, or null when the weapon has no ammo list. */
     fun validAmmo(weaponId: Int?): Array<Int>? =
-        CrossbowType.values.firstOrNull { it.item == weaponId }?.ammo
-            ?: BowType.values.firstOrNull { it.item == weaponId }?.ammo?.takeIf { it.isNotEmpty() }?.let(::withSeekingArrows)
+        when {
+            weaponId in SALAMANDER_WEAPONS -> SALAMANDER_AMMO
+            else -> CrossbowType.values.firstOrNull { it.item == weaponId }?.ammo
+                ?: BowType.values.firstOrNull { it.item == weaponId }?.ammo?.takeIf { it.isNotEmpty() }?.let(::withSeekingArrows)
+        }
+
+    fun isSalamander(weaponId: Int?): Boolean = weaponId in SALAMANDER_WEAPONS
 
     /** A bow that fires a base arrow tier also fires that tier's seeking arrow (ammo2, [Arrows.SEEKING_ARROWS]). */
     fun withSeekingArrows(ammo: Array<Int>): Array<Int> =

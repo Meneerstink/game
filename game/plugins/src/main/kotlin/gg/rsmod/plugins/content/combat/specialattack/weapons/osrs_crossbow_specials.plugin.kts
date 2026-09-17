@@ -11,7 +11,7 @@ import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.EnchantedBolts
 /**
  * OSRS-IMPORT crossbow specials (OSRS Wiki item pages, 2026-09-13). OSRS special graphics are not portable to the 667
  * spotanim table, so these use the normal crossbow animation, sound and bolt projectile (ADAPTED_TO_667, recorded in
- * `C:\RSPS\OSRS_IMPORT_STATUS.md`).
+ * `C:\RSPS\OSRS_IMPORT_MASTER.yml`).
  */
 
 /* Armadyl crossbow - Armadyl Eye: 50%, doubled accuracy and double the base chance of the enchanted bolt effect. */

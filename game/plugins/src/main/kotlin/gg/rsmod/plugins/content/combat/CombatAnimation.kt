@@ -173,7 +173,8 @@ enum class CombatAnimation(
         style(CombatStyle.SECOND, Animations.THROWING_DART.default),
         style(CombatStyle.THIRD, Animations.THROWING_DART.default),
         weaponType = WeaponType.THROWN,
-        // OSRS-IMPORT: the OSRS blowpipe animation is not in 667; the dart throw is used (ADAPTED_TO_667).
+        // OSRS-IMPORT: blowpipes attack with their imported OSRS sequences (OsrsWeaponLooks, read first); this entry only keeps
+        // their block animation in the thrown class.
         itemIds = listOf(*Darts.DARTS, *gg.rsmod.plugins.content.items.osrs.Blowpipe.CHARGED_IDS.toTypedArray()),
     ),
 
@@ -188,6 +189,7 @@ enum class CombatAnimation(
                 Items.MITHRIL_DEFENDER,
                 Items.ADAMANT_DEFENDER,
                 Items.RUNE_DEFENDER,
+                Items.RUNE_DEFENDER_T,
                 Items.DRAGON_DEFENDER,
                 Items.DRAGON_DEFENDER_T,
                 Items.AVERNIC_DEFENDER,

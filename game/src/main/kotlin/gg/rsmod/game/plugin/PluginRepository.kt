@@ -1295,6 +1295,12 @@ class PluginRepository(
         pluginCount++
     }
 
+    /** Whether a plugin handles worn-equipment [option] of item [item]. */
+    fun hasEquipmentOption(
+        item: Int,
+        option: Int,
+    ): Boolean = equipmentOptionPlugins.containsKey((item shl 16) or option)
+
     fun executeEquipmentOption(
         p: Player,
         item: Int,
@@ -1592,6 +1598,12 @@ class PluginRepository(
         itemPlugins[id] = optMap
         pluginCount++
     }
+
+    /** Whether a plugin handles inventory [option] of item [id]. */
+    fun hasItemOption(
+        id: Int,
+        option: Int,
+    ): Boolean = itemPlugins[id]?.containsKey(option) == true
 
     fun executeItem(
         p: Player,

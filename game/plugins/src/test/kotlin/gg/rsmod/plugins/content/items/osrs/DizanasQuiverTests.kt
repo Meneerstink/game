@@ -47,8 +47,16 @@ class DizanasQuiverTests {
         val charged = DizanasQuiver.charge(Item(Items.DIZANAS_QUIVER_UNCHARGED), 2).result
         assertTrue(DizanasQuiver.sunfireActive(charged))
         assertTrue(DizanasQuiver.sunfireActive(Item(Items.BLESSED_DIZANAS_QUIVER_L)))
+        assertTrue(DizanasQuiver.sunfireActive(Item(Items.DIZANAS_MAX_CAPE)), "a max cape is always Sunfire-active")
         assertFalse(DizanasQuiver.sunfireActive(Item(Items.DIZANAS_QUIVER_UNCHARGED)))
         assertFalse(DizanasQuiver.sunfireActive(null))
+        // Owner live report 2026-09-17c + OSRS Wiki: Ava's upgrade is an ammunition-saving effect, never Sunfire - an uncharged
+        // quiver (normal or locked) stays without Sunfire whatever the account has unlocked.
+        assertFalse(DizanasQuiver.sunfireActive(Item(Items.DIZANAS_QUIVER_L_UNCHARGED)), "a locked uncharged quiver has no Sunfire")
+        assertTrue(DizanasQuiver.sunfireActive(DizanasQuiver.charge(Item(Items.DIZANAS_QUIVER_L_UNCHARGED), 1).result), "locked + charged")
+        assertFalse(DizanasQuiver.sunfireActive(Item(Items.RUNE_ARROW)), "not a quiver at all")
+        assertEquals(DizanasQuiver.AvaEffect.ASSEMBLER, DizanasQuiver.effectOf(Items.AVAS_ASSEMBLER))
+        assertEquals(DizanasQuiver.AvaEffect.ACCUMULATOR, DizanasQuiver.effectOf(Items.AVAS_ACCUMULATOR))
         assertSame(charged, DizanasQuiver.spendShot(charged, 0.34), "a roll of 1/3 or more keeps the charge")
         val one = DizanasQuiver.spendShot(charged, 0.33)
         assertEquals(1, DizanasQuiver.charges(one))
@@ -90,6 +98,43 @@ class DizanasQuiverTests {
         assertEquals(null, DizanasQuiver.storedAmmo(Item(Items.RUNE_ARROW, 5)), "only quivers store ammo")
         assertEquals(525, DizanasQuiver.storedAmmo(DizanasQuiver.spendShot(more.quiver, 0.0))!!.amount, "a charge roll keeps the stored ammo")
         assertEquals(6, DizanasQuiver.QUIVERS.size)
+    }
+
+    @Test
+    fun `the Ava upgrade devices are exactly the assembler family plus the accumulator, never the weaker attractor`() {
+        assertEquals(
+            setOf(
+                Items.AVAS_ASSEMBLER, Items.AVAS_ASSEMBLER_L, Items.MASORI_ASSEMBLER, Items.MASORI_ASSEMBLER_L,
+                Items.ASSEMBLER_MAX_CAPE, Items.ASSEMBLER_MAX_CAPE_L, Items.MASORI_ASSEMBLER_MAX_CAPE, Items.MASORI_ASSEMBLER_MAX_CAPE_L,
+                Items.AVAS_ACCUMULATOR,
+            ),
+            DizanasQuiver.AVA_UPGRADE_DEVICES,
+        )
+        assertFalse(Items.AVAS_ATTRACTOR in DizanasQuiver.AVA_UPGRADE_DEVICES, "the wiki only names the assembler and accumulator")
+    }
+
+    @Test
+    fun `uncharge is the exact inverse of charge, returning every charge as a splinter`() {
+        val charged = DizanasQuiver.charge(Item(Items.DIZANAS_QUIVER_UNCHARGED), 150).result
+        val result = DizanasQuiver.uncharge(charged)
+        assertEquals(150, result.added)
+        assertEquals(Items.DIZANAS_QUIVER_UNCHARGED, result.result.id)
+        assertEquals(0, DizanasQuiver.charges(result.result))
+        assertEquals(Items.DIZANAS_QUIVER_L_UNCHARGED, DizanasQuiver.uncharge(DizanasQuiver.charge(Item(Items.DIZANAS_QUIVER_L_UNCHARGED), 5).result).result.id)
+        assertEquals(0, DizanasQuiver.uncharge(Item(Items.DIZANAS_QUIVER_UNCHARGED)).added, "nothing to uncharge")
+        assertEquals(0, DizanasQuiver.uncharge(Item(Items.BLESSED_DIZANAS_QUIVER)).added, "blessed quivers cannot be uncharged")
+    }
+
+    @Test
+    fun `strippedForDeath clears stored ammo and charges but keeps everything else`() {
+        val filled = DizanasQuiver.fill(DizanasQuiver.charge(Item(Items.DIZANAS_QUIVER_UNCHARGED), 40).result, Item(Items.RUNE_ARROW, 500))
+            as DizanasQuiver.FillResult.Filled
+        val stripped = DizanasQuiver.strippedForDeath(filled.quiver)!!
+        assertEquals(filled.quiver.id, stripped.id)
+        assertEquals(null, DizanasQuiver.storedAmmo(stripped))
+        assertEquals(0, DizanasQuiver.charges(stripped))
+        assertEquals(null, DizanasQuiver.strippedForDeath(Item(Items.DIZANAS_QUIVER_UNCHARGED)), "nothing to strip")
+        assertEquals(null, DizanasQuiver.strippedForDeath(Item(Items.RUNE_ARROW, 500)), "not an ammo holder")
     }
 
     @Test

@@ -3,7 +3,6 @@ package gg.rsmod.plugins.content.items.osrs
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.api.ext.*
-import gg.rsmod.plugins.content.areas.home.BountyHunterHome
 import gg.rsmod.plugins.content.magic.SpellbookData
 import gg.rsmod.plugins.content.mechanics.pvp.AreaState
 
@@ -60,7 +59,7 @@ object BlightedSacks {
         if (player.tile.getWildernessLevel() > 0) return true
         if (sack.wildernessOnly) return false
         val home = player.world.gameContext.home
-        return AreaState.isPvpAllowed(player.tile, home) || BountyHunterHome.isSafe(player.tile, home)
+        return AreaState.isPvpAllowed(player.tile, home)
     }
 
     /** True when a sack in the inventory replaces the runes of [spellId] here. */

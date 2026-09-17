@@ -19,9 +19,9 @@ import gg.rsmod.plugins.content.items.osrs.PoweredStaves
  * OSRS-IMPORT powered staff built-in spell (rules and sources in [PoweredStaves]). Accuracy and max hit come from
  * [MagicCombatFormula] (stance bonus and ⌊Magic/3⌋ + offset base), speed 4 from [gg.rsmod.plugins.content.combat.CombatConfigs].
  *
- * ADAPTED_TO_667 (owner decision option a): the OSRS cast animation 1167 and spotanims (Seas 1251/1252/1253, Swamp 665/1040/
- * 1042, Sanguinesti 1540/1539/1541) are not in the 667 cache, so the tridents show the 667 Water Blast look and the
- * Sanguinesti staff the 667 Blood Blitz look.
+ * Look: the imported OSRS spotanims (batch fxpilot) and the OSRS cast animation HUMAN_CASTWAVE_STAFF 1167 - RuneLite combat-logger:
+ * "Wave with staff, Sanguinesti staff, Tridents". Sequence 1167 is the wave-with-staff cast in the 667 cache too (same id and frame count, 14; the
+ * 667 frames are its HD re-export, SeqProbe 2026-09-17c), so the native sequence is played; the earlier "1167 is not in the 667 cache" note was wrong.
  * Experience: rsmod `PlayerAttackManager.giveStaffCombatXp` - 2 Magic and 1.33 Hitpoints per damage on every style, in this
  * server's existing magic strategy units. SOURCE_CONFLICT (owner question): the wiki style table lists Defence experience for
  * Longrange, rsmod gives none; the rsmod amounts are used until the owner decides.
@@ -30,16 +30,18 @@ object PoweredStaffCombatStrategy : CombatStrategy {
     /** Cast / travel / impact spotanims; heights and the cast animation stay those of the former 667 look (ADAPTED). */
     data class Look(val castGfx: Graphic, val projectile: Int, val impactGfx: Graphic, val castAnimation: Int, val healGfx: Int? = null)
 
+    /** HUMAN_CASTWAVE_STAFF: the cast of every powered staff's built-in spell (tridents, Sanguinesti staff). */
+    const val CAST_WAVE_STAFF = 1167
+
     /**
      * OSRS spotanims imported by batch fxpilot (owner decision (e)): Seas SLAYER_TOTS_* 1251/1252/1253, Swamp TOXIC_TOTS_*
-     * 665/1040/1042, Sanguinesti SANGUINESTI_STAFF_* 1540/1539/1541 + heal 1542. The OSRS cast animation 1167 is a player
-     * sequence and stays the 667 spell animation (skeleton incompatible, ADAPTED).
+     * 665/1040/1042, Sanguinesti SANGUINESTI_STAFF_* 1540/1539/1541 + heal 1542. Cast animation: [CAST_WAVE_STAFF].
      */
     fun look(staff: PoweredStaves.Staff): Look {
         val base = if (staff.leech) CombatSpell.BLOOD_BLITZ else CombatSpell.WATER_BLAST
         val castHeight = base.castGfx?.height ?: 0
         val impactHeight = base.impactGfx?.height ?: 0
-        val animation = base.castAnimation[1]
+        val animation = CAST_WAVE_STAFF
         return when {
             staff.leech -> Look(Graphic(OsrsGfx.SANGUINESTI_STAFF_CASTING, castHeight), OsrsGfx.SANGUINESTI_STAFF_TRAVEL, Graphic(OsrsGfx.SANGUINESTI_STAFF_IMPACT, impactHeight), animation, OsrsGfx.SANGUINESTI_STAFF_HEAL)
             staff.venomChance > 0.0 -> Look(Graphic(OsrsGfx.TOXIC_TOTS_CASTING, castHeight), OsrsGfx.TOXIC_TOTS_PROJECTILE, Graphic(OsrsGfx.TOXIC_TOTS_IMPACT, impactHeight), animation)

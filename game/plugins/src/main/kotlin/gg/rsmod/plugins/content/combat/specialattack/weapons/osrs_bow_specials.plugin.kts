@@ -15,22 +15,24 @@ import gg.rsmod.plugins.content.items.osrs.ScorchingBow
 import gg.rsmod.plugins.content.items.osrs.Tonalztics
 
 /*
- * OSRS-IMPORT batch bows specials (rules and sources in RevenantBows, ScorchingBow, Tonalztics). Looks: the 667 bow / thrown attack
- * animation, 667 crystal bow arrow and rune thrownaxe projectiles (ADAPTED_TO_667; OSRS FX_WEBWEAVER01_*, VFX_SCORCHING_BOW_* and the
- * Tonalztics graphics are not imported). Successive hits land one tick apart (ADAPTED, spacing unsourced).
+ * OSRS-IMPORT batch bows specials (rules and sources in RevenantBows, ScorchingBow, Tonalztics). Looks: the imported OSRS sequences
+ * HUMAN_SPECIAL01_WEBWEAVER and HUMAN_GLAIVE_RALOS01_(UN)CHARGED_SPECIAL, FX_WEBWEAVER01_LAUNCH / IMPACT and the VFX_SCORCHING_BOW_*
+ * spotanims; the projectiles in flight keep their 667 graphics where OSRS has no named travel spotanim (ADAPTED_TO_667). Successive hits land one tick apart (ADAPTED, spacing unsourced).
  */
 
 /* Webweaver bow - Swarm: 50 %, four hits with doubled accuracy, each up to 40 % of the max hit rounded up; one ether charge. */
 SpecialAttacks.register(RevenantBows.SWARM_ENERGY, Items.WEBWEAVER_BOW) {
     val victim = target
-    player.animate(CombatConfigs.getAttackAnimation(player))
+    player.animate(gg.rsmod.plugins.content.items.osrs.OsrsSeq.HUMAN_SPECIAL01_WEBWEAVER)
+    player.graphic(gg.rsmod.plugins.content.items.osrs.OsrsGfx.WEBWEAVER_LAUNCH, 90) // Zenyte-lineage SWARM: Graphics(2354, 0, 90)
     player.playSound(Sfx.SHORTBOW)
     val delay = RangedCombatStrategy.getHitDelay(player.getCentreTile(), victim.getCentreTile())
     val maxHit = RevenantBows.swarmMaxHit(RangedCombatFormula.getMaxHit(player, victim))
     repeat(RevenantBows.SWARM_HITS) { index ->
         world.spawn(player.createProjectile(victim, 249, RangedProjectile.RUNE_ARROW.type))
         val landHit = RangedCombatFormula.getAccuracy(player, victim, RevenantBows.SWARM_ACCURACY) >= world.randomDouble()
-        player.dealHit(target = victim, maxHit = maxHit, landHit = landHit, delay = delay + index, hitType = HitType.RANGE)
+        val swarmHit = player.dealHit(target = victim, maxHit = maxHit, landHit = landHit, delay = delay + index, hitType = HitType.RANGE)
+        if (index == 0) swarmHit.hit.addAction { victim.graphic(gg.rsmod.plugins.content.items.osrs.OsrsGfx.WEBWEAVER_IMPACT) }
     }
     RevenantBows.afterShot(player)
 }
@@ -45,11 +47,19 @@ SpecialAttacks.register(ScorchingBow.SHACKLES_ENERGY, Items.SCORCHING_BOW) {
         return@register
     }
     player.animate(CombatConfigs.getAttackAnimation(player))
+    player.graphic(gg.rsmod.plugins.content.items.osrs.OsrsGfx.SCORCHING_BOW_SPECIAL_ATTACK)
     player.playSound(Sfx.SHORTBOW)
     val delay = RangedCombatStrategy.getHitDelay(player.getCentreTile(), victim.getCentreTile())
-    if (gg.rsmod.plugins.content.combat.specialattack.SpecialAttackSupport.rangedShot(player, victim, delay = delay, projectileGfx = 249) == -1) {
+    if (gg.rsmod.plugins.content.combat.specialattack.SpecialAttackSupport.rangedShot(
+            player,
+            victim,
+            delay = delay,
+            projectileGfx = gg.rsmod.plugins.content.items.osrs.OsrsGfx.SCORCHING_BOW_PROJECTILE,
+        ) == -1
+    ) {
         return@register
     }
+    victim.graphic(gg.rsmod.plugins.content.items.osrs.OsrsGfx.SCORCHING_BOW_IMPACT, delay = delay * 30)
     victim.freeze(ScorchingBow.BIND_TICKS)
     repeat(ScorchingBow.BURN_HITS) { index -> victim.hit(damage = 1, delay = delay + index * ScorchingBow.BURN_INTERVAL_TICKS) }
 }
@@ -78,7 +88,13 @@ fun divisionDrain(victim: Pawn) {
 Tonalztics.ALL.forEach { weapon ->
     SpecialAttacks.register(Tonalztics.DIVISION_ENERGY, weapon) {
         val victim = target
-        player.animate(CombatConfigs.getAttackAnimation(player))
+        player.animate(
+            if (weapon == Items.TONALZTICS_OF_RALOS) {
+                gg.rsmod.plugins.content.items.osrs.OsrsSeq.HUMAN_GLAIVE_RALOS01_CHARGED_SPECIAL
+            } else {
+                gg.rsmod.plugins.content.items.osrs.OsrsSeq.HUMAN_GLAIVE_RALOS01_UNCHARGED_SPECIAL
+            },
+        )
         player.playSound(Sfx.THROWN)
         val delay = RangedCombatStrategy.getHitDelay(player.getCentreTile(), victim.getCentreTile())
         var deferredPlayerDrains = 0

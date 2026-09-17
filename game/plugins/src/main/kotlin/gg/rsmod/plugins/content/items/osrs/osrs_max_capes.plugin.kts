@@ -16,7 +16,8 @@ MaxCapes.VARIANTS.forEach { variant ->
             player.message("You need a max hood in your inventory to do that.")
             return@on_item_on_item
         }
-        if (variant.tool != null && !inventory.contains(variant.tool)) {
+        val tool = variant.tool
+        if (tool != null && !inventory.contains(tool)) {
             player.message("You need a needle to do that.")
             return@on_item_on_item
         }

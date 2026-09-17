@@ -11,7 +11,7 @@ import java.io.File
  *
  * One OSRS spotanim brings its model (index 7, id <= 32767 because the spotanim model field is a signed short), its sequence
  * (index 20), every frameset group and base the sequence uses (indexes 0 and 1) and every synth sound its frames play (index 4).
- * The byte conversions are proven against spotanims that exist in both caches (`OsrsFxProbeTool`, OSRS_IMPORT_STATUS.md):
+ * The byte conversions are proven against spotanims that exist in both caches (`OsrsFxProbeTool`, OSRS_IMPORT_MASTER.yml):
  * frames get a leading `0x01` and per-base-type value scaling (origin/translate x4, rotation x16), bases get the 667 boolean and
  * part-mask arrays, spotanim opcode 3 (int model) becomes opcode 1.
  *
@@ -50,6 +50,65 @@ object OsrsFxImportTool {
             // Owner answer Q10, The Mimic: TRAIL_MIMIC_SWEET_PURPLE / GREEN / RED / BLUE 1670-1673 and TRAIL_MIMIC_EXPLOSION (+ GREEN /
             // RED / BLUE) 1674-1677 (RuneLite gameval SpotanimID).
             "mimic" to listOf(1670, 1671, 1672, 1673, 1674, 1675, 1676, 1677),
+            // Owner 2026-09-17c (every weapon's special / projectile graphic exactly like OSRS); names from gameval SpotanimID.
+            "weaponfx2" to
+                listOf(
+                    483, // DARK_SPEC_SPOT (Arclight / Darklight)
+                    1759, 1760, 1761, 1762, // NIGHTMARE_STAFF_VOLATILE_HIT / _CAST, NIGHTMARE_STAFF_ELDRITCH_HIT / _CAST
+                    1996, // NGS_SPECIAL_SPOTANIM (Ancient godsword)
+                    2289, 2291, // ARROW_VENATOR01_LAUNCH01 / TRAVEL01
+                    2354, 2355, // FX_WEBWEAVER01_LAUNCH / IMPACT
+                    2792, // SPECIAL_DUAL_MACUAHUITL_SPOTANIM
+                    2794, 2795, 2796, 2797, 2798, // SPECIAL_ATLATL, VFX_ATLATL_PROJECTILE_01 / IMPACT_01, SPECIAL_ATLATL_CAST / IMPACT
+                    2806, 2807, 2808, 2809, 2908, // VFX_(HUMAN_)SCORCHING_BOW special / PROJECTILE / SPOTANIM / END / IMPACT_01
+                    2810, 2814, // VFX_EMBERLIGHT_SPEC_02, VFX_BURNING_CLAWS_SPEC_02
+                    2833, // SPOTANIM_WEAPON_SWORD_OSMUMTEN_SPECIAL
+                    3486, // ROSEWOOD_BLOWPIPE_SPECIAL_TRAVEL
+                    28, 697, 699, 1629, 1630, // DRAGON_TKNIFE_TRAVEL / _P / _SPEC / _SPEC_P / LAUNCH
+                ),
+        )
+
+    /**
+     * Player sequences of the imported OSRS weapons (owner 2026-09-17c: "attack animation ... exactly like osrs"). Ids and
+     * Jagex names: RuneLite `gameval/AnimationID.java`; the weapon each one belongs to: the names themselves plus the RuneLite
+     * combat-logger plugin's observed attack table (SuperNerdEric/combat-logger `AnimationIds.java`). `_PVN` = the variant the
+     * OSRS server plays against npcs.
+     */
+    val SEQ_BATCHES: Map<String, List<Int>> =
+        mapOf(
+            "weaponseq1" to
+                listOf(
+                    3294, 3295, 3296, 3297, 3300, // ABYSSAL_DAGGER_HACK / BLOCK / IDLE / LUNGE / SPECIAL
+                    7217, 7218, 7219, 7220, 7221, 7222, 7223, 7555, 7556, // BALLISTA_SPLINTER/ATTACK/DEFEND/READY/RUN/SPECIAL_ATTACK/WALK, _PVN
+                    5061, 10656, 13142, 13143, 13144, 13145, // SNAKEBOSS_BLOWPIPE_ATTACK (+ORNAMENT), CAMPHOR/IRONWOOD/ROSEWOOD (+SPECIAL)
+                    9471, 11222, // HUMAN_OSMUMTENS_FANG, WEAPON_SWORD_OSMUMTEN03_SPECIAL
+                    8288, 8289, 8290, // HUMAN_DHUNTER_LANCE_ATTACK / SLASH / CRUSH
+                    1378, // DRAGON_WARHAMMER_SA_PLAYER (667 sequence 1378 is a different animation)
+                    11275, // HUMAN_SPECIAL02_VOIDWAKER
+                    11140, 11138, 2890, // HUMAN_WEAPON_BURNING_CLAWS_02_SPEC, HUMAN_WEAPON_EMBERLIGHT_01_SPEC, DARK_SPEC_PLAYER (Arclight)
+                    9171, // NGS_SPECIAL_PLAYER (Ancient godsword)
+                    10989, // PMOON_MACUAHUITL_CRUSH (Dual macuahuitl)
+                    8194, 8195, 8291, 8292, // HUMAN_DRAGON_KNIFE (+_P), HUMAN_DRAGON_TKNIVES_SPEC (+_POISON)
+                    9964, // HUMAN_SPECIAL01_WEBWEAVER
+                    9166, 9168, 7552, // ZCB_ATTACK (+_PVN), XBOWS_HUMAN_FIRE_AND_RELOAD_PVN
+                    9857, 9858, 9859, 9860, 9861, 9862, 9863, // HUMAN_WEAPON_BOW_VENATOR01_READY/SHOOT/WALK/RUN/STEPLEFT/STEPRIGHT/TURN
+                    11057, 11060, // HUMAN_ATLATL_ATTACK_RANGED_01, HUMAN_SPECIAL_ATLATL_01
+                    10914, 10916, 10922, 10923, // HUMAN_GLAIVE_RALOS01_CHARGED_SPECIAL/UNCHARGED_SPECIAL/UNCHARGED_THROW/CHARGED_THROW
+                    8532, // NIGHTMARE_STAFF_SPECIAL
+                    11513, 11514, 11515, 11517, // HUMAN_HALBERD_VIRULENCE_01-04 (Noxious halberd)
+                ),
+        )
+
+    /** OSRS synth sounds by Jagex config name (OSRS Wiki "List of sound IDs", read 2026-09-17). */
+    val SYNTH_BATCHES: Map<String, List<Int>> =
+        mapOf(
+            "weaponseq1" to
+                listOf(
+                    7917, 7930, // varlamore_pm_macuahuitl_special_01 / crush_01
+                    9316, // burning_claws_swipe_01
+                    9365, 9366, 9367, 9368, // a_r_osmumtens_fang_sword_metallic_woosh_01 / stab_01 / woosh_02 / woosh_01
+                    9403, 9404, // noxious_halberd_special_attack_build_01 / impact_01
+                ),
         )
 
     // ---- smart values ---------------------------------------------------------------------------
@@ -120,6 +179,60 @@ object OsrsFxImportTool {
         return out.toByteArray()
     }
 
+    /** The human rig: player sequences of both caches animate framemap 0 (SeqProbe 2026-09-17: 1062, 1167, 4230 in both caches). */
+    const val PLAYER_BASE = 0
+
+    private class BaseGroups(val types: IntArray, val labels: List<List<Int>>)
+
+    private fun readGroups(base: ByteArray, is667: Boolean): BaseGroups {
+        val c = Cursor(base)
+        val count = c.u8()
+        val types = IntArray(count) { c.u8() }
+        if (is667) c.pos += count * 3
+        val sizes = IntArray(count) { c.u8() }
+        return BaseGroups(types, sizes.map { size -> List(size) { c.u8() } })
+    }
+
+    /**
+     * OSRS human framemap -> rev-667 AnimBase that also moves the 667-only vertex labels.
+     *
+     * Both rigs descend from the 2007 rig: group i has the same type and the same core body-part labels in both caches up to the
+     * point where the two lineages appended their own groups (BaseProbe 2026-09-17). Rev 667 added HD-only labels (213+, fingers,
+     * cape and shoulder pieces) to those shared groups; an OSRS frame knows nothing about them, so with a plain conversion those
+     * vertices of 667 body kits/armour would stay behind while the limb moves. Rule: a label the OSRS rig articulates (it is in
+     * at least one non-whole-body OSRS group) keeps the OSRS grouping; a label only the 667 rig articulates joins the OSRS group
+     * at the same index when that group is the same body part (same type, at least half of the OSRS labels shared).
+     */
+    fun mergePlayerBase(
+        osrsBase: ByteArray,
+        base667: ByteArray,
+    ): ByteArray {
+        val osrs = readGroups(osrsBase, false)
+        val local = readGroups(base667, true)
+        val wholeBody = 100
+        val osrsArticulated = osrs.labels.filter { it.size < wholeBody }.flatten().toSet()
+        val merged =
+            osrs.labels.mapIndexed { i, labels ->
+                val other = local.labels.getOrNull(i)
+                val sameType = local.types.getOrNull(i) == osrs.types[i]
+                val shared = other?.count { it in labels } ?: 0
+                if (other == null || !sameType || labels.isEmpty() || shared * 2 < labels.size) {
+                    labels
+                } else {
+                    labels + other.filter { it !in labels && it !in osrsArticulated }
+                }
+            }
+        osrs.types.forEach { check(it in SCALE_BY_TYPE) { "unsupported base type $it" } }
+        val out = ByteArrayOutputStream()
+        out.u8(osrs.types.size)
+        osrs.types.forEach { out.u8(it) }
+        repeat(osrs.types.size) { out.u8(0) }
+        repeat(osrs.types.size) { out.u16(0xFFFF) }
+        merged.forEach { check(it.size <= 255) { "merged group exceeds 255 labels" }; out.u8(it.size) }
+        merged.forEach { labels -> labels.forEach { out.u8(it) } }
+        return out.toByteArray()
+    }
+
     /** Proven per-type value scale (origin/translate x4, rotation x16, scale and alpha unchanged). */
     val SCALE_BY_TYPE = mapOf(0 to 4, 1 to 4, 2 to 16, 3 to 1, 5 to 1)
 
@@ -162,12 +275,18 @@ object OsrsFxImportTool {
         var walkingPrecedence: Int? = null,
         var replayMode: Int? = null,
         var secondaryFrames: IntArray? = null,
+        /** Rev-667 values of opcodes 6 / 7 (only "hide the hand item" = 0xFFFF is representable, see [decodeOsrsSeq]). */
+        var leftHand: Int? = null,
+        var rightHand: Int? = null,
         val sounds: MutableMap<Int, Pair<Int, Int>> = sortedMapOf(),
         val dropped: MutableList<String> = mutableListOf(),
     )
 
     /** OSRS rev-226+ sequence (RuneLite `SequenceLoader` with rev226 = true). */
-    fun decodeOsrsSeq(bytes: ByteArray): Seq {
+    fun decodeOsrsSeq(
+        bytes: ByteArray,
+        localItems: Map<Int, Int> = emptyMap(),
+    ): Seq {
         val c = Cursor(bytes)
         val seq = Seq()
         while (true) {
@@ -186,7 +305,17 @@ object OsrsFxImportTool {
                 }
                 4 -> seq.dropped += "stretches flag (no 667 equivalent)"
                 5 -> seq.priority = c.u8()
-                6, 7 -> seq.dropped += "hand item ${c.u16()} (OSRS item id)"
+                6, 7 -> {
+                    // OSRS: 0 hides the hand item, >= 512 shows OSRS item (value - 512). 667 `PlayerModel`: 0xFFFF hides, anything
+                    // else is a 667 item id; [localItems] maps imported OSRS items to their 667 ids.
+                    val value = c.u16()
+                    val local = if (value == 0) 0xFFFF else localItems[value - 512]
+                    if (local != null) {
+                        if (op == 6) seq.leftHand = local else seq.rightHand = local
+                    } else {
+                        seq.dropped += "hand item ${value - 512} (OSRS item id, not imported)"
+                    }
+                }
                 8 -> seq.maxLoops = c.u8()
                 9 -> seq.animatingPrecedence = c.u8()
                 10 -> seq.walkingPrecedence = c.u8()
@@ -236,6 +365,8 @@ object OsrsFxImportTool {
         seq.loopOffset?.let { out.u8(2); out.u16(it) }
         seq.blend?.let { b -> out.u8(3); out.u8(b.size); b.forEach { out.u8(it) } }
         seq.priority?.let { out.u8(5); out.u8(it) }
+        seq.leftHand?.let { out.u8(6); out.u16(it) }
+        seq.rightHand?.let { out.u8(7); out.u16(it) }
         seq.maxLoops?.let { out.u8(8); out.u8(it) }
         seq.animatingPrecedence?.let { out.u8(9); out.u8(it) }
         seq.walkingPrecedence?.let { out.u8(10); out.u8(it) }
@@ -404,12 +535,28 @@ object OsrsFxImportTool {
         return out
     }
 
+    /** OSRS item id -> local item id for every imported item recorded in the asset map. */
+    fun importedItems(assetMap: File): Map<Int, Int> {
+        val root = ObjectMapper(YAMLFactory()).readTree(assetMap) ?: return emptyMap()
+        val out = mutableMapOf<Int, Int>()
+        root.path("imports").forEach { entry ->
+            if (entry.path("upstream_item_id").isInt && entry.path("local_item_id").isInt) {
+                out.putIfAbsent(entry.path("upstream_item_id").asInt(), entry.path("local_item_id").asInt())
+            }
+        }
+        return out
+    }
+
     // ---- main ----------------------------------------------------------------------------------
 
     @JvmStatic
     fun main(args: Array<String>) {
         val batchName = args.firstOrNull { !it.startsWith("--") } ?: error("Usage: <batch> [--apply]")
-        val spotIds = BATCHES[batchName] ?: error("Unknown batch '$batchName' (known: ${BATCHES.keys})")
+        val known = BATCHES.keys + SEQ_BATCHES.keys + SYNTH_BATCHES.keys
+        check(batchName in known) { "Unknown batch '$batchName' (known: $known)" }
+        val spotIds = BATCHES[batchName] ?: emptyList()
+        val seqIds = SEQ_BATCHES[batchName] ?: emptyList()
+        val synthIds = SYNTH_BATCHES[batchName] ?: emptyList()
         val apply = "--apply" in args
         val assetMap = File(OsrsItemImportTool.ASSET_MAP)
         val existing = existingFx(assetMap)
@@ -449,6 +596,76 @@ object OsrsFxImportTool {
                 mutations += CacheMutation(index, group, file, bytes, label, expectedCurrentSha1 = current?.takeIf { it != CacheItemProbeTool.sha1(bytes) })
             }
 
+            val importedItems = importedItems(assetMap)
+            val playerBase667 by lazy { library.data(INDEX_BASES, PLAYER_BASE, 0) ?: error("667 player base $PLAYER_BASE missing") }
+
+            fun stageSynth(id: Int, staged: MutableList<() -> Unit>): Int {
+                val synth = reader.file(INDEX_SYNTH, id, 0) ?: error("OSRS synth $id missing")
+                return local("synth", id) { nextSynth++ }.also { localId -> staged += { put(INDEX_SYNTH, localId, 0, synth, "osrs synth $id") } }
+            }
+
+            /** Stages one OSRS sequence with its framesets, bases and frame sounds; returns the local sequence id. */
+            fun stageSeq(osrsSeq: Int, staged: MutableList<() -> Unit>): Int {
+                val seqBytes = reader.file(ModernCacheReader.INDEX_CONFIG, ModernCacheReader.CONFIG_GROUP_SEQUENCE, osrsSeq) ?: error("OSRS sequence $osrsSeq missing")
+                val seq = decodeOsrsSeq(seqBytes, importedItems)
+                dropped += seq.dropped.map { "seq $osrsSeq: $it" }
+                val framesets = (seq.frames.map { it ushr 16 } + (seq.secondaryFrames?.map { it ushr 16 } ?: emptyList())).distinct()
+                val framesetMap = framesets.associateWith { fs -> local("frameset", fs) { nextFrameset++ } }
+                framesets.forEach { fs ->
+                    reader.files(INDEX_FRAMES, fs).forEach { (file, frameBytes) ->
+                        val osrsBase = ((frameBytes[0].toInt() and 0xFF) shl 8) or (frameBytes[1].toInt() and 0xFF)
+                        val baseBytes = reader.file(INDEX_BASES, osrsBase, 0) ?: error("OSRS base $osrsBase missing")
+                        // The human rig (base 0 in both caches) is merged with the 667 rig so the HD-only vertex labels of
+                        // 667 body kits and armour follow the limb the OSRS frames move; every other base converts 1:1.
+                        val player = osrsBase == PLAYER_BASE
+                        val localBase = local(if (player) "playerbase" else "base", osrsBase) { nextBase++ }
+                        val converted = convertFrame(frameBytes, baseTypes(baseBytes), localBase)
+                        val base667 = if (player) mergePlayerBase(baseBytes, playerBase667) else convertBase(baseBytes)
+                        check667Frame(converted, base667)
+                        staged += { put(INDEX_BASES, localBase, 0, base667, "osrs base $osrsBase") }
+                        staged += { put(INDEX_FRAMES, framesetMap.getValue(fs), file, converted, "osrs frame $fs:$file") }
+                    }
+                }
+                seq.frames = IntArray(seq.frames.size) { (framesetMap.getValue(seq.frames[it] ushr 16) shl 16) or (seq.frames[it] and 0xFFFF) }
+                seq.secondaryFrames = seq.secondaryFrames?.let { s -> IntArray(s.size) { (framesetMap.getValue(s[it] ushr 16) shl 16) or (s[it] and 0xFFFF) } }
+                val soundMap = seq.sounds.values.map { it.first }.distinct().associateWith { id -> stageSynth(id, staged) }
+                seq.sounds.replaceAll { _, sound -> soundMap.getValue(sound.first) to sound.second }
+                val localSeq = local("seq", osrsSeq) { nextSeq++ }
+                val seq667 = encode667Seq(seq)
+                decode667SeqFrames(seq667)
+                staged += { put(INDEX_SEQ, localSeq ushr 7, localSeq and 0x7F, seq667, "osrs seq $osrsSeq") }
+                return localSeq
+            }
+
+            /** Runs [block]; a refusal leaves no allocation, record or mutation behind. */
+            fun guarded(label: String, block: (MutableList<() -> Unit>) -> Unit) {
+                val staged = mutableListOf<() -> Unit>()
+                val recordMark = records.size
+                val idsBefore = localIds.toMap()
+                val countersBefore = listOf(nextSpot, nextSeq, nextFrameset, nextBase, nextSynth)
+                try {
+                    block(staged)
+                    staged.forEach { it() }
+                } catch (e: RuntimeException) {
+                    refused += "$label: ${e.javaClass.simpleName}: ${e.message}"
+                    while (records.size > recordMark) records.removeAt(records.size - 1)
+                    localIds.clear()
+                    localIds.putAll(idsBefore)
+                    nextSpot = countersBefore[0]
+                    nextSeq = countersBefore[1]
+                    nextFrameset = countersBefore[2]
+                    nextBase = countersBefore[3]
+                    nextSynth = countersBefore[4]
+                }
+            }
+
+            for (osrsSeq in seqIds) {
+                guarded("seq $osrsSeq") { staged -> println("PLAN seq $osrsSeq -> ${stageSeq(osrsSeq, staged)}") }
+            }
+            for (osrsSynth in synthIds) {
+                guarded("synth $osrsSynth") { staged -> println("PLAN synth $osrsSynth -> ${stageSynth(osrsSynth, staged)}") }
+            }
+
             for (spotId in spotIds) {
                 val spotBytes = reader.file(ModernCacheReader.INDEX_CONFIG, ModernCacheReader.CONFIG_GROUP_SPOTANIM, spotId) ?: error("OSRS spotanim $spotId missing")
                 val staged = mutableListOf<() -> Unit>()
@@ -460,36 +677,7 @@ object OsrsFxImportTool {
                 try {
                     val spot = decodeOsrsSpot(spotBytes)
                     var localSeq = -1
-                    if (spot.seq >= 0) {
-                        val seqBytes = reader.file(ModernCacheReader.INDEX_CONFIG, ModernCacheReader.CONFIG_GROUP_SEQUENCE, spot.seq) ?: error("OSRS sequence ${spot.seq} missing")
-                        val seq = decodeOsrsSeq(seqBytes)
-                        dropped += seq.dropped.map { "seq ${spot.seq}: $it" }
-                        val framesets = (seq.frames.map { it ushr 16 } + (seq.secondaryFrames?.map { it ushr 16 } ?: emptyList())).distinct()
-                        val framesetMap = framesets.associateWith { fs -> local("frameset", fs) { nextFrameset++ } }
-                        framesets.forEach { fs ->
-                            reader.files(INDEX_FRAMES, fs).forEach { (file, frameBytes) ->
-                                val osrsBase = ((frameBytes[0].toInt() and 0xFF) shl 8) or (frameBytes[1].toInt() and 0xFF)
-                                val baseBytes = reader.file(INDEX_BASES, osrsBase, 0) ?: error("OSRS base $osrsBase missing")
-                                val localBase = local("base", osrsBase) { nextBase++ }
-                                val converted = convertFrame(frameBytes, baseTypes(baseBytes), localBase)
-                                val base667 = convertBase(baseBytes)
-                                check667Frame(converted, base667)
-                                staged += { put(INDEX_BASES, localBase, 0, base667, "osrs base $osrsBase") }
-                                staged += { put(INDEX_FRAMES, framesetMap.getValue(fs), file, converted, "osrs frame $fs:$file") }
-                            }
-                        }
-                        seq.frames = IntArray(seq.frames.size) { (framesetMap.getValue(seq.frames[it] ushr 16) shl 16) or (seq.frames[it] and 0xFFFF) }
-                        seq.secondaryFrames = seq.secondaryFrames?.let { s -> IntArray(s.size) { (framesetMap.getValue(s[it] ushr 16) shl 16) or (s[it] and 0xFFFF) } }
-                        val soundMap = seq.sounds.values.map { it.first }.distinct().associateWith { id ->
-                            val synth = reader.file(INDEX_SYNTH, id, 0) ?: error("OSRS synth $id missing")
-                            local("synth", id) { nextSynth++ }.also { localId -> staged += { put(INDEX_SYNTH, localId, 0, synth, "osrs synth $id") } }
-                        }
-                        seq.sounds.replaceAll { _, sound -> soundMap.getValue(sound.first) to sound.second }
-                        localSeq = local("seq", spot.seq) { nextSeq++ }
-                        val seq667 = encode667Seq(seq)
-                        decode667SeqFrames(seq667)
-                        staged += { put(INDEX_SEQ, localSeq ushr 7, localSeq and 0x7F, seq667, "osrs seq ${spot.seq}") }
-                    }
+                    if (spot.seq >= 0) localSeq = stageSeq(spot.seq, staged)
                     var localModel = -1
                     if (spot.model >= 0) {
                         val modelBytes = OsrsModelConversion.convert(reader, spot.model, dropped)

@@ -8,7 +8,7 @@ import gg.rsmod.plugins.api.cfg.Items
  * accuracy and 15% reduced damage, consuming 25% of the player's special attack energy"; "A single attack roll is
  * performed, meaning that either both hits are successful, or both hits miss". Calculator: attack roll x 5/4, max hit
  * x 17/20, `defenceStyle = 'slash'`, the second hit is a separate damage roll over the same range. The poisoned
- * variants have identical stats (weapon poison itself is not implemented anywhere in this server).
+ * variants have identical stats; their cache-name poison markers are handled by the shared [WeaponPoison] roster.
  */
 object AbyssalDagger {
     const val SPECIAL_ENERGY = 25

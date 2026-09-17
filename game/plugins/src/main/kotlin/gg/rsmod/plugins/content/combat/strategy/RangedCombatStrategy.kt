@@ -217,7 +217,12 @@ object RangedCombatStrategy : CombatStrategy {
              * Create a projectile based on ammo.
              */
             val ammoProjectile = if (ammo != null) RangedProjectile.values.firstOrNull { ammo.id in it.items } else null
-            if (ammoProjectile != null) {
+            // OSRS-IMPORT Venator bow: every arrow flies as the bow's own ARROW_VENATOR01_LAUNCH01 / TRAVEL01 (gameval SpotanimID, weaponfx2).
+            val venator = pawn.getEquipment(EquipmentType.WEAPON)?.id == gg.rsmod.plugins.api.cfg.Items.VENATOR_BOW
+            if (ammoProjectile != null && venator) {
+                pawn.graphic(gg.rsmod.plugins.content.items.osrs.OsrsGfx.VENATOR_ARROW_LAUNCH, ammoProjectile.drawback?.height ?: 96)
+                world.spawn(pawn.createProjectile(target, gg.rsmod.plugins.content.items.osrs.OsrsGfx.VENATOR_ARROW_TRAVEL, ammoProjectile.type))
+            } else if (ammoProjectile != null) {
                 val projectile = pawn.createProjectile(target, ammoProjectile.gfx, ammoProjectile.type)
                 ammoProjectile.drawback?.let { drawback -> pawn.graphic(drawback) }
                 ammoProjectile.impact?.let { impact -> target.graphic(impact.id, impact.height, projectile.lifespan) }
@@ -252,8 +257,13 @@ object RangedCombatStrategy : CombatStrategy {
                     val breakAmmo = chance in 0..19
                     // OSRS Wiki "Ava's device": metallic torso armour stops the retrieval effect (AvasDevices).
                     val device = !AvasDevices.interferes(pawn)
+                    // OSRS Wiki "Dizana's quiver": a quiver Ava upgraded saves ammunition like her device; "The interaction between
+                    // Ava devices and metal torsos does not carry over" (no `device` gate for it).
+                    val quiverEffect = gg.rsmod.plugins.content.items.osrs.DizanasQuiver.wornAvaEffect(pawn)
                     val dropAmmo =
                         when {
+                            quiverEffect == gg.rsmod.plugins.content.items.osrs.DizanasQuiver.AvaEffect.ASSEMBLER -> false
+                            quiverEffect == gg.rsmod.plugins.content.items.osrs.DizanasQuiver.AvaEffect.ACCUMULATOR -> chance in 20..27
                             // Attractor 60 % saved / 20 % dropped / 20 % broken (was 10 % dropped); accumulator 72 / 8 / 20;
                             // assembler 80 / 0 / 20 ("will never drop any ammo on the ground").
                             device && pawn.hasEquipped(EquipmentType.CAPE, Items.AVAS_ATTRACTOR) -> chance in 20..39

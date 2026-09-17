@@ -14,7 +14,9 @@ import gg.rsmod.plugins.content.items.osrs.MoonSets
 
 /*
  * OSRS-IMPORT step 4 moon weapon specials (rules and sources in MoonSets). Each needs the full matching set; without it the energy drained
- * by this engine is returned (ADAPTED message). Looks: the 667 weapon attack animation, no graphic (ADAPTED_TO_667).
+ * by this engine is returned (ADAPTED message). Looks: Eclipse plays the imported HUMAN_SPECIAL_ATLATL_01 with SPECIAL_ATLATL_CAST /
+ * _IMPACT; Blood Infusion the macuahuitl attack with SPECIAL_DUAL_MACUAHUITL_SPOTANIM and varlamore_pm_macuahuitl_special_01; no
+ * Jagex-named asset exists for Break Shackles (RuneLite gameval has none), it keeps the spear attack.
  */
 
 fun refund(
@@ -37,10 +39,12 @@ SpecialAttacks.register(MoonSets.ECLIPSE_ENERGY, Items.ECLIPSE_ATLATL) {
         refund(player, MoonSets.ECLIPSE_ENERGY, "You need to be next to your target to do that.")
         return@register
     }
-    player.animate(CombatConfigs.getAttackAnimation(player))
+    player.animate(gg.rsmod.plugins.content.items.osrs.OsrsSeq.HUMAN_SPECIAL_ATLATL_01)
+    player.graphic(gg.rsmod.plugins.content.items.osrs.OsrsGfx.SPECIAL_ATLATL_CAST)
     val (minHit, maxHit) = MoonSets.eclipseHit(RangedCombatFormula.getMaxHit(player, victim).toInt(), Burns.consumeRemaining(victim))
     val landHit = MagicCombatFormula.getAccuracy(player, victim, MoonSets.ECLIPSE_ACCURACY) >= world.randomDouble()
     player.dealHit(target = victim, minHit = minHit.toDouble(), maxHit = maxHit.toDouble(), landHit = landHit, delay = 1, hitType = HitType.MAGIC)
+        .hit.addAction { victim.graphic(gg.rsmod.plugins.content.items.osrs.OsrsGfx.SPECIAL_ATLATL_IMPACT) }
 }
 
 /* Dual macuahuitl - Blood Infusion: 25 %, independent accuracy checks, max hit x1.25, costs 25 % of current Hitpoints, Bloodrager on a hit. */
@@ -51,6 +55,8 @@ SpecialAttacks.register(MoonSets.BLOOD_INFUSION_ENERGY, Items.DUAL_MACUAHUITL) {
         return@register
     }
     player.animate(CombatConfigs.getAttackAnimation(player))
+    player.graphic(gg.rsmod.plugins.content.items.osrs.OsrsGfx.SPECIAL_DUAL_MACUAHUITL)
+    player.playSound(gg.rsmod.plugins.content.items.osrs.OsrsSfx.MACUAHUITL_SPECIAL)
     val selfDamage = MoonSets.bloodInfusionSelfDamage(player.getCurrentLifepoints())
     if (selfDamage > 0) player.hit(damage = selfDamage)
     val boosted = kotlin.math.floor(MeleeCombatFormula.getMaxHit(player, victim) * MoonSets.BLOOD_INFUSION_DAMAGE).toInt()

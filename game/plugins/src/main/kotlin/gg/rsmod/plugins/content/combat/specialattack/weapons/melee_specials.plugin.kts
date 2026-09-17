@@ -107,7 +107,7 @@ SpecialAttacks.register(60, Items.DRAGON_2H_SWORD) {
 /* Granite maul - Quick Smash: OSRS rules (60 % / 50 % ornate handle, instant, homing) live in GraniteMaul / granite_maul.plugin.kts. */
 
 /* Abyssal whip - Energy Drain: 50%, +25% accuracy; steals 10 run energy from a player victim. */
-SpecialAttacks.register(50, Items.ABYSSAL_WHIP) {
+SpecialAttacks.register(50, Items.ABYSSAL_WHIP, Items.FROZEN_ABYSSAL_WHIP, Items.VOLCANIC_ABYSSAL_WHIP) {
     val victim = target
     player.animate(1658)
     victim.graphic(341, 96)
@@ -134,7 +134,7 @@ SpecialAttacks.register(60, Items.ABYSSAL_VINE_WHIP) {
         attacker.world.queue {
             repeat(5) {
                 wait(2)
-                if (victim.isDead() || attacker.isDead()) return@queue
+                if (victim.isDead() || attacker.isDead() || (victim is Player && !victim.isOnline) || !attacker.isOnline) return@queue
                 victim.hit(damage = 10, type = HitType.MELEE.id)
                 victim.damageMap.add(attacker, 10)
             }
@@ -156,17 +156,28 @@ SpecialAttacks.register(100, Items.ANCIENT_MACE) {
     }
 }
 
-/* Darklight - Weaken: 50%; drains the victim's Attack, Strength and Defence by 5% (10% for demons). */
-SpecialAttacks.register(50, Items.DARKLIGHT) {
+/*
+ * Weaken (Darklight, Arclight, Arclight (inactive), Emberlight): 50%; accuracy against stab defence; drains Attack, Strength and Defence
+ * by 5% (10% for demons, 15% with Emberlight) of the base level + 1 (OSRS Wiki item pages, 2026-09-17; rules in items/osrs/Demonbane.kt).
+ * Demons are the DEMON species attribute, the same one the demonbane passive uses. Look: DARK_SPEC_PLAYER / DARK_SPEC_SPOT (2890 / 483, the
+ * same sequence in 667 and OSRS) for Darklight and Arclight; Emberlight plays the imported HUMAN_WEAPON_EMBERLIGHT_01_SPEC / VFX_EMBERLIGHT_SPEC_02.
+ */
+SpecialAttacks.register(gg.rsmod.plugins.content.items.osrs.Weaken.ENERGY, Items.DARKLIGHT, Items.ARCLIGHT, Items.ARCLIGHT_INACTIVE, Items.EMBERLIGHT) {
     val victim = target
-    player.animate(2890)
-    player.graphic(483)
+    val weaponId = player.getEquipment(EquipmentType.WEAPON)?.id ?: Items.DARKLIGHT
+    if (weaponId == Items.EMBERLIGHT) {
+        player.animate(gg.rsmod.plugins.content.items.osrs.OsrsSeq.HUMAN_WEAPON_EMBERLIGHT_01_SPEC)
+        player.graphic(gg.rsmod.plugins.content.items.osrs.OsrsGfx.EMBERLIGHT_SPEC)
+    } else {
+        player.animate(2890)
+        player.graphic(483)
+    }
     player.playSound(Sfx.DARKLIGHT_WEAKEN)
-    meleeHit(player, victim) {
-        val demon = victim is Npc && victim.def.name.contains("demon", ignoreCase = true)
-        val percent = if (demon) 0.10 else 0.05
+    meleeHit(player, victim, defenceStyle = gg.rsmod.game.model.combat.StyleType.STAB) {
+        val demon = gg.rsmod.plugins.content.items.osrs.Demonbane.isDemon(victim)
         listOf(Skills.ATTACK, Skills.STRENGTH, Skills.DEFENCE).forEach { skill ->
-            drain(victim, skill, (currentLevel(victim, skill) * percent).toInt() + 1)
+            val base = gg.rsmod.plugins.content.combat.specialattack.SpecialAttackSupport.baseLevel(victim, skill)
+            drain(victim, skill, gg.rsmod.plugins.content.items.osrs.Weaken.drainAmount(base, weaponId, demon))
         }
     }
 }

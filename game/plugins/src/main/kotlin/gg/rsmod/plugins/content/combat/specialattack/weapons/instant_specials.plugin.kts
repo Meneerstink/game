@@ -29,7 +29,7 @@ SpecialAttacks.registerInstant(100, Items.ENHANCED_EXCALIBUR) { p ->
     p.world.queue {
         repeat(10) {
             wait(4)
-            if (p.isDead()) return@queue
+            if (p.isDead() || !p.isOnline) return@queue
             p.heal(20)
         }
     }
@@ -68,7 +68,7 @@ SpecialAttacks.registerInstant(100, Items.DRAGON_HATCHET, Items.THIRDAGE_AXE) { 
  * Dragon pickaxe - Rock Crusher: 100%; Mining +3 for a short time. OSRS-IMPORT: the 3rd Age pickaxe shares the dragon pickaxe special
  * (OSRS Wiki "Rock Knocker": Mining +3, 100 % energy); ADAPTED: the 667 visuals and message.
  */
-SpecialAttacks.registerInstant(100, Items.DRAGON_PICKAXE, Items.THIRDAGE_PICKAXE) { p ->
+SpecialAttacks.registerInstant(100, Items.DRAGON_PICKAXE, Items.DRAGON_PICKAXE_OR_UPGRADED, Items.DRAGON_PICKAXE_OR, Items.THIRDAGE_PICKAXE) { p ->
     p.animate(12031)
     p.graphic(2109)
     p.skills.alterCurrentLevel(Skills.MINING, 3, capValue = 3)

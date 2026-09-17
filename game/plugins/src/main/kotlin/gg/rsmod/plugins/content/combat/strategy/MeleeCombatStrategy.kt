@@ -9,12 +9,14 @@ import gg.rsmod.plugins.api.HitType
 import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.api.WeaponType
 import gg.rsmod.plugins.api.ext.addXp
+import gg.rsmod.plugins.api.ext.getEquipment
 import gg.rsmod.plugins.api.ext.hasWeaponType
 import gg.rsmod.plugins.api.ext.playSound
 import gg.rsmod.plugins.content.combat.Combat
 import gg.rsmod.plugins.content.combat.CombatConfigs
 import gg.rsmod.plugins.content.combat.dealHit
 import gg.rsmod.plugins.content.combat.formula.MeleeCombatFormula
+import gg.rsmod.plugins.content.combat.strategy.ranged.RangedAmmo
 import kotlin.math.min
 
 /**
@@ -36,6 +38,9 @@ object MeleeCombatStrategy : CombatStrategy {
         pawn: Pawn,
         target: Pawn,
     ): Boolean {
+        if (pawn is Player && RangedAmmo.isSalamander(pawn.getEquipment(gg.rsmod.plugins.api.EquipmentType.WEAPON)?.id)) {
+            return RangedCombatStrategy.canAttack(pawn, target)
+        }
         return true
     }
 
@@ -43,6 +48,12 @@ object MeleeCombatStrategy : CombatStrategy {
         pawn: Pawn,
         target: Pawn,
     ) {
+        if (pawn is Player && RangedAmmo.isSalamander(pawn.getEquipment(gg.rsmod.plugins.api.EquipmentType.WEAPON)?.id)) {
+            // Void prepares every salamander style through the ranged combat route, even though
+            // the first button is presented as slash/melee by the weapon-style table.
+            RangedCombatStrategy.attack(pawn, target)
+            return
+        }
         val world = pawn.world
 
         val animation = CombatConfigs.getAttackAnimation(pawn)
@@ -50,7 +61,10 @@ object MeleeCombatStrategy : CombatStrategy {
 
         if (pawn is Player) {
             val weapon = pawn.equipment[3]
-            if (weapon != null && world.definitions.get(ItemDef::class.java, weapon.id).attackAudio > -1) {
+            val osrsSound = weapon?.let { gg.rsmod.plugins.content.items.osrs.OsrsWeaponLooks.attackSound(it.id, animation) }
+            if (osrsSound != null) {
+                pawn.playSound(osrsSound)
+            } else if (weapon != null && world.definitions.get(ItemDef::class.java, weapon.id).attackAudio > -1) {
                 pawn.playSound(world.definitions.get(ItemDef::class.java, weapon.id).attackAudio)
             }
         }
@@ -110,6 +124,8 @@ object MeleeCombatStrategy : CombatStrategy {
                     // Toxic staff of the dead: 25 % venom on opponents struck by the charged staff (StaffOfTheDead).
                     if (pawn is Player && landHit) {
                         pawnHit.hit.addAction { gg.rsmod.plugins.content.items.osrs.StaffOfTheDead.rollVenom(pawn, target) }
+                        // Arclight: one charge per successful normal hit (Demonbane).
+                        gg.rsmod.plugins.content.items.osrs.Demonbane.afterSuccessfulHit(pawn)
                     }
                 }.hit.hitmarks
                 .sumOf { it.damage }
@@ -156,8 +172,11 @@ object MeleeCombatStrategy : CombatStrategy {
                 player.addXp(Skills.CONSTITUTION, hitpointsExperience * bonusRate)
             }
 
-            XpMode.RANGED_XP -> TODO()
-            XpMode.MAGIC_XP -> TODO()
+            // Salamanders and other hybrid styles can expose a non-melee XP mode while the
+            // shared special-hit path still arrives here with a melee hit type. Delegate to the
+            // already-sourced strategy formulas instead of allowing a reachable TODO() crash.
+            XpMode.RANGED_XP -> RangedCombatStrategy.addCombatXp(player, target, damage)
+            XpMode.MAGIC_XP -> MagicCombatStrategy.addCombatXp(player, target, damage, baseXp = 0.0)
         }
     }
 }

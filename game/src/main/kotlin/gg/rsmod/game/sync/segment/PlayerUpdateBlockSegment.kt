@@ -265,7 +265,10 @@ class PlayerUpdateBlockSegment(
                     val weapon = other.equipment[3] // Assume slot 3 is the weapon.
                     if (renderAnim == -1) {
                         if (weapon != null) {
-                            val def: Any = weapon.getDef(other.world.definitions).params.get(644) ?: 1426
+                            val def: Any =
+                                gg.rsmod.game.model.RenderAnimations.forWeapon(weapon.id)
+                                    ?: weapon.getDef(other.world.definitions).params.get(644)
+                                    ?: 1426
                             appBuf.put(DataType.SHORT, def as Int)
                         } else {
                             appBuf.put(DataType.SHORT, 1426)

@@ -1,5 +1,6 @@
 package gg.rsmod.plugins.content.items.osrs
 
+import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.game.model.item.ItemAttribute
@@ -20,7 +21,16 @@ import gg.rsmod.plugins.content.combat.strategy.ranged.RangedProjectile
  * determined by a random 1/3 roll"; at most 20,000 charges; one charge per Sunfire splinter.
  *
  * Charges live in [ItemAttribute.CHARGES]. SOURCE_GAP (not stated on the pages): whether a charged quiver reverts to the
- * uncharged item at 0 charges - it does here, like the other charged items; the Ava's device upgrade is not built.
+ * uncharged item at 0 charges - it does here, like the other charged items.
+ *
+ * Ava's device upgrade (OSRS Wiki "Dizana's quiver", re-read 2026-09-17c): players "can bring the quiver to Ava, along with Ava's
+ * assembler, Ava's accumulator, or their max cape equivalents, to apply the same ammunition-saving effect of her devices to the
+ * quiver. Doing so will not consume the devices ... the quiver must be combined with Ava's assembler to receive its effect. This
+ * upgrade applies to all quivers the player owns, now and in the future ... The interaction between Ava devices and metal torsos
+ * does not carry over". It is an ammunition-saving effect only - it never grants Dizana's Sunfire. (The 2026-09-16 build read
+ * this as "permanent Sunfire"; owner live report 2026-09-17c: "when uncharged it still gives the same bonuses as a charged" -
+ * that misreading is removed.) Stored per account in [AVA_EFFECT]. OWNER DECISION: the Animal Magnetism requirement is not
+ * enforced here (this cache has no quest system).
  *
  * Second ammunition slot (OWNER DECISION 2026-09-14: build it, server-side storage, real ammo slot first): "an additional
  * ammunition slot, which can only be filled with arrows or bolts", filled "using the Fill option from the Worn Equipment
@@ -52,10 +62,39 @@ object DizanasQuiver {
     /** Everything with permanent Dizana's Sunfire. */
     val BLESSED: Set<Int> = BLESSED_QUIVERS + MAX_CAPES
 
+    /** Which of Ava's ammunition-saving effects the account's quivers carry - see the class doc "Ava's device upgrade". */
+    enum class AvaEffect { ACCUMULATOR, ASSEMBLER }
+
+    val AVA_EFFECT = AttributeKey<String>(persistenceKey = "dizanas_quiver_ava_effect")
+
+    /**
+     * The 2026-09-16 flag (then misread as permanent Sunfire). It did not record which device was shown to Ava, so an account that
+     * only has this flag gets the lesser accumulator effect until Ava sees an assembler - never more than it earned.
+     */
+    val AVA_UPGRADED = AttributeKey<Boolean>(persistenceKey = "dizanas_quiver_ava_upgraded")
+
+    fun avaEffect(player: Player): AvaEffect? =
+        player.attr[AVA_EFFECT]?.let { stored -> AvaEffect.values().firstOrNull { it.name == stored } }
+            ?: if (player.attr[AVA_UPGRADED] == true) AvaEffect.ACCUMULATOR else null
+
+    /** The effect a device shown to Ava grants: only an assembler (or its max capes) carries the assembler effect. */
+    fun effectOf(deviceId: Int): AvaEffect =
+        if (deviceId in gg.rsmod.plugins.content.combat.strategy.ranged.AvasDevices.ASSEMBLERS) AvaEffect.ASSEMBLER else AvaEffect.ACCUMULATOR
+
+    /** The ammunition-saving effect of the worn cape when it is a quiver of an upgraded account, else null. */
+    fun wornAvaEffect(player: Player): AvaEffect? =
+        if (player.getEquipment(EquipmentType.CAPE)?.id in AMMO_HOLDERS) avaEffect(player) else null
+
+    /** Every device (plus max cape equivalent) that grants the Ava's-device upgrade when brought to Ava. */
+    val AVA_UPGRADE_DEVICES: Set<Int> = gg.rsmod.plugins.content.combat.strategy.ranged.AvasDevices.ASSEMBLERS + Items.AVAS_ACCUMULATOR
+
     fun charges(quiver: Item): Int = quiver.attr[ItemAttribute.CHARGES] ?: 0
 
-    fun sunfireActive(quiver: Item?): Boolean =
-        quiver != null && (quiver.id in BLESSED || (quiver.id in UNCHARGED_FOR && charges(quiver) > 0))
+    /** Dizana's Sunfire: permanent on the blessed quiver / max cape, otherwise only while the quiver holds charges. */
+    fun sunfireActive(quiver: Item?): Boolean {
+        if (quiver == null || quiver.id !in AMMO_HOLDERS) return false
+        return quiver.id in BLESSED || (quiver.id in QUIVERS && charges(quiver) > 0)
+    }
 
     fun isArrowOrBolt(ammoId: Int?): Boolean =
         ammoId != null && RangedProjectile.values.any { ammoId in it.items && (it.type == ProjectileType.ARROW || it.type == ProjectileType.BOLT) }
@@ -142,6 +181,21 @@ object DizanasQuiver {
         return Charge(added, result)
     }
 
+    /**
+     * Owner-approved (2026-09-14, `OSRS_IMPORT_MASTER.yml` "Owner answers ... to build", item 3: "Uncharge -> Sunfire
+     * splinters"). The exact inverse of [charge]: splinters charge 1-for-1 (`DizanasQuiverTests` "splinters charge
+     * one for one"), so uncharging returns every remaining charge as a splinter and reverts to the uncharged item.
+     * A no-op (`Charge(0, quiver)`) for a quiver with no charges or one [charge] itself would no-op on (blessed).
+     */
+    fun uncharge(quiver: Item): Charge {
+        val uncharged = UNCHARGED_FOR[quiver.id] ?: return Charge(0, quiver)
+        val current = charges(quiver)
+        if (current <= 0) return Charge(0, quiver)
+        val result = Item(uncharged, quiver.amount).copyAttr(quiver)
+        result.attr.remove(ItemAttribute.CHARGES)
+        return Charge(current, result)
+    }
+
     /** One shot's charge roll ([roll] uniform in [0, 1)); blessed quivers never use charges. */
     fun spendShot(quiver: Item, roll: Double): Item {
         if (quiver.id !in UNCHARGED_FOR || roll >= CHARGE_USE_CHANCE) return quiver
@@ -153,10 +207,27 @@ object DizanasQuiver {
         }
     }
 
-    /** Called after a shot that gained Sunfire: spends the charge roll on the worn quiver. */
+    /** Called after a shot that gained Sunfire: spends the charge roll on the worn quiver (blessed quivers never spend one). */
     fun afterShot(player: Player) {
         val quiver = player.getEquipment(EquipmentType.CAPE) ?: return
         val result = spendShot(quiver, player.world.randomDouble())
         if (result !== quiver) player.equipment[EquipmentType.CAPE.id] = result
+    }
+
+    /**
+     * [item] with its stored ammo and charges cleared (id/amount/every other attribute kept); `null`
+     * when [item] is not an [AMMO_HOLDERS] stack or already carries neither. OSRS Wiki "Dizana's
+     * quiver" Death: an unprotected Wilderness PvP death loses "any ammo that the quiver was holding,
+     * as well as all the charges" - see `QuiverDeathRules`, which calls this for both a lost quiver
+     * (dropping to the killer) and one kept because it is Trouver-locked.
+     */
+    fun strippedForDeath(item: Item): Item? {
+        if (item.id !in AMMO_HOLDERS) return null
+        if (storedAmmo(item) == null && charges(item) <= 0) return null
+        return Item(item.id, item.amount).copyAttr(item).also {
+            it.attr.remove(ItemAttribute.ATTACHED_ITEM_ID)
+            it.attr.remove(ItemAttribute.ATTACHED_ITEM_COUNT)
+            it.attr.remove(ItemAttribute.CHARGES)
+        }
     }
 }

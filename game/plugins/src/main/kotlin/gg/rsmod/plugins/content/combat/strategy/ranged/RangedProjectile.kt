@@ -183,13 +183,20 @@ enum class RangedProjectile(
         type = ProjectileType.THROWN,
         items = ADAMANT_KNIVES,
     ),
-    // OSRS-IMPORT ammo2: OSRS DRAGON_TKNIFE_* / DRAGON_TAXE_* / BLACK_CHINCHOMPA_GRENADE / AMETHYST_ARROW_* spotanims are not
-    // imported yet: the 667 rune knife / rune thrownaxe / red chinchompa / rune arrow graphics are used (ADAPTED_TO_667).
+    // OSRS-IMPORT: dragon knives fly with the imported OSRS DRAGON_TKNIFE_TRAVEL (_P when poisoned) / DRAGON_TKNIFE_LAUNCH (weaponfx2);
+    // drawback height kept from the 667 knives (ADAPTED). OSRS DRAGON_TAXE_* / BLACK_CHINCHOMPA_GRENADE / AMETHYST_ARROW_* spotanims are
+    // not imported yet: the 667 rune thrownaxe / red chinchompa / rune arrow graphics are used (ADAPTED_TO_667).
     DRAGON_KNIFE(
-        gfx = Gfx.RUNE_KNIFE_IN_FLIGHT,
-        drawback = Graphic(Gfx.RUNE_KNIFE_DRAWBACK, 96),
+        gfx = gg.rsmod.plugins.content.items.osrs.OsrsGfx.DRAGON_TKNIFE_TRAVEL,
+        drawback = Graphic(gg.rsmod.plugins.content.items.osrs.OsrsGfx.DRAGON_TKNIFE_LAUNCH, 96),
         type = ProjectileType.THROWN,
-        items = gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Knives.DRAGON_KNIVES,
+        items = arrayOf(Items.DRAGON_KNIFE),
+    ),
+    DRAGON_KNIFE_P(
+        gfx = gg.rsmod.plugins.content.items.osrs.OsrsGfx.DRAGON_TKNIFE_TRAVEL_P,
+        drawback = Graphic(gg.rsmod.plugins.content.items.osrs.OsrsGfx.DRAGON_TKNIFE_LAUNCH, 96),
+        type = ProjectileType.THROWN,
+        items = arrayOf(Items.DRAGON_KNIFE_P, Items.DRAGON_KNIFE_P_PLUS, Items.DRAGON_KNIFE_P_PLUS_PLUS),
     ),
     DRAGON_THROWNAXE(
         gfx = Gfx.RUNE_THROWNAXE_IN_FLIGHT,
@@ -338,7 +345,7 @@ enum class RangedProjectile(
     ),
     // OSRS-IMPORT ballista javelins: OSRS projectile spotanims are not in the 667 table, so each metal tier uses the 667
     // javelin in-flight graphic of the same metal; amethyst and dragon have no 667 javelin and use the rune one
-    // (ADAPTED_TO_667, recorded in OSRS_IMPORT_STATUS.md).
+    // (ADAPTED_TO_667, recorded in OSRS_IMPORT_MASTER.yml).
     OSRS_BRONZE_JAVELIN(gfx = Gfx.BRONZE_JAVELIN_IN_FLIGHT, type = ProjectileType.JAVELIN, items = Javelins.OSRS_BRONZE_JAVELINS),
     OSRS_IRON_JAVELIN(gfx = Gfx.IRON_JAVELIN_IN_FLIGHT, type = ProjectileType.JAVELIN, items = Javelins.OSRS_IRON_JAVELINS),
     OSRS_STEEL_JAVELIN(gfx = Gfx.STEEL_JAVELIN_IN_FLIGHT, type = ProjectileType.JAVELIN, items = Javelins.OSRS_STEEL_JAVELINS),
@@ -348,6 +355,13 @@ enum class RangedProjectile(
     // OSRS-IMPORT (e): OSRS AMETHYST_JAVELIN_TRAVEL 1386 / DRAGON_JAVELIN_TRAVEL 1301 imported (fxpilot).
     OSRS_AMETHYST_JAVELIN(gfx = gg.rsmod.plugins.content.items.osrs.OsrsGfx.AMETHYST_JAVELIN_TRAVEL, type = ProjectileType.JAVELIN, items = Javelins.OSRS_AMETHYST_JAVELINS),
     OSRS_DRAGON_JAVELIN(gfx = gg.rsmod.plugins.content.items.osrs.OsrsGfx.DRAGON_JAVELIN_TRAVEL, type = ProjectileType.JAVELIN, items = Javelins.OSRS_DRAGON_JAVELINS),
+    // OSRS-IMPORT moons: the atlatl dart had no projectile at all; OSRS VFX_ATLATL_PROJECTILE_01 / VFX_ATLATL_IMPACT_01 imported (weaponfx2).
+    ATLATL_DART(
+        gfx = gg.rsmod.plugins.content.items.osrs.OsrsGfx.ATLATL_PROJECTILE,
+        impact = Graphic(gg.rsmod.plugins.content.items.osrs.OsrsGfx.ATLATL_IMPACT, 0),
+        type = ProjectileType.JAVELIN,
+        items = arrayOf(Items.ATLATL_DART),
+    ),
     MORRIGANS_JAVELIN(
         gfx = Gfx.MORRIGANS_JAVELIN_IN_FLIGHT,
         //drawback = Graphic(Gfx.MORRIGANS_JAVELIN_DRAWBACK, 92),

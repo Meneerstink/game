@@ -15,8 +15,9 @@ import gg.rsmod.plugins.content.combat.strategy.ranged.RangedProjectile
 import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Knives
 
 /*
- * OSRS-IMPORT ammo2 thrown-weapon specials (OSRS Wiki raw wikitext 2026-09-14). Looks: the 667 thrown attack animation and the
- * 667 rune knife / rune thrownaxe projectiles (ADAPTED_TO_667). Thrown items follow the Rune thrownaxe Chainhit rule already in
+ * OSRS-IMPORT ammo2 thrown-weapon specials (OSRS Wiki raw wikitext 2026-09-14). Looks: Duality plays the imported OSRS sequence
+ * HUMAN_DRAGON_TKNIVES_SPEC (_POISON for poisoned knives) with the DRAGON_TKNIFE_TRAVEL_SPEC (_P) projectile and sound 2528
+ * (Zenyte-lineage DUALITY_SOUND); the thrownaxe keeps the 667 thrown look (ADAPTED_TO_667). Thrown items follow the Rune thrownaxe Chainhit rule already in
  * this server for what lands on the floor (80 % dropped at the target, SOURCE_GAP for OSRS knife/thrownaxe retrieval odds).
  */
 
@@ -28,10 +29,11 @@ fun throwOne(
     victim: Pawn,
     projectile: RangedProjectile,
     accuracy: Double,
+    projectileGfx: Int = projectile.gfx,
 ): Boolean {
     val weapon = player.getEquipment(EquipmentType.WEAPON) ?: return false
     projectile.drawback?.let { player.graphic(it) }
-    val flight = player.createProjectile(victim, projectile.gfx, projectile.type)
+    val flight = player.createProjectile(victim, projectileGfx, projectile.type)
     world.spawn(flight)
     val delay = RangedCombatStrategy.getHitDelay(player.getCentreTile(), victim.getCentreTile())
     val landHit = RangedCombatFormula.getAccuracy(player, victim, accuracy) >= world.randomDouble()
@@ -44,9 +46,11 @@ fun throwOne(
 /* Dragon knife - Duality: 25 %; "throw two dragon knives at once, with each knife having its own accuracy and damage rolls". */
 SpecialAttacks.register(25, *Knives.DRAGON_KNIVES.toIntArray()) {
     val victim = target
-    player.animate(CombatConfigs.getAttackAnimation(player))
-    player.playSound(Sfx.THROWN)
-    repeat(2) { if (player.getEquipment(EquipmentType.WEAPON) != null) throwOne(player, victim, RangedProjectile.DRAGON_KNIFE, 1.0) }
+    val poisoned = player.getEquipment(EquipmentType.WEAPON)?.id != Items.DRAGON_KNIFE
+    player.animate(if (poisoned) gg.rsmod.plugins.content.items.osrs.OsrsSeq.HUMAN_DRAGON_TKNIVES_SPEC_POISON else gg.rsmod.plugins.content.items.osrs.OsrsSeq.HUMAN_DRAGON_TKNIVES_SPEC)
+    player.playSound(Sfx.CHAINSHOT)
+    val travel = if (poisoned) gg.rsmod.plugins.content.items.osrs.OsrsGfx.DRAGON_TKNIFE_TRAVEL_SPEC_P else gg.rsmod.plugins.content.items.osrs.OsrsGfx.DRAGON_TKNIFE_TRAVEL_SPEC
+    repeat(2) { if (player.getEquipment(EquipmentType.WEAPON) != null) throwOne(player, victim, RangedProjectile.DRAGON_KNIFE, 1.0, travel) }
 }
 
 /*

@@ -9,13 +9,13 @@ import gg.rsmod.plugins.content.items.osrs.BlowpipeCombat
 
 /**
  * OSRS-IMPORT Toxic blowpipe - Toxic Siphon (OSRS Wiki "Toxic blowpipe", 2026-09-14): 50% energy, accuracy +100% and
- * damage +50%, heals half the damage dealt (rounded down); hit delay 2 ticks at distance 4 or 5 ("Hit delay"). The OSRS
- * special graphics are not in 667: the dart throw animation and dart projectile are used (ADAPTED_TO_667).
+ * damage +50%, heals half the damage dealt (rounded down); hit delay 2 ticks at distance 4 or 5 ("Hit delay"). Look: the
+ * imported OSRS blowpipe sequences (OsrsWeaponLooks), TOXIC_BLOWPIPE_SPECIALATTACK and the Zenyte-lineage siphon sounds 2696 + 800.
  */
 /* Rosewood blowpipe - Rapid Burst: 25 %, "shoot two darts in rapid succession" (normal accuracy and damage since 22 July 2026). */
 SpecialAttacks.register(Blowpipe.RAPID_BURST_ENERGY, Items.ROSEWOOD_BLOWPIPE) {
     val victim = target
-    player.animate(CombatConfigs.getAttackAnimation(player))
+    player.animate(gg.rsmod.plugins.content.items.osrs.OsrsSeq.ROSEWOOD_BLOWPIPE_SPECIAL_ATTACK)
     val delay = BlowpipeCombat.hitDelay(player.tile.getDistance(victim.tile), special = false)
     repeat(2) { index ->
         val pipe = player.getEquipment(EquipmentType.WEAPON) ?: return@register
@@ -39,6 +39,8 @@ SpecialAttacks.register(Blowpipe.SPECIAL_ENERGY, Items.TOXIC_BLOWPIPE, Items.BLA
     val victim = target
     player.animate(CombatConfigs.getAttackAnimation(player))
     player.graphic(gg.rsmod.plugins.content.items.osrs.OsrsGfx.TOXIC_BLOWPIPE_SPECIALATTACK) // OSRS TOXIC_BLOWPIPE_SPECIALATTACK (fxpilot)
+    player.playSound(Sfx.DART)
+    player.playSound(Sfx.SNAKE_HIT, delay = 32)
     if (!BlowpipeCombat.fire(player, victim)) return@register
     val delay = BlowpipeCombat.hitDelay(player.tile.getDistance(victim.tile), special = true)
     val maxHit = RangedCombatFormula.getMaxHit(player, victim, specialAttackMultiplier = Blowpipe.SIPHON_DAMAGE)

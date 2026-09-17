@@ -82,6 +82,9 @@ object PoweredStaves {
         fun baseMaxHit(magicLevel: Int): Int = maxOf(1, magicLevel / 3 + maxHitOffset)
     }
 
+    /** The [Staff] tier a charged or (full) item id belongs to, or `null` for an uncharged id or anything else. */
+    fun chargedTierOf(itemId: Int): Staff? = Staff.values().firstOrNull { it.charged == itemId || it.full == itemId }
+
     const val ATTACK_RANGE = 7
 
     /** "Combat Options" / osrsbox stance data: Longrange extends the attack range by 2. */

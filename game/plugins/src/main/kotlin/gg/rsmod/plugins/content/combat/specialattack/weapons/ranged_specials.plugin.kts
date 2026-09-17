@@ -19,7 +19,8 @@ import gg.rsmod.plugins.content.mechanics.prayer.Prayers
  * crossbow; effects follow the 2011 RuneScape Wiki.
  */
 
-private val DARK_BOWS = intArrayOf(Items.DARK_BOW, Items.DARK_BOW_15701, Items.DARK_BOW_15702, Items.DARK_BOW_15703, Items.DARK_BOW_15704)
+// Every dark bow variant (Bows.DARK_BOWS: Items.DARK_BOW, the 667 recolours and the OSRS painted bows).
+private val DARK_BOWS = (setOf(Items.DARK_BOW) + gg.rsmod.plugins.content.combat.strategy.ranged.weapon.Bows.DARK_BOWS).toIntArray()
 private val DRAGON_ARROWS = intArrayOf(Items.DRAGON_ARROW, Items.DRAGON_ARROW_P, Items.DRAGON_ARROW_P_11229, Items.DRAGON_FIRE_ARROWS, Items.DRAGON_FIRE_ARROWS_11222)
 
 /* Magic shortbow / Magic shortbow (i) - Snapshot (OSRS rules in MagicShortbowSnapshot): 55 % / 50 %, two arrows, accuracy ×10/7, own max hit. */
@@ -48,21 +49,43 @@ SpecialAttacks.register(35, Items.MAGIC_LONGBOW, Items.MAGIC_COMPOSITE_BOW) {
     rangedShot(player, victim, forceLand = true, projectileGfx = 249)
 }
 
-/* Dark bow - Descent of Darkness: 55%, two arrows at x1.3 damage (min 5 each), x1.5 and min 8 with dragon arrows. */
+/*
+ * Dark bow - Descent of Darkness / Descent of Dragons (OSRS Wiki "Dark bow" + wiki DPS calculator, 2026-09-17): 55 %, "require more than
+ * 1 arrow equipped"; each of the two arrows makes the regular accuracy check (no accuracy boost), max hit x13/10 (x15/10 with dragon arrows),
+ * a minimum of 5 (8) damage per arrow - also on a failed accuracy roll ("have to pass regular accuracy check to be able to deal more damage
+ * than their minimum guaranteed hit") - and "capped at 48 damage for each arrow" (Mod Ronan, 3 March 2016; the calculator caps both
+ * variants). Previously: x1.15 accuracy, no cap and 0 damage on a miss.
+ */
 SpecialAttacks.register(55, *DARK_BOWS) {
     val victim = target
-    val ammo = gg.rsmod.plugins.content.combat.strategy.ranged.RangedAmmo.fired(player)?.item
-    val dragon = ammo != null && ammo.id in DRAGON_ARROWS
+    val fired = gg.rsmod.plugins.content.combat.strategy.ranged.RangedAmmo.fired(player)
+    if (fired == null || fired.item.amount < 2) {
+        player.message("You need at least two arrows in your quiver to use this special attack.")
+        return@register
+    }
+    val dragon = fired.item.id in DRAGON_ARROWS
     val projectile = if (dragon) 1099 else 1101
     val impact = if (dragon) 1100 else 1103
     val multiplier = if (dragon) 1.5 else 1.3
     val minimum = if (dragon) 8.0 else 5.0
     player.animate(426)
-    val maxHit = RangedCombatFormula.getMaxHit(player, victim, specialAttackMultiplier = multiplier)
-    val minFraction = (minimum / maxHit.coerceAtLeast(minimum)).coerceAtMost(1.0)
-    if (rangedShot(player, victim, accuracy = 1.15, damage = multiplier, minFraction = minFraction, projectileGfx = projectile) == -1) return@register
+    val maxHit = RangedCombatFormula.getMaxHit(player, victim, specialAttackMultiplier = multiplier).toInt()
+    repeat(2) { arrow ->
+        // Calculator: the normal hit distribution (0..max on an accurate roll, 0 on a miss), then limited to [minimum, 48].
+        val lands = RangedCombatFormula.getAccuracy(player, victim, specialAttackMultiplier = 1.0) >= world.randomDouble()
+        val rolled = if (lands) world.random(maxHit.coerceAtLeast(0)) else 0
+        val damage = rolled.coerceIn(minimum.toInt(), 48).toDouble()
+        rangedShot(
+            player,
+            victim,
+            forceLand = true,
+            minFraction = 1.0,
+            projectileGfx = projectile,
+            projectileDelayOffset = arrow,
+            maxHitOverride = { damage },
+        )
+    }
     victim.graphic(impact, 96, 60)
-    rangedShot(player, victim, accuracy = 1.15, damage = multiplier, minFraction = minFraction, projectileGfx = projectile, projectileDelayOffset = 1)
 }
 
 /* Seercull - Soulshot: 100%, an arrow that always hits and drains the victim's Magic by the damage dealt (in hitpoints). */

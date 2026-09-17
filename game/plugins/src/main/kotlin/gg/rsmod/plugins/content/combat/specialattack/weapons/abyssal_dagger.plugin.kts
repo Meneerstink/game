@@ -10,12 +10,13 @@ import gg.rsmod.plugins.content.items.osrs.AbyssalDagger
 /**
  * OSRS-IMPORT Abyssal dagger - Abyssal Puncture (rules and sources in [AbyssalDagger]): one attack roll against the
  * target's slash defence decides both hits; each hit rolls its own damage up to 85% of the max hit. Hit timing follows
- * this server's Dragon dagger special (second hit one tick later against NPCs). The OSRS special animation/graphic are
- * not in 667: the normal dagger attack animation is used (ADAPTED_TO_667).
+ * this server's Dragon dagger special (second hit one tick later against NPCs). Look: the imported OSRS sequence
+ * ABYSSAL_DAGGER_SPECIAL and spotanim ABYSSAL_DAGGER_SPECIAL_SPOTANIM; sound 2537 (puncture) as in the Zenyte-lineage special table.
  */
 SpecialAttacks.register(AbyssalDagger.SPECIAL_ENERGY, *AbyssalDagger.IDS) {
     val victim = target
-    player.animate(CombatConfigs.getAttackAnimation(player))
+    player.animate(gg.rsmod.plugins.content.items.osrs.OsrsSeq.ABYSSAL_DAGGER_SPECIAL)
+    player.playSound(Sfx.PUNCTURE)
     player.graphic(gg.rsmod.plugins.content.items.osrs.OsrsGfx.ABYSSAL_DAGGER_SPECIAL) // OSRS ABYSSAL_DAGGER_SPECIAL_SPOTANIM (fxpilot)
     val maxHit = MeleeCombatFormula.getMaxHit(player, victim, specialAttackMultiplier = AbyssalDagger.SPECIAL_DAMAGE)
     val landHit =

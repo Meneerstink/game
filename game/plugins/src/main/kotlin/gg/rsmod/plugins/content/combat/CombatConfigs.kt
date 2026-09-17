@@ -230,6 +230,16 @@ object CombatConfigs {
             // for the weapon's three hybrid style buttons. The local cache contains that exact
             // sequence (5247); do this before the generic weapon-type fallbacks below.
             if (pawn.hasWeaponType(WeaponType.SALAMANDER)) return Anims.HUMANOID_5247
+            // OSRS-IMPORT: imported weapons play their own OSRS sequences (OsrsWeaponLooks), before any 667 weapon-class fallback.
+            if (weaponId != null) {
+                val againstNpc = pawn.attr[gg.rsmod.game.model.attr.COMBAT_TARGET_FOCUS_ATTR]?.get() is Npc
+                gg.rsmod.plugins.content.items.osrs.OsrsWeaponLooks
+                    .attackAnimation(weaponId, style, againstNpc, getCombatStyle(pawn) == StyleType.STAB)
+                    ?.let { return it }
+                if (againstNpc && weaponId in gg.rsmod.plugins.content.items.osrs.OsrsWeaponLooks.PVN_CROSSBOWS) {
+                    return gg.rsmod.plugins.content.items.osrs.OsrsSeq.XBOWS_HUMAN_FIRE_AND_RELOAD_PVN
+                }
+            }
             val itemAnimation = CombatAnimation.getItemAnimation(weaponId ?: -1, pawn.getWeaponType())
             if (itemAnimation != null) {
                 val style = CombatAnimation.getCorrectStyle(itemAnimation, option)
@@ -336,6 +346,7 @@ object CombatConfigs {
                 return shieldAnimation.blockAnimation.id
             }
             val weapon = pawn.getEquipment(EquipmentType.WEAPON)?.id ?: -1
+            gg.rsmod.plugins.content.items.osrs.OsrsWeaponLooks.blockAnimation(weapon)?.let { return it }
             val weaponAnimation = weapon.let { CombatAnimation.getItemAnimation(it, weaponType = pawn.getWeaponType()) }
             if (weaponAnimation != null) {
                 return weaponAnimation.blockAnimation.id

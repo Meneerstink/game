@@ -2,6 +2,7 @@ package gg.rsmod.plugins.content.items.osrs
 
 import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.entity.Pawn
+import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.api.ext.hit
 
 /**
@@ -34,7 +35,7 @@ object Burns {
         target.world.queue {
             while (burn.remaining > 0) {
                 wait(INTERVAL_TICKS)
-                if (burn.remaining <= 0 || target.isDead()) break
+                if (burn.remaining <= 0 || target.isDead() || (target is Player && !target.isOnline)) break
                 burn.remaining--
                 target.hit(damage = 1)
             }

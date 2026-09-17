@@ -88,4 +88,22 @@ DizanasQuiver.AMMO_HOLDERS.forEach { quiverId ->
             player.message("You empty ${added} x ${ammoName(stored.id)} from your quiver.")
         }
     }
+    // Owner answer 3 (OSRS_IMPORT_MASTER.yml "Owner answers 2026-09-14 ~19:00"): Uncharge -> Sunfire splinters.
+    if (def.inventoryMenu.any { it.equals("Uncharge", ignoreCase = true) }) {
+        on_item_option(item = quiverId, option = "Uncharge") {
+            val slot = player.attr[INTERACTING_ITEM_SLOT] ?: return@on_item_option
+            val quiver = player.inventory[slot] ?: return@on_item_option
+            val result = DizanasQuiver.uncharge(quiver)
+            if (result.added <= 0) {
+                player.message("Your quiver has no charges to uncharge.")
+                return@on_item_option
+            }
+            if (!player.inventory.add(Items.SUNFIRE_SPLINTERS, result.added, assureFullInsertion = true).hasSucceeded()) {
+                player.message("You don't have enough inventory space to uncharge your quiver.")
+                return@on_item_option
+            }
+            player.inventory[slot] = result.result
+            player.message("You uncharge your quiver, recovering ${result.added} Sunfire splinters.")
+        }
+    }
 }

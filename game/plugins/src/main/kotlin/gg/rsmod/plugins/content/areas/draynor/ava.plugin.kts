@@ -3,6 +3,7 @@ package gg.rsmod.plugins.content.areas.draynor
 import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.api.cfg.Requirement
 import gg.rsmod.plugins.api.cfg.SkillRequirement
+import gg.rsmod.plugins.content.items.osrs.DizanasQuiver
 import gg.rsmod.plugins.content.mechanics.shops.CoinCurrency
 
 /**
@@ -94,6 +95,25 @@ on_npc_option(npc = Npcs.AVA, option = "buy device") {
     }
     player.queue {
         purchaseDialogue(this)
+    }
+}
+
+/**
+ * OSRS Wiki "Dizana's quiver" (re-read 2026-09-17c, quoted in `DizanasQuiver`'s class doc): bringing Ava's assembler, Ava's
+ * accumulator or a max cape equivalent to Ava applies that device's ammunition-saving effect to every quiver the player owns, now
+ * and in the future, without consuming the device; only an assembler gives the assembler effect. Animal Magnetism is not enforced
+ * (owner decision; no quest system in this cache). SOURCE_GAP: Ava's dialogue is not on the page - a plain game message is used.
+ */
+DizanasQuiver.AVA_UPGRADE_DEVICES.forEach { deviceId ->
+    on_item_on_npc(item = deviceId, npc = Npcs.AVA) {
+        val offered = DizanasQuiver.effectOf(deviceId)
+        val current = DizanasQuiver.avaEffect(player)
+        if (current != null && current.ordinal >= offered.ordinal) {
+            player.message("Your Dizana's quivers already have this ammunition-saving effect.")
+            return@on_item_on_npc
+        }
+        player.attr[DizanasQuiver.AVA_EFFECT] = offered.name
+        player.message("Ava applies the ammunition-saving effect of her device to every Dizana's quiver you own.")
     }
 }
 

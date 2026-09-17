@@ -9,12 +9,13 @@ import gg.rsmod.plugins.content.combat.specialattack.SpecialAttacks
  * OSRS-IMPORT Dragon warhammer - Smash (OSRS Wiki "Dragon warhammer", raw wikitext 2026-09-14): 50% energy, "deals 50%
  * more damage" and "lowers the target's current Defence level by 30% on successful hit"; "the hit has to deal damage";
  * "fractional defence levels reduced by the special attack will be rounded down"; reductions stack, each from the
- * current level. No accuracy change is stated. The OSRS special animation/graphic are not in 667: the normal warhammer
- * attack animation is used (ADAPTED_TO_667). The page describes monsters; players are drained the same way (SOURCE_GAP).
+ * current level. No accuracy change is stated. Look: the imported OSRS sequence DRAGON_WARHAMMER_SA_PLAYER, spotanim
+ * DRAGON_WARHAMMER_SA_SPOTANIM and sound 2520 (Zenyte-lineage SMASH_SOUND). The page describes monsters; players are drained the same way (SOURCE_GAP).
  */
 SpecialAttacks.register(50, Items.DRAGON_WARHAMMER) {
     val victim = target
-    player.animate(CombatConfigs.getAttackAnimation(player))
+    player.animate(gg.rsmod.plugins.content.items.osrs.OsrsSeq.DRAGON_WARHAMMER_SA_PLAYER)
+    player.playSound(Sfx.TZHAAR_KET_OM_CRUSH)
     player.graphic(gg.rsmod.plugins.content.items.osrs.OsrsGfx.DRAGON_WARHAMMER_SPECIAL) // OSRS DRAGON_WARHAMMER_SA_SPOTANIM (fxpilot)
     val maxHit = MeleeCombatFormula.getMaxHit(player, victim, specialAttackMultiplier = 1.5)
     val landHit = MeleeCombatFormula.getAccuracy(player, victim) >= world.randomDouble()

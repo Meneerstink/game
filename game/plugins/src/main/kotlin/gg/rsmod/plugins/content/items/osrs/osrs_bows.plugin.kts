@@ -189,12 +189,8 @@ on_item_on_item(item1 = Items.TORMENTED_SYNAPSE, item2 = Items.MAGIC_LONGBOW_U) 
     player.addXp(Skills.FLETCHING, if (first) ScorchingBow.FIRST_EXPERIENCE else ScorchingBow.EXPERIENCE)
 }
 
-// "The process to create the scorching bow can be reversed via the 'Revert' option, returning only the tormented synapse".
-on_item_option(item = Items.SCORCHING_BOW, option = "Revert") {
-    val slot = player.getInteractingItemSlot()
-    if (player.inventory[slot]?.id != Items.SCORCHING_BOW) return@on_item_option
-    player.inventory[slot] = Item(Items.TORMENTED_SYNAPSE)
-}
+// "The process to create the scorching bow can be reversed via the 'Revert' option, returning only the tormented synapse": bound
+// with the sourced confirmation dialogue for every synapse product in demonbane.plugin.kts (Demonbane.SYNAPSE_PRODUCTS).
 
 // Venator bow (uncharged): "made by combining five venator shards" (shard option "Combine").
 on_item_option(item = Items.VENATOR_SHARD, option = "Combine") {
@@ -219,5 +215,76 @@ if (bowHasOption(Items.CRYSTAL_BOW_OSRS_INACTIVE, "Revert", worn = false)) {
             if (player.inventory[slot]?.id != Items.CRYSTAL_BOW_OSRS_INACTIVE) return@queue
             player.inventory[slot] = Item(Items.CRYSTAL_SEED)
         }
+    }
+}
+
+/*
+ * Option census 2026-09-17c - bow options that listed no handler.
+ */
+
+// Active crystal bow "Revert" (OSRS Wiki "Crystal bow" infobox options; same seed and the same owner-required warning as the inactive bow).
+if (bowHasOption(Items.CRYSTAL_BOW_OSRS, "Revert", worn = false)) {
+    on_item_option(item = Items.CRYSTAL_BOW_OSRS, option = "Revert") {
+        val slot = player.getInteractingItemSlot()
+        if (player.inventory[slot]?.id != Items.CRYSTAL_BOW_OSRS) return@on_item_option
+        player.queue {
+            val choice = options("Yes, revert it.", "No, cancel.", title = "Revert this item back into a crystal seed? Its charges are lost.")
+            if (choice != 1) return@queue
+            if (player.inventory[slot]?.id != Items.CRYSTAL_BOW_OSRS) return@queue
+            player.inventory[slot] = Item(Items.CRYSTAL_SEED)
+        }
+    }
+}
+
+// Bow of Faerdhinen (c): "it can be reverted to an uncharged state at any time, but the shards used will be permanently lost in doing so".
+if (bowHasOption(Items.BOW_OF_FAERDHINEN_C, "Uncharge", worn = false)) {
+    on_item_option(item = Items.BOW_OF_FAERDHINEN_C, option = "Uncharge") {
+        val slot = player.getInteractingItemSlot()
+        if (player.inventory[slot]?.id != Items.BOW_OF_FAERDHINEN_C) return@on_item_option
+        player.queue {
+            val choice =
+                options("Yes, uncharge it.", "No, cancel.", title = "Revert the bow to its uncharged state? The crystal shards used are lost.")
+            if (choice != 1) return@queue
+            if (player.inventory[slot]?.id != Items.BOW_OF_FAERDHINEN_C) return@queue
+            player.inventory[slot] = Item(Items.BOW_OF_FAERDHINEN_INACTIVE)
+        }
+    }
+}
+
+// Tonalztics of Ralos "Charge" (infobox options "Wield, Check, Charge, Uncharge"): the same splinter charging as using splinters on it.
+Tonalztics.ALL.forEach { weapon ->
+    if (bowHasOption(weapon, "Charge", worn = false)) {
+        on_item_option(item = weapon, option = "Charge") {
+            val slot = player.getInteractingItemSlot()
+            val item = player.inventory[slot]?.takeIf { it.id == weapon } ?: return@on_item_option
+            val held = player.inventory.getItemCount(Items.SUNFIRE_SPLINTERS)
+            if (held <= 0) {
+                player.message("You need sunfire splinters to charge it.")
+                return@on_item_option
+            }
+            val added = Tonalztics.splintersToAdd(item, held)
+            if (added <= 0) {
+                player.message("It cannot hold any more charges.")
+                return@on_item_option
+            }
+            player.inventory.remove(Items.SUNFIRE_SPLINTERS, added)
+            val charged = Tonalztics.withCharges(item, Tonalztics.charges(item) + added)
+            player.inventory[slot] = charged
+            player.message("Charges: ${Tonalztics.charges(charged)}")
+        }
+    }
+}
+
+// Webweaver bow (u) "Dismantle" (OSRS Wiki "Fangs of Venenatis": "The uncharged weapon may be dismantled to separate" the two parts).
+if (bowHasOption(Items.WEBWEAVER_BOW_U, "Dismantle", worn = false)) {
+    on_item_option(item = Items.WEBWEAVER_BOW_U, option = "Dismantle") {
+        val slot = player.getInteractingItemSlot()
+        if (player.inventory[slot]?.id != Items.WEBWEAVER_BOW_U) return@on_item_option
+        if (player.inventory.freeSlotCount < 1) {
+            player.message("You don't have enough inventory space to do that.")
+            return@on_item_option
+        }
+        player.inventory[slot] = Item(Items.CRAWS_BOW_U)
+        player.inventory.add(Items.FANGS_OF_VENENATIS, 1)
     }
 }

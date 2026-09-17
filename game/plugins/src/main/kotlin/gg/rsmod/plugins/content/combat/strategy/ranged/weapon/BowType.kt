@@ -150,6 +150,31 @@ enum class BowType(
             BRONZE_ARROWS + IRON_ARROWS + STEEL_ARROWS + MITHRIL_ARROWS + ADAMANT_ARROWS + RUNE_ARROWS + DRAGON_ARROWS +
                 BROAD_ARROWS + gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Arrows.AMETHYST_ARROWS,
     ),
+    // OSRS painted dark bows (batch kits2): the dark bow's arrow set.
+    OSRS_GREEN_DARK_BOW(
+        item = Items.DARK_BOW_GREEN,
+        ammo =
+            BRONZE_ARROWS + IRON_ARROWS + STEEL_ARROWS + MITHRIL_ARROWS + ADAMANT_ARROWS + RUNE_ARROWS + DRAGON_ARROWS +
+                BROAD_ARROWS + gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Arrows.AMETHYST_ARROWS,
+    ),
+    OSRS_BLUE_DARK_BOW(
+        item = Items.DARK_BOW_BLUE,
+        ammo =
+            BRONZE_ARROWS + IRON_ARROWS + STEEL_ARROWS + MITHRIL_ARROWS + ADAMANT_ARROWS + RUNE_ARROWS + DRAGON_ARROWS +
+                BROAD_ARROWS + gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Arrows.AMETHYST_ARROWS,
+    ),
+    OSRS_YELLOW_DARK_BOW(
+        item = Items.DARK_BOW_YELLOW,
+        ammo =
+            BRONZE_ARROWS + IRON_ARROWS + STEEL_ARROWS + MITHRIL_ARROWS + ADAMANT_ARROWS + RUNE_ARROWS + DRAGON_ARROWS +
+                BROAD_ARROWS + gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Arrows.AMETHYST_ARROWS,
+    ),
+    OSRS_WHITE_DARK_BOW(
+        item = Items.DARK_BOW_WHITE,
+        ammo =
+            BRONZE_ARROWS + IRON_ARROWS + STEEL_ARROWS + MITHRIL_ARROWS + ADAMANT_ARROWS + RUNE_ARROWS + DRAGON_ARROWS +
+                BROAD_ARROWS + gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Arrows.AMETHYST_ARROWS,
+    ),
 
     // S4, 2026-09-03: OSRS Wiki "Twisted bow" - "can fire any type of arrow, including dragon
     // arrows" / comparison table "Uses arrows as ammunition up to and including dragon" - the

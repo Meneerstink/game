@@ -91,6 +91,7 @@ object GraniteMaul {
         player.attr[BAR_CLICKS] = 1
         player.world.queue {
             wait(1)
+            if (!player.isOnline || player.isDead()) return@queue
             evaluateHoming(player, now)
         }
     }
@@ -102,6 +103,7 @@ object GraniteMaul {
         // An even number of clicks in one tick toggles the homing activation back off.
         if ((player.attr[BAR_CLICKS] ?: 0) % 2 == 0 || !isWielding(player)) return
         val target = player.getLastHit() ?: return
+        if (target is Player && !target.isOnline) return
         if (!homingActive(player.attr[LAST_ATTACK_CYCLE], clickCycle) || !inReach(player, target)) return
         smash(player, target, doubled = windowActive(player.attr[WINDOW_OPENED], clickCycle))
     }

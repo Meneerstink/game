@@ -192,6 +192,14 @@ task runOsrsFxImportTool(type: JavaExec) {
     main = 'gg.rsmod.game.tools.importer.OsrsFxImportTool'
 }
 
+task runOsrsBasImportTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Body-animation sets (stand/walk/run) for imported OSRS weapons (CacheTransaction, both caches). ' +
+        'Usage: ./gradlew :game:runOsrsBasImportTool --args="[--apply]"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.OsrsBasImportTool'
+}
+
 task runWatsonHouseImportTool(type: JavaExec) {
     group = 'tools'
     description = 'Owner answer Q10: imports OSRS map square 6455 (Watson\'s house) as new named groups m25_55/l25_55 ' +

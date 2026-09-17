@@ -76,6 +76,49 @@ object OsrsOrnamentKits {
             // Dragon defender (t): on a PvP death "it will remain in the player's inventory, but will become broken" (repair at Perdu) -
             // the defender rule, not the base + kit drop. SOURCE_GAP / ADJACENT: no defender breaks on death here, so default handling.
             Ornament(Items.DRAGON_DEFENDER_T, Items.DRAGON_DEFENDER, Items.DRAGON_DEFENDER_ORNAMENT_KIT, pvpConvert = false),
+            // OSRS import run 2026-09-17, batch "kits" (item pages): tradeable kits; "it can be dismantled anytime, returning the tradeable
+            // [base] and ornament kit" (Dragon boots (g), Berserker necklace (or), Tzhaar-ket-om (t), Rune scimitar (guthix/saradomin/zamorak)),
+            // "The trimmed defender can be dismantled anytime, returning the defender and the tradeable ornament kit" (Rune defender (t)).
+            Ornament(Items.DRAGON_BOOTS_G, Items.DRAGON_BOOTS, Items.DRAGON_BOOTS_ORNAMENT_KIT),
+            Ornament(Items.BERSERKER_NECKLACE_OR, Items.BERSERKER_NECKLACE, Items.BERSERKER_NECKLACE_ORNAMENT_KIT),
+            Ornament(Items.RUNE_DEFENDER_T, Items.RUNE_DEFENDER, Items.RUNE_DEFENDER_ORNAMENT_KIT),
+            Ornament(Items.TZHAAR_KET_OM_T, Items.TZHAARKETOM, Items.TZHAAR_KET_OM_ORNAMENT_KIT),
+            Ornament(Items.RUNE_SCIMITAR_GUTHIX, Items.RUNE_SCIMITAR, Items.RUNE_SCIMITAR_ORNAMENT_KIT_GUTHIX),
+            Ornament(Items.RUNE_SCIMITAR_SARADOMIN, Items.RUNE_SCIMITAR, Items.RUNE_SCIMITAR_ORNAMENT_KIT_SARADOMIN),
+            Ornament(Items.RUNE_SCIMITAR_ZAMORAK, Items.RUNE_SCIMITAR, Items.RUNE_SCIMITAR_ORNAMENT_KIT_ZAMORAK),
+        )
+
+    /**
+     * Kits that are used up (OSRS Wiki item pages, 2026-09-17): the ornamented item "can be reverted to the tradeable abyssal whip by using a
+     * cleaning cloth on it. However, the frozen/volcanic whip mix will not be returned"; the (or) staves "can be reverted anytime, returning
+     * the [staff]. However, the kit will not be returned" (Revert option). No PvP drop rule is stated for these untradeable items (SOURCE_GAP:
+     * the whips' page only says they "will be lost upon death"), so they keep the default death handling.
+     */
+    data class ConsumedKit(
+        val ornamented: Int,
+        val base: Int,
+        val kit: Int,
+        /** True when the revert is a cleaning cloth used on the item; false for the Revert option. */
+        val cleaningCloth: Boolean,
+        /** True when reverting also returns the kit (Zalcano shard: "it can be reverted anytime, returning the dragon pickaxe and Zalcano shard"). */
+        val returnsKit: Boolean = false,
+    )
+
+    val CONSUMED =
+        listOf(
+            ConsumedKit(Items.FROZEN_ABYSSAL_WHIP, Items.ABYSSAL_WHIP, Items.FROZEN_WHIP_MIX, cleaningCloth = true),
+            ConsumedKit(Items.VOLCANIC_ABYSSAL_WHIP, Items.ABYSSAL_WHIP, Items.VOLCANIC_WHIP_MIX, cleaningCloth = true),
+            ConsumedKit(Items.LAVA_BATTLESTAFF_OR, Items.LAVA_BATTLESTAFF, Items.LAVA_STAFF_UPGRADE_KIT, cleaningCloth = false),
+            ConsumedKit(Items.STEAM_BATTLESTAFF_OR, Items.STEAM_BATTLESTAFF, Items.STEAM_STAFF_UPGRADE_KIT, cleaningCloth = false),
+            ConsumedKit(Items.MYSTIC_STEAM_STAFF_OR, Items.MYSTIC_STEAM_STAFF, Items.STEAM_STAFF_UPGRADE_KIT, cleaningCloth = false),
+            // Batch kits2: dark bow paint - "players must use a cleaning cloth on the bow to return to its regular state (the paint will be lost)";
+            // Dragon pickaxe upgrade kit - "The upgrade kit will not be returned upon reverting"; Zalcano shard - Revert returns both parts.
+            ConsumedKit(Items.DARK_BOW_GREEN, Items.DARK_BOW, Items.GREEN_DARK_BOW_PAINT, cleaningCloth = true),
+            ConsumedKit(Items.DARK_BOW_BLUE, Items.DARK_BOW, Items.BLUE_DARK_BOW_PAINT, cleaningCloth = true),
+            ConsumedKit(Items.DARK_BOW_YELLOW, Items.DARK_BOW, Items.YELLOW_DARK_BOW_PAINT, cleaningCloth = true),
+            ConsumedKit(Items.DARK_BOW_WHITE, Items.DARK_BOW, Items.WHITE_DARK_BOW_PAINT, cleaningCloth = true),
+            ConsumedKit(Items.DRAGON_PICKAXE_OR_UPGRADED, Items.DRAGON_PICKAXE, Items.DRAGON_PICKAXE_UPGRADE_KIT, cleaningCloth = false),
+            ConsumedKit(Items.DRAGON_PICKAXE_OR, Items.DRAGON_PICKAXE, Items.ZALCANO_SHARD, cleaningCloth = false, returnsKit = true),
         )
 
     private val byOrnamented = ALL.associateBy { it.ornamented }
