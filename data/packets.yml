@@ -1160,6 +1160,27 @@ in-packets:
         order: LITTLE
         type: SHORT
 
+  # ClientProt OPLOC4 (0, 7 bytes): same field layout as every OPLOC variant in the rev-667 client (MiniMenu).
+  - message: gg.rsmod.game.message.impl.OpLoc4Message
+    type: FIXED
+    opcode: 0
+    length: 7
+    structure:
+      - name: movement_type
+        type: BYTE
+        trans: ADD
+      - name: x
+        type: SHORT
+        trans: ADD
+      - name: id
+        order: LITTLE
+        sign: UNSIGNED
+        type: SHORT
+        trans: ADD
+      - name: z
+        order: LITTLE
+        type: SHORT
+
   - message: gg.rsmod.game.message.impl.OpLoc6Message
     type: FIXED
     opcode: 47
