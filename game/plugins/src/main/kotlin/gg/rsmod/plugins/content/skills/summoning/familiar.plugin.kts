@@ -609,7 +609,7 @@ arrayOf(
         SummoningSpecialMoves.castOnInventoryItem(player, player.getInteractingItemSlot())
     }
     on_spell_on_obj(parent, component) {
-        SummoningSpecialMoves.castOnObject(player, player.attr[INTERACTING_OBJ_ATTR]!!.get()!!)
+        SummoningSpecialMoves.castOnObject(player, player.attr[gg.rsmod.game.model.attr.INTERACTING_OBJ_ATTR]!!.get()!!)
     }
 }
 
