@@ -48,13 +48,23 @@ class OsrsAssemblerImportTests {
 
     @Test
     fun `retrieval rates, blowpipe darts and the PvP death rule follow the wiki`() {
-        val strategy = File("src/main/kotlin/gg/rsmod/plugins/content/combat/strategy/RangedCombatStrategy.kt").readText()
-        assertTrue("device && pawn.hasEquipped(EquipmentType.CAPE, Items.AVAS_ATTRACTOR) -> chance in 20..39" in strategy)
-        assertTrue("device && pawn.hasEquipped(EquipmentType.CAPE, Items.AVAS_ACCUMULATOR) -> chance in 20..27" in strategy)
+        // Owner 2026-09-18: one retrieval rule (AvasDevices.outcome) for every shot - it used to be copied per route and the special
+        // attack shots ignored the devices. The rule text lives in AvasDevices; every consumer must call it.
+        val rule = File("src/main/kotlin/gg/rsmod/plugins/content/combat/strategy/ranged/AvasDevices.kt").readText()
+        assertTrue("device && cape == gg.rsmod.plugins.api.cfg.Items.AVAS_ATTRACTOR -> chance in 20..39" in rule)
+        assertTrue("device && cape == gg.rsmod.plugins.api.cfg.Items.AVAS_ACCUMULATOR -> chance in 20..27" in rule)
         // Batch capes: every assembler (Masori assembler, assembler max capes, each (l)) shares the rule through AvasDevices.ASSEMBLERS.
-        assertTrue("device && pawn.getEquipment(EquipmentType.CAPE)?.id in AvasDevices.ASSEMBLERS -> false" in strategy)
+        assertTrue("device && cape in ASSEMBLERS -> false" in rule, "assembler: 80 % recovered, never dropped")
         assertTrue(Items.AVAS_ASSEMBLER in AvasDevices.ASSEMBLERS && Items.AVAS_ASSEMBLER_L in AvasDevices.ASSEMBLERS)
-        assertTrue("val breakAmmo = chance in 0..19" in strategy, "20 % of ammunition breaks with every device")
+        assertTrue("if (chance in 0..19) return AmmoOutcome.BROKEN" in rule, "20 % of ammunition breaks with every device")
+        listOf(
+            "combat/strategy/RangedCombatStrategy.kt",
+            "combat/specialattack/SpecialAttackSupport.kt",
+            "combat/specialattack/weapons/osrs_thrown_specials.plugin.kts",
+            "combat/specialattack/weapons/ranged_specials.plugin.kts",
+        ).forEach { path ->
+            assertTrue("AvasDevices.outcome(" in File("src/main/kotlin/gg/rsmod/plugins/content/$path").readText(), "$path must use AvasDevices.outcome")
+        }
         assertEquals(0.80, Blowpipe.DART_SAVE_CHANCE[Items.AVAS_ASSEMBLER])
         assertEquals(0.80, Blowpipe.DART_SAVE_CHANCE[Items.AVAS_ASSEMBLER_L])
         val breakable = PvpDeathBreakables.breakableFor(Items.AVAS_ASSEMBLER)!!

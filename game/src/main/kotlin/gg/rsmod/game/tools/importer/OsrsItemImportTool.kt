@@ -940,6 +940,18 @@ object OsrsItemImportTool {
         rev667StringParams = mapOf(528 to "Check"),
     )
 
+    /**
+     * The OSRS worn-equipment menu of [def]: upstream string params 451..455 (worn ops 1..5) become the 667 worn options 528..532
+     * (evidence: 667 Ring of wealth 2572 PARAM_528=Rub = EQUIP_MENU[0]). Owner 2026-09-18 ("both the dizana and ava miss options
+     * when right-clicking them in the worn equipment tab - they need the same options as OSRS"): the tool used to carry worn ops
+     * only when a spec listed them by hand, so e.g. every assembler lost its worn "Commune". A spec's own 528.. entries still
+     * win (ADAPTED options such as the quiver's "Fill").
+     */
+    fun upstreamWornOps(def: ModernItemDef): Map<Int, String> =
+        (0 until 5).mapNotNull { op ->
+            (def.params[451 + op] as? String)?.takeIf { it.isNotBlank() }?.let { 528 + op to it }
+        }.toMap()
+
     /** 667 crystal bow 4212 class: bow style set 16, requirement 23, 80 Ranged + 70 Agility (Bow of Faerdhinen wiki). */
     private fun bowfaParams() = mapOf(686 to 16, 23 to 80, 749 to 4, 750 to 80, 751 to 16, 752 to 70)
 
@@ -1106,7 +1118,7 @@ object OsrsItemImportTool {
                                 entry.spec.rev667Params,
                                 dropped,
                                 countItem = { upstream -> entries.first { it.identity == "upstream_item:$upstream" }.localId },
-                                rev667StringParams = entry.spec.rev667StringParams,
+                                rev667StringParams = upstreamWornOps(entry.def) + entry.spec.rev667StringParams,
                             )
                         }
                     }

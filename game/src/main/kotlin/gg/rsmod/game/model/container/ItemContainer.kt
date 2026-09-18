@@ -298,6 +298,9 @@ class ItemContainer(
         forceNoStack: Boolean = false,
         beginSlot: Int = -1,
     ): ItemTransaction {
+        // Items created here never carry attributes, so a charged weapon id added here holds no charges: it becomes its
+        // uncharged / empty / inactive item (see [creationRedirect]).
+        val item = creationRedirect?.invoke(item) ?: item
         val def = definitions.get(ItemDef::class.java, item)
 
         /*
@@ -630,5 +633,13 @@ class ItemContainer(
         dirty = true
     }
 
-    companion object : KLogging()
+    companion object : KLogging() {
+        /**
+         * Set once by the plugins module (`ChargedItems`): maps a charged weapon/item id to the id it must be when it holds no
+         * charges (OSRS: "Toxic blowpipe (empty)", "... (uncharged)", "... (inactive)"). Applied to every attribute-less item
+         * created through [add], e.g. a spawned, bought or rewarded charged item. Owner 2026-09-18.
+         */
+        @JvmStatic
+        var creationRedirect: ((Int) -> Int?)? = null
+    }
 }

@@ -30,3 +30,11 @@ on_item_option(item = Items.AMULET_OF_BLOOD_FURY, option = "Check") {
     val amulet = player.inventory[player.getInteractingItemSlot()] ?: return@on_item_option
     player.message("Your amulet of blood fury has ${BloodFury.charges(amulet)} charges.")
 }
+
+// OSRS worn op 451 "Check" (imported 2026-09-18 with the rest of the OSRS worn menus).
+if (world.definitions.get(gg.rsmod.game.fs.def.ItemDef::class.java, Items.AMULET_OF_BLOOD_FURY).equipmentMenu.any { it.equals("Check", true) }) {
+    on_equipment_option(item = Items.AMULET_OF_BLOOD_FURY, option = "Check") {
+        val amulet = player.getEquipment(EquipmentType.AMULET)?.takeIf { it.id == Items.AMULET_OF_BLOOD_FURY } ?: return@on_equipment_option
+        player.message("Your amulet of blood fury has ${BloodFury.charges(amulet)} charges.")
+    }
+}

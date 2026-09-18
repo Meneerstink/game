@@ -12,6 +12,7 @@ import gg.rsmod.game.model.container.ItemContainer
 import gg.rsmod.game.model.entity.DynamicObject
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.interf.DisplayMode
+import gg.rsmod.game.model.interf.InterfaceSet
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.game.model.item.ItemAttribute
 import gg.rsmod.game.model.shop.PurchasePolicy
@@ -241,6 +242,13 @@ fun Player.message(
     type: ChatMessageType = ChatMessageType.GAME_MESSAGE,
     username: String? = null,
 ) {
+    // A Check / Inspect item option in progress shows its lines in the item dialogue instead (ItemActionGuard).
+    if (type == ChatMessageType.GAME_MESSAGE && attr.has(gg.rsmod.plugins.content.items.ItemActionGuard.STATUS_CAPTURE)) {
+        (attr[gg.rsmod.plugins.content.items.ItemActionGuard.STATUS_CAPTURE] as? MutableList<String>)?.let {
+            it += message
+            return
+        }
+    }
     write(MessageGameMessage(type = type.id, message = message, username = username))
 }
 
@@ -479,7 +487,10 @@ fun Player.openInterface(
     isModal: Boolean = false,
 ) {
     if (isModal) {
-        interfaces.openModal(parent, child, interfaceId)
+        val replacedHash = interfaces.openModal(parent, child, interfaceId)
+        if (replacedHash != -1) {
+            write(IfCloseSubMessage(replacedHash))
+        }
     } else {
         interfaces.open(parent, child, interfaceId)
     }
@@ -487,10 +498,19 @@ fun Player.openInterface(
 }
 
 fun Player.closeInterface(interfaceId: Int) {
-    if (interfaceId == interfaces.getModal()) {
-        interfaces.setModal(-1)
-    }
     val hash = interfaces.close(interfaceId)
+    if (hash != -1) {
+        write(IfCloseSubMessage(hash))
+    }
+}
+
+/**
+ * Closes the exact type-0 destination tracked by [InterfaceSet]. The client's CLOSE_MODAL
+ * packet has no interface id and locally removes every type-0 sub-interface; mirroring the
+ * destination hash prevents an old fixed/resizable entry from surviving as an invisible menu.
+ */
+fun Player.closeModalInterface() {
+    val hash = interfaces.closeModal()
     if (hash != -1) {
         write(IfCloseSubMessage(hash))
     }
@@ -539,9 +559,14 @@ fun Player.isInterfaceVisible(interfaceId: Int): Boolean = interfaces.isVisible(
 
 fun Player.toggleDisplayInterface(newMode: DisplayMode) {
     if (interfaces.displayMode != newMode) {
+        val previousParent = getDisplayComponentId(interfaces.displayMode)
         interfaces.displayMode = newMode
 
         openOverlayInterface(newMode)
+        // IF_OPENTOP discards every sub-interface under the previous gameframe in the client.
+        // Remove the same parent from server bookkeeping after the new top level is active. A
+        // modal close hook can therefore restore any required tab on the new display mode.
+        interfaces.clearDisplay(previousParent)
         InterfaceDestination.values.filter { pane -> pane.interfaceId != -1 }.forEach { pane ->
             openInterface(spellbookInterfaceId(pane), pane)
         }
@@ -549,13 +574,6 @@ fun Player.toggleDisplayInterface(newMode: DisplayMode) {
 }
 
 fun Player.openOverlayInterface(displayMode: DisplayMode) {
-    if (displayMode != interfaces.displayMode) {
-        interfaces.setVisible(
-            parent = getDisplayComponentId(interfaces.displayMode),
-            child = getChildId(InterfaceDestination.MAIN_SCREEN, interfaces.displayMode),
-            visible = false,
-        )
-    }
     val component = getDisplayComponentId(displayMode)
     interfaces.setVisible(parent = getDisplayComponentId(displayMode), child = 0, visible = true)
     write(IfOpenTopMessage(component, 1))
@@ -1760,9 +1778,9 @@ fun Player.refreshBonuses() {
         listOf(
             "Stab", "Slash", "Crush", "Magic", "Ranged",
             "Stab", "Slash", "Crush", "Magic", "Ranged",
-            "Strength", "Ranged Strength", "Prayer", "Magic Damage",
+            "Melee STR", "Ranged STR", "Magic DMG", "Prayer",
         )
-    val bonusIndices = intArrayOf(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 14, 15, 16, 17)
+    val bonusIndices = intArrayOf(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 14, 15, 17, 16)
     val components = intArrayOf(31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 45, 46, 47, 48)
 
     setVarc(779, getWeaponRenderAnimation())

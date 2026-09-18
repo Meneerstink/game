@@ -206,6 +206,8 @@ on_item_option(item = Items.VENATOR_SHARD, option = "Combine") {
 // sourced). Warns before reverting, per the owner's "crystal items need to give a warning when your try to revert"
 // instruction (`cRYSTAL.rtf`, 2026-09-16).
 if (bowHasOption(Items.CRYSTAL_BOW_OSRS_INACTIVE, "Revert", worn = false)) {
+    gg.rsmod.plugins.content.items.ItemActionGuard.selfConfirming("revert", Items.CRYSTAL_BOW_OSRS_INACTIVE, Items.CRYSTAL_BOW_OSRS)
+    gg.rsmod.plugins.content.items.ItemActionGuard.selfConfirming("uncharge", Items.BOW_OF_FAERDHINEN_C)
     on_item_option(item = Items.CRYSTAL_BOW_OSRS_INACTIVE, option = "Revert") {
         val slot = player.getInteractingItemSlot()
         if (player.inventory[slot]?.id != Items.CRYSTAL_BOW_OSRS_INACTIVE) return@on_item_option

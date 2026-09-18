@@ -43,6 +43,8 @@ OsrsOrnamentKits.ALL.forEach { ornament ->
         }
         player.inventory.add(item = ornament.base, assureFullInsertion = true)
         player.inventory.add(item = ornament.kit, assureFullInsertion = true)
+        // Owner 2026-09-18: dismantling says the opposite of attaching, in the item GUI.
+        player.queue { doubleItemMessageBox(OsrsOrnamentKits.DETACH_MESSAGE, item1 = ornament.base, item2 = ornament.kit) }
     }
 }
 

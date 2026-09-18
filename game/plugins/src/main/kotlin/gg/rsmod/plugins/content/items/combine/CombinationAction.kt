@@ -1,9 +1,11 @@
 package gg.rsmod.plugins.content.items.combine
 
 import gg.rsmod.game.fs.def.ItemDef
+import gg.rsmod.game.model.item.Item
 import gg.rsmod.game.model.queue.QueueTask
 import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.api.ext.filterableMessage
+import gg.rsmod.plugins.api.ext.grantOrRefund
 import gg.rsmod.plugins.api.ext.itemMessageBox
 import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.api.ext.player
@@ -25,8 +27,19 @@ object CombinationAction {
             inventory.remove(item = it, assureFullRemoval = true)
         }
 
-        inventory.add(data.resultItem, assureFullInsertion = true)
+        if (!player.grantOrRefund(Item(data.resultItem, 1), data.items.map { Item(it, 1) })) {
+            return
+        }
         player.addXp(data.skill, data.experience)
+
+        // Owner 2026-09-18: every ornament kit (and kit-like paint / mix / upgrade kit) put on an item says so in the item GUI.
+        val kitName = data.items.map { player.world.definitions.get(ItemDef::class.java, it).name.lowercase() }
+        if (data.resultItem in gg.rsmod.plugins.content.items.osrs.OsrsOrnamentKits.ORNAMENTED_RESULTS ||
+            kitName.any { it.contains("ornament kit") }
+        ) {
+            task.itemMessageBox(gg.rsmod.plugins.content.items.osrs.OsrsOrnamentKits.ATTACH_MESSAGE, item = data.resultItem)
+            return
+        }
 
         if (data.tool != CombinationTool.NONE) {
             player.filterableMessage(

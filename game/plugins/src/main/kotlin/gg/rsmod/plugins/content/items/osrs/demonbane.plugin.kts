@@ -174,6 +174,7 @@ ANVILS.forEach { anvil ->
 
 // Revert (Transcript:Emberlight / Transcript:Scorching bow, the Purging staff page uses the same wording): only the synapse returns.
 Demonbane.SYNAPSE_PRODUCTS.forEach { (productId, name) ->
+    gg.rsmod.plugins.content.items.ItemActionGuard.selfConfirming("revert", productId) // own OSRS revert warning below
     on_item_option(item = productId, option = "Revert") {
         val slot = player.getInteractingItemSlot()
         if (player.inventory[slot]?.id != productId) return@on_item_option

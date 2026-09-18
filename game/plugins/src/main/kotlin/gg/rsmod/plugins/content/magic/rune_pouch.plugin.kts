@@ -120,10 +120,24 @@ listOf(Items.THREAD_OF_ELIDINIS to Items.RUNE_POUCH, Items.NEEDLE to Items.RUNE_
             return@on_item_on_item
         }
         val slot = RunePouch.pouchSlot(player.inventory).takeIf { it >= 0 && player.inventory[it]?.id == Items.RUNE_POUCH } ?: return@on_item_on_item
-        val old = player.inventory[slot]!!
-        player.inventory.remove(Items.THREAD_OF_ELIDINIS, 1)
-        player.inventory[slot] = RunePouch.withContents(Item(Items.DIVINE_RUNE_POUCH), RunePouch.contents(old))
-        player.message("You stitch the thread of Elidinis into your rune pouch.")
+        // Owner 2026-09-18: "use thread on ... when creating the rune pouch should also give an interface": the item warning GUI
+        // first, then the item dialogue with the finished pouch. OSRS Wiki "Divine rune pouch": the stitching takes 3 game ticks.
+        player.queue {
+            if (!confirmItemAction(
+                    Items.DIVINE_RUNE_POUCH,
+                    "Are you sure you want to stitch the thread of Elidinis into your rune pouch?",
+                    "The thread is used up; reverting the pouch later returns the thread and the pouch.",
+                )
+            ) {
+                return@queue
+            }
+            wait(3)
+            val old = player.inventory[slot]?.takeIf { it.id == Items.RUNE_POUCH } ?: return@queue
+            if (!player.inventory.contains(Items.THREAD_OF_ELIDINIS) || !player.inventory.contains(Items.NEEDLE)) return@queue
+            player.inventory.remove(Items.THREAD_OF_ELIDINIS, 1)
+            player.inventory[slot] = RunePouch.withContents(Item(Items.DIVINE_RUNE_POUCH), RunePouch.contents(old))
+            itemMessageBox("You stitch the thread of Elidinis into your rune pouch.", item = Items.DIVINE_RUNE_POUCH)
+        }
     }
 }
 

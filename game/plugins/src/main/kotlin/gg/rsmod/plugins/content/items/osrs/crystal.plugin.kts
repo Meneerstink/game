@@ -80,6 +80,7 @@ fun crystalStatus(item: gg.rsmod.game.model.item.Item): String = "It has ${Cryst
 // "crystal items need to give a warning when your try to revert" (owner instruction, `cRYSTAL.rtf`, 2026-09-16).
 CrystalEquipment.REVERT_SEED.forEach { (id, seed) ->
     if (crystalHasOption(id, "Revert", worn = false)) {
+        gg.rsmod.plugins.content.items.ItemActionGuard.selfConfirming("revert", id) // asks its own "charges are lost" question
         on_item_option(item = id, option = "Revert") {
             val slot = player.getInteractingItemSlot()
             player.inventory[slot]?.takeIf { it.id == id } ?: return@on_item_option

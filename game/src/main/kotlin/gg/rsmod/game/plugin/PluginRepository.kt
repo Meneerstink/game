@@ -1338,9 +1338,19 @@ class PluginRepository(
     ): Boolean {
         val hash = (item shl 16) or option
         val plugin = equipmentOptionPlugins[hash] ?: return false
-        p.executePlugin(plugin)
+        val proceed = { p.executePlugin(plugin) }
+        if (itemOptionInterceptor?.invoke(p, item, option, true, proceed) == true) return true
+        proceed()
         return true
     }
+
+    /**
+     * Shared content hook around every bound inventory and worn-equipment item option (set once by the plugins module, see
+     * `ItemActionGuard`). It receives the item, the 1-based option index, whether the option is a worn-equipment option and a
+     * `proceed` callback that runs the bound plugin. Returns true when it took over the option (it then calls `proceed`
+     * itself, e.g. after an "Are you sure" confirmation); false lets the plugin run immediately as before.
+     */
+    var itemOptionInterceptor: ((p: Player, item: Int, option: Int, worn: Boolean, proceed: () -> Unit) -> Boolean)? = null
 
     fun bindEquipSlot(
         equipSlot: Int,
@@ -1642,7 +1652,9 @@ class PluginRepository(
     ): Boolean {
         val optMap = itemPlugins[id] ?: return false
         val logic = optMap[opt] ?: return false
-        p.executePlugin(logic)
+        val proceed = { p.executePlugin(logic) }
+        if (itemOptionInterceptor?.invoke(p, id, opt, false, proceed) == true) return true
+        proceed()
         return true
     }
 

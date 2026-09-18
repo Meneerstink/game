@@ -26,8 +26,7 @@ godswordHilts.forEach { (godsword, hilt) ->
     on_item_option(item = godsword, option = "Dismantle") {
         val slot = player.getInteractingItemSlot()
         player.queue {
-            // Owner 2026-09-18: like OSRS, dismantling asks "Are you sure" in the chatbox first.
-            if (!confirmWarning("Are you sure you want to dismantle your godsword?")) return@queue
+            // The "Are you sure" item warning GUI is shown before this runs (ItemActionGuard, every Dismantle).
             // One sword becomes two items, so a single free slot is needed on top of the one the
             // sword itself vacates.
             if (player.inventory.freeSlotCount < 1) {

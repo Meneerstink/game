@@ -452,6 +452,30 @@ suspend fun QueueTask.destroyItem(item: Int) {
     }
 }
 
+/**
+ * The destroy-item GUI (interface 94: item picture, name, [question], [detail], Yes / No) reused as the shared "Are you sure"
+ * item warning (ItemActionGuard). Same button contract as [destroyItem]: true only for Yes.
+ */
+suspend fun QueueTask.confirmItemAction(
+    item: Int,
+    question: String,
+    detail: String,
+): Boolean {
+    val itemName = player.world.definitions.get(ItemDef::class.java, item).name
+    player.setComponentItem(interfaceId = 94, component = 9, item = item, amountOrZoom = 1)
+    player.setComponentText(interfaceId = 94, component = 8, text = itemName)
+    player.setComponentText(interfaceId = 94, component = 2, text = question)
+    player.setComponentText(interfaceId = 94, component = 7, text = detail)
+    player.openInterface(interfaceId = 94, parent = 752, child = 12)
+
+    terminateAction = closeDialog
+    waitReturnValue()
+    terminateAction!!(this)
+
+    val result = (requestReturnValue as? ResumePauseButtonMessage)?.let { it.button - 1 } ?: -1
+    return result == 2
+}
+
 suspend fun QueueTask.selectAppearance(): Appearance? {
     player.openInterface(APPEARANCE_INTERFACE_ID, InterfaceDestination.MAIN_SCREEN)
 

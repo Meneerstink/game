@@ -121,6 +121,13 @@ object OsrsOrnamentKits {
             ConsumedKit(Items.DRAGON_PICKAXE_OR, Items.DRAGON_PICKAXE, Items.ZALCANO_SHARD, cleaningCloth = false, returnsKit = true),
         )
 
+    /** Owner 2026-09-18 wording, shown in the item dialogue GUI when any kit is put on / taken off an item. */
+    const val ATTACH_MESSAGE = "The ornament kit attaches itself to the item."
+    const val DETACH_MESSAGE = "The ornament kit detaches itself from the item."
+
+    /** Every item made by attaching a kit, paint, mix or upgrade kit (returned or consumed). */
+    val ORNAMENTED_RESULTS: Set<Int> by lazy { (ALL.map { it.ornamented } + CONSUMED.map { it.ornamented }).toSet() }
+
     private val byOrnamented = ALL.associateBy { it.ornamented }
 
     fun forOrnamented(itemId: Int): Ornament? = byOrnamented[itemId]

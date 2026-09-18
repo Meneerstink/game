@@ -28,7 +28,8 @@ fun confirmReplace(
     val slot = player.getInteractingItemSlot()
     if (player.inventory[slot]?.id != itemId) return
     player.queue {
-        if (options("Yes.", "No.", title = title) != 1) return@queue
+        // The shared item warning GUI (ItemActionGuard) with this item's own question.
+        if (!confirmItemAction(itemId, title, "Are you sure?")) return@queue
         if (player.inventory[slot]?.id != itemId) return@queue
         player.inventory[slot] = Item(result)
         player.message(done)
@@ -50,6 +51,7 @@ listOf(
     Items.RING_OF_SUFFERING_RI to Items.RING_OF_SUFFERING,
 ).forEach { (imbued, base) ->
     if (hasInventoryOption(imbued, "Uncharge")) {
+        gg.rsmod.plugins.content.items.ItemActionGuard.selfConfirming("uncharge", imbued) // confirmReplace asks
         on_item_option(item = imbued, option = "Uncharge") {
             val recoils = imbued == Items.RING_OF_SUFFERING_RI
             confirmReplace(
@@ -69,6 +71,7 @@ listOf(
  * Amulet of rancour (s) "Revert": "If the player reverts the recoloured amulet, they must redo all of the above steps".
  */
 if (hasInventoryOption(Items.AMULET_OF_BLOOD_FURY, "Revert")) {
+    gg.rsmod.plugins.content.items.ItemActionGuard.selfConfirming("revert", Items.AMULET_OF_BLOOD_FURY) // confirmReplace asks
     on_item_option(item = Items.AMULET_OF_BLOOD_FURY, option = "Revert") {
         confirmReplace(
             player,
@@ -80,6 +83,7 @@ if (hasInventoryOption(Items.AMULET_OF_BLOOD_FURY, "Revert")) {
     }
 }
 if (hasInventoryOption(Items.AMULET_OF_RANCOUR_S, "Revert")) {
+    gg.rsmod.plugins.content.items.ItemActionGuard.selfConfirming("revert", Items.AMULET_OF_RANCOUR_S) // confirmReplace asks
     on_item_option(item = Items.AMULET_OF_RANCOUR_S, option = "Revert") {
         confirmReplace(
             player,
@@ -95,27 +99,41 @@ if (hasInventoryOption(Items.AMULET_OF_RANCOUR_S, "Revert")) {
  * Moon armour "Check" (OSRS Wiki "Moon equipment": "The status of each item consists of 3000 degradable points"). The remaining
  * points come from the same per-combat-tick charge the degradation table spends. ADAPTED wording.
  */
+fun moonStatus(
+    armour: MoonArmour,
+    item: Item,
+): String {
+    val id = item.id
+    val percent =
+        when (id) {
+            armour.brokenId -> 0
+            armour.newId -> 100
+            else -> {
+                val left = item.attr[ItemAttribute.CHARGES] ?: DegradeTable.MOON_DEGRADED_CHARGES
+                ((left.toLong() * 100 + DegradeTable.MOON_DEGRADED_CHARGES - 1) / DegradeTable.MOON_DEGRADED_CHARGES).toInt().coerceIn(1, 100)
+            }
+        }
+    return if (percent == 0) {
+        "Your ${itemName(id)} is fully degraded and must be repaired."
+    } else {
+        "Your ${itemName(id)} has $percent% of its durability left."
+    }
+}
+
 MoonArmour.values().forEach { armour ->
     listOf(armour.newId, armour.degradedId, armour.brokenId).distinct().forEach { id ->
-        if (!hasInventoryOption(id, "Check")) return@forEach
-        on_item_option(item = id, option = "Check") {
-            val item = player.inventory[player.getInteractingItemSlot()]?.takeIf { it.id == id } ?: return@on_item_option
-            val percent =
-                when (id) {
-                    armour.brokenId -> 0
-                    armour.newId -> 100
-                    else -> {
-                        val left = item.attr[ItemAttribute.CHARGES] ?: DegradeTable.MOON_DEGRADED_CHARGES
-                        ((left.toLong() * 100 + DegradeTable.MOON_DEGRADED_CHARGES - 1) / DegradeTable.MOON_DEGRADED_CHARGES).toInt().coerceIn(1, 100)
-                    }
-                }
-            player.message(
-                if (percent == 0) {
-                    "Your ${itemName(id)} is fully degraded and must be repaired."
-                } else {
-                    "Your ${itemName(id)} has $percent% of its durability left."
-                },
-            )
+        if (hasInventoryOption(id, "Check")) {
+            on_item_option(item = id, option = "Check") {
+                val item = player.inventory[player.getInteractingItemSlot()]?.takeIf { it.id == id } ?: return@on_item_option
+                player.message(moonStatus(armour, item))
+            }
+        }
+        // OSRS worn op 451 "Check" (imported 2026-09-18 with the rest of the OSRS worn menus).
+        if (world.definitions.get(ItemDef::class.java, id).equipmentMenu.any { it.equals("Check", ignoreCase = true) }) {
+            on_equipment_option(item = id, option = "Check") {
+                val worn = EquipmentType.values().mapNotNull { player.getEquipment(it) }.firstOrNull { it.id == id } ?: return@on_equipment_option
+                player.message(moonStatus(armour, worn))
+            }
         }
     }
 }

@@ -21,6 +21,7 @@ on_item_on_item(item1 = Items.ORNATE_MAUL_HANDLE, item2 = Items.GRANITE_MAUL) {
     }
 }
 
+gg.rsmod.plugins.content.items.ItemActionGuard.selfConfirming("revert", Items.GRANITE_MAUL_ORNATE_HANDLE) // own warning below
 on_item_option(item = Items.GRANITE_MAUL_ORNATE_HANDLE, option = "Revert") {
     val slot = player.getInteractingItemSlot()
     player.queue {
