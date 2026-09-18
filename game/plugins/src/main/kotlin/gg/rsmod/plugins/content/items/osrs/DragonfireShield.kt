@@ -63,7 +63,16 @@ object DragonfireShield {
 
     fun familyOf(itemId: Int): Family? = FAMILIES.firstOrNull { itemId in it.ids }
 
-    fun charges(item: Item): Int = item.attr[ItemAttribute.CHARGES] ?: 0
+    /**
+     * The shield's charges. The ward's and wyvern shield's charged id "exists only while charges > 0", so a charged-id item that
+     * carries no counter (spawned with `item`, or from before this model) is a full one; it used to read as 0, which made Inspect
+     * report 0 and Empty skip its burst sound (owner 2026-09-18). The single-id Dragonfire shield keeps 0 as its default.
+     */
+    fun charges(item: Item): Int {
+        item.attr[ItemAttribute.CHARGES]?.let { return it }
+        val family = familyOf(item.id) ?: return 0
+        return if (family.charged != family.uncharged && item.id == family.charged) MAX_CHARGES else 0
+    }
 
     /** [item] holding [charges] (0-50): the family's charged id while it holds any, its uncharged id at 0. */
     fun withCharges(

@@ -28,7 +28,9 @@ listOf(Items.MAGIC_SHORTBOW, Items.MAGIC_SHORTBOW_I).forEach { bow ->
     SpecialAttacks.register(gg.rsmod.plugins.content.items.osrs.MagicShortbowSnapshot.energy(bow)!!, bow) {
         val victim = target
         player.animate(1074)
-        player.graphic(250, 96)
+        // Snapshot's own double-arrow drawback: graphic 256 (Novite PlayerCombat case 861 `Graphics(256, 0, 100)`,
+        // Void `snapshot_special` = 256); 250 was the crystal bow drawback.
+        player.graphic(256, 100)
         player.playSound(Sfx.SNAPSHOT)
         val snapshotMax = { ammoId: Int ->
             val ammoStrength = world.definitions.get(gg.rsmod.game.fs.def.ItemDef::class.java, ammoId).bonuses[BonusSlot.RANGED_STRENGTH_BONUS.id]

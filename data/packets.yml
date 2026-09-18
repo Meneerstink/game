@@ -820,7 +820,45 @@ out-packets:
         - name: data
           type: BYTES
 
+  # Quick chat (owner 2026-09-18). Each body is prebuilt by the handler (QuickChatHandlers / FriendsChat.talkQuickChat).
+  - message: gg.rsmod.game.message.impl.QuickChatPublicOutMessage
+    type: VARIABLE_BYTE
+    opcode: 91
+    structure:
+      - name: body
+        type: BYTES
+
+  - message: gg.rsmod.game.message.impl.QuickChatFriendChannelOutMessage
+    type: VARIABLE_BYTE
+    opcode: 20
+    structure:
+      - name: body
+        type: BYTES
+
+  - message: gg.rsmod.game.message.impl.QuickChatPrivateOutMessage
+    type: VARIABLE_BYTE
+    opcode: 42
+    structure:
+      - name: body
+        type: BYTES
+
+  - message: gg.rsmod.game.message.impl.QuickChatPrivateEchoOutMessage
+    type: VARIABLE_BYTE
+    opcode: 97
+    structure:
+      - name: body
+        type: BYTES
+
 in-packets:
+  # ClientProt MESSAGE_QUICKCHAT_PUBLIC (30) / MESSAGE_QUICKCHAT_PRIVATE (79); read by hand in QuickChatCodecs.
+  - message: gg.rsmod.game.message.impl.MessageQuickChatPublicMessage
+    type: VARIABLE_BYTE
+    opcode: 30
+
+  - message: gg.rsmod.game.message.impl.MessageQuickChatPrivateMessage
+    type: VARIABLE_BYTE
+    opcode: 79
+
 
   - message: gg.rsmod.game.message.impl.IgnoreMessage # No data
     type: FIXED

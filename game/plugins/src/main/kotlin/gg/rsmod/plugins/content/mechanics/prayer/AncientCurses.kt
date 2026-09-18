@@ -538,6 +538,13 @@ object AncientCurses {
             player.filterableMessage("You don't have enough Prayer points left.")
             return
         }
+        // Dragon scimitar Sever (and every other overhead-disabling effect) blocks the curse book's Deflects too; before,
+        // only the normal book checked the timer, so a severed player could re-enable a Deflect at once (owner 2026-09-18).
+        if (curse.category == AncientCurse.Category.DEFLECT_COMBAT && Prayers.overheadsDisabled(player)) {
+            player.setVarbit(curse.varbit, 0)
+            player.message("You cannot use overhead prayers right now.")
+            return
+        }
         activeCurses(player).filter { curse.conflictsWith(it) }.forEach { deactivateCurse(player, it, playSound = false) }
         if (curse.conflictsWithTurmoil && isTurmoilActive(player)) {
             setTurmoil(player, false)
@@ -1106,24 +1113,36 @@ object AncientCurses {
         // Novite schedules the actual blast one world tick later. This timing matters: the centre
         // graphic, hit and twelve impact tiles are all part of the delayed explosion, not the
         // initial projectile launch.
-        player.queue {
+        // Owner 2026-09-18: Wrath left no hit on players. The blast ran on the dying player's own queue, which the
+        // death routine clears, and each target was checked against a player who was already dead. Like Novite's
+        // WorldTask it now runs on the world queue, and eligibility is decided from the death tile: in multi-combat
+        // every attackable pawn within two tiles, in single-combat only the killer (Novite `Player.sendDeath`).
+        val multi = origin.isMulti(world)
+        val killer = player.attr[gg.rsmod.game.model.attr.KILLER_ATTR]?.get() as? Player
+        world.queue {
             wait(1)
             player.graphic(WRATH_CENTRE_GFX)
 
-            world.npcs.forEach {
-                if (!it.isDead() && it.def.isAttackable() && it.combatDef.lifepoints != -1 &&
-                    it.tile.isWithinRadius(origin, 2)
-                ) {
-                    it.hit(damage = world.random(damage))
+            if (multi) {
+                world.npcs.forEach {
+                    if (!it.isDead() && it.def.isAttackable() && it.combatDef.lifepoints != -1 &&
+                        it.tile.isWithinRadius(origin, 2)
+                    ) {
+                        it.hit(damage = world.random(damage))
+                    }
                 }
-            }
-            world.players.forEach {
-                if (it != player && !it.isDead() &&
-                    it.tile.isWithinRadius(origin, 2) &&
-                    gg.rsmod.plugins.content.mechanics.pvp.AreaState.canPlayersFight(player, it)
-                ) {
-                    it.hit(damage = world.random(damage))
+                world.players.forEach {
+                    if (it != player && !it.isDead() && it.isOnline &&
+                        it.tile.isWithinRadius(origin, 2) &&
+                        gg.rsmod.plugins.content.mechanics.pvp.AreaState.canDeathEffectHit(player, it)
+                    ) {
+                        it.hit(damage = world.random(damage))
+                    }
                 }
+            } else if (killer != null && killer != player && !killer.isDead() && killer.isOnline && killer.tile.isWithinRadius(origin, 2) &&
+                gg.rsmod.plugins.content.mechanics.pvp.AreaState.canDeathEffectHit(player, killer)
+            ) {
+                killer.hit(damage = world.random(damage))
             }
 
             (WRATH_OUTER_OFFSETS + WRATH_INNER_OFFSETS).forEach { (dx, dz) ->

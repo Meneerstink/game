@@ -158,6 +158,31 @@ class FriendsChat {
     }
 
     /**
+     * Relays a quick-chat phrase ([payload]: phrase id + encoded fillers, exactly as the client sent it) to everybody in
+     * [sender]'s channel through ServerProt MESSAGE_QUICKCHAT_FRIENDCHAT, framed like [talk]'s MESSAGE_FRIENDCHANNEL.
+     */
+    fun talkQuickChat(
+        world: World,
+        sender: Player,
+        payload: ByteArray,
+    ): Boolean {
+        val channel = channelOf(sender) ?: return false
+        val id = nextMessageId()
+        val body =
+            gg.rsmod.game.message.handler.packetBody {
+                put(gg.rsmod.net.packet.DataType.BYTE, 0)
+                putString(Misc.formatForDisplay(sender.username))
+                put(gg.rsmod.net.packet.DataType.LONG, gg.rsmod.util.Base37.encode(channel.name))
+                put(gg.rsmod.net.packet.DataType.SHORT, (id shr 24) and 0xFFFF)
+                put(gg.rsmod.net.packet.DataType.TRI_BYTE, id and 0xFFFFFF)
+                put(gg.rsmod.net.packet.DataType.BYTE, channel.rankOf(sender))
+                putBytes(payload)
+            }
+        channel.members().forEach { it.write(gg.rsmod.game.message.impl.QuickChatFriendChannelOutMessage(body)) }
+        return true
+    }
+
+    /**
      * A id no other recent line shares.
      *
      * The client drops a line whose id it has seen in the last hundred, and starts life with a ring

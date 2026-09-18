@@ -22,7 +22,8 @@ class MessagePrivateDecoder : MessageDecoder<MessagePrivateMessage>() {
         reader: GamePacketReader,
     ): MessagePrivateMessage {
         val username = reader.string
-        val length = reader.getUnsigned(DataType.BYTE)
+        // WordPack.encode writes the text length with psmarts: one byte below 128, two bytes above.
+        val length = reader.unsignedSmart
 
         val data = ByteArray(reader.readableBytes)
         reader.getBytes(data)

@@ -77,6 +77,8 @@ class MessageDecoderSet {
         put(IgnoreListAddMessage::class.java, IgnoreListAddDecoder(), IgnoreListAddHandler(), structures)
         put(IgnoreListDeleteMessage::class.java, IgnoreListDeleteDecoder(), IgnoreListDeleteHandler(), structures)
         put(ClanJoinChatLeaveChatMessage::class.java, ClanJoinChatLeaveChatDecoder(), ClanJoinChatLeaveHandler(), structures)
+        put(MessageQuickChatPublicMessage::class.java, MessageQuickChatPublicDecoder(), MessageQuickChatPublicHandler(), structures)
+        put(MessageQuickChatPrivateMessage::class.java, MessageQuickChatPrivateDecoder(), MessageQuickChatPrivateHandler(), structures)
         
         put(SoundSongEndMessage::class.java, SoundSongEndDecoder(), SoundSongEndHandler(), structures)
     }

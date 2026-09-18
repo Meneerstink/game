@@ -239,7 +239,9 @@ object RangedCombatStrategy : CombatStrategy {
                 // same height as the crystal bow (ADAPTED).
                 val bowfa = pawn.getEquipment(EquipmentType.WEAPON)?.id in
                     setOf(gg.rsmod.plugins.api.cfg.Items.BOW_OF_FAERDHINEN, gg.rsmod.plugins.api.cfg.Items.BOW_OF_FAERDHINEN_C)
-                pawn.graphic(if (bowfa) gg.rsmod.plugins.content.items.osrs.OsrsGfx.FAERDHINEN_ARROW_LAUNCH else 250, 60)
+                // Owner 2026-09-18: the shiny arrow did not leave the bow cleanly. Void's "height = 60" is in Void's own units;
+                // every arrow drawback in this server's RangedProjectile table uses 96, so these bows now match them.
+                pawn.graphic(if (bowfa) gg.rsmod.plugins.content.items.osrs.OsrsGfx.FAERDHINEN_ARROW_LAUNCH else 250, 96)
                 world.spawn(pawn.createProjectile(target, if (bowfa) gg.rsmod.plugins.content.items.osrs.OsrsGfx.FAERDHINEN_ARROW_TRAVEL else 249, ProjectileType.ARROW))
             }
 

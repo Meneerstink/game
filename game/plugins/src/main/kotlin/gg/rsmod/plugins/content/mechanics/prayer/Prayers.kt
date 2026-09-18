@@ -224,6 +224,9 @@ object Prayers {
         p.timers[DISABLE_OVERHEADS] = cycles
     }
 
+    /** True while a Sever-type effect blocks overhead prayers; the curse book reads the same timer for its Deflects. */
+    fun overheadsDisabled(p: Player): Boolean = p.timers.has(DISABLE_OVERHEADS)
+
     fun deactivateAll(p: Player) {
         p.setVarbit(AncientCurse.PROTECT_ITEM_VARBIT, 0)
         Prayer.values.forEach { prayer ->

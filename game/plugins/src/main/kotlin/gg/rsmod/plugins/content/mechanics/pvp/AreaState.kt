@@ -326,4 +326,19 @@ object AreaState {
         return (isPvpAllowed(attacker.tile, home) && isPvpAllowed(target.tile, home) && isWithinCombatLevelRange(attacker, target)) ||
             PracticePvp.areMatched(attacker, target)
     }
+
+    /**
+     * Whether a dying player's death effect (Wrath/Retribution) may hit [target]. Same area and level rules as
+     * [canPlayersFight], but the post-kill grace is ignored: the killer receives that grace from this very death
+     * (death.plugin pre-death), so checking it made Wrath unable to ever hit the killer (owner 2026-09-18).
+     */
+    fun canDeathEffectHit(
+        dead: gg.rsmod.game.model.entity.Player,
+        target: gg.rsmod.game.model.entity.Player,
+    ): Boolean {
+        if (BeginnerProtection.isProtected(dead) || BeginnerProtection.isProtected(target)) return false
+        val home = dead.world.gameContext.home
+        return (isPvpAllowed(dead.tile, home) && isPvpAllowed(target.tile, home) && isWithinCombatLevelRange(dead, target)) ||
+            PracticePvp.areMatched(dead, target)
+    }
 }

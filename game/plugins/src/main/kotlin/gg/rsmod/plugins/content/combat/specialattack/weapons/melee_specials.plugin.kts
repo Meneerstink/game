@@ -35,9 +35,9 @@ SpecialAttacks.register(25, Items.DRAGON_MACE) {
 /* Dragon scimitar - Sever: 55%, +25% accuracy; a landed hit turns off the victim's protection prayers for 5 seconds. */
 SpecialAttacks.register(55, Items.DRAGON_SCIMITAR, Items.DRAGON_SCIMITAR_OR) {
     val victim = target
-    player.animate(1872)
-    player.graphic(347, 96)
-    player.playSound(Sfx.SEVER)
+    // Rev-667 Sever look: animation 12031 + graphic 2118 (Novite PlayerCombat case 4587); 1872/347 were pre-667 ids.
+    player.animate(12031)
+    player.graphic(2118) // the sequence carries its own vorbis frame sounds (cache), so no server cue
     meleeHit(player, victim, accuracy = 1.25) {
         if (victim is Player) {
             Prayers.deactivate(victim, Prayer.PROTECT_FROM_MAGIC)
@@ -102,6 +102,20 @@ SpecialAttacks.register(60, Items.DRAGON_2H_SWORD) {
     player.playSound(Sfx.DRAGON_AXE_THUNDER)
     meleeHit(player, victim)
     adjacentTargets(player, victim).forEach { other -> meleeHit(player, other) }
+}
+
+/*
+ * Abyssal tentacle - Binding Tentacle (OSRS Wiki "Abyssal tentacle", read 2026-09-18): 50 % energy; "Regardless of whether the
+ * hit is successful, the target will be frozen for 4.8 seconds" (8 ticks); ~50 % poison starting at 4 is already applied by
+ * WeaponPoison while SPECIAL_ATTACK_IN_PROGRESS is set. The wiki gives no accuracy or damage modifier. Look: the tentacle's own
+ * whip attack sequence; the special's spotanim is not sourced, so none is sent (owner 2026-09-18: "abyssal tentacle spec doet
+ * het niet" - it was never registered).
+ */
+SpecialAttacks.register(50, Items.ABYSSAL_TENTACLE) {
+    val victim = target
+    player.animate(gg.rsmod.plugins.content.combat.CombatConfigs.getAttackAnimation(player))
+    meleeHit(player, victim)
+    victim.freeze(8)
 }
 
 /* Granite maul - Quick Smash: OSRS rules (60 % / 50 % ornate handle, instant, homing) live in GraniteMaul / granite_maul.plugin.kts. */
