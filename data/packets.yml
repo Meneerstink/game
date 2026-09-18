@@ -1454,6 +1454,17 @@ in-packets:
       - name: index
         type: SHORT
 
+  # ClientProt OPPLAYER1/5/6/7/8/9/10 (3 bytes each, same layout); order = OpPlayerExtraDecoder.OPTIONS.
+  - message: gg.rsmod.game.message.impl.OpPlayerExtraMessage
+    type: FIXED
+    opcodes: "14,50,82,49,62,43,19"
+    length: 3
+    structure:
+      - name: unknown
+        type: BYTE
+      - name: index
+        type: SHORT
+
   - message: gg.rsmod.game.message.impl.OpPlayer4Message
     type: FIXED
     opcode: 46
