@@ -16,7 +16,12 @@ SpecialAttacks.register(OsmumtensFang.SPECIAL_ENERGY, Items.OSMUMTENS_FANG) {
     val victim = target
     player.animate(gg.rsmod.plugins.content.items.osrs.OsrsSeq.WEAPON_SWORD_OSMUMTEN03_SPECIAL)
     player.graphic(gg.rsmod.plugins.content.items.osrs.OsrsGfx.OSMUMTEN_SPECIAL)
-    player.playSound(gg.rsmod.plugins.content.items.osrs.OsrsSfx.OSMUMTENS_FANG_METALLIC_WOOSH)
+    // OSRS Wiki sound list: special attack part 1 = 9367 woosh_02, part 2 = 9366 stab_01, part 3 = 9365 metallic_woosh_01
+    // (File pages, 2026-09-18). Neither OSRS sequence carries frame sounds, so the three parts are server cues; the spacing
+    // over the 57-client-tick sequence is ADAPTED (order sourced, offsets not published).
+    player.playSound(gg.rsmod.plugins.content.items.osrs.OsrsSfx.OSMUMTENS_FANG_WOOSH_02)
+    player.playSound(gg.rsmod.plugins.content.items.osrs.OsrsSfx.OSMUMTENS_FANG_STAB, delay = 19)
+    player.playSound(gg.rsmod.plugins.content.items.osrs.OsrsSfx.OSMUMTENS_FANG_METALLIC_WOOSH, delay = 38)
     val maxHit = MeleeCombatFormula.getMaxHit(player, victim)
     val (minimum, maximum) = OsmumtensFang.damageRange(maxHit, special = true)
     val landHit = MeleeCombatFormula.getAccuracy(player, victim, specialAttackMultiplier = OsmumtensFang.SPECIAL_ACCURACY) >= world.randomDouble()

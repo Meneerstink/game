@@ -121,12 +121,7 @@ object Combat {
             if (target.getVarp(AttackTab.DISABLE_AUTO_RETALIATE_VARP) == 0) {
                 target.interruptQueues()
                 target.closeComponent(parent = 752, child = 13)
-                target.attr[PvpSkull.AUTO_RETALIATING_ATTR] = true
-                try {
-                    target.attack(pawn, notifyRefusal = false) // auto-retaliate: never a player-started attack
-                } finally {
-                    target.attr.remove(PvpSkull.AUTO_RETALIATING_ATTR)
-                }
+                target.attack(pawn, notifyRefusal = false) // auto-retaliate (never skulls: PvpSkull.isRetaliation)
             }
         }
 
@@ -162,12 +157,7 @@ object Combat {
                     target.getCombatTarget() == null &&
                     !target.hasMoveDestination()
                 ) {
-                    target.attr[PvpSkull.AUTO_RETALIATING_ATTR] = true
-                    try {
-                        target.attack(pawn, notifyRefusal = false) // auto-retaliate
-                    } finally {
-                        target.attr.remove(PvpSkull.AUTO_RETALIATING_ATTR)
-                    }
+                    target.attack(pawn, notifyRefusal = false) // auto-retaliate (never skulls: PvpSkull.isRetaliation)
                 }
             }
         }
@@ -211,6 +201,29 @@ object Combat {
         val end = target.tile
 
         return start.isWithinRadius(end, distance) && world.collision.raycast(start, end, projectile = projectile)
+    }
+
+    /**
+     * Owner 2026-09-18 ("noxious halberd can attack from far away tiles, max 2"): the combat cycle attacked whenever the
+     * route had succeeded, even when the target stepped away during the last walked tile, so nothing ever re-checked the
+     * real reach. OSRS melee reach, measured between the two bounding boxes: [range] 1 = an orthogonally adjacent tile
+     * (never diagonal, never underneath); halberds (range 2) = any tile within 2, diagonals included, with a clear line.
+     */
+    fun inMeleeReach(
+        pawn: Pawn,
+        target: Pawn,
+        range: Int,
+    ): Boolean {
+        val s = pawn.tile
+        val t = target.tile
+        if (s.height != t.height) return false
+        val sSize = pawn.getSize()
+        val tSize = target.getSize()
+        val dx = maxOf(0, t.x - (s.x + sSize - 1), s.x - (t.x + tSize - 1))
+        val dz = maxOf(0, t.z - (s.z + sSize - 1), s.z - (t.z + tSize - 1))
+        if (dx == 0 && dz == 0) return false
+        if (range <= 1) return (dx == 1 && dz == 0) || (dx == 0 && dz == 1)
+        return maxOf(dx, dz) <= range && pawn.world.collision.raycast(s, t, projectile = true)
     }
 
     suspend fun moveToAttackRange(

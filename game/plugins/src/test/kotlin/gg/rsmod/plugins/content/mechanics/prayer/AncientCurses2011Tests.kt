@@ -38,7 +38,9 @@ class AncientCurses2011Tests {
 
     @Test
     fun `exclusion table matches the 2011 key`() {
-        assertFalse(AncientCurse.SAP_WARRIOR.conflictsWith(AncientCurse.SAP_MAGE))
+        // Owner 2026-09-18: Sap Warrior / Ranger / Mage are mutually exclusive (like the style leeches).
+        assertTrue(AncientCurse.SAP_WARRIOR.conflictsWith(AncientCurse.SAP_MAGE))
+        assertFalse(AncientCurse.SAP_WARRIOR.conflictsWith(AncientCurse.SAP_SPIRIT))
         assertFalse(AncientCurse.LEECH_ATTACK.conflictsWith(AncientCurse.LEECH_DEFENCE))
         assertTrue(AncientCurse.SAP_WARRIOR.conflictsWith(AncientCurse.LEECH_ATTACK))
         assertTrue(AncientCurse.DEFLECT_MELEE.conflictsWith(AncientCurse.DEFLECT_MAGIC))
@@ -157,7 +159,7 @@ class AncientCurses2011Tests {
         expect(AncientCurse.SAP_SPIRIT, AncientCurse.LEECH_ENERGY, false)
         AncientCurse.values().filter { it.category == AncientCurse.Category.SAP }.forEach { expect(it, AncientCurse.LEECH_ENERGY, false) }
         listOf(AncientCurse.SAP_WARRIOR, AncientCurse.SAP_RANGER, AncientCurse.SAP_MAGE, AncientCurse.SAP_SPIRIT).forEach { a ->
-            listOf(AncientCurse.SAP_WARRIOR, AncientCurse.SAP_RANGER, AncientCurse.SAP_MAGE, AncientCurse.SAP_SPIRIT).forEach { b -> if (a != b) expect(a, b, false) }
+            listOf(AncientCurse.SAP_WARRIOR, AncientCurse.SAP_RANGER, AncientCurse.SAP_MAGE, AncientCurse.SAP_SPIRIT).forEach { b -> if (a != b) expect(a, b, a in AncientCurse.STYLE_SAPS && b in AncientCurse.STYLE_SAPS) }
         }
         assertEquals(emptyList<String>(), offenders)
     }
@@ -225,6 +227,8 @@ class AncientCurses2011Tests {
             AncientCurses.toggleCurse(it, AncientCurse.SAP_WARRIOR)
             AncientCurses.toggleCurse(it, AncientCurse.SAP_RANGER)
         }
+        // Owner 2026-09-18: turning Sap Ranger on switched Sap Warrior off.
+        assertFalse(AncientCurses.isCurseActive(attacker, AncientCurse.SAP_WARRIOR))
         val target = newPlayer(mapOf(Skills.ATTACK to 99, Skills.RANGED to 99))
 
         AncientCurses.onDamageDealt(attacker, target, damage = 10, style = CombatClass.RANGED)
@@ -232,7 +236,8 @@ class AncientCurses2011Tests {
         assertEquals(0.9, AncientCurses.drainMultiplier(target, Skills.RANGED), 1e-9)
         assertEquals(99, target.skills.getCurrentLevel(Skills.RANGED))
 
+        // Sap Warrior is off, so a melee hit drains nothing.
         AncientCurses.onDamageDealt(attacker, target, damage = 10, style = CombatClass.MELEE)
-        assertEquals(0.9, AncientCurses.drainMultiplier(target, Skills.ATTACK), 1e-9)
+        assertEquals(1.0, AncientCurses.drainMultiplier(target, Skills.ATTACK), 1e-9)
     }
 }

@@ -290,11 +290,7 @@ object CombatConfigs {
                         CombatStyle.THIRD -> Anims.ATTACK_STAB
                         else -> Anims.ATTACK_CRUSH
                     }
-                pawn.hasWeaponType(WeaponType.WHIP) ->
-                    when (option) {
-                        CombatStyle.SECOND -> Anims.ATTACK_WHIP_LASH
-                        else -> Anims.ATTACK_WHIP_FLICK
-                    }
+                pawn.hasWeaponType(WeaponType.WHIP) -> Animations.WHIP.slash.id // OSRS whip 1658, every style
                 pawn.hasWeaponType(WeaponType.SPEAR) ->
                     when (option) {
                         CombatStyle.SECOND -> Anims.ATTACK_SPEAR_SLASH
@@ -374,7 +370,8 @@ object CombatConfigs {
                 pawn.hasWeaponType(WeaponType.STAFF) || pawn.hasWeaponType(WeaponType.SCEPTRE) -> Anims.BLOCK_BOTH_HANDS
                 pawn.hasWeaponType(WeaponType.BOW) -> Anims.BLOCK_UNARMED
                 pawn.hasWeaponType(WeaponType.SPEAR, WeaponType.HALBERD, WeaponType.SCYTHE) -> Anims.BLOCK_SPEAR
-                pawn.hasWeaponType(WeaponType.WHIP) || pawn.hasWeaponType(WeaponType.SLING) -> Anims.BLOCK_WHIP
+                pawn.hasWeaponType(WeaponType.WHIP) -> Animations.WHIP.block.id // OSRS whip block 1659
+                pawn.hasWeaponType(WeaponType.SLING) -> Anims.BLOCK_WHIP
                 else -> Anims.BLOCK_UNARMED
             }
         }

@@ -134,7 +134,8 @@ class AncientCursesRuntimeTests {
         AncientCurses.selectQuickCurse(player, AncientCurse.BERSERKER.slot)
         AncientCurses.selectQuickCurse(player, AncientCurse.SAP_WARRIOR.slot)
         AncientCurses.selectQuickCurse(player, AncientCurse.SAP_RANGER.slot)
-        assertEquals(setOf(1, 2, 5), AncientCurses.selectedQuickCurseSlots(player).toSet())
+        // Owner 2026-09-18: Sap Ranger replaces Sap Warrior (style saps are exclusive).
+        assertEquals(setOf(2, 5),AncientCurses.selectedQuickCurseSlots(player).toSet())
         AncientCurses.selectQuickCurse(player, AncientCurse.TURMOIL_SLOT)
         assertEquals(setOf(5, 19), AncientCurses.selectedQuickCurseSlots(player).toSet())
         AncientCurses.selectQuickCurse(player, AncientCurse.LEECH_ATTACK.slot)

@@ -126,19 +126,27 @@ class AncientCursesTests {
     // ---- mutual exclusion ----
 
     @Test
-    fun `Saps stack with Saps and a Leech only deactivates the Sap of the same type`() {
+    fun `style Saps are exclusive and a Leech only deactivates the Sap of the same type`() {
         // Owner-supplied 2011 KB: "you cannot have a Sap and Leech curse of the same type active at
-        // the same time (e.g. Sap Ranger and Leech Ranged)"; other Saps stay on.
+        // the same time (e.g. Sap Ranger and Leech Ranged)"; other Saps stay on. Owner 2026-09-18:
+        // Sap Warrior, Sap Ranger and Sap Mage are mutually exclusive (same rule as the style leeches).
         val player = newPlayer()
         AncientCurses.switchBook(player, AncientCurses.PrayerBook.ANCIENT)
         AncientCurses.toggleCurse(player, AncientCurse.SAP_WARRIOR)
-        AncientCurses.toggleCurse(player, AncientCurse.SAP_RANGER)
+        AncientCurses.toggleCurse(player, AncientCurse.SAP_MAGE)
+        assertFalse(AncientCurses.isCurseActive(player, AncientCurse.SAP_WARRIOR))
+        assertTrue(AncientCurses.isCurseActive(player, AncientCurse.SAP_MAGE))
+        AncientCurses.toggleCurse(player, AncientCurse.SAP_MAGE)
+        AncientCurses.toggleCurse(player, AncientCurse.SAP_WARRIOR)
+        AncientCurses.toggleCurse(player, AncientCurse.SAP_SPIRIT)
         assertTrue(AncientCurses.isCurseActive(player, AncientCurse.SAP_WARRIOR))
-        assertTrue(AncientCurses.isCurseActive(player, AncientCurse.SAP_RANGER))
+        assertTrue(AncientCurses.isCurseActive(player, AncientCurse.SAP_SPIRIT))
         AncientCurses.toggleCurse(player, AncientCurse.LEECH_ATTACK)
         assertFalse(AncientCurses.isCurseActive(player, AncientCurse.SAP_WARRIOR))
-        assertTrue(AncientCurses.isCurseActive(player, AncientCurse.SAP_RANGER))
+        assertTrue(AncientCurses.isCurseActive(player, AncientCurse.SAP_SPIRIT))
         assertTrue(AncientCurses.isCurseActive(player, AncientCurse.LEECH_ATTACK))
+        AncientCurses.toggleCurse(player, AncientCurse.SAP_RANGER)
+        assertTrue(AncientCurses.isCurseActive(player, AncientCurse.SAP_RANGER))
         AncientCurses.toggleCurse(player, AncientCurse.LEECH_RANGED)
         assertFalse(AncientCurses.isCurseActive(player, AncientCurse.SAP_RANGER))
         assertTrue(AncientCurses.isCurseActive(player, AncientCurse.LEECH_ATTACK))

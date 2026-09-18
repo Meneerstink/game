@@ -106,8 +106,12 @@ object SpecialAttackSupport {
         val hitDelay = if (delay > -1) delay else 1 + Math.ceil(player.tile.getDistance(target.tile) * 0.3).toInt() + projectileDelayOffset
 
         if (consumeAmmo) {
-            gg.rsmod.plugins.content.combat.strategy.ranged.RangedAmmo.consume(player, fired!!, 1)
-            if (world.random(99) >= 20) {
+            // Same retrieval rule as a normal shot (Ava's devices / upgraded quiver): specials used to ignore the devices.
+            val outcome = gg.rsmod.plugins.content.combat.strategy.ranged.AvasDevices.outcome(player, world.random(99))
+            if (outcome != gg.rsmod.plugins.content.combat.strategy.ranged.AvasDevices.AmmoOutcome.RECOVERED) {
+                gg.rsmod.plugins.content.combat.strategy.ranged.RangedAmmo.consume(player, fired!!, 1)
+            }
+            if (outcome == gg.rsmod.plugins.content.combat.strategy.ranged.AvasDevices.AmmoOutcome.DROPPED) {
                 world.spawn(GroundItem(ammo.id, 1, target.tile, player))
             }
         }

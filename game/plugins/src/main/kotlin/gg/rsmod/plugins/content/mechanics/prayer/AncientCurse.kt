@@ -224,6 +224,9 @@ enum class AncientCurse(
             // Owner decision 2026-09-18 (overrides the KB for this pair set): Leech Strength, Leech
             // Ranged and Leech Magic are one combat-style group; only one may be active at a time.
             this in STYLE_LEECHES && other in STYLE_LEECHES -> true
+            // Owner 2026-09-18, same rule for the saps: Sap Warrior, Sap Ranger and Sap Mage are one
+            // combat-style group (melee, ranged, magic); only one may be active at a time.
+            this in STYLE_SAPS && other in STYLE_SAPS -> true
             a == Category.DEFLECT_COMBAT && b == Category.DEFLECT_COMBAT -> true
             a.isOverhead() && b.isOverhead() && (a != Category.DEFLECT_COMBAT || b != Category.DEFLECT_COMBAT) &&
                 !(a.isDeflect() && b.isDeflect()) -> true
@@ -237,6 +240,9 @@ enum class AncientCurse(
     companion object {
         /** Owner 2026-09-18: mutually exclusive combat-style leeches. */
         val STYLE_LEECHES by lazy { setOf(LEECH_STRENGTH, LEECH_RANGED, LEECH_MAGIC) }
+
+        /** Owner 2026-09-18: mutually exclusive combat-style saps. */
+        val STYLE_SAPS by lazy { setOf(SAP_WARRIOR, SAP_RANGER, SAP_MAGE) }
 
         /**
          * Turmoil is implemented separately in [AncientCurses] rather than as an entry above, but

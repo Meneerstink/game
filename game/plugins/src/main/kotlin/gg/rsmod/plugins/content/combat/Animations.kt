@@ -76,9 +76,13 @@ enum class Animations(
         block = Animation(397),
         stab = Animation(1067),
     ),
+    // Owner 2026-09-18 "abyssal whip animation incorrect" (combat must look exactly like OSRS): every whip-class weapon
+    // (Abyssal whip + its variants, Abyssal tentacle, Frozen / Volcanic abyssal whip) uses the OSRS whip sequences - attack
+    // 1658 for all three styles and block 1659 (both in this 667 cache) - instead of the 2011 whip 11968 / 11974.
+    // 1658 carries no frame sounds, so OsrsWeaponLooks.attackSound plays the OSRS "whip" sound 2720 (OSRS Wiki SFX list).
     WHIP(
-        slash = Animation(11968),
-        block = Animation(11974),
+        slash = Animation(1658),
+        block = Animation(1659),
     ),
     STAFF(
         crush = Animation(419),

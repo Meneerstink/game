@@ -30,27 +30,50 @@ fun throwOne(
     projectile: RangedProjectile,
     accuracy: Double,
     projectileGfx: Int = projectile.gfx,
+    launchGraphic: Boolean = true,
+    extraProjectileDelay: Int = 0,
 ): Boolean {
     val weapon = player.getEquipment(EquipmentType.WEAPON) ?: return false
-    projectile.drawback?.let { player.graphic(it) }
-    val flight = player.createProjectile(victim, projectileGfx, projectile.type)
-    world.spawn(flight)
-    val delay = RangedCombatStrategy.getHitDelay(player.getCentreTile(), victim.getCentreTile())
+    if (launchGraphic) projectile.drawback?.let { player.graphic(it) }
+    val type = projectile.type
+    val lifespan = gg.rsmod.plugins.content.combat.Combat.getProjectileLifespan(player, victim.tile, type)
+    world.spawn(
+        player.createProjectile(
+            victim, projectileGfx, type.startHeight, type.endHeight, type.angle, type.steepness,
+            delay = type.delay + extraProjectileDelay, lifespan = type.delay + extraProjectileDelay + lifespan,
+        ),
+    )
+    val delay = RangedCombatStrategy.getThrownHitDelay(player.getCentreTile(), victim.getCentreTile())
     val landHit = RangedCombatFormula.getAccuracy(player, victim, accuracy) >= world.randomDouble()
     player.dealHit(target = victim, maxHit = RangedCombatFormula.getMaxHit(player, victim), landHit = landHit, delay = delay, hitType = HitType.RANGE)
-    player.equipment.remove(weapon.id, 1)
-    if (world.random(99) >= 20) world.spawn(GroundItem(weapon.id, 1, victim.tile, player))
+    // Shared retrieval rule: Ava's devices recover knives and thrownaxes too (OSRS Wiki "Ava's device").
+    val outcome = gg.rsmod.plugins.content.combat.strategy.ranged.AvasDevices.outcome(player, world.random(99))
+    if (outcome != gg.rsmod.plugins.content.combat.strategy.ranged.AvasDevices.AmmoOutcome.RECOVERED) player.equipment.remove(weapon.id, 1)
+    if (outcome == gg.rsmod.plugins.content.combat.strategy.ranged.AvasDevices.AmmoOutcome.DROPPED) {
+        world.spawn(GroundItem(weapon.id, 1, victim.tile, player))
+    }
     return true
 }
 
-/* Dragon knife - Duality: 25 %; "throw two dragon knives at once, with each knife having its own accuracy and damage rolls". */
+/*
+ * Dragon knife - Duality: 25 %; "throw two dragon knives at once, with each knife having its own accuracy and damage rolls".
+ * Owner 2026-09-18 ("dragon knives have a weird bug when speccing"): the special replayed the NORMAL knife launch graphic twice and
+ * sent both knives as the same projectile on the same client cycle, so they rendered as one flickering knife. The OSRS special
+ * sequence already holds a knife in each hand (8291/8292 hand items, imported), so no normal launch graphic is sent, and the
+ * second knife leaves a few client cycles after the first (offset ADAPTED - two separate flights, OSRS spotanim 699 / 1629).
+ */
 SpecialAttacks.register(25, *Knives.DRAGON_KNIVES.toIntArray()) {
     val victim = target
     val poisoned = player.getEquipment(EquipmentType.WEAPON)?.id != Items.DRAGON_KNIFE
     player.animate(if (poisoned) gg.rsmod.plugins.content.items.osrs.OsrsSeq.HUMAN_DRAGON_TKNIVES_SPEC_POISON else gg.rsmod.plugins.content.items.osrs.OsrsSeq.HUMAN_DRAGON_TKNIVES_SPEC)
     player.playSound(Sfx.CHAINSHOT)
     val travel = if (poisoned) gg.rsmod.plugins.content.items.osrs.OsrsGfx.DRAGON_TKNIFE_TRAVEL_SPEC_P else gg.rsmod.plugins.content.items.osrs.OsrsGfx.DRAGON_TKNIFE_TRAVEL_SPEC
-    repeat(2) { if (player.getEquipment(EquipmentType.WEAPON) != null) throwOne(player, victim, RangedProjectile.DRAGON_KNIFE, 1.0, travel) }
+    val projectile = if (poisoned) RangedProjectile.DRAGON_KNIFE_P else RangedProjectile.DRAGON_KNIFE
+    repeat(2) { knife ->
+        if (player.getEquipment(EquipmentType.WEAPON) != null) {
+            throwOne(player, victim, projectile, 1.0, travel, launchGraphic = false, extraProjectileDelay = knife * 6)
+        }
+    }
 }
 
 /*

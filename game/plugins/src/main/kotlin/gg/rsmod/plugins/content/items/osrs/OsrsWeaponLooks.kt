@@ -127,7 +127,7 @@ object OsrsWeaponLooks {
 
     /**
      * The weapon's own OSRS attack sound (Jagex config names, OSRS Wiki "List of sound IDs"), or null for the item's 667 attack audio.
-     * The fang's stab has its own sound; its slash keeps the sword class audio.
+     * The fang plays the stab sword sounds (its own fang sounds belong to the special).
      */
     fun attackSound(
         weaponId: Int,
@@ -135,8 +135,11 @@ object OsrsWeaponLooks {
     ): Int? =
         when (weaponId) {
             Items.DUAL_MACUAHUITL -> OsrsSfx.MACUAHUITL_CRUSH
-            Items.OSMUMTENS_FANG -> if (attackAnimation == fangStab) OsrsSfx.OSMUMTENS_FANG_STAB else null
-            else -> null
+            // Owner 2026-09-18 "uses special sound for a non special hit": OSRS Wiki sound list - stab plays stabsword_stab 2549,
+            // slash stabsword_slash 2548; a_r_osmumtens_fang_sword_stab_01 (9366) is part 2 of the special only.
+            Items.OSMUMTENS_FANG -> if (attackAnimation == fangStab) gg.rsmod.plugins.api.cfg.Sfx.STABSWORD_STAB else gg.rsmod.plugins.api.cfg.Sfx.STABSWORD_SLASH
+            // Every whip-class weapon swings the OSRS whip sequence (Animations.WHIP), which has no frame sounds: OSRS "whip" 2720.
+            else -> if (attackAnimation == gg.rsmod.plugins.content.combat.Animations.WHIP.slash.id) gg.rsmod.plugins.api.cfg.Sfx.WHIP else null
         }
 
     /** OSRS plays XBOWS_HUMAN_FIRE_AND_RELOAD_PVN against npcs for ordinary crossbows. */

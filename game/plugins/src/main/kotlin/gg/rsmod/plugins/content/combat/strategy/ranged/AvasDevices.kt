@@ -51,4 +51,37 @@ object AvasDevices {
         val body = player.getEquipment(EquipmentType.CHEST) ?: return false
         return interferes(player.world.definitions.get(ItemDef::class.java, body.id).name)
     }
+
+    /** What happens to one piece of recoverable ammunition after a shot. */
+    enum class AmmoOutcome { BROKEN, DROPPED, RECOVERED }
+
+    /**
+     * The single ammunition-retrieval rule for every shot that uses recoverable ammunition - normal attacks, the dark bow's
+     * second arrow, ranged special attacks and thrown specials (OSRS Wiki "Ava's device": the devices recover "arrows, bolts,
+     * darts, javelins, throwing knives, thrownaxes, and toktz-xil-ul"). [chance] is uniform in 0..99: 0..19 always breaks
+     * (20 %); the rest is dropped under the target unless a device saves it - attractor 60 / 20 / 20, accumulator 72 / 8 / 20,
+     * assembler 80 recovered / 20 broken, never dropped. A quiver Ava upgraded gives its effect without the metal-torso rule
+     * ("The interaction between Ava devices and metal torsos does not carry over").
+     *
+     * Owner 2026-09-18: before this every special-attack shot ignored the devices (always used up, 80 % dropped on the floor).
+     */
+    fun outcome(
+        player: Player,
+        chance: Int,
+    ): AmmoOutcome {
+        if (chance in 0..19) return AmmoOutcome.BROKEN
+        val quiver = gg.rsmod.plugins.content.items.osrs.DizanasQuiver.wornAvaEffect(player)
+        val cape = player.getEquipment(EquipmentType.CAPE)?.id
+        val device = !interferes(player)
+        val dropped =
+            when {
+                quiver == gg.rsmod.plugins.content.items.osrs.DizanasQuiver.AvaEffect.ASSEMBLER -> false
+                quiver == gg.rsmod.plugins.content.items.osrs.DizanasQuiver.AvaEffect.ACCUMULATOR -> chance in 20..27
+                device && cape == gg.rsmod.plugins.api.cfg.Items.AVAS_ATTRACTOR -> chance in 20..39
+                device && cape == gg.rsmod.plugins.api.cfg.Items.AVAS_ACCUMULATOR -> chance in 20..27
+                device && cape in ASSEMBLERS -> false
+                else -> true
+            }
+        return if (dropped) AmmoOutcome.DROPPED else AmmoOutcome.RECOVERED
+    }
 }

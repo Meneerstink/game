@@ -11,21 +11,16 @@ import gg.rsmod.game.model.timer.STUN_TIMER
 import gg.rsmod.plugins.content.combat.specialattack.SpecialAttacks
 import gg.rsmod.plugins.content.mechanics.pvp.BeginnerProtection
 import gg.rsmod.plugins.content.mechanics.pvp.CityGuards
-import gg.rsmod.plugins.content.mechanics.pvp.PvpSkull
 import gg.rsmod.plugins.content.combat.strategy.MeleeCombatStrategy
 import gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell
 import gg.rsmod.plugins.content.inter.attack.AttackTab
 
 set_combat_logic {
     if (pawn.getCombatTarget() != null) {
-        // Deadman (owner 2026-09-17): every deliberate player-on-player attack - whatever started
-        // it (Attack option, spell, special, ranged) - skulls the attacker; engine auto-retaliation
-        // is the only exemption. This is the single entry point every attack style passes through.
-        val attacker = pawn
-        val target = attacker.getCombatTarget()
-        if (attacker is Player && target is Player && attacker.attr[PvpSkull.AUTO_RETALIATING_ATTR] != true) {
-            PvpSkull.onPlayerInitiatedAttack(attacker = attacker, victim = target)
-        }
+        // Deadman skull (owner 2026-09-18): NOT granted here at combat start any more. A player is
+        // skulled only when a hitsplat registers on the target - see PvpSkull.onHitRegistered,
+        // called from Pawn.dealHit (content/combat/PawnExt.kt), the one hit dispatch point every
+        // melee/ranged/magic/special route passes through.
         // RC-1: a player's combat loop is persistent - it survives prayers, eating, equipping,
         // familiar commands and other STRONG/soft actions; only a hard interruption (walk, new
         // interaction, teleport, death) ends it. NPC loops keep the old head-only scheduling so
@@ -57,7 +52,6 @@ on_player_option("Attack") {
                 )
             if (choice == 1) {
                 BeginnerProtection.forfeit(player)
-                PvpSkull.onPlayerInitiatedAttack(attacker = player, victim = target)
                 player.attack(target)
             } else {
                 player.message("You decide not to attack.")
@@ -66,7 +60,6 @@ on_player_option("Attack") {
         return@on_player_option
     }
 
-    PvpSkull.onPlayerInitiatedAttack(attacker = player, victim = target)
     player.attack(target)
 }
 
@@ -180,6 +173,14 @@ suspend fun cycle(it: QueueTask): Boolean {
         if (Combat.canAttack(pawn, target, strategy)) {
             if (pawn is Npc && dataAttackRange != null && !gg.rsmod.plugins.content.combat.attack.NpcAttacks.hasValidAttack(pawn, target)) {
                 return true // no attack section can hit from here yet: keep approaching instead of standing still
+            }
+            // A player's melee swing needs the real reach at the moment it fires (halberds 2 tiles, others adjacent);
+            // the target may have stepped away after the route finished - keep chasing instead of hitting from afar.
+            if (pawn is Player && strategy == MeleeCombatStrategy &&
+                !gg.rsmod.plugins.content.combat.strategy.ranged.RangedAmmo.isSalamander(pawn.getEquipment(EquipmentType.WEAPON)?.id) &&
+                !Combat.inMeleeReach(pawn, target, attackRange)
+            ) {
+                return true
             }
             pawn.stopMovement()
             // Check if either the attacker or the target is in a multi-combat area

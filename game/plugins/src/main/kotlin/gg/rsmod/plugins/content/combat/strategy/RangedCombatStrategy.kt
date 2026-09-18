@@ -255,24 +255,10 @@ object RangedCombatStrategy : CombatStrategy {
                     // Void's salamander route consumes one swamp tar directly; it is not Ava-recoverable ammo.
                     if (fired != null) RangedAmmo.consume(pawn, fired, 1) else pawn.equipment.remove(ammo.id, 1)
                 } else {
-                    val chance = world.random(99)
-                    val breakAmmo = chance in 0..19
-                    // OSRS Wiki "Ava's device": metallic torso armour stops the retrieval effect (AvasDevices).
-                    val device = !AvasDevices.interferes(pawn)
-                    // OSRS Wiki "Dizana's quiver": a quiver Ava upgraded saves ammunition like her device; "The interaction between
-                    // Ava devices and metal torsos does not carry over" (no `device` gate for it).
-                    val quiverEffect = gg.rsmod.plugins.content.items.osrs.DizanasQuiver.wornAvaEffect(pawn)
-                    val dropAmmo =
-                        when {
-                            quiverEffect == gg.rsmod.plugins.content.items.osrs.DizanasQuiver.AvaEffect.ASSEMBLER -> false
-                            quiverEffect == gg.rsmod.plugins.content.items.osrs.DizanasQuiver.AvaEffect.ACCUMULATOR -> chance in 20..27
-                            // Attractor 60 % saved / 20 % dropped / 20 % broken (was 10 % dropped); accumulator 72 / 8 / 20;
-                            // assembler 80 / 0 / 20 ("will never drop any ammo on the ground").
-                            device && pawn.hasEquipped(EquipmentType.CAPE, Items.AVAS_ATTRACTOR) -> chance in 20..39
-                            device && pawn.hasEquipped(EquipmentType.CAPE, Items.AVAS_ACCUMULATOR) -> chance in 20..27
-                            device && pawn.getEquipment(EquipmentType.CAPE)?.id in AvasDevices.ASSEMBLERS -> false
-                            else -> !breakAmmo
-                        }
+                    // One shared retrieval rule (Ava's devices, upgraded quivers, metal torsos): AvasDevices.outcome.
+                    val outcome = AvasDevices.outcome(pawn, world.random(99))
+                    val breakAmmo = outcome == AvasDevices.AmmoOutcome.BROKEN
+                    val dropAmmo = outcome == AvasDevices.AmmoOutcome.DROPPED
                     val amount = 1
                     if (ammoNeeded == true) {
                         if (breakAmmo || dropAmmo) {
@@ -340,6 +326,10 @@ object RangedCombatStrategy : CombatStrategy {
         val hitDelay =
             if (firedBlowpipe) {
                 BlowpipeCombat.hitDelay(pawn.tile.getDistance(target.tile), special = false)
+            } else if (pawn is Player && pawn.hasWeaponType(WeaponType.THROWN) && !chinchompa &&
+                pawn.getEquipment(EquipmentType.WEAPON)?.id?.let { gg.rsmod.plugins.content.items.osrs.Tonalztics.isTonalztics(it) } != true
+            ) {
+                getThrownHitDelay(pawn.getCentreTile(), target.tile.transform(target.getSize() / 2, target.getSize() / 2))
             } else {
                 getHitDelay(pawn.getCentreTile(), target.tile.transform(target.getSize() / 2, target.getSize() / 2))
             }
@@ -508,6 +498,16 @@ object RangedCombatStrategy : CombatStrategy {
         return 2 + (Math.floor((3.0 + distance) / 6.0)).toInt()
     }
 
+    /**
+     * OSRS Wiki "Hit delay": "ThrownDelay = 1 + floor(Distance / 6)" for darts, knives and thrownaxes (bows and crossbows use
+     * 1 + floor((3 + Distance) / 6)). Same +1 server offset as [getHitDelay]. Owner 2026-09-18 ("darts ... should be 2 tick"):
+     * thrown weapons used the bow formula, so every dart/knife at 3-5 tiles landed one tick late.
+     */
+    fun getThrownHitDelay(
+        start: Tile,
+        target: Tile,
+    ): Int = 2 + start.getDistance(target) / 6
+
     /** Also used for ranged special attack hits ([gg.rsmod.plugins.content.combat.specialattack.SpecialAttackXp]). */
     /**
      * Uses or drops one extra arrow exactly like the first arrow of an attack (20 % broken, otherwise dropped under the target unless an
@@ -520,17 +520,9 @@ object RangedCombatStrategy : CombatStrategy {
         arrowId: Int,
     ): (PawnHit).() -> Unit {
         val world = pawn.world
-        val chance = world.random(99)
-        val breakAmmo = chance in 0..19
-        val device = !AvasDevices.interferes(pawn)
-        val dropAmmo =
-            when {
-                device && pawn.hasEquipped(EquipmentType.CAPE, Items.AVAS_ATTRACTOR) -> chance in 20..39
-                device && pawn.hasEquipped(EquipmentType.CAPE, Items.AVAS_ACCUMULATOR) -> chance in 20..27
-                device && pawn.getEquipment(EquipmentType.CAPE)?.id in AvasDevices.ASSEMBLERS -> false
-                else -> !breakAmmo
-            }
-        if (breakAmmo || dropAmmo) RangedAmmo.consume(pawn, fired, 1)
+        val outcome = AvasDevices.outcome(pawn, world.random(99))
+        val dropAmmo = outcome == AvasDevices.AmmoOutcome.DROPPED
+        if (outcome != AvasDevices.AmmoOutcome.RECOVERED) RangedAmmo.consume(pawn, fired, 1)
         return if (dropAmmo) ({ world.spawn(GroundItem(arrowId, 1, target.tile, pawn)) }) else ({})
     }
 
