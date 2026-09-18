@@ -309,41 +309,28 @@ class PlayerUpdateBlockSegment(
                 val hitmarkCountStructure = structure[0]
                 val hitbarPercentageStructure = structure[1]
 
-                val hits = other.blockBuffer.hits
+                val entries = HitmarkEntries.of(other.blockBuffer.hits)
 
                 buf.put(
                     hitmarkCountStructure.type,
                     hitmarkCountStructure.order,
                     hitmarkCountStructure.transformation,
-                    hits.size,
+                    entries.size,
                 )
-                hits.forEach { hit ->
-                    val hitmarks = Math.min(2, hit.hitmarks.size)
-
-                    /*
-                     * Inform the client of how many hitmarkers to decode.
-                     */
-                    if (hitmarks == 0) {
-                        buf.putSmart(32766)
-                    }
-
-                    for (i in 0 until hitmarks) {
-                        val hitmark = hit.hitmarks[i]
-                        buf.putSmart(hitmark.type)
-                        buf.putSmart(hitmark.damage)
-                    }
-
-                    buf.putSmart(hit.clientDelay)
-                    val max: Int = other.getMaximumLifepoints()
-                    var percentage = 0
-                    if (max > 0) {
-                        percentage =
-                            if (max < other.getCurrentLifepoints()) {
-                                255
-                            } else {
-                                other.getCurrentLifepoints() * 255 / max
-                            }
-                    }
+                val max: Int = other.getMaximumLifepoints()
+                var percentage = 0
+                if (max > 0) {
+                    percentage =
+                        if (max < other.getCurrentLifepoints()) {
+                            255
+                        } else {
+                            other.getCurrentLifepoints() * 255 / max
+                        }
+                }
+                entries.forEach { entry ->
+                    buf.putSmart(entry.type)
+                    if (entry.type != HitmarkEntries.NO_HITMARK) buf.putSmart(entry.damage)
+                    buf.putSmart(entry.delay)
                     buf.put(
                         hitbarPercentageStructure.type,
                         hitbarPercentageStructure.order,
