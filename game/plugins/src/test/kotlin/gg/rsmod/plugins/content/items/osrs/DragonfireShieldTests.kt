@@ -19,6 +19,15 @@ import kotlin.test.assertNull
  */
 class DragonfireShieldTests {
     @Test
+    fun `a charged ward or wyvern shield without a counter is full, the single-id shield stays at 0`() {
+        // Owner 2026-09-18: a spawned charged Dragonfire ward read as 0 charges, so Empty skipped its burst sound.
+        assertEquals(DragonfireShield.MAX_CHARGES, DragonfireShield.charges(Item(Items.DRAGONFIRE_WARD)))
+        assertEquals(DragonfireShield.MAX_CHARGES, DragonfireShield.charges(Item(Items.ANCIENT_WYVERN_SHIELD)))
+        assertEquals(0, DragonfireShield.charges(Item(Items.DRAGONFIRE_WARD_UNCHARGED)))
+        assertEquals(0, DragonfireShield.charges(Item(Items.DRAGONFIRE_SHIELD)))
+    }
+
+    @Test
     fun `charges default to 0 and are readable back after withCharges`() {
         val fresh = Item(Items.DRAGONFIRE_SHIELD)
         assertEquals(0, DragonfireShield.charges(fresh))

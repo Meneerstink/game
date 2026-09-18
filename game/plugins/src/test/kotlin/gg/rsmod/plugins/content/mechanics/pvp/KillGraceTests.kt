@@ -48,9 +48,23 @@ class KillGraceTests {
         assertTrue(KillGrace.GRACE_TIMER.resetOnDeath, "dying must end the grace period early")
     }
 
+    @Test
+    fun `the grace remembers whose death earned it, so trailing hits on that victim cannot end it`() {
+        // Owner 2026-09-18 ("sometimes no timer after a kill"): the lethal hit's own action and the trailing hits of
+        // claws / double hits registered after the grant and ended it as "attacking someone new".
+        val killer = newPlayer()
+        val victim = newPlayer()
+        val someoneElse = newPlayer()
+        KillGrace.grant(killer, victim)
+        assertTrue(KillGrace.earnedFrom(killer, victim))
+        assertFalse(KillGrace.earnedFrom(killer, someoneElse))
+        kotlin.test.assertEquals(100, KillGrace.cyclesLeft(killer))
+    }
+
     private fun newPlayer(): Player {
         val player = mockk<Player>(relaxed = true)
         every { player.timers } returns TimerMap()
+        every { player.attr } returns gg.rsmod.game.model.attr.AttributeMap()
         return player
     }
 }
