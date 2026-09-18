@@ -101,6 +101,7 @@ object OsrsSfx {
     const val MACUAHUITL_SPECIAL = 10244 // OSRS 7917 varlamore_pm_macuahuitl_special_01
     const val MACUAHUITL_CRUSH = 10245 // OSRS 7930 varlamore_pm_macuahuitl_crush_01
     const val BURNING_CLAWS_SWIPE = 10246 // OSRS 9316 burning_claws_swipe_01
+    const val SUPERIOR_DEMONBANE_CAST = 10268 // OSRS 5027 superior_demonbane_cast (weaponsfx3, tx-20260918-042312)
     const val OSMUMTENS_FANG_METALLIC_WOOSH = 10247 // OSRS 9365 a_r_osmumtens_fang_sword_metallic_woosh_01
     const val OSMUMTENS_FANG_STAB = 10248 // OSRS 9366 a_r_osmumtens_fang_sword_stab_01
     const val OSMUMTENS_FANG_WOOSH_02 = 10249 // OSRS 9367

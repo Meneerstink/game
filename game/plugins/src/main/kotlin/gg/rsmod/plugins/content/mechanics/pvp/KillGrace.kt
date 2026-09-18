@@ -33,6 +33,8 @@ object KillGrace {
 
     fun isProtected(player: Player): Boolean = player.timers.has(GRACE_TIMER)
 
+    fun cyclesLeft(player: Player): Int = if (player.timers.exists(GRACE_TIMER)) player.timers[GRACE_TIMER] else 0
+
     /** Call when [player] attacks another player, or logs out - the two remaining "ends it
      * early" triggers the TimerKey's own resetOnDeath does not already cover. */
     fun endEarly(player: Player) {

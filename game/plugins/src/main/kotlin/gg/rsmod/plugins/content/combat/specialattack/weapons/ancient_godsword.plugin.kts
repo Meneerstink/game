@@ -17,7 +17,8 @@ SpecialAttacks.register(AncientGodsword.SPECIAL_ENERGY, Items.ANCIENT_GODSWORD) 
     val victim = target
     player.animate(gg.rsmod.plugins.content.items.osrs.OsrsSeq.NGS_SPECIAL_PLAYER)
     player.graphic(gg.rsmod.plugins.content.items.osrs.OsrsGfx.NGS_SPECIAL)
-    player.playSound(Sfx.BLOOD_SACRIFICE)
+    // No sound: OSRS 2911 "blood_sacrifice" is the Ruby bolts (e) effect (OSRS Wiki sound list note), which is what the owner heard
+    // as "an enchanted bolt". The godsword's own special sound is not identified by any source (SOURCE_BLOCKED).
     val maxHit = MeleeCombatFormula.getMaxHit(player, victim, specialAttackMultiplier = AncientGodsword.SPECIAL_DAMAGE)
     // Godsword specials roll against the target's slash defence (wiki DPS calculator `defenceStyle = 'slash'`).
     val landHit =

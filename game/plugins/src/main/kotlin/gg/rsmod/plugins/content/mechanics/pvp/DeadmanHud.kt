@@ -6,6 +6,7 @@ import gg.rsmod.game.model.timer.SKULL_ICON_DURATION_TIMER
 import gg.rsmod.plugins.api.InterfaceDestination
 import gg.rsmod.plugins.api.ext.closeInterface
 import gg.rsmod.plugins.api.ext.getWildernessLevel
+import gg.rsmod.plugins.api.ext.isMulti
 import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.api.ext.openInterface
 import gg.rsmod.plugins.api.ext.removeOption
@@ -93,14 +94,44 @@ object DeadmanHud {
         return "${bracket.first}-${bracket.last}"
     }
 
-    /** The full component-381:2 payload: label, separator, bracket. */
-    fun zoneText(player: Player): String = zoneLabel(player) + FIELD_SEPARATOR + bracketText(player.combatLevel)
+    /** Third 381:2 field while the player stands in a multicombat area (client draws the crossed swords under the bracket). */
+    const val MULTI_FLAG = "M"
+
+    /**
+     * The full component-381:2 payload: label, separator, bracket and - only in a multicombat area -
+     * a third field [MULTI_FLAG]. OSRS has no single-way icon, so a single-way area sends two fields.
+     */
+    fun zoneText(player: Player): String = zoneText(zoneLabel(player), player.combatLevel, player.tile.isMulti(player.world))
+
+    fun zoneText(
+        label: String,
+        combatLevel: Int,
+        multi: Boolean,
+    ): String = label + FIELD_SEPARATOR + bracketText(combatLevel) + if (multi) "$FIELD_SEPARATOR$MULTI_FLAG" else ""
 
     /** Remaining skull time as shown on the HUD, or null when not PK-skulled. */
     fun skullText(player: Player): String? {
         if (!PvpSkull.isSkulled(player)) return null
         val cyclesLeft = if (player.timers.exists(SKULL_ICON_DURATION_TIMER)) player.timers[SKULL_ICON_DURATION_TIMER] else 0
         return formatHalfMinutes(cyclesLeft)
+    }
+
+    /**
+     * Owner 2026-09-18 (#16 "1-minute kill grace works but shows no timer"): the post-kill protection time left, m:ss
+     * rounded up to the second, or null without a grace. Sent as a second field of 381:5 so the skull row is unchanged.
+     */
+    fun graceText(player: Player): String? {
+        if (!KillGrace.isProtected(player)) return null
+        val secondsLeft = Math.ceil(KillGrace.cyclesLeft(player) * 0.6).toInt().coerceAtLeast(0)
+        return "%d:%02d".format(secondsLeft / 60, secondsLeft % 60)
+    }
+
+    /** The 381:5 payload: skull time (or empty), then "|grace" while the kill grace runs. */
+    fun timerText(player: Player): String? {
+        val skull = skullText(player)
+        val grace = graceText(player)
+        if (skull == null && grace == null) return null
+        return (skull ?: "") + if (grace != null) "$FIELD_SEPARATOR$grace" else ""
     }
 
     /** m:ss rounded UP to the next 30-second step (5:00, 4:30, 4:00, ... 0:30). */
@@ -121,7 +152,7 @@ object DeadmanHud {
     fun refresh(player: Player) {
         val state = stateOf(player)
         val zone = zoneText(player)
-        val skull = skullText(player)
+        val skull = timerText(player)
 
         val previousState = player.attr[LAST_STATE_ATTR]
         if (previousState != state) {

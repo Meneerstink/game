@@ -126,6 +126,16 @@ object OsrsFxImportTool {
                     7939, 7942, 7943, 7944, // varlamore_glaive_charged_special_throw_01 / _whoosh_01 / _spin_01 / _impact_01
                     7940, 7941, // varlamore_glaive_regular_throw_whoosh_01, varlamore_glaive_projectile_01
                 ),
+            // Owner 2026-09-18 P0 buglist: the Dragon claws special played the Burning claws swipe. OSRS Wiki "List of sound IDs"
+            // (raw wikitext read 2026-09-18): 4138/4140/4141 dragonclaws_special_1/2/3, 4139 dragonclaws_normal. Above ~3800 the
+            // OSRS and 667 synth ids no longer match, so they are imported.
+            "weaponsfx3" to
+                listOf(
+                    4138, 4139, 4140, 4141,
+                    // OSRS Wiki "Voidwaker" trivia: the special's sound is Superior Demonbane's cast layered with a ToA Wardens
+                    // attack sound; 5027 superior_demonbane_cast (the Wardens half is not identified by any source).
+                    5027,
+                ),
         )
 
     // ---- smart values ---------------------------------------------------------------------------

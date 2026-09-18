@@ -307,6 +307,9 @@ object CombatConfigs {
                         else -> Anims.ATTACK_STAB
                     }
                 pawn.hasWeaponType(WeaponType.SCYTHE) -> Anims.ATTACK_HALBERD_SWIPE
+                // Granite maul: every style plays its own maul swing, sequence 1665 (Novite PlayerCombat
+                // getWeaponAttackEmote "granite maul" -> 1665; OSRS the same), not the generic hammer whack.
+                pawn.hasEquipped(EquipmentType.WEAPON, Items.GRANITE_MAUL, Items.GRANITE_MAUL_ORNATE_HANDLE) -> 1665
                 pawn.hasWeaponType(WeaponType.HAMMER) || pawn.hasWeaponType(WeaponType.HAMMER_EXTRA) -> Anims.ATTACK_CRUSH
                 pawn.hasWeaponType(WeaponType.BOW) -> Anims.ATTACK_BOW
                 pawn.hasWeaponType(WeaponType.CROSSBOW) -> Anims.ATTACK_CROSSBOW
