@@ -109,6 +109,13 @@ class AncientCurses2011Tests {
         assertEquals(1.0, AncientCurses.turmoilMultiplier(inactive, Skills.ATTACK, opponent), 1e-9)
     }
 
+    private fun procAfterCooldown(attacker: Player, target: Player) {
+        val world = attacker.world
+        val now = world.currentCycle
+        every { world.currentCycle } returns now + AncientCurses.SAP_LEECH_COOLDOWN_TICKS
+        AncientCurses.onDamageDealt(attacker, target, damage = 10)
+    }
+
     @Test
     fun `Sap Warrior applies the base 10 percent as a modifier, drains one percent per proc up to 20 percent, and releases the base on deactivation`() {
         // Owner-supplied 2011 Knowledge Base: immediate 10 %, slow drain to 20 %, initial 10 % restored
@@ -121,8 +128,10 @@ class AncientCurses2011Tests {
         assertEquals(99, target.skills.getCurrentLevel(Skills.ATTACK))
         assertEquals(0.9, AncientCurses.drainMultiplier(target, Skills.ATTACK), 1e-9)
         AncientCurses.onDamageDealt(attacker, target, damage = 10)
+        assertEquals(99, target.skills.getCurrentLevel(Skills.ATTACK)) // owner 2026-09-18: inside the 45 s cooldown
+        procAfterCooldown(attacker, target)
         assertEquals(98, target.skills.getCurrentLevel(Skills.ATTACK))
-        repeat(20) { AncientCurses.onDamageDealt(attacker, target, damage = 10) }
+        repeat(20) { procAfterCooldown(attacker, target) }
         assertEquals(90, target.skills.getCurrentLevel(Skills.ATTACK)) // 99 - 9 (extra 10 % of 99)
         assertEquals(0.9, AncientCurses.drainMultiplier(target, Skills.ATTACK), 1e-9)
         AncientCurses.toggleCurse(attacker, AncientCurse.SAP_WARRIOR)
@@ -166,7 +175,8 @@ class AncientCurses2011Tests {
         assertEquals(0.9, AncientCurses.drainMultiplier(target, Skills.ATTACK), 1e-9)
         assertEquals(99, attacker.skills.getCurrentLevel(Skills.ATTACK))
         assertEquals(1.05, AncientCurses.leechMultiplier(attacker, Skills.ATTACK), 1e-9)
-        repeat(30) { AncientCurses.onDamageDealt(attacker, target, damage = 10) }
+        // Owner 2026-09-18: one proc per 45-second cooldown; the cap itself is unchanged.
+        repeat(30) { procAfterCooldown(attacker, target) }
         assertEquals(85, target.skills.getCurrentLevel(Skills.ATTACK)) // 99 - 14 (extra 15 % of 99)
         assertEquals(103, attacker.skills.getCurrentLevel(Skills.ATTACK)) // 99 + 4 (extra 5 % of 99)
         AncientCurses.toggleCurse(attacker, AncientCurse.LEECH_ATTACK)

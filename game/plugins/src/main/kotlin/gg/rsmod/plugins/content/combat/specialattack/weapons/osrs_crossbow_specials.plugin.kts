@@ -19,6 +19,8 @@ SpecialAttacks.register(50, Items.ARMADYL_CROSSBOW) {
     player.animate(CombatConfigs.getAttackAnimation(player))
     player.graphic(gg.rsmod.plugins.content.items.osrs.OsrsGfx.ACB_SPECIALATTACK) // OSRS ACB_SPECIALATTACK (fxpilot)
     player.playSound(Sfx.CROSSBOW)
+    // OSRS Wiki "List of sound IDs": 3892 godwars_armadyl_avatar_attack is the Armadyl crossbow special's bird cry (same id in the 667 cache).
+    player.playSound(3892)
     rangedShot(player, target, accuracy = 2.0, boltSpecial = EnchantedBolts.Special.ARMADYL_EYE)
 }
 

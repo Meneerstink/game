@@ -23,6 +23,9 @@ on_item_on_item(item1 = Items.ORNATE_MAUL_HANDLE, item2 = Items.GRANITE_MAUL) {
 
 on_item_option(item = Items.GRANITE_MAUL_ORNATE_HANDLE, option = "Revert") {
     val slot = player.getInteractingItemSlot()
-    if (player.inventory[slot]?.id != Items.GRANITE_MAUL_ORNATE_HANDLE) return@on_item_option
-    player.inventory[slot] = gg.rsmod.game.model.item.Item(Items.GRANITE_MAUL)
+    player.queue {
+        // OSRS Wiki "Ornate maul handle": reverting destroys the handle, so it is confirmed first.
+        if (!confirmWarning("Revert the maul? The ornate handle will be destroyed.")) return@queue
+        if (player.inventory[slot]?.id != Items.GRANITE_MAUL_ORNATE_HANDLE) return@queue
+        player.inventory[slot] = gg.rsmod.game.model.item.Item(Items.GRANITE_MAUL)    }
 }

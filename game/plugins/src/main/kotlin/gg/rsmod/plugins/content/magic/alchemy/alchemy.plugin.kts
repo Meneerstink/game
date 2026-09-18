@@ -14,6 +14,7 @@ on_spell_on_item(fromInterface = 192, fromComponent = 38) {
     player.queue(TaskPriority.STRONG) {
         val data = MagicSpells.getMetadata(spellId = SpellbookData.LOW_ALCHEMY.uniqueId) ?: return@queue
         if (MagicSpells.canCast(player, data.lvl, data.runes)) {
+            if (!confirmValuableAlchemy(this, player)) return@queue
             if (performAlchemy(player, highAlchemy = false)) {
                 MagicSpells.removeRunes(player, data.runes, data.sprite)
             }
@@ -26,11 +27,24 @@ on_spell_on_item(fromInterface = 192, fromComponent = 59) {
     player.queue(TaskPriority.STRONG) {
         val data = MagicSpells.getMetadata(spellId = SpellbookData.HIGH_ALCHEMY.uniqueId) ?: return@queue
         if (MagicSpells.canCast(player, data.lvl, data.runes)) {
+            if (!confirmValuableAlchemy(this, player)) return@queue
             if (performAlchemy(player, highAlchemy = true)) {
                 MagicSpells.removeRunes(player, data.runes, data.sprite)
             }
         }
     }
+}
+
+/** Owner 2026-09-18: alching any item whose Grand Exchange guide price is above this asks for confirmation first. */
+val ALCH_WARNING_VALUE = 50_000L
+
+/** Shows the OSRS-style chatbox warning for a valuable item; true when the cast may proceed. */
+suspend fun confirmValuableAlchemy(task: QueueTask, player: Player): Boolean {
+    val unnoted = player.getInteractingItem().toUnnoted(world.definitions)
+    val value = gg.rsmod.plugins.content.mechanics.death.GuidePriceValueProvider(world).getValue(unnoted.id)
+    if (value <= ALCH_WARNING_VALUE) return true
+    val name = world.definitions.get(ItemDef::class.java, unnoted.id).name
+    return task.confirmWarning("Really alch $name? (${"%,d".format(value)} gp)")
 }
 
 /**

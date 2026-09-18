@@ -23,7 +23,8 @@ SpecialAttacks.register(50, Items.ZAMORAK_GODSWORD, Items.ZAMORAK_GODSWORD_OR) {
     // The (or) godsword plays the OSRS ornate special (gameval ZGS_SPECIAL_ORNATE_PLAYER, imported); the 667 godsword keeps its 667 special.
     player.animate(if (player.getEquipment(EquipmentType.WEAPON)?.id == Items.ZAMORAK_GODSWORD_OR) gg.rsmod.plugins.content.items.osrs.OsrsSeq.ZGS_SPECIAL_ORNATE_PLAYER else 7070)
     player.graphic(1221)
-    player.playSound(3865)
+    // The 667 special sequence 7070 carries its own frame sound (cache: vorbis 6820, radius 10); only the silent imported ornate sequence needs the server cue.
+    if (player.getEquipment(EquipmentType.WEAPON)?.id == Items.ZAMORAK_GODSWORD_OR) player.playSound(3865)
     val maxHit = MeleeCombatFormula.getMaxHit(player, target, specialAttackMultiplier = 1.10)
     val accuracy = MeleeCombatFormula.getAccuracy(player, target, specialAttackMultiplier = 2.0)
     val landHit = accuracy >= world.randomDouble()

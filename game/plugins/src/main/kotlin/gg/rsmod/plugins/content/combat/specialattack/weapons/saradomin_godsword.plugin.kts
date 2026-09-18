@@ -24,7 +24,8 @@ SpecialAttacks.register(50, Items.SARADOMIN_GODSWORD, Items.SARADOMIN_GODSWORD_O
     // The (or) godsword plays the OSRS ornate special (gameval SGS_SPECIAL_ORNATE_PLAYER, imported); the 667 godsword keeps its 667 special.
     player.animate(if (player.getEquipment(EquipmentType.WEAPON)?.id == Items.SARADOMIN_GODSWORD_OR) gg.rsmod.plugins.content.items.osrs.OsrsSeq.SGS_SPECIAL_ORNATE_PLAYER else 12019)
     player.graphic(2109)
-    player.playSound(3865)
+    // The 667 special sequence carries synth 3865 as a frame sound; only the silent imported ornate sequence needs the server cue.
+    if (player.getEquipment(EquipmentType.WEAPON)?.id == Items.SARADOMIN_GODSWORD_OR) player.playSound(3865)
     val maxHit = MeleeCombatFormula.getMaxHit(player, target, specialAttackMultiplier = 1.10)
     val accuracy = MeleeCombatFormula.getAccuracy(player, target, specialAttackMultiplier = 2.0)
     val landHit = accuracy >= world.randomDouble()

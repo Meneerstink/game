@@ -24,22 +24,22 @@ val godswordHilts =
 
 godswordHilts.forEach { (godsword, hilt) ->
     on_item_option(item = godsword, option = "Dismantle") {
-        // One sword becomes two items, so a single free slot is needed on top of the one the
-        // sword itself vacates.
-        if (player.inventory.freeSlotCount < 1) {
-            player.message("You don't have enough inventory space to do that.")
-            return@on_item_option
+        val slot = player.getInteractingItemSlot()
+        player.queue {
+            // Owner 2026-09-18: like OSRS, dismantling asks "Are you sure" in the chatbox first.
+            if (!confirmWarning("Are you sure you want to dismantle your godsword?")) return@queue
+            // One sword becomes two items, so a single free slot is needed on top of the one the
+            // sword itself vacates.
+            if (player.inventory.freeSlotCount < 1) {
+                player.message("You don't have enough inventory space to do that.")
+                return@queue
+            }
+            if (player.inventory[slot]?.id != godsword || !player.inventory.remove(item = godsword, beginSlot = slot).hasSucceeded()) {
+                return@queue
+            }
+            player.inventory.add(item = hilt, assureFullInsertion = true)
+            player.inventory.add(item = Items.GODSWORD_BLADE, assureFullInsertion = true)
+            player.filterableMessage("You detach the hilt from the godsword blade.")
         }
-        if (!player.inventory
-                .remove(
-                    item = godsword,
-                    beginSlot = player.getInteractingItemSlot(),
-                ).hasSucceeded()
-        ) {
-            return@on_item_option
-        }
-        player.inventory.add(item = hilt, assureFullInsertion = true)
-        player.inventory.add(item = Items.GODSWORD_BLADE, assureFullInsertion = true)
-        player.filterableMessage("You detach the hilt from the godsword blade.")
     }
 }

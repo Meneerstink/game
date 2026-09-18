@@ -40,6 +40,12 @@ import kotlin.test.assertTrue
  * ([AncientCurses.onIncomingHit]) and is covered below.
  */
 class AncientCursesTests {
+    private fun advanceCycles(player: Player, cycles: Int) {
+        val world = player.world
+        val now = world.currentCycle
+        every { world.currentCycle } returns now + cycles
+    }
+
     private fun newPlayer(
         skillLevels: Map<Int, Int> = emptyMap(),
         prayerLevel: Int = 99,
@@ -217,7 +223,13 @@ class AncientCursesTests {
             assertEquals(50, target.skills.getCurrentLevel(skill))
             assertEquals(0.9, AncientCurses.drainMultiplier(target, skill), 1e-9)
         }
-        // ...and every later proc removes one percent of the max level as a real drain.
+        // Owner 2026-09-18: a proc inside the 45-second cooldown does nothing...
+        AncientCurses.onDamageDealt(attacker, target, damage = 30)
+        listOf(Skills.ATTACK, Skills.STRENGTH, Skills.DEFENCE).forEach { skill ->
+            assertEquals(50, target.skills.getCurrentLevel(skill))
+        }
+        // ...and the next proc after it removes exactly one level as a real drain.
+        advanceCycles(attacker, AncientCurses.SAP_LEECH_COOLDOWN_TICKS)
         AncientCurses.onDamageDealt(attacker, target, damage = 30)
         listOf(Skills.ATTACK, Skills.STRENGTH, Skills.DEFENCE).forEach { skill ->
             assertEquals(49, target.skills.getCurrentLevel(skill))
@@ -242,7 +254,11 @@ class AncientCursesTests {
         assertEquals(4, stats.getCurrentLevel(NpcSkills.ATTACK))
         assertEquals(0.9, AncientCurses.drainMultiplier(npc, Skills.ATTACK), 1e-9)
         AncientCurses.onDamageDealt(attacker, npc, damage = 30)
+        assertEquals(4, stats.getCurrentLevel(NpcSkills.ATTACK)) // inside the 45 s cooldown
+        advanceCycles(attacker, AncientCurses.SAP_LEECH_COOLDOWN_TICKS)
+        AncientCurses.onDamageDealt(attacker, npc, damage = 30)
         assertEquals(3, stats.getCurrentLevel(NpcSkills.ATTACK))
+        advanceCycles(attacker, AncientCurses.SAP_LEECH_COOLDOWN_TICKS)
         AncientCurses.onDamageDealt(attacker, npc, damage = 30)
         assertEquals(3, stats.getCurrentLevel(NpcSkills.ATTACK))
     }
@@ -342,12 +358,26 @@ class AncientCursesTests {
     @Test
     fun `Deflect reflect triggers for a small 1-to-1 hit whose 10 percent is above zero`() {
         val target = newPlayer().also { activate(it, AncientCurse.DEFLECT_MISSILES) }
-        every { target.world.percentChance(63.0) } returns true
+        every { target.world.percentChance(AncientCurses.DEFLECT_REFLECT_CHANCE_PCT) } returns true
         val attacker = mockk<Player>(relaxed = true)
 
         AncientCurses.onIncomingHit(attacker, target, CombatClass.RANGED, damage = 50) // 10% = 5
+        // Owner 2026-09-18: a second hit of the same attack (same tick) never reflects again.
+        AncientCurses.onIncomingHit(attacker, target, CombatClass.RANGED, damage = 50)
 
         verify(exactly = 1) { attacker.addHit(any()) }
+    }
+
+    @Test
+    fun `Deflect reflect never fires when the 15 percent chance roll fails`() {
+        val target = newPlayer().also { activate(it, AncientCurse.DEFLECT_MISSILES) }
+        every { target.world.percentChance(AncientCurses.DEFLECT_REFLECT_CHANCE_PCT) } returns false
+        val attacker = mockk<Player>(relaxed = true)
+
+        AncientCurses.onIncomingHit(attacker, target, CombatClass.RANGED, damage = 50)
+
+        verify(exactly = 0) { attacker.addHit(any()) }
+        assertEquals(15.0, AncientCurses.DEFLECT_REFLECT_CHANCE_PCT, 0.0)
     }
 
     @Test

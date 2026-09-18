@@ -390,6 +390,12 @@ suspend fun QueueTask.chatPlayer(
  * @param amountOrZoom
  * The amount or zoom of the item to show on the dialog.
  */
+/**
+ * The OSRS chatbox warning shared by every destructive item action (dismantle, revert, high-value alchemy): a two-option
+ * "Yes / No" chatbox under [title]. Returns true only for an explicit "Yes"; closing or "No" cancels.
+ */
+suspend fun QueueTask.confirmWarning(title: String): Boolean = options("Yes.", "No.", title = title) == 1
+
 suspend fun QueueTask.itemMessageBox(
     message: String,
     item: Int,

@@ -46,6 +46,14 @@ class OpHeld5Handler : MessageHandler<OpHeld5Message> {
 
         client.resetFacePawn()
 
+        // The fifth inventory op is only "Drop" when the item says so. Imported OSRS items put real actions there
+        // ("Revert", "Dismantle", ...): route every non-Drop op-5 to its item-option plugin instead of dropping the item
+        // (owner 2026-09-18: Revert on the Granite maul (or) did nothing). Unbound ops fall through to the drop path.
+        val op5 = world.definitions.get(gg.rsmod.game.fs.def.ItemDef::class.java, item.id).inventoryMenu[4]
+        if (op5 != null && !op5.equals("Drop", ignoreCase = true) && world.plugins.executeItem(client, item.id, 5)) {
+            return
+        }
+
         if (world.plugins.canDropItem(client, item.id)) {
             val remove = client.inventory.remove(item, assureFullRemoval = false, beginSlot = slot)
             if (remove.completed > 0) {

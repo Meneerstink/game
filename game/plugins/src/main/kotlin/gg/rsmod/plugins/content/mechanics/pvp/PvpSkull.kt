@@ -16,8 +16,9 @@ import java.lang.ref.WeakReference
  *   legitimate retaliator are never skulled for that exchange.
  * - Duration is 5 minutes. Attacking first always gives a fresh 5-minute skull, even if the
  *   target is already skulled; attacking again while already skulled always resets the timer
- *   back to 5 minutes (every non-retaliation "Attack" click calls [onPlayerInitiatedAttack],
- *   which sets - not adds to - the timer).
+ *   back to 5 minutes (every non-retaliation registered hit calls [onHitRegistered], which
+ *   sets - not adds to - the timer). Owner 2026-09-18: the skull is granted when the hitsplat
+ *   registers on the target, never when the attack merely starts.
  * - The countdown pauses (see [SKULL_PAUSE_CHECK_TIMER]/[tickPauseTracking]) while the player is
  *   in an instanced area (07/client convention: instanced maps live at tile x >= 6400, per
  *   [gg.rsmod.game.model.instance.InstancedMapAllocator]'s own sourced comment) or has been
@@ -43,10 +44,6 @@ object PvpSkull {
     /** ~1 minute of standing on the same tile pauses the skull countdown (owner spec, 2026-09-16). */
     const val SAME_TILE_STALL_CYCLES = 100
 
-    /** Set on a pawn for the duration of an engine auto-retaliation `attack` call, so the shared
-     * combat-start hook can tell it apart from a deliberate attack. */
-    val AUTO_RETALIATING_ATTR = AttributeKey<Boolean>()
-
     /** Per-cycle driver for [tickPauseTracking]; session-local, cleared on death like the skull itself. */
     val SKULL_PAUSE_CHECK_TIMER = TimerKey(tickOffline = false, resetOnDeath = true)
 
@@ -70,29 +67,56 @@ object PvpSkull {
     }
 
     /**
-     * Call when [attacker] player-initiates an attack against [victim] via
-     * the explicit "Attack" option - never for auto-retaliation, which is
-     * how a legitimate retaliation is told apart from a fresh attack (an
-     * auto-retaliation never runs through this method).
+     * Whether [attacker] hitting [victim] is a retaliation: [victim] is the player currently on
+     * record as [attacker]'s aggressor (set by [markAggression] on every hit [victim] lands on
+     * [attacker], and kept alive by [PVP_AGGRESSOR_WINDOW_TIMER]).
      */
-    fun onPlayerInitiatedAttack(
+    fun isRetaliation(
+        attacker: Player,
+        victim: Player,
+    ): Boolean = attacker.timers.has(PVP_AGGRESSOR_WINDOW_TIMER) && attacker.attr[PVP_AGGRESSOR_ATTR]?.get() === victim
+
+    /**
+     * Owner 2026-09-18 (live retest, "MAJOR"): a player is skulled only when a hitsplat actually
+     * registers on the target - never at attack start. A player who could not attack at all (no
+     * arrows, no runes, out of reach) was still skulled because the skull was granted from the
+     * combat-start hook. This is now called from the one hit dispatch point every attack style
+     * (melee, ranged, magic, special) passes through - `Pawn.dealHit` in content/combat/PawnExt.kt
+     * - as a hit action, i.e. on the cycle the hitsplat is written (a 0 / blocked hit is a hitsplat
+     * too: OSRS Wiki "Skull (status)": missing still skulls). A cancelled hit (target or attacker
+     * dead, area no longer PvP) never skulls.
+     *
+     * OSRS Wiki "Skull (status)": "A player becomes skulled when they attack another player who
+     * has not attacked them first" - a retaliation, whether the engine's auto-retaliate or a
+     * manual Attack on the aggressor, never skulls ([isRetaliation]). Every other registered hit
+     * on a player gives, or resets to, the full 5-minute skull.
+     */
+    fun onHitRegistered(
         attacker: Player,
         victim: Player,
     ) {
-        if (!AreaState.canPlayersFight(attacker, victim)) {
+        if (attacker === victim || !AreaState.canPlayersFight(attacker, victim)) {
             return
         }
-
-        // Owner 2026-09-17 (live retest): "when a player attacks another player it needs to always
-        // give you a skull" - every deliberate attack of any style (melee, ranged, magic, special)
-        // skulls and resets the timer; only the engine's automatic retaliation is exempt
-        // ([AUTO_RETALIATING_ATTR], set by Combat.postAttack around the auto-retaliate call).
-        applySkull(attacker)
-        // Deadman PvP guards plan (2026-09-16): "attacking ... ends it early" - the attacker's
-        // own post-kill grace period, if any, ends the moment they initiate a new attack.
-        KillGrace.endEarly(attacker)
+        if (!isRetaliation(attacker, victim)) {
+            applySkull(attacker)
+            // Deadman PvP guards plan (2026-09-16): "attacking ... ends it early" - the attacker's
+            // own post-kill grace period, if any, ends the moment they attack someone new.
+            // A hit landing on the player whose death earned the grace (lethal/trailing hit ordering) is not a new attack.
+            if (!victim.isDead() && !KillGrace.earnedFrom(attacker, victim)) KillGrace.endEarly(attacker)
+        }
         markAggression(attacker, victim)
     }
+
+    /**
+     * Effect-only spells (binds, Teleport Block, stat drains, ...) never write a hitsplat, but a
+     * cast that actually fired at a player (runes consumed, projectile sent) is an attack in OSRS
+     * and skulls exactly like a damaging hit. Called from the magic strategy at cast execution.
+     */
+    fun onEffectSpellCast(
+        attacker: Player,
+        victim: Player,
+    ) = onHitRegistered(attacker, victim)
 
     /** Owner retest helper (`skullme` command): the same 5-minute skull + pause tracking a real
      * unprovoked attack gives, without needing a second account. */

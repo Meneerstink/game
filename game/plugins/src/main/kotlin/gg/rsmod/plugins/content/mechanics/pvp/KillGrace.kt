@@ -20,9 +20,16 @@ object KillGrace {
      * already use for the same class of "ends on death" rule. */
     val GRACE_TIMER = TimerKey(resetOnDeath = true)
 
-    fun grant(killer: Player) {
+    /** The player whose death earned the current grace; hits still landing on them (the lethal hit's own action, the
+     * trailing hits of claws/double hits, delayed projectiles) are not "attacking someone new" and must not end it. */
+    private val KILLED_ATTR = gg.rsmod.game.model.attr.AttributeKey<java.lang.ref.WeakReference<Player>>()
+
+    fun grant(killer: Player, victim: Player? = null) {
         killer.timers[GRACE_TIMER] = DURATION_CYCLES
+        if (victim != null) killer.attr[KILLED_ATTR] = java.lang.ref.WeakReference(victim) else killer.attr.remove(KILLED_ATTR)
     }
+
+    fun earnedFrom(killer: Player, victim: Player): Boolean = killer.attr[KILLED_ATTR]?.get() === victim
 
     fun isProtected(player: Player): Boolean = player.timers.has(GRACE_TIMER)
 

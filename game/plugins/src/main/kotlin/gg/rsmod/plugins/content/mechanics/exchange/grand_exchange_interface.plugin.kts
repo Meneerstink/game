@@ -74,6 +74,7 @@ on_button(GE.MAIN, GE.ABORT) {
     if (slot in 0 until GrandExchangeService.SLOTS) GE.abort(player, slot)
 }
 on_button(GE.MAIN, GE.BACK) { GE.back(player) }
+on_button(GE.MAIN, GE.WARNING_DISMISS) { player.setComponentHidden(GE.MAIN, GE.WARNING_CONTAINER, true) }
 
 GE.COLLECT.forEachIndexed { index, component ->
     on_button(GE.MAIN, component) {

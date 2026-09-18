@@ -4,6 +4,7 @@ import gg.rsmod.game.model.attr.DEATH_RECOVERY_FEE_ATTR
 import gg.rsmod.game.model.attr.KILLER_ATTR
 import gg.rsmod.game.model.attr.PVP_AGGRESSOR_ATTR
 import gg.rsmod.game.model.entity.Player
+import gg.rsmod.game.model.item.Item
 import gg.rsmod.game.model.timer.PVP_AGGRESSOR_WINDOW_TIMER
 import gg.rsmod.game.service.log.LoggerService
 import gg.rsmod.plugins.api.ext.isMulti
@@ -46,11 +47,12 @@ on_player_pre_death {
     // killer a 1-minute period where they cannot be attacked". Gated on the same real per-tile
     // multicombat flag every other single/multi rule in this codebase already uses.
     if (killer is Player && killer !== victim && !victim.tile.isMulti(world)) {
-        gg.rsmod.plugins.content.mechanics.pvp.KillGrace.grant(killer)
+        gg.rsmod.plugins.content.mechanics.pvp.KillGrace.grant(killer, victim)
     }
 
     val logger = world.getService(LoggerService::class.java, searchSubclasses = true)
-    val valueProvider = ItemDefCostValueProvider(world.definitions)
+    // Owner 2026-09-18: rank by Grand Exchange guide price, exactly like RuneScape (GuidePriceValueProvider).
+    val valueProvider = GuidePriceValueProvider(world)
 
     val resolved =
         DeathResolver.resolve(
@@ -58,19 +60,30 @@ on_player_pre_death {
             killer = killer,
             valueProvider = valueProvider,
             alwaysProtected = { itemId ->
-                itemId == CrownOfHelios.ITEM || Trouver.protectedFromDeath(itemId)
+                itemId == CrownOfHelios.ITEM || Trouver.protectedFromDeath(itemId) ||
+                    UntradeableDeathProtection.shouldProtect(world.definitions, itemId)
             },
         )
-    val (result, breaking) = PvpDeathBreakables.split(resolved)
+    val (afterBreakables, breaking) = PvpDeathBreakables.split(resolved)
+    val (result, droppedLostAmmo) = QuiverDeathRules.stripLost(afterBreakables)
     val executed =
         DeathExecutor.execute(
             world = world,
             result = result,
             recoveryConfig = DeathRecoveryConfig.PLACEHOLDER,
             logger = logger,
+            // Owner 2026-09-18 (#6): converted killer loot (broken-item coins, uncharged staves,
+            // ornament kits, quiver ammo) joins the lost stacks in the SAME loot-key plan instead of
+            // being spawned on the floor beside the key.
+            extraPvpLoot = {
+                val converted = mutableListOf<Item>()
+                PvpDeathBreakables.execute(world, result, breaking) { converted += it }
+                val droppedProtectedAmmo = QuiverDeathRules.stripProtected(victim, result)
+                converted += droppedLostAmmo + droppedProtectedAmmo
+                converted
+            },
         )
     if (executed) {
-        PvpDeathBreakables.execute(world, result, breaking)
         // Compensation is part of the same exactly-once death transfer. If a duplicate
         // pre-death hook reaches this script after DeathExecutor's guard fired, paying here
         // again would duplicate the killer's reward even though no second loot transfer ran.

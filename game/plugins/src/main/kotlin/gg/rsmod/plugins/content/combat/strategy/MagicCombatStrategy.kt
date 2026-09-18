@@ -160,6 +160,7 @@ object MagicCombatStrategy : CombatStrategy {
         pawn.animate(animation)
 
         if (pawn is Player) {
+            gg.rsmod.plugins.content.combat.strategy.magic.SpellSounds.of(spell)?.cast?.takeIf { it > 0 }?.let { pawn.playSound(it) }
             MagicSpells
                 .getMetadata(spell.uniqueId)
                 ?.let { requirement -> MagicSpells.removeRunes(pawn, requirement.runes, spellId = spell.uniqueId) }
@@ -171,6 +172,14 @@ object MagicCombatStrategy : CombatStrategy {
 
         val targets = collectTargets(pawn, target, spell)
         targets.forEach { victim -> castOn(pawn, victim, spell, primary = victim === target) }
+
+        // A spell cast directly on a target (not the selected autocast) is a single cast, as in OSRS: the caster
+        // stops afterwards. Non-damaging spells (binds, curses, Teleblock) never reach postDamage, so without this
+        // the spell stayed in CASTING_SPELL and repeated every attack cycle like an autocast (owner 2026-09-18).
+        if (pawn is Player && (spell.autoCastId == -1 || pawn.getVarp(Combat.SELECTED_AUTOCAST_VARP) != spell.autoCastId)) {
+            pawn.attr.remove(Combat.CASTING_SPELL)
+            Combat.reset(pawn)
+        }
     }
 
     /**
@@ -277,9 +286,21 @@ object MagicCombatStrategy : CombatStrategy {
                 accuracy >= world.randomDouble()
             }
 
+        // Impact (or splash) sound when the spell arrives, heard by the caster and a player target.
+        val impactSound = if (landHit) gg.rsmod.plugins.content.combat.strategy.magic.SpellSounds.of(spell)?.impact else gg.rsmod.plugins.content.combat.strategy.magic.SpellSounds.SPLASH
+        if (impactSound != null && impactSound > 0) {
+            (pawn as? Player)?.playSound(impactSound, delay = hitDelay * 30)
+            (target as? Player)?.playSound(impactSound, delay = hitDelay * 30)
+        }
+
         if (!spell.damaging) {
             // Effect-only spell: no damage hit is shown; the effect lands on a successful roll,
-            // otherwise the target only shows the splash graphic.
+            // otherwise the target only shows the splash graphic. No hitsplat ever registers, so
+            // the Deadman skull is granted here, at the cast that actually fired (OSRS: casting
+            // any spell on a player who did not attack you first skulls).
+            if (pawn is Player && target is Player) {
+                gg.rsmod.plugins.content.mechanics.pvp.PvpSkull.onEffectSpellCast(pawn, target)
+            }
             if (landHit) {
                 target.graphic(Graphic(spell.impactGfx?.id ?: 85, spell.impactGfx?.height ?: 96, hitDelay * 30))
                 world.queue {

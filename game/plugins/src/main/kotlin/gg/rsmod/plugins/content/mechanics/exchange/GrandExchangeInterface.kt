@@ -54,6 +54,8 @@ object GrandExchangeInterface {
     const val VARP_SLOT = 1112
     const val VARP_PAGE = 1113
     const val VARP_GUIDE = 1114
+    const val WARNING_CONTAINER = 196
+    const val WARNING_DISMISS = 220
 
     const val SCRIPT_ITEM_SEARCH = 570
     const val SCRIPT_CLOSE_SEARCH = 571
@@ -262,6 +264,10 @@ object GrandExchangeInterface {
         player.attr.remove(SELECTION_ATTR)
         resetConfigs(player)
         player.openInterface(MAIN, InterfaceDestination.MAIN_SCREEN)
+        // The client script shows the "far less than its guide price" warning (container 196); its Dismiss button (layer 220,
+        // label component 0 in the rev-667 cache) only receives clicks once op1 events are enabled for it (owner 2026-09-18:
+        // the warning could not be dismissed, blocking every sell).
+        player.setInterfaceEvents(interfaceId = MAIN, component = WARNING_DISMISS, range = -1..-1, setting = 2)
         refreshAll(player, service)
     }
 

@@ -157,7 +157,7 @@ class AncientCursesVisualAudioTests {
         verify { target.graphic(2264, delay = ONE_TICK_CLIENT_CYCLES) }
         verify { fixture.world.spawn(any<gg.rsmod.game.model.entity.Projectile>()) }
         // Soul Split's 2263/2264 sequences are silent; the hit sound is the PROVISIONAL owner choice.
-        verify(exactly = 1) { fixture.player.write(SynthSoundMessage(sound = AncientCurses.SOUL_SPLIT_HIT_SOUND, loops = 1, delay = 0)) }
+        verify(exactly = 1) { fixture.player.write(SynthSoundMessage(sound = AncientCurses.SOUL_SPLIT_HIT_SOUND, loops = 1, delay = 0, volume = Prayers.PRAYER_SOUND_VOLUME)) }
     }
 
     @Test
@@ -172,12 +172,12 @@ class AncientCursesVisualAudioTests {
                 if (expected == null) {
                     verify(exactly = 0) { fixture.player.write(match<gg.rsmod.game.message.Message> { it is SynthSoundMessage }) }
                 } else {
-                    verify(exactly = 1) { fixture.player.write(SynthSoundMessage(sound = expected, loops = 1, delay = 0)) }
+                    verify(exactly = 1) { fixture.player.write(SynthSoundMessage(sound = expected, loops = 1, delay = 0, volume = Prayers.PRAYER_SOUND_VOLUME)) }
                     verify(exactly = 1) { fixture.player.write(match<gg.rsmod.game.message.Message> { it is SynthSoundMessage }) }
                 }
             }.onFailure { offenders += "$curse: activation sound mismatch (expected ${expected ?: "none"})" }
             AncientCurses.toggleCurse(fixture.player, curse)
-            runCatching { verify(exactly = 1) { fixture.player.write(SynthSoundMessage(sound = LIFT_SOUND, loops = 1, delay = 0)) } }
+            runCatching { verify(exactly = 1) { fixture.player.write(SynthSoundMessage(sound = LIFT_SOUND, loops = 1, delay = 0, volume = Prayers.PRAYER_SOUND_VOLUME)) } }
                 .onFailure { offenders += "$curse: explicit deactivation did not send 2663 exactly once" }
         }
         val fixture = RuntimeFixture()
@@ -186,7 +186,7 @@ class AncientCursesVisualAudioTests {
         runCatching { verify(exactly = 0) { fixture.player.write(match<gg.rsmod.game.message.Message> { it is SynthSoundMessage }) } }
             .onFailure { offenders += "Turmoil: activation sent a server sound" }
         AncientCurses.toggleTurmoil(fixture.player)
-        runCatching { verify(exactly = 1) { fixture.player.write(SynthSoundMessage(sound = LIFT_SOUND, loops = 1, delay = 0)) } }
+        runCatching { verify(exactly = 1) { fixture.player.write(SynthSoundMessage(sound = LIFT_SOUND, loops = 1, delay = 0, volume = Prayers.PRAYER_SOUND_VOLUME)) } }
             .onFailure { offenders += "Turmoil: explicit deactivation did not send 2663 exactly once" }
         assertEquals(emptyList<String>(), offenders)
     }
@@ -239,7 +239,7 @@ class AncientCursesVisualAudioTests {
                 AncientCurses.toggleCurse(fixture.player, second)
                 val own = if (second.activationGraphic == null) AncientCurses.activationSound(second) else null
                 runCatching {
-                    verify(exactly = 0) { fixture.player.write(SynthSoundMessage(sound = LIFT_SOUND, loops = 1, delay = 0)) }
+                    verify(exactly = 0) { fixture.player.write(SynthSoundMessage(sound = LIFT_SOUND, loops = 1, delay = 0, volume = Prayers.PRAYER_SOUND_VOLUME)) }
                     verify(exactly = if (own == null) 0 else 1) { fixture.player.write(match<gg.rsmod.game.message.Message> { it is SynthSoundMessage }) }
                 }.onFailure { offenders += "$first -> $second: replacement must be silent apart from the new curse's own activation sound (${own ?: "none"})" }
             }

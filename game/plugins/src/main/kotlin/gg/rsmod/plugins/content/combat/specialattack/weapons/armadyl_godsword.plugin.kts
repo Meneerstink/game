@@ -18,7 +18,8 @@ SpecialAttacks.register(50, Items.ARMADYL_GODSWORD, Items.ARMADYL_GODSWORD_OR) {
     // The (or) godsword plays the OSRS ornate special (gameval AGS_SPECIAL_ORNATE_PLAYER, imported); the 667 godsword keeps its 667 special.
     player.animate(if (player.getEquipment(EquipmentType.WEAPON)?.id == Items.ARMADYL_GODSWORD_OR) gg.rsmod.plugins.content.items.osrs.OsrsSeq.AGS_SPECIAL_ORNATE_PLAYER else 11989)
     player.graphic(2113)
-    player.playSound(3865)
+    // The 667 special sequence carries synth 3865 as a frame sound; only the silent imported ornate sequence needs the server cue.
+    if (player.getEquipment(EquipmentType.WEAPON)?.id == Items.ARMADYL_GODSWORD_OR) player.playSound(3865)
     val maxHit = MeleeCombatFormula.getMaxHit(player, target, specialAttackMultiplier = 1.10)
     val accuracy = MeleeCombatFormula.getAccuracy(player, target, specialAttackMultiplier = 1.25)
     val landHit = accuracy >= world.randomDouble()

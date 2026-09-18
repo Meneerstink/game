@@ -22,6 +22,9 @@ object Prayers {
 
     private const val DEACTIVATE_PRAYER_SOUND = Sfx.CANCEL_PRAYER
 
+    /** Owner mix decision (2026-09-18): every prayerbook sound plays 10% quieter (255 * 0.9). */
+    const val PRAYER_SOUND_VOLUME = 230
+
     /**
      * Whether this player currently has the prayer book in quick-prayer *selection* mode. This used
      * to be a single `var` on this object, i.e. one flag shared by every player on the server.
@@ -77,9 +80,23 @@ object Prayers {
     }
 
     fun init(player: Player) {
-        // player.setvarp(if (curses) 1582 else 1395, 0)
+        // Active prayers are stored in the player's persistent varps. Do not clear them during
+        // login: doing so turns a valid saved prayer state into an off state before the first
+        // client sync. Rebuild the non-varp runtime mirrors after the serializer has restored the
+        // varps, otherwise Protect Item and Ancient Curses would look off to server-side consumers
+        // even though their client activation bits were saved.
         resetStatMods(player)
         setQuickPrayerSelectMode(player, false)
+        player.attr[PROTECT_ITEM_ATTR] = isActive(player, Prayer.PROTECT_ITEM)
+        AncientCurses.restoreActiveState(player)
+        player.setVarc(QUICK_PRAYERS_ACTIVE_VARC, 0)
+        player.syncVarp(ACTIVE_PRAYERS_VARP)
+        player.syncVarp(AncientCurse.ACTIVE_VARP)
+        // restoreActiveState() publishes the curse overhead when the ancient book is active; the
+        // normal-book setter only knows the normal prayer icon table and would otherwise wipe it.
+        if (AncientCurses.getBook(player) != AncientCurses.PrayerBook.ANCIENT) {
+            setOverhead(player)
+        }
     }
 
     private fun isSelectingQuickPrayers(player: Player): Boolean = player.attr.getOrDefault(QUICK_PRAYER_SELECT_MODE, false)
@@ -288,7 +305,7 @@ object Prayers {
                 1,
             )
             if (prayer.sound != -1 && AncientCurses.getBook(p) != AncientCurses.PrayerBook.ANCIENT) {
-                p.playSound(prayer.sound)
+                p.playSound(prayer.sound, volume = PRAYER_SOUND_VOLUME)
             }
 
             setOverhead(p)
@@ -305,7 +322,7 @@ object Prayers {
     ) {
         if (isActive(p, prayer)) {
             p.setVarbit(prayer.varbit, 0)
-            p.playSound(DEACTIVATE_PRAYER_SOUND)
+            p.playSound(DEACTIVATE_PRAYER_SOUND, volume = PRAYER_SOUND_VOLUME)
             setOverhead(p)
 
             if (prayer == Prayer.PROTECT_ITEM) {

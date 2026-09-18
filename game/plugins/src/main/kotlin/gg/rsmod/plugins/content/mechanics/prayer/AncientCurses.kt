@@ -225,7 +225,7 @@ object AncientCurses {
         if (isTurmoilActive(player)) {
             setTurmoil(player, false)
             resetTurmoilBonus(player)
-            player.playSound(CURSE_DEACTIVATE_SOUND)
+            player.playSound(CURSE_DEACTIVATE_SOUND, volume = Prayers.PRAYER_SOUND_VOLUME)
             player.filterableMessage("You deactivate Turmoil.")
             return
         }
@@ -310,6 +310,37 @@ object AncientCurses {
     /** Pushes the persisted book choice to the client (login) so the prayer tab renders the right grid. */
     fun syncBookVarbit(player: Player) {
         player.setVarbit(AncientCurse.BOOK_VARBIT, if (getBook(player) == PrayerBook.ANCIENT) 1 else 0)
+    }
+
+    /**
+     * Rebuilds the session-only curse runtime state from the persisted active varbits. The active
+     * curse set and Turmoil flag intentionally are not serialized because they are derived from
+     * the cache-backed varp state; failing to rebuild them after reconnect made curses appear
+     * selected in the client while they did not drain, protect or contribute combat effects.
+     */
+    fun restoreActiveState(player: Player) {
+        val active = activeCurses(player)
+        active.clear()
+        if (getBook(player) == PrayerBook.ANCIENT) {
+            AncientCurse.values
+                .filter { it.slot != AncientCurse.TURMOIL_SLOT && player.getVarbit(it.varbit) != 0 }
+                .forEach(active::add)
+            setTurmoil(player, player.getVarbit(AncientCurse.TURMOIL_VARBIT) != 0)
+            if (isTurmoilActive(player)) {
+                player.attr[TURMOIL_BONUS_ATTR] = mutableMapOf()
+            } else {
+                player.attr.remove(TURMOIL_BONUS_ATTR)
+            }
+        } else {
+            // A valid normal-book state cannot contain active curses. Clear only stale curse bits
+            // from older/broken saves; Protect Item remains shared between both books.
+            AncientCurse.values
+                .filter { it.slot != AncientCurse.TURMOIL_SLOT }
+                .forEach { player.setVarbit(it.varbit, 0) }
+            setTurmoil(player, false)
+            player.attr.remove(TURMOIL_BONUS_ATTR)
+        }
+        refreshCurseOverhead(player)
     }
 
     fun switchBook(
@@ -519,7 +550,7 @@ object AncientCurses {
             curse.activationAnimation?.let { player.animate(it) }
             curse.activationGraphic?.let { player.graphic(it) }
             // Graphic-borne sounds play client-side; only graphic-less curses get a server sound.
-            if (curse.activationGraphic == null) activationSound(curse)?.let { player.playSound(it) }
+            if (curse.activationGraphic == null) activationSound(curse)?.let { player.playSound(it, volume = Prayers.PRAYER_SOUND_VOLUME) }
         }
         player.filterableMessage("You activate ${curse.curseName}.")
         refreshCurseOverhead(player)
@@ -532,7 +563,7 @@ object AncientCurses {
     ) {
         if (activeCurses(player).remove(curse)) {
             player.setVarbit(curse.varbit, 0)
-            if (playSound) player.playSound(CURSE_DEACTIVATE_SOUND)
+            if (playSound) player.playSound(CURSE_DEACTIVATE_SOUND, volume = Prayers.PRAYER_SOUND_VOLUME)
             player.filterableMessage("You deactivate ${curse.curseName}.")
             refreshCurseOverhead(player)
             releaseCurseEffects(player, curse)
@@ -733,6 +764,30 @@ object AncientCurses {
         syncStatVarbits(player)
     }
 
+    /**
+     * Owner balance decision (2026-09-18, P0 buglist): Sap and Leech curses were draining far too much. Each Sap/Leech
+     * curse may proc at most once per [SAP_LEECH_COOLDOWN_TICKS] (45 s) per caster, and every proc drains at most one
+     * level (the escalation step), boosted stats included. Leech Special Attack is limited separately to
+     * [LEECH_SPECIAL_PCT] % once per [LEECH_SPECIAL_COOLDOWN_TICKS] (60 s). These are owner values, not 2011 values.
+     */
+    const val SAP_LEECH_COOLDOWN_TICKS = 75
+    const val LEECH_SPECIAL_COOLDOWN_TICKS = 100
+    const val LEECH_SPECIAL_PCT = 5
+    private val CURSE_PROC_CYCLE_ATTR = AttributeKey<MutableMap<AncientCurse, Int>>()
+
+    private fun cooldownTicks(curse: AncientCurse): Int =
+        if (curse == AncientCurse.LEECH_SPECIAL_ATTACK) LEECH_SPECIAL_COOLDOWN_TICKS else SAP_LEECH_COOLDOWN_TICKS
+
+    internal fun offCooldown(attacker: Player, curse: AncientCurse): Boolean {
+        val last = attacker.attr[CURSE_PROC_CYCLE_ATTR]?.get(curse) ?: return true
+        return attacker.world.currentCycle - last >= cooldownTicks(curse)
+    }
+
+    private fun startCooldown(attacker: Player, curse: AncientCurse) {
+        val map = attacker.attr[CURSE_PROC_CYCLE_ATTR] ?: mutableMapOf<AncientCurse, Int>().also { attacker.attr[CURSE_PROC_CYCLE_ATTR] = it }
+        map[curse] = attacker.world.currentCycle
+    }
+
     private fun sap(
         attacker: Player,
         curse: AncientCurse,
@@ -771,7 +826,8 @@ object AncientCurses {
         }
 
         fun tryCurse(curse: AncientCurse): Boolean {
-            if (!active.contains(curse) || !attacker.world.percentChance(curse.activationChancePercent)) return false
+            if (!active.contains(curse) || !offCooldown(attacker, curse) || !attacker.world.percentChance(curse.activationChancePercent)) return false
+            startCooldown(attacker, curse)
             applySapLeech(attacker, target, curse)
             return true
         }
@@ -856,13 +912,13 @@ object AncientCurses {
         )
         attacker.heal((damage * 0.2).toInt().coerceAtLeast(0))
         if (target is Player) target.decreasePrayerPoints(damage / 5)
-        attacker.playSound(SOUL_SPLIT_HIT_SOUND)
+        attacker.playSound(SOUL_SPLIT_HIT_SOUND, volume = Prayers.PRAYER_SOUND_VOLUME)
         // Graphic packet delays are 20 ms client cycles; one game tick is 30 cycles.
         target.graphic(SOUL_SPLIT_TARGET_GFX, delay = 30)
         attacker.queue {
             wait(1)
             if (!attacker.isDead()) {
-                attacker.playSound(SOUL_SPLIT_RETURN_SOUND)
+                attacker.playSound(SOUL_SPLIT_RETURN_SOUND, volume = Prayers.PRAYER_SOUND_VOLUME)
                 attacker.world.spawn(
                     target.createProjectile(
                         attacker,
@@ -942,8 +998,8 @@ object AncientCurses {
                     if (AttackTab.getEnergy(target) <= 0) {
                         curseNoEffectMessage(attacker, target)
                     } else {
-                        AttackTab.setEnergy(target, (AttackTab.getEnergy(target) - 10).coerceAtLeast(0))
-                        AttackTab.setEnergy(attacker, (AttackTab.getEnergy(attacker) + 10).coerceAtMost(100))
+                        AttackTab.setEnergy(target, (AttackTab.getEnergy(target) - LEECH_SPECIAL_PCT).coerceAtLeast(0))
+                        AttackTab.setEnergy(attacker, (AttackTab.getEnergy(attacker) + LEECH_SPECIAL_PCT).coerceAtMost(100))
                         leechMessages(attacker, target, "special attack energy")
                     }
                 }
@@ -1105,12 +1161,20 @@ object AncientCurses {
         if (target !is Player || damage <= 0) return
         val curse = DEFLECT_STYLE[style] ?: return
         if (!isCurseActive(target, curse)) return
+        // Owner balance decision (2026-09-18): at most a 15 % chance to reflect, and at most one reflected hit per
+        // attack - multi-hit attacks (claws, double hits, multi-target spells) landing on the same tick reflect once.
+        if (!target.world.percentChance(DEFLECT_REFLECT_CHANCE_PCT)) return
+        if (target.attr[LAST_DEFLECT_CYCLE_ATTR] == target.world.currentCycle) return
         val reflected = (damage * 0.10).toInt()
         // Novite Player.java:1267-1297 reflects whenever the 10% is above zero. The old `< 10` was
         // written for x10 life points and, after the 1:1 migration, blocked every hit under 100.
         if (reflected <= 0) return
         curse.reflectAnimation?.let { target.animate(it) }
         curse.reflectGraphic?.let { target.graphic(it) }
+        target.attr[LAST_DEFLECT_CYCLE_ATTR] = target.world.currentCycle
         attacker.hit(damage = reflected)
     }
+
+    const val DEFLECT_REFLECT_CHANCE_PCT = 15.0
+    private val LAST_DEFLECT_CYCLE_ATTR = AttributeKey<Int>()
 }
