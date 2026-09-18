@@ -73,8 +73,8 @@ SpecialAttacks.register(
 ) {
     val victim = target
     player.animate(1064)
+    // Graphic 253's sequence 2039 carries the Shove sound (cache: synth 5274, radius 20); the server cue doubled it.
     player.graphic(253, 96)
-    player.playSound(Sfx.SHOVE)
     if (victim.getSize() > 1 || victim.timers.has(gg.rsmod.game.model.timer.STUN_TIMER)) {
         player.message("That creature is too large to knock back.")
         return@register
@@ -99,7 +99,7 @@ SpecialAttacks.register(60, Items.DRAGON_2H_SWORD) {
     val victim = target
     player.animate(3157)
     player.graphic(1225)
-    player.playSound(Sfx.DRAGON_AXE_THUNDER)
+    // No server cue: sequence 3157 carries its own sound (cache: vorbis 6035); the extra cue doubled the special.
     meleeHit(player, victim)
     adjacentTargets(player, victim).forEach { other -> meleeHit(player, other) }
 }

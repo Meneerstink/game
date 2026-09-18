@@ -286,10 +286,14 @@ object RangedCombatStrategy : CombatStrategy {
             }
 
             // Sounds for ranged weapons
-            if (pawn.hasWeaponType(WeaponType.CROSSBOW)) pawn.playSound(Sfx.CROSSBOW) // crossbow sound
-            if (pawn.hasWeaponType(WeaponType.BOW)) pawn.playSound(Sfx.SHORTBOW) // bow sound
-            if (pawn.hasWeaponType(WeaponType.CHINCHOMPA)) pawn.playSound(Sfx.CHINCHOMPA_HIT) // chin sound
-            if (pawn.hasWeaponType(WeaponType.THROWN)) pawn.playSound(Sfx.THROWN) // thrown item sound
+            // The server cue only plays when the attack sequence is silent: 667 sequences such as the bow's 426 carry their own
+            // shot sound (cache frame sounds, AnimDef.hasFrameSounds), which the client plays itself - otherwise every shot
+            // sounded twice (owner 2026-09-18 duplicate-audio audit). Imported OSRS sequences are silent and keep the cue.
+            val sequenceSilent = world.definitions.getNullable(gg.rsmod.game.fs.def.AnimDef::class.java, animation)?.hasFrameSounds != true
+            if (sequenceSilent && pawn.hasWeaponType(WeaponType.CROSSBOW)) pawn.playSound(Sfx.CROSSBOW) // crossbow sound
+            if (sequenceSilent && pawn.hasWeaponType(WeaponType.BOW)) pawn.playSound(Sfx.SHORTBOW) // bow sound
+            if (sequenceSilent && pawn.hasWeaponType(WeaponType.CHINCHOMPA)) pawn.playSound(Sfx.CHINCHOMPA_HIT) // chin sound
+            if (sequenceSilent && pawn.hasWeaponType(WeaponType.THROWN)) pawn.playSound(Sfx.THROWN) // thrown item sound
 
             if (pawn.hasWeaponType(WeaponType.THROWN) || pawn.hasWeaponType(WeaponType.CHINCHOMPA)) {
                 if (pawn.getEquipment(EquipmentType.WEAPON) == null) {

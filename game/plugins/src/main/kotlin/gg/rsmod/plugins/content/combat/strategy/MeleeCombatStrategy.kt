@@ -64,7 +64,11 @@ object MeleeCombatStrategy : CombatStrategy {
             val osrsSound = weapon?.let { gg.rsmod.plugins.content.items.osrs.OsrsWeaponLooks.attackSound(it.id, animation) }
             if (osrsSound != null) {
                 pawn.playSound(osrsSound)
-            } else if (weapon != null && world.definitions.get(ItemDef::class.java, weapon.id).attackAudio > -1) {
+            } else if (weapon != null && world.definitions.get(ItemDef::class.java, weapon.id).attackAudio > -1 &&
+                // The 667 attack sequence usually carries its own swing sound (cache frame sounds); only a silent one needs the
+                // item's attack audio, otherwise every hit sounded twice.
+                world.definitions.getNullable(gg.rsmod.game.fs.def.AnimDef::class.java, animation)?.hasFrameSounds != true
+            ) {
                 pawn.playSound(world.definitions.get(ItemDef::class.java, weapon.id).attackAudio)
             }
         }

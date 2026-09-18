@@ -17,6 +17,13 @@ class AnimDef(
 
     val cycleLength: Int get() = lengthInCycles
 
+    /**
+     * True when any frame of this sequence plays a sound (opcode 13, `SeqType.soundInfo`). The client plays those itself, so
+     * a server cue for the same action would be heard twice (owner 2026-09-18 duplicate-audio audit).
+     */
+    var hasFrameSounds = false
+        private set
+
     /** Frame ids (`frameset archive << 16 | frame file`); a frame file's bytes 1-2 name its skeleton (AnimBase). */
     val frames: IntArray get() = if (::frameIds.isInitialized) frameIds else IntArray(0)
     val frameLength: Int get() = frameLengths.sum()
@@ -91,6 +98,7 @@ class AnimDef(
                 repeat(length) {
                     val size = buf.readUnsignedByte().toInt()
                     if (size > 0) {
+                        hasFrameSounds = true
                         buf.readMedium()
                         for (index in 1 until size) {
                             buf.readShort()
