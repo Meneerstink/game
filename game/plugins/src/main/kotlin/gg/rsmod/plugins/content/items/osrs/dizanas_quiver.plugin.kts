@@ -24,6 +24,7 @@ chargeableQuivers.forEach { quiverId ->
         }
         player.inventory.remove(Items.SUNFIRE_SPLINTERS, charge.added)
         player.inventory[quiverSlot] = charge.result
+        player.attr[DizanasQuiver.SPLINTERS_CHARGED] = (player.attr[DizanasQuiver.SPLINTERS_CHARGED] ?: 0) + charge.added
         player.message("Your quiver now has ${DizanasQuiver.charges(charge.result)} charges.")
     }
 }
@@ -34,6 +35,64 @@ chargeableQuivers.forEach { quiverId ->
  * than the sourced "nothing to fill" text are ADAPTED.
  */
 fun ammoName(id: Int) = world.definitions.get(gg.rsmod.game.fs.def.ItemDef::class.java, id).name
+
+val QuiverUi = gg.rsmod.game.tools.importer.DizanasQuiverInterfaceImportTool
+
+/** The inventory slot of the quiver whose interface is open. */
+val OPEN_QUIVER_SLOT = gg.rsmod.game.model.attr.AttributeKey<Int>()
+
+/** OSRS 592 "Charges: ..." text: a number while charged (OSRS default "Charges: 0"), "None" uncharged (owner picture). */
+fun chargesText(quiver: Item): String =
+    when {
+        quiver.id in DizanasQuiver.BLESSED -> "Charges: Unlimited" // ADAPTED: blessed quivers have permanent Sunfire
+        DizanasQuiver.charges(quiver) > 0 -> "Charges: ${"%,d".format(DizanasQuiver.charges(quiver))}"
+        else -> "Charges: None"
+    }
+
+fun refreshQuiver(player: Player) {
+    val slot = player.attr[OPEN_QUIVER_SLOT] ?: return
+    val quiver = player.inventory[slot]?.takeIf { it.id in DizanasQuiver.AMMO_HOLDERS } ?: return
+    val stored = DizanasQuiver.storedAmmo(quiver)
+    player.setComponentItem(QuiverUi.INTERFACE_ID, QuiverUi.SLOT, stored?.id ?: -1, stored?.amount ?: 0)
+    player.setComponentText(QuiverUi.INTERFACE_ID, QuiverUi.CHARGES, chargesText(quiver))
+}
+
+fun openQuiver(
+    player: Player,
+    slot: Int,
+) {
+    player.attr[OPEN_QUIVER_SLOT] = slot
+    player.openInterface(QuiverUi.INTERFACE_ID, InterfaceDestination.MAIN_SCREEN)
+    player.setInterfaceEvents(QuiverUi.INTERFACE_ID, QuiverUi.CLOSE, -1..-1, 0x2)
+    player.setInterfaceEvents(QuiverUi.INTERFACE_ID, QuiverUi.SLOT, -1..-1, 0x2 or 0x400)
+    refreshQuiver(player)
+}
+
+on_button(interfaceId = QuiverUi.INTERFACE_ID, component = QuiverUi.CLOSE) {
+    player.attr.remove(OPEN_QUIVER_SLOT)
+    player.closeInterface(QuiverUi.INTERFACE_ID)
+}
+
+on_interface_close(interfaceId = QuiverUi.INTERFACE_ID) {
+    player.attr.remove(OPEN_QUIVER_SLOT)
+}
+
+on_button(interfaceId = QuiverUi.INTERFACE_ID, component = QuiverUi.SLOT) {
+    val slot = player.attr[OPEN_QUIVER_SLOT] ?: return@on_button
+    val quiver = player.inventory[slot]?.takeIf { it.id in DizanasQuiver.AMMO_HOLDERS } ?: return@on_button
+    val stored = DizanasQuiver.storedAmmo(quiver) ?: return@on_button
+    if (player.getInteractingOpcode() != 61) {
+        world.sendExamine(player, stored.id, gg.rsmod.game.model.ExamineEntityType.ITEM)
+        return@on_button
+    }
+    val added = player.inventory.add(stored.id, stored.amount).completed
+    if (added <= 0) {
+        player.message("You don't have enough inventory space.")
+        return@on_button
+    }
+    player.inventory[slot] = DizanasQuiver.withStored(quiver, stored.id, stored.amount - added)
+    refreshQuiver(player)
+}
 
 DizanasQuiver.AMMO_HOLDERS.forEach { quiverId ->
     val def = world.definitions.get(gg.rsmod.game.fs.def.ItemDef::class.java, quiverId)
@@ -64,10 +123,12 @@ DizanasQuiver.AMMO_HOLDERS.forEach { quiverId ->
         }
     }
     if (def.inventoryMenu.any { it.equals("Open", ignoreCase = true) }) {
+        // Owner 2026-09-18 (picture "dizana interface"): Open shows the OSRS quiver interface (OSRS 592, built as 667 interface 1150
+        // by DizanasQuiverInterfaceImportTool) instead of a chat line.
         on_item_option(item = quiverId, option = "Open") {
             val slot = player.attr[INTERACTING_ITEM_SLOT] ?: return@on_item_option
-            val stored = DizanasQuiver.storedAmmo(player.inventory[slot])
-            player.message(if (stored == null) "Your quiver holds no ammunition." else "Your quiver holds ${stored.amount} x ${ammoName(stored.id)}.")
+            if (player.inventory[slot]?.id != quiverId) return@on_item_option
+            openQuiver(player, slot)
         }
     }
     if (def.inventoryMenu.any { it.equals("Empty", ignoreCase = true) }) {
@@ -105,6 +166,48 @@ DizanasQuiver.AMMO_HOLDERS.forEach { quiverId ->
             player.inventory[slot] = result.result
             player.message("You uncharge your quiver, recovering ${result.added} Sunfire splinters.")
         }
+    }
+}
+
+/*
+ * Worn Equipment second ammunition slot (owner 2026-09-18, picture "dizana slot"; OSRS Wiki: "The extra ammunition slot above the
+ * original slot, only appearing if the quiver is ... equipped"). The client draws it with the 667 worn tab's spare slot 387:48
+ * (the old aura slot, container slot 14), moved above the ammo slot (EquipmentInterfaceLayout). The server sends the stored
+ * ammunition as display-only slot 14 of inv 94 and shows the slot only while a quiver (or Dizana's max cape) is worn; bonuses,
+ * weight and appearance keep reading the real equipment. Remove puts the stored ammunition in the inventory, Examine examines it.
+ */
+val QUIVER_SLOT_COMPONENT = 48
+val QUIVER_DISPLAY_SLOT = 14
+
+gg.rsmod.game.model.entity.Player.equipmentDisplay = { p, items ->
+    val cape = items.getOrNull(EquipmentType.CAPE.id)
+    val holder = cape != null && cape.id in DizanasQuiver.AMMO_HOLDERS
+    p.setComponentHidden(interfaceId = 387, component = QUIVER_SLOT_COMPONENT, hidden = !holder)
+    if (!holder) {
+        items
+    } else {
+        Array(maxOf(items.size, QUIVER_DISPLAY_SLOT + 1)) { i -> if (i == QUIVER_DISPLAY_SLOT) DizanasQuiver.storedAmmo(cape) else items.getOrNull(i) }
+    }
+}
+
+on_login {
+    // The tab is built after the first equipment sync: resend so the slot's visibility and contents are right.
+    player.equipment.dirty = true
+}
+
+on_button(interfaceId = 387, component = QUIVER_SLOT_COMPONENT) {
+    val quiver = player.getEquipment(EquipmentType.CAPE)?.takeIf { it.id in DizanasQuiver.AMMO_HOLDERS } ?: return@on_button
+    val stored = DizanasQuiver.storedAmmo(quiver) ?: return@on_button
+    when (player.getInteractingOpcode()) {
+        61 -> {
+            val added = player.inventory.add(stored.id, stored.amount).completed
+            if (added <= 0) {
+                player.message("You don't have enough inventory space.")
+                return@on_button
+            }
+            player.equipment[EquipmentType.CAPE.id] = DizanasQuiver.withStored(quiver, stored.id, stored.amount - added)
+        }
+        25 -> world.sendExamine(player, stored.id, gg.rsmod.game.model.ExamineEntityType.ITEM)
     }
 }
 

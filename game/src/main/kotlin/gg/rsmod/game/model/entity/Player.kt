@@ -229,6 +229,14 @@ abstract class Player(
 
     var skullIcon = -1
 
+    /**
+     * Number of Deadman loot keys (0-5) drawn on the head icon next to the skull. Encoded into the
+     * appearance block's pk-icon byte as `skullIcon + (keys shl 4)` (see
+     * [gg.rsmod.game.sync.segment.PlayerUpdateBlockSegment]); the 2011scape client decodes the
+     * same layout. Only meaningful while [skullIcon] is not -1.
+     */
+    var lootKeyIcons = 0
+
     var runEnergy = 100.0
 
     /**
@@ -526,7 +534,16 @@ abstract class Player(
                         .isNotEmpty()
             val forceLogout = timers.exists(FORCE_DISCONNECTION_TIMER) && !timers.has(FORCE_DISCONNECTION_TIMER)
 
-            if (!stopLogout || forceLogout) {
+            /*
+             * Never complete a logout while the death sequence is running. handleLogout()
+             * interrupts the queued death, so the player was saved with DEATH_FLAG set, at the
+             * death tile, after the loot had already been removed - and the next login re-ran the
+             * whole death against whatever they had left. The death queue finishes within a few
+             * ticks; the forced-disconnection deadline still applies as the hard upper bound.
+             */
+            val dying = attr[DEATH_FLAG] == true
+
+            if ((!stopLogout && !dying) || forceLogout) {
                 // TODO: re-enable this after locks are properly checked
                 // if (lock.canLogout()) {
                 handleLogout()
@@ -591,7 +608,7 @@ abstract class Player(
      */
     private fun updateEquipment() {
         if (equipment.dirty) {
-            write(UpdateInvFullMessage(containerKey = 94, items = equipment.rawItems))
+            write(UpdateInvFullMessage(containerKey = 94, items = equipmentDisplay?.invoke(this, equipment.rawItems) ?: equipment.rawItems))
             equipment.dirty = false
             calculateBonuses = true
             calculateWeight = true
@@ -1033,14 +1050,17 @@ abstract class Player(
         val friendList = mutableListOf<Friend>()
         friends.forEach { friend ->
             val friendPlayer = world.getPlayerForName(friend)
-            var worldId = if (friendPlayer != null) 15 else 0
+            // The 667 client treats world 1 as the local game world. Sending 15
+            // makes an actually connected friend render as offline.
+            var worldId = if (friendPlayer != null) 1 else 0
             val added = attr[ADDED_FRIEND] == friend
             val playerIsRanked = privilege.id != 0
 
             // Check to see if this user should show offline, unless the player is a mod+
             if (friendPlayer != null && !playerIsRanked) {
-                val playerOnFriendList = friendPlayer.friends.contains(Misc.formatForDisplay(username))
-                val playerOnIgnoreList = friendPlayer.ignoredPlayers.contains(Misc.formatForDisplay(username))
+                val displayName = Misc.formatForDisplay(username)
+                val playerOnFriendList = friendPlayer.friends.any { Misc.formatForDisplay(it).equals(displayName, ignoreCase = true) }
+                val playerOnIgnoreList = friendPlayer.ignoredPlayers.any { Misc.formatForDisplay(it).equals(displayName, ignoreCase = true) }
                 // If the friend has their private off, show them as offline
                 if (friendPlayer.privateFilterSetting == ChatFilterType.OFF) worldId = 0
                 // If the friend has their private on friends, and you're not on their list, show them as offline
@@ -1068,7 +1088,8 @@ abstract class Player(
      */
     fun updateOthersFriendLists() {
         world.players.forEach { otherPlayer ->
-            if (otherPlayer.friends.contains(Misc.formatForDisplay(username))) {
+            val displayName = Misc.formatForDisplay(username)
+            if (otherPlayer.friends.any { Misc.formatForDisplay(it).equals(displayName, ignoreCase = true) }) {
                 otherPlayer.queue {
                     // Queue for next cycle, needed when updating for a friend logging off
                     wait(1)
@@ -1104,6 +1125,12 @@ abstract class Player(
      * true if the player is registered to a [PawnList].
      */
     val isOnline: Boolean get() = index > 0
+
+    /**
+     * Indicates that this player has requested logout and inbound packets must
+     * no longer be applied before the next player cycle unregisters them.
+     */
+    val isLogoutPending: Boolean get() = pendingLogout
 
     /**
      * Default method to handle any incoming [Message]s that won't be
@@ -1199,6 +1226,14 @@ abstract class Player(
             .toString()
 
     companion object {
+        /**
+         * Display-only view of the worn-equipment container (inv 94) sent to the client, set by the plugins module: it may
+         * append slots the client draws but the server's equipment never holds - e.g. Dizana's quiver's stored ammunition in
+         * the second ammunition slot (387:48, container slot 14). Bonuses, weight and appearance still read [equipment].
+         */
+        @JvmStatic
+        var equipmentDisplay: ((Player, Array<Item?>) -> Array<Item?>)? = null
+
         /**
          * How many tiles a player can 'see' at a time, normally.
          */

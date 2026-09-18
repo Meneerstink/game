@@ -265,6 +265,21 @@ task runNpcAttackOptionStripTool(type: JavaExec) {
     main = 'gg.rsmod.game.tools.importer.NpcAttackOptionStripTool'
 }
 
+task runLootKeyInterfaceImportTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Builds the OSRS Loot keys chest interface (OSRS 742) as 667 interface 1149 and imports its OSRS ' +
+        'sprites into both production caches (CacheTransaction). Usage: ./gradlew :game:runLootKeyInterfaceImportTool --args="[--apply]"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.LootKeyInterfaceImportTool'
+}
+
+task runOsrsSpriteDumpTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Read-only: writes every frame of an OSRS (openrs2 2686) sprite group as PNG. Usage: ./gradlew :game:runOsrsSpriteDumpTool --args="<groupId> <outDir> [cachePath]"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.OsrsSpriteDumpTool'
+}
+
 task runNpcRenameTool(type: JavaExec) {
     group = 'tools'
     description = 'Rewrites the cache name (NPCType opcode 2) of npc definitions in both production caches ' +
@@ -311,6 +326,13 @@ task runTraversalCacheAuditTool(type: JavaExec) {
     main = 'gg.rsmod.game.tools.importer.TraversalCacheAuditTool'
 }
 
+task runDizanasQuiverInterfaceImportTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Builds OSRS interface 592 (Dizana quiver) as 667 interface 1150 in both caches (CacheTransaction). Usage: ' +
+        './gradlew :game:runDizanasQuiverInterfaceImportTool --args="[--apply]"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.DizanasQuiverInterfaceImportTool'
+}
 task runWornAppearanceRankTool(type: JavaExec) {
     group = 'tools'
     description = 'Read-only diagnostic: replicates the client\'s initWornObjIds() ascending-id ' +

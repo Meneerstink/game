@@ -29,7 +29,10 @@ class UpdateFriendListEncoder : MessageEncoder<UpdateFriendListMessage>() {
                     System.arraycopy(worldNameString.toByteArray(), 0, worldNameData, 0, worldNameData.size - 1)
                     worldNameData[worldNameData.size - 1] = 0
 
-                    buf.writeByte(friend.getAddedAsInt())
+                    // The client reads this byte as "useFormerName" (ServerConnectionReader UPDATE_FRIENDLIST): 1 makes it look up
+                    // the former name to rename an existing row. A newly added friend has no former name, so 1 with "" could
+                    // rename a wrong (blank) row or duplicate the friend - only a real rename sends 1.
+                    buf.writeByte(if (friend.oldUsername.isNotEmpty()) 1 else 0)
                     buf.writeBytes(usernameData)
                     buf.writeBytes(oldUsernameData)
                     buf.writeShort(friend.world)

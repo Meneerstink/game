@@ -7,6 +7,7 @@ import gg.rsmod.plugins.api.BonusSlot
 import gg.rsmod.plugins.api.EquipmentType
 import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.api.ext.getEquipment
+import gg.rsmod.plugins.api.ext.hasWeaponType
 import gg.rsmod.plugins.content.combat.strategy.ranged.weapon.BowType
 import gg.rsmod.plugins.content.combat.strategy.ranged.weapon.CrossbowType
 import gg.rsmod.plugins.content.items.osrs.DizanasQuiver
@@ -52,10 +53,23 @@ object RangedAmmo {
         // Crystal bows and the Bow of Faerdhinen generate their own arrows: worn ammo is never fired or used.
         if (gg.rsmod.plugins.content.items.osrs.CrystalEquipment.isCrystalBow(player.getEquipment(EquipmentType.WEAPON)?.id)) return null
         val slot = player.getEquipment(EquipmentType.AMMO)
-        val valid = validAmmo(player.getEquipment(EquipmentType.WEAPON)?.id) ?: return slot?.let { Fired(it, false) }
+        val stored = DizanasQuiver.storedAmmo(player.getEquipment(EquipmentType.CAPE))
+        val valid = validAmmo(player.getEquipment(EquipmentType.WEAPON)?.id)
+        if (valid == null) {
+            // No ammo list for this weapon: a bow fires arrows and a crossbow bolts, from the ammo slot first, then the quiver
+            // (so a god blessing or other non-ammo item in the ammo slot is never fired). Other weapons keep the slot as it is.
+            val kind =
+                when {
+                    player.hasWeaponType(gg.rsmod.plugins.api.WeaponType.BOW) -> gg.rsmod.plugins.api.ProjectileType.ARROW
+                    player.hasWeaponType(gg.rsmod.plugins.api.WeaponType.CROSSBOW) -> gg.rsmod.plugins.api.ProjectileType.BOLT
+                    else -> return slot?.let { Fired(it, false) }
+                }
+            fun isKind(id: Int) = RangedProjectile.values.any { id in it.items && it.type == kind }
+            if (slot != null && isKind(slot.id)) return Fired(slot, false)
+            return stored?.takeIf { isKind(it.id) }?.let { Fired(it, true) }
+        }
         if (slot != null && slot.id in valid) return Fired(slot, false)
-        val stored = DizanasQuiver.storedAmmo(player.getEquipment(EquipmentType.CAPE)) ?: return null
-        return if (stored.id in valid) Fired(stored, true) else null
+        return if (stored != null && stored.id in valid) Fired(stored, true) else null
     }
 
     /** Uses [amount] of the fired ammo from the slot it came from. */

@@ -268,9 +268,11 @@ class JsonPlayerSerializer : PlayerSerializerService() {
      * @return If the player exists in the server's save files.
      */
     fun characterExists(username: String): Boolean {
+        // A blank name resolved to the saves directory itself and "existed" (a blank friend was added that way).
+        if (username.isBlank()) return false
         val save = path.resolve(username)
 
-        return Files.exists(save)
+        return Files.isRegularFile(save)
     }
 
     data class PersistentAppearance(

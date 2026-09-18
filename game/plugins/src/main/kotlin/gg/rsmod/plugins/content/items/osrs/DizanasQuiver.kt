@@ -90,6 +90,14 @@ object DizanasQuiver {
 
     fun charges(quiver: Item): Int = quiver.attr[ItemAttribute.CHARGES] ?: 0
 
+    /**
+     * OSRS Wiki "Blessed Dizana's quiver": blessing needs "a total of 150,000 sunfire splinters" and "Charging the quiver with
+     * sunfire splinters contributes to the required amount of splinters to upgrade". Splinters charged are counted per account.
+     * OPEN (owner decision): the blessing itself is done at the Shrine of Ralos, which does not exist in this 667 world.
+     */
+    const val BLESSING_SPLINTERS = 150_000
+    val SPLINTERS_CHARGED = AttributeKey<Int>(persistenceKey = "dizanas_quiver_splinters_charged")
+
     /** Dizana's Sunfire: permanent on the blessed quiver / max cape, otherwise only while the quiver holds charges. */
     fun sunfireActive(quiver: Item?): Boolean {
         if (quiver == null || quiver.id !in AMMO_HOLDERS) return false
@@ -104,6 +112,9 @@ object DizanasQuiver {
         (player.hasWeaponType(WeaponType.BOW) || player.hasWeaponType(WeaponType.CROSSBOW)) &&
             isArrowOrBolt(RangedAmmo.fired(player)?.item?.id) &&
             sunfireActive(player.getEquipment(EquipmentType.CAPE))
+
+    /** Arrow/bolt weapons with their own charges: they never spend the quiver's charges (OSRS Wiki "Dizana's quiver"). */
+    val OWN_CHARGE_WEAPONS: Set<Int> = setOf(Items.VENATOR_BOW)
 
     const val NOTHING_TO_FILL_MESSAGE = "You have nothing in your worn quiver to fill your Dizana's Quiver with."
 
@@ -209,6 +220,8 @@ object DizanasQuiver {
 
     /** Called after a shot that gained Sunfire: spends the charge roll on the worn quiver (blessed quivers never spend one). */
     fun afterShot(player: Player) {
+        // "Ranged weapons with a charge system of their own, most notably the venator bow, will not use the quiver's charges."
+        if (player.getEquipment(EquipmentType.WEAPON)?.id in OWN_CHARGE_WEAPONS) return
         val quiver = player.getEquipment(EquipmentType.CAPE) ?: return
         val result = spendShot(quiver, player.world.randomDouble())
         if (result !== quiver) player.equipment[EquipmentType.CAPE.id] = result
