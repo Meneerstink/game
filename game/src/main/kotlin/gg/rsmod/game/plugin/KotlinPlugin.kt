@@ -688,6 +688,17 @@ abstract class KotlinPlugin(
     ) = r.bindSpellOnNpc(parent, child, logic)
 
     /**
+     * Invoke [logic] when a spell / interface target [parent]:[child] is used on object [obj] (-1 = any object), after the
+     * player has walked to it ([gg.rsmod.game.message.impl.OpLocTMessage]).
+     */
+    fun on_spell_on_obj(
+        parent: Int,
+        child: Int,
+        obj: Int = -1,
+        logic: (Plugin).() -> Unit,
+    ) = r.bindSpellOnObject(parent, child, obj, logic)
+
+    /**
      * Invoke [logic] when [gg.rsmod.game.message.impl.IfOpenSubMessage] is handled.
      */
     fun on_interface_open(

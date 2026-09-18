@@ -28,6 +28,10 @@ class DeadmanBracketTests {
         assertEquals("Deadman", DeadmanHud.TEXT_DANGEROUS)
         assertEquals('|', DeadmanHud.FIELD_SEPARATOR)
         assertEquals("Warning: You are entering a dangerous zone.", DeadmanHud.DANGER_WARNING)
+        // Two fields in single-way combat, a third "M" field (the crossed swords) in a multicombat area.
+        assertEquals("Deadman|74-102", DeadmanHud.zoneText(DeadmanHud.TEXT_DANGEROUS, 88, multi = false))
+        assertEquals("Deadman|74-102|M", DeadmanHud.zoneText(DeadmanHud.TEXT_DANGEROUS, 88, multi = true))
+        assertEquals("Level: 3|3-17|M", DeadmanHud.zoneText("Level: 3", 3, multi = true))
     }
 
     @Test

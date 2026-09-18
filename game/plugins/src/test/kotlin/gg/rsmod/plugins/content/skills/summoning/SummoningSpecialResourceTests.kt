@@ -419,7 +419,9 @@ class SummoningSpecialResourceTests {
                     container[slot]?.let { it.id * 31 + it.amount } ?: 0
                 }
             }.orEmpty()
-        return skills + listOf(player.getCurrentLifepoints()) + inventory + store
+        // Venom Shot's effect is a charge on the owner's next ranged hit (SummoningSpecialMoves.VENOM_SHOT_CHARGED_ATTR).
+        val charges = listOf(if (player.attr[SummoningSpecialMoves.VENOM_SHOT_CHARGED_ATTR] == true) 1 else 0)
+        return skills + listOf(player.getCurrentLifepoints()) + inventory + store + charges
     }
 
     @Test

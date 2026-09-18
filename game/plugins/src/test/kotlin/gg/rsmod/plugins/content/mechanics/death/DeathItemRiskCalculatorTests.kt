@@ -108,15 +108,42 @@ class DeathItemRiskCalculatorTests {
         assertEquals(DeathContainerSource.INVENTORY, protectedFromInventory.source)
     }
 
+    /**
+     * Owner 2026-09-18 (MAJOR): items kept on death are counted per item, exactly like RuneScape -
+     * a stack is ranked by its per-unit value and only as many units as the keep count allows are
+     * kept (RuneScape Wiki "Items Kept on Death": three coins out of a coin stack). The old rule
+     * ranked whole stacks by total value, which let a cash stack survive an unskulled death.
+     */
     @Test
-    fun `stack amount is preserved and ranked by total stack value, never split`() {
-        // Item 10 is a cheap stackable (value 1/ea) but a huge stack, so its total
-        // value (1 * 5000 = 5000) outranks a single expensive item worth 4000.
-        val cheapBigStack = Item(10, 5000)
-        val expensiveSingle = Item(20, 1)
+    fun `a stack is ranked per unit and split - 3 of 1000 coins are kept, 997 are lost`() {
+        val coins = Item(995, 1000)
+        val inventory = arrayOfNulls<Item?>(28).also { it[0] = coins }
+        val values = mapOf(995 to 1L)
+
+        val result =
+            DeathItemRiskCalculator.calculate(
+                inventory = inventory,
+                equipment = emptyEquipment(),
+                skulled = false,
+                itemProtectionActive = false,
+                valueProvider = ItemRiskValueProvider { values[it] ?: 0L },
+            )
+
+        val kept = result.protected.single()
+        assertEquals(995, kept.item.id)
+        assertEquals(3, kept.item.amount)
+        val lost = result.lost.single()
+        assertEquals(995, lost.item.id)
+        assertEquals(997, lost.item.amount)
+        assertEquals(0, lost.slot, "the lost remainder must point at the same slot for a partial removal")
+    }
+
+    @Test
+    fun `a cheap big stack never outranks a single expensive item`() {
+        // Item 10 is a cheap stackable (value 1/ea) in a huge stack; item 20 is one item worth 4000.
         val inventory = arrayOfNulls<Item?>(28).also {
-            it[0] = cheapBigStack
-            it[1] = expensiveSingle
+            it[0] = Item(10, 5000)
+            it[1] = Item(20, 1)
         }
         val values = mapOf(10 to 1L, 20 to 4000L)
 
@@ -130,13 +157,33 @@ class DeathItemRiskCalculatorTests {
             )
 
         assertEquals(1, result.protectedItemCount)
-        val protected = result.protected.single()
-        assertEquals(10, protected.item.id)
-        assertEquals(5000, protected.item.amount, "the entire stack's original amount must be preserved, not split")
-
+        assertEquals(20, result.protected.single().item.id)
         val lost = result.lost.single()
-        assertEquals(20, lost.item.id)
-        assertEquals(1, lost.item.amount)
+        assertEquals(10, lost.item.id)
+        assertEquals(5000, lost.item.amount)
+    }
+
+    @Test
+    fun `unskulled keeps exactly 3 items across stacks, not 3 stacks`() {
+        // 2 sharks (value 100) + 5 lobsters (value 50): keep 2 sharks + 1 lobster, lose 4 lobsters.
+        val inventory = arrayOfNulls<Item?>(28).also {
+            it[0] = Item(385, 2)
+            it[1] = Item(379, 5)
+        }
+        val values = mapOf(385 to 100L, 379 to 50L)
+
+        val result =
+            DeathItemRiskCalculator.calculate(
+                inventory = inventory,
+                equipment = emptyEquipment(),
+                skulled = false,
+                itemProtectionActive = false,
+                valueProvider = ItemRiskValueProvider { values[it] ?: 0L },
+            )
+
+        assertEquals(3, result.protected.sumOf { it.item.amount })
+        assertEquals(listOf(385 to 2, 379 to 1), result.protected.map { it.item.id to it.item.amount })
+        assertEquals(listOf(379 to 4), result.lost.map { it.item.id to it.item.amount })
     }
 
     @Test

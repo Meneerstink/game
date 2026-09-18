@@ -106,7 +106,8 @@ class SummoningSpecialMoveTests {
         // no special-move binding at all, and therefore a dead Special Move button. Then Goad and
         // Ambush, found by the roster-wide coverage sweep in SummoningSpecialMoveCoverageTests:
         // the Spirit graahk and Spirit kyatt had sourced scroll data and no binding either.
-        assertEquals(57, SummoningSpecialMoves.bindings.size)
+        // 57 + Howl, Venom Shot, Generate Compost, Multichop, Regrowth (2026-09-18).
+        assertEquals(62, SummoningSpecialMoves.bindings.size)
         val player = newPlayer(SummoningPouchData.WAR_TORTOISE.npc)
         assertEquals(SummoningScrollData.TESTUDO_SCROLL, SummoningSpecialMoves.resolveBinding(player)?.scroll)
     }

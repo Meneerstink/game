@@ -126,6 +126,9 @@ class PluginRepository(
      */
     private val spellOnNpcPlugins = Int2ObjectOpenHashMap<Plugin.() -> Unit>()
 
+    /** Spell / interface target on an object: key = component hash, value = object id (-1 = any object) to plugin. */
+    private val spellOnObjectPlugins = Int2ObjectOpenHashMap<MutableMap<Int, Plugin.() -> Unit>>()
+
     /**
      * A map that contains plugins that should be executed when the [TimerKey]
      * hits a value of [0] time left.
@@ -938,6 +941,33 @@ class PluginRepository(
         }
         spellOnNpcPlugins[hash] = plugin
         pluginCount++
+    }
+
+    fun bindSpellOnObject(
+        parent: Int,
+        child: Int,
+        obj: Int,
+        plugin: Plugin.() -> Unit,
+    ) {
+        val hash = (parent shl 16) or child
+        val map = spellOnObjectPlugins.getOrPut(hash) { mutableMapOf() }
+        if (map.containsKey(obj)) {
+            if (rejectDuplicateBinding("Spell on object is already bound: [$parent, $child] obj=$obj")) return
+        }
+        map[obj] = plugin
+        pluginCount++
+    }
+
+    fun executeSpellOnObject(
+        p: Player,
+        parent: Int,
+        child: Int,
+        obj: Int,
+    ): Boolean {
+        val map = spellOnObjectPlugins[(parent shl 16) or child] ?: return false
+        val plugin = map[obj] ?: map[-1] ?: return false
+        p.executePlugin(plugin)
+        return true
     }
 
     fun executeSpellOnNpc(

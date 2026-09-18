@@ -28,6 +28,29 @@ val RESPAWN_TIMER_MAX_RANGE = 98
 val INFERNO_ADZE_PROJECTILE_ID = 1776
 
 object Woodcutting {
+    /** A felled world tree: its stump and what grows back (the tree and, for big trees, its canopy). */
+    class FelledTree(val stump: GameObject, val tree: GameObject, val canopy: GameObject?)
+
+    /** Currently felled world trees by stump tile (farming-patch trees use their own patch state). */
+    val felledStumps = java.util.concurrent.ConcurrentHashMap<gg.rsmod.game.model.Tile, FelledTree>()
+
+    /**
+     * Regrows the felled tree whose stump is [stump] at once (Hydra Regrowth; Void donor: fire the stump's pending regrow).
+     * Returns false when [stump] is not a felled world tree's stump.
+     */
+    fun regrowStump(
+        world: gg.rsmod.game.model.World,
+        stump: GameObject,
+    ): Boolean {
+        val felled = felledStumps[stump.tile] ?: return false
+        if (felled.stump.id != stump.id) return false
+        felledStumps.remove(stump.tile)
+        world.remove(felled.stump)
+        world.spawn(DynamicObject(felled.tree))
+        felled.canopy?.let { world.spawn(DynamicObject(it)) }
+        return true
+    }
+
     suspend fun chopDownTree(
         it: QueueTask,
         obj: GameObject,
@@ -167,6 +190,7 @@ object Woodcutting {
                         }
                         world.remove(obj)
                         world.spawn(trunk)
+                        felledStumps[trunk.tile] = FelledTree(trunk, obj, canopy)
                         val respawnTime =
                             if (tree == TreeType.TREE ||
                                 tree == TreeType.ACHEY
@@ -176,10 +200,14 @@ object Woodcutting {
                                 tree.respawnTime
                             }
                         wait(respawnTime)
-                        world.remove(trunk)
-                        world.spawn(DynamicObject(obj))
-                        if (canopy != null) {
-                            world.spawn(DynamicObject(canopy))
+                        // A Hydra's Regrowth may already have restored this tree (regrowStump).
+                        if (felledStumps[trunk.tile]?.stump === trunk) {
+                            felledStumps.remove(trunk.tile)
+                            world.remove(trunk)
+                            world.spawn(DynamicObject(obj))
+                            if (canopy != null) {
+                                world.spawn(DynamicObject(canopy))
+                            }
                         }
                     }
                 }

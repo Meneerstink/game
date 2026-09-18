@@ -104,6 +104,9 @@ class FamiliarTargetMaskTests {
                     assertEquals("${pouch.name}: item targeting must be TGT_BUTTON", tgtButton, mask)
                 FamiliarSpecialTarget.NPC, FamiliarSpecialTarget.PLAYER ->
                     assertTrue("${pouch.name}: a targeted special must accept players", mask and tgtPlayer != 0)
+                // Compost mound / Beaver / Hydra: only a location (TGT_LOC 0x04) is a valid target.
+                FamiliarSpecialTarget.OBJECT ->
+                    assertEquals("${pouch.name}: object targeting must be TGT_LOC", 0x04, mask)
             }
         }
     }

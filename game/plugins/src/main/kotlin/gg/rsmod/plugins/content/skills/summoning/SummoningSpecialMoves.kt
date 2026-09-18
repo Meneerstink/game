@@ -34,13 +34,13 @@ import gg.rsmod.plugins.content.items.food.Food
 import gg.rsmod.plugins.content.skills.cooking.CookingData
 import kotlin.math.ceil
 
-enum class FamiliarSpecialTarget { INSTANT, NPC, PLAYER, INVENTORY_ITEM }
+enum class FamiliarSpecialTarget { INSTANT, NPC, PLAYER, INVENTORY_ITEM, OBJECT }
 enum class FamiliarSpecialTrigger { IMMEDIATE, TARGETED, NEXT_ATTACK, UTILITY }
 
 private fun FamiliarSpecialTarget.defaultTrigger(): FamiliarSpecialTrigger = when (this) {
     FamiliarSpecialTarget.INSTANT -> FamiliarSpecialTrigger.IMMEDIATE
     FamiliarSpecialTarget.INVENTORY_ITEM -> FamiliarSpecialTrigger.UTILITY
-    FamiliarSpecialTarget.NPC, FamiliarSpecialTarget.PLAYER -> FamiliarSpecialTrigger.TARGETED
+    FamiliarSpecialTarget.NPC, FamiliarSpecialTarget.PLAYER, FamiliarSpecialTarget.OBJECT -> FamiliarSpecialTrigger.TARGETED
 }
 
 data class FamiliarSpecialBinding(
@@ -229,6 +229,7 @@ object SummoningSpecialMoves {
      *   TGT_SELF 0x10  TGT_BUTTON 0x20  TGT_GROUND 0x40
      */
     private const val TARGET_NPC = 0x02
+    private const val TARGET_LOC = 0x04
     private const val TARGET_PLAYER = 0x08
 
     /**
@@ -278,6 +279,10 @@ object SummoningSpecialMoves {
         // Owner P0 remainder 2026-09-18: Spirit wolf Howl and Spirit scorpion Venom Shot had no binding (Void donor effects).
         FamiliarSpecialBinding(SummoningScrollData.HOWL_SCROLL, FamiliarSpecialTarget.NPC),
         FamiliarSpecialBinding(SummoningScrollData.VENOM_SHOT_SCROLL, FamiliarSpecialTarget.INSTANT),
+        // Object-targeted specials (spell-on-object route, OpLocTHandler): Compost mound, Beaver, Hydra (Void donor effects).
+        FamiliarSpecialBinding(SummoningScrollData.GENERATE_COMPOST_SCROLL, FamiliarSpecialTarget.OBJECT),
+        FamiliarSpecialBinding(SummoningScrollData.MULTICHOP_SCROLL, FamiliarSpecialTarget.OBJECT),
+        FamiliarSpecialBinding(SummoningScrollData.REGROWTH_SCROLL, FamiliarSpecialTarget.OBJECT),
         FamiliarSpecialBinding(SummoningScrollData.RISH_FROM_THE_ASHES_SCROLL, FamiliarSpecialTarget.INVENTORY_ITEM),
         FamiliarSpecialBinding(SummoningScrollData.TIRELESS_RUN_SCROLL, FamiliarSpecialTarget.INSTANT),
         FamiliarSpecialBinding(SummoningScrollData.EVIL_FLAMES_SCROLL, FamiliarSpecialTarget.NPC),
@@ -465,6 +470,8 @@ object SummoningSpecialMoves {
             FamiliarSpecialTarget.NPC -> TARGET_NPC or TARGET_PLAYER
             FamiliarSpecialTarget.PLAYER -> TARGET_PLAYER
             FamiliarSpecialTarget.INVENTORY_ITEM -> TARGET_BUTTON
+            // Compost bins, trees and stumps (castOnObject via the spell-on-object route).
+            FamiliarSpecialTarget.OBJECT -> TARGET_LOC
             FamiliarSpecialTarget.INSTANT, null -> 0
         }
 
@@ -564,6 +571,10 @@ object SummoningSpecialMoves {
         }
         return when (binding.target) {
             FamiliarSpecialTarget.INSTANT -> castInstant(player)
+            FamiliarSpecialTarget.OBJECT -> {
+                player.message("Use the special move on the object itself.")
+                false
+            }
             FamiliarSpecialTarget.NPC -> {
                 val target = player.getCombatTarget()
                 when (target) {
@@ -1022,6 +1033,118 @@ object SummoningSpecialMoves {
         }
         return true
     }
+
+    /**
+     * Object-targeted familiar specials (Void donor FamiliarUtilitySpecials / Beaver / Hydra). Every check that can refuse runs
+     * before the scroll and points are committed, so a refused cast costs nothing.
+     *  - Generate Compost (Compost mound): only an empty compost bin; fills it ready-to-empty with 15 compost, 1-in-10
+     *    supercompost. Anim 7775, gfx 1461, projectile 1462, bin gfx 1460.
+     *  - Multichop (Beaver): a naturally growing tree; stores 1-3 logs (KB "up to 3") of the tree's tier or any lower tier
+     *    (Void) in the beaver's pack. Anim 7722, gfx 1459.
+     *  Quantities not given by the 2011 KB (supercompost 1-in-10, the log spread) follow Void or are ADAPTED, labelled so.
+     *  - Regrowth (Hydra): the stump of a felled world tree regrows at once. Anim 7945, gfx 1487.
+     */
+    fun castOnObject(player: Player, obj: gg.rsmod.game.model.entity.GameObject): Boolean {
+        if (Familiar.current(player) == null) {
+            player.message("You need a familiar summoned to use its special move.")
+            return false
+        }
+        val binding = resolveBinding(player)
+        if (binding == null || binding.target != FamiliarSpecialTarget.OBJECT) {
+            player.message("Your familiar's special move can't be used on that.")
+            return false
+        }
+        val resolved = validateResources(player, binding) ?: return false
+        val familiar = resolved.familiar
+        val scroll = resolved.scroll
+        when (scroll) {
+            SummoningScrollData.GENERATE_COMPOST_SCROLL -> {
+                val bin = gg.rsmod.plugins.content.skills.farming.data.CompostBin.byCompostBinId(obj.id)
+                val varbit = bin?.let { gg.rsmod.plugins.content.skills.farming.logic.VarbitUpdater(it.varbit, player) }
+                if (varbit == null || gg.rsmod.plugins.content.skills.farming.data.CompostBinState.forVarbit(varbit.value) !=
+                    gg.rsmod.plugins.content.skills.farming.data.CompostBinState.Empty
+                ) {
+                    player.message("This scroll can only be used on an empty compost bin.")
+                    return false
+                }
+                if (!commitResources(player, scroll)) return false
+                playSpecialAction(player, scroll)
+                familiar.faceTile(obj.tile)
+                familiar.animate(7775)
+                familiar.graphic(1461)
+                val projectile = familiar.createProjectile(obj.tile, 1462, ProjectileType.MAGIC)
+                player.world.spawn(projectile)
+                val superCompost = player.world.random(9) == 0
+                player.world.queue {
+                    wait(((projectile.lifespan + 29) / 30).coerceAtLeast(1))
+                    player.world.spawn(gg.rsmod.game.model.TileGraphic(obj.tile, 1460, 0))
+                    playSpecialImpact(player, scroll)
+                    val full =
+                        if (superCompost) {
+                            gg.rsmod.plugins.content.skills.farming.data.CompostBinState.EmptyingSuperCompost
+                        } else {
+                            gg.rsmod.plugins.content.skills.farming.data.CompostBinState.EmptyingCompost
+                        }
+                    varbit.set(full.varbits.last)
+                }
+            }
+            SummoningScrollData.MULTICHOP_SCROLL -> {
+                val tree = gg.rsmod.plugins.content.skills.woodcutting.TreeType.values().firstOrNull { obj.id in it.objectIds }
+                if (tree == null) {
+                    player.message("Your beaver can only chop naturally growing trees.")
+                    return false
+                }
+                if ((BeastOfBurden.activeContainer(player)?.freeSlotCount ?: 0) <= 0) {
+                    player.message("Your beaver's pack is too full to store any more logs.")
+                    return false
+                }
+                val tiers = MULTICHOP_LOGS.filter { (log, level) -> level <= tree.level }.map { it.first }
+                val log = if (tiers.isEmpty()) tree.log else tiers[player.world.random(tiers.size - 1)]
+                if (!commitResources(player, scroll)) return false
+                playSpecialAction(player, scroll)
+                familiar.faceTile(obj.tile)
+                familiar.animate(7722)
+                familiar.graphic(1459)
+                // 2011 Knowledge Base: "Cuts up to 3 logs from a nearby tree" (Void stores one; the KB wins). The 1-3 spread is
+                // ADAPTED (no source gives the distribution).
+                val logs = 1 + player.world.random(2)
+                player.world.queue {
+                    wait(MULTICHOP_TICKS)
+                    if (BeastOfBurden.grant(player, gg.rsmod.game.model.item.Item(log, logs)) > 0) {
+                        val name = player.world.definitions.get(gg.rsmod.game.fs.def.ItemDef::class.java, log).name.lowercase()
+                        player.message("Your beaver chops the tree and stashes some $name in its pack.")
+                    }
+                }
+            }
+            SummoningScrollData.REGROWTH_SCROLL -> {
+                if (gg.rsmod.plugins.content.skills.woodcutting.Woodcutting.felledStumps[obj.tile]?.stump?.id != obj.id) {
+                    player.message("Your familiar can only regrow the stumps of felled trees.")
+                    return false
+                }
+                if (!commitResources(player, scroll)) return false
+                playSpecialAction(player, scroll)
+                familiar.faceTile(obj.tile)
+                familiar.animate(7945)
+                familiar.graphic(1487)
+                gg.rsmod.plugins.content.skills.woodcutting.Woodcutting.regrowStump(player.world, obj)
+            }
+            else -> {
+                player.message("Your familiar's special move is not available yet.")
+                return false
+            }
+        }
+        return true
+    }
+
+    /** Multichop log tiers, lowest first (Void MULTICHOP_LOGS with the woodcutting levels of their trees). */
+    private val MULTICHOP_LOGS =
+        listOf(
+            Items.LOGS to 1, Items.OAK_LOGS to 15, Items.WILLOW_LOGS to 30,
+            Items.MAPLE_LOGS to 45, Items.YEW_LOGS to 60, Items.MAGIC_LOGS to 75,
+        )
+
+    /** Void Beaver: CHOP_TICKS = 10 before the log is stored. */
+    private const val MULTICHOP_TICKS = 10
 
     fun castOnPlayer(player: Player, target: Player): Boolean {
         if (Familiar.current(player) == null) {

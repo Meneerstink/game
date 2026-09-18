@@ -19,7 +19,9 @@ class CombatInterruptionPolicyTests {
 
     /** Walking, teleporting and choosing a new npc/player/object/ground item/item-on-item end combat. */
     private val hard =
-        setOf("ClickMapHandler", "ClickMinimapHandler", "TeleportHandler", "OpNpcUHandler", "OpObjUHandler", "OpLocUHandler", "OpHeldUHandler") +
+        setOf("ClickMapHandler", "ClickMinimapHandler", "TeleportHandler", "OpNpcUHandler", "OpObjUHandler", "OpLocUHandler", "OpHeldUHandler",
+            // 2026-09-18: spell/interface on an object and player menu slots 1, 5-10 are new interactions too.
+            "OpLocTHandler", "OpPlayerExtraHandler") +
             (1..5).map { "OpNpc${it}Handler" } + (1..8).map { "OpPlayer${it}Handler" } +
             (1..3).map { "OpObj${it}Handler" } + (1..5).map { "OpLoc${it}Handler" }
 

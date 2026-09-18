@@ -70,14 +70,13 @@ class SummoningSpecialMoveCoverageTests {
      * flees; what "mildly" poisonous is, in a codebase whose player ranged attacks apply no weapon
      * poison at all) still do not exist anywhere that has been checked.
      */
-    private val knownUnbound =
-        setOf(
-            SummoningPouchData.SPIRIT_WOLF,
-            SummoningPouchData.SPIRIT_SCORPION,
-            SummoningPouchData.COMPOST_MOUND,
-            SummoningPouchData.BEAVER,
-            SummoningPouchData.HYDRA,
-        )
+    /*
+     * 2026-09-18 (owner P0 remainder): all five are now bound. Howl and Venom Shot follow the approved Void donor
+     * (FamiliarCombatSpecials / FamiliarBoostSpecials: Howl is a no-damage flee, Venom Shot a charge on the owner's next
+     * ranged hit - matching the KB text above, unlike Darkan); Generate Compost, Multichop and Regrowth use the new
+     * OBJECT target (TGT_LOC) and the spell-on-object route. Unsourced quantities are labelled ADAPTED in the code.
+     */
+    private val knownUnbound = emptySet<SummoningPouchData>()
 
     /**
      * The census, as a hard assertion rather than a print. If this fails, either a familiar lost a
@@ -92,7 +91,7 @@ class SummoningSpecialMoveCoverageTests {
             "the set of familiars without a special move changed; see this test's documentation for " +
                 "why each of the five is blocked, and update it deliberately",
         )
-        assertEquals(73, roster.size - withoutSpecial.size, "special-move coverage changed")
+        assertEquals(78, roster.size - withoutSpecial.size, "special-move coverage changed")
     }
 
     /**

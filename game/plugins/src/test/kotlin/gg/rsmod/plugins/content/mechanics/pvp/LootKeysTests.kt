@@ -32,6 +32,21 @@ class LootKeysTests {
         assertFalse(p.limitReached)
     }
 
+    /** Owner 2026-09-18 (#6): a key OR ground loot, never both, unless the killer chose Skully's food-to-floor option. */
+    @Test
+    fun `a kill never leaves ground loot beside a key while the killer has a free key slot`() {
+        for (free in 1..LootKeys.MAX_KEYS) {
+            val p = plan(free = free, loot = listOf(whip, shark, Item(Items.COINS_995, 1000)))
+            assertTrue(p.ground.isEmpty(), "free=$free: loot on the ground beside a key")
+            assertEquals(1, p.keysToGive.size)
+            assertFalse(p.limitReached)
+        }
+        val onlyFood = plan(loot = listOf(shark))
+        assertEquals(listOf(listOf(shark)), onlyFood.keysToGive)
+        assertTrue(onlyFood.ground.isEmpty())
+    }
+
+    /** Skully's OSRS option (owner 2026-09-18: "drop food and potions to ground ... works exactly"). */
     @Test
     fun `food and potions can be sent to the floor, and no key is made when nothing else is left`() {
         assertEquals(listOf(listOf(whip)), plan(foodToFloor = true).keysToGive)

@@ -46,7 +46,9 @@ class CityGuardsTests {
         assertEquals(CityGuards.GUARD_IDS, styled + CityGuards.WIZGUARD_ID)
         val owner =
             listOf(
-                // Ranger posts use the OSRS Deadman ranged guard (owner live retest 2026-09-17: 14404 never turns).
+                Triple(2588, 3341, CityGuards.THIRD_AGE_RANGER_ID),
+                Triple(2612, 3341, CityGuards.THIRD_AGE_RANGER_ID),
+                Triple(2614, 3101, CityGuards.THIRD_AGE_RANGER_ID),
                 Triple(3187, 3446, null), Triple(3186, 3432, CityGuards.THIRD_AGE_MAGE_ID),
                 Triple(3164, 3469, null), Triple(2939, 3356, CityGuards.THIRD_AGE_MAGE_ID),
                 Triple(2966, 3399, null), Triple(3006, 3388, null), Triple(3006, 3326, null),
@@ -58,6 +60,14 @@ class CityGuardsTests {
             assertEquals(id, post!!.npcId, "owner tile $x,$z npc")
         }
         assertEquals(8, CityGuards.PATROL_RADIUS, "owner: alle guards 8 tiles kunnen roamen")
+    }
+
+    @Test
+    fun `patrol radius is bounded to eight tiles including diagonals`() {
+        val post = Tile(3200, 3400, 0)
+        assertTrue(CityGuards.isWithinPatrolRadius(post, Tile(3208, 3400, 0)))
+        assertFalse(CityGuards.isWithinPatrolRadius(post, Tile(3208, 3408, 0)), "a diagonal corner is more than 8 tiles away")
+        assertFalse(CityGuards.isWithinPatrolRadius(post, Tile(3208, 3400, 1)), "patrol cannot change plane")
     }
 
     @Test
@@ -240,6 +250,35 @@ class CityGuardsTests {
         assertEquals(5, CityGuards.WIZGUARD_FREEZE_CYCLES)
         assertEquals(10, CityGuards.WIZGUARD_REAPPEAR_CYCLES)
         assertEquals(2, CityGuards.MAX_GUARDS_PER_PLAYER)
+    }
+
+    @Test
+    fun `an ordinary Guard posted inside any guarded zone roams, one outside or with another name does not`() {
+        fun ordinary(name: String, spawn: Tile): Npc {
+            val n = npc(id = 9, tile = spawn)
+            every { n.spawnTile } returns spawn
+            every { n.def.name } returns name
+            return n
+        }
+        GuardedZones.ZONES.forEach { zone ->
+            assertTrue(CityGuards.isOrdinaryZoneGuard(ordinary("Guard", zone.sample)), "${zone.name}: a posted Guard must roam")
+            assertFalse(CityGuards.isOrdinaryZoneGuard(ordinary("Man", zone.sample)), "${zone.name}: only guards")
+        }
+        assertFalse(CityGuards.isOrdinaryZoneGuard(ordinary("Guard", Tile(3300, 3500, 0))), "outside every zone")
+        val deadman = npc(CityGuards.MELEE_GUARD_ID, tile = grandExchange)
+        every { deadman.spawnTile } returns grandExchange
+        every { deadman.def.name } returns "Guard"
+        assertFalse(CityGuards.isOrdinaryZoneGuard(deadman), "Deadman guards patrol from the leash, not the generic walk")
+    }
+
+    @Test
+    fun `an npc entering a local list gets its block segment whenever it faces something or overrides its level`() {
+        fun withBuffer(init: gg.rsmod.game.sync.block.UpdateBlockBuffer.() -> Unit) = gg.rsmod.game.sync.block.UpdateBlockBuffer().apply(init)
+        val task = gg.rsmod.game.sync.task.NpcSynchronizationTask
+        assertFalse(task.hasPersistentBlockState(withBuffer { }), "nothing persistent: no segment needed")
+        assertTrue(task.hasPersistentBlockState(withBuffer { facePawnIndex = 32768 + 1 }), "facing a player while the mask is clean")
+        assertTrue(task.hasPersistentBlockState(withBuffer { faceDegrees = (3164 shl 16) or 3480 }), "facing a tile")
+        assertTrue(task.hasPersistentBlockState(withBuffer { combatLevel = CityGuards.DISPLAYED_COMBAT_LEVEL }), "1337 level override")
     }
 
     private fun npc(

@@ -34,12 +34,12 @@ class PvpSkullTests {
     }
 
     @Test
-    fun `an unprovoked attack skulls the attacker for the full 5 minutes and arms pause tracking`() {
+    fun `an unprovoked registered hit skulls the attacker for the full 5 minutes and arms pause tracking`() {
         val home = Tile(3140, 3640, 0)
         val attacker = newPlayer(tile = home, home = home)
         val victim = newPlayer(tile = home, home = home)
 
-        PvpSkull.onPlayerInitiatedAttack(attacker, victim)
+        PvpSkull.onHitRegistered(attacker, victim)
 
         assertTrue(PvpSkull.isSkulled(attacker))
         // Nothing at risk (empty containers): the skull is still shown, in the lowest tier colour.
@@ -56,13 +56,60 @@ class PvpSkullTests {
         val victimA = newPlayer(tile = home, home = home)
         val victimB = newPlayer(tile = home, home = home)
 
-        PvpSkull.onPlayerInitiatedAttack(attacker, victimA)
+        PvpSkull.onHitRegistered(attacker, victimA)
         // Simulate time passing (a partially-drained timer) before the second attack.
         attacker.timers[SKULL_ICON_DURATION_TIMER] = 42
 
-        PvpSkull.onPlayerInitiatedAttack(attacker, victimB)
+        PvpSkull.onHitRegistered(attacker, victimB)
 
         assertEquals(PvpSkull.SKULL_DURATION_CYCLES, attacker.timers[SKULL_ICON_DURATION_TIMER])
+    }
+
+    /**
+     * Owner 2026-09-18: the skull is granted only when a hitsplat registers on the target. The
+     * combat-start hook no longer skulls, so an attack that never produces a hit (no ammo, no runes,
+     * out of reach) cannot skull. The only entry point is [PvpSkull.onHitRegistered], invoked as a
+     * hit action from `Pawn.dealHit` - this test pins that no other public "attack started" API exists.
+     */
+    @Test
+    fun `no attack-start skull entry point exists any more`() {
+        val methods = PvpSkull::class.java.methods.map { it.name }
+        assertFalse("onPlayerInitiatedAttack" in methods, "skull must not be granted at attack start")
+        assertTrue("onHitRegistered" in methods)
+    }
+
+    /** OSRS Wiki "Skull (status)": attacking a player who attacked you first never skulls. */
+    @Test
+    fun `hitting back the registered aggressor is a retaliation and does not skull`() {
+        val home = Tile(3140, 3640, 0)
+        val aggressor = newPlayer(tile = home, home = home)
+        val victim = newPlayer(tile = home, home = home)
+
+        PvpSkull.onHitRegistered(aggressor, victim) // the unprovoked hit: aggressor skulled, victim remembers them
+        assertTrue(PvpSkull.isSkulled(aggressor))
+        assertTrue(PvpSkull.isRetaliation(victim, aggressor))
+
+        PvpSkull.onHitRegistered(victim, aggressor) // manual or auto retaliation
+        assertFalse(PvpSkull.isSkulled(victim), "retaliating against the aggressor must not skull")
+
+        // A third party the victim never fought is an unprovoked attack again.
+        val bystander = newPlayer(tile = home, home = home)
+        PvpSkull.onHitRegistered(victim, bystander)
+        assertTrue(PvpSkull.isSkulled(victim))
+    }
+
+    @Test
+    fun `retaliation memory expires with the aggressor window`() {
+        val home = Tile(3140, 3640, 0)
+        val aggressor = newPlayer(tile = home, home = home)
+        val victim = newPlayer(tile = home, home = home)
+        PvpSkull.onHitRegistered(aggressor, victim)
+
+        victim.timers.remove(gg.rsmod.game.model.timer.PVP_AGGRESSOR_WINDOW_TIMER)
+
+        assertFalse(PvpSkull.isRetaliation(victim, aggressor))
+        PvpSkull.onHitRegistered(victim, aggressor)
+        assertTrue(PvpSkull.isSkulled(victim))
     }
 
     @Test

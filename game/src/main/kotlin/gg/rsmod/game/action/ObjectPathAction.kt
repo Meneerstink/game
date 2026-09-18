@@ -185,6 +185,32 @@ object ObjectPathAction {
         }
     }
 
+    /** Walks to the object, then runs the spell-on-object plugin bound for the used interface target (OpLocTHandler). */
+    val spellOnObjectPlugin: Plugin.() -> Unit = {
+        val player = ctx as Player
+        val obj = player.attr[INTERACTING_OBJ_ATTR]!!.get()!!
+        val parent = player.attr[gg.rsmod.game.model.attr.INTERACTING_COMPONENT_PARENT] ?: -1
+        val child = player.attr[gg.rsmod.game.model.attr.INTERACTING_COMPONENT_CHILD] ?: -1
+        val transformedId = obj.getTransform(player)
+        walk(player, obj, null) {
+            player.faceTile(obj.tile)
+            val handled = executeWithObjectIdFallback(obj.id, transformedId) { id ->
+                player.world.plugins.executeSpellOnObject(player, parent, child, id)
+            }
+            if (!handled) {
+                player.writeMessage(Entity.NOTHING_INTERESTING_HAPPENS)
+                UnhandledInteractions.record(
+                    UnhandledInteractions.Key(obj.id, transformedId, (parent shl 16) or child, obj.tile.x, obj.tile.z, obj.tile.height),
+                    player.world.definitions.get(ObjectDef::class.java, transformedId).name,
+                    "interface $parent:$child",
+                    obj.type,
+                    obj.rot,
+                    kind = "spell",
+                )
+            }
+        }
+    }
+
     private suspend fun QueueTask.walkTo(
         obj: GameObject,
         lineOfSightRange: Int?,

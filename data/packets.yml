@@ -1161,6 +1161,36 @@ in-packets:
         type: SHORT
 
   # ClientProt OPLOC4 (0, 7 bytes): same field layout as every OPLOC variant in the rev-667 client (MiniMenu).
+  # ClientProt OPLOCT (42, 15 bytes), MiniMenu: p1_alt2 ctrl, p2_alt1 z, p2_alt1 slot, p4_alt1 hash, p2_alt3 item, p2_alt1 x, p2_alt2 id.
+  - message: gg.rsmod.game.message.impl.OpLocTMessage
+    type: FIXED
+    opcode: 42
+    length: 15
+    structure:
+      - name: movement_type
+        type: BYTE
+        trans: NEGATE
+      - name: z
+        type: SHORT
+        order: LITTLE
+      - name: component_slot
+        type: SHORT
+        order: LITTLE
+      - name: component_hash
+        type: INT
+        order: LITTLE
+      - name: verify
+        type: SHORT
+        order: LITTLE
+        trans: ADD
+      - name: x
+        type: SHORT
+        order: LITTLE
+      - name: id
+        sign: UNSIGNED
+        type: SHORT
+        trans: ADD
+
   - message: gg.rsmod.game.message.impl.OpLoc4Message
     type: FIXED
     opcode: 0

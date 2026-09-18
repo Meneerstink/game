@@ -491,7 +491,8 @@ on_spell_on_player(662, 65) {
     FamiliarCombat.commandAttack(player, player.getInteractingPlayer())
 }
 
-// Fixed/resizable Summoning-orb attack target actions.
+// Fixed/resizable Summoning-orb Attack components are hidden by SummoningUi. These handlers stay
+// as stale-client guards and route through the same capability-validated command path.
 arrayOf(14, 23).forEach { component ->
     on_spell_on_npc(747, component) {
         FamiliarCombat.commandAttack(player, player.getInteractingNpc())
@@ -551,6 +552,12 @@ on_button(747, arrayOf(14, 23)) { // "Attack" - see R07.3b note on 662's Attack 
     }
 }
 
+on_button(747, arrayOf(9, 18)) { // "Follower Details" - orb and skill-tab share one panel state.
+    if (FamiliarCapabilityTable.active(player)?.supports(FamiliarAction.FOLLOWER_DETAILS) == true) {
+        FollowerDetailsTab.open(player)
+    }
+}
+
 /*
  * R08 correction: the previous per-binding wiring here bound `on_button`/`on_spell_on_npc`/
  * `on_spell_on_item` at 662/747 component ids like 77, 129, 161, 197... none of which exist -
@@ -600,6 +607,9 @@ arrayOf(
     }
     on_spell_on_item(parent, component) {
         SummoningSpecialMoves.castOnInventoryItem(player, player.getInteractingItemSlot())
+    }
+    on_spell_on_obj(parent, component) {
+        SummoningSpecialMoves.castOnObject(player, player.attr[INTERACTING_OBJ_ATTR]!!.get()!!)
     }
 }
 
