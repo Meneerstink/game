@@ -96,6 +96,8 @@ object OsrsSeq {
 
 /** OSRS synth sounds of the same batch; names from the OSRS Wiki "List of sound IDs" (Jagex config names). */
 object OsrsSfx {
+    const val ZARYTE_CROSSBOW_SPECIAL = 10270 // OSRS 5306 zaryte_crossbow_special (tx-20260918-221303)
+    const val GODWARS_GODSWORD_SPECIAL_ATTACK = 10271 // OSRS 3869 godwars_godsword_special_attack (tx-20260918-221303)
     const val NOXIOUS_HALBERD_SPECIAL_BUILD = 10242 // OSRS 9403 noxious_halberd_special_attack_build_01
     const val NOXIOUS_HALBERD_SPECIAL_IMPACT = 10243 // OSRS 9404 noxious_halberd_special_attack_impact_01
     const val MACUAHUITL_SPECIAL = 10244 // OSRS 7917 varlamore_pm_macuahuitl_special_01

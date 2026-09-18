@@ -279,7 +279,18 @@ object RangedCombatStrategy : CombatStrategy {
             if (sequenceSilent && pawn.hasWeaponType(WeaponType.CROSSBOW)) pawn.playSound(Sfx.CROSSBOW) // crossbow sound
             if (sequenceSilent && pawn.hasWeaponType(WeaponType.BOW)) pawn.playSound(Sfx.SHORTBOW) // bow sound
             if (sequenceSilent && pawn.hasWeaponType(WeaponType.CHINCHOMPA)) pawn.playSound(Sfx.CHINCHOMPA_HIT) // chin sound
-            if (sequenceSilent && pawn.hasWeaponType(WeaponType.THROWN)) pawn.playSound(Sfx.THROWN) // thrown item sound
+            if (sequenceSilent && pawn.hasWeaponType(WeaponType.THROWN)) {
+                // OSRS per-weapon thrown sounds (Jagex names, gameval sound table; xrsps weapon data): darts "dart" 2696, knives
+                // "throwingknife" 2707, thrownaxes and the rest "thrown" 2708 - the same ids in this 667 cache.
+                val thrownId = pawn.getEquipment(EquipmentType.WEAPON)?.id
+                pawn.playSound(
+                    when (thrownId) {
+                        in gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Darts.DARTS -> Sfx.DART
+                        in gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Knives.KNIVES -> Sfx.THROWINGKNIFE
+                        else -> Sfx.THROWN
+                    },
+                )
+            }
 
             if (pawn.hasWeaponType(WeaponType.THROWN) || pawn.hasWeaponType(WeaponType.CHINCHOMPA)) {
                 if (pawn.getEquipment(EquipmentType.WEAPON) == null) {

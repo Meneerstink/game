@@ -139,6 +139,9 @@ object OsrsFxImportTool {
             // Owner 2026-09-18 re-research: OSRS Wiki "Voidwaker" sound list names the Wardens half of the special:
             // 6182 toa_wardens_square_thunder1_01 ("Special attack", next to 5027).
             "weaponsfx4" to listOf(6182),
+            // Owner 2026-09-18 (Zaryte crossbow / Ancient godsword specials): Jagex sound config names from the gameval table
+            // (Alter-rework data/cfg/rscm/sound.rscm, 2026-09-19): 5306 zaryte_crossbow_special, 3869 godwars_godsword_special_attack.
+            "weaponsfx5" to listOf(5306, 3869),
         )
 
     // ---- smart values ---------------------------------------------------------------------------

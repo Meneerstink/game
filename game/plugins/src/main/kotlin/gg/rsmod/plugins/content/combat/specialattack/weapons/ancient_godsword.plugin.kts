@@ -17,8 +17,11 @@ SpecialAttacks.register(AncientGodsword.SPECIAL_ENERGY, Items.ANCIENT_GODSWORD) 
     val victim = target
     player.animate(gg.rsmod.plugins.content.items.osrs.OsrsSeq.NGS_SPECIAL_PLAYER)
     player.graphic(gg.rsmod.plugins.content.items.osrs.OsrsGfx.NGS_SPECIAL)
-    // No sound: OSRS 2911 "blood_sacrifice" is the Ruby bolts (e) effect (OSRS Wiki sound list note), which is what the owner heard
-    // as "an enchanted bolt". The godsword's own special sound is not identified by any source (SOURCE_BLOCKED).
+    // Owner 2026-09-18 ("still silent ... the second hit"). Jagex sound config names (gameval table, Alter-rework sound.rscm):
+    // the swing plays OSRS 3869 godwars_godsword_special_attack, now imported as local 10271 - the earlier live test used 667 id
+    // 3869, which is a different sound because OSRS and 667 synth ids diverge above ~3800. The delayed hit plays 2911
+    // blood_sacrifice (the special's own name, same id in 667). Which OSRS special uses 3869 is not stated: ADAPTED, owner retest.
+    player.playSound(gg.rsmod.plugins.content.items.osrs.OsrsSfx.GODWARS_GODSWORD_SPECIAL_ATTACK)
     val maxHit = MeleeCombatFormula.getMaxHit(player, victim, specialAttackMultiplier = AncientGodsword.SPECIAL_DAMAGE)
     // Godsword specials roll against the target's slash defence (wiki DPS calculator `defenceStyle = 'slash'`).
     val landHit =
@@ -35,6 +38,9 @@ SpecialAttacks.register(AncientGodsword.SPECIAL_ENERGY, Items.ANCIENT_GODSWORD) 
         if (victim.isDead() || attacker.isDead() || (victim is Player && !victim.isOnline) || !attacker.isOnline) return@queue
         if (victim.tile.height != attacker.tile.height || victim.tile.getDistance(attacker.tile) >= AncientGodsword.ESCAPE_DISTANCE) return@queue
         val before = victim.getCurrentLifepoints()
+        // The Blood Sacrifice explosion: sound for both players (the attacker hears it wherever the victim is within 5 tiles).
+        attacker.playSound(Sfx.BLOOD_SACRIFICE)
+        if (victim is Player) victim.playSound(Sfx.BLOOD_SACRIFICE)
         victim.hit(damage = AncientGodsword.SACRIFICE_DAMAGE, type = HitType.REGULAR_HIT)
         val dealt = minOf(AncientGodsword.SACRIFICE_DAMAGE, before)
         val heal = AncientGodsword.heal(victim.getMaximumLifepoints(), victim is Player, dealt)

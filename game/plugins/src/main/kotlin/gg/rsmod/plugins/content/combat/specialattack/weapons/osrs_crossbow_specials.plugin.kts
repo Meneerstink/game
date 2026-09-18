@@ -28,7 +28,8 @@ SpecialAttacks.register(50, Items.ARMADYL_CROSSBOW) {
 SpecialAttacks.register(75, Items.ZARYTE_CROSSBOW) {
     player.animate(CombatConfigs.getAttackAnimation(player))
     player.graphic(gg.rsmod.plugins.content.items.osrs.OsrsGfx.ZCB_SPECIALATTACK) // OSRS ZCB_SPECIALATTACK (fxpilot)
-    player.playSound(Sfx.CROSSBOW)
+    // Owner 2026-09-18: the crossbow's own special sound - OSRS 5306 zaryte_crossbow_special (Jagex gameval name), local 10270.
+    player.playSound(gg.rsmod.plugins.content.items.osrs.OsrsSfx.ZARYTE_CROSSBOW_SPECIAL)
     rangedShot(player, target, accuracy = 2.0, boltSpecial = EnchantedBolts.Special.ZARYTE_EVOKE)
 }
 
