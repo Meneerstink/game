@@ -122,6 +122,15 @@ object ObjectPathAction {
             }
             if (!handled) {
                 player.writeMessage(Entity.NOTHING_INTERESTING_HAPPENS)
+                // Same bounded registry as unhandled options; the "option" column carries the used item id.
+                UnhandledInteractions.record(
+                    UnhandledInteractions.Key(obj.id, transformedId, item.id, obj.tile.x, obj.tile.z, obj.tile.height),
+                    player.world.definitions.get(ObjectDef::class.java, transformedId).name,
+                    "item ${item.id}",
+                    obj.type,
+                    obj.rot,
+                    kind = "item",
+                )
                 if (player.world.devContext.debugObjects) {
                     player.writeConsoleMessage(
                         "Unhandled item on object: [item=$item, id=${obj.id}, type=${obj.type}, rot=${obj.rot}, x=${obj.tile.x}, z=${obj.tile.z}]",
@@ -147,6 +156,14 @@ object ObjectPathAction {
             } || player.world.plugins.executeObjectFallback(player, obj, opt!!)
             if (!handled) {
                 player.writeMessage(Entity.NOTHING_INTERESTING_HAPPENS)
+                val unhandledDef = player.world.definitions.get(ObjectDef::class.java, transformedId)
+                UnhandledInteractions.record(
+                    UnhandledInteractions.Key(obj.id, transformedId, opt!!, obj.tile.x, obj.tile.z, obj.tile.height),
+                    unhandledDef.name,
+                    unhandledDef.options.getOrNull(opt - 1),
+                    obj.type,
+                    obj.rot,
+                )
                 /*
                  * The item-on-object path above has always reported what it failed to handle; the
                  * plain option path never did, which is why every unbound door, gate, rift and
