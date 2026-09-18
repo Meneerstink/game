@@ -849,6 +849,18 @@ out-packets:
       - name: body
         type: BYTES
 
+  # Server prot 58 IF_SETMODEL: was filed under in-packets, which also registered client opcode 58 (VIDEO_END, 2 bytes) with a wrong size.
+  - message: gg.rsmod.game.message.impl.IfSetModelMessage
+    type: FIXED
+    opcode: 58
+    structure:
+      - name: hash
+        type: INT
+        order: MIDDLE
+      - name: model
+        type: SHORT
+        trans: ADD
+
 in-packets:
   # ClientProt MESSAGE_QUICKCHAT_PUBLIC (30) / MESSAGE_QUICKCHAT_PRIVATE (79); read by hand in QuickChatCodecs.
   - message: gg.rsmod.game.message.impl.MessageQuickChatPublicMessage
@@ -999,12 +1011,6 @@ in-packets:
   - message: gg.rsmod.game.message.impl.IgnoreMessage # No data
     type: VARIABLE_BYTE
     opcode: 37
-    ignore: true
-
-  - message: gg.rsmod.game.message.impl.IgnoreMessage # No data
-    type: VARIABLE_BYTE
-    opcode: 27
-    length: 7
     ignore: true
 
   - message: gg.rsmod.game.message.impl.ResumePauseButtonMessage
@@ -1538,14 +1544,3 @@ in-packets:
     structure:
         - name: username
           type: STRING
-
-  - message: gg.rsmod.game.message.impl.IfSetModelMessage
-    type: FIXED
-    opcode: 58
-    structure:
-      - name: hash
-        type: INT
-        order: MIDDLE
-      - name: model
-        type: SHORT
-        trans: ADD

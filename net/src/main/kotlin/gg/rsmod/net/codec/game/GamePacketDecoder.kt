@@ -47,8 +47,30 @@ class GamePacketDecoder(
             opcode = buf.readUnsignedByte().toInt() - (random?.nextInt() ?: 0) and 0xFF
             val packetType = packetMetadata.getType(opcode)
             if (packetType == null) {
-                logger.warn("Channel {} sent message with no valid metadata: {}.", ctx.channel(), opcode)
-                buf.skipBytes(buf.readableBytes())
+                // Unregistered but real client packet: skip exactly its own bytes (ClientProtSizes) so the packets after it
+                // and the ISAAC opcode stream stay aligned. Only a truly unknown opcode still drops the buffer.
+                val size = ClientProtSizes.SIZES[opcode]
+                if (size == null) {
+                    logger.warn("Channel {} sent message with no valid metadata: {}.", ctx.channel(), opcode)
+                    buf.skipBytes(buf.readableBytes())
+                    return
+                }
+                if (unhandledLogged.add(opcode)) {
+                    logger.info("Skipping unregistered client packet {} ({} bytes) - no handler in packets.yml.", opcode, size)
+                }
+                ignore = true
+                type =
+                    when (size) {
+                        ClientProtSizes.VARIABLE_BYTE -> PacketType.VARIABLE_BYTE
+                        ClientProtSizes.VARIABLE_SHORT -> PacketType.VARIABLE_SHORT
+                        else -> PacketType.FIXED
+                    }
+                if (type == PacketType.FIXED) {
+                    length = size
+                    if (length != 0) setState(GameDecoderState.PAYLOAD)
+                } else {
+                    setState(GameDecoderState.LENGTH)
+                }
                 return
             }
             type = packetType
@@ -101,5 +123,8 @@ class GamePacketDecoder(
         }
     }
 
-    companion object : KLogging()
+    companion object : KLogging() {
+        /** Unregistered opcodes already reported, so a chatty packet logs once per server run. */
+        private val unhandledLogged = java.util.concurrent.ConcurrentHashMap.newKeySet<Int>()
+    }
 }
