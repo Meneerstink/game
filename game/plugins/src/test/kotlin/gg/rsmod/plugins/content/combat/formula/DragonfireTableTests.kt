@@ -62,6 +62,8 @@ class DragonfireTableTests {
                 "brutal_green_dragon" to Type.CHROMATIC, "frost_dragon" to Type.CHROMATIC,
             )
         var dragonfireHits = 0
+        // Load the table here: rows() is only populated when another test happened to load it first (order-dependent).
+        NpcAttacks.load(java.nio.file.Paths.get("..", "..", "data", "cfg", "npcs", "npc-attacks.json").toFile())
         NpcAttacks.rows().forEach { row ->
             row.attacks.forEach { attack ->
                 attack.hits.filter { it.offense == "dragonfire" }.forEach { _ ->

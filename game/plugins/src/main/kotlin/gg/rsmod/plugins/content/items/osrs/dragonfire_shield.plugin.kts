@@ -21,7 +21,8 @@ DragonfireShield.FAMILIES.forEach { family ->
         if (shieldHasOption(id, "Inspect", worn = false)) {
             on_item_option(item = id, option = "Inspect") {
                 val item = player.inventory[player.getInteractingItemSlot()] ?: return@on_item_option
-                player.message(DragonfireShield.inspectMessage(item))
+                // Owner 2026-09-18: Inspect opens the chatbox item dialogue (item sprite + text), not a bare game message.
+                player.queue { itemMessageBox(DragonfireShield.inspectMessage(item), item = item.id) }
             }
         }
         if (shieldHasOption(id, "Check", worn = true)) {
