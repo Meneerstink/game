@@ -333,6 +333,13 @@ task runDizanasQuiverInterfaceImportTool(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     main = 'gg.rsmod.game.tools.importer.DizanasQuiverInterfaceImportTool'
 }
+task runShrineOfRalosImportTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Imports OSRS loc 52405 Shrine of Ralos into both caches (CacheTransaction). Usage: ./gradlew :game:runShrineOfRalosImportTool --args=plan|apply'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.ShrineOfRalosImportTool'
+}
+
 task runWornAppearanceRankTool(type: JavaExec) {
     group = 'tools'
     description = 'Read-only diagnostic: replicates the client\'s initWornObjIds() ascending-id ' +
