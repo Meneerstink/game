@@ -36,8 +36,9 @@ SpecialAttacks.register(SPECIAL_REQUIREMENT, Items.SARADOMIN_SWORD) {
     )
 
     // Magic special attack
-    world.spawn(AreaSound(tile = player.tile, id = SARASWORD_SPEC_SFX_ID, radius = 10, volume = 1))
-    player.playSound(3853)
+    // One cue on the attacker's sound-effects channel. The radius-10 AreaSound of the same synth also reached the attacker
+    // (AreaSound has no source exclusion), so the special was heard twice with ambient sound on (owner 2026-09-18 audit).
+    player.playSound(SARASWORD_SPEC_SFX_ID)
     player.animate(Anims.SARADOMIN_SWORD_SPECIAL)
     player.graphic(Gfx.SARADOMIN_SWORD_SPECIAL)
     target.graphic(Gfx.SARADOMIN_SWORD_SPECIAL_TARGET_EFFECT)
