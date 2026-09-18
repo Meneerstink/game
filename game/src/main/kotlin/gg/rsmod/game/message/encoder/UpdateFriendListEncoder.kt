@@ -37,7 +37,11 @@ class UpdateFriendListEncoder : MessageEncoder<UpdateFriendListMessage>() {
                     buf.writeByte(friend.getReferredAsInt())
                     if (friend.world > 0) {
                         buf.writeBytes(worldNameData)
-                        buf.writeByte(friend.getReferrerAsInt())
+                        // The client reads this byte as "same game" (ServerConnectionReader UPDATE_FRIENDLIST ->
+                        // FriendsList.sameGameFlags -> CS2 FRIEND_SAME_GAME), not as a referrer flag. Every online friend
+                        // here is on this RuneScape server, so it is always 1; sending 0 presented friends as being in a
+                        // different game (owner 2026-09-18: messages to friends did not work).
+                        buf.writeByte(1)
                     }
                 }
 
