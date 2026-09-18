@@ -35,11 +35,19 @@ import gg.rsmod.plugins.content.skills.cooking.CookingData
 import kotlin.math.ceil
 
 enum class FamiliarSpecialTarget { INSTANT, NPC, PLAYER, INVENTORY_ITEM }
+enum class FamiliarSpecialTrigger { IMMEDIATE, TARGETED, NEXT_ATTACK, UTILITY }
+
+private fun FamiliarSpecialTarget.defaultTrigger(): FamiliarSpecialTrigger = when (this) {
+    FamiliarSpecialTarget.INSTANT -> FamiliarSpecialTrigger.IMMEDIATE
+    FamiliarSpecialTarget.INVENTORY_ITEM -> FamiliarSpecialTrigger.UTILITY
+    FamiliarSpecialTarget.NPC, FamiliarSpecialTarget.PLAYER -> FamiliarSpecialTrigger.TARGETED
+}
 
 data class FamiliarSpecialBinding(
     val scroll: SummoningScrollData,
     val target: FamiliarSpecialTarget,
     val alternativeScrolls: List<SummoningScrollData> = emptyList(),
+    val trigger: FamiliarSpecialTrigger = target.defaultTrigger(),
 )
 
 val FamiliarSpecialBinding.scrolls: List<SummoningScrollData>
@@ -89,6 +97,100 @@ object SummoningSpecialMoves {
     internal const val SPECIAL_CAST_ANIMATION = 7660
     internal const val SPECIAL_CAST_GRAPHIC = 1316
     internal const val SPECIAL_CAST_SOUND = 4161
+
+    /**
+     * Steel-specific special audio from `RSPS_SUMMONING_SOUNDS_2009_2012_MASTER_QC3`.
+     * The resource commit, familiar action and first projectile impact are distinct events.
+     */
+    internal const val STEEL_OF_LEGENDS_SCROLL_SOUND = 4680
+    internal const val STEEL_TITAN_SPECIAL_ATTACK_SOUND = 4611
+    internal const val STEEL_TITAN_SPECIAL_IMPACT_SOUND = 4653
+
+    /**
+     * QC3's dedicated familiar-special cues. `action` is the familiar's cast/launch/effect
+     * event; `impact` is emitted only when the damaging effect reaches its target. Entries with
+     * no exact or strong familiar-specific source are intentionally omitted.
+     *
+     * Abyssal Drain and Explode are also intentionally omitted: their revision-667 graphics or
+     * sequences already carry the client-side sounds, so sending another synth would double-play.
+     */
+    internal data class SpecialSoundCue(
+        val action: Int,
+        val impact: Int? = null,
+        val secondaryAction: Int? = null,
+        val secondaryImpact: Int? = null,
+    )
+
+    internal val SPECIAL_SOUND_CUES: Map<SummoningScrollData, SpecialSoundCue> = mapOf(
+        SummoningScrollData.HOWL_SCROLL to SpecialSoundCue(4145, secondaryAction = 4265),
+        SummoningScrollData.DREADFOWL_STRIKE_SCROLL to SpecialSoundCue(4174, impact = 4222),
+        SummoningScrollData.EGG_SPAWN_SCROLL to SpecialSoundCue(4132),
+        SummoningScrollData.SLIME_SPRAY_SCROLL to SpecialSoundCue(4373, impact = 4384),
+        SummoningScrollData.STONY_SHELL_SCROLL to SpecialSoundCue(4392),
+        SummoningScrollData.THIEVING_FINGERS_SCROLL to SpecialSoundCue(4390),
+        SummoningScrollData.PESTER_SCROLL to SpecialSoundCue(4721),
+        SummoningScrollData.ELECTRIC_LASH_SCROLL to SpecialSoundCue(4137, impact = 4261),
+        SummoningScrollData.SANDSTORM_SCROLL to SpecialSoundCue(4389),
+        SummoningScrollData.GENERATE_COMPOST_SCROLL to SpecialSoundCue(4403, impact = 4406),
+        SummoningScrollData.VAMPIRE_TOUCH_SCROLL to SpecialSoundCue(4136),
+        SummoningScrollData.INSANE_FEROCITY_SCROLL to SpecialSoundCue(4395),
+        SummoningScrollData.MULTICHOP_SCROLL to SpecialSoundCue(4387),
+        SummoningScrollData.PETRIFYING_GAZE_SCROLL to SpecialSoundCue(4385),
+        SummoningScrollData.TIRELESS_RUN_SCROLL to SpecialSoundCue(4386),
+        SummoningScrollData.EVIL_FLAMES_SCROLL to SpecialSoundCue(4290),
+        SummoningScrollData.DISSOLVE_SCROLL to SpecialSoundCue(4154, impact = 4133),
+        SummoningScrollData.RENDING_SCROLL to SpecialSoundCue(4661),
+        SummoningScrollData.DOOMSPHERE_SCROLL to SpecialSoundCue(4193, impact = 4248),
+        SummoningScrollData.TESTUDO_SCROLL to SpecialSoundCue(4394),
+        SummoningScrollData.ARCTIC_BLAST_SCROLL to SpecialSoundCue(4399),
+        SummoningScrollData.CRUSHING_CLAW_SCROLL to SpecialSoundCue(4374),
+        SummoningScrollData.MANTIS_STRIKE_SCROLL to SpecialSoundCue(4363),
+        SummoningScrollData.INFERNO_SCROLL to SpecialSoundCue(4700, impact = 4712),
+        SummoningScrollData.VOLCANIC_STRENGTH_SCROLL to SpecialSoundCue(4619, secondaryAction = 4608, secondaryImpact = 4379),
+        SummoningScrollData.TITANS_CONSTITUTION_SCROLL to SpecialSoundCue(4678),
+        SummoningScrollData.HEALING_AURA_SCROLL to SpecialSoundCue(4372),
+        SummoningScrollData.MAGIC_FOCUS_SCROLL to SpecialSoundCue(4217),
+        SummoningScrollData.SPIKE_SHOT_SCROLL to SpecialSoundCue(4402, impact = 4405, secondaryAction = 4300),
+        SummoningScrollData.BRONZE_BULL_RUSH_SCROLL to SpecialSoundCue(4401, impact = 4400, secondaryAction = 4337),
+        SummoningScrollData.IRON_BULL_RUSH_SCROLL to SpecialSoundCue(4401, impact = 4400, secondaryAction = 4337),
+        SummoningScrollData.STEEL_BULL_RUSH_SCROLL to SpecialSoundCue(4401, impact = 4400, secondaryAction = 4337),
+        SummoningScrollData.MITHRIL_BULL_RUSH_SCROLL to SpecialSoundCue(4401, impact = 4400, secondaryAction = 4337),
+        SummoningScrollData.ADAMANT_BULL_RUSH_SCROLL to SpecialSoundCue(4401, impact = 4400, secondaryAction = 4337),
+        SummoningScrollData.RUNE_BULL_RUSH_SCROLL to SpecialSoundCue(4401, impact = 4400, secondaryAction = 4337),
+        SummoningScrollData.POISONOUS_BLAST_SCROLL to SpecialSoundCue(4371, impact = 4380),
+        SummoningScrollData.SWAMP_PLAGUE_SCROLL to SpecialSoundCue(4598, impact = 4693),
+        SummoningScrollData.BOIL_SCROLL to SpecialSoundCue(4383, impact = 4364),
+        SummoningScrollData.DEADLY_CLAW_SCROLL to SpecialSoundCue(4618, impact = 4657),
+        SummoningScrollData.EBON_THUNDER_SCROLL to SpecialSoundCue(4639, secondaryAction = 4640),
+        SummoningScrollData.WINTER_STORAGE_SCROLL to SpecialSoundCue(4172),
+        SummoningScrollData.GOAD_SCROLL to SpecialSoundCue(4645, secondaryAction = 4622),
+        SummoningScrollData.AMBUSH_SCROLL to SpecialSoundCue(4617),
+        SummoningScrollData.FAMINE_SCROLL to SpecialSoundCue(4701),
+        SummoningScrollData.TOAD_BARK_SCROLL to SpecialSoundCue(4368, secondaryAction = 4310),
+        SummoningScrollData.FISH_RAIN_SCROLL to SpecialSoundCue(4397),
+        SummoningScrollData.DUST_CLOUD_SCROLL to SpecialSoundCue(4367, impact = 4382),
+        SummoningScrollData.FRUITFALL_SCROLL to SpecialSoundCue(4396),
+        SummoningScrollData.ESSENCE_SHIPMENT_SCROLL to SpecialSoundCue(4621),
+        SummoningScrollData.OPHIDIAN_INCUBATION_SCROLL to SpecialSoundCue(4319),
+        SummoningScrollData.UNBURDEN_SCROLL to SpecialSoundCue(4388),
+        SummoningScrollData.HERBCALL_SCROLL to SpecialSoundCue(4404),
+        SummoningScrollData.IMMENSE_HEAT_SCROLL to SpecialSoundCue(4603),
+        SummoningScrollData.IRON_WITHIN_SCROLL to SpecialSoundCue(4707),
+    )
+
+    private fun playSpecialAction(player: Player, scroll: SummoningScrollData) {
+        SPECIAL_SOUND_CUES[scroll]?.let {
+            FamiliarAudio.play(player, it.action)
+            it.secondaryAction?.let { sound -> FamiliarAudio.play(player, sound) }
+        }
+    }
+
+    private fun playSpecialImpact(player: Player, scroll: SummoningScrollData) {
+        SPECIAL_SOUND_CUES[scroll]?.let {
+            it.impact?.let { sound -> FamiliarAudio.play(player, sound) }
+            it.secondaryImpact?.let { sound -> FamiliarAudio.play(player, sound) }
+        }
+    }
 
     /**
      * Void `FamiliarCombatSpecials`: Abyssal Drain plays `abyssal_drain` anim 7672, gfx 1422 and
@@ -173,6 +275,9 @@ object SummoningSpecialMoves {
         // button, orb "Cast" entry and own right-click ability option were all dead.
         FamiliarSpecialBinding(SummoningScrollData.CALL_TO_ARMS_SCROLL, FamiliarSpecialTarget.INSTANT),
         FamiliarSpecialBinding(SummoningScrollData.PETRIFYING_GAZE_SCROLL, FamiliarSpecialTarget.NPC),
+        // Owner P0 remainder 2026-09-18: Spirit wolf Howl and Spirit scorpion Venom Shot had no binding (Void donor effects).
+        FamiliarSpecialBinding(SummoningScrollData.HOWL_SCROLL, FamiliarSpecialTarget.NPC),
+        FamiliarSpecialBinding(SummoningScrollData.VENOM_SHOT_SCROLL, FamiliarSpecialTarget.INSTANT),
         FamiliarSpecialBinding(SummoningScrollData.RISH_FROM_THE_ASHES_SCROLL, FamiliarSpecialTarget.INVENTORY_ITEM),
         FamiliarSpecialBinding(SummoningScrollData.TIRELESS_RUN_SCROLL, FamiliarSpecialTarget.INSTANT),
         FamiliarSpecialBinding(SummoningScrollData.EVIL_FLAMES_SCROLL, FamiliarSpecialTarget.NPC),
@@ -206,12 +311,20 @@ object SummoningSpecialMoves {
         FamiliarSpecialBinding(SummoningScrollData.BOIL_SCROLL, FamiliarSpecialTarget.NPC),
         FamiliarSpecialBinding(SummoningScrollData.DEADLY_CLAW_SCROLL, FamiliarSpecialTarget.NPC),
         FamiliarSpecialBinding(SummoningScrollData.ACORN_MISSILE_SCROLL, FamiliarSpecialTarget.NPC),
-        FamiliarSpecialBinding(SummoningScrollData.IRON_WITHIN_SCROLL, FamiliarSpecialTarget.NPC),
+        FamiliarSpecialBinding(
+            SummoningScrollData.IRON_WITHIN_SCROLL,
+            FamiliarSpecialTarget.NPC,
+            trigger = FamiliarSpecialTrigger.NEXT_ATTACK,
+        ),
         FamiliarSpecialBinding(SummoningScrollData.SANDSTORM_SCROLL, FamiliarSpecialTarget.INSTANT),
         FamiliarSpecialBinding(SummoningScrollData.FIREBALL_ASSAULT_SCROLL, FamiliarSpecialTarget.INSTANT),
         FamiliarSpecialBinding(SummoningScrollData.EBON_THUNDER_SCROLL, FamiliarSpecialTarget.NPC),
         FamiliarSpecialBinding(SummoningScrollData.WINTER_STORAGE_SCROLL, FamiliarSpecialTarget.INVENTORY_ITEM),
-        FamiliarSpecialBinding(SummoningScrollData.STEEL_OF_LEGENDS_SCROLL, FamiliarSpecialTarget.NPC),
+        FamiliarSpecialBinding(
+            SummoningScrollData.STEEL_OF_LEGENDS_SCROLL,
+            FamiliarSpecialTarget.NPC,
+            trigger = FamiliarSpecialTrigger.NEXT_ATTACK,
+        ),
         FamiliarSpecialBinding(SummoningScrollData.PESTER_SCROLL, FamiliarSpecialTarget.NPC),
         /*
          * Goad and Ambush had no binding at all, which left the Spirit graahk and the Spirit kyatt
@@ -496,6 +609,7 @@ object SummoningSpecialMoves {
         val familiar = resolved.familiar
         val scroll = resolved.scroll
         val changed = when (scroll) {
+            SummoningScrollData.VENOM_SHOT_SCROLL -> chargeVenomShot(player, familiar)
             SummoningScrollData.STONY_SHELL_SCROLL ->
                 boost(player, Skills.DEFENCE, 4).also { if (it) animateSelf(player, familiar, 8109, 1326) }
             SummoningScrollData.THIEVING_FINGERS_SCROLL ->
@@ -608,7 +722,16 @@ object SummoningSpecialMoves {
             // previous 791 came from a modern wiki page (post-2011 life-point figure), not 2011 data.
             // Animation/projectile remain Smoke Devil's own real normal-attack ids.
             SummoningScrollData.DUST_CLOUD_SCROLL ->
-                executeAoe(player, familiar, maxTargets = 6, radius = 1, maxHit = 80.0, animation = 7816, projectile = 1376)
+                executeAoe(
+                    player,
+                    familiar,
+                    maxTargets = 6,
+                    radius = 1,
+                    maxHit = 80.0,
+                    animation = 7816,
+                    projectile = 1376,
+                    onHit = { playSpecialImpact(player, SummoningScrollData.DUST_CLOUD_SCROLL) },
+                )
             SummoningScrollData.EGG_SPAWN_SCROLL -> {
                 // Exact per-cast distribution isn't published beyond "up to 8" - uniform 1..8.
                 val count = player.world.random(1..8)
@@ -771,7 +894,9 @@ object SummoningSpecialMoves {
             else -> false
         }
         if (!changed) return false
-        return commitResources(player, scroll)
+        if (!commitResources(player, scroll)) return false
+        playSpecialAction(player, scroll)
+        return true
     }
 
     fun castOnNpc(player: Player, target: Npc): Boolean {
@@ -799,22 +924,60 @@ object SummoningSpecialMoves {
             player.message("Your familiar cannot attack that target here.")
             return false
         }
+        if (binding.trigger == FamiliarSpecialTrigger.NEXT_ATTACK && FamiliarCombat.hasQueuedNextAttack(familiar)) {
+            player.message("Your familiar already has a special attack queued.")
+            return false
+        }
+        val direct = directCombat[scroll]
+        val supported =
+            binding.trigger == FamiliarSpecialTrigger.NEXT_ATTACK ||
+                direct != null ||
+                scroll in setOf(
+                    SummoningScrollData.BOIL_SCROLL,
+                    SummoningScrollData.DEADLY_CLAW_SCROLL,
+                    SummoningScrollData.ACORN_MISSILE_SCROLL,
+                    SummoningScrollData.PESTER_SCROLL,
+                    SummoningScrollData.GOAD_SCROLL,
+                    SummoningScrollData.AMBUSH_SCROLL,
+                    SummoningScrollData.PETRIFYING_GAZE_SCROLL,
+                    SummoningScrollData.HOWL_SCROLL,
+                )
+        // Validate dispatch coverage before consuming anything. This protects the resource
+        // transaction when a new NPC-targeted binding is added before its effect branch exists.
+        if (!supported) {
+            player.message("Your familiar's special move is not available yet.")
+            return false
+        }
         if (!commitResources(player, scroll)) return false
         familiar.facePawn(target)
-        val direct = directCombat[scroll]
         when {
+            binding.trigger == FamiliarSpecialTrigger.NEXT_ATTACK -> {
+                check(FamiliarCombat.queueNextAttack(familiar, scroll)) {
+                    "next-attack special was not available after its resource commit"
+                }
+                // The target was explicitly selected for this special. Assign it here so the
+                // normal combat loop reaches the attack boundary even when the familiar had no
+                // previous combat target; ordinary specials below intentionally do not retarget.
+                familiar.attack(target)
+            }
             direct != null -> executeDirectCombat(player, familiar, target, scroll, direct)
             scroll == SummoningScrollData.BOIL_SCROLL -> executeBoil(player, familiar, target)
-            scroll == SummoningScrollData.DEADLY_CLAW_SCROLL -> executeVolley(familiar, target, 3, 100.0, HitType.MAGIC)
+            scroll == SummoningScrollData.HOWL_SCROLL -> executeHowl(player, familiar, target)
+            scroll == SummoningScrollData.DEADLY_CLAW_SCROLL -> {
+                playSpecialAction(player, scroll)
+                val attackAnimation = SummoningCombatDefinitions.getByNpc(familiar.id)?.attackAnimation ?: -1
+                executeVolley(
+                    familiar,
+                    target,
+                    3,
+                    100.0,
+                    HitType.MAGIC,
+                    animation = attackAnimation,
+                ) { if (it == 0) playSpecialImpact(player, scroll) }
+            }
             scroll == SummoningScrollData.ACORN_MISSILE_SCROLL -> {
                 executeDirectCombat(player, familiar, target, scroll, DirectFamiliarSpecial(100.0, 7858, projectile = 1362, targetGraphic = 1363))
                 executeSplash(player, familiar, target, maxTargets = 9, radius = 1, maxHit = 100.0, projectile = 1362, targetGraphic = 1363)
-            }
-            scroll == SummoningScrollData.IRON_WITHIN_SCROLL -> {
-                familiar.animate(7954)
-                familiar.graphic(1450)
-                val melee = familiar.tile.getDistance(target.tile) <= 1
-                executeVolley(familiar, target, 3, if (melee) 230.0 else 220.0, if (melee) HitType.MELEE else HitType.MAGIC)
             }
             // Pester's real effect is just an attack "even without being set as the player's
             // active target" - already exactly what this function's own target parameter (as
@@ -825,7 +988,13 @@ object SummoningSpecialMoves {
             // is the effect, and its damage is the familiar's own.
             scroll == SummoningScrollData.PESTER_SCROLL ||
                 scroll == SummoningScrollData.GOAD_SCROLL ||
-                scroll == SummoningScrollData.AMBUSH_SCROLL -> Unit
+                scroll == SummoningScrollData.AMBUSH_SCROLL -> {
+                playSpecialAction(player, scroll)
+                // These three specials are explicitly "send the familiar to attack" moves. That
+                // intentional target assignment is kept local; ordinary damaging specials below
+                // must not silently replace the familiar's current combat target.
+                familiar.attack(target)
+            }
             /*
              * Petrifying Gaze, shared by all seven "-atrice" familiars, had no binding at all,
              * which left the seven "Drain" options the cache really puts on those npcs doing
@@ -843,23 +1012,14 @@ object SummoningSpecialMoves {
              * no published animation of their own.
              */
             scroll == SummoningScrollData.PETRIFYING_GAZE_SCROLL -> {
+                playSpecialAction(player, scroll)
                 val attackAnimation = SummoningCombatDefinitions.getByNpc(familiar.id)?.attackAnimation ?: -1
                 if (attackAnimation >= 0) familiar.animate(attackAnimation)
                 FamiliarCombat.dealLedgerHit(familiar, target, 100.0, !FamiliarCombat.blockedBySummoningProtection(target), 1, HitType.MAGIC)
                 target.stats.decrementCurrentLevel(NpcSkills.DEFENCE, player.world.random(1..3), capped = false)
             }
-            scroll == SummoningScrollData.STEEL_OF_LEGENDS_SCROLL -> {
-                familiar.animate(8190)
-                target.graphic(1449)
-                repeat(4) { index ->
-                    player.world.spawn(familiar.createProjectile(target, 1445, ProjectileType.ARROW))
-                    // The source table stores 244 in the x10 ledger unit; dealLedgerHit converts to 1:1.
-                    FamiliarCombat.dealLedgerHit(familiar, target, 244.0, !FamiliarCombat.blockedBySummoningProtection(target), index + 1, HitType.RANGE)
-                }
-            }
             else -> return false
         }
-        familiar.attack(target)
         return true
     }
 
@@ -912,6 +1072,7 @@ object SummoningSpecialMoves {
             target.inventory.add(consumed.id, 1, assureFullInsertion = true, beginSlot = foodSlot)
             return false
         }
+        playSpecialAction(player, scroll)
         familiar.facePawn(target)
         player.message("Your familiar consumes one piece of your opponent's food.")
         return true
@@ -980,6 +1141,7 @@ object SummoningSpecialMoves {
             return false
         }
         familiar.setCurrentLifepoints(maxLife)
+        playSpecialAction(player, scroll)
         // Void 2011 `familiar/Phoenix.kt`: max hit = (max - current life) / 4 on its x10 unit. `missing` is
         // 1:1 real HP, so the ledger value is missing * 10 / 4 (a full-health phoenix can only splat 0).
         executeAoe(player, familiar, maxTargets = 9, radius = 1, maxHit = missing * FamiliarCombat.LEDGER_UNITS_PER_HITPOINT / 4.0, animation = -1)
@@ -1003,6 +1165,7 @@ object SummoningSpecialMoves {
             return false
         }
         familiar.graphic(1358)
+        playSpecialAction(player, scroll)
         player.message("Your pack yak sends the item to your bank.")
         return true
     }
@@ -1038,6 +1201,7 @@ object SummoningSpecialMoves {
             refundResources(player, scroll)
             return false
         }
+        playSpecialAction(player, scroll)
         player.message("Your spirit cobra incubates the egg.")
         return true
     }
@@ -1089,10 +1253,9 @@ object SummoningSpecialMoves {
             player.message("You do not have enough familiar special-move energy.")
             return null
         }
-        // Void starts the clock before the effect so a re-entrant or repeated click cannot fire
-        // the special again inside the same window; a refused cast still consumes nothing.
+        // The cooldown is armed only by commitResources after the effect-specific validation has
+        // succeeded. A refused target/item cast must not leave a stale delay behind.
         if (player.timers.has(SPECIAL_MOVE_DELAY_TIMER)) return null
-        player.timers[SPECIAL_MOVE_DELAY_TIMER] = SPECIAL_MOVE_DELAY_TICKS
         return ResolvedSpecial(familiar, scroll)
     }
 
@@ -1114,13 +1277,58 @@ object SummoningSpecialMoves {
         player.addXp(Skills.SUMMONING, scroll.useExperience)
         player.animate(SPECIAL_CAST_ANIMATION)
         player.graphic(SPECIAL_CAST_GRAPHIC)
-        player.playSound(SPECIAL_CAST_SOUND)
+        FamiliarAudio.play(player, SPECIAL_CAST_SOUND)
+        if (scroll == SummoningScrollData.STEEL_OF_LEGENDS_SCROLL) {
+            FamiliarAudio.play(player, STEEL_OF_LEGENDS_SCROLL_SOUND)
+        }
+        player.timers[SPECIAL_MOVE_DELAY_TIMER] = SPECIAL_MOVE_DELAY_TICKS
         return true
     }
 
     private fun refundResources(player: Player, scroll: SummoningScrollData) {
         player.inventory.add(scroll.scroll, 1, assureFullInsertion = true)
         Familiar.restoreSpecialPoints(player, scroll.specialPoints)
+    }
+
+    /**
+     * Executes a special explicitly queued by a successful NEXT_ATTACK cast. The normal combat
+     * loop calls this at the attack boundary and never selects a special as a normal fallback.
+     * The queue is consumed by [FamiliarCombat] before this method is entered, so one activation
+     * cannot repeat on later cycles.
+     */
+    internal fun executeNextAttack(player: Player, familiar: Npc, target: Npc, scroll: SummoningScrollData) {
+        if (!target.isAlive()) return
+        when (scroll) {
+            SummoningScrollData.IRON_WITHIN_SCROLL -> {
+                playSpecialAction(player, scroll)
+                familiar.animate(7954)
+                familiar.graphic(1450)
+                executeVolley(familiar, target, 3, 230.0, HitType.MELEE) {
+                    if (it == 0) playSpecialImpact(player, scroll)
+                }
+            }
+            SummoningScrollData.STEEL_OF_LEGENDS_SCROLL -> {
+                // QC3 and the 667 cache keep the launch/impact sounds separate. The four ranged
+                // strikes are the next attack itself, not an extra attack after a normal cycle.
+                FamiliarAudio.play(player, STEEL_TITAN_SPECIAL_ATTACK_SOUND)
+                familiar.animate(8190)
+                target.graphic(1449)
+                repeat(4) { index ->
+                    player.world.spawn(familiar.createProjectile(target, 1445, ProjectileType.ARROW))
+                    FamiliarCombat.dealLedgerHit(
+                        familiar,
+                        target,
+                        244.0,
+                        !FamiliarCombat.blockedBySummoningProtection(target),
+                        index + 1,
+                        HitType.RANGE,
+                    ) {
+                        if (index == 0) FamiliarAudio.play(player, STEEL_TITAN_SPECIAL_IMPACT_SOUND)
+                    }
+                }
+            }
+            else -> error("${scroll.name} is not a NEXT_ATTACK special")
+        }
     }
 
     private fun executeDirectCombat(
@@ -1130,6 +1338,7 @@ object SummoningSpecialMoves {
         scroll: SummoningScrollData,
         effect: DirectFamiliarSpecial,
     ) {
+        playSpecialAction(player, scroll)
         familiar.animate(effect.animation)
         if (effect.sourceGraphic >= 0) familiar.graphic(effect.sourceGraphic)
         if (effect.projectile >= 0) {
@@ -1144,6 +1353,7 @@ object SummoningSpecialMoves {
             landHit = !FamiliarCombat.blockedBySummoningProtection(target),
             delay = if (effect.projectile >= 0) 2 else 1,
             onHit = { pawnHit ->
+                playSpecialImpact(player, scroll)
                 pawnHit.hit.addAction {
                     when (scroll) {
                         SummoningScrollData.ELECTRIC_LASH_SCROLL -> target.stun(5)
@@ -1189,7 +1399,67 @@ object SummoningSpecialMoves {
         )
     }
 
+    /**
+     * Spirit wolf - Howl ("Causes NPC foes to flee"): no damage. Void donor FamiliarCombatSpecials: familiar anim 8293
+     * (spirit_wolf_howl), source gfx 1334, projectile 1333 (delay 30), and the npc retreats from the familiar only once
+     * the projectile reaches it. Here the retreat is: drop its fight and walk [HOWL_FLEE_TILES] tiles straight away from
+     * the familiar (Void's Retreat mode flees the same way; the distance is ADAPTED).
+     */
+    private fun executeHowl(player: Player, familiar: Npc, target: Npc) {
+        playSpecialAction(player, SummoningScrollData.HOWL_SCROLL)
+        familiar.animate(8293)
+        familiar.graphic(1334)
+        val projectile = familiar.createProjectile(target, 1333, ProjectileType.MAGIC)
+        player.world.spawn(projectile)
+        val ticks = ((projectile.lifespan + 29) / 30).coerceAtLeast(1)
+        player.world.queue {
+            wait(ticks)
+            if (!target.isAlive() || !familiar.isSpawned()) return@queue
+            playSpecialImpact(player, SummoningScrollData.HOWL_SCROLL)
+            val dx = Integer.signum(target.tile.x - familiar.tile.x).let { if (it == 0 && target.tile.z == familiar.tile.z) 1 else it }
+            val dz = Integer.signum(target.tile.z - familiar.tile.z)
+            gg.rsmod.plugins.content.combat.Combat.reset(target)
+            target.resetFacePawn()
+            target.walkTo(target.tile.transform(dx * HOWL_FLEE_TILES, dz * HOWL_FLEE_TILES))
+        }
+    }
+
+    private const val HOWL_FLEE_TILES = 5
+
+    /** Spirit scorpion Venom Shot charge (Void `familiar_venom_shot_charged`); spent by [consumeVenomShot]. */
+    val VENOM_SHOT_CHARGED_ATTR = gg.rsmod.game.model.attr.AttributeKey<Boolean>()
+
+    /** Void: poison(target, 60) in its x10 life-point units = 6 here. */
+    const val VENOM_SHOT_POISON_DAMAGE = 6
+
+    /**
+     * Venom Shot (Void FamiliarBoostSpecials): refuses when already charged; anim 6261 + gfx 1354 on the scorpion, and once
+     * the 3-tick wind-up ends a venom bolt 1355 flies to the owner. The owner's next damaging ranged hit then poisons.
+     */
+    private fun chargeVenomShot(player: Player, familiar: Npc): Boolean {
+        if (player.attr[VENOM_SHOT_CHARGED_ATTR] == true) {
+            player.message("Your familiar's venom shot is already charged.")
+            return false
+        }
+        familiar.facePawn(player)
+        familiar.animate(6261)
+        familiar.graphic(1354)
+        player.world.queue {
+            wait(3)
+            if (familiar.isSpawned()) player.world.spawn(familiar.createProjectile(player, 1355, ProjectileType.MAGIC))
+        }
+        player.attr[VENOM_SHOT_CHARGED_ATTR] = true
+        return true
+    }
+
+    fun consumeVenomShot(attacker: Player, target: gg.rsmod.game.model.entity.Pawn) {
+        if (attacker.attr[VENOM_SHOT_CHARGED_ATTR] != true) return
+        attacker.attr.remove(VENOM_SHOT_CHARGED_ATTR)
+        gg.rsmod.plugins.content.mechanics.poison.Poison.poison(target, VENOM_SHOT_POISON_DAMAGE)
+    }
+
     private fun executeBoil(player: Player, familiar: Npc, target: Npc) {
+        playSpecialAction(player, SummoningScrollData.BOIL_SCROLL)
         familiar.animate(7883)
         familiar.graphic(1373)
         val melee = familiar.tile.getDistance(target.tile) <= 1
@@ -1199,13 +1469,35 @@ object SummoningSpecialMoves {
             player.world.spawn(familiar.createProjectile(target, 1376, projectileType))
             target.graphic(1377)
         }
-        FamiliarCombat.dealLedgerHit(familiar, target, 240.0, !FamiliarCombat.blockedBySummoningProtection(target), if (melee) 1 else 2, hitType)
+        FamiliarCombat.dealLedgerHit(
+            familiar,
+            target,
+            240.0,
+            !FamiliarCombat.blockedBySummoningProtection(target),
+            if (melee) 1 else 2,
+            hitType,
+        ) { playSpecialImpact(player, SummoningScrollData.BOIL_SCROLL) }
     }
 
-    private fun executeVolley(familiar: Npc, target: Npc, hits: Int, maxHit: Double, hitType: HitType) {
-        if (hits == 3 && maxHit == 100.0) familiar.animate(7348)
+    private fun executeVolley(
+        familiar: Npc,
+        target: Npc,
+        hits: Int,
+        maxHit: Double,
+        hitType: HitType,
+        animation: Int = -1,
+        onHit: (Int) -> Unit = {},
+    ) {
+        if (animation >= 0) familiar.animate(animation)
         repeat(hits) { index ->
-            FamiliarCombat.dealLedgerHit(familiar, target, maxHit, !FamiliarCombat.blockedBySummoningProtection(target), 1 + index / 2, hitType)
+            FamiliarCombat.dealLedgerHit(
+                familiar,
+                target,
+                maxHit,
+                !FamiliarCombat.blockedBySummoningProtection(target),
+                1 + index / 2,
+                hitType,
+            ) { onHit(index) }
         }
     }
 
@@ -1219,6 +1511,7 @@ object SummoningSpecialMoves {
         sourceGraphic: Int = -1,
         projectile: Int = -1,
         targetGraphic: Int = -1,
+        onHit: (Npc) -> Unit = {},
     ): Boolean {
         val targets = nearbyAttackableNpcs(player, familiar, familiar, radius, maxTargets)
         if (targets.isEmpty()) {
@@ -1230,8 +1523,14 @@ object SummoningSpecialMoves {
         targets.forEach { target ->
             if (projectile >= 0) player.world.spawn(familiar.createProjectile(target, projectile, ProjectileType.MAGIC))
             if (targetGraphic >= 0) target.graphic(targetGraphic)
-            FamiliarCombat.dealLedgerHit(familiar, target, maxHit, true, if (projectile >= 0) 2 else 1, HitType.MAGIC)
-            familiar.attack(target)
+            FamiliarCombat.dealLedgerHit(
+                familiar,
+                target,
+                maxHit,
+                true,
+                if (projectile >= 0) 2 else 1,
+                HitType.MAGIC,
+            ) { onHit(target) }
         }
         return true
     }

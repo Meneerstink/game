@@ -33,6 +33,7 @@ import gg.rsmod.plugins.content.mechanics.prayer.AncientCurses
 import gg.rsmod.plugins.content.mechanics.prayer.Redemption
 import gg.rsmod.plugins.content.mechanics.prayer.Smite
 import gg.rsmod.plugins.content.mechanics.pvp.AreaState
+import gg.rsmod.plugins.content.mechanics.pvp.PvpSkull
 import java.lang.ref.WeakReference
 import kotlin.random.Random
 
@@ -244,6 +245,14 @@ fun Pawn.dealHit(
 
     val pawnHit = PawnHit(hit, executeHit)
 
+    // Deadman skull (owner 2026-09-18, MAJOR): the attacker is skulled when this hitsplat registers
+    // on the other player - the first hit action, so it runs the cycle the hitmark is written and
+    // never for a cancelled hit. Every melee/ranged/magic/special route deals through here.
+    if (this is Player && target is Player) {
+        val attacker = this
+        hit.addAction { PvpSkull.onHitRegistered(attacker, target) }
+    }
+
     // Special attacks give the normal combat experience for their damage (SpecialAttackXp, OSRS Wiki "Combat").
     if (this is Player && executeHit) {
         gg.rsmod.plugins.content.combat.specialattack.SpecialAttackXp.award(this, target, hit.hitmarks.sumOf { it.damage }, hitType)
@@ -258,6 +267,11 @@ fun Pawn.dealHit(
     // Poisoned weapons and ammunition: 1/4 melee, 1/8 ranged on a landed non-zero hit (WeaponPoison, OSRS Wiki "Poison").
     if (this is Player) {
         gg.rsmod.plugins.content.mechanics.poison.WeaponPoison.onPlayerHit(this, target, pawnHit, hitType)
+        // Spirit scorpion Venom Shot: a charged owner's next damaging ranged hit poisons its target (Void FamiliarBoostSpecials).
+        if (hitType == HitType.RANGE && executeHit && damage > 0) {
+            val attacker = this
+            hit.addAction { gg.rsmod.plugins.content.skills.summoning.SummoningSpecialMoves.consumeVenomShot(attacker, target) }
+        }
     }
 
     // Crystal armour: "One charge is depleted for each successful hit that is received from combat" - monster hits only,
