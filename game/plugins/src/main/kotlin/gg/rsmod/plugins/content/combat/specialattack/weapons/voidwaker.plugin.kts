@@ -18,9 +18,10 @@ SpecialAttacks.register(Voidwaker.SPECIAL_ENERGY, Items.VOIDWAKER) {
     player.animate(gg.rsmod.plugins.content.items.osrs.OsrsSeq.HUMAN_SPECIAL02_VOIDWAKER)
     // OSRS FX_VOIDWAKER02_SPECIAL on the attacker and FX_VOIDWAKER_IMPACT on the target (fxpilot); heights ADAPTED (0).
     player.graphic(gg.rsmod.plugins.content.items.osrs.OsrsGfx.VOIDWAKER_SPECIAL)
-    // OSRS Wiki "Voidwaker" trivia: Superior Demonbane's cast layered with a ToA Wardens attack sound; only the Demonbane
-    // half is identified (the Wardens half stays SOURCE_BLOCKED).
+    // OSRS Wiki "Voidwaker": the special plays 5027 superior_demonbane_cast and 6182 toa_wardens_square_thunder1_01 at the
+    // same time (sound list + trivia, re-read 2026-09-18).
     player.playSound(gg.rsmod.plugins.content.items.osrs.OsrsSfx.SUPERIOR_DEMONBANE_CAST)
+    player.playSound(gg.rsmod.plugins.content.items.osrs.OsrsSfx.TOA_WARDENS_SQUARE_THUNDER1)
     victim.graphic(gg.rsmod.plugins.content.items.osrs.OsrsGfx.VOIDWAKER_IMPACT)
     val (minimum, maximum) = Voidwaker.disruptRange(MeleeCombatFormula.getMaxHit(player, victim))
     player.dealHit(

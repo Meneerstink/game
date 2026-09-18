@@ -31,7 +31,11 @@ object EnchantedHeadgear {
             Headgear(Items.FEATHER_HEADDRESS_12216, Items.FEATHER_HEADDRESS_12216, Items.FEATHER_HEADDRESS_CHARGED_12218, 50, 150),
             Headgear(Items.FEATHER_HEADDRESS_12219, Items.FEATHER_HEADDRESS_12219, Items.FEATHER_HEADDRESS_CHARGED_12221, 50, 150),
             Headgear(Items.FEATHER_HEADDRESS_12222, Items.FEATHER_HEADDRESS_12222, Items.FEATHER_HEADDRESS_CHARGED_12224, 50, 150),
-            Headgear(Items.SNAKESKIN_BANDANA, Items.SNAKESKIN_BANDANA_E, Items.SNAKESKIN_BANDANA_CHARGED, 20, 50),
+            // RS Wiki "Enchanted headgear" table (raw wikitext 2026-09-18): capacity 50, Summoning 20. Missing from the Void table;
+            // found by the Commune census (AvasCommuneTests). Full slayer helmet (charged) is not on that table: SOURCE_GAP.
+            Headgear(Items.ADAMANT_FULL_HELM, Items.ADAMANT_FULL_HELM_E, Items.ADAMANT_FULL_HELM_CHARGED, 20, 50),
+            Headgear(Items.SLAYER_HELMET, Items.SLAYER_HELMET_E, Items.SLAYER_HELMET_CHARGED, 20, 50),
+            Headgear(Items.SNAKESKIN_BANDANA,Items.SNAKESKIN_BANDANA_E, Items.SNAKESKIN_BANDANA_CHARGED, 20, 50),
             Headgear(Items.ARCHER_HELM, Items.ARCHER_HELM_E, Items.ARCHER_HELM_CHARGED, 30, 70),
             Headgear(Items.BERSERKER_HELM, Items.BERSERKER_HELM_E, Items.BERSERKER_HELM_CHARGED, 30, 70),
             Headgear(Items.WARRIOR_HELM, Items.WARRIOR_HELM_E, Items.WARRIOR_HELM_CHARGED, 30, 70),

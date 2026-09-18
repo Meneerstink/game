@@ -163,6 +163,27 @@ class AncientCurses2011Tests {
     }
 
     @Test
+    fun `owner rule - Leech Strength, Ranged and Magic are mutually exclusive, other leeches stack`() {
+        val offenders = mutableListOf<String>()
+        val style = listOf(AncientCurse.LEECH_STRENGTH, AncientCurse.LEECH_RANGED, AncientCurse.LEECH_MAGIC)
+        val leeches = AncientCurse.values().filter { it.category == AncientCurse.Category.LEECH }
+        leeches.forEach { a -> leeches.forEach { b ->
+            if (a != b) {
+                val expected = a in style && b in style
+                if (a.conflictsWith(b) != expected) offenders += "$a vs $b expected conflict=$expected"
+            }
+        } }
+        assertEquals(emptyList<String>(), offenders)
+        // Activation path: turning on a second style leech switches the first off.
+        val player = newPlayer()
+        AncientCurses.switchBook(player, AncientCurses.PrayerBook.ANCIENT)
+        style.forEach { AncientCurses.toggleCurse(player, it) }
+        assertEquals(listOf(AncientCurse.LEECH_MAGIC), style.filter { AncientCurses.isCurseActive(player, it) })
+        AncientCurses.toggleCurse(player, AncientCurse.LEECH_ATTACK)
+        assertTrue(AncientCurses.isCurseActive(player, AncientCurse.LEECH_MAGIC))
+    }
+
+    @Test
     fun `Leech Attack escalates the drain to 25 percent and the self boost to 10 percent`() {
         val attacker = newPlayer(mapOf(Skills.ATTACK to 99))
         AncientCurses.switchBook(attacker, AncientCurses.PrayerBook.ANCIENT)

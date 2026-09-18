@@ -136,6 +136,9 @@ object OsrsFxImportTool {
                     // attack sound; 5027 superior_demonbane_cast (the Wardens half is not identified by any source).
                     5027,
                 ),
+            // Owner 2026-09-18 re-research: OSRS Wiki "Voidwaker" sound list names the Wardens half of the special:
+            // 6182 toa_wardens_square_thunder1_01 ("Special attack", next to 5027).
+            "weaponsfx4" to listOf(6182),
         )
 
     // ---- smart values ---------------------------------------------------------------------------

@@ -22,16 +22,16 @@ fun assemblerHasOption(
     return (if (worn) def.equipmentMenu else def.inventoryMenu).any { it.equals(option, ignoreCase = true) }
 }
 
+/** The OSRS Commune chatbox flow (plain message -> Yes/No option -> plain message), texts in [AvasAssembler.Commune]. */
 fun commune(player: Player) {
-    val stopped = player.attr[AvasAssembler.GATHERING_STOPPED] == true
-    player.attr[AvasAssembler.GATHERING_STOPPED] = !stopped
-    player.message(
-        if (stopped) {
-            "You commune with the device: it will gather random metal items again."
-        } else {
-            "You commune with the device: it will stop gathering random metal items."
-        },
-    )
+    player.queue {
+        val stopped = player.attr[AvasAssembler.GATHERING_STOPPED] == true
+        val text = AvasAssembler.Commune.forState(stopped)
+        messageBox(*text.intro)
+        if (options("Yes", "No", title = text.question) != 1) return@queue
+        player.attr[AvasAssembler.GATHERING_STOPPED] = !stopped
+        messageBox(*text.confirm)
+    }
 }
 
 AvasDevices.ASSEMBLERS.forEach { device ->

@@ -11,9 +11,45 @@ import gg.rsmod.plugins.api.cfg.Items
  * or in the inventory"; when the item fits nowhere: "Ava's contraption makes an odd burping sound."
  * Owner live report 2026-09-17c: "commune option avas assembler does nothing".
  *
- * SOURCE_GAP: the Commune chat wording is not on the pages (plain ADAPTED messages); "approximately" 3.5 minutes is taken as 350 ticks.
+ * Commune GUI (owner 2026-09-18: exact OSRS GUI, not a chat message): plain chatbox message -> "Ask it to stop/start gathering
+ * junk?" Yes/No -> plain confirmation. Wording from the Zenyte OSRS server (RangingCape.java / MaxCape.java / NewMaxCapes.java, one
+ * shared dialogue for every Ava's-type device), the only source with the text; the OSRS Wiki pages do not quote it. The 667 message
+ * box does not auto-wrap, so the lines are pre-split. "approximately" 3.5 minutes is taken as 350 ticks.
  */
 object AvasAssembler {
+    class Commune(val intro: Array<String>, val question: String, val confirm: Array<String>) {
+        companion object {
+            val STOP =
+                Commune(
+                    arrayOf(
+                        "The undead chicken can protect some of your ammunition while",
+                        "you're ranging, and will also gather random metal items for you.",
+                    ),
+                    "Ask it to stop gathering junk?",
+                    arrayOf(
+                        "You somehow communicate your message to the undead chicken.",
+                        "Henceforth it will no longer gather up random metal items",
+                        "while you've got it equipped.",
+                    ),
+                )
+            val START =
+                Commune(
+                    arrayOf(
+                        "The undead chicken understands that you currently don't want it",
+                        "to accumulate random metal items while you've got it equipped.",
+                    ),
+                    "Ask it to start gathering junk?",
+                    arrayOf(
+                        "You somehow communicate your message to the undead chicken.",
+                        "Henceforth it will gather up random metal items while you've",
+                        "got it equipped.",
+                    ),
+                )
+
+            fun forState(gatheringStopped: Boolean): Commune = if (gatheringStopped) START else STOP
+        }
+    }
+
     const val INTERVAL_TICKS = 350
     const val MIN_TILES_MOVED = 3
     const val FULL_MESSAGE = "Ava's contraption makes an odd burping sound."

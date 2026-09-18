@@ -221,6 +221,9 @@ enum class AncientCurse(
         return when {
             a == Category.SAP && b == Category.LEECH -> drains.intersect(other.drains).isNotEmpty()
             a == Category.LEECH && b == Category.SAP -> drains.intersect(other.drains).isNotEmpty()
+            // Owner decision 2026-09-18 (overrides the KB for this pair set): Leech Strength, Leech
+            // Ranged and Leech Magic are one combat-style group; only one may be active at a time.
+            this in STYLE_LEECHES && other in STYLE_LEECHES -> true
             a == Category.DEFLECT_COMBAT && b == Category.DEFLECT_COMBAT -> true
             a.isOverhead() && b.isOverhead() && (a != Category.DEFLECT_COMBAT || b != Category.DEFLECT_COMBAT) &&
                 !(a.isDeflect() && b.isDeflect()) -> true
@@ -232,6 +235,9 @@ enum class AncientCurse(
     val conflictsWithTurmoil: Boolean get() = category == Category.SAP || category == Category.LEECH
 
     companion object {
+        /** Owner 2026-09-18: mutually exclusive combat-style leeches. */
+        val STYLE_LEECHES by lazy { setOf(LEECH_STRENGTH, LEECH_RANGED, LEECH_MAGIC) }
+
         /**
          * Turmoil is implemented separately in [AncientCurses] rather than as an entry above, but
          * it drains through the same shared counter. Same units; 2 seconds per Prayer point at
@@ -244,6 +250,7 @@ enum class AncientCurse(
         const val DRAIN_RUN_ENERGY = CURSE_DRAIN_RUN_ENERGY
 
         /** Cache-proven contract (see class KDoc). */
+        const val ACTIVE_VARP = 1582
         const val ACTIVE_VARBIT_BASE = 6820
         const val QUICK_VARBIT_BASE = 6862
         const val BOOK_VARBIT = 6840

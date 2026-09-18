@@ -39,9 +39,14 @@ SpecialAttacks.register(75, Items.ZARYTE_CROSSBOW) {
 SpecialAttacks.register(60, Items.DRAGON_CROSSBOW) {
     val victim = target
     player.animate(CombatConfigs.getAttackAnimation(player))
-    player.playSound(Sfx.CROSSBOW)
+    // Owner 2026-09-18 "dragon crossbow special heeft geen sound". Zenyte OSRS server SpecialAttackScript ANNIHILATE_START_SOUND /
+    // ANNIHILATE_END_SOUND: 1080 DTTD_bone_crossbow_sa on the shot (replaces the plain crossbow cue) and 163 firewave_hit, the
+    // explosion, when the bolt lands (OSRS Wiki "List of sound IDs" names; both ids are below the range where OSRS and 667 match).
+    player.playSound(1080)
     if (rangedShot(player, victim, damage = 1.2) < 0) return@register
     val delay = 1 + Math.ceil(player.tile.getDistance(victim.tile) * 0.3).toInt()
+    player.playSound(163, delay = delay * 30)
+    (victim as? Player)?.playSound(163, delay = delay * 30)
     adjacentTargets(player, victim, radius = 1).take(9).forEach { other ->
         val maxHit = RangedCombatFormula.getMaxHit(player, other, specialAttackMultiplier = 0.8)
         val landHit = RangedCombatFormula.getAccuracy(player, other) >= world.randomDouble()
