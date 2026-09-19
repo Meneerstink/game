@@ -14,6 +14,7 @@ import gg.rsmod.plugins.content.mechanics.poison.Poison
 import gg.rsmod.plugins.content.mechanics.poison.Venom
 import gg.rsmod.plugins.content.mechanics.prayer.Prayers
 import gg.rsmod.plugins.content.mechanics.prayer.AncientCurses
+import gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction
 import gg.rsmod.plugins.content.magic.Spellbooks
 import gg.rsmod.plugins.content.magic.teleports.TeleportSpell
 
@@ -87,12 +88,16 @@ fun enterHouse(player: Player): Boolean {
 
 // Rimmington house portal: walks into the same private house.
 on_obj_option(obj = PlayerHouse.RIMMINGTON_PORTAL, option = "enter") {
-    enterHouse(player)
+    SevenSecondAction.start(player, SevenSecondAction.Kind.PORTAL) {
+        enterHouse(player)
+    }
 }
 
 // Exit portal.
 on_obj_option(obj = PlayerHouse.PORTAL, option = "enter") {
-    player.moveTo(PlayerHouse.EXIT_TILE)
+    SevenSecondAction.start(player, SevenSecondAction.Kind.PORTAL) {
+        player.moveTo(PlayerHouse.EXIT_TILE)
+    }
 }
 
 // Rejuvenation pool (OSRS Wiki "Ornate rejuvenation pool"): restores hitpoints, prayer, run energy and special
@@ -160,7 +165,14 @@ mapOf(
     PlayerHouse.CAMELOT_PORTAL to TeleportSpell.CAMELOT,
 ).forEach { (portal, spell) ->
     on_obj_option(obj = portal, option = "enter") {
-        player.moveTo(spell.endArea.randomTile)
+        // Owner 2026-09-19: every teleport in the game is reachable from the house - the portal's own city first,
+        // then the full directory (PohTeleports).
+        player.queue {
+            when (options(spell.spellName.removeSuffix(" Teleport"), "All teleports...", "Cancel", title = "House portal")) {
+                1 -> player.canTeleport(TeleportType.MODERN) { player.moveTo(spell.endArea.randomTile) }
+                2 -> with(PohTeleports) { openDirectory(player) }
+            }
+        }
     }
 }
 

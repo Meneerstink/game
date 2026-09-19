@@ -359,23 +359,58 @@ on_world_init {
 // ---- information --------------------------------------------------------------------------------------------------------
 
 on_command("breach", Privilege.ADMIN_POWER) {
+    // Owner 2026-09-19 ("i can only teleport to one location"): an open breach is closed first, so every command opens a
+    // new one. breach [local|region|<number from breachlist>|<part of a name>].
     val args = player.getCommandArgs()
+    val first = args.joinToString(" ").trim()
     val kind =
-        when (args.firstOrNull()?.lowercase()) {
+        when (first.lowercase()) {
             "local", "localised", "localized" -> DeadmanBreach.Kind.LOCALISED
             "region", "regional" -> DeadmanBreach.Kind.REGIONAL
             else -> null
         }
-    val opened = DeadmanBreach.open(world, kind)
+    val only =
+        if (kind != null || first.isEmpty()) {
+            null
+        } else {
+            first.toIntOrNull()?.let { n -> DeadmanBreach.allLocations(world).getOrNull(n - 1)?.first?.substringBefore(" (") } ?: first
+        }
+    DeadmanBreach.close(world)
+    val opened = DeadmanBreach.open(world, kind, only)
     if (opened == null) {
-        player.message("No usable breach location.")
+        player.message(if (only != null) "No usable breach location matches '$first'. Type breachlist." else "No usable breach location.")
     } else {
         opened.sites.forEach { s -> player.message("Breach: ${s.name} (${s.kind}, ${if (s.multi) "multi" else "single"}) spawner ${s.spawners.first()}") }
     }
 }
 
 /** Owner 2026-09-19 ("i cant find the breach please fix me a teleport command"): to the open breach's spawner (site 1 or 2). */
+/** Every breach location with its number, for breach <n> / breachtele <n>. */
+on_command("breachlist", Privilege.ADMIN_POWER) {
+    DeadmanBreach.allLocations(world).forEachIndexed { i, (name, _) -> player.message("${i + 1}. $name") }
+}
+
+/** Closes the open breach and removes its monsters. */
+on_command("breachclose", Privilege.ADMIN_POWER) {
+    DeadmanBreach.close(world)
+    player.message("The breach is closed.")
+}
+
 on_command("breachtele", Privilege.ADMIN_POWER) {
+    // breachtele <number from breachlist | part of a name> goes to any breach location, open or not; breachtele alone goes to
+    // the open breach.
+    val arg = player.getCommandArgs().joinToString(" ").trim()
+    val all = DeadmanBreach.allLocations(world)
+    val target = arg.toIntOrNull()?.let { all.getOrNull(it - 1) } ?: arg.takeIf { it.isNotEmpty() }?.let { a -> all.firstOrNull { it.first.contains(a, ignoreCase = true) } }
+    if (arg.isNotEmpty() && target == null) {
+        player.message("No breach location matches '$arg'. Type breachlist.")
+        return@on_command
+    }
+    target?.let { (name, tile) ->
+        player.moveTo(tile)
+        player.message("Teleported to breach location $name.")
+        return@on_command
+    }
     val open = DeadmanBreach.active
     if (open == null) {
         player.message("No breach is open. ${DeadmanBreach.statusLine()} Use 'breach' to open one.")

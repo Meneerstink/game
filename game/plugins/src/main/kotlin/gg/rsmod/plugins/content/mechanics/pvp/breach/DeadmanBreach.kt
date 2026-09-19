@@ -196,26 +196,55 @@ object DeadmanBreach {
 
     // ---- opening ----------------------------------------------------------------------------------------------------
 
-    /** Opens a breach now; [kind] null picks one of the two types at random. Returns the sites, or null when nothing is usable. */
+    /** Every usable location (localised first, then regional) with a tile at its spawner, numbered from 1 by the admin commands. */
+    fun allLocations(world: World): List<Pair<String, Tile>> {
+        val locs = locations ?: loadLocations(world).also { locations = it }
+        return locs.localised.map { "${it.name} (local, ${if (it.multi) "multi" else "single"})" to it.spawners.first() } +
+            locs.regional.map { r -> "${r.name} (region)" to r.points.first() }
+    }
+
+    /** Closes the open breach at once: its spawners and every monster it spawned are removed. */
+    fun close(world: World) {
+        val open = active ?: return
+        active = null
+        open.sites.forEach { site ->
+            site.objects.forEach { world.remove(it) }
+            site.npcs.forEach { if (world.npcs.contains(it) && !it.isDead()) world.remove(it) }
+        }
+    }
+
+    /**
+     * Opens a breach now; [kind] null picks one of the two types at random, [only] (admin command) opens the location whose
+     * name contains it. Returns the sites, or null when nothing is usable.
+     */
     fun open(
         world: World,
         kind: Kind?,
+        only: String? = null,
     ): Active? {
         if (active != null) return active
         val locs = locations ?: loadLocations(world).also { locations = it }
-        val chosen = kind ?: if (Random.nextBoolean()) Kind.LOCALISED else Kind.REGIONAL
+        val wantedLocal = only?.let { o -> locs.localised.firstOrNull { it.name.contains(o, ignoreCase = true) } }
+        val wantedRegion = only?.let { o -> locs.regional.firstOrNull { it.name.contains(o, ignoreCase = true) } }
+        if (only != null && wantedLocal == null && wantedRegion == null) return null
+        val chosen =
+            when {
+                wantedLocal != null -> Kind.LOCALISED
+                wantedRegion != null -> Kind.REGIONAL
+                else -> kind ?: if (Random.nextBoolean()) Kind.LOCALISED else Kind.REGIONAL
+            }
         val sites =
             when (chosen) {
                 Kind.LOCALISED -> {
-                    val single = locs.localised.filter { !it.multi }.randomOrNull()
-                    val multi = locs.localised.filter { it.multi }.randomOrNull()
+                    val single = if (wantedLocal != null) wantedLocal.takeIf { !it.multi } else locs.localised.filter { !it.multi }.randomOrNull()
+                    val multi = if (wantedLocal != null) wantedLocal.takeIf { it.multi } else locs.localised.filter { it.multi }.randomOrNull()
                     listOfNotNull(single, multi).map { l ->
                         val landing = l.spawners.flatMap { s -> around(world, s, LOCAL_SPAWN_RADIUS) }.distinct()
                         Site(Kind.LOCALISED, l.name, l.multi, l.spawners, landing, LOCALISED_MAX_NPCS)
                     }
                 }
                 Kind.REGIONAL -> {
-                    val r = locs.regional.randomOrNull() ?: return null
+                    val r = wantedRegion ?: locs.regional.randomOrNull() ?: return null
                     val cx = r.points.sumOf { it.x } / r.points.size
                     val cz = r.points.sumOf { it.z } / r.points.size
                     val spawner = r.points.minByOrNull { (it.x - cx) * (it.x - cx) + (it.z - cz) * (it.z - cz) }!!
@@ -257,7 +286,7 @@ object DeadmanBreach {
     ) {
         world.queue {
             var elapsed = 0
-            while (elapsed < SPAWN_WINDOW_TICKS) {
+            while (elapsed < SPAWN_WINDOW_TICKS && active === opened) {
                 opened.sites.forEach { site ->
                     val interval = SPAWN_WINDOW_TICKS / site.maxNpcs
                     if (site.spawned < site.maxNpcs && elapsed >= site.spawned * interval) fire(world, site)
@@ -267,7 +296,7 @@ object DeadmanBreach {
             }
             // The spawners close; unkilled monsters stay for another 30 minutes.
             opened.sites.forEach { site -> site.objects.forEach { world.remove(it) } }
-            active = null
+            if (active === opened) active = null
             wait(LINGER_TICKS)
             opened.sites.forEach { site -> site.npcs.forEach { if (world.npcs.contains(it) && !it.isDead()) world.remove(it) } }
         }

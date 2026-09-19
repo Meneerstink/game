@@ -19,22 +19,22 @@ object SpellSounds {
             CombatSpell.WIND_BOLT to Sounds(218, 219),
             CombatSpell.WIND_BLAST to Sounds(216, 217),
             CombatSpell.WIND_WAVE to Sounds(222, 223),
-            CombatSpell.WIND_SURGE to Sounds(222, 223),
+            CombatSpell.WIND_SURGE to Sounds(10334, 10333), // OSRS 4028 windsurge_cast_and_fire / 4027 windsurge_hit (tx-20260919-205526)
             CombatSpell.WATER_STRIKE to Sounds(211, 212),
             CombatSpell.WATER_BOLT to Sounds(209, 210),
             CombatSpell.WATER_BLAST to Sounds(207, 208),
             CombatSpell.WATER_WAVE to Sounds(213, 214),
-            CombatSpell.WATER_SURGE to Sounds(213, 214),
+            CombatSpell.WATER_SURGE to Sounds(10336, 10335), // OSRS 4030 watersurge_cast_and_fire / 4029 watersurge_hit
             CombatSpell.EARTH_STRIKE to Sounds(132, 133),
             CombatSpell.EARTH_BOLT to Sounds(130, 131),
             CombatSpell.EARTH_BLAST to Sounds(128, 129),
             CombatSpell.EARTH_WAVE to Sounds(134, 135),
-            CombatSpell.EARTH_SURGE to Sounds(134, 135),
+            CombatSpell.EARTH_SURGE to Sounds(10331, 10332), // OSRS 4025 earthsurge_cast_and_fire / 4026 earthsurge_hit
             CombatSpell.FIRE_STRIKE to Sounds(160, 161),
             CombatSpell.FIRE_BOLT to Sounds(157, 158),
             CombatSpell.FIRE_BLAST to Sounds(155, 156),
             CombatSpell.FIRE_WAVE to Sounds(162, 163),
-            CombatSpell.FIRE_SURGE to Sounds(162, 163),
+            CombatSpell.FIRE_SURGE to Sounds(10338, 10337), // OSRS 4032 firesurge_cast_and_fire / 4031 firesurge_hit
             CombatSpell.CRUMBLE_UNDEAD to Sounds(122, 124),
             CombatSpell.IBAN_BLAST to Sounds(162, 163),
             CombatSpell.MAGIC_DART to Sounds(1718, 174),
