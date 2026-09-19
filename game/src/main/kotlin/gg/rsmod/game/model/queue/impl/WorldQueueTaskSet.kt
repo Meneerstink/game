@@ -10,24 +10,32 @@ import kotlin.coroutines.resume
  * @author Tom <rspsmods@gmail.com>
  */
 class WorldQueueTaskSet : QueueTaskSet() {
+    /*
+     * Iterates a snapshot: a world task that queues another world task while it runs (e.g. a Deadman
+     * breach firing a projectile, 2026-09-19 live log "ConcurrentModificationException ... Error cycling
+     * world queues") used to invalidate the live iterator, and failTask then killed the running task.
+     * A task queued during a cycle now starts on the next cycle.
+     */
     override fun cycle() {
-        val iterator = queue.iterator()
-        while (iterator.hasNext()) {
-            val task = iterator.next()
+        for (task in ArrayList(queue)) {
+            try {
+                if (!task.invoked) {
+                    task.invoked = true
+                    task.coroutine.resume(Unit)
+                }
 
-            if (!task.invoked) {
-                task.invoked = true
-                task.coroutine.resume(Unit)
+                task.cycle()
+            } catch (e: Exception) {
+                failTask(task, e) { queue.remove(task) }
+                continue
             }
-
-            task.cycle()
 
             if (!task.suspended()) {
                 /*
                  * Task is no longer in a suspended state, which means its job is
                  * complete.
                  */
-                iterator.remove()
+                queue.remove(task)
             }
         }
     }
