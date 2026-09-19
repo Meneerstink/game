@@ -4,6 +4,7 @@ import gg.rsmod.game.fs.def.ItemDef
 import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
+import gg.rsmod.game.tools.importer.StoreInterfaceImportTool as Ui
 import gg.rsmod.plugins.api.InterfaceDestination
 import gg.rsmod.plugins.api.ext.*
 import gg.rsmod.plugins.content.mechanics.store.StoreCatalogue.Entry
@@ -19,31 +20,47 @@ import java.time.LocalDateTime
  * the currencies are persistent account attributes ([StoreCatalogue.Currency]).
  */
 object StoreUi : KLogging() {
-    const val INTERFACE_ID = 1151
+    // Component ids come straight from the tool that builds the window, so the two can never drift apart.
+    const val INTERFACE_ID = Ui.INTERFACE_ID
+    const val TITLE = Ui.TITLE
+    const val CLOSE = Ui.CLOSE
+    const val TAB_FIRST = Ui.TAB_FIRST
+    const val TAB_STRIDE = Ui.TAB_STRIDE
+    const val SLOT_BACKGROUND_FIRST = Ui.SLOT_BACKGROUND_FIRST
+    const val SLOT_FIRST = Ui.SLOT_FIRST
+    const val SLOT_COUNT = Ui.SLOT_COUNT
+    const val PAGE_PREVIOUS = Ui.PAGE_PREVIOUS
+    const val PAGE_TEXT = Ui.PAGE_TEXT
+    const val PAGE_NEXT = Ui.PAGE_NEXT
+    const val PREVIEW_MODEL = Ui.PREVIEW_MODEL
+    const val CAROUSEL_PREVIOUS = Ui.CAROUSEL_PREVIOUS
+    const val RESULT_NAME = Ui.RESULT_NAME
+    const val CAROUSEL_NEXT = Ui.CAROUSEL_NEXT
+    const val KIT_NAME = Ui.KIT_NAME
+    const val REQUIREMENT = Ui.REQUIREMENT
+    const val COSMETIC = Ui.COSMETIC
+    const val PRICE = Ui.PRICE
+    const val BALANCE = Ui.BALANCE
+    const val BUY_LAYER = Ui.BUY_LAYER
+    const val BUY_TEXT = Ui.BUY_TEXT
+    const val EMPTY_TEXT = Ui.EMPTY_TEXT
 
-    // Component ids - must match StoreInterfaceImportTool.
-    const val TITLE = 12
-    const val CLOSE = 13
-    const val TAB_FIRST = 16
-    const val TAB_STRIDE = 5
-    const val SLOT_BACKGROUND_FIRST = 31
-    const val SLOT_FIRST = 61
-    const val SLOT_COUNT = 30
-    const val PAGE_PREVIOUS = 91
-    const val PAGE_TEXT = 92
-    const val PAGE_NEXT = 93
-    const val PREVIEW_MODEL = 97
-    const val CAROUSEL_PREVIOUS = 98
-    const val RESULT_NAME = 99
-    const val CAROUSEL_NEXT = 100
-    const val KIT_NAME = 101
-    const val REQUIREMENT = 102
-    const val COSMETIC = 103
-    const val PRICE = 104
-    const val BALANCE = 105
-    const val BUY_LAYER = 106
-    const val BUY_TEXT = 110
-    const val EMPTY_TEXT = 111
+    /** Header tagline per shop (tab order). */
+    private val TAGLINES =
+        mapOf(
+            Shop.DONATOR to "Premium cosmetics - Donator Points from the 78 website",
+            Shop.DEADMAN to "Earned in Deadman combat - never for sale",
+            Shop.LOYALTY to "Earned by playing - online time, dailies and events",
+        )
+
+    /** Tier label colours (text <col> tags): Basic silver, Premium green, Elite blue, Prestige purple. */
+    private val TIER_COLOURS =
+        mapOf(
+            StoreCatalogue.Tier.BASIC to "c0c0c0",
+            StoreCatalogue.Tier.PREMIUM to "3cd33c",
+            StoreCatalogue.Tier.ELITE to "3fa7ff",
+            StoreCatalogue.Tier.PRESTIGE to "c77dff",
+        )
 
     /** 667 ids of the loot-key button caps (LootKeyInterfaceImportTool.sprite: 7912 + index 21..26). */
     private const val GREY_LEFT = 7933
@@ -57,6 +74,9 @@ object StoreUi : KLogging() {
     private val PAGE_ATTR = AttributeKey<Int>()
     private val SELECTED_ATTR = AttributeKey<Int>()
     private val CAROUSEL_ATTR = AttributeKey<Int>()
+
+    /** Catalogue index the player pressed Buy on once; the second press on the same entry buys (spending points is final). */
+    private val CONFIRM_ATTR = AttributeKey<Int>()
 
     private const val OP1 = 0x2
     private const val OP1_OP10 = 0x2 or 0x400
@@ -75,6 +95,7 @@ object StoreUi : KLogging() {
         player.attr[PAGE_ATTR] = 0
         player.attr[SELECTED_ATTR] = 0
         player.attr[CAROUSEL_ATTR] = 0
+        player.attr.remove(CONFIRM_ATTR)
         if (!isOpen(player)) {
             player.openInterface(INTERFACE_ID, InterfaceDestination.MAIN_SCREEN)
         }
@@ -101,6 +122,7 @@ object StoreUi : KLogging() {
     ) {
         val page = ((player.attr[PAGE_ATTR] ?: 0) + delta).coerceIn(0, pages(player) - 1)
         player.attr[PAGE_ATTR] = page
+        player.attr.remove(CONFIRM_ATTR)
         render(player)
     }
 
@@ -112,6 +134,8 @@ object StoreUi : KLogging() {
         if (index !in entries(player).indices) return
         player.attr[SELECTED_ATTR] = index
         player.attr[CAROUSEL_ATTR] = 0
+        player.attr.remove(CONFIRM_ATTR)
+        renderSelection(player)
         renderPreview(player)
     }
 
@@ -128,6 +152,7 @@ object StoreUi : KLogging() {
         val size = entry.previewItems.size
         if (size <= 1) return
         player.attr[CAROUSEL_ATTR] = Math.floorMod((player.attr[CAROUSEL_ATTR] ?: 0) + delta, size)
+        player.attr.remove(CONFIRM_ATTR)
         renderPreview(player)
     }
 
@@ -149,7 +174,12 @@ object StoreUi : KLogging() {
             player.setComponentSprite(INTERFACE_ID, base + 1, if (selected) RED_LEFT else GREY_LEFT)
             player.setComponentSprite(INTERFACE_ID, base + 2, if (selected) RED_MIDDLE else GREY_MIDDLE)
             player.setComponentSprite(INTERFACE_ID, base + 3, if (selected) RED_RIGHT else GREY_RIGHT)
+            // Theme: only the active shop's banner and outlines are shown.
+            player.setComponentHidden(INTERFACE_ID, Ui.BANNER_FIRST + i, !selected)
+            player.setComponentHidden(INTERFACE_ID, Ui.GRID_OUTLINE_FIRST + i, !selected)
+            player.setComponentHidden(INTERFACE_ID, Ui.PREVIEW_OUTLINE_FIRST + i, !selected)
         }
+        player.setComponentText(INTERFACE_ID, Ui.TAGLINE, TAGLINES[shop] ?: "")
         for (slot in 0 until SLOT_COUNT) {
             val entry = list.getOrNull(page * SLOT_COUNT + slot)
             player.setComponentHidden(INTERFACE_ID, SLOT_BACKGROUND_FIRST + slot, entry == null)
@@ -159,14 +189,26 @@ object StoreUi : KLogging() {
         }
         player.setComponentText(INTERFACE_ID, PAGE_TEXT, "Page ${page + 1} / ${pages(player)}")
         player.setComponentText(INTERFACE_ID, EMPTY_TEXT, if (list.isEmpty()) "This shop has no stock yet." else "")
+        renderSelection(player)
         renderPreview(player)
+    }
+
+    /** Gold glow + outline on the selected slot when it is on the visible page. */
+    fun renderSelection(player: Player) {
+        val onPage = (player.attr[SELECTED_ATTR] ?: 0) - (player.attr[PAGE_ATTR] ?: 0) * SLOT_COUNT
+        val valid = selected(player) != null
+        for (slot in 0 until SLOT_COUNT) {
+            val show = valid && slot == onPage
+            player.setComponentHidden(INTERFACE_ID, Ui.SELECT_GLOW_FIRST + slot, !show)
+            player.setComponentHidden(INTERFACE_ID, Ui.SELECT_OUTLINE_FIRST + slot, !show)
+        }
     }
 
     fun renderPreview(player: Player) {
         val entry = selected(player)
         val currency = shop(player).currency
         val balance = player.attr[currency.attr] ?: 0
-        player.setComponentText(INTERFACE_ID, BALANCE, "You have: ${balance.format()}")
+        player.setComponentText(INTERFACE_ID, BALANCE, "<col=ffd700>${balance.format()}</col> ${if (balance == 1) currency.singular else currency.plural}")
         player.setComponentHidden(INTERFACE_ID, PREVIEW_MODEL, entry == null)
         if (entry == null) {
             listOf(RESULT_NAME, KIT_NAME, REQUIREMENT, COSMETIC, PRICE).forEach { player.setComponentText(INTERFACE_ID, it, "") }
@@ -181,8 +223,8 @@ object StoreUi : KLogging() {
         player.setComponentHidden(INTERFACE_ID, CAROUSEL_PREVIOUS, !several)
         player.setComponentHidden(INTERFACE_ID, CAROUSEL_NEXT, !several)
         player.setComponentText(INTERFACE_ID, RESULT_NAME, name(player, preview) + if (several) " (${index + 1}/${entry.previewItems.size})" else "")
-        val tier = if (entry.tier.label.isNotEmpty()) " - ${entry.tier.label}" else ""
-        player.setComponentText(INTERFACE_ID, KIT_NAME, name(player, entry.purchaseItem) + tier)
+        val tier = TIER_COLOURS[entry.tier]?.let { "<col=$it>${entry.tier.label}</col> - " } ?: ""
+        player.setComponentText(INTERFACE_ID, KIT_NAME, tier + name(player, entry.purchaseItem))
         val base = entry.requiredBaseItems.getOrNull(index)
         player.setComponentText(
             INTERFACE_ID,
@@ -209,14 +251,22 @@ object StoreUi : KLogging() {
                     }
             },
         )
-        player.setComponentText(INTERFACE_ID, PRICE, "Price: ${entry.price.format()} ${if (entry.price == 1) currency.singular else currency.plural}")
+        val affordable = balance >= entry.price
+        val priceColour = if (affordable) "ffd700" else "ff5050"
+        player.setComponentText(
+            INTERFACE_ID,
+            PRICE,
+            "<col=$priceColour>${entry.price.format()}</col> ${if (entry.price == 1) currency.singular else currency.plural}",
+        )
         player.setComponentHidden(INTERFACE_ID, BUY_LAYER, false)
+        val confirming = player.attr[CONFIRM_ATTR] == player.attr[SELECTED_ATTR]
         player.setComponentText(
             INTERFACE_ID,
             BUY_TEXT,
-            when (entry.kind) {
-                Kind.KIT -> "Buy kit"
-                Kind.UNLOCK -> "Unlock look"
+            when {
+                confirming -> "<col=3cd33c>Confirm purchase</col>"
+                entry.kind == Kind.KIT -> "Buy kit"
+                entry.kind == Kind.UNLOCK -> "Unlock look"
                 else -> "Buy"
             },
         )
@@ -235,6 +285,14 @@ object StoreUi : KLogging() {
             player.message("You need ${entry.price.format()} ${currency.plural} to buy that; you have ${balance.format()}.")
             return
         }
+        // First press arms the purchase, the second (same entry, nothing changed in between) completes it.
+        val index = player.attr[SELECTED_ATTR] ?: 0
+        if (player.attr[CONFIRM_ATTR] != index) {
+            player.attr[CONFIRM_ATTR] = index
+            renderPreview(player)
+            return
+        }
+        player.attr.remove(CONFIRM_ATTR)
         val bought: Boolean =
             when (entry.kind) {
                 Kind.UNLOCK -> {
