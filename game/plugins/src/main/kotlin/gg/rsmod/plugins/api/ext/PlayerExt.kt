@@ -944,7 +944,17 @@ fun Player.hasSpellbook(book: Spellbook): Boolean = getVarbit(Varbits.SPELLBOOK)
 
 fun Player.getSpellbook(): Spellbook = Spellbook.values.first { getVarbit(Varbits.SPELLBOOK) == it.id }
 
-fun Player.setSpellbook(book: Spellbook) = setVarbit(Varbits.SPELLBOOK, book.id)
+/**
+ * Varbit 357 (varp 439 bits 0-1) is the 667 client's own spellbook value: CS2 1121 (the spellbook's onVarTransmit) reads it
+ * to pick the autocast highlight components (0 = 192:30/29, 1 = 193:50/49). Only [Varbits.SPELLBOOK] used to be set, so an
+ * Ancient Magicks autocast worked but was never highlighted (owner 2026-09-19).
+ */
+const val CLIENT_SPELLBOOK_VARBIT = 357
+
+fun Player.setSpellbook(book: Spellbook) {
+    setVarbit(Varbits.SPELLBOOK, book.id)
+    setVarbit(CLIENT_SPELLBOOK_VARBIT, book.id)
+}
 
 fun Player.getWeaponType(): Int = attr[LAST_KNOWN_WEAPON_TYPE] ?: 0
 

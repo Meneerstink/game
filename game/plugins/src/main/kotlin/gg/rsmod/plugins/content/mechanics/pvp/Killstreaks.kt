@@ -77,15 +77,38 @@ object Killstreaks {
         val pairKey = pairKey(killer.username, victim.username)
         val now = System.currentTimeMillis()
         val last = lastScoredPairMillis[pairKey]
-        if (last == null || now - last > REPEAT_KILL_COOLDOWN_CYCLES * 600L) {
+        if (sameConnectionAddress(killer, victim)) {
+            // Owner night run 2026-09-19: no Deadman/PK reward for killing an account on the same address (multi-account farming).
+            killer.filterableMessage("No points awarded - that account plays from your own address.")
+        } else if (last == null || now - last > REPEAT_KILL_COOLDOWN_CYCLES * 600L) {
             lastScoredPairMillis[pairKey] = now
             val streakBonus = (newStreak / 5).coerceAtMost(10)
             val points = POINTS_PER_KILL + streakBonus
             killer.attr[PK_POINTS_ATTR] = (killer.attr[PK_POINTS_ATTR] ?: 0) + points
             killer.filterableMessage("You have been awarded $points PK points.")
+            // Deadman Points (store currency, earned only through Deadman/PvP kills, same anti-farming window). PROVISIONAL amount.
+            val deadman = gg.rsmod.plugins.content.mechanics.store.StoreCatalogue.Currency.DEADMAN.attr
+            val deadmanPoints = DEADMAN_POINTS_PER_KILL + streakBonus
+            killer.attr[deadman] = (killer.attr[deadman] ?: 0) + deadmanPoints
+            killer.filterableMessage("You have been awarded $deadmanPoints Deadman Points.")
         } else {
             killer.filterableMessage("No PK points awarded - you've fought this player too recently.")
         }
+    }
+
+    private const val DEADMAN_POINTS_PER_KILL = 10
+
+    /** True when both players are connected from the same IP address (one person farming kills on a second account). */
+    fun sameConnectionAddress(
+        a: Player,
+        b: Player,
+    ): Boolean {
+        fun address(p: Player): java.net.InetAddress? =
+            ((p as? gg.rsmod.game.model.entity.Client)?.channel?.remoteAddress() as? java.net.InetSocketAddress)?.address
+        val first = address(a) ?: return false
+        // Loopback = the owner's local two-client test setup (Start-RSPS-SecondClient.ps1), never a public player.
+        if (first.isLoopbackAddress) return false
+        return first == address(b)
     }
 
     private fun pairKey(

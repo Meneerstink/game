@@ -21,11 +21,15 @@ import java.io.File
  * Closing main modal for players.
  */
 set_modal_close_logic {
-    val modal = player.interfaces.getModal()
-    if (modal != -1) {
-        player.closeInterface(modal)
+    // Owner 2026-09-19 picture "interface hang": a side panel (equipment stats 670, bank 763, shop, GE, ...) mounted over the
+    // tab area outlived its modal (closed by combat or replaced by another modal). The old guard only removed the side panel
+    // while a modal was still registered, so every later click on the world left the tab strip hidden for good. The side
+    // panel belongs to the modal: remove it whenever the modal-close logic runs.
+    if (player.interfaces.getModal() != -1) {
+        player.closeModalInterface()
+    }
+    if (player.getInterfaceAt(InterfaceDestination.TAB_AREA) != -1) {
         player.closeInterface(InterfaceDestination.TAB_AREA)
-        player.interfaces.setModal(-1)
     }
 }
 

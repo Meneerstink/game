@@ -33,7 +33,7 @@ OsrsOrnamentKits.CONSUMED.forEach { kit ->
 }
 
 OsrsOrnamentKits.ALL.forEach { ornament ->
-    on_item_option(item = ornament.ornamented, option = "Dismantle") {
+    on_item_option(item = ornament.ornamented, option = ornament.detachOption) {
         if (player.inventory.freeSlotCount < 1) {
             player.message("You don't have enough inventory space to do that.")
             return@on_item_option

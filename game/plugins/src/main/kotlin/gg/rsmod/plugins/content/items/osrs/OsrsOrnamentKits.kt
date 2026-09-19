@@ -18,6 +18,8 @@ object OsrsOrnamentKits {
         val base: Int,
         val kit: Int,
         val pvpConvert: Boolean = true,
+        /** The cache option that detaches the kit: "Dismantle" on the imported OSRS items, "Split" on the 667 native ones. */
+        val detachOption: String = "Dismantle",
     )
 
     val ALL =
@@ -86,6 +88,20 @@ object OsrsOrnamentKits {
             Ornament(Items.RUNE_SCIMITAR_GUTHIX, Items.RUNE_SCIMITAR, Items.RUNE_SCIMITAR_ORNAMENT_KIT_GUTHIX),
             Ornament(Items.RUNE_SCIMITAR_SARADOMIN, Items.RUNE_SCIMITAR, Items.RUNE_SCIMITAR_ORNAMENT_KIT_SARADOMIN),
             Ornament(Items.RUNE_SCIMITAR_ZAMORAK, Items.RUNE_SCIMITAR, Items.RUNE_SCIMITAR_ORNAMENT_KIT_ZAMORAK),
+            // Revision-667 native kits (night run 2026-09-19 ornament audit). Their ornamented items carry the cache option "Split"
+            // (inventory op 3), which returns item + kit; the kits are tradeable 667 treasure-trail rewards, so a PvP death drops the
+            // base item and the kit like the OSRS kits above.
+            Ornament(Items.AMULET_OF_FURY_OR, Items.AMULET_OF_FURY, Items.FURY_ORNAMENT_KIT, detachOption = "Split"),
+            Ornament(Items.DRAGON_FULL_HELM_OR, Items.DRAGON_FULL_HELM, Items.DRAGON_FULL_HELM_ORNAMENT_KIT_OR, detachOption = "Split"),
+            Ornament(Items.DRAGON_PLATEBODY_OR, Items.DRAGON_PLATEBODY, Items.DRAGON_PLATEBODY_ORNAMENT_KIT_OR, detachOption = "Split"),
+            Ornament(Items.DRAGON_PLATELEGS_OR, Items.DRAGON_PLATELEGS, Items.DRAGON_PLATELEGSSKIRT_ORNAMENT_KIT_OR, detachOption = "Split"),
+            Ornament(Items.DRAGON_PLATESKIRT_OR, Items.DRAGON_PLATESKIRT, Items.DRAGON_PLATELEGSSKIRT_ORNAMENT_KIT_OR, detachOption = "Split"),
+            Ornament(Items.DRAGON_SQUARE_SHIELD_OR, Items.DRAGON_SQ_SHIELD, Items.DRAGON_SQ_SHIELD_ORNAMENT_KIT_OR, detachOption = "Split"),
+            Ornament(Items.DRAGON_FULL_HELM_SP, Items.DRAGON_FULL_HELM, Items.DRAGON_FULL_HELM_ORNAMENT_KIT_SP, detachOption = "Split"),
+            Ornament(Items.DRAGON_PLATEBODY_SP, Items.DRAGON_PLATEBODY, Items.DRAGON_PLATEBODY_ORNAMENT_KIT_SP, detachOption = "Split"),
+            Ornament(Items.DRAGON_PLATELEGS_SP, Items.DRAGON_PLATELEGS, Items.DRAGON_PLATELEGSSKIRT_ORNAMENT_KIT_SP, detachOption = "Split"),
+            Ornament(Items.DRAGON_PLATESKIRT_SP, Items.DRAGON_PLATESKIRT, Items.DRAGON_PLATELEGSSKIRT_ORNAMENT_KIT_SP, detachOption = "Split"),
+            Ornament(Items.DRAGON_SQ_SHIELD_SP, Items.DRAGON_SQ_SHIELD, Items.DRAGON_SQ_SHIELD_ORNAMENT_KIT_SP, detachOption = "Split"),
         )
 
     /**

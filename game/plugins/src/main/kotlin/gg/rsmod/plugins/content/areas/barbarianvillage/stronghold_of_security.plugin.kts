@@ -28,8 +28,8 @@ enum class SecurityQuestion(
         3,
         listOf(
             "Never give your account details to anyone! This includes things like recovery answers, contact details and passwords. Never use personal details for recoveries or bank PINs!",
-            "Okay, don't tell them the details. But reporting the incident to 2011Scape staff would help. Use the Report Abuse button. Never use personal details for recoveries or bank PINs!",
-            "Report any attempt to gain your account details as it is a very serious breach of 2011Scape rules. Never use personal details for recoveries or bank PINs!",
+            "Okay, don't tell them the details. But reporting the incident to 78 staff would help. Use the Report Abuse button. Never use personal details for recoveries or bank PINs!",
+            "Report any attempt to gain your account details as it is a very serious breach of 78 rules. Never use personal details for recoveries or bank PINs!",
         ),
     ),
     QUESTION_2(
@@ -64,13 +64,13 @@ enum class SecurityQuestion(
         "Why do I need to type in recovery questions?",
         listOf(
             "To help me recover my password if I forget it or it is stolen.",
-            "To let 2011Scape know more about its players.",
+            "To let 78 know more about its players.",
             "To see if I can type in random letters on my keyboard.",
         ),
         1,
         listOf(
             "Your recovery questions will help staff protect and return your account if it is stolen. Never use personal details for recoveries or bank PINs!",
-            "2011Scape values players opinions, but we use polls and forums to see what you think. The recoveries are not there to gain personal information about anybody but to protect your account. Never use personal details",
+            "78 values players opinions, but we use polls and forums to see what you think. The recoveries are not there to gain personal information about anybody but to protect your account. Never use personal details",
             "Typing random letters into your recoveries won't help you or the staff - you'll never remember them anyway! Never use personal details for recoveries or bank PINs!",
         ),
     ),
@@ -103,7 +103,7 @@ enum class SecurityQuestion(
         ),
     ),
     QUESTION_7(
-        "How will 2011Scape contact me if I have been chosen to be a moderator?",
+        "How will 78 contact me if I have been chosen to be a moderator?",
         listOf(
             "Email.",
             "Website popup.",
@@ -111,8 +111,8 @@ enum class SecurityQuestion(
         ),
         3,
         listOf(
-            "2011Scape never uses email to contact you, this is a scam and a fake, do not reply to it and delete it straight away. 2011Scape will only contact you through your Game Inbox available on our website.",
-            "2011Scape would never use such an insecure method to pick you. We will contact you through your Game Inbox available on our website.",
+            "78 never uses email to contact you, this is a scam and a fake, do not reply to it and delete it straight away. 78 will only contact you through your Game Inbox available on our website.",
+            "78 would never use such an insecure method to pick you. We will contact you through your Game Inbox available on our website.",
             "It's always best to protect your personal information and report suspicious activity.",
         ),
     ),
@@ -135,25 +135,25 @@ enum class SecurityQuestion(
         listOf(
             "Nothing.",
             "Give them my password.",
-            "Don't tell them anything and inform 2011Scape through the game website.",
+            "Don't tell them anything and inform 78 through the game website.",
         ),
         3,
         listOf(
-            "This is one solution, however someone will fall for this scam sooner or later. Tell us about it through the website. Remember that  moderators are hand picked by 2011Scape.",
-            "This will almost certainly lead to your account being hijacked. No website can make you a moderator as they are hand picked by 2011Scape.",
+            "This is one solution, however someone will fall for this scam sooner or later. Tell us about it through the website. Remember that  moderators are hand picked by 78.",
+            "This will almost certainly lead to your account being hijacked. No website can make you a moderator as they are hand picked by 78.",
             "By informing us we can have the site taken down so other people will not have their accounts hijacked by this scam.",
         ),
     ),
     QUESTION_10(
-        "Will 2011Scape block me from saying my PIN in game?",
+        "Will 78 block me from saying my PIN in game?",
         listOf(
             "Yes.",
             "No.",
         ),
         2,
         listOf(
-            "2011Scape does NOT block your PIN so don't type it!",
-            "2011Scape will not block your PIN so don't type it! Never use personal details for recoveries or bank PINs!",
+            "78 does NOT block your PIN so don't type it!",
+            "78 will not block your PIN so don't type it! Never use personal details for recoveries or bank PINs!",
         ),
     ),
     QUESTION_11(
@@ -171,16 +171,16 @@ enum class SecurityQuestion(
         ),
     ),
     QUESTION_12(
-        "Where should I enter my 2011Scape Password?",
+        "Where should I enter my 78 Password?",
         listOf(
-            "On all 2011Scape fan sites.",
-            "Only on 2011Scape website.",
+            "On all 78 fan sites.",
+            "Only on 78 website.",
             "On all websites I visit.",
         ),
         2,
         listOf(
             "Always use a unique password purely for your account.",
-            "Always make sure you are entering your password only on the 2011Scape Website as other sites may try to steal it.",
+            "Always make sure you are entering your password only on the 78 Website as other sites may try to steal it.",
             "This is very insecure and will may lead to your account being stolen.",
         ),
     ),
@@ -193,7 +193,7 @@ enum class SecurityQuestion(
         ),
         3,
         listOf(
-            "This is a bad idea as if someone happens to find out your bank PIN on 2011Scape, they then have access to your bank account.",
+            "This is a bad idea as if someone happens to find out your bank PIN on 78, they then have access to your bank account.",
             "Not a good idea because you know how many presents you get for your birthday. So you can imagine how many people know this date. Never use personal details for recoveries or bank PINs!",
             "Well done! Unless you tell someone, they are unlikely to guess who or what you have chosen, and you can always look it up, Never use personal details for recoveries or bank PINs!",
         ),
@@ -227,7 +227,7 @@ enum class SecurityQuestion(
         ),
     ),
     QUESTION_16(
-        "What do you do if someone tells you that you have won the 2011Scape Lottery and asks for your password or recoveries?",
+        "What do you do if someone tells you that you have won the 78 Lottery and asks for your password or recoveries?",
         listOf(
             "Give them the information they asked for",
             "Don't tell them anything and ignore them.",
@@ -235,7 +235,7 @@ enum class SecurityQuestion(
         ),
         3,
         listOf(
-            "here is no 2011Scape Lottery! Never give your account details to anyone. Press the 'Report Abuse' button and fill in the offending player's name and the correct category. Don't tell them anything and click the 'Report Abuse' button.",
+            "here is no 78 Lottery! Never give your account details to anyone. Press the 'Report Abuse' button and fill in the offending player's name and the correct category. Don't tell them anything and click the 'Report Abuse' button.",
             "Quite good. But we should try to stop scammers. So please report them using the 'Report Abuse' button.",
             "Press the 'Report Abuse' button and fill in the offending player's name and the correct category.",
         ),
@@ -244,8 +244,8 @@ enum class SecurityQuestion(
         "What should I do if I think someone knows my recoveries?",
         listOf(
             "Tell them never to use them.",
-            "Use the Account Management section on the 2011Scape website.",
-            "Recover a Lost Password' section on the 2011Scape website.",
+            "Use the Account Management section on the 78 website.",
+            "Recover a Lost Password' section on the 78 website.",
         ),
         3,
         listOf(
@@ -265,13 +265,13 @@ enum class SecurityQuestion(
         listOf(
             "Press the 'Report Abuse' button and fill in the offending player's name and the correct category.",
             "But we should try to stop scammers. So please report them using the 'Report Abuse' button.",
-            "2011Scape never ask for your account information especially to become a player moderator. Press the 'Report Abuse' button and fill in the offending player's name and the correct category.",
+            "78 never ask for your account information especially to become a player moderator. Press the 'Report Abuse' button and fill in the offending player's name and the correct category.",
         ),
     ),
     QUESTION_19(
-        "To pass you must answer me this: Where can i find cheats for 2011Scape?",
+        "To pass you must answer me this: Where can i find cheats for 78?",
         listOf(
-            "On the 2011Scape website",
+            "On the 78 website",
             "By searching the internet",
             "Nowhere.",
         ),

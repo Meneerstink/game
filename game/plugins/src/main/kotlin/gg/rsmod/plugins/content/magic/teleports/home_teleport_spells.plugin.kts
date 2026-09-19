@@ -5,6 +5,7 @@ import gg.rsmod.plugins.content.combat.isBeingAttacked
 import gg.rsmod.plugins.content.magic.MagicSpells.on_magic_spell_button
 import gg.rsmod.plugins.content.magic.TeleportType
 import gg.rsmod.plugins.content.magic.canTeleport
+import gg.rsmod.plugins.content.magic.teleport
 import gg.rsmod.game.model.timer.ACTIVE_COMBAT_TIMER
 
 val TERMINATE_HOME_TELEPORT_NEUTRAL: QueueTask.() -> Unit = {
@@ -57,6 +58,15 @@ HomeTeleport.values.forEach { teleport ->
         // Deadman PvP guards plan (2026-09-16): the two-arg canTeleport overload makes a skulled
         // player's 7-second countdown complete this action automatically.
         player.canTeleport(TeleportType.MODERN) {
+            // Owner 2026-09-19: the home teleports get their spellbook's teleport animation, graphic and sound (the same
+            // route as every other teleport spell of that book) instead of the silent instant snap of 2026-09-06.
+            val bookType = teleport.bookType
+            if (bookType != null) {
+                player.teleport(teleport.endTile(world), bookType)
+                world.spawn(AreaSound(player.tile, HOME_TELEPORT_SOUND, 10, 1))
+                player.timers[HOME_TELEPORT_TIMER] = HOME_TELEPORT_TIMER_DELAY
+                return@canTeleport
+            }
             player.queue(TaskPriority.STRONG) {
                 if (teleport.instant) {
                     instantTeleport(teleport.endTile(world))
@@ -122,18 +132,23 @@ suspend fun QueueTask.waitAndCheckCombat(cycles: Int): Boolean {
     return true
 }
 
+/** Sound 200 (teleport_all): the sound every standard/Ancient/Lunar teleport spell of this server plays (teleport_spells). */
+val HOME_TELEPORT_SOUND = 200
+
 enum class HomeTeleport(
     val spellName: String,
     val endTile: World.() -> Tile,
     /** True for a teleport that must fire with no animation/casting delay - see [instantTeleport]. */
     val instant: Boolean = false,
+    /** The spellbook's own teleport (animation, graphic, delay); null keeps the old instant/staged route. */
+    val bookType: TeleportType? = null,
 ) {
-    // 2026-09-06 owner human retest: "the teleport must become INSTANT" - this project's home
-    // destination is Ferox Enclave, so this is the Ferox Home Teleport specifically.
-    HOME("Home Teleport", { gameContext.home }, instant = true),
+    // This project's home destination is Ferox Enclave. 2026-09-06 the owner asked for an instant teleport; 2026-09-19 the
+    // owner asked for the same teleport animation and sound in every book, so each book uses its own teleport type.
+    HOME("Home Teleport", { gameContext.home }, instant = true, bookType = TeleportType.MODERN),
     // The same Ferox home teleport from the Ancient Magicks (193:48) and Lunar (430:39) books.
-    ANCIENT_HOME("Edgeville Home Teleport", { gameContext.home }, instant = true),
-    LUNAR_HOME("Lunar Home Teleport", { gameContext.home }, instant = true),
+    ANCIENT_HOME("Edgeville Home Teleport", { gameContext.home }, instant = true, bookType = TeleportType.ANCIENT),
+    LUNAR_HOME("Lunar Home Teleport", { gameContext.home }, instant = true, bookType = TeleportType.LUNAR),
     ;
 
     companion object {

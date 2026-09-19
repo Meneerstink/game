@@ -16,6 +16,7 @@ import gg.rsmod.game.model.timer.ACTIVE_COMBAT_TIMER
 import gg.rsmod.game.model.timer.ATTACK_DELAY
 import gg.rsmod.game.model.timer.TELEPORT_COMBAT_TIMER
 import gg.rsmod.plugins.api.BonusSlot
+import gg.rsmod.plugins.api.InterfaceDestination
 import gg.rsmod.plugins.api.NpcSkills
 import gg.rsmod.plugins.api.ProjectileType
 import gg.rsmod.plugins.api.Skills
@@ -112,9 +113,13 @@ object Combat {
         (pawn as? Player)?.let { gg.rsmod.plugins.content.items.osrs.StaffOfTheDead.onCombat(it) }
         (target as? Player)?.let { gg.rsmod.plugins.content.items.osrs.StaffOfTheDead.onCombat(it) }
 
-        if (target is Player && target.interfaces.getModal() !in COMBAT_PERSISTENT_MODALS) {
-            target.closeInterface(target.interfaces.getModal())
-            target.interfaces.setModal(-1)
+        if (target is Player && target.interfaces.getModal() != -1 && target.interfaces.getModal() !in COMBAT_PERSISTENT_MODALS) {
+            // Close the modal together with its tab-area side panel (equipment stats 670, bank 763, shop 621, ...): closing
+            // only the modal left the side panel mounted over a hidden tab strip (owner picture "interface hang").
+            target.closeModalInterface()
+            if (target.getInterfaceAt(InterfaceDestination.TAB_AREA) != -1) {
+                target.closeInterface(InterfaceDestination.TAB_AREA)
+            }
         }
 
         if (target is Player && target.interfaces.isVisible(740)) {

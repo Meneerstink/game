@@ -226,21 +226,22 @@ class AncientCursesTests {
 
         AncientCurses.onDamageDealt(attacker, target, damage = 30)
 
-        // KB: the immediate 10 % is a modifier on all three, levels untouched...
+        // KB: the immediate 10 % is a modifier on all three; owner 2026-09-19: the first proc also removes one real level
+        // (it used to be modifier-only, so the owner saw the message but no drain)...
         listOf(Skills.ATTACK, Skills.STRENGTH, Skills.DEFENCE).forEach { skill ->
-            assertEquals(50, target.skills.getCurrentLevel(skill))
+            assertEquals(49, target.skills.getCurrentLevel(skill))
             assertEquals(0.9, AncientCurses.drainMultiplier(target, skill), 1e-9)
         }
         // Owner 2026-09-18: a proc inside the 45-second cooldown does nothing...
         AncientCurses.onDamageDealt(attacker, target, damage = 30)
         listOf(Skills.ATTACK, Skills.STRENGTH, Skills.DEFENCE).forEach { skill ->
-            assertEquals(50, target.skills.getCurrentLevel(skill))
+            assertEquals(49, target.skills.getCurrentLevel(skill))
         }
-        // ...and the next proc after it removes exactly one level as a real drain.
+        // ...and the next proc after it removes exactly one more level as a real drain.
         advanceCycles(attacker, AncientCurses.SAP_LEECH_COOLDOWN_TICKS)
         AncientCurses.onDamageDealt(attacker, target, damage = 30)
         listOf(Skills.ATTACK, Skills.STRENGTH, Skills.DEFENCE).forEach { skill ->
-            assertEquals(49, target.skills.getCurrentLevel(skill))
+            assertEquals(48, target.skills.getCurrentLevel(skill))
         }
     }
 
@@ -256,13 +257,13 @@ class AncientCursesTests {
             }
         every { npc.stats } returns stats
 
-        // First proc: base modifier only. Second proc: 1 % of 4 = 0.04 -> floored to 0, coerced up to
-        // the documented step of 1, floor = 4 - max(1, 4 * 10 %) = 3.
+        // First proc (owner 2026-09-19: a real step too): 1 % of 4 = 0.04 -> floored to 0, coerced up to the documented
+        // step of 1, floor = 4 - max(1, 4 * 10 %) = 3. Later procs stay on the floor.
         AncientCurses.onDamageDealt(attacker, npc, damage = 30)
-        assertEquals(4, stats.getCurrentLevel(NpcSkills.ATTACK))
+        assertEquals(3, stats.getCurrentLevel(NpcSkills.ATTACK))
         assertEquals(0.9, AncientCurses.drainMultiplier(npc, Skills.ATTACK), 1e-9)
         AncientCurses.onDamageDealt(attacker, npc, damage = 30)
-        assertEquals(4, stats.getCurrentLevel(NpcSkills.ATTACK)) // inside the 45 s cooldown
+        assertEquals(3, stats.getCurrentLevel(NpcSkills.ATTACK)) // inside the 45 s cooldown
         advanceCycles(attacker, AncientCurses.SAP_LEECH_COOLDOWN_TICKS)
         AncientCurses.onDamageDealt(attacker, npc, damage = 30)
         assertEquals(3, stats.getCurrentLevel(NpcSkills.ATTACK))
@@ -278,10 +279,11 @@ class AncientCursesTests {
 
         AncientCurses.onDamageDealt(attacker, target, damage = 20)
 
-        // KB model: the immediate 10 % drain and 5 % boost are combat modifiers, not level changes.
-        assertEquals(50, target.skills.getCurrentLevel(Skills.ATTACK))
+        // KB model: the immediate 10 % drain and 5 % boost are combat modifiers; owner 2026-09-19: the first proc also
+        // leeches one real level (target -1, attacker +1).
+        assertEquals(49, target.skills.getCurrentLevel(Skills.ATTACK))
         assertEquals(0.9, AncientCurses.drainMultiplier(target, Skills.ATTACK), 1e-9)
-        assertEquals(60, attacker.skills.getCurrentLevel(Skills.ATTACK))
+        assertEquals(61, attacker.skills.getCurrentLevel(Skills.ATTACK))
         assertEquals(1.05, AncientCurses.leechMultiplier(attacker, Skills.ATTACK), 1e-9)
     }
 

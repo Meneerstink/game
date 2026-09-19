@@ -1591,6 +1591,20 @@ in-packets:
         - name: length
           type: SHORT
 
+  # Report Abuse (ClientProt SEND_SNAPSHOT 80, CS2 CHAT_SENDABUSEREPORT): name, rule - 1, mute flag, comment.
+  - message: gg.rsmod.game.message.impl.ReportAbuseMessage
+    type: VARIABLE_BYTE
+    opcode: 80
+    structure:
+        - name: name
+          type: STRING
+        - name: rule
+          type: BYTE
+        - name: mute
+          type: BYTE
+        - name: comment
+          type: STRING
+
   - message: gg.rsmod.game.message.impl.IgnoreListAddMessage
     type: VARIABLE_BYTE
     opcode: 17

@@ -73,8 +73,9 @@ fun openQuiver(
     player.setInterfaceEvents(QuiverUi.INTERFACE_ID, QuiverUi.CLOSE, -1..-1, 0x2)
     player.setInterfaceEvents(QuiverUi.INTERFACE_ID, QuiverUi.SLOT, -1..-1, 0x2 or 0x400)
     player.openInterface(QUIVER_INVENTORY, InterfaceDestination.INVENTORY_TAB)
-    player.unlockIComponentOptionSlots(QUIVER_INVENTORY, 0, 0, 27, 0)
-    player.runClientScript(150, QUIVER_INVENTORY shl 16, 93, 4, 7, 0, -1, "Store")
+    // Owner 2026-09-19 picture "store into diz": Store, Store-X and Store-All (ops 1-3 = IF_BUTTON1-3, opcodes 61/64/4).
+    player.unlockIComponentOptionSlots(QUIVER_INVENTORY, 0, 0, 27, 0, 1, 2)
+    player.runClientScript(150, QUIVER_INVENTORY shl 16, 93, 4, 7, 0, -1, "Store", "Store-X", "Store-All")
     refreshQuiver(player)
 }
 
@@ -94,15 +95,34 @@ on_interface_close(interfaceId = QuiverUi.INTERFACE_ID) {
     restoreInventoryTab(player)
 }
 
-on_button(interfaceId = QUIVER_INVENTORY, component = 0) {
-    val quiverSlot = player.attr[OPEN_QUIVER_SLOT] ?: return@on_button
-    val invSlot = player.getInteractingSlot()
-    val quiver = player.inventory[quiverSlot]?.takeIf { it.id in DizanasQuiver.AMMO_HOLDERS } ?: return@on_button
-    val ammo = player.inventory[invSlot]?.takeIf { it.id == player.getInteractingItemId() } ?: return@on_button
-    if (invSlot == quiverSlot) return@on_button
-    when (val result = DizanasQuiver.fill(quiver, ammo)) {
+/** Stores up to [requested] of the item in inventory slot [invSlot] into the open quiver (ammunition) or charges it (splinters). */
+fun storeIntoOpenQuiver(
+    player: Player,
+    invSlot: Int,
+    itemId: Int,
+    requested: Int,
+) {
+    val quiverSlot = player.attr[OPEN_QUIVER_SLOT] ?: return
+    if (invSlot == quiverSlot || requested <= 0) return
+    val quiver = player.inventory[quiverSlot]?.takeIf { it.id in DizanasQuiver.AMMO_HOLDERS } ?: return
+    val item = player.inventory[invSlot]?.takeIf { it.id == itemId } ?: return
+    if (item.id == Items.SUNFIRE_SPLINTERS && quiver.id in chargeableQuivers) {
+        val charge = DizanasQuiver.charge(quiver, minOf(requested, player.inventory.getItemCount(item.id)))
+        if (charge.added <= 0) {
+            player.message("Your quiver cannot hold any more charges.")
+            return
+        }
+        player.inventory.remove(item.id, charge.added)
+        player.inventory[quiverSlot] = charge.result
+        player.attr[DizanasQuiver.SPLINTERS_CHARGED] = (player.attr[DizanasQuiver.SPLINTERS_CHARGED] ?: 0) + charge.added
+        player.message("Your quiver now has ${DizanasQuiver.charges(charge.result)} charges.")
+        refreshQuiver(player)
+        return
+    }
+    val offered = Item(item.id, minOf(requested, item.amount))
+    when (val result = DizanasQuiver.fill(quiver, offered)) {
         is DizanasQuiver.FillResult.Filled -> {
-            player.inventory.remove(ammo.id, result.moved, beginSlot = invSlot)
+            player.inventory.remove(item.id, result.moved, beginSlot = invSlot)
             player.inventory[quiverSlot] = result.quiver
             refreshQuiver(player)
         }
@@ -110,6 +130,20 @@ on_button(interfaceId = QUIVER_INVENTORY, component = 0) {
         DizanasQuiver.FillResult.NotArrowOrBolt -> player.message("Dizana's quiver can only hold arrows or bolts.")
         DizanasQuiver.FillResult.DifferentAmmo -> player.message("Empty your quiver before filling it with a different type of ammunition.")
         DizanasQuiver.FillResult.Full -> player.message("Your quiver cannot hold any more ammunition.")
+    }
+}
+
+on_button(interfaceId = QUIVER_INVENTORY, component = 0) {
+    val invSlot = player.getInteractingSlot()
+    val itemId = player.getInteractingItemId()
+    when (player.getInteractingOpcode()) {
+        61 -> storeIntoOpenQuiver(player, invSlot, itemId, 1)
+        64 ->
+            player.queue {
+                val amount = inputInt("How many would you like to store?")
+                storeIntoOpenQuiver(player, invSlot, itemId, amount)
+            }
+        4 -> storeIntoOpenQuiver(player, invSlot, itemId, Int.MAX_VALUE)
     }
 }
 

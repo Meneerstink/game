@@ -78,6 +78,7 @@ class MessageDecoderSet {
         put(MessagePrivateMessage::class.java, MessagePrivateDecoder(), MessagePrivateHandler(), structures)
         put(ChatFilterMessage::class.java, ChatFilterDecoder(), ChatFilterHandler(), structures)
         put(IgnoreListAddMessage::class.java, IgnoreListAddDecoder(), IgnoreListAddHandler(), structures)
+        put(ReportAbuseMessage::class.java, ReportAbuseDecoder(), ReportAbuseHandler(), structures)
         put(IgnoreListDeleteMessage::class.java, IgnoreListDeleteDecoder(), IgnoreListDeleteHandler(), structures)
         put(ClanJoinChatLeaveChatMessage::class.java, ClanJoinChatLeaveChatDecoder(), ClanJoinChatLeaveHandler(), structures)
         put(MessageQuickChatPublicMessage::class.java, MessageQuickChatPublicDecoder(), MessageQuickChatPublicHandler(), structures)

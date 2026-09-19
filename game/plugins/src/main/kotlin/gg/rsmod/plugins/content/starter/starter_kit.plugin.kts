@@ -106,7 +106,7 @@ on_login {
             it.message(
                 "[<col=d45b5b>Global</col>]: <col=$color>${Misc.formatForDisplay(
                     player.username,
-                )} has just logged into 2011Scape for the first time.</col>",
+                )} has just logged into 78 for the first time.</col>",
             )
         }
     }

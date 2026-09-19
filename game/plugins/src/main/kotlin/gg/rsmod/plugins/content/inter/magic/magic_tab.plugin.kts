@@ -11,6 +11,12 @@ val FILTER_TELEPORT_SPELLS_VARBIT = 6462
 val FILTER_MISC_SPELLS_VARBIT = 6461
 val FILTER_SKILL_SPELLS_VARBIT = 6460
 
+// Saves from before 2026-09-19 carry only the server spellbook varbit: mirror it into the client's spellbook varbit 357 so the
+// autocast highlight (CS2 1121) follows the open book.
+on_login {
+    player.setVarbit(gg.rsmod.plugins.api.ext.CLIENT_SPELLBOOK_VARBIT, player.getSpellbook().id)
+}
+
 CombatSpell.definitions.values.filter { it.autoCastId != -1 }.forEach { spell ->
     on_button(interfaceId = spell.interfaceId, component = spell.componentId) {
         if (player.getVarp(SELECTED_AUTOCAST_VARP) == spell.autoCastId) {

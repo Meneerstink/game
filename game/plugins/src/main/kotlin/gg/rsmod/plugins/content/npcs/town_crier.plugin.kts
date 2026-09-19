@@ -35,7 +35,7 @@ val crierTips = listOf(
     "Players can not trim armour. Don't fall for this popular scam!",
     "The squirrels! The squirrels are coming! Noooo, get them out of my head!",
     "Take time to check the second trade window carefully. Don't be scammed!",
-    "There are no cheats in 2011Scape! Never visit websites promising otherwise!"
+    "There are no cheats in 78! Never visit websites promising otherwise!"
 )
 
 val crierIds = listOf(Npcs.TOWN_CRIER_6136, Npcs.TOWN_CRIER_6137, Npcs.TOWN_CRIER_6138, Npcs.TOWN_CRIER_6139)
@@ -129,14 +129,14 @@ suspend fun normalDialogue(it: QueueTask, tasksDialogueAdded: Boolean = false) {
 suspend fun somethingElse(it: QueueTask) {
     when (it.options(
         "Tell me about Player Moderators.",
-        "Tell me about the Rules of 2011Scape",
+        "Tell me about the Rules of 78",
         "Can you give me a handy tip please?"
     )) {
         FIRST_OPTION -> {
             talkAboutPMods(it)
         }
         SECOND_OPTION -> {
-            it.chatPlayer("Tell me about the Rules of 2011Scape", facialExpression = FacialExpression.NORMAL, wrap =
+            it.chatPlayer("Tell me about the Rules of 78", facialExpression = FacialExpression.NORMAL, wrap =
                 true)
             it.chatNpc("At once. Take a look at my book here.", facialExpression = FacialExpression.NORMAL, wrap =
                 true)
@@ -183,20 +183,20 @@ suspend fun talkAboutPMods(it: QueueTask, showInitialDialogue: Boolean = true) {
             it.chatNpc("Player Moderators, or 'P-mods', have the ability to mute rule breakers and Jagex view their " +
                 "reports as a priority so that action is taken as quickly as possible. P-Mods also have access to the" +
                 " Player Moderator Centre.", facialExpression = FacialExpression.NORMAL, wrap = true)
-            it.chatNpc("Within the Centre are tools to help them Moderate 2011Scape. These tools include dedicated " +
+            it.chatNpc("Within the Centre are tools to help them Moderate 78. These tools include dedicated " +
                 "forums, the Player Moderator Guidelines and the Player Moderator Code of Conduct.", facialExpression
             = FacialExpression.NORMAL, wrap = true)
             anythingElsePMods(it)
         }
         THIRD_OPTION -> {
             it.chatPlayer("How do I become a Player Moderator?", facialExpression = FacialExpression.CONFUSED, wrap = true)
-            it.chatNpc("Jagex picks players who spend their time and effort to help better the 2011Scape community. " +
+            it.chatNpc("Jagex picks players who spend their time and effort to help better the 78 community. " +
                 "To increase your chances of becoming a Player Moderator:", facialExpression = FacialExpression
                     .NORMAL, wrap = true)
             it.chatNpc("Keep your account secure! This is very important, as a player with poor security will never " +
                 "be a P-Mod. Read our Security Tips for more information.", facialExpression = FacialExpression
                     .NORMAL, wrap = true)
-            it.chatNpc("Play by the rules! The rules of 2011Scape are enforced for a reason, to make the game a fair " +
+            it.chatNpc("Play by the rules! The rules of 78 are enforced for a reason, to make the game a fair " +
                 "and enjoyable environment for all.", facialExpression = FacialExpression.NORMAL, wrap = true)
             it.chatNpc("Report accurately! When Jagex consider an account for review they look for quality, not " +
                 "quantity. Ensure your reports are of a high quality by following the report guidelines.",
@@ -248,7 +248,7 @@ suspend fun anythingElsePMods(it: QueueTask, sayThanks: Boolean = true) {
 suspend fun somethingElseWithArdyTasks(it: QueueTask) {
     when (it.options(
         "Tell me about Player Moderators.",
-        "Tell me about the Rules of 2011Scape",
+        "Tell me about the Rules of 78",
         "Can you give me a handy tip please?",
         "About the Task System..."
     )) {
@@ -256,7 +256,7 @@ suspend fun somethingElseWithArdyTasks(it: QueueTask) {
             talkAboutPMods(it)
         }
         SECOND_OPTION -> {
-            it.chatPlayer("Tell me about the Rules of 2011Scape", facialExpression = FacialExpression.NORMAL, wrap =
+            it.chatPlayer("Tell me about the Rules of 78", facialExpression = FacialExpression.NORMAL, wrap =
                 true)
             it.chatNpc("At once. Take a look at my book here.", facialExpression = FacialExpression.NORMAL, wrap =
                 true)

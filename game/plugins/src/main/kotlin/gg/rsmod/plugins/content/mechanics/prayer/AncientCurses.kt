@@ -705,14 +705,16 @@ object AncientCurses {
     ): Boolean {
         val max = maxLevel(target, playerSkill, npcSkill)
         if (max <= 0) return false
-        val firstFromThisCaster = baseDrainState(target).getOrPut(playerSkill) { mutableSetOf() }.add(caster)
+        // Owner 2026-09-19 ("it shows the message but does not drain"): the first proc used to register only the invisible base
+        // modifier, and with the 45-second proc cooldown the first visible level came 45 s later - in a normal fight never.
+        // Every proc (the first included) now also removes one real level; the cap and the one-proc-per-45-s rule are unchanged.
+        baseDrainState(target).getOrPut(playerSkill) { mutableSetOf() }.add(caster)
         cursedTargets(caster).getOrPut(curse) { mutableSetOf() }.add(target)
         val state = drainState(target)
         val extra = state[playerSkill] ?: 0
         val maxExtra = capPct - basePct
         val changed =
             when {
-                firstFromThisCaster && extra == 0 -> true
                 extra >= maxExtra -> false
                 else -> {
                     state[playerSkill] = extra + 1
@@ -757,9 +759,9 @@ object AncientCurses {
     ) {
         val state = boostState(player)
         val maxExtra = LEECH_BOOST_CAP_PCT - LEECH_BOOST_BASE_PCT
-        val current = state[skill]
+        // Every proc, the first included, is a real +1 level (owner 2026-09-19, see escalateDrain).
+        val current = state[skill] ?: 0
         when {
-            current == null -> state[skill] = 0
             current >= maxExtra -> {}
             else -> {
                 state[skill] = current + 1

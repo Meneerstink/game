@@ -127,12 +127,12 @@ class AncientCurses2011Tests {
         AncientCurses.toggleCurse(attacker, AncientCurse.SAP_WARRIOR)
         val target = newPlayer(mapOf(Skills.ATTACK to 99))
         AncientCurses.onDamageDealt(attacker, target, damage = 10)
-        assertEquals(99, target.skills.getCurrentLevel(Skills.ATTACK))
+        assertEquals(98, target.skills.getCurrentLevel(Skills.ATTACK)) // owner 2026-09-19: the first proc is a real level too
         assertEquals(0.9, AncientCurses.drainMultiplier(target, Skills.ATTACK), 1e-9)
         AncientCurses.onDamageDealt(attacker, target, damage = 10)
-        assertEquals(99, target.skills.getCurrentLevel(Skills.ATTACK)) // owner 2026-09-18: inside the 45 s cooldown
+        assertEquals(98, target.skills.getCurrentLevel(Skills.ATTACK)) // owner 2026-09-18: inside the 45 s cooldown
         procAfterCooldown(attacker, target)
-        assertEquals(98, target.skills.getCurrentLevel(Skills.ATTACK))
+        assertEquals(97, target.skills.getCurrentLevel(Skills.ATTACK))
         repeat(20) { procAfterCooldown(attacker, target) }
         assertEquals(90, target.skills.getCurrentLevel(Skills.ATTACK)) // 99 - 9 (extra 10 % of 99)
         assertEquals(0.9, AncientCurses.drainMultiplier(target, Skills.ATTACK), 1e-9)
@@ -192,11 +192,12 @@ class AncientCurses2011Tests {
         AncientCurses.toggleCurse(attacker, AncientCurse.LEECH_ATTACK)
         val target = newPlayer(mapOf(Skills.ATTACK to 99))
         AncientCurses.onDamageDealt(attacker, target, damage = 10)
-        // KB: base 10 % drain / 5 % boost are modifiers while the Leech is active; later procs are
-        // real +-1 % level steps (drain to 25 %, boost to 10 %) that regenerate as usual.
-        assertEquals(99, target.skills.getCurrentLevel(Skills.ATTACK))
+        // KB: base 10 % drain / 5 % boost are modifiers while the Leech is active; procs are real +-1 % level steps (drain to
+        // 25 %, boost to 10 %) that regenerate as usual. Owner 2026-09-19: the FIRST proc is a real step as well (it used to
+        // register only the invisible modifier, so the owner saw "the message but no drain").
+        assertEquals(98, target.skills.getCurrentLevel(Skills.ATTACK))
         assertEquals(0.9, AncientCurses.drainMultiplier(target, Skills.ATTACK), 1e-9)
-        assertEquals(99, attacker.skills.getCurrentLevel(Skills.ATTACK))
+        assertEquals(100, attacker.skills.getCurrentLevel(Skills.ATTACK))
         assertEquals(1.05, AncientCurses.leechMultiplier(attacker, Skills.ATTACK), 1e-9)
         // Owner 2026-09-18: one proc per 45-second cooldown; the cap itself is unchanged.
         repeat(30) { procAfterCooldown(attacker, target) }
@@ -234,7 +235,7 @@ class AncientCurses2011Tests {
         AncientCurses.onDamageDealt(attacker, target, damage = 10, style = CombatClass.RANGED)
         assertEquals(1.0, AncientCurses.drainMultiplier(target, Skills.ATTACK), 1e-9)
         assertEquals(0.9, AncientCurses.drainMultiplier(target, Skills.RANGED), 1e-9)
-        assertEquals(99, target.skills.getCurrentLevel(Skills.RANGED))
+        assertEquals(98, target.skills.getCurrentLevel(Skills.RANGED)) // the first proc is a real one-level drain (owner 2026-09-19)
 
         // Sap Warrior is off, so a melee hit drains nothing.
         AncientCurses.onDamageDealt(attacker, target, damage = 10, style = CombatClass.MELEE)
