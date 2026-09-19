@@ -107,6 +107,8 @@ on_world_init {
         // have their own placement rules and are never moved; the npc next to them moves instead.
         for (npc in npcs.toList().asReversed()) {
             if (npc.respawnOverride == true) continue
+            // Bankers and exchange clerks stand inside their booth on purpose (live boot 2026-09-19 moved all 16 out: wrong).
+            if (worksAcrossCounter(npc)) continue
             val tiles = footprint(npc)
             val others = taken(npc)
             val clipped = tiles.any { world.collision.isClipped(it) }
@@ -117,7 +119,7 @@ on_world_init {
                 "inside an object".takeIf { clipped },
                 "on another npc".takeIf { overlap },
                 "cannot be reached".takeIf { unreachable },
-                "pressed against another npc".takeIf { touching && !worksAcrossCounter(npc) },
+                "pressed against another npc".takeIf { touching },
             )
             if (reason.isEmpty()) continue
             val spot = freeSpot(npc)
