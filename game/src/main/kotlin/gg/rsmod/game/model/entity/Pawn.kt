@@ -87,6 +87,15 @@ abstract class Pawn(
         get() = lastFacingDirection
 
     /**
+     * Sets the direction a player who first sees this pawn gets in the add-npc segment. Plugins
+     * that spawn a standing npc outside `spawn_npc` (Skully, the store npcs) use it so the npc
+     * never shows the default SOUTH facing to late viewers.
+     */
+    fun setSpawnFacing(direction: Direction) {
+        lastFacingDirection = direction
+    }
+
+    /**
      * The current [LockState] which filters what actions this pawn can perform.
      */
     var lock = LockState.NONE
@@ -926,7 +935,7 @@ abstract class Pawn(
             } else {
                 world.collision
             }
-        return if (entityType.isPlayer) {
+        return if (entityType.isPlayer || (this is Npc && this.smartPathfinding)) {
             BFSPathFindingStrategy(
                 collision,
             )

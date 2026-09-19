@@ -125,6 +125,8 @@ object GuardedZones {
             Zone(
                 "Seers' Village bank",
                 intArrayOf(2721, 3498, 2721, 3497, 2719, 3497, 2719, 3494, 2721, 3494, 2721, 3490, 2724, 3490, 2724, 3487, 2728, 3487, 2728, 3490, 2731, 3490, 2731, 3498),
+                // OSRS Wiki Deadman Mode: "Seers' Village bank (Floor 0)" - the ground floor only.
+                heights = 0..0,
             ),
             Zone(
                 "East Ardougne",

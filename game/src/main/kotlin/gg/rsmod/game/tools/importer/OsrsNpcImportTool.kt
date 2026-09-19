@@ -66,6 +66,9 @@ object OsrsNpcImportTool {
     val CLONE_BATCHES: Map<String, List<Pair<Int, String>>> =
         mapOf(
             "skully-family" to listOf(10382 to "Skully Jr", 10382 to "Skully Sr", 10382 to "Skully Max", 10382 to "Skully Bob"),
+            // Owner 2026-09-19 (78 Store NPCs at the Grand Exchange): OSRS "Sigmund The Merchant" 3894 (Talk-to/Trade) as the
+            // Donator Store and OSRS "Emblem Trader" 308 (Talk-to/Rewards/Skull, the OSRS PvP rewards trader) as the Deadman Store.
+            "store-npcs" to listOf(3894 to "Donator Store", 308 to "Deadman Store"),
         )
 
     /**

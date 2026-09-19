@@ -99,36 +99,72 @@ object SkullyRoster {
         val chest: Tile,
     )
 
-    /** Chooses the Skully and chest tiles for [site], or null when nothing near [Site.wanted] is reachable. */
+    /**
+     * Owner 2026-09-18 (#7): "every Skully must stand pinned against a bank wall, not in the middle
+     * of the bank". A tile is against a wall when a cardinal step off it is blocked by the collision
+     * map while the tile beyond is not itself occupied - that is a wall edge, not a booth, counter or
+     * other object (those clip the neighbouring tile). Standing beside a booth would also block the
+     * banking tiles, so only true wall edges count.
+     */
+    fun isAgainstWall(
+        world: World,
+        tile: Tile,
+    ): Boolean =
+        Direction.NESW.any { direction ->
+            world.collision.isBlocked(tile, direction, projectile = false) && !world.collision.isClipped(tile.step(direction))
+        }
+
+    /**
+     * Chooses the Skully and chest tiles for [site], or null when nothing near [Site.wanted] is
+     * reachable. The wall rule ([isAgainstWall]) is applied at every site, the owner-named exact
+     * tiles included: an exact tile that is already against a wall is used as-is, otherwise the
+     * wall tile nearest to it wins (the boot line reports the snap).
+     */
     fun place(
         world: World,
         site: Site,
     ): Placement? {
-        if (site.exact && !world.collision.isClipped(site.wanted)) {
-            // Owner-named tile: stand exactly there; the chest takes any walkable neighbour.
+        val reachable = reachableFrom(world, site.anchor)
+        if (site.exact && site.wanted in reachable && !world.collision.isClipped(site.wanted) && isAgainstWall(world, site.wanted)) {
+            // Owner-named tile, already against a wall and reachable from the customer side: stand exactly there;
+            // the chest must use the same reachable component, never a merely unblocked tile behind a booth.
             val chest =
                 Direction.NESW
                     .map { site.wanted.step(it) }
-                    .firstOrNull { !world.collision.isClipped(it) && it != site.anchor }
+                    .filter { it in reachable && !world.collision.isClipped(it) && it != site.anchor }
+                    .maxByOrNull { if (isAgainstWall(world, it)) 1 else 0 }
                     ?: return null
             return Placement(site, site.wanted, chest)
         }
-        val reachable = reachableFrom(world, site.anchor)
         if (reachable.isEmpty()) return null
+        val candidates = reachable.filter { it != site.anchor }
         val skullyTile =
-            reachable
-                .filter { it != site.anchor }
+            candidates
+                .filter { isAgainstWall(world, it) }
                 .minByOrNull { it.getDistance(site.wanted) * 16 + it.getDistance(site.anchor) }
+                ?: candidates.minByOrNull { it.getDistance(site.wanted) * 16 + it.getDistance(site.anchor) }
                 ?: return null
+        // The chest stands beside him along the same wall where possible.
         val chestTile =
             Direction.NESW
                 .map { skullyTile.step(it) }
                 .filter { it in reachable && it != site.anchor }
-                .minByOrNull { it.getDistance(site.wanted) }
+                .minByOrNull { (if (isAgainstWall(world, it)) 0 else 8) + it.getDistance(site.wanted) }
                 ?: reachable.filter { it != skullyTile && it != site.anchor }.minByOrNull { it.getDistance(skullyTile) }
                 ?: return null
         return Placement(site, skullyTile, chestTile)
     }
+
+    /** The open (unblocked) cardinal neighbour of [tile] nearest to [anchor] - the tile Skully looks at. */
+    fun facing(
+        world: World,
+        tile: Tile,
+        anchor: Tile,
+    ): Tile? =
+        Direction.NESW
+            .filter { !world.collision.isBlocked(tile, it, projectile = false) && !world.collision.isClipped(tile.step(it)) }
+            .map { tile.step(it) }
+            .minByOrNull { it.getDistance(anchor) }
 
     /** Spawns every site; returns the boot summary line. */
     fun spawnAll(world: World): String {
@@ -151,9 +187,19 @@ object SkullyRoster {
             // Owner 2026-09-17: "haal alle combat levels weg bij alle skullys" - publish level 0
             // explicitly (the client suppresses "(level N)" only for exactly 0) whatever the cache says.
             skully.setCombatLevel(0)
+            // Owner 2026-09-18: "correctly smoothly positioned" - with his back to the wall he faces
+            // into the bank (the open side nearest the customer tiles). The face-tile block is kept
+            // in the npc's block buffer, so every player who arrives later sees the same facing.
             world.spawn(DynamicObject(LOOT_CHEST, 10, 0, placement.chest))
+            facing(world, placement.skully, site.anchor)?.let {
+                // Both the add-npc orientation (what a player who arrives later sees first) and the
+                // face-tile block, so no viewer ever sees him turned into the wall.
+                skully.setSpawnFacing(Direction.between(placement.skully, it))
+                skully.faceTile(it)
+            }
             placed++
-            lines += "${site.label}: npc ${site.npcId} at ${placement.skully.x},${placement.skully.z},${placement.skully.height} chest ${placement.chest.x},${placement.chest.z}"
+            val wall = if (isAgainstWall(world, placement.skully)) "wall" else "NO WALL"
+            lines += "${site.label}: npc ${site.npcId} at ${placement.skully.x},${placement.skully.z},${placement.skully.height} ($wall) chest ${placement.chest.x},${placement.chest.z}"
         }
         return "SkullyRoster: placed $placed/${SITES.size} sites [" + lines.joinToString("; ") + "]" +
             (if (failed.isEmpty()) "" else "; UNREACHABLE: $failed")

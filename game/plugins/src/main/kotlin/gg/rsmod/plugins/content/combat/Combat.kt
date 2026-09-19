@@ -113,7 +113,11 @@ object Combat {
         (pawn as? Player)?.let { gg.rsmod.plugins.content.items.osrs.StaffOfTheDead.onCombat(it) }
         (target as? Player)?.let { gg.rsmod.plugins.content.items.osrs.StaffOfTheDead.onCombat(it) }
 
-        if (target is Player && target.interfaces.getModal() != -1 && target.interfaces.getModal() !in COMBAT_PERSISTENT_MODALS) {
+        // Owner 2026-09-19: in a dangerous bank only a PKer's 2-tick attacks close the victim's bank; a slower attack
+        // leaves it open and does not auto-retaliate (retaliating would walk away from the booth and close it anyway).
+        val bankKeptOpen =
+            target is Player && gg.rsmod.plugins.content.mechanics.pvp.BankSecurity.keepsBankOpen(pawn, target, CombatConfigs.getAttackDelay(pawn))
+        if (target is Player && !bankKeptOpen && target.interfaces.getModal() != -1 && target.interfaces.getModal() !in COMBAT_PERSISTENT_MODALS) {
             // Close the modal together with its tab-area side panel (equipment stats 670, bank 763, shop 621, ...): closing
             // only the modal left the side panel mounted over a hidden tab strip (owner picture "interface hang").
             target.closeModalInterface()
@@ -122,7 +126,7 @@ object Combat {
             }
         }
 
-        if (target is Player && target.interfaces.isVisible(740)) {
+        if (target is Player && !bankKeptOpen && target.interfaces.isVisible(740)) {
             if (target.getVarp(AttackTab.DISABLE_AUTO_RETALIATE_VARP) == 0) {
                 target.interruptQueues()
                 target.closeComponent(parent = 752, child = 13)

@@ -19,8 +19,22 @@ import gg.rsmod.game.sync.block.UpdateBlockType
 class Npc private constructor(
     val id: Int,
     world: World,
-    val spawnTile: Tile,
+    /**
+     * The tile this npc respawns on and roams around. Mutable so an npc that is legitimately
+     * re-posted at runtime (a Deadman guard teleported onto an intruder, then left to patrol where
+     * the fight ended) roams and returns to its new post instead of the tile it was first created on.
+     */
+    var spawnTile: Tile,
 ) : Pawn(world) {
+    /**
+     * Route with the same breadth-first path finder players use instead of the axis-aligned
+     * [gg.rsmod.game.model.path.strategy.SimplePathFindingStrategy] every npc gets by default.
+     * The simple strategy walks straight at its target and stops at the first wall, which is why
+     * an npc "forgets" a target standing behind a fence or counter; npcs that must genuinely
+     * chase a target around obstacles (the Deadman guards) opt in here.
+     */
+    var smartPathfinding = false
+
     constructor(id: Int, tile: Tile, world: World) : this(id, world, spawnTile = Tile(tile)) {
         this.tile = tile
     }
@@ -221,7 +235,7 @@ class Npc private constructor(
             timerCycle()
         }
         hitsCycle()
-        if (attr.has(FACING_PAWN_ATTR) && !attr.has(COMBAT_TARGET_FOCUS_ATTR)) {
+        if (attr.has(FACING_PAWN_ATTR) && !attr.has(COMBAT_TARGET_FOCUS_ATTR) && attr[gg.rsmod.game.model.attr.HOLD_FACING_ATTR] != true) {
             val target = attr[FACING_PAWN_ATTR]?.get() ?: return
             if (!tile.isWithinRadius(target.tile, 1)) {
                 resetFacePawn()

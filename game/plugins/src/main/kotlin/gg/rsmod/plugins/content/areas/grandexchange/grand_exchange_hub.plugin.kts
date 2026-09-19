@@ -11,6 +11,8 @@ import gg.rsmod.plugins.content.mechanics.trouver.TrouverRegistry
  * behind a counter, always on a tile reachable from the customer side, no combat level. */
 on_world_init {
     println(SkullyRoster.spawnAll(world))
+    // After Skully, so the 78 Store npcs never take his or his chest's tile.
+    println(gg.rsmod.plugins.content.mechanics.store.StoreNpcs.spawnAll(world))
 }
 
 // GE services requested by the owner. Existing global handlers provide their real functions.
