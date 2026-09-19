@@ -36,7 +36,6 @@ class GuardedZonesTests {
             "Sophanem" to Tile(3300, 2780, 0),
             "Tutorial Island" to Tile(3100, 3100, 0),
             "Void Knights' Outpost" to Tile(2660, 2650, 0),
-            "Warriors' Guild" to Tile(2856, 3546, 1),
         ).forEach { (name, tile) ->
             assertEquals(name, GuardedZones.zoneAt(tile)?.name, "$tile must be inside $name")
         }
@@ -54,6 +53,7 @@ class GuardedZonesTests {
             Tile(3092, 3245, 0), // Draynor bank
             Tile(3269, 3167, 0), // Al Kharid bank
             Tile(3139, 3629, 0), // Ferox bank
+            Tile(2856, 3546, 0), // Warriors' Guild is not an OSRS Deadman safe zone
             Tile(2970, 3300, 0), // south of Falador wall
             Tile(3212, 3428 + 6400, 0), // Varrock sewers
         ).forEach { tile ->
@@ -78,17 +78,7 @@ class GuardedZonesTests {
 
     @Test
     fun `every stationed guard post lies inside its own zone`() {
-        // Owner 2026-09-17 named 2966,3399 verbatim; it lies 4 tiles north of the wiki's Falador
-        // wall line and is snapped to the nearest walkable guarded tile at boot (CityGuards.
-        // spawnStationedGuards, reported in the boot line). Every other post must be inside.
-        val ownerTilesOutsidePolygon = setOf(gg.rsmod.game.model.Tile(2966, 3399, 0))
         GuardPosts.ALL.forEach { post ->
-            if (post.tile in ownerTilesOutsidePolygon) {
-                val zone = GuardedZones.ZONES.first { it.name == post.city }
-                val near = (-6..6).any { dx -> (-6..6).any { dz -> zone.contains(post.tile.transform(dx, dz)) } }
-                assertTrue(near, "owner tile ${post.tile} must be within snapping distance of ${post.city}")
-                return@forEach
-            }
             assertEquals(post.city, GuardedZones.zoneAt(post.tile)?.name, "guard post ${post.tile} of ${post.city} is outside its zone")
         }
     }

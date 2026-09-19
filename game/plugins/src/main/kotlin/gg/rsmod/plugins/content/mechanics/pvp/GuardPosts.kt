@@ -21,8 +21,6 @@ object GuardPosts {
         val city: String,
         val tile: Tile,
         val ranged: Boolean,
-        /** A specific npc for this post (owner 2026-09-17 list); null = the ordinary Deadman guard. */
-        val npcId: Int? = null,
     )
 
     private fun city(
@@ -31,23 +29,23 @@ object GuardPosts {
     ): List<Post> = xz.mapIndexed { index, (x, z) -> Post(name, Tile(x, z, 0), ranged = index % 2 == 1) }
 
     /**
-     * Owner 2026-09-17 ("Place a guard on this exact tiles"), verbatim. Where the owner named an npc
-     * it is used; "voor de open coordinaten laat je de normale guards" - the others alternate the
-     * ordinary melee/ranged Deadman guard. A tile that turns out clipped or just outside the wiki
-     * polygon (2966,3399 lies a few tiles north of the Falador wall line) is snapped to the nearest
-     * walkable guarded tile at boot and reported in the boot line.
+     * Owner 2026-09-17 ("Place a guard on this exact tiles"), verbatim for the posts that are inside
+     * a guarded zone. Posts outside the zone source are not stationed: a guard must never boot
+     * outside its zone and silently snap to a different post.
      */
     val OWNER_TILES_2026_09_17: List<Post> =
         listOf(
-            Post("Varrock", Tile(3187, 3446, 0), ranged = true, npcId = CityGuards.THIRD_AGE_RANGER_ID),
-            Post("Varrock", Tile(3186, 3432, 0), ranged = false, npcId = CityGuards.THIRD_AGE_MAGE_ID),
-            Post("Varrock", Tile(3164, 3469, 0), ranged = true, npcId = CityGuards.THIRD_AGE_RANGER_ID),
-            Post("Falador", Tile(2939, 3356, 0), ranged = false, npcId = CityGuards.THIRD_AGE_MAGE_ID),
-            Post("Falador", Tile(2966, 3399, 0), ranged = true, npcId = CityGuards.THIRD_AGE_RANGER_ID),
+            Post("Varrock", Tile(3187, 3446, 0), ranged = true),
+            Post("Varrock", Tile(3186, 3432, 0), ranged = false),
+            Post("Varrock", Tile(3164, 3469, 0), ranged = true),
+            Post("Falador", Tile(2939, 3356, 0), ranged = false),
             Post("Falador", Tile(3006, 3388, 0), ranged = false),
             Post("Falador", Tile(3006, 3326, 0), ranged = true),
-            Post("Lumbridge", Tile(3237, 3225, 0), ranged = false, npcId = CityGuards.LUCIEN_ID),
+            Post("Lumbridge", Tile(3237, 3225, 0), ranged = false),
             Post("Lumbridge", Tile(3218, 3251, 0), ranged = false),
+            Post("East Ardougne", Tile(2588, 3341, 0), ranged = true),
+            Post("East Ardougne", Tile(2612, 3341, 0), ranged = true),
+            Post("Yanille", Tile(2614, 3101, 0), ranged = true),
         )
 
     private val CALIBRATED: List<Post> =
@@ -71,13 +69,6 @@ object GuardPosts {
             city("Catherby bank", 2808 to 3440) +
             // Seers' Village: bank building 2721-2730 x 3489-3498 (bankers at z 3495), pins in the customer half.
             city("Seers' Village bank", 2724 to 3493, 2728 to 3493) +
-            // Warriors' Guild: 8 px/tile, whole ground floor 2837-2876 x 3535-3558 (Ajjat 2851,3549,
-            // Lidio 2842,3547, Lilly 2845,3549, Jimmy 2872,3535 all land on their rooms).
-            city(
-                "Warriors' Guild",
-                2870 to 3553, 2840 to 3552, 2852 to 3550, 2845 to 3544, 2846 to 3540, 2858 to 3543,
-                2868 to 3543,
-            ) +
             // Rellekka: 2.83 px/tile, anchored on Yrsa's clothes shop icon (2625,3675) and checked
             // against the harbour anchor icon (Sailor 2629,3693).
             city(
@@ -89,7 +80,7 @@ object GuardPosts {
             // south bank "$" (2649-2658 x 3280-3287) and the market bakers (2655/2669, 3310).
             city(
                 "East Ardougne",
-                2588 to 3341, 2612 to 3341, 2634 to 3338, 2640 to 3338, 2648 to 3329, 2580 to 3325,
+                2634 to 3338, 2640 to 3338, 2648 to 3329, 2580 to 3325,
                 2660 to 3308, 2686 to 3307, 2579 to 3300, 2608 to 3299, 2604 to 3291, 2652 to 3286,
                 2602 to 3266,
             ) +
@@ -103,7 +94,7 @@ object GuardPosts {
             // Yanille: 4 px/tile, anchored on the bank "$" (bank 2609-2616 x 3088-3097) and the town walls.
             city(
                 "Yanille",
-                2614 to 3101, 2543 to 3089, 2615 to 3089, 2561 to 3087, 2578 to 3087, 2602 to 3084,
+                2543 to 3089, 2615 to 3089, 2561 to 3087, 2578 to 3087, 2602 to 3084,
             ) +
             // Lumbridge: 8 px/tile, anchored on Bob's Axes (Bob 3228,3203), checked against the general
             // store (Shopkeeper 3212,3240), the church (Father Aereck 3244,3205) and the river Lum.
@@ -112,6 +103,5 @@ object GuardPosts {
                 3220 to 3238, 3207 to 3235, 3231 to 3231, 3220 to 3222, 3235 to 3217, 3208 to 3204,
             )
 
-    /** Declared last: an object's properties initialise in declaration order. */
     val ALL: List<Post> = CALIBRATED + OWNER_TILES_2026_09_17
 }

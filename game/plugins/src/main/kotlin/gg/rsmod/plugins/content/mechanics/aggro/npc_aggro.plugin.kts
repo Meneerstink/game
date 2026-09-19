@@ -92,7 +92,18 @@ on_timer(AGGRO_CHECK_TIMER) {
     if (!npc.timers.has(ACTIVE_COMBAT_TIMER) &&
         npc.lock.canAttack() &&
         npc.isActive()) {
-        if (!checkRadius(npc)) {
+        // A Deadman guard may pursue a valid skulled target anywhere inside the guarded polygon.
+        // The 8-tile aggro radius is acquisition range, not a combat leash. Resetting here used
+        // to drop the target as soon as it moved eight tiles away and cleared face-pawn state.
+        val pursuingGuard =
+            CityGuards.isGuard(npc) &&
+                (npc.getCombatTarget() as? Player)?.let { CityGuards.mayPursue(npc, it) } == true
+        // Only an npc that actually had a target has anything to drop. Running this for an idle
+        // npc stopped its movement on every aggro search (every cycle for a Deadman guard), which
+        // cancelled each patrol / random-walk route on its first step (owner 2026-09-18: guards
+        // "do not roam") and cleared the face-pawn of an aggressive npc a player was talking to.
+        val hadTarget = npc.getCombatTarget() != null
+        if (!checkRadius(npc) && !pursuingGuard && hadTarget) {
             npc.stopMovement()
             npc.resetInteractions()
             npc.resetFacePawn()

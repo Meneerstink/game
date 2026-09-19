@@ -8,10 +8,9 @@ import gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell
  * Deadman guard combat definitions + stationed spawns (OSRS Wiki "Guard (Deadman Mode)": level 1337,
  * 800 hitpoints, 2-tick attack speed, slash or ranged, attack +60, strength +7, stab/slash/crush
  * defence +8/+9/+7, ranged defence +8, aggressive). Damage is not taken from these stats but from
- * the sourced ramp in [CityGuards.rampedMaxHit]. Owner 2026-09-17: every guard - the imported OSRS
- * Deadman guards and the Third Age Ranger / Third Age Mage / Lucien posts - "moeten allemaal de
- * zelfde stats hebben", so one shared definition per attack style is applied to every id of that
- * style. The humanoid models animate with the shared 667 human attack/block/death sequences, the
+ * the sourced ramp in [CityGuards.rampedMaxHit]. The three imported OSRS Deadman guard variants
+ * use one shared definition per attack style. The humanoid models animate with the shared 667
+ * human attack/block/death sequences, the
  * same way the imported Ferox npcs reuse the 667 Man movement set.
  */
 fun KotlinPlugin.meleeGuard(id: Int) =
@@ -56,6 +55,9 @@ fun KotlinPlugin.rangedGuard(id: Int) =
         configs {
             attackSpeed = CityGuards.ATTACK_SPEED_CYCLES
             attackStyle = StyleType.RANGED
+            // Without a projectile on the def RangedCombatStrategy fires nothing for an npc: the
+            // guard only played its animation. Plain arrow (the tier is not published: ADAPTED).
+            attackProjectile = Gfx.BRONZE_ARROW_IN_FLIGHT
             respawnDelay = 50
         }
         aggro {
@@ -81,8 +83,12 @@ fun KotlinPlugin.rangedGuard(id: Int) =
             defenceRanged = 8
         }
         anims {
-            // Real cache-sourced crossbow set already used by the Falador crossbow guards.
-            attack = Anims.ATTACK_CROSSBOW
+            // The ranged guards hold a bow, not a crossbow: OSRS 11203 is the Falador longbow guard
+            // body (OSRS 3272-3274: models 233/250/9458/9450/176/28285/185) with bow model 512 in
+            // the weapon slot, and the Third Age Ranger wields the third-age bow. The crossbow
+            // sequence 4230 made them "shoot a crossbow" they do not hold (owner 2026-09-18);
+            // OSRS Wiki "Guard": only the crossbow guards use a crossbow animation.
+            attack = Anims.ATTACK_BOW
             death = 836
             block = 424
         }

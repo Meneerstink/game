@@ -1,12 +1,17 @@
 package gg.rsmod.plugins.content.mechanics.pvp
 
 import gg.rsmod.game.model.Graphic
+import gg.rsmod.game.model.MovementQueue
 import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.World
 import gg.rsmod.game.model.attr.AttributeKey
+import gg.rsmod.game.model.attr.FACING_PAWN_ATTR
+import gg.rsmod.game.model.attr.HOLD_FACING_ATTR
 import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Pawn
 import gg.rsmod.game.model.entity.Player
+import gg.rsmod.game.model.path.PathRequest
+import gg.rsmod.game.model.path.strategy.BFSPathFindingStrategy
 import gg.rsmod.game.model.timer.TimerKey
 import gg.rsmod.plugins.api.InterfaceDestination
 import gg.rsmod.plugins.api.ext.closeInterface
@@ -24,9 +29,8 @@ import java.lang.ref.WeakReference
  * Npcs: the real OSRS Deadman guards, imported into both 667 caches with `OsrsNpcImportTool` batch
  * `deadman-guard` (owner: "gebruik exact de deadmanmode guard van osrs"): OSRS 6582 "Guard" (slash)
  * -> [MELEE_GUARD_ID], OSRS 11203 "Guard" (ranged) -> [RANGED_GUARD_ID], OSRS 14792 "Wizguard" ->
- * [WIZGUARD_ID]. The owner's stationed extras on named tiles (2026-09-17 pin list) are the already
- * imported Third Age Ranger [THIRD_AGE_RANGER_ID], Third Age Mage [THIRD_AGE_MAGE_ID] and Lucien
- * [LUCIEN_ID]; they share the guard combat definition ("ze moeten allemaal dezelfde stats hebben").
+ * [WIZGUARD_ID]. Only these three OSRS Deadman guard variants are eligible; unrelated imported
+ * Third Age/Lucien NPCs are not Deadman guards and are never spawned by this system.
  * None of them carries a cache "Attack" option any more (`NpcAttackOptionStripTool`, owner: "Remove
  * the attack option from all guards, a player cannot attack them").
  *
@@ -64,18 +68,9 @@ object CityGuards {
     /** OSRS 14792 "Wizguard" imported as this local 667 id. */
     const val WIZGUARD_ID = 14409
 
-    /** Owner pin list 2026-09-17: "npc 14404 third age ranger" (OSRS 8636 import, Npcs.THIRD_AGE_RANGER). */
-    const val THIRD_AGE_RANGER_ID = 14404
-
-    /** Owner pin list 2026-09-17: "npc 14405 third age mage" (OSRS 8637 import, Npcs.THIRD_AGE_MAGE). */
-    const val THIRD_AGE_MAGE_ID = 14405
-
-    /** Owner pin list 2026-09-17: "14256 Lucien" (Npcs.LUCIEN_14256, size 3). */
-    const val LUCIEN_ID = 14256
-
-    val MELEE_GUARD_IDS = setOf(MELEE_GUARD_ID, LUCIEN_ID)
-    val RANGED_GUARD_IDS = setOf(RANGED_GUARD_ID, THIRD_AGE_RANGER_ID)
-    val MAGE_GUARD_IDS = setOf(THIRD_AGE_MAGE_ID)
+    val MELEE_GUARD_IDS = setOf(MELEE_GUARD_ID)
+    val RANGED_GUARD_IDS = setOf(RANGED_GUARD_ID)
+    val MAGE_GUARD_IDS = emptySet<Int>()
     val GUARD_IDS = MELEE_GUARD_IDS + RANGED_GUARD_IDS + MAGE_GUARD_IDS + WIZGUARD_ID
 
     /** Owner 2026-09-17: "MAXIMAAL 2 GUARDS MOGEN 1 PLAYER ATTACKEN". */
@@ -149,6 +144,14 @@ object CityGuards {
 
     fun isGuard(npc: Npc): Boolean = npc.id in GUARD_IDS
 
+    /**
+     * An ordinary cache "Guard" (not a Deadman guard) posted inside a guarded zone. Owner
+     * 2026-09-18: every guard in a safe zone roams, at most [PATROL_RADIUS] tiles and only inside
+     * the zone; these use the generic random walk (`npc_random_walk.plugin.kts`).
+     */
+    fun isOrdinaryZoneGuard(npc: Npc): Boolean =
+        !isGuard(npc) && npc.def.name.equals("Guard", ignoreCase = true) && isGuardedZone(npc.spawnTile)
+
     /** OSRS Wiki: "Protection prayers are ineffective against their damage." Shared by the melee,
      * ranged and magic formulas so they cannot drift on which ids are exempt. */
     fun bypassesProtectionPrayer(pawn: Pawn): Boolean = pawn is Npc && isGuard(pawn)
@@ -181,7 +184,7 @@ object CityGuards {
     fun mayPursue(
         guard: Npc,
         target: Pawn,
-    ): Boolean = target is Player && isSkulledIntruder(target)
+    ): Boolean = isGuard(guard) && isGuardedZone(guard.tile) && target is Player && isSkulledIntruder(target)
 
     // ---- max-two-guards cap ----
 
@@ -313,7 +316,7 @@ object CityGuards {
             if (tile != post.tile) {
                 snapped += "${post.city} ${post.tile.x},${post.tile.z}->${tile.x},${tile.z}"
             }
-            val id = post.npcId ?: if (post.ranged) RANGED_GUARD_ID else MELEE_GUARD_ID
+            val id = if (post.ranged) RANGED_GUARD_ID else MELEE_GUARD_ID
             val guard =
                 Npc(id, tile, world).also {
                     it.respawnOverride = true
@@ -350,6 +353,11 @@ object CityGuards {
     fun leash(guard: Npc) {
         val world = guard.world
         val target = guard.getCombatTarget() as? Player
+        if (target != null && mayPursue(guard, target)) {
+            // Reassert the server-side face-pawn block on the same cadence as the leash. This
+            // covers guards reacquired by aggro and keeps all imported visual variants aligned.
+            guard.facePawn(target)
+        }
         if (target != null && !mayPursue(guard, target)) {
             standDown(guard)
         }
@@ -368,13 +376,125 @@ object CityGuards {
             return
         }
         guard.attr.remove(OUTSIDE_CYCLES_ATTR)
-        if (guard.getCombatTarget() == null &&
-            guard.attr[REACTIVE_GUARD_ATTR] != true &&
-            !guard.movementQueue.hasDestination() &&
-            guard.tile.getDistance(guard.spawnTile) > PATROL_RADIUS + 2
-        ) {
-            guard.walkTo(guard.spawnTile)
+        if (guard.getCombatTarget() == null) {
+            // Owner 2026-09-18: "all 1337 guards ... also the Third Age mage / Third Age ranger face
+            // the player with a skull in a safe zone". A guard the two-guard cap keeps out of the
+            // fight still stops and watches the nearest skulled intruder in view; HOLD_FACING_ATTR
+            // keeps the engine from dropping the non-combat face-pawn while the intruder is not
+            // adjacent (Npc.cycle). The watch ends, and patrolling resumes, when they leave.
+            val intruder = nearestSkulledIntruder(guard)
+            if (intruder != null) {
+                guard.attr[HOLD_FACING_ATTR] = true
+                if (guard.movementQueue.hasDestination()) guard.stopMovement()
+                if (guard.attr[FACING_PAWN_ATTR]?.get() !== intruder) guard.facePawn(intruder)
+                return
+            }
+            if (guard.attr.has(HOLD_FACING_ATTR)) {
+                guard.attr.remove(HOLD_FACING_ATTR)
+                guard.resetFacePawn()
+            }
         }
+        if (guard.getCombatTarget() == null && !guard.movementQueue.hasDestination()) {
+            if (guard.attr[REACTIVE_GUARD_ATTR] != true && guard.tile.getDistance(guard.spawnTile) > PATROL_RADIUS + 2) {
+                guard.walkTo(guard.spawnTile)
+            } else if (world.random(PATROL_STEP_CHANCE) == 0) {
+                // Owner live retest 2026-09-17 ("does not roam the tiles in the safe zone"): patrol
+                // from the leash itself, independent of the generic random-walk plugin. A face-pawn
+                // left over from a fight would otherwise keep the generic walk from ever starting.
+                // resetFacePawn, not a bare attr removal: that left the block buffer's face index
+                // on the old target, so the client kept the guard turned to it while it patrolled.
+                guard.resetFacePawn()
+                val patrol = patrolDestination(world, guard.spawnTile, guard)
+                if (patrol != null) {
+                    guard.walkPath(patrol.second, MovementQueue.StepType.NORMAL, detectCollision = true)
+                    guard.attr[LAST_PATROL_ATTR] = "walk ${patrol.first.x},${patrol.first.z} (${patrol.second.size} steps) @${world.currentCycle}"
+                } else {
+                    // Owner 2026-09-18 ("still not actively roaming"): a post whose zone polygon is
+                    // tight can fail every full-route candidate; fall back to the engine's own
+                    // routing towards any walkable in-zone tile within the radius rather than
+                    // standing still (the leash still stops the guard if it ever steps outside).
+                    val fallback = nearestWalkable(world, guard.spawnTile.transform(world.random(-PATROL_RADIUS..PATROL_RADIUS), world.random(-PATROL_RADIUS..PATROL_RADIUS)), radius = 2) {
+                        isGuardedZone(it) && isWithinPatrolRadius(guard.spawnTile, it)
+                    }
+                    if (fallback != null) guard.walkTo(fallback)
+                    guard.attr[LAST_PATROL_ATTR] = "no full route; fallback ${fallback?.let { "${it.x},${it.z}" } ?: "none"} @${world.currentCycle}"
+                }
+            }
+        }
+    }
+
+    /**
+     * One patrol walk roughly every 8 cycles (~5 s) per idle guard (the leash runs every 2 cycles;
+     * `world.random(n)` is inclusive, so 1 in n+1). Owner live retest 2026-09-18 ("guards still not
+     * actively roaming"): the previous 1-in-16 roll gave one walk per ~19 s, which reads as
+     * standing still; the ordinary cache guards' random walk fires every 15-30 cycles too.
+     */
+    private const val PATROL_STEP_CHANCE = 3
+
+    private const val PATROL_CANDIDATE_ATTEMPTS = 32
+
+    /** How far a guard notices a skulled intruder to watch (its aggro radius plus a little). */
+    const val WATCH_RADIUS = 10
+
+    /** Owner retest aid (`guardinfo` command): what the last patrol roll did for this guard. */
+    val LAST_PATROL_ATTR = AttributeKey<String>()
+
+    /** One diagnostic line per Deadman guard within [radius] of [tile], for the `guardinfo` command. */
+    fun describeNearby(
+        world: World,
+        tile: Tile,
+        radius: Int = 15,
+    ): List<String> {
+        val lines = ArrayList<String>()
+        world.npcs.forEach { npc ->
+            if (isGuard(npc) && npc.tile.height == tile.height && npc.tile.getDistance(tile) <= radius) {
+                lines +=
+                    "${npc.def.name}#${npc.id} @${npc.tile.x},${npc.tile.z} post ${npc.spawnTile.x},${npc.spawnTile.z}" +
+                        " target=${(npc.getCombatTarget() as? Player)?.username ?: "-"}" +
+                        " facing=${(npc.attr[FACING_PAWN_ATTR]?.get() as? Player)?.username ?: "-"}" +
+                        " hold=${npc.attr[HOLD_FACING_ATTR] == true} walking=${npc.movementQueue.hasDestination()}" +
+                        " reactive=${npc.attr[REACTIVE_GUARD_ATTR] == true} inZone=${isGuardedZone(npc.tile)}" +
+                        " leash=${npc.timers.has(GUARD_LEASH_TIMER)} lastPatrol=${npc.attr[LAST_PATROL_ATTR] ?: "-"}"
+            }
+        }
+        return lines
+    }
+
+    /** The nearest skulled intruder inside a guarded zone within [WATCH_RADIUS] of [guard], if any. */
+    fun nearestSkulledIntruder(guard: Npc): Player? {
+        var best: Player? = null
+        var bestDistance = Int.MAX_VALUE
+        guard.world.players.forEach { player ->
+            if (player.isOnline && !player.isDead() && player.tile.height == guard.tile.height && isSkulledIntruder(player)) {
+                val distance = guard.tile.getDistance(player.tile)
+                if (distance <= WATCH_RADIUS && distance < bestDistance) {
+                    best = player
+                    bestDistance = distance
+                }
+            }
+        }
+        return best
+    }
+
+    /** Chebyshev radius is the same tile radius used by NPC walk bounds and the owner request. */
+    fun isWithinPatrolRadius(base: Tile, candidate: Tile): Boolean =
+        base.height == candidate.height && base.getDistance(candidate) <= PATROL_RADIUS
+
+    /** A patrol candidate must be inside the exact zone and reachable around current collision. */
+    private fun patrolDestination(world: World, base: Tile, guard: Npc): Pair<Tile, java.util.Queue<Tile>>? {
+        repeat(PATROL_CANDIDATE_ATTEMPTS) {
+            val candidate = base.transform(world.random(-PATROL_RADIUS..PATROL_RADIUS), world.random(-PATROL_RADIUS..PATROL_RADIUS))
+            if (!isWithinPatrolRadius(base, candidate) || !isGuardedZone(candidate)) return@repeat
+            if (world.chunks.get(candidate, createIfNeeded = false) == null || world.collision.isClipped(candidate)) return@repeat
+            val route =
+                BFSPathFindingStrategy(world.collision).calculateRoute(
+                    PathRequest.createWalkRequest(guard, candidate.x, candidate.z, projectile = false, detectCollision = true),
+                )
+            if (route.success && route.path.isNotEmpty() && route.path.all(::isGuardedZone)) {
+                return candidate to route.path
+            }
+        }
+        return null
     }
 
     /** Ends whatever fight [guard] is in and leaves it idle where it stands. */
@@ -392,6 +512,8 @@ object CityGuards {
 
     private val WAS_IN_GUARDED_ZONE_ATTR = AttributeKey<Boolean>()
     private val WIZGUARD_NEXT_CYCLE_ATTR = AttributeKey<Int>()
+    /** The currently visible Wizguard, so every release route can remove it immediately. */
+    private val ACTIVE_WIZGUARD_ATTR = AttributeKey<WeakReference<Npc>>()
 
     /** Reactive guards per zone name (weak: a removed npc simply drops out). */
     private val pools = HashMap<String, MutableList<WeakReference<Npc>>>()
@@ -434,9 +556,13 @@ object CityGuards {
         player.attr[REACTIVE_GUARDS_ATTR]?.forEach { ref ->
             ref.get()?.let { guard -> if (guard.isActive()) standDown(guard) }
         }
+        player.attr[ACTIVE_WIZGUARD_ATTR]?.get()?.let { wizguard ->
+            if (wizguard.isActive()) player.world.remove(wizguard)
+        }
         player.attr.remove(REACTIVE_GUARDS_ATTR)
         player.attr.remove(REACTIVE_PLAN_ATTR)
         player.attr.remove(WIZGUARD_NEXT_CYCLE_ATTR)
+        player.attr.remove(ACTIVE_WIZGUARD_ATTR)
         player.attr.remove(ENGAGED_STATIONED_ATTR)
     }
 
@@ -538,6 +664,9 @@ object CityGuards {
         world: World,
         player: Player,
     ) {
+        player.attr[ACTIVE_WIZGUARD_ATTR]?.get()?.let { previous ->
+            if (previous.isActive()) world.remove(previous)
+        }
         val tile = meleeTile(world, player)
         val wizguard =
             Npc(WIZGUARD_ID, tile, world).also {
@@ -546,6 +675,7 @@ object CityGuards {
                 it.attr[REACTIVE_GUARD_ATTR] = true
             }
         world.spawn(wizguard)
+        player.attr[ACTIVE_WIZGUARD_ATTR] = WeakReference(wizguard)
         wizguard.setCombatLevel(DISPLAYED_COMBAT_LEVEL)
         wizguard.forceChat(WIZGUARD_SHOUT)
         wizguard.facePawn(player)
@@ -556,7 +686,10 @@ object CityGuards {
         }
         world.queue {
             wait(3)
-            if (wizguard.isActive()) world.remove(wizguard)
+            if (player.attr[ACTIVE_WIZGUARD_ATTR]?.get() === wizguard) {
+                player.attr.remove(ACTIVE_WIZGUARD_ATTR)
+                if (wizguard.isActive()) world.remove(wizguard)
+            }
         }
     }
 }

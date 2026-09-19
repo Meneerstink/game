@@ -27,37 +27,33 @@ class CityGuardsTests {
     private val grandExchange = Tile(3165, 3487, 0)
 
     @Test
-    fun `isGuard recognises the imported OSRS Deadman guards and the owner's three named posts, nothing else`() {
+    fun `isGuard recognises only the three imported OSRS Deadman guards, nothing else`() {
         assertTrue(CityGuards.isGuard(npc(CityGuards.MELEE_GUARD_ID)))
         assertTrue(CityGuards.isGuard(npc(CityGuards.RANGED_GUARD_ID)))
         assertTrue(CityGuards.isGuard(npc(CityGuards.WIZGUARD_ID)))
-        assertTrue(CityGuards.isGuard(npc(CityGuards.THIRD_AGE_RANGER_ID)), "owner pin list: npc 14404 third age ranger")
-        assertTrue(CityGuards.isGuard(npc(CityGuards.THIRD_AGE_MAGE_ID)), "owner pin list: npc 14405 third age mage")
-        assertTrue(CityGuards.isGuard(npc(CityGuards.LUCIEN_ID)), "owner pin list: 14256 Lucien")
+        assertFalse(CityGuards.isGuard(npc(14404)), "Third Age Ranger is not a Deadman guard")
+        assertFalse(CityGuards.isGuard(npc(14405)), "Third Age Mage is not a Deadman guard")
+        assertFalse(CityGuards.isGuard(npc(14256)), "Lucien is not a Deadman guard")
         assertFalse(CityGuards.isGuard(npc(1145)), "the ordinary 667 Ardougne guard is no longer a Deadman guard")
         assertFalse(CityGuards.isGuard(npc(3231)))
         assertFalse(CityGuards.isGuard(npc(9999)))
     }
 
     @Test
-    fun `every guard id has exactly one attack style and the owner's nine tiles are all posted`() {
+    fun `every guard id has exactly one attack style and owner tiles use ordinary guards`() {
         val styled = CityGuards.MELEE_GUARD_IDS + CityGuards.RANGED_GUARD_IDS + CityGuards.MAGE_GUARD_IDS
         assertEquals(styled.size, CityGuards.MELEE_GUARD_IDS.size + CityGuards.RANGED_GUARD_IDS.size + CityGuards.MAGE_GUARD_IDS.size, "an id must not sit in two style sets")
         assertEquals(CityGuards.GUARD_IDS, styled + CityGuards.WIZGUARD_ID)
         val owner =
             listOf(
-                Triple(2588, 3341, CityGuards.THIRD_AGE_RANGER_ID),
-                Triple(2612, 3341, CityGuards.THIRD_AGE_RANGER_ID),
-                Triple(2614, 3101, CityGuards.THIRD_AGE_RANGER_ID),
-                Triple(3187, 3446, null), Triple(3186, 3432, CityGuards.THIRD_AGE_MAGE_ID),
-                Triple(3164, 3469, null), Triple(2939, 3356, CityGuards.THIRD_AGE_MAGE_ID),
-                Triple(2966, 3399, null), Triple(3006, 3388, null), Triple(3006, 3326, null),
-                Triple(3237, 3225, CityGuards.LUCIEN_ID), Triple(3218, 3251, null),
+                3187 to 3446, 3186 to 3432, 3164 to 3469,
+                2939 to 3356, 3006 to 3388, 3006 to 3326,
+                3237 to 3225, 3218 to 3251,
+                2588 to 3341, 2612 to 3341, 2614 to 3101,
             )
-        owner.forEach { (x, z, id) ->
+        owner.forEach { (x, z) ->
             val post = GuardPosts.ALL.firstOrNull { it.tile.x == x && it.tile.z == z }
             assertTrue(post != null, "owner tile $x,$z must be a guard post")
-            assertEquals(id, post!!.npcId, "owner tile $x,$z npc")
         }
         assertEquals(8, CityGuards.PATROL_RADIUS, "owner: alle guards 8 tiles kunnen roamen")
     }
@@ -296,7 +292,8 @@ class CityGuardsTests {
     private fun newPlayer(
         tile: Tile,
         skulled: Boolean = false,
-        maxLifepoints: Int = 990,
+        // Player.getMaximumLifepoints() is the displayed 1:1 hitpoints level (99, not 990).
+        maxLifepoints: Int = 99,
     ): Player {
         val player = mockk<Player>(relaxed = true)
         val world = mockk<World>(relaxed = true)

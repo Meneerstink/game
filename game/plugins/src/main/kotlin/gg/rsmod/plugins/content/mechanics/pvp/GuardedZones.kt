@@ -15,8 +15,7 @@ import gg.rsmod.game.model.Tile
  * tiles were inside a rectangle but outside the real Deadman city.
  *
  * Wiki areas that do not exist in this revision-667 world (Kourend Castle, Prifddinas) are omitted.
- * The Warriors' Guild is an owner addition (2026-09-16, pinned guards on all floors) and keeps its
- * rectangle. Wiki: "No dungeons or Rooftop Agility Courses are considered safezones, even if
+ * Wiki: "No dungeons or Rooftop Agility Courses are considered safezones, even if
  * accessible from safe city limits" - dungeons live at z >= 6400 in this map data, outside every
  * polygon; upper floors (height 1-3) of buildings inside a city are treated as part of the city.
  */
@@ -84,9 +83,6 @@ object GuardedZones {
             return inside
         }
     }
-
-    private fun rect(name: String, minX: Int, maxX: Int, minZ: Int, maxZ: Int): Zone =
-        Zone(name, intArrayOf(minX, minZ, minX, maxZ + 1, maxX + 1, maxZ + 1, maxX + 1, minZ))
 
     val ZONES: List<Zone> =
         listOf(
@@ -228,8 +224,6 @@ object GuardedZones {
                 intArrayOf(3154, 3136, 3054, 3136, 3054, 3057, 3085, 3040, 3085, 3004, 3125, 3004, 3125, 3037, 3154, 3064),
             ),
             Zone("Void Knights' Outpost", intArrayOf(2624, 2560, 2624, 2681, 2688, 2681, 2688, 2560)),
-            // Owner addition 2026-09-16 (not on the wiki map): the Warriors' Guild, all floors.
-            rect("Warriors' Guild", minX = 2836, maxX = 2878, minZ = 3531, maxZ = 3560),
         )
 
     fun zoneAt(tile: Tile): Zone? = ZONES.firstOrNull { it.contains(tile) }
