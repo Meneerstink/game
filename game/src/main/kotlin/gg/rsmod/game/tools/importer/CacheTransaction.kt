@@ -56,6 +56,34 @@ class CacheTransaction(
     val journalDir: File = File(journalRoot, id)
 
     /**
+     * Owner report 2026-09-19 ("why every time my fileserver hangs"): both servers read their cache copy once at boot and
+     * then serve it, so writing a transaction into those files while they run makes the file-server hand the client a cache
+     * that no longer matches the index it loaded - the client hangs on "Loading...". A cache write is therefore refused
+     * while the game-server (50015) or file-server (50016) is listening; stop them first (command port 50017 "shutdown").
+     * [ALLOW_LIVE_ENV] exists for a deliberate override and for the tests, which run against temp caches, not the live ones.
+     */
+    private fun refuseWhileServersRun() {
+        if (System.getenv(ALLOW_LIVE_ENV) != null) return
+        if (targets.none { File(it).absolutePath.replace('\\', '/').let { p -> LIVE_CACHE_PATHS.any { live -> p.endsWith(live) } } }) return
+        val live = LIVE_PORTS.filter { port -> isListening(port) }
+        check(live.isEmpty()) {
+            "Refusing to apply transaction $id: the server is running (port ${live.joinToString(", ")}). Both caches are read " +
+                "at boot, so writing now makes the file-server serve a cache the client cannot load. Stop the servers first " +
+                "(command port 50017 \"shutdown\"), or set $ALLOW_LIVE_ENV=1 to override."
+        }
+    }
+
+    private fun isListening(port: Int): Boolean =
+        try {
+            java.net.Socket().use { socket ->
+                socket.connect(java.net.InetSocketAddress("127.0.0.1", port), 300)
+                true
+            }
+        } catch (_: Exception) {
+            false
+        }
+
+    /**
      * Reads the current state of every (target, mutation) pair and classifies what applying it
      * would do. Writes nothing.
      */
@@ -117,6 +145,7 @@ class CacheTransaction(
      * restore every target that was touched.
      */
     fun apply(plan: List<PreflightEntry> = preflight()): ApplyResult {
+        refuseWhileServersRun()
         val errors = blockingErrors(plan)
         check(errors.isEmpty()) {
             "Refusing to apply transaction $id - preflight has ${errors.size} blocking error(s):\n" +
@@ -362,6 +391,14 @@ class CacheTransaction(
 
     companion object {
         const val DEFAULT_JOURNAL_ROOT = "C:\\RSPS\\import-journal"
+
+        /** Game-server and file-server ports; either one listening means the live caches are in use. */
+        val LIVE_PORTS = listOf(50015, 50016)
+
+        /** Only the two live caches are guarded; tests and probes work on temp copies. */
+        val LIVE_CACHE_PATHS = listOf("RSPS/game/game/data/cache", "RSPS/file-server/cache")
+
+        const val ALLOW_LIVE_ENV = "RSPS_ALLOW_LIVE_CACHE_WRITE"
 
         private val ID_FORMAT = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss").withZone(ZoneOffset.UTC)
 
