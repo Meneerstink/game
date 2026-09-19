@@ -225,6 +225,24 @@ object PawnPathAction {
 
                 logInteraction(pawn, other, opt, if (handled) "handled" else "unhandled")
                 if (!handled) {
+                    if (opt != ITEM_USE_OPCODE) {
+                        UnhandledInteractions.recordInteraction(
+                            kind = if (other is Npc) "npc" else "player",
+                            id = if (other is Npc) other.getTransform(pawn as Player) else other.index,
+                            option = opt,
+                            name = if (other is Npc) other.name else "player",
+                            context = "tile=${other.tile}",
+                        )
+                    } else {
+                        val item = pawn.attr[INTERACTING_ITEM]?.get()
+                        UnhandledInteractions.recordInteraction(
+                            kind = if (other is Npc) "item-on-npc" else "item-on-player",
+                            id = item?.id ?: -1,
+                            option = ITEM_USE_OPCODE,
+                            name = "item",
+                            context = "target=${if (other is Npc) other.getTransform(pawn as Player) else other.index} tile=${other.tile}",
+                        )
+                    }
                     pawn.writeMessage(Entity.NOTHING_INTERESTING_HAPPENS)
                 }
             }
@@ -236,12 +254,35 @@ object PawnPathAction {
                         val handled = world.plugins.executePlayerOption(pawn, option)
                         logInteraction(pawn, other, opt, if (handled) "handled" else "unhandled")
                         if (!handled) {
+                            UnhandledInteractions.recordInteraction(
+                                kind = "player",
+                                id = other.index,
+                                option = opt,
+                                name = "player",
+                                context = "tile=${other.tile}",
+                            )
                             pawn.writeMessage(Entity.NOTHING_INTERESTING_HAPPENS)
                         }
+                    } else {
+                        UnhandledInteractions.recordInteraction(
+                            kind = "player",
+                            id = other.index,
+                            option = opt,
+                            name = "player",
+                            context = "tile=${other.tile} missing-option",
+                        )
                     }
                 } else {
                     val item = pawn.attr[INTERACTING_ITEM]?.get() ?: return
-                    world.plugins.executeItemOnPlayer(pawn, item.id)
+                    if (!world.plugins.executeItemOnPlayer(pawn, item.id)) {
+                        UnhandledInteractions.recordInteraction(
+                            kind = "item-on-player",
+                            id = item.id,
+                            option = ITEM_USE_OPCODE,
+                            name = "item",
+                            context = "target=${other.index} tile=${other.tile}",
+                        )
+                    }
                 }
             }
             pawn.resetFacePawn()
@@ -308,7 +349,13 @@ object PawnPathAction {
 
         val route = pawn.createPathFindingStrategy().calculateRoute(builder.build())
 
-        pawn.walkPath(route.path, MovementQueue.StepType.NORMAL, detectCollision = true)
+        val stepType =
+            if (pawn is gg.rsmod.game.model.entity.Npc && pawn.attr[gg.rsmod.game.model.attr.NPC_RUNS_ATTR] == true) {
+                MovementQueue.StepType.FORCED_RUN
+            } else {
+                MovementQueue.StepType.NORMAL
+            }
+        pawn.walkPath(route.path, stepType, detectCollision = true)
 
         if (pawn.hasLineOfSightTo(target, true, interactionRange) && projectile) {
             return route.success

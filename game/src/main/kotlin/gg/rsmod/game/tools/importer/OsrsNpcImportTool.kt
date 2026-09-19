@@ -35,6 +35,13 @@ object OsrsNpcImportTool {
     /** Sequence ids proven to mean the same movement role in both caches (667 BAS 4 vs OSRS Man 3106). */
     val SHARED_MOVEMENT_SEQS = setOf(808, 819, 820, 821, 822)
 
+    /**
+     * Npcs that must NOT reuse [SHARED_MOVEMENT_SEQS]: their combat sequences animate the imported OSRS human skeleton, so their
+     * stand/walk must be the OSRS sequences too (else the server's skeleton check swaps their attacks for rev-667 ones).
+     * 13660 Jaguar warrior (owner 2026-09-19 "fix everything"): NPC_JAGUAR_RANGER_CLAWS_ATTACK / HUMAN_UNARMED_DEF / HUMAN_DEATH.
+     */
+    val OWN_OSRS_MOVEMENT_NPCS = setOf(13660)
+
     val BATCHES: Map<String, List<Int>> =
         mapOf(
             // OSRS Wiki "Ferox Enclave" personalities, ids from each npc's infobox.
@@ -298,8 +305,11 @@ object OsrsNpcImportTool {
                 mutations += CacheMutation(index, group, file, bytes, label, expectedCurrentSha1 = current?.takeIf { it != CacheItemProbeTool.sha1(bytes) })
             }
 
-            fun importSeq(seqId: Int): Int {
-                if (seqId in SHARED_MOVEMENT_SEQS) return seqId
+            fun importSeq(
+                seqId: Int,
+                ownMovement: Boolean = false,
+            ): Int {
+                if (seqId in SHARED_MOVEMENT_SEQS && !ownMovement) return seqId
                 localIds["seq:$seqId"]?.let { return it }
                 val seqBytes = reader.file(ModernCacheReader.INDEX_CONFIG, ModernCacheReader.CONFIG_GROUP_SEQUENCE, seqId) ?: error("OSRS sequence $seqId missing")
                 val seq = OsrsFxImportTool.decodeOsrsSeq(seqBytes)
@@ -352,8 +362,9 @@ object OsrsNpcImportTool {
                 }
                 val localModels = n.models.map { m -> local("npc_model", m) { modelCandidates.removeAt(0) }.also { put(ModelConvertTool.MODEL_INDEX, it, 0, OsrsModelConversion.convert(reader, m, dropped), "osrs npc model $m") } }
                 val localHeads = n.chatheads.map { m -> local("npc_model", m) { modelCandidates.removeAt(0) }.also { put(ModelConvertTool.MODEL_INDEX, it, 0, OsrsModelConversion.convert(reader, m, dropped), "osrs npc model $m") } }
-                val seqMap = OsrsNpcProbeTool.movementSeqs(n).values.distinct().associateWith { importSeq(it) }
-                val movementKey = OsrsNpcProbeTool.movementSeqs(n).toString()
+                val ownMovement = npcId in OWN_OSRS_MOVEMENT_NPCS
+                val seqMap = OsrsNpcProbeTool.movementSeqs(n).values.distinct().associateWith { importSeq(it, ownMovement) }
+                val movementKey = OsrsNpcProbeTool.movementSeqs(n).toString() + if (ownMovement) "#own$npcId" else ""
                 val basBytes = encode667Bas(n) { seqMap.getValue(it) }
                 val basId =
                     basBySet.getOrPut(movementKey) {

@@ -96,7 +96,8 @@ object BreachMonsters {
         chance: Int = 1,
         hits: Int = 1,
         id: String = "melee",
-    ) = NpcAttacks.Attack(id = id, chance = chance, range = 1, anim = anim, hits = List(hits) { hit(style, max) })
+        condition: String = "",
+    ) = NpcAttacks.Attack(id = id, chance = chance, range = 1, condition = condition, anim = anim, hits = List(hits) { hit(style, max) })
 
     private fun proj(id: Int) = NpcAttacks.Proj(id = id, defHeight = 43, defEndHeight = 31, defDelay = 51, defCurve = 16, timeOffset = 5, multiplier = 5)
 
@@ -118,9 +119,62 @@ object BreachMonsters {
     const val GFX_ZEMOUREGAL_SUMMON = 3064
     private const val GFX_BLACK_CHINCHOMPA = 3065
 
+    /*
+     * OSRS sounds for the OSRS-only breach monsters (owner 2026-09-19: real OSRS sounds chosen by Jagex config name, OSRS Wiki
+     * "List of sound IDs"; ADAPTED where only a family fits). OsrsFxImportTool batch "breachsfx", tx-20260919-194353; human hit /
+     * death were already imported (10289 / 10290). Local id <- OSRS id and name:
+     */
+    const val SFX_HUMAN_ATTACK = 10295 // 2564 human_attack
+    const val SFX_HUMAN_HIT = 10289 // 513 human_hit
+    const val SFX_HUMAN_DEATH = 10290 // 512 human_death
+    private const val SFX_WHIP = 10316 // 2720 whip
+    private const val SFX_ICE_BARRAGE_IMPACT = 10317 // 168 ice_barrage_impact
+    private const val SFX_BLOOD_BARRAGE_IMPACT = 10318 // 102 blood_barrage_impact
+    private const val SFX_CHINCHOMPA_ATTACK = 10319 // 359 chinchompa_attack
+    private const val SFX_CHINCHOMPA_EXPLODE = 10320 // 360 chinchompa_explode
+    private const val SFX_ZEMO_LIGHTNING = 10321 // 7852 zemo_lightning (ADAPTED: Zemouregal's cast)
+    const val SFX_BLOAT_FLIES = 10325 // 3544 tob_bloat_flies_attack_1
+
+    /** rev-667 dragon scimitar attack sound (items.yml attack_audio of item 4587). */
+    private const val SFX_DRAGON_SCIMITAR = 2500
+
+    private fun snd(id: Int) = listOf(NpcAttacks.Sound(id = id))
+
+    /** Breach monster -> OSRS (attack, hit/defend, death) sound, local ids; -1 = none (e.g. the sound is on the death sequence). */
+    val SOUND_ROWS: Map<Int, Triple<Int, Int, Int>> =
+        mapOf(
+            14446 to Triple(10292, 10293, 10294), // Porazdir: demon_attack / demon_hit / demon_death (ADAPTED family)
+            14447 to Triple(SFX_HUMAN_ATTACK, SFX_HUMAN_HIT, SFX_HUMAN_DEATH), // Justiciar Zachariah
+            14448 to Triple(10296, 10297, 10298), // Derwen: lore_ent_attack / _defend / _death (ADAPTED family)
+            14453 to Triple(10299, 10300, 10301), // Jal-ImKot: lavabeast_* (ADAPTED family)
+            14456 to Triple(10302, 10303, 10304), // Sulphur Lizard: lizard_*
+            14458 to Triple(10305, 10306, 10307), // Cerberus: wbr_vention_hellhound_attack_bark / defend_snarl / death
+            14459 to Triple(10308, 10309, -1), // Bee Swarm: varl bee_swarm_attack01 / swarm_hit; death sound is on its death sequence
+            14460 to Triple(10310, 10311, 10312), // Thermonuclear smoke devil: dust_devil_* (ADAPTED family)
+            14461 to Triple(10313, 10314, 10315), // Jaguar warrior: jaguar_attack_01 / jaguar_defend_01 / jaguar_death_01
+            14463 to Triple(-1, SFX_HUMAN_HIT, SFX_HUMAN_DEATH), // Durial321 (whip / ice barrage sounds on its sections)
+            14464 to Triple(-1, SFX_HUMAN_HIT, SFX_HUMAN_DEATH), // Magic Mark (blood barrage impact on its section)
+            14465 to Triple(-1, SFX_HUMAN_HIT, SFX_HUMAN_DEATH), // Ranging Ro (chinchompa sounds on its section)
+            14466 to Triple(-1, SFX_HUMAN_HIT, SFX_HUMAN_DEATH), // Zemouregal (zemo_lightning on its section)
+            14468 to Triple(10322, 10323, 10324), // Splatter: splatter_attack / _hit / _death
+            14469 to Triple(-1, SFX_HUMAN_HIT, SFX_HUMAN_DEATH), // I DSCIM YOU (dragon scimitar sound on its sections)
+            14470 to Triple(-1, 10326, 10327), // Pestilent Bloat: tob_bloat_hit / tob_bloat_death (flies: SFX_BLOAT_FLIES)
+            14473 to Triple(10328, 10329, 10330), // Undead One summon: zombie_*
+            14475 to Triple(SFX_HUMAN_ATTACK, SFX_HUMAN_HIT, SFX_HUMAN_DEATH), // Fremennik summon
+            14476 to Triple(SFX_HUMAN_ATTACK, SFX_HUMAN_HIT, SFX_HUMAN_DEATH), // Khazard summon
+        )
+
+    // Jaguar warrior's OSRS sequences (asset map seq:10847/10848/10849, tx-20260919-162121).
+    private const val JAGUAR_ATTACK = 15669
+    private const val JAGUAR_DEFEND = 15670
+    private const val JAGUAR_DEATH = 15671
+
+    // rev-667 Fire Blast (CombatSpell.FIRE_BLAST: Gfx.FIRE_BLAST_PROJ / FIRE_BLAST_IMPACT) for the Night beast's casts.
+    private const val GFX_FIRE_BLAST_PROJ = 2731
+    private const val GFX_FIRE_BLAST_IMPACT = 2739
+
     // rev-667 cache ids shared with the player combat code (Anims/Gfx), used by the humanoid monsters.
     private const val HUMAN_DEATH = 836
-    private const val HUMAN_PUNCH = 422
 
     // OSRS HUMAN_UNARMEDBLOCK 424 / HUMAN_DEATH 836 imported for the humanoids that stand on an imported OSRS human sequence.
     private const val OSRS_HUMAN_BLOCK = 15706
@@ -285,9 +339,28 @@ object BreachMonsters {
             Monster(
                 14457, 12459, "Night beast",
                 Stats(500, 270, 290, 100, 300, 1, dstab = 75, dslash = 80, dcrush = 120, dmagic = 100, dranged = 100),
-                // Magic max is "?" on the Deadman infobox; the melee max (30) is used for it too (regular Night beast: 31).
+                // OSRS Wiki "Night beast (Deadman)": "attacks similar to its regular variant, and is capable of using its special 3x3
+                // fireball attack". Regular "Night beast": first attack always magic, melee whenever it can reach, magic otherwise;
+                // the standard magic hits up to 8 (Mod Ash, cited there - the Deadman infobox magic max is "?"). Special: it stops
+                // attacking briefly, then three Fire Blast-like casts on the 3x3 around the target, each floor(current HP / 3) with
+                // no accuracy roll (deadman_breach.plugin.kts, NightBeast*). Visuals: Fire Blast projectile/impact (rev-667 ids).
                 4, StyleType.CRUSH, 15658, 15659, 15660,
-                Template(2783, anims = mapOf("melee" to 15658, "magic" to 15658), maxHits = mapOf("melee" to 30, "magic" to 30)),
+                Custom(
+                    "breach_night_beast", 8,
+                    listOf(
+                        melee("crush", 15658, 30, condition = "breach_nb_melee"),
+                        NpcAttacks.Attack(
+                            id = "magic", range = 8, condition = "breach_nb_magic", anim = 15658,
+                            projectiles = listOf(proj(GFX_FIRE_BLAST_PROJ)), impactGfx = listOf(NpcAttacks.Gfx(id = GFX_FIRE_BLAST_IMPACT, defHeight = 32)),
+                            hits = listOf(hit("magic", 8)),
+                        ),
+                        NpcAttacks.Attack(
+                            id = "fireball", range = 8, condition = "breach_nb_fireball", anim = 15658, multiTargetRadius = 1, multiRadius = 1,
+                            impactRegardless = true, projectiles = listOf(proj(GFX_FIRE_BLAST_PROJ)),
+                            impactGfx = listOf(NpcAttacks.Gfx(id = GFX_FIRE_BLAST_IMPACT, defHeight = 32)),
+                        ),
+                    ),
+                ),
             ),
             Monster(
                 14458, 13657, "Cerberus",
@@ -319,10 +392,11 @@ object BreachMonsters {
             Monster(
                 14461, 13660, "Jaguar warrior",
                 Stats(1000, 200, 165, 100, 100, 160, strbns = 15, dstab = 50, dslash = 50, dcrush = 50, dmagic = 100, dranged = 50),
-                // Max hit "21 (x4)": four slash hitsplats per attack. It stands on the shared rev-667 human skeleton (808), which the
-                // OSRS NPC_JAGUAR_* sequences do not animate, so the rev-667 unarmed punch/block/death are used (ADAPTED).
-                6, StyleType.SLASH, HUMAN_PUNCH, HUMAN_BLOCK, HUMAN_DEATH,
-                Custom("breach_jaguar_warrior", 1, listOf(melee("slash", HUMAN_PUNCH, 21, hits = 4))),
+                // Max hit "21 (x4)": four slash hitsplats per attack. Owner 2026-09-19 "fix everything": it now stands on its own imported
+                // OSRS human stand/walk (OsrsNpcImportTool.OWN_OSRS_MOVEMENT_NPCS), so the exact OSRS NPC_JAGUAR_RANGER_CLAWS_ATTACK /
+                // NPC_JAGUAR_HUMAN_UNARMED_DEF / NPC_JAGUAR_HUMAN_DEATH (upstream 10847-10849 -> local 15669-15671) animate it.
+                6, StyleType.SLASH, JAGUAR_ATTACK, JAGUAR_DEFEND, JAGUAR_DEATH,
+                Custom("breach_jaguar_warrior", 1, listOf(melee("slash", JAGUAR_ATTACK, 21, hits = 4))),
             ),
             Monster(
                 14462, 13661, "TzTok-Jad",
@@ -344,8 +418,11 @@ object BreachMonsters {
                 Custom(
                     "breach_durial321", 8,
                     listOf(
-                        melee("slash", WHIP_ATTACK, 28),
-                        NpcAttacks.Attack(id = "ice_barrage", range = 8, anim = ANCIENT_CAST, impactGfx = listOf(NpcAttacks.Gfx(id = 369)), hits = listOf(hit("magic", 30))),
+                        NpcAttacks.Attack(id = "melee", range = 1, anim = WHIP_ATTACK, targetSounds = snd(SFX_WHIP), hits = listOf(hit("slash", 28))),
+                        NpcAttacks.Attack(
+                            id = "ice_barrage", range = 8, anim = ANCIENT_CAST, impactGfx = listOf(NpcAttacks.Gfx(id = 369)),
+                            impactSounds = snd(SFX_ICE_BARRAGE_IMPACT), hits = listOf(hit("magic", 30)),
+                        ),
                     ),
                 ),
             ),
@@ -359,7 +436,7 @@ object BreachMonsters {
                     listOf(
                         NpcAttacks.Attack(
                             id = "blood_barrage", range = 8, anim = ANCIENT_CAST, multiTargetRadius = 1, multiRadius = 1,
-                            impactGfx = listOf(NpcAttacks.Gfx(id = 377)), hits = listOf(hit("magic", 18)),
+                            impactGfx = listOf(NpcAttacks.Gfx(id = 377)), impactSounds = snd(SFX_BLOOD_BARRAGE_IMPACT), hits = listOf(hit("magic", 18)),
                         ),
                     ),
                 ),
@@ -374,7 +451,8 @@ object BreachMonsters {
                     listOf(
                         NpcAttacks.Attack(
                             id = "chinchompa", range = 8, anim = CHINCHOMPA_THROW, multiTargetRadius = 1, multiRadius = 1,
-                            projectiles = listOf(proj(GFX_BLACK_CHINCHOMPA)), impactGfx = listOf(NpcAttacks.Gfx(id = 157)), hits = listOf(hit("range", 16)),
+                            projectiles = listOf(proj(GFX_BLACK_CHINCHOMPA)), impactGfx = listOf(NpcAttacks.Gfx(id = 157)),
+                            targetSounds = snd(SFX_CHINCHOMPA_ATTACK), impactSounds = snd(SFX_CHINCHOMPA_EXPLODE), hits = listOf(hit("range", 16)),
                         ),
                     ),
                 ),
@@ -383,7 +461,7 @@ object BreachMonsters {
                 14466, 15237, "Zemouregal",
                 Stats(750, 1, 1, 125, 255, 1, dstab = 30, dslash = 30, dcrush = 30, dmagic = 255, dranged = 15),
                 7, StyleType.MAGIC, 15677, 15680, 15679,
-                Custom("breach_zemouregal", 8, listOf(NpcAttacks.Attack(id = "magic", range = 8, anim = 15677, hits = listOf(hit("magic", 23))))),
+                Custom("breach_zemouregal", 8, listOf(NpcAttacks.Attack(id = "magic", range = 8, anim = 15677, targetSounds = snd(SFX_ZEMO_LIGHTNING), hits = listOf(hit("magic", 23))))),
             ),
             Monster(
                 14467, 15547, "Big Evil Chicken",
@@ -409,7 +487,7 @@ object BreachMonsters {
                     // the two sections are gated by the conditions registered in deadman_breach.plugin.kts. Rev-667 Sever look
                     // (12031 / 2118) as the players' dragon scimitar special (melee_specials.plugin.kts).
                     listOf(
-                        NpcAttacks.Attack(id = "melee", range = 1, condition = "breach_target_severed", anim = DSCIM_ATTACK, hits = listOf(hit("slash", 21))),
+                        NpcAttacks.Attack(id = "melee", range = 1, condition = "breach_target_severed", anim = DSCIM_ATTACK, targetSounds = snd(SFX_DRAGON_SCIMITAR), hits = listOf(hit("slash", 21))),
                         NpcAttacks.Attack(
                             id = "sever", range = 1, condition = "breach_sever_ready", anim = 12031, gfx = listOf(NpcAttacks.Gfx(id = 2118)),
                             hits = listOf(hit("slash", 21)),
@@ -446,6 +524,15 @@ object BreachMonsters {
             14449 to 1615, 14450 to 745, 14451 to 1633, 14452 to 4355, 14454 to 1643, 14455 to 1637, 14457 to 2783, 14462 to 2745,
             14467 to 3375, 14471 to 1961, 14472 to 1241, 14474 to 2837,
         )
+
+    /**
+     * Demons and their demonbane vulnerability in percent (OSRS Wiki Deadman pages: "Porazdir ... only 1% vulnerable to demonbane
+     * weapons", "Greater abyssal demon ... only 1%", "Flaming pyrelord ... 1%", "Cerberus ... 100%").
+     */
+    val DEMONBANE_VULNERABILITY: Map<Int, Int> = mapOf(14446 to 1, 14449 to 1, 14451 to 1, 14458 to 100)
+
+    /** Monsters that run after their target (OSRS Wiki: Durial321 14463, I DSCIM YOU 14469). */
+    val RUNNERS: Set<Int> = setOf(14463, 14469)
 
     /** The monsters a breach spawns (everything but Zemouregal's summons). */
     val SPAWNABLE: List<Monster> = ROSTER.filter { !it.summon }

@@ -10,9 +10,8 @@ import java.util.Random
  * The permanent world matches ("Each breach monster now drops 1 Chitin per kill. There's a 50% chance to receive a second regular
  * supply drop instead of a Chitin.", runescapeguides.com World 345 breaches).
  *
- * Owner exclusions (Deadman product decision): the Trinket of advanced weaponry only turns into a corrupted weapon, which this server
- * does not have - its slot in the rare table gives nothing. Archaic emblems are Deadman: Annihilation skull-shop points, which the
- * permanent world (and this server) does not have. [ItemIds] holds the ids of the items imported for this table.
+ * Owner exclusions (Deadman product decision): no trinkets at all (see [RARE]). Archaic emblems are Deadman: Annihilation skull-shop
+ * points, which the permanent world (and this server) does not have. [ItemIds] holds the ids of the items imported for this table.
  */
 object BreachLoot {
     const val ELIGIBLE = 16
@@ -43,21 +42,30 @@ object BreachLoot {
         val noted: Boolean = false,
     )
 
-    /** -1 = the Trinket of advanced weaponry slot (nothing, see the class comment). */
+    /**
+     * OSRS rare roll: "the listed x/9576 weights sum to 133" (trinkets 60/20/10/10/1 + weapons 32). The roll keeps its OSRS
+     * trigger chance of 133/9576 even though the trinkets are gone (below).
+     */
+    const val RARE_TRIGGER = 133
+
+    /**
+     * Owner 2026-09-19: "we dont want trinkets in our rsps please" - asked how, the owner chose to drop the trinket slots
+     * (advanced weaponry, fairies, avarice, undead, fortuity) from the table entirely. The rare roll still triggers at
+     * [RARE_TRIGGER]/9576, so these weapons fill the whole table: each drops 133/32 (~4.2x) as often as in OSRS.
+     */
     val RARE: List<Line> =
         listOf(
-            Line(-1, 1, 1, 60),
-            Line(ItemIds.TRINKET_OF_FAIRIES, 1, 1, 20),
-            Line(ItemIds.TRINKET_OF_AVARICE, 1, 1, 10),
-            Line(ItemIds.TRINKET_OF_UNDEAD, 1, 1, 10),
             Line(Items.MORRIGANS_THROWING_AXE, 100, 100, 10),
             Line(Items.MORRIGANS_JAVELIN, 100, 100, 10),
             Line(Items.STATIUSS_WARHAMMER, 1, 1, 3),
             Line(Items.ZURIELS_STAFF, 1, 1, 3),
             Line(Items.VESTAS_SPEAR, 1, 1, 3),
             Line(Items.VESTAS_LONGSWORD, 1, 1, 3),
-            Line(ItemIds.TRINKET_OF_FORTUITY_INACTIVE, 1, 1, 1),
         )
+
+    /** The trinket items imported earlier; they must never drop (owner exclusion). */
+    val EXCLUDED_TRINKETS =
+        setOf(ItemIds.TRINKET_OF_FAIRIES, ItemIds.TRINKET_OF_AVARICE, ItemIds.TRINKET_OF_UNDEAD, ItemIds.TRINKET_OF_FORTUITY_INACTIVE)
 
     /** Equal 1/145728 each. OSRS d'hide bodies are the rev-667 "Armadyl body" / "Saradomin body" / "Zamorak body". */
     val MEGA_RARE: List<Int> =
@@ -156,12 +164,11 @@ object BreachLoot {
     /** One eligible player's loot for one kill. */
     fun roll(random: Random): List<Drop> {
         val out = ArrayList<Drop>()
-        if (random.nextInt(RARE_DENOMINATOR) < RARE_TOTAL) {
+        if (random.nextInt(RARE_DENOMINATOR) < RARE_TRIGGER) {
             if (random.nextInt(MEGA_RARE_CHANCE) == 0) {
                 out += Drop(MEGA_RARE[random.nextInt(MEGA_RARE.size)], 1)
             } else {
-                val line = pick(RARE, random)
-                if (line.item != -1) out += line.drop(random)
+                out += pick(RARE, random).drop(random)
             }
         }
         val regular = MutableList(REGULAR_ROLLS) { pick(REGULAR, random).drop(random) }

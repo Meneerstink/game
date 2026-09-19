@@ -12,6 +12,7 @@ import gg.rsmod.plugins.api.HitType
 import gg.rsmod.plugins.api.cfg.Gfx
 import gg.rsmod.plugins.api.ext.*
 import gg.rsmod.plugins.content.combat.attack.NpcAttacks
+import gg.rsmod.plugins.content.combat.audio.NpcCombatAudio
 import gg.rsmod.plugins.content.combat.getCombatTarget
 import gg.rsmod.plugins.content.mechanics.prayer.AncientCurse
 import gg.rsmod.plugins.content.mechanics.prayer.Prayer
@@ -67,11 +68,27 @@ BreachMonsters.ROSTER.forEach { m ->
             block = m.blockAnim
             death = m.deathAnim
         }
+        if (m.id in BreachMonsters.DEMONBANE_VULNERABILITY) {
+            species { +gg.rsmod.plugins.api.NpcSpecies.DEMON }
+        }
     }
 }
 
+BreachMonsters.DEMONBANE_VULNERABILITY.forEach { (id, percent) -> gg.rsmod.plugins.content.items.osrs.Demonbane.vulnerability[id] = percent }
+
 BreachMonsters.attackRows().forEach { NpcAttacks.register(it) }
 BreachMonsters.SOUND_ALIASES.forEach { (id, source) -> gg.rsmod.plugins.content.combat.audio.NpcCombatAudio.alias(id, source) }
+BreachMonsters.SOUND_ROWS.forEach { (id, s) ->
+    NpcCombatAudio.register(
+        NpcCombatAudio.Row(
+            id = id,
+            name = BreachMonsters.BY_ID.getValue(id).name,
+            attack = if (s.first >= 0) listOf(NpcCombatAudio.Sound(id = s.first)) else emptyList(),
+            defend = s.second,
+            death = s.third,
+        ),
+    )
+}
 
 on_world_init {
     DeadmanBreach.start(world)
@@ -184,7 +201,36 @@ val ZEMOUREGAL_MAX_SUMMONS = 3
 val summonCount = gg.rsmod.game.model.attr.AttributeKey<Int>()
 val summonsOf = gg.rsmod.game.model.attr.AttributeKey<MutableList<Npc>>()
 
+/*
+ * OSRS Wiki "Zemouregal (Deadman)": "He will also not stay focused on a single target, instead occasionally switching targets if other
+ * players are nearby"; "Zemouregal Summon": "They will also frequently switch targets if there are multiple players to target".
+ * ADAPTED (no rate given): Zemouregal 1 in ZEMOUREGAL_SWITCH_CHANCE swings, summons 1 in SUMMON_SWITCH_CHANCE, to another fightable
+ * player within SWITCH_RADIUS tiles.
+ */
+val ZEMOUREGAL_SWITCH_CHANCE = 5
+val SUMMON_SWITCH_CHANCE = 2
+val SWITCH_RADIUS = 8
+
+fun maybeSwitchTarget(npc: Npc, current: gg.rsmod.game.model.entity.Pawn, chance: Int) {
+    if (world.random(chance - 1) != 0) return
+    val others = ArrayList<Player>()
+    world.players.forEach { p ->
+        if (p !== current && !p.isDead() && p.tile.height == npc.tile.height && p.tile.isWithinRadius(npc.tile, SWITCH_RADIUS) && DeadmanBreach.canFight(p)) others += p
+    }
+    val next = others.randomOrNull() ?: return
+    world.queue {
+        wait(1)
+        if (world.npcs.contains(npc) && !npc.isDead() && world.players.contains(next)) npc.attack(next)
+    }
+}
+
+BreachMonsters.SUMMONS.forEach { s ->
+    val def = (s.attacks as BreachMonsters.Custom).combatDef
+    NpcAttacks.onSwing(def) { npc, target, _ -> maybeSwitchTarget(npc, target, SUMMON_SWITCH_CHANCE) }
+}
+
 NpcAttacks.onSwing("breach_zemouregal") { npc, target, _ ->
+    maybeSwitchTarget(npc, target, ZEMOUREGAL_SWITCH_CHANCE)
     val swings = (npc.attr[summonCount] ?: 0) + 1
     npc.attr[summonCount] = swings
     if (swings % ZEMOUREGAL_SUMMON_EVERY != 0) return@onSwing
@@ -197,6 +243,56 @@ NpcAttacks.onSwing("breach_zemouregal") { npc, target, _ ->
     val tile = Tile(target.tile.x + world.random(-1..1), target.tile.z + world.random(-1..1), target.tile.height)
     val spawned = DeadmanBreach.spawnMonster(world, summon.id, if (world.collision.isClipped(tile)) target.tile else tile, 8, DeadmanBreach.LINGER_TICKS)
     alive += spawned
+}
+
+/*
+ * Night beast (OSRS Wiki "Night beast", which "Night beast (Deadman)" says it attacks like): "a night beast's initial attack is
+ * always magic ... It will always attempt to melee the player unless they cannot reach them, in which they will begin using magic";
+ * special: "it will briefly stop attacking then it uses Magic for three attacks which resemble Fire Blast, covering a 3x3 area
+ * dealing damage equal to 1/3 of the player's current Hitpoints (rounded down)" (so it cannot kill below 3 HP).
+ * ADAPTED (the wiki gives no rate or pause length): the special starts on 1 in NIGHT_BEAST_SPECIAL_CHANCE normal swings and the
+ * pause is one attack cycle (4 ticks) before the first fireball.
+ */
+val NIGHT_BEAST_SPECIAL_CHANCE = 5
+val NIGHT_BEAST_FIREBALLS = 3
+val NIGHT_BEAST_PAUSE_TICKS = 8
+val nbAttacked = gg.rsmod.game.model.attr.AttributeKey<Boolean>()
+val nbFireballsLeft = gg.rsmod.game.model.attr.AttributeKey<Int>()
+val nbResumeCycle = gg.rsmod.game.model.attr.AttributeKey<Int>()
+
+fun nbSpecialActive(npc: Npc) = (npc.attr[nbFireballsLeft] ?: 0) > 0
+
+fun nbBordering(npc: Npc, target: gg.rsmod.game.model.entity.Pawn) =
+    gg.rsmod.plugins.content.combat.Combat.areBordering(npc.tile.x, npc.tile.z, npc.getSize(), npc.getSize(), target.tile.x, target.tile.z, target.getSize(), target.getSize())
+
+NpcAttacks.condition("breach_nb_magic") { npc, target -> !nbSpecialActive(npc) && (npc.attr[nbAttacked] != true || !nbBordering(npc, target)) }
+NpcAttacks.condition("breach_nb_melee") { npc, _ -> !nbSpecialActive(npc) && npc.attr[nbAttacked] == true }
+NpcAttacks.condition("breach_nb_fireball") { npc, _ -> nbSpecialActive(npc) && world.currentCycle >= (npc.attr[nbResumeCycle] ?: 0) }
+
+NpcAttacks.onSwing("breach_night_beast") { npc, _, attack ->
+    npc.attr[nbAttacked] = true
+    if (attack.id == "fireball") {
+        npc.attr[nbFireballsLeft] = (npc.attr[nbFireballsLeft] ?: 1) - 1
+    } else if (world.random(NIGHT_BEAST_SPECIAL_CHANCE - 1) == 0) {
+        npc.attr[nbFireballsLeft] = NIGHT_BEAST_FIREBALLS
+        npc.attr[nbResumeCycle] = world.currentCycle + NIGHT_BEAST_PAUSE_TICKS
+    }
+}
+
+NpcAttacks.onAttack("breach_night_beast", "fireball") { _, target ->
+    if (target is Player && DeadmanBreach.canFight(target)) target.hit(target.getCurrentLifepoints() / 3, delay = 2)
+}
+
+/*
+ * Big Evil Chicken (OSRS Wiki): "Like the regular Evil Chicken, it attacks with magic, and will say one of various lines of
+ * dialogue when attacking players." Lines: OSRS Wiki "Transcript:Evil Chicken", overhead dialogue "When under attack" (random).
+ * Keyed on the shared combat definition, so the regular Evil Chicken says them too, as in OSRS.
+ */
+val EVIL_CHICKEN_LINES = listOf("Bwaaaaaauk bwuk bwuk", "Bwuk", "Bwuk bwuk bwuk", "Flee from me, %s!", "Begone, %s!", "MUAHAHAHAHAAA!")
+
+NpcAttacks.onSwing("evil_chicken") { npc, target, _ ->
+    val name = (target as? Player)?.username ?: "human"
+    npc.forceChat(EVIL_CHICKEN_LINES.random().replace("%s", name))
 }
 
 /** Splatter: "Upon death, it explodes": its target in single-way combat, every adjacent player in multi (ADAPTED: 0-100, the "100+"). */
@@ -247,6 +343,7 @@ on_world_init {
                                     npc.hasLineOfSightTo(p, projectile = true, maximumDistance = BLOAT_RANGE)
                                 ) {
                                     p.graphic(BreachMonsters.GFX_BLOAT_FLIES)
+                                    p.playSound(BreachMonsters.SFX_BLOAT_FLIES)
                                     val protected = Prayers.isActive(p, Prayer.PROTECT_FROM_MISSILES)
                                     p.hit(if (protected) 0 else world.random(20), delay = 1)
                                     p.filterableMessage("Flies leave the body of the bloat and swarm you.")

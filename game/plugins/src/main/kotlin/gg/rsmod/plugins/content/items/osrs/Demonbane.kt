@@ -59,18 +59,32 @@ object Demonbane {
 
     fun isDemon(target: Pawn): Boolean = target is Npc && target.isSpecies(NpcSpecies.DEMON)
 
+    /**
+     * Demons whose demonbane vulnerability is not 100 %, by npc id (OSRS Wiki monster pages, e.g. "Porazdir (Deadman)": "It is
+     * only 1% vulnerable to demonbane weapons"). Registered by the content that owns the npc (deadman_breach.plugin.kts).
+     */
+    val vulnerability = java.util.concurrent.ConcurrentHashMap<Int, Int>()
+
+    /** [percent] demonbane scaled by [target]'s vulnerability (100 % unless registered in [vulnerability]). */
+    fun scaled(
+        target: Pawn,
+        percent: Int,
+    ): Int = if (target is Npc) percent * (vulnerability[target.id] ?: 100) / 100 else percent
+
     /** Melee demonbane percentage of [player]'s weapon against [target], 0 when none applies. */
     fun meleePercent(
         player: Player,
         target: Pawn,
     ): Int {
         if (!isDemon(target)) return 0
-        return when {
-            player.hasEquipped(EquipmentType.WEAPON, *ARCLIGHT_CLASS) -> ARCLIGHT_PERCENT
-            player.hasEquipped(EquipmentType.WEAPON, *DARKLIGHT_CLASS) -> DARKLIGHT_PERCENT
-            player.hasEquipped(EquipmentType.WEAPON, Items.BURNING_CLAWS) -> BURNING_CLAWS_PERCENT
-            else -> 0
-        }
+        val percent =
+            when {
+                player.hasEquipped(EquipmentType.WEAPON, *ARCLIGHT_CLASS) -> ARCLIGHT_PERCENT
+                player.hasEquipped(EquipmentType.WEAPON, *DARKLIGHT_CLASS) -> DARKLIGHT_PERCENT
+                player.hasEquipped(EquipmentType.WEAPON, Items.BURNING_CLAWS) -> BURNING_CLAWS_PERCENT
+                else -> 0
+            }
+        return scaled(target, percent)
     }
 
     fun charges(item: Item): Int = if (item.id == Items.ARCLIGHT) item.attr[ItemAttribute.CHARGES] ?: 0 else 0

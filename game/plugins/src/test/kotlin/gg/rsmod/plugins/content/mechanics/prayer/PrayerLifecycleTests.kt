@@ -34,6 +34,8 @@ class PrayerLifecycleTests {
     @Test
     fun `login init rebuilds ancient curse runtime set and Turmoil from persisted varbits`() {
         val fixture = Fixture()
+        // Switching to the Ancient book now needs the performed ritual (Azzanadra / Ancient Hymnal unlock flow).
+        fixture.attributes[AncientCurses.UNLOCKED_ATTR] = true
         AncientCurses.switchBook(fixture.player, AncientCurses.PrayerBook.ANCIENT)
         fixture.player.setVarbit(AncientCurse.DEFLECT_MELEE.varbit, 1)
         fixture.player.setVarbit(AncientCurse.TURMOIL_VARBIT, 1)

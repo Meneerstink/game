@@ -54,6 +54,15 @@ val LAST_ACTIVE_CYCLE_ATTR = AttributeKey<Int>()
 val NO_CLIP_ATTR = AttributeKey<Boolean>()
 
 /**
+ * An npc that runs (two tiles a tick) when it paths to its target instead of walking, e.g. the Deadman breach monsters Durial321
+ * and I DSCIM YOU (OSRS Wiki: "capable of running after his target, unlike most NPCs").
+ */
+val NPC_RUNS_ATTR = AttributeKey<Boolean>()
+
+/** Session-local admin ID inspector switch used by the Crown of Helios diagnostics. */
+val ID_INSPECTOR_ATTR = AttributeKey<Boolean>()
+
+/**
  * A flag that indicates whether or not this player has protect-item
  * prayer active.
  */
@@ -139,7 +148,10 @@ val AGGRESSOR = AttributeKey<WeakReference<Pawn>>()
  * skull: attacking back the player recorded here is retaliation, attacking
  * anyone else (or attacking after this has expired/cleared) is not.
  */
-val PVP_AGGRESSOR_ATTR = AttributeKey<WeakReference<Player>>()
+// The aggressor window is a per-life combat relationship. PlayerDeathAction removes the
+// matching timer on death; reset the remembered player at the same boundary so a post-death
+// attack cannot be mistaken for retaliation against a stale opponent.
+val PVP_AGGRESSOR_ATTR = AttributeKey<WeakReference<Player>>(resetOnDeath = true)
 
 /**
  * The [Pawn] that killed another pawn.
@@ -174,12 +186,6 @@ val POISON_TICKS_LEFT_ATTR = AttributeKey<Int>(persistenceKey = "poison_ticks_le
  * Checked by [gg.rsmod.game.model.entity.Pawn.walkPath]/[gg.rsmod.game.model.entity.Pawn.walkTo]; teleports are unaffected.
  */
 val MOVEMENT_RESTRICTION_ATTR = AttributeKey<String>()
-
-/** RCV-010 A3: Overload boost refreshes still to come (20 per dose, one per 25 ticks). */
-val OVERLOAD_REFRESHES_ATTR = AttributeKey<Int>(persistenceKey = "overload_refreshes_remaining")
-
-/** RCV-010 A3: Prayer renewal ticks left (Novite 667 `prayerRenewalDelay`, 501 per dose). */
-val PRAYER_RENEWAL_TICKS_ATTR = AttributeKey<Int>(persistenceKey = "prayer_renewal_ticks")
 
 /**
  * The number of venom ticks that have already elapsed since a pawn was envenomed. Counts

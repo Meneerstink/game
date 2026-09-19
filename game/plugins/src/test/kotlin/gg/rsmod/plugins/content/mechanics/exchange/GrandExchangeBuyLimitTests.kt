@@ -191,8 +191,11 @@ class GrandExchangeBuyLimitTests {
     }
 
     companion object {
-        /** SOURCE_CONFLICT: Void `pollnivneach_teleport` is "Nardah teleport" in the 667 cache. */
-        val EXCLUDED = setOf(19475)
+        /**
+         * SOURCE_CONFLICT: Void `pollnivneach_teleport` is "Nardah teleport" in the 667 cache.
+         * REMOVED: Raw rocktail 15270 / Rocktail 15272 - the rocktail removal took them out of items.yml and buy-limits.json.
+         */
+        val EXCLUDED = setOf(19475, 15270, 15272)
 
         /**
          * Rows whose 667 name is not a letter-subsequence of the Void key, each reviewed by hand on 2026-09-13 as the same

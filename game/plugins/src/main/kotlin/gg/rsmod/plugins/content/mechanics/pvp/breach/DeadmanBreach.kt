@@ -313,6 +313,8 @@ object DeadmanBreach {
         npc.respawnOverride = false
         npc.walkRadius = walkRadius
         npc.attr[BREACH_NPC_ATTR] = true
+        // OSRS Wiki: Durial321 "is also capable of running after his target, unlike most NPCs"; I DSCIM YOU "runs at its targets".
+        if (id in BreachMonsters.RUNNERS) npc.attr[gg.rsmod.game.model.attr.NPC_RUNS_ATTR] = true
         world.spawn(npc)
         live += npc
         if (lifetimeTicks > 0) {

@@ -160,7 +160,7 @@ object RangedCombatFormula : CombatFormula {
         // Tonalztics of Ralos x3/4.
         if (gg.rsmod.plugins.content.items.osrs.RevenantBows.wildernessBuff(player, target)) hit = floor(hit * 3 / 2)
         if (gg.rsmod.plugins.content.items.osrs.ScorchingBow.demonbane(player, target)) {
-            hit = TargetModifiers.addPercent(hit, gg.rsmod.plugins.content.items.osrs.ScorchingBow.DEMONBANE_PERCENT)
+            hit = TargetModifiers.addPercent(hit, gg.rsmod.plugins.content.items.osrs.Demonbane.scaled(target, gg.rsmod.plugins.content.items.osrs.ScorchingBow.DEMONBANE_PERCENT))
         }
         if (gg.rsmod.plugins.content.items.osrs.Tonalztics.isTonalztics(player.getEquipment(EquipmentType.WEAPON)?.id)) {
             hit = gg.rsmod.plugins.content.items.osrs.Tonalztics.maxHit(hit)
@@ -208,7 +208,7 @@ object RangedCombatFormula : CombatFormula {
         // OSRS-IMPORT bows: revenant bows x3/2 in the Wilderness, Scorching bow demonbane +30 % (before the special factor).
         if (gg.rsmod.plugins.content.items.osrs.RevenantBows.wildernessBuff(player, target)) hit = floor(hit * 3 / 2)
         if (gg.rsmod.plugins.content.items.osrs.ScorchingBow.demonbane(player, target)) {
-            hit = TargetModifiers.addPercent(hit, gg.rsmod.plugins.content.items.osrs.ScorchingBow.DEMONBANE_PERCENT)
+            hit = TargetModifiers.addPercent(hit, gg.rsmod.plugins.content.items.osrs.Demonbane.scaled(target, gg.rsmod.plugins.content.items.osrs.ScorchingBow.DEMONBANE_PERCENT))
         }
         hit = floor(hit * specialAttackMultiplier)
 

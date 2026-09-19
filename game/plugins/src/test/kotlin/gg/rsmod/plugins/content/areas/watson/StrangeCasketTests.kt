@@ -31,7 +31,8 @@ class StrangeCasketTests {
         ).forEach { assertTrue(it in plugin, it) }
         assertEquals(23729, gg.rsmod.plugins.api.cfg.Items.MIMIC)
         assertEquals("Visit the Strange Casket, upstairs in Watson's house in Hosidius, to attempt the Mimic's challenge.", StrangeCasket.OPEN_BEFORE_FIGHT)
-        val yml = File("../../data/cfg/items.yml").readText()
+        // Line-ending agnostic: the checkout may carry CRLF (git autocrlf), the entry is what is asserted.
+        val yml = File("../../data/cfg/items.yml").readText().replace("\r\n", "\n")
         assertTrue("- id: 23729\n  name: \"Mimic\"\n  examine: \"Oh great, it's a casket that's come to life.\"\n  tradeable: false" in yml)
     }
 }

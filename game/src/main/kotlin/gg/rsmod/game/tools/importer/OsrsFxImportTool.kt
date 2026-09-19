@@ -155,6 +155,27 @@ object OsrsFxImportTool {
             // Owner 2026-09-18 re-research: OSRS Wiki "Voidwaker" sound list names the Wardens half of the special:
             // 6182 toa_wardens_square_thunder1_01 ("Special attack", next to 5027).
             "weaponsfx4" to listOf(6182),
+            // Owner 2026-09-19 (breach monsters "sounds, animations, everything"): OSRS server-sent attack / hit / death sounds of the
+            // OSRS-only breach monsters are not public, so the owner chose real OSRS sounds picked by Jagex config name (OSRS Wiki
+            // "List of sound IDs", raw wikitext 2026-09-19). Imported even where the id is below ~3800 so the bytes are OSRS's own.
+            "breachsfx" to
+                listOf(
+                    400, 404, 403, // demon_attack / demon_hit / demon_death (Porazdir, ADAPTED family)
+                    2564, 513, 512, // human_attack / human_hit / human_death (humanoid breach monsters)
+                    4647, 4738, 4755, // lore_ent_attack / lore_ent_defend / lore_ent_death (Derwen, ADAPTED family)
+                    595, 597, 596, // lavabeast_attack / _hit / _death (Jal-ImKot, ADAPTED family)
+                    605, 607, 606, // lizard_attack / _hit / _death (Sulphur Lizard)
+                    6904, 6928, 6952, // wbr_vention_hellhound_attack_bark_01 / _defend_snarl_01 / _death_01 (Cerberus, hellhound family)
+                    7969, 821, // varl_audio_modifier_bee_swarm_attack01, swarm_hit (Bee Swarm)
+                    414, 416, 415, // dust_devil_attack / _hit / _death (Thermonuclear smoke devil, ADAPTED family)
+                    7878, 7884, 7901, // jaguar_attack_01 / jaguar_defend_01 / jaguar_death_01 (Jaguar warrior)
+                    2720, 168, 102, // whip, ice_barrage_impact, blood_barrage_impact (Durial321, Magic Mark)
+                    359, 360, // chinchompa_attack / chinchompa_explode (Ranging Ro)
+                    7852, // zemo_lightning (Zemouregal's cast, ADAPTED)
+                    809, 811, 810, // splatter_attack / _hit / _death
+                    3544, 3971, 3965, // tob_bloat_flies_attack_1 / tob_bloat_hit / tob_bloat_death (Pestilent Bloat)
+                    918, 923, 922, // zombie_attack / _hit / _death (Zemouregal's Undead One summon)
+                ),
             // Owner 2026-09-18 (Zaryte crossbow / Ancient godsword specials): Jagex sound config names from the gameval table
             // (Alter-rework data/cfg/rscm/sound.rscm, 2026-09-19): 5306 zaryte_crossbow_special, 3869 godwars_godsword_special_attack.
             "weaponsfx5" to listOf(5306, 3869),

@@ -78,9 +78,12 @@ class OsrsGuidePricesTests {
         // 2 staff upgrade kits), all named as in the OSRS snapshot: exchangeable 12209 -> 12230, seeded 3289 -> 3310, unmatched unchanged at 8920.
         // 2026-09-17 batch kits2 added 6 more (4 dark bow paints, Dragon pickaxe upgrade kit, Zalcano shard), all in the OSRS snapshot: 12230 -> 12236, seeded 3310 -> 3316.
         // 2026-09-19 batch deadman-breach added 5 (Chitin, Trinkets of fairies / avarice / undead / fortuity (inactive)), all in the OSRS
-        // snapshot: 12236 -> 12241, seeded 3316 -> 3321.
-        assertEquals(12241, items.size, "exchangeable items (tradeable, unnoted, not coins)")
-        assertEquals(3321, matched, "items seeded from the 13 September 2026 OSRS snapshot; the unmatched list is build/osrs-guide-price-unmatched.txt")
+        // snapshot: 12236 -> 12241, seeded 3316 -> 3321. Rocktail removal then removed three unnoted tradeable definitions
+        // from the legacy cache route; the Anglerfish import adds one back: 12238 -> 12239 and 3321 -> 3322.
+        // 2026-09-19 batch blighted-overload added the 4 doses (23830/23832/23834/23836), all in the OSRS snapshot: 12239 -> 12243,
+        // seeded 3322 -> 3326.
+        assertEquals(12243, items.size, "exchangeable items (tradeable, unnoted, not coins)")
+        assertEquals(3326, matched, "items seeded from the 13 September 2026 OSRS snapshot; the unmatched list is build/osrs-guide-price-unmatched.txt")
     }
 
     @Test
