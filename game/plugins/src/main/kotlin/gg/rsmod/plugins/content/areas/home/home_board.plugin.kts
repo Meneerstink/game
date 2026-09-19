@@ -40,15 +40,7 @@ on_obj_option(obj = Objs.JOB_BOARD, option = "look-at") {
 
     lines += "- Wilderness hotspot: ${WildernessHotspot.current.label} (+15% reward/XP there)."
 
-    val warningCycle = WildernessBreach.warningIssuedAtCycle
-    lines +=
-        if (warningCycle != null) {
-            val cyclesLeft = (WildernessBreach.WARNING_CYCLES - (world.currentCycle - warningCycle)).coerceAtLeast(0)
-            val minutesLeft = (cyclesLeft / 100).coerceAtLeast(0)
-            "- Wilderness Breach: incoming in about $minutesLeft minute(s)."
-        } else {
-            "- Wilderness Breach: not currently announced."
-        }
+    lines += "- Deadman breaches: " + gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.statusLine()
 
     lines += "Daily objectives:"
     DailyObjectives.OBJECTIVES.forEach { lines += DailyObjectives.progressLine(player, it) }

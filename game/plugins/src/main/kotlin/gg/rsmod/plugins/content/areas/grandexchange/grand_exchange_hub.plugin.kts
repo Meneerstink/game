@@ -54,6 +54,8 @@ spawn_obj(obj = Objs.SINGING_BOWL, x = 3163, z = 3494, type = 10, rot = 0)
 // PvpDeathBreakables broken item at its sourced cost, and the Trouver lock/unlock engine below.
 on_npc_option(npc = Npcs.PERDU, option = "talk-to") {
     player.queue {
+        // OSRS Wiki "Breach (scenery)": "The player can find the location of the active breach by talking to Perdu".
+        chatNpc(gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.statusLine(), wrap = true)
         val hasBroken =
             (player.inventory.rawItems.filterNotNull() + player.equipment.rawItems.filterNotNull())
                 .any { gg.rsmod.plugins.content.mechanics.death.PvpDeathBreakables.forBroken(it.id) != null }

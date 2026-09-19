@@ -286156,3 +286156,39 @@
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
+- id: 23820
+  name: "Chitin"
+  examine: "A fibrous substance used to create powerful potions."
+  tradeable: true
+  weight: 0.01
+  equipment: null
+- id: 23821
+  name: "Chitin"
+  examine: "Swap this note at any bank for the equivalent item."
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23822
+  name: "Trinket of fairies"
+  examine: "A magic rock! This one smells funny and lets you teleport."
+  tradeable: true
+  weight: 1.0
+  equipment: null
+- id: 23823
+  name: "Trinket of avarice"
+  examine: "A magic rock! This one automatically notes and retrieves drops."
+  tradeable: true
+  weight: 1.0
+  equipment: null
+- id: 23824
+  name: "Trinket of undead"
+  examine: "A magic rock! This one gives you random thralls."
+  tradeable: true
+  weight: 1.0
+  equipment: null
+- id: 23825
+  name: "Trinket of fortuity (inactive)"
+  examine: "A magic rock! This one increases the chance of obtaining rare items when active."
+  tradeable: true
+  weight: 1.0
+  equipment: null

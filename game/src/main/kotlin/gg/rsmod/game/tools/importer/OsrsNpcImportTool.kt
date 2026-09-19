@@ -56,6 +56,17 @@ object OsrsNpcImportTool {
                     6574, 11199, 6575, 6576, 6579, 11200, 6580, 11201, 6581, 11202, 6583, 11204,
                     6698, 11205, 6699, 11206, 6700, 11207, 6701, 11208, 6702, 11209,
                 ),
+            // Owner 2026-09-19 ("import the exact osrs deadman breaches ... fully workable"): every OSRS Wiki breach monster with a
+            // "Permanent" infobox version (ids from each infobox = RuneLite gameval NpcID DEADMAN_BREACH_*), plus the six Zemouregal
+            // Summons (NpcID DEADMAN_BREACH_*_MINION 15558-15563). Not imported: Kree'arra 12443 (no Permanent version) and the seven
+            // monsters whose every sequence is skeletal/animaya (13656 Vardorvis, 15548 Scurrius, 15549 Phantom Muspah, 15551/15552
+            // Wardens, 15554 Sol Heredit, 15555 Yama - probe 2026-09-19: "skeletal (animaya) sequence cannot be represented in 667").
+            "deadman-breach" to
+                listOf(
+                    12439, 12440, 12441, 12442, 12444, 12445, 12446, 12447, 12448, 12449, 12450, 12451, 12452, 12453, 12454, 12455, 12456,
+                    12457, 12458, 12459, 13657, 13658, 13659, 13660, 13661, 13662, 13663, 13664, 15237, 15547, 15550, 15553, 15556,
+                    15558, 15559, 15560, 15561, 15562, 15563,
+                ),
         )
 
     /**
@@ -75,7 +86,49 @@ object OsrsNpcImportTool {
      * Sequences a batch needs that no npc definition references (attacks, death), imported with the same conversion as the movement sets.
      * mimic: RuneLite gameval AnimationID MIMIC_MELEE 8308, MIMIC_CHARGE_RANGED 8309 (candy attack), MIMIC_DEATH 8310.
      */
-    val EXTRA_SEQS: Map<String, List<Int>> = mapOf("mimic" to listOf(8308, 8309, 8310))
+    val EXTRA_SEQS: Map<String, List<Int>> =
+        mapOf(
+            "mimic" to listOf(8308, 8309, 8310),
+            // deadman-breach: attack / defend / death sequences, chosen by RuneLite gameval AnimationID name among the OSRS sequences
+            // that animate the same frame base as each npc's stand sequence (OsrsNpcProbeTool "skeleton", 2026-09-19).
+            "deadman-breach" to
+                listOf(
+                    2852, 2853, 2854, 2855, 2856, // DAGANNOTH_MEGANOTH_DEFEND / ATTACK_MELEE / ATTACK_MAGE / ATTACK_RANGE / DEATH
+                    81, 91, 92, 4638, // DRAGON_FIREBREATH_ALL_ATTACK, DRAGON_HEAD_ATTACK, DRAGON_DEATH, DRAGON_BLOCK_KBD
+                    7018, 7019, 7020, 7021, // GODWARS_BANDOS_ATTACK / DEFEND / DEATH / RANGED
+                    6967, 6968, 6969, 6970, // GODWARS_SARADOMIN_ATTACK / DEATH / DEFEND / MAGIC_ATTACK
+                    6947, 6948, 6949, 6950, // GODWARS_ZAMORAK_DEFEND / ATTACK / DEATH / MAGIC_ATTACK
+                    7838, 7840, 7841, 7843, // ZAMORAK_DEMON_BOSS_DEFEND / ATTACK_MELEE / ATTACK_MAGIC / DEATH (Porazdir)
+                    7853, 7854, 7962, 7965, // WILD_ZEALOT_SLASH / DEATH / MAGIC / DEFEND (Justiciar Zachariah)
+                    7846, 7848, 7849, 7850, // ENT_BOSS_DEFEND / ATTACK_MELEE / ATTACK_MAGIC / ATTACK_DEATH (Derwen)
+                    1537, 1538, 2309, // ABYSSAL_ATTACK / DEATH / ABYSSAL_DEMON_TELEPORT
+                    6182, 6183, 6184, // SLICE_SURFACE_GOBLIN_DEATH / DEFEND / SQUAT_UNARMED_ATTACK (Giant goblin)
+                    1580, 1581, 1582, // PYREFIEND_DEATH / DEFEND / ATTACK
+                    4232, 4233, 4234, // HARMLESS_ISLAND_JUNGLE_HORROR_BLOCK / DEATH / ATTACK (Cave abomination)
+                    7597, 7598, 7599, // JALIMKOT_ATTACK / DEFEND / DEATH
+                    1585, 1586, 1587, // JELLY_DEFEND / ATTACK / DEATH
+                    8283, 8284, // SULPHUR_LIZARD_MELEE / DEATH
+                    2731, 2732, 2733, // DARK_BEAST_UPDATE_ATTACK / DEFEND / DEATH (Night beast)
+                    4489, 4491, 4495, // CERBERUS_DEFEND / BITE / DEATH
+                    10821, 10823, 10824, // NPC_COLOSSEUM_BEES_SPAWN_01 / ATTACK_01 / DESPAWN_01
+                    3847, 3848, 3849, // LORE_DUST_DEVIL_ATTACK / DEFEND / DEATH (Thermonuclear smoke devil)
+                    10847, 10848, 10849, // NPC_JAGUAR_RANGER_CLAWS_ATTACK / NPC_JAGUAR_HUMAN_UNARMED_DEF / NPC_JAGUAR_HUMAN_DEATH
+                    2652, 2653, 2654, 2655, 2656, // LORDMAGMUS_SMASH / DEFEND / DEATH / ATTACK / FIRE (TzTok-Jad)
+                    10123, 10125, 10127, 11412, // MAHJARRAT_ATTACK_MAGIC_05 / ATTACK_SUMMON05 / TELEPORT_DISAPPEAR05 / DEFEND_05 (Zemouregal)
+                    2300, 2301, 2302, // ROOSTERPARRY / ROOSTERDEATH / ROOSTERMAGIC (Big Evil Chicken)
+                    3888, 3890, 3891, // SPLATTER_DEATH / DEFEND / ATTACK
+                    8085, // TOB_BLOAT_DEATH
+                    5549, 5550, 5555, // MUMMY_UPDATE_CIVILLIAN_ATTACK / CIVILLIAN_DEFEND / DEATH (summon 15558)
+                    1283, 1286, 1287, // SHADE_ATTACK / BLOCK / SINK (summon 15559)
+                    5571, 5574, 5575, // ZOMBIE_UPDATE_ATTACK_WEAPON / DEFEND_WEAPON / DEATH_WEAPON (summon 15560)
+                    5567, 5568, 5569, // ZOMBIE_UPDATE_DEFEND_NORMAL / ATTACK_NORMAL / DEATH_NORMAL (summon 15561)
+                    9897, 9900, // MAHJARRAT_ATTACK_MELEE_SLASH01 / TELEPORT_DISAPPEAR04 (summon 15563, Khazard)
+                    // Humanoids whose stand sequence is an imported OSRS one (Dharok 2065, Malevolent Mage 813, Fremennik summon 6113)
+                    // animate the imported OSRS human skeleton, not the rev-667 one: BARROW_DHAROK_SLASH, HUMAN_CASTSTRIKE_STAFF,
+                    // HUMAN_SWORD_SLASH, HUMAN_UNARMEDBLOCK, HUMAN_DEATH (DeadmanBreachTests skeleton check).
+                    2066, 1162, 390, 424, 836,
+                ),
+        )
 
     private fun ByteArrayOutputStream.u8(v: Int) = write(v and 0xFF)
 

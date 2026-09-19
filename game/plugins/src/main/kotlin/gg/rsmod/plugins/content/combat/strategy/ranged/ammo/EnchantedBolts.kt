@@ -1,5 +1,6 @@
 package gg.rsmod.plugins.content.combat.strategy.ranged.ammo
 
+import gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach
 import gg.rsmod.game.model.attr.DRAGONFIRE_IMMUNITY_ATTR
 import gg.rsmod.game.model.combat.CombatClass
 import gg.rsmod.game.model.entity.Npc
@@ -195,7 +196,10 @@ object EnchantedBolts {
             // Overrides bolt damage: 20 % of the target's current hitpoints, capped at 100 (22 % / 110 under Zaryte).
             Effect.BLOOD_FORFEIT -> {
                 val damage = floor(target.getCurrentLifepoints() * if (zaryte) 0.22 else 0.20).toInt()
-                ShotChange(overrideDamage = minOf(damage, if (zaryte) 110 else 100))
+                // OSRS Wiki "Deadman Mode" (Breaches): "Efficacy of ruby bolts (e) special attacks is limited on breach monsters,
+                // having a max hit of 30."
+                val cap = if (target is Npc && DeadmanBreach.isBreachNpc(target)) DeadmanBreach.RUBY_BOLT_CAP else if (zaryte) 110 else 100
+                ShotChange(overrideDamage = minOf(damage, cap))
             }
             else -> ShotChange()
         }

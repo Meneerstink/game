@@ -184,6 +184,14 @@ task runOsrsNpcImportTool(type: JavaExec) {
     main = 'gg.rsmod.game.tools.importer.OsrsNpcImportTool'
 }
 
+task runOsrsLocImportTool(type: JavaExec) {
+    group = 'tools'
+    description = 'OSRS loc (scenery) type import batches for runtime-spawned objects (CacheTransaction, both caches). ' +
+        'Usage: ./gradlew :game:runOsrsLocImportTool --args="<batch> [--apply]"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.OsrsLocImportTool'
+}
+
 task runOsrsFxImportTool(type: JavaExec) {
     group = 'tools'
     description = 'OSRS spotanim import batches with their models and sequences (CacheTransaction, both caches). ' +

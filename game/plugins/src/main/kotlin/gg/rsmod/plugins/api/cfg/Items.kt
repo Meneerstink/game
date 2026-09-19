@@ -20178,5 +20178,13 @@ object Items {
 
     // Owner answer Q10: the Mimic casket (OSRS 23184, OsrsItemImportTool batch "mimic-casket", tx-20260914-142009).
     const val MIMIC = 23729
+    // Owner 2026-09-19: Deadman breach drops (OSRS 29643/29644, 28564, 33044, 28570, 33047; OsrsItemImportTool batch
+    // "deadman-breach", tx-20260919-164727).
+    const val CHITIN = 23820
+    const val CHITIN_NOTED = 23821
+    const val TRINKET_OF_FAIRIES = 23822
+    const val TRINKET_OF_AVARICE = 23823
+    const val TRINKET_OF_UNDEAD = 23824
+    const val TRINKET_OF_FORTUITY_INACTIVE = 23825
     // Auto-generated file using class gg.rsmod.game.service.game.DumpEntityIdService
 }

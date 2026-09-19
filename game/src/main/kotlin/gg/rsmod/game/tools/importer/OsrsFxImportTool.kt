@@ -66,6 +66,19 @@ object OsrsFxImportTool {
                     3486, // ROSEWOOD_BLOWPIPE_SPECIAL_TRAVEL
                     28, 697, 699, 1629, 1630, // DRAGON_TKNIFE_TRAVEL / _P / _SPEC / _SPEC_P / LAUNCH
                 ),
+            // Owner 2026-09-19 (exact OSRS Deadman breaches), names from gameval SpotanimID.
+            "deadman-breach" to
+                listOf(
+                    // VFX_DM_BREACH_PROJ. VFX_DM_BREACH_SPAWN / LOOP / DESPAWN 2519/2522/2553 and VFX_DM_BOSS_* 2554-2558 are refused:
+                    // their sequences are skeletal (animaya), which rev 667 cannot represent (dry run 2026-09-19).
+                    2559,
+                    643, 644, // SMOKE_DEVIL_SMOKE_PLAYER_SPOTANIM / SMOKE_DEVIL_SMOKE_PROJ (Thermonuclear smoke devil)
+                    1512, 1514, 1518, // MA2_GUTHIX_PROJ (Derwen), MA2_ZAMORAK_PROJ (Porazdir), WILD_ZEALOT_LIGHTNING (Justiciar Zachariah)
+                    649, 650, 651, 652, 653, // SPLATTER_EXPLODING_SPOTANIM1-5
+                    1568, 1569, // TOB_BLOAT_FLIES_LARGE / SMALL
+                    2655, 2901, // VFX_MAHJARRAT_TELEPORT_ZEMOUREGAL, VFX_MAHJARRAT_SUMMON_ZEMOUREGAL
+                    1272, // BLACK_CHINCHOMPA_GRENADE (Ranging Ro)
+                ),
         )
 
     /**

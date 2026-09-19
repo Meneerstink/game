@@ -808,6 +808,9 @@ object OsrsItemImportTool {
             // RCV-012 decision 3b: Wilderness loot keys (OSRS Wiki "Loot key": tradeable No, noteable No, options Check/Destroy,
             // ids 26651-26655).
             "lootkeys" to listOf(26651, 26652, 26653, 26654, 26655).map { Spec(it) },
+            // Owner 2026-09-19 (exact OSRS Deadman breaches): the breach drops this server lacks - Chitin 29643 (dropped noted) and the
+            // Trinkets of fairies 28564, avarice 33044, undead 28570 and fortuity (inactive) 33047 (OSRS Wiki infobox ids).
+            "deadman-breach" to listOf(Spec(29643, noted = true), Spec(28564), Spec(33044), Spec(28570), Spec(33047)),
             "deadstaves" to
                 listOf(
                     Spec(11791, noted = true, rev667Params = deadStaffParams()), // Staff of the dead

@@ -198,6 +198,10 @@ fun Pawn.dealHit(
     if (target is Npc && target.id == gg.rsmod.plugins.api.cfg.Npcs.CORPOREAL_BEAST && damage > 0) {
         damage = gg.rsmod.plugins.content.combat.scripts.impl.CorporealBeastCombatScript.modifyIncomingDamage(this, hitType, damage.toInt()).toDouble()
     }
+    // Deadman breach monsters Porazdir, Justiciar Zachariah and Derwen: "completely immune to melee and ranged attacks".
+    if (target is Npc && damage > 0) {
+        damage = gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.modifyIncomingDamage(target, hitType, damage.toInt()).toDouble()
+    }
     // Preserve the hit's declared style and the damage before Deflect reduces it to zero.
     // Reading getCombatClass again on impact can use a different style after a weapon switch.
     val curseHitStyle = when (hitType) {
@@ -336,7 +340,9 @@ fun Pawn.dealHit(
     if (landHit) {
         hit.addAction {
             val pawn = this@dealHit
-            target.damageMap.add(pawn.attr[DAMAGE_CREDIT_ATTR]?.get() ?: pawn, hit.hitmarks.sumOf { it.damage })
+            val credited = pawn.attr[DAMAGE_CREDIT_ATTR]?.get() ?: pawn
+            target.damageMap.add(credited, hit.hitmarks.sumOf { it.damage })
+            gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.recordDamage(target, credited)
         }
     }
 

@@ -6,7 +6,8 @@ import gg.rsmod.plugins.content.mechanics.pvp.BeginnerProtection
 
 on_world_init {
     WildernessHotspot.start(world)
-    WildernessBreach.start(world)
+    // Owner 2026-09-19: the OSRS Deadman breaches (mechanics/pvp/breach) replace this server's own revenant "Wilderness Breach";
+    // WildernessBreach is no longer started so the two never run side by side.
 }
 
 // Audit finding 13 (R14.26): a beginner-protected player must not participate in a Breach at

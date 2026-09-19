@@ -200,10 +200,22 @@ object NpcAttacks {
     @Volatile
     private var rows: Map<Int, Row> = emptyMap()
 
+    /** Rows registered in code ([register]); they survive a [load] of the Void-generated file in either order. */
+    private val registered = java.util.concurrent.ConcurrentHashMap<Int, Row>()
+
     fun load(file: File = File(DEFAULT_PATH)): Int {
         val loaded: Array<Row> = FileReader(file).use { Gson().fromJson(it, Array<Row>::class.java) }
-        rows = loaded.associateBy { it.id }
+        rows = loaded.associateBy { it.id } + registered
         return rows.size
+    }
+
+    /**
+     * Adds a row that is not generated from Void (e.g. imported OSRS npcs such as the Deadman breach monsters), replacing any
+     * file row with the same npc id.
+     */
+    fun register(row: Row) {
+        registered[row.id] = row
+        rows = rows + (row.id to row)
     }
 
     /** Void `npcCondition(name)`. */

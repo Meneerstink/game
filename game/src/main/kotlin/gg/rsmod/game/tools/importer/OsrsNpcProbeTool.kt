@@ -253,6 +253,34 @@ object OsrsNpcProbeTool {
                         )
                     }
                 }
+            // Every OSRS sequence that animates the same skeleton (frame base) as the npc's stand sequence: the only sequences its model
+            // can play. Names come from RuneLite gameval AnimationID, matched outside this tool.
+            "skeleton" ->
+                ModernCacheReader(File(OsrsItemImportTool.SOURCE_CACHE)).use { reader ->
+                    val npcs = reader.files(ModernCacheReader.INDEX_CONFIG, CONFIG_GROUP_NPC)
+                    val seqs = reader.files(ModernCacheReader.INDEX_CONFIG, ModernCacheReader.CONFIG_GROUP_SEQUENCE)
+                    val baseOfFrameset = HashMap<Int, Int>()
+
+                    fun base(frameset: Int): Int =
+                        baseOfFrameset.getOrPut(frameset) {
+                            val frame = reader.files(0, frameset).values.firstOrNull() ?: return@getOrPut -1
+                            ((frame[0].toInt() and 0xFF) shl 8) or (frame[1].toInt() and 0xFF)
+                        }
+
+                    val seqBase = HashMap<Int, Int>()
+                    seqs.forEach { (seqId, bytes) ->
+                        val seq = runCatching { OsrsFxImportTool.decodeOsrsSeq(bytes) }.getOrNull() ?: return@forEach
+                        val fs = seq.frames.firstOrNull()?.ushr(16) ?: return@forEach
+                        seqBase[seqId] = base(fs)
+                    }
+                    ids.forEach { id ->
+                        val n = decodeOsrs(id, npcs[id] ?: return@forEach println("SKELETON_$id ABSENT"))
+                        val stand = movementSeqs(n)["stand"]
+                        val b = stand?.let { seqBase[it] }
+                        val matches = if (b == null) emptyList() else seqBase.filterValues { it == b }.keys.sorted()
+                        println("SKELETON_$id name='${n.name}' stand=$stand base=$b seqs=$matches")
+                    }
+                }
             "npc667" -> {
                 val library = CacheLibrary(OsrsItemImportTool.TARGETS[0])
                 try {

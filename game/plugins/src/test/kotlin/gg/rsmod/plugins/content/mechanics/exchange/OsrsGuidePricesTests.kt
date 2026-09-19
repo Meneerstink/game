@@ -77,8 +77,10 @@ class OsrsGuidePricesTests {
         // Aether rune, Aether catalyst, Smoke/Mist/Dust battlestaff, Mystic mist/dust staff; batch kits: 7 ornament kits, 2 whip mixes,
         // 2 staff upgrade kits), all named as in the OSRS snapshot: exchangeable 12209 -> 12230, seeded 3289 -> 3310, unmatched unchanged at 8920.
         // 2026-09-17 batch kits2 added 6 more (4 dark bow paints, Dragon pickaxe upgrade kit, Zalcano shard), all in the OSRS snapshot: 12230 -> 12236, seeded 3310 -> 3316.
-        assertEquals(12236, items.size, "exchangeable items (tradeable, unnoted, not coins)")
-        assertEquals(3316, matched, "items seeded from the 13 September 2026 OSRS snapshot; the unmatched list is build/osrs-guide-price-unmatched.txt")
+        // 2026-09-19 batch deadman-breach added 5 (Chitin, Trinkets of fairies / avarice / undead / fortuity (inactive)), all in the OSRS
+        // snapshot: 12236 -> 12241, seeded 3316 -> 3321.
+        assertEquals(12241, items.size, "exchangeable items (tradeable, unnoted, not coins)")
+        assertEquals(3321, matched, "items seeded from the 13 September 2026 OSRS snapshot; the unmatched list is build/osrs-guide-price-unmatched.txt")
     }
 
     @Test
