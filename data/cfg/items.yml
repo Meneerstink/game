@@ -97982,19 +97982,19 @@
     remove_beard: false
     remove_arms: false
     weapon_type: 3
-    attack_speed: 4
-    attack_stab: 0
-    attack_slash: 0
-    attack_crush: 0
-    attack_magic: 0
+    attack_speed: 5
+    attack_stab: 7
+    attack_slash: -1
+    attack_crush: 25
+    attack_magic: 10
     attack_ranged: 0
-    defence_stab: 0
-    defence_slash: 0
-    defence_crush: 0
-    defence_magic: 0
+    defence_stab: 2
+    defence_slash: 3
+    defence_crush: 1
+    defence_magic: 10
     defence_ranged: 0
     summoning: 0
-    melee_strength: 0
+    melee_strength: 32
     prayer: 0
     ranged_strength: 0
     magic_damage: 0
@@ -105401,7 +105401,7 @@
     defence_ranged: 9
     summoning: 9
     melee_strength: 0
-    prayer: 4
+    prayer: 0
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -106265,7 +106265,7 @@
     defence_ranged: 9
     summoning: 9
     melee_strength: 0
-    prayer: 4
+    prayer: 0
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -108281,7 +108281,7 @@
     defence_ranged: 9
     summoning: 9
     melee_strength: 0
-    prayer: 4
+    prayer: 0
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -118417,7 +118417,7 @@
     defence_ranged: 9
     summoning: 9
     melee_strength: 0
-    prayer: 4
+    prayer: 0
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -118483,7 +118483,7 @@
     defence_ranged: 9
     summoning: 9
     melee_strength: 0
-    prayer: 4
+    prayer: 0
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -118747,7 +118747,7 @@
     defence_ranged: 9
     summoning: 9
     melee_strength: 0
-    prayer: 4
+    prayer: 0
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -156264,7 +156264,7 @@
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
-    attack_magic: 1
+    attack_magic: 0
     attack_ranged: 0
     defence_stab: 0
     defence_slash: 0
@@ -156298,7 +156298,7 @@
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
-    attack_magic: 1
+    attack_magic: 0
     attack_ranged: 0
     defence_stab: 0
     defence_slash: 0
@@ -179930,42 +179930,6 @@
   equipment: null
 - id: 15269
   name: "Burnt cavefish"
-  examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
-  weight: 0.0
-  equipment: null
-- id: 15270
-  name: "Raw rocktail"
-  examine: "I should try cooking this."
-  tradeable: true
-  weight: 0.3
-  equipment: null
-- id: 15271
-  name: "Raw rocktail"
-  examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
-  weight: 0.0
-  equipment: null
-- id: 15272
-  name: "Rocktail"
-  examine: "Some nicely cooked rocktail."
-  tradeable: true
-  weight: 0.33
-  equipment: null
-- id: 15273
-  name: "Rocktail"
-  examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
-  weight: 0.0
-  equipment: null
-- id: 15274
-  name: "Burnt rocktail"
-  examine: "It's an Burnt rocktail"
-  tradeable: true
-  weight: 0.0
-  equipment: null
-- id: 15275
-  name: "Burnt rocktail"
   examine: "Swamp this note at any bank for the equivalent item"
   tradeable: false
   weight: 0.0
@@ -240161,7 +240125,7 @@
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
-    attack_magic: 1
+    attack_magic: 0
     attack_ranged: 0
     defence_stab: 0
     defence_slash: 0
@@ -286191,4 +286155,535 @@
   examine: "A magic rock! This one increases the chance of obtaining rare items when active."
   tradeable: true
   weight: 1.0
+  equipment: null
+- id: 23826
+  name: "Anglerfish"
+  examine: "A fish with a nasty taste."
+  tradeable: true
+  weight: 0.4
+  equipment: null
+- id: 23827
+  name: "Anglerfish (noted)"
+  examine: "Swap this note at any bank for the equivalent item."
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23828
+  name: "Looting bag"
+  examine: "You can store stuff in the bag when you're in the Wilderness."
+  tradeable: false
+  weight: 0.01
+  equipment: null
+- id: 23829
+  name: "Looting bag"
+  examine: "You can store stuff in the bag when you're in the Wilderness."
+  tradeable: false
+  weight: 0.01
+  equipment: null
+- id: 23830
+  name: "Blighted overload (4)"
+  examine: "4 doses of blighted overload potion."
+  tradeable: true
+  weight: 0.035
+  equipment: null
+- id: 23831
+  name: "Blighted overload (4)"
+  examine: "Swap this note at any bank for the equivalent item."
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23832
+  name: "Blighted overload (3)"
+  examine: "3 doses of blighted overload potion."
+  tradeable: true
+  weight: 0.03
+  equipment: null
+- id: 23833
+  name: "Blighted overload (3)"
+  examine: "Swap this note at any bank for the equivalent item."
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23834
+  name: "Blighted overload (2)"
+  examine: "2 doses of blighted overload potion."
+  tradeable: true
+  weight: 0.025
+  equipment: null
+- id: 23835
+  name: "Blighted overload (2)"
+  examine: "Swap this note at any bank for the equivalent item."
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23836
+  name: "Blighted overload (1)"
+  examine: "1 dose of blighted overload potion."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 23837
+  name: "Blighted overload (1)"
+  examine: "Swap this note at any bank for the equivalent item."
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23838
+  name: "Mixed hide top"
+  examine: "Made from the hide of a few different creatures."
+  tradeable: true
+  weight: 3.0
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6695
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 4
+    attack_slash: -2
+    attack_crush: -3
+    attack_magic: -15
+    attack_ranged: 27
+    defence_stab: 33
+    defence_slash: 39
+    defence_crush: 43
+    defence_magic: 30
+    defence_ranged: 32
+    summoning: 0
+    melee_strength: 2
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23839
+  name: "Mixed hide top"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23840
+  name: "Mixed hide legs"
+  examine: "Made from the hide of a few different creatures."
+  tradeable: true
+  weight: 2.0
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 6696
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 3
+    attack_slash: -1
+    attack_crush: -2
+    attack_magic: -10
+    attack_ranged: 14
+    defence_stab: 20
+    defence_slash: 23
+    defence_crush: 22
+    defence_magic: 16
+    defence_ranged: 20
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23841
+  name: "Mixed hide legs"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23842
+  name: "Mixed hide boots"
+  examine: "Made from the hide of a few different creatures."
+  tradeable: true
+  weight: 2.0
+  equipment:
+    equip_slot: 10
+    equip_type: -1
+    appearance_id: 6697
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -10
+    attack_ranged: 5
+    defence_stab: 4
+    defence_slash: 5
+    defence_crush: 6
+    defence_magic: 3
+    defence_ranged: 3
+    summoning: 0
+    melee_strength: 2
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23843
+  name: "Mixed hide boots"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23844
+  name: "Mixed hide cape"
+  examine: "Made from the hide of a few different creatures."
+  tradeable: true
+  weight: 3.0
+  equipment:
+    equip_slot: 1
+    equip_type: -1
+    appearance_id: 6698
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -15
+    attack_ranged: 5
+    defence_stab: 2
+    defence_slash: 2
+    defence_crush: 2
+    defence_magic: 5
+    defence_ranged: 1
+    summoning: 0
+    melee_strength: 1
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23845
+  name: "Mixed hide cape"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23846
+  name: "Book of Darkness"
+  examine: "The dark book of a forgotten god."
+  tradeable: false
+  weight: 1.0
+  equipment:
+    equip_slot: 5
+    equip_type: -1
+    appearance_id: 6699
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 10
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 5
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23847
+  name: "Ring of shadows"
+  examine: "A powerful ring used to see into other realms..."
+  tradeable: false
+  weight: 0.004
+  equipment:
+    equip_slot: 12
+    equip_type: -1
+    appearance_id: 6700
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 4
+    attack_slash: 4
+    attack_crush: 4
+    attack_magic: 5
+    attack_ranged: 4
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 5
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 2
+    prayer: 2
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23848
+  name: "Ring of shadows (uncharged)"
+  examine: "A powerful ring used to see into other realms..."
+  tradeable: false
+  weight: 0.004
+  equipment:
+    equip_slot: 12
+    equip_type: -1
+    appearance_id: 6700
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 4
+    attack_slash: 4
+    attack_crush: 4
+    attack_magic: 5
+    attack_ranged: 4
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 5
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 2
+    prayer: 2
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23849
+  name: "Burning amulet(5)"
+  examine: "Useful teleports around the wilderness."
+  tradeable: true
+  weight: 0.007
+  equipment:
+    equip_slot: 2
+    equip_type: -1
+    appearance_id: 6700
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23850
+  name: "Burning amulet(4)"
+  examine: "Useful teleports around the wilderness."
+  tradeable: true
+  weight: 0.007
+  equipment:
+    equip_slot: 2
+    equip_type: -1
+    appearance_id: 6701
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23851
+  name: "Burning amulet(3)"
+  examine: "Useful teleports around the wilderness."
+  tradeable: true
+  weight: 0.007
+  equipment:
+    equip_slot: 2
+    equip_type: -1
+    appearance_id: 6702
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23852
+  name: "Burning amulet(2)"
+  examine: "Useful teleports around the wilderness."
+  tradeable: true
+  weight: 0.007
+  equipment:
+    equip_slot: 2
+    equip_type: -1
+    appearance_id: 6703
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23853
+  name: "Burning amulet(1)"
+  examine: "Useful teleports around the wilderness."
+  tradeable: true
+  weight: 0.007
+  equipment:
+    equip_slot: 2
+    equip_type: -1
+    appearance_id: 6704
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23854
+  name: "Spiked manacles"
+  examine: "Some very spikey metal bands, better make sure I don't cut myself while walking."
+  tradeable: true
+  weight: 3.0
+  equipment:
+    equip_slot: 10
+    equip_type: -1
+    appearance_id: 6705
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -3
+    attack_ranged: -1
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: -4
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 4
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23855
+  name: "Spiked manacles"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
   equipment: null

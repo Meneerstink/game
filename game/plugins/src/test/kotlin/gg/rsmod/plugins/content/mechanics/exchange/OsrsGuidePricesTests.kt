@@ -82,8 +82,10 @@ class OsrsGuidePricesTests {
         // from the legacy cache route; the Anglerfish import adds one back: 12238 -> 12239 and 3321 -> 3322.
         // 2026-09-19 batch blighted-overload added the 4 doses (23830/23832/23834/23836), all in the OSRS snapshot: 12239 -> 12243,
         // seeded 3322 -> 3326.
-        assertEquals(12243, items.size, "exchangeable items (tradeable, unnoted, not coins)")
-        assertEquals(3326, matched, "items seeded from the 13 September 2026 OSRS snapshot; the unmatched list is build/osrs-guide-price-unmatched.txt")
+        // 2026-09-19 batch owner0919 added 10 tradeable unnoted items (mixed hide set, Spiked manacles, the 5 burning amulet
+        // charges): 12243 -> 12253; the OSRS snapshot names 6 of them (the amulet only at (5)): 3326 -> 3332.
+        assertEquals(12253, items.size, "exchangeable items (tradeable, unnoted, not coins)")
+        assertEquals(3332, matched, "items seeded from the 13 September 2026 OSRS snapshot; the unmatched list is build/osrs-guide-price-unmatched.txt")
     }
 
     @Test

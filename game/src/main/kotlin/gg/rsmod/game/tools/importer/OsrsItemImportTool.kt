@@ -732,6 +732,12 @@ object OsrsItemImportTool {
             "potions-skill" to
                 listOf(31602, 31605, 31608, 31611, 31626, 31629, 31632, 31635, 31590, 31593, 31596, 31599, 31587, 29180, 29198, 29183, 29201,
                     29186, 29204, 29189, 29207, 29192, 29210, 29195, 29213, 28890, 28893, 22999, 23002).map { Spec(it, noted = true) },
+            // Step 4 batch "food-pk": OSRS PK food missing from the 667 definitions. Anglerfish uses its
+            // upstream item and note definitions; the server-side healing rule lives in Food/Foods.
+            "food-pk" to listOf(Spec(13441, noted = true)),
+            // OSRS Looting bag closed/open state pair. The open state (22586) is a separate
+            // cache item, not a bank-note variant.
+            "looting-bag" to listOf(Spec(11941, noted = true), Spec(22586, noted = false)),
             // Step 4 casket sub-batch "casket-cosmetics": elite / master / Mimic reward wearables absent in 667 that have no item mechanics
             // (OSRS Wiki Reward casket (elite) / (master) / The Mimic drop tables; ids RuneLite gameval ItemID, noted = cert in the nested class).
             "casket-cosmetics" to
@@ -810,7 +816,33 @@ object OsrsItemImportTool {
             "lootkeys" to listOf(26651, 26652, 26653, 26654, 26655).map { Spec(it) },
             // Owner 2026-09-19 (exact OSRS Deadman breaches): the breach drops this server lacks - Chitin 29643 (dropped noted) and the
             // Trinkets of fairies 28564, avarice 33044, undead 28570 and fortuity (inactive) 33047 (OSRS Wiki infobox ids).
+            // Owner 2026-09-19 ("mixed hide, the god book we don't have, the shadow ring, burning amulet"): OSRS Wiki infobox ids -
+            // Mixed hide top 29280 / legs 29283 / boots 29286 / cape 29289 (top: 60 Ranged + 50 Defence, the other three no
+            // requirement), Book of Darkness 12612 (Zaros god book; the six damaged books and the Ancient pages are already 667
+            // items), Ring of shadows charged 28327 / uncharged 28329 (Desert Treasure II reward, untradeable), Burning amulet
+            // 21166 (5) / 21169 (4) / 21171 (3) / 21173 (2) / 21175 (1), Spiked manacles 23389.
+            "owner0919" to
+                listOf(
+                    Spec(29280, noted = true, rev667Params = mapOf(749 to 4, 750 to 60, 751 to 1, 752 to 50)), // Mixed hide top
+                    Spec(29283, noted = true), // Mixed hide legs
+                    Spec(29286, noted = true), // Mixed hide boots
+                    Spec(29289, noted = true), // Mixed hide cape
+                    Spec(12612), // Book of Darkness (untradeable, not noteable)
+                    // Worn "Check" (OSRS worn option 456) -> 667 worn option 528; the five realm teleports have no destination here.
+                    Spec(28327, rev667StringParams = mapOf(528 to "Check")), // Ring of shadows (charged)
+                    Spec(28329), // Ring of shadows (uncharged)
+                    // Worn menu: OSRS worn options 451-453 "Chaos Temple" / "Bandit Camp" / "Lava Maze" -> 667 worn options 528-530.
+                    Spec(21166, rev667StringParams = burningAmuletWornOptions()), // Burning amulet (5)
+                    Spec(21169, rev667StringParams = burningAmuletWornOptions()), // Burning amulet (4)
+                    Spec(21171, rev667StringParams = burningAmuletWornOptions()), // Burning amulet (3)
+                    Spec(21173, rev667StringParams = burningAmuletWornOptions()), // Burning amulet (2)
+                    Spec(21175, rev667StringParams = burningAmuletWornOptions()), // Burning amulet (1)
+                    Spec(23389, noted = true), // Spiked manacles
+                ),
             "deadman-breach" to listOf(Spec(29643, noted = true), Spec(28564), Spec(33044), Spec(28570), Spec(33047)),
+            // Owner 2026-09-19 ("fix everything" - Chitin's use): OSRS Wiki "Blighted overload" ids 29631 (4) / 29634 (3) / 29637 (2)
+            // / 29640 (1), noteable, tradeable; drink/mix handled in mechanics/pvp/breach/blighted_overload.plugin.kts.
+            "blighted-overload" to listOf(Spec(29631, noted = true), Spec(29634, noted = true), Spec(29637, noted = true), Spec(29640, noted = true)),
             "deadstaves" to
                 listOf(
                     Spec(11791, noted = true, rev667Params = deadStaffParams()), // Staff of the dead
@@ -969,6 +1001,9 @@ object OsrsItemImportTool {
     /** 667 Staff of light 15486 class (ItemParamProbeTool 2026-09-14). */
     private fun deadStaffParams() = mapOf(644 to 28, 686 to 26, 687 to 1, 749 to 0, 750 to 75, 751 to 6, 752 to 75)
 
+    /** Burning amulet worn menu (OSRS Wiki infobox worn options): the three Wilderness teleports, 667 worn options 528-530. */
+    private fun burningAmuletWornOptions() = mapOf(528 to "Chaos Temple", 529 to "Bandit Camp", 530 to "Lava Maze")
+
     /** 667 Staff of air 1381 class: render animation 28, staff style set 1, one Magic requirement shown client side. */
     private fun staffParams(requiredMagic: Int) = mapOf(644 to 28, 686 to 1, 749 to 6, 750 to requiredMagic)
 
@@ -1002,7 +1037,8 @@ object OsrsItemImportTool {
         mapOf(
             20576 to 10338, 20577 to 10340, 20598 to 4712, 20599 to 4714, 21207 to 22802, 23624 to 15018, 25258 to 15018,
             26767 to 15018, 23626 to 22929, 23644 to 22911, 23652 to 6889, 24123 to 23003, 25517 to 23084, 25518 to 22876,
-            27157 to 22798, 27174 to 22862, 27175 to 22864, 27176 to 22866, 27177 to 23482, 27179 to 23568, 27180 to 10380,
+            27157 to 22798, 27174 to 22862, 27178 to 23854, // 27178 = the second "Spiked manacles" copy; its main item was imported 2026-09-19 (batch owner0919)
+             27175 to 22864, 27176 to 22866, 27177 to 23482, 27179 to 23568, 27180 to 10380,
             27181 to 10372, 27182 to 10388, 27183 to 10342, 27184 to 22685, 27185 to 8850, 27186 to 22413, 27187 to 22736,
             27189 to 4755, 27190 to 4757, 27191 to 3842, 27192 to 22490, 27193 to 22878, 27194 to 22880, 29843 to 23096,
             29844 to 23097, 29845 to 23095, 29846 to 23099, 29847 to 23100, 29848 to 23098, 29849 to 23137, 25486 to 22946,
@@ -1014,7 +1050,6 @@ object OsrsItemImportTool {
     /** Same-name copies whose main item does not exist on this server (nothing to map to; not imported either). */
     val SAME_NAME_COPIES_WITHOUT_MAIN: Map<Int, String> =
         mapOf(
-            27178 to "Spiked manacles: no main item in items.yml",
             27188 to "Light ballista: no main item in items.yml",
             28555 to "Starter bow: no main item in items.yml",
         )
@@ -1032,7 +1067,16 @@ object OsrsItemImportTool {
 
         ModernCacheReader(File(SOURCE_CACHE)).use { reader ->
             val itemFiles = reader.files(ModernCacheReader.INDEX_CONFIG, ModernCacheReader.CONFIG_GROUP_ITEM)
-            fun decodeItem(id: Int) = ModernItemDefDecoder.decode(id, itemFiles[id] ?: error("upstream item $id missing"))
+            fun decodeItem(id: Int) =
+                try {
+                    ModernItemDefDecoder.decode(id, itemFiles[id] ?: error("upstream item $id missing"))
+                } catch (t: IllegalArgumentException) {
+                    // Name the item: an unknown upstream opcode otherwise fails the whole batch without saying which id.
+                    if (System.getenv("OSRS_ITEM_HEXDUMP") != null) {
+                        println("HEXDUMP $id ${itemFiles[id]?.joinToString(" ") { b -> "%02x".format(b) }}")
+                    }
+                    throw IllegalArgumentException("upstream item $id: ${t.message}", t)
+                }
 
             val entries = mutableListOf<Entry>()
             val countUpstreamIds = mutableSetOf<Int>()

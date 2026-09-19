@@ -197,9 +197,15 @@ object ModernItemDefDecoder {
             }
             opcode == 42 -> def.shiftClickDropIndex = buf.i8()
             opcode == 43 -> {
+                // Worn sub-options (build 2686, verified on Ring of shadows 28327): op index, then (sub-op id, name)
+                // pairs until a 0 id. The single-pair reading this decoder used before desynced the stream after the
+                // first entry and then failed on a text byte ("Unknown opcode 85").
                 buf.u8() // op index
-                buf.u8() // sub-op id
-                buf.string()
+                while (true) {
+                    val subOp = buf.u8()
+                    if (subOp == 0) break
+                    buf.string()
+                }
             }
             opcode == 44 -> def.inventoryModel = buf.i32()
             opcode == 45 -> {

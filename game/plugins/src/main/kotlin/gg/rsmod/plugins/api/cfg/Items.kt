@@ -13378,12 +13378,6 @@ object Items {
     const val CAVEFISH_NOTED = 15267
     const val BURNT_CAVEFISH = 15268
     const val BURNT_CAVEFISH_NOTED = 15269
-    const val RAW_ROCKTAIL = 15270
-    const val RAW_ROCKTAIL_NOTED = 15271
-    const val ROCKTAIL = 15272
-    const val ROCKTAIL_NOTED = 15273
-    const val BURNT_ROCKTAIL = 15274
-    const val BURNT_ROCKTAIL_NOTED = 15275
     const val PLANK_15276 = 15276
     const val DRUGGED_MEAT = 15277
     const val CLOTH = 15278
@@ -19304,7 +19298,7 @@ object Items {
     // Ids 22323/22324 (not 22400/22401, their original allocation) because ItemMetadataService and
     // DefinitionSet require item ids to be perfectly contiguous from 0 with no gaps - see
     // RSPS_AUTONOMOUS_LOG.md 2026-09-02 for the boot-crash this caused and the id-allocation fix.
-    const val TROUVER_PARCHMENT = 22323
+    const val TROUVER_PARCHMENT = 23730
     const val FIRE_CAPE_LOCKED_22324 = 22324
     const val ABYSSAL_TENTACLE = 22325
     // S3, 2026-09-03: added by hand (data/cfg/items.yml entry added in the same change) rather
@@ -19313,7 +19307,7 @@ object Items {
     // name recorded since gate A0 ("Twisted bow" at 22326 in both caches).
     const val TWISTED_BOW = 22326
     const val CROWN_OF_HELIOS = 22327
-    // OSRS-IMPORT pilot batch (tx-20260913-204038, OsrsItemImportTool "pilot"; RSPS_IMPORT_ASSET_MAP.yml).
+    // OSRS-IMPORT pilot batch (tx-20260913-204038, OsrsItemImportTool "pilot"; OSRS_IMPORT_MASTER.yml).
     const val OCCULT_NECKLACE = 22328
     const val OCCULT_NECKLACE_NOTED = 22329
     const val OCCULT_NECKLACE_OR = 22330
@@ -19327,7 +19321,7 @@ object Items {
     const val BELLES_FOLLY_NOTED = 22338
     const val BELLES_FOLLY_TARNISHED = 22339
     const val BELLES_FOLLY_TARNISHED_NOTED = 22340
-    // OSRS-IMPORT batch equipment2 (OsrsItemImportTool "equipment2"; RSPS_IMPORT_ASSET_MAP.yml).
+    // OSRS-IMPORT batch equipment2 (OsrsItemImportTool "equipment2"; OSRS_IMPORT_MASTER.yml).
     const val NECKLACE_OF_ANGUISH = 22341
     const val NECKLACE_OF_ANGUISH_NOTED = 22342
     const val ANGUISH_ORNAMENT_KIT = 22343
@@ -19373,7 +19367,7 @@ object Items {
     const val MASORI_CHAPS_F_NOTED = 22383
     const val ARMADYLEAN_PLATE = 22384
     const val ARMADYLEAN_PLATE_NOTED = 22385
-    // OSRS-IMPORT batch capesrings (OsrsItemImportTool "capesrings"; RSPS_IMPORT_ASSET_MAP.yml).
+    // OSRS-IMPORT batch capesrings (OsrsItemImportTool "capesrings"; OSRS_IMPORT_MASTER.yml).
     const val INFERNAL_CAPE = 22386
     const val INFERNAL_CAPE_BROKEN = 22387
     const val INFERNAL_CAPE_L = 22388
@@ -19397,10 +19391,10 @@ object Items {
     const val RING_OF_SUFFERING_I = 22406
     const val RING_OF_SUFFERING_R = 22407
     const val RING_OF_SUFFERING_RI = 22408
-    // OSRS-IMPORT batch lightbearer (OsrsItemImportTool "lightbearer"; RSPS_IMPORT_ASSET_MAP.yml).
+    // OSRS-IMPORT batch lightbearer (OsrsItemImportTool "lightbearer"; OSRS_IMPORT_MASTER.yml).
     const val LIGHTBEARER = 22409
     const val LIGHTBEARER_NOTED = 22410
-    // OSRS-IMPORT batch crossbows (OsrsItemImportTool "crossbows"; RSPS_IMPORT_ASSET_MAP.yml). The OSRS dragon-metal bolts are
+    // OSRS-IMPORT batch crossbows (OsrsItemImportTool "crossbows"; OSRS_IMPORT_MASTER.yml). The OSRS dragon-metal bolts are
     // OSRS_DRAGON_BOLTS: the 667 DRAGON_BOLTS 9341 / DRAGON_BOLTS_E 9244 are dragonstone bolts and stay separate items.
     // Count (stack-size) variants 22426-22534 have no constants.
     const val ARMADYL_CROSSBOW = 22411
@@ -19452,6 +19446,10 @@ object Items {
     const val BALLISTA_SPRING_NOTED = 22543
     const val MONKEY_TAIL = 22544
     const val MONKEY_TAIL_NOTED = 22545
+    const val INCOMPLETE_HEAVY_BALLISTA = 23731
+    const val INCOMPLETE_HEAVY_BALLISTA_NOTED = 23732
+    const val UNSTRUNG_HEAVY_BALLISTA = 23733
+    const val UNSTRUNG_HEAVY_BALLISTA_NOTED = 23734
     const val JAVELIN_SHAFT = 22550
     const val BRONZE_JAVELIN_TIPS = 22555
     const val IRON_JAVELIN_TIPS = 22560
@@ -20178,6 +20176,97 @@ object Items {
 
     // Owner answer Q10: the Mimic casket (OSRS 23184, OsrsItemImportTool batch "mimic-casket", tx-20260914-142009).
     const val MIMIC = 23729
+
+    // OSRS import run 2026-09-17: batch "demonbane" (OsrsItemImportTool, tx-20260917-051747).
+    const val ARCLIGHT = 23735
+    const val ARCLIGHT_INACTIVE = 23736
+    const val ANCIENT_SHARD = 23737
+    const val EMBERLIGHT = 23738
+    const val BURNING_CLAWS = 23739
+    const val BURNING_CLAWS_NOTED = 23740
+    const val BURNING_CLAW = 23741
+    const val BURNING_CLAW_NOTED = 23742
+
+    // OSRS import run 2026-09-17: batch "runes" (OsrsItemImportTool, tx-20260917-053326).
+    const val WRATH_RUNE = 23743
+    const val AETHER_RUNE = 23744
+    const val AETHER_CATALYST = 23745
+    const val RUNE_POUCH = 23746
+    const val DIVINE_RUNE_POUCH = 23747
+    const val THREAD_OF_ELIDINIS = 23748
+    const val SMOKE_BATTLESTAFF = 23749
+    const val SMOKE_BATTLESTAFF_NOTED = 23750
+    const val MIST_BATTLESTAFF = 23751
+    const val MIST_BATTLESTAFF_NOTED = 23752
+    const val MYSTIC_MIST_STAFF = 23753
+    const val MYSTIC_MIST_STAFF_NOTED = 23754
+    const val DUST_BATTLESTAFF = 23755
+    const val DUST_BATTLESTAFF_NOTED = 23756
+    const val MYSTIC_DUST_STAFF = 23757
+    const val MYSTIC_DUST_STAFF_NOTED = 23758
+
+    // OSRS import run 2026-09-17: batch "kits" (OsrsItemImportTool, tx-20260917-054340).
+    const val DRAGON_BOOTS_ORNAMENT_KIT = 23759
+    const val DRAGON_BOOTS_ORNAMENT_KIT_NOTED = 23760
+    const val DRAGON_BOOTS_G = 23761
+    const val BERSERKER_NECKLACE_ORNAMENT_KIT = 23762
+    const val BERSERKER_NECKLACE_ORNAMENT_KIT_NOTED = 23763
+    const val BERSERKER_NECKLACE_OR = 23764
+    const val RUNE_DEFENDER_ORNAMENT_KIT = 23765
+    const val RUNE_DEFENDER_ORNAMENT_KIT_NOTED = 23766
+    const val RUNE_DEFENDER_T = 23767
+    const val TZHAAR_KET_OM_ORNAMENT_KIT = 23768
+    const val TZHAAR_KET_OM_ORNAMENT_KIT_NOTED = 23769
+    const val TZHAAR_KET_OM_T = 23770
+    const val RUNE_SCIMITAR_ORNAMENT_KIT_GUTHIX = 23771
+    const val RUNE_SCIMITAR_ORNAMENT_KIT_GUTHIX_NOTED = 23772
+    const val RUNE_SCIMITAR_ORNAMENT_KIT_SARADOMIN = 23773
+    const val RUNE_SCIMITAR_ORNAMENT_KIT_SARADOMIN_NOTED = 23774
+    const val RUNE_SCIMITAR_ORNAMENT_KIT_ZAMORAK = 23775
+    const val RUNE_SCIMITAR_ORNAMENT_KIT_ZAMORAK_NOTED = 23776
+    const val RUNE_SCIMITAR_GUTHIX = 23777
+    const val RUNE_SCIMITAR_SARADOMIN = 23778
+    const val RUNE_SCIMITAR_ZAMORAK = 23779
+    const val FROZEN_WHIP_MIX = 23780
+    const val FROZEN_WHIP_MIX_NOTED = 23781
+    const val VOLCANIC_WHIP_MIX = 23782
+    const val VOLCANIC_WHIP_MIX_NOTED = 23783
+    const val FROZEN_ABYSSAL_WHIP = 23784
+    const val VOLCANIC_ABYSSAL_WHIP = 23785
+    const val LAVA_STAFF_UPGRADE_KIT = 23786
+    const val LAVA_STAFF_UPGRADE_KIT_NOTED = 23787
+    const val LAVA_BATTLESTAFF_OR = 23788
+    const val STEAM_STAFF_UPGRADE_KIT = 23789
+    const val STEAM_STAFF_UPGRADE_KIT_NOTED = 23790
+    const val STEAM_BATTLESTAFF_OR = 23791
+    const val MYSTIC_STEAM_STAFF_OR = 23792
+
+    // OSRS import run 2026-09-17: batch "kits2" (OsrsItemImportTool, tx-20260917-062322).
+    const val BLUE_DARK_BOW_PAINT = 23793
+    const val BLUE_DARK_BOW_PAINT_NOTED = 23794
+    const val GREEN_DARK_BOW_PAINT = 23795
+    const val GREEN_DARK_BOW_PAINT_NOTED = 23796
+    const val YELLOW_DARK_BOW_PAINT = 23797
+    const val YELLOW_DARK_BOW_PAINT_NOTED = 23798
+    const val WHITE_DARK_BOW_PAINT = 23799
+    const val WHITE_DARK_BOW_PAINT_NOTED = 23800
+    const val DARK_BOW_GREEN = 23801
+    const val DARK_BOW_BLUE = 23802
+    const val DARK_BOW_YELLOW = 23803
+    const val DARK_BOW_WHITE = 23804
+    const val DRAGON_PICKAXE_UPGRADE_KIT = 23805
+    const val DRAGON_PICKAXE_UPGRADE_KIT_NOTED = 23806
+    const val DRAGON_PICKAXE_OR_UPGRADED = 23807
+    const val ZALCANO_SHARD = 23808
+    const val ZALCANO_SHARD_NOTED = 23809
+    const val DRAGON_PICKAXE_OR = 23810
+    const val FIRE_MAX_CAPE = 23814
+    const val FIRE_MAX_HOOD = 23815
+    const val ACCUMULATOR_MAX_CAPE = 23816
+    const val ACCUMULATOR_MAX_HOOD = 23817
+    const val INFERNAL_MAX_CAPE = 23818
+    const val INFERNAL_MAX_HOOD = 23819
+
     // Owner 2026-09-19: Deadman breach drops (OSRS 29643/29644, 28564, 33044, 28570, 33047; OsrsItemImportTool batch
     // "deadman-breach", tx-20260919-164727).
     const val CHITIN = 23820
@@ -20186,5 +20275,32 @@ object Items {
     const val TRINKET_OF_AVARICE = 23823
     const val TRINKET_OF_UNDEAD = 23824
     const val TRINKET_OF_FORTUITY_INACTIVE = 23825
+
+    // OSRS import run 2026-09-19: batch "food-pk" (Anglerfish, upstream 13441/13442).
+    const val ANGLERFISH = 23826
+    const val ANGLERFISH_NOTED = 23827
+    // OSRS import run: batch "looting-bag" (closed 11941 plus open state 22586).
+    const val LOOTING_BAG = 23828
+    const val LOOTING_BAG_OPEN = 23829
+    // Owner 2026-09-19 import batch "owner0919" (tx-20260919-211216): mixed hide set, Book of Darkness (Zaros god book),
+    // Ring of shadows (DT2 reward), burning amulet charges and spiked manacles.
+    const val MIXED_HIDE_TOP = 23838
+    const val MIXED_HIDE_TOP_NOTED = 23839
+    const val MIXED_HIDE_LEGS = 23840
+    const val MIXED_HIDE_LEGS_NOTED = 23841
+    const val MIXED_HIDE_BOOTS = 23842
+    const val MIXED_HIDE_BOOTS_NOTED = 23843
+    const val MIXED_HIDE_CAPE = 23844
+    const val MIXED_HIDE_CAPE_NOTED = 23845
+    const val BOOK_OF_DARKNESS = 23846
+    const val RING_OF_SHADOWS = 23847
+    const val RING_OF_SHADOWS_UNCHARGED = 23848
+    const val BURNING_AMULET_5 = 23849
+    const val BURNING_AMULET_4 = 23850
+    const val BURNING_AMULET_3 = 23851
+    const val BURNING_AMULET_2 = 23852
+    const val BURNING_AMULET_1 = 23853
+    const val SPIKED_MANACLES = 23854
+    const val SPIKED_MANACLES_NOTED = 23855
     // Auto-generated file using class gg.rsmod.game.service.game.DumpEntityIdService
 }

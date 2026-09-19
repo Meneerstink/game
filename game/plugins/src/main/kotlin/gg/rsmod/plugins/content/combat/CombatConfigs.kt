@@ -50,6 +50,8 @@ object CombatConfigs {
             Items.UNHOLY_BOOK,
             Items.BOOK_OF_LAW,
             Items.BOOK_OF_WAR,
+            // Owner 2026-09-19: the Zaros god book, imported in batch "owner0919" (tx-20260919-211216).
+            Items.BOOK_OF_DARKNESS,
         )
 
     private val BOXING_GLOVES =
