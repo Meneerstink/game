@@ -128,6 +128,33 @@ class RunePaymentTests {
     }
 
     @Test
+    fun `every spell rune list uses the shared payment sources`() {
+        // Unpowered orb (orb charging) and the banana of Ape Atoll Teleport (2 law, 2 fire, 2 water + 1 banana).
+        val nonRuneRequirements = setOf(Items.UNPOWERED_ORB, Items.BANANA)
+        for (spell in SpellbookData.values()) {
+            val grouped = spell.runes.groupBy { it.id }.mapValues { (_, stacks) -> stacks.sumOf { it.amount } }
+            assertTrue(
+                grouped.keys.all { it in RunePouch.RUNES || it in nonRuneRequirements },
+                "${spell.name} contains an unknown rune/item requirement: ${grouped.keys - RunePouch.RUNES - nonRuneRequirements}",
+            )
+            val runes = grouped.filterKeys { it in RunePouch.RUNES }
+            assertEquals(
+                runes,
+                RunePayment.plan(runes, available = { runes[it] ?: 0 }, free = { false }),
+                "${spell.name} must be payable from exact carried runes",
+            )
+
+            // Exercise every elemental/combination staff contract against every spell that uses its rune.
+            for (staff in MagicStaves.values()) {
+                if (staff.runeId !in runes) continue
+                val plan = RunePayment.plan(runes, available = { if (it == staff.runeId) 0 else runes[it] ?: 0 }, free = { it == staff.runeId })
+                assertNotNull(plan, "${spell.name} should accept ${staff.name}'s supplied rune")
+                assertFalse(staff.runeId in plan.orEmpty(), "${spell.name} should not spend ${staff.name}'s supplied rune")
+            }
+        }
+    }
+
+    @Test
     fun `items yml, wiring and death routes`() {
         val yml =
             ObjectMapper(YAMLFactory()).readTree(Paths.get("..", "..", "data", "cfg", "items.yml").toFile())

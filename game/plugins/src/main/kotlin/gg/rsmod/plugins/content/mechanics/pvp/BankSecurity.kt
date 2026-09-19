@@ -43,6 +43,48 @@ object BankSecurity {
             AreaState.isDangerous(victim.tile) &&
             attackDelay > BANK_CLOSING_MAX_ATTACK_TICKS
 
+    /** OSRS Wiki "Deadman Mode": "Eating and drinking potions is blocked for 3 seconds (5 ticks) after banking or
+     * un-noting outside of a safezone". */
+    const val POST_BANK_CONSUME_BLOCK_TICKS = 5
+
+    /** Closing a bank or deposit box outside every guarded zone holds the existing food, combo-food and potion gates
+     * for at least [POST_BANK_CONSUME_BLOCK_TICKS]; every eat/drink route already checks those timers. */
+    fun onBankClosed(player: Player) {
+        if (GuardedZones.contains(player.tile)) return
+        listOf(
+            gg.rsmod.game.model.timer.FOOD_DELAY,
+            gg.rsmod.game.model.timer.COMBO_FOOD_DELAY,
+            gg.rsmod.game.model.timer.POTION_DELAY,
+        ).forEach { key ->
+            if (!player.timers.has(key) || player.timers[key] < POST_BANK_CONSUME_BLOCK_TICKS) {
+                player.timers[key] = POST_BANK_CONSUME_BLOCK_TICKS
+            }
+        }
+    }
+
+    /** OSRS Wiki "Deadman Mode" (2 September 2026): "Players who have recently been in combat can no longer deposit
+     * items worth 20,000 GP or more for 24 seconds, except when using a bank in a safe zone." 24 s = 40 ticks. */
+    const val COMBAT_DEPOSIT_BLOCK_TICKS = 40
+    const val COMBAT_DEPOSIT_VALUE_LIMIT = 20_000L
+
+    val LAST_COMBAT_CYCLE_ATTR = gg.rsmod.game.model.attr.AttributeKey<Int>()
+
+    /** Called from `Combat.postAttack` for every player on either side of an attack. */
+    fun markCombat(player: Player) {
+        player.attr[LAST_COMBAT_CYCLE_ATTR] = player.world.currentCycle
+    }
+
+    /** Whether depositing a stack worth [value] (guide price x amount) is refused right now. */
+    fun blocksDeposit(
+        player: Player,
+        value: Long,
+        now: Int = player.world.currentCycle,
+    ): Boolean {
+        if (value < COMBAT_DEPOSIT_VALUE_LIMIT || GuardedZones.contains(player.tile)) return false
+        val last = player.attr[LAST_COMBAT_CYCLE_ATTR] ?: return false
+        return now - last < COMBAT_DEPOSIT_BLOCK_TICKS
+    }
+
     fun denyBank(player: Player): Boolean {
         if (!isBankBlocked(player)) return false
         player.message(CityGuards.GREETING.format(player.username))

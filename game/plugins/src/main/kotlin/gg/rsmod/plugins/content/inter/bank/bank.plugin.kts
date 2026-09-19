@@ -10,6 +10,11 @@ on_interface_open(Bank.BANK_INTERFACE_ID) {
 on_interface_close(Bank.BANK_INTERFACE_ID) {
     player.closeInterface(dest = InterfaceDestination.TAB_AREA)
     player.closeInputDialog()
+    gg.rsmod.plugins.content.mechanics.pvp.BankSecurity.onBankClosed(player)
+}
+
+on_interface_close(Bank.DEPOSIT_BOX_INTERFACE_ID) {
+    gg.rsmod.plugins.content.mechanics.pvp.BankSecurity.onBankClosed(player)
 }
 
 on_button(interfaceId = Bank.BANK_INTERFACE_ID, component = 44) {

@@ -37,6 +37,36 @@ class DangerousBankAttackTests {
         assertFalse(BankSecurity.keepsBankOpen(player(Tile(0, 0, 0)), player(edgevilleBank, -1), 5), "nothing open")
     }
 
+    @Test
+    fun `a 20k-plus deposit is refused for 40 ticks after combat, only outside the guarded zones`() {
+        val p = player(edgevilleBank)
+        every { p.attr } returns gg.rsmod.game.model.attr.AttributeMap()
+        assertFalse(BankSecurity.blocksDeposit(p, 50_000L, now = 100), "never in combat")
+        p.attr[BankSecurity.LAST_COMBAT_CYCLE_ATTR] = 100
+        assertEquals(true, BankSecurity.blocksDeposit(p, 20_000L, now = 100), "exactly 20k right after combat")
+        assertEquals(true, BankSecurity.blocksDeposit(p, 20_000L, now = 139), "tick 39 of 40")
+        assertFalse(BankSecurity.blocksDeposit(p, 20_000L, now = 140), "24 seconds later")
+        assertFalse(BankSecurity.blocksDeposit(p, 19_999L, now = 100), "below 20k")
+        val safe = player(varrockWestBank)
+        every { safe.attr } returns gg.rsmod.game.model.attr.AttributeMap().also { it[BankSecurity.LAST_COMBAT_CYCLE_ATTR] = 100 }
+        assertFalse(BankSecurity.blocksDeposit(safe, 1_000_000L, now = 100), "safe-zone bank")
+    }
+
+    @Test
+    fun `closing a bank outside a safe zone blocks eating and drinking for 5 ticks`() {
+        val keys = listOf(gg.rsmod.game.model.timer.FOOD_DELAY, gg.rsmod.game.model.timer.COMBO_FOOD_DELAY, gg.rsmod.game.model.timer.POTION_DELAY)
+        val danger = player(edgevilleBank)
+        val dangerTimers = gg.rsmod.game.model.timer.TimerMap()
+        every { danger.timers } returns dangerTimers
+        BankSecurity.onBankClosed(danger)
+        keys.forEach { assertEquals(5, dangerTimers[it]) }
+        val safe = player(varrockWestBank)
+        val safeTimers = gg.rsmod.game.model.timer.TimerMap()
+        every { safe.timers } returns safeTimers
+        BankSecurity.onBankClosed(safe)
+        keys.forEach { assertFalse(safeTimers.has(it), "no block at a safe-zone bank") }
+    }
+
     private fun player(
         tile: Tile,
         modal: Int = -1,

@@ -109,6 +109,9 @@ object Combat {
         if (pawn is Player && target is Player) {
             PvpSkull.markAggression(attacker = pawn, victim = target)
         }
+        // Deadman 24-second high-value deposit block ("recently been in combat").
+        (pawn as? Player)?.let { gg.rsmod.plugins.content.mechanics.pvp.BankSecurity.markCombat(it) }
+        (target as? Player)?.let { gg.rsmod.plugins.content.mechanics.pvp.BankSecurity.markCombat(it) }
         // Toxic staff of the dead: 10 scales on entering combat and every further minute in combat (StaffOfTheDead).
         (pawn as? Player)?.let { gg.rsmod.plugins.content.items.osrs.StaffOfTheDead.onCombat(it) }
         (target as? Player)?.let { gg.rsmod.plugins.content.items.osrs.StaffOfTheDead.onCombat(it) }

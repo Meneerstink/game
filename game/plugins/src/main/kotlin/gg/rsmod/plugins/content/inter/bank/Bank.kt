@@ -75,6 +75,11 @@ class Bank {
             val to = player.bank
             val item = from[fromSlot] ?: return false
             val amount = from.getItemCount(item.id).coerceAtMost(amt)
+            val value = gg.rsmod.plugins.content.mechanics.pvp.LootKeys.value(player.world.definitions, listOf(Item(item.id, amount)))
+            if (gg.rsmod.plugins.content.mechanics.pvp.BankSecurity.blocksDeposit(player, value)) {
+                player.filterableMessage("You can't deposit items worth 20,000 coins or more so soon after combat.")
+                return false
+            }
             val currentTab = BankTabs.selectedTab(player)
 
             var deposited = 0
