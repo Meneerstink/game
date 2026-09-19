@@ -19,6 +19,7 @@ import gg.rsmod.plugins.api.ext.closeInterface
 import gg.rsmod.plugins.api.ext.filterableMessage
 import gg.rsmod.plugins.api.ext.freeze
 import gg.rsmod.plugins.api.ext.hit
+import gg.rsmod.plugins.api.ext.playSound
 import gg.rsmod.plugins.content.combat.Combat
 import gg.rsmod.plugins.content.combat.canEngageCombat
 import gg.rsmod.plugins.content.combat.getCombatTarget
@@ -136,6 +137,8 @@ object CityGuards {
 
     /** OSRS Wiki (Wizguard): "freezing them for 3 seconds (5 ticks)". */
     const val WIZGUARD_FREEZE_CYCLES = 5
+    const val WIZGUARD_CAST_SOUND = 171
+    const val WIZGUARD_IMPACT_SOUND = 169
 
     /** OSRS Wiki (Wizguard): "will appear again after 6 seconds (10 ticks)". */
     const val WIZGUARD_REAPPEAR_CYCLES = 10
@@ -353,9 +356,9 @@ object CityGuards {
         val world = guard.world
         val target = guard.getCombatTarget() as? Player
         if (target != null && mayPursue(guard, target)) {
-            // Reassert the server-side face-pawn block on the same cadence as the leash. This
-            // covers guards reacquired by aggro and keeps all imported visual variants aligned.
-            guard.facePawn(target)
+            // Reassert the face-pawn block on the same cadence as the leash. This covers guards
+            // reacquired by aggro and keeps all imported visual variants aligned.
+            faceAndResend(guard, target)
         }
         if (target != null && !mayPursue(guard, target)) {
             standDown(guard)
@@ -384,7 +387,7 @@ object CityGuards {
             if (intruder != null) {
                 guard.attr[HOLD_FACING_ATTR] = true
                 if (guard.movementQueue.hasDestination()) guard.stopMovement()
-                if (guard.attr[FACING_PAWN_ATTR]?.get() !== intruder) guard.facePawn(intruder)
+                faceAndResend(guard, intruder)
                 return
             }
             if (guard.attr.has(HOLD_FACING_ATTR)) {
@@ -422,6 +425,21 @@ object CityGuards {
     }
 
     /**
+     * Owner live retest 2026-09-19 ("guards are not facing me when attacking", picture guardnotfacing):
+     * [Npc.facePawn] only emits a FACE_PAWN block when the target index changes, so a single lost
+     * update (e.g. sent on a cycle the client did not yet track the guard) left the guard turned
+     * away for the whole fight. The leash re-sends the block every leash tick (2 cycles) so any
+     * client that missed it is corrected within about a second.
+     */
+    fun faceAndResend(
+        guard: Npc,
+        target: Pawn,
+    ) {
+        guard.facePawn(target)
+        guard.addBlock(gg.rsmod.game.sync.block.UpdateBlockType.FACE_PAWN)
+    }
+
+    /**
      * One patrol walk roughly every 8 cycles (~5 s) per idle guard (the leash runs every 2 cycles;
      * `world.random(n)` is inclusive, so 1 in n+1). Owner live retest 2026-09-18 ("guards still not
      * actively roaming"): the previous 1-in-16 roll gave one walk per ~19 s, which reads as
@@ -450,6 +468,7 @@ object CityGuards {
                     "${npc.def.name}#${npc.id} @${npc.tile.x},${npc.tile.z} post ${npc.spawnTile.x},${npc.spawnTile.z}" +
                         " target=${(npc.getCombatTarget() as? Player)?.username ?: "-"}" +
                         " facing=${(npc.attr[FACING_PAWN_ATTR]?.get() as? Player)?.username ?: "-"}" +
+                        " faceIndex=${npc.facePawnIndex}" +
                         " hold=${npc.attr[HOLD_FACING_ATTR] == true} walking=${npc.movementQueue.hasDestination()}" +
                         " reactive=${npc.attr[REACTIVE_GUARD_ATTR] == true} inZone=${isGuardedZone(npc.tile)}" +
                         " leash=${npc.timers.has(GUARD_LEASH_TIMER)} lastPatrol=${npc.attr[LAST_PATROL_ATTR] ?: "-"}"
@@ -665,13 +684,18 @@ object CityGuards {
         wizguard.facePawn(player)
         wizguard.animate(ICE_BARRAGE_CAST_ANIM)
         player.graphic(Graphic(ICE_BARRAGE_IMPACT_GFX, 0))
+        // Ice Barrage cast / impact sounds, the same ids the player's spell plays (SpellSounds: 171, 169).
+        player.playSound(WIZGUARD_CAST_SOUND)
+        player.playSound(WIZGUARD_IMPACT_SOUND, delay = 1)
         player.freeze(WIZGUARD_FREEZE_CYCLES) {
             player.filterableMessage("A Wizguard's Ice Barrage freezes you in place!")
         }
         player.attr[GUARD_FROZEN_UNTIL_CYCLE_ATTR] = world.currentCycle + WIZGUARD_FREEZE_CYCLES
         player.hit(world.random(WIZGUARD_MAX_HIT), delay = 1)
         world.queue {
-            wait(3)
+            wait(1)
+            if (wizguard.isActive()) faceAndResend(wizguard, player)
+            wait(2)
             if (player.attr[ACTIVE_WIZGUARD_ATTR]?.get() === wizguard) {
                 player.attr.remove(ACTIVE_WIZGUARD_ATTR)
                 if (wizguard.isActive()) world.remove(wizguard)

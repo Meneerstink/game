@@ -71,6 +71,7 @@ BreachMonsters.ROSTER.forEach { m ->
 }
 
 BreachMonsters.attackRows().forEach { NpcAttacks.register(it) }
+BreachMonsters.SOUND_ALIASES.forEach { (id, source) -> gg.rsmod.plugins.content.combat.audio.NpcCombatAudio.alias(id, source) }
 
 on_world_init {
     DeadmanBreach.start(world)
@@ -274,6 +275,20 @@ on_command("breach", Privilege.ADMIN_POWER) {
     } else {
         opened.sites.forEach { s -> player.message("Breach: ${s.name} (${s.kind}, ${if (s.multi) "multi" else "single"}) spawner ${s.spawners.first()}") }
     }
+}
+
+/** Owner 2026-09-19 ("i cant find the breach please fix me a teleport command"): to the open breach's spawner (site 1 or 2). */
+on_command("breachtele", Privilege.ADMIN_POWER) {
+    val open = DeadmanBreach.active
+    if (open == null) {
+        player.message("No breach is open. ${DeadmanBreach.statusLine()} Use 'breach' to open one.")
+        return@on_command
+    }
+    val index = (player.getCommandArgs().firstOrNull()?.toIntOrNull() ?: 1).coerceIn(1, open.sites.size) - 1
+    val site = open.sites[index]
+    val dest = site.landing.minByOrNull { it.getDistance(site.spawners.first()) } ?: site.spawners.first()
+    player.moveTo(dest)
+    player.message("Teleported to the breach ${site.name.replaceFirstChar { it.lowercase() }} (${if (site.multi) "multi" else "single"}-way).")
 }
 
 on_command("breachinfo") {

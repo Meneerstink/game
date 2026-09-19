@@ -435,6 +435,18 @@ object BreachMonsters {
 
     val BY_ID: Map<Int, Monster> = ROSTER.associateBy { it.id }
 
+    /**
+     * Breach monster -> the rev-667 npc whose combat-sound row (combat-sounds.json) it uses: the regular version it is a copy of
+     * (owner 2026-09-19 "no sounds": imported npcs had no row). Monsters without a rev-667 counterpart (Cerberus, the Wilderness
+     * bosses, Jal-ImKot, the Varlamore/PvP-legend npcs) only have the sounds of their attack sections.
+     */
+    val SOUND_ALIASES: Map<Int, Int> =
+        mapOf(
+            14438 to 2883, 14439 to 50, 14440 to 2881, 14441 to 2882, 14442 to 6260, 14443 to 6247, 14444 to 6203, 14445 to 2026,
+            14449 to 1615, 14450 to 745, 14451 to 1633, 14452 to 4355, 14454 to 1643, 14455 to 1637, 14457 to 2783, 14462 to 2745,
+            14467 to 3375, 14471 to 1961, 14472 to 1241, 14474 to 2837,
+        )
+
     /** The monsters a breach spawns (everything but Zemouregal's summons). */
     val SPAWNABLE: List<Monster> = ROSTER.filter { !it.summon }
 

@@ -63,13 +63,33 @@ object NpcCombatAudio {
         return rows.size
     }
 
-    fun rowFor(npcId: Int): Row? = rows[npcId]
+    /**
+     * Owner live retest 2026-09-19 ("they have no sounds"): the table is keyed by npc id and generated from Void's rev-667 npcs,
+     * so every OSRS-imported npc (local ids 14000+: Deadman guards, breach monsters) had no row and fought silently. Imported npcs
+     * get a row in code ([register]) or reuse the row of the rev-667 npc they are a version of ([alias]); both survive a [load]
+     * in either order because they are resolved at lookup time.
+     */
+    private val registered = java.util.concurrent.ConcurrentHashMap<Int, Row>()
+    private val aliases = java.util.concurrent.ConcurrentHashMap<Int, Int>()
+
+    fun register(row: Row) {
+        registered[row.id] = row
+    }
+
+    fun alias(
+        npcId: Int,
+        soundsOfNpcId: Int,
+    ) {
+        aliases[npcId] = soundsOfNpcId
+    }
+
+    fun rowFor(npcId: Int): Row? = rows[npcId] ?: registered[npcId] ?: aliases[npcId]?.let { rows[it] }
 
     /**
      * True when the shared table plays a death sound for [npcId]. A hand-written death block that
      * still plays its own sound must check this, so the npc never hears two death sounds.
      */
-    fun hasDeathSound(npcId: Int): Boolean = (rows[npcId]?.death ?: -1) >= 0
+    fun hasDeathSound(npcId: Int): Boolean = (rowFor(npcId)?.death ?: -1) >= 0
 
     fun rows(): Collection<Row> = rows.values
 
@@ -81,7 +101,7 @@ object NpcCombatAudio {
         npc: Npc,
         target: Pawn,
     ) {
-        val row = rows[npc.id] ?: return
+        val row = rowFor(npc.id) ?: return
         if (row.attack.isEmpty()) return
         val cycle = npc.world.currentCycle
         if (npc.attr[LAST_ATTACK_SOUND_CYCLE] == cycle) return
@@ -93,7 +113,7 @@ object NpcCombatAudio {
         source: Pawn,
         npc: Npc,
     ) {
-        val id = rows[npc.id]?.defend ?: return
+        val id = rowFor(npc.id)?.defend ?: return
         if (id >= 0 && source is Player) {
             if (FamiliarAudio.isFamiliarNpc(npc.id)) FamiliarAudio.play(source, id) else source.playSound(id)
         }
@@ -103,7 +123,7 @@ object NpcCombatAudio {
         killer: Player,
         npc: Npc,
     ) {
-        val id = rows[npc.id]?.death ?: return
+        val id = rowFor(npc.id)?.death ?: return
         if (id >= 0) {
             if (FamiliarAudio.isFamiliarNpc(npc.id)) FamiliarAudio.play(killer, id) else killer.playSound(id)
         }

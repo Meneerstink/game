@@ -50,6 +50,10 @@ abstract class Pawn(
      */
     internal var blockBuffer = UpdateBlockBuffer()
 
+    /** The face-pawn index the next update block will carry (-1 = none); read-only, for diagnostics such as `guardinfo`. */
+    val facePawnIndex: Int
+        get() = blockBuffer.facePawnIndex
+
     /**
      * The 3D [Tile] that this pawn was standing on, in the last game cycle.
      */

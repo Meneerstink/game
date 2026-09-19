@@ -93,6 +93,16 @@ class DeadmanBreachTests {
     }
 
     @Test
+    fun `every sound alias points at a rev-667 combat-sound row and only at breach monsters`() {
+        val rows = com.google.gson.JsonParser().parse(Paths.get("..", "..", "data", "cfg", "npcs", "combat-sounds.json").toFile().readText())
+            .asJsonArray.map { it.asJsonObject["id"].asInt }.toSet()
+        BreachMonsters.SOUND_ALIASES.forEach { (id, source) ->
+            assertTrue(id in BreachMonsters.BY_ID, "alias $id is not a breach monster")
+            assertTrue(source in rows, "alias $id -> $source has no combat-sound row")
+        }
+    }
+
+    @Test
     fun `breach and boss spawn locs exist with the OSRS names`() {
         assertEquals("Breach", definitions.get(ObjectDef::class.java, DeadmanBreach.BREACH_LOC).name)
         assertEquals("Boss Spawn", definitions.get(ObjectDef::class.java, DeadmanBreach.BOSS_SPAWN_LOC).name)

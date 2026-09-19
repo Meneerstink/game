@@ -2,6 +2,7 @@ package gg.rsmod.plugins.content.mechanics.pvp
 
 import gg.rsmod.game.model.combat.StyleType
 import gg.rsmod.game.plugin.KotlinPlugin
+import gg.rsmod.plugins.content.combat.audio.NpcCombatAudio
 
 /**
  * Deadman guard combat definitions + stationed spawns (OSRS Wiki "Guard (Deadman Mode)": level 1337,
@@ -96,6 +97,18 @@ fun KotlinPlugin.rangedGuard(id: Int) =
 
 CityGuards.MELEE_GUARD_IDS.forEach { meleeGuard(it) }
 CityGuards.RANGED_GUARD_IDS.forEach { rangedGuard(it) }
+
+/*
+ * Owner live retest 2026-09-19 ("they have no sounds"): the imported guards had no combat-sound row. Defend 513 / death 512 are
+ * the rev-667 Guard row (combat-sounds.json, guard_edgeville 296-299); the attack sound is the one of the weapon each guard holds
+ * (items.yml attack_audio: longsword 2500, longbow 2700), played on the target like every Void attack sound.
+ */
+CityGuards.MELEE_GUARD_IDS.forEach {
+    NpcCombatAudio.register(NpcCombatAudio.Row(id = it, name = "Guard", attack = listOf(NpcCombatAudio.Sound(id = 2500)), defend = 513, death = 512))
+}
+CityGuards.RANGED_GUARD_IDS.forEach {
+    NpcCombatAudio.register(NpcCombatAudio.Row(id = it, name = "Guard", attack = listOf(NpcCombatAudio.Sound(id = 2700)), defend = 513, death = 512))
+}
 
 /** The Wizguard never fights through the combat engine (it casts once and vanishes, see
  * [CityGuards.wizguardStrike]); this def only keeps combatDef/aggro lookups from seeing a missing
