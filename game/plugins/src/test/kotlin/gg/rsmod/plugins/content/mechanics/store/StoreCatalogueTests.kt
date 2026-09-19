@@ -25,9 +25,19 @@ class StoreCatalogueTests {
     fun `the Donator shop sells kits only, never a complete ornamented item`() {
         val donator = StoreCatalogue.entries(Shop.DONATOR)
         assertTrue(donator.isNotEmpty())
-        assertEquals(emptyList(), donator.filter { it.kind != Kind.KIT }.map { it.purchaseItem })
+        // Owner 2026-09-19: besides kits only look-only max cape unlocks (no item is given for those).
+        assertEquals(emptyList(), donator.filter { it.kind != Kind.KIT && it.kind != Kind.UNLOCK }.map { it.purchaseItem })
         val ornamented = OsrsOrnamentKits.ORNAMENTED_RESULTS
         assertEquals(emptyList(), donator.filter { it.purchaseItem in ornamented }.map { it.purchaseItem })
+    }
+
+    @Test
+    fun `every max cape variant look is unlockable for Loyalty and Donator points and requires its real component`() {
+        gg.rsmod.plugins.content.items.osrs.MaxCapes.VARIANTS.forEach { variant ->
+            val unlocks = StoreCatalogue.ENTRIES.filter { it.kind == Kind.UNLOCK && it.purchaseItem == variant.cape }
+            assertEquals(setOf(Shop.LOYALTY, Shop.DONATOR), unlocks.map { it.shop }.toSet(), "look ${variant.cape}")
+            unlocks.forEach { assertEquals(listOf(variant.component), it.requiredBaseItems) }
+        }
     }
 
     @Test

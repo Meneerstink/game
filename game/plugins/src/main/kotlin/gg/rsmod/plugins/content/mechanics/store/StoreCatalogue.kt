@@ -60,10 +60,19 @@ object StoreCatalogue {
 
         /** Exchanges the required base item for the result in one step (Deadman defender (t)). */
         UPGRADE,
+
+        /**
+         * A look-only account unlock (max cape "Customise", [gg.rsmod.plugins.content.items.osrs.MaxCapeLooks]); no item is given.
+         * Owner 2026-09-19: sold for Loyalty Points and for Donator Points, so the same unlock may appear in both shops.
+         */
+        UNLOCK,
     }
 
     enum class TradeablePolicy(val label: String) {
-        /** The bought item keeps its own item-definition tradeability (OSRS kits are tradeable). */
+        /**
+         * The bought item keeps its own item-definition tradeability (OSRS kits are tradeable). Owner decision 2026-09-19: Donator
+         * kits stay tradeable (donors may sell them for gold); Deadman kits are the untradeable OSRS Bounty Hunter kits.
+         */
         ITEM_DEFINITION("tradeable as in OSRS"),
         UNTRADEABLE("untradeable"),
     }
@@ -169,6 +178,16 @@ object StoreCatalogue {
         category: String,
     ) = Entry(shop, result, listOf(result), listOf(base), listOf(result), price, category = category, kind = Kind.UPGRADE)
 
+    /** Max cape look unlock: preview = the variant cape, requirement = its real component (MaxCapes.VARIANTS). */
+    fun lookUnlockEntry(
+        shop: Shop,
+        variant: gg.rsmod.plugins.content.items.osrs.MaxCapes.Variant,
+        price: Int,
+    ) = Entry(
+        shop, variant.cape, listOf(variant.cape), listOf(variant.component), listOf(variant.cape), price,
+        category = "Max cape looks", tier = if (shop == Shop.DONATOR) Tier.PREMIUM else Tier.NONE, kind = Kind.UNLOCK,
+    )
+
     val ENTRIES: List<Entry> by lazy { build() }
 
     fun entries(shop: Shop): List<Entry> = ENTRIES.filter { it.shop == shop }
@@ -254,6 +273,12 @@ object StoreCatalogue {
             Items.TERRIER_PUPPY_12512 to 5_000, Items.GREYHOUND_PUPPY_12514 to 5_000, Items.LABRADOR_PUPPY_12516 to 5_000,
             Items.DALMATIAN_PUPPY_12518 to 5_000, Items.SHEEPDOG_PUPPY_12520 to 5_000, Items.BULLDOG_PUPPY_12522 to 5_000)
             .forEach { (item, price) -> list += itemEntry(l, item, price, "Pets") }
+
+        // Max cape look unlocks (owner 2026-09-19): earnable with Loyalty Points and buyable with Donator Points.
+        gg.rsmod.plugins.content.items.osrs.MaxCapes.VARIANTS.forEach { variant ->
+            list += lookUnlockEntry(l, variant, 20_000)
+            list += lookUnlockEntry(d, variant, TIER_PRICE.getValue(Tier.PREMIUM))
+        }
         return list
     }
 
@@ -263,17 +288,18 @@ object StoreCatalogue {
      */
     fun violations(definitions: DefinitionSet? = null): List<String> {
         val problems = mutableListOf<String>()
-        val shopsByItem = ENTRIES.groupBy { it.purchaseItem }.mapValues { (_, e) -> e.map { it.shop }.toSet() }
+        // Look unlocks are account unlocks, not items: the same unlock may be sold for Loyalty and Donator Points.
+        val shopsByItem = ENTRIES.filter { it.kind != Kind.UNLOCK }.groupBy { it.purchaseItem }.mapValues { (_, e) -> e.map { it.shop }.toSet() }
         shopsByItem.filter { it.value.size > 1 }.forEach { (item, shops) -> problems += "item $item is sold in several shops: $shops" }
         ENTRIES.groupBy { it.shop to it.purchaseItem }.filter { it.value.size > 1 }.forEach { problems += "duplicate entry ${it.key}" }
         val deadmanOnly = setOf(Items.ELDER_CHAOS_ROBES_ORNAMENT_KIT, Items.DAGONHAI_ROBES_ORNAMENT_KIT, Items.HEAVY_BALLISTA_ORNAMENT_KIT)
         ENTRIES.filter { it.purchaseItem in deadmanOnly && it.shop != Shop.DEADMAN }.forEach { problems += "${it.purchaseItem} must be Deadman-only" }
-        ENTRIES.filter { it.shop == Shop.DONATOR && it.kind != Kind.KIT }.forEach { problems += "Donator entry ${it.purchaseItem} is not a kit" }
+        ENTRIES.filter { it.shop == Shop.DONATOR && it.kind != Kind.KIT && it.kind != Kind.UNLOCK }.forEach { problems += "Donator entry ${it.purchaseItem} is not a kit or look unlock" }
         ENTRIES.filter { it.price <= 0 }.forEach { problems += "entry ${it.purchaseItem} has no price" }
         ENTRIES.filter { it.previewItems.isEmpty() || it.previewItems.size != it.resultItems.size }.forEach { problems += "entry ${it.purchaseItem} preview/result mismatch" }
         ENTRIES.filter { it.kind != Kind.ITEM && it.requiredBaseItems.size != it.previewItems.size }.forEach { problems += "entry ${it.purchaseItem} needs a base item per result" }
         val forbidden = setOf(Items.MAX_CAPE, Items.DIZANAS_MAX_CAPE, Items.AVAS_ASSEMBLER, Items.NIGHTMARE_STAFF)
-        ENTRIES.filter { it.shop == Shop.DONATOR && it.purchaseItem in forbidden }.forEach { problems += "Donator must not sell ${it.purchaseItem}" }
+        ENTRIES.filter { it.shop == Shop.DONATOR && it.kind != Kind.UNLOCK && it.purchaseItem in forbidden }.forEach { problems += "Donator must not sell ${it.purchaseItem}" }
         if (definitions != null) {
             ENTRIES.forEach { e ->
                 val def = definitions.getNullable(ItemDef::class.java, e.purchaseItem)

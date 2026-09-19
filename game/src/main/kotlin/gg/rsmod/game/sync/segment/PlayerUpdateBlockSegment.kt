@@ -169,7 +169,9 @@ class PlayerUpdateBlockSegment(
                     for (i in 0 until 4) {
                         val item = other.equipment[i]
                         if (item != null) {
-                            appBuf.put(DataType.SHORT, 0x8000 + item.getDef(other.world.definitions).appearanceId)
+                            val shown = Player.appearanceItemOverride?.invoke(other, i, item.id) ?: item.id
+                            val def = other.world.definitions.getNullable(gg.rsmod.game.fs.def.ItemDef::class.java, shown) ?: item.getDef(other.world.definitions)
+                            appBuf.put(DataType.SHORT, 0x8000 + def.appearanceId)
                         } else {
                             appBuf.put(DataType.BYTE, 0)
                         }

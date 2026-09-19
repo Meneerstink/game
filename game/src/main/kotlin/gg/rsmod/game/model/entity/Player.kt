@@ -262,6 +262,9 @@ abstract class Player(
     var movedToInstance = false
     var movedFromInstance = false
 
+    /** True on a cycle whose pre-synchronization sent a map rebuild; the client then drops every zone's changes. */
+    var regionRebuilt = false
+
     override val entityType: EntityType = EntityType.PLAYER
 
     /**
@@ -1233,6 +1236,14 @@ abstract class Player(
          */
         @JvmStatic
         var equipmentDisplay: ((Player, Array<Item?>) -> Array<Item?>)? = null
+
+        /**
+         * Look-only override of a worn item in the appearance block: (player, equipment slot, worn item id) -> the item id whose
+         * worn model is drawn instead. Bonuses, weight and the equipment container keep the real item (night run 2026-09-19:
+         * the max cape "Customise" perk).
+         */
+        @JvmStatic
+        var appearanceItemOverride: ((Player, Int, Int) -> Int)? = null
 
         /**
          * How many tiles a player can 'see' at a time, normally.

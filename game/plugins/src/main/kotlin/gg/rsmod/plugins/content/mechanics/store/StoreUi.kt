@@ -190,6 +190,7 @@ object StoreUi : KLogging() {
             when {
                 base == null -> "No base item required"
                 entry.kind == Kind.UPGRADE -> "Exchanges your ${name(player, base)}"
+                entry.kind == Kind.UNLOCK -> "Works while you own a ${name(player, base)}"
                 else -> "Use on your ${name(player, base)}"
             },
         )
@@ -200,11 +201,25 @@ object StoreUi : KLogging() {
                 Kind.KIT -> "Stats unchanged - cosmetic only"
                 Kind.UPGRADE -> "Stats unchanged - base item required"
                 Kind.ITEM -> entry.category
+                Kind.UNLOCK ->
+                    if (entry.purchaseItem in gg.rsmod.plugins.content.items.osrs.MaxCapeLooks.unlocked(player)) {
+                        "Unlocked - use Customise on your max cape"
+                    } else {
+                        "Look only - Customise on your max cape"
+                    }
             },
         )
         player.setComponentText(INTERFACE_ID, PRICE, "Price: ${entry.price.format()} ${if (entry.price == 1) currency.singular else currency.plural}")
         player.setComponentHidden(INTERFACE_ID, BUY_LAYER, false)
-        player.setComponentText(INTERFACE_ID, BUY_TEXT, if (entry.kind == Kind.KIT) "Buy kit" else "Buy")
+        player.setComponentText(
+            INTERFACE_ID,
+            BUY_TEXT,
+            when (entry.kind) {
+                Kind.KIT -> "Buy kit"
+                Kind.UNLOCK -> "Unlock look"
+                else -> "Buy"
+            },
+        )
     }
 
     /**
@@ -222,6 +237,11 @@ object StoreUi : KLogging() {
         }
         val bought: Boolean =
             when (entry.kind) {
+                Kind.UNLOCK -> {
+                    val unlocked = gg.rsmod.plugins.content.items.osrs.MaxCapeLooks.unlock(player, entry.purchaseItem)
+                    if (!unlocked) player.message("You have already unlocked that look.")
+                    unlocked
+                }
                 Kind.KIT, Kind.ITEM -> {
                     val result = player.inventory.add(entry.purchaseItem, 1, assureFullInsertion = true)
                     if (!result.hasSucceeded()) player.message("You don't have enough inventory space.")
@@ -242,7 +262,11 @@ object StoreUi : KLogging() {
         if (!bought) return
         player.attr[currency.attr] = balance - entry.price
         audit(player, entry)
-        player.message("You buy ${name(player, entry.purchaseItem)} for ${entry.price.format()} ${currency.plural}.")
+        if (entry.kind == Kind.UNLOCK) {
+            player.message("You unlock the ${name(player, entry.purchaseItem).lowercase()} look for ${entry.price.format()} ${currency.plural}. Use Customise on your max cape.")
+        } else {
+            player.message("You buy ${name(player, entry.purchaseItem)} for ${entry.price.format()} ${currency.plural}.")
+        }
         renderPreview(player)
     }
 
