@@ -95,7 +95,9 @@ class OsrsPilotImportTests {
             OsrsOrnamentKits.Ornament(Items.OCCULT_NECKLACE_OR, Items.OCCULT_NECKLACE, Items.OCCULT_ORNAMENT_KIT),
             OsrsOrnamentKits.forOrnamented(Items.OCCULT_NECKLACE_OR),
         )
-        assertTrue("OsrsOrnamentKits.ALL.forEach" in script && "item = ornament.ornamented, option = \"Dismantle\"" in script)
+        // Night run 2026-09-19: the detach option comes from the table ("Dismantle" by default, "Split" on the 667 native kits).
+        assertTrue("OsrsOrnamentKits.ALL.forEach" in script && "item = ornament.ornamented, option = ornament.detachOption" in script)
+        assertEquals("Dismantle", OsrsOrnamentKits.forOrnamented(Items.OCCULT_NECKLACE_OR)!!.detachOption)
         assertTrue("item = Items.AVERNIC_DEFENDER, option = \"Dismantle\"" in script)
     }
 

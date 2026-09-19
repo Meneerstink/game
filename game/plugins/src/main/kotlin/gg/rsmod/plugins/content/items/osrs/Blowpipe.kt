@@ -177,7 +177,8 @@ object Blowpipe {
 
     /** Wiki "Scale to dart ratio": the share of darts an Ava's device saves (cape slot item id -> chance). */
     val DART_SAVE_CHANCE: Map<Int, Double> =
-        mapOf(Items.AVAS_ATTRACTOR to 0.60, Items.AVAS_ACCUMULATOR to 0.72) +
+        mapOf(Items.AVAS_ATTRACTOR to 0.60) +
+            gg.rsmod.plugins.content.combat.strategy.ranged.AvasDevices.ACCUMULATORS.associateWith { 0.72 } +
             gg.rsmod.plugins.content.combat.strategy.ranged.AvasDevices.ASSEMBLERS.associateWith { 0.80 }
 
     /** The ranged strength the loaded dart adds on top of the blowpipe's own bonus. */

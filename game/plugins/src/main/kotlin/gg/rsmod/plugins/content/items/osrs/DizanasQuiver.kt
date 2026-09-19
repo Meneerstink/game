@@ -87,7 +87,7 @@ object DizanasQuiver {
         if (player.getEquipment(EquipmentType.CAPE)?.id in AMMO_HOLDERS) avaEffect(player) else null
 
     /** Every device (plus max cape equivalent) that grants the Ava's-device upgrade when brought to Ava. */
-    val AVA_UPGRADE_DEVICES: Set<Int> = gg.rsmod.plugins.content.combat.strategy.ranged.AvasDevices.ASSEMBLERS + Items.AVAS_ACCUMULATOR
+    val AVA_UPGRADE_DEVICES: Set<Int> = gg.rsmod.plugins.content.combat.strategy.ranged.AvasDevices.ASSEMBLERS + gg.rsmod.plugins.content.combat.strategy.ranged.AvasDevices.ACCUMULATORS
 
     fun charges(quiver: Item): Int = quiver.attr[ItemAttribute.CHARGES] ?: 0
 

@@ -98,7 +98,8 @@ enum class SpellbookData(
         spellType = SpellType.COMBAT_SPELL_TYPE,
         spellName = "Fire Strike",
         level = 13,
-        runes = listOf(Item(Items.AIR_RUNE, 1), Item(Items.MIND_RUNE, 1), Item(Items.FIRE_RUNE, 3)),
+        // 2 air (OSRS Wiki "Fire Strike" and the 667 cache spell 192:32 both list 2 air, 1 mind, 3 fire; was 1 air).
+        runes = listOf(Item(Items.AIR_RUNE, 2), Item(Items.MIND_RUNE, 1), Item(Items.FIRE_RUNE, 3)),
         sound = Sfx.FIRESTRIKE_CAST_AND_FIRE,
         hitSound = Sfx.FIRESTRIKE_HIT,
     ),

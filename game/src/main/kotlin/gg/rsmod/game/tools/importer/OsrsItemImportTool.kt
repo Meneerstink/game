@@ -592,6 +592,11 @@ object OsrsItemImportTool {
             // Step 3 roster batch "capes" (ids by Jagex name, RuneLite gameval ItemID SKILLCAPE_MAX_*, MA2_*_CAPE_*, AVAS_ASSEMBLER_*): the
             // max cape variants of the imbued god capes, Ava's assembler, the Masori assembler and blessed Dizana's quiver, their hoods,
             // broken and Trouver-locked forms, the imbued god capes (l) and the Masori crafting kit.
+            // Night run 2026-09-19 (owner links: Fire / Accumulator / Infernal max cape wiki pages): the three max cape variants not in
+            // "capes"; names verified in the pinned OSRS cache (13329/13330 Fire max cape/hood, 13337/13338 Accumulator max cape/hood,
+            // 21285/21282 Infernal max cape/hood).
+            "maxcapes2" to
+                listOf(Spec(13329), Spec(13330), Spec(13337), Spec(13338), Spec(21285), Spec(21282)),
             "capes" to
                 listOf(
                     Spec(21776), // Imbued saradomin max cape

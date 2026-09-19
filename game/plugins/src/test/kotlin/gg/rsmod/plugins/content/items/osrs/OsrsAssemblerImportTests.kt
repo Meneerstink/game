@@ -52,7 +52,9 @@ class OsrsAssemblerImportTests {
         // attack shots ignored the devices. The rule text lives in AvasDevices; every consumer must call it.
         val rule = File("src/main/kotlin/gg/rsmod/plugins/content/combat/strategy/ranged/AvasDevices.kt").readText()
         assertTrue("device && cape == gg.rsmod.plugins.api.cfg.Items.AVAS_ATTRACTOR -> chance in 20..39" in rule)
-        assertTrue("device && cape == gg.rsmod.plugins.api.cfg.Items.AVAS_ACCUMULATOR -> chance in 20..27" in rule)
+        // Night run 2026-09-19: the accumulator rule covers Ava's accumulator and the Accumulator max cape (AvasDevices.ACCUMULATORS).
+        assertTrue("device && cape in ACCUMULATORS -> chance in 20..27" in rule)
+        assertTrue(Items.AVAS_ACCUMULATOR in AvasDevices.ACCUMULATORS)
         // Batch capes: every assembler (Masori assembler, assembler max capes, each (l)) shares the rule through AvasDevices.ASSEMBLERS.
         assertTrue("device && cape in ASSEMBLERS -> false" in rule, "assembler: 80 % recovered, never dropped")
         assertTrue(Items.AVAS_ASSEMBLER in AvasDevices.ASSEMBLERS && Items.AVAS_ASSEMBLER_L in AvasDevices.ASSEMBLERS)

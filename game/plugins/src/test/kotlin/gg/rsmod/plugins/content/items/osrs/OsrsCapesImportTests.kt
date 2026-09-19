@@ -15,7 +15,13 @@ import kotlin.test.assertTrue
 class OsrsCapesImportTests {
     @Test
     fun `every max cape variant combines with the 667 max cape and keeps its component's effects`() {
-        assertEquals(6, MaxCapes.VARIANTS.size, "3 imbued god, assembler, Masori assembler, Dizana's")
+        assertEquals(9, MaxCapes.VARIANTS.size, "3 imbued god, assembler, Masori assembler, Dizana's, fire, infernal, accumulator")
+        // Night run 2026-09-19 (OSRS Wiki pages the owner linked): fire / infernal / accumulator max capes on their components.
+        assertEquals(Items.FIRE_CAPE, MaxCapes.forCape(Items.FIRE_MAX_CAPE)?.component)
+        assertEquals(Items.INFERNAL_CAPE, MaxCapes.forCape(Items.INFERNAL_MAX_CAPE)?.component)
+        assertEquals(Items.AVAS_ACCUMULATOR, MaxCapes.forCape(Items.ACCUMULATOR_MAX_CAPE)?.component)
+        assertTrue(Items.ACCUMULATOR_MAX_CAPE in AvasDevices.ACCUMULATORS, "the accumulator max cape saves ammunition like the accumulator")
+        assertEquals(0.72, gg.rsmod.plugins.content.items.osrs.Blowpipe.DART_SAVE_CHANCE[Items.ACCUMULATOR_MAX_CAPE])
         assertEquals(Items.MAX_CAPE_20767, MaxCapes.MAX_CAPE)
         assertEquals(Items.MAX_HOOD_20768, MaxCapes.MAX_HOOD)
         assertEquals(Items.NEEDLE, MaxCapes.forCape(Items.MASORI_ASSEMBLER_MAX_CAPE)?.tool, "Masori recipes list tools = Needle")

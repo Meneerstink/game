@@ -34,7 +34,8 @@ fun commune(player: Player) {
     }
 }
 
-AvasDevices.ASSEMBLERS.forEach { device ->
+// The Accumulator max cape (night run 2026-09-19) carries the same OSRS "Commune" option (inventory and worn, pinned OSRS cache).
+AvasDevices.COMMUNE_DEVICES.forEach { device ->
     if (assemblerHasOption(device, "Commune", worn = false)) on_item_option(item = device, option = "Commune") { commune(player) }
     if (assemblerHasOption(device, "Commune", worn = true)) on_equipment_option(item = device, option = "Commune") { commune(player) }
 }

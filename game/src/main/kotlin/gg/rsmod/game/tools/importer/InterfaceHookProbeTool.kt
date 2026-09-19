@@ -440,6 +440,9 @@ object InterfaceHookProbeTool {
      */
     fun componentSize(data: ByteArray): Pair<Int, Int> = decodeComponent(data).let { it.width to it.height }
 
+    /** The decoded hook argument lists (onLoad, onVarTransmit, ...) of one raw component; null entries are unset hooks. */
+    fun componentHooks(data: ByteArray): Map<String, List<Any>?> = decodeComponent(data).hooks
+
     private fun decodeComponent(data: ByteArray): DecodedComponent {
         var modelId = -1
         var spriteId = -1

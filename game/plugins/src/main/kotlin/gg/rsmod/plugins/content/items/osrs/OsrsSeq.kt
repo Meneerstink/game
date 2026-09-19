@@ -92,6 +92,8 @@ object OsrsSeq {
     const val HUMAN_ZAMORAKSPEAR_STAB = 15521 // OSRS 1711
     const val HUMAN_ZAMORAKSPEAR_SLASH = 15522 // OSRS 1712
     const val HUMAN_CAST_SURGE = 15524 // OSRS 7855
+    const val HUMAN_CASTING_TELE_BLOCK = 15525 // OSRS 1819 (night run 2026-09-19, tx-20260919-022436)
+    const val HUMAN_CASTING_TELE_BLOCK_STAFF = 15526 // OSRS 1820
 }
 
 /** OSRS synth sounds of the same batch; names from the OSRS Wiki "List of sound IDs" (Jagex config names). */

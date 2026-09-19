@@ -36,6 +36,11 @@ object MaxCapes {
             Variant(Items.AVAS_ASSEMBLER, Items.ASSEMBLER_MAX_CAPE, Items.ASSEMBLER_MAX_HOOD),
             Variant(Items.MASORI_ASSEMBLER, Items.MASORI_ASSEMBLER_MAX_CAPE, Items.MASORI_ASSEMBLER_MAX_HOOD, tool = Items.NEEDLE),
             Variant(Items.BLESSED_DIZANAS_QUIVER, Items.DIZANAS_MAX_CAPE, Items.DIZANAS_MAX_HOOD),
+            // Night run 2026-09-19 (OSRS Wiki "Fire max cape", "Infernal max cape", "Accumulator max cape"): the same max cape +
+            // component recipe and knife split; imported in tx-20260919-023421 (OSRS 13329/13330, 21285/21282, 13337/13338).
+            Variant(Items.FIRE_CAPE, Items.FIRE_MAX_CAPE, Items.FIRE_MAX_HOOD),
+            Variant(Items.INFERNAL_CAPE, Items.INFERNAL_MAX_CAPE, Items.INFERNAL_MAX_HOOD),
+            Variant(Items.AVAS_ACCUMULATOR, Items.ACCUMULATOR_MAX_CAPE, Items.ACCUMULATOR_MAX_HOOD),
         )
 
     fun forComponent(itemId: Int): Variant? = VARIANTS.firstOrNull { it.component == itemId }

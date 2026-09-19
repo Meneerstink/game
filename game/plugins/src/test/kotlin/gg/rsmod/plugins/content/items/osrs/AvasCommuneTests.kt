@@ -25,7 +25,7 @@ class AvasCommuneTests {
             DEFINITIONS.getAllKeys(ItemDef::class.java).mapNotNull { id ->
                 val def = DEFINITIONS.getNullable(ItemDef::class.java, id) ?: return@mapNotNull null
                 val commune = (def.inventoryMenu + def.equipmentMenu).any { it?.equals("Commune", ignoreCase = true) == true }
-                if (commune && id !in AvasDevices.ASSEMBLERS && id !in headgear) "$id ${def.name}" else null
+                if (commune && id !in AvasDevices.COMMUNE_DEVICES && id !in headgear) "$id ${def.name}" else null
             }
         assertEquals(emptyList(), offenders)
     }

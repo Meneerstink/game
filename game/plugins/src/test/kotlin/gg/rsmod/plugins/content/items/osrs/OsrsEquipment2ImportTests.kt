@@ -104,7 +104,8 @@ class OsrsEquipment2ImportTests {
         val kits = CombinationData.values().associateBy { it.resultItem }
         OsrsOrnamentKits.ALL.forEach { o ->
             assertEquals(setOf(o.kit, o.base), kits.getValue(o.ornamented).items.toSet(), "combine for ${o.ornamented}")
-            assertTrue("Dismantle" in DEFINITIONS.get(ItemDef::class.java, o.ornamented).inventoryMenu, "${o.ornamented} has Dismantle")
+            // The detach option is the item's own cache option: "Dismantle" (OSRS imports) or "Split" (667 native (or)/(sp), fury (or)).
+            assertTrue(o.detachOption in DEFINITIONS.get(ItemDef::class.java, o.ornamented).inventoryMenu, "${o.ornamented} has ${o.detachOption}")
         }
         val rancour = kits.getValue(Items.AMULET_OF_RANCOUR)
         assertEquals(setOf(Items.ETCHED_ARAXYTE_FANG, Items.AMULET_OF_TORTURE), rancour.items.toSet())

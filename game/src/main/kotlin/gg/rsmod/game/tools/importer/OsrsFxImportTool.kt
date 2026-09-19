@@ -106,6 +106,9 @@ object OsrsFxImportTool {
                     1702, 1703, 1704, 1705, 1706, 1707, 1709, 1710, 1711, 1712, 1713, // HUMAN_ZAMORAKSPEAR_* (Blue moon spear: combat-logger)
                     7855, // HUMAN_CAST_SURGE (Harmonised nightmare staff: combat-logger)
                 ),
+            // Owner 2026-09-19 night run: Teleblock with the exact OSRS cast animation (RuneLite gameval AnimationID
+            // HUMAN_CASTING_TELE_BLOCK 1819 / HUMAN_CASTING_TELE_BLOCK_STAFF 1820).
+            "spellseq1" to listOf(1819, 1820),
         )
 
     /** OSRS synth sounds by Jagex config name (OSRS Wiki "List of sound IDs", read 2026-09-17). */

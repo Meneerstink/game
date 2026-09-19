@@ -244,7 +244,7 @@ enum class CombatSpell(
         componentId = 70,
         maxHit = 17,
         castGfx = Graphic(Gfx.WIND_SPELL_CAST, 22),
-        castAnimation = arrayOf(Anims.WIND_SPELL, Anims.WIND_SPELL_WITH_STAFF),
+        castAnimation = arrayOf(gg.rsmod.plugins.content.items.osrs.OsrsSeq.HUMAN_CAST_SURGE, gg.rsmod.plugins.content.items.osrs.OsrsSeq.HUMAN_CAST_SURGE), // OSRS 7855 HUMAN_CAST_SURGE (owner 2026-09-19)
         projectile = Gfx.WIND_WAVE_PROJ,
         impactGfx = Graphic(Gfx.WIND_WAVE_IMPACT, height = 32),
         autoCastId = 27,
@@ -256,7 +256,7 @@ enum class CombatSpell(
         componentId = 73,
         maxHit = 18,
         castGfx = Graphic(Gfx.WATER_SPELL_CAST, 22),
-        castAnimation = arrayOf(Anims.WATER_SPELL, Anims.WATER_SPELL_WITH_STAFF),
+        castAnimation = arrayOf(gg.rsmod.plugins.content.items.osrs.OsrsSeq.HUMAN_CAST_SURGE, gg.rsmod.plugins.content.items.osrs.OsrsSeq.HUMAN_CAST_SURGE), // OSRS 7855 HUMAN_CAST_SURGE (owner 2026-09-19)
         projectile = Gfx.WATER_WAVE_PROJ,
         impactGfx = Graphic(Gfx.WATER_WAVE_IMPACT, 32),
         autoCastId = 29,
@@ -268,7 +268,7 @@ enum class CombatSpell(
         componentId = 77,
         maxHit = 19,
         castGfx = Graphic(Gfx.EARTH_WAVE_CAST, 22),
-        castAnimation = arrayOf(Anims.EARTH_SPELL, Anims.EARTH_SPELL_WITH_STAFF),
+        castAnimation = arrayOf(gg.rsmod.plugins.content.items.osrs.OsrsSeq.HUMAN_CAST_SURGE, gg.rsmod.plugins.content.items.osrs.OsrsSeq.HUMAN_CAST_SURGE), // OSRS 7855 HUMAN_CAST_SURGE (owner 2026-09-19)
         projectile = Gfx.EARTH_WAVE_PROJ,
         impactGfx = Graphic(Gfx.EARTH_WAVE_IMPACT, 32),
         autoCastId = 31,
@@ -280,7 +280,7 @@ enum class CombatSpell(
         componentId = 80,
         maxHit = 20,
         castGfx = Graphic(Gfx.FIRE_SPELL_CAST, 22),
-        castAnimation = arrayOf(Anims.FIRE_SPELL, Anims.FIRE_SPELL_WITH_STAFF),
+        castAnimation = arrayOf(gg.rsmod.plugins.content.items.osrs.OsrsSeq.HUMAN_CAST_SURGE, gg.rsmod.plugins.content.items.osrs.OsrsSeq.HUMAN_CAST_SURGE), // OSRS 7855 HUMAN_CAST_SURGE (owner 2026-09-19)
         projectile = Gfx.FIRE_WAVE_PROJ,
         secondProjectile = Gfx.FIRE_WAVE_PROJ_2,
         thirdProjectile = Gfx.FIRE_WAVE_PROJ_2,
@@ -470,7 +470,7 @@ enum class CombatSpell(
         componentId = 86,
         maxHit = 0,
         castGfx = Graphic(1841, 0),
-        castAnimation = arrayOf(10503, 10503),
+        castAnimation = arrayOf(gg.rsmod.plugins.content.items.osrs.OsrsSeq.HUMAN_CASTING_TELE_BLOCK, gg.rsmod.plugins.content.items.osrs.OsrsSeq.HUMAN_CASTING_TELE_BLOCK_STAFF), // OSRS 1819 / 1820 (owner 2026-09-19)
         projectile = 1842,
         impactGfx = Graphic(1843, 0),
         autoCastId = -1,

@@ -107,6 +107,8 @@ class DizanasQuiverTests {
                 Items.AVAS_ASSEMBLER, Items.AVAS_ASSEMBLER_L, Items.MASORI_ASSEMBLER, Items.MASORI_ASSEMBLER_L,
                 Items.ASSEMBLER_MAX_CAPE, Items.ASSEMBLER_MAX_CAPE_L, Items.MASORI_ASSEMBLER_MAX_CAPE, Items.MASORI_ASSEMBLER_MAX_CAPE_L,
                 Items.AVAS_ACCUMULATOR,
+                // Night run 2026-09-19: the Accumulator max cape keeps the accumulator's effect (OSRS Wiki), so it is an accumulator too.
+                Items.ACCUMULATOR_MAX_CAPE,
             ),
             DizanasQuiver.AVA_UPGRADE_DEVICES,
         )
