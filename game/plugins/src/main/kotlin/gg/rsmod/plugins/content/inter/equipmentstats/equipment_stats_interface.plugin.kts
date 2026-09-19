@@ -1,11 +1,20 @@
 package gg.rsmod.plugins.content.inter.equipmentstats
 
 import gg.rsmod.game.action.EquipAction
+import gg.rsmod.plugins.api.EquipmentType
+import gg.rsmod.plugins.api.cfg.Items
+import gg.rsmod.plugins.content.combat.CombatConfigs
 import gg.rsmod.plugins.content.mechanics.practicepvp.PracticePvp
 
 val EQUIPMENT_BONUS_INTERFACE_ID = 667
 val INVENTORY_INTERFACE_ID = 670
 val EQUIP_ITEM_SOUND = 2238
+val EQUIPMENT_STATS_NAME_VARCSTR = 321
+val EQUIPMENT_STATS_TITLES_VARCSTR = 322
+val EQUIPMENT_STATS_NAMES_VARCSTR = 323
+val EQUIPMENT_STATS_VALUES_VARCSTR = 324
+val EQUIPMENT_STATS_COMPARISON_VARCSTR = 325
+val EQUIPMENT_STATS_DONE_COMPONENT = 65
 
 on_button(interfaceId = 387, component = 39) {
     when (player.getInteractingOpcode()) {
@@ -14,7 +23,10 @@ on_button(interfaceId = 387, component = 39) {
 }
 
 on_interface_close(interfaceId = EQUIPMENT_BONUS_INTERFACE_ID) {
-    player.closeInterface(interfaceId = INVENTORY_INTERFACE_ID)
+    clearEquipmentStats(player)
+    if (player.interfaces.isVisible(INVENTORY_INTERFACE_ID)) {
+        player.closeInterface(interfaceId = INVENTORY_INTERFACE_ID)
+    }
     player.openInterface(dest = InterfaceDestination.INVENTORY_TAB)
     player.inventory.dirty = true
 }
@@ -51,6 +63,8 @@ fun openEquipmentBonuses(
         player.setInterfaceEvents(interfaceId = INVENTORY_INTERFACE_ID, component = 0, range = 0 until player.inventory.capacity, setting = 1538)
         player.setInterfaceEvents(interfaceId = EQUIPMENT_BONUS_INTERFACE_ID, component = 7, range = 0 until player.equipment.capacity, setting = 1538)
         player.refreshBonuses()
+        // Resend inv 94 so the equipment display hook shows/hides the Dizana's quiver slot 667:14 for this interface too.
+        player.equipment.dirty = true
     }
 }
 
@@ -66,6 +80,14 @@ on_button(interfaceId = EQUIPMENT_BONUS_INTERFACE_ID, component = 7) {
     val opcode = player.getInteractingOpcode()
     val item = player.getInteractingItemId()
     val slot = player.getInteractingSlot()
+    // Dizana's quiver second ammo slot: display-only slot 14 of inv 94 (dizanas_quiver.plugin.kts), not a real equipment slot.
+    if (slot == gg.rsmod.plugins.content.items.osrs.DizanasQuiver.DISPLAY_SLOT && player.equipment[slot] == null) {
+        when (opcode) {
+            61 -> if (gg.rsmod.plugins.content.items.osrs.DizanasQuiver.removeWornStoredToInventory(player)) player.refreshBonuses()
+            25 -> world.sendExamine(player, item, ExamineEntityType.ITEM)
+        }
+        return@on_button
+    }
     when (opcode) {
         61 -> {
             val worn = player.equipment[slot]
@@ -92,6 +114,15 @@ on_button(interfaceId = EQUIPMENT_BONUS_INTERFACE_ID, component = 7) {
     }
 }
 
+// 667:65 is the cache's baked "Done" button for the item-statistics layer.  The old route
+// handled the item menu but never handled this button, leaving the varc strings alive after
+// closing the popup and causing the next item to inherit stale text.
+on_button(interfaceId = EQUIPMENT_BONUS_INTERFACE_ID, component = EQUIPMENT_STATS_DONE_COMPONENT) {
+    if (player.getInteractingOpcode() == 61) {
+        clearEquipmentStats(player)
+    }
+}
+
 on_button(interfaceId = INVENTORY_INTERFACE_ID, component = 0) {
     val opcode = player.getInteractingOpcode()
     val item = player.getInteractingItemId()
@@ -115,49 +146,110 @@ on_button(interfaceId = INVENTORY_INTERFACE_ID, component = 0) {
     }
 }
 
-// Same bonus-name/order convention as Player.refreshBonuses (PlayerExt.kt) - kept local since
-// that one is private to its own function and this is a different rendering (chat, not
-// interface text). R04.7: this replaces a hard TODO() crash - clicking "Stats" on any item in
-// the equip-bonus screen previously threw NotImplementedError. A real hover/popup stats panel
-// needs a verified interface component id this codebase doesn't have yet (see R04.7 ledger
-// note); a chat summary is a working, non-crashing simplification in the meantime.
-// Indices match BonusSlot (BonusSlot.kt) exactly: 0-4 attack, 5-9 defence, 10 summoning,
-// 11-13 absorb (not in BonusSlot but used by NpcCombatDsl/refreshBonuses), 14-17 the rest.
-private val BONUS_NAMES =
-    listOf(
-        "Attack Stab", "Attack Slash", "Attack Crush", "Attack Magic", "Attack Ranged",
-        "Defence Stab", "Defence Slash", "Defence Crush", "Defence Magic", "Defence Ranged",
-        "Summoning", "Absorb Melee", "Absorb Magic", "Absorb Ranged",
-        "Strength", "Ranged Strength", "Prayer", "Magic Damage",
-    )
-
 fun showStats(
     player: Player,
     item: Int,
 ) {
     val def = player.world.definitions.get(ItemDef::class.java, item)
     if (def.equipSlot == -1) {
+        clearEquipmentStats(player)
         return
     }
-    // OSRS Wiki "Equipment Stats" units: slot 17 stores magic damage in tenths of a percent (Occult necklace 50 ->
-    // "+5%", Seers ring (i) 5 -> "+0.5%"), the absorb slots are percentages.
-    fun value(
-        i: Int,
-        bonus: Int,
-    ): String {
-        val sign = if (bonus >= 0) "+" else ""
-        return when (i) {
-            17 -> sign + (if (bonus % 10 != 0) String.format(java.util.Locale.ROOT, "%.1f", bonus / 10.0) else (bonus / 10).toString()) + "%"
-            in 11..13 -> "$sign$bonus%"
-            else -> "$sign$bonus"
-        }
+
+    val textLayout = EquipmentStatsTextLayout()
+
+    fun appendTitle(title: String) {
+        textLayout.title(title)
     }
-    val lines =
-        def.bonuses
-            .toList()
-            .mapIndexedNotNull { i, bonus -> if (bonus != 0) "${BONUS_NAMES[i]}: ${value(i, bonus)}" else null }
-    player.message(
-        if (lines.isEmpty()) "${def.name} has no bonuses." else "${def.name}: ${lines.joinToString(", ")}",
-        type = ChatMessageType.CONSOLE,
-    )
+
+    fun appendRow(label: String, value: String) {
+        textLayout.row(label, value)
+    }
+
+    fun bonusValue(index: Int): String {
+        val bonus = def.bonuses[index]
+        val sign = if (bonus >= 0) "+" else ""
+        return "$sign$bonus"
+    }
+
+    fun percentValue(tenths: Int): String {
+        val value = tenths / 10.0
+        return String.format(java.util.Locale.ROOT, "%+.1f%%", value)
+    }
+
+    appendTitle("Attack bonus")
+    listOf("Stab" to 0, "Slash" to 1, "Crush" to 2, "Magic" to 3, "Ranged" to 4).forEach { (label, index) ->
+        appendRow(label, bonusValue(index))
+    }
+
+    appendTitle("Defence bonus")
+    listOf("Stab" to 5, "Slash" to 6, "Crush" to 7, "Magic" to 8, "Ranged" to 9).forEach { (label, index) ->
+        appendRow(label, bonusValue(index))
+    }
+
+    appendTitle("Other bonuses")
+    appendRow("Melee Str.", bonusValue(14))
+    appendRow("Ranged Str.", bonusValue(15))
+    appendRow("Magic Dmg.", percentValue(def.bonuses[17]))
+    appendRow("Prayer", bonusValue(16))
+
+    appendTitle("Target-specific")
+    val targetSpecific = targetSpecificBonuses(item)
+    appendRow("Undead", targetSpecific.first)
+    appendRow("Slayer", targetSpecific.second)
+
+    val baseSpeed = def.attackSpeed.takeIf { it > 0 }
+    if (baseSpeed != null) {
+        appendTitle("Weapon speed")
+        val actualSpeed =
+            if (player.equipment[EquipmentType.WEAPON.id]?.id == item) {
+                CombatConfigs.getAttackDelay(player)
+            } else {
+                baseSpeed
+            }
+        appendRow("Base", formatWeaponSpeed(baseSpeed))
+        appendRow("Actual", formatWeaponSpeed(actualSpeed))
+    }
+
+    val columns = textLayout.columns()
+    player.setVarcString(EQUIPMENT_STATS_NAME_VARCSTR, def.name)
+    player.setVarcString(EQUIPMENT_STATS_TITLES_VARCSTR, columns.titles)
+    player.setVarcString(EQUIPMENT_STATS_NAMES_VARCSTR, columns.names)
+    player.setVarcString(EQUIPMENT_STATS_VALUES_VARCSTR, columns.values)
+    player.setVarcString(EQUIPMENT_STATS_COMPARISON_VARCSTR, "")
 }
+
+fun clearEquipmentStats(player: Player) {
+    player.setVarcString(EQUIPMENT_STATS_NAME_VARCSTR, "")
+    player.setVarcString(EQUIPMENT_STATS_TITLES_VARCSTR, "")
+    player.setVarcString(EQUIPMENT_STATS_NAMES_VARCSTR, "")
+    player.setVarcString(EQUIPMENT_STATS_VALUES_VARCSTR, "")
+    player.setVarcString(EQUIPMENT_STATS_COMPARISON_VARCSTR, "")
+}
+
+fun formatWeaponSpeed(ticks: Int): String =
+    String.format(java.util.Locale.ROOT, "%.1fs", ticks * 0.6)
+
+fun targetSpecificBonuses(item: Int): Pair<String, String> =
+    when (item) {
+        Items.SALVE_AMULET -> "16.7%" to "0%"
+        Items.SALVE_AMULET_E -> "20%" to "0%"
+        Items.BLACK_MASK,
+        Items.BLACK_MASK_1,
+        Items.BLACK_MASK_2,
+        Items.BLACK_MASK_3,
+        Items.BLACK_MASK_4,
+        Items.BLACK_MASK_5,
+        Items.BLACK_MASK_6,
+        Items.BLACK_MASK_7,
+        Items.BLACK_MASK_8,
+        Items.BLACK_MASK_9,
+        Items.BLACK_MASK_10,
+        Items.SLAYER_HELMET,
+        Items.SLAYER_HELMET_E,
+        Items.SLAYER_HELMET_CHARGED,
+        Items.FULL_SLAYER_HELMET,
+        Items.FULL_SLAYER_HELMET_E,
+        Items.FULL_SLAYER_HELMET_CHARGED -> "0%" to "16.7%"
+        else -> "0%" to "0%"
+    }

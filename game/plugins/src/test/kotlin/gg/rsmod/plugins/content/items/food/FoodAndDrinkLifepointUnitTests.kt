@@ -46,15 +46,18 @@ class FoodAndDrinkLifepointUnitTests {
     fun `every sourced food heal is on the x10 ledger unit`() {
         assertTrue(unsourcedDungeoneeringFoods.contains("CAVE_MORAY"), "Dungeoneering food block not found")
         val offenders = Food.values
-            .filter { it.name !in unsourcedDungeoneeringFoods && it != Food.KEBAB }
+            .filter { it.name !in unsourcedDungeoneeringFoods && it != Food.KEBAB && it != Food.STRANGE_FRUIT }
             .filter { it.heal <= 0 || it.heal % Food.LEDGER_UNITS_PER_HITPOINT != 0 }
             .map { "${it.name} heal=${it.heal}" }
         assertTrue(offenders.isEmpty(), "food heal not on the x10 ledger unit:\n" + offenders.joinToString("\n"))
+        // OSRS Wiki "Strange fruit": "No Hitpoints are restored upon eating the fruit" (it cures poison/venom and restores run energy).
+        assertEquals(0, Food.STRANGE_FRUIT.heal)
     }
 
     @Test
     fun `every food heals one tenth of its ledger value and only rocktail may exceed the maximum by 10`() {
-        Food.values.filter { it != Food.KEBAB }.forEach { food ->
+        // Strange fruit heals nothing (OSRS Wiki) - asserted in the ledger test above.
+        Food.values.filter { it != Food.KEBAB && it != Food.STRANGE_FRUIT }.forEach { food ->
             val p = player()
             Foods.eat(p, food)
             val cap = if (food == Food.ROCKTAIL) 10 else 0

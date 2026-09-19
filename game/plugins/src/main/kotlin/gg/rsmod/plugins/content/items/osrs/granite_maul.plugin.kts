@@ -16,8 +16,15 @@ listOf(Items.GRANITE_MAUL, Items.GRANITE_MAUL_ORNATE_HANDLE).forEach { id ->
 }
 
 on_item_on_item(item1 = Items.ORNATE_MAUL_HANDLE, item2 = Items.GRANITE_MAUL) {
-    if (player.inventory.remove(Items.ORNATE_MAUL_HANDLE, 1).hasSucceeded() && player.inventory.remove(Items.GRANITE_MAUL, 1).hasSucceeded()) {
-        player.inventory.add(Items.GRANITE_MAUL_ORNATE_HANDLE, 1)
+    // Owner 2026-09-19: attaching an ornament asks "Are you sure" in the item GUI, like detaching (Revert) does.
+    player.queue {
+        if (!confirmItemAction(Items.GRANITE_MAUL, "Are you sure you want to attach the ornate handle to this item?", "The ornate handle will be attached to this item.")) {
+            return@queue
+        }
+        if (!player.inventory.contains(Items.ORNATE_MAUL_HANDLE) || !player.inventory.contains(Items.GRANITE_MAUL)) return@queue
+        if (player.inventory.remove(Items.ORNATE_MAUL_HANDLE, 1).hasSucceeded() && player.inventory.remove(Items.GRANITE_MAUL, 1).hasSucceeded()) {
+            player.inventory.add(Items.GRANITE_MAUL_ORNATE_HANDLE, 1)
+        }
     }
 }
 

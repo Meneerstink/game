@@ -10,7 +10,7 @@ import gg.rsmod.plugins.api.ext.hit
  * damage over the course of 40 ticks or 24 seconds (Seen as 1 damage every 4 ticks or 2.4 seconds). Each burn has an individual duration
  * and up to five burns can be applied to a target at a time. At maximum stacks, existing burns must expire before a new burn can be
  * applied." The Eclipse special "will consume the remainder of the burn damage it would have dealt to the target".
- * ADAPTED_TO_667: the burn hits use the regular hitsplat (667 has no burn hitsplat). SOURCE_GAP: the list of burn-immune targets.
+ * Burn hits use the OSRS burn hitsplat (HitType.BURN; the client ships OSRS sprite 4767). SOURCE_GAP: the list of burn-immune targets.
  */
 object Burns {
     const val DAMAGE = 10
@@ -45,7 +45,7 @@ object Burns {
                 wait(INTERVAL_TICKS)
                 if (burn.remaining <= 0 || target.isDead() || (target is Player && !target.isOnline)) break
                 burn.remaining--
-                target.hit(damage = 1)
+                target.hit(damage = 1, type = gg.rsmod.plugins.api.HitType.BURN) // OSRS burn hitsplat (owner 2026-09-19)
             }
         }
         return true

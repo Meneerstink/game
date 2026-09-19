@@ -20,4 +20,10 @@ enum class HitType(
     CRIT_MELEE(id = 10),
     CRIT_RANGE(id = 11),
     CRIT_MAGIC(id = 12),
+
+    /** Owner 2026-09-18 (OSRS venom): the OSRS venom splat - no cache entry; the client draws OSRS sprite 1632 on the poison type (VenomHitmarkType). */
+    VENOM(id = 14),
+
+    /** Owner 2026-09-19 (OSRS burn): the OSRS burn splat (OSRS hitsplat 74, sprite 4767) on the regular damage type; past the cache's 0-27. */
+    BURN(id = 28),
 }

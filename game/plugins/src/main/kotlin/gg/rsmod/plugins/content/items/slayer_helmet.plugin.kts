@@ -1,5 +1,7 @@
 package gg.rsmod.plugins.content.items
 
+import gg.rsmod.game.fs.def.ItemDef
+
 /*
  * Slayer helmet assembly and Disassemble (owner live report 2026-09-17c: "slayer helm disasemble and asemble doesnt work unhandled
  * item"; nothing was bound for either). Rules: OSRS Wiki "Slayer helmet" (raw wikitext 2026-09-17c) - made "by combining a nose peg,
@@ -79,9 +81,59 @@ FULL_HELMET_PARTS.forEachIndexed { i, first ->
     FULL_HELMET_PARTS.drop(i + 1).forEach { second -> on_item_on_item(item1 = first, item2 = second) { assembleFullHelmet(player) } }
 }
 
-on_item_option(item = Items.SLAYER_HELMET, option = "Disassemble") {
-    disassemble(player, Items.SLAYER_HELMET, HELMET_PARTS + Items.BLACK_MASK)
+/*
+ * Owner 2026-09-19: "Slayer helm has a commune option this should not be the case ... the correct is Wear, Check, Disassemble, Drop"
+ * (OSRS 2686 Slayer helmet 11864 / (i) 11865: inventory "Wear, Check, Disassemble", worn "Check"). Every 667 slayer helmet variant
+ * carries exactly that menu now (cache menu edit 2026-09-19), including the Summoning-enchanted (e) / (charged) forms that used to
+ * offer Commune / Uncharge. Check = the Slayer task line of the enchanted gem. Disassemble returns the components; a (charged)
+ * helmet first returns its stored scrolls (the old Uncharge), and the (e) enchantment is lost with the helmet (ADAPTED: no source).
+ */
+val SLAYER_HELMET_PARTS = HELMET_PARTS + Items.BLACK_MASK
+val FULL_SLAYER_HELMET_PARTS = SLAYER_HELMET_PARTS + Items.HEXCREST + Items.FOCUS_SIGHT
+val SLAYER_HELMET_VARIANTS =
+    mapOf(
+        Items.SLAYER_HELMET to SLAYER_HELMET_PARTS,
+        Items.SLAYER_HELMET_E to SLAYER_HELMET_PARTS,
+        Items.SLAYER_HELMET_CHARGED to SLAYER_HELMET_PARTS,
+        Items.FULL_SLAYER_HELMET to FULL_SLAYER_HELMET_PARTS,
+        Items.FULL_SLAYER_HELMET_E to FULL_SLAYER_HELMET_PARTS,
+        Items.FULL_SLAYER_HELMET_CHARGED to FULL_SLAYER_HELMET_PARTS,
+    )
+
+fun hasMenu(
+    id: Int,
+    option: String,
+    worn: Boolean,
+): Boolean {
+    val def = world.definitions.get(ItemDef::class.java, id)
+    return (if (worn) def.equipmentMenu else def.inventoryMenu).any { it.equals(option, ignoreCase = true) }
 }
-on_item_option(item = Items.FULL_SLAYER_HELMET, option = "Disassemble") {
-    disassemble(player, Items.FULL_SLAYER_HELMET, HELMET_PARTS + Items.BLACK_MASK + Items.HEXCREST + Items.FOCUS_SIGHT)
+
+SLAYER_HELMET_VARIANTS.forEach { (helmet, parts) ->
+    if (hasMenu(helmet, "Disassemble", worn = false)) {
+        on_item_option(item = helmet, option = "Disassemble") {
+            val slot = player.getInteractingItemSlot()
+            if (player.inventory[slot]?.id != helmet) return@on_item_option
+            val headgear = gg.rsmod.plugins.content.skills.summoning.EnchantedHeadgear.forItem(helmet)
+            val scroll = player.attr[gg.rsmod.plugins.content.skills.summoning.EnchantedHeadgear.SCROLL_ATTR]
+            val scrolls = player.attr[gg.rsmod.plugins.content.skills.summoning.EnchantedHeadgear.COUNT_ATTR] ?: 0
+            if (headgear != null && helmet == headgear.charged && scroll != null && scrolls > 0) {
+                val needed = parts.size + (if (player.inventory.contains(scroll)) 0 else 1)
+                if (player.inventory.freeSlotCount + 1 < needed) {
+                    player.message("You don't have enough inventory space to do that.")
+                    return@on_item_option
+                }
+                player.inventory.add(scroll, scrolls)
+                player.attr.remove(gg.rsmod.plugins.content.skills.summoning.EnchantedHeadgear.SCROLL_ATTR)
+                player.attr.remove(gg.rsmod.plugins.content.skills.summoning.EnchantedHeadgear.COUNT_ATTR)
+            }
+            disassemble(player, helmet, parts)
+        }
+    }
+    if (hasMenu(helmet, "Check", worn = false)) {
+        on_item_option(item = helmet, option = "Check") { player.getSlayerKillsRemaining() }
+    }
+    if (hasMenu(helmet, "Check", worn = true)) {
+        on_equipment_option(item = helmet, option = "Check") { player.getSlayerKillsRemaining() }
+    }
 }

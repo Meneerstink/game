@@ -90,7 +90,8 @@ class VenomTests {
 
         assertTrue(Poison.poison(player, 4))
         val firstTicks = player.attr[POISON_TICKS_LEFT_ATTR]
-        assertEquals(16, firstTicks)
+        // OSRS Wiki "Poison": severity = 5 x starting damage (4 -> severity 20), stored as severity - 1.
+        assertEquals(19, firstTicks)
         assertEquals(30, player.timers[POISON_TIMER])
 
         player.attr[POISON_TICKS_LEFT_ATTR] = 10
@@ -102,6 +103,30 @@ class VenomTests {
         assertTrue(Poison.poison(player, 4))
         assertEquals(firstTicks, player.attr[POISON_TICKS_LEFT_ATTR])
         assertEquals(30, player.timers[POISON_TIMER])
+    }
+
+    @Test
+    fun `poison deals 5 hits per damage level and 105 in total from 6 - OSRS Wiki Poison`() {
+        val player = newPlayer()
+        assertTrue(Poison.poison(player, 6))
+        // Replays the poison timer's rule (poison_plugin): hit getDamageForTicks(ticks), the hit at ticks 0 is the last one.
+        val hits = mutableListOf<Int>()
+        var ticks = player.attr[POISON_TICKS_LEFT_ATTR]!!
+        while (ticks >= 0) {
+            hits += Poison.getDamageForTicks(ticks)
+            ticks--
+        }
+        assertEquals(List(5) { 6 } + List(5) { 5 } + List(5) { 4 } + List(5) { 3 } + List(5) { 2 } + List(5) { 1 }, hits)
+        assertEquals(105, hits.sum(), "\"a total of 105 poison damage\" for severity 30")
+    }
+
+    @Test
+    fun `poison never lands on an envenomed pawn`() {
+        val player = newPlayer()
+        Venom.envenom(player)
+        assertFalse(Poison.poison(player, 6))
+        assertFalse(player.isPoisoned())
+        assertTrue(player.isEnvenomed())
     }
 
     @Test

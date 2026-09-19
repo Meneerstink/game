@@ -22,6 +22,8 @@ import kotlin.random.Random
  * @author Tom <rspsmods@gmail.com>
  */
 object Foods {
+    /** "approximately 18 seconds" (OSRS Wiki "Strange fruit"). */
+    const val STRANGE_FRUIT_IMMUNITY_TICKS = 30
 
     fun canEat(
         p: Player,
@@ -79,6 +81,15 @@ object Foods {
         if (food == Food.KARAMBWAN) {
             // Eating Karambwans also blocks drinking potions.
             p.timers[POTION_DELAY] = 3
+        }
+
+        if (food == Food.STRANGE_FRUIT) {
+            // 18 seconds = 30 ticks of poison and venom immunity after the cure (OSRS Wiki "Strange fruit").
+            gg.rsmod.plugins.content.mechanics.poison.Venom.cure(p, immunityTicks = STRANGE_FRUIT_IMMUNITY_TICKS, announce = false)
+            gg.rsmod.plugins.content.mechanics.poison.Poison.cure(p)
+            p.timers[gg.rsmod.game.model.timer.POISON_IMMUNITY] = maxOf(if (p.timers.has(gg.rsmod.game.model.timer.POISON_IMMUNITY)) p.timers[gg.rsmod.game.model.timer.POISON_IMMUNITY] else 0, STRANGE_FRUIT_IMMUNITY_TICKS)
+            p.timers[gg.rsmod.game.model.timer.VENOM_IMMUNITY] = maxOf(if (p.timers.has(gg.rsmod.game.model.timer.VENOM_IMMUNITY)) p.timers[gg.rsmod.game.model.timer.VENOM_IMMUNITY] else 0, STRANGE_FRUIT_IMMUNITY_TICKS)
+            gg.rsmod.plugins.content.mechanics.run.RunEnergy.renew(p, 30.0)
         }
 
         if (food == Food.CAVEFISH) {

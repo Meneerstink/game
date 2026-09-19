@@ -172,28 +172,33 @@ on_magic_spell_button("Vengeance Group") { metadata ->
 /*
  * Cures.
  */
+/**
+ * Lunar cures. OSRS Wiki "Venom" (owner 2026-09-19): "casting the Cure Me on the Lunar Spellbook ... [is an] additional option to
+ * reduce venom to poison" - venom is reduced to poison at the same damage (a second cast cures that poison); plain poison is cured.
+ */
 fun curePoison(p: Player): Boolean {
-    var cured = false
-    if (Poison.cure(p)) cured = true
-    if (Venom.cure(p, immunityTicks = 0)) cured = true
-    return cured
+    if (Venom.downgradeToPoison(p)) return true
+    return Poison.cure(p)
 }
 
+fun afflicted(p: Player): Boolean = p.attr.has(POISON_TICKS_LEFT_ATTR) || p.attr.has(gg.rsmod.game.model.attr.VENOM_TICKS_ELAPSED_ATTR)
+
 on_magic_spell_button("Cure Me") { metadata ->
-    if (!player.attr.has(POISON_TICKS_LEFT_ATTR)) {
+    if (!afflicted(player)) {
         player.message("You are not poisoned.")
         return@on_magic_spell_button
     }
     if (player.castLunar(metadata, xp = 69.0, animation = 4411, graphic = 742, height = 90, sound = Sfx.LUNAR_CURE)) {
+        val wasVenom = player.attr.has(gg.rsmod.game.model.attr.VENOM_TICKS_ELAPSED_ATTR)
         curePoison(player)
-        player.message("You have been cured of poison.")
+        if (!wasVenom) player.message("You have been cured of poison.")
     }
 }
 
 on_spell_on_player(430, SpellbookData.CURE_OTHER.component) {
     val target = player.getInteractingPlayer()
     val metadata = spell(SpellbookData.CURE_OTHER)
-    if (!target.attr.has(POISON_TICKS_LEFT_ATTR)) {
+    if (!afflicted(target)) {
         player.message("This player is not poisoned.")
         return@on_spell_on_player
     }

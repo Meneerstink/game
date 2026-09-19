@@ -44,6 +44,12 @@ enum class Food(
     SEA_TURTLE(item = Items.SEA_TURTLE, heal = 210),
     MANTA_RAY(item = Items.MANTA_RAY, heal = 220),
     ROCKTAIL(item = Items.ROCKTAIL, heal = 230, overheal = true),
+
+    /**
+     * OSRS Wiki "Strange fruit" (owner 2026-09-19 venom rules): "No Hitpoints are restored", restores 30% run energy, "cure poison,
+     * venom" and "prevents further re-application of poison or venom for approximately 18 seconds" (Foods.eat).
+     */
+    STRANGE_FRUIT(item = Items.STRANGE_FRUIT, message = "You eat the fruit. It tastes great, some of your energy is restored!"),
     CAVEFISH(item = Items.CAVEFISH, heal = 200),
 
     /**

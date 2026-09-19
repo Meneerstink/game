@@ -49,6 +49,11 @@ listOf(
     Items.TREASONOUS_RING_I to Items.TREASONOUS_RING,
     Items.RING_OF_SUFFERING_I to Items.RING_OF_SUFFERING,
     Items.RING_OF_SUFFERING_RI to Items.RING_OF_SUFFERING,
+    // Menu audit 2026-09-19: OSRS 2686 gives every imbued Dagannoth Kings ring "Wear, Uncharge" (OSRS items 11770-11773).
+    Items.SEERS_RING_I to Items.SEERS_RING,
+    Items.ARCHERS_RING_I to Items.ARCHERS_RING,
+    Items.WARRIOR_RING_I to Items.WARRIOR_RING,
+    Items.BERSERKER_RING_I to Items.BERSERKER_RING,
 ).forEach { (imbued, base) ->
     if (hasInventoryOption(imbued, "Uncharge")) {
         gg.rsmod.plugins.content.items.ItemActionGuard.selfConfirming("uncharge", imbued) // confirmReplace asks

@@ -10,6 +10,7 @@ import gg.rsmod.plugins.api.WeaponType
 import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.api.ext.getEquipment
 import gg.rsmod.plugins.api.ext.hasWeaponType
+import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.content.combat.strategy.ranged.RangedAmmo
 import gg.rsmod.plugins.content.combat.strategy.ranged.RangedProjectile
 
@@ -174,6 +175,25 @@ object DizanasQuiver {
         val stored = storedAmmo(quiver) ?: return
         player.equipment[EquipmentType.CAPE.id] = withStored(quiver, stored.id, stored.amount - amount)
     }
+
+    /**
+     * Worn second ammo slot "Remove" (worn tab 387:48 and the Equipment Bonuses grid 667:7 slot [DISPLAY_SLOT]): as much of the
+     * stored ammunition as fits goes to the inventory. False when nothing was stored or nothing fitted.
+     */
+    fun removeWornStoredToInventory(player: Player): Boolean {
+        val quiver = player.getEquipment(EquipmentType.CAPE)?.takeIf { it.id in AMMO_HOLDERS } ?: return false
+        val stored = storedAmmo(quiver) ?: return false
+        val added = player.inventory.add(stored.id, stored.amount).completed
+        if (added <= 0) {
+            player.message("You don't have enough inventory space.")
+            return false
+        }
+        player.equipment[EquipmentType.CAPE.id] = withStored(quiver, stored.id, stored.amount - added)
+        return true
+    }
+
+    /** Display-only slot of inv 94 that carries the stored ammunition (the 667 aura slot, see dizanas_quiver.plugin.kts). */
+    const val DISPLAY_SLOT = 14
 
     fun accuracyBonus(player: Player): Int = if (applies(player)) ACCURACY_BONUS else 0
 

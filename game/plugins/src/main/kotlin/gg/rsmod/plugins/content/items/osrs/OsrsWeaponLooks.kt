@@ -138,6 +138,9 @@ object OsrsWeaponLooks {
             // Owner 2026-09-18 "uses special sound for a non special hit": OSRS Wiki sound list - stab plays stabsword_stab 2549,
             // slash stabsword_slash 2548; a_r_osmumtens_fang_sword_stab_01 (9366) is part 2 of the special only.
             Items.OSMUMTENS_FANG -> if (attackAnimation == fangStab) gg.rsmod.plugins.api.cfg.Sfx.STABSWORD_STAB else gg.rsmod.plugins.api.cfg.Sfx.STABSWORD_SLASH
+            // Owner 2026-09-19 "noxious halberd makes no sound": OSRS Wiki "Noxious halberd" sounds - stab staff_stab 2562, slash
+            // scythe_slash 2524 (same ids/names in the 667 sound table). Its sequences 428 / 440 carry no frame sounds.
+            Items.NOXIOUS_HALBERD -> if (attackAnimation == HUMAN_SCYTHE_SWEEP) gg.rsmod.plugins.api.cfg.Sfx.SCYTHE_SLASH else gg.rsmod.plugins.api.cfg.Sfx.STAFF_STAB
             // Every whip-class weapon swings the OSRS whip sequence (Animations.WHIP), which has no frame sounds: OSRS "whip" 2720.
             else -> if (attackAnimation == gg.rsmod.plugins.content.combat.Animations.WHIP.slash.id) gg.rsmod.plugins.api.cfg.Sfx.WHIP else null
         }

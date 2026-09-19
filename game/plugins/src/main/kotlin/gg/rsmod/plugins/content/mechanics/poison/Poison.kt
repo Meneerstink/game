@@ -1,11 +1,15 @@
 package gg.rsmod.plugins.content.mechanics.poison
 
 import gg.rsmod.game.model.attr.POISON_TICKS_LEFT_ATTR
+import gg.rsmod.game.model.attr.VENOM_TICKS_ELAPSED_ATTR
 import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Pawn
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.timer.POISON_IMMUNITY
 import gg.rsmod.game.model.timer.POISON_TIMER
+import gg.rsmod.plugins.content.items.potion.Potion
+import gg.rsmod.plugins.content.items.potion.PotionType
+import gg.rsmod.plugins.content.items.potion.Potions
 import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.api.ext.setVarp
 
@@ -65,16 +69,24 @@ object Poison {
         severity: Int,
     ): Boolean = applyPoisonTicks(pawn, severity - 1)
 
+    /**
+     * Poisons [pawn] so its first hit deals [initialDamage]. OSRS Wiki "Poison": "the starting damage is decreased by 1 for every 5
+     * occurrences of poison damage" and it wears off when the severity reaches zero (severity 30 -> 5 hits each of 6, 5, 4, 3, 2, 1 =
+     * 105 damage in 9 minutes), so the severity is 5 x the starting damage. (Was 5 x damage - 4: only two hits at the starting damage.)
+     */
     fun poison(
         pawn: Pawn,
         initialDamage: Int,
-    ): Boolean = applyPoisonTicks(pawn, (initialDamage * 5) - 4)
+    ): Boolean = poisonSeverity(pawn, initialDamage * 5)
 
     private fun applyPoisonTicks(
         pawn: Pawn,
         ticks: Int,
     ): Boolean {
         if (isImmune(pawn)) return false
+        // Owner 2026-09-19: a pawn is never poisoned and envenomed at once - venom is the stronger effect, so a poison hit on an
+        // envenomed pawn does nothing (it used to overwrite the orb to the green poison orb while the venom kept ticking).
+        if (pawn.attr.has(VENOM_TICKS_ELAPSED_ATTR)) return false
 
         // OSRS/ Void/ Novite all keep the stronger poison and restart its 30-cycle timer when
         // an equal or stronger application lands. The old guard was inverted: it only entered
@@ -86,10 +98,53 @@ object Poison {
 
         pawn.timers[POISON_TIMER] = 30
         pawn.attr[POISON_TICKS_LEFT_ATTR] = ticks
-        if (oldTicks == null && pawn is Player) {
-            pawn.message("You have been poisoned!")
+        if (pawn is Player) {
+            setPoisonVarp(pawn, OrbState.POISON)
+            if (oldTicks == null) {
+                pawn.message("You have been poisoned!")
+            }
         }
         return true
+    }
+
+    /** Handles the cache HP-orb "Use Cure" action without relying on an item click slot. */
+    /**
+     * The HP orb's "Use cure". OSRS Wiki "Venom": "clicking the hitpoints orb will automatically cure or reduce venom if the player has
+     * an appropriate item in their inventory, with potions being prioritised over other items" - so while envenomed any antipoison
+     * works too (it reduces the venom to poison). Order: anti-venoms (a full cure), then the antipoison family, then the Strange fruit.
+     */
+    fun cureFromInventory(player: Player): Boolean {
+        val potionOrder =
+            listOf(
+                PotionType.ANTI_VENOM,
+                PotionType.ANTI_VENOM_PLUS,
+                PotionType.EXTENDED_ANTI_VENOM_PLUS,
+                PotionType.ANTIPOISON,
+                PotionType.SUPER_ANTIPOISON,
+                PotionType.ANTIPOISON_PLUS,
+                PotionType.ANTIPOISON_PLUS_PLUS,
+                PotionType.SANFEW_SERUM,
+            )
+        val cure =
+            potionOrder
+                .asSequence()
+                .flatMap { type -> Potion.values().asSequence().filter { it.potionType == type } }
+                .mapNotNull { potion -> player.inventory.getItemIndex(potion.item, false).takeIf { it >= 0 }?.let { potion to it } }
+                .firstOrNull()
+        if (cure != null) {
+            Potions.drinkAt(player, cure.first, cure.second)
+            return true
+        }
+        val fruitSlot = player.inventory.getItemIndex(gg.rsmod.plugins.api.cfg.Items.STRANGE_FRUIT, false)
+        val fruit = gg.rsmod.plugins.content.items.food.Food.STRANGE_FRUIT
+        if (fruitSlot >= 0 && gg.rsmod.plugins.content.items.food.Foods.canEat(player, fruit) &&
+            player.inventory.remove(fruit.item, beginSlot = fruitSlot).hasSucceeded()
+        ) {
+            gg.rsmod.plugins.content.items.food.Foods.eat(player, fruit)
+            return true
+        }
+        player.message("You don't have anything to cure.")
+        return false
     }
 
     /**

@@ -4,6 +4,7 @@ import gg.rsmod.game.fs.def.ItemDef
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.game.model.queue.QueueTask
 import gg.rsmod.plugins.api.Skills
+import gg.rsmod.plugins.api.ext.confirmItemAction
 import gg.rsmod.plugins.api.ext.filterableMessage
 import gg.rsmod.plugins.api.ext.grantOrRefund
 import gg.rsmod.plugins.api.ext.itemMessageBox
@@ -23,6 +24,25 @@ object CombinationAction {
             return
         }
 
+        // Owner 2026-09-18 / 2026-09-19: an ornament kit (or kit-like paint / mix / upgrade kit) says so in the item GUI, and attaching
+        // one first asks "Are you sure" in the same item GUI as detaching (Dismantle) does - on the item the kit goes on.
+        val kitName = data.items.map { player.world.definitions.get(ItemDef::class.java, it).name.lowercase() }
+        val ornament =
+            data.resultItem in gg.rsmod.plugins.content.items.osrs.OsrsOrnamentKits.ORNAMENTED_RESULTS ||
+                kitName.any { it.contains("ornament kit") }
+        if (ornament) {
+            val target =
+                data.items.firstOrNull { !player.world.definitions.get(ItemDef::class.java, it).name.lowercase().contains("kit") }
+                    ?: data.resultItem
+            if (!task.confirmItemAction(target, "Are you sure you want to attach the ornament kit to this item?", "The ornament kit will be attached to this item.")) {
+                return
+            }
+            // The items must still be there after the GUI (they may have been moved or dropped meanwhile).
+            if (!canCombine(task, data)) {
+                return
+            }
+        }
+
         data.items.forEach {
             inventory.remove(item = it, assureFullRemoval = true)
         }
@@ -32,11 +52,7 @@ object CombinationAction {
         }
         player.addXp(data.skill, data.experience)
 
-        // Owner 2026-09-18: every ornament kit (and kit-like paint / mix / upgrade kit) put on an item says so in the item GUI.
-        val kitName = data.items.map { player.world.definitions.get(ItemDef::class.java, it).name.lowercase() }
-        if (data.resultItem in gg.rsmod.plugins.content.items.osrs.OsrsOrnamentKits.ORNAMENTED_RESULTS ||
-            kitName.any { it.contains("ornament kit") }
-        ) {
+        if (ornament) {
             task.itemMessageBox(gg.rsmod.plugins.content.items.osrs.OsrsOrnamentKits.ATTACH_MESSAGE, item = data.resultItem)
             return
         }
