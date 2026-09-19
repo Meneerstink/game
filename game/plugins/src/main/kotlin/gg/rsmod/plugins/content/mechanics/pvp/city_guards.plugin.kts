@@ -27,22 +27,22 @@ fun KotlinPlugin.meleeGuard(id: Int) =
         }
         stats {
             hitpoints = CityGuards.HITPOINTS_TIMES_TEN
-            attack = 800
-            strength = 400
-            defence = 300
-            magic = 1
-            ranged = 1
+            attack = CityGuards.ATTACK_LEVEL
+            strength = CityGuards.STRENGTH_LEVEL
+            defence = CityGuards.DEFENCE_LEVEL
+            magic = CityGuards.MAGIC_LEVEL
+            ranged = CityGuards.RANGED_LEVEL
         }
         bonuses {
-            attackStab = 60
-            attackSlash = 60
-            attackCrush = 60
-            strengthBonus = 7
-            defenceStab = 8
-            defenceSlash = 9
-            defenceCrush = 7
-            defenceMagic = 0
-            defenceRanged = 8
+            attackStab = CityGuards.ATTACK_BONUS
+            attackSlash = CityGuards.ATTACK_BONUS
+            attackCrush = CityGuards.ATTACK_BONUS
+            strengthBonus = CityGuards.STRENGTH_BONUS
+            defenceStab = CityGuards.DEFENCE_STAB_BONUS
+            defenceSlash = CityGuards.DEFENCE_SLASH_BONUS
+            defenceCrush = CityGuards.DEFENCE_CRUSH_BONUS
+            defenceMagic = CityGuards.DEFENCE_MAGIC_BONUS
+            defenceRanged = CityGuards.DEFENCE_RANGED_BONUS
         }
         anims {
             attack = Anims.ATTACK_SLASH
@@ -68,20 +68,20 @@ fun KotlinPlugin.rangedGuard(id: Int) =
         }
         stats {
             hitpoints = CityGuards.HITPOINTS_TIMES_TEN
-            attack = 800
-            strength = 400
-            defence = 300
-            magic = 1
-            ranged = 1
+            attack = CityGuards.ATTACK_LEVEL
+            strength = CityGuards.STRENGTH_LEVEL
+            defence = CityGuards.DEFENCE_LEVEL
+            magic = CityGuards.MAGIC_LEVEL
+            ranged = CityGuards.RANGED_LEVEL
         }
         bonuses {
-            attackRanged = 60
-            rangedStrengthBonus = 7
-            defenceStab = 8
-            defenceSlash = 9
-            defenceCrush = 7
-            defenceMagic = 0
-            defenceRanged = 8
+            attackRanged = CityGuards.ATTACK_BONUS
+            rangedStrengthBonus = CityGuards.STRENGTH_BONUS
+            defenceStab = CityGuards.DEFENCE_STAB_BONUS
+            defenceSlash = CityGuards.DEFENCE_SLASH_BONUS
+            defenceCrush = CityGuards.DEFENCE_CRUSH_BONUS
+            defenceMagic = CityGuards.DEFENCE_MAGIC_BONUS
+            defenceRanged = CityGuards.DEFENCE_RANGED_BONUS
         }
         anims {
             // The ranged guards hold a bow, not a crossbow: OSRS 11203 is the Falador longbow guard

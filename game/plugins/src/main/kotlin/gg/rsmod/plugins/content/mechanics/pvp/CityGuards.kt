@@ -85,6 +85,20 @@ object CityGuards {
     /** OSRS Wiki: "Hitpoints: 800" (NpcCombatDsl takes real HP times ten). */
     const val HITPOINTS_TIMES_TEN = 8000
 
+    /** OSRS Wiki Guard (Deadman Mode) combat definition. */
+    const val ATTACK_LEVEL = 800
+    const val STRENGTH_LEVEL = 400
+    const val DEFENCE_LEVEL = 300
+    const val MAGIC_LEVEL = 1
+    const val RANGED_LEVEL = 1
+    const val ATTACK_BONUS = 60
+    const val STRENGTH_BONUS = 7
+    const val DEFENCE_STAB_BONUS = 8
+    const val DEFENCE_SLASH_BONUS = 9
+    const val DEFENCE_CRUSH_BONUS = 7
+    const val DEFENCE_MAGIC_BONUS = 0
+    const val DEFENCE_RANGED_BONUS = 8
+
     /** OSRS Wiki (Wizguard): "freezing them for 3 seconds (5 ticks)". */
     const val WIZGUARD_FREEZE_CYCLES = 5
 
