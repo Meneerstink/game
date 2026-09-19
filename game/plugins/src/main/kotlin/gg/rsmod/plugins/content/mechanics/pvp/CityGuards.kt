@@ -6,6 +6,7 @@ import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.World
 import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.attr.FACING_PAWN_ATTR
+import gg.rsmod.game.model.attr.GUARD_FROZEN_UNTIL_CYCLE_ATTR
 import gg.rsmod.game.model.attr.HOLD_FACING_ATTR
 import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Pawn
@@ -17,37 +18,35 @@ import gg.rsmod.plugins.api.InterfaceDestination
 import gg.rsmod.plugins.api.ext.closeInterface
 import gg.rsmod.plugins.api.ext.filterableMessage
 import gg.rsmod.plugins.api.ext.freeze
+import gg.rsmod.plugins.api.ext.hit
 import gg.rsmod.plugins.content.combat.Combat
 import gg.rsmod.plugins.content.combat.canEngageCombat
 import gg.rsmod.plugins.content.combat.getCombatTarget
 import java.lang.ref.WeakReference
 
 /**
- * Deadman Mode guards (OSRS Wiki "Guard (Deadman Mode)" / "Wizguard"; owner instructions 2026-09-16
- * and 2026-09-17, retest round 3 the same day).
+ * Deadman Mode guards (OSRS Wiki "Guard (Deadman Mode)" / "Wizguard"; owner 2026-09-19: zones and
+ * guards 100 % OSRS, which replaced the earlier 2-guard cap, the unattackable guards and the "1337
+ * guard" rename).
  *
- * Npcs: the real OSRS Deadman guards, imported into both 667 caches with `OsrsNpcImportTool` batch
- * `deadman-guard` (owner: "gebruik exact de deadmanmode guard van osrs"): OSRS 6582 "Guard" (slash)
- * -> [MELEE_GUARD_ID], OSRS 11203 "Guard" (ranged) -> [RANGED_GUARD_ID], OSRS 14792 "Wizguard" ->
- * [WIZGUARD_ID]. Only these three OSRS Deadman guard variants are eligible; unrelated imported
- * Third Age/Lucien NPCs are not Deadman guards and are never spawned by this system.
- * None of them carries a cache "Attack" option any more (`NpcAttackOptionStripTool`, owner: "Remove
- * the attack option from all guards, a player cannot attack them").
+ * Npcs: every per-city OSRS Deadman guard variant from the wiki infobox, imported into both 667 caches
+ * with `OsrsNpcImportTool` batch `deadman-guard` with its OSRS name, models and "Attack" option
+ * ([VARIANTS]), plus OSRS 14792 "Wizguard" -> [WIZGUARD_ID] (no options, unattackable).
  *
- * Rules (owner 2026-09-17 unless marked wiki):
- * - Guards react only to a PK-skulled player standing inside a guarded zone ([GuardedZones], the
- *   wiki polygons). Outside a zone nothing ever teleports onto you, and a guard never fights from, or
- *   roams to, a tile outside a zone ([mayAttack]; [leash]; the zone-bounded random walk in
- *   `npc_random_walk.plugin.kts`).
- * - Entering a zone skulled brings at most two guards ([MAX_GUARDS_PER_PLAYER]) onto you: a random
- *   group from [SPAWN_COMBINATIONS] - a melee guard that teleports next to you, a ranger that appears
- *   a few tiles away, and/or a Wizguard. The same cap holds for the stationed guards: a guard may
- *   only engage a player who has fewer than two guards on them already.
- * - The guards that came for you do not vanish when you leave ("when the player runs into a
+ * Rules (wiki unless marked owner):
+ * - Guards act only on a PK-skulled player standing inside a guarded zone ([GuardedZones], the
+ *   wiki polygons) and stop the instant the player leaves it; a guard never fights from, or roams to,
+ *   a tile outside a zone ([mayAttack]; [leash]; the zone-bounded random walk).
+ * - "Will also spawn on top of any PK skulled player in a safe zone and attack them ... either a melee
+ *   or a ranged one" plus a Wizguard ([SPAWN_COMBINATIONS]). "Multiple guards are able to attack the
+ *   player" - there is no cap; every stationed guard in aggro range joins in.
+ * - "The guards can only be attacked inside the guarded area while skulled" ([mayBeAttackedBy]);
+ *   otherwise "You probably don't want to do that.". The Wizguard is unattackable.
+ * - Owner: the guards that came for you do not vanish when you leave ("when the player runs into a
  *   dangerous [zone] again the 2 guards disappear, this should not happen"): they stop at once, stay
  *   in the zone and patrol where the fight ended ([release]/[standDown]); the next skulled intruder
  *   in that zone gets the same guards teleported in again (per-zone pool, [acquire]).
- * - Every guard roams up to [PATROL_RADIUS] tiles around its post ("alle guards 8 tiles kunnen
+ * - Owner: every guard roams up to [PATROL_RADIUS] tiles around its post ("alle guards 8 tiles kunnen
  *   roamen") and routes with the real breadth-first path finder ([Npc.smartPathfinding]) so it
  *   walks around fences, counters and buildings instead of forgetting the intruder behind them; it
  *   pursues anywhere inside the zone ([mayPursue], hooked into `NpcLeash`).
@@ -55,8 +54,10 @@ import java.lang.ref.WeakReference
  *   the player's Hitpoints level and rises by 2 per attack, several guards regardless of
  *   single-combat, and they stop the instant the player leaves the zone or loses the skull.
  * - Wiki (Wizguard): appears next to the intruder, yells "You shall not pass!", casts Ice Barrage
- *   once (5-tick freeze, not reduced by Protect from Magic), disappears, and comes back every 10
- *   ticks while the player stays. Its damage is not published, so only the sourced freeze is applied.
+ *   once (5-tick freeze; damage and freeze not reduced by Protect from Magic), disappears, and comes
+ *   back every 10 ticks while the player stays. The wiki gives no Wizguard max hit; the hit is rolled
+ *   up to Ice Barrage's own base max ([WIZGUARD_MAX_HIT]). A frozen player cannot pick up or
+ *   telegrab items (wiki changelog).
  */
 object CityGuards {
     /** OSRS 6582 "Guard" (Varrock, slash) imported as this local 667 id. */
@@ -68,13 +69,47 @@ object CityGuards {
     /** OSRS 14792 "Wizguard" imported as this local 667 id. */
     const val WIZGUARD_ID = 14409
 
-    val MELEE_GUARD_IDS = setOf(MELEE_GUARD_ID)
-    val RANGED_GUARD_IDS = setOf(RANGED_GUARD_ID)
-    val MAGE_GUARD_IDS = emptySet<Int>()
-    val GUARD_IDS = MELEE_GUARD_IDS + RANGED_GUARD_IDS + MAGE_GUARD_IDS + WIZGUARD_ID
+    /** A zone's OSRS guard pair (local 667 ids); [melee] is null where the wiki only lists a ranged guard. */
+    data class Variant(
+        val melee: Int?,
+        val ranged: Int,
+    )
 
-    /** Owner 2026-09-17: "MAXIMAAL 2 GUARDS MOGEN 1 PLAYER ATTACKEN". */
-    const val MAX_GUARDS_PER_PLAYER = 2
+    /**
+     * OSRS Wiki "Guard (Deadman Mode)" infobox versions per guarded zone (OSRS id -> local id from the
+     * `deadman-guard` import, tx-20260919-150209): Varrock 6582/11203 -> 14407/14408, Gnome Stronghold
+     * 6574/11199 -> 14414/14415, Seers' Village (ranged) 6575 -> 14416, Catherby (ranged) 6576 -> 14417,
+     * East Ardougne 6579/11200 -> 14418/14419, Yanille 6580/11201 -> 14420/14421, Falador 6581/11202 ->
+     * 14422/14423, Lumbridge 6583/11204 -> 14424/14425, Port Phasmatys 6698/11205 -> 14426/14427,
+     * Sophanem 6699/11206 -> 14428/14429, Fremennik Isles 6700/11207 -> 14430/14431, Void Knights'
+     * Outpost 6701/11208 -> 14432/14433, Rellekka 6702/11209 -> 14434/14435.
+     */
+    val VARIANTS: Map<String, Variant> =
+        mapOf(
+            "Varrock" to Variant(MELEE_GUARD_ID, RANGED_GUARD_ID),
+            "Tree Gnome Stronghold" to Variant(14414, 14415),
+            "Seers' Village bank" to Variant(null, 14416),
+            "Catherby bank" to Variant(null, 14417),
+            "East Ardougne" to Variant(14418, 14419),
+            "Yanille" to Variant(14420, 14421),
+            "Falador" to Variant(14422, 14423),
+            "Lumbridge" to Variant(14424, 14425),
+            "Port Phasmatys" to Variant(14426, 14427),
+            "Sophanem" to Variant(14428, 14429),
+            "Jatizso" to Variant(14430, 14431),
+            "Neitiznot" to Variant(14430, 14431),
+            "Void Knights' Outpost" to Variant(14432, 14433),
+            "Rellekka" to Variant(14434, 14435),
+        )
+
+    /** Tutorial Island has no guard in the wiki tables; a skulled intruder there gets the Lumbridge pair. */
+    private val FALLBACK_VARIANT = VARIANTS.getValue("Lumbridge")
+
+    fun variantFor(zone: String?): Variant = zone?.let { VARIANTS[it] } ?: FALLBACK_VARIANT
+
+    val MELEE_GUARD_IDS: Set<Int> = VARIANTS.values.mapNotNull { it.melee }.toSet()
+    val RANGED_GUARD_IDS: Set<Int> = VARIANTS.values.map { it.ranged }.toSet()
+    val GUARD_IDS = MELEE_GUARD_IDS + RANGED_GUARD_IDS + WIZGUARD_ID
 
     /** OSRS Wiki: "Combat Level: 1337". Also baked into the imported cache definitions. */
     const val DISPLAYED_COMBAT_LEVEL = 1337
@@ -105,6 +140,10 @@ object CityGuards {
     /** OSRS Wiki (Wizguard): "will appear again after 6 seconds (10 ticks)". */
     const val WIZGUARD_REAPPEAR_CYCLES = 10
 
+    /** OSRS Wiki "Ice Barrage": base max hit 30 - the spell the Wizguard casts (its own max hit is
+     * not published). Rolled 0..30 and, like the freeze, not reduced by Protect from Magic. */
+    const val WIZGUARD_MAX_HIT = 30
+
     /** Ice Barrage cast animation / impact graphic - the same 667 ids the player spell uses
      * ([gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell.ICE_BARRAGE]). */
     const val ICE_BARRAGE_CAST_ANIM = 1979
@@ -119,31 +158,22 @@ object CityGuards {
     /** Cycles a guard may spend walking back after ending up outside every zone before it is put back. */
     const val OUTSIDE_GRACE_CYCLES = 10
 
-    /** How far from you the ranger appears ("1 ranger van ver"). */
-    val RANGER_SPAWN_DISTANCE = 4..6
-
+    /** OSRS Wiki overhead text of the spawned guard and of the Wizguard. */
     const val GREETING = "We don't want your sort here, %s!"
     const val WIZGUARD_SHOUT = "You shall not pass!"
 
-    /** Owner "deadmanmode vervijning" 2026-09-17: every Deadman guard is named "1337 guard" (cache
-     * name, written by `NpcRenameTool`), examines as [EXAMINE] and refuses attacks with
-     * [ATTACK_REFUSED_MESSAGE]. */
-    const val DISPLAY_NAME = "1337 guard"
-    const val EXAMINE = "I wonder if he gets stuck behind fences."
+    /** OSRS Wiki trivia: "Attempting to attack one of the guards displays the message ...". Names and
+     * examines are the OSRS ones per variant (cache names, `data/cfg/npcs.yml`). */
     const val ATTACK_REFUSED_MESSAGE = "You probably don't want to do that."
 
     enum class Kind { MELEE, RANGED, MAGE }
 
     /**
-     * Owner 2026-09-17: "1 ranger van ver en/of 1 melee die in je teleport of 1 mager, compleet
-     * random, maar maximaal 2". Every combination has at most two guards and at least one guard
-     * that deals damage (the Wizguard only freezes - its damage is not published on the wiki).
+     * OSRS Wiki: a guard spawns on top of the skulled intruder - "either a melee or a ranged one" -
+     * and a Wizguard freezes them (then reappears every [WIZGUARD_REAPPEAR_CYCLES]).
      */
     val SPAWN_COMBINATIONS: List<List<Kind>> =
         listOf(
-            listOf(Kind.MELEE),
-            listOf(Kind.RANGED),
-            listOf(Kind.MELEE, Kind.RANGED),
             listOf(Kind.MELEE, Kind.MAGE),
             listOf(Kind.RANGED, Kind.MAGE),
         )
@@ -180,19 +210,22 @@ object CityGuards {
     fun isSkulledIntruder(target: Player): Boolean = PvpSkull.isSkulled(target) && isGuardedZone(target.tile)
 
     /**
-     * Whether [guard] may engage [target]: the target is a skulled intruder, the guard itself stands
-     * inside a guarded zone, and the target does not already have [MAX_GUARDS_PER_PLAYER] other
-     * guards on them. Re-checked every combat cycle by the shared combat gate, which is what makes
-     * a guard "stop attacking the player immediately after they leave the guarded area".
+     * Whether [guard] may engage [target]: the target is a skulled intruder and the guard itself
+     * stands inside a guarded zone (no cap - wiki: "Multiple guards are able to attack the player").
+     * Re-checked every combat cycle by the shared combat gate, which is what makes a guard "stop
+     * attacking the player immediately after they leave the guarded area".
      */
     fun mayAttack(
         guard: Npc,
         target: Player,
-    ): Boolean {
-        if (!isSkulledIntruder(target)) return false
-        if (!isGuardedZone(guard.tile)) return false
-        return reserveSlot(target, guard)
-    }
+    ): Boolean = isSkulledIntruder(target) && isGuardedZone(guard.tile)
+
+    /** OSRS Wiki: "The guards can only be attacked inside the guarded area while skulled." The
+     * Wizguard is "unattackable". */
+    fun mayBeAttackedBy(
+        guard: Npc,
+        attacker: Player,
+    ): Boolean = guard.id != WIZGUARD_ID && isSkulledIntruder(attacker) && isGuardedZone(guard.tile)
 
     /** Leash rule for `NpcLeash`: a guard keeps chasing anywhere inside the zone, never outside it. */
     fun mayPursue(
@@ -200,57 +233,8 @@ object CityGuards {
         target: Pawn,
     ): Boolean = isGuard(guard) && isGuardedZone(guard.tile) && target is Player && isSkulledIntruder(target)
 
-    // ---- max-two-guards cap ----
-
     private val REACTIVE_GUARDS_ATTR = AttributeKey<MutableList<WeakReference<Npc>>>()
     private val REACTIVE_PLAN_ATTR = AttributeKey<List<Kind>>()
-    private val ENGAGED_STATIONED_ATTR = AttributeKey<MutableList<Reservation>>()
-
-    /** A stationed guard holding one of a player's guard slots; [cycle] is when it was taken, so a
-     * guard that reserved a slot but has not started its first attack yet is not pruned early. */
-    class Reservation(
-        val guard: WeakReference<Npc>,
-        val cycle: Int,
-    )
-
-    private const val RESERVATION_GRACE_CYCLES = 3
-
-    /** Guards currently counted against [target]'s cap: the reactive group (its planned size,
-     * so a Wizguard between two appearances still holds its slot) plus stationed guards that are
-     * actively fighting the target. */
-    fun engagedGuardCount(target: Player): Int {
-        val reactive = target.attr[REACTIVE_PLAN_ATTR]?.size ?: 0
-        return reactive + engagedStationed(target).size
-    }
-
-    private fun engagedStationed(target: Player): MutableList<Reservation> {
-        val list = target.attr[ENGAGED_STATIONED_ATTR] ?: mutableListOf<Reservation>().also { target.attr[ENGAGED_STATIONED_ATTR] = it }
-        val now = target.world.currentCycle
-        list.removeAll { r ->
-            val g = r.guard.get()
-            g == null || !g.isActive() || (g.getCombatTarget() !== target && now - r.cycle > RESERVATION_GRACE_CYCLES)
-        }
-        return list
-    }
-
-    private fun isReactiveGuardOf(
-        target: Player,
-        guard: Npc,
-    ): Boolean = target.attr[REACTIVE_GUARDS_ATTR]?.any { it.get() === guard } == true
-
-    /** True if [guard] already holds, or can take, one of [target]'s [MAX_GUARDS_PER_PLAYER] slots. */
-    fun reserveSlot(
-        target: Player,
-        guard: Npc,
-    ): Boolean {
-        if (isReactiveGuardOf(target, guard)) return true
-        val stationed = engagedStationed(target)
-        if (stationed.any { it.guard.get() === guard }) return true
-        val reactive = target.attr[REACTIVE_PLAN_ATTR]?.size ?: 0
-        if (reactive + stationed.size >= MAX_GUARDS_PER_PLAYER) return false
-        stationed += Reservation(WeakReference(guard), target.world.currentCycle)
-        return true
-    }
 
     // ---- consecutive-hit damage ramp ----
 
@@ -330,7 +314,8 @@ object CityGuards {
             if (tile != post.tile) {
                 snapped += "${post.city} ${post.tile.x},${post.tile.z}->${tile.x},${tile.z}"
             }
-            val id = if (post.ranged) RANGED_GUARD_ID else MELEE_GUARD_ID
+            val variant = variantFor(GuardedZones.zoneAt(tile)?.name)
+            val id = if (post.ranged || variant.melee == null) variant.ranged else variant.melee
             val guard =
                 Npc(id, tile, world).also {
                     it.respawnOverride = true
@@ -391,9 +376,8 @@ object CityGuards {
         }
         guard.attr.remove(OUTSIDE_CYCLES_ATTR)
         if (guard.getCombatTarget() == null) {
-            // Owner 2026-09-18: "all 1337 guards ... also the Third Age mage / Third Age ranger face
-            // the player with a skull in a safe zone". A guard the two-guard cap keeps out of the
-            // fight still stops and watches the nearest skulled intruder in view; HOLD_FACING_ATTR
+            // Owner 2026-09-18: every guard faces the player with a skull in a safe zone. A guard
+            // that is not (yet) in the fight stops and watches the nearest skulled intruder in view; HOLD_FACING_ATTR
             // keeps the engine from dropping the non-combat face-pawn while the intruder is not
             // adjacent (Npc.cycle). The watch ends, and patrolling resumes, when they leave.
             val intruder = nearestSkulledIntruder(guard)
@@ -577,7 +561,6 @@ object CityGuards {
         player.attr.remove(REACTIVE_PLAN_ATTR)
         player.attr.remove(WIZGUARD_NEXT_CYCLE_ATTR)
         player.attr.remove(ACTIVE_WIZGUARD_ATTR)
-        player.attr.remove(ENGAGED_STATIONED_ATTR)
     }
 
     /** Random group per [SPAWN_COMBINATIONS]; exposed for tests. */
@@ -597,8 +580,9 @@ object CityGuards {
                 return@forEach
             }
             if (zone == null) return@forEach
-            val tile = if (kind == Kind.MELEE) meleeTile(world, player) else rangerTile(world, player)
-            val guard = acquire(world, zone, kind, tile) ?: return@forEach
+            // Wiki: the guard "will also spawn on top of" the intruder (the adjacent tile, so it
+            // visibly stands beside and faces them).
+            val guard = acquire(world, zone, kind, spawnTileNextTo(world, player)) ?: return@forEach
             engaged += kind
             guards += WeakReference(guard)
             player.attr[REACTIVE_GUARDS_ATTR] = guards
@@ -625,7 +609,8 @@ object CityGuards {
     ): Npc? {
         val pool = pools.getOrPut(zone.name) { ArrayList() }
         pool.removeAll { it.get()?.isActive() != true }
-        val id = if (kind == Kind.MELEE) MELEE_GUARD_ID else RANGED_GUARD_ID
+        val variant = variantFor(zone.name)
+        val id = if (kind == Kind.RANGED || variant.melee == null) variant.ranged else variant.melee
         val idle = pool.mapNotNull { it.get() }.firstOrNull { it.id == id && it.getCombatTarget() == null }
         if (idle != null) {
             idle.stopMovement()
@@ -646,33 +631,18 @@ object CityGuards {
         return guard
     }
 
-    /** The walkable guarded tile next to [player] for the melee guard - never the player's own
-     * tile, so the guard visibly stands beside and faces the intruder. */
-    private fun meleeTile(
+    /** The walkable guarded tile next to [player] - never the player's own tile, so the guard
+     * visibly stands beside and faces the intruder. */
+    private fun spawnTileNextTo(
         world: World,
         player: Player,
     ): Tile = nearestWalkable(world, player.tile, radius = 2) { it != player.tile && isGuardedZone(it) } ?: Tile(player.tile)
 
-    /** A walkable guarded tile [RANGER_SPAWN_DISTANCE] tiles from [player], in a random direction;
-     * falls back to the nearest walkable guarded tile next to the player. */
-    private fun rangerTile(
-        world: World,
-        player: Player,
-    ): Tile {
-        val distance = world.random(RANGER_SPAWN_DISTANCE)
-        val directions = listOf(1 to 0, -1 to 0, 0 to 1, 0 to -1, 1 to 1, -1 to -1, 1 to -1, -1 to 1).shuffled()
-        for ((dx, dz) in directions) {
-            val wanted = player.tile.transform(dx * distance, dz * distance)
-            val tile = nearestWalkable(world, wanted, radius = 2) { isGuardedZone(it) && it.getDistance(player.tile) >= 3 }
-            if (tile != null) return tile
-        }
-        return meleeTile(world, player)
-    }
-
     /**
-     * OSRS Wiki (Wizguard): appears, yells, casts Ice Barrage once (5-tick freeze, unaffected by
-     * Protect from Magic) and disappears. The Wizguard's own damage roll is not published on the
-     * wiki, so only the sourced freeze + graphics are applied - no invented hit.
+     * OSRS Wiki (Wizguard): appears, yells, casts Ice Barrage once - freezing the player for 5 ticks
+     * "and dealing damage", neither affected by Protect from Magic - and disappears. The hit is rolled
+     * up to Ice Barrage's base max ([WIZGUARD_MAX_HIT]); while frozen the player cannot pick up or
+     * telegrab items ([GUARD_FROZEN_UNTIL_CYCLE_ATTR]).
      */
     private fun wizguardStrike(
         world: World,
@@ -681,7 +651,7 @@ object CityGuards {
         player.attr[ACTIVE_WIZGUARD_ATTR]?.get()?.let { previous ->
             if (previous.isActive()) world.remove(previous)
         }
-        val tile = meleeTile(world, player)
+        val tile = spawnTileNextTo(world, player)
         val wizguard =
             Npc(WIZGUARD_ID, tile, world).also {
                 it.respawnOverride = false
@@ -698,6 +668,8 @@ object CityGuards {
         player.freeze(WIZGUARD_FREEZE_CYCLES) {
             player.filterableMessage("A Wizguard's Ice Barrage freezes you in place!")
         }
+        player.attr[GUARD_FROZEN_UNTIL_CYCLE_ATTR] = world.currentCycle + WIZGUARD_FREEZE_CYCLES
+        player.hit(world.random(WIZGUARD_MAX_HIT), delay = 1)
         world.queue {
             wait(3)
             if (player.attr[ACTIVE_WIZGUARD_ATTR]?.get() === wizguard) {

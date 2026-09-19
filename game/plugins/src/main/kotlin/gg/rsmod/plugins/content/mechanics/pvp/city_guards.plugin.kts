@@ -2,15 +2,14 @@ package gg.rsmod.plugins.content.mechanics.pvp
 
 import gg.rsmod.game.model.combat.StyleType
 import gg.rsmod.game.plugin.KotlinPlugin
-import gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell
 
 /**
  * Deadman guard combat definitions + stationed spawns (OSRS Wiki "Guard (Deadman Mode)": level 1337,
  * 800 hitpoints, 2-tick attack speed, slash or ranged, attack 800, strength 400, defence 300,
  * magic/ranged 1, attack +60, strength +7, stab/slash/crush/magic/ranged defence 8/9/7/0/8,
  * aggressive). Damage is not taken from these stats but from
- * the sourced ramp in [CityGuards.rampedMaxHit]. The three imported OSRS Deadman guard variants
- * use one shared definition per attack style. The humanoid models animate with the shared 667
+ * the sourced ramp in [CityGuards.rampedMaxHit]. Every imported per-city OSRS guard variant
+ * ([CityGuards.VARIANTS]) uses the one shared definition of its attack style. The humanoid models animate with the shared 667
  * human attack/block/death sequences, the
  * same way the imported Ferox npcs reuse the 667 Man movement set.
  */
@@ -95,47 +94,8 @@ fun KotlinPlugin.rangedGuard(id: Int) =
         }
     }
 
-/** The owner's Third Age Mage post fights through the engine's magic strategy with the same stats;
- * the cast is the 667 wizard-npc pattern (spell 71 = Fire Strike visuals, see wizard_lvl_9), the
- * damage the shared guard ramp (MagicCombatFormula). */
-fun KotlinPlugin.mageGuard(id: Int) =
-    set_combat_def(id) {
-        configs {
-            attackSpeed = CityGuards.ATTACK_SPEED_CYCLES
-            attackStyle = StyleType.MAGIC
-            spell = CombatSpell.FIRE_STRIKE.uniqueId
-            respawnDelay = 50
-        }
-        aggro {
-            radius = 8
-            searchDelay = 1
-            alwaysAggro()
-        }
-        stats {
-            hitpoints = CityGuards.HITPOINTS_TIMES_TEN
-            attack = 200
-            strength = 200
-            defence = 150
-            magic = 200
-            ranged = 200
-        }
-        bonuses {
-            attackMagic = 60
-            defenceStab = 8
-            defenceSlash = 9
-            defenceCrush = 7
-            defenceMagic = 8
-            defenceRanged = 8
-        }
-        anims {
-            death = Anims.HUMAN_DEATH
-            block = Anims.BLOCK_SHIELD
-        }
-    }
-
 CityGuards.MELEE_GUARD_IDS.forEach { meleeGuard(it) }
 CityGuards.RANGED_GUARD_IDS.forEach { rangedGuard(it) }
-CityGuards.MAGE_GUARD_IDS.forEach { mageGuard(it) }
 
 /** The Wizguard never fights through the combat engine (it casts once and vanishes, see
  * [CityGuards.wizguardStrike]); this def only keeps combatDef/aggro lookups from seeing a missing

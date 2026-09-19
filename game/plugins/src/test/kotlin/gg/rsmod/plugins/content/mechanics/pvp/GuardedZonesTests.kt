@@ -77,9 +77,27 @@ class GuardedZonesTests {
     }
 
     @Test
+    fun `the stationed posts are the 108 distinct OSRS wiki guard pins, on every guarded zone that has guards`() {
+        assertEquals(108, GuardPosts.ALL.size)
+        assertEquals(GuardPosts.ALL.size, GuardPosts.ALL.map { it.tile }.toSet().size, "no duplicate tiles")
+        val expected =
+            mapOf(
+                "Varrock" to 26, "Falador" to 6, "Lumbridge" to 9, "Catherby bank" to 1, "Seers' Village bank" to 2,
+                "East Ardougne" to 13, "Rellekka" to 7, "Tree Gnome Stronghold" to 16, "Yanille" to 6, "Jatizso" to 4,
+                "Neitiznot" to 3, "Port Phasmatys" to 6, "Sophanem" to 6, "Void Knights' Outpost" to 3,
+            )
+        assertEquals(expected, GuardPosts.ALL.groupingBy { it.city }.eachCount())
+        assertEquals(5, GuardPosts.ALL.count { it.tile.height > 0 }, "Lumbridge Castle x3 and Gnome Stronghold first floor x2")
+    }
+
+    @Test
     fun `every stationed guard post lies inside its own zone`() {
-        GuardPosts.ALL.forEach { post ->
-            assertEquals(post.city, GuardedZones.zoneAt(post.tile)?.name, "guard post ${post.tile} of ${post.city} is outside its zone")
-        }
+        // The wiki's own Yanille pin 2614,3104 lies ~2 tiles outside the wiki's own Yanille polygon (the
+        // diagonal south-east wall edge 2620,3097 -> 2608,3109); CityGuards.spawnStationedGuards snaps it to
+        // the nearest walkable tile inside the zone. Any other pin outside its zone is a data error.
+        val outside = GuardPosts.ALL.filter { GuardedZones.zoneAt(it.tile)?.name != it.city }
+        assertEquals(listOf(Tile(2614, 3104, 0)), outside.map { it.tile }, "guard posts outside their own zone")
+        val yanille = GuardedZones.ZONES.first { it.name == "Yanille" }
+        assertTrue((-2..2).any { dx -> (-2..2).any { dz -> yanille.contains(Tile(2614 + dx, 3104 + dz, 0)) } }, "snap target within 2 tiles")
     }
 }

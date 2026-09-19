@@ -3,7 +3,6 @@ package gg.rsmod.plugins.content.mechanics.pvp
 import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.World
 import gg.rsmod.game.model.attr.AttributeMap
-import gg.rsmod.game.model.attr.COMBAT_TARGET_FOCUS_ATTR
 import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.timer.SKULL_ICON_DURATION_TIMER
@@ -11,26 +10,25 @@ import gg.rsmod.game.model.timer.TimerMap
 import gg.rsmod.plugins.api.SkullIcon
 import io.mockk.every
 import io.mockk.mockk
-import java.lang.ref.WeakReference
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 /**
- * Deadman guard coverage for [CityGuards]'s core predicates, the two-guard cap and the
- * consecutive-hit damage ramp (OSRS Wiki "Guard (Deadman Mode)", owner 2026-09-17). Reactive
- * spawn/despawn needs a real World/chunk/collision stack and stays a live-retest item; this file
- * covers the pure logic every guard code path depends on.
+ * Deadman guard coverage for [CityGuards]'s core predicates, the per-zone OSRS variants, player
+ * attacks on guards and the consecutive-hit damage ramp (OSRS Wiki "Guard (Deadman Mode)"; owner
+ * 2026-09-19: 100 % OSRS). Reactive spawn/despawn needs a real World/chunk/collision stack and stays
+ * a live-retest item; this file covers the pure logic every guard code path depends on.
  */
 class CityGuardsTests {
     private val grandExchange = Tile(3165, 3487, 0)
 
     @Test
-    fun `isGuard recognises only the three imported OSRS Deadman guards, nothing else`() {
-        assertTrue(CityGuards.isGuard(npc(CityGuards.MELEE_GUARD_ID)))
-        assertTrue(CityGuards.isGuard(npc(CityGuards.RANGED_GUARD_ID)))
-        assertTrue(CityGuards.isGuard(npc(CityGuards.WIZGUARD_ID)))
+    fun `isGuard recognises exactly the imported OSRS Deadman guard variants and the Wizguard`() {
+        val imported = (14407..14409) + (14414..14435)
+        assertEquals(imported.toSet(), CityGuards.GUARD_IDS, "tx-20260919-150209 imported ids")
+        imported.forEach { assertTrue(CityGuards.isGuard(npc(it)), "npc $it") }
         assertFalse(CityGuards.isGuard(npc(14404)), "Third Age Ranger is not a Deadman guard")
         assertFalse(CityGuards.isGuard(npc(14405)), "Third Age Mage is not a Deadman guard")
         assertFalse(CityGuards.isGuard(npc(14256)), "Lucien is not a Deadman guard")
@@ -40,22 +38,29 @@ class CityGuardsTests {
     }
 
     @Test
-    fun `every guard id has exactly one attack style and owner tiles use ordinary guards`() {
-        val styled = CityGuards.MELEE_GUARD_IDS + CityGuards.RANGED_GUARD_IDS + CityGuards.MAGE_GUARD_IDS
-        assertEquals(styled.size, CityGuards.MELEE_GUARD_IDS.size + CityGuards.RANGED_GUARD_IDS.size + CityGuards.MAGE_GUARD_IDS.size, "an id must not sit in two style sets")
-        assertEquals(CityGuards.GUARD_IDS, styled + CityGuards.WIZGUARD_ID)
-        val owner =
-            listOf(
-                3187 to 3446, 3186 to 3432, 3164 to 3469,
-                2939 to 3356, 3006 to 3388, 3006 to 3326,
-                3237 to 3225, 3218 to 3251,
-                2588 to 3341, 2612 to 3341, 2614 to 3101,
-            )
-        owner.forEach { (x, z) ->
-            val post = GuardPosts.ALL.firstOrNull { it.tile.x == x && it.tile.z == z }
-            assertTrue(post != null, "owner tile $x,$z must be a guard post")
+    fun `every guard id has exactly one attack style and every guarded zone has its OSRS variant`() {
+        assertTrue((CityGuards.MELEE_GUARD_IDS intersect CityGuards.RANGED_GUARD_IDS).isEmpty(), "an id must not sit in two style sets")
+        assertEquals(CityGuards.GUARD_IDS, CityGuards.MELEE_GUARD_IDS + CityGuards.RANGED_GUARD_IDS + CityGuards.WIZGUARD_ID)
+        GuardedZones.ZONES.filter { it.name != "Tutorial Island" }.forEach { zone ->
+            assertTrue(zone.name in CityGuards.VARIANTS, "${zone.name} has no OSRS guard variant")
         }
+        // Wiki: Seers' Village and Catherby only have a ranged guard version.
+        assertEquals(null, CityGuards.VARIANTS.getValue("Seers' Village bank").melee)
+        assertEquals(null, CityGuards.VARIANTS.getValue("Catherby bank").melee)
+        assertEquals(CityGuards.VARIANTS.getValue("Lumbridge"), CityGuards.variantFor("Tutorial Island"))
         assertEquals(8, CityGuards.PATROL_RADIUS, "owner: alle guards 8 tiles kunnen roamen")
+    }
+
+    @Test
+    fun `a player may attack a guard only while skulled inside the guarded area, never the Wizguard`() {
+        val deathZone = Tile(3094, 3491, 0)
+        (CityGuards.MELEE_GUARD_IDS + CityGuards.RANGED_GUARD_IDS).forEach { id ->
+            val guard = npc(id, tile = grandExchange)
+            assertTrue(CityGuards.mayBeAttackedBy(guard, newPlayer(tile = grandExchange, skulled = true)), "npc $id: skulled inside")
+            assertFalse(CityGuards.mayBeAttackedBy(guard, newPlayer(tile = grandExchange, skulled = false)), "npc $id: unskulled")
+            assertFalse(CityGuards.mayBeAttackedBy(guard, newPlayer(tile = deathZone, skulled = true)), "npc $id: attacker outside")
+        }
+        assertFalse(CityGuards.mayBeAttackedBy(npc(CityGuards.WIZGUARD_ID, tile = grandExchange), newPlayer(tile = grandExchange, skulled = true)))
     }
 
     @Test
@@ -117,63 +122,22 @@ class CityGuardsTests {
     }
 
     @Test
-    fun `never more than two guards may attack one player`() {
+    fun `any number of guards may attack one skulled player`() {
+        // Wiki: "Multiple guards are able to attack the player regardless of the location's multicombat area status."
         val target = newPlayer(tile = grandExchange, skulled = true)
-        val first = npc(CityGuards.MELEE_GUARD_ID, tile = grandExchange)
-        val second = npc(CityGuards.RANGED_GUARD_ID, tile = grandExchange)
-        val third = npc(CityGuards.MELEE_GUARD_ID, tile = grandExchange)
-
-        assertTrue(CityGuards.mayAttack(first, target))
-        assertTrue(CityGuards.mayAttack(second, target))
-        assertFalse(CityGuards.mayAttack(third, target), "a third guard must be refused")
-        assertTrue(CityGuards.mayAttack(first, target), "a guard already on the player keeps its slot")
-        assertEquals(2, CityGuards.engagedGuardCount(target))
-    }
-
-    @Test
-    fun `a guard that stopped fighting frees its slot for another guard`() {
-        val target = newPlayer(tile = grandExchange, skulled = true)
-        val world = target.world
-        var cycle = 10
-        every { world.currentCycle } answers { cycle }
-        val first = npc(CityGuards.MELEE_GUARD_ID, tile = grandExchange)
-        val second = npc(CityGuards.RANGED_GUARD_ID, tile = grandExchange)
-        val third = npc(CityGuards.MELEE_GUARD_ID, tile = grandExchange)
-        assertTrue(CityGuards.mayAttack(first, target))
-        assertTrue(CityGuards.mayAttack(second, target))
-        // Both are really fighting the target.
-        first.attr[COMBAT_TARGET_FOCUS_ATTR] = WeakReference(target)
-        second.attr[COMBAT_TARGET_FOCUS_ATTR] = WeakReference(target)
-        cycle = 20
-        assertFalse(CityGuards.mayAttack(third, target))
-
-        // The first guard lets go (target no longer its combat focus): after the grace window its slot is free.
-        first.attr.remove(COMBAT_TARGET_FOCUS_ATTR)
-        cycle = 30
-        assertTrue(CityGuards.mayAttack(third, target))
-    }
-
-    @Test
-    fun `release clears the cap bookkeeping`() {
-        val target = newPlayer(tile = grandExchange, skulled = true)
-        assertTrue(CityGuards.mayAttack(npc(CityGuards.MELEE_GUARD_ID, tile = grandExchange), target))
-        assertTrue(CityGuards.mayAttack(npc(CityGuards.MELEE_GUARD_ID, tile = grandExchange), target))
-        CityGuards.release(target)
-        assertEquals(0, CityGuards.engagedGuardCount(target))
-    }
-
-    @Test
-    fun `every random spawn combination has at most two guards and at least one damaging guard`() {
-        assertTrue(CityGuards.SPAWN_COMBINATIONS.isNotEmpty())
-        CityGuards.SPAWN_COMBINATIONS.forEach { combo ->
-            assertTrue(combo.size in 1..CityGuards.MAX_GUARDS_PER_PLAYER, "$combo exceeds the cap")
-            assertEquals(combo.size, combo.distinct().size, "$combo repeats a kind")
-            assertTrue(combo.any { it == CityGuards.Kind.MELEE || it == CityGuards.Kind.RANGED }, "$combo would only freeze")
+        repeat(6) { i ->
+            val id = if (i % 2 == 0) CityGuards.MELEE_GUARD_ID else CityGuards.RANGED_GUARD_ID
+            assertTrue(CityGuards.mayAttack(npc(id, tile = grandExchange), target), "guard ${i + 1} must be allowed")
         }
-        // Every kind the owner named is reachable: a lone ranger, a lone melee guard, and the Wizguard.
-        assertTrue(CityGuards.SPAWN_COMBINATIONS.contains(listOf(CityGuards.Kind.RANGED)))
-        assertTrue(CityGuards.SPAWN_COMBINATIONS.contains(listOf(CityGuards.Kind.MELEE)))
-        assertTrue(CityGuards.SPAWN_COMBINATIONS.any { CityGuards.Kind.MAGE in it })
+    }
+
+    @Test
+    fun `the reactive spawn is one melee or one ranged guard plus the Wizguard`() {
+        // Wiki: the spawned guard "can be either a melee or a ranged one"; Wizguards freeze every skulled intruder.
+        assertEquals(
+            listOf(listOf(CityGuards.Kind.MELEE, CityGuards.Kind.MAGE), listOf(CityGuards.Kind.RANGED, CityGuards.Kind.MAGE)),
+            CityGuards.SPAWN_COMBINATIONS,
+        )
         for (roll in 0 until 20) {
             assertTrue(CityGuards.pickCombination(roll) in CityGuards.SPAWN_COMBINATIONS)
         }
@@ -257,7 +221,8 @@ class CityGuardsTests {
         assertEquals(8, CityGuards.DEFENCE_RANGED_BONUS)
         assertEquals(5, CityGuards.WIZGUARD_FREEZE_CYCLES)
         assertEquals(10, CityGuards.WIZGUARD_REAPPEAR_CYCLES)
-        assertEquals(2, CityGuards.MAX_GUARDS_PER_PLAYER)
+        assertEquals(30, CityGuards.WIZGUARD_MAX_HIT, "OSRS Wiki Ice Barrage base max hit")
+        assertEquals("You probably don't want to do that.", CityGuards.ATTACK_REFUSED_MESSAGE)
     }
 
     @Test

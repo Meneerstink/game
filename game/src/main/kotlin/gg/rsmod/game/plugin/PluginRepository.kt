@@ -1698,6 +1698,8 @@ class PluginRepository(
         p: Player,
         item: Int,
     ): Boolean {
+        val frozenUntil = p.attr[gg.rsmod.game.model.attr.GUARD_FROZEN_UNTIL_CYCLE_ATTR]
+        if (frozenUntil != null && p.world.currentCycle < frozenUntil) return false
         val plugin = groundItemPickupConditions[item] ?: return true
         return p.executePlugin(plugin)
     }

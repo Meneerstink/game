@@ -311,10 +311,10 @@ object Combat {
             if (!target.isSpawned()) {
                 return false
             }
-            // Deadman guards are never attackable by players (owner 2026-09-17; the cache "Attack"
-            // option is stripped, this closes the spell / special / queued-attack routes with the
-            // owner's message instead of the generic "missing combat definitions" text).
-            if (pawn is Player && CityGuards.isGuard(target)) {
+            // Deadman guards (OSRS Wiki): "can only be attacked inside the guarded area while
+            // skulled"; any other attempt - and every attempt on the unattackable Wizguard - gets
+            // "You probably don't want to do that." on every route (click, spell, special, queue).
+            if (pawn is Player && CityGuards.isGuard(target) && !CityGuards.mayBeAttackedBy(target, pawn)) {
                 pawn.message(CityGuards.ATTACK_REFUSED_MESSAGE)
                 return false
             }

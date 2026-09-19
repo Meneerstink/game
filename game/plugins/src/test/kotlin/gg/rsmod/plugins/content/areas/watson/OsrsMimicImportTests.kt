@@ -25,10 +25,10 @@ class OsrsMimicImportTests {
             Expected(Npcs.THE_MIMIC, "The Mimic", listOf("Challenge", null, null, null, null), 0),
             Expected(Npcs.THE_MIMIC_14402, "The Mimic", listOf(null, "Attack", null, null, null), 0),
             Expected(Npcs.THIRD_AGE_WARRIOR, "Third Age Warrior", listOf(null, "Attack", null, null, null), 0),
-            // Owner decisions 2026-09-17 (OSRS_IMPORT_MASTER.yml "Deadman guards renamed 1337 guard" / "deadman-guard-noattack"): 14404 and
-            // 14405 are reused as Deadman city guards - renamed "1337 guard" (NpcRenameTool) and without the Attack option.
-            Expected(Npcs.THIRD_AGE_RANGER, "1337 guard", listOf(null, null, null, null, null), 0),
-            Expected(Npcs.THIRD_AGE_MAGE, "1337 guard", listOf(null, null, null, null, null), 0),
+            // Owner 2026-09-19 (Deadman guards 100 % OSRS): 14404/14405 are no longer used as guard posts and were restored to
+            // their OSRS definitions by re-running this batch (tx-20260919-150528).
+            Expected(Npcs.THIRD_AGE_RANGER, "Third Age Ranger", listOf(null, "Attack", null, null, null), 0),
+            Expected(Npcs.THIRD_AGE_MAGE, "Third Age Mage", listOf(null, "Attack", null, null, null), 0),
             Expected(Npcs.WATSON, "Watson", listOf("Talk-to", null, null, null, null), 1),
         )
 

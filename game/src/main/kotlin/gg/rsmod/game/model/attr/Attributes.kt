@@ -70,6 +70,21 @@ val DISPLAY_MODE_CHANGE_ATTR = AttributeKey<Int>()
 val FACING_PAWN_ATTR = AttributeKey<WeakReference<Pawn>>()
 
 /**
+ * Set on an npc that must keep facing its [FACING_PAWN_ATTR] outside combat even when that pawn is
+ * not adjacent (the npc cycle otherwise drops a non-combat face-pawn once the target is more than
+ * one tile away). Deadman guards use it to keep watching a skulled intruder they are not allowed to
+ * attack (owner 2026-09-18: every 1337 guard faces a skulled player in its safe zone).
+ */
+val HOLD_FACING_ATTR = AttributeKey<Boolean>()
+
+/**
+ * World cycle until which a player frozen by a Deadman guard (Wizguard Ice Barrage) may not pick up
+ * or telegrab ground items. OSRS Wiki "Deadman Mode" changelog: "A player frozen by guards cannot
+ * pickup or telegrab items." Checked by `PluginRepository.canPickupGroundItem`.
+ */
+val GUARD_FROZEN_UNTIL_CYCLE_ATTR = AttributeKey<Int>()
+
+/**
  * The wilderness agility stage
  */
 val WILDERNESS_AGILITY_STAGE = AttributeKey<Int>()

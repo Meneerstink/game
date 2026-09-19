@@ -48,7 +48,14 @@ object OsrsNpcImportTool {
             "mimic" to listOf(7979, 8633, 8635, 8636, 8637, 7303),
             // Owner 2026-09-17 ("gebruik exact de deadmanmode guard van osrs"): OSRS Wiki "Guard (Deadman Mode)" Varrock
             // variants 6582 (slash) and 11203 (ranged), and "Wizguard" 14792. Combat stats/anims are server-side (city_guards.plugin.kts).
-            "deadman-guard" to listOf(6582, 11203, 14792),
+            // Owner 2026-09-19 (100 % OSRS): every per-city melee/ranged variant from the same infobox (ids 6574-6583, 6698-6702,
+            // 11199-11209), imported with their OSRS names and "Attack" op. Re-running restores 6582/11203/14792 to the OSRS definition.
+            "deadman-guard" to
+                listOf(
+                    6582, 11203, 14792,
+                    6574, 11199, 6575, 6576, 6579, 11200, 6580, 11201, 6581, 11202, 6583, 11204,
+                    6698, 11205, 6699, 11206, 6700, 11207, 6701, 11208, 6702, 11209,
+                ),
         )
 
     /**

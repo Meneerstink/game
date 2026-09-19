@@ -43,8 +43,6 @@ class AreaStateTests {
             Tile(2660, 3665, 0), // Rellekka
             Tile(2465, 3495, 0), // Grand Tree
             Tile(2612, 3093, 0), // Yanille bank
-            Tile(2856, 3546, 0), // Warriors' Guild ground floor
-            Tile(2856, 3546, 1), // Warriors' Guild first floor
         ).forEach { tile ->
             assertTrue(AreaState.isSafe(tile, home), "$tile must be guarded")
             assertFalse(AreaState.isPvpAllowed(tile, home))
@@ -57,12 +55,12 @@ class AreaStateTests {
     }
 
     @Test
-    fun `every wiki Deadman area that exists in this world plus the Warriors' Guild is present`() {
+    fun `every wiki Deadman area that exists in this world is present`() {
         assertEquals(
             listOf(
                 "Varrock", "Falador", "Lumbridge", "Catherby bank", "Seers' Village bank", "East Ardougne", "Rellekka",
                 "Tree Gnome Stronghold", "Yanille", "Jatizso", "Neitiznot", "Port Phasmatys", "Sophanem", "Tutorial Island",
-                "Void Knights' Outpost", "Warriors' Guild",
+                "Void Knights' Outpost",
             ),
             GuardedZones.ZONES.map { it.name },
         )
@@ -77,7 +75,10 @@ class AreaStateTests {
     @Test
     fun `each city has both melee and ranged guards where it has more than one post`() {
         GuardPosts.ALL.groupBy { it.city }.forEach { (city, posts) ->
-            if (posts.size > 1) {
+            if (CityGuards.variantFor(city).melee == null) {
+                // OSRS Wiki: Seers' Village and Catherby only have the ranged guard version.
+                assertTrue(posts.all { it.ranged }, "$city must only have ranged guards")
+            } else if (posts.size > 1) {
                 assertTrue(posts.any { it.ranged } && posts.any { !it.ranged }, "$city must mix melee and ranged guards")
             }
         }
