@@ -6,8 +6,9 @@ import gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell
 
 /**
  * Deadman guard combat definitions + stationed spawns (OSRS Wiki "Guard (Deadman Mode)": level 1337,
- * 800 hitpoints, 2-tick attack speed, slash or ranged, attack +60, strength +7, stab/slash/crush
- * defence +8/+9/+7, ranged defence +8, aggressive). Damage is not taken from these stats but from
+ * 800 hitpoints, 2-tick attack speed, slash or ranged, attack 800, strength 400, defence 300,
+ * magic/ranged 1, attack +60, strength +7, stab/slash/crush/magic/ranged defence 8/9/7/0/8,
+ * aggressive). Damage is not taken from these stats but from
  * the sourced ramp in [CityGuards.rampedMaxHit]. The three imported OSRS Deadman guard variants
  * use one shared definition per attack style. The humanoid models animate with the shared 667
  * human attack/block/death sequences, the
@@ -26,11 +27,11 @@ fun KotlinPlugin.meleeGuard(id: Int) =
         }
         stats {
             hitpoints = CityGuards.HITPOINTS_TIMES_TEN
-            attack = 200
-            strength = 200
-            defence = 150
-            magic = 200
-            ranged = 200
+            attack = 800
+            strength = 400
+            defence = 300
+            magic = 1
+            ranged = 1
         }
         bonuses {
             attackStab = 60
@@ -40,7 +41,7 @@ fun KotlinPlugin.meleeGuard(id: Int) =
             defenceStab = 8
             defenceSlash = 9
             defenceCrush = 7
-            defenceMagic = 8
+            defenceMagic = 0
             defenceRanged = 8
         }
         anims {
@@ -67,11 +68,11 @@ fun KotlinPlugin.rangedGuard(id: Int) =
         }
         stats {
             hitpoints = CityGuards.HITPOINTS_TIMES_TEN
-            attack = 200
-            strength = 200
-            defence = 150
-            magic = 200
-            ranged = 200
+            attack = 800
+            strength = 400
+            defence = 300
+            magic = 1
+            ranged = 1
         }
         bonuses {
             attackRanged = 60
@@ -79,7 +80,7 @@ fun KotlinPlugin.rangedGuard(id: Int) =
             defenceStab = 8
             defenceSlash = 9
             defenceCrush = 7
-            defenceMagic = 8
+            defenceMagic = 0
             defenceRanged = 8
         }
         anims {
