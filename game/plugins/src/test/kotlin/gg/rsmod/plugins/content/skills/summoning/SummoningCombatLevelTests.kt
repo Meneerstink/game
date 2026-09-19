@@ -199,7 +199,7 @@ class SummoningCombatLevelTests {
          * first shape is exactly the mistake that made this table look 17 entries shorter than it
          * is, so the closing bracket is deliberately not part of the pattern.
          */
-        val article = java.io.File("../../../../2011RS_SUMMONING_FAMILIARS.md")
+        val article = java.io.File("src/test/resources/2011RS_SUMMONING_FAMILIARS.md")
         assertTrue("the Knowledge Base article is missing: ${article.absolutePath}", article.exists())
 
         val text = article.readText()

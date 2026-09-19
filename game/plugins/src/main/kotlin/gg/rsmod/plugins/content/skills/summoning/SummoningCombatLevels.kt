@@ -20,7 +20,7 @@ package gg.rsmod.plugins.content.skills.summoning
  * ## Provenance
  *
  * [ARTICLE_LEVELS] is quoted from the archived 2011 Jagex Knowledge Base article
- * `C:\RSPS\2011RS_SUMMONING_FAMILIARS.md`, which states each familiar's level inline in its
+ * `game/plugins/src/test/resources/2011RS_SUMMONING_FAMILIARS.md`, which states each familiar's level inline in its
  * abilities cell and says so explicitly: *"the level in brackets indicates the familiar's Combat
  * level"*. Two shapes appear - `Fights (Level 230)` for Steel titan and `Fights (Level 25 -
  * Controlled)` for Spirit spider - and both are read.
