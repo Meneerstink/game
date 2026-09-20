@@ -281,6 +281,31 @@ task runLootKeyInterfaceImportTool(type: JavaExec) {
     main = 'gg.rsmod.game.tools.importer.LootKeyInterfaceImportTool'
 }
 
+task runCasinoInterfaceImportTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Builds the four casino screens (Dice 1152, Mines 1153, Blackjack 1154, Flower Poker 1155) as 667 ' +
+        'interfaces in both production caches (CacheTransaction). Adds no sprites. ' +
+        'Usage: ./gradlew :game:runCasinoInterfaceImportTool --args="[--apply] [--replace-from-journal=<tx id>]"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.CasinoInterfaceImportTool'
+}
+
+task runStoreInterfaceImportTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Builds the 78 Store window (interface 1151) into both production caches (CacheTransaction). ' +
+        'Usage: ./gradlew :game:runStoreInterfaceImportTool --args="[--apply] [--replace-from-journal=<tx id>]"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.StoreInterfaceImportTool'
+}
+
+task runCasinoMinimapIconTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Hangs the gold activity star (map element 635) on the Grand Exchange blackjack croupier so the ' +
+        'gambling hall shows on the minimap. Usage: ./gradlew :game:runCasinoMinimapIconTool --args="plan|apply"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.CasinoMinimapIconTool'
+}
+
 task runOsrsSpriteDumpTool(type: JavaExec) {
     group = 'tools'
     description = 'Read-only: writes every frame of an OSRS (openrs2 2686) sprite group as PNG. Usage: ./gradlew :game:runOsrsSpriteDumpTool --args="<groupId> <outDir> [cachePath]"'

@@ -245,7 +245,8 @@ object StoreCatalogue {
             Items.ZALCANO_SHARD to 30_000, Items.HARMONISED_ORB to 75_000, Items.VOLATILE_ORB to 75_000, Items.ELDRITCH_ORB to 75_000,
             Items.DRAGON_PICKAXE_UPGRADE_KIT to 30_000)
             .forEach { (kit, price) -> list += kitEntry(l, kit, "High-end rewards", price = price) }
-        listOf(Items.CROWN_OF_HELIOS to 25_000, Items.GUTHIX_HALO to 2_500, Items.SARADOMIN_HALO to 2_500, Items.ZAMORAK_HALO to 2_500,
+        // Owner 2026-09-20: "remove the crown of helious out of the shop" - the Crown of Helios is not sold here.
+        listOf(Items.GUTHIX_HALO to 2_500, Items.SARADOMIN_HALO to 2_500, Items.ZAMORAK_HALO to 2_500,
             Items.ROYAL_CROWN to 15_000, Items.HERALD_CAPE to 7_500, Items.TOP_HAT to 5_000, Items.SNOWMAN_TOP_HAT to 5_000,
             Items.REINDEER_HAT to 500, Items.BUNNY_EARS to 5_000)
             .forEach { (item, price) -> list += itemEntry(l, item, price, "Prestige cosmetics") }

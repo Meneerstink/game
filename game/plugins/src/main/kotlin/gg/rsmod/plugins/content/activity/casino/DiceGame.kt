@@ -17,6 +17,8 @@ object DiceGame {
     /** Everything the interface and the audit trail need about one settled roll. */
     data class Result(
         val target: Int,
+        /** True when the bet was "roll under the target" rather than the sourced "roll over". */
+        val under: Boolean,
         val rollScaled: Int,
         val won: Boolean,
         val stake: Long,
@@ -47,6 +49,7 @@ object DiceGame {
         player: Player,
         stake: Long,
         target: Int,
+        under: Boolean = false,
     ): Rejection? {
         if (target !in CasinoOdds.MIN_DICE_TARGET..CasinoOdds.MAX_DICE_TARGET) {
             return Rejection.BAD_TARGET
@@ -58,7 +61,7 @@ object DiceGame {
             return Rejection.STAKE_TOO_LARGE
         }
         // A win must be payable as coins. Checked before the bet, never discovered after the roll.
-        if (!CasinoWallet.fitsPayout(CasinoOdds.dicePayout(stake, target))) {
+        if (!CasinoWallet.fitsPayout(CasinoOdds.dicePayout(stake, target, under))) {
             return Rejection.PAYOUT_TOO_LARGE
         }
         if (CasinoWallet.balance(player) < stake) {
@@ -75,8 +78,9 @@ object DiceGame {
         player: Player,
         stake: Long,
         target: Int,
+        under: Boolean = false,
     ): Result? {
-        if (validate(player, stake, target) != null) {
+        if (validate(player, stake, target, under) != null) {
             return null
         }
         // Debit first: from here on the player is in a round they have paid for, and a duplicate packet that
@@ -91,18 +95,19 @@ object DiceGame {
         val nonce = CasinoSeeds.takeNonce(player)
 
         val rollScaled = ProvablyFairDice.rollScaled(clientSeed, serverSeed, nonce)
-        val won = CasinoOdds.diceWins(rollScaled, target)
-        val payout = if (won) CasinoOdds.dicePayout(stake, target) else 0L
+        val won = CasinoOdds.diceWins(rollScaled, target, under)
+        val payout = if (won) CasinoOdds.dicePayout(stake, target, under) else 0L
         val credited = if (payout > 0) CasinoWallet.deposit(player, payout) else CasinoWallet.Payout(0, 0, 0)
 
         val result =
             Result(
                 target = target,
+                under = under,
                 rollScaled = rollScaled,
                 won = won,
                 stake = stake,
                 payout = payout,
-                multiplier = CasinoOdds.diceMultiplier(target),
+                multiplier = CasinoOdds.diceMultiplier(target, under),
                 clientSeed = clientSeed,
                 serverSeedHash = serverSeedHash,
                 nonce = nonce,
@@ -118,7 +123,7 @@ object DiceGame {
                 clientSeed = clientSeed,
                 serverSeedHash = serverSeedHash,
                 nonce = nonce,
-                detail = "target=$target roll=${format(result.rollPercentage)}",
+                detail = "${if (under) "under" else "over"}=$target roll=${format(result.rollPercentage)}",
             ),
         )
         return result

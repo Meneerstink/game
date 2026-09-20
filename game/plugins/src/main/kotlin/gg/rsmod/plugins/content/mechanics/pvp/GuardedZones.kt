@@ -93,7 +93,13 @@ object GuardedZones {
                     3265, 3376, 3287, 3376, 3290, 3379, 3290, 3384, 3289, 3385, 3289, 3390, 3288, 3391, 3288, 3407,
                     3287, 3408, 3277, 3408, 3274, 3411, 3274, 3420, 3274, 3437, 3271, 3437, 3271, 3464, 3263, 3472,
                     3263, 3492, 3262, 3493, 3255, 3493, 3252, 3496, 3252, 3502, 3235, 3502, 3229, 3508, 3200, 3508,
-                    3190, 3518, 3170, 3518, 3167, 3515, 3162, 3515, 3159, 3518, 3142, 3518, 3138, 3514, 3138, 3494,
+                    // Owner 2026-09-20: "in some part of the ge is dangerous this is a big bug ! 3164, 3516, 0 is the
+                    // location [...] the whole grand ex should be safe". The wiki polygon's north edge dips to
+                    // z 3515 between x 3162 and x 3167 - the recess of the Grand Exchange's north gateway - which
+                    // left a 6x3 wedge of dangerous tiles (3160..3167, 3515..3517) standing in the middle of the
+                    // Grand Exchange courtyard. The edge is run straight along z 3518 instead, so the whole
+                    // enclosure is one safe zone; `GuardedZonesTests` sweeps every tile of it as a guard.
+                    3190, 3518, 3142, 3518, 3138, 3514, 3138, 3494,
                     3141, 3491, 3141, 3486, 3138, 3483, 3138, 3472, 3142, 3467, 3187, 3467, 3187, 3464, 3185, 3462,
                     3185, 3458, 3186, 3457, 3190, 3457, 3198, 3448, 3180, 3448, 3174, 3448, 3174, 3399, 3182, 3399,
                 ),

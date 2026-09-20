@@ -61,6 +61,41 @@ class GuardedZonesTests {
         }
     }
 
+    /**
+     * Owner 2026-09-20: "in some part of the ge is dangerous this is a big bug ! 3164, 3516, 0 is the location
+     * only this but check the whole grand ex should be safe !".
+     *
+     * The wiki polygon's north edge dipped to z 3515 between x 3162 and x 3167, which left a wedge of dangerous
+     * tiles standing inside the Grand Exchange courtyard. This sweeps the whole enclosure rather than the one
+     * tile the owner happened to stand on, so a future edit to the Varrock polygon cannot re-open a hole here.
+     */
+    @Test
+    fun `every tile of the Grand Exchange enclosure is inside the Varrock zone`() {
+        val dangerous =
+            (3143..3189).flatMap { x ->
+                (3470..3517).map { z -> Tile(x, z, 0) }
+            }.filterNot { GuardedZones.zoneAt(it)?.name == "Varrock" }
+        assertEquals(emptyList(), dangerous, "Grand Exchange tiles outside the Varrock safe zone")
+        assertTrue(GuardedZones.contains(Tile(3164, 3516, 0)), "the tile the owner reported")
+        // Upper floors of the Grand Exchange count as the city, the sewers below it never do.
+        assertTrue(GuardedZones.contains(Tile(3164, 3516, 1)))
+        assertFalse(GuardedZones.contains(Tile(3164, 3516 + 6400, 0)))
+    }
+
+    /**
+     * The zone is a polygon, not a bounding box, so filling the Grand Exchange notch must not have widened
+     * Varrock past its own wall: the wilderness ditch north of the Grand Exchange stays dangerous.
+     */
+    @Test
+    fun `filling the Grand Exchange notch did not reach past the north wall`() {
+        listOf(
+            Tile(3164, 3518, 0), // the wall line itself
+            Tile(3164, 3521, 0), // the wilderness ditch
+            Tile(3164, 3530, 0), // level 1 wilderness
+            Tile(3137, 3500, 0), // one tile west of the Grand Exchange wall
+        ).forEach { assertFalse(GuardedZones.contains(it), "$it must stay a death zone") }
+    }
+
     @Test
     fun `polygon containment follows the wiki edge exactly at the Varrock west gate`() {
         // Wiki edge x = 3174 between z 3399 and 3448: x 3174 is the wall line (inside), 3173 the road outside.

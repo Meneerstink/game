@@ -208,12 +208,12 @@ on_button(interfaceId = Layout.FLOWER_ID, component = Layout.Flower.DECLINE_BUTT
     }
 }
 
-on_button(interfaceId = Layout.FLOWER_ID, component = Layout.Flower.SET_SEED_BUTTON) {
-    player.queue { CasinoDialogs.askClientSeed(this, player); player.getFlowerMatch()?.let { fpRefresh(it) } }
-}
-
-on_button(interfaceId = Layout.FLOWER_ID, component = Layout.Flower.VERIFY_BUTTON) {
-    player.queue { CasinoDialogs.showFairness(this, player); player.getFlowerMatch()?.let { fpRefresh(it) } }
+/*
+ * The seeds moved off the screen and into the shared overlay (owner 2026-09-20: "why do i see seed"), so this
+ * button only opens that panel; the panel's own controls are bound once for all four screens in casino.plugin.kts.
+ */
+on_button(interfaceId = Layout.FLOWER_ID, component = Layout.Flower.FAIR_BUTTON) {
+    CasinoScreens.openFairness(player, Layout.FLOWER_ID)
 }
 
 /*

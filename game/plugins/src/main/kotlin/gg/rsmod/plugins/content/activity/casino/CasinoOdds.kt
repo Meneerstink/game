@@ -30,28 +30,47 @@ object CasinoOdds {
     const val MAX_DICE_TARGET = 100
 
     /**
-     * Number of winning draws for [target]: the roll is the scaled `0 .. 10000` draw of [ProvablyFairDice] and the
-     * player wins when it is at least `target * 100` (the wiki's "higher or equal to").
+     * Number of winning draws for [target].
+     *
+     * The roll is the scaled `0 .. 10000` draw of [ProvablyFairDice]. In the sourced roll-over mode the player wins
+     * when it is at least `target * 100` (the wiki's "higher or equal to"), which leaves `OUTCOMES - target * 100`
+     * winning draws.
+     *
+     * ADAPTED (owner 2026-09-20, "give it some more options"): [under] is the mirror bet every dice site offers -
+     * win when the roll is *below* the target, i.e. `target * 100` winning draws. It is not a second game: the draw
+     * itself is untouched, so a round is still replayable against the published verifier, and the multiplier is
+     * still `RTP / winChance`, so the house edge is exactly `1 - RTP` in both directions. Both modes have at least
+     * one winning draw at every legal target (roll-over 100 wins on the single 10,000th draw, roll-under 1 wins on
+     * draws 0-99), so neither can divide by zero.
      */
-    fun diceWinningOutcomes(target: Int): Int {
+    fun diceWinningOutcomes(
+        target: Int,
+        under: Boolean = false,
+    ): Int {
         require(target in MIN_DICE_TARGET..MAX_DICE_TARGET) { "target must be $MIN_DICE_TARGET-$MAX_DICE_TARGET" }
-        return ProvablyFairDice.OUTCOMES - target * 100
+        return if (under) target * 100 else ProvablyFairDice.OUTCOMES - target * 100
     }
 
     /** Win chance for [target] as a fraction of 1. */
-    fun diceWinChance(target: Int): Double = diceWinningOutcomes(target).toDouble() / ProvablyFairDice.OUTCOMES
+    fun diceWinChance(
+        target: Int,
+        under: Boolean = false,
+    ): Double = diceWinningOutcomes(target, under).toDouble() / ProvablyFairDice.OUTCOMES
 
     /** `RTP / winChance`, i.e. what one staked coin returns on a win. */
-    fun diceMultiplier(target: Int): Double =
-        (DICE_RTP_PERCENT.toDouble() / 100.0) * ProvablyFairDice.OUTCOMES / diceWinningOutcomes(target)
+    fun diceMultiplier(
+        target: Int,
+        under: Boolean = false,
+    ): Double = (DICE_RTP_PERCENT.toDouble() / 100.0) * ProvablyFairDice.OUTCOMES / diceWinningOutcomes(target, under)
 
-    /** Won iff the scaled draw is at least `target * 100`. */
+    /** Won iff the scaled draw is at least `target * 100`, or strictly below it in [under] mode. */
     fun diceWins(
         rollScaled: Int,
         target: Int,
+        under: Boolean = false,
     ): Boolean {
         require(target in MIN_DICE_TARGET..MAX_DICE_TARGET) { "target must be $MIN_DICE_TARGET-$MAX_DICE_TARGET" }
-        return rollScaled >= target * 100
+        return if (under) rollScaled < target * 100 else rollScaled >= target * 100
     }
 
     /**
@@ -61,13 +80,14 @@ object CasinoOdds {
     fun dicePayout(
         stake: Long,
         target: Int,
+        under: Boolean = false,
     ): Long {
         require(stake >= 0) { "stake must not be negative" }
         return BigInteger
             .valueOf(stake)
             .multiply(BigInteger.valueOf(DICE_RTP_PERCENT.toLong()))
             .multiply(BigInteger.valueOf(ProvablyFairDice.OUTCOMES.toLong()))
-            .divide(BigInteger.valueOf(100L).multiply(BigInteger.valueOf(diceWinningOutcomes(target).toLong())))
+            .divide(BigInteger.valueOf(100L).multiply(BigInteger.valueOf(diceWinningOutcomes(target, under).toLong())))
             .toLong()
     }
 

@@ -67,6 +67,19 @@ class StoreCatalogueTests {
         assertEquals(2, previews(Items.WARD_UPGRADE_KIT))
     }
 
+    /**
+     * Owner 2026-09-20: "also remove the crown of helious out of the shop". The Crown of Helios is the staff-only
+     * "yellow partyhat" (`CrownOfHelios`), so it must not be purchasable from any of the three shops.
+     */
+    @Test
+    fun `the Crown of Helios is not sold in any shop`() {
+        assertEquals(
+            emptyList(),
+            StoreCatalogue.ENTRIES.filter { Items.CROWN_OF_HELIOS in it.previewItems || it.purchaseItem == Items.CROWN_OF_HELIOS }
+                .map { "${it.shop} ${it.purchaseItem}" },
+        )
+    }
+
     @Test
     fun `the 667 fury and dragon or and sp kits have attach and Split routes`() {
         listOf(

@@ -61,6 +61,46 @@ class CasinoOddsTests {
         }
     }
 
+    /**
+     * Roll-under (owner 2026-09-20, "give it some more options") is the mirror bet: win below the target instead
+     * of at or above it. It must be the same game with the same edge - a different direction, not a different
+     * house advantage - so the same 99% bound is asserted over every target in that direction too.
+     */
+    @Test
+    fun `roll-under is the mirror of roll-over and keeps the same 99 percent return`() {
+        for (target in CasinoOdds.MIN_DICE_TARGET..CasinoOdds.MAX_DICE_TARGET) {
+            // The two directions partition the 10,001 draws: every draw wins exactly one of them.
+            assertEquals(
+                ProvablyFairDice.OUTCOMES,
+                CasinoOdds.diceWinningOutcomes(target) + CasinoOdds.diceWinningOutcomes(target, under = true),
+                "target $target: the two directions do not partition the draws",
+            )
+            assertTrue(CasinoOdds.diceWinningOutcomes(target, under = true) > 0, "target $target can never win under")
+        }
+
+        // The boundary draw belongs to roll-over, never to roll-under.
+        assertTrue(CasinoOdds.diceWins(rollScaled = 5_000, target = 50))
+        assertFalse(CasinoOdds.diceWins(rollScaled = 5_000, target = 50, under = true))
+        assertTrue(CasinoOdds.diceWins(rollScaled = 4_999, target = 50, under = true))
+        assertTrue(CasinoOdds.diceWins(rollScaled = 0, target = 1, under = true))
+
+        val stake = 1_000_000_000L
+        for (target in CasinoOdds.MIN_DICE_TARGET..CasinoOdds.MAX_DICE_TARGET) {
+            val winners = CasinoOdds.diceWinningOutcomes(target, under = true).toLong()
+            val payout = CasinoOdds.dicePayout(stake, target, under = true)
+            val expectedNumerator = winners * payout
+            val ideal = stake * CasinoOdds.DICE_RTP_PERCENT / 100 * ProvablyFairDice.OUTCOMES
+            assertTrue(
+                expectedNumerator <= ideal,
+                "under target $target returns more than 99%: $expectedNumerator > $ideal",
+            )
+            assertTrue(
+                ideal - expectedNumerator < ProvablyFairDice.OUTCOMES.toLong() * 2,
+                "under target $target loses too much to rounding: ${ideal - expectedNumerator}",
+            )
+        }
+    }
+
     @Test
     fun `dice multiplier grows as the target gets harder`() {
         var previous = 0.0

@@ -109,14 +109,32 @@ object StoreInterfaceImportTool {
     /**
      * Preview box and its model scale. The client scales the item model by width * 512 / aspectX (InterfaceManager, model
      * component), i.e. PREVIEW_WIDTH / PREVIEW_ASPECT_X times its inventory size. The old 5x cropped tall items (owner screenshot
-     * "shop ui.png": Dragon boots (g) cut off); at ~3.75x the whole 36 x 32 inventory drawing fits the box on both axes.
+     * "shop ui.png": Dragon boots (g) cut off).
+     *
+     * 3.75x was then chosen on the assumption that the inventory drawing is 36 x 32, so 3.75 x 34 fits 128 of height. That
+     * holds for a boot; it does not hold for a long weapon, which is drawn corner to corner across its inventory box and so
+     * is nearer 45 units tall - at 3.75x that is ~168px in a 128px panel. A model component is not clipped to its box, so the
+     * overflow is drawn straight over the window frame (owner screenshot "shop visual.png", 2026-09-20: the Steam battlestaff
+     * spilling out of the top of the preview).
+     *
+     * 3.0x was then chosen, and it is still too big: 128 / 43 is 2.98, and 2.98 x the ~45-unit diagonal of a long weapon is
+     * 134px in a 128px panel. That is the owner's 2026-09-20 report, "the preview of the items is still not fitting inside
+     * the panel" - and the 3.0x values had in any case never reached the cache, whose last store write (2026-09-19 20:51)
+     * predates them, so the client was still drawing the 3.75x version.
+     *
+     * 2.67x (128 / 48) puts that same diagonal at 120px, inside the panel with a margin, and still fills most of it for a
+     * compact item. The horizontal scale is kept within a percent of it (210 / 78 = 2.69) so the model is not stretched.
+     *
+     * Scale alone cannot be a guarantee, though, because the cache holds one scale and item models are not one size. The
+     * client now also clips a model component's render to its own box (`InterfaceManager.clipModelComponents`), so an item
+     * nobody anticipated can no longer be drawn over the window frame - it is only ever cropped inside the panel.
      */
     const val PREVIEW_X = 266
     const val PREVIEW_Y = 88
     const val PREVIEW_WIDTH = 210
     const val PREVIEW_HEIGHT = 128
-    const val PREVIEW_ASPECT_X = 56
-    const val PREVIEW_ASPECT_Y = 34
+    const val PREVIEW_ASPECT_X = 78
+    const val PREVIEW_ASPECT_Y = 48
 
     const val GRID_X = 12
     const val GRID_Y = 88

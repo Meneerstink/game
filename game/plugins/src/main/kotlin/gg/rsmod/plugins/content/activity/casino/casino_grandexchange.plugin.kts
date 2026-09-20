@@ -13,15 +13,24 @@ import gg.rsmod.game.model.Direction
  * x 3159-3171 / z 3508-3513 in this cache - no scenery, not even a ground decoration - so nothing of Varrock's own
  * is overwritten or hidden, and the walled backdrop at z 3516 closes the room off behind the dealers.
  *
- * WHAT. Four 2x2 gaming tables in a row with a croupier standing behind each one, a carpeted pit in front of them,
- * a lit brazier-torch centrepiece with the cache's own rolling `Dice`, and torches marking the four corners and the
- * entrance. Players walk in from the Grand Exchange side (south), cross the carpet and talk to the dealer of the
- * game they want; the one-tile gaps between the tables (x 3162 / 3165 / 3168) are deliberately left open so the
- * dealers can be reached from either side of their table.
+ * WHAT. Four gaming tables in a row with a croupier standing behind each one, a carpeted pit in front of them, a
+ * lit centrepiece with the cache's own rolling `Dice`, and torches marking the four corners and the entrance.
+ * Players walk in from the Grand Exchange side (south), cross the carpet and talk to the dealer of the game they
+ * want; the one-tile gaps between the tables (x 3161 / 3165 / 3169) are deliberately left open so the dealers can
+ * be reached from either side of their table.
  *
- * EVERY ID IS CACHE-NATIVE. The croupiers are the revision-667 `Gambler` npcs (2998-3003), the tables its `Table`
- * (593), the carpet the POH `Rug` (13594, the object `PlayerHouse` builds from rug space 15274), the lighting its
- * `Standing torch` (724, flame animation 481) and the centrepiece its animated `Dice` (16855, animation 4360).
+ * THE TABLES ARE `Card table` (12975), NOT `Table` (593). Owner 2026-09-20, on the screenshot of this pit: "use
+ * better tables". 593 is the plain two-by-two kitchen table Varrock's houses are furnished with; 12975 is the
+ * cache's own 3x2 casino table, laid with cards and chips, and it carries animation 12623 so the table is alive
+ * rather than a static prop. `runObjectDefProbeTool` confirms it advertises no options at all, which is the rule
+ * everything placed here follows. It is one tile wider than 593, so the row runs on a four-tile pitch from x 3158
+ * and the pit widened by two tiles at each end to hold it; `runRev667RegionProbeTool locs 12598` reports nothing
+ * but ground decoration at plane 0 across x 3155-3178, so the wider pit still overwrites none of Varrock's own
+ * scenery (a type-10 object and a type-22 ground decoration occupy different slots on a tile and coexist).
+ *
+ * EVERY OTHER ID IS CACHE-NATIVE TOO. The croupiers are the revision-667 `Gambler` npcs (2998-3003), the carpet
+ * the POH `Rug` (13594, the object `PlayerHouse` builds from rug space 15274), the lighting its `Standing torch`
+ * (724, flame animation 481) and the centrepiece its animated `Dice` (16855, animation 4360).
  *
  * NOTHING PLACED HERE CARRIES A DEAD OPTION. Every decorative id was checked with `runObjectDefProbeTool` and only
  * option-less ids were used - that is why the crates are `Gambling crate` 62275 and not 62274, which advertises an
@@ -33,19 +42,25 @@ import gg.rsmod.game.model.Direction
 // ------------------------------------------------------------------ geometry
 
 /** The row the four tables and their dealers occupy; the pit and its carpet lie south of it. */
-val PIT_WEST = 3159
-val PIT_EAST = 3171
+val PIT_WEST = 3157
+val PIT_EAST = 3173
 val PIT_SOUTH = 3507
 val CARPET_SOUTH = 3508
 val TABLE_Z = 3512
 val CARPET_NORTH = 3513
 val DEALER_Z = 3514
 
-/** x of the south-west tile of each 2x2 table; the dealer of that table stands at the same x on [DEALER_Z]. */
-val DICE_TABLE_X = 3160
-val MINES_TABLE_X = 3163
+/**
+ * x of the south-west tile of each 3x2 card table. A table covers x..x+2, so the four sit on a four-tile pitch and
+ * leave single gaps at x 3161, 3165 and 3169. The dealer of a table stands behind its middle column on [DEALER_Z].
+ */
+val DICE_TABLE_X = 3158
+val MINES_TABLE_X = 3162
 val BLACKJACK_TABLE_X = 3166
-val FLOWER_TABLE_X = 3169
+val FLOWER_TABLE_X = 3170
+
+/** A card table is three tiles wide; its dealer stands behind the middle one. */
+val TABLE_WIDTH = 3
 
 val PIT_CENTRE = Tile(3165, 3510, 0)
 
@@ -65,18 +80,18 @@ for (x in PIT_WEST + 1 until PIT_EAST) {
 // ------------------------------------------------------------------ the tables and their dealers
 
 /**
- * One gaming station: a 2x2 table with its croupier standing behind it, facing south into the pit.
+ * One gaming station: a 3x2 card table with its croupier standing behind it, facing south into the pit.
  *
- * The table's south-west tile is [tableX], [TABLE_Z], so it covers x..x+1 by z 3512-3513 and the dealer at
- * [DEALER_Z] is directly behind it. The tile east of each table (x + 2) is left clear, so every dealer can be
+ * The table's south-west tile is [tableX], [TABLE_Z], so it covers x..x+2 by z 3512-3513 and the dealer stands
+ * behind its middle column on [DEALER_Z]. The tile east of each table (x + 3) is left clear, so every dealer can be
  * walked up to from both sides even with the table blocking the front.
  */
 fun station(
     npcId: Int,
     tableX: Int,
 ) {
-    spawn_obj(obj = Objs.TABLE, x = tableX, z = TABLE_Z, type = 10, rot = 0)
-    spawn_npc(npc = npcId, x = tableX, z = DEALER_Z, direction = Direction.SOUTH)
+    spawn_obj(obj = Objs.CARD_TABLE, x = tableX, z = TABLE_Z, type = 10, rot = 0)
+    spawn_npc(npc = npcId, x = tableX + TABLE_WIDTH / 2, z = DEALER_Z, direction = Direction.SOUTH)
 }
 
 station(Npcs.GAMBLER, DICE_TABLE_X)

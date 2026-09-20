@@ -1,5 +1,6 @@
 package gg.rsmod.plugins.content.activity.casino
 
+import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.tools.importer.CasinoInterfaceImportTool as Layout
 import gg.rsmod.plugins.api.InterfaceDestination
@@ -8,6 +9,7 @@ import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.api.ext.openInterface
 import gg.rsmod.plugins.api.ext.setComponentHidden
 import gg.rsmod.plugins.api.ext.setComponentItem
+import gg.rsmod.plugins.api.ext.setComponentSprite
 import gg.rsmod.plugins.api.ext.setComponentText
 import gg.rsmod.plugins.api.ext.setInterfaceEvents
 
@@ -20,29 +22,41 @@ import gg.rsmod.plugins.api.ext.setInterfaceEvents
  * hostile client can never be a source of truth - the worst a tampered client achieves is showing its owner a
  * wrong picture of a game the server is still scoring correctly.
  *
- * The per-screen "bet amount" and "target" the player is composing are the one piece of interface-local state,
- * and they live on the player as plain attributes rather than in the client, for the same reason.
+ * The per-screen bet, target, mine count and dice direction the player is composing are the one piece of
+ * interface-local state, and they live on the player as plain attributes rather than in the client, for the same
+ * reason.
+ *
+ * Owner 2026-09-20 ("why do i see seed"): the seeds are no longer part of any screen. They live in a hidden
+ * overlay ([openFairness]) that the "Provably fair" button reveals, so the protocol is unchanged and unaffected
+ * while nobody has to look at a hex digest to place a bet.
  */
 object CasinoScreens {
     /** op1 only - every casino control is a single-option button. */
     private const val EVENTS_OP1 = 0x2
 
-    val BET = gg.rsmod.game.model.attr.AttributeKey<String>(persistenceKey = "casino_ui_bet")
-    val TARGET = gg.rsmod.game.model.attr.AttributeKey<String>(persistenceKey = "casino_ui_target")
-    val MINE_COUNT = gg.rsmod.game.model.attr.AttributeKey<String>(persistenceKey = "casino_ui_mines")
+    val BET = AttributeKey<String>(persistenceKey = "casino_ui_bet")
+    val TARGET = AttributeKey<String>(persistenceKey = "casino_ui_target")
+    val MINE_COUNT = AttributeKey<String>(persistenceKey = "casino_ui_mines")
+
+    /** "1" while the dice screen is betting on a roll *under* the target. Persisted so the choice survives a relog. */
+    val DICE_UNDER = AttributeKey<String>(persistenceKey = "casino_ui_dice_under")
 
     /**
-     * The dice bar boundary currently drawn on this player's client. Deliberately NOT persisted: it describes what
-     * the client is showing, not anything about the player, and a stale value read back at login would suppress the
-     * first redraw of a bar the client has never drawn.
+     * The boundary and direction currently drawn on this player's dice bar, as `target * 2 + under`. Deliberately
+     * NOT persisted: it describes what the client is showing, not anything about the player, and a stale value
+     * read back at login would suppress the first redraw of a bar the client has never drawn.
      */
-    private val BAR_TARGET = gg.rsmod.game.model.attr.AttributeKey<Int>()
+    private val BAR_STATE = AttributeKey<Int>()
 
     /** Items used to draw a mines board; both are ordinary cache items, so the screen needs no new sprites. */
     const val GEM_ITEM = Items.UNCUT_EMERALD
     const val MINE_ITEM = Items.CANNONBALL
 
-    fun bet(player: Player): Long = player.attr[BET]?.toLongOrNull()?.coerceIn(CasinoWallet.MIN_WAGER, CasinoWallet.MAX_WAGER) ?: CasinoWallet.MIN_WAGER
+    // ---------------------------------------------------------------- composing state
+
+    fun bet(player: Player): Long =
+        player.attr[BET]?.toLongOrNull()?.coerceIn(CasinoWallet.MIN_WAGER, CasinoWallet.MAX_WAGER)
+            ?: CasinoWallet.MIN_WAGER
 
     fun setBet(
         player: Player,
@@ -50,6 +64,13 @@ object CasinoScreens {
     ) {
         player.attr[BET] = amount.coerceIn(CasinoWallet.MIN_WAGER, CasinoWallet.MAX_WAGER).toString()
     }
+
+    /** The most this player could stake right now: what they hold, capped by the house limit. */
+    fun maxBet(player: Player): Long =
+        CasinoWallet
+            .balance(player)
+            .coerceAtMost(CasinoWallet.MAX_WAGER)
+            .coerceAtLeast(CasinoWallet.MIN_WAGER)
 
     fun target(player: Player): Int =
         player.attr[TARGET]?.toIntOrNull()?.coerceIn(CasinoOdds.MIN_DICE_TARGET, CasinoOdds.MAX_DICE_TARGET) ?: 50
@@ -61,6 +82,30 @@ object CasinoScreens {
         player.attr[TARGET] = value.coerceIn(CasinoOdds.MIN_DICE_TARGET, CasinoOdds.MAX_DICE_TARGET).toString()
     }
 
+    fun under(player: Player): Boolean = player.attr[DICE_UNDER] == "1"
+
+    fun setUnder(
+        player: Player,
+        value: Boolean,
+    ) {
+        player.attr[DICE_UNDER] = if (value) "1" else "0"
+    }
+
+    /**
+     * The stake of the last wager this player committed, so "Rebet" can put it back after they have been clicking
+     * the quick-bet chips. Persisted, because the first thing a player does after a relog is repeat their bet.
+     */
+    val LAST_STAKE = AttributeKey<String>(persistenceKey = "casino_ui_last_stake")
+
+    fun rememberStake(
+        player: Player,
+        amount: Long,
+    ) {
+        player.attr[LAST_STAKE] = amount.toString()
+    }
+
+    fun lastStake(player: Player): Long = player.attr[LAST_STAKE]?.toLongOrNull() ?: bet(player)
+
     fun mineCount(player: Player): Int =
         player.attr[MINE_COUNT]?.toIntOrNull()?.coerceIn(ProvablyFairMines.MIN_MINES, ProvablyFairMines.MAX_MINES) ?: 3
 
@@ -71,31 +116,135 @@ object CasinoScreens {
         player.attr[MINE_COUNT] = value.coerceIn(ProvablyFairMines.MIN_MINES, ProvablyFairMines.MAX_MINES).toString()
     }
 
-    // ---------------------------------------------------------------- shared
+    // ---------------------------------------------------------------- shared widgets
 
-    /** The fairness strip at the foot of every screen. */
-    private fun refreshFairness(
+    /*
+     * The three button helpers take the player as a plain parameter rather than being member extensions on
+     * [Player]. A nested object such as [Dice] would have to resolve the extension through the enclosing object as
+     * its dispatch receiver, which is exactly the kind of thing that compiles or does not depending on the
+     * Kotlin version; a plain function is unambiguous and reads the same at the call site.
+     */
+
+    /** Arms the op on a cap button. The op lives on the button's layer, which is the id the screens name. */
+    private fun armButton(
         player: Player,
         interfaceId: Int,
-        hashText: Int,
-        clientText: Int,
-        nonceText: Int,
+        button: Int,
+    ) = player.setInterfaceEvents(interfaceId, button + Layout.BUTTON_LAYER, -1..-1, EVENTS_OP1)
+
+    /**
+     * Shows or hides a whole cap button with one packet.
+     *
+     * Hiding the layer is enough: this client skips a hidden component's entire subtree when it draws, so the
+     * three caps and the caption go with it. The first draft had to hide a sprite and its caption separately and
+     * got that wrong wherever a third component crept in.
+     */
+    private fun showButton(
+        player: Player,
+        interfaceId: Int,
+        button: Int,
+        visible: Boolean,
+    ) = player.setComponentHidden(interfaceId, button + Layout.BUTTON_LAYER, !visible)
+
+    /** Turns a cap button red (active) or grey (idle) by swapping its three slices. */
+    private fun setButtonActive(
+        player: Player,
+        interfaceId: Int,
+        button: Int,
+        active: Boolean,
     ) {
-        val view = Casino.fairness(player)
-        player.setComponentText(interfaceId, hashText, view.shortHash)
-        player.setComponentText(interfaceId, clientText, view.clientSeed)
-        player.setComponentText(interfaceId, nonceText, view.nextNonce.toString())
+        val left = if (active) Layout.RED_LEFT else Layout.GREY_LEFT
+        val middle = if (active) Layout.RED_MIDDLE else Layout.GREY_MIDDLE
+        val right = if (active) Layout.RED_RIGHT else Layout.GREY_RIGHT
+        player.setComponentSprite(interfaceId, button + Layout.BUTTON_LEFT, Layout.sprite(left))
+        player.setComponentSprite(interfaceId, button + Layout.BUTTON_MIDDLE, Layout.sprite(middle))
+        player.setComponentSprite(interfaceId, button + Layout.BUTTON_RIGHT, Layout.sprite(right))
     }
+
+    /** The header every screen shares: the player's coins, live. */
+    private fun refreshHeader(
+        player: Player,
+        interfaceId: Int,
+    ) = player.setComponentText(interfaceId, Layout.COINS_TEXT, CasinoWallet.format(CasinoWallet.balance(player)))
+
+    /** Arms the bet row and the five quick-bet chips of a house game. */
+    private fun armBetControls(
+        player: Player,
+        interfaceId: Int,
+        halve: Int,
+        double: Int,
+        max: Int,
+        custom: Int,
+        quickFirst: Int,
+    ) {
+        listOf(halve, double, max, custom).forEach { armButton(player, interfaceId, it) }
+        for (i in 0 until Layout.QUICK_BETS) {
+            armButton(player, interfaceId, quickFirst + i * Layout.BUTTON_STRIDE)
+        }
+    }
+
+    // ---------------------------------------------------------------- provably fair overlay
+
+    /**
+     * The fairness base of a screen, so one pair of handlers serves all four.
+     *
+     * Returns null for an interface that is not a casino screen, which is what a stray button click from a
+     * tampered client looks like.
+     */
+    fun fairnessBase(interfaceId: Int): Int? =
+        when (interfaceId) {
+            Layout.DICE_ID -> Layout.Dice.FAIRNESS
+            Layout.MINES_ID -> Layout.Mines.FAIRNESS
+            Layout.BLACKJACK_ID -> Layout.Blackjack.FAIRNESS
+            Layout.FLOWER_ID -> Layout.Flower.FAIRNESS
+            else -> null
+        }
 
     private fun armFairness(
         player: Player,
         interfaceId: Int,
-        setSeed: Int,
-        verify: Int,
+        button: Int,
+        base: Int,
     ) {
         player.setInterfaceEvents(interfaceId, Layout.CLOSE, -1..-1, EVENTS_OP1)
-        player.setInterfaceEvents(interfaceId, setSeed, -1..-1, EVENTS_OP1)
-        player.setInterfaceEvents(interfaceId, verify, -1..-1, EVENTS_OP1)
+        armButton(player, interfaceId, button)
+        listOf(Layout.Fair.SET_SEED, Layout.Fair.NEW_SEED, Layout.Fair.CLOSE).forEach {
+            armButton(player, interfaceId, base + it)
+        }
+    }
+
+    /** Fills the overlay from the live seed state. The full 64-character digest never fits, so it is shortened. */
+    fun refreshFairness(
+        player: Player,
+        interfaceId: Int,
+    ) {
+        val base = fairnessBase(interfaceId) ?: return
+        val view = Casino.fairness(player)
+        player.setComponentText(interfaceId, base + Layout.Fair.HASH_TEXT, view.shortHash)
+        player.setComponentText(interfaceId, base + Layout.Fair.CLIENT_TEXT, view.clientSeed)
+        player.setComponentText(interfaceId, base + Layout.Fair.NONCE_TEXT, view.nextNonce.toString())
+        player.setComponentText(
+            interfaceId,
+            base + Layout.Fair.PREVIOUS,
+            view.previous?.let { "Retired seed: ${it.serverSeed} (${it.rounds} rounds)" } ?: "",
+        )
+    }
+
+    fun openFairness(
+        player: Player,
+        interfaceId: Int,
+    ) {
+        val base = fairnessBase(interfaceId) ?: return
+        refreshFairness(player, interfaceId)
+        player.setComponentHidden(interfaceId, base + Layout.Fair.LAYER, false)
+    }
+
+    fun closeFairness(
+        player: Player,
+        interfaceId: Int,
+    ) {
+        val base = fairnessBase(interfaceId) ?: return
+        player.setComponentHidden(interfaceId, base + Layout.Fair.LAYER, true)
     }
 
     // ---------------------------------------------------------------- dice
@@ -105,16 +254,24 @@ object CasinoScreens {
 
         fun open(player: Player) {
             player.openInterface(ID, InterfaceDestination.MAIN_SCREEN)
+            armBetControls(
+                player, ID,
+                Layout.Dice.BET_HALVE, Layout.Dice.BET_DOUBLE, Layout.Dice.BET_MAX, Layout.Dice.BET_CUSTOM,
+                Layout.Dice.QUICK_FIRST,
+            )
             listOf(
-                Layout.Dice.BET_MINUS,
-                Layout.Dice.BET_PLUS,
-                Layout.Dice.BET_CUSTOM,
+                Layout.Dice.MODE_OVER,
+                Layout.Dice.MODE_UNDER,
                 Layout.Dice.TARGET_MINUS,
                 Layout.Dice.TARGET_PLUS,
+                Layout.Dice.TARGET_P25,
+                Layout.Dice.TARGET_P50,
+                Layout.Dice.TARGET_P75,
                 Layout.Dice.TARGET_CUSTOM,
                 Layout.Dice.ROLL_BUTTON,
-            ).forEach { player.setInterfaceEvents(ID, it, -1..-1, EVENTS_OP1) }
-            armFairness(player, ID, Layout.Dice.SET_SEED_BUTTON, Layout.Dice.VERIFY_BUTTON)
+            ).forEach { armButton(player, ID, it) }
+            armFairness(player, ID, Layout.Dice.FAIR_BUTTON, Layout.Dice.FAIRNESS)
+            closeFairness(player, ID)
             clearResult(player)
             refreshBar(player, force = true)
             refresh(player)
@@ -132,37 +289,47 @@ object CasinoScreens {
          *
          * The bar is coloured by this and nothing else, so the boundary a player sees is scored by
          * [CasinoOdds.diceWins] itself rather than by a second, drifting copy of the rule. A segment is two points
-         * wide, so the segment the boundary falls in is part win and part loss; painting it green is the honest
+         * wide, so the segment the boundary falls in is part win and part loss; painting it as a win is the honest
          * choice, because a roll there can win.
+         *
+         * In roll-over mode the representative draw is the top of the segment and in roll-under mode it is the
+         * bottom, which is the same "a win is possible here" rule read from the winning end in each direction.
          */
         fun segmentWins(
             index: Int,
             target: Int,
+            under: Boolean = false,
         ): Boolean {
+            if (under) {
+                return CasinoOdds.diceWins(index * DRAWS_PER_SEGMENT, target, under = true)
+            }
             val last = index == Layout.Dice.SEGMENTS - 1
             val top = if (last) ProvablyFairDice.OUTCOMES - 1 else index * DRAWS_PER_SEGMENT + DRAWS_PER_SEGMENT - 1
             return CasinoOdds.diceWins(top, target)
         }
 
         /**
-         * Slides the colour boundary of the win/lose bar to the current target.
+         * Slides the colour boundary of the win/lose bar to the current target and direction.
          *
-         * Redrawing the bar is a hundred hide packets, and only the target can move the boundary, so the last
-         * boundary drawn is remembered and an unchanged one is skipped: clicking the bet's "+" costs six packets
-         * rather than a hundred and six. [force] is for the one case the memory cannot see - reopening the
-         * interface, where the client has reset every component to the state the cache defines.
+         * Redrawing the bar is a hundred hide packets, and only the target and the direction can move the
+         * boundary, so the last state drawn is remembered and an unchanged one is skipped: clicking the bet's
+         * "x2" costs a handful of packets rather than a hundred and six. [force] is for the one case the memory
+         * cannot see - reopening the interface, where the client has reset every component to the state the cache
+         * defines.
          */
         fun refreshBar(
             player: Player,
             force: Boolean = false,
         ) {
             val target = target(player)
-            if (!force && player.attr[BAR_TARGET] == target) {
+            val under = under(player)
+            val state = target * 2 + if (under) 1 else 0
+            if (!force && player.attr[BAR_STATE] == state) {
                 return
             }
-            player.attr[BAR_TARGET] = target
+            player.attr[BAR_STATE] = state
             for (i in 0 until Layout.Dice.SEGMENTS) {
-                val winning = segmentWins(i, target)
+                val winning = segmentWins(i, target, under)
                 player.setComponentHidden(ID, Layout.Dice.loseSegment(i), winning)
                 player.setComponentHidden(ID, Layout.Dice.winSegment(i), !winning)
             }
@@ -184,14 +351,51 @@ object CasinoScreens {
         fun refresh(player: Player) {
             val stake = bet(player)
             val target = target(player)
+            val under = under(player)
+            val payout = CasinoOdds.dicePayout(stake, target, under)
+
             player.setComponentText(ID, Layout.Dice.BET_TEXT, CasinoWallet.format(stake))
+            player.setComponentText(ID, Layout.Dice.TARGET_LABEL, if (under) "Roll under" else "Roll over")
             player.setComponentText(ID, Layout.Dice.TARGET_TEXT, target.toString())
-            player.setComponentText(ID, Layout.Dice.CHANCE_TEXT, CasinoWallet.percent(CasinoOdds.diceWinChance(target) * 100.0))
-            player.setComponentText(ID, Layout.Dice.MULTIPLIER_TEXT, CasinoWallet.multiplier(CasinoOdds.diceMultiplier(target)))
-            player.setComponentText(ID, Layout.Dice.PAYOUT_TEXT, CasinoWallet.format(CasinoOdds.dicePayout(stake, target)))
-            player.setComponentText(ID, Layout.Dice.COINS_TEXT, CasinoWallet.format(CasinoWallet.balance(player)))
+            player.setComponentText(
+                ID,
+                Layout.Dice.CHANCE_TEXT,
+                CasinoWallet.percent(CasinoOdds.diceWinChance(target, under) * 100.0),
+            )
+            player.setComponentText(
+                ID,
+                Layout.Dice.MULTIPLIER_TEXT,
+                CasinoWallet.multiplier(CasinoOdds.diceMultiplier(target, under)),
+            )
+            player.setComponentText(ID, Layout.Dice.PAYOUT_TEXT, CasinoWallet.format(payout))
+            player.setComponentText(ID, Layout.Dice.PROFIT_TEXT, CasinoWallet.format(payout - stake))
+
+            setButtonActive(player, ID, Layout.Dice.MODE_OVER, !under)
+            setButtonActive(player, ID, Layout.Dice.MODE_UNDER, under)
+
+            refreshHeader(player, ID)
             refreshBar(player)
-            refreshFairness(player, ID, Layout.Dice.SEED_HASH_TEXT, Layout.Dice.CLIENT_SEED_TEXT, Layout.Dice.NONCE_TEXT)
+            refreshHistory(player)
+        }
+
+        /**
+         * The strip of recent rolls along the bottom.
+         *
+         * It is read back out of [CasinoHistory] rather than kept in a second list on the side, so what the strip
+         * shows is exactly what the audited history holds - including after a relog.
+         */
+        fun refreshHistory(player: Player) {
+            val rows = CasinoHistory.recent(player).filter { it.game == CasinoGame.DICE }
+            for (i in 0 until Layout.Dice.HISTORY_SLOTS) {
+                val row = rows.getOrNull(i)
+                val roll = row?.detail?.substringAfter("roll=", "")?.takeIf { it.isNotBlank() }
+                val won = row != null && row.profit >= 0
+                val shown = if (won) Layout.Dice.historyWin(i) else Layout.Dice.historyLose(i)
+                val hidden = if (won) Layout.Dice.historyLose(i) else Layout.Dice.historyWin(i)
+                player.setComponentText(ID, shown, roll ?: "")
+                player.setComponentHidden(ID, shown, roll == null)
+                player.setComponentHidden(ID, hidden, true)
+            }
         }
 
         fun showResult(
@@ -212,11 +416,12 @@ object CasinoScreens {
             player.setComponentHidden(ID, Layout.Dice.marker(segment), false)
 
             val outcome = if (result.won) Layout.Dice.OUTCOME_WIN else Layout.Dice.OUTCOME_LOSE
+            val direction = if (result.under) "under" else "over"
             val line =
                 if (result.won) {
-                    "You rolled over ${result.target} and won ${CasinoWallet.format(result.payout - result.stake)} coins."
+                    "You rolled $direction ${result.target} and won ${CasinoWallet.format(result.payout - result.stake)} coins."
                 } else {
-                    "You needed ${result.target}.00 or higher. You lost ${CasinoWallet.format(result.stake)} coins."
+                    "You needed to roll $direction ${result.target}. You lost ${CasinoWallet.format(result.stake)} coins."
                 }
             player.setComponentText(ID, outcome, line)
             player.setComponentHidden(ID, Layout.Dice.OUTCOME_IDLE, true)
@@ -233,17 +438,26 @@ object CasinoScreens {
 
         fun open(player: Player) {
             player.openInterface(ID, InterfaceDestination.MAIN_SCREEN)
+            armBetControls(
+                player, ID,
+                Layout.Mines.BET_HALVE, Layout.Mines.BET_DOUBLE, Layout.Mines.BET_MAX, Layout.Mines.BET_CUSTOM,
+                Layout.Mines.QUICK_FIRST,
+            )
             listOf(
                 Layout.Mines.MINES_MINUS,
                 Layout.Mines.MINES_PLUS,
-                Layout.Mines.BET_CUSTOM,
                 Layout.Mines.START_BUTTON,
                 Layout.Mines.CASHOUT_BUTTON,
-            ).forEach { player.setInterfaceEvents(ID, it, -1..-1, EVENTS_OP1) }
+                Layout.Mines.RANDOM_BUTTON,
+            ).forEach { armButton(player, ID, it) }
+            for (i in Layout.Mines.PRESETS.indices) {
+                armButton(player, ID, Layout.Mines.preset(i))
+            }
             for (cell in 0 until Layout.Mines.CELLS) {
                 player.setInterfaceEvents(ID, Layout.Mines.cover(cell), -1..-1, EVENTS_OP1)
             }
-            armFairness(player, ID, Layout.Mines.SET_SEED_BUTTON, Layout.Mines.VERIFY_BUTTON)
+            armFairness(player, ID, Layout.Mines.FAIR_BUTTON, Layout.Mines.FAIRNESS)
+            closeFairness(player, ID)
             refresh(player)
         }
 
@@ -256,15 +470,20 @@ object CasinoScreens {
             val board = MinesGame.active(player)
             val playing = board != null
 
-            player.setComponentHidden(ID, Layout.Mines.START_BUTTON, playing)
-            player.setComponentHidden(ID, Layout.Mines.START_BUTTON + 1, playing)
+            showButton(player, ID, Layout.Mines.START_BUTTON, !playing)
             // Cash out only becomes real once a gem is showing; before that there is nothing to take.
-            val canCash = playing && board!!.gems > 0
-            player.setComponentHidden(ID, Layout.Mines.CASHOUT_BUTTON, !canCash)
-            player.setComponentHidden(ID, Layout.Mines.CASHOUT_BUTTON + 1, !canCash)
+            showButton(player, ID, Layout.Mines.CASHOUT_BUTTON, playing && board!!.gems > 0)
+            showButton(player, ID, Layout.Mines.RANDOM_BUTTON, playing)
 
             player.setComponentText(ID, Layout.Mines.MINES_TEXT, (board?.mineCount ?: mineCount(player)).toString())
             player.setComponentText(ID, Layout.Mines.BET_TEXT, CasinoWallet.format(board?.stake ?: bet(player)))
+            player.setComponentText(ID, Layout.Mines.GEMS_TEXT, (board?.gems ?: 0).toString())
+
+            // The mine-count presets light up the one that is selected, so the current board is readable at a glance.
+            val mines = board?.mineCount ?: mineCount(player)
+            Layout.Mines.PRESETS.forEachIndexed { index, value ->
+                setButtonActive(player, ID, Layout.Mines.preset(index), value == mines)
+            }
 
             if (board != null) {
                 player.setComponentText(ID, Layout.Mines.MULTIPLIER_TEXT, CasinoWallet.multiplier(board.multiplier()))
@@ -302,9 +521,8 @@ object CasinoScreens {
                     board.gems == 0 -> "Reveal a tile."
                     else -> "${board.gems} gem${if (board.gems == 1) "" else "s"} - cash out or keep going."
                 }
-            player.setComponentText(ID, Layout.Mines.COINS_TEXT, CasinoWallet.format(CasinoWallet.balance(player)))
             player.setComponentText(ID, Layout.Mines.STATUS_TEXT, line)
-            refreshFairness(player, ID, Layout.Mines.SEED_HASH_TEXT, Layout.Mines.CLIENT_SEED_TEXT, Layout.Mines.NONCE_TEXT)
+            refreshHeader(player, ID)
         }
     }
 
@@ -313,55 +531,61 @@ object CasinoScreens {
     object Blackjack {
         val ID = Layout.BLACKJACK_ID
 
-        /**
-         * Hearts and diamonds are drawn red, spades and clubs black, as at a real table.
-         *
-         * The client cannot recolour a text component, so every card carries a black rank and a red rank stacked on
-         * the same plate and [drawCard] shows the one that matches. The earlier single black rank made this
-         * function dead code and the suits indistinguishable.
-         */
+        /** Hearts and diamonds are drawn red, spades and clubs black, as at a real table. */
         private fun isRed(card: Int): Boolean = BlackjackCards.suit(card) == 0 || BlackjackCards.suit(card) == 2
 
         /**
-         * Draws one card slot. A null [card] hides the whole slot; a face-down card shows the plate with a "?" in
-         * black, whatever it really is, so the hole card leaks nothing through its colour.
+         * The suit as a single letter.
+         *
+         * The cache's fonts have no suit glyphs and this project has no sprite encoder, so a letter under the rank
+         * is the readable choice. The first draft used `v ^ + *`, which told a player nothing.
+         */
+        private fun suitLetter(card: Int): String =
+            when (BlackjackCards.suit(card)) {
+                0 -> "H"
+                1 -> "S"
+                2 -> "D"
+                else -> "C"
+            }
+
+        /**
+         * Draws one card slot. A null [card] hides the whole card with a single packet; a face-down card shows the
+         * plate with a "?" in black, whatever it really is, so the hole card leaks nothing through its colour.
          */
         private fun drawCard(
             player: Player,
-            plate: Int,
-            blackText: Int,
-            redText: Int,
+            base: Int,
             card: Int?,
             facedown: Boolean = false,
         ) {
             if (card == null) {
-                player.setComponentHidden(ID, plate, true)
-                player.setComponentHidden(ID, blackText, true)
-                player.setComponentHidden(ID, redText, true)
+                player.setComponentHidden(ID, base + Layout.CARD_LAYER, true)
                 return
             }
-            player.setComponentHidden(ID, plate, false)
+            player.setComponentHidden(ID, base + Layout.CARD_LAYER, false)
             val red = !facedown && isRed(card)
-            val shown = if (red) redText else blackText
-            player.setComponentText(ID, shown, if (facedown) "?" else face(card))
-            player.setComponentHidden(ID, shown, false)
-            player.setComponentHidden(ID, if (red) blackText else redText, true)
-        }
+            val rankShown = base + if (red) Layout.CARD_RANK_RED else Layout.CARD_RANK_BLACK
+            val rankHidden = base + if (red) Layout.CARD_RANK_BLACK else Layout.CARD_RANK_RED
+            val suitShown = base + if (red) Layout.CARD_SUIT_RED else Layout.CARD_SUIT_BLACK
+            val suitHidden = base + if (red) Layout.CARD_SUIT_BLACK else Layout.CARD_SUIT_RED
 
-        private fun face(card: Int): String {
-            val suit =
-                when (BlackjackCards.suit(card)) {
-                    0 -> "v" // hearts
-                    1 -> "^" // spades
-                    2 -> "+" // diamonds
-                    else -> "*" // clubs
-                }
-            return "${BlackjackCards.shortName(card)}$suit"
+            player.setComponentText(ID, rankShown, if (facedown) "?" else BlackjackCards.shortName(card))
+            player.setComponentText(ID, suitShown, if (facedown) "" else suitLetter(card))
+            player.setComponentHidden(ID, rankShown, false)
+            player.setComponentHidden(ID, suitShown, false)
+            player.setComponentHidden(ID, rankHidden, true)
+            player.setComponentHidden(ID, suitHidden, true)
         }
 
         fun open(player: Player) {
             player.openInterface(ID, InterfaceDestination.MAIN_SCREEN)
+            armBetControls(
+                player, ID,
+                Layout.Blackjack.BET_HALVE, Layout.Blackjack.BET_DOUBLE, Layout.Blackjack.BET_MAX,
+                Layout.Blackjack.BET_CUSTOM, Layout.Blackjack.QUICK_FIRST,
+            )
             listOf(
+                Layout.Blackjack.REBET_BUTTON,
                 Layout.Blackjack.DEAL_BUTTON,
                 Layout.Blackjack.HIT_BUTTON,
                 Layout.Blackjack.STAND_BUTTON,
@@ -369,9 +593,9 @@ object CasinoScreens {
                 Layout.Blackjack.SPLIT_BUTTON,
                 Layout.Blackjack.INSURE_BUTTON,
                 Layout.Blackjack.DECLINE_BUTTON,
-                Layout.Blackjack.BET_CUSTOM,
-            ).forEach { player.setInterfaceEvents(ID, it, -1..-1, EVENTS_OP1) }
-            armFairness(player, ID, Layout.Blackjack.SET_SEED_BUTTON, Layout.Blackjack.VERIFY_BUTTON)
+            ).forEach { armButton(player, ID, it) }
+            armFairness(player, ID, Layout.Blackjack.FAIR_BUTTON, Layout.Blackjack.FAIRNESS)
+            closeFairness(player, ID)
             refresh(player)
         }
 
@@ -383,19 +607,11 @@ object CasinoScreens {
             val live = table != null && table.phase == BlackjackGame.Phase.PLAYER
 
             player.setComponentText(ID, Layout.Blackjack.BET_TEXT, CasinoWallet.format(table?.baseStake ?: bet(player)))
-            player.setComponentText(ID, Layout.Blackjack.COINS_TEXT, CasinoWallet.format(CasinoWallet.balance(player)))
+            refreshHeader(player, ID)
 
             // Dealer row. While the player still has decisions, the hole card stays face down.
-            val hideHole = live
             for (i in 0 until Layout.Blackjack.DEALER_CARDS) {
-                drawCard(
-                    player,
-                    Layout.Blackjack.dealerPlate(i),
-                    Layout.Blackjack.dealerText(i),
-                    Layout.Blackjack.dealerRedText(i),
-                    table?.dealer?.getOrNull(i),
-                    facedown = hideHole && i >= 1,
-                )
+                drawCard(player, Layout.Blackjack.dealerCard(i), table?.dealer?.getOrNull(i), facedown = live && i >= 1)
             }
             val dealerTotal =
                 when {
@@ -409,7 +625,7 @@ object CasinoScreens {
                 val seat = table?.hands?.getOrNull(row)
                 player.setComponentHidden(ID, Layout.Blackjack.rowTotal(row), seat == null)
                 if (seat != null) {
-                    val marker = if (live && table!!.active == row) "<" else ""
+                    val marker = if (live && table.active == row) "<" else ""
                     val hand = seat.hand()
                     // The column beside the cards is 42px wide, so it carries the total, an `s` for a soft hand and
                     // the arrow for the hand being played, and nothing else. The stake is on the Bet line above.
@@ -417,35 +633,32 @@ object CasinoScreens {
                     player.setComponentText(ID, Layout.Blackjack.rowTotal(row), "${hand.total}$soft$marker")
                 }
                 for (i in 0 until Layout.Blackjack.PLAYER_CARDS) {
-                    drawCard(
-                        player,
-                        Layout.Blackjack.playerPlate(row, i),
-                        Layout.Blackjack.playerText(row, i),
-                        Layout.Blackjack.playerRedText(row, i),
-                        seat?.cards?.getOrNull(i),
-                    )
+                    drawCard(player, Layout.Blackjack.playerCard(row, i), seat?.cards?.getOrNull(i))
                 }
             }
 
             val seat = if (live) table!!.current() else null
             val insuring = table?.insuranceOffered() == true
-            fun show(
-                button: Int,
-                visible: Boolean,
-            ) {
-                player.setComponentHidden(ID, button, !visible)
-                player.setComponentHidden(ID, button + 1, !visible)
-            }
-            show(Layout.Blackjack.DEAL_BUTTON, table == null || table.phase == BlackjackGame.Phase.SETTLED)
-            show(Layout.Blackjack.HIT_BUTTON, live && !insuring && seat != null && !seat.splitAce)
-            show(Layout.Blackjack.STAND_BUTTON, live && !insuring && seat != null)
-            show(Layout.Blackjack.DOUBLE_BUTTON, live && !insuring && seat != null && seat.cards.size == 2 && !seat.doubled && !seat.splitAce)
-            show(
-                Layout.Blackjack.SPLIT_BUTTON,
-                live && !insuring && seat != null && BlackjackCards.canSplit(seat.cards) && table!!.hands.size < BlackjackGame.MAX_HANDS,
+            val settled = table == null || table.phase == BlackjackGame.Phase.SETTLED
+            showButton(player, ID, Layout.Blackjack.DEAL_BUTTON, settled)
+            showButton(player, ID, Layout.Blackjack.REBET_BUTTON, settled)
+            showButton(player, ID, Layout.Blackjack.HIT_BUTTON, live && !insuring && seat != null && !seat.splitAce)
+            showButton(player, ID, Layout.Blackjack.STAND_BUTTON, live && !insuring && seat != null)
+            showButton(
+                player,
+                ID,
+                Layout.Blackjack.DOUBLE_BUTTON,
+                live && !insuring && seat != null && seat.cards.size == 2 && !seat.doubled && !seat.splitAce,
             )
-            show(Layout.Blackjack.INSURE_BUTTON, insuring)
-            show(Layout.Blackjack.DECLINE_BUTTON, insuring)
+            showButton(
+                player,
+                ID,
+                Layout.Blackjack.SPLIT_BUTTON,
+                live && !insuring && seat != null && BlackjackCards.canSplit(seat.cards) &&
+                    table!!.hands.size < BlackjackGame.MAX_HANDS,
+            )
+            showButton(player, ID, Layout.Blackjack.INSURE_BUTTON, insuring)
+            showButton(player, ID, Layout.Blackjack.DECLINE_BUTTON, insuring)
 
             val line =
                 status ?: when {
@@ -455,7 +668,6 @@ object CasinoScreens {
                     else -> "Your move."
                 }
             player.setComponentText(ID, Layout.Blackjack.STATUS_TEXT, line)
-            refreshFairness(player, ID, Layout.Blackjack.SEED_HASH_TEXT, Layout.Blackjack.CLIENT_SEED_TEXT, Layout.Blackjack.NONCE_TEXT)
         }
     }
 
@@ -470,8 +682,9 @@ object CasinoScreens {
                 Layout.Flower.STAKE_BUTTON,
                 Layout.Flower.ACCEPT_BUTTON,
                 Layout.Flower.DECLINE_BUTTON,
-            ).forEach { player.setInterfaceEvents(ID, it, -1..-1, EVENTS_OP1) }
-            armFairness(player, ID, Layout.Flower.SET_SEED_BUTTON, Layout.Flower.VERIFY_BUTTON)
+            ).forEach { armButton(player, ID, it) }
+            armFairness(player, ID, Layout.Flower.FAIR_BUTTON, Layout.Flower.FAIRNESS)
+            closeFairness(player, ID)
             refresh(player)
         }
 
@@ -498,8 +711,8 @@ object CasinoScreens {
             player.setComponentText(ID, Layout.Flower.OPPONENT_NAME, theirs.username)
             player.setComponentText(ID, Layout.Flower.POT_TEXT, CasinoWallet.format(match.pot))
             player.setComponentText(ID, Layout.Flower.STAKE_TEXT, CasinoWallet.format(match.stake))
-            player.setComponentText(ID, Layout.Flower.CHALLENGER_TICK, if (match.accepted(mine)) "You accepted" else "")
-            player.setComponentText(ID, Layout.Flower.OPPONENT_TICK, if (match.accepted(theirs)) "${theirs.username} accepted" else "")
+            player.setComponentText(ID, Layout.Flower.CHALLENGER_TICK, if (match.accepted(mine)) "Accepted" else "")
+            player.setComponentText(ID, Layout.Flower.OPPONENT_TICK, if (match.accepted(theirs)) "Accepted" else "")
 
             val round = match.rounds.lastOrNull()
             val mineFlowers = if (round == null) emptyList() else if (viewerIsChallenger) round.first else round.second
@@ -523,13 +736,11 @@ object CasinoScreens {
                 Layout.Flower.OPPONENT_HAND,
                 if (complete) FlowerPoker.evaluate(theirFlowers).displayName else "",
             )
-            player.setComponentText(ID, Layout.Flower.ROUND_TEXT, if (round == null) "" else "Plant ${round.index + 1}")
+            player.setComponentText(ID, Layout.Flower.ROUND_TEXT, if (round == null) "-" else "${round.index + 1}")
 
             val staking = match.stage == FlowerPokerMatch.Stage.CONFIGURING
-            listOf(Layout.Flower.STAKE_BUTTON, Layout.Flower.ACCEPT_BUTTON).forEach {
-                player.setComponentHidden(ID, it, !staking)
-                player.setComponentHidden(ID, it + 1, !staking)
-            }
+            showButton(player, ID, Layout.Flower.STAKE_BUTTON, staking)
+            showButton(player, ID, Layout.Flower.ACCEPT_BUTTON, staking)
 
             player.setComponentText(
                 ID,
@@ -540,7 +751,6 @@ object CasinoScreens {
                     FlowerPokerMatch.Stage.FINISHED -> "Match over."
                 },
             )
-            refreshFairness(player, ID, Layout.Flower.SEED_HASH_TEXT, Layout.Flower.CLIENT_SEED_TEXT, Layout.Flower.NONCE_TEXT)
         }
     }
 
