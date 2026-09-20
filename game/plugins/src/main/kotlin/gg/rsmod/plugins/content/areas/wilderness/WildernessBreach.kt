@@ -86,7 +86,7 @@ object WildernessBreach {
                     // firing a breach nobody can reach.
                     continue
                 }
-                broadcast(world, "A Wilderness Breach is forming and will erupt in about 15 minutes!")
+                broadcast(world, "<col=ff0000>A Wilderness Breach is forming and will erupt in about 15 minutes!</col>")
                 warningIssuedAtCycle = world.currentCycle
                 wait(WARNING_CYCLES)
                 warningIssuedAtCycle = null
@@ -105,7 +105,7 @@ object WildernessBreach {
         world: World,
         epicentre: Tile,
     ) {
-        broadcast(world, "The Wilderness Breach erupts!")
+        broadcast(world, "<col=ff0000>The Wilderness Breach erupts!</col>")
         // R14.26: beginner-protected players are excluded from participation/rewards entirely,
         // not just the final roll - they were never valid PvP targets to begin with, and a
         // Breach is exactly the "designated lucrative Wilderness activity" the rule names.

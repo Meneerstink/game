@@ -1,0 +1,186 @@
+package gg.rsmod.plugins.content.activity.casino
+
+import gg.rsmod.game.model.Direction
+
+/*
+ * The gambling hall of the Grand Exchange (owner 2026-09-20: "create ... a beautifull spot at the grand exchange,
+ * move the gamblers in the spot, make it beautifull").
+ *
+ * WHERE. The croupiers used to stand in the middle of the GE service row at z = 3500, shoulder to shoulder with the
+ * bankers, clerks and shopkeepers - functional, but not a place. They now have their own pit in the open strip
+ * against the Grand Exchange's north wall, x 3159-3171 by z 3507-3514. That strip was chosen because it is
+ * genuinely empty: `runObjectPlacementProbeTool ... tile 3165 3510 0 6` reports NOT ONE placement in
+ * x 3159-3171 / z 3508-3513 in this cache - no scenery, not even a ground decoration - so nothing of Varrock's own
+ * is overwritten or hidden, and the walled backdrop at z 3516 closes the room off behind the dealers.
+ *
+ * WHAT. Four 2x2 gaming tables in a row with a croupier standing behind each one, a carpeted pit in front of them,
+ * a lit brazier-torch centrepiece with the cache's own rolling `Dice`, and torches marking the four corners and the
+ * entrance. Players walk in from the Grand Exchange side (south), cross the carpet and talk to the dealer of the
+ * game they want; the one-tile gaps between the tables (x 3162 / 3165 / 3168) are deliberately left open so the
+ * dealers can be reached from either side of their table.
+ *
+ * EVERY ID IS CACHE-NATIVE. The croupiers are the revision-667 `Gambler` npcs (2998-3003), the tables its `Table`
+ * (593), the carpet the POH `Rug` (13594, the object `PlayerHouse` builds from rug space 15274), the lighting its
+ * `Standing torch` (724, flame animation 481) and the centrepiece its animated `Dice` (16855, animation 4360).
+ *
+ * NOTHING PLACED HERE CARRIES A DEAD OPTION. Every decorative id was checked with `runObjectDefProbeTool` and only
+ * option-less ids were used - that is why the crates are `Gambling crate` 62275 and not 62274, which advertises an
+ * "Open" that no plugin answers, and why the pit is lit by `Standing torch` (no options) rather than `Brazier`
+ * (1:'Investigate'). The rug is `blockwalk=0`, so the carpet is walked over, not around; everything else is solid
+ * and is laid out so that no tile a player needs is ever enclosed.
+ */
+
+// ------------------------------------------------------------------ geometry
+
+/** The row the four tables and their dealers occupy; the pit and its carpet lie south of it. */
+val PIT_WEST = 3159
+val PIT_EAST = 3171
+val PIT_SOUTH = 3507
+val CARPET_SOUTH = 3508
+val TABLE_Z = 3512
+val CARPET_NORTH = 3513
+val DEALER_Z = 3514
+
+/** x of the south-west tile of each 2x2 table; the dealer of that table stands at the same x on [DEALER_Z]. */
+val DICE_TABLE_X = 3160
+val MINES_TABLE_X = 3163
+val BLACKJACK_TABLE_X = 3166
+val FLOWER_TABLE_X = 3169
+
+val PIT_CENTRE = Tile(3165, 3510, 0)
+
+// ------------------------------------------------------------------ the floor
+
+/*
+ * The carpet. Ground decoration (type 22) replaces whatever decoration already stands on a tile, so it is laid only
+ * on the tiles the placement probe reported as empty - x 3160-3170 by z 3508-3513. The tables stand on top of it,
+ * which is what a gaming pit looks like.
+ */
+for (x in PIT_WEST + 1 until PIT_EAST) {
+    for (z in CARPET_SOUTH..CARPET_NORTH) {
+        spawn_obj(obj = Objs.RUG_13594, x = x, z = z, type = 22, rot = 0)
+    }
+}
+
+// ------------------------------------------------------------------ the tables and their dealers
+
+/**
+ * One gaming station: a 2x2 table with its croupier standing behind it, facing south into the pit.
+ *
+ * The table's south-west tile is [tableX], [TABLE_Z], so it covers x..x+1 by z 3512-3513 and the dealer at
+ * [DEALER_Z] is directly behind it. The tile east of each table (x + 2) is left clear, so every dealer can be
+ * walked up to from both sides even with the table blocking the front.
+ */
+fun station(
+    npcId: Int,
+    tableX: Int,
+) {
+    spawn_obj(obj = Objs.TABLE, x = tableX, z = TABLE_Z, type = 10, rot = 0)
+    spawn_npc(npc = npcId, x = tableX, z = DEALER_Z, direction = Direction.SOUTH)
+}
+
+station(Npcs.GAMBLER, DICE_TABLE_X)
+station(Npcs.GAMBLER_3001, MINES_TABLE_X)
+station(Npcs.GAMBLER_3002, BLACKJACK_TABLE_X)
+station(Npcs.GAMBLER_3003, FLOWER_TABLE_X)
+
+// ------------------------------------------------------------------ dressing
+
+// Corner torches frame the pit; the two at PIT_SOUTH flank the entrance the carpet runs up to.
+listOf(
+    Tile(PIT_WEST, CARPET_NORTH, 0),
+    Tile(PIT_EAST, CARPET_NORTH, 0),
+    Tile(PIT_WEST, CARPET_SOUTH, 0),
+    Tile(PIT_EAST, CARPET_SOUTH, 0),
+    Tile(PIT_CENTRE.x - 2, PIT_SOUTH, 0),
+    Tile(PIT_CENTRE.x + 2, PIT_SOUTH, 0),
+    // Flanking the centrepiece, so the middle of the pit is lit rather than empty.
+    Tile(PIT_CENTRE.x - 1, PIT_CENTRE.z, 0),
+    Tile(PIT_CENTRE.x + 1, PIT_CENTRE.z, 0),
+).forEach { spawn_obj(obj = Objs.STANDING_TORCH, x = it.x, z = it.z, type = 10, rot = 0) }
+
+// The centrepiece: the cache's own dice, which roll on animation 4360 for as long as the hall stands.
+spawn_obj(obj = Objs.DICE_16855, x = PIT_CENTRE.x, z = PIT_CENTRE.z, type = 10, rot = 0)
+
+// House crates at either end of the table row. 62275 is the option-less variant of the Gambling crate.
+spawn_obj(obj = Objs.GAMBLING_CRATE_62275, x = PIT_WEST, z = TABLE_Z, type = 10, rot = 0)
+spawn_obj(obj = Objs.GAMBLING_CRATE_62275, x = PIT_EAST, z = TABLE_Z, type = 10, rot = 3)
+
+/*
+ * The dealers are placed by hand, in a layout whose whole point is where each one stands. `ge_home_audit` walks the
+ * Grand Exchange one tick after boot and relocates any npc it finds pressed against another or standing somewhere a
+ * customer cannot reach; the layout above satisfies both rules (the dealers are three tiles apart and each has three
+ * free neighbours), but a later change to the pit must not be able to scatter them across the plaza. Marking them
+ * the same way Skully and the 78 Store npcs are marked - `respawnOverride` set - makes the audit skip them, which is
+ * exactly what "code-placed npcs have their own placement rules" means there.
+ */
+val DEALER_IDS = setOf(Npcs.GAMBLER, Npcs.GAMBLER_3001, Npcs.GAMBLER_3002, Npcs.GAMBLER_3003)
+
+on_world_init {
+    // Not queued: the static spawns above are already in the world by the time on_world_init runs (StoreNpcs reads
+    // them here the same way), while the audit does its work from a `world.queue { wait(1) }`. Tagging straight
+    // away means the mark is always set before the audit looks, whatever order the plugins happen to load in.
+    var tagged = 0
+    world.npcs.forEach {
+        if (it.id in DEALER_IDS && it.tile.z == DEALER_Z && it.tile.height == 0) {
+            it.respawnOverride = true
+            tagged++
+        }
+    }
+    println("casino_grandexchange: $tagged dealers pinned at the Grand Exchange gambling hall.")
+}
+
+/**
+ * Binds a croupier's talk option only if the cache actually gives that npc the option.
+ *
+ * A revision-667 npc menu has five slots and an npc that was never meant to be talked to may not carry one;
+ * asking `on_npc_option` for a missing option throws out of `PluginRepository.init` and takes the whole boot down
+ * (owner 2026-09-20 - the ring of shadows did exactly that). So the definition is read first, and a croupier
+ * without a talk option simply is not bound rather than bringing the server down with it.
+ */
+fun bindCroupier(
+    npcId: Int,
+    game: CasinoGame,
+) {
+    val def = world.definitions.get(NpcDef::class.java, npcId)
+    val option = def.options.filterNotNull().firstOrNull { it.equals("Talk-to", ignoreCase = true) } ?: return
+    on_npc_option(npc = npcId, option = option) {
+        player.queue {
+            chatNpc("Care for a game of ${game.displayName}? Every round here is provably fair.", wrap = true)
+            val choice =
+                options(
+                    "Play ${game.displayName}.",
+                    "How does provably fair work?",
+                    "Show my recent rounds.",
+                    "No thanks.",
+                )
+            when (choice) {
+                1 -> CasinoScreens.open(player, game)
+                2 -> {
+                    chatNpc(
+                        "Before you bet I show you a hash of my secret seed. You pick your own seed. " +
+                            "When you retire the seed I reveal mine, and you can replay every round yourself.",
+                        wrap = true,
+                    )
+                    CasinoDialogs.showFairness(this, player)
+                }
+                3 -> {
+                    val rows = CasinoHistory.recent(player)
+                    if (rows.isEmpty()) {
+                        chatNpc("You have not played here yet.", wrap = true)
+                    } else {
+                        rows.take(5).forEach { row ->
+                            player.message("${row.game.displayName}: ${CasinoWallet.format(row.profit)} (nonce ${row.nonce}) ${row.detail}")
+                        }
+                    }
+                }
+                else -> {}
+            }
+        }
+    }
+}
+
+bindCroupier(Npcs.GAMBLER, CasinoGame.DICE)
+bindCroupier(Npcs.GAMBLER_3001, CasinoGame.MINES)
+bindCroupier(Npcs.GAMBLER_3002, CasinoGame.BLACKJACK)
+bindCroupier(Npcs.GAMBLER_3003, CasinoGame.FLOWER_POKER)

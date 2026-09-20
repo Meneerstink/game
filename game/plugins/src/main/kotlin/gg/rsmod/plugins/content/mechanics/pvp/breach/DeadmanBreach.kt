@@ -262,7 +262,7 @@ object DeadmanBreach {
             }
         }
         val names = sites.joinToString(" and ") { "${it.name.replaceFirstChar { c -> c.lowercase() }} (${if (it.multi) "multi-way" else "single-way"} combat)" }
-        world.players.forEach { it.filterableMessage("<col=a53fff>Breaches have opened: $names!</col>") }
+        world.players.forEach { it.filterableMessage("<col=ff0000>Breaches have opened: $names!</col>") }
         run(world, opened)
         return opened
     }

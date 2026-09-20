@@ -140,6 +140,7 @@ object ObjectDefProbeTool {
                 .mapIndexed { i, option -> if (option.isNullOrBlank()) null else "${i + 1}:'$option'" }
                 .filterNotNull()
                 .joinToString(",")
-        return "name='${def.name}' options=[$options]"
+        return "name='${def.name}' size=${def.width}x${def.length} blockwalk=${def.blockwalk} solid=${def.solid} " +
+            "anim=${def.animation} options=[$options]"
     }
 }
