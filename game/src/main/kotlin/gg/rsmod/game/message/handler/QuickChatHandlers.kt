@@ -6,6 +6,7 @@ import gg.rsmod.game.message.impl.MessageQuickChatPublicMessage
 import gg.rsmod.game.message.impl.QuickChatPrivateEchoOutMessage
 import gg.rsmod.game.message.impl.QuickChatPrivateOutMessage
 import gg.rsmod.game.message.impl.QuickChatPublicOutMessage
+import gg.rsmod.game.message.impl.SetPrivateChatFilterMessage
 import gg.rsmod.game.model.World
 import gg.rsmod.game.model.entity.Client
 import gg.rsmod.game.model.entity.Player
@@ -72,6 +73,16 @@ class MessageQuickChatPrivateHandler : MessageHandler<MessageQuickChatPrivateMes
             return
         }
         toPlayer!!
+
+        // A quick-chat private message is still a private message. Keep the sender's
+        // presence/friend-list transition identical to the typed-message route.
+        val newStatus = PrivateMessagePolicy.senderPrivateStatusAfterSending(fromPlayer.privateFilterSetting)
+        if (newStatus != fromPlayer.privateFilterSetting) {
+            fromPlayer.privateFilterSetting = newStatus
+            fromPlayer.write(SetPrivateChatFilterMessage(newStatus.settingId))
+            fromPlayer.updateOthersFriendLists()
+        }
+
         val id = world.getNextMessageCount()
         toPlayer.write(
             QuickChatPrivateOutMessage(

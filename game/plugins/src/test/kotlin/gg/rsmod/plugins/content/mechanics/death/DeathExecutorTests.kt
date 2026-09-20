@@ -15,8 +15,10 @@ import gg.rsmod.game.model.container.key.INVENTORY_KEY
 import gg.rsmod.game.model.entity.GroundItem
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
+import gg.rsmod.game.model.timer.TimerMap
 import gg.rsmod.game.service.log.LoggerService
 import gg.rsmod.plugins.content.mechanics.pvp.BEST_KILLSTREAK_ATTR
+import gg.rsmod.plugins.content.mechanics.pvp.KillGrace
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -57,6 +59,8 @@ class DeathExecutorTests {
         // the ground-loot path a killer gets after asking Skully to switch the keys off.
         killer.attr[gg.rsmod.plugins.content.mechanics.pvp.LootKeys.ENABLED] = false
         val world = mockk<World>(relaxed = true)
+        every { world.getMultiCombatChunks() } returns emptySet()
+        every { world.getMultiCombatRegions() } returns emptySet()
 
         victim.inventory[0] = Item(LOST_ITEM, 3)
         victim.inventory[1] = Item(KEPT_ITEM, 1)
@@ -72,12 +76,38 @@ class DeathExecutorTests {
         val executed = DeathExecutor.execute(world, result, DeathRecoveryConfig.PLACEHOLDER)
 
         assertTrue(executed)
+        assertTrue(KillGrace.isProtected(killer), "a resolved single-combat PvP kill starts the HUD timer")
+        assertTrue(KillGrace.earnedFrom(killer, victim), "trailing hits on this victim must not cancel the timer")
+        assertEquals(KillGrace.DURATION_CYCLES, KillGrace.cyclesLeft(killer))
+        killer.timers[KillGrace.GRACE_TIMER] = 25
+        assertFalse(DeathExecutor.execute(world, result, DeathRecoveryConfig.PLACEHOLDER))
+        assertEquals(25, KillGrace.cyclesLeft(killer), "duplicate death execution must not refresh protection")
         assertNull(victim.inventory[0], "lost item's slot must be cleared")
         assertNotNull(victim.inventory[1], "kept item must remain")
         assertTrue(victim.deathRecovery.isEmpty, "PvP deaths must not use the recovery container")
         verify(exactly = 1) {
             world.spawn(match<GroundItem> { it.item == LOST_ITEM && it.amount == 3 })
         }
+    }
+
+    @Test
+    fun `multi-combat kill never grants grace while still counting the PvP death`() {
+        val victim = newPlayer()
+        val killer = newPlayer()
+        killer.attr[BEST_KILLSTREAK_ATTR] = 5
+        val world = mockk<World>(relaxed = true)
+        every { world.getMultiCombatChunks() } returns emptySet()
+        every { world.getMultiCombatRegions() } returns setOf(victim.tile.regionId)
+        val result = DeathResolutionResult(
+            DeathContext.WILDERNESS_PVP,
+            victim,
+            killer,
+            DeathItemRiskResult(protectedItemCount = 0, protected = emptyList(), lost = emptyList()),
+        )
+
+        assertTrue(DeathExecutor.execute(world, result, DeathRecoveryConfig.PLACEHOLDER))
+        assertFalse(KillGrace.isProtected(killer))
+        assertFalse(DeathExecutor.execute(world, result, DeathRecoveryConfig.PLACEHOLDER))
     }
 
     @Test
@@ -286,6 +316,7 @@ class DeathExecutorTests {
     private fun newPlayer(): Player {
         val player = mockk<Player>(relaxed = true)
         every { player.attr } returns AttributeMap()
+        every { player.timers } returns TimerMap()
         every { player.tile } returns Tile(3200, 3200, 0)
         every { player.inventory } returns ItemContainer(DEFINITIONS, INVENTORY_KEY)
         every { player.equipment } returns ItemContainer(DEFINITIONS, EQUIPMENT_KEY)
