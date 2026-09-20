@@ -1168,11 +1168,7 @@ object AncientCurses {
     fun deflectDamageTaken(attacker: Pawn, target: Pawn, style: CombatClass, damage: Int): Int =
         if (!deflects(target, style)) damage else if (attacker is Player) damage * 6 / 10 else 0
 
-    /**
-     * Deflect reflection: reflect 10% of qualifying damage, with no random roll and no recoil
-     * threshold. Reflected damage is dealt raw so it can never re-trigger a Deflect on the original
-     * attacker (no recursion).
-     */
+    /** Reflect 10% on a successful roll. Raw reflected damage cannot trigger another Deflect. */
     fun onIncomingHit(
         attacker: Pawn,
         target: Pawn,
@@ -1184,18 +1180,47 @@ object AncientCurses {
         if (!isCurseActive(target, curse)) return
         // Owner balance decision (2026-09-18): at most a 15 % chance to reflect, and at most one reflected hit per
         // attack - multi-hit attacks (claws, double hits, multi-target spells) landing on the same tick reflect once.
-        if (!target.world.percentChance(DEFLECT_REFLECT_CHANCE_PCT)) return
-        if (target.attr[LAST_DEFLECT_CYCLE_ATTR] == target.world.currentCycle) return
         val reflected = (damage * 0.10).toInt()
         // Novite Player.java:1267-1297 reflects whenever the 10% is above zero. The old `< 10` was
         // written for x10 life points and, after the 1:1 migration, blocked every hit under 100.
         if (reflected <= 0) return
+        // A multi-hit special gets one roll across all of its delayed hits. Other hits use one
+        // roll per attacker per cycle. Record failed rolls too, or later hits get extra chances.
+        val cycle = target.world.currentCycle
+        val rolls = target.attr[DEFLECT_ROLLS_ATTR] ?: DeflectRolls().also { target.attr[DEFLECT_ROLLS_ATTR] = it }
+        // Entity indexes are unique within their player/NPC pools for this cycle. Store only an
+        // integer so the defender's attribute cannot retain a logged-out attacker.
+        val attackerKey = attacker.index + if (attacker is Player) 32768 else 0
+        val history = rolls.attackers.getOrPut(attackerKey) { DeflectRollHistory() }
+        val attackToken = deflectAttackTokenContext.get()
+        if (attackToken == null) {
+            if (history.regularCycle == cycle) return
+            history.regularCycle = cycle
+        } else {
+            history.specialTokens.entries.removeIf { cycle - it.value > 32 }
+            if (history.specialTokens.putIfAbsent(attackToken, cycle) != null) return
+        }
+        if (!target.world.percentChance(DEFLECT_REFLECT_CHANCE_PCT)) return
         curse.reflectAnimation?.let { target.animate(it) }
         curse.reflectGraphic?.let { target.graphic(it) }
-        target.attr[LAST_DEFLECT_CYCLE_ATTR] = target.world.currentCycle
         attacker.hit(damage = reflected)
     }
 
     const val DEFLECT_REFLECT_CHANCE_PCT = 15.0
-    private val LAST_DEFLECT_CYCLE_ATTR = AttributeKey<Int>()
+    val DEFLECT_ATTACK_TOKEN_ATTR = AttributeKey<Long>()
+    private val deflectAttackTokenContext = ThreadLocal<Long?>()
+
+    internal fun <T> withDeflectAttackToken(token: Long?, action: () -> T): T {
+        val previous = deflectAttackTokenContext.get()
+        if (token == null) deflectAttackTokenContext.remove() else deflectAttackTokenContext.set(token)
+        try {
+            return action()
+        } finally {
+            if (previous == null) deflectAttackTokenContext.remove() else deflectAttackTokenContext.set(previous)
+        }
+    }
+
+    private class DeflectRollHistory(var regularCycle: Int = Int.MIN_VALUE, val specialTokens: MutableMap<Long, Int> = mutableMapOf())
+    private class DeflectRolls(val attackers: MutableMap<Int, DeflectRollHistory> = mutableMapOf())
+    private val DEFLECT_ROLLS_ATTR = AttributeKey<DeflectRolls>()
 }

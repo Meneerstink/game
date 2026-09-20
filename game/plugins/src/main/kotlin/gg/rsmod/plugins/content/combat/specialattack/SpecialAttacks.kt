@@ -10,11 +10,14 @@ import gg.rsmod.plugins.api.ext.getEquipment
 import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.content.combat.strategy.ranged.RangedProjectile
 import gg.rsmod.plugins.content.inter.attack.AttackTab
+import gg.rsmod.plugins.content.mechanics.prayer.AncientCurses
+import java.util.concurrent.atomic.AtomicLong
 
 /**
  * @author Tom <rspsmods@gmail.com>
  */
 object SpecialAttacks {
+    private val deflectAttackTokens = AtomicLong()
     fun register(
         energy: Int,
         vararg weapon: Int,
@@ -89,10 +92,12 @@ object SpecialAttacks {
         target?.let { combatContext.target = it }
         // The special's hits are dealt inside attack(); WeaponPoison reads this for the Abyssal tentacle's 1/2 poison chance.
         player.attr[gg.rsmod.plugins.content.mechanics.poison.WeaponPoison.SPECIAL_ATTACK_IN_PROGRESS] = true
+        player.attr[AncientCurses.DEFLECT_ATTACK_TOKEN_ATTR] = deflectAttackTokens.incrementAndGet()
         try {
             special.attack(combatContext)
         } finally {
             player.attr.remove(gg.rsmod.plugins.content.mechanics.poison.WeaponPoison.SPECIAL_ATTACK_IN_PROGRESS)
+            player.attr.remove(AncientCurses.DEFLECT_ATTACK_TOKEN_ATTR)
         }
 
         return true

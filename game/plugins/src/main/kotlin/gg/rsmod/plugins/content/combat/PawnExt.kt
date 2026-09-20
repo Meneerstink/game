@@ -346,6 +346,8 @@ fun Pawn.dealHit(
         }
     }
 
+    // Capture the special's identity now: its hit action may execute after the special context ends.
+    val deflectAttackToken = attr[AncientCurses.DEFLECT_ATTACK_TOKEN_ATTR]
     // BATCH 2: Ancient Curses' Sap/Leech/Soul Split trigger once per landed hit - this is the
     // single point every combat style (melee/ranged/magic) routes through, so it only needs
     // wiring here rather than in each *CombatFormula.kt.
@@ -358,7 +360,9 @@ fun Pawn.dealHit(
             // dispatcher instead of calling AncientCurses.onIncomingHit directly - Deflect
             // curse is still evaluated first inside it, unchanged, just moved up a level so
             // it shares an order with Vengeance/Ring of recoil. See DamageResponse.kt.
-            DamageResponse.onIncomingHit(pawn, target, curseHitStyle, totalDamage, deflectDamage)
+            AncientCurses.withDeflectAttackToken(deflectAttackToken) {
+                DamageResponse.onIncomingHit(pawn, target, curseHitStyle, totalDamage)
+            }
             // Lifesteal further-foundations pass (2026-09-02): Guthan's Infestation set effect,
             // an attacker-side "on damage dealt" effect like Sap/Leech above it. See
             // GuthanLifesteal.kt for the sourcing note.

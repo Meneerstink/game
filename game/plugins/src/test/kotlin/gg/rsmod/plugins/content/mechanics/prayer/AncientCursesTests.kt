@@ -391,6 +391,72 @@ class AncientCursesTests {
     }
 
     @Test
+    fun `each combat Deflect rolls once per cycle even when the first hit fails`() {
+        listOf(
+            AncientCurse.DEFLECT_MELEE to CombatClass.MELEE,
+            AncientCurse.DEFLECT_MISSILES to CombatClass.RANGED,
+            AncientCurse.DEFLECT_MAGIC to CombatClass.MAGIC,
+        ).forEach { (curse, style) ->
+            val target = newPlayer().also { activate(it, curse) }
+            val world = target.world
+            val attacker = mockk<Player>(relaxed = true)
+            every { world.percentChance(AncientCurses.DEFLECT_REFLECT_CHANCE_PCT) } returns false
+
+            repeat(4) { AncientCurses.onIncomingHit(attacker, target, style, damage = 50) }
+            verify(exactly = 1) { world.percentChance(AncientCurses.DEFLECT_REFLECT_CHANCE_PCT) }
+            verify(exactly = 0) { attacker.addHit(any()) }
+
+            advanceCycles(target, 1)
+            AncientCurses.onIncomingHit(attacker, target, style, damage = 50)
+            verify(exactly = 2) { world.percentChance(AncientCurses.DEFLECT_REFLECT_CHANCE_PCT) }
+        }
+    }
+
+    @Test
+    fun `two attackers in one cycle each get one Deflect roll`() {
+        val target = newPlayer().also { activate(it, AncientCurse.DEFLECT_MELEE) }
+        val world = target.world
+        val first = mockk<Player>(relaxed = true)
+        val second = mockk<Player>(relaxed = true)
+        every { first.index } returns 1
+        every { second.index } returns 2
+        every { world.percentChance(AncientCurses.DEFLECT_REFLECT_CHANCE_PCT) } returns false
+
+        AncientCurses.onIncomingHit(first, target, CombatClass.MELEE, damage = 50)
+        AncientCurses.onIncomingHit(second, target, CombatClass.MELEE, damage = 50)
+        AncientCurses.onIncomingHit(first, target, CombatClass.MELEE, damage = 50)
+        AncientCurses.onIncomingHit(second, target, CombatClass.MELEE, damage = 50)
+
+        verify(exactly = 2) { world.percentChance(AncientCurses.DEFLECT_REFLECT_CHANCE_PCT) }
+    }
+
+    @Test
+    fun `delayed hits of one special share one Deflect roll across cycles`() {
+        val target = newPlayer().also { activate(it, AncientCurse.DEFLECT_MELEE) }
+        val world = target.world
+        val attacker = mockk<Player>(relaxed = true)
+        every { attacker.index } returns 4
+        every { world.percentChance(AncientCurses.DEFLECT_REFLECT_CHANCE_PCT) } returns false
+
+        repeat(4) {
+            advanceCycles(target, 1)
+            AncientCurses.withDeflectAttackToken(101L) {
+                AncientCurses.onIncomingHit(attacker, target, CombatClass.MELEE, damage = 50)
+            }
+        }
+        verify(exactly = 1) { world.percentChance(AncientCurses.DEFLECT_REFLECT_CHANCE_PCT) }
+
+        AncientCurses.withDeflectAttackToken(102L) {
+            AncientCurses.onIncomingHit(attacker, target, CombatClass.MELEE, damage = 50)
+        }
+        verify(exactly = 2) { world.percentChance(AncientCurses.DEFLECT_REFLECT_CHANCE_PCT) }
+
+        advanceCycles(target, 1)
+        AncientCurses.onIncomingHit(attacker, target, CombatClass.MELEE, damage = 50)
+        verify(exactly = 3) { world.percentChance(AncientCurses.DEFLECT_REFLECT_CHANCE_PCT) }
+    }
+
+    @Test
     fun `Deflect reflect requires the matching Deflect curse to be active for that combat style`() {
         val target = newPlayer().also { activate(it, AncientCurse.DEFLECT_MELEE) }
         every { target.world.percentChance(63.0) } returns true
