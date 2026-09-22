@@ -20,7 +20,9 @@ import gg.rsmod.plugins.content.mechanics.pvp.AreaState
  * The spells' own level, spellbook and target rules stay in force; a sack only replaces the runes, one sack per cast.
  * Location model (ADAPTED, recorded): this server allows PvP everywhere outside safe zones (AreaState R03.1, a PvP-world
  * model), so the three "PvP worlds" sacks work wherever PvP is allowed, in the Wilderness and in the Ferox Enclave home;
- * bank safe zones are not on the list. CONTEXT_UNAVAILABLE: Teleport to Target (no 667 spell), Bounty Hunter shop.
+ * bank safe zones are not on the list. OWNER OVERRIDE 2026-09-22: "ALL BLIGHTED SACKS NEEDS TO WORK IN THE WHOLE MAP JUST NOT
+ * THE SAFE ZONES" - the teleport spell sack is no longer Wilderness-only; every sack works wherever PvP is allowed.
+ * CONTEXT_UNAVAILABLE: Teleport to Target (no 667 spell), Bounty Hunter shop.
  */
 object BlightedSacks {
     enum class Sack(
@@ -41,7 +43,7 @@ object BlightedSacks {
         TELEPORT_SPELL(
             Items.BLIGHTED_TELEPORT_SPELL_SACK,
             setOf(SpellbookData.TELEPORT_BLOCK.uniqueId),
-            wildernessOnly = true,
+            wildernessOnly = false,
         ),
         VENGEANCE(
             Items.BLIGHTED_VENGEANCE_SACK,

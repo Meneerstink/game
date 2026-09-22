@@ -20,7 +20,7 @@ class BlightedSacksTests {
         assertEquals(setOf(SpellbookData.BIND, SpellbookData.SNARE, SpellbookData.ENTANGLE).map { it.uniqueId }.toSet(), BlightedSacks.Sack.ENTANGLE.spells)
         assertEquals(setOf(SpellbookData.TELEPORT_BLOCK.uniqueId), BlightedSacks.Sack.TELEPORT_SPELL.spells)
         assertEquals(setOf(SpellbookData.VENGEANCE, SpellbookData.VENGEANCE_OTHER).map { it.uniqueId }.toSet(), BlightedSacks.Sack.VENGEANCE.spells)
-        assertTrue(BlightedSacks.Sack.TELEPORT_SPELL.wildernessOnly, "teleport spell sack: only inside the Wilderness")
+        assertFalse(BlightedSacks.Sack.TELEPORT_SPELL.wildernessOnly, "owner 2026-09-22: every sack works everywhere outside safe zones")
         assertFalse(BlightedSacks.Sack.ENTANGLE.wildernessOnly)
         assertFalse(BlightedSacks.Sack.ANCIENT_ICE.wildernessOnly)
         assertFalse(BlightedSacks.Sack.VENGEANCE.wildernessOnly)
