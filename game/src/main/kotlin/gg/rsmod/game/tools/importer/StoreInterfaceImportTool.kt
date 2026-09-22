@@ -70,18 +70,18 @@ object StoreInterfaceImportTool {
     const val PREVIEW_MODEL = PREVIEW_OUTLINE_FIRST + TAB_COUNT // 168
     const val CAROUSEL_PREVIOUS = PREVIEW_MODEL + 1
     const val CAROUSEL_NEXT = PREVIEW_MODEL + 2 // 170
-    const val RESULT_NAME = 171
-    const val KIT_NAME = 172
-    const val REQUIREMENT = 173
-    const val COSMETIC = 174
-    const val PRICE = 175
-    const val BUY_LAYER = 176
-    const val BUY_LEFT = 177
-    const val BUY_MIDDLE = 178
-    const val BUY_RIGHT = 179
-    const val BUY_TEXT = 180
-    const val EMPTY_TEXT = 181
-    const val COMPONENT_COUNT = 182
+    const val RESULT_NAME = CAROUSEL_NEXT + 1
+    const val KIT_NAME = RESULT_NAME + 1
+    const val REQUIREMENT = KIT_NAME + 1
+    const val COSMETIC = REQUIREMENT + 1
+    const val PRICE = COSMETIC + 1
+    const val BUY_LAYER = PRICE + 1
+    const val BUY_LEFT = BUY_LAYER + 1
+    const val BUY_MIDDLE = BUY_LAYER + 2
+    const val BUY_RIGHT = BUY_LAYER + 3
+    const val BUY_TEXT = BUY_LAYER + 4
+    const val EMPTY_TEXT = BUY_TEXT + 1
+    const val COMPONENT_COUNT = EMPTY_TEXT + 1
 
     /** Theme colour per shop tab (Donator gold, Deadman crimson, Loyalty azure), in tab order. */
     val THEME_COLOURS = intArrayOf(0xC9A227, 0xA11818, 0x2B8FBF)

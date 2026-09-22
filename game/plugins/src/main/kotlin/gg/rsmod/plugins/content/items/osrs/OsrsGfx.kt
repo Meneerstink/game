@@ -68,4 +68,34 @@ object OsrsGfx {
     const val DRAGON_TKNIFE_TRAVEL_SPEC = 3047 // OSRS 699
     const val DRAGON_TKNIFE_TRAVEL_SPEC_P = 3048 // OSRS 1629
     const val DRAGON_TKNIFE_LAUNCH = 3049 // OSRS 1630
+
+    /*
+     * Batch "surge" (owner 2026-09-20: "we need exact OSRS surge animations").
+     *
+     * All four elements share one casting model/sequence (OSRS model 34617, seq 7857 SURGE_CASTING), one travel
+     * model/sequence (34618, seq 7856 SURGE_TRAVEL) and one impact (model 3116, seq 693). What makes a surge look
+     * like wind, water, earth or fire is the spotanim's own opcode-40 recolour, e.g. the casting graphic recolours
+     * the same three source colours 0x1bc0 / 0x17c0 / 0x03c0 to 0x0052 / 0x007f / 0x003d for wind but
+     * 0xa9de / 0x97c0 / 0xabc0 for water. OsrsFxImportTool copies opcode 40 verbatim, so the four stay distinct.
+     */
+    const val WIND_SURGE_CASTING = 3066 // OSRS 1455 WINDSURGE_CASTING
+    const val WIND_SURGE_TRAVEL = 3067 // OSRS 1456 WINDSURGE_TRAVEL
+    const val WIND_SURGE_IMPACT = 3068 // OSRS 1457 WINDSURGE_IMPACT
+    const val WATER_SURGE_CASTING = 3069 // OSRS 1458 WATERSURGE_CASTING
+    const val WATER_SURGE_TRAVEL = 3070 // OSRS 1459 WATERSURGE_TRAVEL
+    const val WATER_SURGE_IMPACT = 3071 // OSRS 1460 WATERSURGE_IMPACT
+    const val EARTH_SURGE_CASTING = 3072 // OSRS 1461 EARTHSURGE_CASTING
+    const val EARTH_SURGE_TRAVEL = 3073 // OSRS 1462 EARTHSURGE_TRAVEL
+    const val EARTH_SURGE_IMPACT = 3074 // OSRS 1463 EARTHSURGE_IMPACT
+    const val FIRE_SURGE_CASTING = 3075 // OSRS 1464 FIRESURGE_CASTING
+    const val FIRE_SURGE_TRAVEL = 3076 // OSRS 1465 FIRESURGE_TRAVEL
+    const val FIRE_SURGE_IMPACT = 3077 // OSRS 1466 FIRESURGE_IMPACT
+
+    /*
+     * Batch "teleblock" (owner 2026-09-22: Tele Block "osrs animations exactly"). OSRS has no Tele Block casting
+     * spotanim; the projectile is 1300 (model 5800, seq 1821 TELE_BLOCK_TRAVEL) and the impact 345 (model 5799,
+     * seq 1822 TELE_BLOCK_IMPACT).
+     */
+    const val TELE_BLOCK_TRAVEL = 3078 // OSRS 1300 TELE_BLOCK_TRAVEL_FORFAIL
+    const val TELE_BLOCK_IMPACT = 3079 // OSRS 345 TELE_BLOCK_IMPACT
 }

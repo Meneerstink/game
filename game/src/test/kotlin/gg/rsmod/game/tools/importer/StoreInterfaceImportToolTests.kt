@@ -37,7 +37,9 @@ class StoreInterfaceImportToolTests {
         assertEquals(1, model.resizeX)
         val scaleX = StoreInterfaceImportTool.PREVIEW_WIDTH.toDouble() / StoreInterfaceImportTool.PREVIEW_ASPECT_X
         val scaleY = StoreInterfaceImportTool.PREVIEW_HEIGHT.toDouble() / StoreInterfaceImportTool.PREVIEW_ASPECT_Y
-        assertTrue(scaleX > 3.0 && scaleY > 3.0, "preview too small: ${scaleX}x / ${scaleY}x")
+        // Owner 2026-09-22: the client fits every item to this box (InterfaceManager.fitModelToBox, interface 1151), so the
+        // cached scale is only the fallback; it must still fit a long weapon's ~48-unit diagonal inside the panel.
+        assertTrue(48 * scaleY <= StoreInterfaceImportTool.PREVIEW_HEIGHT, "fallback scale crops long items: ${scaleY}x")
         assertTrue(36 * scaleX <= StoreInterfaceImportTool.PREVIEW_WIDTH && 32 * scaleY <= StoreInterfaceImportTool.PREVIEW_HEIGHT, "item cropped")
         assertTrue(kotlin.math.abs(scaleX - scaleY) < 0.1, "stretched: ${scaleX}x vs ${scaleY}x")
     }

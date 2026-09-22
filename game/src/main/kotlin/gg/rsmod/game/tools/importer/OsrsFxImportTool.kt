@@ -79,6 +79,33 @@ object OsrsFxImportTool {
                     2655, 2901, // VFX_MAHJARRAT_TELEPORT_ZEMOUREGAL, VFX_MAHJARRAT_SUMMON_ZEMOUREGAL
                     1272, // BLACK_CHINCHOMPA_GRENADE (Ranging Ro)
                 ),
+            /*
+             * Owner 2026-09-20: "we need exact OSRS surge animations".
+             *
+             * The cast sequence was already imported (OSRS 7855 HUMAN_CAST_SURGE -> OsrsSeq.HUMAN_CAST_SURGE); what
+             * was still 667 art is the casting, travel and impact graphics. The four surges used a mix: only Earth
+             * had a real 667 surge cast graphic, Water and Fire fell back to the generic element cast, and Wind was
+             * firing the *wave* projectile. These twelve spotanims replace all of that with the OSRS set.
+             *
+             * Names and ids from RuneLite `gameval/SpotanimID.java`:
+             *   wind  1455/1456/1457, water 1458/1459/1460, earth 1461/1462/1463, fire 1464/1465/1466
+             * (CASTING / TRAVEL / IMPACT each). The `*_CASTING_FAST` variants 2903-2906 are the fast-cast animation
+             * set and are deliberately not imported - this server casts surges on the normal 5-tick cycle.
+             */
+            "surge" to
+                listOf(
+                    1455, 1456, 1457, // WINDSURGE_CASTING / TRAVEL / IMPACT
+                    1458, 1459, 1460, // WATERSURGE_CASTING / TRAVEL / IMPACT
+                    1461, 1462, 1463, // EARTHSURGE_CASTING / TRAVEL / IMPACT
+                    1464, 1465, 1466, // FIRESURGE_CASTING / TRAVEL / IMPACT
+                ),
+            /*
+             * Owner 2026-09-22: Tele Block "osrs animations exactly". OSRS casts it with no casting spotanim; the
+             * projectile is 1300 TELE_BLOCK_TRAVEL_FORFAIL (model 5800, seq 1821 TELE_BLOCK_TRAVEL, the only OSRS
+             * spotanim on that sequence) and the impact 345 TELE_BLOCK_IMPACT (model 5799, seq 1822). 667 spotanim
+             * 1300 is an unrelated graphic, so both are imported rather than referenced by id.
+             */
+            "teleblock" to listOf(1300, 345),
         )
 
     /**
@@ -89,6 +116,15 @@ object OsrsFxImportTool {
      */
     val SEQ_BATCHES: Map<String, List<Int>> =
         mapOf(
+            // Owner 2026-09-21 ("there is no breach"): the loc animations of OSRS "Breach" 49561 and "Boss Spawn"
+            // 49563, kept here as the record of a settled question. `OsrsLocImportTool` dropped both animations as
+            // "not an imported classic sequence", so the obvious next step was to import the sequences and re-import
+            // the locs with them. This batch is that attempt, and it is REFUSED: `decodeOsrsSeq` reports both as
+            // skeletal (animaya) sequences, which revision 667 cannot represent - and `OsrsLocImportTool` separately
+            // drops the two models' animaya skinning for the same reason. The breach therefore cannot animate itself
+            // in this cache by any import, which is why `DeadmanBreach` pulses a graphic over it instead. Running
+            // this batch re-proves that in a few seconds; it can never apply anything.
+            "breach-anim" to listOf(10418, 10423),
             "weaponseq1" to
                 listOf(
                     3294, 3295, 3296, 3297, 3300, // ABYSSAL_DAGGER_HACK / BLOCK / IDLE / LUNGE / SPECIAL

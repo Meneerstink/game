@@ -9,6 +9,7 @@ import gg.rsmod.game.model.entity.GroundItem
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.game.service.log.LoggerService
+import gg.rsmod.plugins.api.ext.isMulti
 import gg.rsmod.plugins.api.ext.refreshBonuses
 
 /**
@@ -93,6 +94,12 @@ object DeathExecutor {
 
         if (result.context == DeathContext.WILDERNESS_PVP && result.killer != null) {
             gg.rsmod.plugins.content.mechanics.pvp.Killstreaks.onWildernessKill(result.killer, victim)
+            // Grant once, after a resolved PvP death, not on a speculative/lethal combat hit.
+            // The timer's HUD and attack gate already consume KillGrace; previously nothing
+            // in production ever started it. Multi-combat kills do not earn protection.
+            if (result.killer !== victim && !victim.tile.isMulti(world)) {
+                gg.rsmod.plugins.content.mechanics.pvp.KillGrace.grant(result.killer, victim)
+            }
         }
 
         if (toRemove.isEmpty()) {

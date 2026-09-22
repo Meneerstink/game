@@ -289,14 +289,35 @@ enum class CombatSpell(
         experience = 42.5,
     ),
 
+    /*
+     * The four Surges (owner 2026-09-20: "we need exact OSRS surge animations"; the fire and water ones were still
+     * showing 667 art).
+     *
+     * SOURCE: RuneLite `gameval/SpotanimID.java` WINDSURGE / WATERSURGE / EARTHSURGE / FIRESURGE _CASTING, _TRAVEL
+     * and _IMPACT (OSRS 1455-1466), imported into both caches by `OsrsFxImportTool` batch "surge" and listed in
+     * [gg.rsmod.plugins.content.items.osrs.OsrsGfx]; the cast sequence is OSRS 7855 HUMAN_CAST_SURGE.
+     *
+     * Before this, only Earth had a real 667 surge cast graphic: Water and Fire fell back to the generic element
+     * cast graphic and Wind was firing WIND_WAVE_PROJ - the wave projectile - which is why they read as "the old
+     * build". All four now use the OSRS casting / travel / impact set.
+     *
+     * ADAPTED: heights are not carried by the cache (see OsrsGfx), so the established 22 for a cast stays. The
+     * impact height is 32 for all four; Wind previously used 96, but the OSRS impact spotanims are one shared
+     * model and sequence recoloured per element, so one height is right for all of them.
+     *
+     * Fire Surge fires ONE projectile, like the other three. The 667 base gave every Fire spell a three-projectile
+     * volley (`secondProjectile` / `thirdProjectile`, still used by Fire Blast and Fire Wave); OSRS does not - each
+     * surge sends a single FIRESURGE_TRAVEL. Keeping the volley was wrong and the owner called it out on
+     * 2026-09-20 ("its shooting another projectile ... should be the fire surge from osrs").
+     */
     WIND_SURGE(
         uniqueId = 815,
         componentId = 84,
         maxHit = 21,
-        castGfx = Graphic(Gfx.WIND_SPELL_CAST, 22),
+        castGfx = Graphic(gg.rsmod.plugins.content.items.osrs.OsrsGfx.WIND_SURGE_CASTING, 22),
         castAnimation = arrayOf(gg.rsmod.plugins.content.items.osrs.OsrsSeq.HUMAN_CAST_SURGE, gg.rsmod.plugins.content.items.osrs.OsrsSeq.HUMAN_CAST_SURGE), // OSRS 7855 HUMAN_CAST_SURGE: every Surge, staff or not
-        projectile = Gfx.WIND_WAVE_PROJ,
-        impactGfx = Graphic(Gfx.WIND_SURGE_IMPACT, 96),
+        projectile = gg.rsmod.plugins.content.items.osrs.OsrsGfx.WIND_SURGE_TRAVEL,
+        impactGfx = Graphic(gg.rsmod.plugins.content.items.osrs.OsrsGfx.WIND_SURGE_IMPACT, 32),
         autoCastId = 47,
         experience = 44.5,
     ),
@@ -305,10 +326,10 @@ enum class CombatSpell(
         uniqueId = 816,
         componentId = 87,
         maxHit = 22,
-        castGfx = Graphic(Gfx.WATER_SPELL_CAST, 22),
+        castGfx = Graphic(gg.rsmod.plugins.content.items.osrs.OsrsGfx.WATER_SURGE_CASTING, 22),
         castAnimation = arrayOf(gg.rsmod.plugins.content.items.osrs.OsrsSeq.HUMAN_CAST_SURGE, gg.rsmod.plugins.content.items.osrs.OsrsSeq.HUMAN_CAST_SURGE), // OSRS 7855 HUMAN_CAST_SURGE: every Surge, staff or not
-        projectile = Gfx.WATER_SURGE_PROJ,
-        impactGfx = Graphic(Gfx.WATER_SURGE_IMPACT, 32),
+        projectile = gg.rsmod.plugins.content.items.osrs.OsrsGfx.WATER_SURGE_TRAVEL,
+        impactGfx = Graphic(gg.rsmod.plugins.content.items.osrs.OsrsGfx.WATER_SURGE_IMPACT, 32),
         autoCastId = 49,
         experience = 46.5,
     ),
@@ -317,10 +338,10 @@ enum class CombatSpell(
         uniqueId = 817,
         componentId = 89,
         maxHit = 23,
-        castGfx = Graphic(Gfx.EARTH_SURGE_CAST, 22),
+        castGfx = Graphic(gg.rsmod.plugins.content.items.osrs.OsrsGfx.EARTH_SURGE_CASTING, 22),
         castAnimation = arrayOf(gg.rsmod.plugins.content.items.osrs.OsrsSeq.HUMAN_CAST_SURGE, gg.rsmod.plugins.content.items.osrs.OsrsSeq.HUMAN_CAST_SURGE), // OSRS 7855 HUMAN_CAST_SURGE: every Surge, staff or not
-        projectile = Gfx.EARTH_SURGE_PROJ,
-        impactGfx = Graphic(Gfx.EARTH_SURGE_IMPACT, 32),
+        projectile = gg.rsmod.plugins.content.items.osrs.OsrsGfx.EARTH_SURGE_TRAVEL,
+        impactGfx = Graphic(gg.rsmod.plugins.content.items.osrs.OsrsGfx.EARTH_SURGE_IMPACT, 32),
         autoCastId = 51,
         experience = 48.5,
     ),
@@ -329,12 +350,10 @@ enum class CombatSpell(
         uniqueId = 818,
         componentId = 91,
         maxHit = 24,
-        castGfx = Graphic(Gfx.FIRE_SPELL_CAST, 22),
+        castGfx = Graphic(gg.rsmod.plugins.content.items.osrs.OsrsGfx.FIRE_SURGE_CASTING, 22),
         castAnimation = arrayOf(gg.rsmod.plugins.content.items.osrs.OsrsSeq.HUMAN_CAST_SURGE, gg.rsmod.plugins.content.items.osrs.OsrsSeq.HUMAN_CAST_SURGE), // OSRS 7855 HUMAN_CAST_SURGE: every Surge, staff or not
-        projectile = Gfx.FIRE_SURGE_PROJ,
-        secondProjectile = Gfx.FIRE_SURGE_PROJ_2,
-        thirdProjectile = Gfx.FIRE_SURGE_PROJ_2,
-        impactGfx = Graphic(Gfx.FIRE_SURGE_IMPACT, 32),
+        projectile = gg.rsmod.plugins.content.items.osrs.OsrsGfx.FIRE_SURGE_TRAVEL,
+        impactGfx = Graphic(gg.rsmod.plugins.content.items.osrs.OsrsGfx.FIRE_SURGE_IMPACT, 32),
         autoCastId = 53,
         experience = 50.5,
     ),
@@ -392,7 +411,7 @@ enum class CombatSpell(
         componentId = 36,
         maxHit = 0,
         castGfx = Graphic(177, 96),
-        castAnimation = arrayOf(710, 710),
+        castAnimation = arrayOf(710, 1161), // OSRS 710 HUMAN_CASTENTANGLE / 1161 HUMAN_CASTENTANGLE_STAFF (667 sequences match OSRS frame for frame)
         projectile = 178,
         impactGfx = Graphic(181, 96),
         autoCastId = -1,
@@ -405,7 +424,7 @@ enum class CombatSpell(
         componentId = 55,
         maxHit = 0,
         castGfx = Graphic(177, 96),
-        castAnimation = arrayOf(710, 710),
+        castAnimation = arrayOf(710, 1161), // OSRS 710 HUMAN_CASTENTANGLE / 1161 HUMAN_CASTENTANGLE_STAFF (667 sequences match OSRS frame for frame)
         projectile = 178,
         impactGfx = Graphic(180, 96),
         autoCastId = -1,
@@ -418,7 +437,7 @@ enum class CombatSpell(
         componentId = 81,
         maxHit = 0,
         castGfx = Graphic(177, 96),
-        castAnimation = arrayOf(710, 710),
+        castAnimation = arrayOf(710, 1161), // OSRS 710 HUMAN_CASTENTANGLE / 1161 HUMAN_CASTENTANGLE_STAFF (667 sequences match OSRS frame for frame)
         projectile = 178,
         impactGfx = Graphic(179, 96),
         autoCastId = -1,
@@ -469,10 +488,10 @@ enum class CombatSpell(
         uniqueId = 1565,
         componentId = 86,
         maxHit = 0,
-        castGfx = Graphic(1841, 0),
+        castGfx = null, // OSRS Tele Block has no casting spotanim (owner 2026-09-22: "osrs animations exactly")
         castAnimation = arrayOf(gg.rsmod.plugins.content.items.osrs.OsrsSeq.HUMAN_CASTING_TELE_BLOCK, gg.rsmod.plugins.content.items.osrs.OsrsSeq.HUMAN_CASTING_TELE_BLOCK_STAFF), // OSRS 1819 / 1820 (owner 2026-09-19)
-        projectile = 1842,
-        impactGfx = Graphic(1843, 0),
+        projectile = gg.rsmod.plugins.content.items.osrs.OsrsGfx.TELE_BLOCK_TRAVEL,
+        impactGfx = Graphic(gg.rsmod.plugins.content.items.osrs.OsrsGfx.TELE_BLOCK_IMPACT, 0),
         autoCastId = -1,
         experience = 80.0,
         effect = SpellEffect.Teleblock,

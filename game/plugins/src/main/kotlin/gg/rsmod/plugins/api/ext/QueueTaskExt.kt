@@ -82,12 +82,31 @@ inline val QueueTask.npc: Npc get() = ctx as Npc
  * @return
  * The id of the option chosen. The id can range from [1] inclusive to [options] inclusive.
  */
+/**
+ * Owner 2026-09-20 ("when talking to oneiromancer and if u select one of the option the client crashes"). The chatbox
+ * dialogue interfaces have a fixed number of text components; writing to one they do not define makes the client throw
+ * and drop the connection. These are the real capacities in the revision-667 cache:
+ *  - NPC chat   241..244 -> 1..4 lines (245 is not a 5-line layout, it only has components 0..4)
+ *  - Player chat 64..67  -> 1..4 lines (68 likewise)
+ *  - Options    228..240 -> 2..8 entries (226, the "1 option" slot, only has components 0..1)
+ * Everything that builds a chatbox dialogue goes through the helpers below, so clamping here covers every caller.
+ */
+const val MAX_DIALOG_LINES = 4
+const val MAX_DIALOG_OPTIONS = 8
+
 suspend fun QueueTask.options(
     vararg options: String,
     title: String = "Select an Option",
 ): Int {
     if (terminated) return -1
-    val optionsFiltered = options.filterNot { it.isEmpty() || it == "" }
+    // Interfaces 228..240 are the 2..8 option chatboxes. 226 (the "1 option" slot) only defines components 0 and 1,
+    // so a single-option call used to write to a component the interface does not have and the client dropped the
+    // connection. Pad to the smallest real layout instead, and never ask for more entries than 240 provides.
+    val optionsFiltered =
+        options
+            .filterNot { it.isEmpty() || it == "" }
+            .let { if (it.size < 2) it + "Cancel" else it }
+            .take(MAX_DIALOG_OPTIONS)
     val interfaceId = 224 + (2 * optionsFiltered.size)
 
     player.openInterface(interfaceId = interfaceId, parent = 752, child = 13)
@@ -293,13 +312,19 @@ private suspend fun QueueTask.messageBox5(vararg message: String) {
  *
  * @title
  * The title of the dialog, if left as null, the npc's name will be used.
+ *
+ * @wrap
+ * Whether a line too long for the dialogue box is split across lines instead of being cut off at the edge. On by
+ * default since 2026-09-21: the owner's Estate agent screenshot showed "...changes to your hou:" running off the
+ * box, and a line that does not fit is never what a caller wanted, on any npc. [gg.rsmod.util.TextWrapping] splits
+ * at 50 characters and returns a short line untouched, so this costs a caller with short lines nothing.
  */
 suspend fun QueueTask.chatNpc(
     vararg message: String,
     npc: Int = -1,
     facialExpression: FacialExpression = FacialExpression.HAPPY_TALKING,
     title: String? = null,
-    wrap: Boolean = false,
+    wrap: Boolean = true,
     animationOverride: Int? = null,
 ) {
     var npcId =
@@ -325,22 +350,27 @@ suspend fun QueueTask.chatNpc(
             message.toList()
         }
 
-    val interfaceId = 240 + wrappedMessages.size
-    player.openInterface(interfaceId = interfaceId, parent = 752, child = 13)
-    player.setComponentNpcHead(interfaceId = interfaceId, component = 2, npc = npcId)
-    player.setComponentAnim(
-        interfaceId = interfaceId,
-        component = 2,
-        anim = animationOverride ?: facialExpression.animationId,
-    )
-    player.setComponentText(interfaceId = interfaceId, component = 3, text = dialogTitle)
-    for (i in wrappedMessages.indices) {
-        player.setComponentText(interfaceId = interfaceId, component = i + 4, text = wrappedMessages[i])
-    }
+    // Interfaces 241..244 hold 1..4 lines; anything longer is shown as consecutive pages rather than addressing
+    // components the interface does not define (see [MAX_DIALOG_LINES]).
+    val pages = if (wrappedMessages.isEmpty()) listOf(listOf("")) else wrappedMessages.chunked(MAX_DIALOG_LINES)
+    for (page in pages) {
+        val interfaceId = 240 + page.size
+        player.openInterface(interfaceId = interfaceId, parent = 752, child = 13)
+        player.setComponentNpcHead(interfaceId = interfaceId, component = 2, npc = npcId)
+        player.setComponentAnim(
+            interfaceId = interfaceId,
+            component = 2,
+            anim = animationOverride ?: facialExpression.chatheadAnimation(player.world, npcId),
+        )
+        player.setComponentText(interfaceId = interfaceId, component = 3, text = dialogTitle)
+        for (i in page.indices) {
+            player.setComponentText(interfaceId = interfaceId, component = i + 4, text = page[i])
+        }
 
-    terminateAction = closeDialog
-    waitReturnValue()
-    terminateAction!!(this)
+        terminateAction = closeDialog
+        waitReturnValue()
+        terminateAction!!(this)
+    }
 }
 
 /**
@@ -353,7 +383,7 @@ suspend fun QueueTask.chatPlayer(
     vararg message: String,
     facialExpression: FacialExpression = FacialExpression.HAPPY_TALKING,
     title: String? = null,
-    wrap: Boolean = false,
+    wrap: Boolean = true,
 ) {
     val dialogTitle = title ?: Misc.formatForDisplay(player.username)
 
@@ -364,18 +394,22 @@ suspend fun QueueTask.chatPlayer(
             message.toList()
         }
 
-    val interfaceId = 63 + wrappedMessages.size
-    player.openInterface(interfaceId = interfaceId, parent = 752, child = 13)
-    player.setComponentPlayerHead(interfaceId = interfaceId, component = 2)
-    player.setComponentAnim(interfaceId = interfaceId, component = 2, anim = facialExpression.animationId)
-    player.setComponentText(interfaceId = interfaceId, component = 3, text = dialogTitle)
-    for (i in wrappedMessages.indices) {
-        player.setComponentText(interfaceId = interfaceId, component = i + 4, text = wrappedMessages[i])
-    }
+    // Interfaces 64..67 hold 1..4 lines; see [MAX_DIALOG_LINES].
+    val pages = if (wrappedMessages.isEmpty()) listOf(listOf("")) else wrappedMessages.chunked(MAX_DIALOG_LINES)
+    for (page in pages) {
+        val interfaceId = 63 + page.size
+        player.openInterface(interfaceId = interfaceId, parent = 752, child = 13)
+        player.setComponentPlayerHead(interfaceId = interfaceId, component = 2)
+        player.setComponentAnim(interfaceId = interfaceId, component = 2, anim = facialExpression.animationId)
+        player.setComponentText(interfaceId = interfaceId, component = 3, text = dialogTitle)
+        for (i in page.indices) {
+            player.setComponentText(interfaceId = interfaceId, component = i + 4, text = page[i])
+        }
 
-    terminateAction = closeDialog
-    waitReturnValue()
-    terminateAction!!(this)
+        terminateAction = closeDialog
+        waitReturnValue()
+        terminateAction!!(this)
+    }
 }
 
 /**
