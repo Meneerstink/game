@@ -1,6 +1,8 @@
 package gg.rsmod.plugins.content.mechanics.canoes
 
 import gg.rsmod.game.model.attr.CANOE_VARBIT
+import gg.rsmod.plugins.content.mechanics.pvp.DeadmanTimerGate
+import gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction
 import gg.rsmod.plugins.content.skills.woodcutting.AxeType
 import kotlin.math.abs
 
@@ -134,11 +136,12 @@ locationChildIds.forEach { button ->
          * TODO HERE; Add check for familiar, and stop user if they have one following them.
          */
 
-        player.lockingQueue(priority = TaskPriority.STRONG) {
-            // Close the destination map interface.
-            player.closeInterface(interfaceId = CanoeUtils.DESTINATION_INTERFACE)
+        // Close the destination map before opening the shared Deadman countdown in the chatbox.
+        player.closeInterface(interfaceId = CanoeUtils.DESTINATION_INTERFACE)
+        DeadmanTimerGate.requestRoute(player, SevenSecondAction.Kind.TRANSPORT) {
+            player.lockingQueue(priority = TaskPriority.STRONG) {
 
-            player.lockingQueue {
+                player.lockingQueue {
 
                 // Fade screen to black.
                 player.openFullscreenInterface(interfaceId = 120)
@@ -173,6 +176,7 @@ locationChildIds.forEach { button ->
 
                 // Reset tree to unused.
                 CanoeUtils.updateCanoeStations(player)
+                }
             }
         }
     }

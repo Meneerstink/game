@@ -2,6 +2,8 @@ package gg.rsmod.plugins.content.areas.portsarim
 
 import gg.rsmod.plugins.api.cfg.Npcs
 import gg.rsmod.plugins.content.mechanics.shops.CoinCurrency
+import gg.rsmod.plugins.content.mechanics.pvp.DeadmanTimerGate
+import gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction
 import gg.rsmod.plugins.content.quests.finishedQuest
 import gg.rsmod.plugins.content.quests.impl.PiratesTreasure
 
@@ -20,6 +22,17 @@ fun setSail(
 ) {
     player.closeInterface(CHARTER_SELECTION_INTERFACE)
     player.interruptQueues()
+    DeadmanTimerGate.requestRoute(player, SevenSecondAction.Kind.TRANSPORT) {
+        sail(player, charter, port, cost)
+    }
+}
+
+fun sail(
+    player: Player,
+    charter: CharterType,
+    port: Ports,
+    cost: Int,
+) {
     player.lockingQueue(TaskPriority.WEAK) {
         val varpValue = charter.varpValue
         val delay = charter.delay

@@ -25,8 +25,10 @@ class TeleportRouteCoverageTests {
     fun `ring of kinship teleport checks the shared combat lockout before queuing`() {
         assertTrue(ringOfKinship.exists(), "Ring of Kinship plugin source is missing")
         val source = ringOfKinship.readText()
-        val gateIndex = source.indexOf("player.canTeleport(TeleportType.RING_OF_KINSHIP) {")
-        val teleportIndex = source.indexOf("player.teleport(tile, TeleportType.RING_OF_KINSHIP)")
+        // The production helper is an extension on Player, so it is valid both as
+        // `player.canTeleport(...)` and from a Player receiver as `canTeleport(...)`.
+        val gateIndex = source.indexOf("canTeleport(TeleportType.RING_OF_KINSHIP) {")
+        val teleportIndex = source.indexOf("teleport(tile, TeleportType.RING_OF_KINSHIP)")
         assertTrue(gateIndex >= 0, "must call the shared canTeleport gate")
         assertTrue(teleportIndex >= 0, "must still actually teleport the player")
         assertTrue(teleportIndex > gateIndex, "the teleport call must be inside the canTeleport callback, not before/outside it")

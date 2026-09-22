@@ -523,18 +523,12 @@ abstract class Player(
             }
 
             /*
-             * A player should only be unregistered from the world when they
-             * do not have [ACTIVE_COMBAT_TIMER] or its cycles are <= 0, or if
-             * their channel has been inactive for a while.
-             *
-             * We do allow players to disconnect even if they are in combat, but
-             * only if the most recent damage dealt to them are by npcs.
+             * Deadman disconnects remain registered while [DEADMAN_LOGOUT_TIMER] is active.
+             * Combat owns that timer for both sides of PvP and ordinary-PvM encounters; boss
+             * combat deliberately does not arm it. This avoids inferring ownership from stale
+             * damage-map entries and gives X-log the same seven-second rule as the logout UI.
              */
-            val stopLogout =
-                timers.has(ACTIVE_COMBAT_TIMER) &&
-                    damageMap
-                        .getAll(type = EntityType.PLAYER, timeFrameMs = 10_000)
-                        .isNotEmpty()
+            val stopLogout = timers.has(DEADMAN_LOGOUT_TIMER)
             val forceLogout = timers.exists(FORCE_DISCONNECTION_TIMER) && !timers.has(FORCE_DISCONNECTION_TIMER)
 
             /*
@@ -757,7 +751,15 @@ abstract class Player(
      * Requests for this player to log out. However, the player may not be able
      * to log out immediately under certain circumstances.
      */
-    fun requestLogout() {
+    fun requestLogout(deadmanDelayHandled: Boolean = false) {
+        if (deadmanDelayHandled) {
+            timers.remove(DEADMAN_LOGOUT_TIMER)
+        } else if (timers.has(DEADMAN_LOGOUT_TIMER) || timers.has(SKULL_ICON_DURATION_TIMER)) {
+            // A dropped channel has no further packets with which to drive SevenSecondAction.
+            // Refresh the server-side body hold here so closing the client is never faster than
+            // using the visible logout button.
+            timers[DEADMAN_LOGOUT_TIMER] = 12
+        }
         pendingLogout = true
         setDisconnectionTimer = true
     }

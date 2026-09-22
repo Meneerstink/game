@@ -15,6 +15,7 @@ import gg.rsmod.plugins.content.mechanics.poison.Venom
 import gg.rsmod.plugins.content.mechanics.prayer.Prayers
 import gg.rsmod.plugins.content.mechanics.prayer.AncientCurses
 import gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction
+import gg.rsmod.plugins.content.mechanics.pvp.DeadmanTimerGate
 import gg.rsmod.plugins.content.magic.Spellbooks
 import gg.rsmod.plugins.content.magic.teleports.TeleportSpell
 
@@ -88,14 +89,14 @@ fun enterHouse(player: Player): Boolean {
 
 // Rimmington house portal: walks into the same private house.
 on_obj_option(obj = PlayerHouse.RIMMINGTON_PORTAL, option = "enter") {
-    SevenSecondAction.start(player, SevenSecondAction.Kind.PORTAL) {
+    DeadmanTimerGate.requestRoute(player, SevenSecondAction.Kind.PORTAL) {
         enterHouse(player)
     }
 }
 
 // Exit portal.
 on_obj_option(obj = PlayerHouse.PORTAL, option = "enter") {
-    SevenSecondAction.start(player, SevenSecondAction.Kind.PORTAL) {
+    DeadmanTimerGate.requestRoute(player, SevenSecondAction.Kind.PORTAL) {
         player.moveTo(PlayerHouse.EXIT_TILE)
     }
 }
@@ -195,7 +196,7 @@ on_obj_option(obj = PlayerHouse.GLORY, option = "rub") {
         val choice = options("Edgeville.", "Karamja.", "Draynor Village.", "Al Kharid.", "Nowhere.")
         val destination = GLORY_DESTINATIONS.getOrNull(choice - 1) ?: return@queue
         player.canTeleport(TeleportType.JEWELRY) {
-            world.spawn(AreaSound(player.tile, 200, 5, 20))
+            // Teleport sound: TeleportType.JEWELRY in the shared teleport.
             player.teleport(destination, TeleportType.JEWELRY)
         }
     }

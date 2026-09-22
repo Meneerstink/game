@@ -48,6 +48,14 @@ val RESPAWN_TILE_ATTR = AttributeKey<Int>(persistenceKey = "respawn_tile")
 val LAST_ACTIVE_CYCLE_ATTR = AttributeKey<Int>()
 
 /**
+ * Session-local interrupt installed by a server-owned action which must be cancelled by the
+ * player's next deliberate input. Deadman escape countdowns use this shared packet-boundary hook
+ * so eating, attacking, opening an interface, clicking an object, or any other action all cancel
+ * the pending escape consistently instead of relying on a partial list of plugin handlers.
+ */
+val PLAYER_ACTION_INTERRUPT_ATTR = AttributeKey<() -> Unit>()
+
+/**
  * A flag which indicates that the player will not take collision into account
  * when walking.
  */

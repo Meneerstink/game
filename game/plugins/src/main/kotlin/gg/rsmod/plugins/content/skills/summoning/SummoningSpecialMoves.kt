@@ -31,6 +31,8 @@ import gg.rsmod.plugins.content.combat.dealHit
 import gg.rsmod.plugins.content.combat.getCombatTarget
 import gg.rsmod.plugins.content.combat.poison
 import gg.rsmod.plugins.content.items.food.Food
+import gg.rsmod.plugins.content.magic.TeleportType
+import gg.rsmod.plugins.content.magic.canTeleport
 import gg.rsmod.plugins.content.skills.cooking.CookingData
 import kotlin.math.ceil
 
@@ -619,6 +621,21 @@ object SummoningSpecialMoves {
         val resolved = validateResources(player, binding) ?: return false
         val familiar = resolved.familiar
         val scroll = resolved.scroll
+        if (scroll == SummoningScrollData.CALL_TO_ARMS_SCROLL) {
+            var completedImmediately = false
+            val allowed =
+                player.canTeleport(TeleportType.SCROLL) {
+                    // A delayed Deadman teleport must revalidate the scroll and special energy at
+                    // completion. Nothing is paid at request time, so cancellation cannot consume
+                    // resources and a changed inventory cannot produce a free teleport.
+                    val current = validateResources(player, binding) ?: return@canTeleport
+                    if (current.scroll != scroll || !commitResources(player, current.scroll)) return@canTeleport
+                    player.moveTo(Tile(VOID_OUTPOST_X, VOID_OUTPOST_Z, 0))
+                    Familiar.call(player)
+                    completedImmediately = true
+                }
+            return allowed && completedImmediately
+        }
         val changed = when (scroll) {
             SummoningScrollData.VENOM_SHOT_SCROLL -> chargeVenomShot(player, familiar)
             SummoningScrollData.STONY_SHELL_SCROLL ->
@@ -636,14 +653,7 @@ object SummoningSpecialMoves {
              * Squire (Novice) at 2657,2637 in `spawns_10537.plugin.kts`, so this lands the player
              * beside a live, populated part of the outpost rather than at a guessed coordinate.
              */
-            SummoningScrollData.CALL_TO_ARMS_SCROLL -> {
-                // No teleport animation or graphic id for this scroll could be sourced from this
-                // cache, so none is played rather than a guessed one - same rule as the familiar
-                // call/summon visual, which is still an open blocker.
-                player.moveTo(Tile(VOID_OUTPOST_X, VOID_OUTPOST_Z, 0))
-                Familiar.call(player)
-                true
-            }
+            SummoningScrollData.CALL_TO_ARMS_SCROLL -> error("Call to Arms is handled by the shared teleport gate above")
             SummoningScrollData.UNBURDEN_SCROLL -> {
                 val restored = restoreRunEnergy(player)
                 if (restored) animateSelf(player, familiar, 7896, 1382)

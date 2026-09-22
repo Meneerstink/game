@@ -1,7 +1,8 @@
 package gg.rsmod.plugins.content.areas.lumbridge
 
 import gg.rsmod.plugins.content.magic.TeleportType
-import gg.rsmod.plugins.content.magic.prepareForTeleport
+import gg.rsmod.plugins.content.magic.canTeleport
+import gg.rsmod.plugins.content.magic.teleport
 import gg.rsmod.plugins.content.quests.getCurrentStage
 import gg.rsmod.plugins.content.quests.impl.LostCity
 
@@ -42,31 +43,10 @@ on_obj_option(Objs.DOOR_2406, "open") {
 }
 
 fun zanarisTeleport(player: Player) {
-    val type = TeleportType.FAIRY
     if (player.tile in inShed) {
-        player.lockingQueue {
+        player.canTeleport(TeleportType.FAIRY) {
             player.message("The world starts to shimmer...")
-            player.playSound(Sfx.FT_FAIRY_TELEPORT)
-            player.prepareForTeleport()
-            player.animate(type.animation)
-            type.graphic?.let {
-                player.graphic(it)
-            }
-            wait(type.teleportDelay)
-            player.teleportTo(zanarisTile)
-            type.endAnimation?.let {
-                player.animate(it)
-            }
-            type.endGraphic?.let {
-                player.graphic(it)
-            }
-            type.endAnimation?.let {
-                val def = world.definitions.get(AnimDef::class.java, it)
-                wait(def.cycleLength)
-            }
-            player.animate(Anims.RESET)
-            player.unlock()
-            wait(2)
+            player.teleport(zanarisTile, TeleportType.FAIRY)
             if (player.getCurrentStage(LostCity) == LostCity.CREATE_DRAMEN_BRANCH) {
                 LostCity.finishQuest(player)
             }

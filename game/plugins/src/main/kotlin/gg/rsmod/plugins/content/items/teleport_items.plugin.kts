@@ -192,3 +192,24 @@ val MEDALLION_DESTS =
     )
 bindTeleport(Items.DRAKANS_MEDALLION, "Teleport", null, null, MEDALLION_DESTS, TeleportType.DRAKAN_MEDALLION)
 bindTeleport(Items.DRAKANS_MEDALLION, "Teleport", EquipmentType.AMULET, null, MEDALLION_DESTS, TeleportType.DRAKAN_MEDALLION)
+
+/**
+ * Grand seed pod Squash. Cache evidence: item 9469 advertises Launch and Squash. The 2011 item
+ * teleports from up to level 30 Wilderness, consumes one pod, drains Farming by five, and lands
+ * beside King Narnode on the Grand Tree ground floor. The landing tile is derived from this
+ * cache's King Narnode spawn (2466,3497,0), not guessed.
+ *
+ * Launch deliberately remains separate: it requires an outdoor-only delayed Captain Lamdoo
+ * pickup to the top-floor glider and the available source does not establish its exact delay.
+ */
+on_item_option(item = Items.GRAND_SEED_POD, option = "Squash") {
+    player.canTeleport(TeleportType.GRAND_SEED_POD) {
+        val slot = player.inventory.getItemIndex(Items.GRAND_SEED_POD, skipAttrItems = false)
+        if (slot == -1 || !player.inventory.remove(Items.GRAND_SEED_POD, beginSlot = slot).hasSucceeded()) {
+            return@canTeleport
+        }
+        val farming = player.skills.getCurrentLevel(Skills.FARMING)
+        player.skills.setCurrentLevel(Skills.FARMING, (farming - 5).coerceAtLeast(0))
+        player.teleport(Tile(2465, 3497, 0), TeleportType.GRAND_SEED_POD)
+    }
+}

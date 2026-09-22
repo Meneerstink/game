@@ -2,6 +2,7 @@ package gg.rsmod.plugins.content.mechanics.pvp
 
 import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.attr.AttributeKey
+import gg.rsmod.game.model.attr.PLAYER_ACTION_INTERRUPT_ATTR
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.timer.TimerKey
 import gg.rsmod.plugins.api.ext.closeComponent
@@ -45,21 +46,6 @@ object SevenSecondAction {
     private val LAST_TILE_ATTR = AttributeKey<Tile>()
     private val LAST_SHOWN_SECONDS_ATTR = AttributeKey<Int>()
 
-    /**
-     * Legacy one-click confirmation flag for the single-argument
-     * [gg.rsmod.plugins.content.magic.canTeleport] overload; every teleport entrypoint now passes
-     * its action to the two-argument overload, so the automatic completion path is the normal one.
-     */
-    val TELEPORT_CONFIRMED_ATTR = AttributeKey<Boolean>()
-
-    fun consumeTeleportConfirmation(player: Player): Boolean {
-        val confirmed = player.attr[TELEPORT_CONFIRMED_ATTR] == true
-        if (confirmed) {
-            player.attr.remove(TELEPORT_CONFIRMED_ATTR)
-        }
-        return confirmed
-    }
-
     enum class Kind(
         val verb: String,
     ) {
@@ -93,6 +79,7 @@ object SevenSecondAction {
             return
         }
         player.attr[PENDING_ACTION_ATTR] = onComplete
+        player.attr[PLAYER_ACTION_INTERRUPT_ATTR] = { cancel(player, "Your action was cancelled.") }
         player.attr[isActiveAttr] = kind
         player.attr[LAST_TILE_ATTR] = player.tile
         player.timers[COUNTDOWN_TIMER] = DURATION_CYCLES
@@ -131,15 +118,20 @@ object SevenSecondAction {
         player: Player,
         reason: String? = null,
     ) {
-        if (!isActive(player)) {
+        val active = isActive(player)
+        if (!active && !player.attr.has(PENDING_ACTION_ATTR)) {
             return
         }
+        val hadCountdownInterface = active || player.attr.has(LAST_SHOWN_SECONDS_ATTR)
         player.timers.remove(COUNTDOWN_TIMER)
         player.attr.remove(PENDING_ACTION_ATTR)
+        player.attr.remove(PLAYER_ACTION_INTERRUPT_ATTR)
         player.attr.remove(isActiveAttr)
         player.attr.remove(LAST_TILE_ATTR)
-        hideInterface(player)
-        if (reason != null) {
+        if (hadCountdownInterface) {
+            hideInterface(player)
+        }
+        if (active && reason != null) {
             player.filterableMessage(reason)
         }
     }
@@ -149,6 +141,7 @@ object SevenSecondAction {
         val action = player.attr[PENDING_ACTION_ATTR]
         player.timers.remove(COUNTDOWN_TIMER)
         player.attr.remove(PENDING_ACTION_ATTR)
+        player.attr.remove(PLAYER_ACTION_INTERRUPT_ATTR)
         player.attr.remove(isActiveAttr)
         player.attr.remove(LAST_TILE_ATTR)
         hideInterface(player)

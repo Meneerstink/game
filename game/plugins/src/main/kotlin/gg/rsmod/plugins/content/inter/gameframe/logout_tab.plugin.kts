@@ -14,7 +14,7 @@ fun performLogout(player: gg.rsmod.game.model.entity.Player) {
     // Deadman PvP guards plan (2026-09-16): "logging out ... ends it early" - the kill grace
     // period does not persist meaningfully once logged out, but is cleared here for correctness.
     KillGrace.endEarly(player)
-    player.requestLogout()
+    player.requestLogout(deadmanDelayHandled = true)
     player.write(LogoutFullMessage())
     player.channelClose()
 }

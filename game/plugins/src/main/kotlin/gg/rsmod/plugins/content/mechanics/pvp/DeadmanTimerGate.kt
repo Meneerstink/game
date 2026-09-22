@@ -49,8 +49,24 @@ object DeadmanTimerGate {
             else -> Teleport.INSTANT
         }
 
-    /** Logout: countdown when skulled or in combat with a player / non-boss npc. */
+    /** Owner exception: logout counts down only when skulled or in combat with a player / non-boss npc. */
     fun needsCountdown(player: Player): Boolean = PvpSkull.isSkulled(player) || inNonBossCombat(player)
+
+    /**
+     * One entry point for non-magical escape routes (boats, minecarts, carpets, portals and
+     * similar transports). Permanent Deadman applies this countdown regardless of skull or
+     * combat status. The owner's narrower exception applies to logout/teleport only; it does not
+     * exempt non-teleport transport. Callers pass the complete action so it cannot continue
+     * outside the gate.
+     */
+    fun requestRoute(
+        player: Player,
+        kind: SevenSecondAction.Kind,
+        action: () -> Unit,
+    ): Boolean {
+        SevenSecondAction.start(player, kind, action)
+        return false
+    }
 
     /** Whole seconds the player must still stay out of combat, for the owner's message. */
     fun combatSecondsLeft(player: Player): Int =

@@ -1,108 +1,39 @@
 package gg.rsmod.plugins.content.areas.zanaris
 
 import gg.rsmod.plugins.content.magic.TeleportType
-import gg.rsmod.plugins.content.magic.prepareForTeleport
+import gg.rsmod.plugins.content.magic.canTeleport
+import gg.rsmod.plugins.content.magic.teleport
 import gg.rsmod.plugins.content.mechanics.shops.CoinCurrency
 
 val fairyShopkeepers = arrayOf(Npcs.FAIRY_SHOPKEEPER, Npcs.FAIRY_SHOP_ASSISTANT)
 val rawChicken = Items.RAW_CHICKEN
 
 on_obj_option(Objs.FAIRY_RING_12094, "use") {
-    player.lockingQueue(TaskPriority.STRONG) {
-        wait(2)
-        shedTeleport(player)
-    }
+    shedTeleport(player)
 }
 
 on_obj_option(Objs.PORTAL_12260, "enter") {
-    player.lockingQueue(TaskPriority.STRONG) {
-        wait(2)
-        zanarisTeleport(player)
-    }
+    zanarisTeleport(player)
 }
 
 fun shedTeleport(player: Player) {
-    val shedTile = Tile(3202, 3169)
-    val type = TeleportType.FAIRY
-    player.lockingQueue {
+    player.canTeleport(TeleportType.FAIRY) {
         player.message("The world starts to shimmer...")
-        player.playSound(Sfx.FT_FAIRY_TELEPORT)
-        player.prepareForTeleport()
-        player.animate(type.animation)
-        type.graphic?.let {
-            player.graphic(it)
-        }
-        wait(type.teleportDelay)
-        player.teleportTo(shedTile)
-        type.endAnimation?.let {
-            player.animate(it)
-        }
-        type.endGraphic?.let {
-            player.graphic(it)
-        }
-        type.endAnimation?.let {
-            val def = world.definitions.get(AnimDef::class.java, it)
-            wait(def.cycleLength)
-        }
-        player.animate(Anims.RESET)
-        player.unlock()
-        wait(2)
+        player.teleport(Tile(3202, 3169), TeleportType.FAIRY)
     }
 }
 
 fun dragonLairTeleport(player: Player) {
-    val lairTile = Tile(1565, 4356)
-    val type = TeleportType.FAIRY
-    player.lockingQueue {
-        player.playSound(Sfx.FT_FAIRY_TELEPORT)
-        player.prepareForTeleport()
-        player.animate(type.animation)
-        type.graphic?.let {
-            player.graphic(it)
+    player.canTeleport(TeleportType.FAIRY) {
+        if (player.inventory.remove(rawChicken, 1).hasSucceeded()) {
+            player.teleport(Tile(1565, 4356), TeleportType.FAIRY)
         }
-        wait(type.teleportDelay)
-        player.teleportTo(lairTile)
-        type.endAnimation?.let {
-            player.animate(it)
-        }
-        type.endGraphic?.let {
-            player.graphic(it)
-        }
-        type.endAnimation?.let {
-            val def = world.definitions.get(AnimDef::class.java, it)
-            wait(def.cycleLength)
-        }
-        player.animate(Anims.RESET)
-        player.unlock()
-        wait(2)
     }
 }
 
 fun zanarisTeleport(player: Player) {
-    val zanarisTile = Tile(2452, 4471)
-    val type = TeleportType.FAIRY
-    player.lockingQueue {
-        player.playSound(Sfx.FT_FAIRY_TELEPORT)
-        player.prepareForTeleport()
-        player.animate(type.animation)
-        type.graphic?.let {
-            player.graphic(it)
-        }
-        wait(type.teleportDelay)
-        player.teleportTo(zanarisTile)
-        type.endAnimation?.let {
-            player.animate(it)
-        }
-        type.endGraphic?.let {
-            player.graphic(it)
-        }
-        type.endAnimation?.let {
-            val def = world.definitions.get(AnimDef::class.java, it)
-            wait(def.cycleLength)
-        }
-        player.animate(Anims.RESET)
-        player.unlock()
-        wait(2)
+    player.canTeleport(TeleportType.FAIRY) {
+        player.teleport(Tile(2452, 4471), TeleportType.FAIRY)
     }
 }
 
@@ -157,9 +88,5 @@ on_npc_option(Npcs.IRKSOL, "trade") {
 }
 
 on_item_on_obj(Objs.CHICKEN_SHRINE, item = rawChicken) {
-    player.inventory.remove(rawChicken, 1)
-    player.lockingQueue(TaskPriority.STRONG) {
-        wait(2)
-        dragonLairTeleport(player)
-    }
+    dragonLairTeleport(player)
 }

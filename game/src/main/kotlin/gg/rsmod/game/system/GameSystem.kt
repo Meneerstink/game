@@ -11,6 +11,7 @@ import gg.rsmod.game.message.impl.SoundSongEndMessage
 import gg.rsmod.game.message.impl.WindowStatusMessage
 import gg.rsmod.game.model.World
 import gg.rsmod.game.model.attr.LAST_ACTIVE_CYCLE_ATTR
+import gg.rsmod.game.model.attr.PLAYER_ACTION_INTERRUPT_ATTR
 import gg.rsmod.game.model.entity.Client
 import gg.rsmod.game.service.GameService
 import gg.rsmod.net.packet.GamePacket
@@ -94,6 +95,12 @@ class GameSystem(
                     next.message is ClientCheatMessage
             if (!isPassive) {
                 client.attr[LAST_ACTIVE_CYCLE_ATTR] = world.currentCycle
+                // Consume before invoking so the callback can safely clear/re-arm itself. This is
+                // the one server-side boundary every deliberate client action crosses.
+                client.attr[PLAYER_ACTION_INTERRUPT_ATTR]?.let { interrupt ->
+                    client.attr.remove(PLAYER_ACTION_INTERRUPT_ATTR)
+                    interrupt()
+                }
             }
             next.handler.handle(client, world, next.message)
         }

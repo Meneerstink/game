@@ -10,6 +10,7 @@ import gg.rsmod.game.model.timer.FROZEN_TIMER
 import gg.rsmod.game.model.timer.STUN_TIMER
 import gg.rsmod.plugins.content.combat.specialattack.SpecialAttacks
 import gg.rsmod.plugins.content.mechanics.pvp.BeginnerProtection
+import gg.rsmod.plugins.content.mechanics.pvp.BossNpcs
 import gg.rsmod.plugins.content.mechanics.pvp.CityGuards
 import gg.rsmod.plugins.content.combat.strategy.MeleeCombatStrategy
 import gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell
@@ -191,6 +192,22 @@ suspend fun cycle(it: QueueTask): Boolean {
             // of the location's multicombat area status" - a guard is never held back by, and never
             // holds back, the single-combat "already under attack" rule.
             val guardInvolved = CityGuards.ignoresSingleCombat(pawn) || CityGuards.ignoresSingleCombat(target)
+            val boxedByOrdinaryNpc =
+                if (pawn is Player && target is Player) {
+                    val npc = target.getLastHitBy() as? Npc
+                    if (npc != null && !BossNpcs.isBoss(npc) && !CityGuards.isGuard(npc)) {
+                        // Deadman: an ordinary roaming npc must not reserve a player as a safe
+                        // single-combat target. Release that npc before the PK swing; bosses and
+                        // city guards retain their intentionally configured ownership rules.
+                        npc.resetInteractions()
+                        Combat.reset(npc)
+                        true
+                    } else {
+                        false
+                    }
+                } else {
+                    false
+                }
             if (guardInvolved) {
                 // no single-combat restriction
             } else if (pawnInMulti || targetInMulti) {
@@ -201,7 +218,7 @@ suspend fun cycle(it: QueueTask): Boolean {
                     Combat.reset(pawn)
                     return false
                 }
-                if (!targetInMulti && target.isBeingAttacked() && target.getLastHitBy() != pawn) {
+                if (!targetInMulti && target.isBeingAttacked() && target.getLastHitBy() != pawn && !boxedByOrdinaryNpc) {
                     if (pawn is Player) {
                         if (target is Player) {
                             pawn.message("Someone is already fighting this player.")
@@ -222,7 +239,7 @@ suspend fun cycle(it: QueueTask): Boolean {
                     Combat.reset(pawn)
                     return false
                 }
-                if (target.isBeingAttacked() && target.getLastHitBy() != pawn) {
+                if (target.isBeingAttacked() && target.getLastHitBy() != pawn && !boxedByOrdinaryNpc) {
                     if (pawn is Player) {
                         if (target is Player) {
                             pawn.message("Someone is already fighting this player.")

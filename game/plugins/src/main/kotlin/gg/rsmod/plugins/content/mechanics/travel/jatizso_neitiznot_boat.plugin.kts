@@ -5,6 +5,7 @@ import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.content.magic.TeleportType
 import gg.rsmod.plugins.content.magic.teleport
 import gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction
+import gg.rsmod.plugins.content.mechanics.pvp.DeadmanTimerGate
 
 /**
  * R02.3: the Rellekka<->Jatizso and Rellekka<->Neitiznot boat legs, extending the same
@@ -32,7 +33,7 @@ fun sail(
     player: Player,
     dest: Tile,
 ) {
-    SevenSecondAction.start(player, SevenSecondAction.Kind.TRANSPORT) {
+    DeadmanTimerGate.requestRoute(player, SevenSecondAction.Kind.TRANSPORT) {
         player.teleport(dest.transform(1, 0), TeleportType.MODERN)
     }
 }

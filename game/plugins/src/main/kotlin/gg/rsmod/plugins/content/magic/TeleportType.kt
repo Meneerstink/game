@@ -45,10 +45,24 @@ enum class TeleportType(
         teleportDelay = 6,
         animation = Anims.SKULL_SCEPTRE_TELEPORT,
         graphic = Graphic(Gfx.GFX_1683, 0)),
+    /** Grand seed pod squash sequence: 4544/767, four cycles, then 4546/769. */
+    GRAND_SEED_POD(
+        teleportDelay = 4,
+        animation = Anims.HUMANOID_4544,
+        graphic = Graphic(Gfx.GFX_767, 0),
+        endAnimation = Anims.HUMANOID_4546,
+        endGraphic = Graphic(Gfx.GFX_769, 0),
+        wildLvlRestriction = 30),
     WILDERNESS_OBELISK(
         teleportDelay = 5,
         animation = Anims.WILDERNESS_OBELISK_TELEPORT,
-        graphic = Graphic(Gfx.OBELISK_TELEPORT, 0)),
+        graphic = Graphic(Gfx.OBELISK_TELEPORT, 0),
+        wildLvlRestriction = Int.MAX_VALUE),
+    /** Wilderness levers may leave deep Wilderness, but Tele Block and Deadman timing still apply. */
+    LEVER(
+        teleportDelay = 0,
+        animation = Anims.RESET,
+        wildLvlRestriction = Int.MAX_VALUE),
     JEWELRY(
         teleportDelay = 5,
         animation = Anims.JEWELLERY_TELEPORT,
@@ -137,7 +151,8 @@ enum class TeleportType(
         teleportDelay = 6,
         animation = Anims.MODERN_TELEPORT_START,
         graphic = Graphic(Gfx.OBELISK_TELEPORT, 0),
-        endAnimation = Anims.MODERN_TELEPORT_END),
+        endAnimation = Anims.MODERN_TELEPORT_END,
+        wildLvlRestriction = Int.MAX_VALUE),
     FAIRY(
         teleportDelay = 6,
         animation = Anims.FAIRY_TELEPORT_START,

@@ -2,6 +2,7 @@ package gg.rsmod.plugins.content.mechanics.travel
 
 import gg.rsmod.game.model.Tile
 import gg.rsmod.plugins.content.magic.TeleportType
+import gg.rsmod.plugins.content.magic.canTeleport
 import gg.rsmod.plugins.content.magic.teleport
 
 /**
@@ -31,7 +32,13 @@ private data class SpiritTreeStation(
 )
 
 private val SPIRIT_TREE_OBJECTS =
-    intArrayOf(Objs.SPIRIT_TREE_1293, Objs.SPIRIT_TREE_1294, Objs.SPIRIT_TREE_1295, Objs.SPIRIT_TREE_1317)
+    intArrayOf(
+        Objs.SPIRIT_TREE_1293, Objs.SPIRIT_TREE_1294, Objs.SPIRIT_TREE_1295, Objs.SPIRIT_TREE_1317,
+        // 8355 is the 3x3 spirit tree, and it carries the same "Teleport" option. The player-owned house's Superior
+        // Garden uses it because the 4x4 trees above cannot stand in an 8x8 POH room without covering a doorway
+        // (PlayerHouse.furnishGarden); it is the same network from the same tree, so it belongs on the same list.
+        Objs.SPIRIT_TREE_8355,
+    )
 
 private val STATIONS =
     listOf(
@@ -59,11 +66,9 @@ SPIRIT_TREE_OBJECTS.forEach { obj ->
                 return@queue
             }
             val dest = destinations[choice - 1]
-            // Deadman (OSRS Wiki): non-teleport transport always opens the 7-second timer interface first.
-            gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction.start(
-                player,
-                gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction.Kind.TRANSPORT,
-            ) {
+            // Spirit trees are teleports, so Tele Block and the Deadman teleport rule are shared
+            // with spells, jewellery, tabs, fairy rings, levers and obelisks.
+            player.canTeleport(TeleportType.SPIRIT_TREE) {
                 player.teleport(dest.tile, TeleportType.SPIRIT_TREE)
             }
         }

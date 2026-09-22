@@ -2,6 +2,7 @@ package gg.rsmod.plugins.content.mechanics.pvp
 
 import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.attr.AttributeMap
+import gg.rsmod.game.model.attr.PLAYER_ACTION_INTERRUPT_ATTR
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.interf.InterfaceSet
 import gg.rsmod.game.model.timer.TimerMap
@@ -75,10 +76,42 @@ class SevenSecondActionTests {
     }
 
     @Test
+    fun `the shared deliberate-action interrupt cancels the pending action`() {
+        val player = newPlayer(Tile(3200, 3200, 0))
+        var ran = false
+        SevenSecondAction.start(player, SevenSecondAction.Kind.TRANSPORT) { ran = true }
+
+        val interrupt = player.attr[PLAYER_ACTION_INTERRUPT_ATTR]
+        assertTrue(interrupt != null, "start must arm the packet-boundary interrupt")
+        interrupt.invoke()
+
+        assertFalse(SevenSecondAction.isActive(player))
+        assertFalse(ran)
+        assertFalse(player.attr.has(PLAYER_ACTION_INTERRUPT_ATTR))
+    }
+
+    @Test
     fun `cancel is a safe no-op when no countdown is active`() {
         val player = newPlayer(Tile(3200, 3200, 0))
         SevenSecondAction.cancel(player)
         assertFalse(SevenSecondAction.isActive(player))
+    }
+
+    @Test
+    fun `cancel clears a deferred action after the death reset removed its timer`() {
+        val interfaces = newInterfaces()
+        val player = newPlayer(Tile(3200, 3200, 0), interfaces)
+        var ran = false
+        SevenSecondAction.start(player, SevenSecondAction.Kind.TRANSPORT) { ran = true }
+        assertTrue(interfaces.isVisible(SevenSecondAction.CHATBOX_INTERFACE))
+
+        // TimerKey(resetOnDeath = true) removes the timer before the death hook runs.
+        player.timers.remove(SevenSecondAction.COUNTDOWN_TIMER)
+        SevenSecondAction.cancel(player)
+        SevenSecondAction.complete(player)
+
+        assertFalse(ran, "a deferred action must not survive death into a later completion")
+        assertFalse(interfaces.isVisible(SevenSecondAction.CHATBOX_INTERFACE), "death must close the stale countdown chatbox")
     }
 
     @Test

@@ -131,6 +131,23 @@ class DeadmanTimerGateTests {
         assertFalse(DeadmanTimerGate.needsCountdown(player))
     }
 
+    @Test
+    fun `shared transport gate always defers regardless of skull status`() {
+        val safe = newPlayer()
+        var safeRuns = 0
+        assertFalse(DeadmanTimerGate.requestRoute(safe, SevenSecondAction.Kind.TRANSPORT) { safeRuns++ })
+        assertEquals(0, safeRuns)
+        SevenSecondAction.complete(safe)
+        assertEquals(1, safeRuns)
+
+        val skulled = newPlayer(skulled = true)
+        var skulledRuns = 0
+        assertFalse(DeadmanTimerGate.requestRoute(skulled, SevenSecondAction.Kind.PORTAL) { skulledRuns++ })
+        assertEquals(0, skulledRuns)
+        SevenSecondAction.complete(skulled)
+        assertEquals(1, skulledRuns)
+    }
+
     private fun npc(
         id: Int,
         name: String,

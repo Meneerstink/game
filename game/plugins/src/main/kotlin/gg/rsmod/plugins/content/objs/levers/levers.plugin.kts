@@ -4,6 +4,8 @@ import gg.rsmod.game.model.attr.DISABLE_LEVER_WARNING
 import gg.rsmod.game.model.entity.DynamicObject
 import gg.rsmod.game.model.entity.GameObject
 import gg.rsmod.game.model.entity.Player
+import gg.rsmod.plugins.content.magic.TeleportType
+import gg.rsmod.plugins.content.magic.canTeleport
 
 // List of valid lever object IDs
 val lever =
@@ -46,51 +48,52 @@ fun pullLever(
         return false
     }
 
-    p.lockingQueue {
-        var ticks = 0
-        while (true) {
-            when (ticks) {
-                // Start the lever pull animation
-                1 -> {
-                    p.animate(Anims.LEVER_PULL, idleOnly = true)
-                    if (shouldMoveLever) {
-                        moveLever(36, obj)
+    return p.canTeleport(TeleportType.LEVER) {
+        p.lockingQueue {
+            var ticks = 0
+            while (true) {
+                when (ticks) {
+                    // Start the lever pull animation
+                    1 -> {
+                        p.animate(Anims.LEVER_PULL, idleOnly = true)
+                        if (shouldMoveLever) {
+                            moveLever(36, obj)
+                        }
+                    }
+
+                    // Wait for 1 tick
+                    2 -> wait(1)
+
+                    // Play teleport animation and graphic
+                    3 -> {
+                        p.animate(Anims.MODERN_TELEPORT_START)
+                        p.graphic(Gfx.MODERN_TELEPORT_START)
+                    }
+
+                    // Wait for 1 tick
+                    4 -> wait(1)
+
+                    // Play teleport animation and graphic, then move the player
+                    5 -> {
+                        p.animate(Anims.MODERN_TELEPORT_END)
+                        p.graphic(Gfx.MODERN_TELEPORT_END)
+                        p.teleportTo(xDestination, zDestination)
+                    }
+
+                    // Move the lever back to its original state and exit the loop
+                    6 -> {
+                        if (shouldMoveLever) {
+                            moveLever(obj.id, obj)
+                        }
+                        break
                     }
                 }
-
-                // Wait for 1 tick
-                2 -> wait(1)
-
-                // Play teleport animation and graphic
-                3 -> {
-                    p.animate(Anims.MODERN_TELEPORT_START)
-                    p.graphic(Gfx.MODERN_TELEPORT_START)
-                }
-
-                // Wait for 1 tick
-                4 -> wait(1)
-
-                // Play teleport animation and graphic, then move the player
-                5 -> {
-                    p.animate(Anims.MODERN_TELEPORT_END)
-                    p.graphic(Gfx.MODERN_TELEPORT_END)
-                    p.teleportTo(xDestination, zDestination)
-                }
-
-                // Move the lever back to its original state and exit the loop
-                6 -> {
-                    if (shouldMoveLever) {
-                        moveLever(obj.id, obj)
-                    }
-                    break
-                }
+                ticks++
+                wait(1)
             }
-            ticks++
-            wait(1)
+            p.unlock()
         }
-        p.unlock()
     }
-    return true
 }
 
 /**
@@ -148,7 +151,7 @@ on_obj_option(obj = Objs.LEVER_1815, option = "pull", lineOfSightDistance = 1) {
         when (obj.tile.x) {
             3153 -> {
                 // Check if the player is being attacked, locked, dead, or has a modal interface open
-                if (player.isLocked() || player.isDead() || player.interfaces.currentModal != -1) { // TODO: Add condition if player is teleblocked once it's added to the game.
+                if (player.isLocked() || player.isDead() || player.interfaces.currentModal != -1) {
                     player.message("Your teleport was interrupted!")
                 } else {
                     pullLever(player, obj, 2561, 3311)
@@ -167,7 +170,7 @@ on_obj_option(obj = Objs.LEVER_5959, option = "pull", lineOfSightDistance = 1) {
         when (obj.tile.x) {
             3090 -> {
                 // Check if the player is being attacked, locked, dead, or has a modal interface open
-                if (player.isLocked() || player.isDead() || player.interfaces.currentModal != -1) { // TODO: Add condition if player is teleblocked once it's added to the game.
+                if (player.isLocked() || player.isDead() || player.interfaces.currentModal != -1) {
                     player.message("Your teleport was interrupted!")
                 } else {
                     pullLever(player, obj, 2539, 4712)
@@ -186,7 +189,7 @@ on_obj_option(obj = Objs.LEVER_9706, option = "pull") {
         when (obj.tile.x) {
             3104 -> {
                 // Check if the player is being attacked, locked, dead, or has a modal interface open
-                if (player.isLocked() || player.isDead() || player.interfaces.currentModal != -1) { // TODO: Add condition if player is teleblocked once it's added to the game.
+                if (player.isLocked() || player.isDead() || player.interfaces.currentModal != -1) {
                     player.message("Your teleport was interrupted!")
                 } else {
                     pullLever(player, obj, 3105, 3951)
@@ -205,7 +208,7 @@ on_obj_option(obj = Objs.LEVER_9707, option = "pull") {
         when (obj.tile.x) {
             3105 -> {
                 // Check if the player is being attacked, locked, dead, or has a modal interface open
-                if (player.isLocked() || player.isDead() || player.interfaces.currentModal != -1) { // TODO: Add condition if player is teleblocked once it's added to the game.
+                if (player.isLocked() || player.isDead() || player.interfaces.currentModal != -1) {
                     player.message("Your teleport was interrupted!")
                 } else {
                     pullLever(player, obj, 3105, 3956)

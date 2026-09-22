@@ -4,6 +4,7 @@ import gg.rsmod.game.model.Tile
 import gg.rsmod.plugins.content.magic.TeleportType
 import gg.rsmod.plugins.content.magic.teleport
 import gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction
+import gg.rsmod.plugins.content.mechanics.pvp.DeadmanTimerGate
 
 /**
  * R02.3: the Rellekka<->Miscellania boat/charter route, part of the "charter/boat NPC" network.
@@ -23,13 +24,13 @@ val miscellaniaTile = Tile(2581, 3847, 0)
 
 // Deadman (OSRS Wiki): non-teleport transport always opens the 7-second timer interface first.
 on_npc_option(Npcs.SAILOR, "Travel-Miscellania") {
-    SevenSecondAction.start(player, SevenSecondAction.Kind.TRANSPORT) {
+    DeadmanTimerGate.requestRoute(player, SevenSecondAction.Kind.TRANSPORT) {
         player.teleport(miscellaniaTile.transform(1, 0), TeleportType.MODERN)
     }
 }
 
 on_npc_option(Npcs.SAILOR_1385, "Travel-Rellekka") {
-    SevenSecondAction.start(player, SevenSecondAction.Kind.TRANSPORT) {
+    DeadmanTimerGate.requestRoute(player, SevenSecondAction.Kind.TRANSPORT) {
         player.teleport(rellekkaTile.transform(1, 0), TeleportType.MODERN)
     }
 }

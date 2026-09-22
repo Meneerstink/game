@@ -2,6 +2,7 @@ package gg.rsmod.plugins.content.areas.barbarianvillage
 
 import gg.rsmod.game.model.attr.STRONGHOLD_OF_SECURITY
 import gg.rsmod.plugins.content.magic.TeleportType
+import gg.rsmod.plugins.content.magic.canTeleport
 import gg.rsmod.plugins.content.magic.teleport
 
 /**
@@ -628,7 +629,7 @@ on_button(interfaceId = 579, component = 18) {
 on_obj_option(obj = Objs.PORTAL_16150, option = "enter") {
     val floorsCompleted = player.getStrongholdOfSecurity()
     if (floorsCompleted > 0) {
-        player.teleport(Tile(1907, 5220, 0), TeleportType.MODERN)
+        player.canTeleport(TeleportType.MODERN) { player.teleport(Tile(1907, 5220, 0), TeleportType.MODERN) }
     } else {
         player.filterableMessage("A magical force prevents you from entering the portal.")
     }
@@ -637,7 +638,7 @@ on_obj_option(obj = Objs.PORTAL_16150, option = "enter") {
 on_obj_option(obj = Objs.PORTAL_16082, option = "enter") {
     val floorsCompleted = player.getStrongholdOfSecurity()
     if (floorsCompleted > 1) {
-        player.teleport(Tile(2022, 5219, 0), TeleportType.MODERN)
+        player.canTeleport(TeleportType.MODERN) { player.teleport(Tile(2022, 5219, 0), TeleportType.MODERN) }
     } else {
         player.filterableMessage("A magical force prevents you from entering the portal.")
     }
@@ -646,7 +647,7 @@ on_obj_option(obj = Objs.PORTAL_16082, option = "enter") {
 on_obj_option(obj = Objs.PORTAL_16116, option = "enter") {
     val floorsCompleted = player.getStrongholdOfSecurity()
     if (floorsCompleted > 2) {
-        player.teleport(Tile(2146, 5289, 0), TeleportType.MODERN)
+        player.canTeleport(TeleportType.MODERN) { player.teleport(Tile(2146, 5289, 0), TeleportType.MODERN) }
     } else {
         player.filterableMessage("A magical force prevents you from entering the portal.")
     }
@@ -655,7 +656,7 @@ on_obj_option(obj = Objs.PORTAL_16116, option = "enter") {
 on_obj_option(obj = Objs.PORTAL_16050, option = "enter") {
     val floorsCompleted = player.getStrongholdOfSecurity()
     if (floorsCompleted > 3) {
-        player.teleport(Tile(2341, 5218, 0), TeleportType.MODERN)
+        player.canTeleport(TeleportType.MODERN) { player.teleport(Tile(2341, 5218, 0), TeleportType.MODERN) }
     } else {
         player.filterableMessage("A magical force prevents you from entering the portal.")
     }
@@ -835,9 +836,13 @@ on_obj_option(obj = Objs.CRADLE_OF_LIFE, option = "search") {
 
 // Skull Sceptre Teleport
 on_item_option(Items.SKULL_SCEPTRE, option = "invoke") {
-    player.teleport(endTile = Tile(3081, 3421, 0), TeleportType.SKULL_SCEPTRE)
+    player.canTeleport(TeleportType.SKULL_SCEPTRE) {
+        player.teleport(endTile = Tile(3081, 3421, 0), TeleportType.SKULL_SCEPTRE)
+    }
 }
 
 on_equipment_option(item = Items.SKULL_SCEPTRE, option = "invoke") {
-    player.teleport(endTile = Tile(3081, 3421, 0), TeleportType.SKULL_SCEPTRE)
+    player.canTeleport(TeleportType.SKULL_SCEPTRE) {
+        player.teleport(endTile = Tile(3081, 3421, 0), TeleportType.SKULL_SCEPTRE)
+    }
 }

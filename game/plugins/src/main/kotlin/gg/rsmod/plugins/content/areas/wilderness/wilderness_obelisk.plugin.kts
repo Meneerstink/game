@@ -1,7 +1,7 @@
 package gg.rsmod.plugins.content.areas.wilderness
 
-import gg.rsmod.plugins.content.combat.isBeingAttacked
 import gg.rsmod.plugins.content.magic.TeleportType
+import gg.rsmod.plugins.content.magic.canTeleport
 import gg.rsmod.plugins.content.magic.teleport
 
 // A list of obelisk object IDs that can be activated.
@@ -38,12 +38,6 @@ fun activateObelisk(
     player: Player,
     obj: GameObject,
 ) {
-    // Prevent teleportation if the player is currently in combat.
-    if (player.isBeingAttacked()) {
-        player.message("You can't use this while in combat.")
-        return
-    }
-
     // The rest of this function handles the teleportation logic.
     val obeliskTile = obj.tile
     val stationObelisk = Obelisk.forLocation(obeliskTile) ?: return
@@ -90,12 +84,13 @@ fun activateObelisk(
             // Apply the offset to the destination
             val destinationWithOffset = destination.transform(offsetX, offsetZ, 0)
 
-            // Teleport the player to the new destination with the offset
-            filteredPlayer.teleport(destinationWithOffset, TeleportType.OBELISK)
-
-            // Play sound and send message to the teleported player.
-            filteredPlayer.playSound(Sfx.WILDERNESS_TELEPORT)
-            filteredPlayer.message("Ancient magic teleports you somewhere in the wilderness.")
+            // Activation is allowed while fighting or frozen; only the actual teleport is gated.
+            // This preserves chase counterplay while making Tele Block and the Deadman timer
+            // authoritative for every player caught on the platform.
+            filteredPlayer.canTeleport(TeleportType.WILDERNESS_OBELISK) {
+                filteredPlayer.teleport(destinationWithOffset, TeleportType.WILDERNESS_OBELISK)
+                filteredPlayer.message("Ancient magic teleports you somewhere in the wilderness.")
+            }
         }
 
         // Creates 3x3 graphic effect on the obelisk platform to signify multiple player teleportation function.

@@ -60,6 +60,14 @@ val ACTIVE_COMBAT_TIMER = TimerKey()
 val TELEPORT_COMBAT_TIMER = TimerKey()
 
 /**
+ * Session-local Deadman logout hold. Combat code arms this only for non-boss combat; the network
+ * logout path refreshes it when a skulled player disconnects. This keeps an X-log body in the
+ * world for the same seven seconds as the visible logout countdown without making boss combat
+ * lose its intentional instant-logout exception.
+ */
+val DEADMAN_LOGOUT_TIMER = TimerKey(resetOnDeath = true)
+
+/**
  * Timer key used to force a player disconnect, usually used so that if a
  * player's channel has been inactive (disconnected) for X amount of time,
  * we disconnect them so that they can play again.

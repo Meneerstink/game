@@ -14,6 +14,7 @@ import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.queue.QueueTask
 import gg.rsmod.game.model.timer.ACTIVE_COMBAT_TIMER
 import gg.rsmod.game.model.timer.ATTACK_DELAY
+import gg.rsmod.game.model.timer.DEADMAN_LOGOUT_TIMER
 import gg.rsmod.game.model.timer.TELEPORT_COMBAT_TIMER
 import gg.rsmod.plugins.api.BonusSlot
 import gg.rsmod.plugins.api.InterfaceDestination
@@ -29,6 +30,7 @@ import gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell
 import gg.rsmod.plugins.content.inter.attack.AttackTab
 import gg.rsmod.plugins.content.mechanics.pvp.AreaState
 import gg.rsmod.plugins.content.mechanics.pvp.CityGuards
+import gg.rsmod.plugins.content.mechanics.pvp.BossNpcs
 import gg.rsmod.plugins.content.mechanics.pvp.KillGrace
 import gg.rsmod.plugins.content.mechanics.pvp.PvpSkull
 import gg.rsmod.plugins.content.mechanics.practicepvp.PracticePvp
@@ -98,6 +100,18 @@ object Combat {
         // window, and "being attacked" cancels an in-progress 7-second logout/teleport/portal/
         // transport countdown.
         target.timers[TELEPORT_COMBAT_TIMER] = gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction.DURATION_CYCLES
+        if (!BossNpcs.isBoss(pawn)) {
+            (target as? Player)?.timers?.set(
+                DEADMAN_LOGOUT_TIMER,
+                gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction.DURATION_CYCLES,
+            )
+        }
+        if (!BossNpcs.isBoss(target)) {
+            (pawn as? Player)?.timers?.set(
+                DEADMAN_LOGOUT_TIMER,
+                gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction.DURATION_CYCLES,
+            )
+        }
         if (target is Player) {
             gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction.cancel(target, "You have been attacked!")
         }

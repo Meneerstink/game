@@ -4,6 +4,7 @@ import gg.rsmod.game.model.Tile
 import gg.rsmod.plugins.content.magic.TeleportType
 import gg.rsmod.plugins.content.magic.teleport
 import gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction
+import gg.rsmod.plugins.content.mechanics.pvp.DeadmanTimerGate
 
 /**
  * R02.3: the Gnome Glider network. All 6 pilot npcs and their real cache `"Glider"` option were
@@ -53,7 +54,7 @@ STATIONS.forEach { origin ->
             // player.teleport(...) directly), so it also had no combat-recency/skull gate at all.
             // Owner spec: this category always gets the unconditional 7-second countdown, for
             // everyone, regardless of skull state - unlike ordinary teleport spells.
-            SevenSecondAction.start(player, SevenSecondAction.Kind.TRANSPORT) {
+            DeadmanTimerGate.requestRoute(player, SevenSecondAction.Kind.TRANSPORT) {
                 player.teleport(dest.tile.transform(1, 0), TeleportType.MODERN)
             }
         }

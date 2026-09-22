@@ -25,6 +25,7 @@ import gg.rsmod.plugins.content.magic.teleports.RuneFreeTeleportRequirements
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.BeforeClass
+import java.io.File
 import java.nio.file.Paths
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -253,6 +254,32 @@ class TeleportCastBehaviorTests {
         gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction.complete(player)
 
         assertTrue(ran, "onConfirmed must run automatically once the countdown completes - no extra click needed")
+    }
+
+    @Test
+    fun `a Tele Block applied during the countdown prevents the delayed teleport`() {
+        val player = newPlayer(magicLevel = 99)
+        every { player.lock } returns LockState.NONE
+        every { player.tile } returns Tile(3040, 3576)
+        val timers = TimerMap()
+        timers[gg.rsmod.game.model.timer.SKULL_ICON_DURATION_TIMER] = 500
+        every { player.timers } returns timers
+        var ran = false
+
+        assertFalse(player.canTeleport(TeleportType.MODERN) { ran = true })
+        timers[gg.rsmod.game.model.timer.TELEBLOCK_TIMER] = 20
+        gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction.complete(player)
+
+        assertFalse(ran, "completion must re-check Tele Block instead of trusting the seven-second-old decision")
+    }
+
+    @Test
+    fun `delayed teleport callback rechecks the complete spell requirements`() {
+        val source = File("src/main/kotlin/gg/rsmod/plugins/content/magic/teleports/teleport_spells.plugin.kts").readText()
+        assertTrue(
+            "MagicSpells.canCast(this, data.lvl, itemRequirements, data.sprite)" in source,
+            "a seven-second teleport callback must revalidate non-rune ingredients before payment",
+        )
     }
 
     private fun newPlayer(magicLevel: Int): Player {
