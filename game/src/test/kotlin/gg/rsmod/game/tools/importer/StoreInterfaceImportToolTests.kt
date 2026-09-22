@@ -45,23 +45,49 @@ class StoreInterfaceImportToolTests {
     }
 
     @Test
-    fun `every shop has its own theme banner and outlines and only the first shop's are visible by default`() {
+    fun `every shop has its own painted window and only the first shop's is visible by default`() {
         val byId = StoreInterfaceImportTool.components(fonts).associateBy { it.id }
         for (i in 0 until StoreInterfaceImportTool.TAB_COUNT) {
-            listOf(StoreInterfaceImportTool.BANNER_FIRST, StoreInterfaceImportTool.GRID_OUTLINE_FIRST, StoreInterfaceImportTool.PREVIEW_OUTLINE_FIRST).forEach { first ->
-                val c = byId.getValue(first + i)
-                assertEquals(StoreInterfaceImportTool.THEME_COLOURS[i], c.colour, "component ${c.id}")
-                assertEquals(i != 0, c.hidden, "component ${c.id}")
-            }
+            val c = byId.getValue(StoreInterfaceImportTool.BACKGROUND_FIRST + i)
+            assertEquals(StoreArtTool.BACKGROUND_FIRST + i, c.graphic, "component ${c.id}")
+            assertEquals(i != 0, c.hidden, "component ${c.id}")
+            assertEquals(StoreInterfaceImportTool.WIDTH to StoreInterfaceImportTool.HEIGHT, c.width to c.height, "the window art is drawn 1:1")
         }
     }
 
     @Test
-    fun `the selection glow is drawn under the item and the outline over it for every slot`() {
+    fun `the selection glow is drawn under the item and the ring over it for every slot, all above the window art`() {
         for (slot in 0 until StoreInterfaceImportTool.SLOT_COUNT) {
             assertTrue(StoreInterfaceImportTool.SELECT_GLOW_FIRST + slot < StoreInterfaceImportTool.SLOT_FIRST + slot)
             assertTrue(StoreInterfaceImportTool.SELECT_OUTLINE_FIRST + slot > StoreInterfaceImportTool.SLOT_FIRST + slot)
-            assertTrue(StoreInterfaceImportTool.SLOT_BACKGROUND_FIRST + slot > StoreInterfaceImportTool.GRID_PANEL)
+            assertTrue(StoreInterfaceImportTool.SLOT_BACKGROUND_FIRST + slot > StoreInterfaceImportTool.BACKGROUND_FIRST + StoreInterfaceImportTool.TAB_COUNT - 1)
         }
+    }
+
+    /** Every painted sprite is drawn at its own size, so the client never stretches the art. */
+    @Test
+    fun `every art graphic matches its sprite size`() {
+        val art = StoreArtTool.all()
+        val offenders =
+            StoreInterfaceImportTool.components(fonts)
+                .filter { it.graphic in art.keys }
+                .filter { art.getValue(it.graphic).let { image -> image.width != it.width || image.height != it.height } }
+                .map { "${it.id} sprite ${it.graphic}" }
+        assertEquals(emptyList<String>(), offenders)
+    }
+
+    /** The 667 sprite encoding round-trips: size, trailer and a visible pixel's alpha. */
+    @Test
+    fun `painted art encodes as a valid revision-667 sprite`() {
+        val image = StoreArtTool.slot()
+        val data = StoreArtTool.encode(image)
+        val n = data.size
+        assertEquals(1, ((data[n - 2].toInt() and 0xFF) shl 8) or (data[n - 1].toInt() and 0xFF))
+        val p = n - 8 - 7
+        assertEquals(image.width, ((data[p + 9].toInt() and 0xFF) shl 8) or (data[p + 10].toInt() and 0xFF))
+        assertEquals(image.height, ((data[p + 11].toInt() and 0xFF) shl 8) or (data[p + 12].toInt() and 0xFF))
+        assertEquals(0x2, data[0].toInt())
+        val centre = (image.height / 2) * image.width + image.width / 2
+        assertTrue(data[1 + centre].toInt() != 0, "opaque pixel uses a palette entry, not the transparent index 0")
     }
 }

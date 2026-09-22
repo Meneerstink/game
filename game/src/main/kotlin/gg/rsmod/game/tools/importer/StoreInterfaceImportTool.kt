@@ -1,151 +1,104 @@
 package gg.rsmod.game.tools.importer
 
 import gg.rsmod.game.tools.importer.LootKeyInterfaceImportTool.Component
+import gg.rsmod.game.tools.importer.StoreArtTool as Art
 
 /**
  * Builds the "78 Store" window (owner night-run 2026-09-19, batches 4 and 5) as the revision-667 if3 interface [INTERFACE_ID],
  * through the same transactional, both-caches route as [LootKeyInterfaceImportTool] and [DizanasQuiverInterfaceImportTool].
  *
  * Owner flow: "kit in shop-grid -> selected kit -> big preview of the ornamented result -> base item requirement -> stats
- * unchanged / cosmetic only -> price and currency balance -> Buy kit", with a carousel when one kit has several results
- * (Infinity hat/top/bottoms, Elder chaos, Dagon'hai, Twisted ancestral, Malediction/Odium ward, max-cape variants).
+ * unchanged / cosmetic only -> price and currency balance -> Buy kit", with a carousel when one kit has several results.
  *
- * Art: only sprites already in both caches - the OSRS stone frame, dividers, square slot button and grey/red button caps imported
- * by the loot-key window ([LootKeyInterfaceImportTool.sprite]) and the quiver's close button. The preview is a model component
- * whose aspect ratio enlarges the item model five times; the server fills it with IF_SETOBJECT (the client then renders the
- * result item's own model with its inventory angles), the grid slots with IF_SETOBJECT, the texts with IF_SETTEXT, the tab
- * highlight with IF_SETGRAPHIC and enables every op with IF_SETEVENTS (content: `store.plugin.kts`).
+ * Redesign (owner 2026-09-22: "redesign the shop they need to look special ... use the highest quality visuals"): every
+ * visual is the store's own painted art from [StoreArtTool] - one full window per shop theme (gold frame, engraved title,
+ * inset panels, a spotlit showcase with a pedestal), glossy tabs, glass item slots with a gold selection glow and ring,
+ * a jewelled Buy button, currency icons, carousel arrows and a close button. The components only add what changes: the
+ * item icons, the preview model (fitted per item by the client, `InterfaceManager.fitModelToBox`) and the texts.
  *
- * Usage: `java -cp <game lib> gg.rsmod.game.tools.importer.StoreInterfaceImportTool [--apply] [--replace-from-journal=<tx id>]`
+ * The server swaps sprites with IF_SETGRAPHIC and shows/hides theme art with IF_SETHIDE (content: `StoreUi`).
+ *
+ * Usage: `java -cp <game lib> gg.rsmod.game.tools.importer.StoreInterfaceImportTool [--apply]`. The tool owns interface
+ * [INTERFACE_ID]: a re-run replaces its own components (pinned to what is there) and removes any left over from an older
+ * layout.
  */
 object StoreInterfaceImportTool {
     /** First interface id above the Dizana's quiver window (1150). */
     const val INTERFACE_ID = 1151
 
-    const val WIDTH = 488
-    const val HEIGHT = 330
+    const val WIDTH = Art.WIDTH
+    const val HEIGHT = Art.HEIGHT
 
     const val ROOT = 0
     const val WINDOW = 1
-    const val TITLE = 12
-    const val CLOSE = 13
 
-    /** Three shop tabs: layer (op), left cap, middle, right cap, label. */
-    const val TAB_FIRST = 16
-    const val TAB_STRIDE = 5
+    /** The painted window, one per shop theme; only the active shop's is shown. */
+    const val BACKGROUND_FIRST = 2 // 2..4
+    const val CLOSE = 5
+
+    /** Three shop tabs: a clickable layer and its painted tab graphic. */
+    const val TAB_FIRST = 6 // 6..11
+    const val TAB_STRIDE = 2
     const val TAB_COUNT = 3
+    const val TAB_GRAPHIC_OFFSET = 1
 
-    /*
-     * Visual pass (owner 2026-09-19: "make them beautiful, the ui must be top notch"). The 667 server has no IF_SETCOLOUR /
-     * IF_SETPOSITION, so every per-shop colour and the selection highlight exist once per theme / slot and the server only
-     * shows or hides them (IF_SETHIDE). The client draws a parent's children in component order, so backgrounds get the
-     * lower ids and outlines/overlays the higher ones.
-     */
-
-    /** Header strip under the tabs: one filled rectangle per shop theme, the shop tagline and the balance. */
-    const val BANNER_FIRST = TAB_FIRST + TAB_COUNT * TAB_STRIDE // 31..33
-    const val TAGLINE = BANNER_FIRST + TAB_COUNT // 34
-    const val BALANCE = TAGLINE + 1 // 35
-
-    /** Dark panel behind the grid plus one outline per shop theme. */
-    const val GRID_PANEL = BALANCE + 1 // 36
-    const val GRID_OUTLINE_FIRST = GRID_PANEL + 1 // 37..39
+    const val TAGLINE = 12
+    const val BALANCE_ICON = 13
+    const val BALANCE = 14
 
     const val GRID_COLUMNS = 6
     const val GRID_ROWS = 5
     const val SLOT_COUNT = GRID_COLUMNS * GRID_ROWS
-    const val SLOT_BACKGROUND_FIRST = GRID_OUTLINE_FIRST + TAB_COUNT // 40..69
+    const val SLOT_BACKGROUND_FIRST = 15 // 15..44
+    const val SELECT_GLOW_FIRST = SLOT_BACKGROUND_FIRST + SLOT_COUNT // 45..74
+    const val SLOT_FIRST = SELECT_GLOW_FIRST + SLOT_COUNT // 75..104
+    const val SELECT_OUTLINE_FIRST = SLOT_FIRST + SLOT_COUNT // 105..134
 
-    /** Selected slot: a soft gold glow under the item and a gold outline over it. */
-    const val SELECT_GLOW_FIRST = SLOT_BACKGROUND_FIRST + SLOT_COUNT // 70..99
-    const val SLOT_FIRST = SELECT_GLOW_FIRST + SLOT_COUNT // 100..129
-    const val SELECT_OUTLINE_FIRST = SLOT_FIRST + SLOT_COUNT // 130..159
-
-    const val PAGE_PREVIOUS = SELECT_OUTLINE_FIRST + SLOT_COUNT // 160
+    const val PAGE_PREVIOUS = SELECT_OUTLINE_FIRST + SLOT_COUNT // 135
     const val PAGE_TEXT = PAGE_PREVIOUS + 1
     const val PAGE_NEXT = PAGE_PREVIOUS + 2
-    const val PREVIEW_LAYER = PAGE_PREVIOUS + 3 // 163
-    const val PREVIEW_BACKGROUND = PREVIEW_LAYER + 1
-    const val PREVIEW_OUTLINE_FIRST = PREVIEW_LAYER + 2 // 165..167
-    const val PREVIEW_MODEL = PREVIEW_OUTLINE_FIRST + TAB_COUNT // 168
+    const val PREVIEW_LAYER = PAGE_PREVIOUS + 3 // 138
+    const val PREVIEW_MODEL = PREVIEW_LAYER + 1 // 139
     const val CAROUSEL_PREVIOUS = PREVIEW_MODEL + 1
-    const val CAROUSEL_NEXT = PREVIEW_MODEL + 2 // 170
+    const val CAROUSEL_NEXT = PREVIEW_MODEL + 2 // 141
     const val RESULT_NAME = CAROUSEL_NEXT + 1
     const val KIT_NAME = RESULT_NAME + 1
     const val REQUIREMENT = KIT_NAME + 1
     const val COSMETIC = REQUIREMENT + 1
-    const val PRICE = COSMETIC + 1
+    const val PRICE_ICON = COSMETIC + 1
+    const val PRICE = PRICE_ICON + 1
     const val BUY_LAYER = PRICE + 1
-    const val BUY_LEFT = BUY_LAYER + 1
-    const val BUY_MIDDLE = BUY_LAYER + 2
-    const val BUY_RIGHT = BUY_LAYER + 3
-    const val BUY_TEXT = BUY_LAYER + 4
+    const val BUY_GRAPHIC = BUY_LAYER + 1
+    const val BUY_TEXT = BUY_LAYER + 2
     const val EMPTY_TEXT = BUY_TEXT + 1
     const val COMPONENT_COUNT = EMPTY_TEXT + 1
 
-    /** Theme colour per shop tab (Donator gold, Deadman crimson, Loyalty azure), in tab order. */
-    val THEME_COLOURS = intArrayOf(0xC9A227, 0xA11818, 0x2B8FBF)
     const val GOLD = 0xFFD700
-
-    /** Loot-key sprite ids (OSRS numbering) of the grey (unselected) and red (selected) button caps. */
-    const val GREY_LEFT = 1229
-    const val GREY_MIDDLE = 1230
-    const val GREY_RIGHT = 1231
-    const val RED_LEFT = 1232
-    const val RED_MIDDLE = 1233
-    const val RED_RIGHT = 1234
-
-    const val ORANGE = LootKeyInterfaceImportTool.ORANGE
     const val WHITE = LootKeyInterfaceImportTool.WHITE
-    const val GREEN = 0x3CD33C
-    const val LINE = LootKeyInterfaceImportTool.LINE
+    const val ORANGE = LootKeyInterfaceImportTool.ORANGE
+    const val CREAM = 0xEDE3C6
+    const val GREEN = 0x5CE05C
 
-    /** Tab geometry, exposed for the server (tab i at x = TAB_X + i * TAB_PITCH). */
-    const val TAB_X = 12
-    const val TAB_Y = 36
-    const val TAB_WIDTH = 150
-    const val TAB_PITCH = 156
+    /** The preview model's box: above the painted pedestal, clear of the carousel arrows. */
+    const val PREVIEW_X = Art.SHOW_X + 24
+    const val PREVIEW_Y = Art.SHOW_Y + 6
+    const val PREVIEW_WIDTH = Art.SHOW_WIDTH - 48
+    const val PREVIEW_HEIGHT = Art.SHOW_HEIGHT - 20
 
     /**
-     * Preview box and its model scale. The client scales the item model by width * 512 / aspectX (InterfaceManager, model
-     * component), i.e. PREVIEW_WIDTH / PREVIEW_ASPECT_X times its inventory size. The old 5x cropped tall items (owner screenshot
-     * "shop ui.png": Dragon boots (g) cut off).
-     *
-     * 3.75x was then chosen on the assumption that the inventory drawing is 36 x 32, so 3.75 x 34 fits 128 of height. That
-     * holds for a boot; it does not hold for a long weapon, which is drawn corner to corner across its inventory box and so
-     * is nearer 45 units tall - at 3.75x that is ~168px in a 128px panel. A model component is not clipped to its box, so the
-     * overflow is drawn straight over the window frame (owner screenshot "shop visual.png", 2026-09-20: the Steam battlestaff
-     * spilling out of the top of the preview).
-     *
-     * 3.0x was then chosen, and it is still too big: 128 / 43 is 2.98, and 2.98 x the ~45-unit diagonal of a long weapon is
-     * 134px in a 128px panel. That is the owner's 2026-09-20 report, "the preview of the items is still not fitting inside
-     * the panel" - and the 3.0x values had in any case never reached the cache, whose last store write (2026-09-19 20:51)
-     * predates them, so the client was still drawing the 3.75x version.
-     *
-     * 2.67x (128 / 48) puts that same diagonal at 120px, inside the panel with a margin, and still fills most of it for a
-     * compact item. The horizontal scale is kept within a percent of it (210 / 78 = 2.69) so the model is not stretched.
-     *
-     * Scale alone cannot be a guarantee, though, because the cache holds one scale and item models are not one size. The
-     * client now also clips a model component's render to its own box (`InterfaceManager.clipModelComponents`), so an item
-     * nobody anticipated can no longer be drawn over the window frame - it is only ever cropped inside the panel.
+     * Fallback scale for a client without the per-item fit: width * 512 / aspect, kept within the box for a long weapon's
+     * ~48-unit diagonal and equal on both axes.
      */
-    const val PREVIEW_X = 266
-    const val PREVIEW_Y = 88
-    const val PREVIEW_WIDTH = 210
-    const val PREVIEW_HEIGHT = 128
-    const val PREVIEW_ASPECT_X = 78
-    const val PREVIEW_ASPECT_Y = 48
-
-    const val GRID_X = 12
-    const val GRID_Y = 88
-    const val GRID_WIDTH = 246
-    const val GRID_HEIGHT = 194
+    const val PREVIEW_ASPECT_X = 80
+    const val PREVIEW_ASPECT_Y = 50
 
     private const val TYPE_LAYER = 0
-    private const val TYPE_RECTANGLE = 3
     private const val TYPE_TEXT = 4
     private const val TYPE_GRAPHIC = 5
-    private const val TYPE_LINE = 9
+
+    fun slotX(slot: Int) = Art.GRID_X + 2 + 40 * (slot % GRID_COLUMNS)
+
+    fun slotY(slot: Int) = Art.GRID_Y + 2 + 38 * (slot / GRID_COLUMNS)
 
     fun components(fonts: LootKeyInterfaceImportTool.Fonts): List<Component> {
         val list = mutableListOf<Component>()
@@ -153,95 +106,69 @@ object StoreInterfaceImportTool {
             require(list.none { it.id == c.id }) { "duplicate component ${c.id}" }
             list += c
         }
-        val s = LootKeyInterfaceImportTool::sprite
-        fun layer(id: Int, x: Int, y: Int, w: Int, h: Int, parent: Int, ops: List<String> = emptyList(), opBase: String = "", hidden: Boolean = false) =
-            add(Component(id, TYPE_LAYER, x, y, w, h, parent, ops = ops, opBase = opBase, hidden = hidden))
-        fun graphic(id: Int, x: Int, y: Int, w: Int, h: Int, parent: Int, sprite: Int, tiling: Boolean = false, ops: List<String> = emptyList()) =
-            add(Component(id, TYPE_GRAPHIC, x, y, w, h, parent, graphic = sprite, tiling = tiling, ops = ops))
-        fun text(id: Int, x: Int, y: Int, w: Int, h: Int, parent: Int, font: Int, text: String, colour: Int, alignX: Int = 1, ops: List<String> = emptyList(), opBase: String = "") =
-            add(Component(id, TYPE_TEXT, x, y, w, h, parent, font = font, text = text, colour = colour, alignX = alignX, alignY = 1, shadow = true, ops = ops, opBase = opBase))
+        fun layer(id: Int, x: Int, y: Int, w: Int, h: Int, parent: Int, ops: List<String> = emptyList(), opBase: String = "") =
+            add(Component(id, TYPE_LAYER, x, y, w, h, parent, ops = ops, opBase = opBase))
+        fun graphic(id: Int, x: Int, y: Int, w: Int, h: Int, parent: Int, sprite: Int, ops: List<String> = emptyList(), hidden: Boolean = false) =
+            add(Component(id, TYPE_GRAPHIC, x, y, w, h, parent, graphic = sprite, ops = ops, hidden = hidden))
+        fun text(id: Int, x: Int, y: Int, w: Int, h: Int, parent: Int, font: Int, text: String, colour: Int, alignX: Int = 1, ops: List<String> = emptyList()) =
+            add(Component(id, TYPE_TEXT, x, y, w, h, parent, font = font, text = text, colour = colour, alignX = alignX, alignY = 1, shadow = true, ops = ops))
 
         add(Component(ROOT, TYPE_LAYER, 0, 0, 0, 0, -1, resizeX = 1, resizeY = 1))
         add(Component(WINDOW, TYPE_LAYER, 0, 0, WIDTH, HEIGHT, ROOT, reposX = 1, reposY = 1))
-        // Stone frame (loot-key geometry: 32x32 edge canvases with the art 13 px in).
-        graphic(2, 1, 1, WIDTH - 2, HEIGHT - 2, WINDOW, s(297), tiling = true)
-        graphic(3, 32, -13, WIDTH - 64, 20, WINDOW, s(820), tiling = true)
-        graphic(4, 32, HEIGHT - 20, WIDTH - 64, 20, WINDOW, s(822), tiling = true)
-        graphic(5, -13, 32, 20, HEIGHT - 64, WINDOW, s(821), tiling = true)
-        graphic(6, WIDTH - 20, 32, 20, HEIGHT - 64, WINDOW, s(823), tiling = true)
-        graphic(7, 0, 0, 32, 32, WINDOW, s(824))
-        graphic(8, WIDTH - 32, 0, 32, 32, WINDOW, s(825))
-        graphic(9, 0, HEIGHT - 32, 32, 32, WINDOW, s(826))
-        graphic(10, WIDTH - 32, HEIGHT - 32, 32, 32, WINDOW, s(827))
-        graphic(11, 11, 15, WIDTH - 22, 20, WINDOW, s(828), tiling = true)
-        text(TITLE, 0, 5, WIDTH, 20, WINDOW, fonts.b12, "78 Store", ORANGE)
-        graphic(CLOSE, WIDTH - 26, 10, 16, 16, WINDOW, s(831), ops = listOf("Close"))
-        graphic(14, 0, 17, 32, 32, WINDOW, s(829))
-        graphic(15, WIDTH - 11, 17, 11, 32, WINDOW, s(830))
+        for (i in 0 until TAB_COUNT) graphic(BACKGROUND_FIRST + i, 0, 0, WIDTH, HEIGHT, WINDOW, Art.BACKGROUND_FIRST + i, hidden = i != 0)
+        graphic(CLOSE, WIDTH - 34, 12, Art.CLOSE_SIZE, Art.CLOSE_SIZE, WINDOW, Art.CLOSE, ops = listOf("Close"))
 
         val tabNames = listOf("Donator Shop", "Deadman Shop", "Loyalty Shop")
         for (i in 0 until TAB_COUNT) {
             val base = TAB_FIRST + i * TAB_STRIDE
-            layer(base, TAB_X + i * TAB_PITCH, TAB_Y, TAB_WIDTH, 22, WINDOW, ops = listOf("View"), opBase = tabNames[i])
-            graphic(base + 1, 0, 0, 6, 22, base, s(GREY_LEFT))
-            graphic(base + 2, 6, 0, TAB_WIDTH - 12, 22, base, s(GREY_MIDDLE), tiling = true)
-            graphic(base + 3, TAB_WIDTH - 6, 0, 6, 22, base, s(GREY_RIGHT))
-            text(base + 4, 0, 0, TAB_WIDTH, 22, base, fonts.p12, tabNames[i], ORANGE)
+            layer(base, Art.TAB_X + i * Art.TAB_PITCH, Art.TAB_Y, Art.TAB_WIDTH, Art.TAB_HEIGHT, WINDOW, ops = listOf("View"), opBase = tabNames[i])
+            graphic(base + TAB_GRAPHIC_OFFSET, 0, 0, Art.TAB_WIDTH, Art.TAB_HEIGHT, base, if (i == 0) Art.TAB_SELECTED_FIRST else Art.TAB_NORMAL_FIRST + i)
         }
 
-        fun rect(id: Int, x: Int, y: Int, w: Int, h: Int, parent: Int, colour: Int, filled: Boolean, transparency: Int = 0, hidden: Boolean = false) =
-            add(Component(id, TYPE_RECTANGLE, x, y, w, h, parent, colour = colour, filled = filled, transparency = transparency, hidden = hidden))
+        // Info strip: tagline left, currency icon and balance right.
+        text(TAGLINE, Art.STRIP_X + 10, Art.STRIP_Y, 290, Art.STRIP_HEIGHT, WINDOW, fonts.p11, "", CREAM, alignX = 0)
+        graphic(BALANCE_ICON, Art.STRIP_X + 306, Art.STRIP_Y + 2, Art.ICON_SIZE, Art.ICON_SIZE, WINDOW, Art.ICON_FIRST)
+        text(BALANCE, Art.STRIP_X + 326, Art.STRIP_Y, 128, Art.STRIP_HEIGHT, WINDOW, fonts.b12, "", WHITE, alignX = 0)
 
-        // Header strip: the active shop's theme colour (the other two hidden), its tagline left and the balance right.
-        for (i in 0 until TAB_COUNT) rect(BANNER_FIRST + i, GRID_X, 62, WIDTH - 2 * GRID_X, 22, WINDOW, THEME_COLOURS[i], filled = true, transparency = 120, hidden = i != 0)
-        text(TAGLINE, GRID_X + 6, 62, 290, 22, WINDOW, fonts.p11, "", WHITE, alignX = 0)
-        text(BALANCE, WIDTH - GRID_X - 186, 62, 180, 22, WINDOW, fonts.b12, "", WHITE, alignX = 2)
-
-        // Grid panel: dark glass behind the slots with the theme outline.
-        rect(GRID_PANEL, GRID_X, GRID_Y, GRID_WIDTH, GRID_HEIGHT, WINDOW, 0, filled = true, transparency = 150)
-        for (i in 0 until TAB_COUNT) rect(GRID_OUTLINE_FIRST + i, GRID_X, GRID_Y, GRID_WIDTH, GRID_HEIGHT, WINDOW, THEME_COLOURS[i], filled = false, hidden = i != 0)
-
-        // 6 x 5 grid, 40 x 38 pitch, square slot buttons with the item sprite on top; glow under and outline over the selection.
+        // Item grid: glass slot, gold glow under the selected item, the item, gold ring over it.
         val slotOps = listOf("Select", "", "", "", "", "", "", "", "", "Examine")
-        fun slotX(slot: Int) = GRID_X + 3 + 40 * (slot % GRID_COLUMNS)
-        fun slotY(slot: Int) = GRID_Y + 3 + 38 * (slot / GRID_COLUMNS)
-        for (slot in 0 until SLOT_COUNT) graphic(SLOT_BACKGROUND_FIRST + slot, slotX(slot), slotY(slot), 36, 36, WINDOW, s(170))
-        for (slot in 0 until SLOT_COUNT) rect(SELECT_GLOW_FIRST + slot, slotX(slot) + 1, slotY(slot) + 1, 34, 34, WINDOW, GOLD, filled = true, transparency = 185, hidden = true)
+        for (slot in 0 until SLOT_COUNT) graphic(SLOT_BACKGROUND_FIRST + slot, slotX(slot), slotY(slot), Art.SLOT_SIZE, Art.SLOT_SIZE, WINDOW, Art.SLOT)
+        for (slot in 0 until SLOT_COUNT) graphic(SELECT_GLOW_FIRST + slot, slotX(slot), slotY(slot), Art.SLOT_SIZE, Art.SLOT_SIZE, WINDOW, Art.SLOT_GLOW, hidden = true)
         for (slot in 0 until SLOT_COUNT) add(Component(SLOT_FIRST + slot, TYPE_GRAPHIC, slotX(slot) + 2, slotY(slot) + 2, 32, 32, WINDOW, graphic = -1, ops = slotOps))
-        for (slot in 0 until SLOT_COUNT) rect(SELECT_OUTLINE_FIRST + slot, slotX(slot), slotY(slot), 36, 36, WINDOW, GOLD, filled = false, hidden = true)
-        val navY = GRID_Y + GRID_HEIGHT + 6
-        text(PAGE_PREVIOUS, GRID_X + 2, navY, 60, 16, WINDOW, fonts.p12, "< Prev", ORANGE, alignX = 0, ops = listOf("Previous page"))
-        text(PAGE_TEXT, GRID_X + 62, navY, 122, 16, WINDOW, fonts.p12, "Page 1 / 1", WHITE)
-        text(PAGE_NEXT, GRID_X + 184, navY, 60, 16, WINDOW, fonts.p12, "Next >", ORANGE, alignX = 2, ops = listOf("Next page"))
+        for (slot in 0 until SLOT_COUNT) graphic(SELECT_OUTLINE_FIRST + slot, slotX(slot), slotY(slot), Art.SLOT_SIZE, Art.SLOT_SIZE, WINDOW, Art.SLOT_RING, hidden = true)
 
-        // Preview: dark glass with the theme outline and the result item's model (whole item visible), carousel arrows inside.
+        val navY = Art.GRID_Y + Art.GRID_HEIGHT + 2
+        text(PAGE_PREVIOUS, Art.GRID_X + 4, navY, 60, 16, WINDOW, fonts.p12, "< Prev", GOLD, alignX = 0, ops = listOf("Previous page"))
+        text(PAGE_TEXT, Art.GRID_X + 64, navY, 116, 16, WINDOW, fonts.p12, "Page 1 / 1", CREAM)
+        text(PAGE_NEXT, Art.GRID_X + Art.GRID_WIDTH - 64, navY, 60, 16, WINDOW, fonts.p12, "Next >", GOLD, alignX = 2, ops = listOf("Next page"))
+
+        // Showcase: the result item's model standing on the painted pedestal, carousel arrows at the sides.
         layer(PREVIEW_LAYER, PREVIEW_X, PREVIEW_Y, PREVIEW_WIDTH, PREVIEW_HEIGHT, WINDOW)
-        rect(PREVIEW_BACKGROUND, 0, 0, PREVIEW_WIDTH, PREVIEW_HEIGHT, PREVIEW_LAYER, 0, filled = true, transparency = 120)
-        for (i in 0 until TAB_COUNT) rect(PREVIEW_OUTLINE_FIRST + i, 0, 0, PREVIEW_WIDTH, PREVIEW_HEIGHT, PREVIEW_LAYER, THEME_COLOURS[i], filled = false, hidden = i != 0)
         add(
             Component(
                 PREVIEW_MODEL, LootKeyInterfaceImportTool.TYPE_MODEL, 0, 0, 0, 0, PREVIEW_LAYER,
                 resizeX = 1, resizeY = 1, aspectX = PREVIEW_ASPECT_X, aspectY = PREVIEW_ASPECT_Y,
             ),
         )
-        val arrowY = PREVIEW_Y + (PREVIEW_HEIGHT - 20) / 2
-        text(CAROUSEL_PREVIOUS, PREVIEW_X + 2, arrowY, 20, 20, WINDOW, fonts.b12, "<", GOLD, ops = listOf("Previous"))
-        text(CAROUSEL_NEXT, PREVIEW_X + PREVIEW_WIDTH - 22, arrowY, 20, 20, WINDOW, fonts.b12, ">", GOLD, ops = listOf("Next"))
+        val arrowY = Art.SHOW_Y + (Art.SHOW_HEIGHT - Art.ARROW_HEIGHT) / 2 - 6
+        graphic(CAROUSEL_PREVIOUS, Art.SHOW_X + 4, arrowY, Art.ARROW_WIDTH, Art.ARROW_HEIGHT, WINDOW, Art.ARROW_LEFT, ops = listOf("Previous"))
+        graphic(CAROUSEL_NEXT, Art.SHOW_X + Art.SHOW_WIDTH - 4 - Art.ARROW_WIDTH, arrowY, Art.ARROW_WIDTH, Art.ARROW_HEIGHT, WINDOW, Art.ARROW_RIGHT, ops = listOf("Next"))
 
-        // Item card: name, tier + kit, requirement, effect line, price, then the Buy (two-step confirm) button.
-        val cardY = PREVIEW_Y + PREVIEW_HEIGHT + 3
-        text(RESULT_NAME, PREVIEW_X, cardY, PREVIEW_WIDTH, 15, WINDOW, fonts.b12, "", WHITE)
-        text(KIT_NAME, PREVIEW_X, cardY + 15, PREVIEW_WIDTH, 13, WINDOW, fonts.p11, "", ORANGE)
-        text(REQUIREMENT, PREVIEW_X, cardY + 28, PREVIEW_WIDTH, 13, WINDOW, fonts.p11, "", WHITE)
-        text(COSMETIC, PREVIEW_X, cardY + 41, PREVIEW_WIDTH, 13, WINDOW, fonts.p11, "", GREEN)
-        text(PRICE, PREVIEW_X, cardY + 54, PREVIEW_WIDTH, 15, WINDOW, fonts.b12, "", GOLD)
-        val buyWidth = 130
-        layer(BUY_LAYER, PREVIEW_X + (PREVIEW_WIDTH - buyWidth) / 2, cardY + 71, buyWidth, 22, WINDOW, ops = listOf("Buy"))
-        graphic(BUY_LEFT, 0, 0, 6, 22, BUY_LAYER, s(RED_LEFT))
-        graphic(BUY_MIDDLE, 6, 0, buyWidth - 12, 22, BUY_LAYER, s(RED_MIDDLE), tiling = true)
-        graphic(BUY_RIGHT, buyWidth - 6, 0, 6, 22, BUY_LAYER, s(RED_RIGHT))
-        text(BUY_TEXT, 0, 0, buyWidth, 22, BUY_LAYER, fonts.p12, "Buy", WHITE)
-        text(EMPTY_TEXT, GRID_X + 4, GRID_Y + 4, GRID_WIDTH - 8, GRID_HEIGHT - 8, WINDOW, fonts.p12, "", ORANGE)
+        // Item card: name, tier + kit, requirement, effect line and the price with its currency icon.
+        val cx = Art.CARD_X + 10
+        val cw = Art.CARD_WIDTH - 20
+        text(RESULT_NAME, cx, Art.CARD_Y + 2, cw, 14, WINDOW, fonts.b12, "", WHITE, alignX = 0)
+        text(KIT_NAME, cx, Art.CARD_Y + 15, cw, 12, WINDOW, fonts.p11, "", ORANGE, alignX = 0)
+        text(REQUIREMENT, cx, Art.CARD_Y + 27, cw, 12, WINDOW, fonts.p11, "", CREAM, alignX = 0)
+        text(COSMETIC, cx, Art.CARD_Y + 39, cw, 12, WINDOW, fonts.p11, "", GREEN, alignX = 0)
+        graphic(PRICE_ICON, cx - 2, Art.CARD_Y + 50, Art.ICON_SIZE, Art.ICON_SIZE, WINDOW, Art.ICON_FIRST)
+        text(PRICE, cx + 18, Art.CARD_Y + 51, cw - 18, 14, WINDOW, fonts.b12, "", GOLD, alignX = 0)
+
+        val buyX = Art.CARD_X + (Art.CARD_WIDTH - Art.BUY_WIDTH) / 2
+        layer(BUY_LAYER, buyX, Art.CARD_Y + Art.CARD_HEIGHT + 4, Art.BUY_WIDTH, Art.BUY_HEIGHT, WINDOW, ops = listOf("Buy"))
+        graphic(BUY_GRAPHIC, 0, 0, Art.BUY_WIDTH, Art.BUY_HEIGHT, BUY_LAYER, Art.BUY)
+        text(BUY_TEXT, 0, 0, Art.BUY_WIDTH, Art.BUY_HEIGHT, BUY_LAYER, fonts.b12, "Buy", WHITE)
+        text(EMPTY_TEXT, Art.GRID_X + 4, Art.GRID_Y + 4, Art.GRID_WIDTH - 8, Art.GRID_HEIGHT - 8, WINDOW, fonts.p12, "", CREAM)
 
         require(list.size == COMPONENT_COUNT) { "expected $COMPONENT_COUNT components, built ${list.size}" }
         require(list.map { it.id }.sorted() == (0 until COMPONENT_COUNT).toList()) { "component ids must be 0..${COMPONENT_COUNT - 1}" }
@@ -251,28 +178,34 @@ object StoreInterfaceImportTool {
     @JvmStatic
     fun main(args: Array<String>) {
         val apply = "--apply" in args
-        // Re-run over this tool's own earlier write (tx-20260919-021345 = the first 112 components): replaces exactly those files.
-        val previous = args.firstOrNull { it.startsWith("--replace-from-journal=") }?.substringAfter('=')
-            ?.let(LootKeyInterfaceImportTool::journalIntendedSha1s) ?: emptyMap()
-        val fonts =
-            com.displee.cache.CacheLibrary(LootKeyInterfaceImportTool.TARGETS[0]).let { library ->
-                try {
-                    LootKeyInterfaceImportTool.fonts(library)
-                } finally {
-                    library.close()
-                }
-            }
-        val mutations =
-            components(fonts).map { c ->
+        val library = com.displee.cache.CacheLibrary(LootKeyInterfaceImportTool.TARGETS[0])
+        val fonts: LootKeyInterfaceImportTool.Fonts
+        val current: Map<Int, String>
+        try {
+            fonts = LootKeyInterfaceImportTool.fonts(library)
+            // Interface 1151 belongs to this tool: pin what is there so a re-run replaces its own earlier layout.
+            val files = library.index(LootKeyInterfaceImportTool.INDEX_INTERFACES).archive(INTERFACE_ID)?.fileIds()?.toList() ?: emptyList()
+            current = files.associateWith { f -> CacheItemProbeTool.sha1(library.data(LootKeyInterfaceImportTool.INDEX_INTERFACES, INTERFACE_ID, f)!!) }
+        } finally {
+            library.close()
+        }
+        val built = components(fonts)
+        val writes =
+            built.map { c ->
                 CacheMutation(
                     LootKeyInterfaceImportTool.INDEX_INTERFACES,
                     INTERFACE_ID,
                     c.id,
                     LootKeyInterfaceImportTool.encode(c),
                     "interface $INTERFACE_ID:${c.id} type=${c.type}",
-                    expectedCurrentSha1 = previous["idx${LootKeyInterfaceImportTool.INDEX_INTERFACES}_grp${INTERFACE_ID}_file${c.id}"],
+                    expectedCurrentSha1 = current[c.id],
                 )
             }
+        val removals =
+            current.keys.filter { it >= COMPONENT_COUNT }.sorted().map { f ->
+                CacheMutation(LootKeyInterfaceImportTool.INDEX_INTERFACES, INTERFACE_ID, f, null, "interface $INTERFACE_ID:$f (old layout)")
+            }
+        val mutations = writes + removals
         val transaction = CacheTransaction(targets = LootKeyInterfaceImportTool.TARGETS, mutations = mutations)
         val plan = transaction.preflight()
         val errors = transaction.blockingErrors(plan)

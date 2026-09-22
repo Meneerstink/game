@@ -22,7 +22,6 @@ import java.time.LocalDateTime
 object StoreUi : KLogging() {
     // Component ids come straight from the tool that builds the window, so the two can never drift apart.
     const val INTERFACE_ID = Ui.INTERFACE_ID
-    const val TITLE = Ui.TITLE
     const val CLOSE = Ui.CLOSE
     const val TAB_FIRST = Ui.TAB_FIRST
     const val TAB_STRIDE = Ui.TAB_STRIDE
@@ -42,7 +41,10 @@ object StoreUi : KLogging() {
     const val PRICE = Ui.PRICE
     const val BALANCE = Ui.BALANCE
     const val BUY_LAYER = Ui.BUY_LAYER
+    const val BUY_GRAPHIC = Ui.BUY_GRAPHIC
     const val BUY_TEXT = Ui.BUY_TEXT
+    const val BALANCE_ICON = Ui.BALANCE_ICON
+    const val PRICE_ICON = Ui.PRICE_ICON
     const val EMPTY_TEXT = Ui.EMPTY_TEXT
 
     /** Header tagline per shop (tab order). */
@@ -62,13 +64,8 @@ object StoreUi : KLogging() {
             StoreCatalogue.Tier.PRESTIGE to "c77dff",
         )
 
-    /** 667 ids of the loot-key button caps (LootKeyInterfaceImportTool.sprite: 7912 + index 21..26). */
-    private const val GREY_LEFT = 7933
-    private const val GREY_MIDDLE = 7934
-    private const val GREY_RIGHT = 7935
-    private const val RED_LEFT = 7936
-    private const val RED_MIDDLE = 7937
-    private const val RED_RIGHT = 7938
+    /** The store's painted art (StoreArtTool): tabs, Buy button and currency icons, per shop in tab order. */
+    private val Art = gg.rsmod.game.tools.importer.StoreArtTool
 
     private val SHOP_ATTR = AttributeKey<Int>()
     private val PAGE_ATTR = AttributeKey<Int>()
@@ -167,19 +164,19 @@ object StoreUi : KLogging() {
         val shop = shop(player)
         val list = entries(player)
         val page = player.attr[PAGE_ATTR] ?: 0
-        player.setComponentText(INTERFACE_ID, TITLE, "78 Store - ${shop.title}")
         Shop.values().forEachIndexed { i, s ->
-            val base = TAB_FIRST + i * TAB_STRIDE
             val selected = s == shop
-            player.setComponentSprite(INTERFACE_ID, base + 1, if (selected) RED_LEFT else GREY_LEFT)
-            player.setComponentSprite(INTERFACE_ID, base + 2, if (selected) RED_MIDDLE else GREY_MIDDLE)
-            player.setComponentSprite(INTERFACE_ID, base + 3, if (selected) RED_RIGHT else GREY_RIGHT)
-            // Theme: only the active shop's banner and outlines are shown.
-            player.setComponentHidden(INTERFACE_ID, Ui.BANNER_FIRST + i, !selected)
-            player.setComponentHidden(INTERFACE_ID, Ui.GRID_OUTLINE_FIRST + i, !selected)
-            player.setComponentHidden(INTERFACE_ID, Ui.PREVIEW_OUTLINE_FIRST + i, !selected)
+            // Theme: only the active shop's painted window is shown; its tab is the lit one.
+            player.setComponentHidden(INTERFACE_ID, Ui.BACKGROUND_FIRST + i, !selected)
+            player.setComponentSprite(
+                INTERFACE_ID,
+                TAB_FIRST + i * TAB_STRIDE + Ui.TAB_GRAPHIC_OFFSET,
+                if (selected) Art.TAB_SELECTED_FIRST + i else Art.TAB_NORMAL_FIRST + i,
+            )
         }
         player.setComponentText(INTERFACE_ID, Ui.TAGLINE, TAGLINES[shop] ?: "")
+        player.setComponentSprite(INTERFACE_ID, BALANCE_ICON, Art.ICON_FIRST + shop.ordinal)
+        player.setComponentSprite(INTERFACE_ID, PRICE_ICON, Art.ICON_FIRST + shop.ordinal)
         for (slot in 0 until SLOT_COUNT) {
             val entry = list.getOrNull(page * SLOT_COUNT + slot)
             player.setComponentHidden(INTERFACE_ID, SLOT_BACKGROUND_FIRST + slot, entry == null)
@@ -210,9 +207,12 @@ object StoreUi : KLogging() {
         val balance = player.attr[currency.attr] ?: 0
         player.setComponentText(INTERFACE_ID, BALANCE, "<col=ffd700>${balance.format()}</col> ${if (balance == 1) currency.singular else currency.plural}")
         player.setComponentHidden(INTERFACE_ID, PREVIEW_MODEL, entry == null)
+        player.setComponentHidden(INTERFACE_ID, PRICE_ICON, entry == null)
         if (entry == null) {
             listOf(RESULT_NAME, KIT_NAME, REQUIREMENT, COSMETIC, PRICE).forEach { player.setComponentText(INTERFACE_ID, it, "") }
             player.setComponentHidden(INTERFACE_ID, BUY_LAYER, true)
+            player.setComponentHidden(INTERFACE_ID, CAROUSEL_PREVIOUS, true)
+            player.setComponentHidden(INTERFACE_ID, CAROUSEL_NEXT, true)
             return
         }
         val index = (player.attr[CAROUSEL_ATTR] ?: 0).coerceIn(0, entry.previewItems.size - 1)
@@ -260,11 +260,13 @@ object StoreUi : KLogging() {
         )
         player.setComponentHidden(INTERFACE_ID, BUY_LAYER, false)
         val confirming = player.attr[CONFIRM_ATTR] == player.attr[SELECTED_ATTR]
+        // Armed purchase: the button turns gold and asks for the second press.
+        player.setComponentSprite(INTERFACE_ID, BUY_GRAPHIC, if (confirming) Art.BUY_CONFIRM else Art.BUY)
         player.setComponentText(
             INTERFACE_ID,
             BUY_TEXT,
             when {
-                confirming -> "<col=3cd33c>Confirm purchase</col>"
+                confirming -> "Confirm purchase"
                 entry.kind == Kind.KIT -> "Buy kit"
                 entry.kind == Kind.UNLOCK -> "Unlock look"
                 else -> "Buy"
