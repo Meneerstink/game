@@ -79,11 +79,15 @@ object MeleeCombatFormula : CombatFormula {
         val attack = getAttackRoll(pawn, target, specialAttackMultiplier)
         val defence =
             (when {
-                (pawn is Npc && target is Player) && pawn.combatDef.attackStyleType == StyleType.MAGIC_MELEE ->
-                    MagicCombatFormula
-                        .getDefenceRoll(
-                            target,
-                        )
+                // A MAGIC_MELEE attack is rolled against the target's MAGIC defence, whoever the
+                // target is. The npc-versus-npc case (a bloodveld, icefiend or pyrefiend retaliating
+                // against a summoned familiar) used to fall through to the melee defence bonus,
+                // whose `when` has no MAGIC_MELEE branch and threw IllegalStateException out of the
+                // combat cycle - unlike the attack bonus, which maps MAGIC_MELEE to stab.
+                pawn is Npc && pawn.combatDef.attackStyleType == StyleType.MAGIC_MELEE && target is Player ->
+                    MagicCombatFormula.getDefenceRoll(target)
+                pawn is Npc && pawn.combatDef.attackStyleType == StyleType.MAGIC_MELEE && target is Npc ->
+                    MagicCombatFormula.getDefenceRoll(pawn, target)
                 else -> getDefenceRoll(pawn, target, defenceStyle)
             } * defenceMultiplier).toInt()
 
@@ -331,13 +335,13 @@ object MeleeCombatFormula : CombatFormula {
 
     private fun getEffectiveStrengthLevel(npc: Npc, opponent: Pawn? = null): Double {
         var effectiveLevel = floor(npc.stats.getCurrentLevel(NpcSkills.STRENGTH) * AncientCurses.drainMultiplier(npc, Skills.STRENGTH))
-        effectiveLevel += 8
+        effectiveLevel += 9 // "Damage per second/Melee": the +8 constant plus "If you're calculating for: An NPC, +1"
         return effectiveLevel
     }
 
     private fun getEffectiveAttackLevel(npc: Npc, opponent: Pawn? = null): Double {
         var effectiveLevel = floor(npc.stats.getCurrentLevel(NpcSkills.ATTACK) * AncientCurses.drainMultiplier(npc, Skills.ATTACK))
-        effectiveLevel += 8
+        effectiveLevel += 9 // "Damage per second/Melee": the +8 constant plus "If you're calculating for: An NPC, +1"
         return effectiveLevel
     }
 

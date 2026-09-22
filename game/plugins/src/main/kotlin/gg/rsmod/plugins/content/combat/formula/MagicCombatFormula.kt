@@ -137,6 +137,12 @@ object MagicCombatFormula : CombatFormula {
             if (pawn.hasEquipped(EquipmentType.WEAPON, Items.DRAGON_HUNTER_WAND) && Draconic.isDraconic(target)) {
                 hit = Math.floor(hit * 7 / 5)
             }
+            // "Damage per second/Magic": against a player praying Protect from Magic, multiply by 6/10 - the same step
+            // melee and ranged already take (owner audit 2026-09-22: magic was the only style that ignored it in PvP).
+            // Deflect Magic is excluded here because AncientCurses.deflectDamageTaken applies its own 6/10, never both.
+            if (target is Player && target.isProtectedFrom(CombatClass.MAGIC) && !AncientCurses.deflects(target, CombatClass.MAGIC)) {
+                hit = Math.floor(hit * 0.6)
+            }
         } else if (pawn is Npc) {
             val spell = pawn.attr[Combat.CASTING_SPELL]
             if (spell == null) {
@@ -181,8 +187,17 @@ object MagicCombatFormula : CombatFormula {
         return maxRoll.toInt()
     }
 
-    private fun getDefenceRoll(
-        pawn: Pawn,
+    /**
+     * The npc magic defence roll. Public because [MeleeCombatFormula] shares it for the
+     * MAGIC_MELEE attack style, which is rolled against magic defence whoever the target is -
+     * previously only an npc-versus-player MAGIC_MELEE attack found this route, and an npc-versus-npc
+     * one (a bloodveld, icefiend or pyrefiend retaliating against a summoned familiar) fell through
+     * to the melee defence bonus, which has no MAGIC_MELEE case and threw IllegalStateException.
+     *
+     * [pawn] is unused; it is kept so the existing call sites read the same as the player overload.
+     */
+    fun getDefenceRoll(
+        @Suppress("UNUSED_PARAMETER") pawn: Pawn,
         target: Npc,
     ): Int {
         // S2, 2026-09-03: this must read the TARGET npc's effective Defence level, not the
@@ -297,7 +312,7 @@ object MagicCombatFormula : CombatFormula {
 
     private fun getEffectiveAttackLevel(npc: Npc): Double {
         var effectiveLevel = Math.floor(npc.stats.getCurrentLevel(NpcSkills.MAGIC) * AncientCurses.drainMultiplier(npc, Skills.MAGIC))
-        effectiveLevel += 8
+        effectiveLevel += 9 // "Damage per second/Melee": the +8 constant plus "If you're calculating for: An NPC, +1"
         return effectiveLevel
     }
 

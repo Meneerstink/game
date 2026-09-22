@@ -559,7 +559,7 @@ enum class CombatSpell(
     SMOKE_RUSH(
         uniqueId = 329,
         componentId = 28,
-        maxHit = 15,
+        maxHit = 13, // OSRS Wiki "Ancient Magicks" (2026-09-22); the 2011 value was 2 higher
         castGfx = null,
         castAnimation = arrayOf(1978, 1978),
         projectile = 384,
@@ -572,7 +572,7 @@ enum class CombatSpell(
     SHADOW_RUSH(
         uniqueId = 337,
         componentId = 32,
-        maxHit = 16,
+        maxHit = 14, // OSRS Wiki "Ancient Magicks" (2026-09-22); the 2011 value was 2 higher
         castGfx = null,
         castAnimation = arrayOf(1978, 1978),
         projectile = 378,
@@ -585,7 +585,7 @@ enum class CombatSpell(
     BLOOD_RUSH(
         uniqueId = 333,
         componentId = 24,
-        maxHit = 17,
+        maxHit = 15, // OSRS Wiki "Ancient Magicks" (2026-09-22); the 2011 value was 2 higher
         castGfx = null,
         castAnimation = arrayOf(1978, 1978),
         projectile = 372,
@@ -598,7 +598,7 @@ enum class CombatSpell(
     ICE_RUSH(
         uniqueId = 325,
         componentId = 20,
-        maxHit = 18,
+        maxHit = 16, // OSRS Wiki "Ancient Magicks" (2026-09-22); the 2011 value was 2 higher
         castGfx = null,
         castAnimation = arrayOf(1978, 1978),
         projectile = 360,
@@ -611,7 +611,7 @@ enum class CombatSpell(
     SMOKE_BURST(
         uniqueId = 330,
         componentId = 30,
-        maxHit = 19,
+        maxHit = 17, // OSRS Wiki "Ancient Magicks" (2026-09-22); the 2011 value was 2 higher
         castGfx = null,
         castAnimation = arrayOf(1979, 1979),
         projectile = 386,
@@ -625,7 +625,7 @@ enum class CombatSpell(
     SHADOW_BURST(
         uniqueId = 338,
         componentId = 34,
-        maxHit = 20,
+        maxHit = 18, // OSRS Wiki "Ancient Magicks" (2026-09-22); the 2011 value was 2 higher
         castGfx = null,
         castAnimation = arrayOf(1979, 1979),
         projectile = 380,

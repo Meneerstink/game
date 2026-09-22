@@ -50,6 +50,8 @@ object AncientCurses {
      * unlock miniquest is expected for Ancient Curses) - a one-off ritual (`curse unlock`).
      */
     val UNLOCKED_ATTR = AttributeKey<Boolean>(persistenceKey = "ancient_curses_unlocked")
+    /** Set only by the Grand Exchange Azzanadra/Ancient Hymnal unlock flow. */
+    val NPC_UNLOCKED_ATTR = AttributeKey<Boolean>(persistenceKey = "ancient_curses_npc_unlocked")
     private const val UNLOCK_COST = 50_000
     const val TURMOIL_LEVEL = 95
     /** Void/Novite 667: Ancient Protect Item is level 50, unlike normal Protect Item (25). */
@@ -167,9 +169,22 @@ object AncientCurses {
     private val STAT_MODIFIER_VARBITS =
         mapOf(Skills.ATTACK to 6857, Skills.STRENGTH to 6858, Skills.DEFENCE to 6859, Skills.RANGED to 6860, Skills.MAGIC to 6861)
 
-    /** Combat modifier for [target]'s [skill] level while any caster's Sap/Leech base drain applies. */
+    /**
+     * Combat modifier for [target]'s [skill] level while any caster's Sap/Leech base drain applies.
+     * A curse must not consume a temporary potion boost: while the visible level is above the base
+     * level, the potion owns that extra level and the curse drain is deferred until the potion has
+     * naturally expired. Saradomin brew remains an intentional exception because it directly lowers
+     * the skill when it is consumed.
+     */
     fun drainMultiplier(target: Pawn, skill: Int): Double =
-        if (target.attr[CURSE_BASE_DRAIN_ATTR]?.get(skill)?.isNotEmpty() == true) 1.0 - SAP_BASE_PCT / 100.0 else 1.0
+        if (target.attr[CURSE_BASE_DRAIN_ATTR]?.get(skill)?.isNotEmpty() == true && !hasPotionBoost(target, skill)) {
+            1.0 - SAP_BASE_PCT / 100.0
+        } else {
+            1.0
+        }
+
+    private fun hasPotionBoost(target: Pawn, skill: Int): Boolean =
+        target is Player && target.skills.getCurrentLevel(skill) > target.skills.getMaxLevel(skill)
 
     /** Pushes the prayer-tab stat modifiers (boost minus drain) for a player caster or victim. */
     fun syncStatVarbits(player: Player) {
@@ -205,6 +220,10 @@ object AncientCurses {
     }
 
     fun unlock(player: Player) {
+        if (player.attr[NPC_UNLOCKED_ATTR] != true) {
+            player.filterableMessage("Speak to Azzanadra in the Grand Exchange and read the Ancient Hymnal first.")
+            return
+        }
         if (player.attr[UNLOCKED_ATTR] == true) {
             player.filterableMessage("You have already performed the ritual.")
             return
@@ -347,6 +366,10 @@ object AncientCurses {
         player: Player,
         book: PrayerBook,
     ) {
+        if (book == PrayerBook.ANCIENT && player.attr[UNLOCKED_ATTR] != true) {
+            player.filterableMessage("Speak to Azzanadra in the Grand Exchange to unlock Ancient Curses.")
+            return
+        }
         if (getBook(player) == book) {
             player.filterableMessage("You are already using the ${book.name.lowercase()} prayer book.")
             return
@@ -721,11 +744,16 @@ object AncientCurses {
                     val floor = max - (max * maxExtra / 100.0).toInt().coerceAtLeast(1)
                     val step = (max / 100.0).toInt().coerceAtLeast(1)
                     val now = currentLevel(target, playerSkill, npcSkill)
+                    // Owner 2026-09-19: a potion-boosted level loses at most 1 per trigger (117 -> 116), never the
+                    // whole boost at once; an unboosted level drains the normal step down to the floor.
                     val wanted = maxOf(floor, now - step)
-                    if (now > wanted) {
+                    val drain = if (hasPotionBoost(target, playerSkill)) 1 else now - wanted
+                    if (now > wanted && drain > 0) {
                         when (target) {
-                            is Player -> target.skills.alterCurrentLevel(playerSkill, -(now - wanted))
-                            is Npc -> target.stats.alterCurrentLevel(npcSkill, -(now - wanted))
+                            // setCurrentLevel, not alterCurrentLevel: the latter clamps to the base level with its default cap,
+                            // which snapped a boosted 117 straight to 99 (the owner's reported bug).
+                            is Player -> target.skills.setCurrentLevel(playerSkill, now - drain)
+                            is Npc -> target.stats.alterCurrentLevel(npcSkill, -drain)
                         }
                     }
                     true
@@ -902,6 +930,25 @@ object AncientCurses {
     private const val SOUL_SPLIT_PROJECTILE_GFX = 2263
     private const val SOUL_SPLIT_TARGET_GFX = 2264
 
+    /**
+     * Soul Split heals 20 % of the damage and drains 20 % of it from the target's prayer. Per hit that is a fifth of a
+     * small number, and flooring each hit on its own lost everything below 5 (owner 2026-09-22: "Soul Split: hits van 1-4
+     * geven niets"). The remainder is carried per player, so every 5 damage dealt is exactly 1 point over a fight.
+     */
+    private val SOUL_SPLIT_HEAL_REMAINDER = AttributeKey<Int>()
+    private val SOUL_SPLIT_DRAIN_REMAINDER = AttributeKey<Int>()
+
+    internal fun soulSplitFifths(
+        holder: Pawn,
+        key: AttributeKey<Int>,
+        damage: Int,
+    ): Int {
+        if (damage <= 0) return 0
+        val total = (holder.attr[key] ?: 0) + damage
+        holder.attr[key] = total % 5
+        return total / 5
+    }
+
     private fun applySoulSplit(
         attacker: Player,
         target: Pawn,
@@ -919,8 +966,8 @@ object AncientCurses {
                 lifespan = CURSE_PROJECTILE_LIFESPAN,
             ),
         )
-        attacker.heal((damage * 0.2).toInt().coerceAtLeast(0))
-        if (target is Player) target.decreasePrayerPoints(damage / 5)
+        attacker.heal(soulSplitFifths(attacker, SOUL_SPLIT_HEAL_REMAINDER, damage))
+        if (target is Player) target.decreasePrayerPoints(soulSplitFifths(target, SOUL_SPLIT_DRAIN_REMAINDER, damage))
         attacker.playSound(SOUL_SPLIT_HIT_SOUND, volume = Prayers.PRAYER_SOUND_VOLUME)
         // Graphic packet delays are 20 ms client cycles; one game tick is 30 cycles.
         target.graphic(SOUL_SPLIT_TARGET_GFX, delay = 30)
@@ -1078,7 +1125,7 @@ object AncientCurses {
 
     /**
      * Wrath: on the WEARER's own death, up to 300% of the Prayer level in a 5x5 area - called from
-     * the curse plugin's `on_player_death`, before curses are cleared. Only pawns that could legally
+     * the curse plugin's `on_player_pre_death`, before respawn and curses are cleared. Only pawns that could legally
      * be hit are struck: NPCs always, players only where the two could fight (Wilderness rules).
      * The 300% multiplier and centre graphic 2259 are PROVEN from Novite `Player.sendDeath`
      * (`Utils.getRandom(skills.getLevelForXp(Skills.PRAYER) * 3)`); this file previously used 2.5,

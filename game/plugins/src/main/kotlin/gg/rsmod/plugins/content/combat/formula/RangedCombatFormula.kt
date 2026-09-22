@@ -319,13 +319,13 @@ object RangedCombatFormula : CombatFormula {
 
     private fun getEffectiveRangedLevel(npc: Npc): Double {
         var effectiveLevel = floor(npc.stats.getCurrentLevel(NpcSkills.RANGED) * AncientCurses.drainMultiplier(npc, Skills.RANGED))
-        effectiveLevel += 8
+        effectiveLevel += 9 // "Damage per second/Melee": the +8 constant plus "If you're calculating for: An NPC, +1"
         return effectiveLevel
     }
 
     private fun getEffectiveAttackLevel(npc: Npc): Double {
         var effectiveLevel = floor(npc.stats.getCurrentLevel(NpcSkills.RANGED) * AncientCurses.drainMultiplier(npc, Skills.RANGED))
-        effectiveLevel += 8
+        effectiveLevel += 9 // "Damage per second/Melee": the +8 constant plus "If you're calculating for: An NPC, +1"
         return effectiveLevel
     }
 

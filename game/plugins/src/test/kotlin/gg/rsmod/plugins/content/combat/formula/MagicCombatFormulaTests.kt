@@ -48,6 +48,9 @@ import kotlin.test.assertTrue
  * - a baseline/control case with no bonuses, prayers, or gauntlets.
  */
 class MagicCombatFormulaTests {
+    /** Smoke Rush's OSRS base max hit (13, owner combat audit 2026-09-22), read from the spell so the Virtus tests follow it. */
+    private val SMOKE_RUSH_BASE = CombatSpell.SMOKE_RUSH.maxHit.toDouble()
+
     @BeforeTest
     fun setUp() {
         mockkObject(Prayers)
@@ -115,9 +118,9 @@ class MagicCombatFormulaTests {
         // generically elsewhere through each piece's own items.yml magic_damage field, not through this bonus, so
         // this test isolates the new conditional +3%-per-piece with the mocked equipmentBonuses left at 0.
         val ancient = getMaxHit(newPlayer(spell = CombatSpell.SMOKE_RUSH, virtusPieces = 3))
-        // hit = floor(15 * 1.15) with the flat 6% already-generic bonus == this test's baseline (0 mocked), so here
-        // only the +9% (3 pieces x 3%) from VirtusRobes shows up: floor(15 * 1.09) = 16.
-        assertEquals(floor(15.0 * 1.09), ancient)
+        // hit = floor(base * 1.15) with the flat 6% already-generic bonus == this test's baseline (0 mocked), so here
+        // only the +9% (3 pieces x 3%) from VirtusRobes shows up: floor(13 * 1.09) = 14.
+        assertEquals(floor(SMOKE_RUSH_BASE * 1.09), ancient)
     }
 
     @Test
@@ -131,9 +134,9 @@ class MagicCombatFormulaTests {
         val onePiece = getMaxHit(newPlayer(spell = CombatSpell.SMOKE_RUSH, virtusPieces = 1))
         val twoPieces = getMaxHit(newPlayer(spell = CombatSpell.SMOKE_RUSH, virtusPieces = 2))
         val threePieces = getMaxHit(newPlayer(spell = CombatSpell.SMOKE_RUSH, virtusPieces = 3))
-        assertEquals(floor(15.0 * 1.03), onePiece)
-        assertEquals(floor(15.0 * 1.06), twoPieces)
-        assertEquals(floor(15.0 * 1.09), threePieces)
+        assertEquals(floor(SMOKE_RUSH_BASE * 1.03), onePiece)
+        assertEquals(floor(SMOKE_RUSH_BASE * 1.06), twoPieces)
+        assertEquals(floor(SMOKE_RUSH_BASE * 1.09), threePieces)
     }
 
     // ---- getMaxHit: TargetModifiers deliberately excluded (documented decision, not a bug) ----

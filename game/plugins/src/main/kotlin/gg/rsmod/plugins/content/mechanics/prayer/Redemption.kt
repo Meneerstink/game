@@ -26,7 +26,7 @@ import gg.rsmod.plugins.api.ext.heal
  *   max / 10` skip condition, inverted).
  * - Skipped entirely while a Phoenix necklace is worn (donor's own `equipped(Amulet).id ==
  *   "phoenix_necklace"` check).
- * - Heal amount is `floor(maxPrayerLevel * 2.5)` (donor's `levels.getMax(Skill.Prayer) * 2.5`,
+ * - Heal amount is `floor(maxPrayerLevel * 0.25)` (donor's `levels.getMax(Skill.Prayer) * 2.5` on x10 life points,
  *   i.e. the base/max Prayer level, not the current boosted one).
  * - Prayer points are fully drained and all prayers/curses deactivated immediately (donor's
  *   `levels.set(Skill.Prayer, 0)`), matching the same `Prayers.deactivateAll` +
@@ -38,7 +38,8 @@ import gg.rsmod.plugins.api.ext.heal
  * the actual mechanic.
  */
 object Redemption {
-    private const val HEAL_MULTIPLIER = 2.5
+    // OSRS Wiki "Redemption": heals 25 % of the Prayer level. The donor's 2.5 was on its x10 life points; this server is 1:1.
+    private const val HEAL_MULTIPLIER = 0.25
     private const val THRESHOLD_DIVISOR = 10
 
     fun onDamageDealt(
