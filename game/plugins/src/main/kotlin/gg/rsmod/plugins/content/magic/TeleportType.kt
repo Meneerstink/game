@@ -3,6 +3,7 @@ package gg.rsmod.plugins.content.magic
 import gg.rsmod.game.model.Graphic
 import gg.rsmod.plugins.api.cfg.Anims
 import gg.rsmod.plugins.api.cfg.Gfx
+import gg.rsmod.plugins.api.cfg.Sfx
 
 /**
  * @author Tom <rspsmods@gmail.com>
@@ -142,4 +143,29 @@ enum class TeleportType(
         animation = Anims.FAIRY_TELEPORT_START,
         graphic = Graphic(Gfx.FAIRY_RING_TELEPORT, 0),
         endAnimation = Anims.FAIRY_TELEPORT_END),
+    ;
+
+    /**
+     * Sound when the teleport starts and when the player lands (2026-09-22: every non-spell teleport - jewellery,
+     * obelisks, ectophial, fairy rings, scrolls - was silent because the shared [teleport] played none). Values are the
+     * Void donor's same-era `teleport.sounds.toml`: teleport / teleport_jewellery / teleport_ectophial /
+     * teleport_skull_sceptre / teleport_wilderness / teleport_modern = 200, their teleport_land_* = 201,
+     * teleport_tablet = 965, teleport_fairy = 1098. Types Void gives no sound (ancient, lunar, scroll, ...) stay silent
+     * here; spell teleports already play their spell's own cast sound.
+     */
+    val startSound: Int?
+        get() =
+            when (this) {
+                MODERN, JEWELRY, ECTOPHIAL, SKULL_SCEPTRE, WILDERNESS_OBELISK, OBELISK -> Sfx.TELEPORT_ALL
+                TAB -> Sfx.POH_TABLET_BREAK_TELEPORT
+                FAIRY -> Sfx.FT_FAIRY_TELEPORT
+                else -> null
+            }
+
+    val landSound: Int?
+        get() =
+            when (this) {
+                MODERN, JEWELRY, ECTOPHIAL, SKULL_SCEPTRE, WILDERNESS_OBELISK, OBELISK -> Sfx.TELEPORT_REVERSE
+                else -> null
+            }
 }

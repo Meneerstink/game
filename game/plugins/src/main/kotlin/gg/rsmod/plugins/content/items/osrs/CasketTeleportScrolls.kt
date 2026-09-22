@@ -27,6 +27,24 @@ object CasketTeleportScrolls {
             Items.LUMBERYARD_TELEPORT to Destination(3302, 3487, 2),
         )
 
+    /**
+     * The revision-667 Treasure Trail scrolls (19475-19480, cache option "Read"), which had no handler at all (owner
+     * 2026-09-22: "Bandit Camp teleport is currently unhandled"). Landing squares are the Void donor's same-era
+     * `*_teleport` areas tagged "scroll" (bandit_camp, miscellania, piscatoris, tai_bwo_wannai, varrock.areas.toml);
+     * Void has no Nardah square, and RS Wiki "Pollnivneach Teleport" (`{{Teleport map|3361,2970}}`) states this scroll
+     * was the "Nardah teleport" before its 2013 rename to match where it already went. Visuals: TeleportType.SCROLL
+     * (Void teleport_scroll anim 14293 / gfx 94).
+     */
+    val READ_SCROLLS =
+        mapOf(
+            Items.NARDAH_TELEPORT to Destination(3361, 2970, 1),
+            Items.BANDIT_CAMP_TELEPORT to Destination(3172, 2983, 2),
+            Items.MISCELLANIA_TELEPORT to Destination(2513, 3858, 2),
+            Items.PHOENIX_LAIR_TELEPORT to Destination(2292, 3620, 2),
+            Items.TAI_BWO_WANNAI_TELEPORT to Destination(2805, 3086, 2),
+            Items.LUMBER_YARD_TELEPORT to Destination(3301, 3486, 1),
+        )
+
     val REFUSALS =
         mapOf(
             Items.LUNAR_ISLE_TELEPORT to "You need to complete the Lunar Diplomacy quest before you can reach the island.",

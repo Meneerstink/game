@@ -567,6 +567,14 @@ task runFeroxPortalCleanupTool(type: JavaExec) {
         'both caches). Usage: --args="plan|apply"'
     classpath = sourceSets.main.runtimeClasspath
     main = 'gg.rsmod.game.tools.importer.FeroxPortalCleanupTool'
+task runGeMapIconCleanupTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Grand Exchange home: remove the non-bank/non-GE map-marker locs (minimap + world map icons) ' +
+        'from region 12598 (CacheTransaction on both caches). Usage: --args="plan|apply"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.GeMapIconCleanupTool'
+}
+
 }
 
 task runFeroxImportTool(type: JavaExec) {

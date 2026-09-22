@@ -260,6 +260,7 @@ class World(
             // npcCombatDefs, bound npc options, static spawns) are all populated by now.
             logger.info(gg.rsmod.game.model.npc.NpcCensus.writeCsv(this))
         }
+            logger.info(gg.rsmod.game.model.item.ItemOptionCensus.writeCsv(this))
     }
 
     /**

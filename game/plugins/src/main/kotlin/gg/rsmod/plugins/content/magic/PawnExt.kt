@@ -11,6 +11,7 @@ import gg.rsmod.plugins.api.cfg.Anims
 import gg.rsmod.plugins.api.ext.filterableMessage
 import gg.rsmod.plugins.api.ext.getWildernessLevel
 import gg.rsmod.plugins.api.ext.message
+import gg.rsmod.plugins.api.ext.playSound
 import gg.rsmod.plugins.content.mechanics.pvp.DeadmanTimerGate
 import gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction
 
@@ -108,15 +109,20 @@ fun Pawn.prepareForTeleport() {
     clearHits()
 }
 
+/**
+ * @param startSound false when the caller already played the start sound (a spell's own cast sound).
+ */
 fun Pawn.teleport(
     endTile: Tile,
     type: TeleportType,
+    startSound: Boolean = true,
 ) {
     lock = LockState.FULL_WITH_DAMAGE_IMMUNITY
 
     queue(TaskPriority.STRONG) {
         prepareForTeleport()
 
+        if (startSound) type.startSound?.let { (this@teleport as? Player)?.playSound(it) }
         animate(type.animation)
         type.graphic?.let {
             graphic(it)
@@ -125,6 +131,7 @@ fun Pawn.teleport(
         wait(type.teleportDelay)
 
         teleportTo(endTile)
+        type.landSound?.let { (this@teleport as? Player)?.playSound(it) }
 
         type.endAnimation?.let {
             animate(it)

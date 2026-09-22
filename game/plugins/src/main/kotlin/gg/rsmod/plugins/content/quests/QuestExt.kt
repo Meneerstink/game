@@ -198,8 +198,13 @@ fun getRequirements(
 
             is SkillRequirement -> {
                 val skillString = "${it.level} ${Skills.getSkillName(world = player.world, skill = it.skill)}"
+    // Every quest completion shares this one scroll, so the jingle lives here too (2026-09-22: no quest played one).
+    // Void donor quest.jingles.toml: quest_complete_1 = 152, the jingle its quest scripts use for these quests.
+    playJingle(QUEST_COMPLETE_JINGLE)
                 requirementList.add(
                     if (player.skills.getMaxLevel(it.skill) >= it.level) {
+const val QUEST_COMPLETE_JINGLE = 152
+
                         striked(skillString)
                     } else {
                         skillString

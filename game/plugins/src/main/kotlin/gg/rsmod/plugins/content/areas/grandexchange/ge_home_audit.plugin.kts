@@ -107,6 +107,8 @@ on_world_init {
         // have their own placement rules and are never moved; the npc next to them moves instead.
         for (npc in npcs.toList().asReversed()) {
             if (npc.respawnOverride == true) continue
+            // The home hall's stalls stand shoulder to shoulder along its walls on purpose (ge_home_hall.plugin.kts).
+            if (GeHomeHall.contains(npc.tile)) continue
             // Bankers and exchange clerks stand inside their booth on purpose (live boot 2026-09-19 moved all 16 out: wrong).
             if (worksAcrossCounter(npc)) continue
             val tiles = footprint(npc)
