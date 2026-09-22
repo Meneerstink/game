@@ -1,7 +1,5 @@
 package gg.rsmod.plugins.content.areas.grandexchange
 
-import gg.rsmod.game.model.Direction
-
 /*
  * The Grand Exchange home hall (owner 2026-09-22: "At our Home Grand Exchange, create a SMALL but premium custom
  * building ... Put ALL current Grand Exchange Home NPCs inside the building ... Keep bankers / GE access practical").
@@ -15,14 +13,15 @@ import gg.rsmod.game.model.Direction
  * WHAT. Walls are the Grand Exchange's own stone wall (loc 23779, the wall of the exchange compound itself - 192
  * placements in this region as a straight wall, also used there as a corner), so the hall reads as part of the
  * exchange. The four corner pieces are the same loc as an L-corner (type 2). Two three-tile entrances (east and north)
- * are flanked by standing torches (724, animated flame). The centrepiece is the cache's `Carved fountain` (35469, 4x4);
- * the floor is the Construction opulent rug laid as one carpet (corner/edge/centre pieces, rotations as in
- * `casino_grandexchange.plugin.kts`); potted plants (60035) stand in the four corners. Every decorative id was checked
- * to carry no menu option, so nothing in the hall offers a dead "Examine-only" action.
+ * are flanked by standing torches (724, animated flame). The centrepiece is the cache's `Carved fountain` (35469, 4x4).
+ * `GeHomeHallMapTool` replaces the lawn with the exact grey Grand Exchange paving from the adjacent east approach and
+ * removes the covered grass decorations in both caches; the former 121-tile red POH rug is intentionally gone. Four
+ * potted plants soften the solid corners and cache-native GE wall banners (60279) give the long walls a focal point.
+ * Every decorative id was checked to carry no menu option, so nothing offers a dead interaction.
  *
- * WHO. Every service npc of the old open-air hub row stands along the inside of the walls, facing the fountain, with
- * the new Quartermaster (home PvP/PvM supplies) in the middle of the west wall opposite the east entrance. The bankers,
- * GE clerks, Skully and the casino croupiers keep their own posts (banks, booths, the casino pit).
+ * WHO. Every service npc of the old open-air hub row stands along the inside of the walls, facing the fountain. The
+ * crowded west row is split across both side walls; Penguin/Ping/Pong are intentionally removed. Lucien uses the
+ * cache's otherwise identical non-combat variant 273. Bankers, GE clerks, Skully and casino croupiers keep their posts.
  */
 
 val HALL_X = GeHomeHall.X
@@ -37,6 +36,7 @@ val HALL_WALL = 23779
 val STANDING_TORCH = 724
 val CARVED_FOUNTAIN = 35469
 val POTTED_PLANT = 60035
+val GE_WALL_BANNER = 60279
 
 // ------------------------------------------------------------------ walls
 
@@ -55,37 +55,6 @@ spawn_obj(obj = HALL_WALL, x = HALL_X + LAST, z = HALL_Z + LAST, type = 2, rot =
 spawn_obj(obj = HALL_WALL, x = HALL_X + LAST, z = HALL_Z, type = 2, rot = 2)
 spawn_obj(obj = HALL_WALL, x = HALL_X, z = HALL_Z, type = 2, rot = 3)
 
-// ------------------------------------------------------------------ floor
-
-/** The opulent rug as one carpet: a piece's rotation names the side of the carpet it belongs to (N0 E1 S2 W3). */
-fun hallRug(
-    dx: Int,
-    dz: Int,
-): Pair<Int, Int> {
-    val west = dx == 0
-    val east = dx == LAST
-    val south = dz == 0
-    val north = dz == LAST
-    return when {
-        north && west -> Objs.RUG_13594 to 0
-        north && east -> Objs.RUG_13594 to 1
-        south && east -> Objs.RUG_13594 to 2
-        south && west -> Objs.RUG_13594 to 3
-        north -> Objs.RUG_13595 to 0
-        east -> Objs.RUG_13595 to 1
-        south -> Objs.RUG_13595 to 2
-        west -> Objs.RUG_13595 to 3
-        else -> Objs.RUG_13596 to 0
-    }
-}
-
-for (dx in 0..LAST) {
-    for (dz in 0..LAST) {
-        val (piece, rot) = hallRug(dx, dz)
-        spawn_obj(obj = piece, x = HALL_X + dx, z = HALL_Z + dz, type = 22, rot = rot)
-    }
-}
-
 // ------------------------------------------------------------------ dressing
 
 spawn_obj(obj = CARVED_FOUNTAIN, x = HALL_X + 4, z = HALL_Z + 4, type = 10, rot = 0)
@@ -96,46 +65,19 @@ listOf(0 to 0, 0 to LAST, LAST to 0, LAST to LAST).forEach { (dx, dz) ->
 listOf(3 to LAST, 7 to LAST, LAST to 3, LAST to 7).forEach { (dx, dz) ->
     spawn_obj(obj = STANDING_TORCH, x = HALL_X + dx, z = HALL_Z + dz, type = 10, rot = 0)
 }
+// Two restrained heraldic accents on the uninterrupted west/south walls. Type 4 is non-solid wall decoration.
+spawn_obj(obj = GE_WALL_BANNER, x = HALL_X, z = HALL_Z + 5, type = 4, rot = 0)
+spawn_obj(obj = GE_WALL_BANNER, x = HALL_X + 5, z = HALL_Z, type = 4, rot = 3)
 
 // ------------------------------------------------------------------ the npcs
 
 /** One stall: an npc on the inside of a wall, facing into the hall. */
-fun stall(
-    npc: Int,
-    dx: Int,
-    dz: Int,
-    facing: Direction,
-) {
-    spawn_npc(npc = npc, x = HALL_X + dx, z = HALL_Z + dz, walkRadius = 0, direction = facing)
+GeHomeHall.SERVICE_POSTS.forEach { post ->
+    spawn_npc(
+        npc = post.npc,
+        x = HALL_X + post.dx,
+        z = HALL_Z + post.dz,
+        walkRadius = 0,
+        direction = post.facing,
+    )
 }
-
-// West wall, facing east (the Quartermaster opposite the east entrance).
-stall(Npcs.SIR_TIFFY_CASHIEN, 0, 1, Direction.EAST)
-stall(Npcs.MAX, 0, 2, Direction.EAST)
-stall(Npcs.AVA, 0, 3, Direction.EAST)
-stall(Npcs.ALECK, 0, 4, Direction.EAST)
-stall(GeHomeHall.QUARTERMASTER, 0, 5, Direction.EAST)
-stall(Npcs.PIKKUPSTIX, 0, 6, Direction.EAST)
-stall(Npcs.BOB, 0, 7, Direction.EAST)
-stall(Npcs.MANDRITH, 0, 8, Direction.EAST)
-stall(Npcs.PERDU, 0, 9, Direction.EAST)
-
-// South wall, facing north. The three 78 Store keepers (x 1-3) are spawned by StoreNpcs from its POSTS.
-stall(Npcs.PARTY_PETE, 4, 0, Direction.NORTH)
-stall(Npcs.KURADAL_9085, 5, 0, Direction.NORTH)
-stall(Npcs.WISE_OLD_MAN, 6, 0, Direction.NORTH)
-stall(Npcs.EVIL_DAVE, 7, 0, Direction.NORTH)
-stall(Npcs.TOOL_LEPRECHAUN, 8, 0, Direction.NORTH)
-stall(Npcs.DRUNKEN_DWARF, 9, 0, Direction.NORTH)
-
-// North wall either side of the north entrance, facing south.
-stall(Npcs.AZZANADRA, 1, LAST, Direction.SOUTH)
-stall(Npcs.ARCHAEOLOGIST, 2, LAST, Direction.SOUTH)
-stall(Npcs.ONEIROMANCER, 8, LAST, Direction.SOUTH)
-stall(Npcs.KING_NARNODE_SHAREEN, 9, LAST, Direction.SOUTH)
-
-// East wall either side of the east entrance, facing west.
-stall(Npcs.LUCIEN, LAST, 1, Direction.WEST)
-stall(Npcs.PENGUIN_5428, LAST, 2, Direction.WEST)
-stall(Npcs.PING, LAST, 8, Direction.WEST)
-stall(Npcs.PONG, LAST, 9, Direction.WEST)

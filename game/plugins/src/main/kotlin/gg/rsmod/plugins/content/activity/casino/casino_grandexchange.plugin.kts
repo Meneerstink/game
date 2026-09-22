@@ -13,9 +13,9 @@ import gg.rsmod.game.model.Direction
  * x 3159-3171 / z 3508-3513 in this cache - no scenery, not even a ground decoration - so nothing of Varrock's own
  * is overwritten or hidden, and the walled backdrop at z 3516 closes the room off behind the dealers.
  *
- * WHAT. Four gaming tables in a row with a croupier standing behind each one, a carpeted pit in front of them, a
+ * WHAT. Four gaming tables in a row with a croupier standing behind each one, a paved pit in front of them, a
  * lit centrepiece with the cache's own rolling `Dice`, and torches marking the four corners and the entrance.
- * Players walk in from the Grand Exchange side (south), cross the carpet and talk to the dealer of the game they
+ * Players walk in from the Grand Exchange side (south), cross the open floor and talk to the dealer of the game they
  * want; the one-tile gaps between the tables (x 3161 / 3165 / 3169) are deliberately left open so the dealers can
  * be reached from either side of their table.
  *
@@ -28,26 +28,24 @@ import gg.rsmod.game.model.Direction
  * but ground decoration at plane 0 across x 3155-3178, so the wider pit still overwrites none of Varrock's own
  * scenery (a type-10 object and a type-22 ground decoration occupy different slots on a tile and coexist).
  *
- * EVERY OTHER ID IS CACHE-NATIVE TOO. The croupiers are the revision-667 `Gambler` npcs (2998-3003), the carpet
- * the POH `Rug` (13594, the object `PlayerHouse` builds from rug space 15274), the lighting its `Standing torch`
- * (724, flame animation 481) and the centrepiece its animated `Dice` (16855, animation 4360).
+ * EVERY OTHER ID IS CACHE-NATIVE TOO. The croupiers are the revision-667 `Gambler` npcs (2998-3003), the lighting
+ * its `Standing torch` (724, flame animation 481), the centrepiece its animated `Dice` (16855, animation 4360), and
+ * the north wall carries the same Grand Exchange banners used elsewhere in this Home.
  *
  * NOTHING PLACED HERE CARRIES A DEAD OPTION. Every decorative id was checked with `runObjectDefProbeTool` and only
  * option-less ids were used - that is why the crates are `Gambling crate` 62275 and not 62274, which advertises an
  * "Open" that no plugin answers, and why the pit is lit by `Standing torch` (no options) rather than `Brazier`
- * (1:'Investigate'). The rug is `blockwalk=0`, so the carpet is walked over, not around; everything else is solid
- * and is laid out so that no tile a player needs is ever enclosed.
+ * (1:'Investigate'). The native Grand Exchange paving now stays visible throughout the pit; every solid prop is laid
+ * out so that no tile a player needs is ever enclosed.
  */
 
 // ------------------------------------------------------------------ geometry
 
-/** The row the four tables and their dealers occupy; the pit and its carpet lie south of it. */
+/** The row the four tables and their dealers occupy; the open social pit lies south of it. */
 val PIT_WEST = 3157
 val PIT_EAST = 3173
 val PIT_SOUTH = 3507
-val CARPET_SOUTH = 3508
 val TABLE_Z = 3512
-val CARPET_NORTH = 3513
 val DEALER_Z = 3514
 
 /**
@@ -63,19 +61,6 @@ val FLOWER_TABLE_X = 3170
 val TABLE_WIDTH = 3
 
 val PIT_CENTRE = Tile(3165, 3510, 0)
-
-// ------------------------------------------------------------------ the floor
-
-/*
- * The carpet. Ground decoration (type 22) replaces whatever decoration already stands on a tile, so it is laid only
- * on the tiles the placement probe reported as empty - x 3160-3170 by z 3508-3513. The tables stand on top of it,
- * which is what a gaming pit looks like.
- */
-for (x in PIT_WEST + 1 until PIT_EAST) {
-    for (z in CARPET_SOUTH..CARPET_NORTH) {
-        spawn_obj(obj = Objs.RUG_13594, x = x, z = z, type = 22, rot = 0)
-    }
-}
 
 // ------------------------------------------------------------------ the tables and their dealers
 
@@ -101,18 +86,23 @@ station(Npcs.GAMBLER_3003, FLOWER_TABLE_X)
 
 // ------------------------------------------------------------------ dressing
 
-// Corner torches frame the pit; the two at PIT_SOUTH flank the entrance the carpet runs up to.
+// Corner torches frame the pit; the two at PIT_SOUTH flank its open entrance.
 listOf(
-    Tile(PIT_WEST, CARPET_NORTH, 0),
-    Tile(PIT_EAST, CARPET_NORTH, 0),
-    Tile(PIT_WEST, CARPET_SOUTH, 0),
-    Tile(PIT_EAST, CARPET_SOUTH, 0),
+    Tile(PIT_WEST, TABLE_Z + 1, 0),
+    Tile(PIT_EAST, TABLE_Z + 1, 0),
+    Tile(PIT_WEST, TABLE_Z - 4, 0),
+    Tile(PIT_EAST, TABLE_Z - 4, 0),
     Tile(PIT_CENTRE.x - 2, PIT_SOUTH, 0),
     Tile(PIT_CENTRE.x + 2, PIT_SOUTH, 0),
     // Flanking the centrepiece, so the middle of the pit is lit rather than empty.
     Tile(PIT_CENTRE.x - 1, PIT_CENTRE.z, 0),
     Tile(PIT_CENTRE.x + 1, PIT_CENTRE.z, 0),
 ).forEach { spawn_obj(obj = Objs.STANDING_TORCH, x = it.x, z = it.z, type = 10, rot = 0) }
+
+// Cache-native Grand Exchange wall banners make the dealer row feel built into the surrounding exchange.
+listOf(3159, 3163, 3167, 3171).forEach { x ->
+    spawn_obj(obj = 60279, x = x, z = 3516, type = 4, rot = 1)
+}
 
 // The centrepiece: the cache's own dice, which roll on animation 4360 for as long as the hall stands.
 spawn_obj(obj = Objs.DICE_16855, x = PIT_CENTRE.x, z = PIT_CENTRE.z, type = 10, rot = 0)

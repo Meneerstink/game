@@ -546,6 +546,13 @@ task runRev667RegionProbeTool(type: JavaExec) {
     main = 'gg.rsmod.game.tools.importer.Rev667RegionProbeTool'
 }
 
+task runGeHomeHallMapTool(type: JavaExec) {
+    group = 'verification'
+    description = 'Transactionally pave the GE home hall and remove its old lawn decorations. Usage: --args="plan|apply"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.GeHomeHallMapTool'
+}
+
 task runFeroxBarrierOptionTool(type: JavaExec) {
     group = 'tools'
     description = 'Ferox follow-up: give the visible barrier field loc 62438 the "Pass-Through" option (A7 CacheTransaction on both caches). Usage: --args="plan|apply"'
