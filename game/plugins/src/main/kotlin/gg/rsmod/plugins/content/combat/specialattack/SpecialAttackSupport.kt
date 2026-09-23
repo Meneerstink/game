@@ -188,7 +188,9 @@ object SpecialAttackSupport {
     ): Boolean {
         if (other.isDead() || other.invisible || !other.tile.isMulti(player.world)) return false
         return when (other) {
-            is Npc -> other.isSpawned() && other.def.isAttackable() && other.combatDef.lifepoints != -1
+            is Npc -> other.isSpawned() && other.def.isAttackable() && other.combatDef.lifepoints != -1 &&
+                // Every can_attack hook (breach PvP protection, Deadman guards, ...) also gates splash victims, silently.
+                player.world.plugins.canAttack(player, other, false)
             is Player -> {
                 // AreaState.canPlayersFight already enforces the shared +/-12 combat-level range
                 // (Deadman PvP guards plan, 2026-09-16); no separate check needed here.

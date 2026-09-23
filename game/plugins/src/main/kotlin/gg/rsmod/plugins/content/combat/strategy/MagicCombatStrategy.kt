@@ -226,6 +226,8 @@ object MagicCombatStrategy : CombatStrategy {
         }
         return when (other) {
             is Npc -> other.isSpawned() && other.def.isAttackable() && other.combatDef.lifepoints != -1 && other.getCurrentLifepoints() > 0
+                // Every can_attack hook (breach PvP protection, Deadman guards, ...) also gates splash victims, silently.
+                && pawn.world.plugins.canAttack(pawn, other, false)
             is Player -> {
                 if (!other.isOnline || !other.lock.canBeAttacked()) {
                     return false
