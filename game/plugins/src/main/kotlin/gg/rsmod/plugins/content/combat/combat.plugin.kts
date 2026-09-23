@@ -208,6 +208,11 @@ suspend fun cycle(it: QueueTask): Boolean {
                 } else {
                     false
                 }
+            // OSRS Wiki "Deadman: Annihilation": "Multiple players can attack the same boss that spawned through a breach in a
+            // single-way combat zone" - a breach monster is never reserved by the first player on it. The player side keeps the
+            // normal rule ("players can also be attacked by another player in a single area if they are not being attacked by
+            // the boss").
+            val sharedBreachTarget = target is Npc && gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.isBreachNpc(target) && pawn is Player
             if (guardInvolved) {
                 // no single-combat restriction
             } else if (pawnInMulti || targetInMulti) {
@@ -218,7 +223,7 @@ suspend fun cycle(it: QueueTask): Boolean {
                     Combat.reset(pawn)
                     return false
                 }
-                if (!targetInMulti && target.isBeingAttacked() && target.getLastHitBy() != pawn && !boxedByOrdinaryNpc) {
+                if (!targetInMulti && target.isBeingAttacked() && target.getLastHitBy() != pawn && !boxedByOrdinaryNpc && !sharedBreachTarget) {
                     if (pawn is Player) {
                         if (target is Player) {
                             pawn.message("Someone is already fighting this player.")
@@ -239,7 +244,7 @@ suspend fun cycle(it: QueueTask): Boolean {
                     Combat.reset(pawn)
                     return false
                 }
-                if (target.isBeingAttacked() && target.getLastHitBy() != pawn && !boxedByOrdinaryNpc) {
+                if (target.isBeingAttacked() && target.getLastHitBy() != pawn && !boxedByOrdinaryNpc && !sharedBreachTarget) {
                     if (pawn is Player) {
                         if (target is Player) {
                             pawn.message("Someone is already fighting this player.")

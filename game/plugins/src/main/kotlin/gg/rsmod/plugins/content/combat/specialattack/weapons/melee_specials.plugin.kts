@@ -151,6 +151,7 @@ SpecialAttacks.register(60, Items.ABYSSAL_VINE_WHIP) {
                 if (victim.isDead() || attacker.isDead() || (victim is Player && !victim.isOnline) || !attacker.isOnline) return@queue
                 victim.hit(damage = 10, type = HitType.MELEE.id)
                 victim.damageMap.add(attacker, 10)
+                gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.recordDamage(victim, attacker, 10)
             }
         }
     }

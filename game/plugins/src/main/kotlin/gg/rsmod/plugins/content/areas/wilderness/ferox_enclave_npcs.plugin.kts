@@ -24,6 +24,8 @@ spawn_npc(npc = Npcs.ZAMORAKIAN_ACOLYTE, x = 3135, z = 3636, walkRadius = 4, dir
 spawn_npc(npc = Npcs.ZAMORAKIAN_ACOLYTE_14380, x = 3135, z = 3636, walkRadius = 4, direction = Direction.SOUTH)
 spawn_npc(npc = Npcs.ZAMORAKIAN_ACOLYTE_14381, x = 3135, z = 3636, walkRadius = 4, direction = Direction.SOUTH)
 spawn_npc(npc = Npcs.SKULLY, x = 3139, z = 3626, walkRadius = 0, direction = Direction.SOUTH)
+// Owner 2026-09-23: nobody may walk through any Skully - his tile is solid like the bank Skullys (SkullyRoster.blockTile).
+on_world_init { gg.rsmod.plugins.content.mechanics.pvp.SkullyRoster.blockTile(world, Tile(3139, 3626, 0)) }
 spawn_npc(npc = Npcs.BANKER_FEROX_ENCLAVE, x = 3135, z = 3629, walkRadius = 4, direction = Direction.SOUTH)
 spawn_npc(npc = Npcs.MERCENARY_FEROX_ENCLAVE, x = 3130, z = 3629, walkRadius = 4, direction = Direction.SOUTH)
 spawn_npc(npc = Npcs.ANDROS_MAI, x = 3152, z = 3644, walkRadius = 4, direction = Direction.SOUTH)

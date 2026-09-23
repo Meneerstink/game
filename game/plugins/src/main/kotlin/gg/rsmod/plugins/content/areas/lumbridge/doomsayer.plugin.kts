@@ -7,6 +7,7 @@ on_npc_option(Npcs.DOOMSAYER, option = "talk-to") {
 }
 
 on_npc_option(Npcs.DOOMSAYER, option = "Toggle-warnings") {
+    enableDangerWarnings(player)
     player.openInterface(DOOMSAYER_INTERFACE_ID, InterfaceDestination.MAIN_SCREEN)
 }
 
@@ -44,11 +45,20 @@ suspend fun chat(it: QueueTask) {
     ) {
         1 -> {
             it.chatPlayer("Yes, I do.")
+            enableDangerWarnings(it.player)
             it.player.openInterface(DOOMSAYER_INTERFACE_ID, InterfaceDestination.MAIN_SCREEN)
         }
         2 -> {
             it.chatNpc("Ok, keep an eye out for the messages though!")
             it.chatPlayer("I will.")
         }
+    }
+}
+
+/** Owner 2026-09-23: the Doomsayer turns the Dangerous-area warning (DangerWarning) back on. */
+fun enableDangerWarnings(player: Player) {
+    if (player.attr[gg.rsmod.plugins.content.mechanics.pvp.DangerWarning.DISABLED] == true) {
+        gg.rsmod.plugins.content.mechanics.pvp.DangerWarning.setDisabled(player, false)
+        player.message("Dangerous-area warnings are turned on again.")
     }
 }

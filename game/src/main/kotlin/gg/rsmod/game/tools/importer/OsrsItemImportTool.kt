@@ -926,6 +926,12 @@ object OsrsItemImportTool {
             // Kits 2 (OSRS import run 2026-09-17): dark bow paints and the painted dark bows (client class of the 667 Dark bow 11235: 23/749/750
             // 60 Ranged, 644 = 303, 686 = 16, 687 = 1; weapon type 16, attack audio 3731), dragon pickaxe upgrade kit / Zalcano shard and both
             // Dragon pickaxe (or) (class of the 667 Dragon pickaxe 15259: 686 = 4, 687 = 1, 749/750 60 Attack, 770/771 = 14/61 Mining; weapon type 4).
+            // Breach emblem (owner 2026-09-23): OSRS Wiki "Archaic emblem" - "Tier 5 emblems are also guaranteed from breach monsters
+            // if you are eligible for loot and have also dealt 250 or more damage". Tier 5 (12751) has no noted form upstream.
+            "emblems" to
+                listOf(
+                    Spec(12751), // Archaic emblem (tier 5)
+                ),
             "kits2" to
                 listOf(
                     Spec(12757, noted = true), // Blue dark bow paint

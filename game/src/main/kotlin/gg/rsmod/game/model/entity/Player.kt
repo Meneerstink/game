@@ -459,6 +459,11 @@ abstract class Player(
 
         lastTile = Tile(tile)
         moveTo(movement.finalDestination)
+        if (tile != movement.finalDestination && tile == lastTile) {
+            // Held back by a MoveGate (the Dangerous-area warning): no slide on the client, no stale lock.
+            if (movement.lock != LockState.NONE) lock = LockState.NONE
+            return
+        }
 
         forceMove(movement)
 
@@ -481,6 +486,11 @@ abstract class Player(
 
         lastTile = Tile(tile)
         moveTo(movement.finalDestination)
+        if (tile != movement.finalDestination && tile == lastTile) {
+            // Held back by a MoveGate (the Dangerous-area warning): no slide on the client, no stale lock.
+            if (movement.lock != LockState.NONE) lock = LockState.NONE
+            return
+        }
 
         forceMove(movement)
 

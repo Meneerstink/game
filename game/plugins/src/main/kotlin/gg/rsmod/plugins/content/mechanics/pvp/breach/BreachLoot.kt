@@ -10,11 +10,14 @@ import java.util.Random
  * The permanent world matches ("Each breach monster now drops 1 Chitin per kill. There's a 50% chance to receive a second regular
  * supply drop instead of a Chitin.", runescapeguides.com World 345 breaches).
  *
- * Owner exclusions (Deadman product decision): no trinkets at all (see [RARE]). Archaic emblems are Deadman: Annihilation skull-shop
- * points, which the permanent world (and this server) does not have. [ItemIds] holds the ids of the items imported for this table.
+ * Owner exclusions (Deadman product decision): no trinkets at all (see [RARE]). Owner 2026-09-23: the Archaic emblem (tier 5)
+ * drops for eligible players with [EMBLEM_DAMAGE]+ damage and trades in for [BreachPoints] ([DeadmanBreach.dropLoot]). [ItemIds] holds the ids of the items imported for this table.
  */
 object BreachLoot {
     const val ELIGIBLE = 16
+
+    /** "Tier 5 emblems are also guaranteed from breach monsters if you are eligible for loot and have also dealt 250 or more damage". */
+    const val EMBLEM_DAMAGE = 250
 
     /** "a roughly 1/72 chance for eligible players to roll this table": the listed x/9576 weights sum to 133. */
     const val RARE_DENOMINATOR = 9576

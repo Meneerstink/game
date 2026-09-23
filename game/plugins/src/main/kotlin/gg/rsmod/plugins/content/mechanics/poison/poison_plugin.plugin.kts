@@ -31,7 +31,9 @@ on_timer(POISON_TIMER) {
         return@on_timer
     }
 
-    pawn.hit(damage = Poison.getDamageForTicks(ticksLeft), type = HitType.POISON)
+    val poisonDamage = Poison.getDamageForTicks(ticksLeft)
+    pawn.hit(damage = poisonDamage, type = HitType.POISON)
+    gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.recordDotDamage(pawn, poisonDamage)
     if (ticksLeft == 0) {
         // That was the severity-1 hit: the severity is now zero and the poison ends (orb back to normal) right away.
         if (pawn is Player) {

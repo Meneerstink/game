@@ -642,6 +642,9 @@ abstract class Pawn(
         x: Int,
         z: Int,
         height: Int = 0,
+        if (this is Player && gg.rsmod.game.model.MoveGate.teleport?.invoke(this, Tile(x, z, height)) == true) {
+            return
+        }
     ) {
         moved = true
         blockBuffer.teleport = !tile.isWithinRadius(x, z, height, Player.NORMAL_VIEW_DISTANCE)

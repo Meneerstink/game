@@ -341,8 +341,9 @@ fun Pawn.dealHit(
         hit.addAction {
             val pawn = this@dealHit
             val credited = pawn.attr[DAMAGE_CREDIT_ATTR]?.get() ?: pawn
-            target.damageMap.add(credited, hit.hitmarks.sumOf { it.damage })
-            gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.recordDamage(target, credited)
+            val dealt = hit.hitmarks.sumOf { it.damage }
+            target.damageMap.add(credited, dealt)
+            gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.recordDamage(target, credited, dealt)
         }
     }
 
@@ -501,6 +502,7 @@ fun Pawn.poison(
     onPoison: (() -> Unit)? = null,
 ) {
     if (!Poison.isImmune(this) && Poison.poison(this, initialDamage)) {
+        gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.notePoisoner(this)
         Poison.setPoisonVarp(this, Poison.OrbState.POISON)
         onPoison?.invoke()
     }
@@ -508,6 +510,7 @@ fun Pawn.poison(
 
 fun Pawn.venom(onVenom: (() -> Unit)? = null) {
     if (Venom.envenom(this)) {
+        gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.notePoisoner(this)
         onVenom?.invoke()
     }
 }

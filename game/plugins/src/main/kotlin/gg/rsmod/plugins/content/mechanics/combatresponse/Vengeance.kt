@@ -54,6 +54,7 @@ object Vengeance {
         val reflected = max(1, (damage * REFLECT_PERCENT).toInt())
         attacker.hit(damage = reflected, type = HitType.REFLECTED)
         attacker.damageMap.add(target, reflected)
+        gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.recordDamage(attacker, target, reflected)
 
         if (target is Player) {
             // Sourced exact line ("Taste vengeance!") - OSRS Wiki "Vengeance".

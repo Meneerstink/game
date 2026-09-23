@@ -14,6 +14,8 @@ import gg.rsmod.plugins.api.ext.*
 import gg.rsmod.plugins.content.combat.attack.NpcAttacks
 import gg.rsmod.plugins.content.combat.audio.NpcCombatAudio
 import gg.rsmod.plugins.content.combat.getCombatTarget
+import gg.rsmod.plugins.content.combat.getLastHitBy
+import gg.rsmod.plugins.content.combat.isBeingAttacked
 import gg.rsmod.plugins.content.mechanics.prayer.AncientCurse
 import gg.rsmod.plugins.content.mechanics.prayer.Prayer
 import gg.rsmod.plugins.content.mechanics.prayer.Prayers
@@ -101,12 +103,15 @@ on_world_init {
 can_attack { attacker, target ->
     // Pestilent Bloat "does not directly attack": only its flies hurt (the per-tick loop below).
     if (attacker is Npc && attacker.id == BLOAT && DeadmanBreach.isBreachNpc(attacker)) return@can_attack false
-    val npc = (target as? Npc) ?: (attacker as? Npc)
-    val player = (attacker as? Player) ?: (target as? Player)
-    if (npc == null || player == null || !DeadmanBreach.isBreachNpc(npc) || DeadmanBreach.canFight(player)) {
+    // The breach monster on either side; the other side's player is the player itself or the owner of a familiar, so a
+    // protected player's familiar cannot fight breach monsters for him (owner 2026-09-23 protection-bypass audit).
+    val npc = (target as? Npc)?.takeIf { DeadmanBreach.isBreachNpc(it) } ?: (attacker as? Npc)?.takeIf { DeadmanBreach.isBreachNpc(it) }
+    val other = if (npc === target) attacker else target
+    val player = DeadmanBreach.controllingPlayer(other)
+    if (npc == null || player == null || DeadmanBreach.canFight(player)) {
         true
     } else {
-        if (attacker is Player && world.plugins.notifyAttackRefusal) {
+        if (attacker !== npc && world.plugins.notifyAttackRefusal) {
             player.filterableMessage("You can't attack breach monsters while you have PvP protection.")
         }
         false
@@ -213,10 +218,12 @@ val SWITCH_RADIUS = 8
 
 fun maybeSwitchTarget(npc: Npc, current: gg.rsmod.game.model.entity.Pawn, chance: Int) {
     if (world.random(chance - 1) != 0) return
-    val others = ArrayList<Player>()
-    world.players.forEach { p ->
-        if (p !== current && !p.isDead() && p.tile.height == npc.tile.height && p.tile.isWithinRadius(npc.tile, SWITCH_RADIUS) && DeadmanBreach.canFight(p)) others += p
-    }
+    val others =
+        DeadmanBreach.playersNear(world, npc.tile, SWITCH_RADIUS).filter { p ->
+            p !== current && !p.isDead() && DeadmanBreach.canFight(p) &&
+                // single-way: never onto a player someone else is already fighting
+                (npc.tile.isMulti(world) || !p.isBeingAttacked() || p.getLastHitBy() === npc)
+        }
     val next = others.randomOrNull() ?: return
     world.queue {
         wait(1)
@@ -325,13 +332,12 @@ on_npc_pre_death(14468) {
     world.spawn(TileGraphic(tile = npc.tile, id = BreachMonsters.GFX_SPLATTER_EXPLODE, height = 0))
     val victims =
         if (npc.tile.isMulti(world)) {
-            ArrayList<Player>().also { list ->
-                world.players.forEach { if (it.tile.height == npc.tile.height && it.tile.isWithinRadius(npc.tile, 1 + npc.getSize())) list += it }
-            }
+            DeadmanBreach.playersNear(world, npc.tile, 1 + npc.getSize())
         } else {
             listOfNotNull(npc.getCombatTarget() as? Player)
         }
-    victims.forEach { it.hit(world.random(SPLATTER_EXPLOSION_MAX)) }
+    // PvP-protected players are never hurt by breach monsters, the explosion included.
+    victims.filter { DeadmanBreach.canFight(it) }.forEach { it.hit(world.random(SPLATTER_EXPLOSION_MAX)) }
 }
 
 /** Bee Swarm: "Stepping beneath the bee swarm will result in taking damage" (ADAPTED: 0 to its max hit 11, each tick). */
@@ -348,9 +354,9 @@ on_world_init {
             DeadmanBreach.live.forEach { npc ->
                 when (npc.id) {
                     BEE_SWARM ->
-                        world.players.forEach { p ->
+                        DeadmanBreach.playersNear(world, npc.tile, npc.getSize()).forEach { p ->
                             val t = p.tile
-                            if (t.height == npc.tile.height && t.x in npc.tile.x until npc.tile.x + npc.getSize() && t.z in npc.tile.z until npc.tile.z + npc.getSize() &&
+                            if (t.x in npc.tile.x until npc.tile.x + npc.getSize() && t.z in npc.tile.z until npc.tile.z + npc.getSize() &&
                                 DeadmanBreach.canFight(p)
                             ) {
                                 p.hit(world.random(11))
@@ -359,8 +365,8 @@ on_world_init {
                         }
                     BLOAT ->
                         if (tick % 5 == 0) {
-                            world.players.forEach { p ->
-                                if (p.tile.height == npc.tile.height && p.tile.isWithinRadius(npc.tile, BLOAT_RANGE) && DeadmanBreach.canFight(p) &&
+                            DeadmanBreach.playersNear(world, npc.tile, BLOAT_RANGE).forEach { p ->
+                                if (DeadmanBreach.canFight(p) &&
                                     npc.hasLineOfSightTo(p, projectile = true, maximumDistance = BLOAT_RANGE)
                                 ) {
                                     p.graphic(BreachMonsters.GFX_BLOAT_FLIES)

@@ -81,6 +81,8 @@ object NpcLeash {
             return gg.rsmod.plugins.content.mechanics.pvp.CityGuards.mayPursue(npc, target)
         }
         if (gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.isBreachNpc(npc)) {
+            // A breach monster never follows anyone into a Safe (guarded) zone: breaches are Dangerous-area events only.
+            if (gg.rsmod.plugins.content.mechanics.pvp.GuardedZones.contains(target.tile)) return false
             return withinAggro(npc.spawnTile, target.tile, gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.CHASE_RANGE, attackRange)
         }
         return withinAggro(npc.spawnTile, target.tile, maxRange(npc.id), attackRange)

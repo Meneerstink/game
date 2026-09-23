@@ -7,6 +7,9 @@ object BreachIds {
     /** OSRS loc 49561 "Breach" / 49563 "Boss Spawn" (OsrsLocImportTool deadman-breach, tx-20260919-164612). */
     const val BREACH_LOC = 62747
     const val BOSS_SPAWN_LOC = 62748
+
+    /** OSRS item 12751 "Archaic emblem (tier 5)" (OsrsItemImportTool batch emblems, tx-20260923-184052). */
+    const val ARCHAIC_EMBLEM_TIER_5 = 23857
 }
 
 /** OSRS items imported for the breach drop table (OsrsItemImportTool deadman-breach, tx-20260919-164727). */

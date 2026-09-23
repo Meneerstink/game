@@ -286694,3 +286694,9 @@
   tradeable: false
   weight: 0.08
   equipment: null
+- id: 23857
+  name: "Archaic emblem (tier 5)"
+  examine: "An emblem of ancient times, now superseded."
+  tradeable: true
+  weight: 0.1
+  equipment: null

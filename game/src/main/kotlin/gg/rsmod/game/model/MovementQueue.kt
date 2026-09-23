@@ -78,6 +78,10 @@ class MovementQueue(
                     clear()
                     return
                 }
+                if (pawn is Player && MoveGate.step?.invoke(pawn, tile, next.tile) == true) {
+                    clear()
+                    return
+                }
                 tile = Tile(next.tile)
                 pawn.lastFacingDirection = walkDirection
 
@@ -96,7 +100,9 @@ class MovementQueue(
                     if (next != null) {
                         runDirection = Direction.between(tile, next.tile)
 
-                        if (canStep(tile, runDirection, next.detectCollision) && !(pawn is Npc && isEntityBlocked(pawn, next.tile))) {
+                        if (canStep(tile, runDirection, next.detectCollision) && !(pawn is Npc && isEntityBlocked(pawn, next.tile)) &&
+                            !(pawn is Player && MoveGate.step?.invoke(pawn, tile, next.tile) == true)
+                        ) {
                             tile = Tile(next.tile)
                             pawn.lastFacingDirection = runDirection
                         } else {

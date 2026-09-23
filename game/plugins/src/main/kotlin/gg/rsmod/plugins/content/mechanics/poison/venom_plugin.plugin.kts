@@ -23,7 +23,10 @@ on_timer(VENOM_TIMER) {
     }
 
     val ticksElapsed = pawn.attr[VENOM_TICKS_ELAPSED_ATTR] ?: 0
-    pawn.hit(damage = Venom.damageForTick(ticksElapsed), type = HitType.POISON)
+    // Owner 2026-09-18: OSRS venom shows a black splat (HitType.VENOM -> client VenomHitmarkType), not the green poison one.
+    val venomDamage = Venom.damageForTick(ticksElapsed)
+    pawn.hit(damage = venomDamage, type = HitType.VENOM)
+    gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.recordDotDamage(pawn, venomDamage)
     pawn.attr[VENOM_TICKS_ELAPSED_ATTR] = ticksElapsed + 1
 
     pawn.timers[VENOM_TIMER] = Venom.VENOM_TICK_DELAY

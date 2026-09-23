@@ -92,7 +92,9 @@ object DeadmanBreach {
     const val LOCATIONS_PATH = "./data/cfg/deadman/breach-locations.json"
 
     private val BREACH_NPC_ATTR = AttributeKey<Boolean>()
-    private val DAMAGE_ORDER_ATTR = AttributeKey<MutableList<Player>>()
+    private val CONTRIBUTION_ATTR = AttributeKey<BreachContribution>()
+    private val REWARDED_ATTR = AttributeKey<Boolean>()
+    private val DOT_SOURCE_ATTR = AttributeKey<String>()
 
     enum class Kind { LOCALISED, REGIONAL }
 
@@ -240,7 +242,10 @@ object DeadmanBreach {
         open.sites.forEach { site ->
             site.objects.forEach { world.remove(it) }
             site.npcs.forEach { if (world.npcs.contains(it) && !it.isDead()) world.remove(it) }
+            site.npcs.clear()
         }
+        pruneLive(world)
+        gg.rsmod.game.Server.logger.info("Breach closed by command: spawners and monsters removed.")
     }
 
     /**
@@ -293,19 +298,39 @@ object DeadmanBreach {
         }
         val names = sites.joinToString(" and ") { "${it.name.replaceFirstChar { c -> c.lowercase() }} (${if (it.multi) "multi-way" else "single-way"} combat)" }
         world.players.forEach { it.filterableMessage("<col=ff0000>Breaches have opened: $names!</col>") }
+        gg.rsmod.game.Server.logger.info("Breach opened: {}.", sites.joinToString("; ") { "${it.name} ${it.kind} ${if (it.multi) "multi" else "single"} spawners=${it.spawners} landing=${it.landing.size}" })
         run(world, opened)
         return opened
     }
 
-    private fun around(
+    /**
+     * Landing tiles of a localised spawner: usable tiles within [radius] (Chebyshev) that can be WALKED to from the spawner.
+     *
+     * The square alone let monsters land behind walls, inside neighbouring buildings or on the far side of a river - unreachable
+     * for players (a free safespot for them, a trapped monster for the breach). A flood fill over the real collision map keeps
+     * every landing on the spawner's side. The spawner tile itself is excluded (the Breach loc stands there).
+     */
+    fun around(
         world: World,
         centre: Tile,
         radius: Int,
     ): List<Tile> {
+        val seen = HashSet<Tile>()
+        val queue = ArrayDeque<Tile>()
+        seen += centre
+        queue += centre
         val out = ArrayList<Tile>()
-        for (dx in -radius..radius) for (dz in -radius..radius) {
-            val t = Tile(centre.x + dx, centre.z + dz, centre.height)
-            if (usable(world, t)) out += t
+        while (queue.isNotEmpty()) {
+            val current = queue.removeFirst()
+            if (current != centre && usable(world, current)) out += current
+            for (direction in gg.rsmod.game.model.Direction.NESW) {
+                val next = current.step(direction)
+                if (next in seen) continue
+                if (kotlin.math.abs(next.x - centre.x) > radius || kotlin.math.abs(next.z - centre.z) > radius) continue
+                if (!world.collision.canTraverse(current, direction, projectile = false, water = false)) continue
+                seen += next
+                queue += next
+            }
         }
         return out
     }
@@ -330,8 +355,15 @@ object DeadmanBreach {
             // The spawners close; unkilled monsters stay for another 30 minutes.
             opened.sites.forEach { site -> site.objects.forEach { world.remove(it) } }
             if (active === opened) active = null
+            gg.rsmod.game.Server.logger.info("Breach spawning stopped: {} monsters spawned, survivors linger {} ticks.", opened.sites.sumOf { it.spawned }, LINGER_TICKS)
             wait(LINGER_TICKS)
-            opened.sites.forEach { site -> site.npcs.forEach { if (world.npcs.contains(it) && !it.isDead()) world.remove(it) } }
+            var removed = 0
+            opened.sites.forEach { site ->
+                site.npcs.forEach { if (world.npcs.contains(it) && !it.isDead()) { world.remove(it); removed++ } }
+                site.npcs.clear()
+            }
+            pruneLive(world)
+            gg.rsmod.game.Server.logger.info("Breach cleanup: {} unkilled monsters removed.", removed)
         }
     }
 
@@ -442,6 +474,7 @@ object DeadmanBreach {
         if (id in BreachMonsters.RUNNERS) npc.attr[gg.rsmod.game.model.attr.NPC_RUNS_ATTR] = true
         world.spawn(npc)
         live += npc
+        gg.rsmod.game.Server.logger.info("Breach monster {} spawned at {}.", id, tile)
         if (lifetimeTicks > 0) {
             world.queue {
                 wait(lifetimeTicks)
@@ -458,8 +491,36 @@ object DeadmanBreach {
 
     // ---- combat rules -----------------------------------------------------------------------------------------------
 
-    /** "Players with PvP protection active cannot attack breach monsters" (either direction, spells included). */
+    /**
+     * "Players with PvP protection active cannot attack breach monsters at either breach location" (OSRS Wiki "Deadman Mode";
+     * owner 2026-09-23: blocked in single-way and multi-way alike, either direction, spells included).
+     */
     fun canFight(player: Player): Boolean = !BeginnerProtection.isProtected(player)
+
+    /**
+     * The player a pawn fights for: the player itself, or the owner of a familiar/pet that deals damage on a player's behalf
+     * ([gg.rsmod.game.model.attr.DAMAGE_CREDIT_ATTR], the same credit the damage map uses). Null for ordinary npcs.
+     */
+    fun controllingPlayer(pawn: Pawn): Player? =
+        pawn as? Player ?: pawn.attr[gg.rsmod.game.model.attr.DAMAGE_CREDIT_ATTR]?.get() as? Player
+
+    /** Local players within [radius] tiles of [centre] on its plane - chunk lookups, never a scan of every player online. */
+    fun playersNear(
+        world: World,
+        centre: Tile,
+        radius: Int,
+    ): List<Player> {
+        val out = ArrayList<Player>()
+        for (cx in ((centre.x - radius) shr 3)..((centre.x + radius) shr 3)) {
+            for (cz in ((centre.z - radius) shr 3)..((centre.z + radius) shr 3)) {
+                val chunk = world.chunks.get(Tile(cx shl 3, cz shl 3, centre.height), createIfNeeded = false) ?: continue
+                chunk.getEntities<Player>(EntityType.CLIENT, EntityType.PLAYER).forEach { p ->
+                    if (p.tile.height == centre.height && p.tile.isWithinRadius(centre, radius) && p !in out) out += p
+                }
+            }
+        }
+        return out
+    }
 
     /** Porazdir, Justiciar Zachariah and Derwen are "completely immune to melee and ranged attacks". */
     fun modifyIncomingDamage(
@@ -476,31 +537,89 @@ object DeadmanBreach {
         }
     }
 
-    /** Remembers the order in which players first damaged a breach monster (loot goes to the first [BreachLoot.ELIGIBLE] of them). */
+    /**
+     * Adds [damage] (already credited to the familiar's owner by the caller) to the monster's contribution ledger.
+     *
+     * The ledger is keyed by the lower-case account name, not the [Player] object: a player who relogs gets a new object, and
+     * keying by object used to drop his first-damage slot (offline) while handing the new object a second slot. Insertion order
+     * is first-damage order ([BreachContribution.lootEligible]); the value is total damage ([BreachContribution.pointEarners]).
+     * Only real damage counts ("the first 16 players to deal damage"), so a 0 hitsplat claims nothing.
+     */
     fun recordDamage(
         target: Pawn,
         source: Pawn,
+        damage: Int,
     ) {
-        if (target !is Npc || source !is Player || !isBreachNpc(target)) return
-        val order = target.attr[DAMAGE_ORDER_ATTR] ?: ArrayList<Player>().also { target.attr[DAMAGE_ORDER_ATTR] = it }
-        if (source !in order) order += source
+        if (damage <= 0 || target !is Npc || source !is Player || !isBreachNpc(target)) return
+        if (target.attr[REWARDED_ATTR] == true) return
+        val ledger = target.attr[CONTRIBUTION_ATTR] ?: BreachContribution().also { target.attr[CONTRIBUTION_ATTR] = it }
+        ledger.add(source.username, damage)
     }
 
-    fun damageOrder(npc: Npc): List<Player> = npc.attr[DAMAGE_ORDER_ATTR] ?: emptyList()
+    fun contribution(npc: Npc): BreachContribution = npc.attr[CONTRIBUTION_ATTR] ?: BreachContribution()
+
+    /**
+     * Poison and venom tick without a source, so the player who applied them is remembered when they take hold: the last pawn
+     * that attacked the monster ([gg.rsmod.game.model.attr.LAST_HIT_BY_ATTR], set as the attack lands), credited to a familiar's
+     * owner. Breach monsters only - ordinary npcs keep their unchanged drop rules.
+     */
+    fun notePoisoner(target: Pawn) {
+        if (target !is Npc || !isBreachNpc(target)) return
+        val source = target.attr[gg.rsmod.game.model.attr.LAST_HIT_BY_ATTR]?.get() ?: return
+        target.attr[DOT_SOURCE_ATTR] = controllingPlayer(source)?.username ?: return
+    }
+
+    /** A poison/venom tick on a breach monster counts for the player who applied it ([notePoisoner]). */
+    fun recordDotDamage(
+        target: Pawn,
+        damage: Int,
+    ) {
+        if (damage <= 0 || target !is Npc || !isBreachNpc(target) || target.attr[REWARDED_ATTR] == true) return
+        val name = target.attr[DOT_SOURCE_ATTR] ?: return
+        val ledger = target.attr[CONTRIBUTION_ATTR] ?: BreachContribution().also { target.attr[CONTRIBUTION_ATTR] = it }
+        ledger.add(name, damage)
+    }
 
     // ---- loot -------------------------------------------------------------------------------------------------------
 
-    /** Rolls [BreachLoot] for every eligible player and drops it under the monster, visible only to its owner. */
+    /**
+     * Commits one breach monster's rewards exactly once: loot for the first [BreachLoot.ELIGIBLE] damage dealers (each with an
+     * independent roll, dropped under the monster and visible only to its owner), the Archaic emblem (tier 5) for eligible
+     * players with [BreachLoot.EMBLEM_DAMAGE]+ damage, and Breach Points for the top [BreachPoints.EARNERS]. The monster is
+     * marked rewarded first and its ledger cleared afterwards, so a second death callback, a late hit or a double click can
+     * never pay twice. Players who are offline when it dies receive nothing (their slot is not handed to anyone else).
+     */
     fun dropLoot(npc: Npc) {
+        if (npc.attr[REWARDED_ATTR] == true) return
+        npc.attr[REWARDED_ATTR] = true
         val world = npc.world
-        damageOrder(npc).take(BreachLoot.ELIGIBLE).forEach { player ->
-            if (!player.isOnline) return@forEach
-            BreachLoot.roll(world.random).forEach { drop ->
-                val def = world.definitions.getNullable(ItemDef::class.java, drop.item) ?: return@forEach
+        val ledger = contribution(npc)
+        val tile = Tile(npc.tile)
+        var looted = 0
+        ledger.lootEligible().forEach { name ->
+            val player = world.getPlayerForName(name) ?: return@forEach
+            looted++
+            BreachLoot.roll(world.random).forEach drops@{ drop ->
+                val def = world.definitions.getNullable(ItemDef::class.java, drop.item) ?: return@drops
                 val item = if (drop.noted && def.noteLinkId > 0) def.noteLinkId else drop.item
-                world.spawn(GroundItem(item, drop.amount, Tile(npc.tile), player))
+                world.spawn(GroundItem(item, drop.amount, tile, player))
+            }
+            if (ledger.damageOf(name) >= BreachLoot.EMBLEM_DAMAGE && BreachIds.ARCHAIC_EMBLEM_TIER_5 > 0 &&
+                world.definitions.getNullable(ItemDef::class.java, BreachIds.ARCHAIC_EMBLEM_TIER_5) != null
+            ) {
+                world.spawn(GroundItem(BreachIds.ARCHAIC_EMBLEM_TIER_5, 1, tile, player))
             }
         }
+        var paid = 0
+        ledger.pointEarners().forEach { (name, damage) ->
+            val player = world.getPlayerForName(name) ?: return@forEach
+            if (BreachPoints.award(player, damage) > 0) paid++
+        }
+        gg.rsmod.game.Server.logger.info(
+            "Breach reward: npc {} at {} - {} contributors, loot to {}, points to {}.",
+            npc.id, tile, ledger.size, looted, paid,
+        )
+        npc.attr.remove(CONTRIBUTION_ATTR)
     }
 
     // ---- status -----------------------------------------------------------------------------------------------------

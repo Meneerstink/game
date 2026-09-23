@@ -44,6 +44,7 @@ object RingOfRecoil {
             val after = gg.rsmod.plugins.content.items.osrs.RingOfSuffering.afterRecoil(ring, reflect) ?: return
             attacker.hit(damage = reflect, type = HitType.REFLECTED)
             attacker.damageMap.add(target, reflect)
+            gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.recordDamage(attacker, target, reflect)
             target.equipment[EquipmentType.RING.id] = after
             return
         }
@@ -52,6 +53,7 @@ object RingOfRecoil {
         val reflected = (damage / 10) + 1
         attacker.hit(damage = reflected, type = HitType.REFLECTED)
         attacker.damageMap.add(target, reflected)
+        gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.recordDamage(attacker, target, reflected)
 
         val charge = (target.attr[RING_OF_RECOIL_CHARGE_ATTR] ?: 0) + reflected
         if (charge >= CHARGE_LIMIT) {
