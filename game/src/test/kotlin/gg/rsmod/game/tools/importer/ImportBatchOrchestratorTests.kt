@@ -15,7 +15,7 @@ import java.io.File
  * Phase C orchestrator gate (`RSPS_CURRENT_SPRINT.json`, owner-approved unattended engineering run
  * 2026-09-04): proves [ImportBatchOrchestrator] against real, throwaway [CacheLibrary] instances and
  * a real, throwaway asset-map file - never the two real production caches or the real
- * `RSPS_IMPORT_ASSET_MAP.yml`, per this pipeline's own "never use production state as an adversarial
+ * `OSRS_IMPORT_MASTER.yml`, per this pipeline's own "never use production state as an adversarial
  * test fixture" rule (see [CacheTransactionTests], [ModelNamespaceCensusToolTests]).
  *
  * Covers the required minimum adversarial scenarios from the governing run instruction's Section 10

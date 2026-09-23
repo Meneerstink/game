@@ -71,7 +71,6 @@ enum class Fish(
     LAVA_EEL(id = Items.RAW_LAVA_EEL, level = 53, minChance = 16, maxChance = 96, xp = 60.0),
     FROG_SPAWN(id = Items.FROG_SPAWN, level = 33, minChance = 16, maxChance = 96, xp = 75.0),
     CAVEFISH(id = Items.RAW_CAVEFISH, level = 85, minChance = 5, maxChance = 17, xp = 300.0), // 6.7% success rate = ~134/hour.
-    ROCKTAIL(id = Items.RAW_ROCKTAIL, level = 90, minChance = 5, maxChance = 15, xp = 380.0), // 6% success rate = 120/hour.
     CASKET(id = Items.CASKET, level = 16, minChance = 1, maxChance = 2, xp = 0.0),
     OYSTER(id = Items.OYSTER, level = 16, minChance = 3, maxChance = 7, xp = 10.0),
     SEAWEED(id = Items.SEAWEED, level = 16, minChance = 10, maxChance = 10, xp = 1.0),

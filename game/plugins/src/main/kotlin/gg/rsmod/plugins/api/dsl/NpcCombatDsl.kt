@@ -35,6 +35,8 @@ object NpcCombatDsl {
 
             combatBuilder.setAttackSpeed(builder.attackSpeed)
             combatBuilder.setSpell(builder.spell)
+            if (builder.attackProjectile > -1) combatBuilder.setAttackProjectile(builder.attackProjectile)
+            if (builder.attackGfx > -1) combatBuilder.setAttackGfx(builder.attackGfx)
             combatBuilder.setRespawnDelay(builder.respawnDelay)
             combatBuilder.setDeathDelay(builder.deathDelay)
             combatBuilder.setPoisonDamage(builder.poisonDamage)
@@ -42,11 +44,11 @@ object NpcCombatDsl {
             if (builder.poisonImmune) {
                 combatBuilder.setPoisonImmunity()
             }
-            combatBuilder.setXpMultiplier(builder.xpMultiplier)
-            combatBuilder.setAttackStyle(builder.attackStyle)
             if (builder.venomImmune) {
                 combatBuilder.setVenomImmunity()
             }
+            combatBuilder.setXpMultiplier(builder.xpMultiplier)
+            combatBuilder.setAttackStyle(builder.attackStyle)
         }
 
         fun aggro(init: AggressivenessBuilder.() -> Unit) {
@@ -152,15 +154,22 @@ object NpcCombatDsl {
         var poisonImmune = false
 
         /**
-         * The spell an NPC will use if one is set
-        /**
          * Whether the npc cannot be envenomed (OSRS infobox "Venom: 100% resistance"); independent of [poisonImmune].
          */
         var venomImmune = false
 
+        /**
+         * The spell an NPC will use if one is set
          * Note: this is used to signify the NPCs default attack style (magic)
          */
         var spell = -1
+
+        /**
+         * Ranged npcs: the projectile gfx fired at the target and the launch gfx played on the npc
+         * (consumed by RangedCombatStrategy, same fields the bulk npc table fills).
+         */
+        var attackProjectile = -1
+        var attackGfx = -1
 
         /**
          * Some mobs reward less xp per hit than normal

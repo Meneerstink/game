@@ -1,6 +1,6 @@
 # Game values
 # You want to edit these to fit your game.
-name: "RS Mod Server [Tek5]"
+name: "78"
 game-port: 50015
 revision: 667
 
@@ -13,8 +13,8 @@ commandServer:
 # exactly on the preserved Tile(3140, 3640, 0) BH/Wilderness connection point.
 # Ferox Enclave (imported into map squares 12344/12600): arrival tile on the open plaza east of
 # the bank chest. The safe zone is the enclave footprint itself (plugins areas/home/BountyHunterHome.kt).
-home-x: 3137
-home-z: 3629
+home-x: 3164
+home-z: 3487
 home-height: 0
 
 # Privileges
@@ -57,6 +57,11 @@ services:
     dump: false
 
   - class: gg.rsmod.plugins.content.mechanics.exchange.GrandExchangeService
+
+  # OSRS-style password recovery (e-mail code + recovery page). Switched off until smtp-host is filled in, e.g.
+  # smtp-host: "smtp-relay.brevo.com" / smtp-port: 465 / smtp-user / smtp-password / mail-from / public-url.
+  - class: gg.rsmod.game.service.recovery.AccountRecoveryService
+    http-port: 50078
 
   - class: gg.rsmod.game.service.rsa.RsaService
 

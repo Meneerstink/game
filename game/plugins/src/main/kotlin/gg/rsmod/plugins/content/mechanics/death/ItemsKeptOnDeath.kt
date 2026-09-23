@@ -2,9 +2,7 @@ package gg.rsmod.plugins.content.mechanics.death
 
 import gg.rsmod.game.model.attr.PROTECT_ITEM_ATTR
 import gg.rsmod.game.model.entity.Player
-import gg.rsmod.plugins.api.SkullIcon
 import gg.rsmod.plugins.api.ext.getVarbit
-import gg.rsmod.plugins.api.ext.hasSkullIcon
 import gg.rsmod.plugins.api.ext.setVarbit
 import gg.rsmod.plugins.api.ext.setVarcString
 
@@ -53,7 +51,7 @@ object ItemsKeptOnDeath {
      * reflect live skull/Protect Item state rather than a snapshot taken when it was opened.
      */
     fun refresh(player: Player): Int {
-        val skulled = player.hasSkullIcon(SkullIcon.RED)
+        val skulled = gg.rsmod.plugins.content.mechanics.pvp.PvpSkull.isSkulled(player)
         val protectItem = player.attr[PROTECT_ITEM_ATTR] == true
         val keepCount = DeathItemRiskCalculator.protectedItemCount(skulled, protectItem)
         player.setVarbit(SKULLED_VARBIT, if (skulled) 1 else 0)

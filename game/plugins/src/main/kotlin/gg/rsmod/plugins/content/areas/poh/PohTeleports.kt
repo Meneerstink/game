@@ -161,4 +161,20 @@ object PohTeleports {
             player.teleport(tile, leaf.type)
         }
     }
+
+    /**
+     * Opens one named top-level branch of the directory instead of the whole thing - the house jewellery box shows
+     * "Jewellery" and nothing else, the way a real jewellery box only holds jewellery teleports.
+     */
+    suspend fun QueueTask.openBranch(
+        player: Player,
+        name: String,
+    ) {
+        val branch = ROOT.children.filterIsInstance<Branch>().firstOrNull { it.name == name } ?: return
+        val leaf = choose(branch) ?: return
+        val tile = leaf.tile(player) ?: return
+        player.canTeleport(leaf.type) {
+            player.teleport(tile, leaf.type)
+        }
+    }
 }

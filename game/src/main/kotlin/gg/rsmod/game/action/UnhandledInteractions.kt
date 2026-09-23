@@ -16,7 +16,10 @@ object UnhandledInteractions {
 
     data class Key(val id: Int, val transform: Int, val option: Int, val x: Int, val z: Int, val height: Int)
 
+    private data class GenericKey(val kind: String, val id: Int, val option: Int, val context: String)
+
     private val counts = ConcurrentHashMap<Key, Int>()
+    private val genericCounts = ConcurrentHashMap<GenericKey, Int>()
 
     /** Records one unhandled click; returns true when this is a new row. */
     fun record(key: Key, name: String, optionText: String?, type: Int, rot: Int, kind: String = "option"): Boolean {
@@ -40,7 +43,36 @@ object UnhandledInteractions {
         return true
     }
 
+    /** Records an unresolved non-object interaction at the shared dispatch boundary. */
+    fun recordInteraction(
+        kind: String,
+        id: Int,
+        option: Int,
+        name: String,
+        context: String,
+    ): Boolean {
+        val key = GenericKey(kind, id, option, context)
+        val previous = genericCounts[key]
+        if (previous != null) {
+            genericCounts[key] = previous + 1
+            return false
+        }
+        if (size() >= MAX_ROWS) return false
+        genericCounts[key] = 1
+        try {
+            FILE.parentFile?.mkdirs()
+            val header = !FILE.exists()
+            FILE.appendText(
+                (if (header) "kind\tid\ttransform\tname\topt\toption\ttype\trot\tx\tz\theight\n" else "") +
+                    "$kind\t$id\t$id\t$name\t$option\t$context\t0\t0\t0\t0\t0\n",
+            )
+        } catch (_: Exception) {
+            // Diagnostics must never break gameplay.
+        }
+        return true
+    }
+
     fun count(key: Key): Int = counts[key] ?: 0
 
-    fun size(): Int = counts.size
+    fun size(): Int = counts.size + genericCounts.size
 }

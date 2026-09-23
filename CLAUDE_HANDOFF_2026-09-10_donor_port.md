@@ -1,4 +1,10 @@
-# Handoff: donor port mission (Void + Novite → gg-rsmod target) — 2026-09-10
+# RETIRED HISTORICAL HANDOFF — donor port mission (2026-09-10)
+
+This file is historical evidence only. Do not use its old donor-port order or
+DONE/PARTIAL claims as active instructions. Read
+`C:\RSPS\RSPS_MASTERPLAN_ACTUEEL.md`, `C:\RSPS\RSPS_CURRENT_SPRINT.json`,
+`C:\RSPS\RSPS_FULL_AUDIT_REPORT.md` and `C:\RSPS\HANDOFF_CURRENT.md` for the
+current task. Donors remain read-only.
 
 Read this whole file first, then resume the mission directly. Do not ask the owner questions,
 do not write plans or audits, do not give interim reports. Final report only at the very end.

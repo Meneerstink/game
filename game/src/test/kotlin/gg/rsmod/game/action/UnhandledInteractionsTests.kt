@@ -15,4 +15,12 @@ class UnhandledInteractionsTests {
         assertEquals(2, UnhandledInteractions.count(key))
         assertEquals(before + 1, UnhandledInteractions.size())
     }
+
+    @Test
+    fun `non-object interaction census also deduplicates by context`() {
+        val before = UnhandledInteractions.size()
+        assertTrue(UnhandledInteractions.recordInteraction("button", 999_002, 3, "Test button", "interface=548 opcode=61"))
+        assertFalse(UnhandledInteractions.recordInteraction("button", 999_002, 3, "Test button", "interface=548 opcode=61"))
+        assertEquals(before + 1, UnhandledInteractions.size())
+    }
 }

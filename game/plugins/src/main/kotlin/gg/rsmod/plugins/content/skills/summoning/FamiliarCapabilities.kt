@@ -3,14 +3,12 @@ package gg.rsmod.plugins.content.skills.summoning
 import gg.rsmod.game.model.entity.Player
 
 /**
- * The six actions a familiar can be given from the Summoning orb.
+ * The six actions exposed by the revision-667 Summoning orb.
  *
- * This set is the owner's 2026-09-07 requirement H6 and it is deliberately **smaller** than the
- * eight entries interface 747 bakes. Two baked entries are excluded on purpose:
+ * This set is capability-driven and deliberately **smaller** than the eight entries interface
+ * 747 bakes. Generic Attack is not an orb action in the requested 2011 layout; attack targeting
+ * remains a separate, server-validated Follower Details control.
  *
- * * **Follower Details** (747:9 / 747:18) — moved off the orb entirely and onto the Skills tab
- *   (requirement H1). It is not a familiar command; it is a panel switch, and having it on the orb
- *   was what made the orb menu read as a settings menu rather than a command menu.
  * * **Interact** (747:15 / 747:26) — the familiar's own npc option already carries it, so on the
  *   orb it was a duplicate entry for the same conversation.
  *
@@ -35,10 +33,14 @@ enum class FamiliarAction(
     val leftClickValue: Int,
     /** The label the cache itself bakes on that component. */
     val label: String,
+    /** Whether this action participates in the orb right-click/left-click selector. */
+    val orbAction: Boolean = true,
 ) {
     /** 747:16 -> 24 -> 25 is the baked "Spell/Cast" twin; 747:17 is the dynamic button. */
     SPECIAL_MOVE(intArrayOf(16, 17, 24, 25), 1, "Special move"),
-    ATTACK(intArrayOf(14, 23), 2, "Attack"),
+    /** Kept for the panel/server action; deliberately excluded from the orb selector. */
+    ATTACK(intArrayOf(14, 23), 2, "Attack", orbAction = false),
+    FOLLOWER_DETAILS(intArrayOf(9, 18), 0, "Follower Details"),
     CALL(intArrayOf(10, 19), 3, "Call Follower"),
     DISMISS(intArrayOf(11, 20), 4, "Dismiss"),
     TAKE_BOB(intArrayOf(12, 21), 5, "Take BoB"),
@@ -47,16 +49,16 @@ enum class FamiliarAction(
 
     companion object {
         /** In the order the orb menu and the selection dialogue list them. */
-        val ORDERED = values().toList()
+        val ORDERED = values().filter { it.orbAction }
 
         fun byLeftClickValue(value: Int): FamiliarAction? = ORDERED.firstOrNull { it.leftClickValue == value }
 
         /**
-         * The two baked 747 actions that are deliberately **not** offered (requirement H1/H6):
-         * "Follower Details" (9/18), which now lives on the Skills tab, and "Interact" (15/26),
-         * which duplicates the familiar's own npc option. Hidden unconditionally, familiar or not.
+         * Interact (15/26) is deliberately not offered because it duplicates the familiar's own
+         * npc option. Attack (14/23) is also hidden, but is represented separately above so the
+         * Follower Details panel and stale packet guards can still share its capability decision.
          */
-        val REMOVED_ORB_COMPONENTS = intArrayOf(9, 18, 15, 26)
+        val REMOVED_ORB_COMPONENTS = intArrayOf(15, 26, 14, 23)
 
         /** Every per-familiar option component on 747, whether offered or removed. */
         val ALL_ORB_COMPONENTS: IntArray =
@@ -104,25 +106,83 @@ data class FamiliarCapabilities(
     /**
      * The orb actions this familiar authentically supports (requirement H7).
      *
-     * Call, Dismiss and Renew are unconditional: every familiar has a lifetime that can be
-     * refreshed with another pouch, can be recalled to its owner, and can be sent away. Attack,
-     * Take BoB and Special Move are each gated on the corresponding sourced capability.
+     * Follower Details, Call, Dismiss and Renew are unconditional. Take BoB and Special Move are
+     * gated on the corresponding sourced capability. Attack is intentionally not in this set: it
+     * remains a panel/server action, never an orb menu item.
      */
     val actions: Set<FamiliarAction> =
         buildSet {
             add(FamiliarAction.CALL)
             add(FamiliarAction.DISMISS)
             add(FamiliarAction.RENEW)
-            if (canFight) add(FamiliarAction.ATTACK)
+            add(FamiliarAction.FOLLOWER_DETAILS)
             if (carries) add(FamiliarAction.TAKE_BOB)
             if (special != null) add(FamiliarAction.SPECIAL_MOVE)
         }
 
-    fun supports(action: FamiliarAction): Boolean = action in actions
+    fun supports(action: FamiliarAction): Boolean =
+        if (action == FamiliarAction.ATTACK) canReceiveAttackCommand else action in actions
+
+    val combatMode: FamiliarCombatMode
+        get() = when {
+            !canFight -> FamiliarCombatMode.NON_COMBAT
+            SummoningCombatDefinitions.getByNpc(npcId)?.assistMode == FamiliarAssistMode.DEFENSIVE_ONLY ->
+                FamiliarCombatMode.SELF_DEFENCE_ONLY
+            else -> FamiliarCombatMode.COMMANDABLE_COMBAT
+        }
+
+    val skillFocus: FamiliarSkillFocus
+        get() = SummoningCatalogue.getByNpc(npcId)?.skillFocus ?: FamiliarSkillFocus.NONE
+
+    internal val normalAttackProfile: FamiliarNormalAttackProfile?
+        get() = SummoningCombatDefinitions.getByNpc(npcId)?.takeIf { it.isExecutable }?.let { definition ->
+            FamiliarNormalAttackProfile(
+                style = definition.style,
+                skillFocus = skillFocus,
+                range = definition.attackRange,
+                speed = definition.attackSpeed,
+                maxHit = definition.maxHit,
+                animation = definition.attackAnimation,
+                graphic = definition.attackGraphic,
+                projectile = definition.projectile,
+                sounds = FamiliarCombat.NORMAL_ATTACK_SOUNDS[pouch],
+            )
+        }
+
+    val bobSlots: Int get() = BeastOfBurden.storageFor(pouch)?.key?.capacity ?: 0
+    val bobType: FamiliarInventoryKind
+        get() = when {
+            isBeastOfBurden -> FamiliarInventoryKind.BEAST_OF_BURDEN
+            isForager -> FamiliarInventoryKind.FORAGER
+            else -> FamiliarInventoryKind.NONE
+        }
+    val bobEssenceOnly: Boolean get() = BeastOfBurden.storageFor(pouch)?.essenceOnly == true
+    val canReceiveAttackCommand: Boolean get() = combatMode == FamiliarCombatMode.COMMANDABLE_COMBAT
+    val retaliates: Boolean get() = combatMode != FamiliarCombatMode.NON_COMBAT
+    val canBeTargetedInPvm: Boolean get() = combatMode != FamiliarCombatMode.NON_COMBAT
+    val canBeTargetedInPvp: Boolean get() = combatMode != FamiliarCombatMode.NON_COMBAT
+    val summonPoints: Int get() = SummoningFamiliarDefinitions.get(pouch).summonPoints
+    val durationMinutes: Int get() = SummoningFamiliarDefinitions.get(pouch).durationMinutes
+    val specialTrigger: FamiliarSpecialTrigger? get() = special?.trigger
+    val specialPoints: Int? get() = special?.scroll?.specialPoints
 }
 
+enum class FamiliarCombatMode { NON_COMBAT, SELF_DEFENCE_ONLY, COMMANDABLE_COMBAT }
+
+internal data class FamiliarNormalAttackProfile(
+    val style: FamiliarAttackStyle,
+    val skillFocus: FamiliarSkillFocus,
+    val range: Int,
+    val speed: Int,
+    val maxHit: Int,
+    val animation: Int,
+    val graphic: Int,
+    val projectile: Int,
+    val sounds: FamiliarCombat.NormalAttackSounds?,
+)
+
 /**
- * The capability record for every one of the 78 canonical familiars, built once at class-load from
+ * The capability record for every canonical familiar, built once at class-load from
  * the same sourced tables the rest of the subsystem reads.
  */
 object FamiliarCapabilityTable {

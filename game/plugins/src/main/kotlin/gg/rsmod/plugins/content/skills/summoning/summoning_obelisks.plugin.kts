@@ -49,7 +49,7 @@ renewPointObelisks.forEach { obelisk ->
                 Familiar.restorePoints(player)
                 player.animate(Familiar.RENEW_ANIMATION)
                 world.spawn(TileGraphic(player.tile, id = Familiar.RENEW_PLAYER_GRAPHIC, height = 0))
-                player.playSound(Familiar.RENEW_SOUND)
+                FamiliarAudio.play(player, Familiar.RENEW_SOUND)
                 player.message("You renew your Summoning points.")
             }
         }

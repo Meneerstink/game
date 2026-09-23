@@ -58,7 +58,7 @@ table.register(bansheeTable, banshee)
 
 
 on_npc_death(banshee) {
-    table.getDrop(world, npc.damageMap.getMostDamage()!! as Player, npc.id, npc.tile)
+    table.getDrop(world, npc.killer() ?: return@on_npc_death, npc.id, npc.tile)
 }
 
 set_combat_def(banshee) {

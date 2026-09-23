@@ -13,6 +13,26 @@ package gg.rsmod.plugins.content.mechanics.exchange
  * ever be a supply source, not a sink for player-farmed items.
  */
 object GeSystemLiquidity {
+    /**
+     * Owner 2026-09-20: "make every item we have in game buyable in the grand exchange so it sells for mid price
+     * also" (and, when asked whether the house should also buy back, "all").
+     *
+     * With this on, the whitelist below stops being the limit: [GrandExchangeService] hands the matcher the item's
+     * guide price for *every* item, so an unmatched buy is always filled from the house and an unmatched sell is
+     * always bought by the house. The GE becomes a guaranteed two-way market at the guide price instead of a
+     * thin player-to-player book.
+     *
+     * The one thing this must not become is a money printer, and the prices are chosen so it cannot be:
+     *  - the house SELLS at the guide price (the buyer's overbid is refunded), and
+     *  - the house BUYS at the seller's asking price, but only when that ask is at or below the guide price.
+     * The best possible round trip is therefore buy at guide, sell at guide - exactly break-even. Selling at the
+     * top of the allowed band (`guide * 1.05`) is simply never taken by the house.
+     *
+     * What it does change, deliberately: every item is infinitely available, so drop rarity no longer gates
+     * supply. Set this to false to go back to the old cheap-materials-only whitelist.
+     */
+    const val ALL_ITEMS_AT_GUIDE_PRICE = true
+
     val UNIT_PRICE: Map<Int, Int> =
         mapOf(
             gg.rsmod.plugins.api.cfg.Items.FEATHER to 2,
@@ -56,10 +76,16 @@ data class GeFill(
  * offer skips a buyer who is at their limit and moves on to the next one.
  */
 object GrandExchangeBook {
+    /**
+     * [systemPrice] is the house price for an item, or null when the house does not deal in it. The default keeps
+     * the old cheap-materials whitelist so the pure unit tests stay meaningful; [GrandExchangeService] passes the
+     * item's guide price for every item (see [GeSystemLiquidity.ALL_ITEMS_AT_GUIDE_PRICE]).
+     */
     fun match(
         book: List<GrandExchangeOffer>,
         newOffer: GrandExchangeOffer,
         allowance: GeBuyAllowance = GeBuyAllowance.UNLIMITED,
+        systemPrice: (Int) -> Int? = { GeSystemLiquidity.UNIT_PRICE[it] },
     ): List<GeFill> {
         val fills = mutableListOf<GeFill>()
         val opposite =
@@ -115,20 +141,44 @@ object GrandExchangeBook {
             fills.add(GeFill(buyOffer.id, sellOffer.id, quantity, execPrice, fromSystem = false))
         }
 
+        val house = systemPrice(newOffer.itemId)
+
         if (newOffer.type == OfferType.BUY && newOffer.remaining > 0) {
-            val systemPrice = GeSystemLiquidity.UNIT_PRICE[newOffer.itemId]
-            if (systemPrice != null && newOffer.pricePerItem >= systemPrice) {
+            if (house != null && newOffer.pricePerItem >= house) {
                 val quantity = minOf(newOffer.remaining, allowance.remaining(newOffer.username, newOffer.itemId))
                 if (quantity > 0) {
                     newOffer.quantityFilled += quantity
                     newOffer.collectableItems += quantity
-                    newOffer.coinsTraded += systemPrice.toLong() * quantity
-                    val refund = (newOffer.pricePerItem - systemPrice).toLong() * quantity
+                    newOffer.coinsTraded += house.toLong() * quantity
+                    val refund = (newOffer.pricePerItem - house).toLong() * quantity
                     if (refund > 0) newOffer.collectableCoins += refund
                     if (newOffer.remaining <= 0) newOffer.status = OfferStatus.COMPLETED
                     allowance.record(newOffer.username, newOffer.itemId, quantity)
-                    fills.add(GeFill(newOffer.id, null, quantity, systemPrice, fromSystem = true))
+                    fills.add(GeFill(newOffer.id, null, quantity, house, fromSystem = true))
                 }
+            }
+        }
+
+        /*
+         * The house also buys, so a sell offer never sits unsold (owner 2026-09-20).
+         *
+         * It pays the seller's own asking price and only when that ask is at or below the guide price, which is
+         * what stops the two sides becoming a money loop: the house sells at guide and buys at no more than
+         * guide, so buying from it and selling straight back is break-even at best, never profitable. A seller
+         * asking above guide is left resting for a real player, exactly as before.
+         *
+         * No buy limit is recorded here - limits exist to stop one account draining supply, and selling into the
+         * house is the opposite of draining it.
+         */
+        if (newOffer.type == OfferType.SELL && newOffer.remaining > 0) {
+            if (house != null && newOffer.pricePerItem <= house) {
+                val quantity = newOffer.remaining
+                val paid = newOffer.pricePerItem
+                newOffer.quantityFilled += quantity
+                newOffer.collectableCoins += paid.toLong() * quantity
+                newOffer.coinsTraded += paid.toLong() * quantity
+                newOffer.status = OfferStatus.COMPLETED
+                fills.add(GeFill(null, newOffer.id, quantity, paid, fromSystem = true))
             }
         }
 

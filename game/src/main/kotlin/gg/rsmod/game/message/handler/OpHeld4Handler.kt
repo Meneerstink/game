@@ -1,5 +1,6 @@
 package gg.rsmod.game.message.handler
 
+import gg.rsmod.game.action.UnhandledInteractions
 import gg.rsmod.game.message.MessageHandler
 import gg.rsmod.game.message.impl.OpHeld4Message
 import gg.rsmod.game.model.World
@@ -48,13 +49,20 @@ class OpHeld4Handler : MessageHandler<OpHeld4Message> {
             item.id,
             item.amount,
         )
+        if (client.attr[gg.rsmod.game.model.attr.ID_INSPECTOR_ATTR] == true) {
+            val def = item.getDef(world.definitions)
+            client.writeConsoleMessage("Item id=${item.id}, name=${def.name}, amount=${item.amount}, slot=${message.slot}")
+        }
 
         client.attr[INTERACTING_ITEM] = WeakReference(item)
         client.attr[INTERACTING_ITEM_ID] = item.id
         client.attr[INTERACTING_ITEM_SLOT] = message.slot
 
-        if (!world.plugins.executeItem(client, item.id, 4) && world.devContext.debugItemActions) {
-            client.writeConsoleMessage("Unhandled item action: [item=${item.id}, slot=${message.slot}, option=4]")
+        if (!world.plugins.executeItem(client, item.id, 4)) {
+            UnhandledInteractions.recordInteraction("item", item.id, 4, "item", "slot=${message.slot}")
+            if (world.devContext.debugItemActions) {
+                client.writeConsoleMessage("Unhandled item action: [item=${item.id}, slot=${message.slot}, option=4]")
+            }
         }
     }
 }

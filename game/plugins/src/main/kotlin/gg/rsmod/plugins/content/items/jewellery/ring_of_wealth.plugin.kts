@@ -6,9 +6,6 @@ import gg.rsmod.plugins.content.magic.TeleportType
 import gg.rsmod.plugins.content.magic.canTeleport
 import gg.rsmod.plugins.content.magic.teleport
 
-private val SOUNDAREA_ID = 200
-private val SOUNDAREA_RADIUS = 5
-private val SOUNDAREA_VOLUME = 1
 
 val RING_OF_WEALTH =
     intArrayOf(
@@ -36,7 +33,7 @@ on_item_option(item = Items.RING_OF_WEALTH, option = "Rub") {
 }
 
 RING_OF_WEALTH.forEach { item ->
-    on_item_option(item = item, option = 4) {
+    on_item_option(item = item, option = "Rub") {
         player.queue {
             when (options("Miscellania.", "Grand Exchange.", "Nowhere.")) {
                 1 -> player.teleport(LOCATIONS["Miscellania"]!!, isEquipped = false)
@@ -70,8 +67,7 @@ fun Player.teleport(
     // Deadman PvP guards plan (2026-09-16): two-arg canTeleport - a skulled player's 7-second
     // countdown completes this action automatically.
     canTeleport(TeleportType.JEWELRY) {
-        // Play a sound effect in the area around the player
-        world.spawn(AreaSound(tile, SOUNDAREA_ID, SOUNDAREA_RADIUS, SOUNDAREA_VOLUME))
+        // Start/land sounds come from TeleportType.JEWELRY in the shared teleport (one rule, no second copy here).
 
         // Get the replacement ring with updated charges
         val replacement = replacement(getInteractingItemId())

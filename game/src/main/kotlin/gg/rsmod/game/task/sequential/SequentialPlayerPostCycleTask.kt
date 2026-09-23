@@ -3,6 +3,7 @@ package gg.rsmod.game.task.sequential
 import gg.rsmod.game.model.World
 import gg.rsmod.game.service.GameService
 import gg.rsmod.game.task.GameTask
+import mu.KLogging
 
 /**
  * A [GameTask] responsible for executing [gg.rsmod.game.model.entity.Pawn]
@@ -18,7 +19,13 @@ class SequentialPlayerPostCycleTask : GameTask {
         service: GameService,
     ) {
         world.players.forEach { p ->
-            p.postCycle()
+            try {
+                p.postCycle()
+            } catch (e: Exception) {
+                logger.error("Error post-cycling player ${p.username}.", e)
+            }
         }
     }
+
+    companion object : KLogging()
 }

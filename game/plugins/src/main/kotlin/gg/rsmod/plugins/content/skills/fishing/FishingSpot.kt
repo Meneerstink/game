@@ -99,10 +99,6 @@ enum class FishingSpot(
         objectIds = listOf(Npcs.CAVEFISH_SHOAL),
         tools = listOf(FishingTool.FISHING_ROD_CAVEFISH),
     ),
-    FISHING_ROD_ROCKTAIL(
-        objectIds = listOf(Npcs.ROCKTAIL_SHOAL),
-        tools = listOf(FishingTool.FISHING_ROD_ROCKTAIL),
-    ),
     SMALL_FISHING_NET_MONKFISH(
         objectIds = listOf(Npcs.FISHING_SPOT_952, Npcs.FISHING_SPOT_3848),
         tools = listOf(FishingTool.MONKFISH_NET),

@@ -40,7 +40,19 @@ fun activateObelisk(
 ) {
     // The rest of this function handles the teleportation logic.
     val obeliskTile = obj.tile
-    val stationObelisk = Obelisk.forLocation(obeliskTile) ?: return
+    val stationObelisk = Obelisk.forLocation(obeliskTile)
+    if (stationObelisk == null) {
+        // A house obelisk. The Superior Garden's obelisk is one of these same locs (PlayerHouse.OBELISK), so it
+        // arrives here with no Wilderness station within 20 tiles and used to fall out silently. In OSRS the house
+        // obelisk is a chooser for the Wilderness obelisk network, which is what the owner asked for on 2026-09-21
+        // ("we are missing ... a wilderness obelisk"); a house is a safe zone, so the trip out is behind the same
+        // 7-second transport interface as every other non-teleport transport, plus a confirmation.
+        if (!gg.rsmod.plugins.content.areas.poh.PlayerHouse.isSafeTile(obeliskTile)) {
+            return
+        }
+        houseObelisk(player)
+        return
+    }
     val world: World = player.world
 
     // Define the corners relative to the obelisk location for animation purposes.
@@ -120,6 +132,26 @@ enum class Obelisk(
     companion object {
         fun forLocation(location: Tile): Obelisk? {
             return values().firstOrNull { it.location.getDistance(location) <= 20 }
+        }
+    }
+}
+
+/** The Superior Garden obelisk: pick one of the six Wilderness obelisks and travel there. */
+fun houseObelisk(p: Player) {
+    p.queue {
+        val destinations = gg.rsmod.plugins.content.areas.poh.PohGarden.OBELISKS
+        val labels = destinations.map { it.label } + "Cancel"
+        val pick = options(*labels.toTypedArray(), title = "Travel to which obelisk?")
+        if (pick < 1 || pick > destinations.size) {
+            return@queue
+        }
+        val choice = destinations[pick - 1]
+        p.message("This will take you into the Wilderness.")
+        if (options("Travel to the ${choice.label.lowercase()}.", "Stay here.") != 1) {
+            return@queue
+        }
+        p.canTeleport(TeleportType.WILDERNESS_OBELISK) {
+            p.teleport(choice.tile, TeleportType.WILDERNESS_OBELISK)
         }
     }
 }

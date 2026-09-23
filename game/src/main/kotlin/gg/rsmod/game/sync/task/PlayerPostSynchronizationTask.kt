@@ -40,7 +40,16 @@ object PlayerPostSynchronizationTask : SynchronizationTask<Player> {
             val newChunk = pawn.world.chunks.get(pawn.tile.chunkCoords, createIfNeeded = false)
             if (newChunk != null) {
                 val newSurroundings = newChunk.coords.getSurroundingCoords()
-                newSurroundings.forEach { coords ->
+                // A zone's full state (clear + every spawned/removed object) is only sent when the zone newly enters
+                // view, or after a map rebuild / plane change. Re-sending it on every step made the client clear and
+                // redraw every changed object each step - the player-owned house flickered (owner 2026-09-19).
+                val alreadyVisible =
+                    if (oldTile == null || changedHeight || pawn.regionRebuilt) {
+                        emptySet()
+                    } else {
+                        oldTile.chunkCoords.getSurroundingCoords()
+                    }
+                newSurroundings.filter { it !in alreadyVisible }.forEach { coords ->
                     val chunk = pawn.world.chunks.get(coords, createIfNeeded = false) ?: return@forEach
                     chunk.sendUpdates(pawn)
                 }

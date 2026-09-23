@@ -62,12 +62,12 @@ val lesserDemon =
 table.register(lesserDemon, *ids)
 
 on_npc_pre_death(Npcs.LESSER_DEMON_4694, Npcs.LESSER_DEMON_4695, Npcs.LESSER_DEMON_4696, Npcs.LESSER_DEMON_4697) {
-    val p = npc.damageMap.getMostDamage()!! as Player
+    val p = npc.killer() ?: return@on_npc_pre_death
     p.playSound(Sfx.DEMON_DEATH)
 }
 
 on_npc_death(*ids) {
-    table.getDrop(world, npc.damageMap.getMostDamage()!! as Player, npc.id, npc.tile)
+    table.getDrop(world, npc.killer() ?: return@on_npc_death, npc.id, npc.tile)
 }
 
 ids.forEach {

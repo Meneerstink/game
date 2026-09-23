@@ -613,8 +613,7 @@ abstract class Pawn(
         blockBuffer.teleport = true
         tile = Tile(x, z, height)
         movementQueue.clear()
-        addBlock(UpdateBlockType.MOVEMENT_TYPE)
-        addBlock(UpdateBlockType.MOVEMENT)
+        addMovementBlocks()
     }
 
     fun teleportTo(tile: Tile) {
@@ -642,14 +641,32 @@ abstract class Pawn(
         x: Int,
         z: Int,
         height: Int = 0,
+    ) {
         if (this is Player && gg.rsmod.game.model.MoveGate.teleport?.invoke(this, Tile(x, z, height)) == true) {
             return
         }
-    ) {
         moved = true
         blockBuffer.teleport = !tile.isWithinRadius(x, z, height, Player.NORMAL_VIEW_DISTANCE)
         tile = Tile(x, z, height)
         movementQueue.clear()
+        addMovementBlocks()
+    }
+
+    /**
+     * MOVEMENT_TYPE and MOVEMENT are player-only extended-info flags: `data\blocks.yml` lists them
+     * under `players` only, because the 667 client's `NPCList.processExtendedInfo` has no such
+     * flags. [gg.rsmod.game.model.entity.Npc.addBlock] resolves its flag with `!!`, so asking an npc
+     * for one threw `NullPointerException` and aborted whatever was moving it: every Deadman city
+     * guard reposition (320 occurrences in one session's log, thrown out of the player cycle task),
+     * Nex's "No escape" teleport, the Corporeal Beast's dark core, the Giant Mole's burrow and the
+     * Strykewyrm relocation all died on their first move. An npc's move is already synchronised
+     * through [moved] / `blockBuffer.teleport`, which `NpcSynchronizationTask` reads (RCV-012 B3/B4),
+     * so an npc needs no extended-info block at all here.
+     */
+    private fun addMovementBlocks() {
+        if (!entityType.isPlayer) {
+            return
+        }
         addBlock(UpdateBlockType.MOVEMENT_TYPE)
         addBlock(UpdateBlockType.MOVEMENT)
     }

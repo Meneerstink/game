@@ -91,6 +91,7 @@ object FiremakingAction {
 
                     world.queue {
                         wait(2)
+                        if (!player.isOnline || player.isDead()) return@queue
                         player.faceTile(fire.tile)
                         player.timers[LAST_LOG_LIT] = 4
                     }

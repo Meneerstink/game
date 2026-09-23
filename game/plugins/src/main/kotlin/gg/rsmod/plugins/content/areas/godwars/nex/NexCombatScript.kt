@@ -11,6 +11,7 @@ import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Pawn
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.queue.QueueTask
+import gg.rsmod.game.model.queue.TaskPriority
 import gg.rsmod.plugins.api.HitType
 import gg.rsmod.plugins.api.PrayerIcon
 import gg.rsmod.plugins.api.ProjectileType
@@ -214,10 +215,16 @@ object NexCombatScript : CombatScript() {
     /** Pulls the farthest player to Nex, disabling protection prayers and stunning them. */
     private fun pullAttack(npc: Npc) {
         val player = NexEncounter.players().maxByOrNull { it.tile.getDistance(npc.tile) } ?: return
-        player.lock()
         player.stopMovement()
-        npc.world.queue {
+        // Keep the delayed pull owned by the player. A world queue outlives the player death/
+        // logout queue and could otherwise leave a stale lock or apply the special after the
+        // victim had already respawned. STRONG also prevents an open standard menu from pausing
+        // the action while its full lock is active.
+        player.lockingQueue(priority = TaskPriority.STRONG) {
             wait(1)
+            if (!npc.isSpawned() || npc.isDead() || !player.isOnline || player.isDead() || !NexEncounter.inArena(player.tile)) {
+                return@lockingQueue
+            }
             player.animate(14388)
             player.graphic(GFX_PLAYER_SACRIFICE)
             npc.attack(player)
@@ -226,7 +233,6 @@ object NexCombatScript : CombatScript() {
             player.message("You've been injured and you cannot use ${if (AncientCurses.getBook(player) == AncientCurses.PrayerBook.ANCIENT) "protective curses" else "protective prayers"}!")
             NexPrayer.disableProtection(player, 5 + npc.world.random(15))
             player.freeze(5 + npc.world.random(5))
-            player.unlock()
         }
     }
 
@@ -376,7 +382,7 @@ object NexCombatScript : CombatScript() {
         world.queue {
             wait(npc.combatDef.attackSpeed)
             player.attr.remove(NexEncounter.SACRIFICE_TARGET)
-            if (!NexEncounter.fightActive || npc.isDead()) return@queue
+            if (!NexEncounter.fightActive || !player.isOnline || player.isDead() || !npc.isSpawned() || npc.isDead()) return@queue
             if (player.tile.isWithinRadius(npc.getCentreTile(), 3)) {
                 player.message("You didn't make it far enough in time - Nex fires a punishing attack!")
                 npc.animate(ANIM_MAGIC)
@@ -436,6 +442,10 @@ object NexCombatScript : CombatScript() {
         }
         world.queue {
             wait(8)
+            if (!player.isOnline || player.isDead()) {
+                prison.forEach { world.remove(it) }
+                return@queue
+            }
             if (player.tile == base) {
                 player.message("The centre of the ice prison freezes you to the bone!")
                 player.stopMovement()

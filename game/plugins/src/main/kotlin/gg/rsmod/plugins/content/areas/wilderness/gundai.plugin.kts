@@ -1,4 +1,6 @@
 import gg.rsmod.plugins.content.inter.bank.openBank
+import gg.rsmod.plugins.content.inter.bank.BankPin
+import gg.rsmod.plugins.content.mechanics.exchange.GrandExchangeInterface
 
 val gundai = Npcs.GUNDAI
 
@@ -37,14 +39,12 @@ suspend fun accessBankAccount(it: QueueTask) {
 
 suspend fun checkPINSettings(it: QueueTask) {
     it.chatPlayer("Right, so can I check my PIN settings?")
-    it.chatNpc("Sorry, it is not implemented yet.", facialExpression = FacialExpression.SAD_2)
-    // Implement bank PIN interface opening here
+    BankPin.manage(it.player)
 }
 
 suspend fun collectItems(it: QueueTask) {
     it.chatPlayer("I'd like to collect items.")
-    it.chatNpc("Sorry, it is not implemented yet.", facialExpression = FacialExpression.SAD_2)
-    // Implement Grand Exchange collection box interface opening here
+    GrandExchangeInterface.openCollectionBox(it.player)
 }
 
 suspend fun wellNowIKnow(it: QueueTask) {

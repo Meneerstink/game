@@ -217,24 +217,10 @@ object PriceChecker {
     /** Opens interface 206 with its item grid enabled but without the inventory overlay (the Loot Chest reuses the grid, ADAPTED). */
     fun openGrid(player: Player) {
         player.openInterface(INTERFACE_ID, InterfaceDestination.MAIN_SCREEN)
+        // The grid keeps the cache's own clientscript-2184 layout and op labels ("Remove-1" ...
+        // "Remove-X"). Rebuilding the grid with the inventory init script broke the layout (owner
+        // live retest 2026-09-17). The loot-key chest no longer shares this grid (LootKeyChest).
         player.setInterfaceEvents(INTERFACE_ID, GRID_COMPONENT, 0 until CAPACITY, GRID_OPS)
-        // Owner 2026-09-17: the loot must be withdrawable from the grid - give its slots explicit
-        // right-click ops (the same clientscript the inventory overlay uses; op n maps to the same
-        // amounts the button handler already understands).
-        player.runClientScript(
-            INTERFACE_INV_INIT_BIG,
-            (INTERFACE_ID shl 16) or GRID_COMPONENT,
-            CONTAINER_KEY,
-            4,
-            7,
-            0,
-            -1,
-            "Withdraw-1",
-            "Withdraw-5",
-            "Withdraw-10",
-            "Withdraw-All",
-            "Withdraw-X",
-        )
     }
 
     /** Sends [container] as the grid's items plus the per-slot and total value varcs. */

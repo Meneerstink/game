@@ -39,10 +39,15 @@ on_logout {
 /** Sap/Leech escalation restarts from the base drain on a fresh target. */
 on_npc_killed { _, npc -> AncientCurses.clearDrainState(npc) }
 
-on_player_death {
+// The death hook runs after PlayerDeathAction has respawned and reset the player. Wrath must
+// capture the real death tile and killer during the pre-death stage, just like Retribution.
+on_player_pre_death {
     if (AncientCurses.isCurseActive(player, AncientCurse.WRATH)) {
         AncientCurses.wrathExplosion(player)
     }
+}
+
+on_player_death {
     AncientCurses.deactivateAllCurses(player)
     AncientCurses.clearDrainState(player)
 }

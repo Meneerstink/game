@@ -1,6 +1,7 @@
 package gg.rsmod.plugins.content.combat.strategy.magic
 
 import gg.rsmod.plugins.content.areas.poh.PohTeleports
+import gg.rsmod.plugins.content.items.osrs.OsrsGfx
 import gg.rsmod.plugins.content.items.osrs.OsrsSeq
 import gg.rsmod.plugins.content.magic.teleports.TeleportSpell
 import kotlin.test.Test
@@ -38,6 +39,64 @@ class SurgeSpellLooksTests {
                 CombatSpell.FIRE_SURGE to SpellSounds.Sounds(10338, 10337),
             )
         surges.forEach { assertEquals(expected[it], SpellSounds.of(it), it.name) }
+    }
+
+    /**
+     * Owner 2026-09-20: "we need exact OSRS surge animations" - the fire and water surges were still showing 667
+     * art. Each surge must draw its cast, travel and impact from the imported OSRS set (OSRS 1455-1466).
+     */
+    @Test
+    fun `every surge draws the OSRS surge graphics for its own element`() {
+        val expected =
+            mapOf(
+                CombatSpell.WIND_SURGE to Triple(OsrsGfx.WIND_SURGE_CASTING, OsrsGfx.WIND_SURGE_TRAVEL, OsrsGfx.WIND_SURGE_IMPACT),
+                CombatSpell.WATER_SURGE to Triple(OsrsGfx.WATER_SURGE_CASTING, OsrsGfx.WATER_SURGE_TRAVEL, OsrsGfx.WATER_SURGE_IMPACT),
+                CombatSpell.EARTH_SURGE to Triple(OsrsGfx.EARTH_SURGE_CASTING, OsrsGfx.EARTH_SURGE_TRAVEL, OsrsGfx.EARTH_SURGE_IMPACT),
+                CombatSpell.FIRE_SURGE to Triple(OsrsGfx.FIRE_SURGE_CASTING, OsrsGfx.FIRE_SURGE_TRAVEL, OsrsGfx.FIRE_SURGE_IMPACT),
+            )
+        surges.forEach { spell ->
+            val (cast, travel, impact) = expected.getValue(spell)
+            assertEquals(cast, spell.castGfx?.id, "${spell.name} cast graphic")
+            assertEquals(travel, spell.projectile, "${spell.name} projectile")
+            assertEquals(impact, spell.impactGfx?.id, "${spell.name} impact graphic")
+        }
+    }
+
+    /** The specific regression: Wind Surge was firing the *wave* projectile, and no surge may share a wave's look. */
+    @Test
+    fun `no surge reuses a wave graphic`() {
+        val waveGraphics =
+            waves.flatMap { listOfNotNull(it.castGfx?.id, it.projectile, it.impactGfx?.id, it.secondProjectile, it.thirdProjectile) }
+                .filter { it > 0 }
+                .toSet()
+        surges.forEach { spell ->
+            listOfNotNull(spell.castGfx?.id, spell.projectile, spell.impactGfx?.id).forEach { id ->
+                assertTrue(id !in waveGraphics, "${spell.name} reuses wave graphic $id")
+            }
+        }
+    }
+
+    /** The four elements must be visually distinct: no two surges may share a graphic id. */
+    @Test
+    fun `the four surges do not share graphics with each other`() {
+        val all = surges.flatMap { listOfNotNull(it.castGfx?.id, it.projectile, it.impactGfx?.id) }
+        assertEquals(all.size, all.toSet().size, "two surges share a graphic: $all")
+    }
+
+    /**
+     * Every surge sends exactly one projectile, Fire included.
+     *
+     * The 667 base gave Fire spells a three-projectile volley and Fire Surge inherited it; OSRS fires a single
+     * FIRESURGE_TRAVEL (owner 2026-09-20: "its shooting another projectile ... should be the fire surge from
+     * osrs"). Fire Blast and Fire Wave keep their volley - only the surges are OSRS-exact here.
+     */
+    @Test
+    fun `no surge fires more than one projectile`() {
+        surges.forEach { spell ->
+            assertTrue(spell.secondProjectile <= 0, "${spell.name} still has a second projectile: ${spell.secondProjectile}")
+            assertTrue(spell.thirdProjectile <= 0, "${spell.name} still has a third projectile: ${spell.thirdProjectile}")
+        }
+        assertEquals(OsrsGfx.FIRE_SURGE_TRAVEL, CombatSpell.FIRE_SURGE.projectile)
     }
 
     @Test

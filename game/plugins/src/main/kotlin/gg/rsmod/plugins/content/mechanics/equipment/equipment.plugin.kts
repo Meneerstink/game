@@ -162,18 +162,21 @@ fun bind_unequip(
                         91 -> 5
                         else -> 0
                     }
-                if (!world.plugins.executeEquipmentOption(
-                        player,
-                        item.id,
-                        menuOpt,
-                    ) &&
-                    world.devContext.debugItemActions
-                ) {
-                    val action = item.getDef(world.definitions).equipmentMenu[menuOpt]
-                    player.message(
-                        "Unhandled equipment action: [item=${item.id}, option=$menuOpt, action=$action]",
-                        ChatMessageType.CONSOLE,
+                val action = item.getDef(world.definitions).equipmentMenu[menuOpt]
+                if (!world.plugins.executeEquipmentOption(player, item.id, menuOpt)) {
+                    gg.rsmod.game.action.UnhandledInteractions.recordInteraction(
+                        kind = "equipment",
+                        id = item.id,
+                        option = menuOpt,
+                        name = "item",
+                        context = "slot=${equipment.id} action=$action",
                     )
+                    if (world.devContext.debugItemActions) {
+                        player.message(
+                            "Unhandled equipment action: [item=${item.id}, option=$menuOpt, action=$action]",
+                            ChatMessageType.CONSOLE,
+                        )
+                    }
                 }
             }
         }
@@ -182,7 +185,9 @@ fun bind_unequip(
 
 for (equipment in EquipmentType.values) {
     on_equip_to_slot(equipment.id) {
-        player.playSound(Sfx.EQUIP_FUN)
+        // The item is already in its slot here; its sound follows slot, weapon kind and material (EquipSounds).
+        val equipped = player.equipment[equipment.id]
+        if (equipped != null) EquipSounds.play(player, equipped.id, equipment) else player.playSound(Sfx.EQUIP_FUN)
         // R04.7: same fix as the unequip side above - refresh on every slot, not just
         // weapon/shield, so the bonus screen never shows stale numbers after any equip change.
         player.refreshBonuses()

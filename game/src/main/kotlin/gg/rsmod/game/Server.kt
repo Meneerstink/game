@@ -7,6 +7,7 @@ import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.World
 import gg.rsmod.game.model.entity.GroundItem
 import gg.rsmod.game.model.entity.Npc
+import gg.rsmod.game.model.obj.ObjectCensus
 import gg.rsmod.game.model.skill.SkillSet
 import gg.rsmod.game.protocol.ClientChannelInitializer
 import gg.rsmod.game.service.GameService
@@ -52,7 +53,24 @@ class Server {
      * before the game can be launched properly.
      */
     fun startServer(apiProps: Path) {
-        Thread.setDefaultUncaughtExceptionHandler { t, e -> logger.error("Uncaught server exception in thread $t!", e) }
+        val bootThread = Thread.currentThread()
+        Thread.setDefaultUncaughtExceptionHandler { t, e ->
+            logger.error("Uncaught server exception in thread $t!", e)
+            if (t === bootThread) {
+                /*
+                 * A boot failure must never leave a half-started server behind. The game thread is
+                 * already cycling by this point, so without this the process stays alive and busy
+                 * while `startGame` never reaches the game-port bind - which presents as "the
+                 * server hangs" instead of "the server crashed" (owner 2026-09-20, an hour lost to
+                 * a running game-server that was never listening on 50015).
+                 *
+                 * halt() rather than exit(): shutdown hooks are for an orderly stop of a world that
+                 * finished loading, and there are no players to save during boot.
+                 */
+                logger.error("Server boot failed - stopping so this is reported as a crash, not a hang.")
+                Runtime.getRuntime().halt(1)
+            }
+        }
         val stopwatch = Stopwatch.createStarted()
 
         /*
@@ -208,6 +226,9 @@ class Server {
                     } else {
                         "Player $username not found."
                     }
+                }
+                command == "object_inventory" -> {
+                    ObjectCensus.writeCsv(world)
                 }
                 command == "shutdown" -> {
                     // Used by Start-RSPS.ps1 for a real graceful stop: System.exit runs the
@@ -397,6 +418,13 @@ class Server {
          * Post load world.
          */
         world.postLoad()
+
+        /*
+         * The boot thread is done mutating the world; let the game thread start cycling.
+         * See GameService.loaded - until this point a cycle would race the boot thread over
+         * World.chunks and could kill the boot before the game port is ever bound.
+         */
+        world.getService(GameService::class.java)?.loaded = true
 
         /*
          * Inform the time it took to load up all non-network logic.

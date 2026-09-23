@@ -17,7 +17,7 @@ val countTable =
 table.register(countTable)
 
 on_npc_pre_death(count) {
-    val p = npc.damageMap.getMostDamage()!! as Player
+    val p = npc.killer() ?: return@on_npc_pre_death
     if (!gg.rsmod.plugins.content.combat.audio.NpcCombatAudio.hasDeathSound(npc.id)) p.playSound(Sfx.VAMPIRE_DEATH)
     npc.animate(Anims.COUNT_DRAYNOR_WEAKENED)
     npc.queue {
@@ -38,7 +38,7 @@ on_npc_pre_death(count) {
 }
 
 on_npc_death(count) {
-    val p = npc.damageMap.getMostDamage()!! as Player
+    val p = npc.killer() ?: return@on_npc_death
     p.attr.put(killedCountDraynor, true)
     p.lockingQueue(priority = TaskPriority.STRONG) {
         this.chatPlayer("I should tell Morgan that I've killed the vampyre!", facialExpression = FacialExpression.HAPPY)

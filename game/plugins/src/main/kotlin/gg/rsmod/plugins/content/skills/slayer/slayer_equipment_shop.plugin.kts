@@ -36,7 +36,11 @@ create_shop(
     items[21] = ShopItem(Items.UNFINISHED_BROAD_BOLTS, amount = 3000)
 }
 
-val masters = arrayOf(Npcs.TURAEL, Npcs.VANNAKA, Npcs.MAZCHNA)
+// Every Slayer master (one list: SlayerMaster), not only the first three.
+val masters =
+    (gg.rsmod.plugins.content.skills.slayer.data.SlayerMaster.values().map { it.id } + 7779).filter { id ->
+        world.definitions.get(gg.rsmod.game.fs.def.NpcDef::class.java, id).options.any { it.equals("trade", ignoreCase = true) }
+    }
 
 masters.forEach {
     on_npc_option(npc = it, option = "trade") {

@@ -132,21 +132,40 @@ on_timer(GOD_SPELL_CHARGE_TIMER) {
 
 /*
  * Enchant Crossbow Bolt (interface 432). Each cast enchants 10 bolts; runes are per cast.
+ *
+ * OSRS-IMPORT 2026-09-16 (OSRS Wiki "Enchant Crossbow Bolt", raw wikitext): each of the 10 gem spells "produces"
+ * both the plain enchanted bolt ("Opal bolts (e)") and the OSRS-imported gem-tipped dragon bolt ("Opal dragon
+ * bolts (e)") - the same spell/level/runes/XP enchant either, depending on which the player is carrying.
+ * SOURCE_GAP (ADAPTED, not guessed): the page does not say which stack the spell targets when a player holds
+ * both kinds at once - the normal-tier bolt is checked first (unchanged, already-tested priority), falling back
+ * to the dragon-tier bolt only when the player has fewer than 10 of the normal kind. Dragonstone dragon bolts
+ * (e) 22530 exists as a target item even though the plain Dragonstone dragon bolts cannot currently be fletched
+ * here (no "Dragonstone bolt tips" item in this cache) - a player who otherwise obtains the unenchanted stack
+ * can still enchant it.
  */
-data class BoltEnchant(val component: Int, val bolt: Int, val enchanted: Int, val level: Int, val xp: Double, val runes: List<Item>)
+data class BoltEnchant(
+    val component: Int,
+    val bolt: Int,
+    val enchanted: Int,
+    val level: Int,
+    val xp: Double,
+    val runes: List<Item>,
+    val dragonBolt: Int? = null,
+    val dragonEnchanted: Int? = null,
+)
 
 private val BOLT_ENCHANTS =
     listOf(
-        BoltEnchant(14, Items.OPAL_BOLTS, Items.OPAL_BOLTS_E, 4, 9.0, listOf(Item(Items.COSMIC_RUNE, 1), Item(Items.AIR_RUNE, 2))),
-        BoltEnchant(29, Items.SAPPHIRE_BOLTS, Items.SAPPHIRE_BOLTS_E, 7, 17.0, listOf(Item(Items.COSMIC_RUNE, 1), Item(Items.WATER_RUNE, 1), Item(Items.MIND_RUNE, 1))),
-        BoltEnchant(18, Items.JADE_BOLTS, Items.JADE_BOLTS_E, 14, 19.0, listOf(Item(Items.COSMIC_RUNE, 1), Item(Items.EARTH_RUNE, 2))),
-        BoltEnchant(22, Items.PEARL_BOLTS, Items.PEARL_BOLTS_E, 24, 29.0, listOf(Item(Items.COSMIC_RUNE, 1), Item(Items.WATER_RUNE, 2))),
-        BoltEnchant(32, Items.EMERALD_BOLTS, Items.EMERALD_BOLTS_E, 27, 37.0, listOf(Item(Items.COSMIC_RUNE, 1), Item(Items.AIR_RUNE, 3), Item(Items.NATURE_RUNE, 1))),
-        BoltEnchant(26, Items.TOPAZ_BOLTS, Items.TOPAZ_BOLTS_E, 29, 33.0, listOf(Item(Items.COSMIC_RUNE, 1), Item(Items.FIRE_RUNE, 2))),
-        BoltEnchant(35, Items.RUBY_BOLTS, Items.RUBY_BOLTS_E, 49, 59.0, listOf(Item(Items.COSMIC_RUNE, 1), Item(Items.FIRE_RUNE, 5), Item(Items.BLOOD_RUNE, 1))),
-        BoltEnchant(38, Items.DIAMOND_BOLTS, Items.DIAMOND_BOLTS_E, 57, 67.0, listOf(Item(Items.COSMIC_RUNE, 1), Item(Items.EARTH_RUNE, 10), Item(Items.LAW_RUNE, 2))),
-        BoltEnchant(41, Items.DRAGON_BOLTS, Items.DRAGON_BOLTS_E, 68, 78.0, listOf(Item(Items.COSMIC_RUNE, 1), Item(Items.EARTH_RUNE, 15), Item(Items.SOUL_RUNE, 1))),
-        BoltEnchant(44, Items.ONYX_BOLTS, Items.ONYX_BOLTS_E, 87, 97.0, listOf(Item(Items.COSMIC_RUNE, 1), Item(Items.FIRE_RUNE, 20), Item(Items.DEATH_RUNE, 1))),
+        BoltEnchant(14, Items.OPAL_BOLTS, Items.OPAL_BOLTS_E, 4, 9.0, listOf(Item(Items.COSMIC_RUNE, 1), Item(Items.AIR_RUNE, 2)), Items.OPAL_DRAGON_BOLTS, Items.OPAL_DRAGON_BOLTS_E),
+        BoltEnchant(29, Items.SAPPHIRE_BOLTS, Items.SAPPHIRE_BOLTS_E, 7, 17.0, listOf(Item(Items.COSMIC_RUNE, 1), Item(Items.WATER_RUNE, 1), Item(Items.MIND_RUNE, 1)), Items.SAPPHIRE_DRAGON_BOLTS, Items.SAPPHIRE_DRAGON_BOLTS_E),
+        BoltEnchant(18, Items.JADE_BOLTS, Items.JADE_BOLTS_E, 14, 19.0, listOf(Item(Items.COSMIC_RUNE, 1), Item(Items.EARTH_RUNE, 2)), Items.JADE_DRAGON_BOLTS, Items.JADE_DRAGON_BOLTS_E),
+        BoltEnchant(22, Items.PEARL_BOLTS, Items.PEARL_BOLTS_E, 24, 29.0, listOf(Item(Items.COSMIC_RUNE, 1), Item(Items.WATER_RUNE, 2)), Items.PEARL_DRAGON_BOLTS, Items.PEARL_DRAGON_BOLTS_E),
+        BoltEnchant(32, Items.EMERALD_BOLTS, Items.EMERALD_BOLTS_E, 27, 37.0, listOf(Item(Items.COSMIC_RUNE, 1), Item(Items.AIR_RUNE, 3), Item(Items.NATURE_RUNE, 1)), Items.EMERALD_DRAGON_BOLTS, Items.EMERALD_DRAGON_BOLTS_E),
+        BoltEnchant(26, Items.TOPAZ_BOLTS, Items.TOPAZ_BOLTS_E, 29, 33.0, listOf(Item(Items.COSMIC_RUNE, 1), Item(Items.FIRE_RUNE, 2)), Items.TOPAZ_DRAGON_BOLTS, Items.TOPAZ_DRAGON_BOLTS_E),
+        BoltEnchant(35, Items.RUBY_BOLTS, Items.RUBY_BOLTS_E, 49, 59.0, listOf(Item(Items.COSMIC_RUNE, 1), Item(Items.FIRE_RUNE, 5), Item(Items.BLOOD_RUNE, 1)), Items.RUBY_DRAGON_BOLTS, Items.RUBY_DRAGON_BOLTS_E),
+        BoltEnchant(38, Items.DIAMOND_BOLTS, Items.DIAMOND_BOLTS_E, 57, 67.0, listOf(Item(Items.COSMIC_RUNE, 1), Item(Items.EARTH_RUNE, 10), Item(Items.LAW_RUNE, 2)), Items.DIAMOND_DRAGON_BOLTS, Items.DIAMOND_DRAGON_BOLTS_E),
+        BoltEnchant(41, Items.DRAGON_BOLTS, Items.DRAGON_BOLTS_E, 68, 78.0, listOf(Item(Items.COSMIC_RUNE, 1), Item(Items.EARTH_RUNE, 15), Item(Items.SOUL_RUNE, 1)), Items.DRAGONSTONE_DRAGON_BOLTS, Items.DRAGONSTONE_DRAGON_BOLTS_E),
+        BoltEnchant(44, Items.ONYX_BOLTS, Items.ONYX_BOLTS_E, 87, 97.0, listOf(Item(Items.COSMIC_RUNE, 1), Item(Items.FIRE_RUNE, 20), Item(Items.DEATH_RUNE, 1)), Items.ONYX_DRAGON_BOLTS, Items.ONYX_DRAGON_BOLTS_E),
     )
 
 on_magic_spell_button("Enchant Crossbow Bolt") {
@@ -172,7 +191,13 @@ BOLT_ENCHANTS.forEach { enchant ->
                     player.message("You need a Magic level of ${enchant.level} to enchant those bolts.")
                     return@queue
                 }
-                if (player.inventory.getItemCount(enchant.bolt) < 10) {
+                // Normal-tier bolts are checked first (unchanged, already-tested priority); the OSRS-imported
+                // gem-tipped dragon bolt of the same tier is only targeted when the player has fewer than 10
+                // normal bolts - see this block's class doc for why (SOURCE_GAP on the real selection order).
+                val useDragon = player.inventory.getItemCount(enchant.bolt) < 10 && enchant.dragonBolt != null && player.inventory.getItemCount(enchant.dragonBolt) >= 10
+                val bolt = if (useDragon) enchant.dragonBolt!! else enchant.bolt
+                val enchanted = if (useDragon) enchant.dragonEnchanted!! else enchant.enchanted
+                if (player.inventory.getItemCount(bolt) < 10) {
                     player.message("You need at least 10 bolts to cast this spell.")
                     return@queue
                 }
@@ -180,8 +205,8 @@ BOLT_ENCHANTS.forEach { enchant ->
                 MagicSpells.removeRunes(player, enchant.runes, SpellbookData.ENCHANT_CROSSBOW_BOLT.uniqueId)
                 player.animate(4462)
                 player.graphic(759, 96)
-                if (player.inventory.remove(enchant.bolt, 10).hasSucceeded()) {
-                    player.inventory.add(enchant.enchanted, 10)
+                if (player.inventory.remove(bolt, 10).hasSucceeded()) {
+                    player.inventory.add(enchanted, 10)
                     player.addXp(Skills.MAGIC, enchant.xp, checkBrawlingGloves = true)
                 }
                 wait(2)

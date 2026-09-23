@@ -22,9 +22,17 @@ object GenericLadders {
 
     enum class Direction { UP, DOWN }
 
-    /** Ladders, and open trapdoors whose "Climb-down" leads to a ladder on the mirrored dungeon tile. */
+    /**
+     * Ladders, open trapdoors whose "Climb-down" leads to a ladder on the mirrored dungeon tile,
+     * and vines: confirmed with `ObjectPlacementProbeTool` (2026-09-18) that this cache's vine ids
+     * follow the exact same "same tile, id changes with height, Climb-up/Climb-down" shape as
+     * ladders (e.g. obj 27126/27151/27129/27130 all sit at (2894,2980), one per floor) - the same
+     * evidence rule below already covers them correctly, so no separate vine-specific logic exists.
+     */
     fun isLadder(def: ObjectDef): Boolean =
-        def.name.contains("ladder", ignoreCase = true) || def.name.contains("trapdoor", ignoreCase = true)
+        def.name.contains("ladder", ignoreCase = true) ||
+            def.name.contains("trapdoor", ignoreCase = true) ||
+            def.name.contains("vine", ignoreCase = true)
 
     fun optionDirection(option: String?): Direction? =
         when (option?.lowercase()) {

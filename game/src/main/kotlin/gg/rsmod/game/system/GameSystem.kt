@@ -9,6 +9,7 @@ import gg.rsmod.game.message.impl.EventCameraPositionMessage
 import gg.rsmod.game.message.impl.EventMouseIdleMessage
 import gg.rsmod.game.message.impl.SoundSongEndMessage
 import gg.rsmod.game.message.impl.WindowStatusMessage
+import gg.rsmod.game.model.AvTrace
 import gg.rsmod.game.model.World
 import gg.rsmod.game.model.attr.LAST_ACTIVE_CYCLE_ATTR
 import gg.rsmod.game.model.attr.PLAYER_ACTION_INTERRUPT_ATTR
@@ -41,23 +42,44 @@ class GameSystem(
         msg: Any,
     ) {
         if (msg is GamePacket) {
-            val decoder = service.messageDecoders.get(msg.opcode)
-            if (decoder == null) {
-                logger.warn("No decoder found for message $msg.")
-                return
+            try {
+                val decoder = service.messageDecoders.get(msg.opcode)
+                if (decoder == null) {
+                    logger.warn("No decoder found for message $msg.")
+                    return
+                }
+                val handler = service.messageDecoders.getHandler(msg.opcode)
+                if (handler == null) {
+                    logger.warn("No handler found for message $msg")
+                    return
+                }
+                val message = decoder.decode(msg.opcode, service.messageStructures.get(msg.opcode)!!, GamePacketReader(msg))
+                val queued = messages.offer(
+                    MessageHandle(
+                        message = message,
+                        handler = handler,
+                        opcode = msg.opcode,
+                        length = msg.payload.readableBytes(),
+                        queuedAtNanos = System.nanoTime(),
+                    ),
+                )
+                if (!queued) {
+                    // A burst above messages-per-cycle must not throw from Netty's receive path and
+                    // turn a temporary input backlog into the intermittent client freeze/disconnect.
+                    // The bounded queue deliberately drops only the overflowing packet; the event is
+                    // visible when AvTrace is enabled so the client action can be correlated.
+                    AvTrace.log {
+                        "packet queue full user=${client.username} opcode=${msg.opcode} " +
+                            "length=${msg.payload.readableBytes()} capacity=${service.maxMessagesPerCycle}"
+                    }
+                }
+            } finally {
+                /*
+                 * Every Netty packet owns a reference-counted payload, including unknown opcodes,
+                 * missing handlers and decoder failures. Release it on every receive-path exit.
+                 */
+                msg.payload.release()
             }
-            val handler = service.messageDecoders.getHandler(msg.opcode)
-            if (handler == null) {
-                logger.warn("No handler found for message $msg")
-                return
-            }
-            val message = decoder.decode(msg.opcode, service.messageStructures.get(msg.opcode)!!, GamePacketReader(msg))
-            messages.add(MessageHandle(message, handler, msg.opcode, msg.payload.readableBytes()))
-
-            /*
-             * Release the allocated buffer for the [GamePacket].
-             */
-            msg.payload.release()
         }
     }
 
@@ -68,7 +90,16 @@ class GameSystem(
 
     fun handleMessages() {
         for (i in 0 until service.maxMessagesPerCycle) {
+            if (!client.isOnline || client.isLogoutPending) {
+                // Do not apply packets queued before a disconnect/logout request.
+                messages.clear()
+                return
+            }
             val next = messages.poll() ?: break
+            val dequeueNanos = System.nanoTime()
+            val queueWaitNanos = dequeueNanos - next.queuedAtNanos
+            val lockBefore = client.lock
+            val queueSizeBefore = client.queues.size
             // R14.24: marks the player as actively playing on a real deliberate packet - the
             // single choke point every incoming message already passes through, so this needs
             // no per-handler wiring. Deliberately a blocklist of the few message types that are
@@ -102,7 +133,29 @@ class GameSystem(
                     interrupt()
                 }
             }
-            next.handler.handle(client, world, next.message)
+            try {
+                try {
+                    next.handler.handle(client, world, next.message)
+                } catch (e: Exception) {
+                    // A malformed or stale packet must not abort this player's remaining input
+                    // or the MessageHandlerTask for every later player in the same cycle.
+                    logger.error(
+                        "Error handling incoming message ${next.message.javaClass.simpleName} " +
+                            "opcode=${next.opcode} for user=${client.username}",
+                        e,
+                    )
+                }
+            } finally {
+                val handlerNanos = System.nanoTime() - dequeueNanos
+                if (queueWaitNanos >= TRACE_SLOW_PACKET_NANOS || handlerNanos >= TRACE_SLOW_PACKET_NANOS) {
+                    gg.rsmod.game.model.AvTrace.log {
+                        "packet timing user=${client.username} message=${next.message.javaClass.simpleName} " +
+                            "opcode=${next.opcode} length=${next.length} cycle=${world.currentCycle} " +
+                            "queueWaitMs=${queueWaitNanos / 1_000_000.0} handlerMs=${handlerNanos / 1_000_000.0} " +
+                            "lockBefore=$lockBefore lockAfter=${client.lock} queuesBefore=$queueSizeBefore queuesAfter=${client.queues.size}"
+                    }
+                }
+            }
         }
     }
 
@@ -133,7 +186,10 @@ class GameSystem(
         val handler: MessageHandler<Message>,
         val opcode: Int,
         val length: Int,
+        val queuedAtNanos: Long,
     )
 
-    companion object : KLogging()
+    companion object : KLogging() {
+        private const val TRACE_SLOW_PACKET_NANOS = 50_000_000L
+    }
 }

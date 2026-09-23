@@ -1,11 +1,13 @@
 package gg.rsmod.game.message.handler
 
+import gg.rsmod.game.action.UnhandledInteractions
 import gg.rsmod.game.message.MessageHandler
 import gg.rsmod.game.message.impl.OpHeld1Message
 import gg.rsmod.game.model.World
 import gg.rsmod.game.model.attr.INTERACTING_ITEM
 import gg.rsmod.game.model.attr.INTERACTING_ITEM_ID
 import gg.rsmod.game.model.attr.INTERACTING_ITEM_SLOT
+import gg.rsmod.game.model.attr.ID_INSPECTOR_ATTR
 import gg.rsmod.game.model.entity.Client
 import java.lang.ref.WeakReference
 
@@ -48,13 +50,20 @@ class OpHeld1Handler : MessageHandler<OpHeld1Message> {
             item.id,
             item.amount,
         )
+        if (client.attr[ID_INSPECTOR_ATTR] == true) {
+            val def = item.getDef(world.definitions)
+            client.writeConsoleMessage("Item id=${item.id}, name=${def.name}, amount=${item.amount}, slot=${message.slot}")
+        }
 
         client.attr[INTERACTING_ITEM] = WeakReference(item)
         client.attr[INTERACTING_ITEM_ID] = item.id
         client.attr[INTERACTING_ITEM_SLOT] = message.slot
 
-        if (!world.plugins.executeItem(client, item.id, 1) && world.devContext.debugItemActions) {
-            client.writeMessage("Unhandled item action: [item=${item.id}, slot=${message.slot}, option=1]")
+        if (!world.plugins.executeItem(client, item.id, 1)) {
+            UnhandledInteractions.recordInteraction("item", item.id, 1, "item", "slot=${message.slot}")
+            if (world.devContext.debugItemActions) {
+                client.writeMessage("Unhandled item action: [item=${item.id}, slot=${message.slot}, option=1]")
+            }
         }
     }
 }

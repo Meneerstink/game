@@ -55,12 +55,12 @@ val alkharid_warrior =
 table.register(alkharid_warrior, NPC_ID)
 
 on_npc_pre_death(NPC_ID) {
-    val p = npc.damageMap.getMostDamage()!! as Player
+    val p = npc.killer() ?: return@on_npc_pre_death
     p.playSound(Sfx.HUMAN_DEATH)
 }
 
 on_npc_death(NPC_ID) {
-    table.getDrop(world, npc.damageMap.getMostDamage()!! as Player, npc.id, npc.tile)
+    table.getDrop(world, npc.killer() ?: return@on_npc_death, npc.id, npc.tile)
 }
 
 set_combat_def(npc = NPC_ID) {

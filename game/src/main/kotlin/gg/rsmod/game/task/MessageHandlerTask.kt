@@ -2,6 +2,7 @@ package gg.rsmod.game.task
 
 import gg.rsmod.game.model.World
 import gg.rsmod.game.service.GameService
+import mu.KLogging
 
 /**
  * A [GameTask] responsible for handling all incoming
@@ -16,13 +17,20 @@ class MessageHandlerTask : GameTask {
     ) {
         world.players.forEach { p ->
             val start = System.currentTimeMillis()
-            p.handleMessages()
+            try {
+                p.handleMessages()
+            } catch (e: Exception) {
+                logger.error("Error handling messages for player ${p.username}.", e)
+            } finally {
+                val time = System.currentTimeMillis() - start
+                service.playerTimes.merge(p.username, time) { _, oldTime -> oldTime + time }
+            }
             /*
              * Log the time it takes for the task to handle all the player's
              * incoming messages.
              */
-            val time = System.currentTimeMillis() - start
-            service.playerTimes.merge(p.username, time) { _, oldTime -> oldTime + time }
         }
     }
+
+    companion object : KLogging()
 }

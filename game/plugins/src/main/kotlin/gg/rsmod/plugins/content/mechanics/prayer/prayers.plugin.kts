@@ -15,13 +15,6 @@ on_player_pre_death {
 }
 
 /**
- * Deactivate all prayers on log out.
- */
-on_logout {
-    Prayers.deactivateAll(player)
-}
-
-/**
  * Restores prayer on death.
  */
 on_player_death {

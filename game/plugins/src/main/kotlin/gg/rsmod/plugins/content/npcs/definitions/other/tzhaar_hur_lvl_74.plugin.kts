@@ -47,12 +47,12 @@ val tzhaarHur =
 table.register(tzhaarHur, *ids)
 
 on_npc_pre_death(Npcs.TZHAARHUR, Npcs.TZHAARHUR_2601, Npcs.TZHAARHUR_2602, Npcs.TZHAARHUR_2603) {
-    val p = npc.damageMap.getMostDamage()!! as Player
+    val p = npc.killer() ?: return@on_npc_pre_death
     p.playSound(Sfx.TZHAAR_HUR_DEATH)
 }
 
 on_npc_death(*ids) {
-    table.getDrop(world, npc.damageMap.getMostDamage()!! as Player, npc.id, npc.tile)
+    table.getDrop(world, npc.killer() ?: return@on_npc_death, npc.id, npc.tile)
 }
 
 ids.forEach {

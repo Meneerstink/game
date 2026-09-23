@@ -4,18 +4,16 @@ import gg.rsmod.game.model.EntityType
 import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.World
 import gg.rsmod.game.model.attr.AttributeMap
-import gg.rsmod.game.model.attr.LAST_ACTIVE_CYCLE_ATTR
 import gg.rsmod.game.model.entity.Player
 import io.mockk.every
 import io.mockk.mockk
 import kotlin.test.Test
-import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 /**
- * Owner 2026-09-23: the Dangerous-area warning shows on every Safe -> Dangerous move, the "don't show again" choice unlocks
- * only after one hour of genuine active play, and nothing bypasses it.
+ * Owner 2026-09-23: the Dangerous-area warning shows on every Safe -> Dangerous move, but only while a new account's welcome
+ * introduction runs; afterwards (and for existing accounts) never, unless the player turns it back on.
  */
 class DangerWarningTests {
     /** Grand Exchange home square (guarded) and the Wilderness just north of Edgeville (dangerous). */
@@ -24,7 +22,7 @@ class DangerWarningTests {
 
     private var cycle = 1000
 
-    private fun player(): Player {
+    private fun player(intro: Boolean = true): Player {
         val world = mockk<World>(relaxed = true)
         every { world.currentCycle } answers { cycle }
         val p = mockk<Player>(relaxed = true)
@@ -32,6 +30,7 @@ class DangerWarningTests {
         every { p.world } returns world
         every { p.entityType } returns EntityType.CLIENT
         every { p.initiated } returns true
+        if (intro) DangerWarning.startIntro(p)
         return p
     }
 
@@ -42,12 +41,20 @@ class DangerWarningTests {
     }
 
     @Test
-    fun `safe to dangerous warns, every other direction does not`() {
+    fun `safe to dangerous warns during the intro, every other direction does not`() {
         val p = player()
         assertTrue(DangerWarning.needsWarning(p, safe, dangerous))
         assertFalse(DangerWarning.needsWarning(p, dangerous, safe))
         assertFalse(DangerWarning.needsWarning(p, dangerous, dangerous))
         assertFalse(DangerWarning.needsWarning(p, safe, safe))
+    }
+
+    @Test
+    fun `existing accounts and finished intros never warn`() {
+        assertFalse(DangerWarning.needsWarning(player(intro = false), safe, dangerous))
+        val p = player()
+        DangerWarning.endIntro(p)
+        assertFalse(DangerWarning.needsWarning(p, safe, dangerous))
     }
 
     @Test
@@ -67,36 +74,12 @@ class DangerWarningTests {
     }
 
     @Test
-    fun `new players cannot switch warnings off, not even by writing the preference`() {
+    fun `don't show again switches it off, the Doomsayer turns it back on for good`() {
         val p = player()
-        DangerWarning.setDisabled(p, true)
-        assertFalse(DangerWarning.isDisabled(p))
-        p.attr[DangerWarning.DISABLED] = true // a stale or forged save value
-        assertFalse(DangerWarning.isDisabled(p))
-        assertTrue(DangerWarning.needsWarning(p, safe, dangerous))
-    }
-
-    @Test
-    fun `only active minutes count towards the hour`() {
-        val p = player()
-        DangerWarning.countActive(p, 100) // never acted: nothing
-        assertEquals(0, DangerWarning.activeTicks(p))
-        p.attr[LAST_ACTIVE_CYCLE_ATTR] = cycle - DangerWarning.ACTIVE_WINDOW_TICKS - 1 // AFK
-        DangerWarning.countActive(p, 100)
-        assertEquals(0, DangerWarning.activeTicks(p))
-        p.attr[LAST_ACTIVE_CYCLE_ATTR] = cycle - 10 // acted just now
-        DangerWarning.countActive(p, 100)
-        assertEquals(100, DangerWarning.activeTicks(p))
-    }
-
-    @Test
-    fun `after an hour of active play the warning can be switched off and back on`() {
-        val p = player()
-        p.attr[DangerWarning.ACTIVE_TICKS] = DangerWarning.UNLOCK_TICKS
-        DangerWarning.setDisabled(p, true)
-        assertTrue(DangerWarning.isDisabled(p))
+        DangerWarning.setActive(p, false)
         assertFalse(DangerWarning.needsWarning(p, safe, dangerous))
-        DangerWarning.setDisabled(p, false)
+        DangerWarning.setActive(p, true)
+        DangerWarning.endIntro(p)
         assertTrue(DangerWarning.needsWarning(p, safe, dangerous))
     }
 

@@ -248,7 +248,7 @@ open class ItemCurrency(
 
         amount = min(amount, shopItem.currentAmount)
 
-        if (amount == 0) {
+        if (amount <= 0) {
             p.filterableMessage("The shop has run out of stock.")
             return
         }
@@ -285,11 +285,17 @@ open class ItemCurrency(
         val shopItem = shop.items[slot] ?: return
 
         val currencyCost = shopItem.sellPrice ?: getSellPrice(p.world, shopItem.item)
+        if (currencyCost <= 0 || amt <= 0) {
+            // A zero/negative authoring value must never turn into a free-item or
+            // negative-quantity transaction through division/rounding.
+            p.message("This item is not currently available for purchase.")
+            return
+        }
         val currencyCount = p.inventory.getItemCount(currencyItem)
 
         var amount = Math.min(Math.floor(currencyCount.toDouble() / currencyCost.toDouble()).toInt(), amt)
 
-        if (amount == 0) {
+        if (amount <= 0) {
             p.message("You don't have enough $pluralCurrency.")
             return
         }
@@ -298,7 +304,7 @@ open class ItemCurrency(
 
         amount = Math.min(amount, shopItem.currentAmount)
 
-        if (amount == 0) {
+        if (amount <= 0) {
             p.filterableMessage("The shop has run out of stock.")
             return
         }
@@ -368,7 +374,7 @@ open class ItemCurrency(
 
         val amount = Math.min(Math.min(p.inventory.getItemCount(item.id), amt), Int.MAX_VALUE - count)
 
-        if (count == 0 && shop.items.none { it == null } || amount == 0) {
+        if (count == 0 && shop.items.none { it == null } || amount <= 0) {
             p.filterableMessage("The shop has run out of space.")
             return
         }

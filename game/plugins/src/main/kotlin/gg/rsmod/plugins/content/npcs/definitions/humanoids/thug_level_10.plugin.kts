@@ -60,12 +60,12 @@ val thug =
 table.register(thug, *ids)
 
 on_npc_pre_death(Npcs.THUG_7107, Npcs.THUG_7109, Npcs.THUG_7110, Npcs.THUG_7112, Npcs.THUG_7113, Npcs.THUG_7114, Npcs.THUG) {
-    val p = npc.damageMap.getMostDamage()!! as Player
+    val p = npc.killer() ?: return@on_npc_pre_death
     p.playSound(Sfx.HUMAN_DEATH)
 }
 
 on_npc_death(*ids) {
-    table.getDrop(world, npc.damageMap.getMostDamage()!! as Player, npc.id, npc.tile)
+    table.getDrop(world, npc.killer() ?: return@on_npc_death, npc.id, npc.tile)
 }
 
 ids.forEach {

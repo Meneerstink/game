@@ -95,7 +95,7 @@ table.register(dragon, KBD)
 
 
 on_npc_death(KBD) {
-    table.getDrop(world, npc.damageMap.getMostDamage()!! as Player, npc.id, npc.tile)
+    table.getDrop(world, npc.killer() ?: return@on_npc_death, npc.id, npc.tile)
 }
 
 // OSRS Wiki "King Black Dragon" infobox (raw wikitext 2026-09-14): hitpoints 240, att/str/def/mage 240, range 1, attack speed 4,

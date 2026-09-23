@@ -4,7 +4,7 @@ package gg.rsmod.plugins.content.skills.fletching.antlerbolts
  * OSRS-IMPORT antler bolts (OSRS Wiki "Sunlight antler bolts" / "Moonlight antler bolts", 2026-09-14): a chisel on an
  * antler makes 12 bolts; Sunlight antler 62 Fletching and 10 XP, Moonlight antler 72 Fletching and 12.1 XP.
  * SOURCE_GAP: the per-action animation and tick timing are not stated on those pages; each selected antler is
- * processed without an invented animation or delay (recorded in OSRS_IMPORT_STATUS.md).
+ * processed without an invented animation or delay (recorded in OSRS_IMPORT_MASTER.yml).
  */
 
 data class AntlerRecipe(val antler: Int, val bolts: Int, val level: Int, val experience: Double)

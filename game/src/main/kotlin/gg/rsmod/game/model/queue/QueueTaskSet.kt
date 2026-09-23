@@ -2,6 +2,7 @@ package gg.rsmod.game.model.queue
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
+import mu.KLogging
 import java.util.*
 import kotlin.coroutines.createCoroutine
 
@@ -101,6 +102,31 @@ abstract class QueueTaskSet {
             releaseLock?.invoke()
         }
     }
+
+    /**
+     * Conditions run outside the coroutine completion boundary. Remove only a failed task so
+     * one stale callback cannot abort every later pawn/world queue.
+     */
+    protected fun failTask(
+        task: QueueTask,
+        error: Exception,
+        remove: () -> Unit,
+    ) {
+        logger.error("Error with queued task context ${task.ctx}; terminating it.", error)
+        try {
+            task.terminate()
+        } catch (terminationError: Exception) {
+            logger.error("Error terminating failed queued task context ${task.ctx}.", terminationError)
+        } finally {
+            remove()
+            if (task.ownsLock) {
+                task.ownsLock = false
+                releaseLockIfUnowned()
+            }
+        }
+    }
+
+    companion object : KLogging()
 
     /** @return true when a removed task owned the pawn's lock. */
     private fun terminate(keepPersistent: Boolean): Boolean {

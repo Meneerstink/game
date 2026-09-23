@@ -9,7 +9,7 @@ import gg.rsmod.plugins.content.drops.global.Rare
 /**
  * Glacor and glacytes (Glacor Cave, Nov 2011). Stats/anims: Matrix 718 via the Novite donor
  * (5,000 life points, 6-tick attacks, anims 9955/9962/9961). Drops: 2011 wiki table
- * (Ragefire/Steadfast/Glaiven boots, shard of Armadyl, charms, rocktail, runes).
+ * (Ragefire/Steadfast/Glaiven boots, shard of Armadyl, charms and runes).
  */
 val GLACOR = Npcs.GLACOR
 val table = DropTableFactory
@@ -26,7 +26,6 @@ val glacorDrops = table.build {
         obj(Items.BLUE_CHARM, quantityRange = 1..2, slots = 30)
         obj(Items.GREEN_CHARM, quantityRange = 1..3, slots = 40)
         obj(Items.COINS_995, quantityRange = 2000..10000, slots = 80)
-        obj(Items.ROCKTAIL, quantityRange = 3..5, slots = 40)
         obj(Items.BLOOD_RUNE, quantityRange = 30..60, slots = 30)
         obj(Items.SOUL_RUNE, quantityRange = 20..40, slots = 30)
         obj(Items.LAW_RUNE, quantityRange = 30..60, slots = 30)

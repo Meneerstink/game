@@ -324,6 +324,7 @@ object FightCaves {
         if (tokkul > 0) addOrDrop(player, Item(Items.TOKKUL, tokkul))
         world.queue {
             wait(1)
+            if (!player.isOnline) return@queue
             if (defeatedJad) {
                 player.message("<col=ff0000>You were victorious!!")
                 player.message("TzHaar-Mej-Jal: You even defeated TzTok-Jad, I am most impressed! Please accept this gift as a reward.")

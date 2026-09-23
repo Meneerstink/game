@@ -30,8 +30,9 @@ SilverData.values.forEach { data ->
             4 -> {
                 var count = inventory.getItemCount(Items.SILVER_BAR)
                 var countExtra = 0
-                if (data.extraItems != null) {
-                    data.extraItems.forEach {
+                val extraItems = data.extraItems
+                if (extraItems != null) {
+                    extraItems.forEach {
                         countExtra = max(countExtra, inventory.getItemCount(it))
                     }
                 }

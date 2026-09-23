@@ -44,6 +44,9 @@ suspend fun optionsDialogue(task: QueueTask) {
         }
         3 -> {
             // Bob (smith), 2011 wiki: repairs Barrows equipment and recharges the frozen key (FrozenKey).
+            // PvpDeathBreakables repair (Avernic defender, Infernal cape, imbued/assembler/Masori/Dizana's
+            // capes) moved to Perdu at the Grand Exchange - she is a real import (RCV-012 "ferox" batch,
+            // local npc 14394), not absent, so this no longer needs to be fronted through Bob.
             if (FrozenKey.rechargeSlot(task.player) != null) {
                 FrozenKey.recharge(task)
             } else {

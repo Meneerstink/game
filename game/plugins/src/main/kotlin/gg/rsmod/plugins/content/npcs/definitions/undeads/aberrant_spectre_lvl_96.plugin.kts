@@ -61,12 +61,12 @@ val aberrantSpectre =
 table.register(aberrantSpectre, *ids)
 
 on_npc_pre_death(Npcs.ABERRANT_SPECTRE_1605, Npcs.ABERRANT_SPECTRE_1607, Npcs.ABERRANT_SPECTRE_7802, Npcs.ABERRANT_SPECTRE_7803, Npcs.ABERRANT_SPECTRE_7804) {
-    val p = npc.damageMap.getMostDamage()!! as Player
+    val p = npc.killer() ?: return@on_npc_pre_death
     p.playSound(Sfx.SPECTRE_DEATH)
 }
 
 on_npc_death(*ids) {
-    table.getDrop(world, npc.damageMap.getMostDamage()!! as Player, npc.id, npc.tile)
+    table.getDrop(world, npc.killer() ?: return@on_npc_death, npc.id, npc.tile)
 }
 
 ids.forEach {

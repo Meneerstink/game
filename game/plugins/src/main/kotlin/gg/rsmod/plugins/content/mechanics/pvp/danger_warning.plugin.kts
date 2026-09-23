@@ -2,14 +2,10 @@ package gg.rsmod.plugins.content.mechanics.pvp
 
 import gg.rsmod.game.message.impl.ResumePauseButtonMessage
 import gg.rsmod.game.model.MoveGate
-import gg.rsmod.game.model.timer.TimerKey
 
 /*
- * Wiring for [DangerWarning]: the two movement gates, the active-playtime counter and interface 382's buttons.
+ * Wiring for [DangerWarning]: the two movement gates and interface 382's buttons.
  */
-
-val PLAYTIME_TIMER = TimerKey()
-val PLAYTIME_STEP = 100
 
 on_world_init {
     MoveGate.step = { player, from, to ->
@@ -22,48 +18,35 @@ on_world_init {
 }
 
 on_login {
-    player.timers[PLAYTIME_TIMER] = PLAYTIME_STEP
     DangerWarning.syncVarp(player)
 }
 
 // The 667 warning-settings screen (Doomsayer "Toggle-warnings", interface 583): its Wilderness tile switches the
-// Dangerous-area warning. Switching it off needs the hour of active play, like the warning's own row.
+// Dangerous-area warning.
 on_button(DangerWarning.SETTINGS_INTERFACE, DangerWarning.SETTINGS_TOGGLE) {
-    val off = player.attr[DangerWarning.DISABLED] == true && DangerWarning.canDisable(player)
-    if (!off && !DangerWarning.canDisable(player)) {
-        val minutesLeft = (DangerWarning.UNLOCK_TICKS - DangerWarning.activeTicks(player) + 99) / 100
-        player.message("You can turn this warning off after $minutesLeft more minute${if (minutesLeft == 1) "" else "s"} of active play.")
-        return@on_button
-    }
-    DangerWarning.setDisabled(player, !off)
-    player.message(if (off) "Dangerous-area warnings are turned on." else "Dangerous-area warnings are turned off.")
+    val active = !DangerWarning.isActive(player)
+    DangerWarning.setActive(player, active)
+    player.message(if (active) "Dangerous-area warnings are turned on." else "Dangerous-area warnings are turned off.")
 }
 
-on_timer(PLAYTIME_TIMER) {
-    DangerWarning.countActive(player, PLAYTIME_STEP)
-    player.timers[PLAYTIME_TIMER] = PLAYTIME_STEP
-}
-
-// The close cross is an ordinary button: it cancels - the waiting warning is ended and nothing moves.
+// The close cross (382:14, IF_BUTTON1 'Close' in the cache) cancels: the waiting warning ends and nothing moves.
 on_button(DangerWarning.INTERFACE_ID, DangerWarning.CLOSE) {
     player.closeInterface(DangerWarning.INTERFACE_ID)
     player.interruptQueues()
 }
 
 on_command("warnings") {
-    DangerWarning.setDisabled(player, false)
+    DangerWarning.setActive(player, true)
     player.message("Dangerous-area warnings are turned on.")
 }
+
 fun sendDontAsk(player: Player) {
-    val unlocked = DangerWarning.canDisable(player)
-    player.setComponentHidden(DangerWarning.INTERFACE_ID, DangerWarning.DONT_ASK, !unlocked)
-    if (unlocked) {
-        player.setComponentText(
-            DangerWarning.INTERFACE_ID,
-            32,
-            if (player.attr[DangerWarning.DISABLED] == true) "Warnings off - click to keep them on" else "Don't show interface warnings again",
-        )
-    }
+    player.setComponentHidden(DangerWarning.INTERFACE_ID, DangerWarning.DONT_ASK, false)
+    player.setComponentText(
+        DangerWarning.INTERFACE_ID,
+        DangerWarning.DONT_ASK_TEXT,
+        if (DangerWarning.isActive(player)) "Don't show interface warnings again" else "Warnings off - click to keep them on",
+    )
 }
 
 suspend fun showDangerWarning(
@@ -72,9 +55,11 @@ suspend fun showDangerWarning(
     walk: Boolean,
 ) {
     val player = task.player
-    // The held-back teleport/shortcut may have locked the player (this STRONG task inherits that lock). The move itself never
-    // happened, so the lock is released now - otherwise the warning's own buttons could not be clicked.
+    // The held-back teleport/shortcut may have locked the player (this STRONG task inherits that lock) and started its
+    // animation (a tunnel's crawl-in pose). The move itself never happened, so both are undone now - otherwise the player
+    // hangs in that pose and the warning's own buttons cannot be clicked.
     player.unlock()
+    player.animate(-1)
     player.openInterface(DangerWarning.INTERFACE_ID, InterfaceDestination.MAIN_SCREEN)
     player.setComponentText(DangerWarning.INTERFACE_ID, DangerWarning.BODY, DangerWarning.BODY_TEXT)
     sendDontAsk(player)
@@ -83,7 +68,7 @@ suspend fun showDangerWarning(
         task.waitReturnValue()
         val msg = task.requestReturnValue as? ResumePauseButtonMessage
         if (msg != null && msg.interfaceId == DangerWarning.INTERFACE_ID && msg.component == DangerWarning.DONT_ASK) {
-            DangerWarning.setDisabled(player, player.attr[DangerWarning.DISABLED] != true)
+            DangerWarning.setActive(player, !DangerWarning.isActive(player))
             sendDontAsk(player)
             continue
         }

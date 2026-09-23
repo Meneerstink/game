@@ -20,7 +20,7 @@ class SoundAreaUpdate(
             entity.radius,
             entity.volume,
             entity.delay,
-            playbackVolume = 255,
+            playbackVolume = entity.playbackVolume,
             rate = 255,
         )
 }

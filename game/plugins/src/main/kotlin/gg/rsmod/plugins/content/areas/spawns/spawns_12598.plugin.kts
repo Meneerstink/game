@@ -78,11 +78,7 @@ spawn_npc(npc = Npcs.MUSICIAN_PISCATORIS_3463, 3145, 3472, direction = Direction
 
 // ge Tutor Npcs
 spawn_npc(npc = Npcs.RELOBO_BLINYO_LOGS, 3175, 3482, direction = Direction.EAST, static = true)
-spawn_npc(npc = Npcs.HOFUTHAND_ARMOUR_AND_WEAPONS, 3168, 3484, direction = Direction.SOUTH, static = true)
-spawn_npc(npc = Npcs.MURKY_MATT_RUNES, 3184, 3492, direction = Direction.EAST, static = true)
-spawn_npc(npc = Npcs.BOB_BARTER_HERBS, 3155, 3502, direction = Direction.NORTH, static = true)
 // 2026-09-06 owner human retest: "Farid Morrisane must be MOVED from his current Varrock/Grand
 // Exchange placement into Ferox Enclave." Moved to `home_shops.plugin.kts` (HomeLayout.faridMorrisane) -
 // removed here rather than duplicated, so no unintended second copy is left at Varrock.
-spawn_npc(npc = Npcs.BRUGSEN_BURSEN, 3165, 3469, direction = Direction.EAST, static = true)
 spawn_npc(npc = Npcs.GRAND_EXCHANGE_TUTOR, 3164, 3475, direction = Direction.EAST, static = true)

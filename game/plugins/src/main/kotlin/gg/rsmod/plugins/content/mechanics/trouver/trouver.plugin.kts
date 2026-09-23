@@ -5,9 +5,9 @@ import gg.rsmod.plugins.api.ext.message
 
 /**
  * Wires the generic [Trouver] locking engine into the world: registers this server's currently
- * curated set of lockable item pairs, an item-on-item interaction to lock, and a `::trouverunlock`
- * stopgap command to unlock. See [Trouver]'s class doc for why a command fronts unlocking rather
- * than an NPC - Perdu is confirmed genuinely absent from this ~2011/rev-667 cache.
+ * curated set of lockable item pairs and an item-on-item interaction to lock. Unlocking is hosted
+ * by the real, imported Perdu npc at the Grand Exchange (`grand_exchange_hub.plugin.kts`); the
+ * `::trouverunlock` command below remains only as a backup path - see [Trouver]'s class doc.
  *
  * Registry population: only one demonstration pair is registered so far (Fire cape <-> Fire cape
  * (l), items 6570/22324) to prove the engine end-to-end - see `RSPS_IMPORT_MANIFEST.yml`. Curating
@@ -40,6 +40,12 @@ TrouverRegistry.register(TrouverLockable(baseItemId = Items.ASSEMBLER_MAX_CAPE, 
 TrouverRegistry.register(TrouverLockable(baseItemId = Items.MASORI_ASSEMBLER, lockedItemId = Items.MASORI_ASSEMBLER_L))
 TrouverRegistry.register(TrouverLockable(baseItemId = Items.MASORI_ASSEMBLER_MAX_CAPE, lockedItemId = Items.MASORI_ASSEMBLER_MAX_CAPE_L))
 TrouverRegistry.register(TrouverLockable(baseItemId = Items.DIZANAS_MAX_CAPE, lockedItemId = Items.DIZANAS_MAX_CAPE_L, brokenItemId = Items.DIZANAS_MAX_CAPE_L_BROKEN))
+// OSRS-IMPORT quiver (item page "Dizana's quiver", fetched 2026-09-16): "can be locked by bringing it, along with a
+// Trouver parchment and 500,000 coins, to Perdu." Charges and any stored ammo survive locking (Trouver.lock/unlock
+// now copy item attributes) exactly like relogging or banking the same item would. No broken/mangled quiver variant
+// is imported (SOURCE_GAP, see QuiverDeathRules), so only the keep-whole fallback applies here.
+TrouverRegistry.register(TrouverLockable(baseItemId = Items.DIZANAS_QUIVER, lockedItemId = Items.DIZANAS_QUIVER_L))
+TrouverRegistry.register(TrouverLockable(baseItemId = Items.DIZANAS_QUIVER_UNCHARGED, lockedItemId = Items.DIZANAS_QUIVER_L_UNCHARGED))
 
 TrouverRegistry.all().forEach { lockable ->
     on_item_on_item(item1 = Items.TROUVER_PARCHMENT, item2 = lockable.baseItemId) {

@@ -25,7 +25,8 @@ class MessagePrivateHandler : MessageHandler<MessagePrivateMessage> {
         val senderName = Misc.formatForDisplay(fromPlayer.username)
         PrivateMessagePolicy.deliveryRefusal(
             targetOnline = toPlayer != null,
-            targetIgnoresSender = toPlayer != null && toPlayer != fromPlayer && toPlayer.ignoredPlayers.contains(senderName),
+            targetIgnoresSender = toPlayer != null && toPlayer != fromPlayer &&
+                toPlayer.ignoredPlayers.any { Misc.formatForDisplay(it).equals(senderName, ignoreCase = true) },
             senderIsAdmin = fromPlayer.privilege.powers.contains(Privilege.ADMIN_POWER),
         )?.let {
             client.writeMessage(it)

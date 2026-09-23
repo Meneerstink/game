@@ -62,7 +62,7 @@ val living_rock_protector =
 table.register(living_rock_protector, *ids)
 
 on_npc_pre_death(*ids) {
-    val p = npc.damageMap.getMostDamage()!! as Player
+    val p = npc.killer() ?: return@on_npc_pre_death
     p.playSound(Sfx.ROCK_CRAB_DEATH)
 }
 
@@ -172,7 +172,7 @@ on_timer(NPC_REMOVAL_TIMER) {
 on_npc_death(*ids) {
     table.getDrop(
         world,
-        npc.damageMap.getMostDamage()!! as Player,
+        npc.killer() ?: return@on_npc_death,
         npc.id,
         Tile(x = npc.tile.x + 2, z = npc.tile.z + 2, height = npc.tile.height),
     )

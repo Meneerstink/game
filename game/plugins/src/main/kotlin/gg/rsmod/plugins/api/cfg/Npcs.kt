@@ -7959,7 +7959,6 @@ object Npcs {
     const val LIVING_ROCK_REMAINS_8839 = 8839
     const val ROCK_CRITTER = 8840
     const val CAVEFISH_SHOAL = 8841
-    const val ROCKTAIL_SHOAL = 8842
     const val ELF_SQUAD_LIGHT_GREEN = 8845
     const val ELF_SQUAD_LIGHT_GREEN_8846 = 8846
     const val TAEVAS_8847 = 8847

@@ -2,6 +2,7 @@ package gg.rsmod.game.task
 
 import gg.rsmod.game.model.World
 import gg.rsmod.game.service.GameService
+import mu.KLogging
 
 /**
  * A [GameTask] responsible for handling entity removal from the [World] when
@@ -16,9 +17,15 @@ class WorldRemoveTask : GameTask {
     ) {
         for (i in 0 until world.npcs.capacity) {
             val npc = world.npcs[i] ?: continue
-            if (npc.owner?.isOnline == false) {
-                world.remove(npc)
+            try {
+                if (npc.owner?.isOnline == false) {
+                    world.remove(npc)
+                }
+            } catch (e: Exception) {
+                logger.error("Error removing offline-owned npc ${npc.id} (${npc.name}).", e)
             }
         }
     }
+
+    companion object : KLogging()
 }

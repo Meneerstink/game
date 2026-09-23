@@ -15,8 +15,39 @@ class ObjectDef(
     var name = ""
     var width = 1
     var length = 1
-    var solid = true
-    var impenetrable = true
+    /**
+     * The 667 client's LocType.blockwalk: 2 by default, 0 after opcode 17, 1 after opcode 27. Ground decoration only blocks at 1,
+     * every other shape at non-zero (MapRegion loc loading).
+     */
+    var blockwalk = 2
+
+    /** LocType.blockrange: cleared by opcodes 17 and 18. */
+    var blockrange = true
+
+    /**
+     * Opcode 74. The 667 client's LocTypeList.list clears blockwalk and blockrange for such a loc, but only so its own
+     * route finder may plan a path *to* it; movement is server-authoritative. Revision 667 sets it on 671 locs whose
+     * placements are almost all real obstacles - 4161 doors, every Dungeoneering door, 125 bank booths, counters,
+     * tables, gates and ~1200 wall pieces - so it must never make a loc walkable on the server.
+     */
+    var breakroutefinding = false
+
+    /**
+     * Blocks walking. Owner 2026-09-24 ("noclippen lukt in mijn hele server"): this used to be
+     * `blockwalk != 0 && !breakroutefinding`, which made every opcode-74 door, booth, counter, gate and wall piece
+     * walk-through world-wide. Only [blockwalk] decides now; ground decoration keeps its own rule ([blocksGroundDecor],
+     * so walk-on rope bridges stay walkable).
+     */
+    var solid: Boolean
+        get() = blockwalk != 0
+        set(value) {
+            blockwalk = if (value) 2 else 0
+        }
+
+    val impenetrable: Boolean get() = blockrange && !breakroutefinding
+
+    /** The client's ground decoration rule: only blockwalk 1 adds the GROUND_DECOR flag. */
+    val blocksGroundDecor: Boolean get() = blockwalk == 1 && !breakroutefinding
     var interactive = false
     var obstructive = false
     var clipMask = 0
@@ -64,8 +95,11 @@ class ObjectDef(
             2 -> name = buf.readString()
             14 -> width = buf.readUnsignedByte().toInt()
             15 -> length = buf.readUnsignedByte().toInt()
-            17 -> solid = false
-            18 -> impenetrable = false
+            17 -> {
+                blockwalk = 0
+                blockrange = false
+            }
+            18 -> blockrange = false
             19 -> interactive = buf.readUnsignedByte().toInt() == 1
             21 -> {}
             22 -> {}
@@ -76,7 +110,7 @@ class ObjectDef(
                     animation = -1
                 }
             }
-            27 -> {}
+            27 -> blockwalk = 1
             28 -> buf.readUnsignedByte()
             29 -> buf.readByte()
             in 30 until 35 -> {
@@ -115,7 +149,7 @@ class ObjectDef(
             70 -> buf.readShort()
             71 -> buf.readShort()
             72 -> buf.readShort()
-            74 -> {}
+            74 -> breakroutefinding = true
             73 -> obstructive = true
             75 -> buf.readUnsignedByte()
             77, 92 -> {

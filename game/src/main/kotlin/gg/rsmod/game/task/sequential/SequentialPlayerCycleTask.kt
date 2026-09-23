@@ -3,6 +3,7 @@ package gg.rsmod.game.task.sequential
 import gg.rsmod.game.model.World
 import gg.rsmod.game.service.GameService
 import gg.rsmod.game.task.GameTask
+import mu.KLogging
 
 /**
  * A [GameTask] responsible for executing [gg.rsmod.game.model.entity.Player]
@@ -17,13 +18,20 @@ class SequentialPlayerCycleTask : GameTask {
     ) {
         world.players.forEach { p ->
             val start = System.currentTimeMillis()
-            p.cycle()
+            try {
+                p.cycle()
+            } catch (e: Exception) {
+                logger.error("Error cycling player ${p.username}.", e)
+            } finally {
+                val time = System.currentTimeMillis() - start
+                service.playerTimes.merge(p.username, time) { _, oldTime -> oldTime + time }
+            }
             /*
              * Log the time it takes for task to handle the player's cycle
              * logic.
              */
-            val time = System.currentTimeMillis() - start
-            service.playerTimes.merge(p.username, time) { _, oldTime -> oldTime + time }
         }
     }
+
+    companion object : KLogging()
 }

@@ -91,6 +91,22 @@ object ObjectTeleports {
         return rejected
     }
 
+    /**
+     * Drops table entries whose source tile does not contain that object in the loaded 667
+     * landscape. Void's source table predates this cache and contains stale placements; retaining
+     * those entries would make them look handled while they can never be clicked.
+     */
+    fun retainPlaced(isPlaced: (Entry) -> Boolean): List<Entry> {
+        val rejected = mutableListOf<Entry>()
+        byTile =
+            byTile.mapValues { (_, entries) ->
+                entries.filter { entry ->
+                    if (isPlaced(entry)) true else { rejected += entry; false }
+                }
+            }.filterValues { it.isNotEmpty() }
+        return rejected
+    }
+
     fun normalise(option: String?): String = option?.trim()?.lowercase()?.replace(' ', '-') ?: ""
 
     fun entriesAt(tile: Tile): List<Entry> = byTile[key(tile.x, tile.z, tile.height)].orEmpty()

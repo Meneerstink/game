@@ -11136,12 +11136,6 @@
   "max_range": 150
  },
  {
-  "id": 8842,
-  "name": "Rocktail shoal",
-  "void_key": "fishing_spot_rocktail_shoal",
-  "max_range": 150
- },
- {
   "id": 8848,
   "name": "Sir Vant",
   "void_key": "sir_vant_falador_2",

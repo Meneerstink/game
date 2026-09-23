@@ -162,6 +162,11 @@ fun Player.buildQuestStages(quest: Quest) {
  * @param item The item ID to represent the completed quest.
  * @param rewards The rewards to be given to the player upon completion of the quest.
  */
+/** Interface 277 only defines components 0..18; its reward lines are the eight slots 10..17. */
+private const val QUEST_FINISH_REWARD_FIRST = 10
+private const val QUEST_FINISH_REWARD_LAST = 17
+private const val QUEST_FINISH_REWARD_SLOTS = QUEST_FINISH_REWARD_LAST - QUEST_FINISH_REWARD_FIRST + 1
+
 fun Player.buildQuestFinish(
     quest: Quest,
     item: Int,
@@ -170,14 +175,35 @@ fun Player.buildQuestFinish(
     setComponentText(interfaceId = 277, component = 4, "You have completed ${quest.name}!")
     setComponentItem(interfaceId = 277, component = 5, item = item, amountOrZoom = 1)
     setComponentText(interfaceId = 277, component = 7, "${getVarp(Varps.QUEST_POINTS)}")
-    for (i in 10..17) {
+    for (i in QUEST_FINISH_REWARD_FIRST..QUEST_FINISH_REWARD_LAST) {
         setComponentText(interfaceId = 277, component = i, "")
     }
-    rewards.forEachIndexed { index, string ->
-        setComponentText(interfaceId = 277, component = index + 10, text = string)
+    // Owner 2026-09-20 ("when talking to oneiromancer and if u select one of the option the client crashes"):
+    // Recipe for Disaster passes 13 reward lines, so the old loop wrote to components 18..22, which interface
+    // 277 does not define - the client threw on the first missing component and dropped the connection. Never
+    // address a component the interface does not have: show the first slots here and send the rest to the
+    // chatbox, so any caller with any number of rewards is safe.
+    val shown = if (rewards.size > QUEST_FINISH_REWARD_SLOTS) QUEST_FINISH_REWARD_SLOTS - 1 else rewards.size
+    rewards.take(shown).forEachIndexed { index, string ->
+        setComponentText(interfaceId = 277, component = QUEST_FINISH_REWARD_FIRST + index, text = string)
+    }
+    val overflow = rewards.drop(shown)
+    if (overflow.isNotEmpty()) {
+        setComponentText(
+            interfaceId = 277,
+            component = QUEST_FINISH_REWARD_FIRST + shown,
+            text = "...and ${overflow.size} more rewards (see your chatbox)",
+        )
+        message("Rewards for completing ${quest.name}:")
+        overflow.forEach { message("- $it") }
     }
     openInterface(dest = InterfaceDestination.MAIN_SCREEN, interfaceId = 277)
+    // Every quest completion shares this one scroll, so the jingle lives here too (2026-09-22: no quest played one).
+    // Void donor quest.jingles.toml: quest_complete_1 = 152, the jingle its quest scripts use for these quests.
+    playJingle(QUEST_COMPLETE_JINGLE)
 }
+
+const val QUEST_COMPLETE_JINGLE = 152
 
 fun getRequirements(
     player: Player,
@@ -198,13 +224,8 @@ fun getRequirements(
 
             is SkillRequirement -> {
                 val skillString = "${it.level} ${Skills.getSkillName(world = player.world, skill = it.skill)}"
-    // Every quest completion shares this one scroll, so the jingle lives here too (2026-09-22: no quest played one).
-    // Void donor quest.jingles.toml: quest_complete_1 = 152, the jingle its quest scripts use for these quests.
-    playJingle(QUEST_COMPLETE_JINGLE)
                 requirementList.add(
                     if (player.skills.getMaxLevel(it.skill) >= it.level) {
-const val QUEST_COMPLETE_JINGLE = 152
-
                         striked(skillString)
                     } else {
                         skillString

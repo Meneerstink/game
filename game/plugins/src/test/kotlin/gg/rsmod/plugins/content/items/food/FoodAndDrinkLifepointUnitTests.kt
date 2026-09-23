@@ -20,7 +20,7 @@ import kotlin.test.assertTrue
  *
  * Shared path: every food/drink heal ends in `Player.alterLifepoints(value, capValue)`, where lifepoints
  * are 1:1 and capValue is an allowance ABOVE the maximum. The food table stayed on the x10 unit (shark 200)
- * and the rocktail/potion callers passed a level-sized allowance, so HP could go far above the maximum.
+ * and callers must pass a deliberate, bounded allowance so HP cannot go far above the maximum.
  */
 class FoodAndDrinkLifepointUnitTests {
     private fun player(maxLevel: Int = 99): Player {
@@ -46,25 +46,27 @@ class FoodAndDrinkLifepointUnitTests {
     fun `every sourced food heal is on the x10 ledger unit`() {
         assertTrue(unsourcedDungeoneeringFoods.contains("CAVE_MORAY"), "Dungeoneering food block not found")
         val offenders = Food.values
-            .filter { it.name !in unsourcedDungeoneeringFoods && it != Food.KEBAB && it != Food.STRANGE_FRUIT }
+            .filter { it.name !in unsourcedDungeoneeringFoods && it != Food.KEBAB && it != Food.STRANGE_FRUIT && it != Food.ANGLERFISH }
             .filter { it.heal <= 0 || it.heal % Food.LEDGER_UNITS_PER_HITPOINT != 0 }
             .map { "${it.name} heal=${it.heal}" }
         assertTrue(offenders.isEmpty(), "food heal not on the x10 ledger unit:\n" + offenders.joinToString("\n"))
         // OSRS Wiki "Strange fruit": "No Hitpoints are restored upon eating the fruit" (it cures poison/venom and restores run energy).
         assertEquals(0, Food.STRANGE_FRUIT.heal)
+        assertEquals(22, Foods.anglerfishHeal(99))
     }
 
     @Test
-    fun `every food heals one tenth of its ledger value and only rocktail may exceed the maximum by 10`() {
+    fun `every food heals one tenth of its ledger value and only anglerfish may overheal`() {
         // Strange fruit heals nothing (OSRS Wiki) - asserted in the ledger test above.
         Food.values.filter { it != Food.KEBAB && it != Food.STRANGE_FRUIT }.forEach { food ->
             val p = player()
             Foods.eat(p, food)
-            val cap = if (food == Food.ROCKTAIL) 10 else 0
-            verify(exactly = 1) { p.alterLifepoints(food.heal / 10, cap) }
+            val expectedHeal = if (food == Food.ANGLERFISH) Foods.anglerfishHeal(99) else food.heal / 10
+            val cap = if (food == Food.ANGLERFISH) expectedHeal else 0
+            verify(exactly = 1) { p.alterLifepoints(expectedHeal, cap) }
         }
         assertEquals(20, Food.SHARK.hitpoints)
-        assertEquals(23, Food.ROCKTAIL.hitpoints)
+        assertEquals(22, Foods.anglerfishHeal(99))
     }
 
     @Test

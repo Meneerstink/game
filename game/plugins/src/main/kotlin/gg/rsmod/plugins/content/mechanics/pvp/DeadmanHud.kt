@@ -158,7 +158,8 @@ object DeadmanHud {
         if (previousState != state) {
             player.attr[LAST_STATE_ATTR] = state
             if (previousState == State.GUARDED) {
-                player.message(DANGER_WARNING)
+                // Owner 2026-09-23: the warning must stand out in the chatbox - red.
+                player.message("<col=ff0000>$DANGER_WARNING</col>")
             }
         }
 

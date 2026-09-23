@@ -12,7 +12,11 @@ val BUY_INTERFACE = 164
 val LEARN_INTERFACE = 378
 val ASSIGNMENT_INTERFACE = 161
 
-val masters = arrayOf(Npcs.TURAEL, Npcs.VANNAKA, Npcs.MAZCHNA)
+// Every Slayer master (one list: SlayerMaster), not only the first three.
+val masters =
+    (gg.rsmod.plugins.content.skills.slayer.data.SlayerMaster.values().map { it.id } + 7779).filter { id ->
+        world.definitions.get(gg.rsmod.game.fs.def.NpcDef::class.java, id).options.any { it.equals("rewards", ignoreCase = true) }
+    }
 
 /**
  * Initializes rewards shop option for the slayer masters.

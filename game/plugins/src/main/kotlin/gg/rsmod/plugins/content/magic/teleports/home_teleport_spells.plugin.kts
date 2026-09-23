@@ -62,7 +62,7 @@ HomeTeleport.values.forEach { teleport ->
             // route as every other teleport spell of that book) instead of the silent instant snap of 2026-09-06.
             val bookType = teleport.bookType
             if (bookType != null) {
-                player.teleport(teleport.endTile(world), bookType)
+                player.teleport(teleport.endTile(world), bookType, startSound = false)
                 world.spawn(AreaSound(player.tile, HOME_TELEPORT_SOUND, 10, 1))
                 player.timers[HOME_TELEPORT_TIMER] = HOME_TELEPORT_TIMER_DELAY
                 return@canTeleport

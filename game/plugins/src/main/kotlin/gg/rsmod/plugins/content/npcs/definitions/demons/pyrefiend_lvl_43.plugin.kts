@@ -45,12 +45,12 @@ val pyrefiend =
 table.register(pyrefiend, *ids)
 
 on_npc_pre_death(Npcs.PYREFIEND_1634, Npcs.PYREFIEND_1635, Npcs.PYREFIEND_1636) {
-    val p = npc.damageMap.getMostDamage()!! as Player
+    val p = npc.killer() ?: return@on_npc_pre_death
     p.playSound(Sfx.PYREFIEND_DEATH)
 }
 
 on_npc_death(*ids) {
-    table.getDrop(world, npc.damageMap.getMostDamage()!! as Player, npc.id, npc.tile)
+    table.getDrop(world, npc.killer() ?: return@on_npc_death, npc.id, npc.tile)
 }
 
 ids.forEach {

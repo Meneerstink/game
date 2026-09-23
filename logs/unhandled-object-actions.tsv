@@ -1,0 +1,164 @@
+kind	id	transform	name	opt	option	type	rot	x	z	height
+item	17239	17239	Singing bowl	22662	item 22662	10	0	3163	3494	0
+button	43	43	button	3	interface=746 opcode=61	0	0	0	0	0
+button	44	44	button	3	interface=746 opcode=61	0	0	0	0	0
+button	46	46	button	3	interface=746 opcode=61	0	0	0	0	0
+button	43	43	button	3	interface=746 opcode=61	0	0	0	0	0
+button	44	44	button	3	interface=746 opcode=61	0	0	0	0	0
+button	51	51	button	3	interface=746 opcode=61	0	0	0	0	0
+button	174	174	button	3	interface=746 opcode=61	0	0	0	0	0
+button	43	43	button	3	interface=746 opcode=61	0	0	0	0	0
+button	39	39	button	3	interface=746 opcode=61	0	0	0	0	0
+button	45	45	button	3	interface=746 opcode=61	0	0	0	0	0
+button	51	51	button	3	interface=746 opcode=61	0	0	0	0	0
+button	44	44	button	3	interface=746 opcode=61	0	0	0	0	0
+button	41	41	button	3	interface=746 opcode=61	0	0	0	0	0
+button	42	42	button	3	interface=746 opcode=61	0	0	0	0	0
+button	46	46	button	3	interface=746 opcode=61	0	0	0	0	0
+npc	3373	3373	Max	4	tile=Tile{x=3170, z=3490, height=0}	0	0	0	0	0
+button	176	176	button	3	interface=746 opcode=61	0	0	0	0	0
+npc	14394	14394	Perdu	3	tile=Tile{x=3160, z=3485, height=0}	0	0	0	0	0
+button	43	43	button	3	interface=746 opcode=61	0	0	0	0	0
+button	46	46	button	3	interface=746 opcode=61	0	0	0	0	0
+button	45	45	button	3	interface=746 opcode=61	0	0	0	0	0
+button	41	41	button	3	interface=746 opcode=61	0	0	0	0	0
+button	42	42	button	3	interface=746 opcode=61	0	0	0	0	0
+button	51	51	button	3	interface=746 opcode=61	0	0	0	0	0
+button	39	39	button	3	interface=746 opcode=61	0	0	0	0	0
+button	176	176	button	3	interface=746 opcode=61	0	0	0	0	0
+button	44	44	button	3	interface=746 opcode=61	0	0	0	0	0
+button	43	43	button	3	interface=746 opcode=61	0	0	0	0	0
+button	46	46	button	3	interface=746 opcode=61	0	0	0	0	0
+button	45	45	button	3	interface=746 opcode=61	0	0	0	0	0
+button	39	39	button	3	interface=746 opcode=61	0	0	0	0	0
+button	43	43	button	3	interface=746 opcode=61	0	0	0	0	0
+button	46	46	button	3	interface=746 opcode=61	0	0	0	0	0
+button	51	51	button	3	interface=746 opcode=61	0	0	0	0	0
+npc	14394	14394	Perdu	3	tile=Tile{x=3160, z=3485, height=0}	0	0	0	0	0
+button	44	44	button	3	interface=746 opcode=61	0	0	0	0	0
+button	174	174	button	3	interface=746 opcode=61	0	0	0	0	0
+button	39	39	button	3	interface=746 opcode=61	0	0	0	0	0
+button	41	41	button	3	interface=746 opcode=61	0	0	0	0	0
+button	42	42	button	3	interface=746 opcode=61	0	0	0	0	0
+button	176	176	button	3	interface=746 opcode=61	0	0	0	0	0
+button	40	40	button	3	interface=746 opcode=61	0	0	0	0	0
+npc	3373	3373	Max	4	tile=Tile{x=3170, z=3490, height=0}	0	0	0	0	0
+npc	13727	13727	Xuan	4	tile=Tile{x=3165, z=3486, height=0}	0	0	0	0	0
+button	48	48	button	3	interface=746 opcode=61	0	0	0	0	0
+button	50	50	button	3	interface=746 opcode=61	0	0	0	0	0
+button	51	51	button	3	interface=746 opcode=61	0	0	0	0	0
+button	43	43	button	3	interface=746 opcode=61	0	0	0	0	0
+button	41	41	button	3	interface=746 opcode=61	0	0	0	0	0
+button	51	51	button	3	interface=746 opcode=61	0	0	0	0	0
+button	43	43	button	3	interface=746 opcode=61	0	0	0	0	0
+button	56	56	button	3	interface=137 opcode=61	0	0	0	0	0
+button	52	52	button	3	interface=746 opcode=61	0	0	0	0	0
+button	39	39	button	3	interface=746 opcode=61	0	0	0	0	0
+button	44	44	button	3	interface=746 opcode=61	0	0	0	0	0
+button	42	42	button	3	interface=746 opcode=61	0	0	0	0	0
+button	103	103	button	3	interface=548 opcode=61	0	0	0	0	0
+button	43	43	button	3	interface=746 opcode=61	0	0	0	0	0
+button	46	46	button	3	interface=746 opcode=61	0	0	0	0	0
+button	45	45	button	3	interface=746 opcode=61	0	0	0	0	0
+button	34	34	button	3	interface=751 opcode=61	0	0	0	0	0
+option	12128	12128	Fairy ring	1	Use	22	0	2412	4434	0
+button	43	43	button	3	interface=746 opcode=61	0	0	0	0	0
+button	46	46	button	3	interface=746 opcode=61	0	0	0	0	0
+button	45	45	button	3	interface=746 opcode=61	0	0	0	0	0
+button	43	43	button	3	interface=746 opcode=61	0	0	0	0	0
+button	46	46	button	3	interface=746 opcode=61	0	0	0	0	0
+option	13648	13648	Lectern	1	Study	10	2	6402	10	0
+option	8355	8355	Spirit Tree	1	Talk-to	10	0	6413	8	0
+button	41	41	button	3	interface=746 opcode=61	0	0	0	0	0
+button	43	43	button	3	interface=746 opcode=61	0	0	0	0	0
+button	46	46	button	3	interface=746 opcode=61	0	0	0	0	0
+button	176	176	button	3	interface=746 opcode=61	0	0	0	0	0
+button	43	43	button	3	interface=746 opcode=61	0	0	0	0	0
+npc	9085	9085	Kuradal	4	tile=Tile{x=3167, z=3487, height=0}	0	0	0	0	0
+npc	9085	9085	Kuradal	3	tile=Tile{x=3167, z=3487, height=0}	0	0	0	0	0
+button	46	46	button	3	interface=746 opcode=61	0	0	0	0	0
+button	176	176	button	3	interface=746 opcode=61	0	0	0	0	0
+button	44	44	button	3	interface=746 opcode=61	0	0	0	0	0
+button	43	43	button	3	interface=746 opcode=61	0	0	0	0	0
+button	46	46	button	3	interface=746 opcode=61	0	0	0	0	0
+button	41	41	button	3	interface=746 opcode=61	0	0	0	0	0
+button	39	39	button	3	interface=746 opcode=61	0	0	0	0	0
+item	19476	19476	item	1	slot=21	0	0	0	0	0
+button	51	51	button	3	interface=746 opcode=61	0	0	0	0	0
+npc	14394	14394	Perdu	3	tile=Tile{x=3152, z=3479, height=0}	0	0	0	0	0
+button	44	44	button	3	interface=746 opcode=61	0	0	0	0	0
+button	43	43	button	3	interface=746 opcode=61	0	0	0	0	0
+button	46	46	button	3	interface=746 opcode=61	0	0	0	0	0
+button	45	45	button	3	interface=746 opcode=61	0	0	0	0	0
+button	39	39	button	3	interface=746 opcode=61	0	0	0	0	0
+button	41	41	button	3	interface=746 opcode=61	0	0	0	0	0
+button	51	51	button	3	interface=746 opcode=61	0	0	0	0	0
+button	52	52	button	3	interface=746 opcode=61	0	0	0	0	0
+item	11753	11753	item	1	slot=22	0	0	0	0	0
+button	42	42	button	3	interface=746 opcode=61	0	0	0	0	0
+button	50	50	button	3	interface=746 opcode=61	0	0	0	0	0
+npc	1921	1921	Bartender	3	tile=Tile{x=3159, z=2981, height=0}	0	0	0	0	0
+button	176	176	button	3	interface=746 opcode=61	0	0	0	0	0
+button	51	51	button	3	interface=746 opcode=61	0	0	0	0	0
+button	43	43	button	3	interface=746 opcode=61	0	0	0	0	0
+button	176	176	button	3	interface=746 opcode=61	0	0	0	0	0
+option	52863	52863	Mysterious entrance	1	Enter	10	1	3163	9876	0
+button	46	46	button	3	interface=746 opcode=61	0	0	0	0	0
+button	34	34	button	3	interface=751 opcode=61	0	0	0	0	0
+button	176	176	button	3	interface=746 opcode=61	0	0	0	0	0
+button	54	54	button	3	interface=746 opcode=61	0	0	0	0	0
+button	176	176	button	3	interface=746 opcode=61	0	0	0	0	0
+button	176	176	button	3	interface=746 opcode=61	0	0	0	0	0
+button	176	176	button	3	interface=746 opcode=61	0	0	0	0	0
+button	176	176	button	3	interface=746 opcode=61	0	0	0	0	0
+button	43	43	button	3	interface=746 opcode=61	0	0	0	0	0
+item-on-item	14763	14763	item	14763	from_slot=18 to_slot=18 from_component=679:0 to_component=679:0	0	0	0	0	0
+button	50	50	button	3	interface=746 opcode=61	0	0	0	0	0
+button	52	52	button	3	interface=746 opcode=61	0	0	0	0	0
+button	51	51	button	3	interface=746 opcode=61	0	0	0	0	0
+button	44	44	button	3	interface=746 opcode=61	0	0	0	0	0
+button	45	45	button	3	interface=746 opcode=61	0	0	0	0	0
+button	41	41	button	3	interface=746 opcode=61	0	0	0	0	0
+button	39	39	button	3	interface=746 opcode=61	0	0	0	0	0
+button	42	42	button	3	interface=746 opcode=61	0	0	0	0	0
+option	5272	5272	Closed chest	1	Open	10	0	3603	3542	0
+button	46	46	button	3	interface=746 opcode=61	0	0	0	0	0
+button	46	46	button	3	interface=746 opcode=61	0	0	0	0	0
+button	50	50	button	3	interface=746 opcode=61	0	0	0	0	0
+button	52	52	button	3	interface=746 opcode=61	0	0	0	0	0
+button	51	51	button	3	interface=746 opcode=61	0	0	0	0	0
+button	43	43	button	3	interface=746 opcode=61	0	0	0	0	0
+button	51	51	button	3	interface=746 opcode=61	0	0	0	0	0
+button	43	43	button	3	interface=746 opcode=61	0	0	0	0	0
+button	46	46	button	3	interface=746 opcode=61	0	0	0	0	0
+button	44	44	button	3	interface=746 opcode=61	0	0	0	0	0
+button	43	43	button	3	interface=746 opcode=61	0	0	0	0	0
+button	46	46	button	3	interface=746 opcode=61	0	0	0	0	0
+button	46	46	button	3	interface=746 opcode=61	0	0	0	0	0
+button	43	43	button	3	interface=746 opcode=61	0	0	0	0	0
+button	51	51	button	3	interface=746 opcode=61	0	0	0	0	0
+button	46	46	button	3	interface=746 opcode=61	0	0	0	0	0
+button	44	44	button	3	interface=746 opcode=61	0	0	0	0	0
+button	43	43	button	3	interface=746 opcode=61	0	0	0	0	0
+option	8355	8355	Spirit Tree	1	Talk-to	10	0	6413	8	0
+button	51	51	button	3	interface=746 opcode=61	0	0	0	0	0
+button	42	42	button	3	interface=746 opcode=61	0	0	0	0	0
+button	176	176	button	3	interface=746 opcode=61	0	0	0	0	0
+button	43	43	button	3	interface=746 opcode=61	0	0	0	0	0
+button	46	46	button	3	interface=746 opcode=61	0	0	0	0	0
+button	51	51	button	3	interface=746 opcode=61	0	0	0	0	0
+button	42	42	button	3	interface=746 opcode=61	0	0	0	0	0
+button	176	176	button	3	interface=746 opcode=61	0	0	0	0	0
+button	51	51	button	3	interface=746 opcode=61	0	0	0	0	0
+button	176	176	button	3	interface=746 opcode=61	0	0	0	0	0
+button	51	51	button	3	interface=746 opcode=61	0	0	0	0	0
+button	51	51	button	3	interface=743 opcode=61	0	0	0	0	0
+button	46	46	button	3	interface=746 opcode=61	0	0	0	0	0
+button	176	176	button	3	interface=746 opcode=61	0	0	0	0	0
+button	43	43	button	3	interface=746 opcode=61	0	0	0	0	0
+button	176	176	button	3	interface=746 opcode=61	0	0	0	0	0
+button	44	44	button	3	interface=746 opcode=61	0	0	0	0	0
+button	46	46	button	3	interface=746 opcode=61	0	0	0	0	0
+option	5276	5276	Bank booth	1	Use	10	0	3688	3465	0
+option	5276	5276	Bank booth	2	Use-quickly	10	0	3688	3465	0
+button	43	43	button	3	interface=746 opcode=61	0	0	0	0	0

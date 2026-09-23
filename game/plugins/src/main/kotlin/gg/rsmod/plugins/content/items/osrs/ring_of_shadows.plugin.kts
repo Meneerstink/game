@@ -83,13 +83,30 @@ SHADOW_RUNES.forEach { rune ->
     }
 }
 
+/*
+ * Bind only the options each ring variant really carries in the cache.
+ *
+ * Both menus are short and the two variants differ: the charged ring 23847 has worn options
+ * [Check, Ghorrock Dungeon, The Scar, Lassar Undercity, The Stranglewood] (five slots, so "Ancient Vault" did not
+ * fit), and the uncharged ring 23848 has inventory options [Wear, Charge, Destroy] only - no Check, Uncharge or
+ * Teleport. Asking on_item_option / on_equipment_option for an option the cache does not have throws straight out
+ * of PluginRepository.init and kills the whole server boot (owner 2026-09-20 "i cant start my rsps"), so every bind
+ * below is filtered against the real menu first.
+ */
 listOf(Items.RING_OF_SHADOWS, Items.RING_OF_SHADOWS_UNCHARGED).forEach { ring ->
-    on_item_option(item = ring, option = "charge") { chargeShadowRing(player) }
-    on_item_option(item = ring, option = "check") { checkShadowRing(player) }
-    on_item_option(item = ring, option = "uncharge") { unchargeShadowRing(player) }
-    on_item_option(item = ring, option = "teleport") { shadowTeleportUnavailable(player) }
-    on_equipment_option(ring, option = "Check") { checkShadowRing(player) }
-    SHADOW_DESTINATIONS.forEach { destination ->
+    val def = world.definitions.get(ItemDef::class.java, ring)
+    val bagOptions = def.inventoryMenu.filterNotNull().filter { it.isNotBlank() }
+    val wornOptions = def.equipmentMenu.filterNotNull().filter { it.isNotBlank() }
+    fun hasBag(option: String) = bagOptions.any { it.equals(option, ignoreCase = true) }
+    fun hasWorn(option: String) = wornOptions.any { it.equals(option, ignoreCase = true) }
+
+    if (hasBag("charge")) on_item_option(item = ring, option = "charge") { chargeShadowRing(player) }
+    if (hasBag("check")) on_item_option(item = ring, option = "check") { checkShadowRing(player) }
+    if (hasBag("uncharge")) on_item_option(item = ring, option = "uncharge") { unchargeShadowRing(player) }
+    if (hasBag("teleport")) on_item_option(item = ring, option = "teleport") { shadowTeleportUnavailable(player) }
+
+    if (hasWorn("Check")) on_equipment_option(ring, option = "Check") { checkShadowRing(player) }
+    SHADOW_DESTINATIONS.filter { hasWorn(it) }.forEach { destination ->
         on_equipment_option(ring, option = destination) { shadowTeleportUnavailable(player) }
     }
 }

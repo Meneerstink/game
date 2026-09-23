@@ -25,6 +25,16 @@
 				</Route>
 			</Routes>
 		</Routing>
+		<!-- Casino audit trail: one tab-separated line per settled wager, rolled daily.
+		     This is the house's own record of every stake, payout and the seed triple that produced the
+		     result, so a disputed round can be replayed against the published verifier. -->
+		<RollingFile name="CasinoLog" fileName="data/logs/casino/casino.log"
+					 filePattern="data/logs/casino/casino-%d{yyyy-MM-dd}.log">
+			<PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss}]%msg%n"/>
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+			</Policies>
+		</RollingFile>
 	</Appenders>
 
 	<Loggers>
@@ -37,6 +47,11 @@
 		<!-- Private Message Logger -->
 		<Logger name="PrivateMessageLogger" level="info" additivity="false">
 			<AppenderRef ref="PlayerLogRouter"/>
+		</Logger>
+
+		<!-- Casino Logger -->
+		<Logger name="CasinoLogger" level="info" additivity="false">
+			<AppenderRef ref="CasinoLog"/>
 		</Logger>
 	</Loggers>
 </Configuration>

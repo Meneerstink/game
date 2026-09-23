@@ -59,12 +59,12 @@ val blackDemon =
 table.register(blackDemon, *ids)
 
 on_npc_pre_death(Npcs.BLACK_DEMON_4702, Npcs.BLACK_DEMON_4703, Npcs.BLACK_DEMON_4705) {
-    val p = npc.damageMap.getMostDamage()!! as Player
+    val p = npc.killer() ?: return@on_npc_pre_death
     p.playSound(Sfx.BLACK_DEMON_DEATH)
 }
 
 on_npc_death(*ids) {
-    table.getDrop(world, npc.damageMap.getMostDamage()!! as Player, npc.id, npc.tile)
+    table.getDrop(world, npc.killer() ?: return@on_npc_death, npc.id, npc.tile)
 }
 
 ids.forEach {

@@ -7,7 +7,7 @@ import gg.rsmod.plugins.api.SkullIcon
 import gg.rsmod.plugins.api.ext.hasSkullIcon
 import gg.rsmod.plugins.api.ext.setSkullIcon
 import gg.rsmod.plugins.content.mechanics.death.DeathItemRiskCalculator
-import gg.rsmod.plugins.content.mechanics.death.ItemDefCostValueProvider
+import gg.rsmod.plugins.content.mechanics.death.GuidePriceValueProvider
 import gg.rsmod.plugins.content.mechanics.death.ItemRiskValueProvider
 
 /**
@@ -68,7 +68,7 @@ object RiskSkull {
      * need a loaded cache to exercise this. */
     fun calculateRiskedValue(
         player: Player,
-        valueProvider: ItemRiskValueProvider = ItemDefCostValueProvider(player.world.definitions),
+        valueProvider: ItemRiskValueProvider = GuidePriceValueProvider(player.world),
     ): Long {
         val result =
             DeathItemRiskCalculator.calculate(
@@ -78,7 +78,14 @@ object RiskSkull {
                 itemProtectionActive = player.attr[PROTECT_ITEM_ATTR] == true,
                 valueProvider = valueProvider,
             )
-        return result.lost.sumOf { valueProvider.getValue(it.item.id) * it.item.amount }
+        // Owner 2026-09-18 (#5): the risk must follow a kill at once (blue -> red). Loot keys are
+        // always lost on death (RCV-012 3b), so the loot INSIDE the carried keys is at risk too -
+        // OSRS Deadman: the skull colour reflects the value risked including the held keys' loot.
+        val keyLoot =
+            LootKeys.heldKeyIndexes(player).sumOf { index ->
+                LootKeys.slotItems(player, index).sumOf { valueProvider.getValue(it.id) * it.amount }
+            }
+        return result.lost.sumOf { valueProvider.getValue(it.item.id) * it.item.amount } + keyLoot
     }
 
     /** Loot keys carried in the inventory (0-5); OSRS Deadman: "The number of keys on the icon
@@ -88,7 +95,7 @@ object RiskSkull {
     /** The icon [player] should show right now (see the class doc). */
     fun iconFor(
         player: Player,
-        valueProvider: ItemRiskValueProvider = ItemDefCostValueProvider(player.world.definitions),
+        valueProvider: ItemRiskValueProvider = GuidePriceValueProvider(player.world),
     ): SkullIcon {
         val skulled = PvpSkull.isSkulled(player)
         val keys = heldKeys(player)
@@ -104,7 +111,7 @@ object RiskSkull {
      */
     fun refresh(
         player: Player,
-        valueProvider: ItemRiskValueProvider = ItemDefCostValueProvider(player.world.definitions),
+        valueProvider: ItemRiskValueProvider = GuidePriceValueProvider(player.world),
     ) {
         val keys = heldKeys(player)
         var changed = false

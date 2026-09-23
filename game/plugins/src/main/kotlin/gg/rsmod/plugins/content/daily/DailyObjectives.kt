@@ -4,8 +4,8 @@ import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.api.ext.*
+import gg.rsmod.plugins.content.areas.home.BountyHunterHome
 import gg.rsmod.plugins.content.areas.wilderness.WildernessHotspot
-import gg.rsmod.plugins.content.mechanics.pvp.AreaState
 
 /**
  * R14.28/29: three real, kill-tracked daily objectives, reset alongside the existing loyalty
@@ -66,10 +66,11 @@ object DailyObjectives {
         killer: Player,
         npc: Npc,
     ) {
-        // R08.11-consistent: only real Wilderness danger counts toward the wilderness-flavoured
-        // objectives - a kill inside the safe home hub never counts as a "Wilderness" kill even
-        // if the tile's raw level is nonzero, matching AreaState's own safe/dangerous split.
-        val dangerous = !AreaState.isSafe(npc.tile, killer.world.gameContext.home)
+        // These objectives are location-only Wilderness rules. Keep them on the explicit
+        // Wilderness geometry predicate; AreaState deliberately answers a different question
+        // (global PvP permission outside real bank safe zones), so using it here would count
+        // kills in every non-bank region as Wilderness progress.
+        val dangerous = BountyHunterHome.isDangerousWilderness(npc.tile, killer.world.gameContext.home)
         OBJECTIVES.forEachIndexed { index, objective ->
             if (killer.attr[COMPLETED_ATTRS[index]] == true) return@forEachIndexed
             if (objective.id != 0 && !dangerous) return@forEachIndexed

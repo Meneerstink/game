@@ -47,8 +47,19 @@ class DamageMap {
 
     /**
      * Gets the [Pawn] that has dealt the most damage in this map.
+     *
+     * @param timeFrameMs
+     * When given, only [Pawn]s whose most recent hit landed within this many
+     * milliseconds are considered. Without it this map has no notion of "this
+     * fight" at all - it accumulates for as long as the map lives - so an
+     * attacker from a fight the victim escaped long ago can still outweigh
+     * whatever actually landed the killing blow.
      */
-    fun getMostDamage(): Pawn? = map.maxByOrNull { it.value.totalDamage }?.key
+    fun getMostDamage(timeFrameMs: Long? = null): Pawn? =
+        map
+            .filter { timeFrameMs == null || System.currentTimeMillis() - it.value.lastHit < timeFrameMs }
+            .maxByOrNull { it.value.totalDamage }
+            ?.key
 
     /**
      * Gets the most damage dealt by a [Pawn] in our map whom meets the criteria

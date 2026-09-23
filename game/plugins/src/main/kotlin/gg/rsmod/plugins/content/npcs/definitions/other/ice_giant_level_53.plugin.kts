@@ -64,12 +64,12 @@ val iceGiant =
 table.register(iceGiant, *ids)
 
 on_npc_pre_death(Npcs.ICE_GIANT_3072, Npcs.ICE_GIANT_4685, Npcs.ICE_GIANT_4686, Npcs.ICE_GIANT_4687) {
-    val p = npc.damageMap.getMostDamage()!! as Player
+    val p = npc.killer() ?: return@on_npc_pre_death
     p.playSound(Sfx.GIANT_DEATH)
 }
 
 on_npc_death(*ids) {
-    table.getDrop(world, npc.damageMap.getMostDamage()!! as Player, npc.id, npc.tile)
+    table.getDrop(world, npc.killer() ?: return@on_npc_death, npc.id, npc.tile)
 }
 
 ids.forEach {

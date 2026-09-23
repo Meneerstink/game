@@ -241,4 +241,33 @@ class AncientCurses2011Tests {
         AncientCurses.onDamageDealt(attacker, target, damage = 10, style = CombatClass.MELEE)
         assertEquals(1.0, AncientCurses.drainMultiplier(target, Skills.ATTACK), 1e-9)
     }
+
+    @Test
+    /** Owner 2026-09-19: a potion-boosted stat loses at most 1 level per trigger (117 -> 116), never the whole boost. */
+    fun `Sap and Leech drain a temporary combat potion boost by at most one level`() {
+        val cases = listOf(
+            Triple(AncientCurse.SAP_WARRIOR, CombatClass.MELEE, intArrayOf(Skills.ATTACK, Skills.STRENGTH, Skills.DEFENCE)),
+            Triple(AncientCurse.SAP_RANGER, CombatClass.RANGED, intArrayOf(Skills.RANGED, Skills.DEFENCE)),
+            Triple(AncientCurse.SAP_MAGE, CombatClass.MAGIC, intArrayOf(Skills.MAGIC, Skills.DEFENCE)),
+            Triple(AncientCurse.LEECH_ATTACK, CombatClass.MELEE, intArrayOf(Skills.ATTACK)),
+            Triple(AncientCurse.LEECH_RANGED, CombatClass.RANGED, intArrayOf(Skills.RANGED)),
+            Triple(AncientCurse.LEECH_MAGIC, CombatClass.MAGIC, intArrayOf(Skills.MAGIC)),
+        )
+
+        cases.forEach { (curse, style, skills) ->
+            val attacker = newPlayer()
+            AncientCurses.switchBook(attacker, AncientCurses.PrayerBook.ANCIENT)
+            AncientCurses.toggleCurse(attacker, curse)
+            val target = newPlayer(skills.associateWith { 99 })
+            skills.forEach { skill -> target.skills.setCurrentLevel(skill, 117) }
+
+            AncientCurses.onDamageDealt(attacker, target, damage = 10, style = style)
+
+            skills.forEach { skill ->
+                val level = target.skills.getCurrentLevel(skill)
+                assertTrue("$curse skill $skill: boosted 117 may drop by at most 1, was $level", level == 116 || level == 117)
+                assertEquals(1.0, AncientCurses.drainMultiplier(target, skill), 1e-9)
+            }
+        }
+    }
 }

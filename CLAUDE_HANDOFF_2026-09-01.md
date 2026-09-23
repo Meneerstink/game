@@ -1,4 +1,9 @@
-# CLAUDE_HANDOFF — 2026-09-01
+# RETIRED HISTORICAL HANDOFF — 2026-09-01
+
+This file is historical evidence only. Do not use its old Q-/RCV-order or status
+claims as active instructions. Read `C:\RSPS\RSPS_MASTERPLAN_ACTUEEL.md`,
+`C:\RSPS\RSPS_CURRENT_SPRINT.json`, `C:\RSPS\RSPS_FULL_AUDIT_REPORT.md` and
+`C:\RSPS\HANDOFF_CURRENT.md` for the current task.
 
 ## Doel
 Maak deze revision-667 RSPS speelbaar als RuneScape 2011. Geen decoratieve of halve fixes. Een punt is pas DONE wanneer de echte code-route is gevonden, de root cause is opgelost, gerichte tests/build slagen én de eigenaar het live kan controleren. Als data of client-ID’s niet bewezen kunnen worden: rapporteer BLOCKED met bewijs; verzin niets.

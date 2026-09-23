@@ -155,6 +155,19 @@ object Barrows {
 
     fun inInnerRoom(tile: Tile): Boolean = tile.height == 0 && tile.x in INNER_ROOM_X && tile.z in INNER_ROOM_Z
 
+    /**
+     * The puzzle is presented when entering the central room, not after the player is already
+     * inside it. This is the Void BarrowsCrypts rule for the 667 map's four puzzle doors.
+     */
+    fun shouldSolvePuzzle(tile: Tile, objectId: Int): Boolean = objectId in PUZZLE_DOORS && !inInnerRoom(tile)
+
+    /**
+     * ObjectPathAction has already routed the player to interaction distance before the plugin
+     * runs. A tunnel-door callback may therefore only perform the bounded one-door crossing; it
+     * must never become a general collision-free teleport route through the crypts.
+     */
+    fun isAtDoor(tile: Tile, doorTile: Tile): Boolean = tile.isWithinRadius(doorTile, 1)
+
     fun isKilled(player: Player, brother: Brother): Boolean = player.attr[brother.killedAttr] == true
 
     fun spawned(player: Player): MutableMap<String, WeakReference<Npc>> =

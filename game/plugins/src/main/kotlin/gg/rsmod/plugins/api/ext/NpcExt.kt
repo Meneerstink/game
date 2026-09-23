@@ -6,6 +6,7 @@ import gg.rsmod.game.model.combat.StyleType
 import gg.rsmod.game.model.combat.WeaponStyle
 import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Pawn
+import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.entity.Projectile
 import gg.rsmod.plugins.api.NpcSpecies
 
@@ -104,3 +105,15 @@ fun Npc.getStrengthBonus(): Int = equipmentBonuses[NPC_STRENGTH_BONUS_INDEX]
 fun Npc.getRangedStrengthBonus(): Int = equipmentBonuses[NPC_RANGED_STRENGTH_BONUS_INDEX]
 
 fun Npc.getMagicDamageBonus(): Int = equipmentBonuses[NPC_MAGIC_DAMAGE_BONUS_INDEX]
+
+/**
+ * The [Player] credited with killing this npc, or `null` when no player damage was recorded for it.
+ *
+ * Npc death and drop scripts used to write `npc.damageMap.getMostDamage()!! as Player`, which throws
+ * whenever an npc dies without a player attacker in its damage map (a scripted or environmental
+ * kill, a kill by another npc, or an npc that dealt the most damage itself). The death hooks are
+ * isolated, so the throw was swallowed and the npc silently dropped nothing and played no death
+ * sound - live proof: `guard_level_21.plugin.kts` NullPointerException in the 2026-09-15 server log.
+ * One shared accessor, so every script expresses "no player killer" the same way.
+ */
+fun Npc.killer(): Player? = damageMap.getMostDamage() as? Player

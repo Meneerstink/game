@@ -64,12 +64,12 @@ val dragon =
 table.register(dragon, *ids)
 
 on_npc_pre_death(Npcs.GREEN_DRAGON_4677, Npcs.GREEN_DRAGON_4678, Npcs.GREEN_DRAGON_4679, Npcs.GREEN_DRAGON_4680) {
-    val p = npc.damageMap.getMostDamage()!! as Player
+    val p = npc.killer() ?: return@on_npc_pre_death
     p.playSound(Sfx.DRAGON_DEATH)
 }
 
 on_npc_death(*ids) {
-    table.getDrop(world, npc.damageMap.getMostDamage()!! as Player, npc.id, npc.tile)
+    table.getDrop(world, npc.killer() ?: return@on_npc_death, npc.id, npc.tile)
 }
 
 ids.forEach {

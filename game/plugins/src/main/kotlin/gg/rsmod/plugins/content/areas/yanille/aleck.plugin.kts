@@ -1,6 +1,7 @@
 package gg.rsmod.plugins.content.areas.yanille
 
 import gg.rsmod.plugins.content.mechanics.shops.CoinCurrency
+import gg.rsmod.plugins.content.unlocks.UnlockNpcRewards
 
 /**
  * @author Eikenb00m <https://github.com/Eikenb00m>
@@ -29,6 +30,18 @@ on_npc_option(npc = Npcs.ALECK, option = "Trade") {
 }
 
 on_npc_option(npc = Npcs.ALECK, "talk-to") {
+    if (player.getInteractingNpc().tile.regionId == 12598) {
+        player.queue {
+            chatNpc("I can record your Dragon Slayer II victory and unlock its rewards.")
+            when (options("Complete Dragon Slayer II.", "Goodbye.")) {
+                1 -> {
+                    chatPlayer("Please complete Dragon Slayer II for me.")
+                    UnlockNpcRewards.completeDragonSlayerII(player)
+                }
+            }
+        }
+        return@on_npc_option
+    }
     player.queue {
         chatPlayer("Hello.")
         chatNpc(

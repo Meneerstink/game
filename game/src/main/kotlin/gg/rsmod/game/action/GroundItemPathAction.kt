@@ -150,27 +150,54 @@ object GroundItemPathAction {
             val item = p.attr[INTERACTING_ITEM]?.get() ?: return
             val handled = p.world.plugins.executeItemOnGroundItem(p, item.id, groundItem.item)
 
-            if (!handled && p.world.devContext.debugItemActions) {
-                p.writeConsoleMessage(
-                    "Unhandled item on ground item action: [item=${item.id}, ground=${groundItem.item}]",
+            if (!handled) {
+                UnhandledInteractions.recordInteraction(
+                    kind = "item-on-ground",
+                    id = item.id,
+                    option = ITEM_ON_GROUND_ITEM_OPTION,
+                    name = "item",
+                    context = "ground=${groundItem.item} tile=${groundItem.tile}",
                 )
+                if (p.world.devContext.debugItemActions) {
+                    p.writeConsoleMessage(
+                        "Unhandled item on ground item action: [item=${item.id}, ground=${groundItem.item}]",
+                    )
+                }
             }
         } else if (opt == SPELL_ON_GROUND_ITEM_OPTION) {
             val hash = p.attr[INTERACTING_COMPONENT_HASH] ?: return
             val handled = p.world.plugins.executeSpellOnGroundItem(p, hash)
-            if (!handled && p.world.devContext.debugItemActions) {
-                p.writeConsoleMessage("Unhandled spell on ground item action: [ ground=${groundItem.item}]")
+            if (!handled) {
+                UnhandledInteractions.recordInteraction(
+                    kind = "spell-on-ground",
+                    id = hash,
+                    option = SPELL_ON_GROUND_ITEM_OPTION,
+                    name = "spell",
+                    context = "ground=${groundItem.item} tile=${groundItem.tile}",
+                )
+                if (p.world.devContext.debugItemActions) {
+                    p.writeConsoleMessage("Unhandled spell on ground item action: [ ground=${groundItem.item}]")
+                }
             }
         } else {
             val handled = p.world.plugins.executeGroundItem(p, groundItem.item, opt)
             if (!handled) {
                 p.writeMessage(Entity.NOTHING_INTERESTING_HAPPENS)
             }
-            if (!handled && p.world.devContext.debugItemActions) {
+            if (!handled) {
                 val definition = p.world.definitions.get(ItemDef::class.java, groundItem.item)
-                p.writeConsoleMessage(
-                    "Unhandled ground item action: [item=${groundItem.item}, option=[$opt, ${definition.groundMenu[opt - 1]}]]",
+                UnhandledInteractions.recordInteraction(
+                    kind = "ground-item",
+                    id = groundItem.item,
+                    option = opt,
+                    name = definition.name,
+                    context = "tile=${groundItem.tile} option=${definition.groundMenu.getOrNull(opt - 1)}",
                 )
+                if (p.world.devContext.debugItemActions) {
+                    p.writeConsoleMessage(
+                        "Unhandled ground item action: [item=${groundItem.item}, option=[$opt, ${definition.groundMenu[opt - 1]}]]",
+                    )
+                }
             }
         }
     }

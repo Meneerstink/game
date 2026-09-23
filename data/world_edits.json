@@ -1,0 +1,176 @@
+{
+  "edits": [
+    {
+      "op": "remove",
+      "id": 591,
+      "x": 2947,
+      "z": 3372,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "note": "Falador west bank table (owner 2026-09-23)",
+      "group": 0
+    },
+    {
+      "op": "remove",
+      "id": 590,
+      "x": 2948,
+      "z": 3369,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "note": "Falador west bank table (owner 2026-09-23)",
+      "group": 0
+    },
+    {
+      "op": "spawn",
+      "id": 62751,
+      "x": 3140,
+      "z": 3499,
+      "level": 0,
+      "type": 4,
+      "rot": 0,
+      "group": 1
+    },
+    {
+      "op": "remove",
+      "id": 62751,
+      "x": 3140,
+      "z": 3499,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 2
+    },
+    {
+      "op": "spawn",
+      "id": 62751,
+      "x": 3189,
+      "z": 3488,
+      "level": 0,
+      "type": 4,
+      "rot": 0,
+      "group": 3
+    },
+    {
+      "op": "remove",
+      "id": 62751,
+      "x": 3189,
+      "z": 3488,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 4
+    },
+    {
+      "op": "spawn",
+      "id": 62751,
+      "x": 3189,
+      "z": 3486,
+      "level": 0,
+      "type": 4,
+      "rot": 0,
+      "group": 5
+    },
+    {
+      "op": "remove",
+      "id": 62751,
+      "x": 3189,
+      "z": 3486,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 6
+    },
+    {
+      "op": "spawn",
+      "id": 62751,
+      "x": 3189,
+      "z": 3486,
+      "level": 0,
+      "type": 4,
+      "rot": 1,
+      "group": 6
+    },
+    {
+      "op": "remove",
+      "id": 62751,
+      "x": 3189,
+      "z": 3486,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 7
+    },
+    {
+      "op": "spawn",
+      "id": 62750,
+      "x": 3191,
+      "z": 3488,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 8
+    },
+    {
+      "op": "remove",
+      "id": 62750,
+      "x": 3191,
+      "z": 3488,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 9
+    },
+    {
+      "op": "spawn",
+      "id": 62751,
+      "x": 3181,
+      "z": 3488,
+      "level": 0,
+      "type": 4,
+      "rot": 0,
+      "group": 10
+    },
+    {
+      "op": "spawn",
+      "id": 62750,
+      "x": 3178,
+      "z": 3487,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 11
+    },
+    {
+      "op": "remove",
+      "id": 62750,
+      "x": 3178,
+      "z": 3487,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 12
+    },
+    {
+      "op": "remove",
+      "id": 62751,
+      "x": 3181,
+      "z": 3488,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 13
+    },
+    {
+      "op": "remove",
+      "id": 38787,
+      "x": 3173,
+      "z": 3460,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 14
+    }
+  ]
+}

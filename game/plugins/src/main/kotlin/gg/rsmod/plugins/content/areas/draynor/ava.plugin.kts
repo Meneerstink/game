@@ -5,6 +5,7 @@ import gg.rsmod.plugins.api.cfg.Requirement
 import gg.rsmod.plugins.api.cfg.SkillRequirement
 import gg.rsmod.plugins.content.items.osrs.DizanasQuiver
 import gg.rsmod.plugins.content.mechanics.shops.CoinCurrency
+import gg.rsmod.plugins.content.unlocks.UnlockNpcRewards
 
 /**
  * Contains the requirements needed to interact with Ava, as well as her shop inventory and dialogue options.
@@ -20,31 +21,49 @@ val requirements =
     )
 
 /**
- * Creates Ava's shop inventory.
- *
- * @param currency The currency used by the shop.
- * @param purchasePolicy The shop's purchase policy.
- * @param containsSamples Whether the shop's inventory contains sample items.
+ * Ava's Odds and Ends (Trade). OSRS Wiki "Ava's Odds and Ends" base stock: feather 1000, iron arrow 40, steel arrow 10,
+ * iron arrowtips 30, steel arrowtips 20 (the feather pack is not in the 667 cache).
  */
 create_shop(
     "Ava's Odds and Ends",
     currency = CoinCurrency(),
-    purchasePolicy = PurchasePolicy.BUY_NONE,
+    purchasePolicy = PurchasePolicy.BUY_STOCK,
     containsSamples = false,
 ) {
     items[0] = ShopItem(Items.FEATHER, 1000)
-    items[1] = ShopItem(Items.IRON_ARROW, 1000)
-    items[2] = ShopItem(Items.STEEL_ARROW, 1000)
-    items[3] = ShopItem(Items.IRON_ARROWTIPS, 1000)
-    items[4] = ShopItem(Items.STEEL_ARROWTIPS, 1000)
+    items[1] = ShopItem(Items.IRON_ARROW, 40)
+    items[2] = ShopItem(Items.STEEL_ARROW, 10)
+    items[3] = ShopItem(Items.IRON_ARROWTIPS, 30)
+    items[4] = ShopItem(Items.STEEL_ARROWTIPS, 20)
 }
 
 /**
- * Defines the behavior of the "trade" option for Ava.
- *
- * @param npc The NPC that was clicked.
- * @param option The option that was selected.
+ * Ava's devices (Devices / "Buy device"). OSRS Wiki "Ava": a replacement device costs 999 coins; the accumulator also
+ * takes 75 steel arrows and needs 50 Ranged. Sold through a real shop interface instead of the old chat purchase.
  */
+val AVAS_DEVICES = "Ava's Devices"
+
+create_shop(
+    AVAS_DEVICES,
+    currency =
+        gg.rsmod.plugins.content.mechanics.shops.RequirementCoinCurrency(
+            mapOf(
+                Items.AVAS_ACCUMULATOR to
+                    gg.rsmod.plugins.content.mechanics.shops.PurchaseRule(
+                        check = { p ->
+                            if (p.skills.getCurrentLevel(Skills.RANGED) < 50) "You need a Ranged level of 50 to use the accumulator." else null
+                        },
+                        materials = listOf(Items.STEEL_ARROW to 75),
+                    ),
+            ),
+        ),
+    purchasePolicy = PurchasePolicy.BUY_NONE,
+    containsSamples = false,
+) {
+    items[0] = ShopItem(Items.AVAS_ATTRACTOR, 10, sellPrice = 999)
+    items[1] = ShopItem(Items.AVAS_ACCUMULATOR, 10, sellPrice = 999)
+}
+
 on_npc_option(npc = Npcs.AVA, option = "trade") {
     if (!checkRequirements(player)) {
         return@on_npc_option
@@ -52,12 +71,6 @@ on_npc_option(npc = Npcs.AVA, option = "trade") {
     player.openShop("Ava's Odds and Ends")
 }
 
-/**
- * Defines the behavior of the "talk-to" option for Ava.
- *
- * @param npc The NPC that was clicked.
- * @param option The option that was selected.
- */
 on_npc_option(npc = Npcs.AVA, option = "talk-to") {
     if (!checkRequirements(player)) {
         return@on_npc_option
@@ -75,27 +88,42 @@ on_npc_option(npc = Npcs.AVA, option = "talk-to") {
             *"Yay, I didn't even have to talk about a reward; you're more gullible than most adventurers, that's for sure."
                 .splitForDialogue(),
         )
-        chatPlayer(
-            *"Err, well when you put it that way.. I think I'd rather just buy a device from you."
-                .splitForDialogue(),
-        )
-        purchaseDialogue(this)
+        when (options("Could I buy one of your devices?", "Can I see your odds and ends?", "Never mind.")) {
+            FIRST_OPTION -> player.openShop(AVAS_DEVICES)
+            SECOND_OPTION -> player.openShop("Ava's Odds and Ends")
+        }
     }
 }
 
-/**
- * Defines the behavior of the "buy device" option for Ava.
- *
- * @param npc The NPC that was clicked.
- * @param option The option that was selected.
- */
 on_npc_option(npc = Npcs.AVA, option = "buy device") {
     if (!checkRequirements(player)) {
         return@on_npc_option
     }
-    player.queue {
-        purchaseDialogue(this)
+    player.openShop(AVAS_DEVICES)
+}
+
+// Dragon Slayer II unlocks Ava's real assembler upgrade route. The exact materials are the
+// cache-backed OSRS route: Vorkath's head, 75 mithril arrows, and either an accumulator or 4,999 coins.
+on_item_on_npc(item = Items.VORKATHS_HEAD, npc = Npcs.AVA) {
+    if (player.attr[UnlockNpcRewards.AVAS_ASSEMBLER_UNLOCKED] != true) {
+        player.message("You must complete Dragon Slayer II before Ava can create an assembler for you.")
+        return@on_item_on_npc
     }
+    if (player.skills.getCurrentLevel(Skills.RANGED) < 70) {
+        player.message("You need at least 70 Ranged to use Ava's assembler.")
+        return@on_item_on_npc
+    }
+    val hasAccumulator = player.inventory.contains(Items.AVAS_ACCUMULATOR)
+    val hasCoins = player.inventory.getItemCount(Items.COINS_995) >= 4_999
+    if (player.inventory.getItemCount(Items.MITHRIL_ARROW) < 75 || (!hasAccumulator && !hasCoins)) {
+        player.message("You need Vorkath's head, 75 mithril arrows and an Ava's accumulator or 4,999 coins.")
+        return@on_item_on_npc
+    }
+    player.inventory.remove(Items.VORKATHS_HEAD)
+    player.inventory.remove(Items.MITHRIL_ARROW, 75)
+    if (hasAccumulator) player.inventory.remove(Items.AVAS_ACCUMULATOR) else player.inventory.remove(Items.COINS_995, 4_999)
+    player.inventory.add(Items.AVAS_ASSEMBLER)
+    player.message("Ava upgrades your device into an Ava's assembler.")
 }
 
 /**
@@ -131,59 +159,4 @@ fun checkRequirements(player: Player): Boolean {
         return false
     }
     return true
-}
-
-/**
- * Handles the purchase dialogue for the shop.
- *
- * @param it The QueueTask object representing the player's interaction with the shop.
- */
-suspend fun purchaseDialogue(it: QueueTask) {
-    if (!it.player.inventory.hasSpace) {
-        it.chatNpc(*"You'll need some inventory space before I can sell you anything.".splitForDialogue())
-        return
-    }
-    when (it.options("The attractor", "The accumulator", title = "I would like to buy:")) {
-        FIRST_OPTION -> {
-            if (it.player.inventory
-                    .remove(Items.COINS_995, amount = 999)
-                    .hasSucceeded()
-            ) {
-                it.player.inventory.add(Items.AVAS_ATTRACTOR)
-                it.messageBox("You buy a new attractor for 999 coins.")
-            } else {
-                it.chatNpc("I'll need 999 coins from you for the attractor.")
-            }
-        }
-
-        SECOND_OPTION -> {
-            if (it.player.inventory.getItemCount(Items.COINS_995) < 999 ||
-                it.player.inventory.getItemCount(Items.STEEL_ARROW) < 75
-            ) {
-                it.chatNpc(*"I'll need 999 coins, and 75 steel arrows from you for the accumulator.".splitForDialogue())
-                return
-            }
-            if (it.player.skills.getCurrentLevel(Skills.RANGED) < 50) {
-                it.chatNpc(
-                    *"I'm afraid you aren't yet skilled enough for the upgraded version. You need a Ranged level of 50 or greater."
-                        .splitForDialogue(),
-                )
-                return
-            }
-            if (it.player.inventory
-                    .remove(Items.COINS_995, amount = 999)
-                    .hasSucceeded() &&
-                it.player.inventory
-                    .remove(
-                        Items.STEEL_ARROW,
-                        75,
-                    ).hasSucceeded()
-            ) {
-                it.player.inventory.add(Items.AVAS_ACCUMULATOR)
-                it.messageBox("You buy a new accumulator for 999 coins and 75 arrows.")
-            } else {
-                it.chatNpc(*"I'll need 999 coins, and 75 steel arrows from you for the accumulator.".splitForDialogue())
-            }
-        }
-    }
 }

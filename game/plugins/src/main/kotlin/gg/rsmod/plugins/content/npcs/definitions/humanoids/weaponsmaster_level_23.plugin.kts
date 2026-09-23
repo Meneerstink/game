@@ -13,12 +13,12 @@ val thug =
 table.register(thug, Npcs.WEAPONSMASTER)
 
 on_npc_pre_death(Npcs.WEAPONSMASTER) {
-    val p = npc.damageMap.getMostDamage()!! as Player
+    val p = npc.killer() ?: return@on_npc_pre_death
     p.playSound(Sfx.HUMAN_DEATH)
 }
 
 on_npc_death(Npcs.WEAPONSMASTER) {
-    table.getDrop(world, npc.damageMap.getMostDamage()!! as Player, npc.id, npc.tile)
+    table.getDrop(world, npc.killer() ?: return@on_npc_death, npc.id, npc.tile)
 }
 
 set_combat_def(Npcs.WEAPONSMASTER) {

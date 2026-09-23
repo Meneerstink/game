@@ -8,6 +8,7 @@ import gg.rsmod.game.model.combat.StyleType
 import gg.rsmod.game.model.combat.WeaponStyle
 import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Pawn
+import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.queue.QueueTask
 import gg.rsmod.plugins.api.HitType
 import gg.rsmod.plugins.api.ProjectileType
@@ -98,7 +99,7 @@ object StrykewyrmCombatScript : CombatScript() {
         val ANIM_BURROW = Strykewyrms.ANIM_BURROW; val ANIM_EMERGE = Strykewyrms.ANIM_EMERGE; val GFX_JUNGLE_IMPACT = Strykewyrms.GFX_JUNGLE_IMPACT; val GFX_DESERT_IMPACT = Strykewyrms.GFX_DESERT_IMPACT; val GFX_ICE_IMPACT = Strykewyrms.GFX_ICE_IMPACT
         npc.animate(ANIM_BURROW)
         it.wait(2)
-        if (npc.isDead() || target.isDead()) return
+        if (npc.isDead() || target.isDead() || (target is Player && !target.isOnline)) return
         val dest = npc.world.findRandomTileAround(target.tile, radius = 1) ?: Tile(target.tile)
         npc.moveTo(dest)
         npc.animate(ANIM_EMERGE)

@@ -31,6 +31,34 @@ fun hasMaxStats(player: gg.rsmod.game.model.entity.Player): Boolean =
 fun missingSkills(player: gg.rsmod.game.model.entity.Player): List<String> =
     maxCapeSkills(player).filter { player.skills.getMaxLevel(it) < 99 }.map { Skills.getSkillName(player.world, it) }
 
+/**
+ * Max's shop (Trade). OSRS Mac sells the Max cape through his "Max cape" shop; here the cape and hood are one purchase at
+ * the owner's price, only for players with max stats.
+ */
+val MAX_CAPE_SHOP = "Max cape"
+
+create_shop(
+    MAX_CAPE_SHOP,
+    currency =
+        gg.rsmod.plugins.content.mechanics.shops.RequirementCoinCurrency(
+            mapOf(
+                MaxCapes.MAX_CAPE to
+                    gg.rsmod.plugins.content.mechanics.shops.PurchaseRule(
+                        check = { p ->
+                            val missing = missingSkills(p)
+                            if (missing.isEmpty()) null else "You need 99 in every skill first (${missing.size} left: ${missing.take(3).joinToString(", ")})."
+                        },
+                        bonusItems = listOf(MaxCapes.MAX_HOOD),
+                        maxPerPurchase = 1,
+                    ),
+            ),
+        ),
+    purchasePolicy = gg.rsmod.game.model.shop.PurchasePolicy.BUY_NONE,
+    containsSamples = false,
+) {
+    items[0] = gg.rsmod.game.model.shop.ShopItem(MaxCapes.MAX_CAPE, 10, sellPrice = MAX_CAPE_PRICE)
+}
+
 suspend fun QueueTask.sellMaxCape() {
     if (!hasMaxStats(player)) {
         val missing = missingSkills(player)
@@ -47,34 +75,12 @@ suspend fun QueueTask.sellMaxCape() {
         )
         return
     }
-    if (player.inventory.freeSlotCount < 2) {
-        chatNpc("You'll want two free hands to carry these.", facialExpression = FacialExpression.CALM_TALK)
-        return
-    }
-    if (player.inventory.getItemCount(Items.COINS_995) < MAX_CAPE_PRICE) {
-        chatNpc(
-            "The cape and hood together come to 120,000 coins.",
-            "Come back when you've got the gold on you.",
-            facialExpression = FacialExpression.CALM_TALK,
-        )
-        return
-    }
     chatNpc(
         "Then it's yours, and you've earned every stitch of it.",
         "120,000 coins for the cape and the hood.",
         facialExpression = FacialExpression.HAPPY,
     )
-    if (options("Buy the Max cape and hood (120,000 coins).", "Not right now.") != 1) return
-    if (!player.inventory.remove(Items.COINS_995, MAX_CAPE_PRICE).hasSucceeded()) {
-        chatNpc("You're short on coins.", facialExpression = FacialExpression.GRUMPY)
-        return
-    }
-    player.inventory.add(MaxCapes.MAX_CAPE)
-    player.inventory.add(MaxCapes.MAX_HOOD)
-    chatNpc(
-        "Wear it well. There's not many of us.",
-        facialExpression = FacialExpression.HAPPY,
-    )
+    player.openShop(MAX_CAPE_SHOP)
 }
 
 on_npc_option(npc = Npcs.MAX, option = "talk-to") {
@@ -136,5 +142,5 @@ on_npc_option(npc = Npcs.MAX, option = "talk-to") {
 }
 
 on_npc_option(npc = Npcs.MAX, option = "trade") {
-    player.queue { sellMaxCape() }
+    player.openShop(MAX_CAPE_SHOP)
 }

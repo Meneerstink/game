@@ -69,7 +69,9 @@ on_obj_option(obj = Objs.ROPE_6708, option = "climb-up") {
         val obj = player.getInteractingGameObj()
         player.queue {
             // The click dispatches the transformed child (6714/6733); the puzzle doors are identified by the map object.
-            if (obj.id in Barrows.PUZZLE_DOORS && !Barrows.inInnerRoom(player.tile)) {
+            // Puzzle doors are inside the central room. The old negated check let every
+            // puzzle door open without a puzzle while underground.
+            if (Barrows.shouldSolvePuzzle(player.tile, obj.id)) {
                 if (!solvePuzzle(this)) {
                     Barrows.shufflePuzzle(player, incorrect = true)
                     player.message("You got the puzzle wrong! You can hear the catacombs moving around you.")
@@ -98,13 +100,18 @@ suspend fun QueueTask.walkThroughDoor(player: Player, doorTile: Tile, rotation: 
         dz >= 0 -> doorTile.transform(0, -1)
         else -> doorTile.transform(0, 1)
     }
-    if (player.tile != doorTile) {
-        player.walkTo(this, doorTile, detectCollision = false)
-        wait(1)
+    if (!Barrows.isAtDoor(player.tile, doorTile)) {
+        player.message("The door is blocked.")
+        return
     }
-    player.walkTo(this, destination, detectCollision = false)
+    // The object interaction route already brought the player to the door. Only this bounded
+    // one-door crossing is collision-free because the cache's varbit door state is per-player;
+    // never path to an arbitrary door tile with collision disabled.
+    val route = player.walkTo(this, destination, detectCollision = false)
     wait(1)
-    player.moveTo(destination)
+    if (!route.success || player.tile != destination) {
+        player.message("The door is blocked.")
+    }
 }
 
 /**

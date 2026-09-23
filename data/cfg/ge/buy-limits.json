@@ -3066,8 +3066,6 @@
   {"id": 15263, "limit": 10000, "void_key": "living_minerals"},
   {"id": 15264, "limit": 20000, "void_key": "raw_cavefish"},
   {"id": 15266, "limit": 10000, "void_key": "cavefish"},
-  {"id": 15270, "limit": 20000, "void_key": "raw_rocktail"},
-  {"id": 15272, "limit": 10000, "void_key": "rocktail"},
   {"id": 15291, "limit": 10000, "void_key": "plank_2"},
   {"id": 15415, "limit": 5000, "void_key": "black_wool"},
   {"id": 15416, "limit": 5000, "void_key": "ball_of_black_wool"},

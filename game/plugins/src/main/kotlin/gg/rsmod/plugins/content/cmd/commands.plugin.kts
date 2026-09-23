@@ -20,6 +20,7 @@ import gg.rsmod.game.model.region.ChunkCoords
 import gg.rsmod.game.model.timer.ACTIVE_COMBAT_TIMER
 import gg.rsmod.game.service.serializer.PlayerSerializerService
 import gg.rsmod.game.sync.block.UpdateBlockType
+import gg.rsmod.plugins.api.ext.getWildernessLevel
 import gg.rsmod.plugins.content.combat.dealHit
 import gg.rsmod.plugins.content.inter.attack.AttackTab
 import gg.rsmod.plugins.content.inter.bank.openBank
@@ -568,6 +569,7 @@ on_command("noclip", Privilege.ADMIN_POWER) {
 on_command("mypos") {
     val instancedMap = world.instanceAllocator.getMap(player.tile)
     val tile = player.tile
+    val clipboardPosition = "${tile.x}, ${tile.z}, ${tile.height}"
     if (instancedMap == null) {
         player.message(
             "Tile=[<col=42C66C>${tile.x}, ${tile.z}, ${tile.height}</col>], Region=${player.tile.regionId}, Chunk Coords=${player.tile.chunkCoords}, Chunk Hash=${player.tile.chunkCoords.hashCode()} Object=${player.world.getObject(
@@ -583,6 +585,9 @@ on_command("mypos") {
             type = ChatMessageType.CONSOLE,
         )
     }
+    // The revision-667 client recognizes this console-only marker and copies the
+    // plain X, Z, height triplet to the local Windows clipboard.
+    player.message("__RSPS_COPY_POS__:$clipboardPosition", type = ChatMessageType.CONSOLE)
 }
 
 on_command("getmultichunks", Privilege.ADMIN_POWER) {
@@ -1043,6 +1048,54 @@ on_command("master", Privilege.ADMIN_POWER) {
     }
     player.calculateAndSetCombatLevel()
 }
+
+// ---- Deadman test commands (owner retest 2026-09-16) ----
+
+/** Shows the Deadman zone state of the current tile: guarded city name, Wilderness level or "Dangerous". */
+on_command("zone") {
+    val zone = gg.rsmod.plugins.content.mechanics.pvp.GuardedZones.zoneAt(player.tile)
+    val wild = player.tile.getWildernessLevel()
+    val text =
+        when {
+            wild > 0 -> "Wilderness level $wild (death zone)"
+            zone != null -> "Guarded: ${zone.name} (safe zone)"
+            else -> "Dangerous (death zone)"
+        }
+    player.message("Tile ${player.tile.x},${player.tile.z},${player.tile.height}: $text", type = ChatMessageType.CONSOLE)
+    player.message("Tile ${player.tile.x},${player.tile.z},${player.tile.height}: $text", type = ChatMessageType.GAME_MESSAGE)
+}
+
+/** Gives yourself the real 5-minute Deadman PK skull, so guards/HUD/teleport rules can be tested alone. */
+on_command("skullme", Privilege.ADMIN_POWER) {
+    gg.rsmod.plugins.content.mechanics.pvp.PvpSkull.applyTestSkull(player)
+    player.message("You are now PK-skulled for 5 minutes.", type = ChatMessageType.GAME_MESSAGE)
+}
+
+/** Teleports to Deadman guard post n (1-based) and names its city; without a number lists the count per city. */
+on_command("guardpost", Privilege.ADMIN_POWER) {
+    val posts = gg.rsmod.plugins.content.mechanics.pvp.GuardPosts.ALL
+    val args = player.getCommandArgs()
+    val index = args.firstOrNull()?.toIntOrNull()
+    if (index == null || index !in 1..posts.size) {
+        posts.groupBy { it.city }.forEach { (city, list) ->
+            val first = posts.indexOf(list.first()) + 1
+            player.message("$city: posts $first-${first + list.size - 1}", type = ChatMessageType.GAME_MESSAGE)
+        }
+        player.message("Usage: guardpost <1-${posts.size}>", type = ChatMessageType.GAME_MESSAGE)
+        return@on_command
+    }
+    val post = posts[index - 1]
+    val tile = gg.rsmod.plugins.content.mechanics.pvp.CityGuards.nearestWalkable(world, post.tile) ?: post.tile
+    player.moveTo(tile)
+    player.message("Guard post $index/${posts.size}: ${post.city} (${if (post.ranged) "ranged" else "melee"}) at ${tile.x},${tile.z}", type = ChatMessageType.GAME_MESSAGE)
+}
+
+/** Owner retest aid (2026-09-18): state of every Deadman guard within 15 tiles - target, facing, patrol. */
+on_command("guardinfo", Privilege.ADMIN_POWER) {
+    val lines = gg.rsmod.plugins.content.mechanics.pvp.CityGuards.describeNearby(world, player.tile)
+    if (lines.isEmpty()) player.message("No Deadman guards within 15 tiles.", type = ChatMessageType.GAME_MESSAGE)
+    lines.forEach { player.message(it, type = ChatMessageType.GAME_MESSAGE) }
+}
 on_command("drainskills", Privilege.DEV_POWER) {
     for (i in 0 until player.skills.maxSkills) {
         player.skills.setCurrentLevel(i, 1)
@@ -1186,6 +1239,32 @@ on_command("item", Privilege.ADMIN_POWER) {
         } else {
             player.message("Item $item does not exist in cache.", type = ChatMessageType.CONSOLE)
         }
+    }
+}
+
+/** Easy admin item spawn: ::spawn dragon claws 1 or ::spawn dragon_claws 1. */
+on_command("spawn", Privilege.ADMIN_POWER) {
+    val args = player.getCommandArgs()
+    tryWithUsage(player, args, "Invalid format! Example: <col=42C66C>::spawn dragon claws 1</col>") { values ->
+        if (values.isEmpty()) return@tryWithUsage
+        val parsedAmount = values.lastOrNull()?.toIntOrNull()
+        val amount = parsedAmount?.coerceAtLeast(1) ?: 1
+        val nameParts = if (parsedAmount != null && values.size > 1) values.dropLast(1) else values.toList()
+        val query = nameParts.joinToString(" ").replace("_", " ").trim().lowercase()
+        if (query.isBlank()) return@tryWithUsage
+        val count = world.definitions.getCount(ItemDef::class.java)
+        val exact = (0 until count).firstNotNullOfOrNull { id ->
+            world.definitions.getNullable(ItemDef::class.java, id)?.takeIf { it.name.equals(query, ignoreCase = true) }?.let { id to it }
+        }
+        val match = exact ?: (0 until count).firstNotNullOfOrNull { id ->
+            world.definitions.getNullable(ItemDef::class.java, id)?.takeIf { it.name.lowercase().contains(query) }?.let { id to it }
+        }
+        if (match == null) {
+            player.message("No item found for '$query'. Use ::itemsearch $query.", type = ChatMessageType.CONSOLE)
+            return@tryWithUsage
+        }
+        val result = player.inventory.add(match.first, amount, assureFullInsertion = false)
+        player.message("Spawned ${result.completed} x ${match.second.name} (id ${match.first}).", type = ChatMessageType.CONSOLE)
     }
 }
 

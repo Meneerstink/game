@@ -100,7 +100,13 @@ object GuardedZones {
                     // Grand Exchange courtyard. The edge is run straight along z 3518 instead, so the whole
                     // enclosure is one safe zone; `GuardedZonesTests` sweeps every tile of it as a guard.
                     3190, 3518, 3142, 3518, 3138, 3514, 3138, 3494,
-                    3141, 3491, 3141, 3486, 3138, 3483, 3138, 3472, 3142, 3467, 3187, 3467, 3187, 3464, 3185, 3462,
+                    3141, 3491, 3141, 3486, 3138, 3483, 3138, 3472, 3142, 3467,
+                    // Owner 2026-09-23: "in grand exchange mag nooit dangerous zijn" (3158,3465 was Dangerous). The wiki
+                    // edge ran along z 3467, leaving the strip inside the south wall and the gate passage Dangerous. The
+                    // edge now follows the inside of the GE south wall (z 3465, with its diagonal corners) and, at the
+                    // gatehouse, the gatehouse front (z 3462) - the owner's "red line" where Dangerous turns Safe.
+                    3149, 3467, 3151, 3465, 3159, 3465, 3159, 3462, 3171, 3462, 3171, 3465, 3179, 3465, 3181, 3467,
+                    3187, 3467, 3187, 3464, 3185, 3462,
                     3185, 3458, 3186, 3457, 3190, 3457, 3198, 3448, 3180, 3448, 3174, 3448, 3174, 3399, 3182, 3399,
                 ),
             ),
@@ -236,5 +242,13 @@ object GuardedZones {
 
     fun zoneAt(tile: Tile): Zone? = ZONES.firstOrNull { it.contains(tile) }
 
-    fun contains(tile: Tile): Boolean = zoneAt(tile) != null
+    /**
+     * Owner 2026-09-21: "make sure the poh is a safezone just like osrs deadmanmode poh". A player-owned house is not
+     * a polygon on the world map - it is a private instance - so it is folded in here rather than added to [ZONES],
+     * which makes it safe everywhere this one predicate is already consulted: the PvP gate, the guards, the danger
+     * warning and the HUD. (The PK skull already stops counting down inside any instance - see
+     * `PvpSkull.tickPauseTracking` - so no separate skull rule is needed.)
+     */
+    fun contains(tile: Tile): Boolean =
+        zoneAt(tile) != null || gg.rsmod.plugins.content.areas.poh.PlayerHouse.isSafeTile(tile)
 }

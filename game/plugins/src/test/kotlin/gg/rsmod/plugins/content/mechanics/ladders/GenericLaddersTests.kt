@@ -38,6 +38,15 @@ class GenericLaddersTests {
     }
 
     @Test
+    fun `a real vine id is recognised the same way a ladder is`() {
+        // obj 27126 "Vine", confirmed with ObjectPlacementProbeTool (2026-09-18) to sit at the same
+        // tile as its Climb-down counterpart (27130/27129) one floor up, the same shape as a ladder.
+        val vine = definitions.get(ObjectDef::class.java, 27126)
+        assertTrue(GenericLadders.isLadder(vine))
+        assertEquals(GenericLadders.Direction.UP, vine.options.firstNotNullOf { GenericLadders.optionDirection(it) })
+    }
+
+    @Test
     fun `climbing up lands on the same tile one floor higher when a climb-down ladder is there`() {
         val ladder = obj(up, Tile(3200, 3200, 0))
         val counterpart = obj(down, Tile(3200, 3200, 1))

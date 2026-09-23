@@ -61,12 +61,12 @@ val crab = table.build {
 table.register(crab, *ids)
 
 on_npc_pre_death(Npcs.ROCK_CRAB_1267) {
-    val p = npc.damageMap.getMostDamage()!! as Player
+    val p = npc.killer() ?: return@on_npc_pre_death
     p.playSound(Sfx.ROCK_CRAB_DEATH)
 }
 
 on_npc_death(*ids) {
-    table.getDrop(world, npc.damageMap.getMostDamage()!! as Player, npc.id, npc.tile)
+    table.getDrop(world, npc.killer() ?: return@on_npc_death, npc.id, npc.tile)
 
     val spawn = npc.spawnTile
     val id = if (npc.id == Npcs.ROCK_CRAB) Npcs.ROCKS else Npcs.ROCKS_1268

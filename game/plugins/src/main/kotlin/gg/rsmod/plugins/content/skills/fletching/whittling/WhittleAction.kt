@@ -2,12 +2,14 @@ package gg.rsmod.plugins.content.skills.fletching.whittling
 
 import gg.rsmod.game.fs.DefinitionSet
 import gg.rsmod.game.fs.def.ItemDef
+import gg.rsmod.game.model.item.Item
 import gg.rsmod.game.model.queue.QueueTask
 import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.api.cfg.Anims
 import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.api.ext.doubleItemMessageBox
 import gg.rsmod.plugins.api.ext.filterableMessage
+import gg.rsmod.plugins.api.ext.grantOrRefund
 import gg.rsmod.plugins.api.ext.player
 import kotlin.math.min
 
@@ -46,7 +48,9 @@ class WhittleAction(
             if (!inventory.remove(raw, assureFullRemoval = true).hasSucceeded()) {
                 return
             }
-            inventory.add(whittleItem.product, whittleItem.amount)
+            if (!player.grantOrRefund(Item(whittleItem.product, whittleItem.amount), listOf(Item(raw, 1)))) {
+                return
+            }
             val message =
                 "You carefully cut the $rawName into ${if (whittleItem.amount > 1) "${whittleItem.amount} ${productName}s" else "a $productName"}."
             player.filterableMessage(message)

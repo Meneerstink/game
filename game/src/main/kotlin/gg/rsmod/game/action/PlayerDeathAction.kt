@@ -12,12 +12,25 @@ import gg.rsmod.game.model.queue.TaskPriority
 import gg.rsmod.game.plugin.Plugin
 import gg.rsmod.game.service.log.LoggerService
 import java.lang.ref.WeakReference
+import mu.KLogging
 
 /**
  * @author Tom <rspsmods@gmail.com>
  */
-object PlayerDeathAction {
+object PlayerDeathAction : KLogging() {
     private const val DEATH_ANIMATION = 836
+
+    /**
+     * How recently a pawn must have hit the player to be eligible as its killer.
+     *
+     * The damage map accumulates without any notion of "this fight", so without a window the
+     * highest lifetime damage dealer wins: a PKer who hit for 50 and was escaped from minutes ago
+     * outranked the dragon that actually landed the kill, and the death was then resolved as a PvP
+     * death (ground loot for an absent killer instead of death recovery). 60 seconds, kept
+     * numerically in sync with `PvpSkull.AGGRESSOR_WINDOW_CYCLES` (100 cycles) - the same window the
+     * PvP aggressor/skull rules already use - because the game module cannot depend on plugins.
+     */
+    private const val KILL_CREDIT_WINDOW_MS = 60_000L
 
     val deathPlugin: Plugin.() -> Unit = {
         val player = ctx as Player
@@ -25,6 +38,10 @@ object PlayerDeathAction {
         player.attr.put(DEATH_FLAG, true)
         player.interruptQueues()
         player.stopMovement()
+        // Death ends the persistent combat loop as well as movement. Clear the target immediately
+        // so the player cannot unlock with a stale COMBAT_TARGET_FOCUS_ATTR and remain logically
+        // engaged with the pre-death opponent until a later interaction happens to reset it.
+        player.resetInteractions()
         player.lock()
         player.queue(TaskPriority.STRONG) {
             death(player)
@@ -36,14 +53,18 @@ object PlayerDeathAction {
         val deathAnim = world.definitions.get(AnimDef::class.java, DEATH_ANIMATION)
         val instancedMap = world.instanceAllocator.getMap(player.tile)
 
-        player.damageMap.getMostDamage()?.let { killer ->
+        // KILLER_ATTR is a per-death snapshot consumed by the death plugin. Clear the previous
+        // snapshot first: a PvM/environmental death with no current damage must never inherit the
+        // player killer from an earlier death and become PvP loot by stale attribution.
+        player.attr.remove(KILLER_ATTR)
+        player.damageMap.getMostDamage(KILL_CREDIT_WINDOW_MS)?.let { killer ->
             if (killer is Player) {
                 world.getService(LoggerService::class.java, searchSubclasses = true)?.logPlayerKill(killer, player)
             }
             player.attr[KILLER_ATTR] = WeakReference(killer)
         }
 
-        world.plugins.executePlayerPreDeath(player)
+        runDeathHook(player, "player-pre-death") { world.plugins.executePlayerPreDeath(player) }
 
         player.resetFacePawn()
         wait(2)
@@ -75,8 +96,34 @@ object PlayerDeathAction {
         player.attr.removeIf { it.resetOnDeath }
         player.attr.put(DEATH_FLAG, false)
         player.timers.removeIf { it.resetOnDeath }
+        // A death ends the fight, so the damage that caused it must not be carried into the next one.
+        // [Npc.reset] already clears an npc's map on every death; the player's map was never cleared,
+        // so [gg.rsmod.game.model.combat.DamageMap.getMostDamage] - which has no time window - kept
+        // returning the highest *lifetime* damage dealer. A later PvM or environmental death then
+        // inherited the old player killer, was classified as a PvP death and dropped the victim's
+        // items as killer-owned ground loot instead of putting them into death recovery (and paid
+        // that stale killer a loot key, killstreak and Trouver compensation). Cleared here, after
+        // the KILLER_ATTR snapshot and the pre-death hook have both consumed the map.
+        player.damageMap.reset()
 
-        world.plugins.executePlayerDeath(player)
+        runDeathHook(player, "player-death") { world.plugins.executePlayerDeath(player) }
+    }
+
+    /**
+     * A plugin death hook is optional presentation/gameplay work and must not strand the
+     * player in the locked death queue when one hook throws. Keep the sourced death lifecycle
+     * (respawn, unlock and reset-on-death cleanup) authoritative, while retaining diagnostics.
+     */
+    private inline fun runDeathHook(
+        player: Player,
+        stage: String,
+        hook: () -> Unit,
+    ) {
+        try {
+            hook()
+        } catch (e: Exception) {
+            logger.error("Player death hook '$stage' failed for username=${player.username}; continuing lifecycle.", e)
+        }
     }
 
     fun handleDeath(player: Player) {

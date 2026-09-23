@@ -9,7 +9,7 @@ import gg.rsmod.plugins.api.ext.getWildernessLevel
 /**
  * Rev-667 object ids of the Ferox Enclave content imported by `FeroxImportTool`
  * (transaction tx-20260905-052852, source OpenRS2 cache 2499 build 236). Every id below is the
- * local LocType allocated by that import - see `RSPS_IMPORT_ASSET_MAP.yml` "Ferox Enclave world
+ * local LocType allocated by that import - see `OSRS_IMPORT_MASTER.yml` "Ferox Enclave world
  * import" for the upstream->local table. Nothing here is guessed: the placements were re-read
  * from the production cache after the apply (`Rev667RegionProbeTool locs`).
  */

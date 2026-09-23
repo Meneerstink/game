@@ -176,9 +176,6 @@ object PlayerSynchronizationTask : SynchronizationTask<Player> {
             }
         }
 
-        if (skipCount > 0) {
-            throw RuntimeException()
-        }
     }
 
     /**
@@ -267,10 +264,6 @@ object PlayerSynchronizationTask : SynchronizationTask<Player> {
             }
             segments.add(PlayerSkipCountSegment(count = skipCount))
             player.gpiInactivityFlags[index] = player.gpiInactivityFlags[index] or 0x2
-        }
-
-        if (skipCount > 0) {
-            throw RuntimeException()
         }
 
         return added

@@ -140,7 +140,24 @@ class Chunk(
              * for them to view since the client is already aware of them as
              * they are loaded from the game resources (cache).
              */
-            if (entity.entityType != EntityType.STATIC_OBJECT) {
+            if (entity.entityType == EntityType.STATIC_OBJECT) {
+                /*
+                 * A cache object that was removed earlier and is now put back (a world edit undone): drop the removal
+                 * this chunk kept for players who enter later, and show it again to everyone in view. Without this
+                 * the client kept the LOC_DEL, so the object stayed invisible while the server had it back with its
+                 * collision (owner 2026-09-24: a Grand Exchange wall piece stayed a hole after undo).
+                 */
+                val obj = entity as GameObject
+                val wasRemoved =
+                    updates.removeIf {
+                        val other = it.entity
+                        other is GameObject && other.entityType == EntityType.STATIC_OBJECT && other.id == obj.id &&
+                            other.type == obj.type && other.tile.sameAs(obj.tile)
+                    }
+                if (wasRemoved) {
+                    sendUpdate(world, update)
+                }
+            } else {
                 /*
                  * [EntityType]s marked as transient will only be sent to local
                  * players who are currently in the viewport, but will now be
@@ -341,15 +358,61 @@ class Chunk(
             else -> null
         }
 
+    /**
+     * Single-type fast path used by the hot client/entity scans. Avoids a vararg array and the
+     * chunk-wide `flatten().filter()` pair that previously allocated two temporary lists per call.
+     */
     @Suppress("UNCHECKED_CAST")
-    fun <T> getEntities(vararg types: EntityType): List<T> =
-        entities.values.flatten().filter { it.entityType in types } as List<T>
+    fun <T> getEntities(type: EntityType): List<T> {
+        if (entities.isEmpty()) return emptyList()
+        val result = ObjectArrayList<T>()
+        entities.values.forEach { list ->
+            list.forEach { entity ->
+                if (entity.entityType == type) result.add(entity as T)
+            }
+        }
+        return if (result.isEmpty()) emptyList() else result
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    fun <T> getEntities(vararg types: EntityType): List<T> {
+        if (entities.isEmpty() || types.isEmpty()) return emptyList()
+        val result = ObjectArrayList<T>()
+        entities.values.forEach { list ->
+            list.forEach { entity ->
+                if (entity.entityType in types) result.add(entity as T)
+            }
+        }
+        return if (result.isEmpty()) emptyList() else result
+    }
+
+    /** Single-type tile lookup fast path; preserves the empty immutable-list contract. */
+    @Suppress("UNCHECKED_CAST")
+    fun <T> getEntities(
+        tile: Tile,
+        type: EntityType,
+    ): List<T> {
+        val list = entities[tile] ?: return emptyList()
+        val result = ObjectArrayList<T>()
+        list.forEach { entity ->
+            if (entity.entityType == type) result.add(entity as T)
+        }
+        return if (result.isEmpty()) emptyList() else result
+    }
 
     @Suppress("UNCHECKED_CAST")
     fun <T> getEntities(
         tile: Tile,
         vararg types: EntityType,
-    ): List<T> = entities[tile]?.filter { it.entityType in types } as? List<T> ?: emptyList()
+    ): List<T> {
+        val list = entities[tile] ?: return emptyList()
+        if (types.isEmpty()) return emptyList()
+        val result = ObjectArrayList<T>()
+        list.forEach { entity ->
+            if (entity.entityType in types) result.add(entity as T)
+        }
+        return if (result.isEmpty()) emptyList() else result
+    }
 
     companion object {
         /**

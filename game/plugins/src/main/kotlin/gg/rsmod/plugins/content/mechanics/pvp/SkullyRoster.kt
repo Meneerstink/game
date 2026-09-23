@@ -61,6 +61,8 @@ object SkullyRoster {
         val chest: Tile? = null,
         /** Cache scenery taken out of the bank before Skully is put there (owner: "remove the desk ... put skully there"). */
         val clear: List<Tile> = emptyList(),
+        /** Owner-named chest front when it must differ from Skully's facing. */
+        val chestFront: Direction? = null,
     )
 
     /**
@@ -98,8 +100,15 @@ object SkullyRoster {
             Site("Catherby bank", SKULLY_MAX, anchor = Tile(2809, 3441, 0), wanted = Tile(2812, 3441, 0), exact = true, face = Direction.WEST, chest = Tile(2812, 3440, 0)),
             // 2026-09-23 bank pass: he stood on a closed booth (3209,3221). East wall of the customer side.
             Site("Lumbridge castle bank", SKULLY_BOB, anchor = Tile(3208, 3220, 2), wanted = Tile(3210, 3219, 2), exact = true, face = Direction.WEST, chest = Tile(3210, 3218, 2)),
-            // Owner 2026-09-20: "i want skully faladorbank in 2943, 3371" (the heuristic had put him at 2943,3369).
-            Site("Falador west bank", Npcs.SKULLY, anchor = Tile(2946, 3368, 0), wanted = Tile(2943, 3371, 0), exact = true),
+            // Owner 2026-09-23: "verplaats skully naar 2943, 3368, 0", deposit box removed, "de chest en hij correct kijkt
+            // naar de uitgang van de bank" - the exit is the north-wall opening (2945-2946, 3373): Skully faces north-east
+            // towards it, the chest takes the deposit box tile beside him with its front to the north.
+            Site(
+                "Falador west bank", Npcs.SKULLY, anchor = Tile(2946, 3368, 0), wanted = Tile(2943, 3368, 0), exact = true,
+                face = Direction.NORTH_EAST, chest = Tile(2943, 3369, 0), clear = listOf(Tile(2943, 3369, 0)),
+                // Owner 2026-09-23: "de chest staat omgedraaid" with its front north - turned 180 degrees.
+                chestFront = Direction.SOUTH,
+            ),
             // Owner 2026-09-20: "i want another skully on 2653, 3280, 0" (Ardougne south bank). Twelfth site, so
             // the five names have cycled back round to Skully Jr.
             Site("Ardougne south bank", SKULLY_JR, anchor = Tile(2655, 3283, 0), wanted = Tile(2653, 3280, 0), exact = true),
@@ -274,7 +283,7 @@ object SkullyRoster {
             // An owner-named facing wins over the computed one; otherwise face the open side nearest the anchor.
             val faceTile = if (site.face != null) placement.skully.step(site.face) else facing(world, placement.skully, site.anchor, exclude = placement.chest)
             // The chest's front faces the same way Skully does (into the bank), never the wall.
-            val front = site.face ?: faceTile?.let { Direction.between(placement.skully, it) } ?: Direction.NORTH
+            val front = site.chestFront ?: site.face ?: faceTile?.let { Direction.between(placement.skully, it) } ?: Direction.NORTH
             world.spawn(DynamicObject(LOOT_CHEST, 10, chestRotation(front), placement.chest))
             blockTile(world, placement.skully)
             faceTile?.let {

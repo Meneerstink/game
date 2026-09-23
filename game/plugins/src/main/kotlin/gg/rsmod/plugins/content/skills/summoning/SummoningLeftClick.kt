@@ -41,16 +41,13 @@ import gg.rsmod.plugins.api.ext.syncVarp
  *
  * ## What the owner's retests changed
  *
- * Requirement G4 reduces the orb to six actions - Special Move, Attack, Call, Dismiss, Take BoB,
- * Renew - so "Follower Details" (varbit value 0) and "Interact" (value 7) are no longer offered
- * at all. [selectableActions] further restricts the list to the actions the **currently summoned**
+ * The orb exposes six actions - Special Move, Follower Details, Call, Dismiss, Take BoB and
+ * Renew - while generic Attack is kept off the orb. [selectableActions] further restricts the list
+ * to the actions the **currently summoned**
  * familiar can actually perform, which is why it takes a player rather than being a constant.
  *
- * A consequence worth being explicit about: a never-configured account reads varbit 6454 = 0,
- * which used to mean Follower Details and is no longer an orb action at all. [leftClickAction]
- * therefore reports [DEFAULT_ACTION] for value 0, and [migrateRemovedDefault] rewrites the varbit
- * once on login so client and server agree. That is a consequence of G4, not invented RS
- * behaviour, and it is the only value this file substitutes.
+ * A never-configured account reads varbit 6454 = 0, which is the cache's Follower Details value
+ * and remains valid. Only the removed Interact value is migrated to [DEFAULT_ACTION].
  */
 
 /** varbit 6454 (varp 1493 bits 0..3) - the persistent "configured left-click action". */
@@ -60,11 +57,10 @@ private const val ACTIVE_ACTION_VARBIT = 6454
 private const val LEFT_CLICK_VARP = 1493
 
 /**
- * The varbit-6454 values the cache bakes for the two actions H1/H6 removed from the orb:
- * 0 = Follower Details, 7 = Interact. Kept named rather than inline so the migration below reads
- * as "the removed ones" instead of as two magic numbers.
+ * The cache value removed from this orb is 7 = Interact. Follower Details (0) remains an orb
+ * entrypoint and is also available from the custom skill-tab button.
  */
-private val REMOVED_ACTION_VALUES = setOf(0, 7)
+private val REMOVED_ACTION_VALUES = setOf(7)
 
 /**
  * What a left-click does when the stored choice is one of the removed actions. Call Follower is
@@ -78,9 +74,7 @@ fun Player.leftClickAction(): FamiliarAction =
 
 /**
  * Rewrites a stored choice that is no longer an orb action. Run once on login so the client's own
- * script 2671 and the server agree about which twin should be visible; without it an untouched
- * account would keep asking the client to show 747:18 ("Follower Details"), which the orb gating
- * then immediately hides, leaving the orb with no left-click at all.
+ * script 2671 and the server agree about which twin should be visible.
  */
 fun Player.migrateRemovedDefault() {
     if (getVarbit(ACTIVE_ACTION_VARBIT) in REMOVED_ACTION_VALUES) {

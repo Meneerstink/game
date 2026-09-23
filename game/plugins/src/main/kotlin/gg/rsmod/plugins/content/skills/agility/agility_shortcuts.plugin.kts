@@ -433,8 +433,10 @@ on_obj_option(obj = Objs.LOG_BALANCE_2296, option = "Walk-across") {
  *        There's a chance of taking a few points of damage when using this shortcut.
  */
 on_obj_option(obj = Objs.PIPE_29370, option = 1) {
-    if (player.skills.getCurrentLevel(Skills.AGILITY) < 53) {
-        player.message("You need an agility level of 53 to use this obstacle.")
+    // Level corrected 2026-09-18: this checked 53 while the header comment above claimed 51; 2009scape's
+    // PipeShortcut sources obj 29370 (Edgeville Dungeon) at level 51, matching the OSRS Wiki value.
+    if (player.skills.getCurrentLevel(Skills.AGILITY) < 51) {
+        player.message("You need an agility level of 51 to use this obstacle.")
         return@on_obj_option
     }
     val obj = player.getInteractingGameObj()

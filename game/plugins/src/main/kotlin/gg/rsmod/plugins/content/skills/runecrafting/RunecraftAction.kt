@@ -72,7 +72,9 @@ object RunecraftAction {
         preCraft(it)
 
         val inventory = player.inventory
-        val count = min(inventory.getItemCount(Items.PURE_ESSENCE), inventory.getItemCount(combo.rune))
+        var count = min(inventory.getItemCount(Items.PURE_ESSENCE), inventory.getItemCount(combo.rune))
+        if (combo.catalyst != -1) count = min(count, inventory.getItemCount(combo.catalyst))
+        if (count <= 0) return
 
         // Lunar Magic Imbue: no talisman is needed (or consumed) while the charge is active.
         val imbued = player.attr[gg.rsmod.game.model.attr.MAGIC_IMBUE_ATTR] == true
@@ -80,25 +82,28 @@ object RunecraftAction {
 
         if (imbued || removeTalismanTrans!!.hasSucceeded()) {
             val removeEssTrans = inventory.remove(item = Items.PURE_ESSENCE, amount = count)
-            val removeRuneTrans = inventory.remove(item = combo.rune, amount = removeEssTrans.items.size)
+            val removeRuneTrans = inventory.remove(item = combo.rune, amount = removeEssTrans.completed)
+            if (combo.catalyst != -1) inventory.remove(item = combo.catalyst, amount = removeEssTrans.completed)
 
             if (removeRuneTrans.hasSucceeded()) {
-                val runeCount =
-                    if (player.hasEquipped(
-                            EquipmentType.AMULET,
-                            Items.BINDING_NECKLACE,
-                        )
-                    ) {
-                        count
-                    } else {
-                        world.random(IntRange(start = 1, endInclusive = count))
-                    }
-
-                inventory.add(item = combo.id, amount = runeCount)
+                // OSRS Wiki "Mist rune" et al.: "Combinations have a 50% success rate (or 100%, if the player is wearing a binding
+                // necklace)" per essence; "Binding necklace": "It has 16 uses (one use is one click on an altar)", charges stored per
+                // player. (Previously a uniform 1..count roll, never zero, and the necklace never used a charge.)
+                val binding = player.hasEquipped(EquipmentType.AMULET, Items.BINDING_NECKLACE)
+                val runeCount = if (binding) count else combinationSuccesses(count) { world.random(1) == 0 }
+                if (binding) BindingNecklace.useCharge(player)
+                if (runeCount > 0) inventory.add(item = combo.id, amount = runeCount)
+                // SOURCE_GAP (unchanged): experience stays per essence bound.
                 player.addXp(Skills.RUNECRAFTING, count * combo.xp)
             }
         }
     }
+
+    /** Successful combination runes from [essence] independent 50 % rolls. */
+    fun combinationSuccesses(
+        essence: Int,
+        succeeds: () -> Boolean,
+    ): Int = (0 until essence).count { succeeds() }
 
     /**
      * Handles the action of crafting a rune from essence
@@ -210,6 +215,16 @@ object RunecraftAction {
 
         if (!player.inventory.contains(combo.rune)) {
             player.message("You need ${runeName}s to bind ${comboName}s.")
+            return false
+        }
+
+        if (combo.catalyst != -1 && !player.inventory.contains(combo.catalyst)) {
+            player.message("You need aether catalysts to bind ${comboName}s.")
+            return false
+        }
+
+        if (combo.requiresImbue && player.attr[gg.rsmod.game.model.attr.MAGIC_IMBUE_ATTR] != true) {
+            player.message("You need to cast Magic Imbue to bind ${comboName}s.")
             return false
         }
 

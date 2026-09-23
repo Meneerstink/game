@@ -73,7 +73,11 @@ on_login {
         // already-working dialogue system instead of guessing new interface ids). Every account
         // reaching this branch is by definition a fresh level-3 account, so the training-first
         // guidance always applies here without needing a separate level check.
+        // Owner 2026-09-23: the Dangerous-area warning exists only while this introduction runs;
+        // finished, skipped or interrupted, it never shows again.
+        gg.rsmod.plugins.content.mechanics.pvp.DangerWarning.startIntro(player)
         player.queue {
+            terminateAction = { gg.rsmod.plugins.content.mechanics.pvp.DangerWarning.endIntro(player) }
             val skip =
                 options(
                     "Start the introduction (about a minute).",
@@ -94,6 +98,7 @@ on_login {
                         "Wilderness hotspot whenever you're ready.",
                 )
             }
+            gg.rsmod.plugins.content.mechanics.pvp.DangerWarning.endIntro(player)
         }
 
         world.players.entries.filterNotNull().filter { it != player }.forEach {

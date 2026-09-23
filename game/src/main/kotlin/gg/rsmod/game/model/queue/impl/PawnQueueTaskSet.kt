@@ -14,7 +14,11 @@ import kotlin.coroutines.resume
  */
 class PawnQueueTaskSet : QueueTaskSet() {
     override fun cycle() {
-        val cycled = ArrayList<QueueTask>(2)
+        // Most NPCs have no queue at all. Keep the common path allocation-free; the old
+        // ArrayList was created for every pawn on every tick even when there was nothing to
+        // compare in the persistent-task pass below.
+        var firstCycled: QueueTask? = null
+        var additionalCycled: ArrayList<QueueTask>? = null
         while (true) {
             val task = queue.peekFirst() ?: break
 
@@ -22,7 +26,11 @@ class PawnQueueTaskSet : QueueTaskSet() {
                 break
             }
 
-            cycled.add(task)
+            if (firstCycled == null) {
+                firstCycled = task
+            } else {
+                (additionalCycled ?: ArrayList<QueueTask>(2).also { additionalCycled = it }).add(task)
+            }
             if (!step(task)) {
                 /*
                  * Since this task is complete, let's handle any upcoming
@@ -40,7 +48,13 @@ class PawnQueueTaskSet : QueueTaskSet() {
          */
         if (queue.size > 1) {
             for (task in queue.toTypedArray()) {
-                if (!task.persistent || task.terminated || cycled.any { it === task } || isPaused(task)) {
+                if (
+                    !task.persistent ||
+                        task.terminated ||
+                        task === firstCycled ||
+                        additionalCycled?.any { it === task } == true ||
+                        isPaused(task)
+                ) {
                     continue
                 }
                 step(task)
@@ -58,12 +72,17 @@ class PawnQueueTaskSet : QueueTaskSet() {
         val previous = running
         running = task
         try {
-            if (!task.invoked) {
-                task.invoked = true
-                task.coroutine.resume(Unit)
-            }
+            try {
+                if (!task.invoked) {
+                    task.invoked = true
+                    task.coroutine.resume(Unit)
+                }
 
-            task.cycle()
+                task.cycle()
+            } catch (e: Exception) {
+                failTask(task, e) { queue.remove(task) }
+                return false
+            }
         } finally {
             running = previous
         }

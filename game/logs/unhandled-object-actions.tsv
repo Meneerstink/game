@@ -1,0 +1,43 @@
+kind	id	transform	name	opt	option	type	rot	x	z	height
+option	999001	999001	Test door	1	Open	0	0	3200	3200	0
+option	999001	999001	Test door	1	Open	0	0	3200	3200	0
+option	999001	999001	Test door	1	Open	0	0	3200	3200	0
+option	999001	999001	Test door	1	Open	0	0	3200	3200	0
+option	999001	999001	Test door	1	Open	0	0	3200	3200	0
+option	999001	999001	Test door	1	Open	0	0	3200	3200	0
+option	999001	999001	Test door	1	Open	0	0	3200	3200	0
+option	999001	999001	Test door	1	Open	0	0	3200	3200	0
+option	999001	999001	Test door	1	Open	0	0	3200	3200	0
+option	999001	999001	Test door	1	Open	0	0	3200	3200	0
+option	999001	999001	Test door	1	Open	0	0	3200	3200	0
+button	999002	999002	Test button	3	interface=548 opcode=61	0	0	0	0	0
+option	999001	999001	Test door	1	Open	0	0	3200	3200	0
+button	999002	999002	Test button	3	interface=548 opcode=61	0	0	0	0	0
+option	999001	999001	Test door	1	Open	0	0	3200	3200	0
+button	999002	999002	Test button	3	interface=548 opcode=61	0	0	0	0	0
+option	999001	999001	Test door	1	Open	0	0	3200	3200	0
+button	999002	999002	Test button	3	interface=548 opcode=61	0	0	0	0	0
+option	999001	999001	Test door	1	Open	0	0	3200	3200	0
+button	999002	999002	Test button	3	interface=548 opcode=61	0	0	0	0	0
+option	999001	999001	Test door	1	Open	0	0	3200	3200	0
+button	999002	999002	Test button	3	interface=548 opcode=61	0	0	0	0	0
+option	999001	999001	Test door	1	Open	0	0	3200	3200	0
+button	999002	999002	Test button	3	interface=548 opcode=61	0	0	0	0	0
+option	999001	999001	Test door	1	Open	0	0	3200	3200	0
+button	999002	999002	Test button	3	interface=548 opcode=61	0	0	0	0	0
+option	999001	999001	Test door	1	Open	0	0	3200	3200	0
+button	999002	999002	Test button	3	interface=548 opcode=61	0	0	0	0	0
+option	999001	999001	Test door	1	Open	0	0	3200	3200	0
+button	999002	999002	Test button	3	interface=548 opcode=61	0	0	0	0	0
+option	999001	999001	Test door	1	Open	0	0	3200	3200	0
+button	999002	999002	Test button	3	interface=548 opcode=61	0	0	0	0	0
+option	999001	999001	Test door	1	Open	0	0	3200	3200	0
+button	999002	999002	Test button	3	interface=548 opcode=61	0	0	0	0	0
+option	999001	999001	Test door	1	Open	0	0	3200	3200	0
+button	999002	999002	Test button	3	interface=548 opcode=61	0	0	0	0	0
+option	999001	999001	Test door	1	Open	0	0	3200	3200	0
+button	999002	999002	Test button	3	interface=548 opcode=61	0	0	0	0	0
+option	999001	999001	Test door	1	Open	0	0	3200	3200	0
+button	999002	999002	Test button	3	interface=548 opcode=61	0	0	0	0	0
+option	999001	999001	Test door	1	Open	0	0	3200	3200	0
+button	999002	999002	Test button	3	interface=548 opcode=61	0	0	0	0	0

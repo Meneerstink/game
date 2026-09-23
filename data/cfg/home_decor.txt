@@ -1,0 +1,98 @@
+# Grand Exchange home dressing - LIVE: the running server re-reads this file within a second of saving it.
+# obj <id> <x> <z> [plane] [type] [rot] | rect <id> <x1> <z1> <x2> <z2> [plane] [type] [rot] [step] | del <x> <z> [plane] [type] | npc <id> <x> <z> [n|e|s|w]
+# Walls: type 0 with rot 0 west, 1 north, 2 east, 3 south. Corners: type 2. Wall decoration: type 4.
+
+# ---- south gateway (Dangerous -> Safe). The gateway starts at the gatehouse fronts (z 3461) and leads north.
+# litter and dirt-path decals were removed from the map itself (GeHomeGroundDecorTool, tx-20260923-161720)
+# 78 house-style banners (loc 62749, HouseBannerTool) on the GE curtain wall either side of the gate.
+# Outer face: tile south of the wall (wall on its north edge), rotation 0 faces the Wilderness.
+obj 62749 3152 3463 0 10 0
+obj 62749 3155 3463 0 10 0
+obj 62749 3174 3463 0 10 0
+obj 62749 3177 3463 0 10 0
+# Inner face: tile north of the wall (wall on its south edge), rotation 2 faces the exchange.
+obj 62749 3152 3465 0 10 2
+obj 62749 3155 3465 0 10 2
+obj 62749 3174 3465 0 10 2
+obj 62749 3177 3465 0 10 2
+# 78 standards (loc 62750) framing the gate on both sides.
+obj 62750 3158 3460
+obj 62750 3171 3460
+obj 62750 3159 3469
+obj 62750 3170 3469
+# safe side, at the gate exit: skull-and-crossbones danger signs warn players before they walk out into the Wilderness
+obj 1032 3161 3468 0 10 0
+obj 1032 3168 3468 0 10 0# gatehouse facade and ring-pillar banners: their red cloth (texture 973) now carries the 78 texture (GeHomeBannerTool retex)
+
+# ---- 78 house banners outside the Grand Exchange (owner 2026-09-23). Wall banner loc 62749: rot 0 back north,
+# 1 back east, 2 back south, 3 back west (it hangs on the named edge of its own tile, facing away from it).
+# Edgeville bank: bankers' back (east) wall, between the candle (3098,3490) and the south-east corner.
+obj 62749 3098 3489 0 10 1
+# Lumbridge castle east gate: the two gate towers' outer (east) faces, centred, symmetric about the statues.
+obj 62749 3231 3214 0 10 3
+obj 62749 3231 3223 0 10 3
+# Bank pass 2026-09-23: exactly one wall banner per bank, on a clear wall of the bank room, never on booths/doors.
+obj 62749 3088 3245 0 10 3
+obj 62749 3257 3422 0 10 1
+obj 62749 3188 3446 0 10 0
+obj 62749 3018 3356 0 10 1
+obj 62749 2809 3445 0 10 0
+obj 62749 3209 3222 2 10 0
+obj 62749 2947 3373 0 10 1
+obj 62749 2651 3287 0 10 0
+obj 62749 2728 3497 0 10 0
+# Ardougne north (north wall, west of the entrance), Yanille (north wall behind the bankers), Port Phasmatys (north wall),
+# Burgh de Rott (north wall), Nardah (east wall, north of the door), Mos Le'Harmless (east wall), Void Knight outpost
+# (north wall above the partition door), Warriors' Guild (east wall of the customer strip).
+obj 62749 2615 3335 0 10 0
+obj 62749 2615 3097 0 10 0
+obj 62749 3691 3471 0 10 0
+obj 62749 3496 3213 0 10 0
+obj 62749 3430 2893 0 10 1
+obj 62749 3683 2983 0 10 1
+obj 62749 2665 2654 0 10 0
+obj 62749 2844 3538 0 10 1
+# Al Kharid bank: west wall behind the bankers (the bank has no booths in this cache).
+obj 62749 3265 3167 0 10 3
+# Bank pass 2 (2026-09-23): Grand Tree (p1, east wall), Tutorial Island (east wall), Lunar Isle (north wall), Gnome Stronghold
+# west room (p1, north wall) and south room (p1, east wall), Keldagrim (west wall), Duel Arena (north wall), Neitiznot (raised
+# centred banner between the two chest pairs), Lletya (north wall above the bankers), Etceteria (east wall), Dorgesh-Kaan (p1,
+# west wall), bank hall 1857-1866,5553-5562 (north wall), bank 2441-2447,4323-4328 (west wall), bank 2607-2612,5513-5518
+# (south wall), Zanaris (east wall).
+obj 62749 2448 3426 1 10 1
+obj 62749 3124 3123 0 10 1
+obj 62749 2098 3921 0 10 0
+obj 62749 2440 3489 1 10 0
+obj 62749 2450 3480 1 10 1
+obj 62749 2834 10209 0 10 3
+obj 62749 3383 3273 0 10 0
+obj 62752 2336 3808 0 10 0
+obj 62749 2353 3166 0 10 0
+obj 62749 2621 3894 0 10 1
+obj 62749 2320 5399 1 10 3
+obj 62749 1860 5564 0 10 0
+obj 62749 2441 4326 0 10 3
+obj 62749 2611 5513 0 10 2
+obj 62749 2384 4461 0 10 1
+# Open-air bank chests get the free-standing 78 standard beside the chest, off the approach tile: Sophanem hall corner,
+# Castle Wars store, Burthorpe camp, Ferox Enclave, Rogues' Den (p1).
+obj 62750 2802 5168
+obj 62750 2444 3084
+obj 62750 2883 3542
+obj 62750 3132 3631
+obj 62750 3046 4970 1
+# Bank pass 3: Fishing Guild (p1, west wall behind the customer strip), bank 3446-3448,3720 (north wall above the banker),
+# open-air chests/bankers with a standard: 1605,4507 / 1893,3180 camp / 3003,9679 cave / 2572,10277 cave.
+obj 62749 2583 3422 1 10 3
+obj 62749 3448 3721 0 10 0
+obj 62750 1606 4508
+obj 62750 1895 3179
+obj 62750 3002 9680
+obj 62750 2573 10278
+# Bank pass 4 (banks that only got their bankers now): Canifis (east wall behind the bankers), Shilo (north wall), Oo'glog
+# (west wall behind the ogresses), Legends' Guild (p2, east wall), Dorgesh-Kaan bank 2697-2704,5345-5353 (west wall).
+obj 62749 3516 3480 0 10 1
+obj 62749 2852 2957 0 10 0
+obj 62749 2553 2838 0 10 3
+obj 62749 2733 3380 2 10 1
+obj 62749 2697 5350 0 10 3

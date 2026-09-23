@@ -1,6 +1,7 @@
 package gg.rsmod.game.message.handler
 
 import gg.rsmod.game.action.EquipAction
+import gg.rsmod.game.action.UnhandledInteractions
 import gg.rsmod.game.message.MessageHandler
 import gg.rsmod.game.message.impl.OpHeld2Message
 import gg.rsmod.game.model.World
@@ -56,14 +57,21 @@ class OpHeld2Handler : MessageHandler<OpHeld2Message> {
             item.id,
             item.amount,
         )
+        if (client.attr[gg.rsmod.game.model.attr.ID_INSPECTOR_ATTR] == true) {
+            val def = item.getDef(world.definitions)
+            client.writeConsoleMessage("Item id=${item.id}, name=${def.name}, amount=${item.amount}, slot=${message.slot}")
+        }
 
         client.attr[INTERACTING_ITEM] = WeakReference(item)
         client.attr[INTERACTING_ITEM_ID] = item.id
         client.attr[INTERACTING_ITEM_SLOT] = message.slot
 
         val result = EquipAction.equip(client, item, message.slot)
-        if (result == EquipAction.Result.UNHANDLED && world.devContext.debugItemActions) {
-            client.writeMessage("Unhandled item action: [item=${item.id}, slot=${message.slot}, option=2]")
+        if (result == EquipAction.Result.UNHANDLED) {
+            UnhandledInteractions.recordInteraction("item", item.id, 2, "item", "slot=${message.slot}")
+            if (world.devContext.debugItemActions) {
+                client.writeMessage("Unhandled item action: [item=${item.id}, slot=${message.slot}, option=2]")
+            }
         }
     }
 }

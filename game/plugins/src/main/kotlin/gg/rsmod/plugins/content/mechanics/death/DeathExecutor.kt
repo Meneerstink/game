@@ -41,12 +41,32 @@ object DeathExecutor {
         result: DeathResolutionResult,
         recoveryConfig: DeathRecoveryConfig,
         logger: LoggerService? = null,
+        extraPvpLoot: () -> List<Item> = { emptyList() },
     ): Boolean {
         val victim = result.victim
         if (victim.attr[DEATH_LOOT_RESOLVED_ATTR] == true) {
             return false
         }
+        // Recovery is lazy-cleaned because players can be offline when its deadline passes.
+        // Purge an old batch before simulating capacity, otherwise expired items could be
+        // silently renewed by the next PvM death.
+        DeathRecoveryService.expireIfNeeded(victim)
         victim.attr[DEATH_LOOT_RESOLVED_ATTR] = true
+
+        // A looting bag is never protected. Detach its contents before the inventory mutation so
+        // the bag item and its stored stacks follow one atomic death outcome.
+        val bagContents =
+            if (victim.inventory.contains(gg.rsmod.plugins.api.cfg.Items.LOOTING_BAG) ||
+                victim.inventory.contains(gg.rsmod.plugins.api.cfg.Items.LOOTING_BAG_OPEN)
+            ) {
+                if (result.context == DeathContext.WILDERNESS_PVP) {
+                    gg.rsmod.plugins.content.mechanics.pvp.LootingBag.pvpDeathContents(victim)
+                } else {
+                    gg.rsmod.plugins.content.mechanics.pvp.LootingBag.takeContents(victim)
+                }
+            } else {
+                emptyList()
+            }
 
         // For a PvM/safe death, capacity viability must be known *before* any
         // inventory/equipment slot is cleared - a lost stack that can't fit
@@ -72,9 +92,13 @@ object DeathExecutor {
                 }
             // Defends against acting on a stale slot if something else
             // mutated the container between resolve() and execute() - only
-            // remove the slot if it still holds the exact stack we resolved.
-            if (container[slotItem.slot]?.id == slotItem.item.id) {
-                container[slotItem.slot] = null
+            // remove from the slot if it still holds the exact stack we resolved.
+            // Owner 2026-09-18: a stack can be partially kept (3 of 1,000 coins), so remove the
+            // lost AMOUNT and leave the kept remainder in place rather than clearing the slot.
+            val current = container[slotItem.slot]
+            if (current?.id == slotItem.item.id) {
+                container[slotItem.slot] =
+                    if (current.amount > slotItem.item.amount) Item(current, current.amount - slotItem.item.amount) else null
                 if (slotItem.source == DeathContainerSource.EQUIPMENT) {
                     removedEquipment = true
                 }
@@ -102,16 +126,21 @@ object DeathExecutor {
             }
         }
 
-        if (toRemove.isEmpty()) {
-            return true
-        }
-
         when (result.context) {
-            DeathContext.WILDERNESS_PVP -> spawnPvpLoot(world, result, toRemove, logger)
+            // Owner 2026-09-18 (#6): the lost stacks AND every converted killer-bound item (broken-item
+            // repair coins, uncharged staves, quiver ammo, ornament kits ...) are handed to the loot-key
+            // plan in ONE call, so a kill produces a loot key or ground loot - never both, unless the
+            // killer already holds the maximum number of keys.
+            DeathContext.WILDERNESS_PVP -> spawnPvpLoot(world, result, toRemove, extraPvpLoot() + bagContents, logger)
             DeathContext.PVM_SAFE -> {
                 gg.rsmod.plugins.content.mechanics.pvp.LootKeys.removeKeys(victim, lostKeys.map { it.item.id })
-                val recoverable = toRemove - lostKeys.toSet()
-                if (recoverable.isNotEmpty()) createDeathRecovery(victim, recoverable, recoveryConfig, logger)
+                // The bag itself disappears completely; only its detached contents enter the
+                // unprotected death outcome. It must never be recoverable as an item.
+                val lostBags = toRemove.filter { gg.rsmod.plugins.content.mechanics.pvp.LootingBag.isBag(it.item.id) }.toSet()
+                val recoverable = toRemove - lostKeys.toSet() - lostBags
+                if (recoverable.isNotEmpty() || bagContents.isNotEmpty()) {
+                    createDeathRecovery(victim, recoverable, recoveryConfig, logger, bagContents)
+                }
             }
         }
         return true
@@ -159,10 +188,14 @@ object DeathExecutor {
         world: World,
         result: DeathResolutionResult,
         lost: List<DeathSlotItem>,
+        converted: List<Item>,
         logger: LoggerService?,
     ) {
         val victim = result.victim
-        val lostItems = lost.map { it.item }
+        // OSRS destroys the bag item itself; only its contents (already supplied through
+        // [converted]) can become killer loot.
+        val lostItems = lost.filterNot { gg.rsmod.plugins.content.mechanics.pvp.LootingBag.isBag(it.item.id) }.map { it.item } + converted
+        if (lostItems.isEmpty()) return
         // No gravestone and no GP printing for Wilderness/PvP deaths - the
         // ground loot itself is the entire PK reward, unless loot keys take it (RCV-012 decision 3b).
         val groundItems = gg.rsmod.plugins.content.mechanics.pvp.LootKeys.onWildernessPvpDeath(world, victim, result.killer, lostItems)
@@ -177,6 +210,7 @@ object DeathExecutor {
         lost: List<DeathSlotItem>,
         recoveryConfig: DeathRecoveryConfig,
         logger: LoggerService?,
+        extra: List<Item> = emptyList(),
     ) {
         lost.forEach { slotItem ->
             // assureFullInsertion = true: partitionRecoverable() already
@@ -187,6 +221,9 @@ object DeathExecutor {
             // best-effort) means a stack is never silently split if that
             // invariant is ever violated by a future change.
             victim.deathRecovery.add(slotItem.item.id, slotItem.item.amount, assureFullInsertion = true)
+        }
+        extra.forEach { item ->
+            victim.deathRecovery.add(item.id, item.amount, assureFullInsertion = false)
         }
         // A player who dies again before reclaiming a prior batch has their
         // new losses merged additively into the same shared deathRecovery

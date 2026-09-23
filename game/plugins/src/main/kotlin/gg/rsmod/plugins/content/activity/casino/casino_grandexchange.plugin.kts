@@ -76,7 +76,11 @@ fun station(
     tableX: Int,
 ) {
     spawn_obj(obj = Objs.CARD_TABLE, x = tableX, z = TABLE_Z, type = 10, rot = 0)
-    spawn_npc(npc = npcId, x = tableX + TABLE_WIDTH / 2, z = DEALER_Z, direction = Direction.SOUTH)
+    // `static` is the engine's own "this npc keeps its pose" flag: `PawnPathAction` only turns an npc to face the
+    // player when it is NOT static, so a static dealer keeps looking south across the pit however players crowd
+    // round him. Owner 2026-09-21: "the gambler npcs need to look south they now follow the player when u talk to
+    // them". Nothing else reads the flag, so it costs the dealers nothing but their head-turn.
+    spawn_npc(npc = npcId, x = tableX + TABLE_WIDTH / 2, z = DEALER_Z, direction = Direction.SOUTH, static = true)
 }
 
 station(Npcs.GAMBLER, DICE_TABLE_X)

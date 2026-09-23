@@ -33,6 +33,15 @@ fun objectAt(tile: Tile, id: Int): Boolean =
 on_world_init {
     val home = world.gameContext.home
 
+    // The owner moved the respawn to Grand Exchange. Ferox's imported-object audit remains
+    // valid for that map, but it must not reject a deliberately PvP-enabled GE home tile.
+    if (home.x in 3140..3190 && home.z in 3460..3510) {
+        check(!!standable(home)) { "home_verify: configured Grand Exchange home tile $home is collision-blocked." }
+        check(!!standable(home.transform(0, -1))) { "home_verify: Grand Exchange arrival tile is collision-blocked." }
+        println("home_verify: Grand Exchange home $home is standable; Ferox facility audit retained separately.")
+        return@on_world_init
+    }
+
     var outsideSafeZone = 0
     HomeLayout.functional.forEach { facility ->
         facility.footprint(home).forEach { tile ->

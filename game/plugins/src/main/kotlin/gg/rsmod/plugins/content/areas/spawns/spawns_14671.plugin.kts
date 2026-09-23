@@ -38,4 +38,3 @@ spawn_npc(npc = Npcs.CAVEFISH_SHOAL, x = 3653, z = 5085, direction = Direction.S
 
 spawn_npc(npc = Npcs.CAVEFISH_SHOAL, x = 3674, z = 5115, direction = Direction.NORTH, static = true)
 
-spawn_npc(npc = Npcs.ROCKTAIL_SHOAL, x = 3684, z = 5109, direction = Direction.EAST, static = true)

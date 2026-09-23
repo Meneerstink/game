@@ -43,7 +43,8 @@ enum class Food(
     SHARK(item = Items.SHARK, heal = 200),
     SEA_TURTLE(item = Items.SEA_TURTLE, heal = 210),
     MANTA_RAY(item = Items.MANTA_RAY, heal = 220),
-    ROCKTAIL(item = Items.ROCKTAIL, heal = 230, overheal = true),
+    // OSRS: heals 3-22 based on the player's Hitpoints level and can overheal.
+    ANGLERFISH(item = Items.ANGLERFISH, overheal = true),
 
     /**
      * OSRS Wiki "Strange fruit" (owner 2026-09-19 venom rules): "No Hitpoints are restored", restores 30% run energy, "cure poison,
@@ -274,17 +275,13 @@ enum class Food(
     ;
 
     /**
-     * RCV-010 A2/B1: [heal] is recorded on the legacy x10 life-point unit (shark 200, rocktail 230 - Void
-     * `Eating`/`Rocktail` use the same figures). Player lifepoints are 1:1, so every consumer heals by
+     * RCV-010 A2/B1: [heal] is recorded on the legacy x10 life-point unit (shark 200). Player lifepoints are 1:1, so every consumer heals by
      * this value, never by [heal] directly.
      */
     val hitpoints: Int get() = heal / LEDGER_UNITS_PER_HITPOINT
 
     companion object {
         const val LEDGER_UNITS_PER_HITPOINT = 10
-
-        /** Rocktail may heal up to 10 life points above maximum (Void `Rocktail`: maximum = 100 on x10). */
-        const val ROCKTAIL_OVERHEAL_HITPOINTS = 10
 
         val values = enumValues<Food>()
     }

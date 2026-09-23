@@ -14,6 +14,8 @@ import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.game.model.skill.SkillSet
 import gg.rsmod.game.model.timer.POISON_IMMUNITY
+import gg.rsmod.game.model.timer.FOOD_DELAY
+import gg.rsmod.game.model.timer.POTION_DELAY
 import gg.rsmod.game.model.timer.TimerMap
 import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.api.cfg.Items
@@ -79,6 +81,7 @@ class PotionRosterTests {
         Blocked("BLOCKED: Relicym's balm cures disease; the disease mechanic does not exist server-side", named("Relicym's balm")),
         Blocked("SOURCE_CONFLICT: Guthix rest empty container (Void data: empty = vial, excess = empty_cup)", named("Guthix rest")),
         Blocked("OWNER_REMOVED: extreme 125-stat/ranged, overload, prayer renewal and recover special") { it.id in RemovedPotions.itemIds },
+        Blocked("SEPARATE HANDLER: Deadman blighted overload (mechanics/pvp/breach/blighted_overload.plugin.kts)") { it.id in gg.rsmod.plugins.content.mechanics.pvp.breach.BlightedOverload.DOSES },
     )
 
     @Test
@@ -140,6 +143,19 @@ class PotionRosterTests {
             val p = player()
             type.apply(p)
             assertEquals(ticks, p.timers[POISON_IMMUNITY], type.name)
+        }
+    }
+
+    @Test
+    fun `every implemented potion consumes on the shared three tick food and potion lock`() {
+        Potion.values().forEach { potion ->
+            val p = player()
+            p.inventory[0] = Item(potion.item)
+
+            Potions.drinkAt(p, potion, 0)
+
+            assertEquals(3, p.timers[POTION_DELAY], "potion delay for ${potion.name}")
+            assertEquals(3, p.timers[FOOD_DELAY], "food delay for ${potion.name}")
         }
     }
 

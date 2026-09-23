@@ -109,7 +109,12 @@ suspend fun skullyChangeKeys(it: QueueTask) {
     skullySettings(it)
 }
 
-/** Skully's settings menu. The valuables options are BLOCKED (no sourced default threshold) and not offered. */
+/**
+ * Skully's settings menu. The valuables options are BLOCKED (no sourced default threshold) and not
+ * offered. The OSRS "food and potions to the floor" toggle is offered and honoured exactly
+ * (owner 2026-09-18): with it on, food and potions from a kill drop on the floor and only the rest
+ * goes into the loot key (LootKeys.plan).
+ */
 suspend fun skullySettings(it: QueueTask) {
     val player = it.player
     val enabled = LootKeys.receivesKeys(player)

@@ -8,24 +8,30 @@ import gg.rsmod.plugins.content.skills.slayer.data.slayerData
  * @author Alycia <https://github.com/alycii>
  */
 
-val npcIds =
-    arrayOf(
-        Npcs.TURAEL,
-        Npcs.VANNAKA,
-        Npcs.MAZCHNA, /**Npcs.CHAELDAR, Npcs.SUMONA, Npcs.DURADEL_8466, Npcs.KURADAL_9085**/
-    )
+/**
+ * Every Slayer master the server knows ([SlayerMaster]) gets the same routes, from this one list: Talk-to, Get-task,
+ * Trade (Slayer Equipment) and Rewards (points shop, `slayer_rewards.plugin.kts`). 2026-09-22 npc census: Chaeldar,
+ * Sumona, Duradel and Kuradal advertised Get-task/Trade/Rewards in the cache with nothing bound, and Chaeldar/Sumona/
+ * Duradel only answered Talk-to with the generic one-line fallback greeting.
+ */
+val npcIds = SlayerMaster.values().map { it.id }.toTypedArray()
 
-npcIds.forEach { npcId ->
-    val slayerMaster = SlayerMaster.getMaster(npcId)
+// Sumona is spawned as her varbit-transforming wrapper npc 7779 (-> 7780); bind the wrapper too, so her options work
+// whichever id the click resolves to.
+val SUMONA_WRAPPER = 7779
+
+fun hasOption(npcId: Int, option: String): Boolean =
+    world.definitions.get(gg.rsmod.game.fs.def.NpcDef::class.java, npcId).options.any { it.equals(option, ignoreCase = true) }
+
+(npcIds + SUMONA_WRAPPER).forEach { npcId ->
+    val slayerMaster = if (npcId == SUMONA_WRAPPER) SlayerMaster.SUMONA else SlayerMaster.getMaster(npcId)
     slayerMaster?.let {
 
-        // TODO: Add back once we fix NPC Option 3.
-        /**
-         on_npc_option(npc = Npcs.VANNAKA, option = "get-task") {
-         player.queue {
-         giveTask(this, slayerMaster)
-         }
-         }**/
+        if (hasOption(npcId, "get-task")) {
+            on_npc_option(npc = npcId, option = "get-task") {
+                player.queue { giveTask(this, slayerMaster) }
+            }
+        }
 
         on_npc_option(npc = npcId, option = "talk-to") {
             player.queue {

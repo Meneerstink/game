@@ -48,7 +48,6 @@ spawn_npc(npc = Npcs.ROCK_CRITTER, x = 3653, z = 5136, walkRadius = 5, direction
 
 spawn_npc(npc = Npcs.CAVEFISH_SHOAL, x = 3652, z = 5146, direction = Direction.EAST, static = true)
 
-spawn_npc(npc = Npcs.ROCKTAIL_SHOAL, x = 3652, z = 5140, direction = Direction.SOUTH, static = true)
 
 spawn_npc(npc = Npcs.CAVEFISH_SHOAL, x = 3658, z = 5144, direction = Direction.EAST, static = true)
 

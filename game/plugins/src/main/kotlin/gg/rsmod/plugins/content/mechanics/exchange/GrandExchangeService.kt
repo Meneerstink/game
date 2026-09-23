@@ -52,13 +52,44 @@ class GrandExchangeService(
     private val history = mutableMapOf<String, MutableList<GeHistoryEntry>>()
     private val buyLedger = GeBuyLedger(clock)
 
+    /**
+     * Item definitions, captured at boot so [housePrice] can seed a guide price for an item that has never been
+     * traded. The service has no other route to the cache.
+     */
+    private var definitions: gg.rsmod.game.fs.DefinitionSet? = null
+
     override fun init(
         server: Server,
         world: World,
         serviceProperties: ServerProperties,
     ) {
+        definitions = world.definitions
         GeBuyLimits.load()
         load()
+    }
+
+    /**
+     * The house price for [itemId], or null when the house does not deal in it.
+     *
+     * Owner 2026-09-20: every item is buyable and sellable at the guide price
+     * ([GeSystemLiquidity.ALL_ITEMS_AT_GUIDE_PRICE]). Only items that may be exchanged at all qualify - an
+     * untradeable item, a noted id or coins are never dealt by the house, the same rule the offer screen applies.
+     */
+    fun housePrice(itemId: Int): Int? {
+        if (!GeSystemLiquidity.ALL_ITEMS_AT_GUIDE_PRICE) {
+            return GeSystemLiquidity.UNIT_PRICE[itemId]
+        }
+        val defs = definitions ?: return GeSystemLiquidity.UNIT_PRICE[itemId]
+        val def =
+            try {
+                defs.get(gg.rsmod.game.fs.def.ItemDef::class.java, itemId)
+            } catch (ignored: Exception) {
+                return null
+            }
+        if (!GrandExchangeInterface.exchangeable(def)) {
+            return null
+        }
+        return guidePrice(itemId, OsrsGuidePrices.seed(def))
     }
 
     override fun postLoad(
@@ -196,7 +227,7 @@ class GrandExchangeService(
                     slot = target,
                 )
             offers.add(offer)
-            val fills = GrandExchangeBook.match(offers, offer, buyLedger)
+            val fills = GrandExchangeBook.match(offers, offer, buyLedger, ::housePrice)
             fills.forEach { recordTrade(itemId, it.unitPrice) }
             save()
             return offer to fills

@@ -30,6 +30,14 @@ class DoorPairingTests {
         return DoorPairing.derive(ids = byId.keys.sorted(), lookup = { byId[it] }, excluded = excluded)
     }
 
+    private fun deriveMultiClose(
+        defs: List<ObjectDef>,
+        excluded: Set<Int> = emptySet(),
+    ): List<MultiCloseDoor> {
+        val byId = defs.associateBy { it.id }
+        return DoorPairing.deriveMultiClose(ids = byId.keys.sorted(), lookup = { byId[it] }, excluded = excluded)
+    }
+
     @Test
     fun `an open half above the closed half is paired`() {
         val doors =
@@ -164,5 +172,49 @@ class DoorPairingTests {
                 ),
             )
         assertEquals(emptyList<DerivedDoor>(), doors)
+    }
+
+    @Test
+    fun `two real closed doors sharing one open state form a multi-close group`() {
+        // Ids 4629/4630/4631, verbatim: both 4629 and 4631 are real, separately-placed "Large door"
+        // instances (confirmed with ObjectPlacementProbeTool) that share the single 4630 open state.
+        val groups =
+            deriveMultiClose(
+                listOf(
+                    def(4629, "Large door", 0 to "Open"),
+                    def(4630, "Large door", 0 to "Close"),
+                    def(4631, "Large door", 0 to "Open"),
+                ),
+            )
+        assertEquals(listOf(MultiCloseDoor(closedIds = listOf(4629, 4631), opened = 4630, optionSlot = 0)), groups)
+    }
+
+    @Test
+    fun `an ordinary one-to-one door is not reported as a multi-close group`() {
+        val groups =
+            deriveMultiClose(
+                listOf(
+                    def(10527, "Door", 0 to "Open"),
+                    def(10528, "Door", 0 to "Close"),
+                ),
+            )
+        assertEquals(emptyList<MultiCloseDoor>(), groups)
+    }
+
+    @Test
+    fun `excluded gate leaves are never reported as a multi-close group`() {
+        // 1551/1552/1553 structurally matches the multi-close shape but is a real two-leaf gate
+        // (confirmed with ObjectPlacementProbeTool: 1551/1553 sit on adjacent tiles) already resolved
+        // by gates.json; doors.plugin.kts excludes every configured gate id before calling this.
+        val groups =
+            deriveMultiClose(
+                listOf(
+                    def(1551, "Gate", 0 to "Open"),
+                    def(1552, "Gate", 0 to "Close"),
+                    def(1553, "Gate", 0 to "Open"),
+                ),
+                excluded = setOf(1551, 1552, 1553),
+            )
+        assertEquals(emptyList<MultiCloseDoor>(), groups)
     }
 }

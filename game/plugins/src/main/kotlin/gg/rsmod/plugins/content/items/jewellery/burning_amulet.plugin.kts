@@ -24,9 +24,6 @@ val BURNING_AMULET =
         Items.BURNING_AMULET_1,
     )
 
-private val SOUNDAREA_ID = 200
-private val SOUNDAREA_RADIUS = 5
-private val SOUNDAREA_VOLUME = 1
 
 private val BURNING_LOCATIONS =
     linkedMapOf(
@@ -35,19 +32,31 @@ private val BURNING_LOCATIONS =
         "Lava Maze" to (Tile(3028, 3842, 0) to 41),
     )
 
+/*
+ * Only bind the options each charge tier really carries in the cache. A revision-667 item menu is short (five worn
+ * entries) and an import can silently drop one, and asking on_item_option / on_equipment_option for an option the
+ * cache does not have throws out of PluginRepository.init and takes the whole server boot down - which is exactly
+ * what the ring of shadows did on 2026-09-20 ("Ancient Vault" / "check" not found).
+ */
 BURNING_AMULET.forEach { amulet ->
-    on_item_option(item = amulet, option = "rub") {
-        val self = player
-        self.queue {
-            val choice = options("Chaos Temple.", "Bandit Camp.", "Lava Maze.", "Nowhere.")
-            val entry = BURNING_LOCATIONS.entries.toList().getOrNull(choice - 1) ?: return@queue
-            if (confirmWilderness(entry.key, entry.value.second)) {
-                self.teleportWithAmulet(entry.value.first, isEquipped = false)
+    val def = world.definitions.get(ItemDef::class.java, amulet)
+    val bagOptions = def.inventoryMenu.filterNotNull().filter { it.isNotBlank() }
+    val wornOptions = def.equipmentMenu.filterNotNull().filter { it.isNotBlank() }
+
+    if (bagOptions.any { it.equals("rub", ignoreCase = true) }) {
+        on_item_option(item = amulet, option = "rub") {
+            val self = player
+            self.queue {
+                val choice = options("Chaos Temple.", "Bandit Camp.", "Lava Maze.", "Nowhere.")
+                val entry = BURNING_LOCATIONS.entries.toList().getOrNull(choice - 1) ?: return@queue
+                if (confirmWilderness(entry.key, entry.value.second)) {
+                    self.teleportWithAmulet(entry.value.first, isEquipped = false)
+                }
             }
         }
     }
 
-    BURNING_LOCATIONS.forEach { (name, destination) ->
+    BURNING_LOCATIONS.filter { (name, _) -> wornOptions.any { it.equals(name, ignoreCase = true) } }.forEach { (name, destination) ->
         on_equipment_option(amulet, option = name) {
             val self = player
             self.queue(TaskPriority.STRONG) {
@@ -77,7 +86,7 @@ fun Player.teleportWithAmulet(
 ) {
     val used = getInteractingItemId()
     canTeleport(TeleportType.JEWELRY) {
-        world.spawn(AreaSound(tile, SOUNDAREA_ID, SOUNDAREA_RADIUS, SOUNDAREA_VOLUME))
+        // Start/land sounds come from TeleportType.JEWELRY in the shared teleport (one rule, no second copy here).
         val replacement = amuletReplacement(used)
         if (isEquipped) {
             equipment[EquipmentType.AMULET.id] = if (replacement > -1) Item(replacement) else null

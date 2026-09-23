@@ -50,14 +50,21 @@ on_npc_option(npc = Npcs.STAR_SPRITE, option = "Talk-to") {
     val stardust = player.inventory.getItemCount(Items.STARDUST)
     if (stardust <= 0) {
         player.filterableMessage("You don't seem to have any stardust that I can exchange for a reward.")
-    } else if (!player.inventory.hasFreeSpace()) {
-        player.filterableMessage("You don't have enough inventory space to collect your reward.")
     } else {
-        player.inventory.remove(Items.STARDUST, stardust)
-        ShootingStarRewards.calculate(stardust).forEach { (item, amount) ->
-            if (amount > 0) {
-                player.inventory.add(item, amount)
-            }
+        val rewards = ShootingStarRewards.calculate(stardust).filterValues { it > 0 }
+        // A single free slot is not enough when the reward contains several distinct
+        // non-stackable/near-full stacks. Simulate the complete payout first so stardust is
+        // never consumed while part of the reward silently disappears.
+        val simulation = gg.rsmod.game.model.container.ItemContainer(player.inventory)
+        if (rewards.any { (item, amount) -> simulation.add(item, amount, assureFullInsertion = true).hasFailed() }) {
+            player.filterableMessage("You don't have enough inventory space to collect your reward.")
+            return@on_npc_option
+        }
+        if (!player.inventory.remove(Items.STARDUST, stardust, assureFullRemoval = true).hasSucceeded()) {
+            return@on_npc_option
+        }
+        rewards.forEach { (item, amount) ->
+            player.inventory.add(item, amount, assureFullInsertion = true)
         }
         if (!player.timers.has(ShootingStarBonusOreTimer)) {
             player.timers[ShootingStarBonusOreTimer] = 900

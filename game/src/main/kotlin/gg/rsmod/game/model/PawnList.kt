@@ -25,7 +25,11 @@ class PawnList<T : Pawn>(
     // Client packets carry the index; a crafted or stale one must not throw out of every handler.
     operator fun get(index: Int): T? = pawns.getOrNull(index)
 
-    fun contains(pawn: T): Boolean = pawns[pawn.index] == pawn
+    // Same rule as [get] above: an index is not guaranteed to be a live slot. A pawn that was
+    // already removed from the world keeps index -1, so the raw array access threw
+    // "ArrayIndexOutOfBoundsException: Index -1 out of bounds" out of every caller that asked
+    // whether a stale pawn is still in the world (live: DeadmanBreach.pruneLive, 2026-09-20 log).
+    fun contains(pawn: T): Boolean = pawns.getOrNull(pawn.index) == pawn
 
     fun count(): Int = count
 

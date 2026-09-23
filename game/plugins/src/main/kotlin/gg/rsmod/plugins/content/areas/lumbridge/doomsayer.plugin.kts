@@ -57,8 +57,8 @@ suspend fun chat(it: QueueTask) {
 
 /** Owner 2026-09-23: the Doomsayer turns the Dangerous-area warning (DangerWarning) back on. */
 fun enableDangerWarnings(player: Player) {
-    if (player.attr[gg.rsmod.plugins.content.mechanics.pvp.DangerWarning.DISABLED] == true) {
-        gg.rsmod.plugins.content.mechanics.pvp.DangerWarning.setDisabled(player, false)
+    if (!gg.rsmod.plugins.content.mechanics.pvp.DangerWarning.isActive(player)) {
+        gg.rsmod.plugins.content.mechanics.pvp.DangerWarning.setActive(player, true)
         player.message("Dangerous-area warnings are turned on again.")
     }
 }

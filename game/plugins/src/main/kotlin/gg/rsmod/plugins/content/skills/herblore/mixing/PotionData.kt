@@ -218,44 +218,12 @@ enum class PotionData(
         experience = 180.0,
     ),
 
-    RECOVER_SPECIAL(
-        primary = Items.SUPER_ENERGY_3,
-        secondary = Items.PAPAYA_FRUIT,
-        product = Items.RECOVER_SPECIAL_3,
-        levelRequirement = 84,
-        experience = 200.0,
-    ),
-
     SUPER_ANTIFIRE(
         primary = Items.ANTIFIRE_3,
         secondary = Items.PHOENIX_FEATHER,
         product = Items.SUPER_ANTIFIRE_3,
         levelRequirement = 85,
         experience = 210.0,
-    ),
-
-    EXTREME_ATTACK(
-        primary = Items.SUPER_ATTACK_3,
-        secondary = Items.CLEAN_AVANTOE,
-        product = Items.EXTREME_ATTACK_3,
-        levelRequirement = 88,
-        experience = 220.0,
-    ),
-
-    EXTREME_STRENGTH(
-        primary = Items.SUPER_STRENGTH_3,
-        secondary = Items.CLEAN_DWARF_WEED,
-        product = Items.EXTREME_STRENGTH_3,
-        levelRequirement = 89,
-        experience = 230.0,
-    ),
-
-    EXTREME_DEFENCE(
-        primary = Items.SUPER_DEFENCE_3,
-        secondary = Items.CLEAN_LANTADYME,
-        product = Items.EXTREME_DEFENCE_3,
-        levelRequirement = 90,
-        experience = 240.0,
     ),
 
     EXTREME_MAGIC(
@@ -266,28 +234,12 @@ enum class PotionData(
         experience = 250.0,
     ),
 
-    EXTREME_RANGING(
-        primary = Items.RANGING_POTION_3,
-        secondary = Items.GRENWALL_SPIKES,
-        product = Items.EXTREME_RANGING_3,
-        levelRequirement = 92,
-        experience = 260.0,
-    ),
-
     SUPER_PRAYER(
         primary = Items.PRAYER_POTION_3,
         secondary = Items.WYVERN_BONEMEAL,
         product = Items.SUPER_PRAYER_3,
         levelRequirement = 94,
         experience = 270.0,
-    ),
-
-    PRAYER_RENEWAL(
-        primary = Items.FELLSTALK_POTION_UNF,
-        secondary = Items.MORCHELLA_MUSHROOM,
-        product = Items.PRAYER_RENEWAL_3,
-        levelRequirement = 94,
-        experience = 190.0,
     ),
 
     /** Barbarian Mixes  */

@@ -29,12 +29,19 @@ object OsrsGuidePrices {
     /** Name spelling differences only: letter case and the 667 space before a dose / charge suffix ("Strength potion (4)" = OSRS "Strength potion(4)"). */
     fun key(name: String): String = name.lowercase().replace(Regex("\\s+\\("), "(").trim()
 
-    fun load(file: File = File(DEFAULT_PATH)): Table {
+    fun load(file: File = defaultFile()): Table {
         val json = FileReader(file).use { JsonParser().parse(it).asJsonObject }
         val prices = mutableMapOf<String, Int>()
         json.entrySet().filter { !it.key.startsWith("%") }.forEach { prices[it.key] = it.value.asInt }
         return Table(prices, json.get("%LAST_UPDATE_F%")?.asString ?: "")
     }
+
+    /** Resolve the same checked-in data from both the server root and the plugins test cwd. */
+    private fun defaultFile(): File =
+        listOf(
+            File(DEFAULT_PATH),
+            File("../../data/cfg/ge/osrs-ge-guide-prices.json"),
+        ).firstOrNull { it.isFile } ?: File(DEFAULT_PATH)
 
     val table: Table by lazy { load() }
 

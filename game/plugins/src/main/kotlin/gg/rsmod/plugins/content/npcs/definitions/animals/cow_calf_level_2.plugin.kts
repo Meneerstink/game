@@ -18,12 +18,12 @@ val cowCalf =
 table.register(cowCalf, *ids)
 
 on_npc_pre_death(Npcs.COW_CALF_12364, Npcs.COW_CALF_12366) {
-    val p = npc.damageMap.getMostDamage()!! as Player
+    val p = npc.killer() ?: return@on_npc_pre_death
     p.playSound(Sfx.CALF_DEATH)
 }
 
 on_npc_death(*ids) {
-    table.getDrop(world, npc.damageMap.getMostDamage()!! as Player, npc.id, npc.tile)
+    table.getDrop(world, npc.killer() ?: return@on_npc_death, npc.id, npc.tile)
 }
 
 ids.forEach {

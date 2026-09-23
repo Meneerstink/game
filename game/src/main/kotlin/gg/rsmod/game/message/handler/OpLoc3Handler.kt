@@ -8,6 +8,7 @@ import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.World
 import gg.rsmod.game.model.attr.INTERACTING_OBJ_ATTR
 import gg.rsmod.game.model.attr.INTERACTING_OPT_ATTR
+import gg.rsmod.game.model.attr.ID_INSPECTOR_ATTR
 import gg.rsmod.game.model.entity.Client
 import gg.rsmod.game.model.entity.GameObject
 import gg.rsmod.game.model.entity.Player
@@ -62,6 +63,10 @@ class OpLoc3Handler : MessageHandler<OpLoc3Message> {
             message.z,
             message.movementType,
         )
+        if (client.attr[ID_INSPECTOR_ATTR] == true) {
+            val def = obj.getDef(world.definitions)
+            client.writeConsoleMessage("Object id=${obj.id}, name=${def.name}, tile=${obj.tile}, type=${obj.type}, rot=${obj.rot}, options=${def.options.contentToString()}")
+        }
 
         client.closeInterfaceModal()
         client.fullInterruption(movement = true, interactions = true, animations = true, queue = true)

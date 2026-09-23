@@ -41,8 +41,9 @@ Altar.values.forEach { altar ->
      * Handle the enabling of the Mysterious Ruins varbit when equipping
      * the respective tiara
      */
-    if (altar.tiara != null) {
-        on_item_equip(item = altar.tiara) {
+    val tiara = altar.tiara
+    if (tiara != null) {
+        on_item_equip(item = tiara) {
             player.setVarbit(altar.varbit, 1)
         }
     }
@@ -51,8 +52,8 @@ Altar.values.forEach { altar ->
      * Handle the disabling of the Mysterious Ruins varbit when removing
      * the respective tiara
      */
-    if (altar.tiara != null) {
-        on_item_unequip(item = altar.tiara) {
+    if (tiara != null) {
+        on_item_unequip(item = tiara) {
             player.setVarbit(altar.varbit, 0)
         }
     }
@@ -70,15 +71,17 @@ Altar.values.forEach { altar ->
      * Handle the exit portal for the altar
      * Added a restriction to the Law Altar exit portal to prevent players from smuggling items to Entrana.
      */
-    if (altar.exitPortal != null && altar.exit != null) {
-        on_obj_option(obj = altar.exitPortal, option = "enter") {
-            if (player.hasEntranaRestrictedEquipment() && altar.exitPortal == Objs.PORTAL_2472)
+    val exitPortal = altar.exitPortal
+    val exit = altar.exit
+    if (exitPortal != null && exit != null) {
+        on_obj_option(obj = exitPortal, option = "enter") {
+            if (player.hasEntranaRestrictedEquipment() && exitPortal == Objs.PORTAL_2472)
                 {
                     player.message(
                         "You cannot exit through this portal as you are carrying equipment that is restricted on Entrana.",
                     )
                 } else {
-                player.moveTo(altar.exit)
+                player.moveTo(exit)
             }
         }
     }

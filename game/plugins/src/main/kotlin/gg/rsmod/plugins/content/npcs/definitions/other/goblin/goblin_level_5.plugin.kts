@@ -77,12 +77,12 @@ val goblin =
 table.register(goblin, *ids)
 
 on_npc_pre_death(Npcs.GOBLIN_3265, Npcs.GOBLIN_3266, Npcs.GOBLIN_3267, Npcs.GOBLIN_4479, Npcs.GOBLIN_4480, Npcs.GOBLIN_4482, Npcs.GOBLIN_4483, Npcs.GOBLIN_4484, Npcs.GOBLIN_4485, Npcs.GOBLIN_4488, Npcs.GOBLIN_4489, Npcs.GOBLIN_4491, Npcs.GOBLIN_4492, Npcs.GOBLIN_13095) {
-    val p = npc.damageMap.getMostDamage()!! as Player
+    val p = npc.killer() ?: return@on_npc_pre_death
     p.playSound(Sfx.GOBLIN_DEATH)
 }
 
 on_npc_death(*ids) {
-    table.getDrop(world, npc.damageMap.getMostDamage()!! as Player, npc.id, npc.tile)
+    table.getDrop(world, npc.killer() ?: return@on_npc_death, npc.id, npc.tile)
 }
 
 ids.forEach {

@@ -1,5 +1,6 @@
 package gg.rsmod.game.message.handler
 
+import gg.rsmod.game.action.UnhandledInteractions
 import gg.rsmod.game.message.MessageHandler
 import gg.rsmod.game.message.impl.OpHeldTMessage
 import gg.rsmod.game.model.World
@@ -57,11 +58,20 @@ class OpHeldTHandler : MessageHandler<OpHeldTMessage> {
         client.attr[INTERACTING_ITEM_SLOT] = itemSlot
 
         val handled = world.plugins.executeSpellOnItem(client, fromComponentHash)
-        if (!handled && world.devContext.debugMagicSpells) {
-            client.writeConsoleMessage(
-                "Unhandled spell on item: [item=[${item.id}, ${item.amount}], slot=$itemSlot, unknown=$unknown " +
-                    "from_component=[$fromInterfaceId:$fromComponent], to_component=[$toInterfaceId:$toComponent]]",
+        if (!handled) {
+            UnhandledInteractions.recordInteraction(
+                kind = "spell-on-item",
+                id = item.id,
+                option = unknown,
+                name = "item",
+                context = "slot=$itemSlot from_component=$fromInterfaceId:$fromComponent to_component=$toInterfaceId:$toComponent",
             )
+            if (world.devContext.debugMagicSpells) {
+                client.writeConsoleMessage(
+                    "Unhandled spell on item: [item=[${item.id}, ${item.amount}], slot=$itemSlot, unknown=$unknown " +
+                        "from_component=[$fromInterfaceId:$fromComponent], to_component=[$toInterfaceId:$toComponent]]",
+                )
+            }
         }
     }
 }

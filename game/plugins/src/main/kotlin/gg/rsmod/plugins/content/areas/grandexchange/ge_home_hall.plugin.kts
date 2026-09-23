@@ -24,50 +24,10 @@ package gg.rsmod.plugins.content.areas.grandexchange
  * cache's otherwise identical non-combat variant 273. Bankers, GE clerks, Skully and casino croupiers keep their posts.
  */
 
+// Walls, fountain, plants, torches and banners live in data/cfg/home_decor.txt (home_decor_live.plugin.kts).
+
 val HALL_X = GeHomeHall.X
 val HALL_Z = GeHomeHall.Z
-val HALL_SIZE = GeHomeHall.SIZE
-val LAST = HALL_SIZE - 1
-
-/** Local offsets (0..[LAST]) that stay open in the east and north walls. */
-val ENTRANCE = 4..6
-
-val HALL_WALL = 23779
-val STANDING_TORCH = 724
-val CARVED_FOUNTAIN = 35469
-val POTTED_PLANT = 60035
-val GE_WALL_BANNER = 60279
-
-// ------------------------------------------------------------------ walls
-
-// Straight walls on the outer edge of every border tile; rot 0 west, 1 north, 2 east, 3 south.
-for (d in 1 until LAST) {
-    spawn_obj(obj = HALL_WALL, x = HALL_X, z = HALL_Z + d, type = 0, rot = 0)
-    spawn_obj(obj = HALL_WALL, x = HALL_X + d, z = HALL_Z, type = 0, rot = 3)
-    if (d !in ENTRANCE) {
-        spawn_obj(obj = HALL_WALL, x = HALL_X + d, z = HALL_Z + LAST, type = 0, rot = 1)
-        spawn_obj(obj = HALL_WALL, x = HALL_X + LAST, z = HALL_Z + d, type = 0, rot = 2)
-    }
-}
-// L-corners (type 2): rot 0 north-west, 1 north-east, 2 south-east, 3 south-west.
-spawn_obj(obj = HALL_WALL, x = HALL_X, z = HALL_Z + LAST, type = 2, rot = 0)
-spawn_obj(obj = HALL_WALL, x = HALL_X + LAST, z = HALL_Z + LAST, type = 2, rot = 1)
-spawn_obj(obj = HALL_WALL, x = HALL_X + LAST, z = HALL_Z, type = 2, rot = 2)
-spawn_obj(obj = HALL_WALL, x = HALL_X, z = HALL_Z, type = 2, rot = 3)
-
-// ------------------------------------------------------------------ dressing
-
-spawn_obj(obj = CARVED_FOUNTAIN, x = HALL_X + 4, z = HALL_Z + 4, type = 10, rot = 0)
-listOf(0 to 0, 0 to LAST, LAST to 0, LAST to LAST).forEach { (dx, dz) ->
-    spawn_obj(obj = POTTED_PLANT, x = HALL_X + dx, z = HALL_Z + dz, type = 10, rot = 0)
-}
-// Torches flank both entrances on the inside.
-listOf(3 to LAST, 7 to LAST, LAST to 3, LAST to 7).forEach { (dx, dz) ->
-    spawn_obj(obj = STANDING_TORCH, x = HALL_X + dx, z = HALL_Z + dz, type = 10, rot = 0)
-}
-// Two restrained heraldic accents on the uninterrupted west/south walls. Type 4 is non-solid wall decoration.
-spawn_obj(obj = GE_WALL_BANNER, x = HALL_X, z = HALL_Z + 5, type = 4, rot = 0)
-spawn_obj(obj = GE_WALL_BANNER, x = HALL_X + 5, z = HALL_Z, type = 4, rot = 3)
 
 // ------------------------------------------------------------------ the npcs
 

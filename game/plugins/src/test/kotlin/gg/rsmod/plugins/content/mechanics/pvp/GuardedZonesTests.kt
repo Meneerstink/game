@@ -83,6 +83,20 @@ class GuardedZonesTests {
     }
 
     /**
+     * Owner 2026-09-23: "in grand exchange mag nooit dangerous zijn" (3158,3465 was Dangerous). The strip inside the
+     * south wall and the whole gate passage are Guarded; the Dangerous side starts at the gatehouse front (z 3461).
+     */
+    @Test
+    fun `the Grand Exchange south wall strip and gate passage are guarded, outside the gate is not`() {
+        val inside = (3151..3178).map { Tile(it, 3465, 0) } + (3151..3178).map { Tile(it, 3466, 0) } +
+            (3159..3170).flatMap { x -> (3462..3464).map { z -> Tile(x, z, 0) } }
+        assertEquals(emptyList(), inside.filterNot { GuardedZones.contains(it) }, "GE tiles still Dangerous")
+        assertTrue(GuardedZones.contains(Tile(3158, 3465, 0)), "the tile the owner reported")
+        listOf(Tile(3164, 3461, 0), Tile(3162, 3461, 0), Tile(3167, 3461, 0), Tile(3155, 3463, 0), Tile(3175, 3463, 0))
+            .forEach { assertFalse(GuardedZones.contains(it), "$it is outside the GE wall and stays Dangerous") }
+    }
+
+    /**
      * The zone is a polygon, not a bounding box, so filling the Grand Exchange notch must not have widened
      * Varrock past its own wall: the wilderness ditch north of the Grand Exchange stays dangerous.
      */

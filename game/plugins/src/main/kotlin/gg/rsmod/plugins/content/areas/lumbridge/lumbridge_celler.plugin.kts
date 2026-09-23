@@ -1,5 +1,7 @@
 package gg.rsmod.plugins.content.areas.lumbridge
 
+import gg.rsmod.plugins.api.cfg.Varbits
+import gg.rsmod.plugins.api.ext.getVarbit
 import gg.rsmod.plugins.content.mechanics.shops.CoinCurrency
 
 create_shop(
@@ -67,6 +69,10 @@ on_obj_option(obj = Objs.CHEST_12309, option = "buy-food") {
 }
 
 on_obj_option(obj = Objs.CHEST_12309, option = "buy-items") {
+    if (player.getVarbit(Varbits.RECIPE_FOR_DISASTER_PROGRESS) < 5) {
+        player.message("You must complete Recipe for Disaster with the Oneiromancer in the Grand Exchange before you can buy gloves here.")
+        return@on_obj_option
+    }
     player.openShop("Culinaromancer's Chest ")
 }
 

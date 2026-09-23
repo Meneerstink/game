@@ -18,12 +18,12 @@ val landDuckTable =
 table.register(landDuckTable, *landDucks)
 
 on_npc_pre_death(Npcs.DUCK_6113, Npcs.DUCK_2693) {
-    val p = npc.damageMap.getMostDamage()!! as Player
+    val p = npc.killer() ?: return@on_npc_pre_death
     p.playSound(Sfx.DUCK_DEATH)
 }
 
 on_npc_death(*landDucks) {
-    table.getDrop(world, npc.damageMap.getMostDamage()!! as Player, npc.id, npc.tile)
+    table.getDrop(world, npc.killer() ?: return@on_npc_death, npc.id, npc.tile)
 }
 
 (landDucks + waterDucks).forEach {

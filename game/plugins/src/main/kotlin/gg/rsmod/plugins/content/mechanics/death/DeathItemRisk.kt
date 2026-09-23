@@ -56,16 +56,18 @@ object DeathItemRiskCalculator {
     }
 
     /**
-     * Calculates protected vs. lost item stacks across [inventory] and
-     * [equipment] combined, keeping the [protectedItemCount] highest-value
-     * stacks and losing the rest.
+     * Calculates protected vs. lost items across [inventory] and [equipment] combined, keeping
+     * the [protectedItemCount] most valuable *individual items* and losing the rest.
      *
-     * A stack's value is its *total* value - [valueProvider]'s per-unit
-     * value multiplied by the stack's amount - matching this era's
-     * established Protect Item behavior (e.g. a large stack of a cheap
-     * stackable can outrank a single expensive item). This keeps or loses an
-     * entire stack as one deterministic unit; stacks are never partially
-     * split between the protected and lost lists.
+     * Owner 2026-09-18 (MAJOR, "exactly RuneScape"): the kept count is a count of single items,
+     * not of stacks. Ranking is by [valueProvider]'s per-unit value; a stack contributes one
+     * unit per kept slot, so an unskulled player with 1,000 coins and nothing else keeps 3 coins
+     * and drops 997 (RuneScape Wiki "Items Kept on Death": "if you have a stack of items, only
+     * up to three of that stack will be kept"; OSRS Wiki "Items Kept on Death" agrees). A
+     * partially kept stack appears in both lists: the kept units in [DeathItemRiskResult.protected]
+     * and the remainder, same slot, in [DeathItemRiskResult.lost] - `DeathExecutor` removes by
+     * amount, never the whole slot, for exactly this case. The old model kept whole stacks
+     * ranked by total value, which let a cash stack (or three food stacks) survive a death.
      *
      * Ties in value are broken by original slot order (inventory before
      * equipment, ascending slot index) so results are deterministic.
@@ -108,9 +110,24 @@ object DeathItemRiskCalculator {
 
         // Stable sort (Kotlin's sortedByDescending preserves relative order of
         // equal keys), so equally-valued stacks keep their original slot order.
-        val ranked = remaining.sortedByDescending { valueProvider.getValue(it.item.id) * it.item.amount.toLong() }
-        val kept = ranked.take(keepCount)
-        val lostRemaining = ranked.drop(keepCount)
+        val ranked = remaining.sortedByDescending { valueProvider.getValue(it.item.id) }
+        val kept = mutableListOf<DeathSlotItem>()
+        val lostRemaining = mutableListOf<DeathSlotItem>()
+        var budget = keepCount
+        for (slotItem in ranked) {
+            val keepAmount = minOf(budget, slotItem.item.amount)
+            if (keepAmount <= 0) {
+                lostRemaining.add(slotItem)
+                continue
+            }
+            budget -= keepAmount
+            if (keepAmount == slotItem.item.amount) {
+                kept.add(slotItem)
+            } else {
+                kept.add(slotItem.copy(item = Item(slotItem.item, keepAmount)))
+                lostRemaining.add(slotItem.copy(item = Item(slotItem.item, slotItem.item.amount - keepAmount)))
+            }
+        }
 
         return DeathItemRiskResult(
             protectedItemCount = forcedProtected.size + kept.size,

@@ -13243,4 +13243,554 @@
   "defend": 759,
   "death": 758
  }
+ ,{
+  "id": 6807,
+  "name": "Thorny snail",
+  "void_key": "qc3_familiar_audio",
+  "combat_def": "summoning",
+  "attack": [],
+  "attack_blocked": null,
+  "defend": 4298,
+  "death": 4303
+ },
+ {
+  "id": 7332,
+  "name": "Spirit mosquito",
+  "void_key": "qc3_familiar_audio",
+  "combat_def": "summoning",
+  "attack": [],
+  "attack_blocked": null,
+  "defend": 4600,
+  "death": 4615
+ },
+ {
+  "id": 6832,
+  "name": "Desert wyrm",
+  "void_key": "qc3_familiar_audio",
+  "combat_def": "summoning",
+  "attack": [],
+  "attack_blocked": null,
+  "defend": 4308,
+  "death": 4313
+ },
+ {
+  "id": 6838,
+  "name": "Spirit scorpion",
+  "void_key": "qc3_familiar_audio",
+  "combat_def": "summoning",
+  "attack": [],
+  "attack_blocked": null,
+  "defend": 4305,
+  "death": 4317
+ },
+ {
+  "id": 7362,
+  "name": "Spirit Tz-Kih",
+  "void_key": "qc3_familiar_audio",
+  "combat_def": "summoning",
+  "attack": [],
+  "attack_blocked": null,
+  "defend": 4669,
+  "death": 4703
+ },
+ {
+  "id": 6848,
+  "name": "Albino rat",
+  "void_key": "qc3_familiar_audio",
+  "combat_def": "summoning",
+  "attack": [],
+  "attack_blocked": null,
+  "defend": 4188,
+  "death": 4230
+ },
+ {
+  "id": 6872,
+  "name": "Compost mound",
+  "void_key": "qc3_familiar_audio",
+  "combat_def": "summoning",
+  "attack": [],
+  "attack_blocked": null,
+  "defend": 4134,
+  "death": 4162
+ },
+ {
+  "id": 7354,
+  "name": "Giant chinchompa",
+  "void_key": "qc3_familiar_audio",
+  "combat_def": "summoning",
+  "attack": [],
+  "attack_blocked": null,
+  "defend": 4716,
+  "death": -1
+ },
+ {
+  "id": 6846,
+  "name": "Honey badger",
+  "void_key": "qc3_familiar_audio",
+  "combat_def": "summoning",
+  "attack": [],
+  "attack_blocked": null,
+  "defend": 4184,
+  "death": 4210
+ },
+ {
+  "id": 7371,
+  "name": "Void ravager",
+  "void_key": "qc3_familiar_audio",
+  "combat_def": "summoning",
+  "attack": [],
+  "attack_blocked": null,
+  "defend": 4625,
+  "death": 4629
+ },
+ {
+  "id": 7368,
+  "name": "Void shifter",
+  "void_key": "qc3_familiar_audio",
+  "combat_def": "summoning",
+  "attack": [],
+  "attack_blocked": null,
+  "defend": 4606,
+  "death": 4649
+ },
+ {
+  "id": 7334,
+  "name": "Void spinner",
+  "void_key": "qc3_familiar_audio",
+  "combat_def": "summoning",
+  "attack": [],
+  "attack_blocked": null,
+  "defend": 4672,
+  "death": 4690
+ },
+ {
+  "id": 7352,
+  "name": "Void torcher",
+  "void_key": "qc3_familiar_audio",
+  "combat_def": "summoning",
+  "attack": [],
+  "attack_blocked": null,
+  "defend": 4651,
+  "death": 4634
+ },
+ {
+  "id": 6854,
+  "name": "Bronze minotaur",
+  "void_key": "qc3_familiar_audio",
+  "combat_def": "summoning",
+  "attack": [],
+  "attack_blocked": null,
+  "defend": 4338,
+  "death": 4335
+ },
+ {
+  "id": 6856,
+  "name": "Iron minotaur",
+  "void_key": "qc3_familiar_audio",
+  "combat_def": "summoning",
+  "attack": [],
+  "attack_blocked": null,
+  "defend": 4338,
+  "death": 4335
+ },
+ {
+  "id": 6858,
+  "name": "Steel minotaur",
+  "void_key": "qc3_familiar_audio",
+  "combat_def": "summoning",
+  "attack": [],
+  "attack_blocked": null,
+  "defend": 4338,
+  "death": 4335
+ },
+ {
+  "id": 6860,
+  "name": "Mithril minotaur",
+  "void_key": "qc3_familiar_audio",
+  "combat_def": "summoning",
+  "attack": [],
+  "attack_blocked": null,
+  "defend": 4338,
+  "death": 4335
+ },
+ {
+  "id": 6862,
+  "name": "Adamant minotaur",
+  "void_key": "qc3_familiar_audio",
+  "combat_def": "summoning",
+  "attack": [],
+  "attack_blocked": null,
+  "defend": 4338,
+  "death": 4335
+ },
+ {
+  "id": 6864,
+  "name": "Rune minotaur",
+  "void_key": "qc3_familiar_audio",
+  "combat_def": "summoning",
+  "attack": [],
+  "attack_blocked": null,
+  "defend": 4338,
+  "death": 4335
+ },
+ {
+  "id": 6868,
+  "name": "Bull ant",
+  "void_key": "qc3_familiar_audio",
+  "combat_def": "summoning",
+  "attack": [],
+  "attack_blocked": null,
+  "defend": 4212,
+  "death": 4229
+ },
+ {
+  "id": 6834,
+  "name": "Evil turnip",
+  "void_key": "qc3_familiar_audio",
+  "combat_def": "summoning",
+  "attack": [],
+  "attack_blocked": null,
+  "defend": 4324,
+  "death": 4307
+ },
+ {
+  "id": 7378,
+  "name": "Pyrelord",
+  "void_key": "qc3_familiar_audio",
+  "combat_def": "summoning",
+  "attack": [],
+  "attack_blocked": null,
+  "defend": 4641,
+  "death": 4597
+ },
+ {
+  "id": 6993,
+  "name": "Spirit jelly",
+  "void_key": "qc3_familiar_audio",
+  "combat_def": "summoning",
+  "attack": [],
+  "attack_blocked": null,
+  "defend": 4242,
+  "death": 4252
+ },
+ {
+  "id": 7364,
+  "name": "Spirit graahk",
+  "void_key": "qc3_familiar_audio",
+  "combat_def": "summoning",
+  "attack": [],
+  "attack_blocked": null,
+  "defend": 4702,
+  "death": 4652
+ },
+ {
+  "id": 7366,
+  "name": "Spirit kyatt",
+  "void_key": "qc3_familiar_audio",
+  "combat_def": "summoning",
+  "attack": [],
+  "attack_blocked": null,
+  "defend": 4687,
+  "death": 4664
+ },
+ {
+  "id": 7338,
+  "name": "Spirit larupia",
+  "void_key": "qc3_familiar_audio",
+  "combat_def": "summoning",
+  "attack": [],
+  "attack_blocked": null,
+  "defend": 4674,
+  "death": 4696
+ },
+ {
+  "id": 6810,
+  "name": "Karamthulhu overlord",
+  "void_key": "qc3_familiar_audio",
+  "combat_def": "summoning",
+  "attack": [],
+  "attack_blocked": null,
+  "defend": 4191,
+  "death": 4169
+ },
+ {
+  "id": 6866,
+  "name": "Smoke devil",
+  "void_key": "qc3_familiar_audio",
+  "combat_def": "summoning",
+  "attack": [],
+  "attack_blocked": null,
+  "defend": 4318,
+  "death": 4284
+ },
+ {
+  "id": 6821,
+  "name": "Abyssal lurker",
+  "void_key": "qc3_familiar_audio",
+  "combat_def": "summoning",
+  "attack": [],
+  "attack_blocked": null,
+  "defend": 4221,
+  "death": 4267
+ },
+ {
+  "id": 6803,
+  "name": "Spirit cobra",
+  "void_key": "qc3_familiar_audio",
+  "combat_def": "summoning",
+  "attack": [],
+  "attack_blocked": null,
+  "defend": 4283,
+  "death": 4327
+ },
+ {
+  "id": 6828,
+  "name": "Stranger plant",
+  "void_key": "qc3_familiar_audio",
+  "combat_def": "summoning",
+  "attack": [],
+  "attack_blocked": null,
+  "defend": 4234,
+  "death": 4192
+ },
+ {
+  "id": 6890,
+  "name": "Barker toad",
+  "void_key": "qc3_familiar_audio",
+  "combat_def": "summoning",
+  "attack": [],
+  "attack_blocked": null,
+  "defend": 4328,
+  "death": 4289
+ },
+ {
+  "id": 6816,
+  "name": "War tortoise",
+  "void_key": "qc3_familiar_audio",
+  "combat_def": "summoning",
+  "attack": [],
+  "attack_blocked": null,
+  "defend": 4287,
+  "death": 4281
+ },
+ {
+  "id": 6814,
+  "name": "Bunyip",
+  "void_key": "qc3_familiar_audio",
+  "combat_def": "summoning",
+  "attack": [],
+  "attack_blocked": null,
+  "defend": 4198,
+  "death": 4147
+ },
+ {
+  "id": 6840,
+  "name": "Arctic bear",
+  "void_key": "qc3_familiar_audio",
+  "combat_def": "summoning",
+  "attack": [],
+  "attack_blocked": null,
+  "defend": 4232,
+  "death": 4206
+ },
+ {
+  "id": 7346,
+  "name": "Obsidian golem",
+  "void_key": "qc3_familiar_audio",
+  "combat_def": "summoning",
+  "attack": [],
+  "attack_blocked": null,
+  "defend": 4632,
+  "death": 4692
+ },
+ {
+  "id": 6850,
+  "name": "Granite lobster",
+  "void_key": "qc3_familiar_audio",
+  "combat_def": "summoning",
+  "attack": [],
+  "attack_blocked": null,
+  "defend": 4216,
+  "death": 4201
+ },
+ {
+  "id": 6799,
+  "name": "Praying mantis",
+  "void_key": "qc3_familiar_audio",
+  "combat_def": "summoning",
+  "attack": [],
+  "attack_blocked": null,
+  "defend": 4306,
+  "death": 4285
+ },
+ {
+  "id": 7336,
+  "name": "Forge regent",
+  "void_key": "qc3_familiar_audio",
+  "combat_def": "summoning",
+  "attack": [],
+  "attack_blocked": null,
+  "defend": 4667,
+  "death": 4628
+ },
+ {
+  "id": 7348,
+  "name": "Talon beast",
+  "void_key": "qc3_familiar_audio",
+  "combat_def": "summoning",
+  "attack": [],
+  "attack_blocked": null,
+  "defend": 4636,
+  "death": 4658
+ },
+ {
+  "id": 6801,
+  "name": "Giant ent",
+  "void_key": "qc3_familiar_audio",
+  "combat_def": "summoning",
+  "attack": [],
+  "attack_blocked": null,
+  "defend": 4294,
+  "death": 4295
+ },
+ {
+  "id": 7356,
+  "name": "Fire titan",
+  "void_key": "qc3_familiar_audio",
+  "combat_def": "summoning",
+  "attack": [],
+  "attack_blocked": null,
+  "defend": 4604,
+  "death": 4688
+ },
+ {
+  "id": 7360,
+  "name": "Ice titan",
+  "void_key": "qc3_familiar_audio",
+  "combat_def": "summoning",
+  "attack": [],
+  "attack_blocked": null,
+  "defend": 4684,
+  "death": 4635
+ },
+ {
+  "id": 7358,
+  "name": "Moss titan",
+  "void_key": "qc3_familiar_audio",
+  "combat_def": "summoning",
+  "attack": [],
+  "attack_blocked": null,
+  "defend": 4607,
+  "death": 4663
+ },
+ {
+  "id": 6812,
+  "name": "Hydra",
+  "void_key": "qc3_familiar_audio",
+  "combat_def": "summoning",
+  "attack": [],
+  "attack_blocked": null,
+  "defend": 4223,
+  "death": 4257
+ },
+ {
+  "id": 6805,
+  "name": "Spirit dagannoth",
+  "void_key": "qc3_familiar_audio",
+  "combat_def": "summoning",
+  "attack": [],
+  "attack_blocked": null,
+  "defend": 4323,
+  "death": 4291
+ },
+ {
+  "id": 7342,
+  "name": "Lava titan",
+  "void_key": "qc3_familiar_audio",
+  "combat_def": "summoning",
+  "attack": [],
+  "attack_blocked": null,
+  "defend": 4714,
+  "death": 4710
+ },
+ {
+  "id": 7330,
+  "name": "Swamp titan",
+  "void_key": "qc3_familiar_audio",
+  "combat_def": "summoning",
+  "attack": [],
+  "attack_blocked": null,
+  "defend": 4715,
+  "death": 4673
+ },
+ {
+  "id": 6823,
+  "name": "Unicorn stallion",
+  "void_key": "qc3_familiar_audio",
+  "combat_def": "summoning",
+  "attack": [],
+  "attack_blocked": null,
+  "defend": 4135,
+  "death": 4195
+ },
+ {
+  "id": 7340,
+  "name": "Geyser titan",
+  "void_key": "qc3_familiar_audio",
+  "combat_def": "summoning",
+  "attack": [],
+  "attack_blocked": null,
+  "defend": 4697,
+  "death": 4642
+ },
+ {
+  "id": 6870,
+  "name": "Wolpertinger",
+  "void_key": "qc3_familiar_audio",
+  "combat_def": "summoning",
+  "attack": [],
+  "attack_blocked": null,
+  "defend": 4163,
+  "death": 4243
+ },
+ {
+  "id": 7350,
+  "name": "Abyssal titan",
+  "void_key": "qc3_familiar_audio",
+  "combat_def": "summoning",
+  "attack": [],
+  "attack_blocked": null,
+  "defend": 4660,
+  "death": 4717
+ },
+ {
+  "id": 7376,
+  "name": "Iron titan",
+  "void_key": "qc3_familiar_audio",
+  "combat_def": "summoning",
+  "attack": [],
+  "attack_blocked": null,
+  "defend": 4612,
+  "death": 4666
+ },
+ {
+  "id": 6874,
+  "name": "Pack yak",
+  "void_key": "qc3_familiar_audio",
+  "combat_def": "summoning",
+  "attack": [],
+  "attack_blocked": null,
+  "defend": 4175,
+  "death": 4207
+ },
+ {
+  "id": 7344,
+  "name": "Steel titan",
+  "void_key": "qc3_familiar_audio",
+  "combat_def": "summoning",
+  "attack": [],
+  "attack_blocked": null,
+  "defend": 4704,
+  "death": 4668
+ }
 ]

@@ -61,12 +61,12 @@ val werewolf =
 table.register(werewolf, *ids)
 
 on_npc_pre_death(Npcs.WEREWOLF_6007, Npcs.WEREWOLF_6008, Npcs.WEREWOLF_6009, Npcs.WEREWOLF_6010, Npcs.WEREWOLF_6011, Npcs.WEREWOLF_6012, Npcs.WEREWOLF_6013, Npcs.WEREWOLF_6014, Npcs.WEREWOLF_6015, Npcs.WEREWOLF_6016, Npcs.WEREWOLF_6017, Npcs.WEREWOLF_6018, Npcs.WEREWOLF_6019, Npcs.WEREWOLF_6020, Npcs.WEREWOLF_6021, Npcs.WEREWOLF_6022, Npcs.WEREWOLF_6023, Npcs.WEREWOLF_6024, Npcs.WEREWOLF_6025) {
-    val p = npc.damageMap.getMostDamage()!! as Player
+    val p = npc.killer() ?: return@on_npc_pre_death
     p.playSound(Sfx.HALF_WEREWOLF_DEATH)
 }
 
 on_npc_death(*ids) {
-    table.getDrop(world, npc.damageMap.getMostDamage()!! as Player, npc.id, npc.tile)
+    table.getDrop(world, npc.killer() ?: return@on_npc_death, npc.id, npc.tile)
     // Respawn citizen after werewolf is killed.
     val npcCoordinates =
         mapOf(

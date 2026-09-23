@@ -133,7 +133,7 @@ on_npc_pre_death(SECOND_FORM) {
 /** Real kill: the second form's own death. Loot, then a fresh first form after the 50-tick respawn
  * delay - not the standard engine respawn cycle, since both forms have `respawnDelay = 0`. */
 on_npc_death(SECOND_FORM) {
-    table.getDrop(world, npc.damageMap.getMostDamage()!! as Player, npc.id, npc.tile)
+    table.getDrop(world, npc.killer() ?: return@on_npc_death, npc.id, npc.tile)
     val tile = Tile(npc.tile)
     world.queue {
         wait(RESPAWN_TICKS)

@@ -68,8 +68,10 @@ on_login {
     player.setVarbit(Varbits.DEATH_TO_THE_DORGESHUUN_PROGRESS, 13)
     // slot 29
     player.setVarp(Varps.DEATH_PLATEAU_PROGRESS, 80)
-    // slot 30
-    player.setVarbit(Varbits.DESERT_TREASURE_PROGRESS, 15)
+    // slot 30 - Desert Treasure
+    // Owner 2026-09-20: "desert treasure should never be completed for a new player only when talking to the
+    // archaleogist". The Archaeologist in the Grand Exchange is what completes it (UnlockNpcRewards.unlockAncientMagic),
+    // so login must leave it untouched.
     // slot 31
     player.setVarbit(Varbits.DEVIOUS_MINDS_PROGRESS, 80)
     // slot 32

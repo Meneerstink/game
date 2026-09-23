@@ -13,6 +13,8 @@ enum class CrossbowData(
     val stringExperience: Double,
     val stringAnim: Int,
     val itemName: String,
+    /** OSRS-IMPORT dragon crossbow only: the wiki page requires "a hammer in their inventory" to attach the limbs. */
+    val requiresHammer: Boolean = false,
 ) {
     BRONZE(
         stock = Items.WOODEN_STOCK,
@@ -97,6 +99,27 @@ enum class CrossbowData(
         stringExperience = 50.0,
         stringAnim = 6677,
         itemName = "Crossbow",
+    ),
+
+    /**
+     * OSRS-IMPORT (OSRS Wiki "Dragon crossbow", fetched 2026-09-16): "add dragon limbs to the stock with a hammer
+     * in their inventory, granting 135 experience"; "string the crossbow with a crossbow string, granting 70
+     * experience"; both steps require Fletching 78. ADAPTED_TO_667: stringAnim reuses the Runite tier's animation
+     * (6677) - no revision-667 animation exists for a Dragon crossbow, the same "reuse the nearest 667 weapon
+     * class" pattern already used elsewhere in this import (e.g. Belle's folly reusing the Rune sword animation).
+     */
+    DRAGON(
+        stock = Items.MAGIC_STOCK,
+        limbs = Items.DRAGON_LIMBS,
+        unstrung = Items.DRAGON_CROSSBOW_U,
+        strung = Items.DRAGON_CROSSBOW,
+        assembleLevelRequirement = 78,
+        assembleExperience = 135.0,
+        stringLevelRequirement = 78,
+        stringExperience = 70.0,
+        stringAnim = 6677,
+        itemName = "Dragon crossbow",
+        requiresHammer = true,
     ),
     ;
 

@@ -35,6 +35,14 @@ class InterfaceSet(
     var currentModal = -1
 
     /**
+     * Hash of the gameframe component that owns [currentModal]. The client only has one
+     * type-0 modal at a time, but the old server bookkeeping remembered only its interface id.
+     * That made it impossible to retire the exact fixed/resizable destination when a modal was
+     * replaced or the top-level gameframe changed.
+     */
+    private var currentModalHash = -1
+
+    /**
      * The current [DisplayMode] being used by the client.
      */
     var displayMode = DisplayMode.FIXED
@@ -128,8 +136,16 @@ class InterfaceSet(
     private fun closeByHash(hash: Int): Int {
         val found = visible.remove(hash)
         if (found != visible.defaultReturnValue()) {
+            if (hash == currentModalHash) {
+                currentModalHash = -1
+                currentModal = -1
+            }
             listener.onInterfaceClose(found)
             return found
+        }
+        if (hash == currentModalHash) {
+            currentModalHash = -1
+            currentModal = -1
         }
         return -1
     }
@@ -142,15 +158,62 @@ class InterfaceSet(
         parent: Int,
         child: Int,
         interfaceId: Int,
-    ) {
+    ): Int {
+        val hash = (parent shl 16) or child
+        val replacedHash =
+            if (currentModalHash != -1 && currentModalHash != hash) {
+                val previous = currentModalHash
+                closeByHash(previous)
+                previous
+            } else {
+                -1
+            }
         open(parent, child, interfaceId)
         currentModal = interfaceId
+        currentModalHash = hash
+        return replacedHash
     }
 
     fun getModal(): Int = currentModal
 
     fun setModal(currentModal: Int) {
         this.currentModal = currentModal
+        if (currentModal == -1) {
+            currentModalHash = -1
+        }
+    }
+
+    /**
+     * Closes the one modal tracked by the client protocol and returns its destination hash.
+     * `CLOSE_MODAL` carries no interface id, so callers must close the destination that was
+     * actually registered instead of looking up an id that may already have been replaced.
+     */
+    fun closeModal(): Int {
+        val hash = currentModalHash
+        if (hash != -1) {
+            closeByHash(hash)
+        } else {
+            currentModal = -1
+        }
+        return hash
+    }
+
+    /**
+     * Mirrors the client's top-level-interface rebuild. The active modal is closed normally so
+     * content cleanup hooks run; persistent tabs/overlays on the discarded parent are then
+     * removed from bookkeeping without fake close callbacks (they are immediately remounted on
+     * the new gameframe).
+     */
+    fun clearDisplay(parent: Int) {
+        if (currentModalHash ushr 16 == parent) {
+            closeModal()
+        }
+        val hashes = visible.keys.toIntArray()
+        for (hash in hashes) {
+            if (hash ushr 16 == parent) {
+                visible.remove(hash)
+            }
+        }
     }
 
     /**

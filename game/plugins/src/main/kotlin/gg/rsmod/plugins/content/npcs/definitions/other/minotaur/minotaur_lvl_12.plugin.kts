@@ -52,7 +52,7 @@ table.register(minotaurTable, npc)
 
 
 on_npc_death(npc) {
-    table.getDrop(world, npc.damageMap.getMostDamage()!! as Player, npc.id, npc.tile)
+    table.getDrop(world, npc.killer() ?: return@on_npc_death, npc.id, npc.tile)
 }
 
 set_combat_def(npc = npc) {

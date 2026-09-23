@@ -6,6 +6,7 @@ import gg.rsmod.game.fs.def.ObjectDef
 import gg.rsmod.game.message.impl.LogoutFullMessage
 import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.attr.NO_CLIP_ATTR
+import gg.rsmod.game.model.attr.ID_INSPECTOR_ATTR
 import gg.rsmod.game.model.attr.POISON_TICKS_LEFT_ATTR
 import gg.rsmod.game.model.bits.INFINITE_VARS_STORAGE
 import gg.rsmod.game.model.bits.InfiniteVarsType
@@ -27,18 +28,15 @@ import gg.rsmod.plugins.content.cmd.TestSpawnRegistry
 import gg.rsmod.plugins.content.combat.createProjectile
 import gg.rsmod.plugins.content.combat.getCombatTarget
 import gg.rsmod.plugins.content.inter.attack.AttackTab
+import gg.rsmod.plugins.content.items.potion.RemovedPotions
 import gg.rsmod.plugins.content.magic.TeleportType
 import gg.rsmod.plugins.content.magic.teleport
 import gg.rsmod.plugins.content.mechanics.poison.Poison
 import gg.rsmod.plugins.content.mechanics.poison.Venom
 
 /**
- * Crown of Helios dev-tool menu ("Dev Tools" + "AV Tester" in [crownMenu]) - admin-only debug
- * instrumentation layered on top of the crown's original combat/teleport/toggle menu. Built to let
- * the owner isolate missing/incorrect Summoning and Curses animation/GFX/sound without guessing IDs:
- * everything here plays real IDs against a real target and reuses the same primitives the existing
- * `::anim`/`::gfx`/`::sound`/`::objsearch`/`::itemsearch`/`::npc`/`::obj`/`TestSpawnRegistry` admin
- * commands already use (see `commands.plugin.kts`), rather than re-deriving them.
+ * Crown of Helios admin menu and diagnostics. AV playback tools are intentionally not exposed here;
+ * the Crown's real combat presentation remains in CrownOfHeliosCombatStrategy.
  */
 
 /**
@@ -83,7 +81,8 @@ suspend fun QueueTask.combatModeMenu() {
             else -> return crownMenu()
         }
     player.attr[CrownOfHelios.MODE_ATTR] = mode
-    player.crownMessage("Combat mode set to <col=42C66C>${mode.label}</col> (1 tick, 10 tiles, always hits).")
+    CrownOfHelios.maxSet(mode).forEach { player.giveCrownItem(it, 1) }
+    player.crownMessage("<col=42C66C>${mode.label}</col> mode active; its max starter set was added to your inventory.")
 }
 
 suspend fun QueueTask.powerMenu() {
@@ -332,6 +331,7 @@ suspend fun QueueTask.searchAndGiveCrownItem() {
     val matches =
         (0 until world.definitions.getCount(ItemDef::class.java))
             .mapNotNull { id -> world.definitions.getNullable(ItemDef::class.java, id)?.let { id to it } }
+            .filter { (id, _) -> id !in RemovedPotions.itemIds }
             .filter { (_, def) -> def.name.lowercase().contains(query) }
             .take(4)
     if (matches.isEmpty()) {
@@ -349,20 +349,16 @@ suspend fun QueueTask.searchAndGiveCrownItem() {
 }
 
 suspend fun QueueTask.itemToolsMenu() {
-    when (options("Overload (4)", "Super attack (4)", "Super strength (4)", "Search & give", "Back", title = "Item tools")) {
+    when (options("Super attack (4)", "Super strength (4)", "Search & give", "Back", title = "Item tools")) {
         1 -> {
-            player.giveCrownItem(Items.OVERLOAD_4, inputInt("How many Overload (4)?"))
-            itemToolsMenu()
-        }
-        2 -> {
             player.giveCrownItem(Items.SUPER_ATTACK_4, inputInt("How many Super attack (4)?"))
             itemToolsMenu()
         }
-        3 -> {
+        2 -> {
             player.giveCrownItem(Items.SUPER_STRENGTH_4, inputInt("How many Super strength (4)?"))
             itemToolsMenu()
         }
-        4 -> searchAndGiveCrownItem()
+        3 -> searchAndGiveCrownItem()
         else -> devToolsMenu()
     }
 }
@@ -973,18 +969,68 @@ suspend fun QueueTask.moreMenu() {
     when (
         options(
             "Admin toggles",
-            "AV Tester",
             "Dev Tools",
             "Player management (kick / ban)",
+            "ID Inspector: ${onOff(player.attr[ID_INSPECTOR_ATTR] == true)}",
             "Back",
             title = "Crown: more",
         )
     ) {
         1 -> togglesMenu()
-        2 -> avTesterMenu()
-        3 -> devToolsMenu()
-        4 -> playerManagementMenu()
+        2 -> devToolsMenu()
+        3 -> playerManagementMenu()
+        4 -> {
+            val enabled = player.attr[ID_INSPECTOR_ATTR] == true
+            player.attr[ID_INSPECTOR_ATTR] = !enabled
+            player.crownMessage("ID Inspector ${onOff(!enabled)}.")
+            moreMenu()
+        }
         else -> crownMenu()
+    }
+}
+
+suspend fun QueueTask.moderatorCrownMenu() {
+    when (options("Teleport", "ID Inspector: ${onOff(player.attr[ID_INSPECTOR_ATTR] == true)}", "Kick / ban", "Back", title = "Moderator Crown")) {
+        1 -> teleportMenu()
+        2 -> {
+            val enabled = player.attr[ID_INSPECTOR_ATTR] == true
+            player.attr[ID_INSPECTOR_ATTR] = !enabled
+            player.crownMessage("ID Inspector ${onOff(!enabled)}.")
+            moderatorCrownMenu()
+        }
+        3 -> moderatorPlayerManagementMenu()
+        else -> return
+    }
+}
+
+suspend fun QueueTask.moderatorPlayerManagementMenu() {
+    when (options("Kick a player", "Ban a player", "Back", title = "Moderator actions")) {
+        1 -> {
+            val name = inputString("Kick which player? (username)")
+            val target = world.getPlayerForName(name.replace("_", " "))
+            if (target == null) player.crownMessage("$name is not online.")
+            else {
+                target.requestLogout()
+                target.write(LogoutFullMessage())
+                target.channelClose()
+                player.crownMessage("Kicked <col=42C66C>$name</col>.")
+            }
+            moderatorPlayerManagementMenu()
+        }
+        2 -> {
+            val name = inputString("Ban which player? (username)")
+            if (name.isNotBlank()) {
+                BannedPlayers.ban(name)
+                world.getPlayerForName(name.replace("_", " "))?.let { target ->
+                    target.requestLogout()
+                    target.write(LogoutFullMessage())
+                    target.channelClose()
+                }
+                player.crownMessage("Banned <col=42C66C>$name</col>.")
+            }
+            moderatorPlayerManagementMenu()
+        }
+        else -> moderatorCrownMenu()
     }
 }
 
@@ -1040,22 +1086,22 @@ suspend fun QueueTask.playerManagementMenu() {
 }
 
 fun Player.openCrownMenu() {
-    if (!CrownOfHelios.isAdmin(this)) {
+    if (!CrownOfHelios.canUseCrown(this)) {
         message("The crown does not answer to you.")
         return
     }
     // STRONG: terminates any earlier (possibly still-waiting) Crown flow and skips the
     // main-screen "menu open" gate, so a second Command click can never stack a dead task in
     // front of the live one.
-    queue(TaskPriority.STRONG) { crownMenu() }
+    queue(TaskPriority.STRONG) { if (CrownOfHelios.isAdmin(player)) crownMenu() else moderatorCrownMenu() }
 }
 
-on_command("helios", Privilege.ADMIN_POWER) { player.spawnCrown() }
-on_command("teleport", Privilege.ADMIN_POWER) { player.spawnCrown() }
-on_command("crown", Privilege.ADMIN_POWER) { player.openCrownMenu() }
+on_command("helios", Privilege.MOD_POWER) { player.spawnCrown() }
+on_command("teleport", Privilege.MOD_POWER) { player.spawnCrown() }
+on_command("crown", Privilege.MOD_POWER) { player.openCrownMenu() }
 
 can_equip_item(CROWN) {
-    if (!CrownOfHelios.isAdmin(player)) {
+    if (!CrownOfHelios.canUseCrown(player)) {
         player.message("The crown does not answer to you.")
         false
     } else {
@@ -1074,9 +1120,9 @@ on_item_unequip(CROWN) {
 on_item_option(CROWN, "Command") { player.openCrownMenu() }
 
 on_item_option(CROWN, "Teleport") {
-    if (!CrownOfHelios.isAdmin(player)) {
+    if (!CrownOfHelios.canUseCrown(player)) {
         player.message("The crown does not answer to you.")
     } else {
-        player.queue(TaskPriority.STRONG) { teleportMenu() }
+        player.queue(TaskPriority.STRONG) { if (CrownOfHelios.isAdmin(player)) teleportMenu() else moderatorCrownMenu() }
     }
 }

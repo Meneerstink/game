@@ -51,4 +51,17 @@ enum class ItemAttribute {
      * 1 when an item's toggleable effect is switched off (e.g. the Ring of suffering recoil setting, stored per ring).
      */
     TOGGLED_OFF,
+
+    /**
+     * Rune pouch / divine rune pouch slots (OSRS import 2026-09-17): the rune item id and amount stored in each slot. The rune pouch
+     * uses slots 1-3, the divine rune pouch 1-4.
+     */
+    RUNE_POUCH_ID_1,
+    RUNE_POUCH_AMOUNT_1,
+    RUNE_POUCH_ID_2,
+    RUNE_POUCH_AMOUNT_2,
+    RUNE_POUCH_ID_3,
+    RUNE_POUCH_AMOUNT_3,
+    RUNE_POUCH_ID_4,
+    RUNE_POUCH_AMOUNT_4,
 }

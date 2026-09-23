@@ -18,47 +18,57 @@ import gg.rsmod.plugins.content.items.osrs.StaffOfTheDead
  * repair cost going to the killer. PvM deaths keep the normal recovery route.
  */
 object PvpDeathBreakables {
+    /** @param repairCost the OSRS-sourced Perdu repair cost - see [gg.rsmod.plugins.content.mechanics.death.BrokenItemRepair]. */
     data class Breakable(
         val itemId: Int,
         val brokenId: Int,
         val killerCoins: Int,
+        val repairCost: Int,
     )
 
     /**
-     * - Avernic defender: item page, broken + 600,000 coins (the repair cost) for the killer.
+     * - Avernic defender: item page, broken + 600,000 coins (the repair cost) for the killer - repair
+     *   cost and killer coins are the same 600,000 for this item.
      * - Infernal cape: "Items Kept on Death" below level 20 - kept broken, the PKer receives the repair cost;
-     *   item page repair cost 225,000 (since 20 September 2023). Above level 20 the page says it turns into a
-     *   pile of coins for the PKer, but no amount is sourced: PROVISIONAL, the below-20 rule applies everywhere.
-     * - Imbued god capes: item page - broken below level 20, "no coins go to the killer"; above-20 behaviour is
-     *   not sourced (same PROVISIONAL rule).
+     *   item page repair cost 225,000 (since 20 September 2023, again the same value for both). Above level 20 the
+     *   page says it turns into a pile of coins for the PKer, but no amount is sourced, so the below-20 rule applies
+     *   everywhere - OWNER_APPROVED 2026-09-13 ("Combat exactness audit", `OSRS_IMPORT_MASTER.yml`: "provisional
+     *   below-20 PvP death rule approved"), not merely a provisional guess.
+     * - Imbued god capes: item page - broken below level 20, "no coins go to the killer"; repair 96,000 at Perdu
+     *   (`OSRS_IMPORT_MASTER.yml` "Batch capesrings"); above-20 behaviour is not sourced (same PROVISIONAL rule).
      */
     private val entries =
         listOf(
-            Breakable(Items.AVERNIC_DEFENDER, Items.AVERNIC_DEFENDER_BROKEN, 600_000),
-            Breakable(Items.INFERNAL_CAPE, Items.INFERNAL_CAPE_BROKEN, 225_000),
-            Breakable(Items.IMBUED_SARADOMIN_CAPE, Items.IMBUED_SARADOMIN_CAPE_BROKEN, 0),
-            Breakable(Items.IMBUED_GUTHIX_CAPE, Items.IMBUED_GUTHIX_CAPE_BROKEN, 0),
-            Breakable(Items.IMBUED_ZAMORAK_CAPE, Items.IMBUED_ZAMORAK_CAPE_BROKEN, 0),
+            Breakable(Items.AVERNIC_DEFENDER, Items.AVERNIC_DEFENDER_BROKEN, killerCoins = 600_000, repairCost = 600_000),
+            Breakable(Items.INFERNAL_CAPE, Items.INFERNAL_CAPE_BROKEN, killerCoins = 225_000, repairCost = 225_000),
+            Breakable(Items.IMBUED_SARADOMIN_CAPE, Items.IMBUED_SARADOMIN_CAPE_BROKEN, killerCoins = 0, repairCost = 96_000),
+            Breakable(Items.IMBUED_GUTHIX_CAPE, Items.IMBUED_GUTHIX_CAPE_BROKEN, killerCoins = 0, repairCost = 96_000),
+            Breakable(Items.IMBUED_ZAMORAK_CAPE, Items.IMBUED_ZAMORAK_CAPE_BROKEN, killerCoins = 0, repairCost = 96_000),
             // Ava's assembler (raw wiki): unprotected in PvP it "will remain in the player's inventory, but will become
             // broken"; repair 240,000 coins at Perdu. Coins for the killer are not stated: none are dropped (SOURCE_GAP).
-            Breakable(Items.AVAS_ASSEMBLER, Items.AVAS_ASSEMBLER_BROKEN, 0),
+            Breakable(Items.AVAS_ASSEMBLER, Items.AVAS_ASSEMBLER_BROKEN, killerCoins = 0, repairCost = 240_000),
             // OSRS-IMPORT capes (item pages): "it will remain in the player's inventory; however, the item will be in a broken, unusable
             // state" (repair at Perdu: imbued max capes 99,000, assembler max capes and Masori assembler 240,000, Dizana's max cape
             // 400,000). Coins for the killer are not stated (none). Dizana's max cape above level 20 ("converted to coins", amount
-            // unstated) uses the below-20 rule everywhere (PROVISIONAL, like the Infernal cape). SOURCE_GAP: the Masori crafting kit
+            // unstated) uses the below-20 rule everywhere (OWNER_APPROVED, like the Infernal cape - see above). SOURCE_GAP: the Masori crafting kit
             // "placed in their gravestone" is not modelled (no gravestone here).
-            Breakable(Items.IMBUED_SARADOMIN_MAX_CAPE, Items.IMBUED_SARADOMIN_MAX_CAPE_BROKEN, 0),
-            Breakable(Items.IMBUED_GUTHIX_MAX_CAPE, Items.IMBUED_GUTHIX_MAX_CAPE_BROKEN, 0),
-            Breakable(Items.IMBUED_ZAMORAK_MAX_CAPE, Items.IMBUED_ZAMORAK_MAX_CAPE_BROKEN, 0),
-            Breakable(Items.ASSEMBLER_MAX_CAPE, Items.ASSEMBLER_MAX_CAPE_BROKEN, 0),
-            Breakable(Items.MASORI_ASSEMBLER, Items.MASORI_ASSEMBLER_BROKEN, 0),
-            Breakable(Items.MASORI_ASSEMBLER_MAX_CAPE, Items.MASORI_ASSEMBLER_MAX_CAPE_BROKEN, 0),
-            Breakable(Items.DIZANAS_MAX_CAPE, Items.DIZANAS_MAX_CAPE_BROKEN, 0),
+            Breakable(Items.IMBUED_SARADOMIN_MAX_CAPE, Items.IMBUED_SARADOMIN_MAX_CAPE_BROKEN, killerCoins = 0, repairCost = 99_000),
+            Breakable(Items.IMBUED_GUTHIX_MAX_CAPE, Items.IMBUED_GUTHIX_MAX_CAPE_BROKEN, killerCoins = 0, repairCost = 99_000),
+            Breakable(Items.IMBUED_ZAMORAK_MAX_CAPE, Items.IMBUED_ZAMORAK_MAX_CAPE_BROKEN, killerCoins = 0, repairCost = 99_000),
+            Breakable(Items.ASSEMBLER_MAX_CAPE, Items.ASSEMBLER_MAX_CAPE_BROKEN, killerCoins = 0, repairCost = 240_000),
+            Breakable(Items.MASORI_ASSEMBLER, Items.MASORI_ASSEMBLER_BROKEN, killerCoins = 0, repairCost = 240_000),
+            Breakable(Items.MASORI_ASSEMBLER_MAX_CAPE, Items.MASORI_ASSEMBLER_MAX_CAPE_BROKEN, killerCoins = 0, repairCost = 240_000),
+            Breakable(Items.DIZANAS_MAX_CAPE, Items.DIZANAS_MAX_CAPE_BROKEN, killerCoins = 0, repairCost = 400_000),
         ).associateBy { it.itemId }
+
+    private val byBrokenId = entries.values.associateBy { it.brokenId }
 
     val ALL: Collection<Breakable> get() = entries.values
 
     fun breakableFor(itemId: Int): Breakable? = entries[itemId]
+
+    /** The [Breakable] a broken item [brokenId] repairs back into, or `null` if it isn't one of these. */
+    fun forBroken(brokenId: Int): Breakable? = byBrokenId[brokenId]
 
     /**
      * Removes breakable and ornamented stacks from a Wilderness death's lost list so [DeathExecutor]
@@ -71,17 +81,28 @@ object PvpDeathBreakables {
                 entries.containsKey(it.item.id) || OsrsOrnamentKits.forPvpConversion(it.item.id) != null || it.item.id == Items.TOXIC_BLOWPIPE ||
                     it.item.id == Items.BLAZING_BLOWPIPE ||
                     it.item.id == Items.BOW_OF_FAERDHINEN || it.item.id == Items.AMULET_OF_BLOOD_FURY || it.item.id == Items.TOXIC_STAFF_OF_THE_DEAD ||
-                    it.item.id in gg.rsmod.plugins.content.items.osrs.AvernicTreads.UPGRADED || it.item.id == Items.ANCIENT_SCEPTRE
+                    it.item.id in gg.rsmod.plugins.content.items.osrs.AvernicTreads.UPGRADED || it.item.id == Items.ANCIENT_SCEPTRE ||
+                    it.item.id in gg.rsmod.plugins.content.items.osrs.Demonbane.SYNAPSE_PRODUCTS ||
+                    gg.rsmod.plugins.content.magic.RunePouch.isPouch(it.item.id) ||
+                    gg.rsmod.plugins.content.items.osrs.PoweredStaves.chargedTierOf(it.item.id) != null
             }
         if (converting.isEmpty()) return result to emptyList()
         return result.copy(itemRisk = result.itemRisk.copy(lost = rest)) to converting
     }
 
-    /** Swaps each stack for its broken id on the victim and drops the repair cost for the killer. */
+    /**
+     * Swaps each stack for its broken id on the victim and drops the repair cost for the killer.
+     *
+     * Owner 2026-09-18 (#6): every killer-bound item goes through [drop] instead of straight onto the
+     * floor, so `death.plugin.kts` can feed it into the same loot-key plan as the plain lost items -
+     * a kill gives a loot key OR ground loot, never a key with converted loot lying beside it. The
+     * default sink spawns ground loot, for callers outside the loot-key flow.
+     */
     fun execute(
         world: World,
         result: DeathResolutionResult,
         breaking: List<DeathSlotItem>,
+        drop: (Item) -> Unit = { world.spawn(GroundItem(it, result.victim.tile, result.killer)) },
     ): Int {
         val victim = result.victim
         var broken = 0
@@ -100,10 +121,10 @@ object PvpDeathBreakables {
                 val blowpipe = container[slotItem.slot]!!
                 container[slotItem.slot] = null
                 if (slotItem.source == DeathContainerSource.EQUIPMENT) equipmentChanged = true
-                world.spawn(GroundItem(Item(Items.TOXIC_BLOWPIPE_EMPTY, 1), victim.tile, result.killer))
-                if (slotItem.item.id == Items.BLAZING_BLOWPIPE) world.spawn(GroundItem(Item(Items.BLOWPIPE_ORNAMENT_KIT, 1), victim.tile, result.killer))
-                Blowpipe.dart(blowpipe)?.let { world.spawn(GroundItem(Item(it.itemId, Blowpipe.darts(blowpipe)), victim.tile, result.killer)) }
-                Blowpipe.scales(blowpipe).takeIf { it > 0 }?.let { world.spawn(GroundItem(Item(Items.ZULRAHS_SCALES, it), victim.tile, result.killer)) }
+                drop(Item(Items.TOXIC_BLOWPIPE_EMPTY, 1))
+                if (slotItem.item.id == Items.BLAZING_BLOWPIPE) drop(Item(Items.BLOWPIPE_ORNAMENT_KIT, 1))
+                Blowpipe.dart(blowpipe)?.let { drop(Item(it.itemId, Blowpipe.darts(blowpipe))) }
+                Blowpipe.scales(blowpipe).takeIf { it > 0 }?.let { drop(Item(Items.ZULRAHS_SCALES, it)) }
                 continue
             }
             if (slotItem.item.id == Items.BOW_OF_FAERDHINEN) {
@@ -111,7 +132,7 @@ object PvpDeathBreakables {
                 // to charge it will be lost."
                 container[slotItem.slot] = null
                 if (slotItem.source == DeathContainerSource.EQUIPMENT) equipmentChanged = true
-                world.spawn(GroundItem(Item(Items.BOW_OF_FAERDHINEN_INACTIVE, 1), victim.tile, result.killer))
+                drop(Item(Items.BOW_OF_FAERDHINEN_INACTIVE, 1))
                 continue
             }
             if (slotItem.item.id == Items.AMULET_OF_BLOOD_FURY) {
@@ -119,14 +140,44 @@ object PvpDeathBreakables {
                 // the blood shard and any remaining charges are lost" (the fury is lost to the killer as usual).
                 container[slotItem.slot] = null
                 if (slotItem.source == DeathContainerSource.EQUIPMENT) equipmentChanged = true
-                world.spawn(GroundItem(Item(Items.AMULET_OF_FURY, 1), victim.tile, result.killer))
+                drop(Item(Items.AMULET_OF_FURY, 1))
                 continue
             }
             if (slotItem.item.id == Items.ANCIENT_SCEPTRE) {
                 // OSRS Wiki "Ancient sceptre": "Unprotected PvP deaths convert it to an Ancient staff for the killer" (the icon is lost).
                 container[slotItem.slot] = null
                 if (slotItem.source == DeathContainerSource.EQUIPMENT) equipmentChanged = true
-                world.spawn(GroundItem(Item(Items.ANCIENT_STAFF, 1), victim.tile, result.killer))
+                drop(Item(Items.ANCIENT_STAFF, 1))
+                continue
+            }
+            if (gg.rsmod.plugins.content.magic.RunePouch.isPouch(slotItem.item.id)) {
+                // OSRS Wiki "Rune pouch" / "Divine rune pouch" (2026-09-17): an unprotected PvP death in the Wilderness loses the pouch, and
+                // the stored runes are not protected. ADAPTED (drop target not stated): the empty pouch and its runes drop for the killer.
+                val pouch = container[slotItem.slot]!!
+                container[slotItem.slot] = null
+                if (slotItem.source == DeathContainerSource.EQUIPMENT) equipmentChanged = true
+                drop(Item(pouch.id, 1))
+                gg.rsmod.plugins.content.magic.RunePouch.contents(pouch).forEach { drop(it) }
+                continue
+            }
+            if (slotItem.item.id in gg.rsmod.plugins.content.items.osrs.Demonbane.SYNAPSE_PRODUCTS) {
+                // OSRS Wiki "Emberlight", "Scorching bow", "Purging staff" (2026-09-17): "A player killer will receive the synapse from their
+                // opponent if it is not one of the protected items." The rest of the weapon is lost.
+                container[slotItem.slot] = null
+                if (slotItem.source == DeathContainerSource.EQUIPMENT) equipmentChanged = true
+                drop(Item(Items.TORMENTED_SYNAPSE, 1))
+                continue
+            }
+            val chargedStaff = gg.rsmod.plugins.content.items.osrs.PoweredStaves.chargedTierOf(slotItem.item.id)
+            if (chargedStaff != null) {
+                // OSRS Wiki "Trident of the Seas": "If lost on death, only the uncharged trident will appear on the
+                // floor" - explicitly sourced for both tridents. SOURCE_GAP (ADAPTED): the Sanguinesti staff's own page
+                // does not restate this, but it is the same charged-powered-staff mechanic (`PoweredStaves.Staff`) and
+                // this is applied to it too rather than leaving its charges droppable intact - flagged, not silently
+                // assumed equally sourced.
+                container[slotItem.slot] = null
+                if (slotItem.source == DeathContainerSource.EQUIPMENT) equipmentChanged = true
+                drop(Item(chargedStaff.uncharged, 1))
                 continue
             }
             if (slotItem.item.id in gg.rsmod.plugins.content.items.osrs.AvernicTreads.UPGRADED) {
@@ -134,9 +185,9 @@ object PvpDeathBreakables {
                 // used tears will be lost."
                 container[slotItem.slot] = null
                 if (slotItem.source == DeathContainerSource.EQUIPMENT) equipmentChanged = true
-                world.spawn(GroundItem(Item(Items.AVERNIC_TREADS, 1), victim.tile, result.killer))
+                drop(Item(Items.AVERNIC_TREADS, 1))
                 gg.rsmod.plugins.content.items.osrs.AvernicTreads.appliedBoots(slotItem.item.id).forEach { boots ->
-                    world.spawn(GroundItem(Item(boots, 1), victim.tile, result.killer))
+                    drop(Item(boots, 1))
                 }
                 continue
             }
@@ -146,8 +197,8 @@ object PvpDeathBreakables {
                 val scales = StaffOfTheDead.scales(container[slotItem.slot]!!)
                 container[slotItem.slot] = null
                 if (slotItem.source == DeathContainerSource.EQUIPMENT) equipmentChanged = true
-                world.spawn(GroundItem(Item(Items.TOXIC_STAFF_UNCHARGED, 1), victim.tile, result.killer))
-                if (scales > 0) world.spawn(GroundItem(Item(Items.ZULRAHS_SCALES, scales), victim.tile, result.killer))
+                drop(Item(Items.TOXIC_STAFF_UNCHARGED, 1))
+                if (scales > 0) drop(Item(Items.ZULRAHS_SCALES, scales))
                 continue
             }
             val ornament = OsrsOrnamentKits.forPvpConversion(slotItem.item.id)
@@ -155,8 +206,8 @@ object PvpDeathBreakables {
                 // "Items Kept on Death": dropped to the PKer as the non-ornamented item plus the ornament kit.
                 container[slotItem.slot] = null
                 if (slotItem.source == DeathContainerSource.EQUIPMENT) equipmentChanged = true
-                world.spawn(GroundItem(Item(ornament.base, slotItem.item.amount), victim.tile, result.killer))
-                world.spawn(GroundItem(Item(ornament.kit, slotItem.item.amount), victim.tile, result.killer))
+                drop(Item(ornament.base, slotItem.item.amount))
+                drop(Item(ornament.kit, slotItem.item.amount))
                 continue
             }
             val breakable = entries.getValue(slotItem.item.id)
@@ -173,7 +224,7 @@ object PvpDeathBreakables {
             broken++
             val killer = result.killer ?: continue
             if (breakable.killerCoins <= 0) continue
-            world.spawn(GroundItem(Item(Items.COINS_995, breakable.killerCoins * slotItem.item.amount), victim.tile, killer))
+            drop(Item(Items.COINS_995, breakable.killerCoins * slotItem.item.amount))
         }
         if (equipmentChanged) victim.refreshBonuses()
         return broken

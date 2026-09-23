@@ -60,6 +60,21 @@ enum class PickaxeType(
         animation = Anims.MINE_DRAGON_PICKAXE,
         ticksBetweenRolls = 3,
     ),
+
+    // OSRS import batch kits2: both Dragon pickaxe (or) variants are cosmetic ("The shard gives no additional bonuses") - dragon pickaxe
+    // values; the OSRS (or) mining animations are not imported (ADAPTED: 667 dragon pickaxe animation).
+    DRAGON_OR_UPGRADED(
+        item = Items.DRAGON_PICKAXE_OR_UPGRADED,
+        level = 61,
+        animation = Anims.MINE_DRAGON_PICKAXE,
+        ticksBetweenRolls = 3,
+    ),
+    DRAGON_OR(
+        item = Items.DRAGON_PICKAXE_OR,
+        level = 61,
+        animation = Anims.MINE_DRAGON_PICKAXE,
+        ticksBetweenRolls = 3,
+    ),
     GILDED_BRONZE(
         item = Items.GILDED_BRONZE_PICKAXE,
         level = 1,

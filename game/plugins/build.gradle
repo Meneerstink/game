@@ -2,6 +2,12 @@ plugins {
     id 'org.jetbrains.dokka'
 }
 
+sourceSets {
+    main {
+        kotlin.exclude '**/*.plugin.kts'
+    }
+}
+
 dependencies {
     implementation project(':game')
     implementation project(':net')

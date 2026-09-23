@@ -4,6 +4,7 @@ import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.attr.HAS_SPAWNED_TREE_SPIRIT
 import gg.rsmod.game.model.queue.QueueTask
 import gg.rsmod.plugins.content.magic.TeleportType
+import gg.rsmod.plugins.content.magic.canTeleport
 import gg.rsmod.plugins.content.magic.teleport
 import gg.rsmod.plugins.content.quests.advanceToNextStage
 import gg.rsmod.plugins.content.quests.getCurrentStage
@@ -133,7 +134,9 @@ on_obj_option(Objs.MAGIC_DOOR, "open") {
         wait(2)
         player.message("You feel the world around you dissolve...")
         player.playSound(Sfx.FT_FAIRY_TELEPORT)
-        player.teleport(Tile(3237, 3773, 0), type = TeleportType.FAIRY)
+        player.canTeleport(TeleportType.FAIRY) {
+            player.teleport(Tile(3237, 3773, 0), type = TeleportType.FAIRY)
+        }
     }
 }
 

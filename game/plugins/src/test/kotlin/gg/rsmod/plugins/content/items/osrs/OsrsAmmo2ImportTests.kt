@@ -6,6 +6,7 @@ import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.content.combat.strategy.ranged.RangedAmmo
 import gg.rsmod.plugins.content.combat.strategy.ranged.RangedProjectile
 import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Arrows
+import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Knives
 import java.io.File
 import java.nio.file.Paths
 import kotlin.test.Test
@@ -49,7 +50,12 @@ class OsrsAmmo2ImportTests {
         }
         assertEquals(3, Arrows.SEEKING_MIN_HIT)
         val specials = File("src/main/kotlin/gg/rsmod/plugins/content/combat/specialattack/weapons/osrs_thrown_specials.plugin.kts").readText()
+        assertEquals(listOf(Items.DRAGON_KNIFE, Items.DRAGON_KNIFE_P, Items.DRAGON_KNIFE_P_PLUS, Items.DRAGON_KNIFE_P_PLUS_PLUS).toSet(), Knives.DRAGON_KNIVES.toSet())
         assertTrue("SpecialAttacks.register(25, *Knives.DRAGON_KNIVES.toIntArray())" in specials && "repeat(2)" in specials)
+        assertTrue("HUMAN_DRAGON_TKNIVES_SPEC_POISON" in specials, "all poisoned knife variants use OSRS Duality's poisoned animation")
+        assertTrue("DRAGON_TKNIFE_TRAVEL_SPEC_P" in specials && "RangedProjectile.DRAGON_KNIFE_P" in specials, "poisoned Duality uses the poisoned travel path")
+        assertEquals(15442, OsrsSeq.HUMAN_DRAGON_TKNIVES_SPEC)
+        assertEquals(15443, OsrsSeq.HUMAN_DRAGON_TKNIVES_SPEC_POISON)
         assertTrue("SpecialAttacks.registerInstant(25, Items.DRAGON_THROWNAXE)" in specials && "RangedProjectile.DRAGON_THROWNAXE, 1.25" in specials)
     }
 }

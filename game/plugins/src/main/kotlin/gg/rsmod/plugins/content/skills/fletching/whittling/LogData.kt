@@ -55,7 +55,10 @@ enum class LogData(
                 WhittleItem.YEW_STOCK,
             ),
     ),
-    MAGIC(raw = Items.MAGIC_LOGS, products = arrayOf(WhittleItem.MAGIC_SHORTBOW_U, WhittleItem.MAGIC_LONGBOW_U)),
+    MAGIC(
+        raw = Items.MAGIC_LOGS,
+        products = arrayOf(WhittleItem.MAGIC_SHORTBOW_U, WhittleItem.MAGIC_LONGBOW_U, WhittleItem.MAGIC_STOCK),
+    ),
     ;
 
     companion object {

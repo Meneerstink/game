@@ -1,0 +1,23 @@
+/**
+ * The map-spawn scripts are source-isolated: they only consume the main plugin
+ * DSL and are not imported by the remaining content sources. Keeping them in a
+ * dedicated project prevents a full 589-file spawn recompilation when combat,
+ * areas, skills, or interfaces change.
+ */
+sourceSets {
+    main {
+        kotlin {
+            srcDirs = [file('../src/main/kotlin')]
+            include 'gg/rsmod/plugins/content/areas/spawns/**'
+        }
+    }
+}
+
+dependencies {
+    implementation project(':game:plugins')
+    implementation project(':game')
+    implementation project(':net')
+    implementation project(':util')
+    implementation "it.unimi.dsi:fastutil:$fastUtilVersion"
+    implementation "org.jetbrains.kotlin:kotlin-script-runtime:1.8.0"
+}

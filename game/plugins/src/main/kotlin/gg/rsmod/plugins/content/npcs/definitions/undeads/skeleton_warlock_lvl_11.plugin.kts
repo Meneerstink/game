@@ -21,12 +21,12 @@ val skeleton =
 table.register(skeleton, id)
 
 on_npc_pre_death(id) {
-    val p = npc.damageMap.getMostDamage()!! as Player
+    val p = npc.killer() ?: return@on_npc_pre_death
     p.playSound(Sfx.SKELETON_DEATH)
 }
 
 on_npc_death(id) {
-    table.getDrop(world, npc.damageMap.getMostDamage()!! as Player, npc.id, npc.tile)
+    table.getDrop(world, npc.killer() ?: return@on_npc_death, npc.id, npc.tile)
 }
 
 set_combat_def(id) {

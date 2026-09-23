@@ -18,6 +18,24 @@ class CollisionUpdate private constructor(
         REMOVE,
     }
 
+    companion object {
+        /**
+         * The 667 client's rule (MapRegion loc loading): ground decoration flags GROUND_DECOR only when blockwalk == 1; walls
+         * (shapes 0-3), the diagonal wall (9), centrepieces (10-11) and roofs (12-21) flag when blockwalk != 0; wall decoration
+         * (4-8) never blocks. Opcode 74 clears blockwalk ([ObjectDef.solid]).
+         */
+        fun blocksWalk(
+            def: ObjectDef,
+            type: Int,
+        ): Boolean =
+            when (type) {
+                ObjectType.FLOOR_DECORATION.value -> def.blocksGroundDecor
+                in ObjectType.LENGTHWISE_WALL.value..ObjectType.RECTANGULAR_CORNER.value -> def.solid
+                in ObjectType.DIAGONAL_WALL.value until ObjectType.FLOOR_DECORATION.value -> def.solid
+                else -> false
+            }
+    }
+
     class Builder {
         private val flags = Object2ObjectOpenHashMap<Tile, ObjectList<DirectionFlag>>()
 
@@ -74,7 +92,7 @@ class CollisionUpdate private constructor(
             val type = obj.type
             val tile = obj.tile
 
-            if (!unwalkable(def, type)) {
+            if (!blocksWalk(def, type)) {
                 return
             }
 
@@ -92,9 +110,7 @@ class CollisionUpdate private constructor(
             }
 
             if (type == ObjectType.FLOOR_DECORATION.value) {
-                if (def.interactive && def.solid) {
-                    putTile(Tile(x, z, height), impenetrable, *Direction.NESW)
-                }
+                putTile(Tile(x, z, height), impenetrable, *Direction.NESW)
             } else if (type >= ObjectType.DIAGONAL_WALL.value && type < ObjectType.FLOOR_DECORATION.value) {
                 for (dx in 0 until width) {
                     for (dz in 0 until length) {
@@ -108,26 +124,6 @@ class CollisionUpdate private constructor(
             } else if (type == ObjectType.WALL_CORNER.value) {
                 putLargeCornerWall(tile, impenetrable, Direction.WNES_DIAGONAL[orientation])
             }
-        }
-
-        private fun unwalkable(
-            def: ObjectDef,
-            type: Int,
-        ): Boolean {
-            val isSolidFloorDecoration = type == ObjectType.FLOOR_DECORATION.value && def.interactive
-            val isRoof =
-                type > ObjectType.DIAGONAL_INTERACTABLE.value && type < ObjectType.FLOOR_DECORATION.value && def.solid
-            val isWall =
-                (
-                    type >= ObjectType.LENGTHWISE_WALL.value &&
-                        type <= ObjectType.RECTANGULAR_CORNER.value ||
-                        type == ObjectType.DIAGONAL_WALL.value
-                ) &&
-                    def.solid
-            val isSolidInteractable =
-                (type == ObjectType.DIAGONAL_INTERACTABLE.value || type == ObjectType.INTERACTABLE.value) && def.solid
-
-            return isWall || isRoof || isSolidInteractable || isSolidFloorDecoration
         }
     }
 }

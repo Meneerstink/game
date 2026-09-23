@@ -69,12 +69,12 @@ val citizen =
 table.register(citizen, *ids)
 
 on_npc_pre_death(Npcs.MAN_2, Npcs.MAN_3, Npcs.WOMAN_BRUNETTE_PONYTAIL_5, Npcs.WOMAN_WOMAN_BLOND_PONYTAIL_6, Npcs.MAN_3915) {
-    val p = npc.damageMap.getMostDamage()!! as Player
+    val p = npc.killer() ?: return@on_npc_pre_death
     p.playSound(Sfx.HUMAN_DEATH)
 }
 
 on_npc_death(*ids) {
-    table.getDrop(world, npc.damageMap.getMostDamage()!! as Player, npc.id, npc.tile)
+    table.getDrop(world, npc.killer() ?: return@on_npc_death, npc.id, npc.tile)
 }
 
 ids.forEach {

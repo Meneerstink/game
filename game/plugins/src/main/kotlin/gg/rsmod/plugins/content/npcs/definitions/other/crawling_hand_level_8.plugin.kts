@@ -70,12 +70,12 @@ val crawlinghand =
 table.register(crawlinghand, *ids)
 
 on_npc_pre_death(Npcs.CRAWLING_HAND_1649, Npcs.CRAWLING_HAND_1651, Npcs.CRAWLING_HAND_1652, Npcs.CRAWLING_HAND_1654, Npcs.CRAWLING_HAND_1656, Npcs.CRAWLING_HAND_1657) {
-    val p = npc.damageMap.getMostDamage()!! as Player
+    val p = npc.killer() ?: return@on_npc_pre_death
     p.playSound(Sfx.HAND_DEATH)
 }
 
 on_npc_death(*ids) {
-    table.getDrop(world, npc.damageMap.getMostDamage()!! as Player, npc.id, npc.tile)
+    table.getDrop(world, npc.killer() ?: return@on_npc_death, npc.id, npc.tile)
 }
 
 ids.forEach {

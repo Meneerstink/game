@@ -25,6 +25,10 @@ object Foods {
     /** "approximately 18 seconds" (OSRS Wiki "Strange fruit"). */
     const val STRANGE_FRUIT_IMMUNITY_TICKS = 30
 
+    /** OSRS anglerfish heal at the player's Hitpoints level (3..22), not a fixed amount. */
+    fun anglerfishHeal(hitpointsLevel: Int): Int =
+        (hitpointsLevel / 10) + (2 * (hitpointsLevel / 25)) + (5 * (hitpointsLevel / 93)) + 2
+
     fun canEat(
         p: Player,
         food: Food,
@@ -47,14 +51,15 @@ object Foods {
         val heal =
             when {
                 food == Food.KEBAB -> (kebabEffect?.first ?: 0) / Food.LEDGER_UNITS_PER_HITPOINT
+                food == Food.ANGLERFISH -> anglerfishHeal(p.skills.getMaxLevel(Skills.CONSTITUTION))
                 else -> food.hitpoints
             }
 
-        // capValue is an allowance ABOVE the maximum (Player.alterLifepoints). The old value,
-        // current level + 10, let a rocktail raise HP to nearly twice the maximum.
+        // Anglerfish can boost Hitpoints above maximum by the amount healed. Other food cannot
+        // overheal in this food table.
         val overHeal =
             when (food) {
-                Food.ROCKTAIL -> Food.ROCKTAIL_OVERHEAL_HITPOINTS
+                Food.ANGLERFISH -> heal
                 else -> 0
             }
 

@@ -92,9 +92,14 @@ open class PointCurrency(
         }
         val currencyCount = p.attr[balanceAttr] ?: 0
 
+        if (amt <= 0 || currencyCount <= 0) {
+            p.message("You don't have enough $pluralCurrency.")
+            return
+        }
+
         var amount = min(floor(currencyCount.toDouble() / currencyCost.toDouble()).toInt(), amt)
 
-        if (amount == 0) {
+        if (amount <= 0) {
             p.message("You don't have enough $pluralCurrency.")
             return
         }
@@ -103,7 +108,7 @@ open class PointCurrency(
 
         amount = Math.min(amount, shopItem.currentAmount)
 
-        if (amount == 0) {
+        if (amount <= 0) {
             p.filterableMessage("The shop has run out of stock.")
             return
         }
@@ -122,7 +127,9 @@ open class PointCurrency(
             return
         }
 
-        p.attr[balanceAttr] = (p.attr[balanceAttr] ?: 0) - totalCost.toInt()
+        // Debit first, but refund every uninserted unit below. This is a transaction: a full
+        // inventory must not consume points, and a negative client amount must never credit them.
+        p.attr[balanceAttr] = currencyCount - totalCost.toInt()
 
         val add = p.inventory.add(item = shopItem.item, amount = amount, assureFullInsertion = false)
         if (add.completed == 0) {

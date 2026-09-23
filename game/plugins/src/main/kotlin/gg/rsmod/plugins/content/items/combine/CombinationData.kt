@@ -294,6 +294,43 @@ enum class CombinationData(
     DRAGON_DEFENDER_T(items = intArrayOf(Items.DRAGON_DEFENDER_ORNAMENT_KIT, Items.DRAGON_DEFENDER), resultItem = Items.DRAGON_DEFENDER_T, experience = 0.0),
     DRAGON_SCIMITAR_OR(items = intArrayOf(Items.DRAGON_SCIMITAR_ORNAMENT_KIT, Items.DRAGON_SCIMITAR), resultItem = Items.DRAGON_SCIMITAR_OR, experience = 0.0),
 
+    // OSRS import run 2026-09-17, batch "kits" (OSRS Wiki kit / ornamented item pages; OsrsOrnamentKits).
+    DRAGON_BOOTS_G(items = intArrayOf(Items.DRAGON_BOOTS_ORNAMENT_KIT, Items.DRAGON_BOOTS), resultItem = Items.DRAGON_BOOTS_G, experience = 0.0),
+    BERSERKER_NECKLACE_OR(items = intArrayOf(Items.BERSERKER_NECKLACE_ORNAMENT_KIT, Items.BERSERKER_NECKLACE), resultItem = Items.BERSERKER_NECKLACE_OR, experience = 0.0),
+    RUNE_DEFENDER_T(items = intArrayOf(Items.RUNE_DEFENDER_ORNAMENT_KIT, Items.RUNE_DEFENDER), resultItem = Items.RUNE_DEFENDER_T, experience = 0.0),
+    TZHAAR_KET_OM_T(items = intArrayOf(Items.TZHAAR_KET_OM_ORNAMENT_KIT, Items.TZHAARKETOM), resultItem = Items.TZHAAR_KET_OM_T, experience = 0.0),
+    RUNE_SCIMITAR_GUTHIX(items = intArrayOf(Items.RUNE_SCIMITAR_ORNAMENT_KIT_GUTHIX, Items.RUNE_SCIMITAR), resultItem = Items.RUNE_SCIMITAR_GUTHIX, experience = 0.0),
+    RUNE_SCIMITAR_SARADOMIN(items = intArrayOf(Items.RUNE_SCIMITAR_ORNAMENT_KIT_SARADOMIN, Items.RUNE_SCIMITAR), resultItem = Items.RUNE_SCIMITAR_SARADOMIN, experience = 0.0),
+    RUNE_SCIMITAR_ZAMORAK(items = intArrayOf(Items.RUNE_SCIMITAR_ORNAMENT_KIT_ZAMORAK, Items.RUNE_SCIMITAR), resultItem = Items.RUNE_SCIMITAR_ZAMORAK, experience = 0.0),
+    FROZEN_ABYSSAL_WHIP(items = intArrayOf(Items.FROZEN_WHIP_MIX, Items.ABYSSAL_WHIP), resultItem = Items.FROZEN_ABYSSAL_WHIP, experience = 0.0),
+    VOLCANIC_ABYSSAL_WHIP(items = intArrayOf(Items.VOLCANIC_WHIP_MIX, Items.ABYSSAL_WHIP), resultItem = Items.VOLCANIC_ABYSSAL_WHIP, experience = 0.0),
+    LAVA_BATTLESTAFF_OR(items = intArrayOf(Items.LAVA_STAFF_UPGRADE_KIT, Items.LAVA_BATTLESTAFF), resultItem = Items.LAVA_BATTLESTAFF_OR, experience = 0.0),
+    STEAM_BATTLESTAFF_OR(items = intArrayOf(Items.STEAM_STAFF_UPGRADE_KIT, Items.STEAM_BATTLESTAFF), resultItem = Items.STEAM_BATTLESTAFF_OR, experience = 0.0),
+    MYSTIC_STEAM_STAFF_OR(items = intArrayOf(Items.STEAM_STAFF_UPGRADE_KIT, Items.MYSTIC_STEAM_STAFF), resultItem = Items.MYSTIC_STEAM_STAFF_OR, experience = 0.0),
+    DARK_BOW_GREEN(items = intArrayOf(Items.GREEN_DARK_BOW_PAINT, Items.DARK_BOW), resultItem = Items.DARK_BOW_GREEN, experience = 0.0),
+    DARK_BOW_BLUE(items = intArrayOf(Items.BLUE_DARK_BOW_PAINT, Items.DARK_BOW), resultItem = Items.DARK_BOW_BLUE, experience = 0.0),
+    DARK_BOW_YELLOW(items = intArrayOf(Items.YELLOW_DARK_BOW_PAINT, Items.DARK_BOW), resultItem = Items.DARK_BOW_YELLOW, experience = 0.0),
+    DARK_BOW_WHITE(items = intArrayOf(Items.WHITE_DARK_BOW_PAINT, Items.DARK_BOW), resultItem = Items.DARK_BOW_WHITE, experience = 0.0),
+    DRAGON_PICKAXE_OR_UPGRADED(items = intArrayOf(Items.DRAGON_PICKAXE_UPGRADE_KIT, Items.DRAGON_PICKAXE), resultItem = Items.DRAGON_PICKAXE_OR_UPGRADED, experience = 0.0),
+    DRAGON_PICKAXE_OR(items = intArrayOf(Items.ZALCANO_SHARD, Items.DRAGON_PICKAXE), resultItem = Items.DRAGON_PICKAXE_OR, experience = 0.0),
+
+    /**
+     * Revision-667 native ornament kits (night run 2026-09-19 ornament audit: the kits and ornamented items exist in the 667 cache but
+     * no route attached them). The 667 ornamented items carry their own cache option "Split" (OsrsOrnamentKits, option "Split"), which
+     * returns the item and the kit. The platelegs/skirt kits fit both leg pieces, as their names say.
+     */
+    AMULET_OF_FURY_OR_667(items = intArrayOf(Items.FURY_ORNAMENT_KIT, Items.AMULET_OF_FURY), resultItem = Items.AMULET_OF_FURY_OR, experience = 0.0),
+    DRAGON_FULL_HELM_OR_667(items = intArrayOf(Items.DRAGON_FULL_HELM_ORNAMENT_KIT_OR, Items.DRAGON_FULL_HELM), resultItem = Items.DRAGON_FULL_HELM_OR, experience = 0.0),
+    DRAGON_PLATEBODY_OR_667(items = intArrayOf(Items.DRAGON_PLATEBODY_ORNAMENT_KIT_OR, Items.DRAGON_PLATEBODY), resultItem = Items.DRAGON_PLATEBODY_OR, experience = 0.0),
+    DRAGON_PLATELEGS_OR_667(items = intArrayOf(Items.DRAGON_PLATELEGSSKIRT_ORNAMENT_KIT_OR, Items.DRAGON_PLATELEGS), resultItem = Items.DRAGON_PLATELEGS_OR, experience = 0.0),
+    DRAGON_PLATESKIRT_OR_667(items = intArrayOf(Items.DRAGON_PLATELEGSSKIRT_ORNAMENT_KIT_OR, Items.DRAGON_PLATESKIRT), resultItem = Items.DRAGON_PLATESKIRT_OR, experience = 0.0),
+    DRAGON_SQ_SHIELD_OR_667(items = intArrayOf(Items.DRAGON_SQ_SHIELD_ORNAMENT_KIT_OR, Items.DRAGON_SQ_SHIELD), resultItem = Items.DRAGON_SQUARE_SHIELD_OR, experience = 0.0),
+    DRAGON_FULL_HELM_SP_667(items = intArrayOf(Items.DRAGON_FULL_HELM_ORNAMENT_KIT_SP, Items.DRAGON_FULL_HELM), resultItem = Items.DRAGON_FULL_HELM_SP, experience = 0.0),
+    DRAGON_PLATEBODY_SP_667(items = intArrayOf(Items.DRAGON_PLATEBODY_ORNAMENT_KIT_SP, Items.DRAGON_PLATEBODY), resultItem = Items.DRAGON_PLATEBODY_SP, experience = 0.0),
+    DRAGON_PLATELEGS_SP_667(items = intArrayOf(Items.DRAGON_PLATELEGSSKIRT_ORNAMENT_KIT_SP, Items.DRAGON_PLATELEGS), resultItem = Items.DRAGON_PLATELEGS_SP, experience = 0.0),
+    DRAGON_PLATESKIRT_SP_667(items = intArrayOf(Items.DRAGON_PLATELEGSSKIRT_ORNAMENT_KIT_SP, Items.DRAGON_PLATESKIRT), resultItem = Items.DRAGON_PLATESKIRT_SP, experience = 0.0),
+    DRAGON_SQ_SHIELD_SP_667(items = intArrayOf(Items.DRAGON_SQ_SHIELD_ORNAMENT_KIT_SP, Items.DRAGON_SQ_SHIELD), resultItem = Items.DRAGON_SQ_SHIELD_SP, experience = 0.0),
+
     /** OSRS Wiki "Necklace of rupture": Necklace of anguish + Etched elder venator fang, 84 Crafting, 500 experience. */
     NECKLACE_OF_RUPTURE(items = intArrayOf(Items.ETCHED_ELDER_VENATOR_FANG, Items.NECKLACE_OF_ANGUISH), resultItem = Items.NECKLACE_OF_RUPTURE, levelRequired = 84, experience = 500.0),
 
@@ -309,6 +346,11 @@ enum class CombinationData(
         experience = 500.0,
         message = "You successfully create an amulet of rancour.",
     ),
+    // Heavy ballista is NOT a single 4-item combine (owner live-test 2026-09-16 caught this: it crafted instantly
+    // instead of a real 3-step assembly). OSRS Wiki (fetched 2026-09-16): limbs+frame -> Incomplete heavy ballista
+    // (30 XP) -> +spring -> Unstrung heavy ballista (30 XP) -> +monkey tail -> Heavy ballista (600 XP), 72 Fletching
+    // throughout, 660 XP total. Rebuilt as a 3-step chain in heavy_ballista.plugin.kts once the two intermediate
+    // items (Incomplete/Unstrung heavy ballista) are imported - see the "ballista" batch in OsrsItemImportTool.
     PIE_SHELL(
         items = intArrayOf(Items.PASTRY_DOUGH, Items.PIE_DISH),
         resultItem = Items.PIE_SHELL,

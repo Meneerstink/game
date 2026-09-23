@@ -7,11 +7,14 @@ import gg.rsmod.plugins.api.Spellbook
 import gg.rsmod.plugins.api.ext.getSpellbook
 import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.api.ext.switchSpellbook
+import gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction
+import gg.rsmod.plugins.content.unlocks.UnlockNpcRewards
 
 /**
  * Spellbook switching rules shared by the Ancient/Astral altars, the Ferox home altar menu and
  * the ::spellbook command. Level gates, animation and messages sourced from the 2009scape
- * MagicAltarListener (same-era content); quest requirements are out of this server's scope.
+ * MagicAltarListener (same-era content); Grand Exchange NPC unlock flags are enforced here so
+ * altars, commands and other callers cannot bypass the NPC conversations.
  */
 object Spellbooks {
     const val SWITCH_ANIM = 645
@@ -47,6 +50,18 @@ object Spellbooks {
         book: Spellbook,
         ancientDrain: Boolean = false,
     ): Boolean {
+        // Spellbook switching is an action. If it is performed while a Deadman portal,
+        // transport, logout or teleport countdown is visible, the pending action must be
+        // cancelled rather than allowed to complete after the switch.
+        SevenSecondAction.cancel(player, "Your action was cancelled.")
+        if (book == Spellbook.ANCIENT && player.attr[UnlockNpcRewards.ANCIENT_MAGIC_UNLOCKED] != true) {
+            player.message("Speak to the Archaeologist in the Grand Exchange to unlock Ancient Magicks.")
+            return false
+        }
+        if (book == Spellbook.LUNAR && player.attr[UnlockNpcRewards.LUNAR_MAGIC_UNLOCKED] != true) {
+            player.message("Speak to the Oneiromancer in the Grand Exchange to unlock the Lunar spellbook.")
+            return false
+        }
         val level = requiredLevel(book)
         if (player.skills.getMaxLevel(Skills.MAGIC) < level) {
             player.message("You need a Magic level of at least $level in order to do this.")

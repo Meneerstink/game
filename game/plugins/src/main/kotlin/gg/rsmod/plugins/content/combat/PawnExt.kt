@@ -362,7 +362,7 @@ fun Pawn.dealHit(
             // curse is still evaluated first inside it, unchanged, just moved up a level so
             // it shares an order with Vengeance/Ring of recoil. See DamageResponse.kt.
             AncientCurses.withDeflectAttackToken(deflectAttackToken) {
-                DamageResponse.onIncomingHit(pawn, target, curseHitStyle, totalDamage)
+                DamageResponse.onIncomingHit(pawn, target, curseHitStyle, totalDamage, deflectDamage)
             }
             // Lifesteal further-foundations pass (2026-09-02): Guthan's Infestation set effect,
             // an attacker-side "on damage dealt" effect like Sap/Leech above it. See

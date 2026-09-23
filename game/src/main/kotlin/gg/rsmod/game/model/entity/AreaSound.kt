@@ -13,8 +13,9 @@ class AreaSound private constructor(
     val radius: Int,
     val volume: Int,
     val delay: Int,
+    val playbackVolume: Int,
 ) : Entity() {
-    constructor(tile: Tile, id: Int, radius: Int, volume: Int, delay: Int = 0) : this(id, radius, volume, delay) {
+    constructor(tile: Tile, id: Int, radius: Int, volume: Int, delay: Int = 0, playbackVolume: Int = 255) : this(id, radius, volume, delay, playbackVolume) {
         check(radius <= 0xf) { "Radius can not exceed 15 tiles." }
         this.tile = tile
     }

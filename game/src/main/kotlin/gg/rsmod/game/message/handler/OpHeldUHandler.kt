@@ -1,5 +1,6 @@
 package gg.rsmod.game.message.handler
 
+import gg.rsmod.game.action.UnhandledInteractions
 import gg.rsmod.game.message.MessageHandler
 import gg.rsmod.game.message.impl.OpHeldUMessage
 import gg.rsmod.game.model.World
@@ -72,11 +73,20 @@ class OpHeldUHandler : MessageHandler<OpHeldUMessage> {
             client.attr[INTERACTING_ITEM_SLOT] = toSlot
 
             val handled = world.plugins.executeSpellOnItem(client, fromComponentHash)
-            if (!handled && world.devContext.debugMagicSpells) {
-                client.writeConsoleMessage(
-                    "Unhandled spell on item: [item=[${item.id}, ${item.amount}], slot=$toSlot, " +
-                        "from_component=[$fromInterfaceId:$fromComponent], to_component=[$toInterfaceId:$toComponent]]",
+            if (!handled) {
+                UnhandledInteractions.recordInteraction(
+                    kind = "spell-on-item",
+                    id = item.id,
+                    option = fromComponentHash,
+                    name = "item",
+                    context = "slot=$toSlot from_component=$fromInterfaceId:$fromComponent to_component=$toInterfaceId:$toComponent",
                 )
+                if (world.devContext.debugMagicSpells) {
+                    client.writeConsoleMessage(
+                        "Unhandled spell on item: [item=[${item.id}, ${item.amount}], slot=$toSlot, " +
+                            "from_component=[$fromInterfaceId:$fromComponent], to_component=[$toInterfaceId:$toComponent]]",
+                    )
+                }
             }
             return
         }
@@ -118,6 +128,13 @@ class OpHeldUHandler : MessageHandler<OpHeldUMessage> {
         val handled = world.plugins.executeItemOnItem(client, fromItem.id, toItem.id)
 
         if (!handled) {
+            UnhandledInteractions.recordInteraction(
+                kind = "item-on-item",
+                id = fromItem.id,
+                option = toItem.id,
+                name = "item",
+                context = "from_slot=$fromSlot to_slot=$toSlot from_component=$fromInterfaceId:$fromComponent to_component=$toInterfaceId:$toComponent",
+            )
             client.writeFilterableMessage(Entity.NOTHING_INTERESTING_HAPPENS)
             if (world.devContext.debugItemActions) {
                 client.writeConsoleMessage(

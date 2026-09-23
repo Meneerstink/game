@@ -21,7 +21,7 @@ val templeGuardian =
 table.register(templeGuardian, Npcs.TEMPLE_GUARDIAN)
 
 on_npc_pre_death(Npcs.TEMPLE_GUARDIAN) {
-    val p = npc.damageMap.getMostDamage()!! as Player
+    val p = npc.killer() ?: return@on_npc_pre_death
     if (!gg.rsmod.plugins.content.combat.audio.NpcCombatAudio.hasDeathSound(npc.id)) p.playSound(Sfx.DOG_DEATH)
     if (p.getCurrentStage(PriestInPeril) == 2) {
         p.advanceToNextStage(PriestInPeril)
@@ -29,7 +29,7 @@ on_npc_pre_death(Npcs.TEMPLE_GUARDIAN) {
 }
 
 on_npc_death(Npcs.TEMPLE_GUARDIAN) {
-    table.getDrop(world, npc.damageMap.getMostDamage()!! as Player, npc.id, npc.tile)
+    table.getDrop(world, npc.killer() ?: return@on_npc_death, npc.id, npc.tile)
 }
 
 set_combat_def(Npcs.TEMPLE_GUARDIAN) {

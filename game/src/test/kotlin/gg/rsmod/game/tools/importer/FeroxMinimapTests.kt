@@ -7,7 +7,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 /**
- * RCV-011 home minimap, roster-wide: every imported Ferox loc (RSPS_IMPORT_ASSET_MAP.yml) whose OSRS definition has a
+ * RCV-011 home minimap, roster-wide: every imported Ferox loc (OSRS_IMPORT_MASTER.yml) whose OSRS definition has a
  * map scene or map area carries the pixel-proven 667 msi / mapelement in BOTH production caches, or its OSRS value is a
  * recorded SOURCE_BLOCKED one. A newly imported Ferox loc with an unmapped value fails here.
  */

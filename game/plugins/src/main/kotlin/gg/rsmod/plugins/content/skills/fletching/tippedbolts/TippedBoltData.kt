@@ -79,6 +79,79 @@ enum class TippedBoltData(
         levelRequirement = 73,
         experience = 9.4,
     ),
+
+    /**
+     * OSRS-IMPORT: OSRS Wiki "<gem> dragon bolts" item pages (raw wikitext, fetched 2026-09-16, one page per
+     * tier): "Dragon bolts" (`OSRS_DRAGON_BOLTS`, distinct from the 667-native dragon-tipped runite bolts above)
+     * plus 10 of the matching gem's bolt tips, all at Fletching 84. XP per bolt is independently sourced per
+     * tier, not assumed from the lower runite-shaft tier above - Sapphire in particular differs (4.7 here vs
+     * 2.4 for SAPPHIRE above). Dragonstone is the one gem with no dedicated "Dragonstone bolt tips" item in this
+     * cache (only the finished Dragonstone dragon bolts were imported) - CONTEXT_UNAVAILABLE, not built, no tip
+     * material to guess an id for.
+     */
+    OPAL_DRAGON(
+        plainBolt = Items.OSRS_DRAGON_BOLTS,
+        tip = Items.OPAL_BOLT_TIPS,
+        product = Items.OPAL_DRAGON_BOLTS,
+        levelRequirement = 84,
+        experience = 1.6,
+    ),
+    JADE_DRAGON(
+        plainBolt = Items.OSRS_DRAGON_BOLTS,
+        tip = Items.JADE_BOLT_TIPS,
+        product = Items.JADE_DRAGON_BOLTS,
+        levelRequirement = 84,
+        experience = 2.4,
+    ),
+    PEARL_DRAGON(
+        plainBolt = Items.OSRS_DRAGON_BOLTS,
+        tip = Items.PEARL_BOLT_TIPS,
+        product = Items.PEARL_DRAGON_BOLTS,
+        levelRequirement = 84,
+        experience = 3.2,
+    ),
+    TOPAZ_DRAGON(
+        plainBolt = Items.OSRS_DRAGON_BOLTS,
+        tip = Items.TOPAZ_BOLT_TIPS,
+        product = Items.TOPAZ_DRAGON_BOLTS,
+        levelRequirement = 84,
+        experience = 3.9,
+    ),
+    SAPPHIRE_DRAGON(
+        plainBolt = Items.OSRS_DRAGON_BOLTS,
+        tip = Items.SAPPHIRE_BOLT_TIPS,
+        product = Items.SAPPHIRE_DRAGON_BOLTS,
+        levelRequirement = 84,
+        experience = 4.7,
+    ),
+    EMERALD_DRAGON(
+        plainBolt = Items.OSRS_DRAGON_BOLTS,
+        tip = Items.EMERALD_BOLT_TIPS,
+        product = Items.EMERALD_DRAGON_BOLTS,
+        levelRequirement = 84,
+        experience = 5.5,
+    ),
+    RUBY_DRAGON(
+        plainBolt = Items.OSRS_DRAGON_BOLTS,
+        tip = Items.RUBY_BOLT_TIPS,
+        product = Items.RUBY_DRAGON_BOLTS,
+        levelRequirement = 84,
+        experience = 6.3,
+    ),
+    DIAMOND_DRAGON(
+        plainBolt = Items.OSRS_DRAGON_BOLTS,
+        tip = Items.DIAMOND_BOLT_TIPS,
+        product = Items.DIAMOND_DRAGON_BOLTS,
+        levelRequirement = 84,
+        experience = 7.0,
+    ),
+    ONYX_DRAGON(
+        plainBolt = Items.OSRS_DRAGON_BOLTS,
+        tip = Items.ONYX_BOLT_TIPS,
+        product = Items.ONYX_DRAGON_BOLTS,
+        levelRequirement = 84,
+        experience = 9.4,
+    ),
     ;
 
     companion object {

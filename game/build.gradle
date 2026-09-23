@@ -553,11 +553,60 @@ task runGeHomeHallMapTool(type: JavaExec) {
     main = 'gg.rsmod.game.tools.importer.GeHomeHallMapTool'
 }
 
+task runGeHomeGroundDecorTool(type: JavaExec) {
+    group = 'verification'
+    description = 'Transactionally remove GE home ground decorations in a rectangle. Usage: --args="plan|apply minX minZ maxX maxZ"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.GeHomeGroundDecorTool'
+}
+
+task runGeHomeGatehouseTool(type: JavaExec) {
+    group = 'verification'
+    description = 'Transactionally make the GE home south gatehouse always visible. Usage: --args="plan|apply"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.GeHomeGatehouseTool'
+}
+
+task runGeHomeFloorRestoreTool(type: JavaExec) {
+    group = 'verification'
+    description = 'Transactionally restore the original ground under the GE home south gate apron. Usage: --args="plan|apply"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.GeHomeFloorRestoreTool'
+}
+
+task runGeHomeBannerTool(type: JavaExec) {
+    group = 'verification'
+    description = 'Probe or repaint the GE home banner textures. Usage: --args="probe <modelId...>|sprites <textureId...>|plan|apply <tex>=<png>..."'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.GeHomeBannerTool'
+}
+
+task runHouseBannerTool(type: JavaExec) {
+    group = 'verification'
+    description = 'Transactionally add/update the 78 house-style banner texture, models and locs. Usage: --args="plan|apply"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.HouseBannerTool'
+}
+
+task runGeHomeArrivalMapTool(type: JavaExec) {
+    group = 'verification'
+    description = 'Transactionally dress the GE Home arrival route and casino floor. Usage: --args="plan|apply"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.GeHomeArrivalMapTool'
+}
+
 task runFeroxBarrierOptionTool(type: JavaExec) {
     group = 'tools'
     description = 'Ferox follow-up: give the visible barrier field loc 62438 the "Pass-Through" option (A7 CacheTransaction on both caches). Usage: --args="plan|apply"'
     classpath = sourceSets.main.runtimeClasspath
     main = 'gg.rsmod.game.tools.importer.FeroxBarrierOptionTool'
+}
+
+task runPohObjectOptionTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Player-owned house: drop Construction build-mode options from POH locs 13480/13405/13199/13523 and make 13480 the "Drink" rejuvenation pool (A7 CacheTransaction on both caches). Usage: --args="plan|apply"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.PohObjectOptionTool'
 }
 
 task runFeroxFollowupTool(type: JavaExec) {
@@ -567,13 +616,6 @@ task runFeroxFollowupTool(type: JavaExec) {
     main = 'gg.rsmod.game.tools.importer.FeroxFollowupTool'
 }
 
-task runFeroxPortalCleanupTool(type: JavaExec) {
-    group = 'tools'
-    description = 'Ferox portal-removal follow-up: remove the two leftover Bounty Hunter portal ' +
-        'flanking pieces (locs 62580/62581) left behind by FeroxFollowupTool (A7 CacheTransaction on ' +
-        'both caches). Usage: --args="plan|apply"'
-    classpath = sourceSets.main.runtimeClasspath
-    main = 'gg.rsmod.game.tools.importer.FeroxPortalCleanupTool'
 task runGeMapIconCleanupTool(type: JavaExec) {
     group = 'tools'
     description = 'Grand Exchange home: remove the non-bank/non-GE map-marker locs (minimap + world map icons) ' +
@@ -582,6 +624,13 @@ task runGeMapIconCleanupTool(type: JavaExec) {
     main = 'gg.rsmod.game.tools.importer.GeMapIconCleanupTool'
 }
 
+task runFeroxPortalCleanupTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Ferox portal-removal follow-up: remove the two leftover Bounty Hunter portal ' +
+        'flanking pieces (locs 62580/62581) left behind by FeroxFollowupTool (A7 CacheTransaction on ' +
+        'both caches). Usage: --args="plan|apply"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.FeroxPortalCleanupTool'
 }
 
 task runFeroxImportTool(type: JavaExec) {
@@ -620,4 +669,25 @@ task runSeqSoundProbeTool(type: JavaExec) {
         './gradlew :game:runSeqSoundProbeTool --args="<cachePath> <seqId> [seqId ...]"'
     classpath = sourceSets.main.runtimeClasspath
     main = 'gg.rsmod.game.tools.importer.SeqSoundProbeTool'
+}
+
+task runItemTextureProbeTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Read-only: textures used by OSRS item models or rev-667 models. Usage: --args="osrs <itemId>..." | --args="r667 <cachePath> <modelId>..."'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.ItemTextureProbeTool'
+}
+
+task runTextureColourRepairTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Repairs imported OSRS models whose textured faces were flattened to the texture sprite id instead of its colour (both caches, CacheTransaction). Usage: [--apply]'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.TextureColourRepairTool'
+}
+
+task runOsrsTextureImportTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Imports one OSRS sprite texture into both rev-667 caches (sprite, texture program cloned from a 667 template, materials row) and re-textures the imported models using it. Usage: --args="<osrsTex> <template667Tex> <templateOsrsTex> [--apply]"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.OsrsTextureImportTool'
 }

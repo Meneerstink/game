@@ -54,11 +54,7 @@ object Fishing {
     ): Boolean {
         // TODO: are these the correct messages?
 
-        if (!fishingSpot.tile.isWithinRadius(player.tile, 1) && fishingSpot.id != Npcs.ROCKTAIL_SHOAL) {
-            return false
-        }
-
-        if (!fishingSpot.tile.isWithinRadius(player.tile, 2) && fishingSpot.id == Npcs.ROCKTAIL_SHOAL) {
+        if (!fishingSpot.tile.isWithinRadius(player.tile, 1)) {
             return false
         }
 

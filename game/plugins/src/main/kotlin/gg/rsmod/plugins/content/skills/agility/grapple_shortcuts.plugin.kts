@@ -208,7 +208,11 @@ on_world_init {
     }
 
     // ---- Falador wall ----
-    listOf(Triple(17049, Tile(3006, 3395), Direction.SOUTH), Triple(17050, Tile(3005, 3393), Direction.NORTH)).forEach { (id, stand, facing) ->
+    // Owner 2026-09-17 ("3006,3396 shortcut werkt niet"): this cache places the 2011 hidey-hole
+    // variants of the wall (ObjectPlacementProbeTool: 213 at 3006,3395 north face, 214 at 3005,3392
+    // south face, options Grapple / Build hidey-hole), not Void's 17049/17050, so the bindings were
+    // silently skipped. Both faces are bound; the wall-top 17051/17052 "Jump" objects are present.
+    listOf(Triple(213, Tile(3006, 3395), Direction.SOUTH), Triple(214, Tile(3005, 3393), Direction.NORTH)).forEach { (id, stand, facing) ->
         shortcut(id, "Grapple") {
             obstacle {
                 walkToTile(player, stand)

@@ -42,15 +42,17 @@ object DamageResponse {
         target: Pawn,
         style: CombatClass,
         damage: Int,
+        deflectDamage: Int = damage,
     ) {
-        if (damage <= 0 || attacker.isDead() || target.isDead()) return
+        if ((damage <= 0 && deflectDamage <= 0) || attacker.isDead() || target.isDead()) return
         if (target.attr[REFLECTING_DAMAGE_ATTR] == true) return
 
         target.attr[REFLECTING_DAMAGE_ATTR] = true
         try {
             // 1) Deflect curses - existing implementation, logic unchanged, just moved one
             //    call site up so it participates in this single deterministic order.
-            AncientCurses.onIncomingHit(attacker, target, style, damage)
+            AncientCurses.onIncomingHit(attacker, target, style, deflectDamage)
+            if (damage <= 0) return
             //    RCV-011: the same deflect for npcs showing a Deflect overhead (Nex), see NpcDeflect.
             NpcDeflect.onIncomingHit(attacker, target, style, damage)
             // 2) Vengeance - single-use, 75% of damage, consumes itself on trigger.

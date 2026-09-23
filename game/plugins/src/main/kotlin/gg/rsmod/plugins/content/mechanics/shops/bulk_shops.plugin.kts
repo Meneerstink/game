@@ -152,7 +152,7 @@ val BULK_SHOPS = listOf(
     BulkShop("Pikkupstix's Summoning Shop", intArrayOf(6971), false, listOf(12204 to 10, 12207 to 10, 12210 to 10, 12213 to 10, 12216 to 10, 12219 to 10, 12222 to 10, 12183 to 125000, 12155 to 5000)),
     BulkShop("Bogrog's Summoning Shop", intArrayOf(4472), false, listOf(12204 to 10, 12207 to 10, 12210 to 0, 12213 to 0, 12216 to 0, 12219 to 0, 12222 to 0, 12183 to 65000, 12155 to 5000)),
     BulkShop("Fortunato's Fine Wine", intArrayOf(3671), false, listOf(1993 to 10, 7810 to 10, 7919 to 10, 1935 to 10)),
-    BulkShop("Gerrant's Fishy Business", intArrayOf(558), false, listOf(303 to 10, 307 to 10, 309 to 10, 311 to 30, 301 to 10, 13431 to 10, 313 to 1000, 314 to 1000, 317 to 0, 327 to 10, 345 to 0, 321 to 0, 335 to 0, 349 to 0, 331 to 0, 359 to 0, 377 to 0, 371 to 0)),
+    BulkShop("Gerrant's Fishy Business", intArrayOf(558, 12261), false, listOf(303 to 10, 307 to 10, 309 to 10, 311 to 30, 301 to 10, 13431 to 10, 313 to 1000, 314 to 1000, 317 to 0, 327 to 10, 345 to 0, 321 to 0, 335 to 0, 349 to 0, 331 to 0, 359 to 0, 377 to 0, 371 to 0)),
     BulkShop("Harry's Fishing Shop", intArrayOf(576), false, listOf(303 to 10, 307 to 10, 311 to 1000, 301 to 10, 313 to 100, 305 to 10, 317 to 0, 327 to 0, 345 to 0, 353 to 0, 341 to 0, 321 to 0, 359 to 0, 377 to 0, 363 to 0, 371 to 0, 383 to 0, 7810 to 1000)),
     BulkShop("Blades By Urbi", intArrayOf(5266), false, listOf(1205 to 10, 1203 to 10, 1207 to 10, 1217 to 0, 1209 to 10, 1211 to 10, 1213 to 10, 1215 to 0, 1321 to 10, 1323 to 10, 1325 to 10)),
     BulkShop("Gaius' Two Handed Shop.", intArrayOf(586), false, listOf(1307 to 4, 1309 to 3, 1311 to 2, 1313 to 1, 1315 to 1, 1317 to 1)),
@@ -234,13 +234,36 @@ val BULK_SHOPS = listOf(
     BulkShop("The Esoterican Arms", intArrayOf(3920), false, listOf(1917 to 10, 5763 to 10, 1993 to 5, 1798 to 5)),
     BulkShop("Miscellanian Clothes Shop", intArrayOf(1383, 3921), false, listOf(3767 to 5, 3769 to 5, 3771 to 5, 3773 to 5, 3775 to 5, 3795 to 5, 5050 to 3, 5052 to 3, 5038 to 3, 5040 to 3, 5044 to 3, 5046 to 3, 5026 to 3, 5028 to 3, 5032 to 3, 5034 to 3)),
     BulkShop("Island Fishmonger", intArrayOf(1393), false, listOf(303 to 5, 307 to 5, 309 to 5, 311 to 2, 301 to 2, 313 to 1500, 314 to 1000, 305 to 5, 317 to 0, 325 to 200, 345 to 0, 353 to 0, 341 to 0, 321 to 0, 335 to 0, 349 to 0, 331 to 0, 359 to 0, 377 to 0, 363 to 0, 371 to 0, 383 to 0)),
-    BulkShop("Greengrocer of Miscellania", intArrayOf(1394), false, listOf(1965 to 10, 1942 to 10, 1957 to 10, 1982 to 10, 1550 to 2)),
+    BulkShop("Greengrocer of Miscellania", intArrayOf(1394, 1370), false, listOf(1965 to 10, 1942 to 10, 1957 to 10, 1982 to 10, 1550 to 2)),
     BulkShop("Legends Guild General Store", intArrayOf(932), false, listOf(373 to 20, 2323 to 5, 121 to 3, 886 to 500)),
     BulkShop("Two Feet Charley's Fish Shop", intArrayOf(3161), false, listOf(317 to 10, 327 to 10, 345 to 10, 353 to 10, 341 to 10, 321 to 10, 359 to 0, 377 to 0, 363 to 0)),
     BulkShop("Fremennik Fur Trader", intArrayOf(1316), false, listOf(948 to 10, 958 to 10, 10117 to 0, 10121 to 0, 10119 to 0, 10123 to 0, 10093 to 0, 10095 to 0, 10097 to 0, 10099 to 0, 10101 to 0, 10103 to 0)),
     BulkShop("Leon's Prototype Crossbow", intArrayOf(5111), false, listOf(10156 to 2)),
     BulkShop("Uglug's Stuffsies", intArrayOf(2039), false, listOf(4844 to 100, 10927 to 0, 2862 to 100, 1777 to 10, 2876 to 0, 2878 to 10, 4850 to 0, 946 to 5, 4773 to 0, 4778 to 0, 4783 to 0, 4788 to 0, 4793 to 0, 4798 to 0, 4803 to 0, 4827 to 0)),
+    // 2026-09-22: keepers whose cache Trade option was still unbound (npc census). Stock is the Void donor's
+    // `*.shops.toml` for the same npc id (npc -> shop key in `*.npcs.toml`), item ids resolved by name.
+    BulkShop("King Lathas' Armoury", intArrayOf(561), false, listOf(882 to 1000, 877 to 1000, 841 to 10, 839 to 10, 837 to 10, 39 to 300, 40 to 300, 41 to 100, 42 to 100, 1349 to 10, 1353 to 10, 1363 to 10, 1365 to 10, 1369 to 10, 1307 to 10, 1309 to 10, 1311 to 10, 1313 to 10, 1315 to 10, 1317 to 10)),
+    BulkShop("Ore Seller", intArrayOf(2564), false, listOf(436 to 100, 438 to 100, 440 to 100, 447 to 100, 442 to 100, 444 to 100, 453 to 100)),
+    BulkShop("Harpoon Joe's House of 'Rum'", intArrayOf(3163), false, listOf(1917 to 10, 7157 to 10, 1993 to 10, 2003 to 10)),
+    BulkShop("Rellekka Hunting Supplies", intArrayOf(5112), false, listOf(10010 to 5, 10012 to 30, 10150 to 5, 10006 to 20)),
+    BulkShop("Feldip Hunting Supplies", intArrayOf(5113), false, listOf(10010 to 5, 10012 to 30, 10150 to 5, 10006 to 20)),
+    BulkShop("Reldak's Leather Armour", intArrayOf(5780), false, listOf(10954 to 10, 10956 to 10, 10958 to 10)),
+    BulkShop("Miltog's Lamps", intArrayOf(5781), false, listOf(596 to 10, 4525 to 0, 4535 to 0, 4546 to 0, 5013 to 10, 590 to 10, 10973 to 0, 4522 to 0, 4537 to 0, 4548 to 0)),
+    BulkShop("Dealga's Scimitar Emporium", intArrayOf(11475), false, listOf(4587 to 10)),
+    BulkShop("The Milk Shop", intArrayOf(11547), false, listOf(1927 to 200)),
+    BulkShop("Bettamax's Shop", intArrayOf(13106), false, listOf(19967 to 100)),
 )
+
+/** Keepers of [shop] whose Trade/Shop/Buy option exists in the cache and has no handler yet, as (npc id, slot). */
+fun freeKeepers(world: gg.rsmod.game.model.World, shop: BulkShop): List<Pair<Int, Int>> =
+    shop.npcs.toList().mapNotNull { id: Int ->
+        if (id < 0 || id >= world.definitions.getCount(NpcDef::class.java)) return@mapNotNull null
+        val def = world.definitions.get(NpcDef::class.java, id)
+        val slot = def.options.indexOfFirst { it != null && (it.equals("trade", true) || it.equals("shop", true) || it.equals("buy", true)) }
+        if (slot == -1) return@mapNotNull null
+        if (world.plugins.boundNpcOptions(id).contains(slot + 1)) return@mapNotNull null
+        id to slot + 1
+    }
 
 on_world_init_late {
     var created = 0
@@ -248,7 +271,13 @@ on_world_init_late {
     val skipped = mutableListOf<String>()
     BULK_SHOPS.forEach { shop ->
         if (world.getShop(shop.title) != null) {
-            skipped.add("${shop.title} (title exists)")
+            // A hand-written plugin already owns this shop. Its script usually binds only one keeper id, so
+            // every other keeper of the same shop (alternate ids, other towns) is bound to it here instead of
+            // being left on a dead Trade option (root cause of e.g. Draynor seed seller 2233 doing nothing).
+            val extra = freeKeepers(world, shop)
+            extra.forEach { (id, slot) -> world.plugins.bindNpc(id, slot) { player.openShop(shop.title) } }
+            bound += extra.size
+            if (extra.isEmpty()) skipped.add("${shop.title} (title exists)")
             return@forEach
         }
         val validItems = shop.stock.filter { (id, _) -> id in 0 until world.definitions.getCount(gg.rsmod.game.fs.def.ItemDef::class.java) }
@@ -256,15 +285,7 @@ on_world_init_late {
             skipped.add("${shop.title} (no items)")
             return@forEach
         }
-        val keepers =
-            shop.npcs.toList().mapNotNull { id: Int ->
-                if (id < 0 || id >= world.definitions.getCount(NpcDef::class.java)) return@mapNotNull null
-                val def = world.definitions.get(NpcDef::class.java, id)
-                val slot = def.options.indexOfFirst { it != null && (it.equals("trade", true) || it.equals("shop", true) || it.equals("buy", true)) }
-                if (slot == -1) return@mapNotNull null
-                if (world.plugins.boundNpcOptions(id).contains(slot + 1)) return@mapNotNull null
-                id to slot + 1
-            }
+        val keepers = freeKeepers(world, shop)
         if (keepers.isEmpty()) {
             skipped.add("${shop.title} (no free keeper)")
             return@forEach

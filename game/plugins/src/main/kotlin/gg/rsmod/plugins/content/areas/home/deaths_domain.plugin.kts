@@ -22,6 +22,7 @@ on_obj_option(FeroxObjects.DEATHS_DOMAIN, "enter") {
                 val logger = player.world.getService(LoggerService::class.java, searchSubclasses = true)
                 when (val result = DeathRecoveryService.reclaim(player, logger = logger)) {
                     DeathReclaimOutcome.NothingToReclaim -> player.message("You have no items to reclaim.")
+                    DeathReclaimOutcome.Expired -> player.message("Your death recovery expired and its items were forfeited.")
                     DeathReclaimOutcome.InsufficientFunds -> player.message("You need $fee coins to reclaim your items.")
                     is DeathReclaimOutcome.Reclaimed -> player.message("You reclaimed ${result.itemCount} item(s) for ${result.feePaid} coins. Any remaining items are held until you have space.")
                 }

@@ -5,7 +5,6 @@ import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.World
 import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.plugins.api.cfg.Npcs
-import gg.rsmod.plugins.content.mechanics.pvp.SkullyRoster
 
 /**
  * The three 78 Store npcs at the Grand Exchange (owner, RSPS_MASTERPLAN_ACTUEEL.md: "Store NPCs: 3168,3495 Donator /
@@ -32,9 +31,10 @@ object StoreNpcs {
 
     val POSTS: List<Post> =
         listOf(
-            Post(DONATOR_STORE, StoreCatalogue.Shop.DONATOR, Tile(3168, 3495, 0)),
-            Post(DEADMAN_STORE, StoreCatalogue.Shop.DEADMAN, Tile(3160, 3488, 0)),
-            Post(Npcs.XUAN, StoreCatalogue.Shop.LOYALTY, Tile(3165, 3486, 0)),
+            // 2026-09-22: inside the Grand Exchange home hall (ge_home_hall.plugin.kts), south wall, facing north.
+            Post(DONATOR_STORE, StoreCatalogue.Shop.DONATOR, Tile(3153, 3470, 0)),
+            Post(DEADMAN_STORE, StoreCatalogue.Shop.DEADMAN, Tile(3154, 3470, 0)),
+            Post(Npcs.XUAN, StoreCatalogue.Shop.LOYALTY, Tile(3155, 3470, 0)),
         )
 
     /** A Grand Exchange floor tile players stand on (the Skully site's customer-side anchor). */
@@ -43,37 +43,21 @@ object StoreNpcs {
     fun shopFor(npcId: Int): StoreCatalogue.Shop? = POSTS.firstOrNull { it.npcId == npcId }?.shop
 
     fun spawnAll(world: World): String {
-        // Runs right after SkullyRoster.spawnAll: his chest already clips its tile (so it is not reachable) and every
-        // standing npc's tile is taken.
-        val reachable = SkullyRoster.reachableFrom(world, EXCHANGE_FLOOR)
-        val taken = HashSet<Tile>()
-        world.npcs.forEach { if (it.tile.getDistance(EXCHANGE_FLOOR) <= SkullyRoster.SEARCH_RADIUS + 2) taken += Tile(it.tile) }
+        // The posts are fixed stalls inside the home hall, so each keeper stands exactly on its post and faces into
+        // the hall (north); the old snap-to-the-nearest-reachable-exchange-tile search belonged to the open GE floor.
         val lines = ArrayList<String>()
         POSTS.forEach { post ->
-            val tile =
-                if (post.tile in reachable && post.tile !in taken) {
-                    post.tile
-                } else {
-                    reachable.filter { it !in taken && it != EXCHANGE_FLOOR }.minByOrNull { it.getDistance(post.tile) }
-                }
-            if (tile == null) {
-                lines += "${post.shop.title}: NO reachable tile near ${post.tile.x},${post.tile.z}"
-                return@forEach
-            }
-            taken += tile
             val npc =
-                Npc(post.npcId, tile, world).also {
+                Npc(post.npcId, post.tile, world).also {
                     it.respawnOverride = true
                     it.static = true
                     it.walkRadius = 0
                 }
             world.spawn(npc)
             npc.setCombatLevel(0)
-            SkullyRoster.facing(world, tile, EXCHANGE_FLOOR)?.let {
-                npc.setSpawnFacing(Direction.between(tile, it))
-                npc.faceTile(it)
-            }
-            lines += "${post.shop.title}: npc ${post.npcId} at ${tile.x},${tile.z}" + if (tile != post.tile) " (snapped from ${post.tile.x},${post.tile.z})" else ""
+            npc.setSpawnFacing(Direction.NORTH)
+            npc.faceTile(post.tile.step(Direction.NORTH))
+            lines += "${post.shop.title}: npc ${post.npcId} at ${post.tile.x},${post.tile.z}"
         }
         return "StoreNpcs: " + lines.joinToString("; ")
     }

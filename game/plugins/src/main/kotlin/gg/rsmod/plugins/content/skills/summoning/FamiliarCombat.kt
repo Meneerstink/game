@@ -5,6 +5,7 @@ import gg.rsmod.game.model.combat.CombatClass
 import gg.rsmod.game.model.combat.PawnHit
 import gg.rsmod.game.model.combat.StyleType
 import gg.rsmod.game.model.combat.WeaponStyle
+import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Pawn
 import gg.rsmod.game.model.entity.Player
@@ -16,6 +17,7 @@ import gg.rsmod.plugins.api.ext.addXp
 import gg.rsmod.plugins.api.ext.isMulti
 import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.api.ext.npc
+import gg.rsmod.plugins.api.ext.playSound
 import gg.rsmod.plugins.api.ext.prepareAttack
 import gg.rsmod.plugins.content.combat.canEngageCombat
 import gg.rsmod.plugins.content.combat.createProjectile
@@ -35,6 +37,95 @@ import gg.rsmod.plugins.content.combat.strategy.MagicCombatStrategy
 
 /** Native combat-engine integration for player-owned Summoning familiars. */
 object FamiliarCombat {
+    /** Transient per-familiar state; a queued move belongs to the live familiar, not the player. */
+    private val NEXT_ATTACK_SPECIAL_ATTR = AttributeKey<SummoningScrollData>()
+
+    /** Steel Titan combat set from `RSPS_SUMMONING_SOUNDS_2009_2012_MASTER_QC3`. */
+    internal const val STEEL_TITAN_ATTACK_SOUND = 4720
+    internal const val STEEL_TITAN_RANGED_SOUND = 4616
+    internal const val STEEL_TITAN_RANGED_IMPACT_SOUND = 4670
+
+    /**
+     * Dedicated familiar normal-combat cues from QC3. The optional ranged and impact cues are
+     * emitted only on the corresponding combat event. General entity sounds and revision-530
+     * base-creature candidates are deliberately absent: neither proves a familiar binding.
+     * Steel Titan remains on its existing explicit route below because that route was already
+     * completed and its revision-667 attack sequence is silent.
+     */
+    internal data class NormalAttackSounds(
+        val attack: Int,
+        val ranged: Int? = null,
+        val impact: Int? = null,
+    )
+
+    internal val NORMAL_ATTACK_SOUNDS: Map<SummoningPouchData, NormalAttackSounds> = mapOf(
+        SummoningPouchData.THORNY_SNAIL to NormalAttackSounds(4320),
+        SummoningPouchData.SPIRIT_MOSQUITO to NormalAttackSounds(4610),
+        SummoningPouchData.DESERT_WYRM to NormalAttackSounds(4309),
+        SummoningPouchData.SPIRIT_SCORPION to NormalAttackSounds(4280),
+        SummoningPouchData.SPIRIT_TZ_KIH to NormalAttackSounds(4627, ranged = 4630),
+        SummoningPouchData.COMPOST_MOUND to NormalAttackSounds(4233),
+        SummoningPouchData.GIANT_CHINCHOMPA to NormalAttackSounds(4675),
+        SummoningPouchData.HONEY_BADGER to NormalAttackSounds(4160),
+        SummoningPouchData.VOID_RAVAGER to NormalAttackSounds(4711),
+        SummoningPouchData.VOID_SHIFTER to NormalAttackSounds(4689),
+        SummoningPouchData.VOID_SPINNER to NormalAttackSounds(4691),
+        SummoningPouchData.VOID_TORCHER to NormalAttackSounds(4599),
+        SummoningPouchData.BRONZE_MINOTAUR to NormalAttackSounds(4334),
+        SummoningPouchData.IRON_MINOTAUR to NormalAttackSounds(4334),
+        SummoningPouchData.STEEL_MINOTAUR to NormalAttackSounds(4334),
+        SummoningPouchData.MITHRIL_MINOTAUR to NormalAttackSounds(4334),
+        SummoningPouchData.ADAMANT_MINOTAUR to NormalAttackSounds(4334),
+        SummoningPouchData.RUNE_MINOTAUR to NormalAttackSounds(4334),
+        SummoningPouchData.PYRELORD to NormalAttackSounds(4708),
+        SummoningPouchData.SPIRIT_JELLY to NormalAttackSounds(4182),
+        SummoningPouchData.SPIRIT_GRAAHK to NormalAttackSounds(4605),
+        SummoningPouchData.SPIRIT_KYATT to NormalAttackSounds(4650),
+        SummoningPouchData.SPIRIT_LARUPIA to NormalAttackSounds(4631),
+        SummoningPouchData.KARAMTHULHU_OVERLORD to NormalAttackSounds(4179),
+        SummoningPouchData.SMOKE_DEVIL to NormalAttackSounds(4330),
+        SummoningPouchData.ABYSSAL_LURKER to NormalAttackSounds(4215),
+        SummoningPouchData.SPIRIT_COBRA to NormalAttackSounds(4325),
+        SummoningPouchData.STRANGER_PLANT to NormalAttackSounds(4218),
+        SummoningPouchData.BARKER_TOAD to NormalAttackSounds(4301),
+        SummoningPouchData.WAR_TORTOISE to NormalAttackSounds(4296),
+        SummoningPouchData.BUNYIP to NormalAttackSounds(4139),
+        SummoningPouchData.EVIL_TURNIP to NormalAttackSounds(4331),
+        SummoningPouchData.ARCTIC_BEAR to NormalAttackSounds(4224),
+        SummoningPouchData.OBSIDIAN_GOLEM to NormalAttackSounds(4718),
+        SummoningPouchData.GRANITE_LOBSTER to NormalAttackSounds(4235),
+        SummoningPouchData.FORGE_REGENT to NormalAttackSounds(4643),
+        SummoningPouchData.TALON_BEAST to NormalAttackSounds(4681),
+        SummoningPouchData.GIANT_ENT to NormalAttackSounds(4282),
+        SummoningPouchData.FIRE_TITAN to NormalAttackSounds(4614),
+        SummoningPouchData.ICE_TITAN to NormalAttackSounds(4695),
+        SummoningPouchData.MOSS_TITAN to NormalAttackSounds(4662),
+        SummoningPouchData.HYDRA to NormalAttackSounds(4251, ranged = 4185),
+        SummoningPouchData.SPIRIT_DAGANNOTH to NormalAttackSounds(4299),
+        SummoningPouchData.LAVA_TITAN to NormalAttackSounds(4654),
+        SummoningPouchData.SWAMP_TITAN to NormalAttackSounds(4624),
+        SummoningPouchData.UNICORN_STALLION to NormalAttackSounds(4196),
+        SummoningPouchData.GEYSER_TITAN to NormalAttackSounds(4602, ranged = 4713, impact = 4698),
+        SummoningPouchData.ABYSSAL_TITAN to NormalAttackSounds(4644),
+        SummoningPouchData.IRON_TITAN to NormalAttackSounds(4633),
+        SummoningPouchData.PACK_YAK to NormalAttackSounds(4200),
+    )
+
+    internal fun hasQueuedNextAttack(familiar: Npc): Boolean =
+        familiar.attr[NEXT_ATTACK_SPECIAL_ATTR] != null
+
+    internal fun queueNextAttack(familiar: Npc, scroll: SummoningScrollData): Boolean {
+        if (hasQueuedNextAttack(familiar)) return false
+        familiar.attr[NEXT_ATTACK_SPECIAL_ATTR] = scroll
+        return true
+    }
+
+    private fun takeQueuedNextAttack(familiar: Npc): SummoningScrollData? {
+        val queued = familiar.attr[NEXT_ATTACK_SPECIAL_ATTR]
+        familiar.attr.remove(NEXT_ATTACK_SPECIAL_ATTR)
+        return queued
+    }
+
     /**
      * RCV-010 A1: every familiar damage figure in this package (the [SummoningCombatDefinitions] ledger's
      * maxHit and every special-move max hit) is sourced from Void, whose life-point unit is real HP x10
@@ -64,7 +155,8 @@ object FamiliarCombat {
     fun commandAttack(player: Player, target: Pawn, silent: Boolean = false): Boolean {
         val familiar = Familiar.current(player) ?: return false
         val definition = SummoningCombatDefinitions.getByNpc(familiar.id)
-        if (definition == null || !definition.isExecutable) {
+        val capabilities = FamiliarCapabilityTable.forNpc(familiar.id)
+        if (definition == null || !definition.isExecutable || capabilities?.canReceiveAttackCommand != true) {
             if (!silent) player.message("Your familiar cannot fight that target.")
             return false
         }
@@ -135,7 +227,8 @@ object FamiliarCombat {
             return
         }
         val definition = SummoningCombatDefinitions.getByNpc(familiar.id)
-        if (definition == null || !definition.isExecutable || Familiar.current(owner) !== familiar) {
+        val capabilities = FamiliarCapabilityTable.forNpc(familiar.id)
+        if (definition == null || !definition.isExecutable || capabilities?.retaliates != true || Familiar.current(owner) !== familiar) {
             familiar.removeCombatTarget()
             return
         }
@@ -153,7 +246,12 @@ object FamiliarCombat {
                 target = familiar.getCombatTarget() ?: break
                 continue
             }
-            attack(familiar, owner, target, definition)
+            val queuedSpecial = takeQueuedNextAttack(familiar)
+            if (queuedSpecial != null && target is Npc) {
+                SummoningSpecialMoves.executeNextAttack(owner, familiar, target, queuedSpecial)
+            } else {
+                attack(familiar, owner, target, definition)
+            }
             familiar.postAttackLogic(target)
             task.wait(definition.attackSpeed)
             target = familiar.getCombatTarget() ?: break
@@ -194,6 +292,16 @@ object FamiliarCombat {
                 FamiliarAttackStyle.NONE -> return
             }
         familiar.prepareAttack(combatClass, styleType, weaponStyle)
+        // Steel Titan is the proven exception: its attack sequence (8190), source graphic (1444),
+        // and projectile (1445) are silent in this revision. Its completed route is kept explicit.
+        // Other source-backed dedicated cues use the same event boundaries here; sequence-attached
+        // sounds remain client-owned and are not replaced with base-creature candidates.
+        val sourcedSounds = NORMAL_ATTACK_SOUNDS[definition.pouch]
+        if (definition.pouch == SummoningPouchData.STEEL_TITAN) {
+            FamiliarAudio.play(owner, STEEL_TITAN_ATTACK_SOUND)
+        } else {
+            sourcedSounds?.let { FamiliarAudio.play(owner, it.attack) }
+        }
         familiar.animate(definition.attackAnimation, priority = true)
         if (definition.attackGraphic >= 0) familiar.graphic(definition.attackGraphic)
 
@@ -201,6 +309,11 @@ object FamiliarCombat {
         if (definition.projectile >= 0 && projectileType != null) {
             val projectile = familiar.createProjectile(target, definition.projectile, projectileType)
             familiar.world.spawn(projectile)
+            if (definition.pouch == SummoningPouchData.STEEL_TITAN) {
+                FamiliarAudio.play(owner, STEEL_TITAN_RANGED_SOUND)
+            } else {
+                sourcedSounds?.ranged?.let { FamiliarAudio.play(owner, it) }
+            }
             hitDelay = MagicCombatStrategy.getHitDelay(familiar.getCentreTile(), target.getCentreTile())
         }
 
@@ -229,7 +342,14 @@ object FamiliarCombat {
             !summoningProtected && accuracy >= familiar.world.randomDouble(),
             hitDelay,
             hitType,
-        ) { hit -> attachOwnerExperience(hit, familiar, owner, target) }
+        ) { hit ->
+            attachOwnerExperience(hit, familiar, owner, target)
+            if (definition.pouch == SummoningPouchData.STEEL_TITAN && definition.projectile >= 0) {
+                FamiliarAudio.play(owner, STEEL_TITAN_RANGED_IMPACT_SOUND)
+            } else if (definition.projectile >= 0) {
+                sourcedSounds?.impact?.let { FamiliarAudio.play(owner, it) }
+            }
+        }
     }
 
     /**

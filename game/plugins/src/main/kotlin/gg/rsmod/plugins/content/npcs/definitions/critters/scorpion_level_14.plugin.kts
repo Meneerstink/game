@@ -20,7 +20,7 @@ table.register(scorpion, Npcs.SCORPION)
 
 
 on_npc_death(Npcs.SCORPION) {
-    table.getDrop(world, npc.damageMap.getMostDamage()!! as Player, npc.id, npc.tile)
+    table.getDrop(world, npc.killer() ?: return@on_npc_death, npc.id, npc.tile)
 }
 
 set_combat_def(npc = Npcs.SCORPION) {

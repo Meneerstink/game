@@ -4,6 +4,7 @@ import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.World
 import gg.rsmod.game.model.entity.Pawn
 import gg.rsmod.game.service.GameService
+import mu.KLogging
 
 /**
  * A [GameTask] responsible for creating any non-existent [gg.rsmod.game.model.region.Chunk]
@@ -18,12 +19,20 @@ class ChunkCreationTask : GameTask {
         service: GameService,
     ) {
         world.players.forEach { p ->
-            p.changeChunks(world, createChunkIfNeeded = true)
+            try {
+                p.changeChunks(world, createChunkIfNeeded = true)
+            } catch (e: Exception) {
+                logger.error("Error updating chunks for player ${p.username}.", e)
+            }
         }
 
         world.npcs.forEach { npc ->
-            if (npc.isActive()) {
-                npc.changeChunks(world, createChunkIfNeeded = CREATE_CHUNK_FOR_NPC)
+            try {
+                if (npc.isActive()) {
+                    npc.changeChunks(world, createChunkIfNeeded = CREATE_CHUNK_FOR_NPC)
+                }
+            } catch (e: Exception) {
+                logger.error("Error updating chunks for npc $npc.", e)
             }
         }
     }
@@ -47,7 +56,7 @@ class ChunkCreationTask : GameTask {
         lastChunkTile = Tile(tile)
     }
 
-    companion object {
+    companion object : KLogging() {
         /**
          * Flag that specifies if [gg.rsmod.game.model.region.Chunk] should be
          * created if an npc is on it and it doesn't already exist.

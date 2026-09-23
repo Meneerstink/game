@@ -53,6 +53,15 @@ class GrandExchangeInterfaceTests {
                 if (ops.firstOrNull() == label) null else "105:$component expected '$label' got $ops"
             }
         assertTrue(wrong.isEmpty(), wrong.joinToString("\n"))
+        assertEquals(
+            "Ok",
+            InterfaceHookProbeTool.componentOps(LIBRARY.data(3, G.MAIN, G.WARNING_DISMISS)!!).firstOrNull(),
+            "105:${G.WARNING_DISMISS} warning-dismiss op1",
+        )
+        val interfaceSource = File("src/main/kotlin/gg/rsmod/plugins/content/mechanics/exchange/GrandExchangeInterface.kt").readText()
+        val pluginSource = File("src/main/kotlin/gg/rsmod/plugins/content/mechanics/exchange/grand_exchange_interface.plugin.kts").readText()
+        assertTrue("component = WARNING_DISMISS" in interfaceSource, "GE must enable the warning-dismiss component events")
+        assertTrue("on_button(GE.MAIN, GE.WARNING_DISMISS)" in pluginSource, "GE must bind the warning-dismiss button")
         // View boxes also carry Abort Offer as op2 (IF_BUTTON2 / opcode 64).
         G.VIEW_OFFER.forEach { assertEquals("Abort Offer", InterfaceHookProbeTool.componentOps(LIBRARY.data(3, G.MAIN, it)!!).getOrNull(1), "105:$it op2") }
         // Collect item boxes and the sell inventory / collection box layers exist.

@@ -232,13 +232,24 @@ on_obj_option(obj = Objs.KNIGHT, option = "search") {
 }
 
 on_item_on_obj(obj = Objs.HOLE_26340, item = Items.ROPE) {
+    tieEntranceRope(player)
+}
+
+// The production 667 map uses the base hole at (2917,3745,0) (id 26342),
+// not the Void child id 26340.  Item-on-object is the real initial action;
+// the base definition has no menu option until the varbit transforms it.
+on_item_on_obj(obj = 26342, item = Items.ROPE) {
+    tieEntranceRope(player)
+}
+
+fun tieEntranceRope(player: Player) {
     if (!hasKnightsNotes(player)) {
         player.message("Cough... Hey, over here.")
-        return@on_item_on_obj
+        return
     }
     if (player.getVarbit(ROPE_ENTRANCE_VARBIT) == 1) {
         player.message("There is already a rope attached to the hole.")
-        return@on_item_on_obj
+        return
     }
     if (player.inventory.remove(Items.ROPE).hasSucceeded()) {
         player.setVarbit(ROPE_ENTRANCE_VARBIT, 1)
@@ -255,6 +266,12 @@ on_obj_option(obj = Objs.HOLE_26340, option = "Tie-rope") {
         player.message("I'll need a rope to climb down there.")
         return@on_obj_option
     }
+    descendIntoDungeon(player)
+}
+
+// Cache placement at the white-wolf entrance: 26345 is the placed rope with
+// the actual Climb-down option on the upper plane.
+on_obj_option(obj = Objs.ROPE_26345, option = "Climb-down") {
     descendIntoDungeon(player)
 }
 

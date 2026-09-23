@@ -337,43 +337,10 @@ enum class PotionType(
             p.hit(damage)
         }
     },
-    EXTREME_ATTACK {
-        override fun canDrink(p: Player) = PotionEffects.notInWilderness(p)
-
-        override fun apply(p: Player) = PotionEffects.applyExtreme(p, Skills.ATTACK)
-    },
-    EXTREME_STRENGTH {
-        override fun canDrink(p: Player) = PotionEffects.notInWilderness(p)
-
-        override fun apply(p: Player) = PotionEffects.applyExtreme(p, Skills.STRENGTH)
-    },
-    EXTREME_DEFENCE {
-        override fun canDrink(p: Player) = PotionEffects.notInWilderness(p)
-
-        override fun apply(p: Player) = PotionEffects.applyExtreme(p, Skills.DEFENCE)
-    },
     EXTREME_MAGIC {
         override fun canDrink(p: Player) = PotionEffects.notInWilderness(p)
 
         override fun apply(p: Player) = PotionEffects.applyExtreme(p, Skills.MAGIC)
-    },
-    EXTREME_RANGING {
-        override fun canDrink(p: Player) = PotionEffects.notInWilderness(p)
-
-        override fun apply(p: Player) = PotionEffects.applyExtreme(p, Skills.RANGED)
-    },
-    OVERLOAD {
-        override fun canDrink(p: Player) = PotionEffects.canDrinkOverload(p)
-
-        override fun apply(p: Player) = PotionEffects.startOverload(p)
-    },
-    PRAYER_RENEWAL {
-        override fun apply(p: Player) = PotionEffects.startPrayerRenewal(p)
-    },
-    RECOVER_SPECIAL {
-        override fun canDrink(p: Player) = PotionEffects.canDrinkRecoverSpecial(p)
-
-        override fun apply(p: Player) = PotionEffects.recoverSpecial(p)
     },
 
     /** Void 2011 `sanfew_serum`: super-antipoison cure/immunity plus a super restore. */
@@ -621,15 +588,17 @@ enum class PotionType(
             "r" -> boost = floor(currentLevel / 10).toInt() + 3
             "ranging_potion" -> boost = floor(currentLevel / 10).toInt() + 4
             "magic_potion" -> boost = 4
-            "s" -> boost = floor(15 * (currentLevel / 100)).toInt() + 5
+            // Multiply before dividing: Kotlin's Double division must retain the fractional
+            // percentage until floor() is applied (level 99 => floor(14.85) + 5 = 19).
+            "s" -> boost = floor(currentLevel * 15 / 100).toInt() + 5
             "restore" -> boost = floor((currentLevel * 3) / 10).toInt() + 10
             "s_restore" -> boost = floor(currentLevel / 4).toInt() + 8
             "prayer" -> boost = floor(currentLevel / 4).toInt() + 7
-            "s_prayer" -> boost = floor((currentLevel / 100) * 35).toInt() + 7
+            "s_prayer" -> boost = floor(currentLevel * 35 / 100).toInt() + 7
             "r_skill" -> boost = 3
             "mindBombDrain" -> boost = -(floor(currentLevel * 0.03) + 1).toInt()
             // "mindBombBoost" -> boost = floor(currentLevel * 0.02).toInt() + if (currentLevel >= 50) 3 else 1
-            "brewHealth" -> boost = floor(15 * (currentLevel / 100)).toInt() + 2
+            "brewHealth" -> boost = floor(currentLevel * 15 / 100).toInt() + 2
             "brewDef" -> boost = floor(currentLevel / 5).toInt() + 2
             "brewDrain" ->
                 boost =

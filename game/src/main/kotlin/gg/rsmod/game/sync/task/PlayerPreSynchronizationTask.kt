@@ -19,10 +19,15 @@ object PlayerPreSynchronizationTask : SynchronizationTask<Player> {
         val last = pawn.lastKnownRegionBase
         val current = pawn.tile
 
-        pawn.movedToInstance = last != null && last.x < 6368 && current.x >= 6400
-        pawn.movedFromInstance = last != null && last.x >= 6368 && current.x < 6400
+        // Compare the previous tile, not the map base: for an instance in the first allocation column (x 6400) the
+        // base is 6360, so a base comparison reported "moved to instance" on every tick inside it and wiped the
+        // local npc list each cycle - no npc could ever be seen there (player-owned house combat dummy, 2026-09-19).
+        val previous = pawn.lastTile
+        pawn.movedToInstance = previous != null && previous.x < 6400 && current.x >= 6400
+        pawn.movedFromInstance = previous != null && previous.x >= 6400 && current.x < 6400
 
-        if (last == null || shouldRebuildRegion(last, current)) {
+        pawn.regionRebuilt = last == null || shouldRebuildRegion(last, current)
+        if (pawn.regionRebuilt) {
             val regionX = ((current.x shr 3) - (Chunk.MAX_VIEWPORT shr 4)) shl 3
             val regionZ = ((current.z shr 3) - (Chunk.MAX_VIEWPORT shr 4)) shl 3
 

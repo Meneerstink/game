@@ -1,0 +1,24 @@
+/**
+ * Content bindings are Kotlin scripts, not shared library code. They consume
+ * the compiled plugin core but no core source imports their generated script
+ * classes. Isolating them means a core-code edit and a binding edit no longer
+ * rebuild one another.
+ */
+sourceSets {
+    main {
+        kotlin {
+            srcDirs = [file('../src/main/kotlin')]
+            include '**/*.plugin.kts'
+            exclude 'gg/rsmod/plugins/content/areas/spawns/**'
+        }
+    }
+}
+
+dependencies {
+    implementation project(':game:plugins')
+    implementation project(':game')
+    implementation project(':net')
+    implementation project(':util')
+    implementation "it.unimi.dsi:fastutil:$fastUtilVersion"
+    implementation "org.jetbrains.kotlin:kotlin-script-runtime:1.8.0"
+}

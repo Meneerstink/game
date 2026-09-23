@@ -22,6 +22,7 @@ import gg.rsmod.plugins.api.ext.getVarp
 import gg.rsmod.plugins.api.ext.setVarbit
 import gg.rsmod.plugins.api.ext.setVarp
 import gg.rsmod.plugins.content.combat.getCombatTarget
+import gg.rsmod.plugins.content.combat.removeCombatTarget
 import java.lang.ref.WeakReference
 
 /**
@@ -88,11 +89,11 @@ object Familiar {
      * and sound 4214. In the revision-667 cache (openrs2 #1473) gfx 1516 -> seq 12377 carries its
      * own sound 7579; 8502 and 1517 carry none, so 4214 is not duplicated by an attached sound.
      */
-    internal const val RENEW_OBELISK_GRAPHIC = 1516
-    internal const val RENEW_ANIMATION = 8502
-    internal const val RENEW_PLAYER_GRAPHIC = 1517
-    internal const val RENEW_SOUND = 4214
-    internal const val RENEW_GRAPHIC_TICKS = 2
+    const val RENEW_OBELISK_GRAPHIC = 1516
+    const val RENEW_ANIMATION = 8502
+    const val RENEW_PLAYER_GRAPHIC = 1517
+    const val RENEW_SOUND = 4214
+    const val RENEW_GRAPHIC_TICKS = 2
     private const val SPECIAL_REGEN_SECONDS = 30
     private const val SPECIAL_REGEN_AMOUNT = 15
 
@@ -611,8 +612,13 @@ object Familiar {
     fun call(player: Player): Boolean {
         val npc = current(player) ?: return false
         val data = SummoningPouchData.values.firstOrNull { it.npc == npc.id } ?: return false
+        // Call is a recovery boundary, not just a teleport. A dead/stale combat target would make
+        // follow() return on every tick and leave the familiar stranded after the recall.
+        npc.removeCombatTarget()
+        npc.resetFacePawn()
         npc.teleportNpc(placementTile(player, npc.id))
         playArrivalPresentation(player, npc, data)
+        npc.facePawn(player)
         player.message("You call your familiar to your side.")
         FamiliarCombat.recallToOwnerTarget(player)
         updateHud(player)
@@ -633,7 +639,30 @@ object Familiar {
     ) {
         playAppearanceGraphic(npc)
         SummoningSpawnDespawnAnimations.spawnAnim(data).takeIf { it != -1 }?.let { npc.animate(it) }
-        player.playSound(ARRIVAL_SOUND)
+        arrivalSoundIds(data).forEach { FamiliarAudio.play(player, it) }
+    }
+
+    /** Generic arrival cue is mandatory for every roster entry; the second cue is optional. */
+    internal fun arrivalSoundIds(data: SummoningPouchData): List<Int> =
+        listOfNotNull(ARRIVAL_SOUND, FamiliarAudio.spawnSound(data))
+
+    /**
+     * Automatic follow recovery is the same visible re-entry event as summon and Call. Keeping
+     * it on this shared presentation path is important: the generic arrival sound is available
+     * for every familiar, while the optional QC3 familiar-specific cue is emitted only when its
+     * mapping is source-backed. A recovery must never silently become a soundless teleport just
+     * because it was initiated by the follow task.
+     */
+    private fun playRecoveryPresentation(player: Player, npc: Npc) {
+        val data = SummoningPouchData.values.firstOrNull { it.npc == npc.id }
+        if (data == null) {
+            // This should be unreachable for a live familiar. Keep the generic cue as a safe
+            // fallback rather than inventing a per-NPC sound for an unknown definition.
+            playAppearanceGraphic(npc)
+            FamiliarAudio.play(player, ARRIVAL_SOUND)
+        } else {
+            playArrivalPresentation(player, npc, data)
+        }
     }
 
     /**
@@ -817,16 +846,27 @@ object Familiar {
                     "reason=$recovery cycle=${player.world.currentCycle}"
             }
             npc.teleportNpc(placementTile(player, npc.id))
-            playAppearanceGraphic(npc)
+            playRecoveryPresentation(player, npc)
+            npc.facePawn(player)
             return
         }
-        // Combat owns its chase path; following must not overwrite it every player tick.
-        if (npc.getCombatTarget()?.isAlive() == true) return
-        val ownerRunning = player.isRunning()
-        val ownerSteps = player.movementQueue.peekSteps(if (ownerRunning) 2 else 1)
+        // Combat owns its chase path; following must not overwrite it every player tick. A dead
+        // target is explicitly cleared here so a familiar cannot remain in a permanent idle
+        // state because its combat lock outlived the target.
+        val combatTarget = npc.getCombatTarget()
+        if (combatTarget?.isAlive() == true) return
+        if (combatTarget != null) {
+            npc.removeCombatTarget()
+            npc.resetFacePawn()
+        }
+        // A familiar follows at walking speed. The owner's pending movement is still used as
+        // the route target so a running owner does not make the familiar chase an already stale
+        // tile, but it must never turn the follower route into a run route.
+        val ownerSteps = player.movementQueue.peekSteps(if (player.isRunning()) 2 else 1)
         val target = ownerSteps.lastOrNull()?.tile ?: player.tile
         val ownerFootprint = footprint(target, player.getSize())
         if (isInFollowSlot(npc.tile, npc.getSize(), target, player.getSize())) {
+            npc.facePawn(player)
             return
         }
         val request =
@@ -841,8 +881,15 @@ object Familiar {
         val route = BFSPathFindingStrategy(npc.world.collision).calculateRoute(request)
         if (!route.success) {
             gg.rsmod.game.model.AvTrace.log {
-                "familiar follow no-route npc=${npc.id} at=${npc.tile} target=$target size=${npc.getSize()} cycle=${player.world.currentCycle}"
+                "familiar follow teleport npc=${npc.id} at=${npc.tile} target=$target " +
+                    "reason=no-route size=${npc.getSize()} cycle=${player.world.currentCycle}"
             }
+            // A follower that cannot keep up must be recalled; consuming a partial route here
+            // would leave it stranded at a wall and invites a later corner-cutting recovery.
+            npc.teleportNpc(placementTile(player, npc.id))
+            playRecoveryPresentation(player, npc)
+            npc.facePawn(player)
+            return
         }
         /*
          * The familiar must not *stop* on its owner. It may legitimately pass over them - a
@@ -864,9 +911,13 @@ object Familiar {
             )
         npc.walkPath(
             path,
-            stepType = if (ownerSteps.size > 1) MovementQueue.StepType.FORCED_RUN else MovementQueue.StepType.FORCED_WALK,
+            stepType = MovementQueue.StepType.FORCED_WALK,
             detectCollision = true,
         )
+        // Movement and combat may leave a stale face target on the NPC. Reassert the owner as the
+        // sole facing target for the non-combat follow state; combat takes ownership again in
+        // FamiliarCombat.handleCombat before it attacks.
+        npc.facePawn(player)
     }
 
     /**

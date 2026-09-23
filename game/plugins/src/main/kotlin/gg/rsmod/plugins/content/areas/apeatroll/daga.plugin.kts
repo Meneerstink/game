@@ -1,5 +1,7 @@
 package gg.rsmod.plugins.content.areas.apeatroll
 
+import gg.rsmod.plugins.api.cfg.Varps
+import gg.rsmod.plugins.api.ext.getVarp
 import gg.rsmod.plugins.content.mechanics.shops.CoinCurrency
 
 /**
@@ -38,6 +40,13 @@ on_npc_option(npc = Npcs.DAGA, option = "talk-to") {
 
                 THIRD_OPTION -> {
                     chatPlayer("Do you have any Dragon Scimitars in stock?")
+                    if (player.getVarp(Varps.MONKEY_MADNESS_PROGRESS) < 9) {
+                        chatNpc(
+                            "I can only sell that scimitar after King Narnode has recorded your Monkey Madness completion.",
+                            facialExpression = FacialExpression.OLD_NORMAL,
+                        )
+                        return@queue
+                    }
                     chatNpc(
                         "It just so happens I recently got a fresh delivery",
                         "do you want to buy one?",
@@ -88,7 +97,16 @@ on_npc_option(npc = Npcs.DAGA, option = "talk-to") {
 on_npc_option(npc = Npcs.DAGA, option = "trade") {
     // TODO Add missing function greegree
     if (player.hasEquipped(EquipmentType.AMULET, Items.MONKEYSPEAK_AMULET)) {
-        player.openShop("Daga's Scimitar Smithy")
+        if (player.getVarp(Varps.MONKEY_MADNESS_PROGRESS) >= 9) {
+            player.openShop("Daga's Scimitar Smithy")
+        } else {
+            player.queue {
+                chatNpc(
+                    "King Narnode must record your Monkey Madness completion before I can sell the dragon scimitar.",
+                    facialExpression = FacialExpression.OLD_NORMAL,
+                )
+            }
+        }
     } else {
         player.queue {
             chatNpc(

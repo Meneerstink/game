@@ -64,7 +64,7 @@ object Hunter {
             // Trap timed out without a catch - remove it rather than leave it dangling forever.
             if (world.isSpawned(trap.obj) && !trap.sprung) {
                 removeTrap(world, trap)
-                if (player.tile.getDistance(tile) < 16) {
+                if (player.isOnline && !player.isDead() && player.tile.getDistance(tile) < 16) {
                     player.filterableMessage("Your trap failed to catch anything and was abandoned.")
                 }
             }

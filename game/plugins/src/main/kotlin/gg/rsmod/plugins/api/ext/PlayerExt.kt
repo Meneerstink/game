@@ -632,10 +632,19 @@ fun Player.playSound(
     write(SynthSoundMessage(sound = id, loops = loops, delay = delay, volume = volume, rate = rate))
 }
 
+/**
+ * Jingles (quest completion, level up, slayer task) go out as [MusicEffectMessage] / ServerProt.MIDI_JINGLE.
+ * The client gates these on `ClientOptions.musicVolume`, not on the sound-effects volume
+ * (`SoundManager.playMidiJingle` returns early when `musicVolume * volume >> 8 == 0`), so with the music
+ * slider muted every jingle is silent while ordinary synth sounds still play. This trace lets a live test
+ * tell "the server never sent it" apart from "the client dropped it" (owner 2026-09-20: "i hear no quest
+ * complete sound and a level up skill sound").
+ */
 fun Player.playJingle(
     id: Int,
     volume: Int = 255,
 ) {
+    gg.rsmod.game.model.AvTrace.log { "jingle player index=$index id=$id volume=$volume" }
     write(MusicEffectMessage(id = id, volume = volume))
 }
 
@@ -1946,7 +1955,6 @@ private val entranaPermittedItems: List<Int> =
         Items.SHARK_6969,
         Items.SEA_TURTLE,
         Items.MANTA_RAY,
-        Items.ROCKTAIL,
         Items.CRAB_MEAT,
         Items.FROG_MASK,
         Items.FROG_MASK_10721,

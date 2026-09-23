@@ -36,9 +36,7 @@ on_button(interfaceId = 387, component = 42) {
  * "Remove-10", "Remove-All", "Remove-X" and "Examine", in that order.
  */
 on_button(interfaceId = PriceChecker.INTERFACE_ID, component = PriceChecker.GRID_COMPONENT) {
-    // RCV-012 decision 3b: the Loot Chest shows its loot on this grid too (LootKeys, ADAPTED).
-    val lootChest = PriceChecker.container(player) == null
-    val container = PriceChecker.container(player) ?: gg.rsmod.plugins.content.mechanics.pvp.LootKeys.chestContainer(player) ?: return@on_button
+    val container = PriceChecker.container(player) ?: return@on_button
     val slot = player.getInteractingSlot()
     val opcode = player.getInteractingOpcode()
     val item = container[slot] ?: return@on_button
@@ -58,11 +56,7 @@ on_button(interfaceId = PriceChecker.INTERFACE_ID, component = PriceChecker.GRID
                 OP5 -> inputInt("Enter amount:")
                 else -> return@queue
             }
-        if (lootChest) {
-            gg.rsmod.plugins.content.mechanics.pvp.LootKeys.withdraw(player, slot, amount)
-        } else {
-            PriceChecker.uncheck(player, slot, amount)
-        }
+        PriceChecker.uncheck(player, slot, amount)
     }
 }
 
@@ -76,7 +70,6 @@ on_button(interfaceId = PriceChecker.INTERFACE_ID, component = PriceChecker.CLOS
  */
 on_interface_close(interfaceId = PriceChecker.INTERFACE_ID) {
     PriceChecker.close(player)
-    gg.rsmod.plugins.content.mechanics.pvp.LootKeys.closeChest(player)
 }
 
 on_logout {

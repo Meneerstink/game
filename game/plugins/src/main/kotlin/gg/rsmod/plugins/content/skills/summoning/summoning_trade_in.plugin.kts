@@ -168,10 +168,19 @@ fun getMaxSwappable(player: Player, pouchData: SummoningPouchData): Int {
  * @param number: The max number of scrolls being traded in
  */
 fun swapForShards(player: Player, scrollData: SummoningScrollData, number: Int) {
-    val actualNumber = number - (number % scrollData.numNeededToSwap)
+    val requested = number.coerceAtLeast(0)
+    val actualNumber = requested - (requested % scrollData.numNeededToSwap)
+    if (actualNumber <= 0) return
     val stacksTraded = actualNumber / scrollData.numNeededToSwap
-    player.inventory.remove(scrollData.scroll, actualNumber)
-    player.inventory.add(Items.SPIRIT_SHARDS, scrollData.numSwapShards * stacksTraded)
+    val reward = scrollData.numSwapShards.toLong() * stacksTraded.toLong()
+    if (reward <= 0L || reward > Int.MAX_VALUE) return
+    if (!player.inventory.remove(scrollData.scroll, actualNumber, assureFullRemoval = true).hasSucceeded()) return
+    val added = player.inventory.add(Items.SPIRIT_SHARDS, reward.toInt(), assureFullInsertion = true)
+    if (added.hasFailed()) {
+        // The input was already removed, so an overflowing/full reward stack must be a no-op,
+        // never an item sink.
+        player.inventory.add(scrollData.scroll, actualNumber, assureFullInsertion = true)
+    }
 }
 
 /**
@@ -184,9 +193,29 @@ fun swapForShards(player: Player, scrollData: SummoningScrollData, number: Int) 
 fun swapForShards(player: Player, pouchData: SummoningPouchData, number: Int) {
     val notedPouchId = Item(pouchData.pouch).toNoted(player.world.definitions).id
     val unotedScrollCount = player.inventory.getItemCount(pouchData.pouch)
-    val remainingCount = number - unotedScrollCount
-    player.inventory.remove(pouchData.pouch, unotedScrollCount)
-    player.inventory.remove(notedPouchId, remainingCount)
+    val notedPouchCount = player.inventory.getItemCount(notedPouchId)
+    // `number` is the requested amount, not a reason to remove every unnoted pouch. The old
+    // code removed `unotedScrollCount` even for Trade 1/5/10, destroying excess pouches.
+    val actualNumber = minOf(number.coerceAtLeast(0).toLong(), unotedScrollCount.toLong() + notedPouchCount.toLong()).toInt()
+    if (actualNumber <= 0) return
+    val unnotedToTrade = minOf(actualNumber, unotedScrollCount)
+    val notedToTrade = actualNumber - unnotedToTrade
+    val reward = pouchData.numSwapShards.toLong() * actualNumber.toLong()
+    if (reward <= 0L || reward > Int.MAX_VALUE) return
 
-    player.inventory.add(Items.SPIRIT_SHARDS, pouchData.numSwapShards * number)
+    if (unnotedToTrade > 0 &&
+        !player.inventory.remove(pouchData.pouch, unnotedToTrade, assureFullRemoval = true).hasSucceeded()
+    ) return
+    if (notedToTrade > 0 &&
+        !player.inventory.remove(notedPouchId, notedToTrade, assureFullRemoval = true).hasSucceeded()
+    ) {
+        if (unnotedToTrade > 0) player.inventory.add(pouchData.pouch, unnotedToTrade, assureFullInsertion = true)
+        return
+    }
+
+    val added = player.inventory.add(Items.SPIRIT_SHARDS, reward.toInt(), assureFullInsertion = true)
+    if (added.hasFailed()) {
+        if (unnotedToTrade > 0) player.inventory.add(pouchData.pouch, unnotedToTrade, assureFullInsertion = true)
+        if (notedToTrade > 0) player.inventory.add(notedPouchId, notedToTrade, assureFullInsertion = true)
+    }
 }

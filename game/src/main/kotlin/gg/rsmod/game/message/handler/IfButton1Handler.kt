@@ -1,6 +1,7 @@
 package gg.rsmod.game.message.handler
 
 import gg.rsmod.game.action.EquipAction
+import gg.rsmod.game.action.UnhandledInteractions
 import gg.rsmod.game.fs.def.ItemDef
 import gg.rsmod.game.message.MessageHandler
 import gg.rsmod.game.message.impl.IfButtonMessage
@@ -122,6 +123,18 @@ class IfButton1Handler : MessageHandler<IfButtonMessage> {
         }
 
         if (!world.plugins.executeButton(client, interfaceId, component)) {
+            val isInventoryItemAction =
+                interfaceId == 679 &&
+                    message.opcode in setOf(FIRST_OPTION, SECOND_OPTION, THIRD_OPTION, FOURTH_OPTION, FIFTH_OPTION, EIGHT_OPTION)
+            if (!isInventoryItemAction) {
+                UnhandledInteractions.recordInteraction(
+                    kind = "button",
+                    id = component,
+                    option = option,
+                    name = "button",
+                    context = "interface=$interfaceId opcode=${message.opcode}",
+                )
+            }
             return
         }
     }
@@ -152,8 +165,11 @@ class IfButton1Handler : MessageHandler<IfButtonMessage> {
 
             if (option == 2) {
                 val result = EquipAction.equip(client, item, slot)
-                if (result == EquipAction.Result.UNHANDLED && world.devContext.debugItemActions) {
-                    client.writeMessage("Unhandled equip action: [item=${item.id}, slot=$slot]")
+                if (result == EquipAction.Result.UNHANDLED) {
+                    UnhandledInteractions.recordInteraction("item", item.id, 2, "item", "slot=$slot")
+                    if (world.devContext.debugItemActions) {
+                        client.writeMessage("Unhandled equip action: [item=${item.id}, slot=$slot]")
+                    }
                 }
                 return
             }
@@ -165,8 +181,11 @@ class IfButton1Handler : MessageHandler<IfButtonMessage> {
 
             if (option == 10) {
                 val result = world.plugins.executeItem(client, item.id, option)
-                if (!result && world.devContext.debugItemActions) {
-                    client.writeMessage("Unhandled destroy action: [item=${item.id}, slot=$slot]")
+                if (!result) {
+                    UnhandledInteractions.recordInteraction("item", item.id, option, "item", "slot=$slot")
+                    if (world.devContext.debugItemActions) {
+                        client.writeMessage("Unhandled destroy action: [item=${item.id}, slot=$slot]")
+                    }
                 }
                 return
             }
@@ -181,6 +200,13 @@ class IfButton1Handler : MessageHandler<IfButtonMessage> {
             val handled = world.plugins.executeItem(client, item.id, option)
 
             if (!handled) {
+                UnhandledInteractions.recordInteraction(
+                    kind = "item",
+                    id = item.id,
+                    option = option,
+                    name = "item",
+                    context = "slot=$slot",
+                )
                 client.writeFilterableMessage(Entity.NOTHING_INTERESTING_HAPPENS)
                 if (world.devContext.debugItemActions) {
                     client.writeMessage("Unhandled item action: [item=${item.id}, slot=$slot, option=$option]")

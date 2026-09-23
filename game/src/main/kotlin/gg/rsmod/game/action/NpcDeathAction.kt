@@ -11,13 +11,14 @@ import gg.rsmod.game.model.timer.ACTIVE_COMBAT_TIMER
 import gg.rsmod.game.plugin.Plugin
 import gg.rsmod.game.service.log.LoggerService
 import java.lang.ref.WeakReference
+import mu.KLogging
 
 /**
  * This class is responsible for handling npc death events.
  *
  * @author Tom <rspsmods@gmail.com>
  */
-object NpcDeathAction {
+object NpcDeathAction : KLogging() {
     val deathPlugin: Plugin.() -> Unit = {
         val npc = ctx as Npc
 
@@ -42,17 +43,17 @@ object NpcDeathAction {
             if (killer is Player) {
                 world.getService(LoggerService::class.java, searchSubclasses = true)?.logNpcKill(killer, npc)
                 killer.incrementNpcKillCount(npc.id, 1)
-                world.plugins.executeNpcKilled(killer, npc)
+                runDeathHook(npc, "npc-killed") { world.plugins.executeNpcKilled(killer, npc) }
             }
             killer.timers.remove(ACTIVE_COMBAT_TIMER)
             npc.attr[KILLER_ATTR] = WeakReference(killer)
         }
 
-        world.plugins.executeNpcPreDeath(npc)
+        runDeathHook(npc, "npc-pre-death") { world.plugins.executeNpcPreDeath(npc) }
 
         npc.resetFacePawn()
 
-        world.plugins.executeSlayerLogic(npc)
+        runDeathHook(npc, "slayer") { world.plugins.executeSlayerLogic(npc) }
 
         deathAnimation.filter { it >= 0 }.forEach { anim ->
             val def = npc.world.definitions.get(AnimDef::class.java, anim)
@@ -63,16 +64,34 @@ object NpcDeathAction {
         if (deathDelay > 0) {
             wait(deathDelay)
         }
-        world.plugins.executeNpcDeath(npc)
+        runDeathHook(npc, "npc-death") { world.plugins.executeNpcDeath(npc) }
 
         if (npc.respawns) {
             npc.invisible = true
             npc.reset()
             wait(respawnDelay)
             npc.invisible = false
-            world.plugins.executeNpcSpawn(npc)
+            runDeathHook(npc, "npc-spawn") { world.plugins.executeNpcSpawn(npc) }
         } else {
             world.remove(npc)
+        }
+    }
+
+    /**
+     * Death cleanup must not depend on an optional plugin hook being perfect. The queue runner
+     * removes a failed task, but that task is not the NPC's lock owner, so an exception here would
+     * otherwise leave a dead NPC locked in-world and skip respawn/removal. Log the hook failure
+     * and keep the sourced death lifecycle moving.
+     */
+    private inline fun runDeathHook(
+        npc: Npc,
+        stage: String,
+        hook: () -> Unit,
+    ) {
+        try {
+            hook()
+        } catch (e: Exception) {
+            logger.error("NPC death hook '$stage' failed for id=${npc.id}; continuing lifecycle.", e)
         }
     }
 

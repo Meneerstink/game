@@ -89,6 +89,10 @@ object CrownOfHelios {
 
     fun isAdmin(player: Player): Boolean = player.world.privileges.isEligible(player.privilege, Privilege.ADMIN_POWER)
 
+    fun isStaff(player: Player): Boolean = player.world.privileges.isEligible(player.privilege, Privilege.MOD_POWER)
+
+    fun canUseCrown(player: Player): Boolean = isAdmin(player) || isStaff(player)
+
     /** True when the crown is worn by a player who is allowed to use it. */
     fun isActive(pawn: Pawn): Boolean =
         pawn is Player && pawn.getEquipment(EquipmentType.HEAD)?.id == ITEM && isAdmin(pawn)
@@ -104,6 +108,43 @@ object CrownOfHelios {
         }
         return target.getCurrentLifepoints().toDouble() + 1.0
     }
+
+    /** Cache-backed max-style starter sets used by the admin Crown combat shortcuts. */
+    fun maxSet(mode: Mode): IntArray =
+        when (mode) {
+            Mode.MELEE ->
+                intArrayOf(
+                    Items.BANDOS_CHESTPLATE,
+                    Items.BANDOS_TASSETS,
+                    Items.ABYSSAL_WHIP,
+                    Items.DRAGON_DEFENDER,
+                    Items.FIRE_CAPE,
+                    Items.AMULET_OF_FURY,
+                    Items.PRIMORDIAL_BOOTS,
+                    Items.FEROCIOUS_GLOVES,
+                    Items.BERSERKER_RING,
+                )
+            Mode.RANGED ->
+                intArrayOf(
+                    Items.ARMADYL_HELMET,
+                    Items.ARMADYL_CHESTPLATE,
+                    Items.ARMADYL_CHAINSKIRT,
+                    Items.ZARYTE_BOW,
+                    Items.FIRE_CAPE,
+                    Items.AMULET_OF_FURY,
+                    Items.RANGER_BOOTS,
+                )
+            Mode.MAGIC ->
+                intArrayOf(
+                    Items.ANCESTRAL_HAT,
+                    Items.ANCESTRAL_ROBE_TOP,
+                    Items.ANCESTRAL_ROBE_BOTTOM,
+                    Items.STAFF_OF_LIGHT,
+                    Items.MAGES_BOOK,
+                    Items.FIRE_CAPE,
+                    Items.OCCULT_NECKLACE,
+                )
+        }
 }
 
 object CrownOfHeliosCombatStrategy : CombatStrategy {

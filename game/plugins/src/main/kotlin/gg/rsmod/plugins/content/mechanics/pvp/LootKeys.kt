@@ -4,14 +4,11 @@ import gg.rsmod.game.fs.DefinitionSet
 import gg.rsmod.game.fs.def.ItemDef
 import gg.rsmod.game.model.World
 import gg.rsmod.game.model.attr.AttributeKey
-import gg.rsmod.game.model.container.ContainerStackType
-import gg.rsmod.game.model.container.ItemContainer
 import gg.rsmod.game.model.entity.GroundItem
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.api.ext.*
-import gg.rsmod.plugins.content.inter.pricecheck.PriceChecker
 import gg.rsmod.plugins.content.items.food.Food
 import gg.rsmod.plugins.content.items.potion.Potion
 import gg.rsmod.plugins.content.mechanics.exchange.OsrsGuidePrices
@@ -31,11 +28,10 @@ import gg.rsmod.plugins.content.mechanics.exchange.OsrsGuidePrices
  * - Destroying a key worth 1,000,000 coins or more inside a dangerous area fails with the sourced message.
  *
  * One OSRS item id per key (26651-26655 -> [KEY_IDS]); key i's loot lives in persistent slot i. Values are OSRS guide prices
- * ([OsrsGuidePrices]). ADAPTED: the OSRS "Wilderness Loot Key" interface is not in the 667 cache, so the chest shows the loot on the
- * price-checker grid (interface 206; withdraw with its item ops; the loot stays stored when the screen closes); with several keys the
- * chest opens the first one (the key-choice prompt text is not sourced; using a key on the chest picks it). BLOCKED / SOURCE_GAP:
- * skull key-count icons (OSRS sprites), valuable-item threshold (no sourced default), bank-note and bank buttons, key "Check" text,
- * the chest's "no keys" Skully line, the 30-tick disengage rule.
+ * ([OsrsGuidePrices]). The chest is the OSRS "Loot keys" screen ([LootKeyChest], 667 interface 1149 built from OSRS interface 742 and its
+ * sprites): key tabs, loot grid with Withdraw ops, Item/Note mode, Withdraw all to inventory/bank, Destroy with confirmation. The loot
+ * stays stored when the screen closes. SOURCE_GAP: valuable-item threshold (no sourced default), the chest's "no keys" Skully line,
+ * the 30-tick disengage rule.
  */
 object LootKeys {
     val KEY_IDS = intArrayOf(Items.LOOT_KEY, Items.LOOT_KEY_23697, Items.LOOT_KEY_23698, Items.LOOT_KEY_23699, Items.LOOT_KEY_23700)
@@ -43,6 +39,15 @@ object LootKeys {
     const val UNLOCK_COST = 1_000_000
     const val DESTROY_VALUE_LIMIT = 1_000_000L
     const val LIMIT_MESSAGE = "You have reached the limit of 5 loot keys."
+
+    /**
+     * Owner 2026-09-18 sounds (ADAPTED - OSRS Deadman publishes none of these; ids are the 667 cache's
+     * own named synth sounds, `Sfx`): a key landing in the inventory, destroying a key's loot, and
+     * sending a key's loot to the bank.
+     */
+    const val KEY_RECEIVED_SOUND = gg.rsmod.plugins.api.cfg.Sfx.COINS_JINGLE_1
+    const val KEY_DESTROYED_SOUND = gg.rsmod.plugins.api.cfg.Sfx.DESTROY_OBJECT
+    const val KEY_BANKED_SOUND = gg.rsmod.plugins.api.cfg.Sfx.BANK_DRAWER
     const val DESTROY_TOO_VALUABLE_MESSAGE = "The loot is worth too much for you to destroy it here. Go somewhere safe first."
 
     val UNLOCKED = AttributeKey<Boolean>(persistenceKey = "loot_keys_unlocked")
@@ -55,8 +60,6 @@ object LootKeys {
     val CLAIMED_VALUE = AttributeKey<String>(persistenceKey = "loot_keys_claimed_value")
     val DESTROYED_VALUE = AttributeKey<String>(persistenceKey = "loot_keys_destroyed_value")
 
-    private val CHEST_SLOT = AttributeKey<Int>()
-    private val CHEST_CONTAINER = AttributeKey<ItemContainer>()
 
     fun isKey(itemId: Int): Boolean = itemId in KEY_IDS
 
@@ -65,6 +68,22 @@ object LootKeys {
     private val foodAndPotions: Set<Int> by lazy { (Food.values().map { it.item } + Potion.values().map { it.item }).toSet() }
 
     fun isFoodOrPotion(itemId: Int): Boolean = itemId in foodAndPotions
+
+    /**
+     * Skully's "food and potions to the floor" classifier (owner 2026-09-18: the toggle must work
+     * exactly). The 2011 [Food]/[Potion] tables plus anything the cache itself marks edible or
+     * drinkable (an "Eat" / "Drink" inventory option), so OSRS-imported food and potions - divine
+     * potions, brews, anglerfish - drop to the floor too instead of silently landing in the key.
+     */
+    fun isFoodOrPotion(
+        definitions: DefinitionSet,
+        itemId: Int,
+    ): Boolean {
+        val unnoted = Item(itemId, 1).toUnnoted(definitions).id
+        if (isFoodOrPotion(unnoted)) return true
+        val def = definitions.getNullable(ItemDef::class.java, unnoted) ?: return false
+        return def.inventoryMenu.any { it.equals("Eat", ignoreCase = true) || it.equals("Drink", ignoreCase = true) }
+    }
 
     // ---- slot storage ----
 
@@ -141,6 +160,14 @@ object LootKeys {
         val limitReached: Boolean,
     )
 
+    /**
+     * Owner 2026-09-18 (#6): a kill gives a loot key OR ground loot, never both - loot lies on the
+     * floor next to a key only when the killer already holds the maximum 5 keys, or for food and
+     * potions when the killer has explicitly chosen Skully's OSRS "food and potions to the floor"
+     * option ([FOOD_TO_FLOOR]; owner: "if a person triggers at Skully drop food and potions to
+     * ground it works exactly"). Everything else that drops for the killer - including converted
+     * loot such as repair coins or an uncharged staff - goes into the key.
+     */
     fun plan(
         killerFreeSlots: Int,
         killerReceivesKeys: Boolean,
@@ -198,13 +225,19 @@ object LootKeys {
                 victimKeyContents = victimKeyContents,
                 loot = loot,
                 foodToFloor = killer.attr[FOOD_TO_FLOOR] == true,
-                isFood = ::isFoodOrPotion,
+                isFood = { isFoodOrPotion(world.definitions, it) },
             )
         decision.keysToGive.forEach { items ->
             val index = freeSlots(killer).firstOrNull() ?: return@forEach
             setSlot(killer, index, items)
             if (!killer.inventory.add(KEY_IDS[index], 1).hasSucceeded()) {
+                // Owner 2026-09-17: a full inventory never loses the key - it lands on the victim's tile.
                 world.spawn(GroundItem(KEY_IDS[index], 1, victim.tile, killer))
+                killer.message("Your inventory is full, so your loot key has dropped on the ground.")
+            } else {
+                // Owner 2026-09-18: "a sound when u get a lootkey in ur inventory". ADAPTED: OSRS Deadman
+                // has no published loot-key jingle; the 667 cache's own coin jingle (Sfx.COINS_JINGLE_1).
+                killer.playSound(KEY_RECEIVED_SOUND)
             }
         }
         if (decision.limitReached) killer.message(LIMIT_MESSAGE)
@@ -234,26 +267,41 @@ object LootKeys {
         setSlot(player, index, emptyList())
     }
 
-    // ---- chest (ADAPTED onto the price-checker grid) ----
+    // ---- chest (the OSRS "Loot keys" screen, LootKeyChest) ----
 
-    fun chestContainer(player: Player): ItemContainer? = player.attr[CHEST_CONTAINER]
+    /** Removes up to [amount] of [itemId] from key slot [index]'s stored loot and books the claimed value. */
+    fun takeFromSlot(
+        player: Player,
+        index: Int,
+        itemId: Int,
+        amount: Int,
+    ): Int {
+        val stored = slotItems(player, index).toMutableList()
+        val at = stored.indexOfFirst { it.id == itemId }
+        if (at < 0 || amount <= 0) return 0
+        val moved = minOf(amount, stored[at].amount)
+        addCounter(player, CLAIMED_VALUE, value(player.world.definitions, listOf(Item(itemId, moved))))
+        if (moved == stored[at].amount) stored.removeAt(at) else stored[at] = Item(itemId, stored[at].amount - moved)
+        setSlot(player, index, stored)
+        return moved
+    }
+
+    /** An emptied (or destroyed) key is used up: it leaves the inventory and counts as claimed. */
+    fun consumeKey(
+        player: Player,
+        index: Int,
+    ) {
+        setSlot(player, index, emptyList())
+        if (player.inventory.remove(KEY_IDS[index], 1).hasSucceeded()) {
+            addCounter(player, CLAIMED_KEYS, 1)
+        }
+    }
 
     fun openChest(
         player: Player,
         index: Int,
     ) {
-        player.attr[CHEST_SLOT] = index
-        player.attr[CHEST_CONTAINER] = ItemContainer(player.world.definitions, PriceChecker.CAPACITY, ContainerStackType.NORMAL)
-        PriceChecker.openGrid(player)
-        refreshChest(player)
-    }
-
-    private fun refreshChest(player: Player) {
-        val index = player.attr[CHEST_SLOT] ?: return
-        val container = chestContainer(player) ?: return
-        container.removeAll()
-        slotItems(player, index).take(PriceChecker.CAPACITY).forEach { container.add(it.id, it.amount, assureFullInsertion = false) }
-        PriceChecker.sendGrid(player, container)
+        LootKeyChest.open(player, index)
     }
 
     fun withdraw(
@@ -261,32 +309,10 @@ object LootKeys {
         gridSlot: Int,
         amount: Int,
     ) {
-        val index = player.attr[CHEST_SLOT] ?: return
-        val shown = chestContainer(player)?.get(gridSlot) ?: return
-        val stored = slotItems(player, index).toMutableList()
-        val at = stored.indexOfFirst { it.id == shown.id }
-        if (at < 0 || amount <= 0) return
-        val take = minOf(amount, stored[at].amount)
-        val added = player.inventory.add(shown.id, take, assureFullInsertion = false)
-        val moved = take - added.getLeftOver()
-        if (moved <= 0) {
-            player.message("You don't have enough inventory space.")
-            return
-        }
-        addCounter(player, CLAIMED_VALUE, value(player.world.definitions, listOf(Item(shown.id, moved))))
-        if (moved == stored[at].amount) stored.removeAt(at) else stored[at] = Item(shown.id, stored[at].amount - moved)
-        setSlot(player, index, stored)
-        if (stored.isEmpty()) {
-            player.inventory.remove(KEY_IDS[index], 1)
-            addCounter(player, CLAIMED_KEYS, 1)
-            player.closeInterface(PriceChecker.INTERFACE_ID)
-            return
-        }
-        refreshChest(player)
+        LootKeyChest.withdraw(player, gridSlot, amount)
     }
 
     fun closeChest(player: Player) {
-        player.attr.remove(CHEST_SLOT)
-        player.attr.remove(CHEST_CONTAINER)
+        LootKeyChest.close(player)
     }
 }

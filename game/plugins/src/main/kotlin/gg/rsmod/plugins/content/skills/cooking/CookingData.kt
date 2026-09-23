@@ -185,15 +185,6 @@ enum class CookingData(
         lowChance = 1,
         highChance = 232,
     ),
-    ROCKTAIL(
-        raw = Items.RAW_ROCKTAIL,
-        cooked = Items.ROCKTAIL,
-        burnt = Items.BURNT_ROCKTAIL,
-        levelRequirement = 93,
-        experience = 225.0,
-        lowChance = 1,
-        highChance = 222,
-    ),
     CAVE_EEL(
         raw = Items.RAW_CAVE_EEL,
         cooked = Items.CAVE_EEL,

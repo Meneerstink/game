@@ -2,12 +2,14 @@ package gg.rsmod.plugins.content.skills.fletching.crossbows
 
 import gg.rsmod.game.fs.DefinitionSet
 import gg.rsmod.game.fs.def.ItemDef
+import gg.rsmod.game.model.item.Item
 import gg.rsmod.game.model.queue.QueueTask
 import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.api.cfg.Anims
 import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.api.ext.doubleItemMessageBox
 import gg.rsmod.plugins.api.ext.filterableMessage
+import gg.rsmod.plugins.api.ext.grantOrRefund
 import gg.rsmod.plugins.api.ext.itemMessageBox
 import gg.rsmod.plugins.api.ext.player
 import kotlin.math.min
@@ -36,7 +38,9 @@ class CrossbowAction(
             if (!inventory.remove(data.limbs, assureFullRemoval = true).hasSucceeded()) {
                 return
             }
-            inventory.add(data.unstrung, 1)
+            if (!player.grantOrRefund(Item(data.unstrung, 1), listOf(Item(data.stock, 1), Item(data.limbs, 1)))) {
+                return
+            }
             player.filterableMessage("You attach the limbs to the stock.")
             player.addXp(Skills.FLETCHING, data.assembleExperience)
             task.wait(1)
@@ -71,7 +75,9 @@ class CrossbowAction(
             if (!inventory.remove(Items.CROSSBOW_STRING, assureFullRemoval = true).hasSucceeded()) {
                 return
             }
-            inventory.add(data.strung, 1)
+            if (!player.grantOrRefund(Item(data.strung, 1), listOf(Item(data.unstrung, 1), Item(Items.CROSSBOW_STRING, 1)))) {
+                return
+            }
             player.filterableMessage("You add a string to the $productName.")
             player.addXp(Skills.FLETCHING, data.stringExperience)
             task.wait(1)
@@ -85,6 +91,14 @@ class CrossbowAction(
         val player = task.player
         val inventory = player.inventory
         if (!inventory.contains(data.stock) || !inventory.contains(data.limbs)) {
+            return false
+        }
+        if (data.requiresHammer && !inventory.contains(Items.HAMMER)) {
+            task.doubleItemMessageBox(
+                "You need a hammer to attach these limbs.",
+                item1 = data.stock,
+                item2 = data.limbs,
+            )
             return false
         }
         if (player.skills.getCurrentLevel(Skills.FLETCHING) < data.assembleLevelRequirement) {

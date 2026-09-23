@@ -15,28 +15,11 @@ on_world_init {
     println(gg.rsmod.plugins.content.mechanics.store.StoreNpcs.spawnAll(world))
 }
 
-// GE services requested by the owner. Existing global handlers provide their real functions.
-spawn_npc(npc = Npcs.PERDU, x = 3160, z = 3487, direction = Direction.EAST)
-spawn_npc(npc = Npcs.BOB, x = 3160, z = 3490, direction = Direction.EAST)
-spawn_npc(npc = Npcs.PIKKUPSTIX, x = 3160, z = 3493, direction = Direction.EAST)
-spawn_npc(npc = Npcs.KURADAL, x = 3168, z = 3487, direction = Direction.WEST)
-spawn_npc(npc = Npcs.MAX, x = 3170, z = 3490, direction = Direction.WEST)
-spawn_npc(npc = Npcs.MANDRITH, x = 3170, z = 3493, direction = Direction.WEST)
-spawn_npc(npc = Npcs.SIR_TIFFY_CASHIEN, x = 3175, z = 3487, direction = Direction.WEST)
-spawn_npc(npc = Npcs.PARTY_PETE, x = 3175, z = 3490, direction = Direction.WEST)
-// Owner request 2026-09-16: an Ava's-device upgrade convenience spawn at the GE, alongside her
-// existing real Draynor Village placement (not moved/removed) - same "also spawn at the GE hub"
-// pattern already used for Bob above.
-spawn_npc(npc = Npcs.AVA, x = 3175, z = 3493, direction = Direction.WEST)
-spawn_npc(npc = Npcs.EVIL_DAVE, x = 3175, z = 3493, direction = Direction.WEST)
-spawn_npc(npc = Npcs.WISE_OLD_MAN, x = 3180, z = 3487, direction = Direction.WEST)
-spawn_npc(npc = Npcs.TOOL_LEPRECHAUN, x = 3180, z = 3490, walkRadius = 8, direction = Direction.WEST)
-spawn_npc(npc = Npcs.DRUNKEN_DWARF, x = 3180, z = 3493, walkRadius = 8, direction = Direction.WEST)
-spawn_npc(npc = Npcs.PING, x = 3168, z = 3500, direction = Direction.SOUTH)
-spawn_npc(npc = Npcs.PONG, x = 3172, z = 3500, direction = Direction.SOUTH)
-// The cache's named penguin variants are used; the exact Raktuber colour variant is not renamed
-// globally because NpcDef names are shared by every instance of an id.
-spawn_npc(npc = Npcs.PENGUIN_5428, x = 3176, z = 3500, walkRadius = 8, direction = Direction.SOUTH)
+// GE services requested by the owner. Since 2026-09-22 every one of these service npcs (Perdu, Bob, Pikkupstix, Kuradal,
+// Max, Mandrith, Sir Tiffy, Party Pete, Ava, Evil Dave, the Wise Old Man, the tool leprechaun, the drunken dwarf, Ping,
+// Pong, Azzanadra, the Archaeologist, the Oneiromancer, King Narnode, Aleck, Lucien and the penguin) stands in the home
+// hall instead of on the open exchange floor - see ge_home_hall.plugin.kts. Existing global handlers provide their
+// real functions wherever they stand. (Ava and Evil Dave used to share one tile here, 3175,3493.)
 
 // A cache-backed obelisk definition with the existing Infuse-pouch/Renew-points handlers.
 spawn_obj(obj = 50205, x = 3164, z = 3497, type = 10, rot = 0)

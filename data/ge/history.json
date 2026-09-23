@@ -1,0 +1,22 @@
+{
+  "anudd": [
+    {
+      "itemId": 22717,
+      "amount": 101,
+      "coins": 4444,
+      "sold": false
+    },
+    {
+      "itemId": 23128,
+      "amount": 1,
+      "coins": 664125,
+      "sold": false
+    },
+    {
+      "itemId": 11694,
+      "amount": 1,
+      "coins": 7931656,
+      "sold": false
+    }
+  ]
+}

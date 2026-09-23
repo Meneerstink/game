@@ -48,6 +48,25 @@ object MagicSpells {
         return false
     }
 
+    /** Rune ids that [p]'s equipped staff or tome supplies without limit. */
+    fun suppliesRune(
+        p: Player,
+        rune: Int,
+    ): Boolean = usingStaff(p, rune)
+
+    /** The runes [items] cost [p] through the shared [RunePayment] (inventory + carried rune pouch), `null` when unaffordable. */
+    fun runePlan(
+        p: Player,
+        items: List<Item>,
+    ): Map<Int, Int>? {
+        val required = items.filter { it.id in RunePouch.RUNES }.groupBy { it.id }.mapValues { (_, stacks) -> stacks.sumOf { it.amount } }
+        return RunePayment.plan(
+            required,
+            available = { rune -> p.inventory.getItemCount(rune) + RunePouch.carried(p, rune) },
+            free = { rune -> usingStaff(p, rune) },
+        )
+    }
+
     fun canCast(
         p: Player,
         lvl: Int,
@@ -62,8 +81,21 @@ object MagicSpells {
             return false
         }
         if (p.getVarbit(INF_RUNES_VARBIT) == 0 && !gg.rsmod.plugins.content.items.osrs.BlightedSacks.usable(p, spellId)) {
+            if (runePlan(p, items) == null) {
+                val missing =
+                    items.firstOrNull { item ->
+                        item.id in RunePouch.RUNES && !usingStaff(p, item.id) &&
+                            p.inventory.getItemCount(item.id) + RunePouch.carried(p, item.id) +
+                            RunePayment.COMBINATIONS.filter { it.second == item.id || it.third == item.id }
+                                .sumOf { p.inventory.getItemCount(it.first) + RunePouch.carried(p, it.first) } < item.amount
+                    } ?: items.first { it.id in RunePouch.RUNES }
+                p.message("You do not have enough ${missing.getDef(p.world.definitions).name.lowercase()}s to cast this spell.")
+                p.setVarp(Combat.SELECTED_AUTOCAST_VARP, 0)
+                p.attr.remove(Combat.CASTING_SPELL)
+                return false
+            }
             for (item in items) {
-                if (usingStaff(p, item.id)) {
+                if (item.id in RunePouch.RUNES || usingStaff(p, item.id)) {
                     continue
                 }
                 if (p.inventory.getItemCount(item.id) < item.amount &&
@@ -96,11 +128,17 @@ object MagicSpells {
                     (gg.rsmod.plugins.content.items.osrs.StaffOfTheDead.savesRunes(p) || gg.rsmod.plugins.content.items.osrs.KodaiWand.savesRunes(p))
             // A usable Blighted sack is used up instead of the runes ("It is consumed upon cast").
             if (!savedByStaff && !gg.rsmod.plugins.content.items.osrs.BlightedSacks.consume(p, spellId)) {
+                // Runes: staves/tomes, then combination runes, then the rest, from the inventory and then the rune pouch (RunePayment).
+                runePlan(p, items)?.forEach { (rune, amount) ->
+                    val fromInventory = minOf(amount, p.inventory.getItemCount(rune))
+                    if (fromInventory > 0) p.inventory.remove(rune, fromInventory)
+                    if (amount > fromInventory) RunePouch.take(p, rune, amount - fromInventory)
+                }
                 for (item in items) {
                     /*
                      * Do not remove staff item requirements.
                      */
-                    if (item.id in STAFF_ITEMS) {
+                    if (item.id in STAFF_ITEMS || item.id in RunePouch.RUNES) {
                         continue
                     }
                     if (usingStaff(p, item.id)) {

@@ -19,17 +19,21 @@ import gg.rsmod.plugins.content.mechanics.death.ItemRiskValueProvider
  * future lockable item (once its real ids exist in this cache) is added with one registry entry
  * and no changes here.
  *
- * Two explicit, narrow simplifications versus the real mechanic (not silently guessed):
- *  - **No Perdu NPC.** Confirmed genuinely absent from this ~2011/rev-667 cache (see
- *    `RSPS_CODEBASE_MAP.md`). Locking is triggered by using a Trouver parchment on the eligible
- *    item directly; unlocking is fronted by a `::trouverunlock` stopgap command (see
- *    `trouver.plugin.kts`) until a real Perdu NPC exists to host both interactions properly.
+ * One explicit, narrow simplification versus the real mechanic (not silently guessed):
  *  - **No broken/mangled item variants exist yet for any item.** The real mechanic turns an
  *    unprotected locked item into a separate "broken"/"mangled" state on death rather than fully
  *    preventing loss. [TrouverLockable.brokenItemId] is the extension point for that once a real
  *    broken variant is imported for a given pair; until then (every pair currently registered),
  *    [protectedFromDeath] simply keeps the locked item, which is the honestly-documented, safe
  *    fallback rather than a guessed degradation model.
+ *
+ * Correction 2026-09-16: an earlier version of this doc claimed Perdu was absent from this cache
+ * and fronted both lock/unlock through a Trouver parchment used directly on the item plus a
+ * `::trouverunlock` stopgap command. That was wrong - Perdu (upstream OSRS npc 7456) was already a
+ * real import (RCV-012 "ferox" batch, local npc id 14394) and now hosts both interactions properly
+ * at the Grand Exchange (`grand_exchange_hub.plugin.kts`): locking via `Trouver parchment` used on
+ * the eligible item still triggers [lock] (`trouver.plugin.kts`), and unlocking runs by using the
+ * locked item on Perdu directly ([unlock]); `::trouverunlock` remains only as a backup path.
  */
 object Trouver {
     const val LOCK_FEE = 500_000
@@ -69,15 +73,26 @@ object Trouver {
         player: Player,
         item: Item,
     ): LockResult {
+        // Captured before any removal: [item] is commonly an alias of the actual slot in
+        // [player]'s inventory (the real callers read it straight off `player.inventory.items`),
+        // and `ItemContainer.remove` mutates a matched slot's `Item.amount` in place down to 0 -
+        // re-reading `item.amount` after removing would then request 0 of everything below.
+        val amount = item.amount
         val lockable = TrouverRegistry.lockableFor(item.id) ?: return LockResult.NotLockable
-        if (player.inventory.getItemCount(item.id) < item.amount) return LockResult.ItemNotHeld
+        if (player.inventory.getItemCount(item.id) < amount) return LockResult.ItemNotHeld
         if (player.inventory.getItemCount(Items.TROUVER_PARCHMENT) < 1) return LockResult.MissingParchment
         if (player.inventory.getItemCount(Items.COINS_995) < LOCK_FEE) return LockResult.InsufficientFunds
 
-        player.inventory.remove(item.id, item.amount, assureFullRemoval = true)
+        player.inventory.remove(item.id, amount, assureFullRemoval = true)
         player.inventory.remove(Items.TROUVER_PARCHMENT, 1, assureFullRemoval = true)
         player.inventory.remove(Items.COINS_995, LOCK_FEE, assureFullRemoval = true)
-        player.inventory.add(lockable.lockedItemId, item.amount, assureFullInsertion = true)
+        player.inventory.add(lockable.lockedItemId, amount, assureFullInsertion = true)
+        // Locking is a state change on the same item (e.g. a Dizana's quiver's charges and stored
+        // ammo), not a fresh one - carry [item]'s attributes onto whichever slot the fresh add landed in.
+        if (item.hasAnyAttr()) {
+            val slot = player.inventory.items.indexOfFirst { it?.id == lockable.lockedItemId }
+            if (slot != -1) player.inventory[slot] = Item(lockable.lockedItemId, amount).copyAttr(item)
+        }
         player.filterableMessage(
             "You lock your item with a Trouver parchment. It can no longer be lost on death.",
         )
@@ -94,12 +109,15 @@ object Trouver {
         player: Player,
         lockedItem: Item,
     ): UnlockResult {
+        // See lock()'s doc: captured before any removal, since [lockedItem] is commonly the real
+        // aliased inventory slot and `remove` mutates a matched slot's `Item.amount` to 0 in place.
+        val amount = lockedItem.amount
         val lockable = TrouverRegistry.entryForLocked(lockedItem.id) ?: return UnlockResult.NotLocked
-        if (player.inventory.getItemCount(lockedItem.id) < lockedItem.amount) return UnlockResult.ItemNotHeld
+        if (player.inventory.getItemCount(lockedItem.id) < amount) return UnlockResult.ItemNotHeld
 
         val refund = (LOCK_FEE.toLong() * UNLOCK_REFUND_PERCENT / 100).toInt()
 
-        player.inventory.remove(lockedItem.id, lockedItem.amount, assureFullRemoval = true)
+        player.inventory.remove(lockedItem.id, amount, assureFullRemoval = true)
 
         val parchmentGrant = player.inventory.add(Items.TROUVER_PARCHMENT, 1, assureFullInsertion = true)
         val coinGrant =
@@ -110,12 +128,18 @@ object Trouver {
             }
         val baseGrant =
             if (parchmentGrant.hasSucceeded() && coinGrant?.hasSucceeded() == true) {
-                player.inventory.add(lockable.baseItemId, lockedItem.amount, assureFullInsertion = true)
+                player.inventory.add(lockable.baseItemId, amount, assureFullInsertion = true)
             } else {
                 null
             }
 
         if (baseGrant?.hasSucceeded() == true) {
+            // Symmetric to lock(): the unlocked item keeps whatever state (charges, stored ammo) the
+            // locked one carried.
+            if (lockedItem.hasAnyAttr()) {
+                val slot = player.inventory.items.indexOfFirst { it?.id == lockable.baseItemId }
+                if (slot != -1) player.inventory[slot] = Item(lockable.baseItemId, amount).copyAttr(lockedItem)
+            }
             player.filterableMessage("You unlock your item. Your Trouver parchment and $refund coins are returned.")
             return UnlockResult.Success
         }
@@ -123,7 +147,7 @@ object Trouver {
         // Roll back: undo whatever partially succeeded and restore the locked item exactly as it was.
         if (coinGrant?.hasSucceeded() == true) player.inventory.remove(Items.COINS_995, refund, assureFullRemoval = true)
         if (parchmentGrant.hasSucceeded()) player.inventory.remove(Items.TROUVER_PARCHMENT, 1, assureFullRemoval = true)
-        player.inventory.add(lockedItem.id, lockedItem.amount, assureFullInsertion = true)
+        player.inventory.add(lockedItem.id, amount, assureFullInsertion = true)
         player.filterableMessage("You don't have enough inventory space to unlock that item.")
         return UnlockResult.InventoryFull
     }

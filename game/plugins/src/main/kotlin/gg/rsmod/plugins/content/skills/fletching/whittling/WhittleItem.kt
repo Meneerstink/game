@@ -90,4 +90,8 @@ enum class WhittleItem(
         experience = 91.5,
         itemName = "Magic longbow",
     ),
+
+    // OSRS-IMPORT dragon crossbow (OSRS Wiki "Dragon crossbow", fetched 2026-09-16): "cut a magic stock for the
+    // crossbow from magic logs, granting 70 Fletching experience"; "Dragon crossbows can be made ... at level 78".
+    MAGIC_STOCK(product = Items.MAGIC_STOCK, levelRequirement = 78, experience = 70.0, itemName = "Crossbow Stock"),
 }

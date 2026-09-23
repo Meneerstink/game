@@ -19,7 +19,27 @@ private val LOCATIONS =
         Items.BRIMHAVEN_TABLET to Area(2757, 3176, 2758, 3179),
         Items.YANILLE_TABLET to Area(2542, 3095, 2545, 3096),
         Items.TROLLHEIM_TABLET to Area(2888, 3678, 2893, 3681),
+        // 2026-09-22 item-option census: the Runecrafting guild / altar tablets advertised "Break" with no handler.
+        // Landing squares: Void donor runecrafting.areas.toml / wizards_tower.areas.toml (`<altar>_teleport`), which
+        // Void's tablet route reads by the tablet's own item name.
+        Items.RUNECRAFTING_GUILD_TELEPORT to Area(1695, 5463, 1697, 5465),
+        Items.AIR_ALTAR_TELEPORT to Area(3124, 3406, 3125, 3407),
+        Items.MIND_ALTAR_TELEPORT to Area(2979, 3512, 2980, 3513),
+        Items.WATER_ALTAR_TELEPORT to Area(3182, 3162, 3183, 3163),
+        Items.EARTH_ALTAR_TELEPORT to Area(3304, 3475, 3304, 3476),
+        Items.FIRE_ALTAR_TELEPORT to Area(3309, 3251, 3311, 3253),
+        Items.BODY_ALTAR_TELEPORT to Area(3050, 3442, 3051, 3443),
+        Items.COSMIC_ALTAR_TELEPORT to Area(2406, 4382, 2408, 4384),
+        Items.CHAOS_ALTAR_TELEPORT to Area(3057, 3588, 3058, 3589),
+        Items.NATURE_ALTAR_TELEPORT to Area(2864, 3022, 2866, 3024),
+        Items.LAW_ALTAR_TELEPORT to Area(2856, 3378, 2857, 3379),
+        Items.DEATH_ALTAR_TELEPORT to Area(1863, 4637, 1864, 4640),
+        Items.BLOOD_ALTAR_TELEPORT to Area(3558, 9777, 3559, 9778),
+        Items.ASTRAL_ALTAR_TELEPORT to Area(2150, 3860, 2152, 3863),
     )
+
+/** Tablets whose landing square is not on the ground floor (Void: runecrafting_guild_teleport level = 2). */
+private val HEIGHTS = mapOf(Items.RUNECRAFTING_GUILD_TELEPORT to 2)
 
 LOCATIONS.forEach { item, endTile ->
     on_item_option(item = item, option = "break") {
@@ -58,7 +78,7 @@ fun Player.teleport(
             wait(cycles = 2)
             self.animate(id = Anims.RESET)
             self.unlock()
-            self.moveTo(tile = endArea.randomTile)
+            self.moveTo(tile = endArea.randomTile.let { Tile(it.x, it.z, HEIGHTS[tab] ?: 0) })
         }
     }
 }

@@ -395,8 +395,10 @@ on_npc_combat(npc = DAGONHAI_ELITE) {
             val victim = target
             world.queue {
                 wait(3)
-                victim.graphic(GFX_CURSE_IMPACT)
-                victim.hit(10 + world.random(15), HitType.MAGIC)
+                if (victim is Player && victim.isOnline && !victim.isDead()) {
+                    victim.graphic(GFX_CURSE_IMPACT)
+                    victim.hit(10 + world.random(15), HitType.MAGIC)
+                }
             }
             elite.postAttackLogic(target)
             wait(elite.combatDef.attackSpeed)

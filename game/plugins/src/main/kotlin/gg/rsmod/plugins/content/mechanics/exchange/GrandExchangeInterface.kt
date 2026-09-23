@@ -17,6 +17,7 @@ import gg.rsmod.plugins.api.ext.openInterface
 import gg.rsmod.plugins.api.ext.persistNow
 import gg.rsmod.plugins.api.ext.runClientScript
 import gg.rsmod.plugins.api.ext.sendItemContainer
+import gg.rsmod.plugins.api.ext.setComponentHidden
 import gg.rsmod.plugins.api.ext.setInterfaceEvents
 import gg.rsmod.plugins.api.ext.setVarp
 import kotlin.math.ceil
@@ -256,6 +257,22 @@ object GrandExchangeInterface {
         player.setVarp(VARP_QUANTITY, selection.quantity)
         player.setVarp(VARP_PRICE, selection.price)
         player.setVarp(VARP_GUIDE, selection.guide)
+        hideGuidePriceWarning(player)
+    }
+
+    /**
+     * Keeps the cache's "far less than its guide price" panel off the screen (owner 2026-09-20: "everytime i try
+     * to sell an item i get the popup ... remove this").
+     *
+     * The warning is pure client-script decoration and it cannot tell the player anything true here: [clampPrice]
+     * already pins every offer to `guide * 0.95 .. guide * 1.05`, and a fresh selection starts exactly at the
+     * guide price, so an offer that is "far less than the guide price" is not reachable through this interface in
+     * the first place. Hiding the container is therefore removing a false warning, not disabling a safety check -
+     * the real guard is the server-side clamp in [validate], which still rejects any price outside the range no
+     * matter what the client sends.
+     */
+    fun hideGuidePriceWarning(player: Player) {
+        player.setComponentHidden(interfaceId = MAIN, component = WARNING_CONTAINER, hidden = true)
     }
 
     /** Novite `ExchangeManagement.sendSummary`: the six offer boxes. */
@@ -268,6 +285,7 @@ object GrandExchangeInterface {
         // label component 0 in the rev-667 cache) only receives clicks once op1 events are enabled for it (owner 2026-09-18:
         // the warning could not be dismissed, blocking every sell).
         player.setInterfaceEvents(interfaceId = MAIN, component = WARNING_DISMISS, range = -1..-1, setting = 2)
+        hideGuidePriceWarning(player)
         refreshAll(player, service)
     }
 

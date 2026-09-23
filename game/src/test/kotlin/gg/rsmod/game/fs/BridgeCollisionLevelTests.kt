@@ -55,7 +55,7 @@ class BridgeCollisionLevelTests {
 
     @Test
     fun `server terrain collision equals the 667 client for every map square`() {
-        val sites = mapOf("Barrows surface" to 14131, "Barrows crypts" to 14231, "Nex bank (GWD)" to 11602, "Trollheim path" to 11578)
+        val sites = PROBE_SQUARES.entries.associate { (id, name) -> name to id }
         sites.forEach { (name, id) ->
             val r = region(id) ?: return@forEach println("BRIDGE-PROBE $name region $id: no map data")
             val client = clientBlocked(r)
@@ -81,6 +81,14 @@ class BridgeCollisionLevelTests {
         assertTrue(offenders.isEmpty(), "map squares whose server collision differs from the client: ${offenders.take(20)}")
     }
 
+    private companion object {
+        /** Evidence squares printed by both probes: Barrows, every God Wars / Nex square and the Trollheim mountain squares. */
+        val PROBE_SQUARES: Map<Int, String> =
+            linkedMapOf(14131 to "Barrows surface", 14231 to "Barrows crypts") +
+                listOf(11345, 11346, 11347, 11601, 11602, 11603).associateWith { "God Wars / Nex $it" } +
+                (listOf(11319, 11320, 11321, 11575, 11576, 11577, 11578, 11831, 11832, 11833)).associateWith { "Trollheim $it" }
+    }
+
     private class XteaEntry(val mapsquare: Int = 0, val key: IntArray = IntArray(4))
 
     @Test
@@ -88,7 +96,7 @@ class BridgeCollisionLevelTests {
         val keys =
             com.google.gson.Gson().fromJson(File("../data/xteas/xteas.json").readText(), Array<XteaEntry>::class.java)
                 .associate { it.mapsquare to it.key }
-        val sites = mapOf(14131 to "Barrows surface", 14231 to "Barrows crypts", 11602 to "Nex bank (GWD)", 11578 to "Trollheim path")
+        val sites = PROBE_SQUARES
         val definitions = DefinitionSet()
         val offenders = mutableListOf<String>()
         var locs = 0

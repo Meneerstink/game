@@ -35,6 +35,7 @@ import gg.rsmod.game.service.serializer.json.JsonPlayerSerializer
 import gg.rsmod.game.service.xtea.XteaKeyService
 import gg.rsmod.game.sync.block.UpdateBlockSet
 import gg.rsmod.util.HuffmanCodec
+import gg.rsmod.util.Misc
 import gg.rsmod.util.ServerProperties
 import it.unimi.dsi.fastutil.objects.ObjectArrayList
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet
@@ -259,8 +260,8 @@ class World(
             // R04.2: full NPC census, no owner login required - registries (definitions,
             // npcCombatDefs, bound npc options, static spawns) are all populated by now.
             logger.info(gg.rsmod.game.model.npc.NpcCensus.writeCsv(this))
-        }
             logger.info(gg.rsmod.game.model.item.ItemOptionCensus.writeCsv(this))
+        }
     }
 
     /**
@@ -445,13 +446,27 @@ class World(
         chunks.get(npc.tile)?.removeEntity(this, npc, npc.tile)
     }
 
+    /**
+     * The client keeps one loc per tile per layer (wall 0-3, wall decoration 4-8, scenery 9-21, ground decoration 22 -
+     * `LOC_LAYERS_BY_SHAPE`): an added loc replaces whatever held that layer and a LOC_DEL empties the whole layer.
+     * Replacing by exact type here let the server keep two locs the client could not both show (a type-10 wall piece
+     * and a type-10/11 banner), so removing one wiped the other from the client while the server still had it
+     * (owner 2026-09-23: "haalt stukje van de muur weg"). The server now replaces by layer, like the client.
+     */
+    fun locLayer(type: Int): Int =
+        when (type) {
+            in 0..3 -> 0
+            in 4..8 -> 1
+            22 -> 3
+            else -> 2
+        }
+
     fun spawn(obj: GameObject) {
         val tile = obj.tile
         val chunk = chunks.getOrCreate(tile)
         val oldObj =
             chunk.getEntities<GameObject>(tile, EntityType.STATIC_OBJECT, EntityType.DYNAMIC_OBJECT).firstOrNull {
-                it.type ==
-                    obj.type
+                locLayer(it.type) == locLayer(obj.type)
             }
         if (oldObj != null) {
             chunk.removeEntity(this, oldObj, tile)
@@ -464,6 +479,12 @@ class World(
         val chunk = chunks.getOrCreate(tile)
 
         chunk.removeEntity(this, obj, tile)
+        // The client's LOC_DEL empties the whole layer on the tile (see [locLayer]). A cache tile can hold two locs in
+        // one layer (e.g. a wall piece and a banner, both scenery); re-add the one that stays, as a dynamic copy, so the
+        // client shows it again instead of leaving a hole the server does not know about.
+        chunk.getEntities<GameObject>(tile, EntityType.STATIC_OBJECT, EntityType.DYNAMIC_OBJECT)
+            .firstOrNull { locLayer(it.type) == locLayer(obj.type) }
+            ?.let { remaining -> if (remaining is StaticObject) spawn(DynamicObject(remaining)) }
     }
 
     fun spawnTemporaryObject(
@@ -546,12 +567,12 @@ class World(
             }
         }
 
-        for (i in 0 until groundItems.size) {
-            val item = groundItems[i] ?: continue
-            if (area.contains(item.tile)) {
-                remove(item)
-            }
-        }
+        // [remove] deletes the item from this same list, so walking it by a pre-computed index range
+        // both skipped the element shifted into the freed slot and ran off the end once enough items
+        // had been removed - live: "Error with world cycle. IndexOutOfBoundsException: Index (1153)
+        // is greater than or equal to list size (1153)", which aborted the whole world cycle for
+        // that tick. Decide on a snapshot first, then remove.
+        groundItems.filter { area.contains(it.tile) }.forEach { remove(it) }
     }
 
     fun isSpawned(obj: GameObject): Boolean =
@@ -594,9 +615,15 @@ class World(
             }
 
     fun getPlayerForName(username: String): Player? {
+        val requestedName = Misc.formatForDisplay(username)
         for (i in 0 until players.capacity) {
             val player = players[i] ?: continue
-            if (player.username.equals(username, ignoreCase = true)) {
+            // The client sends the account name in some social packets, while the
+            // world update/friend list uses the persisted display name. OSRS treats
+            // underscores, spaces and case as the same account name.
+            val displayName = Misc.formatForDisplay(player.username)
+            val loginName = (player as? Client)?.loginUsername?.let(Misc::formatForDisplay)
+            if (displayName.equals(requestedName, ignoreCase = true) || loginName.equals(requestedName, ignoreCase = true)) {
                 return player
             }
         }

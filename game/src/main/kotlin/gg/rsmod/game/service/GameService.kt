@@ -5,6 +5,7 @@ import gg.rsmod.game.Server
 import gg.rsmod.game.message.MessageDecoderSet
 import gg.rsmod.game.message.MessageEncoderSet
 import gg.rsmod.game.message.MessageStructureSet
+import gg.rsmod.game.model.AvTrace
 import gg.rsmod.game.model.World
 import gg.rsmod.game.task.*
 import gg.rsmod.game.task.sequential.SequentialNpcCycleTask
@@ -16,7 +17,6 @@ import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.asCoroutineDispatcher
 import mu.KLogging
-import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
@@ -53,7 +53,7 @@ class GameService : Service {
      * A list of jobs that will be executed on the next cycle after being
      * submitted.
      */
-    private val gameThreadJobs = ConcurrentLinkedQueue<() -> Unit>()
+    private val gameThreadJobs = GameThreadJobQueue()
 
     /**
      * The amount of ticks that have gone by since the last debug log.
@@ -65,6 +65,13 @@ class GameService : Service {
      * cycles have taken to complete.
      */
     private var cycleTime = 0
+
+    /**
+     * Monotonic start time of the previous game-cycle invocation. This is kept
+     * separately from the measured cycle work time so a scheduler/GC pause
+     * between invocations can be distinguished from slow game logic.
+     */
+    private var previousCycleStartNanos = 0L
 
     /**
      * The Kotlin Coroutine dispatcher to submit suspendable plugins.
@@ -119,6 +126,26 @@ class GameService : Service {
      */
     internal var pause = false
 
+    /**
+     * Boot gate (owner 2026-09-20 "gameserver is still hanging").
+     *
+     * [init] is called from `World.loadServices`, which runs long before the boot thread has
+     * finished `DefinitionSet.loadRegions`, `PluginRepository.init` (static spawns) and
+     * `World.postLoad` (`on_world_init`). All three mutate `World.chunks`, whose backing
+     * `Object2ObjectOpenHashMap` is not thread-safe, so a cycle running [ChunkCreationTask] on the
+     * game thread at the same time corrupted the map: once its chunk count crossed a rehash
+     * boundary the boot thread died with `ArrayIndexOutOfBoundsException: Index 8192 out of bounds
+     * for length 4097` inside `ChunkSet.get`. The game thread survived, so the server kept cycling
+     * forever while `Server.startGame` never reached the game-port bind - a running process that
+     * nothing can connect to.
+     *
+     * The world is single-threaded by design; this flag enforces that during boot too. Cycles are
+     * skipped until the boot thread has finished loading, which costs nothing (there are no players
+     * yet) and removes the race entirely.
+     */
+    @Volatile
+    internal var loaded = false
+
     override fun init(
         server: Server,
         world: World,
@@ -171,10 +198,19 @@ class GameService : Service {
     }
 
     private fun cycle() {
-        if (pause) {
+        if (!loaded || pause) {
             return
         }
         val start = System.currentTimeMillis()
+        val startNanos = System.nanoTime()
+        val previousStartNanos = previousCycleStartNanos
+        previousCycleStartNanos = startNanos
+        val cycleGapMs =
+            if (previousStartNanos == 0L) {
+                -1.0
+            } else {
+                (startNanos - previousStartNanos) / 1_000_000.0
+            }
 
         /*
          * Clear the time it has taken to complete [GameTask]s from last cycle.
@@ -185,17 +221,13 @@ class GameService : Service {
         /*
          * Execute any logic jobs that were submitted.
          */
-        gameThreadJobs.forEach { job ->
+        gameThreadJobs.drain().forEach { job ->
             try {
                 job()
             } catch (e: Exception) {
                 logger.error("Error executing game-thread job.", e)
             }
         }
-        /*
-         * Reset the logic jobs as they have been completed.
-         */
-        gameThreadJobs.clear()
 
         /*
          * Go over the [tasks] and execute their logic. Log the time it took
@@ -213,13 +245,29 @@ class GameService : Service {
             taskTimes[task.javaClass] = System.currentTimeMillis() - taskStart
         }
 
-        world.cycle()
+        try {
+            world.cycle()
+        } catch (e: Exception) {
+            // Keep the fixed-rate game scheduler alive when world maintenance fails.
+            logger.error("Error with world cycle.", e)
+        }
 
         /*
          * Calculate the time, in milliseconds, it took for this cycle to complete
          * and add it to [cycleTime].
          */
         cycleTime += (System.currentTimeMillis() - start).toInt()
+
+        val workMs = (System.nanoTime() - startNanos) / 1_000_000.0
+        val expectedCycleMs = world.gameContext.cycleTime.toDouble()
+        if (cycleGapMs > expectedCycleMs + CYCLE_TIMING_TOLERANCE_MS || workMs > expectedCycleMs) {
+            AvTrace.log {
+                "cycle timing cycle=${world.currentCycle} expectedMs=$expectedCycleMs " +
+                    "gapMs=$cycleGapMs workMs=$workMs " +
+                    "schedulerDelayMs=${(cycleGapMs - expectedCycleMs).coerceAtLeast(0.0)} " +
+                    "tasks=${taskTimes.toList().sortedByDescending { (_, value) -> value }.toMap()}"
+            }
+        }
 
         if (debugTick++ >= TICKS_PER_DEBUG_LOG) {
             val freeMemory = Runtime.getRuntime().freeMemory()
@@ -297,5 +345,7 @@ class GameService : Service {
          * The amount of ticks that must go by for debug info to be logged.
          */
         private const val TICKS_PER_DEBUG_LOG = 10
+
+        private const val CYCLE_TIMING_TOLERANCE_MS = 50.0
     }
 }

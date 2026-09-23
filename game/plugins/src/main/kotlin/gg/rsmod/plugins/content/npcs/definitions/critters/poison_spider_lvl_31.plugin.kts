@@ -11,7 +11,7 @@ import gg.rsmod.plugins.api.cfg.Npcs
 val ids = intArrayOf(Npcs.POISON_SPIDER_1009)
 
 on_npc_pre_death(*ids) {
-    val p = npc.damageMap.getMostDamage()!! as Player
+    val p = npc.killer() ?: return@on_npc_pre_death
     p.playSound(Sfx.BIG_SPIDER_DEATH)
 }
 

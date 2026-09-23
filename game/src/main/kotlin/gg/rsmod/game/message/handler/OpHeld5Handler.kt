@@ -1,5 +1,6 @@
 package gg.rsmod.game.message.handler
 
+import gg.rsmod.game.action.UnhandledInteractions
 import gg.rsmod.game.message.MessageHandler
 import gg.rsmod.game.message.impl.OpHeld5Message
 import gg.rsmod.game.model.World
@@ -39,6 +40,10 @@ class OpHeld5Handler : MessageHandler<OpHeld5Message> {
             hash shr 16,
             hash and 0xFFFF,
         )
+        if (client.attr[gg.rsmod.game.model.attr.ID_INSPECTOR_ATTR] == true) {
+            val def = item.getDef(world.definitions)
+            client.writeConsoleMessage("Item id=${item.id}, name=${def.name}, amount=${item.amount}, slot=$slot")
+        }
 
         client.attr[INTERACTING_ITEM] = WeakReference(item)
         client.attr[INTERACTING_ITEM_ID] = item.id
@@ -50,8 +55,11 @@ class OpHeld5Handler : MessageHandler<OpHeld5Message> {
         // ("Revert", "Dismantle", ...): route every non-Drop op-5 to its item-option plugin instead of dropping the item
         // (owner 2026-09-18: Revert on the Granite maul (or) did nothing). Unbound ops fall through to the drop path.
         val op5 = world.definitions.get(gg.rsmod.game.fs.def.ItemDef::class.java, item.id).inventoryMenu[4]
-        if (op5 != null && !op5.equals("Drop", ignoreCase = true) && world.plugins.executeItem(client, item.id, 5)) {
-            return
+        if (op5 != null && !op5.equals("Drop", ignoreCase = true)) {
+            if (world.plugins.executeItem(client, item.id, 5)) {
+                return
+            }
+            UnhandledInteractions.recordInteraction("item", item.id, 5, "item", "slot=$slot")
         }
 
         if (world.plugins.canDropItem(client, item.id)) {

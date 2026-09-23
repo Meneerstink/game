@@ -482,7 +482,8 @@ suspend fun QueueTask.destroyItem(item: Int) {
     val result = (requestReturnValue as? ResumePauseButtonMessage)?.let { it.button - 1 } ?: -1
 
     if (result == 2) {
-        player.inventory.remove(item)
+        // Void ItemDestroy: destroy_object (2381) plays once the item is gone.
+        if (player.inventory.remove(item).hasSucceeded()) player.playSound(gg.rsmod.plugins.api.cfg.Sfx.DESTROY_OBJECT)
     }
 }
 

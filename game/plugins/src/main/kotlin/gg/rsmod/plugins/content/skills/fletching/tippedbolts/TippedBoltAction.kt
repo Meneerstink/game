@@ -1,9 +1,11 @@
 package gg.rsmod.plugins.content.skills.fletching.tippedbolts
 
+import gg.rsmod.game.model.item.Item
 import gg.rsmod.game.model.queue.QueueTask
 import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.api.ext.doubleItemMessageBox
 import gg.rsmod.plugins.api.ext.filterableMessage
+import gg.rsmod.plugins.api.ext.grantOrRefund
 import gg.rsmod.plugins.api.ext.player
 import kotlin.math.min
 
@@ -27,7 +29,9 @@ object TippedBoltAction {
             if (!inventory.remove(data.tip, assureFullRemoval = true).hasSucceeded()) {
                 return
             }
-            inventory.add(data.product, 1)
+            if (!player.grantOrRefund(Item(data.product, 1), listOf(Item(data.plainBolt, 1), Item(data.tip, 1)))) {
+                return
+            }
             player.addXp(Skills.FLETCHING, data.experience)
             player.filterableMessage("You attach the bolt tips to the bolts.")
             task.wait(1)
