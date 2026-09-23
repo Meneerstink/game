@@ -286700,3 +286700,168 @@
   tradeable: true
   weight: 0.1
   equipment: null
+- id: 23858
+  name: "Armadyl halo"
+  examine: "Halo with the protection of Armadyl."
+  tradeable: false
+  weight: 0.3
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6706
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 11
+    defence_slash: 12
+    defence_crush: 10
+    defence_magic: 11
+    defence_ranged: -1
+    summoning: 0
+    melee_strength: 0
+    prayer: 3
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23859
+  name: "Bandos halo"
+  examine: "Halo with the protection of Bandos."
+  tradeable: false
+  weight: 0.3
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6707
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 11
+    defence_slash: 12
+    defence_crush: 10
+    defence_magic: 11
+    defence_ranged: -1
+    summoning: 0
+    melee_strength: 0
+    prayer: 3
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23860
+  name: "Seren halo"
+  examine: "Halo with the protection of Seren."
+  tradeable: false
+  weight: 0.3
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6708
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 11
+    defence_slash: 12
+    defence_crush: 10
+    defence_magic: 11
+    defence_ranged: -1
+    summoning: 0
+    melee_strength: 0
+    prayer: 3
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23861
+  name: "Ancient halo"
+  examine: "Halo with the protection of an ancient god."
+  tradeable: false
+  weight: 0.3
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6709
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 11
+    defence_slash: 12
+    defence_crush: 10
+    defence_magic: 11
+    defence_ranged: -1
+    summoning: 0
+    melee_strength: 0
+    prayer: 3
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23862
+  name: "Brassica halo"
+  examine: "Halo with the protection of a healthy diet and the smell of flatulence."
+  tradeable: false
+  weight: 0.3
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6710
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 11
+    defence_slash: 12
+    defence_crush: 10
+    defence_magic: 11
+    defence_ranged: -1
+    summoning: 0
+    melee_strength: 0
+    prayer: 3
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0

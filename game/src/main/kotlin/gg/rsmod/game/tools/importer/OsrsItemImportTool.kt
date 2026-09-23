@@ -928,6 +928,17 @@ object OsrsItemImportTool {
             // Dragon pickaxe (or) (class of the 667 Dragon pickaxe 15259: 686 = 4, 687 = 1, 749/750 60 Attack, 770/771 = 14/61 Mining; weapon type 4).
             // Breach emblem (owner 2026-09-23): OSRS Wiki "Archaic emblem" - "Tier 5 emblems are also guaranteed from breach monsters
             // if you are eligible for loot and have also dealt 250 or more damage". Tier 5 (12751) has no noted form upstream.
+            // Breach Trader stock (owner 2026-09-23 "doe ... de rest"): the five OSRS halos the Annihilation shop sells that this
+            // server lacked (OSRS Wiki item pages: 24192 Armadyl, 24195 Bandos, 24198 Seren, 24201 Ancient, 24204 Brassica; head slot,
+            // untradeable, +11/+12/+10/+11/-1 defence, +3 prayer).
+            "halos" to
+                listOf(
+                    Spec(24192), // Armadyl halo
+                    Spec(24195), // Bandos halo
+                    Spec(24198), // Seren halo
+                    Spec(24201), // Ancient halo
+                    Spec(24204), // Brassica halo
+                ),
             "emblems" to
                 listOf(
                     Spec(12751), // Archaic emblem (tier 5)

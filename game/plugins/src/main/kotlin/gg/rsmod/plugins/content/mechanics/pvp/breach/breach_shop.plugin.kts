@@ -13,8 +13,8 @@ import gg.rsmod.plugins.content.mechanics.shops.PointCurrency
  *
  * Stock and prices: OSRS Wiki "Bounty Hunter Shop (Deadman Mode)", Annihilation event stock, read 2026-09-23 - every listed item
  * this server has. Not stocked because the item does not exist here yet: Blighted surge sack, Ring of wealth scroll, Saradomin's
- * tear, Rune pouch note, Looting bag note, Scroll of redirection, Clue box, Scroll of imbuing, Guthixian icon and the Brassica,
- * Ancient, Seren, Bandos and Armadyl halos.
+ * tear, Rune pouch note, Looting bag note, Scroll of redirection, Clue box, Scroll of imbuing and Guthixian icon (each needs its own
+ * behaviour, not just an item). The five missing halos were imported for it (batch halos).
  */
 
 val BREACH_TRADER = 14478
@@ -48,6 +48,13 @@ val STOCK: List<Pair<Int, Int>> =
         Items.SARADOMIN_HALO to 500_000,
         Items.ZAMORAK_HALO to 500_000,
         Items.GUTHIX_HALO to 500_000,
+        // OSRS halos imported for this shop (OsrsItemImportTool batch halos, tx-20260923-200943): Armadyl, Bandos, Seren, Ancient,
+        // Brassica.
+        23858 to 500_000,
+        23859 to 500_000,
+        23860 to 500_000,
+        23861 to 500_000,
+        23862 to 500_000,
     )
 
 create_shop(
