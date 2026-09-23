@@ -36,10 +36,11 @@ class OsrsCasketTeleportScrollsImportTests {
     @Test
     fun `a scroll is consumed only after the teleport is allowed`() {
         val plugin = File("src/main/kotlin/gg/rsmod/plugins/content/items/osrs/casket_teleport_scrolls.plugin.kts").readText()
-        val check = plugin.indexOf("player.canTeleport(TeleportType.TAB)")
+        // One shared scrollTeleport(scroll, destination, type) serves the OSRS "Teleport" and the 667 "Read" scrolls.
+        val check = plugin.indexOf("player.canTeleport(type)")
         val remove = plugin.indexOf("player.inventory.remove(item = scroll, amount = 1")
-        val teleport = plugin.indexOf("player.teleport(tile, TeleportType.TAB)")
+        val teleport = plugin.indexOf("player.teleport(tile, type)")
         assertTrue(check in 0 until remove && remove < teleport, "canTeleport, then remove one scroll, then teleport")
-        assertTrue("on_item_option(item = scroll, option = \"Teleport\")" in plugin)
+        assertTrue("on_item_option(item = scroll, option = \"Teleport\") { scrollTeleport(scroll, destination, TeleportType.TAB) }" in plugin)
     }
 }

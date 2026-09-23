@@ -155,6 +155,7 @@ class SummoningSpecialResourceTests {
 
             val first = SummoningSpecialMoves.castInstant(player)
             if (!timers.has(SummoningSpecialMoves.SPECIAL_MOVE_DELAY_TIMER)) {
+                if (pouch.name in DELAY_STARTS_ON_TELEPORT) return@forEach
                 if (first || "${pouch.name} (${scroll.name})" !in CONDITIONAL_ON_UNPROVIDED_STATE) {
                     offenders += "${pouch.name}: no special-move delay started"
                 }
@@ -511,6 +512,13 @@ class SummoningSpecialResourceTests {
                 "SMOKE_DEVIL (DUST_CLOUD_SCROLL)",
                 "ABYSSAL_TITAN (ESSENCE_SHIPMENT_SCROLL)",
             )
+
+        /**
+         * Call to Arms goes through the shared teleport gate (canTeleport + Deadman route revalidation, WORK_QUEUE 1.0): the
+         * special-move delay starts when that teleport completes, which a mocked world never runs.
+         */
+        private val DELAY_STARTS_ON_TELEPORT =
+            setOf("VOID_RAVAGER", "VOID_SHIFTER", "VOID_SPINNER", "VOID_TORCHER")
 
         /** Hitpoints 99 on the server's 1:1 scale. */
         private const val MAX_LIFEPOINTS = 99

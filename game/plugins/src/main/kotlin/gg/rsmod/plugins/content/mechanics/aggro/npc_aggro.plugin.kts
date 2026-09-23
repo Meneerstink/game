@@ -89,7 +89,13 @@ on_global_npc_spawn {
 }
 
 on_timer(AGGRO_CHECK_TIMER) {
-    if (!npc.timers.has(ACTIVE_COMBAT_TIMER) &&
+    // Breach monsters (owner 2026-09-23: "they need to be aggro and they need to attack multiple players"): the in-combat timer
+    // outlives the fight by several ticks, so after its target died, teleported or ran out of the leash a breach monster stood
+    // idle while other players walked past it. A breach monster without a live target hunts again at once.
+    val breachIdle =
+        gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.isBreachNpc(npc) &&
+            npc.getCombatTarget().let { it == null || it.isDead() }
+    if ((!npc.timers.has(ACTIVE_COMBAT_TIMER) || breachIdle) &&
         npc.lock.canAttack() &&
         npc.isActive()) {
         // A Deadman guard may pursue a valid skulled target anywhere inside the guarded polygon.

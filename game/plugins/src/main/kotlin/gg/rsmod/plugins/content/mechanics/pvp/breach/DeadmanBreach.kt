@@ -4,6 +4,7 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import gg.rsmod.game.fs.def.ItemDef
 import gg.rsmod.game.model.Tile
+import gg.rsmod.game.model.TileGraphic
 import gg.rsmod.game.model.World
 import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.EntityType
@@ -51,6 +52,18 @@ object DeadmanBreach {
     const val LOCALISED_MAX_NPCS = 6
     const val REGIONAL_MAX_NPCS = 25
 
+    /** How far a regional monster wanders around its landing tile. */
+    const val REGIONAL_WANDER_RADIUS = 8
+
+    /**
+     * How far from its landing tile a breach monster keeps chasing (the leash, `NpcLeash.mayPursue`). The generic npc leash is 7
+     * tiles (Void `NPC.maxRange()` default), so a breach boss gave up on anyone who stepped a few tiles away (owner 2026-09-23
+     * "not chasing correctly"). OSRS gives no number for breach monsters; the Zemouregal Summon page confirms they "have a
+     * limited wander radius, so they can only chase players so far before they lose aggro". ADAPTED: 16 tiles, the whole
+     * localised landing area (radius 9) plus room to follow a player running out of it.
+     */
+    const val CHASE_RANGE = 16
+
     /** 15 minutes / 30 minutes in 600 ms game ticks. */
     const val SPAWN_WINDOW_TICKS = 1500
     const val LINGER_TICKS = 3000
@@ -58,6 +71,20 @@ object DeadmanBreach {
     /** Local loc ids of OSRS "Breach" 49561 and "Boss Spawn" 49563 (OsrsLocImportTool deadman-breach). */
     const val BREACH_LOC = BreachIds.BREACH_LOC
     const val BOSS_SPAWN_LOC = BreachIds.BOSS_SPAWN_LOC
+
+    /**
+     * How often an open breach pulses its graphic, in game cycles (3 seconds).
+     *
+     * Owner 2026-09-21: "whenever i spawn a breach through the breach command tele there i see always the same thing
+     * on the ground there is no breach". The breach loc IS there - 62747, the OSRS "Breach" scenery imported as
+     * tx-20260919-164612 - but it stands dead still, so it reads as a painted ring rather than a rift. Its OSRS
+     * animation is sequence 10418, which carries opcode 13, animaya (skeletal) data: `OsrsFxImportTool.decodeOsrsSeq`
+     * refuses exactly that opcode because revision 667 has no way to represent a skeletal sequence, so
+     * `OsrsLocImportTool` dropped the animation and imported the model alone. The loc therefore cannot be made to
+     * animate itself in this cache. Pulsing the breach's own imported graphic over each spawner instead gives the
+     * movement back using an asset 667 CAN represent, and is one constant to change if a better graphic turns up.
+     */
+    private const val BREACH_PULSE_TICKS = 5
 
     /** How long a Boss Spawn stands before its monster appears on top of it. */
     private const val BOSS_SPAWN_TICKS = 3
@@ -98,6 +125,9 @@ object DeadmanBreach {
         val objects = ArrayList<DynamicObject>()
         val npcs = ArrayList<Npc>()
         var spawned = 0
+
+        /** Footprints of monsters whose projectile is still in flight. */
+        val pending: MutableList<Footprint> = java.util.concurrent.CopyOnWriteArrayList()
     }
 
     class Active(
@@ -291,6 +321,9 @@ object DeadmanBreach {
                     val interval = SPAWN_WINDOW_TICKS / site.maxNpcs
                     if (site.spawned < site.maxNpcs && elapsed >= site.spawned * interval) fire(world, site)
                 }
+                if (elapsed % BREACH_PULSE_TICKS == 0) {
+                    opened.sites.forEach { site -> site.spawners.forEach { world.spawn(TileGraphic(it, BreachMonsters.GFX_BREACH_PROJECTILE, height = 0)) } }
+                }
                 wait(1)
                 elapsed++
             }
@@ -302,29 +335,92 @@ object DeadmanBreach {
         }
     }
 
-    /** One projectile from a spawner to a landing tile; a Boss Spawn appears there and spawns a monster on top of it. */
+    /**
+     * One projectile from a spawner to a landing tile; a Boss Spawn appears there, the monster spawns on top of it and the Boss
+     * Spawn then disappears (OSRS Wiki "Boss Spawn": "These boss spawns then spawn a breach monster on top of them before
+     * disappearing").
+     *
+     * Owner 2026-09-23 ("some breachmonsters are spawning in each other", "not moving they just stand still", "no clipp"): the
+     * landing tile used to be any single usable tile, but a breach monster is 1x1 to 5x5, so its other tiles landed in walls,
+     * rocks and other monsters - stuck there it could not step anywhere and stood inside the scenery. The monster is now chosen
+     * first and lands only where its whole footprint is usable and free of every other npc and every landing still in flight.
+     */
     private fun fire(
         world: World,
         site: Site,
     ) {
+        val monster = BreachMonsters.SPAWNABLE.random()
+        val size = world.definitions.getNullable(gg.rsmod.game.fs.def.NpcDef::class.java, monster.id)?.size ?: 1
+        val landing = site.landing.shuffled().firstOrNull { fits(world, it, size) && isFree(world, site, it, size) }
+        if (landing == null) {
+            // Nowhere free for this one right now; the next pulse tries again (spawned is not counted).
+            return
+        }
         site.spawned++
-        val landing = site.landing.random()
-        val from = site.spawners.minByOrNull { it.getDistance(landing) }!!
-        val flight = 30 + from.getDistance(landing) * 5
+        val reserved = Footprint(landing, size)
+        site.pending += reserved
+        val centre = Tile(landing.x + (size - 1) / 2, landing.z + (size - 1) / 2, landing.height)
+        val from = site.spawners.minByOrNull { it.getDistance(centre) }!!
+        val flight = 30 + from.getDistance(centre) * 5
         world.spawn(
-            Projectile.Builder().setTiles(start = from, target = landing).setGfx(BreachMonsters.GFX_BREACH_PROJECTILE)
+            Projectile.Builder().setTiles(start = from, target = centre).setGfx(BreachMonsters.GFX_BREACH_PROJECTILE)
                 .setHeights(startHeight = 100, endHeight = 0).setSlope(angle = 16, steepness = 64).setTimes(delay = 30, lifespan = flight).build(),
         )
         val landTicks = flight / 30 + 1
         world.queue {
             wait(landTicks)
-            val bossSpawn = DynamicObject(BOSS_SPAWN_LOC, 10, 0, landing)
+            val bossSpawn = DynamicObject(BOSS_SPAWN_LOC, 10, 0, centre)
             world.spawn(bossSpawn)
             wait(BOSS_SPAWN_TICKS)
+            site.npcs += spawnMonster(world, monster.id, landing, if (site.kind == Kind.LOCALISED) LOCAL_SPAWN_RADIUS else REGIONAL_WANDER_RADIUS)
+            site.pending -= reserved
+            wait(1)
             world.remove(bossSpawn)
-            val monster = BreachMonsters.SPAWNABLE.random()
-            site.npcs += spawnMonster(world, monster.id, landing, if (site.kind == Kind.LOCALISED) LOCAL_SPAWN_RADIUS else 8)
         }
+    }
+
+    /** A square of tiles an npc will occupy (south-west corner + size). */
+    data class Footprint(
+        val corner: Tile,
+        val size: Int,
+    ) {
+        fun overlaps(
+            other: Tile,
+            otherSize: Int,
+        ): Boolean =
+            corner.height == other.height &&
+                corner.x < other.x + otherSize && other.x < corner.x + size &&
+                corner.z < other.z + otherSize && other.z < corner.z + size
+    }
+
+    /** Every tile of a [size] x [size] footprint at [corner] is usable ([usable]) and can be walked between. */
+    fun fits(
+        world: World,
+        corner: Tile,
+        size: Int,
+    ): Boolean {
+        for (dx in 0 until size) for (dz in 0 until size) {
+            if (!usable(world, corner.transform(dx, dz))) return false
+        }
+        return true
+    }
+
+    /** No live npc and no landing still in flight overlaps the footprint. */
+    private fun isFree(
+        world: World,
+        site: Site,
+        corner: Tile,
+        size: Int,
+    ): Boolean {
+        val fp = Footprint(corner, size)
+        if ((active?.sites.orEmpty() + site).any { s -> s.pending.any { it.overlaps(corner, size) } }) return false
+        val reach = gg.rsmod.game.model.MovementQueue.MAX_NPC_SIZE - 1
+        for (x in corner.x - reach until corner.x + size) for (z in corner.z - reach until corner.z + size) {
+            val t = Tile(x, z, corner.height)
+            val chunk = world.chunks.get(t, createIfNeeded = false) ?: continue
+            if (chunk.getEntities<Npc>(t, EntityType.NPC).any { it.tile == t && fp.overlaps(t, it.getSize().coerceAtLeast(1)) }) return false
+        }
+        return true
     }
 
     /** Every breach npc currently in the world (breach monsters and Zemouregal's summons), for the per-tick mechanics. */

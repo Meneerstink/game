@@ -840,6 +840,9 @@ object OsrsItemImportTool {
                     Spec(23389, noted = true), // Spiked manacles
                 ),
             "deadman-breach" to listOf(Spec(29643, noted = true), Spec(28564), Spec(33044), Spec(28570), Spec(33047)),
+            // Owner 2026-09-23 ("We need the from Deadman's skull it needs to have the option Breach check"): OSRS Wiki "Deadman's
+            // skull" id 33065 - options Shop, Unlocks, Swap, Breach Check, Destroy; untradeable, not bankable.
+            "deadman-skull" to listOf(Spec(33065)),
             // Owner 2026-09-19 ("fix everything" - Chitin's use): OSRS Wiki "Blighted overload" ids 29631 (4) / 29634 (3) / 29637 (2)
             // / 29640 (1), noteable, tradeable; drink/mix handled in mechanics/pvp/breach/blighted_overload.plugin.kts.
             "blighted-overload" to listOf(Spec(29631, noted = true), Spec(29634, noted = true), Spec(29637, noted = true), Spec(29640, noted = true)),
@@ -1125,33 +1128,8 @@ object OsrsItemImportTool {
 
             val convertedModels = mutableMapOf<Int, ByteArray>()
             fun convertModel(modelId: Int): ByteArray =
-                convertedModels.getOrPut(modelId) {
-                    val bytes = reader.file(ModernCacheReader.INDEX_MODEL, modelId, 0) ?: error("upstream model $modelId missing")
-                    val raw =
-                        runCatching { ModernModelDecoder.decode(bytes) }.getOrElse { strict ->
-                            // Complex (cylindrical/spherical/cube) mappings only position texture
-                            // coordinates; the flattening below discards textures anyway.
-                            dropped += "model $modelId: complex texture mappings discarded (${strict.message})"
-                            ModernModelDecoder.decode(bytes, flattenTextures = true)
-                        }
-                    val texFaces = raw.faceTexture?.count { it.toInt() != -1 } ?: 0
-                    val source =
-                        if (texFaces == 0 && raw.texSpaceCount == 0) {
-                            raw
-                        } else {
-                            dropped += "model $modelId: $texFaces textured faces flattened to the modern textures' average colour"
-                            stripTextures(raw) { tex ->
-                                val t = reader.file(ModernCacheReader.INDEX_TEXTURE, 0, tex) ?: error("modern texture $tex missing")
-                                ((t[0].toInt() and 0xFF) shl 8) or (t[1].toInt() and 0xFF)
-                            }
-                        }
-                    if (raw.droppedFaceZOffsets) dropped += "model $modelId: face z-offsets (not representable in 667)"
-                    if (raw.droppedAnimayaSkinning) dropped += "model $modelId: animaya skinning (not representable in 667)"
-                    val converted = Rev667ModelEncoder.encode(source)
-                    val differences = ModelConvertTool.compare(source, Rev667ModelDecoder.decode(converted))
-                    check(differences.isEmpty()) { "model $modelId conversion mismatch: $differences" }
-                    converted
-                }
+                // One conversion for every importer (OsrsModelConversion): texture colour, imported textures, decode-compare.
+                convertedModels.getOrPut(modelId) { OsrsModelConversion.convert(reader, modelId, dropped) }
 
             val batch =
                 entries.map { entry ->

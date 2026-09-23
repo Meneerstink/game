@@ -80,6 +80,9 @@ object NpcLeash {
         if (gg.rsmod.plugins.content.mechanics.pvp.CityGuards.isGuard(npc)) {
             return gg.rsmod.plugins.content.mechanics.pvp.CityGuards.mayPursue(npc, target)
         }
+        if (gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.isBreachNpc(npc)) {
+            return withinAggro(npc.spawnTile, target.tile, gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.CHASE_RANGE, attackRange)
+        }
         return withinAggro(npc.spawnTile, target.tile, maxRange(npc.id), attackRange)
     }
 }

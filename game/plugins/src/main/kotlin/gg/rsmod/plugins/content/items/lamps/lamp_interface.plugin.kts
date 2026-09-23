@@ -56,21 +56,26 @@ on_button(interfaceId = 1139, component = 2) {
     }
 
     player.closeInterface(dest = InterfaceDestination.MAIN_SCREEN)
-    if (player.inventory.remove(Items.LAMP).hasSucceeded()) {
-        val experience = player.skills.getMaxLevel(interfaceEntry.skillId) * 10.0
-        var modifier = player.interpolate(1.0, 5.0, player.skills.getMaxLevel(interfaceEntry.skillId))
-        var totalExperience = experience * modifier
-        player.addXp(skill = interfaceEntry.skillId, xp = experience, disableBonusExperience = true)
+    val lamp = player.attr[LampInterfaceState.RUBBED_LAMP] ?: return@on_button
+    val reward = ExperienceLamps.REWARDS[lamp] ?: return@on_button
+    val skill = interfaceEntry.skillId
+    val experience = ExperienceLamps.experience(reward, player.skills.getMaxLevel(skill), player.skills.getCurrentXp(skill))
+    if (experience == null) {
+        player.queue { messageBox(ExperienceLamps.NOT_HIGH_ENOUGH) }
+        return@on_button
+    }
+    if (player.inventory.remove(lamp).hasSucceeded()) {
+        player.attr.remove(LampInterfaceState.RUBBED_LAMP)
+        player.addXp(skill = skill, xp = experience.toDouble(), disableBonusExperience = true)
         player.playSound(2655)
         player.queue {
             messageBox(
                 "Your wish has been granted!",
-                "You have been awarded ${totalExperience.toInt()} $skillName experience!",
+                "You have been awarded $experience $skillName experience!",
             )
         }
     }
 }
-
 /**
  * Resets the chosen skill varp when the interface (interfaceId 1139) is closed.
  */

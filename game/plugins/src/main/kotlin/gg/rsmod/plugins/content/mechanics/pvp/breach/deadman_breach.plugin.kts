@@ -246,6 +246,27 @@ NpcAttacks.onSwing("breach_zemouregal") { npc, target, _ ->
 }
 
 /*
+ * TzTok-Jad (Deadman): "In Deadman: Annihilation, it can summon a TzTok-Jad-Rek, which is a baby version of itself."
+ * ADAPTED (no rate given): the same cadence as Zemouregal's summons - every JAD_REK_EVERY-th swing, one Jad-Rek alive at a time,
+ * next to its target, gone after the breach linger time. Keyed on the shared tztok_jad combat definition, so only the breach Jad.
+ */
+val JAD_REK_EVERY = 5
+val jadSwings = gg.rsmod.game.model.attr.AttributeKey<Int>()
+val jadRek = gg.rsmod.game.model.attr.AttributeKey<Npc>()
+
+NpcAttacks.onSwing("tztok_jad") { npc, target, _ ->
+    if (npc.id != BreachMonsters.TZTOK_JAD || !DeadmanBreach.isBreachNpc(npc)) return@onSwing
+    val swings = (npc.attr[jadSwings] ?: 0) + 1
+    npc.attr[jadSwings] = swings
+    if (swings % JAD_REK_EVERY != 0) return@onSwing
+    val alive = npc.attr[jadRek]
+    if (alive != null && world.npcs.contains(alive) && !alive.isDead()) return@onSwing
+    val tile = Tile(target.tile.x + world.random(-1..1), target.tile.z + world.random(-1..1), target.tile.height)
+    npc.attr[jadRek] =
+        DeadmanBreach.spawnMonster(world, BreachMonsters.TZTOK_JAD_REK, if (world.collision.isClipped(tile)) target.tile else tile, 8, DeadmanBreach.LINGER_TICKS)
+}
+
+/*
  * Night beast (OSRS Wiki "Night beast", which "Night beast (Deadman)" says it attacks like): "a night beast's initial attack is
  * always magic ... It will always attempt to melee the player unless they cannot reach them, in which they will begin using magic";
  * special: "it will briefly stop attacking then it uses Magic for three attacks which resemble Fire Blast, covering a 3x3 area
@@ -344,7 +365,9 @@ on_world_init {
                                 ) {
                                     p.graphic(BreachMonsters.GFX_BLOAT_FLIES)
                                     p.playSound(BreachMonsters.SFX_BLOAT_FLIES)
-                                    val protected = Prayers.isActive(p, Prayer.PROTECT_FROM_MISSILES)
+                                    // Deflect Missiles is the curse book's Protect from Missiles (the only kept non-OSRS extra).
+                                    val protected = Prayers.isActive(p, Prayer.PROTECT_FROM_MISSILES) ||
+                                        AncientCurses.isCurseActive(p, AncientCurse.DEFLECT_MISSILES)
                                     p.hit(if (protected) 0 else world.random(20), delay = 1)
                                     p.filterableMessage("Flies leave the body of the bloat and swarm you.")
                                 }
@@ -388,6 +411,34 @@ on_command("breach", Privilege.ADMIN_POWER) {
 /** Every breach location with its number, for breach <n> / breachtele <n>. */
 on_command("breachlist", Privilege.ADMIN_POWER) {
     DeadmanBreach.allLocations(world).forEachIndexed { i, (name, _) -> player.message("${i + 1}. $name") }
+}
+
+/**
+ * Diagnostic for "the breach monsters are invisible" (owner 2026-09-20).
+ *
+ * Spawns one of every spawnable breach monster in a line beside the player and prints the id and name of each, so
+ * the invisible ones can be named instead of guessed at. The cache side has already been cleared: every breach npc
+ * definition exists, its bas render type exists and points at real sequences, every model it references is present
+ * with real data, and the game cache and the file-server cache are byte-identical. That leaves something at
+ * spawn/sync time, and this narrows it to exactly which ids are affected.
+ *
+ * `breachtest` spawns them all; `breachtest <npcId>` spawns just that one on the player's own tile.
+ */
+on_command("breachtest", Privilege.ADMIN_POWER) {
+    val args = player.getCommandArgs()
+    val wanted = args.firstOrNull()?.toIntOrNull()
+    val roster = if (wanted != null) BreachMonsters.ROSTER.filter { it.id == wanted } else BreachMonsters.SPAWNABLE
+    if (roster.isEmpty()) {
+        player.message("No breach monster with that id.")
+        return@on_command
+    }
+    player.message("<col=ffff00>Spawning ${roster.size} breach monster(s) - report which ones you cannot see.</col>")
+    roster.forEachIndexed { index, monster ->
+        // Spread them along a line so two large npcs never share a tile and hide each other.
+        val tile = player.tile.transform(1 + (index % 8) * 2, (index / 8) * 2)
+        DeadmanBreach.spawnMonster(world, monster.id, tile, walkRadius = 0)
+        player.message("${monster.id} ${monster.name} at ${tile.x},${tile.z}")
+    }
 }
 
 /** Closes the open breach and removes its monsters. */

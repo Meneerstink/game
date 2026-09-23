@@ -11,7 +11,8 @@ import java.io.FileReader
 /**
  * The Deadman breach monsters (OSRS Wiki "Deadman Mode" #Breaches, navbox "Deadman breach monsters").
  *
- * Every entry is the wiki infobox version labelled "Permanent" (hitpoints were lowered for the permanent world on 25 March 2026),
+ * Every entry is the wiki infobox version labelled "Deadman: Annihilation" (owner 2026-09-23: "all breach monsters need to have
+ * the exact stats as deadmanmode anihilation"; only the hitpoints differ from the "Permanent" version),
  * imported from the pinned OSRS cache by `OsrsNpcImportTool deadman-breach` (local id = [Monster.id], OSRS id = [Monster.osrsId]).
  * Attack, defend and death sequences are the imported OSRS sequences (gameval AnimationID names in the tool batch); humanoid
  * monsters use the shared rev-667 human sequences like the imported Deadman guards.
@@ -21,7 +22,7 @@ import java.io.FileReader
  * regular mechanics hooks (Dharok's Wretched Strength, K'ril's poison and slam, dragonfire types) apply unchanged. Other monsters
  * get their own sections built from the wiki text.
  *
- * Not in the roster: Kree'arra (no Permanent version), TzTok-Jad-Rek (Annihilation only) and the seven skeletal-animation monsters
+ * Not in the roster: Kree'arra (not in Deadman: Annihilation breaches) and the seven skeletal-animation monsters
  * (Vardorvis, Scurrius, Phantom Muspah, Tumeken's and Elidinis' Wardens, Sol Heredit, Yama) - rev 667 cannot play their sequences.
  */
 object BreachMonsters {
@@ -57,6 +58,8 @@ object BreachMonsters {
         val maxHits: Map<String, Int> = emptyMap(),
         /** Void section id -> hits to add when the Void section has none (its damage came from a boss script). */
         val addHits: Map<String, NpcAttacks.HitDef> = emptyMap(),
+        /** Void section id -> extra integer section fields (serialized names, e.g. `multi_target_radius`). */
+        val sectionInts: Map<String, Map<String, Int>> = emptyMap(),
     ) : Attacks()
 
     class Custom(
@@ -189,13 +192,13 @@ object BreachMonsters {
         listOf(
             Monster(
                 14438, 12439, "Dagannoth Rex",
-                Stats(1000, 255, 255, 255, 0, 255, dstab = 255, dslash = 255, dcrush = 255, dmagic = 10, dranged = 255),
+                Stats(3500, 255, 255, 255, 0, 255, dstab = 255, dslash = 255, dcrush = 255, dmagic = 10, dranged = 255),
                 5, StyleType.SLASH, 15606, DK_DEFEND, DK_DEATH,
                 Template(2883, anims = mapOf("melee" to 15606), maxHits = mapOf("melee" to 26)),
             ),
             Monster(
                 14439, 12440, "King Black Dragon",
-                Stats(350, 240, 240, 150, 240, 1, dstab = 70, dslash = 90, dcrush = 90, dmagic = 80, dranged = 40),
+                Stats(500, 240, 240, 150, 240, 1, dstab = 70, dslash = 90, dcrush = 90, dmagic = 80, dranged = 40),
                 4, StyleType.STAB, 15611, 15613, 15612,
                 Template(
                     50,
@@ -205,32 +208,39 @@ object BreachMonsters {
             ),
             Monster(
                 14440, 12441, "Dagannoth Supreme",
-                Stats(1000, 255, 255, 84, 255, 255, dstab = 10, dslash = 10, dcrush = 10, dmagic = 255, dranged = 550),
+                Stats(3000, 255, 255, 84, 255, 255, dstab = 10, dslash = 10, dcrush = 10, dmagic = 255, dranged = 550),
                 4, StyleType.RANGED, 15608, DK_DEFEND, DK_DEATH,
                 // The Deadman infobox gives no max hit; the regular Dagannoth Supreme's (30) is kept from the template.
-                Template(2881, anims = mapOf("ranged" to 15608)),
+                // "capable of targeting multiple players at once, like its regular counterpart" - OSRS Wiki "Dagannoth Supreme":
+                // "sending projectiles at any player standing within the 6x6 area around his target" (ADAPTED: radius 3, the
+                // centred square an even 6x6 cannot be).
+                Template(
+                    2881,
+                    anims = mapOf("ranged" to 15608),
+                    sectionInts = mapOf("ranged" to mapOf("multi_target_radius" to 3, "multi_radius" to 3)),
+                ),
             ),
             Monster(
                 14441, 12442, "Dagannoth Prime",
-                Stats(1000, 255, 255, 125, 255, 0, dstab = 255, dslash = 255, dcrush = 255, dmagic = 255, dranged = 10),
+                Stats(3000, 255, 255, 125, 255, 0, dstab = 255, dslash = 255, dcrush = 255, dmagic = 255, dranged = 10),
                 4, StyleType.MAGIC, 15607, DK_DEFEND, DK_DEATH,
                 Template(2882, anims = mapOf("magic" to 15607), maxHits = mapOf("magic" to 26)),
             ),
             Monster(
                 14442, 12444, "General Graardor",
-                Stats(1000, 280, 350, 250, 80, 350, attbns = 120, strbns = 43, arange = 100, rngbns = 40, dstab = 90, dslash = 90, dcrush = 90, dmagic = 201, dranged = 90),
+                Stats(2000, 280, 350, 250, 80, 350, attbns = 120, strbns = 43, arange = 100, rngbns = 40, dstab = 90, dslash = 90, dcrush = 90, dmagic = 201, dranged = 90),
                 6, StyleType.CRUSH, 15614, 15615, 15616,
                 Template(6260, anims = mapOf("melee" to 15614, "range" to 15617), maxHits = mapOf("melee" to 60)),
             ),
             Monster(
                 14443, 12445, "Commander Zilyana",
-                Stats(750, 280, 196, 150, 300, 250, attbns = 195, strbns = 20, amagic = 200, dstab = 100, dslash = 100, dcrush = 100, dmagic = 100, dranged = 100),
+                Stats(1500, 280, 196, 150, 300, 250, attbns = 195, strbns = 20, amagic = 200, dstab = 100, dslash = 100, dcrush = 100, dmagic = 100, dranged = 100),
                 2, StyleType.CRUSH, 15618, 15620, 15619,
                 Template(6247, anims = mapOf("melee" to 15618, "magic" to 15621), maxHits = mapOf("melee" to 27)),
             ),
             Monster(
                 14444, 12446, "K'ril Tsutsaroth",
-                Stats(750, 340, 300, 270, 200, 1, attbns = 160, strbns = 31, dstab = 80, dslash = 80, dcrush = 80, dmagic = 130, dranged = 80),
+                Stats(1500, 340, 300, 270, 200, 1, attbns = 160, strbns = 31, dstab = 80, dslash = 80, dcrush = 80, dmagic = 130, dranged = 80),
                 6, StyleType.SLASH, 15623, 15622, 15624,
                 Template(
                     6203,
@@ -247,7 +257,7 @@ object BreachMonsters {
             ),
             Monster(
                 14446, 12448, "Porazdir",
-                Stats(500, 250, 150, 100, 180, 1, amagic = 80, mbns = 80, dstab = 200, dslash = 200, dcrush = 200, dmagic = -60, dranged = 200),
+                Stats(2000, 250, 150, 100, 180, 1, amagic = 80, mbns = 80, dstab = 200, dslash = 200, dcrush = 200, dmagic = -60, dranged = 200),
                 6, StyleType.MAGIC, 15628, 15626, 15629,
                 Custom(
                     "breach_porazdir", 8,
@@ -260,7 +270,7 @@ object BreachMonsters {
             ),
             Monster(
                 14447, 12449, "Justiciar Zachariah",
-                Stats(500, 500, 250, 100, 180, 1, attbns = 200, amagic = 80, mbns = 80, dstab = 200, dslash = 200, dcrush = 200, dmagic = -60, dranged = 200),
+                Stats(2000, 500, 250, 100, 180, 1, attbns = 200, amagic = 80, mbns = 80, dstab = 200, dslash = 200, dcrush = 200, dmagic = -60, dranged = 200),
                 6, StyleType.SLASH, 15630, 15633, 15631,
                 Custom(
                     "breach_justiciar", 8,
@@ -273,7 +283,7 @@ object BreachMonsters {
             ),
             Monster(
                 14448, 12450, "Derwen",
-                Stats(500, 250, 150, 100, 180, 1, amagic = 80, mbns = 80, dstab = 200, dslash = 200, dcrush = 200, dmagic = -60, dranged = 200),
+                Stats(2000, 250, 150, 100, 180, 1, amagic = 80, mbns = 80, dstab = 200, dslash = 200, dcrush = 200, dmagic = -60, dranged = 200),
                 6, StyleType.MAGIC, 15636, 15634, 15637,
                 Custom(
                     "breach_derwen", 8,
@@ -286,38 +296,38 @@ object BreachMonsters {
             ),
             Monster(
                 14449, 12451, "Greater abyssal demon",
-                Stats(750, 300, 260, 150, 1, 1, dstab = 50, dslash = 50, dcrush = 50, dmagic = 0, dranged = 50),
+                Stats(2000, 300, 260, 150, 1, 1, dstab = 50, dslash = 50, dcrush = 50, dmagic = 0, dranged = 50),
                 4, StyleType.STAB, 15638, -1, 15639,
                 Custom("breach_greater_abyssal_demon", 1, listOf(melee("stab", 15638, 27))),
             ),
             Monster(
                 14450, 12452, "Giant goblin",
-                Stats(1000, 150, 150, 200, 1, 1, attbns = 120, strbns = 43, dstab = -15, dslash = -15, dcrush = -15, dmagic = -15, dranged = -15),
+                Stats(3500, 150, 150, 200, 1, 1, attbns = 120, strbns = 43, dstab = -15, dslash = -15, dcrush = -15, dmagic = -15, dranged = -15),
                 5, StyleType.CRUSH, 15643, 15642, 15641,
                 Custom("breach_giant_goblin", 1, listOf(melee("crush", 15643, 27))),
             ),
             Monster(
                 14451, 12453, "Flaming pyrelord",
-                Stats(750, 150, 200, 150, 1, 1, dstab = 18, dslash = 18, dcrush = 18, dmagic = 150, dranged = 18),
+                Stats(3500, 150, 200, 150, 1, 1, dstab = 18, dslash = 18, dcrush = 18, dmagic = 150, dranged = 18),
                 // "applies the burn status effect with each hit, dealing 2 hitsplats of 5 burn damage each" (max hit 1, 11 with burn).
                 4, StyleType.MAGIC, 15646, 15645, 15644,
                 Custom("breach_pyrelord", 1, listOf(NpcAttacks.Attack(id = "magic", range = 1, anim = 15646, hits = listOf(hit("magic", 1))))),
             ),
             Monster(
                 14452, 12454, "Cave abomination",
-                Stats(750, 280, 250, 142, 230, 1),
+                Stats(3000, 280, 250, 142, 230, 1),
                 5, StyleType.CRUSH, 15649, 15647, 15648,
                 Custom("breach_cave_abomination", 1, listOf(melee("crush", 15649, 26))),
             ),
             Monster(
                 14453, 12455, "Jal-ImKot",
-                Stats(500, 210, 290, 120, 120, 220, strbns = 40, dstab = 65, dslash = 65, dcrush = 65, dmagic = 30, dranged = 50),
+                Stats(3000, 210, 290, 120, 120, 220, strbns = 40, dstab = 65, dslash = 65, dcrush = 65, dmagic = 30, dranged = 50),
                 5, StyleType.SLASH, 15650, 15651, 15652,
                 Custom("breach_jal_imkot", 1, listOf(melee("slash", 15650, 49))),
             ),
             Monster(
                 14454, 12456, "Malevolent Mage",
-                Stats(500, 1, 1, 150, 255, 1, dmagic = 300),
+                Stats(2000, 1, 1, 150, 255, 1, dmagic = 300),
                 // The Deadman infobox gives no max hit; the regular Malevolent Mage's 20 is used (OSRS Wiki "Malevolent Mage").
                 // Stands on the imported OSRS HUMAN_STAFFREADY: HUMAN_CASTSTRIKE_STAFF (ADAPTED, the wiki names no cast animation).
                 4, StyleType.MAGIC, 15704, OSRS_HUMAN_BLOCK, OSRS_HUMAN_DEATH,
@@ -325,20 +335,20 @@ object BreachMonsters {
             ),
             Monster(
                 14455, 12457, "Vitreous warped Jelly",
-                Stats(500, 200, 250, 50, 180, 1),
+                Stats(3000, 200, 250, 50, 180, 1),
                 4, StyleType.MAGIC, 15654, 15653, 15655,
                 Template(1637, anims = mapOf("attack" to 15654), maxHits = mapOf("attack" to 19)),
             ),
             Monster(
                 14456, 12458, "Sulphur Lizard",
-                Stats(500, 150, 200, 75, 1, 1, dstab = 15, dslash = 25, dcrush = 25, dmagic = 0, dranged = 15),
+                Stats(2500, 150, 200, 75, 1, 1, dstab = 15, dslash = 25, dcrush = 25, dmagic = 0, dranged = 15),
                 // "It attacks with melee, knocking back any players hit by it."
                 5, StyleType.CRUSH, 15656, -1, 15657,
                 Custom("breach_sulphur_lizard", 1, listOf(melee("crush", 15656, 21))),
             ),
             Monster(
                 14457, 12459, "Night beast",
-                Stats(500, 270, 290, 100, 300, 1, dstab = 75, dslash = 80, dcrush = 120, dmagic = 100, dranged = 100),
+                Stats(1000, 270, 290, 100, 300, 1, dstab = 75, dslash = 80, dcrush = 120, dmagic = 100, dranged = 100),
                 // OSRS Wiki "Night beast (Deadman)": "attacks similar to its regular variant, and is capable of using its special 3x3
                 // fireball attack". Regular "Night beast": first attack always magic, melee whenever it can reach, magic otherwise;
                 // the standard magic hits up to 8 (Mod Ash, cited there - the Deadman infobox magic max is "?"). Special: it stops
@@ -364,20 +374,20 @@ object BreachMonsters {
             ),
             Monster(
                 14458, 13657, "Cerberus",
-                Stats(750, 300, 280, 150, 220, 220, attbns = 50, amagic = 50, arange = 50, dstab = 50, dslash = 100, dcrush = 25, dmagic = 100, dranged = 100),
+                Stats(2000, 300, 280, 150, 220, 220, attbns = 50, amagic = 50, arange = 50, dstab = 50, dslash = 100, dcrush = 25, dmagic = 100, dranged = 100),
                 // "It attacks with melee using all three heads, resulting in three hitsplats per attack."
                 3, StyleType.STAB, 15662, 15661, 15663,
                 Custom("breach_cerberus", 1, listOf(melee("stab", 15662, 29, hits = 3))),
             ),
             Monster(
                 14459, 13658, "Bee Swarm",
-                Stats(1500, 400, 100, 30, 1, 1, attbns = 200, dstab = 10, dslash = 10, dcrush = 10, dmagic = 0, dranged = 0),
+                Stats(5000, 400, 100, 30, 1, 1, attbns = 200, dstab = 10, dslash = 10, dcrush = 10, dmagic = 0, dranged = 0),
                 1, StyleType.CRUSH, 15572, -1, 15665,
                 Custom("breach_bee_swarm", 1, listOf(melee("crush", 15572, 11))),
             ),
             Monster(
                 14460, 13659, "Thermonuclear smoke devil",
-                Stats(500, 230, 220, 150, 1, 310, dstab = 30, dslash = 12, dcrush = 20, dmagic = 200, dranged = 300),
+                Stats(1500, 230, 220, 150, 1, 310, dstab = 30, dslash = 12, dcrush = 20, dmagic = 200, dranged = 300),
                 2, StyleType.RANGED, 15666, 15667, 15668,
                 Custom(
                     "breach_smoke_devil", 8,
@@ -391,7 +401,7 @@ object BreachMonsters {
             ),
             Monster(
                 14461, 13660, "Jaguar warrior",
-                Stats(1000, 200, 165, 100, 100, 160, strbns = 15, dstab = 50, dslash = 50, dcrush = 50, dmagic = 100, dranged = 50),
+                Stats(3000, 200, 165, 100, 100, 160, strbns = 15, dstab = 50, dslash = 50, dcrush = 50, dmagic = 100, dranged = 50),
                 // Max hit "21 (x4)": four slash hitsplats per attack. Owner 2026-09-19 "fix everything": it now stands on its own imported
                 // OSRS human stand/walk (OsrsNpcImportTool.OWN_OSRS_MOVEMENT_NPCS), so the exact OSRS NPC_JAGUAR_RANGER_CLAWS_ATTACK /
                 // NPC_JAGUAR_HUMAN_UNARMED_DEF / NPC_JAGUAR_HUMAN_DEATH (upstream 10847-10849 -> local 15669-15671) animate it.
@@ -400,7 +410,7 @@ object BreachMonsters {
             ),
             Monster(
                 14462, 13661, "TzTok-Jad",
-                Stats(2000, 640, 770, 200, 750, 750),
+                Stats(5000, 640, 770, 200, 750, 750),
                 // Permanent max hits: 78 melee, 108 magic and ranged.
                 8, StyleType.STAB, 15675, 15673, 15674,
                 Template(
@@ -412,7 +422,7 @@ object BreachMonsters {
             ),
             Monster(
                 14463, 13662, "Durial321",
-                Stats(750, 95, 98, 88, 94, 80, strbns = 105, amagic = 150, arange = -12, dstab = 148, dslash = 134, dcrush = 162, dmagic = 69, dranged = 88),
+                Stats(2500, 95, 98, 88, 94, 80, strbns = 105, amagic = 150, arange = -12, dstab = 148, dslash = 134, dcrush = 162, dmagic = 69, dranged = 88),
                 // Melee and Ice Barrage ("?" magic max on the infobox: the spell's own 30 is used).
                 4, StyleType.SLASH, WHIP_ATTACK, HUMAN_BLOCK, HUMAN_DEATH,
                 Custom(
@@ -428,7 +438,7 @@ object BreachMonsters {
             ),
             Monster(
                 14464, 13663, "Magic Mark",
-                Stats(1500, 10, 30, 30, 175, 0, amagic = 100, dstab = 25, dslash = 25, dcrush = 25, dmagic = 150, dranged = 10),
+                Stats(3500, 10, 30, 30, 175, 0, amagic = 100, dstab = 25, dslash = 25, dcrush = 25, dmagic = 150, dranged = 10),
                 // Blood spells hitting an area around the target and healing him by the damage dealt.
                 5, StyleType.MAGIC, ANCIENT_CAST, HUMAN_BLOCK, HUMAN_DEATH,
                 Custom(
@@ -443,7 +453,7 @@ object BreachMonsters {
             ),
             Monster(
                 14465, 13664, "Ranging Ro",
-                Stats(1500, 10, 30, 100, 15, 150, amagic = 100, dstab = 100, dslash = 100, dcrush = 100, dmagic = 200, dranged = 100),
+                Stats(3500, 10, 30, 100, 15, 150, amagic = 100, dstab = 100, dslash = 100, dcrush = 100, dmagic = 200, dranged = 100),
                 // Black chinchompas hitting an area around the target.
                 4, StyleType.RANGED, CHINCHOMPA_THROW, HUMAN_BLOCK, HUMAN_DEATH,
                 Custom(
@@ -459,25 +469,25 @@ object BreachMonsters {
             ),
             Monster(
                 14466, 15237, "Zemouregal",
-                Stats(750, 1, 1, 125, 255, 1, dstab = 30, dslash = 30, dcrush = 30, dmagic = 255, dranged = 15),
+                Stats(2500, 1, 1, 125, 255, 1, dstab = 30, dslash = 30, dcrush = 30, dmagic = 255, dranged = 15),
                 7, StyleType.MAGIC, 15677, 15680, 15679,
                 Custom("breach_zemouregal", 8, listOf(NpcAttacks.Attack(id = "magic", range = 8, anim = 15677, targetSounds = snd(SFX_ZEMO_LIGHTNING), hits = listOf(hit("magic", 23))))),
             ),
             Monster(
                 14467, 15547, "Big Evil Chicken",
-                Stats(1000, 255, 255, 25, 300, 0, dstab = 25, dslash = 25, dcrush = 25, dmagic = 255, dranged = 0),
+                Stats(3500, 255, 255, 25, 300, 0, dstab = 25, dslash = 25, dcrush = 25, dmagic = 255, dranged = 0),
                 3, StyleType.MAGIC, 15683, 15681, 15682,
                 Template(3375, anims = mapOf("magic" to 15683), maxHits = mapOf("magic" to 26)),
             ),
             Monster(
                 14468, 15550, "Splatter",
-                Stats(1000, 200, 250, 10, 300, 1),
+                Stats(2000, 200, 250, 10, 300, 1),
                 4, StyleType.CRUSH, 15686, 15685, 15684,
                 Custom("breach_splatter", 1, listOf(melee("crush", 15686, 26))),
             ),
             Monster(
                 14469, 15553, "I DSCIM YOU",
-                Stats(750, 150, 200, 25, 100, 25, dstab = 25, dslash = 25, dcrush = 25, dmagic = 50, dranged = 10),
+                Stats(1500, 150, 200, 25, 100, 25, dstab = 25, dslash = 25, dcrush = 25, dmagic = 50, dranged = 10),
                 // Dragon scimitar; its special attack (Sever) turns the target's protection prayers off.
                 3, StyleType.SLASH, DSCIM_ATTACK, HUMAN_BLOCK, HUMAN_DEATH,
                 Custom(
@@ -497,7 +507,7 @@ object BreachMonsters {
             ),
             Monster(
                 14470, 15556, "Pestilent Bloat",
-                Stats(750, 250, 340, 100, 150, 180, attbns = 150, strbns = 82, arange = 180, rngbns = 4, dstab = 40, dslash = 20, dcrush = 40, dmagic = 600, dranged = 800),
+                Stats(2000, 250, 340, 100, 150, 180, attbns = 150, strbns = 82, arange = 180, rngbns = 4, dstab = 40, dslash = 20, dcrush = 40, dmagic = 600, dranged = 800),
                 // "It does not directly attack": its flies are issued by DeadmanBreach.bloatFlies, not by a combat section.
                 5, StyleType.RANGED, -1, -1, 15687,
                 Custom("breach_bloat", 0, emptyList()),
@@ -508,6 +518,22 @@ object BreachMonsters {
             Monster(14473, 15560, "Zemouregal Summon", Stats(35, 200, 150, 100, 1, 1), 4, StyleType.SLASH, 15694, 15695, 15696, Custom("breach_summon_undead", 1, listOf(melee("slash", 15694, 16))), summon = true),
             Monster(14474, 15561, "Zemouregal Summon", Stats(35, 75, 100, 100, 1, 1), 5, StyleType.CRUSH, 15698, 15697, 15699, Custom("breach_summon_pirate", 1, listOf(melee("crush", 15698, 11))), summon = true),
             Monster(14475, 15562, "Zemouregal Summon", Stats(35, 250, 150, 50, 1, 1), 4, StyleType.SLASH, 15705, OSRS_HUMAN_BLOCK, OSRS_HUMAN_DEATH, Custom("breach_summon_fremennik", 1, listOf(melee("slash", 15705, 16))), summon = true),
+            // OSRS Wiki "TzTok-Jad-Rek" (Deadman: Annihilation): "a smaller and weaker TzTok-Jad, summoned by the breach version of
+            // TzTok-Jad" - 200 hp, 160/240/25/250/250, attack speed 8, stab/magic/ranged, max hit 25 melee and "?" otherwise.
+            // TzTok-Jad's own imported sequences (same model at 70 % scale). ADAPTED: magic/ranged max 34 = 25 x the breach Jad's
+            // 108/78 magic-to-melee ratio, since the wiki gives none.
+            Monster(
+                14477, 15557, "TzTok-Jad-Rek",
+                Stats(200, 160, 240, 25, 250, 250),
+                8, StyleType.STAB, 15675, 15673, 15674,
+                Template(
+                    2745,
+                    anims = mapOf("melee" to 15675, "range" to 15672, "magic" to 15676),
+                    maxHits = mapOf("melee" to 25),
+                    addHits = mapOf("range" to hit("range", 34), "magic" to hit("magic", 34)),
+                ),
+                summon = true,
+            ),
             Monster(14476, 15563, "Zemouregal Summon", Stats(35, 250, 150, 100, 1, 1), 4, StyleType.SLASH, 15700, 15680, 15701, Custom("breach_summon_khazard", 1, listOf(melee("slash", 15700, 16))), summon = true),
         )
 
@@ -522,7 +548,7 @@ object BreachMonsters {
         mapOf(
             14438 to 2883, 14439 to 50, 14440 to 2881, 14441 to 2882, 14442 to 6260, 14443 to 6247, 14444 to 6203, 14445 to 2026,
             14449 to 1615, 14450 to 745, 14451 to 1633, 14452 to 4355, 14454 to 1643, 14455 to 1637, 14457 to 2783, 14462 to 2745,
-            14467 to 3375, 14471 to 1961, 14472 to 1241, 14474 to 2837,
+            14467 to 3375, 14471 to 1961, 14472 to 1241, 14474 to 2837, 14477 to 2745,
         )
 
     /**
@@ -537,7 +563,11 @@ object BreachMonsters {
     /** The monsters a breach spawns (everything but Zemouregal's summons). */
     val SPAWNABLE: List<Monster> = ROSTER.filter { !it.summon }
 
-    val SUMMONS: List<Monster> = ROSTER.filter { it.summon }
+    /** Zemouregal's six summons (TzTok-Jad-Rek is summoned by the breach TzTok-Jad instead). */
+    val SUMMONS: List<Monster> = ROSTER.filter { it.summon && it.name == "Zemouregal Summon" }
+
+    const val TZTOK_JAD = 14462
+    const val TZTOK_JAD_REK = 14477
 
     fun isBreachMonster(npcId: Int): Boolean = npcId in BY_ID
 
@@ -561,6 +591,7 @@ object BreachMonsters {
                         val sectionId = section["id"].asString
                         a.anims[sectionId]?.let { section.addProperty("anim", it) }
                         a.maxHits[sectionId]?.let { max -> section["hits"].asJsonArray.forEach { h -> h.asJsonObject.addProperty("max", max * 10) } }
+                        a.sectionInts[sectionId]?.forEach { (field, value) -> section.addProperty(field, value) }
                         a.addHits[sectionId]?.let { extra ->
                             if (section["hits"].asJsonArray.size() == 0) section.add("hits", gson.toJsonTree(listOf(extra)))
                         }

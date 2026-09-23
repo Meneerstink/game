@@ -9,6 +9,19 @@ val INV_INTERFACE_ID = 621
 val INFO_INTERFACE_ID = 449
 
 val BUY_OPTS = arrayOf(1, 5, 10, 50, 500)
+
+/**
+ * Owner 2026-09-23: "buying items from every shop should give u sounds ... fix all sounds for every shop". Every shop routes its
+ * buy, take-free and sell through [transaction]; the coin jingle plays once when the player's inventory actually changed, so a
+ * refused purchase (no coins, no space, out of stock) stays silent.
+ */
+fun Player.transaction(action: () -> Unit) {
+    val before = inventory.rawItems.map { it?.id to it?.amount }
+    action()
+    if (inventory.rawItems.map { it?.id to it?.amount } != before) {
+        playSound(ShopSounds.TRANSACTION)
+    }
+}
 val SELL_OPTS = arrayOf(1, 5, 10, 50)
 
 on_interface_open(interfaceId = SHOP_INTERFACE_ID) {
@@ -73,7 +86,7 @@ on_button(interfaceId = SHOP_INTERFACE_ID, component = 25) {
                         91 -> BUY_OPTS[4]
                         else -> return@on_button
                     }
-                shop.currency.sellToPlayer(player, shop, slot, amount)
+                player.transaction { shop.currency.sellToPlayer(player, shop, slot, amount) }
             }
         }
     }
@@ -93,9 +106,9 @@ on_button(interfaceId = INFO_INTERFACE_ID, component = 21) {
                 else -> return@on_button
             }
         if (player.attr[LAST_VIEWED_SHOP_ITEM_FREE] == true) {
-            shop.currency.giveToPlayer(player, shop, slot!!, amount)
+            player.transaction { shop.currency.giveToPlayer(player, shop, slot!!, amount) }
         } else {
-            shop.currency.sellToPlayer(player, shop, slot!!, amount)
+            player.transaction { shop.currency.sellToPlayer(player, shop, slot!!, amount) }
         }
         player.closeInterface(interfaceId = INFO_INTERFACE_ID)
         player.openInterface(INV_INTERFACE_ID, dest = InterfaceDestination.TAB_AREA)
@@ -132,7 +145,7 @@ on_button(interfaceId = SHOP_INTERFACE_ID, component = 26) {
                         91 -> BUY_OPTS[4]
                         else -> return@on_button
                     }
-                shop.currency.giveToPlayer(player, shop, slot, amount)
+                player.transaction { shop.currency.giveToPlayer(player, shop, slot, amount) }
             }
         }
     }
@@ -156,7 +169,7 @@ on_button(interfaceId = INV_INTERFACE_ID, component = 0) {
                         18 -> SELL_OPTS[3]
                         else -> return@on_button
                     }
-                shop.currency.buyFromPlayer(player, shop, slot, amount)
+                player.transaction { shop.currency.buyFromPlayer(player, shop, slot, amount) }
             }
         }
     }

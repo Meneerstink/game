@@ -734,14 +734,16 @@ object AncientCurses {
         baseDrainState(target).getOrPut(playerSkill) { mutableSetOf() }.add(caster)
         cursedTargets(caster).getOrPut(curse) { mutableSetOf() }.add(target)
         val state = drainState(target)
-        val extra = state[playerSkill] ?: 0
         val maxExtra = capPct - basePct
+        val floor = max - (max * maxExtra / 100.0).toInt().coerceAtLeast(1)
+        // Owner 2026-09-23 ("it did the curse animation but i didnt get 100 range"): the escalation used to be a lifetime step
+        // counter that only reset when the curse was switched off, so once it had counted to the cap every later proc did
+        // nothing although the drained level had long regenerated. The real level is the state now: the curse drains again
+        // whenever the target is above the floor (the drain "regenerates over time as usual", KB above).
         val changed =
             when {
-                extra >= maxExtra -> false
+                currentLevel(target, playerSkill, npcSkill) <= floor && !hasPotionBoost(target, playerSkill) -> false
                 else -> {
-                    state[playerSkill] = extra + 1
-                    val floor = max - (max * maxExtra / 100.0).toInt().coerceAtLeast(1)
                     val step = (max / 100.0).toInt().coerceAtLeast(1)
                     val now = currentLevel(target, playerSkill, npcSkill)
                     // Owner 2026-09-19: a potion-boosted level loses at most 1 per trigger (117 -> 116), never the
@@ -756,6 +758,9 @@ object AncientCurses {
                             is Npc -> target.stats.alterCurrentLevel(npcSkill, -drain)
                         }
                     }
+                    // Prayer-tab modifier: the percent of the max level currently drained, never above the escalation cap.
+                    val drained = (max - currentLevel(target, playerSkill, npcSkill)).coerceAtLeast(0)
+                    state[playerSkill] = (drained * 100 / max).coerceIn(0, maxExtra)
                     true
                 }
             }
@@ -787,17 +792,13 @@ object AncientCurses {
     ) {
         val state = boostState(player)
         val maxExtra = LEECH_BOOST_CAP_PCT - LEECH_BOOST_BASE_PCT
-        // Every proc, the first included, is a real +1 level (owner 2026-09-19, see escalateDrain).
-        val current = state[skill] ?: 0
-        when {
-            current >= maxExtra -> {}
-            else -> {
-                state[skill] = current + 1
-                val max = player.skills.getMaxLevel(skill)
-                val cap = (max * maxExtra / 100.0).toInt().coerceAtLeast(1)
-                if (player.skills.getCurrentLevel(skill) < max + cap) player.skills.alterCurrentLevel(skill, 1, capValue = cap)
-            }
-        }
+        // Every proc, the first included, is a real +1 level (owner 2026-09-19, see escalateDrain) up to the cap above the base
+        // level. The real level is the state (owner 2026-09-23: a lifetime counter stopped every boost after five procs).
+        val max = player.skills.getMaxLevel(skill)
+        val cap = (max * maxExtra / 100.0).toInt().coerceAtLeast(1)
+        if (player.skills.getCurrentLevel(skill) < max + cap) player.skills.alterCurrentLevel(skill, 1, capValue = cap)
+        val boosted = (player.skills.getCurrentLevel(skill) - max).coerceAtLeast(0)
+        state[skill] = (boosted * 100 / max).coerceIn(0, maxExtra).let { if (boosted > 0) it.coerceAtLeast(1) else it }
         syncStatVarbits(player)
     }
 
@@ -1017,14 +1018,20 @@ object AncientCurses {
             AncientCurse.SAP_WARRIOR ->
                 if (sap(attacker, curse, target, Skills.ATTACK to NpcSkills.ATTACK, Skills.STRENGTH to NpcSkills.STRENGTH, Skills.DEFENCE to NpcSkills.DEFENCE)) {
                     curseMessages(attacker, target, "Attack, Strength and Defence")
+                } else {
+                    curseNoEffectMessage(attacker, target)
                 }
             AncientCurse.SAP_RANGER ->
                 if (sap(attacker, curse, target, Skills.RANGED to NpcSkills.RANGED, Skills.DEFENCE to NpcSkills.DEFENCE)) {
                     curseMessages(attacker, target, "Ranged and Defence")
+                } else {
+                    curseNoEffectMessage(attacker, target)
                 }
             AncientCurse.SAP_MAGE ->
                 if (sap(attacker, curse, target, Skills.MAGIC to NpcSkills.MAGIC, Skills.DEFENCE to NpcSkills.DEFENCE)) {
                     curseMessages(attacker, target, "Magic and Defence")
+                } else {
+                    curseNoEffectMessage(attacker, target)
                 }
             AncientCurse.SAP_SPIRIT ->
                 if (target is Player) {
@@ -1063,13 +1070,15 @@ object AncientCurses {
         }
     }
 
+    // Owner 2026-09-23 ("its also not showing chatbox messages"): these were FILTERED game messages, which the chatbox hides
+    // whenever its game filter is on; the curse lines are ordinary game messages.
     private fun curseMessages(
         attacker: Player,
         target: Pawn,
         what: String,
     ) {
-        attacker.filterableMessage("Your curse drains $what from the enemy.")
-        if (target is Player) target.filterableMessage("Your $what has been drained by an enemy curse.")
+        attacker.message("Your curse drains $what from the enemy.")
+        if (target is Player) target.message("Your $what has been drained by an enemy curse.")
     }
 
     private fun leechMessages(
@@ -1077,16 +1086,16 @@ object AncientCurses {
         target: Pawn,
         what: String,
     ) {
-        attacker.filterableMessage("Your curse drains $what from the enemy, boosting your $what.")
-        if (target is Player) target.filterableMessage("Your $what has been leeched by an enemy curse.")
+        attacker.message("Your curse drains $what from the enemy, boosting your $what.")
+        if (target is Player) target.message("Your $what has been leeched by an enemy curse.")
     }
 
     private fun curseNoEffectMessage(
         attacker: Player,
         target: Pawn,
     ) {
-        attacker.filterableMessage("Your opponent has been weakened so much that your curse has no effect.")
-        if (target is Player) target.filterableMessage("Your opponent's curse has no effect.")
+        attacker.message("Your opponent has been weakened so much that your curse has no effect.")
+        if (target is Player) target.message("Your opponent's curse has no effect.")
     }
 
     // ---- Wrath / Deflect -------------------------------------------------------------------

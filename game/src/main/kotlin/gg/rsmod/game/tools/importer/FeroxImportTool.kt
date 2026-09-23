@@ -177,12 +177,12 @@ object FeroxImportTool {
                         } else {
                             // Modern texture ids index a different texture table; a rev-667 client crashes on an
                             // out-of-range id, so textured faces are flattened to the texture's own average HSL
-                            // colour (the first u16 of the modern texture definition, archive 9 group 0).
+                            // colour ([osrsTextureAverageHsl], archive 9 group 0).
                             val used = raw.faceTexture!!.filter { it.toInt() != -1 }.distinct()
                             dropped.add("model $modernId: $texFaces textured faces flattened to average colour of modern textures $used")
                             stripTextures(raw) { textureId ->
                                 val def = modern.file(9, 0, textureId) ?: error("modern texture $textureId missing")
-                                ((def[0].toInt() and 0xFF) shl 8) or (def[1].toInt() and 0xFF)
+                                osrsTextureAverageHsl(def)
                             }
                         }
                     val converted = Rev667ModelEncoder.encode(decoded)
@@ -340,6 +340,23 @@ object FeroxImportTool {
         log("ASSET_MAP appended ${plan.modelIdMap.size} model mappings and ${plan.locIdMap.size} loc mappings")
     }
 }
+
+/**
+ * The average HSL colour of a modern OSRS texture definition (index 9, group 0, file = texture id).
+ *
+ * Owner 2026-09-23 ("Infernal cape ... now shows a purple cape"): every importer read the first u16 of the definition as the
+ * colour. That was the pre-revision-233 layout (`missingColor` first); the pinned 2686 cache uses the revision-233 layout
+ * (RuneLite `TextureLoader`, `rev233`): u16 sprite file id, u16 missingColor, u8 transparent, u8 animation direction, u8
+ * animation speed - 7 bytes. So every flattened face was painted with its texture's *sprite id* as an HSL value (infernal
+ * lava sprite 318 = pale pink/purple instead of 0x0f23 dark orange-red). Both layouts are read here, in one place.
+ */
+fun osrsTextureAverageHsl(def: ByteArray): Int {
+    fun u16(at: Int) = ((def[at].toInt() and 0xFF) shl 8) or (def[at + 1].toInt() and 0xFF)
+    return if (def.size == OSRS_REV233_TEXTURE_SIZE) u16(2) else u16(0)
+}
+
+/** Size of a revision-233+ OSRS texture definition (u16 file id, u16 colour, three u8). */
+const val OSRS_REV233_TEXTURE_SIZE = 7
 
 /** Copy of [source] with every textured face flattened to `averageHsl(textureId)` and no texture spaces. */
 fun stripTextures(

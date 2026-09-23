@@ -26,7 +26,7 @@ import kotlin.test.assertTrue
 class DeadmanBreachTests {
     @Test
     fun `the roster is exactly the imported deadman-breach npc batch, one local id each`() {
-        val batch = OsrsNpcImportTool.BATCHES.getValue("deadman-breach")
+        val batch = OsrsNpcImportTool.BATCHES.getValue("deadman-breach") + OsrsNpcImportTool.BATCHES.getValue("deadman-jad-rek")
         assertEquals(batch.toSet(), BreachMonsters.ROSTER.map { it.osrsId }.toSet(), "roster OSRS ids vs import batch")
         assertEquals(BreachMonsters.ROSTER.size, BreachMonsters.ROSTER.map { it.id }.toSet().size, "duplicate local ids")
         assertEquals(33, BreachMonsters.SPAWNABLE.size, "40 Permanent breach monsters minus the 7 skeletal-animation ones")

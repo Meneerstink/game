@@ -58,7 +58,7 @@ object OsrsLocImportTool {
                                 dropped += "model $modernId: textured faces flattened to the textures' average colour"
                                 stripTextures(raw) { tex ->
                                     val t = modern.file(9, 0, tex) ?: error("texture $tex missing")
-                                    ((t[0].toInt() and 0xFF) shl 8) or (t[1].toInt() and 0xFF)
+                                    osrsTextureAverageHsl(t)
                                 }
                             }
                         if (decoded.droppedAnimayaSkinning) dropped += "model $modernId: animaya skinning (no rev-667 equivalent)"

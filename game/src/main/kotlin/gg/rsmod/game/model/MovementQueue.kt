@@ -74,26 +74,9 @@ class MovementQueue(
             walkDirection = Direction.between(tile, next.tile)
 
             if (walkDirection != Direction.NONE && canStep(tile, walkDirection, next.detectCollision)) {
-                if (pawn is Npc && !pawn.ignoresEntityCollision) {
-                    val entitiesClipped = mutableListOf<Pawn>()
-
-                    pawn.world.chunks
-                        .get(next.tile, createIfNeeded = true)!!
-                        .getEntities<Npc>(next.tile, EntityType.NPC)
-                        .filter { it.tile == next.tile }
-                        .let { entitiesClipped.addAll(it) }
-
-                    pawn.world.chunks
-                        .get(next.tile, createIfNeeded = true)!!
-                        .getEntities<Player>(next.tile, EntityType.CLIENT)
-                        .filter { it.tile == next.tile }
-                        .let { entitiesClipped.addAll(it) }
-
-                    if (entitiesClipped.isNotEmpty()) {
-                        entitiesClipped.clear()
-                        clear()
-                        return
-                    }
+                if (pawn is Npc && isEntityBlocked(pawn, next.tile)) {
+                    clear()
+                    return
                 }
                 tile = Tile(next.tile)
                 pawn.lastFacingDirection = walkDirection
@@ -113,7 +96,7 @@ class MovementQueue(
                     if (next != null) {
                         runDirection = Direction.between(tile, next.tile)
 
-                        if (canStep(tile, runDirection, next.detectCollision)) {
+                        if (canStep(tile, runDirection, next.detectCollision) && !(pawn is Npc && isEntityBlocked(pawn, next.tile))) {
                             tile = Tile(next.tile)
                             pawn.lastFacingDirection = runDirection
                         } else {
@@ -182,6 +165,42 @@ class MovementQueue(
         return true
     }
 
+    /**
+     * Whether another npc (or a player) stands anywhere in the footprint [npc] would occupy at [dest].
+     *
+     * Owner 2026-09-23 ("breach monsters seem to no clip", "some breachmonsters are spawning in each other"): this used to
+     * compare only south-west corner tiles - `getEntities(next.tile)` filtered on `it.tile == next.tile` - so an npc larger than
+     * 1x1 never saw a neighbour whose corner was elsewhere in its footprint, and two 3x3-5x5 bosses walked straight through
+     * each other. OSRS npcs block each other by their whole size. Followers ([Npc.ignoresEntityCollision]) neither block nor
+     * are blocked, as before; the player rule stays the corner-tile check it always was.
+     */
+    private fun isEntityBlocked(
+        npc: Npc,
+        dest: Tile,
+    ): Boolean {
+        if (npc.ignoresEntityCollision) return false
+        val world = npc.world
+        val size = npc.getSize().coerceAtLeast(1)
+        val reach = MAX_NPC_SIZE - 1
+        for (x in dest.x - reach until dest.x + size) {
+            for (z in dest.z - reach until dest.z + size) {
+                val t = Tile(x, z, dest.height)
+                val chunk = world.chunks.get(t, createIfNeeded = false) ?: continue
+                for (other in chunk.getEntities<Npc>(t, EntityType.NPC)) {
+                    if (other === npc || other.ignoresEntityCollision || other.tile != t) continue
+                    val os = other.getSize().coerceAtLeast(1)
+                    if (x + os > dest.x && z + os > dest.z) return true
+                }
+                if (x == dest.x && z == dest.z &&
+                    chunk.getEntities<Player>(t, EntityType.CLIENT).any { it.tile == t }
+                ) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
     private fun addStep(
         current: Tile,
         next: Tile,
@@ -225,5 +244,10 @@ class MovementQueue(
         NORMAL,
         FORCED_WALK,
         FORCED_RUN,
+    }
+
+    companion object {
+        /** How far back (south-west) another npc's corner is searched: covers every footprint up to 8x8. */
+        const val MAX_NPC_SIZE = 8
     }
 }

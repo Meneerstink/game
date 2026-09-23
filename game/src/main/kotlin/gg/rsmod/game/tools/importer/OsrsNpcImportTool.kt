@@ -74,6 +74,9 @@ object OsrsNpcImportTool {
                     12457, 12458, 12459, 13657, 13658, 13659, 13660, 13661, 13662, 13663, 13664, 15237, 15547, 15550, 15553, 15556,
                     15558, 15559, 15560, 15561, 15562, 15563,
                 ),
+            // Owner 2026-09-23 ("exact stats as deadmanmode anihilation"): OSRS Wiki "TzTok-Jad-Rek" 15557, summoned by the breach
+            // TzTok-Jad in Deadman: Annihilation - TzTok-Jad's model and sequences at 70 % scale (probe 2026-09-23).
+            "deadman-jad-rek" to listOf(15557),
         )
 
     /**

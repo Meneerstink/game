@@ -78,6 +78,8 @@ class ModelData(
             appendLine("maxVertexReferenced=${(faceA + faceB + faceC).maxOrNull()}")
             appendLine("texturedFaces=${faceTexture?.count { it != (-1).toShort() } ?: 0}")
             appendLine("faceAlphaHistogram=${faceAlpha?.map { it.toInt() and 0xFF }?.groupingBy { it }?.eachCount()?.toSortedMap()}")
+            appendLine("facePriorityHistogram=${facePriority?.map { it.toInt() and 0xFF }?.groupingBy { it }?.eachCount()?.toSortedMap()}")
+            appendLine("vertexLabelMax=${vertexLabel?.maxOrNull()} faceLabelMax=${faceLabel?.maxOrNull()}")
             append("faceColours=${faceColour.map { it.toInt() and 0xFFFF }.distinct().take(16)}")
         }
 }

@@ -131,7 +131,7 @@ object WatsonHouseImportTool {
                             dropped += "model $modernId: $texFaces textured faces flattened to the modern textures' average colour"
                             stripTextures(raw) { tex ->
                                 val t = modern.file(9, 0, tex) ?: error("modern texture $tex missing")
-                                ((t[0].toInt() and 0xFF) shl 8) or (t[1].toInt() and 0xFF)
+                                osrsTextureAverageHsl(t)
                             }
                         }
                     val converted = Rev667ModelEncoder.encode(decoded)

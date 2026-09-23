@@ -10,7 +10,6 @@ import gg.rsmod.plugins.api.cfg.Varps
 import gg.rsmod.plugins.api.ext.addXp
 import gg.rsmod.plugins.api.ext.getVarp
 import gg.rsmod.plugins.api.ext.message
-import gg.rsmod.plugins.api.ext.playJingle
 import gg.rsmod.plugins.api.ext.setVarbit
 import gg.rsmod.plugins.api.ext.setVarp
 import gg.rsmod.plugins.content.mechanics.prayer.AncientCurses
@@ -48,9 +47,29 @@ object UnlockNpcRewards {
     val TORMENTED_DEMONS_UNLOCKED = AttributeKey<Boolean>(persistenceKey = "tormented_demons_unlocked")
     val DEMONBANE_WEAPONS_UNLOCKED = AttributeKey<Boolean>(persistenceKey = "demonbane_weapons_unlocked")
 
+    /**
+     * Azzanadra hands over the Ancient hymnal; the curses themselves are unlocked by reading it ([unlockAncientCurses]).
+     * Returns false when the curses are already unlocked.
+     */
+    fun giveAncientHymnal(player: Player): Boolean {
+        player.attr[AncientCurses.NPC_UNLOCKED_ATTR] = true
+        if (player.attr[ANCIENT_CURSES_REWARDED] == true) {
+            player.message("The Ancient Curses are already unlocked.")
+            return false
+        }
+        if (!player.inventory.contains(Items.ANCIENT_HYMNAL)) grant(player, Items.ANCIENT_HYMNAL)
+        return true
+    }
+
+    /**
+     * Owner 2026-09-23: "when u read the Ancient hymnal u unlock ancient curses it shud give a interface you have unlocked
+     * Ancient curses then the book should dissappear". Reading the hymnal unlocks the curses, shows the unlock interface
+     * (the standard completion scroll, 277) and consumes the book.
+     */
     fun unlockAncientCurses(player: Player): Boolean {
         player.attr[AncientCurses.NPC_UNLOCKED_ATTR] = true
         player.attr[AncientCurses.UNLOCKED_ATTR] = true
+        player.inventory.remove(Items.ANCIENT_HYMNAL)
         if (player.attr[ANCIENT_CURSES_REWARDED] == true) {
             player.message("The Ancient Curses are already unlocked.")
             return false
@@ -59,20 +78,18 @@ object UnlockNpcRewards {
         player.addXp(Skills.PRAYER, 10_000.0)
         grant(player, Items.EXPERIENCE_LAMP)
         grant(player, Items.COMBAT_LAMP_15390, 2)
-        if (!player.inventory.contains(Items.ANCIENT_HYMNAL)) grant(player, Items.ANCIENT_HYMNAL)
         complete(
             player,
             name = "Ancient Curses",
             icon = Items.ANCIENT_HYMNAL,
+            "You have unlocked the Ancient Curses!",
             "10,000 Prayer experience",
             "23,000 skills experience lamp for any chosen skill (level 50+)",
             "Two 20,000 combat level experience lamps for any chosen combat skill (level 50+)",
-            "Access to a new set of prayers, known as the Ancient Curses.",
-            "You must read the Ancient hymnal, given to you by Azzanadra, in order to activate them.",
+            "Open your prayer book to call upon the Curses.",
         )
         return true
     }
-
     fun unlockSummoning(player: Player): Boolean {
         if (player.attr[SUMMONING_REWARDED] == true) {
             player.message("Summoning is already unlocked.")
@@ -91,24 +108,34 @@ object UnlockNpcRewards {
         return true
     }
 
+    /**
+     * The Archaeologist's unlock. Owner 2026-09-20: "when talking to the archaologist in ge he should say you have
+     * completed desert treasure he now says you have completed ancient magics". Ancient Magicks is the *reward* of
+     * Desert Treasure, not a quest of its own, so the completion banner names the quest and the quest tab is set to
+     * the cache-backed completed value for Desert Treasure (varbit 358 = 15; nothing else sets it any more, so a new
+     * player starts with the quest incomplete).
+     */
     fun unlockAncientMagic(player: Player): Boolean {
         player.attr[ANCIENT_MAGIC_UNLOCKED] = true
         if (player.attr[ANCIENT_MAGIC_REWARDED] == true) {
-            player.message("Ancient Magicks are already unlocked.")
+            player.message("You have already completed Desert Treasure.")
             return false
         }
         player.attr[ANCIENT_MAGIC_REWARDED] = true
+        player.setVarbit(Varbits.DESERT_TREASURE_PROGRESS, 15)
+        player.setVarp(Varps.QUEST_POINTS, player.getVarp(Varps.QUEST_POINTS) + 3)
         player.addXp(Skills.MAGIC, 20_000.0)
         grant(player, Items.RING_OF_VISIBILITY)
         grant(player, Items.ANCIENT_STAFF)
         grant(player, Items.BANDIT_CAMP_TELEPORT)
         complete(
             player,
-            name = "Ancient Magicks",
+            name = "Desert Treasure",
             icon = Items.ANCIENT_STAFF,
+            "3 Quest Points",
             "20,000 Magic experience",
-            "Ancient Magicks unlocked",
-            "Ring of visibility added to your inventory",
+            "The Ancient Magicks spellbook",
+            "Ring of visibility",
             "You can now buy and wield the ancient staff",
             "Access to the Bandit Camp home teleport",
         )
@@ -312,9 +339,7 @@ object UnlockNpcRewards {
     }
 
     private fun complete(player: Player, name: String, icon: Int, vararg rewards: String) {
-        // Jingle 61 is the already-used completion jingle in this revision's server (Slayer task
-        // completion uses the same effect); the visible reward popup is the standard quest UI.
-        player.playJingle(61)
+        // The standard quest UI; buildQuestFinish plays the sourced quest-complete jingle (152) itself.
         player.buildQuestFinish(UnlockQuest(name), icon, *rewards)
     }
 

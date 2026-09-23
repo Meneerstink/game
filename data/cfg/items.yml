@@ -286687,3 +286687,10 @@
   tradeable: true
   weight: 0.0
   equipment: null
+- id: 23856
+  name: "Deadman's skull"
+  examine: "A Deadman's skull filled with magical power."
+  destroy_message: "You can get another one from the Emblem Trader at the north of Grand Exchange."
+  tradeable: false
+  weight: 0.08
+  equipment: null

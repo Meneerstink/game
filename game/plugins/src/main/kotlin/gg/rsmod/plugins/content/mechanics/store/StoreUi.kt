@@ -322,6 +322,8 @@ object StoreUi : KLogging() {
         if (!bought) return
         player.attr[currency.attr] = balance - entry.price
         audit(player, entry)
+        // Owner 2026-09-23: every shop (Loyalty, Deadman, Donator stores included) plays the shared purchase sound.
+        player.playSound(gg.rsmod.plugins.content.mechanics.shops.ShopSounds.TRANSACTION)
         if (entry.kind == Kind.UNLOCK) {
             player.message("You unlock the ${name(player, entry.purchaseItem).lowercase()} look for ${entry.price.format()} ${currency.plural}. Use Customise on your max cape.")
         } else {
