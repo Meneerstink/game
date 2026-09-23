@@ -12,10 +12,13 @@ import gg.rsmod.game.model.priv.Privilege
 val BANNER_78 = 62751
 val STANDARD_78 = 62750
 
+/** The small 78 banner that fits bank walls (HouseBannerTool smallLoc). */
+val SMALL_78 = 62753
+
 fun intArgs(player: Player): List<Int> = player.getCommandArgs().mapNotNull { it.toIntOrNull() }
 
 /** The 78 banner hangs on a wall: wall decoration (type 4), so it never takes the wall's own client layer slot. */
-fun defaultType(id: Int): Int = if (id == BANNER_78) 4 else 10
+fun defaultType(id: Int): Int = if (id == BANNER_78 || id == SMALL_78) 4 else 10
 
 fun locName(player: Player, id: Int): String = runCatching { player.world.definitions.get(gg.rsmod.game.fs.def.ObjectDef::class.java, id).name }.getOrNull() ?: "$id"
 

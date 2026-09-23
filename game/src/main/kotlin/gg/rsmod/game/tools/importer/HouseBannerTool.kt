@@ -17,7 +17,8 @@ import kotlin.math.sin
  * clamped) and three meshes, all with a modelled dark-iron rod and spear finials:
  *  * [wallModel] "78 banner" - a bank-sized wall banner hung from iron brackets against the north edge of its tile;
  *  * [standardModel] "78 standard" - the flag on a crossbar at the top of a free-standing iron pole;
- *  * [largeModel] "78 banner" (large) - a gatehouse/facade-sized wall banner.
+ *  * [largeModel] "78 banner" (large) - a gatehouse/facade-sized wall banner;
+ *  * [smallModel] "78 banner" (small) - a smaller wall banner that fits bank walls (same texture, same quality).
  * Wall banners carry models for wall decoration (shape 4) and scenery (shape 10), so they can hang on a wall without
  * taking the wall's own client layer slot.
  *
@@ -181,6 +182,9 @@ object HouseBannerTool {
     /** Bank wall banner: about 1.4 tiles wide, top under a standard wall's cornice. */
     fun wallModel(texId: Int): ModelData = wallBanner(texId, Banner78Art.clothWidthFor(250), 250, -300, 22)
 
+    /** Small bank-wall banner: about a tile wide, top under a standard wall's cornice. */
+    fun smallModel(texId: Int): ModelData = wallBanner(texId, Banner78Art.clothWidthFor(190), 190, -300, 14)
+
     /** Facade banner for gatehouses and large walls. */
     fun largeModel(texId: Int): ModelData = wallBanner(texId, Banner78Art.clothWidthFor(380), 380, -520, 28)
 
@@ -229,13 +233,15 @@ object HouseBannerTool {
             val wallModel = ids.getProperty("wallModel")?.toInt() ?: fresh(MODEL_INDEX)
             val standardModel = ids.getProperty("standardModel")?.toInt() ?: (wallModel + 1)
             val largeModel = ids.getProperty("largeModel")?.toInt() ?: fresh(MODEL_INDEX).coerceAtLeast(standardModel + 1)
-            check(largeModel <= 0xFFFF) { "model id $largeModel does not fit the loc model field" }
+            val smallModel = ids.getProperty("smallModel")?.toInt() ?: fresh(MODEL_INDEX).coerceAtLeast(largeModel + 1)
+            check(largeModel <= 0xFFFF && smallModel <= 0xFFFF) { "model ids $largeModel/$smallModel do not fit the loc model field" }
             val lastLoc = library.index(LOC_INDEX).archiveIds().maxOrNull()!!.let { g -> (g shl 8) + (library.index(LOC_INDEX).archive(g)!!.fileIds().maxOrNull() ?: 0) }
             val wallLoc = ids.getProperty("wallLoc")?.toInt() ?: (lastLoc + 1)
             val standardLoc = ids.getProperty("standardLoc")?.toInt() ?: (wallLoc + 1)
             val raisedLoc = ids.getProperty("raisedLoc")?.toInt() ?: (lastLoc + 1)
             val centredLoc = ids.getProperty("centredLoc")?.toInt() ?: (lastLoc + 1)
-            println("IDS sprite=$sprite texture=$texture models=$wallModel,$standardModel,$largeModel locs=$wallLoc,$standardLoc,$raisedLoc,$centredLoc")
+            val smallLoc = ids.getProperty("smallLoc")?.toInt() ?: (lastLoc + 1)
+            println("IDS sprite=$sprite texture=$texture models=$wallModel,$standardModel,$largeModel,$smallModel locs=$wallLoc,$standardLoc,$raisedLoc,$centredLoc,$smallLoc")
 
             fun put(index: Int, group: Int, file: Int, bytes: ByteArray, label: String) {
                 val current = library.data(index, group, file)
@@ -269,7 +275,7 @@ object HouseBannerTool {
             val at = OsrsTextureImportTool.spriteParamOffset(templateProgram)
             put(OsrsTextureImportTool.INDEX_TEXTURES, texture, 0, templateProgram.copyOf().also { it[at] = (sprite ushr 8).toByte(); it[at + 1] = sprite.toByte() }, "78 banner texture program (alpha)")
 
-            listOf(wallModel to wallModel(texture), standardModel to standardModel(texture), largeModel to largeModel(texture)).forEach { (id, model) ->
+            listOf(wallModel to wallModel(texture), standardModel to standardModel(texture), largeModel to largeModel(texture), smallModel to smallModel(texture)).forEach { (id, model) ->
                 val encoded = Rev667ModelEncoder.encode(model)
                 val differences = ModelConvertTool.compare(model, Rev667ModelDecoder.decode(encoded))
                 check(differences.isEmpty()) { "model $id round trip: $differences" }
@@ -281,14 +287,15 @@ object HouseBannerTool {
             put(LOC_INDEX, raisedLoc ushr 8, raisedLoc and 0xFF, locDef("78 banner", largeModel, solid = false, shapes = wall), "loc $raisedLoc 78 banner (large facade)")
             // Shifted half a tile east (rotation 0): the large banner centred on a tile edge, e.g. the middle of a gatehouse.
             put(LOC_INDEX, centredLoc ushr 8, centredLoc and 0xFF, locDef("78 banner", largeModel, solid = false, shapes = wall, shiftX = 64), "loc $centredLoc 78 banner (large, centred on an edge)")
-            listOf(wallLoc, standardLoc, raisedLoc, centredLoc).forEach { loc ->
+            put(LOC_INDEX, smallLoc ushr 8, smallLoc and 0xFF, locDef("78 banner", smallModel, solid = false, shapes = wall), "loc $smallLoc 78 banner (small, bank wall)")
+            listOf(wallLoc, standardLoc, raisedLoc, centredLoc, smallLoc).forEach { loc ->
                 val bytes = mutations.lastOrNull { it.indexId == LOC_INDEX && (it.groupId shl 8) + it.fileId == loc }?.newBytes ?: return@forEach
                 check(Rev667LocType.decode(loc, bytes).allModels.isNotEmpty()) { "loc $loc re-decode failed" }
             }
 
             ids.setProperty("sprite", "$sprite"); ids.setProperty("texture", "$texture")
-            ids.setProperty("wallModel", "$wallModel"); ids.setProperty("standardModel", "$standardModel"); ids.setProperty("largeModel", "$largeModel")
-            ids.setProperty("wallLoc", "$wallLoc"); ids.setProperty("standardLoc", "$standardLoc"); ids.setProperty("raisedLoc", "$raisedLoc"); ids.setProperty("centredLoc", "$centredLoc")
+            ids.setProperty("wallModel", "$wallModel"); ids.setProperty("standardModel", "$standardModel"); ids.setProperty("largeModel", "$largeModel"); ids.setProperty("smallModel", "$smallModel")
+            ids.setProperty("wallLoc", "$wallLoc"); ids.setProperty("standardLoc", "$standardLoc"); ids.setProperty("raisedLoc", "$raisedLoc"); ids.setProperty("centredLoc", "$centredLoc"); ids.setProperty("smallLoc", "$smallLoc")
         } finally {
             library.close()
         }
