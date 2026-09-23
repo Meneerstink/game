@@ -44,6 +44,9 @@ object NpcCombatDsl {
             }
             combatBuilder.setXpMultiplier(builder.xpMultiplier)
             combatBuilder.setAttackStyle(builder.attackStyle)
+            if (builder.venomImmune) {
+                combatBuilder.setVenomImmunity()
+            }
         }
 
         fun aggro(init: AggressivenessBuilder.() -> Unit) {
@@ -150,6 +153,11 @@ object NpcCombatDsl {
 
         /**
          * The spell an NPC will use if one is set
+        /**
+         * Whether the npc cannot be envenomed (OSRS infobox "Venom: 100% resistance"); independent of [poisonImmune].
+         */
+        var venomImmune = false
+
          * Note: this is used to signify the NPCs default attack style (magic)
          */
         var spell = -1

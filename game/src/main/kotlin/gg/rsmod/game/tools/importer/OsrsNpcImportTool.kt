@@ -90,6 +90,8 @@ object OsrsNpcImportTool {
             // Owner 2026-09-19 (78 Store NPCs at the Grand Exchange): OSRS "Sigmund The Merchant" 3894 (Talk-to/Trade) as the
             // Donator Store and OSRS "Emblem Trader" 308 (Talk-to/Rewards/Skull, the OSRS PvP rewards trader) as the Deadman Store.
             "store-npcs" to listOf(3894 to "Donator Store", 308 to "Deadman Store"),
+            // Owner 2026-09-23 (Breach Points shop, own npc): the OSRS Emblem Trader 308 ran the Annihilation points shop.
+            "breach-trader" to listOf(308 to "Breach Trader"),
         )
 
     /**

@@ -92,7 +92,8 @@ object SkullyRoster {
             Site("Falador east bank", Npcs.SKULLY, anchor = Tile(3013, 3355, 0), wanted = Tile(3008, 3357, 0), exact = true, face = Direction.EAST, chest = Tile(3008, 3358, 0)),
             // 2026-09-23 bank pass: the chest stood on the counter (3091,3245). South wall of the customer side.
             Site("Draynor bank", SKULLY_JR, anchor = Tile(3092, 3243, 0), wanted = Tile(3094, 3240, 0), exact = true, face = Direction.NORTH, chest = Tile(3093, 3240, 0)),
-            Site("Al Kharid bank", SKULLY_SR, anchor = Tile(3269, 3167, 0), wanted = Tile(3271, 3165, 0)),
+            // 2026-09-23 bank pass: the heuristic put him in the east entrance (3273,3165). North-east corner, back to the east wall.
+            Site("Al Kharid bank", SKULLY_SR, anchor = Tile(3269, 3167, 0), wanted = Tile(3272, 3171, 0), exact = true, face = Direction.WEST, chest = Tile(3272, 3170, 0)),
             // 2026-09-23 bank pass: he stood on the east booth (2812,3439). East wall, between the two closed booths.
             Site("Catherby bank", SKULLY_MAX, anchor = Tile(2809, 3441, 0), wanted = Tile(2812, 3441, 0), exact = true, face = Direction.WEST, chest = Tile(2812, 3440, 0)),
             // 2026-09-23 bank pass: he stood on a closed booth (3209,3221). East wall of the customer side.

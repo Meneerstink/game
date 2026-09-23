@@ -61,6 +61,24 @@ object DangerWarning {
     ) {
         if (disabled && !canDisable(player)) return
         player.attr[DISABLED] = disabled
+        syncVarp(player)
+    }
+
+    /**
+     * The 667 client keeps its warning switches in varp 1045 (and 1046): interface 382's "don't ask again" row reads bit
+     * [WARNING_BIT] (clientscript 348 args 382:31, 382:33, 7) and the Doomsayer's warning screen 583 draws the same bit on its
+     * Wilderness tile (583:35, clientscript 165 arg 7; its Toggle button is 583:[SETTINGS_TOGGLE]). A set bit = warning off.
+     * The server preference stays the only truth; this mirrors it so both screens show it.
+     */
+    const val WARNING_VARP = 1045
+    const val WARNING_BIT = 7
+    const val SETTINGS_INTERFACE = 583
+    const val SETTINGS_TOGGLE = 66
+
+    fun syncVarp(player: Player) {
+        val value = player.varps.getState(WARNING_VARP)
+        val next = if (isDisabled(player)) value or (1 shl WARNING_BIT) else value and (1 shl WARNING_BIT).inv()
+        if (next != value) player.varps.setState(WARNING_VARP, next)
     }
 
     /** Adds [ticks] of play time when the player really acted recently (AFK / idle logged-in time never counts). */

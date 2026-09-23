@@ -38,6 +38,8 @@ BreachMonsters.ROSTER.forEach { m ->
             attackSpeed = m.speed
             attackStyle = m.style
             respawnDelay = 0
+            poisonImmune = m.id in BreachMonsters.POISON_IMMUNE
+            venomImmune = m.id in BreachMonsters.VENOM_IMMUNE
         }
         aggro {
             radius = 8

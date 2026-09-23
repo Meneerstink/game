@@ -95,6 +95,31 @@ class BreachRewardTests {
     }
 
     @Test
+    fun `the schedule file matches the default and daylight saving never moves an opening`() {
+        val file = java.io.File("../../data/cfg/deadman/breach-schedule.json")
+        val loaded = DeadmanBreach.loadSchedule(file)
+        assertEquals(DeadmanBreach.Schedule().days, loaded.days)
+        assertEquals(DeadmanBreach.Schedule().hours, loaded.hours)
+        // 2026-10-25 is the EU clock change (Sunday): the openings stay on the UTC hours.
+        val amsterdam = java.time.ZonedDateTime.of(2026, 10, 25, 1, 30, 0, 0, java.time.ZoneId.of("Europe/Amsterdam"))
+        val next = DeadmanBreach.nextStart(amsterdam)
+        assertEquals(java.time.ZoneOffset.UTC, next.zone)
+        assertEquals(2, next.hour)
+        assertEquals(0, next.minute)
+    }
+
+    @Test
+    fun `poison and venom immunities follow the wiki infoboxes`() {
+        val roster = BreachMonsters.ROSTER.map { it.id }.toSet()
+        assertTrue(roster.containsAll(BreachMonsters.VENOM_IMMUNE), "every immune id is a breach monster")
+        assertTrue(BreachMonsters.VENOM_IMMUNE.containsAll(BreachMonsters.POISON_IMMUNE), "poison-immune implies venom-immune here")
+        assertTrue(14458 in BreachMonsters.POISON_IMMUNE) // Cerberus: 100% / 100%
+        assertTrue(14438 in BreachMonsters.VENOM_IMMUNE && 14438 !in BreachMonsters.POISON_IMMUNE) // Dagannoth Rex: 0% / 100%
+        assertFalse(14439 in BreachMonsters.VENOM_IMMUNE) // King Black Dragon: 0% / 0%
+        assertFalse(14468 in BreachMonsters.VENOM_IMMUNE) // Splatter: "?" on the wiki
+    }
+
+    @Test
     fun `each eligible player's roll is independent - the same seed gives the same loot whatever others roll`() {
         val a = BreachLoot.roll(Random(42)).map { it.item to it.amount }
         val b = BreachLoot.roll(Random(42)).map { it.item to it.amount }

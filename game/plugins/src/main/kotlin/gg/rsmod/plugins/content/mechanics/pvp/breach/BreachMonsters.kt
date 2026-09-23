@@ -557,6 +557,20 @@ object BreachMonsters {
      */
     val DEMONBANE_VULNERABILITY: Map<Int, Int> = mapOf(14446 to 1, 14449 to 1, 14451 to 1, 14458 to 100)
 
+    /**
+     * Status-effect matrix (owner 2026-09-23 breach audit): OSRS Wiki infobox "Immunities" of each "(Deadman)" page (or the
+     * monster's own page where it has no Deadman page), "Poison"/"Venom" rows, 100% resistance = immune. Read 2026-09-23.
+     * Splatter (14468) shows "?" for both on the wiki: SOURCE_GAP, left susceptible.
+     */
+    val POISON_IMMUNE: Set<Int> =
+        setOf(
+            14442, 14443, 14444, 14446, 14447, 14448, 14449, 14451, 14452, 14453, 14454, 14455, 14457, 14458, 14460, 14461, 14463,
+            14469, 14470, 14476,
+        )
+
+    /** Venom immune: every poison-immune monster plus Rex, Supreme, Prime, TzTok-Jad, Big Evil Chicken and TzTok-Jad-Rek. */
+    val VENOM_IMMUNE: Set<Int> = POISON_IMMUNE + setOf(14438, 14440, 14441, 14462, 14467, 14477)
+
     /** Monsters that run after their target (OSRS Wiki: Durial321 14463, I DSCIM YOU 14469). */
     val RUNNERS: Set<Int> = setOf(14463, 14469)
 

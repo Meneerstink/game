@@ -141,6 +141,10 @@ object DeadmanBreach {
     var active: Active? = null
         private set
 
+    /** Declared before [nextOpening], whose initializer reads it. */
+    @Volatile
+    var schedule: Schedule = Schedule()
+
     @Volatile
     var nextOpening: ZonedDateTime = nextStart(ZonedDateTime.now(ZoneOffset.UTC))
         private set
@@ -151,13 +155,35 @@ object DeadmanBreach {
 
     // ---- schedule ---------------------------------------------------------------------------------------------------
 
-    /** Saturday 02:00 .. Sunday 22:00 GMT every four hours: the first opening strictly after [now]. */
+    /**
+     * When breaches open, always in UTC so daylight saving never moves them. Default: the OSRS permanent-world schedule,
+     * Saturday 02:00 .. Sunday 22:00 every four hours. `data/cfg/deadman/breach-schedule.json` overrides it
+     * (`{"days": ["SATURDAY", "SUNDAY"], "hours": [2, 6, 10, 14, 18, 22]}`), read at boot.
+     */
+    class Schedule(
+        val days: Set<DayOfWeek> = setOf(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY),
+        val hours: List<Int> = (2..22 step 4).toList(),
+    )
+
+    const val SCHEDULE_PATH = "./data/cfg/deadman/breach-schedule.json"
+
+    fun loadSchedule(file: File = File(SCHEDULE_PATH)): Schedule {
+        if (!file.exists()) return Schedule()
+        val root = FileReader(file).use { Gson().fromJson(it, JsonObject::class.java) }
+        val days = root["days"].asJsonArray.map { DayOfWeek.valueOf(it.asString.uppercase()) }.toSet()
+        val hours = root["hours"].asJsonArray.map { it.asInt }.filter { it in 0..23 }.sorted()
+        require(days.isNotEmpty() && hours.isNotEmpty()) { "$file needs at least one day and one hour" }
+        return Schedule(days, hours)
+    }
+
+    /** The first opening of [schedule] strictly after [now] (UTC). */
     fun nextStart(now: ZonedDateTime): ZonedDateTime {
         val utc = now.withZoneSameInstant(ZoneOffset.UTC)
         var day = utc.toLocalDate()
+        val plan = schedule
         repeat(8) {
-            if (day.dayOfWeek == DayOfWeek.SATURDAY || day.dayOfWeek == DayOfWeek.SUNDAY) {
-                for (hour in 2..22 step 4) {
+            if (day.dayOfWeek in plan.days) {
+                for (hour in plan.hours) {
                     val slot = day.atTime(hour, 0).atZone(ZoneOffset.UTC)
                     if (slot.isAfter(utc)) return slot
                 }
@@ -169,6 +195,8 @@ object DeadmanBreach {
 
     fun start(world: World) {
         locations = loadLocations(world)
+        schedule = try { loadSchedule() } catch (e: Exception) { gg.rsmod.game.Server.logger.error("Breach schedule not loaded, using the default: {}", e.toString()); Schedule() }
+        nextOpening = nextStart(ZonedDateTime.now(ZoneOffset.UTC))
         world.queue {
             while (true) {
                 wait(100)
