@@ -171,6 +171,1288 @@
       "type": 10,
       "rot": 0,
       "group": 14
+    },
+    {
+      "op": "remove",
+      "id": 4864,
+      "x": 3172,
+      "z": 3463,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 15
+    },
+    {
+      "op": "remove",
+      "id": 39097,
+      "x": 3172,
+      "z": 3459,
+      "level": 1,
+      "type": 10,
+      "rot": 0,
+      "note": "Tree canopy above 38787 (owner 2026-09-24)",
+      "group": 16
+    },
+    {
+      "op": "remove",
+      "id": 39097,
+      "x": 3172,
+      "z": 3459,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "note": "Tree canopy above 38787 (owner 2026-09-24)",
+      "group": 16
+    },
+    {
+      "op": "remove",
+      "id": 62750,
+      "x": 3171,
+      "z": 3460,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 17
+    },
+    {
+      "op": "spawn",
+      "id": 62750,
+      "x": 3171,
+      "z": 3460,
+      "level": 0,
+      "type": 10,
+      "rot": 1,
+      "group": 17
+    },
+    {
+      "op": "remove",
+      "id": 62750,
+      "x": 3171,
+      "z": 3460,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 18
+    },
+    {
+      "op": "spawn",
+      "id": 62750,
+      "x": 3171,
+      "z": 3460,
+      "level": 0,
+      "type": 10,
+      "rot": 2,
+      "group": 18
+    },
+    {
+      "op": "remove",
+      "id": 62750,
+      "x": 3158,
+      "z": 3460,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 19
+    },
+    {
+      "op": "spawn",
+      "id": 62750,
+      "x": 3158,
+      "z": 3460,
+      "level": 0,
+      "type": 10,
+      "rot": 1,
+      "group": 19
+    },
+    {
+      "op": "remove",
+      "id": 62750,
+      "x": 3158,
+      "z": 3460,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 20
+    },
+    {
+      "op": "spawn",
+      "id": 62750,
+      "x": 3158,
+      "z": 3460,
+      "level": 0,
+      "type": 10,
+      "rot": 2,
+      "group": 20
+    },
+    {
+      "op": "spawn",
+      "id": 62750,
+      "x": 3187,
+      "z": 3442,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 21
+    },
+    {
+      "op": "remove",
+      "id": 62750,
+      "x": 3187,
+      "z": 3442,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 22
+    },
+    {
+      "op": "remove",
+      "id": 62582,
+      "x": 3184,
+      "z": 3446,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 23
+    },
+    {
+      "op": "spawn",
+      "id": 62582,
+      "x": 3184,
+      "z": 3446,
+      "level": 0,
+      "type": 10,
+      "rot": 3,
+      "group": 23
+    },
+    {
+      "op": "remove",
+      "id": 62582,
+      "x": 3184,
+      "z": 3446,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 24
+    },
+    {
+      "op": "spawn",
+      "id": 62582,
+      "x": 3184,
+      "z": 3446,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 24
+    },
+    {
+      "op": "remove",
+      "id": 62749,
+      "x": 3188,
+      "z": 3446,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 25
+    },
+    {
+      "op": "spawn",
+      "id": 62753,
+      "x": 3189,
+      "z": 3448,
+      "level": 0,
+      "type": 4,
+      "rot": 0,
+      "group": 26
+    },
+    {
+      "op": "spawn",
+      "id": 62753,
+      "x": 3188,
+      "z": 3447,
+      "level": 0,
+      "type": 4,
+      "rot": 0,
+      "group": 27
+    },
+    {
+      "op": "remove",
+      "id": 62753,
+      "x": 3188,
+      "z": 3447,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 28
+    },
+    {
+      "op": "remove",
+      "id": 62753,
+      "x": 3189,
+      "z": 3448,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 29
+    },
+    {
+      "op": "spawn",
+      "id": 62753,
+      "x": 3188,
+      "z": 3447,
+      "level": 0,
+      "type": 4,
+      "rot": 0,
+      "group": 30
+    },
+    {
+      "op": "remove",
+      "id": 62753,
+      "x": 3188,
+      "z": 3447,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 31
+    },
+    {
+      "op": "remove",
+      "id": 62582,
+      "x": 3093,
+      "z": 3488,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 32
+    },
+    {
+      "op": "spawn",
+      "id": 62582,
+      "x": 3093,
+      "z": 3488,
+      "level": 0,
+      "type": 10,
+      "rot": 1,
+      "group": 32
+    },
+    {
+      "op": "remove",
+      "id": 62582,
+      "x": 3093,
+      "z": 3488,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 33
+    },
+    {
+      "op": "spawn",
+      "id": 62582,
+      "x": 3093,
+      "z": 3488,
+      "level": 0,
+      "type": 10,
+      "rot": 2,
+      "group": 33
+    },
+    {
+      "op": "remove",
+      "id": 62582,
+      "x": 2721,
+      "z": 3490,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 34
+    },
+    {
+      "op": "spawn",
+      "id": 62582,
+      "x": 2721,
+      "z": 3490,
+      "level": 0,
+      "type": 10,
+      "rot": 2,
+      "group": 34
+    },
+    {
+      "op": "remove",
+      "id": 62582,
+      "x": 2721,
+      "z": 3490,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 35
+    },
+    {
+      "op": "spawn",
+      "id": 62582,
+      "x": 2721,
+      "z": 3490,
+      "level": 0,
+      "type": 10,
+      "rot": 3,
+      "group": 35
+    },
+    {
+      "op": "remove",
+      "id": 62582,
+      "x": 2721,
+      "z": 3490,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 36
+    },
+    {
+      "op": "spawn",
+      "id": 62582,
+      "x": 2721,
+      "z": 3491,
+      "level": 0,
+      "type": 10,
+      "rot": 3,
+      "group": 36
+    },
+    {
+      "op": "remove",
+      "id": 62582,
+      "x": 2721,
+      "z": 3491,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 37
+    },
+    {
+      "op": "spawn",
+      "id": 62582,
+      "x": 2721,
+      "z": 3492,
+      "level": 0,
+      "type": 10,
+      "rot": 3,
+      "group": 37
+    },
+    {
+      "op": "remove",
+      "id": 25768,
+      "x": 2727,
+      "z": 3488,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 38
+    },
+    {
+      "op": "remove",
+      "id": 25768,
+      "x": 2724,
+      "z": 3488,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 39
+    },
+    {
+      "op": "remove",
+      "id": 25937,
+      "x": 2730,
+      "z": 3492,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 40
+    },
+    {
+      "op": "spawn",
+      "id": 62753,
+      "x": 2617,
+      "z": 3329,
+      "level": 0,
+      "type": 4,
+      "rot": 0,
+      "group": 41
+    },
+    {
+      "op": "remove",
+      "id": 62753,
+      "x": 2617,
+      "z": 3329,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 42
+    },
+    {
+      "op": "remove",
+      "id": 62749,
+      "x": 2615,
+      "z": 3335,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 43
+    },
+    {
+      "op": "remove",
+      "id": 62749,
+      "x": 3231,
+      "z": 3223,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 44
+    },
+    {
+      "op": "remove",
+      "id": 62749,
+      "x": 3231,
+      "z": 3214,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 45
+    },
+    {
+      "op": "spawn",
+      "id": 62753,
+      "x": 3230,
+      "z": 3223,
+      "level": 0,
+      "type": 4,
+      "rot": 0,
+      "group": 46
+    },
+    {
+      "op": "remove",
+      "id": 62753,
+      "x": 3230,
+      "z": 3223,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 47
+    },
+    {
+      "op": "spawn",
+      "id": 62753,
+      "x": 3231,
+      "z": 3223,
+      "level": 0,
+      "type": 4,
+      "rot": 0,
+      "group": 47
+    },
+    {
+      "op": "remove",
+      "id": 62753,
+      "x": 3231,
+      "z": 3223,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 48
+    },
+    {
+      "op": "spawn",
+      "id": 62753,
+      "x": 3232,
+      "z": 3223,
+      "level": 0,
+      "type": 4,
+      "rot": 0,
+      "group": 48
+    },
+    {
+      "op": "remove",
+      "id": 57481,
+      "x": 3232,
+      "z": 3224,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 49
+    },
+    {
+      "op": "remove",
+      "id": 62753,
+      "x": 3232,
+      "z": 3223,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 50
+    },
+    {
+      "op": "spawn",
+      "id": 62753,
+      "x": 3233,
+      "z": 3224,
+      "level": 0,
+      "type": 4,
+      "rot": 0,
+      "group": 51
+    },
+    {
+      "op": "remove",
+      "id": 62753,
+      "x": 3233,
+      "z": 3224,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 52
+    },
+    {
+      "op": "spawn",
+      "id": 62753,
+      "x": 3233,
+      "z": 3223,
+      "level": 0,
+      "type": 4,
+      "rot": 0,
+      "group": 52
+    },
+    {
+      "op": "remove",
+      "id": 62753,
+      "x": 3233,
+      "z": 3223,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 53
+    },
+    {
+      "op": "spawn",
+      "id": 62753,
+      "x": 3232,
+      "z": 3223,
+      "level": 0,
+      "type": 4,
+      "rot": 0,
+      "group": 53
+    },
+    {
+      "op": "remove",
+      "id": 62753,
+      "x": 3232,
+      "z": 3223,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 54
+    },
+    {
+      "op": "spawn",
+      "id": 62753,
+      "x": 3232,
+      "z": 3223,
+      "level": 0,
+      "type": 4,
+      "rot": 1,
+      "group": 54
+    },
+    {
+      "op": "remove",
+      "id": 62753,
+      "x": 3232,
+      "z": 3223,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 55
+    },
+    {
+      "op": "spawn",
+      "id": 62753,
+      "x": 3231,
+      "z": 3223,
+      "level": 0,
+      "type": 4,
+      "rot": 1,
+      "group": 55
+    },
+    {
+      "op": "remove",
+      "id": 62753,
+      "x": 3231,
+      "z": 3223,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 56
+    },
+    {
+      "op": "spawn",
+      "id": 62753,
+      "x": 3231,
+      "z": 3223,
+      "level": 0,
+      "type": 4,
+      "rot": 2,
+      "group": 56
+    },
+    {
+      "op": "remove",
+      "id": 62753,
+      "x": 3231,
+      "z": 3223,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 57
+    },
+    {
+      "op": "spawn",
+      "id": 62753,
+      "x": 3231,
+      "z": 3223,
+      "level": 0,
+      "type": 4,
+      "rot": 3,
+      "group": 57
+    },
+    {
+      "op": "remove",
+      "id": 62753,
+      "x": 3231,
+      "z": 3223,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 58
+    },
+    {
+      "op": "spawn",
+      "id": 62753,
+      "x": 3231,
+      "z": 3223,
+      "level": 0,
+      "type": 4,
+      "rot": 0,
+      "group": 58
+    },
+    {
+      "op": "remove",
+      "id": 62753,
+      "x": 3231,
+      "z": 3223,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 59
+    },
+    {
+      "op": "spawn",
+      "id": 62753,
+      "x": 3232,
+      "z": 3223,
+      "level": 0,
+      "type": 4,
+      "rot": 0,
+      "group": 59
+    },
+    {
+      "op": "remove",
+      "id": 62753,
+      "x": 3232,
+      "z": 3223,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 60
+    },
+    {
+      "op": "spawn",
+      "id": 62753,
+      "x": 3184,
+      "z": 3432,
+      "level": 0,
+      "type": 4,
+      "rot": 0,
+      "group": 61
+    },
+    {
+      "op": "remove",
+      "id": 62753,
+      "x": 3184,
+      "z": 3432,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 62
+    },
+    {
+      "op": "spawn",
+      "id": 62751,
+      "x": 3213,
+      "z": 3429,
+      "level": 0,
+      "type": 4,
+      "rot": 0,
+      "group": 63
+    },
+    {
+      "op": "remove",
+      "id": 62751,
+      "x": 3213,
+      "z": 3429,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 64
+    },
+    {
+      "op": "spawn",
+      "id": 62751,
+      "x": 3212,
+      "z": 3429,
+      "level": 0,
+      "type": 4,
+      "rot": 0,
+      "group": 64
+    },
+    {
+      "op": "remove",
+      "id": 62751,
+      "x": 3212,
+      "z": 3429,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 65
+    },
+    {
+      "op": "remove",
+      "id": 62582,
+      "x": 3250,
+      "z": 3423,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 66
+    },
+    {
+      "op": "spawn",
+      "id": 62582,
+      "x": 3250,
+      "z": 3422,
+      "level": 0,
+      "type": 10,
+      "rot": 1,
+      "group": 66
+    },
+    {
+      "op": "remove",
+      "id": 62582,
+      "x": 3250,
+      "z": 3422,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 67
+    },
+    {
+      "op": "spawn",
+      "id": 62582,
+      "x": 3250,
+      "z": 3421,
+      "level": 0,
+      "type": 10,
+      "rot": 1,
+      "group": 67
+    },
+    {
+      "op": "remove",
+      "id": 62582,
+      "x": 3250,
+      "z": 3421,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 68
+    },
+    {
+      "op": "spawn",
+      "id": 62582,
+      "x": 3250,
+      "z": 3421,
+      "level": 0,
+      "type": 10,
+      "rot": 2,
+      "group": 68
+    },
+    {
+      "op": "remove",
+      "id": 62582,
+      "x": 3250,
+      "z": 3421,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 69
+    },
+    {
+      "op": "spawn",
+      "id": 62582,
+      "x": 3250,
+      "z": 3421,
+      "level": 0,
+      "type": 10,
+      "rot": 3,
+      "group": 69
+    },
+    {
+      "op": "remove",
+      "id": 62582,
+      "x": 3250,
+      "z": 3421,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 70
+    },
+    {
+      "op": "spawn",
+      "id": 62582,
+      "x": 3250,
+      "z": 3420,
+      "level": 0,
+      "type": 10,
+      "rot": 3,
+      "group": 70
+    },
+    {
+      "op": "remove",
+      "id": 62582,
+      "x": 3250,
+      "z": 3420,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 71
+    },
+    {
+      "op": "spawn",
+      "id": 62582,
+      "x": 3250,
+      "z": 3420,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 71
+    },
+    {
+      "op": "remove",
+      "id": 62582,
+      "x": 3250,
+      "z": 3420,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 72
+    },
+    {
+      "op": "spawn",
+      "id": 62582,
+      "x": 3250,
+      "z": 3420,
+      "level": 0,
+      "type": 10,
+      "rot": 1,
+      "group": 72
+    },
+    {
+      "op": "remove",
+      "id": 62582,
+      "x": 3250,
+      "z": 3420,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 73
+    },
+    {
+      "op": "spawn",
+      "id": 62582,
+      "x": 3250,
+      "z": 3420,
+      "level": 0,
+      "type": 10,
+      "rot": 2,
+      "group": 73
+    },
+    {
+      "op": "remove",
+      "id": 62582,
+      "x": 3250,
+      "z": 3420,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 74
+    },
+    {
+      "op": "spawn",
+      "id": 62582,
+      "x": 3250,
+      "z": 3419,
+      "level": 0,
+      "type": 10,
+      "rot": 2,
+      "group": 74
+    },
+    {
+      "op": "remove",
+      "id": 782,
+      "x": 3251,
+      "z": 3419,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 75
+    },
+    {
+      "op": "spawn",
+      "id": 782,
+      "x": 3251,
+      "z": 3420,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 75
+    },
+    {
+      "op": "remove",
+      "id": 782,
+      "x": 3251,
+      "z": 3420,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 76
+    },
+    {
+      "op": "spawn",
+      "id": 782,
+      "x": 3251,
+      "z": 3419,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 76
+    },
+    {
+      "op": "remove",
+      "id": 62582,
+      "x": 3250,
+      "z": 3419,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 77
+    },
+    {
+      "op": "spawn",
+      "id": 62582,
+      "x": 3250,
+      "z": 3420,
+      "level": 0,
+      "type": 10,
+      "rot": 2,
+      "group": 77
+    },
+    {
+      "op": "remove",
+      "id": 62582,
+      "x": 3250,
+      "z": 3420,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 78
+    },
+    {
+      "op": "spawn",
+      "id": 62582,
+      "x": 3250,
+      "z": 3421,
+      "level": 0,
+      "type": 10,
+      "rot": 2,
+      "group": 78
+    },
+    {
+      "op": "remove",
+      "id": 62582,
+      "x": 3250,
+      "z": 3421,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 79
+    },
+    {
+      "op": "spawn",
+      "id": 62582,
+      "x": 3250,
+      "z": 3421,
+      "level": 0,
+      "type": 10,
+      "rot": 3,
+      "group": 79
+    },
+    {
+      "op": "remove",
+      "id": 49026,
+      "x": 2589,
+      "z": 3403,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 80
+    },
+    {
+      "op": "spawn",
+      "id": 49026,
+      "x": 2589,
+      "z": 3403,
+      "level": 0,
+      "type": 4,
+      "rot": 0,
+      "group": 80
+    },
+    {
+      "op": "remove",
+      "id": 49026,
+      "x": 2589,
+      "z": 3403,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 81
+    },
+    {
+      "op": "remove",
+      "id": 62582,
+      "x": 2812,
+      "z": 3440,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 82
+    },
+    {
+      "op": "spawn",
+      "id": 62582,
+      "x": 2812,
+      "z": 3440,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 82
+    },
+    {
+      "op": "remove",
+      "id": 62582,
+      "x": 2812,
+      "z": 3440,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 83
+    },
+    {
+      "op": "spawn",
+      "id": 62582,
+      "x": 2812,
+      "z": 3440,
+      "level": 0,
+      "type": 10,
+      "rot": 1,
+      "group": 83
+    },
+    {
+      "op": "remove",
+      "id": 34205,
+      "x": 2812,
+      "z": 3439,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 84
+    },
+    {
+      "op": "remove",
+      "id": 1158,
+      "x": 2806,
+      "z": 3441,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 85
+    },
+    {
+      "op": "remove",
+      "id": 1158,
+      "x": 2806,
+      "z": 3438,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 86
+    },
+    {
+      "op": "npc_remove",
+      "id": 14412,
+      "x": 2812,
+      "z": 3441,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 87
+    },
+    {
+      "op": "npc_spawn",
+      "id": 14412,
+      "x": 2812,
+      "z": 3440,
+      "level": 0,
+      "type": 10,
+      "rot": 4,
+      "group": 87
+    },
+    {
+      "op": "npc_remove",
+      "id": 14412,
+      "x": 2812,
+      "z": 3440,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 88
+    },
+    {
+      "op": "npc_spawn",
+      "id": 14412,
+      "x": 2812,
+      "z": 3439,
+      "level": 0,
+      "type": 10,
+      "rot": 4,
+      "group": 88
+    },
+    {
+      "op": "npc_face",
+      "id": 14412,
+      "x": 2812,
+      "z": 3439,
+      "level": 0,
+      "type": 10,
+      "rot": 5,
+      "group": 89
+    },
+    {
+      "op": "npc_face",
+      "id": 14412,
+      "x": 2812,
+      "z": 3439,
+      "level": 0,
+      "type": 10,
+      "rot": 6,
+      "group": 90
+    },
+    {
+      "op": "npc_remove",
+      "id": 14382,
+      "x": 2943,
+      "z": 3368,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 91
+    },
+    {
+      "op": "npc_spawn",
+      "id": 14382,
+      "x": 2944,
+      "z": 3368,
+      "level": 0,
+      "type": 10,
+      "rot": 4,
+      "group": 91
+    },
+    {
+      "op": "remove",
+      "id": 62582,
+      "x": 2943,
+      "z": 3369,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 92
+    },
+    {
+      "op": "spawn",
+      "id": 62582,
+      "x": 2943,
+      "z": 3368,
+      "level": 0,
+      "type": 10,
+      "rot": 2,
+      "group": 92
+    },
+    {
+      "op": "npc_face",
+      "id": 14382,
+      "x": 2944,
+      "z": 3368,
+      "level": 0,
+      "type": 10,
+      "rot": 5,
+      "group": 93
+    },
+    {
+      "op": "npc_face",
+      "id": 14382,
+      "x": 2944,
+      "z": 3368,
+      "level": 0,
+      "type": 10,
+      "rot": 6,
+      "group": 94
+    },
+    {
+      "op": "npc_face",
+      "id": 14382,
+      "x": 2944,
+      "z": 3368,
+      "level": 0,
+      "type": 10,
+      "rot": 7,
+      "group": 95
+    },
+    {
+      "op": "npc_face",
+      "id": 14382,
+      "x": 2944,
+      "z": 3368,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 96
+    },
+    {
+      "op": "npc_face",
+      "id": 14382,
+      "x": 2944,
+      "z": 3368,
+      "level": 0,
+      "type": 10,
+      "rot": 1,
+      "group": 97
     }
   ]
 }
