@@ -48,6 +48,7 @@ class MessageQuickChatPublicHandler : MessageHandler<MessageQuickChatPublicMessa
                 }
             }
             1 -> if (!world.friendsChat.talkQuickChat(world, client, message.payload)) client.writeMessage("You are not in a friends chat channel.")
+            2 -> if (world.socialHooks.clanQuickChat?.invoke(client, message.payload) != true) client.writeMessage("You are not in a clan channel.")
         }
     }
 

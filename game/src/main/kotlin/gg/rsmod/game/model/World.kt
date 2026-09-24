@@ -90,6 +90,9 @@ class World(
      */
     val friendsChat = FriendsChat()
 
+    /** Clan-system entry points installed by the clan plugin (content/mechanics/clan). */
+    val socialHooks = gg.rsmod.game.model.social.SocialHooks()
+
     /**
      * A collection of our [Service]s specified in our game [ServerProperties]
      * files.

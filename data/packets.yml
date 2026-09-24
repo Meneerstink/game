@@ -820,6 +820,35 @@ out-packets:
         - name: data
           type: BYTES
 
+  # Clan channel / clan settings (owner 2026-09-24 "clanchat ... volledig werkend maken"): bodies prebuilt by ClanChat (plugins).
+  - message: gg.rsmod.game.message.impl.ClanChannelFullMessage
+    type: VARIABLE_SHORT
+    opcode: 7
+    structure:
+      - name: body
+        type: BYTES
+
+  - message: gg.rsmod.game.message.impl.ClanSettingsFullMessage
+    type: VARIABLE_SHORT
+    opcode: 118
+    structure:
+      - name: body
+        type: BYTES
+
+  - message: gg.rsmod.game.message.impl.MessageClanChannelMessage
+    type: VARIABLE_BYTE
+    opcode: 138
+    structure:
+      - name: body
+        type: BYTES
+
+  - message: gg.rsmod.game.message.impl.QuickChatClanChannelOutMessage
+    type: VARIABLE_BYTE
+    opcode: 131
+    structure:
+      - name: body
+        type: BYTES
+
   # Quick chat (owner 2026-09-18). Each body is prebuilt by the handler (QuickChatHandlers / FriendsChat.talkQuickChat).
   - message: gg.rsmod.game.message.impl.QuickChatPublicOutMessage
     type: VARIABLE_BYTE
@@ -1571,6 +1600,28 @@ in-packets:
   - message: gg.rsmod.game.message.impl.ClanJoinChatLeaveChatMessage
     type: VARIABLE_BYTE
     opcode: 1
+    structure:
+        - name: name
+          type: STRING
+
+  # Friends chat Kick/ban, friend ranks and clan-channel kick (owner 2026-09-24): read by hand in FriendsChatDecoders.
+  - message: gg.rsmod.game.message.impl.FriendsChatKickMessage
+    type: VARIABLE_BYTE
+    opcode: 32
+    structure:
+        - name: name
+          type: STRING
+
+  - message: gg.rsmod.game.message.impl.FriendSetRankMessage
+    type: VARIABLE_BYTE
+    opcode: 41
+    structure:
+        - name: name
+          type: STRING
+
+  - message: gg.rsmod.game.message.impl.ClanChannelKickMessage
+    type: VARIABLE_BYTE
+    opcode: 60
     structure:
         - name: name
           type: STRING

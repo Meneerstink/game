@@ -57,11 +57,11 @@ class UpdateFriendChatChannelFullEncoder : MessageEncoder<UpdateFriendChatChanne
                 if (channel != null) {
                     val members = channel.members()
 
-                    buf.putString(channel.name)
+                    buf.putString(channel.ownerName)
                     buf.put(DataType.BYTE, 0)
                     buf.put(DataType.LONG, Base37.encode(channel.name))
-                    // Only the owner can kick, because only the owner has a rank above guest.
-                    buf.put(DataType.BYTE, FriendsChatRank.OWNER)
+                    // The owner's kick rank from Friends Chat Setup (1108).
+                    buf.put(DataType.BYTE, channel.kickRank)
                     buf.put(DataType.BYTE, minOf(members.size, MAX_MEMBERS))
 
                     members.take(MAX_MEMBERS).forEach { member ->

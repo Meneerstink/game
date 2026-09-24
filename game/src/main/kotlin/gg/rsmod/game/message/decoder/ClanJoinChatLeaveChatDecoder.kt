@@ -10,8 +10,8 @@ import gg.rsmod.net.packet.GamePacketReader
  * Decodes ClientProt `FRIENDS_CHAT_CHANGE`, which the client uses for both joining a friends-chat
  * channel and leaving one (`FriendChat.join` / `FriendChat.leave`).
  *
- * The payload is a length byte followed by the channel-owner name, except on leave, where the
- * client writes the length byte as `0` and no name at all. The declarative structure in
+ * The payload is the channel-owner name, except on leave, where the client sends a zero size and no
+ * name at all. The declarative structure in
  * `data/packets.yml` has no way to say "this field is only present sometimes", and reading a string
  * off an empty buffer would throw, so the payload is read here instead.
  *
@@ -23,8 +23,10 @@ class ClanJoinChatLeaveChatDecoder : MessageDecoder<ClanJoinChatLeaveChatMessage
         structure: MessageStructure,
         reader: GamePacketReader,
     ): ClanJoinChatLeaveChatMessage {
-        val length = reader.getUnsigned(DataType.BYTE).toInt()
-        val name = if (length > 0 && reader.readableBytes > 0) reader.string else ""
+        // The var-byte size header is consumed by GamePacketDecoder, so the payload is only the name (none on leave). Reading a
+        // "length" byte here used to eat the first letter of every channel name ("The channel you tried to join does not exist")
+        // and threw on the empty leave payload.
+        val name = if (reader.readableBytes > 0) reader.string else ""
         return ClanJoinChatLeaveChatMessage(name)
     }
 

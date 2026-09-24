@@ -45,7 +45,7 @@ class ClanJoinChatLeaveHandler : MessageHandler<ClanJoinChatLeaveChatMessage> {
         }
 
         if (world.friendsChat.join(player, owner)) {
-            player.writeMessage("Now talking in friends chat channel $owner.")
+            player.writeMessage("Now talking in friends chat channel ${world.friendsChat.channelOf(player)?.name ?: owner}.")
             player.writeMessage("To talk, start each line of chat with the / symbol.")
         }
     }

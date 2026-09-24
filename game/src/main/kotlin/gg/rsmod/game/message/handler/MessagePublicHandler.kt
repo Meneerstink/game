@@ -42,6 +42,28 @@ class MessagePublicHandler : MessageHandler<MessagePublicMessage> {
          * through MESSAGE_PUBLIC, and the leading '/' is what marks a line as belonging to the
          * channel instead of to the players standing nearby.
          */
+        // "///" talks in the clan channel the player listens to as a guest.
+        if (unpacked.startsWith("///")) {
+            val player = client as Player
+            val text = formatSentence(unpacked.substring(3))
+            val hook = world.socialHooks.clanGuestTalk
+            if (text.isNotBlank() && (hook == null || !hook(player, text))) {
+                player.writeMessage("You are not in a guest clan channel.")
+            }
+            return
+        }
+
+        // "//" talks in the player's clan channel (the clan plugin's SocialHooks.clanTalk); a single "/" is the friends chat.
+        if (unpacked.startsWith("//")) {
+            val player = client as Player
+            val text = formatSentence(unpacked.substring(2))
+            val hook = world.socialHooks.clanTalk
+            if (text.isNotBlank() && (hook == null || !hook(player, text))) {
+                player.writeMessage("You are not in a clan channel.")
+            }
+            return
+        }
+
         if (unpacked.startsWith("/")) {
             val player = client as Player
             val text = formatSentence(unpacked.substring(1))

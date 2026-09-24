@@ -1089,7 +1089,8 @@ abstract class Player(
                     added = added,
                     username = friend,
                     world = worldId,
-                    friendChatRank = 0,
+                    // The rank this player gave the friend in Friends Chat Setup (1108), shown beside the name in the friend list.
+                    friendChatRank = world.friendsChat.friendRank(username, friend),
                 ),
             )
         }

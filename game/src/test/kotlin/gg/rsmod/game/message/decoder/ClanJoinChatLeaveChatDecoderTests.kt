@@ -11,8 +11,10 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 
 /**
- * The payload shapes here are the ones the client actually writes in `FriendChat`: a join is
- * `p1(pjstrlen(name))` followed by `pjstr(name)`, and a leave is a lone `p1(0)` with no name at all.
+ * The client writes `p1(pjstrlen(name))` then `pjstr(name)` for a join and a lone `p1(0)` for a leave (`FriendChat`). That first
+ * byte is the var-byte frame header - `ClientMessage.create` writes none of its own, as MESSAGE_PUBLIC's `p1(0)` + `psize1` shows -
+ * and `GamePacketDecoder.decodeLength` consumes it, so the decoder sees only the name (join) or nothing (leave). The old decoder
+ * read that byte again, cutting the first letter off every channel name (owner 2026-09-24: friends chat "werkt niet").
  *
  * The optional trailing field is the whole reason this decoder overrides the declarative path -
  * reading a string off an empty buffer throws, and an exception here would kill the channel the
@@ -41,11 +43,11 @@ class ClanJoinChatLeaveChatDecoderTests {
             reader = GamePacketReader(GamePacket(OPCODE, PacketType.VARIABLE_BYTE, Unpooled.wrappedBuffer(payload))),
         )
 
-    /** `p1(Packet.pjstrlen(name))` - the name plus its terminator - then `pjstr(name)`. */
-    private fun join(name: String): ByteArray = byteArrayOf((name.length + 1).toByte()) + name.toByteArray() + 0
+    /** The payload after framing: `pjstr(name)`. */
+    private fun join(name: String): ByteArray = name.toByteArray() + 0
 
-    /** `p1(0)`, and nothing else. */
-    private fun leave(): ByteArray = byteArrayOf(0)
+    /** A leave's frame has size 0: an empty payload. */
+    private fun leave(): ByteArray = byteArrayOf()
 
     private companion object {
         private const val OPCODE = 1

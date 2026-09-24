@@ -28,3 +28,15 @@ class QuickChatPrivateOutMessage(body: ByteArray) : RawPayloadMessage(body)
 
 /** ServerProt MESSAGE_QUICKCHAT_PRIVATE_ECHO (97): recipient name, payload. */
 class QuickChatPrivateEchoOutMessage(body: ByteArray) : RawPayloadMessage(body)
+
+/** ServerProt CLANCHANNEL_FULL (7, var-short): `g1 affined` then the ClanChannel body, or nothing more to clear it. */
+class ClanChannelFullMessage(body: ByteArray) : RawPayloadMessage(body)
+
+/** ServerProt CLANSETTINGS_FULL (118, var-short): `g1 affined` then the ClanSettings body, or nothing more to clear it. */
+class ClanSettingsFullMessage(body: ByteArray) : RawPayloadMessage(body)
+
+/** ServerProt MESSAGE_CLANCHANNEL (138, var-byte): one line of clan-channel chat. */
+class MessageClanChannelMessage(body: ByteArray) : RawPayloadMessage(body)
+
+/** ServerProt MESSAGE_QUICKCHAT_CLANCHANNEL (131, var-byte): one quick-chat phrase in a clan channel. */
+class QuickChatClanChannelOutMessage(body: ByteArray) : RawPayloadMessage(body)
