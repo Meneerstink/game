@@ -25,8 +25,8 @@ import gg.rsmod.plugins.content.mechanics.pvp.AreaState
  * - "Ancient Magicks": "Unlike the standard spells, Ancient Magicks combat spells can only be autocast with particular Magic weapons" -
  *   ancient staff, ancient sceptres, Blue moon spear, master wand, kodai wand, dragon hunter wand, nightmare / eldritch / volatile
  *   nightmare staff, Thammaron's / Accursed sceptre (a) (not on this server), Ahrim's staff only with the amulet of the damned (not on
- *   this server, so Ahrim's staff never autocasts Ancient Magicks here). Zuriel's staff is a 667 weapon built for Ancient Magicks (its
- *   Miasmic spells need it), so it keeps Ancient autocast.
+ *   this server, so Ahrim's staff never autocasts Ancient Magicks here). Zuriel's staff is not in the OSRS table: it autocasts only
+ *   its own Miasmic spells (owner 2026-09-24: "not all staffs have ancient, use the OSRS wiki").
  * - "God spells": Saradomin Strike needs a Saradomin staff or staff of light; Claws of Guthix a Guthix staff, void knight mace or
  *   staff of balance; Flames of Zamorak a Zamorak staff, staff of the dead or toxic staff of the dead - to cast and to autocast.
  * - Iban Blast / Magic Dart / Miasmic spells: the weapons in [CombatSpell.requiredWeapons].
@@ -43,13 +43,31 @@ object AutocastWeapons {
             CombatSpell.FLAMES_OF_ZAMORAK to setOf(Items.ZAMORAK_STAFF, Items.STAFF_OF_THE_DEAD, Items.TOXIC_STAFF_UNCHARGED, Items.TOXIC_STAFF_OF_THE_DEAD),
         )
 
-    /** Weapons that may autocast Ancient Magicks. */
+    /**
+     * Weapons that may autocast Ancient Magicks - exactly the OSRS Wiki "Autocast" Ancient Magicks table (read 2026-09-24) for the
+     * weapons this server has. Zuriel's staff is not in that table: it autocasts only its own Miasmic spells (their required weapon).
+     */
     val ANCIENT_WEAPONS: Set<Int> =
         setOf(
             Items.ANCIENT_STAFF, Items.MASTER_WAND, Items.KODAI_WAND, Items.DRAGON_HUNTER_WAND,
             Items.NIGHTMARE_STAFF, Items.ELDRITCH_NIGHTMARE_STAFF, Items.VOLATILE_NIGHTMARE_STAFF, Items.BLUE_MOON_SPEAR,
-            Items.ZURIELS_STAFF, Items.ZURIELS_STAFF_DEG, Items.CORRUPT_ZURIELS_STAFF, Items.CORRUPT_ZURIELS_STAFF_DEG,
         ) + AncientSceptres.ALL
+
+    /**
+     * OSRS Wiki "Autocast", standard spellbook: ordinary staves, battlestaves and wands autocast only the elemental spells; the
+     * "Additional spells" column lists who may also autocast Crumble Undead (Magic Dart, Iban Blast and the god spells already need
+     * their weapon to be cast at all - [requiredWeapons]).
+     */
+    val CRUMBLE_UNDEAD_WEAPONS: Set<Int> =
+        setOf(
+            Items.VOID_KNIGHT_MACE, Items.SLAYERS_STAFF, Items.STAFF_OF_THE_DEAD, Items.TOXIC_STAFF_UNCHARGED, Items.TOXIC_STAFF_OF_THE_DEAD,
+            Items.STAFF_OF_BALANCE,
+        ) + STAFF_OF_LIGHT
+
+    /** Void knight mace and Slayer's staff: "From the standard spellbook, can only autocast Wave spells and Surge spells" (+ their additional spells). */
+    private val WAVE_SURGE_ONLY: Set<Int> = setOf(Items.VOID_KNIGHT_MACE, Items.SLAYERS_STAFF)
+
+    private fun isWaveOrSurge(spell: CombatSpell): Boolean = spell.name.endsWith("_WAVE") || spell.name.endsWith("_SURGE")
 
     /** Magic weapons whose 667 weapon class is not a staff (they still use the magic weapon rules). */
     private val NON_STAFF_MAGIC_WEAPONS: Set<Int> = setOf(Items.VOID_KNIGHT_MACE, Items.BLUE_MOON_SPEAR)
@@ -104,7 +122,13 @@ object AutocastWeapons {
         if (spell.autoCastId <= 0 || spell.componentId == -1) return "That spell can't be autocast."
         val required = requiredWeapons(spell)
         if (required.isNotEmpty() && definition.id !in required) return requiredWeaponMessage(spell)
-        if (spell.interfaceId == Autocast.ANCIENT_BOOK && definition.id !in ANCIENT_WEAPONS) return "You can't autocast Ancient Magicks with this weapon."
+        if (spell.interfaceId == Autocast.ANCIENT_BOOK) {
+            return if (definition.id in ANCIENT_WEAPONS || definition.id in required) null else "You can't autocast Ancient Magicks with this weapon."
+        }
+        if (spell == CombatSpell.CRUMBLE_UNDEAD && definition.id !in CRUMBLE_UNDEAD_WEAPONS) return "You can't autocast that spell with this weapon."
+        if (definition.id in WAVE_SURGE_ONLY && required.isEmpty() && spell != CombatSpell.CRUMBLE_UNDEAD && !isWaveOrSurge(spell)) {
+            return "You can't autocast that spell with this weapon."
+        }
         return null
     }
 }
@@ -331,20 +355,26 @@ object Autocast {
         refreshCombatTab(player)
     }
 
-    /** The 884 Spell box: shown only for an autocast weapon; icon, shield marker and highlight follow the state. */
+    /**
+     * OSRS Combat Options for a magic weapon: styles in the left column, the defensive and the normal "Spell" box in the right column.
+     * The active box is highlighted; both show the chosen spell's icon. Any other weapon gets the original 667 tab back.
+     */
     fun refreshCombatTab(player: Player) {
         val l = AutocastInterfaceLayout
         val show = AutocastWeapons.isAutocastWeapon(weaponDef(player))
         player.setComponentHidden(l.COMBAT_TAB, l.BOX_LAYER, !show)
+        (if (show) l.STAFF_POSITIONS else l.ORIGINAL_POSITIONS).forEach { (component, xy) ->
+            player.setComponentPosition(l.COMBAT_TAB, component, xy.first, xy.second)
+        }
         if (!show) return
-        player.setInterfaceEvents(l.COMBAT_TAB, l.BOX_BUTTON, -1..-1, OP1 or OP2)
+        player.setInterfaceEvents(l.COMBAT_TAB, l.DEFENSIVE_BUTTON, -1..-1, OP1)
+        player.setInterfaceEvents(l.COMBAT_TAB, l.BOX_BUTTON, -1..-1, OP1)
         val spell = selected(player)
-        val mode = mode(player)
-        val on = mode != Mode.OFF && spell != null
-        player.setComponentSprite(l.COMBAT_TAB, l.BOX_BUTTON, if (on) l.SPRITE_BOX_SELECTED else l.SPRITE_BOX)
+        val mode = if (spell == null) Mode.OFF else mode(player)
+        player.setComponentSprite(l.COMBAT_TAB, l.DEFENSIVE_BUTTON, if (mode == Mode.DEFENSIVE) l.SPRITE_BOX_SELECTED else l.SPRITE_BOX)
+        player.setComponentSprite(l.COMBAT_TAB, l.BOX_BUTTON, if (mode == Mode.STANDARD) l.SPRITE_BOX_SELECTED else l.SPRITE_BOX)
+        player.setComponentSprite(l.COMBAT_TAB, l.DEFENSIVE_ICON, spell?.uniqueId ?: -1)
         player.setComponentSprite(l.COMBAT_TAB, l.BOX_ICON, spell?.uniqueId ?: -1)
-        player.setComponentHidden(l.COMBAT_TAB, l.BOX_SHIELD, !(on && mode == Mode.DEFENSIVE))
-        player.setComponentText(l.COMBAT_TAB, l.BOX_LABEL, if (on && mode == Mode.DEFENSIVE) "Defensive" else "Spell")
     }
 
     /** Opens the selection panel in the combat tab, listing only what the wielded weapon may autocast in the open spellbook. */
@@ -408,7 +438,6 @@ object Autocast {
 
     private val logger = org.apache.logging.log4j.LogManager.getLogger("Autocast")
     private const val OP1 = 2
-    private const val OP2 = 4
 
     private fun trace(player: Player, text: String) {
         if (AutocastPolicy.debug) logger.info("[autocast] {}: {}", player.username, text)

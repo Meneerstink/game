@@ -7,21 +7,38 @@ package gg.rsmod.game.tools.importer
  * OSRS reference (OSRS Wiki "Autocast"): autocast is chosen on the Combat Options interface - a "Spell" box (offensive) and the same
  * box with a shield (defensive) open a spell-selection panel in the combat tab that lists only what the wielded weapon may autocast.
  *
- * - Combat tab 884 gets one extra box in the empty fourth style slot (layer 10, box 99,58 70x46): the 667 style script 1142 hides
- *   slot 14 for every three-style weapon (staves, bladed staves) and never touches the appended components 32..36. They are baked
- *   hidden, so every other weapon sees exactly the old tab; the server shows them only while an autocast-capable weapon is wielded.
+ * - OSRS Combat Options with a magic weapon (owner reference screenshots 2026-09-24): the three styles in the left column, and in the
+ *   right column the defensive "Spell" box (shield + spell icon) above the normal "Spell" box; the active one is highlighted and both
+ *   show the chosen spell's icon.
+ * - Combat tab 884 gets the right-column layer 32 with both boxes (components 32..39, baked hidden, so every other weapon sees exactly
+ *   the old tab). While an autocast-capable weapon is wielded the server shows it and moves the style slots 11-13, Auto Retaliate and
+ *   the special bar with IF_SETPOSITION ([STAFF_POSITIONS]); any other weapon gets the original 667 positions back
+ *   ([ORIGINAL_POSITIONS]). The 667 style scripts 1142/1143 only hide/label the slots and never set positions.
  * - Interface [SELECT_INTERFACE] is the selection panel, opened in the combat tab slot in place of 884.
  */
 object AutocastInterfaceLayout {
     const val COMBAT_TAB = 884
     /** Existing 884 file count; the tool refuses to run if the cache no longer matches it. */
     const val COMBAT_TAB_ORIGINAL_COMPONENTS = 32
+    /** 884 file count written by the first (single-box) version of this tool. */
+    const val COMBAT_TAB_SINGLE_BOX_COMPONENTS = 37
     const val BOX_LAYER = 32
-    const val BOX_BUTTON = 33
-    const val BOX_ICON = 34
-    const val BOX_SHIELD = 35
-    const val BOX_LABEL = 36
-    const val COMBAT_TAB_COMPONENTS = 37
+    const val DEFENSIVE_BUTTON = 33
+    const val DEFENSIVE_SHIELD = 34
+    const val DEFENSIVE_ICON = 35
+    const val DEFENSIVE_LABEL = 36
+    const val BOX_BUTTON = 37
+    const val BOX_ICON = 38
+    const val BOX_LABEL = 39
+    const val COMBAT_TAB_COMPONENTS = 40
+
+    /** Combat tab components the staff layout moves: component -> (x, y) inside its parent. */
+    const val SPECIAL_BAR = 3
+    const val AUTO_RETALIATE = 15
+    val ORIGINAL_POSITIONS: Map<Int, Pair<Int, Int>> =
+        mapOf(11 to (16 to 5), 12 to (100 to 5), 13 to (16 to 58), AUTO_RETALIATE to (17 to 112), SPECIAL_BAR to (19 to 205))
+    val STAFF_POSITIONS: Map<Int, Pair<Int, Int>> =
+        mapOf(11 to (16 to 3), 12 to (16 to 50), 13 to (16 to 97), AUTO_RETALIATE to (17 to 147), SPECIAL_BAR to (19 to 234))
 
     /** 667 style-box sprites (CS2 1134: 654 = selected style, 653 = not selected). */
     const val SPRITE_BOX = 653
@@ -88,6 +105,16 @@ object AutocastInterfaceImportTool {
     private const val PITCH_X = 40
     private const val PITCH_Y = 30
 
+    /** 884:32..36 as written by the single-box version (tx-20260924-011513); only exactly these may be replaced by the two-box layout. */
+    private val SINGLE_BOX_SHA1 =
+        mapOf(
+            32 to "e79dbde5b768c63718d92ff29ec0e13455b53136",
+            33 to "333150ae9d8d4218074ec5fb148f2f064902d737",
+            34 to "bc40e0a875c0aeff63d8437b8795d8c2c903b4b2",
+            35 to "404adfdc0df6def2de3e78a1829f76ea556663e3",
+            36 to "c8ebefca392942bb12f14fcf59e40ebc1b5b24ff",
+        )
+
     private fun layer(id: Int, x: Int, y: Int, w: Int, h: Int, parent: Int, hidden: Boolean = false) =
         LootKeyInterfaceImportTool.Component(id, TYPE_LAYER, x, y, w, h, parent, hidden = hidden)
 
@@ -100,12 +127,18 @@ object AutocastInterfaceImportTool {
     /** Components appended to combat tab 884 (children of its style layer 10). */
     fun combatTabComponents(fonts: LootKeyInterfaceImportTool.Fonts): List<LootKeyInterfaceImportTool.Component> {
         val l = AutocastInterfaceLayout
+        // Right column beside the moved style slots (layer 10 rows 3..143): defensive box on top, normal box below, centred.
+        val defY = 23
+        val spellY = defY + 48
         return listOf(
-            layer(l.BOX_LAYER, 99, 58, 70, 46, parent = 10, hidden = true),
-            graphic(l.BOX_BUTTON, 0, 0, 70, 46, l.BOX_LAYER, l.SPRITE_BOX, ops = listOf("Choose spell", "Choose defensive spell")),
-            graphic(l.BOX_ICON, 23, 5, ICON, ICON, l.BOX_LAYER, -1),
-            graphic(l.BOX_SHIELD, 50, 1, 20, 20, l.BOX_LAYER, l.SPRITE_SHIELD, hidden = true),
-            text(l.BOX_LABEL, 0, 30, 70, 13, l.BOX_LAYER, fonts.p11, "Spell"),
+            layer(l.BOX_LAYER, 100, 3, 70, 140, parent = 10, hidden = true),
+            graphic(l.DEFENSIVE_BUTTON, 0, defY, 70, 46, l.BOX_LAYER, l.SPRITE_BOX, ops = listOf("Choose spell")),
+            graphic(l.DEFENSIVE_SHIELD, 6, defY + 6, 20, 20, l.BOX_LAYER, l.SPRITE_SHIELD),
+            graphic(l.DEFENSIVE_ICON, 34, defY + 4, ICON, ICON, l.BOX_LAYER, -1),
+            text(l.DEFENSIVE_LABEL, 0, defY + 30, 70, 13, l.BOX_LAYER, fonts.p11, "Spell"),
+            graphic(l.BOX_BUTTON, 0, spellY, 70, 46, l.BOX_LAYER, l.SPRITE_BOX, ops = listOf("Choose spell")),
+            graphic(l.BOX_ICON, 23, spellY + 4, ICON, ICON, l.BOX_LAYER, -1),
+            text(l.BOX_LABEL, 0, spellY + 30, 70, 13, l.BOX_LAYER, fonts.p11, "Spell"),
         )
     }
 
@@ -147,7 +180,7 @@ object AutocastInterfaceImportTool {
                             val index = lib.index(INDEX_INTERFACES)
                             val tab = index.archive(l.COMBAT_TAB) ?: error("$path: interface ${l.COMBAT_TAB} missing")
                             val ids = tab.fileIds().toList()
-                            require(ids == (0 until l.COMBAT_TAB_ORIGINAL_COMPONENTS).toList() || ids == (0 until l.COMBAT_TAB_COMPONENTS).toList()) {
+                            require(listOf(l.COMBAT_TAB_ORIGINAL_COMPONENTS, l.COMBAT_TAB_SINGLE_BOX_COMPONENTS, l.COMBAT_TAB_COMPONENTS).any { ids == (0 until it).toList() }) {
                                 "$path: interface ${l.COMBAT_TAB} has files $ids - not the expected 667 layout, refusing"
                             }
                             val existing = index.archive(l.SELECT_INTERFACE)
@@ -171,7 +204,10 @@ object AutocastInterfaceImportTool {
         sprites.forEach { (entry, sprite) -> println("SPRITE ${entry.book}:${entry.bookComponent} ${entry.name} -> $sprite") }
         val mutations = mutableListOf<CacheMutation>()
         combatTabComponents(fonts).forEach { c ->
-            mutations += CacheMutation(INDEX_INTERFACES, l.COMBAT_TAB, c.id, LootKeyInterfaceImportTool.encode(c), "interface ${l.COMBAT_TAB}:${c.id} autocast box")
+            mutations += CacheMutation(
+                INDEX_INTERFACES, l.COMBAT_TAB, c.id, LootKeyInterfaceImportTool.encode(c), "interface ${l.COMBAT_TAB}:${c.id} autocast box",
+                expectedCurrentSha1 = SINGLE_BOX_SHA1[c.id],
+            )
         }
         selectComponents(fonts, sprites).forEach { c ->
             mutations += CacheMutation(INDEX_INTERFACES, l.SELECT_INTERFACE, c.id, LootKeyInterfaceImportTool.encode(c), "interface ${l.SELECT_INTERFACE}:${c.id} autocast select")
@@ -183,7 +219,7 @@ object AutocastInterfaceImportTool {
         errors.forEach { println("  BLOCKED: $it") }
         check(errors.isEmpty()) { "preflight blocked; nothing written" }
         if (!apply) {
-            println("DRY RUN: pass --apply to write 884:${l.BOX_LAYER}..${l.BOX_LABEL} and interface ${l.SELECT_INTERFACE}")
+            println("DRY RUN: pass --apply to write 884:${l.BOX_LAYER}..${l.COMBAT_TAB_COMPONENTS - 1} and interface ${l.SELECT_INTERFACE}")
             return
         }
         val applied = transaction.apply(plan)

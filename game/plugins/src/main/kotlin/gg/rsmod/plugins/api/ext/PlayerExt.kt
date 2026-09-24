@@ -328,6 +328,16 @@ fun Player.setComponentHidden(
     write(IfSetHideMessage(hash = ((interfaceId shl 16) or component), hidden = hidden))
 }
 
+/** Moves a component inside its parent (the client keeps the position until the interface is reopened). */
+fun Player.setComponentPosition(
+    interfaceId: Int,
+    component: Int,
+    x: Int,
+    y: Int,
+) {
+    write(gg.rsmod.game.message.impl.IfSetPositionMessage(hash = ((interfaceId shl 16) or component), x = x, y = y))
+}
+
 fun Player.setComponentSprite(
     interfaceId: Int,
     component: Int,

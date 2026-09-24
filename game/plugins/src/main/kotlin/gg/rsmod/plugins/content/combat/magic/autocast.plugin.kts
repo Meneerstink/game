@@ -1,4 +1,4 @@
-package gg.rsmod.plugins.content.combat.magic
+﻿package gg.rsmod.plugins.content.combat.magic
 
 import gg.rsmod.game.tools.importer.AutocastInterfaceLayout
 
@@ -6,7 +6,6 @@ import gg.rsmod.game.tools.importer.AutocastInterfaceLayout
  * OSRS Combat Options autocast (see [Autocast]). The client sends the op it was clicked with as its opcode: 61 = op1, 64 = op2.
  */
 private val OP1 = 61
-private val OP2 = 64
 
 on_login {
     Autocast.migrateLegacy(player)
@@ -27,10 +26,11 @@ on_interface_open(interfaceId = AutocastInterfaceLayout.COMBAT_TAB) {
 }
 
 on_button(interfaceId = AutocastInterfaceLayout.COMBAT_TAB, component = AutocastInterfaceLayout.BOX_BUTTON) {
-    when (player.getInteractingOpcode()) {
-        OP1 -> Autocast.openSelection(player, Autocast.Mode.STANDARD)
-        OP2 -> Autocast.openSelection(player, Autocast.Mode.DEFENSIVE)
-    }
+    if (player.getInteractingOpcode() == OP1) Autocast.openSelection(player, Autocast.Mode.STANDARD)
+}
+
+on_button(interfaceId = AutocastInterfaceLayout.COMBAT_TAB, component = AutocastInterfaceLayout.DEFENSIVE_BUTTON) {
+    if (player.getInteractingOpcode() == OP1) Autocast.openSelection(player, Autocast.Mode.DEFENSIVE)
 }
 
 (AutocastInterfaceLayout.SELECT_FIRST_SPELL..AutocastInterfaceLayout.SELECT_CANCEL).forEach { component ->

@@ -574,6 +574,21 @@ out-packets:
       - name: hash
         type: INT
 
+  # IF_SETPOSITION (client ServerProt 104, size 8): y g2s_alt1, x g2s_alt1, idAndSlot g4_alt3.
+  - message: gg.rsmod.game.message.impl.IfSetPositionMessage
+    type: FIXED
+    opcode: 104
+    structure:
+      - name: pos_y
+        order: LITTLE
+        type: SHORT
+      - name: pos_x
+        order: LITTLE
+        type: SHORT
+      - name: hash
+        order: INVERSED_MIDDLE
+        type: INT
+
   - message: gg.rsmod.game.message.impl.IfSetScrollVerticalMessage
     type: FIXED
     opcode: 8

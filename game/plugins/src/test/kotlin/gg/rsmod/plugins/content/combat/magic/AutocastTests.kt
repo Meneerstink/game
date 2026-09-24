@@ -99,7 +99,12 @@ class AutocastTests {
         val air = def(Items.STAFF_OF_AIR)
         assertNull(AutocastWeapons.incompatibility(air, CombatSpell.WIND_STRIKE))
         assertNull(AutocastWeapons.incompatibility(air, CombatSpell.FIRE_SURGE))
-        assertNull(AutocastWeapons.incompatibility(air, CombatSpell.CRUMBLE_UNDEAD))
+        assertNotNull(AutocastWeapons.incompatibility(air, CombatSpell.CRUMBLE_UNDEAD), "OSRS Wiki: plain staves autocast only elemental spells")
+        assertNull(AutocastWeapons.incompatibility(def(Items.SLAYERS_STAFF), CombatSpell.CRUMBLE_UNDEAD))
+        assertNull(AutocastWeapons.incompatibility(def(Items.SLAYERS_STAFF), CombatSpell.FIRE_WAVE))
+        assertNotNull(AutocastWeapons.incompatibility(def(Items.SLAYERS_STAFF), CombatSpell.FIRE_BOLT), "Slayer's staff: only Wave and Surge")
+        assertNull(AutocastWeapons.incompatibility(def(Items.VOID_KNIGHT_MACE), CombatSpell.CLAWS_OF_GUTHIX))
+        assertNotNull(AutocastWeapons.incompatibility(def(Items.VOID_KNIGHT_MACE), CombatSpell.WIND_STRIKE), "Void knight mace: only Wave and Surge")
         assertNotNull(AutocastWeapons.incompatibility(air, CombatSpell.ICE_BARRAGE), "a plain staff cannot autocast Ancient Magicks")
         assertNotNull(AutocastWeapons.incompatibility(air, CombatSpell.IBAN_BLAST))
         assertNotNull(AutocastWeapons.incompatibility(air, CombatSpell.MAGIC_DART))
@@ -114,7 +119,7 @@ class AutocastTests {
         assertNotNull(AutocastWeapons.incompatibility(def(Items.STAFF_OF_THE_DEAD), CombatSpell.ICE_BARRAGE))
         assertNotNull(AutocastWeapons.incompatibility(def(Items.HARMONISED_NIGHTMARE_STAFF), CombatSpell.ICE_BARRAGE))
         assertNull(AutocastWeapons.incompatibility(def(Items.HARMONISED_NIGHTMARE_STAFF), CombatSpell.FIRE_SURGE))
-        assertNull(AutocastWeapons.incompatibility(def(Items.ZURIELS_STAFF), CombatSpell.ICE_BARRAGE))
+        assertNotNull(AutocastWeapons.incompatibility(def(Items.ZURIELS_STAFF), CombatSpell.ICE_BARRAGE), "Zuriel's staff is not in the OSRS Ancient Magicks table")
         assertNull(AutocastWeapons.incompatibility(def(Items.ZURIELS_STAFF), CombatSpell.MIASMIC_BARRAGE))
         assertNotNull(AutocastWeapons.incompatibility(def(Items.ANCIENT_STAFF), CombatSpell.MIASMIC_BARRAGE))
         assertFalse(AutocastWeapons.isAutocastWeapon(def(Items.TRIDENT_OF_THE_SEAS)), "powered staves never autocast")
@@ -132,7 +137,7 @@ class AutocastTests {
                 if (AutocastWeapons.incompatibility(weapon, spell) == null) {
                     val required = AutocastWeapons.requiredWeapons(spell)
                     assertTrue(required.isEmpty() || weapon.id in required, "${weapon.name} autocasts ${spell.name} without its weapon")
-                    if (spell.interfaceId == Autocast.ANCIENT_BOOK) assertTrue(weapon.id in AutocastWeapons.ANCIENT_WEAPONS, "${weapon.name} autocasts ${spell.name}")
+                    if (spell.interfaceId == Autocast.ANCIENT_BOOK && required.isEmpty()) assertTrue(weapon.id in AutocastWeapons.ANCIENT_WEAPONS, "${weapon.name} autocasts ${spell.name}")
                 }
             }
         }
