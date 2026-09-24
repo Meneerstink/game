@@ -394,6 +394,7 @@ enum class PickpocketTarget(
                 Npcs.AGNAR,
                 Npcs.BORROKAR,
                 Npcs.FREIDIR,
+                Npcs.FREYGERD, // 1310: Void 667 pickpocket table "freygerd_rellekka" type fremmennik
                 Npcs.INGA,
                 Npcs.JENNELLA,
                 Npcs.LANZIG,
