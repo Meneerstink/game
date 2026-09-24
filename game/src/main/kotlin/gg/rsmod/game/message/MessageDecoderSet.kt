@@ -84,6 +84,7 @@ class MessageDecoderSet {
         put(gg.rsmod.game.message.impl.FriendsChatKickMessage::class.java, gg.rsmod.game.message.decoder.FriendsChatKickDecoder(), gg.rsmod.game.message.handler.FriendsChatKickHandler(), structures)
         put(gg.rsmod.game.message.impl.FriendSetRankMessage::class.java, gg.rsmod.game.message.decoder.FriendSetRankDecoder(), gg.rsmod.game.message.handler.FriendSetRankHandler(), structures)
         put(gg.rsmod.game.message.impl.ClanChannelKickMessage::class.java, gg.rsmod.game.message.decoder.ClanChannelKickDecoder(), gg.rsmod.game.message.handler.ClanChannelKickHandler(), structures)
+        put(gg.rsmod.game.message.impl.ClanBanFromChannelMessage::class.java, gg.rsmod.game.message.decoder.ClanBanFromChannelDecoder(), gg.rsmod.game.message.handler.ClanBanFromChannelHandler(), structures)
         put(MessageQuickChatPublicMessage::class.java, MessageQuickChatPublicDecoder(), MessageQuickChatPublicHandler(), structures)
         put(MessageQuickChatPrivateMessage::class.java, MessageQuickChatPrivateDecoder(), MessageQuickChatPrivateHandler(), structures)
         

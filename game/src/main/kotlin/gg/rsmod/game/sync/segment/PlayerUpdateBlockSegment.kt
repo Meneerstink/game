@@ -17,7 +17,11 @@ import kotlin.math.max
 class PlayerUpdateBlockSegment(
     val other: Player,
     private val newPlayer: Boolean,
+    /** The player this update is written for (the CLANMATE block is relative to them). */
+    private val observer: Player? = null,
 ) : SynchronizationSegment {
+    private val clanmate: Boolean by lazy { observer != null && observer !== other && other.world.socialHooks.isClanmate?.invoke(observer, other) == true }
+
     override fun encode(buf: GamePacketBuilder) {
         var mask = other.blockBuffer.blockValue()
         val blocks = other.world.playerUpdateBlocks
@@ -44,6 +48,10 @@ class PlayerUpdateBlockSegment(
             }
         }
 
+        // A player coming into view carries the observer's clanmate flag (only when set: the client's default is false).
+        val forceClanmate = newPlayer && clanmate
+        if (forceClanmate) mask = mask or blocks.updateBlocks[UpdateBlockType.CLANMATE]!!.bit
+
         if (mask >= 0x100) {
             mask = mask or blocks.updateBlockExcessMask
         }
@@ -66,6 +74,7 @@ class PlayerUpdateBlockSegment(
                     UpdateBlockType.FACE_TILE -> forceFaceTile || forceFace != null
                     UpdateBlockType.FACE_PAWN -> forceFacePawn
                     UpdateBlockType.APPEARANCE -> newPlayer
+                    UpdateBlockType.CLANMATE -> forceClanmate
                     else -> false
                 }
             if (other.hasBlock(blockType) || force) {
@@ -82,6 +91,11 @@ class PlayerUpdateBlockSegment(
         val blocks = other.world.playerUpdateBlocks
         val renderAnim = other.appearance.renderAnim
         when (blockType) {
+            UpdateBlockType.CLANMATE -> {
+                val structure = blocks.updateBlocks[blockType]!!.values
+                buf.put(structure[0].type, structure[0].order, structure[0].transformation, if (clanmate) 1 else 0)
+            }
+
             UpdateBlockType.FORCE_CHAT -> {
                 // NOTE(Tom): do not need the structure since this value is always
                 // written as a string.

@@ -60,6 +60,41 @@ class ClanPacketTests {
     }
 
     @Test
+    fun `clan settings carry the ban list and the Clan Settings extra settings`() {
+        val c =
+            Clan("Deadmen").apply {
+                members["Zed"] = ClanRank.OWNER
+                members["Abe"] = ClanRank.ORGANISER
+                bans += "Griefer"
+                guestsCanTalk = true
+                motto = "Death to all"
+                timeZone = 60
+                recruiting = true
+                worldId = 3
+            }
+        val p = In(Clans.encodeSettings(c, affined = true, update = 1))
+        p.g1(); p.g1(); p.g1(); p.g4(); p.g4()
+        assertEquals(2, p.g2())
+        assertEquals(1, p.g1(), "banned count")
+        p.gjstr()
+        p.g1()
+        assertEquals(-1, p.g1b(), "guests may talk: rankTalk -1")
+        p.g1b(); p.g1b(); p.g1b()
+        val names = (0 until 2).map { p.fastgstr()!!.also { p.g1b(); p.g4() } }
+        assertEquals(listOf("Abe", "Zed"), names, "members sorted by name, the index the 1096 member list sends back")
+        assertEquals("Griefer", p.fastgstr())
+        val extras = (0 until p.g2()).associate {
+            val idAndType = p.g4()
+            val id = idAndType and 0x3FFFFFFF
+            id to when (idAndType ushr 30) { 0 -> p.g4(); 1 -> p.g8(); else -> p.gjstr() }
+        }
+        assertEquals(60, extras[0], "time zone")
+        assertEquals("Death to all", extras[1], "motto")
+        assertEquals(1 or (3 shl 2), extras[3], "recruiting | world << 2")
+        assertEquals(0, p.buf.remaining())
+    }
+
+    @Test
     fun `clan channel decodes like ClanChannel`() {
         val p = In(Clans.encodeChannel(clan, listOf("Owner" to 126, "Guest" to Clans.GUEST_RANK), affined = false, version = 9))
         assertEquals(0, p.g1(), "listened")

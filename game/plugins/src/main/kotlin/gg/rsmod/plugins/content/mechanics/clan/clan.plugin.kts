@@ -9,6 +9,8 @@ world.socialHooks.clanTalk = { player, text -> Clans.talk(player, text, guest = 
 world.socialHooks.clanGuestTalk = { player, text -> Clans.talk(player, text, guest = true) }
 world.socialHooks.clanQuickChat = { player, payload -> Clans.talkQuickChat(player, payload) }
 world.socialHooks.clanKick = { player, affined, name -> Clans.kickGuest(player, affined, name) }
+world.socialHooks.isClanmate = { observer, other -> Clans.sameClan(observer, other) }
+world.socialHooks.clanBanFromChannel = { player, name -> Clans.ban(player, name) }
 
 val CLAN_TAB = 1110
 
@@ -24,17 +26,43 @@ on_button(interfaceId = CLAN_TAB, component = 76) {
     Clans.details(player).forEach { player.message(it) }
 }
 
-listOf(85, 95).forEach { component ->
-    on_button(interfaceId = CLAN_TAB, component = component) {
-        if (Clans.clanOf(player) != null) {
-            Clans.connect(player)
-            player.message("Now talking in your clan channel. To talk, start each line of chat with //.")
-            return@on_button
-        }
-        player.queue {
-            val name = inputString("Enter the name of the clan whose channel you want to join as a guest:")
-            if (name.isNotBlank()) Clans.listen(player, name)
-        }
+/* Own clan channel: join / leave; without a clan it offers to found one (Novite ClanCreateDialogue). */
+on_button(interfaceId = CLAN_TAB, component = 85) {
+    if (Clans.clanOf(player) != null) {
+        Clans.toggleOwnChannel(player)
+        return@on_button
+    }
+    player.queue {
+        if (options("Yes, found a clan.", "No thanks.", title = "You are not in a clan. Found one?") != 1) return@queue
+        val name = inputString("Enter the name of your new clan:")
+        if (name.isNotBlank()) Clans.create(player, name)
+    }
+}
+
+/* Another clan's channel as a guest ("///"); clicking again while listening leaves it. */
+on_button(interfaceId = CLAN_TAB, component = 95) {
+    if (Clans.isListening(player)) {
+        Clans.stopListening(player)
+        player.message("You have left the guest clan chat channel.")
+        return@on_button
+    }
+    player.queue {
+        val name = inputString("What clan would you like to enter?")
+        if (name.isNotBlank()) Clans.listen(player, name)
+    }
+}
+
+on_button(interfaceId = CLAN_TAB, component = 100) {
+    player.queue {
+        val name = inputString("Enter the name of the player you wish to ban:")
+        if (name.isNotBlank()) Clans.ban(player, name)
+    }
+}
+
+on_button(interfaceId = CLAN_TAB, component = 105) {
+    player.queue {
+        val name = inputString("Enter the name of the player you wish to unban:")
+        if (name.isNotBlank()) Clans.unban(player, name)
     }
 }
 
@@ -49,26 +77,54 @@ on_button(interfaceId = CLAN_TAB, component = 115) {
 }
 
 on_button(interfaceId = CLAN_TAB, component = 80) {
-    if (Clans.clanOf(player) == null) {
-        player.message("You're not in a clan. Found one with the command: clan create <name>")
-        return@on_button
-    }
-    player.queue {
-        when (options("Who can talk in the channel", "Who can kick guests", "Allow or refuse guests", "Nothing", title = "Clan Settings")) {
-            1 -> rankChoice(this, "Who can talk?")?.let { Clans.setTalkRank(player, it) }
-            2 -> rankChoice(this, "Who can kick guests?")?.let { Clans.setKickRank(player, it) }
-            3 -> when (options("Allow guests", "Refuse guests", title = "Guests in the clan channel")) {
-                1 -> Clans.setAllowGuests(player, true)
-                2 -> Clans.setAllowGuests(player, false)
-            }
-        }
-    }
+    ClanSettingsInterface.open(player)
 }
 
-suspend fun rankChoice(task: QueueTask, title: String): ClanRank? {
-    val ranks = listOf(ClanRank.MEMBER, ClanRank.CORPORAL, ClanRank.GENERAL, ClanRank.ADMIN, ClanRank.DEPUTY)
-    val choice = task.options(*ranks.map { "${it.label}+" }.toTypedArray(), title = title)
-    return ranks.getOrNull(choice - 1)
+/* Clan Settings (1096) - see [ClanSettingsInterface]. */
+val SETTINGS = ClanSettingsInterface.INTERFACE
+on_button(interfaceId = SETTINGS, component = ClanSettingsInterface.MEMBER_ROWS) { ClanSettingsInterface.showMember(player, player.getInteractingSlot()) }
+on_button(interfaceId = SETTINGS, component = ClanSettingsInterface.RANK_OPTIONS) { ClanSettingsInterface.chooseRank(player, player.getInteractingSlot()) }
+on_button(interfaceId = SETTINGS, component = ClanSettingsInterface.JOB_OPTIONS) { ClanSettingsInterface.chooseJob(player, player.getInteractingSlot()) }
+on_button(interfaceId = SETTINGS, component = ClanSettingsInterface.SAVE) { ClanSettingsInterface.save(player) }
+on_button(interfaceId = SETTINGS, component = ClanSettingsInterface.KICK) { ClanSettingsInterface.kick(player) }
+ClanSettingsInterface.MEMBER_TOGGLES.keys.forEach { component ->
+    on_button(interfaceId = SETTINGS, component = component) { ClanSettingsInterface.toggleMemberFlag(player, component) }
+}
+on_button(interfaceId = SETTINGS, component = ClanSettingsInterface.GUESTS_ENTER) { Clans.editSettings(player) { allowGuests = !allowGuests } }
+on_button(interfaceId = SETTINGS, component = ClanSettingsInterface.GUESTS_TALK) { Clans.editSettings(player) { guestsCanTalk = !guestsCanTalk } }
+on_button(interfaceId = SETTINGS, component = ClanSettingsInterface.RECRUITING) { Clans.editSettings(player) { recruiting = !recruiting } }
+on_button(interfaceId = SETTINGS, component = ClanSettingsInterface.CLAN_TIME) { Clans.editSettings(player) { clanTime = !clanTime } }
+on_button(interfaceId = SETTINGS, component = ClanSettingsInterface.TIMEZONE_OPTIONS) {
+    val key = player.getInteractingSlot()
+    if (key in 0..144) Clans.editSettings(player) { timeZone = (key - 72) * 10 }
+}
+on_button(interfaceId = SETTINGS, component = ClanSettingsInterface.WORLD_OPTIONS) {
+    val world = player.getInteractingSlot()
+    if (world in 0..200) Clans.editSettings(player) { worldId = world }
+}
+on_button(interfaceId = SETTINGS, component = ClanSettingsInterface.EDIT_MOTTO) {
+    player.queue {
+        val text = inputString("Enter your clan motto:").replace('|', ' ').replace('\n', ' ').trim().take(80)
+        Clans.editSettings(player) { motto = text.ifEmpty { null } }
+    }
+}
+on_button(interfaceId = SETTINGS, component = ClanSettingsInterface.EDIT_KEYWORDS) {
+    player.queue {
+        val text = inputString("Enter keywords to identify with your clan:").replace('|', ' ').replace('\n', ' ').trim().take(80)
+        Clans.editSettings(player) { keywords = text.ifEmpty { null } }
+    }
+}
+on_button(interfaceId = SETTINGS, component = ClanSettingsInterface.EDIT_THREAD) {
+    player.queue {
+        val text = inputString("Enter the Thread ID of your official clan thread:").lowercase().filter { it.isLetterOrDigit() }.take(12)
+        Clans.editSettings(player) { threadId = text.ifEmpty { null } }
+    }
+}
+ClanSettingsInterface.RANK_TABS.forEach { (component, rank) ->
+    on_button(interfaceId = SETTINGS, component = component) { ClanSettingsInterface.selectRank(player, rank) }
+}
+(ClanPermission.values().map { it.row } + ClanPermission.TALK_ROW + ClanPermission.KICK_ROW).forEach { row ->
+    on_button(interfaceId = SETTINGS, component = row) { ClanSettingsInterface.permissionRow(player, row) }
 }
 
 on_command("clan") {
@@ -81,7 +137,19 @@ on_command("clan") {
         "invite" -> {
             val targetName = args.drop(1).joinToString(" ")
             val target = player.world.players.firstOrNull { it.username.equals(targetName, ignoreCase = true) }
-            if (target == null) player.filterableMessage("That player isn't online.") else Clans.invite(player, target)
+            when {
+                target == null -> player.filterableMessage("That player isn't online.")
+                target.attr[Clans.CLAN_ATTR] != null -> player.filterableMessage("${target.username} is already in a clan.")
+                else -> {
+                    // Novite ClanInvite dialogue: the invited player accepts first.
+                    val inviter = player
+                    player.filterableMessage("Sending a clan invite to ${target.username}...")
+                    target.queue {
+                        val clanName = Clans.clanOf(inviter) ?: return@queue
+                        if (options("Yes, join $clanName.", "No thanks.", title = "${inviter.username} invites you to join $clanName.") == 1) Clans.invite(inviter, target)
+                    }
+                }
+            }
         }
         "leave" -> Clans.leave(player)
         "rank" -> {

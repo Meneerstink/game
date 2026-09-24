@@ -45,3 +45,14 @@ class ClanChannelKickDecoder : MessageDecoder<ClanChannelKickMessage>() {
     override fun decode(opcode: Int, opcodeIndex: Int, values: HashMap<String, Number>, stringValues: HashMap<String, String>) =
         ClanChannelKickMessage(false, 0, stringValues["name"] ?: "")
 }
+
+class ClanBanFromChannelDecoder : MessageDecoder<gg.rsmod.game.message.impl.ClanBanFromChannelMessage>() {
+    override fun decode(opcode: Int, structure: MessageStructure, reader: GamePacketReader): gg.rsmod.game.message.impl.ClanBanFromChannelMessage {
+        val slot = reader.getUnsigned(DataType.SHORT).toInt()
+        val name = if (reader.readableBytes > 0) reader.string else ""
+        return gg.rsmod.game.message.impl.ClanBanFromChannelMessage(slot, name)
+    }
+
+    override fun decode(opcode: Int, opcodeIndex: Int, values: HashMap<String, Number>, stringValues: HashMap<String, String>) =
+        gg.rsmod.game.message.impl.ClanBanFromChannelMessage(0, stringValues["name"] ?: "")
+}

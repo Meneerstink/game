@@ -34,6 +34,13 @@ enum class UpdateBlockType {
     FORCE_CHAT,
 
     /**
+     * Player only. `PlayerExtendedInfoFlag.CLANMATE` (0x100000): whether this player is in the *observer's* clan - the client
+     * draws a clanmate dot on the minimap (Minimap: mapdots[7]). The value differs per observer, so [PlayerUpdateBlockSegment]
+     * computes it for the observer it writes for; raising the block on a player makes every observer re-read it.
+     */
+    CLANMATE,
+
+    /**
      * NPC only. `NpcExtendedInfoFlag.COMBAT_LEVEL` (0x80000): overrides the combat level the
      * client would otherwise take from its own cached `NPCType`, for as long as that npc is
      * tracked. `NPCList` falls back to the cache value when 65535 is sent.

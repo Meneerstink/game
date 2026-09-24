@@ -10,6 +10,7 @@ players:
     - GFX_3 # SPOTANIM2 0x40000
     - MOVEMENT # TEMP_SPEED 0x200
     - GFX_4 # SPOTANIM3 0x80000
+    - CLANMATE # CLANMATE 0x100000 (per observer: is this player in the observer's clan - minimap clan dot)
     - HITMARK # HITMARK 0x4
     - APPEARANCE # APPEARANCE 0x8
     - FORCE_CHAT # CHAT 0x4000
@@ -50,6 +51,13 @@ players:
 
     - block: FORCE_CHAT
       bit: 0x4000
+
+    - block: CLANMATE
+      bit: 0x100000
+      structure:
+        - name: clanmate
+          type: BYTE
+          trans: NEGATE
 
     - block: HITMARK
       bit: 0x4

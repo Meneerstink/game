@@ -30,6 +30,10 @@ fun Player.findOnlinePlayer(name: String): Player? = findOnline(name)
 enum class ClanRank(val value: Int, val label: String) {
     OWNER(126, "Owner"),
     DEPUTY(125, "Deputy Owner"),
+    // Cache enum 3715 (clan rank names): 101 Organiser, 102 Coordinator, 103 Overseer sit between Admin and Deputy Owner.
+    OVERSEER(103, "Overseer"),
+    COORDINATOR(102, "Coordinator"),
+    ORGANISER(101, "Organiser"),
     ADMIN(100, "Admin"),
     GENERAL(5, "General"),
     CAPTAIN(4, "Captain"),
@@ -52,7 +56,83 @@ data class Clan(
     /** Guests (non-members) may listen and talk in the channel. */
     var allowGuests: Boolean = true,
     val creation: Long = System.currentTimeMillis(),
-)
+) {
+    /**
+     * Clan Settings (interface 1096) state, laid out like the 667 Novite donor's `Clan` (novite/rs/game/player/clans/Clan.java) and sent
+     * as ClanSettings extra settings (VarClan 0 time zone, 1 motto, 2 forum thread, 3 recruiting/clan time/home world/flag).
+     */
+    var guestsCanTalk: Boolean = false
+    var coinShare: Boolean = false
+    val bans: MutableSet<String> = ConcurrentHashMap.newKeySet()
+    var motto: String? = null
+    var keywords: String? = null
+    var threadId: String? = null
+    /** Minutes from UTC, -720..720 in steps of 30 (cache enum 3711). */
+    var timeZone: Int = 0
+    var recruiting: Boolean = false
+    var clanTime: Boolean = false
+    var worldId: Int = 0
+    var flag: Int = 0
+    val jobs: MutableMap<String, Int> = ConcurrentHashMap()
+    /** Per member: [ClanMemberFlag] bits (mute, keep / citadel / island bans). */
+    val memberFlags: MutableMap<String, Int> = ConcurrentHashMap()
+    val joined: MutableMap<String, Long> = ConcurrentHashMap()
+    /** Rank value -> bit mask over [ClanPermission] (the Permissions page of 1096). */
+    val permissions: MutableMap<Int, Int> = ConcurrentHashMap()
+
+    fun key(name: String): String? = members.keys.firstOrNull { it.equals(name, ignoreCase = true) }
+
+    fun permissionMask(rank: Int): Int = permissions[rank] ?: ClanPermission.defaultMask(rank)
+}
+
+/** Member flags shown on the Clanmates page of 1096 (Novite `ClanMember`: mute, ban from keep / citadel / island). */
+object ClanMemberFlag {
+    const val MUTED = 1
+    const val BAN_KEEP = 2
+    const val BAN_CITADEL = 4
+    const val BAN_ISLAND = 8
+}
+
+/**
+ * The Permissions page of 1096, in the order of its rows: each row's tick is client var (varc) [varc] shown on component [tick] and
+ * toggled by clicking [row] (cache scripts 5135 / 5140). Talk and kick are rank thresholds (varc 1571 / 1570), not toggles.
+ */
+enum class ClanPermission(val varc: Int, val row: Int) {
+    RECRUIT(1576, 508),
+    LOCK_KEEP(1572, 559),
+    LOCK_CITADEL(1574, 572),
+    SIGNPOST(1584, 606),
+    NOTICEBOARD(1583, 617),
+    UPGRADE_BUILDING(1586, 628),
+    DOWNGRADE_BUILDING(1587, 639),
+    EDIT_BATTLEFIELD(1585, 650),
+    TRANSFER_RESOURCES(1588, 661),
+    BATTLEFIELD_EVENT(1577, 673),
+    RATED_CLAN_WAR(1578, 684),
+    CLAN_VOTE(1579, 696),
+    PRIVATE_MEETING(1580, 709),
+    PARTY_ROOM(1581, 721),
+    GATHERING_OBJECTIVE(1589, 733),
+    BUILD_TICK(1590, 745),
+    ENTER_KEEP(1573, 764),
+    ENTER_CITADEL(1575, 777),
+    CITADEL_LANGUAGE(1649, 807),
+    THEATRE(1582, 818),
+    ;
+
+    val bit: Int get() = 1 shl ordinal
+
+    companion object {
+        const val TALK_VARC = 1571
+        const val TALK_ROW = 583
+        const val KICK_VARC = 1570
+        const val KICK_ROW = 595
+
+        /** Admins and above may do everything; lower ranks may only enter the citadel and keep. */
+        fun defaultMask(rank: Int): Int =
+            if (rank >= ClanRank.ADMIN.value) values().fold(0) { m, p -> m or p.bit } else ENTER_KEEP.bit or ENTER_CITADEL.bit
+    }
+}
 
 /**
  * Clans with a real Clan Chat channel (owner 2026-09-24: "clanchat ... volledig werkend maken"). Before this the clan chat was a
@@ -98,7 +178,13 @@ object Clans {
                         val clan = clans.getOrPut(parts[1]) { Clan(parts[1]) }
                         val rank = runCatching { ClanRank.valueOf(parts[3]) }.getOrDefault(ClanRank.MEMBER)
                         clan.members[parts[2]] = rank
+                        parts.getOrNull(4)?.toIntOrNull()?.let { clan.jobs[parts[2]] = it }
+                        parts.getOrNull(5)?.toIntOrNull()?.let { clan.memberFlags[parts[2]] = it }
+                        parts.getOrNull(6)?.toLongOrNull()?.let { clan.joined[parts[2]] = it }
                     }
+                    "ban" -> clans[parts[1]]?.bans?.add(parts[2])
+                    "perm" -> clans[parts[1]]?.let { c -> parts.getOrNull(3)?.toIntOrNull()?.let { c.permissions[parts[2].toInt()] = it } }
+                    "set" -> clans[parts[1]]?.let { c -> applySetting(c, parts[2], parts.drop(3).joinToString("|")) }
                 }
             }
         }
@@ -110,9 +196,44 @@ object Clans {
             val lines = ArrayList<String>()
             clans.values.forEach { clan ->
                 lines.add("clan|${clan.name}|${clan.talkRank}|${clan.kickRank}|${if (clan.allowGuests) 1 else 0}")
-                clan.members.forEach { (member, rank) -> lines.add("member|${clan.name}|$member|$rank") }
+                clan.members.forEach { (member, rank) ->
+                    lines.add("member|${clan.name}|$member|$rank|${clan.jobs[member] ?: 0}|${clan.memberFlags[member] ?: 0}|${clan.joined[member] ?: 0}")
+                }
+                clan.bans.forEach { lines.add("ban|${clan.name}|$it") }
+                clan.permissions.forEach { (rank, mask) -> lines.add("perm|${clan.name}|$rank|$mask") }
+                settingsOf(clan).forEach { (key, value) -> lines.add("set|${clan.name}|$key|$value") }
             }
             gg.rsmod.util.io.AtomicFiles.writeText(file, lines.joinToString("\n"))
+        }
+    }
+
+    /** Scalar settings persisted as `set|clan|key|value` lines (absent = default). */
+    private fun settingsOf(clan: Clan): List<Pair<String, String>> =
+        listOfNotNull(
+            "guestsCanTalk" to (if (clan.guestsCanTalk) "1" else "0"),
+            "coinShare" to (if (clan.coinShare) "1" else "0"),
+            clan.motto?.let { "motto" to it },
+            clan.keywords?.let { "keywords" to it },
+            clan.threadId?.let { "thread" to it },
+            "timeZone" to clan.timeZone.toString(),
+            "recruiting" to (if (clan.recruiting) "1" else "0"),
+            "clanTime" to (if (clan.clanTime) "1" else "0"),
+            "world" to clan.worldId.toString(),
+            "flag" to clan.flag.toString(),
+        )
+
+    private fun applySetting(clan: Clan, key: String, value: String) {
+        when (key) {
+            "guestsCanTalk" -> clan.guestsCanTalk = value == "1"
+            "coinShare" -> clan.coinShare = value == "1"
+            "motto" -> clan.motto = value
+            "keywords" -> clan.keywords = value
+            "thread" -> clan.threadId = value
+            "timeZone" -> value.toIntOrNull()?.let { clan.timeZone = it }
+            "recruiting" -> clan.recruiting = value == "1"
+            "clanTime" -> clan.clanTime = value == "1"
+            "world" -> value.toIntOrNull()?.let { clan.worldId = it }
+            "flag" -> value.toIntOrNull()?.let { clan.flag = it }
         }
     }
 
@@ -144,11 +265,13 @@ object Clans {
         }
         val clan = Clan(clean)
         clan.members[owner.username] = ClanRank.OWNER
+        clan.joined[owner.username] = System.currentTimeMillis()
         clans[clean] = clan
         owner.attr[CLAN_ATTR] = clean
         save()
         owner.filterableMessage("You found the clan '$clean'.")
         connect(owner)
+        refreshClanmateDots(owner)
         return true
     }
 
@@ -161,8 +284,12 @@ object Clans {
             inviter.filterableMessage("You're not in a clan.")
             return
         }
-        if (rankOf(clan, inviter) < ClanRank.ADMIN.value) {
-            inviter.filterableMessage("Only the clan owner, a deputy or an admin can invite.")
+        if (!mayRecruit(clan, inviter)) {
+            inviter.filterableMessage("You don't have permission to invite.")
+            return
+        }
+        if (clan.bans.any { it.equals(target.username, ignoreCase = true) }) {
+            inviter.filterableMessage("This player has been banned from this clan.")
             return
         }
         if (target.attr[CLAN_ATTR] != null) {
@@ -170,6 +297,7 @@ object Clans {
             return
         }
         clan.members[target.username] = ClanRank.MEMBER
+        clan.joined[target.username] = System.currentTimeMillis()
         target.attr[CLAN_ATTR] = clan.name
         save()
         stopListening(target)
@@ -177,6 +305,7 @@ object Clans {
         systemMessage(clan, "${Misc.formatForDisplay(target.username)} has joined the clan.")
         connect(target)
         refreshSettings(clan)
+        refreshClanmateDots(target)
     }
 
     fun leave(player: Player) {
@@ -195,6 +324,7 @@ object Clans {
         }
         save()
         player.filterableMessage("You have left the clan '${clan.name}'.")
+        refreshClanmateDots(player)
         systemMessage(clan, "${Misc.formatForDisplay(player.username)} has left the clan.")
         refreshSettings(clan)
     }
@@ -253,7 +383,10 @@ object Clans {
         when {
             clan == null -> player.filterableMessage("That clan does not exist.")
             clan.name == player.attr[CLAN_ATTR] -> connect(player)
-            !clan.allowGuests -> player.filterableMessage("That clan does not allow guests in its channel.")
+            !clan.allowGuests -> player.filterableMessage("This clan only allows clanmates to join their channel.")
+            clan.bans.any { it.equals(player.username, ignoreCase = true) } -> player.filterableMessage("You have been banned from this channel.")
+            (tempBans[clan.name]?.get(player.username.lowercase()) ?: 0L) > System.currentTimeMillis() ->
+                player.filterableMessage("You have been banned from this channel.")
             else -> {
                 stopListening(player)
                 guestOf[player] = clan.name
@@ -296,7 +429,13 @@ object Clans {
         load()
         val clan = (if (guest) guestOf[sender]?.let { clans[it] } else clanFor(sender)) ?: return false
         if (channelUsers[clan.name]?.contains(sender) != true) return false
-        if (rankOf(clan, sender) < clan.talkRank && !(guest && clan.allowGuests)) {
+        val rank = rankOf(clan, sender)
+        if (rank != GUEST_RANK && (clan.memberFlags[clan.key(sender.username)] ?: 0) and ClanMemberFlag.MUTED != 0) {
+            sender.filterableMessage("You have been muted in this clan channel.")
+            return true
+        }
+        val mayTalk = if (rank == GUEST_RANK) clan.guestsCanTalk else clan.guestsCanTalk || rank >= clan.talkRank
+        if (!mayTalk) {
             sender.filterableMessage("You do not have a high enough rank to talk in this clan channel.")
             return true
         }
@@ -350,9 +489,15 @@ object Clans {
         val clan = (if (affined) clanFor(kicker) else guestOf[kicker]?.let { clans[it] }) ?: return
         if (rankOf(clan, kicker) < clan.kickRank) return kicker.filterableMessage("You do not have a high enough rank to kick from this clan channel.")
         val guest = channelUsers[clan.name]?.firstOrNull { it.username.equals(guestName, ignoreCase = true) && guestOf[it] == clan.name } ?: return
+        // "Temporary kick/ban": the guest may not rejoin for an hour (Novite ClansManager.kickPlayerFromChat / connectToClan: 3600000 ms).
+        tempBans.getOrPut(clan.name) { ConcurrentHashMap() }[guest.username.lowercase()] = System.currentTimeMillis() + TEMP_BAN_MILLIS
         stopListening(guest)
-        guest.filterableMessage("You have been kicked from the clan channel.")
+        guest.filterableMessage("You have been kicked from the guest clan chat channel.")
+        kicker.filterableMessage("You have kicked ${Misc.formatForDisplay(guest.username)} from the clan chat channel.")
     }
+
+    private val tempBans = ConcurrentHashMap<String, ConcurrentHashMap<String, Long>>()
+    private const val TEMP_BAN_MILLIS = 60 * 60 * 1000L
 
     /** The old `::cc` command, kept: it now talks in the real channel. */
     fun chat(
@@ -420,20 +565,45 @@ object Clans {
             put(DataType.INT, update)
             put(DataType.INT, 0)
             put(DataType.SHORT, clan.members.size)
-            put(DataType.BYTE, 0)
+            put(DataType.BYTE, clan.bans.size.coerceAtMost(255))
             putString(clan.name)
             put(DataType.BYTE, if (clan.allowGuests) 1 else 0)
-            put(DataType.BYTE, clan.talkRank)
+            // rankTalk -1 = "guests (and all ranks) can talk" (cache script 4295 ticks 1096:93 on ACTIVECLANSETTINGS_GETRANKTALK == -1).
+            put(DataType.BYTE, talkRankOf(clan))
             put(DataType.BYTE, clan.kickRank)
             put(DataType.BYTE, ClanRank.OWNER.value)
-            put(DataType.BYTE, 0)
-            clan.members.forEach { (name, rank) ->
+            put(DataType.BYTE, if (clan.coinShare) 1 else 0)
+            orderedMembers(clan).forEach { (name, rank) ->
                 putString(Misc.formatForDisplay(name))
                 put(DataType.BYTE, rank.value)
                 put(DataType.INT, 0)
             }
-            put(DataType.SHORT, 0)
+            clan.bans.take(255).forEach { putString(Misc.formatForDisplay(it)) }
+            // Extra settings `g4 id | type << 30` (0 int, 1 long, 2 string) - Novite ClansManager.generateClanSettingsDataBlock:
+            // 0 time zone (minutes), 1 motto, 2 forum thread (base-36 long), 3 recruiting | clan time << 1 | world << 2 | flag << 10.
+            val extras = mutableListOf<Triple<Int, Int, Any>>()
+            if (clan.timeZone != 0) extras += Triple(0, 0, clan.timeZone)
+            clan.motto?.let { extras += Triple(1, 2, it) }
+            clan.threadId?.let { extras += Triple(2, 1, threadIdLong(it)) }
+            val bits = (if (clan.recruiting) 1 else 0) or ((if (clan.clanTime) 1 else 0) shl 1) or (clan.worldId shl 2) or (clan.flag shl 10)
+            if (bits != 0) extras += Triple(3, 0, bits)
+            put(DataType.SHORT, extras.size)
+            extras.forEach { (id, type, value) ->
+                put(DataType.INT, id or (type shl 30))
+                when (value) {
+                    is Int -> put(DataType.INT, value)
+                    is Long -> put(DataType.LONG, value)
+                    is String -> putString(value)
+                }
+            }
         }
+
+    /** The talk rank the client shows: -1 when guests (and every rank) may talk, else the minimum rank. */
+    internal fun talkRankOf(clan: Clan): Int = if (clan.guestsCanTalk) GUEST_RANK else clan.talkRank
+
+    /** Novite `ClansManager.convertToLong`: the forum thread id as a base-36 number (0-9, a-z). */
+    internal fun threadIdLong(id: String): Long =
+        id.lowercase().fold(0L) { acc, c -> acc * 36 + (if (c.isDigit()) c - '0' else if (c in 'a'..'z') c - 'a' + 10 else 0) }
 
     /** ClanChannel: flags 2 (display names), clan hash, update number, name, kick/talk rank, online users (guests rank -1). */
     private fun channelBody(clan: Clan, users: List<Player>, affined: Boolean, version: Long): ByteArray =
@@ -448,7 +618,7 @@ object Clans {
             putString(clan.name)
             put(DataType.BYTE, 0)
             put(DataType.BYTE, clan.kickRank)
-            put(DataType.BYTE, clan.talkRank)
+            put(DataType.BYTE, talkRankOf(clan))
             put(DataType.SHORT, users.size)
             users.forEach { (name, rank) ->
                 putString(name)
@@ -456,6 +626,180 @@ object Clans {
                 put(DataType.SHORT, 1)
             }
         }
+
+    // ---- Clan Chat tab (1110) and Clan Settings (1096) ---------------------------------------------------------------------------
+
+    fun clanOfPlayer(player: Player): Clan? = clanFor(player)
+
+    fun isListening(player: Player): Boolean = guestOf.containsKey(player)
+
+    fun rankOfPlayer(player: Player): Int = clanFor(player)?.let { rankOf(it, player) } ?: GUEST_RANK
+
+    /** Members in the order the ClanSettings packet lists them (by name) - the row index the 1096 member list sends back. */
+    fun orderedMembers(clan: Clan): List<Pair<String, ClanRank>> = clan.members.entries.sortedBy { it.key.lowercase() }.map { it.key to it.value }
+
+    /** The Recruit permission of the player's rank (Permissions page) - who may invite. */
+    fun mayRecruit(clan: Clan, player: Player): Boolean {
+        val rank = rankOf(clan, player)
+        return rank >= ClanRank.ADMIN.value || clan.permissionMask(rank) and ClanPermission.RECRUIT.bit != 0
+    }
+
+    /** Settings page edits (admins and above, Novite `hasRankToEditSettings`). */
+    fun editSettings(player: Player, change: Clan.() -> Unit): Boolean {
+        val clan = clanFor(player) ?: return false
+        if (rankOf(clan, player) < ClanRank.ADMIN.value) {
+            player.filterableMessage("You need to be an admin or above to change the clan settings.")
+            return false
+        }
+        clan.change()
+        save()
+        refreshSettings(clan)
+        refreshChannel(clan)
+        return true
+    }
+
+    /** Clan Chat tab "Join Clan Channel" for a member: join or leave the own channel. */
+    fun toggleOwnChannel(player: Player) {
+        val clan = clanFor(player) ?: return
+        val users = channelUsers.getOrPut(clan.name) { ConcurrentHashMap.newKeySet() }
+        if (player in users) {
+            users.remove(player)
+            player.write(ClanChannelFullMessage(byteArrayOf(1)))
+            refreshChannel(clan)
+            player.filterableMessage("You have left your clan's chat channel.")
+        } else {
+            connect(player)
+            player.filterableMessage("Now talking in your clan channel. To talk, start each line of chat with //.")
+        }
+    }
+
+    /** Add a name to the clan ban list (admins and above); a banned guest in the channel is removed. */
+    fun ban(player: Player, name: String) {
+        val clan = clanFor(player) ?: return player.filterableMessage("You're not in a clan.")
+        val clean = name.trim()
+        when {
+            rankOf(clan, player) < ClanRank.ADMIN.value -> player.filterableMessage("You must be a clan admin to do that.")
+            clean.isEmpty() -> return
+            clan.key(clean) != null -> player.filterableMessage("You can't add a member of your clan to the ban list.")
+            clan.bans.size >= 100 -> player.filterableMessage("The ban list is full.")
+            clan.bans.any { it.equals(clean, ignoreCase = true) } -> player.filterableMessage("$clean is already on the ban list.")
+            else -> {
+                clan.bans += clean
+                save()
+                refreshSettings(clan)
+                channelUsers[clan.name]?.firstOrNull { it.username.equals(clean, ignoreCase = true) && guestOf[it] == clan.name }?.let {
+                    stopListening(it)
+                    it.filterableMessage("You have been banned from this channel.")
+                }
+                player.filterableMessage("${Misc.formatForDisplay(clean)} has been added to the clan ban list.")
+            }
+        }
+    }
+
+    fun unban(player: Player, name: String) {
+        val clan = clanFor(player) ?: return player.filterableMessage("You're not in a clan.")
+        if (rankOf(clan, player) < ClanRank.ADMIN.value) return player.filterableMessage("You must be a clan admin to do that.")
+        if (!clan.bans.removeIf { it.equals(name.trim(), ignoreCase = true) }) return player.filterableMessage("${name.trim()} is not on the ban list.")
+        save()
+        refreshSettings(clan)
+        player.filterableMessage("${Misc.formatForDisplay(name.trim())} has been removed from the clan ban list.")
+    }
+
+    /** Clanmates page Save / Kick and the member toggles: [editor] edits [member] (rank below the editor's, admins and above). */
+    fun editMember(editor: Player, member: String, rank: ClanRank?, job: Int?, flags: Int?): Boolean {
+        val clan = clanFor(editor) ?: return false
+        val key = clan.key(member) ?: return false
+        val editorRank = rankOf(clan, editor)
+        val current = clan.members.getValue(key)
+        when {
+            editorRank < ClanRank.ADMIN.value -> editor.filterableMessage("You need to be an admin or above to edit clanmates.")
+            key.equals(editor.username, ignoreCase = true) && rank != null && rank != current ->
+                editor.filterableMessage("You can't change your own rank.")
+            !key.equals(editor.username, ignoreCase = true) && current.value >= editorRank ->
+                editor.filterableMessage("You can only edit clanmates below your own rank.")
+            rank != null && rank != current && (rank.value >= editorRank || rank == ClanRank.OWNER) ->
+                editor.filterableMessage("You can only give ranks below your own.")
+            else -> {
+                rank?.let { clan.members[key] = it }
+                job?.let { clan.jobs[key] = it }
+                flags?.let { clan.memberFlags[key] = it }
+                save()
+                if (rank != null && rank != current) systemMessage(clan, "${Misc.formatForDisplay(key)} is now a ${rank.label}.")
+                refreshSettings(clan)
+                refreshChannel(clan)
+                return true
+            }
+        }
+        return false
+    }
+
+    fun kickMember(editor: Player, member: String) {
+        val clan = clanFor(editor) ?: return
+        val key = clan.key(member) ?: return
+        val editorRank = rankOf(clan, editor)
+        when {
+            key.equals(editor.username, ignoreCase = true) -> editor.filterableMessage("You can't kick yourself!")
+            clan.members.getValue(key) == ClanRank.OWNER -> editor.filterableMessage("You can't kick the clan owner!")
+            editorRank < ClanRank.ADMIN.value || clan.members.getValue(key).value >= editorRank ->
+                editor.filterableMessage("You can only kick clanmates below your own rank.")
+            else -> {
+                clan.members.remove(key)
+                clan.jobs.remove(key)
+                clan.memberFlags.remove(key)
+                clan.joined.remove(key)
+                save()
+                editor.findOnline(key)?.let { kicked ->
+                    kicked.attr.remove(CLAN_ATTR)
+                    disconnect(kicked, clan, clear = true)
+                    kicked.filterableMessage("You're no longer part of a clan.")
+                    refreshClanmateDots(kicked)
+                }
+                systemMessage(clan, "${Misc.formatForDisplay(key)} has been kicked from the clan.")
+                refreshSettings(clan)
+            }
+        }
+    }
+
+    /** Permissions page: [rank]'s [permission] on/off (editor must outrank [rank] and be an admin or above). */
+    fun setPermission(editor: Player, rank: Int, permission: ClanPermission, on: Boolean): Boolean {
+        val clan = clanFor(editor) ?: return false
+        if (!mayEditRank(clan, editor, rank)) return false
+        val mask = clan.permissionMask(rank)
+        clan.permissions[rank] = if (on) mask or permission.bit else mask and permission.bit.inv()
+        save()
+        return true
+    }
+
+    /** Permissions page "minimum rank to talk / kick" set to [rank]. */
+    fun setThreshold(editor: Player, rank: Int, talk: Boolean): Boolean {
+        val clan = clanFor(editor) ?: return false
+        if (!mayEditRank(clan, editor, rank)) return false
+        if (talk) clan.talkRank = rank else clan.kickRank = rank
+        save()
+        refreshSettings(clan)
+        refreshChannel(clan)
+        return true
+    }
+
+    private fun mayEditRank(clan: Clan, editor: Player, rank: Int): Boolean {
+        val editorRank = rankOf(clan, editor)
+        if (editorRank < ClanRank.ADMIN.value || rank >= editorRank) {
+            editor.filterableMessage("You may not alter this clan setting.")
+            return false
+        }
+        return true
+    }
+
+    /**
+     * Minimap clanmate dots: the player-update CLANMATE block is per observer, so a membership change re-raises it on the player and on
+     * everybody around them (each observer then reads their own value).
+     */
+    fun refreshClanmateDots(player: Player) {
+        player.addBlock(gg.rsmod.game.sync.block.UpdateBlockType.CLANMATE)
+        player.world.players.forEach { other ->
+            if (other !== player && other.tile.isWithinRadius(player.tile, 32)) other.addBlock(gg.rsmod.game.sync.block.UpdateBlockType.CLANMATE)
+        }
+    }
 
     private fun systemMessage(clan: Clan, text: String) {
         channelUsers[clan.name]?.forEach { if (it.attr[CLAN_ATTR] == clan.name) it.filterableMessage("[${clan.name}] $text") }

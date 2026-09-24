@@ -18,4 +18,10 @@ class SocialHooks {
 
     /** ClientProt CLANCHANNEL_KICKUSER. */
     var clanKick: ((Player, Boolean, String) -> Unit)? = null
+
+    /** (observer, other): whether other is in observer's clan - the player-update CLANMATE block (minimap clan dot). */
+    var isClanmate: ((Player, Player) -> Boolean)? = null
+
+    /** ClientProt AFFINEDCLANSETTINGS_ADDBANNED_FROMCHANNEL: permanently ban a guest (by display name) of the own clan channel. */
+    var clanBanFromChannel: ((Player, String) -> Unit)? = null
 }

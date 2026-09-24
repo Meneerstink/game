@@ -29,3 +29,10 @@ class ClanChannelKickHandler : MessageHandler<ClanChannelKickMessage> {
         world.socialHooks.clanKick?.invoke(client, message.affined, message.name)
     }
 }
+
+/** Permanent clan ban of a guest in the own clan channel (AFFINEDCLANSETTINGS_ADDBANNED_FROMCHANNEL). */
+class ClanBanFromChannelHandler : MessageHandler<gg.rsmod.game.message.impl.ClanBanFromChannelMessage> {
+    override fun handle(client: Client, world: World, message: gg.rsmod.game.message.impl.ClanBanFromChannelMessage) {
+        world.socialHooks.clanBanFromChannel?.invoke(client, message.name)
+    }
+}

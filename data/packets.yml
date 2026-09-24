@@ -1641,6 +1641,14 @@ in-packets:
         - name: name
           type: STRING
 
+  # AFFINEDCLANSETTINGS_ADDBANNED_FROMCHANNEL (44): p2 slot, pjstr name - read by hand in ClanBanFromChannelDecoder.
+  - message: gg.rsmod.game.message.impl.ClanBanFromChannelMessage
+    type: VARIABLE_BYTE
+    opcode: 44
+    structure:
+        - name: name
+          type: STRING
+
   - message: gg.rsmod.game.message.impl.FriendListDeleteMessage
     type: VARIABLE_BYTE
     opcode: 8

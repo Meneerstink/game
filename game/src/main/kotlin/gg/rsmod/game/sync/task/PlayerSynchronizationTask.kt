@@ -109,7 +109,7 @@ object PlayerSynchronizationTask : SynchronizationTask<Player> {
 
             val requiresBlockUpdate = local.blockBuffer.isDirty()
             if (requiresBlockUpdate) {
-                segments.add(PlayerUpdateBlockSegment(other = local, newPlayer = false))
+                segments.add(PlayerUpdateBlockSegment(other = local, newPlayer = false, observer = player))
             }
             if (local.moved) {
                 val currTileHash = local?.tile?.asTileHashMultiplier ?: 0
@@ -144,7 +144,7 @@ object PlayerSynchronizationTask : SynchronizationTask<Player> {
                 )
 
                 if (!requiresBlockUpdate && running) {
-                    segments.add(PlayerUpdateBlockSegment(other = local, newPlayer = false))
+                    segments.add(PlayerUpdateBlockSegment(other = local, newPlayer = false, observer = player))
                 }
             } else if (requiresBlockUpdate) {
                 segments.add(SignalPlayerUpdateBlockSegment())
@@ -231,7 +231,7 @@ object PlayerSynchronizationTask : SynchronizationTask<Player> {
                     }
 
                 segments.add(AddLocalPlayerSegment(other = nonLocal, locationSegment = tileUpdateSegment))
-                segments.add(PlayerUpdateBlockSegment(other = nonLocal, newPlayer = true))
+                segments.add(PlayerUpdateBlockSegment(other = nonLocal, newPlayer = true, observer = player))
 
                 player.gpiInactivityFlags[index] = player.gpiInactivityFlags[index] or 0x2
                 player.gpiTileHashMultipliers[index] = currTileHash
