@@ -126,7 +126,7 @@ class IfButton1Handler : MessageHandler<IfButtonMessage> {
             val isInventoryItemAction =
                 interfaceId == 679 &&
                     message.opcode in setOf(FIRST_OPTION, SECOND_OPTION, THIRD_OPTION, FOURTH_OPTION, FIFTH_OPTION, EIGHT_OPTION)
-            if (!isInventoryItemAction) {
+            if (!isInventoryItemAction && !isClientSideButton(interfaceId, component)) {
                 UnhandledInteractions.recordInteraction(
                     kind = "button",
                     id = component,
@@ -138,6 +138,20 @@ class IfButton1Handler : MessageHandler<IfButtonMessage> {
             return
         }
     }
+
+    /**
+     * Buttons the client acts on by itself (their click is only a notification): the gameframe tab stones (resizable 746, fixed 548
+     * Options), the chat-filter "All/View" (751:34) and the chatbox "Click" line (137:56). They filled 170 of 196 rows of
+     * logs/unhandled-object-actions.tsv (2026-09-24) and buried the real gaps, so they are not recorded as unhandled.
+     */
+    private fun isClientSideButton(interfaceId: Int, component: Int): Boolean =
+        when (interfaceId) {
+            746 -> component in 39..54 || component == 174 || component == 176
+            548 -> component == 103
+            751 -> component == 34
+            137 -> component == 56
+            else -> false
+        }
 
     private fun handleItemAction(
         client: Client,
