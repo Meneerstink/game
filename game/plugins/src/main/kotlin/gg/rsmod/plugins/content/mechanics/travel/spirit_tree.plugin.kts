@@ -53,24 +53,50 @@ private val NEAREST_STATION_RADIUS = 30
 
 SPIRIT_TREE_OBJECTS.forEach { obj ->
     on_obj_option(obj = obj, option = "Teleport") {
-        val origin = STATIONS.minByOrNull { it.tile.getDistance(player.tile) }
-        val destinations =
-            if (origin != null && origin.tile.getDistance(player.tile) <= NEAREST_STATION_RADIUS) {
-                STATIONS.filter { it != origin }
-            } else {
-                STATIONS
-            }
-        player.queue {
-            val choice = options(*destinations.map { it.label }.toTypedArray(), title = "Where would you like to go?")
-            if (choice < 1 || choice > destinations.size) {
-                return@queue
-            }
-            val dest = destinations[choice - 1]
-            // Spirit trees are teleports, so Tele Block and the Deadman teleport rule are shared
-            // with spells, jewellery, tabs, fairy rings, levers and obelisks.
-            player.canTeleport(TeleportType.SPIRIT_TREE) {
-                player.teleport(dest.tile, TeleportType.SPIRIT_TREE)
-            }
+        player.queue { travel(this, player) }
+    }
+}
+
+/*
+ * The 3x3 spirit tree (8355, the player-owned house's Superior Garden tree) also carries "Talk-to", "Inspect" and "Guide"; none
+ * had a route, so each click answered "Nothing interesting happens" (owner 2026-09-24: "poh alle objecten werken niet").
+ * Talk-to uses the spirit tree's own greeting (RuneScape Wiki "Spirit tree": "If you are a friend of the gnome people, you are a
+ * friend of mine. Do you want to travel?"); Guide lists the same destinations; Inspect is ADAPTED flavour text.
+ */
+on_obj_option(obj = Objs.SPIRIT_TREE_8355, option = "Talk-to") {
+    player.queue {
+        messageBox("If you are a friend of the gnome people, you are a friend of mine. Do you want to travel?")
+        travel(this, player)
+    }
+}
+
+on_obj_option(obj = Objs.SPIRIT_TREE_8355, option = "Guide") {
+    player.queue { travel(this, player) }
+}
+
+on_obj_option(obj = Objs.SPIRIT_TREE_8355, option = "Inspect") {
+    player.message("The spirit tree can carry you to the other spirit trees of Gielinor.")
+}
+
+suspend fun travel(
+    task: gg.rsmod.game.model.queue.QueueTask,
+    player: Player,
+) {
+    val origin = STATIONS.minByOrNull { it.tile.getDistance(player.tile) }
+    val destinations =
+        if (origin != null && origin.tile.getDistance(player.tile) <= NEAREST_STATION_RADIUS) {
+            STATIONS.filter { it != origin }
+        } else {
+            STATIONS
         }
+    val choice = task.options(*destinations.map { it.label }.toTypedArray(), title = "Where would you like to go?")
+    if (choice < 1 || choice > destinations.size) {
+        return
+    }
+    val dest = destinations[choice - 1]
+    // Spirit trees are teleports, so Tele Block and the Deadman teleport rule are shared
+    // with spells, jewellery, tabs, fairy rings, levers and obelisks.
+    player.canTeleport(TeleportType.SPIRIT_TREE) {
+        player.teleport(dest.tile, TeleportType.SPIRIT_TREE)
     }
 }

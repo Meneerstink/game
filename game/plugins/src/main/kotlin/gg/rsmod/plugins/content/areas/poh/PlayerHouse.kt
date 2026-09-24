@@ -217,6 +217,11 @@ object PlayerHouse {
             48662 to 13282,
         )
 
+    /** Every loc a house places (hotspot replacements and the hand-placed pieces) - the guard test checks each option has a route. */
+    val PLACED_OBJECTS: Set<Int>
+        get() = SPOT_REPLACEMENTS.values.toSet() + setOf(ARMOUR_STAND, JEWELLERY_BOX, GLORY, SPIRIT_TREE, FAIRY_RING, OBELISK, PORTAL) +
+            Style.values().flatMap { listOf(it.wall, it.stainedGlass) }
+
     val DUMMY_HEAL_TIMER = TimerKey()
     const val DUMMY_HEAL_TICKS = 5
 
