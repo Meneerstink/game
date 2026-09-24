@@ -12,6 +12,11 @@ enum class RockType(
     val lowChance: Int,
     val highChance: Int,
     val objectIds: Array<Int>,
+    /**
+     * Rocks that yield several sizes (Desert Quarry sandstone / granite): (item, xp, lowChance, highChance), largest first. Each size is
+     * rolled in order on a mining roll and the first success is the yield (667 Void donor rocks.tables / ores.tables); empty = [reward].
+     */
+    val products: List<Product> = emptyList(),
 ) {
     ESSENCE(
         level = 1,
@@ -297,7 +302,42 @@ enum class RockType(
         highChance = 18,
         objectIds = arrayOf(Objs.ROCKS_14859, Objs.ROCKS_14860, Objs.ROCKS_33078, Objs.ROCKS_33079),
     ),
+    SANDSTONE(
+        level = 35,
+        experience = 30.0,
+        reward = Items.SANDSTONE_1KG,
+        respawnDelay = -1,
+        varrockArmourAffected = -1,
+        lowChance = 25,
+        highChance = 200,
+        objectIds = arrayOf(Objs.ROCKS_10946),
+        products =
+            listOf(
+                Product(Items.SANDSTONE_10KG, 60.0, 4, 50),
+                Product(Items.SANDSTONE_5KG, 50.0, 8, 75),
+                Product(Items.SANDSTONE_2KG, 40.0, 16, 100),
+                Product(Items.SANDSTONE_1KG, 30.0, 25, 200),
+            ),
+    ),
+    GRANITE(
+        level = 45,
+        experience = 50.0,
+        reward = Items.GRANITE_500G,
+        respawnDelay = -1,
+        varrockArmourAffected = -1,
+        lowChance = 16,
+        highChance = 100,
+        objectIds = arrayOf(Objs.ROCKS_10947),
+        products =
+            listOf(
+                Product(Items.GRANITE_5KG, 75.0, 6, 64),
+                Product(Items.GRANITE_2KG, 60.0, 8, 75),
+                Product(Items.GRANITE_500G, 50.0, 16, 100),
+            ),
+    ),
     ;
+
+    data class Product(val item: Int, val experience: Double, val lowChance: Int, val highChance: Int)
 
     companion object {
         val values = enumValues<RockType>()

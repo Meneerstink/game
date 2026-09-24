@@ -57,26 +57,19 @@ object Mining {
             if (ticks % pick.ticksBetweenRolls == 0) {
                 // Invisible familiar boost: raises the success roll only, never a requirement.
                 val level = SummoningBoosts.effectiveLevel(player, Skills.MINING)
-                var baseChance = interpolate(rock.lowChance, rock.highChance, level)
 
                 if (pick == PickaxeType.DRAGON) {
                     player.miningAccumulator += 0.2 // Add the deficit for DRAGON pickaxe
                 }
 
-                if (baseChance > RANDOM.nextInt(255)) {
-                    onSuccess(player, oreName, rock, obj)
-                }
+                attemptYield(player, oreName, rock, obj, level, 1.0)
             }
 
             // Check if accumulated extra roll is due for DRAGON pickaxe
             if (player.miningAccumulator >= 1 && pick == PickaxeType.DRAGON) {
                 // Invisible familiar boost: raises the success roll only, never a requirement.
                 val level = SummoningBoosts.effectiveLevel(player, Skills.MINING)
-                var baseChance = interpolate(rock.lowChance, rock.highChance, level) * 1.12
-
-                if (baseChance > RANDOM.nextInt(255)) {
-                    onSuccess(player, oreName, rock, obj)
-                }
+                attemptYield(player, oreName, rock, obj, level, 1.12)
 
                 player.miningAccumulator -= 1 // Subtract the accumulated extra roll
             }
@@ -94,11 +87,33 @@ object Mining {
         player.animate(Anims.RESET) // Reset animation at the end of mining
     }
 
+    /**
+     * One mining roll. A multi-size rock ([RockType.products], Desert Quarry) rolls each size largest first and yields the first that
+     * succeeds; every other rock rolls its own chance.
+     */
+    private fun attemptYield(
+        player: Player,
+        oreName: String,
+        rock: RockType,
+        obj: GameObject,
+        level: Int,
+        bonus: Double,
+    ) {
+        if (rock.products.isEmpty()) {
+            if (interpolate(rock.lowChance, rock.highChance, level) * bonus > RANDOM.nextInt(255)) onSuccess(player, oreName, rock, obj)
+            return
+        }
+        val product = rock.products.firstOrNull { interpolate(it.lowChance, it.highChance, level) * bonus > RANDOM.nextInt(255) } ?: return
+        val name = player.world.definitions.get(ItemDef::class.java, product.item).name.lowercase()
+        onSuccess(player, name, rock, obj, product)
+    }
+
     private fun onSuccess(
         player: Player,
         oreName: String,
         rock: RockType,
         obj: GameObject,
+        product: RockType.Product? = null,
     ) {
         val world = player.world
         val chanceOfGem =
@@ -124,7 +139,8 @@ object Mining {
         if (chanceOfGem == 1 &&
             rock != RockType.ESSENCE &&
             rock != RockType.CONCENTRATED_COAL &&
-            rock != RockType.CONCENTRATED_GOLD
+            rock != RockType.CONCENTRATED_GOLD &&
+            rock.products.isEmpty()
         ) {
             player.inventory.add(Items.UNCUT_DIAMOND + (player.world.random(0..3) * 2))
         }
@@ -148,7 +164,7 @@ object Mining {
             ) {
                 Items.PURE_ESSENCE
             } else {
-                rock.reward
+                product?.item ?: rock.reward
             }
         val depletedRockId =
             player.world.definitions
@@ -166,7 +182,7 @@ object Mining {
             player.playSound(Sfx.MINE_ORE)
         }
         player.inventory.add(reward)
-        player.addXp(Skills.MINING, rock.experience, checkBrawlingGloves = true)
+        player.addXp(Skills.MINING, product?.experience ?: rock.experience, checkBrawlingGloves = true)
         player.filterableMessage("You manage to mine some $oreName.")
     }
 
