@@ -53,30 +53,49 @@ object AutocastInterfaceLayout {
     const val SELECT_ANCIENT_LAYER = 3
     const val SELECT_FIRST_SPELL = 4
 
-    /** One selectable spell: its spellbook interface/component (the server's CombatSpell key) and its name. */
-    class Entry(val book: Int, val bookComponent: Int, val name: String)
+    /**
+     * One selectable spell: its spellbook interface/component (the server's CombatSpell key), its name, and the spellbook's own icon
+     * pair and Magic level. [sprite] (lit) / [disabledSprite] (dark) / [level] are the arguments of the 667 spellbook's onLoad script 6
+     * on that component (read from the cache 2026-09-24); the component's baked sprite is the dark one for most spells, so it is never
+     * used as the icon.
+     */
+    class Entry(val book: Int, val bookComponent: Int, val name: String, val sprite: Int, val disabledSprite: Int, val level: Int)
 
     /** Standard spellbook: five elemental tiers (Wind, Water, Earth, Fire per row), then the special spells. */
     val STANDARD =
         listOf(
-            Entry(192, 25, "Wind Strike"), Entry(192, 28, "Water Strike"), Entry(192, 30, "Earth Strike"), Entry(192, 32, "Fire Strike"),
-            Entry(192, 34, "Wind Bolt"), Entry(192, 39, "Water Bolt"), Entry(192, 42, "Earth Bolt"), Entry(192, 45, "Fire Bolt"),
-            Entry(192, 49, "Wind Blast"), Entry(192, 52, "Water Blast"), Entry(192, 58, "Earth Blast"), Entry(192, 63, "Fire Blast"),
-            Entry(192, 70, "Wind Wave"), Entry(192, 73, "Water Wave"), Entry(192, 77, "Earth Wave"), Entry(192, 80, "Fire Wave"),
-            Entry(192, 84, "Wind Surge"), Entry(192, 87, "Water Surge"), Entry(192, 89, "Earth Surge"), Entry(192, 91, "Fire Surge"),
-            Entry(192, 98, "Wind Rush"), Entry(192, 47, "Crumble Undead"), Entry(192, 56, "Magic Dart"), Entry(192, 54, "Iban Blast"),
-            Entry(192, 66, "Saradomin Strike"), Entry(192, 67, "Claws of Guthix"), Entry(192, 68, "Flames of Zamorak"), Entry(192, 99, "Storm of Armadyl"),
+            Entry(192, 25, "Wind Strike", 15, 65, 1), Entry(192, 28, "Water Strike", 17, 67, 5),
+            Entry(192, 30, "Earth Strike", 19, 69, 9), Entry(192, 32, "Fire Strike", 21, 71, 13),
+            Entry(192, 34, "Wind Bolt", 23, 73, 17), Entry(192, 39, "Water Bolt", 26, 76, 23),
+            Entry(192, 42, "Earth Bolt", 29, 79, 29), Entry(192, 45, "Fire Bolt", 32, 82, 35),
+            Entry(192, 49, "Wind Blast", 35, 85, 41), Entry(192, 52, "Water Blast", 38, 88, 47),
+            Entry(192, 58, "Earth Blast", 40, 90, 53), Entry(192, 63, "Fire Blast", 44, 94, 59),
+            Entry(192, 70, "Wind Wave", 46, 96, 62), Entry(192, 73, "Water Wave", 48, 98, 65),
+            Entry(192, 77, "Earth Wave", 51, 101, 70), Entry(192, 80, "Fire Wave", 52, 102, 75),
+            Entry(192, 84, "Wind Surge", 500, 815, 81), Entry(192, 87, "Water Surge", 501, 816, 85),
+            Entry(192, 89, "Earth Surge", 811, 817, 90), Entry(192, 91, "Fire Surge", 814, 818, 95),
+            Entry(192, 98, "Wind Rush", 3759, 3760, 1), Entry(192, 47, "Crumble Undead", 34, 84, 39),
+            Entry(192, 56, "Magic Dart", 324, 374, 50), Entry(192, 54, "Iban Blast", 53, 103, 50),
+            Entry(192, 66, "Saradomin Strike", 61, 111, 60), Entry(192, 67, "Claws of Guthix", 60, 110, 60),
+            Entry(192, 68, "Flames of Zamorak", 59, 109, 60), Entry(192, 99, "Storm of Armadyl", 7699, 7702, 77),
         )
 
     /** Ancient Magicks: Smoke, Shadow, Blood, Ice per row (Rush, Burst, Blitz, Barrage), then Miasmic. */
     val ANCIENT =
         listOf(
-            Entry(193, 28, "Smoke Rush"), Entry(193, 32, "Shadow Rush"), Entry(193, 24, "Blood Rush"), Entry(193, 20, "Ice Rush"),
-            Entry(193, 30, "Smoke Burst"), Entry(193, 34, "Shadow Burst"), Entry(193, 26, "Blood Burst"), Entry(193, 22, "Ice Burst"),
-            Entry(193, 29, "Smoke Blitz"), Entry(193, 33, "Shadow Blitz"), Entry(193, 25, "Blood Blitz"), Entry(193, 21, "Ice Blitz"),
-            Entry(193, 31, "Smoke Barrage"), Entry(193, 35, "Shadow Barrage"), Entry(193, 27, "Blood Barrage"), Entry(193, 23, "Ice Barrage"),
-            Entry(193, 36, "Miasmic Rush"), Entry(193, 38, "Miasmic Burst"), Entry(193, 37, "Miasmic Blitz"), Entry(193, 39, "Miasmic Barrage"),
+            Entry(193, 28, "Smoke Rush", 329, 379, 50), Entry(193, 32, "Shadow Rush", 337, 387, 52),
+            Entry(193, 24, "Blood Rush", 333, 383, 56), Entry(193, 20, "Ice Rush", 325, 375, 58),
+            Entry(193, 30, "Smoke Burst", 330, 380, 62), Entry(193, 34, "Shadow Burst", 338, 388, 64),
+            Entry(193, 26, "Blood Burst", 334, 384, 68), Entry(193, 22, "Ice Burst", 326, 376, 70),
+            Entry(193, 29, "Smoke Blitz", 331, 381, 74), Entry(193, 33, "Shadow Blitz", 339, 389, 76),
+            Entry(193, 25, "Blood Blitz", 335, 385, 80), Entry(193, 21, "Ice Blitz", 327, 377, 82),
+            Entry(193, 31, "Smoke Barrage", 332, 382, 86), Entry(193, 35, "Shadow Barrage", 340, 390, 88),
+            Entry(193, 27, "Blood Barrage", 336, 386, 92), Entry(193, 23, "Ice Barrage", 328, 378, 94),
+            Entry(193, 36, "Miasmic Rush", 1568, 1574, 61), Entry(193, 38, "Miasmic Burst", 1569, 1575, 73),
+            Entry(193, 37, "Miasmic Blitz", 1567, 1573, 85), Entry(193, 39, "Miasmic Barrage", 1566, 1572, 97),
         )
+
+    fun entryOf(book: Int, bookComponent: Int): Entry? = ALL.firstOrNull { it.book == book && it.bookComponent == bookComponent }
 
     /** Every entry in component order: component [SELECT_FIRST_SPELL] + index. */
     val ALL = STANDARD + ANCIENT
@@ -90,7 +109,8 @@ object AutocastInterfaceLayout {
 
 /**
  * Writes the autocast UI of [AutocastInterfaceLayout] into both production caches through [CacheTransaction] (preflight, journal,
- * verify; refuses while the servers run). Spell icons are the 667 spellbook's own baked sprites, read from the target cache.
+ * verify; refuses while the servers run). Spell icons are the 667 spellbook's own lit sprites ([AutocastInterfaceLayout.Entry.sprite]);
+ * the server swaps in the dark one per player when the Magic level is too low.
  *
  * Usage: `./gradlew :game:runAutocastInterfaceImportTool --args="[--apply]"`
  */
@@ -191,11 +211,8 @@ object AutocastInterfaceImportTool {
                             if (lib !== library) lib.close()
                         }
                     }
-                    val sprites =
-                        l.ALL.associateWith { entry ->
-                            val data = library.data(INDEX_INTERFACES, entry.book, entry.bookComponent) ?: error("missing ${entry.book}:${entry.bookComponent}")
-                            InterfaceHookProbeTool.componentSprite(data).also { require(it > 0) { "${entry.name}: no baked sprite" } }
-                        }
+                    // The spellbook component's baked sprite is the dark (unavailable) icon for most spells - bake the lit one.
+                    val sprites = l.ALL.associateWith { it.sprite }
                     LootKeyInterfaceImportTool.fonts(library) to sprites
                 } finally {
                     library.close()

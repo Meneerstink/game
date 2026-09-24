@@ -88,6 +88,17 @@ class AutocastTests {
     }
 
     @Test
+    fun `spell icons are the spellbook's lit sprites and dim below the spell's level`() {
+        Autocast.autocastable().forEach { assertNotNull(Autocast.iconOf(it), "${it.name} has no icon") }
+        // 667 spellbook onLoad script 6 (192:32 Fire Strike 21/71, 192:34 Wind Bolt 23/73): uniqueId 71/73 would be the dark icon.
+        assertEquals(21, Autocast.iconOf(CombatSpell.FIRE_STRIKE))
+        assertEquals(23, Autocast.iconOf(CombatSpell.WIND_BOLT))
+        val surge = AutocastInterfaceLayout.entryOf(192, 91)!!
+        assertEquals(surge.sprite, Autocast.listIcon(newPlayer(95), surge))
+        assertEquals(surge.disabledSprite, Autocast.listIcon(newPlayer(94), surge))
+    }
+
+    @Test
     fun `autocast ids are unique so a saved id resolves to one spell`() {
         val ids = Autocast.autocastable().map { it.autoCastId }
         assertEquals(ids.size, ids.toSet().size)

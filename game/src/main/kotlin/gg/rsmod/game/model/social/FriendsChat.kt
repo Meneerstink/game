@@ -193,14 +193,40 @@ class FriendsChat(private val settingsFile: File = File(SETTINGS_FILE)) {
         leave(player)
         val channel = channels.getOrPut(key) { FriendsChatChannel(Misc.formatForDisplay(ownerName), this) }
         channel.add(player)
+        player.attr[LAST_CHANNEL] = channel.owner
         broadcastChannelState(channel)
         return true
     }
 
+    /**
+     * A join with the 2011 chatbox lines (Novite 667 FriendChatsManager): "Attempting to join channel..." first, then the channel
+     * name and the "/" hint. Used for the typed join and for the automatic rejoin at login.
+     */
+    fun joinWithMessages(player: Player, ownerName: String): Boolean {
+        if (channelOf(player)?.let { key(it.owner) == key(ownerName) } == true) return true
+        player.writeMessage("Attempting to join channel...")
+        if (!player.world.characterExists(Misc.formatForDisplay(ownerName))) {
+            player.writeMessage("The channel you tried to join does not exist.")
+            return false
+        }
+        if (!join(player, ownerName)) return false
+        player.writeMessage("Now talking in friends chat channel ${channelOf(player)?.name ?: Misc.formatForDisplay(ownerName)}.")
+        player.writeMessage("To talk, start each line of chat with the / symbol.")
+        return true
+    }
+
+    /** Login: RuneScape puts a player back into the channel they were in when they logged out; a refused rejoin forgets it. */
+    fun rejoinOnLogin(player: Player) {
+        val last = player.attr[LAST_CHANNEL] ?: return
+        if (!joinWithMessages(player, last)) player.attr.remove(LAST_CHANNEL)
+    }
+
+    /** [notifyLeaver] false = logout: the channel is remembered for the next login ([LAST_CHANNEL]); any other leave forgets it. */
     fun leave(
         player: Player,
         notifyLeaver: Boolean = true,
     ) {
+        if (notifyLeaver) player.attr.remove(LAST_CHANNEL)
         val channel = channelOf(player) ?: return
         channel.remove(player)
         if (notifyLeaver) player.write(UpdateFriendChatChannelFullMessage(channel = null))
@@ -289,7 +315,7 @@ class FriendsChat(private val settingsFile: File = File(SETTINGS_FILE)) {
         if (!mayTalk(channel, sender)) return true
         val id = nextMessageId()
         val name = Misc.formatForDisplay(sender.username)
-        channel.members().forEach { member ->
+        channel.members().filterNot { ignores(it, sender) }.forEach { member ->
             member.write(MessageFriendChannelMessage(world = world, sender = name, channel = channel.name, rank = crownOf(sender), id = id, text = text))
         }
         return true
@@ -328,7 +354,7 @@ class FriendsChat(private val settingsFile: File = File(SETTINGS_FILE)) {
                 put(gg.rsmod.net.packet.DataType.BYTE, crownOf(sender))
                 putBytes(payload)
             }
-        channel.members().forEach { it.write(gg.rsmod.game.message.impl.QuickChatFriendChannelOutMessage(body)) }
+        channel.members().filterNot { ignores(it, sender) }.forEach { it.write(gg.rsmod.game.message.impl.QuickChatFriendChannelOutMessage(body)) }
         return true
     }
 
@@ -341,6 +367,13 @@ class FriendsChat(private val settingsFile: File = File(SETTINGS_FILE)) {
         /** The client allocates `FriendChatUser[100]` and reads 255 as "discard this packet". */
         const val MAX_MEMBERS = 100
         private const val MAX_MESSAGE_ID = 0xFF_FFFF_FFFFL
+
+        /** Owner of the channel the player was in at logout (rejoined at login, [rejoinOnLogin]). */
+        val LAST_CHANNEL = gg.rsmod.game.model.attr.AttributeKey<String>(persistenceKey = "friends_chat_channel")
+
+        /** Channel lines from a player on the receiver's ignore list are never shown (friends chat and clan channels alike). */
+        fun ignores(receiver: Player, sender: Player): Boolean =
+            receiver !== sender && receiver.ignoredPlayers.any { Misc.formatForDisplay(it).equals(Misc.formatForDisplay(sender.username), ignoreCase = true) }
 
         /** A valid channel prefix: 1-12 characters the client's base-37 channel name can hold (letters, digits, spaces). */
         fun validPrefix(text: String): String? {

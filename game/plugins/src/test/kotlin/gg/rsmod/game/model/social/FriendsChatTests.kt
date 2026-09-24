@@ -23,14 +23,40 @@ class FriendsChatTests {
         every { world.getPlayerForName(any()) } answers { online[firstArg<String>().lowercase()] }
     }
 
-    private fun player(name: String, friends: List<String> = emptyList(), privilege: Int = 0): Player {
+    private fun player(name: String, friends: List<String> = emptyList(), privilege: Int = 0, ignores: List<String> = emptyList()): Player {
         val p = mockk<Player>(relaxed = true)
         every { p.username } returns name
         every { p.world } returns world
         every { p.friends } returns friends.toMutableList()
         every { p.privilege } returns Privilege(privilege, 0, "p$privilege", emptySet())
+        every { p.attr } returns gg.rsmod.game.model.attr.AttributeMap()
+        every { p.ignoredPlayers } returns ignores.toMutableList()
         online[name.lowercase()] = p
         return p
+    }
+
+    @Test
+    fun `the channel is remembered at logout and rejoined at login, an explicit leave forgets it`() {
+        every { world.characterExists(any()) } returns true
+        val owner = player("Owner")
+        val guest = player("Guest")
+        chat.setPrefix(owner, "Crew")
+        assertTrue(chat.joinWithMessages(guest, "Owner"))
+        chat.leave(guest, notifyLeaver = false)
+        assertNull(chat.channelOf(guest))
+        chat.rejoinOnLogin(guest)
+        assertEquals("Crew", chat.channelOf(guest)!!.name)
+        chat.leave(guest)
+        chat.rejoinOnLogin(guest)
+        assertNull(chat.channelOf(guest))
+    }
+
+    @Test
+    fun `a sender on the receiver's ignore list is not heard`() {
+        val sender = player("Spammer")
+        val receiver = player("Quiet", ignores = listOf("spammer"))
+        assertTrue(FriendsChat.ignores(receiver, sender))
+        assertFalse(FriendsChat.ignores(sender, receiver))
     }
 
     @Test

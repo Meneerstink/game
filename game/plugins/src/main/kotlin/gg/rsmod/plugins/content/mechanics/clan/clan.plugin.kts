@@ -8,6 +8,7 @@ package gg.rsmod.plugins.content.mechanics.clan
 world.socialHooks.clanTalk = { player, text -> Clans.talk(player, text, guest = false) }
 world.socialHooks.clanGuestTalk = { player, text -> Clans.talk(player, text, guest = true) }
 world.socialHooks.clanQuickChat = { player, payload -> Clans.talkQuickChat(player, payload) }
+world.socialHooks.clanGuestQuickChat = { player, payload -> Clans.talkQuickChat(player, payload, guest = true) }
 world.socialHooks.clanKick = { player, affined, name -> Clans.kickGuest(player, affined, name) }
 world.socialHooks.isClanmate = { observer, other -> Clans.sameClan(observer, other) }
 world.socialHooks.clanBanFromChannel = { player, name -> Clans.ban(player, name) }

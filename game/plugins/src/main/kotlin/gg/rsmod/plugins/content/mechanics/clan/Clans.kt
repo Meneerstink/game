@@ -426,24 +426,13 @@ object Clans {
 
     /** "//" (affined) or "///" (guest) chat. @return true when handled (sent or refused with a reason). */
     fun talk(sender: Player, text: String, guest: Boolean): Boolean {
-        load()
-        val clan = (if (guest) guestOf[sender]?.let { clans[it] } else clanFor(sender)) ?: return false
-        if (channelUsers[clan.name]?.contains(sender) != true) return false
-        val rank = rankOf(clan, sender)
-        if (rank != GUEST_RANK && (clan.memberFlags[clan.key(sender.username)] ?: 0) and ClanMemberFlag.MUTED != 0) {
-            sender.filterableMessage("You have been muted in this clan channel.")
-            return true
-        }
-        val mayTalk = if (rank == GUEST_RANK) clan.guestsCanTalk else clan.guestsCanTalk || rank >= clan.talkRank
-        if (!mayTalk) {
-            sender.filterableMessage("You do not have a high enough rank to talk in this clan channel.")
-            return true
-        }
+        val clan = talkChannel(sender, guest) ?: return false
+        if (!mayTalk(clan, sender)) return true
         val id = 1L + (messageIds.getAndIncrement() % 0xFF_FFFF_FFFFL)
         val name = Misc.formatForDisplay(sender.username)
         val compressed = ByteArray(256)
         val length = sender.world.huffman.compress(text, compressed)
-        channelUsers[clan.name]?.forEach { member ->
+        listeners(clan, sender).forEach { member ->
             val affined = member.attr[CLAN_ATTR] == clan.name
             member.write(
                 MessageClanChannelMessage(
@@ -462,12 +451,13 @@ object Clans {
         return true
     }
 
-    fun talkQuickChat(sender: Player, payload: ByteArray): Boolean {
-        val clan = clanFor(sender) ?: return false
-        if (channelUsers[clan.name]?.contains(sender) != true) return false
+    /** Quick chat into the own clan channel (quick-chat channel 2) or the guest channel (3): the same mute / rank rules as typed chat. */
+    fun talkQuickChat(sender: Player, payload: ByteArray, guest: Boolean = false): Boolean {
+        val clan = talkChannel(sender, guest) ?: return false
+        if (!mayTalk(clan, sender)) return true
         val id = 1L + (messageIds.getAndIncrement() % 0xFF_FFFF_FFFFL)
         val name = Misc.formatForDisplay(sender.username)
-        channelUsers[clan.name]?.forEach { member ->
+        listeners(clan, sender).forEach { member ->
             member.write(
                 QuickChatClanChannelOutMessage(
                     body {
@@ -483,6 +473,29 @@ object Clans {
         }
         return true
     }
+
+    /** The channel [sender] talks into ("//" own clan, "///" guest), or null when they are not in it. */
+    private fun talkChannel(sender: Player, guest: Boolean): Clan? {
+        load()
+        val clan = (if (guest) guestOf[sender]?.let { clans[it] } else clanFor(sender)) ?: return null
+        return clan.takeIf { channelUsers[it.name]?.contains(sender) == true }
+    }
+
+    /** Mute and talk rank; tells the sender why not. */
+    private fun mayTalk(clan: Clan, sender: Player): Boolean {
+        val rank = rankOf(clan, sender)
+        if (rank != GUEST_RANK && (clan.memberFlags[clan.key(sender.username)] ?: 0) and ClanMemberFlag.MUTED != 0) {
+            sender.filterableMessage("You have been muted in this clan channel.")
+            return false
+        }
+        val allowed = if (rank == GUEST_RANK) clan.guestsCanTalk else clan.guestsCanTalk || rank >= clan.talkRank
+        if (!allowed) sender.filterableMessage("You do not have a high enough rank to talk in this clan channel.")
+        return allowed
+    }
+
+    /** Everybody in the channel except those who ignore [sender]. */
+    private fun listeners(clan: Clan, sender: Player): List<Player> =
+        channelUsers[clan.name]?.filterNot { gg.rsmod.game.model.social.FriendsChat.ignores(it, sender) } ?: emptyList()
 
     /** ClientProt CLANCHANNEL_KICKUSER: a guest removed from the channel by a member of kick rank. */
     fun kickGuest(kicker: Player, affined: Boolean, guestName: String) {

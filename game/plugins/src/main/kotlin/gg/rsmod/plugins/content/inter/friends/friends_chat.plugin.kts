@@ -104,6 +104,7 @@ on_button(interfaceId = TAB, component = 19) {
 // The channel settings keep a snapshot of the owner's friends, so ranks and "Any friends" work while the owner is offline.
 on_login {
     world.friendsChat.syncFriends(player)
+    world.friendsChat.rejoinOnLogin(player)
 }
 
 on_add_friend {

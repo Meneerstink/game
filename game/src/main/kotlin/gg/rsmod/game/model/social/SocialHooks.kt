@@ -16,6 +16,9 @@ class SocialHooks {
     /** A quick-chat phrase into the clan channel (payload exactly as the client sent it). */
     var clanQuickChat: ((Player, ByteArray) -> Boolean)? = null
 
+    /** A quick-chat phrase into the clan channel the player listens to as a guest (quick-chat channel 3). */
+    var clanGuestQuickChat: ((Player, ByteArray) -> Boolean)? = null
+
     /** ClientProt CLANCHANNEL_KICKUSER. */
     var clanKick: ((Player, Boolean, String) -> Unit)? = null
 

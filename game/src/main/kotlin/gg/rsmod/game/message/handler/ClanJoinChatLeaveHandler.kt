@@ -38,15 +38,6 @@ class ClanJoinChatLeaveHandler : MessageHandler<ClanJoinChatLeaveChatMessage> {
             return
         }
 
-        val owner = Misc.formatForDisplay(message.name)
-        if (!world.characterExists(owner)) {
-            player.writeMessage("The channel you tried to join does not exist.")
-            return
-        }
-
-        if (world.friendsChat.join(player, owner)) {
-            player.writeMessage("Now talking in friends chat channel ${world.friendsChat.channelOf(player)?.name ?: owner}.")
-            player.writeMessage("To talk, start each line of chat with the / symbol.")
-        }
+        world.friendsChat.joinWithMessages(player, Misc.formatForDisplay(message.name))
     }
 }

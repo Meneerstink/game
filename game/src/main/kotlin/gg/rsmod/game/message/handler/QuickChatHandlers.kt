@@ -29,7 +29,7 @@ internal inline fun packetBody(build: GamePacketBuilder.() -> Unit): ByteArray {
 /**
  * Quick-chat phrases said aloud (channel 0) or into the friends-chat channel (channel 1). Public phrases go to everybody
  * within the same 30-tile radius as typed public chat, through MESSAGE_PUBLIC with the 0x8000 quick-chat flag, exactly the
- * framing the client's MESSAGE_PUBLIC reader expects. Clan channels (2/3) have no server clan system yet and are ignored.
+ * framing the client's MESSAGE_PUBLIC reader expects. Clan channels: 2 = own clan, 3 = the guest clan channel (clan plugin hooks).
  */
 class MessageQuickChatPublicHandler : MessageHandler<MessageQuickChatPublicMessage> {
     override fun handle(client: Client, world: World, message: MessageQuickChatPublicMessage) {
@@ -49,6 +49,7 @@ class MessageQuickChatPublicHandler : MessageHandler<MessageQuickChatPublicMessa
             }
             1 -> if (!world.friendsChat.talkQuickChat(world, client, message.payload)) client.writeMessage("You are not in a friends chat channel.")
             2 -> if (world.socialHooks.clanQuickChat?.invoke(client, message.payload) != true) client.writeMessage("You are not in a clan channel.")
+            3 -> if (world.socialHooks.clanGuestQuickChat?.invoke(client, message.payload) != true) client.writeMessage("You are not in a guest clan channel.")
         }
     }
 

@@ -373,9 +373,17 @@ object Autocast {
         val mode = if (spell == null) Mode.OFF else mode(player)
         player.setComponentSprite(l.COMBAT_TAB, l.DEFENSIVE_BUTTON, if (mode == Mode.DEFENSIVE) l.SPRITE_BOX_SELECTED else l.SPRITE_BOX)
         player.setComponentSprite(l.COMBAT_TAB, l.BOX_BUTTON, if (mode == Mode.STANDARD) l.SPRITE_BOX_SELECTED else l.SPRITE_BOX)
-        player.setComponentSprite(l.COMBAT_TAB, l.DEFENSIVE_ICON, spell?.uniqueId ?: -1)
-        player.setComponentSprite(l.COMBAT_TAB, l.BOX_ICON, spell?.uniqueId ?: -1)
+        val icon = spell?.let { iconOf(it) } ?: -1
+        player.setComponentSprite(l.COMBAT_TAB, l.DEFENSIVE_ICON, icon)
+        player.setComponentSprite(l.COMBAT_TAB, l.BOX_ICON, icon)
     }
+
+    /** The spellbook's own lit icon of [spell] (not [CombatSpell.uniqueId], which matches a sprite only by coincidence). */
+    fun iconOf(spell: CombatSpell): Int? = AutocastInterfaceLayout.entryOf(spell.interfaceId, spell.componentId)?.sprite
+
+    /** Lit icon when the current Magic level reaches the spell's level, else the spellbook's dark icon (as in the spellbook). */
+    fun listIcon(player: Player, entry: AutocastInterfaceLayout.Entry): Int =
+        if (player.skills.getCurrentLevel(gg.rsmod.plugins.api.Skills.MAGIC) >= entry.level) entry.sprite else entry.disabledSprite
 
     /** Opens the selection panel in the combat tab, listing only what the wielded weapon may autocast in the open spellbook. */
     fun openSelection(player: Player, mode: Mode) {
@@ -400,7 +408,10 @@ object Autocast {
             val component = l.componentOf(entry)
             val allowed = entry in entries && spellFor(entry)?.let { AutocastWeapons.incompatibility(def, it) == null } == true
             player.setComponentHidden(l.SELECT_INTERFACE, component, !allowed)
-            if (allowed) player.setInterfaceEvents(l.SELECT_INTERFACE, component, -1..-1, OP1)
+            if (allowed) {
+                player.setComponentSprite(l.SELECT_INTERFACE, component, listIcon(player, entry))
+                player.setInterfaceEvents(l.SELECT_INTERFACE, component, -1..-1, OP1)
+            }
         }
         player.setInterfaceEvents(l.SELECT_INTERFACE, l.SELECT_CANCEL, -1..-1, OP1)
         trace(player, "open selection mode=$mode book=$book")
