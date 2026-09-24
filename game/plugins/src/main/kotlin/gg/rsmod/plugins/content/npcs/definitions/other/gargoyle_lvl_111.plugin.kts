@@ -107,36 +107,37 @@ ids.forEach {
         }
     }
 
-    // TODO: Fix error Npc is already bound to a plugin: 1610 [opt=3]
-    /**on_npc_option(npc = Npcs.GARGOYLE, "smash") {
-     val npc = player.getInteractingNpc()
-     if (npc.getCombatTarget() == player) {
-     if (npc.getCurrentLifepoints() > npc.combatDef.deathBlowLifepoints) {
-     player.filterableMessage("The gargoyle is not weak enough to smash yet.")
-     } else if (player.inventory.contains(Items.ROCK_HAMMER)) {
-     player.animate(1755)
-     npc.setTransmogId(Npcs.GARGOYLE_1827)
-     npc.setCurrentLifepoints(0)
-     npc.executePlugin(NpcDeathAction.deathPlugin)
-     player.filterableMessage("You smash the gargoyle with the rock hammer and it shatters into pieces.")
-     } else {
-     player.filterableMessage("You need a rock hammer to smash the gargoyle.")
-     }
-     }
-     }**/
-
     on_item_on_npc(item = Items.ROCK_HAMMER, npc = it) {
-        val npc = player.getInteractingNpc()
-        if (npc.getCombatTarget() == player) {
-            if (npc.getCurrentLifepoints() > npc.combatDef.deathBlowLifepoints) {
-                player.filterableMessage("The gargoyle is not weak enough to smash yet.")
-                return@on_item_on_npc
-            }
-            player.animate(Anims.HAMMER_GARGOYLE)
-            npc.setTransmogId(Npcs.GARGOYLE_1827)
-            npc.setCurrentLifepoints(0)
-            npc.executePlugin(NpcDeathAction.deathPlugin)
-            player.filterableMessage("You smash the gargoyle with the rock hammer and it shatters into pieces.")
-        }
+        smash(player, player.getInteractingNpc())
     }
+}
+
+/*
+ * The cache's "Smash" option (op 3 on 1610 only). It used to sit inside the per-id loop above, which bound 1610 op 3 several times
+ * and broke boot, so it was commented out and the right-click did nothing. Bound once here, same logic as the rock hammer.
+ */
+ids.filter { if_npc_has_option(it, "smash") }.forEach { id ->
+    on_npc_option(npc = id, option = "smash") {
+        smash(player, player.getInteractingNpc())
+    }
+}
+
+fun smash(player: Player, npc: Npc) {
+    if (npc.getCombatTarget() != player) {
+        player.message("Someone else is fighting that.") // Void 667 Gargoyle.kt
+        return
+    }
+    if (npc.getCurrentLifepoints() > npc.combatDef.deathBlowLifepoints) {
+        player.filterableMessage("The gargoyle is not weak enough to smash yet.")
+        return
+    }
+    if (!player.inventory.contains(Items.ROCK_HAMMER)) {
+        player.filterableMessage("You need a rock hammer to smash the gargoyle.")
+        return
+    }
+    player.animate(Anims.HAMMER_GARGOYLE)
+    npc.setTransmogId(Npcs.GARGOYLE_1827)
+    npc.setCurrentLifepoints(0)
+    npc.executePlugin(NpcDeathAction.deathPlugin)
+    player.filterableMessage("You smash the gargoyle with the rock hammer and it shatters into pieces.")
 }
