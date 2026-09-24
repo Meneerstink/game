@@ -230,6 +230,25 @@ object Autocast {
         sync(player)
     }
 
+    /**
+     * Login: a saved (or migrated legacy) choice that the wielded magic weapon or the open spellbook can no longer autocast is
+     * forgotten, so the staff never sits on the hidden fourth style with nothing to cast.
+     */
+    fun revalidate(player: Player) {
+        val spell = selected(player) ?: return
+        if (bookOf(spell) != player.getSpellbook()) {
+            clear(player, Reason.SPELLBOOK_CHANGED)
+            return
+        }
+        val def = weaponDef(player)
+        val weapon = player.getEquipment(EquipmentType.WEAPON)
+        if (weapon != null && (AutocastWeapons.isAutocastWeapon(def) || AutocastWeapons.isPoweredStaff(weapon.id)) &&
+            AutocastWeapons.incompatibility(def, spell) != null
+        ) {
+            clear(player, Reason.INCOMPATIBLE_WEAPON)
+        }
+    }
+
     fun onSpellbookChanged(player: Player) {
         val spell = selected(player) ?: return sync(player)
         if (bookOf(spell) != player.getSpellbook()) clear(player, Reason.SPELLBOOK_CHANGED) else sync(player)

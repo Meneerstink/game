@@ -10,6 +10,7 @@ private val OP2 = 64
 
 on_login {
     Autocast.migrateLegacy(player)
+    Autocast.revalidate(player)
     Autocast.sync(player)
 }
 

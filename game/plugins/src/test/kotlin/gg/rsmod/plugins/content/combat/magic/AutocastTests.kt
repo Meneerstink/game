@@ -263,6 +263,25 @@ class AutocastTests {
     }
 
     @Test
+    fun `login forgets a saved choice the weapon or spellbook can no longer autocast`() {
+        val player = newPlayer()
+        player.wield(Items.ANCIENT_STAFF)
+        player.setSpellbook(Spellbook.ANCIENT)
+        Autocast.select(player, CombatSpell.ICE_BARRAGE, Autocast.Mode.STANDARD)
+        player.equipment[EquipmentType.WEAPON.id] = Item(Items.STAFF_OF_AIR)
+        Autocast.revalidate(player)
+        assertNull(Autocast.selected(player))
+        assertEquals(0, player.getVarp(AttackTab.ATTACK_STYLE_VARP), "the staff is back on a real style")
+    }
+
+    @Test
+    fun `equipping never touches the attack timer and the old varp writers are gone`() {
+        val sources = File("src/main/kotlin/gg/rsmod/plugins").walkTopDown().filter { it.isFile && it.readText().contains("ATTACK_DELAY] =") }.map { it.name }.toSet()
+        // Only attacks (and eating / Granite maul, which OSRS delays too) write the attack timer - never equip, spell selection or UI.
+        assertEquals(setOf("Combat.kt", "TormentedDemonCombatScript.kt", "Foods.kt", "GraniteMaul.kt"), sources)
+    }
+
+    @Test
     fun `no legacy path writes autocast state any more`() {
         val root = File("src/main/kotlin/gg/rsmod/plugins")
         val offenders = root.walkTopDown().filter { it.isFile && (it.extension == "kt" || it.name.endsWith(".kts")) }
