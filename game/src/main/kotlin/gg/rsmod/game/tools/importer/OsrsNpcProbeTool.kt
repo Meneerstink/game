@@ -230,6 +230,22 @@ object OsrsNpcProbeTool {
                         if (n.dropped.isNotEmpty()) println("  DROPPED ${n.dropped}")
                     }
                 }
+            // For each npc: every OSRS npc that shares its first (body) model and has movement sequences - the rig donor for an npc whose
+            // definition carries no movement (Deadman guards, 2026-09-24).
+            "samebody" ->
+                ModernCacheReader(File(OsrsItemImportTool.SOURCE_CACHE)).use { reader ->
+                    val npcs = reader.files(ModernCacheReader.INDEX_CONFIG, CONFIG_GROUP_NPC)
+                    val decoded = npcs.mapNotNull { (id, bytes) -> runCatching { decodeOsrs(id, bytes) }.getOrNull()?.let { id to it } }
+                    ids.forEach { id ->
+                        val n = decoded.firstOrNull { it.first == id }?.second ?: return@forEach println("SAMEBODY_$id ABSENT")
+                        val body = n.models.toList()
+                        val exact = decoded.filter { (other, o) -> other != id && o.models.toList() == body && movementSeqs(o).isNotEmpty() }
+                        val first = decoded.filter { (other, o) -> other != id && o.models.firstOrNull() == body.firstOrNull() && movementSeqs(o).isNotEmpty() }
+                        println("SAMEBODY_$id name='${n.name}' models=$body")
+                        exact.forEach { (other, o) -> println("  EXACT $other '${o.name}' combat=${o.combat} ${movementSeqs(o)}") }
+                        first.map { (_, o) -> movementSeqs(o) }.groupingBy { it }.eachCount().forEach { (m, count) -> println("  FIRSTMODEL x$count $m") }
+                    }
+                }
             "bas667" -> {
                 val library = CacheLibrary(OsrsItemImportTool.TARGETS[0])
                 try {

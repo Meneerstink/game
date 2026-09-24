@@ -36,6 +36,14 @@ object OsrsNpcImportTool {
     val SHARED_MOVEMENT_SEQS = setOf(808, 819, 820, 821, 822)
 
     /**
+     * Npcs whose OSRS definition has no movement sequences take them from an OSRS npc with the same body models (OsrsNpcProbeTool
+     * "samebody", 2026-09-24). Deadman guards: the gnome guards 6574/11199 = Gnome guard 6082 (2331/12042), the desert guards
+     * 6699/11206 = Sophanem Guard 3881 (813/1205-1208), 6702/11209 = Honour guard 2981 (813 ready stance). Every other Deadman guard's
+     * same-body OSRS guard uses 808/819/820/821/822 - the humanoid default they already have.
+     */
+    val RIG_DONORS: Map<Int, Int> = mapOf(6574 to 6082, 11199 to 6082, 6699 to 3881, 11206 to 3881, 6702 to 2981, 11209 to 2981)
+
+    /**
      * Npcs that must NOT reuse [SHARED_MOVEMENT_SEQS]: their combat sequences animate the imported OSRS human skeleton, so their
      * stand/walk must be the OSRS sequences too (else the server's skeleton check swaps their attacks for rev-667 ones).
      * 13660 Jaguar warrior (owner 2026-09-19 "fix everything"): NPC_JAGUAR_RANGER_CLAWS_ATTACK / HUMAN_UNARMED_DEF / HUMAN_DEATH.
@@ -101,6 +109,11 @@ object OsrsNpcImportTool {
     val EXTRA_SEQS: Map<String, List<Int>> =
         mapOf(
             "mimic" to listOf(8308, 8309, 8310),
+            // deadman-guard: the gnome guards' combat on the OSRS gnome skeleton (base of GNOME_READY 2331): GNOME_ATTACKBOW 12043,
+            // GNOME_ATTACKSWORD 12045, GNOME_BLOCK 12046, GNOME_DEATH 12048 (RuneLite gameval AnimationID, 2026-09-24).
+            // The Sophanem / Rellekka guards stand with the imported HUMAN_STAFFREADY 813 (OSRS human skeleton), so their combat uses
+            // the OSRS HUMAN_SWORD_SLASH 390, HUMAN_SHIELD_DEFENCE 1156, HUMAN_DEATH 836, HUMAN_BOW 426, HUMAN_UNARMEDBLOCK 424 on it too.
+            "deadman-guard" to listOf(12043, 12045, 12046, 12048, 390, 1156, 836, 426, 424),
             // deadman-breach: attack / defend / death sequences, chosen by RuneLite gameval AnimationID name among the OSRS sequences
             // that animate the same frame base as each npc's stand sequence (OsrsNpcProbeTool "skeleton", 2026-09-19).
             "deadman-breach" to
@@ -353,7 +366,17 @@ object OsrsNpcImportTool {
             for ((npcId, nameOverride) in entries) {
                 val n = OsrsNpcProbeTool.decodeOsrs(npcId, npcFiles[npcId] ?: error("OSRS npc $npcId missing"))
                 if (nameOverride != null) n.name = nameOverride
-                if (OsrsNpcProbeTool.movementSeqs(n).isEmpty() && n.size == 1) {
+                val rigDonor = RIG_DONORS[npcId]?.let { OsrsNpcProbeTool.decodeOsrs(it, npcFiles[it] ?: error("OSRS rig donor $it missing")) }
+                if (OsrsNpcProbeTool.movementSeqs(n).isEmpty() && rigDonor != null) {
+                    n.stand = rigDonor.stand
+                    n.walk = rigDonor.walk
+                    n.walk180 = rigDonor.walk180
+                    n.walkLeft = rigDonor.walkLeft
+                    n.walkRight = rigDonor.walkRight
+                    n.idleTurnLeft = rigDonor.idleTurnLeft
+                    n.idleTurnRight = rigDonor.idleTurnRight
+                    dropped += "npc $npcId: no OSRS movement sequences; movement of same-body OSRS npc ${RIG_DONORS[npcId]} '${rigDonor.name}' applied"
+                } else if (OsrsNpcProbeTool.movementSeqs(n).isEmpty() && n.size == 1) {
                     // The OSRS definition carries no stand/walk sequences at all (e.g. the Deadman guards 6582/11203):
                     // the client then shows the model in its rest pose. 667 needs a BAS, so the humanoid default set
                     // proven by the Man pair (667 BAS 4 = OSRS Man 3106: 808/819/820/821/822) is applied - the same

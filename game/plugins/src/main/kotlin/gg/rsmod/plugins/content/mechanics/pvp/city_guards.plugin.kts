@@ -14,6 +14,25 @@ import gg.rsmod.plugins.content.combat.audio.NpcCombatAudio
  * human attack/block/death sequences, the
  * same way the imported Ferox npcs reuse the 667 Man movement set.
  */
+/*
+ * The Tree Gnome Stronghold guards (OSRS 6574/11199 -> 14414/14415) are gnomes: human sequences cannot animate the OSRS gnome
+ * skeleton. OSRS GNOME_ATTACKSWORD 12045 / GNOME_ATTACKBOW 12043 / GNOME_BLOCK 12046 / GNOME_DEATH 12048 (RuneLite gameval names),
+ * imported with the deadman-guard batch (tx-20260924-181836).
+ */
+val GNOME_GUARDS = setOf(14414, 14415)
+val GNOME_ATTACK_BOW = 15777
+val GNOME_ATTACK_SWORD = 15778
+val GNOME_BLOCK = 15779
+val GNOME_DEATH = 15780
+
+/*
+ * The Sophanem (14428/14429) and Rellekka (14434/14435) guards stand with OSRS HUMAN_STAFFREADY 813 (same-body OSRS Sophanem Guard /
+ * Honour guard), which animates the OSRS human skeleton, so their combat uses the OSRS sequences imported onto it:
+ * HUMAN_SWORD_SLASH 390 -> 15705, HUMAN_SHIELD_DEFENCE 1156 -> 15781, HUMAN_DEATH 836 -> 15707, HUMAN_BOW 426 -> 15782,
+ * HUMAN_UNARMEDBLOCK 424 -> 15706 (tx-20260924-182230).
+ */
+val OSRS_RIG_GUARDS = setOf(14428, 14429, 14434, 14435)
+
 fun KotlinPlugin.meleeGuard(id: Int) =
     set_combat_def(id) {
         configs {
@@ -45,9 +64,11 @@ fun KotlinPlugin.meleeGuard(id: Int) =
             defenceRanged = CityGuards.DEFENCE_RANGED_BONUS
         }
         anims {
-            attack = Anims.ATTACK_SLASH
-            death = Anims.HUMAN_DEATH
-            block = Anims.BLOCK_SHIELD
+            val gnome = id in GNOME_GUARDS
+            val osrsRig = id in OSRS_RIG_GUARDS
+            attack = if (gnome) GNOME_ATTACK_SWORD else if (osrsRig) 15705 else Anims.ATTACK_SLASH
+            death = if (gnome) GNOME_DEATH else if (osrsRig) 15707 else Anims.HUMAN_DEATH
+            block = if (gnome) GNOME_BLOCK else if (osrsRig) 15781 else Anims.BLOCK_SHIELD
         }
     }
 
@@ -89,9 +110,11 @@ fun KotlinPlugin.rangedGuard(id: Int) =
             // the weapon slot, and the Third Age Ranger wields the third-age bow. The crossbow
             // sequence 4230 made them "shoot a crossbow" they do not hold (owner 2026-09-18);
             // OSRS Wiki "Guard": only the crossbow guards use a crossbow animation.
-            attack = Anims.ATTACK_BOW
-            death = 836
-            block = 424
+            val gnome = id in GNOME_GUARDS
+            val osrsRig = id in OSRS_RIG_GUARDS
+            attack = if (gnome) GNOME_ATTACK_BOW else if (osrsRig) 15782 else Anims.ATTACK_BOW
+            death = if (gnome) GNOME_DEATH else if (osrsRig) 15707 else 836
+            block = if (gnome) GNOME_BLOCK else if (osrsRig) 15706 else 424
         }
     }
 

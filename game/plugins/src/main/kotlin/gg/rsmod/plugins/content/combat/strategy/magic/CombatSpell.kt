@@ -444,7 +444,7 @@ enum class CombatSpell(
         componentId = 75,
         maxHit = 0,
         castGfx = Graphic(3137 /* OSRS 167 */, 96),
-        castAnimation = arrayOf(729, 729),
+        castAnimation = arrayOf(15763, 15764), // OSRS 718 HUMAN_CASTCURSE / 1165 _STAFF: Void donor magic.anims.toml [vulnerability] 718, [vulnerability_staff] 1165
         projectile = 3138 /* OSRS 168 */,
         impactGfx = Graphic(3139 /* OSRS 169 */, 96),
         autoCastId = -1,

@@ -48,6 +48,29 @@ class DeadmanBreachTests {
     }
 
     @Test
+    fun `every Deadman guard's combat animations animate its own skeleton`() {
+        // city_guards.plugin.kts: human guards use the 667 human set; the Tree Gnome Stronghold guards (14414/14415) the imported
+        // OSRS gnome set (owner 2026-09-24: every guard with the right stance and animations).
+        val gnome = setOf(14414, 14415)
+        val osrsRig = setOf(14428, 14429, 14434, 14435)
+        val failures = mutableListOf<String>()
+        val melee = gg.rsmod.plugins.content.mechanics.pvp.CityGuards.MELEE_GUARD_IDS
+        (melee + gg.rsmod.plugins.content.mechanics.pvp.CityGuards.RANGED_GUARD_IDS).forEach { id ->
+            val anims =
+                when {
+                    id in gnome && id in melee -> listOf(15778, 15779, 15780)
+                    id in gnome -> listOf(15777, 15779, 15780)
+                    id in osrsRig && id in melee -> listOf(15705, 15781, 15707)
+                    id in osrsRig -> listOf(15782, 15706, 15707)
+                    id in melee -> listOf(gg.rsmod.plugins.api.cfg.Anims.ATTACK_SLASH, gg.rsmod.plugins.api.cfg.Anims.HUMAN_DEATH, gg.rsmod.plugins.api.cfg.Anims.BLOCK_SHIELD)
+                    else -> listOf(gg.rsmod.plugins.api.cfg.Anims.ATTACK_BOW, 836, 424)
+                }
+            anims.forEach { anim -> if (!AnimSkeletons.fits(definitions, store, id, anim)) failures += "guard $id: anim $anim does not fit its skeleton" }
+        }
+        assertTrue(failures.isEmpty(), failures.joinToString("\n"))
+    }
+
+    @Test
     fun `every attack, block, death and section animation animates the monster's own skeleton`() {
         val rows = BreachMonsters.attackRows(Paths.get("..", "..", "data", "cfg", "npcs", "npc-attacks.json").toFile()).associateBy { it.id }
         val failures = mutableListOf<String>()

@@ -96,6 +96,9 @@ class StandardSpellbookOsrsTests {
         // HUMAN_CASTSTRIKE (15754) / _STAFF (15774) for strike, bolt and blast; HUMAN_CASTWAVE (15755) / _STAFF (15756) for waves.
         CombatSpell.ELEMENTAL_TIERS.dropLast(2).flatten().forEach { (spell, _) -> assertEquals(spell.name, listOf(15754, 15774), spell.castAnimation.take(2)) }
         CombatSpell.ELEMENTAL_TIERS[3].forEach { (spell, _) -> assertEquals(spell.name, listOf(15755, 15756), spell.castAnimation.take(2)) }
+        // Every other spell casts an imported OSRS player sequence too (standardspellseq 15754+, surge 15524, Tele Block 15525/15526).
+        val osrsCast = xp.keys.filter { spell -> spell.castAnimation.take(2).any { it !in 15524..15526 && it !in 15754..15774 } }
+        assertEquals(emptyList<CombatSpell>(), osrsCast)
     }
 
     @Test
