@@ -95,6 +95,15 @@ object AutocastInterfaceLayout {
             Entry(193, 37, "Miasmic Blitz", 1567, 1573, 85), Entry(193, 39, "Miasmic Barrage", 1566, 1572, 97),
         )
 
+    const val ICON_SIZE = 24
+    private const val COLUMNS = 4
+    private const val PITCH_X = 40
+    private const val PITCH_Y = 30
+
+    /** (x, y) of the [index]-th icon in a spell grid: four per row. The server packs the allowed spells with it (no gaps). */
+    fun gridPosition(index: Int): Pair<Int, Int> =
+        (15 + (index % COLUMNS) * PITCH_X + (PITCH_X - ICON_SIZE) / 2) to ((index / COLUMNS) * PITCH_Y + 3)
+
     fun entryOf(book: Int, bookComponent: Int): Entry? = ALL.firstOrNull { it.book == book && it.bookComponent == bookComponent }
 
     /** Every entry in component order: component [SELECT_FIRST_SPELL] + index. */
@@ -120,10 +129,7 @@ object AutocastInterfaceImportTool {
     private const val TYPE_LAYER = 0
     private const val TYPE_TEXT = 4
     private const val TYPE_GRAPHIC = 5
-    private const val ICON = 24
-    private const val COLUMNS = 4
-    private const val PITCH_X = 40
-    private const val PITCH_Y = 30
+    private const val ICON = AutocastInterfaceLayout.ICON_SIZE
 
     /** 884:32..36 as written by the single-box version (tx-20260924-011513); only exactly these may be replaced by the two-box layout. */
     private val SINGLE_BOX_SHA1 =
@@ -173,8 +179,7 @@ object AutocastInterfaceImportTool {
         )
         fun grid(entries: List<AutocastInterfaceLayout.Entry>, parent: Int) {
             entries.forEachIndexed { index, entry ->
-                val x = 15 + (index % COLUMNS) * PITCH_X + (PITCH_X - ICON) / 2
-                val y = (index / COLUMNS) * PITCH_Y + 3
+                val (x, y) = l.gridPosition(index)
                 val sprite = sprites[entry] ?: error("no sprite for ${entry.name}")
                 list += graphic(l.componentOf(entry), x, y, ICON, ICON, parent, sprite, ops = listOf("Select"), opBase = "<col=00ff00>${entry.name}")
             }

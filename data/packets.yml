@@ -1518,6 +1518,26 @@ in-packets:
       - name: index
         type: SHORT
 
+  # OPPLAYER9 (client 43): clicking a clan-invite chat line. p1 ctrl-run, p2 index.
+  - message: gg.rsmod.game.message.impl.OpPlayer9Message
+    type: FIXED
+    opcode: 43
+    length: 3
+    structure:
+      - name: unknown
+        type: BYTE
+      - name: index
+        type: SHORT
+
+  # RESUME_P_HSLDIALOG (client 22): the colour accepted in the HSL picker (1106). p2 hsl.
+  - message: gg.rsmod.game.message.impl.ResumeHslDialogMessage
+    type: FIXED
+    opcode: 22
+    length: 2
+    structure:
+      - name: hsl
+        type: SHORT
+
   - message: gg.rsmod.game.message.impl.OpPlayer3Message
     type: FIXED
     opcode: 77

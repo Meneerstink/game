@@ -102,7 +102,11 @@ on_button(interfaceId = TAB, component = 19) {
 }
 
 // The channel settings keep a snapshot of the owner's friends, so ranks and "Any friends" work while the owner is offline.
+world.socialHooks.friendsChatLeft = { p -> LootShare.disable(p) }
+
 on_login {
+    // LootShare never survives a logout; it is switched on again from the tab (2 minutes).
+    LootShare.disable(player, quiet = true)
     world.friendsChat.syncFriends(player)
     world.friendsChat.rejoinOnLogin(player)
 }

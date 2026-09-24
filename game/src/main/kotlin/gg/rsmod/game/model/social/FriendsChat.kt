@@ -229,6 +229,8 @@ class FriendsChat(private val settingsFile: File = File(SETTINGS_FILE)) {
         if (notifyLeaver) player.attr.remove(LAST_CHANNEL)
         val channel = channelOf(player) ?: return
         channel.remove(player)
+        // Logout (notifyLeaver false) writes nothing to the closing session; LootShare is cleared at the next login instead.
+        if (notifyLeaver) player.world.socialHooks.friendsChatLeft?.invoke(player)
         if (notifyLeaver) player.write(UpdateFriendChatChannelFullMessage(channel = null))
         if (channel.isEmpty()) channels.remove(key(channel.owner)) else broadcastChannelState(channel)
     }

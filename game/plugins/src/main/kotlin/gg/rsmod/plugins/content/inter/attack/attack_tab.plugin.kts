@@ -78,14 +78,7 @@ on_equip_to_slot(EquipmentType.WEAPON.id) {
     player.setVarp(AttackTab.SPECIAL_ATTACK_VARP, 0)
 }
 
-/**
- * Toggles on the 3rd attack style when the 4th weapon style is unavailable.
- */
-on_unequip_from_slot(EquipmentType.WEAPON.id) {
-    if (player.getVarp(AttackTab.ATTACK_STYLE_VARP) == 3) {
-        player.setVarp(AttackTab.ATTACK_STYLE_VARP, 2)
-    }
-}
+// A style the new weapon lacks (4th box -> 3rd, else 1st) is corrected on every weapon change by Autocast.sync / validStyle.
 
 /**
  * Disable special attack on log-out.

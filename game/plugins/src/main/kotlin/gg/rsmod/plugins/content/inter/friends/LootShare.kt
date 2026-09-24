@@ -43,6 +43,15 @@ object LootShare {
 
     fun isActive(player: Player): Boolean = player.getVarbit(ACTIVE_VARBIT) == 1
 
+    /** Leaving the channel (or logging in fresh) switches LootShare and CoinShare off (Novite 667 FriendChatsManager.disableLootShare). */
+    fun disable(player: Player, quiet: Boolean = false) {
+        val wasOn = isActive(player) || player.getVarbit(LOADING_VARBIT) == 1
+        player.setVarbit(LOADING_VARBIT, 0)
+        player.setVarbit(ACTIVE_VARBIT, 0)
+        player.setVarbit(COIN_SHARE_VARBIT, 0)
+        if (wasOn && !quiet && player.isOnline) player.message("LootShare is no longer active.")
+    }
+
     /** The LootShare button on the Friends Chat tab. */
     fun toggle(player: Player) {
         val chat = player.world.friendsChat
@@ -62,7 +71,8 @@ object LootShare {
         player.message("You will ${if (active) "stop sharing" else "be able to share"} loot in 2 minutes.")
         player.world.queue {
             wait(TOGGLE_TICKS)
-            if (!player.isOnline) return@queue
+            // Left the channel (or relogged) meanwhile: disable() already cleared the pending toggle.
+            if (!player.isOnline || player.getVarbit(LOADING_VARBIT) != 1 || chat.channelOf(player) == null) return@queue
             player.setVarbit(LOADING_VARBIT, 0)
             val now = !isActive(player)
             player.setVarbit(ACTIVE_VARBIT, if (now) 1 else 0)

@@ -27,6 +27,8 @@ enum class ChatMessageType(
     MOD_AUTO_TYPER(91),
     CONSOLE(99),
     TRADE_REQ(100),
+    /** "X is inviting you to join their clan." - clicking it sends OPPLAYER9 for X (Novite 667 sendClanInviteMessage). */
+    CLAN_INVITE(117),
     /** Duel Arena challenge request (Novite 667 `sendDuelChallengeRequestMessage` → message type 101). */
     DUEL_REQ(101),
     TRADE(102),

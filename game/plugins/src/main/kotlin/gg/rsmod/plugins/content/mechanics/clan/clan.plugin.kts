@@ -23,9 +23,39 @@ on_logout {
     Clans.onLogout(player)
 }
 
+world.socialHooks.clanInviteClicked = { player, inviter -> ClanScreens.openInvite(player, inviter) }
+world.socialHooks.hslColourChosen = { player, hsl -> ClanScreens.colourChosen(player, hsl) }
+
 on_button(interfaceId = CLAN_TAB, component = 76) {
-    Clans.details(player).forEach { player.message(it) }
+    ClanScreens.openDetails(player)
 }
+
+/* "Invite": the cache bakes 1110:90 as a player-targeted button (events 0x4000); the chosen player arrives as OPPLAYERT. */
+on_spell_on_player(CLAN_TAB, 90) {
+    val target = player.getInteractingPlayer()
+    Clans.recruit(player, target)
+}
+
+/* Invitation screen (1095): Accept is its pause button (ClanScreens.openInvite waits for it); these refuse. */
+ClanScreens.INVITE_REFUSE.forEach { component ->
+    on_button(interfaceId = ClanScreens.INVITE, component = component) { ClanScreens.refuseInvite(player) }
+}
+
+/* National flag (1096 "Select Flag" -> 1089). */
+on_button(interfaceId = ClanSettingsInterface.INTERFACE, component = ClanSettingsInterface.SELECT_FLAG) { ClanScreens.openFlags(player) }
+on_button(interfaceId = ClanScreens.FLAGS, component = ClanScreens.FLAG_LIST) { ClanScreens.selectFlag(player, player.getInteractingSlot()) }
+on_button(interfaceId = ClanScreens.FLAGS, component = ClanScreens.FLAG_SAVE) { ClanScreens.saveFlag(player) }
+on_button(interfaceId = ClanScreens.FLAGS, component = ClanScreens.FLAG_CLOSE) { ClanScreens.backToSettings(player, ClanScreens.FLAGS) }
+
+/* Motif Designer (1096 "Edit motif" -> 1105, colours through the HSL picker 1106). */
+on_button(interfaceId = ClanSettingsInterface.INTERFACE, component = ClanSettingsInterface.EDIT_MOTIF) { ClanScreens.openMotif(player) }
+on_button(interfaceId = ClanScreens.MOTIF, component = ClanScreens.MOTIF_TOP_LIST) { ClanScreens.selectSymbol(player, top = true, slot = player.getInteractingSlot()) }
+on_button(interfaceId = ClanScreens.MOTIF, component = ClanScreens.MOTIF_BOTTOM_LIST) { ClanScreens.selectSymbol(player, top = false, slot = player.getInteractingSlot()) }
+ClanScreens.MOTIF_COLOUR_BUTTONS.forEachIndexed { part, component ->
+    on_button(interfaceId = ClanScreens.MOTIF, component = component) { ClanScreens.editColour(player, part) }
+}
+on_button(interfaceId = ClanScreens.MOTIF, component = ClanScreens.MOTIF_DONE) { ClanScreens.backToSettings(player, ClanScreens.MOTIF) }
+on_button(interfaceId = ClanScreens.MOTIF, component = ClanScreens.MOTIF_CLOSE) { player.closeInterface(ClanScreens.MOTIF) }
 
 /* Own clan channel: join / leave; without a clan it offers to found one (Novite ClanCreateDialogue). */
 on_button(interfaceId = CLAN_TAB, component = 85) {
@@ -138,19 +168,8 @@ on_command("clan") {
         "invite" -> {
             val targetName = args.drop(1).joinToString(" ")
             val target = player.world.players.firstOrNull { it.username.equals(targetName, ignoreCase = true) }
-            when {
-                target == null -> player.filterableMessage("That player isn't online.")
-                target.attr[Clans.CLAN_ATTR] != null -> player.filterableMessage("${target.username} is already in a clan.")
-                else -> {
-                    // Novite ClanInvite dialogue: the invited player accepts first.
-                    val inviter = player
-                    player.filterableMessage("Sending a clan invite to ${target.username}...")
-                    target.queue {
-                        val clanName = Clans.clanOf(inviter) ?: return@queue
-                        if (options("Yes, join $clanName.", "No thanks.", title = "${inviter.username} invites you to join $clanName.") == 1) Clans.invite(inviter, target)
-                    }
-                }
-            }
+            // Same path as the tab's Invite button: the target clicks the invitation line, then Accept on 1095.
+            if (target == null) player.filterableMessage("That player isn't online.") else Clans.recruit(player, target)
         }
         "leave" -> Clans.leave(player)
         "rank" -> {

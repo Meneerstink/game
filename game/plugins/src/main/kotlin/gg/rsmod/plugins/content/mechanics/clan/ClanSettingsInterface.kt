@@ -24,10 +24,18 @@ import gg.rsmod.util.Misc
 object ClanSettingsInterface {
     const val INTERFACE = 1096
     const val MEMBER_ROWS = 39
-    const val RANK_OPTIONS = 276
+    /*
+     * Dropdowns (script 4497 -> 4499 -> 4506): the options are created as children of the dropdown component itself (its onLoad
+     * passes itself as the list parent) with op1 "Select", child index = enum key. Rank 284 (enum 3714), time zone 248 (enum 3711),
+     * home world 298 (enum 3700). The old 276 / 240 / 290 were a border piece, the time-zone open arrow and a border piece, so none of
+     * these dropdowns ever reached the server.
+     */
+    const val RANK_OPTIONS = 284
     const val JOB_OPTIONS = 262
-    const val TIMEZONE_OPTIONS = 240
-    const val WORLD_OPTIONS = 290
+    const val TIMEZONE_OPTIONS = 248
+    const val WORLD_OPTIONS = 298
+    const val SELECT_FLAG = 371
+    const val EDIT_MOTIF = 125
     const val KICK = 327
     const val SAVE = 340
     const val GUESTS_ENTER = 92

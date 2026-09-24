@@ -19,6 +19,15 @@ class SocialHooks {
     /** A quick-chat phrase into the clan channel the player listens to as a guest (quick-chat channel 3). */
     var clanGuestQuickChat: ((Player, ByteArray) -> Boolean)? = null
 
+    /** A player left their friends chat channel (leave, kick, channel disabled; not logout): LootShare switches off. */
+    var friendsChatLeft: ((Player) -> Unit)? = null
+
+    /** OPPLAYER9: a clan-invite chat line from (player, inviter) was clicked. */
+    var clanInviteClicked: ((Player, Player) -> Unit)? = null
+
+    /** RESUME_P_HSLDIALOG: the colour the player accepted in the HSL picker (1106). */
+    var hslColourChosen: ((Player, Int) -> Unit)? = null
+
     /** ClientProt CLANCHANNEL_KICKUSER. */
     var clanKick: ((Player, Boolean, String) -> Unit)? = null
 

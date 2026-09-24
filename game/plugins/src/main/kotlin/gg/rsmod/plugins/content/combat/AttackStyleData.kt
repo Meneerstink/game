@@ -88,7 +88,8 @@ enum class WeaponCombatData(
         AttackStyleData(CombatStyle.FIRST, WeaponStyle.ACCURATE, StyleType.CRUSH, XpMode.ATTACK_XP),
         AttackStyleData(CombatStyle.SECOND, WeaponStyle.AGGRESSIVE, StyleType.CRUSH, XpMode.STRENGTH_XP),
         AttackStyleData(CombatStyle.THIRD, WeaponStyle.CONTROLLED, StyleType.STAB, XpMode.SHARED_XP),
-        AttackStyleData(CombatStyle.THIRD, WeaponStyle.DEFENSIVE, StyleType.CRUSH, XpMode.DEFENCE_XP),
+        // Block (4th box): was listed as THIRD, so a mace on Block had no style data at all and combat threw.
+        AttackStyleData(CombatStyle.FOURTH, WeaponStyle.DEFENSIVE, StyleType.CRUSH, XpMode.DEFENCE_XP),
     ),
 
     SPEAR(

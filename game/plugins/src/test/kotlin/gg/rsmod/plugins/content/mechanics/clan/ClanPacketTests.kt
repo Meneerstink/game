@@ -55,8 +55,27 @@ class ClanPacketTests {
         p.g1b()
         val members = (0 until affined).associate { p.fastgstr()!! to p.g1b().also { p.g4() } }
         assertEquals(mapOf("Owner" to 126, "Pal" to 5), members)
-        assertEquals(0, p.g2(), "extra settings (version >= 3)")
+        // Novite generateClanSettingsDataBlock always sends the motif colours (16, 18); nothing else for a default clan.
+        assertEquals(2, p.g2(), "extra settings (version >= 3)")
+        val c = Clan.DEFAULT_MOTIF_COLOURS
+        assertEquals(16, p.g4()); assertEquals(c[0] or (c[1] shl 16), p.g4())
+        assertEquals(18, p.g4()); assertEquals(c[2] or (c[3] shl 16), p.g4())
         assertEquals(0, p.buf.remaining())
+    }
+
+    @Test
+    fun `motif symbols and colours travel as clan settings 13, 16 and 18`() {
+        val c = Clan("Deadmen").apply {
+            members["Zed"] = ClanRank.OWNER
+            motifTop = 5
+            motifBottom = 17
+            motifColours[0] = 100; motifColours[1] = 200; motifColours[2] = 300; motifColours[3] = 400
+        }
+        val p = In(Clans.encodeSettings(c, affined = true, update = 1))
+        p.g1(); p.g1(); p.g1(); p.g4(); p.g4(); p.g2(); p.g1(); p.gjstr(); p.g1(); p.g1b(); p.g1b(); p.g1b(); p.g1b()
+        p.fastgstr(); p.g1b(); p.g4()
+        val extras = (0 until p.g2()).associate { p.g4() to p.g4() }
+        assertEquals(mapOf(13 to (5 or (17 shl 16)), 16 to (100 or (200 shl 16)), 18 to (300 or (400 shl 16))), extras)
     }
 
     @Test

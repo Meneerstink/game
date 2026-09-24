@@ -73,6 +73,11 @@ data class Clan(
     var clanTime: Boolean = false
     var worldId: Int = 0
     var flag: Int = 0
+    /** Motif Designer (1105): top / bottom symbol as enum 3686 key (list slot + 1, 0 = none) - client varbits 9086 / 9087. */
+    var motifTop: Int = 0
+    var motifBottom: Int = 0
+    /** Symbol top, symbol bottom, primary, secondary colour (16-bit HSL, varps 2094..2097); defaults = the clan cloak's own colours. */
+    val motifColours: IntArray = DEFAULT_MOTIF_COLOURS.copyOf()
     val jobs: MutableMap<String, Int> = ConcurrentHashMap()
     /** Per member: [ClanMemberFlag] bits (mute, keep / citadel / island bans). */
     val memberFlags: MutableMap<String, Int> = ConcurrentHashMap()
@@ -83,6 +88,11 @@ data class Clan(
     fun key(name: String): String? = members.keys.firstOrNull { it.equals(name, ignoreCase = true) }
 
     fun permissionMask(rank: Int): Int = permissions[rank] ?: ClanPermission.defaultMask(rank)
+
+    companion object {
+        /** Clan cloak / vexillum (items 20708 / 20709) recolour sources, read from the 667 cache 2026-09-24 (Novite Clan default). */
+        val DEFAULT_MOTIF_COLOURS = intArrayOf(31690, 60362, 55246, 17358)
+    }
 }
 
 /** Member flags shown on the Clanmates page of 1096 (Novite `ClanMember`: mute, ban from keep / citadel / island). */
@@ -220,6 +230,8 @@ object Clans {
             "clanTime" to (if (clan.clanTime) "1" else "0"),
             "world" to clan.worldId.toString(),
             "flag" to clan.flag.toString(),
+            "motif" to "${clan.motifTop},${clan.motifBottom}",
+            "colours" to clan.motifColours.joinToString(","),
         )
 
     private fun applySetting(clan: Clan, key: String, value: String) {
@@ -234,6 +246,8 @@ object Clans {
             "clanTime" -> clan.clanTime = value == "1"
             "world" -> value.toIntOrNull()?.let { clan.worldId = it }
             "flag" -> value.toIntOrNull()?.let { clan.flag = it }
+            "motif" -> value.split(",").mapNotNull { it.toIntOrNull() }.takeIf { it.size == 2 }?.let { (t, b) -> clan.motifTop = t; clan.motifBottom = b }
+            "colours" -> value.split(",").mapNotNull { it.toIntOrNull() }.take(4).forEachIndexed { i, c -> clan.motifColours[i] = c }
         }
     }
 
@@ -275,27 +289,62 @@ object Clans {
         return true
     }
 
+    /** A clan invitation waiting for the invited player to click the chat line (single use). */
+    class PendingInvite(val inviter: String, val clan: String)
+
+    val PENDING_INVITE = AttributeKey<PendingInvite>()
+
+    const val MAX_MEMBERS = 500
+
+    /**
+     * Clan Chat tab "Invite" (1110:90, a player-targeted button) - Novite 667 `ClansManager.invite`: permission, ban list, size and
+     * busy checks, then the target gets the clickable chat line "X is inviting you to join their clan." (chat type 117).
+     */
+    fun recruit(inviter: Player, target: Player) {
+        val clan = clanFor(inviter) ?: return inviter.filterableMessage("You must be in a clan to do that.")
+        val targetName = Misc.formatForDisplay(target.username)
+        when {
+            target === inviter -> return
+            !mayRecruit(clan, inviter) -> inviter.filterableMessage("You don't have permissions to invite.")
+            clan.bans.any { it.equals(target.username, ignoreCase = true) } -> inviter.filterableMessage("This player has been banned from this clan.")
+            clan.members.size >= MAX_MEMBERS -> inviter.filterableMessage("Clans can't have over $MAX_MEMBERS members.")
+            target.attr[CLAN_ATTR] != null -> inviter.filterableMessage("This player is already a member of another clan.")
+            target.getInterfaceAt(gg.rsmod.plugins.api.InterfaceDestination.MAIN_SCREEN) != -1 -> inviter.filterableMessage("The other player is busy.")
+            else -> {
+                target.attr[PENDING_INVITE] = PendingInvite(inviter.username, clan.name)
+                inviter.filterableMessage("Sending $targetName an invitation...")
+                target.message("${Misc.formatForDisplay(inviter.username)} is inviting you to join their clan.", gg.rsmod.plugins.api.ChatMessageType.CLAN_INVITE, Misc.formatForDisplay(inviter.username))
+            }
+        }
+    }
+
+    /** The clan an invitation from [inviter] would put [player] in, consuming the invitation; null when there is none. */
+    fun takeInvite(player: Player, inviter: Player): Clan? {
+        load()
+        val pending = player.attr[PENDING_INVITE] ?: return null
+        if (!pending.inviter.equals(inviter.username, ignoreCase = true)) return null
+        player.attr.remove(PENDING_INVITE)
+        return clans[pending.clan]
+    }
+
+    /** The invitation screen's Accept: re-checked, because the clan may have changed while the screen was open. */
+    fun acceptInvite(target: Player, clanName: String) {
+        val clan = clans[clanName] ?: return target.filterableMessage("That clan no longer exists.")
+        when {
+            target.attr[CLAN_ATTR] != null -> target.filterableMessage("You're already in a clan.")
+            clan.bans.any { it.equals(target.username, ignoreCase = true) } -> target.filterableMessage("You have been banned from this clan.")
+            clan.members.size >= MAX_MEMBERS -> target.filterableMessage("Clans can't have over $MAX_MEMBERS members.")
+            else -> addMember(clan, target)
+        }
+    }
+
+    /** The old `clan invite` command path (tests, admins): the same checks and the same clickable invitation. */
     fun invite(
         inviter: Player,
         target: Player,
-    ) {
-        val clan = clanFor(inviter)
-        if (clan == null) {
-            inviter.filterableMessage("You're not in a clan.")
-            return
-        }
-        if (!mayRecruit(clan, inviter)) {
-            inviter.filterableMessage("You don't have permission to invite.")
-            return
-        }
-        if (clan.bans.any { it.equals(target.username, ignoreCase = true) }) {
-            inviter.filterableMessage("This player has been banned from this clan.")
-            return
-        }
-        if (target.attr[CLAN_ATTR] != null) {
-            inviter.filterableMessage("${target.username} is already in a clan.")
-            return
-        }
+    ) = recruit(inviter, target)
+
+    private fun addMember(clan: Clan, target: Player) {
         clan.members[target.username] = ClanRank.MEMBER
         clan.joined[target.username] = System.currentTimeMillis()
         target.attr[CLAN_ATTR] = clan.name
@@ -370,7 +419,17 @@ object Clans {
 
     /** Login / "Join Clan Channel": the member's own clan channel and settings. */
     fun connect(player: Player) {
+        load()
+        // A clan that was disbanded while the player was offline.
+        player.attr[CLAN_ATTR]?.let { name -> if (clans[name] == null) player.attr.remove(CLAN_ATTR) }
         val clan = clanFor(player) ?: return
+        if (clan.key(player.username) == null) {
+            // Kicked (or the clan changed) while offline: the saved clan name is stale (Novite connectToClan "You have been kicked").
+            player.attr.remove(CLAN_ATTR)
+            player.filterableMessage("You have been kicked from the clan.")
+            refreshClanmateDots(player)
+            return
+        }
         channelUsers.getOrPut(clan.name) { ConcurrentHashMap.newKeySet() }.add(player)
         player.write(ClanSettingsFullMessage(settingsBody(clan, affined = true)))
         refreshChannel(clan)
@@ -600,6 +659,10 @@ object Clans {
             clan.threadId?.let { extras += Triple(2, 1, threadIdLong(it)) }
             val bits = (if (clan.recruiting) 1 else 0) or ((if (clan.clanTime) 1 else 0) shl 1) or (clan.worldId shl 2) or (clan.flag shl 10)
             if (bits != 0) extras += Triple(3, 0, bits)
+            // 13 motif top | bottom << 16, 16 / 18 the four motif colours (Novite generateClanSettingsDataBlock).
+            if (clan.motifTop != 0 || clan.motifBottom != 0) extras += Triple(13, 0, clan.motifTop or (clan.motifBottom shl 16))
+            extras += Triple(16, 0, clan.motifColours[0] or (clan.motifColours[1] shl 16))
+            extras += Triple(18, 0, clan.motifColours[2] or (clan.motifColours[3] shl 16))
             put(DataType.SHORT, extras.size)
             extras.forEach { (id, type, value) ->
                 put(DataType.INT, id or (type shl 30))
@@ -610,6 +673,19 @@ object Clans {
                 }
             }
         }
+
+    /**
+     * The invitation screen (1095) reads the inviting clan from the *listened* (non-affined) ClanSettings slot, as in the Novite donor;
+     * [restoreListenedSettings] puts the guest channel's settings back afterwards.
+     */
+    fun sendPreviewSettings(player: Player, clan: Clan) = player.write(ClanSettingsFullMessage(settingsBody(clan, affined = false)))
+
+    fun restoreListenedSettings(player: Player) {
+        val guestClan = guestOf[player]?.let { clans[it] }
+        player.write(ClanSettingsFullMessage(if (guestClan != null) settingsBody(guestClan, affined = false) else byteArrayOf(0)))
+    }
+
+    fun ownerOf(clan: Clan): String? = clan.members.entries.firstOrNull { it.value == ClanRank.OWNER }?.key
 
     /** The talk rank the client shows: -1 when guests (and every rank) may talk, else the minimum rank. */
     internal fun talkRankOf(clan: Clan): Int = if (clan.guestsCanTalk) GUEST_RANK else clan.talkRank

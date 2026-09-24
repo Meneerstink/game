@@ -347,12 +347,42 @@ object Autocast {
         val active = resolve(player)
         player.setVarp(Combat.SELECTED_AUTOCAST_VARP, active?.autoCastId ?: 0)
         val weaponAutocasts = AutocastWeapons.isAutocastWeapon(weaponDef(player))
+        val style = player.getVarp(AttackTab.ATTACK_STYLE_VARP)
         if (weaponAutocasts && mode(player) != Mode.OFF && selected(player) != null) {
-            if (player.getVarp(AttackTab.ATTACK_STYLE_VARP) != AUTOCAST_STYLE) player.setVarp(AttackTab.ATTACK_STYLE_VARP, AUTOCAST_STYLE)
-        } else if (player.getVarp(AttackTab.ATTACK_STYLE_VARP) == AUTOCAST_STYLE && weaponAutocasts) {
-            player.setVarp(AttackTab.ATTACK_STYLE_VARP, 0)
+            if (style != AUTOCAST_STYLE) {
+                player.attr[STYLE_BEFORE_AUTOCAST] = style
+                player.setVarp(AttackTab.ATTACK_STYLE_VARP, AUTOCAST_STYLE)
+            }
+        } else {
+            // Leaving autocast (melee style picked, other weapon, spell forgotten): the melee style from before autocast comes back,
+            // and a style the wielded weapon does not have (e.g. the hidden 4th slot on a whip) never reaches combat.
+            val before = player.attr[STYLE_BEFORE_AUTOCAST]
+            player.attr.remove(STYLE_BEFORE_AUTOCAST)
+            val wanted = if (style == AUTOCAST_STYLE && before != null) before else style
+            val valid = validStyle(player, wanted)
+            if (valid != style) player.setVarp(AttackTab.ATTACK_STYLE_VARP, valid)
         }
         refreshCombatTab(player)
+    }
+
+    /** The melee/ranged style picked before autocast took over the style varp (restored when autocast stops). */
+    val STYLE_BEFORE_AUTOCAST = AttributeKey<Int>(persistenceKey = "autocast_style_before")
+
+    /**
+     * [style] when the wielded weapon has it, else the nearest one it has: the 4th box falls back to the 3rd (the old unequip rule),
+     * anything else to the 1st. Unknown weapon types keep [style].
+     */
+    fun validStyle(player: Player, style: Int): Int {
+        // From the item itself (as sendWeaponComponentInformation does): LAST_KNOWN_WEAPON_TYPE may not be updated yet on this equip.
+        val typeId = weaponDef(player)?.let { maxOf(0, it.weaponType) } ?: WeaponType.NONE.id
+        val type = WeaponType.values().firstOrNull { it.id == typeId } ?: return style
+        val data = gg.rsmod.plugins.content.combat.WeaponCombatData.values().firstOrNull { type in it.type } ?: return style
+        val has = { s: Int -> data.style.any { it.combatStyle.id == s } }
+        return when {
+            has(style) -> style
+            style == AUTOCAST_STYLE && has(AUTOCAST_STYLE - 1) -> AUTOCAST_STYLE - 1
+            else -> 0
+        }
     }
 
     /**
@@ -404,11 +434,15 @@ object Autocast {
         player.setComponentText(l.SELECT_INTERFACE, l.SELECT_TITLE, if (mode == Mode.DEFENSIVE) "Choose a defensive spell" else "Choose a spell")
         player.setComponentHidden(l.SELECT_INTERFACE, l.SELECT_STANDARD_LAYER, book != Spellbook.STANDARD)
         player.setComponentHidden(l.SELECT_INTERFACE, l.SELECT_ANCIENT_LAYER, book != Spellbook.ANCIENT)
+        var slot = 0
         l.ALL.forEach { entry ->
             val component = l.componentOf(entry)
             val allowed = entry in entries && spellFor(entry)?.let { AutocastWeapons.incompatibility(def, it) == null } == true
             player.setComponentHidden(l.SELECT_INTERFACE, component, !allowed)
             if (allowed) {
+                // Only the weapon's spells, one after another (no holes where another weapon's spells would sit).
+                val (x, y) = l.gridPosition(slot++)
+                player.setComponentPosition(l.SELECT_INTERFACE, component, x, y)
                 player.setComponentSprite(l.SELECT_INTERFACE, component, listIcon(player, entry))
                 player.setInterfaceEvents(l.SELECT_INTERFACE, component, -1..-1, OP1)
             }

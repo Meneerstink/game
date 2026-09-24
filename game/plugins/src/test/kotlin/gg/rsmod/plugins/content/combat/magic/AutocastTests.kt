@@ -172,6 +172,31 @@ class AutocastTests {
     }
 
     @Test
+    fun `leaving autocast gives back a style the new weapon has - the hidden 4th box never reaches melee`() {
+        val player = newPlayer()
+        player.wield(Items.STAFF_OF_AIR)
+        player.setVarp(AttackTab.ATTACK_STYLE_VARP, 1)
+        Autocast.select(player, CombatSpell.WIND_STRIKE, Autocast.Mode.STANDARD)
+        assertEquals(Autocast.AUTOCAST_STYLE, player.getVarp(AttackTab.ATTACK_STYLE_VARP))
+        player.wield(Items.ABYSSAL_WHIP)
+        assertEquals(1, player.getVarp(AttackTab.ATTACK_STYLE_VARP), "the whip gets the style from before autocast, not the hidden 4th box")
+        player.setVarp(AttackTab.ATTACK_STYLE_VARP, 3)
+        Autocast.sync(player)
+        assertEquals(2, player.getVarp(AttackTab.ATTACK_STYLE_VARP), "a 3-style weapon on the 4th box falls back to the 3rd")
+        player.wield(null)
+        assertTrue(player.getVarp(AttackTab.ATTACK_STYLE_VARP) in 0..2, "unarmed has three styles")
+    }
+
+    @Test
+    fun `every weapon style table lists each box once, so style lookups never fall through`() {
+        gg.rsmod.plugins.content.combat.WeaponCombatData.values().forEach { data ->
+            val boxes = data.style.map { it.combatStyle }
+            assertEquals(boxes.size, boxes.toSet().size, "${data.name} lists a box twice")
+            assertEquals(boxes.indices.toList(), boxes.map { it.id }, "${data.name} boxes must be consecutive from the 1st")
+        }
+    }
+
+    @Test
     fun `an incompatible staff, a powered staff and a spellbook change forget the choice`() {
         val player = newPlayer()
         player.wield(Items.IBANS_STAFF)
