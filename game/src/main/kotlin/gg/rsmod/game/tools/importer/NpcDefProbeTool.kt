@@ -143,7 +143,7 @@ object NpcDefProbeTool {
                         }
                         println(
                             "NPC_$id name=${def.name} size=${def.size} combatLevel=${def.combatLevel} " +
-                                "interactable=${def.interactable} transforms=${def.transforms?.toList()} " +
+                                "interactable=${def.interactable} transforms=${def.transforms?.toList()} transformVarbit=${def.varbit} transformVarp=${def.varp} " +
                                 "basId=${def.basId} walkMask=${def.walkMask} headIcon=${def.headIcon} " +
                                 "width=${def.width} length=${def.length}",
                         )
