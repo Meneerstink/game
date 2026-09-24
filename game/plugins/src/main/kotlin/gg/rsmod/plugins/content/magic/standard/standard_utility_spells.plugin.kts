@@ -30,32 +30,16 @@ fun spell(data: SpellbookData): SpellMetadata {
     return MagicSpells.getMetadata(data.uniqueId)!!
 }
 
-private val BONES = listOf(
-    Items.BONES, Items.BURNT_BONES, Items.BAT_BONES, Items.BIG_BONES, Items.BABYDRAGON_BONES, Items.DRAGON_BONES,
-    Items.WOLF_BONES, Items.JOGRE_BONES, Items.MONKEY_BONES, Items.ZOGRE_BONES, Items.OURG_BONES, Items.DAGANNOTH_BONES,
-)
-
 fun bonesTo(
     player: Player,
     metadata: SpellMetadata,
     produce: Int,
     xp: Double,
 ) {
-    val bones = player.inventory.rawItems.filterNotNull().filter { it.id in BONES }
-    if (bones.isEmpty()) {
-        player.message("You aren't holding any bones!")
-        return
-    }
+    if (gg.rsmod.plugins.content.magic.BonesToFruit.refuseWithoutBones(player)) return
     if (!MagicSpells.canCast(player, metadata.lvl, metadata.runes)) return
     MagicSpells.removeRunes(player, metadata.runes, metadata.sprite)
-    player.animate(722)
-    player.graphic(141, 96)
-    bones.forEach { bone ->
-        val count = player.inventory.getItemCount(bone.id)
-        if (count > 0 && player.inventory.remove(bone.id, count).hasSucceeded()) {
-            player.inventory.add(produce, count)
-        }
-    }
+    gg.rsmod.plugins.content.magic.BonesToFruit.convert(player, produce)
     player.addXp(Skills.MAGIC, xp, checkBrawlingGloves = true)
 }
 
