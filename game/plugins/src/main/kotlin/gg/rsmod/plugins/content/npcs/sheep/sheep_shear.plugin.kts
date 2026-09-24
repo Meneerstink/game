@@ -1,14 +1,14 @@
 package gg.rsmod.plugins.content.npcs.sheep
 
+/*
+ * Every sheep the cache offers "Shear" on (the hand-typed list missed 43 and 5158, spawned around Lumbridge / Falador): the cache
+ * is the list, so a sheep with the option always works.
+ */
 val SHEEP =
-    listOf(
-        Npcs.SHEEP_1763,
-        Npcs.SHEEP_1765,
-        Npcs.SHEEP_5156,
-        Npcs.SHEEP_5157,
-        Npcs.SHEEP_5160,
-        Npcs.SHEEP_5161,
-    )
+    world.definitions.getAllKeys(NpcDef::class.java).filter { id ->
+        val def = world.definitions.get(NpcDef::class.java, id)
+        def.name.equals("Sheep", ignoreCase = true) && def.options.any { it.equals("Shear", ignoreCase = true) }
+    }
 
 val SHEAR_ANIMATION = 893
 

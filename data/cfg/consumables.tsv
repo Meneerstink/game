@@ -1,0 +1,154 @@
+# id	verb	heal_min	heal_max (667 x10 lifepoint units)	leftover id (-1 none)	eat ticks ('' = default)	combo	message ('' = default)	name - 667 Void donor items.toml heals/excess/eat_delay/combo/eat_message, 2026-09-24
+247	eat	20	20	-1		0		Jangerberries
+337	eat	60	60	-1		0		Giant carp
+403	eat	40	40	-1		0		Edible seaweed
+431	drink	50	50	-1		0		Karamjan rum
+712	drink	30	30	1980		0		Cup of tea
+1869	eat	20	20	-1		0		Chopped tomato
+1871	eat	10	10	-1		0		Chopped onion
+1875	eat	20	20	-1		0		Onion & tomato
+1885	eat	190	190	-1		0		Ugthanki kebab
+1909	drink	10	10	1919		0		Greenman's ale
+1911	drink	10	10	1919		0		Dragon bitter
+1915	drink	30	30	1919		0		Grog
+1942	eat	10	10	-1		0		Potato
+1967	eat	10	10	-1		0		Cabbage
+1977	drink	40	40	1925		0		Chocolatey milk
+1978	drink	30	30	1980		0		Cup of tea
+2015	drink	50	50	-1		0		Vodka
+2017	drink	50	50	-1		0		Whisky
+2019	drink	50	50	-1		0		Gin
+2021	drink	50	50	-1		0		Brandy
+2028	drink	70	70	2026		0		Premade blurb' sp.
+2030	drink	50	50	2026		0		Premade choc s'dy
+2032	drink	50	50	2026		0		Premade dr' dragon
+2034	drink	30	30	2026		0		Premade fr' blast
+2036	drink	90	90	2026		0	You drink the cocktail. It tastes great.	Premade p' punch
+2038	drink	50	50	2026		0		Premade sgg
+2040	drink	50	50	2026		0		Premade wiz blz'd
+2048	drink	90	90	2026		0	You drink the cocktail. It tastes great.	Pineapple punch
+2054	drink	50	50	2026		0		Wizard blizzard
+2064	drink	60	60	2026		0		Blurberry special
+2074	drink	50	50	2026		0		Choc saturday
+2080	drink	50	50	2026		0		Short green guy
+2084	drink	90	90	2026		0		Fruit blast
+2092	drink	50	50	2026		0		Drunk dragon
+2128	eat	10	10	-1		0		Equa leaves
+2162	eat	20	20	-1		0		King worm
+2343	eat	140	140	-1		0		Cooked oomlie wrap
+2955	drink	40	40	1919		0	You drink the foul smelling brew. It tastes like something just died in your mouth.	Moonlight mead
+3151	eat	30	30	-1		0		Karambwanji
+3801	drink	150	150	-1		0	You chug the keg. You feel reinvigorated... ...but extremely drunk, too.	Keg of beer
+3803	drink	40	40	3805		0	You quaff the beer. You feel slightly reinvigorated... but very dizzy too.	Beer
+4012	eat	40	40	-1		0		Monkey nuts
+4014	eat	50	50	-1		0		Monkey bar
+4016	eat	110	110	-1		0		Banana stew
+4237	drink	10	10	1923		0		Nettle-water
+4239	drink	30	30	1923		0		Nettle tea
+4240	drink	30	30	1923		0		Nettle tea
+4242	drink	30	30	1980		0		Cup of tea
+4291	eat	10	10	-1		0		Cooked chicken
+4293	eat	10	10	-1		0		Cooked meat
+4417	drink	0	0	4419		0	You drink some of your guthix rest.	Guthix rest (4)
+4419	drink	0	0	4421		0	You drink some of your guthix rest.	Guthix rest (3)
+4421	drink	0	0	4423		0	You drink some of your guthix rest.	Guthix rest (2)
+4423	drink	0	0	1980		0	You drink some of your guthix rest.	Guthix rest (1)
+4485	eat	20	20	4486		0	You eat the White Pearl and spit out the seed when you're done. Mmm, tasty.	White pearl
+4517	eat	60	60	-1		0		Giant frog legs
+4627	drink	10	10	1919		0		Bandit's brew
+5004	eat	30	60	-1		0		Frog spawn
+5504	eat	60	60	-1		0		Strawberry
+5739	drink	20	20	1919		0		Asgarnian ale (m)
+5741	drink	10	10	1919		0		Mature wmb
+5743	drink	10	10	1919		0		Greenman's ale (m)
+5745	drink	20	20	1919		0		Dragon bitter (m)
+5747	drink	10	10	1919		0		Dwarven stout (m)
+5749	drink	60	60	1919		0	You drink the foul smelling brew. It tastes like something just died in your mouth.	Moonlight mead (m)
+5751	drink	10	10	1919		0		Axeman's folly
+5753	drink	20	20	1919		0		Axeman's folly (m)
+5755	drink	10	10	1919		0		Chef's delight
+5757	drink	20	20	1919		0		Chef's delight (m)
+5759	drink	10	10	1919		0		Slayer's respite
+5761	drink	10	10	1919		0		Slayer's respite (m)
+5763	drink	20	20	1919		0		Cider
+5765	drink	20	20	1919		0		Mature cider
+5988	eat	10	10	-1		0		Cooked sweetcorn
+6297	eat	70	100	-1		0		Spider on stick
+6299	eat	70	100	-1		0		Spider on shaft
+6469	eat	30	30	-1		0		White tree fruit
+6794	eat	70	70	-1		0		Choc-ice
+6969	eat	200	200	-1		0		Shark
+7070	eat	20	20	1923		0		Minced meat
+7086	eat	100	100	1923		0		Chopped tuna
+7157	drink	14	14	-1		0		Braindeath 'rum'
+7178	eat	60	60	7180	1	0		Garden pie
+7180	eat	60	60	2313	1	0		Half a garden pie
+7188	eat	60	60	7190	1	0		Fish pie
+7190	eat	60	60	2313	1	0		Half a fish pie
+7198	eat	80	80	7200	1	0		Admiral pie
+7200	eat	80	80	2313	1	0		Half an admiral pie
+7208	eat	110	110	7210	1	0		Wild pie
+7210	eat	110	110	2313	1	0		Half a wild pie
+7218	eat	110	110	7220	1	0		Summer pie
+7220	eat	110	110	2313	1	0		Half a summer pie
+7740	drink	10	10	7742		0		Beer
+7744	drink	20	20	7742		0		Asgarnian ale
+7746	drink	10	10	7742		0		Greenman's ale
+7748	drink	10	10	7742		0		Dragon bitter
+7750	drink	40	40	7742		0	You drink the foul smelling brew. It tastes like something just died in your mouth.	Moonlight mead
+7752	drink	20	20	7742		0		Cider
+7754	drink	10	10	7742		0		Chef's delight
+7919	drink	140	140	7921		0		Bottle of wine
+7943	eat	10	10	-1		0	It's so fresh that it's got no flavour, and it doesn't heal much health either.	Fresh monkfish
+9052	eat	30	30	-1		0	Juices spurt into your mouth as you chew. It's tastier than it looks.	Locust meat
+9510	drink	50	50	2026		0		Short green guy
+9512	drink	90	90	2026		0		Pineapple punch
+9514	drink	90	90	2026		0		Fruit blast
+9516	drink	50	50	2026		0		Drunk dragon
+9518	drink	50	50	2026		0		Choc saturday
+9520	drink	60	60	2026		0		Blurberry special
+9994	eat	20	20	1923		0		Spicy tomato
+9996	eat	30	30	1923		0		Spicy minced meat
+10476	eat	30	30	-1		0		Purple sweets
+10960	eat	20	20	-1		0		Green gloop soup
+10961	eat	20	20	-1		0		Frogspawn gumbo
+10962	eat	20	20	-1		0		Frogburger
+10963	eat	20	20	-1		0		Coated frogs' legs
+10964	eat	20	20	-1		0		Bat shish
+10965	eat	20	20	-1		0		Fingers
+10966	eat	20	20	-1		0		Grubs � la mode
+10967	eat	20	20	-1		0		Roast frog
+10968	eat	20	20	-1		0		Mushrooms
+10969	eat	20	20	-1		0		Fillets
+10970	eat	30	30	-1		0		Loach
+10971	eat	10	10	-1		0		Eel sushi
+11324	eat	30	30	-1		0		Roe
+11326	eat	50	50	-1		0		Caviar
+11437	drink	30	30	11439		0	You drink the lumpy potion.	Relicym's mix (2)
+11439	drink	30	30	229		0	You drink the lumpy potion.	Relicym's mix (1)
+12644	eat	140	140	-1		0		Easter egg
+13563	eat	10	10	-1		0		Button mushroom
+14082	eat	30	30	-1		0		Popcorn ball
+14083	eat	30	30	-1		0		Chocolate drop
+14084	eat	30	30	-1		0		Wrapped candy
+14162	eat	40	40	-1		0		Food (class 1)
+14164	eat	80	80	-1		0		Food (class 2)
+14166	eat	120	120	-1		0		Food (class 3)
+14168	eat	160	160	-1		0		Food (class 4)
+14170	eat	200	200	-1		0		Food (class 5)
+14540	eat	30	30	-1		0		Cooked turkey
+14543	eat	10	10	-1		0		Cooked turkey drumstick
+14665	eat	20	20	-1		0		Doughnut
+15123	eat	90	90	882		0		Skewered kebab
+15428	eat	20	20	-1		0		Turkey drumstick
+15429	eat	10	10	-1		0		Roast potatoes
+15430	eat	10	10	-1		0		Yule log
+17817	eat	20	20	-1		0	You eat the raw cave potato. You must really be hungry.	Raw cave potato
+17819	eat	30	30	-1		0		Gissel mushroom
+17821	eat	90	90	-1		0		Edicap mushroom
+18199	eat	20	20	-1		0		Banana
+19467	eat	10	30	-1		0		Biscuits
+19778	eat	120	120	-1		0		Oktoberfest pretzel
+19948	eat	200	200	-1		0		Baron shark
+19949	eat	220	220	-1		0		Juju gumbo
+20111	eat	50	50	-1		0		10th anniversary cake
