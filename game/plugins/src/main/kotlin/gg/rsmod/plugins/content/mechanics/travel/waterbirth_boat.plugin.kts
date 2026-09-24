@@ -24,11 +24,11 @@ on_npc_option(npc = Npcs.JARVALD_2437, option = "travel-waterbirth") {
         chatNpc("I will allow you to escort us, but you must pay me a sum of money first.", facialExpression = FacialExpression.CALM_TALK)
         chatNpc("Let us say... 1,000 coins. Payable in advance, of course.", facialExpression = FacialExpression.CALM_TALK)
         if (options("YES", "NO") != 1) return@queue
-        if (!player.inventory.remove(Items.COINS_995, WATERBIRTH_FEE, assureFullRemoval = true).hasSucceeded()) {
+        if (player.inventory.getItemCount(Items.COINS_995) < WATERBIRTH_FEE) {
             player.message("You don't have enough coins.")
             return@queue
         }
-        voyage(player, WATERBIRTH, "I suggest you head to the cave with some urgency outerlander, the cold air out here might be too much for the likes of you...", Npcs.JARVALD_2438)
+        voyage(player, WATERBIRTH, "I suggest you head to the cave with some urgency outerlander, the cold air out here might be too much for the likes of you...", Npcs.JARVALD_2438, WATERBIRTH_FEE)
     }
 }
 
@@ -36,12 +36,14 @@ on_npc_option(npc = Npcs.JARVALD_2438, option = "travel-rellekka") {
     player.queue {
         chatPlayer("I wish to return to Rellekka.", facialExpression = FacialExpression.CALM_TALK)
         chatNpc("Then let us away; There will be death to bring here another day!", facialExpression = FacialExpression.CALM_TALK)
-        voyage(player, RELLEKKA_JARVALD, null, -1)
+        voyage(player, RELLEKKA_JARVALD, null, -1, 0)
     }
 }
 
-fun voyage(player: Player, destination: Tile, arrivalLine: String?, arrivalNpc: Int) {
+fun voyage(player: Player, destination: Tile, arrivalLine: String?, arrivalNpc: Int, fee: Int) {
     DeadmanTimerGate.requestRoute(player, SevenSecondAction.Kind.TRANSPORT) {
+        // The fee is taken only when the boat actually leaves (the Deadman timer can cancel the trip).
+        if (fee > 0 && !player.inventory.remove(Items.COINS_995, fee, assureFullRemoval = true).hasSucceeded()) return@requestRoute
         player.lockingQueue {
             player.openInterface(115, InterfaceDestination.MAIN_SCREEN_FULL)
             wait(3)

@@ -23,17 +23,17 @@ val CARTS =
 
 CARTS.forEach { cart ->
     on_npc_option(npc = cart.driver, option = "pay-fare") {
-        player.queue { ride(this, cart, offer = false) }
+        player.queue { board(this, cart, offer = false) }
     }
     on_obj_option(obj = cart.cart, option = "board") {
-        player.queue { ride(this, cart, offer = true) }
+        player.queue { board(this, cart, offer = true) }
     }
     on_obj_option(obj = cart.cart, option = "pay-fare") {
-        player.queue { ride(this, cart, offer = false) }
+        player.queue { board(this, cart, offer = false) }
     }
 }
 
-suspend fun ride(task: QueueTask, cart: Cart, offer: Boolean) {
+suspend fun board(task: QueueTask, cart: Cart, offer: Boolean) {
     val player = task.player
     if (offer) {
         task.chatNpc(
@@ -48,7 +48,7 @@ suspend fun ride(task: QueueTask, cart: Cart, offer: Boolean) {
         }
         task.chatPlayer("Yes please, I'd like to go to ${cart.destinationName}.", facialExpression = FacialExpression.CALM_TALK)
     }
-    if (!player.inventory.remove(Items.COINS_995, CART_FARE, assureFullRemoval = true).hasSucceeded()) {
+    if (player.inventory.getItemCount(Items.COINS_995) < CART_FARE) {
         task.chatNpc(
             "Sorry, but it looks as if you don't have enough money. Come and see me when you have enough for the ride.",
             npc = cart.driver,
@@ -56,6 +56,13 @@ suspend fun ride(task: QueueTask, cart: Cart, offer: Boolean) {
         )
         return
     }
+    // Deadman: non-teleport transport opens the 7-second timer first; the fare is taken only when the ride starts.
+    gg.rsmod.plugins.content.mechanics.pvp.DeadmanTimerGate.requestRoute(player, gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction.Kind.TRANSPORT) {
+        if (player.inventory.remove(Items.COINS_995, CART_FARE, assureFullRemoval = true).hasSucceeded()) ride(player, cart, offer)
+    }
+}
+
+fun ride(player: Player, cart: Cart, offer: Boolean) {
     player.lockingQueue {
         player.openInterface(FADE_IN, InterfaceDestination.MAIN_SCREEN_FULL)
         wait(3)
