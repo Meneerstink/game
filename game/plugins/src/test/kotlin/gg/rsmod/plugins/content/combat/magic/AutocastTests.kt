@@ -277,8 +277,8 @@ class AutocastTests {
     @Test
     fun `equipping never touches the attack timer and the old varp writers are gone`() {
         val sources = File("src/main/kotlin/gg/rsmod/plugins").walkTopDown().filter { it.isFile && it.readText().contains("ATTACK_DELAY] =") }.map { it.name }.toSet()
-        // Only attacks (and eating / Granite maul, which OSRS delays too) write the attack timer - never equip, spell selection or UI.
-        assertEquals(setOf("Combat.kt", "TormentedDemonCombatScript.kt", "Foods.kt", "GraniteMaul.kt"), sources)
+        // Only attacks (and eating - Foods, consumables - / Granite maul, which OSRS delays too) write the attack timer - never equip, spell selection or UI.
+        assertEquals(setOf("Combat.kt", "TormentedDemonCombatScript.kt", "Foods.kt", "consumables.plugin.kts", "GraniteMaul.kt"), sources)
     }
 
     @Test
