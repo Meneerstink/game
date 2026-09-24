@@ -1,0 +1,532 @@
+# OSRS Wiki infobox_monster elemental_weakness / elemental_weakness_percent (bucket API, read 2026-09-24), by monster name.
+# Names whose wiki variants disagree are left out (ambiguous: 21).
+# name	element	percent
+a corpse	Fire	50
+aberrant spectre	Air	50
+abhorrent spectre	Air	50
+abyssal portal	Fire	50
+acidic araxyte	Fire	50
+adamant dragon	Earth	50
+agrith naar	Water	25
+agrith naar (hard)	Water	25
+ahrim the blighted	Air	50
+air elemental	Air	30
+akkha's shadow	Air	60
+albino bat	Air	40
+alchemical hydra	Earth	50
+ammonite crab	Earth	25
+amoxliatl	Fire	30
+amoxliatl (echo)	Fire	30
+ancient custodian	Fire	30
+ancient wyvern	Air	35
+ancient zygomite	Fire	40
+angry barbarian spirit	Air	30
+animated adamant armour	Earth	30
+animated black armour	Earth	30
+animated bronze armour	Earth	30
+animated iron armour	Earth	30
+animated mithril armour	Earth	30
+animated rune armour	Earth	30
+animated spade	Earth	25
+animated steel armour	Earth	30
+ankou	Air	40
+apparition	Air	40
+araxxor	Fire	50
+araxyte	Fire	50
+arcane scarab	Fire	50
+armadylean guard	Air	30
+armoured kraken	Earth	50
+armoured zombie	Fire	50
+arrg	Earth	50
+arrg (hard)	Earth	50
+asyn shade	Air	40
+asyn shadow	Air	40
+augur metzli	Earth	30
+aviansie	Air	45
+baby black dragon	Water	50
+baby green dragon	Water	50
+baby red dragon	Water	50
+baby roc	Air	30
+baby tanglefoot	Fire	20
+balfrug kreeyath	Water	25
+banshee	Air	30
+bark blamish snail	Earth	30
+basilisk	Earth	40
+basilisk knight	Earth	40
+basilisk sentinel	Earth	40
+basilisk youngling	Earth	40
+bat	Air	35
+bear cub	Fire	25
+bee swarm	Fire	50
+berry	Earth	20
+berserk barbarian spirit	Air	25
+big frog	Earth	25
+big wolf	Fire	20
+billy goat	Fire	10
+bird	Air	25
+black bear	Fire	30
+black demon	Water	40
+black demon (hard)	Water	40
+black dragon	Water	50
+black eye bethel	Fire	50
+black jaguar	Fire	30
+blessed spider	Fire	50
+blood blamish snail	Earth	30
+blood jaguar	Earth	15
+blood moon	Air	15
+blood spawn	Earth	50
+blue dagannoth	Earth	35
+blue moon	Air	15
+boar	Fire	20
+body golem	Earth	35
+bouncer	Air	15
+branda the fire queen	Water	50
+bronze dragon	Earth	50
+bruise blamish snail	Earth	25
+brutal black dragon	Water	50
+brutal green dragon	Water	50
+brutal red dragon	Water	50
+brutus	Earth	25
+bryophyta	Fire	50
+callisto	Fire	30
+cave bug	Fire	50
+cave crawler	Fire	50
+cave goblin	Fire	40
+cave goblin guard	Fire	40
+cave goblin miner	Fire	40
+cave horror	Fire	30
+cave kraken	Earth	50
+cave slime	Earth	50
+cerberus	Water	40
+cerberus (echo)	Water	40
+champion of scabaras	Fire	35
+chaos elemental	Air	50
+chaos golem	Earth	35
+chasm crawler	Fire	50
+chilled jelly	Fire	50
+choke devil	Air	25
+chronozon	Water	25
+chronozon (hard)	Water	25
+chuck up	Earth	20
+corporeal beast	Earth	10
+crab	Earth	20
+crocodile	Earth	40
+crypt spider	Fire	50
+dad	Earth	40
+dad (hard)	Earth	40
+daddy's special water	Earth	40
+dagannoth	Earth	35
+dagannoth fledgeling	Earth	35
+dagannoth mother	Earth	35
+dagannoth mother (hard)	Earth	35
+dagannoth prime	Earth	35
+dagannoth rex	Earth	35
+dagannoth spawn	Earth	35
+dagannoth supreme	Earth	35
+dark beast	Earth	60
+dawn	Earth	70
+deadly red spider	Fire	40
+death wing	Air	20
+definitely not dusk	Earth	40
+demonic brutus	Earth	25
+demonic gorilla	Water	35
+deviant spectre	Air	30
+dharok the wretched	Air	50
+dinky the drink troll	Earth	0
+dire bat	Air	40
+dire gryphon	Air	50
+don't know what	Fire	40
+drake	Water	50
+dreadborn araxyte	Fire	50
+drink troll queen	Earth	50
+dusk	Earth	40
+dusk (echo)	Earth	40
+dust devil	Air	35
+earth elemental	Earth	50
+earthen nagua	Air	15
+eclipse moon	Air	15
+elder custodian stalker	Fire	30
+eldric the ice king	Fire	50
+elidinis' warden	Earth	50
+elvarg	Water	30
+elvarg (hard)	Water	30
+enormous tentacle	Earth	50
+enraged barbarian spirit	Air	15
+ent	Fire	40
+entrana firebird	Water	100
+evil spirit	Air	30
+fareed	Water	30
+fareed (hard)	Water	30
+ferocious barbarian spirit	Air	10
+fever spider	Fire	25
+fire elemental	Water	100
+fire giant	Water	100
+fiyr shade	Air	40
+fiyr shadow	Air	40
+flambeed	Water	50
+flambeed (hard)	Water	50
+flaming pyrelord	Water	100
+flawed golem	Earth	35
+flesh crawler	Fire	20
+flight kilisa	Air	30
+flockleader geerin	Air	30
+forgotten soul	Air	50
+fox	Fire	25
+frenzied ice troll female	Fire	50
+frenzied ice troll grunt	Fire	50
+frenzied ice troll male	Fire	50
+frenzied ice troll runt	Fire	50
+frog	Earth	40
+frogeel	Earth	40
+frost crab	Fire	100
+frost dragon	Fire	100
+frost nagua	Fire	50
+galvek	Water	40
+gargoyle	Earth	40
+general graardor	Earth	40
+ghast	Air	25
+ghost	Air	50
+giant bat	Air	10
+giant crypt spider	Fire	40
+giant frog	Earth	25
+giant lobster	Earth	25
+giant mosquito	Fire	40
+giant roc	Air	35
+giant roc (hard)	Air	35
+giant rock crab	Earth	20
+giant rockslug	Earth	20
+giant scarab	Fire	50
+giant scarab (hard)	Fire	50
+giant sea snake	Earth	20
+giant skeleton	Earth	40
+giant snail	Earth	45
+giant spider	Fire	50
+glod	Earth	50
+glod (hard)	Earth	50
+grave scorpion	Fire	40
+great olm	Earth	50
+great olm (left claw)	Earth	50
+great olm (right claw)	Earth	50
+greater demon	Water	40
+greater skeleton hellhound	Earth	40
+green dragon	Water	50
+grizzly bear	Fire	20
+grizzly bear cub	Fire	20
+gryphon	Air	50
+guardian drake	Water	50
+guthan the infested	Air	50
+harpie bug swarm	Fire	50
+hellhound	Water	50
+hespori	Fire	100
+hespori (echo)	Fire	100
+hill giant	Earth	25
+hopeless creature	Fire	40
+hueycoatl body	Earth	60
+hueycoatl tail	Earth	60
+hueycoatl tail (broken)	Earth	60
+hydra	Earth	40
+i dscim you	Fire	50
+ice block	Fire	100
+ice demon	Fire	150
+ice elemental	Fire	100
+ice giant	Fire	100
+ice queen	Fire	100
+ice spider	Fire	100
+ice troll	Fire	100
+ice troll grunt	Fire	35
+ice troll king	Fire	35
+ice troll king (hard)	Fire	35
+ice warrior	Fire	100
+ice wolf	Fire	20
+icefiend	Fire	100
+icelord	Fire	30
+imp	Water	10
+iron dragon	Earth	50
+irvig senay	Air	15
+jackal	Fire	10
+jaguar	Fire	10
+jaguar cub	Fire	10
+jal-ak	Water	40
+jal-akrek-ket	Water	40
+jal-akrek-mej	Water	40
+jal-akrek-xil	Water	40
+jal-mejjak	Water	40
+jal-mejrah	Water	40
+jal-nib	Water	40
+jaltok-jad	Water	40
+jal-xil	Water	40
+jal-zek	Water	40
+jelly	Earth	35
+jogre	Earth	25
+judge of yama	Water	15
+jungle demon	Fire	25
+jungle demon (hard)	Fire	25
+jungle horror	Fire	25
+jungle spider	Fire	40
+jungle wolf	Fire	15
+juvenile custodian stalker	Fire	30
+kalphite guardian	Fire	40
+kalphite queen	Fire	40
+kalphite soldier	Fire	40
+kalphite worker	Fire	40
+kamil	Fire	10
+kamil (hard)	Fire	10
+karamel	Fire	40
+karamel (hard)	Fire	40
+karil the tainted	Air	50
+ket-zek	Water	40
+khazard scorpion	Fire	25
+killerwatt	Air	60
+king black dragon	Water	50
+king black dragon (echo)	Water	50
+king sand crab	Earth	15
+king scorpion	Fire	20
+kob	Earth	20
+kraka	Earth	20
+kraken	Earth	50
+kree'arra	Air	30
+k'ril tsutsaroth	Water	30
+large mosquito	Fire	40
+lava beast	Water	100
+lava dragon	Water	50
+lava strykewyrm	Water	50
+lesser demon	Water	40
+lesser demon champion	Water	40
+loar shade	Air	40
+loar shadow	Air	40
+lobstrosity	Earth	25
+locust	Fire	40
+locust rider	Fire	40
+long-tailed wyvern	Air	25
+mad angel	Earth	15
+magma strykewyrm	Water	50
+malevolent mage	Water	50
+marble gargoyle	Earth	40
+mature custodian stalker	Fire	30
+mind golem	Earth	35
+mirrorback araxyte	Fire	50
+mithril dragon	Earth	50
+mogre	Earth	20
+molanisk	Earth	60
+monkey zombie	Fire	50
+monstrous basilisk	Earth	40
+mosquito swarm	Fire	45
+moss giant	Fire	50
+moss guardian	Fire	50
+moss guardian (hard)	Fire	50
+mudskipper	Earth	20
+mummy	Fire	50
+mutated tortoise	Earth	25
+muttadile	Earth	40
+myre blamish snail	Earth	25
+nazastarool (hard)	Air	20
+nezikchened	Water	10
+nezikchened (hard)	Water	10
+nuclear smoke devil	Air	20
+nylocas athanatos	Fire	15
+nylocas hagios	Fire	15
+nylocas ischyros	Fire	15
+nylocas matomenos	Fire	15
+nylocas prinkipas	Fire	15
+nylocas toxobolos	Fire	15
+nylocas vasilias	Fire	15
+obor	Earth	20
+ocelot	Fire	10
+ochre blamish snail	Earth	25
+ogre	Earth	20
+ogre chieftain	Earth	20
+ogress shaman	Earth	20
+ogress warrior	Earth	20
+ork	Earth	15
+otherworldly being	Air	35
+parasite	Fire	50
+pee hat	Earth	20
+penguin	Fire	25
+phantom muspah	Air	65
+phrin shade	Air	40
+phrin shadow	Air	40
+pit scorpion	Fire	25
+poison scorpion	Fire	25
+poison spider	Fire	40
+porcupine	Fire	20
+pygmy kraken	Earth	50
+pyrefiend	Water	100
+pyrelord	Water	100
+rabbit	Fire	20
+ram	Fire	20
+ranalph devere	Air	10
+red dragon	Water	50
+repugnant spectre	Air	40
+revenant cyclops	Air	30
+revenant dark beast	Air	30
+revenant demon	Air	30
+revenant dragon	Air	30
+revenant goblin	Air	30
+revenant hellhound	Air	30
+revenant hobgoblin	Air	30
+revenant imp	Air	30
+revenant knight	Air	30
+revenant ork	Air	30
+revenant pyrefiend	Air	30
+river troll	Earth	20
+riyl shade	Air	40
+riyl shadow	Air	40
+rock crab	Earth	20
+rock golem	Earth	40
+rock lobster	Earth	25
+rocks	Earth	20
+rockslug	Earth	25
+rubble	Earth	35
+rune dragon	Earth	50
+runite golem	Earth	60
+ruptura araxyte	Fire	50
+san tojalon	Air	10
+sand crab	Earth	20
+sand snake	Earth	40
+sand snake (hard)	Earth	40
+sandy boulder	Earth	15
+sandy rocks	Earth	20
+sanguidae	Fire	40
+sarachnis	Fire	40
+scarab	Fire	40
+scarab mage	Fire	50
+scarabs	Fire	50
+scarred black demon	Water	40
+scarred greater demon	Water	40
+scarred hellhound	Water	50
+scarred imp	Water	10
+scarred lesser demon	Water	40
+scorpia	Fire	35
+scorpia's guardian	Fire	35
+scorpia's offspring	Fire	35
+scorpion	Fire	25
+screaming banshee	Air	40
+screaming twisted banshee	Air	40
+sea snake hatchling	Earth	20
+sea snake young	Earth	20
+sea troll	Earth	15
+sea troll queen	Earth	15
+seagull	Air	20
+shade	Air	40
+shadow	Air	40
+shadow spider	Fire	40
+shadow wyrm	Earth	50
+shellbane gryphon	Air	50
+skeletal wyvern	Fire	25
+skeleton brute	Earth	35
+skeleton champion	Air	35
+skeleton fremennik	Earth	35
+skeleton heavy	Earth	35
+skeleton hellhound (hard)	Earth	35
+skeleton hero	Earth	35
+skeleton mage	Earth	35
+skeleton thug	Earth	35
+skeleton warlord	Earth	35
+skotizo	Water	40
+slagilith	Earth	40
+slagilith (hard)	Earth	40
+small scarab	Fire	50
+smoke devil	Air	30
+soldier scarab	Fire	50
+spider	Fire	50
+spidine	Fire	25
+spindel	Fire	25
+spined kraken	Earth	50
+spitting scarab	Fire	50
+spitting wyvern	Air	25
+steel dragon	Earth	50
+stick	Earth	20
+stone guardian	Earth	40
+strange creature	Fire	30
+strangled	Fire	50
+sulphur nagua	Air	15
+summoned zombie	Fire	50
+suqah	Earth	20
+swamp crab	Earth	35
+swamp frog	Earth	20
+swampy log	Earth	35
+taloned wyvern	Air	35
+tanglefoot	Fire	35
+tanglefoot (hard)	Fire	35
+tekton	Water	20
+tekton (enraged)	Water	20
+temple spider	Fire	40
+the draugen	Air	50
+the forsaken assassin	Air	15
+the hueycoatl	Earth	60
+the jormungand	Earth	40
+the rocks	Fire	100
+the whisperer	Earth	60
+thermonuclear smoke devil	Air	20
+thermonuclear smoke devil (echo)	Air	20
+thrower troll	Earth	20
+tok-xil	Water	40
+torag the corrupted	Air	50
+tormented demon	Water	30
+tortoise	Earth	20
+totem	Fire	70
+trapped soul	Air	15
+trapped soul (hard)	Air	15
+tree spirit	Fire	35
+tree spirit (hard)	Fire	35
+treus dayth	Air	25
+treus dayth (hard)	Air	25
+troll general	Earth	20
+troll spectator	Earth	20
+tstanon karlak	Water	40
+tumeken's warden	Earth	50
+twig	Earth	20
+twisted banshee	Air	25
+tzhaar-hur	Water	40
+tzhaar-ket	Water	40
+tzhaar-mej	Water	40
+tzhaar-xil	Water	40
+tzkal-zuk	Water	40
+tz-kek	Water	40
+tz-kih	Water	40
+tztok-jad	Water	40
+tztok-jad-rek	Water	40
+unbound jaltok-jad	Water	40
+undead chicken	Fire	50
+undead cow	Fire	50
+undead druid	Fire	50
+undead lumberjack	Fire	50
+undead zealot	Fire	50
+urium shade	Air	40
+urium shadow	Air	40
+vampyre kraken	Earth	50
+vampyre snail	Earth	5
+vardorvis	Fire	35
+venenatis	Fire	40
+verac the defiled	Air	50
+verzik vitur	Fire	50
+vespula	Fire	50
+vitreous chilled jelly	Earth	30
+vitreous jelly	Earth	30
+vitreous warped jelly	Earth	30
+vorkath	Fire	40
+vulture	Air	20
+wallasalki	Earth	30
+warped jelly	Earth	30
+warped tortoise	Earth	20
+water elemental	Earth	50
+waterfiend	Earth	100
+webbed-winged crow	Air	25
+white wolf	Fire	25
+wingman skree	Air	30
+wolf	Fire	25
+wyrm	Earth	50
+wyrmling	Earth	50
+xarpus	Air	50
+yama	Water	50
+yt-hurkot	Water	40
+yt-mejkot	Water	40
+zakl'n gritch	Water	40
+zombie	Fire	50
+zombie pirate	Fire	50
+zombie rat	Fire	50
+zombie swab	Fire	50
+zombies<sup class="noprint">&#91;<span class="fact-text" title="the preceding quoted material has been reproduced verbatim from the quoted original and is not a transcription error.">sic</span>&#93;</sup> champion	Fire	50
+zombified spawn	Fire	50
+zulrah	Fire	50
+zygomite	Fire	40

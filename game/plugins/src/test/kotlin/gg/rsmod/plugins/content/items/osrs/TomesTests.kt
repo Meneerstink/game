@@ -41,7 +41,7 @@ class TomesTests {
     @Test
     fun `the magic formula, rune supply, charge use and drain boost are wired in`() {
         val formula = File("src/main/kotlin/gg/rsmod/plugins/content/combat/formula/MagicCombatFormula.kt").readText()
-        val additive = formula.indexOf("hit = Math.floor(Math.floor(hit) * (1.0 + additive))")
+        val additive = formula.indexOf("hit = Math.floor(baseMax * (1.0 + additive))")
         val tome = formula.indexOf("Tomes.damageMultiplier(pawn, target, spell)")
         assertTrue(additive in 0 until tome, "tome after the additive magic damage (multiplicative)")
         // Step 4 nightmare: the casting spell is read through castingSpell(player), which hides it only during a Nightmare staff special.

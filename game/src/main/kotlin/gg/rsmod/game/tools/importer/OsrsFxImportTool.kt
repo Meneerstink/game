@@ -106,6 +106,25 @@ object OsrsFxImportTool {
              * 1300 is an unrelated graphic, so both are imported rather than referenced by id.
              */
             "teleblock" to listOf(1300, 345),
+            /*
+             * Owner 2026-09-24: every normal-spellbook combat spell with the exact OSRS look, like the surges ("alleen normal
+             * spellbook"). Names from RuneLite gameval SpotanimID; the 667 spotanims with these ids are the 2010 remakes
+             * (OsrsFxProbeTool: different models/sequences), so they are imported, never referenced by id.
+             */
+            "standardspells" to
+                listOf(
+                    90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, // WIND/WATER/EARTH/FIRESTRIKE_CASTING / TRAVEL / IMPACT
+                    117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, // WIND/WATER/EARTH/FIREBOLT_*
+                    132, 133, 134, 135, 136, 137, 138, 139, 140, 129, 130, 131, // WIND/WATER/EARTH/FIREBLAST_*
+                    158, 159, 160, 161, 162, 163, 164, 165, 166, 155, 156, 157, // WIND/WATER/EARTH/FIREWAVE_*
+                    102, 103, 104, 105, 106, 107, 108, 109, 110, // CONFUSE / WEAKEN / CURSE _CASTING / TRAVEL / IMPACT
+                    167, 168, 169, 170, 171, 172, 173, 174, 175, // VULNERABILITY / ENFEEBLE / STUN _*
+                    177, 178, 179, 180, 181, // ENTANGLE_CASTING / TRAVEL / IMPACT, SNARE_IMPACT, BIND_IMPACT
+                    145, 146, 147, // CRUMBLEUNDEAD_*
+                    87, 88, 89, // IBANBLAST_*
+                    328, 329, // SLAYER_MAGICDART_TRAVEL / IMPACT
+                    76, 77, 78, // SARADOMIN_LIGHTNING, GUNTHIX_CLAW, ZAMORAK_FLAME
+                ),
         )
 
     /**
@@ -158,6 +177,16 @@ object OsrsFxImportTool {
             // Owner 2026-09-19 night run: Teleblock with the exact OSRS cast animation (RuneLite gameval AnimationID
             // HUMAN_CASTING_TELE_BLOCK 1819 / HUMAN_CASTING_TELE_BLOCK_STAFF 1820).
             "spellseq1" to listOf(1819, 1820),
+            // Owner 2026-09-24: normal-spellbook cast animations (RuneLite gameval AnimationID names; which spell uses which from
+            // the combat-logger plugin's AnimationIds.java where it lists them): HUMAN_CASTSTRIKE (+_STAFF) strike/bolt/blast,
+            // HUMAN_CASTWAVE (+_STAFF), HUMAN_CASTENTANGLE (+_STAFF) bind/snare/entangle, HUMAN_CASTCONFUSE / WEAKEN / CURSE /
+            // ENFEEBLE / STUN (+_STAFF), HUMAN_CASTCRUMBLEUNDEAD (+_STAFF), HUMAN_CASTIBANBLAST, SLAYER_MAGICDART_CAST,
+            // HUMAN_CASTING (god spells).
+            "standardspellseq" to
+                listOf(711, 1162, 727, 1167, 710, 1161, 716, 1163, 717, 1164, 718, 1165, 728, 1168, 729, 1169, 724, 1166, 708, 1576, 811),
+            // HUMAN_CASTSTRIKE_STAFF again, on the player rig: the first batch reused the npc tool's 1162 (Malevolent Mage 15704) and
+            // overwrote its frames; they were restored from the journal (tx-20260924-174902) and the player copy gets its own ids.
+            "standardspellseq2" to listOf(1162),
         )
 
     /** OSRS synth sounds by Jagex config name (OSRS Wiki "List of sound IDs", read 2026-09-17). */
@@ -708,6 +737,15 @@ object OsrsFxImportTool {
         return out
     }
 
+    /** "kind:upstream" keys the npc import tool owns (converted for an npc skeleton, never for the player rig). */
+    fun npcOwnedFx(assetMap: File): Set<String> {
+        val root = ObjectMapper(YAMLFactory()).readTree(assetMap) ?: return emptySet()
+        return root.path("imports")
+            .filter { it.path("fx_kind").isTextual && it.path("upstream_fx_id").isInt && it.path("status").asText() == "IMPORTED_BY_OSRS_NPC_TOOL" }
+            .map { "${it.path("fx_kind").asText()}:${it.path("upstream_fx_id").asInt()}" }
+            .toSet()
+    }
+
     /** OSRS item id -> local item id for every imported item recorded in the asset map. */
     fun importedItems(assetMap: File): Map<Int, Int> {
         val root = ObjectMapper(YAMLFactory()).readTree(assetMap) ?: return emptyMap()
@@ -733,6 +771,7 @@ object OsrsFxImportTool {
         val apply = "--apply" in args
         val assetMap = File(OsrsItemImportTool.ASSET_MAP)
         val existing = existingFx(assetMap)
+        val npcOwned = npcOwnedFx(assetMap)
         val reader = ModernCacheReader(File(OsrsItemImportTool.SOURCE_CACHE))
         val library = CacheLibrary(TARGETS[0])
         val mutations = mutableListOf<CacheMutation>()
@@ -783,7 +822,14 @@ object OsrsFxImportTool {
                 val seq = decodeOsrsSeq(seqBytes, importedItems)
                 dropped += seq.dropped.map { "seq $osrsSeq: $it" }
                 val framesets = (seq.frames.map { it ushr 16 } + (seq.secondaryFrames?.map { it ushr 16 } ?: emptyList())).distinct()
-                val framesetMap = framesets.associateWith { fs -> local("frameset", fs) { nextFrameset++ } }
+                // A player sequence converts its frames onto the merged 667 player rig; OsrsNpcImportTool converts the same OSRS frames
+                // 1:1 for an npc skeleton. The two conversions never share ids: reusing the npc tool's frameset/seq (2026-09-24: OSRS
+                // 1162, Malevolent Mage 15704) overwrote the npc frames with player-rig frames.
+                val playerSeq = framesets.any { fs ->
+                    reader.files(INDEX_FRAMES, fs).values.firstOrNull()?.let { b -> (((b[0].toInt() and 0xFF) shl 8) or (b[1].toInt() and 0xFF)) == PLAYER_BASE } == true
+                }
+                fun key(kind: String, upstream: Int): String = if (playerSeq && "$kind:$upstream" in npcOwned) "player$kind" else kind
+                val framesetMap = framesets.associateWith { fs -> local(key("frameset", fs), fs) { nextFrameset++ } }
                 framesets.forEach { fs ->
                     reader.files(INDEX_FRAMES, fs).forEach { (file, frameBytes) ->
                         val osrsBase = ((frameBytes[0].toInt() and 0xFF) shl 8) or (frameBytes[1].toInt() and 0xFF)
@@ -803,7 +849,7 @@ object OsrsFxImportTool {
                 seq.secondaryFrames = seq.secondaryFrames?.let { s -> IntArray(s.size) { (framesetMap.getValue(s[it] ushr 16) shl 16) or (s[it] and 0xFFFF) } }
                 val soundMap = seq.sounds.values.map { it.first }.distinct().associateWith { id -> stageSynth(id, staged) }
                 seq.sounds.replaceAll { _, sound -> soundMap.getValue(sound.first) to sound.second }
-                val localSeq = local("seq", osrsSeq) { nextSeq++ }
+                val localSeq = local(key("seq", osrsSeq), osrsSeq) { nextSeq++ }
                 val seq667 = encode667Seq(seq)
                 decode667SeqFrames(seq667)
                 staged += { put(INDEX_SEQ, localSeq ushr 7, localSeq and 0x7F, seq667, "osrs seq $osrsSeq") }

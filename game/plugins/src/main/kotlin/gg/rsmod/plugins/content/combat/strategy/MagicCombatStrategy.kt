@@ -320,7 +320,8 @@ object MagicCombatStrategy : CombatStrategy {
                 target.graphic(Graphic(85, 96, hitDelay * 30))
                 if (pawn is Player) pawn.message("The spell has no effect.")
             }
-            if (pawn is Player && landHit) {
+            // OSRS: a splashed spell still gives its base experience (splash training), so the cast XP does not depend on landHit.
+            if (pawn is Player) {
                 pawn.addXp(Skills.MAGIC, spell.experience, checkBrawlingGloves = true)
             }
             return

@@ -94,7 +94,10 @@ object MagicCombatFormula : CombatFormula {
         // Powered staff built-in spell (PoweredStaves): max(1, ⌊current Magic/3⌋ + offset) replaces the spell base.
         var hit =
             specialBase?.toDouble()
-                ?: spell?.maxHit?.toDouble()
+                ?: spell?.let { s ->
+                    // Players: OSRS level-scaled base (elemental tiers, Magic Dart); npcs cast the fixed base.
+                    (if (pawn is Player) CombatSpell.baseMaxHit(s, pawn.skills.getCurrentLevel(Skills.MAGIC)) else s.maxHit).toDouble()
+                }
                 ?: (pawn as? Player)?.let { p ->
                     gg.rsmod.plugins.content.items.osrs.PoweredStaves.wielded(p)?.baseMaxHit(p.skills.getCurrentLevel(Skills.MAGIC))?.toDouble()
                 }
@@ -125,12 +128,15 @@ object MagicCombatFormula : CombatFormula {
                 pawn.getMagicDamageBonus() / 1000.0 + getEliteVoidMagicDamage(pawn) + getPrayerMagicDamage(pawn) +
                     gg.rsmod.plugins.content.items.osrs.SmokeStaves.magicDamageBonus(pawn, spell) +
                     gg.rsmod.plugins.content.items.osrs.VirtusRobes.ancientMagicksBonus(pawn, spell)
-            hit = Math.floor(Math.floor(hit) * (1.0 + additive))
+            val baseMax = Math.floor(hit)
+            hit = Math.floor(baseMax * (1.0 + additive))
             // Imbued Slayer helmet (OSRS-audit 2026-09-17b, see TargetModifiers.IMBUED_SLAYER_HELMETS):
             // "a 15% boost to Magic accuracy and Magic damage" against the player's current Slayer task.
             if (TargetModifiers.hasImbuedSlayerHelmetTaskBoost(pawn, target)) {
                 hit = Math.floor(hit * TargetModifiers.IMBUED_SLAYER_HELMET_BOOST)
             }
+            // Elemental weakness: + ⌊Base Max × weakness %⌋, after the slayer/salve step (ElementalWeakness).
+            hit += Math.floor(baseMax * ElementalWeakness.percent(target, spell) / 100.0)
             // Charged tomes: "stacking multiplicatively with Magic damage bonuses" (Tomes).
             hit = Math.floor(hit * gg.rsmod.plugins.content.items.osrs.Tomes.damageMultiplier(pawn, target, spell))
             // Dragon hunter wand: max hit x7/5 against draconic targets (wiki DPS calculator trackFactor [7, 5]).
@@ -183,6 +189,9 @@ object MagicCombatFormula : CombatFormula {
         var maxRoll = a * (b + 64.0)
         if (pawn is Player) {
             maxRoll = applyAttackSpecials(pawn, target, maxRoll, specialAttackMultiplier)
+            // Elemental weakness: +1 % magic accuracy per weakness point (ElementalWeakness).
+            val weakness = ElementalWeakness.percent(target, pawn.attr[Combat.CASTING_SPELL])
+            if (weakness > 0) maxRoll = Math.floor(maxRoll) + Math.floor(Math.floor(maxRoll) * weakness / 100.0)
         }
         return maxRoll.toInt()
     }

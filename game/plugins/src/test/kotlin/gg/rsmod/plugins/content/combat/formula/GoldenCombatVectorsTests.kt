@@ -345,8 +345,8 @@ class GoldenCombatVectorsTests {
                 rangedAttackBonus = 90,
             )
         val target = newPlayer()
-        // hit = 2[WIND_STRIKE] * (1.0 + 0/100) = 2.0, unaffected by the melee/ranged bonuses.
-        assertEquals(2.0, MagicCombatFormula.getMaxHit(contaminated, target, 1.0, 1.0), 1e-9)
+        // hit = 8[WIND_STRIKE at Magic 70: OSRS 29 May 2024 strike tier scaling] * (1.0 + 0/100) = 8.0, unaffected by the melee/ranged bonuses.
+        assertEquals(8.0, MagicCombatFormula.getMaxHit(contaminated, target, 1.0, 1.0), 1e-9)
     }
 
     // ==== helpers ====
