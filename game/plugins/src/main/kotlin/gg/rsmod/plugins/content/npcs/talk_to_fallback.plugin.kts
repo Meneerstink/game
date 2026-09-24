@@ -61,17 +61,25 @@ on_world_init {
             // offers the npc's own bound service, so Talk-to and the service option lead to the same place.
             val service =
                 def.options.withIndex().firstOrNull { (i, o) -> o != null && o.lowercase() in SERVICE_OPTIONS && i != slot }
+            val isBanker = def.name.lowercase().contains("banker") || def.options.any { it?.lowercase() == "bank" }
             on_npc_option(npc = id, option = "talk-to") {
                 val bound = service != null && (service.index + 1) in world.plugins.boundNpcOptions(id)
                 player.queue {
                     if (ServiceDialogues.play(this, player.getInteractingNpc())) return@queue
+                    // Every bank npc without its own dialogue holds the full banker conversation - also a "Banker" whose cache entry
+                    // only offers Talk-to (e.g. the Tutorial Island banker 953). It runs before the wiki transcripts: those record the
+                    // words but never open the bank, and some banker rows are dead ends or another npc's page (1360, 2718).
+                    if (isBanker) {
+                        gg.rsmod.plugins.content.npcs.bankers.BankerDialogue.chat(this)
+                        return@queue
+                    }
                     if (TranscriptDialogue.play(this, player.getInteractingNpc())) return@queue
                     if (!bound) {
                         chatNpc(genericGreetings.random())
                         return@queue
                     }
-                    chatNpc(SERVICE_GREETINGS.random())
                     val option = service!!.value!!.lowercase()
+                    chatNpc(SERVICE_GREETINGS.random())
                     if (options(SERVICE_LINES[option] ?: "I'd like to $option.", "Nothing, thanks.") == FIRST_OPTION) {
                         world.plugins.executeNpc(player, id, service.index + 1)
                     }

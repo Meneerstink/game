@@ -64,3 +64,54 @@ BANK_CHESTS_BANK.forEach { chest ->
         player.openBank()
     }
 }
+
+/*
+ * Owner 2026-09-24 ("controleer alle bankers ... alle banks in onze rsps! pest control bank"): the hand list above missed real bank
+ * booths - the Void Knights' Outpost booth 14369 and Port Phasmatys' 5276 answered "Nothing interesting happens" (unhandled-actions
+ * log). Every other bank object is now served from its cache definition: a loc named "Bank booth" / "Bank chest" / "Bank counter"
+ * (or a "Counter" that advertises "Use-quickly") opens the bank on Use / Use-quickly / Bank and the collection box on Collect. It is
+ * an object FALLBACK - consulted only when no explicit handler is bound - so it can never double-bind or override a special bank.
+ */
+val BANK_OBJECT_NAMES = setOf("bank booth", "bank chest", "bank counter")
+val BANK_OPEN_OPTIONS = setOf("use", "use-quickly", "bank")
+
+world.plugins.bindObjectFallback { player, obj, opt ->
+    val def = player.world.definitions.get(ObjectDef::class.java, obj.getTransform(player))
+    val options = def.options.map { it?.lowercase() }
+    val name = def.name.lowercase()
+    if (name !in BANK_OBJECT_NAMES && !(name == "counter" && "use-quickly" in options)) return@bindObjectFallback false
+    when (options.getOrNull(opt - 1)) {
+        in BANK_OPEN_OPTIONS -> {
+            player.openBank()
+            true
+        }
+        "collect" -> {
+            GrandExchangeInterface.openCollectionBox(player)
+            true
+        }
+        else -> false
+    }
+}
+
+/* The "Closed chest" pieces standing in the Burgh de Rott (12768) and Port Phasmatys (5272) banks open and close like every chest. */
+listOf(Objs.CLOSED_CHEST_12768 to Objs.OPEN_CHEST_12769, Objs.CLOSED_CHEST_5272 to Objs.OPEN_CHEST_5273).forEach { (closed, open) ->
+    on_obj_option(closed, "Open") {
+        val chest = player.getInteractingGameObj()
+        player.lockingQueue(lockState = LockState.FULL) {
+            player.animate(Anims.REACH_FORWARD)
+            wait(2)
+            world.spawn(DynamicObject(open, chest.type, chest.rot, chest.tile))
+        }
+    }
+    on_obj_option(open, "Close") {
+        val chest = player.getInteractingGameObj()
+        player.lockingQueue(lockState = LockState.FULL) {
+            player.animate(Anims.REACH_FORWARD)
+            wait(2)
+            world.spawn(DynamicObject(closed, chest.type, chest.rot, chest.tile))
+        }
+    }
+    on_obj_option(open, "Search") {
+        player.message("You search the chest and find nothing.")
+    }
+}

@@ -55,6 +55,11 @@ val STAFF =
         // Dorgesh-Kaan
         BankStaff(5776, 2699, 5349, facing = Direction.EAST),
         BankStaff(5777, 2699, 5348, facing = Direction.EAST),
+        // Burgh de Rott (owner 2026-09-24 "burg de roth bank volledig werkend maken"): Cornelius runs this bank - its booths
+        // 12800/12801 carry no option in the cache - and was never spawned. Void spawns npc 3567 (varbit-transformed to Cornelius
+        // 3569 once the bank is open) at 3493,3211 on the staff side of the booths at x 3494 (the bank's chest stands there too),
+        // in the gap between them; he faces the customers to the east (ADAPTED facing).
+        BankStaff(3569, 3493, 3211, facing = Direction.EAST),
         // Tutorial Island
         BankStaff(953, 3120, 3125, facing = Direction.SOUTH),
         BankStaff(953, 3122, 3125, facing = Direction.SOUTH),
