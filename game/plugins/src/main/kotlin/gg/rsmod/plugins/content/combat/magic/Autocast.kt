@@ -401,19 +401,28 @@ object Autocast {
         player.setInterfaceEvents(l.COMBAT_TAB, l.BOX_BUTTON, -1..-1, OP1)
         val spell = selected(player)
         val mode = if (spell == null) Mode.OFF else mode(player)
-        player.setComponentSprite(l.COMBAT_TAB, l.DEFENSIVE_BUTTON, if (mode == Mode.DEFENSIVE) l.SPRITE_BOX_SELECTED else l.SPRITE_BOX)
-        player.setComponentSprite(l.COMBAT_TAB, l.BOX_BUTTON, if (mode == Mode.STANDARD) l.SPRITE_BOX_SELECTED else l.SPRITE_BOX)
+        player.setComponentSprite(l.COMBAT_TAB, l.DEFENSIVE_BUTTON, if (mode == Mode.DEFENSIVE) l.SPRITE_TALL_BOX_SELECTED else l.SPRITE_TALL_BOX)
+        player.setComponentSprite(l.COMBAT_TAB, l.BOX_BUTTON, if (mode == Mode.STANDARD) l.SPRITE_TALL_BOX_SELECTED else l.SPRITE_TALL_BOX)
         val icon = spell?.let { iconOf(it) } ?: -1
         player.setComponentSprite(l.COMBAT_TAB, l.DEFENSIVE_ICON, icon)
         player.setComponentSprite(l.COMBAT_TAB, l.BOX_ICON, icon)
     }
 
-    /** The spellbook's own lit icon of [spell] (not [CombatSpell.uniqueId], which matches a sprite only by coincidence). */
+    /** The lit autocast icon of [spell]: the imported OSRS spell sprite (the 667 one for spells OSRS does not have). */
     fun iconOf(spell: CombatSpell): Int? = AutocastInterfaceLayout.entryOf(spell.interfaceId, spell.componentId)?.sprite
 
-    /** Lit icon when the current Magic level reaches the spell's level, else the spellbook's dark icon (as in the spellbook). */
-    fun listIcon(player: Player, entry: AutocastInterfaceLayout.Entry): Int =
-        if (player.skills.getCurrentLevel(gg.rsmod.plugins.api.Skills.MAGIC) >= entry.level) entry.sprite else entry.disabledSprite
+    /** Lit icon when the spell could be cast right now (Magic level and runes, as in the spellbook), else the dark icon. */
+    fun listIcon(player: Player, entry: AutocastInterfaceLayout.Entry): Int {
+        val spell = spellFor(entry)
+        val requirements = spell?.let { gg.rsmod.plugins.content.magic.MagicSpells.getMetadata(it.uniqueId) }
+        val castable =
+            if (requirements == null) {
+                player.skills.getCurrentLevel(gg.rsmod.plugins.api.Skills.MAGIC) >= entry.level
+            } else {
+                gg.rsmod.plugins.content.magic.MagicSpells.castProblem(player, requirements.lvl, requirements.runes, spell.uniqueId) == null
+            }
+        return if (castable) entry.sprite else entry.disabledSprite
+    }
 
     /** Opens the selection panel in the combat tab, listing only what the wielded weapon may autocast in the open spellbook. */
     fun openSelection(player: Player, mode: Mode) {
@@ -431,17 +440,16 @@ object Autocast {
         }
         player.attr[PENDING_MODE] = mode.ordinal
         player.openInterface(l.SELECT_INTERFACE, InterfaceDestination.ATTACK_TAB)
-        player.setComponentText(l.SELECT_INTERFACE, l.SELECT_TITLE, if (mode == Mode.DEFENSIVE) "Choose a defensive spell" else "Choose a spell")
         player.setComponentHidden(l.SELECT_INTERFACE, l.SELECT_STANDARD_LAYER, book != Spellbook.STANDARD)
         player.setComponentHidden(l.SELECT_INTERFACE, l.SELECT_ANCIENT_LAYER, book != Spellbook.ANCIENT)
+        val allowed = entries.filter { entry -> spellFor(entry)?.let { AutocastWeapons.incompatibility(def, it) == null } == true }
         var slot = 0
         l.ALL.forEach { entry ->
             val component = l.componentOf(entry)
-            val allowed = entry in entries && spellFor(entry)?.let { AutocastWeapons.incompatibility(def, it) == null } == true
-            player.setComponentHidden(l.SELECT_INTERFACE, component, !allowed)
-            if (allowed) {
+            player.setComponentHidden(l.SELECT_INTERFACE, component, entry !in allowed)
+            if (entry in allowed) {
                 // Only the weapon's spells, one after another (no holes where another weapon's spells would sit).
-                val (x, y) = l.gridPosition(slot++)
+                val (x, y) = l.gridPosition(slot++, allowed.size)
                 player.setComponentPosition(l.SELECT_INTERFACE, component, x, y)
                 player.setComponentSprite(l.SELECT_INTERFACE, component, listIcon(player, entry))
                 player.setInterfaceEvents(l.SELECT_INTERFACE, component, -1..-1, OP1)

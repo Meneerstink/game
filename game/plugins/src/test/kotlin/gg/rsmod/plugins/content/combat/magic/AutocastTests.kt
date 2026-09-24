@@ -88,14 +88,20 @@ class AutocastTests {
     }
 
     @Test
-    fun `spell icons are the spellbook's lit sprites and dim below the spell's level`() {
+    fun `spell icons are the imported OSRS sprites and dim below the spell's level or without the runes`() {
         Autocast.autocastable().forEach { assertNotNull(Autocast.iconOf(it), "${it.name} has no icon") }
-        // 667 spellbook onLoad script 6 (192:32 Fire Strike 21/71, 192:34 Wind Bolt 23/73): uniqueId 71/73 would be the dark icon.
-        assertEquals(21, Autocast.iconOf(CombatSpell.FIRE_STRIKE))
-        assertEquals(23, Autocast.iconOf(CombatSpell.WIND_BOLT))
-        val surge = AutocastInterfaceLayout.entryOf(192, 91)!!
-        assertEquals(surge.sprite, Autocast.listIcon(newPlayer(95), surge))
-        assertEquals(surge.disabledSprite, Autocast.listIcon(newPlayer(94), surge))
+        // OSRS icons are imported in OSRS_ICON_ENTRIES order, lit then dark: Fire Strike is the 4th, Wind Bolt the 5th.
+        val l = AutocastInterfaceLayout
+        assertEquals(l.SPRITE_ICON_BASE + 2 * 3, Autocast.iconOf(CombatSpell.FIRE_STRIKE))
+        assertEquals(l.SPRITE_ICON_BASE + 2 * 4, Autocast.iconOf(CombatSpell.WIND_BOLT))
+        assertEquals(21, l.entryOf(192, 32)!!.osrsSprite)
+        assertEquals(l.OSRS_ICON_ENTRIES.size * 2, l.OSRS_ICON_ENTRIES.map { it.sprite }.toSet().size + l.OSRS_ICON_ENTRIES.map { it.disabledSprite }.toSet().size)
+        val surge = l.entryOf(192, 91)!!
+        val runes = MagicSpells.getMetadata(CombatSpell.FIRE_SURGE.uniqueId)!!.runes
+        fun withRunes(level: Int) = newPlayer(level).also { p -> runes.forEach { p.inventory.add(it.id, it.amount) } }
+        assertEquals(surge.sprite, Autocast.listIcon(withRunes(95), surge))
+        assertEquals(surge.disabledSprite, Autocast.listIcon(withRunes(94), surge))
+        assertEquals(surge.disabledSprite, Autocast.listIcon(newPlayer(99), surge), "no runes -> dark icon, as in OSRS")
     }
 
     @Test

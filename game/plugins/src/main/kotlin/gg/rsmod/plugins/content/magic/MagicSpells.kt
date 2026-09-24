@@ -74,9 +74,20 @@ object MagicSpells {
         /** The spell's unique id; lets a Blighted sack replace the runes (`BlightedSacks`). -1 = no sack applies. */
         spellId: Int = -1,
     ): Boolean {
+        val problem = castProblem(p, lvl, items, spellId) ?: return true
+        p.message(problem)
+        return false
+    }
+
+    /** Why [p] cannot cast a spell right now (level, runes, staff items), or `null` when it can. Sends nothing. */
+    fun castProblem(
+        p: Player,
+        lvl: Int,
+        items: List<Item>,
+        spellId: Int = -1,
+    ): String? {
         if (p.skills.getCurrentLevel(Skills.MAGIC) < lvl) {
-            p.message("Your Magic level is not high enough for this spell.")
-            return false
+            return "Your Magic level is not high enough for this spell."
         }
         if (p.getVarbit(INF_RUNES_VARBIT) == 0 && !gg.rsmod.plugins.content.items.osrs.BlightedSacks.usable(p, spellId)) {
             if (runePlan(p, items) == null) {
@@ -87,8 +98,7 @@ object MagicSpells {
                             RunePayment.COMBINATIONS.filter { it.second == item.id || it.third == item.id }
                                 .sumOf { p.inventory.getItemCount(it.first) + RunePouch.carried(p, it.first) } < item.amount
                     } ?: items.first { it.id in RunePouch.RUNES }
-                p.message("You do not have enough ${missing.getDef(p.world.definitions).name.lowercase()}s to cast this spell.")
-                return false
+                return "You do not have enough ${missing.getDef(p.world.definitions).name.lowercase()}s to cast this spell."
             }
             for (item in items) {
                 if (item.id in RunePouch.RUNES || usingStaff(p, item.id)) {
@@ -97,16 +107,11 @@ object MagicSpells {
                 if (p.inventory.getItemCount(item.id) < item.amount &&
                     p.equipment.getItemCount(item.id) < item.amount
                 ) {
-                    p.message(
-                        "You do not have enough ${item.getDef(
-                            p.world.definitions,
-                        ).name.lowercase()}s to cast this spell.",
-                    )
-                    return false
+                    return "You do not have enough ${item.getDef(p.world.definitions).name.lowercase()}s to cast this spell."
                 }
             }
         }
-        return true
+        return null
     }
 
     fun removeRunes(
