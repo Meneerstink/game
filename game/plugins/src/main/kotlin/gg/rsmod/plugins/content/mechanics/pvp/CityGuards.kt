@@ -375,6 +375,7 @@ object CityGuards {
             } else if (!guard.movementQueue.hasDestination()) {
                 guard.walkTo(back)
             }
+            guard.attr[LEASH_STATE_ATTR] = "outside zone, heading ${back.x},${back.z}"
             return
         }
         guard.attr.remove(OUTSIDE_CYCLES_ATTR)
@@ -388,6 +389,7 @@ object CityGuards {
                 guard.attr[HOLD_FACING_ATTR] = true
                 if (guard.movementQueue.hasDestination()) guard.stopMovement()
                 faceAndResend(guard, intruder)
+                guard.attr[LEASH_STATE_ATTR] = "watching ${intruder.username}"
                 return
             }
             if (guard.attr.has(HOLD_FACING_ATTR)) {
@@ -395,6 +397,12 @@ object CityGuards {
                 guard.resetFacePawn()
             }
         }
+        guard.attr[LEASH_STATE_ATTR] =
+            when {
+                guard.getCombatTarget() != null -> "in combat"
+                guard.movementQueue.hasDestination() -> "walking"
+                else -> "idle"
+            }
         if (guard.getCombatTarget() == null && !guard.movementQueue.hasDestination()) {
             if (guard.attr[REACTIVE_GUARD_ATTR] != true && guard.tile.getDistance(guard.spawnTile) > PATROL_RADIUS + 2) {
                 guard.walkTo(guard.spawnTile)
@@ -455,6 +463,9 @@ object CityGuards {
     /** Owner retest aid (`guardinfo` command): what the last patrol roll did for this guard. */
     val LAST_PATROL_ATTR = AttributeKey<String>()
 
+    /** What the leash decided on its last tick (combat / watching / outside zone / walking / idle), for `guardinfo`. */
+    val LEASH_STATE_ATTR = AttributeKey<String>()
+
     /** One diagnostic line per Deadman guard within [radius] of [tile], for the `guardinfo` command. */
     fun describeNearby(
         world: World,
@@ -471,7 +482,8 @@ object CityGuards {
                         " faceIndex=${npc.facePawnIndex}" +
                         " hold=${npc.attr[HOLD_FACING_ATTR] == true} walking=${npc.movementQueue.hasDestination()}" +
                         " reactive=${npc.attr[REACTIVE_GUARD_ATTR] == true} inZone=${isGuardedZone(npc.tile)}" +
-                        " leash=${npc.timers.has(GUARD_LEASH_TIMER)} lastPatrol=${npc.attr[LAST_PATROL_ATTR] ?: "-"}"
+                        " leash=${npc.timers.has(GUARD_LEASH_TIMER)} state=${npc.attr[LEASH_STATE_ATTR] ?: "-"}" +
+                        " lastPatrol=${npc.attr[LAST_PATROL_ATTR] ?: "-"}"
             }
         }
         return lines

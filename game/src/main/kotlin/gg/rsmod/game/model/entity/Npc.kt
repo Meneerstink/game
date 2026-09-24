@@ -179,10 +179,24 @@ class Npc private constructor(
     }
 
     /**
-     * Getter property for our npc name.
+     * A name given to this one npc by a world edit (null: none). Setting it also sends it to the clients.
+     */
+    var nameOverride: String? = null
+        set(value) {
+            field = value
+            refreshName()
+        }
+
+    /**
+     * Getter property for our npc name: this npc's own override, then its type's override, then the cache name.
      */
     val name: String
-        get() = def.name
+        get() = nameOverride ?: typeNames[id] ?: def.name
+
+    /** Re-sends [name] to every client that sees this npc (the cache name when the overrides are gone). */
+    fun refreshName() {
+        addBlock(UpdateBlockType.NAME)
+    }
 
     /**
      * If the npc is a "static" npc, meaning
@@ -296,6 +310,9 @@ class Npc private constructor(
 
     companion object {
         internal const val RESET_PAWN_FACE_DELAY = 25
+
+        /** Names given to every npc of a type by a world edit; callers refresh the live npcs of that type. */
+        val typeNames = java.util.concurrent.ConcurrentHashMap<Int, String>()
     }
 
     /**

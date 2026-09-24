@@ -182,6 +182,7 @@ npcs:
     - FACE_PAWN # 1
     - GFX_4 # SPOTANIM3 0x20000
     - HITMARK # 3
+    - NAME # 5 (0x40000)
     - APPEARANCE # 6
     - FORCE_CHAT # 7
     - FACE_TILE # 8
@@ -216,6 +217,10 @@ npcs:
 
     - block: FORCE_CHAT
       bit: 0x2
+
+    # NpcExtendedInfoFlag.NAME: one gjstr, read after TIMERBAR and before SET_TYPE. Third mask byte, like COMBAT_LEVEL.
+    - block: NAME
+      bit: 0x40000
 
     - block: FACE_TILE
       bit: 0x8

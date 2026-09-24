@@ -1913,6 +1913,19 @@ class PluginRepository(
         opt: Int,
     ): Boolean = objectFallbacks.any { it(p, obj, opt) }
 
+    /** Handlers asked before any object plugin (e.g. a world-edit teleport on that one object); true = handled. */
+    private val objectOverrides = mutableListOf<(Player, gg.rsmod.game.model.entity.GameObject, Int) -> Boolean>()
+
+    fun bindObjectOverride(handler: (Player, gg.rsmod.game.model.entity.GameObject, Int) -> Boolean) {
+        objectOverrides.add(handler)
+    }
+
+    fun executeObjectOverride(
+        p: Player,
+        obj: gg.rsmod.game.model.entity.GameObject,
+        opt: Int,
+    ): Boolean = objectOverrides.any { it(p, obj, opt) }
+
     fun bindNpc(
         npc: Int,
         opt: Int,

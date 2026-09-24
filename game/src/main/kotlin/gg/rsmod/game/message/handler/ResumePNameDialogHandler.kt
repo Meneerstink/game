@@ -15,11 +15,13 @@ class ResumePNameDialogHandler : MessageHandler<ResumePNameDialogMessage> {
         world: World,
         message: ResumePNameDialogMessage,
     ) {
-        val name = message.name
-        val target = world.getPlayerForName(name)
-
-        log(client, "Player username input dialog: username=%s", name)
-
-        client.queues.submitReturnValue(target ?: QueueTask.EMPTY_RETURN_VALUE)
+        /*
+         * Opcode 7 is the 667 client's reply to clientscript 110, the long-text input (Novite InputPacketHandler
+         * ENTER_LONG_STRING_PACKET = 7), not a player-name lookup. Resolving it to a player dropped every typed text
+         * (owner 2026-09-24: devmode Rename always reset the name). The text goes back as typed; callers that want a
+         * player look it up themselves (QueueTask.inputPlayer).
+         */
+        log(client, "Long text input dialog: input=%s", message.name)
+        client.queues.submitReturnValue(message.name)
     }
 }

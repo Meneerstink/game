@@ -22,6 +22,7 @@ class NpcUpdateBlockSegment(
         var forceFacePawn = false
         var forceFaceTile = false
         var forceCombatLevel = false
+        var forceName = false
 
         if (newAddition) {
             if (npc.blockBuffer.faceDegrees != 0) {
@@ -40,6 +41,11 @@ class NpcUpdateBlockSegment(
             if (npc.blockBuffer.combatLevel != UpdateBlockBuffer.CACHE_COMBAT_LEVEL) {
                 mask = mask or blocks.updateBlocks[UpdateBlockType.COMBAT_LEVEL]!!.bit
                 forceCombatLevel = true
+            }
+            // A renamed npc (world edit) is also a property, re-sent to every player it enters the view of.
+            if (npc.name != npc.def.name) {
+                mask = mask or blocks.updateBlocks[UpdateBlockType.NAME]!!.bit
+                forceName = true
             }
         }
 
@@ -72,6 +78,7 @@ class NpcUpdateBlockSegment(
                     UpdateBlockType.FACE_TILE -> forceFaceTile
                     UpdateBlockType.FACE_PAWN -> forceFacePawn
                     UpdateBlockType.COMBAT_LEVEL -> forceCombatLevel
+                    UpdateBlockType.NAME -> forceName
                     else -> false
                 }
             if (npc.hasBlock(blockType) || force) {
@@ -140,6 +147,11 @@ class NpcUpdateBlockSegment(
 
             UpdateBlockType.GFX, UpdateBlockType.GFX_2, UpdateBlockType.GFX_3, UpdateBlockType.GFX_4 -> {
                 GraphicBlock.write(buf, blocks.updateBlocks[blockType]!!, npc.blockBuffer.graphics[GraphicBlock.slotOf(blockType)])
+            }
+
+            // The client puts its cached NPCType name back for "" or that same name.
+            UpdateBlockType.NAME -> {
+                buf.putString(npc.name)
             }
 
             UpdateBlockType.FORCE_CHAT -> {

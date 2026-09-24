@@ -148,8 +148,10 @@ on_global_npc_spawn {
 on_timer(CityGuards.GUARD_LEASH_TIMER) {
     if (npc.isActive()) {
         CityGuards.leash(npc)
-        npc.timers[CityGuards.GUARD_LEASH_TIMER] = 2
     }
+    // Always re-arm (owner 2026-09-24, "geen enkele guard roamt"): an npc is only active while a player has it in view, so
+    // re-arming inside the check let the timer lapse at boot - before anyone logged in - and no guard ever patrolled.
+    npc.timers[CityGuards.GUARD_LEASH_TIMER] = 2
 }
 
 /** A skulled player logging out under the guards: the guards stand down and patrol. */

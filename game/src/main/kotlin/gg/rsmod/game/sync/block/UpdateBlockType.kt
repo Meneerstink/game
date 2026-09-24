@@ -39,4 +39,10 @@ enum class UpdateBlockType {
      * tracked. `NPCList` falls back to the cache value when 65535 is sent.
      */
     COMBAT_LEVEL,
+
+    /**
+     * NPC only. `NpcExtendedInfoFlag.NAME` (0x40000): the name the client shows for this npc instead of its cached
+     * `NPCType` name; an empty string (or the cached name) puts the cached name back.
+     */
+    NAME,
 }

@@ -4,8 +4,8 @@ import gg.rsmod.game.model.attr.FACING_PAWN_ATTR
 import gg.rsmod.game.model.attr.NO_CLIP_ATTR
 import gg.rsmod.plugins.content.mechanics.pvp.CityGuards
 
-val SEARCH_FOR_PATH_TIMER = TimerKey()
-val SEARCH_FOR_PATH_DELAY = 15..30
+val SEARCH_FOR_PATH_TIMER = NpcRandomWalk.TIMER
+val SEARCH_FOR_PATH_DELAY = NpcRandomWalk.DELAY
 
 on_global_npc_spawn {
     // Owner 2026-09-18: "all guards we have in our rsps in a safezone need to be able to roam! max

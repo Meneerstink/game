@@ -5,9 +5,11 @@ import gg.rsmod.game.model.Direction
 import gg.rsmod.game.model.EntityType
 import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.World
+import gg.rsmod.game.model.collision.CollisionUpdate
 import gg.rsmod.game.model.entity.DynamicObject
 import gg.rsmod.game.model.entity.GameObject
 import gg.rsmod.game.model.entity.Npc
+import gg.rsmod.plugins.content.mechanics.npcwalk.NpcRandomWalk
 import java.io.File
 
 /**
@@ -20,7 +22,13 @@ import java.io.File
 object WorldEdits {
     val FILE = File("C:/RSPS/game/game/data/world_edits.json")
 
-    /** One edit. [op] is "remove" (take loc [id] off the tile) or "spawn" (put loc [id] there with [type]/[rot]). */
+    /**
+     * One edit. [op] is "remove" (take loc [id] off the tile) or "spawn" (put loc [id] there with [type]/[rot]); for
+     * npcs "npc_remove" / "npc_spawn" / "npc_face"; "npc_name" (this npc, [note] = name, empty = its own name again),
+     * "npc_type_name" (every npc [id], same), "npc_radius" ([rot] = walk radius); for locs "tele" ([note] = "x,z,level",
+     * clicking loc [id] on the tile goes there), "passable" (loc [id] stays visible but no longer blocks), "solid" (it
+     * blocks again) and "untele" (no teleport any more).
+     */
     data class Edit(
         val op: String,
         val id: Int,
@@ -49,6 +57,38 @@ object WorldEdits {
     /** Npcs removed by an edit (put back on undo) and npcs spawned by one (removed on undo). */
     private val removedNpcs = ArrayList<Npc>()
     private val spawnedNpcs = ArrayList<Npc>()
+
+    /** Npcs given an own name, and the walk radius each radius-edited npc had before, to put back on undo. */
+    private val renamedNpcs = ArrayList<Npc>()
+    private val originalRadius = java.util.IdentityHashMap<Npc, Int>()
+
+    /** Teleport locs: "x,z,level,id" of the loc to its destination. */
+    private val teleports = HashMap<String, Tile>()
+
+    /** Locs whose collision an edit took away (they stay visible), to give it back on undo. */
+    private val unclipped = ArrayList<GameObject>()
+
+    private fun locKey(
+        tile: Tile,
+        id: Int,
+    ) = "${tile.x},${tile.z},${tile.height},$id"
+
+    /** Where clicking [obj] takes the player, or null when it is no teleport loc. */
+    fun teleportFor(obj: GameObject): Tile? = teleports[locKey(obj.tile, obj.id)]
+
+    fun isPassable(obj: GameObject): Boolean = unclipped.any { it === obj }
+
+    private fun present(
+        world: World,
+        obj: GameObject,
+    ) = objectsAt(world, obj.tile).any { it === obj }
+
+    private fun restoreCollision(
+        world: World,
+        obj: GameObject,
+    ) {
+        if (present(world, obj)) world.collision.applyCollision(world.definitions, obj, CollisionUpdate.Type.ADD)
+    }
 
     /** The eight facings an npc can be given, in clockwise order; an npc edit's [Edit.rot] indexes this list. */
     val FACINGS =
@@ -99,6 +139,19 @@ object WorldEdits {
             .toList()
 
     private fun undo(world: World) {
+        // Collision back first: the spawned locs removed below take theirs off again.
+        unclipped.forEach { restoreCollision(world, it) }
+        unclipped.clear()
+        teleports.clear()
+        originalRadius.forEach { (npc, radius) -> npc.walkRadius = radius }
+        originalRadius.clear()
+        renamedNpcs.forEach { it.nameOverride = null }
+        renamedNpcs.clear()
+        if (Npc.typeNames.isNotEmpty()) {
+            val ids = HashSet(Npc.typeNames.keys)
+            Npc.typeNames.clear()
+            world.npcs.forEach { if (it.id in ids) it.refreshName() }
+        }
         spawned.forEach { world.remove(it) }
         spawned.clear()
         takenOut.asReversed().forEach { world.spawn(it) }
@@ -155,6 +208,50 @@ object WorldEdits {
                 "npc_face" -> {
                     val npc = npcAt(world, edit.tile, edit.id) ?: continue
                     face(npc, edit.rot)
+                    applied++
+                }
+                "npc_name" -> {
+                    val npc = npcAt(world, edit.tile, edit.id) ?: continue
+                    npc.nameOverride = edit.note?.takeIf { it.isNotBlank() }
+                    if (npc !in renamedNpcs) renamedNpcs += npc
+                    applied++
+                }
+                "npc_type_name" -> {
+                    val name = edit.note?.takeIf { it.isNotBlank() }
+                    if (name == null) Npc.typeNames.remove(edit.id) else Npc.typeNames[edit.id] = name
+                    world.npcs.forEach { if (it.id == edit.id) it.refreshName() }
+                    applied++
+                }
+                "npc_radius" -> {
+                    val npc = npcAt(world, edit.tile, edit.id) ?: continue
+                    if (!originalRadius.containsKey(npc)) originalRadius[npc] = npc.walkRadius
+                    npc.walkRadius = edit.rot.coerceAtLeast(0)
+                    // The random-walk timer only runs for npcs that roamed at spawn; start it (radius 0 walks home).
+                    npc.timers[NpcRandomWalk.TIMER] = 1
+                    applied++
+                }
+                "tele" -> {
+                    val to = edit.note?.split(',')?.mapNotNull { it.trim().toIntOrNull() } ?: continue
+                    if (to.size < 3) continue
+                    teleports[locKey(edit.tile, edit.id)] = Tile(to[0], to[1], to[2])
+                    applied++
+                }
+                "passable" -> {
+                    val obj = objectsAt(world, edit.tile).firstOrNull { it.id == edit.id } ?: continue
+                    if (isPassable(obj)) continue
+                    world.collision.applyCollision(world.definitions, obj, CollisionUpdate.Type.REMOVE)
+                    unclipped += obj
+                    applied++
+                }
+                "untele" -> {
+                    teleports.remove(locKey(edit.tile, edit.id))
+                    applied++
+                }
+                "solid" -> {
+                    unclipped.filter { it.id == edit.id && it.tile.sameAs(edit.tile) }.forEach {
+                        restoreCollision(world, it)
+                        unclipped.remove(it)
+                    }
                     applied++
                 }
             }

@@ -192,7 +192,9 @@ suspend fun QueueTask.inputPlayer(description: String = "Enter name"): Player? {
     waitReturnValue()
     terminateAction!!(this)
 
-    return requestReturnValue as? Player
+    // Script 109 answers with the typed text (RESUME_P_STRINGDIALOG); the player is looked up here.
+    val name = requestReturnValue as? String ?: return null
+    return player.world.getPlayerForName(name)
 }
 
 /**
@@ -334,8 +336,14 @@ suspend fun QueueTask.chatNpc(
             player.attr[INTERACTING_NPC_ATTR]?.get()?.getTransform(player)
                 ?: throw RuntimeException("Npc id must be manually set as the player is not interacting with an npc.")
         }
+    // A name given by a world edit (devnpcname) - to the npc being talked to, or to every npc of this type - wins.
+    val renamed =
+        player.attr[INTERACTING_NPC_ATTR]?.get()
+            ?.takeIf { it.id == npcId || it.getTransform(player) == npcId }
+            ?.let { it.nameOverride ?: Npc.typeNames[it.id] }
+            ?: Npc.typeNames[npcId]
     val dialogTitle =
-        title ?: player.world.definitions
+        title ?: renamed ?: player.world.definitions
             .get(NpcDef::class.java, npcId)
             .name
 
