@@ -75,7 +75,16 @@ object DropTableFactory {
         type: DropTableType = DropTableType.KILL,
     ) {
         try {
-            getDrop(player, npcId, type)?.forEach { createDrop(world, it, tile, player) }
+            val items = getDrop(player, npcId, type) ?: return
+            // Friends chat LootShare: a shared kill hands each item to one of the sharers (LootShare).
+            val sharers = if (type == DropTableType.KILL) gg.rsmod.plugins.content.inter.friends.LootShare.sharers(player, tile) else null
+            items.forEach { item ->
+                if (sharers == null) {
+                    createDrop(world, item, tile, player)
+                } else {
+                    gg.rsmod.plugins.content.inter.friends.LootShare.share(world, player, sharers, item, tile) { shared, owner -> createDrop(world, shared, tile, owner) }
+                }
+            }
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -256,8 +265,10 @@ object DropTableFactory {
             world.spawn(ground)
         }
         else {
+            // One entity per item (cbefbb361), each owned by the killer like a stackable drop: the split lost the owner, so
+            // non-stackable loot (armour, weapons) was public to every player the moment it landed.
             for (i in 0 until item.amount) {
-                val ground = GroundItem(item.id, 1, tile)
+                val ground = GroundItem(item.id, 1, tile, owner as? Player)
                 world.spawn(ground)
             }
         }

@@ -28,6 +28,7 @@ fun refresh(player: Player) {
     player.setComponentText(SETUP, KICK, FriendsChatRank.label(s?.kickRank ?: FriendsChatRank.OWNER))
     val loot = s?.lootShareRank ?: FriendsChatRank.GUEST
     player.setComponentText(SETUP, LOOT, if (loot == FriendsChatRank.GUEST) "No-one" else FriendsChatRank.label(loot))
+    player.setVarbit(LootShare.COIN_SHARE_SETTING_VARBIT, if (s?.coinShare == true) 1 else 0)
 }
 
 on_button(interfaceId = TAB, component = 33) {
@@ -91,12 +92,13 @@ on_button(interfaceId = SETUP, component = LOOT) {
     refresh(player)
 }
 
+// CoinShare toggle (the owner's own setup screen); reaches the channel 30 seconds later (LootShare).
 on_button(interfaceId = SETUP, component = 33) {
-    player.message("CoinShare is not available on this server.")
+    LootShare.toggleCoinShare(player)
 }
 
 on_button(interfaceId = TAB, component = 19) {
-    player.message("LootShare is not available on this server.")
+    LootShare.toggle(player)
 }
 
 // The channel settings keep a snapshot of the owner's friends, so ranks and "Any friends" work while the owner is offline.

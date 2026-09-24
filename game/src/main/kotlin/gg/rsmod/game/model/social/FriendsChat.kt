@@ -51,6 +51,8 @@ class FriendsChatSettings(
     var talkRank: Int = FriendsChatRank.GUEST,
     var kickRank: Int = FriendsChatRank.OWNER,
     var lootShareRank: Int = FriendsChatRank.GUEST,
+    /** CoinShare (Friends Chat Setup 1108): drops worth over 100,000 coins are split as coins among the sharers. */
+    var coinShare: Boolean = false,
     var friends: MutableSet<String> = HashSet(),
     var ranks: MutableMap<String, Int> = HashMap(),
 )
@@ -153,6 +155,9 @@ class FriendsChat(private val settingsFile: File = File(SETTINGS_FILE)) {
         channels[key(owner.username)]?.let { broadcastChannelState(it) }
     }
 
+    /** The live channel [owner] runs, if anybody is in it. */
+    fun channelOwnedBy(owner: String): FriendsChatChannel? = channels[key(owner)]
+
     fun channelOf(player: Player): FriendsChatChannel? = channels.values.firstOrNull { it.contains(player) }
 
     /** Moves [player] into [ownerName]'s channel. @return true when the player is now in that channel. */
@@ -252,6 +257,8 @@ class FriendsChat(private val settingsFile: File = File(SETTINGS_FILE)) {
     fun setKickRank(owner: Player, rank: Int) = update(owner) { kickRank = rank }
 
     fun setLootShareRank(owner: Player, rank: Int) = update(owner) { lootShareRank = rank }
+
+    fun setCoinShare(owner: Player, on: Boolean) = update(owner) { coinShare = on }
 
     /** ClientProt FRIEND_SETRANK: [owner] gives [friend] a rank (0 = plain friend .. 6 = General). */
     fun setFriendRank(owner: Player, friend: String, rank: Int) {
