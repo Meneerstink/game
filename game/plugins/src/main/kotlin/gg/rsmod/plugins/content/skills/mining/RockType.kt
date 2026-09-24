@@ -61,6 +61,7 @@ enum class RockType(
         highChance = 379,
         objectIds =
             arrayOf(
+                Objs.ROCKS_3042, // 667 Void rocks.objs.toml clone of the copper rock (traversal census 2026-09-24)
                 Objs.ROCKS_3229,
                 Objs.ROCKS_3027,
                 Objs.ROCKS_11936,
@@ -87,6 +88,7 @@ enum class RockType(
         highChance = 379,
         objectIds =
             arrayOf(
+                Objs.ROCKS_3043, // 667 Void rocks.objs.toml clone of the tin rock (traversal census 2026-09-24)
                 Objs.ROCKS_3038,
                 Objs.ROCKS_3245,
                 Objs.ROCKS_11933,
@@ -173,6 +175,7 @@ enum class RockType(
         highChance = 100,
         objectIds =
             arrayOf(
+                Objs.ROCKS_32426, // 667 Void rocks.objs.toml clone of the coal rock (traversal census 2026-09-24)
                 Objs.ROCKS_11932,
                 Objs.ROCKS_11930,
                 Objs.ROCKS_11963,
