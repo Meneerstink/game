@@ -27,7 +27,8 @@ fun castCombatSpellOnPawn(
 ) {
     val combatSpell = CombatSpell.values.firstOrNull { spell -> spell.uniqueId == spellMetadata.sprite }
     if (combatSpell != null) {
-        player.attr[Combat.CASTING_SPELL] = combatSpell
+        // Manual cast: one cast through the shared engine; the saved autocast choice is untouched.
+        gg.rsmod.plugins.content.combat.magic.Autocast.markManualCast(player, combatSpell, pawn)
         player.attack(pawn)
     } else {
         /*

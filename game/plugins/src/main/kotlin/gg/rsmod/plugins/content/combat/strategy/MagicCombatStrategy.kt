@@ -57,39 +57,45 @@ object MagicCombatStrategy : CombatStrategy {
                 return RangedCombatStrategy.canAttack(pawn, target)
             }
             val spell = pawn.attr[Combat.CASTING_SPELL]!!
-            if (spell.requiredWeapons.isNotEmpty()) {
+            // The one validation every combat cast passes - manual cast and autocast alike (shared engine). A failed check never
+            // touches the saved autocast choice (OSRS: it stays selected without level/runes); it only drops a pending manual cast,
+            // so the next plain attack cannot fire a stale spell. The weapon check covers the god spells too (AutocastWeapons).
+            val required = gg.rsmod.plugins.content.combat.magic.AutocastWeapons.requiredWeapons(spell)
+            if (required.isNotEmpty()) {
                 val weapon = pawn.getEquipment(EquipmentType.WEAPON)
-                if (weapon == null || weapon.id !in spell.requiredWeapons) {
-                    pawn.message(spell.requiredWeaponMessage)
-                    pawn.setVarp(Combat.SELECTED_AUTOCAST_VARP, 0)
-                    pawn.attr.remove(Combat.CASTING_SPELL)
-                    return false
+                if (weapon == null || weapon.id !in required) {
+                    pawn.message(gg.rsmod.plugins.content.combat.magic.AutocastWeapons.requiredWeaponMessage(spell))
+                    return failCast(pawn)
                 }
             }
             if (spell == CombatSpell.CRUMBLE_UNDEAD && !isUndead(target)) {
                 pawn.message("This spell only affects skeletons, zombies, ghosts and shades.")
-                pawn.setVarp(Combat.SELECTED_AUTOCAST_VARP, 0)
-                pawn.attr.remove(Combat.CASTING_SPELL)
-                return false
+                return failCast(pawn)
             }
             if (spell.effect == SpellEffect.Teleblock) {
                 if (target !is Player) {
                     pawn.message("You can only cast this spell on other players.")
-                    pawn.attr.remove(Combat.CASTING_SPELL)
-                    return false
+                    return failCast(pawn)
                 }
                 if (target.timers.has(TELEBLOCK_TIMER)) {
                     pawn.message("This player is already affected by this spell.")
-                    pawn.attr.remove(Combat.CASTING_SPELL)
-                    return false
+                    return failCast(pawn)
                 }
             }
             val requirements = MagicSpells.getMetadata(spell.uniqueId)
             if (requirements != null && !MagicSpells.canCast(pawn, requirements.lvl, requirements.runes, spellId = spell.uniqueId)) {
-                return false
+                return failCast(pawn)
             }
         }
         return true
+    }
+
+    /** A cast that cannot fire: a pending manual cast is dropped; an autocast spell is re-resolved by the combat loop next time. */
+    private fun failCast(pawn: Player): Boolean {
+        if (pawn.attr[gg.rsmod.plugins.content.combat.magic.Autocast.AUTO_CAST] != true) {
+            pawn.attr.remove(Combat.CASTING_SPELL)
+        }
+        return false
     }
 
     fun isUndead(target: Pawn): Boolean {
@@ -176,7 +182,7 @@ object MagicCombatStrategy : CombatStrategy {
         // A spell cast directly on a target (not the selected autocast) is a single cast, as in OSRS: the caster
         // stops afterwards. Non-damaging spells (binds, curses, Teleblock) never reach postDamage, so without this
         // the spell stayed in CASTING_SPELL and repeated every attack cycle like an autocast (owner 2026-09-18).
-        if (pawn is Player && (spell.autoCastId == -1 || pawn.getVarp(Combat.SELECTED_AUTOCAST_VARP) != spell.autoCastId)) {
+        if (pawn is Player && pawn.attr[gg.rsmod.plugins.content.combat.magic.Autocast.AUTO_CAST] != true) {
             pawn.attr.remove(Combat.CASTING_SPELL)
             Combat.reset(pawn)
         }
@@ -489,7 +495,9 @@ object MagicCombatStrategy : CombatStrategy {
         val hitpointsExperience = (modDamage * 0.133) * multiplier
         val defenceExperience = (modDamage * 0.1) * multiplier
         var bonusRate: Double
-        val defensive = player.getVarp(Combat.DEFENSIVE_CAST_VARP) > 0
+        // OSRS Wiki "Autocast": only a defensive autocast splits into Defence; manual casts give the offensive split. (The old check
+        // read varp 439, whose low bits are the client spellbook, so every Ancient Magicks cast was counted as defensive.)
+        val defensive = gg.rsmod.plugins.content.combat.magic.Autocast.isDefensiveCast(player)
         if (defensive) {
             bonusRate = player.addXp(Skills.MAGIC, sharedExperience, checkBrawlingGloves = true)
             player.addXp(Skills.DEFENCE, defenceExperience * bonusRate)

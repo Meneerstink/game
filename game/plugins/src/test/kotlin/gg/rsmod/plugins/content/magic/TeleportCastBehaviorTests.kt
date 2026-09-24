@@ -307,8 +307,8 @@ class TeleportCastBehaviorTests {
         // path touches: the varp backing INF_RUNES_VARBIT (so getVarbit()
         // resolves through the real VarbitDef, exercising the actual
         // cast-behavior code path rather than a stub) and
-        // Combat.SELECTED_AUTOCAST_VARP, which the insufficient-level branch
-        // resets directly.
+        // Combat.SELECTED_AUTOCAST_VARP (the autocast display mirror; canCast no
+        // longer touches it - OSRS keeps autocast selected without level/runes).
         private lateinit var VARPS: VarpSet
 
         @BeforeClass

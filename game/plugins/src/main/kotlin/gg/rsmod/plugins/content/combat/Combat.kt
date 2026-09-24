@@ -62,8 +62,8 @@ object Combat {
 
     const val PRIORITY_PID_VARP = 1075
 
+    /** Display mirror of the active autocast spell (667 spellbook highlight, CS2 1121); written only by Autocast.sync. */
     const val SELECTED_AUTOCAST_VARP = 108
-    const val DEFENSIVE_CAST_VARP = 439
 
     fun reset(pawn: Pawn) {
         pawn.attr.remove(COMBAT_TARGET_FOCUS_ATTR)
@@ -122,6 +122,8 @@ object Combat {
 
         if (pawn is Player && target is Player) {
             PvpSkull.markAggression(attacker = pawn, victim = target)
+            // The player's own outgoing player attack - the OSRS PvP autocast swap rule counts from this, never from being attacked.
+            gg.rsmod.plugins.content.combat.magic.Autocast.onOutgoingPlayerAttack(pawn)
         }
         // Deadman 24-second high-value deposit block ("recently been in combat").
         (pawn as? Player)?.let { gg.rsmod.plugins.content.mechanics.pvp.BankSecurity.markCombat(it) }

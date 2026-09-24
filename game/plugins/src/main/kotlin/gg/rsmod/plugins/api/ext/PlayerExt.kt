@@ -1775,8 +1775,9 @@ fun Player.spellbookInterfaceId(pane: InterfaceDestination = InterfaceDestinatio
  */
 fun Player.switchSpellbook(book: Spellbook) {
     setSpellbook(book)
-    setVarp(108, 0)
     attr.remove(gg.rsmod.plugins.content.combat.Combat.CASTING_SPELL)
+    // OSRS: a spell of the old book can no longer be autocast; the autocast registry decides and logs the reset.
+    gg.rsmod.plugins.content.combat.magic.Autocast.onSpellbookChanged(this)
     closeInterface(InterfaceDestination.MAGIC_TAB)
     openInterface(spellbookInterfaceId(), InterfaceDestination.MAGIC_TAB)
 }

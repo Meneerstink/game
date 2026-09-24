@@ -273,6 +273,14 @@ task runNpcAttackOptionStripTool(type: JavaExec) {
     main = 'gg.rsmod.game.tools.importer.NpcAttackOptionStripTool'
 }
 
+task runAutocastInterfaceImportTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Adds the OSRS autocast Spell box to combat tab 884 and builds the autocast spell-selection interface 1170 in both ' +
+        'production caches (CacheTransaction). Usage: ./gradlew :game:runAutocastInterfaceImportTool --args="[--apply]"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.AutocastInterfaceImportTool'
+}
+
 task runLootKeyInterfaceImportTool(type: JavaExec) {
     group = 'tools'
     description = 'Builds the OSRS Loot keys chest interface (OSRS 742) as 667 interface 1149 and imports its OSRS ' +

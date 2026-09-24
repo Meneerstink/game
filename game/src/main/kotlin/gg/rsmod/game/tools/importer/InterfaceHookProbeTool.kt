@@ -440,6 +440,9 @@ object InterfaceHookProbeTool {
      */
     fun componentSize(data: ByteArray): Pair<Int, Int> = decodeComponent(data).let { it.width to it.height }
 
+    /** Baked sprite id of one raw GRAPHIC(5) component, -1 when none. */
+    fun componentSprite(data: ByteArray): Int = decodeComponent(data).spriteId
+
     /** The decoded hook argument lists (onLoad, onVarTransmit, ...) of one raw component; null entries are unset hooks. */
     fun componentHooks(data: ByteArray): Map<String, List<Any>?> = decodeComponent(data).hooks
 

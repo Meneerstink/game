@@ -94,13 +94,8 @@ PoweredStaves.Staff.values().forEach { staff ->
                 player.message("You uncharge your weapon.")
             }
         }
-        // Powered staves "cannot be used to autocast spells": a selected autocast spell is cleared when one is wielded.
-        on_item_equip(item = staffId) {
-            if (player.getVarp(Combat.SELECTED_AUTOCAST_VARP) != 0) {
-                player.setVarp(Combat.SELECTED_AUTOCAST_VARP, 0)
-                player.attr.remove(Combat.CASTING_SPELL)
-            }
-        }
+        // Powered staves "cannot be used to autocast spells": equipping one forgets the autocast choice - done centrally by
+        // Autocast.onWeaponChanged ("unless you equip a staff that cannot autocast the chosen spell").
     }
 }
 

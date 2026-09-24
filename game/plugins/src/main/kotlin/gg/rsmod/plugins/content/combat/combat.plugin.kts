@@ -101,15 +101,9 @@ suspend fun cycle(it: QueueTask): Boolean {
 
     if (pawn is Player) {
         pawn.setVarp(Combat.PRIORITY_PID_VARP, target.index)
-        // Powered staves "cannot be used to autocast spells" (OSRS Wiki "Powered staff").
-        if (!pawn.attr.has(Combat.CASTING_SPELL) && pawn.getVarp(Combat.SELECTED_AUTOCAST_VARP) != 0 &&
-            gg.rsmod.plugins.content.items.osrs.PoweredStaves.wielded(pawn) == null
-        ) {
-            val spell = CombatSpell.values.firstOrNull { it.autoCastId == pawn.getVarp(Combat.SELECTED_AUTOCAST_VARP) }
-            if (spell != null) {
-                pawn.attr[Combat.CASTING_SPELL] = spell
-            }
-        }
+        // The one autocast entry point: loads the resolved autocast spell (weapon, spellbook and mode checked centrally) or drops a
+        // stale one; a pending manual cast wins for this attack. Powered staves never resolve (AutocastWeapons).
+        gg.rsmod.plugins.content.combat.magic.Autocast.prepareAttack(pawn, target)
     }
 
     val strategy = CombatConfigs.getCombatStrategy(pawn)

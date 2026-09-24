@@ -52,7 +52,8 @@ class StaffOfTheDeadTests {
         assertTrue("StaffOfTheDead.rollVenom(pawn, target)" in read("combat/strategy/MeleeCombatStrategy.kt"))
         assertTrue("StaffOfTheDead.rollVenom(pawn, target)" in read("combat/strategy/MagicCombatStrategy.kt"))
         assertTrue("StaffOfTheDead.onCombat(it)" in read("combat/Combat.kt"))
-        assertTrue("StaffOfTheDead.isWieldingDeadStaff(player)" in read("inter/magic/magic_tab.plugin.kts"))
+        // Autocast: standard spells only - no dead staff is in the central Ancient Magicks autocast set.
+        assertTrue(StaffOfTheDead.DEAD_STAVES.none { it in gg.rsmod.plugins.content.combat.magic.AutocastWeapons.ANCIENT_WEAPONS })
         assertFalse("Items.STAFF_OF_LIGHT)" in read("combat/specialattack/weapons/melee_specials.plugin.kts"), "no second special binding")
         assertTrue("Item(Items.TOXIC_STAFF_UNCHARGED, 1)" in read("mechanics/death/PvpDeathBreakables.kt"))
     }

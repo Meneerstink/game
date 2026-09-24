@@ -44,6 +44,7 @@ class BlightedSacksTests {
         val lunar = File("src/main/kotlin/gg/rsmod/plugins/content/magic/lunar/lunar_spells.plugin.kts").readText()
         assertTrue("MagicSpells.canCast(this, metadata.lvl, metadata.runes, spellId = metadata.sprite)" in lunar)
         assertTrue("MagicSpells.removeRunes(this, metadata.runes, metadata.sprite)" in lunar)
-        assertTrue("spellId = spell.uniqueId" in File("src/main/kotlin/gg/rsmod/plugins/content/inter/magic/magic_tab.plugin.kts").readText(), "ice autocast")
+        // Autocast and manual casts share MagicCombatStrategy.canAttack, which passes the spell id (sacks cover autocast Ice spells).
+        assertTrue("canCast(pawn, requirements.lvl, requirements.runes, spellId = spell.uniqueId)" in File("src/main/kotlin/gg/rsmod/plugins/content/combat/strategy/MagicCombatStrategy.kt").readText(), "ice autocast")
     }
 }

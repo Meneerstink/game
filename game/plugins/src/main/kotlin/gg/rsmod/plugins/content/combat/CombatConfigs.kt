@@ -183,14 +183,10 @@ object CombatConfigs {
             }
             // "Powered staff": attack speed 4 for the built-in spell; spellbook casts keep 5.
             if (getCombatClass(pawn) == CombatClass.MAGIC && !gg.rsmod.plugins.content.items.osrs.PoweredStaves.usingBuiltInSpell(pawn)) {
-                speed = 5
-                // Harmonised Nightmare staff: standard offensive spells take 4 ticks, "The 4-tick spell speed only applies when autocasting."
-                val spell = pawn.attr[Combat.CASTING_SPELL]
-                if (weapon.id == gg.rsmod.plugins.api.cfg.Items.HARMONISED_NIGHTMARE_STAFF && spell != null && spell.interfaceId == 192 &&
-                    pawn.getVarp(Combat.SELECTED_AUTOCAST_VARP) == spell.autoCastId
-                ) {
-                    speed = 4
-                }
+                // Spellbook casts: 5 ticks, weapon exceptions from the one table (AutocastWeapons.spellAttackSpeed).
+                speed = gg.rsmod.plugins.content.combat.magic.AutocastWeapons.spellAttackSpeed(
+                    weapon.id, pawn.attr[Combat.CASTING_SPELL], autocast = pawn.attr[gg.rsmod.plugins.content.combat.magic.Autocast.AUTO_CAST] == true,
+                )
             }
             // Miasmic spells: attack speed is halved (doubled delay) for the effect duration.
             if (pawn.timers.has(MIASMIC_TIMER)) {

@@ -866,7 +866,8 @@ enum class CombatSpell(
         castAnimation = arrayOf(Anims.WARLOCK_WEAK_EARTH_STRIKE),
         projectile = Gfx.EARTH_STRIKE_PROJ,
         impactGfx = Graphic(Gfx.EARTH_STRIKE_IMPACT, 60),
-        autoCastId = 7,
+        // NPC-only spell: it used to share Earth Strike's autocast id 7, so an autocast lookup by id could pick it.
+        autoCastId = -1,
         experience = 9.5,
     ),
 

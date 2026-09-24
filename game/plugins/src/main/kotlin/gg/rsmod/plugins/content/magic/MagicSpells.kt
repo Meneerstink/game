@@ -76,8 +76,6 @@ object MagicSpells {
     ): Boolean {
         if (p.skills.getCurrentLevel(Skills.MAGIC) < lvl) {
             p.message("Your Magic level is not high enough for this spell.")
-            p.setVarp(Combat.SELECTED_AUTOCAST_VARP, 0)
-            p.attr.remove(Combat.CASTING_SPELL)
             return false
         }
         if (p.getVarbit(INF_RUNES_VARBIT) == 0 && !gg.rsmod.plugins.content.items.osrs.BlightedSacks.usable(p, spellId)) {
@@ -90,8 +88,6 @@ object MagicSpells {
                                 .sumOf { p.inventory.getItemCount(it.first) + RunePouch.carried(p, it.first) } < item.amount
                     } ?: items.first { it.id in RunePouch.RUNES }
                 p.message("You do not have enough ${missing.getDef(p.world.definitions).name.lowercase()}s to cast this spell.")
-                p.setVarp(Combat.SELECTED_AUTOCAST_VARP, 0)
-                p.attr.remove(Combat.CASTING_SPELL)
                 return false
             }
             for (item in items) {
@@ -106,8 +102,6 @@ object MagicSpells {
                             p.world.definitions,
                         ).name.lowercase()}s to cast this spell.",
                     )
-                    p.setVarp(Combat.SELECTED_AUTOCAST_VARP, 0)
-                    p.attr.remove(Combat.CASTING_SPELL)
                     return false
                 }
             }

@@ -1,10 +1,5 @@
 package gg.rsmod.plugins.content.inter.magic
 
-import gg.rsmod.plugins.content.combat.Combat
-import gg.rsmod.plugins.content.combat.Combat.DEFENSIVE_CAST_VARP
-import gg.rsmod.plugins.content.combat.Combat.SELECTED_AUTOCAST_VARP
-import gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell
-import gg.rsmod.plugins.content.magic.MagicSpells
 
 val FILTER_COMBAT_SPELLS_VARBIT = 6459
 val FILTER_TELEPORT_SPELLS_VARBIT = 6462
@@ -17,50 +12,30 @@ on_login {
     player.setVarbit(gg.rsmod.plugins.api.ext.CLIENT_SPELLBOOK_VARBIT, player.getSpellbook().id)
 }
 
-CombatSpell.definitions.values.filter { it.autoCastId != -1 }.forEach { spell ->
-    on_button(interfaceId = spell.interfaceId, component = spell.componentId) {
-        if (player.getVarp(SELECTED_AUTOCAST_VARP) == spell.autoCastId) {
-            player.attr.remove(Combat.CASTING_SPELL)
-            player.setVarp(SELECTED_AUTOCAST_VARP, 0)
-            return@on_button
-        }
+/*
+ * Legacy 667 combat autocast is gone: combat spells are autocast only from the Combat Options tab (content/combat/magic/Autocast).
+ * The spellbook's baked "Autocast" op (standard op1, Ancient op6) and the "Defensive Casting" toggle (192:2, 193:18, 430:20) are
+ * stripped from the client menu by re-sending each component's baked event mask without that op, every time a spellbook is opened
+ * (the open hook fires before the IfOpenSub, and the client reloads the baked masks on open, so it runs a cycle later). Casting a
+ * spell on a target (the targeting bits) is untouched and stays a manual cast. No server handler exists for the stripped ops, so a
+ * replayed legacy click changes nothing.
+ */
+val LEGACY_AUTOCAST_OPS: Map<Int, List<Pair<Int, Int>>> =
+    mapOf(
+        192 to (listOf(25, 28, 30, 32, 34, 39, 42, 45, 49, 52, 54, 56, 58, 63, 66, 67, 68, 70, 73, 77, 80, 84, 87, 89, 91, 98, 99).map { it to (0x005002 and 0x2.inv()) } +
+            listOf(47 to (0x001002 and 0x2.inv()), 2 to (0x000402 and 0x2.inv()))),
+        193 to ((20..35).map { it to (0x005040 and 0x40.inv()) } + (36..39).map { it to (0x005440 and 0x40.inv()) } + listOf(18 to (0x000402 and 0x2.inv()))),
+        430 to listOf(20 to (0x000402 and 0x2.inv())),
+    )
 
-        // Powered staves "cannot be used to autocast spells" (OSRS Wiki "Powered staff"); message ADAPTED.
-        if (gg.rsmod.plugins.content.items.osrs.PoweredStaves.wielded(player) != null) {
-            player.message(gg.rsmod.plugins.content.items.osrs.PoweredStaves.NO_AUTOCAST_MESSAGE)
-            player.setVarp(SELECTED_AUTOCAST_VARP, 0)
-            return@on_button
+LEGACY_AUTOCAST_OPS.forEach { (book, components) ->
+    on_interface_open(interfaceId = book) {
+        val p = player
+        world.queue {
+            wait(1)
+            if (!p.isOnline) return@queue
+            components.forEach { (component, events) -> p.setInterfaceEvents(book, component, -1..-1, events) }
         }
-
-        // Staff of the dead family autocasts standard spells, "not Ancient Magicks" (OSRS Wiki); message ADAPTED.
-        // Harmonised Nightmare staff: "cannot autocast any other spells (including Ancient Magicks ...)" (OSRS Wiki).
-        if (spell.interfaceId == 193 && (gg.rsmod.plugins.content.items.osrs.StaffOfTheDead.isWieldingDeadStaff(player) ||
-                player.getEquipment(EquipmentType.WEAPON)?.id == Items.HARMONISED_NIGHTMARE_STAFF)
-        ) {
-            player.message("You can't autocast Ancient Magicks with this staff.")
-            player.setVarp(SELECTED_AUTOCAST_VARP, 0)
-            return@on_button
-        }
-
-        val metadata = MagicSpells.getMetadata(spell.uniqueId)
-        if (metadata != null && MagicSpells.canCast(player, metadata.lvl, metadata.runes, spellId = spell.uniqueId)) {
-            player.attr[Combat.CASTING_SPELL] = spell
-            player.setVarp(SELECTED_AUTOCAST_VARP, spell.autoCastId)
-        } else {
-            player.setVarp(SELECTED_AUTOCAST_VARP, 0)
-        }
-    }
-}
-
-// Defensive Casting toggle: 192:2 standard, 193:18 Ancient Magicks, 430:20 Lunar (component ids
-// decoded from the production cache; all three share CS2 hook script 1128).
-listOf(192 to 2, 193 to 18, 430 to 20).forEach { (interfaceId, component) ->
-    on_button(interfaceId = interfaceId, component = component) {
-        if (player.getVarp(DEFENSIVE_CAST_VARP) > 0) {
-            player.setVarp(DEFENSIVE_CAST_VARP, 0)
-            return@on_button
-        }
-        player.setVarp(DEFENSIVE_CAST_VARP, 256)
     }
 }
 

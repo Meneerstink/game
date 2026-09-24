@@ -45,8 +45,9 @@ class OsrsNightmareImportTests {
                 assertEquals(orb, row?.kit, "and the orb")
             }
         val configs = File("src/main/kotlin/gg/rsmod/plugins/content/combat/CombatConfigs.kt").readText()
-        assertTrue("Items.HARMONISED_NIGHTMARE_STAFF" in configs && "speed = 4" in configs && "SELECTED_AUTOCAST_VARP) == spell.autoCastId" in configs)
-        assertTrue("Items.HARMONISED_NIGHTMARE_STAFF" in File("src/main/kotlin/gg/rsmod/plugins/content/inter/magic/magic_tab.plugin.kts").readText())
+        assertTrue("AutocastWeapons.spellAttackSpeed(" in configs && gg.rsmod.plugins.content.combat.magic.AutocastWeapons.spellAttackSpeed(Items.HARMONISED_NIGHTMARE_STAFF, gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell.FIRE_SURGE, true) == 4 && gg.rsmod.plugins.content.combat.magic.AutocastWeapons.spellAttackSpeed(Items.HARMONISED_NIGHTMARE_STAFF, gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell.FIRE_SURGE, false) == 5)
+        // Harmonised: standard spells only - it is not in the central Ancient Magicks autocast set.
+        assertTrue(Items.HARMONISED_NIGHTMARE_STAFF !in gg.rsmod.plugins.content.combat.magic.AutocastWeapons.ANCIENT_WEAPONS)
         val formula = File("src/main/kotlin/gg/rsmod/plugins/content/combat/formula/MagicCombatFormula.kt").readText()
         assertTrue("NightmareStaves.SPECIAL_BASE_MAX_HIT" in formula && "roll = Math.floor(roll * specialAttackMultiplier)" in formula)
         val specials = File("src/main/kotlin/gg/rsmod/plugins/content/combat/specialattack/weapons/nightmare_staves.plugin.kts").readText()

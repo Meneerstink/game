@@ -35,20 +35,12 @@ on_item_unequip(item = Items.LIGHTBEARER) {
 /**
  * Attack style buttons
  */
-on_button(interfaceId = 884, component = 11) {
-    player.setVarp(AttackTab.ATTACK_STYLE_VARP, 0)
-}
-
-on_button(interfaceId = 884, component = 12) {
-    player.setVarp(AttackTab.ATTACK_STYLE_VARP, 1)
-}
-
-on_button(interfaceId = 884, component = 13) {
-    player.setVarp(AttackTab.ATTACK_STYLE_VARP, 2)
-}
-
-on_button(interfaceId = 884, component = 14) {
-    player.setVarp(AttackTab.ATTACK_STYLE_VARP, 3)
+listOf(11, 12, 13, 14).forEachIndexed { style, component ->
+    on_button(interfaceId = 884, component = component) {
+        player.setVarp(AttackTab.ATTACK_STYLE_VARP, style)
+        // OSRS: choosing a melee style turns autocast off; the chosen spell is remembered for the Spell box.
+        gg.rsmod.plugins.content.combat.magic.Autocast.deactivate(player, gg.rsmod.plugins.content.combat.magic.Autocast.Reason.MELEE_STYLE)
+    }
 }
 
 /**
