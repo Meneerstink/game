@@ -1,5 +1,7 @@
 package gg.rsmod.plugins.content.combat.magic
 
+import gg.rsmod.game.model.entity.zoneTile
+
 import gg.rsmod.game.fs.def.ItemDef
 import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.entity.Player
@@ -245,7 +247,7 @@ object Autocast {
         val def = weaponDef(player)
         if (spell != null && weapon != null && (AutocastWeapons.isAutocastWeapon(def) || AutocastWeapons.isPoweredStaff(weapon.id))) {
             when {
-                attackedPlayerRecently(player) && AreaState.isDangerous(player.tile) -> clear(player, Reason.PVP_WEAPON_SWAP)
+                attackedPlayerRecently(player) && AreaState.isDangerous(player.zoneTile()) -> clear(player, Reason.PVP_WEAPON_SWAP)
                 AutocastWeapons.incompatibility(def, spell) != null -> clear(player, Reason.INCOMPATIBLE_WEAPON)
             }
         }

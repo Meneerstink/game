@@ -20303,5 +20303,6 @@ object Items {
     const val SPIKED_MANACLES = 23854
     const val SPIKED_MANACLES_NOTED = 23855
     const val DEADMANS_SKULL = 23856
+    const val ADAMANT_SEEDS = 23863
     // Auto-generated file using class gg.rsmod.game.service.game.DumpEntityIdService
 }

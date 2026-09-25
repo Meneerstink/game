@@ -150,6 +150,7 @@ object MagicCombatStrategy : CombatStrategy {
         }
 
         val spell = pawn.attr[Combat.CASTING_SPELL] ?: return
+        pawn.attr[Combat.SPELL_OF_THIS_ATTACK] = spell
         pawn.stopMovement()
         spell.castGfx?.let { gfx -> pawn.graphic(gfx) }
         var animation = spell.castAnimation[0]

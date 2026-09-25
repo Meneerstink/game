@@ -70,10 +70,11 @@ on_command("ge_sell") {
         geMsg(player, "You don't have $quantity x $name to sell.")
         return@on_command
     }
-    val (offer, _) = service.submit(geUsername(player), OfferType.SELL, itemId, price, quantity) ?: run {
+    val (offer, fills) = service.submit(geUsername(player), OfferType.SELL, itemId, price, quantity) ?: run {
         player.inventory.add(itemId, quantity)
         return@on_command
     }
+    GrandExchangeInterface.announceFills(player.world, service, fills)
     player.persistNow()
     geMsg(
         player,
@@ -125,10 +126,11 @@ on_command("ge_buy") {
         geMsg(player, "You don't have ${DecimalFormat().format(totalCost)} gp to place that offer.")
         return@on_command
     }
-    val (offer, _) = service.submit(geUsername(player), OfferType.BUY, itemId, price, quantity) ?: run {
+    val (offer, fills) = service.submit(geUsername(player), OfferType.BUY, itemId, price, quantity) ?: run {
         player.inventory.add(Items.COINS_995, totalCost.toInt())
         return@on_command
     }
+    GrandExchangeInterface.announceFills(player.world, service, fills)
     player.persistNow()
     geMsg(
         player,

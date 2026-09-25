@@ -66,6 +66,15 @@ object OsrsFxImportTool {
                     3486, // ROSEWOOD_BLOWPIPE_SPECIAL_TRAVEL
                     28, 697, 699, 1629, 1630, // DRAGON_TKNIFE_TRAVEL / _P / _SPEC / _SPEC_P / LAUNCH
                 ),
+            // Owner 2026-09-24 ("alle osrs geporte weapons moeten precies als osrs behaven"): the Tonalztics of Ralos still threw the 667
+            // rune thrownaxe. Gameval SpotanimID: VFX_GLAIVE_CHARGED_SPECIAL 2725, VFX_GLAIVE_UNCHARGED_SPECIAL 2726,
+            // PROJANIM_GLAIVE_01_SPECIAL 2727 / _02_SPECIAL 2728, PROJANIM_GLAIVE_01_REGULAR 2729 / _02_REGULAR 2730,
+            // VFX_GLAIVE_01_IMPACT_SPECIAL_01 2731, VFX_GLAIVE_01_IMPACT_REGULAR_01 2732, VFX_GLAIVE_02_IMPACT_SPECIAL_01 2733,
+            // VFX_GLAIVE_CHARGED_REGULAR 2734.
+            "glaive" to listOf(2725, 2726, 2727, 2728, 2729, 2730, 2731, 2732, 2733, 2734),
+            // OSRS max cape emote (every max cape, OSRS Wiki "Max cape"): gameval SpotanimID MAX_CAPE 1286 (sequence MAX_CAPE_SPOTANIM 7120);
+            // the player plays MAX_CAPE_PLAYER_ANIM 7121 (SEQ_BATCHES, same batch name).
+            "maxcapeemote" to listOf(1286),
             // Owner 2026-09-19 (exact OSRS Deadman breaches), names from gameval SpotanimID.
             "deadman-breach" to
                 listOf(
@@ -187,6 +196,21 @@ object OsrsFxImportTool {
             // HUMAN_CASTSTRIKE_STAFF again, on the player rig: the first batch reused the npc tool's 1162 (Malevolent Mage 15704) and
             // overwrote its frames; they were restored from the journal (tx-20260924-174902) and the player copy gets its own ids.
             "standardspellseq2" to listOf(1162),
+            // Owner 2026-09-24 ("FIX alle OSRS GEPORTE WEAPONS ... met de correcte OSRS Attack animaties"): the classic melee and thrown
+            // sequences the imported OSRS weapons play, as OSRS frames on the player rig instead of trusting the same-numbered 667
+            // sequences (RuneLite gameval names): HUMAN_SWORD_STAB 386, HUMAN_SWORD_DEF 388, HUMAN_SWORD_SLASH 390, HUMAN_SWORD_LUNGE 392,
+            // HUMAN_AXE_CHOP 393 (staff bash), HUMAN_STAFF_PUMMEL 414 (wand melee), HUMAN_SPEAR_SPIKE 428, HUMAN_SCYTHE_SWEEP 440,
+            // II_HUMAN_DART_THROW_PVN 7554, HUMAN_STAKE2_PVN 7617 (thrown weapons against npcs).
+            "osrsweaponseq" to listOf(386, 388, 390, 392, 393, 414, 428, 440, 7554, 7617),
+            // The rest of the classes the imported weapons use: HUMAN_AXE_HACK 395, HUMAN_BLUNT_SPIKE 400, HUMAN_BLUNT_POUND 401,
+            // HUMAN_DHSWORD_CHOP 406, HUMAN_DHSWORD_SLASH 407, HUMAN_SPEAR_LUNGE 429, HUMAN_BOW 426, XBOWS_HUMAN_FIRE_AND_RELOAD 4230,
+            // II_HUMAN_DART_THROW 6600, HUMAN_STAKE2 929, HUMAN_CHINCHOMPA_ATTACK 2779, HUMAN_CHINCHOMPA_ATTACK_PVN 7618,
+            // SLAYER_GRANITE_MAUL_ATTACK 1665.
+            "osrsweaponseq2" to listOf(395, 400, 401, 406, 407, 429, 426, 4230, 6600, 929, 2779, 7618, 1665),
+            // Claws (D_CLAWS_PUNCH 1067) and whips (SLAYER_ABYSSAL_WHIP_ATTACK 1658 / _DEFEND 1659).
+            "osrsweaponseq3" to listOf(1067, 1658, 1659),
+            // OSRS max cape emote, player side: MAX_CAPE_PLAYER_ANIM 7121 (the spotanim is in BATCHES under the same name).
+            "maxcapeemote" to listOf(7121),
         )
 
     /** OSRS synth sounds by Jagex config name (OSRS Wiki "List of sound IDs", read 2026-09-17). */

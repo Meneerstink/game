@@ -27,7 +27,6 @@ object RuneFreeTeleportRequirements {
  Items.MUD_RUNE,
  Items.LAVA_RUNE,
  Items.ASTRAL_RUNE,
- Items.ARMADYL_RUNE,
  )
 
  fun isRune(itemId: Int): Boolean = itemId in runeIds

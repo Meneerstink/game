@@ -73,7 +73,6 @@ object RunecraftAction {
 
         val inventory = player.inventory
         var count = min(inventory.getItemCount(Items.PURE_ESSENCE), inventory.getItemCount(combo.rune))
-        if (combo.catalyst != -1) count = min(count, inventory.getItemCount(combo.catalyst))
         if (count <= 0) return
 
         // Lunar Magic Imbue: no talisman is needed (or consumed) while the charge is active.
@@ -83,7 +82,6 @@ object RunecraftAction {
         if (imbued || removeTalismanTrans!!.hasSucceeded()) {
             val removeEssTrans = inventory.remove(item = Items.PURE_ESSENCE, amount = count)
             val removeRuneTrans = inventory.remove(item = combo.rune, amount = removeEssTrans.completed)
-            if (combo.catalyst != -1) inventory.remove(item = combo.catalyst, amount = removeEssTrans.completed)
 
             if (removeRuneTrans.hasSucceeded()) {
                 // OSRS Wiki "Mist rune" et al.: "Combinations have a 50% success rate (or 100%, if the player is wearing a binding
@@ -215,16 +213,6 @@ object RunecraftAction {
 
         if (!player.inventory.contains(combo.rune)) {
             player.message("You need ${runeName}s to bind ${comboName}s.")
-            return false
-        }
-
-        if (combo.catalyst != -1 && !player.inventory.contains(combo.catalyst)) {
-            player.message("You need aether catalysts to bind ${comboName}s.")
-            return false
-        }
-
-        if (combo.requiresImbue && player.attr[gg.rsmod.game.model.attr.MAGIC_IMBUE_ATTR] != true) {
-            player.message("You need to cast Magic Imbue to bind ${comboName}s.")
             return false
         }
 

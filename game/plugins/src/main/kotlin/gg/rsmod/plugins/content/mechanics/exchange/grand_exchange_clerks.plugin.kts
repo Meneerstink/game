@@ -51,7 +51,7 @@ suspend fun clerkMenu(task: QueueTask, explained: Boolean) {
             task.chatNpc("If that is your wish.")
             GrandExchangeHistory.open(task.player)
         }
-        "Can you help me with item sets?" -> task.player.message("Use the Sets option on a clerk to exchange item sets.")
+        "Can you help me with item sets?" -> gg.rsmod.plugins.content.inter.ge.openGeSets(task.player)
         else -> {}
     }
 }

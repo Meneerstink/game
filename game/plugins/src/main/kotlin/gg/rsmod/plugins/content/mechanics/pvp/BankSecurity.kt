@@ -1,5 +1,7 @@
 package gg.rsmod.plugins.content.mechanics.pvp
 
+import gg.rsmod.game.model.entity.zoneTile
+
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.api.ext.message
 
@@ -16,7 +18,7 @@ import gg.rsmod.plugins.api.ext.message
  */
 object BankSecurity {
     fun isBankBlocked(player: Player): Boolean =
-        PvpSkull.isSkulled(player) && GuardedZones.contains(player.tile)
+        PvpSkull.isSkulled(player) && GuardedZones.contains(player.zoneTile())
 
     /** Owner 2026-09-19: "only 2 tick weapons should cancel the banking of every pker in a dangerous bank". */
     const val BANK_CLOSING_MAX_ATTACK_TICKS = 2
@@ -40,7 +42,7 @@ object BankSecurity {
     ): Boolean =
         attacker is Player &&
             victim.interfaces.getModal() in BANKING_INTERFACES &&
-            AreaState.isDangerous(victim.tile) &&
+            AreaState.isDangerous(victim.zoneTile()) &&
             attackDelay > BANK_CLOSING_MAX_ATTACK_TICKS
 
     /** OSRS Wiki "Deadman Mode": "Eating and drinking potions is blocked for 3 seconds (5 ticks) after banking or
@@ -50,7 +52,7 @@ object BankSecurity {
     /** Closing a bank or deposit box outside every guarded zone holds the existing food, combo-food and potion gates
      * for at least [POST_BANK_CONSUME_BLOCK_TICKS]; every eat/drink route already checks those timers. */
     fun onBankClosed(player: Player) {
-        if (GuardedZones.contains(player.tile)) return
+        if (GuardedZones.contains(player.zoneTile())) return
         listOf(
             gg.rsmod.game.model.timer.FOOD_DELAY,
             gg.rsmod.game.model.timer.COMBO_FOOD_DELAY,
@@ -80,7 +82,7 @@ object BankSecurity {
         value: Long,
         now: Int = player.world.currentCycle,
     ): Boolean {
-        if (value < COMBAT_DEPOSIT_VALUE_LIMIT || GuardedZones.contains(player.tile)) return false
+        if (value < COMBAT_DEPOSIT_VALUE_LIMIT || GuardedZones.contains(player.zoneTile())) return false
         val last = player.attr[LAST_COMBAT_CYCLE_ATTR] ?: return false
         return now - last < COMBAT_DEPOSIT_BLOCK_TICKS
     }

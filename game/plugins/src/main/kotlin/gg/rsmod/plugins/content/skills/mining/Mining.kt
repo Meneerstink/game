@@ -17,6 +17,10 @@ import gg.rsmod.plugins.api.ext.*
 import kotlin.math.min
 
 object Mining {
+    /** Rocks the Mining cape's extra ore applies to: every ore rock up to adamantite. */
+    private val MINING_CAPE_ROCKS =
+        setOf(RockType.CLAY, RockType.COPPER, RockType.TIN, RockType.BLURITE, RockType.IRON, RockType.SILVER, RockType.COAL, RockType.GOLD, RockType.MITHRIL, RockType.ADAMANTITE)
+
     private const val MINING_ANIMATION_TIME = 16
 
     suspend fun mineRock(
@@ -156,6 +160,14 @@ object Mining {
             if ((rock.varrockArmourAffected - (player.getEquipment(EquipmentType.CHEST)?.id ?: -1)) >= 0) {
                 player.inventory.add(rock.reward)
             }
+        }
+        // OSRS Wiki "Mining cape": "When worn, there is a 5% chance of receiving an extra ore from rocks up to adamantite; stacks with
+        // Varrock armour" (max cape too).
+        if (rock in MINING_CAPE_ROCKS &&
+            gg.rsmod.plugins.content.skills.SkillcapePerks.worn(player, gg.rsmod.plugins.content.skills.Skillcapes.MINING) &&
+            player.world.randomDouble() < 0.05
+        ) {
+            player.inventory.add(rock.reward)
         }
         val reward =
             if (rock == RockType.ESSENCE &&

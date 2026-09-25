@@ -39,7 +39,10 @@ fun handleGuildDoor(
     val blockEntrance = DynamicObject(id = 0, type = 0, rot = 0, tile = Tile(x = 2933, z = 3288))
     val doorOpen = DynamicObject(id = obj.id, type = 0, rot = 2, tile = Tile(x = obj.tile.x, z = obj.tile.z))
     val isNorth = player.tile.z >= obj.tile.z
-    if (player.hasEquipped(slot = EquipmentType.CHEST, Items.BROWN_APRON)) {
+    // OSRS Wiki "Crafting cape": access to the Crafting Guild without a brown apron - every max cape too (SkillcapePerks).
+    if (player.hasEquipped(slot = EquipmentType.CHEST, Items.BROWN_APRON) ||
+        gg.rsmod.plugins.content.skills.SkillcapePerks.worn(player, gg.rsmod.plugins.content.skills.SkillcapePerks.VariantPerk.CRAFTING_GUILD)
+    ) {
         player.lockingQueue(lockState = LockState.DELAY_ACTIONS) {
             world.remove(doorObject)
             player.playSound(Sfx.DOOR_OPEN)

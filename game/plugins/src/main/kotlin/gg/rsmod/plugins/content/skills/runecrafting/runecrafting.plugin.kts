@@ -5,6 +5,34 @@ import gg.rsmod.plugins.content.quests.impl.RuneMysteries
 
 private val enterOption = "Enter"
 
+/*
+ * OSRS Wiki "Runecraft cape": "When worn, allows access to any runic altar without the use of talismans or tiaras" (the plain max
+ * cape too). The ruins show "Enter" through the same per-altar varbit a tiara sets, so the cape opens every altar's varbit while it is
+ * worn; taking it off leaves only the altar of a worn tiara open.
+ */
+/** Altars reached through Mysterious Ruins (their ruins transform by a varbit; 0 = no varbit). */
+val RUIN_ALTARS = Altar.values.filter { it.ruins != null && it.varbit != 0 }
+
+fun openAllRuins(player: Player) = RUIN_ALTARS.forEach { player.setVarbit(it.varbit, 1) }
+
+fun closeRuinsExceptTiara(player: Player) {
+    val head = player.getEquipment(EquipmentType.HEAD)?.id
+    RUIN_ALTARS.forEach { player.setVarbit(it.varbit, if (it.tiara != null && it.tiara == head) 1 else 0) }
+}
+
+fun syncRuins(player: Player) {
+    if (gg.rsmod.plugins.content.skills.SkillcapePerks.worn(player, gg.rsmod.plugins.content.skills.Skillcapes.RUNECRAFTING)) {
+        openAllRuins(player)
+    } else {
+        closeRuinsExceptTiara(player)
+    }
+}
+
+// Slot hooks (they run after the change, and a cape swapped for another cape only fires the equip hook).
+on_equip_to_slot(EquipmentType.CAPE.id) { syncRuins(player) }
+on_unequip_from_slot(EquipmentType.CAPE.id) { syncRuins(player) }
+on_login { syncRuins(player) }
+
 Altar.values.forEach { altar ->
 
     /**
@@ -50,11 +78,12 @@ Altar.values.forEach { altar ->
 
     /**
      * Handle the disabling of the Mysterious Ruins varbit when removing
-     * the respective tiara
+     * the respective tiara - unless a Runecraft cape perk keeps every altar open.
      */
     if (tiara != null) {
         on_item_unequip(item = tiara) {
-            player.setVarbit(altar.varbit, 0)
+            val cape = gg.rsmod.plugins.content.skills.SkillcapePerks.worn(player, gg.rsmod.plugins.content.skills.Skillcapes.RUNECRAFTING)
+            player.setVarbit(altar.varbit, if (cape) 1 else 0)
         }
     }
 

@@ -30,10 +30,13 @@ object RestorationRates {
 
     fun loweredStatRate(player: Player): Int = if (Prayers.isActive(player, Prayer.RAPID_RESTORE)) 2 else 1
 
+    // OSRS Wiki "Hitpoints cape": "natural Hitpoint restoration rate is doubled. The effect does not stack with Rapid Heal" (the max
+    // cape carries it too) - the same doubling as Rapid Heal, not on top of it.
     fun lifePointRate(player: Player): Int =
         when {
             Prayers.isActive(player, Prayer.RAPID_RENEWAL) -> 5
             Prayers.isActive(player, Prayer.RAPID_HEAL) -> 2
+            gg.rsmod.plugins.content.skills.SkillcapePerks.worn(player, gg.rsmod.plugins.content.skills.Skillcapes.CONSTITUTION) -> 2
             else -> 1
         }
 

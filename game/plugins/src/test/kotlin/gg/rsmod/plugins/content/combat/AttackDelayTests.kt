@@ -33,6 +33,24 @@ class AttackDelayTests {
         }
     }
 
+    /**
+     * Owner 2026-09-24 ("ik kan entangle spammen achter elkaar op npc"): MagicCombatStrategy.attack clears a manual cast before
+     * Combat.postAttack reads the delay, so the delay fell back to the weapon's speed (a 2-tick weapon recast every 2 ticks). The spell
+     * of the attack now decides: 5 ticks with any weapon, and with no weapon at all.
+     */
+    @Test
+    fun aManualCastAlwaysWaitsTheSpellDelayWhateverTheWeapon() {
+        for (speed in listOf(2, 3, 4, 6)) {
+            val p = player(speed)
+            p.attr[Combat.SPELL_OF_THIS_ATTACK] = gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell.ENTANGLE
+            assertEquals(5, CombatConfigs.getAttackDelay(p))
+        }
+        val unarmed = player(4)
+        unarmed.equipment[3] = null
+        unarmed.attr[Combat.SPELL_OF_THIS_ATTACK] = gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell.ENTANGLE
+        assertEquals(5, CombatConfigs.getAttackDelay(unarmed))
+    }
+
     private fun player(speed: Int, rapid: Boolean = false): Player {
         val item = ItemDef(18353).apply { attackSpeed = speed }
         val definitions = mockk<DefinitionSet>(relaxed = true)

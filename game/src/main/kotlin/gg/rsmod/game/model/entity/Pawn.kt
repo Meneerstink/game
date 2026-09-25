@@ -60,6 +60,39 @@ abstract class Pawn(
     internal var lastTile: Tile? = null
 
     /**
+     * Where the pawn was when its current transit began: a forced movement (agility shortcut, tunnel, knockback) puts the
+     * server tile on the destination at once while the client still slides there, and an obstacle ([obstacleUntilUnlocked])
+     * keeps the player on the near side until it is finished. Null when no transit runs.
+     */
+    var transitOrigin: Tile? = null
+
+    /** The cycle at which the current forced movement has visibly arrived. */
+    var transitUntilCycle = 0
+
+    /** True while a whole obstacle (several forced moves under one full lock) counts as one transit. */
+    var obstacleUntilUnlocked = false
+
+    /** True while a forced movement is still sliding on the client, or an obstacle still holds its lock. */
+    fun inTransit(): Boolean {
+        if (transitOrigin == null) return false
+        if (world.currentCycle < transitUntilCycle) return true
+        if (obstacleUntilUnlocked && lock != gg.rsmod.game.model.LockState.NONE) return true
+        transitOrigin = null
+        obstacleUntilUnlocked = false
+        return false
+    }
+
+    /** Starts (or continues) a transit from the current tile that visibly lasts [cycles] game cycles. */
+    fun beginTransit(cycles: Int) {
+        val obstacle = obstacleUntilUnlocked
+        if (!inTransit()) {
+            transitOrigin = Tile(tile)
+            obstacleUntilUnlocked = obstacle
+        }
+        transitUntilCycle = maxOf(transitUntilCycle, world.currentCycle + cycles)
+    }
+
+    /**
      * The last tile that was set for the pawn's [gg.rsmod.game.model.region.Chunk].
      */
     internal var lastChunkTile: Tile? = null

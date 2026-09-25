@@ -113,7 +113,8 @@ object AutocastInterfaceLayout {
             Entry(192, 47, "Crumble Undead", 34, 84, 39, 34), Entry(192, 56, "Magic Dart", 324, 374, 50, 324),
             Entry(192, 54, "Iban Blast", 53, 103, 50, 53), Entry(192, 66, "Saradomin Strike", 61, 111, 60, 61),
             Entry(192, 67, "Claws of Guthix", 60, 110, 60, 60), Entry(192, 68, "Flames of Zamorak", 59, 109, 60, 59),
-            // Not OSRS spells (667 content): their own 667 icons, after the OSRS ones.
+            // Not OSRS spells (667 content): their own 667 icons, after the OSRS ones. Both were removed from the game (owner
+            // 2026-09-24); their slots stay so the component ids of every later entry keep their place - see [RETIRED].
             Entry(192, 98, "Wind Rush", 3759, 3760, 1), Entry(192, 99, "Storm of Armadyl", 7699, 7702, 77),
         )
 
@@ -131,6 +132,9 @@ object AutocastInterfaceLayout {
             Entry(193, 36, "Miasmic Rush", 1568, 1574, 61), Entry(193, 38, "Miasmic Burst", 1569, 1575, 73),
             Entry(193, 37, "Miasmic Blitz", 1567, 1573, 85), Entry(193, 39, "Miasmic Barrage", 1566, 1572, 97),
         )
+
+    /** Slots whose spell was removed from the game (Wind Rush, Storm of Armadyl): never shown, no spell behind them. */
+    val RETIRED: Set<Pair<Int, Int>> = setOf(192 to 98, 192 to 99)
 
     const val ICON_SIZE = 24
     private const val COLUMNS = 4

@@ -195,6 +195,16 @@ class GrandExchangeService(
         }
     }
 
+    /** A snapshot of offer [offerId], or null when it no longer exists. */
+    fun offer(offerId: Long): GrandExchangeOffer? {
+        lock.lock()
+        try {
+            return offers.firstOrNull { it.id == offerId }?.copy()
+        } finally {
+            lock.unlock()
+        }
+    }
+
     /**
      * Submits a new offer into [slot] (or the first free slot when [slot] is -1) and immediately attempts to match it
      * against the resting book (and, for a buy order, system liquidity). Matching mutates escrow directly on both
@@ -227,8 +237,9 @@ class GrandExchangeService(
                     slot = target,
                 )
             offers.add(offer)
+            val guide = housePrice(itemId)
             val fills = GrandExchangeBook.match(offers, offer, buyLedger, ::housePrice)
-            fills.forEach { recordTrade(itemId, it.unitPrice) }
+            fills.forEach { recordTrade(itemId, guidedTradePrice(guide, it.unitPrice)) }
             save()
             return offer to fills
         } finally {
@@ -404,6 +415,19 @@ class GrandExchangeService(
         } finally {
             lock.unlock()
         }
+    }
+
+    /**
+     * Offer prices are free (OSRS), but the guide price must not be steerable by two accounts trading at 1 gp or at
+     * absurd prices - the house deals at the guide price. A trade therefore moves the guide by at most 5 % per trade.
+     */
+    fun guidedTradePrice(
+        guide: Int?,
+        unitPrice: Int,
+    ): Int {
+        if (guide == null) return unitPrice
+        val range = GrandExchangeInterface.priceRange(guide)
+        return unitPrice.coerceIn(range.first, range.last)
     }
 
     private fun recordTrade(

@@ -1,4 +1,24 @@
-package gg.rsmod.plugins.content.inter.ge
+﻿package gg.rsmod.plugins.content.inter.ge
+
+import gg.rsmod.game.model.entity.Player
+import gg.rsmod.plugins.api.InterfaceDestination
+import gg.rsmod.plugins.api.ext.openInterface
+import gg.rsmod.plugins.api.ext.runClientScript
+import gg.rsmod.plugins.api.ext.runClientScriptReversed
+import gg.rsmod.plugins.api.ext.unlockIComponentOptionSlots
+
+const val GE_SETS_INTERFACE = 645
+const val GE_SETS_SIDE_INTERFACE = 644
+
+/** Opens the item sets screen; shared by the clerks' Sets option and their dialogue line. */
+fun openGeSets(p: Player) {
+    p.openInterface(GE_SETS_INTERFACE, InterfaceDestination.MAIN_SCREEN)
+    p.openInterface(GE_SETS_SIDE_INTERFACE, InterfaceDestination.INVENTORY_TAB)
+    p.unlockIComponentOptionSlots(GE_SETS_INTERFACE, 16, 0, 115, 0, 1)
+    p.runClientScriptReversed(676)
+    p.unlockIComponentOptionSlots(GE_SETS_SIDE_INTERFACE, 0, 0, 27, 0, 1)
+    p.runClientScript(150, GE_SETS_SIDE_INTERFACE shl 16, 93, 4, 7, 0, -1, "Components", "Exchange")
+}
 
 /**
  * Grand Exchange item sets (pre-existing hand table, moved out of Sets.plugin.kts so it can be tested).

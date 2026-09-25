@@ -85,8 +85,10 @@ class OsrsGuidePricesTests {
         // 2026-09-19 batch owner0919 added 10 tradeable unnoted items (mixed hide set, Spiked manacles, the 5 burning amulet
         // charges): 12243 -> 12253; the OSRS snapshot names 6 of them (the amulet only at (5)): 3326 -> 3332.
         // 2026-09-23 batch emblems added Archaic emblem (tier 5) (23857, tradeable, in the OSRS snapshot): 12253 -> 12254, seeded 3332 -> 3333.
-        assertEquals(12254, items.size, "exchangeable items (tradeable, unnoted, not coins)")
-        assertEquals(3333, matched, "items seeded from the 13 September 2026 OSRS snapshot; the unmatched list is build/osrs-guide-price-unmatched.txt")
+        // 2026-09-24 owner removals: Armadyl rune, Aether rune and Aether catalyst leave the exchange (RemovedItems; the aether pair was
+        // seeded), and the Adamant seeds import (23863, in the snapshot) joins it: 12254 -> 12252, seeded 3333 -> 3332.
+        assertEquals(12252, items.size, "exchangeable items (tradeable, unnoted, not coins)")
+        assertEquals(3332, matched, "items seeded from the 13 September 2026 OSRS snapshot; the unmatched list is build/osrs-guide-price-unmatched.txt")
     }
 
     @Test

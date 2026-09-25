@@ -1,5 +1,6 @@
 package gg.rsmod.plugins.content.objs.prayeraltar
 
+import gg.rsmod.game.fs.def.ObjectDef
 import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.content.mechanics.prayer.Prayers
 import gg.rsmod.plugins.content.mechanics.prayer.AncientCurses
@@ -44,6 +45,26 @@ ALTARS_PRAY_AT.forEach { altar ->
     }
 }
 
+/*
+ * Every other prayer altar, from its cache definition (owner 2026-09-24: "Check alle donors ... port t dan"; Void PrayerAltars.kt binds
+ * "Pray" on every altar, while the two hand lists above left 67 altar ids answering nothing - ROOT_CAUSES #35). A loc whose name contains
+ * "altar" and whose option is "Pray" / "Pray-at" recharges prayer exactly like the listed ones. It is an object FALLBACK - consulted only
+ * when no explicit handler is bound - so the special altars (God Wars, spellbook, Ferox, POH, chaos) keep their own behaviour.
+ */
+val PRAY_OPTIONS = setOf("pray", "pray-at")
+
+world.plugins.bindObjectFallback { player, obj, opt ->
+    val def = player.world.definitions.get(ObjectDef::class.java, obj.getTransform(player))
+    if (!def.name.lowercase().contains("altar")) return@bindObjectFallback false
+    if (def.options.getOrNull(opt - 1)?.lowercase() !in PRAY_OPTIONS) return@bindObjectFallback false
+    player.queue {
+        player.animate(Anims.ALTAR_PRAY)
+        player.filterableMessage("You recharge your Prayer points.")
+        player.playSound(Sfx.PRAYER_RECHARGE)
+        Prayers.rechargePrayerPoints(player)
+    }
+    true
+}
 ALTARS_PRAY.forEach { altar ->
     on_obj_option(obj = altar, "pray") {
         player.queue {

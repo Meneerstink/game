@@ -1,5 +1,7 @@
 package gg.rsmod.plugins.content.mechanics.pvp
 
+import gg.rsmod.game.model.entity.zoneTile
+
 import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.timer.SKULL_ICON_DURATION_TIMER
@@ -76,14 +78,14 @@ object DeadmanHud {
 
     fun stateOf(player: Player): State =
         when {
-            !AreaState.isDangerous(player.tile) -> State.GUARDED
-            player.tile.getWildernessLevel() > 0 -> State.WILDERNESS
+            !AreaState.isDangerous(player.zoneTile()) -> State.GUARDED
+            player.zoneTile().getWildernessLevel() > 0 -> State.WILDERNESS
             else -> State.DANGEROUS
         }
 
     fun zoneLabel(player: Player): String =
         when (stateOf(player)) {
-            State.WILDERNESS -> "Level: ${player.tile.getWildernessLevel()}"
+            State.WILDERNESS -> "Level: ${player.zoneTile().getWildernessLevel()}"
             State.GUARDED -> TEXT_GUARDED
             State.DANGEROUS -> TEXT_DANGEROUS
         }
@@ -101,7 +103,7 @@ object DeadmanHud {
      * The full component-381:2 payload: label, separator, bracket and - only in a multicombat area -
      * a third field [MULTI_FLAG]. OSRS has no single-way icon, so a single-way area sends two fields.
      */
-    fun zoneText(player: Player): String = zoneText(zoneLabel(player), player.combatLevel, player.tile.isMulti(player.world))
+    fun zoneText(player: Player): String = zoneText(zoneLabel(player), player.combatLevel, player.zoneTile().isMulti(player.world))
 
     fun zoneText(
         label: String,
@@ -150,6 +152,7 @@ object DeadmanHud {
 
     /** Called every cycle; only sends packets on an actual change. */
     fun refresh(player: Player) {
+        gg.rsmod.plugins.content.items.osrs.BlightedSacks.syncClient(player)
         val state = stateOf(player)
         val zone = zoneText(player)
         val skull = timerText(player)

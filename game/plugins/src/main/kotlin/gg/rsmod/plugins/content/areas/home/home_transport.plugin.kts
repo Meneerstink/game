@@ -52,7 +52,7 @@ import gg.rsmod.game.model.shop.PurchasePolicy
  * Every item below was checked to exist unnoted in this cache and to have a working route: food in `Food`, potions in
  * `Potion`, runes/combination runes through the spellbooks, blighted sacks in `BlightedSacks`, arrows through ranged
  * ammo, the house tab in `player_house.plugin.kts`, the burning amulet in `burning_amulet.plugin.kts` and Mithril seeds
- * in `mithril_seeds.plugin.kts`. Prices use the same OSRS guide/mid-price table as the Grand Exchange; the amount is
+ * in `flower_seeds.plugin.kts`. Prices use the same OSRS guide/mid-price table as the Grand Exchange; the amount is
  * the shop's stock, which restocks at the default rate.
  */
 val QUARTERMASTER = gg.rsmod.plugins.content.areas.grandexchange.GeHomeHall.QUARTERMASTER

@@ -31,8 +31,8 @@ object RunePouch {
         setOf(
             Items.AIR_RUNE, Items.WATER_RUNE, Items.EARTH_RUNE, Items.FIRE_RUNE, Items.MIND_RUNE, Items.BODY_RUNE, Items.COSMIC_RUNE,
             Items.CHAOS_RUNE, Items.NATURE_RUNE, Items.LAW_RUNE, Items.DEATH_RUNE, Items.BLOOD_RUNE, Items.SOUL_RUNE, Items.ASTRAL_RUNE,
-            Items.ARMADYL_RUNE, Items.MIST_RUNE, Items.DUST_RUNE, Items.MUD_RUNE, Items.SMOKE_RUNE, Items.STEAM_RUNE, Items.LAVA_RUNE,
-            Items.WRATH_RUNE, Items.AETHER_RUNE,
+            Items.MIST_RUNE, Items.DUST_RUNE, Items.MUD_RUNE, Items.SMOKE_RUNE, Items.STEAM_RUNE, Items.LAVA_RUNE,
+            Items.WRATH_RUNE,
         )
 
     fun isPouch(itemId: Int): Boolean = itemId == Items.RUNE_POUCH || itemId == Items.DIVINE_RUNE_POUCH
@@ -143,7 +143,7 @@ object RunePouch {
  * casts a spell with combination runes in their inventory, it will prioritise using those runes first, even while having sufficient
  * runes otherwise"; "Mist rune": "any spell requiring one water rune, one air rune, or both will spend only one mist rune"; Void 634
  * `SpellRunes.removeItems` implements the same model): 1. runes an equipped staff or tome supplies are free; 2. combination runes (mist,
- * dust, mud, smoke, steam, lava, aether) cover both of their elements at once, `max` of the two covered amounts spent; 3. the remaining
+ * dust, mud, smoke, steam, lava) cover both of their elements at once, `max` of the two covered amounts spent; 3. the remaining
  * runes. Sources: inventory first, then the carried rune pouch (SOURCE_GAP: the inventory/pouch order is not stated; the total is what
  * matters for every requirement).
  */
@@ -157,7 +157,6 @@ object RunePayment {
             Triple(Items.SMOKE_RUNE, Items.AIR_RUNE, Items.FIRE_RUNE),
             Triple(Items.STEAM_RUNE, Items.WATER_RUNE, Items.FIRE_RUNE),
             Triple(Items.LAVA_RUNE, Items.EARTH_RUNE, Items.FIRE_RUNE),
-            Triple(Items.AETHER_RUNE, Items.COSMIC_RUNE, Items.SOUL_RUNE),
         )
 
     /**

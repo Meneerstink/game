@@ -11,8 +11,7 @@ package gg.rsmod.plugins.content.inter.gameframe
  * varp is the whole of the fix, and because non-zero varps are written to the player's save the
  * setting also survives a logout.
  *
- * Deliberately still unbound, because the interface it opens is not established from the cache:
- * component 8 `Open House Options`.
+ * Component 8 `Open House Options` opens the House Options panel 398 (areas/poh/house_options.plugin.kts).
  */
 private val TOGGLES =
     mapOf(
@@ -56,3 +55,25 @@ on_button(261, 5) {
 on_button(982, 5) {
     player.openInterface(261, InterfaceDestination.SETTINGS_TAB)
 }
+
+/*
+ * Chat Setup (982) colour buttons (owner 2026-09-24: "Zorg al onze tandwiel instellingen in game correct werken"). Every "Select
+ * colour" click already reached the server and nothing listened, so a chosen colour was only set client-side (CS2 2733 / 4427 / 4585 /
+ * 3417 write the var locally) and was gone after a relog. The server now writes the same var, which is saved with the player.
+ * The button -> value table is the one CS2 83 registers (982:17 value 0, 982:18 value 1, ... 982:33 value 20; decoded 2026-09-24):
+ * Clan Chat varbit 3612 (buttons 17-36), Friends Chat varbit 9188 (72-91), Guest Chat varbit 9191 (97-116), Private chat varp 287
+ * (buttons 49-66 = 1..18; "No split" 41 = 0, CS2 2735 draws <= 0 as not split).
+ */
+val GROUP_VALUES = intArrayOf(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 20, 17, 18, 19)
+
+GROUP_VALUES.forEachIndexed { index, value ->
+    on_button(982, 17 + index) { player.setVarbit(3612, value) }
+    on_button(982, 72 + index) { player.setVarbit(9188, value) }
+    on_button(982, 97 + index) { player.setVarbit(9191, value) }
+}
+
+(1..18).forEach { value ->
+    on_button(982, 48 + value) { player.setVarp(287, value) }
+}
+
+on_button(982, 41) { player.setVarp(287, 0) }

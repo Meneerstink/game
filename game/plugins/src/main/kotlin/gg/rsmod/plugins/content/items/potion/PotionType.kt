@@ -573,10 +573,26 @@ enum class PotionType(
             // other drink heals up to the maximum - capValue is an allowance ABOVE the maximum.
             when (i) {
                 Skills.CONSTITUTION -> p.heal(boost, if (alterStrategy[index] == "brewHealth") cap else 0)
-                Skills.PRAYER -> p.restorePrayer(boost, cap)
+                Skills.PRAYER -> p.restorePrayer(boost + holyWrenchBonus(p, alterStrategy[index]), cap)
                 else -> p.skills.alterCurrentLevel(i, boost, cap)
             }
         }
+    }
+
+    /**
+     * OSRS Wiki "Holy wrench": "increases the amount of Prayer points restored when drinking a dose of certain prayer restoring
+     * potions by an additional 2% of your prayer level" (prayer potion and super restore: 27% / 27% instead of 25%, on top of the base
+     * restore); "Prayer cape": "When worn or in the inventory, acts as a holy wrench" - the plain max cape too. The item itself is not in
+     * this cache, so only the capes carry it. The extra is the difference of the floored totals.
+     */
+    internal fun holyWrenchBonus(
+        p: Player,
+        strategy: String,
+    ): Int {
+        if (strategy != "prayer" && strategy != "s_restore") return 0
+        if (!gg.rsmod.plugins.content.skills.SkillcapePerks.wornOrCarried(p, gg.rsmod.plugins.content.skills.Skillcapes.PRAYER)) return 0
+        val level = p.skills.getMaxLevel(Skills.PRAYER).toDouble()
+        return floor(level * 27 / 100).toInt() - floor(level / 4).toInt()
     }
 
     internal fun boostQuantity(

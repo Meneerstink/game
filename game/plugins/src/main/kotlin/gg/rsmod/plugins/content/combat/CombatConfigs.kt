@@ -163,29 +163,38 @@ object CombatConfigs {
                 return MIN_ATTACK_SPEED
             }
             val default = PLAYER_DEFAULT_ATTACK_SPEED
-            val weapon = pawn.getEquipment(EquipmentType.WEAPON) ?: return default
+            val weapon = pawn.getEquipment(EquipmentType.WEAPON)
             // Missing metadata is -1, not a one-tick weapon. Keep explicit custom speeds.
-            var speed = weapon.getDef(pawn.world.definitions).attackSpeed.takeIf { it > 0 } ?: default
+            var speed = weapon?.getDef(pawn.world.definitions)?.attackSpeed?.takeIf { it > 0 } ?: default
             // OSRS Wiki "Toxic blowpipe": "During player versus player combat, its attack speed is 4, or equal to a shortbow."
             // "Rosewood blowpipe" etc.: "As with all blowpipes ... During player versus player combat, its attack speed is 4".
-            if (gg.rsmod.plugins.content.items.osrs.Blowpipe.isBlowpipe(weapon.id) &&
+            if (weapon != null && gg.rsmod.plugins.content.items.osrs.Blowpipe.isBlowpipe(weapon.id) &&
                 pawn.attr[gg.rsmod.game.model.attr.COMBAT_TARGET_FOCUS_ATTR]?.get() is Player
             ) {
                 speed = 4
             }
             // Eclipse atlatl: "During player versus player combat, its base attack speed is 5, unless the full Eclipse
             // armour set is worn" (then 3).
-            if (weapon.id == gg.rsmod.plugins.api.cfg.Items.ECLIPSE_ATLATL && pawn.attr[gg.rsmod.game.model.attr.COMBAT_TARGET_FOCUS_ATTR]?.get() is Player) {
+            if (weapon?.id == gg.rsmod.plugins.api.cfg.Items.ECLIPSE_ATLATL && pawn.attr[gg.rsmod.game.model.attr.COMBAT_TARGET_FOCUS_ATTR]?.get() is Player) {
                 speed = gg.rsmod.plugins.content.items.osrs.MoonSets.atlatlPvpSpeed(pawn)
             }
-            if (getCombatClass(pawn) == CombatClass.RANGED && getAttackStyle(pawn) == WeaponStyle.RAPID) {
+            // The spell of this attack: the one still selected, or a manual cast that has already fired and was cleared by
+            // MagicCombatStrategy.attack before postAttack ran. Without the second source a manual cast (Entangle, a curse, a
+            // Tele Block) took the weapon's speed - a dart or blowpipe let the player recast every 2-3 ticks (owner 2026-09-24).
+            val castSpell =
+                (pawn.attr[Combat.CASTING_SPELL] as Any?) as? gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell
+                    ?: (pawn.attr[Combat.SPELL_OF_THIS_ATTACK] as Any?) as? gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell
+            // Without a weapon the class can only be magic through a spell (castSpell); nothing else needs the class then.
+            val combatClass = if (weapon != null) getCombatClass(pawn) else null
+            val magic = castSpell != null || combatClass == CombatClass.MAGIC
+            if (!magic && combatClass == CombatClass.RANGED && getAttackStyle(pawn) == WeaponStyle.RAPID) {
                 speed -= 1
             }
-            // "Powered staff": attack speed 4 for the built-in spell; spellbook casts keep 5.
-            if (getCombatClass(pawn) == CombatClass.MAGIC && !gg.rsmod.plugins.content.items.osrs.PoweredStaves.usingBuiltInSpell(pawn)) {
+            // "Powered staff": attack speed 4 for the built-in spell; spellbook casts keep 5 - with any weapon or none.
+            if (magic && !gg.rsmod.plugins.content.items.osrs.PoweredStaves.usingBuiltInSpell(pawn)) {
                 // Spellbook casts: 5 ticks, weapon exceptions from the one table (AutocastWeapons.spellAttackSpeed).
                 speed = gg.rsmod.plugins.content.combat.magic.AutocastWeapons.spellAttackSpeed(
-                    weapon.id, pawn.attr[Combat.CASTING_SPELL], autocast = pawn.attr[gg.rsmod.plugins.content.combat.magic.Autocast.AUTO_CAST] == true,
+                    weapon?.id, castSpell, autocast = pawn.attr[gg.rsmod.plugins.content.combat.magic.Autocast.AUTO_CAST] == true,
                 )
             }
             // Miasmic spells: attack speed is halved (doubled delay) for the effect duration.

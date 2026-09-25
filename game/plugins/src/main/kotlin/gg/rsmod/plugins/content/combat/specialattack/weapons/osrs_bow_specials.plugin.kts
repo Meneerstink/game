@@ -100,11 +100,19 @@ Tonalztics.ALL.forEach { weapon ->
                 gg.rsmod.plugins.content.items.osrs.OsrsSeq.HUMAN_GLAIVE_RALOS01_UNCHARGED_SPECIAL
             },
         )
-        player.playSound(Sfx.THROWN)
+        // OSRS glaive special graphics (batch "glaive"): VFX_GLAIVE_(UN)CHARGED_SPECIAL on the thrower - its sequence carries the special's
+        // throw whoosh / spin sounds - then PROJANIM_GLAIVE_01 / _02_SPECIAL and their special impacts with the special impact sound.
+        val osrs = gg.rsmod.plugins.content.items.osrs.OsrsGfx
+        val sfx = gg.rsmod.plugins.content.items.osrs.OsrsSfx
+        val charged = weapon == Items.TONALZTICS_OF_RALOS
+        player.graphic(if (charged) osrs.GLAIVE_CHARGED_SPECIAL else osrs.GLAIVE_UNCHARGED_SPECIAL)
         val delay = RangedCombatStrategy.getHitDelay(player.getCentreTile(), victim.getCentreTile())
         var deferredPlayerDrains = 0
         repeat(Tonalztics.hits(player.getEquipment(EquipmentType.WEAPON))) { index ->
-            world.spawn(player.createProjectile(victim, RangedProjectile.DRAGON_THROWNAXE.gfx, RangedProjectile.DRAGON_THROWNAXE.type))
+            val projectile = player.createProjectile(victim, if (index == 0) osrs.GLAIVE_01_SPECIAL_TRAVEL else osrs.GLAIVE_02_SPECIAL_TRAVEL, RangedProjectile.DRAGON_THROWNAXE.type)
+            world.spawn(projectile)
+            victim.graphic(if (index == 0) osrs.GLAIVE_01_SPECIAL_IMPACT else osrs.GLAIVE_02_SPECIAL_IMPACT, 0, projectile.lifespan)
+            if (index == 0) player.playSound(if (charged) sfx.GLAIVE_CHARGED_SPECIAL_IMPACT else sfx.GLAIVE_UNCHARGED_SPECIAL_IMPACT, delay = projectile.lifespan)
             val landHit = RangedCombatFormula.getAccuracy(player, victim, Tonalztics.DIVISION_ACCURACY) >= world.randomDouble()
             player.dealHit(target = victim, maxHit = RangedCombatFormula.getMaxHit(player, victim), landHit = landHit, delay = delay + index, hitType = HitType.RANGE)
             if (landHit) {

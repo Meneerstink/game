@@ -64,6 +64,10 @@ object EmotesTab {
         p: Player,
         emote: Emote,
     ) {
+        if (emote == Emote.SKILLCAPE) {
+            if (SkillcapeEmotes.perform(p)) ClueScrollManager.tryEmote(p, emote.component)
+            return
+        }
         if (emote.varbit != -1 && p.getVarbit(emote.varbit) != emote.requiredVarbitValue) {
             val description = emote.unlockDescription ?: "You have not unlocked this emote yet."
             p.queue { messageBox(description) }

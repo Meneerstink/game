@@ -1,5 +1,7 @@
 package gg.rsmod.plugins.content.mechanics.pvp
 
+import gg.rsmod.game.model.entity.zoneTile
+
 import gg.rsmod.game.model.Graphic
 import gg.rsmod.game.model.MovementQueue
 import gg.rsmod.game.model.Tile
@@ -210,7 +212,7 @@ object CityGuards {
     fun isGuardedZone(tile: Tile): Boolean = GuardedZones.contains(tile)
 
     /** The only thing a guard ever acts on: a PK-skulled player standing inside a guarded zone. */
-    fun isSkulledIntruder(target: Player): Boolean = PvpSkull.isSkulled(target) && isGuardedZone(target.tile)
+    fun isSkulledIntruder(target: Player): Boolean = PvpSkull.isSkulled(target) && isGuardedZone(target.zoneTile())
 
     /**
      * Whether [guard] may engage [target]: the target is a skulled intruder and the guard itself
@@ -550,7 +552,7 @@ object CityGuards {
     /** Called every cycle for every online player from the shared per-cycle poll. */
     fun onZoneCheck(player: Player) {
         val world = player.world
-        val inZone = isGuardedZone(player.tile)
+        val inZone = isGuardedZone(player.zoneTile())
         val wasInZone = player.attr[WAS_IN_GUARDED_ZONE_ATTR] ?: false
         player.attr[WAS_IN_GUARDED_ZONE_ATTR] = inZone
 

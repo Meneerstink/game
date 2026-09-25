@@ -22,15 +22,24 @@ object OsrsWeaponLooks {
 
     private fun all(seq: Int) = intArrayOf(seq, seq, seq, seq)
 
-    /** Sequences that carry the same id and animation in the 667 cache and in OSRS (RuneLite gameval names). */
-    const val HUMAN_SPEAR_SPIKE = 428
-    const val HUMAN_SCYTHE_SWEEP = 440
+    /**
+     * The classic OSRS sequences, imported with their OSRS frames on the player rig (batch osrsweaponseq) instead of relying on the
+     * same-numbered 667 sequence (RuneLite gameval names).
+     */
+    const val HUMAN_SPEAR_SPIKE = OsrsSeq.HUMAN_SPEAR_SPIKE
+    const val HUMAN_SCYTHE_SWEEP = OsrsSeq.HUMAN_SCYTHE_SWEEP
+    const val HUMAN_SWORD_STAB = OsrsSeq.HUMAN_SWORD_STAB
+    const val HUMAN_SWORD_DEF = OsrsSeq.HUMAN_SWORD_DEF
+    const val HUMAN_SWORD_SLASH = OsrsSeq.HUMAN_SWORD_SLASH
+    const val HUMAN_SWORD_LUNGE = OsrsSeq.HUMAN_SWORD_LUNGE
 
     val OSRS_GODSWORDS =
         intArrayOf(
             Items.ANCIENT_GODSWORD, Items.ARMADYL_GODSWORD_OR, Items.BANDOS_GODSWORD_OR, Items.SARADOMIN_GODSWORD_OR, Items.ZAMORAK_GODSWORD_OR,
-            Items.GILDED_2H_SWORD,
         )
+
+    /** The four imported Dark bow colours (OSRS 12765-12768). */
+    val DARK_BOWS = intArrayOf(23801, 23802, 23803, 23804)
     val NIGHTMARE_STAVES =
         intArrayOf(Items.NIGHTMARE_STAFF, Items.HARMONISED_NIGHTMARE_STAFF, Items.VOLATILE_NIGHTMARE_STAFF, Items.ELDRITCH_NIGHTMARE_STAFF)
 
@@ -106,7 +115,101 @@ object OsrsWeaponLooks {
         // "Virulence" is the NAME OF ITS SPECIAL: HUMAN_HALBERD_VIRULENCE_01-04 are special-attack sequences, not normal attacks (the
         // first build of this table misread them); _02 carries the special's sounds and is what the special plays.
         register(Look(intArrayOf(HUMAN_SPEAR_SPIKE, HUMAN_SCYTHE_SWEEP, HUMAN_SPEAR_SPIKE, HUMAN_SPEAR_SPIKE)), Items.NOXIOUS_HALBERD)
+
+        // Owner 2026-09-24: "Toxic Staff en een aantal andere wapens hebben nog bij een whack de 667 attack animatie ... FIX alle OSRS
+        // GEPORTE WEAPONS". Root cause: an imported weapon without its own row fell back to the 667 weapon class, and the 667 slash-sword
+        // and Staff-of-light classes animate with RS HD sequences (15071 / 15072 / 15074 / 12806) that OSRS never had. OSRS plays the
+        // classic sequences, which carry the same ids and frames in the 667 cache (RuneLite gameval names below).
+        // Slash swords (OSRS Wiki weapon category "Slash sword": Chop / Slash / Lunge / Block = slash, slash, stab, slash): HUMAN_SWORD_SLASH
+        // 390, HUMAN_SWORD_STAB 386, block HUMAN_SWORD_DEF 388 (RuneLite combat-logger: 390 "Slash", 386 "Stab"; xrsps weapon table agrees).
+        register(
+            Look(intArrayOf(HUMAN_SWORD_SLASH, HUMAN_SWORD_SLASH, HUMAN_SWORD_STAB, HUMAN_SWORD_SLASH), block = HUMAN_SWORD_DEF),
+            Items.THIRDAGE_LONGSWORD, Items.GILDED_SCIMITAR, Items.KATANA, Items.DRAGON_SCIMITAR_OR, Items.ARCLIGHT, Items.ARCLIGHT_INACTIVE,
+            Items.EMBERLIGHT, Items.VOIDWAKER, Items.RUNE_SCIMITAR_GUTHIX, Items.RUNE_SCIMITAR_SARADOMIN, Items.RUNE_SCIMITAR_ZAMORAK,
+        )
+        // Stab sword (OSRS Wiki "Belle's folly": Accurate stab / Lunge stab / Slash / Block stab): HUMAN_SWORD_STAB 386, HUMAN_SWORD_LUNGE
+        // 392, HUMAN_SWORD_SLASH 390 (xrsps stab-sword table 386 / 392 / 390 / 386).
+        register(Look(intArrayOf(HUMAN_SWORD_STAB, HUMAN_SWORD_LUNGE, HUMAN_SWORD_SLASH, HUMAN_SWORD_STAB), block = HUMAN_SWORD_DEF), Items.BELLES_FOLLY)
+        // Bladed staves (Staff of the dead, Toxic staff, Staff of balance): every melee style swings HUMAN_SCYTHE_SWEEP 440 (per-item OSRS
+        // table of the Glabay OSRS server, attack_animations.json: 11791 / 12902 / 12904 -> 440). Block: no source names it (SOURCE_GAP),
+        // so the class block stays.
+        register(
+            Look(all(HUMAN_SCYTHE_SWEEP)),
+            Items.STAFF_OF_THE_DEAD, Items.TOXIC_STAFF_UNCHARGED, Items.TOXIC_STAFF_OF_THE_DEAD, Items.STAFF_OF_BALANCE,
+        )
+        // Staves (Bash / Pound / Focus): HUMAN_AXE_CHOP 393 - RuneLite combat-logger, observed in OSRS: "HUMAN_AXE_CHOP, // Staff bash".
+        // (The xrsps table says 419 HUMAN_STAFFORB_PUMMEL; the combat-logger is the in-game observation, so it wins.)
+        register(
+            Look(all(OsrsSeq.HUMAN_AXE_CHOP)),
+            Items.TRIDENT_OF_THE_SEAS, Items.TRIDENT_OF_THE_SEAS_FULL, Items.UNCHARGED_TRIDENT, Items.TRIDENT_OF_THE_SWAMP,
+            Items.UNCHARGED_TOXIC_TRIDENT, Items.TRIDENT_OF_THE_SEAS_E, Items.UNCHARGED_TRIDENT_E, Items.TRIDENT_OF_THE_SWAMP_E,
+            Items.UNCHARGED_TOXIC_TRIDENT_E, Items.SANGUINESTI_STAFF, Items.SANGUINESTI_STAFF_UNCHARGED, Items.MYSTIC_SMOKE_STAFF,
+            Items.ANCIENT_SCEPTRE, Items.ANCIENT_SCEPTRE_L, Items.BLOOD_ANCIENT_SCEPTRE, Items.ICE_ANCIENT_SCEPTRE, Items.SMOKE_ANCIENT_SCEPTRE,
+            Items.SHADOW_ANCIENT_SCEPTRE, Items.BLOOD_ANCIENT_SCEPTRE_L, Items.ICE_ANCIENT_SCEPTRE_L, Items.SMOKE_ANCIENT_SCEPTRE_L,
+            Items.SHADOW_ANCIENT_SCEPTRE_L, Items.PURGING_STAFF, Items.SMOKE_BATTLESTAFF, Items.MIST_BATTLESTAFF, Items.MYSTIC_MIST_STAFF,
+            Items.DUST_BATTLESTAFF, Items.MYSTIC_DUST_STAFF, Items.LAVA_BATTLESTAFF_OR, Items.STEAM_BATTLESTAFF_OR, Items.MYSTIC_STEAM_STAFF_OR,
+        )
+        // Wands: HUMAN_STAFF_PUMMEL 414 - combat-logger "Wand melee auto"; the Glabay per-item table agrees (21006 Kodai, 12422 3rd age wand).
+        register(Look(all(OsrsSeq.HUMAN_STAFF_PUMMEL)), Items.KODAI_WAND, Items.THIRDAGE_WAND, Items.DRAGON_HUNTER_WAND)
+        // Thrown: against players OSRS plays the classic throw (darts II_HUMAN_DART_THROW 6600, thrownaxes HUMAN_STAKE2 929, same ids in
+        // 667), against npcs the _PVN versions (combat-logger: "II_HUMAN_DART_THROW_PVN, // Dart throw", "HUMAN_STAKE2_PVN, // Rune knife,
+        // thrownaxe").
+        register(
+            Look(all(OsrsSeq.II_HUMAN_DART_THROW), attackPvn = all(OsrsSeq.II_HUMAN_DART_THROW_PVN)),
+            Items.AMETHYST_DART, Items.AMETHYST_DART_P, Items.AMETHYST_DART_P_PLUS, Items.AMETHYST_DART_P_PLUS_PLUS,
+        )
+        register(Look(all(OsrsSeq.HUMAN_STAKE2), attackPvn = all(OsrsSeq.HUMAN_STAKE2_PVN)), Items.DRAGON_THROWNAXE)
+        // Chinchompas: HUMAN_CHINCHOMPA_ATTACK 2779, against npcs _PVN 7618 (combat-logger "HUMAN_CHINCHOMPA_ATTACK_PVN, // Chinchompa").
+        register(Look(all(OsrsSeq.HUMAN_CHINCHOMPA_ATTACK), attackPvn = all(OsrsSeq.HUMAN_CHINCHOMPA_ATTACK_PVN)), Items.BLACK_CHINCHOMPA)
+        // Axes (Chop / Hack slash, Smash crush, Block slash): HUMAN_AXE_HACK 395 "Axe", HUMAN_BLUNT_POUND 401 "Crush" (combat-logger).
+        register(
+            Look(intArrayOf(OsrsSeq.HUMAN_AXE_HACK, OsrsSeq.HUMAN_AXE_HACK, OsrsSeq.HUMAN_BLUNT_POUND, OsrsSeq.HUMAN_AXE_HACK)),
+            Items.THIRDAGE_AXE, Items.GILDED_AXE,
+        )
+        // Pickaxes: HUMAN_BLUNT_SPIKE 400 (combat-logger "Pickaxe smash"; xrsps: pickaxe spike 400).
+        register(Look(all(OsrsSeq.HUMAN_BLUNT_SPIKE)), Items.THIRDAGE_PICKAXE, Items.GILDED_PICKAXE, Items.DRAGON_PICKAXE_OR, Items.DRAGON_PICKAXE_OR_UPGRADED)
+        // Blunt weapons (Pound / Pummel / Block, all crush): HUMAN_BLUNT_POUND 401 (combat-logger "Crush, DWH"; Glabay 13576 -> 401).
+        register(Look(all(OsrsSeq.HUMAN_BLUNT_POUND)), Items.DRAGON_WARHAMMER, Items.GILDED_SPADE, Items.DRAGON_CANE)
+        // Granite maul: SLAYER_GRANITE_MAUL_ATTACK 1665 (combat-logger "Granite maul").
+        register(Look(all(OsrsSeq.SLAYER_GRANITE_MAUL_ATTACK)), Items.GRANITE_MAUL_ORNATE_HANDLE)
+        // Spears (Lunge stab / Swipe slash / Pound crush / Block stab): HUMAN_SPEAR_SPIKE 428 "Spear stab", HUMAN_SCYTHE_SWEEP 440
+        // "Spear slash", HUMAN_SPEAR_LUNGE 429 "Spear crush" (combat-logger).
+        register(
+            Look(intArrayOf(HUMAN_SPEAR_SPIKE, HUMAN_SCYTHE_SWEEP, OsrsSeq.HUMAN_SPEAR_LUNGE, HUMAN_SPEAR_SPIKE)),
+            Items.GILDED_SPEAR, Items.GILDED_HASTA,
+        )
+        // Two-handed swords (Chop / Slash slash, Smash crush, Block slash): HUMAN_DHSWORD_SLASH 407 "2h slash", HUMAN_DHSWORD_CHOP 406
+        // "2h crush" (combat-logger).
+        register(
+            Look(intArrayOf(OsrsSeq.HUMAN_DHSWORD_SLASH, OsrsSeq.HUMAN_DHSWORD_SLASH, OsrsSeq.HUMAN_DHSWORD_CHOP, OsrsSeq.HUMAN_DHSWORD_SLASH)),
+            Items.GILDED_2H_SWORD,
+        )
+        // Claws (Chop / Slash slash, Lunge stab, Block slash): slash HUMAN_AXE_CHOP 393 (combat-logger lists the dragon claws under 393),
+        // stab D_CLAWS_PUNCH 1067 ("Claw stab").
+        register(
+            Look(intArrayOf(OsrsSeq.HUMAN_AXE_CHOP, OsrsSeq.HUMAN_AXE_CHOP, OsrsSeq.D_CLAWS_PUNCH, OsrsSeq.HUMAN_AXE_CHOP)),
+            Items.BURNING_CLAWS,
+        )
+        // Imported whips: SLAYER_ABYSSAL_WHIP_ATTACK 1658 / _DEFEND 1659 as OSRS frames.
+        register(
+            Look(all(OsrsSeq.SLAYER_ABYSSAL_WHIP_ATTACK), block = OsrsSeq.SLAYER_ABYSSAL_WHIP_DEFEND),
+            Items.FROZEN_ABYSSAL_WHIP, Items.VOLCANIC_ABYSSAL_WHIP,
+        )
+        // Bows and crossbows without their own sequence: HUMAN_BOW 426 "Bow"; crossbows XBOWS_HUMAN_FIRE_AND_RELOAD 4230 (PVN below).
+        register(
+            Look(all(OsrsSeq.HUMAN_BOW)),
+            Items.TWISTED_BOW, Items.BOW_OF_FAERDHINEN, Items.BOW_OF_FAERDHINEN_INACTIVE, Items.BOW_OF_FAERDHINEN_C, Items.MAGIC_SHORTBOW_I,
+            Items.CRYSTAL_BOW_OSRS, Items.CRYSTAL_BOW_OSRS_INACTIVE, Items.CRAWS_BOW_U, Items.CRAWS_BOW, Items.WEBWEAVER_BOW_U, Items.WEBWEAVER_BOW,
+            Items.VENATOR_BOW_UNCHARGED, Items.SCORCHING_BOW, Items.THIRDAGE_BOW, *DARK_BOWS,
+        )
+        register(
+            Look(all(OsrsSeq.XBOWS_HUMAN_FIRE_AND_RELOAD), attackPvn = all(OsrsSeq.XBOWS_HUMAN_FIRE_AND_RELOAD_PVN)),
+            Items.ARMADYL_CROSSBOW, Items.DRAGON_CROSSBOW, Items.DRAGON_HUNTER_CROSSBOW, Items.HUNTERS_SUNLIGHT_CROSSBOW,
+        )
     }
+
+    /** Every imported OSRS weapon with its own OSRS look (guard: `OsrsWeaponLooksTests`). */
+    val COVERED: Set<Int> get() = looks.keys + Items.OSMUMTENS_FANG
 
     /** Osmumten's fang: only the stab styles have their own sequence; Slash keeps the sword slash (combat-logger: HUMAN_SWORD_SLASH). */
     private val fangStab = OsrsSeq.HUMAN_OSMUMTENS_FANG
@@ -142,7 +245,7 @@ object OsrsWeaponLooks {
             // scythe_slash 2524 (same ids/names in the 667 sound table). Its sequences 428 / 440 carry no frame sounds.
             Items.NOXIOUS_HALBERD -> if (attackAnimation == HUMAN_SCYTHE_SWEEP) gg.rsmod.plugins.api.cfg.Sfx.SCYTHE_SLASH else gg.rsmod.plugins.api.cfg.Sfx.STAFF_STAB
             // Every whip-class weapon swings the OSRS whip sequence (Animations.WHIP), which has no frame sounds: OSRS "whip" 2720.
-            else -> if (attackAnimation == gg.rsmod.plugins.content.combat.Animations.WHIP.slash.id) gg.rsmod.plugins.api.cfg.Sfx.WHIP else null
+            else -> if (attackAnimation == gg.rsmod.plugins.content.combat.Animations.WHIP.slash.id || attackAnimation == OsrsSeq.SLAYER_ABYSSAL_WHIP_ATTACK) gg.rsmod.plugins.api.cfg.Sfx.WHIP else null
         }
 
     /** OSRS plays XBOWS_HUMAN_FIRE_AND_RELOAD_PVN against npcs for ordinary crossbows. */

@@ -843,6 +843,9 @@ object OsrsItemImportTool {
             // Owner 2026-09-23 ("We need the from Deadman's skull it needs to have the option Breach check"): OSRS Wiki "Deadman's
             // skull" id 33065 - options Shop, Unlocks, Swap, Breach Check, Destroy; untradeable, not bankable.
             "deadman-skull" to listOf(Spec(33065)),
+            // Owner 2026-09-24 ("Importeer Adamant Seeds ... zorg voor correcte werking!"): OSRS Wiki "Adamant seeds" id 29458 -
+            // options Plant/Drop, stackable, tradeable, not noteable; planting handled with the Mithril seeds in FlowerSeeds.
+            "adamant-seeds" to listOf(Spec(29458)),
             // Owner 2026-09-19 ("fix everything" - Chitin's use): OSRS Wiki "Blighted overload" ids 29631 (4) / 29634 (3) / 29637 (2)
             // / 29640 (1), noteable, tradeable; drink/mix handled in mechanics/pvp/breach/blighted_overload.plugin.kts.
             "blighted-overload" to listOf(Spec(29631, noted = true), Spec(29634, noted = true), Spec(29637, noted = true), Spec(29640, noted = true)),
@@ -882,8 +885,8 @@ object OsrsItemImportTool {
             "runes" to
                 listOf(
                     Spec(21880), // Wrath rune
-                    Spec(30843), // Aether rune
-                    Spec(30771), // Aether catalyst
+                    Spec(30843), // Aether rune (removed from the game again 2026-09-24, RemovedItems; the ids stay allocated)
+                    Spec(30771), // Aether catalyst (removed 2026-09-24, as above)
                     Spec(12791), // Rune pouch
                     Spec(27281), // Divine rune pouch
                     Spec(27279), // Thread of Elidinis

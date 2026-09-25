@@ -62,7 +62,7 @@ class OwnerBuglist20260917cTests {
             }
         }
         // Noxious halberd: the OSRS halberd jab / swipe (combat-logger's observed table), never a "Virulence" special sequence.
-        assertEquals(listOf(428, 440, 428), (0..2).map { OsrsWeaponLooks.attackAnimation(Items.NOXIOUS_HALBERD, it, againstNpc = true, stabStyle = false) })
+        assertEquals(listOf(OsrsSeq.HUMAN_SPEAR_SPIKE, OsrsSeq.HUMAN_SCYTHE_SWEEP, OsrsSeq.HUMAN_SPEAR_SPIKE), (0..2).map { OsrsWeaponLooks.attackAnimation(Items.NOXIOUS_HALBERD, it, againstNpc = true, stabStyle = false) })
         // Heavy ballista: OSRS plays a different sequence against npcs (BALLISTA_ATTACK_PVN) than against players.
         assertEquals(OsrsSeq.BALLISTA_ATTACK_PVN, OsrsWeaponLooks.attackAnimation(Items.HEAVY_BALLISTA, 0, againstNpc = true, stabStyle = false))
         assertEquals(OsrsSeq.BALLISTA_ATTACK, OsrsWeaponLooks.attackAnimation(Items.HEAVY_BALLISTA, 0, againstNpc = false, stabStyle = false))

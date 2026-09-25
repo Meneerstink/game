@@ -1,5 +1,7 @@
 package gg.rsmod.plugins.content.mechanics.pvp.breach
 
+import gg.rsmod.game.model.entity.zoneTile
+
 import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.timer.FOOD_DELAY
 import gg.rsmod.game.model.timer.POTION_DELAY
@@ -90,7 +92,7 @@ BlightedOverload.DOSES.forEach { dose ->
     on_item_option(item = dose, option = "drink") {
         val slot = player.getInteractingItemSlot()
         if (player.timers.has(POTION_DELAY)) return@on_item_option
-        if (!AreaState.isDangerous(player.tile)) {
+        if (!AreaState.isDangerous(player.zoneTile())) {
             player.message("You can only drink a blighted overload in a dangerous area.")
             return@on_item_option
         }
@@ -113,7 +115,7 @@ BlightedOverload.DOSES.forEach { dose ->
 
 on_timer(BLIGHTED_TICK) {
     val left = (player.attr[ticksLeft] ?: 0) - 1
-    val inSafe = !AreaState.isDangerous(player.tile)
+    val inSafe = !AreaState.isDangerous(player.zoneTile())
     val safe = if (inSafe) (player.attr[safeTicks] ?: 0) + 1 else 0
     if (left <= 0 || safe > BlightedOverload.SAFE_ZONE_GRACE_TICKS) {
         endEffect(player)

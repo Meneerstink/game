@@ -228,8 +228,17 @@ object RangedCombatStrategy : CombatStrategy {
                 ammoProjectile.impact?.let { impact -> target.graphic(impact.id, impact.height, projectile.lifespan) }
                 world.spawn(projectile)
             } else if (gg.rsmod.plugins.content.items.osrs.Tonalztics.isTonalztics(pawn.getEquipment(EquipmentType.WEAPON)?.id)) {
-                // ADAPTED_TO_667: the 667 rune thrownaxe projectile (OSRS Tonalztics graphics not imported).
-                world.spawn(pawn.createProjectile(target, RangedProjectile.DRAGON_THROWNAXE.gfx, RangedProjectile.DRAGON_THROWNAXE.type))
+                // OSRS glaive graphics (batch "glaive"): the charged weapon throws two glaives (PROJANIM_GLAIVE_01 / _02_REGULAR) behind
+                // VFX_GLAIVE_CHARGED_REGULAR, whose sequence carries varlamore_glaive_regular_throw_whoosh; the uncharged weapon throws one.
+                val osrs = gg.rsmod.plugins.content.items.osrs.OsrsGfx
+                val sfx = gg.rsmod.plugins.content.items.osrs.OsrsSfx
+                val charged = gg.rsmod.plugins.content.items.osrs.Tonalztics.hits(pawn.getEquipment(EquipmentType.WEAPON)) == 2
+                if (charged) pawn.graphic(osrs.GLAIVE_CHARGED_REGULAR) else (pawn as? Player)?.playSound(sfx.GLAIVE_REGULAR_THROW_WHOOSH)
+                (pawn as? Player)?.playSound(sfx.GLAIVE_PROJECTILE)
+                val first = pawn.createProjectile(target, osrs.GLAIVE_01_TRAVEL, RangedProjectile.DRAGON_THROWNAXE.type)
+                world.spawn(first)
+                target.graphic(osrs.GLAIVE_01_IMPACT, 0, first.lifespan)
+                if (charged) world.spawn(pawn.createProjectile(target, osrs.GLAIVE_02_TRAVEL, RangedProjectile.DRAGON_THROWNAXE.type))
             } else if (gg.rsmod.plugins.content.items.osrs.CrystalEquipment.isCrystalBow(pawn.getEquipment(EquipmentType.WEAPON)?.id) ||
                 pawn.getEquipment(EquipmentType.WEAPON)?.id in gg.rsmod.plugins.content.items.osrs.RevenantBows.ALL
             ) {

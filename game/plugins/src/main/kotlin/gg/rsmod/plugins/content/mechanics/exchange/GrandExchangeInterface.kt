@@ -15,9 +15,12 @@ import gg.rsmod.plugins.api.ext.closeInterface
 import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.api.ext.openInterface
 import gg.rsmod.plugins.api.ext.persistNow
+import gg.rsmod.plugins.api.ext.playJingle
+import gg.rsmod.plugins.api.ext.playSound
 import gg.rsmod.plugins.api.ext.runClientScript
 import gg.rsmod.plugins.api.ext.sendItemContainer
 import gg.rsmod.plugins.api.ext.setComponentHidden
+import gg.rsmod.plugins.api.ext.setComponentText
 import gg.rsmod.plugins.api.ext.setInterfaceEvents
 import gg.rsmod.plugins.api.ext.setVarp
 import kotlin.math.ceil
@@ -57,6 +60,9 @@ object GrandExchangeInterface {
     const val VARP_GUIDE = 1114
     const val WARNING_CONTAINER = 196
     const val WARNING_DISMISS = 220
+
+    /** The item description under the item name on the buy/sell page (Void `grand_exchange:examine`). */
+    const val EXAMINE_TEXT = 143
 
     const val SCRIPT_ITEM_SEARCH = 570
     const val SCRIPT_CLOSE_SEARCH = 571
@@ -106,6 +112,7 @@ object GrandExchangeInterface {
     const val MSG_ABORT = "Abort request acknowledged. Please be aware that your offer may have already been completed."
     const val MSG_UPDATED = "One or more of your Grand Exchange offers have been updated."
     const val MSG_NO_SPACE = "Not enough space in your inventory."
+    const val MSG_ITEMS_WAITING = "You have items waiting in your Grand Exchange collection box!"
 
     fun service(player: Player): GrandExchangeService? = player.world.getService(GrandExchangeService::class.java)
 
@@ -129,7 +136,10 @@ object GrandExchangeInterface {
             UpdateStockmarketSlotMessage(slot, status(offer), offer.itemId, offer.pricePerItem, offer.totalQuantity, offer.quantityFilled, gold)
         }
 
-    /** Void `selectItem`: the offer price must stay within `ceil(guide * 0.95)..ceil(guide * 1.05)`. */
+    /**
+     * Void `selectItem`: `ceil(guide * 0.95)..ceil(guide * 1.05)`. No longer an offer limit (OSRS prices are free); it
+     * bounds how far one trade may move the guide price ([GrandExchangeService.guidedTradePrice]).
+     */
     fun priceRange(guide: Int): IntRange = ceil(guide * 0.95).toInt()..ceil(guide * 1.05).toInt()
 
     /**
@@ -157,7 +167,7 @@ object GrandExchangeInterface {
         return next.coerceIn(0L, max).toInt()
     }
 
-    /** The price after pressing [component], always kept inside [priceRange] of the selection's guide price. */
+    /** The price after pressing [component]; the -5%/+5% buttons move the current price by 5 %. */
     fun adjustPrice(
         selection: GeSelection,
         component: Int,
@@ -175,16 +185,20 @@ object GrandExchangeInterface {
         return clampPrice(selection, next)
     }
 
+    /**
+     * OSRS Grand Exchange: an offer may name any price of at least 1 coin (no ±5 % lock around the guide price, which
+     * was the 2011 rule). The house still only trades at or against the guide price ([GrandExchangeBook]), so a free
+     * price cannot be turned into a money loop.
+     */
+    @Suppress("UNUSED_PARAMETER")
     fun clampPrice(
         selection: GeSelection,
         price: Int,
-    ): Int {
-        val range = priceRange(selection.guide)
-        return price.coerceIn(range.first, range.last)
-    }
+    ): Int = price.coerceAtLeast(1)
 
-    /** Items that may be offered: tradeable, not coins, and never the noted form (offers are made for the real item). */
-    fun exchangeable(def: ItemDef): Boolean = def.tradeable && !def.noted && def.id != Items.COINS_995
+    /** Items that may be offered: tradeable, not coins, never the noted form (offers are made for the real item), never a removed item. */
+    fun exchangeable(def: ItemDef): Boolean =
+        def.tradeable && !def.noted && def.id != Items.COINS_995 && !gg.rsmod.plugins.content.mechanics.removed.RemovedItems.isRemoved(def)
 
     /** The unnoted id of [def]. */
     fun unnoted(def: ItemDef): Int = if (def.noted) def.noteLinkId else def.id
@@ -193,7 +207,6 @@ object GrandExchangeInterface {
         if (selection == null || selection.itemId == -1) return MSG_CHOOSE_FIRST
         if (selection.quantity < 1 || selection.price < 1) return MSG_CHOOSE_FIRST
         if (selection.price.toLong() * selection.quantity > Int.MAX_VALUE) return MSG_TOO_VALUABLE
-        if (selection.price !in priceRange(selection.guide)) return MSG_CHOOSE_FIRST
         return null
     }
 
@@ -260,16 +273,18 @@ object GrandExchangeInterface {
         hideGuidePriceWarning(player)
     }
 
+    /** Void `selectItem`: the chosen item's description under its name. */
+    fun sendExamine(
+        player: Player,
+        itemId: Int,
+    ) {
+        val text = if (itemId == -1) "" else player.world.definitions.getNullable(ItemDef::class.java, itemId)?.examine ?: ""
+        player.setComponentText(MAIN, EXAMINE_TEXT, text)
+    }
+
     /**
      * Keeps the cache's "far less than its guide price" panel off the screen (owner 2026-09-20: "everytime i try
-     * to sell an item i get the popup ... remove this").
-     *
-     * The warning is pure client-script decoration and it cannot tell the player anything true here: [clampPrice]
-     * already pins every offer to `guide * 0.95 .. guide * 1.05`, and a fresh selection starts exactly at the
-     * guide price, so an offer that is "far less than the guide price" is not reachable through this interface in
-     * the first place. Hiding the container is therefore removing a false warning, not disabling a safety check -
-     * the real guard is the server-side clamp in [validate], which still rejects any price outside the range no
-     * matter what the client sends.
+     * to sell an item i get the popup ... remove this"). The panel blocked every sell; the owner removed it.
      */
     fun hideGuidePriceWarning(player: Player) {
         player.setComponentHidden(interfaceId = MAIN, component = WARNING_CONTAINER, hidden = true)
@@ -298,6 +313,7 @@ object GrandExchangeInterface {
         val selection = GeSelection(slot, OfferType.BUY)
         player.attr[SELECTION_ATTR] = selection
         sendSelection(player, selection)
+        sendExamine(player, -1)
         openItemSearch(player)
     }
 
@@ -315,6 +331,7 @@ object GrandExchangeInterface {
         val selection = GeSelection(slot, OfferType.SELL)
         player.attr[SELECTION_ATTR] = selection
         sendSelection(player, selection)
+        sendExamine(player, -1)
         player.openInterface(SELL_INVENTORY, InterfaceDestination.TAB_AREA)
         player.runClientScript(SCRIPT_INVENTORY_OPTIONS, (SELL_INVENTORY shl 16) or SELL_INVENTORY_ITEMS, INVENTORY_INTERFACE_KEY, 4, 7, 0, -1, "Offer", "", "", "", "")
         player.setInterfaceEvents(interfaceId = SELL_INVENTORY, component = SELL_INVENTORY_ITEMS, range = 0..27, setting = 1026)
@@ -325,20 +342,24 @@ object GrandExchangeInterface {
     fun select(
         player: Player,
         itemId: Int,
+        quantity: Int = 1,
     ) {
         val service = service(player) ?: return
         val selection = player.attr[SELECTION_ATTR] ?: return
         val def = player.world.definitions.getNullable(ItemDef::class.java, itemId) ?: return
         val real = player.world.definitions.getNullable(ItemDef::class.java, unnoted(def)) ?: return
         if (!exchangeable(real)) {
+            player.playSound(GrandExchangeSounds.TRADE_ERROR)
             player.message(MSG_NOT_TRADEABLE)
             return
         }
         selection.itemId = real.id
         selection.guide = service.guidePrice(real.id, OsrsGuidePrices.seed(real))
         selection.price = clampPrice(selection, selection.guide)
-        selection.quantity = 1
+        // Void `stock_side:items` / OSRS: a sell offer starts at the clicked stack's amount (a whole stack or note pile).
+        selection.quantity = if (selection.type == OfferType.SELL) quantity.coerceIn(1, ownedCount(player, real.id).coerceAtLeast(1)) else 1
         sendSelection(player, selection)
+        sendExamine(player, real.id)
     }
 
     fun ownedCount(
@@ -368,6 +389,13 @@ object GrandExchangeInterface {
 
     /** Novite/Void confirm: escrow the coins or items first, then submit; anything refused is handed straight back. */
     fun confirm(player: Player): Boolean {
+        val placed = placeOffer(player)
+        if (!placed) player.playSound(GrandExchangeSounds.TRADE_ERROR)
+        return placed
+    }
+
+    /** Messages why an offer could not be placed; [confirm] plays GE_TRADE_ERROR for every refusal (2009scape). */
+    private fun placeOffer(player: Player): Boolean {
         val service = service(player) ?: return false
         val selection = player.attr[SELECTION_ATTR]
         validate(selection)?.let {
@@ -377,12 +405,13 @@ object GrandExchangeInterface {
         selection!!
         val username = username(player)
         if (service.offerInSlot(username, selection.slot) != null) return false
+        val fills: List<GeFill>
         if (selection.type == OfferType.BUY) {
             // Long: price * quantity overflowed Int for large offers, and a negative "total" passed
             // the coin check and then *added* coins on remove.
             val totalCost = selection.price.toLong() * selection.quantity
             if (totalCost <= 0 || totalCost > Int.MAX_VALUE) {
-                player.message("That offer's total cost is too large.")
+                player.message(MSG_TOO_VALUABLE)
                 return false
             }
             val total = totalCost.toInt()
@@ -393,12 +422,17 @@ object GrandExchangeInterface {
             if (player.inventory.remove(Items.COINS_995, total, assureFullRemoval = true).hasFailed()) {
                 return false
             }
-            if (service.submit(username, OfferType.BUY, selection.itemId, selection.price, selection.quantity, selection.slot) == null) {
+            val submitted = service.submit(username, OfferType.BUY, selection.itemId, selection.price, selection.quantity, selection.slot)
+            if (submitted == null) {
                 player.inventory.add(Items.COINS_995, total)
                 return false
             }
+            fills = submitted.second
         } else {
-            if (ownedCount(player, selection.itemId) < selection.quantity) return false
+            if (ownedCount(player, selection.itemId) < selection.quantity) {
+                player.message("You do not have enough of this item in your inventory to cover the offer.")
+                return false
+            }
             val def = player.world.definitions.get(ItemDef::class.java, selection.itemId)
             val unnotedRemoved = player.inventory.remove(selection.itemId, selection.quantity, assureFullRemoval = false).completed
             val notedRemoved =
@@ -413,36 +447,78 @@ object GrandExchangeInterface {
                     player.inventory.add(itemId, amount)
                 }
             }
-            if (removed < selection.quantity ||
-                service.submit(username, OfferType.SELL, selection.itemId, selection.price, selection.quantity, selection.slot) == null
-            ) {
+            val submitted =
+                if (removed < selection.quantity) {
+                    null
+                } else {
+                    service.submit(username, OfferType.SELL, selection.itemId, selection.price, selection.quantity, selection.slot)
+                }
+            if (submitted == null) {
                 restore()
                 return false
             }
+            fills = submitted.second
             player.closeInterface(dest = InterfaceDestination.TAB_AREA)
         }
         player.attr.remove(SELECTION_ATTR)
         resetConfigs(player)
+        sendExamine(player, -1)
         player.runClientScript(SCRIPT_CLOSE_SEARCH)
+        player.playSound(GrandExchangeSounds.PLACE_ITEM)
         refreshAll(player, service)
-        notifyCounterparties(player, service)
+        announceFills(player.world, service, fills)
         // The escrow is on disk in the book; the debited inventory must be on disk as well.
         player.persistNow()
         return true
     }
 
-    /** Refreshes the boxes of every other online owner whose offer just traded against this one. */
-    private fun notifyCounterparties(
-        player: Player,
+    /**
+     * OSRS offer update message for [offer]: "Grand Exchange: Finished buying 10 x Iron ore." once complete, otherwise
+     * "Grand Exchange: Bought 4 / 10 x Iron ore." (selling: "Finished selling" / "Sold").
+     */
+    fun progressMessage(
+        offer: GrandExchangeOffer,
+        itemName: String,
+    ): String {
+        val buy = offer.type == OfferType.BUY
+        return if (offer.remaining <= 0) {
+            "Grand Exchange: Finished ${if (buy) "buying" else "selling"} ${offer.totalQuantity} x $itemName."
+        } else {
+            "Grand Exchange: ${if (buy) "Bought" else "Sold"} ${offer.quantityFilled} / ${offer.totalQuantity} x $itemName."
+        }
+    }
+
+    /**
+     * Tells every online owner of an offer that just traded: the offer boxes refresh, one message per offer and the
+     * offer-updated jingle once (2009scape `GrandExchangeTimer`). Offline owners hear about it at login ([onLogin]).
+     */
+    fun announceFills(
+        world: gg.rsmod.game.model.World,
         service: GrandExchangeService,
+        fills: List<GeFill>,
     ) {
-        val self = username(player)
-        player.world.players.forEach { other ->
-            if (other == player) return@forEach
-            val name = (other as? Client)?.loginUsername ?: return@forEach
-            if (name == self) return@forEach
-            val changed = service.offersFor(name).any { it.quantityFilled > 0 || it.status != OfferStatus.ACTIVE }
-            if (changed) refreshAll(other, service)
+        if (fills.isEmpty()) return
+        val offerIds = fills.flatMap { listOfNotNull(it.buyOfferId, it.sellOfferId) }.distinct()
+        val byOwner = offerIds.mapNotNull { service.offer(it) }.groupBy { it.username }
+        byOwner.forEach { (owner, offers) ->
+            val player = world.players.firstOrNull { (it as? Client)?.loginUsername == owner } ?: return@forEach
+            refreshAll(player, service)
+            offers.forEach { offer ->
+                val name = player.world.definitions.getNullable(ItemDef::class.java, offer.itemId)?.name ?: "item"
+                player.message(progressMessage(offer, name))
+            }
+            player.playJingle(GrandExchangeSounds.OFFER_UPDATED_JINGLE)
+        }
+    }
+
+    /** Void `GrandExchange.login` / 2009scape `GrandExchangeRecords`: boxes refresh; anything owed is announced. */
+    fun onLogin(player: Player) {
+        val service = service(player) ?: return
+        refreshAll(player, service)
+        val waiting = service.offersFor(username(player)).any { it.collectableCoins > 0 || it.collectableItems > 0 }
+        if (waiting) {
+            player.message(MSG_ITEMS_WAITING)
+            player.playJingle(GrandExchangeSounds.OFFER_UPDATED_JINGLE)
         }
     }
 
@@ -494,6 +570,14 @@ object GrandExchangeInterface {
             service.restoreCollectable(offer.id, if (coins) leftover else 0, if (coins) 0 else leftover.toInt())
             player.message(MSG_NO_SPACE)
         }
+        // 2009scape collect: GE_COLLECT_COINS / GE_COLLECT_ITEMS, GE_TRADE_ERROR when nothing fitted.
+        player.playSound(
+            when {
+                added <= 0 -> GrandExchangeSounds.TRADE_ERROR
+                coins -> GrandExchangeSounds.COLLECT_COINS
+                else -> GrandExchangeSounds.COLLECT_ITEMS
+            },
+        )
         service.releaseIfDrained(username, offer.id)
         refresh(player, service, slot)
         player.sendItemContainer(collectContainerKey(slot), collectItems(player.world.definitions, service.offerInSlot(username, slot)))
@@ -504,6 +588,7 @@ object GrandExchangeInterface {
     fun back(player: Player) {
         player.attr.remove(SELECTION_ATTR)
         resetConfigs(player)
+        sendExamine(player, -1)
         player.runClientScript(SCRIPT_CLOSE_SEARCH)
         player.closeInterface(dest = InterfaceDestination.TAB_AREA)
         player.openInterface(dest = InterfaceDestination.INVENTORY_TAB)

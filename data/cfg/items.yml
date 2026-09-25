@@ -260238,7 +260238,7 @@
 - id: 21773
   name: "Armadyl rune"
   examine: "It's an Armadyl rune"
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment: null
 - id: 21774
@@ -284808,13 +284808,13 @@
 - id: 23744
   name: "Aether rune"
   examine: "A combined cosmic and soul rune."
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment: null
 - id: 23745
   name: "Aether catalyst"
   examine: "A piece of the cosmos' soul? Or souls belonging to the cosmos?"
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment: null
 - id: 23746
@@ -286865,3 +286865,9 @@
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
+- id: 23863
+  name: "Adamant seeds"
+  examine: "Magical seeds in an adamant case."
+  tradeable: true
+  weight: 0.0
+  equipment: null

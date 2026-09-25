@@ -260,6 +260,8 @@ fun degradePouch(
     player: Player,
     pouch: Pouch,
 ) {
+    // OSRS Wiki "Runecraft cape": "When worn, prevents essence pouches from degrading when filling them" - every max cape too.
+    if (gg.rsmod.plugins.content.skills.SkillcapePerks.worn(player, gg.rsmod.plugins.content.skills.SkillcapePerks.VariantPerk.ESSENCE_POUCHES)) return
     val degradationCount = player.getPouchDegradation(pouch) + 1
 
     val capacityLoss: Int =

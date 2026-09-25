@@ -1,5 +1,7 @@
 package gg.rsmod.plugins.content.combat
 
+import gg.rsmod.game.model.entity.zoneTile
+
 import gg.rsmod.game.action.PawnPathAction
 import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.attr.AttributeKey
@@ -60,6 +62,9 @@ object Combat {
     val DAMAGE_TAKE_MULTIPLIER = AttributeKey<Double>()
     val BOLT_ENCHANTMENT_EFFECT = AttributeKey<Boolean>()
 
+    /** The spell the current attack cast; set by MagicCombatStrategy.attack, read for the attack delay and cleared by [postAttack]. */
+    val SPELL_OF_THIS_ATTACK = AttributeKey<CombatSpell>()
+
     const val PRIORITY_PID_VARP = 1075
 
     /** Display mirror of the active autocast spell (667 spellbook highlight, CS2 1121); written only by Autocast.sync. */
@@ -87,11 +92,13 @@ object Combat {
         pawn: Pawn,
         target: Pawn,
     ) {
-        pawn.timers[ATTACK_DELAY] = CombatConfigs.getAttackDelay(pawn)
+        val attackDelay = CombatConfigs.getAttackDelay(pawn)
+        pawn.attr.remove(SPELL_OF_THIS_ATTACK)
+        pawn.timers[ATTACK_DELAY] = attackDelay
         // Blood moon armour Bloodrager: the dual macuahuitl attacks one tick earlier after a trigger (MoonSets).
         if (pawn.attr[gg.rsmod.plugins.content.items.osrs.MoonSets.BLOODRAGER] == true) {
             pawn.attr.remove(gg.rsmod.plugins.content.items.osrs.MoonSets.BLOODRAGER)
-            pawn.timers[ATTACK_DELAY] = maxOf(1, CombatConfigs.getAttackDelay(pawn) - 1)
+            pawn.timers[ATTACK_DELAY] = maxOf(1, attackDelay - 1)
         }
         // Granite maul homing: "for 5 ticks after attacking a target with any weapon" (GraniteMaul).
         pawn.attr[gg.rsmod.plugins.content.items.osrs.GraniteMaul.LAST_ATTACK_CYCLE] = pawn.world.currentCycle
@@ -135,7 +142,7 @@ object Combat {
         // Owner 2026-09-19: in a dangerous bank only a PKer's 2-tick attacks close the victim's bank; a slower attack
         // leaves it open and does not auto-retaliate (retaliating would walk away from the booth and close it anyway).
         val bankKeptOpen =
-            target is Player && gg.rsmod.plugins.content.mechanics.pvp.BankSecurity.keepsBankOpen(pawn, target, CombatConfigs.getAttackDelay(pawn))
+            target is Player && gg.rsmod.plugins.content.mechanics.pvp.BankSecurity.keepsBankOpen(pawn, target, attackDelay)
         if (target is Player && !bankKeptOpen && target.interfaces.getModal() != -1 && target.interfaces.getModal() !in COMBAT_PERSISTENT_MODALS) {
             // Close the modal together with its tab-area side panel (equipment stats 670, bank 763, shop 621, ...): closing
             // only the modal left the side panel mounted over a hidden tab strip (owner picture "interface hang").
@@ -360,10 +367,8 @@ object Combat {
             // exception above, while npc attackers may still fight an owned familiar.
             if ((!target.def.isAttackable() && !publicFamiliar && (pawn is Player || target.owner == null)) ||
             target.combatDef.lifepoints == -1) {
+                // Owner 2026-09-24: players only ever see the game message, never internal npc ids.
                 (pawn as? Player)?.message("You can't attack this npc.")
-                (pawn as? Player)?.message(
-                    "Npc ID: ${target.def.id} is missing combat definitions, please report this on Discord.",
-                )
                 return false
             }
 
@@ -388,7 +393,7 @@ object Combat {
                     // Deadman (owner 2026-09-17): inside a guarded city the guards' message wins over
                     // every other reason - the zone is what forbids the attack there.
                     val home = pawn.world.gameContext.home
-                    if (!AreaState.isPvpAllowed(pawn.tile, home) || !AreaState.isPvpAllowed(target.tile, home)) {
+                    if (!AreaState.isPvpAllowed(pawn.zoneTile(), home) || !AreaState.isPvpAllowed(target.zoneTile(), home)) {
                         pawn.message(AreaState.SAFE_ZONE_ATTACK_MESSAGE)
                         return false
                     }

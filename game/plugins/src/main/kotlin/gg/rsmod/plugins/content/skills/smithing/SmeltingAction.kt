@@ -127,7 +127,12 @@ class SmeltingAction(
 
             if (removedFromInventory && ironBarSuccess) {
                 inventory.add(bar.product)
-                player.addXp(Skills.SMITHING, bar.experience, checkBrawlingGloves = true)
+                // OSRS Wiki "Smithing cape": "When worn, acts as a pair of goldsmith gauntlets" - "Goldsmith gauntlets": gold bars give
+                // 56.2 experience instead of 22.5 (the gauntlets are not in this cache; the cape and the plain max cape carry the effect).
+                val goldsmith =
+                    bar == SmeltingData.GOLD &&
+                        gg.rsmod.plugins.content.skills.SkillcapePerks.worn(player, gg.rsmod.plugins.content.skills.Skillcapes.SMITHING)
+                player.addXp(Skills.SMITHING, if (goldsmith) 56.2 else bar.experience, checkBrawlingGloves = true)
             }
 
             task.wait(WAIT_CYCLE)

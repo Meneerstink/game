@@ -1,5 +1,7 @@
 package gg.rsmod.plugins.content.items.osrs
 
+import gg.rsmod.game.model.entity.zoneTile
+
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.api.ext.*
@@ -61,7 +63,7 @@ object BlightedSacks {
         if (player.tile.getWildernessLevel() > 0) return true
         if (sack.wildernessOnly) return false
         val home = player.world.gameContext.home
-        return AreaState.isPvpAllowed(player.tile, home)
+        return AreaState.isPvpAllowed(player.zoneTile(), home)
     }
 
     /** True when a sack in the inventory replaces the runes of [spellId] here. */
@@ -80,5 +82,37 @@ object BlightedSacks {
     ): Boolean {
         if (!usable(player, spellId)) return false
         return player.inventory.remove(sackFor(spellId)!!.item, 1).hasSucceeded()
+    }
+
+    const val SAFE_ZONE_MESSAGE = "Your blighted sack has no power here - it only works outside the safe zones."
+
+    /**
+     * Shown instead of the missing-rune message when the player carries the sack for [spellId] but stands in a safe zone
+     * (Deadman guarded city), so the refusal names the real reason. Null when that is not the situation.
+     */
+    fun safeZoneRefusal(
+        player: Player,
+        spellId: Int,
+    ): String? {
+        val sack = sackFor(spellId) ?: return null
+        if (!player.inventory.contains(sack.item) || allowedAt(player, sack)) return null
+        return SAFE_ZONE_MESSAGE
+    }
+
+    /** Client varc read by the patched spellbook scripts (`BlightedSackSpellbookPatchTool.VARC_SACKS_ALLOWED`). */
+    const val VARC_SACKS_ALLOWED = 1415
+    private val CLIENT_ALLOWED_ATTR = gg.rsmod.game.model.attr.AttributeKey<Boolean>()
+
+    /**
+     * Keeps the spellbook in step with where sacks work: varc 1415 = 1 outside the safe zones, 0 inside. On a change the
+     * inventory is resent, which re-runs the spell icon script so sack spells light up or grey out at once. Called every
+     * cycle from the Deadman HUD refresh; sends nothing while the state is unchanged.
+     */
+    fun syncClient(player: Player) {
+        val allowed = allowedAt(player, Sack.ENTANGLE)
+        if (player.attr[CLIENT_ALLOWED_ATTR] == allowed) return
+        player.attr[CLIENT_ALLOWED_ATTR] = allowed
+        player.setVarc(VARC_SACKS_ALLOWED, if (allowed) 1 else 0)
+        player.inventory.dirty = true
     }
 }

@@ -458,6 +458,7 @@ abstract class Player(
         }
 
         lastTile = Tile(tile)
+        beginTransit(cycleDuration.coerceAtLeast(1))
         moveTo(movement.finalDestination)
         if (tile != movement.finalDestination && tile == lastTile) {
             // Held back by a MoveGate (the Dangerous-area warning): no slide on the client, no stale lock.
@@ -485,6 +486,7 @@ abstract class Player(
         }
 
         lastTile = Tile(tile)
+        beginTransit(cycleDuration.coerceAtLeast(1))
         moveTo(movement.finalDestination)
         if (tile != movement.finalDestination && tile == lastTile) {
             // Held back by a MoveGate (the Dangerous-area warning): no slide on the client, no stale lock.

@@ -35,8 +35,8 @@ class RunePaymentTests {
             pay(mapOf(Items.FIRE_RUNE to 4, Items.AIR_RUNE to 3, Items.DEATH_RUNE to 1), mapOf(Items.SMOKE_RUNE to 3, Items.FIRE_RUNE to 10, Items.DEATH_RUNE to 1)),
         )
         assertNull(pay(mapOf(Items.FIRE_RUNE to 4, Items.AIR_RUNE to 3), mapOf(Items.SMOKE_RUNE to 2, Items.FIRE_RUNE to 1, Items.AIR_RUNE to 5)), "4 fire needs 2 smoke + 2 fire")
-        // Aether: cosmic + soul.
-        assertEquals(mapOf(Items.AETHER_RUNE to 2), pay(mapOf(Items.COSMIC_RUNE to 1, Items.SOUL_RUNE to 2), mapOf(Items.AETHER_RUNE to 2)))
+        // Aether runes are removed (owner 2026-09-24): they pay for nothing.
+        assertNull(pay(mapOf(Items.COSMIC_RUNE to 1, Items.SOUL_RUNE to 2), mapOf(Items.AETHER_RUNE to 2)))
         // A staff makes its element free before combinations are considered.
         assertEquals(mapOf(Items.SMOKE_RUNE to 1), pay(mapOf(Items.FIRE_RUNE to 5, Items.AIR_RUNE to 1), mapOf(Items.SMOKE_RUNE to 9), free = setOf(Items.FIRE_RUNE)))
         assertEquals(emptyMap(), pay(mapOf(Items.FIRE_RUNE to 5), emptyMap(), free = setOf(Items.FIRE_RUNE)))
@@ -84,18 +84,23 @@ class RunePaymentTests {
         val withdrawn = RunePouch.withdraw(pouch, Items.BLOOD_RUNE, 10)
         assertEquals(listOf(Items.DEATH_RUNE, Items.WATER_RUNE), RunePouch.contents(withdrawn).map { it.id }, "an emptied slot frees up")
         assertEquals(RunePouch.RUNES, RunePouch.RUNES.filter { it > 0 }.toSet())
-        assertTrue(Items.WRATH_RUNE in RunePouch.RUNES && Items.AETHER_RUNE in RunePouch.RUNES && Items.MIST_RUNE in RunePouch.RUNES)
+        assertTrue(Items.WRATH_RUNE in RunePouch.RUNES && Items.MIST_RUNE in RunePouch.RUNES)
     }
 
     @Test
-    fun `aether crafting, combination success and binding necklace`() {
-        val aether = CombinationRune.values.single { it.id == Items.AETHER_RUNE }
-        assertEquals(90, aether.level)
-        assertEquals(20.0, aether.xp)
-        assertEquals(Items.SOUL_RUNE, aether.rune)
-        assertEquals(Items.AETHER_CATALYST, aether.catalyst)
-        assertTrue(aether.requiresImbue)
-        assertFalse(CombinationRune.values.filter { it.id != Items.AETHER_RUNE }.any { it.requiresImbue || it.catalyst != -1 })
+    fun `removed runes exist nowhere - pouch, combinations, crafting, spells`() {
+        val removed = setOf(Items.ARMADYL_RUNE, Items.AETHER_RUNE, Items.AETHER_CATALYST)
+        assertEquals(removed, gg.rsmod.plugins.content.mechanics.removed.RemovedItems.IDS)
+        assertTrue(removed.none { it in RunePouch.RUNES })
+        assertTrue(RunePayment.COMBINATIONS.none { it.first in removed })
+        assertTrue(CombinationRune.values.none { it.id in removed || it.rune in removed })
+        assertTrue(gg.rsmod.plugins.content.magic.SpellbookData.values().none { spell -> spell.runes.any { it.id in removed } })
+        assertTrue(gg.rsmod.plugins.content.magic.SpellbookData.values().none { it.spellName == "Wind Rush" || it.spellName == "Storm of Armadyl" })
+        assertTrue(gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell.values.none { it.uniqueId == 3759 || it.uniqueId == 7699 })
+    }
+
+    @Test
+    fun `combination success and binding necklace`() {
         var flip = false
         assertEquals(13, RunecraftAction.combinationSuccesses(26) { flip = !flip; flip }, "50 % per essence")
         assertEquals(0, RunecraftAction.combinationSuccesses(5) { false }, "a trip can fail completely")

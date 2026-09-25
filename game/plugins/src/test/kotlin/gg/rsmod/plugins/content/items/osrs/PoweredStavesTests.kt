@@ -104,7 +104,7 @@ class PoweredStavesTests {
         val configs = File("src/main/kotlin/gg/rsmod/plugins/content/combat/CombatConfigs.kt").readText()
         assertTrue("PoweredStaves.usingBuiltInSpell(pawn)) {\n            gg.rsmod.plugins.content.combat.strategy.PoweredStaffCombatStrategy" in configs)
         assertTrue("PoweredStaves.wielded(pawn) != null -> CombatClass.MAGIC" in configs)
-        assertTrue("CombatClass.MAGIC && !gg.rsmod.plugins.content.items.osrs.PoweredStaves.usingBuiltInSpell(pawn)" in configs, "speed 4")
+        assertTrue("magic && !gg.rsmod.plugins.content.items.osrs.PoweredStaves.usingBuiltInSpell(pawn)" in configs, "speed 4")
         assertTrue("PoweredStaves.staffFor(definition.id) != null) return false" in File("src/main/kotlin/gg/rsmod/plugins/content/combat/magic/Autocast.kt").readText(), "no autocast")
         assertTrue("PoweredStaves.NO_AUTOCAST_MESSAGE" in File("src/main/kotlin/gg/rsmod/plugins/content/combat/magic/Autocast.kt").readText())
         assertTrue("PoweredStaves.rollVenom(pawn, target)" in File("src/main/kotlin/gg/rsmod/plugins/content/combat/strategy/MagicCombatStrategy.kt").readText(), "manual casts roll Swamp venom")

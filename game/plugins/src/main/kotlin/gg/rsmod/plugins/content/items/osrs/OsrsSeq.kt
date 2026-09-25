@@ -94,6 +94,38 @@ object OsrsSeq {
     const val HUMAN_CAST_SURGE = 15524 // OSRS 7855
     const val HUMAN_CASTING_TELE_BLOCK = 15525 // OSRS 1819 (night run 2026-09-19, tx-20260919-022436)
     const val HUMAN_CASTING_TELE_BLOCK_STAFF = 15526 // OSRS 1820
+
+    // Batch osrsweaponseq (2026-09-24, tx-20260924-222959): the classic OSRS melee / thrown sequences on the player rig.
+    const val HUMAN_SWORD_STAB = 15783 // OSRS 386
+    const val HUMAN_SWORD_DEF = 15784 // OSRS 388
+    const val HUMAN_SWORD_SLASH = 15785 // OSRS 390
+    const val HUMAN_SWORD_LUNGE = 15786 // OSRS 392
+    const val HUMAN_AXE_CHOP = 15787 // OSRS 393 (staff bash)
+    const val HUMAN_STAFF_PUMMEL = 15788 // OSRS 414 (wand melee)
+    const val HUMAN_SPEAR_SPIKE = 15789 // OSRS 428
+    const val HUMAN_SCYTHE_SWEEP = 15790 // OSRS 440
+    const val II_HUMAN_DART_THROW_PVN = 15791 // OSRS 7554
+    const val HUMAN_STAKE2_PVN = 15792 // OSRS 7617
+
+    // Batch osrsweaponseq2 (2026-09-24, tx-20260924-223247).
+    const val HUMAN_AXE_HACK = 15793 // OSRS 395
+    const val HUMAN_BLUNT_SPIKE = 15794 // OSRS 400
+    const val HUMAN_BLUNT_POUND = 15795 // OSRS 401
+    const val HUMAN_DHSWORD_CHOP = 15796 // OSRS 406
+    const val HUMAN_DHSWORD_SLASH = 15797 // OSRS 407
+    const val HUMAN_SPEAR_LUNGE = 15798 // OSRS 429
+    const val HUMAN_BOW = 15799 // OSRS 426
+    const val XBOWS_HUMAN_FIRE_AND_RELOAD = 15800 // OSRS 4230
+    const val II_HUMAN_DART_THROW = 15801 // OSRS 6600
+    const val HUMAN_STAKE2 = 15802 // OSRS 929
+    const val HUMAN_CHINCHOMPA_ATTACK = 15803 // OSRS 2779
+    const val HUMAN_CHINCHOMPA_ATTACK_PVN = 15804 // OSRS 7618
+    const val SLAYER_GRANITE_MAUL_ATTACK = 15805 // OSRS 1665
+
+    // Batch osrsweaponseq3 (2026-09-24, tx-20260924-223452).
+    const val D_CLAWS_PUNCH = 15806 // OSRS 1067
+    const val SLAYER_ABYSSAL_WHIP_ATTACK = 15807 // OSRS 1658
+    const val SLAYER_ABYSSAL_WHIP_DEFEND = 15808 // OSRS 1659
 }
 
 /** OSRS synth sounds of the same batch; names from the OSRS Wiki "List of sound IDs" (Jagex config names). */
@@ -111,6 +143,21 @@ object OsrsSfx {
     const val OSMUMTENS_FANG_STAB = 10248 // OSRS 9366 a_r_osmumtens_fang_sword_stab_01
     const val OSMUMTENS_FANG_WOOSH_02 = 10249 // OSRS 9367
     const val OSMUMTENS_FANG_WOOSH_01 = 10250 // OSRS 9368
+
+    // Batch weaponsfx2 (imported before, wired 2026-09-24): Eclipse atlatl and Tonalztics of Ralos (OSRS Wiki "List of sound IDs").
+    const val ATLATL_SPECIAL_IMPACT = 10251 // OSRS 7918 varlamore_pm_atlatl_special_impact_01
+    const val ATLATL_SPECIAL_CAST = 10252 // OSRS 7932 varlamore_pm_atlatl_special_cast_01
+    const val GLAIVE_REMOVE_CHARGE = 10253 // OSRS 7936 varlamore_glaive_remove_charge_01
+    const val GLAIVE_ADD_CHARGE = 10254 // OSRS 7946 varlamore_glaive_add_charge_01
+    const val GLAIVE_UNCHARGED_SPECIAL_THROW_SPIN = 10255 // OSRS 7937
+    const val GLAIVE_UNCHARGED_SPECIAL_WHOOSH = 10256 // OSRS 7938
+    const val GLAIVE_UNCHARGED_SPECIAL_IMPACT = 10257 // OSRS 7945
+    const val GLAIVE_CHARGED_SPECIAL_THROW = 10258 // OSRS 7939
+    const val GLAIVE_CHARGED_SPECIAL_WHOOSH = 10259 // OSRS 7942
+    const val GLAIVE_CHARGED_SPECIAL_SPIN = 10260 // OSRS 7943
+    const val GLAIVE_CHARGED_SPECIAL_IMPACT = 10261 // OSRS 7944
+    const val GLAIVE_REGULAR_THROW_WHOOSH = 10262 // OSRS 7940 varlamore_glaive_regular_throw_whoosh_01
+    const val GLAIVE_PROJECTILE = 10263 // OSRS 7941 varlamore_glaive_projectile_01
 }
 
 /** Body-animation sets built by `OsrsBasImportTool` (tx-20260917-184006): the 667 default human set with OSRS stand / walk / run. */

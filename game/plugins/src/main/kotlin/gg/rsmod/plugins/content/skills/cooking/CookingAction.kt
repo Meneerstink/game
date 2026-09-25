@@ -44,9 +44,10 @@ object CookingAction {
             val removeResult = inventory.remove(data.raw, assureFullRemoval = true)
             if (removeResult.hasFailed()) return
 
+            // OSRS Wiki "Cooking cape": "When worn, food will never be burned while cooking" (the max cape carries it too).
             val success =
-                interpolate(data.lowChance, data.highChance, player.skills.getCurrentLevel(Skills.COOKING)) >
-                    RANDOM.nextInt(255)
+                gg.rsmod.plugins.content.skills.SkillcapePerks.worn(player, gg.rsmod.plugins.content.skills.Skillcapes.COOKING) ||
+                    interpolate(data.lowChance, data.highChance, player.skills.getCurrentLevel(Skills.COOKING)) > RANDOM.nextInt(255)
 
             if (success) {
                 inventory.add(itemToCook)

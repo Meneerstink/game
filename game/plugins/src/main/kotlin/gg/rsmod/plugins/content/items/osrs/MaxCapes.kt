@@ -43,6 +43,15 @@ object MaxCapes {
             Variant(Items.AVAS_ACCUMULATOR, Items.ACCUMULATOR_MAX_CAPE, Items.ACCUMULATOR_MAX_HOOD),
         )
 
+    /** Every wearable max cape variant: the combined capes and their (l) versions (the broken ones cannot be worn). */
+    val WEARABLE_VARIANTS: Set<Int> by lazy {
+        VARIANTS.map { it.cape }.toSet() +
+            setOf(
+                Items.IMBUED_SARADOMIN_MAX_CAPE_L, Items.IMBUED_ZAMORAK_MAX_CAPE_L, Items.IMBUED_GUTHIX_MAX_CAPE_L,
+                Items.ASSEMBLER_MAX_CAPE_L, Items.MASORI_ASSEMBLER_MAX_CAPE_L, Items.DIZANAS_MAX_CAPE_L,
+            )
+    }
+
     fun forComponent(itemId: Int): Variant? = VARIANTS.firstOrNull { it.component == itemId }
 
     fun forCape(itemId: Int): Variant? = VARIANTS.firstOrNull { it.cape == itemId }

@@ -34,6 +34,17 @@ object AvasDevices {
     val ACCUMULATORS: Set<Int> =
         setOf(gg.rsmod.plugins.api.cfg.Items.AVAS_ACCUMULATOR, gg.rsmod.plugins.api.cfg.Items.ACCUMULATOR_MAX_CAPE)
 
+    /**
+     * Everything that saves ammunition like the accumulator: the [ACCUMULATORS], the Ranging cape (OSRS Wiki "Cape of Accomplishment":
+     * "When worn, acts as Ava's accumulator") and the plain max cape, which carries every skillcape perk. Only the ammunition effect -
+     * the Dizana's quiver upgrade still needs a real accumulator or assembler brought to Ava.
+     */
+    val ACCUMULATOR_EFFECT: Set<Int> =
+        ACCUMULATORS + setOf(
+            gg.rsmod.plugins.api.cfg.Items.RANGING_CAPE, gg.rsmod.plugins.api.cfg.Items.RANGING_CAPE_T,
+            gg.rsmod.plugins.content.items.osrs.MaxCapes.MAX_CAPE,
+        )
+
     /** Every item carrying the OSRS "Commune" junk-gathering option: the assembler family and the Accumulator max cape. */
     val COMMUNE_DEVICES: Set<Int> get() = ASSEMBLERS + gg.rsmod.plugins.api.cfg.Items.ACCUMULATOR_MAX_CAPE
 
@@ -85,7 +96,7 @@ object AvasDevices {
                 quiver == gg.rsmod.plugins.content.items.osrs.DizanasQuiver.AvaEffect.ASSEMBLER -> false
                 quiver == gg.rsmod.plugins.content.items.osrs.DizanasQuiver.AvaEffect.ACCUMULATOR -> chance in 20..27
                 device && cape == gg.rsmod.plugins.api.cfg.Items.AVAS_ATTRACTOR -> chance in 20..39
-                device && cape in ACCUMULATORS -> chance in 20..27
+                device && cape in ACCUMULATOR_EFFECT -> chance in 20..27
                 device && cape in ASSEMBLERS -> false
                 else -> true
             }

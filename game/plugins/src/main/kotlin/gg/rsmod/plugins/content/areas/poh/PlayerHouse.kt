@@ -1,5 +1,7 @@
 package gg.rsmod.plugins.content.areas.poh
 
+import gg.rsmod.plugins.api.ext.getVarbit
+
 import gg.rsmod.game.fs.def.ObjectDef
 import gg.rsmod.game.model.Area
 import gg.rsmod.game.model.EntityType
@@ -240,6 +242,17 @@ object PlayerHouse {
      */
     private val houseAreas = java.util.concurrent.CopyOnWriteArrayList<Area>()
 
+    /** The rooms of every house here: garden, costume room, portal chamber, chapel and study (House Options "Number Of Rooms"). */
+    const val ROOM_COUNT = 5
+
+    /** House Options teleport arrival (settings varbit 6450: 1 = at the portal, 0 = in the house; the client's own CS2 2685 values). */
+    const val ARRIVAL_VARBIT = 6450
+
+    /** Set once the player picked an arrival, so a fresh account (varbit 0) keeps the portal default. */
+    val ARRIVAL_CHOSEN_ATTR = gg.rsmod.game.model.attr.AttributeKey<Boolean>(persistenceKey = "poh_arrival_chosen")
+
+    fun arrivesInHouse(player: Player): Boolean = player.attr[ARRIVAL_CHOSEN_ATTR] == true && player.getVarbit(ARRIVAL_VARBIT) == 0
+
     /** True when [tile] is inside a live player-owned house. Folded into `GuardedZones.contains`. */
     fun isSafeTile(tile: Tile): Boolean = houseAreas.any { it.contains(tile) }
 
@@ -290,7 +303,11 @@ object PlayerHouse {
 
         player.attr[PENDING_DUMMY_ATTR] = map to local(8 + 5, 3)
         player.timers[DUMMY_SPAWN_TIMER] = DUMMY_SPAWN_DELAY
-        // The player arrives in the garden, in front of the pool, with every room one doorway away.
+        // House Options "When teleporting, arrive at portal" (the default): the garden, in front of the pool and the exit portal,
+        // with every room one doorway away; "arrive in house": inside the chapel.
+        if (arrivesInHouse(player)) {
+            return gg.rsmod.plugins.content.mechanics.pvp.CityGuards.nearestWalkable(world, local(8 + 3, 3), radius = 3) ?: local(2, 2)
+        }
         return local(2, 2)
     }
 

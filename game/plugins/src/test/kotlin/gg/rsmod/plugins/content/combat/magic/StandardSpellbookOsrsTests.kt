@@ -110,6 +110,5 @@ class StandardSpellbookOsrsTests {
         assertEquals(ElementalWeakness.Element.FIRE, ElementalWeakness.elementOf(CombatSpell.FIRE_STRIKE))
         assertNull(ElementalWeakness.elementOf(CombatSpell.FLAMES_OF_ZAMORAK))
         assertNull(ElementalWeakness.elementOf(CombatSpell.ICE_BARRAGE))
-        assertNull(ElementalWeakness.elementOf(CombatSpell.WIND_RUSH))
     }
 }

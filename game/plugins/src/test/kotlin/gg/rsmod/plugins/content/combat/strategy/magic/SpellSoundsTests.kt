@@ -10,7 +10,6 @@ import kotlin.test.assertEquals
 class SpellSoundsTests {
     private val unsourced =
         setOf(
-            CombatSpell.WIND_RUSH, CombatSpell.STORM_OF_ARMADYL,
             CombatSpell.MIASMIC_RUSH, CombatSpell.MIASMIC_BURST, CombatSpell.MIASMIC_BLITZ, CombatSpell.MIASMIC_BARRAGE,
             CombatSpell.WEAK_FIRE_BLAST, CombatSpell.WARLOCK_SKELETON_EARTH_STRIKE,
         )

@@ -36,6 +36,15 @@ class BlightedSacksTests {
         val spells = File("src/main/kotlin/gg/rsmod/plugins/content/magic/MagicSpells.kt").readText()
         assertTrue("BlightedSacks.usable(p, spellId)" in spells, "canCast")
         assertTrue("BlightedSacks.consume(p, spellId)" in spells, "removeRunes")
+        assertTrue("BlightedSacks.safeZoneRefusal(p, spellId)" in spells, "a sack in a safe zone names the real reason")
+        assertTrue(
+            "BlightedSacks.syncClient(player)" in File("src/main/kotlin/gg/rsmod/plugins/content/mechanics/pvp/DeadmanHud.kt").readText(),
+            "the spellbook varc follows the safe zones every cycle",
+        )
+        assertTrue(
+            "is missing combat definitions" !in File("src/main/kotlin/gg/rsmod/plugins/content/combat/Combat.kt").readText(),
+            "players never see internal npc ids",
+        )
         assertTrue(
             "MagicSpells.canCast(pawn, requirements.lvl, requirements.runes, spellId = spell.uniqueId)" in
                 File("src/main/kotlin/gg/rsmod/plugins/content/combat/strategy/MagicCombatStrategy.kt").readText(),

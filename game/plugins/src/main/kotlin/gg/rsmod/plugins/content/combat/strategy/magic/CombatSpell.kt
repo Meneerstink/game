@@ -43,18 +43,6 @@ enum class CombatSpell(
      * Standard.
      */
 
-    WIND_RUSH(
-        uniqueId = 3759,
-        componentId = 98,
-        maxHit = 1,
-        castGfx = Graphic(Gfx.WIND_SPELL_CAST, 22),
-        castAnimation = arrayOf(Anims.WIND_SPELL, Anims.WIND_SPELL_WITH_STAFF),
-        projectile = Gfx.WIND_RUSH_PROJ,
-        impactGfx = Graphic(Gfx.WIND_RUSH_IMPACT, 32),
-        autoCastId = 143,
-        experience = 0.2,
-    ),
-
     WIND_STRIKE(
         uniqueId = 15,
         componentId = 25,
@@ -530,18 +518,6 @@ enum class CombatSpell(
         requiredWeapons = intArrayOf(Items.SLAYERS_STAFF, Items.STAFF_OF_LIGHT, Items.STAFF_OF_THE_DEAD, Items.TOXIC_STAFF_UNCHARGED, Items.TOXIC_STAFF_OF_THE_DEAD, Items.STAFF_OF_BALANCE),
         requiredWeaponMessage = "You need to be wielding a slayer's staff or staff of light to cast this spell.",
     ),
-    STORM_OF_ARMADYL(
-        uniqueId = 7699,
-        componentId = 99,
-        maxHit = 16,
-        castGfx = Graphic(457, 0),
-        castAnimation = arrayOf(10546, 10546),
-        projectile = 1019,
-        impactGfx = Graphic(1019, 0),
-        autoCastId = 145,
-        experience = 70.0,
-    ),
-
     /**
      * Ancient Magicks (interface 193).
      *

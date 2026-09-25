@@ -93,7 +93,10 @@ object Pickpocketing {
         targetInfo: PickpocketTarget,
         player: Player,
     ): Boolean {
-        val adjustmentFactor = if (player.hasEquipped(EquipmentType.GLOVES, Items.GLOVES_OF_SILENCE)) 1.05 else 1.0
+        // OSRS Wiki "Thieving cape": "When worn, additional 10% chance of being successful when pickpocketing" (max cape too),
+        // applied like the gloves of silence as a factor on the success chance.
+        val capeFactor = if (gg.rsmod.plugins.content.skills.SkillcapePerks.worn(player, gg.rsmod.plugins.content.skills.Skillcapes.THIEVING)) 1.1 else 1.0
+        val adjustmentFactor = (if (player.hasEquipped(EquipmentType.GLOVES, Items.GLOVES_OF_SILENCE)) 1.05 else 1.0) * capeFactor
         return targetInfo.roll(player.skills.getCurrentLevel(Skills.THIEVING), adjustmentFactor)
     }
 

@@ -85,8 +85,9 @@ class DeadmanRouteGateTests {
         assertTrue(pawn.contains("timers.has(FROZEN_TIMER)"))
         assertTrue(objectPath.contains("player.timers.has(FROZEN_TIMER)"))
 
-        val seeds = read("items/mithril_seeds.plugin.kts")
+        val seeds = read("items/flower_seeds.plugin.kts")
         assertTrue(seeds.contains("Direction.WEST, Direction.EAST, Direction.SOUTH, Direction.NORTH"))
+        assertTrue(seeds.contains("Items.ADAMANT_SEEDS to listOf(Direction.EAST, Direction.WEST, Direction.SOUTH, Direction.NORTH)"), "OSRS Wiki Adamant seeds: east, west, south, north")
         assertTrue(seeds.contains("world.collision.canTraverse"))
         assertTrue(seeds.contains("player.moveTo(tile.step(step))"), "seed displacement must bypass ordinary frozen walking")
 

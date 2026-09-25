@@ -98,6 +98,8 @@ object ItemDefCodec {
         intOverrides: Map<Int, Int> = emptyMap(),
         removedOpcodes: Set<Int> = emptySet(),
         removedParamIds: Set<Int> = emptySet(),
+        /** String params (opcode 249) to set; an existing entry with the same id is replaced. */
+        stringParams: Map<Int, String> = emptyMap(),
     ): ByteArray {
         require(stringOverrides.keys.all { it in STRING_OPCODES }) {
             "Only string opcodes ($STRING_OPCODES) can be overridden by this codec."
@@ -140,6 +142,11 @@ object ItemDefCodec {
                     output.writeByte(missing)
                     writeNullTerminatedString(output, value)
                 }
+                if (249 !in seen && stringParams.isNotEmpty()) {
+                    output.writeByte(249)
+                    output.writeByte(0)
+                    appendStringParams(output, output.writerIndex() - 1, stringParams)
+                }
                 output.writeByte(opcode)
                 break
             }
@@ -147,7 +154,8 @@ object ItemDefCodec {
             // Decoded into a scratch buffer first so a removed opcode can be dropped whole, without
             // this codec ever having to know an opcode's width twice.
             val field = Unpooled.buffer()
-            copyOrOverrideField(input, field, opcode, stringOverrides, shortOverrides, intOverrides, removedParamIds)
+            copyOrOverrideField(input, field, opcode, stringOverrides, shortOverrides, intOverrides, removedParamIds + stringParams.keys)
+            if (opcode == 249 && stringParams.isNotEmpty()) appendStringParams(field, 0, stringParams)
             if (opcode !in removedOpcodes) {
                 output.writeByte(opcode)
                 output.writeBytes(field)
@@ -307,6 +315,20 @@ object ItemDefCodec {
         }
         output.writeByte(kept.size)
         kept.forEach { output.writeBytes(it) }
+    }
+
+    /** Appends [params] as string entries to a params block whose count byte sits at [countIndex] of [block]. */
+    private fun appendStringParams(
+        block: ByteBuf,
+        countIndex: Int,
+        params: Map<Int, String>,
+    ) {
+        block.setByte(countIndex, block.getUnsignedByte(countIndex) + params.size)
+        params.forEach { (id, value) ->
+            block.writeByte(1)
+            block.writeMedium(id)
+            writeNullTerminatedString(block, value)
+        }
     }
 
     private fun readNullTerminatedString(buf: ByteBuf): String {

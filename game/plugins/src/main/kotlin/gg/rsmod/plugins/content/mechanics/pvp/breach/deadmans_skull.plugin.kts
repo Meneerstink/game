@@ -1,5 +1,7 @@
 package gg.rsmod.plugins.content.mechanics.pvp.breach
 
+import gg.rsmod.game.model.entity.zoneTile
+
 import gg.rsmod.game.model.timer.ACTIVE_COMBAT_TIMER
 import gg.rsmod.plugins.api.Spellbook
 import gg.rsmod.plugins.content.magic.Spellbooks
@@ -41,7 +43,7 @@ on_item_option(item = Items.DEADMANS_SKULL, option = "swap") {
                 AncientCurses.switchBook(player, if (curses) AncientCurses.PrayerBook.NORMAL else AncientCurses.PrayerBook.ANCIENT)
             }
             SECOND_OPTION -> {
-                if (!GuardedZones.contains(player.tile) || player.timers.has(ACTIVE_COMBAT_TIMER)) {
+                if (!GuardedZones.contains(player.zoneTile()) || player.timers.has(ACTIVE_COMBAT_TIMER)) {
                     player.message("You can only swap your spellbook in a safe zone while out of combat.")
                     return@queue
                 }

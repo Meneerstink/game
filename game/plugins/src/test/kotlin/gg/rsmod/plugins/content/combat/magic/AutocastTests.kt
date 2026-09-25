@@ -78,10 +78,13 @@ class AutocastTests {
 
     @Test
     fun `every autocastable spell is in the cache layout exactly once and every layout slot is an autocastable spell`() {
-        val fromLayout = AutocastInterfaceLayout.ALL.map { entry -> assertNotNull(Autocast.spellFor(entry), "${entry.name} has no autocast spell") }
+        val live = AutocastInterfaceLayout.ALL.filter { (it.book to it.bookComponent) !in AutocastInterfaceLayout.RETIRED }
+        AutocastInterfaceLayout.ALL.filter { (it.book to it.bookComponent) in AutocastInterfaceLayout.RETIRED }
+            .forEach { assertNull(Autocast.spellFor(it), "${it.name} was removed and must have no spell") }
+        val fromLayout = live.map { entry -> assertNotNull(Autocast.spellFor(entry), "${entry.name} has no autocast spell") }
         assertEquals(fromLayout.size, fromLayout.toSet().size, "a spell sits in two layout slots")
         assertEquals(Autocast.autocastable().toSet(), fromLayout.toSet(), "server autocast table and cache layout differ")
-        AutocastInterfaceLayout.ALL.forEach { entry ->
+        live.forEach { entry ->
             val spell = Autocast.spellFor(entry)!!
             assertEquals(entry.book, spell.interfaceId, "${entry.name} is in the wrong book grid")
         }

@@ -23,10 +23,6 @@ enum class CombinationRune(
     val talisman: Int,
     val rune: Int,
     val altar: Altar,
-    /** Extra item consumed per essence (Aether catalyst), -1 when none. */
-    val catalyst: Int = -1,
-    /** Only craftable under Magic Imbue (no usable talisman). */
-    val requiresImbue: Boolean = false,
 ) {
     MIST_AIR(
         id = Items.MIST_RUNE,
@@ -129,22 +125,7 @@ enum class CombinationRune(
         rune = Items.EARTH_RUNE,
         altar = Altar.FIRE,
     ),
-
-    /*
-     * OSRS import run 2026-09-17, OSRS Wiki "Aether rune" / "Combination rune": pure essence + soul rune + aether catalyst on the
-     * Cosmic Altar, 90 Runecraft, 20 experience; "The use of Magic Imbue is necessary as the true Soul Altar and soul talisman are not
-     * accessible". Daeyalt/guardian essence and scarred extracts do not exist here (N/A).
-     */
-    AETHER_COSMIC(
-        id = Items.AETHER_RUNE,
-        level = 90,
-        xp = 20.0,
-        talisman = Items.SOUL_TALISMAN,
-        rune = Items.SOUL_RUNE,
-        altar = Altar.COSMIC,
-        catalyst = Items.AETHER_CATALYST,
-        requiresImbue = true,
-    ),
+    // Aether runes were removed from the server (owner 2026-09-24: "Verwijder aether rune volledig!").
     ;
 
     companion object {

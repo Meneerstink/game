@@ -1,5 +1,7 @@
 package gg.rsmod.plugins.content.mechanics.pvp
 
+import gg.rsmod.game.model.entity.zoneTile
+
 import gg.rsmod.game.fs.DefinitionSet
 import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.entity.Player
@@ -289,7 +291,7 @@ object LootKeyChest {
         val index = viewedIndex(player) ?: return
         if (LootKeys.slotItems(player, index).isEmpty()) return
         val value = LootKeys.value(player.world.definitions, LootKeys.slotItems(player, index))
-        if (!LootKeys.canDestroyHere(value, AreaState.isDangerous(player.tile))) {
+        if (!LootKeys.canDestroyHere(value, AreaState.isDangerous(player.zoneTile()))) {
             player.message(LootKeys.DESTROY_TOO_VALUABLE_MESSAGE)
             return
         }

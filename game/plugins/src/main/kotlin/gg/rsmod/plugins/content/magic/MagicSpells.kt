@@ -91,6 +91,7 @@ object MagicSpells {
         }
         if (p.getVarbit(INF_RUNES_VARBIT) == 0 && !gg.rsmod.plugins.content.items.osrs.BlightedSacks.usable(p, spellId)) {
             if (runePlan(p, items) == null) {
+                gg.rsmod.plugins.content.items.osrs.BlightedSacks.safeZoneRefusal(p, spellId)?.let { return it }
                 val missing =
                     items.firstOrNull { item ->
                         item.id in RunePouch.RUNES && !usingStaff(p, item.id) &&

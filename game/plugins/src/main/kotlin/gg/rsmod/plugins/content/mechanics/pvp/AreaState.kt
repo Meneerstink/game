@@ -1,5 +1,7 @@
 package gg.rsmod.plugins.content.mechanics.pvp
 
+import gg.rsmod.game.model.entity.zoneTile
+
 import gg.rsmod.game.model.Direction
 import gg.rsmod.game.model.EntityType
 import gg.rsmod.game.model.Tile
@@ -323,7 +325,7 @@ object AreaState {
         // Practice PvP matches are randomly queued (no level-matching) and are a consequence-free
         // sandbox, so a matched pair bypasses both the safe-zone gate and the level-range gate -
         // the same exemption the safe-zone gate already had.
-        return (isPvpAllowed(attacker.tile, home) && isPvpAllowed(target.tile, home) && isWithinCombatLevelRange(attacker, target)) ||
+        return (isPvpAllowed(attacker.zoneTile(), home) && isPvpAllowed(target.zoneTile(), home) && isWithinCombatLevelRange(attacker, target)) ||
             PracticePvp.areMatched(attacker, target)
     }
 
@@ -338,7 +340,7 @@ object AreaState {
     ): Boolean {
         if (BeginnerProtection.isProtected(dead) || BeginnerProtection.isProtected(target)) return false
         val home = dead.world.gameContext.home
-        return (isPvpAllowed(dead.tile, home) && isPvpAllowed(target.tile, home) && isWithinCombatLevelRange(dead, target)) ||
+        return (isPvpAllowed(dead.zoneTile(), home) && isPvpAllowed(target.zoneTile(), home) && isWithinCombatLevelRange(dead, target)) ||
             PracticePvp.areMatched(dead, target)
     }
 }

@@ -28,20 +28,5 @@
     "createdAtMs": 1789861626210,
     "slot": 5,
     "coinsTraded": 0
-  },
-  {
-    "id": 7,
-    "username": "anudd",
-    "type": "BUY",
-    "itemId": 23826,
-    "pricePerItem": 1817,
-    "totalQuantity": 101,
-    "quantityFilled": 101,
-    "status": "COMPLETED",
-    "collectableCoins": 8787,
-    "collectableItems": 101,
-    "createdAtMs": 1790096500435,
-    "slot": 4,
-    "coinsTraded": 174730
   }
 ]

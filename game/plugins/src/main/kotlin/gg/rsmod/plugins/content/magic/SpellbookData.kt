@@ -25,17 +25,6 @@ enum class SpellbookData(
         sound = -1,
         hitSound = -1,
     ),
-    WIND_RUSH(
-        interfaceId = 192,
-        component = 98,
-        uniqueId = 3759,
-        spellType = SpellType.COMBAT_SPELL_TYPE,
-        spellName = "Wind Rush",
-        level = 1,
-        runes = listOf(Item(Items.AIR_RUNE, 2)),
-        sound = Sfx.WINDSTRIKE_CAST_AND_FIRE,
-        hitSound = Sfx.WINDSTRIKE_HIT,
-    ),
     WIND_STRIKE(
         interfaceId = 192,
         component = 25,
@@ -806,18 +795,6 @@ enum class SpellbookData(
         sound = -1,
         hitSound = -1,
     ),
-    STORM_OF_ARMADYL(
-        interfaceId = 192,
-        component = 99,
-        uniqueId = 7699,
-        spellType = SpellType.COMBAT_SPELL_TYPE,
-        spellName = "Storm of Armadyl",
-        level = 77,
-        runes = listOf(Item(Items.ARMADYL_RUNE, 1)),
-        sound = -1,
-        hitSound = -1,
-    ),
-
     /*
      * Ancient Magicks (interface 193). Decoded from the production cache.
      */

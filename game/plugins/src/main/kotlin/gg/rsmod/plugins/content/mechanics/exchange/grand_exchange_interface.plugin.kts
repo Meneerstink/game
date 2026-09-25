@@ -8,7 +8,18 @@ import gg.rsmod.game.model.attr.OBJ_DIALOG_ITEM_ATTR
 val GE = GrandExchangeInterface
 
 on_login {
-    GE.service(player)?.let { GE.refreshAll(player, it) }
+    GE.onLogin(player)
+}
+
+/** "You must choose an item first." with GE_TRADE_ERROR (2009scape plays it for every refused GE action). */
+fun chooseFirst(player: Player) {
+    player.playSound(GrandExchangeSounds.TRADE_ERROR)
+    player.message(GE.MSG_CHOOSE_FIRST)
+}
+
+/** GE_UP_AMOUNT / GE_DOWN_AMOUNT for a quantity or price change. */
+fun amountSound(player: Player, before: Int, after: Int) {
+    GrandExchangeSounds.amountChange(before, after)?.let { player.playSound(it) }
 }
 
 GE.VIEW_OFFER.forEachIndexed { slot, component ->
@@ -22,10 +33,12 @@ GE.MAKE_SELL.forEachIndexed { slot, component -> on_button(GE.MAIN, component) {
 listOf(GE.DECREASE_QUANTITY, GE.INCREASE_QUANTITY, GE.ADD_1, GE.ADD_10, GE.ADD_100, GE.ADD_1000).forEach { component ->
     on_button(GE.MAIN, component) {
         val selection = player.attr[GE.SELECTION_ATTR]?.takeIf { it.itemId != -1 } ?: run {
-            player.message(GE.MSG_CHOOSE_FIRST)
+            chooseFirst(player)
             return@on_button
         }
+        val before = selection.quantity
         selection.quantity = GE.adjustQuantity(selection, component, GE.ownedCount(player, selection.itemId))
+        amountSound(player, before, selection.quantity)
         GE.sendSelection(player, selection)
     }
 }
@@ -33,34 +46,43 @@ listOf(GE.DECREASE_QUANTITY, GE.INCREASE_QUANTITY, GE.ADD_1, GE.ADD_10, GE.ADD_1
 listOf(GE.DECREASE_PRICE, GE.INCREASE_PRICE, GE.PLUS_FIVE_PERCENT, GE.MINUS_FIVE_PERCENT, GE.OFFER_GUIDE_PRICE).forEach { component ->
     on_button(GE.MAIN, component) {
         val selection = player.attr[GE.SELECTION_ATTR]?.takeIf { it.itemId != -1 } ?: run {
-            player.message(GE.MSG_CHOOSE_FIRST)
+            chooseFirst(player)
             return@on_button
         }
+        val before = selection.price
         selection.price = GE.adjustPrice(selection, component)
+        amountSound(player, before, selection.price)
         GE.sendSelection(player, selection)
     }
 }
 
 on_button(GE.MAIN, GE.EDIT_QUANTITY) {
     val selection = player.attr[GE.SELECTION_ATTR]?.takeIf { it.itemId != -1 } ?: run {
-        player.message(GE.MSG_CHOOSE_FIRST)
+        chooseFirst(player)
         return@on_button
     }
     player.queue(TaskPriority.WEAK) {
-        val input = inputInt("Enter amount")
+        // Void "Edit Quantity" prompts.
+        val input = inputInt(if (selection.type == OfferType.SELL) "Enter the amount you wish to sell:" else "Enter the amount you wish to purchase:")
         val max = if (selection.type == OfferType.SELL) GE.ownedCount(player, selection.itemId) else Int.MAX_VALUE
+        val before = selection.quantity
         selection.quantity = input.coerceIn(0, max)
+        amountSound(player, before, selection.quantity)
         GE.sendSelection(player, selection)
     }
 }
 
 on_button(GE.MAIN, GE.EDIT_PRICE) {
     val selection = player.attr[GE.SELECTION_ATTR]?.takeIf { it.itemId != -1 } ?: run {
-        player.message(GE.MSG_CHOOSE_FIRST)
+        chooseFirst(player)
         return@on_button
     }
     player.queue(TaskPriority.WEAK) {
-        selection.price = GE.clampPrice(selection, inputInt("Enter Price"))
+        // Void "Edit Price" prompts.
+        val input = inputInt(if (selection.type == OfferType.SELL) "Enter the price you wish to sell for:" else "Enter the price you wish to buy for:")
+        val before = selection.price
+        selection.price = GE.clampPrice(selection, input)
+        amountSound(player, before, selection.price)
         GE.sendSelection(player, selection)
     }
 }
@@ -96,7 +118,7 @@ on_button(GE.SELL_INVENTORY, GE.SELL_INVENTORY_ITEMS) {
     val selection = player.attr[GE.SELECTION_ATTR] ?: return@on_button
     if (selection.type != OfferType.SELL) return@on_button
     val item = player.inventory[player.getInteractingSlot()] ?: return@on_button
-    GE.select(player, item.id)
+    GE.select(player, item.id, item.amount)
 }
 
 on_obj_dialog {

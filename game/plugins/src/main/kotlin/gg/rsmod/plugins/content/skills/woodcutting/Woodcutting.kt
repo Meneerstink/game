@@ -139,7 +139,10 @@ object Woodcutting {
                 player.filterableMessage(message)
             }
         }
-        if (player.world.random(256) == 1) {
+        // OSRS Wiki "Woodcutting cape": "When worn, additional 10% chance of a bird nest falling while chopping trees" (max cape too).
+        val nestChance =
+            (1.0 / 256) * if (gg.rsmod.plugins.content.skills.SkillcapePerks.worn(player, gg.rsmod.plugins.content.skills.Skillcapes.WOODCUTTING)) 1.1 else 1.0
+        if (player.world.randomDouble() < nestChance) {
             val nest = DropTableFactory.getDrop(player, 10_000) ?: return false
             nest.forEach {
                 val groundItem = GroundItem(it, player.findWesternTile(), player)

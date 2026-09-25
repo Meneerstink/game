@@ -1,0 +1,9 @@
+clan|anudd|0|100|1
+member|anudd|anudd|OWNER|0|0|1790276894305
+set|anudd|guestsCanTalk|0
+set|anudd|coinShare|0
+set|anudd|timeZone|0
+set|anudd|recruiting|0
+set|anudd|clanTime|0
+set|anudd|world|0
+set|anudd|flag|0

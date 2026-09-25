@@ -35,7 +35,10 @@ on_obj_option(obj = Objs.DOOR_2712, option = "open") {
         }
         return@on_obj_option
     }
-    if (player.tile.z <= obj.tile.z && !player.hasEquipped(EquipmentType.HEAD, Items.CHEFS_HAT)) {
+    // OSRS Wiki "Cooking cape": "acts as a substitute for a chef's hat to enter the Cooks' Guild" - every max cape too (SkillcapePerks).
+    if (player.tile.z <= obj.tile.z && !player.hasEquipped(EquipmentType.HEAD, Items.CHEFS_HAT) &&
+        !gg.rsmod.plugins.content.skills.SkillcapePerks.worn(player, gg.rsmod.plugins.content.skills.SkillcapePerks.VariantPerk.COOKS_GUILD)
+    ) {
         player.queue {
             chatNpc(
                 *"You can't come in here unless you're wearing a chef's hat or something like that.".splitForDialogue(),

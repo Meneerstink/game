@@ -91,7 +91,7 @@ class GrandExchangeInterfaceTests {
     }
 
     @Test
-    fun `price stays inside the five percent guide range and quantity follows Novite`() {
+    fun `prices are free like OSRS and quantity follows Novite`() {
         val G = GrandExchangeInterface
         val sel = GeSelection(0, OfferType.BUY, itemId = Items.ABYSSAL_WHIP, quantity = 1, price = 1000, guide = 1000)
         assertEquals(950..1050, G.priceRange(1000))
@@ -99,9 +99,11 @@ class GrandExchangeInterfaceTests {
         assertEquals(950, G.adjustPrice(sel, G.MINUS_FIVE_PERCENT))
         assertEquals(1001, G.adjustPrice(sel, G.INCREASE_PRICE))
         sel.price = 1050
-        assertEquals(1050, G.adjustPrice(sel, G.PLUS_FIVE_PERCENT), "clamped at the top of the range")
-        assertEquals(1050, G.clampPrice(sel, 5000))
-        assertEquals(950, G.clampPrice(sel, 1))
+        assertEquals(1103, G.adjustPrice(sel, G.PLUS_FIVE_PERCENT), "+5% keeps going past the old range")
+        assertEquals(5000, G.clampPrice(sel, 5000))
+        assertEquals(1, G.clampPrice(sel, 1))
+        assertEquals(1, G.clampPrice(sel, 0), "never below 1 coin")
+        assertNull(G.validate(sel.copy(price = 5000)), "an offer far above the guide price is allowed")
         assertEquals(1000, G.adjustPrice(sel, G.OFFER_GUIDE_PRICE))
         assertEquals(1001, G.adjustQuantity(sel, G.ADD_1000, 0))
         val sell = GeSelection(0, OfferType.SELL, itemId = Items.ABYSSAL_WHIP, quantity = 1, price = 1000, guide = 1000)
@@ -111,6 +113,37 @@ class GrandExchangeInterfaceTests {
         assertEquals(G.MSG_CHOOSE_FIRST, G.validate(GeSelection(0, OfferType.BUY)))
         assertEquals(G.MSG_TOO_VALUABLE, G.validate(GeSelection(0, OfferType.BUY, itemId = 1, quantity = 3, price = Int.MAX_VALUE / 2, guide = Int.MAX_VALUE / 2)))
         assertNull(G.validate(sel))
+    }
+
+    @Test
+    fun `offer messages, sounds and the guide price guard`() {
+        val G = GrandExchangeInterface
+        val buy = GrandExchangeOffer(1, "a", OfferType.BUY, Items.ABYSSAL_WHIP, 10, 10, quantityFilled = 4)
+        assertEquals("Grand Exchange: Bought 4 / 10 x Abyssal whip.", G.progressMessage(buy, "Abyssal whip"))
+        assertEquals("Grand Exchange: Finished buying 10 x Abyssal whip.", G.progressMessage(buy.copy(quantityFilled = 10), "Abyssal whip"))
+        val sell = buy.copy(type = OfferType.SELL)
+        assertEquals("Grand Exchange: Sold 4 / 10 x Abyssal whip.", G.progressMessage(sell, "Abyssal whip"))
+        assertEquals("Grand Exchange: Finished selling 10 x Abyssal whip.", G.progressMessage(sell.copy(quantityFilled = 10), "Abyssal whip"))
+
+        assertEquals(GrandExchangeSounds.UP_AMOUNT, GrandExchangeSounds.amountChange(1, 2))
+        assertEquals(GrandExchangeSounds.DOWN_AMOUNT, GrandExchangeSounds.amountChange(2, 1))
+        assertNull(GrandExchangeSounds.amountChange(2, 2))
+        val synth = CacheLibrary("C:/RSPS/reference/openrs2_667/cache")
+        try {
+            (4039..4045).forEach { assertNotNull(synth.index(4).archive(it), "667 synth $it") }
+            assertNotNull(synth.index(11).archive(GrandExchangeSounds.OFFER_UPDATED_JINGLE), "667 jingle 284")
+        } finally {
+            synth.close()
+        }
+        assertEquals(G.EXAMINE_TEXT, 143)
+        assertTrue(LIBRARY.data(3, G.MAIN, G.EXAMINE_TEXT) != null, "105:143 item description text")
+
+        val service = newService()
+        // A 1 gp trade moves the recorded guide at most 5 % (free prices must not steer the house price).
+        assertEquals(950, service.guidedTradePrice(1000, 1))
+        assertEquals(1050, service.guidedTradePrice(1000, 1_000_000))
+        assertEquals(1010, service.guidedTradePrice(1000, 1010))
+        assertEquals(7, service.guidedTradePrice(null, 7))
     }
 
     @Test

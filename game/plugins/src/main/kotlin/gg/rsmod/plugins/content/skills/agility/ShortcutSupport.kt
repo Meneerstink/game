@@ -118,5 +118,9 @@ fun KotlinPlugin.shortcut(
 
 fun Plugin.obstacle(block: suspend QueueTask.(GameObject) -> Unit) {
     val obj = player.getInteractingGameObj()
-    player.lockingQueue(lockState = LockState.FULL) { block(obj) }
+    player.lockingQueue(lockState = LockState.FULL) {
+        // The whole obstacle is one transit: zone rules keep judging the near side until the player is across (Pawn.zoneTile).
+        player.obstacleUntilUnlocked = true
+        block(obj)
+    }
 }

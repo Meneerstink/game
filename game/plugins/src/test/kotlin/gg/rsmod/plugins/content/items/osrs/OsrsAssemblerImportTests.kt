@@ -53,8 +53,10 @@ class OsrsAssemblerImportTests {
         val rule = File("src/main/kotlin/gg/rsmod/plugins/content/combat/strategy/ranged/AvasDevices.kt").readText()
         assertTrue("device && cape == gg.rsmod.plugins.api.cfg.Items.AVAS_ATTRACTOR -> chance in 20..39" in rule)
         // Night run 2026-09-19: the accumulator rule covers Ava's accumulator and the Accumulator max cape (AvasDevices.ACCUMULATORS).
-        assertTrue("device && cape in ACCUMULATORS -> chance in 20..27" in rule)
+        // 2026-09-24: the retrieval effect set (ACCUMULATOR_EFFECT) also holds the Ranging cape (OSRS skillcape perk).
+        assertTrue("device && cape in ACCUMULATOR_EFFECT -> chance in 20..27" in rule)
         assertTrue(Items.AVAS_ACCUMULATOR in AvasDevices.ACCUMULATORS)
+        assertTrue(AvasDevices.ACCUMULATORS.all { it in AvasDevices.ACCUMULATOR_EFFECT })
         // Batch capes: every assembler (Masori assembler, assembler max capes, each (l)) shares the rule through AvasDevices.ASSEMBLERS.
         assertTrue("device && cape in ASSEMBLERS -> false" in rule, "assembler: 80 % recovered, never dropped")
         assertTrue(Items.AVAS_ASSEMBLER in AvasDevices.ASSEMBLERS && Items.AVAS_ASSEMBLER_L in AvasDevices.ASSEMBLERS)

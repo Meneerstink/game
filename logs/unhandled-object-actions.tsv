@@ -194,3 +194,27 @@ button	51	51	button	3	interface=746 opcode=61	0	0	0	0	0
 button	43	43	button	3	interface=746 opcode=61	0	0	0	0	0
 button	174	174	button	3	interface=746 opcode=61	0	0	0	0	0
 button	176	176	button	3	interface=746 opcode=61	0	0	0	0	0
+button	129	129	button	3	interface=548 opcode=61	0	0	0	0	0
+button	133	133	button	3	interface=548 opcode=61	0	0	0	0	0
+button	182	182	button	3	interface=548 opcode=61	0	0	0	0	0
+button	129	129	button	3	interface=548 opcode=61	0	0	0	0	0
+button	133	133	button	3	interface=548 opcode=61	0	0	0	0	0
+button	130	130	button	3	interface=548 opcode=61	0	0	0	0	0
+button	101	101	button	3	interface=548 opcode=61	0	0	0	0	0
+button	27	27	button	3	interface=1109 opcode=61	0	0	0	0	0
+button	102	102	button	3	interface=548 opcode=61	0	0	0	0	0
+button	22	22	button	3	interface=751 opcode=61	0	0	0	0	0
+button	28	28	button	3	interface=751 opcode=61	0	0	0	0	0
+button	25	25	button	3	interface=751 opcode=61	0	0	0	0	0
+button	136	136	button	3	interface=548 opcode=61	0	0	0	0	0
+button	182	182	button	3	interface=548 opcode=61	0	0	0	0	0
+button	19	19	button	3	interface=751 opcode=61	0	0	0	0	0
+button	22	22	button	3	interface=751 opcode=61	0	0	0	0	0
+button	28	28	button	3	interface=751 opcode=61	0	0	0	0	0
+button	8	8	button	3	interface=751 opcode=61	0	0	0	0	0
+button	118	118	button	3	interface=1096 opcode=61	0	0	0	0	0
+button	413	413	button	3	interface=1096 opcode=61	0	0	0	0	0
+item-on-item	22717	22717	item	22717	from_slot=3 to_slot=3 from_component=679:0 to_component=679:0	0	0	0	0	0
+item-on-npc	22717	22717	item	-1	target=9 tile=Tile{x=2967, z=3384, height=0}	0	0	0	0	0
+button	8	8	button	3	interface=261 opcode=61	0	0	0	0	0
+button	49	49	button	3	interface=743 opcode=61	0	0	0	0	0

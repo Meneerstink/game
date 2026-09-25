@@ -107,7 +107,6 @@ class SpellbookRegistryTests {
                 CombatSpell.BIND to 20,
                 CombatSpell.ENTANGLE to 79,
                 CombatSpell.TELEPORT_BLOCK to 85,
-                CombatSpell.STORM_OF_ARMADYL to 77,
             )
         expected.forEach { (spell, level) ->
             assertEquals("${spell.name} level", level, MagicSpells.getMetadata(spell.uniqueId)!!.lvl)
