@@ -12,13 +12,13 @@ import java.io.File
  * map markers, the ring section, trees and spirit tree come back exactly as they were, and prepares the centre instead.
  *
  * The hall (floor x [FLOOR_MIN_X]-[FLOOR_MAX_X], z [FLOOR_MIN_Z]-[FLOOR_MAX_Z], walls on the ring of tiles around it; see
- * `ge_home_hall.plugin.kts`) is centred on the exchange's fountain. The centre is flat terrain (height 40) under raised
- * plane-1 paving (bridge flag) and the four big paving models 47606/47607/47909/47911, whose surface is 4-13 units up.
+ * `ge_home_hall.plugin.kts`) is centred on the exchange's fountain. The centre is flat grass terrain (height 40) under an
+ * invisible raised walk surface (plane 1, bridge flag, overlay 124 = magenta, not drawn); everything players see there is
+ * the four 10 x 10 paving models 47606/47607/47909/47911. They are replaced by RoyalHallLocTool's copies without the
+ * hall's floor ([RoyalHallLocTool.CUTS]), so the paving runs on under the walls and all round the hall unchanged.
  * For every tile of [MIN_X]..[MAX_X] x [MIN_Z]..[MAX_Z] this tool:
  *  - removes the plane-1 surface (bridge flag, overlay and underlay), so the hall has one floor level;
- *  - raises plane 0 by [FLOOR_RAISE] (to the old bridge level, above the paving models) under the floor, and lays white
- *    marble ([MARBLE_OVERLAY]) on the floor and the doorways; the other wall-ring tiles keep the paving they showed
- *    (the plane-1 overlay moves down), so no marble apron shows outside the walls;
+ *  - lays white marble ([MARBLE_OVERLAY]) on the floor; the wall-ring tiles keep their ground (under the paving);
  *  - sets the heights of levels 1-3 for the second storey and the slate roof ([STOREY_STEPS]) and marks the floor and
  *    doorway tiles "remove roof" (tile flag 4), so with the client's selective roof removal the roof shows from outside
  *    and disappears when a player walks in.
@@ -51,9 +51,6 @@ object RoyalHallMapTool {
     private const val MAX_Z = FLOOR_MAX_Z + 1
     private val SIDE_DOORS = 3490..3493
     private val SOUTH_DOOR = 3163..3166
-
-    /** Plane-0 height units (x8) the floor rises: 2 = 16, the raised paving's level, above the paving models. */
-    private const val FLOOR_RAISE = 2
 
     /** Overlay definition 243 (texture 1112, white marble with an inlaid pattern), written +1 as the map stores overlays. */
     private const val MARBLE_OVERLAY = 244
@@ -94,7 +91,6 @@ object RoyalHallMapTool {
             val tiles = Rev667TileCodec.decode(pristineMap)
             check(Rev667TileCodec.encode(tiles).contentEquals(pristineMap)) { "map tile round-trip failed" }
 
-            var raised = 0
             var paved = 0
             var unbridged = 0
             var roofed = 0
@@ -103,21 +99,11 @@ object RoyalHallMapTool {
                 val upper = tiles.tiles[1][x - rx * 64][z - rz * 64]
                 val floor = x in FLOOR_MIN_X..FLOOR_MAX_X && z in FLOOR_MIN_Z..FLOOR_MAX_Z
                 val doorway = (x == MIN_X || x == MAX_X) && z in SIDE_DOORS || z == MIN_Z && x in SOUTH_DOOR
-                // A tile's height is its south-west corner, so the floor's corners are the floor tiles plus the east and
-                // north wall-ring tiles; the west and south wall-ring tiles slope up under their walls.
-                if (x >= FLOOR_MIN_X && z >= FLOOR_MIN_Z) {
-                    ground.height += FLOOR_RAISE
-                    raised++
-                }
-                if (floor || doorway) {
+                if (floor) {
                     ground.overlayId = MARBLE_OVERLAY
                     ground.overlayShape = 0
                     ground.overlayRotation = 0
                     paved++
-                } else if (upper.overlayId != 0) {
-                    ground.overlayId = upper.overlayId
-                    ground.overlayShape = upper.overlayShape
-                    ground.overlayRotation = upper.overlayRotation
                 }
                 ground.flags = ground.flags and BLOCKED.inv()
                 if (upper.flags and BRIDGE != 0) unbridged++
@@ -142,7 +128,7 @@ object RoyalHallMapTool {
                         mapArchive.id,
                         0,
                         updatedMap,
-                        "Royal Hall (GE centre, north-east restored): raise $raised, pave $paved, unbridge $unbridged, roof flags $roofed tiles in $MIN_X,$MIN_Z..$MAX_X,$MAX_Z",
+                        "Royal Hall (GE centre, north-east restored): pave $paved, unbridge $unbridged, roof flags $roofed tiles in $MIN_X,$MIN_Z..$MAX_X,$MAX_Z",
                         CacheItemProbeTool.sha1(mapBytes),
                     )
             }
@@ -155,7 +141,14 @@ object RoyalHallMapTool {
             val inHall = { l: Rev667Loc -> rx * 64 + l.localX in MIN_X..MAX_X && rz * 64 + l.localZ in MIN_Z..MAX_Z }
             val removed = locs.filter { inHall(it) && (it.id in REMOVED_IDS || it.type == 22 && it.id != KEPT_MARKER) }
             removed.groupBy { it.id }.forEach { (id, list) -> println("REMOVE $id x${list.size}") }
-            val kept = locs - removed.toSet()
+            val cuts = RoyalHallLocTool.CUTS.associateBy { Triple(it.source, it.x, it.z) }
+            var swapped = 0
+            val kept =
+                (locs - removed.toSet()).map { loc ->
+                    val cut = cuts[Triple(loc.id, rx * 64 + loc.localX, rz * 64 + loc.localZ)]
+                    if (cut == null || loc.plane != 0) loc else Rev667Loc(cut.id, loc.localX, loc.localZ, loc.plane, loc.type, loc.rotation).also { swapped++ }
+                }
+            check(swapped == cuts.size) { "expected ${cuts.size} paving models, swapped $swapped" }
             kept.filter(inHall).forEach { println("REMAINS ${it.id} type=${it.type} at ${rx * 64 + it.localX},${rz * 64 + it.localZ},${it.plane}") }
             val updatedLocs = Rev667LocCodec.encode(kept)
             if (!updatedLocs.contentEquals(locBytes)) {
@@ -165,12 +158,12 @@ object RoyalHallMapTool {
                         locArchive.id,
                         0,
                         updatedLocs,
-                        "Royal Hall (GE centre, north-east restored): remove ${removed.size} planters, fences, canopy, fountain and decals",
+                        "Royal Hall (GE centre, north-east restored): remove ${removed.size} planters, fences, canopy, fountain and decals, $swapped paving models without the floor",
                         CacheItemProbeTool.sha1(locBytes),
                         xtea = key,
                     )
             }
-            println("ROYAL_HALL_MAP raised=$raised paved=$paved unbridged=$unbridged roofed=$roofed locsRemoved=${removed.size}")
+            println("ROYAL_HALL_MAP swapped=$swapped paved=$paved unbridged=$unbridged roofed=$roofed locsRemoved=${removed.size}")
         } finally {
             library.close()
         }

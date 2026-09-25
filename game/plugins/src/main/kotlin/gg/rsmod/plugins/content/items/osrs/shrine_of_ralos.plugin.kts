@@ -14,7 +14,8 @@ import gg.rsmod.game.model.item.ItemAttribute
  */
 val SHRINE_OF_RALOS = 62746
 
-spawn_obj(obj = SHRINE_OF_RALOS, x = 3158, z = 3499, type = 10, rot = 0)
+// Centred on the Royal Hall's north facade (x 3163-3166), between its flowerbeds (data/cfg/home_decor.txt).
+spawn_obj(obj = SHRINE_OF_RALOS, x = 3163, z = 3499, type = 10, rot = 0)
 
 on_obj_option(obj = SHRINE_OF_RALOS, option = "Bask") {
     player.queue {

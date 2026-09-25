@@ -45,6 +45,81 @@ object RoyalHallLocTool {
             Copy(62758, FOUNTAIN, null, "Royal Hall fountain (exact copy of the Grand Exchange fountain 47150)"),
         )
 
+    /**
+     * The Grand Exchange's visible paving in the centre is four 10 x 10 models (the plane-1 floor there is an invisible
+     * walk surface, overlay 124). The hall's floor is cut out of copies of them: [newModel] is [model] with every face
+     * whose centre lies on the hall's floor collapsed to a point, and loc [id] is [source] showing [newModel].
+     * RoyalHallMapTool puts the copies in place of the originals at ([x], [z]).
+     */
+    class Cut(val id: Int, val source: Int, val model: Int, val newModel: Int, val x: Int, val z: Int)
+
+    val CUTS =
+        listOf(
+            Cut(62759, 47606, 19802, 65428, 3155, 3492),
+            Cut(62760, 47607, 19805, 65429, 3165, 3492),
+            Cut(62761, 47909, 19817, 65430, 3155, 3482),
+            Cut(62762, 47911, 19860, 65431, 3165, 3482),
+        )
+    private const val CUT_SIZE = 10
+    private const val MODEL_INDEX = 7
+
+    /**
+     * [data] (a rev-667 mesh with the version byte, footer -1 -1) with the faces over the hall floor collapsed; returns
+     * the new mesh and the number of faces cut. Version 13+ meshes use 512 units per tile (the client scales them by
+     * 1/4), centred on the loc's footprint; +z is north.
+     */
+    fun cutModel(data: ByteArray, locX: Int, locZ: Int): Pair<ByteArray, Int> {
+        val version = data[data.size - 24].toInt() and 0xFF
+        check(data[data.size - 23 + 5].toInt() and 0x8 != 0 && version >= 13) { "expected a version-13+ mesh" }
+        val model = Rev667ModelDecoder.decode(data)
+        val unitsPerTile = 512.0
+        var cut = 0
+        for (f in 0 until model.faceCount) {
+            val a = model.faceA[f]
+            val b = model.faceB[f]
+            val c = model.faceC[f]
+            val cx = locX + CUT_SIZE / 2.0 + (model.vertexX[a] + model.vertexX[b] + model.vertexX[c]) / 3.0 / unitsPerTile
+            val cz = locZ + CUT_SIZE / 2.0 + (model.vertexZ[a] + model.vertexZ[b] + model.vertexZ[c]) / 3.0 / unitsPerTile
+            val onFloor =
+                cx >= RoyalHallMapTool.FLOOR_MIN_X && cx < RoyalHallMapTool.FLOOR_MAX_X + 1 &&
+                    cz >= RoyalHallMapTool.FLOOR_MIN_Z && cz < RoyalHallMapTool.FLOOR_MAX_Z + 1
+            if (onFloor) {
+                model.faceB[f] = a
+                model.faceC[f] = a
+                cut++
+            }
+        }
+        // The encoder writes a version-12 trailer; put the version byte back in front of it and flag it (bit 3).
+        val encoded = Rev667ModelEncoder.encode(model)
+        val body = encoded.copyOf(encoded.size - 23)
+        val trailer = encoded.copyOfRange(encoded.size - 23, encoded.size)
+        trailer[5] = (trailer[5].toInt() or 0x8).toByte()
+        return (body + byteArrayOf(version.toByte()) + trailer) to cut
+    }
+
+    /** [def] with every opcode-1 model id [from] replaced by [to]. */
+    fun withModel(id: Int, def: ByteArray, from: Int, to: Int): ByteArray {
+        val at = opcodePosition(id, def, 1)
+        check(at >= 0) { "loc $id has no opcode 1" }
+        val out = def.copyOf()
+        var p = at + 1
+        var replaced = 0
+        repeat(out[p++].toInt() and 0xFF) {
+            p++ // shape
+            repeat(out[p++].toInt() and 0xFF) {
+                val model = ((out[p].toInt() and 0xFF) shl 8) or (out[p + 1].toInt() and 0xFF)
+                if (model == from) {
+                    out[p] = (to shr 8).toByte()
+                    out[p + 1] = to.toByte()
+                    replaced++
+                }
+                p += 2
+            }
+        }
+        check(replaced > 0) { "loc $id does not use model $from" }
+        return out
+    }
+
     /** Returns [def] with its opcode-71 (vertical offset) set to [offset], inserted before the terminator when absent. */
     fun withOffset(id: Int, def: ByteArray, offset: Int): ByteArray {
         val at = opcodePosition(id, def, 71)
@@ -131,6 +206,27 @@ object RoyalHallLocTool {
                     else -> error("loc ${copy.id} already exists with other content; refusing to overwrite it")
                 }
                 mutations += CacheMutation(LOC_INDEX, copy.id ushr 8, copy.id and 0xFF, wanted, copy.label, null)
+            }
+            CUTS.forEach { cut ->
+                val source = library.data(MODEL_INDEX, cut.model, 0) ?: error("model ${cut.model} missing")
+                val (mesh, faces) = cutModel(source, cut.x, cut.z)
+                val back = Rev667ModelDecoder.decode(mesh)
+                val orig = Rev667ModelDecoder.decode(source)
+                check(back.vertexCount == orig.vertexCount && back.faceCount == orig.faceCount) { "model ${cut.newModel} changed its size" }
+                val currentMesh = library.data(MODEL_INDEX, cut.newModel, 0)
+                println("MODEL ${cut.newModel} = ${cut.model} with $faces of ${orig.faceCount} faces cut (${if (currentMesh == null) "create" else if (currentMesh.contentEquals(mesh)) "in place" else "REPLACE"})")
+                if (currentMesh == null || !currentMesh.contentEquals(mesh)) {
+                    mutations += CacheMutation(MODEL_INDEX, cut.newModel, 0, mesh, "Royal Hall floor cut from GE paving model ${cut.model}", currentMesh?.let { CacheItemProbeTool.sha1(it) })
+                }
+                val def = library.data(LOC_INDEX, cut.source ushr 8, cut.source and 0xFF) ?: error("loc ${cut.source} missing")
+                val wanted = withModel(cut.source, def, cut.model, cut.newModel)
+                val current = library.data(LOC_INDEX, cut.id ushr 8, cut.id and 0xFF)
+                when {
+                    current == null -> println("CREATE loc ${cut.id} = ${cut.source} showing model ${cut.newModel}")
+                    current.contentEquals(wanted) -> return@forEach println("LOC ${cut.id} already in place")
+                    else -> error("loc ${cut.id} already exists with other content; refusing to overwrite it")
+                }
+                mutations += CacheMutation(LOC_INDEX, cut.id ushr 8, cut.id and 0xFF, wanted, "Royal Hall paving ${cut.id} (${cut.source} without the hall floor)", null)
             }
         } finally {
             library.close()

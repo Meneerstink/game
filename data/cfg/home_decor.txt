@@ -590,3 +590,28 @@ obj 30578 3162 3484
 obj 30578 3167 3484
 obj 563 3156 3494 0 10 1
 obj 15611 3156 3489 0 10 1
+# ---- surroundings (owner 2026-09-25: "improve the surroundings so the building is natural", "make it visually more
+# beautifull"): the exchange's paving runs up to the walls (RoyalHallLocTool CUTS); flowerbeds line the facades, black
+# lamp posts stand on the four corners, 78 standards flank the east door like the statues flank the west one, and the
+# Shrine of Ralos (shrine_of_ralos.plugin.kts) is centred on the north facade between two flowerbeds
+obj 2163 3156 3484 0 10 0
+obj 2163 3173 3484 0 10 0
+obj 2163 3156 3499 0 10 0
+obj 2163 3173 3499 0 10 0
+obj 27074 3159 3499 0 10 0
+obj 27074 3168 3499 0 10 0
+obj 1199 3158 3499 0 10 0
+obj 1199 3171 3499 0 10 0
+obj 27074 3156 3486 0 10 1
+obj 27074 3156 3495 0 10 1
+obj 27074 3173 3486 0 10 1
+obj 27074 3173 3495 0 10 1
+obj 62750 3173 3489 0 10 0
+obj 62750 3173 3494 0 10 0
+obj 1199 3158 3484 0 10 0
+obj 1199 3159 3484 0 10 0
+obj 1199 3170 3484 0 10 0
+obj 1199 3171 3484 0 10 0
+# inside: the exchange's potted shrubs either side of the south door
+obj 47153 3162 3486 0 10 0
+obj 47153 3167 3486 0 10 0
