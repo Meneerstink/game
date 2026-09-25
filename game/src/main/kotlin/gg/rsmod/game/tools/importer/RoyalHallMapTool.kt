@@ -136,16 +136,20 @@ object RoyalHallMapTool {
                         upper.flags = REMOVE_ROOF
                         gallery++
                     } else {
-                        upper.flags = BLOCKED
+                        upper.flags = BLOCKED or REMOVE_ROOF
                     }
+                } else {
+                    // The wall ring on level 1 carries the upper storey's walls: part of the building for roof removal.
+                    upper.flags = REMOVE_ROOF
                 }
                 // Storey heights for the second storey and the roof (client: level height = level below - value * 8).
                 for (level in 1..3) tiles.tiles[level][x - rx * 64][z - rz * 64].height = STOREY_STEPS[level - 1]
-                // Selective roof removal: standing on the hall's floor or in a doorway hides the upper storey and roof.
-                if (floor || doorway) {
-                    ground.flags = ground.flags or REMOVE_ROOF
-                    roofed++
-                }
+                // Selective roof removal (client Static409 flood fill over flag-4 tiles): the whole footprint, wall ring
+                // included, is the building. The hall's walls stand on the ring outside the floor (the reverse of the
+                // game's own buildings), so an unflagged ring kept its upper walls and parapet on screen from inside and
+                // stopped the fill from reaching the roof over the open centre when upstairs.
+                ground.flags = ground.flags or REMOVE_ROOF
+                roofed++
             }
             val updatedMap = Rev667TileCodec.encode(tiles)
             if (!updatedMap.contentEquals(mapBytes)) {

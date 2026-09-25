@@ -76,6 +76,10 @@ object RoyalHallLocTool {
     const val ICON_SPRITE = 8193
     const val ICON_ELEMENT = 1107
     const val ICON_LOC = 62767
+    private const val WORLD_MAP_INDEX = 23
+    private const val STATIC_ELEMENTS = "main_staticelements"
+    private const val ICON_TILE_X = 3164
+    private const val ICON_TILE_Z = 3491
     private const val GE_ELEMENT = 637
     private const val GE_MARKER = 27990
     private const val SPRITE_INDEX = 8
@@ -206,8 +210,51 @@ object RoyalHallLocTool {
         return byteArrayOf(41, 1, 0, VARROCK_CARPET_TEXTURE.toByte(), (CARPET_TEXTURE shr 8).toByte(), CARPET_TEXTURE.toByte()) + out
     }
 
+    /**
+     * The royal roof: the Legends' Guild slate 41409 recoloured to deep royal-blue slate (its four slate tints, same
+     * lightness) with gilded ridge beams (the wood faces 1710/1714/1718 tinted gold). Rings 3-5 ([COPIES]) derive from it.
+     */
+    private val ROYAL_SLATE_TINTS = mapOf(0x201c to 0xAD9C, 0x2014 to 0xAD94, 0x200c to 0xAD8C, 0x2008 to 0xAD88)
+    private val GILDED_RIDGE = listOf(0x1710 to 0x2396, 0x1714 to 0x239C, 0x1718 to 0x23A2)
+
+    fun royalSlate(def: ByteArray): ByteArray {
+        val at = opcodePosition(SLATE, def, 40)
+        check(at >= 0) { "slate has no recolour" }
+        val pairs = def[at + 1].toInt() and 0xFF
+        val out = java.io.ByteArrayOutputStream()
+        out.write(def, 0, at)
+        out.write(40)
+        out.write(pairs + GILDED_RIDGE.size)
+        for (i in 0 until pairs) {
+            val p = at + 2 + i * 4
+            val dst = ((def[p + 2].toInt() and 0xFF) shl 8) or (def[p + 3].toInt() and 0xFF)
+            val royal = ROYAL_SLATE_TINTS[dst] ?: error("unexpected slate tint ${dst.toString(16)}")
+            out.write(def, p, 2)
+            out.write(royal shr 8)
+            out.write(royal and 0xFF)
+        }
+        GILDED_RIDGE.forEach { (src, dst) ->
+            out.write(src shr 8)
+            out.write(src and 0xFF)
+            out.write(dst shr 8)
+            out.write(dst and 0xFF)
+        }
+        val rest = at + 2 + pairs * 4
+        out.write(def, rest, def.size - rest)
+        return out.toByteArray()
+    }
+
+    /** [def] made see-through for projectiles (opcode 18), so npcs behind it are talked to across it like a bank booth. */
+    private fun counterReach(def: ByteArray): ByteArray {
+        check(opcodePosition(0, def, 18) < 0) { "already see-through" }
+        return byteArrayOf(18) + def
+    }
+
     val VARIANTS =
         listOf(
+            Variant(62771, 43953, "Royal Hall stall counter: carved mahogany desk 43953 (3x1), see-through", ::counterReach),
+            Variant(62772, 41215, "Royal Hall stall counter: mahogany corner desk 41215 (1x1), see-through", ::counterReach),
+            Variant(62773, SLATE, "Royal Hall royal-blue slate roof with gilded ridges (41409 recoloured)", ::royalSlate),
             Variant(62768, 15548, "78 carpet corner (Varrock carpet 15548 with the 78 texture)", ::with78Carpet),
             Variant(62769, 15549, "78 carpet edge (Varrock carpet 15549 with the 78 texture)", ::with78Carpet),
             Variant(62770, 15550, "78 carpet middle (Varrock carpet 15550 with the 78 texture)", ::with78Carpet),
@@ -368,7 +415,9 @@ object RoyalHallLocTool {
         try {
             COPIES.forEach { copy ->
                 val source = library.data(LOC_INDEX, copy.source ushr 8, copy.source and 0xFF) ?: error("loc ${copy.source} missing")
-                val wanted = copy.offset?.let { withOffset(copy.source, source, it) } ?: source.copyOf()
+                // The lifted slate rings share the royal roof's colours.
+                val base = if (copy.source == SLATE) royalSlate(source) else source
+                val wanted = copy.offset?.let { withOffset(copy.source, base, it) } ?: base.copyOf()
                 val before = Rev667LocType.decode(copy.source, source)
                 val after = Rev667LocType.decode(copy.id, wanted)
                 check(after.allModels == before.allModels && after.modelsByShape.keys == before.modelsByShape.keys) { "copy ${copy.id} changed its models" }
@@ -376,9 +425,23 @@ object RoyalHallLocTool {
                 when {
                     current == null -> println("CREATE loc ${copy.id} from ${copy.source} offset ${copy.offset}: ${copy.label}")
                     current.contentEquals(wanted) -> return@forEach println("LOC ${copy.id} already in place")
-                    else -> error("loc ${copy.id} already exists with other content; refusing to overwrite it")
+                    else -> println("REPLACE loc ${copy.id} (Royal Hall copy redefined): ${copy.label}")
                 }
-                mutations += CacheMutation(LOC_INDEX, copy.id ushr 8, copy.id and 0xFF, wanted, copy.label, null)
+                mutations += CacheMutation(LOC_INDEX, copy.id ushr 8, copy.id and 0xFF, wanted, copy.label, current?.let { CacheItemProbeTool.sha1(it) })
+            }
+            // The world map draws its icons from its own prebuilt data, not the landscape: the icon joins the main area's
+            // static elements (index 23, group "main_staticelements": one file per icon = u32 packed coord, u16 element,
+            // u8 members), on the fountain beside the Grand Exchange label.
+            val staticGroup = library.index(WORLD_MAP_INDEX).archive(STATIC_ELEMENTS) ?: error("$STATIC_ELEMENTS missing")
+            val coord = (ICON_TILE_X shl 14) or ICON_TILE_Z
+            val staticEntry = byteArrayOf((coord ushr 24).toByte(), (coord ushr 16).toByte(), (coord ushr 8).toByte(), coord.toByte(), (ICON_ELEMENT shr 8).toByte(), ICON_ELEMENT.toByte(), 0)
+            val existing = staticGroup.fileIds().firstOrNull { library.data(WORLD_MAP_INDEX, staticGroup.id, it)?.contentEquals(staticEntry) == true }
+            if (existing != null) {
+                println("WORLD MAP icon already in place (file $existing)")
+            } else {
+                val file = staticGroup.fileIds().maxOrNull()!! + 1
+                println("CREATE world map icon: $STATIC_ELEMENTS file $file, element $ICON_ELEMENT at $ICON_TILE_X,$ICON_TILE_Z")
+                mutations += CacheMutation(WORLD_MAP_INDEX, staticGroup.id, file, staticEntry, "Royal Hall world map icon", null)
             }
             val sprite = StoreArtTool.encode(iconImage())
             val currentSprite = library.data(SPRITE_INDEX, ICON_SPRITE, 0)
