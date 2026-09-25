@@ -15,7 +15,10 @@ import java.io.File
  *  - levels plane 0 to height [FLOOR_HEIGHT] and lays the Grand Exchange paving overlay (188, whole tile), clearing the
  *    walk-block bit so the floor is one flat, walkable surface;
  *  - removes the plane-1 bridge surface (bridge flag, overlay and underlay), so the hall has one floor level instead of a
- *    raised half.
+ *    raised half;
+ *  - sets the heights of levels 1-3 for the second storey and the slate roof ([STOREY_STEPS]) and marks the floor and
+ *    doorway tiles "remove roof" (tile flag 4), so with the client's selective roof removal the roof shows from outside
+ *    and disappears when a player walks in.
  *
  * It also removes the plane-1 content that belonged to the north-east corner: the booth's Grand Exchange (637) and bank
  * (560) map-marker locs, which put their icons on the minimap and world map, the booth's four corner pieces, and the
@@ -37,6 +40,20 @@ object RoyalHallMapTool {
     private const val FLOOR_HEIGHT = 40
     private const val GE_PAVING_OVERLAY = 188
     private const val BLOCKED = 1
+    private const val REMOVE_ROOF = 4
+
+    private const val FLOOR_MIN_X = 3176
+    private const val FLOOR_MAX_X = 3188
+    private const val FLOOR_MIN_Z = 3503
+    private const val FLOOR_MAX_Z = 3514
+
+    /**
+     * Height steps (x8 client units) of levels 1..3 above the one below: 30 = 240, the Legends' Guild wall height, for the
+     * second storey; 31 = 248 puts the roof's eaves (level 2) on top of the second storey's walls; 9 = 72 is the rise of
+     * one ring of the roof set 41409, so the level-3 ring continues the level-2 ring. (Owner 2026-09-25: "geef t gebouw
+     * een dak"; the colonnade's cut beams, about 600 up, now end at the hall's roof line.)
+     */
+    private val STOREY_STEPS = intArrayOf(30, 31, 9)
 
     class Removal(val id: Int, val x: Int, val z: Int, val plane: Int, val type: Int, val label: String)
 
@@ -87,6 +104,8 @@ object RoyalHallMapTool {
             var levelled = 0
             var paved = 0
             var unbridged = 0
+            var storeys = 0
+            var roofed = 0
             for (x in MIN_X..MAX_X) for (z in MIN_Z..MAX_Z) {
                 val ground = tiles.tiles[0][x - rx * 64][z - rz * 64]
                 if (ground.height != FLOOR_HEIGHT) {
@@ -109,6 +128,22 @@ object RoyalHallMapTool {
                     upper.underlayId = 0
                     unbridged++
                 }
+                // Storey heights for the second storey and the roof (client: level height = level below - value * 8).
+                for (level in 1..3) {
+                    val tile = tiles.tiles[level][x - rx * 64][z - rz * 64]
+                    if (tile.height != STOREY_STEPS[level - 1]) {
+                        tile.height = STOREY_STEPS[level - 1]
+                        storeys++
+                    }
+                }
+                // Selective roof removal: standing on the hall's floor or in a doorway hides the upper storey and roof.
+                val inside = x in FLOOR_MIN_X..FLOOR_MAX_X && z in FLOOR_MIN_Z..FLOOR_MAX_Z
+                val doorway = (x == MIN_X || x == MAX_X) && z in 3508..3510 || z == MIN_Z && x in 3181..3183
+                val wanted = if (inside || doorway) ground.flags or REMOVE_ROOF else ground.flags and REMOVE_ROOF.inv()
+                if (ground.flags != wanted) {
+                    ground.flags = wanted
+                    roofed++
+                }
             }
             val updatedMap = Rev667TileCodec.encode(tiles)
             if (!updatedMap.contentEquals(mapBytes)) {
@@ -118,7 +153,7 @@ object RoyalHallMapTool {
                         mapArchive.id,
                         0,
                         updatedMap,
-                        "Royal Hall: level $levelled, pave $paved, unbridge $unbridged tiles in $MIN_X,$MIN_Z..$MAX_X,$MAX_Z",
+                        "Royal Hall: level $levelled, pave $paved, unbridge $unbridged, storey heights $storeys, roof flags $roofed tiles in $MIN_X,$MIN_Z..$MAX_X,$MAX_Z",
                         CacheItemProbeTool.sha1(mapBytes),
                     )
             }
@@ -154,7 +189,7 @@ object RoyalHallMapTool {
                         xtea = key,
                     )
             }
-            println("ROYAL_HALL_MAP levelled=$levelled paved=$paved unbridged=$unbridged locsRemoved=${removed.size}")
+            println("ROYAL_HALL_MAP levelled=$levelled paved=$paved unbridged=$unbridged storeys=$storeys roofed=$roofed locsRemoved=${removed.size}")
         } finally {
             library.close()
         }
