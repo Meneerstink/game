@@ -7,6 +7,8 @@ gen/
 
 /data/saves/
 /data/logs/
+# Audit S-05: the RSA private key must never be in git; RsaService generates one when it is missing.
+data/rsa/*.pem
 
 /plugins/
 

@@ -31,6 +31,12 @@ class IfButtonDHandler : MessageHandler<IfButtonDMessage> {
         val toInterfaceId = toComponentHash shr 16
         val toComponent = toComponentHash - (toInterfaceId shl 16)
 
+        // Audit S-15: both ends of a drag must be interfaces the player has open; the bank could be
+        // rearranged with the bank closed.
+        if (!client.interfaces.isVisible(fromInterfaceId) || !client.interfaces.isVisible(toInterfaceId)) {
+            return
+        }
+
         if (fromInterfaceId != 763 && fromInterfaceId != 762) {
             toSlot = message.dstSlot - 28
         }
@@ -60,7 +66,7 @@ class IfButtonDHandler : MessageHandler<IfButtonDMessage> {
             toComponent,
         )
 
-        if (world.devContext.debugButtons) {
+        if (world.devContext.debugButtons && client.seesDebugOutput()) {
             client.writeConsoleMessage(
                 "Unhandled component to component swap: [from_item=$fromItemId, to_item=$toItemId, from_slot=$fromSlot, to_slot=$toSlot, " +
                     "from_component=[$fromInterfaceId:$fromComponent], to_component=[$toInterfaceId:$toComponent]]",

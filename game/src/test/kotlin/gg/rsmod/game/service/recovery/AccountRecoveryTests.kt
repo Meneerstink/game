@@ -53,4 +53,45 @@ class AccountRecoveryTests {
         recovery.requestReset("anudd")
         assertEquals("Passwords are 5 to 20 letters and numbers.", recovery.resetPassword(world, "anudd", code(sent.single().second), "abc"))
     }
+
+    /** Audit S-08: spacing and case variations are one account, and an open code is never replaced. */
+    @Test
+    fun `ten requests with name variations send one mail and keep the first code valid`() {
+        val (recovery, _, sent) = setup("owner@example.com")
+        listOf("anudd", "Anudd", "anudd ", " anudd", "ANUDD", "anudd  ", "AnUdD", "anudd\t", " Anudd ", "anudd").forEach {
+            recovery.requestReset(it)
+        }
+        assertTrue(sent.size <= AccountRecovery.MAX_CODES_PER_HOUR)
+        assertEquals(1, sent.size)
+        assertEquals("Your password has been changed. You can log in now.", recovery.resetPassword(world, " ANUDD ", code(sent.single().second), "newpass1"))
+    }
+
+    @Test
+    fun `requests are limited per address`() {
+        val (recovery, _, sent) = setup("owner@example.com")
+        repeat(AccountRecovery.MAX_REQUESTS_PER_IP_PER_HOUR) { recovery.requestReset("nobody$it", ip = "1.2.3.4") }
+        // The per-IP budget is used up, so even the real account gets no mail from that address.
+        recovery.requestReset("anudd", ip = "1.2.3.4")
+        assertTrue(sent.isEmpty())
+        recovery.requestReset("anudd", ip = "5.6.7.8")
+        assertEquals(1, sent.size)
+    }
+
+    @Test
+    fun `the save is not rewritten while the account is logged in or logging in`() {
+        val (recovery, dir, sent) = setup("owner@example.com")
+        recovery.requestReset("anudd")
+        val code = code(sent.single().second)
+        assertEquals(
+            "Log out of the game first, then reset your password.",
+            recovery.resetPassword(world, "anudd", code, "newpass1", lockAccount = { null }),
+        )
+        assertTrue(Files.readString(dir.resolve("anudd")).contains("\"old\""), "hash unchanged")
+        val released = mutableListOf<String>()
+        assertEquals(
+            "Your password has been changed. You can log in now.",
+            recovery.resetPassword(world, "anudd", code, "newpass1", lockAccount = { name -> AutoCloseable { released += name } }),
+        )
+        assertEquals(listOf("anudd"), released, "the login slot is given back after the write")
+    }
 }

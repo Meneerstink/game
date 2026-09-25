@@ -43,19 +43,18 @@ class RsaService : Service {
         radix = serviceProperties.getOrDefault("radix", 16)
 
         if (!Files.exists(keyPath)) {
-            val scanner = Scanner(System.`in`)
-            println("Private RSA key was not found in path: $keyPath")
-            println("Would you like to create one? (y/n)")
-
-            val create = if (scanner.hasNext()) scanner.nextLine() in arrayOf("yes", "y", "true") else true
-            if (create) {
-                logger.info("Generating RSA key pair...")
-                createPair(bitCount = serviceProperties.getOrDefault("bit-count", 2048))
-                println("Please follow the instructions on console and continue once you've done so.")
-                scanner.next()
-                init(server, world, serviceProperties)
-            } else {
-                throw RuntimeException("Private RSA key was not found! Please follow the instructions on console.")
+            /*
+             * Audit S-05: the private key is no longer kept in git (.pem files under data/rsa are ignored), so a fresh checkout or
+             * deploy has none. This used to ask a yes/no question on stdin and then block on scanner.next() - a server
+             * started without a console hung at boot. Generate a new pair without asking and log the public modulus,
+             * which the client needs (ClientConfig: the RSA modulus next to BigInteger("10001")); until the client
+             * carries it, logins fail with a bad session id.
+             */
+            logger.warn("Private RSA key was not found in path: {} - generating a new key pair.", keyPath.toAbsolutePath())
+            keyPath.toAbsolutePath().parent?.let { Files.createDirectories(it) }
+            createPair(bitCount = serviceProperties.getOrDefault("bit-count", 2048))
+            if (!Files.exists(keyPath)) {
+                throw IOException("Could not write the new RSA private key to ${keyPath.toAbsolutePath()}.")
             }
         }
 
@@ -113,17 +112,32 @@ class RsaService : Service {
         val privateKey = keyPair.private as RSAPrivateKey
         val publicKey = keyPair.public as RSAPublicKey
 
+        val exponentText = publicKey.publicExponent.toString(radix)
+        val modulusText = publicKey.modulus.toString(radix)
         println("")
         println("Place these keys in the client (find BigInteger(\"10001\" in client code):")
         println("--------------------")
-        println("public key: " + publicKey.publicExponent.toString(radix))
-        println("modulus: " + publicKey.modulus.toString(radix))
+        println("public key: $exponentText")
+        println("modulus: $modulusText")
         println("")
+        logger.warn(
+            "NEW RSA KEY PAIR - put this public modulus (radix {}) in the client, next to exponent {}: {}",
+            radix,
+            exponentText,
+            modulusText,
+        )
 
         try {
             PemWriter(Files.newBufferedWriter(keyPath)).use { writer ->
                 writer.writeObject(PemObject("RSA PRIVATE KEY", privateKey.encoded))
             }
+            // Audit S-05: the public half next to the key, so the owner can copy it into the client. Not a secret.
+            val publicFile = keyPath.resolveSibling("modulus.txt")
+            Files.write(
+                publicFile,
+                listOf("radix=$radix", "exponent=$exponentText", "modulus=$modulusText"),
+            )
+            logger.warn("The client modulus was also written to {}.", publicFile.toAbsolutePath())
         } catch (e: Exception) {
             logger.error(e) { "Failed to write private key to ${keyPath.toAbsolutePath()}" }
         }

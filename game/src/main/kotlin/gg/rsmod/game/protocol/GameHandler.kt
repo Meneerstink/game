@@ -1,6 +1,7 @@
 package gg.rsmod.game.protocol
 
 import gg.rsmod.game.model.World
+import gg.rsmod.game.system.GameSystem
 import gg.rsmod.game.system.LoginSystem
 import gg.rsmod.game.system.ServerSystem
 import gg.rsmod.net.codec.handshake.HandshakeMessage
@@ -8,6 +9,8 @@ import gg.rsmod.net.codec.handshake.HandshakeType
 import io.netty.channel.ChannelHandler
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.ChannelInboundHandlerAdapter
+import io.netty.handler.timeout.IdleState
+import io.netty.handler.timeout.IdleStateEvent
 import io.netty.handler.timeout.ReadTimeoutException
 import io.netty.util.AttributeKey
 import mu.KLogging
@@ -50,6 +53,26 @@ class GameHandler(
         } catch (e: Exception) {
             logger.error("Error reading message $msg from channel ${ctx.channel()}.", e)
         }
+    }
+
+    override fun userEventTriggered(
+        ctx: ChannelHandlerContext,
+        evt: Any,
+    ) {
+        /*
+         * Audit S-06: the IdleStateHandler in ClientChannelInitializer fired its reader-idle event
+         * into a pipeline where nothing reacted, so a socket that never logged in stayed open
+         * forever. A channel that is still idle before reaching the game is closed; a logged-in
+         * player's connection is left to the normal logout/disconnect handling.
+         */
+        if (evt is IdleStateEvent && evt.state() == IdleState.READER_IDLE) {
+            if (ctx.channel().attr(SYSTEM_KEY).get() !is GameSystem) {
+                logger.info("Closing channel idle before login: {}", ctx.channel())
+                ctx.channel().close()
+                return
+            }
+        }
+        super.userEventTriggered(ctx, evt)
     }
 
     override fun exceptionCaught(

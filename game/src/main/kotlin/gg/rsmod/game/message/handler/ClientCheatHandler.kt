@@ -27,18 +27,24 @@ class ClientCheatHandler : MessageHandler<ClientCheatMessage> {
                 null
             }
 
-        log(client, "Command: cmd=%s, args=%s", command, Arrays.toString(args ?: emptyArray<String>()))
+        // Audit S-04: arguments of password commands are never written to the packet or command logs.
+        val loggedArgs = if (command in SENSITIVE_COMMANDS) arrayOf("<redacted>") else args ?: emptyArray()
+        log(client, "Command: cmd=%s, args=%s", command, Arrays.toString(loggedArgs))
 
         val handled = world.plugins.executeCommand(client, command, args)
         if (handled) {
             world.getService(LoggerService::class.java, searchSubclasses = true)?.logCommand(
                 client,
                 command,
-                *
-                    args ?: emptyArray(),
+                *loggedArgs,
             )
         } else {
             client.writeMessage("No valid command found: $command")
         }
+    }
+
+    companion object {
+        /** Commands whose arguments are secrets (passwords, codes). */
+        val SENSITIVE_COMMANDS = setOf("changepass", "confirmemail")
     }
 }

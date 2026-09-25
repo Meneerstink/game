@@ -15,14 +15,20 @@ import gg.rsmod.game.service.rsa.RsaService
 import gg.rsmod.game.service.xtea.XteaKeyService
 import gg.rsmod.util.ServerProperties
 import io.netty.bootstrap.ServerBootstrap
+import io.netty.buffer.ByteBuf
 import io.netty.buffer.PooledByteBufAllocator
+import io.netty.buffer.Unpooled
 import io.netty.channel.Channel
+import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.ChannelInitializer
 import io.netty.channel.ChannelOption
 import io.netty.channel.EventLoopGroup
 import kotlin.concurrent.thread
 import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.nio.NioServerSocketChannel
+import io.netty.handler.codec.LineBasedFrameDecoder
+import io.netty.util.CharsetUtil
+import io.netty.util.ReferenceCountUtil
 import mu.KLogging
 import java.net.InetSocketAddress
 import java.nio.file.Files
@@ -47,6 +53,12 @@ class Server {
     private val ioGroup = NioEventLoopGroup(1)
 
     private val bootstrap = ServerBootstrap()
+
+    /**
+     * Audit S-09: the command port's shared secret (game.yml `commandServer.token`). Blank refuses every command.
+     */
+    @Volatile
+    private var commandServerToken: String = ""
 
     /**
      * Prepares and handles any API related logic that must be handled
@@ -103,7 +115,9 @@ class Server {
                     .childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
                     .childHandler(object : ChannelInitializer<Channel>() {
                         override fun initChannel(ch: Channel) {
-                            ch.pipeline().addLast(NettyTcpSocketHandler(world, ::handleCommand))
+                            // Audit S-09: one command per line, at most 256 bytes; a longer line closes the connection.
+                            ch.pipeline().addLast(LineBasedFrameDecoder(256))
+                            ch.pipeline().addLast(NettyTcpSocketHandler(world, { commandServerToken }, ::handleCommand))
                         }
                     })
                 val serverChannelFuture = serverBootstrap.bind(InetSocketAddress("127.0.0.1", port)).sync()
@@ -130,35 +144,46 @@ class Server {
 
     private class NettyTcpSocketHandler(
         private val world: World,
-        private val commandHandler: (String, World) -> String
+        private val token: () -> String,
+        private val commandHandler: (String, World, (String) -> Unit) -> Unit,
     ) : io.netty.channel.ChannelInboundHandlerAdapter() {
 
-        override fun channelRead(ctx: io.netty.channel.ChannelHandlerContext, msg: Any) {
-            if (msg is io.netty.buffer.ByteBuf) {
-                try {
-                    val command = msg.toString(io.netty.util.CharsetUtil.UTF_8).trim()
-                    logger.info("Received command via TCP: $command")
-
-                    // Command validation and handling logic inlined
-                    val response = when {
-                        command.isBlank() -> "Error: Command cannot be empty."
-                        command.length > 255 -> "Error: Command exceeds maximum length of 255 characters."
-                        else -> try {
-                            commandHandler(command, world)
-                        } catch (e: Exception) {
-                            logger.error("Error executing command via TCP: '${command}': ${e.message}", e)
-                            "Error: An exception occurred while executing the command."
-                        }
-                    }
-
-                    // Write response back to client
-                    val responseBuf = ctx.alloc().buffer()
-                    responseBuf.writeBytes("$response\n".toByteArray(io.netty.util.CharsetUtil.UTF_8))
-                    ctx.writeAndFlush(responseBuf)
-                } finally {
-                    msg.release()
-                }
+        override fun channelRead(ctx: ChannelHandlerContext, msg: Any) {
+            if (msg !is ByteBuf) {
+                ReferenceCountUtil.release(msg)
+                return
             }
+            try {
+                val line = msg.toString(CharsetUtil.UTF_8).trim()
+                // Audit S-09: every line must start with the shared token; it is never logged.
+                val command = CommandServerAuth.authorize(line, token())
+                if (command == null) {
+                    logger.warn("Command server: refused a line without a valid token from {}.", ctx.channel().remoteAddress())
+                    reply(ctx, if (token().isBlank()) "Error: the command server has no token configured (commandServer.token in game.yml)." else "Error: invalid token.")
+                    return
+                }
+                logger.info("Received command via TCP: {}", command)
+                if (command.isBlank()) {
+                    reply(ctx, "Error: Command cannot be empty.")
+                    return
+                }
+                try {
+                    commandHandler(command, world) { response -> reply(ctx, response) }
+                } catch (e: Exception) {
+                    logger.error("Error executing command via TCP: '$command': ${e.message}", e)
+                    reply(ctx, "Error: An exception occurred while executing the command.")
+                }
+            } finally {
+                msg.release()
+            }
+        }
+
+        /** Thread-safe: may be called from the game thread once a command has run there. */
+        private fun reply(
+            ctx: ChannelHandlerContext,
+            response: String,
+        ) {
+            ctx.writeAndFlush(Unpooled.copiedBuffer("$response\n", CharsetUtil.UTF_8))
         }
 
         override fun exceptionCaught(ctx: io.netty.channel.ChannelHandlerContext, cause: Throwable) {
@@ -169,85 +194,109 @@ class Server {
     }
 
     /**
+     * Audit S-09: runs [action] on the game thread and sends its answer to [reply]. The world is
+     * single-threaded; `teleport` used to call moveTo on the Netty thread and `kick` ran in a loose Thread.
+     */
+    private fun onGameThread(
+        world: World,
+        reply: (String) -> Unit,
+        action: () -> String,
+    ) {
+        val game = world.getService(GameService::class.java)
+        if (game == null) {
+            reply("Error: the game service is not running.")
+            return
+        }
+        game.submitGameThreadJob {
+            val response =
+                try {
+                    action()
+                } catch (e: Exception) {
+                    logger.error("Error while handling a command-server action: ${e.message}", e)
+                    "An error occurred while processing your command: ${e.message}"
+                }
+            reply(response)
+        }
+    }
+
+    /**
      * Processes a given command and performs the specified action within the game's world.
      *
      * The method supports commands such as "kick" (to remove a player from the game)
      * and "teleport" (to move a player to a specific location in the game world).
+     * Anything that touches the world runs on the game thread ([onGameThread]).
      *
      * @param command The command string containing the action to be executed along with its arguments.
      * @param world The game world instance, used to interact and manipulate the state of the players.
-     * @return A response string indicating the result of the command execution or an error message if applicable.
+     * @param reply Receives the response string (the result or an error message); may be called from the game thread.
      */
-    private fun handleCommand(command: String, world: World): String {
-        return try {
-            when {
-                command.startsWith("kick") -> {
-                    val username = command.substringAfter(" ").trim()
-                    if (username.isEmpty()) {
-                        return "Invalid usage! Expected: kick <username>"
-                    }
+    private fun handleCommand(
+        command: String,
+        world: World,
+        reply: (String) -> Unit,
+    ) {
+        when {
+            command.startsWith("kick") -> {
+                val username = command.substringAfter(" ").trim()
+                if (username.isEmpty() || username == command) {
+                    reply("Invalid usage! Expected: kick <username>")
+                    return
+                }
+                onGameThread(world, reply) {
                     val player = world.getPlayerForName(username.replace("_", " "))
-                    return if (player != null) {
-                        val response = "Player $username has been kicked."
-                        Thread {
-                            try {
-                                player.apply {
-                                    requestLogout()
-                                    write(LogoutFullMessage())
-                                    channelClose()
-                                }
-                            } catch (e: Exception) {
-                                logger.error("Error during player logout: ${e.message}", e)
-                            }
-                        }.start()
-                        response
+                    if (player != null) {
+                        player.requestLogout()
+                        player.write(LogoutFullMessage())
+                        player.channelClose()
+                        "Player $username has been kicked."
                     } else {
                         "Player $username not found."
                     }
                 }
-                command.startsWith("teleport") -> {
-                    val args = command.substringAfter(" ").split(" ")
-                    if (args.size < 3 || args.size > 4) {
-                        return "Invalid usage! Expected: teleport <username> <x> <z> [height]"
-                    }
-                    val username = args[0]
-                    val x = args[1].toIntOrNull()
-                    val z = args[2].toIntOrNull()
-                    val height = if (args.size == 4) args[3].toIntOrNull() ?: 0 else 0
+            }
+            command.startsWith("teleport") -> {
+                val args = command.substringAfter(" ").split(" ")
+                if (args.size < 3 || args.size > 4) {
+                    reply("Invalid usage! Expected: teleport <username> <x> <z> [height]")
+                    return
+                }
+                val username = args[0]
+                val x = args[1].toIntOrNull()
+                val z = args[2].toIntOrNull()
+                val height = if (args.size == 4) args[3].toIntOrNull() ?: 0 else 0
 
-                    if (x == null || z == null) {
-                        return "Invalid coordinates! <x> and <z> must be integers."
-                    }
+                if (x == null || z == null) {
+                    reply("Invalid coordinates! <x> and <z> must be integers.")
+                    return
+                }
 
+                onGameThread(world, reply) {
                     val player = world.getPlayerForName(username.replace("_", " "))
-                    return if (player != null) {
+                    if (player != null) {
                         player.moveTo(Tile(x, z, height))
                         "Player $username has been teleported to [$x, $z, $height]."
                     } else {
                         "Player $username not found."
                     }
                 }
-                command == "object_inventory" -> {
-                    ObjectCensus.writeCsv(world)
-                }
-                command == "shutdown" -> {
-                    // Used by Start-RSPS.ps1 for a real graceful stop: System.exit runs the
-                    // Launcher shutdown hook (player saves + service termination). taskkill
-                    // without /F cannot stop a windowless JVM on Windows, so the launcher used
-                    // to fall back to a hard kill that skipped the saves.
-                    logger.info { "Shutdown requested via command server - saving players and exiting." }
-                    thread(start = true, name = "CommandShutdown") {
-                        Thread.sleep(250)
-                        System.exit(0)
-                    }
-                    "Shutting down: players are being saved."
-                }
-                //TODO: Add moderation commands once report abuse interface is finished.
-                else -> "Unknown command: $command"
             }
-        } catch (e: Exception) {
-            logger.error("Error while handling command: '$command'. Exception: ${e.message}", e)
-            "An error occurred while processing your command: ${e.message}"
+            command == "object_inventory" -> {
+                onGameThread(world, reply) { ObjectCensus.writeCsv(world) }
+            }
+            command == "shutdown" -> {
+                // Used by Start-RSPS.ps1 for a real graceful stop: System.exit runs the
+                // Launcher shutdown hook (player saves + service termination). taskkill
+                // without /F cannot stop a windowless JVM on Windows, so the launcher used
+                // to fall back to a hard kill that skipped the saves.
+                logger.info { "Shutdown requested via command server - saving players and exiting." }
+                thread(start = true, name = "CommandShutdown") {
+                    Thread.sleep(250)
+                    System.exit(0)
+                }
+                reply("Shutting down: players are being saved.")
+            }
+            //TODO: Add moderation commands once report abuse interface is finished.
+            else -> reply("Unknown command: $command")
         }
     }
 
@@ -288,6 +337,10 @@ class Server {
          */
         val commandServerConfig = gameProperties.get<Map<String, Any>>("commandServer")
         val tcpPort = commandServerConfig?.get("tcpPort") as? Int ?: 50017
+        commandServerToken = (commandServerConfig?.get("token") as? String)?.trim().orEmpty()
+        if (commandServerToken.isBlank()) {
+            logger.warn("commandServer.token is not set in game.yml: the command port (shutdown/kick/teleport) refuses every command.")
+        }
 
         /*
          * Create a game context for our configurations and services to run.
@@ -331,7 +384,8 @@ class Server {
                 debugItemActions = devProperties.getOrDefault("debug-items", false),
                 debugMagicSpells = devProperties.getOrDefault("debug-spells", false),
                 debugInteractions = devProperties.getOrDefault("debug-interactions", false),
-                debugNpcCensus = devProperties.getOrDefault("debug-npc-census", true),
+                // Audit S-12: off unless dev-settings.yml switches it on.
+                debugNpcCensus = devProperties.getOrDefault("debug-npc-census", false),
             )
 
         val world = World(gameContext, devContext)
@@ -444,6 +498,8 @@ class Server {
                 rsaModulus = rsaService?.getModulus(),
                 filestore = world.filestore,
                 world = world,
+                maxConnectionsPerIp =
+                    gameProperties.getOrDefault("max-connections-per-ip", ClientChannelInitializer.DEFAULT_MAX_CONNECTIONS_PER_IP),
             )
 
         bootstrap.group(acceptGroup, ioGroup)

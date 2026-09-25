@@ -1,8 +1,10 @@
+# Audit S-12: all debug output is off in production. When switched on it is shown only to players
+# with the "dev" power (owner privilege), never to normal players.
 debug-examines: false
-debug-objects: true
-debug-buttons: true
-debug-items: true
-debug-spells: true
+debug-objects: false
+debug-buttons: false
+debug-items: false
+debug-spells: false
 # Audit findings 6/7: log the packet -> target/option -> queue/interrupt -> route ->
 # distance/sight -> handler chain for pawn (double-click) and object (bank-distance)
 # interactions, so a real reproduction with a client pinpoints the exact cancellation
@@ -10,4 +12,5 @@ debug-spells: true
 debug-interactions: false
 # R04.2: dump the full NPC census (all cache definitions, not just spawned) to
 # ./npc_inventory.csv once on every boot, after world init - no owner login needed.
-debug-npc-census: true
+# Audit S-12: off by default (it wrote CSVs on every production boot).
+debug-npc-census: false

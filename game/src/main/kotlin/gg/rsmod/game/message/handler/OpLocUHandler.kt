@@ -76,9 +76,12 @@ class OpLocUHandler : MessageHandler<OpLocUMessage> {
             message.x,
             message.z,
         )
-        client.writeConsoleMessage(
-            "Item on object: item=${message.item}, slot=${message.slot}, obj=${message.obj}, x=${message.x}, z=${message.z}",
-        )
+        // Audit S-12: interaction traces are for staff only.
+        if (client.seesDebugOutput()) {
+            client.writeConsoleMessage(
+                "Item on object: item=${message.item}, slot=${message.slot}, obj=${message.obj}, x=${message.x}, z=${message.z}",
+            )
+        }
 
         client.closeInterfaceModal()
         client.fullInterruption(movement = true, interactions = true, animations = true, queue = true)

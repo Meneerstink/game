@@ -539,21 +539,17 @@ on_command("home", Privilege.MOD_POWER) {
     player.moveTo(home)
 }
 
+// Audit S-04: old password required and verified, PasswordPolicy for the new one, one attempt per minute, Argon2 off the
+// game thread, and the password is never echoed (see PasswordChange).
 on_command("changepass") {
     val args = player.getCommandArgs()
-    tryWithUsage(
-        player,
-        args,
-        "Invalid format! Example of proper command <col=42C66C>::changepass newpassword</col>",
-    ) { values ->
-        val password = values[0]
-        val client = player as Client
-        client.passwordHash = Argon2Factory.create().hash(2, 65536, 1, password.toCharArray())
-        player.world.getService(PlayerSerializerService::class.java, searchSubclasses = true)?.saveClientData(client)
-        player.message(
-            "<col=178000>You've successfully changed your password to $password",
-            type = ChatMessageType.CONSOLE,
-        )
+    val client = player as? Client ?: return@on_command
+    if (args.size != 2) {
+        player.message(PasswordChange.USAGE, type = ChatMessageType.CONSOLE)
+        return@on_command
+    }
+    PasswordChange.request(client, args[0], args[1]) { reply ->
+        player.message(reply, type = ChatMessageType.CONSOLE)
     }
 }
 

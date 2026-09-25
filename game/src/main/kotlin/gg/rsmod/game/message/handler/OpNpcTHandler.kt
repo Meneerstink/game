@@ -27,6 +27,12 @@ class OpNpcTHandler : MessageHandler<OpNpcTMessage> {
             return
         }
 
+        // Audit S-02: only a component of an interface the player really has open (active
+        // spellbook, inventory, Summoning panel/orb) may target an npc; see OpPlayerTHandler.
+        if (!client.interfaces.isVisible(parent)) {
+            return
+        }
+
         log(
             client,
             "Spell on npc: npc=%d. index=%d, component=[%d:%d], movement=%d",
@@ -36,7 +42,10 @@ class OpNpcTHandler : MessageHandler<OpNpcTMessage> {
             child,
             message.movementType,
         )
-        client.writeConsoleMessage("Interface on NPC: [$message], parent=$parent, child=$child")
+        // Audit S-12: interaction traces are for staff only.
+        if (client.seesDebugOutput()) {
+            client.writeConsoleMessage("Interface on NPC: [$message], parent=$parent, child=$child")
+        }
 
         if (message.movementType == 1 && world.privileges.isEligible(client.privilege, Privilege.ADMIN_POWER)) {
             client.moveTo(world.findRandomTileAround(npc.tile, 1) ?: npc.tile)
@@ -61,7 +70,7 @@ class OpNpcTHandler : MessageHandler<OpNpcTMessage> {
 
         if (!world.plugins.executeSpellOnNpc(client, parent, child)) {
             client.writeMessage(Entity.NOTHING_INTERESTING_HAPPENS)
-            if (world.devContext.debugMagicSpells) {
+            if (world.devContext.debugMagicSpells && client.seesDebugOutput()) {
                 client.writeConsoleMessage("Unhandled magic spell: [$parent, $child]")
             }
         }

@@ -73,10 +73,7 @@ class LoginDecoder(
         }
     }
 
-    private fun validateUsername(username: String): Boolean {
-        val regex = Regex("^(?=.{1,12}$)[a-zA-Z0-9]+(?: [a-zA-Z0-9]+)*$")
-        return regex.matches(username)
-    }
+    private fun validateUsername(username: String): Boolean = isValidUsername(username)
 
     private fun decodePayload(
         ctx: ChannelHandlerContext,
@@ -171,5 +168,14 @@ class LoginDecoder(
     companion object : KLogging() {
         private const val LOGIN_OPCODE = 16
         private const val RECONNECT_OPCODE = 18
+
+        private val USERNAME = Regex("^(?=.{1,12}$)[a-zA-Z0-9]+(?: [a-zA-Z0-9]+)*$")
+
+        /**
+         * The login-name rule: 1-12 letters/digits, single spaces between words. Audit S-13: shared
+         * with the save lookup (`JsonPlayerSerializer.characterExists`) so a name that could never
+         * log in can never reach the file system either.
+         */
+        fun isValidUsername(username: String): Boolean = USERNAME.matches(username)
     }
 }

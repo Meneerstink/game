@@ -3,7 +3,10 @@ version: '3.3'
 services:
   rsmod-server:
     build: .
+    # Audit S-16: the game port is 50015 (game.yml game-port). The command port 50017 is never published.
     ports:
-      - "43594:43594"
+      - "50015:50015"
     volumes:
       - ./data/saves:/app/bin/data/saves
+      # The RSA private key is generated on first start (RsaService) and must survive container rebuilds.
+      - ./data/rsa:/app/bin/data/rsa

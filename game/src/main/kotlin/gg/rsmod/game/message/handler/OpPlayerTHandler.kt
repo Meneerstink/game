@@ -27,7 +27,13 @@ class OpPlayerTHandler : MessageHandler<OpPlayerTMessage> {
             return
         }
 
-        client.writeConsoleMessage("Interface on Player: [$message], parent=$parent, child=$child")
+        // Audit S-02: the component hash comes straight from the client. Only an interface the
+        // player really has open may be used (the active spellbook, the inventory, the Summoning
+        // panel/orb, the clan tab); a modified client sent Ancient spell components from the
+        // standard book. Audit S-12: the unconditional "Interface on Player" console line is gone.
+        if (!client.interfaces.isVisible(parent)) {
+            return
+        }
 
         if (message.movementType == 1 && world.privileges.isEligible(client.privilege, Privilege.ADMIN_POWER)) {
             client.moveTo(world.findRandomTileAround(player.tile, 1) ?: player.tile)
@@ -50,7 +56,7 @@ class OpPlayerTHandler : MessageHandler<OpPlayerTMessage> {
 
         if (!world.plugins.executeSpellOnPlayer(client, parent, child)) {
             client.writeMessage(Entity.NOTHING_INTERESTING_HAPPENS)
-            if (world.devContext.debugMagicSpells) {
+            if (world.devContext.debugMagicSpells && client.seesDebugOutput()) {
                 client.writeConsoleMessage("Unhandled magic spell: [$parent, $child]")
             }
         }

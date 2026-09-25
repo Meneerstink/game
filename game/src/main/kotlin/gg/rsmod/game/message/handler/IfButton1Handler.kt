@@ -68,7 +68,7 @@ class IfButton1Handler : MessageHandler<IfButtonMessage> {
             message.item,
         )
 
-        if (world.devContext.debugButtons) {
+        if (world.devContext.debugButtons && client.seesDebugOutput()) {
             client.writeConsoleMessage(
                 "Button action: [component=[$interfaceId:$component], option=$option, slot=${message.slot}, item=${message.item}, opcode=${message.opcode}]",
             )
@@ -181,7 +181,7 @@ class IfButton1Handler : MessageHandler<IfButtonMessage> {
                 val result = EquipAction.equip(client, item, slot)
                 if (result == EquipAction.Result.UNHANDLED) {
                     UnhandledInteractions.recordInteraction("item", item.id, 2, "item", "slot=$slot")
-                    if (world.devContext.debugItemActions) {
+                    if (world.devContext.debugItemActions && client.seesDebugOutput()) {
                         client.writeMessage("Unhandled equip action: [item=${item.id}, slot=$slot]")
                     }
                 }
@@ -197,7 +197,7 @@ class IfButton1Handler : MessageHandler<IfButtonMessage> {
                 val result = world.plugins.executeItem(client, item.id, option)
                 if (!result) {
                     UnhandledInteractions.recordInteraction("item", item.id, option, "item", "slot=$slot")
-                    if (world.devContext.debugItemActions) {
+                    if (world.devContext.debugItemActions && client.seesDebugOutput()) {
                         client.writeMessage("Unhandled destroy action: [item=${item.id}, slot=$slot]")
                     }
                 }
@@ -222,7 +222,7 @@ class IfButton1Handler : MessageHandler<IfButtonMessage> {
                     context = "slot=$slot",
                 )
                 client.writeFilterableMessage(Entity.NOTHING_INTERESTING_HAPPENS)
-                if (world.devContext.debugItemActions) {
+                if (world.devContext.debugItemActions && client.seesDebugOutput()) {
                     client.writeMessage("Unhandled item action: [item=${item.id}, slot=$slot, option=$option]")
                     return
                 }

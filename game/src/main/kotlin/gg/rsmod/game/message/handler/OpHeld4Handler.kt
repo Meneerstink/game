@@ -60,7 +60,7 @@ class OpHeld4Handler : MessageHandler<OpHeld4Message> {
 
         if (!world.plugins.executeItem(client, item.id, 4)) {
             UnhandledInteractions.recordInteraction("item", item.id, 4, "item", "slot=${message.slot}")
-            if (world.devContext.debugItemActions) {
+            if (world.devContext.debugItemActions && client.seesDebugOutput()) {
                 client.writeConsoleMessage("Unhandled item action: [item=${item.id}, slot=${message.slot}, option=4]")
             }
         }

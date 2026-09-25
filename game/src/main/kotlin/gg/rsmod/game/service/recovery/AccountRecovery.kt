@@ -6,23 +6,33 @@ import com.google.gson.JsonParser
 import de.mkammerer.argon2.Argon2Factory
 import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.entity.Player
+import gg.rsmod.game.service.login.AccountSessionRegistry
+import gg.rsmod.game.service.login.PasswordPolicy
 import mu.KLogging
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardCopyOption
 import java.security.SecureRandom
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.Executor
 
 /**
  * OSRS-style account recovery (owner 2026-09-19: "forgot password option should work", "yes osrs style"): an account links a
  * verified e-mail address in game (`setemail`, `confirmemail`); a lost password is reset on the recovery web page with a
  * one-time code sent to that address. Codes are random, stored only as Argon2 hashes, expire after [CODE_LIFETIME_MS], allow
  * [MAX_ATTEMPTS] tries and are rate limited per account. Passwords and codes are never logged.
+ *
+ * Audit S-08: account names are normalised ([normalize]) for every key, so "name", "Name " and "name_" share one rate limit;
+ * requests and reset attempts are also limited per IP; a code that is still valid is never replaced by a new request (a
+ * stranger could otherwise keep invalidating the owner's code); reset mails go out on [mailExecutor] instead of the HTTP
+ * thread; and the save is rewritten only while the account's login slot is held ([resetPassword]'s `lockAccount`).
  */
 class AccountRecovery(
     private val mailer: ((to: String, subject: String, body: String) -> Unit)?,
     private val savesPath: Path,
     val publicUrl: String,
+    /** Where reset mails are sent from. The default runs them on the calling thread (tests); the service passes a background thread. */
+    private val mailExecutor: Executor = Executor { it.run() },
 ) {
     private data class PendingCode(val hash: String, val expires: Long, var attempts: Int = 0, val email: String? = null)
 
@@ -38,12 +48,15 @@ class AccountRecovery(
 
     private fun hash(code: String): String = argon2.hash(2, 16384, 1, code.toCharArray())
 
-    private fun rateLimited(key: String): Boolean {
+    private fun rateLimited(
+        key: String,
+        maxPerHour: Int = MAX_CODES_PER_HOUR,
+    ): Boolean {
         val now = System.currentTimeMillis()
-        val list = sentAt.getOrPut(key) { mutableListOf() }
+        val list = sentAt.computeIfAbsent(key) { mutableListOf() }
         synchronized(list) {
             list.removeIf { now - it > 3_600_000L }
-            if (list.size >= MAX_CODES_PER_HOUR) return true
+            if (list.size >= maxPerHour) return true
             list += now
         }
         return false
@@ -57,9 +70,9 @@ class AccountRecovery(
         val mail = mailer ?: return NOT_CONFIGURED
         val address = email.trim()
         if (!EMAIL.matches(address)) return "That doesn't look like a valid e-mail address."
-        if (rateLimited("link:${player.username.lowercase()}")) return "Too many codes requested - try again in an hour."
+        if (rateLimited("link:${normalize(player.username)}")) return "Too many codes requested - try again in an hour."
         val code = newCode()
-        emailCodes[player.username.lowercase()] = PendingCode(hash(code), System.currentTimeMillis() + CODE_LIFETIME_MS, email = address)
+        emailCodes[normalize(player.username)] = PendingCode(hash(code), System.currentTimeMillis() + CODE_LIFETIME_MS, email = address)
         return try {
             mail(address, "78 - confirm your recovery e-mail", "Your 78 confirmation code is: $code\n\nType in game: confirmemail $code\nThe code expires in 15 minutes.")
             "A confirmation code was sent to $address. Type: confirmemail <code>"
@@ -74,7 +87,7 @@ class AccountRecovery(
         player: Player,
         code: String,
     ): String {
-        val key = player.username.lowercase()
+        val key = normalize(player.username)
         val pending = emailCodes[key] ?: return "You have no e-mail confirmation in progress. Type: setemail <address>"
         if (System.currentTimeMillis() > pending.expires || pending.attempts >= MAX_ATTEMPTS) {
             emailCodes.remove(key)
@@ -98,45 +111,81 @@ class AccountRecovery(
 
     private fun emailOf(save: JsonObject): String? = save.getAsJsonObject("attributes")?.get(RECOVERY_EMAIL_KEY)?.asString
 
-    /** Web page step 1. Always answers the same way, so the page cannot be used to find out which accounts exist. */
-    fun requestReset(username: String): String {
+    /**
+     * Web page step 1. Always answers the same way, so the page cannot be used to find out which accounts exist.
+     *
+     * @param ip the requester's address, for the per-IP limit (null: not limited per IP).
+     */
+    fun requestReset(
+        username: String,
+        ip: String? = null,
+    ): String {
         val generic = "If that account has a confirmed recovery e-mail, a reset code has been sent to it."
         val mail = mailer ?: return NOT_CONFIGURED
+        if (ip != null && rateLimited("request-ip:$ip", MAX_REQUESTS_PER_IP_PER_HOUR)) return generic
+        val key = normalize(username)
+        val open = resetCodes[key]
+        if (open != null && System.currentTimeMillis() <= open.expires && open.attempts < MAX_ATTEMPTS) {
+            // A code that can still be used stays valid: a new request must not silently invalidate it.
+            return generic
+        }
         val file = runCatching { saveFile(username) }.getOrNull() ?: return generic
         val email = runCatching { emailOf(readSave(file)) }.getOrNull() ?: return generic
-        if (rateLimited("reset:${username.lowercase()}")) return generic
+        if (rateLimited("reset:$key")) return generic
         val code = newCode()
-        resetCodes[username.trim().lowercase()] = PendingCode(hash(code), System.currentTimeMillis() + CODE_LIFETIME_MS)
-        runCatching { mail(email, "78 - password reset code", "Your 78 password reset code is: $code\n\nEnter it on $publicUrl within 15 minutes.\nIf you did not ask for this, ignore this e-mail.") }
-            .onFailure { logger.warn { "Reset mail for $username failed: ${it.javaClass.simpleName}" } }
+        resetCodes[key] = PendingCode(hash(code), System.currentTimeMillis() + CODE_LIFETIME_MS)
+        val account = username.trim()
+        mailExecutor.execute {
+            runCatching { mail(email, "78 - password reset code", "Your 78 password reset code is: $code\n\nEnter it on $publicUrl within 15 minutes.\nIf you did not ask for this, ignore this e-mail.") }
+                .onFailure { logger.warn { "Reset mail for $account failed: ${it.javaClass.simpleName}" } }
+        }
         return generic
     }
 
-    /** Web page step 2: [code] + new password. Refused while the account is logged in. */
+    /**
+     * Web page step 2: [code] + new password. Refused while the account is logged in.
+     *
+     * @param ip the requester's address, for the per-IP limit on attempts (null: not limited per IP).
+     * @param lockAccount Audit S-08: claims the account's login slot for the duration of the rewrite and returns the handle
+     * that releases it, or null when the account is online or logging in/out. Without it a login could read the old save
+     * between the online check and the write, and its later logout save would put the old password back.
+     */
     fun resetPassword(
         isOnline: (String) -> Boolean,
         username: String,
         code: String,
         newPassword: String,
+        ip: String? = null,
+        lockAccount: (String) -> AutoCloseable? = { AutoCloseable {} },
     ): String {
-        val key = username.trim().lowercase()
+        if (ip != null && rateLimited("reset-ip:$ip", MAX_RESET_ATTEMPTS_PER_IP_PER_HOUR)) return "Too many attempts - try again later."
+        val key = normalize(username)
         val pending = resetCodes[key] ?: return "Request a reset code first."
-        if (System.currentTimeMillis() > pending.expires || pending.attempts >= MAX_ATTEMPTS) {
-            resetCodes.remove(key)
-            return "That code has expired. Request a new one."
+        synchronized(pending) {
+            if (System.currentTimeMillis() > pending.expires || pending.attempts >= MAX_ATTEMPTS) {
+                resetCodes.remove(key, pending)
+                return "That code has expired. Request a new one."
+            }
+            pending.attempts++
         }
-        pending.attempts++
         if (!argon2.verify(pending.hash, code.trim().uppercase().toCharArray())) return "That code is not correct."
-        if (newPassword.length !in 5..20 || !newPassword.all { it.isLetterOrDigit() }) return "Passwords are 5 to 20 letters and numbers."
-        if (newPassword.equals(username.trim(), ignoreCase = true)) return "Your password can't be your username."
-        if (isOnline(username.trim())) return "Log out of the game first, then reset your password."
-        val file = saveFile(username) ?: return "That code is not correct."
-        val save = readSave(file)
-        save.addProperty("passwordHash", Argon2Factory.create().hash(2, 65536, 1, newPassword.toCharArray()))
-        val temp = file.resolveSibling(file.fileName.toString() + ".reset.tmp")
-        Files.writeString(temp, GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create().toJson(save))
-        Files.move(temp, file, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE)
-        resetCodes.remove(key)
+        PasswordPolicy.problem(username, newPassword)?.let { return it }
+        val lock = lockAccount(key) ?: return "Log out of the game first, then reset your password."
+        lock.use {
+            if (isOnline(username.trim())) return "Log out of the game first, then reset your password."
+            val file = saveFile(username) ?: return "That code is not correct."
+            // The code is spent before the write, so two simultaneous correct submissions cannot both write.
+            if (!resetCodes.remove(key, pending)) return "Request a reset code first."
+            val save = readSave(file)
+            save.addProperty("passwordHash", Argon2Factory.create().hash(2, 65536, 1, newPassword.toCharArray()))
+            val temp = Files.createTempFile(file.toAbsolutePath().parent, file.fileName.toString() + ".", ".reset.tmp")
+            try {
+                Files.writeString(temp, GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create().toJson(save))
+                Files.move(temp, file, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE)
+            } finally {
+                Files.deleteIfExists(temp)
+            }
+        }
         logger.info { "Password reset through the recovery page for account ${username.trim()}." }
         return "Your password has been changed. You can log in now."
     }
@@ -147,9 +196,14 @@ class AccountRecovery(
         const val CODE_LIFETIME_MS = 15 * 60_000L
         const val MAX_ATTEMPTS = 5
         const val MAX_CODES_PER_HOUR = 3
+        const val MAX_REQUESTS_PER_IP_PER_HOUR = 10
+        const val MAX_RESET_ATTEMPTS_PER_IP_PER_HOUR = 20
         const val NOT_CONFIGURED = "Password recovery by e-mail is not switched on on this server yet."
         private const val CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
         private val EMAIL = Regex("^[A-Za-z0-9._%+-]{1,64}@[A-Za-z0-9.-]{1,190}\\.[A-Za-z]{2,24}$")
+
+        /** Audit S-08: the one key form of an account name (trimmed, lower case, underscores as spaces). */
+        fun normalize(username: String): String = AccountSessionRegistry.normalize(username)
 
         fun mask(email: String): String {
             val at = email.indexOf('@')

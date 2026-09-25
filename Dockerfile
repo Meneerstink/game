@@ -7,8 +7,14 @@
 # task whenever you want the docker image to contain the latest changes in your
 # code.
 
-# Use kotlin image to run the server.
-FROM zenika/kotlin:1.3-eap-jdk8-alpine
+# Audit S-16: the code targets JVM 11+ (jvmTarget 11); the old JDK 8 image could not run it.
+# Debian/Ubuntu based (glibc) so the bundled Argon2 native library loads.
+FROM eclipse-temurin:17-jre
+
+# unzip is needed to unpack the distribution archive below.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends unzip \
+    && rm -rf /var/lib/apt/lists/*
 
 # Define `directory` as '/app/'
 ENV directory /app/
@@ -36,9 +42,10 @@ RUN rm -rf game*
 WORKDIR bin
 
 # Documentation on which ports need to be published when the image is run
-# The container must be executed with `-p 43594:43594/tcp`
-# For example: docker run -it -p 43594:43594/tcp image
-EXPOSE 43594:43594/tcp
+# The container must be executed with `-p 50015:50015/tcp` (game-port in game.yml).
+# For example: docker run -it -p 50015:50015/tcp image
+# Never publish 50017: the command server (shutdown/kick/teleport) is for the host only.
+EXPOSE 50015/tcp
 
 # Run the main entry point
 ENTRYPOINT ./game

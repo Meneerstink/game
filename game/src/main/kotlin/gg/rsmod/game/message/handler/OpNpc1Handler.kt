@@ -27,7 +27,10 @@ class OpNpc1Handler : MessageHandler<OpNpc1Message> {
 
         log(client, "Npc option 1: index=%d, movement=%d, npc=%s", message.index, message.movementType, npc)
 
-        client.writeConsoleMessage("Npc option 1: index=${message.index}, movement=${message.movementType}, npc=$npc")
+        // Audit S-12: interaction traces are for staff only.
+        if (client.seesDebugOutput()) {
+            client.writeConsoleMessage("Npc option 1: index=${message.index}, movement=${message.movementType}, npc=$npc")
+        }
 
         if (message.movementType == 1 && world.privileges.isEligible(client.privilege, Privilege.ADMIN_POWER)) {
             client.moveTo(world.findRandomTileAround(npc.tile, 1) ?: npc.tile)

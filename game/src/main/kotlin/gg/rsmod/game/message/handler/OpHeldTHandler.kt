@@ -66,7 +66,7 @@ class OpHeldTHandler : MessageHandler<OpHeldTMessage> {
                 name = "item",
                 context = "slot=$itemSlot from_component=$fromInterfaceId:$fromComponent to_component=$toInterfaceId:$toComponent",
             )
-            if (world.devContext.debugMagicSpells) {
+            if (world.devContext.debugMagicSpells && client.seesDebugOutput()) {
                 client.writeConsoleMessage(
                     "Unhandled spell on item: [item=[${item.id}, ${item.amount}], slot=$itemSlot, unknown=$unknown " +
                         "from_component=[$fromInterfaceId:$fromComponent], to_component=[$toInterfaceId:$toComponent]]",

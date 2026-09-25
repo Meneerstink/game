@@ -68,6 +68,13 @@ class OpHeldUHandler : MessageHandler<OpHeldUMessage> {
                 return
             }
 
+            // Audit S-02: the spell (or Summoning special) must come from an interface the player
+            // has open - the active spellbook - and target the open inventory. A modified client
+            // could otherwise cast High Alchemy and the other spell-on-item spells from any book.
+            if (!client.interfaces.isVisible(fromInterfaceId) || !client.interfaces.isVisible(toInterfaceId)) {
+                return
+            }
+
             client.attr[INTERACTING_ITEM] = WeakReference(item)
             client.attr[INTERACTING_ITEM_ID] = toItemId
             client.attr[INTERACTING_ITEM_SLOT] = toSlot
@@ -81,7 +88,7 @@ class OpHeldUHandler : MessageHandler<OpHeldUMessage> {
                     name = "item",
                     context = "slot=$toSlot from_component=$fromInterfaceId:$fromComponent to_component=$toInterfaceId:$toComponent",
                 )
-                if (world.devContext.debugMagicSpells) {
+                if (world.devContext.debugMagicSpells && client.seesDebugOutput()) {
                     client.writeConsoleMessage(
                         "Unhandled spell on item: [item=[${item.id}, ${item.amount}], slot=$toSlot, " +
                             "from_component=[$fromInterfaceId:$fromComponent], to_component=[$toInterfaceId:$toComponent]]",
@@ -136,7 +143,7 @@ class OpHeldUHandler : MessageHandler<OpHeldUMessage> {
                 context = "from_slot=$fromSlot to_slot=$toSlot from_component=$fromInterfaceId:$fromComponent to_component=$toInterfaceId:$toComponent",
             )
             client.writeFilterableMessage(Entity.NOTHING_INTERESTING_HAPPENS)
-            if (world.devContext.debugItemActions) {
+            if (world.devContext.debugItemActions && client.seesDebugOutput()) {
                 client.writeConsoleMessage(
                     "Unhandled item on item: [from_item=${fromItem.id}, to_item=${toItem.id}, from_slot=$fromSlot, to_slot=$toSlot, " +
                         "from_component=[$fromInterfaceId:$fromComponent], to_component=[$toInterfaceId:$toComponent]]",
