@@ -18,7 +18,7 @@ import java.io.File
  * hall's floor ([RoyalHallLocTool.CUTS]), so the paving runs on under the walls and all round the hall unchanged.
  * For every tile of [MIN_X]..[MAX_X] x [MIN_Z]..[MAX_Z] this tool:
  *  - removes the plane-1 surface (bridge flag, overlay and underlay), so the hall has one floor level;
- *  - lays white marble ([MARBLE_OVERLAY]) on the floor; the wall-ring tiles keep their ground (under the paving);
+ *  - lays white marble ([MARBLE_OVERLAY]) on the floor and on the wall ring under the walls and towers;
  *  - sets the heights of levels 1-3 for the second storey and the slate roof ([STOREY_STEPS]) and marks the floor and
  *    doorway tiles "remove roof" (tile flag 4), so with the client's selective roof removal the roof shows from outside
  *    and disappears when a player walks in.
@@ -59,11 +59,13 @@ object RoyalHallMapTool {
     private const val REMOVE_ROOF = 4
 
     /**
-     * Height steps (x8 client units) of levels 1..3 above the one below: 30 = 240, the wall height, for the second storey;
-     * 31 = 248 puts the roof's eaves (level 2) on top of the second storey's walls; 9 = 72 is the rise of one ring of the
-     * roof set 41409, so the level-3 ring continues the level-2 ring.
+     * Height steps (x8 client units) of levels 1..3 above the one below: 30 = 240, the wall height (walls 33868/33877 are
+     * 240 high), for the second storey and again for the roof's eaves and parapet (level 2) exactly on the second storey's
+     * wall tops - 31 (248) left an 8-unit slit all round the building between wall and parapet that the sky showed
+     * through (owner 2026-09-26: "some walls can be seen through"); 9 = 72 is the rise of one ring of the roof set 41409,
+     * so the level-3 ring continues the level-2 ring.
      */
-    private val STOREY_STEPS = intArrayOf(30, 31, 9)
+    private val STOREY_STEPS = intArrayOf(30, 30, 9)
 
     /** The centre's planters, their fences, the canopy ring on pillars and the map fountain. */
     private val REMOVED_IDS = setOf(47119, 84, 47174, 47175, 47244, 47246, 47150)
@@ -80,13 +82,17 @@ object RoyalHallMapTool {
     /** A balcony: level-1 marble floor on these tiles, outside a doorway of the upper floor. */
     class Balcony(val xs: IntRange, val zs: IntRange)
 
+    /**
+     * Reached through the upper doorways. Each includes its row of the wall ring, so the balcony floor runs up to the
+     * building's face: without it the ring tiles either side of a doorway had no level-1 floor and the balcony stood a
+     * tile off the wall (owner 2026-09-26: "the balconys are not connecting visible to the building").
+     */
     val BALCONIES =
         listOf(
-            // Reached through the upper doorways in the wall ring (floored by the hall loop).
-            Balcony(SOUTH_DOOR.first - 1..SOUTH_DOOR.last + 1, MIN_Z - 2..MIN_Z - 1),
-            Balcony(SOUTH_DOOR.first - 1..SOUTH_DOOR.last + 1, MAX_Z + 1..MAX_Z + 2),
-            Balcony(MIN_X - 2..MIN_X - 1, SIDE_DOORS.first - 1..SIDE_DOORS.last + 1),
-            Balcony(MAX_X + 1..MAX_X + 2, SIDE_DOORS.first - 1..SIDE_DOORS.last + 1),
+            Balcony(SOUTH_DOOR.first - 1..SOUTH_DOOR.last + 1, MIN_Z - 2..MIN_Z),
+            Balcony(SOUTH_DOOR.first - 1..SOUTH_DOOR.last + 1, MAX_Z..MAX_Z + 2),
+            Balcony(MIN_X - 2..MIN_X, SIDE_DOORS.first - 1..SIDE_DOORS.last + 1),
+            Balcony(MAX_X..MAX_X + 2, SIDE_DOORS.first - 1..SIDE_DOORS.last + 1),
         )
     /** Invisible marker on the fountain tile (model 1105), kept: it is the fountain's ambient sound (loc opcode 78). */
     private const val KEPT_MARKER = 29419
@@ -182,12 +188,13 @@ object RoyalHallMapTool {
                 val upper = tile(1, x, z)
                 val floor = x in FLOOR_MIN_X..FLOOR_MAX_X && z in FLOOR_MIN_Z..FLOOR_MAX_Z
                 val doorway = (x == MIN_X || x == MAX_X) && z in SIDE_DOORS || (z == MIN_Z || z == MAX_Z) && x in SOUTH_DOOR
-                if (floor) {
-                    ground.overlayId = MARBLE_OVERLAY
-                    ground.overlayShape = 0
-                    ground.overlayRotation = 0
-                    paved++
-                }
+                // The floor and the wall ring under the walls and towers: the ring kept its grass and earth, which showed as
+                // a green and brown strip along the facades and beside every entrance (owner 2026-09-26: "the grass and dirt
+                // is still visible outside the west entrance ... on all sides entrances").
+                ground.overlayId = MARBLE_OVERLAY
+                ground.overlayShape = 0
+                ground.overlayRotation = 0
+                paved++
                 ground.flags = ground.flags and BLOCKED.inv()
                 unbridge(x, z)
                 // The upper floor: one full marble floor over the whole hall, and through the upper doorways (above the
@@ -223,7 +230,9 @@ object RoyalHallMapTool {
                     upper.overlayId = MARBLE_OVERLAY
                     upper.overlayShape = 0
                     upper.overlayRotation = 0
-                    upper.flags = REMOVE_ROOF
+                    // A wall-ring tile beside the doorway keeps its storey wall, so it stays closed to walking.
+                    val ringWall = (x in MIN_X..MAX_X && z in MIN_Z..MAX_Z) && (upper.flags and BLOCKED != 0)
+                    upper.flags = if (ringWall) REMOVE_ROOF or BLOCKED else REMOVE_ROOF
                     upstairs++
                 }
             }

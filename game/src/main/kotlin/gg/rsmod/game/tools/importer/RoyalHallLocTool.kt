@@ -75,14 +75,21 @@ object RoyalHallLocTool {
         return byteArrayOf(14, 1, 65, 0, 64) + def.copyOfRange(2, def.size)
     }
 
-    /** The Falador castle turret 43730 at 1.375x (model scale opcodes 65-67, 128 = 1x) for the hall's corner turrets. */
-    /** The stone tones (hue 6) of the turret model 47452. */
+    /**
+     * The Falador castle turret at 1.375x (model scale opcodes 65-67, 128 = 1x) for the hall's corner turrets. Since
+     * 2026-09-26 the closed variant 43731 (model 47453): 43730 is open on one side where Falador's walls run into it, and
+     * no rotation hides that at a corner, so the hall's towers could be seen through (owner: "the castle turrets can be see
+     * through"). 43731 is round all the way, with a solid buttress on its east side (rotation 0) that runs along a wall.
+     */
+    const val TURRET_LOC = 43731
+
+    /** The stone tones (hue 6) of the turret model 47453. */
     private val TURRET_STONE =
-        listOf(0x1890, 0x1892, 0x1899, 0x189d, 0x189f, 0x18a1, 0x18a5, 0x18a6, 0x18a8, 0x18a9, 0x18ab, 0x18ad, 0x18ae, 0x18b2, 0x18b3,
-            0x18b4, 0x18b5, 0x18b8, 0x18bb, 0x18bd, 0x18bf, 0x18c3, 0x18c7, 0x18cc, 0x18cd, 0x18cf, 0x18d4, 0x1923, 0x1a12)
+        listOf(0x1890, 0x1892, 0x1898, 0x1899, 0x189d, 0x189f, 0x18a1, 0x18a5, 0x18a8, 0x18a9, 0x18ab, 0x18ad, 0x18ae, 0x18b1, 0x18b2,
+            0x18b3, 0x18b5, 0x18b8, 0x18bb, 0x18bd, 0x18bf, 0x18c1, 0x18c3, 0x18c7, 0x18cc, 0x18cd, 0x18cf, 0x18d4, 0x1923, 0x1a12)
 
     private fun grandTurret(def: ByteArray): ByteArray {
-        check(listOf(65, 66, 67).none { opcodePosition(43730, def, it) >= 0 }) { "turret already scaled" }
+        check(listOf(65, 66, 67).none { opcodePosition(TURRET_LOC, def, it) >= 0 }) { "turret already scaled" }
         // 1.375 wide and 1.75 high: the owner chose towers that rise from the ground (C:/RSPS/foto/tower_designs.png, 3), in
         // dark granite (tower_colours.png e): every stone tone (hue 6) greyed at 0.55 of its lightness.
         val recolour = java.io.ByteArrayOutputStream()
@@ -92,7 +99,7 @@ object RoyalHallLocTool {
             val granite = (c and 0x7F) * 55 / 100
             recolour.write(byteArrayOf((c shr 8).toByte(), c.toByte(), (granite shr 8).toByte(), granite.toByte()))
         }
-        return withModel(43730, byteArrayOf(65, 0, 176.toByte(), 66, 0, 224.toByte(), 67, 0, 176.toByte()) + recolour.toByteArray() + def, TURRET_MODEL, TURRET_MODEL_CLEAN)
+        return withModel(TURRET_LOC, byteArrayOf(65, 0, 176.toByte(), 66, 0, 224.toByte(), 67, 0, 176.toByte()) + recolour.toByteArray() + def, TURRET_MODEL, TURRET_MODEL_CLEAN)
     }
 
     /**
@@ -312,13 +319,14 @@ object RoyalHallLocTool {
     }
 
     /**
-     * The corner turret's model (Falador castle turret 47452) without the little guard standing on its top platform: every
+     * The corner turret's model (closed Falador castle turret 47453; 65427 was the open 47452) without the little guard
+     * standing on its top platform: every
      * face within 45 units of the centre at or above the platform (height 320) except the flagpole (texture 91), its flag
      * (480) and the platform floor (505) is collapsed to a point. Owner 2026-09-25: "on the round corner things i see a
      * minitaure npcs".
      */
-    const val TURRET_MODEL = 47452
-    const val TURRET_MODEL_CLEAN = 65427
+    const val TURRET_MODEL = 47453
+    const val TURRET_MODEL_CLEAN = 65426
 
     /**
      * The mesh uses complex texture mappings, which [Rev667ModelEncoder] cannot write, so only its vertex section is
@@ -511,6 +519,20 @@ object RoyalHallLocTool {
         recoloured(def, listOf(0x0031 to 0x23BC, 0x0039 to 0x23C6, 0x2812 to 0x0074, 0x2816 to 0x0078, 0x281a to 0x007C))
 
     /**
+     * The gilded railing as a straight wall decoration (shape 4): the balcony's side railing on the wall-ring tile beside
+     * an upper doorway, whose wall slot holds the storey's wall. Same model and colours, listed under shape 4 instead of 0
+     * (opcode 1: shape count, shape, model count, model), so the balcony's sides run on to the building (owner 2026-09-26:
+     * "the balconys are not connecting visible to the building").
+     */
+    private fun gildedRailingDecor(def: ByteArray): ByteArray {
+        val out = gildedRailing(def)
+        val at = opcodePosition(15602, out, 1)
+        check(at >= 0 && out[at + 1] == 1.toByte() && out[at + 2] == 0.toByte()) { "railing models are not one shape-0 list" }
+        out[at + 2] = 4
+        return out
+    }
+
+    /**
      * The portico pillar: the Grand Exchange pillar 47169 in bright white ("a white bright color instead of champagne")
      * at 0.95 height, so its top stays under the balcony floor (level 1, 240 up) instead of showing through it.
      */
@@ -553,12 +575,13 @@ object RoyalHallLocTool {
             Variant(62781, 35454, "Royal Hall stall counter: the opulent table at half length, see-through", ::opulentCounter),
             Variant(62782, 47169, "Royal Hall portico pillar: the GE pillar in bright white, 0.95 high", ::brightPillar),
             Variant(62783, 15602, "Royal Hall balcony railing: gilded on white marble plinths", ::gildedRailing),
+            Variant(62786, 15602, "Royal Hall balcony railing as a wall decoration (beside the upper doorways)", ::gildedRailingDecor),
             Variant(62779, 34872, "Royal Hall spiral staircase (bottom): white marble, gilded rails", ::premiumStairs),
             Variant(62780, 34873, "Royal Hall spiral staircase (top): white marble, gilded rails", ::premiumStairs),
             Variant(62768, 15548, "78 carpet corner (Varrock carpet 15548 with the 78 texture)", ::with78Carpet),
             Variant(62769, 15549, "78 carpet edge (Varrock carpet 15549 with the 78 texture)", ::with78Carpet),
             Variant(62770, 15550, "78 carpet middle (Varrock carpet 15550 with the 78 texture)", ::with78Carpet),
-            Variant(62766, 43730, "Royal Hall corner turret (Falador castle turret 43730 at 1.375x)", ::grandTurret),
+            Variant(62766, TURRET_LOC, "Royal Hall corner turret (closed Falador castle turret 43731 at 1.375x)", ::grandTurret),
             Variant(ICON_LOC, GE_MARKER, "Royal Hall map marker (27990 carrying map element $ICON_ELEMENT)") { withElement(it, ICON_ELEMENT) },
             Variant(62763, 22435, "Royal Hall open gold door, west leaf (22435 without its option)", ::withoutLeadingOption),
             Variant(62764, 22437, "Royal Hall open gold door, east leaf (22437 without its option)", ::withoutLeadingOption),
@@ -813,7 +836,7 @@ object RoyalHallLocTool {
                 val wanted = v.edit(source)
                 val before = Rev667LocType.decode(v.source, source)
                 val after = Rev667LocType.decode(v.id, wanted)
-                val expectedModels = before.allModels.map { if (it == TURRET_MODEL && v.source == 43730) TURRET_MODEL_CLEAN else it }
+                val expectedModels = before.allModels.map { if (it == TURRET_MODEL && v.source == TURRET_LOC) TURRET_MODEL_CLEAN else it }
                 check(after.allModels == expectedModels && (v.id in WITH_OPTIONS || after.options.all { it == null || it.equals("hidden", true) })) { "variant ${v.id} is wrong" }
                 val current = library.data(LOC_INDEX, v.id ushr 8, v.id and 0xFF)
                 when {

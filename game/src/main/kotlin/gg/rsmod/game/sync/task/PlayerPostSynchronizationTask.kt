@@ -2,6 +2,8 @@ package gg.rsmod.game.sync.task
 
 import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.entity.Player
+import gg.rsmod.game.model.region.Chunk
+import gg.rsmod.game.model.region.ChunkCoords
 import gg.rsmod.game.sync.SynchronizationTask
 
 /**
@@ -39,19 +41,21 @@ object PlayerPostSynchronizationTask : SynchronizationTask<Player> {
                 }
             val newChunk = pawn.world.chunks.get(pawn.tile.chunkCoords, createIfNeeded = false)
             if (newChunk != null) {
-                val newSurroundings = newChunk.coords.getSurroundingCoords()
-                // A zone's full state (clear + every spawned/removed object) is only sent when the zone newly enters
-                // view, or after a map rebuild / plane change. Re-sending it on every step made the client clear and
-                // redraw every changed object each step - the player-owned house flickered (owner 2026-09-19).
-                val alreadyVisible =
-                    if (oldTile == null || changedHeight || pawn.regionRebuilt) {
-                        emptySet()
-                    } else {
-                        oldTile.chunkCoords.getSurroundingCoords()
+                // A zone's full state (clear + every spawned/removed object) is sent for every zone of the loaded map
+                // after a login, map rebuild or plane change, and not again while the map stays: re-sending it on every
+                // step made the client clear and redraw every changed object each step - the player-owned house
+                // flickered (owner 2026-09-19). Live changes reach the whole map through Chunk.sendUpdate, so a
+                // building of spawned objects is complete from any distance (Royal Hall, owner 2026-09-26).
+                if (oldTile == null || changedHeight || pawn.regionRebuilt) {
+                    val base = pawn.lastKnownRegionBase
+                    if (base != null) {
+                        for (dx in 0 until Chunk.CHUNKS_PER_REGION) {
+                            for (dz in 0 until Chunk.CHUNKS_PER_REGION) {
+                                val coords = ChunkCoords((base.x shr 3) + dx, (base.z shr 3) + dz)
+                                pawn.world.chunks.get(coords, createIfNeeded = false)?.sendUpdates(pawn)
+                            }
+                        }
                     }
-                newSurroundings.filter { it !in alreadyVisible }.forEach { coords ->
-                    val chunk = pawn.world.chunks.get(coords, createIfNeeded = false) ?: return@forEach
-                    chunk.sendUpdates(pawn)
                 }
                 if (!changedHeight) {
                     if (oldChunk != null) {

@@ -31,8 +31,11 @@ object GeHomeHall {
     /** The non-combat quest variant has the same Lucien identity/BAS and keeps Talk-to without advertising Attack. */
     const val SERVICE_LUCIEN = Npcs.LUCIEN_273
 
-    /** One stall: npc [npc] on floor offset ([dx], [dz]) of level [level] (1 = the gallery lounge), facing [facing]. */
-    data class ServicePost(val npc: Int, val dx: Int, val dz: Int, val facing: Direction, val level: Int = 0)
+    /**
+     * One stall: npc [npc] on floor offset ([dx], [dz]) of level [level] (1 = the gallery lounge), facing [facing]. [size] is
+     * the npc's cache size: it covers [size] x [size] tiles north-east of its post, all of which must be free floor.
+     */
+    data class ServicePost(val npc: Int, val dx: Int, val dz: Int, val facing: Direction, val level: Int = 0, val size: Int = 1)
 
     /**
      * Ground floor: west and east walls hold five stalls each (either side of their doorway), the north wall one either
@@ -53,8 +56,10 @@ object GeHomeHall {
             ServicePost(Npcs.TOOL_LEPRECHAUN, 13, 3, Direction.WEST),
             ServicePost(SERVICE_LUCIEN, 13, 8, Direction.WEST),
             ServicePost(Npcs.BOB, 13, 9, Direction.WEST),
-            ServicePost(Npcs.AZZANADRA, 3, 11, Direction.SOUTH),
-            ServicePost(Npcs.MANDRITH, 10, 11, Direction.SOUTH),
+            // One row in from the north wall: Azzanadra is 2 x 2 and at dz 11 stood half inside the wall (owner 2026-09-26,
+            // who moved him to exactly this tile in game); Mandrith mirrors him.
+            ServicePost(Npcs.AZZANADRA, 3, 10, Direction.SOUTH, size = 2),
+            ServicePost(Npcs.MANDRITH, 10, 10, Direction.SOUTH),
             ServicePost(QUARTERMASTER, 1, 0, Direction.NORTH),
             ServicePost(Npcs.DRUNKEN_DWARF, 2, 0, Direction.NORTH),
             ServicePost(Npcs.KURADAL_9085, 4, 0, Direction.NORTH),

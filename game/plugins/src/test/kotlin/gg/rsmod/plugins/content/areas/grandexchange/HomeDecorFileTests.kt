@@ -18,6 +18,15 @@ class HomeDecorFileTests {
     }
 
     @Test
+    fun `no two objects share one tile slot`() {
+        // The client holds one wall, one wall decoration, one ground decoration per tile and level, and the server replaces
+        // an object in the same slot: a second one silently wipes the first (a railing where a wall stands).
+        fun slot(type: Int) = when (type) { in 0..3 -> "wall"; in 4..8 -> "wall decoration"; 22 -> "ground decoration"; else -> "object" }
+        val clashes = design.placements.groupBy { it.tile to slot(it.type) }.filter { it.value.size > 1 }
+        assertTrue(clashes.isEmpty(), "shared slots: ${clashes.values}")
+    }
+
+    @Test
     fun `both south gate lanes stay walkable`() {
         val lanes = (3457..3469).flatMap { z -> listOf(3162, 3163, 3166, 3167).map { Tile(it, z, 0) } }
         val blocking = design.placements.filter { it.tile in lanes && (it.type in 0..3 || it.type == 10) }

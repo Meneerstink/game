@@ -34,6 +34,23 @@ class GeHomeHallTests {
     }
 
     @Test
+    fun `every stall's whole npc stands on free hall floor`() {
+        // Azzanadra (2 x 2) once stood half inside the north wall (owner 2026-09-26).
+        val design = HomeDecorFile.load(java.nio.file.Paths.get("..", "..", "data", "cfg", "home_decor.txt"))
+        val stairTiles = GeHomeHall.STAIRS.flatMap { s -> (0..1).flatMap { dx -> (0..1).map { dz -> (s.base.x - GeHomeHall.X + dx) to (s.base.z - GeHomeHall.Z + dz) } } }.toSet()
+        GeHomeHall.SERVICE_POSTS.forEach { post ->
+            val footprint = (0 until post.size).flatMap { dx -> (0 until post.size).map { dz -> post.dx + dx to post.dz + dz } }
+            footprint.forEach { (dx, dz) ->
+                assertTrue(dx in 0 until GeHomeHall.WIDTH && dz in 0 until GeHomeHall.DEPTH, "${post.npc} reaches off the floor at $dx,$dz")
+                assertFalse(post.level == 0 && (dx to dz) in stairTiles, "${post.npc} stands in a staircase")
+                val tile = gg.rsmod.game.model.Tile(GeHomeHall.X + dx, GeHomeHall.Z + dz, post.level)
+                val solid = design.placements.filter { it.tile == tile && it.type in 9..21 }
+                assertTrue(solid.isEmpty(), "${post.npc} stands in $solid")
+            }
+        }
+    }
+
+    @Test
     fun `hall Lucien is non combat and penguins are absent`() {
         val ids = GeHomeHall.SERVICE_POSTS.map { it.npc }.toSet()
         assertTrue(GeHomeHall.SERVICE_LUCIEN in ids)

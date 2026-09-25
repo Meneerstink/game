@@ -239,26 +239,32 @@ class Chunk(
     }
 
     /**
-     * Send the [update] to any [Client] entities that are within view distance
-     * of this chunk.
+     * Whether this chunk lies inside the 104 x 104 map the client of [p] has loaded. The client draws every chunk of
+     * that map, so every spawned or removed object in it must reach the client - not only those within
+     * [CHUNK_VIEW_RADIUS]: a building of spawned objects (the Royal Hall) otherwise showed only its near half from a
+     * distance, and after a map rebuild its far half stayed bare map (owner 2026-09-26).
+     */
+    fun inBuildArea(p: Player): Boolean {
+        val base = p.lastKnownRegionBase ?: return false
+        val baseX = base.x shr 3
+        val baseZ = base.z shr 3
+        return coords.x in baseX until baseX + CHUNKS_PER_REGION && coords.z in baseZ until baseZ + CHUNKS_PER_REGION
+    }
+
+    /**
+     * Send the [update] to every player whose loaded map contains this chunk.
      */
     private fun sendUpdate(
         world: World,
         update: EntityUpdate<*>,
     ) {
-        val surrounding = coords.getSurroundingCoords()
-
-        for (coords in surrounding) {
-            val chunk = world.chunks.get(coords, createIfNeeded = false) ?: continue
-            val clients = chunk.getEntities<Client>(EntityType.CLIENT)
-            for (client in clients) {
-                if (!canBeViewed(client, update.entity)) {
-                    continue
-                }
-                val local = client.lastKnownRegionBase!!.toLocal(update.entity.tile)
-                client.write(UpdateZonePartialFollowsMessage(local.x shr 3, local.z shr 3, update.entity.tile.height))
-                client.write(update.toMessage())
+        world.players.forEach { client ->
+            if (!inBuildArea(client) || !canBeViewed(client, update.entity)) {
+                return@forEach
             }
+            val local = client.lastKnownRegionBase!!.toLocal(update.entity.tile)
+            client.write(UpdateZonePartialFollowsMessage(local.x shr 3, local.z shr 3, update.entity.tile.height))
+            client.write(update.toMessage())
         }
     }
 
