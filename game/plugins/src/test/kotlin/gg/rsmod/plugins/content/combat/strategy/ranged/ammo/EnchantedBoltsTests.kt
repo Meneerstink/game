@@ -49,8 +49,11 @@ class EnchantedBoltsTests {
                 Items.DRAGONSTONE_DRAGON_BOLTS_E to Row(0.06, 0.06, true, 756, 2915),
                 Items.ONYX_DRAGON_BOLTS_E to Row(0.11, 0.10, true, 753, 2917),
             )
-        assertEquals(expected.keys, EnchantedBolts.ROSTER.keys, "every dragon bolt (e) is in the roster, nothing else")
-        expected.forEach { (id, row) ->
+        // Audit I-02: the ten gem bolts (e) carry the rows of their dragon bolt (e) counterparts.
+        val gemRows = EnchantedBolts.GEM_BOLT_E_TO_DRAGON_BOLT_E.mapValues { (_, dragon) -> expected.getValue(dragon) }
+        assertEquals(10, gemRows.size)
+        assertEquals(expected.keys + gemRows.keys, EnchantedBolts.ROSTER.keys, "every dragon bolt (e) and gem bolt (e) is in the roster, nothing else")
+        (expected + gemRows).forEach { (id, row) ->
             val bolt = EnchantedBolts.ROSTER.getValue(id)
             assertEquals(row, Row(bolt.monsterChance, bolt.playerChance, bolt.needsSuccessfulHit, bolt.effect.gfx, bolt.effect.sound), "bolt $id")
         }

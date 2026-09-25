@@ -27,7 +27,8 @@ SpecialAttacks.register(50, Items.SARADOMIN_GODSWORD, Items.SARADOMIN_GODSWORD_O
     // The 667 special sequence carries synth 3865 as a frame sound; only the silent imported ornate sequence needs the server cue.
     if (player.getEquipment(EquipmentType.WEAPON)?.id == Items.SARADOMIN_GODSWORD_OR) player.playSound(3865)
     val maxHit = MeleeCombatFormula.getMaxHit(player, target, specialAttackMultiplier = 1.10)
-    val accuracy = MeleeCombatFormula.getAccuracy(player, target, specialAttackMultiplier = 2.0)
+    // Audit C-04: godsword specials roll against the target's slash defence, whatever style is selected.
+    val accuracy = MeleeCombatFormula.getAccuracyAgainst(player, target, specialAttackMultiplier = 2.0, defenceStyle = gg.rsmod.game.model.combat.StyleType.SLASH)
     val landHit = accuracy >= world.randomDouble()
     val hit = player.dealHit(
         target = target,

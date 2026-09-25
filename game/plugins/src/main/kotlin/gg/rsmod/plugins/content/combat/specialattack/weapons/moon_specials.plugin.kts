@@ -19,24 +19,24 @@ import gg.rsmod.plugins.content.items.osrs.MoonSets
  * Jagex-named asset exists for Break Shackles (RuneLite gameval has none), it keeps the spear attack.
  */
 
-fun refund(
-    player: Player,
-    energy: Int,
+/** Audit C-15: a moon special without its set is not performed; SpecialAttacks.perform returns the energy, no attack delay follows. */
+fun gg.rsmod.plugins.content.combat.specialattack.CombatContext.refund(
+    @Suppress("UNUSED_PARAMETER") energy: Int,
     message: String,
 ) {
     player.message(message)
-    AttackTab.setEnergy(player, minOf(100, AttackTab.getEnergy(player) + energy))
+    specialFailed()
 }
 
 /* Eclipse atlatl - Eclipse: 50 %, magic-based at melee distance, accuracy x1.5; consumes the target's burns (+max, +half min, cap 50). */
 SpecialAttacks.register(MoonSets.ECLIPSE_ENERGY, Items.ECLIPSE_ATLATL) {
     val victim: Pawn = target
     if (!MoonSets.wearing(player, MoonSets.MoonSet.ECLIPSE)) {
-        refund(player, MoonSets.ECLIPSE_ENERGY, "You need to wear the full eclipse moon armour set to do that.")
+        refund(MoonSets.ECLIPSE_ENERGY, "You need to wear the full eclipse moon armour set to do that.")
         return@register
     }
     if (player.tile.getDistance(victim.tile) > 1) {
-        refund(player, MoonSets.ECLIPSE_ENERGY, "You need to be next to your target to do that.")
+        refund(MoonSets.ECLIPSE_ENERGY, "You need to be next to your target to do that.")
         return@register
     }
     player.animate(gg.rsmod.plugins.content.items.osrs.OsrsSeq.HUMAN_SPECIAL_ATLATL_01)
@@ -51,7 +51,7 @@ SpecialAttacks.register(MoonSets.ECLIPSE_ENERGY, Items.ECLIPSE_ATLATL) {
 SpecialAttacks.register(MoonSets.BLOOD_INFUSION_ENERGY, Items.DUAL_MACUAHUITL) {
     val victim: Pawn = target
     if (!MoonSets.wearing(player, MoonSets.MoonSet.BLOOD)) {
-        refund(player, MoonSets.BLOOD_INFUSION_ENERGY, "You need to wear the full blood moon armour set to do that.")
+        refund(MoonSets.BLOOD_INFUSION_ENERGY, "You need to wear the full blood moon armour set to do that.")
         return@register
     }
     player.animate(CombatConfigs.getAttackAnimation(player))
@@ -72,7 +72,7 @@ SpecialAttacks.register(MoonSets.BLOOD_INFUSION_ENERGY, Items.DUAL_MACUAHUITL) {
 SpecialAttacks.register(MoonSets.BREAK_SHACKLES_ENERGY, Items.BLUE_MOON_SPEAR) {
     val victim: Pawn = target
     if (!MoonSets.wearing(player, MoonSets.MoonSet.BLUE)) {
-        refund(player, MoonSets.BREAK_SHACKLES_ENERGY, "You need to wear the full blue moon armour set to do that.")
+        refund(MoonSets.BREAK_SHACKLES_ENERGY, "You need to wear the full blue moon armour set to do that.")
         return@register
     }
     val ticks = if (victim.timers.has(FROZEN_TIMER)) victim.timers[FROZEN_TIMER] else 0

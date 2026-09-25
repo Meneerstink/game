@@ -14,6 +14,7 @@ import gg.rsmod.plugins.api.*
 import gg.rsmod.plugins.api.cfg.Gfx
 import gg.rsmod.plugins.api.ext.*
 import gg.rsmod.plugins.content.combat.Combat
+import gg.rsmod.plugins.content.combat.CombatXpRates
 import gg.rsmod.plugins.content.combat.createProjectile
 import gg.rsmod.plugins.content.combat.dealHit
 import gg.rsmod.plugins.content.combat.formula.MagicCombatFormula
@@ -57,6 +58,12 @@ object MagicCombatStrategy : CombatStrategy {
                 return RangedCombatStrategy.canAttack(pawn, target)
             }
             val spell = pawn.attr[Combat.CASTING_SPELL]!!
+            // Audit S-02: the spell must belong to the active spellbook (a modified client cast Ancient spells from the standard
+            // book through spell-on-player/npc). Only autocast used to check this.
+            if (!pawn.hasSpellbook(gg.rsmod.plugins.content.combat.magic.Autocast.bookOf(spell))) {
+                pawn.message("You can't cast that spell from your current spellbook.")
+                return failCast(pawn)
+            }
             // The one validation every combat cast passes - manual cast and autocast alike (shared engine). A failed check never
             // touches the saved autocast choice (OSRS: it stays selected without level/runes); it only drops a pending manual cast,
             // so the next plain attack cannot fire a stale spell. The weapon check covers the god spells too (AutocastWeapons).
@@ -379,8 +386,12 @@ object MagicCombatStrategy : CombatStrategy {
                 val sceptreBoost = spell in gg.rsmod.plugins.content.items.osrs.AncientSceptres.ICE_SPELLS && gg.rsmod.plugins.content.items.osrs.AncientSceptres.boosted(pawn)
                 // Swampbark helm, body and legs: +2 ticks each to standard bind spells (BarkArmour).
                 val ticks =
-                    gg.rsmod.plugins.content.items.osrs.AncientSceptres.freezeTicks(effect.ticks, sceptreBoost) +
-                        gg.rsmod.plugins.content.items.osrs.BarkArmour.bindBonus(pawn, spell)
+                    // Audit I-08: Zuriel's staff lengthens ice-spell freezes.
+                    gg.rsmod.plugins.content.items.osrs.ZurielsStaff.freezeTicks(
+                        pawn,
+                        spell,
+                        gg.rsmod.plugins.content.items.osrs.AncientSceptres.freezeTicks(effect.ticks, sceptreBoost),
+                    ) + gg.rsmod.plugins.content.items.osrs.BarkArmour.bindBonus(pawn, spell)
                 val frozen = target.freeze(ticks) { if (target is Player) target.message("You have been frozen.") }
                 if (!frozen && spell == CombatSpell.ICE_BARRAGE) {
                     // Already frozen / immune: barrage shows the frozen-orb graphic instead.
@@ -402,7 +413,8 @@ object MagicCombatStrategy : CombatStrategy {
                 val sceptres = gg.rsmod.plugins.content.items.osrs.AncientSceptres
                 // Bloodbark armour: +2 % of the damage per piece, scaled after the rounded-down quarter (BarkArmour).
                 val bark = gg.rsmod.plugins.content.items.osrs.BarkArmour
-                val heal = bark.bloodHeal(damage, bark.bloodbarkPieces(pawn), sceptres.boosted(pawn))
+                // Audit I-08: Zuriel's staff, blood spells heal 50 % more.
+                val heal = gg.rsmod.plugins.content.items.osrs.ZurielsStaff.bloodHeal(pawn, bark.bloodHeal(damage, bark.bloodbarkPieces(pawn), sceptres.boosted(pawn)))
                 if (heal > 0) {
                     when (pawn) {
                         is Player -> pawn.heal(heal, capValue = sceptres.overhealCap(pawn, pawn.getMaximumLifepoints()))
@@ -502,10 +514,11 @@ object MagicCombatStrategy : CombatStrategy {
     ) {
         val modDamage = if (target.entityType.isNpc) target.getCurrentLifepoints().coerceAtMost(damage) else damage
         val multiplier = if (target is Npc) Combat.getNpcXpMultiplier(target) else 1.0
-        val experience = baseXp + (modDamage * 0.2) * multiplier
-        val sharedExperience = baseXp + (modDamage * 0.133) * multiplier
-        val hitpointsExperience = (modDamage * 0.133) * multiplier
-        val defenceExperience = (modDamage * 0.1) * multiplier
+        // Audit C-02: OSRS 2 Magic (1.33 + 1 Defence defensively) and 1.33 Hitpoints per 1:1 damage point.
+        val experience = baseXp + (modDamage * CombatXpRates.MAGIC_PER_DAMAGE) * multiplier
+        val sharedExperience = baseXp + (modDamage * CombatXpRates.DEFENSIVE_MAGIC_PER_DAMAGE) * multiplier
+        val hitpointsExperience = (modDamage * CombatXpRates.HITPOINTS_PER_DAMAGE) * multiplier
+        val defenceExperience = (modDamage * CombatXpRates.DEFENSIVE_DEFENCE_PER_DAMAGE) * multiplier
         var bonusRate: Double
         // OSRS Wiki "Autocast": only a defensive autocast splits into Defence; manual casts give the offensive split. (The old check
         // read varp 439, whose low bits are the client spellbook, so every Ancient Magicks cast was counted as defensive.)

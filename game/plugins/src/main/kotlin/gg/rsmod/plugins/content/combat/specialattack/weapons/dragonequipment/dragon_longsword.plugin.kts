@@ -12,7 +12,8 @@ SpecialAttacks.register(SPECIAL_REQUIREMENT, Items.DRAGON_LONGSWORD) {
     player.playSound(Sfx.CLEAVE)
     for (i in 0 until 1) {
         val maxHit = MeleeCombatFormula.getMaxHit(player, target, specialAttackMultiplier = 1.25)
-        val accuracy = MeleeCombatFormula.getAccuracy(player, target, specialAttackMultiplier = 1.25)
+        // Audit I-10/C-04: OSRS Cleave is +25 % damage only (the accuracy bonus is the (bh) variant), rolled against slash.
+        val accuracy = MeleeCombatFormula.getAccuracyAgainst(player, target, specialAttackMultiplier = 1.0, defenceStyle = gg.rsmod.game.model.combat.StyleType.SLASH)
         val landHit = accuracy >= world.randomDouble()
         val delay = if (target.entityType.isNpc) i + 1 else 1
         player.dealHit(

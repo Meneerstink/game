@@ -25,6 +25,9 @@ object Foods {
     /** "approximately 18 seconds" (OSRS Wiki "Strange fruit"). */
     const val STRANGE_FRUIT_IMMUNITY_TICKS = 30
 
+    /** Audit C-14: the normal-food delay a karambwan leaves behind (same length as its potion delay). */
+    const val KARAMBWAN_FOOD_DELAY = 3
+
     /** OSRS anglerfish heal at the player's Hitpoints level (3..22), not a fixed amount. */
     fun anglerfishHeal(hitpointsLevel: Int): Int =
         (hitpointsLevel / 10) + (2 * (hitpointsLevel / 25)) + (5 * (hitpointsLevel / 93)) + 2
@@ -86,6 +89,8 @@ object Foods {
         if (food == Food.KARAMBWAN) {
             // Eating Karambwans also blocks drinking potions.
             p.timers[POTION_DELAY] = 3
+            // Audit C-14: and normal food, so the OSRS combo order is food -> potion -> karambwan (karambwan -> shark is refused).
+            p.timers[FOOD_DELAY] = maxOf(if (p.timers.has(FOOD_DELAY)) p.timers[FOOD_DELAY] else 0, KARAMBWAN_FOOD_DELAY)
         }
 
         if (food == Food.STRANGE_FRUIT) {

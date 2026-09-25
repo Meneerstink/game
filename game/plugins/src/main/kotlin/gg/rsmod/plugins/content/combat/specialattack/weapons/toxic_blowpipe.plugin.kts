@@ -21,9 +21,14 @@ SpecialAttacks.register(Blowpipe.RAPID_BURST_ENERGY, Items.ROSEWOOD_BLOWPIPE) {
         val pipe = player.getEquipment(EquipmentType.WEAPON) ?: return@register
         if (!Blowpipe.canFire(pipe)) {
             player.message(Blowpipe.noChargesMessage(pipe))
+            // Audit C-15: an empty pipe before the first dart costs nothing; after the first dart the special did happen.
+            if (index == 0) specialFailed()
             return@register
         }
-        if (!BlowpipeCombat.fire(player, victim)) return@register
+        if (!BlowpipeCombat.fire(player, victim)) {
+            if (index == 0) specialFailed()
+            return@register
+        }
         val landHit = RangedCombatFormula.getAccuracy(player, victim) >= world.randomDouble()
         // ADAPTED: the second dart lands one tick after the first (spacing unsourced).
         player.dealHit(target = victim, maxHit = RangedCombatFormula.getMaxHit(player, victim), landHit = landHit, delay = delay + index, hitType = HitType.RANGE)
@@ -34,6 +39,7 @@ SpecialAttacks.register(Blowpipe.SPECIAL_ENERGY, Items.TOXIC_BLOWPIPE, Items.BLA
     val pipe = player.getEquipment(EquipmentType.WEAPON) ?: return@register
     if (!Blowpipe.canFire(pipe)) {
         player.message(Blowpipe.noChargesMessage(pipe))
+        specialFailed() // Audit C-15: an empty blowpipe costs no energy and starts no attack delay.
         return@register
     }
     val victim = target
@@ -41,7 +47,10 @@ SpecialAttacks.register(Blowpipe.SPECIAL_ENERGY, Items.TOXIC_BLOWPIPE, Items.BLA
     player.graphic(gg.rsmod.plugins.content.items.osrs.OsrsGfx.TOXIC_BLOWPIPE_SPECIALATTACK) // OSRS TOXIC_BLOWPIPE_SPECIALATTACK (fxpilot)
     player.playSound(Sfx.DART)
     player.playSound(Sfx.SNAKE_HIT, delay = 32)
-    if (!BlowpipeCombat.fire(player, victim)) return@register
+    if (!BlowpipeCombat.fire(player, victim)) {
+        specialFailed()
+        return@register
+    }
     val delay = BlowpipeCombat.hitDelay(player.tile.getDistance(victim.tile), special = true)
     val maxHit = RangedCombatFormula.getMaxHit(player, victim, specialAttackMultiplier = Blowpipe.SIPHON_DAMAGE)
     val landHit = RangedCombatFormula.getAccuracy(player, victim, specialAttackMultiplier = Blowpipe.SIPHON_ACCURACY) >= world.randomDouble()

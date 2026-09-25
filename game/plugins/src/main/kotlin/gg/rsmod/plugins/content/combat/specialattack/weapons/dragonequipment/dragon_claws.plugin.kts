@@ -15,7 +15,7 @@ import gg.rsmod.plugins.content.items.osrs.DragonClaws
  * (protection prayers, Deflect, special experience). A zero hitsplat is dealt as a non-landing hit.
  *
  * Replaces the earlier approximation (1.5x accuracy, half-damage follow-ups, 20 % consolation hit) that did not match OSRS.
- * Hitsplat timing is not sourced (SOURCE_GAP): the four Dragon claws hits keep their previous delays 1-4; Burning claws uses 1, 1, 2
+ * Hitsplat timing: the four Dragon claws hits land on 1, 1, 2, 2 ([DragonClaws.HIT_DELAYS], audit C-06); Burning claws uses 1, 1, 2
  * (ADAPTED). Look: Dragon claws keep the 667 special; Burning claws play the imported OSRS HUMAN_WEAPON_BURNING_CLAWS_02_SPEC,
  * VFX_BURNING_CLAWS_SPEC_02 and burning_claws_swipe_01.
  */
@@ -38,7 +38,8 @@ SpecialAttacks.register(50, Items.DRAGON_CLAWS) {
     val maxHit = MeleeCombatFormula.getMaxHit(player, target)
     val accuracy = MeleeCombatFormula.getAccuracyAgainst(player, target, 1.0, StyleType.SLASH)
     val splats = DragonClaws.sliceAndDice(maxHit.toInt(), { accuracy >= world.randomDouble() }, kotlin.random.Random.Default)
-    splats.forEachIndexed { i, damage -> splat(player, target, damage, i + 1) }
+    // Audit C-06: hits land on 1, 1, 2, 2 instead of 1-4.
+    splats.forEachIndexed { i, damage -> splat(player, target, damage, DragonClaws.HIT_DELAYS[i]) }
 }
 
 SpecialAttacks.register(BurningClaws.ENERGY, Items.BURNING_CLAWS) {

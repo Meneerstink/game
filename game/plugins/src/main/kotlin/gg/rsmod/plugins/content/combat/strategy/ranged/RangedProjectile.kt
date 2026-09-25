@@ -61,6 +61,8 @@ enum class RangedProjectile(
             Bolts.BRONZE_BOLTS + Bolts.IRON_BOLTS + Bolts.STEEL_BOLTS + Bolts.MITHRIL_BOLTS +
                 Bolts.ADAMANT_BOLTS + Bolts.RUNITE_BOLTS + Bolts.DRAGON_BOLTS + Bolts.BLURITE_BOLTS + Bolts.KEBBIT_BOLTS +
                 Bolts.BONE_BOLTS +
+                // Audit I-02: gem-tipped bolts and gem bolts (e) (the dragonstone 9341 is already in DRAGON_BOLTS above).
+                Bolts.GEM_BOLTS.filter { it != Items.DRAGON_BOLTS }.toTypedArray() +
                 // OSRS-IMPORT antler bolts: no 667 antler bolt graphic exists, the 667 bolt projectile is used (ADAPTED_TO_667).
                 arrayOf(Items.SUNLIGHT_ANTLER_BOLTS, Items.MOONLIGHT_ANTLER_BOLTS),
     ),

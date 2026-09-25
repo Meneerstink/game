@@ -21,7 +21,8 @@ SpecialAttacks.register(
 
     for (i in 0 until 2) {
         val maxHit = MeleeCombatFormula.getMaxHit(player, target, specialAttackMultiplier = 1.15)
-        val accuracy = MeleeCombatFormula.getAccuracy(player, target, specialAttackMultiplier = 1.15)
+        // Audit C-04: the Puncture rolls against slash defence (osrs-dps-calc), whatever style is selected.
+        val accuracy = MeleeCombatFormula.getAccuracyAgainst(player, target, specialAttackMultiplier = 1.15, defenceStyle = gg.rsmod.game.model.combat.StyleType.SLASH)
         val landHit = accuracy >= world.randomDouble()
         val delay = if (target.entityType.isNpc) i + 1 else 1
         player.dealHit(

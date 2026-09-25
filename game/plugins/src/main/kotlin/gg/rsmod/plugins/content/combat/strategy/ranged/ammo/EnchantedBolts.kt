@@ -27,7 +27,7 @@ import gg.rsmod.plugins.content.mechanics.poison.Poison
 import kotlin.math.floor
 
 /**
- * Enchanted dragon bolt special effects, one shared model for the whole roster (OSRS Wiki item pages of the ten
+ * Enchanted dragon bolt and gem bolt (e) special effects (audit I-02), one shared model for the whole roster (OSRS Wiki item pages of the ten
  * "<gem> dragon bolts (e)", fetched 2026-09-13; see `C:\RSPS\OSRS_IMPORT_MASTER.yml`). Gfx 749-758 and sounds 2910-2920
  * are the 667 cache ids (Void donor `bolts.gfx.toml` / `bolt_special.sounds.toml`, cache-verified). The Kandarin hard
  * diary does not exist here, so base chances apply. The Armadyl crossbow special doubles the base chance; the Zaryte
@@ -65,7 +65,7 @@ object EnchantedBolts {
         val needsSuccessfulHit: Boolean,
     )
 
-    val ROSTER: Map<Int, Bolt> =
+    private val DRAGON_ROSTER: List<Bolt> =
         listOf(
             Bolt(Items.OPAL_DRAGON_BOLTS_E, Effect.LUCKY_LIGHTNING, 0.05, 0.05, needsSuccessfulHit = false),
             Bolt(Items.JADE_DRAGON_BOLTS_E, Effect.EARTHS_FURY, 0.06, 0.06, needsSuccessfulHit = false),
@@ -77,7 +77,30 @@ object EnchantedBolts {
             Bolt(Items.DIAMOND_DRAGON_BOLTS_E, Effect.ARMOUR_PIERCING, 0.10, 0.05, needsSuccessfulHit = false),
             Bolt(Items.DRAGONSTONE_DRAGON_BOLTS_E, Effect.DRAGONS_BREATH, 0.06, 0.06, needsSuccessfulHit = true),
             Bolt(Items.ONYX_DRAGON_BOLTS_E, Effect.LIFE_LEECH, 0.11, 0.10, needsSuccessfulHit = true),
-        ).associateBy { it.itemId }
+        )
+
+    /**
+     * Audit I-02: the gem bolts (e) share the effect, chances and hit requirement of their dragon bolt (e) counterpart (OSRS: the
+     * dragon versions are the same enchantments on a dragon-metal bolt). The 667 "Dragon bolts (e)" 9244 is the dragonstone bolt.
+     */
+    val GEM_BOLT_E_TO_DRAGON_BOLT_E: Map<Int, Int> =
+        mapOf(
+            Items.OPAL_BOLTS_E to Items.OPAL_DRAGON_BOLTS_E,
+            Items.JADE_BOLTS_E to Items.JADE_DRAGON_BOLTS_E,
+            Items.PEARL_BOLTS_E to Items.PEARL_DRAGON_BOLTS_E,
+            Items.TOPAZ_BOLTS_E to Items.TOPAZ_DRAGON_BOLTS_E,
+            Items.SAPPHIRE_BOLTS_E to Items.SAPPHIRE_DRAGON_BOLTS_E,
+            Items.EMERALD_BOLTS_E to Items.EMERALD_DRAGON_BOLTS_E,
+            Items.RUBY_BOLTS_E to Items.RUBY_DRAGON_BOLTS_E,
+            Items.DIAMOND_BOLTS_E to Items.DIAMOND_DRAGON_BOLTS_E,
+            Items.DRAGON_BOLTS_E to Items.DRAGONSTONE_DRAGON_BOLTS_E,
+            Items.ONYX_BOLTS_E to Items.ONYX_DRAGON_BOLTS_E,
+        )
+
+    val ROSTER: Map<Int, Bolt> =
+        DRAGON_ROSTER.associateBy { it.itemId } +
+            GEM_BOLT_E_TO_DRAGON_BOLT_E.map { (gem, dragon) -> DRAGON_ROSTER.first { it.itemId == dragon }.copy(itemId = gem) }
+                .associateBy { it.itemId }
 
     /** Crossbow special modes that change bolt effects. */
     enum class Special { NONE, ARMADYL_EYE, ZARYTE_EVOKE }

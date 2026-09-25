@@ -562,9 +562,11 @@ enum class PotionType(
     ) {
         alteredSkills.forEachIndexed { index, i ->
             val cap = boostCap(p.skills.getMaxLevel(i), alterStrategy[index])
+            // Audit C-01: the Saradomin brew drain is taken from the current level (OSRS), all others from the base level.
+            val sourceLevel = if (alterStrategy[index] == "brewDrain") p.skills.getCurrentLevel(i) else p.skills.getMaxLevel(i)
             val boost =
                 boostQuantity(
-                    p.skills.getMaxLevel(i).toDouble(),
+                    sourceLevel.toDouble(),
                     alterStrategy[index],
                 )
             // RCV-010 A2: Constitution used to fall through to alterCurrentLevel as well, so the heal
@@ -616,13 +618,9 @@ enum class PotionType(
             // "mindBombBoost" -> boost = floor(currentLevel * 0.02).toInt() + if (currentLevel >= 50) 3 else 1
             "brewHealth" -> boost = floor(currentLevel * 15 / 100).toInt() + 2
             "brewDef" -> boost = floor(currentLevel / 5).toInt() + 2
-            "brewDrain" ->
-                boost =
-                    if ((currentLevel - (floor(currentLevel / 10).toInt() - 2)) < 1) {
-                        currentLevel.toInt() - 1
-                    } else {
-                        -(floor(currentLevel / 10).toInt() - 2)
-                    }
+            // Audit C-01: OSRS drains 10% + 2 of the CURRENT level and never raises it; the old
+            // -(lvl/10 - 2) was 0 at 20-29 and positive below 20, which made alterCurrentLevel throw.
+            "brewDrain" -> boost = -(floor(currentLevel * 10 / 100).toInt() + 2)
             "dwarvenBoost" -> boost = 1
             "dwarvenDrain" -> boost = -2
             "beerHealth" -> boost = 1
@@ -645,13 +643,8 @@ enum class PotionType(
             "s" -> cap = boostQuantity(currentLevel.toDouble(), boostStrategy)
             "brewHealth" -> cap = boostQuantity(currentLevel.toDouble(), boostStrategy)
             "brewDef" -> cap = boostQuantity(currentLevel.toDouble(), boostStrategy)
-            "brewDrain" ->
-                cap =
-                    if (currentLevel == 1) {
-                        0
-                    } else {
-                        -124
-                    }
+            // Audit C-01: the drain is always negative now, so a negative cap is always valid.
+            "brewDrain" -> cap = -124
             // RCV-010 A3: skill potions boost ABOVE the base level (Void `levels.boost(skill, 3)`); cap 0
             // meant "restore to base only", so fishing/agility/hunter/crafting/fletching did nothing at full level.
             "r_skill" -> cap = 3

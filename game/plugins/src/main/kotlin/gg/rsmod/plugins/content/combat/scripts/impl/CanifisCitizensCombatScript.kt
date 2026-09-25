@@ -15,8 +15,6 @@ import gg.rsmod.plugins.api.cfg.Npcs
 import gg.rsmod.plugins.api.ext.*
 import gg.rsmod.plugins.content.combat.*
 import gg.rsmod.plugins.content.combat.formula.MeleeCombatFormula
-import java.util.Timer
-import java.util.TimerTask
 
 object CanifisCitizensCombatScript : CombatScript() {
     override val ids =
@@ -47,8 +45,6 @@ object CanifisCitizensCombatScript : CombatScript() {
         val npc = it.npc
         var target = npc.getCombatTarget() ?: return
         val world = it.npc.world
-        val nextAnimationTimer = Timer()
-        val resetAnimationTimer = Timer()
 
         while (npc.canEngageCombat(target)) {
             npc.facePawn(target)
@@ -62,57 +58,37 @@ object CanifisCitizensCombatScript : CombatScript() {
                     it.wait(1)
                     // Start transformation
                     npc.animate(Anims.START_HUMAN_TO_WEREWOLF, priority = true)
-                    nextAnimationTimer.schedule(
-                        object : TimerTask() {
-                            override fun run() {
-                                // Transform into werewolf
-                                world.spawn(werewolf)
-                                world.remove(npc)
-                                werewolf.facePawn(target)
-                                werewolf.animate(Anims.FINISH_HUMAN_TO_WEREWOLF, priority = true)
-                                // TODO: ADD Transformation GFX
-                                /**
-                                 * GFX Ids
-                                 * 1079: Werewolf transformation
-                                 * 1080: Werewolf transformation
-                                 * 1081: Werewolf transformation
-                                 * 1082: Werewolf transformation
-                                 * 1083: Werewolf transformation
-                                 * 1084: Werewolf transformation
-                                 * 1085: Werewolf transformation
-                                 * 1086: Werewolf transformation
-                                 * 1087: Werewolf transformation
-                                 * 1088: Werewolf transformation
-                                 * 1089: Werewolf transformation
-                                 * 1090: Werewolf transformation
-                                 * 1091: Werewolf transformation
-                                 * 1092: Werewolf transformation
-                                 * 1093: Werewolf transformation
-                                 * 1094: Werewolf transformation
-                                 * 1095: Werewolf transformation
-                                 * 1096: Werewolf transformation
-                                 * 1097: Werewolf transformation
-                                 * 1098: Werewolf transformation
-                                 */
-                            }
-                        },
-                        150,
-                    ) // Set the delay in milliseconds
-                    resetAnimationTimer.schedule(
-                        object : TimerTask() {
-                            override fun run() {
-                                werewolf.resetAnimation()
-                            }
-                        },
-                        2000,
-                    ) // Set the delay in milliseconds
+                    /*
+                     * Audit T-03: the swap into the werewolf and the animation reset ran 150 ms and 2000 ms later
+                     * on two java.util.Timer threads per fight - never cancelled, so the threads leaked - and
+                     * mutated the npc list, chunks and update blocks from outside the game thread. Both now run
+                     * on the game thread, on ticks: the swap on the next tick (where the 150 ms timer's result
+                     * first became visible) and the reset on the tick where the old 2000 ms timer's reset first
+                     * became visible, three ticks after the swap.
+                     */
                     it.wait(1)
+                    // Transform into werewolf
+                    world.spawn(werewolf)
+                    world.remove(npc)
+                    werewolf.facePawn(target)
+                    werewolf.animate(Anims.FINISH_HUMAN_TO_WEREWOLF, priority = true)
+                    // TODO: ADD Transformation GFX (ids 1079-1098: werewolf transformation)
+                    // A world task: werewolf.attack() below interrupts the werewolf's own queue.
+                    world.queue {
+                        wait(WEREWOLF_ANIMATION_RESET_TICKS)
+                        werewolf.resetAnimation()
+                    }
                     // Changes the combat target to the werewolf
                     player.clearActiveCombatTimer()
                     player.setCombatTarget(werewolf)
                     werewolf.setCombatTarget(player)
                     // Attack player
                     werewolf.attack(player)
+                    // The citizen has left the world; the werewolf fights on. (The old loop kept running for the
+                    // removed npc and could still swing at the player once.)
+                    npc.resetFacePawn()
+                    npc.removeCombatTarget()
+                    return
                 }
                 if (npc.moveToAttackRange(it, target, distance = 1, projectile = false) && npc.isAttackDelayReady()) {
                     npc.prepareAttack(CombatClass.MELEE, StyleType.SLASH, WeaponStyle.ACCURATE)
@@ -129,7 +105,12 @@ object CanifisCitizensCombatScript : CombatScript() {
         }
         npc.resetFacePawn()
         npc.removeCombatTarget()
-        nextAnimationTimer.cancel() // Cancel the timer when the combat loop is done
-        resetAnimationTimer.cancel()
     }
+
+    /**
+     * Audit T-03: the reset replaces a 2000 ms timer started one tick before the swap. The world task starts
+     * in the swap tick and, like every queue task, its first `wait(n)` resumes n-1 ticks later - so 4 resets
+     * the animation three ticks after the swap, the tick in which the old timer's reset reached the client.
+     */
+    private const val WEREWOLF_ANIMATION_RESET_TICKS = 4
 }

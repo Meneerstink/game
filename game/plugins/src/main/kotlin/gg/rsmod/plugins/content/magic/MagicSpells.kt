@@ -5,6 +5,7 @@ import gg.rsmod.game.model.item.Item
 import gg.rsmod.game.plugin.KotlinPlugin
 import gg.rsmod.game.plugin.Plugin
 import gg.rsmod.plugins.api.Skills
+import gg.rsmod.plugins.api.Spellbook
 import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.api.ext.*
 import gg.rsmod.plugins.content.combat.Combat
@@ -86,6 +87,11 @@ object MagicSpells {
         items: List<Item>,
         spellId: Int = -1,
     ): String? {
+        // Audit S-02: a spell of another spellbook (sent by a modified client through spell-on-player/npc/item) is refused.
+        val book = getMetadata(spellId)?.let { spellbookOf(it.interfaceId) }
+        if (book != null && !p.hasSpellbook(book)) {
+            return WRONG_SPELLBOOK
+        }
         if (p.skills.getCurrentLevel(Skills.MAGIC) < lvl) {
             return "Your Magic level is not high enough for this spell."
         }
@@ -159,6 +165,17 @@ object MagicSpells {
     }
 
     fun isLoaded(): Boolean = metadata.isNotEmpty()
+
+    const val WRONG_SPELLBOOK = "You can't cast that spell from your current spellbook."
+
+    /** The spellbook whose interface is [interfaceId] (192 standard, 193 Ancient Magicks, 430 Lunar), or null for any other interface. */
+    fun spellbookOf(interfaceId: Int): Spellbook? =
+        when (interfaceId) {
+            192 -> Spellbook.STANDARD
+            193 -> Spellbook.ANCIENT
+            430 -> Spellbook.LUNAR
+            else -> null
+        }
 
     fun loadSpellRequirements() {
         for (spell in SpellbookData.values()) {

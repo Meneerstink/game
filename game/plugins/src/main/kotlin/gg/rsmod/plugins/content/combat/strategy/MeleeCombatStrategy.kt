@@ -14,6 +14,7 @@ import gg.rsmod.plugins.api.ext.hasWeaponType
 import gg.rsmod.plugins.api.ext.playSound
 import gg.rsmod.plugins.content.combat.Combat
 import gg.rsmod.plugins.content.combat.CombatConfigs
+import gg.rsmod.plugins.content.combat.CombatXpRates
 import gg.rsmod.plugins.content.combat.dealHit
 import gg.rsmod.plugins.content.combat.formula.MeleeCombatFormula
 import gg.rsmod.plugins.content.combat.strategy.ranged.RangedAmmo
@@ -156,9 +157,10 @@ object MeleeCombatStrategy : CombatStrategy {
         val mode = CombatConfigs.getXpMode(player)
         val multiplier = if (target is Npc) Combat.getNpcXpMultiplier(target) else 1.0
 
-        val hitpointsExperience = (modDamage * 0.133) * multiplier
-        val combatExperience = (modDamage * 0.4) * multiplier
-        val sharedExperience = (modDamage * 0.133) * multiplier
+        // Audit C-02: OSRS 4 / 1.33 each / 1.33 Hitpoints per 1:1 damage point.
+        val hitpointsExperience = (modDamage * CombatXpRates.HITPOINTS_PER_DAMAGE) * multiplier
+        val combatExperience = (modDamage * CombatXpRates.COMBAT_PER_DAMAGE) * multiplier
+        val sharedExperience = (modDamage * CombatXpRates.CONTROLLED_MELEE_PER_DAMAGE) * multiplier
         var bonusRate: Double
         when (mode) {
             XpMode.ATTACK_XP -> {

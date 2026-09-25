@@ -62588,6 +62588,7 @@
     ranged_strength: 42
     magic_damage: 0
     attack_audio: -1
+    skill_reqs: [{'skill': 4, 'level': 40}]
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
@@ -129755,6 +129756,7 @@
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 40}]
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
@@ -153237,6 +153239,7 @@
     ranged_strength: 0
     magic_damage: 0
     attack_audio: 2517
+    skill_reqs: [{'skill': 0, 'level': 60}]
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
@@ -153270,6 +153273,7 @@
     ranged_strength: 0
     magic_damage: 0
     attack_audio: 2517
+    skill_reqs: [{'skill': 0, 'level': 60}]
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
@@ -153303,6 +153307,7 @@
     ranged_strength: 0
     magic_damage: 0
     attack_audio: 2517
+    skill_reqs: [{'skill': 0, 'level': 60}]
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
@@ -160045,6 +160050,7 @@
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 40}]
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
@@ -160078,6 +160084,7 @@
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 40}]
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
@@ -160111,6 +160118,7 @@
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 40}]
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
@@ -160210,6 +160218,7 @@
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 40}]
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
@@ -160243,6 +160252,7 @@
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 60}]
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
@@ -160276,6 +160286,7 @@
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 40}]
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
@@ -160309,6 +160320,7 @@
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 60}]
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
@@ -160342,6 +160354,7 @@
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 40}]
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
@@ -160375,6 +160388,7 @@
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 60}]
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
@@ -254011,6 +254025,7 @@
     equip_slot: 3
     equip_type: -1
     weapon_type: -1
+    attack_speed: 4
     remove_head: false
     remove_beard: false
     remove_arms: false
@@ -254043,6 +254058,7 @@
     equip_slot: 3
     equip_type: -1
     weapon_type: -1
+    attack_speed: 4
     remove_head: false
     remove_beard: false
     remove_arms: false
@@ -254075,6 +254091,7 @@
     equip_slot: 3
     equip_type: -1
     weapon_type: -1
+    attack_speed: 4
     remove_head: false
     remove_beard: false
     remove_arms: false
@@ -254107,6 +254124,7 @@
     equip_slot: 3
     equip_type: -1
     weapon_type: -1
+    attack_speed: 4
     remove_head: false
     remove_beard: false
     remove_arms: false
@@ -254139,6 +254157,7 @@
     equip_slot: 3
     equip_type: -1
     weapon_type: -1
+    attack_speed: 4
     remove_head: false
     remove_beard: false
     remove_arms: false
@@ -269000,6 +269019,7 @@
     ranged_strength: 28
     magic_damage: 0
     attack_audio: -1
+    skill_reqs: [{'skill': 4, 'level': 50}]
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
@@ -271427,6 +271447,7 @@
     ranged_strength: 122
     magic_damage: 0.0
     attack_audio: -1
+    skill_reqs: [{'skill': 4, 'level': 64}]
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
@@ -271460,6 +271481,7 @@
     ranged_strength: 122
     magic_damage: 0.0
     attack_audio: -1
+    skill_reqs: [{'skill': 4, 'level': 64}]
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
@@ -271493,6 +271515,7 @@
     ranged_strength: 122
     magic_damage: 0.0
     attack_audio: -1
+    skill_reqs: [{'skill': 4, 'level': 64}]
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
@@ -271560,6 +271583,7 @@
     ranged_strength: 30
     magic_damage: 0.0
     attack_audio: 2704
+    skill_reqs: [{'skill': 4, 'level': 60}]
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
@@ -271593,6 +271617,7 @@
     ranged_strength: 30
     magic_damage: 0.0
     attack_audio: 2704
+    skill_reqs: [{'skill': 4, 'level': 60}]
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
@@ -271728,6 +271753,7 @@
     ranged_strength: 28
     magic_damage: 0.0
     attack_audio: 2547
+    skill_reqs: [{'skill': 4, 'level': 50}]
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
@@ -271761,6 +271787,7 @@
     ranged_strength: 28
     magic_damage: 0.0
     attack_audio: 2547
+    skill_reqs: [{'skill': 4, 'level': 50}]
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
@@ -271794,6 +271821,7 @@
     ranged_strength: 28
     magic_damage: 0.0
     attack_audio: 2547
+    skill_reqs: [{'skill': 4, 'level': 50}]
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
@@ -275833,6 +275861,7 @@
     ranged_strength: 0
     magic_damage: 2.0
     attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 75}]
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
@@ -275866,6 +275895,7 @@
     ranged_strength: 0
     magic_damage: 2.0
     attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 75}]
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
@@ -275899,6 +275929,7 @@
     ranged_strength: 0
     magic_damage: 2.0
     attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 75}]
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
@@ -276083,6 +276114,7 @@
     ranged_strength: 2
     magic_damage: 0.0
     attack_audio: -1
+    skill_reqs: [{'skill': 4, 'level': 70}, {'skill': 1, 'level': 35}]
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0

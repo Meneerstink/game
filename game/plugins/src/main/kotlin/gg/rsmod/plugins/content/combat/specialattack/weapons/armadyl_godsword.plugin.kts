@@ -20,8 +20,9 @@ SpecialAttacks.register(50, Items.ARMADYL_GODSWORD, Items.ARMADYL_GODSWORD_OR) {
     player.graphic(2113)
     // The 667 special sequence carries synth 3865 as a frame sound; only the silent imported ornate sequence needs the server cue.
     if (player.getEquipment(EquipmentType.WEAPON)?.id == Items.ARMADYL_GODSWORD_OR) player.playSound(3865)
-    val maxHit = MeleeCombatFormula.getMaxHit(player, target, specialAttackMultiplier = 1.10)
-    val accuracy = MeleeCombatFormula.getAccuracy(player, target, specialAttackMultiplier = 1.25)
+    // Audit C-03: OSRS "The Judgement" is +37.5 % damage (1.1 x 1.25) and doubled accuracy, rolled against slash (C-04).
+    val maxHit = MeleeCombatFormula.getMaxHit(player, target, specialAttackMultiplier = 1.375)
+    val accuracy = MeleeCombatFormula.getAccuracyAgainst(player, target, specialAttackMultiplier = 2.0, defenceStyle = gg.rsmod.game.model.combat.StyleType.SLASH)
     val landHit = accuracy >= world.randomDouble()
     player.dealHit(
         target = target,

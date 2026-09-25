@@ -50,7 +50,8 @@ fun ItemContainer.transfer(
             copy
         }
 
-    val add = to.add(finalItem.id, finalItem.amount, assureFullInsertion = false, beginSlot = toSlot)
+    // Audit E-06: a transfer moves an existing item, so the charged-item creation redirect must not change its id.
+    val add = to.add(finalItem.id, finalItem.amount, assureFullInsertion = false, beginSlot = toSlot, applyCreationRedirect = false)
     if (add.completed == 0) {
         return null
     }
@@ -80,7 +81,9 @@ fun ItemContainer.addPreservingAttr(
     assureFullInsertion: Boolean = true,
     beginSlot: Int = -1,
 ): ItemTransaction {
-    val transaction = add(item.id, item.amount, assureFullInsertion = assureFullInsertion, beginSlot = beginSlot)
+    // Audit E-06: the item already exists (trade, death recovery), so it keeps its id; its attributes follow below.
+    val transaction =
+        add(item.id, item.amount, assureFullInsertion = assureFullInsertion, beginSlot = beginSlot, applyCreationRedirect = false)
     if (item.hasAnyAttr()) {
         transaction.items.forEach { it.item.copyAttr(item) }
     }

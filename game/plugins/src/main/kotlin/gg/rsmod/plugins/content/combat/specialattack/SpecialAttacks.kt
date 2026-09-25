@@ -68,22 +68,40 @@ object SpecialAttacks {
 
     private val instantAttacks = mutableMapOf<Int, InstantSpecial>()
 
+    /** Audit C-15: what a special-attack attempt did this combat cycle. */
+    enum class Outcome {
+        /** No special ran (no special on the weapon, too little energy, refused target): the normal attack follows. */
+        NOT_USED,
+
+        /** The special was performed and its energy spent. */
+        PERFORMED,
+
+        /** The special ran but could not be performed ([CombatContext.specialFailed]): energy returned, no attack this cycle. */
+        FAILED,
+    }
+
     fun execute(
         player: Player,
         target: Pawn?,
         world: World,
-    ): Boolean {
-        val weaponItem = player.getEquipment(EquipmentType.WEAPON) ?: return false
-        val special = attacks[weaponItem.id] ?: return false
+    ): Boolean = perform(player, target, world) == Outcome.PERFORMED
+
+    fun perform(
+        player: Player,
+        target: Pawn?,
+        world: World,
+    ): Outcome {
+        val weaponItem = player.getEquipment(EquipmentType.WEAPON) ?: return Outcome.NOT_USED
+        val special = attacks[weaponItem.id] ?: return Outcome.NOT_USED
 
         if (AttackTab.getEnergy(player) < special.energyRequired) {
             player.message("You don't have enough power left.")
-            return false
+            return Outcome.NOT_USED
         }
 
         if (RangedProjectile.MORRIGANS_JAVELIN.items.contains(weaponItem.id) && target is Npc) {
             player.message("This special attack can only be used against another player.")
-            return false
+            return Outcome.NOT_USED
         }
 
         AttackTab.setEnergy(player, AttackTab.getEnergy(player) - special.energyRequired)
@@ -100,7 +118,13 @@ object SpecialAttacks {
             player.attr.remove(AncientCurses.DEFLECT_ATTACK_TOKEN_ATTR)
         }
 
-        return true
+        if (combatContext.failed) {
+            // Audit C-15: the energy is only really spent on success. It is drained before the attack (specials read the
+            // remaining energy) and returned here when the special could not be performed.
+            AttackTab.setEnergy(player, minOf(100, AttackTab.getEnergy(player) + special.energyRequired))
+            return Outcome.FAILED
+        }
+        return Outcome.PERFORMED
     }
 
     private val attacks = mutableMapOf<Int, SpecialAttack>()

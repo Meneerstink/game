@@ -97,6 +97,20 @@ object Combat {
 
     fun isAttackDelayReady(pawn: Pawn): Boolean = !pawn.timers.has(ATTACK_DELAY)
 
+    /** Audit X-10: minimum logout hold after a player is attacked or takes a hit (poison and venom included). */
+    const val LOGOUT_HOLD_TICKS = 16
+
+    /** Audit X-10: extends (never shortens) the Deadman logout hold to at least [ticks]. */
+    fun holdLogout(
+        player: Player,
+        ticks: Int = LOGOUT_HOLD_TICKS,
+    ) {
+        val remaining = if (player.timers.has(DEADMAN_LOGOUT_TIMER)) player.timers[DEADMAN_LOGOUT_TIMER] else 0
+        if (ticks > remaining) {
+            player.timers[DEADMAN_LOGOUT_TIMER] = ticks
+        }
+    }
+
     fun postAttack(
         pawn: Pawn,
         target: Pawn,
@@ -116,17 +130,11 @@ object Combat {
         // window, and "being attacked" cancels an in-progress 7-second logout/teleport/portal/
         // transport countdown.
         target.timers[TELEPORT_COMBAT_TIMER] = gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction.DURATION_CYCLES
-        if (!BossNpcs.isBoss(pawn)) {
-            (target as? Player)?.timers?.set(
-                DEADMAN_LOGOUT_TIMER,
-                gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction.DURATION_CYCLES,
-            )
-        }
+        // Audit X-10: being attacked by anything, bosses included, holds a disconnected body in the world until the attack's
+        // pending hits have landed (a boss x-log used to escape an in-flight lethal hit). dealHit extends the hold again on impact.
+        (target as? Player)?.let { holdLogout(it) }
         if (!BossNpcs.isBoss(target)) {
-            (pawn as? Player)?.timers?.set(
-                DEADMAN_LOGOUT_TIMER,
-                gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction.DURATION_CYCLES,
-            )
+            (pawn as? Player)?.let { holdLogout(it, gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction.DURATION_CYCLES) }
         }
         if (target is Player) {
             gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction.cancel(target, "You have been attacked!")

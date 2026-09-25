@@ -7,6 +7,7 @@ import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.api.*
 import gg.rsmod.plugins.api.ext.*
 import gg.rsmod.plugins.content.combat.Combat
+import gg.rsmod.plugins.content.combat.CombatXpRates
 import gg.rsmod.plugins.content.combat.createProjectile
 import gg.rsmod.plugins.content.combat.dealHit
 import gg.rsmod.plugins.content.combat.formula.MagicCombatFormula
@@ -65,9 +66,10 @@ object PoweredStaffCombatStrategy : CombatStrategy {
             player.message(PoweredStaves.NO_CHARGES_MESSAGE)
             return false
         }
-        // "Powered staff spells cannot be cast upon other players in the Wilderness."
-        if (target is Player && (target.tile.getWildernessLevel() > 0 || player.tile.getWildernessLevel() > 0)) {
-            player.message(PoweredStaves.WILDERNESS_PLAYER_MESSAGE)
+        // Audit I-06: "Powered staff spells cannot be cast upon other players" - on this server PvP happens outside the Wilderness
+        // too, so the old Wilderness-only check let the runeless 4-tick trident/sanguinesti attacks be used in PvP everywhere else.
+        if (target is Player) {
+            player.message(PoweredStaves.PLAYER_TARGET_MESSAGE)
             return false
         }
         return true
@@ -139,13 +141,13 @@ object PoweredStaffCombatStrategy : CombatStrategy {
         // the Seas) at the defensive-casting rates 1.33 Magic, 1 Defence, 1.33 Hitpoints per damage ("Combat Options"); the wiki
         // gives no powered-staff-specific split (recorded). Same units as MagicCombatStrategy defensive casting.
         if (PoweredStaves.isLongrange(player)) {
-            val longrangeRate = player.addXp(Skills.MAGIC, modDamage * 0.133 * multiplier, checkBrawlingGloves = true)
-            player.addXp(Skills.DEFENCE, modDamage * 0.1 * multiplier * longrangeRate)
-            player.addXp(Skills.CONSTITUTION, modDamage * 0.133 * multiplier * longrangeRate)
+            val longrangeRate = player.addXp(Skills.MAGIC, modDamage * CombatXpRates.DEFENSIVE_MAGIC_PER_DAMAGE * multiplier, checkBrawlingGloves = true)
+            player.addXp(Skills.DEFENCE, modDamage * CombatXpRates.DEFENSIVE_DEFENCE_PER_DAMAGE * multiplier * longrangeRate)
+            player.addXp(Skills.CONSTITUTION, modDamage * CombatXpRates.HITPOINTS_PER_DAMAGE * multiplier * longrangeRate)
             return
         }
-        // Same unit as MagicCombatStrategy (0.2 Magic / 0.133 Hitpoints per damage point there = 2 / 1.33).
-        val bonusRate = player.addXp(Skills.MAGIC, modDamage * PoweredStaves.MAGIC_XP_PER_DAMAGE / 10.0 * multiplier, checkBrawlingGloves = true)
-        player.addXp(Skills.CONSTITUTION, modDamage * 0.133 * multiplier * bonusRate)
+        // Audit C-02: damage is 1:1, so the OSRS 2 Magic / 1.33 Hitpoints apply unscaled (the old "/ 10.0" was the x10 unit).
+        val bonusRate = player.addXp(Skills.MAGIC, modDamage * PoweredStaves.MAGIC_XP_PER_DAMAGE * multiplier, checkBrawlingGloves = true)
+        player.addXp(Skills.CONSTITUTION, modDamage * CombatXpRates.HITPOINTS_PER_DAMAGE * multiplier * bonusRate)
     }
 }

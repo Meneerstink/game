@@ -43,8 +43,8 @@ SpecialAttacks.register(ScorchingBow.SHACKLES_ENERGY, Items.SCORCHING_BOW) {
     val victim = target
     if (!ScorchingBow.isDemon(victim)) {
         player.message(ScorchingBow.NOT_DEMON_MESSAGE)
-        // ADAPTED: this engine drains the energy before the special runs; the special does not work, so the energy is returned.
-        AttackTab.setEnergy(player, minOf(100, AttackTab.getEnergy(player) + ScorchingBow.SHACKLES_ENERGY))
+        // Audit C-15: the special does not work, so SpecialAttacks.perform returns the energy and no attack delay follows.
+        specialFailed()
         return@register
     }
     player.animate(CombatConfigs.getAttackAnimation(player))
@@ -58,6 +58,7 @@ SpecialAttacks.register(ScorchingBow.SHACKLES_ENERGY, Items.SCORCHING_BOW) {
             projectileGfx = gg.rsmod.plugins.content.items.osrs.OsrsGfx.SCORCHING_BOW_PROJECTILE,
         ) == -1
     ) {
+        specialFailed() // Audit C-15: no ammo - the special costs nothing and no attack follows.
         return@register
     }
     victim.graphic(gg.rsmod.plugins.content.items.osrs.OsrsGfx.SCORCHING_BOW_IMPACT, delay = delay * 30)

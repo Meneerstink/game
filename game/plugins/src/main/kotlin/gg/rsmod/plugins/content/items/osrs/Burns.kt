@@ -47,8 +47,18 @@ object Burns {
                 burn.remaining--
                 target.hit(damage = 1, type = gg.rsmod.plugins.api.HitType.BURN) // OSRS burn hitsplat (owner 2026-09-19)
             }
+            // Audit C-07: a burn that stops (death, logout, consumed) leaves no stack behind; before this a stopped burn kept its
+            // remaining damage, counted towards MAX_STACKS and was paid out again by the Eclipse special.
+            burn.remaining = 0
+            target.attr[ACTIVE]?.remove(burn)
         }
         return true
+    }
+
+    /** Audit C-07: drops every burn on [target] without paying out its damage (death). */
+    fun clear(target: Pawn) {
+        target.attr[ACTIVE]?.forEach { it.remaining = 0 }
+        target.attr.remove(ACTIVE)
     }
 
     /** Ends every burn on [target] and returns the damage they had left to deal. */

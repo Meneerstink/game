@@ -101,6 +101,9 @@ object PoweredStaves {
     const val NO_CHARGES_MESSAGE = "Your weapon has no charges left."
     const val WILDERNESS_PLAYER_MESSAGE = "You can't use this weapon's spell on players in the Wilderness."
 
+    /** Audit I-06: powered staves cannot attack players anywhere. */
+    const val PLAYER_TARGET_MESSAGE = "You can't use this weapon's spell on other players."
+
     /** Magic fang + uncharged trident (normal and (e)) -> uncharged toxic trident; Dismantle reverses it. */
     val TOXIC_UPGRADE: Map<Int, Int> =
         mapOf(Items.UNCHARGED_TRIDENT to Items.UNCHARGED_TOXIC_TRIDENT, Items.UNCHARGED_TRIDENT_E to Items.UNCHARGED_TOXIC_TRIDENT_E)

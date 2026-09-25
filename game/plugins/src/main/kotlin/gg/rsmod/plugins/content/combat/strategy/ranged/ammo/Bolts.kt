@@ -38,6 +38,23 @@ object Bolts {
             Items.OSRS_DRAGON_BOLTS_P, Items.OSRS_DRAGON_BOLTS_P_PLUS, Items.OSRS_DRAGON_BOLTS_P_PLUS_PLUS,
         )
 
+    /*
+     * Audit I-02: the OSRS gem-tipped bolts and their enchanted (e) versions, grouped by the metal tier of crossbow that fires
+     * them (opal bronze, jade blurite, pearl iron, topaz steel, sapphire/emerald mithril, ruby/diamond adamant, dragonstone/onyx
+     * runite). The 667 "Dragon bolts" 9341 / "Dragon bolts (e)" 9244 are the dragonstone-tipped bolts.
+     */
+    val OPAL_GEM_BOLTS = arrayOf(Items.OPAL_BOLTS, Items.OPAL_BOLTS_E)
+    val JADE_GEM_BOLTS = arrayOf(Items.JADE_BOLTS, Items.JADE_BOLTS_E)
+    val PEARL_GEM_BOLTS = arrayOf(Items.PEARL_BOLTS, Items.PEARL_BOLTS_E)
+    val TOPAZ_GEM_BOLTS = arrayOf(Items.TOPAZ_BOLTS, Items.TOPAZ_BOLTS_E)
+    val MITHRIL_GEM_BOLTS = arrayOf(Items.SAPPHIRE_BOLTS, Items.SAPPHIRE_BOLTS_E, Items.EMERALD_BOLTS, Items.EMERALD_BOLTS_E)
+    val ADAMANT_GEM_BOLTS = arrayOf(Items.RUBY_BOLTS, Items.RUBY_BOLTS_E, Items.DIAMOND_BOLTS, Items.DIAMOND_BOLTS_E)
+    val RUNITE_GEM_BOLTS = arrayOf(Items.DRAGON_BOLTS, Items.DRAGON_BOLTS_E, Items.ONYX_BOLTS, Items.ONYX_BOLTS_E)
+
+    /** Audit I-02: every gem-tipped bolt, plain and enchanted. */
+    val GEM_BOLTS: Array<Int>
+        get() = OPAL_GEM_BOLTS + JADE_GEM_BOLTS + PEARL_GEM_BOLTS + TOPAZ_GEM_BOLTS + MITHRIL_GEM_BOLTS + ADAMANT_GEM_BOLTS + RUNITE_GEM_BOLTS
+
     val BLURITE_BOLTS =
         arrayOf(Items.BLURITE_BOLTS, Items.BLURITE_BOLTS_P, Items.BLURITE_BOLTS_P_9293, Items.BLURITE_BOLTS_P_9300)
     val BONE_BOLTS = arrayOf(Items.BONE_BOLTS)

@@ -22,7 +22,8 @@ val SARASWORD_SPEC_SFX_ID = 3853
 SpecialAttacks.register(SPECIAL_REQUIREMENT, Items.SARADOMIN_SWORD) {
     // First normal attack
     val maxHit = MeleeCombatFormula.getMaxHit(player, target, specialAttackMultiplier = 1.10)
-    val accuracy = MeleeCombatFormula.getAccuracy(player, target)
+    // Audit C-04: Saradomin Lightning rolls against slash defence (osrs-dps-calc), whatever style is selected.
+    val accuracy = MeleeCombatFormula.getAccuracyAgainst(player, target, specialAttackMultiplier = 1.0, defenceStyle = gg.rsmod.game.model.combat.StyleType.SLASH)
     val landHit = accuracy >= world.randomDouble()
     val delay = 1
 

@@ -29,6 +29,7 @@ SpecialAttacks.register(ENERGY_REQUIRED, Items.HAND_CANNON) {
     val ammo = player.getEquipment(EquipmentType.AMMO)
     if (ammo == null || ammo.id != Items.HAND_CANNON_SHOT) {
         player.message("You have no ammo left in your quiver.")
+        specialFailed() // Audit C-15: no ammo - the special costs nothing and no attack follows.
         return@register
     }
 

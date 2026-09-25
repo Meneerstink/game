@@ -9,6 +9,13 @@ import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Bolts.BROAD_BOLTS
 import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Bolts.BRONZE_BOLTS
 import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Bolts.DRAGON_BOLTS
 import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Bolts.OSRS_DRAGON_BOLT_FAMILY
+import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Bolts.ADAMANT_GEM_BOLTS
+import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Bolts.GEM_BOLTS
+import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Bolts.JADE_GEM_BOLTS
+import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Bolts.MITHRIL_GEM_BOLTS
+import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Bolts.OPAL_GEM_BOLTS
+import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Bolts.PEARL_GEM_BOLTS
+import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Bolts.TOPAZ_GEM_BOLTS
 import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Bolts.IRON_BOLTS
 import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Bolts.KEBBIT_BOLTS
 import gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Bolts.MITHRIL_BOLTS
@@ -26,19 +33,27 @@ enum class CrossbowType(
     PHOENIX_CROSSBOW(item = Items.PHOENIX_CROSSBOW, ammo = BRONZE_BOLTS),
     CROSSBOW(item = Items.CROSSBOW, ammo = BRONZE_BOLTS),
 
-    BRONZE_CROSSBOW(item = Items.BRONZE_CROSSBOW, ammo = BRONZE_BOLTS),
-    IRON_CROSSBOW(item = Items.IRON_CROSSBOW, ammo = BRONZE_BOLTS + IRON_BOLTS),
-    STEEL_CROSSBOW(item = Items.STEEL_CROSSBOW, ammo = BRONZE_BOLTS + IRON_BOLTS + STEEL_BOLTS),
-    MITH_CROSSBOW(item = Items.MITH_CROSSBOW, ammo = BRONZE_BOLTS + IRON_BOLTS + STEEL_BOLTS + MITHRIL_BOLTS),
+    // Audit I-02: each metal crossbow also fires the gem-tipped bolts (plain and (e)) of its own tier and below (OSRS).
+    BRONZE_CROSSBOW(item = Items.BRONZE_CROSSBOW, ammo = BRONZE_BOLTS + OPAL_GEM_BOLTS),
+    IRON_CROSSBOW(item = Items.IRON_CROSSBOW, ammo = BRONZE_BOLTS + IRON_BOLTS + OPAL_GEM_BOLTS + PEARL_GEM_BOLTS),
+    STEEL_CROSSBOW(
+        item = Items.STEEL_CROSSBOW,
+        ammo = BRONZE_BOLTS + IRON_BOLTS + STEEL_BOLTS + OPAL_GEM_BOLTS + PEARL_GEM_BOLTS + TOPAZ_GEM_BOLTS,
+    ),
+    MITH_CROSSBOW(
+        item = Items.MITH_CROSSBOW,
+        ammo = BRONZE_BOLTS + IRON_BOLTS + STEEL_BOLTS + MITHRIL_BOLTS + OPAL_GEM_BOLTS + PEARL_GEM_BOLTS + TOPAZ_GEM_BOLTS + MITHRIL_GEM_BOLTS,
+    ),
     ADAMANT_CROSSBOW(
         item = Items.ADAMANT_CROSSBOW,
         ammo =
-            BRONZE_BOLTS + IRON_BOLTS + STEEL_BOLTS + MITHRIL_BOLTS + ADAMANT_BOLTS,
+            BRONZE_BOLTS + IRON_BOLTS + STEEL_BOLTS + MITHRIL_BOLTS + ADAMANT_BOLTS +
+                OPAL_GEM_BOLTS + PEARL_GEM_BOLTS + TOPAZ_GEM_BOLTS + MITHRIL_GEM_BOLTS + ADAMANT_GEM_BOLTS,
     ),
     RUNE_CROSSBOW(
         item = Items.RUNE_CROSSBOW,
         ammo =
-            BRONZE_BOLTS + IRON_BOLTS + STEEL_BOLTS + MITHRIL_BOLTS + ADAMANT_BOLTS + RUNITE_BOLTS + BROAD_BOLTS,
+            BRONZE_BOLTS + IRON_BOLTS + STEEL_BOLTS + MITHRIL_BOLTS + ADAMANT_BOLTS + RUNITE_BOLTS + BROAD_BOLTS + GEM_BOLTS,
     ),
 
     // OSRS-IMPORT: Armadyl, Zaryte and Dragon crossbow fire every bolt up to dragon bolts (OSRS Wiki item pages),
@@ -57,7 +72,7 @@ enum class CrossbowType(
     // OSRS Wiki "Heavy ballista (or)": "a cosmetic variant of the heavy ballista".
     HEAVY_BALLISTA_OR(item = Items.HEAVY_BALLISTA_OR, ammo = Javelins.BALLISTA_JAVELINS),
 
-    BLURITE_CROSSBOW(item = Items.BLURITE_CROSSBOW, ammo = BRONZE_BOLTS + BLURITE_BOLTS),
+    BLURITE_CROSSBOW(item = Items.BLURITE_CROSSBOW, ammo = BRONZE_BOLTS + BLURITE_BOLTS + OPAL_GEM_BOLTS + JADE_GEM_BOLTS),
     DORGESHUUN_CROSSBOW(item = Items.DORGESHUUN_CBOW, ammo = BONE_BOLTS),
     HUNTER_CROSSBOW(item = Items.HUNTERS_CROSSBOW, ammo = KEBBIT_BOLTS),
 
@@ -83,4 +98,4 @@ enum class CrossbowType(
 private val UP_TO_DRAGON_BOLTS: Array<Int>
     get() =
         BRONZE_BOLTS + IRON_BOLTS + STEEL_BOLTS + MITHRIL_BOLTS + ADAMANT_BOLTS + RUNITE_BOLTS + BROAD_BOLTS +
-            DRAGON_BOLTS + OSRS_DRAGON_BOLT_FAMILY
+            DRAGON_BOLTS + OSRS_DRAGON_BOLT_FAMILY + GEM_BOLTS

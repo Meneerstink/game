@@ -249,6 +249,12 @@ fun Pawn.dealHit(
 
     val pawnHit = PawnHit(hit, executeHit)
 
+    // Audit X-10: a player with a hit on its way cannot finish an x-log before it lands, and stays held 16 ticks after impact.
+    if (target is Player) {
+        Combat.holdLogout(target, delay + Combat.LOGOUT_HOLD_TICKS)
+        hit.addAction { Combat.holdLogout(target) }
+    }
+
     // Deadman skull (owner 2026-09-18, MAJOR): the attacker is skulled when this hitsplat registers
     // on the other player - the first hit action, so it runs the cycle the hitmark is written and
     // never for a cancelled hit. Every melee/ranged/magic/special route deals through here.

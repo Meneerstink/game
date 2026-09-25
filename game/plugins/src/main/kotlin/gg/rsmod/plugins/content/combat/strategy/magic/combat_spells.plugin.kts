@@ -34,7 +34,8 @@ fun castCombatSpellOnPawn(
         /*
          * The spell is not defined in [CombatSpell].
          */
-        if (world.devContext.debugMagicSpells) {
+        // Audit S-12: debug output only for staff with the dev power.
+        if (world.devContext.debugMagicSpells && world.privileges.isEligible(player.privilege, gg.rsmod.game.model.priv.Privilege.DEV_POWER)) {
             player.message("Undefined combat spell: [spellId=${spellMetadata.sprite}, name=${spellMetadata.name}]")
         }
     }

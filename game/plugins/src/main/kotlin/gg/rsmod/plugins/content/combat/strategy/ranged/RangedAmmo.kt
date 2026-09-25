@@ -27,9 +27,8 @@ private val SALAMANDER_AMMO = arrayOf(Items.SWAMP_TAR)
  * otherwise the ammo stored in a worn Dizana's quiver does.
  *
  * Weapons without an ammo list here keep the old behaviour (the ammo slot as it is). Ranged attack/strength bonuses of the
- * fired quiver ammo replace those of the unused slot ammo only for a quiver shot (the wiki DPS calculator
- * `ammoApplicability` counts ammo bonuses only for ammo the weapon uses); the general 667 rule that an unused ammo slot
- * still adds its bonuses is an ADJACENT GAP recorded in OSRS_IMPORT_MASTER.yml, not changed here.
+ * fired quiver ammo replace those of the unused slot ammo for a quiver shot, and (audit I-01) ammunition the weapon does not fire
+ * adds no bonuses at all (the wiki DPS calculator `ammoApplicability` counts ammo bonuses only for ammo the weapon uses).
  */
 object RangedAmmo {
     data class Fired(val item: Item, val fromQuiver: Boolean)
@@ -81,13 +80,27 @@ object RangedAmmo {
         if (fired.fromQuiver) DizanasQuiver.removeStored(player, amount) else player.equipment.remove(fired.item.id, amount)
     }
 
-    /** Bonus change for a quiver shot: the stored ammo's bonus instead of the unused slot ammo's (0 otherwise). */
+    /**
+     * Bonus change for the ammunition the shot does not use (called for bows, crossbows and every other non-thrown weapon):
+     * - a quiver shot uses the stored ammo's bonus instead of the slot's;
+     * - Audit I-01: ammunition in the ammo slot that the weapon does not fire (Bow of Faerdhinen / crystal bows, or ammo the weapon
+     *   does not accept) adds nothing, as in OSRS (wiki DPS calculator `ammoApplicability`). A non-ammunition item in the slot (god
+     *   blessing) always keeps its bonuses.
+     * 0 when the slot ammo is the ammo that fires.
+     */
     fun quiverBonusCorrection(
         player: Player,
         slot: BonusSlot,
     ): Int {
-        val fired = fired(player)?.takeIf { it.fromQuiver } ?: return 0
+        val slotId = player.getEquipment(EquipmentType.AMMO)?.id
+        val fired = fired(player)
+        if (fired != null && !fired.fromQuiver) return 0
         fun bonus(id: Int?) = if (id == null) 0 else player.world.definitions.get(ItemDef::class.java, id).bonuses[slot.id]
-        return bonus(fired.item.id) - bonus(player.getEquipment(EquipmentType.AMMO)?.id)
+        val unusedSlotAmmo = if (slotId != null && isAmmunition(slotId)) bonus(slotId) else 0
+        val quiverAmmo = if (fired != null) bonus(fired.item.id) else 0
+        return quiverAmmo - unusedSlotAmmo
     }
+
+    /** Audit I-01: arrows, bolts, javelins, darts, knives, ... - anything a ranged weapon can fire (not a god blessing). */
+    fun isAmmunition(itemId: Int): Boolean = RangedProjectile.values.any { itemId in it.items }
 }

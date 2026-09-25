@@ -46,7 +46,11 @@ class VoidwakerTests {
         val shared = File("src/main/kotlin/gg/rsmod/plugins/content/combat/specialattack/SpecialAttackXp.kt").readText()
         assertTrue("HitType.MAGIC -> MagicCombatStrategy.addCombatXp(player, target, damage, baseXp = 0.0)" in shared)
         val magic = File("src/main/kotlin/gg/rsmod/plugins/content/combat/strategy/MagicCombatStrategy.kt").readText()
-        assertTrue("val experience = baseXp + (modDamage * 0.2) * multiplier" in magic && "val hitpointsExperience = (modDamage * 0.133) * multiplier" in magic)
+        // Audit C-02: the rates are OSRS per 1:1 damage point now (2 Magic, 1.33 Hitpoints).
+        assertTrue(
+            "val experience = baseXp + (modDamage * CombatXpRates.MAGIC_PER_DAMAGE) * multiplier" in magic &&
+                "val hitpointsExperience = (modDamage * CombatXpRates.HITPOINTS_PER_DAMAGE) * multiplier" in magic,
+        )
     }
 
     /**

@@ -186,22 +186,8 @@ suspend fun cycle(it: QueueTask): Boolean {
             // of the location's multicombat area status" - a guard is never held back by, and never
             // holds back, the single-combat "already under attack" rule.
             val guardInvolved = CityGuards.ignoresSingleCombat(pawn) || CityGuards.ignoresSingleCombat(target)
-            val boxedByOrdinaryNpc =
-                if (pawn is Player && target is Player) {
-                    val npc = target.getLastHitBy() as? Npc
-                    if (npc != null && !BossNpcs.isBoss(npc) && !CityGuards.isGuard(npc)) {
-                        // Deadman: an ordinary roaming npc must not reserve a player as a safe
-                        // single-combat target. Release that npc before the PK swing; bosses and
-                        // city guards retain their intentionally configured ownership rules.
-                        npc.resetInteractions()
-                        Combat.reset(npc)
-                        true
-                    } else {
-                        false
-                    }
-                } else {
-                    false
-                }
+            // Audit C-10 (owner: OSRS everywhere): a player fighting an ordinary npc in single-way combat is protected from PKers
+            // by the normal "already under attack" rule below; the former Deadman exception that released the npc is removed.
             // OSRS Wiki "Deadman: Annihilation": "Multiple players can attack the same boss that spawned through a breach in a
             // single-way combat zone" - a breach monster is never reserved by the first player on it. The player side keeps the
             // normal rule ("players can also be attacked by another player in a single area if they are not being attacked by
@@ -217,7 +203,7 @@ suspend fun cycle(it: QueueTask): Boolean {
                     Combat.reset(pawn)
                     return false
                 }
-                if (!targetInMulti && target.isBeingAttacked() && target.getLastHitBy() != pawn && !boxedByOrdinaryNpc && !sharedBreachTarget) {
+                if (!targetInMulti && target.isBeingAttacked() && target.getLastHitBy() != pawn && !sharedBreachTarget) {
                     if (pawn is Player) {
                         if (target is Player) {
                             pawn.message("Someone is already fighting this player.")
@@ -238,7 +224,7 @@ suspend fun cycle(it: QueueTask): Boolean {
                     Combat.reset(pawn)
                     return false
                 }
-                if (target.isBeingAttacked() && target.getLastHitBy() != pawn && !boxedByOrdinaryNpc && !sharedBreachTarget) {
+                if (target.isBeingAttacked() && target.getLastHitBy() != pawn && !sharedBreachTarget) {
                     if (pawn is Player) {
                         if (target is Player) {
                             pawn.message("Someone is already fighting this player.")
@@ -263,9 +249,15 @@ suspend fun cycle(it: QueueTask): Boolean {
                     pawn.getEquipment(EquipmentType.WEAPON) != null
                 ) {
                     AttackTab.disableSpecial(pawn)
-                    if (SpecialAttacks.execute(pawn, target, world)) {
-                        Combat.postAttack(pawn, target)
-                        return true
+                    when (SpecialAttacks.perform(pawn, target, world)) {
+                        SpecialAttacks.Outcome.PERFORMED -> {
+                            Combat.postAttack(pawn, target)
+                            return true
+                        }
+                        // Audit C-15: a special that could not be performed costs nothing and starts no attack delay; the special
+                        // bar is already off, so the fight simply continues with a normal attack from the next cycle.
+                        SpecialAttacks.Outcome.FAILED -> return true
+                        SpecialAttacks.Outcome.NOT_USED -> {}
                     }
                 }
             }

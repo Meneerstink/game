@@ -231,6 +231,9 @@ object BurningClaws {
  * wiki patterns "0-4-2-2", "0-0-3-3" and "0-0-0-5" place the misses first, used here.)
  */
 object DragonClaws {
+    /** Audit C-06: the first two hitsplats land together, the last two one tick later (OSRS 1, 1, 2, 2 - not wiki-verified). */
+    val HIT_DELAYS = intArrayOf(1, 1, 2, 2)
+
     fun sliceAndDice(
         maxHit: Int,
         rollLands: () -> Boolean,

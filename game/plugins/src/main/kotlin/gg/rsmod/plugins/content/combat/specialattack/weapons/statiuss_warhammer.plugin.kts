@@ -7,7 +7,7 @@ import gg.rsmod.plugins.content.combat.specialattack.SpecialAttacks
 /**
  * OSRS Wiki "Statius's warhammer" (fetched 2026-09-16): "Smash" costs 35% special attack energy and
  * "deals between 25% and 125% of the user's max hit, while lowering the target's current Defence
- * level by 75% on a successful hit"; "Defence reductions stack across multiple successful hits, with
+ * level by 75% on a successful hit" (that is the (bh) variant - audit I-04 uses the Deadman 30 %, see below); "Defence reductions stack across multiple successful hits, with
  * each subsequent reduction calculated from the temporarily lowered level"; the page states no
  * accuracy bonus, so accuracy uses the normal (unmultiplied) roll.
  *
@@ -43,5 +43,10 @@ SpecialAttacks.register(35, Items.STATIUSS_WARHAMMER, Items.STATIUS_WARHAMMER_DE
     }
 }
 
-/** 75% of the current Defence level, rounded down. */
-fun smashDefenceReduction(level: Int): Int = level * 75 / 100
+/**
+ * Audit I-04 (owner: OSRS Deadman behaviour): the Deadman/LMS Statius's warhammer lowers the current Defence by 30 %, rounded down
+ * (99 -> 70); the 75 % is the Bounty Hunter (bh) variant.
+ */
+val SMASH_DEFENCE_REDUCTION_PERCENT = 30
+
+fun smashDefenceReduction(level: Int): Int = level * SMASH_DEFENCE_REDUCTION_PERCENT / 100

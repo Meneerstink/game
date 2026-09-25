@@ -63,12 +63,17 @@ object Potions {
             // the effect are traced - the next live sip shows whether the boost is applied and something undoes it, or it never applies.
             val combat = intArrayOf(0, 1, 2, 4, 6)
             val before = combat.map { player.skills.getCurrentLevel(it) }
-            potion.potionType.apply(player)
+            try {
+                potion.potionType.apply(player)
+            } finally {
+                // Audit C-01: the dose is already consumed, so the delays must hold even when an effect throws;
+                // otherwise a failing effect allowed several drinks in the same tick.
+                player.timers[POTION_DELAY] = TICK_DELAY
+                player.timers[FOOD_DELAY] = TICK_DELAY
+            }
             gg.rsmod.game.model.AvTrace.log {
                 "potion drink item=${potion.item} type=${potion.potionType} att/def/str/rng/mag before=$before after=${combat.map { player.skills.getCurrentLevel(it) }}"
             }
-            player.timers[POTION_DELAY] = TICK_DELAY
-            player.timers[FOOD_DELAY] = TICK_DELAY
             // 667 barbarian mixes: the base potion's effect, then the mix heal and the OSRS mix message (BarbarianMixes).
             if (potion.mixHeal > 0) {
                 player.heal(potion.mixHeal)

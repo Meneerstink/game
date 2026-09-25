@@ -37,7 +37,10 @@ listOf(Items.MAGIC_SHORTBOW, Items.MAGIC_SHORTBOW_I).forEach { bow ->
             gg.rsmod.plugins.content.items.osrs.MagicShortbowSnapshot.maxHit(player.skills.getCurrentLevel(Skills.RANGED), ammoStrength)
         }
         val accuracy = gg.rsmod.plugins.content.items.osrs.MagicShortbowSnapshot.ACCURACY
-        if (rangedShot(player, victim, accuracy = accuracy, projectileGfx = 249, maxHitOverride = snapshotMax) == -1) return@register
+        if (rangedShot(player, victim, accuracy = accuracy, projectileGfx = 249, maxHitOverride = snapshotMax) == -1) {
+            specialFailed() // Audit C-15: no ammo - the special costs nothing and no attack follows.
+            return@register
+        }
         rangedShot(player, victim, accuracy = accuracy, projectileGfx = 249, projectileDelayOffset = 1, maxHitOverride = snapshotMax)
     }
 }
@@ -48,7 +51,7 @@ SpecialAttacks.register(35, Items.MAGIC_LONGBOW, Items.MAGIC_COMPOSITE_BOW) {
     player.animate(CombatConfigs.getAttackAnimation(player))
     player.graphic(250, 96)
     player.playSound(Sfx.POWERSHOT)
-    rangedShot(player, victim, forceLand = true, projectileGfx = 249)
+    if (rangedShot(player, victim, forceLand = true, projectileGfx = 249) == -1) specialFailed() // Audit C-15: no ammo - the special costs nothing and no attack follows.
 }
 
 /*
@@ -63,6 +66,7 @@ SpecialAttacks.register(55, *DARK_BOWS) {
     val fired = gg.rsmod.plugins.content.combat.strategy.ranged.RangedAmmo.fired(player)
     if (fired == null || fired.item.amount < 2) {
         player.message("You need at least two arrows in your quiver to use this special attack.")
+        specialFailed() // Audit C-15: the energy stays and no attack delay follows.
         return@register
     }
     val dragon = fired.item.id in DRAGON_ARROWS

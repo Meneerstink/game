@@ -265,6 +265,8 @@ object MagicCombatFormula : CombatFormula {
         var roll = Math.floor(smoke * gg.rsmod.plugins.content.items.osrs.Tomes.accuracyMultiplier(player, target, castingSpell(player)))
         // Ice ancient sceptre: +10 % for ice spells on freezable, not frozen targets (AncientSceptres).
         roll = Math.floor(roll * gg.rsmod.plugins.content.items.osrs.AncientSceptres.iceAccuracyMultiplier(player, target, castingSpell(player)))
+        // Audit I-08: Zuriel's staff, ice spells +10 % accuracy.
+        roll = Math.floor(roll * gg.rsmod.plugins.content.items.osrs.ZurielsStaff.iceAccuracyMultiplier(player, castingSpell(player)))
         // Dragon hunter wand: attack roll x7/4 against draconic targets (wiki DPS calculator trackFactor [7, 4]).
         if (player.hasEquipped(EquipmentType.WEAPON, Items.DRAGON_HUNTER_WAND) && Draconic.isDraconic(target)) {
             roll = Math.floor(roll * 7 / 4)
