@@ -211,6 +211,25 @@ class ItemContainerTests {
         assertEquals(container[0]!!.amount, Int.MAX_VALUE)
     }
 
+    /*
+     * Audit E-06: the charged-item creation redirect applies to items that are created, not to items that are moved
+     * (bank, trade, transfer), which pass applyCreationRedirect = false and keep their id.
+     */
+    @Test
+    fun creationRedirectOnlyOnCreation() {
+        val saved = ItemContainer.creationRedirect
+        try {
+            ItemContainer.creationRedirect = { id -> if (id == 4151) 4153 else null }
+            val container = ItemContainer(definitions, CAPACITY, ContainerStackType.NORMAL)
+            container.add(item = 4151, amount = 1)
+            assertEquals(4153, container[0]!!.id, "a created charged item becomes its uncharged item")
+            container.add(item = 4151, amount = 1, applyCreationRedirect = false)
+            assertEquals(4151, container[1]!!.id, "a moved item keeps its id")
+        } finally {
+            ItemContainer.creationRedirect = saved
+        }
+    }
+
     companion object {
         private const val CAPACITY = 28
 

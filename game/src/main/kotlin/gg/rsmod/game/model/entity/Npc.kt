@@ -245,10 +245,14 @@ class Npc private constructor(
     }
 
     override fun cycle() {
-        if (timers.isNotEmpty) {
-            timerCycle()
+        // Audit T-02: pending hits always run, even if the timer pass throws.
+        try {
+            if (timers.isNotEmpty) {
+                timerCycle()
+            }
+        } finally {
+            hitsCycle()
         }
-        hitsCycle()
         if (attr.has(FACING_PAWN_ATTR) && !attr.has(COMBAT_TARGET_FOCUS_ATTR) && attr[gg.rsmod.game.model.attr.HOLD_FACING_ATTR] != true) {
             val target = attr[FACING_PAWN_ATTR]?.get() ?: return
             if (!tile.isWithinRadius(target.tile, 1)) {

@@ -110,15 +110,21 @@ class GamePacketDecoder(
         out: MutableList<Any>,
     ) {
         if (buf.readableBytes() >= length) {
-            val payload = buf.readBytes(length)
             setState(GameDecoderState.OPCODE)
 
             /**
              * If the packet isn't flagged as being a packet we should ignore,
              * we queue it up for our game to process the packet.
+             *
+             * Audit S-07: an ignored packet's payload used to be copied with readBytes() and then
+             * dropped without release(), leaking one pooled buffer per ignored packet (opcode 29
+             * spam with 255 bytes each ended in an OOM). Skip the bytes instead: nothing is
+             * allocated, so there is nothing to release.
              */
-            if (!ignore) {
-                out.add(GamePacket(opcode, type, payload))
+            if (ignore) {
+                buf.skipBytes(length)
+            } else {
+                out.add(GamePacket(opcode, type, buf.readBytes(length)))
             }
         }
     }

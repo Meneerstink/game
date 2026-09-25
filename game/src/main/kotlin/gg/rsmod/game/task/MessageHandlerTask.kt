@@ -19,7 +19,9 @@ class MessageHandlerTask : GameTask {
             val start = System.currentTimeMillis()
             try {
                 p.handleMessages()
-            } catch (e: Exception) {
+            } catch (e: Throwable) {
+                // Audit T-01: a non-Exception throwable must not abort every later player's input.
+                e.rethrowIfFatal()
                 logger.error("Error handling messages for player ${p.username}.", e)
             } finally {
                 val time = System.currentTimeMillis() - start

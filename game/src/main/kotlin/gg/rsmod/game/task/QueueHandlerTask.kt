@@ -22,7 +22,9 @@ class QueueHandlerTask : GameTask {
             try {
                 player.queues.cycle()
                 playerQueues += player.queues.size
-            } catch (e: Exception) {
+            } catch (e: Throwable) {
+                // Audit T-01: catch every non-fatal throwable, not only Exception.
+                e.rethrowIfFatal()
                 logger.error("Error cycling queues for player ${player.username}.", e)
             }
         }
@@ -31,7 +33,8 @@ class QueueHandlerTask : GameTask {
             try {
                 npc.queues.cycle()
                 npcQueues += npc.queues.size
-            } catch (e: Exception) {
+            } catch (e: Throwable) {
+                e.rethrowIfFatal()
                 logger.error("Error cycling queues for npc ${npc.id} (${npc.name}).", e)
             }
         }
@@ -39,7 +42,8 @@ class QueueHandlerTask : GameTask {
         val worldQueues: Int = world.queues.size
         try {
             world.queues.cycle()
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
+            e.rethrowIfFatal()
             logger.error("Error cycling world queues.", e)
         }
 

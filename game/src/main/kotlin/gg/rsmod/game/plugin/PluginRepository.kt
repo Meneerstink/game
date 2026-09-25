@@ -8,6 +8,7 @@ import gg.rsmod.game.model.SimplePolygonArea
 import gg.rsmod.game.model.World
 import gg.rsmod.game.model.attr.COMMAND_ARGS_ATTR
 import gg.rsmod.game.model.attr.COMMAND_ATTR
+import gg.rsmod.game.model.attr.DEATH_FLAG
 import gg.rsmod.game.model.combat.NpcCombatDef
 import gg.rsmod.game.model.container.key.*
 import gg.rsmod.game.model.entity.*
@@ -832,7 +833,14 @@ class PluginRepository(
     }
 
     fun executePlayerPreDeath(p: Player) {
-        playerPreDeathPlugins.forEach { plugin -> p.executePlugin(plugin) }
+        // Audit X-09: one failing hook must not skip the others (the item transfer is one of them).
+        playerPreDeathPlugins.forEach { plugin ->
+            try {
+                p.executePlugin(plugin)
+            } catch (e: Exception) {
+                logger.error("Pre-death hook failed for username=${p.username}; continuing with the next hook.", e)
+            }
+        }
     }
 
     fun bindPlayerOption(
@@ -1303,6 +1311,9 @@ class PluginRepository(
         child: Int,
     ): Boolean {
         val hash = (parent shl 16) or child
+        // Audit X-08: between the lethal hit and the item transfer (next tick) a dying player's
+        // interface clicks - bank deposits included - are swallowed.
+        if (p.attr[DEATH_FLAG] == true) return true
         val plugin = buttonPlugins[hash]
         if (plugin != null) {
             p.executePlugin(plugin)

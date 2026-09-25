@@ -18,6 +18,13 @@ import gg.rsmod.util.ServerProperties
 abstract class PlayerSerializerService : Service {
     private lateinit var startTile: Tile
 
+    /**
+     * Audit S-06: asked before an unknown name becomes a new account; false refuses it. The
+     * [gg.rsmod.game.service.login.LoginService] installs its per-IP registration limit here.
+     */
+    @Volatile
+    var registrationGate: (LoginRequest) -> Boolean = { true }
+
     final override fun init(
         server: Server,
         world: World,

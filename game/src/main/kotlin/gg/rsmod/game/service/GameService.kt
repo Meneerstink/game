@@ -8,6 +8,7 @@ import gg.rsmod.game.message.MessageStructureSet
 import gg.rsmod.game.model.AvTrace
 import gg.rsmod.game.model.World
 import gg.rsmod.game.task.*
+import gg.rsmod.game.task.rethrowIfFatal
 import gg.rsmod.game.task.sequential.SequentialNpcCycleTask
 import gg.rsmod.game.task.sequential.SequentialPlayerCycleTask
 import gg.rsmod.game.task.sequential.SequentialPlayerPostCycleTask
@@ -18,6 +19,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.asCoroutineDispatcher
 import mu.KLogging
 import java.util.concurrent.Executors
+import java.util.concurrent.RejectedExecutionException
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
 
@@ -48,6 +50,34 @@ class GameService : Service {
                 .setUncaughtExceptionHandler { t, e -> logger.error("Error with thread $t", e) }
                 .build(),
         )
+
+    /**
+     * Audit T-01: a daemon thread that reports a game loop which stopped completing cycles (an endless
+     * loop in a plugin, a deadlock, or a loop that died) together with the game thread's stack.
+     */
+    private val watchdog: ScheduledExecutorService =
+        Executors.newSingleThreadScheduledExecutor(
+            ThreadFactoryBuilder()
+                .setNameFormat("game-watchdog")
+                .setDaemon(true)
+                .build(),
+        )
+
+    /**
+     * Audit T-01: ticks completed since boot (also the skipped ones before [loaded]); written only by the
+     * game thread and read by the [watchdog].
+     */
+    @Volatile
+    private var completedTicks = 0L
+
+    /** Audit T-01: the thread running the game cycle, for the [watchdog]'s stack dump. */
+    @Volatile
+    private var gameThread: Thread? = null
+
+    /**
+     * Audit T-08: when the next tick is due, on the [System.nanoTime] clock. See [scheduleNextTick].
+     */
+    private var nextTickNanos = 0L
 
     /**
      * A list of jobs that will be executed on the next cycle after being
@@ -154,7 +184,15 @@ class GameService : Service {
         this.world = world
         populateTasks()
         maxMessagesPerCycle = serviceProperties.getOrDefault("messages-per-cycle", 30)
-        executor.scheduleAtFixedRate(this::cycle, 0, world.gameContext.cycleTime.toLong(), TimeUnit.MILLISECONDS)
+        /*
+         * Audit T-08: each tick schedules the next one (see scheduleNextTick) instead of
+         * scheduleAtFixedRate, which ran every missed tick back to back after a slow cycle (a 3 s cycle
+         * was followed by a burst of about four in which nobody could eat or switch prayers) and, on any
+         * Throwable escaping a run, silently cancelled all future ticks (Audit T-01).
+         */
+        nextTickNanos = System.nanoTime()
+        executor.schedule(Runnable { tick() }, 0, TimeUnit.NANOSECONDS)
+        startWatchdog()
     }
 
     override fun postLoad(
@@ -197,6 +235,81 @@ class GameService : Service {
         gameThreadJobs.offer(job)
     }
 
+    /**
+     * Audit T-01/T-08: runs one game cycle and always schedules the next one. Nothing that escapes
+     * [cycle] - not even a fatal JVM error - can end the game loop silently any more.
+     */
+    private fun tick() {
+        gameThread = Thread.currentThread()
+        try {
+            cycle()
+        } catch (t: Throwable) {
+            logger.error("Game cycle aborted by an uncaught error; the next cycle is still scheduled.", t)
+        } finally {
+            completedTicks++
+            scheduleNextTick()
+        }
+    }
+
+    /**
+     * Audit T-08: fixed period without catch-up - `next = max(previous deadline + period, now)`. After a
+     * cycle that overran, the next one starts right away and the ones after it keep the normal spacing;
+     * missed ticks are dropped instead of being run as a burst.
+     */
+    private fun scheduleNextTick() {
+        val period = TimeUnit.MILLISECONDS.toNanos(world.gameContext.cycleTime.toLong())
+        val now = System.nanoTime()
+        nextTickNanos = nextCycleDeadline(nextTickNanos, period, now)
+        try {
+            executor.schedule(Runnable { tick() }, nextTickNanos - now, TimeUnit.NANOSECONDS)
+        } catch (e: RejectedExecutionException) {
+            logger.error("The game scheduler rejected the next cycle; the game loop has stopped.", e)
+        }
+    }
+
+    /**
+     * Audit T-01: checks every [WATCHDOG_INTERVAL_SECONDS] whether a tick completed and logs, once per
+     * stall, the game thread's stack when none did for [WATCHDOG_STALL_SECONDS].
+     */
+    private fun startWatchdog() {
+        var lastSeenTicks = -1L
+        var lastProgressNanos = System.nanoTime()
+        var reported = false
+        watchdog.scheduleWithFixedDelay(
+            Runnable {
+                try {
+                    val ticks = completedTicks
+                    val now = System.nanoTime()
+                    if (ticks != lastSeenTicks) {
+                        if (reported) {
+                            logger.warn("Game loop recovered after {} s without a completed cycle.", (now - lastProgressNanos) / 1_000_000_000L)
+                        }
+                        lastSeenTicks = ticks
+                        lastProgressNanos = now
+                        reported = false
+                    } else if (!reported && now - lastProgressNanos >= TimeUnit.SECONDS.toNanos(WATCHDOG_STALL_SECONDS)) {
+                        reported = true
+                        val thread = gameThread
+                        val stack = thread?.stackTrace?.joinToString(separator = "\n\tat ", prefix = "\tat ") ?: "(no game thread yet)"
+                        logger.error(
+                            "Game loop stalled: no cycle completed for {} s (world cycle {}). Game thread {} ({}):\n{}",
+                            (now - lastProgressNanos) / 1_000_000_000L,
+                            world.currentCycle,
+                            thread?.name,
+                            thread?.state,
+                            stack,
+                        )
+                    }
+                } catch (t: Throwable) {
+                    logger.error("Game watchdog check failed.", t)
+                }
+            },
+            WATCHDOG_INTERVAL_SECONDS,
+            WATCHDOG_INTERVAL_SECONDS,
+            TimeUnit.SECONDS,
+        )
+    }
+
     private fun cycle() {
         if (!loaded || pause) {
             return
@@ -224,7 +337,9 @@ class GameService : Service {
         gameThreadJobs.drain().forEach { job ->
             try {
                 job()
-            } catch (e: Exception) {
+            } catch (e: Throwable) {
+                // Audit T-01: any non-fatal throwable, not only Exception.
+                e.rethrowIfFatal()
                 logger.error("Error executing game-thread job.", e)
             }
         }
@@ -239,7 +354,10 @@ class GameService : Service {
             val taskStart = System.currentTimeMillis()
             try {
                 task.execute(world, this)
-            } catch (e: Exception) {
+            } catch (e: Throwable) {
+                // Audit T-01: any non-fatal throwable, not only Exception; a fatal one aborts this cycle
+                // and is logged by tick(), which still schedules the next cycle.
+                e.rethrowIfFatal()
                 logger.error("Error with task ${task.javaClass.simpleName}.", e)
             }
             taskTimes[task.javaClass] = System.currentTimeMillis() - taskStart
@@ -247,8 +365,9 @@ class GameService : Service {
 
         try {
             world.cycle()
-        } catch (e: Exception) {
-            // Keep the fixed-rate game scheduler alive when world maintenance fails.
+        } catch (e: Throwable) {
+            // Keep the game loop alive when world maintenance fails (Audit T-01: any non-fatal throwable).
+            e.rethrowIfFatal()
             logger.error("Error with world cycle.", e)
         }
 
@@ -347,5 +466,21 @@ class GameService : Service {
         private const val TICKS_PER_DEBUG_LOG = 10
 
         private const val CYCLE_TIMING_TOLERANCE_MS = 50.0
+
+        /** Audit T-01: how often the watchdog checks the game loop. */
+        private const val WATCHDOG_INTERVAL_SECONDS = 5L
+
+        /** Audit T-01: how long the game loop may go without a completed cycle before it is reported. */
+        private const val WATCHDOG_STALL_SECONDS = 10L
+
+        /**
+         * Audit T-08: the deadline of the next tick - one [periodNanos] after the previous deadline, or
+         * [nowNanos] when that is already past. Missed ticks are dropped instead of run back to back.
+         */
+        internal fun nextCycleDeadline(
+            previousDeadlineNanos: Long,
+            periodNanos: Long,
+            nowNanos: Long,
+        ): Long = maxOf(previousDeadlineNanos + periodNanos, nowNanos)
     }
 }

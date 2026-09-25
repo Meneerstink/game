@@ -26,10 +26,14 @@ import gg.rsmod.game.plugin.Plugin
 import gg.rsmod.game.service.log.LoggerService
 import gg.rsmod.game.sync.block.UpdateBlockBuffer
 import gg.rsmod.game.sync.block.UpdateBlockType
+import gg.rsmod.game.task.rethrowIfFatal
 import kotlinx.coroutines.CoroutineScope
-import java.lang.System.currentTimeMillis
+import mu.KotlinLogging
 import java.lang.ref.WeakReference
 import java.util.*
+
+/** Audit T-02: failures in timer plugins and hit actions are logged here instead of aborting the pawn's cycle. */
+private val pawnCycleLogger = KotlinLogging.logger("gg.rsmod.game.model.entity.Pawn")
 
 /**
  * A controllable character in the world that is used by something, or someone,
@@ -193,9 +197,10 @@ abstract class Pawn(
     private val pendingHits = mutableListOf<Hit>()
 
     /**
-     * A [DamageMap] to keep track of who has dealt damage to this pawn.
+     * A [DamageMap] to keep track of who has dealt damage to this pawn. Audit T-12: hits are stamped
+     * with the game cycle, so its time windows count ticks.
      */
-    val damageMap = DamageMap()
+    val damageMap = DamageMap { world.currentCycle }
 
     /**
      * A flag which indicates if this pawn is visible to players in the world.
@@ -215,7 +220,12 @@ abstract class Pawn(
 
     var walkMask = 0
 
-    internal var lastAnimation = 0L
+    /**
+     * Audit T-13: the game cycle until which the last animation is protected from a non-priority
+     * animation (a block animation must not replace an attack animation from the same tick). It was
+     * `currentTimeMillis() + ticks`, a window of a few milliseconds.
+     */
+    internal var lastAnimation = 0
 
     /**
      * Handles logic before any synchronization tasks are executed.
@@ -344,6 +354,14 @@ abstract class Pawn(
 
     fun addHit(hit: Hit) {
         pendingHits.add(hit)
+        // Audit X-10: every hit a player receives - whatever its source (npc scripts, recoil, burn, poison) - holds a
+        // disconnected body in the world until at least LOGOUT_HOLD_AFTER_HIT ticks after the hit lands.
+        if (this is Player) {
+            val hold = hit.damageDelay + LOGOUT_HOLD_AFTER_HIT
+            if (!timers.has(DEADMAN_LOGOUT_TIMER) || timers[DEADMAN_LOGOUT_TIMER] < hold) {
+                timers[DEADMAN_LOGOUT_TIMER] = hold
+            }
+        }
     }
 
     fun clearHits() {
@@ -352,43 +370,28 @@ abstract class Pawn(
 
     /**
      * Handle a single cycle for [timers].
+     *
+     * Audit T-02: each expired timer's plugin runs in its own try/catch and the timer is removed in
+     * `finally` unless it was re-armed. A throwing plugin used to leave its timer at zero, so it fired
+     * again every tick, and the exception skipped the rest of the pawn's cycle - [hitsCycle] included, so
+     * that pawn took no damage until it relogged or respawned. Timing is unchanged.
      */
     fun timerCycle() {
-        /*
-         * Tick every timer first and only run the expired ones afterwards: a timer plugin may
-         * add or remove *other* timers (combat reset, area transitions, ...), which threw a
-         * ConcurrentModificationException while the map was still being iterated and aborted
-         * the rest of the pawn's cycle for that tick.
-         */
         // Most pawns have no timers. Avoid creating a HashMap iterator for every idle NPC.
         if (!timers.isNotEmpty) return
-
-        var expired: MutableList<TimerKey>? = null
-        for (entry in timers.getTimers().entries) {
-            val key = entry.key
-            // Deadman PvP guards plan (2026-09-16): a paused key (see TimerMap.pause) does not
-            // tick this cycle at all - neither decremented nor eligible to expire - so whichever
-            // plugin paused it (e.g. PvpSkull while the player is instanced/same-tile-stalled)
-            // can freeze the countdown without a race against this same decrement pass.
-            if (timers.isPaused(key)) {
-                continue
-            }
-            val updatedTime = if (key.tickForward) entry.value + 1 else entry.value - 1
-            entry.setValue(updatedTime)
-            if (updatedTime <= 0 && !key.tickForward) {
-                (expired ?: ArrayList<TimerKey>(2).also { expired = it }).add(key)
-            }
-        }
-        expired?.forEach { key ->
-            if (key == RESET_PAWN_FACING_TIMER) {
-                resetFacePawn()
-            } else {
-                world.plugins.executeTimer(this, key)
-            }
-            if (!timers.has(key) && key.removeOnZero) {
-                timers.remove(key)
-            }
-        }
+        cycleTimerMap(
+            timers,
+            fire = { key ->
+                if (key == RESET_PAWN_FACING_TIMER) {
+                    resetFacePawn()
+                } else {
+                    world.plugins.executeTimer(this, key)
+                }
+            },
+            onFailure = { key, error ->
+                pawnCycleLogger.error(error) { "Error in timer $key of $this; the timer was removed." }
+            },
+        )
     }
 
     /**
@@ -447,7 +450,7 @@ abstract class Pawn(
                          * terminate all queues and begin the death logic.
                          */
                         if (getCurrentLifepoints() <= 0) {
-                            hit.invokeActions()
+                            invokeHitActions(hit)
                             if (entityType.isPlayer) {
                                 executePlugin(PlayerDeathAction.deathPlugin)
                             } else {
@@ -457,13 +460,27 @@ abstract class Pawn(
                             break@processing
                         }
                     }
-                    hit.invokeActions()
+                    invokeHitActions(hit)
                 }
                 pendingHits.remove(hit)
             }
         }
         if (isDead() && pendingHits.isNotEmpty()) {
             pendingHits.clear()
+        }
+    }
+
+    /**
+     * Audit T-02: a failing hit action (recoil, vengeance, a special attack's effect) is logged and
+     * isolated to its own hit; the damage has already been applied and the pawn's other pending hits,
+     * and the death plugin for a killing hit, still run.
+     */
+    private fun invokeHitActions(hit: Hit) {
+        try {
+            hit.invokeActions()
+        } catch (e: Throwable) {
+            e.rethrowIfFatal()
+            pawnCycleLogger.error(e) { "Error in a hit action on $this; the hit itself was applied." }
         }
     }
 
@@ -714,12 +731,11 @@ abstract class Pawn(
         idleOnly: Boolean = false,
         priority: Boolean = true,
     ) {
-        if (!priority && lastAnimation > currentTimeMillis()) {
+        // Audit T-13: the protection window is counted in game cycles (it compared milliseconds with ticks).
+        if (!priority && lastAnimation > world.currentCycle) {
             return
         }
-        if (id != -1) {
-            lastAnimation = currentTimeMillis() + (world.getAnimationDelay(id) + 3)
-        }
+        lastAnimation = if (id != -1) world.currentCycle + world.getAnimationDelay(id) else 0
         blockBuffer.animation = id
         blockBuffer.animationDelay = delay
         blockBuffer.idleOnly = idleOnly
@@ -727,6 +743,7 @@ abstract class Pawn(
     }
 
     fun resetAnimation() {
+        lastAnimation = 0
         blockBuffer.animation = -1
         blockBuffer.animationDelay = 0
         blockBuffer.idleOnly = false
@@ -1003,5 +1020,57 @@ abstract class Pawn(
 
     companion object {
         private val EMPTY_TILE_DEQUE = ArrayDeque<Tile>()
+
+        /**
+         * One timer pass for [timers] (see [timerCycle]): ticks every timer first and only then runs the
+         * expired ones, because a timer plugin may add or remove *other* timers (combat reset, area
+         * transitions, ...), which threw a ConcurrentModificationException while the map was still being
+         * iterated and aborted the rest of the pawn's cycle for that tick.
+         *
+         * Deadman PvP guards plan (2026-09-16): a paused key (see [TimerMap.pause]) does not tick this
+         * cycle at all - neither decremented nor eligible to expire - so whichever plugin paused it (e.g.
+         * PvpSkull while the player is instanced/same-tile-stalled) can freeze the countdown without a
+         * race against this same decrement pass.
+         *
+         * Audit T-02: [fire] runs per expired key inside its own try/catch; a failure goes to [onFailure]
+         * and the key is removed, otherwise the key is removed when it was not re-armed and
+         * [TimerKey.removeOnZero].
+         */
+        internal fun cycleTimerMap(
+            timers: TimerMap,
+            fire: (TimerKey) -> Unit,
+            onFailure: (TimerKey, Throwable) -> Unit,
+        ) {
+            var expired: MutableList<TimerKey>? = null
+            for (entry in timers.getTimers().entries) {
+                val key = entry.key
+                if (timers.isPaused(key)) {
+                    continue
+                }
+                val updatedTime = if (key.tickForward) entry.value + 1 else entry.value - 1
+                entry.setValue(updatedTime)
+                if (updatedTime <= 0 && !key.tickForward) {
+                    (expired ?: ArrayList<TimerKey>(2).also { expired = it }).add(key)
+                }
+            }
+            val keys = expired ?: return
+            for (key in keys) {
+                var failed = false
+                try {
+                    fire(key)
+                } catch (e: Throwable) {
+                    e.rethrowIfFatal()
+                    failed = true
+                    onFailure(key, e)
+                } finally {
+                    if (!timers.has(key) && (key.removeOnZero || failed)) {
+                        timers.remove(key)
+                    }
+                }
+            }
+        }
     }
 }
+
+/** Audit X-10: minimum logout hold after a received hit lands (mirrors Combat.LOGOUT_HOLD_TICKS in plugins). */
+private const val LOGOUT_HOLD_AFTER_HIT = 16

@@ -1,6 +1,7 @@
 package gg.rsmod.game.model.queue.impl
 
 import gg.rsmod.game.model.queue.QueueTaskSet
+import gg.rsmod.game.task.rethrowIfFatal
 import kotlin.coroutines.resume
 
 /**
@@ -25,7 +26,9 @@ class WorldQueueTaskSet : QueueTaskSet() {
                 }
 
                 task.cycle()
-            } catch (e: Exception) {
+            } catch (e: Throwable) {
+                // Audit T-01: every non-fatal throwable fails only this task.
+                e.rethrowIfFatal()
                 failTask(task, e) { queue.remove(task) }
                 continue
             }

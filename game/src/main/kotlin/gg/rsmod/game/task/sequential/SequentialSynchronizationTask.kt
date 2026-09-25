@@ -4,6 +4,7 @@ import gg.rsmod.game.model.World
 import gg.rsmod.game.service.GameService
 import gg.rsmod.game.sync.task.*
 import gg.rsmod.game.task.GameTask
+import gg.rsmod.game.task.rethrowIfFatal
 import mu.KLogging
 
 /**
@@ -25,7 +26,9 @@ class SequentialSynchronizationTask : GameTask {
         worldPlayers.forEach { p ->
             try {
                 PlayerPreSynchronizationTask.run(p)
-            } catch (e: Exception) {
+            } catch (e: Throwable) {
+                // Audit T-01: catch every non-fatal throwable, not only Exception.
+                e.rethrowIfFatal()
                 logger.error(e) { "Error during player pre-synchronization for ${p.username}." }
             }
         }
@@ -34,7 +37,9 @@ class SequentialSynchronizationTask : GameTask {
             if (n != null) {
                 try {
                     NpcPreSynchronizationTask.run(n)
-                } catch (e: Exception) {
+                } catch (e: Throwable) {
+                    // Audit T-01: catch every non-fatal throwable, not only Exception.
+                    e.rethrowIfFatal()
                     logger.error(e) { "Error during NPC pre-synchronization for ${n.id} (${n.name})." }
                 }
             }
@@ -49,7 +54,9 @@ class SequentialSynchronizationTask : GameTask {
             if (p.entityType.isHumanControlled && p.initiated) {
                 try {
                     PlayerSynchronizationTask.run(p)
-                } catch (e: Exception) {
+                } catch (e: Throwable) {
+                    // Audit T-01: catch every non-fatal throwable, not only Exception.
+                    e.rethrowIfFatal()
                     logger.error(e) { "Error during player synchronization for ${p.username}." }
                 }
             }
@@ -64,7 +71,9 @@ class SequentialSynchronizationTask : GameTask {
             if (p.entityType.isHumanControlled && p.initiated) {
                 try {
                     npcSync.run(p)
-                } catch (e: Exception) {
+                } catch (e: Throwable) {
+                    // Audit T-01: catch every non-fatal throwable, not only Exception.
+                    e.rethrowIfFatal()
                     logger.error(e) { "Error during NPC synchronization for ${p.username}." }
                 }
             }
@@ -73,7 +82,9 @@ class SequentialSynchronizationTask : GameTask {
         worldPlayers.forEach { p ->
             try {
                 PlayerPostSynchronizationTask.run(p)
-            } catch (e: Exception) {
+            } catch (e: Throwable) {
+                // Audit T-01: catch every non-fatal throwable, not only Exception.
+                e.rethrowIfFatal()
                 logger.error(e) { "Error during player post-synchronization for ${p.username}." }
             }
         }
@@ -82,7 +93,9 @@ class SequentialSynchronizationTask : GameTask {
             if (n != null) {
                 try {
                     NpcPostSynchronizationTask.run(n)
-                } catch (e: Exception) {
+                } catch (e: Throwable) {
+                    // Audit T-01: catch every non-fatal throwable, not only Exception.
+                    e.rethrowIfFatal()
                     logger.error(e) { "Error during NPC post-synchronization for ${n.id} (${n.name})." }
                 }
             }

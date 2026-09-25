@@ -5,6 +5,7 @@ import gg.rsmod.game.message.Message
 import gg.rsmod.game.model.EntityType
 import gg.rsmod.game.model.World
 import gg.rsmod.game.model.attr.LAST_LOGOUT_DATE
+import gg.rsmod.game.service.login.LoginService
 import gg.rsmod.game.service.serializer.PlayerSerializerService
 import gg.rsmod.game.system.GameSystem
 import gg.rsmod.net.codec.login.LoginRequest
@@ -89,9 +90,15 @@ class Client(
     override val entityType: EntityType = EntityType.CLIENT
 
     override fun handleLogout() {
-        super.handleLogout()
-        attr[LAST_LOGOUT_DATE] = System.currentTimeMillis()
-        world.getService(PlayerSerializerService::class.java, searchSubclasses = true)?.saveClientData(this)
+        try {
+            super.handleLogout()
+            attr[LAST_LOGOUT_DATE] = System.currentTimeMillis()
+            world.getService(PlayerSerializerService::class.java, searchSubclasses = true)?.saveClientData(this)
+        } finally {
+            // Audit S-03: the account stays claimed until its logout save is on disk, so a new
+            // login in the same tick is refused instead of loading the previous save.
+            world.getService(LoginService::class.java)?.sessions?.release(loginUsername)
+        }
     }
 
     override fun handleMessages() {

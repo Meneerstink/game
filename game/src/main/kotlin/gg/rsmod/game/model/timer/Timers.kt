@@ -16,11 +16,23 @@ internal val RESET_PAWN_FACING_TIMER = TimerKey()
 
 /**
  * A timer for removing a skull icon. Has a persistence key so the remaining
- * duration survives logout/reconnect (ticks down in real time while offline,
- * matching how a PK skull behaves in-game) and is cleared on death, since a
- * death already resolves the skull's item-risk consequence.
+ * duration survives logout/reconnect and is cleared on death, since a death
+ * already resolves the skull's item-risk consequence.
+ *
+ * Audit D-04: `tickOffline = false` - the skull only counts down while the player is online
+ * (OSRS behaviour), so logging out for five minutes no longer sheds it. Saves written before
+ * this change still carry the old `tickOffline = true` key; `pvp_skull.plugin.kts` migrates
+ * that legacy key onto this one at login ([LEGACY_SKULL_ICON_DURATION_TIMER]).
  */
 val SKULL_ICON_DURATION_TIMER =
+    TimerKey(persistenceKey = "skull_icon_duration", tickOffline = false, resetOnDeath = true, removeOnZero = true)
+
+/**
+ * Audit D-04: the pre-fix shape of [SKULL_ICON_DURATION_TIMER] (`tickOffline = true`). A persisted
+ * timer is rebuilt from its saved flags, so a save written before the fix deserialises into this key,
+ * not the live one. Only read (and removed) by the login migration in `pvp_skull.plugin.kts`.
+ */
+val LEGACY_SKULL_ICON_DURATION_TIMER =
     TimerKey(persistenceKey = "skull_icon_duration", tickOffline = true, resetOnDeath = true, removeOnZero = true)
 
 /**
@@ -35,9 +47,8 @@ val PVP_AGGRESSOR_WINDOW_TIMER = TimerKey(tickOffline = false, resetOnDeath = tr
  * R14.23/R14.24: remaining beginner-PvP-protection budget, in game cycles. Granted once (60
  * minutes = 6000 cycles) at true first login. `tickOffline = false` is the exact mechanism
  * R14.24/R14.27 ask for: it only counts down while the player is actually online/active, and
- * is untouched while offline - the opposite of [SKULL_ICON_DURATION_TIMER]'s `tickOffline =
- * true`, which is deliberately how a skull is supposed to behave (counts down in real time
- * whether online or not). `removeOnZero = true` means the timer disappears entirely once
+ * is untouched while offline - the same as [SKULL_ICON_DURATION_TIMER] (Audit D-04: the skull
+ * no longer counts down offline either). `removeOnZero = true` means the timer disappears entirely once
  * exhausted, so "has this timer" doubles as "is currently protected" with no separate expiry
  * flag needed. Not reset on death (R14.24: "do not grant anew on ... death").
  */
@@ -60,10 +71,10 @@ val ACTIVE_COMBAT_TIMER = TimerKey()
 val TELEPORT_COMBAT_TIMER = TimerKey()
 
 /**
- * Session-local Deadman logout hold. Combat code arms this only for non-boss combat; the network
- * logout path refreshes it when a skulled player disconnects. This keeps an X-log body in the
- * world for the same seven seconds as the visible logout countdown without making boss combat
- * lose its intentional instant-logout exception.
+ * Session-local Deadman logout hold. Audit X-10: combat arms it for every hit a player receives
+ * (bosses, poison and venom included - at least 16 ticks after the latest hit), and the network
+ * logout path refreshes it when a skulled player disconnects, so an X-log can never finish before
+ * a pending hit has landed.
  */
 val DEADMAN_LOGOUT_TIMER = TimerKey(resetOnDeath = true)
 
@@ -75,9 +86,9 @@ val DEADMAN_LOGOUT_TIMER = TimerKey(resetOnDeath = true)
 val FORCE_DISCONNECTION_TIMER = TimerKey()
 
 /**
- * Timer key set when frozen.
+ * Timer key set when frozen. Audit C-13: cleared on death, so a fresh freeze/stun never carries over the respawn.
  */
-val FROZEN_TIMER = TimerKey()
+val FROZEN_TIMER = TimerKey(resetOnDeath = true)
 
 /**
  * Timer key set alongside [FROZEN_TIMER] (P9-followup further-foundations pass, 2026-09-02)
@@ -86,14 +97,15 @@ val FROZEN_TIMER = TimerKey()
  * pawn can't be frozen again (sourced from the OSRS wiki's "Freeze" article: 5 ticks for both
  * Curse-book binds (Bind/Snare/Entangle) and Ice spells, the two freeze sources that existed
  * in this server's ~2011/rev-667 era — Arceuus' Grasp spells and their separate 2-tick
- * immunity are 2018+ content and not applicable here). See `Pawn.freeze()`.
+ * immunity are 2018+ content and not applicable here). See `Pawn.freeze()`. Audit C-13: cleared on
+ * death together with [FROZEN_TIMER].
  */
-val FREEZE_IMMUNITY_TIMER = TimerKey()
+val FREEZE_IMMUNITY_TIMER = TimerKey(resetOnDeath = true)
 
 /**
- * Timer key set when stunned.
+ * Timer key set when stunned. Audit C-13: cleared on death, so a fresh freeze/stun never carries over the respawn.
  */
-val STUN_TIMER = TimerKey()
+val STUN_TIMER = TimerKey(resetOnDeath = true)
 
 /**
  * Timer key for poison ticks.

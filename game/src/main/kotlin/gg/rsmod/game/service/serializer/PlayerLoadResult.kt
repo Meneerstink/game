@@ -30,4 +30,16 @@ enum class PlayerLoadResult {
      * There was an error decoding the data.
      */
     MALFORMED,
+
+    /**
+     * Audit S-06: a new account was refused because its password does not meet
+     * [gg.rsmod.game.service.login.PasswordPolicy]. No save is created.
+     */
+    INVALID_NEW_PASSWORD,
+
+    /**
+     * Audit S-06: a new account was refused because its address created too many accounts
+     * recently. No save is created.
+     */
+    REGISTRATION_LIMIT,
 }

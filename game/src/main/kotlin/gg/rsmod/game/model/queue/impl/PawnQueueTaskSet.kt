@@ -4,6 +4,7 @@ import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.queue.QueueTask
 import gg.rsmod.game.model.queue.QueueTaskSet
 import gg.rsmod.game.model.queue.TaskPriority
+import gg.rsmod.game.task.rethrowIfFatal
 import kotlin.coroutines.resume
 
 /**
@@ -79,7 +80,9 @@ class PawnQueueTaskSet : QueueTaskSet() {
                 }
 
                 task.cycle()
-            } catch (e: Exception) {
+            } catch (e: Throwable) {
+                // Audit T-01: every non-fatal throwable fails only this task.
+                e.rethrowIfFatal()
                 failTask(task, e) { queue.remove(task) }
                 return false
             }

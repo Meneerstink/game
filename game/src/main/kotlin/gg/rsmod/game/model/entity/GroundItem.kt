@@ -28,7 +28,10 @@ class GroundItem private constructor(
         this.tile = tile
     }
 
-    constructor(item: Item, tile: Tile, owner: Player? = null) : this(item.id, item.amount, tile, owner)
+    // Audit X-06: keep charges/stored contents - a dropped or death-looted item must not come back "fresh".
+    constructor(item: Item, tile: Tile, owner: Player? = null) : this(item.id, item.amount, tile, owner) {
+        attr.putAll(item.attr)
+    }
 
     var currentCycle = 0
 

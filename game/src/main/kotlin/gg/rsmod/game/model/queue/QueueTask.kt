@@ -138,10 +138,15 @@ data class QueueTask(
      * Wait for our [ctx] to reach [tile]. Note that [ctx] MUST be an instance
      * of [Pawn] and that the height of the [tile] and [Pawn.tile] must be equal,
      * as well as the x and z coordinates.
+     *
+     * Audit T-09: the condition reads the pawn's *current* tile each time. It captured the [Tile]
+     * object the pawn stood on when the wait started, but movement replaces [Pawn.tile] with a new
+     * object, so the captured tile never matched and the task never resumed.
      */
     suspend fun waitTile(tile: Tile): Unit =
         suspendCoroutine {
-            nextStep = SuspendableStep(TileCondition((ctx as Pawn).tile, tile), it)
+            val pawn = ctx as Pawn
+            nextStep = SuspendableStep(PredicateCondition { pawn.tile.sameAs(tile) }, it)
         }
 
     /**

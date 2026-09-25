@@ -2,6 +2,7 @@ package gg.rsmod.game.task
 
 import java.io.File
 import kotlin.test.Test
+import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 class PerEntityTaskIsolationTests {
@@ -18,9 +19,13 @@ class PerEntityTaskIsolationTests {
             File("src/main/kotlin/gg/rsmod/game/task/QueueHandlerTask.kt"),
         )
 
+        // Audit T-01: the nets catch every non-fatal Throwable (TODO(), StackOverflowError, ...), not only
+        // Exception; only a fatal VirtualMachineError is rethrown.
         sources.forEach { source ->
             val text = source.readText()
-            assertTrue(text.contains("catch (e: Exception)"), "${source.name} lacks per-entity catch")
+            assertTrue(text.contains("catch (e: Throwable)"), "${source.name} lacks per-entity catch")
+            assertTrue(text.contains("rethrowIfFatal()"), "${source.name} must let fatal JVM errors through")
+            assertFalse(text.contains("catch (e: Exception)"), "${source.name} still catches only Exception")
             assertTrue(text.contains("logger.error"), "${source.name} lacks failure logging")
         }
     }

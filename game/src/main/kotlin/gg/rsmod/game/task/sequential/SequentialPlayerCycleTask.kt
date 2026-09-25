@@ -3,6 +3,7 @@ package gg.rsmod.game.task.sequential
 import gg.rsmod.game.model.World
 import gg.rsmod.game.service.GameService
 import gg.rsmod.game.task.GameTask
+import gg.rsmod.game.task.rethrowIfFatal
 import mu.KLogging
 
 /**
@@ -20,7 +21,9 @@ class SequentialPlayerCycleTask : GameTask {
             val start = System.currentTimeMillis()
             try {
                 p.cycle()
-            } catch (e: Exception) {
+            } catch (e: Throwable) {
+                // Audit T-01: catch every non-fatal throwable, not only Exception.
+                e.rethrowIfFatal()
                 logger.error("Error cycling player ${p.username}.", e)
             } finally {
                 val time = System.currentTimeMillis() - start

@@ -3,6 +3,7 @@ package gg.rsmod.game.action
 import gg.rsmod.game.fs.def.ItemDef
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
+import gg.rsmod.game.model.item.ItemAttribute
 
 /**
  * This class is responsible for handling armor equip and unequip related
@@ -101,6 +102,12 @@ object EquipAction {
 
         if (!plugins.executeEquipItemRequirement(p, item.id)) {
             return Result.PLUGIN
+        }
+
+        // Audit D-15: an item broken on a PvP death can't be worn until it is repaired.
+        if ((item.attr[ItemAttribute.BROKEN] ?: 0) > 0) {
+            p.writeMessage("This item is broken. Perdu at the Grand Exchange can repair it.")
+            return Result.FAILED_REQUIREMENTS
         }
 
         val levelRequirements = def.skillReqs

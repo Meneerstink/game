@@ -4,6 +4,7 @@ import gg.rsmod.game.model.World
 import gg.rsmod.game.model.AvTrace
 import gg.rsmod.game.service.GameService
 import gg.rsmod.game.task.GameTask
+import gg.rsmod.game.task.rethrowIfFatal
 import mu.KLogging
 
 /**
@@ -21,7 +22,9 @@ class SequentialNpcCycleTask : GameTask {
             val startNanos = System.nanoTime()
             try {
                 n.cycle()
-            } catch (e: Exception) {
+            } catch (e: Throwable) {
+                // Audit T-01: catch every non-fatal throwable, not only Exception.
+                e.rethrowIfFatal()
                 logger.error("Error cycling npc ${n.id} (${n.name}).", e)
             } finally {
                 val elapsedNanos = System.nanoTime() - startNanos

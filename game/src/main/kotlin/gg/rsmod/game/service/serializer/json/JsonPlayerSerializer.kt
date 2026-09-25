@@ -16,18 +16,22 @@ import gg.rsmod.game.model.interf.DisplayMode
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.game.model.priv.Privilege
 import gg.rsmod.game.model.timer.TimerKey
+import gg.rsmod.game.service.login.PasswordPolicy
 import gg.rsmod.game.service.serializer.PlayerLoadResult
 import gg.rsmod.game.service.serializer.PlayerSerializerService
+import gg.rsmod.net.codec.login.LoginDecoder
 import gg.rsmod.net.codec.login.LoginRequest
 import gg.rsmod.util.ServerProperties
 import mu.KLogging
 import java.io.BufferedReader
 import java.io.FileReader
+import java.io.Writer
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.nio.file.StandardCopyOption
 import java.util.*
+import java.util.concurrent.ConcurrentHashMap
 import kotlin.math.max
 
 /**
@@ -58,13 +62,18 @@ class JsonPlayerSerializer : PlayerSerializerService() {
         client.loginUsername = client.loginUsername.lowercase()
 
         if (!characterExists(client.loginUsername)) {
-            if (client.loginUsername == "kontman" && request.password != "kontman") {
-                return PlayerLoadResult.INVALID_CREDENTIALS
+            // Audit S-06: a reconnect carries no password - it used to create an account with an
+            // empty password hash for any unknown name.
+            if (request.reconnecting) {
+                return PlayerLoadResult.INVALID_RECONNECTION
+            }
+            if (!PasswordPolicy.isAcceptable(client.loginUsername, request.password)) {
+                return PlayerLoadResult.INVALID_NEW_PASSWORD
+            }
+            if (!registrationGate(request)) {
+                return PlayerLoadResult.REGISTRATION_LIMIT
             }
             configureNewPlayer(client, request)
-            if (client.loginUsername == "kontman") {
-                client.privilege = client.world.privileges.get(1) ?: Privilege.DEFAULT
-            }
             client.uid = PlayerUID(client.loginUsername)
             saveClientData(client)
             return PlayerLoadResult.NEW_ACCOUNT
@@ -99,12 +108,7 @@ class JsonPlayerSerializer : PlayerSerializerService() {
             client.username = data.displayName
             client.passwordHash = data.passwordHash
             client.tile = Tile(data.x, data.z, data.height)
-            client.privilege =
-                if (client.loginUsername == "kontman") {
-                    world.privileges.get(1) ?: Privilege.DEFAULT
-                } else {
-                    world.privileges.get(data.privilege) ?: Privilege.DEFAULT
-                }
+            client.privilege = world.privileges.get(data.privilege) ?: Privilege.DEFAULT
             client.runEnergy = data.runEnergy
             client.interfaces.displayMode =
                 DisplayMode.values.firstOrNull { it.id == data.displayMode } ?: DisplayMode.FIXED
@@ -200,6 +204,12 @@ class JsonPlayerSerializer : PlayerSerializerService() {
 
     override fun saveClientData(client: Client): Boolean {
         client.loginUsername = client.loginUsername.lowercase() // Convert username to lowercase
+        // Audit S-10: one save of a given account at a time (autosave, logout save, shutdown hook
+        // and ::changepass could overlap), so the snapshot and the file move stay in order.
+        return synchronized(saveLock(client.loginUsername)) { writeSave(client) }
+    }
+
+    private fun writeSave(client: Client): Boolean {
         client.attr[SKULL_ICON_ATTR] = client.skullIcon
         val data =
             JsonPlayerSaveData(
@@ -230,17 +240,12 @@ class JsonPlayerSerializer : PlayerSerializerService() {
          * native OOM or disk error mid-write used to leave a truncated save behind, which loads as
          * MALFORMED and locks the account out with all progress gone.
          */
-        val save = path.resolve(client.loginUsername)
-        val temp = path.resolve(client.loginUsername + ".tmp")
         val json = GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create()
-        Files.newBufferedWriter(temp).use { writer -> json.toJson(data, writer) }
-        try {
-            Files.move(temp, save, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE)
-        } catch (e: java.nio.file.AtomicMoveNotSupportedException) {
-            Files.move(temp, save, StandardCopyOption.REPLACE_EXISTING)
-        }
+        writeAtomically(path.resolve(client.loginUsername)) { writer -> json.toJson(data, writer) }
         return true
     }
+
+    private fun saveLock(username: String): Any = saveLocks.computeIfAbsent(username.lowercase()) { Any() }
 
     private fun Client.getPersistentContainers(): List<PersistentContainer> {
         val persistent = mutableListOf<PersistentContainer>()
@@ -281,7 +286,11 @@ class JsonPlayerSerializer : PlayerSerializerService() {
     fun characterExists(username: String): Boolean {
         // A blank name resolved to the saves directory itself and "existed" (a blank friend was added that way).
         if (username.isBlank()) return false
-        val save = path.resolve(username)
+        // Audit S-13: names from report abuse, friends/ignore lists and friends chat reach this
+        // unvalidated; "../../game.yml" probed for files outside the saves directory. Only a name
+        // the login decoder would accept can have a save.
+        if (!isValidSaveName(username)) return false
+        val save = path.resolve(username.trim())
 
         return Files.isRegularFile(save)
     }
@@ -304,5 +313,38 @@ class JsonPlayerSerializer : PlayerSerializerService() {
         @JsonProperty("lastLvl") val lastLvl: Int,
     )
 
-    companion object : KLogging()
+    /**
+     * Audit S-10: per-account save locks. Entries are one small object per account that saved
+     * during this run.
+     */
+    private val saveLocks = ConcurrentHashMap<String, Any>()
+
+    companion object : KLogging() {
+        /** Audit S-13: the login decoder's own username rule, so no other name can reach the file system. */
+        fun isValidSaveName(username: String): Boolean = LoginDecoder.isValidUsername(username.trim())
+
+        /**
+         * Audit S-10: writes [save] through a temp file of its own and moves it over [save]
+         * atomically. Every write gets a unique temp file: all saves of one account used to share
+         * `<name>.tmp`, so two overlapping saves (shutdown hook vs autosave/logout) could interleave
+         * into a mixed or cut-off file that then loaded as MALFORMED and locked the account.
+         */
+        fun writeAtomically(
+            save: Path,
+            content: (Writer) -> Unit,
+        ) {
+            val directory = save.toAbsolutePath().parent
+            val temp = Files.createTempFile(directory, save.fileName.toString() + ".", ".tmp")
+            try {
+                Files.newBufferedWriter(temp).use { writer -> content(writer) }
+                try {
+                    Files.move(temp, save, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE)
+                } catch (e: java.nio.file.AtomicMoveNotSupportedException) {
+                    Files.move(temp, save, StandardCopyOption.REPLACE_EXISTING)
+                }
+            } finally {
+                Files.deleteIfExists(temp)
+            }
+        }
+    }
 }

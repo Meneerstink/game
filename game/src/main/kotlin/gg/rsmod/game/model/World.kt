@@ -34,6 +34,7 @@ import gg.rsmod.game.service.Service
 import gg.rsmod.game.service.serializer.json.JsonPlayerSerializer
 import gg.rsmod.game.service.xtea.XteaKeyService
 import gg.rsmod.game.sync.block.UpdateBlockSet
+import gg.rsmod.game.task.rethrowIfFatal
 import gg.rsmod.util.HuffmanCodec
 import gg.rsmod.util.Misc
 import gg.rsmod.util.ServerProperties
@@ -283,8 +284,20 @@ class World(
         val timersCopy = timers.getTimers().toMutableMap()
         timersCopy.forEach { key, time ->
             if (time <= 0) {
-                plugins.executeWorldTimer(this, key)
-                if (!timers.has(key)) {
+                /*
+                 * Audit T-02: a throwing world-timer plugin is logged and its timer removed. It used to
+                 * abort the rest of this world cycle (ground items, temporary objects, reboot countdown)
+                 * and, left at zero, fire - and fail - again every tick.
+                 */
+                var failed = false
+                try {
+                    plugins.executeWorldTimer(this, key)
+                } catch (e: Throwable) {
+                    e.rethrowIfFatal()
+                    failed = true
+                    logger.error("Error in world timer $key; the timer was removed.", e)
+                }
+                if (failed || !timers.has(key)) {
                     timers.remove(key)
                 }
             }

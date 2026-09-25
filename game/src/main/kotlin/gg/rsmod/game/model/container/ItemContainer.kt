@@ -282,6 +282,11 @@ class ItemContainer(
      * suggestion as any pre-existing stack's index of the item will be used as
      * the slot for this transaction.
      *
+     * @param applyCreationRedirect
+     * true (the default) when this add *creates* the item (spawn, shop, reward, Grand Exchange payout): a charged id
+     * then becomes its uncharged item, see [creationRedirect]. Callers that *move* an existing item (bank, trade,
+     * container transfer) pass false so the id is kept and the caller can copy the item's own attributes onto it.
+     *
      * @return
      * An [ItemTransaction] that contains relevant information on how successful
      * the operation was. The transaction implements [Iterable]. Its iterable
@@ -297,10 +302,13 @@ class ItemContainer(
         assureFullInsertion: Boolean = true,
         forceNoStack: Boolean = false,
         beginSlot: Int = -1,
+        applyCreationRedirect: Boolean = true,
     ): ItemTransaction {
         // Items created here never carry attributes, so a charged weapon id added here holds no charges: it becomes its
         // uncharged / empty / inactive item (see [creationRedirect]).
-        val item = creationRedirect?.invoke(item) ?: item
+        // Audit E-06: only on real creation. A bank withdraw or trade used to turn a charged blowpipe into "(empty)"
+        // here and then copy its charges onto the empty id.
+        val item = if (applyCreationRedirect) creationRedirect?.invoke(item) ?: item else item
         val def = definitions.get(ItemDef::class.java, item)
 
         /*
@@ -447,6 +455,7 @@ class ItemContainer(
         assureFullInsertion: Boolean = true,
         forceNoStack: Boolean = false,
         beginSlot: Int = -1,
+        applyCreationRedirect: Boolean = true,
     ): ItemTransaction {
         return add(
             item = item.id,
@@ -454,6 +463,7 @@ class ItemContainer(
             assureFullInsertion = assureFullInsertion,
             forceNoStack = forceNoStack,
             beginSlot = beginSlot,
+            applyCreationRedirect = applyCreationRedirect,
         )
     }
 

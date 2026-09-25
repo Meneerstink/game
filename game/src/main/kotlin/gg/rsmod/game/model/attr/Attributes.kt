@@ -747,7 +747,9 @@ val DEATH_RECOVERY_FEE_ATTR = AttributeKey<Int>(persistenceKey = "death_recovery
  * sweep), so it is armed only for the duration of the death it was set for and
  * is always clear again before the next death can begin.
  */
-val DEATH_LOOT_RESOLVED_ATTR = AttributeKey<Boolean>(resetOnDeath = true)
+// Audit X-11: persisted, so a force-logout or crash-save during the death sequence can't make the
+// replayed death on login resolve the victim's items a second time.
+val DEATH_LOOT_RESOLVED_ATTR = AttributeKey<Boolean>(persistenceKey = "death_loot_resolved", resetOnDeath = true)
 
 /**
  * Lunar Disruption Shield: while true, the next damaging hit from another player is nullified

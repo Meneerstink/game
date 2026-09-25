@@ -561,28 +561,34 @@ abstract class Player(
             }
         }
 
-        updateInventory()
-        updateEquipment()
-        updateBank()
-        updateRandomEventGift()
-        updateShop()
+        // Audit T-02: pending hits and the varp/skill flush run even when something before them throws
+        // (timerCycle already isolates each timer); the failure still reaches the cycle task's log.
+        try {
+            updateInventory()
+            updateEquipment()
+            updateBank()
+            updateRandomEventGift()
+            updateShop()
 
-        if (calculateWeight) {
-            calculateWeight()
+            if (calculateWeight) {
+                calculateWeight()
+            }
+
+            if (calculateBonuses) {
+                calculateBonuses()
+            }
+
+            if (timers.isNotEmpty) {
+                timerCycle()
+            }
+        } finally {
+            try {
+                hitsCycle()
+            } finally {
+                updateVarps()
+                updateSkills()
+            }
         }
-
-        if (calculateBonuses) {
-            calculateBonuses()
-        }
-
-        if (timers.isNotEmpty) {
-            timerCycle()
-        }
-
-        hitsCycle()
-
-        updateVarps()
-        updateSkills()
     }
 
     /**
@@ -770,7 +776,10 @@ abstract class Player(
             // A dropped channel has no further packets with which to drive SevenSecondAction.
             // Refresh the server-side body hold here so closing the client is never faster than
             // using the visible logout button.
-            timers[DEADMAN_LOGOUT_TIMER] = 12
+            // Audit X-10: extend only - never shorten a longer hold armed by a pending hit.
+            if (!timers.has(DEADMAN_LOGOUT_TIMER) || timers[DEADMAN_LOGOUT_TIMER] < 12) {
+                timers[DEADMAN_LOGOUT_TIMER] = 12
+            }
         }
         pendingLogout = true
         setDisconnectionTimer = true

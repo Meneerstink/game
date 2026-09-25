@@ -3,8 +3,11 @@ package gg.rsmod.game.model.queue
 import gg.rsmod.game.model.queue.impl.PawnQueueTaskSet
 import gg.rsmod.game.model.queue.impl.WorldQueueTaskSet
 import kotlinx.coroutines.Dispatchers
+import java.io.File
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 class QueueTaskFailureIsolationTests {
     @Test
@@ -70,5 +73,40 @@ class QueueTaskFailureIsolationTests {
         assertEquals(3, parentTicks, "the parent task ran all three iterations")
         assertEquals(3, childRuns, "every queued child ran")
         assertEquals(0, set.size)
+    }
+
+    @Test
+    fun `a condition throwing an Error fails only that task`() {
+        // Audit T-01: a StackOverflowError or TODO() in a condition used to escape the Exception-only net.
+        val set = PawnQueueTaskSet()
+        var survivorRuns = 0
+        set.queue(Any(), Dispatchers.Unconfined, TaskPriority.STANDARD, block = {
+            while (true) {
+                survivorRuns++
+                wait(1)
+            }
+        }, persistent = true)
+        set.queue(Any(), Dispatchers.Unconfined, TaskPriority.STANDARD, block = {
+            wait { throw StackOverflowError("runaway recursion in a condition") }
+        })
+        set.queue(Any(), Dispatchers.Unconfined, TaskPriority.STANDARD, block = {
+            wait { throw NotImplementedError("TODO() in a condition") }
+        })
+
+        set.cycle()
+        set.cycle()
+
+        assertEquals(1, set.size)
+        assertTrue(survivorRuns >= 2, "the surviving task keeps running")
+    }
+
+    @Test
+    fun `waitTile reads the pawn's current tile instead of a captured Tile object`() {
+        // Audit T-09: movement replaces Pawn.tile with a new object, so a condition holding the old
+        // object never became true and the task never resumed (monkey bars shortcut).
+        val source = File("src/main/kotlin/gg/rsmod/game/model/queue/QueueTask.kt").readText()
+        val waitTile = source.substringAfter("suspend fun waitTile(tile: Tile)").substringBefore("\n        }")
+        assertTrue("PredicateCondition { pawn.tile.sameAs(tile) }" in waitTile, waitTile)
+        assertFalse("TileCondition(" in waitTile)
     }
 }

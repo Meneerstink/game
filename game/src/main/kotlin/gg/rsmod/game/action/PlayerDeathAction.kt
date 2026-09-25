@@ -26,11 +26,14 @@ object PlayerDeathAction : KLogging() {
      * The damage map accumulates without any notion of "this fight", so without a window the
      * highest lifetime damage dealer wins: a PKer who hit for 50 and was escaped from minutes ago
      * outranked the dragon that actually landed the kill, and the death was then resolved as a PvP
-     * death (ground loot for an absent killer instead of death recovery). 60 seconds, kept
-     * numerically in sync with `PvpSkull.AGGRESSOR_WINDOW_CYCLES` (100 cycles) - the same window the
-     * PvP aggressor/skull rules already use - because the game module cannot depend on plugins.
+     * death (ground loot for an absent killer instead of death recovery). 100 game cycles (60
+     * seconds), kept in sync with `PvpSkull.AGGRESSOR_WINDOW_CYCLES` (100 cycles) - the same window
+     * the PvP aggressor/skull rules already use - because the game module cannot depend on plugins.
+     *
+     * Audit T-12: counted in game cycles, like the damage map's hit stamps (it was 60 000 ms of wall
+     * clock, which lag or a catch-up burst stretched or shrank).
      */
-    private const val KILL_CREDIT_WINDOW_MS = 60_000L
+    private const val KILL_CREDIT_WINDOW_CYCLES = 100
 
     val deathPlugin: Plugin.() -> Unit = {
         val player = ctx as Player
@@ -57,7 +60,7 @@ object PlayerDeathAction : KLogging() {
         // snapshot first: a PvM/environmental death with no current damage must never inherit the
         // player killer from an earlier death and become PvP loot by stale attribution.
         player.attr.remove(KILLER_ATTR)
-        player.damageMap.getMostDamage(KILL_CREDIT_WINDOW_MS)?.let { killer ->
+        player.damageMap.getMostDamage(KILL_CREDIT_WINDOW_CYCLES)?.let { killer ->
             if (killer is Player) {
                 world.getService(LoggerService::class.java, searchSubclasses = true)?.logPlayerKill(killer, player)
             }

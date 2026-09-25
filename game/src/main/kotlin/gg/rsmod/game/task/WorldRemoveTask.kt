@@ -21,7 +21,9 @@ class WorldRemoveTask : GameTask {
                 if (npc.owner?.isOnline == false) {
                     world.remove(npc)
                 }
-            } catch (e: Exception) {
+            } catch (e: Throwable) {
+                // Audit T-01: catch every non-fatal throwable, not only Exception.
+                e.rethrowIfFatal()
                 logger.error("Error removing offline-owned npc ${npc.id} (${npc.name}).", e)
             }
         }

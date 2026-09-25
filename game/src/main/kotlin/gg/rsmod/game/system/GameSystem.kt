@@ -15,6 +15,7 @@ import gg.rsmod.game.model.attr.LAST_ACTIVE_CYCLE_ATTR
 import gg.rsmod.game.model.attr.PLAYER_ACTION_INTERRUPT_ATTR
 import gg.rsmod.game.model.entity.Client
 import gg.rsmod.game.service.GameService
+import gg.rsmod.game.task.rethrowIfFatal
 import gg.rsmod.net.packet.GamePacket
 import gg.rsmod.net.packet.GamePacketReader
 import io.netty.channel.Channel
@@ -35,7 +36,18 @@ class GameSystem(
     val client: Client,
     val service: GameService,
 ) : ServerSystem(channel) {
-    private val messages: BlockingQueue<MessageHandle> = ArrayBlockingQueue<MessageHandle>(service.maxMessagesPerCycle)
+    /**
+     * Audit T-15: the buffer holds [PACKET_BUFFER_CYCLES] cycles' worth of packets. It was exactly one
+     * cycle (`messages-per-cycle`, 30), so a burst - passive packets included - silently dropped real
+     * clicks. [handleMessages] still handles at most `messages-per-cycle` packets per cycle; the rest
+     * wait, in order, for the following cycles. Only a sustained flood overflows it.
+     */
+    private val messages: BlockingQueue<MessageHandle> =
+        ArrayBlockingQueue<MessageHandle>(bufferCapacity(service.maxMessagesPerCycle))
+
+    /** Audit T-15: packets this connection dropped because the buffer was full. */
+    @Volatile
+    private var droppedPackets = 0
 
     override fun receiveMessage(
         ctx: ChannelHandlerContext,
@@ -64,13 +76,22 @@ class GameSystem(
                     ),
                 )
                 if (!queued) {
-                    // A burst above messages-per-cycle must not throw from Netty's receive path and
-                    // turn a temporary input backlog into the intermittent client freeze/disconnect.
-                    // The bounded queue deliberately drops only the overflowing packet; the event is
+                    // A burst above the buffer must not throw from Netty's receive path and turn a
+                    // temporary input backlog into the intermittent client freeze/disconnect. The
+                    // bounded queue deliberately drops only the overflowing packet; the event is
                     // visible when AvTrace is enabled so the client action can be correlated.
                     AvTrace.log {
                         "packet queue full user=${client.username} opcode=${msg.opcode} " +
-                            "length=${msg.payload.readableBytes()} capacity=${service.maxMessagesPerCycle}"
+                            "length=${msg.payload.readableBytes()} capacity=${bufferCapacity(service.maxMessagesPerCycle)}"
+                    }
+                    // Audit T-15: overflow now means a sustained flood, so it is no longer silent.
+                    if (droppedPackets++ % OVERFLOW_WARN_EVERY == 0) {
+                        logger.warn(
+                            "Packet buffer of {} is full ({} packets dropped so far); dropping opcode {}.",
+                            client.username,
+                            droppedPackets,
+                            msg.opcode,
+                        )
                     }
                 }
             } finally {
@@ -88,6 +109,10 @@ class GameSystem(
         logger.info("User '{}' requested disconnection from channel {}.", client.username, channel)
     }
 
+    /**
+     * Handles at most `messages-per-cycle` queued packets; the rest stay queued, in order, for the
+     * next cycle (Audit T-15).
+     */
     fun handleMessages() {
         for (i in 0 until service.maxMessagesPerCycle) {
             if (!client.isOnline || client.isLogoutPending) {
@@ -136,9 +161,11 @@ class GameSystem(
             try {
                 try {
                     next.handler.handle(client, world, next.message)
-                } catch (e: Exception) {
+                } catch (e: Throwable) {
                     // A malformed or stale packet must not abort this player's remaining input
                     // or the MessageHandlerTask for every later player in the same cycle.
+                    // Audit T-01: any non-fatal throwable (a handler's TODO()), not only Exception.
+                    e.rethrowIfFatal()
                     logger.error(
                         "Error handling incoming message ${next.message.javaClass.simpleName} " +
                             "opcode=${next.opcode} for user=${client.username}",
@@ -191,5 +218,14 @@ class GameSystem(
 
     companion object : KLogging() {
         private const val TRACE_SLOW_PACKET_NANOS = 50_000_000L
+
+        /** Audit T-15: how many cycles' worth of packets (at `messages-per-cycle`) the buffer holds. */
+        internal const val PACKET_BUFFER_CYCLES = 8
+
+        /** Audit T-15: log one warning per this many dropped packets. */
+        private const val OVERFLOW_WARN_EVERY = 100
+
+        /** Audit T-15: the packet buffer capacity for [messagesPerCycle] handled packets per cycle. */
+        internal fun bufferCapacity(messagesPerCycle: Int): Int = (messagesPerCycle * PACKET_BUFFER_CYCLES).coerceAtLeast(1)
     }
 }

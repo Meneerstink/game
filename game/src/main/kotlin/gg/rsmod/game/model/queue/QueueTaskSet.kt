@@ -1,5 +1,6 @@
 package gg.rsmod.game.model.queue
 
+import gg.rsmod.game.task.rethrowIfFatal
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import mu.KLogging
@@ -109,13 +110,15 @@ abstract class QueueTaskSet {
      */
     protected fun failTask(
         task: QueueTask,
-        error: Exception,
+        error: Throwable,
         remove: () -> Unit,
     ) {
+        // Audit T-01: callers pass every non-fatal Throwable (a condition's TODO(), a StackOverflowError).
         logger.error("Error with queued task context ${task.ctx}; terminating it.", error)
         try {
             task.terminate()
-        } catch (terminationError: Exception) {
+        } catch (terminationError: Throwable) {
+            terminationError.rethrowIfFatal()
             logger.error("Error terminating failed queued task context ${task.ctx}.", terminationError)
         } finally {
             remove()

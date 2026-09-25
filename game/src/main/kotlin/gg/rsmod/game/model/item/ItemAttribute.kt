@@ -64,4 +64,10 @@ enum class ItemAttribute {
     RUNE_POUCH_AMOUNT_3,
     RUNE_POUCH_ID_4,
     RUNE_POUCH_AMOUNT_4,
+
+    /**
+     * Audit D-15: 1 when an untradeable item without its own broken variant was lost on a PvP death.
+     * OSRS keeps such an item with the victim "in broken form"; it can't be worn until Perdu repairs it.
+     */
+    BROKEN,
 }

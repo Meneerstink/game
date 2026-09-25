@@ -21,7 +21,9 @@ class ChunkCreationTask : GameTask {
         world.players.forEach { p ->
             try {
                 p.changeChunks(world, createChunkIfNeeded = true)
-            } catch (e: Exception) {
+            } catch (e: Throwable) {
+                // Audit T-01: catch every non-fatal throwable, not only Exception.
+                e.rethrowIfFatal()
                 logger.error("Error updating chunks for player ${p.username}.", e)
             }
         }
@@ -31,7 +33,9 @@ class ChunkCreationTask : GameTask {
                 if (npc.isActive()) {
                     npc.changeChunks(world, createChunkIfNeeded = CREATE_CHUNK_FOR_NPC)
                 }
-            } catch (e: Exception) {
+            } catch (e: Throwable) {
+                // Audit T-01: catch every non-fatal throwable, not only Exception.
+                e.rethrowIfFatal()
                 logger.error("Error updating chunks for npc $npc.", e)
             }
         }

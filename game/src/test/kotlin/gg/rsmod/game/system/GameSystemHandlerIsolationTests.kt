@@ -12,8 +12,9 @@ class GameSystemHandlerIsolationTests {
             File("src/main/kotlin/gg/rsmod/game/system/GameSystem.kt").readText()
         val handleMessages = source.substringAfter("fun handleMessages()")
 
+        // Audit T-01: every non-fatal Throwable (a handler's TODO()), not only Exception.
         assertTrue(
-            "catch (e: Exception)" in handleMessages,
+            "catch (e: Throwable)" in handleMessages && "rethrowIfFatal()" in handleMessages,
             "message handling must catch packet-handler exceptions per message",
         )
         assertTrue(
@@ -21,7 +22,7 @@ class GameSystemHandlerIsolationTests {
             "packet-handler exceptions must remain observable in the server log",
         )
         assertTrue(
-            handleMessages.indexOf("catch (e: Exception)") < handleMessages.indexOf("finally"),
+            handleMessages.indexOf("catch (e: Throwable)") < handleMessages.indexOf("finally"),
             "the per-message catch must wrap the handler before timing cleanup",
         )
     }
