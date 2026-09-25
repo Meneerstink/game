@@ -84,6 +84,7 @@ object RoyalHallMapTool {
             Removal(38785, 3176, 3513, 0, 10, "tree in the hall"),
             Removal(38785, 3181, 3512, 0, 10, "tree in the hall"),
             Removal(1317, 3186, 3509, 0, 10, "spirit tree (stands east of the hall, home_decor.txt)"),
+            Removal(48065, 3173, 3509, 2, 10, "tree crown (3x3, level 2) growing into the hall's west facade"),
         )
 
     @JvmStatic
