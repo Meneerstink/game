@@ -1,30 +1,28 @@
 package gg.rsmod.plugins.content.areas.grandexchange
 
 /*
- * The Grand Exchange home hall (owner 2026-09-22: "At our Home Grand Exchange, create a SMALL but premium custom
- * building ... Put ALL current Grand Exchange Home NPCs inside the building ... Keep bankers / GE access practical").
+ * The Grand Exchange home hall: the Royal Hall (owner 2026-09-25: "create me a building in the grand exchange and put all
+ * the npcs in the building make the building beautifull make sure our building isnt noclipped on anything in grand
+ * exchange ... use the highest quality materials"; chosen: royal marble & gold, one big floor, in place of the north-east
+ * booth, cutting into the ring colonnade). It replaces the 2026-09-22 open-air hall on the south-west lawn.
  *
- * WHERE. The Grand Exchange's south-west lawn, x 3152-3162 by z 3470-3480 (11 x 11 tiles). `runRev667RegionProbeTool
- * locs 12598` reports nothing solid in that square - only ground decoration (grass tufts) and the GE's large non-solid
- * floor pieces - so no Varrock scenery is hidden or blocked. It stays clear of the south-west bank/clerk booth
- * (x 3147-3150, z 3477-3480), of the trees on z 3469 and of the south path into the exchange (x 3163-3167), which the
- * hall's east entrance faces. The north entrance opens towards the bank booth, so banking stays one step away.
+ * WHERE. Floor x 3176-3188, z 3503-3514 (GeHomeHall.X/Z/WIDTH/DEPTH). The north-east bank booth (47173) and the ring
+ * section 47451 (paving, colonnade roof and pillars) are removed; the neighbouring colonnade roofs end half a tile short of
+ * the walls, which stand one tile inside the cut (checked in rendered previews of the real cache models). The spirit tree
+ * moved into the garden just east of the hall. Doorways: south (x 3181-3183, onto the ring), west (z 3508-3510, towards
+ * the casino) and east (z 3508-3510, to the spirit tree).
  *
- * WHAT. Walls are the Grand Exchange's own stone wall (loc 23779, the wall of the exchange compound itself - 192
- * placements in this region as a straight wall, also used there as a corner), so the hall reads as part of the
- * exchange. The four corner pieces are the same loc as an L-corner (type 2). Two three-tile entrances (east and north)
- * are flanked by standing torches (724, animated flame). The centrepiece is the cache's `Carved fountain` (35469, 4x4).
- * `GeHomeHallMapTool` replaces the lawn with the exact grey Grand Exchange paving from the adjacent east approach and
- * removes the covered grass decorations in both caches; the former 121-tile red POH rug is intentionally gone. Four
- * potted plants soften the solid corners and cache-native GE wall banners (60279) give the long walls a focal point.
- * Every decorative id was checked to carry no menu option, so nothing offers a dead interaction.
+ * WHAT. Legends' Guild walls (41388, arched windows 41390): white marble inside, grey stone outside like the exchange.
+ * Varrock Palace gold-and-black carpet over the whole floor, its gold throne with gold standards and 78 banners on the north
+ * wall, a three-tier fountain (47747) in the middle with gold candelabras, black-and-gold suits of armour in the corners
+ * and candle sconces on every wall. Every id is cache-native and carries no menu option.
  *
- * WHO. Every service npc of the old open-air hub row stands along the inside of the walls, facing the fountain. The
- * crowded west row is split across both side walls; Penguin/Ping/Pong are intentionally removed. Lucien uses the
- * cache's otherwise identical non-combat variant 273. Bankers, GE clerks, Skully and casino croupiers keep their posts.
+ * WHO. The 20 service stalls below stand along the west, east and north walls facing in; the south row beside the entrance
+ * holds the bank staff of the old north-east booth (spawns_12598), the 78 Store keepers (StoreNpcs) and the Breach Trader.
+ * Penguin/Ping/Pong stay removed; Lucien uses the non-combat variant 273. Skully and the casino croupiers keep their posts.
  */
 
-// Walls, fountain, plants, torches and banners live in data/cfg/home_decor.txt (home_decor_live.plugin.kts).
+// Walls, carpet, throne, fountain and the other furniture live in data/cfg/home_decor.txt (home_decor_live.plugin.kts).
 
 val HALL_X = GeHomeHall.X
 val HALL_Z = GeHomeHall.Z

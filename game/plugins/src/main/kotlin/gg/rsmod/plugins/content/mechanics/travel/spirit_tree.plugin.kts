@@ -45,7 +45,9 @@ private val STATIONS =
         SpiritTreeStation("Tree Gnome Village", Tile(2542, 3169, 0)),
         SpiritTreeStation("Tree Gnome Stronghold", Tile(2462, 3444, 0)),
         SpiritTreeStation("Battlefield of Khazard", Tile(2557, 3259, 0)),
-        SpiritTreeStation("North-east of the Grand Exchange in Varrock", Tile(3185, 3511, 0)),
+        // Owner 2026-09-25: the Royal Hall took the tree's corner; it now stands in the garden just east of the hall
+        // (data/cfg/home_decor.txt) and players arrive beside the hall's east door.
+        SpiritTreeStation("North-east of the Grand Exchange in Varrock", Tile(3190, 3507, 0)),
         SpiritTreeStation("Mobilising Armies", Tile(2416, 2851, 0)),
     )
 

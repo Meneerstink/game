@@ -9,8 +9,13 @@ import java.io.File
  * `home_decor.txt` cannot take away the white leaf litter and worn dirt-path decals around the south gate; only the map
  * itself can. Bounded, transactional (preflight, journal, verify) and idempotent.
  *
- * Usage: `./gradlew :game:runGeHomeGroundDecorTool --args="plan|apply <minX> <minZ> <maxX> <maxZ> [locId,locId,...]"`;
- * without ids every ground decoration in the rectangle goes.
+ * The same holds for any loc whose origin tile carries the bridge flag (the Grand Exchange's raised paving rings): the
+ * client keeps it on the tile underneath the bridge, where a server-side removal (sent on the bridge level) cannot reach
+ * it. The Royal Hall (owner 2026-09-25) replaces the north-east bank booth 47173, which stands on such a tile, so the
+ * optional last argument names the loc types to remove (default `22`).
+ *
+ * Usage: `./gradlew :game:runGeHomeGroundDecorTool --args="plan|apply <minX> <minZ> <maxX> <maxZ> [locId,locId,...|*] [type,type,...]"`;
+ * without ids (or with `*`) every loc of the named types in the rectangle goes.
  */
 object GeHomeGroundDecorTool {
     private const val GAME_CACHE = "C:/RSPS/game/game/data/cache"
@@ -21,9 +26,12 @@ object GeHomeGroundDecorTool {
     @JvmStatic
     fun main(args: Array<String>) {
         val mode = args.getOrNull(0) ?: "plan"
-        require((mode == "plan" || mode == "apply") && args.size in 5..6) { "Usage: plan|apply <minX> <minZ> <maxX> <maxZ> [locId,locId,...]" }
+        require((mode == "plan" || mode == "apply") && args.size in 5..7) {
+            "Usage: plan|apply <minX> <minZ> <maxX> <maxZ> [locId,locId,...|*] [type,type,...]"
+        }
         val (minX, minZ, maxX, maxZ) = args.slice(1..4).map { it.toInt() }
-        val ids = args.getOrNull(5)?.split(',')?.map { it.trim().toInt() }?.toSet()
+        val ids = args.getOrNull(5)?.takeIf { it != "*" }?.split(',')?.map { it.trim().toInt() }?.toSet()
+        val types = args.getOrNull(6)?.split(',')?.map { it.trim().toInt() }?.toSet() ?: setOf(22)
         val rx = REGION_ID shr 8
         val rz = REGION_ID and 0xFF
         require(minX >= rx * 64 && maxX < rx * 64 + 64 && minZ >= rz * 64 && maxZ < rz * 64 + 64) { "Rectangle leaves map square $REGION_ID" }
@@ -39,7 +47,7 @@ object GeHomeGroundDecorTool {
             check(Rev667LocCodec.encode(locs).contentEquals(locBytes)) { "$locName loc round-trip failed" }
             val removed =
                 locs.filter {
-                    it.plane == 0 && it.type == 22 && (ids == null || it.id in ids) && rx * 64 + it.localX in minX..maxX && rz * 64 + it.localZ in minZ..maxZ
+                    it.plane == 0 && it.type in types && (ids == null || it.id in ids) && rx * 64 + it.localX in minX..maxX && rz * 64 + it.localZ in minZ..maxZ
                 }
             removed.groupingBy { it.id }.eachCount().forEach { (id, count) -> println("REMOVE loc $id x$count") }
             val updatedLocs = Rev667LocCodec.encode(locs - removed.toSet())
@@ -50,7 +58,7 @@ object GeHomeGroundDecorTool {
                         locArchive.id,
                         0,
                         updatedLocs,
-                        "GE home: remove ${removed.size} ground decorations in $minX,$minZ..$maxX,$maxZ",
+                        "GE home: remove ${removed.size} locs of types $types in $minX,$minZ..$maxX,$maxZ",
                         CacheItemProbeTool.sha1(locBytes),
                         xtea = key,
                     )

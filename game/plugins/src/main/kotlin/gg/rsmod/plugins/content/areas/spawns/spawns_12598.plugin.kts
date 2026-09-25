@@ -10,8 +10,10 @@ spawn_npc(npc = Npcs.GRAND_EXCHANGE_CLERK, x = 3147, z = 3479, direction = Direc
 spawn_npc(npc = Npcs.GRAND_EXCHANGE_CLERK_2593, x = 3150, z = 3478, direction = Direction.EAST)
 spawn_npc(npc = Npcs.GRAND_EXCHANGE_CLERK_2240, x = 3182, z = 3478, direction = Direction.EAST)
 spawn_npc(npc = Npcs.GRAND_EXCHANGE_CLERK_2241, x = 3179, z = 3479, direction = Direction.WEST)
-spawn_npc(npc = Npcs.GRAND_EXCHANGE_CLERK, x = 3179, z = 3505, direction = Direction.WEST)
-spawn_npc(npc = Npcs.GRAND_EXCHANGE_CLERK_2593, x = 3182, z = 3504, direction = Direction.EAST)
+// Owner 2026-09-25: the north-east booth made way for the Royal Hall (GeHomeHall.kt); its clerks and bankers stand
+// inside the hall on the south row beside the entrance, facing north.
+spawn_npc(npc = Npcs.GRAND_EXCHANGE_CLERK, x = 3178, z = 3503, direction = Direction.NORTH)
+spawn_npc(npc = Npcs.GRAND_EXCHANGE_CLERK_2593, x = 3179, z = 3503, direction = Direction.NORTH)
 spawn_npc(npc = Npcs.GRAND_EXCHANGE_CLERK_2240, x = 3150, z = 3504, direction = Direction.EAST)
 spawn_npc(npc = Npcs.GRAND_EXCHANGE_CLERK_2241, x = 3147, z = 3505, direction = Direction.WEST)
 
@@ -46,18 +48,18 @@ spawn_npc(
 )
 spawn_npc(
     npc = Npcs.BANKER_LATEST_FEMALE_HANDSBEHIND_3293,
-    x = 3180,
+    x = 3177,
     z = 3503,
-    direction = Direction.SOUTH,
-    static = true,
-) // split hair female facing south, in north east stall
-spawn_npc(
-    npc = Npcs.BANKER_LATEST_MALE_HANDSBEHIND_3416,
-    x = 3181,
-    z = 3506,
     direction = Direction.NORTH,
     static = true,
-)
+) // split hair female, Royal Hall south row (was the north-east stall)
+spawn_npc(
+    npc = Npcs.BANKER_LATEST_MALE_HANDSBEHIND_3416,
+    x = 3180,
+    z = 3503,
+    direction = Direction.NORTH,
+    static = true,
+) // Royal Hall south row (was the north-east stall)
 spawn_npc(
     npc = Npcs.BANKER_LATEST_FEMALE_BLOND_HANDSBEHIND_2718,
     x = 3181,
