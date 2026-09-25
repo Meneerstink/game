@@ -11,8 +11,9 @@ import com.displee.cache.CacheLibrary
  * 41409 whose vertical offset (loc opcode 71) lifts them onto the ring below: ring 2 is 41409 itself on level 3, ring k
  * sits 70 * (k - 2) higher. The small glass lantern on top is a copy of the glass roof piece 47841 lifted onto ring 5.
  * Nothing else about the definitions changes (models, shapes, recolours, no options), so they look and behave like the
- * originals. Appended as new loc ids after the last one in the cache; one [CacheTransaction] over both production caches,
- * idempotent.
+ * originals. The hall's fountain is a byte-exact copy of the Grand Exchange fountain 47150 (owner 2026-09-25: the hall
+ * moved onto the exchange's centre, where the owner's own world edit removes 47150 from that tile). Appended as new loc
+ * ids after the last one in the cache; one [CacheTransaction] over both production caches, idempotent.
  *
  * Usage: `java -cp <game lib> gg.rsmod.game.tools.importer.RoyalHallLocTool plan|apply`
  */
@@ -23,6 +24,7 @@ object RoyalHallLocTool {
 
     const val SLATE = 41409
     const val GLASS = 47841
+    const val FOUNTAIN = 47150
 
     /** The slate piece's own opcode-71 value; the rings above add their lift to it. */
     private const val SLATE_BASE_OFFSET = -6
@@ -31,7 +33,8 @@ object RoyalHallLocTool {
     /** Glass slope faces start 16 above the loc; the lantern's base meets the top of ring 5 (216 + 70 above level 3). */
     private const val GLASS_OFFSET = -(3 * SLATE_RISE + SLATE_RISE - SLATE_BASE_OFFSET - 16)
 
-    class Copy(val id: Int, val source: Int, val offset: Int, val label: String)
+    /** A copy of [source]; [offset] replaces its vertical offset (opcode 71), null keeps the definition byte-exact. */
+    class Copy(val id: Int, val source: Int, val offset: Int?, val label: String)
 
     val COPIES =
         listOf(
@@ -39,6 +42,7 @@ object RoyalHallLocTool {
             Copy(62755, SLATE, SLATE_BASE_OFFSET - 2 * SLATE_RISE, "Royal Hall roof ring 4 (slate 41409 raised 140)"),
             Copy(62756, SLATE, SLATE_BASE_OFFSET - 3 * SLATE_RISE, "Royal Hall roof ring 5 (slate 41409 raised 210)"),
             Copy(62757, GLASS, GLASS_OFFSET, "Royal Hall glass lantern (glass roof 47841 raised onto ring 5)"),
+            Copy(62758, FOUNTAIN, null, "Royal Hall fountain (exact copy of the Grand Exchange fountain 47150)"),
         )
 
     /** Returns [def] with its opcode-71 (vertical offset) set to [offset], inserted before the terminator when absent. */
@@ -116,7 +120,7 @@ object RoyalHallLocTool {
         try {
             COPIES.forEach { copy ->
                 val source = library.data(LOC_INDEX, copy.source ushr 8, copy.source and 0xFF) ?: error("loc ${copy.source} missing")
-                val wanted = withOffset(copy.source, source, copy.offset)
+                val wanted = copy.offset?.let { withOffset(copy.source, source, it) } ?: source.copyOf()
                 val before = Rev667LocType.decode(copy.source, source)
                 val after = Rev667LocType.decode(copy.id, wanted)
                 check(after.allModels == before.allModels && after.modelsByShape.keys == before.modelsByShape.keys) { "copy ${copy.id} changed its models" }

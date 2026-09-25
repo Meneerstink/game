@@ -32,9 +32,9 @@ object StoreNpcs {
     val POSTS: List<Post> =
         listOf(
             // 2026-09-25: inside the Royal Hall (GeHomeHall.kt), south row east of the entrance, facing north.
-            Post(DONATOR_STORE, StoreCatalogue.Shop.DONATOR, Tile(3184, 3503, 0)),
-            Post(DEADMAN_STORE, StoreCatalogue.Shop.DEADMAN, Tile(3185, 3503, 0)),
-            Post(Npcs.XUAN, StoreCatalogue.Shop.LOYALTY, Tile(3186, 3503, 0)),
+            Post(DONATOR_STORE, StoreCatalogue.Shop.DONATOR, Tile(3168, 3486, 0)),
+            Post(DEADMAN_STORE, StoreCatalogue.Shop.DEADMAN, Tile(3169, 3486, 0)),
+            Post(Npcs.XUAN, StoreCatalogue.Shop.LOYALTY, Tile(3170, 3486, 0)),
         )
 
     /** A Grand Exchange floor tile players stand on (the Skully site's customer-side anchor). */

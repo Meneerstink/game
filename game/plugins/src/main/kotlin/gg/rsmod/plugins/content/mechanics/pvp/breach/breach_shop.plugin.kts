@@ -66,8 +66,8 @@ create_shop(
     STOCK.forEachIndexed { slot, (item, price) -> items[slot] = ShopItem(item, amount = 1_000, sellPrice = price) }
 }
 
-// Royal Hall (GeHomeHall.kt), south row beside the 78 Store keepers.
-spawn_npc(npc = BREACH_TRADER, x = 3187, z = 3503, walkRadius = 0, direction = Direction.NORTH)
+// Royal Hall (GeHomeHall.kt), south row west of the entrance.
+spawn_npc(npc = BREACH_TRADER, x = 3161, z = 3486, walkRadius = 0, direction = Direction.NORTH)
 
 on_npc_option(npc = BREACH_TRADER, option = "talk-to") {
     player.queue {

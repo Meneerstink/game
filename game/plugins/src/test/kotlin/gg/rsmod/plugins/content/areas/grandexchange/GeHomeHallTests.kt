@@ -14,9 +14,9 @@ class GeHomeHallTests {
         assertEquals(posts.size, posts.map { it.npc }.distinct().size)
         assertEquals(posts.size, posts.map { it.dx to it.dz }.distinct().size)
         assertTrue(posts.all { it.dx in 0 until GeHomeHall.WIDTH && it.dz in 0 until GeHomeHall.DEPTH })
-        // Doorways (west/east dz 5..7, south dx 5..7) stay clear, and so do the four corners (armour).
-        assertFalse(posts.any { (it.dx == 0 || it.dx == GeHomeHall.WIDTH - 1) && it.dz in 5..7 })
-        assertFalse(posts.any { it.dz == 0 && it.dx in 5..7 })
+        // Doorways stay clear, and so do the four corners (armour).
+        assertFalse(posts.any { (it.dx == 0 || it.dx == GeHomeHall.WIDTH - 1) && it.dz in GeHomeHall.SIDE_DOOR })
+        assertFalse(posts.any { it.dz == 0 && it.dx in GeHomeHall.SOUTH_DOOR })
         assertFalse(posts.any { (it.dx == 0 || it.dx == GeHomeHall.WIDTH - 1) && (it.dz == 0 || it.dz == GeHomeHall.DEPTH - 1) })
         // Every stall faces into the hall and the tile in front of it is not another stall.
         val taken = posts.map { it.dx to it.dz }.toSet()

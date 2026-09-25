@@ -3,23 +3,22 @@ package gg.rsmod.plugins.content.areas.grandexchange
 /*
  * The Grand Exchange home hall: the Royal Hall (owner 2026-09-25: "create me a building in the grand exchange and put all
  * the npcs in the building make the building beautifull make sure our building isnt noclipped on anything in grand
- * exchange ... use the highest quality materials"; chosen: royal marble & gold, one big floor, in place of the north-east
- * booth, cutting into the ring colonnade). It replaces the 2026-09-22 open-air hall on the south-west lawn.
+ * exchange ... use the highest quality materials"; chosen: royal marble & gold; then "i want the building to move in the
+ * middel of grand exchange"). It first stood in the north-east corner, which is restored with its booth, clerks and bankers.
  *
- * WHERE. Floor x 3176-3188, z 3503-3514 (GeHomeHall.X/Z/WIDTH/DEPTH). The north-east bank booth (47173) and the ring
- * section 47451 (paving, colonnade roof and pillars) are removed; the neighbouring colonnade roofs end half a tile short of
- * the walls, which stand one tile inside the cut (checked in rendered previews of the real cache models). The spirit tree
- * moved into the garden just east of the hall. Doorways: south (x 3181-3183, onto the ring), west (z 3508-3510, towards
- * the casino) and east (z 3508-3510, to the spirit tree).
+ * WHERE. Floor x 3158-3171, z 3486-3497 (GeHomeHall.X/Z/WIDTH/DEPTH), centred on the exchange's fountain inside the inner
+ * ring, clear of the ring colonnade. RoyalHallMapTool removed the centre's planters, fences, canopy and paving decals and
+ * raised the floor above the paving models. Doorways: south (x 3163-3166, the path from the south gate), west and east
+ * (z 3490-3493).
  *
- * WHAT. Legends' Guild walls (41388, arched windows 41390): white marble inside, grey stone outside like the exchange.
- * Varrock Palace gold-and-black carpet over the whole floor, its gold throne with gold standards and 78 banners on the north
- * wall, a three-tier fountain (47747) in the middle with gold candelabras, black-and-gold suits of armour in the corners
- * and candle sconces on every wall. Every id is cache-native and carries no menu option.
+ * WHAT. Whitewashed walls with gold stained-glass windows on two storeys, a cream parapet with 78 standards and a slate hip
+ * roof (data/cfg/home_decor.txt); inside white marble, a Varrock Palace gold rug round the fountain (62758, a copy of the
+ * exchange's own), the king's and queen's thrones beside the summoning obelisk, gold candelabras, benches, paintings and
+ * black-and-gold armour in the corners. Every id is cache-native or a byte-exact copy and carries no menu option.
  *
- * WHO. The 20 service stalls below stand along the west, east and north walls facing in; the south row beside the entrance
- * holds the bank staff of the old north-east booth (spawns_12598), the 78 Store keepers (StoreNpcs) and the Breach Trader.
- * Penguin/Ping/Pong stay removed; Lucien uses the non-combat variant 273. Skully and the casino croupiers keep their posts.
+ * WHO. The 20 service stalls below stand along the walls facing in; the rest of the south row holds the Breach Trader and
+ * the 78 Store keepers (StoreNpcs). Penguin/Ping/Pong stay removed; Lucien uses the non-combat variant 273. Skully waits
+ * outside the south door; the casino croupiers keep their posts.
  */
 
 // Walls, carpet, throne, fountain and the other furniture live in data/cfg/home_decor.txt (home_decor_live.plugin.kts).
