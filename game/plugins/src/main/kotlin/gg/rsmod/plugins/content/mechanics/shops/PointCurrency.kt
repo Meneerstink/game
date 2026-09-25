@@ -49,7 +49,7 @@ open class PointCurrency(
         shop: Shop,
         item: Int,
     ) {
-        p.message("You can't sell this item to this shop.")
+        p.message(CANT_SELL)
     }
 
     /**
@@ -67,11 +67,12 @@ open class PointCurrency(
         return 0
     }
 
+    /** Point shops never buy (PurchasePolicy.BUY_NONE); 0 means "won't buy" to every caller. */
     override fun getBuyPrice(
         stock: Int,
         world: World,
         item: Int,
-    ): Int = error("Point shops don't buy items from players (PurchasePolicy.BUY_NONE) - getBuyPrice should be unreachable.")
+    ): Int = 0
 
     override fun sellToPlayer(
         p: Player,
@@ -160,21 +161,31 @@ open class PointCurrency(
         }
     }
 
+    /*
+     * Audit E-10: these used to throw. Selling an item to a point shop (Breach Trader) reached buyFromPlayer from the
+     * inventory's Sell option and crashed the click; a refusal message is the retail behaviour.
+     */
     override fun giveToPlayer(
         p: Player,
         shop: Shop,
         slot: Int,
         amt: Int,
-    ): Unit = error("Point shops don't buy items from players (PurchasePolicy.BUY_NONE) - giveToPlayer should be unreachable.")
+    ) {
+        p.message("This item is not currently available for purchase.")
+    }
 
     override fun buyFromPlayer(
         p: Player,
         shop: Shop,
         slot: Int,
         amt: Int,
-    ): Unit = error("Point shops don't buy items from players (PurchasePolicy.BUY_NONE) - buyFromPlayer should be unreachable.")
+    ) {
+        p.message(CANT_SELL)
+    }
 
     override val currencyItem = -1
 
-    companion object : KLogging()
+    companion object : KLogging() {
+        const val CANT_SELL = "You can't sell this item to this shop."
+    }
 }

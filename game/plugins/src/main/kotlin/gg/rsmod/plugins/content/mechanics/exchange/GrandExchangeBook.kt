@@ -17,16 +17,15 @@ object GeSystemLiquidity {
      * Owner 2026-09-20: "make every item we have in game buyable in the grand exchange so it sells for mid price
      * also" (and, when asked whether the house should also buy back, "all").
      *
-     * With this on, the whitelist below stops being the limit: [GrandExchangeService] hands the matcher the item's
-     * guide price for *every* item, so an unmatched buy is always filled from the house and an unmatched sell is
-     * always bought by the house. The GE becomes a guaranteed two-way market at the guide price instead of a
-     * thin player-to-player book.
+     * With this on, the whitelist below stops being the limit: [GrandExchangeService] hands the matcher a house quote
+     * ([GeHousePricing]) for *every* exchangeable item, so an unmatched buy is always filled from the house and an
+     * unmatched sell is always bought by the house.
      *
      * The one thing this must not become is a money printer, and the prices are chosen so it cannot be:
-     *  - the house SELLS at the guide price (the buyer's overbid is refunded), and
-     *  - the house BUYS at the seller's asking price, but only when that ask is at or below the guide price.
-     * The best possible round trip is therefore buy at guide, sell at guide - exactly break-even. Selling at the
-     * top of the allowed band (`guide * 1.05`) is simply never taken by the house.
+     *  - the house SELLS at its ask (the buyer's overbid is refunded), and
+     *  - the house BUYS at its bid, and only from a seller asking at most that bid,
+     * where bid <= ask, both derived from the fixed OSRS seed rather than the player-steerable guide price
+     * (audit E-01), and held to the shop and alchemy bounds of audit E-03.
      *
      * What it does change, deliberately: every item is infinitely available, so drop rarity no longer gates
      * supply. Set this to false to go back to the old cheap-materials-only whitelist.
@@ -46,6 +45,9 @@ object GeSystemLiquidity {
             gg.rsmod.plugins.api.cfg.Items.HAMMER to 8,
             gg.rsmod.plugins.api.cfg.Items.TINDERBOX_590 to 8,
         )
+
+    /** The whitelist quote: the listed unit price on both sides (a round trip is break-even). */
+    fun quote(itemId: Int): GeHouseQuote? = UNIT_PRICE[itemId]?.let { GeHouseQuote(ask = it, bid = it) }
 }
 
 /**
@@ -77,16 +79,18 @@ data class GeFill(
  */
 object GrandExchangeBook {
     /**
-     * [systemPrice] is the house price for an item, or null when the house does not deal in it. The default keeps
-     * the old cheap-materials whitelist so the pure unit tests stay meaningful; [GrandExchangeService] passes the
-     * item's guide price for every item (see [GeSystemLiquidity.ALL_ITEMS_AT_GUIDE_PRICE]).
+     * [houseQuote] is the house's quote for an item, or null when the house does not deal in it. The default keeps
+     * the old cheap-materials whitelist so the pure unit tests stay meaningful; [GrandExchangeService] passes a
+     * quote for every exchangeable item (see [GeSystemLiquidity.ALL_ITEMS_AT_GUIDE_PRICE]).
+     * [taxPerItem] is the OSRS convenience fee per item sold ([GeTax]); the seller pays it on every sale, player and
+     * house alike. It comes before [houseQuote] so that a trailing lambda still means the house quote.
      */
     fun match(
         book: List<GrandExchangeOffer>,
         newOffer: GrandExchangeOffer,
         allowance: GeBuyAllowance = GeBuyAllowance.UNLIMITED,
-        systemPrice: (Int) -> Int? = { GeSystemLiquidity.UNIT_PRICE[it] },
         taxPerItem: (itemId: Int, unitPrice: Int) -> Int = { _, _ -> 0 },
+        houseQuote: (Int) -> GeHouseQuote? = GeSystemLiquidity::quote,
     ): List<GeFill> {
         // OSRS convenience fee: the seller receives the execution price minus the fee on every item sold.
         fun paySeller(
@@ -103,6 +107,8 @@ object GrandExchangeBook {
             book
                 .asSequence()
                 .filter { it.status == OfferStatus.ACTIVE && it.id != newOffer.id }
+                // Audit E-01: an account never trades with itself (a wash trade that only moved the guide price).
+                .filter { it.username != newOffer.username }
                 .filter { it.itemId == newOffer.itemId }
                 .filter { it.type != newOffer.type }
                 .filter { candidate ->
@@ -152,10 +158,11 @@ object GrandExchangeBook {
             fills.add(GeFill(buyOffer.id, sellOffer.id, quantity, execPrice, fromSystem = false))
         }
 
-        val house = systemPrice(newOffer.itemId)
+        val quote = houseQuote(newOffer.itemId)
 
-        if (newOffer.type == OfferType.BUY && newOffer.remaining > 0) {
-            if (house != null && newOffer.pricePerItem >= house) {
+        if (newOffer.type == OfferType.BUY && newOffer.remaining > 0 && quote != null) {
+            val house = quote.ask
+            if (house > 0 && newOffer.pricePerItem >= house) {
                 val quantity = minOf(newOffer.remaining, allowance.remaining(newOffer.username, newOffer.itemId))
                 if (quantity > 0) {
                     newOffer.quantityFilled += quantity
@@ -173,18 +180,19 @@ object GrandExchangeBook {
         /*
          * The house also buys, so a sell offer never sits unsold (owner 2026-09-20).
          *
-         * The house acts like a resting OSRS buy offer at the guide price: it takes any ask at or below the guide
-         * and, as in OSRS where the earlier offer's price is the trade price, pays the guide price (a low ask is
-         * not taken at face value). Buying from the house and selling straight back is guide in, guide out minus
-         * the convenience fee, so never profitable. A seller asking above guide is left resting for a real player.
+         * It buys only from a seller asking at most its bid, and pays the bid (OSRS: an order fills at the price of
+         * the order already resting in the book - the house is that resting buyer; a low ask is not taken at face
+         * value). bid <= ask and the seller pays the convenience fee ([taxPerItem], [GeTax]) on the bid as on any
+         * sale, so buying from the house and selling straight back never gains anything. A seller asking above the
+         * bid is left resting for a real player, exactly as before.
          *
          * No buy limit is recorded here - limits exist to stop one account draining supply, and selling into the
          * house is the opposite of draining it.
          */
-        if (newOffer.type == OfferType.SELL && newOffer.remaining > 0) {
-            if (house != null && newOffer.pricePerItem <= house) {
+        if (newOffer.type == OfferType.SELL && newOffer.remaining > 0 && quote != null) {
+            if (quote.bid > 0 && newOffer.pricePerItem <= quote.bid) {
                 val quantity = newOffer.remaining
-                val paid = house
+                val paid = quote.bid
                 newOffer.quantityFilled += quantity
                 paySeller(newOffer, quantity, paid)
                 newOffer.coinsTraded += paid.toLong() * quantity

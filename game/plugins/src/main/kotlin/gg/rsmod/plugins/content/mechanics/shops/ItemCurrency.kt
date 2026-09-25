@@ -65,7 +65,7 @@ open class ItemCurrency(
         freeItem: Boolean,
     ) {
         val unnoted = Item(shopItem.item).toUnnoted(p.world.definitions)
-        val value = shopItem.sellPrice ?: getSellPrice(p.world, unnoted.id)
+        val value = sellPriceOf(p.world, shopItem)
         val name = unnoted.getName(p.world.definitions)
         val currency = if (value != 1) pluralCurrency else singularCurrency
         val def = unnoted.getDef(p.world.definitions)
@@ -200,9 +200,13 @@ open class ItemCurrency(
         if (acceptance.acceptable) {
             val shopItem = shop.items.filterNotNull().firstOrNull { it.item == unnoted.id }
             val stock = shopItem?.currentAmount ?: 0
-            val value = shopItem?.buyPrice ?: getBuyPrice(stock, p.world, unnoted.id)
+            val value = buyPriceOf(p.world, shopItem, unnoted.id, stock)
             val name = unnoted.getName(p.world.definitions)
             val currency = if (value != 1) pluralCurrency else singularCurrency
+            if (value <= 0) {
+                p.message("$name: shop won't buy this item.")
+                return
+            }
             p.message("$name: shop will buy for ${value.format()} $currency")
         } else {
             p.message(acceptance.errorMessage)
@@ -218,6 +222,43 @@ open class ItemCurrency(
             return 1
         }
         return world.definitions.get(ItemDef::class.java, item).cost
+    }
+
+    /**
+     * What this shop charges for one [shopItem]: its authored price, otherwise the cache value.
+     *
+     * Audit E-03: a coin shop never sells below the high-alchemy value (`ceil(0.6 * cost)`, OSRS: a shop price is never
+     * below an item's value), so buying from a shop and high-alching can never print coins. A zero/absent-price item
+     * stays unavailable (see [sellToPlayer]); the floor only raises a positive price. Untradeable items cannot be
+     * alched (alchemy.plugin.kts), so their authored price stands.
+     */
+    open fun sellPriceOf(
+        world: World,
+        shopItem: ShopItem,
+    ): Int {
+        val base = shopItem.sellPrice ?: getSellPrice(world, shopItem.item)
+        if (base <= 0 || currencyItem != gg.rsmod.plugins.api.cfg.Items.COINS_995) return base
+        val def = world.definitions.getNullable(ItemDef::class.java, Item(shopItem.item).toUnnoted(world.definitions).id) ?: return base
+        if (!def.tradeable) return base
+        return maxOf(base.toLong(), highAlchValue(def.cost)).coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
+    }
+
+    /**
+     * What this shop pays for one [unnoted] item while it holds [stock] of it.
+     *
+     * Audit E-05: never more than one unit of currency below what the same shop sells that item for, so selling to a
+     * shop and buying it straight back can never gain anything (a wiki sell price could be lower than the cache-based
+     * buy price, e.g. ticket shops). A result of 0 or less means the shop won't buy it.
+     */
+    open fun buyPriceOf(
+        world: World,
+        shopItem: ShopItem?,
+        unnoted: Int,
+        stock: Int,
+    ): Int {
+        val offered = shopItem?.buyPrice ?: getBuyPrice(stock, world, unnoted)
+        val sells = if (shopItem != null) sellPriceOf(world, shopItem) else sellPriceOf(world, ShopItem(unnoted, amount = 0))
+        return minOf(offered, sells - 1)
     }
 
     override fun getBuyPrice(
@@ -284,7 +325,7 @@ open class ItemCurrency(
     ) {
         val shopItem = shop.items[slot] ?: return
 
-        val currencyCost = shopItem.sellPrice ?: getSellPrice(p.world, shopItem.item)
+        val currencyCost = sellPriceOf(p.world, shopItem)
         if (currencyCost <= 0 || amt <= 0) {
             // A zero/negative authoring value must never turn into a free-item or
             // negative-quantity transaction through division/rounding.
@@ -313,6 +354,14 @@ open class ItemCurrency(
             p.filterableMessage("The shop has run out of stock.")
         }
 
+        // Audit E-09: buy only what fits. The coins used to be taken for the whole amount and the refund for what did
+        // not fit was added without checking, so a full inventory destroyed coins.
+        amount = Math.min(amount, room(p, shopItem.item))
+        if (amount <= 0) {
+            p.message("You don't have enough inventory space.")
+            return
+        }
+
         val totalCost = currencyCost.toLong() * amount.toLong()
 
         if (totalCost > Int.MAX_VALUE) {
@@ -335,8 +384,15 @@ open class ItemCurrency(
         }
 
         if (add.getLeftOver() > 0) {
-            val refund = add.getLeftOver() * currencyCost
-            p.inventory.add(item = currencyItem, amount = refund)
+            // Audit E-09: never destroy the refund - inventory first, otherwise the bank.
+            val refund = Math.min(Int.MAX_VALUE.toLong(), add.getLeftOver().toLong() * currencyCost).toInt()
+            val back = p.inventory.add(item = currencyItem, amount = refund, assureFullInsertion = false).completed
+            if (back < refund) {
+                val banked = p.bank.add(item = currencyItem, amount = refund - back, assureFullInsertion = false).completed
+                if (back + banked < refund) {
+                    logger.error { "Shop refund of $refund x $currencyItem for ${p.username} only partly delivered (${back + banked})." }
+                }
+            }
         }
 
         if (add.completed > 0 && shopItem.amount != Int.MAX_VALUE) {
@@ -379,7 +435,8 @@ open class ItemCurrency(
             return
         }
 
-        val price = shopItem?.buyPrice ?: getBuyPrice(count, world = p.world, item = unnoted)
+        // Audit E-05: clamped below this shop's own sell price, see [buyPriceOf].
+        val price = buyPriceOf(p.world, shopItem, unnoted, count)
         if (price <= 0) {
             p.filterableMessage("The shop won't buy this item for that price.")
             return
@@ -408,5 +465,28 @@ open class ItemCurrency(
         }
     }
 
+    /**
+     * Audit E-09: how many of [itemId] the inventory can take now, before any currency leaves it. Conservative: a
+     * currency stack that the purchase would empty does not count as a free slot.
+     */
+    private fun room(
+        p: Player,
+        itemId: Int,
+    ): Int {
+        val def = p.world.definitions.get(ItemDef::class.java, itemId)
+        if (!def.stackable && !def.noted) return p.inventory.freeSlotCount
+        val held = p.inventory.getItemCount(itemId)
+        return when {
+            held > 0 -> Int.MAX_VALUE - held
+            p.inventory.freeSlotCount > 0 -> Int.MAX_VALUE
+            else -> 0
+        }
+    }
+
     override val currencyItem = itemCurrency
+
+    companion object : mu.KLogging() {
+        /** High-alchemy value of an item with cache value [cost]: `ceil(0.6 * cost)`, in Long. */
+        fun highAlchValue(cost: Int): Long = (cost.coerceAtLeast(0).toLong() * 3 + 4) / 5
+    }
 }

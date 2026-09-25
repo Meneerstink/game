@@ -2,6 +2,7 @@ package gg.rsmod.plugins.content.activity.casino
 
 import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.entity.Player
+import gg.rsmod.plugins.api.ext.persistNow
 import org.apache.logging.log4j.LogManager
 
 /** The four games, in the order they appear in the lobby. */
@@ -74,6 +75,9 @@ object CasinoHistory {
                 "\tpayout=${round.payout}\tprofit=${round.profit}\tclientSeed=${clean(round.clientSeed)}" +
                 "\tserverSeedHash=${round.serverSeedHash}\tnonce=${round.nonce}\tdetail=${clean(round.detail)}",
         )
+        // Audit E-07: every settled round (stake, payout, consumed nonce, this row) goes to disk now, not at the next
+        // autosave, so a crash can never roll a finished round back to a state where its nonce is unused again.
+        player.persistNow()
     }
 
     /**

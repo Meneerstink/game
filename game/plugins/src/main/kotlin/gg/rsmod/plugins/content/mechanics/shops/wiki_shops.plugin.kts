@@ -52,7 +52,9 @@ on_world_init_late {
             create_shop(
                 title,
                 currency = if (currencyItem == Items.COINS_995) CoinCurrency() else ItemCurrency(currencyItem, currencyName, currencyName.removeSuffix("s") + "s"),
-                purchasePolicy = PurchasePolicy.BUY_STOCK,
+                // Audit E-05: ticket / token exchanges (Ranging Guild, Agility Arena, Castle Wars, Fist of Guthix) never buy
+                // items back, as in retail; their wiki sell price could sit below the cache-based buy-back price.
+                purchasePolicy = if (currencyItem == Items.COINS_995) PurchasePolicy.BUY_STOCK else PurchasePolicy.BUY_NONE,
                 stockSize = maxOf(40, stock.size),
                 containsSamples = false,
             ) {

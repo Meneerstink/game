@@ -47,6 +47,11 @@ data class GrandExchangeOffer(
     var coinsTraded: Long = 0,
     /** OSRS convenience fee ([GeTax]) taken from this sell offer's proceeds so far. */
     var taxPaid: Long = 0,
+    /**
+     * Audit E-08: the pending-escrow marker this offer was placed under ([GeEscrow]), so a login after a crash can tell
+     * whether the offer reached the book. Null for offers without a marker (and for offers saved before E-08).
+     */
+    val escrowToken: String? = null,
 ) {
     val remaining: Int
         get() = totalQuantity - quantityFilled

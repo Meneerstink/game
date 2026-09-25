@@ -91,14 +91,16 @@ class GrandExchangeBookTests {
     }
 
     @Test
-    fun `house buys a low ask at the guide price like a resting OSRS buy offer`() {
+    fun `house buys a low ask at its bid like a resting OSRS buy offer`() {
+        // Audit E-01: the house deals from a quote (ask / bid), no longer from a single guide price.
+        val house = GeHouseQuote(ask = 1_000, bid = 1_000)
         val sell = GrandExchangeOffer(id = 1, username = "seller", type = OfferType.SELL, itemId = 4151, pricePerItem = 1, totalQuantity = 2)
-        val fills = GrandExchangeBook.match(mutableListOf(sell), sell, systemPrice = { 1_000 }, taxPerItem = { _, p -> GeTax.perItem(p) })
+        val fills = GrandExchangeBook.match(mutableListOf(sell), sell, taxPerItem = { _, p -> GeTax.perItem(p) }, houseQuote = { house })
         assertEquals(1_000, fills.single().unitPrice)
         assertEquals(OfferStatus.COMPLETED, sell.status)
         assertEquals(1_960L, sell.collectableCoins)
         val high = GrandExchangeOffer(id = 2, username = "seller", type = OfferType.SELL, itemId = 4151, pricePerItem = 1_001, totalQuantity = 1)
-        assertEquals(0, GrandExchangeBook.match(mutableListOf(high), high, systemPrice = { 1_000 }).size, "an ask above guide rests")
+        assertEquals(0, GrandExchangeBook.match(mutableListOf(high), high, houseQuote = { house }).size, "an ask above the bid rests")
     }
 
     @Test

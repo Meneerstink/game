@@ -182,8 +182,11 @@ class GrandExchangeInterfaceTests {
         val service = newService()
         val whip = DEFINITIONS.get(ItemDef::class.java, Items.ABYSSAL_WHIP)
         assertEquals(whip.cost.coerceAtLeast(1), service.guidePrice(whip.id, whip.cost))
-        service.submit("s", OfferType.SELL, whip.id, 1000, 1)
-        service.submit("b", OfferType.BUY, whip.id, 1200, 1)
+        // Audit E-01: trades between GeGuidePrice.MIN_PAIRS different pairs of accounts establish the guide.
+        (1..GeGuidePrice.MIN_PAIRS).forEach { i ->
+            service.submit("s$i", OfferType.SELL, whip.id, 1000, 1)
+            service.submit("b$i", OfferType.BUY, whip.id, 1200, 1)
+        }
         assertEquals(1000, service.guidePrice(whip.id, whip.cost))
     }
 

@@ -141,7 +141,8 @@ object GrandExchangeInterface {
 
     /**
      * Void `selectItem`: `ceil(guide * 0.95)..ceil(guide * 1.05)`. No longer an offer limit (OSRS prices are free); it
-     * bounds how far one trade may move the guide price ([GrandExchangeService.guidedTradePrice]).
+     * bounds how far one trade may move the guide price ([GrandExchangeService.guidedTradePrice]) and how far the guide
+     * may move per hour ([GeGuidePrice]).
      */
     fun priceRange(guide: Int): IntRange = ceil(guide * 0.95).toInt()..ceil(guide * 1.05).toInt()
 
@@ -190,8 +191,8 @@ object GrandExchangeInterface {
 
     /**
      * OSRS Grand Exchange: an offer may name any price of at least 1 coin (no ±5 % lock around the guide price, which
-     * was the 2011 rule). The house still only trades at or against the guide price ([GrandExchangeBook]), so a free
-     * price cannot be turned into a money loop.
+     * was the 2011 rule). The house deals only at its fixed quote ([GeHousePricing], bid <= ask), so a free price
+     * cannot be turned into a money loop.
      */
     @Suppress("UNUSED_PARAMETER")
     fun clampPrice(
@@ -425,11 +426,11 @@ object GrandExchangeInterface {
             if (player.inventory.remove(Items.COINS_995, total, assureFullRemoval = true).hasFailed()) {
                 return false
             }
-            val submitted = service.submit(username, OfferType.BUY, selection.itemId, selection.price, selection.quantity, selection.slot)
-            if (submitted == null) {
-                player.inventory.add(Items.COINS_995, total)
-                return false
-            }
+            // Audit E-08: player save (with a pending marker) before the book write, see GeEscrow.
+            val submitted =
+                GeEscrow.place(player, listOf(Items.COINS_995 to total), restore = { player.inventory.add(Items.COINS_995, total) }) { token ->
+                    service.submit(username, OfferType.BUY, selection.itemId, selection.price, selection.quantity, selection.slot, token)
+                } ?: return false
             fills = submitted.second
         } else {
             if (ownedCount(player, selection.itemId) < selection.quantity) {
@@ -450,16 +451,15 @@ object GrandExchangeInterface {
                     player.inventory.add(itemId, amount)
                 }
             }
-            val submitted =
-                if (removed < selection.quantity) {
-                    null
-                } else {
-                    service.submit(username, OfferType.SELL, selection.itemId, selection.price, selection.quantity, selection.slot)
-                }
-            if (submitted == null) {
+            if (removed < selection.quantity) {
                 restore()
                 return false
             }
+            // Audit E-08: player save (with a pending marker) before the book write, see GeEscrow.
+            val submitted =
+                GeEscrow.place(player, restoredSellItems(def, unnotedRemoved, notedRemoved), restore) { token ->
+                    service.submit(username, OfferType.SELL, selection.itemId, selection.price, selection.quantity, selection.slot, token)
+                } ?: return false
             fills = submitted.second
             player.closeInterface(dest = InterfaceDestination.TAB_AREA)
         }
@@ -470,8 +470,7 @@ object GrandExchangeInterface {
         player.playSound(GrandExchangeSounds.PLACE_ITEM)
         refreshAll(player, service)
         announceFills(player.world, service, fills)
-        // The escrow is on disk in the book; the debited inventory must be on disk as well.
-        player.persistNow()
+        // The debited inventory was saved before the book write and again after it (GeEscrow.place).
         return true
     }
 
@@ -517,6 +516,8 @@ object GrandExchangeInterface {
     /** Void `GrandExchange.login` / 2009scape `GrandExchangeRecords`: boxes refresh; anything owed is announced. */
     fun onLogin(player: Player) {
         val service = service(player) ?: return
+        // Audit E-08: settle an offer placement a crash interrupted, before anything else can touch the book.
+        GeEscrow.reconcile(player, service, username(player))
         refreshAll(player, service)
         val waiting = service.offersFor(username(player)).any { it.collectableCoins > 0 || it.collectableItems > 0 }
         if (waiting) {

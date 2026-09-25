@@ -42,27 +42,10 @@ class TradeSession(
     private var stage: TradeStage = TradeStage.TRADE_SCREEN
 
     /**
-     * An extension function for retrieving the value of each item in an [ItemContainer]]
+     * The summed value of an [ItemContainer]. Audit E-11: computed in Long ([TradeItems.value]); `cost * amount` in Int
+     * wrapped to a wrong or negative value on a large stack, which the partner saw as the offer's worth.
      */
-    private fun ItemContainer.getItemValues(): Array<Int> =
-        rawItems
-            .map {
-                if (it ==
-                    null
-                ) {
-                    0
-                } else {
-                    player.world.definitions
-                        .get(ItemDef::class.java, it.toUnnoted(player.world.definitions).id)
-                        .cost *
-                        it.amount
-                }
-            }.toTypedArray()
-
-    /**
-     * An extension function for retrieving the sum of each item's value in an [ItemContainer]
-     */
-    private fun ItemContainer.getValue() = getItemValues().sum()
+    private fun ItemContainer.getValue(): Long = TradeItems.value(player.world.definitions, this)
 
     /**
      * Opens the trade session, and configures the interfaces
@@ -101,9 +84,9 @@ class TradeSession(
      */
     private fun refresh() {
         // Calculate the trade value
-        val values = container.getItemValues()
-        val containerValue = values.sum()
-        val partnerValue = partner.getTradeSession()?.container?.getValue() ?: 0
+        // Audit E-11: Long totals, clamped to Int.MAX_VALUE for the Int varc.
+        val containerValue = TradeItems.displayValue(container.getValue())
+        val partnerValue = TradeItems.displayValue(partner.getTradeSession()?.container?.getValue() ?: 0L)
 
         // Send the item containers
         player.sendItemContainer(PLAYER_INVENTORY_KEY, inventory)
@@ -245,10 +228,8 @@ class TradeSession(
             return
         }
 
-        val transaction = inventory.remove(item.id, count, assureFullRemoval = true, beginSlot = slot)
-        if (transaction.hasSucceeded()) {
-            container.addPreservingAttr(Item(item.id, count).copyAttr(item))
-        }
+        // Audit E-04: every exemplar moves with its own attributes (not the clicked item's).
+        TradeItems.moveEach(from = inventory, to = container, itemId = item.id, amount = count, startSlot = slot)
 
         refresh()
         progress(false)
@@ -270,15 +251,13 @@ class TradeSession(
         val item = container[slot] ?: return
         val count = Math.min(amount, container.getItemCount(item.id))
 
-        val transaction = container.remove(item.id, count, assureFullRemoval = true)
-        if (transaction.hasSucceeded()) {
-            inventory.addPreservingAttr(Item(item.id, count).copyAttr(item))
+        // Audit E-04: every exemplar moves back with its own attributes (not the clicked item's).
+        val emptied = TradeItems.moveEach(from = container, to = inventory, itemId = item.id, amount = count, startSlot = slot)
 
-            // Loop over the remove items
-            transaction.items.forEach {
-                player.runClientScript(TRADE_MODIFIED_SCRIPT, TRADE_INTERFACE.getInterfaceHash(31), 4, 7, it.slot)
-                partner.runClientScript(TRADE_MODIFIED_SCRIPT, TRADE_INTERFACE.getInterfaceHash(33), 4, 7, it.slot)
-            }
+        // Flag the emptied slots
+        emptied.forEach { emptiedSlot ->
+            player.runClientScript(TRADE_MODIFIED_SCRIPT, TRADE_INTERFACE.getInterfaceHash(31), 4, 7, emptiedSlot)
+            partner.runClientScript(TRADE_MODIFIED_SCRIPT, TRADE_INTERFACE.getInterfaceHash(33), 4, 7, emptiedSlot)
         }
 
         refresh()
@@ -416,6 +395,17 @@ class TradeSession(
         partnerSession.inventory.forEachIndexed { index, item -> partnerInv[index] = item }
         container.filterNotNull().forEach { partnerInv.addPreservingAttr(it) }
 
+        // Audit D-07: record what each side handed over, so a kill on the receiver doesn't count gifted risk. Bookkeeping
+        // only - it must never keep an already-transferred trade from finalising.
+        runCatching {
+            gg.rsmod.plugins.content.mechanics.pvp.DeadmanTrade.onTradeCompleted(
+                player,
+                partnerSession.container.filterNotNull().toList(),
+                partner,
+                container.filterNotNull().toList(),
+            )
+        }
+
         // Finalise the trade session
         finalise(player)
         finalise(partner)
@@ -432,20 +422,11 @@ class TradeSession(
      *
      * @param player    The player to finalise the trade session for
      */
-    /** Per-id totals of [real] must equal the session's snapshot inventory plus its offer. */
+    /** Per-id-and-attributes totals of [real] must equal the session's snapshot inventory plus its offer (audit E-04). */
     private fun matchesSnapshot(
         real: ItemContainer,
         session: TradeSession,
-    ): Boolean {
-        fun ItemContainer.totals(into: MutableMap<Int, Long>) =
-            rawItems.forEach { item -> if (item != null) into.merge(item.id, item.amount.toLong(), Long::plus) }
-        val expected = HashMap<Int, Long>()
-        session.inventory.totals(expected)
-        session.container.totals(expected)
-        val actual = HashMap<Int, Long>()
-        real.totals(actual)
-        return expected == actual
-    }
+    ): Boolean = TradeItems.matchesSnapshot(real, session.inventory, session.container)
 
     /** Every item [giver] offers must fully fit into [receiver]'s post-trade inventory, simulated on a copy. */
     private fun fits(

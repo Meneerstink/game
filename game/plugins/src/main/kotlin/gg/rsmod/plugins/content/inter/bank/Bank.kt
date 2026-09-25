@@ -74,6 +74,11 @@ class Bank {
         ): Boolean {
             val to = player.bank
             val item = from[fromSlot] ?: return false
+            // Audit D-01: a loot key's loot lives with the key, so the key itself can't be banked.
+            if (gg.rsmod.plugins.content.mechanics.pvp.LootKeys.isKey(item.id)) {
+                player.filterableMessage("You can't bank a loot key. Open it at Skully instead.")
+                return false
+            }
             val amount = from.getItemCount(item.id).coerceAtMost(amt)
             val value = gg.rsmod.plugins.content.mechanics.pvp.LootKeys.value(player.world.definitions, listOf(Item(item.id, amount)))
             if (gg.rsmod.plugins.content.mechanics.pvp.BankSecurity.blocksDeposit(player, value)) {

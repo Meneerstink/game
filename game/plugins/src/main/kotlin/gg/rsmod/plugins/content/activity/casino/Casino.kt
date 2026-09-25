@@ -1,6 +1,7 @@
 package gg.rsmod.plugins.content.activity.casino
 
 import gg.rsmod.game.model.entity.Player
+import gg.rsmod.plugins.api.ext.persistNow
 
 /**
  * The one entry point the interfaces and plugin scripts use.
@@ -57,6 +58,9 @@ object Casino {
         }
         val revealed = CasinoSeeds.rotate(player)
         CasinoHistory.logReveal(player, revealed)
+        // Audit E-07: the old seed is public now. Save the new one at once: after a crash before the autosave the
+        // revealed seed would be live again and every result it decides would be known in advance.
+        player.persistNow()
         return revealed
     }
 

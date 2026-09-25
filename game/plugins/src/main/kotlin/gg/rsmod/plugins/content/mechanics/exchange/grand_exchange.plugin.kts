@@ -3,6 +3,10 @@ package gg.rsmod.plugins.content.mechanics.exchange
 import gg.rsmod.game.fs.def.ItemDef
 import gg.rsmod.game.model.entity.Client
 import gg.rsmod.game.model.entity.Player
+import gg.rsmod.game.model.attr.DEATH_FLAG
+import gg.rsmod.game.model.entity.zoneTile
+import gg.rsmod.plugins.content.combat.isBeingAttacked
+import gg.rsmod.plugins.content.mechanics.pvp.AreaState
 import gg.rsmod.plugins.api.ChatMessageType
 import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.content.mechanics.practicepvp.PracticePvp
@@ -27,12 +31,30 @@ fun geMsg(
     text: String,
 ) = player.message(text, type = ChatMessageType.CONSOLE)
 
+/**
+ * Audit E-02: the chat commands used to work anywhere, so an item could be pulled into GE escrow
+ * mid-fight (out of death risk) and collected after respawning. Like the retail GE they now only
+ * work from a guarded (safe) zone, out of combat, while not locked or dying.
+ */
+fun geCommandBlocked(player: Player): Boolean {
+    val reason =
+        when {
+            player.attr[DEATH_FLAG] == true || player.isLocked() -> "You can't do that right now."
+            AreaState.isDangerous(player.zoneTile()) -> "You can only use the Grand Exchange from a safe zone."
+            player.isBeingAttacked() -> "You can't use the Grand Exchange while in combat."
+            else -> return false
+        }
+    geMsg(player, reason)
+    return true
+}
+
 fun geItemName(
     player: Player,
     itemId: Int,
 ): String? = player.world.definitions.getNullable(ItemDef::class.java, itemId)?.name
 
 on_command("ge_sell") {
+    if (geCommandBlocked(player)) return@on_command
     if (PracticePvp.isHoldingTempGear(player)) {
         geMsg(player, "You can't use the Grand Exchange while wearing free Practice PvP gear.")
         return@on_command
@@ -70,12 +92,12 @@ on_command("ge_sell") {
         geMsg(player, "You don't have $quantity x $name to sell.")
         return@on_command
     }
-    val (offer, fills) = service.submit(geUsername(player), OfferType.SELL, itemId, price, quantity) ?: run {
-        player.inventory.add(itemId, quantity)
-        return@on_command
-    }
+    // Audit E-08: player save (with a pending marker) before the book write, see GeEscrow.
+    val (offer, fills) =
+        GeEscrow.place(player, listOf(itemId to quantity), restore = { player.inventory.add(itemId, quantity) }) { token ->
+            service.submit(geUsername(player), OfferType.SELL, itemId, price, quantity, escrowToken = token)
+        } ?: return@on_command
     GrandExchangeInterface.announceFills(player.world, service, fills)
-    player.persistNow()
     geMsg(
         player,
         "Placed sell offer #${offer.id}: $quantity x $name @ ${DecimalFormat().format(price)} gp each. " +
@@ -84,6 +106,7 @@ on_command("ge_sell") {
 }
 
 on_command("ge_buy") {
+    if (geCommandBlocked(player)) return@on_command
     if (PracticePvp.isHoldingTempGear(player)) {
         geMsg(player, "You can't use the Grand Exchange while wearing free Practice PvP gear.")
         return@on_command
@@ -126,12 +149,12 @@ on_command("ge_buy") {
         geMsg(player, "You don't have ${DecimalFormat().format(totalCost)} gp to place that offer.")
         return@on_command
     }
-    val (offer, fills) = service.submit(geUsername(player), OfferType.BUY, itemId, price, quantity) ?: run {
-        player.inventory.add(Items.COINS_995, totalCost.toInt())
-        return@on_command
-    }
+    // Audit E-08: player save (with a pending marker) before the book write, see GeEscrow.
+    val (offer, fills) =
+        GeEscrow.place(player, listOf(Items.COINS_995 to totalCost.toInt()), restore = { player.inventory.add(Items.COINS_995, totalCost.toInt()) }) { token ->
+            service.submit(geUsername(player), OfferType.BUY, itemId, price, quantity, escrowToken = token)
+        } ?: return@on_command
     GrandExchangeInterface.announceFills(player.world, service, fills)
-    player.persistNow()
     geMsg(
         player,
         "Placed buy offer #${offer.id}: $quantity x $name @ ${DecimalFormat().format(price)} gp each. " +
@@ -140,6 +163,7 @@ on_command("ge_buy") {
 }
 
 on_command("ge_cancel") {
+    if (geCommandBlocked(player)) return@on_command
     val args = player.getCommandArgs()
     val offerId = args.getOrNull(0)?.toLongOrNull()
     if (offerId == null) {
@@ -178,6 +202,7 @@ on_command("ge_offers") {
  * option has to pay out exactly the same way this command does.
  */
 on_command("ge_collect") {
+    if (geCommandBlocked(player)) return@on_command
     val service = geService(player) ?: return@on_command
     val offerId = player.getCommandArgs().getOrNull(0)?.toLongOrNull()
     val outcome = GrandExchangeCollection.collect(player, service, offerId)

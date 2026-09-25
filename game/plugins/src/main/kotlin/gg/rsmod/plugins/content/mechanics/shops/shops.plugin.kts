@@ -3,6 +3,7 @@ package gg.rsmod.plugins.content.mechanics.shops
 import gg.rsmod.game.model.attr.CURRENT_SHOP_ATTR
 import gg.rsmod.game.model.attr.LAST_VIEWED_SHOP_ITEM_FREE
 import gg.rsmod.game.model.attr.LAST_VIEWED_SHOP_ITEM_SLOT
+import gg.rsmod.game.model.shop.PurchasePolicy
 
 val SHOP_INTERFACE_ID = 620
 val INV_INTERFACE_ID = 621
@@ -169,6 +170,11 @@ on_button(interfaceId = INV_INTERFACE_ID, component = 0) {
                         18 -> SELL_OPTS[3]
                         else -> return@on_button
                     }
+                // Audit E-10: a shop that buys nothing refuses with a message before any currency code runs.
+                if (shop.purchasePolicy == PurchasePolicy.BUY_NONE) {
+                    player.message("You can't sell any items to this shop.")
+                    return@on_button
+                }
                 player.transaction { shop.currency.buyFromPlayer(player, shop, slot, amount) }
             }
         }
