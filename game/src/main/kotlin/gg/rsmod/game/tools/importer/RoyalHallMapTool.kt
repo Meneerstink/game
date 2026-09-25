@@ -12,7 +12,7 @@ import java.io.File
  * ring's raised paving (plane 1, bridge flag), a grass lawn and the spirit tree's mound (heights up to 51) met, so the
  * carpet, a flat ground decoration, was crossed by grass and slopes. For every tile of [MIN_X]..[MAX_X] x [MIN_Z]..[MAX_Z]
  * (the floor and its wall ring) this tool:
- *  - levels plane 0 to height [FLOOR_HEIGHT] and lays the Grand Exchange paving overlay (188, whole tile), clearing the
+ *  - levels plane 0 to height [FLOOR_HEIGHT] and lays white marble ([MARBLE_OVERLAY], whole tile), clearing the
  *    walk-block bit so the floor is one flat, walkable surface;
  *  - removes the plane-1 bridge surface (bridge flag, overlay and underlay), so the hall has one floor level instead of a
  *    raised half;
@@ -38,7 +38,12 @@ object RoyalHallMapTool {
     private const val MIN_Z = 3502
     private const val MAX_Z = 3515
     private const val FLOOR_HEIGHT = 40
-    private const val GE_PAVING_OVERLAY = 188
+    /**
+     * Overlay definition 243 (texture 1112, white marble with an inlaid pattern), written +1 as the map stores overlays.
+     * The first pass laid 188 believing it the Grand Exchange paving; that is definition 187, the exchange's brown dirt
+     * path (texture 441) - owner 2026-09-25: "we still have the dirt ground inside you need to make it marble".
+     */
+    private const val MARBLE_OVERLAY = 244
     private const val BLOCKED = 1
     private const val REMOVE_ROOF = 4
 
@@ -113,8 +118,8 @@ object RoyalHallMapTool {
                     ground.height = FLOOR_HEIGHT
                     levelled++
                 }
-                if (ground.overlayId and 0xFF != GE_PAVING_OVERLAY || ground.overlayShape != 0 || ground.overlayRotation != 0) {
-                    ground.overlayId = GE_PAVING_OVERLAY
+                if (ground.overlayId and 0xFF != MARBLE_OVERLAY || ground.overlayShape != 0 || ground.overlayRotation != 0) {
+                    ground.overlayId = MARBLE_OVERLAY
                     ground.overlayShape = 0
                     ground.overlayRotation = 0
                     paved++
