@@ -246,9 +246,9 @@ class Chunk(
      */
     fun inBuildArea(p: Player): Boolean {
         val base = p.lastKnownRegionBase ?: return false
-        val baseX = base.x shr 3
-        val baseZ = base.z shr 3
-        return coords.x in baseX until baseX + CHUNKS_PER_REGION && coords.z in baseZ until baseZ + CHUNKS_PER_REGION
+        // ChunkCoords hold the chunk index minus 6 (Tile.topLeftRegionX); compare in tiles.
+        val tile = coords.toTile()
+        return tile.x in base.x until base.x + MAX_VIEWPORT && tile.z in base.z until base.z + MAX_VIEWPORT
     }
 
     /**
@@ -435,6 +435,18 @@ class Chunk(
          * The amount of [Chunk]s that can be viewed at a time by a player.
          */
         const val CHUNK_VIEW_RADIUS = 3
+
+        /**
+         * The chunks of the 104 x 104 map whose south-west tile is ([baseX], [baseZ]). ChunkCoords hold the chunk index
+         * minus 6 (Tile.topLeftRegionX), so they are derived from each chunk's tile, never from base / 8.
+         */
+        fun buildAreaChunks(
+            baseX: Int,
+            baseZ: Int,
+        ): List<ChunkCoords> =
+            (0 until CHUNKS_PER_REGION).flatMap { dx ->
+                (0 until CHUNKS_PER_REGION).map { dz -> ChunkCoords.fromTile(Tile(baseX + dx * CHUNK_SIZE, baseZ + dz * CHUNK_SIZE)) }
+            }
 
         /**
          * The size of a region, in tiles.

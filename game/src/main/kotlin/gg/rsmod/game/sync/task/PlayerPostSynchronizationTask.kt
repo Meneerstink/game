@@ -3,7 +3,6 @@ package gg.rsmod.game.sync.task
 import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.region.Chunk
-import gg.rsmod.game.model.region.ChunkCoords
 import gg.rsmod.game.sync.SynchronizationTask
 
 /**
@@ -47,13 +46,9 @@ object PlayerPostSynchronizationTask : SynchronizationTask<Player> {
                 // flickered (owner 2026-09-19). Live changes reach the whole map through Chunk.sendUpdate, so a
                 // building of spawned objects is complete from any distance (Royal Hall, owner 2026-09-26).
                 if (oldTile == null || changedHeight || pawn.regionRebuilt) {
-                    val base = pawn.lastKnownRegionBase
-                    if (base != null) {
-                        for (dx in 0 until Chunk.CHUNKS_PER_REGION) {
-                            for (dz in 0 until Chunk.CHUNKS_PER_REGION) {
-                                val coords = ChunkCoords((base.x shr 3) + dx, (base.z shr 3) + dz)
-                                pawn.world.chunks.get(coords, createIfNeeded = false)?.sendUpdates(pawn)
-                            }
+                    pawn.lastKnownRegionBase?.let { base ->
+                        Chunk.buildAreaChunks(base.x, base.z).forEach { coords ->
+                            pawn.world.chunks.get(coords, createIfNeeded = false)?.sendUpdates(pawn)
                         }
                     }
                 }
