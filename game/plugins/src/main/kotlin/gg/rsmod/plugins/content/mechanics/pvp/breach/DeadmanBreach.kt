@@ -96,6 +96,16 @@ object DeadmanBreach {
     private val REWARDED_ATTR = AttributeKey<Boolean>()
     private val DOT_SOURCE_ATTR = AttributeKey<String>()
 
+    /** Audit D-14: the breach event ([Active.eventId]) a breach npc was spawned for. */
+    private val BREACH_EVENT_ATTR = AttributeKey<Int>()
+
+    /** Audit D-14: id of the most recently opened breach event; npcs spawned while none is open belong to it. */
+    @Volatile
+    private var lastEventId = 0
+
+    /** Audit D-14: breach event id -> lower-case account names that already received an Archaic emblem in it. */
+    private val emblemClaims = java.util.concurrent.ConcurrentHashMap<Int, MutableSet<String>>()
+
     enum class Kind { LOCALISED, REGIONAL }
 
     class Localised(
@@ -135,6 +145,8 @@ object DeadmanBreach {
     class Active(
         val sites: List<Site>,
         val openedAtCycle: Int,
+        /** Audit D-14: identifies this breach event (one emblem per account per event). */
+        val eventId: Int = 0,
     )
 
     @Volatile
@@ -315,7 +327,10 @@ object DeadmanBreach {
                 }
             }.filter { it.landing.isNotEmpty() }
         if (sites.isEmpty()) return null
-        val opened = Active(sites, world.currentCycle)
+        lastEventId++
+        // Only the current and the previous event can still have live monsters (survivors linger after spawning stops).
+        emblemClaims.keys.removeIf { it < lastEventId - 1 }
+        val opened = Active(sites, world.currentCycle, lastEventId)
         active = opened
         sites.forEach { site ->
             site.spawners.forEach { t ->
@@ -498,6 +513,7 @@ object DeadmanBreach {
         npc.respawnOverride = false
         npc.walkRadius = walkRadius
         npc.attr[BREACH_NPC_ATTR] = true
+        npc.attr[BREACH_EVENT_ATTR] = active?.eventId ?: lastEventId
         // OSRS Wiki: Durial321 "is also capable of running after his target, unlike most NPCs"; I DSCIM YOU "runs at its targets".
         if (id in BreachMonsters.RUNNERS) npc.attr[gg.rsmod.game.model.attr.NPC_RUNS_ATTR] = true
         world.spawn(npc)
@@ -613,7 +629,8 @@ object DeadmanBreach {
     /**
      * Commits one breach monster's rewards exactly once: loot for the first [BreachLoot.ELIGIBLE] damage dealers (each with an
      * independent roll, dropped under the monster and visible only to its owner), the Archaic emblem (tier 5) for eligible
-     * players with [BreachLoot.EMBLEM_DAMAGE]+ damage, and Breach Points for the top [BreachPoints.EARNERS]. The monster is
+     * players with [BreachLoot.EMBLEM_DAMAGE]+ damage (Audit D-14: once per account per breach event, [claimArchaicEmblem]),
+     * and Breach Points for the top [BreachPoints.EARNERS]. The monster is
      * marked rewarded first and its ledger cleared afterwards, so a second death callback, a late hit or a double click can
      * never pay twice. Players who are offline when it dies receive nothing (their slot is not handed to anyone else).
      */
@@ -632,8 +649,10 @@ object DeadmanBreach {
                 val item = if (drop.noted && def.noteLinkId > 0) def.noteLinkId else drop.item
                 world.spawn(GroundItem(item, drop.amount, tile, player))
             }
+            // Audit D-14: at most one Archaic emblem per account per breach event, however many monsters it helps kill.
             if (ledger.damageOf(name) >= BreachLoot.EMBLEM_DAMAGE && BreachIds.ARCHAIC_EMBLEM_TIER_5 > 0 &&
-                world.definitions.getNullable(ItemDef::class.java, BreachIds.ARCHAIC_EMBLEM_TIER_5) != null
+                world.definitions.getNullable(ItemDef::class.java, BreachIds.ARCHAIC_EMBLEM_TIER_5) != null &&
+                claimArchaicEmblem(npc.attr[BREACH_EVENT_ATTR] ?: lastEventId, name)
             ) {
                 world.spawn(GroundItem(BreachIds.ARCHAIC_EMBLEM_TIER_5, 1, tile, player))
             }
@@ -649,6 +668,15 @@ object DeadmanBreach {
         )
         npc.attr.remove(CONTRIBUTION_ATTR)
     }
+
+    /**
+     * Audit D-14: claims [account]'s Archaic emblem for breach event [eventId]. True only the first time per account and
+     * event (case-insensitive, so a relog cannot claim twice); every later monster of the same event gives none.
+     */
+    fun claimArchaicEmblem(
+        eventId: Int,
+        account: String,
+    ): Boolean = emblemClaims.getOrPut(eventId) { java.util.concurrent.ConcurrentHashMap.newKeySet<String>() }.add(account.lowercase())
 
     // ---- status -----------------------------------------------------------------------------------------------------
 

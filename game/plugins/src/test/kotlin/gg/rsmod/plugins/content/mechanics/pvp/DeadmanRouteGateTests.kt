@@ -59,7 +59,8 @@ class DeadmanRouteGateTests {
         assertTrue(player.contains("timers[DEADMAN_LOGOUT_TIMER] = 12"))
 
         val combat = read("combat/Combat.kt")
-        assertTrue(combat.contains("!BossNpcs.isBoss(pawn)"))
+        // Audit X-10: the victim is held after any attack (bosses included); only the attacker's own hold still skips bosses.
+        assertTrue(combat.contains("(target as? Player)?.let { holdLogout(it) }"))
         assertTrue(combat.contains("!BossNpcs.isBoss(target)"))
         assertTrue(combat.contains("DEADMAN_LOGOUT_TIMER"))
 
@@ -69,13 +70,12 @@ class DeadmanRouteGateTests {
     }
 
     @Test
-    fun `npc boxing releases ordinary npcs but preserves bosses and deadman guards`() {
+    fun `an ordinary npc fight protects the player in single combat as in OSRS`() {
+        // Audit C-10: the Deadman npc-boxing exception is removed; the normal single-combat rule applies.
         val combat = read("combat/combat.plugin.kts")
-        assertTrue(combat.contains("boxedByOrdinaryNpc"))
-        assertTrue(combat.contains("!BossNpcs.isBoss(npc)"))
-        assertTrue(combat.contains("!CityGuards.isGuard(npc)"))
-        assertTrue(combat.contains("npc.resetInteractions()"))
-        assertTrue(combat.contains("Combat.reset(npc)"))
+        assertTrue(!combat.contains("boxedByOrdinaryNpc"))
+        assertTrue(!combat.contains("npc.resetInteractions()"))
+        assertTrue(combat.contains("Someone is already fighting this player."))
     }
 
     @Test

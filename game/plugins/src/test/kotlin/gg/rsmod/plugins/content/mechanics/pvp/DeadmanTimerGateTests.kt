@@ -148,6 +148,35 @@ class DeadmanTimerGateTests {
         assertEquals(1, skulledRuns)
     }
 
+    @Test
+    fun `Audit D-11 - a PvP hit followed by a boss hit still needs the logout countdown`() {
+        val player = newPlayer()
+        every { player.world.currentCycle } returns 300
+        PvpSkull.markAggression(mockk(relaxed = true), player)
+        // Then a boss hit: it moves LAST_HIT_BY (and would re-arm the X-log hold), but not the player-hit record.
+        player.timers[TELEPORT_COMBAT_TIMER] = 12
+        player.attr[LAST_HIT_BY_ATTR] = WeakReference(npc(Npcs.CORPOREAL_BEAST, "Corporeal Beast"))
+        assertTrue(DeadmanTimerGate.needsCountdown(player))
+
+        every { player.world.currentCycle } returns 300 + DeadmanTimerGate.PVP_HIT_TELEPORT_BLOCK_CYCLES
+        assertFalse(DeadmanTimerGate.needsCountdown(player), "7 seconds after the player hit the boss exception applies again")
+    }
+
+    @Test
+    fun `Audit D-11 - no instant teleport in a boss area within 7 seconds of a player hit`() {
+        val player = newPlayer(bossHere = true)
+        every { player.world.currentCycle } returns 500
+        PvpSkull.markAggression(mockk(relaxed = true), player)
+        // Then a boss hit: LAST_HIT_BY is the boss.
+        player.timers[TELEPORT_COMBAT_TIMER] = 12
+        player.attr[LAST_HIT_BY_ATTR] = WeakReference(npc(Npcs.KING_BLACK_DRAGON, "King Black Dragon"))
+        assertEquals(DeadmanTimerGate.Teleport.BLOCKED_IN_COMBAT, DeadmanTimerGate.teleportDecision(player))
+        assertEquals("You must be out of combat for another 7 seconds to teleport.", DeadmanTimerGate.blockedMessage(player))
+
+        every { player.world.currentCycle } returns 500 + DeadmanTimerGate.PVP_HIT_TELEPORT_BLOCK_CYCLES
+        assertEquals(DeadmanTimerGate.Teleport.INSTANT, DeadmanTimerGate.teleportDecision(player), "7 seconds later the boss-area rule applies")
+    }
+
     private fun npc(
         id: Int,
         name: String,

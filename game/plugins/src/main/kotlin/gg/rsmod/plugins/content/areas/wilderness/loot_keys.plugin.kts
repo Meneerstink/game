@@ -1,9 +1,10 @@
 package gg.rsmod.plugins.content.areas.wilderness
 
 import gg.rsmod.plugins.content.inter.bank.BankPin
-import gg.rsmod.plugins.content.areas.home.BountyHunterHome
 import gg.rsmod.plugins.content.mechanics.pvp.BEST_KILLSTREAK_ATTR
 import gg.rsmod.plugins.content.mechanics.pvp.LootKeys
+import gg.rsmod.plugins.content.mechanics.pvp.AreaState
+import gg.rsmod.game.model.entity.zoneTile
 
 /**
  * RCV-012 decision 3b: Skully, the Loot Chest (loc 62582 at 3138,3626) and the loot key items. Dialogue is the OSRS Wiki Skully
@@ -35,10 +36,12 @@ gg.rsmod.plugins.content.mechanics.pvp.SkullyRoster.NPC_IDS.forEach { skullyId -
     }
 }
 
-/** Opens the first loot key the player carries (or the first stored loot), the same as the Loot Chest. */
+/**
+ * Opens the first loot key the player carries. Audit D-01: stored loot is only reachable with its key in
+ * the inventory - a key that was dropped, stored or lost no longer opens anything.
+ */
 fun openFirstKey(player: Player): Boolean {
-    val held = LootKeys.heldKeyIndexes(player)
-    val index = held.firstOrNull() ?: LootKeys.KEY_IDS.indices.firstOrNull { LootKeys.slotItems(player, it).isNotEmpty() }
+    val index = LootKeys.heldKeyIndexes(player).firstOrNull()
     if (index == null) {
         return false
     }
@@ -210,7 +213,7 @@ fun openLootChest(
 }
 
 on_obj_option(obj = LOOT_CHEST, option = "loot") {
-    // A key-less chest still opens loot left inside (OSRS Wiki "Loot Chest"); several keys open the first one (ADAPTED).
+    // Several keys open the first one (ADAPTED); without a key there is nothing to open (audit D-01).
     if (!openFirstKey(player)) {
         player.message("You don't have any key.")
     }
@@ -219,6 +222,12 @@ on_obj_option(obj = LOOT_CHEST, option = "loot") {
 LootKeys.KEY_IDS.forEachIndexed { index, key ->
     on_item_on_obj(obj = LOOT_CHEST, item = key) {
         openLootChest(player, index)
+    }
+
+    // Audit D-01: a key never leaves the inventory except by being opened, destroyed or lost on death.
+    can_drop_item(item = key) {
+        player.message("You can't drop a loot key. Open it at Skully or destroy it.")
+        false
     }
 
     // Owner 2026-09-17: "Check" on a key must say where to open it (was "unhandled item").
@@ -232,7 +241,8 @@ LootKeys.KEY_IDS.forEachIndexed { index, key ->
         // Loot-key destruction is a location rule, unlike death loot/recovery which is now
         // cause-based. Keep the wilderness-only Skully restriction explicit rather than asking
         // DeathResolver to infer a missing killer from geography.
-        val dangerous = BountyHunterHome.isDangerousWilderness(player)
+        // Audit D-03: "dangerous" is the Deadman area state (everything outside guarded zones), not only the Wilderness.
+        val dangerous = AreaState.isDangerous(player.zoneTile())
         if (!LootKeys.canDestroyHere(value, dangerous)) {
             player.message(LootKeys.DESTROY_TOO_VALUABLE_MESSAGE)
             return@on_item_option

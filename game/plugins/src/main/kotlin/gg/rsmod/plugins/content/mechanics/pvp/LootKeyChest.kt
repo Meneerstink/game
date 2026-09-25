@@ -8,6 +8,7 @@ import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.game.tools.importer.LootKeyInterfaceImportTool as Layout
 import gg.rsmod.plugins.api.InterfaceDestination
+import gg.rsmod.plugins.api.ext.addPreservingAttr
 import gg.rsmod.plugins.api.ext.closeInterface
 import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.api.ext.openInterface
@@ -80,6 +81,20 @@ object LootKeyChest {
 
     fun viewedIndex(player: Player): Int? = player.attr[VIEWED_INDEX]
 
+    /**
+     * Audit D-01: the loot lives with the key (OSRS: "if you lose the key, you can't get the stuff
+     * out"). Every action that moves or destroys stored loot needs the viewed key in the inventory,
+     * so a key that was dropped, stored or lost on death no longer opens its loot.
+     */
+    fun heldViewedIndex(player: Player): Int? {
+        val index = viewedIndex(player) ?: return null
+        if (player.inventory.contains(LootKeys.KEY_IDS[index])) return index
+        player.message(NO_KEY_MESSAGE)
+        return null
+    }
+
+    const val NO_KEY_MESSAGE = "You need to carry that loot key to open it."
+
     fun noteMode(player: Player): Boolean = player.attr[NOTE_MODE] == true
 
     /** The loot slot shown in [component], or -1 when the component is not a loot slot. */
@@ -101,6 +116,10 @@ object LootKeyChest {
         player: Player,
         index: Int,
     ) {
+        if (index !in 0 until LootKeys.MAX_KEYS || !player.inventory.contains(LootKeys.KEY_IDS[index])) {
+            player.message(NO_KEY_MESSAGE)
+            return
+        }
         player.attr[VIEWED_INDEX] = index
         player.openInterface(INTERFACE_ID, InterfaceDestination.MAIN_SCREEN)
         player.setInterfaceEvents(INTERFACE_ID, CLOSE, -1..-1, EVENTS_OP1)
@@ -198,7 +217,7 @@ object LootKeyChest {
         slot: Int,
         amount: Int,
     ) {
-        val index = viewedIndex(player) ?: return
+        val index = heldViewedIndex(player) ?: return
         val target = storedAt(player, slot) ?: return
         if (amount <= 0) return
         val moved = moveToInventory(player, index, target.id, minOf(amount, target.amount))
@@ -214,7 +233,7 @@ object LootKeyChest {
      * have been withdrawn." / the inventory-full message when some had to stay).
      */
     fun withdrawAllToInventory(player: Player) {
-        val index = viewedIndex(player) ?: return
+        val index = heldViewedIndex(player) ?: return
         var movedAny = false
         var blocked = false
         for (item in LootKeys.slotItems(player, index)) {
@@ -235,14 +254,23 @@ object LootKeyChest {
 
     /** "Withdraw all to bank": items go to the bank unnoted, like a bank deposit. Chat feedback as above (#4). */
     fun withdrawAllToBank(player: Player) {
-        val index = viewedIndex(player) ?: return
+        val index = heldViewedIndex(player) ?: return
+        // Audit D-02: the bank route obeys the same rules as a normal bank deposit.
+        if (BankSecurity.isBankBlocked(player)) {
+            player.message("You can't use the bank while skulled in a guarded zone.")
+            return
+        }
+        if (BankSecurity.blocksDeposit(player, LootKeys.value(player.world.definitions, LootKeys.slotItems(player, index)))) {
+            player.message("You can't deposit items worth 20,000 coins or more so soon after combat.")
+            return
+        }
         val definitions = player.world.definitions
         var movedAny = false
         var blocked = false
         for (item in LootKeys.slotItems(player, index)) {
             val unnoted = item.toUnnoted(definitions)
-            val added = player.bank.add(unnoted.id, unnoted.amount, assureFullInsertion = false)
-            val moved = unnoted.amount - added.getLeftOver()
+            val added = player.bank.addPreservingAttr(Item(unnoted.id, unnoted.amount).copyAttr(item), assureFullInsertion = false)
+            val moved = added.completed
             if (moved > 0) {
                 movedAny = true
                 LootKeys.takeFromSlot(player, index, item.id, moved)
@@ -268,9 +296,12 @@ object LootKeyChest {
         amount: Int,
     ): Int {
         val definitions = player.world.definitions
-        val give = shown(definitions, Item(itemId, amount), noteMode(player))
-        val added = player.inventory.add(give.id, give.amount, assureFullInsertion = false)
-        val moved = give.amount - added.getLeftOver()
+        // Audit X-06: stored loot keeps its attributes (charges, stored runes) on the way out.
+        val stored = LootKeys.slotItems(player, index).firstOrNull { it.id == itemId }
+        val source = if (stored != null) Item(stored, amount) else Item(itemId, amount)
+        val give = shown(definitions, source, noteMode(player))
+        val added = player.inventory.addPreservingAttr(if (give.id == itemId) source else give, assureFullInsertion = false)
+        val moved = added.completed
         if (moved > 0) LootKeys.takeFromSlot(player, index, itemId, moved)
         return moved
     }
@@ -288,7 +319,7 @@ object LootKeyChest {
     // ---- destroy ----
 
     fun promptDestroy(player: Player) {
-        val index = viewedIndex(player) ?: return
+        val index = heldViewedIndex(player) ?: return
         if (LootKeys.slotItems(player, index).isEmpty()) return
         val value = LootKeys.value(player.world.definitions, LootKeys.slotItems(player, index))
         if (!LootKeys.canDestroyHere(value, AreaState.isDangerous(player.zoneTile()))) {
@@ -303,8 +334,13 @@ object LootKeyChest {
     }
 
     fun confirmDestroy(player: Player) {
-        val index = viewedIndex(player) ?: return
+        val index = heldViewedIndex(player) ?: return
         player.setComponentHidden(INTERFACE_ID, CONFIRM_LAYER, hidden = true)
+        val worth = LootKeys.value(player.world.definitions, LootKeys.slotItems(player, index))
+        if (!LootKeys.canDestroyHere(worth, AreaState.isDangerous(player.zoneTile()))) {
+            player.message(LootKeys.DESTROY_TOO_VALUABLE_MESSAGE)
+            return
+        }
         if (LootKeys.slotItems(player, index).isNotEmpty()) {
             LootKeys.destroyed(player, index)
             LootKeys.consumeKey(player, index)

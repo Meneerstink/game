@@ -20,20 +20,19 @@ val PK_POINTS_ATTR = AttributeKey<Int>(persistenceKey = "pk_points")
  * killer is on, capped bonus - see IMPLEMENTATION_STATUS.md.
  *
  * ponytail: the leaderboard is a flat "name:streak" text file (`data/killstreak_leaderboard.txt`),
- * not a database - fine at the ~20-50 concurrent player target. Anti-farming is a basic
- * same-pair cooldown (below), not full IP/account-link detection.
+ * not a database - fine at the ~20-50 concurrent player target.
+ *
+ * Audit D-08: a kill only raises the streak and pays PK / Deadman Points when [ValidPkKill] judges it
+ * [ValidPkKill.Verdict.VALID] - the same verdict the emblems use: 1M+ risk, no same address/machine, the persisted
+ * pair and per-victim cooldowns, the daily cap and no fed kills. The old in-memory 5-minute pair cooldown (wiped by
+ * every restart) is gone; the persisted [ValidPkKill] cooldowns replace it.
  */
 object Killstreaks {
     private const val POINTS_PER_KILL = 2
-    private const val REPEAT_KILL_COOLDOWN_CYCLES = 500 // ~5 minutes; same pair scores once per window
     private val leaderboardFile = File("data/killstreak_leaderboard.txt")
     private val leaderboard = ConcurrentHashMap<String, Int>()
 
     @Volatile private var loaded = false
-
-    // Basic anti-farming: last time (in System.currentTimeMillis) a given killer/victim pair
-    // scored points, so two accounts can't trade kills back and forth for free points.
-    private val lastScoredPairMillis = ConcurrentHashMap<String, Long>()
 
     private fun load() {
         if (loaded) return
@@ -55,11 +54,33 @@ object Killstreaks {
         }
     }
 
-    /** Call from [gg.rsmod.plugins.content.mechanics.death.DeathExecutor] on a Wilderness PvP death. */
+    /**
+     * Legacy call from [gg.rsmod.plugins.content.mechanics.death.DeathExecutor] on a Wilderness PvP death, made before
+     * the kill is judged. Audit D-08: it only ends the victim's streak now; the killer is credited by [onJudgedKill]
+     * (from `DeadmanEmblem.onPvpDeath`, which owns the single [ValidPkKill.evaluate] of the death). Safe to drop.
+     */
     fun onWildernessKill(
         killer: Player,
         victim: Player,
     ) {
+        if (killer !== victim) victim.attr[CURRENT_KILLSTREAK_ATTR] = 0
+    }
+
+    /**
+     * Audit D-08: the killstreak and point reward for one resolved PvP death, with the death's single [ValidPkKill]
+     * [verdict]. The victim's streak always ends; the killer's streak and points only move on a valid kill.
+     */
+    fun onJudgedKill(
+        killer: Player,
+        victim: Player,
+        verdict: ValidPkKill.Verdict,
+    ) {
+        if (killer === victim) return
+        victim.attr[CURRENT_KILLSTREAK_ATTR] = 0
+        if (!verdict.valid) {
+            killer.filterableMessage("No PK or Deadman Points awarded - ${verdict.reason}.")
+            return
+        }
         load()
 
         val newStreak = (killer.attr[CURRENT_KILLSTREAK_ATTR] ?: 0) + 1
@@ -72,42 +93,24 @@ object Killstreaks {
         }
         killer.filterableMessage("Killstreak: $newStreak.")
 
-        victim.attr[CURRENT_KILLSTREAK_ATTR] = 0
-
-        val pairKey = pairKey(killer.username, victim.username)
-        val now = System.currentTimeMillis()
-        val last = lastScoredPairMillis[pairKey]
-        if (sameConnectionAddress(killer, victim)) {
-            // Owner night run 2026-09-19: no Deadman/PK reward for killing an account on the same address (multi-account farming).
-            killer.filterableMessage("No points awarded - that account plays from your own address.")
-        } else if (last == null || now - last > REPEAT_KILL_COOLDOWN_CYCLES * 600L) {
-            lastScoredPairMillis[pairKey] = now
-            val streakBonus = (newStreak / 5).coerceAtMost(10)
-            val points = POINTS_PER_KILL + streakBonus
-            killer.attr[PK_POINTS_ATTR] = (killer.attr[PK_POINTS_ATTR] ?: 0) + points
-            killer.filterableMessage("You have been awarded $points PK points.")
-            // Deadman Points (store currency, earned only through Deadman/PvP kills, same anti-farming window). PROVISIONAL amount.
-            val deadman = gg.rsmod.plugins.content.mechanics.store.StoreCatalogue.Currency.DEADMAN.attr
-            val deadmanPoints = DEADMAN_POINTS_PER_KILL + streakBonus
-            killer.attr[deadman] = (killer.attr[deadman] ?: 0) + deadmanPoints
-            killer.filterableMessage("You have been awarded $deadmanPoints Deadman Points.")
-        } else {
-            killer.filterableMessage("No PK points awarded - you've fought this player too recently.")
-        }
+        val streakBonus = (newStreak / 5).coerceAtMost(10)
+        val points = POINTS_PER_KILL + streakBonus
+        killer.attr[PK_POINTS_ATTR] = (killer.attr[PK_POINTS_ATTR] ?: 0) + points
+        killer.filterableMessage("You have been awarded $points PK points.")
+        // Deadman Points (store currency, earned only through Deadman/PvP kills). PROVISIONAL amount.
+        val deadman = gg.rsmod.plugins.content.mechanics.store.StoreCatalogue.Currency.DEADMAN.attr
+        val deadmanPoints = DEADMAN_POINTS_PER_KILL + streakBonus
+        killer.attr[deadman] = (killer.attr[deadman] ?: 0) + deadmanPoints
+        killer.filterableMessage("You have been awarded $deadmanPoints Deadman Points.")
     }
 
-    private const val DEADMAN_POINTS_PER_KILL = 10
+    const val DEADMAN_POINTS_PER_KILL = 10
 
-    /** True when both players are connected from the same IP address (one person farming kills on a second account). */
+    /** True when both players are connected from the same IP address or machine (one person farming kills on a second account). */
     fun sameConnectionAddress(
         a: Player,
         b: Player,
     ): Boolean = ValidPkKill.sameAddress(a, b)
-
-    private fun pairKey(
-        a: String,
-        b: String,
-    ): String = if (a < b) "$a|$b" else "$b|$a"
 
     fun top(n: Int): List<Pair<String, Int>> {
         load()

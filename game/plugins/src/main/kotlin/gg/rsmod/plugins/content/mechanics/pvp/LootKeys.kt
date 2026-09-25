@@ -7,6 +7,7 @@ import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.entity.GroundItem
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
+import gg.rsmod.game.model.item.ItemAttribute
 import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.api.ext.*
 import gg.rsmod.plugins.content.items.food.Food
@@ -87,16 +88,79 @@ object LootKeys {
 
     // ---- slot storage ----
 
-    fun encode(items: List<Item>): String = items.joinToString(",") { "${it.id}:${it.amount}" }
+    /**
+     * "id:amount" per stack; audit X-06 appends ":ATTR=value;ATTR=value" when the stack carries item
+     * attributes (charges, stored runes), so looted items are not handed over "fresh". [decode] still
+     * reads the old two-field form.
+     */
+    fun encode(items: List<Item>): String =
+        items.joinToString(",") { item ->
+            val base = "${item.id}:${item.amount}"
+            if (item.attr.isEmpty()) base else base + ":" + item.attr.entries.joinToString(";") { "${it.key.name}=${it.value}" }
+        }
 
     fun decode(value: String): List<Item> =
-        if (value.isBlank()) emptyList() else value.split(',').map { part -> part.split(':').let { Item(it[0].toInt(), it[1].toInt()) } }
+        if (value.isBlank()) {
+            emptyList()
+        } else {
+            value.split(',').map { part ->
+                val fields = part.split(':')
+                val item = Item(fields[0].toInt(), fields[1].toInt())
+                if (fields.size > 2) {
+                    fields[2].split(';').forEach { pair ->
+                        val (name, v) = pair.split('=').let { (it.getOrNull(0) ?: "") to it.getOrNull(1)?.toIntOrNull() }
+                        val key = ItemAttribute.values().firstOrNull { it.name == name }
+                        if (key != null && v != null) item.attr[key] = v
+                    }
+                }
+                item
+            }
+        }
 
     fun slots(player: Player): MutableList<String> {
         val stored = player.attr[SLOTS]?.map { it.toString() }?.toMutableList() ?: mutableListOf()
         while (stored.size < MAX_KEYS) stored += ""
+        releaseDespawnedKeys(player, stored)
         player.attr[SLOTS] = stored
         return stored
+    }
+
+    /**
+     * Audit X-12: when a key drops to the floor (full inventory) and despawns unclaimed, its loot is gone
+     * with it - the slot must not stay occupied forever. "index:deadlineMs" per key on the floor.
+     */
+    val GROUND_KEY_DEADLINES = AttributeKey<String>(persistenceKey = "loot_keys_ground_deadlines")
+
+    /** Ground items are private for 100 ticks and gone at 200 (GroundItem); a small margin on top. */
+    private const val GROUND_KEY_LIFETIME_MS = 210L * 600L
+
+    private fun releaseDespawnedKeys(
+        player: Player,
+        stored: MutableList<String>,
+        nowMs: Long = System.currentTimeMillis(),
+    ) {
+        val raw = player.attr[GROUND_KEY_DEADLINES] ?: return
+        val remaining = mutableListOf<String>()
+        raw.split(',').filter { it.isNotBlank() }.forEach { entry ->
+            val index = entry.substringBefore(':').toIntOrNull() ?: return@forEach
+            val deadline = entry.substringAfter(':').toLongOrNull() ?: return@forEach
+            when {
+                index !in 0 until MAX_KEYS -> Unit
+                player.inventory.contains(KEY_IDS[index]) -> Unit // picked up again
+                deadline < nowMs -> stored[index] = ""
+                else -> remaining += entry
+            }
+        }
+        if (remaining.isEmpty()) player.attr.remove(GROUND_KEY_DEADLINES) else player.attr[GROUND_KEY_DEADLINES] = remaining.joinToString(",")
+    }
+
+    private fun markKeyOnGround(
+        player: Player,
+        index: Int,
+    ) {
+        val deadline = System.currentTimeMillis() + GROUND_KEY_LIFETIME_MS
+        val existing = player.attr[GROUND_KEY_DEADLINES]?.split(',')?.filter { it.isNotBlank() && !it.startsWith("$index:") } ?: emptyList()
+        player.attr[GROUND_KEY_DEADLINES] = (existing + "$index:$deadline").joinToString(",")
     }
 
     fun slotItems(
@@ -212,7 +276,8 @@ object LootKeys {
         killer: Player?,
         lost: List<Item>,
     ): List<Item> {
-        val victimKeys = lost.filter { isKey(it.id) }.map { keyIndex(it.id) }.distinct()
+        // Audit D-01: every stored key's loot is at risk on a PvP death, wherever the key item itself is.
+        val victimKeys = (lost.filter { isKey(it.id) }.map { keyIndex(it.id) } + KEY_IDS.indices.filter { slotItems(victim, it).isNotEmpty() }).distinct()
         val victimKeyContents = victimKeys.map { slotItems(victim, it) }.filter { it.isNotEmpty() }
         victimKeys.forEach { setSlot(victim, it, emptyList()) }
         val loot = lost.filterNot { isKey(it.id) }
@@ -233,6 +298,7 @@ object LootKeys {
             if (!killer.inventory.add(KEY_IDS[index], 1).hasSucceeded()) {
                 // Owner 2026-09-17: a full inventory never loses the key - it lands on the victim's tile.
                 world.spawn(GroundItem(KEY_IDS[index], 1, victim.tile, killer))
+                markKeyOnGround(killer, index)
                 killer.message("Your inventory is full, so your loot key has dropped on the ground.")
             } else {
                 // Owner 2026-09-18: "a sound when u get a lootkey in ur inventory". ADAPTED: OSRS Deadman
@@ -281,7 +347,7 @@ object LootKeys {
         if (at < 0 || amount <= 0) return 0
         val moved = minOf(amount, stored[at].amount)
         addCounter(player, CLAIMED_VALUE, value(player.world.definitions, listOf(Item(itemId, moved))))
-        if (moved == stored[at].amount) stored.removeAt(at) else stored[at] = Item(itemId, stored[at].amount - moved)
+        if (moved == stored[at].amount) stored.removeAt(at) else stored[at] = Item(stored[at], stored[at].amount - moved)
         setSlot(player, index, stored)
         return moved
     }

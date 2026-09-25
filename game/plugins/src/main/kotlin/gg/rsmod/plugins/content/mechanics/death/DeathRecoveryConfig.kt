@@ -20,13 +20,27 @@ data class DeathRecoveryConfig(
 ) {
     companion object {
         /**
+         * Audit D-09: reclaim fee by the total guide value waiting in Death's Domain, following the
+         * OSRS Death's Office tiers (free up to 100k, 5k up to 1M, 50k up to 10M, 500k up to 100M,
+         * then 1%) - tier values niet geverifieerd against the wiki (unreachable from the audit).
+         */
+        fun feeFor(value: Long): Int =
+            when {
+                value <= 100_000L -> 0
+                value <= 1_000_000L -> 5_000
+                value <= 10_000_000L -> 50_000
+                value <= 100_000_000L -> 500_000
+                else -> (value / 100L).coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
+            }
+
+        /**
          * NOT a finalized product value - see class doc. Exists only so the
          * server has something to run with before the owner decides.
          */
         val PLACEHOLDER =
             DeathRecoveryConfig(
                 recoveryDurationMs = 15 * 60 * 1000L,
-                reclaimFee = 100,
+                reclaimFee = 0,
             )
     }
 }

@@ -27,14 +27,13 @@ on_timer(PvpSkull.SKULL_PAUSE_CHECK_TIMER) {
 /**
  * Deadman PvP guards plan (2026-09-16): the pause/HUD driver is session-local (not persisted),
  * so a player who reconnects with a still-active persisted skull (restored/fast-forwarded by the
- * normal SKULL_ICON_DURATION_TIMER persistence pipeline) needs it re-armed here, otherwise the
+ * normal SKULL_ICON_DURATION_TIMER persistence pipeline, paused while offline since Audit D-04) needs it re-armed here, otherwise the
  * countdown would tick down unprotected by the pause rule and the HUD refresh would never fire
  * again until the next fresh attack.
  */
 on_login {
-    if (PvpSkull.isSkulled(player)) {
-        player.timers[PvpSkull.SKULL_PAUSE_CHECK_TIMER] = 1
-    }
+    // Audit D-04: the skull timer no longer ticks offline; re-arm the pause driver at once (and migrate a pre-fix save).
+    PvpSkull.resumeAfterLogin(player)
 }
 
 /**

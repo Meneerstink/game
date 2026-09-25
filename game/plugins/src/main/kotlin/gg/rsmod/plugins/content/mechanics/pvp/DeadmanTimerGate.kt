@@ -28,6 +28,13 @@ import gg.rsmod.plugins.content.npcs.Constants
  *
  * "Attacked in the last 7 seconds" is [TELEPORT_COMBAT_TIMER], armed for [SevenSecondAction.DURATION_CYCLES]
  * by [gg.rsmod.plugins.content.combat.Combat.postAttack] on every landed hit.
+ *
+ * Audit D-11: a boss hit overwrites LAST_HIT_BY, so "the last attacker" alone let a player hit by a PKer at a boss take
+ * one boss hit and then log out or teleport instantly. Both logout and the boss-area teleport exception now also look
+ * at the last PLAYER hit ([PvpSkull.cyclesSincePvpHit], recorded by [PvpSkull.markAggression] and never overwritten by
+ * an npc): within [PVP_HIT_TELEPORT_BLOCK_CYCLES] of it, logout counts down and teleporting is blocked, boss or not.
+ * (Not [gg.rsmod.game.model.timer.DEADMAN_LOGOUT_TIMER]: combat now arms that X-log hold for boss hits too, so it cannot
+ * tell a PvP hit from a boss hit.)
  */
 object DeadmanTimerGate {
     enum class Teleport {
@@ -41,16 +48,34 @@ object DeadmanTimerGate {
         BLOCKED_IN_COMBAT,
     }
 
+    /** Audit D-11: after a player hit, even a boss area gives no instant teleport for this long (7 seconds, as elsewhere). */
+    const val PVP_HIT_TELEPORT_BLOCK_CYCLES = SevenSecondAction.DURATION_CYCLES
+
     fun teleportDecision(player: Player): Teleport =
         when {
             PvpSkull.isSkulled(player) -> Teleport.COUNTDOWN
+            recentlyHitByPlayer(player) -> Teleport.BLOCKED_IN_COMBAT
             BossAreas.isBossArea(player.world, player.tile) -> Teleport.INSTANT
             recentlyHitByNonBoss(player) -> Teleport.BLOCKED_IN_COMBAT
             else -> Teleport.INSTANT
         }
 
-    /** Owner exception: logout counts down only when skulled or in combat with a player / non-boss npc. */
-    fun needsCountdown(player: Player): Boolean = PvpSkull.isSkulled(player) || inNonBossCombat(player)
+    /**
+     * Owner exception: logout counts down only when skulled or in combat with a player / non-boss npc. Audit D-11: a
+     * player hit in the last 7 seconds counts too, even when a boss hit came after it.
+     *
+     * `Player.requestLogout(deadmanDelayHandled = true)` clearing the X-log hold needs no engine change for this: the
+     * logout button only reaches it when this returned false or after an uninterrupted 7-second countdown, and any hit
+     * on the player cancels that countdown, so no player hit can have landed in the 7 seconds before it completes.
+     */
+    fun needsCountdown(player: Player): Boolean =
+        PvpSkull.isSkulled(player) || recentlyHitByPlayer(player) || inNonBossCombat(player)
+
+    /** Audit D-11: hit by another player within [PVP_HIT_TELEPORT_BLOCK_CYCLES]. */
+    fun recentlyHitByPlayer(player: Player): Boolean {
+        val since = PvpSkull.cyclesSincePvpHit(player) ?: return false
+        return since in 0 until PVP_HIT_TELEPORT_BLOCK_CYCLES
+    }
 
     /**
      * One entry point for non-magical escape routes (boats, minecarts, carpets, portals and
@@ -69,8 +94,13 @@ object DeadmanTimerGate {
     }
 
     /** Whole seconds the player must still stay out of combat, for the owner's message. */
-    fun combatSecondsLeft(player: Player): Int =
-        if (player.timers.has(TELEPORT_COMBAT_TIMER)) SevenSecondAction.secondsFor(player.timers[TELEPORT_COMBAT_TIMER]) else 0
+    fun combatSecondsLeft(player: Player): Int {
+        val combat = if (player.timers.has(TELEPORT_COMBAT_TIMER)) player.timers[TELEPORT_COMBAT_TIMER] else 0
+        // Audit D-11: the player-hit block can outlast a TELEPORT_COMBAT_TIMER that was never refreshed.
+        val pvp = PvpSkull.cyclesSincePvpHit(player)?.let { PVP_HIT_TELEPORT_BLOCK_CYCLES - it }?.takeIf { it > 0 } ?: 0
+        val cycles = maxOf(combat, pvp)
+        return if (cycles > 0) SevenSecondAction.secondsFor(cycles) else 0
+    }
 
     fun blockedMessage(player: Player): String = "You must be out of combat for another ${combatSecondsLeft(player)} seconds to teleport."
 

@@ -113,7 +113,8 @@ object DeadmanHud {
 
     /** Remaining skull time as shown on the HUD, or null when not PK-skulled. */
     fun skullText(player: Player): String? {
-        if (!PvpSkull.isSkulled(player)) return null
+        // Audit D-10: a key-only skull (no timer) has no time to show.
+        if (!PvpSkull.hasSkullTimer(player)) return null
         val cyclesLeft = if (player.timers.exists(SKULL_ICON_DURATION_TIMER)) player.timers[SKULL_ICON_DURATION_TIMER] else 0
         return formatHalfMinutes(cyclesLeft)
     }

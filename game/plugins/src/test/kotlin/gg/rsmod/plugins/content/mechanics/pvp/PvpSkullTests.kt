@@ -172,6 +172,76 @@ class PvpSkullTests {
         assertEquals(99, player.timers[PvpSkull.SKULL_PAUSE_CHECK_TIMER])
     }
 
+    @Test
+    fun `Audit D-05 - hitting the same victim again after their respawn ends the kill grace`() {
+        val home = Tile(3140, 3640, 0)
+        val killer = newPlayer(tile = home, home = home)
+        val victim = newPlayer(tile = home, home = home)
+        every { killer.world.currentCycle } returns 100
+        KillGrace.grant(killer, victim)
+
+        PvpSkull.onHitRegistered(killer, victim) // a trailing hit of the lethal attack, same cycle
+        assertTrue(KillGrace.isProtected(killer))
+
+        every { killer.world.currentCycle } returns 200 // the victim has respawned
+        PvpSkull.onHitRegistered(killer, victim)
+        assertFalse(KillGrace.isProtected(killer), "a new attack on the respawned victim ends the grace")
+    }
+
+    @Test
+    fun `Audit D-05 - a retaliation by the grace holder ends the grace too, without skulling`() {
+        val home = Tile(3140, 3640, 0)
+        val holder = newPlayer(tile = home, home = home)
+        val aggressor = newPlayer(tile = home, home = home)
+        val killed = newPlayer(tile = home, home = home)
+        PvpSkull.onHitRegistered(aggressor, holder) // aggressor hit the holder first
+        every { holder.world.currentCycle } returns 100
+        KillGrace.grant(holder, killed)
+        every { holder.world.currentCycle } returns 200
+
+        PvpSkull.onHitRegistered(holder, aggressor) // retaliation
+        assertFalse(KillGrace.isProtected(holder), "retaliating is attacking: the grace ends")
+        assertFalse(PvpSkull.isSkulled(holder), "a retaliation still never skulls")
+    }
+
+    @Test
+    fun `Audit D-10 - carrying a loot key counts as skulled even without the skull timer`() {
+        val player = newPlayer(tile = Tile(3100, 3100, 0), home = Tile(3140, 3640, 0))
+        assertFalse(PvpSkull.isSkulled(player))
+        player.inventory[0] = gg.rsmod.game.model.item.Item(gg.rsmod.plugins.api.cfg.Items.LOOT_KEY, 1)
+        assertTrue(PvpSkull.isSkulled(player))
+        assertFalse(PvpSkull.hasSkullTimer(player), "a key-only skull has no countdown")
+
+        // The pause driver has no countdown to track for a key-only skull and stops rescheduling.
+        player.timers[PvpSkull.SKULL_PAUSE_CHECK_TIMER] = 99
+        PvpSkull.tickPauseTracking(player)
+        assertEquals(99, player.timers[PvpSkull.SKULL_PAUSE_CHECK_TIMER])
+    }
+
+    @Test
+    fun `Audit D-04 - the skull timer does not tick offline and login re-arms the pause driver at once`() {
+        assertFalse(SKULL_ICON_DURATION_TIMER.tickOffline, "the skull only counts down while online")
+        assertEquals("skull_icon_duration", SKULL_ICON_DURATION_TIMER.persistenceKey)
+
+        val instanced = newSkulledPlayer(tile = Tile(6500, 100, 0))
+        PvpSkull.resumeAfterLogin(instanced)
+        assertTrue(instanced.timers.exists(PvpSkull.SKULL_PAUSE_CHECK_TIMER))
+        assertTrue(instanced.timers.isPaused(SKULL_ICON_DURATION_TIMER), "the instance pause applies from the first cycle back")
+    }
+
+    @Test
+    fun `Audit D-04 - a skull saved before the fix is migrated onto the live key at login`() {
+        val player = newPlayer(tile = Tile(3100, 3100, 0), home = Tile(3140, 3640, 0))
+        player.timers[gg.rsmod.game.model.timer.LEGACY_SKULL_ICON_DURATION_TIMER] = 321
+        assertFalse(PvpSkull.isSkulled(player), "the legacy key is not the live skull")
+
+        PvpSkull.resumeAfterLogin(player)
+
+        assertFalse(player.timers.exists(gg.rsmod.game.model.timer.LEGACY_SKULL_ICON_DURATION_TIMER))
+        assertEquals(321, player.timers[SKULL_ICON_DURATION_TIMER])
+        assertTrue(player.timers.exists(PvpSkull.SKULL_PAUSE_CHECK_TIMER))
+    }
+
     private fun newSkulledPlayer(tile: Tile): Player {
         val home = Tile(3140, 3640, 0)
         val player = newPlayer(tile = tile, home = home)

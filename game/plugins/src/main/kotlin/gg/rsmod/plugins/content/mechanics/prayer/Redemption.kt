@@ -42,6 +42,12 @@ object Redemption {
     private const val HEAL_MULTIPLIER = 0.25
     private const val THRESHOLD_DIVISOR = 10
 
+    /** Audit C-16: OSRS "below 10 %" without integer division (99 HP: triggers at 9 HP, not only at 8). */
+    fun belowThreshold(
+        current: Int,
+        max: Int,
+    ): Boolean = current * THRESHOLD_DIVISOR < max
+
     fun onDamageDealt(
         target: Pawn,
         damage: Int,
@@ -50,7 +56,7 @@ object Redemption {
         if (!Prayers.isActive(target, Prayer.REDEMPTION)) return
         val current = target.getCurrentLifepoints()
         val max = target.getMaximumLifepoints()
-        if (current <= 0 || current >= max / THRESHOLD_DIVISOR) return
+        if (current <= 0 || !belowThreshold(current, max)) return
         if (target.hasEquipped(EquipmentType.AMULET, Items.PHOENIX_NECKLACE)) return
 
         target.setCurrentPrayerPoints(0)

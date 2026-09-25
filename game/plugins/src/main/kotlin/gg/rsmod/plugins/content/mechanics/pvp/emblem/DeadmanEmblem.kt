@@ -8,6 +8,7 @@ import gg.rsmod.game.model.item.Item
 import gg.rsmod.plugins.api.cfg.Gfx
 import gg.rsmod.plugins.api.cfg.Sfx
 import gg.rsmod.plugins.api.ext.getWildernessLevel
+import gg.rsmod.plugins.api.ext.isMulti
 import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.api.ext.playSound
 import gg.rsmod.plugins.content.mechanics.pvp.DeadmanHud
@@ -197,13 +198,22 @@ object DeadmanEmblem {
      * Called exactly once per PvP death from `DeathExecutor` (after its exactly-once guard), with the tiers of the emblems
      * removed from the victim ([lostTiers]; the removal itself is part of the death's item transfer) and the real value the
      * victim lost to the killer ([risk], excluding the emblem).
+     *
+     * This is the single place a PvP death is judged: the one [ValidPkKill.evaluate] of the death also drives the
+     * killstreak / Deadman Points reward (Audit D-08, [gg.rsmod.plugins.content.mechanics.pvp.Killstreaks.onJudgedKill])
+     * and the post-kill grace (Audit D-06, [gg.rsmod.plugins.content.mechanics.pvp.KillGrace.grantForKill]), so all three
+     * see the same verdict before [ValidPkKill.record] starts the cooldowns. Returns that result.
      */
-    fun onPvpDeath(world: World, victim: Player, killer: Player?, lostTiers: List<Int>, risk: Long) {
+    fun onPvpDeath(world: World, victim: Player, killer: Player?, lostTiers: List<Int>, risk: Long): ValidPkKill.Result {
         val result = ValidPkKill.evaluate(killer, victim, risk)
         val verdict = result.verdict
         val victimTier = lostTiers.maxOrNull() ?: 0
         if (result.suspicious.isNotEmpty()) {
             EmblemLog.write("SUSPICIOUS", victim, "killer" to (killer?.username ?: "-"), "victim" to victim.username, "risk" to risk, "verdict" to verdict.name, "notes" to result.suspicious.joinToString("; "), "area" to area(victim))
+        }
+        if (killer != null) {
+            gg.rsmod.plugins.content.mechanics.pvp.Killstreaks.onJudgedKill(killer, victim, verdict)
+            gg.rsmod.plugins.content.mechanics.pvp.KillGrace.grantForKill(killer, victim, verdict, victim.tile.isMulti(world))
         }
         lostTiers.sortedDescending().drop(1).forEach { extra ->
             EmblemLog.write("DESTROY", victim, "tierBefore" to extra, "tierAfter" to 0, "reason" to "second emblem on a PvP death (integrity)")
@@ -213,7 +223,7 @@ object DeadmanEmblem {
                 victim.message("<col=ef1020>Your tier $victimTier Deadman emblem crumbles to dust.")
                 EmblemLog.write("DESTROY", victim, "tierBefore" to victimTier, "tierAfter" to 0, "killer" to (killer?.username ?: "-"), "victim" to victim.username, "risk" to risk, "reason" to verdict.reason, "area" to area(victim))
             }
-            return
+            return result
         }
         // 1) The kill itself: a valid kill raises the emblem the killer carries by exactly one tier.
         if (verdict.valid) {
@@ -248,6 +258,7 @@ object DeadmanEmblem {
             }
             EmblemLog.write("PVP_TRANSFER", killer, "tierBefore" to victimTier, "tierAfter" to victimTier, "killer" to killer.username, "victim" to victim.username, "risk" to risk, "verdict" to verdict.name, "area" to area(victim))
         }
+        return result
     }
 
     private fun upgradeCarried(world: World, killer: Player, victim: Player, risk: Long) {

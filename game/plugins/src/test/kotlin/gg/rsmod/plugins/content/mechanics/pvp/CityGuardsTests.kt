@@ -203,6 +203,26 @@ class CityGuardsTests {
     }
 
     @Test
+    fun `Audit D-12 - an intruder without a live melee or ranged guard is retried, one with a guard is not`() {
+        assertTrue(CityGuards.needsPhysicalGuard(null), "no guard placed yet")
+        assertTrue(CityGuards.needsPhysicalGuard(emptyList()), "the pool had none free: the plan must not count as engaged")
+        assertTrue(CityGuards.needsPhysicalGuard(listOf(false)), "the guard is gone")
+        assertFalse(CityGuards.needsPhysicalGuard(listOf(false, true)))
+        assertTrue(CityGuards.GUARD_RETRY_CYCLES in 1..10, "retried within a few seconds")
+    }
+
+    @Test
+    fun `Audit D-10 - a loot-key carrier without a skull timer is a skulled intruder`() {
+        val carrier = newPlayer(tile = grandExchange)
+        val inventory = gg.rsmod.game.model.container.ItemContainer(gg.rsmod.game.fs.DefinitionSet(), gg.rsmod.game.model.container.key.INVENTORY_KEY)
+        every { carrier.inventory } returns inventory
+        assertFalse(CityGuards.isSkulledIntruder(carrier))
+        inventory[0] = gg.rsmod.game.model.item.Item(gg.rsmod.plugins.api.cfg.Items.LOOT_KEY, 1)
+        assertTrue(CityGuards.isSkulledIntruder(carrier))
+        assertTrue(CityGuards.mayAttack(npc(CityGuards.MELEE_GUARD_ID, tile = grandExchange), carrier))
+    }
+
+    @Test
     fun `sourced guard constants`() {
         assertEquals(1337, CityGuards.DISPLAYED_COMBAT_LEVEL)
         assertEquals(2, CityGuards.ATTACK_SPEED_CYCLES)

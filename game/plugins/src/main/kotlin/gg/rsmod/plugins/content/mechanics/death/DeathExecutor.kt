@@ -4,12 +4,12 @@ import gg.rsmod.game.model.World
 import gg.rsmod.game.model.attr.DEATH_LOOT_RESOLVED_ATTR
 import gg.rsmod.game.model.attr.DEATH_RECOVERY_EXPIRY_ATTR
 import gg.rsmod.game.model.attr.DEATH_RECOVERY_FEE_ATTR
-import gg.rsmod.game.model.container.ItemContainer
 import gg.rsmod.game.model.entity.GroundItem
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.game.service.log.LoggerService
-import gg.rsmod.plugins.api.ext.isMulti
+import gg.rsmod.plugins.api.ext.addPreservingAttr
+import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.api.ext.refreshBonuses
 
 /**
@@ -55,32 +55,30 @@ object DeathExecutor {
 
         // A looting bag is never protected. Detach its contents before the inventory mutation so
         // the bag item and its stored stacks follow one atomic death outcome.
+        // Audit X-01: on a PvP death the bag's contents are always at risk, wherever the bag item itself is -
+        // the contents belong to the player, not to the item, so parking the bag elsewhere must not protect them.
         val bagContents =
-            if (victim.inventory.contains(gg.rsmod.plugins.api.cfg.Items.LOOTING_BAG) ||
+            if (result.context == DeathContext.WILDERNESS_PVP) {
+                gg.rsmod.plugins.content.mechanics.pvp.LootingBag.pvpDeathContents(victim)
+            } else if (victim.inventory.contains(gg.rsmod.plugins.api.cfg.Items.LOOTING_BAG) ||
                 victim.inventory.contains(gg.rsmod.plugins.api.cfg.Items.LOOTING_BAG_OPEN)
             ) {
-                if (result.context == DeathContext.WILDERNESS_PVP) {
-                    gg.rsmod.plugins.content.mechanics.pvp.LootingBag.pvpDeathContents(victim)
-                } else {
-                    gg.rsmod.plugins.content.mechanics.pvp.LootingBag.takeContents(victim)
-                }
+                gg.rsmod.plugins.content.mechanics.pvp.LootingBag.takeContents(victim)
             } else {
                 emptyList()
             }
 
-        // For a PvM/safe death, capacity viability must be known *before* any
-        // inventory/equipment slot is cleared - a lost stack that can't fit
-        // into deathRecovery (e.g. a prior death's recovery batch is still
-        // unreclaimed and near-full) must simply stay with the player rather
-        // than being destroyed. Wilderness/PvP loot has no such constraint;
-        // ground loot is uncapped, so every lost item is always removed.
+        // Audit X-03: every lost stack is always removed, PvM included. What does not fit into
+        // deathRecovery is dropped as the victim's own ground item at the death tile (see
+        // createDeathRecovery) - it no longer stays with the player, which made a full recovery
+        // container a free insurance against every later PvM death.
         // RCV-012 decision 3b: loot keys never go to death recovery - "If a player dies a PvM death with loot keys in the inventory,
         // they are removed instead" - and on a PvP death LootKeys decides where they go.
         val lostKeys = result.itemRisk.lost.filter { gg.rsmod.plugins.content.mechanics.pvp.LootKeys.isKey(it.item.id) }
         val toRemove =
             when (result.context) {
                 DeathContext.WILDERNESS_PVP -> result.itemRisk.lost
-                DeathContext.PVM_SAFE -> partitionRecoverable(victim, result.itemRisk.lost - lostKeys.toSet()).fitsInRecovery + lostKeys
+                DeathContext.PVM_SAFE -> result.itemRisk.lost
             }
 
         var removedEquipment = false
@@ -122,12 +120,9 @@ object DeathExecutor {
 
         if (result.context == DeathContext.WILDERNESS_PVP && result.killer != null) {
             gg.rsmod.plugins.content.mechanics.pvp.Killstreaks.onWildernessKill(result.killer, victim)
-            // Grant once, after a resolved PvP death, not on a speculative/lethal combat hit.
-            // The timer's HUD and attack gate already consume KillGrace; previously nothing
-            // in production ever started it. Multi-combat kills do not earn protection.
-            if (result.killer !== victim && !victim.tile.isMulti(world)) {
-                gg.rsmod.plugins.content.mechanics.pvp.KillGrace.grant(result.killer, victim)
-            }
+            // Audit D-06/D-08: kill grace, killstreak and Deadman points are granted by
+            // DeadmanEmblem.onPvpDeath (below) with the kill's ValidPkKill verdict - only a valid,
+            // single-combat kill earns them, so an alt feeding kills no longer buys 60 s of immunity.
         }
 
         when (result.context) {
@@ -164,43 +159,8 @@ object DeathExecutor {
         return true
     }
 
-    /**
-     * Splits [lost] into the stacks that [victim]'s current
-     * [Player.deathRecovery] contents actually have room for versus those
-     * that don't, without mutating [victim]'s real container. Simulated
-     * against a defensive copy (via [ItemContainer]'s copy constructor) using
-     * the container's own `add(assureFullInsertion = true)` semantics, so
-     * stacking/slot behavior exactly matches what the real transfer will do
-     * and no stack is ever partially split between the two lists.
-     *
-     * Items are tried in [lost]'s order and the simulation carries forward
-     * between items, so a stackable item merging into an earlier lost stack
-     * of the same id (or an existing recovery stack) frees no extra slot,
-     * while one oversized/non-stacking stack that doesn't fit does not block
-     * later, smaller stacks from still being recovered.
-     */
-    private fun partitionRecoverable(
-        victim: Player,
-        lost: List<DeathSlotItem>,
-    ): RecoveryFitResult {
-        val simulated = ItemContainer(victim.deathRecovery)
-        val fits = mutableListOf<DeathSlotItem>()
-        val overflow = mutableListOf<DeathSlotItem>()
-        for (slotItem in lost) {
-            val transaction = simulated.add(slotItem.item.id, slotItem.item.amount, assureFullInsertion = true)
-            if (transaction.hasSucceeded()) {
-                fits.add(slotItem)
-            } else {
-                overflow.add(slotItem)
-            }
-        }
-        return RecoveryFitResult(fits, overflow)
-    }
-
-    private data class RecoveryFitResult(
-        val fitsInRecovery: List<DeathSlotItem>,
-        val overflow: List<DeathSlotItem>,
-    )
+    /** The death sequence's wait(2) + animation 836 (~4 ticks); exact OSRS tick niet geverifieerd. */
+    const val PVP_LOOT_SPAWN_DELAY_TICKS = 5
 
     private fun spawnPvpLoot(
         world: World,
@@ -217,8 +177,14 @@ object DeathExecutor {
         // No gravestone and no GP printing for Wilderness/PvP deaths - the
         // ground loot itself is the entire PK reward, unless loot keys take it (RCV-012 decision 3b).
         val groundItems = gg.rsmod.plugins.content.mechanics.pvp.LootKeys.onWildernessPvpDeath(world, victim, result.killer, lostItems)
-        groundItems.forEach { item ->
-            world.spawn(GroundItem(Item(item), victim.tile, result.killer))
+        // Audit X-12: ground loot appears when the death animation has played (OSRS), not before it.
+        if (groundItems.isNotEmpty()) {
+            val tile = victim.tile
+            val owner = result.killer
+            world.queue {
+                wait(PVP_LOOT_SPAWN_DELAY_TICKS)
+                groundItems.forEach { item -> world.spawn(GroundItem(Item(item), tile, owner)) }
+            }
         }
         logger?.logDeathLootTransfer(victim, result.killer, lostItems)
     }
@@ -230,18 +196,19 @@ object DeathExecutor {
         logger: LoggerService?,
         extra: List<Item> = emptyList(),
     ) {
-        lost.forEach { slotItem ->
-            // assureFullInsertion = true: partitionRecoverable() already
-            // proved this exact stack fits against the real container's
-            // current (pre-mutation) contents, and no other code path mutates
-            // deathRecovery between that check and this call, so this can
-            // never fail - but requiring full insertion here (rather than
-            // best-effort) means a stack is never silently split if that
-            // invariant is ever violated by a future change.
-            victim.deathRecovery.add(slotItem.item.id, slotItem.item.amount, assureFullInsertion = true)
+        // Audit X-06/X-07: attributes (rune pouch runes, charges, quiver ammo) are kept, and nothing is
+        // dropped silently - whatever does not fit lands as the victim's own ground item.
+        var overflowed = false
+        (lost.map { it.item } + extra).forEach { item ->
+            val transaction = victim.deathRecovery.addPreservingAttr(item, assureFullInsertion = false)
+            val leftOver = item.amount - transaction.completed
+            if (leftOver > 0) {
+                victim.world.spawn(GroundItem(Item(item, leftOver), victim.tile, victim))
+                overflowed = true
+            }
         }
-        extra.forEach { item ->
-            victim.deathRecovery.add(item.id, item.amount, assureFullInsertion = false)
+        if (overflowed) {
+            victim.message("Death's Domain is full: some of your items were left where you died.")
         }
         // A player who dies again before reclaiming a prior batch has their
         // new losses merged additively into the same shared deathRecovery
@@ -254,12 +221,15 @@ object DeathExecutor {
         // milestone report's known limitations.
         val expiresAt = System.currentTimeMillis() + recoveryConfig.recoveryDurationMs
         victim.attr[DEATH_RECOVERY_EXPIRY_ATTR] = expiresAt
-        victim.attr[DEATH_RECOVERY_FEE_ATTR] = recoveryConfig.reclaimFee
+        // Audit D-09: the fee follows the value of everything waiting (OSRS Death's Office tiers).
+        val batchValue =
+            gg.rsmod.plugins.content.mechanics.pvp.LootKeys.value(victim.world.definitions, victim.deathRecovery.rawItems.filterNotNull())
+        victim.attr[DEATH_RECOVERY_FEE_ATTR] = maxOf(recoveryConfig.reclaimFee, DeathRecoveryConfig.feeFor(batchValue))
         logger?.logDeathRecoveryCreated(
             player = victim,
             itemCount = lost.size,
             expiresAtMs = expiresAt,
-            reclaimFee = recoveryConfig.reclaimFee,
+            reclaimFee = victim.attr[DEATH_RECOVERY_FEE_ATTR] ?: recoveryConfig.reclaimFee,
         )
     }
 }

@@ -34,6 +34,7 @@ can_attack { attacker, target ->
     }
 }
 
+// Audit D-16: no "+15% reward/XP" claim - no live system pays that bonus. The hotspot is the daily-objective location.
 on_command("hotspot") {
-    player.filterableMessage("Current Wilderness hotspot: ${WildernessHotspot.current.label} (+15% reward/XP there).")
+    player.filterableMessage("Current Wilderness hotspot (daily objective): ${WildernessHotspot.current.label}.")
 }

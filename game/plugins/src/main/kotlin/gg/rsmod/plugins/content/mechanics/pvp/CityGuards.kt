@@ -157,8 +157,12 @@ object CityGuards {
     /** Owner 2026-09-17: "alle guards 8 tiles kunnen roamen" - roaming radius around a guard's post. */
     const val PATROL_RADIUS = 8
 
-    /** Reactive guards retained per zone and kind; beyond this the idle ones are reused. */
-    const val POOL_PER_KIND = 2
+    /**
+     * Audit D-12: how often a skulled intruder whose melee/ranged guard is missing (none could be placed, or it was
+     * removed) gets a new one. There is no pool cap any more - idle guards are reused first, otherwise a new one comes
+     * (OSRS Wiki: every skulled intruder gets a guard), so two busy intruders can no longer shield a third.
+     */
+    const val GUARD_RETRY_CYCLES = 5
 
     /** Cycles a guard may spend walking back after ending up outside every zone before it is put back. */
     const val OUTSIDE_GRACE_CYCLES = 10
@@ -543,6 +547,7 @@ object CityGuards {
 
     private val WAS_IN_GUARDED_ZONE_ATTR = AttributeKey<Boolean>()
     private val WIZGUARD_NEXT_CYCLE_ATTR = AttributeKey<Int>()
+    private val GUARD_RETRY_CYCLE_ATTR = AttributeKey<Int>()
     /** The currently visible Wizguard, so every release route can remove it immediately. */
     private val ACTIVE_WIZGUARD_ATTR = AttributeKey<WeakReference<Npc>>()
 
@@ -570,6 +575,13 @@ object CityGuards {
             player.closeInterface(dest = InterfaceDestination.TAB_AREA)
             engageReactiveGuards(world, player)
             player.attr[WIZGUARD_NEXT_CYCLE_ATTR] = world.currentCycle
+        } else if (needsPhysicalGuard(player.attr[REACTIVE_GUARDS_ATTR]?.map { it.get()?.isActive() == true })) {
+            // Audit D-12: the plan's melee/ranged guard never came (or is gone) - try again every few cycles.
+            val next = player.attr[GUARD_RETRY_CYCLE_ATTR] ?: world.currentCycle
+            if (world.currentCycle >= next) {
+                engagePhysicalGuard(world, player)
+                player.attr[GUARD_RETRY_CYCLE_ATTR] = world.currentCycle + GUARD_RETRY_CYCLES
+            }
         }
         if (player.attr[REACTIVE_PLAN_ATTR]?.contains(Kind.MAGE) == true) {
             val next = player.attr[WIZGUARD_NEXT_CYCLE_ATTR] ?: world.currentCycle
@@ -594,45 +606,58 @@ object CityGuards {
         player.attr.remove(REACTIVE_PLAN_ATTR)
         player.attr.remove(WIZGUARD_NEXT_CYCLE_ATTR)
         player.attr.remove(ACTIVE_WIZGUARD_ATTR)
+        player.attr.remove(GUARD_RETRY_CYCLE_ATTR)
     }
 
     /** Random group per [SPAWN_COMBINATIONS]; exposed for tests. */
     fun pickCombination(random: Int): List<Kind> = SPAWN_COMBINATIONS[Math.floorMod(random, SPAWN_COMBINATIONS.size)]
 
+    /**
+     * Audit D-12: whether the intruder still needs a melee/ranged guard - [guardsAlive] holds one flag per guard
+     * engaged for them (null: none yet). Every skulled intruder gets one (OSRS Wiki), so a plan without a live guard
+     * is retried ([GUARD_RETRY_CYCLES]).
+     */
+    fun needsPhysicalGuard(guardsAlive: List<Boolean>?): Boolean = guardsAlive == null || guardsAlive.none { it }
+
     private fun engageReactiveGuards(
         world: World,
         player: Player,
     ) {
-        val zone = GuardedZones.zoneAt(player.tile)
         val plan = pickCombination(world.random(SPAWN_COMBINATIONS.size - 1))
-        val engaged = ArrayList<Kind>(2)
-        val guards = ArrayList<WeakReference<Npc>>(2)
-        plan.forEach { kind ->
-            if (kind == Kind.MAGE) {
-                engaged += kind // the Wizguard is driven by wizguardStrike
-                return@forEach
-            }
-            if (zone == null) return@forEach
-            // Wiki: the guard "will also spawn on top of" the intruder (the adjacent tile, so it
-            // visibly stands beside and faces them).
-            val guard = acquire(world, zone, kind, spawnTileNextTo(world, player)) ?: return@forEach
-            engaged += kind
-            guards += WeakReference(guard)
-            player.attr[REACTIVE_GUARDS_ATTR] = guards
-            guard.forceChat(GREETING.format(player.username))
-            guard.facePawn(player)
-            if (guard.canEngageCombat(player)) {
-                guard.attack(player)
-            }
+        // The Wizguard is driven by wizguardStrike on the plan alone; the physical guard is placed below and, Audit
+        // D-12, retried from onZoneCheck until one is actually engaged - the plan no longer pretends it was.
+        player.attr[REACTIVE_PLAN_ATTR] = plan
+        player.attr[REACTIVE_GUARDS_ATTR] = ArrayList<WeakReference<Npc>>(2)
+        engagePhysicalGuard(world, player, plan.firstOrNull { it != Kind.MAGE })
+        player.attr[GUARD_RETRY_CYCLE_ATTR] = world.currentCycle + GUARD_RETRY_CYCLES
+    }
+
+    /** Places and engages [player]'s melee or ranged guard ([kind], else the plan's own). */
+    private fun engagePhysicalGuard(
+        world: World,
+        player: Player,
+        kind: Kind? = player.attr[REACTIVE_PLAN_ATTR]?.firstOrNull { it != Kind.MAGE },
+    ) {
+        val zone = GuardedZones.zoneAt(player.tile) ?: return
+        val wanted = kind ?: if (world.random(1) == 0) Kind.MELEE else Kind.RANGED
+        // Wiki: the guard "will also spawn on top of" the intruder (the adjacent tile, so it
+        // visibly stands beside and faces them).
+        val guard = acquire(world, zone, wanted, spawnTileNextTo(world, player)) ?: return
+        val guards = player.attr[REACTIVE_GUARDS_ATTR] ?: ArrayList<WeakReference<Npc>>(2).also { player.attr[REACTIVE_GUARDS_ATTR] = it }
+        guards.removeAll { it.get()?.isActive() != true }
+        guards += WeakReference(guard)
+        guard.forceChat(GREETING.format(player.username))
+        guard.facePawn(player)
+        if (guard.canEngageCombat(player)) {
+            guard.attack(player)
         }
-        player.attr[REACTIVE_GUARDS_ATTR] = guards
-        player.attr[REACTIVE_PLAN_ATTR] = engaged
     }
 
     /**
      * A guard of [kind] for [zone], teleported to [tile]: an idle guard from the zone's pool when
-     * one exists, otherwise a new one while the pool for that kind is below [POOL_PER_KIND]. Null
-     * when every guard of that kind in the zone is busy with another intruder.
+     * one exists, otherwise a new one. Audit D-12: no pool cap - a guard busy with another intruder
+     * never leaves this one unguarded (the pool only grows to the most intruders at one time, since
+     * idle guards are always reused first).
      */
     private fun acquire(
         world: World,
@@ -651,7 +676,6 @@ object CityGuards {
             idle.spawnTile = Tile(tile)
             return idle
         }
-        if (pool.count { it.get()?.id == id } >= POOL_PER_KIND) return null
         val guard =
             Npc(id, tile, world).also {
                 it.respawnOverride = false

@@ -98,6 +98,93 @@ class DeadmanEmblemTests {
         assertEquals(Verdict.VALID, ValidPkKill.judge(true, false, false, false, false, 1_000_000))
         assertTrue(Verdict.SAME_ADDRESS.abuse && Verdict.STAFF.abuse && !Verdict.LOW_RISK.abuse && !Verdict.REPEAT_VICTIM.abuse)
         assertEquals(ValidPkKill.pairKey("Bob", "alice"), ValidPkKill.pairKey("Alice", "bob"), "the cooldown is per pair, either direction")
+        // Audit D-07: the daily cap and the fed-kill rule come after the cooldowns; neither is abuse.
+        assertEquals(Verdict.DAILY_CAP, ValidPkKill.judge(true, false, false, false, false, 5_000_000, dailyCapReached = true, fedKill = true))
+        assertEquals(Verdict.LOW_RISK, ValidPkKill.judge(true, false, false, false, false, 999_999, fedKill = true))
+        assertEquals(Verdict.FED_KILL, ValidPkKill.judge(true, false, false, false, false, 1_000_000, fedKill = true))
+        assertFalse(Verdict.DAILY_CAP.abuse || Verdict.FED_KILL.abuse || Verdict.DAILY_CAP.valid || Verdict.FED_KILL.valid)
+    }
+
+    @Test
+    fun `Audit D-07 - the same machine id is the same person whatever the IP, loopback included`() {
+        val a = client("uuid_a", "ABC-123", "10.0.0.1")
+        val b = client("uuid_b", "ABC-123", "10.0.0.2")
+        assertTrue(ValidPkKill.sameAddress(a, b), "same machine, different IP")
+        val c = client("uuid_c", "ABC-123", "127.0.0.1")
+        val d = client("uuid_d", "ABC-123", "127.0.0.1")
+        assertTrue(ValidPkKill.sameAddress(c, d), "loopback with the same machine id is the same person")
+        val e = client("uuid_e", "", "127.0.0.1")
+        val f = client("uuid_f", "", "127.0.0.1")
+        assertFalse(ValidPkKill.sameAddress(e, f), "loopback without a machine id stays the owner's local two-client test")
+        val g = client("uuid_g", "", "10.0.0.9")
+        val h = client("uuid_h", "", "10.0.0.9")
+        assertTrue(ValidPkKill.sameAddress(g, h), "same remote IP")
+        assertFalse(ValidPkKill.sameAddress(a, g), "a blank machine id never matches")
+    }
+
+    @Test
+    fun `Audit D-07 - one victim counts once per hour whoever the killer is`() {
+        val (world, first, victim) = fight("rv_killer1", "rv_victim")
+        victim.inventory[0] = Item(COINS, 2_000_000)
+        assertEquals(Verdict.VALID, DeadmanEmblem.onPvpDeath(world, victim, first, emptyList(), 2_000_000).verdict)
+        val second = newPlayer("rv_killer2", world)
+        hitBack(second, victim)
+        assertEquals(Verdict.REPEAT_VICTIM, ValidPkKill.evaluate(second, victim, 2_000_000).verdict)
+    }
+
+    @Test
+    fun `Audit D-07 - a fed kill does not count and a hit long ago is not fighting back`() {
+        val (_, killer, victim) = fight("fed_killer", "fed_victim")
+        every { killer.damageMap } returns gg.rsmod.game.model.combat.DamageMap()
+        assertEquals(Verdict.FED_KILL, ValidPkKill.evaluate(killer, victim, 5_000_000).verdict)
+        hitBack(killer, victim)
+        val later = System.currentTimeMillis() + ValidPkKill.FED_KILL_WINDOW_MS + 1
+        assertEquals(Verdict.FED_KILL, ValidPkKill.evaluate(killer, victim, 5_000_000, later).verdict)
+        assertEquals(Verdict.VALID, ValidPkKill.evaluate(killer, victim, 5_000_000).verdict)
+    }
+
+    @Test
+    fun `Audit D-07 - value the killer handed the victim is not the victim's risk`() {
+        val (_, killer, victim) = fight("gift_killer", "gift_victim")
+        ValidPkKill.noteGift("GIFT_KILLER", "gift_victim", 1_500_000)
+        assertEquals(Verdict.LOW_RISK, ValidPkKill.evaluate(killer, victim, 2_000_000).verdict, "2M risked, 1.5M of it from the killer")
+        assertEquals(Verdict.VALID, ValidPkKill.evaluate(killer, victim, 2_600_000).verdict)
+        val tomorrow = System.currentTimeMillis() + ValidPkKill.GIFT_WINDOW_MS + 1
+        assertEquals(0L, ValidPkKill.giftedRecently("gift_killer", "gift_victim", tomorrow))
+    }
+
+    @Test
+    fun `Audit D-07 - a killer scores at most the daily cap and the cooldowns are written to disk`() {
+        val world = fight("cap_killer", "cap_victim_0").world
+        val killer = newPlayer("cap_killer", world)
+        repeat(ValidPkKill.DAILY_VALID_KILL_CAP) { i ->
+            val victim = newPlayer("cap_victim_$i", world)
+            hitBack(killer, victim)
+            assertEquals(Verdict.VALID, ValidPkKill.evaluate(killer, victim, 2_000_000).verdict, "kill ${i + 1}")
+            ValidPkKill.record(killer, victim)
+        }
+        val one = newPlayer("cap_victim_extra", world)
+        hitBack(killer, one)
+        assertEquals(Verdict.DAILY_CAP, ValidPkKill.evaluate(killer, one, 2_000_000).verdict)
+        val state = java.io.File(ValidPkKill.dataDir, "deadman_emblem_pairs.txt").readText()
+        assertTrue("victim:cap_victim_0=" in state, "the per-victim cooldown survives a restart")
+        val daily = java.io.File(ValidPkKill.dataDir, "deadman_pk_daily.txt").readText()
+        assertTrue(daily.startsWith("cap_killer=") || "\ncap_killer=" in daily, "the daily count survives a restart")
+    }
+
+    @Test
+    fun `Audit D-08 and D-06 - points and the kill grace only follow a valid kill`() {
+        val (world, killer, victim) = fight("pts_killer", "pts_victim")
+        assertEquals(Verdict.LOW_RISK, DeadmanEmblem.onPvpDeath(world, victim, killer, emptyList(), 0).verdict)
+        assertEquals(null, killer.attr[StoreCatalogue.Currency.DEADMAN.attr], "a naked victim pays no Deadman Points")
+        assertEquals(null, killer.attr[gg.rsmod.plugins.content.mechanics.pvp.CURRENT_KILLSTREAK_ATTR], "nor raises the streak")
+        assertFalse(gg.rsmod.plugins.content.mechanics.pvp.KillGrace.isProtected(killer), "nor earns the grace")
+
+        val (world2, killer2, victim2) = fight("pts_killer2", "pts_victim2")
+        assertEquals(Verdict.VALID, DeadmanEmblem.onPvpDeath(world2, victim2, killer2, emptyList(), 1_000_000).verdict)
+        assertEquals(KILL_POINTS, killer2.attr[StoreCatalogue.Currency.DEADMAN.attr])
+        assertEquals(1, killer2.attr[gg.rsmod.plugins.content.mechanics.pvp.CURRENT_KILLSTREAK_ATTR])
+        assertTrue(gg.rsmod.plugins.content.mechanics.pvp.KillGrace.isProtected(killer2))
     }
 
     @Test
@@ -145,7 +232,8 @@ class DeadmanEmblemTests {
 
         // Own T1 stays T1 (no upgrade); the incoming T1 is equal, so it is cashed in.
         assertEquals(listOf(1), DeadmanEmblem.holdings(killer).map { it.tier })
-        assertEquals(DeadmanEmblem.points(1) + KILL_POINTS, killer.attr[StoreCatalogue.Currency.DEADMAN.attr])
+        // Audit D-08 (deliberate change): a low-risk kill no longer pays the killstreak's Deadman Points.
+        assertEquals(DeadmanEmblem.points(1), killer.attr[StoreCatalogue.Currency.DEADMAN.attr])
     }
 
     @Test
@@ -238,7 +326,27 @@ class DeadmanEmblemTests {
         val victim = newPlayer(victimName, world)
         killer.attr[BEST_KILLSTREAK_ATTR] = 99
         killer.attr[LootKeys.ENABLED] = false
+        // Audit D-07: a kill only counts when the victim fought back (no fed kills).
+        hitBack(killer, victim)
         return Fight(world, killer, victim)
+    }
+
+    /** [victim] lands a real hit on [killer] now (the killer's damage map, as combat records it). */
+    private fun hitBack(killer: Player, victim: Player) {
+        val map = gg.rsmod.game.model.combat.DamageMap()
+        map.add(victim, 5)
+        every { killer.damageMap } returns map
+    }
+
+    /** A connected client with machine id [uuid] from [ip]. */
+    private fun client(name: String, uuid: String, ip: String): gg.rsmod.game.model.entity.Client {
+        val client = mockk<gg.rsmod.game.model.entity.Client>(relaxed = true)
+        val channel = mockk<io.netty.channel.Channel>(relaxed = true)
+        every { channel.remoteAddress() } returns java.net.InetSocketAddress(java.net.InetAddress.getByName(ip), 43594)
+        every { client.channel } returns channel
+        every { client.uuid } returns uuid
+        every { client.username } returns name
+        return client
     }
 
     /** Kills [victim] (everything in the inventory lost) through the real death executor. */

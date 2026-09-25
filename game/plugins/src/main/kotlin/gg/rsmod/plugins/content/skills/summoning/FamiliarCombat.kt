@@ -1,5 +1,6 @@
 package gg.rsmod.plugins.content.skills.summoning
 
+import gg.rsmod.plugins.content.combat.CombatXpRates
 import gg.rsmod.plugins.api.ext.isProtectedFromSummoning
 import gg.rsmod.game.model.combat.CombatClass
 import gg.rsmod.game.model.combat.PawnHit
@@ -376,20 +377,21 @@ object FamiliarCombat {
             if (Familiar.current(owner) !== familiar || !owner.isOnline) return@addAction
             val damage = pawnHit.hit.hitmarks.sumOf { it.damage }.coerceAtMost(target.getMaximumLifepoints())
             if (damage <= 0) return@addAction
+            // Audit C-02: damage is 1:1 (OSRS scale), so the per-damage rates are the OSRS ones, not the 667 x10 ones.
             when (focus) {
-                FamiliarSkillFocus.ATTACK -> owner.addXp(Skills.ATTACK, damage * 0.4)
-                FamiliarSkillFocus.STRENGTH -> owner.addXp(Skills.STRENGTH, damage * 0.4)
-                FamiliarSkillFocus.DEFENCE -> owner.addXp(Skills.DEFENCE, damage * 0.4)
+                FamiliarSkillFocus.ATTACK -> owner.addXp(Skills.ATTACK, damage * CombatXpRates.COMBAT_PER_DAMAGE)
+                FamiliarSkillFocus.STRENGTH -> owner.addXp(Skills.STRENGTH, damage * CombatXpRates.COMBAT_PER_DAMAGE)
+                FamiliarSkillFocus.DEFENCE -> owner.addXp(Skills.DEFENCE, damage * CombatXpRates.COMBAT_PER_DAMAGE)
                 FamiliarSkillFocus.CONTROLLED -> {
-                    owner.addXp(Skills.ATTACK, damage * 0.133)
-                    owner.addXp(Skills.STRENGTH, damage * 0.133)
-                    owner.addXp(Skills.DEFENCE, damage * 0.133)
+                    owner.addXp(Skills.ATTACK, damage * CombatXpRates.CONTROLLED_MELEE_PER_DAMAGE)
+                    owner.addXp(Skills.STRENGTH, damage * CombatXpRates.CONTROLLED_MELEE_PER_DAMAGE)
+                    owner.addXp(Skills.DEFENCE, damage * CombatXpRates.CONTROLLED_MELEE_PER_DAMAGE)
                 }
-                FamiliarSkillFocus.RANGED -> owner.addXp(Skills.RANGED, damage * 0.4)
-                FamiliarSkillFocus.MAGIC -> owner.addXp(Skills.MAGIC, damage * 0.4)
+                FamiliarSkillFocus.RANGED -> owner.addXp(Skills.RANGED, damage * CombatXpRates.COMBAT_PER_DAMAGE)
+                FamiliarSkillFocus.MAGIC -> owner.addXp(Skills.MAGIC, damage * CombatXpRates.COMBAT_PER_DAMAGE)
                 FamiliarSkillFocus.NONE -> return@addAction
             }
-            owner.addXp(Skills.CONSTITUTION, damage * 0.133)
+            owner.addXp(Skills.CONSTITUTION, damage * CombatXpRates.HITPOINTS_PER_DAMAGE)
         }
     }
 

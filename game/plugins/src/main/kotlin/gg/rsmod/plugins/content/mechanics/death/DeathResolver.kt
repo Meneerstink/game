@@ -1,5 +1,6 @@
 package gg.rsmod.plugins.content.mechanics.death
 
+import gg.rsmod.game.model.attr.KILLER_ATTR
 import gg.rsmod.game.model.attr.PROTECT_ITEM_ATTR
 import gg.rsmod.game.model.attr.PVP_AGGRESSOR_ATTR
 import gg.rsmod.game.model.entity.Player
@@ -48,6 +49,19 @@ data class DeathResolutionResult(
  * or granted.
  */
 object DeathResolver {
+    /**
+     * Audit X-04: the player a death is credited to - the direct killer from the damage map, else the
+     * recent PvP aggressor. A killer that is no longer online is never credited: loot handed to an
+     * offline (already saved) player object is silently destroyed, and teammates could grief a kill
+     * by hitting hard and logging out.
+     */
+    fun resolveKiller(victim: Player): Player? {
+        val direct = victim.attr[KILLER_ATTR]?.get() as? Player
+        val candidate =
+            direct ?: if (victim.timers.has(PVP_AGGRESSOR_WINDOW_TIMER)) victim.attr[PVP_AGGRESSOR_ATTR]?.get() else null
+        return candidate?.takeIf { it !== victim && it.isOnline }
+    }
+
     fun resolveContext(victim: Player, killer: Player? = null): DeathContext {
         val recentAggressor =
             if (victim.timers.has(PVP_AGGRESSOR_WINDOW_TIMER)) {
@@ -84,8 +98,9 @@ object DeathResolver {
         itemProtectionActive: Boolean = victim.attr[PROTECT_ITEM_ATTR] == true,
         valueProvider: ItemRiskValueProvider,
         alwaysProtected: (itemId: Int) -> Boolean = { false },
+        contextOverride: DeathContext? = null,
     ): DeathResolutionResult {
-        val context = resolveContext(victim, killer)
+        val context = contextOverride ?: resolveContext(victim, killer)
         // Snapshot the container backing arrays before any mutation happens.
         // ItemContainer.rawItems is a live alias to the same array the
         // container mutates in place, not a defensive copy, so calculation

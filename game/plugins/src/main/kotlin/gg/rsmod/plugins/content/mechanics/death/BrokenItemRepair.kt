@@ -2,6 +2,7 @@ package gg.rsmod.plugins.content.mechanics.death
 
 import gg.rsmod.game.fs.def.ItemDef
 import gg.rsmod.game.model.item.Item
+import gg.rsmod.game.model.item.ItemAttribute
 import gg.rsmod.game.model.queue.QueueTask
 import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.api.ext.chatNpc
@@ -26,11 +27,18 @@ object BrokenItemRepair {
             val breakable = PvpDeathBreakables.forBroken(item.id) ?: return@forEach
             damaged.add(item to breakable)
         }
-        if (damaged.isEmpty()) {
+        // Audit D-15: generic untradeables broken on a PvP death carry ItemAttribute.BROKEN instead of a broken id.
+        val attrBroken =
+            (player.inventory.rawItems.filterNotNull() + player.equipment.rawItems.filterNotNull())
+                .filter { UntradeableDeathProtection.isBroken(it) }
+        if (damaged.isEmpty() && attrBroken.isEmpty()) {
             return
         }
         task.chatPlayer("Can you repair this for me?")
-        val total = damaged.sumOf { (item, breakable) -> breakable.repairCost.toLong() * item.amount }.coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
+        val attrCost = attrBroken.sumOf { UntradeableDeathProtection.repairCost(player.world.definitions, it.id) * it.amount }
+        val total =
+            (damaged.sumOf { (item, breakable) -> breakable.repairCost.toLong() * item.amount } + attrCost)
+                .coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
         task.chatNpc("I can repair that for a total of ${total.format()} coins. Shall I go ahead?")
         if (task.options("Yes, please.", "No, thanks.") != 1) {
             return
@@ -40,6 +48,12 @@ object BrokenItemRepair {
             return
         }
         player.inventory.remove(Items.COINS_995, total)
+        for (slot in 0 until player.inventory.capacity) {
+            val item = player.inventory[slot] ?: continue
+            if (UntradeableDeathProtection.isBroken(item)) {
+                player.inventory[slot] = Item(item).also { it.attr.remove(ItemAttribute.BROKEN) }
+            }
+        }
         damaged.forEach { (item, breakable) ->
             val fixed = Item(breakable.itemId, item.amount)
             if (player.inventory.remove(item).hasSucceeded()) {

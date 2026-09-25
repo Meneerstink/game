@@ -4,6 +4,7 @@ import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.attr.PVP_AGGRESSOR_ATTR
 import gg.rsmod.game.model.entity.Player
+import gg.rsmod.game.model.timer.LEGACY_SKULL_ICON_DURATION_TIMER
 import gg.rsmod.game.model.timer.PVP_AGGRESSOR_WINDOW_TIMER
 import gg.rsmod.game.model.timer.SKULL_ICON_DURATION_TIMER
 import gg.rsmod.game.model.timer.TimerKey
@@ -24,9 +25,9 @@ import java.lang.ref.WeakReference
  *   [gg.rsmod.game.model.instance.InstancedMapAllocator]'s own sourced comment) or has been
  *   standing on the same tile for about a minute (100 cycles).
  * - Skull state survives reconnect via the normal attribute/timer persistence pipeline
- *   ([SKULL_ICON_DURATION_TIMER] carries a persistence key); the pause-tracking driver itself is
- *   session-local and simply re-derives pause state from live player state on the first cycle
- *   after reconnect.
+ *   ([SKULL_ICON_DURATION_TIMER] carries a persistence key). Audit D-04: the timer does not tick
+ *   while offline, and the session-local pause-tracking driver is re-armed at login
+ *   ([resumeAfterLogin]) so the pause rule applies from the very first cycle back.
  * - The skull feeds into [gg.rsmod.plugins.content.mechanics.death.DeathResolver] automatically,
  *   since it defaults to reading the player's live skull icon.
  */
@@ -56,8 +57,19 @@ object PvpSkull {
      * cycle in the risk-tier colour (owner 2026-09-17: "the skull above the head colour needs to be
      * updating ... when the risk changes of a player it needs to recalculate and change colors
      * depending on risk"). Nothing may test the icon id to learn whether a player is skulled.
+     *
+     * Audit D-10: carrying a loot key also counts as skulled (OSRS Deadman: key carriers show the skull and are
+     * treated as skulled), so the guards, BankSecurity, the death resolver and the teleport gate see the same
+     * state the head icon already showed.
      */
-    fun isSkulled(player: Player): Boolean = player.timers.exists(SKULL_ICON_DURATION_TIMER)
+    fun isSkulled(player: Player): Boolean = hasSkullTimer(player) || LootKeys.heldKeyIndexes(player).isNotEmpty()
+
+    /**
+     * Audit D-10: only the running 5-minute skull timer, without the loot-key rule of [isSkulled]. For the
+     * countdown/pause bookkeeping and the HUD time, which have nothing to count for a key-only skull.
+     * (Only reads [LootKeys]' public API; LootKeys never reads PvpSkull, so there is no init cycle.)
+     */
+    fun hasSkullTimer(player: Player): Boolean = player.timers.exists(SKULL_ICON_DURATION_TIMER)
 
     /** Starts (or restarts) the 5-minute skull and shows the risk-coloured icon at once. */
     private fun applySkull(player: Player) {
@@ -98,12 +110,12 @@ object PvpSkull {
         if (attacker === victim || !AreaState.canPlayersFight(attacker, victim)) {
             return
         }
+        // Deadman PvP guards plan (2026-09-16): "attacking ... ends it early". Audit D-05: EVERY attack the grace holder
+        // makes ends it - a retaliation too, and the same victim again after their respawn. Only the trailing hits of the
+        // attack that made the kill are exempt ([KillGrace.isTrailingHit]).
+        if (!KillGrace.isTrailingHit(attacker, victim)) KillGrace.endEarly(attacker)
         if (!isRetaliation(attacker, victim)) {
             applySkull(attacker)
-            // Deadman PvP guards plan (2026-09-16): "attacking ... ends it early" - the attacker's
-            // own post-kill grace period, if any, ends the moment they attack someone new.
-            // A hit landing on the player whose death earned the grace (lethal/trailing hit ordering) is not a new attack.
-            if (!victim.isDead() && !KillGrace.earnedFrom(attacker, victim)) KillGrace.endEarly(attacker)
         }
         markAggression(attacker, victim)
     }
@@ -136,6 +148,33 @@ object PvpSkull {
     ) {
         victim.attr[PVP_AGGRESSOR_ATTR] = WeakReference(attacker)
         victim.timers[PVP_AGGRESSOR_WINDOW_TIMER] = AGGRESSOR_WINDOW_CYCLES
+        // Audit D-11: remembered separately from the boss-overwritable LAST_HIT_BY, for the boss-area teleport gate.
+        victim.attr[LAST_PVP_HIT_CYCLE_ATTR] = victim.world.currentCycle
+    }
+
+    /** Audit D-11: the world cycle this player was last attacked or hit by another player ([markAggression]; session-local). */
+    val LAST_PVP_HIT_CYCLE_ATTR = AttributeKey<Int>()
+
+    /** Audit D-11: cycles since [player] was last hit by a player, or null when never (this session). */
+    fun cyclesSincePvpHit(player: Player): Int? = player.attr[LAST_PVP_HIT_CYCLE_ATTR]?.let { player.world.currentCycle - it }
+
+    /**
+     * Audit D-04: called at login. The skull no longer ticks offline, and this re-arms the session-local
+     * pause driver at once with a fresh stall baseline, applying the instance pause immediately instead of
+     * one cycle later. Also migrates a save written before D-04 (legacy `tickOffline = true` key, already
+     * fast-forwarded by the deserialiser like before) onto the live key.
+     */
+    fun resumeAfterLogin(player: Player) {
+        if (player.timers.exists(LEGACY_SKULL_ICON_DURATION_TIMER)) {
+            val left = player.timers[LEGACY_SKULL_ICON_DURATION_TIMER]
+            player.timers.remove(LEGACY_SKULL_ICON_DURATION_TIMER)
+            if (left > 0 && !hasSkullTimer(player)) player.timers[SKULL_ICON_DURATION_TIMER] = left
+        }
+        if (!hasSkullTimer(player)) return
+        player.attr[SKULL_STALL_TILE_ATTR] = player.tile
+        player.attr[SKULL_STALL_CYCLES_ATTR] = 0
+        if (player.tile.x >= 6400) player.timers.pause(SKULL_ICON_DURATION_TIMER) else player.timers.resume(SKULL_ICON_DURATION_TIMER)
+        player.timers[SKULL_PAUSE_CHECK_TIMER] = 1
     }
 
     /**
@@ -157,7 +196,8 @@ object PvpSkull {
      * stops rescheduling itself (and clears its bookkeeping attributes) once the skull clears.
      */
     fun tickPauseTracking(player: Player) {
-        if (!isSkulled(player)) {
+        // Audit D-10: a key-only skull has no countdown to pause.
+        if (!hasSkullTimer(player)) {
             player.timers.resume(SKULL_ICON_DURATION_TIMER)
             player.attr.remove(SKULL_STALL_TILE_ATTR)
             player.attr.remove(SKULL_STALL_CYCLES_ATTR)

@@ -13,14 +13,7 @@ on_timer(POISON_TIMER) {
     // Ticks left = severity - 1 (Poison.poisonSeverity): 0 is the last hit (severity 1, damage 1), below 0 the poison has worn off.
     val ticksLeft = pawn.attr[POISON_TICKS_LEFT_ATTR] ?: -1
 
-    // If the pawn is a player, and they have a modal open, reset the timer to 1 tick
-    // Resetting the timer to 1 tick ensures that when the modal is closed, poison will continue
-    if (pawn is Player) {
-        if (pawn.interfaces.currentModal != -1) {
-            pawn.timers[POISON_TIMER] = 1
-            return@on_timer
-        }
-    }
+    // Audit C-08: OSRS poison keeps hitting while an interface (bank, shop, ...) is open; the old modal guard paused it.
 
     // Severity 0: the poison has worn off (OSRS Wiki "Poison": it expires "once the poison severity value reaches zero").
     if (ticksLeft < 0) {
@@ -33,6 +26,8 @@ on_timer(POISON_TIMER) {
 
     val poisonDamage = Poison.getDamageForTicks(ticksLeft)
     pawn.hit(damage = poisonDamage, type = HitType.POISON)
+    // Audit X-10: damage over time also holds a disconnected player in the world (no x-log escape while poisoned).
+    if (pawn is Player) gg.rsmod.plugins.content.combat.Combat.holdLogout(pawn)
     gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.recordDotDamage(pawn, poisonDamage)
     if (ticksLeft == 0) {
         // That was the severity-1 hit: the severity is now zero and the poison ends (orb back to normal) right away.

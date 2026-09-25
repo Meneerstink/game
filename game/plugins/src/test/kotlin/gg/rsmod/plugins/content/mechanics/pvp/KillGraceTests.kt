@@ -61,8 +61,48 @@ class KillGraceTests {
         kotlin.test.assertEquals(100, KillGrace.cyclesLeft(killer))
     }
 
+    @Test
+    fun `Audit D-06 - only a valid single-combat kill of another player earns the grace`() {
+        val killer = newPlayer()
+        val victim = newPlayer()
+        for (verdict in ValidPkKill.Verdict.values().filter { !it.valid }) {
+            assertFalse(KillGrace.grantForKill(killer, victim, verdict, multiCombat = false), "$verdict must not grant")
+            assertFalse(KillGrace.isProtected(killer), "$verdict must not grant")
+        }
+        assertFalse(KillGrace.grantForKill(killer, victim, ValidPkKill.Verdict.VALID, multiCombat = true), "multi-combat")
+        assertFalse(KillGrace.grantForKill(killer, killer, ValidPkKill.Verdict.VALID, multiCombat = false), "self")
+        assertFalse(KillGrace.isProtected(killer))
+
+        assertTrue(KillGrace.grantForKill(killer, victim, ValidPkKill.Verdict.VALID, multiCombat = false))
+        assertTrue(KillGrace.isProtected(killer))
+        assertTrue(KillGrace.earnedFrom(killer, victim))
+    }
+
+    @Test
+    fun `Audit D-05 - only hits of the lethal attack are trailing hits, the respawned victim is a new attack`() {
+        val killer = newPlayer()
+        val victim = newPlayer()
+        val someoneElse = newPlayer()
+        every { killer.world.currentCycle } returns 1_000
+        KillGrace.grant(killer, victim)
+
+        assertTrue(KillGrace.isTrailingHit(killer, victim), "same cycle as the kill: a trailing hit of the lethal attack")
+        assertFalse(KillGrace.isTrailingHit(killer, someoneElse), "another player is always a new attack")
+
+        every { killer.world.currentCycle } returns 1_000 + KillGrace.TRAILING_HIT_CYCLES + 1
+        every { victim.isDead() } returns true
+        assertTrue(KillGrace.isTrailingHit(killer, victim), "still dead: nothing can be a new attack on them yet")
+        every { victim.isDead() } returns false
+        assertFalse(KillGrace.isTrailingHit(killer, victim), "respawned: hitting them again is a new attack")
+
+        KillGrace.endEarly(killer)
+        assertFalse(KillGrace.earnedFrom(killer, victim), "ending the grace forgets the victim too")
+    }
+
     private fun newPlayer(): Player {
         val player = mockk<Player>(relaxed = true)
+        val world = mockk<gg.rsmod.game.model.World>(relaxed = true)
+        every { player.world } returns world
         every { player.timers } returns TimerMap()
         every { player.attr } returns gg.rsmod.game.model.attr.AttributeMap()
         return player

@@ -443,9 +443,9 @@ on_logout {
 // is the *modern* rule, introduced by the 22 August 2016 ninja strike ("A beast of burden's
 // inventory is now dropped to the floor when a player dies"); before it, the cargo was simply
 // lost. Familiar.ownerDeath implements this revision's behaviour and documents the switch back.
-on_player_pre_death {
-    Familiar.ownerDeath(player)
-}
+// Audit X-01: the owner-death despawn is called by mechanics/death/death.plugin.kts, AFTER a PvP
+// death has handed the cargo to the killer. A separate pre-death hook here had no defined order
+// relative to the death plugin, so the cargo could be rescued to Death's Domain first.
 // A familiar can also be killed independently of its owner. Release BoB cargo
 // at the familiar's death tile and clear the owner's live familiar state.
 on_npc_pre_death(*familiarNpcIds) {

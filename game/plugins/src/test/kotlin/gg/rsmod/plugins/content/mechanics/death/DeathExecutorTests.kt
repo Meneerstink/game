@@ -17,10 +17,15 @@ import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.game.model.timer.TimerMap
 import gg.rsmod.game.service.log.LoggerService
+import gg.rsmod.plugins.api.ext.refreshBonuses
 import gg.rsmod.plugins.content.mechanics.pvp.BEST_KILLSTREAK_ATTR
 import gg.rsmod.plugins.content.mechanics.pvp.KillGrace
+import io.mockk.Runs
 import io.mockk.every
+import io.mockk.just
 import io.mockk.mockk
+import io.mockk.mockkStatic
+import io.mockk.unmockkStatic
 import io.mockk.verify
 import org.junit.BeforeClass
 import java.nio.file.Paths
@@ -76,18 +81,15 @@ class DeathExecutorTests {
         val executed = DeathExecutor.execute(world, result, DeathRecoveryConfig.PLACEHOLDER)
 
         assertTrue(executed)
-        assertTrue(KillGrace.isProtected(killer), "a resolved single-combat PvP kill starts the HUD timer")
-        assertTrue(KillGrace.earnedFrom(killer, victim), "trailing hits on this victim must not cancel the timer")
-        assertEquals(KillGrace.DURATION_CYCLES, KillGrace.cyclesLeft(killer))
-        killer.timers[KillGrace.GRACE_TIMER] = 25
+        // Audit D-06: a no-risk kill (this fixture) is not a valid PK, so it earns no kill grace.
+        assertFalse(KillGrace.isProtected(killer), "an invalid (low-risk) kill must not start kill grace")
         assertFalse(DeathExecutor.execute(world, result, DeathRecoveryConfig.PLACEHOLDER))
-        assertEquals(25, KillGrace.cyclesLeft(killer), "duplicate death execution must not refresh protection")
         assertNull(victim.inventory[0], "lost item's slot must be cleared")
         assertNotNull(victim.inventory[1], "kept item must remain")
         assertTrue(victim.deathRecovery.isEmpty, "PvP deaths must not use the recovery container")
-        verify(exactly = 1) {
-            world.spawn(match<GroundItem> { it.item == LOST_ITEM && it.amount == 3 })
-        }
+        // Audit X-12: the ground loot is queued to appear after the death animation, exactly once.
+        verify(exactly = 1) { world.queue(any()) }
+        verify(exactly = 0) { world.spawn(any<GroundItem>()) }
     }
 
     @Test
@@ -129,7 +131,8 @@ class DeathExecutorTests {
 
         assertTrue(first)
         assertFalse(second, "a second execute() for the same death must be a no-op")
-        verify(exactly = 1) { world.spawn(any<GroundItem>()) }
+        // Audit X-12: ground loot is queued once, to appear after the death animation.
+        verify(exactly = 1) { world.queue(any()) }
     }
 
     @Test
@@ -156,7 +159,8 @@ class DeathExecutorTests {
     }
 
     @Test
-    fun `PvM death that would exceed recovery capacity keeps the overflow item on the player instead of losing it`() {
+    fun `PvM death that would exceed recovery capacity drops the overflow as the victim's own ground item`() {
+        // Audit X-03: a full recovery container no longer lets the overflow stay with the player.
         val victim = newPlayer()
         val world = mockk<World>(relaxed = true)
         fillDeathRecovery(victim, slots = 0 until 42, itemId = FILLER_ITEM)
@@ -170,44 +174,15 @@ class DeathExecutorTests {
             )
         val result = DeathResolutionResult(DeathContext.PVM_SAFE, victim, null, itemRisk)
 
-        val executed = DeathExecutor.execute(world, result, DeathRecoveryConfig.PLACEHOLDER)
-
-        assertTrue(executed, "the death itself still resolves even though this one stack couldn't be recovered")
-        val keptItem = victim.inventory[0]
-        assertNotNull(keptItem, "overflowing stack must never be destroyed")
-        assertEquals(LOST_ITEM, keptItem.id)
-        assertEquals(5, keptItem.amount, "overflowing stack must stay exactly as it was")
-        assertEquals(0, victim.deathRecovery.getItemCount(LOST_ITEM), "overflow item must never enter recovery")
+        assertTrue(DeathExecutor.execute(world, result, DeathRecoveryConfig.PLACEHOLDER))
+        assertNull(victim.inventory[0], "the lost stack leaves the player even when recovery is full")
+        assertEquals(0, victim.deathRecovery.getItemCount(LOST_ITEM))
         assertTrue(victim.deathRecovery.isFull, "the pre-existing recovery contents must be untouched")
-        verify(exactly = 0) { world.spawn(any<GroundItem>()) }
+        assertEquals(1, spawnedItems.count { it.item == LOST_ITEM && it.amount == 5 }, "the overflow is dropped once")
     }
 
     @Test
-    fun `PvM death overflow does not partially mutate the inventory slot it couldn't recover`() {
-        val victim = newPlayer()
-        val world = mockk<World>(relaxed = true)
-        fillDeathRecovery(victim, slots = 0 until 42, itemId = FILLER_ITEM)
-        val original = Item(LOST_ITEM, 5)
-        victim.inventory[0] = original
-
-        val itemRisk =
-            DeathItemRiskResult(
-                protectedItemCount = 0,
-                protected = emptyList(),
-                lost = listOf(DeathSlotItem(DeathContainerSource.INVENTORY, 0, original)),
-            )
-        val result = DeathResolutionResult(DeathContext.PVM_SAFE, victim, null, itemRisk)
-
-        DeathExecutor.execute(world, result, DeathRecoveryConfig.PLACEHOLDER)
-
-        val afterSlot = victim.inventory[0]
-        assertNotNull(afterSlot, "the slot must not be left cleared with the item lost nowhere")
-        assertEquals(LOST_ITEM, afterSlot.id)
-        assertEquals(5, afterSlot.amount, "amount must not be partially reduced")
-    }
-
-    @Test
-    fun `PvM death overflow does not partially mutate the equipment slot it couldn't recover`() {
+    fun `PvM death overflow from equipment is removed and dropped too`() {
         val victim = newPlayer()
         val world = mockk<World>(relaxed = true)
         fillDeathRecovery(victim, slots = 0 until 42, itemId = FILLER_ITEM)
@@ -222,16 +197,22 @@ class DeathExecutorTests {
             )
         val result = DeathResolutionResult(DeathContext.PVM_SAFE, victim, null, itemRisk)
 
-        DeathExecutor.execute(world, result, DeathRecoveryConfig.PLACEHOLDER)
+        // Audit X-03: the equipped item now leaves the player, so the bonuses are refreshed; that needs a live
+        // client (varcs, interface text), which this mock player does not have.
+        mockkStatic(PLAYER_EXT)
+        try {
+            every { victim.refreshBonuses() } just Runs
+            DeathExecutor.execute(world, result, DeathRecoveryConfig.PLACEHOLDER)
+        } finally {
+            unmockkStatic(PLAYER_EXT)
+        }
 
-        val afterSlot = victim.equipment[0]
-        assertNotNull(afterSlot, "the equipped item must not be removed if it can't be recovered")
-        assertEquals(LOST_ITEM, afterSlot.id)
-        assertEquals(1, afterSlot.amount)
+        assertNull(victim.equipment[0])
+        assertEquals(1, spawnedItems.count { it.item == LOST_ITEM && it.amount == 1 }, "the equipped overflow is dropped once")
     }
 
     @Test
-    fun `repeated execute for an overflowed PvM death does not duplicate the kept-back item`() {
+    fun `repeated execute for an overflowed PvM death does not drop the item twice`() {
         val victim = newPlayer()
         val world = mockk<World>(relaxed = true)
         fillDeathRecovery(victim, slots = 0 until 42, itemId = FILLER_ITEM)
@@ -250,8 +231,8 @@ class DeathExecutorTests {
 
         assertTrue(first)
         assertFalse(second, "a second execute() for the same death must be a no-op")
-        assertEquals(1, victim.inventory.getItemCount(LOST_ITEM), "kept-back item must not be duplicated")
-        assertEquals(0, victim.deathRecovery.getItemCount(LOST_ITEM))
+        assertEquals(0, victim.inventory.getItemCount(LOST_ITEM))
+        assertEquals(1, spawnedItems.size, "a second execute() must not drop the item again")
     }
 
     @Test
@@ -282,8 +263,11 @@ class DeathExecutorTests {
         val expiry = victim.attr[DEATH_RECOVERY_EXPIRY_ATTR]
         assertNotNull(expiry)
         assertTrue(expiry in (before + config.recoveryDurationMs)..(after + config.recoveryDurationMs))
-        assertEquals(250, victim.attr[DEATH_RECOVERY_FEE_ATTR])
-        verify(exactly = 1) { logger.logDeathRecoveryCreated(victim, 1, expiry, 250) }
+        // Audit D-09: the fee follows the value waiting in recovery (Death's Office tiers), never below the config fee.
+        val value = gg.rsmod.plugins.content.mechanics.pvp.LootKeys.value(DEFINITIONS, listOf(Item(LOST_ITEM, 5)))
+        val fee = maxOf(250, DeathRecoveryConfig.feeFor(value))
+        assertEquals(fee, victim.attr[DEATH_RECOVERY_FEE_ATTR])
+        verify(exactly = 1) { logger.logDeathRecoveryCreated(victim, 1, expiry, fee) }
     }
 
     @Test
@@ -313,6 +297,9 @@ class DeathExecutorTests {
         assertTrue((victim.attr[DEATH_RECOVERY_EXPIRY_ATTR] ?: 0L) > System.currentTimeMillis())
     }
 
+    /** Every ground item spawned through a [newPlayer]'s world in the current test (JUnit: one instance per test). */
+    private val spawnedItems = mutableListOf<GroundItem>()
+
     private fun newPlayer(): Player {
         val player = mockk<Player>(relaxed = true)
         every { player.attr } returns AttributeMap()
@@ -321,6 +308,13 @@ class DeathExecutorTests {
         every { player.inventory } returns ItemContainer(DEFINITIONS, INVENTORY_KEY)
         every { player.equipment } returns ItemContainer(DEFINITIONS, EQUIPMENT_KEY)
         every { player.deathRecovery } returns ItemContainer(DEFINITIONS, DEATH_RECOVERY_KEY)
+        // Audit D-09: the recovery fee values the lost items through the victim's world definitions. Ground items the
+        // victim's world spawns are collected in [spawnedItems]: a mockk verify through victim.world would also count
+        // every getWorld() call (spawn + fee lookup), so the drops are counted directly instead.
+        val world = mockk<World>(relaxed = true)
+        every { world.definitions } returns DEFINITIONS
+        every { world.spawn(any<GroundItem>()) } answers { spawnedItems.add(firstArg()) }
+        every { player.world } returns world
         return player
     }
 
@@ -342,6 +336,7 @@ class DeathExecutorTests {
     }
 
     companion object {
+        private const val PLAYER_EXT = "gg.rsmod.plugins.api.ext.PlayerExtKt"
         private const val LOST_ITEM = 4151
         private const val KEPT_ITEM = 995
 

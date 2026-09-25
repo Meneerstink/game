@@ -74,6 +74,15 @@ class BreachRewardTests {
     }
 
     @Test
+    fun `Audit D-14 - one Archaic emblem per account per breach event, however many monsters`() {
+        val event = 9_001
+        assertTrue(DeadmanBreach.claimArchaicEmblem(event, "Anudd"), "the first monster of the event gives the emblem")
+        assertFalse(DeadmanBreach.claimArchaicEmblem(event, "anudd"), "a second monster (or a relog) in the same event gives none")
+        assertTrue(DeadmanBreach.claimArchaicEmblem(event, "other"), "every account has its own claim")
+        assertTrue(DeadmanBreach.claimArchaicEmblem(event + 1, "Anudd"), "the next breach event gives a new one")
+    }
+
+    @Test
     fun `points are one per damage and stop at the 75,000 lifetime cap`() {
         val p = player()
         assertEquals(1234, BreachPoints.award(p, 1234))

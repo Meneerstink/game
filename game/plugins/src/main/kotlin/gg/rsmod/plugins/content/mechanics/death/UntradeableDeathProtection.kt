@@ -2,6 +2,13 @@ package gg.rsmod.plugins.content.mechanics.death
 
 import gg.rsmod.game.fs.DefinitionSet
 import gg.rsmod.game.fs.def.ItemDef
+import gg.rsmod.game.model.entity.GroundItem
+import gg.rsmod.game.model.entity.Player
+import gg.rsmod.game.model.item.Item
+import gg.rsmod.game.model.item.ItemAttribute
+import gg.rsmod.plugins.api.ext.addPreservingAttr
+import gg.rsmod.plugins.api.ext.message
+import gg.rsmod.plugins.api.ext.refreshBonuses
 import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.content.items.osrs.AvernicTreads
 import gg.rsmod.plugins.content.items.osrs.OsrsOrnamentKits
@@ -55,4 +62,70 @@ object UntradeableDeathProtection {
         if (LootKeys.isKey(itemId) || hasSpecificRule(itemId)) return false
         return !definitions.get(ItemDef::class.java, itemId).tradeable
     }
+
+    /**
+     * Audit D-15: on a PvP death a generic untradeable is no longer force-kept whole. It takes part in
+     * the normal keep-3 ranking; when it ends up lost it is taken out of the killer-bound list here and
+     * [breakInPlace] keeps it with the victim "in broken form" (OSRS "Items Kept on Death"), unusable
+     * until Perdu repairs it ([BrokenItemRepair]). Nothing reaches the killer for it (below-20 rule).
+     */
+    fun splitGeneric(
+        definitions: DefinitionSet,
+        result: DeathResolutionResult,
+    ): Pair<DeathResolutionResult, List<DeathSlotItem>> {
+        if (result.context != DeathContext.WILDERNESS_PVP) return result to emptyList()
+        val (generic, rest) = result.itemRisk.lost.partition { shouldProtect(definitions, it.item.id) }
+        if (generic.isEmpty()) return result to emptyList()
+        return result.copy(itemRisk = result.itemRisk.copy(lost = rest)) to generic
+    }
+
+    /**
+     * Marks each stack in [broken] as [ItemAttribute.BROKEN]. A worn item is taken off first (to the
+     * inventory, else the bank, else a private ground item) so its bonuses no longer apply.
+     */
+    fun breakInPlace(
+        victim: Player,
+        broken: List<DeathSlotItem>,
+    ) {
+        var unequipped = false
+        for (slotItem in broken) {
+            val container =
+                when (slotItem.source) {
+                    DeathContainerSource.INVENTORY -> victim.inventory
+                    DeathContainerSource.EQUIPMENT -> victim.equipment
+                }
+            val current = container[slotItem.slot] ?: continue
+            if (current.id != slotItem.item.id) continue
+            val damaged = Item(current).also { it.attr[ItemAttribute.BROKEN] = 1 }
+            if (slotItem.source == DeathContainerSource.INVENTORY) {
+                container[slotItem.slot] = damaged
+                continue
+            }
+            container[slotItem.slot] = null
+            unequipped = true
+            val placed =
+                victim.inventory.addPreservingAttr(damaged, assureFullInsertion = true).hasSucceeded() ||
+                    victim.bank.addPreservingAttr(damaged, assureFullInsertion = true).hasSucceeded()
+            if (!placed) {
+                victim.world.spawn(GroundItem(damaged, victim.tile, victim))
+            }
+        }
+        if (unequipped) victim.refreshBonuses()
+        if (broken.isNotEmpty()) {
+            victim.message("Some of your untradeable items were broken. Perdu at the Grand Exchange can repair them.")
+        }
+    }
+
+    fun isBroken(item: Item): Boolean = (item.attr[ItemAttribute.BROKEN] ?: 0) > 0
+
+    /**
+     * Repair cost for an attribute-broken untradeable. OSRS prices vary per item and are not sourced
+     * here (niet geverifieerd): the item's store value, with a floor so repairs are never free.
+     */
+    fun repairCost(
+        definitions: DefinitionSet,
+        itemId: Int,
+    ): Long = maxOf(MIN_REPAIR_COST, definitions.get(ItemDef::class.java, itemId).cost.toLong())
+
+    const val MIN_REPAIR_COST = 1_000L
 }

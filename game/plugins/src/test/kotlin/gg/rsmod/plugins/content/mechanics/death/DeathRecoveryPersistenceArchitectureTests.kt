@@ -31,10 +31,9 @@ import kotlin.test.assertTrue
  *  - the expiry and fee attached to it are stored under [AttributeKey]s that
  *    declare a [persistenceKey], not left as transient/in-memory-only state.
  *
- * Conversely, [DEATH_LOOT_RESOLVED_ATTR] must NOT survive a reconnect (or
- * even survive past the death that set it) - it's a same-call re-entrancy
- * guard, not saved state - so it must have no [persistenceKey] and must be
- * marked `resetOnDeath`.
+ * [DEATH_LOOT_RESOLVED_ATTR] is persisted (audit X-11) so a death replayed on
+ * login after a force-logout or crash-save can't resolve the items twice, and
+ * it is marked `resetOnDeath` so it never outlives the death that set it.
  */
 class DeathRecoveryPersistenceArchitectureTests {
     @Test
@@ -58,10 +57,11 @@ class DeathRecoveryPersistenceArchitectureTests {
     }
 
     @Test
-    fun `the death-loot resolution guard is transient and self-clearing, never persisted`() {
-        assertNull(
+    fun `the death-loot resolution guard survives a crash mid-death but never outlives that death`() {
+        assertEquals(
+            "death_loot_resolved",
             DEATH_LOOT_RESOLVED_ATTR.persistenceKey,
-            "this is a same-death re-entrancy guard only; persisting it would permanently block death loot after a save/load",
+            "audit X-11: a death replayed on login must see that its items were already resolved",
         )
         assertTrue(
             DEATH_LOOT_RESOLVED_ATTR.resetOnDeath,

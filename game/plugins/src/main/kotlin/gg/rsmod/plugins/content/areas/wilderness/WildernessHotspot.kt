@@ -13,6 +13,10 @@ import gg.rsmod.plugins.api.ext.*
  * [gg.rsmod.plugins.content.areas.wilderness.WildernessBreach] rewards and PK points here) -
  * it is not wired into every wilderness skilling action's XP grant, since that would mean
  * touching every skilling file's `addXp` call in this pass. See IMPLEMENTATION_STATUS.md.
+ *
+ * Audit D-16: its only caller is the retired [gg.rsmod.plugins.content.areas.wilderness.WildernessBreach] (no longer
+ * started since the Deadman breaches replaced it), so the "+15% reward/XP" was a promise nothing paid. The rotation
+ * stays - the daily objective "defeat monsters at the hotspot" uses it - but it is no longer broadcast as a bonus.
  */
 object WildernessHotspot {
     data class Zone(
@@ -46,16 +50,9 @@ object WildernessHotspot {
         world.queue {
             while (true) {
                 current = ZONES.random()
-                broadcast(world, "The Wilderness hotspot has moved to ${current.label}! (+15% reward/XP there)")
+                // Audit D-16: no broadcast - the "+15% reward/XP" it announced was never paid by any live system.
                 wait(ROTATION_CYCLES)
             }
         }
-    }
-
-    private fun broadcast(
-        world: World,
-        message: String,
-    ) {
-        world.players.forEach { it.filterableMessage(message) }
     }
 }

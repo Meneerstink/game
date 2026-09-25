@@ -17,7 +17,7 @@ import gg.rsmod.plugins.content.mechanics.lfg.Lfg
  * bound here.
  *
  * R14.18: low-population location recommendation. Reuses the existing [WildernessHotspot]
- * (already a rotating "go here for +15%" rally point) and the busiest open [Lfg] group as the
+ * (a rotating rally point) and the busiest open [Lfg] group as the
  * "recommended locations" - only surfaced when population is low, and never hides/disables
  * anything else on the board or elsewhere. ponytail: LOW_POP_THRESHOLD is an arbitrary headcount
  * heuristic, not derived from real population data (none exists yet) - tune if it feels off.
@@ -38,7 +38,7 @@ spawn_obj(obj = Objs.JOB_BOARD, x = boardTile.x, z = boardTile.z, height = board
 on_obj_option(obj = Objs.JOB_BOARD, option = "look-at") {
     val lines = mutableListOf("Server activities:")
 
-    lines += "- Wilderness hotspot: ${WildernessHotspot.current.label} (+15% reward/XP there)."
+    lines += "- Wilderness hotspot: ${WildernessHotspot.current.label}."
 
     lines += "- Deadman breaches: " + gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.statusLine()
 

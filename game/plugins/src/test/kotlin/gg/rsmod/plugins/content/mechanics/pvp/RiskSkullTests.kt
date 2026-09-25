@@ -91,8 +91,9 @@ class RiskSkullTests {
 
         RiskSkull.refresh(player, testValueProvider())
 
-        // 3 stacks protected, the 4th 500k stack (plus the worthless key) at risk -> Iron tier.
-        verify { player.skullIcon = SkullIcon.DMM_LOW_RISK.id }
+        // Audit D-10 (deliberate change): a key carrier IS skulled, so nothing is protected - all four 500k stacks
+        // (plus the worthless key) are at risk -> Green tier (was Iron while key carriers kept their 3 items).
+        verify { player.skullIcon = SkullIcon.DMM_MEDIUM_RISK.id }
         verify { player.lootKeyIcons = 1 }
     }
 

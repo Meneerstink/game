@@ -2,6 +2,7 @@ package gg.rsmod.plugins.content.mechanics.death
 
 import gg.rsmod.game.model.attr.DEATH_RECOVERY_EXPIRY_ATTR
 import gg.rsmod.game.model.attr.DEATH_RECOVERY_FEE_ATTR
+import gg.rsmod.game.model.attr.LAST_LOGOUT_DATE
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.game.service.log.LoggerService
@@ -71,6 +72,22 @@ object DeathRecoveryService {
      * or mutating anything further - a repeated reclaim cannot duplicate
      * items or charge twice.
      */
+    /**
+     * Audit X-13/T-12: the recovery deadline only counts time spent online. On login the deadline is
+     * pushed back by the time since the last logout ([LAST_LOGOUT_DATE]).
+     */
+    fun shiftForOfflineTime(
+        player: Player,
+        nowMs: Long = System.currentTimeMillis(),
+    ) {
+        val expiry = player.attr[DEATH_RECOVERY_EXPIRY_ATTR] ?: return
+        val loggedOutAt = player.attr[LAST_LOGOUT_DATE] ?: return
+        val offline = nowMs - loggedOutAt
+        if (offline > 0 && loggedOutAt < expiry) {
+            player.attr[DEATH_RECOVERY_EXPIRY_ATTR] = expiry + offline
+        }
+    }
+
     fun reclaim(
         player: Player,
         coinItemId: Int = Items.COINS_995,

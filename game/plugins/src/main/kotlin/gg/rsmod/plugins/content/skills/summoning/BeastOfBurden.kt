@@ -6,6 +6,7 @@ import gg.rsmod.game.model.container.ItemContainer
 import gg.rsmod.game.model.container.key.ContainerKey
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
+import gg.rsmod.plugins.api.ext.addPreservingAttr
 import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.api.ext.message
 
@@ -163,6 +164,13 @@ object BeastOfBurden {
             player.message("Your familiar can't carry a Deadman emblem.")
             return 0
         }
+        // Audit X-01: loot keys and the looting bag are PvP risk by design; they may never be parked in a familiar.
+        if (gg.rsmod.plugins.content.mechanics.pvp.LootKeys.isKey(item.id) ||
+            gg.rsmod.plugins.content.mechanics.pvp.LootingBag.isBag(item.id)
+        ) {
+            player.message("Your familiar can't carry that item.")
+            return 0
+        }
         val key = storage.key
         val essence = item.id == Items.RUNE_ESSENCE || item.id == Items.PURE_ESSENCE
         if (storage.essenceOnly != essence) {
@@ -174,7 +182,8 @@ object BeastOfBurden {
         val requested = minOf(item.amount, player.inventory.getItemCount(item.id))
         if (requested <= 0) return 0
         val held = container(player, key)
-        val transaction = held.add(item.id, requested, assureFullInsertion = false)
+        // Audit E-06: keep charges/stored contents (item attributes) on the way in.
+        val transaction = held.addPreservingAttr(Item(item, requested), assureFullInsertion = false)
         if (transaction.completed <= 0) {
             player.message("Your familiar can't carry any more of that.")
             return 0
@@ -220,9 +229,9 @@ object BeastOfBurden {
         var withdrawn = 0
         for (slot in 0 until container.capacity) {
             val item = container[slot] ?: continue
-            val transaction = player.inventory.add(item.id, item.amount, assureFullInsertion = false)
+            val transaction = player.inventory.addPreservingAttr(item, assureFullInsertion = false)
             if (transaction.completed <= 0) continue
-            container[slot] = if (transaction.completed == item.amount) null else Item(item.id, item.amount - transaction.completed)
+            container[slot] = if (transaction.completed == item.amount) null else Item(item, item.amount - transaction.completed)
             withdrawn += transaction.completed
         }
         synchronise(player)
@@ -241,9 +250,9 @@ object BeastOfBurden {
         if (slot !in 0 until container.capacity) return 0
         val item = container[slot] ?: return 0
         val take = minOf(amount, item.amount)
-        val transaction = player.inventory.add(item.id, take, assureFullInsertion = false)
+        val transaction = player.inventory.addPreservingAttr(Item(item, take), assureFullInsertion = false)
         if (transaction.completed <= 0) return 0
-        container[slot] = if (transaction.completed == item.amount) null else Item(item.id, item.amount - transaction.completed)
+        container[slot] = if (transaction.completed == item.amount) null else Item(item, item.amount - transaction.completed)
         synchronise(player)
         return transaction.completed
     }
@@ -301,6 +310,24 @@ object BeastOfBurden {
         moveToDeathsDomain(player)
     }
 
+    /**
+     * Audit X-01: on a PvP death the familiar's cargo is unprotected loot like everything else the victim
+     * carried. Removes and returns every stack (attributes kept) so the death plugin can hand it to the
+     * killer through the same loot-key/ground-loot plan; [Familiar.ownerDeath] then finds nothing to rescue.
+     */
+    fun takeAllCargo(player: Player): List<Item> {
+        val key = activeKey(player) ?: return emptyList()
+        val held = container(player, key)
+        val cargo = mutableListOf<Item>()
+        for (slot in 0 until held.capacity) {
+            val item = held[slot] ?: continue
+            cargo += Item(item)
+            held[slot] = null
+        }
+        if (cargo.isNotEmpty()) synchronise(player)
+        return cargo
+    }
+
     /** How many items are currently waiting in Death's Domain. */
     fun deathsDomainCount(player: Player): Int =
         (0 until player.deathRecovery.capacity).count { player.deathRecovery[it] != null }
@@ -312,7 +339,7 @@ object BeastOfBurden {
         var stranded = 0
         for (slot in 0 until held.capacity) {
             val item = held[slot] ?: continue
-            val transaction = player.deathRecovery.add(item.id, item.amount, assureFullInsertion = false)
+            val transaction = player.deathRecovery.addPreservingAttr(item, assureFullInsertion = false)
             if (transaction.completed <= 0) {
                 stranded++
                 continue

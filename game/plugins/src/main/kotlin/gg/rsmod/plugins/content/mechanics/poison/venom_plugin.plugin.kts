@@ -13,19 +13,14 @@ import gg.rsmod.game.model.timer.VENOM_TIMER
 on_timer(VENOM_TIMER) {
     val pawn = pawn // The pawn being affected by the venom effect
 
-    // If the pawn is a player, and they have a modal open, reset the timer to 1 tick -
-    // mirrors poison_plugin.plugin.kts's own modal guard so venom continues once closed.
-    if (pawn is Player) {
-        if (pawn.interfaces.currentModal != -1) {
-            pawn.timers[VENOM_TIMER] = 1
-            return@on_timer
-        }
-    }
+    // Audit C-08: OSRS venom keeps hitting while an interface (bank, shop, ...) is open; the old modal guard paused it.
 
     val ticksElapsed = pawn.attr[VENOM_TICKS_ELAPSED_ATTR] ?: 0
     // Owner 2026-09-18: OSRS venom shows a black splat (HitType.VENOM -> client VenomHitmarkType), not the green poison one.
     val venomDamage = Venom.damageForTick(ticksElapsed)
     pawn.hit(damage = venomDamage, type = HitType.VENOM)
+    // Audit X-10: damage over time also holds a disconnected player in the world (no x-log escape while poisoned).
+    if (pawn is Player) gg.rsmod.plugins.content.combat.Combat.holdLogout(pawn)
     gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.recordDotDamage(pawn, venomDamage)
     pawn.attr[VENOM_TICKS_ELAPSED_ATTR] = ticksElapsed + 1
 
