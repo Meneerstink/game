@@ -154,9 +154,12 @@ object OsrsWeaponLooks {
         // Thrown: against players OSRS plays the classic throw (darts II_HUMAN_DART_THROW 6600, thrownaxes HUMAN_STAKE2 929, same ids in
         // 667), against npcs the _PVN versions (combat-logger: "II_HUMAN_DART_THROW_PVN, // Dart throw", "HUMAN_STAKE2_PVN, // Rune knife,
         // thrownaxe").
+        // Every dart, not only the imported ones: the 667 copy of seq 6600 has no replay mode (default RESTART_LOOP) and lasts exactly
+        // 2 ticks, so a rapid 2-tick throw arriving while the last one was still on its final frame did not restart - the dart flew
+        // without a throw (owner 2026-09-25, dragon darts). The OSRS copies (15801 / 15791) carry replay mode 1 and restart.
         register(
             Look(all(OsrsSeq.II_HUMAN_DART_THROW), attackPvn = all(OsrsSeq.II_HUMAN_DART_THROW_PVN)),
-            Items.AMETHYST_DART, Items.AMETHYST_DART_P, Items.AMETHYST_DART_P_PLUS, Items.AMETHYST_DART_P_PLUS_PLUS,
+            *gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Darts.DARTS.toIntArray(),
         )
         register(Look(all(OsrsSeq.HUMAN_STAKE2), attackPvn = all(OsrsSeq.HUMAN_STAKE2_PVN)), Items.DRAGON_THROWNAXE)
         // Chinchompas: HUMAN_CHINCHOMPA_ATTACK 2779, against npcs _PVN 7618 (combat-logger "HUMAN_CHINCHOMPA_ATTACK_PVN, // Chinchompa").

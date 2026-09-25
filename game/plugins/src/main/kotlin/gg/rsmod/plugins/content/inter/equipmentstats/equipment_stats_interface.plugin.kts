@@ -90,8 +90,18 @@ on_button(interfaceId = EQUIPMENT_BONUS_INTERFACE_ID, component = 7) {
     }
     when (opcode) {
         61 -> {
-            val worn = player.equipment[slot]
-            if (worn != null && worn.id == item) {
+            // Owner 2026-09-25 "interfaces blijven hangen" (live log: 667:7 clicked 3 times, nothing removed): the clicked grid
+            // index did not always name the equipment slot holding the clicked item, and a mismatch was silently ignored. The
+            // clicked item decides; the delivered index is used when it matches, otherwise the slot that really holds the item.
+            val wornSlot =
+                if (player.equipment[slot]?.id == item) slot
+                else (0 until player.equipment.capacity).firstOrNull { player.equipment[it]?.id == item } ?: -1
+            if (wornSlot != slot) {
+                gg.rsmod.game.model.AvTrace.log { "equipment stats remove: clicked slot=$slot item=$item -> worn slot=$wornSlot" }
+            }
+            val worn = if (wornSlot >= 0) player.equipment[wornSlot] else null
+            if (worn != null) {
+                val slot = wornSlot
                 // Finding 9 (audit): same Practice PvP temp-gear leak as the ordinary
                 // equipment tab (equipment.plugin.kts) - this is the other real call site
                 // of EquipAction.unequip, so it needs the same guard.

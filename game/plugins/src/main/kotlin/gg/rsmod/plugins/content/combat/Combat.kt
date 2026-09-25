@@ -70,8 +70,17 @@ object Combat {
     /** Display mirror of the active autocast spell (667 spellbook highlight, CS2 1121); written only by Autocast.sync. */
     const val SELECTED_AUTOCAST_VARP = 108
 
-    fun reset(pawn: Pawn) {
+    /**
+     * Ends [pawn]'s fight. The pawn also stops facing that target (owner 2026-09-25: after combat ended - a weapon switch left
+     * without ammo, "already under attack", a lock - the player kept turning towards the npc). [keepFacing] is only for a
+     * manual single cast, which ends the fight but still looks at the target it just cast on.
+     */
+    fun reset(pawn: Pawn, keepFacing: Boolean = false) {
+        val target = pawn.attr[COMBAT_TARGET_FOCUS_ATTR]?.get()
         pawn.attr.remove(COMBAT_TARGET_FOCUS_ATTR)
+        if (!keepFacing && target != null && pawn.attr[gg.rsmod.game.model.attr.FACING_PAWN_ATTR]?.get() === target) {
+            pawn.resetFacePawn()
+        }
     }
 
     fun canAttack(

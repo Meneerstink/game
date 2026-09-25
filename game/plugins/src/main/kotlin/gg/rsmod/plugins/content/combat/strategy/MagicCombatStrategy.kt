@@ -82,6 +82,16 @@ object MagicCombatStrategy : CombatStrategy {
                     return failCast(pawn)
                 }
             }
+            // OSRS Wiki Confuse/Weaken/Curse/Enfeeble: "The spell can only be cast if the opponent's stats haven't already been
+            // lowered". Without this a drain curse recast every 5 ticks on a drained target (runes used, no effect). Message: Void
+            // DrainSpells ("lowered" for Confuse and Weaken, "weakened" for the rest).
+            val drain = spell.effect as? SpellEffect.StatDrain
+            if (drain != null && !StatDrainRule.canDrain(target, spell)) {
+                val skill = Skills.getSkillName(pawn.world, drain.skill).lowercase()
+                val verb = if (spell == CombatSpell.CONFUSE || spell == CombatSpell.WEAKEN) "lowered" else "weakened"
+                pawn.message("Your foe's $skill has already been $verb.")
+                return failCast(pawn)
+            }
             val requirements = MagicSpells.getMetadata(spell.uniqueId)
             if (requirements != null && !MagicSpells.canCast(pawn, requirements.lvl, requirements.runes, spellId = spell.uniqueId)) {
                 return failCast(pawn)
@@ -185,7 +195,7 @@ object MagicCombatStrategy : CombatStrategy {
         // the spell stayed in CASTING_SPELL and repeated every attack cycle like an autocast (owner 2026-09-18).
         if (pawn is Player && pawn.attr[gg.rsmod.plugins.content.combat.magic.Autocast.AUTO_CAST] != true) {
             pawn.attr.remove(Combat.CASTING_SPELL)
-            Combat.reset(pawn)
+            Combat.reset(pawn, keepFacing = true)
         }
     }
 

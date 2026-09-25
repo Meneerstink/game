@@ -60,4 +60,13 @@ class OsrsWeaponLooksTests {
         assertEquals(OsrsSeq.HUMAN_SWORD_SLASH, OsrsWeaponLooks.attackAnimation(gg.rsmod.plugins.api.cfg.Items.VOIDWAKER, 0, false, false))
         assertEquals(OsrsSeq.II_HUMAN_DART_THROW_PVN, OsrsWeaponLooks.attackAnimation(gg.rsmod.plugins.api.cfg.Items.AMETHYST_DART, 0, true, false))
     }
+
+    /** Every dart throws the OSRS seq copies (replay mode 1): the 667 seq 6600 did not restart on a 2-tick rapid throw. */
+    @Test
+    fun `every dart uses the restartable OSRS dart throw`() {
+        for (dart in gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Darts.DARTS) {
+            assertEquals(OsrsSeq.II_HUMAN_DART_THROW, OsrsWeaponLooks.attackAnimation(dart, 1, false, false))
+            assertEquals(OsrsSeq.II_HUMAN_DART_THROW_PVN, OsrsWeaponLooks.attackAnimation(dart, 1, true, false))
+        }
+    }
 }

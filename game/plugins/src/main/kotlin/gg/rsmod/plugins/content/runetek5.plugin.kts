@@ -28,6 +28,13 @@ set_modal_close_logic {
     if (player.interfaces.getModal() != -1) {
         player.closeModalInterface()
     }
+    // The menu-open check below pauses every STANDARD queue while anything sits in a main-screen slot. Whatever it counts must
+    // also be closed here, or an interface mounted there without being the registered modal kept actions paused ("hang").
+    for (dest in arrayOf(InterfaceDestination.MAIN_SCREEN, InterfaceDestination.MAIN_SCREEN_FULL)) {
+        if (player.getInterfaceAt(dest) != -1) {
+            player.closeInterface(dest)
+        }
+    }
     if (player.getInterfaceAt(InterfaceDestination.TAB_AREA) != -1) {
         player.closeInterface(InterfaceDestination.TAB_AREA)
     }

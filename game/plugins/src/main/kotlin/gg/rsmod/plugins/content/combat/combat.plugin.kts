@@ -270,14 +270,21 @@ suspend fun cycle(it: QueueTask): Boolean {
                 }
             }
 
-            if (pawn is Npc && gg.rsmod.plugins.content.combat.attack.NpcAttacks.handles(pawn)) {
-                // RCV-005: the npc's own attack sections (Void Attack.kt) - style anims, gfx, projectiles,
-                // sounds, hits and impact effects. No valid section from here: keep approaching.
-                if (!gg.rsmod.plugins.content.combat.attack.NpcAttacks.attack(pawn, target)) {
-                    return true
+            // An attack that throws after its animation, runes and projectile have gone out must still start the attack delay:
+            // without it the next cycle attacked again at once (a crash turned into a 1-tick spam).
+            try {
+                if (pawn is Npc && gg.rsmod.plugins.content.combat.attack.NpcAttacks.handles(pawn)) {
+                    // RCV-005: the npc's own attack sections (Void Attack.kt) - style anims, gfx, projectiles,
+                    // sounds, hits and impact effects. No valid section from here: keep approaching.
+                    if (!gg.rsmod.plugins.content.combat.attack.NpcAttacks.attack(pawn, target)) {
+                        return true
+                    }
+                } else {
+                    strategy.attack(pawn, target)
                 }
-            } else {
-                strategy.attack(pawn, target)
+            } catch (e: Exception) {
+                Combat.postAttack(pawn, target)
+                throw e
             }
             Combat.postAttack(pawn, target)
         } else {

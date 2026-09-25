@@ -396,6 +396,10 @@ object CombatConfigs {
             if (data != null) {
                 return data.weaponStyle
             }
+            // The OSRS "Spell" boxes set the style varp to Autocast.AUTOCAST_STYLE, which a staff's 3-style table does not have.
+            // OSRS Wiki "Attack styles": "Unlike other combat styles and powered staves, autocasting does not give invisible bonuses."
+            // Throwing here aborted every npc attack on an autocasting player mid-swing (live log 2026-09-25 "Invalid attack style").
+            return WeaponStyle.NONE
         }
         throw IllegalArgumentException("Invalid attack style for $pawn")
     }

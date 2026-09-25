@@ -51,6 +51,32 @@ class AttackDelayTests {
         assertEquals(5, CombatConfigs.getAttackDelay(unarmed))
     }
 
+    /**
+     * Live log 2026-09-25: "Invalid attack style" aborted every npc hit on a player autocasting with a staff - the OSRS Spell box
+     * sets the style varp to 3, which a staff's 3-style table lacks. Autocasting gives no invisible bonus (OSRS Wiki "Attack styles").
+     */
+    @Test
+    fun theAutocastSpellBoxHasNoInvisibleStyleBonusInsteadOfThrowing() {
+        val p = player(4)
+        p.attr[LAST_KNOWN_WEAPON_TYPE] = WeaponType.STAFF.id
+        every { p.varps.getState(any()) } returns gg.rsmod.plugins.content.combat.magic.Autocast.AUTOCAST_STYLE
+        assertEquals(gg.rsmod.game.model.combat.WeaponStyle.NONE, CombatConfigs.getAttackStyle(p))
+    }
+
+    /** Owner 2026-09-25: a fight that ends (weapon switch without ammo, "already under attack") must stop facing its target. */
+    @Test
+    fun endingAFightStopsFacingItsTargetUnlessAManualCastKeepsIt() {
+        val target = mockk<Player>(relaxed = true)
+        for (keep in listOf(false, true)) {
+            val p = player(4)
+            p.attr[gg.rsmod.game.model.attr.COMBAT_TARGET_FOCUS_ATTR] = java.lang.ref.WeakReference(target)
+            p.attr[gg.rsmod.game.model.attr.FACING_PAWN_ATTR] = java.lang.ref.WeakReference(target)
+            Combat.reset(p, keepFacing = keep)
+            io.mockk.verify(exactly = if (keep) 0 else 1) { p.resetFacePawn() }
+            org.junit.Assert.assertNull(p.attr[gg.rsmod.game.model.attr.COMBAT_TARGET_FOCUS_ATTR])
+        }
+    }
+
     private fun player(speed: Int, rapid: Boolean = false): Player {
         val item = ItemDef(18353).apply { attackSpeed = speed }
         val definitions = mockk<DefinitionSet>(relaxed = true)

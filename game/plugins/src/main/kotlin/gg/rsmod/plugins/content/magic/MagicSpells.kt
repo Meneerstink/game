@@ -148,9 +148,10 @@ object MagicSpells {
                 }
             }
 
-            // Play the sound associated with the spell
+            // Play the sound associated with the spell. Combat spells are voiced by MagicCombatStrategy (SpellSounds cast + impact);
+            // playing the metadata sound here too doubled them (god spells: 1655 on cast and again on impact) and sent id -1.
             val spellMetadata = getMetadata(spellId)
-            if (spellMetadata != null) {
+            if (spellMetadata != null && spellMetadata.sound > 0 && spellMetadata.spellType != SpellType.COMBAT_SPELL_TYPE) {
                 p.playSound(spellMetadata.sound)
             }
         }
