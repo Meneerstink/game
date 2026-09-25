@@ -49,6 +49,20 @@ object RoyalHallLocTool {
     class Variant(val id: Int, val source: Int, val label: String, val edit: (ByteArray) -> ByteArray)
 
     /** The gold "Large door" leaves 22435/22437 stand open in the hall's south doorway as scenery: their "Open" option goes. */
+    /** [def] without its menu option(s) 30-34 wherever they stand (scenery doors that are never opened). */
+    private fun withoutOptions(def: ByteArray): ByteArray {
+        var out = def
+        for (op in 30..34) {
+            // Options come early in these definitions; a tail opcode this walker cannot size means there are no more.
+            val at = runCatching { opcodePosition(0, out, op) }.getOrDefault(-1)
+            if (at < 0) continue
+            var end = at + 1
+            while (out[end] != 0.toByte()) end++
+            out = out.copyOfRange(0, at) + out.copyOfRange(end + 1, out.size)
+        }
+        return out
+    }
+
     private fun withoutLeadingOption(def: ByteArray): ByteArray {
         check(def[0] == 30.toByte()) { "expected the definition to start with option 1" }
         val end = def.indexOf(0.toByte())
@@ -62,9 +76,23 @@ object RoyalHallLocTool {
     }
 
     /** The Falador castle turret 43730 at 1.375x (model scale opcodes 65-67, 128 = 1x) for the hall's corner turrets. */
+    /** The stone tones (hue 6) of the turret model 47452. */
+    private val TURRET_STONE =
+        listOf(0x1890, 0x1892, 0x1899, 0x189d, 0x189f, 0x18a1, 0x18a5, 0x18a6, 0x18a8, 0x18a9, 0x18ab, 0x18ad, 0x18ae, 0x18b2, 0x18b3,
+            0x18b4, 0x18b5, 0x18b8, 0x18bb, 0x18bd, 0x18bf, 0x18c3, 0x18c7, 0x18cc, 0x18cd, 0x18cf, 0x18d4, 0x1923, 0x1a12)
+
     private fun grandTurret(def: ByteArray): ByteArray {
         check(listOf(65, 66, 67).none { opcodePosition(43730, def, it) >= 0 }) { "turret already scaled" }
-        return withModel(43730, byteArrayOf(65, 0, 176.toByte(), 66, 0, 176.toByte(), 67, 0, 176.toByte()) + def, TURRET_MODEL, TURRET_MODEL_CLEAN)
+        // 1.375 wide and 1.75 high: the owner chose towers that rise from the ground (C:/RSPS/foto/tower_designs.png, 3), in
+        // dark granite (tower_colours.png e): every stone tone (hue 6) greyed at 0.55 of its lightness.
+        val recolour = java.io.ByteArrayOutputStream()
+        recolour.write(40)
+        recolour.write(TURRET_STONE.size)
+        TURRET_STONE.forEach { c ->
+            val granite = (c and 0x7F) * 55 / 100
+            recolour.write(byteArrayOf((c shr 8).toByte(), c.toByte(), (granite shr 8).toByte(), granite.toByte()))
+        }
+        return withModel(43730, byteArrayOf(65, 0, 176.toByte(), 66, 0, 224.toByte(), 67, 0, 176.toByte()) + recolour.toByteArray() + def, TURRET_MODEL, TURRET_MODEL_CLEAN)
     }
 
     /**
@@ -216,26 +244,30 @@ object RoyalHallLocTool {
      */
     // Hue 40 of 64, saturation 2, the slate's lightness x0.8: a deep, muted slate blue (hue 43 / saturation 3 came out
     // lavender in game, owner 2026-09-25 foto roof).
-    private val ROYAL_SLATE_TINTS = mapOf(0x201c to 0xA116, 0x2014 to 0xA110, 0x200c to 0xA10A, 0x2008 to 0xA106)
+    // Owner 2026-09-26 chose the ivory roof (hue 8, saturation 1, lightness 100-76) from C:/RSPS/foto/roof_options.png.
+    private val ROYAL_SLATE_TINTS = mapOf(0x201c to 0x20E4, 0x2014 to 0x20DC, 0x200c to 0x20D4, 0x2008 to 0x20CC)
     private val GILDED_RIDGE = listOf(0x1710 to 0x2396, 0x1714 to 0x239C, 0x1718 to 0x23A2)
 
-    fun royalSlate(def: ByteArray): ByteArray {
+    fun royalSlate(def: ByteArray): ByteArray = slateWith(def, ROYAL_SLATE_TINTS, GILDED_RIDGE)
+
+    /** The slate [def] with its four slate tints mapped by [tints] and the ridge beams recoloured by [ridge]. */
+    fun slateWith(def: ByteArray, tints: Map<Int, Int>, ridge: List<Pair<Int, Int>>): ByteArray {
         val at = opcodePosition(SLATE, def, 40)
         check(at >= 0) { "slate has no recolour" }
         val pairs = def[at + 1].toInt() and 0xFF
         val out = java.io.ByteArrayOutputStream()
         out.write(def, 0, at)
         out.write(40)
-        out.write(pairs + GILDED_RIDGE.size)
+        out.write(pairs + ridge.size)
         for (i in 0 until pairs) {
             val p = at + 2 + i * 4
             val dst = ((def[p + 2].toInt() and 0xFF) shl 8) or (def[p + 3].toInt() and 0xFF)
-            val royal = ROYAL_SLATE_TINTS[dst] ?: error("unexpected slate tint ${dst.toString(16)}")
+            val royal = tints[dst] ?: error("unexpected slate tint ${dst.toString(16)}")
             out.write(def, p, 2)
             out.write(royal shr 8)
             out.write(royal and 0xFF)
         }
-        GILDED_RIDGE.forEach { (src, dst) ->
+        ridge.forEach { (src, dst) ->
             out.write(src shr 8)
             out.write(src and 0xFF)
             out.write(dst shr 8)
@@ -459,6 +491,49 @@ object RoyalHallLocTool {
         return out.toByteArray()
     }
 
+    /** [def] with [pairs] (source colour to target colour) as its only recolour, inserted before everything else. */
+    private fun recoloured(def: ByteArray, pairs: List<Pair<Int, Int>>, prefix: ByteArray = ByteArray(0)): ByteArray {
+        check(opcodePosition(0, def, 40) < 0) { "already recoloured" }
+        val out = java.io.ByteArrayOutputStream()
+        out.write(prefix)
+        out.write(40)
+        out.write(pairs.size)
+        pairs.forEach { (s, d) -> out.write(byteArrayOf((s shr 8).toByte(), s.toByte(), (d shr 8).toByte(), d.toByte())) }
+        out.write(def)
+        return out.toByteArray()
+    }
+
+    /**
+     * The balcony railing: the wrought-iron railing 15602 gilded (its iron 0031/0039 in bright gold) on white marble
+     * plinths (the stone 2812-281a near-white). Owner 2026-09-26: "balcony rails" can be better.
+     */
+    private fun gildedRailing(def: ByteArray) =
+        recoloured(def, listOf(0x0031 to 0x23BC, 0x0039 to 0x23C6, 0x2812 to 0x0074, 0x2816 to 0x0078, 0x281a to 0x007C))
+
+    /**
+     * The portico pillar: the Grand Exchange pillar 47169 in bright white ("a white bright color instead of champagne")
+     * at 0.95 height, so its top stays under the balcony floor (level 1, 240 up) instead of showing through it.
+     */
+    private fun brightPillar(def: ByteArray) =
+        recoloured(
+            def,
+            listOf(0x802c to 0x0076, 0x8030 to 0x0078, 0x8031 to 0x0078, 0x8036 to 0x007A, 0x803b to 0x007C, 0x8040 to 0x007E, 0x8044 to 0x007F,
+                // the base in gold (owner 2026-09-26: "white gold base pilars", C:/RSPS/foto/pillar_options.png option 3)
+                0x8066 to 0x23B2, 0x806a to 0x23B8, 0x806e to 0x23BE, 0x8075 to 0x23C0),
+            prefix = byteArrayOf(66, 0, 122),
+        )
+
+    /**
+     * The stall counter: the opulent table 35454 (cream marble with gold) at half length (1 x 1, z scale 0.5) and
+     * see-through (opcode 18), so npcs are talked to across it. The retextured counter kept its wooden planks in game.
+     */
+    private fun opulentCounter(def: ByteArray): ByteArray {
+        val at = (0 until def.size - 1).first { def[it] == 15.toByte() && def[it + 1] == 2.toByte() }
+        val out = def.copyOf()
+        out[at + 1] = 1
+        return byteArrayOf(18, 67, 0, 64) + out
+    }
+
     /** Variants that keep their menu options (the staircases). */
     val WITH_OPTIONS = setOf(62779, 62780)
 
@@ -475,6 +550,9 @@ object RoyalHallLocTool {
             Variant(62773, SLATE, "Royal Hall royal-blue slate roof with gilded ridges (41409 recoloured)", ::royalSlate),
             Variant(62776, 45238, "Royal Hall premium stall counter: white marble and gold (45238 at half length)", ::premiumCounter),
             Variant(62778, 36695, "Royal Hall fountain: the Fountain of Heroes widened to 4x4", ::grandFountain),
+            Variant(62781, 35454, "Royal Hall stall counter: the opulent table at half length, see-through", ::opulentCounter),
+            Variant(62782, 47169, "Royal Hall portico pillar: the GE pillar in bright white, 0.95 high", ::brightPillar),
+            Variant(62783, 15602, "Royal Hall balcony railing: gilded on white marble plinths", ::gildedRailing),
             Variant(62779, 34872, "Royal Hall spiral staircase (bottom): white marble, gilded rails", ::premiumStairs),
             Variant(62780, 34873, "Royal Hall spiral staircase (top): white marble, gilded rails", ::premiumStairs),
             Variant(62768, 15548, "78 carpet corner (Varrock carpet 15548 with the 78 texture)", ::with78Carpet),
@@ -484,6 +562,8 @@ object RoyalHallLocTool {
             Variant(ICON_LOC, GE_MARKER, "Royal Hall map marker (27990 carrying map element $ICON_ELEMENT)") { withElement(it, ICON_ELEMENT) },
             Variant(62763, 22435, "Royal Hall open gold door, west leaf (22435 without its option)", ::withoutLeadingOption),
             Variant(62764, 22437, "Royal Hall open gold door, east leaf (22437 without its option)", ::withoutLeadingOption),
+            Variant(62784, 1506, "Royal Hall open door, west leaf: white with gold studs (1506 without its option)", ::withoutOptions),
+            Variant(62785, 1508, "Royal Hall open door, east leaf: white with gold studs (1508 without its option)", ::withoutOptions),
             Variant(62765, 37169, "Royal Hall 1x1 white marble stall counter (37169 at half length)", ::halfCounter),
         )
 
