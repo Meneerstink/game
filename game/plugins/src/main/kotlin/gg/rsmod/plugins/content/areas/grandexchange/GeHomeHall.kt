@@ -38,8 +38,8 @@ object GeHomeHall {
      * Ground floor: west and east walls hold five stalls each (either side of their doorway), the north wall one either
      * side of the throne dais (the corners beside it hold the spiral staircases), the south wall four (two here, the
      * Breach Trader at dx 3 in breach_shop and Kuradal) west of the entrance and Perdu plus the three 78 Store keepers
-     * (StoreNpcs, dx 10-12) east of it. Every ground-floor stall stands behind a marble counter. The gallery lounge
-     * above the entrance (level 1) hosts the four npcs players visit least.
+     * (StoreNpcs, dx 10-12) east of it. Every stall stands behind a white marble and gold counter. The upper floor
+     * (level 1) seats the four npcs players visit least behind its south counters, either side of the balcony door.
      */
     val SERVICE_POSTS =
         listOf(
@@ -59,21 +59,21 @@ object GeHomeHall {
             ServicePost(Npcs.DRUNKEN_DWARF, 2, 0, Direction.NORTH),
             ServicePost(Npcs.KURADAL_9085, 4, 0, Direction.NORTH),
             ServicePost(Npcs.PERDU, 9, 0, Direction.NORTH),
-            ServicePost(Npcs.PARTY_PETE, 3, 0, Direction.NORTH, level = 1),
-            ServicePost(Npcs.KING_NARNODE_SHAREEN, 5, 0, Direction.NORTH, level = 1),
-            ServicePost(Npcs.ONEIROMANCER, 8, 0, Direction.NORTH, level = 1),
-            ServicePost(Npcs.ARCHAEOLOGIST, 10, 0, Direction.NORTH, level = 1),
+            ServicePost(Npcs.PARTY_PETE, 2, 0, Direction.NORTH, level = 1),
+            ServicePost(Npcs.KING_NARNODE_SHAREEN, 4, 0, Direction.NORTH, level = 1),
+            ServicePost(Npcs.ONEIROMANCER, 9, 0, Direction.NORTH, level = 1),
+            ServicePost(Npcs.ARCHAEOLOGIST, 11, 0, Direction.NORTH, level = 1),
         )
 
     /**
-     * The two white spiral staircases (1739, 2 x 2, south-west tile [base]) to the gallery, with their tops (1740) on the
-     * same tile of level 1. [floor] is where a player coming down lands (on the rug in front of the stairs), [gallery]
+     * The two white marble spiral staircases (62779, 2 x 2, south-west tile [base]) to the upper floor, with their tops
+     * (62780) on the same tile of level 1. [floor] is where a player coming down lands (on the rug in front of the stairs), [gallery]
      * where one going up lands (on the gallery beside the stairwell).
      */
     class Staircase(val base: Tile, val floor: Tile, val gallery: Tile)
 
-    const val STAIRS_BOTTOM = 1739
-    const val STAIRS_TOP = 1740
+    const val STAIRS_BOTTOM = 62779
+    const val STAIRS_TOP = 62780
 
     val STAIRS =
         listOf(

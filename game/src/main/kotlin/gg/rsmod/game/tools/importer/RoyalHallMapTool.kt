@@ -73,10 +73,20 @@ object RoyalHallMapTool {
     /** The centre's planters, their fences, the canopy ring on pillars and the map fountain. */
     private val REMOVED_IDS = setOf(47119, 84, 47174, 47175, 47244, 47246, 47150)
 
-    /** Tile of the hall's map icon marker: on the fountain, beside the fountain's own sound marker [KEPT_MARKER]. */
-    private const val ICON_X = 3164
-    private const val ICON_Z = 3491
+    /** The ground tiles of the four paving blocks round the hall (RoyalHallLocTool.CUTS), laid as a white marble plaza. */
+    private val PLAZA_X = 3155..3174
+    private val PLAZA_Z = 3482..3501
 
+    /** A balcony: level-1 marble floor on these tiles, outside a doorway of the upper floor. */
+    class Balcony(val xs: IntRange, val zs: IntRange)
+
+    val BALCONIES =
+        listOf(
+            // Reached through the upper doorways in the wall ring (floored by the hall loop).
+            Balcony(SOUTH_DOOR.first - 1..SOUTH_DOOR.last + 1, MIN_Z - 2..MIN_Z - 1),
+            Balcony(MIN_X - 2..MIN_X - 1, SIDE_DOORS.first - 1..SIDE_DOORS.last + 1),
+            Balcony(MAX_X + 1..MAX_X + 2, SIDE_DOORS.first - 1..SIDE_DOORS.last + 1),
+        )
     /** Invisible marker on the fountain tile (model 1105), kept: it is the fountain's ambient sound (loc opcode 78). */
     private const val KEPT_MARKER = 29419
 
@@ -102,11 +112,56 @@ object RoyalHallMapTool {
 
             var paved = 0
             var unbridged = 0
-            var gallery = 0
+            var upstairs = 0
             var roofed = 0
+            var plaza = 0
+            fun tile(level: Int, x: Int, z: Int) = tiles.tiles[level][x - rx * 64][z - rz * 64]
+
+            // Remove the raised walk surface (bridge flag, overlay, underlay) of level 1, so the tile's own level 1 is free.
+            fun unbridge(x: Int, z: Int) {
+                val upper = tile(1, x, z)
+                if (upper.flags and BRIDGE != 0) unbridged++
+                upper.flags = 0
+                upper.overlayId = 0
+                upper.overlayShape = 0
+                upper.overlayRotation = 0
+                upper.underlayId = 0
+            }
+
+            // The white marble plaza: every ground tile of the four paving blocks round the hall is laid in marble, so
+            // wherever the exchange's paving models leave the ground visible (the ring of bare earth that ran round the old
+            // centre) it is marble; under the paving models it stays hidden.
+            for (x in PLAZA_X) for (z in PLAZA_Z) {
+                if (x in MIN_X..MAX_X && z in MIN_Z..MAX_Z) continue
+                val ground = tile(0, x, z)
+                ground.overlayId = MARBLE_OVERLAY
+                ground.overlayShape = 0
+                ground.overlayRotation = 0
+                plaza++
+            }
+
+            // Storey heights. A tile's height is its south-west corner and a loc stands on the average of its footprint's
+            // corners, so the heights run one tile past the east and north wall rings (else the upper walls, parapet and
+            // turrets there sank), and under the three balconies with their far corners.
+            val storeyTiles = HashSet<Pair<Int, Int>>()
+            for (x in MIN_X..MAX_X + 1) for (z in MIN_Z..MAX_Z + 1) storeyTiles += x to z
+            // Balconies with a border for the railings that stand on the neighbouring tiles at their corners.
+            BALCONIES.forEach { b -> for (x in b.xs.first..b.xs.last + 1) for (z in b.zs.first - 1..b.zs.last + 2) storeyTiles += x to z }
+            for ((x, z) in storeyTiles) {
+                // A bridge tile walks on its level-1 heights, so every tile touching a raised corner (the storey tile and
+                // its west, south and south-west neighbours) leaves the bridge; its paving model does not change.
+                for ((nx, nz) in listOf(x to z, x - 1 to z, x to z - 1, x - 1 to z - 1)) {
+                    if (nx !in MIN_X..MAX_X || nz !in MIN_Z..MAX_Z) unbridge(nx, nz)
+                }
+                for (level in 1..3) tile(level, x, z).height = STOREY_STEPS[level - 1]
+                // Level 2 and 3 of the old canopy carried flag 8 ("never removed with the roof"): cleared, so the roof and
+                // parapet hide like the rest of the building.
+                for (level in 2..3) tile(level, x, z).flags = 0
+            }
+
             for (x in MIN_X..MAX_X) for (z in MIN_Z..MAX_Z) {
-                val ground = tiles.tiles[0][x - rx * 64][z - rz * 64]
-                val upper = tiles.tiles[1][x - rx * 64][z - rz * 64]
+                val ground = tile(0, x, z)
+                val upper = tile(1, x, z)
                 val floor = x in FLOOR_MIN_X..FLOOR_MAX_X && z in FLOOR_MIN_Z..FLOOR_MAX_Z
                 val doorway = (x == MIN_X || x == MAX_X) && z in SIDE_DOORS || z == MIN_Z && x in SOUTH_DOOR
                 // The throne dais: a tile's height is its south-west corner, so these corners lift the red platform
@@ -119,37 +174,33 @@ object RoyalHallMapTool {
                     paved++
                 }
                 ground.flags = ground.flags and BLOCKED.inv()
-                if (upper.flags and BRIDGE != 0) unbridged++
-                upper.flags = 0
-                upper.overlayId = 0
-                upper.overlayShape = 0
-                upper.overlayRotation = 0
-                upper.underlayId = 0
-                // The gallery lounge: a two-tile marble ring along the walls on level 1, roof removed when standing on it
-                // (so the roof hides upstairs too); the rest of level 1 over the floor is open to the hall below and
-                // blocked, so nobody walks off the gallery.
-                if (floor) {
-                    val dx = x - FLOOR_MIN_X
-                    val dz = z - FLOOR_MIN_Z
-                    if (dx <= 1 || dx >= FLOOR_MAX_X - FLOOR_MIN_X - 1 || dz <= 1 || dz >= FLOOR_MAX_Z - FLOOR_MIN_Z - 1) {
-                        upper.overlayId = MARBLE_OVERLAY
-                        upper.flags = REMOVE_ROOF
-                        gallery++
-                    } else {
-                        upper.flags = BLOCKED or REMOVE_ROOF
-                    }
-                } else {
-                    // The wall ring on level 1 carries the upper storey's walls: part of the building for roof removal.
-                    upper.flags = REMOVE_ROOF
+                unbridge(x, z)
+                // The upper floor: one full marble floor over the whole hall, and through the upper doorways (above the
+                // ground floor's) out onto the balconies. Roof removed when standing on it, so the roof hides upstairs too.
+                if (floor || doorway) {
+                    upper.overlayId = MARBLE_OVERLAY
+                    upstairs++
                 }
-                // Storey heights for the second storey and the roof (client: level height = level below - value * 8).
-                for (level in 1..3) tiles.tiles[level][x - rx * 64][z - rz * 64].height = STOREY_STEPS[level - 1]
+                // The wall ring on both levels carries walls: part of the building for roof removal. Upstairs only the
+                // doorways lead out (onto the balconies); the rest of the ring is blocked so nobody steps off the building.
+                upper.flags = if (floor || doorway) REMOVE_ROOF else REMOVE_ROOF or BLOCKED
                 // Selective roof removal (client Static409 flood fill over flag-4 tiles): the whole footprint, wall ring
                 // included, is the building. The hall's walls stand on the ring outside the floor (the reverse of the
-                // game's own buildings), so an unflagged ring kept its upper walls and parapet on screen from inside and
-                // stopped the fill from reaching the roof over the open centre when upstairs.
+                // game's own buildings), so an unflagged ring kept its upper walls and parapet on screen from inside.
                 ground.flags = ground.flags or REMOVE_ROOF
                 roofed++
+            }
+
+            // The balconies: marble floors on level 1 outside the three doorways, carried by the porticoes' pillars.
+            BALCONIES.forEach { b ->
+                for (x in b.xs) for (z in b.zs) {
+                    val upper = tile(1, x, z)
+                    upper.overlayId = MARBLE_OVERLAY
+                    upper.overlayShape = 0
+                    upper.overlayRotation = 0
+                    upper.flags = 0
+                    upstairs++
+                }
             }
             val updatedMap = Rev667TileCodec.encode(tiles)
             if (!updatedMap.contentEquals(mapBytes)) {
@@ -159,7 +210,7 @@ object RoyalHallMapTool {
                         mapArchive.id,
                         0,
                         updatedMap,
-                        "Royal Hall (GE centre, north-east restored): pave $paved, unbridge $unbridged, roof flags $roofed tiles in $MIN_X,$MIN_Z..$MAX_X,$MAX_Z",
+                        "Royal Hall (GE centre, north-east restored): pave $paved, plaza $plaza, upper floor $upstairs, unbridge $unbridged, roof flags $roofed",
                         CacheItemProbeTool.sha1(mapBytes),
                     )
             }
@@ -180,8 +231,9 @@ object RoyalHallMapTool {
                     if (cut == null || loc.plane != 0) loc else Rev667Loc(cut.id, loc.localX, loc.localZ, loc.plane, loc.type, loc.rotation).also { swapped++ }
                 }
             check(swapped == cuts.size) { "expected ${cuts.size} paving models, swapped $swapped" }
-            // The Royal Hall's minimap / world-map icon (RoyalHallLocTool.ICON_LOC), on the fountain beside its sound marker.
-            val kept = swappedLocs + Rev667Loc(RoyalHallLocTool.ICON_LOC, ICON_X - rx * 64, ICON_Z - rz * 64, 0, 22, 0)
+            // The Royal Hall's map icon is one world-map static element (RoyalHallLocTool), which the minimap draws too; a
+            // marker loc as well showed it twice (owner 2026-09-26).
+            val kept = swappedLocs
             kept.filter(inHall).forEach { println("REMAINS ${it.id} type=${it.type} at ${rx * 64 + it.localX},${rz * 64 + it.localZ},${it.plane}") }
             val updatedLocs = Rev667LocCodec.encode(kept)
             if (!updatedLocs.contentEquals(locBytes)) {
@@ -196,7 +248,7 @@ object RoyalHallMapTool {
                         xtea = key,
                     )
             }
-            println("ROYAL_HALL_MAP gallery=$gallery swapped=$swapped paved=$paved unbridged=$unbridged roofed=$roofed locsRemoved=${removed.size}")
+            println("ROYAL_HALL_MAP plaza=$plaza upstairs=$upstairs swapped=$swapped paved=$paved unbridged=$unbridged roofed=$roofed locsRemoved=${removed.size}")
         } finally {
             library.close()
         }

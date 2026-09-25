@@ -64,7 +64,7 @@ object RoyalHallLocTool {
     /** The Falador castle turret 43730 at 1.375x (model scale opcodes 65-67, 128 = 1x) for the hall's corner turrets. */
     private fun grandTurret(def: ByteArray): ByteArray {
         check(listOf(65, 66, 67).none { opcodePosition(43730, def, it) >= 0 }) { "turret already scaled" }
-        return byteArrayOf(65, 0, 176.toByte(), 66, 0, 176.toByte(), 67, 0, 176.toByte()) + def
+        return withModel(43730, byteArrayOf(65, 0, 176.toByte(), 66, 0, 176.toByte(), 67, 0, 176.toByte()) + def, TURRET_MODEL, TURRET_MODEL_CLEAN)
     }
 
     /**
@@ -214,7 +214,9 @@ object RoyalHallLocTool {
      * The royal roof: the Legends' Guild slate 41409 recoloured to deep royal-blue slate (its four slate tints, same
      * lightness) with gilded ridge beams (the wood faces 1710/1714/1718 tinted gold). Rings 3-5 ([COPIES]) derive from it.
      */
-    private val ROYAL_SLATE_TINTS = mapOf(0x201c to 0xAD9C, 0x2014 to 0xAD94, 0x200c to 0xAD8C, 0x2008 to 0xAD88)
+    // Hue 40 of 64, saturation 2, the slate's lightness x0.8: a deep, muted slate blue (hue 43 / saturation 3 came out
+    // lavender in game, owner 2026-09-25 foto roof).
+    private val ROYAL_SLATE_TINTS = mapOf(0x201c to 0xA116, 0x2014 to 0xA110, 0x200c to 0xA10A, 0x2008 to 0xA106)
     private val GILDED_RIDGE = listOf(0x1710 to 0x2396, 0x1714 to 0x239C, 0x1718 to 0x23A2)
 
     fun royalSlate(def: ByteArray): ByteArray {
@@ -244,6 +246,222 @@ object RoyalHallLocTool {
         return out.toByteArray()
     }
 
+    /**
+     * The premium stall counter: the gold-trimmed counter 45238 at half length (1 x 1, model scale x 0.5) in white marble
+     * and gold - its wood (63) and panel (73, 102) textures become the speckled white marble 254, the panel tints gold and
+     * everything else near-white. It stays see-through (opcode 18), so npcs are talked to across it.
+     */
+    private val COUNTER_TINTS = listOf(0x238a to 0x23B2, 0x2123 to 0x23A8, 0x2196 to 0x0074, 0x219a to 0x0072, 0x219f to 0x0074, 0x2212 to 0x006E)
+
+    private fun premiumCounter(def: ByteArray): ByteArray {
+        check(def[2] == 14.toByte() && def[3] == 2.toByte()) { "expected sizeX 2 after the first opcode" }
+        val out = java.io.ByteArrayOutputStream()
+        out.write(byteArrayOf(65, 0, 64))
+        out.write(byteArrayOf(41, 3, 0, 63, 0, 254.toByte(), 0, 73, 0, 254.toByte(), 0, 102, 0, 254.toByte()))
+        out.write(40)
+        out.write(COUNTER_TINTS.size)
+        COUNTER_TINTS.forEach { (src, dst) -> out.write(byteArrayOf((src shr 8).toByte(), src.toByte(), (dst shr 8).toByte(), dst.toByte())) }
+        out.write(def, 0, 3)
+        out.write(1) // sizeX 1
+        out.write(def, 4, def.size - 4)
+        return out.toByteArray()
+    }
+
+    /**
+     * The hall's fountain: the gold-rimmed Fountain of Heroes 36695 widened to 4 x 4 (x/z scale 1.75, height unchanged,
+     * 220 units), so the upper floor (240 up) closes over it; the Grand Exchange fountain (611 high) would stick through it.
+     */
+    private fun grandFountain(def: ByteArray): ByteArray {
+        val at = (0 until def.size - 3).first { def[it] == 14.toByte() && def[it + 1] == 2.toByte() && def[it + 2] == 15.toByte() && def[it + 3] == 2.toByte() }
+        val out = def.copyOf()
+        out[at + 1] = 4
+        out[at + 3] = 4
+        return byteArrayOf(65, 0, 224.toByte(), 66, 0, 128.toByte(), 67, 0, 224.toByte()) + out
+    }
+
+    /**
+     * The corner turret's model (Falador castle turret 47452) without the little guard standing on its top platform: every
+     * face within 45 units of the centre at or above the platform (height 320) except the flagpole (texture 91), its flag
+     * (480) and the platform floor (505) is collapsed to a point. Owner 2026-09-25: "on the round corner things i see a
+     * minitaure npcs".
+     */
+    const val TURRET_MODEL = 47452
+    const val TURRET_MODEL_CLEAN = 65427
+
+    /**
+     * The mesh uses complex texture mappings, which [Rev667ModelEncoder] cannot write, so only its vertex section is
+     * rebuilt (client `Mesh.decodeNew` layout): every vertex used only by guard faces moves onto one point on the platform,
+     * collapsing those faces, and all other bytes (faces, colours, textures, labels, mappings) are copied unchanged.
+     * Returns the new mesh and the number of guard faces.
+     */
+    fun turretWithoutGuard(data: ByteArray): Pair<ByteArray, Int> {
+        fun u8(p: Int) = data[p].toInt() and 0xFF
+        fun u16(p: Int) = (u8(p) shl 8) or u8(p + 1)
+        val t = data.size - 23
+        val vertexCount = u16(t)
+        val faceCount = u16(t + 2)
+        val texSpaceCount = u8(t + 4)
+        val flags = u8(t + 5)
+        check(flags and 0x1 == 0 && flags and 0x8 == 0) { "unexpected mesh flags $flags" }
+        val priorityFlag = u8(t + 6)
+        val faceAlphaFlag = u8(t + 7)
+        val faceGroupFlag = u8(t + 8)
+        val faceTextureFlag = u8(t + 9)
+        val vertexLabelFlag = u8(t + 10)
+        val lenX = u16(t + 11)
+        val lenY = u16(t + 13)
+        val lenZ = u16(t + 15)
+        val faceDataSize = u16(t + 17)
+        val texSpaceSize = u16(t + 19)
+        var ptr = texSpaceCount
+        val vertexFlagsPtr = ptr
+        ptr += vertexCount
+        val faceTypePtr = ptr
+        ptr += faceCount
+        if (priorityFlag == 255) ptr += faceCount
+        if (faceGroupFlag == 1) ptr += faceCount
+        if (vertexLabelFlag == 1) ptr += vertexCount
+        if (faceAlphaFlag == 1) ptr += faceCount
+        val faceDataPtr = ptr
+        ptr += faceDataSize
+        val faceTexturePtr = ptr
+        if (faceTextureFlag == 1) ptr += faceCount * 2
+        ptr += texSpaceSize
+        ptr += faceCount * 2
+        val vertexXPtr = ptr
+        val restPtr = vertexXPtr + lenX + lenY + lenZ
+
+        class Reader(var p: Int) {
+            fun smart(): Int {
+                val v = u8(p)
+                return if (v < 128) { p++; v - 64 } else { val r = u16(p) - 49152; p += 2; r }
+            }
+        }
+        val xs = IntArray(vertexCount)
+        val ys = IntArray(vertexCount)
+        val zs = IntArray(vertexCount)
+        val rx = Reader(vertexXPtr)
+        val ry = Reader(vertexXPtr + lenX)
+        val rz = Reader(vertexXPtr + lenX + lenY)
+        var cx = 0
+        var cy = 0
+        var cz = 0
+        for (i in 0 until vertexCount) {
+            val mask = u8(vertexFlagsPtr + i)
+            if (mask and 1 != 0) cx += rx.smart()
+            if (mask and 2 != 0) cy += ry.smart()
+            if (mask and 4 != 0) cz += rz.smart()
+            xs[i] = cx
+            ys[i] = cy
+            zs[i] = cz
+        }
+        check(rx.p == vertexXPtr + lenX && ry.p == vertexXPtr + lenX + lenY && rz.p == restPtr) { "vertex streams did not line up" }
+
+        val fr = Reader(faceDataPtr)
+        val faces = Array(faceCount) { IntArray(3) }
+        var a = 0
+        var b = 0
+        var c = 0
+        var last = 0
+        for (i in 0 until faceCount) {
+            when (u8(faceTypePtr + i)) {
+                1 -> { a = fr.smart() + last; b = fr.smart() + a; c = fr.smart() + b; last = c }
+                2 -> { b = c; c = fr.smart() + last; last = c }
+                3 -> { a = c; c = fr.smart() + last; last = c }
+                4 -> { val pa = a; a = b; b = pa; c = fr.smart() + last; last = c }
+                else -> error("face type")
+            }
+            faces[i][0] = a
+            faces[i][1] = b
+            faces[i][2] = c
+        }
+        val keep = setOf(91, 480, 505)
+        val guard = BooleanArray(faceCount)
+        for (f in 0 until faceCount) {
+            val (fa, fb, fc) = faces[f].let { Triple(it[0], it[1], it[2]) }
+            val y = -(ys[fa] + ys[fb] + ys[fc]) / 3.0
+            val x = (xs[fa] + xs[fb] + xs[fc]) / 3.0
+            val z = (zs[fa] + zs[fb] + zs[fc]) / 3.0
+            val tex = if (faceTextureFlag == 1) u16(faceTexturePtr + f * 2) - 1 else -1
+            guard[f] = kotlin.math.hypot(x, z) < 45 && y >= 320 && tex !in keep
+        }
+        val usedByKept = BooleanArray(vertexCount)
+        val usedByGuard = BooleanArray(vertexCount)
+        for (f in 0 until faceCount) faces[f].forEach { if (guard[f]) usedByGuard[it] = true else usedByKept[it] = true }
+        val shared = (0 until vertexCount).count { usedByGuard[it] && usedByKept[it] }
+        check(shared == 0) { "$shared guard vertices are shared with the tower; collapsing them would tear it" }
+        for (v in 0 until vertexCount) if (usedByGuard[v]) { xs[v] = 0; ys[v] = -321; zs[v] = 0 }
+
+        val flagsOut = ByteArray(vertexCount)
+        val sx = java.io.ByteArrayOutputStream()
+        val sy = java.io.ByteArrayOutputStream()
+        val sz = java.io.ByteArrayOutputStream()
+        fun smart(out: java.io.ByteArrayOutputStream, v: Int) {
+            if (v in -64..63) out.write(v + 64) else { check(v in -16384..16383); val w = v + 49152; out.write(w shr 8); out.write(w and 0xFF) }
+        }
+        var px = 0
+        var py = 0
+        var pz = 0
+        for (i in 0 until vertexCount) {
+            var mask = 0
+            if (xs[i] != px) { mask = mask or 1; smart(sx, xs[i] - px) }
+            if (ys[i] != py) { mask = mask or 2; smart(sy, ys[i] - py) }
+            if (zs[i] != pz) { mask = mask or 4; smart(sz, zs[i] - pz) }
+            flagsOut[i] = mask.toByte()
+            px = xs[i]
+            py = ys[i]
+            pz = zs[i]
+        }
+        val out = java.io.ByteArrayOutputStream()
+        out.write(data, 0, vertexFlagsPtr)
+        out.write(flagsOut)
+        out.write(data, vertexFlagsPtr + vertexCount, vertexXPtr - (vertexFlagsPtr + vertexCount))
+        out.write(sx.toByteArray())
+        out.write(sy.toByteArray())
+        out.write(sz.toByteArray())
+        out.write(data, restPtr, t - restPtr)
+        val trailer = data.copyOfRange(t, data.size)
+        fun put16(at: Int, v: Int) { trailer[at] = (v shr 8).toByte(); trailer[at + 1] = v.toByte() }
+        put16(11, sx.size())
+        put16(13, sy.size())
+        put16(15, sz.size())
+        out.write(trailer)
+        return out.toByteArray() to guard.count { it }
+    }
+    /**
+     * The premium spiral staircase: the stone spiral 34872 (bottom) / 34873 (top) in white marble with gilded rails - its
+     * stone textures (70, 377, 67, 105) become the white marble 254 tinted near-white, its wooden rails (the recoloured
+     * 1510-1520 faces) are tinted gold. Options (Climb-up / Climb-down) are kept; GeHomeHall routes them.
+     */
+    private val STAIR_STONE = listOf(0x201e to 0x0070, 0x2022 to 0x0072, 0x2032 to 0x0074, 0x2037 to 0x0076)
+    private val STAIR_RAIL_GOLD = mapOf(0x1d10 to 0x23A0, 0x1d18 to 0x23A8, 0x1d1c to 0x23AC, 0x1d20 to 0x23B0)
+
+    private fun premiumStairs(def: ByteArray): ByteArray {
+        val at = opcodePosition(34872, def, 40)
+        check(at >= 0) { "stairs have no recolour" }
+        val pairs = def[at + 1].toInt() and 0xFF
+        val out = java.io.ByteArrayOutputStream()
+        out.write(byteArrayOf(41, 4, 0, 70, 0, 254.toByte(), 1, 121, 0, 254.toByte(), 0, 67, 0, 254.toByte(), 0, 105, 0, 254.toByte()))
+        out.write(def, 0, at)
+        out.write(40)
+        out.write(pairs + STAIR_STONE.size)
+        for (i in 0 until pairs) {
+            val p = at + 2 + i * 4
+            val dst = ((def[p + 2].toInt() and 0xFF) shl 8) or (def[p + 3].toInt() and 0xFF)
+            val gold = STAIR_RAIL_GOLD[dst] ?: error("unexpected rail tint ${dst.toString(16)}")
+            out.write(def, p, 2)
+            out.write(gold shr 8)
+            out.write(gold and 0xFF)
+        }
+        STAIR_STONE.forEach { (src, dst) -> out.write(byteArrayOf((src shr 8).toByte(), src.toByte(), (dst shr 8).toByte(), dst.toByte())) }
+        val rest = at + 2 + pairs * 4
+        out.write(def, rest, def.size - rest)
+        return out.toByteArray()
+    }
+
+    /** Variants that keep their menu options (the staircases). */
+    val WITH_OPTIONS = setOf(62779, 62780)
+
     /** [def] made see-through for projectiles (opcode 18), so npcs behind it are talked to across it like a bank booth. */
     private fun counterReach(def: ByteArray): ByteArray {
         check(opcodePosition(0, def, 18) < 0) { "already see-through" }
@@ -255,6 +473,10 @@ object RoyalHallLocTool {
             Variant(62771, 43953, "Royal Hall stall counter: carved mahogany desk 43953 (3x1), see-through", ::counterReach),
             Variant(62772, 41215, "Royal Hall stall counter: mahogany corner desk 41215 (1x1), see-through", ::counterReach),
             Variant(62773, SLATE, "Royal Hall royal-blue slate roof with gilded ridges (41409 recoloured)", ::royalSlate),
+            Variant(62776, 45238, "Royal Hall premium stall counter: white marble and gold (45238 at half length)", ::premiumCounter),
+            Variant(62778, 36695, "Royal Hall fountain: the Fountain of Heroes widened to 4x4", ::grandFountain),
+            Variant(62779, 34872, "Royal Hall spiral staircase (bottom): white marble, gilded rails", ::premiumStairs),
+            Variant(62780, 34873, "Royal Hall spiral staircase (top): white marble, gilded rails", ::premiumStairs),
             Variant(62768, 15548, "78 carpet corner (Varrock carpet 15548 with the 78 texture)", ::with78Carpet),
             Variant(62769, 15549, "78 carpet edge (Varrock carpet 15549 with the 78 texture)", ::with78Carpet),
             Variant(62770, 15550, "78 carpet middle (Varrock carpet 15550 with the 78 texture)", ::with78Carpet),
@@ -498,12 +720,21 @@ object RoyalHallLocTool {
                 materials.rows.getOrNull(CARPET_TEXTURE)?.let { r -> r.indices.all { r[it].contentEquals(row[it]) } } == true -> println("MATERIAL $CARPET_TEXTURE already in place")
                 else -> error("materials table has ${materials.present.size} rows; texture $CARPET_TEXTURE is taken by something else")
             }
+            // The corner turret without its little guard (TURRET_MODEL_CLEAN, used by 62766).
+            val turretSource = library.data(MODEL_INDEX, TURRET_MODEL, 0) ?: error("turret model missing")
+            val (turretMesh, turretCut) = turretWithoutGuard(turretSource)
+            val currentTurret = library.data(MODEL_INDEX, TURRET_MODEL_CLEAN, 0)
+            println("MODEL $TURRET_MODEL_CLEAN = $TURRET_MODEL without its guard ($turretCut faces) ${if (currentTurret == null) "create" else if (currentTurret.contentEquals(turretMesh)) "in place" else "REPLACE"}")
+            if (currentTurret == null || !currentTurret.contentEquals(turretMesh)) {
+                mutations += CacheMutation(MODEL_INDEX, TURRET_MODEL_CLEAN, 0, turretMesh, "Royal Hall turret without the guard", currentTurret?.let { CacheItemProbeTool.sha1(it) })
+            }
             VARIANTS.forEach { v ->
                 val source = library.data(LOC_INDEX, v.source ushr 8, v.source and 0xFF) ?: error("loc ${v.source} missing")
                 val wanted = v.edit(source)
                 val before = Rev667LocType.decode(v.source, source)
                 val after = Rev667LocType.decode(v.id, wanted)
-                check(after.allModels == before.allModels && after.options.all { it == null || it.equals("hidden", true) }) { "variant ${v.id} is wrong" }
+                val expectedModels = before.allModels.map { if (it == TURRET_MODEL && v.source == 43730) TURRET_MODEL_CLEAN else it }
+                check(after.allModels == expectedModels && (v.id in WITH_OPTIONS || after.options.all { it == null || it.equals("hidden", true) })) { "variant ${v.id} is wrong" }
                 val current = library.data(LOC_INDEX, v.id ushr 8, v.id and 0xFF)
                 when {
                     current == null -> println("CREATE loc ${v.id} from ${v.source}: ${v.label} (size ${after.sizeX}x${after.sizeZ})")
