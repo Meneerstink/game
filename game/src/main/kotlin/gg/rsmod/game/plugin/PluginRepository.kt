@@ -721,6 +721,17 @@ class PluginRepository(
 
     fun getNpcInteractionDistance(npc: Int): Int? = npcInteractionDistancePlugins.getOrDefault(npc, null)
 
+    /**
+     * Lets players interact with [npc] from up to [distance] tiles in line of sight, like a banker across a booth, for
+     * npcs that stand behind a counter whatever option plugin binds them.
+     */
+    fun setNpcInteractionDistance(
+        npc: Int,
+        distance: Int,
+    ) {
+        npcInteractionDistancePlugins[npc] = distance
+    }
+
     fun getObjInteractionDistance(obj: Int): Int? = objInteractionDistancePlugins.getOrDefault(obj, null)
 
     fun bindWorldInit(plugin: Plugin.() -> Unit) {

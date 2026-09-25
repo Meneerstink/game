@@ -45,6 +45,179 @@ object RoyalHallLocTool {
             Copy(62758, FOUNTAIN, null, "Royal Hall fountain (exact copy of the Grand Exchange fountain 47150)"),
         )
 
+    /** A copy of loc [source] as [id], its definition bytes changed by [edit] (models and everything else kept). */
+    class Variant(val id: Int, val source: Int, val label: String, val edit: (ByteArray) -> ByteArray)
+
+    /** The gold "Large door" leaves 22435/22437 stand open in the hall's south doorway as scenery: their "Open" option goes. */
+    private fun withoutLeadingOption(def: ByteArray): ByteArray {
+        check(def[0] == 30.toByte()) { "expected the definition to start with option 1" }
+        val end = def.indexOf(0.toByte())
+        return def.copyOfRange(end + 1, def.size)
+    }
+
+    /** The white marble counter 37169 is 2 x 1; the hall's stall counters are 1 x 1, the same model at half length. */
+    private fun halfCounter(def: ByteArray): ByteArray {
+        check(def[0] == 14.toByte() && def[1] == 2.toByte()) { "expected sizeX 2 first" }
+        return byteArrayOf(14, 1, 65, 0, 64) + def.copyOfRange(2, def.size)
+    }
+
+    /** The Falador castle turret 43730 at 1.375x (model scale opcodes 65-67, 128 = 1x) for the hall's corner turrets. */
+    private fun grandTurret(def: ByteArray): ByteArray {
+        check(listOf(65, 66, 67).none { opcodePosition(43730, def, it) >= 0 }) { "turret already scaled" }
+        return byteArrayOf(65, 0, 176.toByte(), 66, 0, 176.toByte(), 67, 0, 176.toByte()) + def
+    }
+
+    /**
+     * The Royal Hall's minimap and world-map icon: a 15 x 15 badge in the style of the game's own (black outline, round
+     * ring) - a gold crown with red and pearl gems on 78 purple inside a gold ring. [ICON_ELEMENT] is a copy of the
+     * Grand Exchange's MapElementType 637 showing [ICON_SPRITE]; [ICON_LOC] a copy of its invisible marker loc 27990
+     * carrying [ICON_ELEMENT], placed on the hall's centre by RoyalHallMapTool.
+     */
+    const val ICON_SPRITE = 8193
+    const val ICON_ELEMENT = 1107
+    const val ICON_LOC = 62767
+    private const val GE_ELEMENT = 637
+    private const val GE_MARKER = 27990
+    private const val SPRITE_INDEX = 8
+    private const val CONFIG_INDEX = 2
+    private const val MAP_ELEMENT_GROUP = 36
+
+    private val ICON_ROWS =
+        listOf(
+            ".....KKKKK.....",
+            "...KKGGGGGKK...",
+            "..KGGPPPPPGGK..",
+            ".KGPPPPPPPPPGK.",
+            ".KGPPPPHPPPPGK.",
+            "KGPPHPPGPPHPPGK",
+            "KGPPGPGGGPGPPGK",
+            "KGPPGGGGGGGPPGK",
+            "KGPPGRGWGRGPPGK",
+            "KGPPGGGGGGGPPGK",
+            ".KGPDDDDDDDPGK.",
+            ".KGPPPPPPPPPGK.",
+            "..KGGPPPPPGGK..",
+            "...KKGGGGGKK...",
+            ".....KKKKK.....",
+        )
+    private val ICON_COLOURS =
+        mapOf('K' to 0x0A0A0A, 'G' to 0xE8B830, 'H' to 0xFFE680, 'D' to 0x9C6B12, 'P' to 0x4E1F74, 'R' to 0xD0202A, 'W' to 0xF4F0E8)
+
+    fun iconImage(): java.awt.image.BufferedImage {
+        val image = java.awt.image.BufferedImage(15, 15, java.awt.image.BufferedImage.TYPE_INT_ARGB)
+        ICON_ROWS.forEachIndexed { y, row -> row.forEachIndexed { x, c -> ICON_COLOURS[c]?.let { image.setRGB(x, y, it or (0xFF shl 24)) } } }
+        return image
+    }
+
+    /** [def] (a MapElementType, op 1 = u16 sprite first) showing [sprite]. */
+    private fun withSprite(def: ByteArray, sprite: Int): ByteArray {
+        check(def[0] == 1.toByte()) { "expected the sprite first" }
+        return def.copyOf().also {
+            it[1] = (sprite shr 8).toByte()
+            it[2] = sprite.toByte()
+        }
+    }
+
+    /** [def] (a marker LocType, op 107 = u16 map element first) carrying [element]. */
+    private fun withElement(def: ByteArray, element: Int): ByteArray {
+        check(def[0] == 107.toByte()) { "expected the map element first" }
+        return def.copyOf().also {
+            it[1] = (element shr 8).toByte()
+            it[2] = element.toByte()
+        }
+    }
+
+    /**
+     * The 78 carpet: a sprite texture in the house colours replacing the Varrock Palace carpet's procedural gold texture
+     * 106. Alternating royal purple diamonds framed by a gold lattice with dark-gold edges and a thin inner gold line, gold
+     * studs where the lines cross and a four-pointed gold star in every diamond; 128 px with a 64 px period, so it tiles seamlessly. Its metrics are 106's
+     * (same tiling, lighting and low-detail fallback) as a full-size, still texture with a purple average colour.
+     */
+    const val CARPET_SPRITE = 8194
+    const val CARPET_TEXTURE = 1416
+    private const val VARROCK_CARPET_TEXTURE = 106
+    private const val SPRITE_TEXTURE_TEMPLATE = 40
+    private const val TEXTURE_INDEX = 9
+    private const val MATERIALS_INDEX = 26
+
+    /** HSL16 royal purple (hue 48 of 64, saturation 4, lightness 36), the carpet's colour on low detail and far away. */
+    private const val CARPET_AVERAGE_HSL = (48 shl 10) or (4 shl 7) or 36
+
+    fun carpetImage(): java.awt.image.BufferedImage {
+        val size = 128
+        val period = 64
+        val purple = 0x4A1C6E
+        val purpleDeep = 0x3A1458
+        val gold = 0xE0B040
+        val goldLight = 0xF6D877
+        val goldDark = 0x8C5E12
+        val image = java.awt.image.BufferedImage(size, size, java.awt.image.BufferedImage.TYPE_INT_ARGB)
+        for (y in 0 until size) for (x in 0 until size) {
+            // Diagonal coordinates: lattice lines are x + y = k * period and x - y = k * period.
+            val a = Math.floorMod(x + y, period)
+            val b = Math.floorMod(x - y, period)
+            val la = minOf(a, period - a)
+            val lb = minOf(b, period - b)
+            val line = minOf(la, lb)
+            // Alternating diamonds (checkerboard in diagonal space).
+            val parity = Math.floorMod(Math.floorDiv(x + y, period) + Math.floorDiv(x - y, period), 2)
+            var rgb = if (parity == 0) purple else purpleDeep
+            // Thin inner gold outline in every diamond.
+            if (line in 10..11) rgb = goldDark
+            // Lattice band: light core, gold, dark-gold rim.
+            rgb = when {
+                line <= 1 -> goldLight
+                line <= 4 -> gold
+                line <= 6 -> goldDark
+                else -> rgb
+            }
+            // Studs where two lines cross.
+            val cross = kotlin.math.hypot(la.toDouble(), lb.toDouble()) / Math.sqrt(2.0)
+            if (cross <= 6.5) rgb = if (cross <= 4.5) (if (cross <= 2.0) goldLight else gold) else goldDark
+            // Four-pointed star (points up, down, left and right) in each diamond's centre.
+            val da = a - period / 2
+            val db = b - period / 2
+            val dx = kotlin.math.abs(da + db) / 2
+            val dy = kotlin.math.abs(da - db) / 2
+            if (dx + dy <= 13 && dx * dy <= 4) rgb = if (dx + dy <= 4) goldLight else gold
+            image.setRGB(x, y, rgb or (0xFF shl 24))
+        }
+        return image
+    }
+
+    /**
+     * [def] with the Varrock carpet texture replaced by the 78 carpet (loc opcode 41, texture pairs). The Varrock carpet's
+     * texture is grey and its recolour (opcode 40) tints it gold; the 78 texture carries its own colours, so every recolour
+     * target becomes a neutral grey 1.8x as light (the border stays relatively darker) and the texture shows true.
+     */
+    private fun with78Carpet(def: ByteArray): ByteArray {
+        check(opcodePosition(15550, def, 41) < 0) { "carpet already retextured" }
+        val out = def.copyOf()
+        val at = opcodePosition(15550, out, 40)
+        check(at >= 0) { "carpet has no recolour" }
+        val pairs = out[at + 1].toInt() and 0xFF
+        for (i in 0 until pairs) {
+            val p = at + 2 + i * 4 + 2
+            val hsl = ((out[p].toInt() and 0xFF) shl 8) or (out[p + 1].toInt() and 0xFF)
+            val neutral = minOf(127, (hsl and 0x7F) * 9 / 5)
+            out[p] = 0
+            out[p + 1] = neutral.toByte()
+        }
+        return byteArrayOf(41, 1, 0, VARROCK_CARPET_TEXTURE.toByte(), (CARPET_TEXTURE shr 8).toByte(), CARPET_TEXTURE.toByte()) + out
+    }
+
+    val VARIANTS =
+        listOf(
+            Variant(62768, 15548, "78 carpet corner (Varrock carpet 15548 with the 78 texture)", ::with78Carpet),
+            Variant(62769, 15549, "78 carpet edge (Varrock carpet 15549 with the 78 texture)", ::with78Carpet),
+            Variant(62770, 15550, "78 carpet middle (Varrock carpet 15550 with the 78 texture)", ::with78Carpet),
+            Variant(62766, 43730, "Royal Hall corner turret (Falador castle turret 43730 at 1.375x)", ::grandTurret),
+            Variant(ICON_LOC, GE_MARKER, "Royal Hall map marker (27990 carrying map element $ICON_ELEMENT)") { withElement(it, ICON_ELEMENT) },
+            Variant(62763, 22435, "Royal Hall open gold door, west leaf (22435 without its option)", ::withoutLeadingOption),
+            Variant(62764, 22437, "Royal Hall open gold door, east leaf (22437 without its option)", ::withoutLeadingOption),
+            Variant(62765, 37169, "Royal Hall 1x1 white marble stall counter (37169 at half length)", ::halfCounter),
+        )
+
     /**
      * The Grand Exchange's visible paving in the centre is four 10 x 10 models (the plane-1 floor there is an invisible
      * walk surface, overlay 124). The hall's floor is cut out of copies of them: [newModel] is [model] with every face
@@ -206,6 +379,75 @@ object RoyalHallLocTool {
                     else -> error("loc ${copy.id} already exists with other content; refusing to overwrite it")
                 }
                 mutations += CacheMutation(LOC_INDEX, copy.id ushr 8, copy.id and 0xFF, wanted, copy.label, null)
+            }
+            val sprite = StoreArtTool.encode(iconImage())
+            val currentSprite = library.data(SPRITE_INDEX, ICON_SPRITE, 0)
+            when {
+                currentSprite == null -> println("CREATE sprite $ICON_SPRITE (Royal Hall map icon)")
+                currentSprite.contentEquals(sprite) -> println("SPRITE $ICON_SPRITE already in place")
+                else -> println("REPLACE sprite $ICON_SPRITE (Royal Hall map icon redrawn)")
+            }
+            if (currentSprite == null || !currentSprite.contentEquals(sprite)) {
+                mutations += CacheMutation(SPRITE_INDEX, ICON_SPRITE, 0, sprite, "Royal Hall map icon sprite", currentSprite?.let { CacheItemProbeTool.sha1(it) })
+            }
+            val element = withSprite(library.data(CONFIG_INDEX, MAP_ELEMENT_GROUP, GE_ELEMENT) ?: error("map element $GE_ELEMENT missing"), ICON_SPRITE)
+            val currentElement = library.data(CONFIG_INDEX, MAP_ELEMENT_GROUP, ICON_ELEMENT)
+            when {
+                currentElement == null -> {
+                    println("CREATE map element $ICON_ELEMENT (637 with sprite $ICON_SPRITE)")
+                    mutations += CacheMutation(CONFIG_INDEX, MAP_ELEMENT_GROUP, ICON_ELEMENT, element, "Royal Hall map element", null)
+                }
+                currentElement.contentEquals(element) -> println("MAP ELEMENT $ICON_ELEMENT already in place")
+                else -> error("map element $ICON_ELEMENT already exists with other content; refusing to overwrite it")
+            }
+            val carpetSprite = OsrsTextureImportTool.opaqueSprite(carpetImage())
+            val currentCarpetSprite = library.data(SPRITE_INDEX, CARPET_SPRITE, 0)
+            if (currentCarpetSprite == null || !currentCarpetSprite.contentEquals(carpetSprite)) {
+                println("${if (currentCarpetSprite == null) "CREATE" else "REPLACE"} sprite $CARPET_SPRITE (78 carpet texture image)")
+                mutations += CacheMutation(SPRITE_INDEX, CARPET_SPRITE, 0, carpetSprite, "78 carpet texture sprite", currentCarpetSprite?.let { CacheItemProbeTool.sha1(it) })
+            }
+            val template = library.data(TEXTURE_INDEX, SPRITE_TEXTURE_TEMPLATE, 0) ?: error("texture $SPRITE_TEXTURE_TEMPLATE missing")
+            val at = OsrsTextureImportTool.spriteParamOffset(template)
+            val program = template.copyOf().also { it[at] = (CARPET_SPRITE ushr 8).toByte(); it[at + 1] = CARPET_SPRITE.toByte() }
+            val currentProgram = library.data(TEXTURE_INDEX, CARPET_TEXTURE, 0)
+            when {
+                currentProgram == null -> {
+                    println("CREATE texture $CARPET_TEXTURE (sprite $CARPET_SPRITE)")
+                    mutations += CacheMutation(TEXTURE_INDEX, CARPET_TEXTURE, 0, program, "78 carpet texture program", null)
+                }
+                currentProgram.contentEquals(program) -> println("TEXTURE $CARPET_TEXTURE already in place")
+                else -> error("texture $CARPET_TEXTURE already exists with other content; refusing to overwrite it")
+            }
+            val materialsBytes = library.data(MATERIALS_INDEX, 0, 0) ?: error("materials table missing")
+            val materials = OsrsTextureImportTool.Materials.decode(materialsBytes)
+            val row = Array(OsrsTextureImportTool.MATERIAL_COLUMNS.size) { materials.rows[VARROCK_CARPET_TEXTURE]!![it].copyOf() }
+            row[1][0] = 0 // small = false: a 128 px sprite
+            row[7][0] = (CARPET_AVERAGE_HSL shr 8).toByte() // low-detail colour: royal purple
+            row[7][1] = CARPET_AVERAGE_HSL.toByte()
+            row[OsrsTextureImportTool.COL_SPEED_U][0] = 0
+            row[OsrsTextureImportTool.COL_SPEED_V][0] = 0
+            when {
+                materials.present.size == CARPET_TEXTURE -> {
+                    println("APPEND material row $CARPET_TEXTURE")
+                    val updated = OsrsTextureImportTool.Materials(materials.present + true, materials.rows + arrayOf(row)).encode()
+                    mutations += CacheMutation(MATERIALS_INDEX, 0, 0, updated, "materials + 78 carpet texture $CARPET_TEXTURE", CacheItemProbeTool.sha1(materialsBytes))
+                }
+                materials.rows.getOrNull(CARPET_TEXTURE)?.let { r -> r.indices.all { r[it].contentEquals(row[it]) } } == true -> println("MATERIAL $CARPET_TEXTURE already in place")
+                else -> error("materials table has ${materials.present.size} rows; texture $CARPET_TEXTURE is taken by something else")
+            }
+            VARIANTS.forEach { v ->
+                val source = library.data(LOC_INDEX, v.source ushr 8, v.source and 0xFF) ?: error("loc ${v.source} missing")
+                val wanted = v.edit(source)
+                val before = Rev667LocType.decode(v.source, source)
+                val after = Rev667LocType.decode(v.id, wanted)
+                check(after.allModels == before.allModels && after.options.all { it == null || it.equals("hidden", true) }) { "variant ${v.id} is wrong" }
+                val current = library.data(LOC_INDEX, v.id ushr 8, v.id and 0xFF)
+                when {
+                    current == null -> println("CREATE loc ${v.id} from ${v.source}: ${v.label} (size ${after.sizeX}x${after.sizeZ})")
+                    current.contentEquals(wanted) -> return@forEach println("LOC ${v.id} already in place")
+                    else -> println("REPLACE loc ${v.id} (Royal Hall variant redefined): ${v.label}")
+                }
+                mutations += CacheMutation(LOC_INDEX, v.id ushr 8, v.id and 0xFF, wanted, v.label, current?.let { CacheItemProbeTool.sha1(it) })
             }
             CUTS.forEach { cut ->
                 val source = library.data(MODEL_INDEX, cut.model, 0) ?: error("model ${cut.model} missing")

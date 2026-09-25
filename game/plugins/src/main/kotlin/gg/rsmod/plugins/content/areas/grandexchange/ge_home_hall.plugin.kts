@@ -28,13 +28,44 @@ val HALL_Z = GeHomeHall.Z
 
 // ------------------------------------------------------------------ the npcs
 
+// Each stall stands behind a marble counter (home_decor.txt): its npc, the 78 Store keepers and the Breach Trader are
+// reached across it.
+on_world_init {
+    val ids = GeHomeHall.SERVICE_POSTS.map { it.npc } + gg.rsmod.plugins.content.mechanics.store.StoreNpcs.POSTS.map { it.npcId } + GeHomeHall.BREACH_TRADER
+    ids.forEach { world.plugins.setNpcInteractionDistance(it, GeHomeHall.COUNTER_REACH) }
+}
+
 /** One stall: an npc on the inside of a wall, facing into the hall. */
 GeHomeHall.SERVICE_POSTS.forEach { post ->
     spawn_npc(
         npc = post.npc,
         x = HALL_X + post.dx,
         z = HALL_Z + post.dz,
+        height = post.level,
         walkRadius = 0,
         direction = post.facing,
     )
+}
+
+// ------------------------------------------------------------------ the spiral staircases to the gallery
+
+// The hall's two staircases (GeHomeHall.STAIRS) are dressing from home_decor.txt; this takes their climb options before
+// the generic stairs so players land on the rug in front of them or on the gallery beside the stairwell.
+on_world_init {
+    world.plugins.bindObjectOverride { p, obj, opt ->
+        // The top (1740) stands on the same x/z as the bottom's south-west tile, one level up.
+        val stairs = GeHomeHall.STAIRS.firstOrNull { it.base.x == obj.tile.x && it.base.z == obj.tile.z && obj.tile.height <= 1 } ?: return@bindObjectOverride false
+        val option = obj.getDef(world.definitions).options.getOrNull(opt - 1)?.lowercase() ?: return@bindObjectOverride false
+        val up = obj.id == GeHomeHall.STAIRS_BOTTOM && (option == "climb" || option == "climb-up")
+        val down = obj.id == GeHomeHall.STAIRS_TOP && (option == "climb" || option == "climb-down")
+        if (!up && !down) {
+            if (obj.id == GeHomeHall.STAIRS_BOTTOM || obj.id == GeHomeHall.STAIRS_TOP) p.message("These stairs only lead ${if (obj.id == GeHomeHall.STAIRS_BOTTOM) "up" else "down"}.")
+            return@bindObjectOverride obj.id == GeHomeHall.STAIRS_BOTTOM || obj.id == GeHomeHall.STAIRS_TOP
+        }
+        p.lockingQueue(lockState = gg.rsmod.game.model.LockState.FULL) {
+            wait(2)
+            p.moveTo(if (up) stairs.gallery else stairs.floor)
+        }
+        true
+    }
 }

@@ -12,15 +12,15 @@ class GeHomeHallTests {
     fun `service posts are unique balanced and keep entrances clear`() {
         val posts = GeHomeHall.SERVICE_POSTS
         assertEquals(posts.size, posts.map { it.npc }.distinct().size)
-        assertEquals(posts.size, posts.map { it.dx to it.dz }.distinct().size)
+        assertEquals(posts.size, posts.map { Triple(it.dx, it.dz, it.level) }.distinct().size)
         assertTrue(posts.all { it.dx in 0 until GeHomeHall.WIDTH && it.dz in 0 until GeHomeHall.DEPTH })
         // Doorways stay clear, and so do the four corners (armour).
         assertFalse(posts.any { (it.dx == 0 || it.dx == GeHomeHall.WIDTH - 1) && it.dz in GeHomeHall.SIDE_DOOR })
-        assertFalse(posts.any { it.dz == 0 && it.dx in GeHomeHall.SOUTH_DOOR })
+        assertFalse(posts.any { it.level == 0 && it.dz == 0 && it.dx in GeHomeHall.SOUTH_DOOR })
         assertFalse(posts.any { (it.dx == 0 || it.dx == GeHomeHall.WIDTH - 1) && (it.dz == 0 || it.dz == GeHomeHall.DEPTH - 1) })
         // Every stall faces into the hall and the tile in front of it is not another stall.
         val taken = posts.map { it.dx to it.dz }.toSet()
-        posts.forEach { post ->
+        posts.filter { it.level == 0 }.forEach { post ->
             val front =
                 when (post.facing) {
                     Direction.EAST -> post.dx + 1 to post.dz
@@ -39,5 +39,16 @@ class GeHomeHallTests {
         assertTrue(GeHomeHall.SERVICE_LUCIEN in ids)
         assertFalse(Npcs.LUCIEN in ids)
         assertTrue(ids.intersect(GeHomeHall.REMOVED_PENGUINS).isEmpty())
+    }
+
+    @Test
+    fun `spiral staircases keep clear of every ground floor stall`() {
+        val stairTiles = GeHomeHall.STAIRS.flatMap { s -> (0..1).flatMap { dx -> (0..1).map { dz -> (s.base.x - GeHomeHall.X + dx) to (s.base.z - GeHomeHall.Z + dz) } } }.toSet()
+        assertTrue(GeHomeHall.SERVICE_POSTS.filter { it.level == 0 }.none { (it.dx to it.dz) in stairTiles })
+        GeHomeHall.STAIRS.forEach { s ->
+            assertEquals(1, s.gallery.height)
+            assertEquals(0, s.floor.height)
+            assertFalse((s.floor.x - GeHomeHall.X to s.floor.z - GeHomeHall.Z) in stairTiles)
+        }
     }
 }

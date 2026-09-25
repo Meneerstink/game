@@ -31,12 +31,15 @@ object GeHomeHall {
     /** The non-combat quest variant has the same Lucien identity/BAS and keeps Talk-to without advertising Attack. */
     const val SERVICE_LUCIEN = Npcs.LUCIEN_273
 
-    data class ServicePost(val npc: Int, val dx: Int, val dz: Int, val facing: Direction)
+    /** One stall: npc [npc] on floor offset ([dx], [dz]) of level [level] (1 = the gallery lounge), facing [facing]. */
+    data class ServicePost(val npc: Int, val dx: Int, val dz: Int, val facing: Direction, val level: Int = 0)
 
     /**
-     * West and east walls hold six stalls each (either side of their doorway), the north wall six (either side of the
-     * thrones), the south wall two west of the entrance. The rest of the south row belongs to the Breach Trader
-     * (breach_shop, dx 3) and the 78 Store keepers (StoreNpcs, dx 10-12), which are deliberately not duplicated here.
+     * Ground floor: west and east walls hold five stalls each (either side of their doorway), the north wall one either
+     * side of the throne dais (the corners beside it hold the spiral staircases), the south wall four (two here, the
+     * Breach Trader at dx 3 in breach_shop and Kuradal) west of the entrance and Perdu plus the three 78 Store keepers
+     * (StoreNpcs, dx 10-12) east of it. Every ground-floor stall stands behind a marble counter. The gallery lounge
+     * above the entrance (level 1) hosts the four npcs players visit least.
      */
     val SERVICE_POSTS =
         listOf(
@@ -45,24 +48,46 @@ object GeHomeHall {
             ServicePost(Npcs.AVA, 0, 3, Direction.EAST),
             ServicePost(Npcs.PIKKUPSTIX, 0, 8, Direction.EAST),
             ServicePost(Npcs.ALECK, 0, 9, Direction.EAST),
-            ServicePost(Npcs.PARTY_PETE, 0, 10, Direction.EAST),
             ServicePost(Npcs.WISE_OLD_MAN, 13, 1, Direction.WEST),
             ServicePost(Npcs.EVIL_DAVE, 13, 2, Direction.WEST),
             ServicePost(Npcs.TOOL_LEPRECHAUN, 13, 3, Direction.WEST),
             ServicePost(SERVICE_LUCIEN, 13, 8, Direction.WEST),
             ServicePost(Npcs.BOB, 13, 9, Direction.WEST),
-            ServicePost(Npcs.MANDRITH, 13, 10, Direction.WEST),
-            ServicePost(Npcs.KURADAL_9085, 1, 11, Direction.SOUTH),
-            ServicePost(Npcs.AZZANADRA, 2, 11, Direction.SOUTH),
-            ServicePost(Npcs.ARCHAEOLOGIST, 3, 11, Direction.SOUTH),
-            ServicePost(Npcs.ONEIROMANCER, 10, 11, Direction.SOUTH),
-            ServicePost(Npcs.KING_NARNODE_SHAREEN, 11, 11, Direction.SOUTH),
-            ServicePost(Npcs.PERDU, 12, 11, Direction.SOUTH),
+            ServicePost(Npcs.AZZANADRA, 3, 11, Direction.SOUTH),
+            ServicePost(Npcs.MANDRITH, 10, 11, Direction.SOUTH),
             ServicePost(QUARTERMASTER, 1, 0, Direction.NORTH),
             ServicePost(Npcs.DRUNKEN_DWARF, 2, 0, Direction.NORTH),
+            ServicePost(Npcs.KURADAL_9085, 4, 0, Direction.NORTH),
+            ServicePost(Npcs.PERDU, 9, 0, Direction.NORTH),
+            ServicePost(Npcs.PARTY_PETE, 3, 0, Direction.NORTH, level = 1),
+            ServicePost(Npcs.KING_NARNODE_SHAREEN, 5, 0, Direction.NORTH, level = 1),
+            ServicePost(Npcs.ONEIROMANCER, 8, 0, Direction.NORTH, level = 1),
+            ServicePost(Npcs.ARCHAEOLOGIST, 10, 0, Direction.NORTH, level = 1),
+        )
+
+    /**
+     * The two white spiral staircases (1739, 2 x 2, south-west tile [base]) to the gallery, with their tops (1740) on the
+     * same tile of level 1. [floor] is where a player coming down lands (on the rug in front of the stairs), [gallery]
+     * where one going up lands (on the gallery beside the stairwell).
+     */
+    class Staircase(val base: Tile, val floor: Tile, val gallery: Tile)
+
+    const val STAIRS_BOTTOM = 1739
+    const val STAIRS_TOP = 1740
+
+    val STAIRS =
+        listOf(
+            Staircase(Tile(X + 1, Z + 10, 0), Tile(X + 2, Z + 9, 0), Tile(X + 1, Z + 9, 1)),
+            Staircase(Tile(X + 11, Z + 10, 0), Tile(X + 11, Z + 9, 0), Tile(X + 12, Z + 9, 1)),
         )
 
     val REMOVED_PENGUINS = setOf(Npcs.PENGUIN_5428, Npcs.PING, Npcs.PONG)
+
+    /** Every stall has a marble counter in front of it; its npc is talked to across it, like a banker across a booth. */
+    const val COUNTER_REACH = 2
+
+    /** The Breach Trader (breach_shop.plugin.kts), whose south-row stall also has a counter. */
+    const val BREACH_TRADER = 14478
 
     /** Whether [tile] is inside the hall; its stalls are a deliberate layout the GE boot audit must not rearrange. */
     fun contains(tile: Tile): Boolean = tile.height == 0 && tile.x in X until X + WIDTH && tile.z in Z until Z + DEPTH

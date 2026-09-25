@@ -52,6 +52,11 @@ object RoyalHallMapTool {
     private val SIDE_DOORS = 3490..3493
     private val SOUTH_DOOR = 3163..3166
 
+    /** Corners raised for the throne dais (height units x8), see the floor loop. */
+    private val DAIS_X = FLOOR_MIN_X + 4..FLOOR_MIN_X + 10
+    private val DAIS_Z = FLOOR_MIN_Z + 10..FLOOR_MIN_Z + 11
+    private const val DAIS_RISE = 3
+
     /** Overlay definition 243 (texture 1112, white marble with an inlaid pattern), written +1 as the map stores overlays. */
     private const val MARBLE_OVERLAY = 244
     private const val BLOCKED = 1
@@ -68,7 +73,11 @@ object RoyalHallMapTool {
     /** The centre's planters, their fences, the canopy ring on pillars and the map fountain. */
     private val REMOVED_IDS = setOf(47119, 84, 47174, 47175, 47244, 47246, 47150)
 
-    /** Invisible marker on the fountain tile (model 1105), kept. */
+    /** Tile of the hall's map icon marker: on the fountain, beside the fountain's own sound marker [KEPT_MARKER]. */
+    private const val ICON_X = 3164
+    private const val ICON_Z = 3491
+
+    /** Invisible marker on the fountain tile (model 1105), kept: it is the fountain's ambient sound (loc opcode 78). */
     private const val KEPT_MARKER = 29419
 
     @JvmStatic
@@ -93,12 +102,16 @@ object RoyalHallMapTool {
 
             var paved = 0
             var unbridged = 0
+            var gallery = 0
             var roofed = 0
             for (x in MIN_X..MAX_X) for (z in MIN_Z..MAX_Z) {
                 val ground = tiles.tiles[0][x - rx * 64][z - rz * 64]
                 val upper = tiles.tiles[1][x - rx * 64][z - rz * 64]
                 val floor = x in FLOOR_MIN_X..FLOOR_MAX_X && z in FLOOR_MIN_Z..FLOOR_MAX_Z
                 val doorway = (x == MIN_X || x == MAX_X) && z in SIDE_DOORS || z == MIN_Z && x in SOUTH_DOOR
+                // The throne dais: a tile's height is its south-west corner, so these corners lift the red platform
+                // (floor dx 4-9, dz 10) and ramp gently to the north wall and the rug.
+                if (x in DAIS_X && z in DAIS_Z) ground.height += DAIS_RISE
                 if (floor) {
                     ground.overlayId = MARBLE_OVERLAY
                     ground.overlayShape = 0
@@ -112,6 +125,20 @@ object RoyalHallMapTool {
                 upper.overlayShape = 0
                 upper.overlayRotation = 0
                 upper.underlayId = 0
+                // The gallery lounge: a two-tile marble ring along the walls on level 1, roof removed when standing on it
+                // (so the roof hides upstairs too); the rest of level 1 over the floor is open to the hall below and
+                // blocked, so nobody walks off the gallery.
+                if (floor) {
+                    val dx = x - FLOOR_MIN_X
+                    val dz = z - FLOOR_MIN_Z
+                    if (dx <= 1 || dx >= FLOOR_MAX_X - FLOOR_MIN_X - 1 || dz <= 1 || dz >= FLOOR_MAX_Z - FLOOR_MIN_Z - 1) {
+                        upper.overlayId = MARBLE_OVERLAY
+                        upper.flags = REMOVE_ROOF
+                        gallery++
+                    } else {
+                        upper.flags = BLOCKED
+                    }
+                }
                 // Storey heights for the second storey and the roof (client: level height = level below - value * 8).
                 for (level in 1..3) tiles.tiles[level][x - rx * 64][z - rz * 64].height = STOREY_STEPS[level - 1]
                 // Selective roof removal: standing on the hall's floor or in a doorway hides the upper storey and roof.
@@ -143,12 +170,14 @@ object RoyalHallMapTool {
             removed.groupBy { it.id }.forEach { (id, list) -> println("REMOVE $id x${list.size}") }
             val cuts = RoyalHallLocTool.CUTS.associateBy { Triple(it.source, it.x, it.z) }
             var swapped = 0
-            val kept =
+            val swappedLocs =
                 (locs - removed.toSet()).map { loc ->
                     val cut = cuts[Triple(loc.id, rx * 64 + loc.localX, rz * 64 + loc.localZ)]
                     if (cut == null || loc.plane != 0) loc else Rev667Loc(cut.id, loc.localX, loc.localZ, loc.plane, loc.type, loc.rotation).also { swapped++ }
                 }
             check(swapped == cuts.size) { "expected ${cuts.size} paving models, swapped $swapped" }
+            // The Royal Hall's minimap / world-map icon (RoyalHallLocTool.ICON_LOC), on the fountain beside its sound marker.
+            val kept = swappedLocs + Rev667Loc(RoyalHallLocTool.ICON_LOC, ICON_X - rx * 64, ICON_Z - rz * 64, 0, 22, 0)
             kept.filter(inHall).forEach { println("REMAINS ${it.id} type=${it.type} at ${rx * 64 + it.localX},${rz * 64 + it.localZ},${it.plane}") }
             val updatedLocs = Rev667LocCodec.encode(kept)
             if (!updatedLocs.contentEquals(locBytes)) {
@@ -163,7 +192,7 @@ object RoyalHallMapTool {
                         xtea = key,
                     )
             }
-            println("ROYAL_HALL_MAP swapped=$swapped paved=$paved unbridged=$unbridged roofed=$roofed locsRemoved=${removed.size}")
+            println("ROYAL_HALL_MAP gallery=$gallery swapped=$swapped paved=$paved unbridged=$unbridged roofed=$roofed locsRemoved=${removed.size}")
         } finally {
             library.close()
         }
