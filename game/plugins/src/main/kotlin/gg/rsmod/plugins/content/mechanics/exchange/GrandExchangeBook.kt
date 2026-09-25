@@ -86,7 +86,18 @@ object GrandExchangeBook {
         newOffer: GrandExchangeOffer,
         allowance: GeBuyAllowance = GeBuyAllowance.UNLIMITED,
         systemPrice: (Int) -> Int? = { GeSystemLiquidity.UNIT_PRICE[it] },
+        taxPerItem: (itemId: Int, unitPrice: Int) -> Int = { _, _ -> 0 },
     ): List<GeFill> {
+        // OSRS convenience fee: the seller receives the execution price minus the fee on every item sold.
+        fun paySeller(
+            seller: GrandExchangeOffer,
+            quantity: Int,
+            unitPrice: Int,
+        ) {
+            val tax = taxPerItem(seller.itemId, unitPrice).coerceIn(0, unitPrice).toLong() * quantity
+            seller.collectableCoins += unitPrice.toLong() * quantity - tax
+            seller.taxPaid += tax
+        }
         val fills = mutableListOf<GeFill>()
         val opposite =
             book
@@ -133,7 +144,7 @@ object GrandExchangeBook {
             if (buyOffer.remaining <= 0) buyOffer.status = OfferStatus.COMPLETED
 
             sellOffer.quantityFilled += quantity
-            sellOffer.collectableCoins += quantity.toLong() * execPrice
+            paySeller(sellOffer, quantity, execPrice)
             sellOffer.coinsTraded += execPrice.toLong() * quantity
             if (sellOffer.remaining <= 0) sellOffer.status = OfferStatus.COMPLETED
 
@@ -162,10 +173,10 @@ object GrandExchangeBook {
         /*
          * The house also buys, so a sell offer never sits unsold (owner 2026-09-20).
          *
-         * It pays the seller's own asking price and only when that ask is at or below the guide price, which is
-         * what stops the two sides becoming a money loop: the house sells at guide and buys at no more than
-         * guide, so buying from it and selling straight back is break-even at best, never profitable. A seller
-         * asking above guide is left resting for a real player, exactly as before.
+         * The house acts like a resting OSRS buy offer at the guide price: it takes any ask at or below the guide
+         * and, as in OSRS where the earlier offer's price is the trade price, pays the guide price (a low ask is
+         * not taken at face value). Buying from the house and selling straight back is guide in, guide out minus
+         * the convenience fee, so never profitable. A seller asking above guide is left resting for a real player.
          *
          * No buy limit is recorded here - limits exist to stop one account draining supply, and selling into the
          * house is the opposite of draining it.
@@ -173,9 +184,9 @@ object GrandExchangeBook {
         if (newOffer.type == OfferType.SELL && newOffer.remaining > 0) {
             if (house != null && newOffer.pricePerItem <= house) {
                 val quantity = newOffer.remaining
-                val paid = newOffer.pricePerItem
+                val paid = house
                 newOffer.quantityFilled += quantity
-                newOffer.collectableCoins += paid.toLong() * quantity
+                paySeller(newOffer, quantity, paid)
                 newOffer.coinsTraded += paid.toLong() * quantity
                 newOffer.status = OfferStatus.COMPLETED
                 fills.add(GeFill(null, newOffer.id, quantity, paid, fromSystem = true))

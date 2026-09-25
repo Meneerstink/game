@@ -157,11 +157,12 @@ class GrandExchangeInterfaceTests {
         assertNull(service.freeSlot("a"))
         assertNotNull(service.submit("b", OfferType.SELL, Items.ABYSSAL_WHIP, 90, 2, slot = 3), "slots are per player")
 
-        // b's sell fills two of a's buys at the resting price (100): b is owed 200, a's first two offers complete.
+        // b's sell fills two of a's buys at the resting price (100): b is owed 200 minus the 2 % OSRS fee (2 gp each).
         val aOffers = (0 until 6).map { service.offerInSlot("a", it)!! }
         val completed = aOffers.filter { it.status == OfferStatus.COMPLETED }
         assertEquals(2, completed.size)
-        assertEquals(200L, service.offerInSlot("b", 3)!!.collectableCoins)
+        assertEquals(196L, service.offerInSlot("b", 3)!!.collectableCoins)
+        assertEquals(4L, service.offerInSlot("b", 3)!!.taxPaid)
 
         val aborted = aOffers.first { it.status == OfferStatus.ACTIVE }
         service.cancel("a", aborted.id)

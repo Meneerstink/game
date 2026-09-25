@@ -132,7 +132,10 @@ object GrandExchangeInterface {
         if (offer == null) {
             UpdateStockmarketSlotMessage(slot, STATE_EMPTY, 0, 0, 0, 0, 0)
         } else {
-            val gold = minOf(offer.quantityFilled.toLong() * offer.pricePerItem, Int.MAX_VALUE.toLong()).toInt()
+            // OSRS shows the coins actually exchanged (a buy filled below its offer price shows the lower total);
+            // offers saved before coinsTraded existed fall back to the offer price.
+            val traded = if (offer.coinsTraded > 0 || offer.quantityFilled == 0) offer.coinsTraded else offer.quantityFilled.toLong() * offer.pricePerItem
+            val gold = minOf(traded, Int.MAX_VALUE.toLong()).toInt()
             UpdateStockmarketSlotMessage(slot, status(offer), offer.itemId, offer.pricePerItem, offer.totalQuantity, offer.quantityFilled, gold)
         }
 

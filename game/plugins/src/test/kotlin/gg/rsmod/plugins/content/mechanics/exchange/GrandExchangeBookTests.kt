@@ -63,6 +63,45 @@ class GrandExchangeBookTests {
     }
 
     @Test
+    fun `OSRS convenience fee - 2 percent rounded down, 5M cap per item, sub-50 free, exempt list`() {
+        assertEquals(0, GeTax.perItem(49))
+        assertEquals(1, GeTax.perItem(50))
+        assertEquals(1, GeTax.perItem(99))
+        assertEquals(2_000, GeTax.perItem(100_000))
+        assertEquals(5_000_000, GeTax.perItem(250_000_000))
+        assertEquals(5_000_000, GeTax.perItem(Int.MAX_VALUE))
+        listOf("Lobster", "Hammer", "Energy potion(4)", "Energy potion(1)", "Watering can", "Watering can(8)", "Ring of dueling(8)",
+            "Games necklace(8)", "Varrock teleport", "Mind rune", "Old school bond").forEach { assertEquals(true, GeTax.exempt(it), it) }
+        listOf("Ring of dueling(7)", "Games necklace(1)", "Abyssal whip", "Chocolate cake", "Raw lobster", "Super energy(4)", null)
+            .forEach { assertEquals(false, GeTax.exempt(it), "$it") }
+    }
+
+    @Test
+    fun `seller pays the fee on player trades and on house sales`() {
+        val tax: (Int, Int) -> Int = { _, price -> GeTax.perItem(price) }
+        val buy = GrandExchangeOffer(id = 1, username = "buyer", type = OfferType.BUY, itemId = 4151, pricePerItem = 1_000, totalQuantity = 3)
+        val book = mutableListOf(buy)
+        val sell = GrandExchangeOffer(id = 2, username = "seller", type = OfferType.SELL, itemId = 4151, pricePerItem = 900, totalQuantity = 3)
+        book.add(sell)
+        GrandExchangeBook.match(book, sell, taxPerItem = tax)
+        assertEquals(2_940L, sell.collectableCoins, "sold at the resting buy price 1,000, minus 20 each")
+        assertEquals(60L, sell.taxPaid)
+        assertEquals(3_000L, sell.coinsTraded)
+        assertEquals(0L, buy.collectableCoins, "buyers pay no fee")
+    }
+
+    @Test
+    fun `house buys a low ask at the guide price like a resting OSRS buy offer`() {
+        val sell = GrandExchangeOffer(id = 1, username = "seller", type = OfferType.SELL, itemId = 4151, pricePerItem = 1, totalQuantity = 2)
+        val fills = GrandExchangeBook.match(mutableListOf(sell), sell, systemPrice = { 1_000 }, taxPerItem = { _, p -> GeTax.perItem(p) })
+        assertEquals(1_000, fills.single().unitPrice)
+        assertEquals(OfferStatus.COMPLETED, sell.status)
+        assertEquals(1_960L, sell.collectableCoins)
+        val high = GrandExchangeOffer(id = 2, username = "seller", type = OfferType.SELL, itemId = 4151, pricePerItem = 1_001, totalQuantity = 1)
+        assertEquals(0, GrandExchangeBook.match(mutableListOf(high), high, systemPrice = { 1_000 }).size, "an ask above guide rests")
+    }
+
+    @Test
     fun `unmatched buy for a non-whitelisted item stays active and uncollectable`() {
         val buy = GrandExchangeOffer(id = 1, username = "buyer", type = OfferType.BUY, itemId = 4151, pricePerItem = 1000, totalQuantity = 1)
         val fills = GrandExchangeBook.match(mutableListOf(buy), buy)

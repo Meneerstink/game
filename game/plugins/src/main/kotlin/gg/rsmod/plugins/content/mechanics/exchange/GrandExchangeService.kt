@@ -92,6 +92,15 @@ class GrandExchangeService(
         return guidePrice(itemId, OsrsGuidePrices.seed(def))
     }
 
+    /** The OSRS convenience fee ([GeTax]) on one [itemId] sold at [unitPrice]; 0 for an exempt item. */
+    fun taxPerItem(
+        itemId: Int,
+        unitPrice: Int,
+    ): Int {
+        val def = definitions?.getNullable(gg.rsmod.game.fs.def.ItemDef::class.java, itemId)
+        return if (GeTax.exempt(def)) 0 else GeTax.perItem(unitPrice)
+    }
+
     override fun postLoad(
         server: Server,
         world: World,
@@ -238,7 +247,7 @@ class GrandExchangeService(
                 )
             offers.add(offer)
             val guide = housePrice(itemId)
-            val fills = GrandExchangeBook.match(offers, offer, buyLedger, ::housePrice)
+            val fills = GrandExchangeBook.match(offers, offer, buyLedger, ::housePrice, ::taxPerItem)
             fills.forEach { recordTrade(itemId, guidedTradePrice(guide, it.unitPrice)) }
             save()
             return offer to fills
