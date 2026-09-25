@@ -79,7 +79,10 @@ object ExperienceLamps {
             19767 to Reward.Fixed(30_000, 86), // Elite Fremennik Tasks, 30k
             19768 to Reward.Fixed(40_000, 89), // Elite Fremennik Tasks, 40k
             19775 to Reward.Fixed(200, 5), // Gunnar's Ground
-        )
+        ) +
+            // Deadman lamps: the XP cash-out of a Deadman emblem, one lamp per tier (DeadmanEmblem.LAMP_XP).
+            gg.rsmod.plugins.content.mechanics.pvp.emblem.DeadmanEmblem.LAMP_IDS.withIndex()
+                .associate { (i, id) -> id to Reward.Fixed(gg.rsmod.plugins.content.mechanics.pvp.emblem.DeadmanEmblem.LAMP_XP[i]) }
 
     const val NOT_HIGH_ENOUGH = "This skill is not high enough to gain experience from this lamp."
 

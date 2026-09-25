@@ -100,7 +100,10 @@ object DeathResolver {
                 alwaysProtected = alwaysProtected,
                 alwaysLost = { itemId ->
                     gg.rsmod.plugins.content.mechanics.pvp.LootKeys.isKey(itemId) ||
-                        gg.rsmod.plugins.content.mechanics.pvp.LootingBag.isBag(itemId)
+                        gg.rsmod.plugins.content.mechanics.pvp.LootingBag.isBag(itemId) ||
+                        // Deadman emblems: always lost on a PvP death, Protect Item never applies (owner 2026-09-25).
+                        // On a PvM death the caller's alwaysProtected keeps them, and alwaysProtected wins.
+                        gg.rsmod.plugins.content.mechanics.pvp.emblem.DeadmanEmblem.isEmblem(itemId)
                 },
             )
         return DeathResolutionResult(context, victim, killer, itemRisk)

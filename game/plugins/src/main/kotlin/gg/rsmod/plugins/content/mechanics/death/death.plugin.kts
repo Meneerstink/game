@@ -54,14 +54,21 @@ on_player_pre_death {
     // Owner 2026-09-18: rank by Grand Exchange guide price, exactly like RuneScape (GuidePriceValueProvider).
     val valueProvider = GuidePriceValueProvider(world)
 
+    // Deadman emblems (owner 2026-09-25): kept on a PvM death, always lost on a PvP death - they are untradeable, so the
+    // untradeable protection below must never reach them on a PvP death.
+    val pvpDeath = DeathResolver.resolveContext(victim, killer) == DeathContext.WILDERNESS_PVP
     val resolved =
         DeathResolver.resolve(
             victim = victim,
             killer = killer,
             valueProvider = valueProvider,
             alwaysProtected = { itemId ->
-                itemId == CrownOfHelios.ITEM || Trouver.protectedFromDeath(itemId) ||
-                    UntradeableDeathProtection.shouldProtect(world.definitions, itemId)
+                if (gg.rsmod.plugins.content.mechanics.pvp.emblem.DeadmanEmblem.isEmblem(itemId)) {
+                    !pvpDeath
+                } else {
+                    itemId == CrownOfHelios.ITEM || Trouver.protectedFromDeath(itemId) ||
+                        UntradeableDeathProtection.shouldProtect(world.definitions, itemId)
+                }
             },
         )
     val (afterBreakables, breaking) = PvpDeathBreakables.split(resolved)

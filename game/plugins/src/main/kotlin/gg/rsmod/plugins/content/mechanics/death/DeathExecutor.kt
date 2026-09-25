@@ -84,6 +84,8 @@ object DeathExecutor {
             }
 
         var removedEquipment = false
+        // Deadman emblems actually taken from the victim by this death (only these may reach the killer - no dupes).
+        val removedEmblemTiers = mutableListOf<Int>()
         for (slotItem in toRemove) {
             val container =
                 when (slotItem.source) {
@@ -102,6 +104,8 @@ object DeathExecutor {
                 if (slotItem.source == DeathContainerSource.EQUIPMENT) {
                     removedEquipment = true
                 }
+                val emblemTier = gg.rsmod.plugins.content.mechanics.pvp.emblem.DeadmanEmblem.tierOf(slotItem.item.id)
+                if (emblemTier > 0) removedEmblemTiers += emblemTier
             }
         }
         if (removedEquipment) {
@@ -131,7 +135,21 @@ object DeathExecutor {
             // repair coins, uncharged staves, quiver ammo, ornament kits ...) are handed to the loot-key
             // plan in ONE call, so a kill produces a loot key or ground loot - never both, unless the
             // killer already holds the maximum number of keys.
-            DeathContext.WILDERNESS_PVP -> spawnPvpLoot(world, result, toRemove, extraPvpLoot() + bagContents, logger)
+            DeathContext.WILDERNESS_PVP -> {
+                val converted = extraPvpLoot() + bagContents
+                // Deadman emblems never become loot-key or ground loot: DeadmanEmblem hands them to the killer.
+                val loot = toRemove.filterNot { gg.rsmod.plugins.content.mechanics.pvp.emblem.DeadmanEmblem.isEmblem(it.item.id) }
+                val keys = gg.rsmod.plugins.content.mechanics.pvp.LootKeys
+                // The real value the killer takes (emblem excluded): lost stacks, converted loot, the looting bag's
+                // contents and the loot stored behind the victim's lost keys. Read before the key plan clears them.
+                val keyLoot = loot.filter { keys.isKey(it.item.id) }.flatMap { keys.slotItems(victim, keys.keyIndex(it.item.id)) }
+                val stacks =
+                    loot.filterNot { keys.isKey(it.item.id) || gg.rsmod.plugins.content.mechanics.pvp.LootingBag.isBag(it.item.id) }
+                        .map { it.item }
+                val risk = gg.rsmod.plugins.content.mechanics.pvp.emblem.DeadmanEmblem.riskValue(world, stacks + converted + keyLoot)
+                gg.rsmod.plugins.content.mechanics.pvp.emblem.DeadmanEmblem.onPvpDeath(world, victim, result.killer, removedEmblemTiers, risk)
+                spawnPvpLoot(world, result, loot, converted, logger)
+            }
             DeathContext.PVM_SAFE -> {
                 gg.rsmod.plugins.content.mechanics.pvp.LootKeys.removeKeys(victim, lostKeys.map { it.item.id })
                 // The bag itself disappears completely; only its detached contents enter the

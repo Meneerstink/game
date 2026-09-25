@@ -699,3 +699,11 @@ task runOsrsTextureImportTool(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     main = 'gg.rsmod.game.tools.importer.OsrsTextureImportTool'
 }
+
+task runDeadmanEmblemTool(type: JavaExec) {
+    group = 'verification'
+    description = 'Transactionally add/update the six Deadman emblems (textures, models, items) and Deadman lamps. Usage: --args="probe|preview|plan|apply"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.DeadmanEmblemTool'
+}
+

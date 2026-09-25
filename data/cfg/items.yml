@@ -286871,3 +286871,75 @@
   tradeable: true
   weight: 0.0
   equipment: null
+- id: 23864
+  name: "Deadman emblem (tier 1)"
+  examine: "An ancient crest of dark iron. It stirs when blood is spilled nearby."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 23865
+  name: "Deadman emblem (tier 2)"
+  examine: "Crimson has crept into the metal. It hungers for another kill."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 23866
+  name: "Deadman emblem (tier 3)"
+  examine: "Blood seeps through cracks in the metal. Its core beats like a heart."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 23867
+  name: "Deadman emblem (tier 4)"
+  examine: "Blackened by slaughter, its blood core burns ever brighter."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 23868
+  name: "Deadman emblem (tier 5)"
+  examine: "Gilded with the gold of fallen warriors. Few ever carry one this far."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 23869
+  name: "Deadman emblem (tier 6)"
+  examine: "The crown of Deadman. Every scar on it is someone else's last breath."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 23870
+  name: "Deadman lamp (tier 1)"
+  examine: "Rub it for experience in a skill of your choice."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 23871
+  name: "Deadman lamp (tier 2)"
+  examine: "Rub it for experience in a skill of your choice."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 23872
+  name: "Deadman lamp (tier 3)"
+  examine: "Rub it for experience in a skill of your choice."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 23873
+  name: "Deadman lamp (tier 4)"
+  examine: "Rub it for experience in a skill of your choice."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 23874
+  name: "Deadman lamp (tier 5)"
+  examine: "Rub it for experience in a skill of your choice."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 23875
+  name: "Deadman lamp (tier 6)"
+  examine: "Rub it for experience in a skill of your choice."
+  tradeable: false
+  weight: 0.1
+  equipment: null

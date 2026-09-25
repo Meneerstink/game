@@ -33,7 +33,7 @@ open class ItemCurrency(
         world: World,
         item: Int,
     ): AcceptItemState {
-        if (item == currencyItem) {
+        if (item == currencyItem || gg.rsmod.plugins.content.mechanics.pvp.emblem.DeadmanEmblem.isEmblem(item)) {
             return AcceptItemState(acceptable = false, errorMessage = "You can't sell this item to a shop.")
         }
         when (shop.purchasePolicy) {

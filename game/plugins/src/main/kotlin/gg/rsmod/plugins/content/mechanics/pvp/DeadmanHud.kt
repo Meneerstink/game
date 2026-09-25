@@ -128,11 +128,16 @@ object DeadmanHud {
         return "%d:%02d".format(secondsLeft / 60, secondsLeft % 60)
     }
 
-    /** The 381:5 payload: skull time (or empty), then "|grace" while the kill grace runs. */
+    /**
+     * The 381:5 payload: skull time (or empty), then "|grace" while the kill grace runs, then - only while a Deadman
+     * emblem is carried (owner 2026-09-25) - "|tier:points:nextPoints" as a third field, e.g. "5:00||3:200:360".
+     */
     fun timerText(player: Player): String? {
         val skull = skullText(player)
         val grace = graceText(player)
-        if (skull == null && grace == null) return null
+        val emblem = gg.rsmod.plugins.content.mechanics.pvp.emblem.DeadmanEmblem.hudField(player)
+        if (skull == null && grace == null && emblem.isEmpty()) return null
+        if (emblem.isNotEmpty()) return (skull ?: "") + FIELD_SEPARATOR + (grace ?: "") + FIELD_SEPARATOR + emblem
         return (skull ?: "") + if (grace != null) "$FIELD_SEPARATOR$grace" else ""
     }
 

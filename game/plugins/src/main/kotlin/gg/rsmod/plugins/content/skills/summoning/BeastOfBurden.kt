@@ -158,6 +158,11 @@ object BeastOfBurden {
             player.message("You can only withdraw items from this familiar.")
             return 0
         }
+        if (gg.rsmod.plugins.content.mechanics.pvp.emblem.DeadmanEmblem.isEmblem(item.id)) {
+            // One emblem per player, held in the inventory or bank only (owner 2026-09-25).
+            player.message("Your familiar can't carry a Deadman emblem.")
+            return 0
+        }
         val key = storage.key
         val essence = item.id == Items.RUNE_ESSENCE || item.id == Items.PURE_ESSENCE
         if (storage.essenceOnly != essence) {

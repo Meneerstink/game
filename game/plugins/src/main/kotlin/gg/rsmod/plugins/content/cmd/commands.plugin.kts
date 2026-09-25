@@ -1227,6 +1227,7 @@ on_command("item", Privilege.ADMIN_POWER) {
     ) { values ->
         val item = values[0].toInt()
         val amount = if (values.size > 1) Math.min(Int.MAX_VALUE.toLong(), values[1].parseAmount()).toInt() else 1
+        if (gg.rsmod.plugins.content.mechanics.pvp.emblem.DeadmanEmblem.adminSpawn(player, item)) return@tryWithUsage
         if (item < world.definitions.getCount(ItemDef::class.java)) {
             val def = world.definitions.get(ItemDef::class.java, Item(item).toUnnoted(world.definitions).id)
             val result = player.inventory.add(item = item, amount = amount, assureFullInsertion = false)
@@ -1263,6 +1264,7 @@ on_command("spawn", Privilege.ADMIN_POWER) {
             player.message("No item found for '$query'. Use ::itemsearch $query.", type = ChatMessageType.CONSOLE)
             return@tryWithUsage
         }
+        if (gg.rsmod.plugins.content.mechanics.pvp.emblem.DeadmanEmblem.adminSpawn(player, match.first)) return@tryWithUsage
         val result = player.inventory.add(match.first, amount, assureFullInsertion = false)
         player.message("Spawned ${result.completed} x ${match.second.name} (id ${match.first}).", type = ChatMessageType.CONSOLE)
     }
@@ -1313,6 +1315,7 @@ on_command("give", Privilege.ADMIN_POWER) {
             val def = world.definitions.getNullable(ItemDef::class.java, i)
             if (def != null) {
                 if (def.name.lowercase() == item.lowercase() && !foundItem) {
+                    if (gg.rsmod.plugins.content.mechanics.pvp.emblem.DeadmanEmblem.adminSpawn(player, i)) return@tryWithUsage
                     val result =
                         player.inventory.add(
                             item = if (noted) def.noteLinkId else i,

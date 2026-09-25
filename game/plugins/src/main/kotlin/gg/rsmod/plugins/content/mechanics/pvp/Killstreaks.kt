@@ -102,14 +102,7 @@ object Killstreaks {
     fun sameConnectionAddress(
         a: Player,
         b: Player,
-    ): Boolean {
-        fun address(p: Player): java.net.InetAddress? =
-            ((p as? gg.rsmod.game.model.entity.Client)?.channel?.remoteAddress() as? java.net.InetSocketAddress)?.address
-        val first = address(a) ?: return false
-        // Loopback = the owner's local two-client test setup (Start-RSPS-SecondClient.ps1), never a public player.
-        if (first.isLoopbackAddress) return false
-        return first == address(b)
-    }
+    ): Boolean = ValidPkKill.sameAddress(a, b)
 
     private fun pairKey(
         a: String,
