@@ -680,9 +680,13 @@ object Familiar {
      * modern, friendlier rule instead is a one-line change: call [dismiss] from the owner-death
      * hook in `familiar.plugin.kts`.
      */
-    fun ownerDeath(player: Player) {
+    /** @param safeDeath the owner died in a safe minigame: the rescued cargo costs nothing to take back. */
+    fun ownerDeath(
+        player: Player,
+        safeDeath: Boolean = false,
+    ) {
         val npc = current(player) ?: return
-        BeastOfBurden.discard(player)
+        BeastOfBurden.discard(player, free = safeDeath)
         player.world.remove(npc)
         clearState(player)
         // The cargo is no longer lost here - CUSTOM_SERVER_OVERRIDE, see BeastOfBurden.release,

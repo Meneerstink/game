@@ -202,6 +202,30 @@ class DeathsDomainTests {
     }
 
     @Test
+    fun `a repeat death refreshes the timer but never takes away blessed time`() {
+        val owner = newPlayer()
+        val blesser = newPlayer()
+        Gravestone.deposit(owner, listOf(Item(WHIP, 1)), Tile(3100, 3100, 0), moveExisting = false, config = DeathsDomainConfig.OSRS)
+        every { blesser.skills.getMaxLevel(5) } returns 99
+        every { blesser.getCurrentPrayerPoints() } returns 99
+        Gravestone.bless(blesser, owner)
+        val blessed = Gravestone.ticksLeft(owner)
+        assertEquals(1500 + 60 * 100, blessed)
+        Gravestone.deposit(owner, listOf(Item(BRONZE_SWORD, 1)), Tile(3100, 3100, 0), moveExisting = false, config = DeathsDomainConfig.OSRS)
+        assertEquals(blessed, Gravestone.ticksLeft(owner), "the blessed time stays")
+    }
+
+    @Test
+    fun `a safe-minigame death rescues familiar cargo fee-free, a normal rescue pays the office fee`() {
+        val player = newPlayer()
+        DeathsOffice.store(player, Item(WHIP, 1), free = true)
+        DeathsOffice.store(player, Item(WHIP, 1))
+        assertEquals(0L, DeathFees.officeFee(player.deathRecovery[0]!!, 1, values(WHIP to 1_000_000L)))
+        assertEquals(50_000L, DeathFees.officeFee(player.deathRecovery[1]!!, 1, values(WHIP to 1_000_000L)))
+        val script = java.io.File("src/main/kotlin/gg/rsmod/plugins/content/mechanics/death/death.plugin.kts").readText()
+        assertTrue("Familiar.ownerDeath(victim, safeDeath = SafeDeath.isSafe(victim))" in script)
+    }
+    @Test
     fun `owner 2026-09-26 - Death's Office is unlimited`() {
         val player = newPlayer()
         for (i in 0 until 1_000) assertEquals(1, DeathsOffice.store(player, Item(BRONZE_SWORD, 1)))

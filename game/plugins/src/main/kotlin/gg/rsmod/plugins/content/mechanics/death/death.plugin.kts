@@ -24,7 +24,8 @@ on_player_pre_death {
     } finally {
         // Audit X-01: the familiar is despawned here, AFTER a PvP death handed its cargo to the killer
         // (a separate pre-death hook in familiar.plugin.kts had no defined order relative to this one).
-        gg.rsmod.plugins.content.skills.summoning.Familiar.ownerDeath(victim)
+        // A safe minigame death costs nothing: cargo still in the familiar is rescued fee-free.
+        gg.rsmod.plugins.content.skills.summoning.Familiar.ownerDeath(victim, safeDeath = SafeDeath.isSafe(victim))
     }
 }
 

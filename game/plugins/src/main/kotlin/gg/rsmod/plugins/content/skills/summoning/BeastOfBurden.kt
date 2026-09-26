@@ -304,8 +304,11 @@ object BeastOfBurden {
      * Same override as [release]; kept as a distinct entry point because [Familiar.ownerDeath]
      * used to destroy the cargo outright and the difference is worth keeping visible.
      */
-    fun discard(player: Player) {
-        moveToDeathsDomain(player)
+    fun discard(
+        player: Player,
+        free: Boolean = false,
+    ) {
+        moveToDeathsDomain(player, free)
     }
 
     /**
@@ -330,7 +333,11 @@ object BeastOfBurden {
     fun deathsDomainCount(player: Player): Int =
         (0 until player.deathRecovery.capacity).count { player.deathRecovery[it] != null }
 
-    private fun moveToDeathsDomain(player: Player) {
+    /** @param free a safe death (safe minigame) costs nothing: the cargo is stored fee-free. */
+    private fun moveToDeathsDomain(
+        player: Player,
+        free: Boolean = false,
+    ) {
         val key = activeKey(player) ?: return
         val held = container(player, key)
         var moved = 0
@@ -338,7 +345,7 @@ object BeastOfBurden {
         for (slot in 0 until held.capacity) {
             val item = held[slot] ?: continue
             // Owner 2026-09-26 (death rework): familiar cargo is no longer fee-free - Death's normal office fee applies.
-            val stored = gg.rsmod.plugins.content.mechanics.death.DeathsOffice.store(player, item)
+            val stored = gg.rsmod.plugins.content.mechanics.death.DeathsOffice.store(player, item, free = free)
             if (stored <= 0) {
                 stranded++
                 continue

@@ -47,6 +47,9 @@ object GraveInterface {
             player.setInterfaceEvents(INTERFACE_ID, Layout.FREE_SLOT_FIRST + i, -1..-1, EVENTS_SLOT)
             player.setInterfaceEvents(INTERFACE_ID, Layout.PAY_SLOT_FIRST + i, -1..-1, EVENTS_DRAGGABLE)
         }
+        // Owner 2026-09-26: no fee - the whole OSRS fee block (fee text, fee items, Unlock, incinerator) is hidden; only the
+        // "free" line below it stays.
+        player.setComponentHidden(INTERFACE_ID, Layout.PAY_TOP, hidden = true)
         player.attr[FREE_VIEW] = emptyList()
         player.attr[PAY_VIEW] = emptyList()
         resetShown(player)

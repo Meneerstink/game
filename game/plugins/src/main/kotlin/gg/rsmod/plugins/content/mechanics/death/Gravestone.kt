@@ -113,7 +113,8 @@ object Gravestone {
         if (grave.isEmpty) {
             clear(player)
         } else if (added) {
-            player.attr[GRAVESTONE_TICKS_ATTR] = config.graveDurationTicks
+            // The timer is refreshed to 15 minutes, but never shortened: time added by Bless/Repair on this gravestone stays.
+            player.attr[GRAVESTONE_TICKS_ATTR] = maxOf(config.graveDurationTicks, if (hadGrave) ticksLeft(player) else 0)
         }
         return GraveDeposit(movedFromOldGrave = movedFromOld, addedToPrevious = hadGrave && added, overflow = overflow)
     }

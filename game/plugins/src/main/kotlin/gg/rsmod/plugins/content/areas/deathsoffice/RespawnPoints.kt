@@ -103,11 +103,15 @@ object RespawnPoints {
 
     private const val SEARCH_RADIUS = 4
 
+    /** Death speaks like everywhere else in his office (DeathDialogue): his own chathead, NORMAL expression. */
+    private suspend fun QueueTask.death(line: String, wrap: Boolean = true) =
+        chatNpc(line, npc = DeathsOfficeArea.DEATH, facialExpression = gg.rsmod.plugins.api.cfg.FacialExpression.NORMAL, wrap = wrap)
+
     /** Death: "Can I change where I respawn?" */
     suspend fun QueueTask.respawnDialogue() {
-        chatPlayer("Can I change where I respawn?", wrap = true)
+        chatPlayer("Can I change where I respawn?", facialExpression = gg.rsmod.plugins.api.cfg.FacialExpression.NORMAL)
         val current = active(player)?.label ?: "the Grand Exchange"
-        chatNpc("You currently return to the living at $current. For ${String.format(java.util.Locale.US, "%,d", PRICE)} coins, once, I can send you back somewhere else - and switch between the places you've paid for whenever you like.", wrap = true)
+        death("You currently return to the living at $current. For ${String.format(java.util.Locale.US, "%,d", PRICE)} coins, once, I can send you back somewhere else - and switch between the places you've paid for whenever you like.", wrap = true)
         val offered = Point.values().filter { available(it) }
         val labels =
             listOf("The Grand Exchange (free)") +
@@ -115,20 +119,21 @@ object RespawnPoints {
         val choice = pick(labels) ?: return
         if (choice == 0) {
             useHome(player)
-            chatNpc("Very well. You will return at the Grand Exchange.", wrap = true)
+            death("Very well. You will return at the Grand Exchange.", wrap = true)
             return
         }
         val point = offered[choice - 1]
         if (!owns(player, point)) {
             if (options("Pay ${String.format(java.util.Locale.US, "%,d", PRICE)} coins.", "No, thanks.", title = "Respawn at ${point.label}?") != 1) return
-            if (!player.inventory.remove(Items.COINS_995, PRICE, assureFullRemoval = true).hasSucceeded()) {
-                chatNpc("You don't have ${String.format(java.util.Locale.US, "%,d", PRICE)} coins with you.", wrap = true)
+            // Paid like every fee of Death: his Coffer first, then coins carried, then the bank (DeathPayment).
+            if (!gg.rsmod.plugins.content.mechanics.death.DeathPayment.pay(player, PRICE.toLong())) {
+                death("You haven't got ${String.format(java.util.Locale.US, "%,d", PRICE)} coins - not in my Coffer, with you or in your bank.", wrap = true)
                 return
             }
             player.attr[OWNED] = (player.attr[OWNED] ?: 0) or (1 shl point.ordinal)
         }
         activate(player, point)
-        chatNpc("It is done. You will return to the living at ${point.label}.", wrap = true)
+        death("It is done. You will return to the living at ${point.label}.", wrap = true)
     }
 
     /** A paged option menu (the chatbox shows at most five lines). Returns the chosen index, or null. */
