@@ -117,10 +117,13 @@ fun Player.buildQuestOverview(quest: Quest) {
     setComponentHidden(interfaceId = 178, component = 27, hidden = true)
     setComponentHidden(interfaceId = 178, component = 28, hidden = false)
 
-    var progress = "Not started"
-    if (startedQuest(quest)) {
-        progress = "In progress"
-    }
+    // 2026-09-26: a finished quest said "In progress" here; the overview now shows all three states.
+    val progress =
+        when {
+            finishedQuest(quest) -> "Completed"
+            startedQuest(quest) -> "In progress"
+            else -> "Not started"
+        }
     setComponentText(interfaceId = 178, component = 70, text = progress)
     setComponentSprite(interfaceId = 178, component = 79, sprite = quest.spriteId)
     openInterface(dest = InterfaceDestination.MAIN_SCREEN, interfaceId = 178)

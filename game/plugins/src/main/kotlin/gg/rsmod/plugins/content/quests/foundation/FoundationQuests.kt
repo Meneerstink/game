@@ -31,13 +31,13 @@ const val KNIGHT_WAVES_VARBIT = 3909
 const val KNIGHT_WAVES_COMPLETE = 8
 
 private val GE_HALL = Tile(3164, 3491, 0)
-private val BANDIT_CAMP = Tile(3184, 2981, 0)
-private val RELLEKKA_DOCK = Tile(2622, 3686, 0)
+private val BANDIT_CAMP = Tile(3183, 2982, 0)
+private val RELLEKKA_DOCK = Tile(2621, 3685, 0)
 private val NARDAH = Tile(3419, 2936, 0)
 private val SINCLAIR_MANSION = Tile(2741, 3553, 0)
 private val CAMELOT = Tile(2758, 3504, 0)
 private val EDGEVILLE = Tile(3068, 3513, 0)
-private val DRAYNOR = Tile(3098, 3254, 0)
+private val DRAYNOR = Tile(3097, 3253, 0)
 private val EAST_ARDOUGNE = Tile(2568, 3331, 0)
 private val GLIDER_HANGAR = Tile(2648, 4517, 0)
 private val CRASH_ISLAND = Tile(2894, 2726, 0)
@@ -609,7 +609,10 @@ object DragonSlayerII : ShortQuest(
         QuestReward(
             icon = Items.VORKATHS_HEAD,
             xp = listOf(Skills.SMITHING to 80_000.0, Skills.MINING to 60_000.0, Skills.AGILITY to 50_000.0, Skills.THIEVING to 50_000.0),
-            lines = listOf("80,000 Smithing XP", "60,000 Mining XP", "50,000 Agility XP", "50,000 Thieving XP", "Access to the Myths' Guild", "Ability to make Ava's assembler"),
+            // OSRS Wiki "Ellen": after the quest, 25,000 XP four times in Attack, Strength, Defence, Ranged, Magic or
+            // Hitpoints; no level requirement is given.
+            lamps = List(4) { QuestLamp(25_000, FoundationRewards.COMBAT_SKILLS, 1, "25,000 XP Myths' Guild combat reward") },
+            lines = listOf("80,000 Smithing XP", "60,000 Mining XP", "50,000 Agility XP", "50,000 Thieving XP", "Four 25,000 XP combat rewards", "Access to the Myths' Guild", "Ability to make Ava's assembler"),
             unlock = { p ->
                 p.attr[UnlockNpcRewards.DRAGON_SLAYER_II_REWARDED] = true
                 p.attr[UnlockNpcRewards.DRAGON_SLAYER_II_UNLOCKED] = true
@@ -793,7 +796,10 @@ object MonkeyMadnessII : ShortQuest(
         QuestReward(
             icon = Items.ZENYTE_SHARD,
             xp = listOf(Skills.SLAYER to 80_000.0, Skills.AGILITY to 60_000.0, Skills.THIEVING to 50_000.0, Skills.HUNTER to 50_000.0),
-            lines = listOf("80,000 Slayer XP", "60,000 Agility XP", "50,000 Thieving XP", "50,000 Hunter XP", "Ability to wield the heavy ballista", "Ability to craft and wear zenyte jewellery"),
+            // OSRS Wiki "Monkey Madness II" rewards: 2x 50,000 XP from Duke in Magic, Ranged, Attack, Defence, Strength or
+            // Hitpoints; no level requirement is given.
+            lamps = List(2) { QuestLamp(50_000, FoundationRewards.COMBAT_SKILLS, 1, "50,000 XP Duke combat training") },
+            lines = listOf("80,000 Slayer XP", "60,000 Agility XP", "50,000 Thieving XP", "50,000 Hunter XP", "Two 50,000 XP combat rewards", "Ability to wield the heavy ballista", "Ability to craft and wear zenyte jewellery"),
         )
 
     override suspend fun QueueTask.intro(): Boolean {
@@ -904,7 +910,30 @@ class CompletedOsrsQuest(name: String, pointReward: Int, questId: Int, slot: Int
     override fun finishQuest(player: Player) = Unit
 }
 
+/** A quest npc the world did not spawn yet, on its 2011 post. */
+data class QuestNpcPost(val npc: Int, val tile: Tile, val facing: gg.rsmod.game.model.Direction, val idle: List<String>)
+
 object FoundationQuests {
+    /**
+     * Npcs of the short quests that the world did not spawn yet, on their 2011 posts (Void 2011 npc-spawns). Lokar moved one
+     * tile south-west: his Void tile is covered by a solid dock loc (816) on this map (NewPlayerFoundationTests checks every post).
+     */
+
+
+    val NPC_POSTS: List<QuestNpcPost> =
+        listOf(
+            QuestNpcPost(Npcs.EBLIS, Tile(3185, 2983), gg.rsmod.game.model.Direction.SOUTH, listOf("The desert keeps its secrets, stranger.", "Most of them are buried with the people who asked.")),
+            QuestNpcPost(Npcs.LOKAR_SEARUNNER, Tile(2620, 3687), gg.rsmod.game.model.Direction.WEST, listOf("Fair winds to you! If you ever need a ship to", "Pirates' Cove, you know where I'll be.")),
+            QuestNpcPost(Npcs.ALI_THE_WISE, Tile(3420, 2938), gg.rsmod.game.model.Direction.SOUTH, listOf("Wisdom is knowing which doors to leave closed.", "Nardah has enough trouble without opening more.")),
+            QuestNpcPost(Npcs.GOSSIP, Tile(2742, 3555), gg.rsmod.game.model.Direction.SOUTH, listOf("Did you hear about the Sinclairs? Oh, you were", "there? Then you know more than I do!")),
+            QuestNpcPost(Npcs.ANNA, Tile(2734, 3575), gg.rsmod.game.model.Direction.SOUTH, listOf("Thank you again for believing me.", "Father would have been proud of you.")),
+            QuestNpcPost(Npcs.EDMOND, Tile(2568, 3334), gg.rsmod.game.model.Direction.EAST, listOf("Ardougne is quieter these days, thank Saradomin.", "Elena sends her regards from Prifddinas.")),
+            QuestNpcPost(Npcs.ELENA, Tile(2592, 3336), gg.rsmod.game.model.Direction.WEST, listOf("There's always another sickness to cure.", "Mind how you go.")),
+            QuestNpcPost(Npcs.DAERO, Tile(2648, 4519), gg.rsmod.game.model.Direction.SOUTH, listOf("The gliders run on time again.", "Glough's gorillas won't trouble the hangar now.")),
+            QuestNpcPost(Npcs.WAYDAR, Tile(2891, 2724), gg.rsmod.game.model.Direction.EAST, listOf("Crash Island is quiet now.", "I rather miss the excitement.")),
+        )
+
+
     val SHORT: List<ShortQuest> =
         listOf(DesertTreasure, LunarDiplomacy, TempleAtSenntisten, KingsRansom, DesertTreasureII, DragonSlayerII, SongOfTheElves, MonkeyMadnessII)
 
@@ -935,8 +964,15 @@ object FoundationQuests {
     const val QUEST_LIST_DIRECTION_VARBIT = 4538
     const val GROUP_BY_PROGRESS = 1
 
-    /** Every account: the quest list opens grouped by progress, unfinished quests on top (enum 2250 order, see QuestListCacheTool). */
+    val QUEST_LIST_ORDER_SET = gg.rsmod.game.model.attr.AttributeKey<Boolean>(persistenceKey = "foundation_quest_list_order_set")
+
+    /**
+     * Once per account: the quest list opens grouped by progress, unfinished quests on top (enum 2250 order, see
+     * QuestListCacheTool). Only once, so a player who picks another grouping in the quest tab keeps it.
+     */
     fun applyQuestListOrder(player: Player) {
+        if (player.attr[QUEST_LIST_ORDER_SET] == true) return
+        player.attr[QUEST_LIST_ORDER_SET] = true
         player.setVarbit(QUEST_LIST_GROUPING_VARBIT, GROUP_BY_PROGRESS)
         player.setVarbit(QUEST_LIST_DIRECTION_VARBIT, 0)
     }

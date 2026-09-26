@@ -122,7 +122,9 @@ class NewPlayerFoundationTests {
         assertEquals(5, qp)
         assertEquals(80_000.0, account.skills.getCurrentXp(Skills.SMITHING))
         assertTrue(account.attributes[UnlockNpcRewards.AVAS_ASSEMBLER_UNLOCKED] == true)
+        assertEquals(4, FoundationRewards.pendingLamps(account.player).count { it.xp == 25_000 }, "Ellen: four 25,000 XP rewards")
         assertFalse(FoundationRewards.complete(account.player, DragonSlayerII))
+        assertEquals(4, FoundationRewards.pendingLamps(account.player).size, "no second set of lamps")
         assertEquals(qp, account.player.getVarp(Varps.QUEST_POINTS))
         assertEquals(calls, account.xpCalls)
         assertEquals(80_000.0, account.skills.getCurrentXp(Skills.SMITHING))
@@ -274,6 +276,10 @@ class NewPlayerFoundationTests {
         FoundationQuests.applyQuestListOrder(account.player)
         assertEquals(FoundationQuests.GROUP_BY_PROGRESS, account.player.getVarbit(FoundationQuests.QUEST_LIST_GROUPING_VARBIT))
         assertEquals(0, account.player.getVarbit(FoundationQuests.QUEST_LIST_DIRECTION_VARBIT))
+        // Only once per account: a player who picks another grouping keeps it on the next login.
+        account.player.setVarbit(FoundationQuests.QUEST_LIST_GROUPING_VARBIT, 2)
+        FoundationQuests.applyQuestListOrder(account.player)
+        assertEquals(2, account.player.getVarbit(FoundationQuests.QUEST_LIST_GROUPING_VARBIT))
         FoundationQuests.completeListedQuests(account.player)
         FoundationQuests.COMPLETED.forEach { assertEquals(1, account.player.getVarp(it.questId), it.name) }
     }
@@ -369,6 +375,49 @@ class NewPlayerFoundationTests {
             val options = DEFINITIONS.get(gg.rsmod.game.fs.def.ObjectDef::class.java, it.loc).options.filterNotNull().map { o -> o.lowercase() }
             assertTrue("train" in options, "station ${it.loc}: $options")
         }
+    }
+
+    @Test
+    fun `every quest npc post and arrival tile is walkable floor on the real map`() {
+        val library = CacheLibrary(CACHE_PATH)
+        val keys = gg.rsmod.game.tools.importer.ModernRegionProbeTool.loadKeys(File("../../data/xteas/xteas.json"))
+        val maps = library.index(5)
+        val tiles =
+            FoundationQuests.NPC_POSTS.map { "npc ${it.npc}" to it.tile } +
+                FoundationQuests.SHORT.flatMap { q -> q.steps.mapNotNull { s -> s.location?.let { "${q.name} travel to ${s.place}" to it } } } +
+                listOf("basement arrival" to AfkArea.BASEMENT_ARRIVAL)
+        fun blockReason(tile: gg.rsmod.game.model.Tile): String? {
+            val sx = tile.x shr 6
+            val sz = tile.z shr 6
+            val lx = tile.x and 63
+            val lz = tile.z and 63
+            val mapGroup = maps.archive("m${sx}_$sz") ?: return "no map square"
+            val map = gg.rsmod.game.tools.importer.Rev667TileCodec.decode(library.data(5, mapGroup.id, 0)!!)
+            val bridged = map.tiles[1][lx][lz].flags and 2 != 0
+            val plane = if (bridged && tile.height < 3) tile.height + 1 else tile.height
+            if (map.tiles[plane][lx][lz].flags and 1 != 0) return "blocked tile flag"
+            val locGroup = maps.archive("l${sx}_$sz") ?: return null
+            val key = keys[(sx shl 8) or sz]?.takeIf { k -> k.any { it != 0 } }
+            val locs = gg.rsmod.game.tools.importer.Rev667LocCodec.decode(library.data(5, locGroup.id, 0, key)!!)
+            locs.filter { it.plane == tile.height && it.type in 10..11 }.forEach { loc ->
+                val def = DEFINITIONS.getNullable(gg.rsmod.game.fs.def.ObjectDef::class.java, loc.id) ?: return@forEach
+                if (!def.solid) return@forEach
+                val w = if (loc.rotation and 1 == 1) def.length else def.width
+                val d = if (loc.rotation and 1 == 1) def.width else def.length
+                if (lx in loc.localX until loc.localX + w && lz in loc.localZ until loc.localZ + d) return "covered by loc ${loc.id} '${def.name}'"
+            }
+            return null
+        }
+        val problems = mutableListOf<String>()
+        tiles.forEach { (label, tile) ->
+            val reason = blockReason(tile) ?: return@forEach
+            val free =
+                (1..4).asSequence().flatMap { r -> (-r..r).asSequence().flatMap { dx -> (-r..r).asSequence().map { dz -> gg.rsmod.game.model.Tile(tile.x + dx, tile.z + dz, tile.height) } } }
+                    .firstOrNull { blockReason(it) == null }
+            problems += "$label $tile: $reason (nearest free: $free)"
+        }
+        library.close()
+        assertTrue(problems.isEmpty(), problems.joinToString("\n"))
     }
 
     // ------------------------------------------------------------------------------------------ config

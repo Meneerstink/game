@@ -109,16 +109,29 @@ suspend fun QueueTask.claimSummoning() {
 
 suspend fun QueueTask.claimLamps() {
     val lamps = FoundationRewards.pendingLamps(player)
-    val shown = lamps.take(4)
-    val index = options(*(shown.map { it.label } + "Not now.").toTypedArray(), title = "Your quest lamps") - 1
-    val lamp = shown.getOrNull(index) ?: return
+    // Three lamps a page ("More lamps"), so a player with nine waiting lamps sees them all.
+    var lampPage = 0
+    var picked: QuestLamp? = null
+    while (picked == null) {
+        val shown = lamps.drop(lampPage * 3).take(3)
+        val moreLamps = (lampPage + 1) * 3 < lamps.size
+        val labels = shown.map { it.label } + (if (moreLamps) listOf("More lamps") else emptyList()) + "Not now."
+        val choice = options(*labels.toTypedArray(), title = "Your quest lamps (${lamps.size})")
+        when {
+            choice in 1..shown.size -> picked = shown[choice - 1]
+            moreLamps && choice == shown.size + 1 -> lampPage++
+            else -> return
+        }
+    }
+    val lamp = picked ?: return
     val skills = lamp.skills
+    val title = if (lamp.minLevel > 1) "Choose a skill (level ${lamp.minLevel}+)" else "Choose a skill"
     var page = 0
     while (true) {
         val slice = skills.drop(page * 3).take(3)
         val more = (page + 1) * 3 < skills.size
         val labels = slice.map { Skills.getSkillName(world, it) } + (if (more) listOf("More skills") else emptyList()) + "Cancel"
-        val choice = options(*labels.toTypedArray(), title = "Choose a skill (level ${lamp.minLevel}+)")
+        val choice = options(*labels.toTypedArray(), title = title)
         when {
             choice <= 0 || choice == labels.size -> return
             more && choice == labels.size - 1 -> page++
@@ -180,23 +193,7 @@ suspend fun QueueTask.travel(place: String, tile: Tile) {
 
 // ------------------------------------------------------------------------------------- the quests' own npcs
 
-/** Npcs of the short quests that the world did not spawn yet, on their 2011 posts (Void 2011 npc-spawns). */
-data class QuestNpcPost(val npc: Int, val tile: Tile, val facing: Direction, val idle: List<String>)
-
-val QUEST_NPC_POSTS =
-    listOf(
-        QuestNpcPost(Npcs.EBLIS, Tile(3185, 2983), Direction.SOUTH, listOf("The desert keeps its secrets, stranger.", "Most of them are buried with the people who asked.")),
-        QuestNpcPost(Npcs.LOKAR_SEARUNNER, Tile(2621, 3688), Direction.WEST, listOf("Fair winds to you! If you ever need a ship to", "Pirates' Cove, you know where I'll be.")),
-        QuestNpcPost(Npcs.ALI_THE_WISE, Tile(3420, 2938), Direction.SOUTH, listOf("Wisdom is knowing which doors to leave closed.", "Nardah has enough trouble without opening more.")),
-        QuestNpcPost(Npcs.GOSSIP, Tile(2742, 3555), Direction.SOUTH, listOf("Did you hear about the Sinclairs? Oh, you were", "there? Then you know more than I do!")),
-        QuestNpcPost(Npcs.ANNA, Tile(2734, 3575), Direction.SOUTH, listOf("Thank you again for believing me.", "Father would have been proud of you.")),
-        QuestNpcPost(Npcs.EDMOND, Tile(2568, 3334), Direction.EAST, listOf("Ardougne is quieter these days, thank Saradomin.", "Elena sends her regards from Prifddinas.")),
-        QuestNpcPost(Npcs.ELENA, Tile(2592, 3336), Direction.WEST, listOf("There's always another sickness to cure.", "Mind how you go.")),
-        QuestNpcPost(Npcs.DAERO, Tile(2648, 4519), Direction.SOUTH, listOf("The gliders run on time again.", "Glough's gorillas won't trouble the hangar now.")),
-        QuestNpcPost(Npcs.WAYDAR, Tile(2891, 2724), Direction.EAST, listOf("Crash Island is quiet now.", "I rather miss the excitement.")),
-    )
-
-QUEST_NPC_POSTS.forEach { post ->
+FoundationQuests.NPC_POSTS.forEach { post ->
     spawn_npc(npc = post.npc, x = post.tile.x, z = post.tile.z, height = post.tile.height, walkRadius = 0, direction = post.facing)
     on_npc_option(npc = post.npc, option = "talk-to") {
         player.queue {
