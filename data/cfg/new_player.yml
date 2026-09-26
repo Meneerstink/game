@@ -15,6 +15,8 @@ afk_area:
   # XP per game tick (0.6 s) while a player trains at a station in the AFK area, multiplied by rate. This XP is added
   # raw: the level curve, bonus xp and normal_rate above do NOT apply, so what you set here is exactly what players get.
   # Default 30 per tick = 180,000 XP an hour; level 55 (166,636 XP) takes about 55 minutes from level 1.
+  # OWNER: fill in the Skilling Basement XP rate you want - these two values are defaults (the same for all 15 skills);
+  # rate multiplies xp_per_tick. The server reads them at boot.
   rate: 1.0
   xp_per_tick: 30
   # Training stops exactly at the XP of this level (never above it) and a skill already at it cannot train here.

@@ -416,7 +416,6 @@ obj 15549 3159 3490 0 22 2
 obj 15550 3159 3491 0 22 0
 obj 15550 3159 3492 0 22 0
 obj 15549 3159 3493 0 22 0
-obj 15548 3160 3488 0 22 3
 obj 15549 3160 3489 0 22 3
 obj 15550 3160 3490 0 22 0
 obj 15550 3160 3491 0 22 0
@@ -424,7 +423,6 @@ obj 15550 3160 3492 0 22 0
 obj 15550 3160 3493 0 22 0
 obj 15549 3160 3494 0 22 3
 obj 15548 3160 3495 0 22 0
-obj 15549 3161 3488 0 22 2
 obj 15550 3161 3489 0 22 0
 obj 15550 3161 3490 0 22 0
 obj 15550 3161 3491 0 22 0
@@ -935,6 +933,5 @@ obj 47756 3173 3496 0 10 0
 # ---- Death's Domain entrance: loc 62430 is part of the map (RoyalHallMapTool, 3169,3486 rotation 2, laid like the Ferox
 # Enclave original with its sunken steps) so the minimap shows its Death's Office icon - no decor copy here.
 
-# ---- AFK skill basement (owner 2026-09-26): the way down, the hall's white marble spiral staircase top (62780, 2 x 2) in the
-# ground floor at 3160,3487 (owner 2026-09-26: moved from the south-east corner). afk_area.plugin.kts (AfkArea.HALL_STAIRS) takes Climb-down on exactly this tile.
-obj 62780 3160 3487 0 10 0
+# ---- Skilling Basement (owner 2026-09-26): the way down - stone cellar stairs 62894 with the dungeon minimap icon and a
+# standing torch either side - is part of the map itself (AfkBasementMapTool, square 49,54, tx-20260926-195800), not placed here.

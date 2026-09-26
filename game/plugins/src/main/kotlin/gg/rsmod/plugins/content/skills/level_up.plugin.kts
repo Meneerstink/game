@@ -54,6 +54,9 @@ set_level_up_logic {
     val skill = player.attr[LEVEL_UP_SKILL_ID]!!
     val increment = player.attr[LEVEL_UP_INCREMENT]!!
     val skillName = Skills.getSkillName(player.world, skill)
+    // Skilling Basement (owner 2026-09-26): only a chat line - no window, jingle, fireworks or flashing icon - and the
+    // training queue is not interrupted.
+    if (gg.rsmod.plugins.content.newplayer.AfkArea.quietLevelUp(player, skill, skillName)) return@set_level_up_logic
     val levelFormat = if (increment == 1) Misc.formatForVowel(skillName) else "$increment"
     val inCraftingGuild = player.tile.regionId == 11571
     player.graphic(Gfx.LEVEL_UP_FIREWORKS)

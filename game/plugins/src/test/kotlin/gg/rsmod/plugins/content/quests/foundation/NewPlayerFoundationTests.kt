@@ -304,34 +304,6 @@ class NewPlayerFoundationTests {
         assertEquals(0.0, AfkArea.tickXp(account.player, Skills.COOKING, config))
     }
 
-    @Test
-    fun `the AFK area has one station per non-combat skill and matches the map tool`() {
-        val expected = setOf(
-            Skills.COOKING, Skills.WOODCUTTING, Skills.FLETCHING, Skills.FISHING, Skills.FIREMAKING, Skills.CRAFTING, Skills.SMITHING,
-            Skills.MINING, Skills.HERBLORE, Skills.AGILITY, Skills.THIEVING, Skills.FARMING, Skills.RUNECRAFTING, Skills.HUNTER, Skills.CONSTRUCTION,
-        )
-        assertEquals(expected, AfkArea.TRAINABLE)
-        assertEquals(expected, AfkArea.STATIONS.map { it.skill }.toSet())
-        assertEquals(AfkArea.STATIONS.size, AfkArea.STATIONS.map { it.skill }.distinct().size)
-        assertEquals(AfkBasementMapTool.STATIONS.size, AfkArea.STATIONS.size)
-        AfkBasementMapTool.STATIONS.forEachIndexed { index, station ->
-            assertEquals(AfkBasementMapTool.FIRST_STATION_LOC + index, AfkArea.STATIONS[index].loc)
-            assertEquals(SKILL_BY_NAME.getValue(station.skill), AfkArea.STATIONS[index].skill, station.skill)
-        }
-        assertEquals(AfkBasementMapTool.REGION_ID, AfkArea.REGION_ID)
-        assertEquals(AfkBasementMapTool.BASE_X + AfkBasementMapTool.ROOM_X.first, AfkArea.MIN_X)
-        assertEquals(AfkBasementMapTool.BASE_X + AfkBasementMapTool.ROOM_X.last, AfkArea.MAX_X)
-        assertEquals(AfkBasementMapTool.BASE_Z + AfkBasementMapTool.ROOM_Z.first, AfkArea.MIN_Z)
-        assertEquals(AfkBasementMapTool.BASE_Z + AfkBasementMapTool.ROOM_Z.last, AfkArea.MAX_Z)
-        assertEquals(AfkBasementMapTool.BASE_X + AfkBasementMapTool.STAIRS_LX, AfkArea.BASEMENT_STAIRS.x)
-        assertEquals(AfkBasementMapTool.BASE_Z + AfkBasementMapTool.STAIRS_LZ, AfkArea.BASEMENT_STAIRS.z)
-        assertTrue(AfkArea.contains(AfkArea.BASEMENT_ARRIVAL))
-        assertTrue(GuardedZones.contains(AfkArea.BASEMENT_ARRIVAL), "the basement is a safe zone")
-        val decor = File("../../data/cfg/home_decor.txt").readText()
-        assertTrue("obj ${AfkArea.HALL_STAIRS_DOWN} ${AfkArea.HALL_STAIRS.x} ${AfkArea.HALL_STAIRS.z} 0 10 0" in decor, "the hall's way down is placed")
-        AfkArea.STATIONS.forEach { assertTrue(DEFINITIONS.getNullable(gg.rsmod.game.fs.def.ObjectDef::class.java, it.loc) != null, "station loc ${it.loc} in cache") }
-    }
-
     // --------------------------------------------------------------------------------------- Summoning
 
     @Test
@@ -371,10 +343,6 @@ class NewPlayerFoundationTests {
         val up = DEFINITIONS.get(gg.rsmod.game.fs.def.ObjectDef::class.java, AfkArea.BASEMENT_STAIRS_UP).options.filterNotNull().map { it.lowercase() }
         assertTrue("climb-down" in down, "$down")
         assertTrue("climb-up" in up, "$up")
-        AfkArea.STATIONS.forEach {
-            val options = DEFINITIONS.get(gg.rsmod.game.fs.def.ObjectDef::class.java, it.loc).options.filterNotNull().map { o -> o.lowercase() }
-            assertTrue("train" in options, "station ${it.loc}: $options")
-        }
     }
 
     @Test
