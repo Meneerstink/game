@@ -281,7 +281,8 @@ object LootKeys {
         val victimKeyContents = victimKeys.map { slotItems(victim, it) }.filter { it.isNotEmpty() }
         victimKeys.forEach { setSlot(victim, it, emptyList()) }
         val loot = lost.filterNot { isKey(it.id) }
-        if (killer == null) return loot
+        // No player killer (a skulled player killed by a guard): the keys' loot joins the public ground loot, never deleted.
+        if (killer == null) return loot + victimKeyContents.flatten()
         val decision =
             plan(
                 killerFreeSlots = freeSlots(killer).size,

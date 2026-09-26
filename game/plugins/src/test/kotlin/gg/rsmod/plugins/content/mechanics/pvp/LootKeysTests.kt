@@ -123,4 +123,53 @@ class LootKeysTests {
         assertEquals(listOf(Items.LOOT_KEY), result.lost.map { it.item.id })
         assertEquals(listOf(4151), result.protected.map { it.item.id })
     }
+
+    // ---- owner 2026-09-26 death rework checks ----
+
+    private fun player(): gg.rsmod.game.model.entity.Player {
+        val p = io.mockk.mockk<gg.rsmod.game.model.entity.Player>(relaxed = true)
+        io.mockk.every { p.attr } returns gg.rsmod.game.model.attr.AttributeMap()
+        io.mockk.every { p.inventory } returns gg.rsmod.game.model.container.ItemContainer(DEFINITIONS, gg.rsmod.game.model.container.key.INVENTORY_KEY)
+        return p
+    }
+
+    @Test
+    fun `loot keys are on by default for brand-new and old accounts, off only when switched off`() {
+        val p = player()
+        assertTrue(LootKeys.receivesKeys(p), "no saved value (new or pre-key account) means enabled")
+        p.attr[LootKeys.ENABLED] = false
+        assertFalse(LootKeys.receivesKeys(p))
+    }
+
+    @Test
+    fun `a guard kill without a player killer drops the victim's key loot as public ground loot`() {
+        val victim = player()
+        LootKeys.slots(victim)[0] = LootKeys.encode(listOf(whip))
+        val world = io.mockk.mockk<gg.rsmod.game.model.World>(relaxed = true)
+        val ground = LootKeys.onWildernessPvpDeath(world, victim, null, listOf(Item(Items.LOOT_KEY, 1), shark))
+        assertEquals(listOf(shark.id, whip.id), ground.map { it.id }, "the key's loot is never deleted")
+        assertTrue(LootKeys.slotItems(victim, 0).isEmpty())
+    }
+
+    @Test
+    fun `a PvM death removes carried keys together with their loot`() {
+        val victim = player()
+        LootKeys.slots(victim)[0] = LootKeys.encode(listOf(whip))
+        LootKeys.removeKeys(victim, listOf(Items.LOOT_KEY))
+        assertTrue(LootKeys.slotItems(victim, 0).isEmpty())
+    }
+
+    @Test
+    fun `a key that dropped on a full inventory frees its slot once it has despawned`() {
+        val killer = player()
+        LootKeys.slots(killer)[2] = LootKeys.encode(listOf(whip))
+        killer.attr[LootKeys.GROUND_KEY_DEADLINES] = "2:${System.currentTimeMillis() + 60_000}"
+        assertFalse(2 in LootKeys.freeSlots(killer), "still on the floor: the slot stays taken")
+        killer.attr[LootKeys.GROUND_KEY_DEADLINES] = "2:1"
+        assertTrue(2 in LootKeys.freeSlots(killer), "despawned: the slot is released")
+    }
+
+    companion object {
+        private val DEFINITIONS = gg.rsmod.game.fs.DefinitionSet()
+    }
 }

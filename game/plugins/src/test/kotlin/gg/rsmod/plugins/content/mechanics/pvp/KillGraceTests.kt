@@ -99,6 +99,25 @@ class KillGraceTests {
         assertFalse(KillGrace.earnedFrom(killer, victim), "ending the grace forgets the victim too")
     }
 
+    @Test
+    fun `the HUD grace field shows 1-00 on a kill and clears after 100 ticks, on an attack and on death`() {
+        val killer = newPlayer()
+        KillGrace.grant(killer)
+        kotlin.test.assertEquals("1:00", DeadmanHud.graceText(killer))
+
+        // The timer runs out: 100 cycles later the value is 0 and the field is gone.
+        killer.timers[KillGrace.GRACE_TIMER] = 0
+        kotlin.test.assertNull(DeadmanHud.graceText(killer))
+
+        KillGrace.grant(killer)
+        KillGrace.endEarly(killer) // an attack (PvpSkull.onHitRegistered) or logging out
+        kotlin.test.assertNull(DeadmanHud.graceText(killer))
+
+        KillGrace.grant(killer)
+        assertTrue(KillGrace.GRACE_TIMER.resetOnDeath, "the killer's own death ends it")
+        assertFalse(KillGrace.GRACE_TIMER.persistenceKey != null, "never persisted: a relog cannot keep it")
+    }
+
     private fun newPlayer(): Player {
         val player = mockk<Player>(relaxed = true)
         val world = mockk<gg.rsmod.game.model.World>(relaxed = true)
