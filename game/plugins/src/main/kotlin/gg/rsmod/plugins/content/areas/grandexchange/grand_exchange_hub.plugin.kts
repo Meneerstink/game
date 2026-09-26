@@ -49,25 +49,4 @@ on_npc_option(npc = Npcs.PERDU, option = "talk-to") {
     }
 }
 
-// Perdu now hosts the generic Trouver engine instead of the old command-only unlock path.
-TrouverRegistry.all().forEach { lockable ->
-    on_item_on_npc(item = lockable.lockedItemId, npc = Npcs.PERDU) {
-        // A locked item that broke on a PvP death (attribute-broken) is repaired first, never unlocked in its broken state.
-        if (gg.rsmod.plugins.content.mechanics.death.UntradeableDeathProtection.isDamaged(player.getInteractingItem())) {
-            player.queue { BrokenItemRepair.repair(this) }
-            return@on_item_on_npc
-        }
-        when (Trouver.unlock(player, player.getInteractingItem())) {
-            Trouver.UnlockResult.Success -> {}
-            Trouver.UnlockResult.NotLocked -> player.message("That item isn't locked.")
-            Trouver.UnlockResult.ItemNotHeld -> player.message("You don't have that item.")
-            Trouver.UnlockResult.InventoryFull -> {}
-        }
-    }
-}
-
-// OSRS: a broken or mangled item is repaired by using it on Perdu.
-(gg.rsmod.plugins.content.mechanics.death.PvpDeathBreakables.ALL.map { it.brokenId } +
-    TrouverRegistry.all().flatMap { listOfNotNull(it.brokenItemId, it.mangledItemId) }).distinct().forEach { damaged ->
-    on_item_on_npc(item = damaged, npc = Npcs.PERDU) { player.queue { BrokenItemRepair.repair(this) } }
-}
+// Perdu's Trouver unlock and her use-item repair are registered in mechanics/trouver/trouver.plugin.kts, after the registry is filled.

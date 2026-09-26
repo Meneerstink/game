@@ -63,6 +63,32 @@ TrouverRegistry.all().forEach { lockable ->
     }
 }
 
+/*
+ * Perdu (Grand Exchange) hosts the Trouver engine: using a locked item on her unlocks it, and using a broken or mangled item
+ * on her repairs it (OSRS). Registered here, right after the registry above is filled - a script elsewhere could read the
+ * registry before this one has run.
+ */
+TrouverRegistry.all().forEach { lockable ->
+    on_item_on_npc(item = lockable.lockedItemId, npc = Npcs.PERDU) {
+        // A locked item that broke on a PvP death (attribute-broken) is repaired first, never unlocked in its broken state.
+        if (gg.rsmod.plugins.content.mechanics.death.UntradeableDeathProtection.isDamaged(player.getInteractingItem())) {
+            player.queue { gg.rsmod.plugins.content.mechanics.death.BrokenItemRepair.repair(this) }
+            return@on_item_on_npc
+        }
+        when (Trouver.unlock(player, player.getInteractingItem())) {
+            Trouver.UnlockResult.Success -> {}
+            Trouver.UnlockResult.NotLocked -> player.message("That item isn't locked.")
+            Trouver.UnlockResult.ItemNotHeld -> player.message("You don't have that item.")
+            Trouver.UnlockResult.InventoryFull -> {}
+        }
+    }
+}
+
+// OSRS: a broken or mangled item is repaired by using it on Perdu.
+(gg.rsmod.plugins.content.mechanics.death.PvpDeathBreakables.ALL.map { it.brokenId } +
+    TrouverRegistry.all().flatMap { listOfNotNull(it.brokenItemId, it.mangledItemId) }).distinct().forEach { damaged ->
+    on_item_on_npc(item = damaged, npc = Npcs.PERDU) { player.queue { gg.rsmod.plugins.content.mechanics.death.BrokenItemRepair.repair(this) } }
+}
 on_command("trouverunlock") {
     val args = player.getCommandArgs()
     val itemId = args.getOrNull(0)?.toIntOrNull()

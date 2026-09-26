@@ -179,7 +179,9 @@ listOf(DeathsOfficeArea.GRAVE, DeathsOfficeArea.GRAVE_ANGEL).forEach { grave ->
 
 // Owner 2026-09-26: every respawn point Death sells must be a standable tile in a Deadman safe zone (RespawnPoints).
 on_world_init {
-    RespawnPoints.verify(world).forEach { println(it) }
+    // Never allowed to stop the boot: on any error no point is offered and everyone respawns at the Grand Exchange.
+    runCatching { RespawnPoints.verify(world) }.onSuccess { lines -> lines.forEach { println(it) } }
+        .onFailure { println("respawn_verify: FAILED ($it) - only the Grand Exchange respawn is offered") }
 }
 
 on_login {
