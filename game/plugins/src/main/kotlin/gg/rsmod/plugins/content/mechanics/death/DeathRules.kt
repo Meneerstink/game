@@ -48,7 +48,7 @@ object DeathRules {
     ): ItemRiskValueProvider =
         ItemRiskValueProvider { itemId ->
             val def = RepairPrices.itemDef(definitions, itemId)
-            if (def != null && !def.tradeable && UntradeableDeathProtection.handles(definitions, itemId)) {
+            if (def != null && !def.tradeable && UntradeableDeathProtection.valuedAtRepairPrice(definitions, itemId)) {
                 RepairPrices.repairPrice(definitions, itemId)
             } else {
                 guide.getValue(itemId)

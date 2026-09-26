@@ -18,7 +18,11 @@ import gg.rsmod.plugins.content.items.osrs.StaffOfTheDead
  * repair cost going to the killer. PvM deaths keep the normal recovery route.
  */
 object PvpDeathBreakables {
-    /** @param repairCost the OSRS-sourced Perdu repair cost - see [gg.rsmod.plugins.content.mechanics.death.BrokenItemRepair]. */
+    /**
+     * @param repairCost the OSRS-sourced Perdu repair cost - see [BrokenItemRepair] and [RepairPrices].
+     * @param killerCoins historical (the sourced coin statement per item); owner 2026-09-26: the killer always receives the repair
+     * price ([RepairPrices]), so this value is no longer used.
+     */
     data class Breakable(
         val itemId: Int,
         val brokenId: Int,

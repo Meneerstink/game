@@ -30,7 +30,7 @@ enum class UntradeableFate {
     /** Rune pouch that is kept (locked, or below level 20): the victim keeps the empty pouch, the runes go to the killer. */
     POUCH_EMPTIED,
 
-    /** Already broken/mangled, or a stackable untradeable (tokens): stays with the victim as it is, nothing for the killer. */
+    /** Already broken/mangled, stackable (tokens) or without combat use: stays with the victim as it is, nothing for the killer. */
     UNCHANGED,
 }
 
@@ -81,6 +81,21 @@ object UntradeableDeathProtection {
         return !def.tradeable && itemId != Items.COINS_995
     }
 
+    /**
+     * Whether [itemId] is valued at its repair price (the keep-1 ranking and the risk value): an untradeable this rule breaks,
+     * mangles or destroys for coins - equipment, locked items, the rune pouch. A non-combat or stackable untradeable is kept
+     * anyway, so it never takes the Protect Item slot.
+     */
+    fun valuedAtRepairPrice(
+        definitions: DefinitionSet,
+        itemId: Int,
+    ): Boolean {
+        if (!handles(definitions, itemId)) return false
+        if (RunePouch.isPouch(itemId) || TrouverRegistry.isLockedAnyState(itemId) || PvpDeathBreakables.breakableFor(itemId) != null) return true
+        val def = RepairPrices.itemDef(definitions, itemId) ?: return false
+        return !def.stackable && def.equipSlot >= 0
+    }
+
     fun fateOf(
         definitions: DefinitionSet,
         item: Item,
@@ -96,6 +111,11 @@ object UntradeableDeathProtection {
             }
         }
         if (RepairPrices.itemDef(definitions, item.id)?.stackable == true) return UntradeableOutcomeFate(UntradeableFate.UNCHANGED, 0L)
+        // OSRS Wiki "Items Kept on Death": "Any untradeable item without any combat use is kept on death" - only equipment breaks
+        // (and pays the killer), so a pile of free non-combat untradeables can never mint coins.
+        if (!locked && PvpDeathBreakables.breakableFor(item.id) == null && (RepairPrices.itemDef(definitions, item.id)?.equipSlot ?: -1) < 0) {
+            return UntradeableOutcomeFate(UntradeableFate.UNCHANGED, 0L)
+        }
         return when {
             !deepWilderness -> UntradeableOutcomeFate(UntradeableFate.BROKEN, RepairPrices.repairPrice(definitions, item.id))
             locked -> UntradeableOutcomeFate(UntradeableFate.MANGLED, RepairPrices.MANGLED_REPAIR)

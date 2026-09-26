@@ -49,6 +49,17 @@ class UntradeableDeathProtectionTests {
     }
 
     @Test
+    fun `an untradeable without combat use is kept unchanged and pays nothing (OSRS)`() {
+        val ammoMould = 4 // untradeable, not equipable (items.yml)
+        assertFalse(DEFINITIONS.get(ItemDef::class.java, ammoMould).tradeable)
+        for (deep in listOf(false, true)) {
+            val fate = UntradeableDeathProtection.fateOf(DEFINITIONS, Item(ammoMould), deep)
+            assertEquals(UntradeableFate.UNCHANGED, fate.fate)
+            assertEquals(0L, fate.killerCoins)
+        }
+    }
+
+    @Test
     fun `above level 20 an unlocked untradeable is destroyed for coins`() {
         val fate = UntradeableDeathProtection.fateOf(DEFINITIONS, Item(Items.AVERNIC_DEFENDER), deepWilderness = true)
         assertEquals(UntradeableFate.DESTROYED, fate.fate)
@@ -119,6 +130,8 @@ class UntradeableDeathProtectionTests {
                     line.startsWith("- id: ") -> id = line.removePrefix("- id: ").trim().toInt()
                     line.startsWith("  tradeable: ") && id >= 0 ->
                         DEFINITIONS.getNullable(ItemDef::class.java, id)?.tradeable = line.removePrefix("  tradeable: ").trim() == "true"
+                    line.startsWith("    equip_slot: ") && id >= 0 ->
+                        DEFINITIONS.getNullable(ItemDef::class.java, id)?.equipSlot = line.removePrefix("    equip_slot: ").trim().toInt()
                 }
             }
         }
