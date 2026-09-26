@@ -151,7 +151,7 @@ suspend fun feroxWhatCanYouDo(it: QueueTask) {
             // Owner 2026-09-26: respawn points are sold by Death in his office now (500,000 coins, once) - RespawnPoints.
             it.chatNpc(
                 "It'll cost you though! Transporting you here is no easy task - Death himself arranges it these days. " +
-                    "Speak to him in his office: ${String.format("%,d", gg.rsmod.plugins.content.areas.deathsoffice.RespawnPoints.PRICE)} coins, a one time fee of course.",
+                    "Speak to him in his office: ${String.format(java.util.Locale.US, "%,d", gg.rsmod.plugins.content.areas.deathsoffice.RespawnPoints.PRICE)} coins, a one time fee of course.",
                 wrap = true,
             )
         }        2 -> {

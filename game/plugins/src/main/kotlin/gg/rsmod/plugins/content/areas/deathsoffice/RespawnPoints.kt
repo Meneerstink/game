@@ -107,11 +107,11 @@ object RespawnPoints {
     suspend fun QueueTask.respawnDialogue() {
         chatPlayer("Can I change where I respawn?", wrap = true)
         val current = active(player)?.label ?: "the Grand Exchange"
-        chatNpc("You currently return to the living at $current. For ${String.format("%,d", PRICE)} coins, once, I can send you back somewhere else - and switch between the places you've paid for whenever you like.", wrap = true)
+        chatNpc("You currently return to the living at $current. For ${String.format(java.util.Locale.US, "%,d", PRICE)} coins, once, I can send you back somewhere else - and switch between the places you've paid for whenever you like.", wrap = true)
         val offered = Point.values().filter { available(it) }
         val labels =
             listOf("The Grand Exchange (free)") +
-                offered.map { if (owns(player, it)) "${it.label} (owned)" else "${it.label} (${String.format("%,d", PRICE)})" }
+                offered.map { if (owns(player, it)) "${it.label} (owned)" else "${it.label} (${String.format(java.util.Locale.US, "%,d", PRICE)})" }
         val choice = pick(labels) ?: return
         if (choice == 0) {
             useHome(player)
@@ -120,9 +120,9 @@ object RespawnPoints {
         }
         val point = offered[choice - 1]
         if (!owns(player, point)) {
-            if (options("Pay ${String.format("%,d", PRICE)} coins.", "No, thanks.", title = "Respawn at ${point.label}?") != 1) return
+            if (options("Pay ${String.format(java.util.Locale.US, "%,d", PRICE)} coins.", "No, thanks.", title = "Respawn at ${point.label}?") != 1) return
             if (!player.inventory.remove(Items.COINS_995, PRICE, assureFullRemoval = true).hasSucceeded()) {
-                chatNpc("You don't have ${String.format("%,d", PRICE)} coins with you.", wrap = true)
+                chatNpc("You don't have ${String.format(java.util.Locale.US, "%,d", PRICE)} coins with you.", wrap = true)
                 return
             }
             player.attr[OWNED] = (player.attr[OWNED] ?: 0) or (1 shl point.ordinal)

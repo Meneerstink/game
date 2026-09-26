@@ -58,7 +58,7 @@ object ItemsKeptOnDeath {
 
     private fun name(player: Player, itemId: Int): String = player.world.definitions.get(ItemDef::class.java, itemId).name
 
-    private fun spaced(value: Long): String = String.format("%,d", value)
+    private fun spaced(value: Long): String = String.format(java.util.Locale.US, "%,d", value)
 
     /** Everything a death with [toggles] would do to [player]'s items, without touching them. */
     fun preview(

@@ -63,12 +63,12 @@ can_attack { attacker, target ->
     true
 }
 
+// Castle Wars is a safe minigame (OSRS Wiki "Castle Wars": "a safe minigame"; Ferox: "Castle Wars ... they have their own
+// magic to keep you safe"). Owner 2026-09-26: register it on the match attribute itself - no map bounding box is needed.
+gg.rsmod.plugins.content.mechanics.death.SafeDeath.register { it.attr[CW_PLAYING] == true }
+
 // A carrier who dies drops the flag and respawns at their own base, staying in the match - matches
-// Novite's controller-driven respawn. NOT ported: Novite's Castle Wars death is otherwise item-safe
-// (no item loss); this project has no per-area SafeDeath bounding box sourced for the whole Castle
-// Wars map this batch (only specific tile points, not the full region, were confirmed), so a
-// Castle Wars death currently still follows this server's normal item-on-death rules - a real,
-// disclosed fidelity gap, not a silent omission.
+// Novite's controller-driven respawn.
 on_player_death {
     if (player.attr[CW_PLAYING] != true) return@on_player_death
     val team = player.attr[CW_TEAM] ?: return@on_player_death

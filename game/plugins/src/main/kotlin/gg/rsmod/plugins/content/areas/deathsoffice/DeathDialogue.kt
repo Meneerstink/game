@@ -291,7 +291,7 @@ object DeathDialogue {
         while (true) {
             val angelCost = DeathsDomainConfig.current.angelCost
             // The transcript: "a choice between the basic or angel gravestone, which are free and 200k coins respectively".
-            val choice = options("Basic gravestone (free).", "Angel of Death gravestone (${String.format("%,d", angelCost)} coins).", title = "Select a gravestone")
+            val choice = options("Basic gravestone (free).", "Angel of Death gravestone (${String.format(java.util.Locale.US, "%,d", angelCost)} coins).", title = "Select a gravestone")
             val angel = player.attr[GRAVESTONE_ANGEL_ATTR] == true
             when (choice) {
                 1 ->
@@ -320,7 +320,7 @@ object DeathDialogue {
                     val carried = player.inventory.getItemCount(Items.COINS_995).toLong()
                     val coffer = DeathPayment.coffer(player).toLong()
                     if (carried + coffer < angelCost) {
-                        death("You haven't got ${String.format("%,d", angelCost)} coins to pay for that. I can take coins from your inventory, or from my Coffer.")
+                        death("You haven't got ${String.format(java.util.Locale.US, "%,d", angelCost)} coins to pay for that. I can take coins from your inventory, or from my Coffer.")
                         if (options("Can I choose a different-looking gravestone?", "Actually, never mind.") == 1) {
                             me("Can I choose a different-looking gravestone?")
                             continue

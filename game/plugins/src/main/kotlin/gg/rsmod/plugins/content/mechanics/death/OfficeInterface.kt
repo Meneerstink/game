@@ -65,7 +65,7 @@ object OfficeInterface {
     /** Owner 2026-09-26: Death's Office is unlimited, so the title shows only how many stacks Death holds. */
     fun title(used: Int): String = "Death's Office Item Retrieval <col=ffb83f>($used)</col>"
 
-    private fun spaced(value: Long): String = String.format("%,d", value)
+    private fun spaced(value: Long): String = String.format(java.util.Locale.US, "%,d", value)
 
     /** death_office_redraw's info text for the selected stack ([total] units of it in the office, [feeEach] per unit). */
     fun itemText(name: String, total: Int, feeEach: Int, coffer: Int): String {

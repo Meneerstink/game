@@ -77,7 +77,7 @@ object CofferInterface {
         refresh(player)
     }
 
-    private fun spaced(value: Long): String = String.format("%,d", value)
+    private fun spaced(value: Long): String = String.format(java.util.Locale.US, "%,d", value)
 
     fun cofferText(coffer: Int): String =
         when {
