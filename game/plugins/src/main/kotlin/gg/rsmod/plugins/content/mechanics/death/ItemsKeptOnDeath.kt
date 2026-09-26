@@ -103,11 +103,13 @@ object ItemsKeptOnDeath {
             }
         }
         val bag = LootingBag.peekContents(player)
+        // Beast-of-burden cargo follows the death like everything else: to the killer (PvP) or into the gravestone (PvM).
+        val cargo = gg.rsmod.plugins.content.skills.summoning.BeastOfBurden.activeContainer(player)?.rawItems?.filterNotNull()?.map { Item(it) } ?: emptyList()
         var risk = 0L
         if (pvp) {
             val lost =
                 result.itemRisk.lost.map { it.item }.filterNot { LootingBag.isBag(it.id) } + converting.map { it.item } +
-                    bag.filterNot { LootingBag.destroyedOnPvpDeath(player, it) } + lostAmmo
+                    bag.filterNot { LootingBag.destroyedOnPvpDeath(player, it) } + lostAmmo + cargo
             lost.forEach { item ->
                 risk += value.getValue(item.id) * item.amount
                 entries += Entry(Section.LOST, item, line(item, "This item will be lost to the player who kills you.", "These items will be lost to the player who kills you."))
@@ -116,7 +118,7 @@ object ItemsKeptOnDeath {
             (result.itemRisk.lost.map { it.item }.filter { LootingBag.isBag(it.id) } + bag.filter { LootingBag.destroyedOnPvpDeath(player, it) }).forEach { deleted(player, entries, it) }
         } else {
             // Owner 2026-09-26: everything lost on a PvM death goes to the gravestone, and taking it back is free.
-            val toGrave = result.itemRisk.lost.map { it.item }.filterNot { LootKeys.isKey(it.id) || LootingBag.isBag(it.id) } + bag
+            val toGrave = result.itemRisk.lost.map { it.item }.filterNot { LootKeys.isKey(it.id) || LootingBag.isBag(it.id) } + bag + cargo
             toGrave.forEach { item ->
                 risk += value.getValue(item.id) * item.amount
                 entries += Entry(Section.GRAVESTONE, item, line(item, "This item will be sent to your gravestone.", "These items will be sent to your gravestone."))

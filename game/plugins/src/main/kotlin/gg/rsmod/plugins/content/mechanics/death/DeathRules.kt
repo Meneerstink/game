@@ -91,6 +91,8 @@ object DeathRules {
         loss += lostAmmo
         loss += UntradeableDeathProtection.killerLoot(untradeables)
         loss += LootingBag.peekContents(player).filterNot { LootingBag.destroyedOnPvpDeath(player, it) }
+        // A beast of burden's cargo is unprotected PvP loot too (death.plugin.kts, BeastOfBurden.takeAllCargo).
+        loss += gg.rsmod.plugins.content.skills.summoning.BeastOfBurden.activeContainer(player)?.rawItems?.filterNotNull() ?: emptyList()
         return loss
     }
 }
