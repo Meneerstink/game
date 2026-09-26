@@ -111,10 +111,11 @@ object DeathDialogue {
     private suspend fun QueueTask.explainGravestones() {
         itemMessageBox("A gravestone appears on the ground ${red}near where you died$END. You can go there and retrieve your items by clicking on it.", GRAVE_PICTURE)
         itemMessageBox("Your gravestone would be marked with an arrow to help to spot it. A grave icon appears on the ${red}world map$END too, if your grave is in a mapped area.", GRAVE_PICTURE)
-        doubleItemMessageBox(
-            "Gravestones charge a ${red}small fee$END to return especially valuable items, but most things are returned free of charge. " +
-                "Conveniently, a gravestone can take its fee ${red}straight from your bank$END.",
-            GRAVE_PICTURE, Items.COINS_995, amount2 = 100,
+        // Owner 2026-09-26: the gravestone is free; others can bless or repair it (RS 2009).
+        itemMessageBox(
+            "Taking your items back from a gravestone is ${red}free of charge$END. Only you can loot it, but other players can see it - " +
+                "a kind soul may even ${red}bless or repair$END it to make it last longer.",
+            GRAVE_PICTURE,
         )
         itemMessageBox("A gravestone does not last forever. After ${red}about 15 minutes$END, a gravestone will collapse. Anything in it will be sent here, to me.", GRAVE_PICTURE)
         death(
@@ -130,7 +131,7 @@ object DeathDialogue {
             val choice =
                 options(
                     topic("Tell me about gravestones again.", true),
-                    topic("How do I pay a gravestone fee?", has(player, FEE_TOPIC)),
+                    topic("How do I pay your fee?", has(player, FEE_TOPIC)),
                     topic("How long do I have to return to my gravestone?", has(player, TIME_TOPIC)),
                     topic("How do I know what will happen to my items when I die?", has(player, KEPT_TOPIC)),
                     "I think I'm done here.",
@@ -142,11 +143,11 @@ object DeathDialogue {
                     explainGravestones()
                 }
                 2 -> {
-                    me("How do I pay a gravestone fee?")
-                    death("Cash is always acceptable. Also, a gravestone can take it directly from you bank, in case you didn't have enough with you.")
+                    me("How do I pay your fee?")
+                    death("Your gravestone costs you nothing. Only what reaches me costs a little: cash is always acceptable, and I can take it from your bank too.")
                     death(
                         "Besides that, take a look at my Coffer here. You can bring your unwanted possessions, and sacrifice them into my Coffer. " +
-                            "I'll count their value against any future gravestone fees you're charged.",
+                            "I'll count their value against any future fees I charge you.",
                     )
                     itemMessageBox(
                         "Death's Coffer won't accept items worth less than ${red}10,000 coins per item$END - Death doesn't want cheap junk! " +
@@ -170,7 +171,7 @@ object DeathDialogue {
                     death("There is a menu to predict these things for you. Take a look at your Worn Items side-panel...")
                     // The worn equipment tab opens (tab 5 of this gameframe).
                     player.focusTab(WORN_EQUIPMENT_TAB)
-                    messageBox("The ${red}Items Kept on Death$END menu tells you roughly what your items will do when you next die, including ${red}estimating gravestone fees$END.")
+                    messageBox("The ${red}Items Kept on Death$END menu tells you roughly what your items will do when you next die.")
                     set(player, KEPT_TOPIC)
                 }
                 5 -> {

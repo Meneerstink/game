@@ -2,7 +2,6 @@ package gg.rsmod.plugins.content.mechanics.death
 
 import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.entity.Player
-import gg.rsmod.game.model.item.Item
 import gg.rsmod.game.tools.importer.DeathsOfficeInterfaceImportTool
 import gg.rsmod.plugins.api.InterfaceDestination
 import gg.rsmod.plugins.api.ext.message
@@ -17,13 +16,9 @@ import gg.rsmod.game.tools.importer.DeathsOfficeInterfaceImportTool.Grave as Lay
 /**
  * The OSRS gravestone screen (OSRS interface 672, built as 667 interface [INTERFACE_ID] by `DeathsOfficeInterfaceImportTool`):
  *  - title "Gravestone (n/120)" (gravestone_generic_title);
- *  - "Free to reclaim:" - every stack that costs nothing, with the Take-All button;
- *  - the fee section - every stack still behind the fee, each labelled with its own fee ("1k", "10k", "100k" per unit,
- *    gravestone_generic_window_set), "Fee: X coins" / "Fee: Paid" (gravestone_generic_parsefee), the Unlock button while a
- *    fee is due and Take-All once it is paid, the incinerator ("Discard items to reduce a fee.") and the coffer line
- *    (gravestone_generic_parsecoffer).
- * Items are listed in the order OSRS lists them: the fee section by fee tier (100k, then 10k, then 1k), then slot order.
- * The view maps each shown component back to a gravestone slot ([freeSlots] / [paySlots]).
+ *  - "Free to reclaim:" - every stack, with the Take-All button. Owner 2026-09-26: the gravestone has no fee, so the fee
+ *    section of the OSRS screen stays empty ("Fee: None") and its Unlock / Take-All buttons are hidden.
+ * The view maps each shown component back to a gravestone slot ([freeSlot]).
  */
 object GraveInterface {
     const val INTERFACE_ID = DeathsOfficeInterfaceImportTool.GRAVE
@@ -68,45 +63,24 @@ object GraveInterface {
 
     fun paySlot(player: Player, index: Int): Int? = player.attr[PAY_VIEW]?.getOrNull(index)
 
-    /** OSRS fee label under a fee item: "10k" from 1,000, else the number (gravestone_generic_window_set). */
-    fun feeLabel(fee: Long): String = if (fee >= 1000) "${fee / 1000}k" else fee.toString()
-
-    fun feeText(fee: Int): String =
-        when (fee) {
-            0 -> "Fee: <col=ffffff>Paid</col>"
-            1 -> "Fee: <col=ffffff>1 coin</col>"
-            else -> "Fee: <col=ffffff>${String.format("%,d", fee)} coins</col>"
-        }
-
-    fun cofferText(coffer: Int): String =
-        when (coffer) {
-            0 -> "Death's Coffer: <col=ffffff>Empty</col><br>Discard items to reduce a fee."
-            1 -> "Death's Coffer: <col=ffffff>1 coin</col><br>Discard items to reduce a fee."
-            else -> "Death's Coffer: <col=ffffff>${String.format("%,d", coffer)} coins</col><br>Discard items to reduce a fee."
-        }
-
     fun title(used: Int): String = "Gravestone <col=ffb83f>($used/120)</col>"
 
     fun refresh(player: Player) {
         if (!isOpen(player)) return
-        val value = GuidePriceValueProvider(player.world)
         val grave = player.gravestone
-        val stacks = (0 until grave.capacity).mapNotNull { slot -> grave[slot]?.let { slot to it } }
-        val free = stacks.filter { DeathFees.graveStackFee(it.second, value) == 0L }.map { it.first }
-        val pay =
-            stacks.filter { DeathFees.graveStackFee(it.second, value) > 0L }
-                .sortedByDescending { DeathFees.graveUnitFee(value.getValue(it.second.id)) }
-                .map { it.first }
+        // Owner 2026-09-26: taking items from the gravestone is free - every stack is in the free section, the fee section
+        // stays empty and its Unlock / Take-All buttons are hidden.
+        val free = (0 until grave.capacity).filter { grave[it] != null }
+        val pay = emptyList<Int>()
         player.attr[FREE_VIEW] = free
         player.attr[PAY_VIEW] = pay
-        player.setComponentText(INTERFACE_ID, DeathsOfficeInterfaceImportTool.TITLE, title(stacks.size))
+        player.setComponentText(INTERFACE_ID, DeathsOfficeInterfaceImportTool.TITLE, title(free.size))
         showItems(player, free, Layout.FREE_SLOT_FIRST, null)
-        showItems(player, pay, Layout.PAY_SLOT_FIRST, Layout.PAY_FEE_FIRST) { DeathFees.graveStackFee(it, value) }
-        val fee = Gravestone.fee(player, value)
-        player.setComponentText(INTERFACE_ID, Layout.FEE, feeText(fee))
-        player.setComponentHidden(INTERFACE_ID, Layout.UNLOCK_BUTTON, hidden = fee == 0)
-        player.setComponentHidden(INTERFACE_ID, Layout.PAY_TAKE_ALL_BUTTON, hidden = fee != 0)
-        player.setComponentText(INTERFACE_ID, Layout.INFO, cofferText(DeathPayment.coffer(player)))
+        showItems(player, pay, Layout.PAY_SLOT_FIRST, Layout.PAY_FEE_FIRST)
+        player.setComponentText(INTERFACE_ID, Layout.FEE, "Fee: <col=ffffff>None</col>")
+        player.setComponentHidden(INTERFACE_ID, Layout.UNLOCK_BUTTON, hidden = true)
+        player.setComponentHidden(INTERFACE_ID, Layout.PAY_TAKE_ALL_BUTTON, hidden = true)
+        player.setComponentText(INTERFACE_ID, Layout.INFO, "Taking items from your gravestone is free.")
         val freeRows = (free.size + Layout.COLUMNS - 1) / Layout.COLUMNS
         val payRows = (pay.size + Layout.COLUMNS - 1) / Layout.COLUMNS
         setScroll(player, Layout.FREE_ITEMS, Layout.FREE_SCROLLBAR, if (freeRows == 0) 0 else (freeRows - 1) * Layout.FREE_ROW_STEP + 32)
@@ -118,7 +92,6 @@ object GraveInterface {
         slots: List<Int>,
         firstComponent: Int,
         firstLabel: Int?,
-        fee: ((Item) -> Long)? = null,
     ) {
         val shown = player.attr[LAST_SHOWN] ?: HashMap<Int, Pair<Int, Int>>().also { player.attr[LAST_SHOWN] = it }
         for (i in 0 until Layout.SLOTS) {
@@ -134,10 +107,6 @@ object GraveInterface {
                     player.setComponentItem(INTERFACE_ID, component, item.id, item.amount)
                     player.setComponentHidden(INTERFACE_ID, component, hidden = false)
                 }
-            }
-            if (item != null && firstLabel != null && fee != null) {
-                player.setComponentText(INTERFACE_ID, firstLabel + i, feeLabel(fee(item)))
-                player.setComponentHidden(INTERFACE_ID, firstLabel + i, hidden = false)
             }
         }
     }

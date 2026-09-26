@@ -160,7 +160,7 @@ class DeathExecutorTests {
         val world = mockk<World>(relaxed = true)
         for (slot in 0 until victim.gravestone.capacity) victim.gravestone[slot] = Item(FILLER_ITEM, 1)
         victim.attr[GRAVESTONE_TILE_ATTR] = Tile(3200, 3200, 0).as30BitInteger
-        fillDeathRecovery(victim, slots = 0 until 120, itemId = FILLER_ITEM)
+        fillDeathRecovery(victim, slots = 0 until victim.deathRecovery.capacity, itemId = FILLER_ITEM)
         victim.inventory[0] = Item(LOST_ITEM, 5)
 
         assertTrue(DeathExecutor.execute(world, pvmResult(victim, DeathSlotItem(DeathContainerSource.INVENTORY, 0, Item(LOST_ITEM, 5)))))
@@ -176,7 +176,7 @@ class DeathExecutorTests {
         val world = mockk<World>(relaxed = true)
         for (slot in 0 until victim.gravestone.capacity) victim.gravestone[slot] = Item(FILLER_ITEM, 1)
         victim.attr[GRAVESTONE_TILE_ATTR] = Tile(3200, 3200, 0).as30BitInteger
-        fillDeathRecovery(victim, slots = 0 until 120, itemId = FILLER_ITEM)
+        fillDeathRecovery(victim, slots = 0 until victim.deathRecovery.capacity, itemId = FILLER_ITEM)
         val original = Item(LOST_ITEM, 1)
         victim.equipment[0] = original
 
@@ -194,6 +194,25 @@ class DeathExecutorTests {
         assertEquals(1, spawnedItems.count { it.item == LOST_ITEM && it.amount == 1 }, "the equipped overflow is dropped once")
     }
 
+    @Test
+    fun `owner 2026-09-26 - beast-of-burden cargo goes into the gravestone on a PvM death, never to Death's Office`() {
+        val victim = newPlayer()
+        val world = mockk<World>(relaxed = true)
+        victim.inventory[0] = Item(LOST_ITEM, 1)
+        var calls = 0
+        DeathExecutor.execute(
+            world,
+            pvmResult(victim, DeathSlotItem(DeathContainerSource.INVENTORY, 0, Item(LOST_ITEM, 1))),
+            extraPvmItems = {
+                calls++
+                listOf(Item(FILLER_ITEM, 3))
+            },
+        )
+        assertEquals(1, calls, "the cargo is taken exactly once, before the gravestone is filled")
+        assertEquals(3, victim.gravestone.getItemCount(FILLER_ITEM))
+        assertEquals(1, victim.gravestone.getItemCount(LOST_ITEM))
+        assertEquals(0, victim.deathRecovery.getItemCount(FILLER_ITEM))
+    }
     @Test
     fun `repeated execute for a PvM death does not move the items twice`() {
         val victim = newPlayer()

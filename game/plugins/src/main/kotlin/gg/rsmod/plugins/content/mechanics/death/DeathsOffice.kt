@@ -19,7 +19,7 @@ sealed class OfficeRetrieveOutcome {
 }
 
 /**
- * Death's Office storage ([Player.deathRecovery], OSRS "Death's Office Item Retrieval", 120 slots). Death keeps items here
+ * Death's Office storage ([Player.deathRecovery], OSRS "Death's Office Item Retrieval"; owner 2026-09-26: unlimited). Death keeps items here
  * without a time limit (OSRS Wiki "Death's Office"); taking them back costs the office fee ([DeathFees.officeUnitFee]),
  * paid through [DeathPayment]. Owner decision 2026-09-26: the office never deletes anything - when it is full, whatever
  * cannot come in simply stays where it is (a collapsing gravestone keeps standing).
@@ -67,6 +67,12 @@ object DeathsOffice {
         val fee = DeathFees.officeFee(stored, fits, value)
         if (!DeathPayment.pay(player, fee)) return OfficeRetrieveOutcome.CannotAfford(fee)
         val taken = DeathStorage.takeFromSlot(player.deathRecovery, slot, fits) ?: return OfficeRetrieveOutcome.NothingThere
+        if (gg.rsmod.plugins.content.mechanics.pvp.emblem.DeadmanEmblem.isEmblem(taken.id)) {
+            // A Deadman emblem comes back under the one-emblem rule (keep the best, cash the other in).
+            val emblem = gg.rsmod.plugins.content.mechanics.pvp.emblem.DeadmanEmblem
+            repeat(taken.amount) { emblem.receive(player, emblem.tierOf(taken.id), gg.rsmod.plugins.content.mechanics.pvp.emblem.DeadmanEmblem.Source.RECLAIM, "death's office") }
+            return OfficeRetrieveOutcome.Retrieved(Item(taken.id, taken.amount), fee)
+        }
         val back = handedBack(taken)
         val added = player.inventory.addPreservingAttr(back, assureFullInsertion = false).completed
         if (added < back.amount) {

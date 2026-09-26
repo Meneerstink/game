@@ -3,12 +3,15 @@ package gg.rsmod.plugins.content.mechanics.death
 import gg.rsmod.game.fs.DefinitionSet
 import gg.rsmod.game.fs.def.ItemDef
 import gg.rsmod.game.model.Tile
+import gg.rsmod.game.model.attr.GRAVESTONE_BLESSED_ATTR
+import gg.rsmod.game.model.attr.GRAVESTONE_REPAIRED_ATTR
 import gg.rsmod.game.model.attr.GRAVESTONE_TICKS_ATTR
 import gg.rsmod.game.model.attr.GRAVESTONE_TILE_ATTR
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.game.model.item.ItemAttribute
 import gg.rsmod.plugins.api.ext.addPreservingAttr
+import gg.rsmod.plugins.content.mechanics.pvp.emblem.DeadmanEmblem
 
 /** What a PvM death did with the lost items (the plugin turns this into the OSRS chat messages). */
 data class GraveDeposit(
@@ -26,8 +29,6 @@ sealed class GraveTakeOutcome {
 
     object NoInventorySpace : GraveTakeOutcome()
 
-    /** The item is behind the unpaid fee; "Unlock" first. */
-    object Locked : GraveTakeOutcome()
 
     data class Taken(val items: List<Item>) : GraveTakeOutcome()
 }
@@ -45,7 +46,9 @@ sealed class GraveTakeOutcome {
  *    and every unstackable item beyond 28 of one kind to Death's Office;
  *  - the 15-minute timer (1500 ticks) is refreshed whenever the contents change, and only runs while the player is logged
  *    in, not idle for more than 10 seconds and not looking at the gravestone ([tick]);
- *  - when it runs out the gravestone collapses and its items go to Death's Office.
+ *  - when it runs out the gravestone collapses and its items go to Death's Office (5 % fee per item worth 100,000+).
+ * Owner decisions 2026-09-26: taking items from the gravestone is free (no fee, no Unlock); the gravestone is visible to every
+ * player, only the owner can loot it, and others can Bless / Repair it once each (RS 2009 rules, [bless], [repair]).
  * Owner decisions 2026-09-26: food and potions stay in the gravestone on a repeat death (OSRS drops them under it), and a
  * gravestone whose items do not all fit in a full Death's Office keeps standing until there is room.
  */
@@ -88,6 +91,11 @@ object Gravestone {
         }
         if (!hadGrave || moveExisting) {
             player.attr[GRAVESTONE_TILE_ATTR] = deathTile.as30BitInteger
+        }
+        if (!hadGrave) {
+            // A new gravestone can be blessed and repaired again.
+            player.attr.remove(GRAVESTONE_BLESSED_ATTR)
+            player.attr.remove(GRAVESTONE_REPAIRED_ATTR)
         }
         val overflow = mutableListOf<Item>()
         var added = false
@@ -191,49 +199,24 @@ object Gravestone {
     fun clear(player: Player) {
         player.attr.remove(GRAVESTONE_TILE_ATTR)
         player.attr.remove(GRAVESTONE_TICKS_ATTR)
+        player.attr.remove(GRAVESTONE_BLESSED_ATTR)
+        player.attr.remove(GRAVESTONE_REPAIRED_ATTR)
     }
 
-    /** Stacks still behind the fee, i.e. not marked paid/free and worth a fee. */
-    fun chargeable(
-        player: Player,
-        value: ItemRiskValueProvider,
-    ): List<Int> =
-        (0 until player.gravestone.capacity).filter { slot ->
-            val item = player.gravestone[slot] ?: return@filter false
-            DeathFees.graveStackFee(item, value) > 0L
-        }
-
-    /** The fee still to pay before the chargeable items can be taken (0 = "Fee: Paid"). */
-    fun fee(
-        player: Player,
-        value: ItemRiskValueProvider,
-    ): Int = DeathFees.graveFee(player.gravestone.rawItems.filterNotNull(), value)
-
-    /**
-     * "Unlock": pays the whole gravestone fee (coffer, then coins carried, then bank) and marks every item paid.
-     * @return false when the fee cannot be paid (nothing changes).
-     */
-    fun unlock(
-        player: Player,
-        value: ItemRiskValueProvider,
-    ): Boolean {
-        val fee = fee(player, value)
-        if (fee > 0 && !DeathPayment.pay(player, fee.toLong())) return false
-        for (slot in 0 until player.gravestone.capacity) {
-            player.gravestone[slot]?.putAttr(ItemAttribute.DEATH_FEE_FREE, 1)
-        }
-        return true
-    }
-
-    /** "Take" one stack (as much as fits in the inventory). Locked (unpaid) stacks need [unlock] first. */
+    /** "Take" one stack (as much as fits in the inventory). Owner 2026-09-26: taking items from the gravestone is free. */
     fun take(
         player: Player,
         slot: Int,
-        value: ItemRiskValueProvider,
     ): GraveTakeOutcome {
         if (slot !in 0 until player.gravestone.capacity) return GraveTakeOutcome.NothingThere
         val item = player.gravestone[slot] ?: return GraveTakeOutcome.NothingThere
-        if (DeathFees.graveStackFee(item, value) > 0L) return GraveTakeOutcome.Locked
+        if (DeadmanEmblem.isEmblem(item.id)) {
+            // A Deadman emblem comes back under the one-emblem rule (keep the best, cash the other in).
+            player.gravestone[slot] = null
+            afterChange(player)
+            repeat(item.amount) { DeadmanEmblem.receive(player, DeadmanEmblem.tierOf(item.id), DeadmanEmblem.Source.RECLAIM, "gravestone") }
+            return GraveTakeOutcome.Taken(listOf(Item(item.id, item.amount)))
+        }
         val back = DeathsOffice.handedBack(item)
         val fits = DeathsOffice.inventoryRoom(player, back, back.amount)
         if (fits <= 0) return GraveTakeOutcome.NoInventorySpace
@@ -245,25 +228,17 @@ object Gravestone {
         return GraveTakeOutcome.Taken(listOf(Item(handed.id, added)))
     }
 
-    /**
-     * "Take-All" of the free section (or, once unlocked, of everything): OSRS "When collecting items from the take-all
-     * section in the gravestone menu, equipable items are now prioritised".
-     */
-    fun takeAll(
-        player: Player,
-        value: ItemRiskValueProvider,
-    ): GraveTakeOutcome {
+    /** "Take-All": OSRS "When collecting items from the take-all section in the gravestone menu, equipable items are now prioritised". */
+    fun takeAll(player: Player): GraveTakeOutcome {
         val definitions = player.world.definitions
         val slots =
-            (0 until player.gravestone.capacity).filter { slot ->
-                val item = player.gravestone[slot] ?: return@filter false
-                DeathFees.graveStackFee(item, value) == 0L
-            }.sortedByDescending { slot -> definitions.getNullable(ItemDef::class.java, player.gravestone[slot]!!.id)?.equipSlot?.let { it >= 0 } == true }
+            (0 until player.gravestone.capacity).filter { player.gravestone[it] != null }
+                .sortedByDescending { slot -> definitions.getNullable(ItemDef::class.java, player.gravestone[slot]!!.id)?.equipSlot?.let { it >= 0 } == true }
         if (slots.isEmpty()) return GraveTakeOutcome.NothingThere
         val taken = mutableListOf<Item>()
         var blocked = false
         for (slot in slots) {
-            when (val outcome = take(player, slot, value)) {
+            when (val outcome = take(player, slot)) {
                 is GraveTakeOutcome.Taken -> taken += outcome.items
                 GraveTakeOutcome.NoInventorySpace -> blocked = true
                 else -> {}
@@ -273,22 +248,70 @@ object Gravestone {
         return GraveTakeOutcome.Taken(taken)
     }
 
-    /**
-     * Destroys a stack still behind the fee ("Discard items to reduce a fee."). Only unpaid items can be discarded; the
-     * caller asks for confirmation first.
-     */
-    fun discard(
-        player: Player,
-        slot: Int,
-        value: ItemRiskValueProvider,
-    ): Item? {
-        val item = player.gravestone[slot] ?: return null
-        if (DeathFees.graveStackFee(item, value) <= 0L) return null
-        player.gravestone[slot] = null
-        afterChange(player)
-        return item
+    /** Result of blessing or repairing a gravestone (RS 2009, 2009scape `GraveController`). */
+    sealed class PrayOutcome {
+        object AlreadyDone : PrayOutcome()
+
+        object OwnGrave : PrayOutcome()
+
+        data class LevelTooLow(val level: Int) : PrayOutcome()
+
+        object NoPrayerPoints : PrayOutcome()
+
+        data class Done(val minutes: Int) : PrayOutcome()
     }
 
+    const val BLESS_LEVEL = 70
+    const val BLESS_MAX_MINUTES = 60
+    const val REPAIR_LEVEL = 2
+    const val REPAIR_MAX_MINUTES = 5
+
+    /** Ticks per minute (0.6 s ticks). */
+    private const val TICKS_PER_MINUTE = 100
+
+    /**
+     * Bless [owner]'s gravestone (RS 2009): only another player, Prayer 70, once per gravestone; adds min(60, prayer points
+     * - 10) minutes and costs that many prayer points. The caller plays animation 645 and the prayer recharge sound.
+     */
+    fun bless(
+        blesser: Player,
+        owner: Player,
+    ): PrayOutcome {
+        if (blesser === owner) return PrayOutcome.OwnGrave
+        if (owner.attr[GRAVESTONE_BLESSED_ATTR] == true) return PrayOutcome.AlreadyDone
+        if (blesser.skills.getMaxLevel(PRAYER_SKILL) < BLESS_LEVEL) return PrayOutcome.LevelTooLow(BLESS_LEVEL)
+        val minutes = minOf(BLESS_MAX_MINUTES, blesser.getCurrentPrayerPoints() - 10)
+        if (minutes <= 0) return PrayOutcome.NoPrayerPoints
+        blesser.alterPrayerPoints(-minutes)
+        owner.attr[GRAVESTONE_BLESSED_ATTR] = true
+        addMinutes(owner, minutes)
+        return PrayOutcome.Done(minutes)
+    }
+
+    /** Repair a gravestone (RS 2009): Prayer 2, once per gravestone; adds min(5, prayer points) minutes for that many points. */
+    fun repair(
+        repairer: Player,
+        owner: Player,
+    ): PrayOutcome {
+        if (owner.attr[GRAVESTONE_REPAIRED_ATTR] == true) return PrayOutcome.AlreadyDone
+        if (repairer.skills.getMaxLevel(PRAYER_SKILL) < REPAIR_LEVEL) return PrayOutcome.LevelTooLow(REPAIR_LEVEL)
+        val minutes = minOf(REPAIR_MAX_MINUTES, repairer.getCurrentPrayerPoints())
+        if (minutes <= 0) return PrayOutcome.NoPrayerPoints
+        repairer.alterPrayerPoints(-minutes)
+        owner.attr[GRAVESTONE_REPAIRED_ATTR] = true
+        addMinutes(owner, minutes)
+        return PrayOutcome.Done(minutes)
+    }
+
+    /** Extra time lives in [GRAVESTONE_TICKS_ATTR], so it survives logout like the rest of the timer. */
+    private fun addMinutes(
+        owner: Player,
+        minutes: Int,
+    ) {
+        owner.attr[GRAVESTONE_TICKS_ATTR] = ticksLeft(owner) + minutes * TICKS_PER_MINUTE
+    }
+
+    private const val PRAYER_SKILL = 5
     /** A gravestone emptied by taking its items disappears. */
     fun afterChange(player: Player) {
         if (player.gravestone.isEmpty) clear(player)

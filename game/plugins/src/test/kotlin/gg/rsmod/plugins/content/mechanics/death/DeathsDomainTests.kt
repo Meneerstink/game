@@ -23,6 +23,7 @@ import gg.rsmod.game.model.item.ItemAttribute
 import gg.rsmod.game.model.timer.TimerMap
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import org.junit.BeforeClass
 import java.io.File
 import java.nio.file.Paths
@@ -35,31 +36,11 @@ import kotlin.test.assertTrue
 
 /**
  * The OSRS death system (gravestone, Death's Office, Death's Coffer) and the owner's Deadman decisions of 2026-09-26:
- * nothing is ever deleted (a full office keeps the gravestone standing), familiar cargo is free, food and potions stay in
- * the gravestone. Every expected number is the OSRS Wiki / OSRS clientscript one (see [DeathFees]).
+ * nothing is ever deleted, food and potions stay in
+ * the gravestone. Death rework (owner 2026-09-26): the gravestone is free, can be blessed/repaired, and Death's Office is unlimited.
  */
 class DeathsDomainTests {
-    // ---- fees ----
-
-    @Test
-    fun `gravestone fee per unit follows the OSRS tiers`() {
-        val c = DeathsDomainConfig.OSRS
-        assertEquals(0, DeathFees.graveUnitFee(99_999L, c))
-        assertEquals(1_000, DeathFees.graveUnitFee(100_000L, c))
-        assertEquals(1_000, DeathFees.graveUnitFee(999_999L, c))
-        assertEquals(10_000, DeathFees.graveUnitFee(1_000_000L, c))
-        assertEquals(10_000, DeathFees.graveUnitFee(9_999_999L, c))
-        assertEquals(100_000, DeathFees.graveUnitFee(10_000_000L, c))
-        assertEquals(100_000, DeathFees.graveUnitFee(2_000_000_000L, c))
-    }
-
-    @Test
-    fun `gravestone fee multiplies by the stack and is capped at 500k`() {
-        val c = DeathsDomainConfig.OSRS
-        assertEquals(3_000L, DeathFees.graveStackFee(Item(WHIP, 3), values(WHIP to 200_000L), c))
-        assertEquals(500_000, DeathFees.graveFee(List(6) { Item(WHIP, 1) }, values(WHIP to 50_000_000L), c))
-        assertEquals(0L, DeathFees.graveStackFee(Item(WHIP, 1).putAttr(ItemAttribute.DEATH_FEE_FREE, 1), values(WHIP to 50_000_000L), c))
-    }
+    // ---- fees (owner 2026-09-26: the gravestone has none, Death's Office keeps 5 %) ----
 
     @Test
     fun `death's office charges 5 percent per unit worth 100k or more`() {
@@ -133,7 +114,7 @@ class DeathsDomainTests {
     }
 
     @Test
-    fun `a collapsing gravestone sends everything to Death's Office, paid items stay free`() {
+    fun `a collapsing gravestone sends everything to Death's Office, items saved as paid stay free`() {
         val player = newPlayer()
         player.gravestone[0] = Item(WHIP, 1).putAttr(ItemAttribute.DEATH_FEE_FREE, 1)
         player.gravestone[1] = Item(COINS, 50)
@@ -167,41 +148,65 @@ class DeathsDomainTests {
     }
 
     @Test
-    fun `locked items need the fee, unlocking pays coffer first then coins then bank`() {
+    fun `owner 2026-09-26 - taking items from the gravestone is free`() {
         val player = newPlayer()
-        val value = values(WHIP to 2_000_000L)
         player.gravestone[0] = Item(WHIP, 1)
+        player.gravestone[1] = Item(COINS, 500)
         player.attr[GRAVESTONE_TILE_ATTR] = Tile(3000, 3000, 0).as30BitInteger
         player.attr[DEATH_COFFER_ATTR] = 4_000
-        player.inventory[0] = Item(COINS, 3_000)
         player.bank[0] = Item(COINS, 10_000)
 
-        assertEquals(GraveTakeOutcome.Locked, Gravestone.take(player, 0, value))
-        assertEquals(10_000, Gravestone.fee(player, value), "1m-10m: 10,000 coins")
-        assertTrue(Gravestone.unlock(player, value))
-        assertEquals(0, player.attr[DEATH_COFFER_ATTR])
-        assertEquals(0, player.inventory.getItemCount(COINS))
-        assertEquals(7_000, player.bank.getItemCount(COINS))
-        assertEquals(0, Gravestone.fee(player, value), "Fee: Paid")
+        val taken = Gravestone.takeAll(player)
 
-        val taken = Gravestone.take(player, 0, value)
         assertTrue(taken is GraveTakeOutcome.Taken)
         assertEquals(1, player.inventory.getItemCount(WHIP))
-        assertNull(player.inventory.rawItems.filterNotNull().first { it.id == WHIP }.getAttr(ItemAttribute.DEATH_FEE_FREE), "the office mark never leaves")
+        assertEquals(500, player.inventory.getItemCount(COINS), "nothing is charged")
+        assertEquals(4_000, player.attr[DEATH_COFFER_ATTR])
+        assertEquals(10_000, player.bank.getItemCount(COINS))
         assertFalse(Gravestone.exists(player), "an emptied gravestone disappears")
     }
 
     @Test
-    fun `an unaffordable unlock changes nothing`() {
-        val player = newPlayer()
-        val value = values(WHIP to 20_000_000L)
-        player.gravestone[0] = Item(WHIP, 1)
-        player.attr[GRAVESTONE_TILE_ATTR] = Tile(3000, 3000, 0).as30BitInteger
-        player.inventory[0] = Item(COINS, 99_999)
+    fun `bless - another player with 70 Prayer, once, adds min(60, points - 10) minutes`() {
+        val owner = newPlayer()
+        val blesser = newPlayer()
+        Gravestone.deposit(owner, listOf(Item(WHIP, 1)), Tile(3100, 3100, 0), moveExisting = false, config = DeathsDomainConfig.OSRS)
+        val before = Gravestone.ticksLeft(owner)
+        every { blesser.skills.getMaxLevel(5) } returns 69
+        assertEquals(Gravestone.PrayOutcome.LevelTooLow(70), Gravestone.bless(blesser, owner))
+        every { blesser.skills.getMaxLevel(5) } returns 70
+        every { blesser.getCurrentPrayerPoints() } returns 45
+        assertEquals(Gravestone.PrayOutcome.OwnGrave, Gravestone.bless(owner, owner))
 
-        assertFalse(Gravestone.unlock(player, value))
-        assertEquals(99_999, player.inventory.getItemCount(COINS))
-        assertEquals(1, player.gravestone.getItemCount(WHIP))
+        assertEquals(Gravestone.PrayOutcome.Done(35), Gravestone.bless(blesser, owner))
+        verify { blesser.alterPrayerPoints(-35) }
+        assertEquals(before + 35 * 100, Gravestone.ticksLeft(owner), "the extra time lives in the persisted grave timer")
+        assertEquals(Gravestone.PrayOutcome.AlreadyDone, Gravestone.bless(blesser, owner))
+    }
+
+    @Test
+    fun `repair - Prayer 2, once, adds min(5, points) minutes, and a new gravestone can be blessed and repaired again`() {
+        val owner = newPlayer()
+        Gravestone.deposit(owner, listOf(Item(WHIP, 1)), Tile(3100, 3100, 0), moveExisting = false, config = DeathsDomainConfig.OSRS)
+        val before = Gravestone.ticksLeft(owner)
+        every { owner.skills.getMaxLevel(5) } returns 2
+        every { owner.getCurrentPrayerPoints() } returns 3
+        assertEquals(Gravestone.PrayOutcome.Done(3), Gravestone.repair(owner, owner))
+        assertEquals(before + 300, Gravestone.ticksLeft(owner))
+        assertEquals(Gravestone.PrayOutcome.AlreadyDone, Gravestone.repair(owner, owner))
+
+        Gravestone.clear(owner)
+        owner.gravestone[0] = null
+        Gravestone.deposit(owner, listOf(Item(WHIP, 1)), Tile(3100, 3100, 0), moveExisting = false, config = DeathsDomainConfig.OSRS)
+        assertEquals(Gravestone.PrayOutcome.Done(3), Gravestone.repair(owner, owner), "flags are per gravestone")
+    }
+
+    @Test
+    fun `owner 2026-09-26 - Death's Office is unlimited`() {
+        val player = newPlayer()
+        for (i in 0 until 1_000) assertEquals(1, DeathsOffice.store(player, Item(BRONZE_SWORD, 1)))
+        assertEquals(1_000, player.deathRecovery.getItemCount(BRONZE_SWORD))
+        assertTrue(player.deathRecovery.capacity >= 4_000)
     }
 
     @Test
@@ -210,20 +215,8 @@ class DeathsDomainTests {
         for (slot in 0 until 28) player.inventory[slot] = Item(BRONZE_SWORD, 1)
         player.gravestone[0] = Item(WHIP, 1)
         player.attr[GRAVESTONE_TILE_ATTR] = Tile(3000, 3000, 0).as30BitInteger
-        assertEquals(GraveTakeOutcome.NoInventorySpace, Gravestone.take(player, 0, values()))
+        assertEquals(GraveTakeOutcome.NoInventorySpace, Gravestone.take(player, 0))
         assertEquals(1, player.gravestone.getItemCount(WHIP))
-    }
-
-    @Test
-    fun `only items behind the fee can be discarded`() {
-        val player = newPlayer()
-        val value = values(WHIP to 2_000_000L)
-        player.gravestone[0] = Item(WHIP, 1)
-        player.gravestone[1] = Item(BRONZE_SWORD, 1)
-        player.attr[GRAVESTONE_TILE_ATTR] = Tile(3000, 3000, 0).as30BitInteger
-        assertNull(Gravestone.discard(player, 1, value), "a free item is never destroyed")
-        assertEquals(WHIP, Gravestone.discard(player, 0, value)?.id)
-        assertEquals(0, Gravestone.fee(player, value))
     }
 
     // ---- Death's Office ----
@@ -255,7 +248,7 @@ class DeathsDomainTests {
     }
 
     @Test
-    fun `familiar cargo is free to take back`() {
+    fun `items saved before the rework as free stay free to take back`() {
         val player = newPlayer()
         DeathsOffice.store(player, Item(WHIP, 1), free = true)
         val outcome = DeathsOffice.retrieve(player, 0, 1, values(WHIP to 50_000_000L))

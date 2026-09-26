@@ -356,6 +356,26 @@ class DeadmanEmblemTests {
         return result
     }
 
+    @Test
+    fun `an emblem in the gravestone counts as owned and comes back under the one-emblem rule`() {
+        val player = newPlayer("graveowner")
+        player.gravestone[0] = Item(DeadmanEmblem.emblemId(2), 1)
+        player.attr[gg.rsmod.game.model.attr.GRAVESTONE_TILE_ATTR] = Tile(3200, 3200, 0).as30BitInteger
+        assertEquals(2, DeadmanEmblem.ownedTier(player), "an emblem waiting in the gravestone is still owned")
+        // A better emblem drops meanwhile: the one in the gravestone is cashed in, never a second emblem.
+        DeadmanEmblem.receive(player, 3, DeadmanEmblem.Source.DROP)
+        assertEquals(0, player.gravestone.getItemCount(DeadmanEmblem.emblemId(2)))
+        assertEquals(1, player.inventory.getItemCount(DeadmanEmblem.emblemId(3)))
+        assertEquals(DeadmanEmblem.points(2), player.attr[StoreCatalogue.Currency.DEADMAN.attr])
+
+        // Reclaiming a worse emblem from the gravestone cashes it in instead of adding a second one.
+        player.gravestone[0] = Item(DeadmanEmblem.emblemId(1), 1)
+        assertTrue(gg.rsmod.plugins.content.mechanics.death.Gravestone.take(player, 0) is gg.rsmod.plugins.content.mechanics.death.GraveTakeOutcome.Taken)
+        assertEquals(1, DeadmanEmblem.holdings(player).size)
+        assertEquals(3, DeadmanEmblem.ownedTier(player))
+        assertEquals(DeadmanEmblem.points(2) + DeadmanEmblem.points(1), player.attr[StoreCatalogue.Currency.DEADMAN.attr])
+    }
+
     private fun newPlayer(name: String, world: World = mockk(relaxed = true)): Player {
         val player = mockk<Player>(relaxed = true)
         every { player.username } returns name

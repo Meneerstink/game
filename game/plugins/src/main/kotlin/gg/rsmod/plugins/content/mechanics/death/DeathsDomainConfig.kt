@@ -15,9 +15,6 @@ data class DeathsDomainConfig(
     val graveSlots: Int,
     val graveLootDistance: Int,
     val graveUnstackableKeep: Int,
-    /** (minimum unit value, fee per unit), ascending by value. */
-    val graveFeeTiers: List<Pair<Long, Int>>,
-    val graveFeeCap: Int,
     val angelCost: Int,
     val officeSlots: Int,
     val officeFreeBelow: Long,
@@ -36,8 +33,6 @@ data class DeathsDomainConfig(
                 graveSlots = 120,
                 graveLootDistance = 7,
                 graveUnstackableKeep = 28,
-                graveFeeTiers = listOf(100_000L to 1_000, 1_000_000L to 10_000, 10_000_000L to 100_000),
-                graveFeeCap = 500_000,
                 angelCost = 200_000,
                 officeSlots = 120,
                 officeFreeBelow = 100_000L,
@@ -61,19 +56,12 @@ data class DeathsDomainConfig(
             val grave = section("gravestone")
             val office = section("office")
             val coffer = section("coffer")
-            val tiers =
-                (grave["fee_tiers"] as? List<*> ?: error("$file: missing gravestone.fee_tiers")).map {
-                    val tier = it as Map<*, *>
-                    tier.long("min_value") to tier.int("fee")
-                }.sortedBy { it.first }
             return DeathsDomainConfig(
                 graveDurationTicks = grave.int("duration_ticks"),
                 graveIdlePauseTicks = grave.int("idle_pause_ticks"),
                 graveSlots = grave.int("slots"),
                 graveLootDistance = grave.int("loot_distance"),
                 graveUnstackableKeep = grave.int("unstackable_keep"),
-                graveFeeTiers = tiers,
-                graveFeeCap = grave.int("fee_cap"),
                 angelCost = grave.int("angel_cost"),
                 officeSlots = office.int("slots"),
                 officeFreeBelow = office.long("free_below"),

@@ -289,8 +289,8 @@ object BeastOfBurden {
      * * **Persistence.** [Player.deathRecovery] is a saved container
      *   ([gg.rsmod.game.model.container.key.DEATH_RECOVERY_KEY]), so the cargo survives logout and
      *   a server restart.
-     * * **Free to reclaim.** The cargo is stored marked fee-free, so Death hands it back without
-     *   the office fee (owner 2026-09-26).
+     * * **Office fee.** Death charges his normal office fee for it (owner 2026-09-26, death rework);
+     *   on the owner's PvM death the cargo goes to the gravestone instead (death.plugin.kts).
      *
      * Called by every path that takes a familiar away while it still holds items - dismiss,
      * expiry, death, replacement and the owner's own death. Logout deliberately does not call it:
@@ -337,8 +337,8 @@ object BeastOfBurden {
         var stranded = 0
         for (slot in 0 until held.capacity) {
             val item = held[slot] ?: continue
-            // Owner 2026-09-26: familiar cargo stays free to reclaim from Death (no office fee).
-            val stored = gg.rsmod.plugins.content.mechanics.death.DeathsOffice.store(player, item, free = true)
+            // Owner 2026-09-26 (death rework): familiar cargo is no longer fee-free - Death's normal office fee applies.
+            val stored = gg.rsmod.plugins.content.mechanics.death.DeathsOffice.store(player, item)
             if (stored <= 0) {
                 stranded++
                 continue

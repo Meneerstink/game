@@ -14,17 +14,12 @@ gravestone:
   loot_distance: 7
   # "the theoretical maximum quantity [of an unstackable item] present in a grave is 56": over 28 goes to Death's Office.
   unstackable_keep: 28
-  # Fee per reclaimed item by its value (per unit): no fee under 100k, 1k up to 1m, 10k up to 10m, 100k from 10m.
-  fee_tiers:
-    - { min_value: 100000, fee: 1000 }
-    - { min_value: 1000000, fee: 10000 }
-    - { min_value: 10000000, fee: 100000 }
-  # "The total combined fees are capped at 500,000"
-  fee_cap: 500000
+  # OWNER 2026-09-26: taking items from the gravestone is free (no OSRS gravestone fee).
   # Angel of Death gravestone (cosmetic), bought from Death.
   angel_cost: 200000
 
 office:
+  # OWNER 2026-09-26: Death's Office is unlimited (container capacity DEATH_RECOVERY_KEY); kept for reference.
   slots: 120
   # "items worth less than 100,000 are free to reclaim, but items worth more come with a 5% reclamation fee"
   free_below: 100000

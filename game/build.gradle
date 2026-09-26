@@ -329,6 +329,14 @@ task runNpcRenameTool(type: JavaExec) {
     main = 'gg.rsmod.game.tools.importer.NpcRenameTool'
 }
 
+task runNpcOptionsTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Sets npc right-click options (NPCType opcodes 30-34) in both production caches (CacheTransaction). ' +
+        'Usage: ./gradlew :game:runNpcOptionsTool --args="<npcId> [npcId ...] --op4=Bless [--apply]"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.NpcOptionsTool'
+}
+
 task runNpcPristineRestoreTool(type: JavaExec) {
     group = 'tools'
     description = 'Restores native 667 npc definitions from the pristine openrs2 #1473 cache into both caches. ' +

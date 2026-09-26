@@ -1,6 +1,5 @@
 package gg.rsmod.plugins.content.mechanics.death
 
-import gg.rsmod.game.fs.def.ItemDef
 import gg.rsmod.game.model.ExamineEntityType
 import gg.rsmod.game.model.queue.TaskPriority
 import gg.rsmod.game.tools.importer.DeathsOfficeInterfaceImportTool
@@ -46,64 +45,16 @@ for (i in 0 until Grave.SLOTS) {
             examine(player, item.id)
             return@on_button
         }
-        GraveInterface.report(player, Gravestone.take(player, slot, GuidePriceValueProvider(world)))
+        GraveInterface.report(player, Gravestone.take(player, slot))
         afterGraveChange(player)
-    }
-    on_button(interfaceId = GraveInterface.INTERFACE_ID, component = Grave.PAY_SLOT_FIRST + i) {
-        val slot = GraveInterface.paySlot(player, i) ?: return@on_button
-        val item = player.gravestone[slot] ?: return@on_button
-        if (player.getInteractingOpcode() == OP10) {
-            examine(player, item.id)
-            return@on_button
-        }
-        // "Take" on an item behind the fee pays the gravestone's fee first, exactly like "Unlock".
-        val value = GuidePriceValueProvider(world)
-        if (Gravestone.take(player, slot, value) == GraveTakeOutcome.Locked) {
-            if (!Gravestone.unlock(player, value)) {
-                player.message("You don't have enough coins to pay the gravestone's fee.")
-                return@on_button
-            }
-            GraveInterface.report(player, Gravestone.take(player, slot, value))
-        }
-        afterGraveChange(player)
-    }
-    // Drag an item behind the fee onto the incinerator: "Discard items to reduce a fee."
-    on_component_to_component_item_swap(
-        srcInterfaceId = GraveInterface.INTERFACE_ID,
-        srcComponent = Grave.PAY_SLOT_FIRST + i,
-        dstInterfaceId = GraveInterface.INTERFACE_ID,
-        dstComponent = Grave.INCINERATOR,
-    ) {
-        val slot = GraveInterface.paySlot(player, i) ?: return@on_component_to_component_item_swap
-        val item = player.gravestone[slot] ?: return@on_component_to_component_item_swap
-        player.queue(TaskPriority.WEAK) {
-            val name = world.definitions.get(ItemDef::class.java, item.id).name
-            if (options("Discard ${if (item.amount > 1) "${item.amount} x " else ""}$name. It cannot be recovered.", "Keep it.", title = "Discard this item?") != 1) return@queue
-            // The gravestone may have changed while the question was open: discard only the very same stack.
-            if (player.gravestone[slot]?.let { it.id == item.id && it.amount == item.amount } != true) return@queue
-            Gravestone.discard(player, slot, GuidePriceValueProvider(world))
-            afterGraveChange(player)
-        }
     }
 }
 
+// Owner 2026-09-26: the gravestone is free - there is no Unlock button, no fee section and no incinerator any more.
 on_button(interfaceId = GraveInterface.INTERFACE_ID, component = Grave.FREE_BUTTON) {
-    GraveInterface.report(player, Gravestone.takeAll(player, GuidePriceValueProvider(world)))
+    GraveInterface.report(player, Gravestone.takeAll(player))
     afterGraveChange(player)
 }
-
-on_button(interfaceId = GraveInterface.INTERFACE_ID, component = Grave.UNLOCK_BUTTON) {
-    if (!Gravestone.unlock(player, GuidePriceValueProvider(world))) {
-        player.message("You don't have enough coins to pay the gravestone's fee.")
-    }
-    afterGraveChange(player)
-}
-
-on_button(interfaceId = GraveInterface.INTERFACE_ID, component = Grave.PAY_TAKE_ALL_BUTTON) {
-    GraveInterface.report(player, Gravestone.takeAll(player, GuidePriceValueProvider(world)))
-    afterGraveChange(player)
-}
-
 on_interface_close(interfaceId = GraveInterface.INTERFACE_ID) {
     GraveInterface.close(player)
 }

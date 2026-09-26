@@ -120,16 +120,60 @@ on_timer(GRAVE_TIMER) {
     if (Gravestone.exists(player)) player.timers[GRAVE_TIMER] = 1
 }
 
+fun timeLeft(owner: gg.rsmod.game.model.entity.Player): String {
+    val seconds = maxOf(1, Gravestone.ticksLeft(owner) * 3 / 5)
+    return "${seconds / 60}:${"%02d".format(seconds % 60)}"
+}
+
 listOf(DeathsOfficeArea.GRAVE, DeathsOfficeArea.GRAVE_ANGEL).forEach { grave ->
-    // Owner 2026-09-26: "Check" tells how long the gravestone has left (the OSRS wording is not documented).
+    // Owner 2026-09-26: "Check" tells how long the gravestone has left (the OSRS wording is not documented); on someone
+    // else's gravestone the RS 2009 line (2009scape GraveController).
     on_npc_option(npc = grave, option = "check") {
-        val seconds = maxOf(1, Gravestone.ticksLeft(player) * 3 / 5)
-        player.message("Your gravestone will collapse in ${seconds / 60}:${"%02d".format(seconds % 60)}.")
+        val owner = GravestoneWorld.ownerOf(player.getInteractingNpc()) ?: return@on_npc_option
+        if (owner === player) {
+            player.message("Your gravestone will collapse in ${timeLeft(owner)}.")
+        } else {
+            player.message("This is ${owner.username}'s gravestone. It looks like it'll survive another ${timeLeft(owner)}.")
+        }
     }
-    // "can be accessed from a distance of up to 7 tiles away, provided the player has line-of-sight"
+    // "can be accessed from a distance of up to 7 tiles away, provided the player has line-of-sight"; only the owner.
     on_npc_option(npc = grave, option = "loot", lineOfSightDistance = 7) {
-        if (player.getInteractingNpc().owner !== player) return@on_npc_option
+        if (GravestoneWorld.ownerOf(player.getInteractingNpc()) !== player) {
+            player.message("This isn't your gravestone.")
+            return@on_npc_option
+        }
         GraveInterface.open(player)
+    }
+    // Owner 2026-09-26: Bless and Repair like RS 2009 (2009scape GraveController): once each per gravestone.
+    on_npc_option(npc = grave, option = "bless") {
+        val owner = GravestoneWorld.ownerOf(player.getInteractingNpc()) ?: return@on_npc_option
+        when (val outcome = Gravestone.bless(player, owner)) {
+            Gravestone.PrayOutcome.OwnGrave -> player.message("The gods don't seem to approve of people attempting to bless their own gravestones.")
+            Gravestone.PrayOutcome.AlreadyDone -> player.message("This grave has already been blessed.")
+            is Gravestone.PrayOutcome.LevelTooLow -> player.message("You need a Prayer level of ${outcome.level} to bless a grave.")
+            Gravestone.PrayOutcome.NoPrayerPoints -> player.message("You do not have enough prayer points to do that.")
+            is Gravestone.PrayOutcome.Done -> {
+                player.animate(Anims.ALTAR_PRAY)
+                player.playSound(Sfx.PRAYER_RECHARGE)
+                player.message("You bless the gravestone. It will last another ${outcome.minutes} minutes.")
+                owner.message("<col=ff0000>Your grave has been blessed.</col>")
+            }
+        }
+    }
+    on_npc_option(npc = grave, option = "repair") {
+        val owner = GravestoneWorld.ownerOf(player.getInteractingNpc()) ?: return@on_npc_option
+        when (val outcome = Gravestone.repair(player, owner)) {
+            Gravestone.PrayOutcome.AlreadyDone -> player.message("This grave has already been repaired.")
+            is Gravestone.PrayOutcome.LevelTooLow -> player.message("You need a Prayer level of ${outcome.level} to repair a grave.")
+            Gravestone.PrayOutcome.NoPrayerPoints -> player.message("You do not have enough prayer points to do that.")
+            is Gravestone.PrayOutcome.Done -> {
+                player.animate(Anims.ALTAR_PRAY)
+                player.playSound(Sfx.PRAYER_RECHARGE)
+                player.message("You repair the gravestone. It will last another ${outcome.minutes} minutes.")
+                if (owner !== player) owner.message("<col=ff0000>Your grave has been repaired.</col>")
+            }
+            Gravestone.PrayOutcome.OwnGrave -> {}
+        }
     }
 }
 

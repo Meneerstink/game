@@ -88,6 +88,10 @@ object DeadmanEmblem {
         }
         scan(player.inventory, false)
         scan(player.bank, true)
+        // Owner 2026-09-26: a PvM death sends the emblem to the gravestone, and from there to Death's Office. It is still owned
+        // there, so the one-emblem rule sees it (stored like a banked one) and a reclaim goes through [receive].
+        scan(player.gravestone, true)
+        scan(player.deathRecovery, true)
         return out
     }
 
@@ -103,7 +107,7 @@ object DeadmanEmblem {
 
     // ------------------------------------------------------------------ receiving (the single entry for every new emblem)
 
-    enum class Source { DROP, PVP_TRANSFER, ADMIN_CREATE, PENDING }
+    enum class Source { DROP, PVP_TRANSFER, ADMIN_CREATE, PENDING, RECLAIM }
 
     /**
      * Gives [player] an emblem of [tier] under the one-emblem rule. Keeps the best emblem, cashes the other in for Deadman

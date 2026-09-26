@@ -62,7 +62,8 @@ object OfficeInterface {
         refresh(player)
     }
 
-    fun title(used: Int): String = "Death's Office Item Retrieval <col=ffb83f>($used/120)</col>"
+    /** Owner 2026-09-26: Death's Office is unlimited, so the title shows only how many stacks Death holds. */
+    fun title(used: Int): String = "Death's Office Item Retrieval <col=ffb83f>($used)</col>"
 
     private fun spaced(value: Long): String = String.format("%,d", value)
 
@@ -83,7 +84,9 @@ object OfficeInterface {
         }
     }
 
-    fun noneText(coffer: Int): String = "Select an item to retrieve.<br>Death's Coffer: <col=ffffff>${spaced(coffer.toLong())}</col>"
+    fun noneText(coffer: Int, hidden: Int = 0): String =
+        "Select an item to retrieve.<br>Death's Coffer: <col=ffffff>${spaced(coffer.toLong())}</col>" +
+            if (hidden > 0) "<br><col=ffb83f>${spaced(hidden.toLong())} more stacks appear as you take items.</col>" else ""
 
     fun refresh(player: Player) {
         if (!isOpen(player)) return
@@ -101,7 +104,8 @@ object OfficeInterface {
                 player.setComponentHidden(INTERFACE_ID, component, hidden = false)
             }
         }
-        val rows = (slots.size + Layout.COLUMNS - 1) / Layout.COLUMNS
+        // Never more rows than the grid has components: the stacks beyond them move up as items are taken (nothing is dropped).
+        val rows = (minOf(slots.size, Layout.SLOTS) + Layout.COLUMNS - 1) / Layout.COLUMNS
         player.runClientScript(
             DeathsOfficeInterfaceImportTool.SCROLL_SCRIPT,
             (INTERFACE_ID shl 16) or Layout.ITEMS,
@@ -117,7 +121,7 @@ object OfficeInterface {
             player.setComponentHidden(INTERFACE_ID, Layout.SELECTED, hidden = true)
             buttons.forEach { player.setComponentHidden(INTERFACE_ID, it, hidden = true) }
             player.setComponentHidden(INTERFACE_ID, Layout.INFO_ITEM, hidden = true)
-            player.setComponentText(INTERFACE_ID, Layout.INFO_NONE, noneText(coffer))
+            player.setComponentText(INTERFACE_ID, Layout.INFO_NONE, noneText(coffer, (slots.size - Layout.SLOTS).coerceAtLeast(0)))
             player.setComponentHidden(INTERFACE_ID, Layout.INFO_NONE, hidden = false)
             return
         }

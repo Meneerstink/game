@@ -42,9 +42,10 @@ import kotlin.test.assertTrue
  */
 class DeathRecoveryPersistenceArchitectureTests {
     @Test
-    fun `death's office and the gravestone are real persisted containers of 120 slots`() {
+    fun `death's office (unlimited) and the gravestone (120 slots) are real persisted containers`() {
         assertEquals("death_recovery", DEATH_RECOVERY_KEY.name, "the save key of Death's Office stays the old one: saved items keep loading")
-        assertEquals(120, DEATH_RECOVERY_KEY.capacity, "OSRS Death's Office Item Retrieval holds 120 stacks")
+        assertEquals(gg.rsmod.game.model.container.key.DEATH_RECOVERY_CAPACITY, DEATH_RECOVERY_KEY.capacity, "owner 2026-09-26: Death's Office is unlimited")
+        assertTrue(DEATH_RECOVERY_KEY.capacity >= 4_000)
         assertEquals(ContainerStackType.NORMAL, DEATH_RECOVERY_KEY.stackType)
         assertEquals("gravestone", GRAVESTONE_KEY.name)
         assertEquals(120, GRAVESTONE_KEY.capacity, "OSRS Wiki Grave: a gravestone functions similarly to a bank with 120 slots")

@@ -747,6 +747,11 @@ val GRAVESTONE_UNLOCKED_ATTR = AttributeKey<Boolean>(persistenceKey = "graveston
 /** True when the player bought the Angel of Death gravestone from Death (OSRS: 200,000 coins, cosmetic). */
 val GRAVESTONE_ANGEL_ATTR = AttributeKey<Boolean>(persistenceKey = "gravestone_angel")
 
+/** Owner 2026-09-26 (RS 2009 gravestones): the current gravestone was blessed / repaired - once each per gravestone, reset for a new one. */
+val GRAVESTONE_BLESSED_ATTR = AttributeKey<Boolean>(persistenceKey = "gravestone_blessed")
+
+val GRAVESTONE_REPAIRED_ATTR = AttributeKey<Boolean>(persistenceKey = "gravestone_repaired")
+
 /** Coins in the player's Death's Coffer (OSRS: sacrificed items at 105% of their value; pays reclamation fees only). */
 val DEATH_COFFER_ATTR = AttributeKey<Int>(persistenceKey = "death_coffer")
 
