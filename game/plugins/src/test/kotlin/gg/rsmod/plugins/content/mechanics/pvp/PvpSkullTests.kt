@@ -43,7 +43,8 @@ class PvpSkullTests {
 
         assertTrue(PvpSkull.isSkulled(attacker))
         // Nothing at risk (empty containers): the skull is still shown, in the lowest tier colour.
-        verify { attacker.skullIcon = SkullIcon.DMM_VERY_LOW_RISK.id }
+        // Owner 2026-09-26: a real skull shows the yellow-eyed tier.
+        verify { attacker.skullIcon = SkullIcon.DMM_VERY_LOW_RISK_SKULLED.id }
         verify(exactly = 0) { attacker.skullIcon = SkullIcon.RED.id }
         assertEquals(PvpSkull.SKULL_DURATION_CYCLES, attacker.timers[SKULL_ICON_DURATION_TIMER])
         assertTrue(attacker.timers.exists(PvpSkull.SKULL_PAUSE_CHECK_TIMER), "pause-tracking driver must be armed")

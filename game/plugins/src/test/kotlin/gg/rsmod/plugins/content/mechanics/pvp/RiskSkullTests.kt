@@ -68,23 +68,19 @@ class RiskSkullTests {
     }
 
     @Test
-    fun `refresh shows no skull at all for an unskulled player without loot keys, whatever the risk`() {
-        // Owner 2026-09-17: "als een player unskulled is geeft die nu een witte skull aan, dit mag
-        // niet" - value at risk alone never puts a skull above the head any more.
-        val player = newPlayer(currentSkullIcon = SkullIcon.DMM_LOW_RISK.id)
+    fun `owner 2026-09-26 - an unskulled player without keys always shows the dark-eyed tier skull`() {
+        val player = newPlayer()
         player.inventory[0] = Item(5, 1)
         player.inventory[1] = Item(5, 1)
-        player.inventory[2] = Item(5, 1)
-        player.inventory[3] = Item(5, 1)
 
         RiskSkull.refresh(player, testValueProvider())
 
-        verify { player.skullIcon = SkullIcon.NONE.id }
-        verify(exactly = 0) { player.skullIcon = SkullIcon.DMM_LOW_RISK.id }
+        verify { player.skullIcon = SkullIcon.DMM_MEDIUM_RISK.id }
+        verify(exactly = 0) { player.skullIcon = SkullIcon.NONE.id }
     }
 
     @Test
-    fun `refresh colours the key-carrier skull by the value at risk`() {
+    fun `refresh colours the key-carrier skull by the value at risk, yellow-eyed`() {
         val player = newPlayer()
         player.inventory[0] = Item(gg.rsmod.plugins.api.cfg.Items.LOOT_KEY, 1)
         player.inventory[1] = Item(5, 1)
@@ -94,78 +90,83 @@ class RiskSkullTests {
 
         RiskSkull.refresh(player, testValueProvider())
 
-        // Audit D-10 (deliberate change): a key carrier IS skulled, so nothing is protected - all four 500k stacks
-        // (plus the worthless key) are at risk -> Green tier (was Iron while key carriers kept their 3 items).
-        verify { player.skullIcon = SkullIcon.DMM_MEDIUM_RISK.id }
+        // Nothing is protected without Protect Item - all four 500k stacks are at risk -> Green, yellow-eyed (key carrier).
+        verify { player.skullIcon = SkullIcon.DMM_MEDIUM_RISK_SKULLED.id }
         verify { player.lootKeyIcons = 1 }
     }
 
     @Test
-    fun `refresh colours a PK-skulled player's skull by the value at risk and re-evaluates as it changes`() {
-        // Owner 2026-09-17: "the skull above the head colour needs to be updating ... when the risk
-        // changes of a player it needs to recalculate and change colors depending on risk".
+    fun `refresh colours a PK-skulled player's yellow-eyed skull by the value at risk and re-evaluates as it changes`() {
         val player = newPlayer(skulled = true)
-        player.inventory[0] = Item(5, 1) // 500k, nothing protected while skulled -> Iron
+        player.inventory[0] = Item(5, 1) // 500k -> Iron
 
         RiskSkull.refresh(player, testValueProvider())
-        verify { player.skullIcon = SkullIcon.DMM_LOW_RISK.id }
+        verify { player.skullIcon = SkullIcon.DMM_LOW_RISK_SKULLED.id }
         verify(exactly = 0) { player.skullIcon = SkullIcon.RED.id }
 
-        every { player.skullIcon } returns SkullIcon.DMM_LOW_RISK.id
+        every { player.skullIcon } returns SkullIcon.DMM_LOW_RISK_SKULLED.id
         player.inventory[1] = Item(5, 1)
         player.inventory[2] = Item(5, 1)
         player.inventory[3] = Item(5, 1) // 2M at risk -> Green
 
         RiskSkull.refresh(player, testValueProvider())
-        verify { player.skullIcon = SkullIcon.DMM_MEDIUM_RISK.id }
+        verify { player.skullIcon = SkullIcon.DMM_MEDIUM_RISK_SKULLED.id }
     }
 
     @Test
-    fun `a PK-skulled player with nothing at risk still shows the bronze skull, never RED and never none`() {
+    fun `a PK-skulled player with nothing at risk still shows the yellow-eyed bronze skull, never RED and never none`() {
         val player = newPlayer(skulled = true)
 
         RiskSkull.refresh(player, testValueProvider())
 
-        verify { player.skullIcon = SkullIcon.DMM_VERY_LOW_RISK.id }
+        verify { player.skullIcon = SkullIcon.DMM_VERY_LOW_RISK_SKULLED.id }
         verify(exactly = 0) { player.skullIcon = SkullIcon.RED.id }
         verify(exactly = 0) { player.skullIcon = SkullIcon.NONE.id }
     }
 
     @Test
-    fun `iconFor is NONE for an unskulled key-less player and a tier for a skulled one`() {
-        assertEquals(SkullIcon.NONE, RiskSkull.iconFor(newPlayer(), testValueProvider()))
-        assertEquals(SkullIcon.DMM_VERY_LOW_RISK, RiskSkull.iconFor(newPlayer(skulled = true), testValueProvider()))
+    fun `iconFor is the dark-eyed tier unskulled and the yellow-eyed tier skulled`() {
+        assertEquals(SkullIcon.DMM_VERY_LOW_RISK, RiskSkull.iconFor(newPlayer(), testValueProvider()))
+        assertEquals(SkullIcon.DMM_VERY_LOW_RISK_SKULLED, RiskSkull.iconFor(newPlayer(skulled = true), testValueProvider()))
+        assertEquals(SkullIcon.DMM_VERY_LOW_RISK, SkullIcon.DMM_VERY_LOW_RISK_SKULLED.tier())
+        assertEquals(24, SkullIcon.DMM_VERY_HIGH_RISK.skulled().id)
     }
 
     @Test
-    fun `refresh shows at least a bronze skull plus the key count for a player carrying loot keys`() {
+    fun `refresh shows at least a yellow-eyed bronze skull plus the key count for a player carrying loot keys`() {
         val player = newPlayer()
         player.inventory[0] = Item(gg.rsmod.plugins.api.cfg.Items.LOOT_KEY, 1)
         player.inventory[1] = Item(gg.rsmod.plugins.api.cfg.Items.LOOT_KEY_23697, 1)
 
         RiskSkull.refresh(player, testValueProvider())
 
-        verify { player.skullIcon = SkullIcon.DMM_VERY_LOW_RISK.id }
+        verify { player.skullIcon = SkullIcon.DMM_VERY_LOW_RISK_SKULLED.id }
         verify { player.lootKeyIcons = 2 }
     }
 
     @Test
-    fun `refresh clears the risk skull when nothing is at risk`() {
-        // Start from a stale risk-tier icon so clearing it back to NONE is an observable change,
-        // rather than the already-NONE default (which correctly makes refresh a no-op).
-        val player = newPlayer(currentSkullIcon = SkullIcon.DMM_LOW_RISK.id)
+    fun `the colour is frozen in a safe zone - it keeps the last dangerous-area tier and never shows the live value`() {
+        val player = newPlayer()
+        player.inventory[0] = Item(5, 1) // 500k -> Iron, computed in the dangerous area
+        assertEquals(SkullIcon.DMM_LOW_RISK, RiskSkull.iconFor(player, testValueProvider()))
 
-        RiskSkull.refresh(player, testValueProvider())
+        every { player.tile } returns SAFE_TILE
+        for (slot in 1 until 20) player.inventory[slot] = Item(5, 1) // now worth 10m - but in a city
+        assertEquals(SkullIcon.DMM_LOW_RISK, RiskSkull.iconFor(player, testValueProvider()), "anti-scouting: frozen in the safe zone")
 
-        verify { player.skullIcon = SkullIcon.NONE.id }
+        val fresh = newPlayer(tile = SAFE_TILE)
+        fresh.inventory[0] = Item(5, 1)
+        assertEquals(SkullIcon.DMM_VERY_LOW_RISK, RiskSkull.iconFor(fresh, testValueProvider()), "never computed: bronze, not the live value")
     }
 
     private fun newPlayer(
         protectItem: Boolean = false,
         currentSkullIcon: Int = SkullIcon.NONE.id,
         skulled: Boolean = false,
+        tile: gg.rsmod.game.model.Tile = DANGEROUS_TILE,
     ): Player {
         val player = mockk<Player>(relaxed = true)
+        every { player.tile } returns tile
         every { player.skullIcon } returns currentSkullIcon
         // The skull state is the running PK skull timer (PvpSkull.isSkulled), never an icon id.
         every { player.timers } returns TimerMap().also { if (skulled) it[SKULL_ICON_DURATION_TIMER] = PvpSkull.SKULL_DURATION_CYCLES }
@@ -192,5 +193,11 @@ class RiskSkullTests {
 
     companion object {
         private val DEFINITIONS = DefinitionSet()
+
+        /** Edgeville: a Deadman dangerous area. */
+        private val DANGEROUS_TILE = gg.rsmod.game.model.Tile(3094, 3469, 0)
+
+        /** Lumbridge castle courtyard: a guarded (safe) city. */
+        private val SAFE_TILE = gg.rsmod.game.model.Tile(3222, 3218, 0)
     }
 }

@@ -2,6 +2,7 @@ package gg.rsmod.plugins.content.mechanics.pvp
 
 import gg.rsmod.game.model.attr.PROTECT_ITEM_ATTR
 import gg.rsmod.game.model.entity.Player
+import gg.rsmod.game.model.entity.zoneTile
 import gg.rsmod.game.sync.block.UpdateBlockType
 import gg.rsmod.plugins.api.SkullIcon
 import gg.rsmod.plugins.api.ext.hasSkullIcon
@@ -10,30 +11,14 @@ import gg.rsmod.plugins.content.mechanics.death.DeathRules
 import gg.rsmod.plugins.content.mechanics.death.ItemRiskValueProvider
 
 /**
- * Risk-coloured skulls (master plan section 1C "Deadman-style onderdelen"; owner 2026-09-17: "the
- * skull above the head colour needs to be updating with the skull in the timerskull hud, so when
- * the risk changes of a player it needs to recalculate and change colors depending on risk").
+ * Risk-coloured skulls, exactly like OSRS Deadman: Annihilation (owner 2026-09-26):
+ *  - every player always shows a skull in the colour of the value they would lose right now ([calculateRiskedValue] -
+ *    the very rules of the real death, [DeathRules.pvpLoss]);
+ *  - the colour is only recalculated in a dangerous area and stays frozen in safe zones ([FROZEN_TIER], anti-scouting);
+ *  - a really skulled player (or a loot key carrier) shows the yellow-eyed variant of the tier ([SkullIcon.skulled]).
+ * The client's skull-timer HUD draws the local player's own head icon, so it always shows the same skull.
  *
- * The head icon is DERIVED state, recomputed every cycle from two facts:
- * - whether the player is PK-skulled ([PvpSkull.isSkulled] - the running skull timer), and
- * - how many loot keys they carry ([LootKeys]).
- *
- * A skulled player always shows a skull, coloured by the value currently at risk (bronze when
- * nothing is at risk, so the skull never vanishes while the timer runs). An unskulled player shows
- * no skull at all (owner 2026-09-17: "als een player unskulled is geeft die nu een witte skull aan,
- * dit mag niet") unless they carry loot keys, in which case the risk-coloured skull is the carrier
- * of the key count (owner example: "1 key above his head and a brown skull"). The five tiers are
- * the cache-verified Deadman icon ids [SkullIcon.DMM_VERY_HIGH_RISK]..[SkullIcon.DMM_VERY_LOW_RISK];
- * the plain red [SkullIcon.RED] frame is never used, so the client's skull-timer HUD (which draws
- * the local player's own head icon) shows exactly the same colour as the icon above the head.
- *
- * "Risked value" reuses the same centralized death/risk engine ([DeathItemRiskCalculator]) death
- * itself resolves against - it is specifically the value of the item stacks that would actually be
- * LOST right now (i.e. excluded by Protect Item/skull-based protected-stack count), not raw total
- * held wealth, matching the real Deadman Mode concept this table is sourced from.
- *
- * Thresholds are the owner's explicit 2026-09-16 values (Deadman PvP guards plan), superseding
- * the master plan's earlier provisional table ("Exacte bedragen later balancen"):
+ * Thresholds are the owner's explicit 2026-09-16 values:
  *
  * | Tier   | Risk                  |
  * |--------|-----------------------|
@@ -42,8 +27,7 @@ import gg.rsmod.plugins.content.mechanics.death.ItemRiskValueProvider
  * | Green  | 800,001 - 2,000,000   |
  * | Blue   | 2,000,001 - 8,000,000 |
  * | Red    | 8,000,001+            |
- */
-object RiskSkull {
+ */object RiskSkull {
     const val BRONZE_MAX = 200_000L
     const val IRON_MAX = 800_000L
     const val GREEN_MAX = 2_000_000L
@@ -79,18 +63,38 @@ object RiskSkull {
      * reflects the number of keys a player has in their inventory." */
     fun heldKeys(player: Player): Int = LootKeys.heldKeyIndexes(player).size.coerceIn(0, LootKeys.MAX_KEYS)
 
-    /** The icon [player] should show right now (see the class doc). */
+    /**
+     * The tier colour, last computed in a dangerous area (persisted). Owner 2026-09-26, OSRS Deadman anti-scouting: the colour
+     * is only recalculated while the player stands in a dangerous area and stays frozen in safe zones, so it never leaks the
+     * live value after a login or a teleport into a city.
+     */
+    val FROZEN_TIER = gg.rsmod.game.model.attr.AttributeKey<Int>(persistenceKey = "risk_skull_tier")
+
+    /** The dark-eyed tier [player] shows right now: live in a dangerous area, frozen in a safe one (bronze if never seen). */
+    fun tierNow(
+        player: Player,
+        valueProvider: ItemRiskValueProvider = DeathRules.rankValue(player.world),
+    ): SkullIcon {
+        if (AreaState.isDangerous(player.zoneTile())) {
+            val live = tierFor(calculateRiskedValue(player, valueProvider)).let { if (it == SkullIcon.NONE) SkullIcon.DMM_VERY_LOW_RISK else it }
+            player.attr[FROZEN_TIER] = live.id
+            return live
+        }
+        return player.attr[FROZEN_TIER]?.let { SkullIcon.forId(it) }?.takeIf { it.id in 8..12 } ?: SkullIcon.DMM_VERY_LOW_RISK
+    }
+
+    /**
+     * The icon [player] should show right now. Owner 2026-09-26 (OSRS Deadman: Annihilation): every player always shows a
+     * risk-coloured skull; a real skull ([PvpSkull.isSkulled] - attacked first, Emblem Trader) or carried loot keys show its
+     * yellow-eyed variant. Only the icon changes here: every "is skulled" decision keeps reading [PvpSkull.isSkulled].
+     */
     fun iconFor(
         player: Player,
         valueProvider: ItemRiskValueProvider = DeathRules.rankValue(player.world),
     ): SkullIcon {
-        val skulled = PvpSkull.isSkulled(player)
-        val keys = heldKeys(player)
-        if (!skulled && keys == 0) return SkullIcon.NONE
-        val tier = tierFor(calculateRiskedValue(player, valueProvider))
-        return if (tier == SkullIcon.NONE) SkullIcon.DMM_VERY_LOW_RISK else tier
+        val tier = tierNow(player, valueProvider)
+        return if (PvpSkull.isSkulled(player) || heldKeys(player) > 0) tier.skulled() else tier
     }
-
     /**
      * Refreshes [player]'s head icon and loot-key count from the current skull state and risk. A
      * no-op when nothing changed, so it is safe to call every cycle. [valueProvider] is threaded
