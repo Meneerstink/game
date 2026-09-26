@@ -86,7 +86,7 @@ class NewPlayerFoundationTests {
         FoundationQuests.SHORT.forEach { quest ->
             val account = Account(isNew = true)
             assertEquals(0, quest.stage(account.player), quest.name)
-            assertTrue(quest.steps.size in 2..6, "${quest.name}: 3-7 steps including the start (Desert Treasure: Eblis, four warriors, Azzanadra)")
+            assertTrue(quest.steps.size in 4..7, "${quest.name}: 5-8 steps including the start (10-20 minutes, owner 2026-09-26)")
             for (stage in 1..quest.steps.size) {
                 quest.setStage(account.player, stage)
                 val journal = quest.getObjective(account.player, stage).objectives
@@ -426,8 +426,9 @@ class NewPlayerFoundationTests {
             .map { it.asJsonObject }.associateBy { it.get("id").asInt }
         FoundationQuests.SHORT.forEach { quest ->
             val fights = quest.steps.mapNotNull { it.fight }
-            // Desert Treasure: Dessous, Kamil, Damis and Fareed; every other short quest one fight.
-            assertEquals(if (quest == DesertTreasure) 4 else 1, fights.size, "${quest.name} fights")
+            // Desert Treasure: Dessous, Kamil, Damis and Fareed; the others one or two fights.
+            assertEquals(if (quest == DesertTreasure) 4 else fights.size.coerceIn(1, 2), fights.size, "${quest.name} fights")
+            fights.flatMap { it.chain }.forEach { (npc, _) -> assertTrue(defs[npc] != null, "${quest.name}: chained foe $npc has a combat definition") }
             fights.forEach { fight ->
                 val def = defs[fight.npc]
                 assertTrue(def != null, "${quest.name}: npc ${fight.npc} has a combat definition")

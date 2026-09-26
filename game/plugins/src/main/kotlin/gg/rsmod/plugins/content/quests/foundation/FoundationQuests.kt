@@ -49,6 +49,22 @@ private val KAMIL_PATH = Tile(2857, 3754, 0)
 private val DAMIS_LAIR = Tile(2739, 5088, 0)
 private val FAREED_PIT = Tile(3315, 9376, 0)
 
+// The other short quests' places (npc spawns of this world and Void 2011 spawn data; checked against the map by tests).
+private val RELLEKKA_LONGHALL = Tile(2658, 3667, 0)
+private val LUNAR_DOCK = Tile(2142, 3900, 0)
+private val LUNAR_ALTAR = Tile(2151, 3868, 0)
+private val DIGSITE = Tile(3361, 3341, 0)
+private val GHORROCK = Tile(2978, 3872, 0)
+private val BARROWS = Tile(3565, 3289, 0)
+private val KNIGHT_WAVES = Tile(2758, 3508, 2)
+private val VARROCK_PALACE = Tile(3220, 3471, 0)
+private val WEST_ARDOUGNE = Tile(2542, 3326, 0)
+private val LLETYA = Tile(2352, 3163, 0)
+private val GRAND_TREE = Tile(2390, 3514, 1)
+private val APE_ATOLL = Tile(2805, 2762, 0)
+private val APE_ATOLL_GUARD = Tile(2795, 2775, 0)
+private val MERLIN_CELL = Tile(2757, 3502, 0)
+
 private val DIAMONDS = listOf(Items.BLOOD_DIAMOND, Items.ICE_DIAMOND, Items.SMOKE_DIAMOND, Items.SHADOW_DIAMOND)
 
 // ------------------------------------------------------------------------------------------------ Desert Treasure
@@ -167,7 +183,7 @@ object DesertTreasure : ShortQuest(
                 fight =
                     QuestFight(
                         Npcs.DAMIS, "Damis", 103, DAMIS_LAIR, "The shadows will take you.",
-                        secondForm = Npcs.DAMIS_1975, secondFormShout = "Now I show... you... my true power!",
+                        chain = listOf(Npcs.DAMIS_1975 to "Now I show... you... my true power!"),
                     ),
                 talk = {
                     chatNpc("Damis lurks in the Shadow Dungeon. He rises twice.", facialExpression = FacialExpression.WORRIED)
@@ -250,18 +266,19 @@ object LunarDiplomacy : ShortQuest(
 
     override suspend fun QueueTask.intro(): Boolean {
         chatNpc(
-            "The Fremennik and my people have not spoken in",
-            "an age. I would end that silence, but they will",
-            "not listen to a Moon Clan mage.",
+            "The Fremennik and my people, the Moon Clan, have",
+            "not spoken in an age. I would end that silence, but",
+            "they will not listen to a Moon Clan mage.",
             facialExpression = FacialExpression.CALM_TALK,
         )
         chatNpc(
-            "Lokar Searunner sails from Rellekka's west dock.",
-            "Ask him for a Seal of passage and bring it to me.",
+            "Lokar Searunner sails from Rellekka's west dock. He",
+            "knows the way to our isle - and a Fremennik who",
+            "carries a Seal of passage may come ashore.",
             facialExpression = FacialExpression.SECRETLY_TALKING,
         )
-        if (options("I'll go and see Lokar.", "Not right now.", title = "Start Lunar Diplomacy?") != 1) return false
-        chatPlayer("I'll go and see Lokar for you.", facialExpression = FacialExpression.CALM_TALK)
+        if (options("I'll carry your message to the Fremennik.", "Not right now.", title = "Start Lunar Diplomacy?") != 1) return false
+        chatPlayer("I'll carry your message to the Fremennik.", facialExpression = FacialExpression.CALM_TALK)
         return true
     }
 
@@ -269,76 +286,161 @@ object LunarDiplomacy : ShortQuest(
         listOf(
             QuestStep(
                 npc = Npcs.LOKAR_SEARUNNER,
-                journal = listOf("I should speak to ${red("Lokar Searunner")} on the west", "dock of ${red("Rellekka")} about a Seal of passage."),
-                done = listOf("Lokar Searunner gave me a Seal of passage."),
+                journal = listOf("I should speak to ${red("Lokar Searunner")} on the west", "dock of ${red("Rellekka")} about sailing to Lunar Isle."),
+                done = listOf("Lokar agreed to sail me to Lunar Isle, with a Seal."),
                 place = "Rellekka",
                 location = RELLEKKA_DOCK,
-                gives = listOf(Items.SEAL_OF_PASSAGE to 1),
                 talk = {
                     chatNpc(
-                        "The moon folk want to talk? Ha! Took them long",
-                        "enough. My brother trades with them, you know.",
+                        "Lunar Isle? Ha! I'll sail anywhere for a good",
+                        "story. But the moon folk turn back any ship",
+                        "without a Seal of passage.",
                         facialExpression = FacialExpression.LAUGH,
                     )
                     chatNpc(
-                        "Here - a Seal of passage. Wear it on the isle",
-                        "and they'll know you come in peace.",
-                        facialExpression = FacialExpression.HAPPY,
-                    )
-                    FoundationRewards.grant(player, Items.SEAL_OF_PASSAGE, 1)
-                    player.message("Lokar hands you a Seal of passage.")
-                    chatNpc(
-                        "One more thing - a suqah came over with my last",
-                        "cargo from the isle. Nasty brute. Deal with it and",
-                        "the Moon Clan will know you mean what you say.",
-                        facialExpression = FacialExpression.WORRIED,
+                        "Only our chieftain, Brundt, can give you one. You'll",
+                        "find him in the longhall. Come back with the Seal.",
+                        facialExpression = FacialExpression.CALM_TALK,
                     )
                     true
                 },
             ),
             QuestStep(
+                npc = Npcs.BRUNDT_THE_CHIEFTAIN,
+                journal = listOf("I should ask ${red("Brundt the Chieftain")} in the Rellekka", "longhall for a ${red("Seal of passage")}."),
+                done = listOf("Brundt gave me a Seal of passage."),
+                place = "the Rellekka longhall",
+                location = RELLEKKA_LONGHALL,
+                gives = listOf(Items.SEAL_OF_PASSAGE to 1),
+                talk = {
+                    chatNpc(
+                        "The Moon Clan wants to talk after all these years?",
+                        "Then prove you are worth a Fremennik's trust.",
+                        facialExpression = FacialExpression.THINKING,
+                    )
+                    chatNpc(
+                        "Answer me this, outerlander: what does a Fremennik",
+                        "prize above gold?",
+                        facialExpression = FacialExpression.TOUGH,
+                    )
+                    val answer = options("Honour.", "Mead.", "A fine longship.", title = "Brundt's question")
+                    if (answer != 1) {
+                        chatNpc("Hah! Spoken like an outerlander. Think again and come back.", facialExpression = FacialExpression.LAUGH)
+                        return@QuestStep false
+                    }
+                    chatNpc(
+                        "Honour. Good. Here - a Seal of passage. Wear it on",
+                        "the isle and the moon folk will know you come in",
+                        "peace, speaking for the Fremennik.",
+                        facialExpression = FacialExpression.HAPPY,
+                    )
+                    FoundationRewards.grant(player, Items.SEAL_OF_PASSAGE, 1)
+                    player.message("Brundt hands you a Seal of passage.")
+                    true
+                },
+            ),
+            QuestStep(
                 npc = Npcs.LOKAR_SEARUNNER,
-                journal = listOf("I must defeat the ${red("suqah")} (level 111) that came over", "on Lokar's ship to Rellekka."),
-                done = listOf("I killed the suqah that stowed away on Lokar's ship."),
+                journal = listOf("I should show the Seal to ${red("Lokar Searunner")} on", "the Rellekka dock so he sails me to Lunar Isle."),
+                done = listOf("Lokar sailed me to Lunar Isle."),
                 place = "Rellekka",
                 location = RELLEKKA_DOCK,
-                fight = QuestFight(Npcs.SUQAH, "suqah", 111, RELLEKKA_DOCK, "Grraaah!"),
                 talk = {
-                    chatNpc("It's still prowling the dock. Mind its horns!", facialExpression = FacialExpression.WORRIED)
+                    if (!hasSeal(player)) {
+                        chatNpc("No Seal, no voyage. Brundt's in the longhall.", facialExpression = FacialExpression.CALM_TALK)
+                        return@QuestStep false
+                    }
+                    chatNpc(
+                        "Brundt's own Seal! Climb aboard. Mind the suqah",
+                        "on the isle - hairy brutes, and they don't like",
+                        "visitors any more than the moon folk do.",
+                        facialExpression = FacialExpression.LAUGH,
+                    )
+                    messageBox("Lokar sails you across the sea to Lunar Isle.")
+                    player.moveTo(LUNAR_DOCK)
+                    wait(2)
+                    true
+                },
+            ),
+            QuestStep(
+                npc = Npcs.LOKAR_SEARUNNER,
+                journal = listOf("I must defeat the ${red("suqah")} (level 111) that guards the", "path from the Lunar Isle dock."),
+                done = listOf("I killed the suqah on the path from the dock."),
+                place = "Lunar Isle",
+                location = LUNAR_DOCK,
+                fight = QuestFight(Npcs.SUQAH, "suqah", 111, LUNAR_DOCK, "Grraaah!"),
+                talk = {
+                    chatNpc("The suqah is still on the path. Go on!", facialExpression = FacialExpression.WORRIED)
                     true
                 },
             ),
             QuestStep(
                 npc = Npcs.ONEIROMANCER,
                 journal = listOf("I should bring the Seal of passage to the", "${red("Oneiromancer")} in the Grand Exchange hall."),
-                done = listOf("The Oneiromancer made peace in the dream world", "and taught me the Lunar spells."),
+                done = listOf("The Oneiromancer sent me into the dream world."),
                 place = "the Grand Exchange hall",
                 location = GE_HALL,
                 talk = {
-                    if (!player.inventory.contains(Items.SEAL_OF_PASSAGE) && !player.equipment.contains(Items.SEAL_OF_PASSAGE)) {
+                    if (!hasSeal(player)) {
                         chatNpc(
                             "Without the Seal the Fremennik will not believe",
-                            "you. Bring it to me.",
+                            "you speak for them. Bring it to me.",
                             facialExpression = FacialExpression.UPSET,
                         )
-                        false
-                    } else {
-                        chatNpc(
-                            "The Seal... then the Fremennik have answered.",
-                            "Sleep now. In the dream, the moon listens.",
-                            facialExpression = FacialExpression.EYES_CLOSED,
-                        )
-                        messageBox("You drift into a dream of silver light, and wake knowing the Lunar spells.")
-                        chatNpc(
-                            "Welcome, friend of the Moon Clan. Keep the Seal;",
-                            "Lunar Isle is open to you now.",
-                            facialExpression = FacialExpression.HAPPY,
-                        )
-                        true
+                        return@QuestStep false
                     }
+                    chatNpc(
+                        "The Seal... then the Fremennik have answered. But",
+                        "a message between our peoples must be spoken in",
+                        "the dream world, where no lie survives.",
+                        facialExpression = FacialExpression.CALM_TALK,
+                    )
+                    chatNpc(
+                        "Sleep by the altar on Lunar Isle. In the dream you",
+                        "will meet the one who doubts you most - yourself.",
+                        "You cannot change your equipment there.",
+                        facialExpression = FacialExpression.EYES_CLOSED,
+                    )
+                    true
+                },
+            ),
+            QuestStep(
+                npc = Npcs.ONEIROMANCER,
+                journal = listOf("I must defeat ${red("Me")} (level 79) in the dream by the", "Lunar Isle altar. I cannot change equipment there."),
+                done = listOf("I defeated my own doubt in the dream world."),
+                place = "the Lunar Isle altar",
+                location = LUNAR_ALTAR,
+                fight = QuestFight(Npcs.ME, "Me", 79, LUNAR_ALTAR, "You can't beat me. I know all your moves."),
+                talk = {
+                    chatNpc("Go to the altar on Lunar Isle and dream.", facialExpression = FacialExpression.EYES_CLOSED)
+                    true
+                },
+            ),
+            QuestStep(
+                npc = Npcs.ONEIROMANCER,
+                journal = listOf("I should return to the ${red("Oneiromancer")} in the Grand", "Exchange hall."),
+                done = listOf("The Oneiromancer made peace between our peoples", "and taught me the Lunar spells."),
+                place = "the Grand Exchange hall",
+                location = GE_HALL,
+                talk = {
+                    chatNpc(
+                        "You faced yourself and won. The moon listened, and",
+                        "so did the Fremennik. Peace, after an age.",
+                        facialExpression = FacialExpression.HAPPY,
+                    )
+                    messageBox("The Oneiromancer teaches you the spells of the Moon Clan.")
+                    chatNpc(
+                        "Welcome, friend of the Moon Clan. Keep the Seal;",
+                        "Lunar Isle is open to you now.",
+                        facialExpression = FacialExpression.HAPPY,
+                    )
+                    true
                 },
             ),
         )
+
+    private fun hasSeal(player: gg.rsmod.game.model.entity.Player): Boolean =
+        player.inventory.contains(Items.SEAL_OF_PASSAGE) || player.equipment.contains(Items.SEAL_OF_PASSAGE)
 }
 
 // ------------------------------------------------------------------------------------ The Temple at Senntisten
@@ -384,18 +486,19 @@ object TempleAtSenntisten : ShortQuest(
 
     override suspend fun QueueTask.intro(): Boolean {
         chatNpc(
-            "The temple of Zaros at Senntisten lies defiled.",
-            "Before I can rededicate it I need the relics that",
-            "Ali the Wise of Nardah has kept hidden.",
+            "The temple of Zaros at Senntisten lies beneath the",
+            "Digsite, defiled by Saradominist hands. I mean to",
+            "rededicate it - and for that I need two relics.",
             facialExpression = FacialExpression.CALM_TALK,
         )
         chatNpc(
-            "Serve me in this and I will teach you prayers",
-            "no Saradominist priest would dare to utter.",
+            "The Frostenhorn, lost in the ice of Ghorrock, and the",
+            "icon the Barrows brothers guard. Ali the Wise of",
+            "Nardah has kept my secrets before. Start with him.",
             facialExpression = FacialExpression.SECRETLY_TALKING,
         )
-        if (options("I'll fetch the relics.", "Not right now.", title = "Start The Temple at Senntisten?") != 1) return false
-        chatPlayer("I'll fetch the relics from Ali the Wise.", facialExpression = FacialExpression.CALM_TALK)
+        if (options("I'll help you restore the temple.", "Not right now.", title = "Start The Temple at Senntisten?") != 1) return false
+        chatPlayer("I'll help you restore the temple.", facialExpression = FacialExpression.CALM_TALK)
         return true
     }
 
@@ -403,55 +506,91 @@ object TempleAtSenntisten : ShortQuest(
         listOf(
             QuestStep(
                 npc = Npcs.ALI_THE_WISE,
-                journal = listOf("I should speak to ${red("Ali the Wise")} in ${red("Nardah")}", "about the temple relics."),
-                done = listOf("Ali the Wise entrusted the temple relics to me."),
+                journal = listOf("I should speak to ${red("Ali the Wise")} in ${red("Nardah")}", "about the temple."),
+                done = listOf("Ali the Wise sent me to Dr Nabanik at the Digsite."),
                 place = "Nardah",
                 location = NARDAH,
                 talk = {
                     chatNpc(
                         "Azzanadra sends a messenger now? He never did",
-                        "learn patience. The relics are safe with me.",
+                        "learn patience. The temple lies under the Digsite,",
+                        "and the Exam Centre guards every stone of it.",
                         facialExpression = FacialExpression.THINKING,
                     )
                     chatNpc(
-                        "Tell him the wise man of Nardah keeps his word.",
-                        "May the temple not bring ruin on us all.",
-                        facialExpression = FacialExpression.WORRIED,
+                        "Speak to Dr Nabanik at the Exam Centre. He will",
+                        "let you dig where others may not. Trust him - more",
+                        "than you would trust his face.",
+                        facialExpression = FacialExpression.SECRETLY_TALKING,
                     )
-                    player.message("Ali the Wise entrusts the temple relics to you.")
+                    true
+                },
+            ),
+            QuestStep(
+                npc = Npcs.DR_NABANIK,
+                journal = listOf("I should speak to ${red("Dr Nabanik")} at the ${red("Digsite Exam Centre")}."),
+                done = listOf("Dr Nabanik - Azzanadra in disguise - explained the relics."),
+                place = "the Digsite Exam Centre",
+                location = DIGSITE,
+                talk = {
                     chatNpc(
-                        "Careful. A Zamorakian mage has been asking after",
-                        "those relics all week. He will not let you walk",
-                        "away with them.",
+                        "You found me. Yes - Nabanik is a mask I wear among",
+                        "these scholars. I am Azzanadra, and the temple is",
+                        "beneath our feet.",
+                        facialExpression = FacialExpression.SECRETLY_TALKING,
+                    )
+                    chatNpc(
+                        "First the Frostenhorn. It lies in Ghorrock, deep in",
+                        "the frozen north of the Wilderness, and an ice",
+                        "demon keeps it. Water will not touch that beast.",
                         facialExpression = FacialExpression.WORRIED,
                     )
                     true
                 },
             ),
             QuestStep(
-                npc = Npcs.ALI_THE_WISE,
-                journal = listOf("I must defeat the ${red("Zamorak mage")} (level 82) who wants", "the temple relics, in Nardah."),
-                done = listOf("I drove off the Zamorak mage who wanted the relics."),
-                place = "Nardah",
-                location = NARDAH,
-                fight = QuestFight(Npcs.ZAMORAK_MAGE_6368, "Zamorak mage", 82, NARDAH, "The relics belong to Zamorak!"),
+                npc = Npcs.DR_NABANIK,
+                journal = listOf("I must defeat the ${red("Ice demon")} (level 177) in ${red("Ghorrock")},", "deep in the Wilderness, for the Frostenhorn.", "Water spells do not harm it."),
+                done = listOf("I shattered the ice demon and took the Frostenhorn."),
+                place = "Ghorrock, in the Wilderness",
+                location = GHORROCK,
+                fight = QuestFight(Npcs.ICE_DEMON, "Ice demon", 177, GHORROCK, "Cold... so cold... you will join me!"),
                 talk = {
-                    chatNpc("He is still out there. Go - before he finds you first.", facialExpression = FacialExpression.WORRIED)
+                    chatNpc("The Frostenhorn waits in Ghorrock. Beware the Wilderness.", facialExpression = FacialExpression.WORRIED)
+                    true
+                },
+            ),
+            QuestStep(
+                npc = Npcs.DR_NABANIK,
+                journal = listOf("I must defeat ${red("Dharok the Wretched")} (level 115) at the", "${red("Barrows")} to claim the Barrows icon."),
+                done = listOf("I defeated Dharok and took the Barrows icon."),
+                place = "the Barrows",
+                location = BARROWS,
+                fight = QuestFight(Npcs.DHAROK_THE_WRETCHED_14264, "Dharok the Wretched", 115, BARROWS, "You dare disturb my rest?"),
+                talk = {
+                    chatNpc(
+                        "The Frostenhorn! Now the icon. The Barrows brothers",
+                        "will not part with it - Dharok least of all. His axe",
+                        "hits harder the closer he is to death.",
+                        facialExpression = FacialExpression.WORRIED,
+                    )
                     true
                 },
             ),
             QuestStep(
                 npc = Npcs.AZZANADRA,
-                journal = listOf("I should return to ${red("Azzanadra")} in the Grand", "Exchange hall with news of the relics."),
+                journal = listOf("I should bring the Frostenhorn and the Barrows icon", "to ${red("Azzanadra")} in the Grand Exchange hall."),
                 done = listOf("Azzanadra rededicated the temple and taught me the", "Ancient Curses."),
                 place = "the Grand Exchange hall",
                 location = GE_HALL,
                 talk = {
                     chatNpc(
-                        "The relics are placed and the temple breathes",
-                        "again. Kneel, and hear the old words.",
+                        "The Frostenhorn and the icon, both. The relics are",
+                        "placed and the temple breathes again. Kneel, and",
+                        "hear the old words.",
                         facialExpression = FacialExpression.CALM_TALK,
                     )
+                    messageBox("The temple shakes as Zarosian power pours into it. Azzanadra teaches you the curses of Zaros.")
                     chatNpc(
                         "These are not prayers. They are demands. The",
                         "Ancient hymnal will remind you of them.",
@@ -506,8 +645,9 @@ object KingsRansom : ShortQuest(
             facialExpression = FacialExpression.TALKING_ALOT,
         )
         chatNpc(
-            "Anna's the one they say did it. Poor thing. She",
-            "might talk to someone who isn't a gossip.",
+            "Anna's the one they say did it. Poor thing. Funny,",
+            "though - I saw a man in black armour by the back",
+            "door that night. And the butler had a wet boot.",
             facialExpression = FacialExpression.WORRIED,
         )
         if (options("I'll look into it.", "Not right now.", title = "Start King's Ransom?") != 1) return false
@@ -520,20 +660,19 @@ object KingsRansom : ShortQuest(
             QuestStep(
                 npc = Npcs.ANNA,
                 journal = listOf("I should speak to ${red("Anna")} inside Sinclair Mansion."),
-                done = listOf("Anna told me the Black Knights hold King Arthur."),
+                done = listOf("Anna told me she is on trial for a murder she did", "not commit."),
                 place = "Sinclair Mansion",
                 location = SINCLAIR_MANSION,
                 talk = {
                     chatNpc(
-                        "I didn't kill anyone! It was a trick of the",
-                        "Black Knights - they took King Arthur and they",
-                        "want the Round Table to take the blame.",
+                        "I didn't kill anyone! They found the butler dead and",
+                        "my knife beside him - but I lost that knife a week",
+                        "ago. My trial is today, and nobody believes me.",
                         facialExpression = FacialExpression.DISTRESSED,
                     )
                     chatNpc(
-                        "One of them is still watching the mansion. If you",
-                        "can beat him, bring his word to the knights at",
-                        "Camelot. Please.",
+                        "Please - speak for me. Tell them what really",
+                        "happened that night.",
                         facialExpression = FacialExpression.SAD,
                     )
                     true
@@ -541,32 +680,73 @@ object KingsRansom : ShortQuest(
             ),
             QuestStep(
                 npc = Npcs.ANNA,
-                journal = listOf("I must defeat the ${red("Black Knight")} (level 33) watching", "Sinclair Mansion."),
-                done = listOf("I beat the Black Knight, who confessed the plot."),
+                journal = listOf("I should speak for ${red("Anna")} at her trial, using what", "the ${red("Gossip")} saw on the night of the murder."),
+                done = listOf("I proved at the trial that the Black Knights framed", "the Sinclairs."),
                 place = "Sinclair Mansion",
                 location = SINCLAIR_MANSION,
-                fight = QuestFight(Npcs.BLACK_KNIGHT_2698, "Black Knight", 33, SINCLAIR_MANSION, "For the Black Knights!"),
                 talk = {
-                    chatNpc("He's still out there, near the mansion. Be careful!", facialExpression = FacialExpression.WORRIED)
+                    messageBox("The trial begins. The judge asks what you know of the night of the murder.")
+                    val who = options("A man in black armour was seen at the back door.", "Anna was seen with the knife.", "The butler fell down the stairs.", title = "Your evidence")
+                    if (who != 1) {
+                        messageBox("The judge is not convinced. Perhaps the Gossip saw something more useful.")
+                        return@QuestStep false
+                    }
+                    val clue = options("The butler had a wet boot - he came in from the moat.", "Anna's knife was clean.", "The door was locked all night.", title = "And the butler?")
+                    if (clue != 1) {
+                        messageBox("The judge frowns. That does not explain how the killer got in.")
+                        return@QuestStep false
+                    }
+                    messageBox("Under questioning, a guard confesses: the Black Knights paid him to frame the Sinclairs - and they hold King Arthur.")
+                    chatNpc("You saved me. Now save the king - Merlin knows where he is!", facialExpression = FacialExpression.HAPPY)
+                    true
+                },
+            ),
+            QuestStep(
+                npc = Npcs.MERLIN,
+                journal = listOf("I should free ${red("Merlin")}, locked in a cell at ${red("Camelot")}."),
+                done = listOf("I picked the lock of Merlin's cell."),
+                place = "Camelot",
+                location = CAMELOT,
+                talk = {
+                    chatNpc(
+                        "At last! The Black Knights sealed my cell with four",
+                        "tumblers. I heard them set it: high, low, low, high.",
+                        facialExpression = FacialExpression.WORRIED,
+                    )
+                    val combination = listOf("High", "Low", "Low", "High")
+                    for (i in combination.indices) {
+                        val pick = options("High", "Low", title = "Tumbler ${i + 1}")
+                        if ((if (pick == 1) "High" else "Low") != combination[i]) {
+                            messageBox("The tumblers slip back. The lock stays shut.")
+                            return@QuestStep false
+                        }
+                    }
+                    messageBox("With a click, the cell door swings open.")
+                    chatNpc(
+                        "Thank you! King Arthur is held in the Black Knights'",
+                        "fortress, turned to stone by their magic. I have",
+                        "broken the spell from here - go and bring him home.",
+                        facialExpression = FacialExpression.HAPPY,
+                    )
                     true
                 },
             ),
             QuestStep(
                 npc = Npcs.KING_ARTHUR,
-                journal = listOf("I should warn the knights at ${red("Camelot")} and", "speak to ${red("King Arthur")}."),
-                done = listOf("King Arthur was rescued and cleared the Sinclairs."),
+                journal = listOf("I should speak to ${red("King Arthur")} in ${red("Camelot")}, now that", "Merlin has broken the Black Knights' spell."),
+                done = listOf("King Arthur returned to Camelot and cleared the Sinclairs."),
                 place = "Camelot",
                 location = CAMELOT,
                 talk = {
                     chatNpc(
-                        "Anna's word and yours, and my knights rode out",
-                        "within the hour. I owe you my freedom, friend.",
+                        "Stone, for a week! Merlin's spell brought me home,",
+                        "and Anna is free. I owe you my crown, friend.",
                         facialExpression = FacialExpression.HAPPY,
                     )
                     chatNpc(
-                        "Sir Lancelot keeps the training grounds upstairs.",
-                        "Survive his Knight Waves and you shall learn the",
-                        "prayers of the Round Table.",
+                        "Prove yourself against my knights in the Knight",
+                        "Waves Training Ground, and you shall learn the",
+                        "prayers of the Round Table. Speak to Sir Lancelot.",
                         facialExpression = FacialExpression.CALM_TALK,
                     )
                     true
@@ -574,17 +754,41 @@ object KingsRansom : ShortQuest(
             ),
             QuestStep(
                 npc = Npcs.SIR_LANCELOT,
-                journal = listOf("I should speak to ${red("Sir Lancelot")} in Camelot", "and complete the Knight Waves Training Ground."),
+                journal = listOf("I must defeat all eight knights of the ${red("Knight Waves")}", "${red("Training Ground")} in Camelot, one after another,", "from Sir Bedivere (level 110) to Sir Lancelot (level 127)."),
                 done = listOf("I defeated all eight Knight Waves."),
-                place = "Camelot",
-                location = CAMELOT,
+                place = "the Knight Waves Training Ground",
+                location = KNIGHT_WAVES,
+                fight =
+                    QuestFight(
+                        Npcs.SIR_BEDIVERE_6177, "Sir Bedivere", 110, KNIGHT_WAVES, "Wave one! Have at you!",
+                        chain =
+                            listOf(
+                                Npcs.SIR_PELLEAS_6176 to "Wave two: Sir Pelleas!",
+                                Npcs.SIR_TRISTRAM_6175 to "Wave three: Sir Tristram!",
+                                Npcs.SIR_PALOMEDES_1883 to "Wave four: Sir Palomedes!",
+                                Npcs.SIR_LUCAN_6173 to "Wave five: Sir Lucan!",
+                                Npcs.SIR_GAWAIN_6172 to "Wave six: Sir Gawain!",
+                                Npcs.SIR_KAY_6171 to "Wave seven: Sir Kay!",
+                                Npcs.SIR_LANCELOT_6170 to "The last wave. Face me, if you dare!",
+                            ),
+                        chainAtTile = true,
+                    ),
                 talk = {
                     chatNpc(
                         "Eight knights, one after another. Keep your",
                         "guard up and your head down.",
                         facialExpression = FacialExpression.TOUGH,
                     )
-                    messageBox("You fight your way through all eight Knight Waves.")
+                    true
+                },
+            ),
+            QuestStep(
+                npc = Npcs.SIR_LANCELOT,
+                journal = listOf("I should speak to ${red("Sir Lancelot")} in Camelot."),
+                done = listOf("Sir Lancelot taught me the prayers of the Round Table."),
+                place = "Camelot",
+                location = CAMELOT,
+                talk = {
                     chatNpc(
                         "Well fought! The prayers of Chivalry and Piety",
                         "are yours - if your faith and defence are strong.",
@@ -645,9 +849,9 @@ object DesertTreasureII : ShortQuest(
 
     override suspend fun QueueTask.intro(): Boolean {
         chatNpc(
-            "There's a vault north-east of Nardah that wasn't",
-            "there last year. Old Zarosian work. Whatever sleeps",
-            "inside, four of them woke up at once.",
+            "There's a vault in the desert that wasn't there last",
+            "year. Old Zarosian work, with four statues at its",
+            "heart - and the statues have started to move.",
             facialExpression = FacialExpression.WORRIED,
         )
         chatNpc(
@@ -671,14 +875,42 @@ object DesertTreasureII : ShortQuest(
                 talk = {
                     chatNpc(
                         "The vault holds the Forgotten Four: Vardorvis,",
-                        "Duke Sucellus, the Leviathan and the Whisperer.",
-                        "The Mahjarrat Azzanadra will know how to stop them.",
+                        "Duke Sucellus, the Leviathan and the Whisperer -",
+                        "Zaros's greatest servants, sealed in stone.",
                         facialExpression = FacialExpression.WORRIED,
                     )
                     chatNpc(
-                        "But first: the dead are walking out of that vault.",
-                        "One of its mummies has come as far as our town.",
-                        "Put it back in the ground for us.",
+                        "Each statue answers to a medallion. Tell me in",
+                        "which order the seals were set, and I will know",
+                        "you have read the vault's walls with care.",
+                        facialExpression = FacialExpression.THINKING,
+                    )
+                    true
+                },
+            ),
+            QuestStep(
+                npc = Npcs.ALI_THE_WISE,
+                journal = listOf("I should read the ${red("vault's inscription")} to ${red("Ali the Wise")}:", "\"The blade before the ice, the ice before the deep,", "the deep before the whisper.\""),
+                done = listOf("I read the order of the Forgotten Four's seals."),
+                place = "Nardah",
+                location = NARDAH,
+                talk = {
+                    messageBox("The inscription reads: \"The blade before the ice, the ice before the deep, the deep before the whisper.\"")
+                    val order = listOf("Vardorvis", "Duke Sucellus", "The Leviathan", "The Whisperer")
+                    val remaining = order.toMutableList()
+                    for (i in order.indices) {
+                        val shown = remaining.sorted()
+                        val pick = shown.getOrNull(options(*shown.toTypedArray(), title = "Seal ${i + 1}") - 1)
+                        if (pick != order[i]) {
+                            chatNpc("No... that is not the order the walls give. Read them again.", facialExpression = FacialExpression.UPSET)
+                            return@QuestStep false
+                        }
+                        remaining.remove(pick)
+                    }
+                    chatNpc(
+                        "Blade, ice, deep, whisper. Yes. And the dead are",
+                        "walking out of that vault because the seals are",
+                        "failing. One mummy has come as far as our town.",
                         facialExpression = FacialExpression.SCARED,
                     )
                     true
@@ -704,11 +936,17 @@ object DesertTreasureII : ShortQuest(
                 location = GE_HALL,
                 talk = {
                     chatNpc(
-                        "Four of my kin's old servants walk again. So be",
-                        "it - I will lend you my strength to break them.",
+                        "The seals fail because someone is breaking them.",
+                        "Sliske - I would know his hand anywhere. He wants",
+                        "the Four as his own champions.",
                         facialExpression = FacialExpression.ANGRY,
                     )
-                    messageBox("With Azzanadra's power behind you, you break the Forgotten Four and take their rings.")
+                    chatNpc(
+                        "He will not have them. Take my strength and set",
+                        "the medallions again, in the order you learned.",
+                        facialExpression = FacialExpression.CALM_TALK,
+                    )
+                    messageBox("With Azzanadra's power behind you, you reseal the Forgotten Four and take the rings Sliske left behind.")
                     true
                 },
             ),
@@ -720,7 +958,7 @@ object DesertTreasureII : ShortQuest(
                 location = GE_HALL,
                 talk = {
                     chatNpc(
-                        "The four of them, beaten? And the vault's all",
+                        "The four of them, sealed again? And the vault's all",
                         "mine to catalogue? You wonderful lunatic!",
                         facialExpression = FacialExpression.LAUGH_EXCITED,
                     )
@@ -791,7 +1029,48 @@ object DragonSlayerII : ShortQuest(
                     chatNpc(
                         "Galvek. That's the name the old books give it -",
                         "a dragon of the first age, and the dragonkin",
-                        "behind it. You'll need a ship. Talk to Ned.",
+                        "behind it. One hero can't stop that alone.",
+                        facialExpression = FacialExpression.TOUGH,
+                    )
+                    chatNpc(
+                        "You'll need the kingdoms behind you. Start with",
+                        "King Roald in Varrock, then the Fremennik.",
+                        facialExpression = FacialExpression.CALM_TALK,
+                    )
+                    true
+                },
+            ),
+            QuestStep(
+                npc = Npcs.KING_ROALD,
+                journal = listOf("I should ask ${red("King Roald")} in ${red("Varrock Palace")} to stand", "against the dragons."),
+                done = listOf("King Roald pledged Varrock's soldiers."),
+                place = "Varrock Palace",
+                location = VARROCK_PALACE,
+                talk = {
+                    chatNpc(
+                        "Dragons? Over my city? Not while I sit on this",
+                        "throne. Varrock's soldiers are yours - tell the",
+                        "Fremennik we fight together for once.",
+                        facialExpression = FacialExpression.ANGRY,
+                    )
+                    true
+                },
+            ),
+            QuestStep(
+                npc = Npcs.BRUNDT_THE_CHIEFTAIN,
+                journal = listOf("I should ask ${red("Brundt the Chieftain")} in the ${red("Rellekka")}", "longhall for the Fremennik's longships."),
+                done = listOf("Brundt pledged the Fremennik longships."),
+                place = "the Rellekka longhall",
+                location = RELLEKKA_LONGHALL,
+                talk = {
+                    chatNpc(
+                        "Varrock asks the Fremennik for help? The world",
+                        "must truly be ending. Our longships will sail.",
+                        facialExpression = FacialExpression.LAUGH,
+                    )
+                    chatNpc(
+                        "But the call comes from Crandor, where Elvarg's",
+                        "bones lie. Ned of Draynor knows those waters.",
                         facialExpression = FacialExpression.TOUGH,
                     )
                     true
@@ -799,7 +1078,7 @@ object DragonSlayerII : ShortQuest(
             ),
             QuestStep(
                 npc = Npcs.NED,
-                journal = listOf("I should ask ${red("Ned")} in ${red("Draynor Village")} to sail me", "to the dragon's island."),
+                journal = listOf("I should ask ${red("Ned")} in ${red("Draynor Village")} to sail me", "to Crandor."),
                 done = listOf("Ned sailed me out to Crandor."),
                 place = "Draynor Village",
                 location = DRAYNOR,
@@ -818,7 +1097,7 @@ object DragonSlayerII : ShortQuest(
             ),
             QuestStep(
                 npc = Npcs.NED,
-                journal = listOf("I must defeat ${red("Elvarg")} (level 83), woken by Galvek's call,", "on Crandor. An anti-dragon shield would help."),
+                journal = listOf("I must defeat ${red("Elvarg")} (level 83), woken by Galvek's call,", "on Crandor. An anti-dragon shield protects from her fire."),
                 done = listOf("I slew Elvarg again and Ned sailed me back."),
                 place = "Crandor",
                 location = CRANDOR,
@@ -838,9 +1117,9 @@ object DragonSlayerII : ShortQuest(
                 location = GE_HALL,
                 talk = {
                     chatNpc(
-                        "Elvarg slain and Galvek's call silenced! The Myths'",
-                        "Guild will want your name on its walls - and Ava",
-                        "owes you an assembler, I'd wager.",
+                        "Elvarg slain, Varrock and the Fremennik side by",
+                        "side, and Galvek's call silenced! The Myths' Guild",
+                        "will want your name on its walls.",
                         facialExpression = FacialExpression.LAUGH_EXCITED,
                     )
                     true
@@ -882,9 +1161,9 @@ object SongOfTheElves : ShortQuest(
 
     override suspend fun QueueTask.intro(): Boolean {
         chatNpc(
-            "Elena's been gone for days, and the last thing she",
-            "said was something about the elves and a song",
-            "that could bring down a king. I'm worried sick.",
+            "Elena went back into West Ardougne. She says the",
+            "plague was never real - that the Mourners and King",
+            "Lathas lied to keep the city walled. I'm worried sick.",
             facialExpression = FacialExpression.WORRIED,
         )
         if (options("I'll find Elena.", "Not right now.", title = "Start Song of the Elves?") != 1) return false
@@ -897,20 +1176,19 @@ object SongOfTheElves : ShortQuest(
             QuestStep(
                 npc = Npcs.ELENA,
                 journal = listOf("I should find ${red("Elena")} in ${red("East Ardougne")}."),
-                done = listOf("Elena told me the elves have freed Prifddinas."),
+                done = listOf("Elena told me the plague was a hoax."),
                 place = "East Ardougne",
                 location = EAST_ARDOUGNE,
                 talk = {
                     chatNpc(
-                        "Father sent you? I'm fine - better than fine.",
-                        "Lord Iorwerth has fallen and the elves have sung",
-                        "their city back into the world.",
-                        facialExpression = FacialExpression.HAPPY,
+                        "Father sent you? I'm fine. I've seen the proof: there",
+                        "is no plague. The Mourners are Lord Iorwerth's",
+                        "elves and Lathas's men, keeping the west walled.",
+                        facialExpression = FacialExpression.ANGRY,
                     )
                     chatNpc(
-                        "The crystal singers owe you for helping me get",
-                        "word out - but one of Iorwerth's warriors followed",
-                        "me here. Please, stop him before he finds Father.",
+                        "One of their armed Mourners watches the gate. Stop",
+                        "him, and the people will see the truth.",
                         facialExpression = FacialExpression.WORRIED,
                     )
                     true
@@ -918,27 +1196,60 @@ object SongOfTheElves : ShortQuest(
             ),
             QuestStep(
                 npc = Npcs.ELENA,
-                journal = listOf("I must defeat the ${red("elf warrior")} (level 90) who followed", "Elena to East Ardougne."),
-                done = listOf("I defeated Lord Iorwerth's elf warrior."),
-                place = "East Ardougne",
-                location = EAST_ARDOUGNE,
-                fight = QuestFight(Npcs.ELF_WARRIOR, "elf warrior", 90, EAST_ARDOUGNE, "For Lord Iorwerth!"),
+                journal = listOf("I must defeat the ${red("armed Mourner")} (level 108) in", "${red("West Ardougne")}."),
+                done = listOf("I defeated the armed Mourner and the city rose up."),
+                place = "West Ardougne",
+                location = WEST_ARDOUGNE,
+                fight = QuestFight(Npcs.MOURNER_2373, "armed Mourner", 108, WEST_ARDOUGNE, "You'll never leave the city!"),
                 talk = {
-                    chatNpc("He's still close - I can hear his bowstring.", facialExpression = FacialExpression.SCARED)
+                    chatNpc("He's still at his post in the west. Be careful!", facialExpression = FacialExpression.WORRIED)
+                    true
+                },
+            ),
+            QuestStep(
+                npc = Npcs.ARIANWYN,
+                journal = listOf("I should speak to ${red("Arianwyn")} in the elf camp of", "${red("Lletya")}, west of the Arandar pass."),
+                done = listOf("Arianwyn told me Iorwerth means to wake the Dark Lord."),
+                place = "Lletya",
+                location = LLETYA,
+                talk = {
+                    chatNpc(
+                        "Lathas has fallen? Then Iorwerth has lost his",
+                        "puppet - but not his plan. He means to wake the",
+                        "Dark Lord and rule Tirannwn through him.",
+                        facialExpression = FacialExpression.WORRIED,
+                    )
+                    chatNpc(
+                        "His warriors hunt our clan leaders in the forest.",
+                        "One is already outside our camp. Stop him.",
+                        facialExpression = FacialExpression.ANGRY,
+                    )
+                    true
+                },
+            ),
+            QuestStep(
+                npc = Npcs.ARIANWYN,
+                journal = listOf("I must defeat ${red("Lord Iorwerth's elf warrior")} (level 90) outside", "${red("Lletya")}."),
+                done = listOf("I defeated Lord Iorwerth's elf warrior."),
+                place = "Lletya",
+                location = LLETYA,
+                fight = QuestFight(Npcs.ELF_WARRIOR, "elf warrior", 90, LLETYA, "For Lord Iorwerth!"),
+                talk = {
+                    chatNpc("He's close - I can hear his bowstring.", facialExpression = FacialExpression.SCARED)
                     true
                 },
             ),
             QuestStep(
                 npc = Npcs.EDMOND,
-                journal = listOf("I should tell ${red("Edmond")} that Elena is safe."),
+                journal = listOf("I should tell ${red("Edmond")} in East Ardougne that Elena", "is safe and the elves are free."),
                 done = listOf("Edmond thanked me for finding Elena."),
                 place = "East Ardougne",
                 location = EAST_ARDOUGNE,
                 talk = {
                     chatNpc(
                         "She's safe? Thank Saradomin. And the elves are",
-                        "singing crystal again - the whole of Ardougne",
-                        "will hear about this.",
+                        "singing crystal again in Prifddinas - the whole of",
+                        "Ardougne will hear about this.",
                         facialExpression = FacialExpression.HAPPY,
                     )
                     true
@@ -981,8 +1292,8 @@ object MonkeyMadnessII : ShortQuest(
             facialExpression = FacialExpression.WORRIED,
         )
         chatNpc(
-            "Daero will tell you more. He's in the glider",
-            "hangar, beneath the Grand Tree.",
+            "Anita was the last to see him - she lives near the",
+            "Grand Tree. Start with her.",
             facialExpression = FacialExpression.CALM_TALK,
         )
         if (options("I'll stop Glough.", "Not right now.", title = "Start Monkey Madness II?") != 1) return false
@@ -993,24 +1304,72 @@ object MonkeyMadnessII : ShortQuest(
     override val steps =
         listOf(
             QuestStep(
+                npc = Npcs.ANITA,
+                journal = listOf("I should ask ${red("Anita")} at the ${red("Grand Tree")} about Glough."),
+                done = listOf("Anita told me Glough had fled to Ape Atoll."),
+                place = "the Grand Tree",
+                location = GRAND_TREE,
+                talk = {
+                    chatNpc(
+                        "Glough? He came here the night he escaped, raving",
+                        "about gorillas and airships. He took a glider",
+                        "south - to Ape Atoll, I'd bet my life on it.",
+                        facialExpression = FacialExpression.SCARED,
+                    )
+                    chatNpc("Daero in the glider hangar will know.", facialExpression = FacialExpression.CALM_TALK)
+                    true
+                },
+            ),
+            QuestStep(
                 npc = Npcs.DAERO,
                 journal = listOf("I should speak to ${red("Daero")} in the ${red("glider hangar")}", "under the Grand Tree."),
-                done = listOf("Daero sent me to Waydar on Crash Island."),
+                done = listOf("Daero flew me to Ape Atoll."),
                 place = "the glider hangar",
                 location = GLIDER_HANGAR,
                 talk = {
                     chatNpc(
                         "Glough's been building something on Ape Atoll -",
-                        "demonic gorillas, if the pilots are right. Waydar",
-                        "watches from Crash Island. Go to him.",
+                        "demonic gorillas, if the pilots are right. Garkor",
+                        "leads the 10th squad there. I'll fly you to him.",
                         facialExpression = FacialExpression.WORRIED,
+                    )
+                    messageBox("Daero flies you south to Ape Atoll.")
+                    player.moveTo(APE_ATOLL)
+                    wait(2)
+                    true
+                },
+            ),
+            QuestStep(
+                npc = Npcs.GARKOR,
+                journal = listOf("I should speak to ${red("Garkor")} of the 10th squad on", "${red("Ape Atoll")}."),
+                done = listOf("Garkor told me Glough had turned the monkey guards."),
+                place = "Ape Atoll",
+                location = APE_ATOLL,
+                talk = {
+                    chatNpc(
+                        "Glough has bought one of Awowogei's guards. He",
+                        "lets Glough's people come and go. Beat him and",
+                        "we'll learn where the airship is kept.",
+                        facialExpression = FacialExpression.TOUGH,
                     )
                     true
                 },
             ),
             QuestStep(
+                npc = Npcs.GARKOR,
+                journal = listOf("I must defeat the ${red("monkey guard")} (level 167) that Glough", "bought on ${red("Ape Atoll")}."),
+                done = listOf("I beat the bought monkey guard; he talked of Crash Island."),
+                place = "Ape Atoll",
+                location = APE_ATOLL_GUARD,
+                fight = QuestFight(Npcs.MONKEY_GUARD_1459, "monkey guard", 167, APE_ATOLL_GUARD, "Ook! Glough pays better!"),
+                talk = {
+                    chatNpc("The guard is still at his post. Go!", facialExpression = FacialExpression.TOUGH)
+                    true
+                },
+            ),
+            QuestStep(
                 npc = Npcs.WAYDAR,
-                journal = listOf("I should speak to ${red("Waydar")} on ${red("Crash Island")}."),
+                journal = listOf("I should speak to ${red("Waydar")} on ${red("Crash Island")}, where", "Glough's archers have landed."),
                 done = listOf("Waydar told me Glough's monkeys had landed."),
                 place = "Crash Island",
                 location = CRASH_ISLAND,
@@ -1044,8 +1403,9 @@ object MonkeyMadnessII : ShortQuest(
                 location = GE_HALL,
                 talk = {
                     chatNpc(
-                        "Glough defeated, and Ape Atoll at peace! The",
-                        "gnomes will sing of this for a generation.",
+                        "Glough's guard beaten, his archers scattered, and",
+                        "Ape Atoll at peace! The gnomes will sing of this",
+                        "for a generation.",
                         facialExpression = FacialExpression.HAPPY,
                     )
                     true
@@ -1114,6 +1474,9 @@ object FoundationQuests {
             QuestNpcPost(Npcs.ELENA, Tile(2592, 3336), gg.rsmod.game.model.Direction.WEST, listOf("There's always another sickness to cure.", "Mind how you go.")),
             QuestNpcPost(Npcs.DAERO, Tile(2648, 4519), gg.rsmod.game.model.Direction.SOUTH, listOf("The gliders run on time again.", "Glough's gorillas won't trouble the hangar now.")),
             QuestNpcPost(Npcs.WAYDAR, Tile(2891, 2724), gg.rsmod.game.model.Direction.EAST, listOf("Crash Island is quiet now.", "I rather miss the excitement.")),
+            QuestNpcPost(Npcs.DR_NABANIK, DIGSITE, gg.rsmod.game.model.Direction.SOUTH, listOf("The Exam Centre keeps me busy.", "Mind the dig trenches on your way out.")),
+            QuestNpcPost(Npcs.MERLIN, MERLIN_CELL, gg.rsmod.game.model.Direction.SOUTH, listOf("Camelot has never been safer.", "Well - not since the last time, anyway.")),
+            QuestNpcPost(Npcs.ARIANWYN, LLETYA, gg.rsmod.game.model.Direction.SOUTH, listOf("Tirannwn breathes again.", "Prifddinas sings for all of us now.")),
         )
 
 
@@ -1263,7 +1626,8 @@ object FoundationQuests {
     val NPC_NAMES: Map<Int, String> =
         mapOf(
             Npcs.EBLIS to "Eblis", Npcs.LOKAR_SEARUNNER to "Lokar Searunner", Npcs.ALI_THE_WISE to "Ali the Wise",
-            Npcs.ANNA to "Anna", Npcs.NED to "Ned", Npcs.ELENA to "Elena", Npcs.WAYDAR to "Waydar",
+            Npcs.ANNA to "Anna", Npcs.NED to "Ned", Npcs.ELENA to "Elena", Npcs.WAYDAR to "Waydar", Npcs.GARKOR to "Garkor",
+            Npcs.DR_NABANIK to "Dr Nabanik", Npcs.ARIANWYN to "Arianwyn", Npcs.BRUNDT_THE_CHIEFTAIN to "Brundt the Chieftain",
         )
 
     private suspend fun runReminder(task: QueueTask, quest: ShortQuest, stage: Int) {

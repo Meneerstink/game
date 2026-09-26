@@ -166,11 +166,17 @@ object QuestBosses {
 
     val SCRIPTS: List<CombatScript> = listOf(Dessous, Kamil, Damis, Fareed, Elvarg)
 
-    /** Fareed: magic other than a water spell does nothing to him ("water-based magic works"). */
+    /**
+     * Fareed: magic other than a water spell does nothing to him ("water-based magic works"). The Temple at Senntisten's
+     * ice demon is the other way round: "immune to water spells" (RuneScape Wiki quick guide).
+     */
     fun modifyIncomingDamage(target: Npc, attacker: Pawn, hitType: HitType, damage: Int): Int {
-        if (target.id != Npcs.FAREED || hitType != HitType.MAGIC) return damage
+        if (hitType != HitType.MAGIC || (target.id != Npcs.FAREED && target.id != Npcs.ICE_DEMON)) return damage
         val spell = attacker.attr[Combat.SPELL_OF_THIS_ATTACK] ?: attacker.attr[Combat.CASTING_SPELL]
         val water = spell != null && spell.name.startsWith("WATER_")
-        return if (water) damage else 0
+        return when (target.id) {
+            Npcs.FAREED -> if (water) damage else 0
+            else -> if (water) 0 else damage
+        }
     }
 }

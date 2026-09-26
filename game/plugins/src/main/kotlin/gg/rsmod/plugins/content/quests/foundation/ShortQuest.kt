@@ -47,10 +47,23 @@ class QuestFight(
     val shout: String,
     /** Where the player is taken back to after the kill (a fight the step npc sailed or sent them to), or null. */
     val returnTo: Tile? = null,
-    /** A second form that takes the first one's place when it dies (Damis), with its lines; the second kill counts. */
-    val secondForm: Int? = null,
-    val secondFormShout: String = "",
-)
+    /**
+     * Foes that follow when this one dies, in order, each with its shout: a second form (Damis) or waves (the eight
+     * Knight Waves knights). Only the last kill completes the step.
+     */
+    val chain: List<Pair<Int, String>> = emptyList(),
+    /** Waves appear on the fight tile; a second form where the first one fell. */
+    val chainAtTile: Boolean = false,
+) {
+    /** The foe after [npc] in the fight, or null when [npc] is the last one. */
+    fun next(npc: Int): Pair<Int, String>? {
+        val order = listOf(this.npc) + chain.map { it.first }
+        val index = order.indexOf(npc)
+        return if (index < 0) null else chain.getOrNull(index)
+    }
+
+    val secondForm: Int? get() = chain.firstOrNull()?.first
+}
 
 /**
  * A short playable quest (owner 2026-09-26, about five minutes each): start at [startNpc], work through [steps] and

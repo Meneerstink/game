@@ -272,3 +272,27 @@ on_npc_option(npc = Npcs.SIR_LANCELOT, option = "talk-to") {
         }
     }
 }
+
+// Npcs of the longer short quests that stand in the world already but had nothing to say (owner 2026-09-26).
+mapOf(
+    Npcs.BRUNDT_THE_CHIEFTAIN to listOf("Welcome to Rellekka, outerlander. Mind your", "manners in my longhall."),
+    Npcs.GARKOR to listOf("The 10th squad stands ready. Ook!", "Er - I mean, at your service."),
+    Npcs.ANITA to listOf("It's so peaceful by the Grand Tree now.", "Thank you for everything."),
+).forEach { (id, idle) ->
+    on_npc_option(npc = id, option = "talk-to") {
+        player.queue {
+            if (!FoundationQuests.talk(this, id)) chatNpc(*idle.toTypedArray(), facialExpression = FacialExpression.CALM_TALK)
+        }
+    }
+}
+
+// Lunar Diplomacy (OSRS Wiki quick guide): "Cannot equip any different equipment when fighting Me".
+can_equip_any_item { p, _ ->
+    val foe = QuestFights.active(p)
+    if (foe != null && foe.id == Npcs.ME) {
+        p.message("You can't change your equipment in the dream world.")
+        false
+    } else {
+        true
+    }
+}

@@ -72,17 +72,18 @@ object QuestFights {
         val quest = FoundationQuests.SHORT.firstOrNull { it.slot == slot } ?: return
         if (quest.stage(killer) != stage) return
         val fight = quest.steps[stage - 1].fight ?: return
-        // A foe with a second form (Damis): the first form's death brings the second one, whose death counts.
-        val second = fight.secondForm
-        if (second != null && npc.id != second) {
+        // A foe with a second form (Damis) or waves (Knight Waves): the next one comes, only the last kill counts.
+        val next = fight.next(npc.id)
+        if (next != null) {
+            val (second, shout) = next
             val world = killer.world
-            val foe = Npc(killer, second, npc.tile, world)
+            val foe = Npc(killer, second, if (fight.chainAtTile) fight.tile else npc.tile, world)
             foe.respawnOverride = false
             foe.attr[FOE_QUEST] = slot
             foe.attr[FOE_STAGE] = stage
             if (world.spawn(foe)) {
                 killer.attr[ACTIVE_FOE] = WeakReference(foe)
-                if (fight.secondFormShout.isNotEmpty()) foe.forceChat(fight.secondFormShout)
+                if (shout.isNotEmpty()) foe.forceChat(shout)
                 foe.attack(killer)
                 leash(killer, quest, stage, foe, fight)
                 return

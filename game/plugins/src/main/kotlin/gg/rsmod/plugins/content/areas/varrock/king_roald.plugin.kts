@@ -10,6 +10,8 @@ val priestInPeril = PriestInPeril
 
 on_npc_option(npc = Npcs.KING_ROALD, option = "talk-to") {
     player.queue {
+        // Dragon Slayer II's rally (quests/foundation) comes first when that step is open.
+        if (gg.rsmod.plugins.content.quests.foundation.FoundationQuests.talk(this, Npcs.KING_ROALD)) return@queue
         if (player.startedQuest(PriestInPeril)) {
             when (player.getCurrentStage(PriestInPeril)) {
                 1 -> kingRoaldDialogueAfterAcceptingQuest(this)
