@@ -47,6 +47,7 @@ object DeathExecutor {
         logger: LoggerService? = null,
         extraPvpLoot: () -> List<Item> = { emptyList() },
         graveTile: Tile = result.victim.tile,
+        extraPvmItems: () -> List<Item> = { emptyList() },
     ): Boolean {
         val victim = result.victim
         if (victim.attr[DEATH_LOOT_RESOLVED_ATTR] == true) {
@@ -152,8 +153,10 @@ object DeathExecutor {
                 // unprotected death outcome. It must never be recoverable as an item.
                 val lostBags = toRemove.filter { gg.rsmod.plugins.content.mechanics.pvp.LootingBag.isBag(it.item.id) }.toSet()
                 val recoverable = toRemove - lostKeys.toSet() - lostBags
-                if (recoverable.isNotEmpty() || bagContents.isNotEmpty()) {
-                    createGravestone(victim, recoverable, logger, bagContents, graveTile)
+                // Owner 2026-09-26: beast-of-burden cargo (and anything else the caller detaches) joins the same gravestone.
+                val extra = bagContents + extraPvmItems()
+                if (recoverable.isNotEmpty() || extra.isNotEmpty()) {
+                    createGravestone(victim, recoverable, logger, extra, graveTile)
                 }
             }
         }
@@ -216,7 +219,8 @@ object DeathExecutor {
             player = victim,
             itemCount = items.size,
             expiresAtMs = System.currentTimeMillis() + Gravestone.ticksLeft(victim) * 600L,
-            reclaimFee = Gravestone.fee(victim, GuidePriceValueProvider(victim.world)),
+            // Owner 2026-09-26: taking items from the gravestone is free.
+            reclaimFee = 0,
         )
     }
 }

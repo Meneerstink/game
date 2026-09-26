@@ -46,12 +46,15 @@ class RiskSkullTests {
     @Test
     fun `calculateRiskedValue sums only the item stacks that would actually be lost`() {
         val player = newPlayer()
-        player.inventory[0] = Item(1, 1) // value 10 -> protected (top 3)
-        player.inventory[1] = Item(2, 1) // value 5 -> protected
-        player.inventory[2] = Item(3, 1) // value 20 -> protected
-        player.inventory[3] = Item(4, 1) // value 1 -> the 4th stack, lost
+        player.inventory[0] = Item(1, 1) // value 10
+        player.inventory[1] = Item(2, 1) // value 5
+        player.inventory[2] = Item(3, 1) // value 20 -> the one Protect Item would keep
+        player.inventory[3] = Item(4, 1) // value 1
 
-        assertEquals(1L, RiskSkull.calculateRiskedValue(player, testValueProvider()))
+        // Owner 2026-09-26: without Protect Item everything is lost; with it only the single most valuable item is kept.
+        assertEquals(36L, RiskSkull.calculateRiskedValue(player, testValueProvider()))
+        player.attr[gg.rsmod.game.model.attr.PROTECT_ITEM_ATTR] = true
+        assertEquals(16L, RiskSkull.calculateRiskedValue(player, testValueProvider()))
     }
 
     @Test

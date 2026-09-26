@@ -5,6 +5,12 @@ import gg.rsmod.game.fs.DefinitionSet
 import gg.rsmod.game.fs.def.ItemDef
 import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.content.mechanics.pvp.LootKeys
+import gg.rsmod.plugins.content.mechanics.trouver.TrouverLockable
+import gg.rsmod.plugins.content.mechanics.trouver.TrouverRegistry
+import gg.rsmod.game.model.item.Item
+import gg.rsmod.game.model.item.ItemAttribute
+import org.junit.After
+import kotlin.test.assertEquals
 import org.junit.BeforeClass
 import java.nio.file.Paths
 import kotlin.test.Test
@@ -13,38 +19,78 @@ import kotlin.test.assertNotEquals
 import kotlin.test.assertTrue
 
 /**
- * [UntradeableDeathProtection]: the fallback for untradeable items with no item-specific PvP-death
- * rule elsewhere in this codebase - see its class doc for the sourced general "Items Kept on Death"
- * rule this approximates (kept, rather than dropped fully working to the killer).
+ * [UntradeableDeathProtection] (owner 2026-09-26, OSRS level-20 rule): at or below level 20 untradeables break and stay with
+ * the victim (killer gets the repair price), above level 20 unlocked ones are destroyed and locked ones mangled (500,000).
  */
 class UntradeableDeathProtectionTests {
+    @After
+    fun clearRegistry() = TrouverRegistry.clear()
+
     @Test
-    fun `an untradeable item with no specific rule, such as Ferocious gloves, is protected`() {
+    fun `an untradeable item such as Ferocious gloves is handled, a tradeable one is not`() {
         assertFalse(DEFINITIONS.get(ItemDef::class.java, Items.FEROCIOUS_GLOVES).tradeable, "sanity: must actually be untradeable")
-        assertTrue(UntradeableDeathProtection.shouldProtect(DEFINITIONS, Items.FEROCIOUS_GLOVES))
-    }
-
-    @Test
-    fun `a tradeable item is never protected by this fallback`() {
+        assertTrue(UntradeableDeathProtection.handles(DEFINITIONS, Items.FEROCIOUS_GLOVES))
         assertTrue(DEFINITIONS.get(ItemDef::class.java, Items.ABYSSAL_WHIP).tradeable, "sanity: the whip is tradeable")
-        assertFalse(UntradeableDeathProtection.shouldProtect(DEFINITIONS, Items.ABYSSAL_WHIP))
+        assertFalse(UntradeableDeathProtection.handles(DEFINITIONS, Items.ABYSSAL_WHIP))
     }
 
     @Test
-    fun `an untradeable item already covered by an item-specific rule defers to that rule instead`() {
-        assertFalse(DEFINITIONS.get(ItemDef::class.java, Items.AVERNIC_DEFENDER).tradeable, "sanity: must actually be untradeable")
-        assertFalse(
-            UntradeableDeathProtection.shouldProtect(DEFINITIONS, Items.AVERNIC_DEFENDER),
-            "PvpDeathBreakables already owns this item's death rule",
-        )
+    fun `loot keys, conversions and emblems keep their own rules`() {
+        assertFalse(UntradeableDeathProtection.handles(DEFINITIONS, LootKeys.KEY_IDS.first()), "loot keys must stay always-lost (RCV-012 3b)")
+        assertFalse(UntradeableDeathProtection.handles(DEFINITIONS, Items.TOXIC_BLOWPIPE), "the blowpipe keeps its OSRS conversion")
     }
 
     @Test
-    fun `a loot key is never protected by this fallback, even if untradeable`() {
-        val key = LootKeys.KEY_IDS.first()
-        assertFalse(UntradeableDeathProtection.shouldProtect(DEFINITIONS, key), "loot keys must stay always-lost (RCV-012 3b)")
+    fun `below level 20 an untradeable breaks and the killer gets the repair price`() {
+        val fate = UntradeableDeathProtection.fateOf(DEFINITIONS, Item(Items.FEROCIOUS_GLOVES), deepWilderness = false)
+        assertEquals(UntradeableFate.BROKEN, fate.fate)
+        assertEquals(RepairPrices.repairPrice(DEFINITIONS, Items.FEROCIOUS_GLOVES), fate.killerCoins)
+        assertTrue(fate.killerCoins >= RepairPrices.MIN_REPAIR)
     }
 
+    @Test
+    fun `above level 20 an unlocked untradeable is destroyed for coins`() {
+        val fate = UntradeableDeathProtection.fateOf(DEFINITIONS, Item(Items.AVERNIC_DEFENDER), deepWilderness = true)
+        assertEquals(UntradeableFate.DESTROYED, fate.fate)
+        assertEquals(600_000L, fate.killerCoins, "Avernic defender: its OSRS repair price")
+    }
+
+    @Test
+    fun `a locked item breaks below 20 and is mangled above 20 for 500k`() {
+        TrouverRegistry.register(TrouverLockable(Items.ANCIENT_SCEPTRE, Items.ANCIENT_SCEPTRE_L, Items.ANCIENT_SCEPTRE_L_BROKEN, Items.ANCIENT_SCEPTRE_L_MANGLED))
+        val low = UntradeableDeathProtection.fateOf(DEFINITIONS, Item(Items.ANCIENT_SCEPTRE_L), deepWilderness = false)
+        val deep = UntradeableDeathProtection.fateOf(DEFINITIONS, Item(Items.ANCIENT_SCEPTRE_L), deepWilderness = true)
+        assertEquals(UntradeableFate.BROKEN, low.fate)
+        assertEquals(UntradeableFate.MANGLED, deep.fate)
+        assertEquals(RepairPrices.MANGLED_REPAIR, deep.killerCoins)
+        val mangled = Item(Items.ANCIENT_SCEPTRE_L_MANGLED)
+        assertEquals(RepairPrices.MANGLED_REPAIR, UntradeableDeathProtection.repairCost(DEFINITIONS, mangled))
+        assertEquals(Items.ANCIENT_SCEPTRE_L, UntradeableDeathProtection.repaired(mangled).id, "the lock survives the repair")
+    }
+
+    @Test
+    fun `an already damaged item is never paid out twice`() {
+        val broken = Item(Items.FEROCIOUS_GLOVES).also { it.attr[ItemAttribute.BROKEN] = UntradeableDeathProtection.STATE_BROKEN }
+        val fate = UntradeableDeathProtection.fateOf(DEFINITIONS, broken, deepWilderness = true)
+        assertEquals(UntradeableFate.UNCHANGED, fate.fate)
+        assertEquals(0L, fate.killerCoins)
+        assertEquals(UntradeableFate.UNCHANGED, UntradeableDeathProtection.fateOf(DEFINITIONS, Item(Items.AVERNIC_DEFENDER_BROKEN), false).fate)
+        assertFalse(UntradeableDeathProtection.isBroken(UntradeableDeathProtection.repaired(broken)))
+    }
+
+    @Test
+    fun `rune pouch keeps the empty pouch below 20 and is destroyed above 20 when unlocked`() {
+        assertEquals(UntradeableFate.POUCH_EMPTIED, UntradeableDeathProtection.fateOf(DEFINITIONS, Item(Items.RUNE_POUCH), false).fate)
+        assertEquals(UntradeableFate.DESTROYED, UntradeableDeathProtection.fateOf(DEFINITIONS, Item(Items.RUNE_POUCH), true).fate)
+    }
+
+    @Test
+    fun `repair price is the OSRS amount, else 25 percent of the store price with a 10k floor`() {
+        assertEquals(150_000L, RepairPrices.repairPrice(DEFINITIONS, Items.FIRE_CAPE))
+        assertEquals(225_000L, RepairPrices.repairPrice(DEFINITIONS, Items.INFERNAL_CAPE))
+        val cost = DEFINITIONS.get(ItemDef::class.java, Items.FEROCIOUS_GLOVES).cost.toLong()
+        assertEquals(maxOf(10_000L, cost / 4), RepairPrices.repairPrice(DEFINITIONS, Items.FEROCIOUS_GLOVES))
+    }
     companion object {
         private val DEFINITIONS = DefinitionSet()
 

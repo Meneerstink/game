@@ -199,92 +199,25 @@ class TrouverTests {
     }
 
     @Test
-    fun `protectedFromDeath is true only for a registered locked id`() {
-        TrouverRegistry.register(TrouverLockable(Items.FIRE_CAPE, Items.FIRE_CAPE_LOCKED_22324))
-
-        assertTrue(Trouver.protectedFromDeath(Items.FIRE_CAPE_LOCKED_22324))
-        assertFalse(Trouver.protectedFromDeath(Items.FIRE_CAPE))
-    }
-
-    @Test
-    fun `killer compensation pays out for a protected locked item in a Wilderness death`() {
-        TrouverRegistry.register(TrouverLockable(Items.FIRE_CAPE, Items.FIRE_CAPE_LOCKED_22324))
-        val killer = newPlayer()
-        val result = deathResult(
-            context = DeathContext.WILDERNESS_PVP,
-            killer = killer,
-            protected = listOf(slotItem(Items.FIRE_CAPE_LOCKED_22324, 1)),
+    fun `a locked item is never kept whole any more - it only marks the lock in any state`() {
+        TrouverRegistry.register(
+            TrouverLockable(Items.ANCIENT_SCEPTRE, Items.ANCIENT_SCEPTRE_L, Items.ANCIENT_SCEPTRE_L_BROKEN, Items.ANCIENT_SCEPTRE_L_MANGLED),
         )
 
-        val granted = Trouver.grantKillerCompensation(result) { itemId -> if (itemId == Items.FIRE_CAPE) 1000L else 0L }
-
-        assertEquals(1000L, granted)
-        assertEquals(1000, killer.inventory.getItemCount(Items.COINS_995))
+        assertTrue(TrouverRegistry.isLockedAnyState(Items.ANCIENT_SCEPTRE_L))
+        assertTrue(TrouverRegistry.isLockedAnyState(Items.ANCIENT_SCEPTRE_L_BROKEN))
+        assertTrue(TrouverRegistry.isLockedAnyState(Items.ANCIENT_SCEPTRE_L_MANGLED))
+        assertFalse(TrouverRegistry.isLockedAnyState(Items.ANCIENT_SCEPTRE))
+        // Owner 2026-09-26: locked items rank in the normal keep-1 like every other item.
+        val risk =
+            gg.rsmod.plugins.content.mechanics.death.DeathItemRiskCalculator.calculate(
+                inventory = arrayOf(Item(Items.ANCIENT_SCEPTRE_L, 1)),
+                equipment = arrayOfNulls(14),
+                itemProtectionActive = false,
+                valueProvider = gg.rsmod.plugins.content.mechanics.death.ItemRiskValueProvider { 1L },
+            )
+        assertEquals(listOf(Items.ANCIENT_SCEPTRE_L), risk.lost.map { it.item.id })
     }
-
-    @Test
-    fun `killer compensation is a no-op outside a Wilderness death`() {
-        TrouverRegistry.register(TrouverLockable(Items.FIRE_CAPE, Items.FIRE_CAPE_LOCKED_22324))
-        val killer = newPlayer()
-        val result = deathResult(
-            context = DeathContext.PVM_SAFE,
-            killer = killer,
-            protected = listOf(slotItem(Items.FIRE_CAPE_LOCKED_22324, 1)),
-        )
-
-        val granted = Trouver.grantKillerCompensation(result) { 1000L }
-
-        assertEquals(0L, granted)
-        assertEquals(0, killer.inventory.getItemCount(Items.COINS_995))
-    }
-
-    @Test
-    fun `killer compensation is a no-op without a killer`() {
-        TrouverRegistry.register(TrouverLockable(Items.FIRE_CAPE, Items.FIRE_CAPE_LOCKED_22324))
-        val result = deathResult(
-            context = DeathContext.WILDERNESS_PVP,
-            killer = null,
-            protected = listOf(slotItem(Items.FIRE_CAPE_LOCKED_22324, 1)),
-        )
-
-        val granted = Trouver.grantKillerCompensation(result) { 1000L }
-
-        assertEquals(0L, granted)
-    }
-
-    @Test
-    fun `killer compensation ignores protected items that aren't Trouver-locked`() {
-        val killer = newPlayer()
-        val result = deathResult(
-            context = DeathContext.WILDERNESS_PVP,
-            killer = killer,
-            protected = listOf(slotItem(Items.COINS_995, 1)),
-        )
-
-        val granted = Trouver.grantKillerCompensation(result) { 1000L }
-
-        assertEquals(0L, granted)
-        assertEquals(0, killer.inventory.getItemCount(Items.COINS_995))
-    }
-
-    private fun deathResult(
-        context: DeathContext,
-        killer: Player?,
-        protected: List<DeathSlotItem>,
-    ): DeathResolutionResult {
-        val victim = newPlayer()
-        return DeathResolutionResult(
-            context = context,
-            victim = victim,
-            killer = killer,
-            itemRisk = DeathItemRiskResult(protectedItemCount = protected.size, protected = protected, lost = emptyList()),
-        )
-    }
-
-    private fun slotItem(
-        itemId: Int,
-        amount: Int,
-    ): DeathSlotItem = DeathSlotItem(source = DeathContainerSource.INVENTORY, slot = 0, item = Item(itemId, amount))
 
     private fun newPlayer(): Player {
         val player = mockk<Player>(relaxed = true)

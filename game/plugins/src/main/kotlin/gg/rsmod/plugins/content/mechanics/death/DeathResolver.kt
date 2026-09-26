@@ -77,24 +77,14 @@ object DeathResolver {
     }
 
     /**
-     * @param skulled
-     * Whether [victim] is currently skulled. Defaults to the running PK skull timer
-     * ([gg.rsmod.plugins.content.mechanics.pvp.PvpSkull.isSkulled]) - the only skull state this
-     * milestone wires trigger logic for; a full aggressor/timer skull system
-     * (Bounty Hunter targeting, PK points) is explicitly out of scope and is
-     * a follow-up milestone. Exposed as a parameter (rather than only ever
-     * read internally) so callers/tests can inject it directly.
-     *
      * @param itemProtectionActive
-     * Whether Protect Item is *active* right now (i.e. [PROTECT_ITEM_ATTR]
-     * is true), not merely unlocked. [gg.rsmod.plugins.content.mechanics.prayer.Prayers]
-     * already keeps this attribute live-updated on activate/deactivate, so
-     * it is reused directly rather than re-deriving prayer state here.
+     * Whether Protect Item is *active* right now (i.e. [PROTECT_ITEM_ATTR] is true), not merely unlocked. The skull no longer
+     * changes what is kept (owner 2026-09-26, [DeathRules.keepCount]).
+     * @param valueProvider the keep-1 ranking value - production callers pass [DeathRules.rankValue].
      */
     fun resolve(
         victim: Player,
         killer: Player?,
-        skulled: Boolean = gg.rsmod.plugins.content.mechanics.pvp.PvpSkull.isSkulled(victim),
         itemProtectionActive: Boolean = victim.attr[PROTECT_ITEM_ATTR] == true,
         valueProvider: ItemRiskValueProvider,
         alwaysProtected: (itemId: Int) -> Boolean = { false },
@@ -109,17 +99,11 @@ object DeathResolver {
             DeathItemRiskCalculator.calculate(
                 inventory = victim.inventory.items.copyOf(),
                 equipment = victim.equipment.items.copyOf(),
-                skulled = skulled,
                 itemProtectionActive = itemProtectionActive,
                 valueProvider = valueProvider,
                 alwaysProtected = alwaysProtected,
-                alwaysLost = { itemId ->
-                    gg.rsmod.plugins.content.mechanics.pvp.LootKeys.isKey(itemId) ||
-                        gg.rsmod.plugins.content.mechanics.pvp.LootingBag.isBag(itemId) ||
-                        // Deadman emblems: always lost on a PvP death, Protect Item never applies (owner 2026-09-25).
-                        // On a PvM death the caller's alwaysProtected keeps them, and alwaysProtected wins.
-                        gg.rsmod.plugins.content.mechanics.pvp.emblem.DeadmanEmblem.isEmblem(itemId)
-                },
+                // Loot keys, looting bags and Deadman emblems are never kept (RCV-012 3b, owner 2026-09-25/26).
+                alwaysLost = DeathRules::alwaysLost,
             )
         return DeathResolutionResult(context, victim, killer, itemRisk)
     }

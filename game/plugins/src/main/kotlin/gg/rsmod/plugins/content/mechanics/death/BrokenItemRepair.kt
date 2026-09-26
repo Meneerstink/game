@@ -1,8 +1,5 @@
 package gg.rsmod.plugins.content.mechanics.death
 
-import gg.rsmod.game.fs.def.ItemDef
-import gg.rsmod.game.model.item.Item
-import gg.rsmod.game.model.item.ItemAttribute
 import gg.rsmod.game.model.queue.QueueTask
 import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.api.ext.chatNpc
@@ -12,57 +9,33 @@ import gg.rsmod.plugins.api.ext.options
 import gg.rsmod.plugins.api.ext.player
 
 /**
- * OSRS repairs every [PvpDeathBreakables] broken item "at Perdu" for its sourced coin cost. Perdu
- * (upstream OSRS npc 7456) is a real import (RCV-012 "ferox" batch, local npc id 14394) and is
- * wired into her own "talk-to" option at the Grand Exchange (`grand_exchange_hub.plugin.kts`).
- * Correction 2026-09-16: an earlier note here claimed Perdu was absent and fronted this service
- * through Bob instead - that was wrong (the ferox batch already imported her); repair now runs on
- * Perdu directly and Bob no longer calls this.
+ * Perdu (local npc 14394, Grand Exchange) repairs every item a PvP death damaged: imported broken ids ([PvpDeathBreakables]),
+ * broken/mangled Trouver-locked ids and attribute-broken untradeables ([UntradeableDeathProtection]). OSRS Wiki: every
+ * PvP-broken untradeable ("Fire cape", "Infernal cape", "Avernic defender", "Trouver parchment") is repaired "by using it on
+ * Perdu"; Bob repairs degraded Barrows gear, not death damage, so this service is Perdu's only. The price is
+ * [UntradeableDeathProtection.repairCost]: the item's repair price, or 500,000 for a mangled locked item.
  */
 object BrokenItemRepair {
     suspend fun repair(task: QueueTask) {
         val player = task.player
-        val damaged = mutableListOf<Pair<Item, PvpDeathBreakables.Breakable>>()
-        (player.inventory.rawItems.filterNotNull() + player.equipment.rawItems.filterNotNull()).forEach { item ->
-            val breakable = PvpDeathBreakables.forBroken(item.id) ?: return@forEach
-            damaged.add(item to breakable)
-        }
-        // Audit D-15: generic untradeables broken on a PvP death carry ItemAttribute.BROKEN instead of a broken id.
-        val attrBroken =
-            (player.inventory.rawItems.filterNotNull() + player.equipment.rawItems.filterNotNull())
-                .filter { UntradeableDeathProtection.isBroken(it) }
-        if (damaged.isEmpty() && attrBroken.isEmpty()) {
-            return
-        }
+        val definitions = player.world.definitions
+        val damaged = (0 until player.inventory.capacity).filter { slot -> player.inventory[slot]?.let(UntradeableDeathProtection::isDamaged) == true }
+        if (damaged.isEmpty()) return
         task.chatPlayer("Can you repair this for me?")
-        val attrCost = attrBroken.sumOf { UntradeableDeathProtection.repairCost(player.world.definitions, it.id) * it.amount }
         val total =
-            (damaged.sumOf { (item, breakable) -> breakable.repairCost.toLong() * item.amount } + attrCost)
+            damaged.sumOf { UntradeableDeathProtection.repairCost(definitions, player.inventory[it]!!) }
                 .coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
         task.chatNpc("I can repair that for a total of ${total.format()} coins. Shall I go ahead?")
-        if (task.options("Yes, please.", "No, thanks.") != 1) {
-            return
-        }
-        if (player.inventory.getItemCount(Items.COINS_995) < total) {
+        if (task.options("Yes, please.", "No, thanks.") != 1) return
+        // The inventory may have changed while the dialogue was open: re-check every slot before charging.
+        val still = damaged.filter { player.inventory[it]?.let(UntradeableDeathProtection::isDamaged) == true }
+        val due = still.sumOf { UntradeableDeathProtection.repairCost(definitions, player.inventory[it]!!) }.coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
+        if (player.inventory.getItemCount(Items.COINS_995) < due) {
             task.chatNpc("You don't have enough coins for that.")
             return
         }
-        player.inventory.remove(Items.COINS_995, total)
-        for (slot in 0 until player.inventory.capacity) {
-            val item = player.inventory[slot] ?: continue
-            if (UntradeableDeathProtection.isBroken(item)) {
-                player.inventory[slot] = Item(item).also { it.attr.remove(ItemAttribute.BROKEN) }
-            }
-        }
-        damaged.forEach { (item, breakable) ->
-            val fixed = Item(breakable.itemId, item.amount)
-            if (player.inventory.remove(item).hasSucceeded()) {
-                player.inventory.add(fixed)
-            } else if (player.equipment.remove(item).hasSucceeded()) {
-                val def = player.world.definitions.get(ItemDef::class.java, fixed.id)
-                player.equipment.add(fixed, beginSlot = def.equipSlot)
-            }
-        }
+        if (due > 0 && !player.inventory.remove(Items.COINS_995, due, assureFullRemoval = true).hasSucceeded()) return
+        still.forEach { slot -> player.inventory[slot] = UntradeableDeathProtection.repaired(player.inventory[slot]!!) }
         task.chatNpc("There you go - good as new!")
     }
 }

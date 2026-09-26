@@ -35,44 +35,17 @@ import gg.rsmod.plugins.content.mechanics.poison.Poison
 import gg.rsmod.plugins.content.mechanics.poison.Venom
 
 /**
- * Crown of Helios admin menu and diagnostics. AV playback tools are intentionally not exposed here;
- * the Crown's real combat presentation remains in CrownOfHeliosCombatStrategy.
+ * The staff "crown" menu (teleports, dev tools, player management). Owner 2026-09-26: the Crown of Helios item (22327)
+ * is removed from the game - no spawn, no combat override, no death protection - and `crown` (also `helios`/`teleport`)
+ * opens this menu without any item. Leftover crowns are purged at login ([RemovedItems]).
  */
 
-/**
- * Crown of Helios (item 22327) - the staff "yellow partyhat". See [CrownOfHelios] for the combat
- * side; this script is the spawn commands, the right-click menu and the admin utilities on it.
- *
- * Commands (ADMIN_POWER): `::helios` / `::teleport` spawn the crown, `::crown` opens its menu.
- * Inventory options (baked into the cloned cache definition): Wear, Command, Teleport.
- */
-
-val CROWN = CrownOfHelios.ITEM
-
-fun Player.crownMessage(text: String) = message("<col=E5B80B>Crown of Helios:</col> $text", type = ChatMessageType.CONSOLE)
-
-fun Player.spawnCrown() {
-    if (inventory.contains(CROWN) || equipment.contains(CROWN)) {
-        crownMessage("You already carry the crown. Use <col=42C66C>::crown</col> or right-click it for its menu.")
-        return
-    }
-    val result = inventory.add(CROWN, 1, assureFullInsertion = false)
-    if (result.completed == 0) {
-        crownMessage("No free inventory space for the crown.")
-        return
-    }
-    crownMessage("A blazing golden crown appears in your pack. Wear it, then right-click <col=42C66C>Command</col>.")
-}
-
-fun Player.statusLine(): String {
-    val worn = if (equipment.contains(CROWN)) "worn" else "not worn"
-    return "$worn - mode <col=42C66C>${CrownOfHelios.mode(this).label}</col>, power <col=42C66C>${CrownOfHelios.power(this).label}</col>"
-}
+fun Player.crownMessage(text: String) = message("<col=E5B80B>Crown:</col> $text", type = ChatMessageType.CONSOLE)
 
 fun onOff(enabled: Boolean) = if (enabled) "<col=178000>on</col>" else "<col=42C66C>off</col>"
 
 suspend fun QueueTask.combatModeMenu() {
-    val choice = options("Melee", "Ranged", "Magic", "Back", title = "Combat mode")
+    val choice = options("Melee", "Ranged", "Magic", "Back", title = "Max starter set")
     val mode =
         when (choice) {
             1 -> CrownOfHelios.Mode.MELEE
@@ -80,17 +53,8 @@ suspend fun QueueTask.combatModeMenu() {
             3 -> CrownOfHelios.Mode.MAGIC
             else -> return crownMenu()
         }
-    player.attr[CrownOfHelios.MODE_ATTR] = mode
     CrownOfHelios.maxSet(mode).forEach { player.giveCrownItem(it, 1) }
-    player.crownMessage("<col=42C66C>${mode.label}</col> mode active; its max starter set was added to your inventory.")
-}
-
-suspend fun QueueTask.powerMenu() {
-    val powers = CrownOfHelios.Power.values()
-    val choice = options(*powers.map { it.label }.toTypedArray(), "Back", title = "Hit power")
-    val power = powers.getOrNull(choice - 1) ?: return crownMenu()
-    player.attr[CrownOfHelios.POWER_ATTR] = power
-    player.crownMessage("Hit power set to <col=42C66C>${power.label}</col>.")
+    player.crownMessage("The <col=42C66C>${mode.label}</col> max starter set was added to your inventory.")
 }
 
 fun Player.rememberRecent(
@@ -949,19 +913,17 @@ fun Player.healAndRestore() {
 suspend fun QueueTask.crownMenu() {
     val choice =
         options(
-            "Combat mode: ${CrownOfHelios.mode(player).label}",
-            "Hit power: ${CrownOfHelios.power(player).label}",
+            "Max starter set",
             "Teleport",
             "Heal & restore",
             "More (toggles / AV Tester / Dev Tools / players)",
-            title = "Crown of Helios",
+            title = "Crown",
         )
     when (choice) {
         1 -> combatModeMenu()
-        2 -> powerMenu()
-        3 -> teleportMenu()
-        4 -> player.healAndRestore()
-        5 -> moreMenu()
+        2 -> teleportMenu()
+        3 -> player.healAndRestore()
+        4 -> moreMenu()
     }
 }
 
@@ -1096,33 +1058,6 @@ fun Player.openCrownMenu() {
     queue(TaskPriority.STRONG) { if (CrownOfHelios.isAdmin(player)) crownMenu() else moderatorCrownMenu() }
 }
 
-on_command("helios", Privilege.MOD_POWER) { player.spawnCrown() }
-on_command("teleport", Privilege.MOD_POWER) { player.spawnCrown() }
+on_command("helios", Privilege.MOD_POWER) { player.openCrownMenu() }
+on_command("teleport", Privilege.MOD_POWER) { player.openCrownMenu() }
 on_command("crown", Privilege.MOD_POWER) { player.openCrownMenu() }
-
-can_equip_item(CROWN) {
-    if (!CrownOfHelios.canUseCrown(player)) {
-        player.message("The crown does not answer to you.")
-        false
-    } else {
-        true
-    }
-}
-
-on_item_equip(CROWN) {
-    player.crownMessage("The crown blazes to life: ${player.statusLine()}.")
-}
-
-on_item_unequip(CROWN) {
-    player.crownMessage("The crown's fire fades; your normal combat returns.")
-}
-
-on_item_option(CROWN, "Command") { player.openCrownMenu() }
-
-on_item_option(CROWN, "Teleport") {
-    if (!CrownOfHelios.canUseCrown(player)) {
-        player.message("The crown does not answer to you.")
-    } else {
-        player.queue(TaskPriority.STRONG) { if (CrownOfHelios.isAdmin(player)) teleportMenu() else moderatorCrownMenu() }
-    }
-}

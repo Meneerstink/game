@@ -6,7 +6,6 @@ import gg.rsmod.game.model.item.Item
 import gg.rsmod.game.service.log.LoggerService
 import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.api.ext.persistNow
-import gg.rsmod.plugins.content.mechanics.trouver.Trouver
 
 /**
  * Wires the shared death-resolution model ([DeathResolver] /
@@ -15,9 +14,8 @@ import gg.rsmod.plugins.content.mechanics.trouver.Trouver
  * items go to the victim's gravestone ([Gravestone]); Death's Office, the coffer and the
  * gravestone screens live in `deaths_office.plugin.kts`.
  *
- * `alwaysProtected` is wired to [Trouver.protectedFromDeath] - the only production caller of that
- * hook (`RSPS_DECISIONS.md` 2026-09-02 "STANDING OWNER AUTHORIZATION"). [Trouver.grantKillerCompensation]
- * runs after execution so it sees the same resolved [DeathResolutionResult] the item removal used.
+ * Owner 2026-09-26 rules: [DeathRules] (keep 1 with Protect Item), [UntradeableDeathProtection] (level-20 rule, Trouver
+ * broken/mangled, rune pouch) and a free gravestone for everything lost on a PvM death.
  */
 on_player_pre_death {
     val victim = player
@@ -52,8 +50,6 @@ fun resolveDeath(victim: Player) {
     // Audit D-06: kill grace is granted once, by DeathExecutor, for a resolved PvP death only.
 
     val logger = world.getService(LoggerService::class.java, searchSubclasses = true)
-    // Owner 2026-09-18: rank by Grand Exchange guide price, exactly like RuneScape (GuidePriceValueProvider).
-    val valueProvider = GuidePriceValueProvider(world)
 
     // Audit D-09: a skulled player killed by a city guard is not rescued by Death's Domain - the items are
     // at risk exactly like a PvP death without a player killer (public ground loot).
@@ -63,21 +59,20 @@ fun resolveDeath(victim: Player) {
                 ?.let { gg.rsmod.plugins.content.mechanics.pvp.CityGuards.isGuard(it) } == true
     val contextOverride = if (killedBySkulledGuard) DeathContext.WILDERNESS_PVP else null
 
-    // Deadman emblems (owner 2026-09-25): kept on a PvM death, always lost on a PvP death - they are untradeable, so the
-    // untradeable protection below must never reach them on a PvP death.
     val pvpDeath = (contextOverride ?: DeathResolver.resolveContext(victim, killer)) == DeathContext.WILDERNESS_PVP
+    // Owner 2026-09-26: Protect Item keeps 1 item (skull irrelevant), ranked by guide price / untradeable repair price.
     val resolved =
         DeathResolver.resolve(
             victim = victim,
             killer = killer,
-            valueProvider = valueProvider,
-            alwaysProtected = DeathRules.alwaysProtected(world.definitions, pvpDeath),
+            valueProvider = DeathRules.rankValue(world),
             contextOverride = contextOverride,
         )
-    val (withoutGeneric, brokenInPlace) = UntradeableDeathProtection.splitGeneric(world.definitions, resolved)
-    val (afterBreakables, breaking) = PvpDeathBreakables.split(withoutGeneric)
-    val (result, droppedLostAmmo) = QuiverDeathRules.stripLost(afterBreakables)
-    UntradeableDeathProtection.breakInPlace(victim, brokenInPlace)
+    // The OSRS level-20 rule reads the death tile (the same tile the Items Kept on Death screen and the risk skull read).
+    val deepWilderness = pvpDeath && DeathRules.deepWilderness(victim.tile)
+    val (stripped, droppedLostAmmo) = QuiverDeathRules.stripLost(resolved)
+    val (afterConversions, converting) = PvpDeathBreakables.split(stripped)
+    val (result, untradeables) = UntradeableDeathProtection.splitPvp(world.definitions, afterConversions, deepWilderness)
     // OSRS: "In instanced areas, the Gravestone will aim to appear outside the instance where its owner can loot it."
     val graveTile = GraveLocations.graveTile(victim)
     val executed =
@@ -86,24 +81,24 @@ fun resolveDeath(victim: Player) {
             result = result,
             logger = logger,
             graveTile = graveTile,
-            // Owner 2026-09-18 (#6): converted killer loot (broken-item coins, uncharged staves,
-            // ornament kits, quiver ammo) joins the lost stacks in the SAME loot-key plan instead of
-            // being spawned on the floor beside the key.
+            // Owner 2026-09-18 (#6): converted killer loot (repair coins, uncharged staves, ornament kits, quiver ammo, rune
+            // pouch runes) joins the lost stacks in the SAME loot-key plan instead of being spawned beside the key. Without a
+            // player killer (a skulled player killed by a guard) it all becomes public ground loot like the rest.
             extraPvpLoot = {
                 val converted = mutableListOf<Item>()
-                PvpDeathBreakables.execute(world, result, breaking) { converted += it }
+                PvpDeathBreakables.execute(world, result, converting) { converted += it }
+                converted += UntradeableDeathProtection.execute(victim, untradeables)
                 val droppedProtectedAmmo = QuiverDeathRules.stripProtected(victim, result)
                 converted += droppedLostAmmo + droppedProtectedAmmo
                 // Audit X-01: a beast of burden's cargo is unprotected PvP loot, not a free Death's Domain batch.
                 converted += gg.rsmod.plugins.content.skills.summoning.BeastOfBurden.takeAllCargo(victim)
                 converted
             },
+            // Owner 2026-09-26: on a PvM death the beast of burden's cargo goes to the gravestone with everything else - taken
+            // here, before the gravestone is filled, not afterwards by the familiar's despawn.
+            extraPvmItems = { gg.rsmod.plugins.content.skills.summoning.BeastOfBurden.takeAllCargo(victim) },
         )
     if (executed) {
-        // Compensation is part of the same exactly-once death transfer. If a duplicate
-        // pre-death hook reaches this script after DeathExecutor's guard fired, paying here
-        // again would duplicate the killer's reward even though no second loot transfer ran.
-        Trouver.grantKillerCompensation(result, valueProvider)
         // Audit X-05: persist the transfer at once, like trades do - a crash before the next autosave
         // would otherwise give the victim everything back while the killer keeps the loot.
         victim.persistNow()

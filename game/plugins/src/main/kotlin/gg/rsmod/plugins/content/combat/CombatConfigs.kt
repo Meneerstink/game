@@ -17,8 +17,6 @@ import gg.rsmod.plugins.content.combat.strategy.CombatStrategy
 import gg.rsmod.plugins.content.combat.strategy.MagicCombatStrategy
 import gg.rsmod.plugins.content.combat.strategy.MeleeCombatStrategy
 import gg.rsmod.plugins.content.combat.strategy.RangedCombatStrategy
-import gg.rsmod.plugins.content.items.helios.CrownOfHelios
-import gg.rsmod.plugins.content.items.helios.CrownOfHeliosCombatStrategy
 
 /**
  * @author Tom <rspsmods@gmail.com>
@@ -84,9 +82,7 @@ object CombatConfigs {
         )
 
     fun getCombatStrategy(pawn: Pawn): CombatStrategy =
-        if (CrownOfHelios.isActive(pawn)) {
-            CrownOfHeliosCombatStrategy
-        } else if (gg.rsmod.plugins.content.items.osrs.PoweredStaves.usingBuiltInSpell(pawn)) {
+        if (gg.rsmod.plugins.content.items.osrs.PoweredStaves.usingBuiltInSpell(pawn)) {
             gg.rsmod.plugins.content.combat.strategy.PoweredStaffCombatStrategy
         } else when (getCombatClass(pawn)) {
             CombatClass.MELEE -> MeleeCombatStrategy
@@ -116,7 +112,6 @@ object CombatConfigs {
 
         if (pawn is Player) {
             return when {
-                CrownOfHelios.isActive(pawn) -> CrownOfHelios.mode(pawn).combatClass
                 pawn.attr.has(Combat.CASTING_SPELL) -> CombatClass.MAGIC
                 // Powered staves always attack with their built-in spell (owner decision option a: magic class forced).
                 gg.rsmod.plugins.content.items.osrs.PoweredStaves.wielded(pawn) != null -> CombatClass.MAGIC
@@ -159,9 +154,6 @@ object CombatConfigs {
         }
 
         if (pawn is Player) {
-            if (CrownOfHelios.isActive(pawn)) {
-                return MIN_ATTACK_SPEED
-            }
             val default = PLAYER_DEFAULT_ATTACK_SPEED
             val weapon = pawn.getEquipment(EquipmentType.WEAPON)
             // Missing metadata is -1, not a one-tick weapon. Keep explicit custom speeds.

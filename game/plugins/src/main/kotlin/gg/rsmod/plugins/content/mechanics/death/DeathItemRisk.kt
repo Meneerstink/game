@@ -38,31 +38,19 @@ data class DeathItemRiskResult(
  */
 object DeathItemRiskCalculator {
     /**
-     * The number of item stacks a player is allowed to keep on death.
-     *
-     * Confirmed rules: unskulled players keep the 3 most valuable stacks
-     * normally, or 4 with an active Protect Item effect; skulled players
-     * keep 0 normally, or 1 with an active Protect Item effect.
-     * [itemProtectionActive] must reflect an *active* Protect Item
-     * prayer/Ancient-Curse effect at the time of death, not merely an
-     * unlocked prayer level.
+     * The number of single items a player keeps on death: [DeathRules.keepCount] (owner 2026-09-26 - Protect Item keeps
+     * exactly 1, skulled or not; nothing otherwise). [itemProtectionActive] must reflect an *active* Protect Item
+     * prayer/Ancient-Curse effect at the time of death, not merely an unlocked prayer level.
      */
-    fun protectedItemCount(
-        skulled: Boolean,
-        itemProtectionActive: Boolean,
-    ): Int {
-        val base = if (skulled) 0 else 3
-        return base + if (itemProtectionActive) 1 else 0
-    }
-
+    fun protectedItemCount(itemProtectionActive: Boolean): Int = DeathRules.keepCount(itemProtectionActive)
     /**
      * Calculates protected vs. lost items across [inventory] and [equipment] combined, keeping
      * the [protectedItemCount] most valuable *individual items* and losing the rest.
      *
      * Owner 2026-09-18 (MAJOR, "exactly RuneScape"): the kept count is a count of single items,
      * not of stacks. Ranking is by [valueProvider]'s per-unit value; a stack contributes one
-     * unit per kept slot, so an unskulled player with 1,000 coins and nothing else keeps 3 coins
-     * and drops 997 (RuneScape Wiki "Items Kept on Death": "if you have a stack of items, only
+     * unit per kept slot, so a player with Protect Item and 1,000 coins keeps 1 coin
+     * and loses 999 (RuneScape Wiki "Items Kept on Death": "if you have a stack of items, only
      * up to three of that stack will be kept"; OSRS Wiki "Items Kept on Death" agrees). A
      * partially kept stack appears in both lists: the kept units in [DeathItemRiskResult.protected]
      * and the remainder, same slot, in [DeathItemRiskResult.lost] - `DeathExecutor` removes by
@@ -86,7 +74,6 @@ object DeathItemRiskCalculator {
     fun calculate(
         inventory: Array<Item?>,
         equipment: Array<Item?>,
-        skulled: Boolean,
         itemProtectionActive: Boolean,
         valueProvider: ItemRiskValueProvider,
         alwaysProtected: (itemId: Int) -> Boolean = { false },
@@ -106,7 +93,7 @@ object DeathItemRiskCalculator {
         val forcedLost = slots.filter { !alwaysProtected(it.item.id) && alwaysLost(it.item.id) }
         val remaining = slots.filterNot { alwaysProtected(it.item.id) || alwaysLost(it.item.id) }
 
-        val keepCount = protectedItemCount(skulled, itemProtectionActive)
+        val keepCount = protectedItemCount(itemProtectionActive)
 
         // Stable sort (Kotlin's sortedByDescending preserves relative order of
         // equal keys), so equally-valued stacks keep their original slot order.

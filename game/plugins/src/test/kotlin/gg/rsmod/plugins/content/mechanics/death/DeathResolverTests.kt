@@ -54,8 +54,8 @@ class DeathResolverTests {
         val result = DeathResolver.resolve(victim, killer, valueProvider = { _ -> 1L })
 
         assertEquals(DeathContext.WILDERNESS_PVP, result.context)
-        assertEquals(3, result.itemRisk.protectedItemCount, "unskulled Wilderness deaths keep the 3 most valuable stacks")
-        assertEquals(1, result.itemRisk.lost.size, "the 4th, lowest-ranked stack must be lost")
+        assertEquals(0, result.itemRisk.protectedItemCount, "owner 2026-09-26: without Protect Item nothing is kept, skulled or not")
+        assertEquals(4, result.itemRisk.lost.size, "every stack is lost")
     }
 
     @Test

@@ -7,7 +7,6 @@ import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.game.tools.importer.DeathsOfficeInterfaceImportTool
 import gg.rsmod.plugins.api.InterfaceDestination
-import gg.rsmod.plugins.api.ext.getWildernessLevel
 import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.api.ext.openInterface
 import gg.rsmod.plugins.api.ext.runClientScript
@@ -24,7 +23,7 @@ import gg.rsmod.game.tools.importer.DeathsOfficeInterfaceImportTool.Kept as Layo
 /**
  * The OSRS "Items Kept on Death" screen (OSRS interface 4, built as 667 interface [INTERFACE_ID] by
  * `DeathsOfficeInterfaceImportTool`; owner 2026-09-26: "OSRS-scherm bouwen"). The server fills it from [preview], which runs
- * the very same rules as a real death ([DeathResolver] with [DeathRules.alwaysProtected], [UntradeableDeathProtection],
+ * the very same rules as a real death ([DeathResolver] with [DeathRules] keep 1, [UntradeableDeathProtection],
  * [PvpDeathBreakables], [QuiverDeathRules], loot keys and the looting bag), so the screen cannot disagree with a death.
  *
  * Sections and texts are OSRS clientscript `deathkeep_left_redraw` (974): "Items that are KEPT:", "Items that go to your
@@ -65,7 +64,7 @@ object ItemsKeptOnDeath {
     fun preview(
         player: Player,
         toggles: Toggles,
-        value: ItemRiskValueProvider = GuidePriceValueProvider(player.world),
+        value: ItemRiskValueProvider = DeathRules.rankValue(player.world),
     ): Preview {
         val definitions = player.world.definitions
         val pvp = toggles.killedByPlayer
@@ -73,89 +72,59 @@ object ItemsKeptOnDeath {
             DeathResolver.resolve(
                 victim = player,
                 killer = null,
-                skulled = toggles.skulled,
                 itemProtectionActive = toggles.protectItem,
                 valueProvider = value,
-                alwaysProtected = DeathRules.alwaysProtected(definitions, pvp),
                 contextOverride = if (pvp) DeathContext.WILDERNESS_PVP else DeathContext.PVM_SAFE,
             )
-        val (withoutGeneric, brokenInPlace) = UntradeableDeathProtection.splitGeneric(definitions, resolved)
-        val (afterBreakables, breaking) = PvpDeathBreakables.split(withoutGeneric)
-        val (result, lostAmmo) = QuiverDeathRules.stripLost(afterBreakables)
+        val (stripped, lostAmmo) = QuiverDeathRules.stripLost(resolved)
+        val (afterConversions, converting) = PvpDeathBreakables.split(stripped)
+        val (result, untradeables) = UntradeableDeathProtection.splitPvp(definitions, afterConversions, pvp && toggles.deepWilderness)
         val entries = mutableListOf<Entry>()
-        val keepCount = DeathItemRiskCalculator.protectedItemCount(toggles.skulled, toggles.protectItem)
-        fun keep(item: Item, message: String) = entries.add(Entry(Section.KEPT, item, message))
+        fun line(item: Item, one: String, many: String) =
+            if (item.amount > 1) "${spaced(item.amount.toLong())} x ${name(player, item.id)}: $many" else "${name(player, item.id)}: $one"
         result.itemRisk.protected.forEach {
-            val item = it.item
-            val always = DeathRules.alwaysProtected(definitions, pvp)(item.id)
-            keep(
-                item,
-                when {
-                    always && item.amount > 1 -> "${spaced(item.amount.toLong())} x ${name(player, item.id)}: You'll always keep these items."
-                    always -> "${name(player, item.id)}: You'll always keep this item."
-                    keepCount > 1 -> "${name(player, item.id)}: You'll protect your $keepCount most valuable items."
-                    else -> "${name(player, item.id)}: You'll protect your most valuable item."
-                },
-            )
+            entries += Entry(Section.KEPT, it.item, line(it.item, "You'll protect your most valuable item.", "You'll protect your most valuable item."))
         }
-        // PvP: untradeables and breakables stay with the player in broken form (Audit D-15, PvpDeathBreakables).
-        (brokenInPlace + breaking.filter { PvpDeathBreakables.breakableFor(it.item.id) != null }).forEach {
-            val item = it.item
-            keep(
-                item,
-                if (item.amount > 1) {
-                    "${spaced(item.amount.toLong())} x ${name(player, item.id)}: You'll keep a downgraded version of these items."
-                } else {
-                    "${name(player, item.id)}: You'll keep a downgraded version of this item."
-                },
-            )
+        // PvP untradeables (owner 2026-09-26, OSRS level-20 rule): broken, mangled or emptied ones stay with the player.
+        untradeables.forEach { outcome ->
+            val item = outcome.slotItem.item
+            val coins = spaced(outcome.killerCoins)
+            when (outcome.fate) {
+                UntradeableFate.BROKEN ->
+                    entries += Entry(Section.KEPT, item, line(item, "This item will break. You keep it; the player who kills you receives $coins coins.", "These items will break. You keep them; the player who kills you receives $coins coins."))
+                UntradeableFate.MANGLED ->
+                    entries += Entry(Section.KEPT, item, line(item, "This locked item will be mangled. You keep it; the player who kills you receives $coins coins.", "These locked items will be mangled. You keep them; the player who kills you receives $coins coins."))
+                UntradeableFate.POUCH_EMPTIED ->
+                    entries += Entry(Section.KEPT, item, line(item, "You keep the empty pouch; its runes are lost to the player who kills you.", "You keep the empty pouches; their runes are lost to the player who kills you."))
+                UntradeableFate.UNCHANGED ->
+                    entries += Entry(Section.KEPT, item, line(item, "You'll keep this item.", "You'll keep these items."))
+                UntradeableFate.DESTROYED ->
+                    entries += Entry(Section.DELETED, item, line(item, "This item will be destroyed; the player who kills you receives $coins coins.", "These items will be destroyed; the player who kills you receives $coins coins."))
+            }
         }
         val bag = LootingBag.peekContents(player)
-        var graveFee = 0
         var risk = 0L
         if (pvp) {
-            val lost = result.itemRisk.lost.map { it.item } + breaking.filter { PvpDeathBreakables.breakableFor(it.item.id) == null }.map { it.item } +
-                bag.filterNot { LootingBag.destroyedOnPvpDeath(player, it) } + lostAmmo
-            lost.filterNot { LootingBag.isBag(it.id) }.forEach { item ->
+            val lost =
+                result.itemRisk.lost.map { it.item }.filterNot { LootingBag.isBag(it.id) } + converting.map { it.item } +
+                    bag.filterNot { LootingBag.destroyedOnPvpDeath(player, it) } + lostAmmo
+            lost.forEach { item ->
                 risk += value.getValue(item.id) * item.amount
-                entries +=
-                    Entry(
-                        Section.LOST, item,
-                        if (item.amount > 1) {
-                            "${spaced(item.amount.toLong())} x ${name(player, item.id)}: These items will be lost to the player who kills you."
-                        } else {
-                            "${name(player, item.id)}: This item will be lost to the player who kills you."
-                        },
-                    )
+                entries += Entry(Section.LOST, item, line(item, "This item will be lost to the player who kills you.", "These items will be lost to the player who kills you."))
             }
+            UntradeableDeathProtection.killerLoot(untradeables).forEach { risk += value.getValue(it.id) * it.amount }
             (result.itemRisk.lost.map { it.item }.filter { LootingBag.isBag(it.id) } + bag.filter { LootingBag.destroyedOnPvpDeath(player, it) }).forEach { deleted(player, entries, it) }
         } else {
+            // Owner 2026-09-26: everything lost on a PvM death goes to the gravestone, and taking it back is free.
             val toGrave = result.itemRisk.lost.map { it.item }.filterNot { LootKeys.isKey(it.id) || LootingBag.isBag(it.id) } + bag
-            graveFee = DeathFees.graveFee(toGrave, value)
             toGrave.forEach { item ->
                 risk += value.getValue(item.id) * item.amount
-                val fee = DeathFees.graveStackFee(item, value)
-                val expected =
-                    when (fee) {
-                        0L -> "<br>Expected fee: <col=ff0000>None</col>"
-                        1L -> "<br>Expected fee: <col=ff0000>1 coin</col>"
-                        else -> "<br>Expected fee: <col=ff0000>${spaced(fee)} coins</col>"
-                    }
-                entries +=
-                    Entry(
-                        Section.GRAVESTONE, item,
-                        if (item.amount > 1) {
-                            "${spaced(item.amount.toLong())} x ${name(player, item.id)}: These items will be sent to your gravestone.$expected"
-                        } else {
-                            "${name(player, item.id)}: This item will be sent to your gravestone.$expected"
-                        },
-                    )
+                entries += Entry(Section.GRAVESTONE, item, line(item, "This item will be sent to your gravestone.", "These items will be sent to your gravestone."))
             }
             result.itemRisk.lost.map { it.item }.filter { LootKeys.isKey(it.id) || LootingBag.isBag(it.id) }.forEach { deleted(player, entries, it) }
         }
-        return Preview(entries, graveFee, risk)
+        return Preview(entries, 0, risk)
     }
-
     private fun deleted(
         player: Player,
         entries: MutableList<Entry>,
@@ -178,7 +147,7 @@ object ItemsKeptOnDeath {
             protectItem = player.attr[PROTECT_ITEM_ATTR] == true,
             skulled = PvpSkull.isSkulled(player),
             killedByPlayer = false,
-            deepWilderness = player.tile.getWildernessLevel() > 20,
+            deepWilderness = DeathRules.deepWilderness(player.tile),
         )
 
     fun open(player: Player) {
@@ -242,16 +211,8 @@ object ItemsKeptOnDeath {
                 divider++
                 y += 8
             }
-            val text =
-                if (section == Section.GRAVESTONE) {
-                    section.header + when (preview.graveFee) {
-                        0 -> " <col=ffffff>(Fee: None)</col>"
-                        1 -> " <col=ffffff>(Fee: 1 coin)</col>"
-                        else -> " <col=ffffff>(Fee: ${spaced(preview.graveFee.toLong())} coins)</col>"
-                    }
-                } else {
-                    section.header
-                }
+            val text = section.header
+
             player.setComponentText(INTERFACE_ID, Layout.HEADER_FIRST + header, text)
             player.setComponentPosition(INTERFACE_ID, Layout.HEADER_FIRST + header, 1, y + 3)
             player.setComponentHidden(INTERFACE_ID, Layout.HEADER_FIRST + header, hidden = false)

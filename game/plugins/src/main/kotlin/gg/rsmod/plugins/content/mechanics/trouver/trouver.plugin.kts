@@ -21,13 +21,12 @@ TrouverRegistry.register(TrouverLockable(baseItemId = Items.INFERNAL_CAPE, locke
 // OSRS-IMPORT assembler: the Ava's assembler infobox lists "Ava's assembler (l)" (24222) as its locked variant.
 TrouverRegistry.register(TrouverLockable(baseItemId = Items.AVAS_ASSEMBLER, lockedItemId = Items.AVAS_ASSEMBLER_L))
 // OSRS-IMPORT sceptres: "pay 500,000 coins plus a Trouver parchment to lock the item at Perdu"; below level 20 a locked sceptre becomes
-// its broken form (OSRS Wiki "Ancient sceptre"). The mangled forms (above level 20, 500,000 coins to the PKer) are imported but this
-// engine holds one broken id per pair (SOURCE_GAP recorded).
-TrouverRegistry.register(TrouverLockable(baseItemId = Items.ANCIENT_SCEPTRE, lockedItemId = Items.ANCIENT_SCEPTRE_L, brokenItemId = Items.ANCIENT_SCEPTRE_L_BROKEN))
-TrouverRegistry.register(TrouverLockable(baseItemId = Items.BLOOD_ANCIENT_SCEPTRE, lockedItemId = Items.BLOOD_ANCIENT_SCEPTRE_L, brokenItemId = Items.BLOOD_ANCIENT_SCEPTRE_L_BROKEN))
-TrouverRegistry.register(TrouverLockable(baseItemId = Items.ICE_ANCIENT_SCEPTRE, lockedItemId = Items.ICE_ANCIENT_SCEPTRE_L, brokenItemId = Items.ICE_ANCIENT_SCEPTRE_L_BROKEN))
-TrouverRegistry.register(TrouverLockable(baseItemId = Items.SMOKE_ANCIENT_SCEPTRE, lockedItemId = Items.SMOKE_ANCIENT_SCEPTRE_L, brokenItemId = Items.SMOKE_ANCIENT_SCEPTRE_L_BROKEN))
-TrouverRegistry.register(TrouverLockable(baseItemId = Items.SHADOW_ANCIENT_SCEPTRE, lockedItemId = Items.SHADOW_ANCIENT_SCEPTRE_L, brokenItemId = Items.SHADOW_ANCIENT_SCEPTRE_L_BROKEN))
+// its broken form (OSRS Wiki "Ancient sceptre"), above level 20 its mangled form (500,000 coins to the PKer).
+TrouverRegistry.register(TrouverLockable(baseItemId = Items.ANCIENT_SCEPTRE, lockedItemId = Items.ANCIENT_SCEPTRE_L, brokenItemId = Items.ANCIENT_SCEPTRE_L_BROKEN, mangledItemId = Items.ANCIENT_SCEPTRE_L_MANGLED))
+TrouverRegistry.register(TrouverLockable(baseItemId = Items.BLOOD_ANCIENT_SCEPTRE, lockedItemId = Items.BLOOD_ANCIENT_SCEPTRE_L, brokenItemId = Items.BLOOD_ANCIENT_SCEPTRE_L_BROKEN, mangledItemId = Items.BLOOD_ANCIENT_SCEPTRE_L_MANGLED))
+TrouverRegistry.register(TrouverLockable(baseItemId = Items.ICE_ANCIENT_SCEPTRE, lockedItemId = Items.ICE_ANCIENT_SCEPTRE_L, brokenItemId = Items.ICE_ANCIENT_SCEPTRE_L_BROKEN, mangledItemId = Items.ICE_ANCIENT_SCEPTRE_L_MANGLED))
+TrouverRegistry.register(TrouverLockable(baseItemId = Items.SMOKE_ANCIENT_SCEPTRE, lockedItemId = Items.SMOKE_ANCIENT_SCEPTRE_L, brokenItemId = Items.SMOKE_ANCIENT_SCEPTRE_L_BROKEN, mangledItemId = Items.SMOKE_ANCIENT_SCEPTRE_L_MANGLED))
+TrouverRegistry.register(TrouverLockable(baseItemId = Items.SHADOW_ANCIENT_SCEPTRE, lockedItemId = Items.SHADOW_ANCIENT_SCEPTRE_L, brokenItemId = Items.SHADOW_ANCIENT_SCEPTRE_L_BROKEN, mangledItemId = Items.SHADOW_ANCIENT_SCEPTRE_L_MANGLED))
 // OSRS-IMPORT capes: each infobox lists a Trouver-locked "(l)" version (imbued god capes and max capes, assembler max capes, Masori
 // assembler); Dizana's max cape (l) also has "(l) (broken)" ("Locked Dizana's max cape now breaks on death below level 20").
 TrouverRegistry.register(TrouverLockable(baseItemId = Items.IMBUED_SARADOMIN_CAPE, lockedItemId = Items.IMBUED_SARADOMIN_CAPE_L))
@@ -39,7 +38,7 @@ TrouverRegistry.register(TrouverLockable(baseItemId = Items.IMBUED_ZAMORAK_MAX_C
 TrouverRegistry.register(TrouverLockable(baseItemId = Items.ASSEMBLER_MAX_CAPE, lockedItemId = Items.ASSEMBLER_MAX_CAPE_L))
 TrouverRegistry.register(TrouverLockable(baseItemId = Items.MASORI_ASSEMBLER, lockedItemId = Items.MASORI_ASSEMBLER_L))
 TrouverRegistry.register(TrouverLockable(baseItemId = Items.MASORI_ASSEMBLER_MAX_CAPE, lockedItemId = Items.MASORI_ASSEMBLER_MAX_CAPE_L))
-TrouverRegistry.register(TrouverLockable(baseItemId = Items.DIZANAS_MAX_CAPE, lockedItemId = Items.DIZANAS_MAX_CAPE_L, brokenItemId = Items.DIZANAS_MAX_CAPE_L_BROKEN))
+TrouverRegistry.register(TrouverLockable(baseItemId = Items.DIZANAS_MAX_CAPE, lockedItemId = Items.DIZANAS_MAX_CAPE_L, brokenItemId = Items.DIZANAS_MAX_CAPE_L_BROKEN, mangledItemId = Items.DIZANAS_MAX_CAPE_L_MANGLED))
 // OSRS-IMPORT quiver (item page "Dizana's quiver", fetched 2026-09-16): "can be locked by bringing it, along with a
 // Trouver parchment and 500,000 coins, to Perdu." Charges and any stored ammo survive locking (Trouver.lock/unlock
 // now copy item attributes) exactly like relogging or banking the same item would. No broken/mangled quiver variant

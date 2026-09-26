@@ -116,7 +116,6 @@ class LootKeysTests {
             DeathItemRiskCalculator.calculate(
                 inventory = inventory,
                 equipment = arrayOfNulls(14),
-                skulled = false,
                 itemProtectionActive = true,
                 valueProvider = ItemRiskValueProvider { 1 },
                 alwaysLost = LootKeys::isKey,

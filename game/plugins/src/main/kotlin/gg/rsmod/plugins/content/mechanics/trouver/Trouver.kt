@@ -4,9 +4,6 @@ import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.api.ext.filterableMessage
-import gg.rsmod.plugins.content.mechanics.death.DeathContext
-import gg.rsmod.plugins.content.mechanics.death.DeathResolutionResult
-import gg.rsmod.plugins.content.mechanics.death.ItemRiskValueProvider
 
 /**
  * Generic Trouver-parchment item-locking engine (`RSPS_DECISIONS.md` 2026-09-02 "STANDING OWNER
@@ -19,13 +16,11 @@ import gg.rsmod.plugins.content.mechanics.death.ItemRiskValueProvider
  * future lockable item (once its real ids exist in this cache) is added with one registry entry
  * and no changes here.
  *
- * One explicit, narrow simplification versus the real mechanic (not silently guessed):
- *  - **No broken/mangled item variants exist yet for any item.** The real mechanic turns an
- *    unprotected locked item into a separate "broken"/"mangled" state on death rather than fully
- *    preventing loss. [TrouverLockable.brokenItemId] is the extension point for that once a real
- *    broken variant is imported for a given pair; until then (every pair currently registered),
- *    [protectedFromDeath] simply keeps the locked item, which is the honestly-documented, safe
- *    fallback rather than a guessed degradation model.
+ * Death (owner 2026-09-26, OSRS Wiki "Trouver parchment"): a locked item is no longer kept whole. It takes part in the
+ * normal keep-1 ranking; when it is lost on a PvP death it becomes broken (level 20 and below) or mangled (above 20), stays
+ * with the victim and keeps its lock, and the killer receives the repair fee - see
+ * [gg.rsmod.plugins.content.mechanics.death.UntradeableDeathProtection]. The old server-original compensation (100 % of the
+ * item's value to the killer) is gone.
  *
  * Correction 2026-09-16: an earlier version of this doc claimed Perdu was absent from this cache
  * and fronted both lock/unlock through a Trouver parchment used directly on the item plus a
@@ -38,16 +33,6 @@ import gg.rsmod.plugins.content.mechanics.death.ItemRiskValueProvider
 object Trouver {
     const val LOCK_FEE = 500_000
     const val UNLOCK_REFUND_PERCENT = 95
-
-    /**
-     * PROVISIONAL_BALANCE: the real mechanic never drops a locked item to a killer at all (it
-     * stays with the victim, broken or not), so there is no sourced "killer compensation" value
-     * to reuse. Compensating the killer for a Trouver-protected kill is a server-original design
-     * choice made per the owner's explicit "killer compensation" requirement for this engine, not
-     * OSRS source data - centralized here, as a percentage of [ItemRiskValueProvider]'s value for
-     * the item's *unlocked* base id, so it can be tuned or replaced without touching call sites.
-     */
-    const val KILLER_COMPENSATION_PERCENT = 100
 
     sealed class LockResult {
         object Success : LockResult()
@@ -94,7 +79,7 @@ object Trouver {
             if (slot != -1) player.inventory[slot] = Item(lockable.lockedItemId, amount).copyAttr(item)
         }
         player.filterableMessage(
-            "You lock your item with a Trouver parchment. It can no longer be lost on death.",
+            "You lock your item with a Trouver parchment. It can no longer be destroyed on death.",
         )
         return LockResult.Success
     }
@@ -150,48 +135,5 @@ object Trouver {
         player.inventory.add(lockedItem.id, amount, assureFullInsertion = true)
         player.filterableMessage("You don't have enough inventory space to unlock that item.")
         return UnlockResult.InventoryFull
-    }
-
-    /**
-     * Whether [itemId] should be kept regardless of value/rank on death - the
-     * [gg.rsmod.plugins.content.mechanics.death.DeathResolver.resolve] `alwaysProtected` hook this
-     * engine plugs into (see `death.plugin.kts`).
-     */
-    fun protectedFromDeath(itemId: Int): Boolean = TrouverRegistry.isLocked(itemId)
-
-    /**
-     * Grants [result]'s killer coin compensation for every Trouver-locked item that was protected
-     * from becoming their loot in a Wilderness/PvP death - see [KILLER_COMPENSATION_PERCENT]'s doc
-     * for why this exists. No-op outside [DeathContext.WILDERNESS_PVP], without a killer, or when
-     * nothing protected in this death was actually locked. Best-effort: if the killer's inventory
-     * has no room, the compensation for that item is simply not granted (never destroys or
-     * substitutes anything else on the killer's behalf).
-     *
-     * @return the total coins actually granted.
-     */
-    fun grantKillerCompensation(
-        result: DeathResolutionResult,
-        valueProvider: ItemRiskValueProvider,
-    ): Long {
-        val killer = result.killer ?: return 0L
-        if (result.context != DeathContext.WILDERNESS_PVP) return 0L
-
-        var totalGranted = 0L
-        for (slotItem in result.itemRisk.protected) {
-            val lockable = TrouverRegistry.entryForLocked(slotItem.item.id) ?: continue
-            val baseValue = valueProvider.getValue(lockable.baseItemId)
-            val compensation = (baseValue * slotItem.item.amount * KILLER_COMPENSATION_PERCENT / 100)
-            if (compensation <= 0L) continue
-            val amount = compensation.coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
-            val transaction = killer.inventory.add(Items.COINS_995, amount, assureFullInsertion = false)
-            val granted = transaction.completed.toLong()
-            if (granted > 0) {
-                totalGranted += granted
-                killer.filterableMessage(
-                    "You receive $granted coins in compensation for a Trouver-locked item you couldn't loot.",
-                )
-            }
-        }
-        return totalGranted
     }
 }

@@ -90,7 +90,8 @@ class RunePaymentTests {
     @Test
     fun `removed runes exist nowhere - pouch, combinations, crafting, spells`() {
         val removed = setOf(Items.ARMADYL_RUNE, Items.AETHER_RUNE, Items.AETHER_CATALYST)
-        assertEquals(removed, gg.rsmod.plugins.content.mechanics.removed.RemovedItems.IDS)
+        // Owner 2026-09-26: the Crown of Helios item is removed as well.
+        assertEquals(removed + Items.CROWN_OF_HELIOS, gg.rsmod.plugins.content.mechanics.removed.RemovedItems.IDS)
         assertTrue(removed.none { it in RunePouch.RUNES })
         assertTrue(RunePayment.COMBINATIONS.none { it.first in removed })
         assertTrue(CombinationRune.values.none { it.id in removed || it.rune in removed })
@@ -175,7 +176,8 @@ class RunePaymentTests {
         val spells = File("src/main/kotlin/gg/rsmod/plugins/content/magic/MagicSpells.kt").readText()
         assertEquals(2, Regex("runePlan\\(p, items\\)").findAll(spells).count(), "canCast and removeRunes share the plan")
         assertTrue("RunePouch.take(p, rune" in spells)
-        val death = File("src/main/kotlin/gg/rsmod/plugins/content/mechanics/death/PvpDeathBreakables.kt").readText()
-        assertEquals(2, Regex("RunePouch.isPouch").findAll(death).count(), "split and execute")
+        // Owner 2026-09-26: the rune pouch follows the untradeable rule (fate + runes to the killer).
+        val death = File("src/main/kotlin/gg/rsmod/plugins/content/mechanics/death/UntradeableDeathProtection.kt").readText()
+        assertEquals(3, Regex("RunePouch.isPouch").findAll(death).count(), "handles, fate and killer loot")
     }
 }

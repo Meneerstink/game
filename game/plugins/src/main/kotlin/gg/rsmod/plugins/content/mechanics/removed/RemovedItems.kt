@@ -11,10 +11,11 @@ import gg.rsmod.plugins.content.magic.RunePouch
  * "Verwijder aether rune volledig!"). Their cache definitions stay, because item ids must stay contiguous, but nothing may offer,
  * trade or keep them: the Grand Exchange refuses them ([gg.rsmod.plugins.content.mechanics.exchange.GrandExchangeInterface.exchangeable]),
  * the spells, rune pouch and runecrafting no longer know them, and [purge] takes any copy out of a player's inventory, worn items,
- * bank and rune pouches at login. One list, so every route asks the same question.
+ * bank, gravestone, Death's Office and rune pouches at login. One list, so every route asks the same question.
  */
 object RemovedItems {
-    val IDS: Set<Int> = setOf(Items.ARMADYL_RUNE, Items.AETHER_RUNE, Items.AETHER_CATALYST)
+    // Owner 2026-09-26: the Crown of Helios item is removed too (the staff `crown` menu stays, without the item).
+    val IDS: Set<Int> = setOf(Items.ARMADYL_RUNE, Items.AETHER_RUNE, Items.AETHER_CATALYST, Items.CROWN_OF_HELIOS)
 
     /** True for a removed item or its noted form. */
     fun isRemoved(def: ItemDef): Boolean = def.id in IDS || (def.noted && def.noteLinkId in IDS)
@@ -27,7 +28,8 @@ object RemovedItems {
     /** Removes every removed item the player holds; returns how many item stacks were taken. */
     fun purge(player: Player): Int {
         var taken = 0
-        for (container in listOf(player.inventory, player.equipment, player.bank)) {
+        // The gravestone and Death's Office too: a removed item must not come back through a death.
+        for (container in listOf(player.inventory, player.equipment, player.bank, player.gravestone, player.deathRecovery)) {
             taken += purge(player, container)
         }
         return taken

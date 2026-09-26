@@ -6,89 +6,150 @@ import gg.rsmod.game.model.entity.GroundItem
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.game.model.item.ItemAttribute
+import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.api.ext.addPreservingAttr
 import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.api.ext.refreshBonuses
-import gg.rsmod.plugins.api.cfg.Items
-import gg.rsmod.plugins.content.items.osrs.AvernicTreads
-import gg.rsmod.plugins.content.items.osrs.OsrsOrnamentKits
-import gg.rsmod.plugins.content.items.osrs.PoweredStaves
+import gg.rsmod.plugins.content.magic.RunePouch
 import gg.rsmod.plugins.content.mechanics.pvp.LootKeys
+import gg.rsmod.plugins.content.mechanics.pvp.LootingBag
+import gg.rsmod.plugins.content.mechanics.pvp.emblem.DeadmanEmblem
+import gg.rsmod.plugins.content.mechanics.trouver.TrouverRegistry
+
+/** What an unprotected PvP death does to one lost untradeable stack (owner 2026-09-26, the OSRS level-20 rule). */
+enum class UntradeableFate {
+    /** Stays with the victim in broken form; the killer gets the repair price. */
+    BROKEN,
+
+    /** Trouver-locked, above level 20: stays with the victim mangled and still locked; the killer gets 500,000. */
+    MANGLED,
+
+    /** Unlocked, above level 20: the item is destroyed; the killer gets the OSRS coin amount, else the repair price. */
+    DESTROYED,
+
+    /** Rune pouch that is kept (locked, or below level 20): the victim keeps the empty pouch, the runes go to the killer. */
+    POUCH_EMPTIED,
+
+    /** Already broken/mangled, or a stackable untradeable (tokens): stays with the victim as it is, nothing for the killer. */
+    UNCHANGED,
+}
+
+data class UntradeableOutcome(
+    val slotItem: DeathSlotItem,
+    val fate: UntradeableFate,
+    val killerCoins: Long,
+)
 
 /**
- * OSRS Wiki "Items Kept on Death" (mechanics table, raw wikitext, fetched 2026-09-16) - the general,
- * unnamed-item default for a "non-locked" untradeable item on an unprotected death: "The victim keeps
- * it in their inventory in broken form" (below level 20 Wilderness; above 20 it instead "turns into a
- * tiny pile of coins ... dropped to the PKer" - unsourced amount, and per this project's owner-approved
- * "below-20 rule applies everywhere" convention (`OSRS_IMPORT_MASTER.yml`, 2026-09-13), the broken-kept
- * branch is the one that matters here).
+ * Untradeables on an unprotected PvP death (owner decisions 2026-09-26, OSRS Wiki "Items Kept on Death" / "Trouver parchment"):
  *
- * Every *named* untradeable item this codebase already special-cases (`PvpDeathBreakables`,
- * `OsrsOrnamentKits`, the Toxic blowpipe/Bow of Faerdhinen/etc. conversions in `PvpDeathBreakables`,
- * `PoweredStaves`) already implements exactly this rule with each item's own sourced broken id and
- * repair cost. This object is the FALLBACK for every other untradeable, non-loot-key item that has no
- * such entry: a real gap this codebase had (see `OSRS_IMPORT_MASTER.yml` "Continued pass" - such items
- * were being spawned as-is, fully working, for the killer to loot, which is neither branch of the
- * sourced rule and is a genuine potential exploit).
+ *  - at or below level 20 Wilderness (every Deadman dangerous area outside the Wilderness has level 0): locked and unlocked
+ *    untradeables break and stay with the victim; the killer receives the repair price in coins ([RepairPrices]);
+ *  - above level 20: an unlocked untradeable is destroyed and the killer receives the OSRS coin amount (else the repair
+ *    price); a Trouver-locked item becomes mangled, stays with the victim and keeps its lock, and the killer receives 500,000;
+ *  - rune pouch: the runes are always lost to the killer; the victim keeps the empty pouch when it is locked or the death is
+ *    at or below level 20, above level 20 an unlocked pouch is destroyed like any other untradeable.
  *
- * No broken-item cache id exists for the vast majority of these items (importing one per item is its
- * own future, bounded cache-import task), so guessing one is not an option. Instead this reuses
- * [DeathResolver.resolve]'s existing `alwaysProtected` extension point - the exact "keep the item whole
- * instead of guessing a degradation" fallback `Trouver`'s own class doc already establishes as this
- * codebase's honest answer to the same "no broken variant yet" situation. It is a deliberately narrower
- * outcome than the sourced rule (kept working rather than kept broken-and-unusable), recorded as such,
- * not silently presented as the full mechanic.
+ * The item-specific conversions ([PvpDeathBreakables.converts]: blowpipes, powered staves, ornament kits ...), loot keys,
+ * looting bags and Deadman emblems keep their own rules and never come here. On a PvM death nothing breaks: every lost item,
+ * untradeables included, goes to the gravestone. The death tile decides the Wilderness level ([DeathRules.deepWilderness]),
+ * the same for the death, the Items Kept on Death screen and the risk skull.
  */
 object UntradeableDeathProtection {
-    /** Whether [itemId] already has its own specific PvP-death rule elsewhere in this codebase. */
-    private fun hasSpecificRule(itemId: Int): Boolean =
-        PvpDeathBreakables.breakableFor(itemId) != null ||
-            OsrsOrnamentKits.forPvpConversion(itemId) != null ||
-            itemId == Items.TOXIC_BLOWPIPE || itemId == Items.BLAZING_BLOWPIPE ||
-            itemId == Items.BOW_OF_FAERDHINEN || itemId == Items.AMULET_OF_BLOOD_FURY ||
-            itemId == Items.TOXIC_STAFF_OF_THE_DEAD || itemId == Items.ANCIENT_SCEPTRE ||
-            itemId in AvernicTreads.UPGRADED ||
-            PoweredStaves.chargedTierOf(itemId) != null
+    /** Broken state kept in [ItemAttribute.BROKEN] for items without an imported broken/mangled id. */
+    const val STATE_BROKEN = 1
+    const val STATE_MANGLED = 2
 
-    /**
-     * True when [itemId] should be force-kept with the victim: untradeable, not a loot key (those are
-     * always lost regardless - RCV-012 decision 3b, unrelated to tradeability and never overridden
-     * here), and not already covered by one of this codebase's item-specific death rules.
-     */
-    fun shouldProtect(
+    fun state(item: Item): Int = item.attr[ItemAttribute.BROKEN] ?: 0
+
+    fun isBroken(item: Item): Boolean = state(item) > 0
+
+    /** Whether [item] is already in a damaged state (attribute, or an imported broken/mangled id). */
+    fun isDamaged(item: Item): Boolean =
+        isBroken(item) || PvpDeathBreakables.forBroken(item.id) != null || TrouverRegistry.entryForDamaged(item.id) != null
+
+    /** Untradeables this rule handles on a PvP death. */
+    fun handles(
         definitions: DefinitionSet,
         itemId: Int,
     ): Boolean {
-        if (LootKeys.isKey(itemId) || hasSpecificRule(itemId)) return false
-        return !definitions.get(ItemDef::class.java, itemId).tradeable
+        if (LootKeys.isKey(itemId) || LootingBag.isBag(itemId) || DeadmanEmblem.isEmblem(itemId)) return false
+        if (PvpDeathBreakables.converts(itemId)) return false
+        if (RunePouch.isPouch(itemId) || TrouverRegistry.isLockedAnyState(itemId) || PvpDeathBreakables.breakableFor(itemId) != null) return true
+        if (PvpDeathBreakables.forBroken(itemId) != null) return true
+        val def = RepairPrices.itemDef(definitions, itemId) ?: return false
+        return !def.tradeable && itemId != Items.COINS_995
     }
 
+    fun fateOf(
+        definitions: DefinitionSet,
+        item: Item,
+        deepWilderness: Boolean,
+    ): UntradeableOutcomeFate {
+        val locked = TrouverRegistry.isLockedAnyState(item.id)
+        if (isDamaged(item)) return UntradeableOutcomeFate(UntradeableFate.UNCHANGED, 0L)
+        if (RunePouch.isPouch(item.id)) {
+            return if (locked || !deepWilderness) {
+                UntradeableOutcomeFate(UntradeableFate.POUCH_EMPTIED, 0L)
+            } else {
+                UntradeableOutcomeFate(UntradeableFate.DESTROYED, RepairPrices.destroyCoins(definitions, item.id))
+            }
+        }
+        if (RepairPrices.itemDef(definitions, item.id)?.stackable == true) return UntradeableOutcomeFate(UntradeableFate.UNCHANGED, 0L)
+        return when {
+            !deepWilderness -> UntradeableOutcomeFate(UntradeableFate.BROKEN, RepairPrices.repairPrice(definitions, item.id))
+            locked -> UntradeableOutcomeFate(UntradeableFate.MANGLED, RepairPrices.MANGLED_REPAIR)
+            else -> UntradeableOutcomeFate(UntradeableFate.DESTROYED, RepairPrices.destroyCoins(definitions, item.id))
+        }
+    }
+
+    data class UntradeableOutcomeFate(val fate: UntradeableFate, val killerCoins: Long)
+
     /**
-     * Audit D-15: on a PvP death a generic untradeable is no longer force-kept whole. It takes part in
-     * the normal keep-3 ranking; when it ends up lost it is taken out of the killer-bound list here and
-     * [breakInPlace] keeps it with the victim "in broken form" (OSRS "Items Kept on Death"), unusable
-     * until Perdu repairs it ([BrokenItemRepair]). Nothing reaches the killer for it (below-20 rule).
+     * Takes every lost untradeable out of a PvP death's lost list (so [DeathExecutor] never hands it to the killer) and
+     * decides its fate. A PvM death returns the result unchanged: its untradeables go to the gravestone.
      */
-    fun splitGeneric(
+    fun splitPvp(
         definitions: DefinitionSet,
         result: DeathResolutionResult,
-    ): Pair<DeathResolutionResult, List<DeathSlotItem>> {
+        deepWilderness: Boolean,
+    ): Pair<DeathResolutionResult, List<UntradeableOutcome>> {
         if (result.context != DeathContext.WILDERNESS_PVP) return result to emptyList()
-        val (generic, rest) = result.itemRisk.lost.partition { shouldProtect(definitions, it.item.id) }
-        if (generic.isEmpty()) return result to emptyList()
-        return result.copy(itemRisk = result.itemRisk.copy(lost = rest)) to generic
+        val (untradeable, rest) = result.itemRisk.lost.partition { handles(definitions, it.item.id) }
+        if (untradeable.isEmpty()) return result to emptyList()
+        val outcomes =
+            untradeable.map {
+                val fate = fateOf(definitions, it.item, deepWilderness)
+                UntradeableOutcome(it, fate.fate, fate.killerCoins)
+            }
+        return result.copy(itemRisk = result.itemRisk.copy(lost = rest)) to outcomes
+    }
+
+    /** The items the killer receives for [outcomes] (coins, and the runes of a rune pouch), without touching the victim. */
+    fun killerLoot(outcomes: List<UntradeableOutcome>): List<Item> {
+        val loot = mutableListOf<Item>()
+        for (outcome in outcomes) {
+            if (outcome.killerCoins > 0) loot += Item(Items.COINS_995, outcome.killerCoins.coerceAtMost(Int.MAX_VALUE.toLong()).toInt())
+            if (RunePouch.isPouch(outcome.slotItem.item.id) && outcome.fate != UntradeableFate.UNCHANGED) {
+                loot += RunePouch.contents(outcome.slotItem.item)
+            }
+        }
+        return loot
     }
 
     /**
-     * Marks each stack in [broken] as [ItemAttribute.BROKEN]. A worn item is taken off first (to the
-     * inventory, else the bank, else a private ground item) so its bonuses no longer apply.
+     * Applies [outcomes] to the victim's containers and returns the killer's items ([killerLoot]). A worn broken, mangled or
+     * emptied item is taken off first (to the inventory, else the bank, else a private ground item) so its bonuses stop.
      */
-    fun breakInPlace(
+    fun execute(
         victim: Player,
-        broken: List<DeathSlotItem>,
-    ) {
-        var unequipped = false
-        for (slotItem in broken) {
+        outcomes: List<UntradeableOutcome>,
+    ): List<Item> {
+        var equipmentChanged = false
+        val applied = mutableListOf<UntradeableOutcome>()
+        var damaged = false
+        for (outcome in outcomes) {
+            val slotItem = outcome.slotItem
             val container =
                 when (slotItem.source) {
                     DeathContainerSource.INVENTORY -> victim.inventory
@@ -96,36 +157,80 @@ object UntradeableDeathProtection {
                 }
             val current = container[slotItem.slot] ?: continue
             if (current.id != slotItem.item.id) continue
-            val damaged = Item(current).also { it.attr[ItemAttribute.BROKEN] = 1 }
-            if (slotItem.source == DeathContainerSource.INVENTORY) {
-                container[slotItem.slot] = damaged
+            applied += outcome
+            val replacement: Item? =
+                when (outcome.fate) {
+                    UntradeableFate.UNCHANGED -> continue
+                    UntradeableFate.DESTROYED -> null
+                    UntradeableFate.POUCH_EMPTIED -> RunePouch.withContents(current, emptyList())
+                    UntradeableFate.BROKEN -> damagedCopy(slotItem.item, current, mangled = false)
+                    UntradeableFate.MANGLED -> damagedCopy(slotItem.item, current, mangled = true)
+                }
+            if (outcome.fate == UntradeableFate.BROKEN || outcome.fate == UntradeableFate.MANGLED) damaged = true
+            if (slotItem.source == DeathContainerSource.INVENTORY || replacement == null) {
+                container[slotItem.slot] = replacement
+                if (slotItem.source == DeathContainerSource.EQUIPMENT) equipmentChanged = true
+                continue
+            }
+            if (outcome.fate == UntradeableFate.POUCH_EMPTIED) {
+                container[slotItem.slot] = replacement
                 continue
             }
             container[slotItem.slot] = null
-            unequipped = true
+            equipmentChanged = true
             val placed =
-                victim.inventory.addPreservingAttr(damaged, assureFullInsertion = true).hasSucceeded() ||
-                    victim.bank.addPreservingAttr(damaged, assureFullInsertion = true).hasSucceeded()
-            if (!placed) {
-                victim.world.spawn(GroundItem(damaged, victim.tile, victim))
-            }
+                victim.inventory.addPreservingAttr(replacement, assureFullInsertion = true).hasSucceeded() ||
+                    victim.bank.addPreservingAttr(replacement, assureFullInsertion = true).hasSucceeded()
+            if (!placed) victim.world.spawn(GroundItem(replacement, victim.tile, victim))
         }
-        if (unequipped) victim.refreshBonuses()
-        if (broken.isNotEmpty()) {
-            victim.message("Some of your untradeable items were broken. Perdu at the Grand Exchange can repair them.")
+        if (equipmentChanged) victim.refreshBonuses()
+        if (damaged) victim.message("Some of your untradeable items were damaged. Perdu at the Grand Exchange can repair them.")
+        return killerLoot(applied)
+    }
+
+    /**
+     * The damaged form: the imported broken/mangled id where one exists ([PvpDeathBreakables] broken ids, Trouver
+     * [gg.rsmod.plugins.content.mechanics.trouver.TrouverLockable.brokenItemId]/[mangledItemId]), otherwise the same id with
+     * [ItemAttribute.BROKEN]. [resolved] carries the death's attributes (e.g. a quiver already stripped of its ammo).
+     */
+    private fun damagedCopy(
+        resolved: Item,
+        current: Item,
+        mangled: Boolean,
+    ): Item {
+        val source = if (resolved.hasAnyAttr() || !current.hasAnyAttr()) resolved else current
+        val lockable = TrouverRegistry.entryForLocked(current.id)
+        val importedId =
+            if (lockable != null) {
+                if (mangled) lockable.mangledItemId else lockable.brokenItemId
+            } else {
+                PvpDeathBreakables.breakableFor(current.id)?.brokenId
+            }
+        if (importedId != null) return Item(importedId, current.amount).copyAttr(source)
+        return Item(current.id, current.amount).copyAttr(source).also {
+            it.attr[ItemAttribute.BROKEN] = if (mangled) STATE_MANGLED else STATE_BROKEN
         }
     }
 
-    fun isBroken(item: Item): Boolean = (item.attr[ItemAttribute.BROKEN] ?: 0) > 0
-
-    /**
-     * Repair cost for an attribute-broken untradeable. OSRS prices vary per item and are not sourced
-     * here (niet geverifieerd): the item's store value, with a floor so repairs are never free.
-     */
+    /** What Perdu charges to repair [item] (0 when it is not damaged). */
     fun repairCost(
         definitions: DefinitionSet,
-        itemId: Int,
-    ): Long = maxOf(MIN_REPAIR_COST, definitions.get(ItemDef::class.java, itemId).cost.toLong())
+        item: Item,
+    ): Long {
+        val mangled = state(item) == STATE_MANGLED || TrouverRegistry.entryForDamaged(item.id)?.mangledItemId == item.id
+        return when {
+            mangled -> RepairPrices.MANGLED_REPAIR
+            isDamaged(item) -> RepairPrices.repairPrice(definitions, item.id)
+            else -> 0L
+        } * item.amount
+    }
 
-    const val MIN_REPAIR_COST = 1_000L
+    /** The whole item [item] repairs into (same attributes, broken state removed). */
+    fun repaired(item: Item): Item {
+        val id =
+            PvpDeathBreakables.forBroken(item.id)?.itemId
+                ?: TrouverRegistry.entryForDamaged(item.id)?.lockedItemId
+                ?: item.id
+        return Item(id, item.amount).copyAttr(item).also { it.attr.remove(ItemAttribute.BROKEN) }
+    }
 }

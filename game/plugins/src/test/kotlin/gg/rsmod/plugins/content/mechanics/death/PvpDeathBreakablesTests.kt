@@ -31,51 +31,56 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 /**
- * [PvpDeathBreakables]: an unprotected Avernic defender never becomes killer loot in a Wilderness
- * death; it breaks, stays with the victim and the killer gets the 600,000-coin repair cost once.
+ * [PvpDeathBreakables] and [UntradeableDeathProtection] (owner 2026-09-26): an unprotected Avernic defender never becomes
+ * killer loot; at or below level 20 it breaks, stays with the victim and the killer gets its repair price once.
  */
 class PvpDeathBreakablesTests {
     @Test
-    fun `wilderness death breaks an inventory Avernic defender in place and drops the repair cost once`() {
+    fun `wilderness death breaks an inventory Avernic defender in place and pays the repair cost once`() {
         val victim = newPlayer()
         val killer = newPlayer()
-        val world = mockk<World>(relaxed = true)
         victim.inventory[3] = Item(Items.AVERNIC_DEFENDER, 1)
-        victim.inventory[4] = Item(Items.ABYSSAL_WHIP, 1)
+        victim.inventory[4] = Item(Items.COINS_995, 1)
         val lost =
             listOf(
                 DeathSlotItem(DeathContainerSource.INVENTORY, 3, Item(Items.AVERNIC_DEFENDER, 1)),
-                DeathSlotItem(DeathContainerSource.INVENTORY, 4, Item(Items.ABYSSAL_WHIP, 1)),
+                DeathSlotItem(DeathContainerSource.INVENTORY, 4, Item(Items.COINS_995, 1)),
             )
         val resolved = DeathResolutionResult(DeathContext.WILDERNESS_PVP, victim, killer, DeathItemRiskResult(0, emptyList(), lost))
 
-        val (result, breaking) = PvpDeathBreakables.split(resolved)
-        assertEquals(listOf(Items.ABYSSAL_WHIP), result.itemRisk.lost.map { it.item.id }, "the defender must never be dropped as loot")
-        assertEquals(listOf(Items.AVERNIC_DEFENDER), breaking.map { it.item.id })
+        val (afterConversions, converting) = PvpDeathBreakables.split(resolved)
+        assertTrue(converting.isEmpty(), "the defender has no conversion")
+        val (result, untradeables) = UntradeableDeathProtection.splitPvp(DEFINITIONS, afterConversions, deepWilderness = false)
+        assertEquals(listOf(Items.COINS_995), result.itemRisk.lost.map { it.item.id }, "the defender must never be dropped as loot")
+        assertEquals(listOf(Items.AVERNIC_DEFENDER), untradeables.map { it.slotItem.item.id })
 
-        assertEquals(1, PvpDeathBreakables.execute(world, result, breaking))
+        val loot = UntradeableDeathProtection.execute(victim, untradeables)
         assertEquals(Items.AVERNIC_DEFENDER_BROKEN, victim.inventory[3]?.id)
-        verify(exactly = 1) { world.spawn(match<GroundItem> { it.item == Items.COINS_995 && it.amount == 600_000 }) }
-        assertEquals(0, PvpDeathBreakables.execute(world, result, breaking), "a second execution finds no defender to break")
+        assertEquals(listOf(Items.COINS_995 to 600_000), loot.map { it.id to it.amount })
+        assertTrue(UntradeableDeathProtection.execute(victim, untradeables).isEmpty(), "a second execution finds no defender to break")
     }
 
     @Test
     fun `an equipped Avernic defender is unequipped and kept broken in the inventory`() {
         val victim = newPlayer()
-        val world = mockk<World>(relaxed = true)
         victim.equipment[5] = Item(Items.AVERNIC_DEFENDER, 1)
         val lost = listOf(DeathSlotItem(DeathContainerSource.EQUIPMENT, 5, Item(Items.AVERNIC_DEFENDER, 1)))
-        val (result, breaking) = PvpDeathBreakables.split(DeathResolutionResult(DeathContext.WILDERNESS_PVP, victim, null, DeathItemRiskResult(0, emptyList(), lost)))
+        val (_, untradeables) =
+            UntradeableDeathProtection.splitPvp(
+                DEFINITIONS,
+                DeathResolutionResult(DeathContext.WILDERNESS_PVP, victim, null, DeathItemRiskResult(0, emptyList(), lost)),
+                deepWilderness = false,
+            )
         // refreshBonuses writes interface varcs/components a mocked player does not have.
         mockkStatic("gg.rsmod.plugins.api.ext.PlayerExtKt")
         try {
             every { victim.refreshBonuses() } just Runs
 
-            PvpDeathBreakables.execute(world, result, breaking)
+            val loot = UntradeableDeathProtection.execute(victim, untradeables)
 
             assertNull(victim.equipment[5])
             assertEquals(1, victim.inventory.getItemCount(Items.AVERNIC_DEFENDER_BROKEN))
-            verify(exactly = 0) { world.spawn(any<GroundItem>()) }
+            assertEquals(600_000, loot.single().amount, "no killer: the coins still go to the (public) loot sink")
             verify(exactly = 1) { victim.refreshBonuses() }
         } finally {
             unmockkStatic("gg.rsmod.plugins.api.ext.PlayerExtKt")
@@ -84,18 +89,6 @@ class PvpDeathBreakablesTests {
 
     @Test
     fun `every breakable item breaks in place and pays exactly its sourced repair cost`() {
-        assertEquals(
-            mapOf(
-                Items.AVERNIC_DEFENDER to 600_000, Items.INFERNAL_CAPE to 225_000, Items.IMBUED_SARADOMIN_CAPE to 0, Items.IMBUED_GUTHIX_CAPE to 0, Items.IMBUED_ZAMORAK_CAPE to 0,
-                // Ava's assembler (raw wiki): becomes broken and stays with the player; no coins for the killer are stated.
-                Items.AVAS_ASSEMBLER to 0,
-                // Batch capes (item pages): imbued max capes, assembler max capes, Masori assembler and Dizana's max cape break in place;
-                // only Perdu's repair cost is stated, no coins for the killer.
-                Items.IMBUED_SARADOMIN_MAX_CAPE to 0, Items.IMBUED_GUTHIX_MAX_CAPE to 0, Items.IMBUED_ZAMORAK_MAX_CAPE to 0,
-                Items.ASSEMBLER_MAX_CAPE to 0, Items.MASORI_ASSEMBLER to 0, Items.MASORI_ASSEMBLER_MAX_CAPE to 0, Items.DIZANAS_MAX_CAPE to 0,
-            ),
-            PvpDeathBreakables.ALL.associate { it.itemId to it.killerCoins },
-        )
         assertEquals(
             // Sourced Perdu repair costs (OSRS_IMPORT_MASTER.yml "Batch capesrings" / "Batch assembler" / "Batch capes" / pilot).
             mapOf(
@@ -111,20 +104,20 @@ class PvpDeathBreakablesTests {
         PvpDeathBreakables.ALL.forEach { breakable ->
             val victim = newPlayer()
             val killer = newPlayer()
-            val world = mockk<World>(relaxed = true)
             victim.inventory[2] = Item(breakable.itemId, 1)
             val lost = listOf(DeathSlotItem(DeathContainerSource.INVENTORY, 2, Item(breakable.itemId, 1)))
-            val (result, converting) = PvpDeathBreakables.split(DeathResolutionResult(DeathContext.WILDERNESS_PVP, victim, killer, DeathItemRiskResult(0, emptyList(), lost)))
+            val (result, untradeables) =
+                UntradeableDeathProtection.splitPvp(DEFINITIONS, DeathResolutionResult(DeathContext.WILDERNESS_PVP, victim, killer, DeathItemRiskResult(0, emptyList(), lost)), false)
+            assertTrue(result.itemRisk.lost.isEmpty())
 
-            PvpDeathBreakables.execute(world, result, converting)
+            val loot = UntradeableDeathProtection.execute(victim, untradeables)
 
             assertEquals(breakable.brokenId, victim.inventory[2]?.id, "${breakable.itemId} breaks in place")
-            val coinDrops = if (breakable.killerCoins > 0) 1 else 0
-            verify(exactly = coinDrops) { world.spawn(match<GroundItem> { it.item == Items.COINS_995 && it.amount == breakable.killerCoins }) }
-            verify(exactly = 0) { world.spawn(match<GroundItem> { it.item == breakable.itemId }) }
+            assertEquals(listOf(Items.COINS_995 to breakable.repairCost), loot.map { it.id to it.amount }, "${breakable.itemId}: killer gets the repair cost")
+            assertEquals(breakable.repairCost.toLong(), UntradeableDeathProtection.repairCost(DEFINITIONS, victim.inventory[2]!!))
+            assertEquals(breakable.itemId, UntradeableDeathProtection.repaired(victim.inventory[2]!!).id)
         }
     }
-
     @Test
     fun `every item with a tradeable ornament or colour kit is dropped as base item plus kit on a wilderness death`() {
         // "Items Kept on Death": tradeable ornament kits -> "Dropped to the PKer as the tradeable, non-ornamented item. Also drops

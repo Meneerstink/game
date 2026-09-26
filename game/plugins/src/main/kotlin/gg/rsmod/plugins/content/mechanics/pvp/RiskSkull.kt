@@ -6,8 +6,7 @@ import gg.rsmod.game.sync.block.UpdateBlockType
 import gg.rsmod.plugins.api.SkullIcon
 import gg.rsmod.plugins.api.ext.hasSkullIcon
 import gg.rsmod.plugins.api.ext.setSkullIcon
-import gg.rsmod.plugins.content.mechanics.death.DeathItemRiskCalculator
-import gg.rsmod.plugins.content.mechanics.death.GuidePriceValueProvider
+import gg.rsmod.plugins.content.mechanics.death.DeathRules
 import gg.rsmod.plugins.content.mechanics.death.ItemRiskValueProvider
 
 /**
@@ -60,34 +59,22 @@ object RiskSkull {
             else -> SkullIcon.DMM_VERY_HIGH_RISK
         }
 
-    /** The total value of exactly the item stacks [player] would lose if they died right now -
-     * the same [DeathItemRiskCalculator] the real death-resolution path uses, run non-
-     * destructively against a snapshot of the live containers. [valueProvider] defaults to the
-     * same cache-cost-backed provider death resolution uses, but is overridable (matching
-     * [ItemRiskValueProvider]'s own "swappable, not hard-wired" design intent) so tests don't
-     * need a loaded cache to exercise this. */
+    /**
+     * The value [player] would give away if a player killed them right now: [DeathRules.pvpLoss] - the very rules the real
+     * death runs (keep 1 with Protect Item, conversions, untradeable repair coins at the level-20 rule of the player's
+     * current tile, looting bag contents and the loot behind carried keys), valued like the keep-1 ranking
+     * ([DeathRules.rankValue]: guide price, coins at face value).
+     */
     fun calculateRiskedValue(
         player: Player,
-        valueProvider: ItemRiskValueProvider = GuidePriceValueProvider(player.world),
-    ): Long {
-        val result =
-            DeathItemRiskCalculator.calculate(
-                inventory = player.inventory.items.copyOf(),
-                equipment = player.equipment.items.copyOf(),
-                skulled = PvpSkull.isSkulled(player),
-                itemProtectionActive = player.attr[PROTECT_ITEM_ATTR] == true,
-                valueProvider = valueProvider,
-            )
-        // Owner 2026-09-18 (#5): the risk must follow a kill at once (blue -> red). Loot keys are
-        // always lost on death (RCV-012 3b), so the loot INSIDE the carried keys is at risk too -
-        // OSRS Deadman: the skull colour reflects the value risked including the held keys' loot.
-        val keyLoot =
-            LootKeys.heldKeyIndexes(player).sumOf { index ->
-                LootKeys.slotItems(player, index).sumOf { valueProvider.getValue(it.id) * it.amount }
-            }
-        return result.lost.sumOf { valueProvider.getValue(it.item.id) * it.item.amount } + keyLoot
-    }
-
+        valueProvider: ItemRiskValueProvider = DeathRules.rankValue(player.world),
+    ): Long =
+        DeathRules.pvpLoss(
+            player = player,
+            itemProtectionActive = player.attr[PROTECT_ITEM_ATTR] == true,
+            deepWilderness = DeathRules.deepWilderness(player.tile),
+            value = valueProvider,
+        ).sumOf { valueProvider.getValue(it.id) * it.amount }
     /** Loot keys carried in the inventory (0-5); OSRS Deadman: "The number of keys on the icon
      * reflects the number of keys a player has in their inventory." */
     fun heldKeys(player: Player): Int = LootKeys.heldKeyIndexes(player).size.coerceIn(0, LootKeys.MAX_KEYS)
@@ -95,7 +82,7 @@ object RiskSkull {
     /** The icon [player] should show right now (see the class doc). */
     fun iconFor(
         player: Player,
-        valueProvider: ItemRiskValueProvider = GuidePriceValueProvider(player.world),
+        valueProvider: ItemRiskValueProvider = DeathRules.rankValue(player.world),
     ): SkullIcon {
         val skulled = PvpSkull.isSkulled(player)
         val keys = heldKeys(player)
@@ -111,7 +98,7 @@ object RiskSkull {
      */
     fun refresh(
         player: Player,
-        valueProvider: ItemRiskValueProvider = GuidePriceValueProvider(player.world),
+        valueProvider: ItemRiskValueProvider = DeathRules.rankValue(player.world),
     ) {
         val keys = heldKeys(player)
         var changed = false

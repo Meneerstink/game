@@ -265310,7 +265310,7 @@
 - id: 22327
   name: "Crown of Helios"
   examine: "A blazing golden crown. Only the staff of this world may bear it."
-  destroy_message: "Use ::helios to spawn another Crown of Helios."
+  destroy_message: "The Crown of Helios has been removed from the game."
   tradeable: false
   weight: 0.0
   equipment:

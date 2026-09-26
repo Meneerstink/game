@@ -39,9 +39,8 @@ on_npc_option(npc = Npcs.PERDU, option = "talk-to") {
     player.queue {
         // OSRS Wiki "Breach (scenery)": "The player can find the location of the active breach by talking to Perdu".
         chatNpc(gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.statusLine(), wrap = true)
-        val hasBroken =
-            (player.inventory.rawItems.filterNotNull() + player.equipment.rawItems.filterNotNull())
-                .any { gg.rsmod.plugins.content.mechanics.death.PvpDeathBreakables.forBroken(it.id) != null }
+        // Every PvP-damaged item: imported broken/mangled ids and attribute-broken untradeables (owner 2026-09-26).
+        val hasBroken = player.inventory.rawItems.filterNotNull().any(gg.rsmod.plugins.content.mechanics.death.UntradeableDeathProtection::isDamaged)
         if (!hasBroken) {
             chatNpc("I can repair and protect eligible equipment. Bring me a broken item and I'll fix it for a fee.", wrap = true)
             return@queue
@@ -53,6 +52,11 @@ on_npc_option(npc = Npcs.PERDU, option = "talk-to") {
 // Perdu now hosts the generic Trouver engine instead of the old command-only unlock path.
 TrouverRegistry.all().forEach { lockable ->
     on_item_on_npc(item = lockable.lockedItemId, npc = Npcs.PERDU) {
+        // A locked item that broke on a PvP death (attribute-broken) is repaired first, never unlocked in its broken state.
+        if (gg.rsmod.plugins.content.mechanics.death.UntradeableDeathProtection.isDamaged(player.getInteractingItem())) {
+            player.queue { BrokenItemRepair.repair(this) }
+            return@on_item_on_npc
+        }
         when (Trouver.unlock(player, player.getInteractingItem())) {
             Trouver.UnlockResult.Success -> {}
             Trouver.UnlockResult.NotLocked -> player.message("That item isn't locked.")
@@ -60,4 +64,10 @@ TrouverRegistry.all().forEach { lockable ->
             Trouver.UnlockResult.InventoryFull -> {}
         }
     }
+}
+
+// OSRS: a broken or mangled item is repaired by using it on Perdu.
+(gg.rsmod.plugins.content.mechanics.death.PvpDeathBreakables.ALL.map { it.brokenId } +
+    TrouverRegistry.all().flatMap { listOfNotNull(it.brokenItemId, it.mangledItemId) }).distinct().forEach { damaged ->
+    on_item_on_npc(item = damaged, npc = Npcs.PERDU) { player.queue { BrokenItemRepair.repair(this) } }
 }

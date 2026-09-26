@@ -194,7 +194,6 @@ class DeadmanEmblemTests {
             DeathItemRiskCalculator.calculate(
                 inventory = arrayOf(Item(emblem, 1), Item(4151, 1)),
                 equipment = arrayOfNulls(14),
-                skulled = false,
                 itemProtectionActive = true,
                 valueProvider = ItemRiskValueProvider { if (it == emblem) Long.MAX_VALUE else 1L },
                 alwaysLost = { DeadmanEmblem.isEmblem(it) },

@@ -74,24 +74,27 @@ object PvpDeathBreakables {
      * Removes breakable and ornamented stacks from a Wilderness death's lost list so [DeathExecutor]
      * never drops them as-is; returns the filtered result and the removed stacks for [execute].
      */
+    /**
+     * Items with their own OSRS conversion on an unprotected PvP death (owner 2026-09-26: unchanged). Every other
+     * untradeable - including the broken-id [entries] and the rune pouch - follows [UntradeableDeathProtection].
+     */
+    fun converts(itemId: Int): Boolean =
+        OsrsOrnamentKits.forPvpConversion(itemId) != null || itemId == Items.TOXIC_BLOWPIPE ||
+            itemId == Items.BLAZING_BLOWPIPE ||
+            itemId == Items.BOW_OF_FAERDHINEN || itemId == Items.AMULET_OF_BLOOD_FURY || itemId == Items.TOXIC_STAFF_OF_THE_DEAD ||
+            itemId in gg.rsmod.plugins.content.items.osrs.AvernicTreads.UPGRADED || itemId == Items.ANCIENT_SCEPTRE ||
+            itemId in gg.rsmod.plugins.content.items.osrs.Demonbane.SYNAPSE_PRODUCTS ||
+            gg.rsmod.plugins.content.items.osrs.PoweredStaves.chargedTierOf(itemId) != null
+
     fun split(result: DeathResolutionResult): Pair<DeathResolutionResult, List<DeathSlotItem>> {
         if (result.context != DeathContext.WILDERNESS_PVP) return result to emptyList()
-        val (converting, rest) =
-            result.itemRisk.lost.partition {
-                entries.containsKey(it.item.id) || OsrsOrnamentKits.forPvpConversion(it.item.id) != null || it.item.id == Items.TOXIC_BLOWPIPE ||
-                    it.item.id == Items.BLAZING_BLOWPIPE ||
-                    it.item.id == Items.BOW_OF_FAERDHINEN || it.item.id == Items.AMULET_OF_BLOOD_FURY || it.item.id == Items.TOXIC_STAFF_OF_THE_DEAD ||
-                    it.item.id in gg.rsmod.plugins.content.items.osrs.AvernicTreads.UPGRADED || it.item.id == Items.ANCIENT_SCEPTRE ||
-                    it.item.id in gg.rsmod.plugins.content.items.osrs.Demonbane.SYNAPSE_PRODUCTS ||
-                    gg.rsmod.plugins.content.magic.RunePouch.isPouch(it.item.id) ||
-                    gg.rsmod.plugins.content.items.osrs.PoweredStaves.chargedTierOf(it.item.id) != null
-            }
+        val (converting, rest) = result.itemRisk.lost.partition { converts(it.item.id) }
         if (converting.isEmpty()) return result to emptyList()
         return result.copy(itemRisk = result.itemRisk.copy(lost = rest)) to converting
     }
 
     /**
-     * Swaps each stack for its broken id on the victim and drops the repair cost for the killer.
+     * Converts each stack for the killer (its OSRS conversion) - broken items and repair coins are [UntradeableDeathProtection]'s job.
      *
      * Owner 2026-09-18 (#6): every killer-bound item goes through [drop] instead of straight onto the
      * floor, so `death.plugin.kts` can feed it into the same loot-key plan as the plain lost items -
@@ -150,16 +153,7 @@ object PvpDeathBreakables {
                 drop(Item(Items.ANCIENT_STAFF, 1))
                 continue
             }
-            if (gg.rsmod.plugins.content.magic.RunePouch.isPouch(slotItem.item.id)) {
-                // OSRS Wiki "Rune pouch" / "Divine rune pouch" (2026-09-17): an unprotected PvP death in the Wilderness loses the pouch, and
-                // the stored runes are not protected. ADAPTED (drop target not stated): the empty pouch and its runes drop for the killer.
-                val pouch = container[slotItem.slot]!!
-                container[slotItem.slot] = null
-                if (slotItem.source == DeathContainerSource.EQUIPMENT) equipmentChanged = true
-                drop(Item(pouch.id, 1))
-                gg.rsmod.plugins.content.magic.RunePouch.contents(pouch).forEach { drop(it) }
-                continue
-            }
+
             if (slotItem.item.id in gg.rsmod.plugins.content.items.osrs.Demonbane.SYNAPSE_PRODUCTS) {
                 // OSRS Wiki "Emberlight", "Scorching bow", "Purging staff" (2026-09-17): "A player killer will receive the synapse from their
                 // opponent if it is not one of the protected items." The rest of the weapon is lost.
@@ -210,21 +204,6 @@ object PvpDeathBreakables {
                 drop(Item(ornament.kit, slotItem.item.amount))
                 continue
             }
-            val breakable = entries.getValue(slotItem.item.id)
-            when (slotItem.source) {
-                DeathContainerSource.INVENTORY -> container[slotItem.slot] = Item(breakable.brokenId, slotItem.item.amount)
-                DeathContainerSource.EQUIPMENT -> {
-                    container[slotItem.slot] = null
-                    equipmentChanged = true
-                    if (!victim.inventory.add(breakable.brokenId, slotItem.item.amount, assureFullInsertion = true).hasSucceeded()) {
-                        victim.deathRecovery.add(breakable.brokenId, slotItem.item.amount, assureFullInsertion = true)
-                    }
-                }
-            }
-            broken++
-            val killer = result.killer ?: continue
-            if (breakable.killerCoins <= 0) continue
-            drop(Item(Items.COINS_995, breakable.killerCoins * slotItem.item.amount))
         }
         if (equipmentChanged) victim.refreshBonuses()
         return broken
