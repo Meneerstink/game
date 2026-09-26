@@ -6,6 +6,7 @@ import gg.rsmod.game.model.collision.ObjectType
 import gg.rsmod.game.model.attr.LAST_ACTIVE_CYCLE_ATTR
 import gg.rsmod.game.model.attr.RESPAWN_TILE_ATTR
 import gg.rsmod.game.model.entity.DynamicObject
+import gg.rsmod.game.model.entity.zoneTile
 import gg.rsmod.game.model.queue.TaskPriority
 import gg.rsmod.game.model.timer.TimerKey
 import gg.rsmod.plugins.content.areas.deathsoffice.DeathDialogue.firstDeath
@@ -114,7 +115,8 @@ DeathsOfficeArea.ENTRANCE_LOCS.forEach { loc ->
             player.attr[DEATHS_OFFICE_RETURN_ATTR] = from.as30BitInteger
             player.moveTo(DeathsOfficeArea.ARRIVAL)
         }
-        if (GuardedZones.contains(player.tile)) {
+        // The displayed tile (zoneTile): mid-transit the player still counts where the move started (ZoneTransitGuardTests).
+        if (GuardedZones.contains(player.zoneTile())) {
             enter()
         } else {
             DeadmanTimerGate.requestRoute(player, SevenSecondAction.Kind.TRANSPORT, enter)

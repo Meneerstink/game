@@ -25,7 +25,8 @@ class SkullyRosterPlacementTests {
             mapOf(
                 // Owner 2026-09-23: Edgeville and Camelot moved onto the removed desks (task 1 / picture "l").
                 "Edgeville bank" to Tile(3092, 3488, 0),
-                "Falador west bank" to Tile(2943, 3371, 0),
+                // Owner 2026-09-23 "verplaats skully naar 2943, 3368, 0", confirmed 2026-09-27.
+                "Falador west bank" to Tile(2943, 3368, 0),
                 "Seers' Village bank" to Tile(2721, 3491, 0),
                 "Ardougne south bank" to Tile(2653, 3280, 0),
             )
