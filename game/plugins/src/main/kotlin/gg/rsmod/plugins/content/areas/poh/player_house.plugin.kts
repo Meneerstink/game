@@ -145,11 +145,11 @@ on_obj_option(obj = PlayerHouse.ALTAR, option = "pray") {
         player.filterableMessage("You recharge your Prayer points.")
         player.playSound(Sfx.PRAYER_RECHARGE)
         Prayers.rechargePrayerPoints(player)
-        when (options("Use Normal Prayers.", "Use Ancient Curses.", "Unlock Ancient Curses (50,000 coins).", "Change my spellbook.", "Keep my books.")) {
+        when (options("Use Normal Prayers.", "Use Ancient Curses.", "Change my spellbook.", "Keep my books.")) {
             1 -> AncientCurses.switchBook(player, AncientCurses.PrayerBook.NORMAL)
             2 -> AncientCurses.switchBook(player, AncientCurses.PrayerBook.ANCIENT)
-            3 -> AncientCurses.unlock(player)
-            4 ->
+            // Owner 2026-09-26: no paid curse unlock - The Temple at Senntisten is the only route.
+             3 ->
                 when (options("Standard spellbook.", "Ancient Magicks.", "Lunar spellbook.")) {
                     1 -> Spellbooks.select(player, Spellbook.STANDARD)
                     2 -> Spellbooks.select(player, Spellbook.ANCIENT)

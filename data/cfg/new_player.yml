@@ -1,0 +1,54 @@
+# New-player foundation (2026-09-26): XP rates, the AFK skill area under the Grand Exchange hall, the Summoning kit the
+# Quest Guide hands out once, the quest-choice npc and the Deadman Mode starter chest. The running server reads this file
+# at boot (NewPlayerConfig); a value missing here falls back to the default written next to it.
+
+xp:
+  # Multiplier on every XP gain that goes through Player.addXp with modifiers switched on (skilling, combat and the
+  # older quests). It is applied on top of - never instead of - the engine's own two factors:
+  #   gained = base xp * level curve (x1.0 at level 1 rising linearly to x5.0 at level 98) * bonus xp (the time-played
+  #            multiplier 2.7 .. 1.1, only when game.yml bonus-experience is on) * normal_rate
+  # 1.0 keeps today's rates exactly. Calls that pass modifiers = false ignore all three factors: the eight choice
+  # quests and their lamps pay the exact wiki experience, and the AFK area below pays exactly its own numbers.
+  normal_rate: 1.0
+
+afk_area:
+  # XP per game tick (0.6 s) while a player trains at a station in the AFK area, multiplied by rate. This XP is added
+  # raw: the level curve, bonus xp and normal_rate above do NOT apply, so what you set here is exactly what players get.
+  # Default 30 per tick = 180,000 XP an hour; level 55 (166,636 XP) takes about 55 minutes from level 1.
+  rate: 1.0
+  xp_per_tick: 30
+  # Training stops exactly at the XP of this level (never above it) and a skill already at it cannot train here.
+  level_cap: 55
+
+summoning_kit:
+  # The Quest Guide hands every account this kit once, together with the Wolf Whistle completion. The amounts are
+  # computed from the plan below and the xp rates above: pouches are infused level by level (each pouch's cache XP * the
+  # level curve * normal_rate, bonus xp not counted) until target_level is reached, and each pouch needs its charm, its
+  # spirit shards, one empty pouch and its tertiary. A plan row uses the pouch from its level until the next row starts.
+  target_level: 55
+  plan:
+    - { pouch: SPIRIT_WOLF, from_level: 1 }
+    - { pouch: GRANITE_CRAB, from_level: 16 }
+    - { pouch: BULL_ANT, from_level: 40 }
+    - { pouch: SPIRIT_TERRORBIRD, from_level: 52 }
+
+choice_npc:
+  # The npc the new-player intro sends players to for the permanent quest choices, the Summoning kit and quest lamps.
+  # Change the id or the tile here to move or replace it (949 = cache "Quest Guide"); facing is n, e, s or w.
+  npc: 949
+  x: 3164
+  z: 3486
+  level: 1
+  facing: n
+
+starter_chest:
+  # The Deadman Mode starter chest the intro will hand out (not handed out yet). item 23881 = OSRS item 22330 "Deadman
+  # starter pack" (OSRS Wiki), imported by OsrsItemImportTool batch starter-pack (tx-20260926-161950).
+  # contents: item id and amount per row - the OSRS pack's contents that exist on this server. OWNER: the OSRS pack also
+  # holds a starter sword, starter bow, starter staff, starter cape, a chronicle (10 charges) and Deadman's chest and
+  # legs; they are not imported yet - add their ids here once they are.
+  item: 23881
+  contents:
+    - { item: 361, amount: 12 }   # Tuna
+    - { item: 772, amount: 1 }    # Dramen staff
+    - { item: 23856, amount: 1 }  # Deadman's skull

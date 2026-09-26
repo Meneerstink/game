@@ -953,6 +953,12 @@ object OsrsItemImportTool {
                 listOf(
                     Spec(12751), // Archaic emblem (tier 5)
                 ),
+            // Owner 2026-09-26 (new-player foundation): the Deadman Mode starter chest the intro will hand out. OSRS Wiki
+            // "Deadman starter pack": item 22330, untradeable; its contents are data/cfg/new_player.yml starter_chest.
+            "starter-pack" to
+                listOf(
+                    Spec(22330), // Deadman starter pack
+                ),
             "kits2" to
                 listOf(
                     Spec(12757, noted = true), // Blue dark bow paint

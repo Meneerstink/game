@@ -69,9 +69,8 @@ on_login {
     // slot 29
     player.setVarp(Varps.DEATH_PLATEAU_PROGRESS, 80)
     // slot 30 - Desert Treasure
-    // Owner 2026-09-20: "desert treasure should never be completed for a new player only when talking to the
-    // archaleogist". The Archaeologist in the Grand Exchange is what completes it (UnlockNpcRewards.unlockAncientMagic),
-    // so login must leave it untouched.
+    // A permanent-choice quest (owner 2026-09-26, quests/foundation): the Quest Guide's Magic choice or the short quest
+    // that starts at the Archaeologist completes it, so login leaves it untouched.
     // slot 31
     player.setVarbit(Varbits.DEVIOUS_MINDS_PROGRESS, 80)
     // slot 32
@@ -153,7 +152,7 @@ on_login {
     // slot 69
     player.setVarbit(Varbits.THE_LOST_TRIBE_PROGRESS, 11)
     // slot 70
-    player.setVarbit(Varbits.LUNAR_DIPLOMACY_PROGRESS, 190)
+    // Lunar Diplomacy - a permanent-choice quest (quests/foundation): complete only for legacy accounts, by choice or played.
     // slot 71
     player.setVarbit(Varbits.MAKING_HISTORY_PROGRESS, 4)
     // slot 72
@@ -265,7 +264,7 @@ on_login {
     // slot 125
     player.setVarbit(Varbits.GRIM_TALES_PROGRESS, 60)
     // slot 126
-    player.setVarbit(Varbits.KINGS_RANSOM_PROGRESS, 90)
+    // King's Ransom - a permanent-choice quest (quests/foundation).
     // slot 127
     player.setVarbit(Varbits.THE_PATH_OF_GLOUPHRIE_PROGRESS, 200)
     // slot 128
@@ -317,7 +316,7 @@ on_login {
     // slot 156
     player.setVarbit(Varbits.THE_CURSE_OF_ARRAV_PROGRESS, 240)
     // slot 157
-    player.setVarbit(Varbits.THE_TEMPLE_AT_SENNTISTEN_PROGRESS, 90)
+    // The Temple at Senntisten - a permanent-choice quest (quests/foundation).
     // slot 151
     player.setVarbit(Varbits.HUNT_FOR_RED_RAKTUBER_PROGRESS, 140)
     // slot 152

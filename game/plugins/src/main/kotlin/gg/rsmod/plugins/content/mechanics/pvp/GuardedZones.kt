@@ -253,5 +253,7 @@ object GuardedZones {
         zoneAt(tile) != null || gg.rsmod.plugins.content.areas.poh.PlayerHouse.isSafeTile(tile) ||
             // Death's Office (2026-09-26) is a private instance in OSRS and "a safe area"; here it is one shared map square,
             // so it is folded in like the house: nobody can attack anybody there.
-            gg.rsmod.plugins.content.areas.deathsoffice.DeathsOfficeArea.inOffice(tile)
+            gg.rsmod.plugins.content.areas.deathsoffice.DeathsOfficeArea.inOffice(tile) ||
+            // The AFK skill basement under the Grand Exchange hall (owner 2026-09-26, "safe zone"): its own map square.
+            gg.rsmod.plugins.content.newplayer.AfkArea.contains(tile)
 }

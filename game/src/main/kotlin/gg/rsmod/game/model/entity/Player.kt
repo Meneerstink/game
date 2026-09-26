@@ -898,6 +898,9 @@ abstract class Player(
 
         if (!modifiers) {
             modifier = 1.0
+        } else {
+            // data/cfg/new_player.yml xp.normal_rate (1.0 = unchanged), on top of the level curve and bonus xp.
+            modifier *= gg.rsmod.game.model.skill.XpRates.normal
         }
 
         val newXp = min(SkillSet.MAX_XP.toDouble(), (oldXp + (xp * modifier * bonusExperience)))

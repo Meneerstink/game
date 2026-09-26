@@ -45,6 +45,10 @@ fun singArmour(
     recipe: CrystalEquipment.CreationRecipe,
     viaReese: Boolean,
 ): Boolean {
+    if (!QuestStubs.songOfTheElvesCompleted(player)) {
+        player.message("You need to have completed Song of the Elves to do that.")
+        return false
+    }
     if (player.inventory.getItemCount(Items.CRYSTAL_ARMOUR_SEED) < recipe.seeds) {
         player.message("You need ${recipe.seeds} crystal armour seed${if (recipe.seeds > 1) "s" else ""} to sing a ${itemName(recipe.active).lowercase()}.")
         return false
@@ -73,7 +77,7 @@ fun singBow(
     player: Player,
     viaReese: Boolean,
 ): Boolean {
-    if (!QuestStubs.songOfTheElvesCompleted()) {
+    if (!QuestStubs.songOfTheElvesCompleted(player)) {
         player.message("You need to have completed Song of the Elves to do that.")
         return false
     }

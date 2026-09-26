@@ -475,6 +475,22 @@ object Prayers {
         prayer: Prayer,
     ): Boolean = p.getVarbit(prayer.varbit) != 0
 
+    /**
+     * RuneScape Wiki "Piety" (2026-09-26): Prayer 70, Defence 70, King's Ransom and the Knight Waves Training Ground;
+     * Chivalry: Prayer 60, Defence 65 and the same two. The Knight Waves are won when varbit 3909 reaches 8 (the value the
+     * old commented-out check here used; Void quest.varbits "knights_waves"), which the short King's Ransom sets
+     * (quests/foundation). Null when the prayer may be used.
+     */
+    fun knightWavesRefusal(p: Player, prayer: Prayer): String? {
+        if (prayer != Prayer.CHIVALRY && prayer != Prayer.PIETY) return null
+        if (p.getVarbit(KING_RANSOMS_QUEST_VARBIT) < 8) {
+            return "You need to complete King's Ransom and the Knight Waves Training Ground to use ${prayer.named}."
+        }
+        val defence = if (prayer == Prayer.PIETY) 70 else 65
+        if (p.skills.getMaxLevel(Skills.DEFENCE) < defence) return "You need a Defence level of $defence to use ${prayer.named}."
+        return null
+    }
+
     fun rechargePrayerPoints(player: Player) {
         player.skills.alterCurrentLevel(Skills.PRAYER, player.skills.getMaxLevel(Skills.PRAYER))
         player.setCurrentPrayerPoints(player.skills.getMaxLevel(Skills.PRAYER))
@@ -494,7 +510,14 @@ object Prayers {
             return false
         }
 
-        // TODO: Add requirement back after adding King's Ransom quest.
+        knightWavesRefusal(p, prayer)?.let { refusal ->
+            p.syncVarp(ACTIVE_PRAYERS_VARP)
+            it.messageBox(refusal)
+            return false
+        }
+
+        // Chivalry/Piety are enforced by knightWavesRefusal above (owner 2026-09-26, King's Ransom is playable now);
+        // Rigour/Augury stay unenforced as before.
         /**
          if (prayer == Prayer.CHIVALRY && p.getVarbit(KING_RANSOMS_QUEST_VARBIT) < 8) {
          p.syncVarp(ACTIVE_PRAYERS_VARP)

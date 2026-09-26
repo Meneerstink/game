@@ -957,3 +957,7 @@ obj 47756 3173 3496 0 10 0
 # "Death's domain" (loc 62430, 2x3) on the west lawn just inside the south gate. Move it here freely: "Enter" works on
 # every copy of this loc, and the exit portal returns the player to the tile they entered from.
 obj 62430 3155 3469 0 10 0
+
+# ---- AFK skill basement (owner 2026-09-26): the way down, the hall's white marble spiral staircase top (62780, 2 x 2) in the
+# south-east corner of the ground floor. afk_area.plugin.kts (AfkArea.HALL_STAIRS) takes Climb-down on exactly this tile.
+obj 62780 3170 3486 0 10 0

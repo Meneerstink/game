@@ -12,11 +12,9 @@ import gg.rsmod.plugins.api.ext.getVarp
 import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.api.ext.setVarbit
 import gg.rsmod.plugins.api.ext.setVarp
-import gg.rsmod.plugins.content.mechanics.prayer.AncientCurses
 import gg.rsmod.plugins.content.quests.Quest
 import gg.rsmod.plugins.content.quests.QuestStage
 import gg.rsmod.plugins.content.quests.buildQuestFinish
-import gg.rsmod.plugins.content.skills.summoning.Familiar
 
 /**
  * Small, idempotent reward service for the convenience NPCs in the Grand Exchange hub.
@@ -24,6 +22,10 @@ import gg.rsmod.plugins.content.skills.summoning.Familiar
  * not rely on a bespoke client interface or silently disappear when the inventory is full.
  */
 object UnlockNpcRewards {
+    // Owner 2026-09-26 (new-player foundation): Desert Treasure, Lunar Diplomacy, The Temple at Senntisten, Desert
+    // Treasure II and Dragon Slayer II are no longer handed out here. Their unlocks come only from their short quests or
+    // the Quest Guide's permanent choice (quests/foundation, FoundationRewards.complete), which set the flags below;
+    // Summoning is the one-time start of newplayer/SummoningKit.
     val ANCIENT_CURSES_REWARDED = AttributeKey<Boolean>(persistenceKey = "ge_ancient_curses_rewarded")
     val SUMMONING_REWARDED = AttributeKey<Boolean>(persistenceKey = "ge_summoning_rewarded")
     val ANCIENT_MAGIC_REWARDED = AttributeKey<Boolean>(persistenceKey = "ge_ancient_magic_rewarded")
@@ -46,125 +48,6 @@ object UnlockNpcRewards {
     val AVAS_ASSEMBLER_UNLOCKED = AttributeKey<Boolean>(persistenceKey = "avas_assembler_unlocked")
     val TORMENTED_DEMONS_UNLOCKED = AttributeKey<Boolean>(persistenceKey = "tormented_demons_unlocked")
     val DEMONBANE_WEAPONS_UNLOCKED = AttributeKey<Boolean>(persistenceKey = "demonbane_weapons_unlocked")
-
-    /**
-     * Azzanadra hands over the Ancient hymnal; the curses themselves are unlocked by reading it ([unlockAncientCurses]).
-     * Returns false when the curses are already unlocked.
-     */
-    fun giveAncientHymnal(player: Player): Boolean {
-        player.attr[AncientCurses.NPC_UNLOCKED_ATTR] = true
-        if (player.attr[ANCIENT_CURSES_REWARDED] == true) {
-            player.message("The Ancient Curses are already unlocked.")
-            return false
-        }
-        if (!player.inventory.contains(Items.ANCIENT_HYMNAL)) grant(player, Items.ANCIENT_HYMNAL)
-        return true
-    }
-
-    /**
-     * Owner 2026-09-23: "when u read the Ancient hymnal u unlock ancient curses it shud give a interface you have unlocked
-     * Ancient curses then the book should dissappear". Reading the hymnal unlocks the curses, shows the unlock interface
-     * (the standard completion scroll, 277) and consumes the book.
-     */
-    fun unlockAncientCurses(player: Player): Boolean {
-        player.attr[AncientCurses.NPC_UNLOCKED_ATTR] = true
-        player.attr[AncientCurses.UNLOCKED_ATTR] = true
-        player.inventory.remove(Items.ANCIENT_HYMNAL)
-        if (player.attr[ANCIENT_CURSES_REWARDED] == true) {
-            player.message("The Ancient Curses are already unlocked.")
-            return false
-        }
-        player.attr[ANCIENT_CURSES_REWARDED] = true
-        player.addXp(Skills.PRAYER, 10_000.0)
-        grant(player, Items.EXPERIENCE_LAMP)
-        grant(player, Items.COMBAT_LAMP_15390, 2)
-        complete(
-            player,
-            name = "Ancient Curses",
-            icon = Items.ANCIENT_HYMNAL,
-            "You have unlocked the Ancient Curses!",
-            "10,000 Prayer experience",
-            "23,000 skills experience lamp for any chosen skill (level 50+)",
-            "Two 20,000 combat level experience lamps for any chosen combat skill (level 50+)",
-            "Open your prayer book to call upon the Curses.",
-        )
-        return true
-    }
-    fun unlockSummoning(player: Player): Boolean {
-        if (player.attr[SUMMONING_REWARDED] == true) {
-            player.message("Summoning is already unlocked.")
-            return false
-        }
-        player.attr[SUMMONING_REWARDED] = true
-        Familiar.unlockInterface(player)
-        player.addXp(Skills.SUMMONING, 20_000.0)
-        complete(
-            player,
-            name = "Summoning",
-            icon = Items.WOLF_WHISTLE,
-            "You have unlocked Summoning",
-            "20,000 Summoning experience",
-        )
-        return true
-    }
-
-    /**
-     * The Archaeologist's unlock. Owner 2026-09-20: "when talking to the archaologist in ge he should say you have
-     * completed desert treasure he now says you have completed ancient magics". Ancient Magicks is the *reward* of
-     * Desert Treasure, not a quest of its own, so the completion banner names the quest and the quest tab is set to
-     * the cache-backed completed value for Desert Treasure (varbit 358 = 15; nothing else sets it any more, so a new
-     * player starts with the quest incomplete).
-     */
-    fun unlockAncientMagic(player: Player): Boolean {
-        player.attr[ANCIENT_MAGIC_UNLOCKED] = true
-        if (player.attr[ANCIENT_MAGIC_REWARDED] == true) {
-            player.message("You have already completed Desert Treasure.")
-            return false
-        }
-        player.attr[ANCIENT_MAGIC_REWARDED] = true
-        player.setVarbit(Varbits.DESERT_TREASURE_PROGRESS, 15)
-        player.setVarp(Varps.QUEST_POINTS, player.getVarp(Varps.QUEST_POINTS) + 3)
-        player.addXp(Skills.MAGIC, 20_000.0)
-        grant(player, Items.RING_OF_VISIBILITY)
-        grant(player, Items.ANCIENT_STAFF)
-        grant(player, Items.BANDIT_CAMP_TELEPORT)
-        complete(
-            player,
-            name = "Desert Treasure",
-            icon = Items.ANCIENT_STAFF,
-            "3 Quest Points",
-            "20,000 Magic experience",
-            "The Ancient Magicks spellbook",
-            "Ring of visibility",
-            "You can now buy and wield the ancient staff",
-            "Access to the Bandit Camp home teleport",
-        )
-        return true
-    }
-
-    fun unlockLunarMagic(player: Player): Boolean {
-        player.attr[LUNAR_MAGIC_UNLOCKED] = true
-        if (player.attr[LUNAR_MAGIC_REWARDED] == true) {
-            player.message("Lunar Magicks are already unlocked.")
-            return false
-        }
-        player.attr[LUNAR_MAGIC_REWARDED] = true
-        player.addXp(Skills.MAGIC, 20_000.0)
-        player.addXp(Skills.RUNECRAFTING, 10_000.0)
-        // This is the cache-backed completed Lunar Diplomacy value used by the quest tab and
-        // Lunar Isle teleport requirement; it is not a guessed private flag.
-        player.setVarbit(Varbits.LUNAR_DIPLOMACY_PROGRESS, 190)
-        complete(
-            player,
-            name = "Lunar Magicks",
-            icon = Items.LUNAR_ISLE_TELEPORT,
-            "20,000 Magic experience",
-            "10,000 Runecrafting experience",
-            "Access to Lunar Isle",
-            "Access to the Lunar spellbook",
-        )
-        return true
-    }
 
     fun completeRecipeForDisaster(player: Player): Boolean {
         if (player.attr[RFD_REWARDED] == true) {
@@ -202,65 +85,6 @@ object UnlockNpcRewards {
             "10,000 Agility experience",
             "20,000 experience antique lamp for any skill above level 50 (can be banked)",
             "Access to the Culinaromancer's Chest in the Lumbridge cellar to buy gloves",
-        )
-        return true
-    }
-
-    fun completeDragonSlayerII(player: Player): Boolean {
-        if (player.attr[DRAGON_SLAYER_II_REWARDED] == true) {
-            player.message("Dragon Slayer II is already completed.")
-            return false
-        }
-        player.attr[DRAGON_SLAYER_II_REWARDED] = true
-        player.attr[DRAGON_SLAYER_II_UNLOCKED] = true
-        player.attr[MYTHS_GUILD_UNLOCKED] = true
-        player.attr[AVAS_ASSEMBLER_UNLOCKED] = true
-        player.setVarp(Varps.QUEST_POINTS, player.getVarp(Varps.QUEST_POINTS) + 5)
-        player.addXp(Skills.RANGED, 80_000.0)
-        player.addXp(Skills.MINING, 60_000.0)
-        player.addXp(Skills.AGILITY, 50_000.0)
-        player.addXp(Skills.THIEVING, 50_000.0)
-        complete(
-            player,
-            name = "Dragon Slayer II",
-            icon = Items.VORKATHS_HEAD,
-            "5 Quest Points",
-            "80,000 Ranged experience",
-            "60,000 Mining experience",
-            "50,000 Agility experience",
-            "50,000 Thieving experience",
-            "Access to Myth's Guild",
-            "Ability to create Ava's assembler",
-        )
-        return true
-    }
-
-    fun completeDesertTreasureII(player: Player): Boolean {
-        if (player.attr[DESERT_TREASURE_II_REWARDED] == true) {
-            player.message("Desert Treasure II is already completed.")
-            return false
-        }
-        player.attr[DESERT_TREASURE_II_REWARDED] = true
-        player.attr[DESERT_TREASURE_II_UNLOCKED] = true
-        player.attr[SCAR_ESSENCE_MINE_UNLOCKED] = true
-        player.attr[ANCIENT_RINGS_UNLOCKED] = true
-        player.attr[FORGOTTEN_FOUR_UNLOCKED] = true
-        player.attr[DEMONIC_BRUTUS_UNLOCKED] = true
-        player.setVarp(Varps.QUEST_POINTS, player.getVarp(Varps.QUEST_POINTS) + 5)
-        // Owner 2026-09-19 ("we forgot to add ring of shadows reward"): OSRS hands the uncharged Ring of shadows at the end
-        // of the quest; it is charged with blood, soul, death and law runes (ring_of_shadows.plugin.kts).
-        grant(player, Items.RING_OF_SHADOWS_UNCHARGED)
-        complete(
-            player,
-            name = "Desert Treasure II",
-            icon = Items.RING_OF_VISIBILITY,
-            "5 Quest Points",
-            "Three ancient lamps, each offering 100,000 experience in Attack, Strength, Defence, Constitution, Ranged, Magic or Prayer at level 60+",
-            "Access to Scar essence mine",
-            "Ring of shadows",
-            "Ability to wear ancient rings",
-            "Ability to repeat the Forgotten Four encounters and challenge their awakened variants",
-            "Ability to fight Demonic Brutus using abyssal potatoes",
         )
         return true
     }

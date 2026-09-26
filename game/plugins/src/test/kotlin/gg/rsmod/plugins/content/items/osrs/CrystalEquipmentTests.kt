@@ -116,10 +116,10 @@ class CrystalEquipmentTests {
         assertTrue("fun corruptBow(" in bowlPlugin && "CORRUPT_SHARDS" in bowlPlugin)
         assertTrue("fun revertBowToSeed(" in bowlPlugin && "REVERT_SHARDS" in bowlPlugin)
         assertTrue("Npcs.REESE" in bowlPlugin, "Conwenna is absent from this cache; only Reese's assist route is wired")
-        assertTrue("QuestStubs.songOfTheElvesCompleted()" in bowlPlugin, "bow creation must check the Song of the Elves stub")
+        assertTrue("QuestStubs.songOfTheElvesCompleted(player)" in bowlPlugin, "bow and armour singing must check Song of the Elves")
 
         val questStub = File("src/main/kotlin/gg/rsmod/plugins/content/items/osrs/QuestStubs.kt").readText()
-        assertTrue("fun songOfTheElvesCompleted(): Boolean = true" in questStub)
+        assertTrue("fun songOfTheElvesCompleted(player: Player): Boolean = SongOfTheElves.isFinished(player)" in questStub, "Song of the Elves is a real, playable choice quest now (owner 2026-09-26)")
 
         // "crystal items need to give a warning when your try to revert" (owner instruction) - every Revert path confirms first.
         val crystalPlugin = File("src/main/kotlin/gg/rsmod/plugins/content/items/osrs/crystal.plugin.kts").readText()

@@ -11,6 +11,8 @@ import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.content.magic.Spellbooks
 import gg.rsmod.plugins.content.mechanics.shops.CoinCurrency
 import gg.rsmod.plugins.content.unlocks.UnlockNpcRewards
+import gg.rsmod.plugins.content.mechanics.prayer.AncientCurses
+import gg.rsmod.plugins.content.quests.foundation.FoundationQuests
 
 create_shop(
     "Ancient Magicks Shop",
@@ -26,87 +28,45 @@ create_shop(
  * have unlocked a mysterious prayer please open your prayer book". Every line below is kept short enough to sit on
  * one chatbox row, and each one carries the facial expression that fits it instead of the default HAPPY_TALKING.
  */
+/*
+ * Owner 2026-09-26 (new-player foundation): Azzanadra no longer hands out the Ancient Curses or Desert Treasure II. He
+ * takes part in the short quests (The Temple at Senntisten, Desert Treasure, Desert Treasure II - quests/foundation);
+ * their rewards come only from those quests or the Quest Guide's permanent choice. Switching books stays here.
+ */
 on_npc_option(npc = Npcs.AZZANADRA, option = "talk-to") {
     player.queue {
-        val curses = player.attr[UnlockNpcRewards.ANCIENT_CURSES_REWARDED] == true
+        if (FoundationQuests.talk(this, Npcs.AZZANADRA)) return@queue
+        val curses = player.attr[AncientCurses.UNLOCKED_ATTR] == true
         if (curses) {
             chatNpc(
                 "The old words still sit well on your tongue,",
                 "mortal. Zaros is not so easily forgotten.",
                 facialExpression = FacialExpression.CALM_TALK,
             )
+            when (options("Switch me to the Ancient Curses.", "Switch me to the normal prayers.", "I'll leave you to your rest.")) {
+                1 -> AncientCurses.switchBook(player, AncientCurses.PrayerBook.ANCIENT)
+                2 -> AncientCurses.switchBook(player, AncientCurses.PrayerBook.NORMAL)
+            }
         } else {
             chatNpc(
                 "You stand before Azzanadra, Mahjarrat of Zaros.",
-                "I have slept four ages beneath the desert sand",
-                "waiting for someone willing to learn what the",
-                "gods buried. You have that look about you.",
+                "The curses of my god are earned in his temple,",
+                "not given away to passers-by.",
                 facialExpression = FacialExpression.CALM_TALK,
             )
-        }
-        when (
-            options(
-                "Teach me the Ancient Curses.",
-                "Tell me of Desert Treasure II.",
-                "Switch me to the Ancient Curses.",
-                "I'll leave you to your rest.",
-            )
-        ) {
-            1 -> {
-                chatPlayer(
-                    "Teach me the Ancient Curses.",
-                    facialExpression = FacialExpression.CALM_TALK,
-                )
-                chatNpc(
-                    "Then listen, and do not flinch.",
-                    "These are not prayers. They are demands.",
-                    facialExpression = FacialExpression.SECRETLY_TALKING,
-                )
-                if (UnlockNpcRewards.giveAncientHymnal(player)) {
-                    chatNpc(
-                        "Take this Ancient hymnal. Read it, and the",
-                        "Curses of Zaros will answer to you.",
-                        facialExpression = FacialExpression.CALM_TALK,
-                    )
-                }
-            }
-            2 -> {
-                chatPlayer(
-                    "Tell me of Desert Treasure II.",
-                    facialExpression = FacialExpression.THINKING,
-                )
-                chatNpc(
-                    "Four of my kin walk again, and they do not",
-                    "walk kindly. Deal with them and the rings of",
-                    "the ancients are yours to wear.",
-                    facialExpression = FacialExpression.SECRETLY_TALKING,
-                )
-                if (options("I have dealt with them.", "Another time.") == 1) {
-                    UnlockNpcRewards.completeDesertTreasureII(player)
-                }
-            }
-            3 -> {
-                chatPlayer(
-                    "Switch me to the Ancient Curses.",
-                    facialExpression = FacialExpression.CALM_TALK,
-                )
-                gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.switchBook(
-                    player,
-                    gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.PrayerBook.ANCIENT,
-                )
-            }
         }
     }
 }
 
 on_item_option(item = Items.ANCIENT_HYMNAL, option = "read") {
     player.queue {
-        chatPlayer("I read the Ancient Hymnal.")
-        // Unlocks, shows the "unlocked" scroll and consumes the book (UnlockNpcRewards.unlockAncientCurses).
-        UnlockNpcRewards.unlockAncientCurses(player)
+        if (player.attr[AncientCurses.UNLOCKED_ATTR] == true) {
+            messageBox("The hymnal's verses are the Ancient Curses you learned at the temple of Senntisten.")
+        } else {
+            messageBox("The hymnal is written in an ancient Zarosian tongue you cannot follow.")
+        }
     }
 }
-
 // The reward lamps are real cache items, but their selection is server-owned. Keep the choice
 // deliberately short and grouped so the player never has to click through a long flat list.
 on_item_option(item = Items.EXPERIENCE_LAMP, option = "rub") {
@@ -192,7 +152,8 @@ on_npc_option(npc = Npcs.PIKKUPSTIX, option = "talk-to") {
         when (options("Unlock Summoning.", "How does Summoning work?", "Goodbye.")) {
             1 -> {
                 chatPlayer("Please unlock Summoning for me.")
-                UnlockNpcRewards.unlockSummoning(player)
+                // One grant per account, shared with the Quest Guide (Wolf Whistle + supplies to level 55).
+                gg.rsmod.plugins.content.newplayer.SummoningKit.claim(player)
             }
             2 -> chatNpc("Use pouches from my shop to summon familiars. Your Summoning tab will be available once it is unlocked.")
         }
@@ -201,65 +162,22 @@ on_npc_option(npc = Npcs.PIKKUPSTIX, option = "talk-to") {
 
 on_npc_option(npc = Npcs.ARCHAEOLOGIST, option = "talk-to") {
     player.queue {
-        val done = player.attr[UnlockNpcRewards.ANCIENT_MAGIC_REWARDED] == true
-        if (done) {
-            chatNpc(
-                "Asgarnia Smith, at your service - though I see",
-                "you've already been down into the pyramid.",
-                facialExpression = FacialExpression.HAPPY,
-            )
-        } else {
-            chatNpc(
-                "Asgarnia Smith! Archaeologist extraordinaire,",
-                "voted best in the field four years running.",
-                facialExpression = FacialExpression.HAPPY,
-            )
-            chatNpc(
-                "I've been digging out a pyramid south of here.",
-                "Four diamonds, four guardians, and a very cross",
-                "mahjarrat at the bottom of it.",
-                facialExpression = FacialExpression.CALM_TALK,
-            )
-        }
-        when (
-            options(
-                "I'll finish the Desert Treasure for you.",
-                "Switch me to Ancient Magicks.",
-                "Sell me an ancient staff.",
-                "Good luck with the dig.",
-            )
-        ) {
+        // Desert Treasure and Desert Treasure II start and end here (quests/foundation).
+        if (FoundationQuests.talk(this, Npcs.ARCHAEOLOGIST)) return@queue
+        chatNpc(
+            "Asgarnia Smith, at your service - archaeologist",
+            "extraordinaire, voted best in the field four years running.",
+            facialExpression = FacialExpression.HAPPY,
+        )
+        when (options("Switch me to Ancient Magicks.", "Sell me an ancient staff.", "Good luck with the dig.")) {
             1 -> {
-                chatPlayer(
-                    "I'll finish the Desert Treasure for you.",
-                    facialExpression = FacialExpression.CALM_TALK,
-                )
-                chatNpc(
-                    "Ha! You've got the look of someone who means it.",
-                    "Mind the diamonds - and mind Azzanadra.",
-                    facialExpression = FacialExpression.HAPPY,
-                )
-                // Completes Desert Treasure itself; the Ancient Magicks spellbook is that quest's reward.
-                if (UnlockNpcRewards.unlockAncientMagic(player)) {
-                    chatNpc(
-                        "The ancient words are yours. Try not to point",
-                        "them at anything I still want to excavate.",
-                        facialExpression = FacialExpression.LAUGH,
-                    )
-                }
-            }
-            2 -> {
-                chatPlayer(
-                    "Switch me to Ancient Magicks.",
-                    facialExpression = FacialExpression.CALM_TALK,
-                )
+                chatPlayer("Switch me to Ancient Magicks.", facialExpression = FacialExpression.CALM_TALK)
                 Spellbooks.select(player, Spellbook.ANCIENT)
             }
-            3 -> player.openShop("Ancient Magicks Shop")
+            2 -> player.openShop("Ancient Magicks Shop")
         }
     }
 }
-
 /*
  * Owner 2026-09-20: "when talking to oneiromancer and if u select one of the option the client crashes... he should
  * only unlock lunar spellbook". The crash was Recipe for Disaster's 13 reward lines overflowing the quest-finish
@@ -268,76 +186,30 @@ on_npc_option(npc = Npcs.ARCHAEOLOGIST, option = "talk-to") {
  */
 on_npc_option(npc = Npcs.ONEIROMANCER, option = "talk-to") {
     player.queue {
-        val done = player.attr[UnlockNpcRewards.LUNAR_MAGIC_REWARDED] == true
-        if (done) {
-            chatNpc(
-                "The moon still turns for you, dreamer.",
-                facialExpression = FacialExpression.CALM_TALK,
-            )
-        } else {
-            chatNpc(
-                "You dream loudly, you know. I heard you from",
-                "Lunar Isle.",
-                facialExpression = FacialExpression.CALM_TALK,
-            )
-            chatNpc(
-                "My people gave up war for moonlight and sleep.",
-                "What we learned in those dreams is not taught",
-                "anywhere else in Gielinor.",
-                facialExpression = FacialExpression.SECRETLY_TALKING,
-            )
-        }
-        when (
-            options(
-                "Teach me the Lunar spells.",
-                "Switch me to the Lunar spellbook.",
-                "What is a Lunar spell good for?",
-                "Let me dream on it.",
-            )
-        ) {
+        // Lunar Diplomacy starts and ends here (quests/foundation).
+        if (FoundationQuests.talk(this, Npcs.ONEIROMANCER)) return@queue
+        chatNpc(
+            "You dream loudly, you know. I heard you from",
+            "Lunar Isle.",
+            facialExpression = FacialExpression.CALM_TALK,
+        )
+        when (options("Switch me to the Lunar spellbook.", "What is a Lunar spell good for?", "Let me dream on it.")) {
             1 -> {
-                chatPlayer(
-                    "Teach me the Lunar spells.",
-                    facialExpression = FacialExpression.CALM_TALK,
-                )
-                chatNpc(
-                    "Then sleep, and wake up knowing.",
-                    facialExpression = FacialExpression.EYES_CLOSED,
-                )
-                if (UnlockNpcRewards.unlockLunarMagic(player)) {
-                    chatNpc(
-                        "The Lunar spellbook is open to you, and the",
-                        "boat to Lunar Isle will not turn you away.",
-                        facialExpression = FacialExpression.HAPPY,
-                    )
-                }
-            }
-            2 -> {
-                chatPlayer(
-                    "Switch me to the Lunar spellbook.",
-                    facialExpression = FacialExpression.CALM_TALK,
-                )
+                chatPlayer("Switch me to the Lunar spellbook.", facialExpression = FacialExpression.CALM_TALK)
                 Spellbooks.select(player, Spellbook.LUNAR)
             }
-            3 -> {
-                chatPlayer(
-                    "What is a Lunar spell good for?",
-                    facialExpression = FacialExpression.THINKING,
-                )
+            2 -> {
+                chatPlayer("What is a Lunar spell good for?", facialExpression = FacialExpression.THINKING)
                 chatNpc(
                     "Not for killing. For mending, for carrying,",
                     "for sharing what you have with a friend.",
                     facialExpression = FacialExpression.CALM_TALK,
                 )
-                chatNpc(
-                    "Humans always ask what a thing kills first.",
-                    facialExpression = FacialExpression.DISDAIN,
-                )
+                chatNpc("Humans always ask what a thing kills first.", facialExpression = FacialExpression.DISDAIN)
             }
         }
     }
 }
-
 /*
  * Recipe for Disaster's unlock, moved off the Oneiromancer at the owner's request. Evil Dave is one of the
  * Culinaromancer's captives in that quest, so the Lumbridge-cellar chest access comes from the right character.
@@ -421,6 +293,8 @@ can_attack { attacker, target ->
 
 on_npc_option(npc = Npcs.KING_NARNODE_SHAREEN, option = "talk-to") {
     player.queue {
+        // Monkey Madness II starts and ends here (quests/foundation); Monkey Madness itself stays below.
+        if (FoundationQuests.talk(this, Npcs.KING_NARNODE_SHAREEN)) return@queue
         chatNpc("Welcome. I can record your Monkey Madness victory and award the experience you earned.")
         when (options("Complete Monkey Madness.", "Choose my experience focus.", "Goodbye.")) {
             1, 2 -> {

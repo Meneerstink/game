@@ -9,6 +9,7 @@ create_shop("Oziach's Armour", CoinCurrency(), containsSamples = false, purchase
 
 on_npc_option(npc = Npcs.OZIACH, option = "talk-to") {
     player.queue {
+        if (gg.rsmod.plugins.content.quests.foundation.FoundationQuests.talk(this, Npcs.OZIACH)) return@queue
         if (player.inventory.contains(Items.DRACONIC_VISAGE)) {
             carryingDraconicVisageDialogue(this)
         } else {

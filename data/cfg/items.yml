@@ -287005,3 +287005,9 @@
   tradeable: false
   weight: 0.878
   equipment: null
+- id: 23881
+  name: "Deadman starter pack"
+  examine: "Contains some useful supplies."
+  tradeable: false
+  weight: 4.0
+  equipment: null

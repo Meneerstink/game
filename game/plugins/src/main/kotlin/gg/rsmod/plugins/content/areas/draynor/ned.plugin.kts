@@ -8,6 +8,7 @@ import gg.rsmod.plugins.content.quests.startedQuest
 
 on_npc_option(Npcs.NED, "Talk-to") {
     player.queue {
+        if (gg.rsmod.plugins.content.quests.foundation.FoundationQuests.talk(this, Npcs.NED)) return@queue
         when (options(
             "About the Task System...",
             "Talk about something else."

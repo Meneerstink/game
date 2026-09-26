@@ -55,11 +55,11 @@ object Spellbooks {
         // cancelled rather than allowed to complete after the switch.
         SevenSecondAction.cancel(player, "Your action was cancelled.")
         if (book == Spellbook.ANCIENT && player.attr[UnlockNpcRewards.ANCIENT_MAGIC_UNLOCKED] != true) {
-            player.message("Speak to the Archaeologist in the Grand Exchange to unlock Ancient Magicks.")
+            player.message("You need to complete Desert Treasure to use Ancient Magicks.")
             return false
         }
         if (book == Spellbook.LUNAR && player.attr[UnlockNpcRewards.LUNAR_MAGIC_UNLOCKED] != true) {
-            player.message("Speak to the Oneiromancer in the Grand Exchange to unlock the Lunar spellbook.")
+            player.message("You need to complete Lunar Diplomacy to use the Lunar spellbook.")
             return false
         }
         val level = requiredLevel(book)

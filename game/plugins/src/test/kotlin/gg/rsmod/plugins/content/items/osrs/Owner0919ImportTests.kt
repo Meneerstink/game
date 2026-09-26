@@ -78,8 +78,9 @@ class Owner0919ImportTests {
 
     @Test
     fun `the ring of shadows is the Desert Treasure II reward and charges with four runes`() {
-        val rewards = File("src/main/kotlin/gg/rsmod/plugins/content/unlocks/UnlockNpcRewards.kt").readText()
-        assertTrue("grant(player, Items.RING_OF_SHADOWS_UNCHARGED)" in rewards, "Azzanadra hands the ring on completion")
+        // Owner 2026-09-26: Desert Treasure II is a short playable choice quest; its reward carries the ring.
+        val rewards = File("src/main/kotlin/gg/rsmod/plugins/content/quests/foundation/FoundationQuests.kt").readText()
+        assertTrue("items = listOf(Items.RING_OF_SHADOWS_UNCHARGED to 1)" in rewards, "Desert Treasure II hands the ring on completion")
         val script = File("src/main/kotlin/gg/rsmod/plugins/content/items/osrs/ring_of_shadows.plugin.kts").readText()
         listOf("BLOOD_RUNE", "SOUL_RUNE", "DEATH_RUNE", "LAW_RUNE").forEach { assertTrue(it in script, "charged with $it") }
         assertTrue("SHADOW_MAX_CHARGES = 1000" in script, "OSRS caps the ring at 1,000 charges")

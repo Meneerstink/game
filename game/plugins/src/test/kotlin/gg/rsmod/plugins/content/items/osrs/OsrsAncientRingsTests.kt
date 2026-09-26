@@ -25,10 +25,11 @@ class OsrsAncientRingsTests {
         listOf(magus, venator).forEach { assertFalse("skill_req" in it && Regex("skill_reqs:\\s*\\n\\s+- ").containsMatchIn(it), "no wear requirement: $it") }
     }
 
+    /** Owner 2026-09-26: the Magus ring is a Desert Treasure II unlock of the quest choices; the one gate is that quest (OsrsQuestRequirements), never a boss kill. */
     @Test
     fun `no plugin gates wearing either ring on a boss kill`() {
         val offenders =
-            File("src/main/kotlin").walkTopDown().filter { it.isFile && (it.name.endsWith(".kt") || it.name.endsWith(".kts")) && it.name != "Items.kt" }
+            File("src/main/kotlin").walkTopDown().filter { it.isFile && (it.name.endsWith(".kt") || it.name.endsWith(".kts")) && it.name != "Items.kt" && it.name != "OsrsQuestRequirements.kt" }
                 .filter { f -> f.readText().let { "MAGUS_RING" in it || "VENATOR_RING" in it || "slips off your finger" in it } }
                 .map { it.name }.toList()
         assertEquals(emptyList(), offenders)

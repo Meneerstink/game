@@ -1,18 +1,15 @@
 package gg.rsmod.plugins.content.items.osrs
 
+import gg.rsmod.game.model.entity.Player
+import gg.rsmod.plugins.content.quests.foundation.SongOfTheElves
+
 /**
- * OSRS-IMPORT: owner instruction (`cRYSTAL.rtf`, 2026-09-16) - "Completing of Song of the elves do not create the quest
- * just add the quest in questlist and make it completed." Song of the Elves itself remains parked per
- * `RSPS_MASTERPLAN_ACTUEEL.md` ("all quests... remain parked unless a later explicit owner instruction reopens them");
- * this stub only satisfies the functional requirement that Bow of Faerdhinen creation must not be gated behind a quest
- * that will never be built.
- *
- * ADJACENT GAP (recorded, not built this batch): this engine has no quest-list interface/tab wired at all yet (no
- * `Quest`/`QuestList` type exists anywhere in `gg.rsmod.plugins`, confirmed by search) - showing "Song of the Elves" as
- * a completed row in an in-game quest journal needs that whole subsystem to exist first, which is out of this bounded
- * batch's scope. Only the functional completion check below is implemented.
+ * OSRS-IMPORT: owner instruction (`cRYSTAL.rtf`, 2026-09-16) made Song of the Elves count as completed for everyone.
+ * Owner 2026-09-26 (new-player foundation) replaced that: Song of the Elves is one of the three Gear choices and has a
+ * short playable version (quests/foundation), so it is only complete when the account finished it - by playing it, by
+ * picking it at the Quest Guide, or as a legacy account (every pre-existing account keeps it completed).
  */
 object QuestStubs {
-    /** Always true: Song of the Elves is treated as completed for every player, per the owner's explicit instruction. */
-    fun songOfTheElvesCompleted(): Boolean = true
+    /** OSRS Wiki: singing crystal armour and the Bow of faerdhinen needs Song of the Elves. */
+    fun songOfTheElvesCompleted(player: Player): Boolean = SongOfTheElves.isFinished(player)
 }

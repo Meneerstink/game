@@ -52,7 +52,6 @@ object AncientCurses {
     val UNLOCKED_ATTR = AttributeKey<Boolean>(persistenceKey = "ancient_curses_unlocked")
     /** Set only by the Grand Exchange Azzanadra/Ancient Hymnal unlock flow. */
     val NPC_UNLOCKED_ATTR = AttributeKey<Boolean>(persistenceKey = "ancient_curses_npc_unlocked")
-    private const val UNLOCK_COST = 50_000
     const val TURMOIL_LEVEL = 95
     /** Void/Novite 667: Ancient Protect Item is level 50, unlike normal Protect Item (25). */
     const val PROTECT_ITEM_LEVEL = 50
@@ -219,23 +218,18 @@ object AncientCurses {
         syncStatVarbits(player)
     }
 
+    /**
+     * Owner 2026-09-26 (new-player foundation): the Ancient Curses come only from The Temple at Senntisten - played, or
+     * picked as the permanent Prayer choice at the Quest Guide - which sets [UNLOCKED_ATTR]. The old 50,000-coin ritual
+     * (altar menus, `curse unlock`) was a way round that and is gone; this only explains the route.
+     */
     fun unlock(player: Player) {
-        if (player.attr[NPC_UNLOCKED_ATTR] != true) {
-            player.filterableMessage("Speak to Azzanadra in the Grand Exchange and read the Ancient Hymnal first.")
-            return
-        }
         if (player.attr[UNLOCKED_ATTR] == true) {
-            player.filterableMessage("You have already performed the ritual.")
+            player.filterableMessage("You already know the Ancient Curses.")
             return
         }
-        if (!player.inventory.remove(Items.COINS_995, UNLOCK_COST).hasSucceeded()) {
-            player.filterableMessage("You need $UNLOCK_COST coins to perform the ritual.")
-            return
-        }
-        player.attr[UNLOCKED_ATTR] = true
-        player.filterableMessage("You perform the ritual and feel the ancients' power. Ancient Curses unlocked.")
+        player.filterableMessage("Complete The Temple at Senntisten (Azzanadra, Grand Exchange hall) to learn the Ancient Curses.")
     }
-
     // ---- Turmoil ------------------------------------------------------------------------------
 
     fun isTurmoilActive(player: Player): Boolean = player.attr[TURMOIL_ACTIVE_ATTR] == true
@@ -253,7 +247,7 @@ object AncientCurses {
             return
         }
         if (player.attr[UNLOCKED_ATTR] != true) {
-            player.filterableMessage("You must perform the ritual first - use: curse unlock.")
+            player.filterableMessage("Complete The Temple at Senntisten to use the Ancient Curses.")
             return
         }
         if (player.skills.getMaxLevel(Skills.PRAYER) < TURMOIL_LEVEL) {
@@ -367,7 +361,7 @@ object AncientCurses {
         book: PrayerBook,
     ) {
         if (book == PrayerBook.ANCIENT && player.attr[UNLOCKED_ATTR] != true) {
-            player.filterableMessage("Speak to Azzanadra in the Grand Exchange to unlock Ancient Curses.")
+            player.filterableMessage("Complete The Temple at Senntisten to use the Ancient Curses.")
             return
         }
         if (getBook(player) == book) {
@@ -397,7 +391,7 @@ object AncientCurses {
         when (slot) {
             AncientCurse.PROTECT_ITEM_SLOT -> {
                 if (player.attr[UNLOCKED_ATTR] != true) {
-                    player.filterableMessage("You must perform the ritual first - use: curse unlock.")
+                    player.filterableMessage("Complete The Temple at Senntisten to use the Ancient Curses.")
                     return
                 }
                 if (player.skills.getMaxLevel(Skills.PRAYER) < PROTECT_ITEM_LEVEL) {
@@ -546,7 +540,7 @@ object AncientCurses {
             return
         }
         if (player.attr[UNLOCKED_ATTR] != true) {
-            player.filterableMessage("You must perform the ritual first - use: curse unlock.")
+            player.filterableMessage("Complete The Temple at Senntisten to use the Ancient Curses.")
             return
         }
         if (getBook(player) != PrayerBook.ANCIENT) {
