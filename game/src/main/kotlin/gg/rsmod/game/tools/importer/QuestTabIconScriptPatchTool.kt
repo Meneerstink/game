@@ -15,8 +15,18 @@ import java.io.ByteArrayOutputStream
  *   [180] PUSH_CONSTANT_INT(1819)   -> skull   (then 35913869 = 548:141, OP_2105 = cc_setgraphic)
  *   [183] PUSH_CONSTANT_INT(1819)   -> skull   (then 48889882 = 746:26)
  *
- * Only those two operands change (same instruction count and length, so every branch stays valid). Applied
- * transactionally to both caches. `--apply` writes; without it the tool only reports the preflight.
+ * Only those two operands change (same instruction count and length, so every branch stays valid).
+ *
+ * Resizable / fullscreen: clientscript 722 lays the tab strip out in one row or two (by window width) and moves every
+ * icon with cc_setposition (OP_2000: x, y, xmode 2, ymode 2 = from the right and bottom). Its positions are for the old
+ * 22 x 22 icon, so the 33 x 36 skull sat 5 px left and 5 px high of its tab (owner 2026-09-27; fixed mode, which has
+ * no such script, was centred). Both positions move by (-5, -5), which is also where [QuestTabInterfaceImportTool]
+ * stores the icon (359, 1):
+ *
+ *   [257] PUSH_CONSTANT_INT(124) -> 119, [258] PUSH_CONSTANT_INT(43) -> 38   (two rows)
+ *   [516] PUSH_CONSTANT_INT(364) -> 359, [517] PUSH_CONSTANT_INT(6)  -> 1    (one row)
+ *
+ * Applied transactionally to both caches. `--apply` writes; without it the tool only reports the preflight.
  */
 object QuestTabIconScriptPatchTool {
     const val CLIENTSCRIPT_INDEX = 12
@@ -26,34 +36,50 @@ object QuestTabIconScriptPatchTool {
     const val OLD_SPRITE = 1819
     val NEW_SPRITE get() = QuestTabInterfaceImportTool.GAMEFRAME_ICON
 
+    const val LAYOUT_SCRIPT_ID = 722
+
+    /** Script 722 instruction -> (old operand, new operand): the 746:26 positions for the 33 x 36 skull. */
+    val LAYOUT_POSITIONS = mapOf(257 to (124 to 119), 258 to (43 to 38), 516 to (364 to 359), 517 to (6 to 1))
+
     @JvmStatic
     fun main(args: Array<String>) {
         val apply = "--apply" in args
         val library = CacheLibrary(LootKeyInterfaceImportTool.TARGETS[0])
-        val current =
+        val (current, layout) =
             try {
-                requireNotNull(library.data(CLIENTSCRIPT_INDEX, SCRIPT_ID, 0)) { "Missing clientscript $SCRIPT_ID" }
+                requireNotNull(library.data(CLIENTSCRIPT_INDEX, SCRIPT_ID, 0)) { "Missing clientscript $SCRIPT_ID" } to
+                    requireNotNull(library.data(CLIENTSCRIPT_INDEX, LAYOUT_SCRIPT_ID, 0)) { "Missing clientscript $LAYOUT_SCRIPT_ID" }
             } finally {
                 library.close()
             }
         val patched = patch(current)
-        val mutation =
-            CacheMutation(
-                CLIENTSCRIPT_INDEX,
-                SCRIPT_ID,
-                0,
-                patched,
-                "clientscript $SCRIPT_ID: quest tab icon $OLD_SPRITE -> $NEW_SPRITE (Deadman skull)",
-                expectedCurrentSha1 = CacheItemProbeTool.sha1(current),
+        val mutations =
+            listOf(
+                CacheMutation(
+                    CLIENTSCRIPT_INDEX,
+                    SCRIPT_ID,
+                    0,
+                    patched,
+                    "clientscript $SCRIPT_ID: quest tab icon $OLD_SPRITE -> $NEW_SPRITE (Deadman skull)",
+                    expectedCurrentSha1 = CacheItemProbeTool.sha1(current),
+                ),
+                CacheMutation(
+                    CLIENTSCRIPT_INDEX,
+                    LAYOUT_SCRIPT_ID,
+                    0,
+                    patchOperands(layout, LAYOUT_SCRIPT_ID, LAYOUT_POSITIONS),
+                    "clientscript $LAYOUT_SCRIPT_ID: resizable quest tab icon 746:26 centred for the 33x36 skull",
+                    expectedCurrentSha1 = CacheItemProbeTool.sha1(layout),
+                ),
             )
-        val transaction = CacheTransaction(targets = LootKeyInterfaceImportTool.TARGETS, mutations = listOf(mutation))
+        val transaction = CacheTransaction(targets = LootKeyInterfaceImportTool.TARGETS, mutations = mutations)
         val plan = transaction.preflight()
         val errors = transaction.blockingErrors(plan)
         println("PREFLIGHT transaction=${transaction.id} outcomes=${plan.groupingBy { it.outcome }.eachCount()}")
         errors.forEach { println("  BLOCKED: $it") }
         check(errors.isEmpty()) { "preflight blocked; nothing written" }
         if (!apply) {
-            println("DRY RUN: pass --apply to write clientscript $SCRIPT_ID")
+            println("DRY RUN: pass --apply to write clientscripts $SCRIPT_ID and $LAYOUT_SCRIPT_ID")
             return
         }
         val applied = transaction.apply(plan)
@@ -92,5 +118,36 @@ object QuestTabIconScriptPatchTool {
             }
         }
         return patched
+    }
+
+    /**
+     * [current] with the PUSH_CONSTANT_INT operands of [changes] (instruction -> old to new) replaced in place; unchanged
+     * when every operand already has its new value.
+     */
+    fun patchOperands(current: ByteArray, scriptId: Int, changes: Map<Int, Pair<Int, Int>>): ByteArray {
+        val decoded = ProductionTabClientScriptPatchTool.decode(current)
+        if (changes.all { (i, v) -> decoded[i].opcode == PUSH_CONSTANT_INT && decoded[i].intOperand == v.second }) return current
+        val out = current.copyOf()
+        changes.forEach { (i, v) ->
+            val instruction = decoded[i]
+            check(instruction.opcode == PUSH_CONSTANT_INT && instruction.intOperand == v.first) {
+                "clientscript $scriptId instruction $i is not PUSH_CONSTANT_INT(${v.first}): $instruction"
+            }
+            val at = instruction.start + 2
+            val n = v.second
+            out[at] = (n ushr 24).toByte()
+            out[at + 1] = (n ushr 16).toByte()
+            out[at + 2] = (n ushr 8).toByte()
+            out[at + 3] = n.toByte()
+        }
+        val check = ProductionTabClientScriptPatchTool.decode(out)
+        check(check.size == decoded.size) { "script $scriptId shape changed" }
+        decoded.indices.forEach { i ->
+            val expected = changes[i]?.second ?: decoded[i].intOperand
+            check(check[i].opcode == decoded[i].opcode && check[i].intOperand == expected && check[i].stringOperand == decoded[i].stringOperand) {
+                "script $scriptId instruction $i differs after patch"
+            }
+        }
+        return out
     }
 }

@@ -58,6 +58,9 @@ object RoyalHallMapTool {
     private const val BRIDGE = 2
     private const val REMOVE_ROOF = 4
 
+    /** Client TileFlag.ZERO_LEVEL: the tile is drawn as part of level 0, so roof removal never hides it. */
+    private const val ZERO_LEVEL = 8
+
     /**
      * Height steps (x8 client units) of levels 1..3 above the one below: 30 = 240, the wall height (walls 33868/33877 are
      * 240 high), for the second storey and again for the roof's eaves and parapet (level 2) exactly on the second storey's
@@ -69,15 +72,6 @@ object RoyalHallMapTool {
 
     /** The centre's planters, their fences, the canopy ring on pillars and the map fountain. */
     private val REMOVED_IDS = setOf(47119, 84, 47174, 47175, 47244, 47246, 47150)
-
-    /** The ground tiles of the four paving blocks round the hall (RoyalHallLocTool.CUTS), laid as a white marble plaza. */
-    private val PLAZA_X = 3155..3174
-    private val PLAZA_Z = 3482..3501
-
-    /** Inside the Grand Exchange's walls (the gate paths beyond them keep their earth). */
-    private val EXCHANGE_X = 3143..3190
-    private val EXCHANGE_Z = 3470..3515
-    private const val DIRT_OVERLAY = 188
 
     /** A balcony: level-1 marble floor on these tiles, outside a doorway of the upper floor. */
     class Balcony(val xs: IntRange, val zs: IntRange)
@@ -94,6 +88,52 @@ object RoyalHallMapTool {
             Balcony(MIN_X - 2..MIN_X, SIDE_DOORS.first - 1..SIDE_DOORS.last + 1),
             Balcony(MAX_X..MAX_X + 2, SIDE_DOORS.first - 1..SIDE_DOORS.last + 1),
         )
+    /**
+     * Death's Domain (loc 62430, 2 x 3) in the hall's south-east corner (owner 2026-09-26: "verplaats de death van grand
+     * exchange naar 3169, 3487, 0 ... precies t zelfde te benaderen als de death entrance in ferox enclave"): one tile
+     * south of the owner's tile so its back stands on the south wall as the Ferox one stands on its wall.
+     */
+    const val DEATHS_DOMAIN_LOC = 62430
+    const val DEATHS_DOMAIN_X = 3169
+    const val DEATHS_DOMAIN_Z = 3486
+    const val DEATHS_DOMAIN_ROT = 2
+
+    /** Ferox's underlay under the tomb (stored id), shown where the front row's shaped overlay leaves the tile open. */
+    private const val FEROX_UNDERLAY = 50
+
+    /** Ferox's floor under and beside the tomb (x 3124-3127, z 3630-3632), turned 180 degrees: dx, dz, shape, rotation, overlay. */
+    private val DEATHS_DOMAIN_FLOOR =
+        listOf(
+            listOf(0, 0, 0, 0, 61), listOf(1, 0, 0, 0, 61),
+            listOf(0, 1, 0, 0, 61), listOf(1, 1, 0, 0, 61),
+            listOf(0, 2, 6, 3, 61), listOf(1, 2, 6, 3, 61),
+            // The two side tiles beside the front row are full marble here: Ferox cuts them (shape 9) over its underlay 50,
+            // which showed as grass inside the mansion at 3168,3488 and 3171,3488 (owner 2026-09-27).
+            listOf(-1, 2, 0, 0, MARBLE_OVERLAY), listOf(2, 2, 0, 0, MARBLE_OVERLAY),
+        )
+
+    /** Dark granite: overlay 236 = FloType 235 (35302d, texture 928), Lumbridge castle courtyard 3222,3218. */
+    const val GRANITE_OVERLAY = 236
+
+    /** Gold trim along the wall ring: overlay 157 = FloType 156 (fab737, texture 61). */
+    const val GOLD_TRIM_OVERLAY = 157
+
+    /** The brown ring road / path overlay (stored id 188 = FloType 187, 4e4329, texture 441). */
+    const val DIRT_ROAD_OVERLAY = 188
+
+    /** Falador square cobbles: overlay 137 = FloType 136 (746949, texture 608), Falador 2965,3380. */
+    const val BRICK_OVERLAY = 137
+
+    /** The path between the grey blocks south of the south entrance (owner's tags, foto d.png). */
+    val BRICK_PATH: Set<Pair<Int, Int>> = (3164..3165).flatMap { x -> (3478..3482).map { z -> x to z } }.toSet()
+
+    /** The exchange centre inside the brown ring road; the grass band fill must stay inside it. */
+    val BAND_BOX_X = 3143..3186
+    val BAND_BOX_Z = 3472..3512
+
+    /** South-west tiles of the four corner turrets 62766 (2 x 2), as home_decor.txt places them. */
+    val TURRETS = listOf(3157 to 3485, 3171 to 3485, 3157 to 3497, 3171 to 3497)
+
     /** Invisible marker on the fountain tile (model 1105), kept: it is the fountain's ambient sound (loc opcode 78). */
     private const val KEPT_MARKER = 29419
 
@@ -139,30 +179,9 @@ object RoyalHallMapTool {
                 upper.underlayId = 0
             }
 
-            // The white marble plaza: every ground tile of the four paving blocks round the hall is laid in marble, so
-            // wherever the exchange's paving models leave the ground visible (the ring of bare earth that ran round the old
-            // centre) it is marble; under the paving models it stays hidden.
-            for (x in PLAZA_X) for (z in PLAZA_Z) {
-                if (x in MIN_X..MAX_X && z in MIN_Z..MAX_Z) continue
-                val ground = tile(0, x, z)
-                ground.overlayId = MARBLE_OVERLAY
-                ground.overlayShape = 0
-                ground.overlayRotation = 0
-                plaza++
-            }
-
-            // No bare earth inside the exchange's walls: every dirt-path tile (overlay 187, stored 188) becomes the white
-            // marble, keeping its shape and rotation so the curved edges stay (owner 2026-09-26: "i can still see some dirt
-            // ground outside the building").
-            var dirt = 0
-            for (x in EXCHANGE_X) for (z in EXCHANGE_Z) {
-                val ground = tile(0, x, z)
-                if (ground.overlayId and 0xFF == DIRT_OVERLAY) {
-                    ground.overlayId = MARBLE_OVERLAY
-                    dirt++
-                }
-            }
-            plaza += dirt
+            // Owner 2026-09-26 (foto wit): "het wit moet weg uit de cirkel alleen wit op terrein van mansion zelf". The
+            // white marble plaza round the hall and the marble on every dirt path of the exchange are gone again: outside
+            // the hall's footprint (floor and wall ring, below) the exchange keeps its own pristine ground.
 
             // Storey heights. A tile's height is its south-west corner and a loc stands on the average of its footprint's
             // corners, so the heights run one tile past the east and north wall rings (else the upper walls, parapet and
@@ -236,6 +255,79 @@ object RoyalHallMapTool {
                     upstairs++
                 }
             }
+            // The Death's Domain entrance, laid exactly like its Ferox Enclave original (3125,3630 rotation 0, OSRS 39637):
+            // the tomb's back against a wall and its sunken steps shown through overlay 61 (stored; def 60 = magenta, not
+            // drawn: a hole in the floor), with the front row shaped (6) and its two neighbours cut (9) like at Ferox.
+            // Here it is turned 180 degrees - back on the hall's south wall, door onto the gold rug.
+            DEATHS_DOMAIN_FLOOR.forEach { (dx, dz, shape, rot, overlay) ->
+                val ground = tile(0, DEATHS_DOMAIN_X + dx, DEATHS_DOMAIN_Z + dz)
+                ground.overlayId = overlay
+                ground.overlayShape = shape
+                ground.overlayRotation = rot
+                ground.underlayId = FEROX_UNDERLAY
+            }
+
+            // The grass strip round the mansion (owner 2026-09-27, foto jj.png: "the mansion outside still has the low quality
+            // grass ... put something else", chosen: dark granite with a gold trim). It is the exchange's unpaved ground
+            // (underlay only) between the wall ring and the brown ring road (overlay 188): flood-filled from the ring over
+            // tiles without an overlay, inside a box that the fill must never reach. The row touching the wall ring is gold.
+            val band = HashSet<Pair<Int, Int>>()
+            val queue = ArrayDeque<Pair<Int, Int>>()
+            fun footprint(x: Int, z: Int) = x in MIN_X..MAX_X && z in MIN_Z..MAX_Z
+            for (x in MIN_X - 1..MAX_X + 1) for (z in MIN_Z - 1..MAX_Z + 1) if (!footprint(x, z)) queue += x to z
+            while (queue.isNotEmpty()) {
+                val (x, z) = queue.removeFirst()
+                if (footprint(x, z) || (x to z) in band || tile(0, x, z).overlayId != 0) continue
+                check(x in BAND_BOX_X && z in BAND_BOX_Z) { "grass band leaks out of the exchange centre at $x,$z" }
+                band += x to z
+                listOf(x - 1 to z, x + 1 to z, x to z - 1, x to z + 1).forEach { queue += it }
+            }
+            band.forEach { (x, z) ->
+                val ground = tile(0, x, z)
+                val trim = (x - 1..x + 1).any { nx -> (z - 1..z + 1).any { nz -> footprint(nx, nz) } }
+                ground.overlayId = if (trim) GOLD_TRIM_OVERLAY else GRANITE_OVERLAY
+                ground.overlayShape = 0
+                ground.overlayRotation = 0
+            }
+            check(band.size in 100..1200) { "grass band has ${band.size} tiles" }
+
+            // The dirt path south of the south entrance, between the grey paving blocks (owner 2026-09-27, foto d.png and
+            // his tags 3164-3165, 3478-3482): Falador square cobbles instead of the brown ring road overlay.
+            BRICK_PATH.forEach { (x, z) ->
+                val ground = tile(0, x, z)
+                check((ground.overlayId and 0xFF) == DIRT_ROAD_OVERLAY) { "brick path tile $x,$z is not the dirt road (overlay ${ground.overlayId})" }
+                ground.overlayId = BRICK_OVERLAY
+                ground.overlayShape = 0
+                ground.overlayRotation = 0
+            }
+            val repaved = band + BRICK_PATH
+
+            // See-through walls (owner 2026-09-27, fotos pp.png / wr.png: "I can see through the walls everywhere, first and
+            // second floor"). The client's selective roof removal (Static409 flood fill over flag-4 tiles) hides every level
+            // above the player's on the whole footprint - wall ring included - unless that tile carries ZERO_LEVEL (8).
+            // Inside on the ground floor the upper-storey walls vanished (one-storey walls to look over, beside full-height
+            // turrets); on the upper floor the parapet above vanished and the walls looked cut open. The wall ring keeps
+            // its upper walls and parapet always drawn, as the Grand Exchange's own canopy did with the same flag; the
+            // floor inside still clears above the player, and the upper doorways (walked on) keep their normal level.
+            for (x in MIN_X..MAX_X) for (z in MIN_Z..MAX_Z) {
+                val ring = x == MIN_X || x == MAX_X || z == MIN_Z || z == MAX_Z
+                val doorway = (x == MIN_X || x == MAX_X) && z in SIDE_DOORS || (z == MIN_Z || z == MAX_Z) && x in SOUTH_DOOR
+                if (!ring) continue
+                for (level in 1..3) {
+                    if (level == 1 && doorway) continue
+                    tile(level, x, z).flags = tile(level, x, z).flags or ZERO_LEVEL
+                }
+            }
+
+            // The corner turrets (62766, home_decor.txt) are the 2 x 2 Falador turret drawn 1.375x wide, so the model hangs
+            // about 0.4 tile over each side of its 2 x 2 collision, and players stood inside the tower with their weapon
+            // through the stone (owner 2026-09-27, foto dde.png). The tiles along each side of a turret are blocked on
+            // both storeys; the diagonal ones are clear of the round tower.
+            TURRETS.forEach { (tx, tz) ->
+                val sides = (tz..tz + 1).flatMap { z -> listOf(tx - 1 to z, tx + 2 to z) } + (tx..tx + 1).flatMap { x -> listOf(x to tz - 1, x to tz + 2) }
+                sides.forEach { (x, z) -> for (level in 0..1) tile(level, x, z).flags = tile(level, x, z).flags or BLOCKED }
+            }
+
             // The Skilling Basement's way down needs its dark opening in this floor (after the paving above).
             AfkBasementMapTool.cutEntrance(tiles, rx, rz)
             val updatedMap = Rev667TileCodec.encode(tiles)
@@ -257,8 +349,11 @@ object RoyalHallMapTool {
             val locs = Rev667LocCodec.decode(pristineLocs)
             check(Rev667LocCodec.encode(locs).contentEquals(pristineLocs)) { "loc round-trip failed" }
             val inHall = { l: Rev667Loc -> rx * 64 + l.localX in MIN_X..MAX_X && rz * 64 + l.localZ in MIN_Z..MAX_Z }
-            val removed = locs.filter { inHall(it) && (it.id in REMOVED_IDS || it.type == 22 && it.id != KEPT_MARKER) }
+            // Floor decorations (dirt decals 46976, grass tufts) on the repaved granite band and brick path go too.
+            val onRepaved = { l: Rev667Loc -> l.plane == 0 && l.type == 22 && (rx * 64 + l.localX to rz * 64 + l.localZ) in repaved }
+            val removed = locs.filter { inHall(it) && (it.id in REMOVED_IDS || it.type == 22 && it.id != KEPT_MARKER) || onRepaved(it) }
             removed.groupBy { it.id }.forEach { (id, list) -> println("REMOVE $id x${list.size}") }
+            removed.filter { !inHall(it) }.forEach { println("REMOVE_REPAVED ${it.id} at ${rx * 64 + it.localX},${rz * 64 + it.localZ}") }
             val cuts = RoyalHallLocTool.CUTS.associateBy { Triple(it.source, it.x, it.z) }
             var swapped = 0
             var lowered = 0
@@ -276,7 +371,11 @@ object RoyalHallMapTool {
             check(swapped == cuts.size) { "expected ${cuts.size} paving models, swapped $swapped" }
             // The Royal Hall's map icon is one world-map static element (RoyalHallLocTool), which the minimap draws too; a
             // marker loc as well showed it twice (owner 2026-09-26).
-            val kept = swappedLocs
+            // In the map, like at Ferox, so the minimap draws its Death's Office icon (map element 1108 on loc 62430); a
+            // server-spawned copy never reaches the minimap.
+            val kept =
+                swappedLocs.filterNot { it.id == DEATHS_DOMAIN_LOC } +
+                    Rev667Loc(DEATHS_DOMAIN_LOC, DEATHS_DOMAIN_X - rx * 64, DEATHS_DOMAIN_Z - rz * 64, 0, 10, DEATHS_DOMAIN_ROT)
             kept.filter(inHall).forEach { println("REMAINS ${it.id} type=${it.type} at ${rx * 64 + it.localX},${rz * 64 + it.localZ},${it.plane}") }
             val updatedLocs = Rev667LocCodec.encode(kept)
             if (!updatedLocs.contentEquals(locBytes)) {

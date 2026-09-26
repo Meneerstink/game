@@ -72,6 +72,14 @@ object AfkBasementMapTool {
     /** Lumbridge lawn 3232,3224: underlay 161 = FloType 160 (grass, texture 917), no overlay. */
     const val UNDERLAY_GRASS = 161
 
+    /**
+     * The map square's environment (the block after the tile data, opcode 0), byte for byte the Lumbridge castle cellar's
+     * (m50_150) without its lights: flags 0x32, ambient 0x0074, light direction -100/-100/-100 and fog colour 000000.
+     * Without it the client used its surface default, and the void round the room showed beige-white (owner 2026-09-27,
+     * `C:/RSPS/foto/dd.png`); a dungeon's fog and background are black.
+     */
+    val CELLAR_ENVIRONMENT = byteArrayOf(0, 0x32, 0, 0x74, -1, -100, -1, -100, -1, -100, 0, 0, 0, 0)
+
     const val WALL = 32902
     const val ROCK = 32904
     const val ROCK_CORNER = 32906
@@ -100,6 +108,18 @@ object AfkBasementMapTool {
      * climbing south into the wall (owner 2026-09-26: "Cannot go up the stairs", "I can't reach that!").
      */
     const val STAIRS_ROTATION = 2
+
+    /**
+     * The square's underwater terrain ("um" archive, one level, heights = metres below the surface in 32-unit steps). The
+     * client draws water as a surface over this terrain; without it the pond's water had no depth and drew as a white
+     * square (owner 2026-09-27, `C:/RSPS/foto/dung.png`). Built like Lumbridge's um50_50 under the river: riverbed
+     * underlay 65 below the water, the hidden overlay 42 (FloType 41, colour ff00ff) everywhere else.
+     */
+    const val UNDERWATER_NAME = "um${SQUARE_X}_$SQUARE_Z"
+    const val UNDERWATER_HIDDEN = 42
+    const val UNDERWATER_RIVERBED = 65
+    const val POND_BANK_DEPTH = 2
+    const val POND_DEPTH = 10
 
     /** The fishing spot npc copy the server spawns in the middle of the pond (NpcCopy of 327, Net / Bait). */
     const val FISHING_SPOT_NPC = 14483
@@ -307,6 +327,129 @@ object AfkBasementMapTool {
             else -> FLOOR_STONE
         }
 
+    /**
+     * The [UNDERWATER_NAME] bytes: one level of 64 x 64 tile records in the map's record order (overlay, underlay,
+     * height). A tile's height sets its south-west corner, so the pond's corners run x 21..24, z 31..34: the rim at
+     * [POND_BANK_DEPTH], the inner corners at [POND_DEPTH].
+     */
+    fun underwater(): ByteArray {
+        val out = ByteArrayOutputStream()
+        val cornersX = POND_X.first..POND_X.last + 1
+        val cornersZ = POND_Z.first..POND_Z.last + 1
+        for (lx in 0 until 64) for (lz in 0 until 64) {
+            if (lx in POND_X && lz in POND_Z) {
+                out.write(81 + UNDERWATER_RIVERBED)
+            } else {
+                out.write(2)
+                out.write(UNDERWATER_HIDDEN)
+                out.write(81 + UNDERLAY_GRASS)
+            }
+            if (lx in cornersX && lz in cornersZ) {
+                val rim = lx == cornersX.first || lx == cornersX.last || lz == cornersZ.first || lz == cornersZ.last
+                out.write(1)
+                out.write(if (rim) POND_BANK_DEPTH else POND_DEPTH)
+            } else {
+                out.write(0)
+            }
+        }
+        return out.toByteArray()
+    }
+
+    /**
+     * The basement's own world map (owner 2026-09-27: opening the world map down here showed Lumbridge). The client picks
+     * the area whose chunk covers the player's tile (WORLDMAP_GETMAP); with none it fell back to the surface map. Built
+     * like the small dungeon areas (Tolna's Rift, area 4): a `details` entry (file id = area id, name = [WORLD_MAP_FILE])
+     * with one chunk mapping this square onto itself, and the group [WORLD_MAP_FILE] holding the file `area`.
+     */
+    const val WORLD_MAP_INDEX = 23
+    const val WORLD_MAP_DETAILS = "details"
+    const val WORLD_MAP_AREA_ID = 41
+    const val WORLD_MAP_FILE = "skilling_basement"
+    const val WORLD_MAP_NAME = "Skilling Basement"
+
+    /** The details entry: file, name, origin (room centre), 0, shown, zoom 200 (as Tolna's Rift), 0, one chunk (level 0, source = display). */
+    fun worldMapDetails(): ByteArray {
+        val out = ByteArrayOutputStream()
+        fun str(s: String) {
+            out.write(s.toByteArray(Charsets.ISO_8859_1))
+            out.write(0)
+        }
+        fun p2(v: Int) {
+            out.write(v ushr 8)
+            out.write(v and 0xFF)
+        }
+        fun p4(v: Int) {
+            p2(v ushr 16)
+            p2(v and 0xFFFF)
+        }
+        str(WORLD_MAP_FILE)
+        str(WORLD_MAP_NAME)
+        p4(((BASE_X + (ROOM_X.first + ROOM_X.last) / 2) shl 14) or (BASE_Z + (ROOM_Z.first + ROOM_Z.last) / 2))
+        p4(0)
+        out.write(1)
+        out.write(200)
+        out.write(0)
+        out.write(1)
+        out.write(0)
+        repeat(2) {
+            p2(BASE_X)
+            p2(BASE_Z)
+            p2(BASE_X + 63)
+            p2(BASE_Z + 63)
+        }
+        return out.toByteArray()
+    }
+
+    /**
+     * The `area` file: the underlay and overlay ids it uses, then this square's 64 x 64 tiles (x outer, z inner). A tile
+     * without locs is one byte (underlay: list index << 2; overlay: 2 | index << 2, then its underlay; 0xF8 = empty); a
+     * tile with walls or objects is 1 | 8 (overlay) | 0x10 (locs): underlay, overlay, shape, count, then each loc id and
+     * (rotation << 6 | type) - walls draw as lines, objects with a map icon (trees, rocks, ranges) as their icon.
+     */
+    fun worldMapArea(tiles: Rev667TileMap, locs: List<Rev667Loc>): ByteArray {
+        val ground = tiles.tiles[0]
+        val underlays = (0 until 64).flatMap { x -> (0 until 64).map { z -> ground[x][z].underlayId } }.filter { it != 0 }.distinct().sorted()
+        val overlays = (0 until 64).flatMap { x -> (0 until 64).map { z -> ground[x][z].overlayId } }.filter { it != 0 }.distinct().sorted()
+        check(underlays.size < 62 && overlays.size < 62) { "too many floors for the world map lists" }
+        val shown = locs.filter { it.plane == 0 && (it.type == 0 || it.type == 10) }.groupBy { it.localX to it.localZ }
+        val out = ByteArrayOutputStream()
+        out.write(underlays.size)
+        underlays.forEach { out.write(it) }
+        out.write(overlays.size)
+        overlays.forEach { out.write(it) }
+        out.write(0)
+        out.write(SQUARE_X)
+        out.write(SQUARE_Z)
+        for (lx in 0 until 64) for (lz in 0 until 64) {
+            val t = ground[lx][lz]
+            val here = shown[lx to lz].orEmpty()
+            when {
+                here.isNotEmpty() -> {
+                    check(here.size < 256) { "too many locs on $lx,$lz" }
+                    out.write(1 or (if (t.overlayId != 0) 8 else 0) or 0x10)
+                    out.write(t.underlayId)
+                    if (t.overlayId != 0) {
+                        out.write(t.overlayId)
+                        out.write((t.overlayRotation shl 6) or t.overlayShape)
+                    }
+                    out.write(here.size)
+                    here.forEach { loc ->
+                        out.write(loc.id ushr 8)
+                        out.write(loc.id and 0xFF)
+                        out.write((loc.rotation shl 6) or loc.type)
+                    }
+                }
+                t.overlayId != 0 -> {
+                    out.write(2 or (overlays.indexOf(t.overlayId) shl 2))
+                    out.write(t.underlayId)
+                }
+                t.underlayId != 0 -> out.write(underlays.indexOf(t.underlayId) shl 2)
+                else -> out.write(62 shl 2)
+            }
+        }
+        return out.toByteArray()
+    }
+
     fun plan(): List<CacheMutation> {
         val library = CacheLibrary(GAME_CACHE)
         try {
@@ -322,7 +465,9 @@ object AfkBasementMapTool {
             val mapGroup = existingMap?.id ?: ((maps.archiveIds().maxOrNull() ?: -1) + 1)
             val locGroup = existingLocs?.id ?: (mapGroup + 1)
 
-            val tiles = Rev667TileMap()
+            val tiles = Rev667TileMap(trailing = CELLAR_ENVIRONMENT)
+            val cellar = Rev667TileCodec.decode(library.data(Rev667RegionProbeTool.MAP_INDEX, maps.archive("m50_150")!!.id, 0)!!).trailing
+            check(cellar.copyOfRange(0, CELLAR_ENVIRONMENT.size).contentEquals(CELLAR_ENVIRONMENT)) { "the Lumbridge cellar environment changed" }
             val ringX = ROOM_X.first - 2..ROOM_X.last + 2
             val ringZ = ROOM_Z.first - 2..ROOM_Z.last + 2
             for (lx in 0 until 64) for (lz in 0 until 64) {
@@ -403,14 +548,19 @@ object AfkBasementMapTool {
             }
 
             val copies = mutableListOf<CacheMutation>()
-            fun copy(copyId: Int, source: Int, label: String, patch: (ByteArrayOutputStream) -> Unit) {
-                val base = requireNotNull(locBytes(library, source)) { "loc $source missing" }
+            fun copy(copyId: Int, source: Int, label: String, stripOptions: Boolean = false, patch: (ByteArrayOutputStream) -> Unit) {
+                val raw = requireNotNull(locBytes(library, source)) { "loc $source missing" }
+                val base = if (stripOptions) RoyalHallLocTool.withoutOptions(raw) else raw
                 check(base.last().toInt() == 0) { "loc $source does not end with opcode 0" }
                 val out = ByteArrayOutputStream()
                 out.write(base, 0, base.size - 1)
                 patch(out)
                 out.write(0)
                 val bytes = out.toByteArray()
+                if (stripOptions) {
+                    val options = Rev667LocType.decode(copyId, bytes).options.toList()
+                    check(options.drop(1).all { it == null }) { "loc $copyId ($label) still has options $options" }
+                }
                 val current = locBytes(library, copyId)
                 check(current == null || current.contentEquals(bytes) || copyId in REBUILT) { "loc id $copyId is taken by something else" }
                 if (current == null || !current.contentEquals(bytes)) {
@@ -422,7 +572,7 @@ object AfkBasementMapTool {
             copy(STAIRS_UP_LOC, STAIRS_UP_SOURCE, "stairs up") { }
             STATIONS.forEachIndexed { index, station ->
                 val copyId = FIRST_STATION_LOC + index
-                copy(copyId, station.source, "${station.skill} station '${station.option}'") { stationOptions(it, station.option) }
+                copy(copyId, station.source, "${station.skill} station '${station.option}'", stripOptions = true) { stationOptions(it, station.option) }
                 claim(copyId, station.lx, station.lz, station.rotation, 10, station.source)
                 station.more.forEach { (x, z) -> claim(copyId, x, z, station.rotation, 10, station.source) }
             }
@@ -475,8 +625,24 @@ object AfkBasementMapTool {
             val sorted = locs.sortedWith(compareBy({ it.id }, { it.packedPosition }, { it.type }))
             val locBytes = Rev667LocCodec.encode(sorted)
             check(Rev667LocCodec.decode(locBytes).size == sorted.size) { "loc round trip" }
-            println("PLAN $MAP_NAME=$mapGroup $LOC_NAME=$locGroup locs=${sorted.size} copies=${copies.size}")
-            return copies + listOfNotNull(hallMutation, hallFloor(library)) + listOf(
+            val worldMap = library.index(WORLD_MAP_INDEX)
+            val details = requireNotNull(worldMap.archive(WORLD_MAP_DETAILS)) { "world map details missing" }
+            val currentDetails = details.file(WORLD_MAP_AREA_ID)?.let { library.data(WORLD_MAP_INDEX, details.id, WORLD_MAP_AREA_ID) }
+            check(currentDetails == null || String(currentDetails, Charsets.ISO_8859_1).startsWith(WORLD_MAP_FILE + "\u0000")) { "world map area $WORLD_MAP_AREA_ID is taken" }
+            val existingArea = worldMap.archive(WORLD_MAP_FILE)
+            val areaGroup = existingArea?.id ?: ((worldMap.archiveIds().maxOrNull() ?: -1) + 1)
+            val areaBytes = worldMapArea(tiles, sorted)
+            val worldMapMutations =
+                listOf(
+                    CacheMutation(WORLD_MAP_INDEX, details.id, WORLD_MAP_AREA_ID, worldMapDetails(), "Skilling basement world map area $WORLD_MAP_AREA_ID", currentDetails?.let { CacheItemProbeTool.sha1(it) }, fileName = WORLD_MAP_FILE),
+                    CacheMutation(WORLD_MAP_INDEX, areaGroup, WORLD_MAP_AREA_ID, areaBytes, "Skilling basement world map tiles", existingArea?.let { library.data(WORLD_MAP_INDEX, areaGroup, WORLD_MAP_AREA_ID) }?.let { CacheItemProbeTool.sha1(it) }, groupName = WORLD_MAP_FILE, fileName = "area"),
+                )
+            val existingUnderwater = maps.archive(UNDERWATER_NAME)
+            val underwaterGroup = existingUnderwater?.id ?: ((maps.archiveIds().maxOrNull() ?: -1) + 1)
+            val underwaterBytes = underwater()
+            println("PLAN $MAP_NAME=$mapGroup $LOC_NAME=$locGroup $UNDERWATER_NAME=$underwaterGroup locs=${sorted.size} copies=${copies.size}")
+            return copies + worldMapMutations + listOfNotNull(hallMutation, hallFloor(library)) + listOf(
+                CacheMutation(Rev667RegionProbeTool.MAP_INDEX, underwaterGroup, 0, underwaterBytes, "Skilling basement underwater terrain $UNDERWATER_NAME", expectedCurrentSha1 = existingUnderwater?.let { library.data(Rev667RegionProbeTool.MAP_INDEX, underwaterGroup, 0) }?.let { CacheItemProbeTool.sha1(it) }, groupName = UNDERWATER_NAME),
                 CacheMutation(Rev667RegionProbeTool.MAP_INDEX, mapGroup, 0, mapBytes, "Skilling basement tiles $MAP_NAME", expectedCurrentSha1 = existingMap?.let { library.data(Rev667RegionProbeTool.MAP_INDEX, mapGroup, 0) }?.let { CacheItemProbeTool.sha1(it) }, groupName = MAP_NAME),
                 CacheMutation(Rev667RegionProbeTool.MAP_INDEX, locGroup, 0, locBytes, "Skilling basement locs $LOC_NAME (unencrypted)", expectedCurrentSha1 = existingLocs?.let { library.data(Rev667RegionProbeTool.MAP_INDEX, locGroup, 0) }?.let { CacheItemProbeTool.sha1(it) }, groupName = LOC_NAME),
             )
@@ -495,6 +661,13 @@ object AfkBasementMapTool {
      */
     const val ENTRANCE_FLOOR = 42
 
+    /**
+     * The north row of the opening, where the steps (rotation 0) run down under the floor: with nothing below the hall the
+     * client showed its sky colour there, a white-blue patch behind the stairs (owner 2026-09-27, `C:/RSPS/foto/ff.png`).
+     * Overlay 52 = FloType 51 (plain black 000000, no texture) makes it a dark hole instead.
+     */
+    const val ENTRANCE_HOLE = 52
+
     /** Cuts the entrance opening into the hall square's tiles (also called by RoyalHallMapTool, which rebuilds them). */
     fun cutEntrance(
         tiles: Rev667TileMap,
@@ -504,7 +677,7 @@ object AfkBasementMapTool {
         if (squareX != HALL_SQUARE_X || squareZ != HALL_SQUARE_Z) return
         for (dx in 0..1) for (dz in 0..1) {
             val t = tiles.tiles[0][ENTRANCE_X - squareX * 64 + dx][ENTRANCE_Z - squareZ * 64 + dz]
-            t.overlayId = ENTRANCE_FLOOR
+            t.overlayId = if (dz == 1) ENTRANCE_HOLE else ENTRANCE_FLOOR
             t.overlayShape = 0
             t.overlayRotation = 0
             t.underlayId = 0
@@ -552,7 +725,10 @@ object AfkBasementMapTool {
         return CacheMutation(Rev667RegionProbeTool.MAP_INDEX, archive.id, 0, newBytes, "Skilling basement entrance in $name", CacheItemProbeTool.sha1(bytes), xtea = key)
     }
 
-    /** Option 1 [text], options 2-5 "Hidden" (the client drops "Hidden" options), so only the station's action shows. */
+    /**
+     * Option 1 [text] only; the source's options are stripped before ([RoyalHallLocTool.withoutOptions]). This client does
+     * not drop options named "Hidden" - they showed as "Hidden Fire pit" x4 in the menu (owner 2026-09-27, `C:/RSPS/foto/Naamloos.jpg`).
+     */
     private fun stationOptions(out: ByteArrayOutputStream, text: String) {
         fun option(op: Int, value: String) {
             out.write(op)
@@ -560,7 +736,6 @@ object AfkBasementMapTool {
             out.write(0)
         }
         option(30, text)
-        (31..34).forEach { option(it, "Hidden") }
     }
 
     private fun zeroXteaKey() {

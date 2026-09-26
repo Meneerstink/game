@@ -50,7 +50,7 @@ object RoyalHallLocTool {
 
     /** The gold "Large door" leaves 22435/22437 stand open in the hall's south doorway as scenery: their "Open" option goes. */
     /** [def] without its menu option(s) 30-34 wherever they stand (scenery doors that are never opened). */
-    private fun withoutOptions(def: ByteArray): ByteArray {
+    internal fun withoutOptions(def: ByteArray): ByteArray {
         var out = def
         for (op in 30..34) {
             // Options come early in these definitions; a tail opcode this walker cannot size means there are no more.
@@ -90,8 +90,11 @@ object RoyalHallLocTool {
 
     private fun grandTurret(def: ByteArray): ByteArray {
         check(listOf(65, 66, 67).none { opcodePosition(TURRET_LOC, def, it) >= 0 }) { "turret already scaled" }
-        // 1.375 wide and 1.75 high: the owner chose towers that rise from the ground (C:/RSPS/foto/tower_designs.png, 3), in
-        // dark granite (tower_colours.png e): every stone tone (hue 6) greyed at 0.55 of its lightness.
+        // 1.375 wide and 2.25 high: the owner chose towers that rise from the ground (C:/RSPS/foto/tower_designs.png, 3), in
+        // dark granite (tower_colours.png e): every stone tone (hue 6) greyed at 0.55 of its lightness. At 1.75 high the
+        // crown ended level with the parapet (plane 2, 480 + 129) and the roof edge ran across it (owner 2026-09-26: "de 4
+        // towers lopen niet smooth door op het dak"); at 2.25 (453 x 2.25 = 1019) the parapet meets the shaft and the
+        // crown stands clear above the roof's eaves.
         val recolour = java.io.ByteArrayOutputStream()
         recolour.write(40)
         recolour.write(TURRET_STONE.size)
@@ -99,7 +102,7 @@ object RoyalHallLocTool {
             val granite = (c and 0x7F) * 55 / 100
             recolour.write(byteArrayOf((c shr 8).toByte(), c.toByte(), (granite shr 8).toByte(), granite.toByte()))
         }
-        return withModel(TURRET_LOC, byteArrayOf(65, 0, 176.toByte(), 66, 0, 224.toByte(), 67, 0, 176.toByte()) + recolour.toByteArray() + def, TURRET_MODEL, TURRET_MODEL_CLEAN)
+        return withModel(TURRET_LOC, byteArrayOf(65, 0, 176.toByte(), 66, 1, 32, 67, 0, 176.toByte()) + recolour.toByteArray() + def, TURRET_MODEL, TURRET_MODEL_CLEAN)
     }
 
     /**
@@ -113,7 +116,8 @@ object RoyalHallLocTool {
     const val ICON_LOC = 62767
     private const val WORLD_MAP_INDEX = 23
     private const val STATIC_ELEMENTS = "main_staticelements"
-    private const val ICON_TILE_X = 3164
+    /** The Grand Exchange ring's centre on the world map (owner 2026-09-27 foto www.png: at 3164 the icon sat a tile west of it). */
+    private const val ICON_TILE_X = 3165
     private const val ICON_TILE_Z = 3491
     private const val GE_ELEMENT = 637
     private const val GE_MARKER = 27990
@@ -476,6 +480,15 @@ object RoyalHallLocTool {
     private val STAIR_STONE = listOf(0x201e to 0x0070, 0x2022 to 0x0072, 0x2032 to 0x0074, 0x2037 to 0x0076)
     private val STAIR_RAIL_GOLD = mapOf(0x1d10 to 0x23A0, 0x1d18 to 0x23A8, 0x1d1c to 0x23AC, 0x1d20 to 0x23B0)
 
+    /**
+     * The bottom staircase leads up only (owner 2026-09-27: the two marble stairs offered "Climb-down" on the ground floor):
+     * its Climb / Climb-up / Climb-down become the single option "Climb-up".
+     */
+    private fun premiumStairsBottom(def: ByteArray): ByteArray {
+        val stairs = withoutOptions(premiumStairs(def))
+        return stairs.copyOfRange(0, stairs.size - 1) + byteArrayOf(30) + "Climb-up".toByteArray(Charsets.ISO_8859_1) + byteArrayOf(0, 0)
+    }
+
     private fun premiumStairs(def: ByteArray): ByteArray {
         val at = opcodePosition(34872, def, 40)
         check(at >= 0) { "stairs have no recolour" }
@@ -576,7 +589,7 @@ object RoyalHallLocTool {
             Variant(62782, 47169, "Royal Hall portico pillar: the GE pillar in bright white, 0.95 high", ::brightPillar),
             Variant(62783, 15602, "Royal Hall balcony railing: gilded on white marble plinths", ::gildedRailing),
             Variant(62786, 15602, "Royal Hall balcony railing as a wall decoration (beside the upper doorways)", ::gildedRailingDecor),
-            Variant(62779, 34872, "Royal Hall spiral staircase (bottom): white marble, gilded rails", ::premiumStairs),
+            Variant(62779, 34872, "Royal Hall spiral staircase (bottom): white marble, gilded rails, Climb-up only", ::premiumStairsBottom),
             Variant(62780, 34873, "Royal Hall spiral staircase (top): white marble, gilded rails", ::premiumStairs),
             Variant(62768, 15548, "78 carpet corner (Varrock carpet 15548 with the 78 texture)", ::with78Carpet),
             Variant(62769, 15549, "78 carpet edge (Varrock carpet 15549 with the 78 texture)", ::with78Carpet),
@@ -761,8 +774,17 @@ object RoyalHallLocTool {
             val coord = (ICON_TILE_X shl 14) or ICON_TILE_Z
             val staticEntry = byteArrayOf((coord ushr 24).toByte(), (coord ushr 16).toByte(), (coord ushr 8).toByte(), coord.toByte(), (ICON_ELEMENT shr 8).toByte(), ICON_ELEMENT.toByte(), 0)
             val existing = staticGroup.fileIds().firstOrNull { library.data(WORLD_MAP_INDEX, staticGroup.id, it)?.contentEquals(staticEntry) == true }
+            // An earlier placement of this icon (same element, other tile) is moved, never duplicated.
+            val moved =
+                staticGroup.fileIds().firstOrNull { f ->
+                    val d = library.data(WORLD_MAP_INDEX, staticGroup.id, f)
+                    d != null && d.size == staticEntry.size && d[4] == staticEntry[4] && d[5] == staticEntry[5] && !d.contentEquals(staticEntry)
+                }
             if (existing != null) {
                 println("WORLD MAP icon already in place (file $existing)")
+            } else if (moved != null) {
+                println("MOVE world map icon: $STATIC_ELEMENTS file $moved to $ICON_TILE_X,$ICON_TILE_Z")
+                mutations += CacheMutation(WORLD_MAP_INDEX, staticGroup.id, moved, staticEntry, "Royal Hall world map icon (moved)", CacheItemProbeTool.sha1(library.data(WORLD_MAP_INDEX, staticGroup.id, moved)!!))
             } else {
                 val file = staticGroup.fileIds().maxOrNull()!! + 1
                 println("CREATE world map icon: $STATIC_ELEMENTS file $file, element $ICON_ELEMENT at $ICON_TILE_X,$ICON_TILE_Z")
@@ -838,6 +860,7 @@ object RoyalHallLocTool {
                 val after = Rev667LocType.decode(v.id, wanted)
                 val expectedModels = before.allModels.map { if (it == TURRET_MODEL && v.source == TURRET_LOC) TURRET_MODEL_CLEAN else it }
                 check(after.allModels == expectedModels && (v.id in WITH_OPTIONS || after.options.all { it == null || it.equals("hidden", true) })) { "variant ${v.id} is wrong" }
+                check(v.id != 62779 || after.options.toList() == listOf("Climb-up", null, null, null, null)) { "bottom staircase options ${after.options.toList()}" }
                 val current = library.data(LOC_INDEX, v.id ushr 8, v.id and 0xFF)
                 when {
                     current == null -> println("CREATE loc ${v.id} from ${v.source}: ${v.label} (size ${after.sizeX}x${after.sizeZ})")

@@ -73,6 +73,33 @@ class ObjectMetadataService : Service {
                 metadata.solid?.let { def.solid = it }
             }
         }
+        fillMissingExamines(definitions)
+    }
+
+    /**
+     * Owner 2026-09-27: "every item placed in the mansion has no examine just like the skills area". Every copied loc
+     * (Royal Hall variants, basement stations, signs, stairs) has an id of its own that objs.yml never lists, and some
+     * sources have no examine either, so the server logged "No examine info found" and sent nothing. A named loc without
+     * one takes the most common examine among locs of the same name, else a plain "A <name>." line.
+     */
+    private fun fillMissingExamines(definitions: DefinitionSet) {
+        val all = definitions.getAll(ObjectDef::class.java).values.filterIsInstance<ObjectDef>()
+        fun named(def: ObjectDef) = def.name.isNotBlank() && !def.name.equals("null", ignoreCase = true)
+        val byName =
+            all.filter { named(it) && it.examine != null }
+                .groupBy { it.name.lowercase() }
+                .mapValues { (_, defs) -> defs.groupingBy { it.examine!! }.eachCount().maxByOrNull { it.value }!!.key }
+        all.filter { named(it) && it.examine == null }.forEach { def ->
+            def.examine = byName[def.name.lowercase()] ?: plainExamine(def.name)
+        }
+    }
+
+    companion object {
+        fun plainExamine(name: String): String {
+            val lower = name.lowercase()
+            val article = if (lower.first() in "aeiou") "An" else "A"
+            return "$article $lower."
+        }
     }
 
     private data class Metadata(

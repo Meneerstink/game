@@ -194,6 +194,10 @@ class CacheTransaction(
                                 val index = library.index(mutation.indexId)
                                 index.archive(mutation.groupId)!!.hashName = index.toHash(name)
                             }
+                            mutation.fileName?.let { name ->
+                                val index = library.index(mutation.indexId)
+                                index.archive(mutation.groupId)!!.file(mutation.fileId)!!.hashName = index.toHash(name)
+                            }
                         }
                         committed += entry
                         applied++
@@ -298,6 +302,13 @@ class CacheTransaction(
                         val named = library.index(mutation.indexId).archive(mutation.groupName)?.id
                         if (named != mutation.groupId) {
                             problems += "NAME_MISMATCH at $target ${mutation.describeLocation()}: group name '${mutation.groupName}' resolves to ${named ?: "nothing"}"
+                        }
+                    }
+                    if (mutation.fileName != null && mutation.newBytes != null) {
+                        val index = library.index(mutation.indexId)
+                        val hash = index.archive(mutation.groupId)?.file(mutation.fileId)?.hashName
+                        if (hash != index.toHash(mutation.fileName)) {
+                            problems += "NAME_MISMATCH at $target ${mutation.describeLocation()}: file name '${mutation.fileName}' not set (hash $hash)"
                         }
                     }
                 }
@@ -436,6 +447,11 @@ class CacheMutation(
      * [groupId] on every target. Null = unnamed / existing group.
      */
     val groupName: String? = null,
+    /**
+     * Name of the file this mutation writes, for indexes whose files are looked up by name (world map data: the client
+     * reads `getfile("<area>", "area")`). Applied as the file's hash name; verify checks it. Null = keep / unnamed.
+     */
+    val fileName: String? = null,
 ) {
     fun describeLocation(): String = "idx${indexId}_grp${groupId}_file$fileId"
 

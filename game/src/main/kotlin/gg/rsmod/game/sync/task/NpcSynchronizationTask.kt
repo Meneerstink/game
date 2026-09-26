@@ -140,14 +140,21 @@ class NpcSynchronizationTask(
             isWithinView(player, npc.tile) &&
             (npc.owner == null || npc.owner == player || npc.publicOwner)
 
+    /**
+     * In view: within the view distance on the player's own floor or a floor below it. `Tile.isWithinRadius` also demands
+     * the same height, so from an upper floor (the mansion's balconies) nobody on the ground was ever sent and the Grand
+     * Exchange square looked empty (owner 2026-09-27, foto balc.png). The add segment carries the npc's floor, so the
+     * client places them below; floors above stay out, the client hides those levels anyway.
+     */
     private fun isWithinView(
         player: Player,
         tile: Tile,
     ): Boolean =
-        tile.isWithinRadius(
-            player.tile,
-            if (player.hasLargeViewport()) Player.LARGE_VIEW_DISTANCE else Player.NORMAL_VIEW_DISTANCE,
-        )
+        tile.height <= player.tile.height &&
+            Tile(tile.x, tile.z, player.tile.height).isWithinRadius(
+                player.tile,
+                if (player.hasLargeViewport()) Player.LARGE_VIEW_DISTANCE else Player.NORMAL_VIEW_DISTANCE,
+            )
 
     companion object {
         private const val MAX_LOCAL_NPCS = 255

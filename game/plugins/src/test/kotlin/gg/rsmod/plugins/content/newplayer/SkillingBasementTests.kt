@@ -90,7 +90,7 @@ class SkillingBasementTests {
             assertEquals(station.option, server.option, station.skill)
             val def = DEFINITIONS.get(ObjectDef::class.java, server.loc)
             assertEquals(station.option, def.options[0], "loc ${server.loc} first option")
-            def.options.drop(1).forEach { assertTrue(it.isNullOrEmpty() || it == "Hidden", "loc ${server.loc} shows only its station option: ${def.options.toList()}") }
+            def.options.drop(1).forEach { assertTrue(it.isNullOrEmpty(),"loc ${server.loc} shows only its station option: ${def.options.toList()}") }
         }
         val spot = DEFINITIONS.get(NpcDef::class.java, AfkArea.FISHING_SPOT)
         assertEquals("Fishing spot", spot.name)
@@ -215,7 +215,8 @@ class SkillingBasementTests {
             val tiles = Rev667TileCodec.decode(library.data(5, maps.archive("m49_54")!!.id, 0)!!)
             for (dx in 0..1) for (dz in 0..1) {
                 val t = tiles.tiles[0][AfkArea.HALL_STAIRS.x - 49 * 64 + dx][AfkArea.HALL_STAIRS.z - 54 * 64 + dz]
-                assertEquals(AfkBasementMapTool.ENTRANCE_FLOOR, t.overlayId, "entrance tile +$dx,+$dz")
+                val expected = if (dz == 1) AfkBasementMapTool.ENTRANCE_HOLE else AfkBasementMapTool.ENTRANCE_FLOOR
+                assertEquals(expected, t.overlayId, "entrance tile +$dx,+$dz")
                 assertEquals(0, t.underlayId)
             }
             // RoyalHallMapTool rebuilds this floor from the pristine map: it cuts the opening too.
