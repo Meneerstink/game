@@ -105,7 +105,12 @@ object OsrsMusicImportTool {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        val mode = args.firstOrNull() ?: error("Usage: plan|apply")
+        val mode = args.firstOrNull() ?: error("Usage: plan|apply [upstreamSong localGroup musicIndex name]")
+        // 2026-09-26: optional track arguments, e.g. "apply 679 1011 1017 Rest in Peace" (Death's Office, OSRS Wiki cacheid 679).
+        val UPSTREAM_SONG = args.getOrNull(1)?.toInt() ?: UPSTREAM_SONG
+        val LOCAL_SONG_GROUP = args.getOrNull(2)?.toInt() ?: LOCAL_SONG_GROUP
+        val MUSIC_INDEX = args.getOrNull(3)?.toInt() ?: MUSIC_INDEX
+        val NAME = if (args.size > 4) args.drop(4).joinToString(" ") else NAME
         val song = ModernCacheReader(File(SOURCE_CACHE)).use { it.file(MUSIC_INDEX_ID, UPSTREAM_SONG, 0) } ?: error("OSRS song $UPSTREAM_SONG missing")
         val library = CacheLibrary(FeroxImportTool.GAME_CACHE)
         val names: ByteArray
@@ -150,7 +155,7 @@ object OsrsMusicImportTool {
         check(verify.isEmpty()) { "Post-apply verification failed; see journal ${tx.id} for rollback." }
         println("VERIFY_OK both targets hold intended bytes")
         val block =
-            "  - name: OSRS music track The Enclave (owner answer Q11 option a)\n" +
+            "  - name: OSRS music track $NAME\n" +
                 "    transaction: ${tx.id}\n" +
                 "    source: OpenRS2 cache 2686 index 6 group $UPSTREAM_SONG (sha1 ${CacheItemProbeTool.sha1(song)})\n" +
                 "    music: { upstream_song_group: $UPSTREAM_SONG, local_song_group: $LOCAL_SONG_GROUP, music_index: $MUSIC_INDEX, name: $NAME }\n" +

@@ -826,6 +826,28 @@ out-packets:
       - name: model
         type: SHORT
 
+  - message: gg.rsmod.game.message.impl.HintArrowTileMessage
+    type: FIXED
+    length: 12
+    opcode: 81
+    structure:
+      - name: slot_type
+        type: BYTE
+      - name: sprite
+        type: BYTE
+      - name: level
+        type: BYTE
+      - name: x
+        type: SHORT
+      - name: z
+        type: SHORT
+      - name: height
+        type: BYTE
+      - name: draw_distance
+        type: SHORT
+      - name: model
+        type: SHORT
+
   - message: gg.rsmod.game.message.impl.MinimapToggleMessage
     type: FIXED
     length: 1

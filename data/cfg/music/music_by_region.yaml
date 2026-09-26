@@ -543,6 +543,11 @@ talking_forest:
   index: 119
   areas:
     - region: 10550
+# Owner 2026-09-26: OSRS "Rest in Peace" (OSRS Wiki #641, cacheid 679), only inside Death's Office (square 12639).
+rest_in_peace:
+  index: 1017
+  areas:
+    - region: 12639
 the_enclave:
   index: 1016
   areas:

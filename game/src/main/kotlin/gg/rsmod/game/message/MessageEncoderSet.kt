@@ -95,6 +95,7 @@ class MessageEncoderSet {
         put(CameraSmoothResetEncoder(), CameraSmoothResetMessage::class.java)
         put(MinimapToggleEncoder(), MinimapToggleMessage::class.java)
         put(HintArrowEncoder(), HintArrowMessage::class.java)
+        put(gg.rsmod.game.message.encoder.HintArrowTileEncoder(), gg.rsmod.game.message.impl.HintArrowTileMessage::class.java)
         put(RebuildRegionEncoder(), RebuildRegionMessage::class.java)
     }
 

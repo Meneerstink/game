@@ -44,6 +44,13 @@ object QuestFights {
         foe.forceChat(fight.shout)
         player.message("<col=ef1020>The ${fight.name} (level ${fight.level}) attacks! Dying here follows the normal death rules of this area.")
         foe.attack(player)
+        leash(player, quest, stage, foe, fight)
+        return true
+    }
+
+    /** The foe leaves when its player goes (20 tiles), logs out, dies or the stage moves on; it comes back on return. */
+    private fun leash(player: Player, quest: ShortQuest, stage: Int, foe: Npc, fight: QuestFight) {
+        val world = player.world
         foe.queue {
             while (foe.isSpawned() && foe.isAlive()) {
                 wait(5)
@@ -51,11 +58,10 @@ object QuestFights {
                 if (gone && foe.isSpawned() && foe.isAlive()) {
                     world.remove(foe)
                     player.attr.remove(ACTIVE_FOE)
-                    if (player.isOnline && !player.isDead()) player.message("The ${fight.name} has fled. Speak to ${questNpcName(quest, stage)} to face it again.")
+                    if (player.isOnline && !player.isDead()) player.message("The ${fight.name} has fled. Return to ${quest.steps[stage - 1].place ?: "the quest location"} to face it again.")
                 }
             }
         }
-        return true
     }
 
     /** A kill of a quest foe by its owner completes the step: its items, then the next stage (or the quest). */
@@ -65,6 +71,23 @@ object QuestFights {
         if (npc.owner != killer) return
         val quest = FoundationQuests.SHORT.firstOrNull { it.slot == slot } ?: return
         if (quest.stage(killer) != stage) return
+        val fight = quest.steps[stage - 1].fight ?: return
+        // A foe with a second form (Damis): the first form's death brings the second one, whose death counts.
+        val second = fight.secondForm
+        if (second != null && npc.id != second) {
+            val world = killer.world
+            val foe = Npc(killer, second, npc.tile, world)
+            foe.respawnOverride = false
+            foe.attr[FOE_QUEST] = slot
+            foe.attr[FOE_STAGE] = stage
+            if (world.spawn(foe)) {
+                killer.attr[ACTIVE_FOE] = WeakReference(foe)
+                if (fight.secondFormShout.isNotEmpty()) foe.forceChat(fight.secondFormShout)
+                foe.attack(killer)
+                leash(killer, quest, stage, foe, fight)
+                return
+            }
+        }
         killer.attr.remove(ACTIVE_FOE)
         FoundationQuests.completeStep(killer, quest, stage)
     }

@@ -31,8 +31,8 @@ object AfkArea {
     /** The hall's way down: the marble spiral staircase top (62780, 2 x 2) in the south-east corner, from home_decor.txt. */
     const val HALL_STAIRS_DOWN = 62780
     const val BASEMENT_STAIRS_UP = 62779
-    val HALL_STAIRS = Tile(3170, 3486, 0)
-    val HALL_ARRIVAL = Tile(3169, 3488, 0)
+    val HALL_STAIRS = Tile(3160, 3487, 0)
+    val HALL_ARRIVAL = Tile(3162, 3487, 0)
 
     fun contains(tile: Tile): Boolean = tile.height == 0 && tile.x in MIN_X..MAX_X && tile.z in MIN_Z..MAX_Z
 

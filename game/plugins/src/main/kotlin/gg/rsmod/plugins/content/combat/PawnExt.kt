@@ -198,6 +198,10 @@ fun Pawn.dealHit(
     if (target is Npc && target.id == gg.rsmod.plugins.api.cfg.Npcs.CORPOREAL_BEAST && damage > 0) {
         damage = gg.rsmod.plugins.content.combat.scripts.impl.CorporealBeastCombatScript.modifyIncomingDamage(this, hitType, damage.toInt()).toDouble()
     }
+    // Desert Treasure: Fareed only takes magic damage from water spells (quests/foundation/QuestBosses).
+    if (target is Npc && damage > 0) {
+        damage = gg.rsmod.plugins.content.quests.foundation.QuestBosses.modifyIncomingDamage(target, this, hitType, damage.toInt()).toDouble()
+    }
     // Deadman breach monsters Porazdir, Justiciar Zachariah and Derwen: "completely immune to melee and ranged attacks".
     if (target is Npc && damage > 0) {
         damage = gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.modifyIncomingDamage(target, hitType, damage.toInt()).toDouble()

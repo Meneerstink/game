@@ -21,6 +21,7 @@ import gg.rsmod.plugins.content.mechanics.death.ItemsKeptOnDeath
 import gg.rsmod.plugins.content.mechanics.death.OfficeInterface
 import gg.rsmod.plugins.content.mechanics.death.SafeDeath
 import gg.rsmod.plugins.content.mechanics.pvp.DeadmanTimerGate
+import gg.rsmod.plugins.content.mechanics.pvp.GuardedZones
 import gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction
 
 /*
@@ -31,12 +32,46 @@ import gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction
 // ---- Death in his office ----
 spawn_npc(DeathsOfficeArea.DEATH, DeathsOfficeArea.DEATH_TILE.x, DeathsOfficeArea.DEATH_TILE.z, 0, walkRadius = 0, direction = DeathsOfficeArea.DEATH_FACING)
 
+/*
+ * Owner 2026-09-26: Death looks west, towards the portal (the exit). He turns to whoever talks to him; once that player has
+ * closed the dialogue or the retrieval screen, or walked off, he turns back to the portal.
+ */
+val DEATH_TALKER = gg.rsmod.game.model.attr.AttributeKey<java.lang.ref.WeakReference<gg.rsmod.game.model.entity.Player>>()
+val DEATH_WATCHING = gg.rsmod.game.model.attr.AttributeKey<Boolean>()
+
+fun faceExit(death: gg.rsmod.game.model.entity.Npc) {
+    death.resetFacePawn()
+    death.faceTile(death.tile.transform(-10, 0), 2, 2)
+}
+
+fun busyWithDeath(player: gg.rsmod.game.model.entity.Player): Boolean =
+    (228..245).any { player.isInterfaceVisible(it) } || (1160..1164).any { player.isInterfaceVisible(it) }
+
+fun watchTalker(death: gg.rsmod.game.model.entity.Npc, player: gg.rsmod.game.model.entity.Player) {
+    death.attr[DEATH_TALKER] = java.lang.ref.WeakReference(player)
+    if (death.attr[DEATH_WATCHING] == true) return
+    death.attr[DEATH_WATCHING] = true
+    death.queue {
+        wait(2)
+        while (true) {
+            val talker = death.attr[DEATH_TALKER]?.get()
+            if (talker == null || !talker.isOnline || !talker.tile.isWithinRadius(death.tile, 8) || !busyWithDeath(talker)) break
+            wait(2)
+        }
+        death.attr.remove(DEATH_TALKER)
+        death.attr.remove(DEATH_WATCHING)
+        faceExit(death)
+    }
+}
+
 /* Death sits behind his desk: he is spoken to across it (the desk does not block line of sight). */
 on_npc_option(npc = DeathsOfficeArea.DEATH, option = "talk-to", lineOfSightDistance = 4) {
+    watchTalker(player.getInteractingNpc(), player)
     player.queue { talk() }
 }
 
 on_npc_option(npc = DeathsOfficeArea.DEATH, option = "collect", lineOfSightDistance = 4) {
+    watchTalker(player.getInteractingNpc(), player)
     OfficeInterface.open(player)
 }
 
@@ -64,14 +99,21 @@ on_world_init {
 /**
  * "Enter": the player goes to Death's Office; the portal brings them back to the tile they entered from (OSRS Wiki "Portal
  * (Death's Office)": "It returns the player to a specific tile surrounding the coffin they accessed the area from"). A Death's
- * Domain entrance is a non-magical escape route, so the Deadman countdown applies to it like every other transport.
+ * Domain entrance is a non-magical escape route, so the Deadman countdown applies to it like every other transport - but
+ * not in a safe (guarded) zone such as the Grand Exchange, where nobody can be attacked by a player (owner 2026-09-26:
+ * "death entrance geeft een timer aan van 7 seconden dit is een safezone en hoort niet").
  */
 DeathsOfficeArea.ENTRANCE_LOCS.forEach { loc ->
     on_obj_option(obj = loc, option = "enter") {
         val from = Tile(player.tile)
-        DeadmanTimerGate.requestRoute(player, SevenSecondAction.Kind.TRANSPORT) {
+        val enter = {
             player.attr[DEATHS_OFFICE_RETURN_ATTR] = from.as30BitInteger
             player.moveTo(DeathsOfficeArea.ARRIVAL)
+        }
+        if (GuardedZones.contains(player.tile)) {
+            enter()
+        } else {
+            DeadmanTimerGate.requestRoute(player, SevenSecondAction.Kind.TRANSPORT, enter)
         }
     }
 }

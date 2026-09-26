@@ -463,7 +463,7 @@ object DeathsOfficeInterfaceImportTool {
         return out.toByteArray()
     }
 
-    private class Builder(val fonts: LootKeyInterfaceImportTool.Fonts) {
+    class Builder(val fonts: LootKeyInterfaceImportTool.Fonts) {
         val list = mutableListOf<Comp>()
 
         fun add(c: Comp) {

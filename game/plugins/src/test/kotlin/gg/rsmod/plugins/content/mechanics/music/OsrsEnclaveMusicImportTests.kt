@@ -27,7 +27,8 @@ class OsrsEnclaveMusicImportTests {
                 assertEquals("The Enclave", string(names.entries.getValue(1016)), path)
                 assertEquals(1010, int(groups.entries.getValue(1016)), path)
                 assertEquals(names.entries.keys, groups.entries.keys, "$path: every named track has a song group")
-                assertEquals(1015, names.entries.size, path)
+                // 2026-09-26: + index 1017 "Rest in Peace" (Death's Office, same tool) - 1016 entries.
+        assertEquals(1016, names.entries.size, path)
                 assertTrue(names.arraySize > 1016 && groups.arraySize > 1016, path)
             } finally {
                 library.close()

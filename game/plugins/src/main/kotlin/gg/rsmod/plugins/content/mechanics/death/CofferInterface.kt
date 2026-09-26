@@ -8,6 +8,7 @@ import gg.rsmod.plugins.api.InterfaceDestination
 import gg.rsmod.plugins.api.ext.closeInterface
 import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.api.ext.openInterface
+import gg.rsmod.plugins.api.ext.playSound
 import gg.rsmod.plugins.api.ext.runClientScript
 import gg.rsmod.plugins.api.ext.setComponentHidden
 import gg.rsmod.plugins.api.ext.setComponentItem
@@ -67,7 +68,7 @@ object CofferInterface {
     fun select(player: Player, inventorySlot: Int) {
         if (player.inventory[inventorySlot] == null) return
         player.attr[SELECTED] = inventorySlot
-        player.attr.remove(QUANTITY)
+        // Owner 2026-09-26 (perfect the coffer): the chosen quantity stays when another item is selected, like OSRS var263.
         refresh(player)
     }
 
@@ -159,9 +160,15 @@ object CofferInterface {
     fun confirm(player: Player) {
         val slot = player.attr[SELECTED] ?: return
         val quantity = player.attr[QUANTITY] ?: return
-        when (DeathCoffer.sacrifice(player, slot, quantity, GuidePriceValueProvider(player.world))) {
+        when (val outcome = DeathCoffer.sacrifice(player, slot, quantity, GuidePriceValueProvider(player.world))) {
             CofferOutcome.Ineligible -> player.message(DeathCoffer.CANNOT_TRADE)
             CofferOutcome.Full -> player.message(DeathCoffer.TOO_FULL)
+            is CofferOutcome.Sacrificed -> {
+                val name = player.world.definitions.get(ItemDef::class.java, outcome.item.id).name
+                val what = if (outcome.item.amount > 1) "${spaced(outcome.item.amount.toLong())} x $name" else name
+                player.message("You sacrifice $what to Death's Coffer. <col=ef1020>+${spaced(outcome.coins)} coins</col> (coffer: ${spaced(DeathPayment.coffer(player).toLong())}).")
+                player.playSound(gg.rsmod.plugins.api.cfg.Sfx.COINS)
+            }
             else -> {}
         }
         if (player.inventory[slot] == null) {

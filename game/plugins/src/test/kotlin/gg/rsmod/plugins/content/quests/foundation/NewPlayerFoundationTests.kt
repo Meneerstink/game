@@ -86,7 +86,7 @@ class NewPlayerFoundationTests {
         FoundationQuests.SHORT.forEach { quest ->
             val account = Account(isNew = true)
             assertEquals(0, quest.stage(account.player), quest.name)
-            assertTrue(quest.steps.size in 2..4, "${quest.name}: 3-5 steps including the start")
+            assertTrue(quest.steps.size in 2..6, "${quest.name}: 3-7 steps including the start (Desert Treasure: Eblis, four warriors, Azzanadra)")
             for (stage in 1..quest.steps.size) {
                 quest.setStage(account.player, stage)
                 val journal = quest.getObjective(account.player, stage).objectives
@@ -421,29 +421,36 @@ class NewPlayerFoundationTests {
     }
 
     @Test
-    fun `every short quest has one fight against a real npc with its real combat level`() {
+    fun `every short quest has fights against real npcs with their real combat levels`() {
         val defs = com.google.gson.JsonParser().parse(File("../../data/cfg/npcs/combat-defs.json").readText()).asJsonArray
             .map { it.asJsonObject }.associateBy { it.get("id").asInt }
         FoundationQuests.SHORT.forEach { quest ->
             val fights = quest.steps.mapNotNull { it.fight }
-            assertEquals(1, fights.size, "${quest.name} has one fight")
-            val fight = fights.single()
-            val def = defs[fight.npc]
-            assertTrue(def != null, "${quest.name}: npc ${fight.npc} has a combat definition")
-            assertEquals(fight.level, def!!.get("combat_level").asInt, "${quest.name}: journal level matches the npc")
-            val step = quest.steps.first { it.fight == fight }
-            assertEquals(fight.tile, step.location, "${quest.name}: the fight tile is the step's travel tile (walkability-checked)")
-            assertTrue(step.journal.joinToString(" ").contains("level ${fight.level}"), "${quest.name}: journal shows the level")
+            // Desert Treasure: Dessous, Kamil, Damis and Fareed; every other short quest one fight.
+            assertEquals(if (quest == DesertTreasure) 4 else 1, fights.size, "${quest.name} fights")
+            fights.forEach { fight ->
+                val def = defs[fight.npc]
+                assertTrue(def != null, "${quest.name}: npc ${fight.npc} has a combat definition")
+                assertEquals(fight.level, def!!.get("combat_level").asInt, "${quest.name}: journal level matches the npc")
+                fight.secondForm?.let { assertTrue(defs[it] != null, "${quest.name}: second form $it has a combat definition") }
+                val step = quest.steps.first { it.fight == fight }
+                assertEquals(fight.tile, step.location, "${quest.name}: the fight tile is the step's travel tile (walkability-checked)")
+                assertTrue(step.journal.joinToString(" ").contains("level ${fight.level}"), "${quest.name}: journal shows the level")
+            }
         }
     }
 
     @Test
     fun `a fight kill completes its step with the step's items`() {
         val account = Account(isNew = true)
-        val fightStage = DesertTreasure.steps.indexOfFirst { it.fight != null } + 1
-        DesertTreasure.setStage(account.player, fightStage)
-        FoundationQuests.completeStep(account.player, DesertTreasure, fightStage)
-        assertEquals(fightStage + 1, DesertTreasure.stage(account.player))
+        // Desert Treasure: each of the four warriors' kills hands out his diamond.
+        DesertTreasure.steps.forEachIndexed { index, step ->
+            if (step.fight == null) return@forEachIndexed
+            val fightStage = index + 1
+            DesertTreasure.setStage(account.player, fightStage)
+            FoundationQuests.completeStep(account.player, DesertTreasure, fightStage)
+            assertEquals(fightStage + 1, DesertTreasure.stage(account.player))
+        }
         listOf(Items.BLOOD_DIAMOND, Items.ICE_DIAMOND, Items.SMOKE_DIAMOND, Items.SHADOW_DIAMOND).forEach { assertEquals(1, account.inventory.getItemCount(it)) }
         // Dragon Slayer II's fight on Crandor sends the player back to Draynor.
         assertTrue(DragonSlayerII.steps.first { it.fight != null }.fight!!.returnTo != null)

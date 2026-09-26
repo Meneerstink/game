@@ -30,6 +30,32 @@ on_login {
 // The short quests' fight steps: the owner's kill of a quest foe completes the step (QuestFights).
 on_npc_killed { killer, npc -> QuestFights.onKilled(killer, npc) }
 
+// The quest bosses' own mechanics (QuestBosses: Dessous, Kamil, Damis, Fareed, Elvarg).
+QuestBosses.SCRIPTS.forEach { script ->
+    on_npc_combat(*script.ids) {
+        npc.queue { script.handleSpecialCombat(this) }
+    }
+}
+
+// Quest Helper (QuestHelper): arrows to the tracked quest's next step, and fight-step bosses appearing on arrival.
+on_login {
+    if (QuestHelper.needsTimer(player)) QuestHelper.start(player)
+}
+
+on_timer(QuestHelper.TIMER) {
+    QuestHelper.tick(player)
+    if (QuestHelper.needsTimer(player)) player.timers[QuestHelper.TIMER] = QuestHelper.INTERVAL
+}
+
+on_command("questhelper") {
+    val quest = QuestHelper.tracked(player) ?: FoundationQuests.SHORT.firstOrNull { FoundationQuests.inProgress(player, it) }
+    if (quest == null) {
+        player.message("You have no quest in progress to track.")
+    } else {
+        QuestHelper.toggle(player, quest)
+    }
+}
+
 // ---------------------------------------------------------------------------------------------- the Quest Guide
 
 // Moved or replaced through data/cfg/new_player.yml (choice_npc) - the later intro sends new players here.
@@ -50,6 +76,29 @@ on_npc_option(npc = config.choiceNpc, option = "talk-to") {
     player.queue { questGuide() }
 }
 
+// ---- "Choose your path" (QuestGuideUi): the permanent quest choices as one window ----
+on_button(interfaceId = QuestGuideUi.INTERFACE_ID, component = gg.rsmod.game.tools.importer.DeathsOfficeInterfaceImportTool.CLOSE) {
+    QuestGuideUi.close(player)
+}
+on_interface_close(interfaceId = QuestGuideUi.INTERFACE_ID) {
+    QuestGuideUi.onClosed(player)
+}
+for (r in 0 until gg.rsmod.game.tools.importer.QuestGuideInterfaceImportTool.ROWS) {
+    on_button(interfaceId = QuestGuideUi.INTERFACE_ID, component = gg.rsmod.game.tools.importer.QuestGuideInterfaceImportTool.rowBase(r) + gg.rsmod.game.tools.importer.QuestGuideInterfaceImportTool.ROW_CONFIRM) {
+        QuestGuideUi.clickConfirm(player, r)
+    }
+    for (c in 0 until gg.rsmod.game.tools.importer.QuestGuideInterfaceImportTool.CARDS) {
+        on_button(interfaceId = QuestGuideUi.INTERFACE_ID, component = gg.rsmod.game.tools.importer.QuestGuideInterfaceImportTool.cardBase(r, c)) {
+            QuestGuideUi.clickCard(player, r, c)
+        }
+    }
+}
+on_button(interfaceId = QuestGuideUi.INTERFACE_ID, component = gg.rsmod.game.tools.importer.QuestGuideInterfaceImportTool.YES) {
+    QuestGuideUi.clickYes(player)
+}
+on_button(interfaceId = QuestGuideUi.INTERFACE_ID, component = gg.rsmod.game.tools.importer.QuestGuideInterfaceImportTool.NO) {
+    QuestGuideUi.clickNo(player)
+}
 suspend fun QueueTask.questGuide() {
     chatNpc(
         "Welcome to the hall, adventurer. I keep the records",
@@ -60,7 +109,7 @@ suspend fun QueueTask.questGuide() {
     while (true) {
         val menu = mutableListOf<Pair<String, suspend QueueTask.() -> Unit>>()
         if (!QuestChoices.isLegacy(player) && ChoiceGroup.values().any { QuestChoices.chosen(player, it) == null }) {
-            menu += "Make my quest choices." to { chooseGroup() }
+            menu += "Make my quest choices." to { QuestGuideUi.open(player) }
         }
         if (player.attr[SummoningKit.CLAIMED] != true) menu += "Claim my Summoning start." to { claimSummoning() }
         if (FoundationRewards.pendingLamps(player).isNotEmpty()) menu += "Claim my quest experience lamps." to { claimLamps() }
@@ -70,6 +119,8 @@ suspend fun QueueTask.questGuide() {
         val entry = menu.getOrNull(choice - 1) ?: return
         if (entry.first == "Goodbye.") return
         entry.second(this)
+        // The choice window replaces the dialogue.
+        if (entry.first == "Make my quest choices.") return
     }
 }
 

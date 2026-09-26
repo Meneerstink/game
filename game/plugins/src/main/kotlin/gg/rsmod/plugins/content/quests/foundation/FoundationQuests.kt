@@ -43,6 +43,12 @@ private val EAST_ARDOUGNE = Tile(2568, 3331, 0)
 private val GLIDER_HANGAR = Tile(2648, 4517, 0)
 private val CRASH_ISLAND = Tile(2894, 2726, 0)
 
+// Desert Treasure: the four warriors' posts (2009scape DiamondOf*Listeners spawns; OSRS Wiki quick guide locations).
+private val DESSOUS_GRAVE = Tile(3570, 3405, 0)
+private val KAMIL_PATH = Tile(2857, 3754, 0)
+private val DAMIS_LAIR = Tile(2739, 5088, 0)
+private val FAREED_PIT = Tile(3315, 9376, 0)
+
 private val DIAMONDS = listOf(Items.BLOOD_DIAMOND, Items.ICE_DIAMOND, Items.SMOKE_DIAMOND, Items.SHADOW_DIAMOND)
 
 // ------------------------------------------------------------------------------------------------ Desert Treasure
@@ -75,13 +81,13 @@ object DesertTreasure : ShortQuest(
     override suspend fun QueueTask.intro(): Boolean {
         chatNpc(
             "I've found the tomb of a Mahjarrat under the sand -",
-            "Azzanadra, sealed in by four diamonds. Bandits",
-            "carried the diamonds off before I could study them.",
+            "Azzanadra, sealed in by four diamonds. The four",
+            "warriors who sealed him still keep them.",
             facialExpression = FacialExpression.CALM_TALK,
         )
         chatNpc(
-            "Eblis at the Bandit Camp knows who has them.",
-            "Fetch them for me? I'd go myself, but I bruise.",
+            "Eblis at the Bandit Camp knows where they are.",
+            "Fetch the diamonds? I'd go myself, but I bruise.",
             facialExpression = FacialExpression.HAPPY,
         )
         if (options("I'll recover the diamonds.", "Not right now.", title = "Start Desert Treasure?") != 1) return false
@@ -94,19 +100,32 @@ object DesertTreasure : ShortQuest(
             QuestStep(
                 npc = Npcs.EBLIS,
                 journal = listOf("I should travel to the ${red("Bandit Camp")} in the desert", "and speak to ${red("Eblis")} about the four diamonds."),
-                done = listOf("Eblis told me the Bandit champion took the diamonds."),
+                done = listOf("Eblis told me which warrior guards each diamond."),
                 place = "the Bandit Camp",
                 location = BANDIT_CAMP,
                 talk = {
                     chatNpc(
-                        "So the digger sent you. The four of them fought",
-                        "over those stones - Damis, Fareed, Kamil and",
-                        "Dessous. None of them came back for them.",
+                        "So the digger sent you. Four warriors of Zamorak",
+                        "sealed Azzanadra in: Dessous, Kamil, Damis and",
+                        "Fareed. Each still guards the diamond he took.",
                         facialExpression = FacialExpression.SECRETLY_TALKING,
                     )
                     chatNpc(
-                        "But our champion found them first, and he won't",
-                        "share. Beat him and they're yours - I won't stop you.",
+                        "Dessous, the vampyre, sleeps in a grave north of",
+                        "Castle Drakan. Mind your prayers - he hisses at",
+                        "those who guard against his claws.",
+                        facialExpression = FacialExpression.WORRIED,
+                    )
+                    chatNpc(
+                        "Kamil walks the Ice Path above Trollheim; his ice",
+                        "will freeze you where you stand. Damis hides in",
+                        "the Shadow Dungeon and does not die just once.",
+                        facialExpression = FacialExpression.WORRIED,
+                    )
+                    chatNpc(
+                        "And Fareed burns in the Smoke Dungeon west of",
+                        "Pollnivneach. Wear ice gloves, or fight him with",
+                        "water spells. Bring me word when all four fall.",
                         facialExpression = FacialExpression.EVIL,
                     )
                     true
@@ -114,14 +133,57 @@ object DesertTreasure : ShortQuest(
             ),
             QuestStep(
                 npc = Npcs.EBLIS,
-                journal = listOf("I must defeat the ${red("Bandit champion")} (level 70) at the", "Bandit Camp to win the four diamonds."),
-                done = listOf("I defeated the Bandit champion and took the four", "Diamonds of Azzanadra."),
-                place = "the Bandit Camp",
-                location = BANDIT_CAMP,
-                gives = DIAMONDS.map { it to 1 },
-                fight = QuestFight(Npcs.BANDIT_CHAMPION, "Bandit champion", 70, BANDIT_CAMP, "Those diamonds are mine!"),
+                journal = listOf("I must defeat ${red("Dessous")} (level 139) at the graveyard", "north of Castle Drakan for the Diamond of Blood."),
+                done = listOf("I destroyed Dessous and took the Diamond of Blood."),
+                place = "the graveyard north of Castle Drakan",
+                location = DESSOUS_GRAVE,
+                gives = listOf(Items.BLOOD_DIAMOND to 1),
+                fight = QuestFight(Npcs.DESSOUS, "Dessous", 139, DESSOUS_GRAVE, "Who dares disturb my rest?"),
                 talk = {
-                    chatNpc("The champion's waiting for you. Try not to die.", facialExpression = FacialExpression.LAUGH)
+                    chatNpc("Dessous waits in his grave. Protect yourself well.", facialExpression = FacialExpression.WORRIED)
+                    true
+                },
+            ),
+            QuestStep(
+                npc = Npcs.EBLIS,
+                journal = listOf("I must defeat ${red("Kamil")} (level 154) on the Ice Path", "above Trollheim for the Diamond of Ice."),
+                done = listOf("I shattered Kamil and took the Diamond of Ice."),
+                place = "the Ice Path above Trollheim",
+                location = KAMIL_PATH,
+                gives = listOf(Items.ICE_DIAMOND to 1),
+                fight = QuestFight(Npcs.KAMIL, "Kamil", 154, KAMIL_PATH, "You will freeze, like the others!"),
+                talk = {
+                    chatNpc("Kamil walks the Ice Path. Dress warmly.", facialExpression = FacialExpression.CALM_TALK)
+                    true
+                },
+            ),
+            QuestStep(
+                npc = Npcs.EBLIS,
+                journal = listOf("I must defeat ${red("Damis")} (level 103, then 174) in the", "Shadow Dungeon for the Diamond of Shadow."),
+                done = listOf("I defeated both forms of Damis and took the", "Diamond of Shadow."),
+                place = "the Shadow Dungeon",
+                location = DAMIS_LAIR,
+                gives = listOf(Items.SHADOW_DIAMOND to 1),
+                fight =
+                    QuestFight(
+                        Npcs.DAMIS, "Damis", 103, DAMIS_LAIR, "The shadows will take you.",
+                        secondForm = Npcs.DAMIS_1975, secondFormShout = "Now I show... you... my true power!",
+                    ),
+                talk = {
+                    chatNpc("Damis lurks in the Shadow Dungeon. He rises twice.", facialExpression = FacialExpression.WORRIED)
+                    true
+                },
+            ),
+            QuestStep(
+                npc = Npcs.EBLIS,
+                journal = listOf("I must defeat ${red("Fareed")} (level 167) in the Smoke", "Dungeon for the Diamond of Smoke. Ice gloves or water", "spells help against his heat."),
+                done = listOf("I put out Fareed's flames and took the Diamond of Smoke."),
+                place = "the Smoke Dungeon",
+                location = FAREED_PIT,
+                gives = listOf(Items.SMOKE_DIAMOND to 1),
+                fight = QuestFight(Npcs.FAREED, "Fareed", 167, FAREED_PIT, "Burn, fool!"),
+                talk = {
+                    chatNpc("Fareed burns in the Smoke Dungeon. Ice gloves!", facialExpression = FacialExpression.WORRIED)
                     true
                 },
             ),
@@ -1147,6 +1209,7 @@ object FoundationQuests {
         if (!accepted || quest.stage(task.player) != 0) return
         quest.setStage(task.player, 1)
         task.player.message("You've started a new quest: <col=5861e9>${quest.name}")
+        QuestHelper.onStarted(task.player, quest)
         val first = quest.steps.first()
         if (first.location != null && first.place != null) with(quest) { task.offerTravel(first.place, first.location) }
     }
@@ -1160,7 +1223,13 @@ object FoundationQuests {
                 task.chatNpc("Go on, it's right there! Finish the fight.", facialExpression = FacialExpression.ANGRY)
                 return
             }
-            if (step.talk(task) && quest.stage(player) == stage) QuestFights.start(player, quest, stage)
+            if (!step.talk(task) || quest.stage(player) != stage) return
+            val fight = step.fight
+            if (player.tile.height == fight.tile.height && player.tile.isWithinRadius(fight.tile, QuestFights.REACH)) {
+                QuestFights.start(player, quest, stage)
+            } else if (step.location != null && step.place != null) {
+                with(quest) { task.offerTravel(step.place, step.location) }
+            }
             return
         }
         if (!step.talk(task)) return
@@ -1185,6 +1254,7 @@ object FoundationQuests {
         }
         quest.setStage(player, stage + 1)
         player.message("Your quest journal has been updated: <col=5861e9>${quest.name}")
+        QuestHelper.start(player)
         val next = quest.steps[stage]
         if (next.fight != null && next.npc == step.npc) QuestFights.start(player, quest, stage + 1)
     }

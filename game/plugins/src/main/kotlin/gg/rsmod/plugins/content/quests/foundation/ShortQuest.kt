@@ -47,6 +47,9 @@ class QuestFight(
     val shout: String,
     /** Where the player is taken back to after the kill (a fight the step npc sailed or sent them to), or null. */
     val returnTo: Tile? = null,
+    /** A second form that takes the first one's place when it dies (Damis), with its lines; the second kill counts. */
+    val secondForm: Int? = null,
+    val secondFormShout: String = "",
 )
 
 /**
