@@ -1470,7 +1470,6 @@ object FoundationQuests {
             QuestNpcPost(Npcs.ALI_THE_WISE, Tile(3420, 2938), gg.rsmod.game.model.Direction.SOUTH, listOf("Wisdom is knowing which doors to leave closed.", "Nardah has enough trouble without opening more.")),
             QuestNpcPost(Npcs.GOSSIP, Tile(2742, 3555), gg.rsmod.game.model.Direction.SOUTH, listOf("Did you hear about the Sinclairs? Oh, you were", "there? Then you know more than I do!")),
             QuestNpcPost(Npcs.ANNA, Tile(2734, 3575), gg.rsmod.game.model.Direction.SOUTH, listOf("Thank you again for believing me.", "Father would have been proud of you.")),
-            QuestNpcPost(Npcs.EDMOND, Tile(2568, 3334), gg.rsmod.game.model.Direction.EAST, listOf("Ardougne is quieter these days, thank Saradomin.", "Elena sends her regards from Prifddinas.")),
             QuestNpcPost(Npcs.ELENA, Tile(2592, 3336), gg.rsmod.game.model.Direction.WEST, listOf("There's always another sickness to cure.", "Mind how you go.")),
             QuestNpcPost(Npcs.DAERO, Tile(2648, 4519), gg.rsmod.game.model.Direction.SOUTH, listOf("The gliders run on time again.", "Glough's gorillas won't trouble the hangar now.")),
             QuestNpcPost(Npcs.WAYDAR, Tile(2891, 2724), gg.rsmod.game.model.Direction.EAST, listOf("Crash Island is quiet now.", "I rather miss the excitement.")),

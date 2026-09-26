@@ -278,6 +278,8 @@ mapOf(
     Npcs.BRUNDT_THE_CHIEFTAIN to listOf("Welcome to Rellekka, outerlander. Mind your", "manners in my longhall."),
     Npcs.GARKOR to listOf("The 10th squad stands ready. Ook!", "Er - I mean, at your service."),
     Npcs.ANITA to listOf("It's so peaceful by the Grand Tree now.", "Thank you for everything."),
+    // Edmond already stands in East Ardougne (spawns_10292); the quest used to spawn a second one next to him.
+    Npcs.EDMOND to listOf("Ardougne is quieter these days, thank Saradomin.", "Elena sends her regards from Prifddinas."),
 ).forEach { (id, idle) ->
     on_npc_option(npc = id, option = "talk-to") {
         player.queue {
