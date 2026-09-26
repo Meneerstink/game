@@ -11,11 +11,14 @@ import gg.rsmod.plugins.api.ext.setVarp
 import gg.rsmod.plugins.content.quests.buildQuestFinish
 
 /**
- * An experience lamp a quest hands out, kept on the account until the player picks a skill at the Quest Guide
- * ([FoundationQuests.claimLamp]). [skills] are the skills it may go to and [minLevel] the level the chosen skill needs
- * (both from the quest's wiki reward), so a lamp waits safely until the player is ready, like the real items.
+ * An experience lamp a quest hands out. Owner 2026-09-26: quest rewards go straight into the inventory, so every lamp is a
+ * real item ([item]: the Experience lamp for any skill, the Combat lamp otherwise) and a record of what it gives waits on
+ * the account; rubbing the item uses the oldest record for that item ([FoundationRewards.takeLamp]). [skills] are the
+ * skills it may go to; lamps have no level requirement (owner 2026-09-26), [minLevel] is kept only for old records.
  */
 data class QuestLamp(val xp: Int, val skills: List<Int>, val minLevel: Int, val label: String) {
+    val item: Int get() = if (skills.size >= FoundationRewards.ALL_SKILLS.size) gg.rsmod.plugins.api.cfg.Items.EXPERIENCE_LAMP else gg.rsmod.plugins.api.cfg.Items.COMBAT_LAMP_15390
+
     fun encode(): String = "$xp:${skills.joinToString(",")}:$minLevel:$label"
 
     companion object {
@@ -68,10 +71,13 @@ object FoundationRewards {
         player.setVarp(Varps.QUEST_POINTS, player.getVarp(Varps.QUEST_POINTS) + quest.pointReward)
         reward.unlock(player)
         reward.xp.forEach { (skill, amount) -> player.addXp(skill, amount, modifiers = false) }
-        reward.lamps.forEach { addLamp(player, it) }
+        reward.lamps.forEach {
+            addLamp(player, it)
+            grant(player, it.item, 1)
+        }
         reward.items.forEach { (item, amount) -> grant(player, item, amount) }
         if (reward.lamps.isNotEmpty()) {
-            player.message("Your quest experience lamps wait for you at the Quest Guide in the Grand Exchange hall.")
+            player.message("<col=ef1020>Your quest experience lamps are in your inventory - rub them to choose a skill.</col>")
         }
         val lines = mutableListOf("${quest.pointReward} Quest Point${if (quest.pointReward == 1) "" else "s"}")
         lines += reward.lines
@@ -87,6 +93,30 @@ object FoundationRewards {
     }
 
     private fun addLamp(player: Player, lamp: QuestLamp) = setPendingLamps(player, pendingLamps(player) + lamp)
+
+    /** The oldest waiting lamp that [item] stands for, removed from the account; null when none waits (an ordinary lamp). */
+    fun takeLamp(player: Player, item: Int): QuestLamp? {
+        val lamps = pendingLamps(player).toMutableList()
+        val index = lamps.indexOfFirst { it.item == item }
+        if (index < 0) return null
+        val lamp = lamps.removeAt(index)
+        setPendingLamps(player, lamps)
+        return lamp
+    }
+
+    /** The oldest waiting lamp for [item], without taking it. */
+    fun peekLamp(player: Player, item: Int): QuestLamp? = pendingLamps(player).firstOrNull { it.item == item }
+
+    val LAMPS_ITEMISED = AttributeKey<Boolean>(persistenceKey = "foundation_lamps_itemised")
+
+    /** Lamps that waited at the Quest Guide before 2026-09-26 become items once. */
+    fun itemiseOldLamps(player: Player) {
+        if (player.attr[LAMPS_ITEMISED] == true) return
+        player.attr[LAMPS_ITEMISED] = true
+        val lamps = pendingLamps(player)
+        lamps.forEach { grant(player, it.item, 1) }
+        if (lamps.isNotEmpty()) player.message("<col=ef1020>Your ${lamps.size} waiting quest lamp${if (lamps.size == 1) " is" else "s are"} now in your inventory - rub to use.</col>")
+    }
 
     /** Inventory first, then the bank; only when both are full does the rest land on the ground under the player. */
     fun grant(player: Player, item: Int, amount: Int) {

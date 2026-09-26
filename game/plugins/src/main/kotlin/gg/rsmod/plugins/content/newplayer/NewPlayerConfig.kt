@@ -59,7 +59,7 @@ data class NewPlayerConfig(
                         PlanRow(SummoningPouchData.BULL_ANT, 40),
                         PlanRow(SummoningPouchData.SPIRIT_TERRORBIRD, 52),
                     ),
-                choiceNpc = Npcs.QUEST_GUIDE,
+                choiceNpc = gg.rsmod.game.tools.importer.QuestGuideNpcTool.NPC_ID,
                 choiceNpcTile = Tile(3164, 3486, 1),
                 choiceNpcFacing = Direction.NORTH,
                 // OSRS item 22330 "Deadman starter pack", imported as 23881 (OsrsItemImportTool batch starter-pack).

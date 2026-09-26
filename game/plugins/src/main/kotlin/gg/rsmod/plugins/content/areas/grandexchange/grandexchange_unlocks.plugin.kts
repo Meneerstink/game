@@ -83,8 +83,11 @@ on_item_option(item = Items.COMBAT_LAMP_15390, option = "rub") {
     player.queue { useGeLamp(Items.COMBAT_LAMP_15390, 20_000.0, combatOnly = true) }
 }
 
-suspend fun QueueTask.useGeLamp(item: Int, xp: Double, combatOnly: Boolean) {
-    val groups =
+suspend fun QueueTask.useGeLamp(item: Int, fixedXp: Double, combatOnly: Boolean) {
+    // Owner 2026-09-26: quest lamps are these items now; a waiting quest-lamp record decides the experience and the skills.
+    val questLamp = gg.rsmod.plugins.content.quests.foundation.FoundationRewards.peekLamp(player, item)
+    val xp = questLamp?.xp?.toDouble() ?: fixedXp
+    val allGroups =
         if (combatOnly) {
             arrayOf(
                 "Attack" to Skills.ATTACK,
@@ -121,7 +124,9 @@ suspend fun QueueTask.useGeLamp(item: Int, xp: Double, combatOnly: Boolean) {
                 "Dungeoneering" to Skills.DUNGEONEERING,
             )
         }
-    val pageSize = 5
+    val groups = if (questLamp == null) allGroups else Skills.run { questLamp.skills.map { getSkillName(world, it) to it }.toTypedArray() }
+    // Three skills a page: with "More skills" and "Cancel" that is the chatbox's limit of five (seven were cut off).
+    val pageSize = 3
     var page = 0
     while (true) {
         val pageItems = groups.drop(page * pageSize).take(pageSize)
@@ -129,7 +134,7 @@ suspend fun QueueTask.useGeLamp(item: Int, xp: Double, combatOnly: Boolean) {
         val hasMore = (page + 1) * pageSize < groups.size
         if (hasMore) labels += "More skills"
         labels += "Cancel"
-        val choice = options(*labels.toTypedArray(), title = "Choose a skill.")
+        val choice = options(*labels.toTypedArray(), title = "Choose a skill (${String.format(java.util.Locale.US, "%,d", xp.toInt())} XP)")
         when {
             choice <= 0 -> return
             choice == labels.size -> return
@@ -140,8 +145,15 @@ suspend fun QueueTask.useGeLamp(item: Int, xp: Double, combatOnly: Boolean) {
             else -> {
                 val selected = pageItems[choice - 1]
                 if (!player.inventory.remove(item).hasSucceeded()) return
-                player.addXp(selected.second, xp)
-                player.message("The lamp grants you ${xp.toInt()} ${selected.first} experience.")
+                if (questLamp != null) {
+                    gg.rsmod.plugins.content.quests.foundation.FoundationRewards.takeLamp(player, item)
+                    // Quest experience is exact (no rate or bonus), like every foundation quest reward.
+                    player.addXp(selected.second, xp, modifiers = false)
+                } else {
+                    player.addXp(selected.second, xp)
+                }
+                player.playSound(gg.rsmod.plugins.api.cfg.Sfx.UNLOCK)
+                player.message("The lamp grants you ${String.format(java.util.Locale.US, "%,d", xp.toInt())} ${selected.first} experience.")
                 return
             }
         }

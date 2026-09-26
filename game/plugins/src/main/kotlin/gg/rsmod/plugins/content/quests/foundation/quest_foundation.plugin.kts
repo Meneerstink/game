@@ -23,6 +23,8 @@ FoundationQuests.register()
 
 on_login {
     if (QuestChoices.isLegacy(player)) QuestChoices.applyLegacy(player)
+    // Owner 2026-09-26: quest lamps are inventory items; lamps that waited at the Quest Guide are handed out once.
+    FoundationRewards.itemiseOldLamps(player)
     FoundationQuests.completeListedQuests(player)
     FoundationQuests.applyQuestListOrder(player)
 }
@@ -68,6 +70,11 @@ spawn_npc(
     direction = config.choiceNpcFacing,
 )
 
+// Owner 2026-09-26: right-click "Quest choices" opens "Choose your path" (also to see what was chosen).
+on_npc_option(npc = config.choiceNpc, option = "quest choices") {
+    QuestGuideUi.open(player)
+}
+
 on_npc_option(npc = config.choiceNpc, option = "talk-to") {
     if (player.getInteractingNpc().spawnTile != config.choiceNpcTile) {
         player.queue { chatNpc("The Quest Guide in the Grand Exchange hall keeps the quest records now.") }
@@ -108,11 +115,9 @@ suspend fun QueueTask.questGuide() {
     )
     while (true) {
         val menu = mutableListOf<Pair<String, suspend QueueTask.() -> Unit>>()
-        if (!QuestChoices.isLegacy(player) && ChoiceGroup.values().any { QuestChoices.chosen(player, it) == null }) {
-            menu += "Make my quest choices." to { QuestGuideUi.open(player) }
-        }
+        // The choice window also shows what was chosen, so it is always on offer (and on the npc's right-click).
+        menu += (if (!QuestChoices.isLegacy(player) && ChoiceGroup.values().any { QuestChoices.chosen(player, it) == null }) "Make my quest choices." else "View my quest choices.") to { QuestGuideUi.open(player) }
         if (player.attr[SummoningKit.CLAIMED] != true) menu += "Claim my Summoning start." to { claimSummoning() }
-        if (FoundationRewards.pendingLamps(player).isNotEmpty()) menu += "Claim my quest experience lamps." to { claimLamps() }
         menu += "Where do the quests start?" to { questDirections() }
         menu += "Goodbye." to { }
         val choice = options(*menu.take(5).map { it.first }.toTypedArray(), title = "Quest Guide")
@@ -120,7 +125,7 @@ suspend fun QueueTask.questGuide() {
         if (entry.first == "Goodbye.") return
         entry.second(this)
         // The choice window replaces the dialogue.
-        if (entry.first == "Make my quest choices.") return
+        if (entry.first.endsWith("my quest choices.")) return
     }
 }
 

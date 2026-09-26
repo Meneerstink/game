@@ -34,8 +34,9 @@ summoning_kit:
 
 choice_npc:
   # The npc the new-player intro sends players to for the permanent quest choices, the Summoning kit and quest lamps.
-  # Change the id or the tile here to move or replace it (949 = cache "Quest Guide"); facing is n, e, s or w.
-  npc: 949
+  # Change the id or the tile here to move or replace it (14482 = the quest-cape "Quest Guide", QuestGuideNpcTool;
+  # 949 = the plain cache one); facing is n, e, s or w.
+  npc: 14482
   x: 3164
   z: 3486
   level: 1
