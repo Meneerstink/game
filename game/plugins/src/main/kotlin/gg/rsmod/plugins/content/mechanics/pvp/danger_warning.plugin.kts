@@ -15,6 +15,9 @@ on_world_init {
     DangerWarning.open = { player, destination, walk ->
         player.queue(TaskPriority.STRONG) { showDangerWarning(this, destination, walk) }
     }
+    DangerWarning.confirm = { player, text, onEnter ->
+        player.queue(TaskPriority.STRONG) { if (confirmDanger(this, text)) onEnter() }
+    }
 }
 
 on_login {
@@ -82,4 +85,19 @@ suspend fun showDangerWarning(
         if (walk) player.walkTo(destination) else player.moveTo(destination)
         return
     }
+}
+
+/** Interface 382 with [text]; true when the player clicked "Enter" (close, or anything else, cancels). */
+suspend fun confirmDanger(task: QueueTask, text: String): Boolean {
+    val player = task.player
+    player.openInterface(DangerWarning.INTERFACE_ID, InterfaceDestination.MAIN_SCREEN)
+    player.setComponentText(DangerWarning.INTERFACE_ID, DangerWarning.BODY, text)
+    player.setComponentHidden(DangerWarning.INTERFACE_ID, DangerWarning.DONT_ASK, true)
+    task.terminateAction = { player.closeInterface(DangerWarning.INTERFACE_ID) }
+    task.waitReturnValue()
+    val msg = task.requestReturnValue as? ResumePauseButtonMessage
+    player.closeInterface(DangerWarning.INTERFACE_ID)
+    task.terminateAction = null
+    return msg != null && msg.interfaceId == DangerWarning.INTERFACE_ID &&
+        (msg.component == DangerWarning.ENTER || msg.component == DangerWarning.ENTER_HOVER)
 }

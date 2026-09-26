@@ -31,6 +31,8 @@ class QuestStep(
     val gives: List<Pair<Int, Int>> = emptyList(),
     /** A fight step: [npc] sends the player into it, killing [fight]'s foe completes the step (QuestFights). */
     val fight: QuestFight? = null,
+    /** The Quest Helper's tip for this step: what to bring, or the boss's mechanic. */
+    val tip: String? = null,
     val talk: suspend QueueTask.() -> Boolean,
 )
 
@@ -153,7 +155,10 @@ abstract class ShortQuest(
     /** Offers the teleport to [location]; used by the quest's own npcs. */
     suspend fun QueueTask.offerTravel(place: String, location: Tile) {
         if (options("Can you get me to $place?", "I'll find my own way.", title = "Travel") != 1) return
-        player.canTeleport(TeleportType.MODERN) { player.teleport(location, TeleportType.MODERN) }
+        // Owner 2026-09-26: a Dangerous destination asks first (interface 382, "check your world map").
+        gg.rsmod.plugins.content.mechanics.pvp.DangerWarning.questTravel(player, location) {
+            player.canTeleport(TeleportType.MODERN) { player.teleport(location, TeleportType.MODERN) }
+        }
     }
 
 

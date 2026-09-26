@@ -154,6 +154,7 @@ object DesertTreasure : ShortQuest(
                 place = "the graveyard north of Castle Drakan",
                 location = DESSOUS_GRAVE,
                 gives = listOf(Items.BLOOD_DIAMOND to 1),
+                tip = "Dessous hisses magic and ranged at you while you protect from melee. Bring food.",
                 fight = QuestFight(Npcs.DESSOUS, "Dessous", 139, DESSOUS_GRAVE, "Who dares disturb my rest?"),
                 talk = {
                     chatNpc("Dessous waits in his grave. Protect yourself well.", facialExpression = FacialExpression.WORRIED)
@@ -167,6 +168,7 @@ object DesertTreasure : ShortQuest(
                 place = "the Ice Path above Trollheim",
                 location = KAMIL_PATH,
                 gives = listOf(Items.ICE_DIAMOND to 1),
+                tip = "Kamil freezes you in place. Bring food and fight from where you stand.",
                 fight = QuestFight(Npcs.KAMIL, "Kamil", 154, KAMIL_PATH, "You will freeze, like the others!"),
                 talk = {
                     chatNpc("Kamil walks the Ice Path. Dress warmly.", facialExpression = FacialExpression.CALM_TALK)
@@ -180,6 +182,7 @@ object DesertTreasure : ShortQuest(
                 place = "the Shadow Dungeon",
                 location = DAMIS_LAIR,
                 gives = listOf(Items.SHADOW_DIAMOND to 1),
+                tip = "Damis rises a second time and then drains your Prayer with every hit.",
                 fight =
                     QuestFight(
                         Npcs.DAMIS, "Damis", 103, DAMIS_LAIR, "The shadows will take you.",
@@ -197,6 +200,7 @@ object DesertTreasure : ShortQuest(
                 place = "the Smoke Dungeon",
                 location = FAREED_PIT,
                 gives = listOf(Items.SMOKE_DIAMOND to 1),
+                tip = "Wear ice gloves to keep your weapon, or use water spells - other magic does nothing.",
                 fight = QuestFight(Npcs.FAREED, "Fareed", 167, FAREED_PIT, "Burn, fool!"),
                 talk = {
                     chatNpc("Fareed burns in the Smoke Dungeon. Ice gloves!", facialExpression = FacialExpression.WORRIED)
@@ -368,6 +372,7 @@ object LunarDiplomacy : ShortQuest(
                 done = listOf("I killed the suqah on the path from the dock."),
                 place = "Lunar Isle",
                 location = LUNAR_DOCK,
+                tip = "Bring food and a weapon: suqahs hit with melee and magic.",
                 fight = QuestFight(Npcs.SUQAH, "suqah", 111, LUNAR_DOCK, "Grraaah!"),
                 talk = {
                     chatNpc("The suqah is still on the path. Go on!", facialExpression = FacialExpression.WORRIED)
@@ -410,6 +415,7 @@ object LunarDiplomacy : ShortQuest(
                 done = listOf("I defeated my own doubt in the dream world."),
                 place = "the Lunar Isle altar",
                 location = LUNAR_ALTAR,
+                tip = "You cannot change equipment in the dream: wear your gear before you go.",
                 fight = QuestFight(Npcs.ME, "Me", 79, LUNAR_ALTAR, "You can't beat me. I know all your moves."),
                 talk = {
                     chatNpc("Go to the altar on Lunar Isle and dream.", facialExpression = FacialExpression.EYES_CLOSED)
@@ -465,16 +471,16 @@ object TempleAtSenntisten : ShortQuest(
             xp = listOf(Skills.PRAYER to 10_000.0),
             lamps =
                 listOf(
-                    QuestLamp(23_000, FoundationRewards.ALL_SKILLS, 50, "23,000 XP lamp (any skill, level 50+)"),
-                    QuestLamp(20_000, FoundationRewards.COMBAT_SKILLS, 50, "20,000 XP combat lamp (level 50+)"),
-                    QuestLamp(20_000, FoundationRewards.COMBAT_SKILLS, 50, "20,000 XP combat lamp (level 50+)"),
+                    QuestLamp(23_000, FoundationRewards.ALL_SKILLS, 1, "23,000 XP lamp (any skill)"),
+                    QuestLamp(20_000, FoundationRewards.COMBAT_SKILLS, 1, "20,000 XP combat lamp"),
+                    QuestLamp(20_000, FoundationRewards.COMBAT_SKILLS, 1, "20,000 XP combat lamp"),
                 ),
             items = listOf(Items.ANCIENT_HYMNAL to 1),
             lines =
                 listOf(
                     "10,000 Prayer XP",
-                    "A 23,000 XP lamp (any skill, level 50+)",
-                    "Two 20,000 XP combat lamps (level 50+)",
+                    "A 23,000 XP lamp (any skill)",
+                    "Two 20,000 XP combat lamps",
                     "The Ancient Curses prayer book",
                 ),
             unlock = { p ->
@@ -554,6 +560,7 @@ object TempleAtSenntisten : ShortQuest(
                 done = listOf("I shattered the ice demon and took the Frostenhorn."),
                 place = "Ghorrock, in the Wilderness",
                 location = GHORROCK,
+                tip = "Ghorrock is deep in the Wilderness. Water spells do not harm the ice demon.",
                 fight = QuestFight(Npcs.ICE_DEMON, "Ice demon", 177, GHORROCK, "Cold... so cold... you will join me!"),
                 talk = {
                     chatNpc("The Frostenhorn waits in Ghorrock. Beware the Wilderness.", facialExpression = FacialExpression.WORRIED)
@@ -566,6 +573,7 @@ object TempleAtSenntisten : ShortQuest(
                 done = listOf("I defeated Dharok and took the Barrows icon."),
                 place = "the Barrows",
                 location = BARROWS,
+                tip = "Dharok hits harder the lower his life points are. Protect from Melee helps.",
                 fight = QuestFight(Npcs.DHAROK_THE_WRETCHED_14264, "Dharok the Wretched", 115, BARROWS, "You dare disturb my rest?"),
                 talk = {
                     chatNpc(
@@ -623,15 +631,15 @@ object KingsRansom : ShortQuest(
             icon = Items.ANTIQUE_LAMP,
             lamps =
                 listOf(
-                    QuestLamp(5_000, listOf(Skills.MAGIC), 45, "5,000 Magic XP lamp (level 45+)"),
-                    QuestLamp(5_000, FoundationRewards.ALL_SKILLS, 50, "5,000 XP antique lamp (any skill, level 50+)"),
-                    QuestLamp(33_000, listOf(Skills.DEFENCE), 65, "33,000 Defence XP lamp (level 65+)"),
+                    QuestLamp(5_000, listOf(Skills.MAGIC), 1, "5,000 Magic XP lamp"),
+                    QuestLamp(5_000, FoundationRewards.ALL_SKILLS, 1, "5,000 XP antique lamp (any skill)"),
+                    QuestLamp(33_000, listOf(Skills.DEFENCE), 1, "33,000 Defence XP lamp"),
                 ),
             lines =
                 listOf(
-                    "A 5,000 Magic XP lamp (level 45+)",
-                    "A 5,000 XP antique lamp (level 50+)",
-                    "A 33,000 Defence XP lamp (level 65+)",
+                    "A 5,000 Magic XP lamp",
+                    "A 5,000 XP antique lamp",
+                    "A 33,000 Defence XP lamp",
                     "Knight Waves done: Chivalry and Piety",
                 ),
             unlock = { p -> p.setVarbit(KNIGHT_WAVES_VARBIT, KNIGHT_WAVES_COMPLETE) },
@@ -758,6 +766,7 @@ object KingsRansom : ShortQuest(
                 done = listOf("I defeated all eight Knight Waves."),
                 place = "the Knight Waves Training Ground",
                 location = KNIGHT_WAVES,
+                tip = "Eight knights in a row, no rest between them. Bring plenty of food.",
                 fight =
                     QuestFight(
                         Npcs.SIR_BEDIVERE_6177, "Sir Bedivere", 110, KNIGHT_WAVES, "Wave one! Have at you!",
@@ -824,14 +833,14 @@ object DesertTreasureII : ShortQuest(
                     QuestLamp(
                         100_000,
                         listOf(Skills.ATTACK, Skills.STRENGTH, Skills.DEFENCE, Skills.CONSTITUTION, Skills.RANGED, Skills.MAGIC, Skills.PRAYER),
-                        60,
-                        "100,000 XP ancient lamp (combat or Prayer, level 60+)",
+                        1,
+                        "100,000 XP ancient lamp (combat or Prayer)",
                     )
                 },
             items = listOf(Items.RING_OF_SHADOWS_UNCHARGED to 1),
             lines =
                 listOf(
-                    "Three 100,000 XP ancient lamps (level 60+)",
+                    "Three 100,000 XP ancient lamps",
                     "The Ring of shadows",
                     "Ability to wear the ancient rings",
                     "Ability to make and wield the ancient sceptres",
@@ -922,6 +931,7 @@ object DesertTreasureII : ShortQuest(
                 done = listOf("I put the vault's mummy back to rest."),
                 place = "Nardah",
                 location = NARDAH,
+                tip = "Bring food and a weapon for the mummy.",
                 fight = QuestFight(Npcs.MUMMY_2018, "mummy", 84, NARDAH, "Mmmhhh..."),
                 talk = {
                     chatNpc("The mummy still walks. Please, hurry.", facialExpression = FacialExpression.SCARED)
@@ -1101,6 +1111,7 @@ object DragonSlayerII : ShortQuest(
                 done = listOf("I slew Elvarg again and Ned sailed me back."),
                 place = "Crandor",
                 location = CRANDOR,
+                tip = "Wear an anti-dragon shield or drink an antifire potion: Elvarg breathes fire.",
                 fight = QuestFight(Npcs.ELVARG, "Elvarg", 83, CRANDOR, "Rrrooaaarr!", returnTo = DRAYNOR),
                 talk = {
                     chatNpc("Back to Crandor, then? Hold on to your hat.", facialExpression = FacialExpression.LAUGH)
@@ -1200,6 +1211,7 @@ object SongOfTheElves : ShortQuest(
                 done = listOf("I defeated the armed Mourner and the city rose up."),
                 place = "West Ardougne",
                 location = WEST_ARDOUGNE,
+                tip = "Bring food and a weapon for the armed Mourner.",
                 fight = QuestFight(Npcs.MOURNER_2373, "armed Mourner", 108, WEST_ARDOUGNE, "You'll never leave the city!"),
                 talk = {
                     chatNpc("He's still at his post in the west. Be careful!", facialExpression = FacialExpression.WORRIED)
@@ -1233,6 +1245,7 @@ object SongOfTheElves : ShortQuest(
                 done = listOf("I defeated Lord Iorwerth's elf warrior."),
                 place = "Lletya",
                 location = LLETYA,
+                tip = "The elf warrior shoots from range. Protect from Missiles helps.",
                 fight = QuestFight(Npcs.ELF_WARRIOR, "elf warrior", 90, LLETYA, "For Lord Iorwerth!"),
                 talk = {
                     chatNpc("He's close - I can hear his bowstring.", facialExpression = FacialExpression.SCARED)
@@ -1361,6 +1374,7 @@ object MonkeyMadnessII : ShortQuest(
                 done = listOf("I beat the bought monkey guard; he talked of Crash Island."),
                 place = "Ape Atoll",
                 location = APE_ATOLL_GUARD,
+                tip = "The monkey guard hits hard in melee. Protect from Melee helps.",
                 fight = QuestFight(Npcs.MONKEY_GUARD_1459, "monkey guard", 167, APE_ATOLL_GUARD, "Ook! Glough pays better!"),
                 talk = {
                     chatNpc("The guard is still at his post. Go!", facialExpression = FacialExpression.TOUGH)
@@ -1389,6 +1403,7 @@ object MonkeyMadnessII : ShortQuest(
                 done = listOf("I shot down Glough's monkey archer and his plan fell apart."),
                 place = "Crash Island",
                 location = CRASH_ISLAND,
+                tip = "The monkey archer shoots from range. Protect from Missiles helps.",
                 fight = QuestFight(Npcs.MONKEY_ARCHER_1457, "monkey archer", 86, CRASH_ISLAND, "Ook! Ook!"),
                 talk = {
                     chatNpc("He's still on the island. Keep your head down!", facialExpression = FacialExpression.TOUGH)
@@ -1634,7 +1649,14 @@ object FoundationQuests {
         val step = quest.steps[stage - 1]
         // An npc of an earlier step hands its quest items out again when the player lost them (before they are used).
         val npc = task.player.getInteractingNpc().id
-        val lost = quest.steps.take(stage - 1).filter { it.npc == npc }.flatMap { it.gives }.filter { (item, _) -> !player.inventory.contains(item) && !player.bank.contains(item) }
+        // Owner 2026-09-26: no free copies. Only untradeable quest items come back (nothing that can be sold or traded on),
+        // and only when the account holds none anywhere - inventory, bank or worn (the Seal of passage is an amulet).
+        val lost =
+            quest.steps.take(stage - 1).filter { it.npc == npc }.flatMap { it.gives }.filter { (item, _) ->
+                val def = player.world.definitions.getNullable(gg.rsmod.game.fs.def.ItemDef::class.java, item)
+                def != null && !def.tradeable &&
+                    !player.inventory.contains(item) && !player.bank.contains(item) && !player.equipment.contains(item)
+            }
         if (lost.isNotEmpty()) {
             task.chatNpc("You've lost what I gave you? Here, take it again - and be careful this time.")
             lost.forEach { (item, amount) -> FoundationRewards.grant(player, item, amount) }

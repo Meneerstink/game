@@ -32,7 +32,11 @@ object DeathsOfficeArea {
      * tiles the OSRS map itself marks as blocked behind the desk (imported square, tile flags).
      */
     val DEATH_TILE = Tile(3179, 5726 + DZ, 0)
-    val DEATH_FACING = Direction.WEST
+    /**
+     * Owner 2026-09-26: Death looks west, towards the portal. The OSRS model (seated, anim 8748) already looks west at the
+     * default spawn orientation (south, as every OSRS npc spawn); spawning him "WEST" turned him to face north.
+     */
+    val DEATH_FACING = Direction.SOUTH
 
     /** Where the player appears in the office: the first free tile east of the portal (OSRS portal 3169,5726, 2x2). */
     val ARRIVAL = Tile(DeathsOfficeIds.ARRIVAL_X, DeathsOfficeIds.ARRIVAL_Z, 0)

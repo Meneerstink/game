@@ -169,7 +169,7 @@ suspend fun QueueTask.claimLamps() {
     while (picked == null) {
         val shown = lamps.drop(lampPage * 3).take(3)
         val moreLamps = (lampPage + 1) * 3 < lamps.size
-        val labels = shown.map { it.label } + (if (moreLamps) listOf("More lamps") else emptyList()) + "Not now."
+        val labels = shown.map { it.label.replace(Regex(",? ?\\(?level \\d+\\+\\)?"), "").replace(" ()", "") } + (if (moreLamps) listOf("More lamps") else emptyList()) + "Not now."
         val choice = options(*labels.toTypedArray(), title = "Your quest lamps (${lamps.size})")
         when {
             choice in 1..shown.size -> picked = shown[choice - 1]
@@ -179,7 +179,8 @@ suspend fun QueueTask.claimLamps() {
     }
     val lamp = picked ?: return
     val skills = lamp.skills
-    val title = if (lamp.minLevel > 1) "Choose a skill (level ${lamp.minLevel}+)" else "Choose a skill"
+    // Owner 2026-09-26: quest lamps have no level requirement.
+    val title = "Choose a skill"
     var page = 0
     while (true) {
         val slice = skills.drop(page * 3).take(3)
@@ -191,10 +192,6 @@ suspend fun QueueTask.claimLamps() {
             more && choice == labels.size - 1 -> page++
             else -> {
                 val skill = slice[choice - 1]
-                if (player.skills.getMaxLevel(skill) < lamp.minLevel) {
-                    chatNpc("You need level ${lamp.minLevel} ${Skills.getSkillName(world, skill)} for that lamp. It will wait for you.")
-                    return
-                }
                 val current = FoundationRewards.pendingLamps(player).toMutableList()
                 if (!current.remove(lamp)) return
                 FoundationRewards.setPendingLamps(player, current)
@@ -242,7 +239,10 @@ suspend fun QueueTask.questDirections() {
 
 suspend fun QueueTask.travel(place: String, tile: Tile) {
     if (options("Send me to $place.", "I'll find my own way.", title = "Travel") != 1) return
-    player.canTeleport(TeleportType.MODERN) { player.teleport(tile, TeleportType.MODERN) }
+    // Owner 2026-09-26: a Dangerous destination asks first (interface 382, "check your world map").
+    gg.rsmod.plugins.content.mechanics.pvp.DangerWarning.questTravel(player, tile) {
+        player.canTeleport(TeleportType.MODERN) { player.teleport(tile, TeleportType.MODERN) }
+    }
 }
 
 // ------------------------------------------------------------------------------------- the quests' own npcs

@@ -45,6 +45,30 @@ object DangerWarning {
     /** Opens the warning for a held-back move; installed by `danger_warning.plugin.kts`. */
     var open: ((Player, Tile, Boolean) -> Unit)? = null
 
+    /**
+     * Owner 2026-09-26: a quest teleport (the Quest Guide, a quest npc) into a Dangerous place always asks first, whether
+     * or not the general warning is on. [confirm] shows interface 382 with [QUEST_TEXT] and runs the teleport on "Enter".
+     * Installed by `danger_warning.plugin.kts`; without it (tests) the teleport simply runs.
+     */
+    var confirm: ((Player, String, () -> Unit) -> Unit)? = null
+
+    const val QUEST_TEXT =
+        "The quest sends you to a <col=ff0000>Dangerous</col> area: other players can attack you there, and if you die you " +
+            "can lose your items. Check your world map - everything outside the safe zones is Dangerous. Continue?"
+
+    /** Runs [teleport] to [destination], after the warning when [destination] is Dangerous. */
+    fun questTravel(player: Player, destination: Tile, teleport: () -> Unit) {
+        val ask = confirm
+        if (!AreaState.isDangerous(destination) || ask == null) {
+            teleport()
+            return
+        }
+        ask(player, QUEST_TEXT) {
+            allowNextCrossing(player)
+            teleport()
+        }
+    }
+
     fun isActive(player: Player): Boolean = player.attr[INTRO] == true || player.attr[ENABLED] == true
 
     fun startIntro(player: Player) {

@@ -62,6 +62,12 @@ on_item_option(item = Items.ANCIENT_HYMNAL, option = "read") {
     player.queue {
         if (player.attr[AncientCurses.UNLOCKED_ATTR] == true) {
             messageBox("The hymnal's verses are the Ancient Curses you learned at the temple of Senntisten.")
+            // Owner 2026-09-26: reading it turns to the curses at once, with a red line and the unlock sound.
+            if (AncientCurses.getBook(player) != AncientCurses.PrayerBook.ANCIENT) {
+                AncientCurses.switchBook(player, AncientCurses.PrayerBook.ANCIENT)
+                player.message("<col=ef1020>The words of the hymnal fill your mind: your prayer book is now the Ancient Curses.</col>")
+                player.playSound(gg.rsmod.plugins.api.cfg.Sfx.UNLOCK)
+            }
         } else {
             messageBox("The hymnal is written in an ancient Zarosian tongue you cannot follow.")
         }
@@ -123,7 +129,7 @@ suspend fun QueueTask.useGeLamp(item: Int, xp: Double, combatOnly: Boolean) {
         val hasMore = (page + 1) * pageSize < groups.size
         if (hasMore) labels += "More skills"
         labels += "Cancel"
-        val choice = options(*labels.toTypedArray(), title = "Choose a skill (level 50+).")
+        val choice = options(*labels.toTypedArray(), title = "Choose a skill.")
         when {
             choice <= 0 -> return
             choice == labels.size -> return
@@ -133,10 +139,6 @@ suspend fun QueueTask.useGeLamp(item: Int, xp: Double, combatOnly: Boolean) {
             }
             else -> {
                 val selected = pageItems[choice - 1]
-                if (player.skills.getMaxLevel(selected.second) < 50) {
-                    player.message("You need at least level 50 in that skill.")
-                    return
-                }
                 if (!player.inventory.remove(item).hasSucceeded()) return
                 player.addXp(selected.second, xp)
                 player.message("The lamp grants you ${xp.toInt()} ${selected.first} experience.")

@@ -41,7 +41,8 @@ val DEATH_WATCHING = gg.rsmod.game.model.attr.AttributeKey<Int>()
 
 fun faceExit(death: gg.rsmod.game.model.entity.Npc) {
     death.resetFacePawn()
-    death.faceTile(death.tile.transform(-10, 0), 2, 2)
+    // The model looks west at the default (south) orientation - see DeathsOfficeArea.DEATH_FACING.
+    death.faceTile(death.tile.transform(0, -20), 2, 2)
 }
 
 fun busyWithDeath(player: gg.rsmod.game.model.entity.Player): Boolean =

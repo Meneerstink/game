@@ -224,7 +224,36 @@ suspend fun QueueTask.searchItemInput(message: String): Int {
  * The spacing, in pixels, in between each line that will be rendered on the
  * dialog box.
  */
-suspend fun QueueTask.messageBox(vararg message: String) {
+/**
+ * The message box's lines, word-wrapped: a line wider than the box (about [MESSAGE_BOX_LINE_CHARS] characters of its
+ * font, colour tags not counted) is split over more lines, at most five (the 210-214 boxes). Owner 2026-09-26: long
+ * one-line messages were cut off at both sides.
+ */
+internal const val MESSAGE_BOX_LINE_CHARS = 62
+
+internal fun wrapMessageBox(message: Array<out String>): List<String> {
+    fun visible(s: String) = s.replace(Regex("<[^>]+>"), "").length
+    if (message.all { visible(it) <= MESSAGE_BOX_LINE_CHARS }) return message.toList()
+    val lines = mutableListOf<String>()
+    message.forEach { text ->
+        var line = StringBuilder()
+        text.split(' ').forEach { word ->
+            val candidate = if (line.isEmpty()) word else "$line $word"
+            if (line.isNotEmpty() && visible(candidate) > MESSAGE_BOX_LINE_CHARS) {
+                lines += line.toString()
+                line = StringBuilder(word)
+            } else {
+                line = StringBuilder(candidate)
+            }
+        }
+        if (line.isNotEmpty()) lines += line.toString()
+    }
+    if (lines.size <= 5) return lines
+    return lines.take(4) + lines.drop(4).joinToString(" ")
+}
+
+suspend fun QueueTask.messageBox(vararg lines: String) {
+    val message = wrapMessageBox(lines).toTypedArray()
     when(message.size) {
         1 -> messageBox1(*message)
         2 -> messageBox2(*message)

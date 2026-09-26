@@ -136,7 +136,7 @@ class NewPlayerFoundationTests {
         FoundationRewards.complete(account.player, DesertTreasureII)
         val lamps = FoundationRewards.pendingLamps(account.player)
         assertEquals(3, lamps.size)
-        lamps.forEach { assertEquals(100_000, it.xp); assertEquals(60, it.minLevel) }
+        lamps.forEach { assertEquals(100_000, it.xp); assertEquals(1, it.minLevel) } // owner 2026-09-26: no lamp levels
         assertEquals(1, account.inventory.getItemCount(Items.RING_OF_SHADOWS_UNCHARGED))
         FoundationRewards.setPendingLamps(account.player, lamps.drop(1))
         assertEquals(2, FoundationRewards.pendingLamps(account.player).size)
