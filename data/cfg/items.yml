@@ -286993,3 +286993,15 @@
   tradeable: false
   weight: 10.0
   equipment: null
+- id: 23879
+  name: "Rune pouch (l)"
+  examine: "You can store runes in here."
+  tradeable: false
+  weight: 1.0
+  equipment: null
+- id: 23880
+  name: "Divine rune pouch (l)"
+  examine: "A vessel used to store runes that's been imbued with the powers of Elidinis."
+  tradeable: false
+  weight: 0.878
+  equipment: null

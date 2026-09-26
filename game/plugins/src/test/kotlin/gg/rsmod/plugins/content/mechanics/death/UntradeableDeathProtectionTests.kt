@@ -82,6 +82,11 @@ class UntradeableDeathProtectionTests {
     fun `rune pouch keeps the empty pouch below 20 and is destroyed above 20 when unlocked`() {
         assertEquals(UntradeableFate.POUCH_EMPTIED, UntradeableDeathProtection.fateOf(DEFINITIONS, Item(Items.RUNE_POUCH), false).fate)
         assertEquals(UntradeableFate.DESTROYED, UntradeableDeathProtection.fateOf(DEFINITIONS, Item(Items.RUNE_POUCH), true).fate)
+        TrouverRegistry.register(TrouverLockable(Items.RUNE_POUCH, Items.RUNE_POUCH_L))
+        assertEquals(UntradeableFate.POUCH_EMPTIED, UntradeableDeathProtection.fateOf(DEFINITIONS, Item(Items.RUNE_POUCH_L), true).fate, "locked: keep the empty pouch")
+        val pouch = gg.rsmod.plugins.content.magic.RunePouch.withContents(Item(Items.RUNE_POUCH_L), listOf(Item(Items.DEATH_RUNE, 100)))
+        val loot = UntradeableDeathProtection.killerLoot(listOf(UntradeableOutcome(DeathSlotItem(DeathContainerSource.INVENTORY, 0, pouch), UntradeableFate.POUCH_EMPTIED, 0L)))
+        assertEquals(listOf(Items.DEATH_RUNE to 100), loot.map { it.id to it.amount }, "the runes always go to the killer")
     }
 
     @Test

@@ -847,6 +847,9 @@ object OsrsItemImportTool {
             // Owner 2026-09-23 ("We need the from Deadman's skull it needs to have the option Breach check"): OSRS Wiki "Deadman's
             // skull" id 33065 - options Shop, Unlocks, Swap, Breach Check, Destroy; untradeable, not bankable.
             "deadman-skull" to listOf(Spec(33065)),
+            // Owner 2026-09-26 (death rework): the rune pouch becomes Trouver-lockable - OSRS Wiki "Rune pouch (l)" 24416 and "Divine rune
+            // pouch (l)" 27509 (untradeable; a locked pouch keeps the empty pouch on a PvP death, its runes go to the killer).
+            "rune-pouch-locked" to listOf(Spec(24416), Spec(27509)),
             // Owner 2026-09-24 ("Importeer Adamant Seeds ... zorg voor correcte werking!"): OSRS Wiki "Adamant seeds" id 29458 -
             // options Plant/Drop, stackable, tradeable, not noteable; planting handled with the Mithril seeds in FlowerSeeds.
             "adamant-seeds" to listOf(Spec(29458)),

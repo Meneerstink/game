@@ -20193,6 +20193,8 @@ object Items {
     const val AETHER_CATALYST = 23745
     const val RUNE_POUCH = 23746
     const val DIVINE_RUNE_POUCH = 23747
+    const val RUNE_POUCH_L = 23879
+    const val DIVINE_RUNE_POUCH_L = 23880
     const val THREAD_OF_ELIDINIS = 23748
     const val SMOKE_BATTLESTAFF = 23749
     const val SMOKE_BATTLESTAFF_NOTED = 23750

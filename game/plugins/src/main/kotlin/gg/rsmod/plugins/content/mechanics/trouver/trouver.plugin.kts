@@ -45,6 +45,10 @@ TrouverRegistry.register(TrouverLockable(baseItemId = Items.DIZANAS_MAX_CAPE, lo
 // is imported (SOURCE_GAP, see QuiverDeathRules), so only the keep-whole fallback applies here.
 TrouverRegistry.register(TrouverLockable(baseItemId = Items.DIZANAS_QUIVER, lockedItemId = Items.DIZANAS_QUIVER_L))
 TrouverRegistry.register(TrouverLockable(baseItemId = Items.DIZANAS_QUIVER_UNCHARGED, lockedItemId = Items.DIZANAS_QUIVER_L_UNCHARGED))
+// Owner 2026-09-26 (death rework): the rune pouch is lockable (OSRS "Rune pouch (l)" 24416 / "Divine rune pouch (l)" 27509, cache tx-20260926-042642).
+// A locked pouch keeps the empty pouch on a PvP death; its runes always go to the killer (UntradeableDeathProtection).
+TrouverRegistry.register(TrouverLockable(baseItemId = Items.RUNE_POUCH, lockedItemId = Items.RUNE_POUCH_L))
+TrouverRegistry.register(TrouverLockable(baseItemId = Items.DIVINE_RUNE_POUCH, lockedItemId = Items.DIVINE_RUNE_POUCH_L))
 
 TrouverRegistry.all().forEach { lockable ->
     on_item_on_item(item1 = Items.TROUVER_PARCHMENT, item2 = lockable.baseItemId) {

@@ -20,7 +20,8 @@ object RunePouch {
     const val SLOT_CAPACITY = 16_000
     const val DIVINE_CRAFTING_LEVEL = 75
 
-    val POUCHES = intArrayOf(Items.RUNE_POUCH, Items.DIVINE_RUNE_POUCH)
+    /** Owner 2026-09-26: the Trouver-locked pouches (OSRS "Rune pouch (l)", "Divine rune pouch (l)") work exactly like the pouches. */
+    val POUCHES = intArrayOf(Items.RUNE_POUCH, Items.DIVINE_RUNE_POUCH, Items.RUNE_POUCH_L, Items.DIVINE_RUNE_POUCH_L)
 
     private val ID_KEYS = listOf(ItemAttribute.RUNE_POUCH_ID_1, ItemAttribute.RUNE_POUCH_ID_2, ItemAttribute.RUNE_POUCH_ID_3, ItemAttribute.RUNE_POUCH_ID_4)
     private val AMOUNT_KEYS =
@@ -35,9 +36,9 @@ object RunePouch {
             Items.WRATH_RUNE,
         )
 
-    fun isPouch(itemId: Int): Boolean = itemId == Items.RUNE_POUCH || itemId == Items.DIVINE_RUNE_POUCH
+    fun isPouch(itemId: Int): Boolean = itemId in POUCHES
 
-    fun slots(pouchId: Int): Int = if (pouchId == Items.DIVINE_RUNE_POUCH) 4 else 3
+    fun slots(pouchId: Int): Int = if (pouchId == Items.DIVINE_RUNE_POUCH || pouchId == Items.DIVINE_RUNE_POUCH_L) 4 else 3
 
     /** Stored runes in slot order (empty slots omitted). */
     fun contents(pouch: Item): List<Item> =
