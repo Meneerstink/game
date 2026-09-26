@@ -14,7 +14,9 @@ enum class InterfaceDestination(
     ATTACK_TAB(interfaceId = 884, fixedChildId = 204, resizeChildId = 90),
     ACHIEVEMENTS_TAB(interfaceId = 1056, fixedChildId = 205, resizeChildId = 91),
     SKILLS_TAB(interfaceId = 320, fixedChildId = 206, resizeChildId = 92),
-    QUEST_TAB(interfaceId = 190, fixedChildId = 207, resizeChildId = 93),
+    // The quest tab container (owner 2026-09-26: tab row + Deadman / Groups / Quest List / Diaries); the 667 quest list 190
+    // opens inside it (content/quests/tab/QuestTab).
+    QUEST_TAB(interfaceId = gg.rsmod.game.tools.importer.QuestTabInterfaceImportTool.CONTAINER, fixedChildId = 207, resizeChildId = 93),
     INVENTORY_TAB(interfaceId = 679, fixedChildId = 208, resizeChildId = 94),
     EQUIPMENT_TAB(interfaceId = 387, fixedChildId = 209, resizeChildId = 95),
     PRAYER_TAB(interfaceId = 271, fixedChildId = 210, resizeChildId = 96),

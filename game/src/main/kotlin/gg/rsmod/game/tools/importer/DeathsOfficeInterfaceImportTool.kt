@@ -289,7 +289,17 @@ object DeathsOfficeInterfaceImportTool {
         val animation: Int = -1,
         /** Script id followed by its int arguments ([EVENT_COM] = this component). */
         val onLoad: List<Int> = emptyList(),
+        /** Graphic drawn mirrored left-right (the OSRS tab pieces reuse one sprite for both sides). */
+        val hflip: Boolean = false,
     )
+
+    /**
+     * The two flip bytes of a graphic, in cache order. The 667 client applies the first as IndexedImage.flipHorizontally,
+     * which swaps rows (an up-down flip), and the second as flipVertically, which mirrors each row (left-right) - the
+     * deob names are swapped. A left-right mirror ([Comp.hflip]) therefore goes in the second byte; in the first it
+     * turned the quest tab's right-hand tab pieces upside down (owner 2026-09-26).
+     */
+    fun flipBytes(c: Comp): Pair<Int, Int> = 0 to (if (c.hflip) 1 else 0)
 
     private class Out {
         val bytes = ByteArrayOutputStream()
@@ -346,8 +356,9 @@ object DeathsOfficeInterfaceImportTool {
                 o.p1(c.transparency)
                 o.p1(c.outline)
                 o.p4(c.shadow)
-                o.p1(0) // horizontal flip
-                o.p1(0) // vertical flip
+                val (first, second) = flipBytes(c)
+                o.p1(first)
+                o.p1(second)
                 o.p4(0) // colour
             }
             TYPE_TEXT -> {

@@ -411,6 +411,7 @@ fun Player.openInterface(
     if (dest == InterfaceDestination.TAB_AREA) {
         GameframeRebuild.rearm(this)
     }
+    PaneMountHooks.afterMount(this, interfaceId)
 }
 
 /**

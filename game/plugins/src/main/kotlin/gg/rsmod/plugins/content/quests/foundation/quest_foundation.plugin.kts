@@ -77,7 +77,7 @@ on_npc_option(npc = config.choiceNpc, option = "quest choices") {
 
 on_npc_option(npc = config.choiceNpc, option = "talk-to") {
     if (player.getInteractingNpc().spawnTile != config.choiceNpcTile) {
-        player.queue { chatNpc("The Quest Guide in the Grand Exchange hall keeps the quest records now.") }
+        player.queue { chatNpc("The Quest Tutor in the Grand Exchange hall keeps the quest records now.") }
         return@on_npc_option
     }
     player.queue { questGuide() }
@@ -120,7 +120,7 @@ suspend fun QueueTask.questGuide() {
         if (player.attr[SummoningKit.CLAIMED] != true) menu += "Claim my Summoning start." to { claimSummoning() }
         menu += "Where do the quests start?" to { questDirections() }
         menu += "Goodbye." to { }
-        val choice = options(*menu.take(5).map { it.first }.toTypedArray(), title = "Quest Guide")
+        val choice = options(*menu.take(5).map { it.first }.toTypedArray(), title = "Quest Tutor")
         val entry = menu.getOrNull(choice - 1) ?: return
         if (entry.first == "Goodbye.") return
         entry.second(this)

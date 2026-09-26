@@ -4,6 +4,7 @@ import gg.rsmod.game.fs.def.NpcDef
 import gg.rsmod.game.fs.def.ObjectDef
 import gg.rsmod.game.model.LockState
 import gg.rsmod.game.model.entity.GameObject
+import gg.rsmod.plugins.api.cfg.FacialExpression
 
 /*
  * The Skilling Basement under the Grand Exchange hall (AfkArea): the stairs in both directions, the stations, the
@@ -67,17 +68,56 @@ on_enter_region(AfkArea.REGION_ID) {
     }
 }
 
-suspend fun QueueTask.expertIntro() {
-    val lines = AfkArea.introLines(NewPlayerConfig.current.afkLevelCap)
-    lines.chunked(2).forEach { chatNpc(*it.toTypedArray(), npc = AfkArea.SURVIVAL_EXPERT) }
+suspend fun QueueTask.expert(vararg lines: String, face: FacialExpression = FacialExpression.HAPPY_TALKING) {
+    lines.forEach { chatNpc(it, npc = AfkArea.SURVIVAL_EXPERT, facialExpression = face) }
 }
 
+suspend fun QueueTask.expertIntro() {
+    expert(*AfkArea.introLines(NewPlayerConfig.current.afkLevelCap).toTypedArray())
+}
+
+// Talk-to: a real conversation with questions, instead of the welcome speech every time (owner 2026-09-26).
 suspend fun QueueTask.expertTalk(player: Player) {
-    expertIntro()
     val cap = NewPlayerConfig.current.afkLevelCap
-    val done = AfkArea.TRAINABLE.filter { AfkArea.atCap(player, it) }.map { Skills.getSkillName(world, it) }.sorted()
-    if (done.isNotEmpty()) {
-        chatNpc("You've already reached level $cap here in: ${done.joinToString(", ")}. Train those out in the world now.", npc = AfkArea.SURVIVAL_EXPERT)
+    expert("Hello again, adventurer. How are you getting on down here?")
+    while (true) {
+        when (options("What is this place?", "How does the training work?", "Where do I find each skill?", "How far have I come here?", "Goodbye.", title = "Survival Expert")) {
+            1 -> {
+                chatPlayer("What is this place?", facialExpression = FacialExpression.THINKING)
+                expert(
+                    "This is the Skilling Basement, the guild cellar under the mansion.",
+                    "It's a quiet place to build up your skills before you head out into the world. No tools, no materials, no danger.",
+                )
+            }
+            2 -> {
+                chatPlayer("How does the training work?", facialExpression = FacialExpression.THINKING)
+                expert(
+                    "Click a station once and you'll keep training on your own. You earn experience every moment, but never any items.",
+                    "Walk away, click something else, use an item or open an interface, and you'll stop.",
+                    "You can train each skill here up to level $cap. After that, the world is your teacher.",
+                )
+            }
+            3 -> {
+                chatPlayer("Where do I find each skill?", facialExpression = FacialExpression.THINKING)
+                expert(*AfkArea.WHERE_LINES.toTypedArray())
+            }
+            4 -> {
+                chatPlayer("How far have I come down here?", facialExpression = FacialExpression.THINKING)
+                val done = AfkArea.TRAINABLE.filter { AfkArea.atCap(player, it) }.map { Skills.getSkillName(world, it) }.sorted()
+                if (done.isEmpty()) {
+                    expert("You haven't reached level $cap in any skill down here yet. Keep at it!")
+                } else if (done.size == AfkArea.TRAINABLE.size) {
+                    expert("Every skill I teach is at level $cap. There's nothing more I can show you - the world is waiting!", face = FacialExpression.LAUGH_EXCITED)
+                } else {
+                    expert("You've already reached level $cap in ${AfkArea.joinNames(done)}. Train ${if (done.size == 1) "that one" else "those"} out in the world now.")
+                }
+            }
+            else -> {
+                chatPlayer("Thanks, goodbye!")
+                expert("Good luck with your training, adventurer!")
+                return
+            }
+        }
     }
 }
 
@@ -96,7 +136,7 @@ fun startTraining(player: Player, station: AfkArea.Station, target: Tile) {
     player.faceTile(target)
     if (AfkArea.atCap(player, station.skill, config)) {
         AfkArea.endSession(player)
-        player.message("Your $name is already level ${config.afkLevelCap}; train it out in the world now.")
+        player.message(AfkArea.alreadyCappedMessage(name, config.afkLevelCap))
         return
     }
     val session = AfkArea.newSession(player)
@@ -117,9 +157,9 @@ fun startTraining(player: Player, station: AfkArea.Station, target: Tile) {
             if (!AfkArea.train(player, station.skill, config)) {
                 AfkArea.endSession(player)
                 player.animate(-1)
-                player.message("Your $name has reached level ${config.afkLevelCap}, the most the basement can teach.")
+                player.message(AfkArea.capReachedMessage(name, config.afkLevelCap))
                 if (AfkArea.markCapped(player, station.skill)) {
-                    AfkArea.capLines(name, config.afkLevelCap).forEach { chatNpc(it, npc = AfkArea.SURVIVAL_EXPERT) }
+                    AfkArea.capLines(name, config.afkLevelCap).forEach { chatNpc(it, npc = AfkArea.SURVIVAL_EXPERT, facialExpression = FacialExpression.HAPPY) }
                 }
                 return@queue
             }

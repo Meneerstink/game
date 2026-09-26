@@ -22,7 +22,11 @@ import java.io.ByteArrayOutputStream
 object QuestGuideNpcTool {
     /** The first free npc id (probe 2026-09-26: highest 14481). */
     const val NPC_ID = 14482
-    const val NAME = "Quest Guide"
+    /** Owner 2026-09-26 (quest tab mission): in game this one npc is the "Quest Tutor". */
+    const val NAME = "Quest Tutor"
+
+    /** Names this tool itself wrote before, so a rename re-run still recognises its own definition. */
+    val PREVIOUS_NAMES = setOf("Quest Guide")
     const val BAS = 4
 
     val MODELS = intArrayOf(230, 249, 151, 18914, 18946, 4952, 4844, 4953, 4955)
@@ -81,7 +85,7 @@ object QuestGuideNpcTool {
         }
         if (current != null) {
             val existing = NpcDef(NPC_ID).also { it.decode(Unpooled.wrappedBuffer(current)) }
-            check(existing.name == NAME) { "npc $NPC_ID already holds '${existing.name}' - refusing to overwrite another npc" }
+            check(existing.name == NAME || existing.name in PREVIOUS_NAMES) { "npc $NPC_ID already holds '${existing.name}' - refusing to overwrite another npc" }
         }
         val mutation = CacheMutation(NpcOptionsTool.INDEX_NPC, group, file, bytes, "npc $NPC_ID '$NAME' (quest cape guide)", expectedCurrentSha1 = current?.let(CacheItemProbeTool::sha1))
         val transaction = CacheTransaction(targets = NpcOptionsTool.TARGETS, mutations = listOf(mutation))

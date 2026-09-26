@@ -179,20 +179,40 @@ object AfkArea {
         return true
     }
 
+    /** The Survival Expert's welcome, one dialogue box per line (owner 2026-09-26: better dialogue, good English). */
     fun introLines(cap: Int): List<String> =
         listOf(
-            "Welcome to the Skilling Basement, adventurer! Down here you can train fifteen skills without any tools or materials.",
-            "Woodcutting, Fishing, Mining, Farming and Hunter are in the garden to the west. Cooking, Firemaking, Smithing, Crafting, Fletching, Herblore, Construction and Runecrafting are in the workshop to the east.",
-            "Agility and Thieving are along the north wall. Click a station once and you keep training by yourself - you only earn experience, never items.",
-            "Every skill can be trained here up to level $cap. Walk away or do anything else and you stop training.",
-            "The whole cellar is a safe zone, and you may stay AFK down here for as long as you like.",
-            "A level-up down here is just a chat message, so your training simply carries on.",
+            "Welcome to the Skilling Basement, adventurer! I'm the Survival Expert, and I look after this cellar.",
+            "Down here you can train fifteen skills without any tools or materials. Click a station once and you'll keep training on your own.",
+            "Every skill can be trained here up to level $cap. You earn experience only, never items.",
+            "Walk away or do anything else and you'll stop training. The whole cellar is a safe zone, so stay as long as you like.",
+            "Oh, and a level-up down here is only a chat message, so your training simply carries on.",
+        )
+
+    /** Where each skill is trained, for "Where do I find each skill?". */
+    val WHERE_LINES =
+        listOf(
+            "Woodcutting, Fishing, Mining, Farming and Hunter are in the garden to the west.",
+            "Cooking, Firemaking, Smithing, Crafting, Fletching, Herblore, Construction and Runecrafting are in the workshop to the east.",
+            "Agility and Thieving are along the north wall, by the market stalls.",
         )
 
     fun capLines(skillName: String, cap: Int): List<String> =
         listOf(
-            "Well done! Your $skillName has reached level $cap - the most the basement can teach you.",
-            "Down here you can train every skill up to level $cap. From now on, train $skillName out in the world, the normal RuneScape way.",
-            "Any of your other skills still below level $cap can be brought up to $cap here.",
+            "Well done! Your $skillName has reached level $cap, the highest level I can help you reach down here.",
+            "From now on, you'll have to train $skillName out in the world, the normal RuneScape way.",
+            "Any of your other skills that are still below level $cap can be trained here, though.",
         )
+
+    /** Clicking a station for a skill that is already at the cap. */
+    fun alreadyCappedMessage(skillName: String, cap: Int): String =
+        "Your $skillName is already level $cap, the highest level you can train here. Train it further out in the world."
+
+    /** The tick a skill reaches the cap. */
+    fun capReachedMessage(skillName: String, cap: Int): String =
+        "Your $skillName has reached level $cap, the highest level you can train here."
+
+    /** "Fishing", "Fishing and Mining", "Fishing, Mining and Smithing". */
+    fun joinNames(names: List<String>): String =
+        if (names.size <= 1) names.joinToString("") else names.dropLast(1).joinToString(", ") + " and " + names.last()
 }

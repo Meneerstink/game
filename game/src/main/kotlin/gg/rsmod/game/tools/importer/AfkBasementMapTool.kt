@@ -94,6 +94,13 @@ object AfkBasementMapTool {
     const val STAIRS_LX = 31
     const val STAIRS_LZ = 22
 
+    /**
+     * Loc 54 can only be used from its south side (access mask 11 blocks north, east and west) and climbs north. Here the
+     * south wall is behind it and players arrive from the north, so it is turned 180 degrees: used from the north,
+     * climbing south into the wall (owner 2026-09-26: "Cannot go up the stairs", "I can't reach that!").
+     */
+    const val STAIRS_ROTATION = 2
+
     /** The fishing spot npc copy the server spawns in the middle of the pond (NpcCopy of 327, Net / Bait). */
     const val FISHING_SPOT_NPC = 14483
     const val FISHING_SPOT_SOURCE = 327
@@ -164,7 +171,7 @@ object AfkBasementMapTool {
 
     const val STANDING_TORCH = 724
     const val WALL_TORCH = 31145
-    const val PILLAR = 32903
+    const val SUIT_OF_ARMOUR = 24215
     const val BANNER = 62749
     const val BARREL = 15674
     const val SHELVES = 32284
@@ -176,10 +183,11 @@ object AfkBasementMapTool {
 
     val DECOR: List<Place> =
         buildList {
-            // pillars either side of the carpet
+            // suits of armour either side of the carpet, facing it (owner 2026-09-26: the dark cellar pillars read as black
+            // holes); Varrock palace 3207,3471 stands rot 2 facing north, so rot 3 faces east and rot 1 west.
             for (lz in listOf(24, 27, 30, 33)) {
-                add(Place(PILLAR, 29, lz))
-                add(Place(PILLAR, 34, lz))
+                add(Place(SUIT_OF_ARMOUR, 29, lz, rotation = 3))
+                add(Place(SUIT_OF_ARMOUR, 34, lz, rotation = 1))
             }
             add(Place(CHANDELIER_LOC, 31, 32))
             add(Place(CHANDELIER_LOC, 31, 27))
@@ -325,7 +333,8 @@ object AfkBasementMapTool {
                     t.overlayId = overlay
                     t.overlayShape = 0
                     t.overlayRotation = 0
-                    t.underlayId = if (overlay == 0) UNDERLAY_GRASS else 0
+                    // Grass under the garden and under the pond: water without an underlay drew as a white square.
+                    t.underlayId = if (overlay == 0 || overlay == FLOOR_WATER) UNDERLAY_GRASS else 0
                     if (overlay == FLOOR_WATER) t.flags = BLOCKED
                 } else if (lx in ringX && lz in ringZ) {
                     // under the walls and the rock backing: the same stone, never walkable
@@ -350,6 +359,17 @@ object AfkBasementMapTool {
             locs += Rev667Loc(WALL, ROOM_X.last + 1, ROOM_Z.first - 1, 0, 1, 0)
             locs += Rev667Loc(WALL, ROOM_X.last + 1, ROOM_Z.last + 1, 0, 1, 3)
             locs += Rev667Loc(WALL, ROOM_X.first - 1, ROOM_Z.last + 1, 0, 1, 2)
+            // The cellar wall only has a face towards the room, so from outside - the camera, most of all on the south and
+            // east sides - it was invisible and players looked through it (owner 2026-09-26). The same wall, turned the
+            // other way on the room's edge tiles, gives every side a face outwards too.
+            for (lx in ROOM_X) {
+                locs += Rev667Loc(WALL, lx, ROOM_Z.first, 0, 0, 3)
+                locs += Rev667Loc(WALL, lx, ROOM_Z.last, 0, 0, 1)
+            }
+            for (lz in ROOM_Z) {
+                locs += Rev667Loc(WALL, ROOM_X.first, lz, 0, 0, 0)
+                locs += Rev667Loc(WALL, ROOM_X.last, lz, 0, 0, 2)
+            }
             for (lx in ROOM_X.first - 1..ROOM_X.last + 1) {
                 locs += Rev667Loc(ROCK, lx, ROOM_Z.first - 2, 0, 10, 1)
                 locs += Rev667Loc(ROCK, lx, ROOM_Z.last + 2, 0, 10, 3)
@@ -398,7 +418,7 @@ object AfkBasementMapTool {
                 }
             }
 
-            claim(STAIRS_UP_LOC, STAIRS_LX, STAIRS_LZ, 0, 10, STAIRS_UP_SOURCE)
+            claim(STAIRS_UP_LOC, STAIRS_LX, STAIRS_LZ, STAIRS_ROTATION, 10, STAIRS_UP_SOURCE)
             copy(STAIRS_UP_LOC, STAIRS_UP_SOURCE, "stairs up") { }
             STATIONS.forEachIndexed { index, station ->
                 val copyId = FIRST_STATION_LOC + index
@@ -456,7 +476,7 @@ object AfkBasementMapTool {
             val locBytes = Rev667LocCodec.encode(sorted)
             check(Rev667LocCodec.decode(locBytes).size == sorted.size) { "loc round trip" }
             println("PLAN $MAP_NAME=$mapGroup $LOC_NAME=$locGroup locs=${sorted.size} copies=${copies.size}")
-            return copies + listOfNotNull(hallMutation) + listOf(
+            return copies + listOfNotNull(hallMutation, hallFloor(library)) + listOf(
                 CacheMutation(Rev667RegionProbeTool.MAP_INDEX, mapGroup, 0, mapBytes, "Skilling basement tiles $MAP_NAME", expectedCurrentSha1 = existingMap?.let { library.data(Rev667RegionProbeTool.MAP_INDEX, mapGroup, 0) }?.let { CacheItemProbeTool.sha1(it) }, groupName = MAP_NAME),
                 CacheMutation(Rev667RegionProbeTool.MAP_INDEX, locGroup, 0, locBytes, "Skilling basement locs $LOC_NAME (unencrypted)", expectedCurrentSha1 = existingLocs?.let { library.data(Rev667RegionProbeTool.MAP_INDEX, locGroup, 0) }?.let { CacheItemProbeTool.sha1(it) }, groupName = LOC_NAME),
             )
@@ -467,6 +487,42 @@ object AfkBasementMapTool {
 
     /** Ids this tool may overwrite when their bytes change between runs (its own copies). */
     private val REBUILT = (FIRST_STATION_LOC..ENTRANCE_LOC).toSet()
+
+    /**
+     * The floor under the entrance: loc 55 is a stairwell whose steps go down below the floor, so on the hall's marble it
+     * was covered and invisible (owner 2026-09-26: "the dungeon entrance is invisible"). Its real placement (2820,3484)
+     * stands on overlay 42 (stored), no underlay, on all four tiles - the dark opening the steps go down into.
+     */
+    const val ENTRANCE_FLOOR = 42
+
+    /** Cuts the entrance opening into the hall square's tiles (also called by RoyalHallMapTool, which rebuilds them). */
+    fun cutEntrance(
+        tiles: Rev667TileMap,
+        squareX: Int,
+        squareZ: Int,
+    ) {
+        if (squareX != HALL_SQUARE_X || squareZ != HALL_SQUARE_Z) return
+        for (dx in 0..1) for (dz in 0..1) {
+            val t = tiles.tiles[0][ENTRANCE_X - squareX * 64 + dx][ENTRANCE_Z - squareZ * 64 + dz]
+            t.overlayId = ENTRANCE_FLOOR
+            t.overlayShape = 0
+            t.overlayRotation = 0
+            t.underlayId = 0
+        }
+    }
+
+    /** The hall square's tiles with the entrance opening; null when it is already there. */
+    private fun hallFloor(library: CacheLibrary): CacheMutation? {
+        val name = "m${HALL_SQUARE_X}_$HALL_SQUARE_Z"
+        val archive = library.index(Rev667RegionProbeTool.MAP_INDEX).archive(name) ?: error("$name missing")
+        val bytes = archive.file(0)!!.data!!
+        val tiles = Rev667TileCodec.decode(bytes)
+        check(Rev667TileCodec.encode(tiles).contentEquals(bytes)) { "$name round-trip failed" }
+        cutEntrance(tiles, HALL_SQUARE_X, HALL_SQUARE_Z)
+        val newBytes = Rev667TileCodec.encode(tiles)
+        if (newBytes.contentEquals(bytes)) return null
+        return CacheMutation(Rev667RegionProbeTool.MAP_INDEX, archive.id, 0, newBytes, "Skilling basement entrance opening in $name", CacheItemProbeTool.sha1(bytes), groupName = name)
+    }
 
     /** Adds the entrance and its torches to the hall square's loc file; null when they are already there. */
     private fun hallEntrance(library: CacheLibrary): CacheMutation? {

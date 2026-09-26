@@ -236,6 +236,8 @@ object RoyalHallMapTool {
                     upstairs++
                 }
             }
+            // The Skilling Basement's way down needs its dark opening in this floor (after the paving above).
+            AfkBasementMapTool.cutEntrance(tiles, rx, rz)
             val updatedMap = Rev667TileCodec.encode(tiles)
             if (!updatedMap.contentEquals(mapBytes)) {
                 mutations +=

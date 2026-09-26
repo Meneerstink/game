@@ -143,6 +143,26 @@ class SkillingBasementTests {
                 val sides = fp.flatMap { (x, z) -> listOf((x + 1) to z, (x - 1) to z, x to (z + 1), x to (z - 1)) }.filter { it !in fp }
                 assertTrue(sides.any { it in reached }, "station ${loc.id} at ${loc.localX},${loc.localZ} can be reached")
             }
+            // The stairs up can be used: one of the sides its access mask leaves open (rotated with the loc) borders a tile
+            // players reach. Loc 54 only opens its south side; placed unturned against the south wall it said
+            // "I can't reach that!" (owner 2026-09-26).
+            val stairs = locs.single { it.id == AfkBasementMapTool.STAIRS_UP_LOC }
+            val stairsDef = DEFINITIONS.get(ObjectDef::class.java, stairs.id)
+            val mask = stairsDef.clipMask and 0xF
+            val r = stairs.rotation
+            val rotated = if (r == 0) mask else ((mask shl r) and 0xF) or (mask ushr (4 - r))
+            val fp = footprint(stairs, stairsDef)
+            val xs = fp.map { it.first }
+            val zs = fp.map { it.second }
+            val openSides =
+                buildList {
+                    if (rotated and 1 == 0) xs.distinct().forEach { add(it to zs.maxOf { it } + 1) } // north
+                    if (rotated and 2 == 0) zs.distinct().forEach { add(xs.maxOf { it } + 1 to it) } // east
+                    if (rotated and 4 == 0) xs.distinct().forEach { add(it to zs.minOf { it } - 1) } // south
+                    if (rotated and 8 == 0) zs.distinct().forEach { add(xs.minOf { it } - 1 to it) } // west
+                }
+            assertTrue(openSides.any { it in reached }, "the stairs up can be used from a reachable tile (open sides $openSides)")
+            assertTrue(start in openSides, "players arrive on a tile the stairs can be used from")
             val spot = AfkBasementMapTool.FISHING_LX to AfkBasementMapTool.FISHING_LZ
             assertTrue(reached.any { (x, z) -> maxOf(Math.abs(x - spot.first), Math.abs(z - spot.second)) <= 2 }, "the fishing spot is within two tiles of the bank")
             assertTrue(reached.size > 250, "the room is mostly walkable (${reached.size} tiles)")
@@ -152,6 +172,77 @@ class SkillingBasementTests {
         } finally {
             library.close()
         }
+    }
+
+    @Test
+    fun `every wall has a face outwards too, and the pond has grass under its water`() {
+        val library = CacheLibrary(CACHE_PATH)
+        try {
+            val maps = library.index(5)
+            val tiles = Rev667TileCodec.decode(library.data(5, maps.archive(AfkBasementMapTool.MAP_NAME)!!.id, 0)!!)
+            val locs = Rev667LocCodec.decode(library.data(5, maps.archive(AfkBasementMapTool.LOC_NAME)!!.id, 0)!!)
+            fun wall(lx: Int, lz: Int, rotation: Int) = locs.any { it.id == AfkBasementMapTool.WALL && it.type == 0 && it.localX == lx && it.localZ == lz && it.rotation == rotation }
+            val x = AfkBasementMapTool.ROOM_X
+            val z = AfkBasementMapTool.ROOM_Z
+            // The cellar wall only faces the room; without these the south and east sides were see-through from the camera.
+            x.forEach { lx ->
+                assertTrue(wall(lx, z.first, 3), "south edge $lx faces out")
+                assertTrue(wall(lx, z.last, 1), "north edge $lx faces out")
+                assertTrue(wall(lx, z.first - 1, 1), "south wall $lx faces in")
+            }
+            z.forEach { lz ->
+                assertTrue(wall(x.first, lz, 0), "west edge $lz faces out")
+                assertTrue(wall(x.last, lz, 2), "east edge $lz faces out")
+            }
+            // Water without an underlay drew as a white square.
+            for (lx in AfkBasementMapTool.POND_X) for (lz in AfkBasementMapTool.POND_Z) {
+                val t = tiles.tiles[0][lx][lz]
+                assertEquals(AfkBasementMapTool.FLOOR_WATER, t.overlayId)
+                assertEquals(AfkBasementMapTool.UNDERLAY_GRASS, t.underlayId, "pond $lx,$lz")
+            }
+            // No dark cellar pillars on the carpet any more.
+            assertFalse(locs.any { it.id == 32903 }, "the black cellar pillars are gone")
+        } finally {
+            library.close()
+        }
+    }
+
+    @Test
+    fun `the hall entrance stands on its dark opening, so the steps down are visible`() {
+        val library = CacheLibrary(CACHE_PATH)
+        try {
+            val maps = library.index(5)
+            val tiles = Rev667TileCodec.decode(library.data(5, maps.archive("m49_54")!!.id, 0)!!)
+            for (dx in 0..1) for (dz in 0..1) {
+                val t = tiles.tiles[0][AfkArea.HALL_STAIRS.x - 49 * 64 + dx][AfkArea.HALL_STAIRS.z - 54 * 64 + dz]
+                assertEquals(AfkBasementMapTool.ENTRANCE_FLOOR, t.overlayId, "entrance tile +$dx,+$dz")
+                assertEquals(0, t.underlayId)
+            }
+            // RoyalHallMapTool rebuilds this floor from the pristine map: it cuts the opening too.
+            val hallTool = File("../src/main/kotlin/gg/rsmod/game/tools/importer/RoyalHallMapTool.kt").readText()
+            assertTrue("AfkBasementMapTool.cutEntrance(tiles, rx, rz)" in hallTool)
+            assertTrue(hallTool.indexOf("AfkBasementMapTool.cutEntrance(") < hallTool.indexOf("val updatedMap = Rev667TileCodec.encode(tiles)"))
+        } finally {
+            library.close()
+        }
+    }
+
+    @Test
+    fun `basement messages are plain English`() {
+        assertEquals(
+            "Your Fishing is already level 55, the highest level you can train here. Train it further out in the world.",
+            AfkArea.alreadyCappedMessage("Fishing", 55),
+        )
+        assertEquals("Your Fishing has reached level 55, the highest level you can train here.", AfkArea.capReachedMessage("Fishing", 55))
+        assertEquals("Fishing", AfkArea.joinNames(listOf("Fishing")))
+        assertEquals("Fishing and Mining", AfkArea.joinNames(listOf("Fishing", "Mining")))
+        assertEquals("Cooking, Fishing and Mining", AfkArea.joinNames(listOf("Cooking", "Fishing", "Mining")))
+        val script = File("src/main/kotlin/gg/rsmod/plugins/content/newplayer/afk_area.plugin.kts").readText()
+        assertFalse("train it out in the world now" in script)
+        // Talk-to is a conversation with questions, not the welcome speech again.
+        listOf("What is this place?", "How does the training work?", "Where do I find each skill?", "Goodbye.").forEach { assertTrue(it in script, it) }
+        // Every welcome line fits one dialogue box (the old ones were two long lines per box).
+        (AfkArea.introLines(55) + AfkArea.WHERE_LINES + AfkArea.capLines("Construction", 55)).forEach { assertTrue(it.length <= 150, it) }
     }
 
     @Test
