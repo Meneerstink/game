@@ -177,8 +177,14 @@ listOf(DeathsOfficeArea.GRAVE, DeathsOfficeArea.GRAVE_ANGEL).forEach { grave ->
     }
 }
 
+// Owner 2026-09-26: every respawn point Death sells must be a standable tile in a Deadman safe zone (RespawnPoints).
+on_world_init {
+    RespawnPoints.verify(world).forEach { println(it) }
+}
+
 on_login {
     DeathsOffice.migrateLegacy(player)
+    RespawnPoints.sanitize(player)
     if (Gravestone.exists(player) && player.gravestone.isEmpty) Gravestone.clear(player)
     if (Gravestone.exists(player)) {
         GravestoneWorld.respawn(player)

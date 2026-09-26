@@ -12,6 +12,7 @@ import gg.rsmod.game.model.entity.Player
  * The tile is the owner-approved tile next to The Old Nite (OSRS Wiki map: rectangle centred on 3152,3644, 8 x 6).
  */
 object FeroxRespawn {
+    /** The old price at Ferox. Owner 2026-09-26: Death sells the Ferox respawn now ([gg.rsmod.plugins.content.areas.deathsoffice.RespawnPoints.PRICE]). */
     const val PRICE = 5_000_000
 
     /**

@@ -50,14 +50,15 @@ class FeroxEnclaveTests {
     }
 
     @Test
-    fun `Ferox respawn switch charges 5M once and death uses the chosen tile`() {
-        assertEquals(5_000_000, gg.rsmod.plugins.content.areas.wilderness.FeroxRespawn.PRICE)
+    fun `Ferox respawn is sold by Death for 500k, Ferox switches it for owners and death uses the chosen tile`() {
+        // Owner 2026-09-26: Death sells respawn points (500,000 once); Ferox only points players to him.
+        assertEquals(500_000, gg.rsmod.plugins.content.areas.deathsoffice.RespawnPoints.PRICE)
         val npcs = File(content, "areas/wilderness/ferox_enclave_npcs.plugin.kts").readText()
         listOf(
-            "Okay, switch my respawn to Ferox Enclave.", "Thank you, you'll respawn in the Enclave from here on out.",
+            "Death himself arranges it these days", "RespawnPoints.Point.FEROX",
             "Ask about your respawn point.", "Would you like to respawn back in Ferox Enclave again?", "Fair enough, it has been done.",
             "How are you finding our sanctuary?", "Yes, switch my respawn to Lumbridge.",
-            "inventory.remove(Items.COINS_995, FeroxRespawn.PRICE).hasSucceeded()", "FeroxRespawn.activate(it.player)",
+            "FeroxRespawn.activate(it.player)",
             "FeroxRespawn.deactivate(it.player)",
         ).forEach { assertTrue(it in npcs, "ferox dialogue lacks $it") }
         val death = File("../src/main/kotlin/gg/rsmod/game/action/PlayerDeathAction.kt").readText()

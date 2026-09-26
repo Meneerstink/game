@@ -255,7 +255,7 @@ object DeathDialogue {
 
     /** @return true to go back to the first options ("Previous options..."). */
     private suspend fun QueueTask.moreOptions(): Boolean {
-        when (options("Can I choose a different-looking gravestone?", "Can I change how I die?", "Not just now, thanks.", "Previous options...")) {
+        when (options("Can I choose a different-looking gravestone?", "Can I change how I die?", "Can I change where I respawn?", "Not just now, thanks.", "Previous options...")) {
             1 -> {
                 me("Can I choose a different-looking gravestone?")
                 chooseGravestone()
@@ -273,11 +273,16 @@ object DeathDialogue {
                 return false
             }
             3 -> {
+                // Owner 2026-09-26: respawn points are bought and switched here (RespawnPoints).
+                with(RespawnPoints) { respawnDialogue() }
+                return false
+            }
+            4 -> {
                 me("Not just now, thanks.")
                 death("Really? There isn't much else for you to do here. But you know your business.")
                 return false
             }
-            4 -> return true
+            5 -> return true
         }
         return false
     }

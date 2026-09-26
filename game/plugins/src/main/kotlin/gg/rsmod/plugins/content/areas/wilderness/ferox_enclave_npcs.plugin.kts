@@ -46,7 +46,7 @@ on_npc_option(npc = Npcs.FEROX, option = "talk-to") {
 
 suspend fun ferox(it: QueueTask) {
     it.chatNpc("Welcome wanderer.", wrap = true)
-    val paid = it.player.attr[FeroxRespawn.PAID] == true
+    val paid = gg.rsmod.plugins.content.areas.deathsoffice.RespawnPoints.owns(it.player, gg.rsmod.plugins.content.areas.deathsoffice.RespawnPoints.Point.FEROX)
     when (it.options("What is this place?", if (paid) "Ask about your respawn point." else "What can you do for me?", "Nevermind.")) {
         1 -> feroxWhatIsThisPlace(it)
         2 -> if (paid) feroxRespawnPoint(it) else feroxWhatCanYouDo(it)
@@ -148,29 +148,13 @@ suspend fun feroxWhatCanYouDo(it: QueueTask) {
                 "I won't be able to do anything if you die somewhere like Castle Wars or the Emir's Arena; they have their own magic to keep you safe.",
                 wrap = true,
             )
-            it.chatNpc("It'll cost you though! Transporting you here is no easy task. 5 million coins should do it, that'd be a one time fee of course.", wrap = true)
-            if (it.player.inventory.getItemCount(Items.COINS_995) < 5_000_000) {
-                it.chatPlayer("I don't have that much money on me.", wrap = true)
-                val gender = if (it.player.appearance.gender == Gender.MALE) "man" else "woman"
-                it.chatNpc("Understandable, you'd have to be a brave $gender to be carrying that much gold out here.", wrap = true)
-            } else {
-                when (it.options("Okay, switch my respawn to Ferox Enclave.", "I'm not interested.")) {
-                    1 -> {
-                        it.chatPlayer("Okay, switch my respawn to Ferox Enclave.", wrap = true)
-                        if (it.player.inventory.remove(Items.COINS_995, FeroxRespawn.PRICE).hasSucceeded()) {
-                            it.player.attr[FeroxRespawn.PAID] = true
-                            FeroxRespawn.activate(it.player)
-                            it.chatNpc("Thank you, you'll respawn in the Enclave from here on out.", wrap = true)
-                        }
-                    }
-                    2 -> {
-                        it.chatPlayer("I'm not interested.", wrap = true)
-                        it.chatNpc("Can't say I blame you, this wouldn't be my choice either.", wrap = true)
-                    }
-                }
-            }
-        }
-        2 -> {
+            // Owner 2026-09-26: respawn points are sold by Death in his office now (500,000 coins, once) - RespawnPoints.
+            it.chatNpc(
+                "It'll cost you though! Transporting you here is no easy task - Death himself arranges it these days. " +
+                    "Speak to him in his office: ${String.format("%,d", gg.rsmod.plugins.content.areas.deathsoffice.RespawnPoints.PRICE)} coins, a one time fee of course.",
+                wrap = true,
+            )
+        }        2 -> {
             it.chatPlayer("That doesn't interest me.", wrap = true)
             it.chatNpc("Come find me if you change your mind.", wrap = true)
         }
