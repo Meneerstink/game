@@ -178,6 +178,7 @@ class RunePaymentTests {
         assertTrue("RunePouch.take(p, rune" in spells)
         // Owner 2026-09-26: the rune pouch follows the untradeable rule (fate + runes to the killer).
         val death = File("src/main/kotlin/gg/rsmod/plugins/content/mechanics/death/UntradeableDeathProtection.kt").readText()
-        assertEquals(3, Regex("RunePouch.isPouch").findAll(death).count(), "handles, fate and killer loot")
+        assertTrue(Regex("RunePouch.isPouch").findAll(death).count() >= 3, "handles, fate and killer loot")
+        assertTrue("RunePouch.contents(outcome.slotItem.item)" in death, "the runes always go to the killer")
     }
 }
