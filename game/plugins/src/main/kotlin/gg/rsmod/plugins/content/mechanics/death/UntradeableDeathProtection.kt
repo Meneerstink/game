@@ -218,7 +218,9 @@ object UntradeableDeathProtection {
         current: Item,
         mangled: Boolean,
     ): Item {
-        val source = if (resolved.hasAnyAttr() || !current.hasAnyAttr()) resolved else current
+        // Always the resolved item: it is the container's own item, or the copy QuiverDeathRules stripped of the ammo the
+        // killer receives - never the live slot, which would keep that ammo a second time.
+        val source = resolved
         val lockable = TrouverRegistry.entryForLocked(current.id)
         val importedId =
             if (lockable != null) {

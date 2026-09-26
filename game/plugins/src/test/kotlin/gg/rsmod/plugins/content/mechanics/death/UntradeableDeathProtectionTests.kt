@@ -107,6 +107,28 @@ class UntradeableDeathProtectionTests {
         val cost = DEFINITIONS.get(ItemDef::class.java, Items.FEROCIOUS_GLOVES).cost.toLong()
         assertEquals(maxOf(10_000L, cost / 4), RepairPrices.repairPrice(DEFINITIONS, Items.FEROCIOUS_GLOVES))
     }
+    @Test
+    fun `a broken quiver never keeps the ammo that went to the killer`() {
+        val victim = io.mockk.mockk<gg.rsmod.game.model.entity.Player>(relaxed = true)
+        io.mockk.every { victim.inventory } returns gg.rsmod.game.model.container.ItemContainer(DEFINITIONS, gg.rsmod.game.model.container.key.INVENTORY_KEY)
+        io.mockk.every { victim.equipment } returns gg.rsmod.game.model.container.ItemContainer(DEFINITIONS, gg.rsmod.game.model.container.key.EQUIPMENT_KEY)
+        val quiver =
+            Item(Items.DIZANAS_QUIVER).also {
+                it.attr[ItemAttribute.ATTACHED_ITEM_ID] = Items.RUNE_ARROW
+                it.attr[ItemAttribute.ATTACHED_ITEM_COUNT] = 500
+            }
+        victim.inventory[0] = quiver
+        val lost = listOf(DeathSlotItem(DeathContainerSource.INVENTORY, 0, quiver))
+        val resolved = DeathResolutionResult(DeathContext.WILDERNESS_PVP, victim, null, DeathItemRiskResult(0, emptyList(), lost))
+        val (stripped, ammo) = QuiverDeathRules.stripLost(resolved)
+        assertEquals(listOf(Items.RUNE_ARROW to 500), ammo.map { it.id to it.amount })
+        val (_, outcomes) = UntradeableDeathProtection.splitPvp(DEFINITIONS, stripped, deepWilderness = false)
+        assertEquals(UntradeableFate.BROKEN, outcomes.single().fate)
+        UntradeableDeathProtection.execute(victim, outcomes)
+        val broken = victim.inventory[0]!!
+        assertTrue(UntradeableDeathProtection.isBroken(broken))
+        assertEquals(null, broken.attr[ItemAttribute.ATTACHED_ITEM_ID], "the ammo went to the killer only")
+    }
     companion object {
         private val DEFINITIONS = DefinitionSet()
 
