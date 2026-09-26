@@ -30,7 +30,7 @@ object QuestFights {
     fun start(player: Player, quest: ShortQuest, stage: Int): Boolean {
         val fight = quest.steps.getOrNull(stage - 1)?.fight ?: return false
         if (active(player) != null) return true
-        if (!player.tile.isWithinRadius(fight.tile, REACH)) {
+        if (player.tile.height != fight.tile.height || !player.tile.isWithinRadius(fight.tile, REACH)) {
             player.message("The ${fight.name} waits for you at ${quest.steps[stage - 1].place ?: "the quest location"}.")
             return false
         }

@@ -54,11 +54,12 @@ object QuestBosses {
         npc.dealHit(target = target, minHit = dealt, maxHit = dealt, landHit = true, delay = delay, hitType = type)
     }
 
-    private suspend fun fight(it: QueueTask, attack: suspend (Npc, Pawn) -> Unit) {
+    private suspend fun fight(it: QueueTask, beforeMove: (Npc, Pawn) -> Unit = { _, _ -> }, attack: suspend (Npc, Pawn) -> Unit) {
         val npc = it.npc
         var target = npc.getCombatTarget() ?: return
         while (npc.canEngageCombat(target)) {
             npc.facePawn(target)
+            beforeMove(npc, target)
             if (npc.moveToAttackRange(it, target, distance = 1, projectile = false) && npc.isAttackDelayReady()) {
                 attack(npc, target)
                 npc.postAttackLogic(target)
@@ -74,12 +75,17 @@ object QuestBosses {
         override val ids = intArrayOf(Npcs.DESSOUS, Npcs.DESSOUS_1915)
 
         override suspend fun handleSpecialCombat(it: QueueTask) =
-            fight(it) { npc, target ->
-                if (!npc.tile.isWithinRadius(target.tile, 4)) {
-                    npc.graphic(86)
-                    npc.moveTo(target.tile.x, target.tile.z, target.tile.height)
-                    npc.graphic(86)
-                }
+            fight(
+                it,
+                // 2009scape DessousBehavior: "Teleport nearer, if too far" - 5 tiles or more.
+                beforeMove = { npc, target ->
+                    if (!npc.tile.isWithinRadius(target.tile, 4) && npc.tile.height == target.tile.height) {
+                        npc.graphic(86)
+                        npc.moveTo(target.tile.x, target.tile.z, target.tile.height)
+                        npc.graphic(86)
+                    }
+                },
+            ) { npc, target ->
                 if (protects(target, CombatClass.MELEE)) {
                     if (npc.getTransmogId() != Npcs.DESSOUS_1915) {
                         npc.setTransmogId(Npcs.DESSOUS_1915)
@@ -135,11 +141,9 @@ object QuestBosses {
 
         override suspend fun handleSpecialCombat(it: QueueTask) =
             fight(it) { npc, target ->
-                if (target is Player && !target.equipment.contains(Items.ICE_GLOVES)) {
-                    val weapon = target.equipment[3]
-                    if (weapon != null && target.inventory.hasSpace) {
-                        target.equipment.remove(weapon, assureFullRemoval = true, beginSlot = 3)
-                        target.inventory.add(weapon)
+                // The normal unequip route (stats, weapon tab and appearance update; refused when the inventory is full).
+                if (target is Player && !target.equipment.contains(Items.ICE_GLOVES) && target.equipment[3] != null) {
+                    if (gg.rsmod.game.action.EquipAction.unequip(target, 3) == gg.rsmod.game.action.EquipAction.Result.SUCCESS) {
                         target.message("The heat from the warrior causes you to drop your weapon.")
                     }
                 }

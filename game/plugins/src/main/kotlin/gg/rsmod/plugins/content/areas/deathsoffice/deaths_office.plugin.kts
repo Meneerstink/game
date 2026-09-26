@@ -37,7 +37,7 @@ spawn_npc(DeathsOfficeArea.DEATH, DeathsOfficeArea.DEATH_TILE.x, DeathsOfficeAre
  * closed the dialogue or the retrieval screen, or walked off, he turns back to the portal.
  */
 val DEATH_TALKER = gg.rsmod.game.model.attr.AttributeKey<java.lang.ref.WeakReference<gg.rsmod.game.model.entity.Player>>()
-val DEATH_WATCHING = gg.rsmod.game.model.attr.AttributeKey<Boolean>()
+val DEATH_WATCHING = gg.rsmod.game.model.attr.AttributeKey<Int>()
 
 fun faceExit(death: gg.rsmod.game.model.entity.Npc) {
     death.resetFacePawn()
@@ -49,13 +49,16 @@ fun busyWithDeath(player: gg.rsmod.game.model.entity.Player): Boolean =
 
 fun watchTalker(death: gg.rsmod.game.model.entity.Npc, player: gg.rsmod.game.model.entity.Player) {
     death.attr[DEATH_TALKER] = java.lang.ref.WeakReference(player)
-    if (death.attr[DEATH_WATCHING] == true) return
-    death.attr[DEATH_WATCHING] = true
+    // One watcher at a time; a watcher that was stopped (queue replaced) is noticed by its age and started again.
+    val started = death.attr[DEATH_WATCHING]
+    if (started != null && death.world.currentCycle - started < 200) return
+    death.attr[DEATH_WATCHING] = death.world.currentCycle
     death.queue {
         wait(2)
         while (true) {
             val talker = death.attr[DEATH_TALKER]?.get()
             if (talker == null || !talker.isOnline || !talker.tile.isWithinRadius(death.tile, 8) || !busyWithDeath(talker)) break
+            death.attr[DEATH_WATCHING] = death.world.currentCycle
             wait(2)
         }
         death.attr.remove(DEATH_TALKER)
