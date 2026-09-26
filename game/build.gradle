@@ -40,7 +40,8 @@ dependencies {
 }
 
 sourceSets {
-    main.kotlin.srcDirs = ['src/main/kotlin']
+    // src/main/java: Java2D art painters (ChoosePathArt) that the Kotlin tools call.
+    main.kotlin.srcDirs = ['src/main/kotlin', 'src/main/java']
     main.resources.srcDirs = ['src/main/resources']
 }
 

@@ -2,7 +2,6 @@ package gg.rsmod.plugins.content.quests.foundation
 
 import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.entity.Player
-import gg.rsmod.game.tools.importer.DeathsOfficeInterfaceImportTool
 import gg.rsmod.game.tools.importer.QuestGuideInterfaceImportTool as L
 import gg.rsmod.plugins.api.InterfaceDestination
 import gg.rsmod.plugins.api.cfg.Items
@@ -85,7 +84,7 @@ object QuestGuideUi {
         player.attr[OPEN] = true
         player.attr.remove(PICKS)
         player.attr.remove(CONFIRMING)
-        val clickable = mutableListOf(DeathsOfficeInterfaceImportTool.CLOSE, L.YES, L.NO)
+        val clickable = mutableListOf(L.CLOSE, L.YES, L.NO)
         for (r in 0 until L.ROWS) {
             clickable += L.rowBase(r) + L.ROW_CONFIRM
             for (c in 0 until L.CARDS) clickable += L.cardBase(r, c)
@@ -118,11 +117,11 @@ object QuestGuideUi {
             val base = L.rowBase(r)
             val chosen = QuestChoices.chosen(player, group)
             val rowLocked = locked(player, group)
-            player.setComponentText(INTERFACE_ID, base + L.ROW_LABEL, group.label.uppercase())
             val pick = picks[r]?.let { name -> group.quests.firstOrNull { it.name == name } }
             val canConfirm = !rowLocked && pick != null && QuestChoices.available(player, group).contains(pick)
             player.setComponentHidden(INTERFACE_ID, base + L.CONFIRM_ACTIVE, hidden = !canConfirm)
             player.setComponentHidden(INTERFACE_ID, base + L.CONFIRM_DISABLED, hidden = canConfirm)
+            player.setComponentText(INTERFACE_ID, base + L.CONFIRM_TEXT, if (canConfirm) "<col=3a1e02>Confirm</col>" else "Confirm")
             for (c in 0 until L.CARDS) {
                 val card = L.cardBase(r, c)
                 val quest = group.quests.getOrNull(c)
@@ -136,29 +135,27 @@ object QuestGuideUi {
                 val isChosen = quest == chosen
                 val lockedOut = rowLocked && !isChosen && !finished
                 val selected = !rowLocked && quest == pick
-                player.setComponentHidden(INTERFACE_ID, card + L.CARD_NORMAL, hidden = lockedOut)
-                player.setComponentHidden(INTERFACE_ID, card + L.CARD_DOWN, hidden = !lockedOut)
-                val frame = isChosen || selected
-                player.setComponentHidden(INTERFACE_ID, card + L.CARD_FRAME_OUTER, hidden = !frame)
-                player.setComponentHidden(INTERFACE_ID, card + L.CARD_FRAME_INNER, hidden = !frame)
+                // Faces: 0 normal, 1 selected, 2 chosen, 3 locked.
+                val face =
+                    when {
+                        lockedOut -> 3
+                        isChosen -> 2
+                        selected -> 1
+                        else -> 0
+                    }
+                for (state in 0 until 4) player.setComponentHidden(INTERFACE_ID, card + L.FACE_FIRST + state, hidden = state != face)
                 player.setComponentHidden(INTERFACE_ID, card + L.CARD_TICK, hidden = !(isChosen || finished))
                 player.setComponentHidden(INTERFACE_ID, card + L.CARD_LOCK, hidden = !lockedOut)
                 player.setComponentItem(INTERFACE_ID, card + L.CARD_ICON, ICON[quest] ?: quest.reward.icon, 1)
                 val name = NAMES[quest] ?: quest.name
                 player.setComponentText(INTERFACE_ID, card + L.CARD_NAME, if (lockedOut) "$GREY$name$END" else name)
-                val desc =
-                    when {
-                        lockedOut -> "${GREY}Complete the quest<br>to unlock$END"
-                        else -> UNLOCKS[quest] ?: ""
-                    }
-                player.setComponentText(INTERFACE_ID, card + L.CARD_DESC, desc)
+                player.setComponentText(INTERFACE_ID, card + L.CARD_DESC, if (lockedOut) "${GREY}Complete the quest<br>to unlock$END" else UNLOCKS[quest] ?: "")
             }
         }
         val confirming = player.attr[CONFIRMING]
         player.setComponentHidden(INTERFACE_ID, L.DIM, hidden = confirming == null)
         player.setComponentHidden(INTERFACE_ID, L.DIALOG, hidden = confirming == null)
     }
-
     fun clickCard(player: Player, row: Int, card: Int) {
         if (!isOpen(player) || player.attr[CONFIRMING] != null) return
         val group = ROWS.getOrNull(row) ?: return

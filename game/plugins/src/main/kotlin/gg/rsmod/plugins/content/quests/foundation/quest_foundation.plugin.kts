@@ -84,7 +84,7 @@ on_npc_option(npc = config.choiceNpc, option = "talk-to") {
 }
 
 // ---- "Choose your path" (QuestGuideUi): the permanent quest choices as one window ----
-on_button(interfaceId = QuestGuideUi.INTERFACE_ID, component = gg.rsmod.game.tools.importer.DeathsOfficeInterfaceImportTool.CLOSE) {
+on_button(interfaceId = QuestGuideUi.INTERFACE_ID, component = gg.rsmod.game.tools.importer.QuestGuideInterfaceImportTool.CLOSE) {
     QuestGuideUi.close(player)
 }
 on_interface_close(interfaceId = QuestGuideUi.INTERFACE_ID) {
