@@ -27,6 +27,9 @@ on_login {
     FoundationQuests.applyQuestListOrder(player)
 }
 
+// The short quests' fight steps: the owner's kill of a quest foe completes the step (QuestFights).
+on_npc_killed { killer, npc -> QuestFights.onKilled(killer, npc) }
+
 // ---------------------------------------------------------------------------------------------- the Quest Guide
 
 // Moved or replaced through data/cfg/new_player.yml (choice_npc) - the later intro sends new players here.

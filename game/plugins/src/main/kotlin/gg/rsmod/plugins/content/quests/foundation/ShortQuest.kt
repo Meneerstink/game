@@ -29,7 +29,24 @@ class QuestStep(
     val place: String? = null,
     val location: Tile? = null,
     val gives: List<Pair<Int, Int>> = emptyList(),
+    /** A fight step: [npc] sends the player into it, killing [fight]'s foe completes the step (QuestFights). */
+    val fight: QuestFight? = null,
     val talk: suspend QueueTask.() -> Boolean,
+)
+
+/**
+ * The foe of a fight step: a real cache npc with its own combat definition (data/cfg/npcs/combat-defs.json), spawned for
+ * the player alone (an owned npc, invisible to everybody else) on [tile], a floor tile the tests check on the real map.
+ * [shout] is its overhead line when it appears; [level] is its combat level, shown in the journal so players can prepare.
+ */
+class QuestFight(
+    val npc: Int,
+    val name: String,
+    val level: Int,
+    val tile: Tile,
+    val shout: String,
+    /** Where the player is taken back to after the kill (a fight the step npc sailed or sent them to), or null. */
+    val returnTo: Tile? = null,
 )
 
 /**

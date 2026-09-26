@@ -38,6 +38,7 @@ private val SINCLAIR_MANSION = Tile(2741, 3553, 0)
 private val CAMELOT = Tile(2758, 3504, 0)
 private val EDGEVILLE = Tile(3068, 3513, 0)
 private val DRAYNOR = Tile(3097, 3253, 0)
+private val CRANDOR = Tile(2851, 3238, 0)
 private val EAST_ARDOUGNE = Tile(2568, 3331, 0)
 private val GLIDER_HANGAR = Tile(2648, 4517, 0)
 private val CRASH_ISLAND = Tile(2894, 2726, 0)
@@ -93,10 +94,9 @@ object DesertTreasure : ShortQuest(
             QuestStep(
                 npc = Npcs.EBLIS,
                 journal = listOf("I should travel to the ${red("Bandit Camp")} in the desert", "and speak to ${red("Eblis")} about the four diamonds."),
-                done = listOf("Eblis gave me the four Diamonds of Azzanadra."),
+                done = listOf("Eblis told me the Bandit champion took the diamonds."),
                 place = "the Bandit Camp",
                 location = BANDIT_CAMP,
-                gives = DIAMONDS.map { it to 1 },
                 talk = {
                     chatNpc(
                         "So the digger sent you. The four of them fought",
@@ -105,12 +105,23 @@ object DesertTreasure : ShortQuest(
                         facialExpression = FacialExpression.SECRETLY_TALKING,
                     )
                     chatNpc(
-                        "Take them. Blood, ice, smoke and shadow. Bring",
-                        "them to the one they were meant to hold down.",
-                        facialExpression = FacialExpression.CALM_TALK,
+                        "But our champion found them first, and he won't",
+                        "share. Beat him and they're yours - I won't stop you.",
+                        facialExpression = FacialExpression.EVIL,
                     )
-                    DIAMONDS.forEach { FoundationRewards.grant(player, it, 1) }
-                    player.message("Eblis hands you the four Diamonds of Azzanadra.")
+                    true
+                },
+            ),
+            QuestStep(
+                npc = Npcs.EBLIS,
+                journal = listOf("I must defeat the ${red("Bandit champion")} (level 70) at the", "Bandit Camp to win the four diamonds."),
+                done = listOf("I defeated the Bandit champion and took the four", "Diamonds of Azzanadra."),
+                place = "the Bandit Camp",
+                location = BANDIT_CAMP,
+                gives = DIAMONDS.map { it to 1 },
+                fight = QuestFight(Npcs.BANDIT_CHAMPION, "Bandit champion", 70, BANDIT_CAMP, "Those diamonds are mine!"),
+                talk = {
+                    chatNpc("The champion's waiting for you. Try not to die.", facialExpression = FacialExpression.LAUGH)
                     true
                 },
             ),
@@ -214,6 +225,24 @@ object LunarDiplomacy : ShortQuest(
                     )
                     FoundationRewards.grant(player, Items.SEAL_OF_PASSAGE, 1)
                     player.message("Lokar hands you a Seal of passage.")
+                    chatNpc(
+                        "One more thing - a suqah came over with my last",
+                        "cargo from the isle. Nasty brute. Deal with it and",
+                        "the Moon Clan will know you mean what you say.",
+                        facialExpression = FacialExpression.WORRIED,
+                    )
+                    true
+                },
+            ),
+            QuestStep(
+                npc = Npcs.LOKAR_SEARUNNER,
+                journal = listOf("I must defeat the ${red("suqah")} (level 111) that came over", "on Lokar's ship to Rellekka."),
+                done = listOf("I killed the suqah that stowed away on Lokar's ship."),
+                place = "Rellekka",
+                location = RELLEKKA_DOCK,
+                fight = QuestFight(Npcs.SUQAH, "suqah", 111, RELLEKKA_DOCK, "Grraaah!"),
+                talk = {
+                    chatNpc("It's still prowling the dock. Mind its horns!", facialExpression = FacialExpression.WORRIED)
                     true
                 },
             ),
@@ -328,6 +357,24 @@ object TempleAtSenntisten : ShortQuest(
                         facialExpression = FacialExpression.WORRIED,
                     )
                     player.message("Ali the Wise entrusts the temple relics to you.")
+                    chatNpc(
+                        "Careful. A Zamorakian mage has been asking after",
+                        "those relics all week. He will not let you walk",
+                        "away with them.",
+                        facialExpression = FacialExpression.WORRIED,
+                    )
+                    true
+                },
+            ),
+            QuestStep(
+                npc = Npcs.ALI_THE_WISE,
+                journal = listOf("I must defeat the ${red("Zamorak mage")} (level 82) who wants", "the temple relics, in Nardah."),
+                done = listOf("I drove off the Zamorak mage who wanted the relics."),
+                place = "Nardah",
+                location = NARDAH,
+                fight = QuestFight(Npcs.ZAMORAK_MAGE_6368, "Zamorak mage", 82, NARDAH, "The relics belong to Zamorak!"),
+                talk = {
+                    chatNpc("He is still out there. Go - before he finds you first.", facialExpression = FacialExpression.WORRIED)
                     true
                 },
             ),
@@ -422,9 +469,23 @@ object KingsRansom : ShortQuest(
                         facialExpression = FacialExpression.DISTRESSED,
                     )
                     chatNpc(
-                        "Tell the knights at Camelot. Please.",
+                        "One of them is still watching the mansion. If you",
+                        "can beat him, bring his word to the knights at",
+                        "Camelot. Please.",
                         facialExpression = FacialExpression.SAD,
                     )
+                    true
+                },
+            ),
+            QuestStep(
+                npc = Npcs.ANNA,
+                journal = listOf("I must defeat the ${red("Black Knight")} (level 33) watching", "Sinclair Mansion."),
+                done = listOf("I beat the Black Knight, who confessed the plot."),
+                place = "Sinclair Mansion",
+                location = SINCLAIR_MANSION,
+                fight = QuestFight(Npcs.BLACK_KNIGHT_2698, "Black Knight", 33, SINCLAIR_MANSION, "For the Black Knights!"),
+                talk = {
+                    chatNpc("He's still out there, near the mansion. Be careful!", facialExpression = FacialExpression.WORRIED)
                     true
                 },
             ),
@@ -552,6 +613,24 @@ object DesertTreasureII : ShortQuest(
                         "The Mahjarrat Azzanadra will know how to stop them.",
                         facialExpression = FacialExpression.WORRIED,
                     )
+                    chatNpc(
+                        "But first: the dead are walking out of that vault.",
+                        "One of its mummies has come as far as our town.",
+                        "Put it back in the ground for us.",
+                        facialExpression = FacialExpression.SCARED,
+                    )
+                    true
+                },
+            ),
+            QuestStep(
+                npc = Npcs.ALI_THE_WISE,
+                journal = listOf("I must defeat the ${red("mummy")} (level 84) that came out of", "the Ancient Vault into Nardah."),
+                done = listOf("I put the vault's mummy back to rest."),
+                place = "Nardah",
+                location = NARDAH,
+                fight = QuestFight(Npcs.MUMMY_2018, "mummy", 84, NARDAH, "Mmmhhh..."),
+                talk = {
+                    chatNpc("The mummy still walks. Please, hurry.", facialExpression = FacialExpression.SCARED)
                     true
                 },
             ),
@@ -659,30 +738,47 @@ object DragonSlayerII : ShortQuest(
             QuestStep(
                 npc = Npcs.NED,
                 journal = listOf("I should ask ${red("Ned")} in ${red("Draynor Village")} to sail me", "to the dragon's island."),
-                done = listOf("Ned sailed me out and I defeated Galvek."),
+                done = listOf("Ned sailed me out to Crandor."),
                 place = "Draynor Village",
                 location = DRAYNOR,
                 talk = {
                     chatNpc(
                         "Another dragon? My knees! Still, the Lady Lumbridge",
-                        "never lost a crew yet. Climb aboard.",
+                        "never lost a crew yet. Climb aboard - it's Crandor,",
+                        "where old Elvarg's bones were stirring.",
                         facialExpression = FacialExpression.LAUGH,
                     )
-                    messageBox("You sail out, face Galvek over the burning sea, and bring it down.")
+                    messageBox("Ned sails you out to Crandor. Galvek's call has woken Elvarg again.")
+                    player.moveTo(CRANDOR)
+                    wait(2)
+                    true
+                },
+            ),
+            QuestStep(
+                npc = Npcs.NED,
+                journal = listOf("I must defeat ${red("Elvarg")} (level 83), woken by Galvek's call,", "on Crandor. An anti-dragon shield would help."),
+                done = listOf("I slew Elvarg again and Ned sailed me back."),
+                place = "Crandor",
+                location = CRANDOR,
+                fight = QuestFight(Npcs.ELVARG, "Elvarg", 83, CRANDOR, "Rrrooaaarr!", returnTo = DRAYNOR),
+                talk = {
+                    chatNpc("Back to Crandor, then? Hold on to your hat.", facialExpression = FacialExpression.LAUGH)
+                    player.moveTo(CRANDOR)
+                    wait(2)
                     true
                 },
             ),
             QuestStep(
                 npc = Npcs.ALECK,
-                journal = listOf("I should tell ${red("Aleck")} in the Grand Exchange hall", "that Galvek is dead."),
+                journal = listOf("I should tell ${red("Aleck")} in the Grand Exchange hall", "that Galvek's call is broken."),
                 done = listOf("Aleck welcomed me to the Myths' Guild."),
                 place = "the Grand Exchange hall",
                 location = GE_HALL,
                 talk = {
                     chatNpc(
-                        "Galvek, slain! The Myths' Guild will want your",
-                        "name on its walls - and Ava owes you an",
-                        "assembler, I'd wager.",
+                        "Elvarg slain and Galvek's call silenced! The Myths'",
+                        "Guild will want your name on its walls - and Ava",
+                        "owes you an assembler, I'd wager.",
                         facialExpression = FacialExpression.LAUGH_EXCITED,
                     )
                     true
@@ -751,9 +847,22 @@ object SongOfTheElves : ShortQuest(
                     )
                     chatNpc(
                         "The crystal singers owe you for helping me get",
-                        "word out. Tell Father I'll be home soon.",
-                        facialExpression = FacialExpression.HAPPY_TALKING,
+                        "word out - but one of Iorwerth's warriors followed",
+                        "me here. Please, stop him before he finds Father.",
+                        facialExpression = FacialExpression.WORRIED,
                     )
+                    true
+                },
+            ),
+            QuestStep(
+                npc = Npcs.ELENA,
+                journal = listOf("I must defeat the ${red("elf warrior")} (level 90) who followed", "Elena to East Ardougne."),
+                done = listOf("I defeated Lord Iorwerth's elf warrior."),
+                place = "East Ardougne",
+                location = EAST_ARDOUGNE,
+                fight = QuestFight(Npcs.ELF_WARRIOR, "elf warrior", 90, EAST_ARDOUGNE, "For Lord Iorwerth!"),
+                talk = {
+                    chatNpc("He's still close - I can hear his bowstring.", facialExpression = FacialExpression.SCARED)
                     true
                 },
             ),
@@ -840,16 +949,28 @@ object MonkeyMadnessII : ShortQuest(
             QuestStep(
                 npc = Npcs.WAYDAR,
                 journal = listOf("I should speak to ${red("Waydar")} on ${red("Crash Island")}."),
-                done = listOf("With Waydar's help I stopped Glough's gorillas."),
+                done = listOf("Waydar told me Glough's monkeys had landed."),
                 place = "Crash Island",
                 location = CRASH_ISLAND,
                 talk = {
                     chatNpc(
-                        "There's a cavern under the crash site full of",
-                        "his gorillas. Let's finish this together.",
+                        "Glough's monkeys have landed here already. Their",
+                        "archer leads them - take him down and the rest",
+                        "will scatter.",
                         facialExpression = FacialExpression.TOUGH,
                     )
-                    messageBox("You storm the Crash Site Cavern with Waydar and put an end to Glough's plan.")
+                    true
+                },
+            ),
+            QuestStep(
+                npc = Npcs.WAYDAR,
+                journal = listOf("I must defeat Glough's ${red("monkey archer")} (level 86) on", "Crash Island."),
+                done = listOf("I shot down Glough's monkey archer and his plan fell apart."),
+                place = "Crash Island",
+                location = CRASH_ISLAND,
+                fight = QuestFight(Npcs.MONKEY_ARCHER_1457, "monkey archer", 86, CRASH_ISLAND, "Ook! Ook!"),
+                talk = {
+                    chatNpc("He's still on the island. Keep your head down!", facialExpression = FacialExpression.TOUGH)
                     true
                 },
             ),
@@ -1005,7 +1126,7 @@ object FoundationQuests {
             if (step.npc == npc) {
                 actions += Action("${quest.name}.") { runStep(this, quest, stage) }
                 direct = true
-            } else if (quest.startNpc == npc || quest.steps.getOrNull(stage - 2)?.npc == npc) {
+            } else if (quest.startNpc == npc || quest.steps.take(stage - 1).any { it.npc == npc }) {
                 actions += Action("${quest.name}.") { runReminder(this, quest, stage) }
             }
         }
@@ -1033,25 +1154,57 @@ object FoundationQuests {
     private suspend fun runStep(task: QueueTask, quest: ShortQuest, stage: Int) {
         val player = task.player
         val step = quest.steps[stage - 1]
+        if (step.fight != null) {
+            // A fight step: the npc sends the player in; the kill completes it (QuestFights.onKilled).
+            if (QuestFights.active(player) != null) {
+                task.chatNpc("Go on, it's right there! Finish the fight.", facialExpression = FacialExpression.ANGRY)
+                return
+            }
+            if (step.talk(task) && quest.stage(player) == stage) QuestFights.start(player, quest, stage)
+            return
+        }
         if (!step.talk(task)) return
         // The conversation suspends: never advance a stage another path changed meanwhile.
         if (quest.stage(player) != stage) return
+        completeStep(player, quest, stage)
+    }
+
+    /**
+     * Step [stage] of [quest] is done: its fight items (a talk step hands its own items out in its conversation), then the
+     * next stage - starting the next fight at once when the same npc sends the player straight into it - or the quest.
+     */
+    fun completeStep(player: Player, quest: ShortQuest, stage: Int) {
+        val step = quest.steps[stage - 1]
+        step.fight?.let { fight ->
+            step.gives.forEach { (item, amount) -> FoundationRewards.grant(player, item, amount) }
+            fight.returnTo?.let { player.moveTo(it) }
+        }
         if (stage == quest.steps.size) {
             FoundationRewards.complete(player, quest)
-        } else {
-            quest.setStage(player, stage + 1)
-            player.message("Your quest journal has been updated: <col=5861e9>${quest.name}")
+            return
         }
+        quest.setStage(player, stage + 1)
+        player.message("Your quest journal has been updated: <col=5861e9>${quest.name}")
+        val next = quest.steps[stage]
+        if (next.fight != null && next.npc == step.npc) QuestFights.start(player, quest, stage + 1)
     }
+
+    /** Names of the quest npcs, for messages that point the player back to one. */
+    val NPC_NAMES: Map<Int, String> =
+        mapOf(
+            Npcs.EBLIS to "Eblis", Npcs.LOKAR_SEARUNNER to "Lokar Searunner", Npcs.ALI_THE_WISE to "Ali the Wise",
+            Npcs.ANNA to "Anna", Npcs.NED to "Ned", Npcs.ELENA to "Elena", Npcs.WAYDAR to "Waydar",
+        )
 
     private suspend fun runReminder(task: QueueTask, quest: ShortQuest, stage: Int) {
         val player = task.player
         val step = quest.steps[stage - 1]
-        val previous = quest.steps.getOrNull(stage - 2)
-        // The npc of the previous step hands its quest items out again when the player lost them.
-        if (previous != null && previous.gives.isNotEmpty() && previous.gives.any { (item, _) -> !player.inventory.contains(item) && !player.bank.contains(item) }) {
-            task.chatNpc("You've lost what I gave you? Here, take these again - and be careful this time.")
-            previous.gives.forEach { (item, amount) -> if (!player.inventory.contains(item) && !player.bank.contains(item)) FoundationRewards.grant(player, item, amount) }
+        // An npc of an earlier step hands its quest items out again when the player lost them (before they are used).
+        val npc = task.player.getInteractingNpc().id
+        val lost = quest.steps.take(stage - 1).filter { it.npc == npc }.flatMap { it.gives }.filter { (item, _) -> !player.inventory.contains(item) && !player.bank.contains(item) }
+        if (lost.isNotEmpty()) {
+            task.chatNpc("You've lost what I gave you? Here, take it again - and be careful this time.")
+            lost.forEach { (item, amount) -> FoundationRewards.grant(player, item, amount) }
         }
         task.chatPlayer(*step.journal.map { it.replace(Regex("<[^>]+>"), "") }.toTypedArray(), facialExpression = FacialExpression.THINKING)
         if (step.location != null && step.place != null) with(quest) { task.offerTravel(step.place, step.location) }

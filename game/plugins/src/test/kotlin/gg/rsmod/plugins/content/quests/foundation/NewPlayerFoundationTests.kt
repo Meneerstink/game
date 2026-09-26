@@ -420,6 +420,35 @@ class NewPlayerFoundationTests {
         assertTrue(problems.isEmpty(), problems.joinToString("\n"))
     }
 
+    @Test
+    fun `every short quest has one fight against a real npc with its real combat level`() {
+        val defs = com.google.gson.JsonParser().parse(File("../../data/cfg/npcs/combat-defs.json").readText()).asJsonArray
+            .map { it.asJsonObject }.associateBy { it.get("id").asInt }
+        FoundationQuests.SHORT.forEach { quest ->
+            val fights = quest.steps.mapNotNull { it.fight }
+            assertEquals(1, fights.size, "${quest.name} has one fight")
+            val fight = fights.single()
+            val def = defs[fight.npc]
+            assertTrue(def != null, "${quest.name}: npc ${fight.npc} has a combat definition")
+            assertEquals(fight.level, def!!.get("combat_level").asInt, "${quest.name}: journal level matches the npc")
+            val step = quest.steps.first { it.fight == fight }
+            assertEquals(fight.tile, step.location, "${quest.name}: the fight tile is the step's travel tile (walkability-checked)")
+            assertTrue(step.journal.joinToString(" ").contains("level ${fight.level}"), "${quest.name}: journal shows the level")
+        }
+    }
+
+    @Test
+    fun `a fight kill completes its step with the step's items`() {
+        val account = Account(isNew = true)
+        val fightStage = DesertTreasure.steps.indexOfFirst { it.fight != null } + 1
+        DesertTreasure.setStage(account.player, fightStage)
+        FoundationQuests.completeStep(account.player, DesertTreasure, fightStage)
+        assertEquals(fightStage + 1, DesertTreasure.stage(account.player))
+        listOf(Items.BLOOD_DIAMOND, Items.ICE_DIAMOND, Items.SMOKE_DIAMOND, Items.SHADOW_DIAMOND).forEach { assertEquals(1, account.inventory.getItemCount(it)) }
+        // Dragon Slayer II's fight on Crandor sends the player back to Draynor.
+        assertTrue(DragonSlayerII.steps.first { it.fight != null }.fight!!.returnTo != null)
+    }
+
     // ------------------------------------------------------------------------------------------ config
 
     @Test
