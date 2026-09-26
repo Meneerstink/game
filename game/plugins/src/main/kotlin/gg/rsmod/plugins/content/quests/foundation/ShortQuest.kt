@@ -117,7 +117,8 @@ abstract class ShortQuest(
 
     fun stage(player: Player): Int = player.getCurrentStage(this)
 
-    fun isFinished(player: Player): Boolean = stage(player) >= completedValue
+    /** Completed in the server's one quest status (QuestStatus reads this quest's stage against [completedValue]). */
+    fun isFinished(player: Player): Boolean = gg.rsmod.plugins.content.quests.QuestStatus.isCompleted(player, this)
 
     /** Writes [value] and pokes the quest list so the client re-evaluates its colours. */
     fun setStage(player: Player, value: Int) {

@@ -157,7 +157,7 @@ object TheKnightsSword : Quest(
 
     override fun finishQuest(player: Player) {
         player.advanceToNextStage(this)
-        player.setVarp(Varps.QUEST_POINTS, player.getVarp(Varps.QUEST_POINTS).plus(pointReward))
+        gg.rsmod.plugins.content.quests.QuestStatus.sync(player) // Quest Points = the completed quests of the list
         player.addXp(skill = Skills.SMITHING, xp = 12725.0)
         player.inventory.remove(Items.BLURITE_SWORD)
         player.buildQuestFinish(

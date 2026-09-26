@@ -24,10 +24,10 @@ object DeadmanGroupsView {
     class View(val showNote: Boolean, val groups: List<Group>)
 
     /**
-     * The one read of a quest's status for this panel. Part 2 of the quest tab points this at the central quest status;
+     * The one read of a quest's status for this panel: the server's central quest status (QuestStatus, quest tab part 2);
      * nothing else here asks a quest whether it is finished.
      */
-    fun questFinished(player: Player, quest: ShortQuest): Boolean = quest.isFinished(player)
+    fun questFinished(player: Player, quest: ShortQuest): Boolean = gg.rsmod.plugins.content.quests.QuestStatus.isCompleted(player, quest)
 
     fun name(quest: ShortQuest): String = QuestGuideUi.NAMES[quest] ?: quest.name
 

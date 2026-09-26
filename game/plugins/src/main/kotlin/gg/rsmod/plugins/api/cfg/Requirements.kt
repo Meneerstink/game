@@ -33,7 +33,7 @@ class QuestPointRequirement(
     val points: Int,
 ) : Requirement {
     override fun hasRequirement(player: Player): Boolean {
-        return player.getVarp(Varps.QUEST_POINTS) >= points
+        return gg.rsmod.plugins.content.quests.QuestStatus.points(player) >= points
     }
 }
 

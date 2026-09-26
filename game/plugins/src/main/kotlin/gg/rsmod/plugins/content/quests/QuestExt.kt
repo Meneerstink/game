@@ -24,16 +24,13 @@ fun Player.getCurrentStage(quest: Quest): Int {
 }
 
 /**
- * Checks if the specified [Quest] has been started by this [Player],
- * based on the current stage of the quest. Returns true if the current
- * stage is the first stage in the list of stages for the quest.
+ * Checks if the specified [Quest] has been started by this [Player]: in progress or completed in the server's one
+ * quest status ([QuestStatus]).
  *
  * @param quest The quest to check.
  * @return true if the quest has been started, false otherwise.
  */
-fun Player.startedQuest(quest: Quest): Boolean {
-    return getCurrentStage(quest) > 0
-}
+fun Player.startedQuest(quest: Quest): Boolean = QuestStatus.isStarted(this, quest)
 
 /**
  * Advances the player to the next stage of the specified quest.
@@ -69,17 +66,13 @@ fun Player.startQuest(quest: Quest) {
 }
 
 /**
- * Checks if the specified [Quest] has been finished by this [Player],
- * based on the current stage of the quest. Returns true if the current
- * varbit value is greater than or equal to the number of stages in the
- * list of stages for the quest.
+ * Checks if the specified [Quest] has been finished by this [Player]: the server's one quest status ([QuestStatus]),
+ * where every quest is completed except the permanent-choice quests the account has not picked or played.
  *
  * @param quest The quest to check.
  * @return true if the quest has been finished, false otherwise.
  */
-fun Player.finishedQuest(quest: Quest): Boolean {
-    return if (quest.usesVarbits) getVarbit(quest.questId) >= quest.stages else getVarp(quest.questId) >= quest.stages
-}
+fun Player.finishedQuest(quest: Quest): Boolean = QuestStatus.isCompleted(this, quest)
 
 /**
  * Checks if the specified [Quest] can be started by this [Player], based
@@ -217,7 +210,7 @@ fun getRequirements(
         when (it) {
             is QuestRequirement -> {
                 requirementList.add(
-                    if (player.finishedQuest(quest)) {
+                    if (player.finishedQuest(it.quest)) {
                         striked(it.quest.name)
                     } else {
                         it.quest.name

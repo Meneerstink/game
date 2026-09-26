@@ -9,7 +9,7 @@ import gg.rsmod.util.Misc
 
 on_npc_option(npc = Npcs.WISE_OLD_MAN, option = "talk-to") {
     player.queue {
-        if (player.getVarp(Varps.QUEST_POINTS) >= Quest.quests.sumOf { it.pointReward }) {
+        if (gg.rsmod.plugins.content.quests.QuestStatus.hasAllQuestPoints(player)) {
             questCapeDialogue(this)
         } else {
             mainDialogue(this)

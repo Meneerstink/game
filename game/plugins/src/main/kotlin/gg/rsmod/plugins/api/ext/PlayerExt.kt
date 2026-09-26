@@ -1447,7 +1447,7 @@ fun Player.getMagicDamageBonus(): Int = equipmentBonuses[BonusSlot.MAGIC_DAMAGE_
 fun Player.getPrayerBonus(): Int = equipmentBonuses[BonusSlot.PRAYER_BONUS.id]
 
 fun Player.completedAllQuests(): Boolean {
-    return getVarp(Varps.QUEST_POINTS) >= Quest.quests.sumOf { it.pointReward }
+    return gg.rsmod.plugins.content.quests.QuestStatus.hasAllQuestPoints(this)
 }
 
 fun Player.checkEquipment() {

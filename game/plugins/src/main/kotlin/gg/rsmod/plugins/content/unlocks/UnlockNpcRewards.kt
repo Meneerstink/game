@@ -98,7 +98,7 @@ object UnlockNpcRewards {
         player.attr[TORMENTED_DEMONS_UNLOCKED] = true
         player.attr[DEMONBANE_WEAPONS_UNLOCKED] = true
         player.setVarbit(Varbits.WHILE_GUTHIX_SLEEPS_PROGRESS, 910)
-        player.setVarp(Varps.QUEST_POINTS, player.getVarp(Varps.QUEST_POINTS) + 5)
+        gg.rsmod.plugins.content.quests.QuestStatus.sync(player) // Quest Points = the completed quests of the list
         player.addXp(Skills.THIEVING, 80_000.0)
         player.addXp(Skills.FARMING, 75_000.0)
         player.addXp(Skills.HERBLORE, 75_000.0)

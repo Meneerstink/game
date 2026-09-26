@@ -159,7 +159,8 @@ object QuestTabInterfaceImportTool {
      */
     val QUEST_LIST_FIT =
         listOf(
-            FieldPatch(190, 13, 10, 173, 149),
+            // Quest list part 2 (QuestListPart2CacheTool, 2026-09-27): the filters are gone, the list layer is 200 high.
+            FieldPatch(190, 13, 10, 173, 200, earlier = 149),
             FieldPatch(190, 7, 10, 224, 200),
             FieldPatch(190, 6, 6, 236, 212),
             FieldPatch(190, 2, 6, 251, 223, earlier = 227),

@@ -119,7 +119,8 @@ class NewPlayerFoundationTests {
         assertTrue(FoundationRewards.complete(account.player, DragonSlayerII))
         val qp = account.player.getVarp(Varps.QUEST_POINTS)
         val calls = account.xpCalls
-        assertEquals(5, qp)
+        // Quest Points are the completed quests of the list (QuestStatus): everything but the eight choice quests, plus this one.
+        assertEquals(gg.rsmod.plugins.content.quests.QuestStatus.MAX_POINTS - 26 + 5, qp)
         assertEquals(80_000.0, account.skills.getCurrentXp(Skills.SMITHING))
         assertTrue(account.attributes[UnlockNpcRewards.AVAS_ASSEMBLER_UNLOCKED] == true)
         assertEquals(4, FoundationRewards.pendingLamps(account.player).count { it.xp == 25_000 }, "Ellen: four 25,000 XP rewards")
@@ -172,7 +173,7 @@ class NewPlayerFoundationTests {
         val slayer = account.skills.getCurrentXp(Skills.SLAYER)
         repeat(3) { QuestChoices.choose(account.player, ChoiceGroup.GEAR, MonkeyMadnessII) }
         assertEquals(slayer, account.skills.getCurrentXp(Skills.SLAYER))
-        assertEquals(4, account.player.getVarp(Varps.QUEST_POINTS))
+        assertEquals(gg.rsmod.plugins.content.quests.QuestStatus.MAX_POINTS - 26 + 4, account.player.getVarp(Varps.QUEST_POINTS))
     }
 
     @Test
@@ -264,7 +265,7 @@ class NewPlayerFoundationTests {
     @Test
     fun `the quest list has the ten OSRS quests and puts unfinished quests on top`() {
         assertTrue(QuestListCacheTool.plan(CACHE_PATH).isEmpty(), "QuestListCacheTool must be applied to the cache")
-        assertEquals(mapOf(0 to 1, 1 to 0, 2 to 2), QuestListCacheTool.PROGRESS_ORDER, "In progress, Not started, Complete")
+        assertEquals(mapOf(0 to 0, 1 to 1), QuestListCacheTool.PROGRESS_ORDER, "Not completed, Completed (quest list part 2)")
         val slots = (FoundationQuests.SHORT.filter { !it.usesVarbits } + FoundationQuests.COMPLETED).map { it.slot }.toSet()
         assertEquals(QuestListCacheTool.QUESTS.map { it.slot }.toSet(), slots)
         QuestListCacheTool.QUESTS.forEach { entry ->
@@ -280,7 +281,7 @@ class NewPlayerFoundationTests {
         account.player.setVarbit(FoundationQuests.QUEST_LIST_GROUPING_VARBIT, 2)
         FoundationQuests.applyQuestListOrder(account.player)
         assertEquals(2, account.player.getVarbit(FoundationQuests.QUEST_LIST_GROUPING_VARBIT))
-        FoundationQuests.completeListedQuests(account.player)
+        gg.rsmod.plugins.content.quests.QuestStatus.sync(account.player)
         FoundationQuests.COMPLETED.forEach { assertEquals(1, account.player.getVarp(it.questId), it.name) }
     }
 

@@ -295,8 +295,9 @@ class QuestTabTests {
                 if (hMode == 0 && yMode == 0) {
                     if (b[1].toInt() == 5) assertTrue(y < area, "190:$f starts at y $y") else assertTrue(y + h <= area, "190:$f ends at y ${y + h}")
                 }
-                // Bottom-aligned with a fixed height (the quest list): inside the area and below the filters (y 76).
-                if (hMode == 0 && yMode == 2) assertTrue(area - y - h >= 76, "190:$f top at ${area - y - h}")
+                // Bottom-aligned with a fixed height (the quest list): inside the area and right under the top divider line
+                // (y 22-24); quest list part 2 removed the filters that sat above it (QuestListPart2CacheTool).
+                if (hMode == 0 && yMode == 2) assertEquals(25, area - y - h, "190:$f top")
             }
             assertTrue("QUEST_SCROLLBAR, hidden = true" in File("src/main/kotlin/gg/rsmod/plugins/content/quests/tab/QuestTab.kt").readText(), "no second scrollbar")
         } finally {

@@ -1537,10 +1537,6 @@ object FoundationQuests {
         player.setVarbit(QUEST_LIST_DIRECTION_VARBIT, 0)
     }
 
-    fun completeListedQuests(player: Player) {
-        COMPLETED.forEach { if (player.getVarp(it.questId) < 1) player.setVarp(it.questId, 1) }
-    }
-
     // ------------------------------------------------------------------------------------------- conversations
 
     private class Action(val label: String, val run: suspend QueueTask.() -> Unit)

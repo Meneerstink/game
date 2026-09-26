@@ -88,7 +88,7 @@ object DoricsQuest : Quest(
         player.inventory.remove(Items.IRON_ORE, 2)
         player.inventory.add(Items.COINS_995, 180)
         player.addXp(Skills.MINING, 1300.0)
-        player.setVarp(Varps.QUEST_POINTS, player.getVarp(Varps.QUEST_POINTS).plus(pointReward))
+        gg.rsmod.plugins.content.quests.QuestStatus.sync(player) // Quest Points = the completed quests of the list
         player.buildQuestFinish(
             this,
             item = Items.STEEL_PICKAXE,

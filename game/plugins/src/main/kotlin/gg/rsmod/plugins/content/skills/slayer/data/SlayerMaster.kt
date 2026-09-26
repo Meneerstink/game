@@ -133,7 +133,7 @@ val slayerData =
                         assignment = SlayerAssignment.GREEN_DRAGON,
                         requirement =
                             listOf(
-                                QuestPointRequirement(points = Quest.quests.sumOf { it.pointReward }),
+                                QuestPointRequirement(points = gg.rsmod.plugins.content.quests.QuestStatus.MAX_POINTS),
                             ),
                         amount = 30..60,
                         weight = 2.17,

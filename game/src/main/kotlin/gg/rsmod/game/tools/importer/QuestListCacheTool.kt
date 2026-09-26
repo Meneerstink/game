@@ -36,8 +36,11 @@ object QuestListCacheTool {
     const val PROGRESS_SCRIPT = 2193
     const val PROGRESS_HELPER = 2157
 
-    /** Enum 2250 after the change: position -> group (enum 2249: 0 Not started, 1 In progress, 2 Complete). */
-    val PROGRESS_ORDER = linkedMapOf(0 to 1, 1 to 0, 2 to 2)
+    /**
+     * Enum 2250: position -> group. This tool first made it In progress, Not started, Complete; quest list part 2
+     * (QuestListPart2CacheTool, 2026-09-27) made the list two parts, not completed then completed.
+     */
+    val PROGRESS_ORDER = QuestListPart2CacheTool.ORDER
 
     class NewQuest(val slot: Int, val name: String, val sortName: String, val difficulty: Int, val x: Int, val z: Int, val varp: Int, val complete: Int)
 
@@ -116,7 +119,7 @@ object QuestListCacheTool {
                 mutations +=
                     CacheMutation(
                         ENUM_INDEX, PROGRESS_ORDER_ENUM ushr 8, PROGRESS_ORDER_ENUM and 0xFF, newOrder,
-                        "enum $PROGRESS_ORDER_ENUM: In progress, Not started, Complete",
+                        "enum $PROGRESS_ORDER_ENUM: Not completed, Completed",
                         expectedCurrentSha1 = CacheItemProbeTool.sha1(orderBytes),
                     )
             }

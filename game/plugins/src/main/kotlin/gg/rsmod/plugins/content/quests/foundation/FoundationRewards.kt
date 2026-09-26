@@ -68,7 +68,7 @@ object FoundationRewards {
         player.attr[rewardedKey(quest)] = true
         val reward = quest.reward
         quest.setStage(player, quest.completedValue)
-        player.setVarp(Varps.QUEST_POINTS, player.getVarp(Varps.QUEST_POINTS) + quest.pointReward)
+        gg.rsmod.plugins.content.quests.QuestStatus.sync(player) // Quest Points = the completed quests of the list
         reward.unlock(player)
         reward.xp.forEach { (skill, amount) -> player.addXp(skill, amount, modifiers = false) }
         reward.lamps.forEach {

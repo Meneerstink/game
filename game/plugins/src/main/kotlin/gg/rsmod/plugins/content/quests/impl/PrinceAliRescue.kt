@@ -144,7 +144,9 @@ object PrinceAliRescue : Quest(
                         ),
                 )
 
-            8 ->
+            // 8 and up: finished. The quest list reads varp 273 at 110 as complete (clientscript 2193), the value
+            // QuestStatus writes for a completed quest.
+            in 8..Int.MAX_VALUE ->
                 QuestStage(
                     objectives =
                         listOf(
@@ -174,7 +176,7 @@ object PrinceAliRescue : Quest(
     override fun finishQuest(player: Player) {
         player.advanceToNextStage(this)
         player.inventory.add(Items.COINS_995, 700)
-        player.setVarp(Varps.QUEST_POINTS, player.getVarp(Varps.QUEST_POINTS).plus(pointReward))
+        gg.rsmod.plugins.content.quests.QuestStatus.sync(player) // Quest Points = the completed quests of the list
         player.buildQuestFinish(
             this,
             item = Items.COINS_995,

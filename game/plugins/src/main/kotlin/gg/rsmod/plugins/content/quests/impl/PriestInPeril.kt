@@ -217,7 +217,7 @@ object PriestInPeril : Quest(
         player.advanceToNextStage(this, 53)
         player.inventory.add(Items.WOLFBANE)
         player.addXp(Skills.PRAYER, 1406.0)
-        player.setVarp(Varps.QUEST_POINTS, player.getVarp(Varps.QUEST_POINTS).plus(pointReward))
+        gg.rsmod.plugins.content.quests.QuestStatus.sync(player) // Quest Points = the completed quests of the list
         player.buildQuestFinish(
             this,
             item = Items.WOLFBANE,

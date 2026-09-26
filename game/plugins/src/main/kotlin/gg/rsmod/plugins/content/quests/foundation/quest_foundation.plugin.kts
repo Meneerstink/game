@@ -22,10 +22,9 @@ FoundationQuests.register()
 // ------------------------------------------------------------------------------------------------------ login
 
 on_login {
-    if (QuestChoices.isLegacy(player)) QuestChoices.applyLegacy(player)
+    // The legacy cohort's quests and the OSRS list entries are completed by QuestStatus.login (quest_tab.plugin.kts).
     // Owner 2026-09-26: quest lamps are inventory items; lamps that waited at the Quest Guide are handed out once.
     FoundationRewards.itemiseOldLamps(player)
-    FoundationQuests.completeListedQuests(player)
     FoundationQuests.applyQuestListOrder(player)
 }
 
