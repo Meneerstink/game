@@ -8,6 +8,7 @@ import gg.rsmod.game.model.World
 import gg.rsmod.game.model.attr.AttributeMap
 import gg.rsmod.game.model.container.ItemContainer
 import gg.rsmod.game.model.container.key.DEATH_RECOVERY_KEY
+import gg.rsmod.game.model.container.key.GRAVESTONE_KEY
 import gg.rsmod.game.model.container.key.EQUIPMENT_KEY
 import gg.rsmod.game.model.container.key.INVENTORY_KEY
 import gg.rsmod.game.model.entity.GroundItem
@@ -234,6 +235,7 @@ class PvpDeathBreakablesTests {
         every { player.inventory } returns ItemContainer(DEFINITIONS, INVENTORY_KEY)
         every { player.equipment } returns ItemContainer(DEFINITIONS, EQUIPMENT_KEY)
         every { player.deathRecovery } returns ItemContainer(DEFINITIONS, DEATH_RECOVERY_KEY)
+        every { player.gravestone } returns ItemContainer(DEFINITIONS, GRAVESTONE_KEY)
         return player
     }
 

@@ -85,7 +85,16 @@ object OsrsNpcImportTool {
             // Owner 2026-09-23 ("exact stats as deadmanmode anihilation"): OSRS Wiki "TzTok-Jad-Rek" 15557, summoned by the breach
             // TzTok-Jad in Deadman: Annihilation - TzTok-Jad's model and sequences at 70 % scale (probe 2026-09-23).
             "deadman-jad-rek" to listOf(15557),
+            // Death's Domain (2026-09-26): RuneLite gameval NpcID DEATH_OFFICE_DEATH 9855 (OSRS Wiki "Death (NPC)" infobox 9855),
+            // GRAVESTONE_DEFAULT 9856 and GRAVESTONE_ANGEL 9857 (OSRS Wiki "Grave" basic / angel).
+            "deaths-office" to listOf(9855, 9856, 9857),
         )
+
+    /**
+     * Npcs that never move and have no movement sequences in OSRS: they keep their model's rest pose (no humanoid default).
+     * The OSRS graves 9856/9857 are gravestone models, not a humanoid rig.
+     */
+    val STATIC_NPCS = setOf(9856, 9857)
 
     /**
      * Batches whose entries are renamed clones of an OSRS npc: the same models, BAS and options, only the cache name changed.
@@ -114,6 +123,10 @@ object OsrsNpcImportTool {
             // The Sophanem / Rellekka guards stand with the imported HUMAN_STAFFREADY 813 (OSRS human skeleton), so their combat uses
             // the OSRS HUMAN_SWORD_SLASH 390, HUMAN_SHIELD_DEFENCE 1156, HUMAN_DEATH 836, HUMAN_BOW 426, HUMAN_UNARMEDBLOCK 424 on it too.
             "deadman-guard" to listOf(12043, 12045, 12046, 12048, 390, 1156, 836, 426, 424),
+            // deaths-office: the animated scenery of Death's Office (OSRS map square 12633 loc definitions: 39551 -> 6853,
+            // Muncher 39571 -> 8749, the portals 39548/39549 -> 8750, 39582 -> 8751, Death's desk 39570 -> 8752) and the swirl
+            // behind the item on Death's Coffer screen (OSRS interface 670:7 -> 7301).
+            "deaths-office" to listOf(6853, 8749, 8750, 8751, 8752, 7301),
             // deadman-breach: attack / defend / death sequences, chosen by RuneLite gameval AnimationID name among the OSRS sequences
             // that animate the same frame base as each npc's stand sequence (OsrsNpcProbeTool "skeleton", 2026-09-19).
             "deadman-breach" to
@@ -217,7 +230,10 @@ object OsrsNpcImportTool {
             out.u8(n.size)
         }
         n.ops.forEachIndexed { i, op ->
-            if (op != null) {
+            // OSRS names a scripted, never-shown op "hidden" (Death 9855 op5); the 667 client would print it in the menu.
+            if (op != null && op.equals("hidden", ignoreCase = true)) {
+                dropped += "npc ${n.id}: op${i + 1} \"$op\" (OSRS hidden op)"
+            } else if (op != null) {
                 out.u8(30 + i)
                 out.str(op)
             }
@@ -376,6 +392,8 @@ object OsrsNpcImportTool {
                     n.idleTurnLeft = rigDonor.idleTurnLeft
                     n.idleTurnRight = rigDonor.idleTurnRight
                     dropped += "npc $npcId: no OSRS movement sequences; movement of same-body OSRS npc ${RIG_DONORS[npcId]} '${rigDonor.name}' applied"
+                } else if (OsrsNpcProbeTool.movementSeqs(n).isEmpty() && npcId in STATIC_NPCS) {
+                    dropped += "npc $npcId: no OSRS movement sequences; static npc, rest pose kept (BAS without sequences)"
                 } else if (OsrsNpcProbeTool.movementSeqs(n).isEmpty() && n.size == 1) {
                     // The OSRS definition carries no stand/walk sequences at all (e.g. the Deadman guards 6582/11203):
                     // the client then shows the model in its rest pose. 667 needs a BAS, so the humanoid default set

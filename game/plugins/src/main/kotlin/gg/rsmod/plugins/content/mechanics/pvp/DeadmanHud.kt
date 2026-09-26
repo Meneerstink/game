@@ -130,14 +130,30 @@ object DeadmanHud {
     }
 
     /**
+     * The gravestone timer (OSRS gravestone_hud_write: minutes:seconds of the ticks left), or null without a gravestone.
+     * OSRS shows it next to the Deadman state icon ("Poll 84: Batch II", 30 April 2025).
+     */
+    fun graveText(player: Player): String? {
+        if (!gg.rsmod.plugins.content.mechanics.death.Gravestone.exists(player)) return null
+        val seconds = maxOf(1, gg.rsmod.plugins.content.mechanics.death.Gravestone.ticksLeft(player) * 30 / 50)
+        return "%d:%02d".format(seconds / 60, seconds % 60)
+    }
+
+    /**
      * The 381:5 payload: skull time (or empty), then "|grace" while the kill grace runs, then - only while a Deadman
-     * emblem is carried (owner 2026-09-25) - "|tier:points:nextPoints" as a third field, e.g. "5:00||3:200:360".
+     * emblem is carried (owner 2026-09-25) - "|tier:points:nextPoints" as a third field, e.g. "5:00||3:200:360", and -
+     * only while a gravestone stands (2026-09-26) - "|m:ss" as a fourth field, e.g. "||0:0:0|14:59" (the client draws no
+     * emblem row for tier 0).
      */
     fun timerText(player: Player): String? {
         val skull = skullText(player)
         val grace = graceText(player)
         val emblem = gg.rsmod.plugins.content.mechanics.pvp.emblem.DeadmanEmblem.hudField(player)
-        if (skull == null && grace == null && emblem.isEmpty()) return null
+        val grave = graveText(player)
+        if (skull == null && grace == null && emblem.isEmpty() && grave == null) return null
+        if (grave != null) {
+            return (skull ?: "") + FIELD_SEPARATOR + (grace ?: "") + FIELD_SEPARATOR + emblem.ifEmpty { "0:0:0" } + FIELD_SEPARATOR + grave
+        }
         if (emblem.isNotEmpty()) return (skull ?: "") + FIELD_SEPARATOR + (grace ?: "") + FIELD_SEPARATOR + emblem
         return (skull ?: "") + if (grace != null) "$FIELD_SEPARATOR$grace" else ""
     }

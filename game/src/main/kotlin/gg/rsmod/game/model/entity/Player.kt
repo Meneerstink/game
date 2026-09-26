@@ -112,10 +112,14 @@ abstract class Player(
     val randomEventGift = ItemContainer(world.definitions, RANDOM_EVENT_GIFT_KEY)
 
     /**
-     * Holds non-protected items from this player's most recent non-Wilderness
-     * death, pending reclaim. See [gg.rsmod.game.model.container.key.DEATH_RECOVERY_KEY].
+     * Death's Office: the items Death holds for this player. See [gg.rsmod.game.model.container.key.DEATH_RECOVERY_KEY].
      */
     val deathRecovery = ItemContainer(world.definitions, DEATH_RECOVERY_KEY)
+
+    /**
+     * The items waiting in this player's gravestone. See [gg.rsmod.game.model.container.key.GRAVESTONE_KEY].
+     */
+    val gravestone = ItemContainer(world.definitions, GRAVESTONE_KEY)
 
     /**
      * A flag which indicates if the map should be force
@@ -139,6 +143,7 @@ abstract class Player(
             put(BANK_KEY, bank)
             put(RANDOM_EVENT_GIFT_KEY, randomEventGift)
             put(DEATH_RECOVERY_KEY, deathRecovery)
+            put(GRAVESTONE_KEY, gravestone)
         }
 
     /**

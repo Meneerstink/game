@@ -952,3 +952,8 @@ obj 47756 3156 3487 0 10 0
 obj 47756 3156 3496 0 10 0
 obj 47756 3173 3487 0 10 0
 obj 47756 3173 3496 0 10 0
+
+# ---- Death's Domain entrance (owner 2026-09-26: "GE + alle OSRS-plekken", Ferox tomb style) - the OSRS Ferox Enclave
+# "Death's domain" (loc 62430, 2x3) on the west lawn just inside the south gate. Move it here freely: "Enter" works on
+# every copy of this loc, and the exit portal returns the player to the tile they entered from.
+obj 62430 3155 3469 0 10 0

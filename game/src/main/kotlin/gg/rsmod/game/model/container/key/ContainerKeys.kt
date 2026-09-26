@@ -15,9 +15,14 @@ val RANDOM_EVENT_GIFT_KEY = ContainerKey("random_event_gift", capacity = 28, sta
 val BANK_KEY = ContainerKey("bank", capacity = 800, stackType = ContainerStackType.STACK)
 
 /**
- * Holds a player's non-protected items after a non-Wilderness (PvM/safe) death,
- * until they are reclaimed or the recovery expires. Capacity 42 covers the
- * worst case of every inventory (28) and equipment (14) slot being lost in a
- * single death.
+ * Death's Office: the items Death holds for a player (OSRS "Death's Office Item Retrieval", inventory 636, 120 slots). Items
+ * arrive here when a gravestone collapses, when a familiar's cargo is rescued (owner override) or when an old grave hands its
+ * resources over on a repeat death. Death keeps them without a time limit (OSRS Wiki "Death's Office").
  */
-val DEATH_RECOVERY_KEY = ContainerKey("death_recovery", capacity = 42, stackType = ContainerStackType.NORMAL)
+val DEATH_RECOVERY_KEY = ContainerKey("death_recovery", capacity = 120, stackType = ContainerStackType.NORMAL)
+
+/**
+ * The player's gravestone (OSRS "Grave", inventory 525, 120 slots): the items lost on a PvM death, waiting at the grave for
+ * 15 minutes of play (OSRS Wiki "Grave": "a gravestone functions similarly to a bank with 120 slots").
+ */
+val GRAVESTONE_KEY = ContainerKey("gravestone", capacity = 120, stackType = ContainerStackType.NORMAL)

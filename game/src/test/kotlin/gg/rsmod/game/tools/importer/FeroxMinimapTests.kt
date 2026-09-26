@@ -37,7 +37,9 @@ class FeroxMinimapTests {
                 entries.forEach { e ->
                     val loc = locs.getValue(e.local)
                     assertEquals(expectedMsi[e.local] ?: -1, loc.msi, "$cache loc ${e.local} msi")
-                    assertEquals(expectedElement[e.local] ?: -1, loc.mapElement, "$cache loc ${e.local} mapelement")
+                    // The Ferox "Death's domain" carries the Death's Office icon DeathsOfficeMapImportTool gave every entrance (2026-09-26).
+                    val element = if (e.local == DeathsOfficeMapImportTool.FEROX_ENTRANCE) DeathsOfficeMapImportTool.OFFICE_MAP_ELEMENT else expectedElement[e.local] ?: -1
+                    assertEquals(element, loc.mapElement, "$cache loc ${e.local} mapelement")
                 }
             } finally {
                 library.close()

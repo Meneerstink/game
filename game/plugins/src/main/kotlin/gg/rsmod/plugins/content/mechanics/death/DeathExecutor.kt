@@ -1,14 +1,14 @@
 package gg.rsmod.plugins.content.mechanics.death
 
+import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.World
+import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.attr.DEATH_LOOT_RESOLVED_ATTR
-import gg.rsmod.game.model.attr.DEATH_RECOVERY_EXPIRY_ATTR
-import gg.rsmod.game.model.attr.DEATH_RECOVERY_FEE_ATTR
 import gg.rsmod.game.model.entity.GroundItem
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.game.service.log.LoggerService
-import gg.rsmod.plugins.api.ext.addPreservingAttr
+import gg.rsmod.plugins.api.ext.getWildernessLevel
 import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.api.ext.refreshBonuses
 
@@ -16,8 +16,8 @@ import gg.rsmod.plugins.api.ext.refreshBonuses
  * Mutates player/world state to carry out an already-computed
  * [DeathResolutionResult]: removes lost item stacks from inventory/equipment
  * exactly once, then either spawns them as killer-owned ground loot
- * ([DeathContext.WILDERNESS_PVP]) or moves them into the victim's
- * [Player.deathRecovery] container pending reclaim ([DeathContext.PVM_SAFE]).
+ * ([DeathContext.WILDERNESS_PVP]) or puts them in the victim's gravestone
+ * ([Gravestone.deposit], [DeathContext.PVM_SAFE]).
  *
  * Performs no ranking/selection logic of its own - `DeathResolver` computes
  * the full outcome first, and this object only carries out the removal and
@@ -36,21 +36,22 @@ object DeathExecutor {
      * this function - for whatever reason - can never generate ground loot
      * or recovery state twice for the same death.
      */
+    /**
+     * @param graveTile
+     * Where a PvM death's gravestone appears: the death tile, or outside the instance the player died in (OSRS "In
+     * instanced areas, the Gravestone will aim to appear outside the instance where its owner can loot it").
+     */
     fun execute(
         world: World,
         result: DeathResolutionResult,
-        recoveryConfig: DeathRecoveryConfig,
         logger: LoggerService? = null,
         extraPvpLoot: () -> List<Item> = { emptyList() },
+        graveTile: Tile = result.victim.tile,
     ): Boolean {
         val victim = result.victim
         if (victim.attr[DEATH_LOOT_RESOLVED_ATTR] == true) {
             return false
         }
-        // Recovery is lazy-cleaned because players can be offline when its deadline passes.
-        // Purge an old batch before simulating capacity, otherwise expired items could be
-        // silently renewed by the next PvM death.
-        DeathRecoveryService.expireIfNeeded(victim)
         victim.attr[DEATH_LOOT_RESOLVED_ATTR] = true
 
         // A looting bag is never protected. Detach its contents before the inventory mutation so
@@ -68,11 +69,11 @@ object DeathExecutor {
                 emptyList()
             }
 
-        // Audit X-03: every lost stack is always removed, PvM included. What does not fit into
-        // deathRecovery is dropped as the victim's own ground item at the death tile (see
-        // createDeathRecovery) - it no longer stays with the player, which made a full recovery
-        // container a free insurance against every later PvM death.
-        // RCV-012 decision 3b: loot keys never go to death recovery - "If a player dies a PvM death with loot keys in the inventory,
+        // Audit X-03: every lost stack is always removed, PvM included. What fits neither the gravestone
+        // nor Death's Office is dropped as the victim's own ground item at the death tile (see
+        // createGravestone) - it never stays with the player, which made a full container a free
+        // insurance against every later PvM death.
+        // RCV-012 decision 3b: loot keys never go to the gravestone - "If a player dies a PvM death with loot keys in the inventory,
         // they are removed instead" - and on a PvP death LootKeys decides where they go.
         val lostKeys = result.itemRisk.lost.filter { gg.rsmod.plugins.content.mechanics.pvp.LootKeys.isKey(it.item.id) }
         val toRemove =
@@ -152,7 +153,7 @@ object DeathExecutor {
                 val lostBags = toRemove.filter { gg.rsmod.plugins.content.mechanics.pvp.LootingBag.isBag(it.item.id) }.toSet()
                 val recoverable = toRemove - lostKeys.toSet() - lostBags
                 if (recoverable.isNotEmpty() || bagContents.isNotEmpty()) {
-                    createDeathRecovery(victim, recoverable, recoveryConfig, logger, bagContents)
+                    createGravestone(victim, recoverable, logger, bagContents, graveTile)
                 }
             }
         }
@@ -189,47 +190,33 @@ object DeathExecutor {
         logger?.logDeathLootTransfer(victim, result.killer, lostItems)
     }
 
-    private fun createDeathRecovery(
+    /** The last PvM death's gravestone outcome, read by the respawn hook for the OSRS chat messages. Not persisted. */
+    val LAST_DEPOSIT = AttributeKey<GraveDeposit>()
+
+    private fun createGravestone(
         victim: Player,
         lost: List<DeathSlotItem>,
-        recoveryConfig: DeathRecoveryConfig,
         logger: LoggerService?,
-        extra: List<Item> = emptyList(),
+        extra: List<Item>,
+        graveTile: Tile,
     ) {
-        // Audit X-06/X-07: attributes (rune pouch runes, charges, quiver ammo) are kept, and nothing is
-        // dropped silently - whatever does not fit lands as the victim's own ground item.
-        var overflowed = false
-        (lost.map { it.item } + extra).forEach { item ->
-            val transaction = victim.deathRecovery.addPreservingAttr(item, assureFullInsertion = false)
-            val leftOver = item.amount - transaction.completed
-            if (leftOver > 0) {
-                victim.world.spawn(GroundItem(Item(item, leftOver), victim.tile, victim))
-                overflowed = true
-            }
+        // Audit X-06/X-07: attributes (rune pouch runes, charges, quiver ammo) are kept. Nothing is dropped silently: a
+        // stack that fits neither the gravestone nor Death's Office lands as the victim's own ground item.
+        val items = lost.map { it.item } + extra
+        // OSRS: "Existing gravestones will now only move to the new death location if the location is in 20+ Wilderness."
+        val deposit = Gravestone.deposit(victim, items, graveTile, moveExisting = graveTile.getWildernessLevel() >= 20)
+        // OSRS message order on a repeat death: this line, "Oh dear, you are dead!", then "... added to your previous gravestone."
+        if (deposit.movedFromOldGrave) victim.message("Some items have been moved to Death's Office from your gravestone.")
+        if (deposit.overflow.isNotEmpty()) {
+            deposit.overflow.forEach { victim.world.spawn(GroundItem(it, victim.tile, victim)) }
+            victim.message("Your gravestone and Death's Office are full: some of your items were left where you died.")
         }
-        if (overflowed) {
-            victim.message("Death's Domain is full: some of your items were left where you died.")
-        }
-        // A player who dies again before reclaiming a prior batch has their
-        // new losses merged additively into the same shared deathRecovery
-        // container, and the expiry/fee below is overwritten for the whole
-        // batch (now correctly extending/refreshing the whole batch's
-        // deadline rather than risking an already-shorter expiry). Any lost
-        // stack that doesn't fit is left with the player instead of being
-        // destroyed - see partitionRecoverable(). This is a simplification
-        // versus a fully faithful multi-gravestone system - see the
-        // milestone report's known limitations.
-        val expiresAt = System.currentTimeMillis() + recoveryConfig.recoveryDurationMs
-        victim.attr[DEATH_RECOVERY_EXPIRY_ATTR] = expiresAt
-        // Audit D-09: the fee follows the value of everything waiting (OSRS Death's Office tiers).
-        val batchValue =
-            gg.rsmod.plugins.content.mechanics.pvp.LootKeys.value(victim.world.definitions, victim.deathRecovery.rawItems.filterNotNull())
-        victim.attr[DEATH_RECOVERY_FEE_ATTR] = maxOf(recoveryConfig.reclaimFee, DeathRecoveryConfig.feeFor(batchValue))
+        victim.attr[LAST_DEPOSIT] = deposit
         logger?.logDeathRecoveryCreated(
             player = victim,
-            itemCount = lost.size,
-            expiresAtMs = expiresAt,
-            reclaimFee = victim.attr[DEATH_RECOVERY_FEE_ATTR] ?: recoveryConfig.reclaimFee,
+            itemCount = items.size,
+            expiresAtMs = System.currentTimeMillis() + Gravestone.ticksLeft(victim) * 600L,
+            reclaimFee = Gravestone.fee(victim, GuidePriceValueProvider(victim.world)),
         )
     }
 }

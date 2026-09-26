@@ -70,4 +70,11 @@ enum class ItemAttribute {
      * OSRS keeps such an item with the victim "in broken form"; it can't be worn until Perdu repairs it.
      */
     BROKEN,
+
+    /**
+     * 1 on an item Death holds for free: familiar cargo rescued into Death's Office (owner override, 2026-09-07/2026-09-26:
+     * "stays free to reclaim"). Only ever set inside [gg.rsmod.game.model.container.key.DEATH_RECOVERY_KEY] and removed again
+     * when the item is handed back, so it never reaches an inventory, bank or trade.
+     */
+    DEATH_FEE_FREE,
 }

@@ -724,18 +724,37 @@ val PHANTOM_STRIKE_BLEED = AttributeKey<Int>(resetOnDeath = true)
 val SKULL_ICON_ATTR = AttributeKey<Int>(persistenceKey = "skull_icon")
 
 /**
- * The timestamp (epoch millis) at which the items in a player's
- * [Player.deathRecovery] container become forfeit and can no longer be
- * reclaimed. Absent when the player has no unreclaimed death-recovery items.
+ * Legacy (pre-2026-09-26) Death's Domain deadline. Death's Office now keeps items without a time limit (OSRS Wiki "Death's
+ * Office"); the key is only read once on login to migrate an old save and is then removed.
  */
 val DEATH_RECOVERY_EXPIRY_ATTR = AttributeKey<Long>(persistenceKey = "death_recovery_expiry")
 
 /**
- * The coin fee required to reclaim the items currently held in a player's
- * [Player.deathRecovery] container. Absent when the player has no unreclaimed
- * death-recovery items.
+ * Legacy (pre-2026-09-26) flat reclaim fee of the whole Death's Domain batch. Fees are now per item (OSRS). Read once on login
+ * to migrate an old save (a batch that was free stays free) and then removed.
  */
 val DEATH_RECOVERY_FEE_ATTR = AttributeKey<Int>(persistenceKey = "death_recovery_fee")
+
+/** The tile of the player's gravestone (30-bit hash); absent when there is no gravestone. */
+val GRAVESTONE_TILE_ATTR = AttributeKey<Int>(persistenceKey = "gravestone_tile")
+
+/** Game ticks left before the gravestone collapses (OSRS: 15 minutes = 1500 ticks, counted only while active). */
+val GRAVESTONE_TICKS_ATTR = AttributeKey<Int>(persistenceKey = "gravestone_ticks")
+
+/** True once the gravestone's fee has been paid ("Unlock"); every item in it is then free to take. */
+val GRAVESTONE_UNLOCKED_ATTR = AttributeKey<Boolean>(persistenceKey = "gravestone_unlocked")
+
+/** True when the player bought the Angel of Death gravestone from Death (OSRS: 200,000 coins, cosmetic). */
+val GRAVESTONE_ANGEL_ATTR = AttributeKey<Boolean>(persistenceKey = "gravestone_angel")
+
+/** Coins in the player's Death's Coffer (OSRS: sacrificed items at 105% of their value; pays reclamation fees only). */
+val DEATH_COFFER_ATTR = AttributeKey<Int>(persistenceKey = "death_coffer")
+
+/** Death's first-death tutorial progress (bit flags, see the plugin's DeathTutorial). */
+val DEATH_TUTORIAL_ATTR = AttributeKey<Int>(persistenceKey = "death_tutorial")
+
+/** Where Death's Office's exit portal returns the player (30-bit tile hash): the entrance used, or the respawn point. */
+val DEATHS_OFFICE_RETURN_ATTR = AttributeKey<Int>(persistenceKey = "deaths_office_return")
 
 /**
  * Transient (non-persisted) guard set for the duration of death-loot

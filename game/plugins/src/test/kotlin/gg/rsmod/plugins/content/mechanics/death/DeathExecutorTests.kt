@@ -6,11 +6,12 @@ import gg.rsmod.game.fs.def.ItemDef
 import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.World
 import gg.rsmod.game.model.attr.AttributeMap
-import gg.rsmod.game.model.attr.DEATH_RECOVERY_EXPIRY_ATTR
-import gg.rsmod.game.model.attr.DEATH_RECOVERY_FEE_ATTR
+import gg.rsmod.game.model.attr.GRAVESTONE_TICKS_ATTR
+import gg.rsmod.game.model.attr.GRAVESTONE_TILE_ATTR
 import gg.rsmod.game.model.container.ItemContainer
 import gg.rsmod.game.model.container.key.DEATH_RECOVERY_KEY
 import gg.rsmod.game.model.container.key.EQUIPMENT_KEY
+import gg.rsmod.game.model.container.key.GRAVESTONE_KEY
 import gg.rsmod.game.model.container.key.INVENTORY_KEY
 import gg.rsmod.game.model.entity.GroundItem
 import gg.rsmod.game.model.entity.Player
@@ -40,8 +41,7 @@ import kotlin.test.assertTrue
 /**
  * Regression tests for [DeathExecutor]: exactly-once ground-loot generation
  * for Wilderness/PvP deaths, exactly-once (non-duplicating) execution when
- * called repeatedly for the same death, and correct PvM death-recovery state
- * creation.
+ * called repeatedly for the same death, and the PvM gravestone (OSRS "Grave").
  *
  * Item slots are set directly (`container[slot] = item`) rather than through
  * `ItemContainer.add`, so fixture setup is independent of any particular
@@ -78,12 +78,12 @@ class DeathExecutorTests {
             )
         val result = DeathResolutionResult(DeathContext.WILDERNESS_PVP, victim, killer, itemRisk)
 
-        val executed = DeathExecutor.execute(world, result, DeathRecoveryConfig.PLACEHOLDER)
+        val executed = DeathExecutor.execute(world, result)
 
         assertTrue(executed)
         // Audit D-06: a no-risk kill (this fixture) is not a valid PK, so it earns no kill grace.
         assertFalse(KillGrace.isProtected(killer), "an invalid (low-risk) kill must not start kill grace")
-        assertFalse(DeathExecutor.execute(world, result, DeathRecoveryConfig.PLACEHOLDER))
+        assertFalse(DeathExecutor.execute(world, result))
         assertNull(victim.inventory[0], "lost item's slot must be cleared")
         assertNotNull(victim.inventory[1], "kept item must remain")
         assertTrue(victim.deathRecovery.isEmpty, "PvP deaths must not use the recovery container")
@@ -107,9 +107,9 @@ class DeathExecutorTests {
             DeathItemRiskResult(protectedItemCount = 0, protected = emptyList(), lost = emptyList()),
         )
 
-        assertTrue(DeathExecutor.execute(world, result, DeathRecoveryConfig.PLACEHOLDER))
+        assertTrue(DeathExecutor.execute(world, result))
         assertFalse(KillGrace.isProtected(killer))
-        assertFalse(DeathExecutor.execute(world, result, DeathRecoveryConfig.PLACEHOLDER))
+        assertFalse(DeathExecutor.execute(world, result))
     }
 
     @Test
@@ -126,8 +126,8 @@ class DeathExecutorTests {
             )
         val result = DeathResolutionResult(DeathContext.WILDERNESS_PVP, victim, null, itemRisk)
 
-        val first = DeathExecutor.execute(world, result, DeathRecoveryConfig.PLACEHOLDER)
-        val second = DeathExecutor.execute(world, result, DeathRecoveryConfig.PLACEHOLDER)
+        val first = DeathExecutor.execute(world, result)
+        val second = DeathExecutor.execute(world, result)
 
         assertTrue(first)
         assertFalse(second, "a second execute() for the same death must be a no-op")
@@ -136,48 +136,37 @@ class DeathExecutorTests {
     }
 
     @Test
-    fun `PvM death recovers an item that exactly fills the last free recovery slot`() {
+    fun `PvM death puts the lost items in a new gravestone where the player died`() {
         val victim = newPlayer()
         val world = mockk<World>(relaxed = true)
-        fillDeathRecovery(victim, slots = 0 until 41, itemId = FILLER_ITEM)
         victim.inventory[0] = Item(LOST_ITEM, 1)
+        val graveTile = Tile(3210, 3210, 0)
 
-        val itemRisk =
-            DeathItemRiskResult(
-                protectedItemCount = 0,
-                protected = emptyList(),
-                lost = listOf(DeathSlotItem(DeathContainerSource.INVENTORY, 0, Item(LOST_ITEM, 1))),
-            )
-        val result = DeathResolutionResult(DeathContext.PVM_SAFE, victim, null, itemRisk)
+        val result = pvmResult(victim, DeathSlotItem(DeathContainerSource.INVENTORY, 0, Item(LOST_ITEM, 1)))
 
-        val executed = DeathExecutor.execute(world, result, DeathRecoveryConfig.PLACEHOLDER)
-
-        assertTrue(executed)
-        assertNull(victim.inventory[0], "item must be removed once it fits in the last free slot")
-        assertEquals(1, victim.deathRecovery.getItemCount(LOST_ITEM))
-        assertTrue(victim.deathRecovery.isFull, "recovery must now be exactly full, not overflowed")
+        assertTrue(DeathExecutor.execute(world, result, graveTile = graveTile))
+        assertNull(victim.inventory[0], "the lost item leaves the player")
+        assertEquals(1, victim.gravestone.getItemCount(LOST_ITEM))
+        assertTrue(victim.deathRecovery.isEmpty, "nothing goes straight to Death's Office")
+        assertEquals(graveTile, Gravestone.tile(victim))
+        assertEquals(DeathsDomainConfig.OSRS.graveDurationTicks, Gravestone.ticksLeft(victim), "OSRS: 15 minutes")
+        assertTrue(spawnedItems.isEmpty())
     }
 
     @Test
-    fun `PvM death that would exceed recovery capacity drops the overflow as the victim's own ground item`() {
-        // Audit X-03: a full recovery container no longer lets the overflow stay with the player.
+    fun `a PvM death that fits neither the gravestone nor the office drops the rest as the victim's own ground item`() {
+        // Audit X-03 still holds: the lost stack never stays with the player; nothing is deleted.
         val victim = newPlayer()
         val world = mockk<World>(relaxed = true)
-        fillDeathRecovery(victim, slots = 0 until 42, itemId = FILLER_ITEM)
+        for (slot in 0 until victim.gravestone.capacity) victim.gravestone[slot] = Item(FILLER_ITEM, 1)
+        victim.attr[GRAVESTONE_TILE_ATTR] = Tile(3200, 3200, 0).as30BitInteger
+        fillDeathRecovery(victim, slots = 0 until 120, itemId = FILLER_ITEM)
         victim.inventory[0] = Item(LOST_ITEM, 5)
 
-        val itemRisk =
-            DeathItemRiskResult(
-                protectedItemCount = 0,
-                protected = emptyList(),
-                lost = listOf(DeathSlotItem(DeathContainerSource.INVENTORY, 0, Item(LOST_ITEM, 5))),
-            )
-        val result = DeathResolutionResult(DeathContext.PVM_SAFE, victim, null, itemRisk)
-
-        assertTrue(DeathExecutor.execute(world, result, DeathRecoveryConfig.PLACEHOLDER))
-        assertNull(victim.inventory[0], "the lost stack leaves the player even when recovery is full")
+        assertTrue(DeathExecutor.execute(world, pvmResult(victim, DeathSlotItem(DeathContainerSource.INVENTORY, 0, Item(LOST_ITEM, 5)))))
+        assertNull(victim.inventory[0])
+        assertEquals(0, victim.gravestone.getItemCount(LOST_ITEM))
         assertEquals(0, victim.deathRecovery.getItemCount(LOST_ITEM))
-        assertTrue(victim.deathRecovery.isFull, "the pre-existing recovery contents must be untouched")
         assertEquals(1, spawnedItems.count { it.item == LOST_ITEM && it.amount == 5 }, "the overflow is dropped once")
     }
 
@@ -185,24 +174,18 @@ class DeathExecutorTests {
     fun `PvM death overflow from equipment is removed and dropped too`() {
         val victim = newPlayer()
         val world = mockk<World>(relaxed = true)
-        fillDeathRecovery(victim, slots = 0 until 42, itemId = FILLER_ITEM)
+        for (slot in 0 until victim.gravestone.capacity) victim.gravestone[slot] = Item(FILLER_ITEM, 1)
+        victim.attr[GRAVESTONE_TILE_ATTR] = Tile(3200, 3200, 0).as30BitInteger
+        fillDeathRecovery(victim, slots = 0 until 120, itemId = FILLER_ITEM)
         val original = Item(LOST_ITEM, 1)
         victim.equipment[0] = original
 
-        val itemRisk =
-            DeathItemRiskResult(
-                protectedItemCount = 0,
-                protected = emptyList(),
-                lost = listOf(DeathSlotItem(DeathContainerSource.EQUIPMENT, 0, original)),
-            )
-        val result = DeathResolutionResult(DeathContext.PVM_SAFE, victim, null, itemRisk)
-
-        // Audit X-03: the equipped item now leaves the player, so the bonuses are refreshed; that needs a live
+        // Audit X-03: the equipped item leaves the player, so the bonuses are refreshed; that needs a live
         // client (varcs, interface text), which this mock player does not have.
         mockkStatic(PLAYER_EXT)
         try {
             every { victim.refreshBonuses() } just Runs
-            DeathExecutor.execute(world, result, DeathRecoveryConfig.PLACEHOLDER)
+            DeathExecutor.execute(world, pvmResult(victim, DeathSlotItem(DeathContainerSource.EQUIPMENT, 0, original)))
         } finally {
             unmockkStatic(PLAYER_EXT)
         }
@@ -212,90 +195,56 @@ class DeathExecutorTests {
     }
 
     @Test
-    fun `repeated execute for an overflowed PvM death does not drop the item twice`() {
+    fun `repeated execute for a PvM death does not move the items twice`() {
         val victim = newPlayer()
         val world = mockk<World>(relaxed = true)
-        fillDeathRecovery(victim, slots = 0 until 42, itemId = FILLER_ITEM)
         victim.inventory[0] = Item(LOST_ITEM, 1)
+        val result = pvmResult(victim, DeathSlotItem(DeathContainerSource.INVENTORY, 0, Item(LOST_ITEM, 1)))
 
-        val itemRisk =
-            DeathItemRiskResult(
-                protectedItemCount = 0,
-                protected = emptyList(),
-                lost = listOf(DeathSlotItem(DeathContainerSource.INVENTORY, 0, Item(LOST_ITEM, 1))),
-            )
-        val result = DeathResolutionResult(DeathContext.PVM_SAFE, victim, null, itemRisk)
-
-        val first = DeathExecutor.execute(world, result, DeathRecoveryConfig.PLACEHOLDER)
-        val second = DeathExecutor.execute(world, result, DeathRecoveryConfig.PLACEHOLDER)
-
-        assertTrue(first)
-        assertFalse(second, "a second execute() for the same death must be a no-op")
-        assertEquals(0, victim.inventory.getItemCount(LOST_ITEM))
-        assertEquals(1, spawnedItems.size, "a second execute() must not drop the item again")
+        assertTrue(DeathExecutor.execute(world, result))
+        assertFalse(DeathExecutor.execute(world, result), "a second execute() for the same death must be a no-op")
+        assertEquals(1, victim.gravestone.getItemCount(LOST_ITEM))
+        assertTrue(spawnedItems.isEmpty())
     }
 
     @Test
-    fun `PvM death moves lost items into death-recovery and sets expiry and fee`() {
+    fun `PvM death logs the gravestone`() {
         val victim = newPlayer()
         val world = mockk<World>(relaxed = true)
         val logger = mockk<LoggerService>(relaxed = true)
         victim.inventory[0] = Item(LOST_ITEM, 5)
 
-        val itemRisk =
-            DeathItemRiskResult(
-                protectedItemCount = 0,
-                protected = emptyList(),
-                lost = listOf(DeathSlotItem(DeathContainerSource.INVENTORY, 0, Item(LOST_ITEM, 5))),
-            )
-        val result = DeathResolutionResult(DeathContext.PVM_SAFE, victim, null, itemRisk)
-        val config = DeathRecoveryConfig(recoveryDurationMs = 60_000L, reclaimFee = 250)
-
-        val before = System.currentTimeMillis()
-        val executed = DeathExecutor.execute(world, result, config, logger)
-        val after = System.currentTimeMillis()
-
-        assertTrue(executed)
-        assertNull(victim.inventory[0], "lost item must be removed from inventory")
-        assertEquals(5, victim.deathRecovery.getItemCount(LOST_ITEM), "full stack must be moved into recovery")
+        assertTrue(DeathExecutor.execute(world, pvmResult(victim, DeathSlotItem(DeathContainerSource.INVENTORY, 0, Item(LOST_ITEM, 5))), logger = logger))
+        assertEquals(5, victim.gravestone.getItemCount(LOST_ITEM), "the full stack is in the gravestone")
         verify(exactly = 0) { world.spawn(any<GroundItem>()) }
-
-        val expiry = victim.attr[DEATH_RECOVERY_EXPIRY_ATTR]
-        assertNotNull(expiry)
-        assertTrue(expiry in (before + config.recoveryDurationMs)..(after + config.recoveryDurationMs))
-        // Audit D-09: the fee follows the value waiting in recovery (Death's Office tiers), never below the config fee.
-        val value = gg.rsmod.plugins.content.mechanics.pvp.LootKeys.value(DEFINITIONS, listOf(Item(LOST_ITEM, 5)))
-        val fee = maxOf(250, DeathRecoveryConfig.feeFor(value))
-        assertEquals(fee, victim.attr[DEATH_RECOVERY_FEE_ATTR])
-        verify(exactly = 1) { logger.logDeathRecoveryCreated(victim, 1, expiry, fee) }
+        verify(exactly = 1) { logger.logDeathRecoveryCreated(victim, 1, any(), any()) }
     }
 
     @Test
-    fun `a new PvM death purges expired recovery before checking capacity`() {
+    fun `a second PvM death adds to the existing gravestone at its old place and leaves the office alone`() {
         val victim = newPlayer()
         val world = mockk<World>(relaxed = true)
-        victim.deathRecovery[0] = Item(FILLER_ITEM, 1)
-        victim.attr[DEATH_RECOVERY_EXPIRY_ATTR] = System.currentTimeMillis() - 1
-        victim.attr[DEATH_RECOVERY_FEE_ATTR] = 250
+        val oldTile = Tile(3000, 3000, 0)
+        victim.gravestone[0] = Item(FILLER_ITEM, 1)
+        victim.attr[GRAVESTONE_TILE_ATTR] = oldTile.as30BitInteger
+        victim.attr[GRAVESTONE_TICKS_ATTR] = 10
+        victim.deathRecovery[0] = Item(KEPT_ITEM, 7)
         victim.inventory[0] = Item(LOST_ITEM, 1)
 
-        val result =
-            DeathResolutionResult(
-                DeathContext.PVM_SAFE,
-                victim,
-                null,
-                DeathItemRiskResult(
-                    protectedItemCount = 0,
-                    protected = emptyList(),
-                    lost = listOf(DeathSlotItem(DeathContainerSource.INVENTORY, 0, Item(LOST_ITEM, 1))),
-                ),
-            )
-
-        assertTrue(DeathExecutor.execute(world, result, DeathRecoveryConfig.PLACEHOLDER))
-        assertEquals(0, victim.deathRecovery.getItemCount(FILLER_ITEM), "expired recovery must not consume capacity")
-        assertEquals(1, victim.deathRecovery.getItemCount(LOST_ITEM), "new loss must enter fresh recovery")
-        assertTrue((victim.attr[DEATH_RECOVERY_EXPIRY_ATTR] ?: 0L) > System.currentTimeMillis())
+        val result = pvmResult(victim, DeathSlotItem(DeathContainerSource.INVENTORY, 0, Item(LOST_ITEM, 1)))
+        assertTrue(DeathExecutor.execute(world, result, graveTile = Tile(3300, 3300, 0)))
+        assertEquals(oldTile, Gravestone.tile(victim), "OSRS: new items go to the existing gravestone at its original location")
+        assertEquals(1, victim.gravestone.getItemCount(FILLER_ITEM))
+        assertEquals(1, victim.gravestone.getItemCount(LOST_ITEM))
+        assertEquals(DeathsDomainConfig.OSRS.graveDurationTicks, Gravestone.ticksLeft(victim), "the timer is refreshed when the contents change")
+        assertEquals(7, victim.deathRecovery.getItemCount(KEPT_ITEM), "Death keeps his items without a time limit")
+        assertTrue(victim.attr[DeathExecutor.LAST_DEPOSIT]!!.addedToPrevious)
     }
+
+    private fun pvmResult(
+        victim: Player,
+        vararg lost: DeathSlotItem,
+    ) = DeathResolutionResult(DeathContext.PVM_SAFE, victim, null, DeathItemRiskResult(protectedItemCount = 0, protected = emptyList(), lost = lost.toList()))
 
     /** Every ground item spawned through a [newPlayer]'s world in the current test (JUnit: one instance per test). */
     private val spawnedItems = mutableListOf<GroundItem>()
@@ -308,11 +257,14 @@ class DeathExecutorTests {
         every { player.inventory } returns ItemContainer(DEFINITIONS, INVENTORY_KEY)
         every { player.equipment } returns ItemContainer(DEFINITIONS, EQUIPMENT_KEY)
         every { player.deathRecovery } returns ItemContainer(DEFINITIONS, DEATH_RECOVERY_KEY)
+        every { player.gravestone } returns ItemContainer(DEFINITIONS, GRAVESTONE_KEY)
         // Audit D-09: the recovery fee values the lost items through the victim's world definitions. Ground items the
         // victim's world spawns are collected in [spawnedItems]: a mockk verify through victim.world would also count
         // every getWorld() call (spawn + fee lookup), so the drops are counted directly instead.
         val world = mockk<World>(relaxed = true)
         every { world.definitions } returns DEFINITIONS
+        // The gravestone fee is priced by the Grand Exchange guide price; no exchange service in a unit test (seed prices).
+        every { world.getService(gg.rsmod.plugins.content.mechanics.exchange.GrandExchangeService::class.java, any()) } returns null
         every { world.spawn(any<GroundItem>()) } answers { spawnedItems.add(firstArg()) }
         every { player.world } returns world
         return player

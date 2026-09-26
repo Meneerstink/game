@@ -711,6 +711,10 @@ object OsrsItemImportTool {
                 listOf(12905, 12907, 12909, 12911, 12913, 12915, 12917, 12919, 29824, 29827, 29830, 29833).map { Spec(it, noted = true) },
             // Owner answer Q10: the Mimic casket (OSRS Wiki "Mimic" infobox id 23184, RuneLite gameval TRAIL_MIMIC_CASKET; untradeable, no note).
             "mimic-casket" to listOf(Spec(23184)),
+            // Death's Domain (2026-09-26): the pictures Death's first-death explanation shows (OSRS Wiki "Death (NPC)" transcript
+            // tboxes "Gravestone (unobtainable item, 1/2)" and "Death's Coffer (unobtainable item)"; RuneLite gameval ItemID 24418 /
+            // 24524 "Gravestone", 24523 "Death's Coffer"). Display-only items: never given to a player.
+            "deaths-office-pictures" to listOf(Spec(24418), Spec(24524), Spec(24523)),
             // Step 4 batch "potions-antifire" (owner answer Q8; OSRS Wiki infobox ids, most doses first): Extended antifire, Extended antifire
             // mix (2 doses), Super antifire mix (2), Extended super antifire, Extended super antifire mix (2). The OSRS "Super antifire potion"
             // is the 667 Super antifire (same-name rule: mapped to the main item, not imported).

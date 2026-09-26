@@ -807,6 +807,25 @@ out-packets:
     length: 0
     opcode: 15
 
+  # HINT_ARROW (client ServerProt 81, 12 bytes): slot/type, arrow sprite, npc/player index, flash rate, 4 unused, model.
+  - message: gg.rsmod.game.message.impl.HintArrowMessage
+    type: FIXED
+    length: 12
+    opcode: 81
+    structure:
+      - name: slot_type
+        type: BYTE
+      - name: sprite
+        type: BYTE
+      - name: target
+        type: SHORT
+      - name: flash_rate
+        type: SHORT
+      - name: padding
+        type: INT
+      - name: model
+        type: SHORT
+
   - message: gg.rsmod.game.message.impl.MinimapToggleMessage
     type: FIXED
     length: 1

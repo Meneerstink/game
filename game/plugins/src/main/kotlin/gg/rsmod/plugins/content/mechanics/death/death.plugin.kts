@@ -1,25 +1,19 @@
 package gg.rsmod.plugins.content.mechanics.death
 
-import gg.rsmod.game.model.attr.DEATH_RECOVERY_FEE_ATTR
 import gg.rsmod.game.model.attr.KILLER_ATTR
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.game.service.log.LoggerService
 import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.api.ext.persistNow
-import gg.rsmod.game.model.entity.zoneTile
-import gg.rsmod.plugins.content.combat.isBeingAttacked
 import gg.rsmod.plugins.content.mechanics.trouver.Trouver
-import gg.rsmod.plugins.content.items.helios.CrownOfHelios
 
 /**
  * Wires the shared death-resolution model ([DeathResolver] /
  * [DeathItemRiskCalculator]) and execution layer ([DeathExecutor]) into the
- * existing [gg.rsmod.game.action.PlayerDeathAction] pre-death hook, and
- * exposes a `::reclaim` command so a PvM/safe death's recovered items can be
- * reclaimed. Uses [DeathRecoveryConfig.PLACEHOLDER] and
- * [ItemDefCostValueProvider] - see their docs for why these are not final
- * production values/pricing.
+ * existing [gg.rsmod.game.action.PlayerDeathAction] pre-death hook. A PvM death's lost
+ * items go to the victim's gravestone ([Gravestone]); Death's Office, the coffer and the
+ * gravestone screens live in `deaths_office.plugin.kts`.
  *
  * `alwaysProtected` is wired to [Trouver.protectedFromDeath] - the only production caller of that
  * hook (`RSPS_DECISIONS.md` 2026-09-02 "STANDING OWNER AUTHORIZATION"). [Trouver.grantKillerCompensation]
@@ -37,6 +31,11 @@ on_player_pre_death {
 }
 
 fun resolveDeath(victim: Player) {
+    // A Deadman 7-second countdown (logout, teleport, a Death's Domain entrance) never completes during the death animation:
+    // combat hits already cancel it, and poison, venom or scenery damage cancel it here.
+    if (gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction.isActive(victim)) {
+        gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction.cancel(victim, "Your action was cancelled.")
+    }
     // Audit X-02: items "checked" on the price checker leave the inventory; put them back first so they
     // take part in the death like every other carried item.
     gg.rsmod.plugins.content.inter.pricecheck.PriceChecker.close(victim)
@@ -72,28 +71,21 @@ fun resolveDeath(victim: Player) {
             victim = victim,
             killer = killer,
             valueProvider = valueProvider,
-            alwaysProtected = { itemId ->
-                if (gg.rsmod.plugins.content.mechanics.pvp.emblem.DeadmanEmblem.isEmblem(itemId)) {
-                    !pvpDeath
-                } else {
-                    // Audit D-15: on a PvP death generic untradeables are no longer kept whole; they rank in the
-                    // normal keep-3 and, when lost, break in place (UntradeableDeathProtection.splitGeneric).
-                    itemId == CrownOfHelios.ITEM || Trouver.protectedFromDeath(itemId) ||
-                        (!pvpDeath && UntradeableDeathProtection.shouldProtect(world.definitions, itemId))
-                }
-            },
+            alwaysProtected = DeathRules.alwaysProtected(world.definitions, pvpDeath),
             contextOverride = contextOverride,
         )
     val (withoutGeneric, brokenInPlace) = UntradeableDeathProtection.splitGeneric(world.definitions, resolved)
     val (afterBreakables, breaking) = PvpDeathBreakables.split(withoutGeneric)
     val (result, droppedLostAmmo) = QuiverDeathRules.stripLost(afterBreakables)
     UntradeableDeathProtection.breakInPlace(victim, brokenInPlace)
+    // OSRS: "In instanced areas, the Gravestone will aim to appear outside the instance where its owner can loot it."
+    val graveTile = GraveLocations.graveTile(victim)
     val executed =
         DeathExecutor.execute(
             world = world,
             result = result,
-            recoveryConfig = DeathRecoveryConfig.PLACEHOLDER,
             logger = logger,
+            graveTile = graveTile,
             // Owner 2026-09-18 (#6): converted killer loot (broken-item coins, uncharged staves,
             // ornament kits, quiver ammo) joins the lost stacks in the SAME loot-key plan instead of
             // being spawned on the floor beside the key.
@@ -119,31 +111,10 @@ fun resolveDeath(victim: Player) {
     }
 }
 
-/** Audit X-13/T-12: the recovery deadline only runs while the player is online. */
-on_login {
-    DeathRecoveryService.shiftForOfflineTime(player)
-}
-
+/*
+ * Owner 2026-09-26: the old "reclaim" command is gone - like OSRS, items come back only from the gravestone or from Death
+ * in Death's Office. Typing it only says where to go.
+ */
 on_command("reclaim") {
-    // Audit D-09: reclaiming is a safe-zone, out-of-combat action (OSRS: at Death / the gravestone).
-    if (gg.rsmod.plugins.content.mechanics.pvp.AreaState.isDangerous(player.zoneTile())) {
-        player.message("You can only reclaim your items from a safe zone.")
-        return@on_command
-    }
-    if (player.isBeingAttacked() || player.attr[gg.rsmod.game.model.attr.DEATH_FLAG] == true) {
-        player.message("You can't reclaim your items right now.")
-        return@on_command
-    }
-    val logger = player.world.getService(LoggerService::class.java, searchSubclasses = true)
-    when (val outcome = DeathRecoveryService.reclaim(player, logger = logger)) {
-        is DeathReclaimOutcome.NothingToReclaim -> player.message("You have no items to reclaim.")
-        is DeathReclaimOutcome.Expired -> player.message("Your death recovery expired and its items were forfeited.")
-        is DeathReclaimOutcome.InsufficientFunds -> {
-            val fee = player.attr[DEATH_RECOVERY_FEE_ATTR] ?: DeathRecoveryConfig.PLACEHOLDER.reclaimFee
-            player.message("You need $fee coins to reclaim your items.")
-        }
-        is DeathReclaimOutcome.Reclaimed -> player.message(
-            "You have reclaimed ${outcome.itemCount} item(s) for ${outcome.feePaid} coins.",
-        )
-    }
+    player.message("Your items are in your gravestone, or with Death in Death's Office if the gravestone has collapsed.")
 }

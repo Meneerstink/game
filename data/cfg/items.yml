@@ -286975,3 +286975,21 @@
   tradeable: false
   weight: 0.1
   equipment: null
+- id: 23876
+  name: "Gravestone"
+  examine: "A simple marker for the dead."
+  tradeable: false
+  weight: 10.0
+  equipment: null
+- id: 23877
+  name: "Gravestone"
+  examine: "The Angel of Death!"
+  tradeable: false
+  weight: 10.0
+  equipment: null
+- id: 23878
+  name: "Death's coffer"
+  examine: "Sacrifice items to pay down item reclamation fees."
+  tradeable: false
+  weight: 10.0
+  equipment: null

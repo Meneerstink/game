@@ -1,0 +1,38 @@
+# Death's Domain / Death's Office / gravestones (OSRS import, 2026-09-26).
+# Every value is the OSRS one unless marked OWNER. Sources:
+#   OSRS Wiki "Grave", "Death/Item Recovery Fees", "Death's Office", "Death's Coffer", "Death (NPC)" transcript,
+#   Jagex news post "Death Changes" (25 June 2020), OSRS clientscripts gravestone_generic_window_set (3464),
+#   gravestone_hud_resynch (3459), death_office_redraw (3492), death_coffer script3483.
+
+gravestone:
+  # "Players have 15 minutes after respawning to return to their grave" = 1500 ticks of 0.6 s (HUD varbit max 1500).
+  duration_ticks: 1500
+  # "The 15-minute timer does not count down when a player is ... idle for more than 10 seconds" = 17 ticks.
+  idle_pause_ticks: 17
+  slots: 120
+  # "can be accessed from a distance of up to 7 tiles away, provided the player has line-of-sight"
+  loot_distance: 7
+  # "the theoretical maximum quantity [of an unstackable item] present in a grave is 56": over 28 goes to Death's Office.
+  unstackable_keep: 28
+  # Fee per reclaimed item by its value (per unit): no fee under 100k, 1k up to 1m, 10k up to 10m, 100k from 10m.
+  fee_tiers:
+    - { min_value: 100000, fee: 1000 }
+    - { min_value: 1000000, fee: 10000 }
+    - { min_value: 10000000, fee: 100000 }
+  # "The total combined fees are capped at 500,000"
+  fee_cap: 500000
+  # Angel of Death gravestone (cosmetic), bought from Death.
+  angel_cost: 200000
+
+office:
+  slots: 120
+  # "items worth less than 100,000 are free to reclaim, but items worth more come with a 5% reclamation fee"
+  free_below: 100000
+  fee_percent: 5
+
+coffer:
+  # "sacrifice items worth 10,000 coins or more, individually, in return for 105% of their Grand Exchange price"
+  min_item_value: 10000
+  value_percent: 105
+  # "Players can sacrifice up to a value of 2,147,483,647 coins"
+  max_total: 2147483647

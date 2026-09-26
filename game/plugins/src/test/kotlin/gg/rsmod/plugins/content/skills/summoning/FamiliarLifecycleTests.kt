@@ -10,6 +10,7 @@ import gg.rsmod.game.model.World
 import gg.rsmod.game.model.attr.AttributeMap import gg.rsmod.game.model.attr.DAMAGE_CREDIT_ATTR
 import gg.rsmod.game.model.container.ItemContainer
 import gg.rsmod.game.model.container.key.DEATH_RECOVERY_KEY
+import gg.rsmod.game.model.container.key.GRAVESTONE_KEY
 import gg.rsmod.game.model.container.key.INVENTORY_KEY
 import gg.rsmod.game.model.entity.GroundItem
 import gg.rsmod.game.model.entity.Npc
@@ -214,6 +215,7 @@ class FamiliarLifecycleTests {
         every { player.containers } returns HashMap()
         // A real container, not a relaxed mock: the Death's Domain rescue is the thing under test.
         every { player.deathRecovery } returns ItemContainer(DEFINITIONS, DEATH_RECOVERY_KEY)
+        every { player.gravestone } returns ItemContainer(DEFINITIONS, GRAVESTONE_KEY)
 
         val npc = Npc(familiarNpcId, tile, world)
         npcs.add(npc)

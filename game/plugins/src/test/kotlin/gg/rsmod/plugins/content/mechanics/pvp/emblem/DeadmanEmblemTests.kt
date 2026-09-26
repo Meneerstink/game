@@ -9,6 +9,7 @@ import gg.rsmod.game.model.attr.AttributeMap
 import gg.rsmod.game.model.container.ItemContainer
 import gg.rsmod.game.model.container.key.BANK_KEY
 import gg.rsmod.game.model.container.key.DEATH_RECOVERY_KEY
+import gg.rsmod.game.model.container.key.GRAVESTONE_KEY
 import gg.rsmod.game.model.container.key.EQUIPMENT_KEY
 import gg.rsmod.game.model.container.key.INVENTORY_KEY
 import gg.rsmod.game.model.entity.Player
@@ -19,7 +20,6 @@ import gg.rsmod.plugins.content.mechanics.death.DeathContext
 import gg.rsmod.plugins.content.mechanics.death.DeathExecutor
 import gg.rsmod.plugins.content.mechanics.death.DeathItemRiskCalculator
 import gg.rsmod.plugins.content.mechanics.death.DeathItemRiskResult
-import gg.rsmod.plugins.content.mechanics.death.DeathRecoveryConfig
 import gg.rsmod.plugins.content.mechanics.death.DeathResolutionResult
 import gg.rsmod.plugins.content.mechanics.death.DeathSlotItem
 import gg.rsmod.plugins.content.mechanics.death.ItemRiskValueProvider
@@ -278,7 +278,7 @@ class DeadmanEmblemTests {
         every { killer.isOnline } returns false
         victim.inventory[0] = Item(DeadmanEmblem.emblemId(2), 1)
         val result = die(world, victim, killer)
-        assertFalse(DeathExecutor.execute(world, result, DeathRecoveryConfig.PLACEHOLDER))
+        assertFalse(DeathExecutor.execute(world, result))
         assertEquals(listOf(2), DeadmanEmblem.Ledger.pendingFor("off_killer"))
         assertEquals(0, DeadmanEmblem.holdings(killer).size)
 
@@ -353,7 +353,7 @@ class DeadmanEmblemTests {
     private fun die(world: World, victim: Player, killer: Player): DeathResolutionResult {
         val lost = (0 until victim.inventory.capacity).mapNotNull { slot -> victim.inventory[slot]?.let { DeathSlotItem(DeathContainerSource.INVENTORY, slot, it) } }
         val result = DeathResolutionResult(DeathContext.WILDERNESS_PVP, victim, killer, DeathItemRiskResult(0, emptyList(), lost))
-        assertTrue(DeathExecutor.execute(world, result, DeathRecoveryConfig.PLACEHOLDER))
+        assertTrue(DeathExecutor.execute(world, result))
         return result
     }
 
@@ -369,6 +369,7 @@ class DeadmanEmblemTests {
         every { player.equipment } returns ItemContainer(DEFINITIONS, EQUIPMENT_KEY)
         every { player.bank } returns ItemContainer(DEFINITIONS, BANK_KEY)
         every { player.deathRecovery } returns ItemContainer(DEFINITIONS, DEATH_RECOVERY_KEY)
+        every { player.gravestone } returns ItemContainer(DEFINITIONS, GRAVESTONE_KEY)
         return player
     }
 

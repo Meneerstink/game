@@ -1,6 +1,5 @@
 package gg.rsmod.plugins.content.skills.summoning
 
-import gg.rsmod.game.model.attr.DEATH_RECOVERY_FEE_ATTR
 import gg.rsmod.game.model.container.ContainerStackType
 import gg.rsmod.game.model.container.ItemContainer
 import gg.rsmod.game.model.container.key.ContainerKey
@@ -30,7 +29,7 @@ private const val DEATHS_DOMAIN_RED = "<col=ff0000>"
  * No graphical deposit/withdraw interface is built here: real RS's BoB interface component
  * layout is a specific 667-era cache interface this session has not located or verified an ID
  * for, and the work order explicitly forbids guessing interface/component IDs. Deposit is
- * instead exposed the same real, non-graphical way as [gg.rsmod.plugins.content.mechanics.death.DeathRecoveryService]
+ * instead exposed the same real, non-graphical way the old Death's Domain recovery was
  * exposes death-recovery: using an inventory item on the familiar deposits it (matching real
  * RS's own "drag item onto your pack animal" mechanic - wired in `familiar.plugin.kts`), and
  * the familiar's existing Renew/Dismiss/Cancel interact menu gains a "Withdraw-all" option.
@@ -290,9 +289,8 @@ object BeastOfBurden {
      * * **Persistence.** [Player.deathRecovery] is a saved container
      *   ([gg.rsmod.game.model.container.key.DEATH_RECOVERY_KEY]), so the cargo survives logout and
      *   a server restart.
-     * * **Free to reclaim.** The reclaim fee is only defaulted when nothing has set one; an
-     *   unpaid fee from a real death is never overwritten, and cargo rescued from a familiar
-     *   never invents a charge of its own.
+     * * **Free to reclaim.** The cargo is stored marked fee-free, so Death hands it back without
+     *   the office fee (owner 2026-09-26).
      *
      * Called by every path that takes a familiar away while it still holds items - dismiss,
      * expiry, death, replacement and the owner's own death. Logout deliberately does not call it:
@@ -339,24 +337,22 @@ object BeastOfBurden {
         var stranded = 0
         for (slot in 0 until held.capacity) {
             val item = held[slot] ?: continue
-            val transaction = player.deathRecovery.addPreservingAttr(item, assureFullInsertion = false)
-            if (transaction.completed <= 0) {
+            // Owner 2026-09-26: familiar cargo stays free to reclaim from Death (no office fee).
+            val stored = gg.rsmod.plugins.content.mechanics.death.DeathsOffice.store(player, item, free = true)
+            if (stored <= 0) {
                 stranded++
                 continue
             }
             held[slot] =
-                if (transaction.completed == item.amount) {
+                if (stored == item.amount) {
                     null
                 } else {
-                    Item(item.id, item.amount - transaction.completed).copyAttr(item)
+                    Item(item.id, item.amount - stored).copyAttr(item)
                 }
             moved++
         }
         if (moved == 0) {
             return
-        }
-        if (player.attr[DEATH_RECOVERY_FEE_ATTR] == null) {
-            player.attr[DEATH_RECOVERY_FEE_ATTR] = 0
         }
         // Red, per the owner's specification. This revision has no red chat *type*; every other
         // red line in this codebase is an inline colour tag on an ordinary game message.

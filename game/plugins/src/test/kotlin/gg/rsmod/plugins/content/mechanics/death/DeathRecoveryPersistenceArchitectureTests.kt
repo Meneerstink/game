@@ -1,11 +1,16 @@
 package gg.rsmod.plugins.content.mechanics.death
 
+import gg.rsmod.game.model.attr.DEATHS_OFFICE_RETURN_ATTR
+import gg.rsmod.game.model.attr.DEATH_COFFER_ATTR
 import gg.rsmod.game.model.attr.DEATH_LOOT_RESOLVED_ATTR
-import gg.rsmod.game.model.attr.DEATH_RECOVERY_EXPIRY_ATTR
-import gg.rsmod.game.model.attr.DEATH_RECOVERY_FEE_ATTR
+import gg.rsmod.game.model.attr.DEATH_TUTORIAL_ATTR
+import gg.rsmod.game.model.attr.GRAVESTONE_ANGEL_ATTR
+import gg.rsmod.game.model.attr.GRAVESTONE_TICKS_ATTR
+import gg.rsmod.game.model.attr.GRAVESTONE_TILE_ATTR
 import gg.rsmod.game.model.attr.SKULL_ICON_ATTR
 import gg.rsmod.game.model.container.ContainerStackType
 import gg.rsmod.game.model.container.key.DEATH_RECOVERY_KEY
+import gg.rsmod.game.model.container.key.GRAVESTONE_KEY
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -28,7 +33,7 @@ import kotlin.test.assertTrue
  *  - the death-recovery item container itself is a real, named, persisted
  *    [gg.rsmod.game.model.container.key.ContainerKey] (as opposed to a
  *    transient/derived list), and
- *  - the expiry and fee attached to it are stored under [AttributeKey]s that
+ *  - the gravestone, coffer and tutorial state are stored under [AttributeKey]s that
  *    declare a [persistenceKey], not left as transient/in-memory-only state.
  *
  * [DEATH_LOOT_RESOLVED_ATTR] is persisted (audit X-11) so a death replayed on
@@ -37,18 +42,21 @@ import kotlin.test.assertTrue
  */
 class DeathRecoveryPersistenceArchitectureTests {
     @Test
-    fun `death-recovery container is a real persisted container distinct from inventory and equipment`() {
-        assertEquals("death_recovery", DEATH_RECOVERY_KEY.name)
-        assertEquals(42, DEATH_RECOVERY_KEY.capacity, "must fit every inventory + equipment slot lost in one death")
+    fun `death's office and the gravestone are real persisted containers of 120 slots`() {
+        assertEquals("death_recovery", DEATH_RECOVERY_KEY.name, "the save key of Death's Office stays the old one: saved items keep loading")
+        assertEquals(120, DEATH_RECOVERY_KEY.capacity, "OSRS Death's Office Item Retrieval holds 120 stacks")
         assertEquals(ContainerStackType.NORMAL, DEATH_RECOVERY_KEY.stackType)
+        assertEquals("gravestone", GRAVESTONE_KEY.name)
+        assertEquals(120, GRAVESTONE_KEY.capacity, "OSRS Wiki Grave: a gravestone functions similarly to a bank with 120 slots")
+        assertEquals(ContainerStackType.NORMAL, GRAVESTONE_KEY.stackType, "unstackables take a slot each (the 28 / 56 rules)")
     }
 
     @Test
-    fun `death-recovery expiry and fee attributes are persisted`() {
-        assertNotNull(DEATH_RECOVERY_EXPIRY_ATTR.persistenceKey, "expiry must survive logout or it can never expire correctly")
-        assertNotNull(DEATH_RECOVERY_FEE_ATTR.persistenceKey, "the exact fee charged must survive logout")
-        assertFalse(DEATH_RECOVERY_EXPIRY_ATTR.resetOnDeath, "a later, unrelated death must not silently clear a pending recovery")
-        assertFalse(DEATH_RECOVERY_FEE_ATTR.resetOnDeath)
+    fun `gravestone, coffer and tutorial state survive a logout and a death`() {
+        listOf(GRAVESTONE_TILE_ATTR, GRAVESTONE_TICKS_ATTR, GRAVESTONE_ANGEL_ATTR, DEATH_COFFER_ATTR, DEATH_TUTORIAL_ATTR, DEATHS_OFFICE_RETURN_ATTR).forEach {
+            assertNotNull(it.persistenceKey, "$it must be saved")
+            assertFalse(it.resetOnDeath, "$it must not be cleared by the next death")
+        }
     }
 
     @Test

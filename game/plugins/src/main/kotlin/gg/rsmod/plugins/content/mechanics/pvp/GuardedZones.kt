@@ -250,5 +250,8 @@ object GuardedZones {
      * `PvpSkull.tickPauseTracking` - so no separate skull rule is needed.)
      */
     fun contains(tile: Tile): Boolean =
-        zoneAt(tile) != null || gg.rsmod.plugins.content.areas.poh.PlayerHouse.isSafeTile(tile)
+        zoneAt(tile) != null || gg.rsmod.plugins.content.areas.poh.PlayerHouse.isSafeTile(tile) ||
+            // Death's Office (2026-09-26) is a private instance in OSRS and "a safe area"; here it is one shared map square,
+            // so it is folded in like the house: nobody can attack anybody there.
+            gg.rsmod.plugins.content.areas.deathsoffice.DeathsOfficeArea.inOffice(tile)
 }

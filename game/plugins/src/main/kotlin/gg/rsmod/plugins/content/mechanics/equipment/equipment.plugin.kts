@@ -9,7 +9,6 @@ import gg.rsmod.plugins.content.quests.impl.LostCity
 import gg.rsmod.plugins.content.mechanics.practicepvp.PracticePvp
 import gg.rsmod.plugins.content.mechanics.death.ItemsKeptOnDeath
 
-val KEPT_ON_DEATH_INTERFACE = ItemsKeptOnDeath.INTERFACE_ID
 
 val questItems = arrayOf(Items.QUEST_POINT_CAPE, Items.QUEST_POINT_HOOD)
 questItems.forEach {
@@ -83,27 +82,9 @@ can_equip_item(item = Items.DRAGON_DAGGER_P_5698) {
 
 on_button(interfaceId = 387, component = 45) {
     when (player.getInteractingOpcode()) {
-        61 -> {
-            // Interface 17 builds its own item lists out of inventory 93 / worn 94 / familiar 530,
-            // but the wording, the title and the "you may choose N" count all come from varbits the
-            // server owns - see ItemsKeptOnDeath. Without them the screen opens on the Wilderness
-            // panel with a keep count of zero regardless of the player's real risk.
-            ItemsKeptOnDeath.open(player)
-            player.openInterface(interfaceId = KEPT_ON_DEATH_INTERFACE, dest = InterfaceDestination.MAIN_SCREEN)
-        }
+        // OSRS "Items Kept on Death" (owner 2026-09-26), filled by the server from the real death rules - see ItemsKeptOnDeath.
+        61 -> ItemsKeptOnDeath.open(player)
     }
-}
-
-/**
- * "What if I entered the Wilderness?" / "Back" - the only stateful control on the screen. The
- * component bakes op1 itself (`events=0x000002`), so the click always reaches us.
- */
-on_button(interfaceId = KEPT_ON_DEATH_INTERFACE, component = ItemsKeptOnDeath.TOGGLE_COMPONENT) {
-    ItemsKeptOnDeath.toggleWildernessPreview(player)
-}
-
-on_button(interfaceId = KEPT_ON_DEATH_INTERFACE, component = ItemsKeptOnDeath.CLOSE_COMPONENT) {
-    player.closeInterface(interfaceId = KEPT_ON_DEATH_INTERFACE)
 }
 
 fun bind_unequip(

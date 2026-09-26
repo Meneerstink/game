@@ -174,6 +174,18 @@ object LootingBag {
         refresh(player)
     }
 
+    /** The bag's stored stacks, untouched (the Items Kept on Death preview). */
+    fun peekContents(player: Player): List<Item> = container(player).sequence().map { Item(it) }.toList()
+
+    /** Whether a PvP death destroys [item] from the bag instead of handing it to the killer (see [pvpDeathContents]). */
+    fun destroyedOnPvpDeath(
+        player: Player,
+        item: Item,
+    ): Boolean {
+        val def = player.world.definitions.get(ItemDef::class.java, item.id)
+        return !def.noted && (item.id == Items.VIAL || Food.values().any { it.item == item.id } || Potion.values().any { it.item == item.id })
+    }
+
     /** Removes and returns the bag's stored stacks when the bag itself is lost on death. */
     fun takeContents(player: Player): List<Item> {
         val bag = container(player)

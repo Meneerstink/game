@@ -94,6 +94,7 @@ class MessageEncoderSet {
         put(CameraLookAtEncoder(), CameraLookAtMessage::class.java)
         put(CameraSmoothResetEncoder(), CameraSmoothResetMessage::class.java)
         put(MinimapToggleEncoder(), MinimapToggleMessage::class.java)
+        put(HintArrowEncoder(), HintArrowMessage::class.java)
         put(RebuildRegionEncoder(), RebuildRegionMessage::class.java)
     }
 

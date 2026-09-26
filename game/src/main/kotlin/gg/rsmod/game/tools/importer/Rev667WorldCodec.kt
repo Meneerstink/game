@@ -389,6 +389,7 @@ class Rev667LocType(val id: Int) {
             src: ModernObjectDef,
             modelRemap: (Int) -> Int,
             dropped: MutableList<String>,
+            seqRemap: ((Int) -> Int?)? = null,
         ): ByteArray {
             val out = ByteArrayOutputStream()
             fun u8(v: Int) = out.write(v and 0xFF)
@@ -449,7 +450,14 @@ class Rev667LocType(val id: Int) {
             }
             if (src.mergeNormals) u8(22)
             if (src.modelClipped) u8(23)
-            if (src.animationId != -1) dropped.add("loc ${src.id} '${src.name}': animation ${src.animationId} (modern seq id, not in 667 table)")
+            val localSeq = if (src.animationId != -1) seqRemap?.invoke(src.animationId) else null
+            if (localSeq != null) {
+                // Opcode 24: the loc's idle animation, a sequence the OSRS npc/fx import brought into the 667 table.
+                u8(24)
+                u16(localSeq)
+            } else if (src.animationId != -1) {
+                dropped.add("loc ${src.id} '${src.name}': animation ${src.animationId} (modern seq id, not in 667 table)")
+            }
             if (src.decorDisplacement != 16) {
                 u8(28)
                 u8(src.decorDisplacement)
