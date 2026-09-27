@@ -66,8 +66,7 @@ create_shop(
     STOCK.forEachIndexed { slot, (item, price) -> items[slot] = ShopItem(item, amount = 1_000, sellPrice = price) }
 }
 
-// Royal Hall (GeHomeHall.kt), south row west of the entrance.
-spawn_npc(npc = BREACH_TRADER, x = 3161, z = 3486, walkRadius = 0, direction = Direction.NORTH)
+// Posted in the Royal Hall's PvP corner by data/world_edits.json (GeHomeHall: one source per npc).
 
 on_npc_option(npc = BREACH_TRADER, option = "talk-to") {
     player.queue {

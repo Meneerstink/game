@@ -36,7 +36,8 @@ object AfkArea {
     /** The hall's way down: the stone cellar stairs with the dungeon icon, where the marble staircase stood. */
     const val HALL_STAIRS_DOWN = AfkBasementMapTool.ENTRANCE_LOC
     val HALL_STAIRS = Tile(AfkBasementMapTool.ENTRANCE_X, AfkBasementMapTool.ENTRANCE_Z, 0)
-    val HALL_ARRIVAL = Tile(3162, 3487, 0)
+    /** In front of the way down's door (the tomb at 3159-3160, 3486-3488, door north). */
+    val HALL_ARRIVAL = Tile(3160, 3489, 0)
 
     /** The pond's fishing spot npc and the Survival Expert beside the stairs. */
     const val FISHING_SPOT = AfkBasementMapTool.FISHING_SPOT_NPC

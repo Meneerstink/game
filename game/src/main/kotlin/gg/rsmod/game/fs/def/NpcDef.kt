@@ -25,6 +25,9 @@ class NpcDef(
     var render6 = -1
     var render7 = -1
     var visibleMapDot = true
+
+    /** The minimap icon (MapElementType) the client draws over this npc instead of its yellow dot, or -1. */
+    var mapElement = -1
     var combatLevel = -1
     var width = -1
     var length = -1
@@ -169,7 +172,8 @@ class NpcDef(
                     buf.readByte()
                 }
             }
-            122, 123, 137, 138, 139, 142 -> buf.readUnsignedShort()
+            122, 123, 137, 138, 139 -> buf.readUnsignedShort()
+            142 -> mapElement = buf.readUnsignedShort()
             125, 128, 140, 163, 165, 168 -> buf.readByte()
             127 -> basId = buf.readUnsignedShort().let { if (it == 65535) -1 else it }
             134 -> {

@@ -19,9 +19,9 @@ import java.io.File
  * For every tile of [MIN_X]..[MAX_X] x [MIN_Z]..[MAX_Z] this tool:
  *  - removes the plane-1 surface (bridge flag, overlay and underlay), so the hall has one floor level;
  *  - lays white marble ([MARBLE_OVERLAY]) on the floor and on the wall ring under the walls and towers;
- *  - sets the heights of levels 1-3 for the second storey and the slate roof ([STOREY_STEPS]) and marks the floor and
- *    doorway tiles "remove roof" (tile flag 4), so with the client's selective roof removal the roof shows from outside
- *    and disappears when a player walks in.
+ *  - sets the heights of levels 1-3 for the second storey and the slate roof ([STOREY_STEPS]) and marks only the floor
+ *    tiles inside the walls "remove roof" (tile flag 4), so with the client's selective roof removal the roof shows from
+ *    outside - thresholds, porticoes and balconies included - and disappears when a player walks in.
  * It removes the centre's four planters (47119) with their plane-1 fences (84), the canopy ring on pillars (47174,
  * 47175, 47244, 47246), the map copy of the fountain (47150 on the raised paving; the hall places it on the floor) and the
  * paving decals (type 22) under the hall. Byte-exact codec round-trips, one [CacheTransaction] (preflight, journal,
@@ -99,10 +99,10 @@ object RoyalHallMapTool {
     const val DEATHS_DOMAIN_ROT = 2
 
     /** Ferox's underlay under the tomb (stored id), shown where the front row's shaped overlay leaves the tile open. */
-    private const val FEROX_UNDERLAY = 50
+    const val FEROX_UNDERLAY = 50
 
     /** Ferox's floor under and beside the tomb (x 3124-3127, z 3630-3632), turned 180 degrees: dx, dz, shape, rotation, overlay. */
-    private val DEATHS_DOMAIN_FLOOR =
+    val DEATHS_DOMAIN_FLOOR =
         listOf(
             listOf(0, 0, 0, 0, 61), listOf(1, 0, 0, 0, 61),
             listOf(0, 1, 0, 0, 61), listOf(1, 1, 0, 0, 61),
@@ -114,9 +114,6 @@ object RoyalHallMapTool {
 
     /** Dark granite: overlay 236 = FloType 235 (35302d, texture 928), Lumbridge castle courtyard 3222,3218. */
     const val GRANITE_OVERLAY = 236
-
-    /** Gold trim along the wall ring: overlay 157 = FloType 156 (fab737, texture 61). */
-    const val GOLD_TRIM_OVERLAY = 157
 
     /** The brown ring road / path overlay (stored id 188 = FloType 187, 4e4329, texture 441). */
     const val DIRT_ROAD_OVERLAY = 188
@@ -136,6 +133,20 @@ object RoyalHallMapTool {
 
     /** Invisible marker on the fountain tile (model 1105), kept: it is the fountain's ambient sound (loc opcode 78). */
     private const val KEPT_MARKER = 29419
+
+    /**
+     * The floor a tomb loc (Death's Domain 62430 and the Skilling Basement's way down, both 2 x 3 at rotation 2) stands
+     * on: [DEATHS_DOMAIN_FLOOR] from its south-west tile ([x], [z]) - the hole its dark pit and sunken steps show through.
+     */
+    fun layTombFloor(tiles: Rev667TileMap, rx: Int, rz: Int, x: Int, z: Int) {
+        DEATHS_DOMAIN_FLOOR.forEach { (dx, dz, shape, rot, overlay) ->
+            val ground = tiles.tiles[0][x + dx - rx * 64][z + dz - rz * 64]
+            ground.overlayId = overlay
+            ground.overlayShape = shape
+            ground.overlayRotation = rot
+            ground.underlayId = FEROX_UNDERLAY
+        }
+    }
 
     @JvmStatic
     fun main(args: Array<String>) {
@@ -222,26 +233,25 @@ object RoyalHallMapTool {
                     upper.overlayId = MARBLE_OVERLAY
                     upstairs++
                 }
-                // The wall ring on both levels carries walls: part of the building for roof removal. Upstairs only the
-                // doorways lead out (onto the balconies); the rest of the ring is blocked so nobody steps off the building.
-                upper.flags = if (floor || doorway) REMOVE_ROOF else REMOVE_ROOF or BLOCKED
-                // Selective roof removal (client Static409 flood fill over flag-4 tiles): the whole footprint, wall ring
-                // included, is the building. The hall's walls stand on the ring outside the floor (the reverse of the
-                // game's own buildings), so an unflagged ring kept its upper walls and parapet on screen from inside.
-                ground.flags = ground.flags or REMOVE_ROOF
-                roofed++
-            }
-
-            // Under the balconies (and their corner railings) the ground counts as building for roof removal: the
-            // porticoes are roofed by the balcony, and from inside the hall the balconies hide with the upper storey
-            // (owner 2026-09-26 foto bh: "when u are in the building u can see the balcony").
-            BALCONIES.forEach { b ->
-                for (x in b.xs.first - 1..b.xs.last + 1) for (z in b.zs.first - 1..b.zs.last + 1) {
-                    if (x in MIN_X..MAX_X && z in MIN_Z..MAX_Z) continue
-                    tile(0, x, z).flags = tile(0, x, z).flags or REMOVE_ROOF
-                    tile(1, x, z).flags = tile(1, x, z).flags or REMOVE_ROOF
+                // Selective roof removal (client Static276/Static409: the roof hides only while the player's own tile carries
+                // flag 4, then flood-fills over the connected flag-4 tiles). "Inside" is exactly the floor: the hall's walls
+                // stand on the inner edge of the ring tiles (home_decor.txt: west rot 2, east rot 0, south rot 1, north
+                // rot 3), so a ring tile - threshold included - lies outside the wall, and a flagged ring or portico made a
+                // player outside hide the whole roof and upper storey (owner 2026-09-27, fotos mansion_bug1/3/6/7). The
+                // flood still reaches the ring as its edge; the ring's upper levels carry ZERO_LEVEL (below) and stay drawn.
+                // Upstairs only the doorways lead out (onto the balconies); the rest of the ring is blocked.
+                upper.flags = if (floor) REMOVE_ROOF else if (doorway) 0 else BLOCKED
+                if (floor) {
+                    ground.flags = ground.flags or REMOVE_ROOF
+                    roofed++
+                } else {
+                    ground.flags = ground.flags and REMOVE_ROOF.inv()
                 }
             }
+
+            // The porticoes under the balconies are outside: no roof flag there (it used to run three tiles out from every
+            // door, so a player in front of the mansion hid its roof, fotos mansion_bug6 vs mansion_bug7). The upper
+            // storey's walls stay drawn from inside (ZERO_LEVEL), so the balconies sit behind them as real outside space.
             // The balconies: marble floors on level 1 outside the three doorways, carried by the porticoes' pillars.
             BALCONIES.forEach { b ->
                 for (x in b.xs) for (z in b.zs) {
@@ -250,8 +260,9 @@ object RoyalHallMapTool {
                     upper.overlayShape = 0
                     upper.overlayRotation = 0
                     // A wall-ring tile beside the doorway keeps its storey wall, so it stays closed to walking.
+                    // A balcony is outside too: standing on it shows the roof, as on any RuneScape balcony.
                     val ringWall = (x in MIN_X..MAX_X && z in MIN_Z..MAX_Z) && (upper.flags and BLOCKED != 0)
-                    upper.flags = if (ringWall) REMOVE_ROOF or BLOCKED else REMOVE_ROOF
+                    upper.flags = if (ringWall) BLOCKED else 0
                     upstairs++
                 }
             }
@@ -259,13 +270,7 @@ object RoyalHallMapTool {
             // the tomb's back against a wall and its sunken steps shown through overlay 61 (stored; def 60 = magenta, not
             // drawn: a hole in the floor), with the front row shaped (6) and its two neighbours cut (9) like at Ferox.
             // Here it is turned 180 degrees - back on the hall's south wall, door onto the gold rug.
-            DEATHS_DOMAIN_FLOOR.forEach { (dx, dz, shape, rot, overlay) ->
-                val ground = tile(0, DEATHS_DOMAIN_X + dx, DEATHS_DOMAIN_Z + dz)
-                ground.overlayId = overlay
-                ground.overlayShape = shape
-                ground.overlayRotation = rot
-                ground.underlayId = FEROX_UNDERLAY
-            }
+            layTombFloor(tiles, rx, rz, DEATHS_DOMAIN_X, DEATHS_DOMAIN_Z)
 
             // The grass strip round the mansion (owner 2026-09-27, foto jj.png: "the mansion outside still has the low quality
             // grass ... put something else", chosen: dark granite with a gold trim). It is the exchange's unpaved ground
@@ -282,10 +287,11 @@ object RoyalHallMapTool {
                 band += x to z
                 listOf(x - 1 to z, x + 1 to z, x to z - 1, x to z + 1).forEach { queue += it }
             }
+            // One granite band, no trim row: the "gold trim" overlay 157 (FloType 156) carries texture 61, which renders as
+            // orange lava-like strips along the walls (owner 2026-09-27, fotos mansion_bug1 / mansion_bug3).
             band.forEach { (x, z) ->
                 val ground = tile(0, x, z)
-                val trim = (x - 1..x + 1).any { nx -> (z - 1..z + 1).any { nz -> footprint(nx, nz) } }
-                ground.overlayId = if (trim) GOLD_TRIM_OVERLAY else GRANITE_OVERLAY
+                ground.overlayId = GRANITE_OVERLAY
                 ground.overlayShape = 0
                 ground.overlayRotation = 0
             }
@@ -308,15 +314,12 @@ object RoyalHallMapTool {
             // Inside on the ground floor the upper-storey walls vanished (one-storey walls to look over, beside full-height
             // turrets); on the upper floor the parapet above vanished and the walls looked cut open. The wall ring keeps
             // its upper walls and parapet always drawn, as the Grand Exchange's own canopy did with the same flag; the
-            // floor inside still clears above the player, and the upper doorways (walked on) keep their normal level.
+            // floor inside still clears above the player. The upper doorways too: without it the flood's edge step cut the
+            // upper storey open above every door, a see-through patch beside the door (owner 2026-09-27, foto mansion_bug2).
             for (x in MIN_X..MAX_X) for (z in MIN_Z..MAX_Z) {
                 val ring = x == MIN_X || x == MAX_X || z == MIN_Z || z == MAX_Z
-                val doorway = (x == MIN_X || x == MAX_X) && z in SIDE_DOORS || (z == MIN_Z || z == MAX_Z) && x in SOUTH_DOOR
                 if (!ring) continue
-                for (level in 1..3) {
-                    if (level == 1 && doorway) continue
-                    tile(level, x, z).flags = tile(level, x, z).flags or ZERO_LEVEL
-                }
+                for (level in 1..3) tile(level, x, z).flags = tile(level, x, z).flags or ZERO_LEVEL
             }
 
             // The corner turrets (62766, home_decor.txt) are the 2 x 2 Falador turret drawn 1.375x wide, so the model hangs
@@ -373,9 +376,15 @@ object RoyalHallMapTool {
             // marker loc as well showed it twice (owner 2026-09-26).
             // In the map, like at Ferox, so the minimap draws its Death's Office icon (map element 1108 on loc 62430); a
             // server-spawned copy never reaches the minimap.
+            // The Skilling Basement's way down and its two torches (AfkBasementMapTool) belong to this loc file too, so a run
+            // of this tool never drops them.
             val kept =
-                swappedLocs.filterNot { it.id == DEATHS_DOMAIN_LOC } +
-                    Rev667Loc(DEATHS_DOMAIN_LOC, DEATHS_DOMAIN_X - rx * 64, DEATHS_DOMAIN_Z - rz * 64, 0, 10, DEATHS_DOMAIN_ROT)
+                swappedLocs.filterNot { it.id == DEATHS_DOMAIN_LOC || it.id == AfkBasementMapTool.ENTRANCE_LOC } +
+                    Rev667Loc(DEATHS_DOMAIN_LOC, DEATHS_DOMAIN_X - rx * 64, DEATHS_DOMAIN_Z - rz * 64, 0, 10, DEATHS_DOMAIN_ROT) +
+                    Rev667Loc(AfkBasementMapTool.ENTRANCE_LOC, AfkBasementMapTool.ENTRANCE_X - rx * 64, AfkBasementMapTool.ENTRANCE_Z - rz * 64, 0, 10, AfkBasementMapTool.ENTRANCE_ROTATION) +
+                    AfkBasementMapTool.ENTRANCE_TORCHES.map { (x, z) -> Rev667Loc(AfkBasementMapTool.STANDING_TORCH, x - rx * 64, z - rz * 64, 0, 10, 0) } +
+                    // The casino's one minimap star, on the upper floor (a map-file loc: server-spawned ones never reach the minimap).
+                    Rev667Loc(RoyalHallLocTool.CASINO_MARKER, RoyalHallLocTool.CASINO_MARKER_X - rx * 64, RoyalHallLocTool.CASINO_MARKER_Z - rz * 64, 1, 22, 0)
             kept.filter(inHall).forEach { println("REMAINS ${it.id} type=${it.type} at ${rx * 64 + it.localX},${rz * 64 + it.localZ},${it.plane}") }
             val updatedLocs = Rev667LocCodec.encode(kept)
             if (!updatedLocs.contentEquals(locBytes)) {

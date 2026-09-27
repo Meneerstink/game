@@ -201,6 +201,8 @@ object WorldEdits {
                     }
                     if (world.spawn(npc)) {
                         spawnedNpcs += npc
+                        // A service npc shows no combat level, as when code posted it (StoreNpcs / home_decor npc lines).
+                        if (npc.def.options.none { it != null && it.equals("Attack", ignoreCase = true) }) npc.setCombatLevel(0)
                         face(npc, edit.rot)
                         applied++
                     }

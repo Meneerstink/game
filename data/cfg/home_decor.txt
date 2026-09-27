@@ -615,14 +615,10 @@ obj 15549 3171 3490 1 22 2
 obj 15550 3171 3491 1 22 0
 obj 15550 3171 3492 1 22 0
 obj 15549 3171 3493 1 22 0
-# ---- ground floor: the gold-rimmed Fountain of Heroes (62778, 4x4) in the middle, gold
-# candelabras along the side aisles, black-and-gold armour in the north nooks, white spiral staircases with gilded rails
+# ---- ground floor: the gold-rimmed Fountain of Heroes (62778, 4x4) in the middle (the four candelabras that stood on the
+# carpet cross went 2026-09-27: they stood in front of the npc posts), black-and-gold armour in the north nooks, white spiral staircases with gilded rails
 # (62779, tops 62780; GeHomeHall.STAIRS) in the north corners, and open white-and-gold doors in all four doorways
 obj 62778 3163 3490 0 10 0
-obj 203 3161 3490 0 10 0
-obj 203 3161 3493 0 10 0
-obj 203 3168 3490 0 10 0
-obj 203 3168 3493 0 10 0
 obj 24215 3158 3496 0 10 0
 obj 24215 3171 3496 0 10 0
 obj 62779 3159 3496 0 10 0
@@ -663,17 +659,12 @@ obj 24216 3157 3489 0 5 2
 obj 24216 3157 3494 0 5 2
 obj 24216 3172 3489 0 5 0
 obj 24216 3172 3494 0 5 0
-# ---- upper floor, the throne room (plane 1, laid by RoyalHallMapTool): the king's and queen's thrones on a red dais at
-# the head of a royal banquet table (two opulent tables 35454, together 2 x 2) between four gilded benches, the king's
-# and queen's statues and gold standards round the dais, marble fireplaces and gold screens against the side walls
-# (1 x 2 along the wall: rotation 0 faces east, 2 west), the lounge npcs behind one counter each either side of the
-# south door, candelabras and wall lights
+# ---- upper floor, the casino and lounge (plane 1, laid by RoyalHallMapTool; owner 2026-09-27): the king's and queen's
+# thrones at the head of a royal banquet table (two opulent tables 35454, together 2 x 2) between four gilded benches,
+# gold standards behind the thrones, marble fireplaces and gold screens against the side walls (1 x 2 along the wall:
+# rotation 0 faces east, 2 west), candelabras and wall lights. The casino tables are in their own block below.
 obj 24310 3164 3494 1 10 0
 obj 24310 3165 3494 1 10 0
-obj 24216 3162 3494 1 10 0
-obj 24216 3167 3494 1 10 0
-obj 563 3161 3494 1 10 0
-obj 15611 3168 3494 1 10 0
 obj 35454 3164 3491 1 10 0
 obj 35454 3165 3491 1 10 0
 obj 203 3164 3490 1 10 0
@@ -700,23 +691,33 @@ obj 39838 3163 3491 1 10 3
 obj 39838 3166 3491 1 10 1
 obj 39838 3163 3492 1 10 3
 obj 39838 3166 3492 1 10 1
-obj 62781 3160 3487 1 10 2
-obj 62781 3162 3487 1 10 2
-obj 62781 3167 3487 1 10 2
-obj 62781 3169 3487 1 10 2
-# the throne dais: a bordered red carpet (rug set 13594 corner, 13595 edge, 13596 middle)
-obj 13594 3162 3494 1 22 3
-obj 13594 3162 3495 1 22 0
-obj 13595 3163 3494 1 22 2
-obj 13595 3163 3495 1 22 0
-obj 13595 3164 3494 1 22 2
-obj 13595 3164 3495 1 22 0
-obj 13595 3165 3494 1 22 2
-obj 13595 3165 3495 1 22 0
-obj 13595 3166 3494 1 22 2
-obj 13595 3166 3495 1 22 0
-obj 13594 3167 3494 1 22 2
-obj 13594 3167 3495 1 22 1
+# ---- the casino (owner 2026-09-27): one card table 12975 per marble corner of the upper floor, its dealer behind it
+# (data/world_edits.json) and a gilded sign named after the game on the inner side (RoyalHallLocTool.CASINO_SIGNS:
+# 62895 Blackjack, 62896 Dice, 62897 Flower Poker, 62898 Mines). North tables face south, south tables north; players
+# stand on the carpet side. The one minimap star is the map marker 62899 (RoyalHallMapTool), not placed here.
+obj 12975 3160 3494 1 10 0
+obj 62895 3162 3496 1 10 0
+obj 12975 3167 3494 1 10 0
+obj 62896 3167 3496 1 10 0
+obj 12975 3160 3487 1 10 2
+obj 62897 3162 3486 1 10 0
+obj 12975 3167 3487 1 10 2
+obj 62898 3167 3486 1 10 0
+# ---- balconies: two gilded benches (39838) on each, looking out over the exchange (the lamp posts stand on the outer corners)
+obj 39838 3163 3483 1 10 0
+obj 39838 3166 3483 1 10 0
+obj 39838 3163 3500 1 10 2
+obj 39838 3166 3500 1 10 2
+obj 39838 3155 3490 1 10 1
+obj 39838 3155 3493 1 10 1
+obj 39838 3174 3490 1 10 3
+obj 39838 3174 3493 1 10 3
+# ---- ground floor, south-east corner (death and repair): a standing torch either side of Death's Domain's door, as
+# beside the Skilling Basement's opposite, and a bank deposit box (9398) between Death's Domain and the Oneiromancer
+obj 724 3168 3488 0 10 0
+obj 724 3171 3488 0 10 0
+obj 9398 3168 3489 0 10 0
+
 # ---- four balconies (plane 1, RoyalHallMapTool) outside the upper doorways, running up to the wall: a bordered gold
 # carpet, gilded railing (62783) round the outer edges (at a corner the second edge's piece stands on the neighbouring
 # tile: a tile holds one wall) and along the sides to the building - on the wall-ring tile, whose wall slot holds the

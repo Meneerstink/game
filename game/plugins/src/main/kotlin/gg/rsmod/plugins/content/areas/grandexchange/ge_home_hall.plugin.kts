@@ -16,36 +16,15 @@ package gg.rsmod.plugins.content.areas.grandexchange
  * exchange's own), the king's and queen's thrones beside the summoning obelisk, gold candelabras, benches, paintings and
  * black-and-gold armour in the corners. Every id is cache-native or a byte-exact copy and carries no menu option.
  *
- * WHO. The 20 service stalls below stand along the walls facing in; the rest of the south row holds the Breach Trader and
- * the 78 Store keepers (StoreNpcs). Penguin/Ping/Pong stay removed; Lucien uses the non-combat variant 273. Skully waits
- * outside the south door; the casino croupiers keep their posts.
+ * WHO. Services on the ground floor, one theme per marble corner, the casino and lounge upstairs (GeHomeHall, owner
+ * 2026-09-27); every npc is posted by data/world_edits.json.
  */
 
 // Walls, carpet, throne, fountain and the other furniture live in data/cfg/home_decor.txt (home_decor_live.plugin.kts).
 
-val HALL_X = GeHomeHall.X
-val HALL_Z = GeHomeHall.Z
-
 // ------------------------------------------------------------------ the npcs
 
-// Each stall stands behind a marble counter (home_decor.txt): its npc, the 78 Store keepers and the Breach Trader are
-// reached across it.
-on_world_init {
-    val ids = GeHomeHall.SERVICE_POSTS.map { it.npc } + gg.rsmod.plugins.content.mechanics.store.StoreNpcs.POSTS.map { it.npcId } + GeHomeHall.BREACH_TRADER
-    ids.forEach { world.plugins.setNpcInteractionDistance(it, GeHomeHall.COUNTER_REACH) }
-}
-
-/** One stall: an npc on the inside of a wall, facing into the hall. */
-GeHomeHall.SERVICE_POSTS.forEach { post ->
-    spawn_npc(
-        npc = post.npc,
-        x = HALL_X + post.dx,
-        z = HALL_Z + post.dz,
-        height = post.level,
-        walkRadius = 0,
-        direction = post.facing,
-    )
-}
+// Every hall npc is posted once in data/world_edits.json (GeHomeHall: one source per npc); nothing is spawned here.
 
 // ------------------------------------------------------------------ the spiral staircases to the gallery
 

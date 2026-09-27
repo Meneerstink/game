@@ -72,7 +72,13 @@ object SkullyRoster {
      */
     val SITES: List<Site> =
         listOf(
-            Site("Grand Exchange", Npcs.SKULLY, anchor = Tile(3165, 3487, 0), wanted = Tile(3161, 3484, 0)),
+            // Owner 2026-09-27: the Royal Hall's PvP corner (north-west of the ground floor), facing into the corner, the Loot
+            // Chest against the west wall beside him, opening east onto the staircase approach. The single source for his post: the
+            // world_edits.json moves that once put him outside the south door were folded into this line.
+            Site(
+                "Grand Exchange", Npcs.SKULLY, anchor = Tile(3165, 3487, 0), wanted = Tile(3158, 3494, 0), exact = true,
+                face = Direction.EAST, chest = Tile(3158, 3495, 0), chestFront = Direction.EAST,
+            ),
             // 2026-09-23 bank pass: the heuristic had put him on the staircase tile (3255,3421). North-west corner of
             // the customer side, back to the west wall, chest in the corner.
             Site("Varrock east bank", SKULLY_JR, anchor = Tile(3253, 3420, 0), wanted = Tile(3250, 3422, 0), exact = true, face = Direction.EAST, chest = Tile(3250, 3423, 0)),

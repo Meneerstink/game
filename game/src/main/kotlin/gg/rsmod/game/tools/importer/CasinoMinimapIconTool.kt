@@ -83,7 +83,8 @@ object CasinoMinimapIconTool {
     @JvmStatic
     fun main(args: Array<String>) {
         val mode = args.getOrNull(0) ?: "plan"
-        require(mode == "plan" || mode == "apply") { "Usage: plan|apply" }
+        require(mode in setOf("plan", "apply", "unmark-plan", "unmark")) { "Usage: plan|apply|unmark-plan|unmark" }
+        val unmark = mode.startsWith("unmark")
 
         val group = ICON_NPC ushr 7
         val file = ICON_NPC and 0x7F
@@ -93,10 +94,19 @@ object CasinoMinimapIconTool {
                 val current = library.data(INDEX_NPC, group, file) ?: error("npc $ICON_NPC missing from ${TARGETS[0]}")
                 check(current.last() == 0.toByte()) { "npc $ICON_NPC does not end with the opcode-0 terminator" }
                 val before = appendedMapElement(current)
-                check(before == -1) { "npc $ICON_NPC already carries mapElement $before; refusing" }
-                val updated = patched(current, MAP_ELEMENT)
+                val updated =
+                    if (unmark) {
+                        // Owner 2026-09-27: the casino moved into the Royal Hall's upper floor. An npc icon is drawn on its own
+                        // floor only (Minimap: npc.level == self.level), so the star now sits on one map marker loc upstairs
+                        // (RoyalHallLocTool.CASINO_MARKER, seen from both floors) and the dealer gives his back.
+                        check(before == MAP_ELEMENT) { "npc $ICON_NPC carries mapElement $before, not the casino star; refusing" }
+                        current.copyOfRange(0, current.size - 4) + byteArrayOf(0)
+                    } else {
+                        check(before == -1) { "npc $ICON_NPC already carries mapElement $before; refusing" }
+                        patched(current, MAP_ELEMENT)
+                    }
                 val after = appendedMapElement(updated)
-                check(after == MAP_ELEMENT) { "re-read mismatch for npc $ICON_NPC: got $after" }
+                check(after == (if (unmark) -1 else MAP_ELEMENT)) { "re-read mismatch for npc $ICON_NPC: got $after" }
                 println("NPC $ICON_NPC mapElement $before -> $after, bytes ${current.size}->${updated.size}")
                 listOf(
                     CacheMutation(
@@ -118,7 +128,7 @@ object CasinoMinimapIconTool {
         val errors = transaction.blockingErrors(plan)
         errors.forEach { println("  BLOCKED: $it") }
         check(errors.isEmpty()) { "preflight blocked; nothing written" }
-        if (mode == "plan") {
+        if (mode == "plan" || mode == "unmark-plan") {
             println("PLAN_ONLY transaction=${transaction.id} mutations=${mutations.size} (nothing written)")
             return
         }

@@ -1,18 +1,26 @@
 package gg.rsmod.plugins.content.areas.grandexchange
 
-import gg.rsmod.game.model.Direction
 import gg.rsmod.game.model.Tile
 import gg.rsmod.plugins.api.cfg.Npcs
 
 /**
- * Shared geometry and ids of the Grand Exchange home hall (`ge_home_hall.plugin.kts`).
+ * Shared geometry and ids of the Grand Exchange home hall, the Royal Hall (`ge_home_hall.plugin.kts`).
  *
- * Owner 2026-09-25: the hall is the Royal Hall in the middle of the exchange ("i want the building to move in the middel
- * of grand exchange"), centred on the exchange's own fountain in place of its planters and canopy; the north-east booth it
- * first replaced is restored. Its walls, carpet and furniture live in `data/cfg/home_decor.txt`; the floor is [WIDTH] x
- * [DEPTH] tiles from ([X], [Z]), with doorways in the south wall ([SOUTH_DOOR]), the west wall and the east wall
- * ([SIDE_DOOR]). Every stall stands on the edge of the floor against a wall, facing in, with free marble in front of it;
- * the four corners hold suits of armour.
+ * Owner 2026-09-25: the hall stands in the middle of the exchange, centred on the exchange's own fountain. Its walls,
+ * carpet and furniture live in `data/cfg/home_decor.txt`; the floor is [WIDTH] x [DEPTH] tiles from ([X], [Z]), with a
+ * doorway in the middle of every wall ([SOUTH_DOOR] in the north and south walls, [SIDE_DOOR] in the west and east ones).
+ *
+ * Owner 2026-09-27 ("richt hem professioneel in"): the ground floor holds the services, one theme per marble corner -
+ * south-east "death and repair" (Death's Domain, Bob, a deposit box), south-west "skills" (the Skilling Basement, Max,
+ * Kuradal, the Wise Old Man, Pikkupstix), north-west "PvP" (Skully, the Quartermaster, Perdu, the Breach Trader,
+ * Mandrith), north-east "stores" (Loyalty, Donator and Deadman Store, Ava, Aleck) - and the quest start beside the south
+ * entrance (Quest Guide, Archaeologist, Oneiromancer, Azzanadra). The arms of the carpet cross stay free. The upper floor
+ * is the casino and lounge: a card table with its dealer and a gilded sign in each marble corner, the thrones and the
+ * banquet table with King Narnode, Party Pete and the Drunken Dwarf.
+ *
+ * ONE SOURCE PER NPC. Every hall npc is posted by a single `npc_spawn` line of `data/world_edits.json` (so the owner moves
+ * it himself in developer mode); no code spawns one. The exceptions own their npc for a reason: Skully and his Loot Chest
+ * (SkullyRoster, the chest comes with him) and the Quest Guide (`data/cfg/new_player.yml`, the intro sends players to it).
  */
 object GeHomeHall {
     /** Npc 11679 (cache "Shop assistant"), renamed "Quartermaster" in both caches (tx-20260922-141234). */
@@ -28,42 +36,28 @@ object GeHomeHall {
     val SOUTH_DOOR = 5..8
     val SIDE_DOOR = 4..7
 
-    /**
-     * One stall: npc [npc] on floor offset ([dx], [dz]) of level [level] (1 = the gallery lounge), facing [facing]. [size] is
-     * the npc's cache size: it covers [size] x [size] tiles north-east of its post, all of which must be free floor.
-     */
-    data class ServicePost(val npc: Int, val dx: Int, val dz: Int, val facing: Direction, val level: Int = 0, val size: Int = 1)
+    /** The Breach Trader (breach_shop.plugin.kts). */
+    const val BREACH_TRADER = 14478
 
-    /**
-     * Ground floor: west and east walls hold five stalls each (either side of their doorway), the north wall one either
-     * side of the throne dais (the corners beside it hold the spiral staircases), the south wall four (two here, the
-     * Breach Trader at dx 3 in breach_shop and Kuradal) west of the entrance and Perdu plus the three 78 Store keepers
-     * (StoreNpcs, dx 10-12) east of it. Every stall stands behind a white marble and gold counter. The upper floor
-     * (level 1) seats the four npcs players visit least behind its south counters, either side of the balcony door.
-     */
-    val SERVICE_POSTS =
-        listOf(
-            ServicePost(Npcs.SIR_TIFFY_CASHIEN, 0, 1, Direction.EAST),
-            ServicePost(Npcs.MAX, 0, 2, Direction.EAST),
-            ServicePost(Npcs.AVA, 0, 3, Direction.EAST),
-            ServicePost(Npcs.PIKKUPSTIX, 0, 8, Direction.EAST),
-            ServicePost(Npcs.ALECK, 0, 9, Direction.EAST),
-            ServicePost(Npcs.WISE_OLD_MAN, 13, 1, Direction.WEST),
-            ServicePost(Npcs.TOOL_LEPRECHAUN, 13, 3, Direction.WEST),
-            ServicePost(Npcs.BOB, 13, 9, Direction.WEST),
-            // One row in from the north wall: Azzanadra is 2 x 2 and at dz 11 stood half inside the wall (owner 2026-09-26,
-            // who moved him to exactly this tile in game); Mandrith mirrors him.
-            ServicePost(Npcs.AZZANADRA, 3, 10, Direction.SOUTH, size = 2),
-            ServicePost(Npcs.MANDRITH, 10, 10, Direction.SOUTH),
-            ServicePost(QUARTERMASTER, 1, 0, Direction.NORTH),
-            ServicePost(Npcs.DRUNKEN_DWARF, 2, 0, Direction.NORTH),
-            ServicePost(Npcs.KURADAL_9085, 4, 0, Direction.NORTH),
-            ServicePost(Npcs.PERDU, 9, 0, Direction.NORTH),
-            ServicePost(Npcs.PARTY_PETE, 2, 0, Direction.NORTH, level = 1),
-            ServicePost(Npcs.KING_NARNODE_SHAREEN, 4, 0, Direction.NORTH, level = 1),
-            ServicePost(Npcs.ONEIROMANCER, 9, 0, Direction.NORTH, level = 1),
-            ServicePost(Npcs.ARCHAEOLOGIST, 11, 0, Direction.NORTH, level = 1),
-        )
+    /** The 78 Store keepers (StoreNpcs) and Loyalty's Xuan. */
+    const val DONATOR_STORE = 14436
+    const val DEADMAN_STORE = 14437
+
+    /** The casino dealers (casino_grandexchange.plugin.kts): Dice, Mines, Blackjack, Flower Poker. */
+    val CASINO_DEALERS = setOf(Npcs.GAMBLER, Npcs.GAMBLER_3001, Npcs.GAMBLER_3002, Npcs.GAMBLER_3003)
+
+    /** Every npc world_edits.json posts in the hall, each exactly once; the value is its cache size (tiles per side). */
+    val HALL_NPCS: Map<Int, Int> =
+        mapOf(
+            Npcs.BOB to 1, Npcs.ARCHAEOLOGIST to 1, Npcs.ONEIROMANCER to 1, Npcs.AZZANADRA to 2,
+            Npcs.MAX to 1, Npcs.KURADAL_9085 to 1, Npcs.WISE_OLD_MAN to 1, Npcs.PIKKUPSTIX to 1,
+            QUARTERMASTER to 1, Npcs.PERDU to 1, BREACH_TRADER to 1, Npcs.MANDRITH to 1,
+            Npcs.XUAN to 1, DONATOR_STORE to 1, DEADMAN_STORE to 1, Npcs.AVA to 1, Npcs.ALECK to 1,
+            Npcs.KING_NARNODE_SHAREEN to 1, Npcs.PARTY_PETE to 1, Npcs.DRUNKEN_DWARF to 1,
+        ) + CASINO_DEALERS.associateWith { 1 }
+
+    /** Npcs that left the hall for good (owner: claim-only npcs, the penguins, Sir Tiffy and the Tool Leprechaun). */
+    val REMOVED = setOf(Npcs.EVIL_DAVE, Npcs.LUCIEN, Npcs.LUCIEN_273, Npcs.SIR_TIFFY_CASHIEN, Npcs.TOOL_LEPRECHAUN, Npcs.PENGUIN_5428, Npcs.PING, Npcs.PONG)
 
     /**
      * The two white marble spiral staircases (62779, 2 x 2, south-west tile [base]) to the upper floor, with their tops
@@ -81,14 +75,6 @@ object GeHomeHall {
             Staircase(Tile(X + 11, Z + 10, 0), Tile(X + 11, Z + 9, 0), Tile(X + 12, Z + 9, 1)),
         )
 
-    val REMOVED_PENGUINS = setOf(Npcs.PENGUIN_5428, Npcs.PING, Npcs.PONG)
-
-    /** Every stall has a marble counter in front of it; its npc is talked to across it, like a banker across a booth. */
-    const val COUNTER_REACH = 2
-
-    /** The Breach Trader (breach_shop.plugin.kts), whose south-row stall also has a counter. */
-    const val BREACH_TRADER = 14478
-
-    /** Whether [tile] is inside the hall; its stalls are a deliberate layout the GE boot audit must not rearrange. */
+    /** Whether [tile] is inside the hall; its npcs are a deliberate layout the GE boot audit must not rearrange. */
     fun contains(tile: Tile): Boolean = tile.height == 0 && tile.x in X until X + WIDTH && tile.z in Z until Z + DEPTH
 }

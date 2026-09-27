@@ -60,8 +60,9 @@ data class NewPlayerConfig(
                         PlanRow(SummoningPouchData.SPIRIT_TERRORBIRD, 52),
                     ),
                 choiceNpc = gg.rsmod.game.tools.importer.QuestGuideNpcTool.NPC_ID,
-                choiceNpcTile = Tile(3164, 3486, 1),
-                choiceNpcFacing = Direction.NORTH,
+                // Owner 2026-09-27: the Royal Hall's ground floor beside the south entrance, the first stop for new players.
+                choiceNpcTile = Tile(3167, 3487, 0),
+                choiceNpcFacing = Direction.WEST,
                 // OSRS item 22330 "Deadman starter pack", imported as 23881 (OsrsItemImportTool batch starter-pack).
                 starterChestItem = 23881,
                 starterChestContents = listOf(Items.TUNA to 12, Items.DRAMEN_STAFF to 1, Items.DEADMANS_SKULL to 1),

@@ -33,6 +33,7 @@ object Rev667RegionProbeTool {
                 args[1] == "floors" -> floors(library)
                 args[1] == "loctypes" -> locTypes(library)
                 args.size >= 3 && args[1] == "locbytes" -> args.drop(2).forEach { locBytes(library, it.toInt()) }
+                args.size >= 7 && args[1] == "grid" -> tileGrid(library, args[2].toInt(), args[3].toInt(), args[4].toInt(), args[5].toInt(), args[6].toInt())
                 args.size >= 4 && args[1] == "tile" -> tileInfo(library, args[2].toInt(), args[3].toInt())
                 args.size >= 4 && args[2] == "roundtrip" -> args.drop(3).forEach { roundTrip(library, loadKeys(File(args[1])), it.toInt()) }
                 args.size >= 4 && args[2] == "locs" -> locs(library, loadKeys(File(args[1])), args[3].toInt(), if (args.size >= 8) IntArray(4) { args[4 + it].toInt() } else null)
@@ -180,6 +181,29 @@ object Rev667RegionProbeTool {
             val def = types[loc.id]
             println("LOC id=${loc.id} '${def?.name}' at $x,$z,${loc.plane} type=${loc.type} rot=${loc.rotation} models=${def?.allModels}")
         }
+    }
+}
+
+/** Prints one plane's tile flags and overlays over a box, north row first (`flags:overlay` per tile). */
+fun Rev667RegionProbeTool.tileGrid(
+    library: com.displee.cache.CacheLibrary,
+    plane: Int,
+    minX: Int,
+    minZ: Int,
+    maxX: Int,
+    maxZ: Int,
+) {
+    val maps = HashMap<Int, Rev667TileMap>()
+    println("GRID plane=$plane x=$minX..$maxX (columns) z=$maxZ..$minZ (rows)")
+    for (z in maxZ downTo minZ) {
+        val row = StringBuilder("$z ")
+        for (x in minX..maxX) {
+            val region = (x shr 6 shl 8) or (z shr 6)
+            val map = maps.getOrPut(region) { Rev667TileCodec.decode(regionGroupData(library, "m${x shr 6}_${z shr 6}", null) ?: error("no map")) }
+            val t = map.tiles[plane][x and 63][z and 63]
+            row.append(String.format(" %2d:%3d", t.flags, t.overlayId and 0xFF))
+        }
+        println(row)
     }
 }
 

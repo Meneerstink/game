@@ -19,6 +19,7 @@ import gg.rsmod.game.tools.importer.Rev667Loc
 import gg.rsmod.game.tools.importer.Rev667LocCodec
 import gg.rsmod.game.tools.importer.Rev667LocType
 import gg.rsmod.game.tools.importer.Rev667TileCodec
+import gg.rsmod.game.tools.importer.RoyalHallMapTool
 import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.content.mechanics.pvp.GuardedZones
 import io.mockk.every
@@ -213,11 +214,10 @@ class SkillingBasementTests {
         try {
             val maps = library.index(5)
             val tiles = Rev667TileCodec.decode(library.data(5, maps.archive("m49_54")!!.id, 0)!!)
-            for (dx in 0..1) for (dz in 0..1) {
+            // The way down is the dark stone tomb of Death's Domain, laid on exactly the floor Death's Domain stands on.
+            RoyalHallMapTool.DEATHS_DOMAIN_FLOOR.forEach { (dx, dz, shape, rot, overlay) ->
                 val t = tiles.tiles[0][AfkArea.HALL_STAIRS.x - 49 * 64 + dx][AfkArea.HALL_STAIRS.z - 54 * 64 + dz]
-                val expected = if (dz == 1) AfkBasementMapTool.ENTRANCE_HOLE else AfkBasementMapTool.ENTRANCE_FLOOR
-                assertEquals(expected, t.overlayId, "entrance tile +$dx,+$dz")
-                assertEquals(0, t.underlayId)
+                assertEquals(listOf(overlay, shape, rot, RoyalHallMapTool.FEROX_UNDERLAY), listOf(t.overlayId and 0xFF, t.overlayShape, t.overlayRotation, t.underlayId and 0xFF), "entrance tile +$dx,+$dz")
             }
             // RoyalHallMapTool rebuilds this floor from the pristine map: it cuts the opening too.
             val hallTool = File("../src/main/kotlin/gg/rsmod/game/tools/importer/RoyalHallMapTool.kt").readText()

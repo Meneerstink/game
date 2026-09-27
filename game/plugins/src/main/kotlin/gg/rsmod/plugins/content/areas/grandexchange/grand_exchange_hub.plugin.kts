@@ -11,8 +11,7 @@ import gg.rsmod.plugins.content.mechanics.trouver.TrouverRegistry
  * behind a counter, always on a tile reachable from the customer side, no combat level. */
 on_world_init {
     println(SkullyRoster.spawnAll(world))
-    // After Skully, so the 78 Store npcs never take his or his chest's tile.
-    println(gg.rsmod.plugins.content.mechanics.store.StoreNpcs.spawnAll(world))
+    // The 78 Store npcs are posted in the Royal Hall by data/world_edits.json (GeHomeHall).
 }
 
 // GE services requested by the owner. Since 2026-09-22 every one of these service npcs (Perdu, Bob, Pikkupstix, Kuradal,

@@ -176,7 +176,12 @@ object AfkBasementMapTool {
     /** Varrock chandelier (plane 1 over the bank); the copy hangs a plane higher and does not block. */
     const val CHANDELIER_SOURCE = 23933
     const val SIGN_SOURCE = 14869
-    const val ENTRANCE_SOURCE = 55
+    /**
+     * The way down is the dark stone tomb of Death's Domain (62430: stone arch, door and sunken steps into its own dark pit),
+     * the one entrance that renders correctly on the hall's floor. The stairwell 55 used before went down into nothing -
+     * a black square with a wooden side and the sky showing through (owner 2026-09-27, foto mansion_bug5).
+     */
+    const val ENTRANCE_SOURCE = RoyalHallMapTool.DEATHS_DOMAIN_LOC
 
     /** MapElementType 607 (sprite: the skull), the dungeon icon: its marker loc 5118 marks the Stronghold of Security, Edgeville dungeon and more (`elements`, sprite sheet). */
     const val DUNGEON_MAP_ELEMENT = 607
@@ -184,10 +189,13 @@ object AfkBasementMapTool {
     /** The hall (square 49,54) tile of the way down, where the marble spiral staircase stood (AfkArea.HALL_STAIRS). */
     const val HALL_SQUARE_X = 49
     const val HALL_SQUARE_Z = 54
-    const val ENTRANCE_X = 3160
-    const val ENTRANCE_Z = 3487
-    const val ENTRANCE_ROTATION = 0
-    val ENTRANCE_TORCHES = listOf(3159 to 3488, 3162 to 3488)
+    /** Mirrors Death's Domain (3169,3486, rotation 2) across the hall: 2 x 3, back on the south wall, door north. */
+    const val ENTRANCE_X = 3159
+    const val ENTRANCE_Z = 3486
+    const val ENTRANCE_ROTATION = RoyalHallMapTool.DEATHS_DOMAIN_ROT
+
+    /** A standing torch either side of the door (the tomb's front row, z 3488). */
+    val ENTRANCE_TORCHES = listOf(3158 to 3488, 3161 to 3488)
 
     const val STANDING_TORCH = 724
     const val WALL_TORCH = 31145
@@ -606,10 +614,14 @@ object AfkBasementMapTool {
 
             // The way down in the hall's square: the entrance copy with the dungeon icon and a torch either side.
             check(DUNGEON_MAP_ELEMENT >= 0) { "DUNGEON_MAP_ELEMENT not chosen yet (run 'elements')" }
-            copy(ENTRANCE_LOC, ENTRANCE_SOURCE, "hall entrance with the dungeon mapelement") { out ->
-                out.write(107)
-                out.write(DUNGEON_MAP_ELEMENT ushr 8)
-                out.write(DUNGEON_MAP_ELEMENT and 0xFF)
+            run {
+                val bytes = entranceDef(requireNotNull(locBytes(library, ENTRANCE_SOURCE)) { "loc $ENTRANCE_SOURCE missing" })
+                val type = Rev667LocType.decode(ENTRANCE_LOC, bytes)
+                check(type.name == "Stairs" && type.options.toList() == listOf("Climb-down", null, null, null, null) && type.mapElement == DUNGEON_MAP_ELEMENT) { "entrance definition is wrong" }
+                val current = locBytes(library, ENTRANCE_LOC)
+                if (current == null || !current.contentEquals(bytes)) {
+                    copies += CacheMutation(Rev667RegionProbeTool.LOC_INDEX, ENTRANCE_LOC ushr 8, ENTRANCE_LOC and 0xFF, bytes, "Skilling basement: hall entrance (tomb $ENTRANCE_SOURCE as Stairs / Climb-down, dungeon icon)", current?.let { CacheItemProbeTool.sha1(it) })
+                }
             }
             val hallMutation = hallEntrance(library)
 
@@ -655,33 +667,39 @@ object AfkBasementMapTool {
     private val REBUILT = (FIRST_STATION_LOC..ENTRANCE_LOC).toSet()
 
     /**
-     * The floor under the entrance: loc 55 is a stairwell whose steps go down below the floor, so on the hall's marble it
-     * was covered and invisible (owner 2026-09-26: "the dungeon entrance is invisible"). Its real placement (2820,3484)
-     * stands on overlay 42 (stored), no underlay, on all four tiles - the dark opening the steps go down into.
+     * The entrance's definition: the tomb [source] (models, size, lighting) named "Stairs" with the single option
+     * "Climb-down" and the dungeon map icon instead of its Death's Office icon.
      */
-    const val ENTRANCE_FLOOR = 42
+    fun entranceDef(source: ByteArray): ByteArray {
+        val at = source.size - 4
+        check(source[at] == 107.toByte() && source.last() == 0.toByte()) { "tomb definition does not end with its map element" }
+        val base = RoyalHallLocTool.withoutOptions(source.copyOfRange(0, at) + byteArrayOf(0))
+        val out = ByteArrayOutputStream()
+        out.write(base, 0, base.size - 1)
+        out.write(2)
+        out.write("Stairs".toByteArray(Charsets.ISO_8859_1))
+        out.write(0)
+        out.write(30)
+        out.write("Climb-down".toByteArray(Charsets.ISO_8859_1))
+        out.write(0)
+        out.write(107)
+        out.write(DUNGEON_MAP_ELEMENT ushr 8)
+        out.write(DUNGEON_MAP_ELEMENT and 0xFF)
+        out.write(0)
+        return out.toByteArray()
+    }
 
     /**
-     * The north row of the opening, where the steps (rotation 0) run down under the floor: with nothing below the hall the
-     * client showed its sky colour there, a white-blue patch behind the stairs (owner 2026-09-27, `C:/RSPS/foto/ff.png`).
-     * Overlay 52 = FloType 51 (plain black 000000, no texture) makes it a dark hole instead.
+     * Lays the entrance's floor into the hall square's tiles (also called by RoyalHallMapTool, which rebuilds them): the
+     * tomb's own floor, as under Death's Domain - its dark pit and sunken steps show through the hole in the marble.
      */
-    const val ENTRANCE_HOLE = 52
-
-    /** Cuts the entrance opening into the hall square's tiles (also called by RoyalHallMapTool, which rebuilds them). */
     fun cutEntrance(
         tiles: Rev667TileMap,
         squareX: Int,
         squareZ: Int,
     ) {
         if (squareX != HALL_SQUARE_X || squareZ != HALL_SQUARE_Z) return
-        for (dx in 0..1) for (dz in 0..1) {
-            val t = tiles.tiles[0][ENTRANCE_X - squareX * 64 + dx][ENTRANCE_Z - squareZ * 64 + dz]
-            t.overlayId = if (dz == 1) ENTRANCE_HOLE else ENTRANCE_FLOOR
-            t.overlayShape = 0
-            t.overlayRotation = 0
-            t.underlayId = 0
-        }
+        RoyalHallMapTool.layTombFloor(tiles, squareX, squareZ, ENTRANCE_X, ENTRANCE_Z)
     }
 
     /** The hall square's tiles with the entrance opening; null when it is already there. */
@@ -715,7 +733,7 @@ object AfkBasementMapTool {
         // Earlier runs of this tool (other rotation) are replaced; nothing else in the square is touched.
         val kept = locs.filterNot { l -> l.id == ENTRANCE_LOC || (l.id == STANDING_TORCH && ENTRANCE_TORCHES.any { (x, z) -> l.localX == x - bx && l.localZ == z - bz && l.plane == 0 }) }
         if (wanted.all { w -> locs.any { same(it, w) } } && kept.size + wanted.size == locs.size) return null
-        val entranceTiles = (0..1).flatMap { dx -> (0..1).map { dz -> (ENTRANCE_X - bx + dx) to (ENTRANCE_Z - bz + dz) } }
+        val entranceTiles = (0..1).flatMap { dx -> (0..2).map { dz -> (ENTRANCE_X - bx + dx) to (ENTRANCE_Z - bz + dz) } }
         val clash = kept.filter { it.plane == 0 && it.type in 9..11 && (it.localX to it.localZ) in entranceTiles }
         check(clash.isEmpty()) { "hall entrance tiles hold other locs: ${clash.map { it.id }}" }
         val merged = (kept + wanted).sortedWith(compareBy({ it.id }, { it.packedPosition }, { it.type }))

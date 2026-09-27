@@ -569,6 +569,28 @@ object RoyalHallLocTool {
         return byteArrayOf(18, 67, 0, 64) + out
     }
 
+    /** The gilded sign the Skilling Basement also uses (option-less, animated). */
+    const val SIGN = 14869
+
+    /**
+     * The casino's one minimap icon: MapElementType 635 (sprite 1377, the gold activity star - CasinoMinimapIconTool) on an
+     * invisible marker loc that RoyalHallMapTool lays on the upper floor at [CASINO_MARKER_X], [CASINO_MARKER_Z]. The
+     * minimap draws map-file loc icons of the player's level and the one above, so the star shows from both floors.
+     */
+    const val CASINO_MARKER = 62899
+    const val CASINO_ELEMENT = 635
+    const val CASINO_MARKER_X = 3165
+    const val CASINO_MARKER_Z = 3495
+
+    /** Casino signs Blackjack, Dice, Flower Poker, Mines (copies of [SIGN] under their game's name). */
+    val CASINO_SIGNS = listOf(62895, 62896, 62897, 62898)
+
+    /** [def] with [name] as its name: opcode 2 written again before the terminator, the later one wins. */
+    private fun named(def: ByteArray, name: String): ByteArray {
+        check(def.last() == 0.toByte()) { "definition does not end with opcode 0" }
+        return def.copyOfRange(0, def.size - 1) + byteArrayOf(2) + name.toByteArray(Charsets.ISO_8859_1) + byteArrayOf(0, 0)
+    }
+
     /** Variants that keep their menu options (the staircases). */
     val WITH_OPTIONS = setOf(62779, 62780)
 
@@ -589,7 +611,9 @@ object RoyalHallLocTool {
             Variant(62782, 47169, "Royal Hall portico pillar: the GE pillar in bright white, 0.95 high", ::brightPillar),
             Variant(62783, 15602, "Royal Hall balcony railing: gilded on white marble plinths", ::gildedRailing),
             Variant(62786, 15602, "Royal Hall balcony railing as a wall decoration (beside the upper doorways)", ::gildedRailingDecor),
-            Variant(62779, 34872, "Royal Hall spiral staircase (bottom): white marble, gilded rails, Climb-up only", ::premiumStairsBottom),
+            // 34871 is the set's real bottom piece (model 36515, "Climb-up"); the middle piece 34872 it was copied from before
+            // carries the flight down, whose steps poked through the hall's floor (owner 2026-09-27, foto mansion_bug4).
+            Variant(62779, 34871, "Royal Hall spiral staircase (bottom): white marble, gilded rails, Climb-up only", ::premiumStairsBottom),
             Variant(62780, 34873, "Royal Hall spiral staircase (top): white marble, gilded rails", ::premiumStairs),
             Variant(62768, 15548, "78 carpet corner (Varrock carpet 15548 with the 78 texture)", ::with78Carpet),
             Variant(62769, 15549, "78 carpet edge (Varrock carpet 15549 with the 78 texture)", ::with78Carpet),
@@ -601,6 +625,13 @@ object RoyalHallLocTool {
             Variant(62784, 1506, "Royal Hall open door, west leaf: white with gold studs (1506 without its option)", ::withoutOptions),
             Variant(62785, 1508, "Royal Hall open door, east leaf: white with gold studs (1508 without its option)", ::withoutOptions),
             Variant(62765, 37169, "Royal Hall 1x1 white marble stall counter (37169 at half length)", ::halfCounter),
+            // The casino upstairs (owner 2026-09-27): one gilded sign (14869, as in the Skilling Basement) named after the game
+            // beside each card table.
+            Variant(CASINO_MARKER, GE_MARKER, "Royal Hall casino map marker (27990 carrying map element $CASINO_ELEMENT)") { withElement(it, CASINO_ELEMENT) },
+            Variant(CASINO_SIGNS[0], SIGN, "Royal Hall casino sign 'Blackjack'") { named(it, "Blackjack") },
+            Variant(CASINO_SIGNS[1], SIGN, "Royal Hall casino sign 'Dice'") { named(it, "Dice") },
+            Variant(CASINO_SIGNS[2], SIGN, "Royal Hall casino sign 'Flower Poker'") { named(it, "Flower Poker") },
+            Variant(CASINO_SIGNS[3], SIGN, "Royal Hall casino sign 'Mines'") { named(it, "Mines") },
         )
 
     /**
