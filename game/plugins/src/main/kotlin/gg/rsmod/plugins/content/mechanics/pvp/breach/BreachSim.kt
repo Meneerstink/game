@@ -90,6 +90,7 @@ object BreachSim {
         bot.loginUsername = name
         bot.username = name
         bot.passwordHash = ""
+        bot.uid = gg.rsmod.game.model.PlayerUID(name)
         bot.tile = tile
         bot.gameSystem = GameSystem(channel, world, bot, world.getService(GameService::class.java)!!)
         for (skill in 0..6) bot.skills.setBaseLevel(skill, 99)
@@ -311,6 +312,28 @@ object BreachSim {
                     out("single-way: ${mons.size} goblins, multi=${a.isMulti(world)} on player A=$onA on player B=$onB ${if (onA <= 1 && onB <= 1) "OK" else "BUG:pile-up"}")
                     mons.forEach { if (world.npcs.contains(it)) world.remove(it) }
                     world.unregister(bot2)
+                }
+                // ---- 5. rewards: a real (non-test) breach monster killed by the player ------------------------------------
+                run {
+                    DeadmanBreach.close(world)
+                    bot.moveTo(home)
+                    wait(18)
+                    val spot = arena.firstOrNull { gapTo2(it, home) in 2..4 && DeadmanBreach.fits(world, it, 1) } ?: home
+                    val real = DeadmanBreach.spawnMonster(world, 14454, spot, DeadmanBreach.LOCAL_SPAWN_RADIUS) // Malevolent Mage, 1x1
+                    val pointsBefore = BreachPoints.balance(bot)
+                    DeadmanBreach.recordDamage(real, bot, 300)
+                    real.hit(real.getCurrentLifepoints() + 10)
+                    repeat(15) { wait(1); bot.setCurrentLifepoints(LIFE) }
+                    val items = ArrayList<gg.rsmod.game.model.entity.GroundItem>()
+                    for (dx in -2..2) for (dz in -2..2) {
+                        val t = real.tile.transform(dx, dz)
+                        world.chunks.get(t, createIfNeeded = false)?.getEntities<gg.rsmod.game.model.entity.GroundItem>(t, gg.rsmod.game.model.EntityType.GROUND_ITEM)?.let { items += it }
+                    }
+                    val mine = items.filter { it.isOwnedBy(bot) }
+                    val emblem = mine.any { it.item == BreachIds.ARCHAIC_EMBLEM_TIER_5 }
+                    val points = BreachPoints.balance(bot) - pointsBefore
+                    out("rewards: real monster killed -> drops for player=${mine.size} emblem=$emblem points+=$points ${if (mine.isNotEmpty() && points > 0) "OK" else "BUG:no-rewards"}")
+                    mine.forEach { world.remove(it) }
                 }
             } catch (e: Exception) {
                 logger.error("BREACHSIM failed: {}", e.toString(), e)
