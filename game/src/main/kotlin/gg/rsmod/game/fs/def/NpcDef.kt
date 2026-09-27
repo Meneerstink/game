@@ -39,7 +39,10 @@ class NpcDef(
     var pet = false
     var options: Array<String?> = Array(5) { "" }
     var transforms: Array<Int>? = null
-    var walkMask = -1
+    // No opcode 119 = no movement flags. This was -1, and every consumer tests `walkMask and 0x4` (swimmer): a def without the
+    // opcode (all imported OSRS npcs - every breach monster) became water-only after its first random walk copied the value,
+    // and could then never step on land again (owner 2026-09-27: breach monsters stop following / stop attacking).
+    var walkMask = 0
 
     /**
      * The npc's chathead models (opcode 60), or `null` when it has none.

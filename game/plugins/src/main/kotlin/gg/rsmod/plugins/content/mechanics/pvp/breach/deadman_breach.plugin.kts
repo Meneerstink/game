@@ -355,8 +355,30 @@ fun nbSpecialActive(npc: Npc) = (npc.attr[nbFireballsLeft] ?: 0) > 0
 fun nbBordering(npc: Npc, target: gg.rsmod.game.model.entity.Pawn) =
     gg.rsmod.plugins.content.combat.Combat.areBordering(npc.tile.x, npc.tile.z, npc.getSize(), npc.getSize(), target.tile.x, target.tile.z, target.getSize(), target.getSize())
 
-NpcAttacks.condition("breach_nb_magic") { npc, target -> !nbSpecialActive(npc) && (npc.attr[nbAttacked] != true || !nbBordering(npc, target)) }
+/**
+ * "Always attempt to melee the player unless they cannot reach them": magic only when no route to melee distance exists. Owner
+ * 2026-09-27: magic used to be picked whenever the target was merely in spell range, so the npc stood there casting and never
+ * walked in (and once the target came close it had no section left that matched).
+ */
+fun cannotReachMelee(npc: Npc, target: gg.rsmod.game.model.entity.Pawn) =
+    !nbBordering(npc, target) &&
+        (npc.timers.has(gg.rsmod.game.model.timer.FROZEN_TIMER) || !gg.rsmod.game.action.PawnPathAction.meleeRouteExists(npc, target))
+
+NpcAttacks.condition("breach_nb_magic") { npc, target -> !nbSpecialActive(npc) && (npc.attr[nbAttacked] != true || cannotReachMelee(npc, target)) }
 NpcAttacks.condition("breach_nb_melee") { npc, _ -> !nbSpecialActive(npc) && npc.attr[nbAttacked] == true }
+
+/*
+ * Durial321 (owner 2026-09-27: "hij hoort je 1 keer te barragen dan je whippen"): the opening attack of a fight is Ice Barrage,
+ * then he runs in and whips; he casts again only while he cannot reach melee distance (freeze: DURIAL_FREEZE_TICKS above).
+ */
+val durialOpened = gg.rsmod.game.model.attr.AttributeKey<java.lang.ref.WeakReference<gg.rsmod.game.model.entity.Pawn>>()
+
+fun durialOpenedOn(npc: Npc, target: gg.rsmod.game.model.entity.Pawn) = npc.attr[durialOpened]?.get() === target
+
+NpcAttacks.condition("breach_durial_barrage") { npc, target -> !durialOpenedOn(npc, target) || cannotReachMelee(npc, target) }
+NpcAttacks.condition("breach_durial_whip") { npc, target -> durialOpenedOn(npc, target) }
+
+NpcAttacks.onSwing("breach_durial321") { npc, target, _ -> npc.attr[durialOpened] = java.lang.ref.WeakReference(target) }
 NpcAttacks.condition("breach_nb_fireball") { npc, _ -> nbSpecialActive(npc) && world.currentCycle >= (npc.attr[nbResumeCycle] ?: 0) }
 
 NpcAttacks.onSwing("breach_night_beast") { npc, _, attack ->
@@ -503,9 +525,11 @@ on_command("breachtest", Privilege.ADMIN_POWER) {
         return@on_command
     }
     player.message("<col=ffff00>Spawning ${roster.size} test breach monster(s). They fight normally but give no loot, emblems or points.</col>")
+    // Spread them in rows of 8 with a gap of one free tile around the largest body (owner 2026-09-27: at 2 tiles apart a 4x4 and a
+    // 2x2 overlapped and blocked each other, so the test monsters could not walk).
+    val cell = roster.maxOf { world.definitions.get(gg.rsmod.game.fs.def.NpcDef::class.java, it.id).size.coerceAtLeast(1) } + 1
     roster.forEachIndexed { index, monster ->
-        // Spread them along a line so two large npcs never share a tile and hide each other.
-        val tile = player.tile.transform(1 + (index % 8) * 2, (index / 8) * 2)
+        val tile = player.tile.transform(1 + (index % 8) * cell, (index / 8) * cell)
         DeadmanBreach.spawnMonster(world, monster.id, tile, walkRadius = 0, test = true)
         player.message("${monster.id} ${monster.name} at ${tile.x},${tile.z}")
     }

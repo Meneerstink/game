@@ -120,6 +120,7 @@ object BreachMonsters {
     const val GFX_SPLATTER_EXPLODE = 3056
     const val GFX_BLOAT_FLIES = 3061
     const val GFX_ZEMOUREGAL_SUMMON = 3064
+    const val GFX_ZEMOUREGAL_LIGHTNING = 3177 // OSRS 2864, tx-20260927-191716
     private const val GFX_BLACK_CHINCHOMPA = 3065
 
     /*
@@ -450,9 +451,13 @@ object BreachMonsters {
                 Custom(
                     "breach_durial321", 8,
                     listOf(
-                        NpcAttacks.Attack(id = "melee", range = 1, anim = WHIP_ATTACK, targetSounds = snd(SFX_WHIP), hits = listOf(hit("slash", 28))),
+                        // Owner 2026-09-27: one Ice Barrage to open, then the whip (conditions in deadman_breach.plugin.kts).
                         NpcAttacks.Attack(
-                            id = "ice_barrage", range = 8, anim = ANCIENT_CAST, impactGfx = listOf(NpcAttacks.Gfx(id = 369)),
+                            id = "melee", range = 1, condition = "breach_durial_whip", anim = WHIP_ATTACK, targetSounds = snd(SFX_WHIP),
+                            hits = listOf(hit("slash", 28)),
+                        ),
+                        NpcAttacks.Attack(
+                            id = "ice_barrage", range = 8, condition = "breach_durial_barrage", anim = ANCIENT_CAST, impactGfx = listOf(NpcAttacks.Gfx(id = 369)),
                             impactSounds = snd(SFX_ICE_BARRAGE_IMPACT), hits = listOf(hit("magic", 30)),
                         ),
                     ),
@@ -493,7 +498,17 @@ object BreachMonsters {
                 14466, 15237, "Zemouregal",
                 Stats(2500, 1, 1, 125, 255, 1, dstab = 30, dslash = 30, dcrush = 30, dmagic = 255, dranged = 15),
                 7, StyleType.MAGIC, 15677, 15680, 15679,
-                Custom("breach_zemouregal", 8, listOf(NpcAttacks.Attack(id = "magic", range = 8, anim = 15677, targetSounds = snd(SFX_ZEMO_LIGHTNING), hits = listOf(hit("magic", 23))))),
+                // Lightning on the target with its sound (owner 2026-09-27: his attack had no graphic): OSRS spotanim 2864
+                // LUC2_LUCIEN_LIGHTNING_SPOT on seq VFX_MAHJARRAT_ATTACK_LIGHTNING05 (ADAPTED by name, OsrsFxImportTool breachzemolightning).
+                Custom(
+                    "breach_zemouregal", 8,
+                    listOf(
+                        NpcAttacks.Attack(
+                            id = "magic", range = 8, anim = 15677, targetGfx = listOf(gfx(GFX_ZEMOUREGAL_LIGHTNING)), targetSounds = snd(SFX_ZEMO_LIGHTNING),
+                            hits = listOf(hit("magic", 23)),
+                        ),
+                    ),
+                ),
             ),
             Monster(
                 14467, 15547, "Big Evil Chicken",

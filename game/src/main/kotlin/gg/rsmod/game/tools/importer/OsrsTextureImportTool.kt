@@ -203,6 +203,13 @@ object OsrsTextureImportTool {
         osrsTexture: Int,
         localTexture: Int,
         colour: (Int) -> Int,
+    ): ModelData = keepTextures(source, mapOf(osrsTexture to localTexture), colour)
+
+    /** [source] with the faces of every OSRS texture in [kept] kept (as its 667 texture) and every other textured face flattened. */
+    fun keepTextures(
+        source: ModelData,
+        kept: Map<Int, Int>,
+        colour: (Int) -> Int,
     ): ModelData {
         val types = source.texMappingType
         check(types == null || types.all { it.toInt() == 0 }) { "model has non-planar texture spaces" }
@@ -217,10 +224,11 @@ object OsrsTextureImportTool {
         val texture = ShortArray(source.faceCount) { -1 }
         val space = ByteArray(source.faceCount) { -1 }
         source.faceTexture!!.forEachIndexed { i, t ->
-            when (t.toInt()) {
-                -1 -> Unit
-                osrsTexture -> {
-                    texture[i] = localTexture.toShort()
+            val local = kept[t.toInt()]
+            when {
+                t.toInt() == -1 -> Unit
+                local != null -> {
+                    texture[i] = local.toShort()
                     space[i] = source.faceTexSpace?.get(i) ?: -1
                 }
                 else -> out.faceColour[i] = colour(t.toInt() and 0xFFFF).toShort()

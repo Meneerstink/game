@@ -9,6 +9,18 @@ object OsrsModelConversion {
     /** OSRS texture id -> rev-667 texture id imported by [OsrsTextureImportTool] (asset map `fx_kind: texture`). */
     val IMPORTED_TEXTURES: Map<Int, Int> = mapOf(59 to 1408)
 
+    /**
+     * OSRS textures the rev-667 cache already holds under the same id with the same image: the 667 program is the single sprite
+     * op on the OSRS texture's own sprite id. Census 2026-09-27 over every imported model (asset map, 26 OSRS textures used):
+     * these 9 match, the other 17 have a different, multi-op 667 program and stay flattened. They were flattened too, so the
+     * fire cape lava (40, sprite 485) on Durial321 became one pale orange-pink colour (owner 2026-09-27 "de firecape ... is roze").
+     * Guard: [NativeTextureRestoreTool.census] re-proves the sprite match against both caches before it rewrites any model.
+     */
+    val NATIVE_SAME_TEXTURES: Set<Int> = setOf(6, 8, 12, 17, 19, 21, 27, 34, 40)
+
+    /** Every OSRS texture kept on a converted model, with its rev-667 id. */
+    val KEPT_TEXTURES: Map<Int, Int> = NATIVE_SAME_TEXTURES.associateWith { it } + IMPORTED_TEXTURES
+
     fun convert(
         reader: ModernCacheReader,
         modelId: Int,
@@ -21,14 +33,14 @@ object OsrsModelConversion {
                 ModernModelDecoder.decode(bytes, flattenTextures = true)
             }
         val texFaces = raw.faceTexture?.count { it.toInt() != -1 } ?: 0
-        val imported = raw.faceTexture?.map { it.toInt() }?.firstOrNull { it in IMPORTED_TEXTURES }
+        val kept = raw.faceTexture?.map { it.toInt() }?.filter { it in KEPT_TEXTURES }?.toSet().orEmpty()
         val source =
             if (texFaces == 0 && raw.texSpaceCount == 0) {
                 raw
-            } else if (imported != null && raw.texMappingType?.all { it.toInt() == 0 } != false) {
-                // A texture already imported by OsrsTextureImportTool stays on the model; any other texture is flattened.
-                dropped += "model $modelId: texture $imported kept as 667 texture ${IMPORTED_TEXTURES.getValue(imported)}"
-                OsrsTextureImportTool.keepTexture(raw, imported, IMPORTED_TEXTURES.getValue(imported)) { tex ->
+            } else if (kept.isNotEmpty() && raw.texMappingType?.all { it.toInt() == 0 } != false) {
+                // A texture 667 has (same image) or OsrsTextureImportTool imported stays on the model; any other is flattened.
+                dropped += "model $modelId: textures ${kept.sorted()} kept as 667 textures ${kept.sorted().map { KEPT_TEXTURES.getValue(it) }}"
+                OsrsTextureImportTool.keepTextures(raw, KEPT_TEXTURES.filterKeys { it in kept }) { tex ->
                     osrsTextureAverageHsl(reader.file(ModernCacheReader.INDEX_TEXTURE, 0, tex) ?: error("modern texture $tex missing"))
                 }
             } else {

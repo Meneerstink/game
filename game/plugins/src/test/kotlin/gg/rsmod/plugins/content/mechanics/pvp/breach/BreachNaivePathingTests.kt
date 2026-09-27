@@ -2,6 +2,7 @@ package gg.rsmod.plugins.content.mechanics.pvp.breach
 
 import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.World
+import gg.rsmod.game.model.collision.CollisionFlag
 import gg.rsmod.game.model.collision.CollisionManager
 import gg.rsmod.game.model.entity.Pawn
 import gg.rsmod.game.model.path.PathRequest
@@ -18,7 +19,8 @@ import kotlin.test.assertTrue
  * NPCs", "naively paths diagonally to the end tile and then straight if there's no diagonals left". Open ground (no collision).
  */
 class BreachNaivePathingTests {
-    private val collision = CollisionManager(ChunkSet(mockk<World>(relaxed = true)))
+    private val chunks = ChunkSet(mockk<World>(relaxed = true))
+    private val collision = CollisionManager(chunks)
     private val walker = mockk<Pawn>(relaxed = true).also { every { it.walkMask } returns 0 }
 
     private fun follow(
@@ -77,5 +79,29 @@ class BreachNaivePathingTests {
             )
         assertTrue(r.success)
         assertEquals(Tile(3204, 3509, 0), r.tail)
+    }
+
+    /** A solid object (tree, rock, table): CollisionUpdate flags only its own tile, on every side. */
+    private fun solid(tile: Tile) {
+        val matrix = chunks.get(tile, createIfNeeded = true)!!.getMatrix(tile.height)
+        listOf(CollisionFlag.PAWN_NORTH, CollisionFlag.PAWN_EAST, CollisionFlag.PAWN_SOUTH, CollisionFlag.PAWN_WEST)
+            .forEach { matrix.addFlag(tile.x % 8, tile.z % 8, it) }
+    }
+
+    @Test
+    fun `no npc walks into solid scenery`() {
+        // Owner 2026-09-27 "breachmonsters kunnen allemaal noclippen": only the tile being left was asked, and it never knows.
+        val target = Tile(3212, 3500, 0)
+        for (x in 3202..3206) for (z in 3496..3504) solid(Tile(x, z, 0))
+        for (size in 1..5) {
+            val start = Tile(3196 - size, 3500, 0)
+            val r = follow(start, size, target)
+            val corners = listOf(start) + r.path.toList()
+            for (c in corners) {
+                for (dx in 0 until size) for (dz in 0 until size) {
+                    assertTrue(c.x + dx !in 3202..3206 || c.z + dz !in 3496..3504, "size $size entered the rock at $c: ${r.path}")
+                }
+            }
+        }
     }
 }

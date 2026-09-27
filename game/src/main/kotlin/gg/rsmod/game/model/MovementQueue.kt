@@ -187,13 +187,13 @@ class MovementQueue(
         val size = pawn.getSize().coerceAtLeast(1)
         for (x in 0 until size) {
             for (z in 0 until size) {
-                if (!collision.canTraverse(
-                        from.transform(x, z),
-                        direction,
-                        projectile = false,
-                        water = water,
-                    )
-                ) {
+                val part = from.transform(x, z)
+                if (!collision.canTraverse(part, direction, projectile = false, water = water)) {
+                    return false
+                }
+                // The entered tile too (isStepBlocked's clipLink): solid scenery flags only its own tiles, so testing the tile
+                // being left alone let npcs walk into trees, rocks and tables (owner 2026-09-27, breach monsters noclipping).
+                if (!collision.canTraverse(part.step(direction), direction.getOpposite(), projectile = false, water = water)) {
                     return false
                 }
             }

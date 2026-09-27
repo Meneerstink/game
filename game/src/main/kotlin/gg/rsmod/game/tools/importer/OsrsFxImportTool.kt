@@ -88,6 +88,11 @@ object OsrsFxImportTool {
                     2655, 2901, // VFX_MAHJARRAT_TELEPORT_ZEMOUREGAL, VFX_MAHJARRAT_SUMMON_ZEMOUREGAL
                     1272, // BLACK_CHINCHOMPA_GRENADE (Ranging Ro)
                 ),
+            // Owner 2026-09-27 ("de animaties van zemouregal lijken niet helemaal ok"): his magic attack had no graphic. Gameval: his
+            // attack is MAHJARRAT_ATTACK_MAGIC_05 (10123) and VFX_MAHJARRAT_ATTACK_LIGHTNING05_SPOTANIM (seq 11413) is the matching
+            // "_05" lightning; the only spotanim on that sequence is LUC2_LUCIEN_LIGHTNING_SPOT 2864 (OSRS cache scan 2026-09-27), and
+            // the breach npc's config name is deadman_breach_lucien (OSRS Wiki trivia). ADAPTED by name: no page states the pairing.
+            "breachzemolightning" to listOf(2864),
             /*
              * Owner 2026-09-20: "we need exact OSRS surge animations".
              *

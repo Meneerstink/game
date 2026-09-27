@@ -51,7 +51,9 @@ object QuestFights {
     /** The foe leaves when its player goes (20 tiles), logs out, dies or the stage moves on; it comes back on return. */
     private fun leash(player: Player, quest: ShortQuest, stage: Int, foe: Npc, fight: QuestFight) {
         val world = player.world
-        foe.queue {
+        // A world task, never foe.queue: an npc runs only the head of its own queue, so this endless watcher sat in front of the
+        // foe's combat loop and the foe never followed or hit (owner 2026-09-27: "dharok the wretched volgt niet").
+        world.queue {
             while (foe.isSpawned() && foe.isAlive()) {
                 wait(5)
                 val gone = !player.isOnline || player.isDead() || !player.tile.isWithinRadius(foe.tile, LEASH) || quest.stage(player) != stage

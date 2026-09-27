@@ -396,6 +396,31 @@ object PawnPathAction {
         return route.success
     }
 
+    /**
+     * Whether [pawn] has a route to melee distance of [target] from where it stands - the same request [walkTo] makes for a melee
+     * approach. Npcs that "always attempt to melee the player unless they cannot reach them" (OSRS Wiki: Night beast; Durial321,
+     * owner 2026-09-27) use magic only when this is false; they used to cast whenever the target was merely inside spell range,
+     * and never walked in.
+     */
+    fun meleeRouteExists(
+        pawn: Pawn,
+        target: Pawn,
+    ): Boolean {
+        val request =
+            PathRequest
+                .Builder()
+                .setPoints(pawn.tile, target.tile)
+                .setSourceSize(pawn.getSize(), pawn.getSize())
+                .setTargetSize(target.getSize(), target.getSize())
+                .setProjectilePath(false)
+                .setTouchRadius(1)
+                .clipPathNodes(node = true, link = true)
+                .clipDiagonalTiles()
+                .clipOverlapTiles()
+                .build()
+        return pawn.createPathFindingStrategy().calculateRoute(request).success
+    }
+
     private fun overlap(
         tile1: Tile,
         size1: Int,

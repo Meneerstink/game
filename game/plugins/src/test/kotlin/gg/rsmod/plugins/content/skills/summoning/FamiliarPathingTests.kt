@@ -88,6 +88,29 @@ class FamiliarPathingTests {
         )
     }
 
+    /**
+     * Owner 2026-09-27 "breachmonsters kunnen allemaal noclippen": solid scenery (a tree, rock or table) flags only its own
+     * tile, so the tile being left never says the step is blocked. The mover has to ask the tile being entered too, for a
+     * 1x1 and for a large body whose leading edge meets the object.
+     */
+    @Test
+    fun `no npc steps into solid scenery that flags only its own tile`() {
+        for (familiar in listOf(SMALL_FAMILIAR, LARGE_FAMILIAR)) {
+            val world = newWorld()
+            val origin = Tile(3200, 3200, 0)
+            val npc = newNpc(world, familiar, origin)
+            val size = npc.getSize().coerceAtLeast(1)
+            // A rock right in front of the npc's north edge, on its north-east-most column.
+            val rock = origin.transform(size - 1, size)
+            Direction.NESW.forEach { block(world, rock, it) }
+
+            npc.walkPath(pathOf(origin.transform(0, 1)), MovementQueue.StepType.FORCED_WALK, detectCollision = true)
+            npc.movementQueue.cycle()
+
+            assertEquals(origin, npc.tile, "a size-$size npc stepped into a solid object at $rock")
+        }
+    }
+
     /** A 1x1 npc must still be able to walk where nothing blocks it - the fix is not a freeze. */
     @Test
     fun `a size-1 npc still walks freely through open ground`() {
