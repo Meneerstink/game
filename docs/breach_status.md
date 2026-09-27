@@ -92,6 +92,8 @@ Bugs the run found and that are fixed (all npcs, not only breaches):
   single-way a player fights one npc; the aggro search also skips a player another npc picked this tick. Sim: 3 goblins,
   2 players -> 1 each, the third waits.
 - Greater abyssal demon teleported onto its target (3x3 footprint over the player): destination must now fit and not overlap.
+- A 2x2-5x5 monster could land in a pocket only a 1x1 walker leaves (Cerberus stuck 4 tiles from its target): a localised
+  landing now needs a route for the whole body to the spawner (`DeadmanBreach.reachesSpawner`); sim 09:33: landings and Cerberus OK.
 
 ### Final run per monster (2026-09-27 08:35, final build, 0 ERROR lines in the server log)
 

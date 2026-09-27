@@ -522,7 +522,11 @@ object DeadmanBreach {
     ) {
         val monster = BreachMonsters.SPAWNABLE.random()
         val size = world.definitions.getNullable(gg.rsmod.game.fs.def.NpcDef::class.java, monster.id)?.size ?: 1
-        val landing = site.landing.shuffled().firstOrNull { fits(world, it, size) && canLeave(world, it, size) && isFree(world, site, it, size) }
+        val landing =
+            site.landing.shuffled().firstOrNull {
+                fits(world, it, size) && canLeave(world, it, size) && isFree(world, site, it, size) &&
+                    (site.kind != Kind.LOCALISED || reachesSpawner(world, it, size, site.spawners))
+            }
         if (landing == null) {
             // Nowhere free for this one right now; the next pulse tries again (spawned is not counted).
             return
@@ -590,6 +594,27 @@ object DeadmanBreach {
         val far = maxOf(kotlin.math.abs(dx), kotlin.math.abs(dz))
         if (far <= MAX_PROJECTILE_TILES) return spawner
         return Tile(landing.x + dx * MAX_PROJECTILE_TILES / far, landing.z + dz * MAX_PROJECTILE_TILES / far, landing.height)
+    }
+
+    /**
+     * In-engine test run 2026-09-27: the landing flood fill ([around]) walks with a 1x1 body, so a 2x2-5x5 monster could land in
+     * a pocket only a 1x1 walker leaves (Cerberus stood 4 tiles from its target at a Varrock site). A large monster lands only
+     * where a route for its whole body reaches next to a spawner.
+     */
+    fun reachesSpawner(
+        world: World,
+        corner: Tile,
+        size: Int,
+        spawners: List<Tile>,
+    ): Boolean {
+        if (size <= 1) return true
+        val spawner = spawners.minByOrNull { it.getDistance(corner) } ?: return true
+        val route =
+            gg.rsmod.game.model.path.strategy.BFSPathFindingStrategy(world.collision).calculateRoute(
+                gg.rsmod.game.model.path.PathRequest.Builder().setPoints(corner, spawner).setSourceSize(size, size).setTargetSize(1, 1)
+                    .setProjectilePath(false).setTouchRadius(1).clipPathNodes(node = true, link = true).clipOverlapTiles().build(),
+            )
+        return route.success
     }
 
     /**
