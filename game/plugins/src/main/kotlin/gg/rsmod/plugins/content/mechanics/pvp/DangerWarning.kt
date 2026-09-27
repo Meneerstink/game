@@ -4,6 +4,8 @@ import gg.rsmod.game.model.EntityType
 import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.entity.Player
+import gg.rsmod.game.model.queue.QueueTask
+import gg.rsmod.plugins.api.ext.player
 import gg.rsmod.plugins.api.ext.isInterfaceVisible
 
 /**
@@ -50,23 +52,25 @@ object DangerWarning {
      * or not the general warning is on. [confirm] shows interface 382 with [QUEST_TEXT] and runs the teleport on "Enter".
      * Installed by `danger_warning.plugin.kts`; without it (tests) the teleport simply runs.
      */
-    var confirm: ((Player, String, () -> Unit) -> Unit)? = null
+    var confirm: (suspend (QueueTask, String) -> Boolean)? = null
 
+    /** Owner 2026-09-27, word for word. */
     const val QUEST_TEXT =
-        "The quest sends you to a <col=ff0000>Dangerous</col> area: other players can attack you there, and if you die you " +
-            "can lose your items. Check your world map - everything outside the safe zones is Dangerous. Continue?"
+        "This destination is in a <col=ff0000>Dangerous</col> area. Other players can attack you and you can lose your " +
+            "items. Continue?"
 
-    /** Runs [teleport] to [destination], after the warning when [destination] is Dangerous. */
-    fun questTravel(player: Player, destination: Tile, teleport: () -> Unit) {
-        val ask = confirm
-        if (!AreaState.isDangerous(destination) || ask == null) {
-            teleport()
-            return
-        }
-        ask(player, QUEST_TEXT) {
-            allowNextCrossing(player)
-            teleport()
-        }
+    /**
+     * The one gate of every quest move (Quest Tutor and short-quest teleports, quest boat and glider trips, a fight's
+     * return trip): true when [destination] is Safe, or Dangerous and the player clicked "Enter". A confirmed move then
+     * passes the movement gate once and follows the normal Deadman rules. The general warning's on/off switch and its
+     * "don't show again" row do not apply here.
+     */
+    suspend fun confirmQuestTravel(task: QueueTask, destination: Tile): Boolean {
+        if (!AreaState.isDangerous(destination)) return true
+        val ask = confirm ?: return true
+        if (!ask(task, QUEST_TEXT)) return false
+        allowNextCrossing(task.player)
+        return true
     }
 
     fun isActive(player: Player): Boolean = player.attr[INTRO] == true || player.attr[ENABLED] == true

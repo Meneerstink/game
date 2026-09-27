@@ -28,8 +28,8 @@ fun Player.teleport(
     spell: TeleportSpell,
     data: SpellMetadata,
 ) {
-    if (spell == TeleportSpell.APE_ATOLL && getVarp(Varps.MONKEY_MADNESS_PROGRESS) < 9) {
-        message("You must speak to King Narnode in the Grand Exchange to unlock Ape Atoll.")
+    if (spell == TeleportSpell.APE_ATOLL && !gg.rsmod.plugins.content.quests.QuestStatus.isCompleted(this, "Monkey Madness")) {
+        message("You need to complete Monkey Madness to use this teleport.")
         return
     }
     val endTile = findValidTile(spell)

@@ -15,6 +15,7 @@ import gg.rsmod.plugins.content.quests.QuestStage
 import gg.rsmod.plugins.content.quests.getCurrentStage
 import gg.rsmod.plugins.content.quests.red
 import gg.rsmod.plugins.content.quests.striked
+import gg.rsmod.plugins.content.mechanics.pvp.DangerWarning
 import gg.rsmod.plugins.content.unlocks.UnlockNpcRewards
 
 /*
@@ -360,6 +361,7 @@ object LunarDiplomacy : ShortQuest(
                         "visitors any more than the moon folk do.",
                         facialExpression = FacialExpression.LAUGH,
                     )
+                    if (!DangerWarning.confirmQuestTravel(this, LUNAR_DOCK)) return@QuestStep false
                     messageBox("Lokar sails you across the sea to Lunar Isle.")
                     player.moveTo(LUNAR_DOCK)
                     wait(2)
@@ -1099,6 +1101,7 @@ object DragonSlayerII : ShortQuest(
                         "where old Elvarg's bones were stirring.",
                         facialExpression = FacialExpression.LAUGH,
                     )
+                    if (!DangerWarning.confirmQuestTravel(this, CRANDOR)) return@QuestStep false
                     messageBox("Ned sails you out to Crandor. Galvek's call has woken Elvarg again.")
                     player.moveTo(CRANDOR)
                     wait(2)
@@ -1115,6 +1118,7 @@ object DragonSlayerII : ShortQuest(
                 fight = QuestFight(Npcs.ELVARG, "Elvarg", 83, CRANDOR, "Rrrooaaarr!", returnTo = DRAYNOR),
                 talk = {
                     chatNpc("Back to Crandor, then? Hold on to your hat.", facialExpression = FacialExpression.LAUGH)
+                    if (!DangerWarning.confirmQuestTravel(this, CRANDOR)) return@QuestStep false
                     player.moveTo(CRANDOR)
                     wait(2)
                     true
@@ -1346,6 +1350,7 @@ object MonkeyMadnessII : ShortQuest(
                         "leads the 10th squad there. I'll fly you to him.",
                         facialExpression = FacialExpression.WORRIED,
                     )
+                    if (!DangerWarning.confirmQuestTravel(this, APE_ATOLL)) return@QuestStep false
                     messageBox("Daero flies you south to Ape Atoll.")
                     player.moveTo(APE_ATOLL)
                     wait(2)
@@ -1619,7 +1624,10 @@ object FoundationQuests {
         val step = quest.steps[stage - 1]
         step.fight?.let { fight ->
             step.gives.forEach { (item, amount) -> FoundationRewards.grant(player, item, amount) }
-            fight.returnTo?.let { player.moveTo(it) }
+            // The trip back is a quest move too: a Dangerous destination asks first; "No" stays (owner 2026-09-27).
+            fight.returnTo?.let { back ->
+                player.queue { if (DangerWarning.confirmQuestTravel(this, back)) player.moveTo(back) }
+            }
         }
         if (stage == quest.steps.size) {
             FoundationRewards.complete(player, quest)

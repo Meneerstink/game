@@ -102,7 +102,8 @@ fun openSpellbook(player: Player) {
         return
     }
     player.queue {
-        val books = Spellbook.values.filter { it != player.getSpellbook() }
+        // Only books the player has unlocked (Desert Treasure / Lunar Diplomacy) - the cape is no way around the quests.
+        val books = Spellbook.values.filter { it != player.getSpellbook() && gg.rsmod.plugins.content.magic.Spellbooks.hasAccess(player, it) }
         val names = books.map { it.name.lowercase().replaceFirstChar { c -> c.uppercase() } }
         val picked = books.getOrNull(options(*(names + "Cancel").toTypedArray(), title = "Change spellbook ($left left today)") - 1) ?: return@queue
         if (!SkillcapePerks.takeDailyUse(player, DailyUse.SPELLBOOK)) return@queue

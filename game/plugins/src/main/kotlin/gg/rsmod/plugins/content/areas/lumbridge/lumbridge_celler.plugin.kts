@@ -69,8 +69,8 @@ on_obj_option(obj = Objs.CHEST_12309, option = "buy-food") {
 }
 
 on_obj_option(obj = Objs.CHEST_12309, option = "buy-items") {
-    if (player.getVarbit(Varbits.RECIPE_FOR_DISASTER_PROGRESS) < 5) {
-        player.message("You must complete Recipe for Disaster with the Oneiromancer in the Grand Exchange before you can buy gloves here.")
+    if (!gg.rsmod.plugins.content.quests.QuestStatus.isCompleted(player, "Recipe for Disaster")) {
+        player.message("You must complete Recipe for Disaster before you can buy gloves here.")
         return@on_obj_option
     }
     player.openShop("Culinaromancer's Chest ")

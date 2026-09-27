@@ -40,9 +40,9 @@ on_npc_option(npc = Npcs.DAGA, option = "talk-to") {
 
                 THIRD_OPTION -> {
                     chatPlayer("Do you have any Dragon Scimitars in stock?")
-                    if (player.getVarp(Varps.MONKEY_MADNESS_PROGRESS) < 9) {
+                    if (!gg.rsmod.plugins.content.quests.QuestStatus.isCompleted(player, "Monkey Madness")) {
                         chatNpc(
-                            "I can only sell that scimitar after King Narnode has recorded your Monkey Madness completion.",
+                            "I can only sell that scimitar to those who have completed Monkey Madness.",
                             facialExpression = FacialExpression.OLD_NORMAL,
                         )
                         return@queue
@@ -97,7 +97,7 @@ on_npc_option(npc = Npcs.DAGA, option = "talk-to") {
 on_npc_option(npc = Npcs.DAGA, option = "trade") {
     // TODO Add missing function greegree
     if (player.hasEquipped(EquipmentType.AMULET, Items.MONKEYSPEAK_AMULET)) {
-        if (player.getVarp(Varps.MONKEY_MADNESS_PROGRESS) >= 9) {
+        if (gg.rsmod.plugins.content.quests.QuestStatus.isCompleted(player, "Monkey Madness")) {
             player.openShop("Daga's Scimitar Smithy")
         } else {
             player.queue {

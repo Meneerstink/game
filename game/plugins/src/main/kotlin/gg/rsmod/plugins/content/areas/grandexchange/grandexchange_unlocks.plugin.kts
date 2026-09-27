@@ -13,6 +13,7 @@ import gg.rsmod.plugins.content.mechanics.shops.CoinCurrency
 import gg.rsmod.plugins.content.unlocks.UnlockNpcRewards
 import gg.rsmod.plugins.content.mechanics.prayer.AncientCurses
 import gg.rsmod.plugins.content.quests.foundation.FoundationQuests
+import gg.rsmod.plugins.content.quests.QuestStatus
 
 create_shop(
     "Ancient Magicks Shop",
@@ -162,14 +163,13 @@ suspend fun QueueTask.useGeLamp(item: Int, fixedXp: Double, combatOnly: Boolean)
 
 on_npc_option(npc = Npcs.PIKKUPSTIX, option = "talk-to") {
     player.queue {
-        chatNpc("Hello! I can unlock the Summoning skill and explain how to use your familiars.")
-        when (options("Unlock Summoning.", "How does Summoning work?", "Goodbye.")) {
-            1 -> {
-                chatPlayer("Please unlock Summoning for me.")
-                // One grant per account, shared with the Quest Guide (Wolf Whistle + supplies to level 55).
-                gg.rsmod.plugins.content.newplayer.SummoningKit.claim(player)
-            }
-            2 -> chatNpc("Use pouches from my shop to summon familiars. Your Summoning tab will be available once it is unlocked.")
+        // Owner 2026-09-27: the Summoning start (Wolf Whistle + supplies) comes only from the Quest Tutor now.
+        chatNpc("Hello! I can explain how to use your familiars.")
+        when (options("How does Summoning work?", "Goodbye.")) {
+            1 -> chatNpc(
+                "Use pouches from my shop to summon familiars. The",
+                "Quest Tutor hands every newcomer a Summoning start.",
+            )
         }
     }
 }
@@ -225,8 +225,9 @@ on_npc_option(npc = Npcs.ONEIROMANCER, option = "talk-to") {
     }
 }
 /*
- * Recipe for Disaster's unlock, moved off the Oneiromancer at the owner's request. Evil Dave is one of the
- * Culinaromancer's captives in that quest, so the Lumbridge-cellar chest access comes from the right character.
+ * Owner 2026-09-27 (final check): the old quest-claim npcs are gone from the Grand Exchange hall. Evil Dave no longer
+ * completes Recipe for Disaster, Lucien no longer completes While Guthix Sleeps and King Narnode no longer completes
+ * Monkey Madness: every account has those quests completed through QuestStatus, which is what the unlocks below read.
  */
 on_npc_option(npc = Npcs.EVIL_DAVE, option = "talk-to") {
     player.queue {
@@ -238,27 +239,8 @@ on_npc_option(npc = Npcs.EVIL_DAVE, option = "talk-to") {
             "...mum says I have to be back upstairs by six.",
             facialExpression = FacialExpression.SAD,
         )
-        when (
-            options(
-                "About the Culinaromancer's captives...",
-                "Let me into the Culinaromancer's chest.",
-                "Evil, you say?",
-                "I'll leave you to it.",
-            )
-        ) {
-            1, 2 -> {
-                chatPlayer(
-                    "About the Culinaromancer and his captives...",
-                    facialExpression = FacialExpression.CALM_TALK,
-                )
-                chatNpc(
-                    "Freed, the lot of us. Took some cooking.",
-                    "The chest under Lumbridge is open to you now.",
-                    facialExpression = FacialExpression.HAPPY,
-                )
-                UnlockNpcRewards.completeRecipeForDisaster(player)
-            }
-            3 -> {
+        when (options("Evil, you say?", "I'll leave you to it.")) {
+            1 -> {
                 chatPlayer("Evil, you say?", facialExpression = FacialExpression.THINKING)
                 chatNpc(
                     "EVIL! I once dyed every stew in Lumbridge black.",
@@ -273,21 +255,9 @@ on_npc_option(npc = Npcs.EVIL_DAVE, option = "talk-to") {
     }
 }
 
-on_npc_option(npc = Npcs.LUCIEN, option = "talk-to") {
-    player.queue {
-        chatNpc("I can record your While Guthix Sleeps victory and unlock the Tormented demons and demonbane weapons.")
-        when (options("Complete While Guthix Sleeps.", "Goodbye.")) {
-            1 -> {
-                chatPlayer("Please complete While Guthix Sleeps for me.")
-                UnlockNpcRewards.completeWhileGuthixSleeps(player)
-            }
-        }
-    }
-}
-
 listOf(Items.EMBERLIGHT, Items.SCORCHING_BOW, Items.PURGING_STAFF).forEach { weapon ->
     can_equip_item(weapon) {
-        if (player.attr[UnlockNpcRewards.DEMONBANE_WEAPONS_UNLOCKED] == true) {
+        if (QuestStatus.isCompleted(player, "While Guthix Sleeps")) {
             true
         } else {
             player.message("You must complete While Guthix Sleeps before you can wear that weapon.")
@@ -297,7 +267,7 @@ listOf(Items.EMBERLIGHT, Items.SCORCHING_BOW, Items.PURGING_STAFF).forEach { wea
 }
 
 can_attack { attacker, target ->
-    if (attacker is Player && target is Npc && target.id in 8349..8369 && attacker.attr[UnlockNpcRewards.TORMENTED_DEMONS_UNLOCKED] != true) {
+    if (attacker is Player && target is Npc && target.id in 8349..8369 && !QuestStatus.isCompleted(attacker, "While Guthix Sleeps")) {
         attacker.message("You must complete While Guthix Sleeps before you can attack Tormented demons.")
         false
     } else {
@@ -307,22 +277,12 @@ can_attack { attacker, target ->
 
 on_npc_option(npc = Npcs.KING_NARNODE_SHAREEN, option = "talk-to") {
     player.queue {
-        // Monkey Madness II starts and ends here (quests/foundation); Monkey Madness itself stays below.
+        // Monkey Madness II starts and ends here (quests/foundation).
         if (FoundationQuests.talk(this, Npcs.KING_NARNODE_SHAREEN)) return@queue
-        chatNpc("Welcome. I can record your Monkey Madness victory and award the experience you earned.")
-        when (options("Complete Monkey Madness.", "Choose my experience focus.", "Goodbye.")) {
-            1, 2 -> {
-                when (options("35,000 Strength and Constitution each.", "35,000 Attack and Defence each.")) {
-                    1 -> UnlockNpcRewards.completeMonkeyMadness(
-                        player,
-                        UnlockNpcRewards.MonkeyPair.STRENGTH_CONSTITUTION,
-                    )
-                    2 -> UnlockNpcRewards.completeMonkeyMadness(
-                        player,
-                        UnlockNpcRewards.MonkeyPair.ATTACK_DEFENCE,
-                    )
-                }
-            }
-        }
+        chatNpc(
+            "Welcome, friend of the gnomes. The Grand Tree",
+            "stands tall thanks to you.",
+            facialExpression = FacialExpression.HAPPY,
+        )
     }
 }

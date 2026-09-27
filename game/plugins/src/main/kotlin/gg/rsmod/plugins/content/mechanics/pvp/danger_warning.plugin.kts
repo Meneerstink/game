@@ -15,9 +15,7 @@ on_world_init {
     DangerWarning.open = { player, destination, walk ->
         player.queue(TaskPriority.STRONG) { showDangerWarning(this, destination, walk) }
     }
-    DangerWarning.confirm = { player, text, onEnter ->
-        player.queue(TaskPriority.STRONG) { if (confirmDanger(this, text)) onEnter() }
-    }
+    DangerWarning.confirm = { task, text -> confirmDanger(task, text) }
 }
 
 on_login {

@@ -5518,6 +5518,50 @@
       "type": 10,
       "rot": 0,
       "group": 386
+    },
+    {
+      "op": "npc_remove",
+      "id": 2909,
+      "x": 3161,
+      "z": 3489,
+      "level": 1,
+      "type": 10,
+      "rot": 0,
+      "note": "Evil Dave: Old quest-claim npc removed (owner 2026-09-27 final check)",
+      "group": 437
+    },
+    {
+      "op": "npc_remove",
+      "id": 273,
+      "x": 3159,
+      "z": 3492,
+      "level": 1,
+      "type": 10,
+      "rot": 0,
+      "note": "Lucien: Old quest-claim npc removed (owner 2026-09-27 final check)",
+      "group": 438
+    },
+    {
+      "op": "npc_remove",
+      "id": 3373,
+      "x": 3161,
+      "z": 3490,
+      "level": 1,
+      "type": 10,
+      "rot": 0,
+      "note": "Max one tile north, next to Azzanadra, closing the gap (owner 2026-09-27 final check)",
+      "group": 439
+    },
+    {
+      "op": "npc_spawn",
+      "id": 3373,
+      "x": 3161,
+      "z": 3491,
+      "level": 1,
+      "type": 10,
+      "rot": 0,
+      "note": "Max one tile north, next to Azzanadra, closing the gap (owner 2026-09-27 final check)",
+      "group": 439
     }
   ]
 }

@@ -580,6 +580,11 @@ on_magic_spell_button("Spellbook Swap") { metadata ->
                 2 -> Spellbook.STANDARD
                 else -> return@queue
             }
+        // Ancient Magicks only after Desert Treasure: Spellbook Swap is no way around the quest.
+        if (!gg.rsmod.plugins.content.magic.Spellbooks.hasAccess(player, book)) {
+            player.message(gg.rsmod.plugins.content.magic.Spellbooks.noAccessMessage(book))
+            return@queue
+        }
         MagicSpells.removeRunes(player, metadata.runes, metadata.sprite)
         player.addXp(Skills.MAGIC, 96.0, checkBrawlingGloves = true)
         SpellbookSwap.start(player, book)

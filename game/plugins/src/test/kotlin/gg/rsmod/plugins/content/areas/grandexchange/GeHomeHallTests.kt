@@ -51,11 +51,44 @@ class GeHomeHallTests {
     }
 
     @Test
-    fun `hall Lucien is non combat and penguins are absent`() {
+    fun `old quest claim npcs and penguins are absent from the hall`() {
         val ids = GeHomeHall.SERVICE_POSTS.map { it.npc }.toSet()
-        assertTrue(GeHomeHall.SERVICE_LUCIEN in ids)
-        assertFalse(Npcs.LUCIEN in ids)
+        // Owner 2026-09-27: Evil Dave (Recipe for Disaster) and Lucien (While Guthix Sleeps) were claim-only npcs.
+        assertTrue(ids.intersect(OLD_CLAIM_NPCS).isEmpty(), "claim npc still posted: ${ids.intersect(OLD_CLAIM_NPCS)}")
         assertTrue(ids.intersect(GeHomeHall.REMOVED_PENGUINS).isEmpty())
+        // The owner's own world edits moved both upstairs; replaying the file must leave neither standing in the hall.
+        val standing = mutableListOf<Triple<Int, Int, Int>>()
+        val edits = com.fasterxml.jackson.databind.ObjectMapper().readTree(java.io.File(worldEditsPath()))["edits"]
+        edits.forEach { e ->
+            val key = Triple(e["id"].asInt(), e["x"].asInt(), e["z"].asInt() * 10 + e["level"].asInt())
+            when (e["op"].asText()) {
+                "npc_spawn" -> standing += key
+                "npc_remove" -> standing -= key
+            }
+        }
+        val inHall = standing.filter { (id, x, zl) -> id in OLD_CLAIM_NPCS && GeHomeHall.contains(gg.rsmod.game.model.Tile(x, zl / 10, 0)) }
+        assertTrue(inHall.isEmpty(), "world_edits.json still spawns $inHall in the hall")
+    }
+
+    @Test
+    fun `no npc talk completes a quest or hands out the summoning start any more`() {
+        val root = java.io.File(worldEditsPath()).parentFile.parentFile
+        val sources = java.io.File(root, "game/plugins/src/main/kotlin").walkTopDown().filter { it.isFile && (it.name.endsWith(".kt") || it.name.endsWith(".kts")) }
+        val offenders =
+            sources.filter { f ->
+                val text = f.readText()
+                Regex("UnlockNpcRewards\\.complete\\w+\\(").containsMatchIn(text) ||
+                    (f.name != "quest_foundation.plugin.kts" && f.name != "SummoningKit.kt" && "SummoningKit.claim(" in text)
+            }.map { it.name }.toList()
+        assertTrue(offenders.isEmpty(), "claim routes left in $offenders")
+    }
+
+    private val OLD_CLAIM_NPCS = setOf(Npcs.EVIL_DAVE, Npcs.LUCIEN, Npcs.LUCIEN_273)
+
+    private fun worldEditsPath(): String {
+        var dir: java.io.File? = java.io.File("").absoluteFile
+        while (dir != null && !java.io.File(dir, "data/world_edits.json").isFile) dir = dir.parentFile
+        return java.io.File(requireNotNull(dir) { "data/world_edits.json not found" }, "data/world_edits.json").path
     }
 
     @Test

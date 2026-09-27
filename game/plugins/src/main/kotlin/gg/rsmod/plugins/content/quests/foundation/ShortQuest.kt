@@ -156,10 +156,9 @@ abstract class ShortQuest(
     /** Offers the teleport to [location]; used by the quest's own npcs. */
     suspend fun QueueTask.offerTravel(place: String, location: Tile) {
         if (options("Can you get me to $place?", "I'll find my own way.", title = "Travel") != 1) return
-        // Owner 2026-09-26: a Dangerous destination asks first (interface 382, "check your world map").
-        gg.rsmod.plugins.content.mechanics.pvp.DangerWarning.questTravel(player, location) {
-            player.canTeleport(TeleportType.MODERN) { player.teleport(location, TeleportType.MODERN) }
-        }
+        // Owner 2026-09-26/27: a Dangerous destination always asks first (interface 382).
+        if (!gg.rsmod.plugins.content.mechanics.pvp.DangerWarning.confirmQuestTravel(this, location)) return
+        player.canTeleport(TeleportType.MODERN) { player.teleport(location, TeleportType.MODERN) }
     }
 
 

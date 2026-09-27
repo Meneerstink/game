@@ -30,8 +30,8 @@ object PohTeleports {
     private fun spells(type: TeleportType) =
         TeleportSpell.values().filter { it.type == type }.map { spell ->
             Leaf(spell.spellName.removeSuffix(" Teleport").removePrefix("Teleport to "), spell.type) { player ->
-                if (spell == TeleportSpell.APE_ATOLL && player.getVarp(Varps.MONKEY_MADNESS_PROGRESS) < 9) {
-                    player.message("You must speak to King Narnode in the Grand Exchange to unlock Ape Atoll.")
+                if (spell == TeleportSpell.APE_ATOLL && !gg.rsmod.plugins.content.quests.QuestStatus.isCompleted(player, "Monkey Madness")) {
+                    player.message("You need to complete Monkey Madness to use this teleport.")
                     null
                 } else {
                     spell.endArea.randomTile

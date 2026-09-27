@@ -243,10 +243,9 @@ suspend fun QueueTask.questDirections() {
 
 suspend fun QueueTask.travel(place: String, tile: Tile) {
     if (options("Send me to $place.", "I'll find my own way.", title = "Travel") != 1) return
-    // Owner 2026-09-26: a Dangerous destination asks first (interface 382, "check your world map").
-    gg.rsmod.plugins.content.mechanics.pvp.DangerWarning.questTravel(player, tile) {
-        player.canTeleport(TeleportType.MODERN) { player.teleport(tile, TeleportType.MODERN) }
-    }
+    // Owner 2026-09-26/27: a Dangerous destination always asks first (interface 382).
+    if (!gg.rsmod.plugins.content.mechanics.pvp.DangerWarning.confirmQuestTravel(this, tile)) return
+    player.canTeleport(TeleportType.MODERN) { player.teleport(tile, TeleportType.MODERN) }
 }
 
 // ------------------------------------------------------------------------------------- the quests' own npcs

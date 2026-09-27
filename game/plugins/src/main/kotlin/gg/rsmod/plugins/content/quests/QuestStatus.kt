@@ -49,6 +49,13 @@ object QuestStatus {
 
     fun isStarted(player: Player, quest: Quest): Boolean = state(player, quest) != State.NOT_STARTED
 
+    /**
+     * Whether the list quest named [name] is completed: the unlock check of quests without server code (While Guthix
+     * Sleeps, Recipe for Disaster, Monkey Madness...). An unknown name throws, so a typo cannot silently lock content.
+     */
+    fun isCompleted(player: Player, name: String): Boolean =
+        state(player, QuestList.ENTRIES.first { it.name == name }.slot) == State.COMPLETED
+
     /** Current Quest Points: the points of every completed quest of the list. */
     fun points(player: Player): Int = QuestList.ENTRIES.filter { state(player, it.slot) == State.COMPLETED }.sumOf { it.points }
 

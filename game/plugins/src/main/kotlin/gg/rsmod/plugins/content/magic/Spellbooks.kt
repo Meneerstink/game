@@ -33,6 +33,27 @@ object Spellbooks {
             else -> "Modern spells activated!"
         }
 
+    /**
+     * Whether [player] may use [book] at all: Ancient Magicks after Desert Treasure, Lunar after Lunar Diplomacy (their
+     * short quest or the Quest Tutor's choice). Every route into a book (altars, npcs, the Max cape, Spellbook Swap) asks here.
+     */
+    fun hasAccess(
+        player: Player,
+        book: Spellbook,
+    ): Boolean =
+        when (book) {
+            Spellbook.ANCIENT -> player.attr[UnlockNpcRewards.ANCIENT_MAGIC_UNLOCKED] == true
+            Spellbook.LUNAR -> player.attr[UnlockNpcRewards.LUNAR_MAGIC_UNLOCKED] == true
+            else -> true
+        }
+
+    fun noAccessMessage(book: Spellbook): String =
+        if (book == Spellbook.LUNAR) {
+            "You need to complete Lunar Diplomacy to use the Lunar spellbook."
+        } else {
+            "You need to complete Desert Treasure to use Ancient Magicks."
+        }
+
     /** Altar behaviour: a second use of the same altar returns the player to the standard book. */
     fun toggle(
         player: Player,
@@ -54,12 +75,8 @@ object Spellbooks {
         // transport, logout or teleport countdown is visible, the pending action must be
         // cancelled rather than allowed to complete after the switch.
         SevenSecondAction.cancel(player, "Your action was cancelled.")
-        if (book == Spellbook.ANCIENT && player.attr[UnlockNpcRewards.ANCIENT_MAGIC_UNLOCKED] != true) {
-            player.message("You need to complete Desert Treasure to use Ancient Magicks.")
-            return false
-        }
-        if (book == Spellbook.LUNAR && player.attr[UnlockNpcRewards.LUNAR_MAGIC_UNLOCKED] != true) {
-            player.message("You need to complete Lunar Diplomacy to use the Lunar spellbook.")
+        if (!hasAccess(player, book)) {
+            player.message(noAccessMessage(book))
             return false
         }
         val level = requiredLevel(book)

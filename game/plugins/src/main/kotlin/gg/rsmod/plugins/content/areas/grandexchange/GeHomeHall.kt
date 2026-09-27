@@ -28,9 +28,6 @@ object GeHomeHall {
     val SOUTH_DOOR = 5..8
     val SIDE_DOOR = 4..7
 
-    /** The non-combat quest variant has the same Lucien identity/BAS and keeps Talk-to without advertising Attack. */
-    const val SERVICE_LUCIEN = Npcs.LUCIEN_273
-
     /**
      * One stall: npc [npc] on floor offset ([dx], [dz]) of level [level] (1 = the gallery lounge), facing [facing]. [size] is
      * the npc's cache size: it covers [size] x [size] tiles north-east of its post, all of which must be free floor.
@@ -52,9 +49,7 @@ object GeHomeHall {
             ServicePost(Npcs.PIKKUPSTIX, 0, 8, Direction.EAST),
             ServicePost(Npcs.ALECK, 0, 9, Direction.EAST),
             ServicePost(Npcs.WISE_OLD_MAN, 13, 1, Direction.WEST),
-            ServicePost(Npcs.EVIL_DAVE, 13, 2, Direction.WEST),
             ServicePost(Npcs.TOOL_LEPRECHAUN, 13, 3, Direction.WEST),
-            ServicePost(SERVICE_LUCIEN, 13, 8, Direction.WEST),
             ServicePost(Npcs.BOB, 13, 9, Direction.WEST),
             // One row in from the north wall: Azzanadra is 2 x 2 and at dz 11 stood half inside the wall (owner 2026-09-26,
             // who moved him to exactly this tile in game); Mandrith mirrors him.
