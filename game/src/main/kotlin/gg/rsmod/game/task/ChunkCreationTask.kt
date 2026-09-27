@@ -30,7 +30,11 @@ class ChunkCreationTask : GameTask {
 
         world.npcs.forEach { npc ->
             try {
-                if (npc.isActive()) {
+                // Breach conformance 2026-09-27: an npc no player can see still walks (random walk, walking home), but its tile
+                // registration only followed it while it was active - collision lookups (MovementQueue.isEntityBlocked, breach
+                // landings) then saw it on its old tile and other npcs walked or landed straight through it. Every npc whose tile
+                // changed is re-registered; unmoved npcs return at once in changeChunks.
+                if (npc.isActive() || npc.lastChunkTile?.sameAs(npc.tile) == false) {
                     npc.changeChunks(world, createChunkIfNeeded = CREATE_CHUNK_FOR_NPC)
                 }
             } catch (e: Throwable) {

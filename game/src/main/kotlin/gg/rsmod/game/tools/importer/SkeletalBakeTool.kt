@@ -462,13 +462,15 @@ object SkeletalBakeTool {
         }
 
     /** OSRS skeletal sequence fields (opcode 13 id, 15 range); null when it is not skeletal. */
-    class SkeletalSeq(val animaya: Int, val start: Int, val end: Int)
+    /** [sounds]: opcode 14 frame sounds as (tick, OSRS synth id, loops, radius) - played by the OSRS client on that tick. */
+    class SkeletalSeq(val animaya: Int, val start: Int, val end: Int, val sounds: List<IntArray> = emptyList())
 
     fun decodeSkeletalSeq(bytes: ByteArray): SkeletalSeq? {
         val c = In(bytes)
         var id = -1
         var start = -1
         var end = -1
+        val sounds = ArrayList<IntArray>()
         while (c.remaining > 0) {
             when (val op = c.u8()) {
                 0 -> break
@@ -483,7 +485,15 @@ object SkeletalBakeTool {
                 6, 7 -> c.u16()
                 12 -> repeat(c.u8() * 2) { c.u16() }
                 13 -> id = c.i32()
-                14 -> repeat(c.u16()) { c.u16(); c.u16(); c.u8(); c.u8(); c.u8(); c.u8() }
+                14 -> repeat(c.u16()) {
+                    val tick = c.u16()
+                    val sound = c.u16()
+                    c.u8() // weight
+                    val loops = c.u8()
+                    val radius = c.u8()
+                    c.u8() // retain
+                    sounds += intArrayOf(tick, sound, loops, radius)
+                }
                 15 -> {
                     start = c.u16()
                     end = c.u16()
@@ -494,7 +504,7 @@ object SkeletalBakeTool {
                 else -> error("unknown OSRS sequence opcode $op")
             }
         }
-        return if (id >= 0) SkeletalSeq(id, start, end) else null
+        return if (id >= 0) SkeletalSeq(id, start, end, sounds) else null
     }
 
     class Baked(
@@ -685,14 +695,14 @@ object SkeletalBakeTool {
                     val seq = reader.file(ModernCacheReader.INDEX_CONFIG, ModernCacheReader.CONFIG_GROUP_SEQUENCE, def.animationId)?.let { decodeSkeletalSeq(it) }
                     def.models.forEach { m ->
                         val md = ModernModelDecoder.decode(reader.file(7, m, 0)!!)
-                        println("LOC $loc '${def.name}' model $m vertices=${md.vertexCount} faces=${md.faceCount} skinned=${md.animayaBones != null} anim=${def.animationId} animaya=${seq?.animaya} range=${seq?.start}..${seq?.end}")
+                        println("LOC $loc '${def.name}' model $m vertices=${md.vertexCount} faces=${md.faceCount} skinned=${md.animayaBones != null} anim=${def.animationId} animaya=${seq?.animaya} range=${seq?.start}..${seq?.end} sounds=${seq?.sounds?.map { it.toList() }}")
                     }
                 }
                 for (spot in listOf(2519, 2522, 2553, 2554, 2555, 2556, 2557, 2558)) {
                     val s = OsrsFxImportTool.decodeOsrsSpot(reader.file(ModernCacheReader.INDEX_CONFIG, ModernCacheReader.CONFIG_GROUP_SPOTANIM, spot) ?: continue)
                     val md = if (s.model >= 0) ModernModelDecoder.decode(reader.file(7, s.model, 0)!!) else null
                     val seq = if (s.seq >= 0) reader.file(ModernCacheReader.INDEX_CONFIG, ModernCacheReader.CONFIG_GROUP_SEQUENCE, s.seq)?.let { decodeSkeletalSeq(it) } else null
-                    println("SPOT $spot model ${s.model} vertices=${md?.vertexCount} skinned=${md?.animayaBones != null} seq=${s.seq} animaya=${seq?.animaya} range=${seq?.start}..${seq?.end}")
+                    println("SPOT $spot model ${s.model} vertices=${md?.vertexCount} skinned=${md?.animayaBones != null} seq=${s.seq} animaya=${seq?.animaya} range=${seq?.start}..${seq?.end} sounds=${seq?.sounds?.map { it.toList() }}")
                 }
                 return
             }

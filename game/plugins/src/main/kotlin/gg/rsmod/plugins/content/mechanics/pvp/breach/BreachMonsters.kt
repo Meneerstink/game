@@ -175,6 +175,16 @@ object BreachMonsters {
             14469 to Triple(-1, SFX_HUMAN_HIT, SFX_HUMAN_DEATH), // I DSCIM YOU (dragon scimitar sound on its sections)
             14470 to Triple(-1, 10326, 10327), // Pestilent Bloat: tob_bloat_hit / tob_bloat_death (flies: SFX_BLOAT_FLIES)
             14473 to Triple(10328, 10329, 10330), // Undead One summon: zombie_*
+            // Owner 2026-09-27 sound audit (BreachAuditTests): OsrsFxImportTool batch breachsfx2, tx-20260927-153802.
+            // Graardor: attack/death are frame sounds of his OSRS sequences; defend = 3867 godwars_bandos_avatar_hit.
+            14442 to Triple(-1, 10341, -1),
+            // Zilyana: attack/defend frame sounds; death = 3860 godwars_saradomin_avatar_death.
+            14443 to Triple(-1, -1, 10342),
+            // Cave abomination: attack 497 cave_horror_howl (ADAPTED), hit / death of the Cave horror row it already used (500 / 480).
+            14452 to Triple(10344, 500, 480),
+            // TzTok-Jad / Jad-Rek melee: 255 tzhaar_ket_attack_punch (ADAPTED, TzHaar family); hit / death of the 667 Jad row (410 / 409).
+            14462 to Triple(10343, 410, 409),
+            14477 to Triple(10343, 410, 409),
             14475 to Triple(SFX_HUMAN_ATTACK, SFX_HUMAN_HIT, SFX_HUMAN_DEATH), // Fremennik summon
             14476 to Triple(SFX_HUMAN_ATTACK, SFX_HUMAN_HIT, SFX_HUMAN_DEATH), // Khazard summon
         )
@@ -594,7 +604,29 @@ object BreachMonsters {
      * monster uses the ordinary npc (dumb) pathing and can be safespotted like in OSRS - this undoes the earlier B3 rule that
      * gave all of them smart routes.
      */
-    val ROUTEFINDERS: Set<Int> = setOf(14463, 14466)
+    val ROUTEFINDERS: Set<Int> = setOf(14463, 14466, 14471, 14472, 14473, 14474, 14475, 14476)
+
+    /**
+     * OSRS Wiki "Zemouregal Summon": "They are aggressive towards all nearby players and can be very dangerous to unaware players, as
+     * they can be lured even into safezones. They utilise routefinding, meaning they cannot be safespotted" - the summons are
+     * [ROUTEFINDERS] and, unlike every other breach monster, follow their target into a Safe zone.
+     */
+    /**
+     * Owner 2026-09-27 ("all DMM monsters must have the Deadman: Annihilation stats"): the combat level shown to players is the
+     * Annihilation infobox "combat" of each monster (data/cfg/deadman/wiki-infobox, OSRS id -> level); the imported cache levels
+     * were older versions (e.g. Dagannoth Rex 479, Annihilation 1104). Sent as the npc's combat-level override when it spawns.
+     * Guarded by BreachWikiInfoboxTests.
+     */
+    val COMBAT_LEVEL_BY_OSRS: Map<Int, Int> =
+        mapOf(
+            13658 to 1420, 15547 to 1047, 12454 to 957, 13657 to 726, 12445 to 596, 12442 to 947, 12439 to 1104, 12441 to 936,
+            12450 to 655, 12447 to 666, 13662 to 709, 12453 to 1026, 12444 to 624, 12452 to 1022, 12451 to 719, 15553 to 495,
+            13660 to 893, 12455 to 240, 12449 to 768, 12446 to 650, 12440 to 318, 13663 to 967, 12456 to 661, 12459 to 457,
+            15556 to 716, 12448 to 655, 13664 to 973, 15550 to 648, 12458 to 757, 13659 to 563, 15557 to 186, 13661 to 1758,
+            12457 to 908, 15237 to 984,
+        )
+
+    val FOLLOW_INTO_SAFE_ZONES: Set<Int> = setOf(14471, 14472, 14473, 14474, 14475, 14476)
 
     /**
      * Breach conformance 2026-09-27: osrs-docs "Entity Collision" - "Excluded NPCs (Dagannoth Kings, Godwars generals, pets, etc.)"

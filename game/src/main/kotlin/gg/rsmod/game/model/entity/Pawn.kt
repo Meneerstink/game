@@ -368,6 +368,13 @@ abstract class Pawn(
 
     fun addHit(hit: Hit) {
         pendingHits.add(hit)
+        if (this is Player && gg.rsmod.game.model.BreachTrace.active()) {
+            // Breach conformance trace: every hit a player receives (burn, explosion, stings, flies, specials ...) with its source.
+            gg.rsmod.game.model.BreachTrace.log("player.hit") {
+                val caller = Thread.currentThread().stackTrace.drop(2).firstOrNull { f -> !f.className.startsWith("gg.rsmod.game.model.entity") && !f.className.contains("PawnExt") }
+                "player=${(this as Player).username} damage=${hit.hitmarks.joinToString("+") { "${it.damage}" }} delay=${hit.damageDelay} source=${caller?.fileName}:${caller?.lineNumber}"
+            }
+        }
         // Audit X-10: every hit a player receives - whatever its source (npc scripts, recoil, burn, poison) - holds a
         // disconnected body in the world until at least LOGOUT_HOLD_AFTER_HIT ticks after the hit lands.
         if (this is Player) {
@@ -747,6 +754,7 @@ abstract class Pawn(
     ) {
         // Audit T-13: the protection window is counted in game cycles (it compared milliseconds with ticks).
         if (!priority && lastAnimation > world.currentCycle) {
+            if (this is Npc) gg.rsmod.game.model.AvTrace.log { "anim NPC index=$index npc=${(this as Npc).id} id=$id SKIPPED(protected until ${lastAnimation})" }
             if (this is Npc && gg.rsmod.game.model.BreachTrace.watches((this as Npc).id)) {
                 gg.rsmod.game.model.BreachTrace.log("anim.skipped") { "npc=${(this as Npc).id}#$index anim=$id protectedUntil=$lastAnimation" }
             }
@@ -755,6 +763,7 @@ abstract class Pawn(
         if (this is Npc && gg.rsmod.game.model.BreachTrace.watches((this as Npc).id)) {
             gg.rsmod.game.model.BreachTrace.log("anim.set") { "npc=${(this as Npc).id}#$index anim=$id delay=$delay prio=$priority replaces=${if (hasBlock(UpdateBlockType.ANIMATION)) blockBuffer.animation else -1}" }
         }
+        if (this is Npc) gg.rsmod.game.model.AvTrace.log { "anim NPC index=$index npc=${(this as Npc).id} id=$id delay=$delay prio=$priority cycle=${world.currentCycle}" }
         lastAnimation = if (id != -1) world.currentCycle + world.getAnimationDelay(id) else 0
         blockBuffer.animation = id
         blockBuffer.animationDelay = delay

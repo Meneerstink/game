@@ -235,3 +235,37 @@ research: `C:\RSPS\agent-handoffs\2026-09-27-breach-osrs-conformance-testplan.tx
   incl. BreachWikiInfoboxTests (every stat, immunity, weakness and max hit against the Annihilation infobox).
 Not proven by this run (needs the owner's client or OSRS recordings): what the real client renders / plays, target switching
 in multi against OSRS, Prime's projectile at melee distance.
+
+### Owner decisions and live report (2026-09-27 evening)
+- Multi-way target switching: every breach monster occasionally switches (1 in 5 swings) to another fightable player nearby,
+  like Zemouregal (owner decision; NpcAttacks.onAnySwing + maybeSwitchTarget). Single-way: never onto a player another breach
+  npc already targets (also in the aggro search - fixed a Zemouregal-summon pile-up the conformance run found).
+- Breach projectiles always show, also at melee distance (Dagannoth Prime; owner decision, ADAPTED one-tile flight).
+- Ruby bolts (e): max 30 (unchanged). God Wars room radius 8 (unchanged).
+- Owner live report: "sometimes nothing / only 1 monster": one monster per 2.5 min per site. Now half of a site's monsters come
+  out at once (localised 3, regional 12), the rest over 15 minutes (owner decision).
+- Boss Spawn: sound on appear / disappear - OSRS 4274 noa_rift_open_1 / 4322 noa_rift_end_screech_1 (owner choice, ADAPTED;
+  no OSRS breach sequence carries a frame sound, SkeletalBakeTool probe) imported as 10339 / 10340 (tx-20260927-145454).
+  Conformance event: 9 Boss Spawns added and all 9 deleted at the client, sounds 9/9. Client now logs every loc add / delete.
+- Thermonuclear smoke devil attacks every 2 ticks and Jaguar warrior every 6: both exactly the Annihilation infobox (measured).
+  Jaguar hits 4 times at once ("21 (x4)"), shown in the client's 4 hitsplat slots.
+
+### Late additions (2026-09-27 17:00-18:00)
+- Multicombat map: owner decision "DMM map everywhere" - the surface uses the tile-exact OSRS Wiki
+  Module:DeadmanAnnihilationMulticombatZones.json (164 polygons, data/cfg/areas/dmm-multicombat-zones.json, MultiCombatZones);
+  dungeons / instances keep multi.yml. The old multi.yml was wrong at 16 of 29 localised breach sites (e.g. Fountain of Rune,
+  Tithe Farm, Arceuus multi in OSRS). Underground multi breach sites (Ourania, Mor Ul Rek, Mole Hole) register their landing area
+  as multi. SOURCE CONFLICT: North-west of the Champions' Guild is single in the breach table but its spawner 3133,3395 lies in a
+  map polygon (map wins). Multi icon is checked per tick. Guard: MultiCombatZonesTests.
+- Sounds: every breach monster has an attack, defend and death sound (BreachAuditTests); added 3867 bandos_avatar_hit (Graardor
+  defend), 3860 saradomin_avatar_death (Zilyana death), ADAPTED 255 tzhaar_ket_attack_punch (Jad / Jad-Rek melee), 497
+  cave_horror_howl (Cave abomination attack) - tx-20260927-153802. Walk sounds: OSRS has them only as walk-sequence frame sounds
+  (Graardor, K'ril, Bee Swarm, Bloat) - all imported and audible (BreachSoundAuditTool: 21 OSRS sequences with sounds, 0 lost).
+- Overhead text: God Wars generals and the Big Evil Chicken talk (conformance column chats=).
+- Zemouregal Summons: routefinding and they follow into safe zones (OSRS Wiki "Zemouregal Summon").
+- Combat levels: the Annihilation infobox levels are sent as the level override at spawn (27 were older versions, e.g. Rex 479
+  -> 1104). Guard: BreachWikiInfoboxTests (hp, speed, levels, bonuses, immunities incl. freeze, weakness, max hits, combat, size).
+- Mechanics checked per monster in the conformance run (mech column): Dharok max hit at 10 % hp, Pyrelord burn 2x5, Tele Block
+  (Derwen, Zachariah), knockback (Sulphur Lizard), heal (Magic Mark), Ice Barrage freeze (Durial321), Sever (I DSCIM YOU), bee
+  stings under the swarm, Bloat flies, Splatter explosion (single: target only), Zemouregal summons, Jad-Rek, KBD toxic/ice/shock
+  effects, melee+ranged immunity (Porazdir, Derwen, Zachariah), freeze immunity.

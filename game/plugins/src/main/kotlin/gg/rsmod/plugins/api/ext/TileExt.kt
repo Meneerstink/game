@@ -4,6 +4,10 @@ import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.World
 
 fun Tile.isMulti(world: World): Boolean {
+    // Owner decision 2026-09-27: the surface follows the tile-exact OSRS Deadman: Annihilation multicombat map; dungeons and
+    // instances keep data/cfg/areas/multi.yml (MultiCombatZones).
+    val zones = gg.rsmod.plugins.content.mechanics.multi.MultiCombatZones
+    if (zones.loaded && zones.covers(x, z)) return zones.contains(x, z)
     val region = regionId
     val chunk = chunkCoords.hashCode()
     return world.getMultiCombatChunks().contains(chunk) || world.getMultiCombatRegions().contains(region)

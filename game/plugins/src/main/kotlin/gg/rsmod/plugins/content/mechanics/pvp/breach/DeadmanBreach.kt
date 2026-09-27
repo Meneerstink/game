@@ -101,6 +101,14 @@ object DeadmanBreach {
     const val GFX_BOSS_SPAWN = 3175
     const val GFX_BOSS_DESPAWN = 3176
 
+    /**
+     * Boss Spawn sounds (owner 2026-09-27: it must "spawn, make a sound and disappear"). The OSRS breach and Boss Spawn sequences
+     * carry no frame sounds (SkeletalBakeTool probe) and no breach sound name exists in the OSRS Wiki sound list, so the owner
+     * chose OSRS 4274 noa_rift_open_1 / 4322 noa_rift_end_screech_1 (ADAPTED), imported as 10339 / 10340 (tx-20260927-145454).
+     */
+    const val SFX_BOSS_SPAWN = 10339
+    const val SFX_BOSS_DESPAWN = 10340
+
     /** How long a Boss Spawn stands before its monster appears on top of it. */
     private const val BOSS_SPAWN_TICKS = 3
 
@@ -369,6 +377,17 @@ object DeadmanBreach {
      * Opens a breach now; [kind] null picks one of the two types at random, [only] (admin command) opens the location whose
      * name contains it. Returns the sites, or null when nothing is usable.
      */
+    /** The localised [Site] whose name contains [name], without opening anything (breach conformance harness). */
+    internal fun localisedSite(
+        world: World,
+        name: String,
+    ): Site? {
+        val locs = locations ?: loadLocations(world).also { locations = it }
+        val l = locs.localised.firstOrNull { it.name.contains(name, ignoreCase = true) } ?: return null
+        val landing = l.spawners.flatMap { s -> around(world, s, LOCAL_SPAWN_RADIUS) }.distinct()
+        return Site(Kind.LOCALISED, l.name, l.multi, l.spawners, landing, LOCALISED_MAX_NPCS)
+    }
+
     fun open(
         world: World,
         kind: Kind?,
@@ -476,8 +495,11 @@ object DeadmanBreach {
                 // F7: one bad tick (a failed spawn) is logged and skipped; it never ends the breach or leaves `active` set.
                 try {
                     opened.sites.forEach { site ->
-                        val interval = SPAWN_WINDOW_TICKS / site.maxNpcs
-                        if (site.spawned < site.maxNpcs && elapsed >= site.spawned * interval) fire(world, site)
+                        // Owner decision 2026-09-27: half of a site's monsters come out at once when the breach opens, the rest
+                        // spread over the 15 minutes (OSRS gives no cadence; one every 2.5 minutes looked like an empty breach).
+                        val burst = site.maxNpcs / 2
+                        val interval = SPAWN_WINDOW_TICKS / (site.maxNpcs - burst).coerceAtLeast(1)
+                        if (site.spawned < site.maxNpcs && (site.spawned < burst || elapsed >= (site.spawned - burst + 1) * interval)) fire(world, site)
                     }
 
                 } catch (e: Exception) {
@@ -575,6 +597,7 @@ object DeadmanBreach {
                 bossSpawn = DynamicObject(BOSS_SPAWN_LOC, 10, 0, centre).also { site.bossSpawns += it }
                 world.spawn(bossSpawn)
                 world.spawn(TileGraphic(centre, GFX_BOSS_SPAWN, height = 0))
+                world.spawn(gg.rsmod.game.model.entity.AreaSound(tile = centre, id = SFX_BOSS_SPAWN, radius = 15, volume = 1))
                 wait(BOSS_SPAWN_TICKS)
                 if (site.closed) return@queue
                 site.npcs += spawnMonster(world, monster.id, landing, if (site.kind == Kind.LOCALISED) LOCAL_SPAWN_RADIUS else REGIONAL_WANDER_RADIUS)
@@ -588,6 +611,7 @@ object DeadmanBreach {
                     if (site.bossSpawns.remove(it)) {
                         world.remove(it)
                         world.spawn(TileGraphic(it.tile, GFX_BOSS_DESPAWN, height = 0))
+                        world.spawn(gg.rsmod.game.model.entity.AreaSound(tile = it.tile, id = SFX_BOSS_DESPAWN, radius = 15, volume = 1))
                     }
                 }
             }
@@ -740,6 +764,7 @@ object DeadmanBreach {
         // OSRS Wiki: Durial321 "is also capable of running after his target, unlike most NPCs"; I DSCIM YOU "runs at its targets".
         if (id in BreachMonsters.RUNNERS) npc.attr[gg.rsmod.game.model.attr.NPC_RUNS_ATTR] = true
         world.spawn(npc)
+        BreachMonsters.BY_ID[id]?.let { m -> BreachMonsters.COMBAT_LEVEL_BY_OSRS[m.osrsId] }?.let { level -> if (level != npc.def.combatLevel) npc.setCombatLevel(level) }
         live += npc
         gg.rsmod.game.Server.logger.info("Breach monster {} spawned at {}.", id, tile)
         gg.rsmod.game.model.BreachTrace.log("breach.spawn") {

@@ -87,6 +87,17 @@ suspend fun cycle(it: QueueTask): Boolean {
     if (!Combat.canEngage(pawn, target)) {
         Combat.reset(pawn)
         pawn.resetFacePawn()
+        // Breach conformance 2026-09-27: a target that teleported far away ended combat here and the npc stood where it was,
+        // 13 tiles from its spawn (K'ril). Same rule as the leash below: back to its spawn area.
+        if (pawn is Npc) {
+            if (gg.rsmod.game.model.BreachTrace.watches(pawn.id)) {
+                gg.rsmod.game.model.BreachTrace.log("leash") {
+                    "npc=${pawn.id}#${pawn.index} at=${pawn.tile.x},${pawn.tile.z} spawn=${pawn.spawnTile.x},${pawn.spawnTile.z} " +
+                        "target=${(target as? Player)?.username ?: target.toString()}@${target.tile.x},${target.tile.z} result=cannot-engage-walk-home"
+                }
+            }
+            NpcLeash.returnHome(pawn)
+        }
         return false
     }
 

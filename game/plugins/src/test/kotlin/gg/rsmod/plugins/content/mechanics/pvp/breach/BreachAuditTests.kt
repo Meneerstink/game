@@ -67,8 +67,10 @@ class BreachAuditTests {
     }
 
     @Test
-    fun `A2 conformance - only Zemouregal and Durial321 route around obstacles`() {
-        assertEquals(setOf(14463, 14466), BreachMonsters.ROUTEFINDERS)
+    fun `A2 conformance - only Zemouregal, his summons and Durial321 route around obstacles`() {
+        // OSRS Wiki: Zemouregal and Zemouregal Summon "utilise routefinding", Durial321 "capable of pursuing targets".
+        assertEquals(setOf(14463, 14466, 14471, 14472, 14473, 14474, 14475, 14476), BreachMonsters.ROUTEFINDERS)
+        assertEquals(setOf(14471, 14472, 14473, 14474, 14475, 14476), BreachMonsters.FOLLOW_INTO_SAFE_ZONES)
     }
 
     @Test
@@ -91,6 +93,39 @@ class BreachAuditTests {
         DeadmanBreach.recordDamage(npc, mockk<gg.rsmod.game.model.entity.Player>(relaxed = true).also { every { it.username } returns "a" }, 500)
         DeadmanBreach.dropLoot(npc)
         verify(exactly = 0) { world.spawn(any<GroundItem>()) }
+    }
+
+    /**
+     * Owner 2026-09-27 ("check that every breach monster has all its sounds"): every attack section, the block and the death of
+     * every breach monster make a sound - from the section itself, the npc's combat-sound row, or an audible frame sound of the
+     * animation it plays (the client plays those for everyone in range).
+     */
+    @Test
+    fun `every breach monster has an attack, defend and death sound`() {
+        val audio = gg.rsmod.plugins.content.combat.audio.NpcCombatAudio
+        audio.load(Paths.get("..", "..", "data", "cfg", "npcs", "combat-sounds.json").toFile())
+        BreachMonsters.SOUND_ALIASES.forEach { (id, source) -> audio.alias(id, source) }
+        BreachMonsters.SOUND_ROWS.forEach { (id, s) ->
+            audio.register(
+                gg.rsmod.plugins.content.combat.audio.NpcCombatAudio.Row(
+                    id = id, name = BreachMonsters.BY_ID.getValue(id).name,
+                    attack = if (s.first >= 0) listOf(gg.rsmod.plugins.content.combat.audio.NpcCombatAudio.Sound(id = s.first)) else emptyList(),
+                    defend = s.second, death = s.third,
+                ),
+            )
+        }
+        fun frame(anim: Int) = anim >= 0 && definitions.getNullable(AnimDef::class.java, anim)?.hasAudibleFrameSounds == true
+        val missing = mutableListOf<String>()
+        BreachMonsters.ROSTER.filter { it.id != 14470 }.forEach { m ->
+            val row = audio.rowFor(m.id)
+            rows.getValue(m.id).attacks.forEach { a ->
+                val own = a.sounds.isNotEmpty() || a.targetSounds.isNotEmpty() || a.impactSounds.isNotEmpty()
+                if (!own && !frame(a.anim) && row?.attack.isNullOrEmpty()) missing += "${m.id} ${m.name}: attack section '${a.id}' (anim ${a.anim})"
+            }
+            if ((row?.defend ?: -1) < 0 && !frame(m.blockAnim)) missing += "${m.id} ${m.name}: defend (block anim ${m.blockAnim})"
+            if ((row?.death ?: -1) < 0 && !frame(m.deathAnim)) missing += "${m.id} ${m.name}: death (death anim ${m.deathAnim})"
+        }
+        assertTrue(missing.isEmpty(), "missing sounds:\n" + missing.joinToString("\n"))
     }
 
     companion object {

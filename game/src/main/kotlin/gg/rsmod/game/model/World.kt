@@ -555,6 +555,7 @@ class World(
     fun spawn(projectile: Projectile) {
         val tile = projectile.tile
         val chunk = chunks.getOrCreate(tile)
+        AvTrace.log { "projectile gfx=${projectile.gfx} from=$tile to=${projectile.targetPawn?.let { "${it.entityType}#${it.index}" } ?: projectile.targetTile} cycle=$currentCycle" }
         BreachTrace.log("projectile.spawn") { "gfx=${projectile.gfx} from=${tile.x},${tile.z} to=${projectile.targetPawn?.let { "${it.entityType}#${it.index}" } ?: projectile.targetTile}" }
 
         chunk.addEntity(this, projectile, tile)
@@ -563,6 +564,7 @@ class World(
     fun spawn(sound: AreaSound) {
         val tile = sound.tile
         val chunk = chunks.getOrCreate(tile)
+        AvTrace.log { "areasound id=${sound.id} at=$tile radius=${sound.radius} delay=${sound.delay} cycle=$currentCycle" }
         BreachTrace.log("areasound.spawn") { "id=${sound.id} at=${tile.x},${tile.z},${tile.height} radius=${sound.radius} delay=${sound.delay}" }
 
         chunk.addEntity(this, sound, tile)

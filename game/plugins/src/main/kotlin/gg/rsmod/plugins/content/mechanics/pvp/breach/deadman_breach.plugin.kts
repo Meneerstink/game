@@ -98,6 +98,20 @@ BreachMonsters.SOUND_ROWS.forEach { (id, s) ->
     )
 }
 
+/*
+ * Multi-way breach sites below the surface (Ourania Altar, Mor Ul Rek, the Mole Hole): the Deadman: Annihilation multicombat map
+ * covers the surface only (MultiCombatZones), but the wiki's breach table lists these sites as multi-way combat - their landing
+ * area (every chunk within LOCAL_SPAWN_RADIUS of a spawner) is registered as multi.
+ */
+DeadmanBreach.loadLocations().localised.filter { it.multi }.forEach { site ->
+    site.spawners.filter { !gg.rsmod.plugins.content.mechanics.multi.MultiCombatZones.covers(it.x, it.z) }.forEach { s ->
+        val r = DeadmanBreach.LOCAL_SPAWN_RADIUS
+        for (x in (s.x - r) until (s.x + r + 8) step 8) for (z in (s.z - r) until (s.z + r + 8) step 8) {
+            set_multi_combat_chunk(Tile(x, z, s.height).chunkCoords.hashCode())
+        }
+    }
+}
+
 on_world_init {
     DeadmanBreach.start(world)
     logger.info("Deadman breaches: {} monsters, next opening {}.", BreachMonsters.ROSTER.size, DeadmanBreach.nextOpening)
@@ -148,6 +162,7 @@ val TELEBLOCK_TICKS = 100
 listOf("breach_justiciar", "breach_derwen").forEach { def ->
     NpcAttacks.onImpact(def, "magic") { _, target ->
         if (target is Player && !target.timers.has(TELEBLOCK_TIMER)) {
+            gg.rsmod.game.model.BreachTrace.log("mech.teleblock") { "def=$def player=${target.username}" }
             target.timers[TELEBLOCK_TIMER] = TELEBLOCK_TICKS
             target.message("You have been teleblocked.")
         }
@@ -157,6 +172,7 @@ listOf("breach_justiciar", "breach_derwen").forEach { def ->
 
 /** Flaming pyrelord: "2 hitsplats of 5 burn damage each" per hit (ADAPTED: 4 ticks apart). */
 NpcAttacks.onImpact("breach_pyrelord", "magic") { _, target ->
+    gg.rsmod.game.model.BreachTrace.log("mech.burn") { "target=${(target as? Player)?.username ?: target.toString()}" }
     target.hit(5, HitType.REGULAR_HIT, delay = 4)
     target.hit(5, HitType.REGULAR_HIT, delay = 8)
     true
@@ -168,20 +184,27 @@ NpcAttacks.onImpact("breach_sulphur_lizard", "melee") { npc, target ->
     val dz = Integer.signum(target.tile.z - npc.tile.z)
     val dest = target.tile.transform(dx, dz)
     val dir = Direction.between(target.tile, dest)
-    if (dir != Direction.NONE && world.collision.canTraverse(target.tile, dir, projectile = false, water = false)) target.moveTo(dest)
+    val moved = dir != Direction.NONE && world.collision.canTraverse(target.tile, dir, projectile = false, water = false)
+    gg.rsmod.game.model.BreachTrace.log("mech.knockback") { "target=${(target as? Player)?.username ?: target.toString()} moved=$moved to=${dest.x},${dest.z}" }
+    if (moved) target.moveTo(dest)
     true
 }
 
 /** Magic Mark: blood spells "healing himself with the damage he deals". */
 NpcAttacks.onHitDealt("breach_magic_mark") { npc, _, _, damage ->
-    if (damage > 0) npc.setCurrentLifepoints((npc.getCurrentLifepoints() + damage).coerceAtMost(npc.getMaximumLifepoints()))
+    if (damage > 0) {
+        gg.rsmod.game.model.BreachTrace.log("mech.heal") { "npc=${npc.id}#${npc.index} +$damage hp=${npc.getCurrentLifepoints()}" }
+        npc.setCurrentLifepoints((npc.getCurrentLifepoints() + damage).coerceAtMost(npc.getMaximumLifepoints()))
+    }
 }
 
 /** Durial321: Ice Barrage freeze "lasts for a shorter duration than regular freezes" (ADAPTED: half of Ice Barrage's 32 ticks). */
 val DURIAL_FREEZE_TICKS = 16
 
 NpcAttacks.onImpact("breach_durial321", "ice_barrage") { _, target ->
-    target.freeze(DURIAL_FREEZE_TICKS)
+    val frozen = target.freeze(DURIAL_FREEZE_TICKS) {}
+    gg.rsmod.game.model.BreachTrace.log("mech.freeze") { "npc=durial target=${(target as? Player)?.username} applied=$frozen ticks=$DURIAL_FREEZE_TICKS" }
+    if (frozen && target is Player) target.message("You have been frozen.")
     true
 }
 
@@ -198,6 +221,7 @@ NpcAttacks.onImpact("breach_dscim", "sever") { _, target ->
         AncientCurses.deactivateCurse(target, AncientCurse.DEFLECT_MISSILES)
         AncientCurses.deactivateCurse(target, AncientCurse.DEFLECT_MELEE)
         Prayers.disableOverheads(target, 8)
+        gg.rsmod.game.model.BreachTrace.log("mech.sever") { "player=${target.username} overheadsDisabled=${Prayers.overheadsDisabled(target)}" }
         target.message("You have been injured!")
     }
     true
@@ -215,6 +239,7 @@ NpcAttacks.onAttack("breach_greater_abyssal_demon", "melee") { npc, target ->
             dest.z < target.tile.z + target.getSize() && target.tile.z < dest.z + size
     if (!overlaps && DeadmanBreach.fits(world, dest, size) && npc.lock.canMove()) {
         world.spawn(TileGraphic(tile = dest, id = Gfx.ABYSSAL_DEMON_TELEPORT, height = 0))
+        gg.rsmod.game.model.BreachTrace.log("mech.teleport") { "npc=${npc.id}#${npc.index} from=${npc.tile.x},${npc.tile.z} to=${dest.x},${dest.z}" }
         npc.teleportNpc(dest)
     }
 }
@@ -240,14 +265,32 @@ fun maybeSwitchTarget(npc: Npc, current: gg.rsmod.game.model.entity.Pawn, chance
     val others =
         DeadmanBreach.playersNear(world, npc.tile, SWITCH_RADIUS).filter { p ->
             p !== current && !p.isDead() && DeadmanBreach.canFight(p) &&
-                // single-way: never onto a player someone else is already fighting
-                (npc.tile.isMulti(world) || !p.isBeingAttacked() || p.getLastHitBy() === npc)
+                gg.rsmod.plugins.content.combat.NpcLeash.mayPursue(npc, p, NpcAttacks.attackRange(npc) ?: 1) &&
+                // single-way: never onto a player someone else is already fighting - or has just picked and not hit yet
+                // (conformance run 2026-09-27: a Zemouregal summon switched onto its master's target, two monsters on one player)
+                (
+                    npc.tile.isMulti(world) ||
+                        ((!p.isBeingAttacked() || p.getLastHitBy() === npc) && DeadmanBreach.live.none { it !== npc && !it.isDead() && it.getCombatTarget() === p })
+                )
         }
     val next = others.randomOrNull() ?: return
     world.queue {
         wait(1)
         if (world.npcs.contains(npc) && !npc.isDead() && world.players.contains(next)) npc.attack(next)
     }
+}
+
+/*
+ * Owner decision 2026-09-27 (OSRS sources silent except Zemouregal): in multi-way combat EVERY breach monster occasionally
+ * switches to another player nearby, like Zemouregal - 1 in MULTI_SWITCH_CHANCE swings. Single-way keeps one monster per player.
+ * Zemouregal and his summons keep their own hooks below.
+ */
+val MULTI_SWITCH_CHANCE = 5
+
+NpcAttacks.onAnySwing { npc, target, _ ->
+    if (!DeadmanBreach.isBreachNpc(npc) || npc.id == 14466 || BreachMonsters.BY_ID[npc.id]?.summon == true) return@onAnySwing
+    if (!npc.tile.isMulti(world) || !target.tile.isMulti(world)) return@onAnySwing
+    maybeSwitchTarget(npc, target, MULTI_SWITCH_CHANCE)
 }
 
 BreachMonsters.SUMMONS.forEach { s ->

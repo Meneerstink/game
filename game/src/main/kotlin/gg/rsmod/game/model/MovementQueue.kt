@@ -151,6 +151,7 @@ class MovementQueue(
                 if (pawn is Player) {
                     pawn.addBlock(UpdateBlockType.MOVEMENT)
                 }
+                if (pawn is Npc) reRegister(pawn)
             }
         }
     }
@@ -237,6 +238,22 @@ class MovementQueue(
             }
         }
         return false
+    }
+
+    /**
+     * Breach conformance 2026-09-27: [isEntityBlocked] finds npcs through their chunk registration, which [gg.rsmod.game.task.ChunkCreationTask]
+     * only refreshed once per tick. An npc that had already stepped this tick was then registered on its old tile while its
+     * `tile` was the new one, so the `other.tile != t` filter hid it at both places and a second npc stepping the same tick walked
+     * into it (two breach monsters ended up inside each other). OSRS moves npcs one after another against the current positions,
+     * so the npc is re-registered the moment it steps; ChunkCreationTask then finds nothing left to do for it.
+     */
+    private fun reRegister(npc: Npc) {
+        val world = npc.world
+        val last = npc.lastChunkTile
+        if (last != null && last.sameAs(npc.tile)) return
+        if (last != null) world.chunks.get(last)?.removeEntity(world, npc, last)
+        world.chunks.get(npc.tile, createIfNeeded = false)?.addEntity(world, npc, npc.tile)
+        npc.lastChunkTile = Tile(npc.tile)
     }
 
     private fun addStep(

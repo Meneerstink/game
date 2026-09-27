@@ -13,9 +13,11 @@ import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.service.GameService
 import gg.rsmod.game.system.GameSystem
+import gg.rsmod.plugins.api.ext.freeze
 import gg.rsmod.plugins.api.ext.hit
 import gg.rsmod.plugins.api.ext.isMulti
 import gg.rsmod.plugins.content.combat.getCombatTarget
+import gg.rsmod.plugins.content.combat.getLastHitBy
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.ChannelOutboundHandlerAdapter
 import io.netty.channel.ChannelPromise
@@ -80,6 +82,8 @@ object BreachConformance {
                             is SynthSoundMessage -> rec.lines += "t=$t sound id=${msg.sound}"
                             is MapProjAnimMessage -> rec.lines += "t=$t projectile gfx=${msg.gfx}"
                             is MapAnimMessage -> rec.lines += "t=$t tilegfx id=${msg.id}"
+                            is gg.rsmod.game.message.impl.LocAddChangeMessage -> rec.lines += "t=$t locadd id=${msg.id} tile=${msg.tile} settings=${msg.settings}"
+                            is gg.rsmod.game.message.impl.LocDelMessage -> rec.lines += "t=$t locdel tile=${msg.tile} settings=${msg.settings}"
                         }
                         ReferenceCountUtil.release(msg)
                         promise.setSuccess()
@@ -159,11 +163,18 @@ object BreachConformance {
                     repeat(DeadmanBreach.LOCALISED_MAX_NPCS) { sites.forEach { s -> DeadmanBreach.fire(world, s) } }
                     // overlap is judged right after landing (excluded bosses may walk through others afterwards, like in OSRS)
                     var overlapsAtLanding = 0
+                    val overlapPairs = LinkedHashSet<String>()
                     repeat(40) {
                         wait(1)
-                        val now = sites.flatMap { it.npcs }.filter { it.id !in BreachMonsters.COLLISION_EXCLUDED }
-                        overlapsAtLanding = maxOf(overlapsAtLanding, now.count { a -> now.any { b -> a !== b && a.tile.x < b.tile.x + b.getSize() && b.tile.x < a.tile.x + a.getSize() && a.tile.z < b.tile.z + b.getSize() && b.tile.z < a.tile.z + a.getSize() } })
+                        val now = sites.flatMap { it.npcs }.filter { it.id !in BreachMonsters.COLLISION_EXCLUDED && world.npcs.contains(it) }
+                        now.forEach { a -> now.forEach { b ->
+                            if (a.index < b.index && a.tile.height == b.tile.height && a.tile.x < b.tile.x + b.getSize() && b.tile.x < a.tile.x + a.getSize() && a.tile.z < b.tile.z + b.getSize() && b.tile.z < a.tile.z + a.getSize()) {
+                                overlapPairs += "${a.id}#${a.index}@${a.tile.x},${a.tile.z}+${b.id}#${b.index}@${b.tile.x},${b.tile.z}(t=${BreachTrace.cycle})"
+                            }
+                        } }
+                        overlapsAtLanding = overlapPairs.size
                     }
+                    if (overlapPairs.isNotEmpty()) say("event overlap pairs: " + overlapPairs.take(6).joinToString(" "))
                     val spawned = sites.flatMap { it.npcs }
                     val far =
                         spawned.filter { n ->
@@ -176,6 +187,12 @@ object BreachConformance {
                     val projectiles = got("projectile", BreachMonsters.GFX_BREACH_PROJECTILE)
                     val bossIn = got("tilegfx", DeadmanBreach.GFX_BOSS_SPAWN)
                     val bossOut = got("tilegfx", DeadmanBreach.GFX_BOSS_DESPAWN)
+                    // every Boss Spawn loc the watcher was sent must also be deleted again (a loc left in the client = "never disappears")
+                    val bossAdds = rec.filter { it.contains(" locadd id=${DeadmanBreach.BOSS_SPAWN_LOC} ") && tOf(it) >= t0 }.map { kv(it, "tile") }
+                    val bossDels = rec.filter { it.contains(" locdel ") && tOf(it) >= t0 }.map { kv(it, "tile") }
+                    val bossLeft = bossAdds.count { tile -> bossDels.none { it == tile } }
+                    val soundsIn = got("areasound", DeadmanBreach.SFX_BOSS_SPAWN)
+                    val soundsOut = got("areasound", DeadmanBreach.SFX_BOSS_DESPAWN)
                     val singleMulti = sites.map { it.multi }.toSet() == setOf(true, false)
                     val removed = DeadmanBreach.close(world)
                     wait(3)
@@ -187,12 +204,15 @@ object BreachConformance {
                             "spawned=${spawned.size}".takeIf { spawned.isEmpty() },
                             "further-than-9=${far.size}".takeIf { far.isNotEmpty() },
                             "overlapping=$overlaps".takeIf { overlaps > 0 },
+                            "bossSpawnNeverDeleted=$bossLeft".takeIf { bossLeft > 0 },
+                            "bossSpawnSounds=$soundsIn/$soundsOut".takeIf { soundsIn == 0 || soundsOut == 0 },
+                            "spawnerProjectiles=0".takeIf { projectiles == 0 },
                             "left-after-close=$left".takeIf { left > 0 },
                         )
                     say(
                         "event | localised | ${if (fails.isEmpty()) "PASS" else "FAIL(${fails.size})"} | sites single+multi=$singleMulti | spawned=${spawned.size} " +
                             "(max ${DeadmanBreach.LOCALISED_MAX_NPCS} per site) | furtherThan9=${far.size} | overlapping=$overlaps | watcher got projectiles=$projectiles " +
-                            "bossSpawnGfx=$bossIn bossDespawnGfx=$bossOut breachDespawnGfx=$despawnGfx | close removed=$removed left=$left ${fails.joinToString(" ")}",
+                            "bossSpawnGfx=$bossIn bossDespawnGfx=$bossOut bossLocAdd=${bossAdds.size} bossLocLeft=$bossLeft bossSounds=$soundsIn/$soundsOut breachDespawnGfx=$despawnGfx | close removed=$removed left=$left ${fails.joinToString(" ")}",
                     )
                     world.unregister(watcher)
                     bots -= watcher
@@ -206,7 +226,12 @@ object BreachConformance {
                         "leash (released, homeGap) | death (animSeenBy, removed) | invariants",
                 )
                 var n = 0
-                for (site in sites) {
+                // The event above uses whatever sites the breach picked; the per-monster phases always use the same two roomy
+                // reference sites, so a cramped random site (e.g. "West within Zanaris") cannot turn size-5 monsters into SKIPPED rows.
+                val phaseSites =
+                    listOf("West of the Ourania Altar", "North of Al Kharid").mapNotNull { DeadmanBreach.localisedSite(world, it) }
+                        .takeIf { it.size == 2 } ?: sites
+                for (site in phaseSites) {
                     val arena = site.landing.toHashSet()
                     val a = site.landing.minByOrNull { it.getDistance(site.spawners.first()) }!!
                     fun near(
@@ -280,6 +305,8 @@ object BreachConformance {
                 val g = maxOf(0, t.x - home.x, home.x - (t.x + size - 1)).coerceAtLeast(maxOf(0, t.z - home.z, home.z - (t.z + size - 1)))
                 // east of A: the bots B, C and O stand west of A, never between the monster and its target
                 t.x > home.x && g in 4..7 && DeadmanBreach.fits(world, t, size) && DeadmanBreach.canLeave(world, t, size) &&
+                    // a clear walk and line of sight to A (otherwise it is a safespot - authentic OSRS, but then nothing gets tested)
+                    world.collision.raycast(t, home, projectile = false) && world.collision.raycast(t, home, projectile = true) &&
                     // no other npc between the spot and A (a town npc in the way blocks it, as in OSRS, and the checks need a fight)
                     world.npcs.none { o -> o.tile.height == t.height && o.tile.x in minOf(home.x, t.x) - 1..maxOf(home.x, t.x + size) && o.tile.z in minOf(home.z, t.z) - 1..maxOf(home.z, t.z + size) } &&
                     bots.none { p -> p.tile.x in t.x until t.x + size && p.tile.z in t.z until t.z + size }
@@ -374,11 +401,43 @@ object BreachConformance {
         val soundsO = recv(o, "areasound", spawnT).size
         val skipped = p1.count { cat(it) == "zone.skip" && bots.any { p -> kv(it, "player") == p.username } }
         if (skipped > 0) invariant += " FAIL:zone.skip=$skipped"
-        val projSections = swings.count { kv(it, "projectiles") != "[]" }
+        val projSections = swings.count { s -> list(kv(s, "projectiles")).any { (it.toIntOrNull() ?: -1) >= 0 } }
         val projA = recv(a, "projectile", spawnT).size
         val projO = recv(o, "projectile", spawnT).size
         val soundCol = "server A=$soundsA O=$soundsO frame=$frameSounds per $attacks swings${if (attacks > 0 && soundsA == 0 && frameSounds == 0) " FAIL:silent" else ""}"
-        val projCol = if (projSections == 0) "-" else "A=$projA O=$projO of $projSections${if (projA == 0 || projO == 0) " FAIL" else ""}"
+        val projCol = if (projSections == 0) "-" else "A=$projA O=$projO of $projSections${if (projA < projSections || projO < projSections) " FAIL" else ""}"
+
+        // 1b. monster-specific mechanics that need a setup (OSRS Wiki "Deadman: Annihilation/Breach monsters" + monster pages)
+        val tMech = trace.size
+        var mechSetup = ""
+        when (m.id) {
+            14445 -> { // Dharok: "increases his max hit ... for every Hitpoint he is missing"
+                npc.setCurrentLifepoints((npc.getMaximumLifepoints() / 10).coerceAtLeast(1))
+                // re-engage A: after the multi-way phase Dharok may be on another bot or idle, which left the sample empty
+                npc.attack(a)
+                ticks(24)
+                val maxes = trace.subList(tMech, trace.size).filter { cat(it) == "hit" && it.contains(tag) }.mapNotNull { kv(it, "max")?.toDoubleOrNull() }
+                mechSetup = "dharokMaxAt10%=${maxes.maxOrNull() ?: "no-hit"}${if ((maxes.maxOrNull() ?: 0.0) <= 29.0) " FAIL(not above 29)" else ""}"
+                npc.setCurrentLifepoints(npc.getMaximumLifepoints())
+            }
+            14459 -> { // Bee Swarm: "Stepping beneath the bee swarm will result in taking damage"
+                val back = a.tile
+                a.moveTo(npc.tile)
+                ticks(4)
+                val stings = trace.subList(tMech, trace.size).count { cat(it) == "player.hit" && kv(it, "player") == a.username && (kv(it, "source") ?: "").contains("deadman_breach", ignoreCase = true) }
+                mechSetup = "stungUnderSwarm=$stings${if (stings == 0) " FAIL" else ""}"
+                a.moveTo(back)
+            }
+        }
+        // freeze immunity (infobox freezeresistance 100) - the others must freeze
+        run {
+            val t0 = trace.size
+            val took = npc.freeze(4) {}
+            val resisted = trace.subList(t0, trace.size).any { cat(it) == "freeze.resisted" && it.contains(tag) }
+            val immune = m.id in BreachMonsters.FREEZE_IMMUNE
+            mechSetup += " freeze=${if (took) "frozen" else if (resisted) "resisted" else "no(timer)"}${if (immune && took) " FAIL(immune)" else if (!immune && resisted) " FAIL(not immune)" else ""}"
+            ticks(6)
+        }
 
         // 2. B attacks the monster while it fights A
         val t2 = trace.size
@@ -391,12 +450,17 @@ object BreachConformance {
                 "switch=${if (switched) "yes" else "no"} (OSRS: only Zemouregal documented)"
             } else {
                 val ruling = p2.lastOrNull { cat(it) == "single" && kv(it, "attacker") == b.username && (kv(it, "target") ?: "").contains("${m.id}") }
-                val ok = ruling?.let { kv(it, "result") == "allowed" } ?: p2.any { cat(it) == "damage.in" && it.contains(tag) }
+                // refused because B is itself fought by another breach npc (a summon) is the correct single-way rule
+                val busyWithOther = ruling?.let { kv(it, "result") == "refused:single-attacker-under-attack" } == true &&
+                    (b.getLastHitBy() as? Npc)?.let { it !== npc && DeadmanBreach.isBreachNpc(it) } == true
+                val ok = busyWithOther || (ruling?.let { kv(it, "result") == "allowed" } ?: p2.any { cat(it) == "damage.in" && it.contains(tag) })
                 "allowed=${ruling?.let { kv(it, "result") } ?: "no-ruling"}${if (ok) "" else " FAIL"}"
             }
         b.resetInteractions()
 
-        // 3. C attacks A while the monster attacks A
+        // 3. C attacks A while the monster attacks A (the forced attack below ignores the single-way rules, so the monster's own
+        // summons - Zemouregal Summons, TzTok-Jad-Rek, ADAPTED side monsters - leave first; they would be a pile-up made by the test)
+        DeadmanBreach.live.filter { it !== npc && BreachMonsters.BY_ID[it.id]?.summon == true }.forEach { if (world.npcs.contains(it)) world.remove(it) }
         npc.attack(a)
         ticks(6)
         val t3 = trace.size
@@ -417,8 +481,11 @@ object BreachConformance {
         a.resetInteractions()
 
         // 4. A steps diagonally away (inside the leash): the monster's first step must be diagonal when it can be
+        // drop a route still queued towards another bot (multi phase), or its first step is measured as this one
+        npc.stopMovement()
+        ticks(1)
         val t4 = trace.size
-        val diag = arena.filter { t -> val dx = t.x - npc.tile.x; val dz = t.z - npc.tile.z; kotlin.math.abs(dx) in 4..7 && kotlin.math.abs(dz) in 4..7 }.minByOrNull { it.getDistance(npc.tile) }
+        val diag =arena.filter { t -> val dx = t.x - npc.tile.x; val dz = t.z - npc.tile.z; kotlin.math.abs(dx) in 4..7 && kotlin.math.abs(dz) in 4..7 }.minByOrNull { it.getDistance(npc.tile) }
         var diagCol = "n/a"
         if (diag != null) {
             a.moveTo(diag)
@@ -444,7 +511,12 @@ object BreachConformance {
                         val dir = gg.rsmod.game.model.Direction.values().firstOrNull { it.getDeltaX() == dx && it.getDeltaZ() == dz }
                         val open = dir != null && dx != 0 && dz != 0 &&
                             (0 until size).all { x -> (0 until size).all { z -> world.collision.canTraverse(start.transform(x, z), dir, projectile = false, water = false) } }
-                        if (open) "straight FAIL(diagonal was open)" else "straight (diagonal blocked)"
+                        // routefinders (Zemouregal, summons, Durial321) take a shortest route, which may start straight
+                        when {
+                            npc.id in BreachMonsters.ROUTEFINDERS -> "straight (routefinder)"
+                            open -> "straight FAIL(diagonal was open)"
+                            else -> "straight (diagonal blocked)"
+                        }
                     }
                 }
         }
@@ -475,10 +547,44 @@ object BreachConformance {
         bots.forEachIndexed { i, p -> p.moveTo(homes[i]) }
 
         val seenCol = seen()
-        val verdictFails = listOf(hitsCol, animCol, seenCol, aoe, soundCol, projCol, bCol, cCol, diagCol, leashCol, deathCol, invariant).count { it.contains("FAIL") || it.contains("MISSING") } +
+        // mechanics proven from the monster's whole trace
+        val all = trace.subList(traceStart, trace.size).toList()
+        fun n(c: String) = all.count { cat(it) == c && (it.contains(tag) || !it.contains("npc=")) }
+        val mechCol =
+            (
+                mechSetup + " " +
+                    when (m.id) {
+                        14451 -> { val burns = n("mech.burn"); val fives = all.count { cat(it) == "player.hit" && kv(it, "damage") == "5" && (kv(it, "source") ?: "").contains("deadman_breach", ignoreCase = true) }; "burn=$burns burnHits=$fives${if (burns == 0 || fives < 2 * burns) " FAIL" else ""}" }
+                        14447, 14448 -> { val tb = n("mech.teleblock"); "teleblock=$tb${if (tb == 0) " FAIL" else ""}" }
+                        14456 -> { val kb = n("mech.knockback"); "knockback=$kb${if (kb == 0) " FAIL" else ""}" }
+                        14464 -> { val h = n("mech.heal"); "heal=$h${if (h == 0) " FAIL" else ""}" }
+                        14463 -> { val fz = all.count { cat(it) == "mech.freeze" && kv(it, "applied") == "true" }; "iceBarrageFreeze=$fz${if (fz == 0) " FAIL" else ""}" }
+                        14469 -> { val sv = n("mech.sever"); "sever=$sv${if (sv == 0) " FAIL" else ""}" }
+                        14449 -> "teleports=${n("mech.teleport")}"
+                        14457 -> "fireballs=${all.count { cat(it) == "attack.swing" && it.contains(tag) && kv(it, "section") == "fireball" }}"
+                        14466 -> { val s = all.count { cat(it) == "breach.spawn" && Regex("npc=1447[1-6]#").containsMatchIn(it) }; "summons=$s${if (s == 0) " FAIL" else ""}" }
+                        14462 -> { val s = all.count { cat(it) == "breach.spawn" && it.contains("npc=14477#") }; "jadRek=$s${if (s == 0) " FAIL" else ""}" }
+                        14470 -> { val fl = all.count { cat(it) == "player.hit" && (kv(it, "source") ?: "").contains("deadman_breach", ignoreCase = true) }; "flyHits=$fl${if (fl == 0) " FAIL" else ""}" }
+                        14468 -> { val ex = all.filter { cat(it) == "player.hit" && (kv(it, "source") ?: "").contains("deadman_breach", ignoreCase = true) }.map { kv(it, "player") }.distinct().size; "explosionVictims=$ex${if (ex == 0 || (!site.multi && ex > 1)) " FAIL" else ""}" }
+                        14446, 14447, 14448 -> ""
+                        14439 -> {
+                            // KBD: "normal dragonfire as well as shock, ice, and poison dragonfire" - each special must carry its effect
+                            val imp = all.filter { cat(it) == "impact" && it.contains(tag) && kv(it, "landed") == "true" }
+                            val bad = imp.count { i -> when (kv(i, "section")) { "toxic" -> kv(i, "poison") == "0"; "ice" -> kv(i, "freeze") == "0"; "shock" -> kv(i, "drains") == "0"; else -> false } }
+                            "dragonfire=${imp.mapNotNull { kv(it, "section") }.distinct()}${if (bad > 0) " FAIL(effect missing $bad)" else ""}"
+                        }
+                        else -> ""
+                    } +
+                    if (m.immuneMelee) { val leak = all.count { cat(it) == "damage.in" && it.contains(tag) && (kv(it, "type") == "MELEE" || kv(it, "type") == "RANGE") && kv(it, "final") != "0" }; " meleeRangedImmune=${if (leak == 0) "ok" else "FAIL($leak)"}" } else ""
+            ).trim()
+        // overhead texts (OSRS: the God Wars generals shout, the Big Evil Chicken talks); a talker silent over 12+ swings is a FAIL
+        val chats = trace.subList(traceStart, trace.size).filter { cat(it) == "sync.block" && it.contains(tag) && kv(it, "viewer") == a.username && !it.endsWith("chat=-") }.size
+        val talkers = setOf(14442, 14443, 14444, 14467)
+        val chatCol = "chats=$chats${if (m.id in talkers && attacks >= 12 && chats == 0) " FAIL:silent-talker" else ""}"
+        val verdictFails = listOf(mechCol, chatCol, hitsCol, animCol, seenCol, aoe, soundCol, projCol, bCol, cCol, diagCol, leashCol, deathCol, invariant).count { it.contains("FAIL") || it.contains("MISSING") } +
             (if (!hitsOk) 1 else 0) + (if (attacks == 0 && m.id != 14470) 1 else 0) +
             (if (seenCol.split(',').any { s -> s.substringBefore('/') != s.substringAfter('/') }) 1 else 0)
         return "${m.id} ${m.name} | $siteName | ${if (verdictFails == 0) "PASS" else "FAIL($verdictFails)"} | attacks=$attacks first=$firstAttack | $animCol | seen $seenCol | aoe $aoe | " +
-            "hits=${if (hitsOk) "ok" else "FAIL"} $hitsCol | sounds $soundCol | proj $projCol | B $bCol | C $cCol | step $diagCol | $leashCol | death $deathCol |$invariant"
+            "hits=${if (hitsOk) "ok" else "FAIL"} $hitsCol | sounds $soundCol | $chatCol | mech ${mechCol.ifEmpty { "-" }} | proj $projCol | B $bCol | C $cCol | step $diagCol | $leashCol | death $deathCol |$invariant"
     }
 }

@@ -272,6 +272,15 @@ object OsrsFxImportTool {
             // 4025 earthsurge_cast_and_fire, 4026 earthsurge_hit, 4027 windsurge_hit, 4028 windsurge_cast_and_fire,
             // 4029 watersurge_hit, 4030 watersurge_cast_and_fire, 4031 firesurge_hit, 4032 firesurge_cast_and_fire.
             "surgesfx" to listOf(4025, 4026, 4027, 4028, 4029, 4030, 4031, 4032),
+            // Owner 2026-09-27 (Boss Spawn "must spawn, make a sound and disappear"; the OSRS breach sequences carry no frame
+            // sounds and no breach sound name exists in the list): 4274 noa_rift_open_1 (appear), 4322 noa_rift_end_screech_1
+            // (disappear) - ADAPTED, chosen by the owner.
+            "breachspawnsfx" to listOf(4274, 4322),
+            // Owner 2026-09-27 ("check that every breach monster has all its sounds", BreachAuditTests): OSRS Wiki "List of sound
+            // IDs" - 3867 godwars_bandos_avatar_hit (Graardor defend), 3860 godwars_saradomin_avatar_death (Zilyana death);
+            // ADAPTED by name family where OSRS names none: 255 tzhaar_ket_attack_punch (TzTok-Jad / Jad-Rek melee), 497
+            // cave_horror_howl (Cave abomination attack, which already uses the Cave horror hit / death sounds).
+            "breachsfx2" to listOf(3867, 3860, 255, 497),
         )
 
     // ---- smart values ---------------------------------------------------------------------------

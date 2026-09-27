@@ -84,6 +84,7 @@ object GodWarsGenerals {
     fun installAttackHooks() {
         shouts.forEach { (combatDef, lines) ->
             NpcAttacks.onSwing(combatDef) { npc, _, attack ->
+                gg.rsmod.game.model.BreachTrace.log("shout.roll") { "npc=${npc.id}#${npc.index} def=$combatDef section=${attack.id} say='${attack.say}'" }
                 // An attack with its own `say` (K'ril's slam) already shouted.
                 if (attack.say.isEmpty() && npc.world.random(4) == 0) {
                     val (line, sound) = lines.random()

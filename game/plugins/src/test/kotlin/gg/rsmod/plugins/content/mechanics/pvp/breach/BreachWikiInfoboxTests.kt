@@ -95,6 +95,28 @@ class BreachWikiInfoboxTests {
         assertTrue(failures.isEmpty(), failures.joinToString("\n"))
     }
 
+    /** Combat level and size of every breach npc in the game cache against its Annihilation infobox ("combat", "size"). */
+    @Test
+    fun `every breach monster has the Annihilation combat level and size in the cache`() {
+        val store = com.displee.cache.CacheLibrary(Paths.get("..", "..", "data", "cache").toString())
+        val failures = mutableListOf<String>()
+        try {
+            val defs = gg.rsmod.game.fs.DefinitionSet()
+            defs.load(store, gg.rsmod.game.fs.def.NpcDef::class.java)
+            BreachMonsters.ROSTER.filter { it.name != "Zemouregal Summon" }.forEach { m ->
+                val box = infobox(m.osrsId) ?: return@forEach
+                val def = defs.getNullable(gg.rsmod.game.fs.def.NpcDef::class.java, m.id) ?: return@forEach failures.add("${m.name}: no npc ${m.id}").let { }
+                // shown level = the spawn override (BreachMonsters.COMBAT_LEVEL_BY_OSRS) or the cache level
+                val shown = BreachMonsters.COMBAT_LEVEL_BY_OSRS[m.osrsId] ?: def.combatLevel
+                box.int("combat")?.let { if (it != shown) failures += "${m.name}: combat level shown=$shown (cache ${def.combatLevel}) wiki=$it" }
+                box.int("size")?.let { if (it != def.size) failures += "${m.name}: size cache=${def.size} wiki=$it" }
+            }
+        } finally {
+            store.close()
+        }
+        assertTrue(failures.isEmpty(), failures.joinToString("\n"))
+    }
+
     /**
      * The infobox "max hit" of the Annihilation version ("60 (Melee)", "43 (Magic), 16 (Melee)", "21 (x4)", "78 (Melee), 108") must
      * be a max hit of one of the monster's attack sections of that style. "?" and extras the sections do not model ("(Explosion)",

@@ -263,6 +263,13 @@ object NpcAttacks {
         swingHooks[combatDef] = hook
     }
 
+    private val anySwingHooks = java.util.concurrent.CopyOnWriteArrayList<(Npc, Pawn, Attack) -> Unit>()
+
+    /** Runs once per swing of ANY data-driven npc, after its combat-definition swing hook (content filters the npcs it cares about). */
+    fun onAnySwing(hook: (npc: Npc, target: Pawn, attack: Attack) -> Unit) {
+        anySwingHooks += hook
+    }
+
     /** Runs for every hit of [combatDef] after the accuracy roll and before the hit is dealt. */
     fun onHitRoll(
         combatDef: String,
@@ -431,6 +438,7 @@ object NpcAttacks {
         playSounds(npc, attack.sounds, null, areaRadiusFor(npc))
         if (attack.say.isNotEmpty()) npc.forceChat(attack.say)
         swingHooks[row.combatDef]?.invoke(npc, primaryTarget, attack)
+        anySwingHooks.forEach { it(npc, primaryTarget, attack) }
 
         // Target(s)
         val targetSet = targets(npc, primaryTarget, attack)
@@ -446,6 +454,10 @@ object NpcAttacks {
                     "gfx=${attack.gfx.map { it.id }} sounds=${attack.sounds.map { it.id }} projectiles=${attack.projectiles.map { it.id }} targetGfx=${attack.targetGfx.map { it.id }} " +
                     "impactGfx=${attack.impactGfx.map { it.id }} targetSounds=${attack.targetSounds.map { it.id }} impactSounds=${attack.impactSounds.map { it.id }}"
             }
+        }
+        gg.rsmod.game.model.AvTrace.log {
+            "npcattack npc=${npc.id}#${npc.index} section=${attack.id} anim=$anim primary=${primaryTarget.entityType}#${primaryTarget.index} " +
+                "targets=${targetSet.joinToString(",") { "${it.entityType}#${it.index}" }} cycle=${npc.world.currentCycle}"
         }
         for (target in targetSet) {
             val targetHeight = heightOf(target)
@@ -643,7 +655,10 @@ object NpcAttacks {
                 else -> Tile(target.tile.x.coerceIn(npc.tile.x, npc.tile.x + size - 1), target.tile.z.coerceIn(npc.tile.z, npc.tile.z + size - 1), npc.tile.height)
             }
         val distance = max(abs(source.x - target.tile.x), abs(source.z - target.tile.z)) - 1
-        val flightTime = p.timeOffset + distance * p.multiplier
+        var flightTime = p.timeOffset + distance * p.multiplier
+        // Owner decision 2026-09-27: a breach monster always shows its projectile, also next to its target (Dagannoth Prime's
+        // Void timing -5 + 10 x distance gave none at melee distance). ADAPTED: at least one tile's flight time.
+        if (flightTime < 0 && gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.isBreachNpc(npc)) flightTime = abs(p.multiplier).coerceAtLeast(5)
         if (flightTime < 0) return -1
         val startDelay = p.delay ?: p.defDelay
         val curveMin = p.curveMin

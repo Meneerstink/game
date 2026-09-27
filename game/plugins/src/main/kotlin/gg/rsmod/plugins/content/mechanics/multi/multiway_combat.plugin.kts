@@ -1,51 +1,47 @@
 package gg.rsmod.plugins.content.mechanics.multi
 
+import gg.rsmod.game.Server.Companion.logger
 import gg.rsmod.plugins.api.ext.isMulti
 
 val MULTIWAY_VARC = 616
 
 load_service(MultiService())
 
-// R03.4: the crossed-swords multi-combat icon previously had no login/reconnect check at all -
-// only on_enter/on_exit region/chunk set it, so a player logging in (or reconnecting) already
-// standing inside a multi-combat zone would see no icon until they next crossed a region/chunk
-// boundary. Set the correct initial state immediately, same pattern wilderness.plugin.kts uses
-// for the danger icon.
+// Owner decision 2026-09-27: the surface uses the tile-exact OSRS Deadman: Annihilation multicombat map (MultiCombatZones);
+// multi.yml keeps covering dungeons and instances.
+val zoneTiles = MultiCombatZones.load()
+logger.info("Multicombat: {} surface tiles from the Deadman: Annihilation map ({}).", zoneTiles, MultiCombatZones.PATH)
+
+/*
+ * The crossed-swords icon. It used to be set by on_enter/on_exit region/chunk hooks of multi.yml; the surface zones are now
+ * tile-exact, so every player's icon is checked each tick instead (one set lookup) and only sent when it changes. R03.4 (the
+ * icon must also be right at login / reconnect) is kept by the first check right after login.
+ */
+val MULTI_ICON_TIMER = TimerKey()
+val MULTI_ICON_STATE = AttributeKey<Boolean>()
+
+fun refreshIcon(player: Player) {
+    val multi = player.tile.isMulti(world)
+    if (player.attr[MULTI_ICON_STATE] != multi) {
+        player.attr[MULTI_ICON_STATE] = multi
+        player.setVarc(MULTIWAY_VARC, if (multi) 1 else 0)
+    }
+}
+
 on_login {
-    player.setVarc(MULTIWAY_VARC, if (player.tile.isMulti(world)) 1 else 0)
+    player.attr.remove(MULTI_ICON_STATE)
+    refreshIcon(player)
+    player.timers[MULTI_ICON_TIMER] = 1
+}
+
+on_timer(MULTI_ICON_TIMER) {
+    refreshIcon(player)
+    player.timers[MULTI_ICON_TIMER] = 1
 }
 
 on_world_init {
     world.getService(MultiService::class.java)!!.let { service ->
-        // Handling Regions
-        service.multiRegions.forEach { region ->
-            set_multi_combat_region(region)
-            on_enter_exit_region(region)
-        }
-        // Handling Chunks
-        service.multiChunks.forEach { chunk ->
-            set_multi_combat_chunk(chunk)
-            on_enter_exit_chunk(chunk)
-        }
-    }
-}
-
-fun on_enter_exit_region(region: Int) {
-    on_enter_region(region) {
-        player.setVarc(MULTIWAY_VARC, 1)
-    }
-
-    on_exit_region(region) {
-        player.setVarc(MULTIWAY_VARC, 0)
-    }
-}
-
-fun on_enter_exit_chunk(chunk: Int) {
-    on_enter_chunk(chunk) {
-        player.setVarc(MULTIWAY_VARC, 1)
-    }
-
-    on_exit_chunk(chunk) {
-        player.setVarc(MULTIWAY_VARC, 0)
+        service.multiRegions.forEach { region -> set_multi_combat_region(region) }
+        service.multiChunks.forEach { chunk -> set_multi_combat_chunk(chunk) }
     }
 }

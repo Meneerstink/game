@@ -206,6 +206,12 @@ fun refusal(
     // ... also when another npc picked him on this same tick and has not hit yet (idle breach monsters chose him together).
     val aggressor = target.getAggressor()
     if (!target.tile.isMulti(world) && aggressor is Npc && aggressor !== npc && !aggressor.isDead() && aggressor.getCombatTarget() === target) return "single-picked-by-other"
+    // ... and for breach monsters any other live breach npc that targets him (a retaliating one never sets the aggressor attribute)
+    if (!target.tile.isMulti(world) && gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.isBreachNpc(npc) &&
+        gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.live.any { it !== npc && !it.isDead() && it.getCombatTarget() === target }
+    ) {
+        return "single-targeted-by-other"
+    }
     return null
 }
 
