@@ -6487,6 +6487,258 @@
       "type": 10,
       "rot": 0,
       "group": 502
+    },
+    {
+      "op": "remove",
+      "id": 12975,
+      "x": 3160,
+      "z": 3492,
+      "level": 1,
+      "type": 10,
+      "rot": 0,
+      "group": 503
+    },
+    {
+      "op": "spawn",
+      "id": 12975,
+      "x": 3162,
+      "z": 3493,
+      "level": 2,
+      "type": 10,
+      "rot": 1,
+      "note": "Royal Hall: casino moved up to the second upper floor (owner 2026-09-27)",
+      "group": 503
+    },
+    {
+      "op": "remove",
+      "id": 62895,
+      "x": 3162,
+      "z": 3495,
+      "level": 1,
+      "type": 10,
+      "rot": 0,
+      "group": 504
+    },
+    {
+      "op": "spawn",
+      "id": 62895,
+      "x": 3162,
+      "z": 3496,
+      "level": 2,
+      "type": 10,
+      "rot": 0,
+      "note": "Royal Hall: casino moved up to the second upper floor (owner 2026-09-27)",
+      "group": 504
+    },
+    {
+      "op": "npc_remove",
+      "id": 3002,
+      "x": 3161,
+      "z": 3494,
+      "level": 1,
+      "type": 10,
+      "rot": 0,
+      "group": 505
+    },
+    {
+      "op": "npc_spawn",
+      "id": 3002,
+      "x": 3163,
+      "z": 3496,
+      "level": 2,
+      "type": 10,
+      "rot": 4,
+      "note": "Royal Hall: casino moved up to the second upper floor (owner 2026-09-27)",
+      "group": 505
+    },
+    {
+      "op": "remove",
+      "id": 12975,
+      "x": 3167,
+      "z": 3492,
+      "level": 1,
+      "type": 10,
+      "rot": 0,
+      "group": 506
+    },
+    {
+      "op": "spawn",
+      "id": 12975,
+      "x": 3166,
+      "z": 3493,
+      "level": 2,
+      "type": 10,
+      "rot": 1,
+      "note": "Royal Hall: casino moved up to the second upper floor (owner 2026-09-27)",
+      "group": 506
+    },
+    {
+      "op": "remove",
+      "id": 62896,
+      "x": 3167,
+      "z": 3494,
+      "level": 1,
+      "type": 10,
+      "rot": 0,
+      "group": 507
+    },
+    {
+      "op": "spawn",
+      "id": 62896,
+      "x": 3167,
+      "z": 3496,
+      "level": 2,
+      "type": 10,
+      "rot": 0,
+      "note": "Royal Hall: casino moved up to the second upper floor (owner 2026-09-27)",
+      "group": 507
+    },
+    {
+      "op": "npc_remove",
+      "id": 2998,
+      "x": 3168,
+      "z": 3494,
+      "level": 1,
+      "type": 10,
+      "rot": 0,
+      "group": 508
+    },
+    {
+      "op": "npc_spawn",
+      "id": 2998,
+      "x": 3166,
+      "z": 3496,
+      "level": 2,
+      "type": 10,
+      "rot": 4,
+      "note": "Royal Hall: casino moved up to the second upper floor (owner 2026-09-27)",
+      "group": 508
+    },
+    {
+      "op": "remove",
+      "id": 12975,
+      "x": 3160,
+      "z": 3487,
+      "level": 1,
+      "type": 10,
+      "rot": 2,
+      "group": 509
+    },
+    {
+      "op": "spawn",
+      "id": 12975,
+      "x": 3162,
+      "z": 3487,
+      "level": 2,
+      "type": 10,
+      "rot": 3,
+      "note": "Royal Hall: casino moved up to the second upper floor (owner 2026-09-27)",
+      "group": 509
+    },
+    {
+      "op": "remove",
+      "id": 62897,
+      "x": 3162,
+      "z": 3486,
+      "level": 1,
+      "type": 10,
+      "rot": 0,
+      "group": 510
+    },
+    {
+      "op": "spawn",
+      "id": 62897,
+      "x": 3162,
+      "z": 3486,
+      "level": 2,
+      "type": 10,
+      "rot": 0,
+      "note": "Royal Hall: casino moved up to the second upper floor (owner 2026-09-27)",
+      "group": 510
+    },
+    {
+      "op": "npc_remove",
+      "id": 3003,
+      "x": 3161,
+      "z": 3486,
+      "level": 1,
+      "type": 10,
+      "rot": 0,
+      "group": 511
+    },
+    {
+      "op": "npc_spawn",
+      "id": 3003,
+      "x": 3163,
+      "z": 3486,
+      "level": 2,
+      "type": 10,
+      "rot": 0,
+      "note": "Royal Hall: casino moved up to the second upper floor (owner 2026-09-27)",
+      "group": 511
+    },
+    {
+      "op": "remove",
+      "id": 12975,
+      "x": 3167,
+      "z": 3487,
+      "level": 1,
+      "type": 10,
+      "rot": 2,
+      "group": 512
+    },
+    {
+      "op": "spawn",
+      "id": 12975,
+      "x": 3166,
+      "z": 3487,
+      "level": 2,
+      "type": 10,
+      "rot": 3,
+      "note": "Royal Hall: casino moved up to the second upper floor (owner 2026-09-27)",
+      "group": 512
+    },
+    {
+      "op": "remove",
+      "id": 62898,
+      "x": 3167,
+      "z": 3486,
+      "level": 1,
+      "type": 10,
+      "rot": 0,
+      "group": 513
+    },
+    {
+      "op": "spawn",
+      "id": 62898,
+      "x": 3167,
+      "z": 3486,
+      "level": 2,
+      "type": 10,
+      "rot": 0,
+      "note": "Royal Hall: casino moved up to the second upper floor (owner 2026-09-27)",
+      "group": 513
+    },
+    {
+      "op": "npc_remove",
+      "id": 3001,
+      "x": 3168,
+      "z": 3486,
+      "level": 1,
+      "type": 10,
+      "rot": 0,
+      "group": 514
+    },
+    {
+      "op": "npc_spawn",
+      "id": 3001,
+      "x": 3166,
+      "z": 3486,
+      "level": 2,
+      "type": 10,
+      "rot": 0,
+      "note": "Royal Hall: casino moved up to the second upper floor (owner 2026-09-27)",
+      "group": 514
     }
   ]
 }

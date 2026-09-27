@@ -7,9 +7,9 @@ import com.displee.cache.CacheLibrary
  * niet echt uit als een paleis", "please dont stop untill its perfet").
  *
  * The Legends' Guild slate roof piece 41409 rises 70 (old model units) across one tile, and the client stacks roof rings
- * on higher levels, but a map square has only four. The hall's roof needs five slate rings, so rings 3-5 are copies of
- * 41409 whose vertical offset (loc opcode 71) lifts them onto the ring below: ring 2 is 41409 itself on level 3, ring k
- * sits 70 * (k - 2) higher. The small glass lantern on top is a copy of the glass roof piece 47841 lifted onto ring 5.
+ * on higher levels, but a map square has only four. The hall's roof needs five slate rings, so rings 2-5 are copies of
+ * 41409 whose vertical offset (loc opcode 71) lifts them onto the ring below: all five stand on level 3 (the hall has two
+ * upper storeys since 2026-09-27), ring 2 lifted [RING2_LIFT], ring k another 70 * (k - 2). The small glass lantern on top is a copy of the glass roof piece 47841 lifted onto ring 5.
  * Nothing else about the definitions changes (models, shapes, recolours, no options), so they look and behave like the
  * originals. The hall's fountain is a byte-exact copy of the Grand Exchange fountain 47150 (owner 2026-09-25: the hall
  * moved onto the exchange's centre, where the owner's own world edit removes 47150 from that tile). Appended as new loc
@@ -30,17 +30,29 @@ object RoyalHallLocTool {
     private const val SLATE_BASE_OFFSET = -6
     private const val SLATE_RISE = 70
 
-    /** Glass slope faces start 16 above the loc; the lantern's base meets the top of ring 5 (216 + 70 above level 3). */
-    private const val GLASS_OFFSET = -(3 * SLATE_RISE + SLATE_RISE - SLATE_BASE_OFFSET - 16)
+    /**
+     * The roof stands on level 3 since the hall's second upper storey (owner 2026-09-27: "bouw een extra verdieping"; level 2
+     * is that storey now). Ring 1 is 62773 itself on level 3; ring 2 used to be 62773 one level higher, on level 3's 72-unit
+     * step above level 2 (RoyalHallMapTool.STOREY_STEPS then 30, 30, 9). With every storey 240 high there is no such step
+     * left, so ring 2 is a copy lifted by that step and every ring above it lifts by it as well: the roof keeps its shape.
+     */
+    private const val RING2_LIFT = 72
+
+    /** Glass slope faces start 16 above the loc; the lantern's base meets the top of ring 5 (216 + 70 above ring 2). */
+    private const val GLASS_OFFSET = -(3 * SLATE_RISE + SLATE_RISE - SLATE_BASE_OFFSET - 16) - RING2_LIFT
+
+    /** Ring 2 of the roof: the royal slate lifted by [RING2_LIFT] onto ring 1 (both on level 3). */
+    const val ROOF_RING2 = 62900
 
     /** A copy of [source]; [offset] replaces its vertical offset (opcode 71), null keeps the definition byte-exact. */
     class Copy(val id: Int, val source: Int, val offset: Int?, val label: String)
 
     val COPIES =
         listOf(
-            Copy(62754, SLATE, SLATE_BASE_OFFSET - SLATE_RISE, "Royal Hall roof ring 3 (slate 41409 raised 70)"),
-            Copy(62755, SLATE, SLATE_BASE_OFFSET - 2 * SLATE_RISE, "Royal Hall roof ring 4 (slate 41409 raised 140)"),
-            Copy(62756, SLATE, SLATE_BASE_OFFSET - 3 * SLATE_RISE, "Royal Hall roof ring 5 (slate 41409 raised 210)"),
+            Copy(ROOF_RING2, SLATE, SLATE_BASE_OFFSET - RING2_LIFT, "Royal Hall roof ring 2 (slate 41409 raised 72, on level 3)"),
+            Copy(62754, SLATE, SLATE_BASE_OFFSET - RING2_LIFT - SLATE_RISE, "Royal Hall roof ring 3 (slate 41409 raised 72 + 70)"),
+            Copy(62755, SLATE, SLATE_BASE_OFFSET - RING2_LIFT - 2 * SLATE_RISE, "Royal Hall roof ring 4 (slate 41409 raised 72 + 140)"),
+            Copy(62756, SLATE, SLATE_BASE_OFFSET - RING2_LIFT - 3 * SLATE_RISE, "Royal Hall roof ring 5 (slate 41409 raised 72 + 210)"),
             Copy(62757, GLASS, GLASS_OFFSET, "Royal Hall glass lantern (glass roof 47841 raised onto ring 5)"),
             Copy(62758, FOUNTAIN, null, "Royal Hall fountain (exact copy of the Grand Exchange fountain 47150)"),
         )
@@ -94,7 +106,8 @@ object RoyalHallLocTool {
         // dark granite (tower_colours.png e): every stone tone (hue 6) greyed at 0.55 of its lightness. At 1.75 high the
         // crown ended level with the parapet (plane 2, 480 + 129) and the roof edge ran across it (owner 2026-09-26: "de 4
         // towers lopen niet smooth door op het dak"); at 2.25 (453 x 2.25 = 1019) the parapet meets the shaft and the
-        // crown stands clear above the roof's eaves.
+        // crown stands clear above the roof's eaves. Owner 2026-09-27 ("hoektorens lopen door"): the hall has a second upper
+        // storey and the parapet moved up 240 to level 3, so the towers are 2.75 high (1246): the same clearance above it.
         val recolour = java.io.ByteArrayOutputStream()
         recolour.write(40)
         recolour.write(TURRET_STONE.size)
@@ -102,7 +115,7 @@ object RoyalHallLocTool {
             val granite = (c and 0x7F) * 55 / 100
             recolour.write(byteArrayOf((c shr 8).toByte(), c.toByte(), (granite shr 8).toByte(), granite.toByte()))
         }
-        return withModel(TURRET_LOC, byteArrayOf(65, 0, 176.toByte(), 66, 1, 32, 67, 0, 176.toByte()) + recolour.toByteArray() + def, TURRET_MODEL, TURRET_MODEL_CLEAN)
+        return withModel(TURRET_LOC, byteArrayOf(65, 0, 176.toByte(), 66, 1, 96, 67, 0, 176.toByte()) + recolour.toByteArray() + def, TURRET_MODEL, TURRET_MODEL_CLEAN)
     }
 
     /**
@@ -512,6 +525,41 @@ object RoyalHallLocTool {
         return out.toByteArray()
     }
 
+    /**
+     * The middle staircase (level 1) between the bottom (level 0) and the top (level 2) since the hall's second upper storey:
+     * 34872 (the set's middle piece, flights up and down) in the hall's marble and gold, with exactly "Climb-up" and
+     * "Climb-down".
+     */
+    private fun premiumStairsMiddle(def: ByteArray): ByteArray {
+        val stairs = withoutOptions(premiumStairs(def))
+        val latin = Charsets.ISO_8859_1
+        return stairs.copyOfRange(0, stairs.size - 1) + byteArrayOf(30) + "Climb-up".toByteArray(latin) + byteArrayOf(0, 31) +
+            "Climb-down".toByteArray(latin) + byteArrayOf(0, 0)
+    }
+
+    /**
+     * The upper balconies' parapet (owner 2026-09-27, option C of C:/RSPS/foto/mansion_level2_options.png): the Falador
+     * castle's crenellated parapet 11831 - the roof's own parapet - in white marble (its cream tones near-white).
+     */
+    private fun marbleParapet(def: ByteArray): ByteArray {
+        // 11831 already recolours its two darker creams (14ca, 18cc) to the model's own 20d6 / 20ce: that recolour is
+        // replaced by one that turns all four tones near-white.
+        val at = opcodePosition(11831, def, 40)
+        check(at >= 0 && def[at + 1] == 2.toByte()) { "parapet recolour is not the expected two pairs" }
+        val pairs = listOf(0x14ca to 0x0074, 0x18cc to 0x0076, 0x20ce to 0x0078, 0x20d6 to 0x007C)
+        val out = java.io.ByteArrayOutputStream()
+        out.write(def, 0, at)
+        out.write(40)
+        out.write(pairs.size)
+        pairs.forEach { (s, d) -> out.write(byteArrayOf((s shr 8).toByte(), s.toByte(), (d shr 8).toByte(), d.toByte())) }
+        val rest = at + 2 + 2 * 4
+        out.write(def, rest, def.size - rest)
+        return out.toByteArray()
+    }
+
+    const val STAIRS_MIDDLE = 62901
+    const val BALCONY_PARAPET = 62902
+
     /** [def] with [pairs] (source colour to target colour) as its only recolour, inserted before everything else. */
     private fun recoloured(def: ByteArray, pairs: List<Pair<Int, Int>>, prefix: ByteArray = ByteArray(0)): ByteArray {
         check(opcodePosition(0, def, 40) < 0) { "already recoloured" }
@@ -592,7 +640,7 @@ object RoyalHallLocTool {
     }
 
     /** Variants that keep their menu options (the staircases). */
-    val WITH_OPTIONS = setOf(62779, 62780)
+    val WITH_OPTIONS = setOf(62779, 62780, STAIRS_MIDDLE)
 
     /** [def] made see-through for projectiles (opcode 18), so npcs behind it are talked to across it like a bank booth. */
     private fun counterReach(def: ByteArray): ByteArray {
@@ -614,7 +662,9 @@ object RoyalHallLocTool {
             // 34871 is the set's real bottom piece (model 36515, "Climb-up"); the middle piece 34872 it was copied from before
             // carries the flight down, whose steps poked through the hall's floor (owner 2026-09-27, foto mansion_bug4).
             Variant(62779, 34871, "Royal Hall spiral staircase (bottom): white marble, gilded rails, Climb-up only", ::premiumStairsBottom),
+            Variant(STAIRS_MIDDLE, 34872, "Royal Hall spiral staircase (middle, level 1): white marble, gilded rails, Climb-up / Climb-down", ::premiumStairsMiddle),
             Variant(62780, 34873, "Royal Hall spiral staircase (top): white marble, gilded rails", ::premiumStairs),
+            Variant(BALCONY_PARAPET, 11831, "Royal Hall upper balcony parapet: the crenellated parapet 11831 in white marble", ::marbleParapet),
             Variant(62768, 15548, "78 carpet corner (Varrock carpet 15548 with the 78 texture)", ::with78Carpet),
             Variant(62769, 15549, "78 carpet edge (Varrock carpet 15549 with the 78 texture)", ::with78Carpet),
             Variant(62770, 15550, "78 carpet middle (Varrock carpet 15550 with the 78 texture)", ::with78Carpet),
@@ -892,6 +942,7 @@ object RoyalHallLocTool {
                 val expectedModels = before.allModels.map { if (it == TURRET_MODEL && v.source == TURRET_LOC) TURRET_MODEL_CLEAN else it }
                 check(after.allModels == expectedModels && (v.id in WITH_OPTIONS || after.options.all { it == null || it.equals("hidden", true) })) { "variant ${v.id} is wrong" }
                 check(v.id != 62779 || after.options.toList() == listOf("Climb-up", null, null, null, null)) { "bottom staircase options ${after.options.toList()}" }
+                check(v.id != STAIRS_MIDDLE || after.options.toList() == listOf("Climb-up", "Climb-down", null, null, null)) { "middle staircase options ${after.options.toList()}" }
                 val current = library.data(LOC_INDEX, v.id ushr 8, v.id and 0xFF)
                 when {
                     current == null -> println("CREATE loc ${v.id} from ${v.source}: ${v.label} (size ${after.sizeX}x${after.sizeZ})")

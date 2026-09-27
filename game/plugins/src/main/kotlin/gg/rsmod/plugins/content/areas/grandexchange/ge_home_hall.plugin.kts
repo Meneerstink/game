@@ -26,24 +26,35 @@ package gg.rsmod.plugins.content.areas.grandexchange
 
 // Every hall npc is posted once in data/world_edits.json (GeHomeHall: one source per npc); nothing is spawned here.
 
-// ------------------------------------------------------------------ the spiral staircases to the gallery
+// ------------------------------------------------------------------ the spiral staircases to the upper floors
 
 // The hall's two staircases (GeHomeHall.STAIRS) are dressing from home_decor.txt; this takes their climb options before
-// the generic stairs so players land on the rug in front of them or on the gallery beside the stairwell.
+// the generic stairs: the bottom leads up to level 1, the middle piece on level 1 up to level 2 or down, the top on level 2
+// down to level 1. Players land in front of the stairs on the ground floor and beside the stairwell upstairs.
 on_world_init {
     world.plugins.bindObjectOverride { p, obj, opt ->
-        // The top (1740) stands on the same x/z as the bottom's south-west tile, one level up.
-        val stairs = GeHomeHall.STAIRS.firstOrNull { it.base.x == obj.tile.x && it.base.z == obj.tile.z && obj.tile.height <= 1 } ?: return@bindObjectOverride false
+        // The middle piece and the top stand on the same x/z as the bottom's south-west tile, one and two levels up.
+        val stairs = GeHomeHall.STAIRS.firstOrNull { it.base.x == obj.tile.x && it.base.z == obj.tile.z && obj.tile.height <= 2 } ?: return@bindObjectOverride false
+        val ours = obj.id == GeHomeHall.STAIRS_BOTTOM || obj.id == GeHomeHall.STAIRS_MIDDLE || obj.id == GeHomeHall.STAIRS_TOP
+        if (!ours) return@bindObjectOverride false
         val option = obj.getDef(world.definitions).options.getOrNull(opt - 1)?.lowercase() ?: return@bindObjectOverride false
-        val up = obj.id == GeHomeHall.STAIRS_BOTTOM && (option == "climb" || option == "climb-up")
-        val down = obj.id == GeHomeHall.STAIRS_TOP && (option == "climb" || option == "climb-down")
-        if (!up && !down) {
-            if (obj.id == GeHomeHall.STAIRS_BOTTOM || obj.id == GeHomeHall.STAIRS_TOP) p.message("These stairs only lead ${if (obj.id == GeHomeHall.STAIRS_BOTTOM) "up" else "down"}.")
-            return@bindObjectOverride obj.id == GeHomeHall.STAIRS_BOTTOM || obj.id == GeHomeHall.STAIRS_TOP
+        val up = option == "climb-up" || option == "climb" && obj.id == GeHomeHall.STAIRS_BOTTOM
+        val down = option == "climb-down" || option == "climb" && obj.id == GeHomeHall.STAIRS_TOP
+        val to =
+            when {
+                up && obj.id == GeHomeHall.STAIRS_BOTTOM -> stairs.gallery
+                up && obj.id == GeHomeHall.STAIRS_MIDDLE -> stairs.landing
+                down && obj.id == GeHomeHall.STAIRS_MIDDLE -> stairs.floor
+                down && obj.id == GeHomeHall.STAIRS_TOP -> stairs.gallery
+                else -> null
+            }
+        if (to == null) {
+            p.message("These stairs only lead ${if (obj.id == GeHomeHall.STAIRS_BOTTOM) "up" else "down"}.")
+            return@bindObjectOverride true
         }
         p.lockingQueue(lockState = gg.rsmod.game.model.LockState.FULL) {
             wait(2)
-            p.moveTo(if (up) stairs.gallery else stairs.floor)
+            p.moveTo(to)
         }
         true
     }

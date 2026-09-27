@@ -24,7 +24,8 @@ import kotlin.test.assertTrue
 
 /**
  * The Royal Hall's layout (owner 2026-09-27): one source per npc, everything on free floor, the carpet cross free, the
- * casino in the four upper corners, and the roof logic that hides the roof only for a player inside the walls.
+ * casino in the middle room of the second upper floor, staircases through all three floors, and the roof logic that hides
+ * the roof only for a player inside the walls.
  */
 class GeHomeHallTests {
     companion object {
@@ -123,8 +124,8 @@ class GeHomeHallTests {
     @Test
     fun `every npc stands on free floor of its own level, clear of objects, stairs and each other`() {
         val solid = solidTiles()
-        val stairs = GeHomeHall.STAIRS.flatMap { s -> footprint(s.base, 2, 2) + footprint(Tile(s.base.x, s.base.z, 1), 2, 2) }.toSet()
-        val landings = GeHomeHall.STAIRS.flatMap { listOf(it.floor, it.gallery) }.toSet()
+        val stairs = GeHomeHall.STAIRS.flatMap { s -> (0..2).flatMap { level -> footprint(Tile(s.base.x, s.base.z, level), 2, 2) } }.toSet()
+        val landings = GeHomeHall.STAIRS.flatMap { listOf(it.floor, it.gallery, it.landing) }.toSet()
         val skully = SkullyRoster.SITES.single { it.label == "Grand Exchange" }
         val all = hallPosts().filter { it.id in GeHomeHall.HALL_NPCS } +
             Post(skully.npcId, skully.wanted, 0) + Post(NewPlayerConfig.DEFAULTS.choiceNpc, NewPlayerConfig.DEFAULTS.choiceNpcTile, 0)
@@ -132,7 +133,7 @@ class GeHomeHallTests {
         all.forEach { post ->
             val n = size(post.id)
             footprint(post.tile, n, n).forEach { t ->
-                assertTrue(t.x in floorX && t.z in floorZ && t.height in 0..1, "${post.id} leaves the floor at $t")
+                assertTrue(t.x in floorX && t.z in floorZ && t.height in 0..2, "${post.id} leaves the floor at $t")
                 assertFalse(t in solid, "${post.id} stands in an object at $t")
                 assertFalse(t in stairs || t in landings, "${post.id} blocks a staircase at $t")
                 assertEquals(null, taken.put(t, post.id), "${post.id} shares $t")
@@ -156,7 +157,7 @@ class GeHomeHallTests {
     }
 
     @Test
-    fun `the casino is one table with its dealer and named sign in each upper corner and nowhere else`() {
+    fun `the casino is one table with its dealer and named sign in each quarter of the top floor's middle room`() {
         // The decor file as the owner's own world edits leave it (he moves tables and signs himself in developer mode).
         val placed = HomeDecorFile.load(Paths.get("..", "..", "data", "cfg", "home_decor.txt")).placements.toMutableList()
         worldEdits().forEach { e ->
@@ -168,17 +169,24 @@ class GeHomeHallTests {
         }
         val tables = placed.filter { it.id == 12975 }
         assertEquals(4, tables.size)
-        assertTrue(tables.all { it.tile.height == 1 && it.tile.x in floorX && it.tile.z in floorZ })
-        val corners = tables.map { (it.tile.x < GeHomeHall.X + GeHomeHall.WIDTH / 2) to (it.tile.z < GeHomeHall.Z + GeHomeHall.DEPTH / 2) }.toSet()
-        assertEquals(4, corners.size, "one table per corner")
+        // Owner 2026-09-27: the casino moved up to the big middle room of the second upper floor (x 3162-3167), the card
+        // tables (3 x 2) turned lengthwise so the aisle from the north to the south doorway (x 3164-3165) stays free.
+        val room = 3162..3167
+        val aisle = 3164..3165
+        fun cover(p: HomeDecorFile.Placement) = if (p.rot and 1 == 1) footprint(p.tile, 2, 3) else footprint(p.tile, 3, 2)
+        assertTrue(tables.all { t -> t.tile.height == 2 && cover(t).all { it.x in room && it.x !in aisle && it.z in floorZ } }, "tables $tables")
+        val quarters = tables.map { (it.tile.x < aisle.first) to (it.tile.z < GeHomeHall.Z + GeHomeHall.DEPTH / 2) }.toSet()
+        assertEquals(4, quarters.size, "one table per quarter")
         val dealers = hallPosts().filter { it.id in GeHomeHall.CASINO_DEALERS }
         assertEquals(4, dealers.size)
+        assertTrue(dealers.all { it.tile.height == 2 && it.tile.x in room && it.tile.x !in aisle }, "dealers $dealers")
         tables.forEach { table ->
-            val cover = footprint(table.tile, 3, 2).map { it.x to it.z }
-            fun near(t: Tile) = cover.any { (x, z) -> maxOf(kotlin.math.abs(x - t.x), kotlin.math.abs(z - t.z)) in 1..2 }
-            assertEquals(1, dealers.count { it.tile.height == 1 && near(it.tile) }, "table ${table.tile} has no dealer of its own")
-            assertEquals(1, placed.count { it.id in RoyalHallLocTool.CASINO_SIGNS && it.tile.height == 1 && near(it.tile) }, "table ${table.tile} has no sign")
+            val covered = cover(table).map { it.x to it.z }
+            fun near(t: Tile) = covered.any { (x, z) -> maxOf(kotlin.math.abs(x - t.x), kotlin.math.abs(z - t.z)) in 1..2 }
+            assertEquals(1, dealers.count { near(it.tile) }, "table ${table.tile} has no dealer of its own")
+            assertEquals(1, placed.count { it.id in RoyalHallLocTool.CASINO_SIGNS && it.tile.height == 2 && near(it.tile) }, "table ${table.tile} has no sign")
         }
+        assertTrue(placed.none { it.id in RoyalHallLocTool.CASINO_SIGNS && it.tile.height != 2 }, "a casino sign left behind")
         assertEquals(RoyalHallLocTool.CASINO_SIGNS.toSet(), placed.filter { it.id in RoyalHallLocTool.CASINO_SIGNS }.map { it.id }.toSet())
         // Each dealer carries the owner's name for his game.
         val names = worldEdits().filter { it["op"].asText() == "npc_name" && it["id"].asInt() in GeHomeHall.CASINO_DEALERS }.map { it["note"].asText() }.toSet()
@@ -199,15 +207,22 @@ class GeHomeHallTests {
                 // threshold, a portico or a balcony (owner 2026-09-27, fotos mansion_bug1/3/6/7).
                 assertEquals(inside, flags(0, x, z) and 4 != 0, "ground $x,$z")
                 assertEquals(inside, flags(1, x, z) and 4 != 0, "upper $x,$z")
+                assertEquals(inside, flags(2, x, z) and 4 != 0, "top $x,$z")
                 val ring = (x == GeHomeHall.X - 1 || x == GeHomeHall.X + GeHomeHall.WIDTH) && z in GeHomeHall.Z - 1..GeHomeHall.Z + GeHomeHall.DEPTH ||
                     (z == GeHomeHall.Z - 1 || z == GeHomeHall.Z + GeHomeHall.DEPTH) && x in GeHomeHall.X - 1..GeHomeHall.X + GeHomeHall.WIDTH
                 // The wall ring's upper walls and parapet stay drawn from inside (ZERO_LEVEL); the upper doorways hide with
-                // their balcony (owner 2026-09-27: "elke balkon kan ik vanaf de begane grond doorheen kijken").
-                val upperDoorway = ring && flags(1, x, z) == RoyalHallMapTool.BELOW_BUILDING
-                if (ring) for (level in 1..3) if (!(level == 1 && upperDoorway)) assertTrue(flags(level, x, z) and 8 != 0, "ring $x,$z level $level")
+                // their balcony (owner 2026-09-27: "elke balkon kan ik vanaf de begane grond doorheen kijken"), on both
+                // upper storeys.
+                if (ring) for (level in 1..3) if (flags(level, x, z) != RoyalHallMapTool.BELOW_BUILDING) assertTrue(flags(level, x, z) and 8 != 0, "ring $x,$z level $level")
                 // Every walkable balcony tile and upper doorway is "part of the building below" (flag 0x20), nothing else.
-                val walkableBalcony = RoyalHallMapTool.BALCONIES.any { x in it.xs && z in it.zs } && flags(1, x, z) and 1 == 0
-                assertEquals(walkableBalcony, flags(1, x, z) == RoyalHallMapTool.BELOW_BUILDING, "balcony flag $x,$z")
+                for (level in 1..2) {
+                    val balconies = if (level == 1) RoyalHallMapTool.BALCONIES else RoyalHallMapTool.BALCONIES_2
+                    val walkableBalcony = balconies.any { x in it.xs && z in it.zs } && flags(level, x, z) and 1 == 0
+                    assertEquals(walkableBalcony, flags(level, x, z) == RoyalHallMapTool.BELOW_BUILDING, "balcony flag $x,$z level $level")
+                }
+                // The client reads 0x20 on the level above the player's, so from inside the ground floor a level-2 balcony
+                // hides only with the level-1 balcony under it: every one of its tiles must stand over one.
+                if (RoyalHallMapTool.BALCONIES_2.any { x in it.xs && z in it.zs }) assertEquals(RoyalHallMapTool.BELOW_BUILDING, flags(1, x, z), "no balcony under $x,$z")
                 // No orange "gold trim" (overlay 157, texture 61) round the mansion any more.
                 assertNotEquals(157, tiles.tiles[0][x - 49 * 64][z - 54 * 64].overlayId and 0xFF, "orange trim at $x,$z")
             }
@@ -227,8 +242,36 @@ class GeHomeHallTests {
         GeHomeHall.STAIRS.forEach { s ->
             assertEquals(1, s.gallery.height)
             assertEquals(0, s.floor.height)
+            assertEquals(2, s.landing.height)
+        }
+        // Owner 2026-09-27: both staircases continue to the second upper floor - the middle piece on level 1 leads both ways.
+        val middle = DEFINITIONS.get(ObjectDef::class.java, GeHomeHall.STAIRS_MIDDLE)
+        assertEquals(listOf("Climb-up", "Climb-down"), middle.options.filterNotNull().filter { it.isNotBlank() })
+        val decor = HomeDecorFile.load(Paths.get("..", "..", "data", "cfg", "home_decor.txt")).placements
+        GeHomeHall.STAIRS.forEach { s ->
+            listOf(GeHomeHall.STAIRS_BOTTOM, GeHomeHall.STAIRS_MIDDLE, GeHomeHall.STAIRS_TOP).forEachIndexed { level, id ->
+                assertEquals(listOf(id), decor.filter { it.tile == Tile(s.base.x, s.base.z, level) }.map { it.id }, "staircase at ${s.base} level $level")
+            }
         }
         assertEquals(RoyalHallMapTool.DEATHS_DOMAIN_ROT, gg.rsmod.game.tools.importer.AfkBasementMapTool.ENTRANCE_ROTATION)
+    }
+
+    @Test
+    fun `the roof and parapet stand on level 3 above the second upper storey`() {
+        val decor = HomeDecorFile.load(Paths.get("..", "..", "data", "cfg", "home_decor.txt")).placements.filter { nearHall(it.tile.x, it.tile.z) }
+        val roof = setOf(11831, 62773, RoyalHallLocTool.ROOF_RING2, 62754, 62755, 62756, 62757)
+        assertTrue(decor.filter { it.id in roof }.all { it.tile.height == 3 }, "roof or parapet below level 3")
+        assertTrue(decor.any { it.id == RoyalHallLocTool.ROOF_RING2 } && decor.any { it.id == 62773 })
+        // The second upper storey repeats the first one's outer walls, plus the wall beside each of its narrower doorways.
+        val walls = setOf(33868, 33877)
+        fun ring(level: Int) = decor.filter { it.id in walls && it.type == 0 && it.tile.height == level && (it.tile.x !in floorX || it.tile.z !in floorZ) }
+        assertEquals(ring(1).size + 8, ring(2).size)
+        assertTrue(ring(1).all { w -> ring(2).any { it.tile.x == w.tile.x && it.tile.z == w.tile.z && it.rot == w.rot } })
+        // Three rooms: an inner wall on x 3162 and x 3167 with a two-tile opening (z 3491-3492) in each.
+        val inner = decor.filter { it.id in walls && it.tile.height == 2 && it.tile.x in floorX && it.tile.z in floorZ }
+        listOf(3162 to 0, 3167 to 2).forEach { (x, rot) ->
+            assertEquals(floorZ.filter { it !in 3491..3492 }.toSet(), inner.filter { it.tile.x == x && it.rot == rot }.map { it.tile.z }.toSet())
+        }
     }
 
     @Test

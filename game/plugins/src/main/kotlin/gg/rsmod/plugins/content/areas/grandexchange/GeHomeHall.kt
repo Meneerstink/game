@@ -14,9 +14,11 @@ import gg.rsmod.plugins.api.cfg.Npcs
  * south-east "death and repair" (Death's Domain, Bob, a deposit box), south-west "skills" (the Skilling Basement, Max,
  * Kuradal, the Wise Old Man, Pikkupstix), north-west "PvP" (Skully, the Quartermaster, Perdu, the Breach Trader,
  * Mandrith), north-east "stores" (Loyalty, Donator and Deadman Store, Ava, Aleck) - and the quest start beside the south
- * entrance (Quest Guide, Archaeologist, Oneiromancer, Azzanadra). The arms of the carpet cross stay free. The upper floor
- * is the casino and lounge: a card table with its dealer and a gilded sign in each marble corner, the thrones and the
- * lounge with King Narnode (the owner rearranges the upper floor himself in developer mode).
+ * entrance (Quest Guide, Archaeologist, Oneiromancer, Azzanadra). The arms of the carpet cross stay free. The first upper
+ * floor (level 1) is the lounge with the thrones and King Narnode. The second upper floor (level 2, owner 2026-09-27: "bouw
+ * een extra verdieping") has three rooms: the casino in the big middle room (four card tables, each with its dealer and a
+ * gilded sign), a small west room for other npcs and a small east room; the staircases rise into the side rooms. The owner
+ * rearranges the upper floors himself in developer mode.
  *
  * ONE SOURCE PER NPC. Every hall npc is posted by a single `npc_spawn` line of `data/world_edits.json` (so the owner moves
  * it himself in developer mode); no code spawns one. The exceptions own their npc for a reason: Skully and his Loot Chest
@@ -61,13 +63,17 @@ object GeHomeHall {
     val REMOVED = setOf(Npcs.EVIL_DAVE, Npcs.LUCIEN, Npcs.LUCIEN_273, Npcs.SIR_TIFFY_CASHIEN, Npcs.TOOL_LEPRECHAUN, Npcs.PENGUIN_5428, Npcs.PING, Npcs.PONG)
 
     /**
-     * The two white marble spiral staircases (62779, 2 x 2, south-west tile [base]) to the upper floor, with their tops
-     * (62780) on the same tile of level 1. [floor] is where a player coming down lands (on the rug in front of the stairs), [gallery]
-     * where one going up lands (on the gallery beside the stairwell).
+     * The two white marble spiral staircases (2 x 2, south-west tile [base]) through all three floors: the bottom (62779)
+     * on the ground floor, the middle piece (62901) on the same tile of level 1 and the top (62780) on level 2. [floor] is
+     * where a player coming down lands (on the rug in front of the stairs), [gallery] where one lands on level 1 (beside the
+     * stairwell), [landing] where one going up to level 2 lands (the same spot one storey higher, in a side room).
      */
-    class Staircase(val base: Tile, val floor: Tile, val gallery: Tile)
+    class Staircase(val base: Tile, val floor: Tile, val gallery: Tile) {
+        val landing: Tile get() = Tile(gallery.x, gallery.z, 2)
+    }
 
     const val STAIRS_BOTTOM = 62779
+    const val STAIRS_MIDDLE = 62901
     const val STAIRS_TOP = 62780
 
     val STAIRS =
