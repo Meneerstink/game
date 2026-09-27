@@ -102,13 +102,23 @@ object NpcCombatAudio {
         target: Pawn,
         anim: Int = npc.combatDef.attackAnimation,
     ) {
-        val row = rowFor(npc.id) ?: return
-        if (row.attack.isEmpty()) return
-        // One source per sound (breach audit 2026-09-27, A3): an animation that carries its own audible frame sounds already
-        // plays them for everyone nearby, so the table's cue on top of it was a second copy.
-        if (hasAudibleFrameSounds(npc, anim)) return
+        val traced = gg.rsmod.game.model.BreachTrace.watches(npc.id)
+        val row = rowFor(npc.id)
+        val skip =
+            when {
+                row == null -> "no-sound-row"
+                row.attack.isEmpty() -> "row-has-no-attack-sound"
+                // One source per sound (breach audit 2026-09-27, A3): an animation that carries its own audible frame sounds already
+                // plays them for everyone nearby, so the table's cue on top of it was a second copy.
+                hasAudibleFrameSounds(npc, anim) -> "anim-$anim-has-frame-sounds"
+                npc.attr[LAST_ATTACK_SOUND_CYCLE] == npc.world.currentCycle -> "already-this-cycle"
+                else -> null
+            }
+        if (traced) {
+            gg.rsmod.game.model.BreachTrace.log("sound.attack") { "npc=${npc.id}#${npc.index} anim=$anim sounds=${row?.attack?.map { it.id }} result=${skip ?: "played"}" }
+        }
+        if (row == null || skip != null) return
         val cycle = npc.world.currentCycle
-        if (npc.attr[LAST_ATTACK_SOUND_CYCLE] == cycle) return
         npc.attr[LAST_ATTACK_SOUND_CYCLE] = cycle
         val area = areaRadius(npc)
         row.attack.forEach { sound ->
@@ -153,8 +163,14 @@ object NpcCombatAudio {
         source: Pawn,
         npc: Npc,
     ) {
-        val id = rowFor(npc.id)?.defend ?: return
-        if (id < 0 || hasAudibleFrameSounds(npc, npc.combatDef.blockAnimation)) return
+        val id = rowFor(npc.id)?.defend ?: -1
+        val frame = id >= 0 && hasAudibleFrameSounds(npc, npc.combatDef.blockAnimation)
+        if (gg.rsmod.game.model.BreachTrace.watches(npc.id)) {
+            gg.rsmod.game.model.BreachTrace.log("sound.defend") {
+                "npc=${npc.id}#${npc.index} id=$id blockAnim=${npc.combatDef.blockAnimation} result=${if (id < 0) "no-defend-sound" else if (frame) "block-anim-has-frame-sounds" else "played"}"
+            }
+        }
+        if (id < 0 || frame) return
         if (source is Player || areaRadius(npc) > 0) playAt(npc, source as? Player, id)
     }
 
@@ -162,8 +178,15 @@ object NpcCombatAudio {
         killer: Player,
         npc: Npc,
     ) {
-        val id = rowFor(npc.id)?.death ?: return
-        if (id < 0 || npc.combatDef.deathAnimation.any { hasAudibleFrameSounds(npc, it) }) return
+        val id = rowFor(npc.id)?.death ?: -1
+        val frame = id >= 0 && npc.combatDef.deathAnimation.any { hasAudibleFrameSounds(npc, it) }
+        if (gg.rsmod.game.model.BreachTrace.watches(npc.id)) {
+            gg.rsmod.game.model.BreachTrace.log("sound.death") {
+                "npc=${npc.id}#${npc.index} id=$id deathAnims=${npc.combatDef.deathAnimation} killer=${killer.username} " +
+                    "result=${if (id < 0) "no-death-sound" else if (frame) "death-anim-has-frame-sounds" else "played"}"
+            }
+        }
+        if (id < 0 || frame) return
         playAt(npc, killer, id)
     }
 

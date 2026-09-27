@@ -1,0 +1,81 @@
+{{Deadman permanent|content=yes}}
+{{Infobox Monster
+|defver = 4
+|version1 = Apocalypse
+|version2 = Armageddon
+|version3 = Annihilation
+|version4 = Permanent
+|name = Vitreous warped Jelly
+|image = [[File:Vitreous warped Jelly (Deadman Apocalypse).png|200px]]
+|release = [[23 August]] [[2023]]
+|update = Deadman: Apocalypse - Friday 25th August
+|members = Yes
+|combat1 = 333
+|combat2 = 408
+|combat3 = 908
+|combat4 = 283
+|size = 3
+|examine = I don't think you're ready for this jelly.
+|xpbonus = 
+|max hit1 = 19
+|max hit2 = 26
+|max hit3 = 19
+|max hit4 = 19
+|aggressive = Yes
+|poisonous = No
+|attack style = [[Magic]]
+|attack speed = 4
+|hitpoints1 = 500
+|hitpoints2 = 1000
+|hitpoints3 = 3000
+|hitpoints4 = 500
+|att = 200
+|str = 250
+|def1 = 250
+|def2 = 50
+|def3 = 50
+|def4 = 50
+|mage = 180
+|range = 1
+|attbns = 0
+|strbns = 0
+|amagic = 0
+|mbns = 0
+|arange = 0
+|rngbns = 0
+|dstab = 0
+|dslash = 0
+|dcrush = 0
+|dmagic = 0
+|dlight = 0
+|dstandard = 0
+|dheavy = 0
+|elementalweaknesstype1 = 
+|elementalweaknesstype2 = Earth
+|elementalweaknesstype3 = Earth
+|elementalweaknesstype4 = Earth
+|elementalweaknesspercent1 = 
+|elementalweaknesspercent2 = 30
+|elementalweaknesspercent3 = 30
+|elementalweaknesspercent4 = 30
+|poisonresistance = 100
+|venomresistance = 100
+|id = 12457
+|leagueRegion = No
+}}
+A '''vitreous warped Jelly''' is a monster which spawns from [[breach]]es in both temporary and permanent [[Deadman Mode]].
+
+{{DeadmanAnnihilationBreachDropTable}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 4 February 2026
+|update = Deadman: Annihilation Tweaks, Shellbane Gryphon CAs & More!
+|change = Increased Hitpoints from 1000 to 3000.
+}}
+{{Subject changes footer}}
+
+{{Deadman: Breach Monsters}}
+{{Deadman: Apocalypse}}
+{{Deadman: Armageddon}}

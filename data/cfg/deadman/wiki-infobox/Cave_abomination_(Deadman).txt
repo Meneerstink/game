@@ -1,0 +1,79 @@
+{{Deadman permanent|content=yes}}
+{{Infobox Monster
+|defver = 3
+|version1 = Apocalypse, Armageddon
+|version2 = Annihilation
+|version3 = Permanent
+|name = Cave abomination
+|image = [[File:Cave abomination (Deadman Apocalypse).png|200px]]
+|release = [[23 August]] [[2023]]
+|update = Deadman: Apocalypse - Friday 25th August
+|members = Yes
+|combat1 = 361
+|combat2 = 957
+|combat3 = 395
+|size = 3
+|examine = An extremely dangerous, emaciated, ape-like creature with beady red eyes.
+|xpbonus = 
+|max hit1 = 20
+|max hit2 = 26
+|max hit3 = 26
+|aggressive = Yes
+|poisonous = No
+|attack style = [[Crush]]
+|attack speed1 = 4
+|attack speed2 = 5
+|attack speed3 = 5
+|hitpoints1 = 750
+|hitpoints2 = 3000
+|hitpoints3 = 750
+|att1 = 230
+|att2 = 280
+|att3 = 280
+|str1 = 195
+|str2 = 250
+|str3 = 250
+|def = 142
+|mage = 230
+|range = 1
+|attbns = 0
+|strbns = 0
+|amagic = 0
+|mbns = 0
+|arange = 0
+|rngbns = 0
+|dstab = 0
+|dslash = 0
+|dcrush = 0
+|dmagic = 0
+|dlight = 0
+|dstandard = 0
+|dheavy = 0
+|poisonresistance = 100
+|venomresistance = 100
+|id = 12454
+|leagueRegion = No
+}}
+'''Cave abominations''' are monsters which spawns from [[breach]]es in both temporary and permanent [[Deadman Mode]].
+
+{{DeadmanAnnihilationBreachDropTable}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 4 February 2026
+|update = Deadman: Annihilation Tweaks, Shellbane Gryphon CAs & More!
+|change = Increased Hitpoints from 1000 to 3000.
+}}
+{{Subject changes
+|date = 21 January 2026
+|update = Holy Moleys and the Hooded Slayer Helm are Here!
+|change = The cave abomination's attack speed was decreased to 5 ticks from 4 ticks, and its attack and strength stats were increased.
+}}
+{{Subject changes footer}}
+
+{{Deadman: Breach Monsters}}
+{{Deadman: Apocalypse}}
+{{Deadman: Armageddon}}
+
+[[Category:Deadman: Annihilation]]

@@ -17,6 +17,7 @@ import gg.rsmod.game.model.entity.Projectile
 import gg.rsmod.plugins.api.HitType
 import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.api.ext.freeze
+import gg.rsmod.plugins.api.ext.isMulti
 import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.api.ext.playSound
 import gg.rsmod.plugins.api.ext.prepareAttack
@@ -386,7 +387,11 @@ object NpcAttacks {
         primaryTarget: Pawn,
     ): Boolean {
         val row = rows[npc.id] ?: return false
-        val attack = select(npc, primaryTarget, runnable(npc.id)) ?: return false
+        val attack = select(npc, primaryTarget, runnable(npc.id))
+        if (gg.rsmod.game.model.BreachTrace.watches(npc.id)) {
+            gg.rsmod.game.model.BreachTrace.log("attack.select") { "npc=${npc.id}#${npc.index} chosen=${attack?.id ?: "-"} ${explainReach(npc, primaryTarget)}" }
+        }
+        attack ?: return false
         perform(npc, row, primaryTarget, attack)
         return true
     }
@@ -428,7 +433,21 @@ object NpcAttacks {
         swingHooks[row.combatDef]?.invoke(npc, primaryTarget, attack)
 
         // Target(s)
-        for (target in targets(npc, primaryTarget, attack)) {
+        val targetSet = targets(npc, primaryTarget, attack)
+        if (gg.rsmod.game.model.BreachTrace.watches(npc.id)) {
+            // Breach conformance trace: the swing, the animation asked for and played, every target and every nearby player left out.
+            gg.rsmod.game.model.BreachTrace.log("attack.swing") {
+                val near = gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.playersNear(npc.world, npc.tile, 10).filter { it !in targetSet }
+                "npc=${npc.id}#${npc.index} section=${attack.id} animAsked=${attack.anim} animPlayed=$anim " +
+                    "rule=${attack.multiTargetArea?.let { "area:${it.name}" } ?: if (attack.multiTargetRadius != 0) "radius-around-target:${attack.multiRadius}" else if (attack.multiRadius != 0) "radius-around-npc:${attack.multiRadius}" else "single"} " +
+                    "multi=${npc.tile.isMulti(npc.world)} primary=${(primaryTarget as? Player)?.username ?: primaryTarget.toString()} " +
+                    "targets=[${targetSet.joinToString(",") { (it as? Player)?.username ?: it.toString() }}] " +
+                    "area=[${breachArea(npc, primaryTarget, attack).joinToString(",") { (it as? Player)?.username ?: it.toString() }}] leftOut=[${near.joinToString(",") { "${it.username}@${it.tile.getDistance(npc.tile)}" }}] " +
+                    "gfx=${attack.gfx.map { it.id }} sounds=${attack.sounds.map { it.id }} projectiles=${attack.projectiles.map { it.id }} targetGfx=${attack.targetGfx.map { it.id }} " +
+                    "impactGfx=${attack.impactGfx.map { it.id }} targetSounds=${attack.targetSounds.map { it.id }} impactSounds=${attack.impactSounds.map { it.id }}"
+            }
+        }
+        for (target in targetSet) {
             val targetHeight = heightOf(target)
             if (attack.targetAnim >= 0) target.animate(attack.targetAnim)
             playGfx(target, targetHeight, attack.targetGfx, null)
@@ -524,6 +543,7 @@ object NpcAttacks {
         target: Pawn,
         attack: Attack,
     ): Set<Pawn> {
+        if (gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.isBreachNpc(npc)) return breachTargets(npc, target, attack)
         val area = attack.multiTargetArea
         if (area == null) {
             return when {
@@ -536,6 +556,51 @@ object NpcAttacks {
         npc.world.players.forEach {
             val t = it.tile
             if (!it.isDead() && t.height == area.level && t.x in area.minX..area.maxX && t.z in area.minZ..area.maxZ) set.add(it)
+        }
+        return set
+    }
+
+    /**
+     * Breach conformance 2026-09-27 (A1): who a breach monster's attack hits. A multi-target attack hits PLAYERS (never the other
+     * npcs standing around - the Void rule is for God Wars bodyguards), and only in multi-way combat: OSRS Wiki "Splatter
+     * (Deadman)" - the explosion "only affects its current target when in single-way combat, but is capable of hitting multiple
+     * players in multi-combat", the OSRS single-way rule that only one attacker may fight a player. A player a breach may not
+     * fight (PvP protection, OSRS Wiki "Deadman Mode") is never hit. [Attack.multiTargetRadius] measures around the target,
+     * [Attack.multiRadius] alone around the monster's whole footprint.
+     */
+    private fun breachTargets(
+        npc: Npc,
+        target: Pawn,
+        attack: Attack,
+    ): Set<Pawn> {
+        val multiTarget = attack.multiTargetArea != null || attack.multiTargetRadius != 0 || attack.multiRadius != 0
+        if (!multiTarget || !target.tile.isMulti(npc.world)) return setOf(target)
+        return breachArea(npc, target, attack)
+    }
+
+    /** Everyone a breach multi-target attack covers where multi-way rules allow it (the target first); see [breachTargets]. */
+    fun breachArea(
+        npc: Npc,
+        target: Pawn,
+        attack: Attack,
+    ): Set<Pawn> {
+        val set = linkedSetOf(target)
+        if (attack.multiTargetArea == null && attack.multiTargetRadius == 0 && attack.multiRadius == 0) return set
+        val size = npc.getSize()
+        val radius = attack.multiRadius.coerceAtLeast(attack.multiTargetRadius)
+        val aroundTarget = attack.multiTargetRadius != 0
+        val search = if (aroundTarget) target.tile else npc.tile
+        gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.playersNear(npc.world, search, radius + size).forEach { p ->
+            if (p.isDead() || p.tile.height != npc.tile.height || !gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.canFight(p)) return@forEach
+            val inside =
+                if (aroundTarget) {
+                    abs(p.tile.x - target.tile.x) <= radius && abs(p.tile.z - target.tile.z) <= radius
+                } else {
+                    val dx = maxOf(0, npc.tile.x - p.tile.x, p.tile.x - (npc.tile.x + size - 1))
+                    val dz = maxOf(0, npc.tile.z - p.tile.z, p.tile.z - (npc.tile.z + size - 1))
+                    maxOf(dx, dz) <= radius
+                }
+            if (inside) set += p
         }
         return set
     }
@@ -693,6 +758,13 @@ object NpcAttacks {
         dealtHooks[combatDef]?.let { hook ->
             pawnHit.hit.addAction { hook(npc, target, roll, pawnHit.hit.hitmarks.sumOf { it.damage }) }
         }
+        if (gg.rsmod.game.model.BreachTrace.watches(npc.id)) {
+            gg.rsmod.game.model.BreachTrace.log("hit") {
+                "npc=${npc.id}#${npc.index} target=${(target as? Player)?.username ?: target.toString()} offense=$offense max=${roll.maxHit} " +
+                    "accuracyRolled=$rollAccuracy lands=${roll.landHit} landsIgnoringPrayer=${roll.landsIgnoringPrayer} delayTicks=${hitDelayTicks(clientDelay)} " +
+                    "damage=${pawnHit.hit.hitmarks.joinToString("+") { "${it.damage}" }}"
+            }
+        }
         return pawnHit
     }
 
@@ -706,6 +778,12 @@ object NpcAttacks {
         landed: Boolean,
     ) {
         val hook = impactHooks["${row.combatDef}:${attack.id}"]
+        if (gg.rsmod.game.model.BreachTrace.watches(npc.id)) {
+            gg.rsmod.game.model.BreachTrace.log("impact") {
+                "npc=${npc.id}#${npc.index} section=${attack.id} target=${(target as? Player)?.username ?: target.toString()} landed=$landed " +
+                    "freeze=${freezeTicks(row.combatDef, attack)} poison=${attack.poison} drains=${attack.drains.size} hook=${hook != null} message=${attack.message.isNotEmpty()}"
+            }
+        }
         if (hook != null && !hook(npc, target)) return
         if (attack.impactAnim >= 0) target.animate(attack.impactAnim)
         if (!attack.impactRegardless && !landed) return
@@ -781,6 +859,12 @@ object NpcAttacks {
     ) {
         for (s in list) {
             val d = delay ?: s.delay
+            if (areaRadius > 0) {
+                gg.rsmod.game.model.BreachTrace.log("sound.section") {
+                    "id=${s.id} at=${(pawn as? Player)?.username ?: pawn.toString()} radius=${if (s.radius == 0) areaRadius else s.radius} delay=$d " +
+                        "kind=${if (s.radius == 0 && areaRadius > 0) "area-at-pawn" else if (s.radius == 0) "direct" else "area-offset"}"
+                }
+            }
             if (s.radius == 0 && areaRadius > 0) {
                 pawn.world.spawn(AreaSound(tile = pawn.tile, id = s.id, radius = areaRadius, volume = 1, delay = d))
             } else if (s.radius == 0) {

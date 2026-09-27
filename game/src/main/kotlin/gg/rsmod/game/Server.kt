@@ -336,7 +336,7 @@ class Server {
          * Extract the `commandServer` configuration as a map
          */
         val commandServerConfig = gameProperties.get<Map<String, Any>>("commandServer")
-        val tcpPort = commandServerConfig?.get("tcpPort") as? Int ?: 50017
+        val tcpPort = System.getProperty("rsps.commandPort")?.toIntOrNull() ?: commandServerConfig?.get("tcpPort") as? Int ?: 50017
         commandServerToken = (commandServerConfig?.get("token") as? String)?.trim().orEmpty()
         if (commandServerToken.isBlank()) {
             logger.warn("commandServer.token is not set in game.yml: the command port (shutdown/kick/teleport) refuses every command.")
@@ -350,7 +350,8 @@ class Server {
                 initialLaunch = initialLaunch,
                 name = gameProperties.get<String>("name")!!,
                 revision = gameProperties.get<Int>("revision")!!,
-                cycleTime = gameProperties.getOrDefault("cycle-time", 600),
+                // -Drsps.cycleTime only for the agent's headless breach test run (BreachSim), never in the owner's start.
+                cycleTime = System.getProperty("rsps.cycleTime")?.toIntOrNull() ?: gameProperties.getOrDefault("cycle-time", 600),
                 playerLimit = gameProperties.getOrDefault("max-players", 2048),
                 home =
                     Tile(
@@ -514,7 +515,8 @@ class Server {
         /*
          * Bind the game port.
          */
-        val port = gameProperties.getOrDefault("game-port", 43594)
+        // -Drsps.gamePort only for the agent's headless test server, so it never occupies the owner's 50015.
+        val port = System.getProperty("rsps.gamePort")?.toIntOrNull() ?: gameProperties.getOrDefault("game-port", 43594)
         bootstrap.bind(InetSocketAddress(port)).sync().awaitUninterruptibly()
         logger.info("Now listening for incoming connections on port $port...")
 

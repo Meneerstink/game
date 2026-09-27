@@ -201,7 +201,14 @@ object Combat {
                 // its owner. Void Combat.retaliate: an npc that is already attacking while under attack keeps its
                 // target; it only retaliates when it has no living target of its own.
                 val current = target.attr[COMBAT_TARGET_FOCUS_ATTR]?.get()
-                if (current == null || current.isDead() || (current is Npc && !current.isSpawned())) {
+                val retaliates = current == null || current.isDead() || (current is Npc && !current.isSpawned())
+                if (target is Npc && gg.rsmod.game.model.BreachTrace.watches(target.id)) {
+                    gg.rsmod.game.model.BreachTrace.log("retaliate") {
+                        "npc=${target.id}#${target.index} hitBy=${(pawn as? Player)?.username ?: pawn.toString()} current=${(current as? Player)?.username ?: current?.toString() ?: "-"} " +
+                            "switch=$retaliates"
+                    }
+                }
+                if (retaliates) {
                     target.attack(pawn, notifyRefusal = false) // npc retaliation
                 }
             } else if (target is Player) {

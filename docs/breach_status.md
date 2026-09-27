@@ -178,3 +178,60 @@ Caches: tx-20260927-032334 (both caches, frame-sound radius of 25 sequences).
 Owner test (commands without prefix): `breach local`, `breachtele site 1`, `breachtele site 2`, `breach region`, `breachtest`,
 `breachtest 14462`, `breachinfo`, `breachclose`, with `C:\RSPS\avtrace.on` present and a second account in a second client
 (`Start-RSPS-SecondClient.ps1`).
+## Breach OSRS conformance (2026-09-27 afternoon, agent Claude-breach-conformance)
+
+Owner: "test literally everything - pathing, single, multi - so breaches behave exactly like OSRS DMM breaches". Plan and
+research: `C:\RSPS\agent-handoffs\2026-09-27-breach-osrs-conformance-testplan.txt`.
+
+### What was built
+- `BreachTrace` (game module): one `[breachtrace]` line per decision - aggro candidates with the refusal rule, target set /
+  drop / retaliate, single/multi ruling per attack attempt (incl. PvP), reach + attack selection, every swing (anim asked vs
+  played, targets, area, players left out), hits (rolls, damage), impacts, sounds (played / skipped + reason), steps taken /
+  refused + reason, routes, update blocks per viewer (`sync.block`, `sync.notlocal`, `sync.carry`), zone packets per receiver
+  (`zone.recv` / `zone.skip`), damage in, contributions, deaths, breach fire / landing rejections / spawns, freeze resisted.
+  On with `breachtrace` (admin command), `-Drsps.breachTrace=true` or `C:\RSPS\breachtrace.on`. Off by default.
+- `BreachConformance` (plugins): headless 4-player run over every spawnable monster on the single AND multi site of a real
+  breach, packet recorder per player; `tools\Run-BreachConformance.ps1` (own ports 50115/50117, private lib copy, ends itself).
+  Report `launcher-logs\breach-conformance-<stamp>.txt` + full trace + per-player receive logs.
+- `BreachWikiInfoboxTests`: every monster against the raw OSRS Wiki infobox of its Annihilation version
+  (`data\cfg\deadman\wiki-infobox\*.txt`, fetched with `?action=raw`): hp, attack speed, levels, bonuses, poison / venom / freeze
+  immunity, elemental weakness, max hit per style. `BreachNaivePathingTests`: OSRS npc pathing.
+- Client AvTrace: every sound played / not played + reason (out of range with distance, other level, volume 0 with the option
+  values, queue full, radius 0 on another entity), the sound options whenever they change, and every script that changes them.
+- RuneLite plugin `tools\runelite-breach-logger` (OSRS ground truth, same line format) + `tools\breach-compare.ps1`.
+
+### Root causes found and fixed
+| id | finding (evidence) | fix |
+|----|--------------------|-----|
+| A1 | Graardor ranged / Zilyana magic hit only 1 player: their Void sections carry the GWD chamber coordinates (`multi_target_area`), nobody stands there in a breach | chamber area -> every player within `ROOM_RADIUS` 8 of the footprint (ADAPTED: "all players in the room"); range back to 1 (OSRS Wiki: used "within melee range" / "at melee distance" - the earlier B7 8-tile change contradicted the wiki) |
+| A1b | npc multi-target attacks also hit other npcs and ignored single-way | breach attacks hit players only, only in multi-way (single: only the target, OSRS Wiki Splatter), never a PvP-protected player |
+| A2 | all breach monsters had smart (BFS) routes; OSRS npcs "naively path diagonally ... then straight" and can be safespotted, only Zemouregal and Durial321 routefind | `NaivePathFindingStrategy` (diagonal first) for breach monsters, BFS only for `ROUTEFINDERS` |
+| C1 | players blocked an npc only on its south-west destination tile | whole destination footprint (osrs-docs Entity Collision) - all npcs |
+| C2 | Dagannoth Kings and God Wars generals are "excluded NPCs" (walk through players / npcs) | `ignoresEntityCollision` for them, regular and breach ids |
+| D1 | freeze worked on 100 % freeze-resistant monsters (Durial321, Magic Mark, Bloat, Bee Swarm) | `FREEZE_RESISTANT_NPCS` checked in `Pawn.freeze` |
+| D2 | Durial321 poison/venom immune (wiki: 0 %); Jal-ImKot missing Water 30 weakness; Thermonuclear smoke devil had the regular Air 20 | data fixed, per-id weakness overrides |
+| M1 | a monster that lost its target through the aggro timer (teleport, logout) stayed where it was | walks home like the leash path |
+| S1 | an npc moved (teleported) and acting on the same tick lost its update blocks for every player (abyssal demon: 3 of 10 attack animations and hitsplats unseen) | blocks are carried to the re-add on the next tick |
+| SND | owner's clients: sound effects option became 0 at 13:44:01 / 13:44:05, right after opening the audio settings (261:16 -> 743:20); 647 + 345 sounds dropped with `soundVolumeOption=0`; preferences file: sound 0, area 1 | preferences restored to 127/127 (backup `C:\Users\Pa\jagex_runescape_preferences.dat.bak-20260927`); client now logs which script changes a volume and to what |
+
+### Still open (need OSRS ground truth or an owner decision)
+- Target switching in multi: no OSRS source (wiki / osrs-docs silent) except Zemouregal "occasionally switching". Ours: a monster keeps its target, retaliates only without one (Void rule). Record on world 345 or decide.
+- Dagannoth Prime's magic projectile is not shown at melee distance (Void data time_offset -5; Void does the same); OSRS unknown.
+- Zemouregal's summon swing replaces the attack animation on that tick (ADAPTED cadence).
+- Ruby bolts (e): Annihilation blog "immune" vs Deadman Mode page "max hit 30" (kept 30).
+- Headless-client render/playback layer (T3/T4) not built; the client side is covered by the new AvTrace reasons.
+
+### Result of the final in-engine conformance run (2026-09-27 15:52-16:18 + rerun 16:19)
+`launcher-logs\breach-conformance-20260927-1552*.txt` (66 rows) and `...-1619*.txt` (event + Bee Swarm + Bloat rerun):
+- all 33 monsters x single and multi site PASS (after the harness fixes for Bee Swarm next to a Nardah town npc and the Bloat,
+  which never attacks directly). Per row: first attack, anim asked = played and in the cache, every one of 4 players received
+  every attack animation, multi-target hits exactly the players in the area (multi) / only the target (single), a hit for every
+  target, hitsplats per swing (Cerberus 3, Jaguar 4), server sounds + frame sounds reach the target and an observer, projectiles
+  reach both, a second player may hit the monster in single (OSRS Wiki), a PK on its target is refused in single and allowed in
+  multi, first chase step diagonal (OSRS npc pathing), leash release + walk home, death animation seen by all 4, removal.
+- breach event PASS: 2 sites (single + multi), landings within 9 tiles, no overlap, spawner projectiles, Boss Spawn and breach
+  despawn graphics received, nothing left after closing.
+- 105 targeted unit tests green (Breach*, NpcAttacks, NpcCombatAudio, NpcLeash, GodWarsInteraction, CityGuards, DeadmanTimerGate),
+  incl. BreachWikiInfoboxTests (every stat, immunity, weakness and max hit against the Annihilation infobox).
+Not proven by this run (needs the owner's client or OSRS recordings): what the real client renders / plays, target switching
+in multi against OSRS, Prime's projectile at melee distance.

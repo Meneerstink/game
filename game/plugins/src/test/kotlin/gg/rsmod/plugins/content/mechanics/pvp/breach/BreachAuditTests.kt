@@ -51,11 +51,24 @@ class BreachAuditTests {
     }
 
     @Test
-    fun `B7 - the God Wars clones reach with their ranged and magic attacks`() {
+    fun `A1 conformance - the God Wars clones use their room attack at melee distance and hit everyone around, no chamber area`() {
+        // OSRS Wiki "General Graardor": "can only use it if he is within melee range of his current target", "hitting all players
+        // in the room"; "Commander Zilyana": "She will only use her magic attacks at melee distance".
         mapOf(14442 to "range", 14443 to "magic", 14444 to "magic").forEach { (id, section) ->
-            assertEquals(8, rows.getValue(id).attacks.single { it.id == section }.range, "npc $id $section")
+            assertEquals(1, rows.getValue(id).attacks.single { it.id == section }.range, "npc $id $section")
         }
-        assertEquals(1, rows.getValue(14442).attacks.single { it.id == "melee" }.range)
+        mapOf(14442 to "range", 14443 to "magic").forEach { (id, section) ->
+            val attack = rows.getValue(id).attacks.single { it.id == section }
+            assertEquals(null, attack.multiTargetArea, "npc $id $section still uses a God Wars chamber area")
+            assertEquals(BreachMonsters.ROOM_RADIUS, attack.multiRadius, "npc $id $section")
+        }
+        // no breach row may keep a God Wars (or any other fixed) chamber area
+        rows.values.forEach { row -> row.attacks.forEach { assertEquals(null, it.multiTargetArea, "${row.name} ${it.id}") } }
+    }
+
+    @Test
+    fun `A2 conformance - only Zemouregal and Durial321 route around obstacles`() {
+        assertEquals(setOf(14463, 14466), BreachMonsters.ROUTEFINDERS)
     }
 
     @Test

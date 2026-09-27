@@ -40,6 +40,18 @@ object ElementalWeakness {
 
     fun of(name: String): Weakness? = table[name.lowercase().trim()]
 
+    /**
+     * Per npc id overrides of the by-name table (null = no weakness), for variants whose weakness differs from the regular monster
+     * of the same name - the Deadman breach monsters' Annihilation infoboxes (breach conformance 2026-09-27).
+     */
+    val idOverrides: MutableMap<Int, Weakness?> = java.util.Collections.synchronizedMap(HashMap())
+
+    /** The weakness of npc [npcId] named [name]: its id override when it has one, else the by-name table. */
+    fun of(
+        npcId: Int,
+        name: String,
+    ): Weakness? = if (idOverrides.containsKey(npcId)) idOverrides[npcId] else of(name)
+
     fun elementOf(spell: CombatSpell?): Element? {
         spell ?: return null
         if (CombatSpell.ELEMENTAL_TIERS.none { row -> row.any { it.first == spell } }) return null
@@ -50,7 +62,7 @@ object ElementalWeakness {
     fun percent(target: Pawn, spell: CombatSpell?): Int {
         if (target !is Npc) return 0
         val element = elementOf(spell) ?: return 0
-        val weakness = of(target.def.name) ?: return 0
+        val weakness = of(target.id, target.def.name) ?: return 0
         return if (weakness.element == element) weakness.percent else 0
     }
 }

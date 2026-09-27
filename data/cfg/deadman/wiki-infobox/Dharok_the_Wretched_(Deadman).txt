@@ -1,0 +1,71 @@
+{{Deadman permanent|content=yes}}
+{{Infobox Monster
+|defver = 4
+|version1 = Apocalypse
+|version2 = Armageddon
+|version3 = Annihilation
+|version4 = Permanent
+|name = Dharok the Wretched
+|image = [[File:Dharok the Wretched (Deadman Apocalypse).png|200px]]
+|release = [[23 August]] [[2023]]
+|update = Deadman: Apocalypse - Friday 25th August
+|members = Yes
+|combat = 666
+|size = 2
+|examine = A vengeful spirit corrupted by dark magic.
+|attributes = spectral
+|xpbonus = 
+|max hit = 29
+|aggressive = Yes
+|poisonous = No
+|attack style = [[Slash]]
+|attack speed = 7
+|cat = Bosses
+|assignedby = konar,nieve,duradel
+|hitpoints1 = 200
+|hitpoints2 = 200
+|hitpoints3 = 300
+|hitpoints4 = 300
+|att = 100
+|str = 100
+|def1 = 100
+|def2 = 200
+|def3 = 200
+|def4 = 200
+|mage = 1
+|range = 1
+|attbns = 0
+|strbns = 105
+|amagic = -58
+|mbns = 0
+|arange = -18
+|rngbns = 0
+|dstab = 252
+|dslash = 250
+|dcrush = 244
+|dmagic = -11
+|dlight = 249
+|dstandard = 249
+|dheavy = 249
+|elementalweaknesstype1 = 
+|elementalweaknesstype2 = air
+|elementalweaknesstype3 = air
+|elementalweaknesstype4 = air
+|elementalweaknesspercent1 = 
+|elementalweaknesspercent2 = 50
+|elementalweaknesspercent3 = 50
+|elementalweaknesspercent4 = 50
+|poisonresistance = 0
+|venomresistance = 0
+|id = 12447
+|leagueRegion = No
+}}
+'''Dharok the Wretched''' is a monster which spawns from [[breach]]es in both temporary and permanent [[Deadman Mode]]. He is a much larger version of the regular [[Dharok the Wretched]], and has the same Wretched Strength mechanic which increases his max hit by % for every [[Hitpoint]] he is missing.
+
+{{DeadmanAnnihilationBreachDropTable}}
+
+{{Deadman: Breach Monsters}}
+{{Deadman: Apocalypse}}
+{{Deadman: Armageddon}}
+
+[[Category:Deadman: Annihilation]]

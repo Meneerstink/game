@@ -1,0 +1,81 @@
+{{Deadman permanent|content=yes}}
+{{Infobox Monster
+|defver = 3
+|version1 = Apocalypse, Armageddon
+|version2 = Annihilation
+|version3 = Permanent
+|name = Cerberus
+|image = [[File:Cerberus (Deadman).png|250x250px]]
+|release = [[19 July]] [[2024]]
+|update = Deadman: Armageddon & While Guthix Sleeps Updates
+|members = Yes
+|combat1 = 430
+|combat2 = 726
+|combat3 = 413
+|size = 5
+|examine = A three-headed gigantic hound. Guardian of the River of Souls.
+|attributes = Demon
+|xpbonus = 
+|max hit1 = 23
+|max hit2 = 29
+|max hit3 = 29
+|aggressive = Yes
+|poisonous = No
+|attack style = [[Stab]]
+|attack speed = 3
+|slayxp = 
+|cat = Hellhounds, Bosses
+|assignedby = vannaka,chaeldar,konar,nieve,duradel
+|hitpoints1 = 1000
+|hitpoints2 = 2000
+|hitpoints3 = 750
+|att1 = 220
+|att2 = 300
+|att3 = 300
+|str1 = 220
+|str2 = 280
+|str3 = 280
+|def = 150
+|mage = 220
+|range = 220
+|attbns = 50
+|strbns = 0
+|amagic = 50
+|mbns = 0
+|arange = 50
+|rngbns = 0
+|dstab = 50
+|dslash = 100
+|dcrush = 25
+|dmagic = 100
+|dlight = 100
+|dstandard = 100
+|dheavy = 100
+|elementalweaknesstype = Water
+|elementalweaknesspercent = 40
+|poisonresistance = 100
+|venomresistance = 100
+|immuneburn = Immune to normal burn
+|id = 13657
+|leagueRegion = No
+}}
+'''Cerberus''' is a monster which spawns from [[breach]]es in both temporary and permanent [[Deadman Mode]]. It attacks with melee using all three heads, resulting in three hitsplats per attack.
+
+It is 100% vulnerable to [[demonbane weapons]].
+
+{{DeadmanAnnihilationBreachDropTable}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 4 February 2026
+|update = Deadman: Annihilation Tweaks, Shellbane Gryphon CAs & More!
+|change = Increased Hitpoints from 1000 to 2000.
+}}
+{{Subject changes footer}}
+
+{{Deadman: Breach Monsters}}
+{{Deadman: Apocalypse}}
+{{Deadman: Armageddon}}
+
+[[Category:Deadman: Annihilation]]

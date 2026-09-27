@@ -1,0 +1,78 @@
+{{Deadman permanent|content=yes}}
+{{Infobox Monster
+|defver = 4
+|version1 = Apocalypse
+|version2 = Armageddon
+|version3 = Annihilation
+|version4 = Permanent
+|name = Greater abyssal demon
+|image = [[File:Greater abyssal demon (Deadman Apocalypse).png|200px]]
+|release = [[23 August]] [[2023]]
+|update = Deadman: Apocalypse - Friday 25th August
+|members = Yes
+|combat1 = 429
+|combat2 = 407
+|combat3 = 719
+|combat4 = 407
+|size = 3
+|examine = A greater denizen of the Abyss.
+|attributes = demon
+|xpbonus = 
+|max hit = 27
+|aggressive = Yes
+|poisonous = No
+|attack style = [[Stab]]
+|attack speed = 4
+|slayxp = 
+|cat = Abyssal Demons
+|assignedby = vannaka,chaeldar,konar,nieve,duradel
+|hitpoints1 = 750
+|hitpoints2 = 750
+|hitpoints3 = 2000
+|hitpoints4 = 750
+|att = 300
+|str = 260
+|def1 = 240
+|def2 = 150
+|def3 = 150
+|def4 = 150
+|mage = 1
+|range = 1
+|attbns = 0
+|strbns = 0
+|amagic = 0
+|mbns = 0
+|arange = 0
+|rngbns = 0
+|dstab = 50
+|dslash = 50
+|dcrush = 50
+|dmagic = 0
+|dlight = 50
+|dstandard = 50
+|dheavy = 50
+|poisonresistance = 100
+|venomresistance = 100
+|id = 12451
+|leagueRegion = No
+}}
+'''Greater abyssal demons''' are monster which spawns from [[breach]]es in both temporary and permanent [[Deadman Mode]]. Like its regular version, it is capable of rapidly teleporting short distances.
+
+It is only 1% vulnerable to [[demonbane weapons]].
+
+{{DeadmanAnnihilationBreachDropTable}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 4 February 2026
+|update = Deadman: Annihilation Tweaks, Shellbane Gryphon CAs & More!
+|change = Increased Hitpoints from 1250 to 2000.
+}}
+{{Subject changes footer}}
+
+{{Deadman: Breach Monsters}}
+{{Deadman: Apocalypse}}
+{{Deadman: Armageddon}}
+
+[[Category:Deadman: Annihilation]]

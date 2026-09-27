@@ -1,0 +1,76 @@
+{{Deadman permanent|content=yes}}
+{{Infobox Monster
+|defver = 3
+|version1 = Armageddon
+|version2 = Annihilation
+|version3 = Permanent
+|name = Magic Mark
+|image = [[File:Magic Mark.png|250x250px]]
+|release = [[19 July]] [[2024]]
+|update = Deadman: Armageddon & While Guthix Sleeps Updates
+|members = Yes
+|combat1 = 467
+|combat2 = 967
+|combat3 = 467
+|size = 1
+|examine = He doesn't look too friendly.
+|xpbonus = 
+|max hit = 18
+|aggressive = Yes
+|poisonous = No
+|attack style = [[Magic]]
+|attack speed = 5
+|hitpoints1 = 1500
+|hitpoints2 = 3500
+|hitpoints3 = 1500
+|att = 10
+|str = 30
+|def = 30
+|mage = 175
+|range = 0
+|attbns = 0
+|strbns = 0
+|amagic = 100
+|mbns = 0
+|arange = 0
+|rngbns = 0
+|dstab = 25
+|dslash = 25
+|dcrush = 25
+|dmagic = 150
+|dlight = 10
+|dstandard = 10
+|dheavy = 10
+|poisonresistance = 0
+|venomresistance = 0
+|freezeresistance = 100
+|id = 13663
+|leagueRegion = No
+}}
+[[File:Magic Mark chathead.png|left]]
+'''Magic Mark''' is a monster which spawns from [[breach]]es in both temporary and permanent [[Deadman Mode]]. He attacks with [[blood spells]] which hits in an AoE around his target, healing himself with the damage he deals.
+
+{{DeadmanAnnihilationBreachDropTable}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 4 February 2026
+|update = Deadman: Annihilation Tweaks, Shellbane Gryphon CAs & More!
+|change = Increased Hitpoints from 1500 to 2500.
+}}
+{{Subject changes
+|date = 23 July 2025
+|update = Varlamore: The Final Dawn Out Now
+|change = Magic Mark's combat level was reduced from 467 to 217, and his hitpoints were changed from 1500 to 500.
+}}
+{{Subject changes footer}}
+
+==Trivia==
+* He appears to be wearing an [[ancient staff]], [[infinity hat]], [[mystic robe top]] and [[mystic robe bottom|bottoms]], [[arcane spirit shield]], [[mystic gloves]], [[infinity boots]], [[occult necklace]] and an [[imbued Saradomin cape]].
+* His name may be a reference to the film {{WP|Magic Mike}}.
+
+{{Deadman: Breach Monsters}}
+{{Deadman: Armageddon}}
+{{Player spoof}}
+[[Category:Deadman: Annihilation]]

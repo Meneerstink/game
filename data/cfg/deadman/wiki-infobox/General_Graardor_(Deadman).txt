@@ -1,0 +1,75 @@
+{{Deadman permanent|content=yes}}
+{{Infobox Monster
+|defver = 4
+|version1 = Apocalypse
+|version2 = Armageddon
+|version3 = Annihilation
+|version4 = Permanent
+|name = General Graardor
+|image = [[File:General Graardor (Deadman Apocalypse).png|200px]]
+|release = [[23 August]] [[2023]]
+|update = Deadman: Apocalypse - Friday 25th August
+|members = Yes
+|combat = 624
+|size = 4
+|examine = A huge war chief.
+|xpbonus = 
+|max hit = 60 (Melee)
+|aggressive = Yes
+|poisonous = No
+|attack style = [[Crush]]
+|attack speed = 6
+|slayxp = 
+|cat = Bosses
+|assignedby = konar,nieve,duradel
+|hitpoints1 = 1000
+|hitpoints2 = 1500
+|hitpoints3 = 2000
+|hitpoints4 = 1000
+|att = 280
+|str = 350
+|def = 250
+|mage = 80
+|range = 350
+|attbns = 120
+|strbns = 43
+|amagic = 0
+|mbns = 0
+|arange = 100
+|rngbns = 40
+|dstab = 90
+|dslash = 90
+|dcrush = 90
+|dmagic = 201
+|dlight = 90
+|dstandard = 90
+|dheavy = 90
+|elementalweaknesstype1 = 
+|elementalweaknesstype2 = Earth
+|elementalweaknesstype3 = Earth
+|elementalweaknesstype4 = Earth
+|elementalweaknesspercent1 = 
+|elementalweaknesspercent2 = 40
+|elementalweaknesspercent3 = 40
+|elementalweaknesspercent4 = 40
+|poisonresistance = 100
+|venomresistance = 100
+|id = 12444
+|leagueRegion = No
+}}
+'''General Graardor''' is a monster which spawns from [[breach]]es in both temporary and permanent [[Deadman Mode]]. Like his regular variant, he attacks with both melee and ranged.
+
+{{DeadmanAnnihilationBreachDropTable}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 4 February 2026
+|update = Deadman: Annihilation Tweaks, Shellbane Gryphon CAs & More!
+|change = Increased Hitpoints from 1500 to 2000.
+}}
+{{Subject changes footer}}
+
+{{Deadman: Breach Monsters}}
+{{Deadman: Apocalypse}}
+{{Deadman: Armageddon}}

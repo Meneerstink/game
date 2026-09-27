@@ -1,0 +1,78 @@
+{{Deadman permanent|content=yes}}
+{{Infobox Monster
+|defver = 3
+|version1 = Armageddon
+|version2 = Annihilation
+|version3 = Permanent
+|name = Ranging Ro
+|image1 = [[File:Ranging Ro.png|250x250px]]
+|image2 = [[File:Ranging Ro.png|250x250px]]
+|image3 = [[File:Ranging Ro (Annihilation).png|250x250px]]
+|release = [[19 July]] [[2024]]
+|update = Deadman: Armageddon & While Guthix Sleeps Updates
+|members = Yes
+|combat1 = 473
+|combat2 = 973
+|combat3 = 473
+|size = 1
+|examine = She doesn't look too friendly.
+|xpbonus = 
+|max hit = 16
+|aggressive = Yes
+|poisonous = No
+|attack style = [[Ranged]]
+|attack speed = 4
+|hitpoints1 = 1500
+|hitpoints2 = 3500
+|hitpoints3 = 1500
+|att = 10
+|str = 30
+|def = 100
+|mage = 15
+|range = 150
+|attbns = 0
+|strbns = 0
+|amagic = 100
+|mbns = 0
+|arange = 0
+|rngbns = 0
+|dstab = 100
+|dslash = 100
+|dcrush = 100
+|dmagic = 200
+|dlight = 100
+|dstandard = 100
+|dheavy = 100
+|poisonresistance = 0
+|venomresistance = 0
+|id = 13664
+|leagueRegion = No
+}}
+[[File:Ranging Ro chathead.png|left|80px]]
+'''Ranging Ro''' is a monster which spawns from [[breach]]es in both temporary and permanent [[Deadman Mode]]. She attacks by throwing [[black chinchompa]]s at at her target which hits in an AoE around them.
+
+{{Bug|Ranging Ro's model is currently missing its jaw.}}
+
+{{DeadmanAnnihilationBreachDropTable}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 4 February 2026
+|update = Deadman: Annihilation Tweaks, Shellbane Gryphon CAs & More!
+|change = Increased Hitpoints from 1500 to 3500.
+}}
+{{Subject changes
+|date = 23 July 2025
+|update = Varlamore: The Final Dawn Out Now
+|change = Ranging Ro's combat level was reduced from 473 to 223, and her hitpoints were changed from 1500 to 500.
+}}
+{{Subject changes footer}}
+
+==Trivia==
+* She appears to be wearing [[Karil's leathertop]], [[Karil's leatherskirt]], [[black chinchompa]]s, a [[crystal shield]], [[pegasian boots]], an [[archer's helm]], [[3rd Age vambraces]], and a [[necklace of anguish]].
+
+{{Deadman: Breach Monsters}}
+{{Deadman: Armageddon}}
+{{Player spoof}}
+[[Category:Deadman: Annihilation]]

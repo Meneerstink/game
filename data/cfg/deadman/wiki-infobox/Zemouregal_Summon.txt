@@ -1,0 +1,169 @@
+{{Deadman permanent|content=yes}}
+{{Infobox Monster
+|version1 = Mummy
+|version2 = Shade
+|version3 = Undead One
+|version4 = Pirate
+|version5 = Fremennik
+|version6 = Khazard
+|name = Zemouregal Summon
+|image1 = [[File:Zemouregal Summon (Mummy).png|250x250px]]
+|image2 = [[File:Zemouregal Summon (Shade).png|250x250px]]
+|image3 = [[File:Zemouregal Summon (Undead One).png|250x250px]]
+|image4 = [[File:Zemouregal Summon (Pirate).png|250x250px]]
+|image5 = [[File:Zemouregal Summon (Ulfric).png|250x250px]]
+|image6 = [[File:Zemouregal Summon (Khazard).png|325x325px]]
+|release = [[21 January]] [[2026]]
+|update = Holy Moleys and the Hooded Slayer Helm are Here!
+|members = Yes
+|combat1 = 163
+|combat2 = 141
+|combat3 = 147
+|combat4 = 90
+|combat5 = 151
+|combat6 = 163
+|size = 1
+|examine1 = A tightly-wrapped monster.
+|examine2 = The shadowy remains of a long-departed soul.
+|examine3 = The animated dead; one of Rashiliyia's minions.
+|examine4 = Aaaargh, me hearty!
+|examine5 = What could be worse than an angry, undead fremennik?
+|examine6 = He looks really nasty. Smells bad too.
+|attributes1 = None
+|attributes2 = spectral
+|attributes3 = None
+|attributes4 = None
+|attributes5 = None
+|attributes6 = None
+|xpbonus = 
+|flatarmour1 = 0
+|flatarmour2 = -3
+|flatarmour3 = 0
+|flatarmour4 = 0
+|flatarmour5 = 0
+|flatarmour6 = 0
+|max hit1 = 16
+|max hit2 = 16
+|max hit3 = 16
+|max hit4 = 11
+|max hit5 = 16
+|max hit6 = 16
+|aggressive = Yes
+|poisonous = No
+|attack style1 = [[Crush]]
+|attack style2 = [[Crush]]
+|attack style3 = [[Slash]]
+|attack style4 = [[Crush]]
+|attack style5 = [[Slash]]
+|attack style6 = [[Slash]]
+|attack speed1 = 4
+|attack speed2 = 4
+|attack speed3 = 4
+|attack speed4 = 5
+|attack speed5 = 4
+|attack speed6 = 4
+|hitpoints = 35
+|att1 = 250
+|att2 = 250
+|att3 = 200
+|att4 = 75
+|att5 = 250
+|att6 = 250
+|str1 = 150
+|str2 = 150
+|str3 = 150
+|str4 = 100
+|str5 = 150
+|str6 = 150
+|def1 = 150
+|def2 = 10
+|def3 = 100
+|def4 = 100
+|def5 = 50
+|def6 = 100
+|mage1 = 1
+|mage2 = 50
+|mage3 = 1
+|mage4 = 1
+|mage5 = 1
+|mage6 = 1
+|range = 1
+|attbns = 0
+|strbns = 0
+|amagic = 0
+|mbns = 0
+|arange = 0
+|rngbns = 0
+|dstab = 0
+|dslash = 0
+|dcrush = 0
+|dmagic = 0
+|dlight = 0
+|dstandard = 0
+|dheavy = 0
+|elementalweaknesstype1 = Fire
+|elementalweaknesstype2 = Air
+|elementalweaknesstype3 = Fire
+|elementalweaknesstype4 = Fire
+|elementalweaknesstype5 = 
+|elementalweaknesstype6 = 
+|elementalweaknesspercent1 = 50
+|elementalweaknesspercent2 = 40
+|elementalweaknesspercent3 = 50
+|elementalweaknesspercent4 = 50
+|elementalweaknesspercent5 = 
+|elementalweaknesspercent6 = 
+|poisonresistance1 = 0
+|poisonresistance2 = 0
+|poisonresistance3 = 0
+|poisonresistance4 = 0
+|poisonresistance5 = 0
+|poisonresistance6 = 100
+|venomresistance1 = 0
+|venomresistance2 = 0
+|venomresistance3 = 0
+|venomresistance4 = 0
+|venomresistance5 = 0
+|venomresistance6 = 100
+|immunecannon1 = No
+|immunecannon2 = No
+|immunecannon3 = No
+|immunecannon4 = No
+|immunecannon5 = No
+|immunecannon6 = Yes
+|id1 = 15558
+|id2 = 15559
+|id3 = 15560
+|id4 = 15561
+|id5 = 15562
+|id6 = 15563
+|leagueRegion = No
+}}
+'''Zemouregal Summons''' are summoned by [[Zemouregal (Deadman)|Zemouregal]] in [[Deadman: Annihilation]]. Both the breach version and [[Deadman's chest (scenery)|deadman's chest]] version of Zemouregal can spawn the summons. They are [[Aggressiveness|aggressive]] towards all nearby players and can be very dangerous to unaware players, as they can be lured even into safezones.
+
+They utilise routefinding, meaning they cannot be [[safespot]]ted as they will path around obstacles to reach their target. They will also frequently switch targets if there are multiple players to target, and have a limited wander radius, so they can only chase players so far before they lose aggro.
+
+==Drops==
+{{DropsTableHead}}
+{{DropsLine|name=Archaic emblem (tier 1)|quantity=1|rarity=}}
+{{DropsTableBottom}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 2 September 2026
+|update = Summer Sweep Up Miscellaneous
+|change = Zemouregal’s summoned minions now have a significantly lower wander range from their spawn point.
+}}
+{{Subject changes
+|date = 4 February 2026
+|update = Deadman: Annihilation Tweaks, Shellbane Gryphon CAs & More!
+|change = The Strength levels of all but the pirate summon have been reduced to 150.
+}}
+{{Subject changes footer}}
+
+==Trivia==
+* The summons all use the models of existing NPCs, being the [[Mummy (Ancient Pyramid)|Mummy]], [[Shade (Temple Trekking)|Shade]], [[Undead One]], [[Zombie pirate]], [[Ulfric]], and [[General Khazard]] respectively.
+
+{{Deadman: Breach Monsters}}
+{{Deadman: Annihilation}}

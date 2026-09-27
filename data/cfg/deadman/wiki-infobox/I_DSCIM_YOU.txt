@@ -1,0 +1,66 @@
+{{Deadman permanent|content=yes}}
+{{Infobox Monster
+|defver = 2
+|version1 = Annihilation
+|version2 = Permanent
+|name = I DSCIM YOU
+|image = [[File:I DSCIM YOU.png|250x250px]]
+|release = [[21 January]] [[2026]]
+|update = Holy Moleys and the Hooded Slayer Helm are Here!
+|members = Yes
+|combat1 = 495
+|combat2 = 307
+|size = 1
+|examine = Lives off of surge potions.
+|xpbonus = 
+|max hit = 21
+|aggressive = Yes
+|poisonous = No
+|attack style = [[Slash]]
+|attack speed = 3
+|hitpoints1 = 1500
+|hitpoints2 = 750
+|att = 150
+|str = 200
+|def = 25
+|mage = 100
+|range = 25
+|attbns = 0
+|strbns = 0
+|amagic = 0
+|mbns = 0
+|arange = 0
+|rngbns = 0
+|dstab = 25
+|dslash = 25
+|dcrush = 25
+|dmagic = 50
+|dlight = 10
+|dstandard = 10
+|dheavy = 10
+|elementalweaknesstype = Fire
+|elementalweaknesspercent = 50
+|poisonresistance = 100
+|venomresistance = 100
+|id = 15553
+|leagueRegion = No
+}}
+'''I DSCIM YOU''' is a monster which spawns from [[breach]]es in [[Deadman: Annihilation]]. It attacks with a [[dragon scimitar]] and is capable of using its special attack, which turns the player's [[protection prayers]] off. It will always use the special attack if its target isn't currently under the effect of the special attack. It also runs at its targets, rather than walking like most monsters.
+
+{{DeadmanAnnihilationBreachDropTable}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 4 February 2026
+|update = Deadman: Annihilation Tweaks, Shellbane Gryphon CAs & More!
+|change = Increased Hitpoints from 1000 to 1500.
+}}
+{{Subject changes footer}}
+
+==Trivia==
+* They appear to be wearing the [[hood of ruin]], [[robe top of ruin]], [[robe bottom of ruin]], [[gloves of ruin]], [[socks of ruin]], and a [[dragon scimitar]].
+
+{{Deadman: Breach Monsters}}
+{{Deadman: Annihilation}}
+{{Player spoof}}

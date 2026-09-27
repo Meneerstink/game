@@ -251,6 +251,14 @@ class Chunk(
         return tile.x in base.x until base.x + MAX_VIEWPORT && tile.z in base.z until base.z + MAX_VIEWPORT
     }
 
+    private fun traceName(entity: Entity): String =
+        when (entity) {
+            is AreaSound -> "sound=${entity.id} radius=${entity.radius} at=${entity.tile.x},${entity.tile.z}"
+            is Projectile -> "projectile=${entity.gfx} at=${entity.tile.x},${entity.tile.z}"
+            is TileGraphic -> "tilegfx=${entity.id} at=${entity.tile.x},${entity.tile.z}"
+            else -> entity.entityType.toString()
+        }
+
     /**
      * Send the [update] to every player whose loaded map contains this chunk.
      */
@@ -258,9 +266,17 @@ class Chunk(
         world: World,
         update: EntityUpdate<*>,
     ) {
+        val traced = BreachTrace.active() && (update.entity is AreaSound || update.entity is Projectile || update.entity is TileGraphic)
         world.players.forEach { client ->
             if (!inBuildArea(client) || !canBeViewed(client, update.entity)) {
+                // Breach conformance trace: a nearby player who does NOT get the sound/projectile/graphic is the bug case.
+                if (traced && client.tile.height == update.entity.tile.height && client.tile.isWithinRadius(update.entity.tile, 32)) {
+                    BreachTrace.log("zone.skip") { "${traceName(update.entity)} player=${client.username} dist=${client.tile.getDistance(update.entity.tile)} buildArea=${inBuildArea(client)}" }
+                }
                 return@forEach
+            }
+            if (traced) {
+                BreachTrace.log("zone.recv") { "${traceName(update.entity)} player=${client.username} dist=${client.tile.getDistance(update.entity.tile)}" }
             }
             val local = client.lastKnownRegionBase!!.toLocal(update.entity.tile)
             client.write(UpdateZonePartialFollowsMessage(local.x shr 3, local.z shr 3, update.entity.tile.height))

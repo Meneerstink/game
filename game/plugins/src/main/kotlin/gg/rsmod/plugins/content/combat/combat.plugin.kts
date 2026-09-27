@@ -114,6 +114,12 @@ suspend fun cycle(it: QueueTask): Boolean {
     // RCV-005 root cause: npcs had no leash model. Void CombatMovement.withinAggro - an npc fights on
     // while the target stays inside its spawn leash, and gives up only once the target leaves it.
     if (pawn is Npc && !NpcLeash.mayPursue(pawn, target, attackRange)) {
+        if (gg.rsmod.game.model.BreachTrace.watches(pawn.id)) {
+            gg.rsmod.game.model.BreachTrace.log("leash") {
+                "npc=${pawn.id}#${pawn.index} at=${pawn.tile.x},${pawn.tile.z} spawn=${pawn.spawnTile.x},${pawn.spawnTile.z} " +
+                    "target=${(target as? Player)?.username ?: target.toString()}@${target.tile.x},${target.tile.z} result=released-walk-home"
+            }
+        }
         pawn.stopMovement()
         pawn.resetFacePawn()
         Combat.reset(pawn)
@@ -137,7 +143,14 @@ suspend fun cycle(it: QueueTask): Boolean {
         // "arrive" where no section can hit (e.g. a 1x1 range-8 npc at +7,+8: box says arrived, withinRange says 11 > 9), and
         // the npc then stood there every tick. Now withinRange is the only "arrived" rule: in reach -> stop and attack; not in
         // reach -> step towards the target (a melee approach), and look again next tick.
-        if (gg.rsmod.plugins.content.combat.attack.NpcAttacks.hasValidAttack(pawn, target)) {
+        val inReach = gg.rsmod.plugins.content.combat.attack.NpcAttacks.hasValidAttack(pawn, target)
+        if (gg.rsmod.game.model.BreachTrace.watches(pawn.id)) {
+            gg.rsmod.game.model.BreachTrace.log("reach") {
+                "npc=${pawn.id}#${pawn.index} at=${pawn.tile.x},${pawn.tile.z} target=${(target as? Player)?.username ?: target.toString()}@${target.tile.x},${target.tile.z} " +
+                    "inReach=$inReach frozen=${pawn.timers.has(FROZEN_TIMER)} ${gg.rsmod.plugins.content.combat.attack.NpcAttacks.explainReach(pawn, target)}"
+            }
+        }
+        if (inReach) {
             pawn.stopMovement()
             pathFound = true
         } else {
@@ -220,7 +233,23 @@ suspend fun cycle(it: QueueTask): Boolean {
             // ... but in single-way a player still fights one npc at a time (in-engine test run: two monsters shared one player).
             val otherNpcOnTarget =
                 !targetInMulti && target.isBeingAttacked() && target.getLastHitBy().let { it is Npc && it !== pawn && !it.isDead() }
+            val traceSingle =
+                gg.rsmod.game.model.BreachTrace.active() &&
+                    ((pawn is Npc && gg.rsmod.game.model.BreachTrace.watches(pawn.id)) || (target is Npc && gg.rsmod.game.model.BreachTrace.watches(target.id)) ||
+                        (pawn is Player && target is Player))
+            val ruling = { result: String ->
+                if (traceSingle) {
+                    gg.rsmod.game.model.BreachTrace.log("single") {
+                        "attacker=${(pawn as? Player)?.username ?: pawn.toString()} target=${(target as? Player)?.username ?: target.toString()} " +
+                            "pawnMulti=$pawnInMulti targetMulti=$targetInMulti guard=$guardInvolved breachAttacker=$breachAttacker " +
+                            "sharedBreachTarget=$sharedBreachTarget otherNpcOnTarget=$otherNpcOnTarget " +
+                            "pawnLastHitBy=${pawn.getLastHitBy()?.let { (it as? Player)?.username ?: it.toString() }} " +
+                            "targetLastHitBy=${target.getLastHitBy()?.let { (it as? Player)?.username ?: it.toString() }} result=$result"
+                    }
+                }
+            }
             if (breachAttacker && otherNpcOnTarget) {
+                ruling("refused:breach-npc-target-busy")
                 Combat.reset(pawn)
                 return false
             }
@@ -228,6 +257,7 @@ suspend fun cycle(it: QueueTask): Boolean {
                 // no single-combat restriction
             } else if (pawnInMulti || targetInMulti) {
                 if (!pawnInMulti && pawn.isBeingAttacked() && pawn.getLastHitBy() != target) {
+                    ruling("refused:multi-edge-attacker-under-attack")
                     if (pawn is Player) {
                         pawn.message("I'm already under attack!")
                     }
@@ -235,6 +265,7 @@ suspend fun cycle(it: QueueTask): Boolean {
                     return false
                 }
                 if (!targetInMulti && target.isBeingAttacked() && target.getLastHitBy() != pawn && !sharedBreachTarget) {
+                    ruling("refused:multi-edge-target-busy")
                     if (pawn is Player) {
                         if (target is Player) {
                             pawn.message("Someone is already fighting this player.")
@@ -249,6 +280,7 @@ suspend fun cycle(it: QueueTask): Boolean {
             }
             else {
                 if (pawn.isBeingAttacked() && pawn.getLastHitBy() != target) {
+                    ruling("refused:single-attacker-under-attack")
                     if (pawn is Player) {
                         pawn.message("I'm already under attack!")
                     }
@@ -256,6 +288,7 @@ suspend fun cycle(it: QueueTask): Boolean {
                     return false
                 }
                 if (target.isBeingAttacked() && target.getLastHitBy() != pawn && !sharedBreachTarget) {
+                    ruling("refused:single-target-busy")
                     if (pawn is Player) {
                         if (target is Player) {
                             pawn.message("Someone is already fighting this player.")
@@ -268,6 +301,8 @@ suspend fun cycle(it: QueueTask): Boolean {
                     return false
                 }
             }
+
+            ruling("allowed")
 
             if (pawn is Player) {
                 if (target is Npc && target.combatDef.slayerReq > pawn.skills.getMaxLevel(Skills.SLAYER)) {

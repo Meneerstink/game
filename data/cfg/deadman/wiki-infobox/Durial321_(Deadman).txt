@@ -1,0 +1,76 @@
+{{Deadman permanent|content=yes}}
+{{otheruses|def=no|the version from the [[World 666 event]]|Durial321}}
+{{Infobox Monster
+|defver = 3
+|version1 = Armageddon
+|version2 = Annihilation
+|version3 = Permanent
+|name = Durial321
+|image = [[File:Durial321 (Deadman).png|150px]]
+|release = [[19 July]] [[2024]]
+|update = Deadman: Armageddon & While Guthix Sleeps Updates
+|members = Yes
+|combat1 = 334
+|combat2 = 709
+|combat3 = 272
+|size = 1
+|examine = I have the sudden urge to bank my items.
+|xpbonus = 
+|max hit = 28 (Melee), ? (Magic)
+|aggressive = Yes
+|poisonous = No
+|attack style = [[Slash]], [[Magic]]
+|attack speed = 4
+|hitpoints1 = 1000
+|hitpoints2 = 2500
+|hitpoints3 = 750
+|att = 95
+|str = 98
+|def = 88
+|mage = 94
+|range = 80
+|attbns = 0
+|strbns = 105
+|amagic1 = 47
+|amagic2 = 150
+|amagic3 = 150
+|mbns = 0
+|arange = -12
+|rngbns = 0
+|dstab = 148
+|dslash = 134
+|dcrush = 162
+|dmagic = 69
+|dlight = 88
+|dstandard = 88
+|dheavy = 88
+|poisonresistance = 0
+|venomresistance = 0
+|freezeresistance = 100
+|id = 13662
+|leagueRegion = No
+}}
+[[File:Durial321 (Deadman) chathead.png|left]]
+'''Durial321''' is a monster which spawns from [[breach]]es in both temporary and permanent [[Deadman Mode]]. He attacks with both melee and magic, casting [[Ice Barrage]] on the player, which lasts for a shorter duration than regular [[Freeze|freezes]]. He is also capable of running after his target, unlike most NPCs.
+
+{{DeadmanAnnihilationBreachDropTable}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 4 February 2026
+|update = Deadman: Annihilation Tweaks, Shellbane Gryphon CAs & More!
+|change = Increased Hitpoints from 1500 to 2500.
+}}
+{{Subject changes
+|date = 23 July 2025
+|update = Varlamore: The Final Dawn Out Now
+|change = Durial321's combat level was reduced from 334 to 209, and his hitpoints were changed from 1000 to 500.
+}}
+{{Subject changes footer}}
+
+{{Deadman: Breach Monsters}}
+{{Deadman: Apocalypse}}
+{{Deadman: Armageddon}}
+
+[[Category:Deadman: Annihilation]]

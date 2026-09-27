@@ -1,0 +1,81 @@
+{{Deadman permanent|content=yes}}
+{{Infobox Monster
+|defver = 4
+|version1 = Apocalypse
+|version2 = Armageddon
+|version3 = Annihilation
+|version4 = Permanent
+|name = Malevolent Mage
+|image = [[File:Malevolent Mage (Deadman Apocalypse).png|150px]]
+|release = [[23 August]] [[2023]]
+|update = Deadman: Apocalypse - Friday 25th August
+|members = Yes
+|combat1 = 286
+|combat2 = 286
+|combat3 = 661
+|combat4 = 286
+|size = 1
+|examine = The evil that men do lives on and on.
+|xpbonus = 
+|max hit = 
+|aggressive = Yes
+|poisonous = No
+|attack style = [[Magic]]
+|attack speed = 4
+|hitpoints1 = 500
+|hitpoints2 = 500
+|hitpoints3 = 2000
+|hitpoints4 = 500
+|att = 1
+|str = 1
+|def = 150
+|mage = 255
+|range = 1
+|attbns = 0
+|strbns = 0
+|amagic = 0
+|mbns = 0
+|arange = 0
+|rngbns = 0
+|dstab = 0
+|dslash = 0
+|dcrush = 0
+|dmagic = 300
+|dlight = 0
+|dstandard = 0
+|dheavy = 0
+|elementalweaknesstype1 = 
+|elementalweaknesstype2 = Water
+|elementalweaknesstype3 = Water
+|elementalweaknesstype4 = Water
+|elementalweaknesspercent1 = 
+|elementalweaknesspercent2 = 50
+|elementalweaknesspercent3 = 50
+|elementalweaknesspercent4 = 50
+|poisonresistance = 100
+|venomresistance = 100
+|immuneburn1 = 
+|immuneburn2 = Weak
+|immuneburn3 = Weak
+|immuneburn4 = Weak
+|id = 12456
+|leagueRegion = No
+}}
+'''Malevolent Mages''' are monsters which spawns from [[breach]]es in both temporary and permanent [[Deadman Mode]].
+
+{{DeadmanAnnihilationBreachDropTable}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 4 February 2026
+|update = Deadman: Annihilation Tweaks, Shellbane Gryphon CAs & More!
+|change = Increased Hitpoints from 500 to 2000.
+}}
+{{Subject changes footer}}
+
+{{Deadman: Breach Monsters}}
+{{Deadman: Apocalypse}}
+{{Deadman: Armageddon}}
+
+[[Category:Deadman: Annihilation]]

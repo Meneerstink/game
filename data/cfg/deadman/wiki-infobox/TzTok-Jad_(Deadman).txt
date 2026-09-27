@@ -1,0 +1,86 @@
+{{Deadman permanent|content=yes}}
+{{Confuse|TzTok-Jad}}
+{{Infobox Monster
+|defver = 3
+|version1 = Armageddon
+|version2 = Annihilation
+|version3 = Permanent
+|name = TzTok-Jad
+|image = [[File:TzTok-Jad (Deadman).png|250x250px]]
+|release = [[19 July]] [[2024]]
+|update = Deadman: Armageddon & While Guthix Sleeps Updates
+|members = Yes
+|combat1 = 1527
+|combat2 = 1758
+|combat3 = 1008
+|size = 5
+|examine = This is going to hurt...
+|xpbonus = 0
+|max hit = 78 (Melee), 108
+|aggressive = Yes
+|poisonous = No
+|attack style = [[Stab]], [[Magic]], [[Ranged]]
+|attack speed = 8
+|slaylvl = <!-- if not a slayer monster, remove this parameter -->
+|slayxp = <!-- if not a slayer monster, remove this parameter -->
+|cat = TzHaar
+|assignedby = <!-- if not a slayer monster, remove this parameter -->
+|hitpoints1 = 5000
+|hitpoints2 = 5000
+|hitpoints3 = 2000
+|att1 = 350
+|att2 = 640
+|att3 = 640
+|str1 = 350
+|str2 = 770
+|str3 = 770
+|def = 200
+|mage1 = 450
+|mage2 = 750
+|mage3 = 750
+|range1 = 450
+|range2 = 750
+|range3 = 750
+|attbns = 0
+|strbns = 0
+|amagic = 0
+|mbns = 0
+|arange = 0
+|rngbns = 0
+|dstab = 0
+|dslash = 0
+|dcrush = 0
+|dmagic = 0
+|dlight = 0
+|dstandard = 0
+|dheavy = 0
+|elementalweaknesstype = Water
+|elementalweaknesspercent = 40
+|poisonresistance = 0
+|venomresistance = 100
+|id = 13661
+|leagueRegion = No
+}}
+'''TzTok-Jad''' is a monster which spawns from [[breach]]es in both temporary and permanent [[Deadman Mode]]. In [[Deadman: Annihilation]], it can summon a [[TzTok-Jad-Rek]], which is a baby version of itself.
+
+{{DeadmanAnnihilationBreachDropTable}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 4 February 2026
+|update = Deadman: Annihilation Tweaks, Shellbane Gryphon CAs & More!
+|change = Increased Hitpoints from 3500 to 5000.
+}}
+{{Subject changes
+|date = 22 May 2025
+|update = Yama: The Calm Before the Contract Storm
+|change = The [[combat level]] was changed from 1527 to 527, and [[hitpoints]] was changed from 5000 to 1000.
+}}
+{{Subject changes footer}}
+
+{{Deadman: Breach Monsters}}
+{{Deadman: Apocalypse}}
+{{Deadman: Armageddon}}
+
+[[Category:Deadman: Annihilation]]

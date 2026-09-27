@@ -1,0 +1,82 @@
+{{Deadman permanent|content=yes}}
+{{Infobox Monster
+|defver = 4
+|version1 = Apocalypse
+|version2 = Armageddon
+|version3 = Annihilation
+|version4 = Permanent
+|name = Dagannoth Prime
+|image = [[File:Dagannoth Prime (Deadman Apocalypse).png|200px]]
+|release = [[23 August]] [[2023]]
+|update = Deadman: Apocalypse - Friday 25th August
+|members = Yes
+|combat1 = 417
+|combat2 = 447
+|combat3 = 947
+|combat4 = 447
+|size = 3
+|examine = A legendary dagannoth king, rumoured to fly on the North winds.
+|xpbonus = 
+|max hit = 26
+|aggressive = Yes
+|poisonous = No
+|attack style = [[Magic]]
+|attack speed = 4
+|cat = Bosses, Dagannoth
+|assignedby = vannaka,chaeldar,konar,nieve,duradel
+|hitpoints1 = 750
+|hitpoints2 = 1000
+|hitpoints3 = 3000
+|hitpoints4 = 1000
+|att = 255
+|str = 255
+|def1 = 255
+|def2 = 125
+|def3 = 125
+|def4 = 125
+|mage = 255
+|range = 0
+|attbns = 0
+|strbns = 0
+|amagic = 0
+|mbns = 0
+|arange = 0
+|rngbns = 0
+|dstab = 255
+|dslash = 255
+|dcrush = 255
+|dmagic = 255
+|dlight = 10
+|dstandard = 10
+|dheavy = 10
+|elementalweaknesstype1 = 
+|elementalweaknesstype2 = earth
+|elementalweaknesstype3 = earth
+|elementalweaknesstype4 = earth
+|elementalweaknesspercent1 = 
+|elementalweaknesspercent2 = 35
+|elementalweaknesspercent3 = 35
+|elementalweaknesspercent4 = 35
+|poisonresistance = 0
+|venomresistance = 100
+|id = 12442
+|leagueRegion = No
+}}
+'''Dagannoth Prime''' is a monster which spawns from [[breach]]es in both temporary and permanent [[Deadman Mode]].
+
+{{DeadmanAnnihilationBreachDropTable}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 4 February 2026
+|update = Deadman: Annihilation Tweaks, Shellbane Gryphon CAs & More!
+|change = Increased Hitpoints from 1500 to 3000.
+}}
+{{Subject changes footer}}
+
+{{Deadman: Breach Monsters}}
+{{Deadman: Apocalypse}}
+{{Deadman: Armageddon}}
+
+[[Category:Deadman: Annihilation]]

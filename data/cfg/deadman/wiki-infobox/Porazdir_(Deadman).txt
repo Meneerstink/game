@@ -1,0 +1,76 @@
+{{Deadman permanent|content=yes}}
+{{Infobox Monster
+|defver = 4
+|version1 = Apocalypse
+|version2 = Armageddon
+|version3 = Annihilation
+|version4 = Permanent
+|name = Porazdir
+|image = [[File:Porazdir (Deadman Apocalypse).png|200px]]
+|release = [[23 August]] [[2023]]
+|update = Deadman: Apocalypse - Friday 25th August
+|members = Yes
+|combat1 = 235
+|combat2 = 280
+|combat3 = 655
+|combat4 = 280
+|size = 3
+|examine = A rage-filled Zamorakian Demon.
+|attributes = demon
+|xpbonus = 
+|max hit = 43 (Magic), 16 (Melee)
+|aggressive = Yes
+|poisonous = No
+|attack style = [[Magic]], [[Slash]]
+|attack speed = 6
+|slayxp = 
+|cat = Black Demons
+|assignedby = krystilia,chaeldar,nieve,duradel
+|hitpoints1 = 320
+|hitpoints2 = 500
+|hitpoints3 = 2000
+|hitpoints4 = 500
+|att = 250
+|str = 150
+|def = 100
+|mage = 180
+|range = 1
+|attbns = 0
+|strbns = 0
+|amagic = 80
+|mbns = 80
+|arange = 0
+|rngbns = 0
+|dstab = 200
+|dslash = 200
+|dcrush = 200
+|dmagic = -60
+|dlight = 200
+|dstandard = 200
+|dheavy = 200
+|poisonresistance = 100
+|venomresistance = 100
+|immunecannon = Yes
+|id = 12448
+|leagueRegion = No
+}}
+'''Porazdir''' is a monster which spawns from [[breach]]es in both temporary and permanent [[Deadman Mode]]. He is completely immune to melee and ranged attacks, so he can only be damaged with magic attacks.
+
+It is only 1% vulnerable to [[demonbane weapons]].
+
+{{DeadmanAnnihilationBreachDropTable}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 4 February 2026
+|update = Deadman: Annihilation Tweaks, Shellbane Gryphon CAs & More!
+|change = Increased Hitpoints from 750 to 2000.
+}}
+{{Subject changes footer}}
+
+{{Deadman: Breach Monsters}}
+{{Deadman: Apocalypse}}
+{{Deadman: Armageddon}}
+
+[[Category:Deadman: Annihilation]]

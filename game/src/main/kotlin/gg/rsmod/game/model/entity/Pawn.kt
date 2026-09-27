@@ -333,12 +333,26 @@ abstract class Pawn(
             // registered plugin blocks it - see PluginRepository.canAttack's doc comment.
             // [notifyRefusal] is false for automatic attacks (auto-retaliate), so a refusing hook stays silent.
             if (!world.plugins.canAttack(this, target, notifyRefusal)) {
+                if (gg.rsmod.game.model.BreachTrace.active() &&
+                    (this is Player || (this is Npc && gg.rsmod.game.model.BreachTrace.watches(this.id)) || (target is Npc && gg.rsmod.game.model.BreachTrace.watches(target.id)))
+                ) {
+                    gg.rsmod.game.model.BreachTrace.log("attack.refused") {
+                        "attacker=${(this as? Player)?.username ?: this.toString()} target=${(target as? Player)?.username ?: target.toString()} by=can_attack-plugin"
+                    }
+                }
                 return
             }
 
             resetInteractions()
             interruptQueues()
 
+            if (this is Npc && gg.rsmod.game.model.BreachTrace.watches(this.id)) {
+                val old = attr[COMBAT_TARGET_FOCUS_ATTR]?.get()
+                gg.rsmod.game.model.BreachTrace.log("target.set") {
+                    "npc=${(this as Npc).id}#$index old=${(old as? Player)?.username ?: old?.toString() ?: "-"} new=${(target as? Player)?.username ?: target.toString()} " +
+                        "caller=${Thread.currentThread().stackTrace.drop(2).firstOrNull { !it.className.startsWith("gg.rsmod.game.model.entity.Pawn") }?.let { "${it.fileName}:${it.lineNumber}" }}"
+                }
+            }
             attr[COMBAT_TARGET_FOCUS_ATTR] = WeakReference(target)
 
             /*
@@ -733,7 +747,13 @@ abstract class Pawn(
     ) {
         // Audit T-13: the protection window is counted in game cycles (it compared milliseconds with ticks).
         if (!priority && lastAnimation > world.currentCycle) {
+            if (this is Npc && gg.rsmod.game.model.BreachTrace.watches((this as Npc).id)) {
+                gg.rsmod.game.model.BreachTrace.log("anim.skipped") { "npc=${(this as Npc).id}#$index anim=$id protectedUntil=$lastAnimation" }
+            }
             return
+        }
+        if (this is Npc && gg.rsmod.game.model.BreachTrace.watches((this as Npc).id)) {
+            gg.rsmod.game.model.BreachTrace.log("anim.set") { "npc=${(this as Npc).id}#$index anim=$id delay=$delay prio=$priority replaces=${if (hasBlock(UpdateBlockType.ANIMATION)) blockBuffer.animation else -1}" }
         }
         lastAnimation = if (id != -1) world.currentCycle + world.getAnimationDelay(id) else 0
         blockBuffer.animation = id
@@ -1039,6 +1059,8 @@ abstract class Pawn(
             BFSPathFindingStrategy(
                 collision,
             )
+        } else if (this is Npc && this.naivePathfinding) {
+            gg.rsmod.game.model.path.strategy.NaivePathFindingStrategy(collision, this)
         } else {
             SimplePathFindingStrategy(collision, this)
         }

@@ -122,7 +122,37 @@ class NpcSynchronizationTask(
             player.localNpcs.add(npc)
         }
 
+        if (gg.rsmod.game.model.BreachTrace.active()) traceViewer(player, segments)
+
         return segments
+    }
+
+    /**
+     * Breach conformance trace: for every watched npc in view of [player], which update blocks this player receives this
+     * cycle (animation, graphics, facing, hitsplats, forced chat), or why the npc is not in the player's list at all.
+     */
+    private fun traceViewer(
+        player: Player,
+        segments: List<SynchronizationSegment>,
+    ) {
+        val blocks = segments.filterIsInstance<NpcUpdateBlockSegment>().map { it.npc }.toHashSet()
+        for (npc in worldNpcs) {
+            if (npc == null || !gg.rsmod.game.model.BreachTrace.watches(npc.id)) continue
+            if (npc.tile.height != player.tile.height || !npc.tile.isWithinRadius(player.tile, 16)) continue
+            val b = npc.blockBuffer
+            if (!player.localNpcs.contains(npc)) {
+                gg.rsmod.game.model.BreachTrace.log("sync.notlocal") { "npc=${npc.id}#${npc.index} viewer=${player.username} dirty=${b.isDirty()} anim=${b.animation}" }
+                continue
+            }
+            if (npc !in blocks) continue
+            gg.rsmod.game.model.BreachTrace.log("sync.block") {
+                val gfx = (0 until b.graphicCount).joinToString("/") { "${b.graphics[it].id}" }
+                "npc=${npc.id}#${npc.index} viewer=${player.username} " +
+                    "anim=${if (npc.hasBlock(gg.rsmod.game.sync.block.UpdateBlockType.ANIMATION)) b.animation else -1} " +
+                    "gfx=${if (gfx.isEmpty()) "-" else gfx} face=${b.facePawnIndex} hits=${b.hits.size} " +
+                    "chat=${if (npc.hasBlock(gg.rsmod.game.sync.block.UpdateBlockType.FORCE_CHAT)) b.forceChat else "-"}"
+            }
+        }
     }
 
     private fun shouldRemove(

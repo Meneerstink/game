@@ -1,0 +1,53 @@
+{{Deadman permanent|content=yes}}
+{{Infobox Monster
+|defver = 2
+|version1 = Annihilation
+|version2 = Permanent
+|name = Pestilent Bloat
+|image = [[File:Pestilent Bloat (Deadman).png|250x250px]]
+|release = [[21 January]] [[2026]]
+|update = Holy Moleys and the Hooded Slayer Helm are Here!
+|members = Yes
+|combat1 = 716
+|combat2 = 404
+|size = 5
+|examine = An infinite mass of decay and death.
+|xpbonus = 
+|max hit = 20
+|aggressive = Yes
+|poisonous = No
+|attack style = [[Ranged]]
+|attack speed = 5
+|hitpoints1 = 2000
+|hitpoints2 = 750
+|att = 250
+|str = 340
+|def = 100
+|mage = 150
+|range = 180
+|attbns = 150
+|strbns = 82
+|amagic = 0
+|mbns = 0
+|arange = 180
+|rngbns = 4
+|dstab = 40
+|dslash = 20
+|dcrush = 40
+|dmagic = 600
+|dlight = 800
+|dstandard = 800
+|dheavy = 800
+|poisonresistance = 100
+|venomresistance = 100
+|immunecannon = Yes
+|freezeresistance = 100
+|id = 15556
+|leagueRegion = No
+}}
+'''Pestilent Bloat''' is a monster which spawns from [[breach]]es in [[Deadman: Annihilation]]. It does not directly attack, but rather it wanders around, attacking players with range and line of sight with swarms of flies, which deal damage and display the message {{mes|Flies leave the body of the bloat and swarm you.}}. The flies can be completely protected against by praying [[Protect from Ranged]].
+
+{{DeadmanAnnihilationBreachDropTable}}
+
+{{Deadman: Breach Monsters}}
+{{Deadman: Annihilation}}

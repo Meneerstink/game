@@ -1,0 +1,61 @@
+{{Deadman permanent|content=yes}}
+{{Infobox Monster
+|defver = 2
+|version1 = Annihilation
+|version2 = Permanent
+|name = Splatter
+|image = [[File:Splatter (Deadman).png|250x250px]]
+|release = [[21 January]] [[2026]]
+|update = Holy Moleys and the Hooded Slayer Helm are Here!
+|members = Yes
+|combat1 = 648
+|combat2 = 398
+|size = 3
+|examine = Don't burst its bubble!
+|xpbonus = 
+|max hit = 26 (Melee), 100+ (Explosion)
+|aggressive = Yes
+|poisonous = No
+|attack style = [[Crush]]
+|attack speed = 4
+|hitpoints1 = 2000
+|hitpoints2 = 1000
+|att = 200
+|str = 250
+|def = 10
+|mage = 300
+|range = 1
+|attbns = 0
+|strbns = 0
+|amagic = 0
+|mbns = 0
+|arange = 0
+|rngbns = 0
+|dstab = 0
+|dslash = 0
+|dcrush = 0
+|dmagic = 0
+|dlight = 0
+|dstandard = 0
+|dheavy = 0
+|poisonresistance = 
+|venomresistance = 
+|id = 15550
+|leagueRegion = No
+}}
+'''Splatter''' is a monster which spawns from [[breach]]es in [[Deadman: Annihilation]]. Upon death, it explodes, dealing large amounts of damage. This explosion only affects its current target when in single-way combat, but is capable of hitting multiple players in multi-combat.
+
+{{DeadmanAnnihilationBreachDropTable}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 4 February 2026
+|update = Deadman: Annihilation Tweaks, Shellbane Gryphon CAs & More!
+|change = Increased Hitpoints from 100 to 2000.
+}}
+{{Subject changes footer}}
+
+
+{{Deadman: Breach Monsters}}
+{{Deadman: Annihilation}}

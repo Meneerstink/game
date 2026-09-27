@@ -1,0 +1,84 @@
+{{Deadman permanent|content=yes}}
+{{Infobox Monster
+|defver = 4
+|version1 = Apocalypse
+|version2 = Armageddon
+|version3 = Annihilation
+|version4 = Permanent
+|name = Giant goblin
+|image = [[File:Giant goblin.png|200px]]
+|release = [[23 August]] [[2023]]
+|update = Deadman: Apocalypse - Friday 25th August
+|members = Yes
+|combat1 = 347
+|combat2 = 397
+|combat3 = 1022
+|combat4 = 397
+|size = 2
+|examine = An ugly green creature.
+|xpbonus = 
+|max hit = 27
+|aggressive = Yes
+|poisonous = No
+|attack style = [[Crush]]
+|attack speed1 = 4
+|attack speed2 = 4
+|attack speed3 = 5
+|attack speed4 = 5
+|slayxp = 
+|cat = Goblins
+|assignedby = turael,spria
+|hitpoints1 = 750
+|hitpoints2 = 1000
+|hitpoints3 = 3500
+|hitpoints4 = 1000
+|att = 150
+|str = 150
+|def1 = 250
+|def2 = 200
+|def3 = 200
+|def4 = 200
+|mage = 1
+|range = 1
+|attbns = 120
+|strbns = 43
+|amagic = 0
+|mbns = 0
+|arange = 0
+|rngbns = 0
+|dstab = -15
+|dslash = -15
+|dcrush = -15
+|dmagic = -15
+|dlight = -15
+|dstandard = -15
+|dheavy = -15
+|poisonresistance = 0
+|venomresistance = 0
+|id = 12452
+|leagueRegion = No
+}}
+[[File:Giant goblin chathead.png|left]]
+'''Giant goblin''' is a monster which spawns from [[breach]]es in both temporary and permanent [[Deadman Mode]].
+
+{{DeadmanAnnihilationBreachDropTable}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 4 February 2026
+|update = Deadman: Annihilation Tweaks, Shellbane Gryphon CAs & More!
+|change = Increased Hitpoints from 1000 to 3500.
+}}
+{{Subject changes
+|date = 21 January 2026
+|update = Holy Moleys and the Hooded Slayer Helm are Here!
+|change = The giant goblin's attack speed was decreased to 5 ticks from 4 ticks.
+}}
+{{Subject changes footer}}
+
+{{Deadman: Breach Monsters}}
+{{Deadman: Apocalypse}}
+{{Deadman: Armageddon}}
+{{Deadman: Annihilation}}
+[[Category:Goblins]]

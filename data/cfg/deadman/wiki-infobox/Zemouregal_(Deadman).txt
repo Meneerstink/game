@@ -1,0 +1,76 @@
+{{Deadman permanent|content=yes}}
+{{Infobox Monster
+|defver = 2
+|version1 = Annihilation
+|version2 = Permanent
+|version3 = Deadman's chest
+|name = Zemouregal
+|image = [[File:Zemouregal (Deadman).png|250x250px]]
+|image3 = [[File:Zemouregal (Deadman's chest).png|250x250px]]
+|release = [[21 January]] [[2026]]
+|update = Holy Moleys and the Hooded Slayer Helm are Here!
+|members = Yes
+|combat1 = 984
+|combat2 = 984
+|combat3 = 322
+|size = 2
+|examine = The infamous enemy of Varrock.
+|xpbonus = 
+|max hit = 23+
+|aggressive = Yes
+|poisonous = No
+|attack style = [[Magic]]
+|attack speed = 7
+|hitpoints1 = 2500
+|hitpoints2 = 750
+|hitpoints3 = 500
+|att = 1
+|str = 1
+|def = 125
+|mage = 255
+|range = 1
+|attbns = 0
+|strbns = 0
+|amagic = 0
+|mbns = 0
+|arange = 0
+|rngbns = 0
+|dstab = 30
+|dslash = 30
+|dcrush = 30
+|dmagic = 255
+|dlight = 15
+|dstandard = 15
+|dheavy = 15
+|poisonresistance = 0
+|venomresistance = 0
+|id = 15237
+|id3 = 15564
+|leagueRegion = No
+}}
+{{Synced switch
+|version1 = [[File:Zemouregal (Deadman) chathead.png|left]]
+|version2 = [[File:Zemouregal (Deadman) chathead.png|left]]
+|version3 = [[File:Zemouregal (Deadman's chest) chathead.png|left]]
+}}
+'''Zemouregal''' is a monster that can appear at [[breach]]es in [[Deadman Mode]] and spawned alongside [[Deadman's chest (scenery)|Deadman's chests]] in [[Deadman: Annihilation]]. Wielding the [[Staff of Armadyl]], he attacks with magic and can summon [[Zemouregal Summon]]s. He utilises routefinding, meaning he cannot be [[safespot]]ted as he will path around obstacles to reach his target. He will also not stay focused on a single target, instead occasionally switching targets if other players are nearby.
+
+When spawned from a breach, he is level 984; when defending a Deadman's chest, he is level 322. Only the breach versions drop the breach loot. The Deadman's chest version when killed will instead always drop a tier 5 [[Archaic_emblem#Tier_5|Archaic emblem]].
+
+{{DeadmanAnnihilationBreachDropTable}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 4 February 2026
+|update = Deadman: Annihilation Tweaks, Shellbane Gryphon CAs & More!
+|change = Increased Hitpoints of the breach variant from 1500 to 2500.
+}}
+{{Subject changes footer}}
+
+==Trivia==
+* The config name of the breach version is <code>deadman_breach_lucien</code>, which suggests that it was originally intended to be [[Lucien]], rather than [[Zemouregal]]. This would also explain why Zemouregal is wielding the [[Staff of Armadyl]] here.
+* Upon being defeated, he fades away into smoke, using the same animation that [[Mahjarrat]] do when appearing or disappearing.
+
+{{Deadman: Breach Monsters}}
+{{Deadman: Annihilation}}

@@ -1,0 +1,71 @@
+{{Deadman permanent|content=yes}}
+{{Infobox Monster
+|defver = 4
+|version1 = Apocalypse
+|version2 = Armageddon
+|version3 = Annihilation
+|version4 = Permanent
+|name = Commander Zilyana
+|image = [[File:Commander Zilyana (Deadman Apocalypse).png|200px]]
+|release = [[23 August]] [[2023]]
+|update = Deadman: Apocalypse - Friday 25th August
+|members = Yes
+|combat = 596
+|size = 2
+|examine = Commander of Saradomin's forces.
+|xpbonus = 
+|max hit = 27
+|aggressive = Yes
+|poisonous = No
+|attack style = [[Crush]]
+|attack speed = 2
+|cat = Bosses
+|assignedby = konar,nieve,duradel
+|hitpoints1 = 500
+|hitpoints2 = 500
+|hitpoints3 = 1500
+|hitpoints4 = 750
+|att = 280
+|str = 196
+|def1 = 300
+|def2 = 150
+|def3 = 150
+|def4 = 150
+|mage = 300
+|range = 250
+|attbns = 195
+|strbns = 20
+|amagic = 200
+|mbns = 0
+|arange = 0
+|rngbns = 0
+|dstab = 100
+|dslash = 100
+|dcrush = 100
+|dmagic = 100
+|dlight = 100
+|dstandard = 100
+|dheavy = 100
+|poisonresistance = 100
+|venomresistance = 100
+|id = 12445
+|leagueRegion = No
+}}
+'''Commander Zilyana''' is a monster which spawns from [[breach]]es in both temporary and permanent [[Deadman Mode]]. Like the [[Commander Zilyana|regular version]], she is capable of using both magic and melee attacks.
+
+{{DeadmanAnnihilationBreachDropTable}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 4 February 2026
+|update = Deadman: Annihilation Tweaks, Shellbane Gryphon CAs & More!
+|change = Increased Hitpoints from 1000 to 1500.
+}}
+{{Subject changes footer}}
+
+{{Deadman: Breach Monsters}}
+{{Deadman: Apocalypse}}
+{{Deadman: Armageddon}}
+
+[[Category:Deadman: Annihilation]]

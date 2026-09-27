@@ -1,0 +1,82 @@
+{{Deadman permanent|content=yes}}
+{{Infobox Monster
+|defver = 4
+|version1 = Apocalypse
+|version2 = Armageddon
+|version3 = Annihilation
+|version4 = Permanent
+|name = Night beast
+|image = [[File:Night beast (Deadman Apocalypse).png|200px]]
+|release = [[23 August]] [[2023]]
+|update = Deadman: Apocalypse - Friday 25th August
+|members = Yes
+|combat1 = 362
+|combat2 = 332
+|combat3 = 457
+|combat4 = 332
+|size = 4
+|examine = I don't want to ever visit that darker dimension...
+|xpbonus = 
+|max hit = 30 (Melee), ? (Magic)
+|aggressive = Yes
+|poisonous = No
+|attack style = [[Crush]], [[Magic]]
+|attack speed = 4
+|cat = Dark Beasts
+|assignedby = konar,nieve,duradel
+|hitpoints1 = 500
+|hitpoints2 = 500
+|hitpoints3 = 1000
+|hitpoints4 = 500
+|att = 270
+|str = 290
+|def1 = 220
+|def2 = 100
+|def3 = 100
+|mage = 300
+|range = 1
+|attbns = 0
+|strbns = 0
+|amagic = 0
+|mbns = 0
+|arange = 0
+|rngbns = 0
+|dstab = 75
+|dslash = 80
+|dcrush1 = 200
+|dcrush2 = 120
+|dcrush3 = 120
+|dmagic1 = 190
+|dmagic2 = 100
+|dmagic3 = 100
+|dlight = 100
+|dstandard = 100
+|dheavy = 100
+|poisonresistance = 100
+|venomresistance = 100
+|id = 12459
+|leagueRegion = No
+}}
+'''Night beasts''' are monsters which spawns from [[breach]]es in both temporary and permanent [[Deadman Mode]]. It attacks similar to its [[Night beast|regular variant]], and is capable of using its special 3x3 fireball attack.
+
+Loot from the breach monsters will be as follows:
+* The MvP (player with the most damage to the boss) will have a chance to get a unique drop.
+* The non-MvPs (top 15 players that have dealt damage to the boss) will receive regular breach loot.
+* Players who did damage to the breach monsters but did not do enough damage to be in the top 15 damage dealers will not receive loot or points for that kill.
+
+{{DeadmanAnnihilationBreachDropTable}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 4 February 2026
+|update = Deadman: Annihilation Tweaks, Shellbane Gryphon CAs & More!
+|change = Increased Hitpoints from 500 to 1000.
+}}
+{{Subject changes footer}}
+
+{{Deadman: Breach Monsters}}
+{{Deadman: Apocalypse}}
+{{Deadman: Armageddon}}
+
+[[Category:Deadman: Annihilation]]

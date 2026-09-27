@@ -1,0 +1,81 @@
+{{Deadman permanent|content=yes}}
+{{Infobox Monster
+|defver = 4
+|version1 = Apocalypse
+|version2 = Armageddon
+|version3 = Annihilation
+|version4 = Permanent
+|name = Dagannoth Supreme
+|image = [[File:Dagannoth Supreme (Deadman Apocalypse).png|200px]]
+|release = [[23 August]] [[2023]]
+|update = Deadman: Apocalypse - Friday 25th August
+|members = Yes
+|combat1 = 385
+|combat2 = 436
+|combat3 = 936
+|combat4 = 436
+|size = 3
+|examine = The dagannoth king responsible for the death of the Bukalla.
+|xpbonus = 
+|max hit = 
+|aggressive = Yes
+|poisonous = No
+|attack style = [[Ranged]]
+|attack speed = 4
+|cat = Bosses, Dagannoth
+|assignedby = vannaka,chaeldar,konar,nieve,duradel
+|hitpoints1 = 750
+|hitpoints2 = 1000
+|hitpoints3 = 3000
+|hitpoints4 = 1000
+|att = 255
+|str = 255
+|def1 = 128
+|def2 = 84
+|def3 = 84
+|def4 = 84
+|mage = 255
+|range = 255
+|attbns = 0
+|strbns = 0
+|amagic = 0
+|mbns = 0
+|arange = 0
+|rngbns = 0
+|dstab = 10
+|dslash = 10
+|dcrush = 10
+|dmagic = 255
+|dlight = 550
+|dstandard = 550
+|dheavy = 550
+|elementalweaknesstype1 = 
+|elementalweaknesstype2 = earth
+|elementalweaknesstype3 = earth
+|elementalweaknesstype4 = earth
+|elementalweaknesspercent1 = 
+|elementalweaknesspercent2 = 35
+|elementalweaknesspercent3 = 35
+|elementalweaknesspercent4 = 35
+|poisonresistance = 0
+|venomresistance = 100
+|id = 12441
+|leagueRegion = No
+}}
+'''Dagannoth Supreme''' is a monster which spawns from [[breach]]es in both temporary and permanent [[Deadman Mode]]. It attacks with ranged and is capable of targeting multiple players at once, like its [[Dagannoth Supreme|regular]] counterpart.
+
+{{DeadmanAnnihilationBreachDropTable}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 4 February 2026
+|update = Deadman: Annihilation Tweaks, Shellbane Gryphon CAs & More!
+|change = Increased Hitpoints from 1500 to 3000.
+}}
+{{Subject changes footer}}
+
+{{Deadman: Breach Monsters}}
+{{Deadman: Apocalypse}}
+{{Deadman: Armageddon}}
+[[Category:Deadman: Annihilation]]

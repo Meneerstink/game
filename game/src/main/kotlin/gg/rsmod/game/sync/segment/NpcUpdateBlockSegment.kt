@@ -12,7 +12,7 @@ import gg.rsmod.net.packet.GamePacketBuilder
  * @author Tom <rspsmods@gmail.com>
  */
 class NpcUpdateBlockSegment(
-    private val npc: Npc,
+    val npc: Npc,
     private val newAddition: Boolean,
 ) : SynchronizationSegment {
     override fun encode(buf: GamePacketBuilder) {

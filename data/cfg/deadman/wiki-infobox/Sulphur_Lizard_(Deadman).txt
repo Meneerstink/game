@@ -1,0 +1,79 @@
+{{Deadman permanent|content=yes}}
+{{Infobox Monster
+|defver = 3
+|version1 = Apocalypse, Armageddon
+|version2 = Annihilation
+|version3 = Permanent
+|name = Sulphur Lizard
+|image = [[File:Sulphur Lizard (Deadman Apocalypse).png|200px]]
+|release = [[23 August]] [[2023]]
+|update = Deadman: Apocalypse - Friday 25th August
+|members = Yes
+|combat1 = 257
+|combat2 = 757
+|combat3 = 257
+|size = 2
+|examine = A cold-blooded creature, partial to warmth.
+|xpbonus = 
+|flatarmour1 = 0
+|flatarmour2 = -1
+|flatarmour3 = -1
+|max hit = 21
+|aggressive = Yes
+|poisonous = No
+|attack style = [[Crush]]
+|attack speed1 = 4
+|attack speed2 = 5
+|attack speed3 = 5
+|slayxp = 
+|cat = Lizards
+|assignedby = turael,spria,mazchna,vannaka,chaeldar
+|hitpoints1 = 500
+|hitpoints2 = 2500
+|hitpoints3 = 500
+|att = 150
+|str = 200
+|def = 75
+|mage = 1
+|range = 1
+|attbns = 0
+|strbns = 0
+|amagic = 0
+|mbns = 0
+|arange = 0
+|rngbns = 0
+|dstab = 15
+|dslash = 25
+|dcrush = 25
+|dmagic = 0
+|dlight = 15
+|dstandard = 15
+|dheavy = 15
+|poisonresistance = 0
+|venomresistance = 0
+|id = 12458
+|leagueRegion = No
+}}
+'''Sulphur Lizards''' are monsters which spawns from [[breach]]es in both temporary and permanent [[Deadman Mode]]. It attacks with melee, knocking back any players hit by it.
+
+{{DeadmanAnnihilationBreachDropTable}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 4 February 2026
+|update = Deadman: Annihilation Tweaks, Shellbane Gryphon CAs & More!
+|change = Increased Hitpoints from 500 to 2500.
+}}
+{{Subject changes
+|date = 21 January 2026
+|update = Holy Moleys and the Hooded Slayer Helm are Here!
+|change = The sulphur lizard's attack speed was decreased to 5 ticks from 4 ticks.
+}}
+{{Subject changes footer}}
+
+{{Deadman: Breach Monsters}}
+{{Deadman: Apocalypse}}
+{{Deadman: Armageddon}}
+
+[[Category:Deadman: Annihilation]]

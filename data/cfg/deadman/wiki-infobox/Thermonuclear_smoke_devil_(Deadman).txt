@@ -1,0 +1,74 @@
+{{Deadman permanent|content=yes}}
+{{Infobox Monster
+|defver = 3
+|version1 = Armageddon
+|version2 = Annihilation
+|version3 = Permanent
+|name = Thermonuclear smoke devil
+|image = [[File:Thermonuclear smoke devil (deadman).png|250x250px]]
+|release = [[19 July]] [[2024]]
+|update = Deadman: Armageddon & While Guthix Sleeps Updates
+|members = Yes
+|combat1 = 313
+|combat2 = 563
+|combat3 = 313
+|size = 4
+|examine = Woah.
+|xpbonus = 
+|max hit = 32
+|aggressive = Yes
+|poisonous = No
+|attack style = [[Ranged]]
+|attack speed = 2
+|slayxp = 
+|cat = Bosses, Smoke Devils
+|assignedby = konar,nieve,duradel
+|hitpoints1 = 500
+|hitpoints2 = 1500
+|hitpoints3 = 500
+|att = 230
+|str = 220
+|def = 150
+|mage = 1
+|range = 310
+|attbns = 0
+|strbns = 0
+|amagic = 0
+|mbns = 0
+|arange = 0
+|rngbns = 0
+|dstab = 30
+|dslash = 12
+|dcrush = 20
+|dmagic = 200
+|dlight = 300
+|dstandard = 300
+|dheavy = 300
+|elementalweaknesstype1 = 
+|elementalweaknesstype2 = Air
+|elementalweaknesstype3 = Air
+|elementalweaknesspercent1 = 
+|elementalweaknesspercent2 = 20
+|elementalweaknesspercent3 = 20
+|poisonresistance = 100
+|venomresistance = 100
+|id = 13659
+|leagueRegion = No
+}}
+'''Thermonuclear smoke devil''' is a monster which spawns from [[breach]]es in both temporary and permanent [[Deadman Mode]].
+
+{{DeadmanAnnihilationBreachDropTable}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 4 February 2026
+|update = Deadman: Annihilation Tweaks, Shellbane Gryphon CAs & More!
+|change = Increased Hitpoints from 500 to 1500.
+}}
+{{Subject changes footer}}
+
+{{Deadman: Breach Monsters}}
+{{Deadman: Armageddon}}
+
+[[Category:Deadman: Annihilation]]

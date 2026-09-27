@@ -35,6 +35,12 @@ class Npc private constructor(
      */
     var smartPathfinding = false
 
+    /**
+     * OSRS npc movement (diagonal first, then straight; [gg.rsmod.game.model.path.strategy.NaivePathFindingStrategy]) instead of
+     * the rsmod axis-by-axis default. Set for the Deadman breach monsters (breach conformance 2026-09-27); [smartPathfinding] wins.
+     */
+    var naivePathfinding = false
+
     constructor(id: Int, tile: Tile, world: World) : this(id, world, spawnTile = Tile(tile)) {
         this.tile = tile
     }

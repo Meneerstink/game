@@ -1,0 +1,76 @@
+{{Deadman permanent|content=yes}}
+{{otheruses|def=no|the normal variant|Bee Swarm}}
+{{Infobox Monster
+|defver = 3
+|version1 = Armageddon
+|version2 = Annihilation
+|version3 = Permanent
+|name = Bee Swarm
+|image = [[File:Bee Swarm (Deadman).png|250x250px]]
+|release = [[19 July]] [[2024]]
+|update = Deadman: Armageddon & While Guthix Sleeps Updates
+|members = Yes
+|combat1 = 670
+|combat2 = 1420
+|combat3 = 545
+|size = 3
+|examine = Not the bees!
+|xpbonus = 
+|max hit = 11
+|aggressive = Yes
+|poisonous = No
+|attack style = [[Crush]]
+|attack speed = 1
+|hitpoints1 = 2000
+|hitpoints2 = 5000
+|hitpoints3 = 1500
+|att = 400
+|str = 100
+|def = 30
+|mage = 1
+|range = 1
+|attbns = 200
+|strbns = 0
+|amagic = 0
+|mbns = 0
+|arange = 0
+|rngbns = 0
+|dstab = 10
+|dslash = 10
+|dcrush = 10
+|dmagic = 0
+|dlight = 0
+|dstandard = 0
+|dheavy = 0
+|elementalweaknesstype = Fire
+|elementalweaknesspercent = 50
+|poisonresistance = 0
+|venomresistance = 0
+|immunecannon = Yes
+|freezeresistance = 100
+|id = 13658
+|leagueRegion = No
+}}
+'''Bee swarms''' are monsters which spawns from [[breach]]es in both temporary and permanent [[Deadman Mode]]. Stepping beneath the bee swarm will result in taking damage, displaying the message {{mes|You get stung while stood within the swarm of bees.}}
+
+{{DeadmanAnnihilationBreachDropTable}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 4 February 2026
+|update = Deadman: Annihilation Tweaks, Shellbane Gryphon CAs & More!
+|change = Increased Hitpoints from 3000 to 5000.
+}}
+{{Subject changes
+|date = 23 July 2025
+|update = Varlamore: The Final Dawn Out Now
+|change = The bee swarm's combat level was reduced from 670 to 357, and its hitpoints were changed from 2000 to 750.
+}}
+{{Subject changes footer}}
+
+{{Deadman: Breach Monsters}}
+{{Deadman: Apocalypse}}
+{{Deadman: Armageddon}}
+
+[[Category:Deadman: Annihilation]]

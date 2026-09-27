@@ -276,6 +276,7 @@ class World(
             currentCycle = 0
             logger.info("World cycle has been reset.")
         }
+        BreachTrace.cycle = currentCycle
 
         /*
          * Copy the timers to a mutable map just in case a timer has to modify
@@ -554,6 +555,7 @@ class World(
     fun spawn(projectile: Projectile) {
         val tile = projectile.tile
         val chunk = chunks.getOrCreate(tile)
+        BreachTrace.log("projectile.spawn") { "gfx=${projectile.gfx} from=${tile.x},${tile.z} to=${projectile.targetPawn?.let { "${it.entityType}#${it.index}" } ?: projectile.targetTile}" }
 
         chunk.addEntity(this, projectile, tile)
     }
@@ -561,6 +563,7 @@ class World(
     fun spawn(sound: AreaSound) {
         val tile = sound.tile
         val chunk = chunks.getOrCreate(tile)
+        BreachTrace.log("areasound.spawn") { "id=${sound.id} at=${tile.x},${tile.z},${tile.height} radius=${sound.radius} delay=${sound.delay}" }
 
         chunk.addEntity(this, sound, tile)
     }
@@ -568,6 +571,7 @@ class World(
     fun spawn(graphic: TileGraphic) {
         val tile = graphic.tile
         val chunk = chunks.getOrCreate(tile)
+        BreachTrace.log("tilegfx.spawn") { "id=${graphic.id} at=${tile.x},${tile.z},${tile.height}" }
 
         chunk.addEntity(this, graphic, tile)
     }

@@ -1,0 +1,86 @@
+{{Deadman permanent|content=yes}}
+{{Infobox Monster
+|defver = 4
+|version1 = Apocalypse
+|version2 = Armageddon
+|version3 = Annihilation
+|version4 = Permanent
+|name = Jal-ImKot
+|image = [[File:Jal-ImKot (Deadman Apocalypse).png|200px]]
+|release = [[23 August]] [[2023]]
+|update = Deadman: Apocalypse - Friday 25th August
+|members = Yes
+|combat = 240
+|size = 4
+|examine = Those are some powerful claws.
+|xpbonus = 
+|max hit = 49
+|aggressive = Yes
+|poisonous = No
+|attack style = [[Slash]]
+|attack speed1 = 4
+|attack speed2 = 4
+|attack speed3 = 5
+|attack speed4 = 5
+|slayxp = 
+|cat = TzHaar
+|assignedby = chaeldar,nieve,duradel
+|hitpoints1 = 750
+|hitpoints2 = 1000
+|hitpoints3 = 3000
+|hitpoints4 = 500
+|att = 210
+|str = 290
+|def = 120
+|mage = 120
+|range = 220
+|attbns = 0
+|strbns = 40
+|amagic = 0
+|mbns = 0
+|arange = 0
+|rngbns = 0
+|dstab = 65
+|dslash = 65
+|dcrush = 65
+|dmagic = 30
+|dlight = 50
+|dstandard = 50
+|dheavy = 50
+|elementalweaknesstype1 = 
+|elementalweaknesstype2 = Water
+|elementalweaknesstype3 = Water
+|elementalweaknesstype4 = Water
+|elementalweaknesspercent1 = 
+|elementalweaknesspercent2 = 30
+|elementalweaknesspercent3 = 30
+|elementalweaknesspercent4 = 30
+|poisonresistance = 100
+|venomresistance = 100
+|immuneburn = No
+|id = 12455
+|leagueRegion = No
+}}
+'''Jal-ImKot''' is a monster which spawns from [[breach]]es in both temporary and permanent [[Deadman Mode]].
+
+{{DeadmanAnnihilationBreachDropTable}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 4 February 2026
+|update = Deadman: Annihilation Tweaks, Shellbane Gryphon CAs & More!
+|change = Increased Hitpoints from 1000 to 3000.
+}}
+{{Subject changes
+|date = 21 January 2026
+|update = Holy Moleys and the Hooded Slayer Helm are Here!
+|change = The Jal-ImKot's attack speed was decreased to 5 ticks from 4 ticks.
+}}
+{{Subject changes footer}}
+
+{{Deadman: Breach Monsters}}
+{{Deadman: Apocalypse}}
+{{Deadman: Armageddon}}
+
+[[Category:Deadman: Annihilation]]

@@ -1,0 +1,85 @@
+{{Deadman permanent|content=yes}}
+{{Infobox Monster
+|defver = 4
+|version1 = Apocalypse
+|version2 = Armageddon
+|version3 = Annihilation
+|version4 = Permanent
+|name = King Black Dragon
+|image = [[File:King Black Dragon (Deadman Apocalypse).png|200px]]
+|release = [[23 August]] [[2023]]
+|update = Deadman: Apocalypse - Friday 25th August
+|members = Yes
+|combat1 = 278
+|combat2 = 256
+|combat3 = 318
+|combat4 = 281
+|size = 5
+|examine = One of the biggest, meanest dragons around.
+|attributes = dragon
+|xpbonus = 
+|max hit = 25 (Melee), 65 (Dragonfire)
+|aggressive = Yes
+|poisonous = Yes
+|attack style = [[Stab]], [[Dragonfire]]
+|attack speed = 4
+|slayxp = 
+|cat = Black Dragons, Bosses
+|assignedby = konar,nieve,duradel
+|hitpoints1 = 250
+|hitpoints2 = 250
+|hitpoints3 = 500
+|hitpoints4 = 350
+|att = 240
+|str = 240
+|def1 = 240
+|def2 = 150
+|def3 = 150
+|def4 = 150
+|mage = 240
+|range = 1
+|attbns = 0
+|strbns = 0
+|amagic = 0
+|mbns = 0
+|arange = 0
+|rngbns = 0
+|dstab = 70
+|dslash = 90
+|dcrush = 90
+|dmagic = 80
+|dlight = 70
+|dstandard = 40
+|dheavy = 70
+|elementalweaknesstype1 = 
+|elementalweaknesstype2 = Water
+|elementalweaknesstype3 = Water
+|elementalweaknesstype4 = Water
+|elementalweaknesspercent1 = 
+|elementalweaknesspercent2 = 50
+|elementalweaknesspercent3 = 50
+|elementalweaknesspercent4 = 50
+|poisonresistance = 0
+|venomresistance = 0
+|immuneburn = Normal
+|id = 12440
+|leagueRegion = No
+}}
+'''King Black Dragon''' is a monster which spawns from [[breach]]es in both temporary and permanent [[Deadman Mode]]. It attacks the same way as its regular version, utilising normal [[dragonfire]] as well as shock, ice, and poison dragonfire.
+
+{{DeadmanAnnihilationBreachDropTable}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 4 February 2026
+|update = Deadman: Annihilation Tweaks, Shellbane Gryphon CAs & More!
+|change = Increased Hitpoints from 250 to 500.
+}}
+{{Subject changes footer}}
+
+{{Deadman: Breach Monsters}}
+{{Deadman: Apocalypse}}
+{{Deadman: Armageddon}}
+
+[[Category:Deadman: Annihilation]]

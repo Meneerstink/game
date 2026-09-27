@@ -1,0 +1,76 @@
+{{Deadman permanent|content=yes}}
+{{Infobox Monster
+|defver = 4
+|version1 = Apocalypse
+|version2 = Armageddon
+|version3 = Annihilation
+|version4 = Permanent
+|name = K'ril Tsutsaroth
+|image = [[File:K'ril Tsutsaroth (Deadman Apocalypse).png|200px]]
+|release = [[23 August]] [[2023]]
+|update = Deadman: Apocalypse - Friday 25th August
+|members = Yes
+|combat = 650
+|size = 5
+|examine = A servant of the god Zamorak.
+|xpbonus = 
+|max hit = 46 (Melee)
+|aggressive = Yes
+|poisonous = No
+|attack style = [[Slash]]
+|attack speed = 6
+|cat = Bosses, Greater Demons
+|assignedby = chaeldar,konar,nieve,duradel
+|hitpoints1 = 1000
+|hitpoints2 = 1000
+|hitpoints3 = 1500
+|hitpoints4 = 750
+|att = 340
+|str = 300
+|def = 270
+|mage = 200
+|range = 1
+|attbns = 160
+|strbns = 31
+|amagic = 0
+|mbns = 0
+|arange = 0
+|rngbns = 0
+|dstab = 80
+|dslash = 80
+|dcrush = 80
+|dmagic = 130
+|dlight = 80
+|dstandard = 80
+|dheavy = 80
+|elementalweaknesstype1 = 
+|elementalweaknesstype2 = Water
+|elementalweaknesstype3 = Water
+|elementalweaknesstype4 = Water
+|elementalweaknesspercent1 = 
+|elementalweaknesspercent2 = 30
+|elementalweaknesspercent3 = 30
+|elementalweaknesspercent4 = 30
+|poisonresistance = 100
+|venomresistance = 100
+|id = 12446
+|leagueRegion = No
+}}
+'''K'ril Tsutsaroth''' is a monster which spawns from [[breach]]es in both temporary and permanent [[Deadman Mode]].
+
+{{DeadmanAnnihilationBreachDropTable}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 4 February 2026
+|update = Deadman: Annihilation Tweaks, Shellbane Gryphon CAs & More!
+|change = Increased Hitpoints from 1000 to 1500.
+}}
+{{Subject changes footer}}
+
+{{Deadman: Breach Monsters}}
+{{Deadman: Apocalypse}}
+{{Deadman: Armageddon}}
+
+[[Category:Deadman: Annihilation]]

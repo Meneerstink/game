@@ -118,10 +118,19 @@ on_timer(AGGRO_CHECK_TIMER) {
         // "do not roam") and cleared the face-pawn of an aggressive npc a player was talking to.
         val hadTarget = npc.getCombatTarget() != null
         if (!checkRadius(npc) && !pursuingGuard && hadTarget) {
+            if (breach) {
+                gg.rsmod.game.model.BreachTrace.log("target.drop") {
+                    val t = npc.getCombatTarget()
+                    "npc=${npc.id}#${npc.index} target=${(t as? Player)?.username ?: t?.toString() ?: "-"} dead=${t?.isDead()} reason=no-candidate-and-not-pursuable"
+                }
+            }
             npc.stopMovement()
             npc.resetInteractions()
             npc.resetFacePawn()
             npc.interruptQueues()
+            // Breach conformance 2026-09-27: a target lost this way (teleported, logged out, out of reach) left the npc standing
+            // where it was - only the leash path walked it home (B5). Same rule here: back to its spawn area.
+            NpcLeash.returnHome(npc)
         }
     }
     npc.timers[AGGRO_CHECK_TIMER] =
@@ -151,7 +160,22 @@ fun checkRadius(npc: Npc): Boolean {
             }
         }
     }
-    val target = candidates.randomOrNull() ?: return false
+    val target = candidates.randomOrNull()
+    if (gg.rsmod.game.model.BreachTrace.active() && gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.isBreachNpc(npc)) {
+        // Breach conformance trace: every player in the hunt square with the rule that accepted or refused him, and the pick.
+        val seen = ArrayList<String>()
+        for (x in -radius until radius + size) for (z in -radius until radius + size) {
+            val tile = npc.tile.transform(x, z)
+            world.chunks.get(tile, createIfNeeded = false)?.getEntities<Player>(tile, EntityType.PLAYER, EntityType.CLIENT)?.forEach { p ->
+                seen += "${p.username}:${refusal(npc, p, range) ?: "ok"}"
+            }
+        }
+        gg.rsmod.game.model.BreachTrace.log("aggro.search") {
+            "npc=${npc.id}#${npc.index} at=${npc.tile.x},${npc.tile.z} radius=$radius old=${(npc.getCombatTarget() as? Player)?.username ?: "-"} " +
+                "picked=${target?.username ?: "-"} candidates=[${seen.joinToString(" ")}]"
+        }
+    }
+    target ?: return false
     if (npc.getCombatTarget() != target && target.getAggressor() == null) {
         target.attr[AGGRESSOR] = WeakReference(npc)
     }
@@ -164,16 +188,25 @@ fun mayTarget(
     npc: Npc,
     target: Player,
     range: Int,
-): Boolean {
-    if (!canAttack(npc, target) || !npc.canEngageCombat(target)) return false
-    if (!world.plugins.canAttack(npc, target) || !Combat.canEngage(npc, target)) return false
-    if (!NpcLeash.mayPursue(npc, target, range)) return false
+): Boolean = refusal(npc, target, range) == null
+
+/** Why [npc] may not pick [target] (null = it may); the breach trace logs the reason per candidate. */
+fun refusal(
+    npc: Npc,
+    target: Player,
+    range: Int,
+): String? {
+    if (!canAttack(npc, target)) return "aggro-rule"
+    if (!npc.canEngageCombat(target)) return "cannot-engage"
+    if (!world.plugins.canAttack(npc, target)) return "can_attack-plugin"
+    if (!Combat.canEngage(npc, target)) return "combat-canEngage"
+    if (!NpcLeash.mayPursue(npc, target, range)) return "leash"
     // Single-way: a player someone else is already fighting is not a target (the combat cycle would refuse it).
-    if (!target.tile.isMulti(world) && target.isBeingAttacked() && target.getLastHitBy() != npc) return false
+    if (!target.tile.isMulti(world) && target.isBeingAttacked() && target.getLastHitBy() != npc) return "single-under-attack"
     // ... also when another npc picked him on this same tick and has not hit yet (idle breach monsters chose him together).
     val aggressor = target.getAggressor()
-    if (!target.tile.isMulti(world) && aggressor is Npc && aggressor !== npc && !aggressor.isDead() && aggressor.getCombatTarget() === target) return false
-    return true
+    if (!target.tile.isMulti(world) && aggressor is Npc && aggressor !== npc && !aggressor.isDead() && aggressor.getCombatTarget() === target) return "single-picked-by-other"
+    return null
 }
 
 fun canAttack(

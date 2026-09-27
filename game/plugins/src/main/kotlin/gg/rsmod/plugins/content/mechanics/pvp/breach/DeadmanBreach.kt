@@ -16,6 +16,7 @@ import gg.rsmod.game.model.entity.Pawn
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.entity.Projectile
 import gg.rsmod.plugins.api.HitType
+import gg.rsmod.plugins.api.ext.isMulti
 import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.content.mechanics.pvp.BeginnerProtection
 import gg.rsmod.plugins.content.mechanics.pvp.GuardedZones
@@ -531,6 +532,25 @@ object DeadmanBreach {
                 fits(world, it, size) && canLeave(world, it, size) && isFree(world, site, it, size) &&
                     (site.kind != Kind.LOCALISED || reachesSpawner(world, it, size, site.spawners))
             }
+        if (gg.rsmod.game.model.BreachTrace.active()) {
+            // Breach conformance trace: how many landing tiles each rule rejected for this monster.
+            var noFit = 0
+            var boxed = 0
+            var taken = 0
+            var noRoute = 0
+            site.landing.forEach {
+                when {
+                    !fits(world, it, size) -> noFit++
+                    !canLeave(world, it, size) -> boxed++
+                    !isFree(world, site, it, size) -> taken++
+                    site.kind == Kind.LOCALISED && !reachesSpawner(world, it, size, site.spawners) -> noRoute++
+                }
+            }
+            gg.rsmod.game.model.BreachTrace.log("breach.fire") {
+                "site='${site.name}' monster=${monster.id} size=$size landing=${landing?.let { "${it.x},${it.z}" } ?: "NONE"} tiles=${site.landing.size} " +
+                    "rejected[fit=$noFit boxed=$boxed taken=$taken noRoute=$noRoute] spawned=${site.spawned}/${site.maxNpcs}"
+            }
+        }
         if (landing == null) {
             // Nowhere free for this one right now; the next pulse tries again (spawned is not counted).
             return
@@ -709,8 +729,10 @@ object DeadmanBreach {
         val npc = Npc(id, Tile(tile), world)
         npc.respawnOverride = false
         npc.walkRadius = walkRadius
-        // Breach audit 2026-09-27 (B3): breach monsters route around obstacles to reach their target (1x1 to 5x5).
-        npc.smartPathfinding = true
+        // Breach conformance 2026-09-27 (A2): OSRS npc pathing - only the routefinders (Zemouregal, Durial321) go around obstacles.
+        npc.smartPathfinding = id in BreachMonsters.ROUTEFINDERS
+        npc.naivePathfinding = true
+        if (id in BreachMonsters.COLLISION_EXCLUDED) npc.ignoresEntityCollision = true
         npc.attr[BREACH_NPC_ATTR] = true
         // F4: a `breachtest` monster fights like the real one but pays nothing (no loot, emblem or points).
         if (test) markTest(npc)
@@ -720,6 +742,10 @@ object DeadmanBreach {
         world.spawn(npc)
         live += npc
         gg.rsmod.game.Server.logger.info("Breach monster {} spawned at {}.", id, tile)
+        gg.rsmod.game.model.BreachTrace.log("breach.spawn") {
+            "npc=$id#${npc.index} at=${tile.x},${tile.z},${tile.height} size=${npc.getSize()} walkRadius=$walkRadius pathing=${if (npc.smartPathfinding) "smart" else if (npc.naivePathfinding) "naive" else "simple"} " +
+                "runs=${id in BreachMonsters.RUNNERS} test=$test hp=${npc.getCurrentLifepoints()} multi=${tile.isMulti(world)}"
+        }
         if (lifetimeTicks > 0) {
             world.queue {
                 wait(lifetimeTicks)
@@ -775,11 +801,14 @@ object DeadmanBreach {
     ): Int {
         if (!isBreachNpc(npc)) return damage
         val m = BreachMonsters.BY_ID[npc.id] ?: return damage
-        return when {
-            hitType == HitType.MELEE && m.immuneMelee -> 0
-            hitType == HitType.RANGE && m.immuneRanged -> 0
-            else -> damage
-        }
+        val result =
+            when {
+                hitType == HitType.MELEE && m.immuneMelee -> 0
+                hitType == HitType.RANGE && m.immuneRanged -> 0
+                else -> damage
+            }
+        gg.rsmod.game.model.BreachTrace.log("damage.in") { "npc=${npc.id}#${npc.index} type=$hitType raw=$damage final=$result hp=${npc.getCurrentLifepoints()}" }
+        return result
     }
 
     /**
@@ -799,6 +828,7 @@ object DeadmanBreach {
         if (target.attr[REWARDED_ATTR] == true) return
         val ledger = target.attr[CONTRIBUTION_ATTR] ?: BreachContribution().also { target.attr[CONTRIBUTION_ATTR] = it }
         ledger.add(source.username, damage)
+        gg.rsmod.game.model.BreachTrace.log("contribution") { "npc=${target.id}#${target.index} player=${source.username} +$damage total=${ledger.damageOf(source.username)} contributors=${ledger.size}" }
     }
 
     fun contribution(npc: Npc): BreachContribution = npc.attr[CONTRIBUTION_ATTR] ?: BreachContribution()

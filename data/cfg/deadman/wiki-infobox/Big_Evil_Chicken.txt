@@ -1,0 +1,61 @@
+{{Deadman permanent|content=yes}}
+{{Infobox Monster
+|defver = 2
+|version1 = Annihilation
+|version2 = Permanent
+|name = Big Evil Chicken
+|image = [[File:Big Evil Chicken.png|250x250px]]
+|release = [[21 January]] [[2026]]
+|update = Holy Moleys and the Hooded Slayer Helm are Here!
+|members = Yes
+|combat1 = 1047
+|combat2 = 422
+|size = 3
+|examine = A big chicken.
+|xpbonus = 
+|max hit = 26
+|aggressive = Yes
+|poisonous = No
+|attack style = [[Magic]]
+|attack speed = 3
+|hitpoints1 = 3500
+|hitpoints2 = 1000
+|att = 255
+|str = 255
+|def = 25
+|mage = 300
+|range = 0
+|attbns = 0
+|strbns = 0
+|amagic = 0
+|mbns = 0
+|arange = 0
+|rngbns = 0
+|dstab = 25
+|dslash = 25
+|dcrush = 25
+|dmagic = 255
+|dlight = 0
+|dstandard = 0
+|dheavy = 0
+|poisonresistance = 0
+|venomresistance = 100
+|id = 15547
+|leagueRegion = No
+}}
+'''Big Evil Chicken''' is a monster which spawns from [[breach]]es in [[Deadman: Annihilation]]. Like the regular [[Evil Chicken]], it attacks with magic, and will say one of various lines of dialogue when attacking players.
+
+{{DeadmanAnnihilationBreachDropTable}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 4 February 2026
+|update = Deadman: Annihilation Tweaks, Shellbane Gryphon CAs & More!
+|change = Increased Hitpoints from 1500 to 3500.
+}}
+{{Subject changes footer}}
+
+{{Deadman: Breach Monsters}}
+{{Deadman: Annihilation}}
+[[Category:Birds]]

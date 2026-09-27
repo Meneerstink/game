@@ -1,0 +1,49 @@
+{{Deadman permanent|content=yes}}
+{{Infobox Monster
+|name = TzTok-Jad-Rek
+|image = [[File:TzTok-Jad-Rek.png|150px]]
+|release = [[21 January]] [[2026]]
+|update = Holy Moleys and the Hooded Slayer Helm are Here!
+|members = Yes
+|combat = 186
+|size = 3
+|examine = This is going to hurt... Slightly.
+|xpbonus = 
+|max hit = 25 (Melee), ?
+|aggressive = Yes
+|poisonous = No
+|attack style = [[Stab]], [[Magic]], [[Ranged]]
+|attack speed = 8
+|slaylvl = <!-- if not a slayer monster, remove this parameter -->
+|slayxp = <!-- if not a slayer monster, remove this parameter -->
+|cat = TzHaar
+|assignedby = <!-- if not a slayer monster, remove this parameter -->
+|hitpoints = 200
+|att = 160
+|str = 240
+|def = 25
+|mage = 250
+|range = 250
+|attbns = 0
+|strbns = 0
+|amagic = 0
+|mbns = 0
+|arange = 0
+|rngbns = 0
+|dstab = 0
+|dslash = 0
+|dcrush = 0
+|dmagic = 0
+|dlight = 0
+|dstandard = 0
+|dheavy = 0
+|elementalweaknesstype = Water
+|elementalweaknesspercent = 40
+|poisonresistance = 0
+|venomresistance = 100
+|id = 15557
+}}
+'''TzTok-Jad-Rek''' (translated as '''Hard/Rock/Obsidian Fire Elemental Baby''') is a [[volcanic creature]] which spawns in [[Deadman: Annihilation]]. It is a smaller and weaker [[TzTok-Jad]], summoned by the breach version of [[TzTok-Jad (Deadman)|TzTok-Jad]].
+
+{{Deadman: Breach Monsters}}
+{{Deadman: Annihilation}}

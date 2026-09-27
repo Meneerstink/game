@@ -1,0 +1,73 @@
+{{Deadman permanent|content=yes}}
+{{otheruses|def=no|the normal variant|Jaguar warrior}}
+{{Infobox Monster
+|defver = 3
+|version1 = Armageddon
+|version2 = Annihilation
+|version3 = Permanent
+|name = Jaguar warrior
+|image = [[File:Jaguar warrior (deadman).png|250x250px]]
+|release = [[19 July]] [[2024]]
+|update = Deadman: Armageddon & While Guthix Sleeps Updates
+|members = Yes
+|combat1 = 518
+|combat2 = 893
+|combat3 = 393
+|size = 2
+|examine = A furry with a score to settle.
+|xpbonus = 
+|max hit = 21 (x4)
+|aggressive = Yes
+|poisonous = No
+|attack style = [[Slash]]
+|attack speed = 6
+|hitpoints1 = 1500
+|hitpoints2 = 3000
+|hitpoints3 = 1000
+|att = 200
+|str = 165
+|def = 100
+|mage = 100
+|range = 160
+|attbns = 0
+|strbns = 15
+|amagic = 0
+|mbns = 0
+|arange = 0
+|rngbns = 0
+|dstab = 50
+|dslash = 50
+|dcrush = 50
+|dmagic = 100
+|dlight = 50
+|dstandard = 50
+|dheavy = 50
+|poisonresistance = 100
+|venomresistance = 100
+|immunecannon = Yes
+|id = 13660
+|leagueRegion = No
+}}
+'''Jaguar warrior''' are monsters which spawns from [[breach]]es in both temporary and permanent [[Deadman Mode]].
+
+{{DeadmanAnnihilationBreachDropTable}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 4 February 2026
+|update = Deadman: Annihilation Tweaks, Shellbane Gryphon CAs & More!
+|change = Increased Hitpoints from 2000 to 3000.
+}}
+{{Subject changes
+|date = 23 July 2025
+|update = Varlamore: The Final Dawn Out Now
+|change = The jaguar warrior's combat level was reduced from 518 to 331, and his hitpoints were changed from 1500 to 750.
+}}
+{{Subject changes footer}}
+
+{{Deadman: Breach Monsters}}
+{{Deadman: Apocalypse}}
+{{Deadman: Armageddon}}
+
+[[Category:Deadman: Annihilation]]

@@ -63,6 +63,32 @@ class MovementQueue(
         addStep(current, step, type, detectCollision)
     }
 
+    /** Breach conformance trace: who stands in [npc]'s destination footprint at [dest] (same rules as [isEntityBlocked]). */
+    private fun blockerOf(
+        npc: Npc,
+        dest: Tile,
+    ): String {
+        val size = npc.getSize().coerceAtLeast(1)
+        val reach = MAX_NPC_SIZE - 1
+        for (x in dest.x - reach until dest.x + size) for (z in dest.z - reach until dest.z + size) {
+            val t = Tile(x, z, dest.height)
+            val chunk = npc.world.chunks.get(t, createIfNeeded = false) ?: continue
+            chunk.getEntities<Npc>(t, EntityType.NPC).firstOrNull { it !== npc && !it.ignoresEntityCollision && it.tile == t && x + it.getSize() > dest.x && z + it.getSize() > dest.z }
+                ?.let { return "npc:${it.id}(${it.name})@${t.x},${t.z}" }
+            if (x >= dest.x && z >= dest.z) {
+                chunk.getEntities<Player>(t, EntityType.CLIENT, EntityType.PLAYER).firstOrNull { it.tile == t }?.let { return "player:${it.username}@${t.x},${t.z}" }
+            }
+        }
+        return "?"
+    }
+
+    /** Breach conformance trace: every step a watched npc takes or is refused, with the reason. */
+    private fun traceStep(category: String, from: Tile, to: Tile, reason: String) {
+        val npc = pawn as? Npc ?: return
+        if (!BreachTrace.active() || !BreachTrace.watches(npc.id)) return
+        BreachTrace.log(category) { "npc=${npc.id}#${npc.index} from=${from.x},${from.z} to=${to.x},${to.z} $reason queued=${steps.size}" }
+    }
+
     fun cycle() {
         var next = steps.poll()
         if (next != null) {
@@ -75,6 +101,7 @@ class MovementQueue(
 
             if (walkDirection != Direction.NONE && canStep(tile, walkDirection, next.detectCollision)) {
                 if (pawn is Npc && isEntityBlocked(pawn, next.tile)) {
+                    if (BreachTrace.active() && BreachTrace.watches(pawn.id)) traceStep("step.refused", tile, next.tile, "entity-blocked by=${blockerOf(pawn, next.tile)}")
                     clear()
                     return
                 }
@@ -112,11 +139,13 @@ class MovementQueue(
                     }
                 }
             } else {
+                traceStep("step.refused", tile, next.tile, if (walkDirection == Direction.NONE) "same-tile" else "collision")
                 walkDirection = null
                 clear()
             }
 
             if (walkDirection != null && walkDirection != Direction.NONE) {
+                traceStep("step", pawn.tile, tile, if (runDirection != null) "run" else "walk")
                 pawn.steps = StepDirection(walkDirection, runDirection)
                 pawn.tile = Tile(tile)
                 if (pawn is Player) {
@@ -197,8 +226,11 @@ class MovementQueue(
                     val os = other.getSize().coerceAtLeast(1)
                     if (x + os > dest.x && z + os > dest.z) return true
                 }
-                if (x == dest.x && z == dest.z &&
-                    chunk.getEntities<Player>(t, EntityType.CLIENT).any { it.tile == t }
+                // osrs-docs "Entity Collision": players flag "all the game squares beneath" them and every npc (except the
+                // excluded ones, [Npc.ignoresEntityCollision]) checks that flag before it moves - a player anywhere under the
+                // npc's destination footprint blocks it, not only on its south-west corner (breach conformance 2026-09-27).
+                if (x >= dest.x && z >= dest.z &&
+                    chunk.getEntities<Player>(t, EntityType.CLIENT, EntityType.PLAYER).any { it.tile == t && !it.invisible }
                 ) {
                     return true
                 }

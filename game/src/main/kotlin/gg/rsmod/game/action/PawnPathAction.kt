@@ -352,6 +352,13 @@ object PawnPathAction {
         builder.clipOverlapTiles()
 
         val route = pawn.createPathFindingStrategy().calculateRoute(builder.build())
+        if (pawn is gg.rsmod.game.model.entity.Npc && gg.rsmod.game.model.BreachTrace.watches(pawn.id)) {
+            gg.rsmod.game.model.BreachTrace.log("route") {
+                "npc=${pawn.id}#${pawn.index} strategy=${if (pawn.smartPathfinding) "smart" else if (pawn.naivePathfinding) "naive" else "simple"} from=${sourceTile.x},${sourceTile.z} " +
+                    "target=${target.entityType}#${target.index}@${targetTile.x},${targetTile.z} range=$interactionRange los=$lineOfSight " +
+                    "success=${route.success} steps=${route.path.size} tail=${route.tail.x},${route.tail.z} frozen=$frozen"
+            }
+        }
 
         val stepType =
             if (pawn is gg.rsmod.game.model.entity.Npc && pawn.attr[gg.rsmod.game.model.attr.NPC_RUNS_ATTR] == true) {

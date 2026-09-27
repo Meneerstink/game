@@ -81,6 +81,10 @@ BreachMonsters.ROSTER.forEach { m ->
 BreachMonsters.DEMONBANE_VULNERABILITY.forEach { (id, percent) -> gg.rsmod.plugins.content.items.osrs.Demonbane.vulnerability[id] = percent }
 
 BreachMonsters.attackRows().forEach { NpcAttacks.register(it) }
+// Breach conformance trace (breachtrace command / -Drsps.breachTrace=true / C:\RSPS\breachtrace.on): the engine hooks follow these ids.
+gg.rsmod.game.model.BreachTrace.watchedNpcIds = BreachMonsters.ROSTER.map { it.id }.toSet()
+gg.rsmod.plugins.api.ext.FREEZE_RESISTANT_NPCS += BreachMonsters.FREEZE_IMMUNE
+gg.rsmod.plugins.content.combat.formula.ElementalWeakness.idOverrides += BreachMonsters.WEAKNESS_OVERRIDES
 BreachMonsters.SOUND_ALIASES.forEach { (id, source) -> gg.rsmod.plugins.content.combat.audio.NpcCombatAudio.alias(id, source) }
 BreachMonsters.SOUND_ROWS.forEach { (id, s) ->
     NpcCombatAudio.register(
@@ -99,6 +103,8 @@ on_world_init {
     logger.info("Deadman breaches: {} monsters, next opening {}.", BreachMonsters.ROSTER.size, DeadmanBreach.nextOpening)
     // Agent test run only (-Drsps.breachSim=true): never active in a normal start.
     if (BreachSim.enabled()) BreachSim.start(world)
+    // Agent conformance run only (-Drsps.breachConformance=true): multi-player OSRS checks per monster, single and multi.
+    if (BreachConformance.enabled()) BreachConformance.start(world)
 }
 
 // ---- rules --------------------------------------------------------------------------------------------------------------
@@ -126,6 +132,9 @@ BreachMonsters.ROSTER.forEach { m ->
     on_npc_death(m.id) {
         val npc = npc
         if (!DeadmanBreach.isBreachNpc(npc)) return@on_npc_death
+        gg.rsmod.game.model.BreachTrace.log("death") {
+            "npc=${npc.id}#${npc.index} at=${npc.tile.x},${npc.tile.z} deathAnims=${npc.combatDef.deathAnimation} summon=${m.summon} contributors=${DeadmanBreach.contribution(npc).size}"
+        }
         if (m.summon) return@on_npc_death
         DeadmanBreach.dropLoot(npc)
     }
@@ -501,4 +510,11 @@ on_command("breachtele", Privilege.ADMIN_POWER) {
 
 on_command("breachinfo") {
     player.message(DeadmanBreach.statusLine())
+}
+
+/** Breach conformance trace on/off: `[breachtrace]` lines in the game-server log (see BreachTrace). */
+on_command("breachtrace", Privilege.ADMIN_POWER) {
+    val trace = gg.rsmod.game.model.BreachTrace
+    trace.enabled = !trace.enabled
+    player.message("Breach trace: ${if (trace.enabled) "on" else "off"} (game-server log, [breachtrace] lines).")
 }

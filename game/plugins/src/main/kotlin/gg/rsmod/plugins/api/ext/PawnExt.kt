@@ -115,11 +115,21 @@ fun Pawn.hit(
 // Timers.kt for the full sourcing note.
 private const val FREEZE_IMMUNITY_TICKS = 5
 
+/**
+ * Npc ids with 100 % freeze resistance (OSRS Wiki infobox "freezeresistance = 100", e.g. the Deadman breach Durial321, Magic Mark,
+ * Pestilent Bloat and Bee Swarm - breach conformance 2026-09-27); registered by the content that owns them. They are never frozen.
+ */
+val FREEZE_RESISTANT_NPCS: MutableSet<Int> = java.util.concurrent.ConcurrentHashMap.newKeySet()
+
 fun Pawn.freeze(
     cycles: Int,
     onFreeze: () -> Unit,
 ): Boolean {
     if (timers.has(FROZEN_TIMER) || timers.has(FREEZE_IMMUNITY_TIMER)) {
+        return false
+    }
+    if (this is Npc && id in FREEZE_RESISTANT_NPCS) {
+        gg.rsmod.game.model.BreachTrace.log("freeze.resisted") { "npc=$id#$index cycles=$cycles" }
         return false
     }
     stopMovement()

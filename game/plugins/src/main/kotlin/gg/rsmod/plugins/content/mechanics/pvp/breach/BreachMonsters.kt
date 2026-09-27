@@ -144,12 +144,16 @@ object BreachMonsters {
     private fun snd(id: Int) = listOf(NpcAttacks.Sound(id = id))
 
     /**
-     * Breach audit 2026-09-27 (B7): the God Wars generals' Void rows give their ranged / magic attack range 1, because in God Wars
-     * that attack is a room-wide script of the chamber. A breach clone has no chamber, so range 1 made the ranged / magic attack
-     * adjacent-only (OSRS Wiki "General Graardor (Deadman)": "attacks with both melee and ranged"). ADAPTED: 8 tiles, the reach of
-     * every other ranged / magic breach section.
+     * Breach conformance 2026-09-27 (A1): the God Wars generals' room-wide attacks. OSRS Wiki "General Graardor": "he slams the
+     * ground, hitting all players in the room" and "Despite it being a Ranged attack, Graardor can only use it if he is within
+     * melee range of his current target"; "Commander Zilyana": "She will only use her magic attacks at melee distance". Their Void
+     * sections therefore keep range 1 (the earlier B7 change to 8 tiles contradicted the wiki and is undone), and hit every player
+     * in the chamber (`multi_target_area` = the GWD room coordinates). A breach has no chamber - with the GWD coordinates the attack
+     * found nobody there and hit the primary target alone. [attackRows] replaces every chamber area by the players within
+     * [ROOM_RADIUS] tiles of the monster's footprint. ADAPTED: 8 tiles, half the long side of the Bandos chamber (13 x 19) the
+     * wiki's "room" refers to.
      */
-    private val RANGED_REACH = mapOf("range" to 8)
+    const val ROOM_RADIUS = 8
 
     /** Breach monster -> OSRS (attack, hit/defend, death) sound, local ids; -1 = none (e.g. the sound is on the death sequence). */
     val SOUND_ROWS: Map<Int, Triple<Int, Int, Int>> =
@@ -238,13 +242,13 @@ object BreachMonsters {
                 14442, 12444, "General Graardor",
                 Stats(2000, 280, 350, 250, 80, 350, attbns = 120, strbns = 43, arange = 100, rngbns = 40, dstab = 90, dslash = 90, dcrush = 90, dmagic = 201, dranged = 90),
                 6, StyleType.CRUSH, 15614, 15615, 15616,
-                Template(6260, anims = mapOf("melee" to 15614, "range" to 15617), maxHits = mapOf("melee" to 60), sectionInts = mapOf("range" to RANGED_REACH)),
+                Template(6260, anims = mapOf("melee" to 15614, "range" to 15617), maxHits = mapOf("melee" to 60)),
             ),
             Monster(
                 14443, 12445, "Commander Zilyana",
                 Stats(1500, 280, 196, 150, 300, 250, attbns = 195, strbns = 20, amagic = 200, dstab = 100, dslash = 100, dcrush = 100, dmagic = 100, dranged = 100),
                 2, StyleType.CRUSH, 15618, 15620, 15619,
-                Template(6247, anims = mapOf("melee" to 15618, "magic" to 15621), maxHits = mapOf("melee" to 27), sectionInts = mapOf("magic" to RANGED_REACH)),
+                Template(6247, anims = mapOf("melee" to 15618, "magic" to 15621), maxHits = mapOf("melee" to 27)),
             ),
             Monster(
                 14444, 12446, "K'ril Tsutsaroth",
@@ -254,7 +258,6 @@ object BreachMonsters {
                     6203,
                     anims = mapOf("melee" to 15623, "melee_poison" to 15623, "melee_slam" to 15623, "melee_slam_poison" to 15623, "magic" to 15625),
                     maxHits = mapOf("melee" to 46, "melee_poison" to 46),
-                    sectionInts = mapOf("magic" to RANGED_REACH),
                 ),
             ),
             Monster(
@@ -573,7 +576,7 @@ object BreachMonsters {
      */
     val POISON_IMMUNE: Set<Int> =
         setOf(
-            14442, 14443, 14444, 14446, 14447, 14448, 14449, 14451, 14452, 14453, 14454, 14455, 14457, 14458, 14460, 14461, 14463,
+            14442, 14443, 14444, 14446, 14447, 14448, 14449, 14451, 14452, 14453, 14454, 14455, 14457, 14458, 14460, 14461,
             14469, 14470, 14476,
         )
 
@@ -582,6 +585,40 @@ object BreachMonsters {
 
     /** Monsters that run after their target (OSRS Wiki: Durial321 14463, I DSCIM YOU 14469). */
     val RUNNERS: Set<Int> = setOf(14463, 14469)
+
+    /**
+     * Breach conformance 2026-09-27 (A2): the only breach monsters that route around obstacles. OSRS Wiki "Safespot": NPCs "always
+     * move directly toward their target and do not detour around obstacles", "it is not possible to safespot NPCs with
+     * routefinding"; "Zemouregal (Deadman)": "He utilises routefinding, meaning he cannot be safespotted as he will path around
+     * obstacles to reach his target"; "Durial321 (Deadman)": "capable of pursuing targets, unlike most NPCs". Every other breach
+     * monster uses the ordinary npc (dumb) pathing and can be safespotted like in OSRS - this undoes the earlier B3 rule that
+     * gave all of them smart routes.
+     */
+    val ROUTEFINDERS: Set<Int> = setOf(14463, 14466)
+
+    /**
+     * Breach conformance 2026-09-27: osrs-docs "Entity Collision" - "Excluded NPCs (Dagannoth Kings, Godwars generals, pets, etc.)"
+     * neither set nor check the npc/player collision flags: they walk through players and other npcs. The breach Dagannoth Kings
+     * and God Wars generals are the regular monsters' Deadman copies ("attacks the same way as its regular version"), so they keep
+     * the exclusion.
+     */
+    val COLLISION_EXCLUDED: Set<Int> = setOf(14438, 14440, 14441, 14442, 14443, 14444)
+
+    /**
+     * 100 % freeze resistance (OSRS Wiki infobox "freezeresistance = 100", Deadman: Annihilation, read 2026-09-27 into
+     * data/cfg/deadman/wiki-infobox): Bee Swarm, Durial321, Magic Mark, Pestilent Bloat. Guarded by BreachWikiInfoboxTests.
+     */
+    val FREEZE_IMMUNE: Set<Int> = setOf(14459, 14463, 14464, 14470)
+
+    /**
+     * Where the Annihilation infobox's elemental weakness differs from the regular monster of the same name (the shared by-name
+     * table): Jal-ImKot "Water 30", Thermonuclear smoke devil none (the regular one is Air 20). Guarded by BreachWikiInfoboxTests.
+     */
+    val WEAKNESS_OVERRIDES: Map<Int, gg.rsmod.plugins.content.combat.formula.ElementalWeakness.Weakness?> =
+        mapOf(
+            14453 to gg.rsmod.plugins.content.combat.formula.ElementalWeakness.Weakness(gg.rsmod.plugins.content.combat.formula.ElementalWeakness.Element.WATER, 30),
+            14460 to null,
+        )
 
     /** The monsters a breach spawns (everything but Zemouregal's summons). */
     val SPAWNABLE: List<Monster> = ROSTER.filter { !it.summon }
@@ -612,6 +649,11 @@ object BreachMonsters {
                     row["attacks"].asJsonArray.forEach { el ->
                         val section = el.asJsonObject
                         val sectionId = section["id"].asString
+                        // A1: a God Wars chamber area means "every player in the room"; a breach has no room (see ROOM_RADIUS).
+                        if (section.has("multi_target_area") && !section["multi_target_area"].isJsonNull) {
+                            section.remove("multi_target_area")
+                            section.addProperty("multi_radius", ROOM_RADIUS)
+                        }
                         a.anims[sectionId]?.let { section.addProperty("anim", it) }
                         a.maxHits[sectionId]?.let { max -> section["hits"].asJsonArray.forEach { h -> h.asJsonObject.addProperty("max", max * 10) } }
                         a.sectionInts[sectionId]?.forEach { (field, value) -> section.addProperty(field, value) }
