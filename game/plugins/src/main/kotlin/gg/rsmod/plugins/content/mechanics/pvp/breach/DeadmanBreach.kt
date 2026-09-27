@@ -44,7 +44,7 @@ import kotlin.random.Random
  *
  * ADAPTED where the sources are silent (listed for the owner): the projectile cadence spreads a breach's monsters evenly over the
  * 15 minutes; which of the two types opens is a fair coin; the regional spawner stands on the region's spawn point nearest its centre;
- * the broadcast and Perdu wording. The Breach and Boss Spawn keep their OSRS models but not their animations or spotanims (skeletal).
+ * the broadcast and Perdu wording. The Breach and Boss Spawn animations and the breach spawn/despawn graphics are OSRS skeletal\n * animations baked into classic frames (SkeletalBakeTool, 2026-09-27).
  */
 object DeadmanBreach {
     const val RUBY_BOLT_CAP = 30
@@ -85,6 +85,16 @@ object DeadmanBreach {
      * movement back using an asset 667 CAN represent, and is one constant to change if a better graphic turns up.
      */
     private const val BREACH_PULSE_TICKS = 5
+
+    /**
+     * Breach audit 2026-09-27, phase 4: the OSRS skeletal animations of the breach are now baked into classic 667 frames by
+     * `SkeletalBakeTool` (tx-20260927-062328 / -062541): the Breach loc plays its own spiral (OSRS seq 10418 -> 15828), the Boss
+     * Spawn its own (10423 -> 15829), and the spawn / despawn graphics exist: VFX_DM_BREACH_SPAWN 2519 -> 3173 and
+     * VFX_DM_BREACH_DESPAWN 2553 -> 3174. The pulse of the projectile graphic above ([BREACH_PULSE_TICKS]) is therefore no longer
+     * played - OSRS shows only the animated spiral.
+     */
+    const val GFX_BREACH_SPAWN = 3173
+    const val GFX_BREACH_DESPAWN = 3174
 
     /** How long a Boss Spawn stands before its monster appears on top of it. */
     private const val BOSS_SPAWN_TICKS = 3
@@ -329,6 +339,7 @@ object DeadmanBreach {
         lingering.clear()
         sites.forEach { site ->
             site.closed = true
+            if (site.objects.isNotEmpty()) site.spawners.forEach { world.spawn(TileGraphic(it, GFX_BREACH_DESPAWN, height = 0)) }
             // F1: the objects list is emptied here, so the old run task can never remove a newer breach's objects on the same tile.
             site.objects.forEach { world.remove(it) }
             site.objects.clear()
@@ -400,6 +411,7 @@ object DeadmanBreach {
                     val obj = DynamicObject(BREACH_LOC, 10, 0, t)
                     world.spawn(obj)
                     site.objects += obj
+                    world.spawn(TileGraphic(t, GFX_BREACH_SPAWN, height = 0))
                 }
             }
             val names = sites.joinToString(" and ") { "${it.name.replaceFirstChar { c -> c.lowercase() }} (${if (it.multi) "multi-way" else "single-way"} combat)" }
@@ -462,9 +474,7 @@ object DeadmanBreach {
                         val interval = SPAWN_WINDOW_TICKS / site.maxNpcs
                         if (site.spawned < site.maxNpcs && elapsed >= site.spawned * interval) fire(world, site)
                     }
-                    if (elapsed % BREACH_PULSE_TICKS == 0) {
-                        opened.sites.forEach { site -> site.spawners.forEach { world.spawn(TileGraphic(it, BreachMonsters.GFX_BREACH_PROJECTILE, height = 0)) } }
-                    }
+
                 } catch (e: Exception) {
                     gg.rsmod.game.Server.logger.error("Breach tick {} failed: {}", elapsed, e.toString(), e)
                 }
@@ -477,6 +487,7 @@ object DeadmanBreach {
             if (closed()) return@queue
             // The spawners close; unkilled monsters stay for another 30 minutes.
             opened.sites.forEach { site ->
+                site.spawners.forEach { world.spawn(TileGraphic(it, GFX_BREACH_DESPAWN, height = 0)) }
                 site.objects.forEach { world.remove(it) }
                 site.objects.clear()
             }

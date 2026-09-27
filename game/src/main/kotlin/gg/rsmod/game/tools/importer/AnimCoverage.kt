@@ -244,6 +244,14 @@ object AnimCoverage {
         var mode = "npc"
         var bad = 0
         for (arg in args.drop(1)) {
+            if (arg.startsWith("pair=")) {
+                // pair=<model>:<seq> - a loc or any model with one sequence
+                val (model, seq) = arg.removePrefix("pair=").split(":").map { it.toInt() }
+                val r = check(library, modelLabels(library, listOf(model)), seq)
+                if (!r.ok) bad++
+                println("PAIR model $model ${if (r.ok) "OK " else "BAD"} $r")
+                continue
+            }
             if (arg == "npc" || arg == "spot") {
                 mode = arg
                 continue

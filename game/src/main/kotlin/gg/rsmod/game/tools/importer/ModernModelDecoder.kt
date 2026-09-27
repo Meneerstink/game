@@ -250,13 +250,21 @@ object ModernModelDecoder {
         // records that loss rather than pretending the conversion is lossless.
         if (animayaFlag == 1) {
             model.droppedAnimayaSkinning = true
+            val bones = arrayOfNulls<IntArray>(vertexCount)
+            val weights = arrayOfNulls<IntArray>(vertexCount)
             for (i in 0 until vertexCount) {
                 val groupCount = labels.u8()
-                repeat(groupCount) {
-                    labels.u8()
-                    labels.u8()
+                val b = IntArray(groupCount)
+                val w = IntArray(groupCount)
+                for (j in 0 until groupCount) {
+                    b[j] = labels.u8()
+                    w[j] = labels.u8()
                 }
+                bones[i] = b
+                weights[i] = w
             }
+            model.animayaBones = bones.requireNoNulls()
+            model.animayaWeights = weights.requireNoNulls()
         }
 
         val colours = ModelBuffer(data, faceColourPtr)
@@ -449,13 +457,21 @@ private fun ModernModelDecoder.decodeType2Impl(data: ByteArray): ModelData {
     }
     if (animayaFlag == 1) {
         model.droppedAnimayaSkinning = true
+        val bones = ArrayList<IntArray>(vertexCount)
+        val weights = ArrayList<IntArray>(vertexCount)
         for (i in 0 until vertexCount) {
             val n = labels.u8()
-            repeat(n) {
-                labels.u8()
-                labels.u8()
+            val b = IntArray(n)
+            val w = IntArray(n)
+            for (j in 0 until n) {
+                b[j] = labels.u8()
+                w[j] = labels.u8()
             }
+            bones += b
+            weights += w
         }
+        model.animayaBones = bones.toTypedArray()
+        model.animayaWeights = weights.toTypedArray()
     }
 
     val colours = ModelBuffer(data, colourPtr)

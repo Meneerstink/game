@@ -59,6 +59,10 @@ class ModelData(
     /** Set when a modern source carried animaya (multi-bone) skinning, which rev-667 cannot express. */
     var droppedAnimayaSkinning = false
 
+    /** The dropped skinning itself (bone index / weight 0-255 per influence), kept for SkeletalBakeTool. */
+    var animayaBones: Array<IntArray>? = null
+    var animayaWeights: Array<IntArray>? = null
+
     /** Set when a modern source carried per-face z-offsets, which rev-667 cannot express. */
     var droppedFaceZOffsets = false
 

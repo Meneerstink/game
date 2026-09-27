@@ -69,4 +69,34 @@ class BreachAuditImportTests {
             }
         }
     }
+
+    @Test
+    fun `E - the breach skeletal animations bake into classic frames that replay the OSRS skinning`() {
+        ModernCacheReader(java.io.File(OsrsItemImportTool.SOURCE_CACHE)).use { reader ->
+            // Breach spiral (OSRS model 49487, seq 10418) and Boss Spawn (49488, seq 10423).
+            for ((model, seq) in listOf(49487 to 10418, 49488 to 10423)) {
+                val baked = SkeletalBakeTool.bake(reader, model, seq, 1)
+                assertTrue(baked.frames.isNotEmpty() && baked.clusters <= SkeletalBakeTool.MAX_CLUSTERS)
+                assertTrue(baked.maxError < 3.0, "model $model replay error ${baked.maxError}")
+            }
+        }
+        assertEquals(0, SkeletalBakeTool.In(byteArrayOf(64)).smart2(), "bone 0 is written as signed smart 64")
+    }
+
+    @Test
+    fun `E - the baked breach loc, boss spawn and spawn graphics move their models in both caches`() {
+        for (cache in OsrsItemImportTool.TARGETS) {
+            val library = CacheLibrary(cache)
+            try {
+                listOf(3993 to 15828, 3994 to 15829, 3993 to 15830, 3993 to 15831).forEach { (model, seq) ->
+                    val r = AnimCoverage.check(library, AnimCoverage.modelLabels(library, listOf(model)), seq)
+                    assertTrue(r.ok && r.moves, "$cache model $model seq $seq: $r")
+                }
+                assertEquals(3993 to 15830, AnimCoverage.spotanim(library, 3173))
+                assertEquals(3993 to 15831, AnimCoverage.spotanim(library, 3174))
+            } finally {
+                library.close()
+            }
+        }
+    }
 }
