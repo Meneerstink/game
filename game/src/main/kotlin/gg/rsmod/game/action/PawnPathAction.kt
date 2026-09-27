@@ -24,6 +24,9 @@ import java.lang.ref.WeakReference
 object PawnPathAction {
     private const val ITEM_USE_OPCODE = -1
 
+    /** Ticks without a step after which [walkTo] stops waiting for a route that can no longer reach its tail. */
+    const val STALL_TICKS = 2
+
     /** Audit finding 6: opt-in diagnostic trail for the double-click cancellation chain. */
     private fun logInteraction(
         pawn: Pawn,
@@ -296,6 +299,7 @@ object PawnPathAction {
         target: Pawn,
         interactionRange: Int,
         lineOfSight: Boolean,
+        waitForArrival: Boolean = true,
     ): Boolean {
         val sourceSize = pawn.getSize()
         val targetSize = target.getSize()
@@ -361,11 +365,26 @@ object PawnPathAction {
             return route.success
         }
 
+        // The caller re-evaluates every tick (npc combat): the steps are queued, nothing to wait for.
+        if (!waitForArrival) return route.success
+
+        var lastTile = pawn.tile
+        var stalled = 0
         while (!pawn.tile.sameAs(route.tail)) {
             if (!targetTile.sameAs(target.tile)) {
                 return walkTo(it, pawn, target, interactionRange, lineOfSight)
             }
             it.wait(1)
+            // Breach audit 2026-09-27 (B2): a route cut short (a pawn on the next tile, a freeze, a blocked second run step, a
+            // projectile-only route) never reaches its tail, and this loop waited for it forever - the pawn stood still until a
+            // new interaction replaced the queue. Stop waiting once the pawn has not moved for STALL_TICKS ticks with nothing
+            // left to walk; the caller then routes again from where the pawn really is.
+            if (pawn.tile.sameAs(lastTile)) {
+                if ((++stalled >= STALL_TICKS && !pawn.hasMoveDestination()) || stalled >= STALL_TICKS * 2) return route.success
+            } else {
+                stalled = 0
+                lastTile = pawn.tile
+            }
         }
         return route.success
     }

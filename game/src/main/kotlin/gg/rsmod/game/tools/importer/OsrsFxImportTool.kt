@@ -505,6 +505,12 @@ object OsrsFxImportTool {
         var leftHand: Int? = null,
         var rightHand: Int? = null,
         val sounds: MutableMap<Int, Pair<Int, Int>> = sortedMapOf(),
+        /**
+         * Frame -> OSRS sound "location" (the audible radius in tiles). Breach audit 2026-09-27 (cause A1): it was dropped, so every
+         * imported frame sound was packed with radius 0, which the 667 client (`Static431.method5827`) plays only for the local
+         * player's own animation - a sound on an npc or on another player's animation was never heard by anyone.
+         */
+        val soundRadius: MutableMap<Int, Int> = sortedMapOf(),
         val dropped: MutableList<String> = mutableListOf(),
     )
 
@@ -559,11 +565,14 @@ object OsrsFxImportTool {
                         val id = c.u16()
                         c.u8() // weight
                         val loops = c.u8()
-                        c.u8() // location
+                        val location = c.u8()
                         c.u8() // retain
-                        if (id >= 1 && loops >= 1) seq.sounds[frame] = id to loops
+                        if (id >= 1 && loops >= 1) {
+                            seq.sounds[frame] = id to loops
+                            seq.soundRadius[frame] = location
+                        }
                     }
-                    seq.dropped += "frame sound location/retain/weight (no 667 fields)"
+                    seq.dropped += "frame sound retain/weight (no 667 fields)"
                 }
                 15 -> error("skeletal (animaya) frame range ${c.u16()}-${c.u16()} cannot be represented in 667")
                 16 -> seq.dropped += "vertical offset ${c.s8()}"
@@ -578,6 +587,9 @@ object OsrsFxImportTool {
             }
         }
     }
+
+    /** The 5-bit radius field of a 667 frame sound (`soundInfo & 0x1F`). */
+    fun packedRadius(location: Int): Int = location.coerceIn(0, 31)
 
     /** Rev-667 `SeqType.decode` stream; frame ids and sound ids already local. */
     fun encode667Seq(seq: Seq): ByteArray {
@@ -612,7 +624,7 @@ object OsrsFxImportTool {
                     out.u8(0)
                 } else {
                     out.u8(1)
-                    val packed = (sound.first shl 8) or (sound.second.coerceAtMost(7) shl 5)
+                    val packed = (sound.first shl 8) or (sound.second.coerceAtMost(7) shl 5) or packedRadius(seq.soundRadius[frame] ?: 0)
                     out.u8(packed ushr 16)
                     out.u16(packed and 0xFFFF)
                 }

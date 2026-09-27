@@ -16,7 +16,7 @@ import gg.rsmod.game.model.entity.Pawn
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.entity.Projectile
 import gg.rsmod.plugins.api.HitType
-import gg.rsmod.plugins.api.ext.filterableMessage
+import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.content.mechanics.pvp.BeginnerProtection
 import gg.rsmod.plugins.content.mechanics.pvp.GuardedZones
 import net.runelite.cache.IndexType
@@ -95,6 +95,14 @@ object DeadmanBreach {
     private val CONTRIBUTION_ATTR = AttributeKey<BreachContribution>()
     private val REWARDED_ATTR = AttributeKey<Boolean>()
     private val DOT_SOURCE_ATTR = AttributeKey<String>()
+    private val TEST_NPC_ATTR = AttributeKey<Boolean>()
+
+    /** Spawned by `breachtest`: gives no rewards ([dropLoot]). */
+    fun isTestNpc(npc: Npc): Boolean = npc.attr[TEST_NPC_ATTR] == true
+
+    fun markTest(npc: Npc) {
+        npc.attr[TEST_NPC_ATTR] = true
+    }
 
     /** Audit D-14: the breach event ([Active.eventId]) a breach npc was spawned for. */
     private val BREACH_EVENT_ATTR = AttributeKey<Int>()
@@ -134,12 +142,19 @@ object DeadmanBreach {
         val landing: List<Tile>,
         val maxNpcs: Int,
     ) {
-        val objects = ArrayList<DynamicObject>()
-        val npcs = ArrayList<Npc>()
+        val objects: MutableList<DynamicObject> = java.util.concurrent.CopyOnWriteArrayList()
+        val npcs: MutableList<Npc> = java.util.concurrent.CopyOnWriteArrayList()
         var spawned = 0
 
         /** Footprints of monsters whose projectile is still in flight. */
         val pending: MutableList<Footprint> = java.util.concurrent.CopyOnWriteArrayList()
+
+        /** Boss Spawns standing on a landing tile right now (removed when their monster appears or the breach closes). */
+        val bossSpawns: MutableList<DynamicObject> = java.util.concurrent.CopyOnWriteArrayList()
+
+        /** Set by [close]: projectiles still in flight land on nothing and spawn nothing. */
+        @Volatile
+        var closed = false
     }
 
     class Active(
@@ -148,6 +163,13 @@ object DeadmanBreach {
         /** Audit D-14: identifies this breach event (one emblem per account per event). */
         val eventId: Int = 0,
     )
+
+    /**
+     * Every site whose monsters may still be alive: the open breach and the previous ones in their linger time. [close] clears
+     * all of them (breach audit 2026-09-27, F2: a breach whose spawning had ended was no longer [active], so `breachclose`
+     * left its survivors standing).
+     */
+    private val lingering: MutableList<Site> = java.util.concurrent.CopyOnWriteArrayList()
 
     @Volatile
     var active: Active? = null
@@ -243,10 +265,24 @@ object DeadmanBreach {
         return Locations(localised, regional)
     }
 
-    private fun loadLocations(world: World): Locations = loadLocations().let { all -> Locations(
-        all.localised.map { Localised(it.name, it.multi, it.spawners.filter { t -> usable(world, t) }) }.filter { it.spawners.isNotEmpty() },
-        all.regional.map { Regional(it.name, it.combat, it.points.filter { t -> usable(world, t) }) }.filter { it.points.size >= REGIONAL_MAX_NPCS },
-    ) }
+    private fun loadLocations(world: World): Locations =
+        loadLocations().let { all ->
+            val locs =
+                Locations(
+                    all.localised.map { Localised(it.name, it.multi, it.spawners.filter { t -> usable(world, t) }) }.filter { it.spawners.isNotEmpty() },
+                    all.regional.map { Regional(it.name, it.combat, it.points.filter { t -> usable(world, t) }) }.filter { it.points.size >= REGIONAL_MAX_NPCS },
+                )
+            // Breach audit 2026-09-27 (F8): name every location the rev-667 map cannot hold instead of dropping it silently.
+            val keptLocal = locs.localised.map { it.name }.toSet()
+            val keptRegion = locs.regional.map { it.name }.toSet()
+            val droppedLocal = all.localised.map { it.name }.filter { it !in keptLocal }
+            val droppedRegion = all.regional.map { it.name }.filter { it !in keptRegion }
+            gg.rsmod.game.Server.logger.info(
+                "Breach locations: {} localised and {} regional usable; {} dropped (no usable 667 map tile): {}",
+                locs.localised.size, locs.regional.size, droppedLocal.size + droppedRegion.size, droppedLocal + droppedRegion,
+            )
+            locs
+        }
 
     /**
      * A tile the rev-667 map has (its map square exists), that is walkable, lies outside every Deadman safe zone and holds no
@@ -261,10 +297,16 @@ object DeadmanBreach {
                 .getEntities<GameObject>(tile, EntityType.STATIC_OBJECT, EntityType.DYNAMIC_OBJECT)
                 .none { it.type in 9..21 }
 
+    /** Map square id -> whether the rev-667 cache has it; F9: one filestore lookup per 64x64 square instead of one per tile. */
+    private val mapSquares = java.util.concurrent.ConcurrentHashMap<Int, Boolean>()
+
     fun mapExists(
         world: World,
         tile: Tile,
-    ): Boolean = world.filestore.data(IndexType.MAPS.number, "m${tile.x shr 6}_${tile.z shr 6}") != null
+    ): Boolean =
+        mapSquares.getOrPut(((tile.x shr 6) shl 8) or (tile.z shr 6)) {
+            world.filestore.data(IndexType.MAPS.number, "m${tile.x shr 6}_${tile.z shr 6}") != null
+        }
 
     // ---- opening ----------------------------------------------------------------------------------------------------
 
@@ -275,17 +317,36 @@ object DeadmanBreach {
             locs.regional.map { r -> "${r.name} (region)" to r.points.first() }
     }
 
-    /** Closes the open breach at once: its spawners and every monster it spawned are removed. */
-    fun close(world: World) {
-        val open = active ?: return
+    /**
+     * Closes every breach at once (breach audit 2026-09-27, F2): the open one and the ones still lingering, their spawners and
+     * Boss Spawns, every breach npc in the world (monsters, Zemouregal's summons, TzTok-Jad-Rek, `breachtest` monsters), and
+     * every projectile still in flight lands on nothing. Returns how many npcs were removed.
+     */
+    fun close(world: World): Int {
+        val open = active
         active = null
-        open.sites.forEach { site ->
+        val sites = (open?.sites.orEmpty() + lingering).distinct()
+        lingering.clear()
+        sites.forEach { site ->
+            site.closed = true
+            // F1: the objects list is emptied here, so the old run task can never remove a newer breach's objects on the same tile.
             site.objects.forEach { world.remove(it) }
-            site.npcs.forEach { if (world.npcs.contains(it) && !it.isDead()) world.remove(it) }
+            site.objects.clear()
+            site.bossSpawns.forEach { world.remove(it) }
+            site.bossSpawns.clear()
+            site.pending.clear()
             site.npcs.clear()
         }
-        pruneLive(world)
-        gg.rsmod.game.Server.logger.info("Breach closed by command: spawners and monsters removed.")
+        var removed = 0
+        live.toList().forEach { npc ->
+            if (world.npcs.contains(npc) && !npc.isDead()) {
+                world.remove(npc)
+                removed++
+            }
+        }
+        live.clear()
+        gg.rsmod.game.Server.logger.info("Breach closed by command: {} site(s) and {} breach npc(s) removed.", sites.size, removed)
+        return removed
     }
 
     /**
@@ -332,17 +393,26 @@ object DeadmanBreach {
         emblemClaims.keys.removeIf { it < lastEventId - 1 }
         val opened = Active(sites, world.currentCycle, lastEventId)
         active = opened
-        sites.forEach { site ->
-            site.spawners.forEach { t ->
-                val obj = DynamicObject(BREACH_LOC, 10, 0, t)
-                world.spawn(obj)
-                site.objects += obj
+        lingering += sites
+        try {
+            sites.forEach { site ->
+                site.spawners.forEach { t ->
+                    val obj = DynamicObject(BREACH_LOC, 10, 0, t)
+                    world.spawn(obj)
+                    site.objects += obj
+                }
             }
+            val names = sites.joinToString(" and ") { "${it.name.replaceFirstChar { c -> c.lowercase() }} (${if (it.multi) "multi-way" else "single-way"} combat)" }
+            // F5: a world event, never hidden by the game-message filter.
+            world.players.forEach { it.message("<col=ff0000>Breaches have opened: $names!</col>") }
+            gg.rsmod.game.Server.logger.info("Breach opened: {}.", sites.joinToString("; ") { "${it.name} ${it.kind} ${if (it.multi) "multi" else "single"} spawners=${it.spawners} landing=${it.landing.size}" })
+            run(world, opened)
+        } catch (e: Exception) {
+            // F7: a failed opening must not leave `active` set (no breach could open again until a restart).
+            gg.rsmod.game.Server.logger.error("Breach opening failed, cleaning up: {}", e.toString(), e)
+            close(world)
+            return null
         }
-        val names = sites.joinToString(" and ") { "${it.name.replaceFirstChar { c -> c.lowercase() }} (${if (it.multi) "multi-way" else "single-way"} combat)" }
-        world.players.forEach { it.filterableMessage("<col=ff0000>Breaches have opened: $names!</col>") }
-        gg.rsmod.game.Server.logger.info("Breach opened: {}.", sites.joinToString("; ") { "${it.name} ${it.kind} ${if (it.multi) "multi" else "single"} spawners=${it.spawners} landing=${it.landing.size}" })
-        run(world, opened)
         return opened
     }
 
@@ -384,26 +454,41 @@ object DeadmanBreach {
     ) {
         world.queue {
             var elapsed = 0
-            while (elapsed < SPAWN_WINDOW_TICKS && active === opened) {
-                opened.sites.forEach { site ->
-                    val interval = SPAWN_WINDOW_TICKS / site.maxNpcs
-                    if (site.spawned < site.maxNpcs && elapsed >= site.spawned * interval) fire(world, site)
-                }
-                if (elapsed % BREACH_PULSE_TICKS == 0) {
-                    opened.sites.forEach { site -> site.spawners.forEach { world.spawn(TileGraphic(it, BreachMonsters.GFX_BREACH_PROJECTILE, height = 0)) } }
+            val closed = { opened.sites.all { it.closed } }
+            while (elapsed < SPAWN_WINDOW_TICKS && active === opened && !closed()) {
+                // F7: one bad tick (a failed spawn) is logged and skipped; it never ends the breach or leaves `active` set.
+                try {
+                    opened.sites.forEach { site ->
+                        val interval = SPAWN_WINDOW_TICKS / site.maxNpcs
+                        if (site.spawned < site.maxNpcs && elapsed >= site.spawned * interval) fire(world, site)
+                    }
+                    if (elapsed % BREACH_PULSE_TICKS == 0) {
+                        opened.sites.forEach { site -> site.spawners.forEach { world.spawn(TileGraphic(it, BreachMonsters.GFX_BREACH_PROJECTILE, height = 0)) } }
+                    }
+                } catch (e: Exception) {
+                    gg.rsmod.game.Server.logger.error("Breach tick {} failed: {}", elapsed, e.toString(), e)
                 }
                 wait(1)
                 elapsed++
             }
-            // The spawners close; unkilled monsters stay for another 30 minutes.
-            opened.sites.forEach { site -> site.objects.forEach { world.remove(it) } }
             if (active === opened) active = null
+            // F1: a breach closed by command was cleaned up by close(); touching its objects again could remove a newer
+            // breach's spiral standing on the same tile.
+            if (closed()) return@queue
+            // The spawners close; unkilled monsters stay for another 30 minutes.
+            opened.sites.forEach { site ->
+                site.objects.forEach { world.remove(it) }
+                site.objects.clear()
+            }
             gg.rsmod.game.Server.logger.info("Breach spawning stopped: {} monsters spawned, survivors linger {} ticks.", opened.sites.sumOf { it.spawned }, LINGER_TICKS)
             wait(LINGER_TICKS)
+            if (closed()) return@queue
             var removed = 0
             opened.sites.forEach { site ->
+                site.closed = true
                 site.npcs.forEach { if (world.npcs.contains(it) && !it.isDead()) { world.remove(it); removed++ } }
                 site.npcs.clear()
+                lingering -= site
             }
             pruneLive(world)
             gg.rsmod.game.Server.logger.info("Breach cleanup: {} unkilled monsters removed.", removed)
@@ -426,7 +511,7 @@ object DeadmanBreach {
     ) {
         val monster = BreachMonsters.SPAWNABLE.random()
         val size = world.definitions.getNullable(gg.rsmod.game.fs.def.NpcDef::class.java, monster.id)?.size ?: 1
-        val landing = site.landing.shuffled().firstOrNull { fits(world, it, size) && isFree(world, site, it, size) }
+        val landing = site.landing.shuffled().firstOrNull { fits(world, it, size) && canLeave(world, it, size) && isFree(world, site, it, size) }
         if (landing == null) {
             // Nowhere free for this one right now; the next pulse tries again (spawned is not counted).
             return
@@ -435,24 +520,88 @@ object DeadmanBreach {
         val reserved = Footprint(landing, size)
         site.pending += reserved
         val centre = Tile(landing.x + (size - 1) / 2, landing.z + (size - 1) / 2, landing.height)
-        val from = site.spawners.minByOrNull { it.getDistance(centre) }!!
-        val flight = 30 + from.getDistance(centre) * 5
+        val from = projectileStart(site.spawners.minByOrNull { it.getDistance(centre) }!!, centre)
+        val flight = flightCycles(from, centre)
         world.spawn(
             Projectile.Builder().setTiles(start = from, target = centre).setGfx(BreachMonsters.GFX_BREACH_PROJECTILE)
                 .setHeights(startHeight = 100, endHeight = 0).setSlope(angle = 16, steepness = 64).setTimes(delay = 30, lifespan = flight).build(),
         )
         val landTicks = flight / 30 + 1
         world.queue {
-            wait(landTicks)
-            val bossSpawn = DynamicObject(BOSS_SPAWN_LOC, 10, 0, centre)
-            world.spawn(bossSpawn)
-            wait(BOSS_SPAWN_TICKS)
-            site.npcs += spawnMonster(world, monster.id, landing, if (site.kind == Kind.LOCALISED) LOCAL_SPAWN_RADIUS else REGIONAL_WANDER_RADIUS)
-            site.pending -= reserved
-            wait(1)
-            world.remove(bossSpawn)
+            var bossSpawn: DynamicObject? = null
+            try {
+                wait(landTicks)
+                // F2: a breach closed while the projectile flew lands on nothing.
+                if (site.closed) return@queue
+                bossSpawn = DynamicObject(BOSS_SPAWN_LOC, 10, 0, centre).also { site.bossSpawns += it }
+                world.spawn(bossSpawn)
+                wait(BOSS_SPAWN_TICKS)
+                if (site.closed) return@queue
+                site.npcs += spawnMonster(world, monster.id, landing, if (site.kind == Kind.LOCALISED) LOCAL_SPAWN_RADIUS else REGIONAL_WANDER_RADIUS)
+                wait(1)
+            } catch (e: Exception) {
+                gg.rsmod.game.Server.logger.error("Breach landing at {} failed: {}", landing, e.toString(), e)
+            } finally {
+                // F7: whatever happens, the footprint is released and the Boss Spawn disappears.
+                site.pending -= reserved
+                bossSpawn?.let {
+                    if (site.bossSpawns.remove(it)) world.remove(it)
+                }
+            }
         }
     }
+
+    /**
+     * Client cycles (20 ms) a spawner projectile flies: 30 + 5 per tile, as before, but at least long enough to be seen and never
+     * longer than the rev-667 projectile packet can hold. Regional breaches fire over up to ~40 tiles.
+     */
+    fun flightCycles(
+        from: Tile,
+        to: Tile,
+    ): Int = (30 + from.getDistance(to) * 5).coerceAtMost(1000)
+
+    /** Longest projectile flight in tiles; see [projectileStart]. */
+    const val MAX_PROJECTILE_TILES = 30
+
+    /**
+     * Where a spawner projectile starts (breach audit 2026-09-27, D1). A rev-667 projectile packet reaches only the players whose
+     * loaded 104x104 map holds its START tile (Chunk.sendUpdate), so a regional projectile fired 40+ tiles across the region was
+     * never seen by the players standing at the landing tile. Beyond [MAX_PROJECTILE_TILES] it starts on the straight line from
+     * the spawner, [MAX_PROJECTILE_TILES] tiles before the landing: it still comes from the spawner's direction and is visible
+     * where it lands. ADAPTED (packet limit), localised breaches (radius 9) are unchanged.
+     */
+    fun projectileStart(
+        spawner: Tile,
+        landing: Tile,
+    ): Tile {
+        val dx = spawner.x - landing.x
+        val dz = spawner.z - landing.z
+        val far = maxOf(kotlin.math.abs(dx), kotlin.math.abs(dz))
+        if (far <= MAX_PROJECTILE_TILES) return spawner
+        return Tile(landing.x + dx * MAX_PROJECTILE_TILES / far, landing.z + dz * MAX_PROJECTILE_TILES / far, landing.height)
+    }
+
+    /**
+     * A footprint that can step at least one way (breach audit 2026-09-27, B3): [fits] proves the tiles under the monster are
+     * usable, not that it can move off them - a large monster could land boxed in by walls on every side.
+     */
+    fun canLeave(
+        world: World,
+        corner: Tile,
+        size: Int,
+    ): Boolean =
+        gg.rsmod.game.model.Direction.NESW.any { dir ->
+            (0 until size).all { i ->
+                val edge =
+                    when (dir) {
+                        gg.rsmod.game.model.Direction.NORTH -> corner.transform(i, size - 1)
+                        gg.rsmod.game.model.Direction.SOUTH -> corner.transform(i, 0)
+                        gg.rsmod.game.model.Direction.EAST -> corner.transform(size - 1, i)
+                        else -> corner.transform(0, i)
+                    }
+                world.collision.canTraverse(edge, dir, projectile = false, water = false)
+            }
+        }
 
     /** A square of tiles an npc will occupy (south-west corner + size). */
     data class Footprint(
@@ -488,7 +637,10 @@ object DeadmanBreach {
         size: Int,
     ): Boolean {
         val fp = Footprint(corner, size)
-        if ((active?.sites.orEmpty() + site).any { s -> s.pending.any { it.overlaps(corner, size) } }) return false
+        val sites = (active?.sites.orEmpty() + lingering + site).distinct()
+        if (sites.any { s -> s.pending.any { it.overlaps(corner, size) } }) return false
+        // F6: never on a spawner (a regional spawner stands on one of the region's own landing points).
+        if (sites.any { s -> s.spawners.any { fp.overlaps(it, 1) } }) return false
         val reach = gg.rsmod.game.model.MovementQueue.MAX_NPC_SIZE - 1
         for (x in corner.x - reach until corner.x + size) for (z in corner.z - reach until corner.z + size) {
             val t = Tile(x, z, corner.height)
@@ -508,11 +660,16 @@ object DeadmanBreach {
         tile: Tile,
         walkRadius: Int,
         lifetimeTicks: Int = -1,
+        test: Boolean = false,
     ): Npc {
         val npc = Npc(id, Tile(tile), world)
         npc.respawnOverride = false
         npc.walkRadius = walkRadius
+        // Breach audit 2026-09-27 (B3): breach monsters route around obstacles to reach their target (1x1 to 5x5).
+        npc.smartPathfinding = true
         npc.attr[BREACH_NPC_ATTR] = true
+        // F4: a `breachtest` monster fights like the real one but pays nothing (no loot, emblem or points).
+        if (test) markTest(npc)
         npc.attr[BREACH_EVENT_ATTR] = active?.eventId ?: lastEventId
         // OSRS Wiki: Durial321 "is also capable of running after his target, unlike most NPCs"; I DSCIM YOU "runs at its targets".
         if (id in BreachMonsters.RUNNERS) npc.attr[gg.rsmod.game.model.attr.NPC_RUNS_ATTR] = true
@@ -640,9 +797,17 @@ object DeadmanBreach {
         val world = npc.world
         val ledger = contribution(npc)
         val tile = Tile(npc.tile)
+        if (isTestNpc(npc)) {
+            gg.rsmod.game.Server.logger.info("Breach reward: test npc {} at {} - no rewards ({} contributors).", npc.id, tile, ledger.size)
+            npc.attr.remove(CONTRIBUTION_ATTR)
+            return
+        }
+        // F9: one pass over the players instead of a name lookup per contributor (up to 116 per kill).
+        val online = HashMap<String, Player>()
+        world.players.forEach { online[it.username.lowercase()] = it }
         var looted = 0
         ledger.lootEligible().forEach { name ->
-            val player = world.getPlayerForName(name) ?: return@forEach
+            val player = online[name.lowercase()] ?: return@forEach
             looted++
             BreachLoot.roll(world.random).forEach drops@{ drop ->
                 val def = world.definitions.getNullable(ItemDef::class.java, drop.item) ?: return@drops
@@ -659,7 +824,7 @@ object DeadmanBreach {
         }
         var paid = 0
         ledger.pointEarners().forEach { (name, damage) ->
-            val player = world.getPlayerForName(name) ?: return@forEach
+            val player = online[name.lowercase()] ?: return@forEach
             if (BreachPoints.award(player, damage) > 0) paid++
         }
         gg.rsmod.game.Server.logger.info(

@@ -178,6 +178,16 @@ object NpcAttacks {
     private val VOID_UNREGISTERED_CONDITIONS = setOf("no_attackers", "confusion_cooldown")
 
     private val DATA_ATTACK_CYCLE = AttributeKey<Int>()
+    private val DATA_ATTACK_ANIM = AttributeKey<Int>()
+    private val DATA_ATTACK_SOUNDED = AttributeKey<Boolean>()
+
+    /**
+     * Breach audit 2026-09-27 (A5): the audible radius of an OSRS breach monster's attack sounds. A radius-0 sound on an npc was
+     * dropped (only a player can receive a direct sound) and on a player target reached that player alone; OSRS npc sounds are
+     * heard by everyone nearby. ADAPTED value: 15 tiles, the most common radius of the OSRS npc animation sounds imported so far
+     * (SeqSoundRadiusRepairTool histogram 2026-09-27: 20 of 44 frame sounds, next 10 and 6 with 5 each).
+     */
+    const val BREACH_SOUND_RADIUS = 15
 
     private val conditions = HashMap<String, (Npc, Pawn) -> Boolean>()
     private val attackHooks = HashMap<String, (Npc, Pawn) -> Unit>()
@@ -315,6 +325,16 @@ object NpcAttacks {
 
     fun isDataAttackThisCycle(npc: Npc): Boolean = npc.attr[DATA_ATTACK_CYCLE] == npc.world.currentCycle
 
+    /**
+     * Breach audit 2026-09-27 (A2): true only when this cycle's data attack played attack sounds of its own. The hit pipeline used
+     * to skip the npc's combat-sound row for every data attack, so npcs whose sections carry no sound (most of them) never made
+     * an attack sound at all.
+     */
+    fun playedSectionSoundsThisCycle(npc: Npc): Boolean = isDataAttackThisCycle(npc) && npc.attr[DATA_ATTACK_SOUNDED] == true
+
+    /** The attack animation [npc] played this cycle: the data section's, else its combat definition's. */
+    fun attackAnimThisCycle(npc: Npc): Int = if (isDataAttackThisCycle(npc)) npc.attr[DATA_ATTACK_ANIM] ?: -1 else npc.combatDef.attackAnimation
+
     /** True when at least one runnable section of [npc] can hit [target] from where the npc stands now. */
     fun hasValidAttack(
         npc: Npc,
@@ -381,11 +401,14 @@ object NpcAttacks {
         attack: Attack,
     ) {
         npc.attr[DATA_ATTACK_CYCLE] = npc.world.currentCycle
+        val anim = if (attack.anim >= 0) animationFor(npc, attack.anim) else -1
+        npc.attr[DATA_ATTACK_ANIM] = anim
+        npc.attr[DATA_ATTACK_SOUNDED] = attack.sounds.isNotEmpty() || attack.targetSounds.isNotEmpty()
 
         // Source
-        if (attack.anim >= 0) npc.animate(animationFor(npc, attack.anim))
+        if (anim >= 0) npc.animate(anim)
         playGfx(npc, row.height, attack.gfx, null)
-        playSounds(npc, attack.sounds, null)
+        playSounds(npc, attack.sounds, null, areaRadiusFor(npc))
         if (attack.say.isNotEmpty()) npc.forceChat(attack.say)
         swingHooks[row.combatDef]?.invoke(npc, primaryTarget, attack)
 
@@ -394,7 +417,7 @@ object NpcAttacks {
             val targetHeight = heightOf(target)
             if (attack.targetAnim >= 0) target.animate(attack.targetAnim)
             playGfx(target, targetHeight, attack.targetGfx, null)
-            playSounds(target, attack.targetSounds, null)
+            playSounds(target, attack.targetSounds, null, areaRadiusFor(npc))
 
             val delays = IntArray(attack.projectiles.size)
             attack.projectiles.forEachIndexed { i, p ->
@@ -418,7 +441,7 @@ object NpcAttacks {
             val impactDelay = delays.firstOrNull()
             val showImpact = attack.impactRegardless || landed
             playGfx(target, targetHeight, if (showImpact) attack.impactGfx else attack.missGfx, impactDelay)
-            playSounds(target, if (showImpact) attack.impactSounds else attack.missSounds, impactDelay)
+            playSounds(target, if (showImpact) attack.impactSounds else attack.missSounds, impactDelay, areaRadiusFor(npc))
             val impactOn = firstHit
             val delayTicks = if (impactOn == null) hitDelayTicks(impactDelay ?: 0) else 0
             if (impactOn != null) {
@@ -732,14 +755,20 @@ object NpcAttacks {
     }
 
     /** Void `Attack.play(sounds)`: radius 0 is heard by that character only (a no-op on an npc), else an area sound. */
+    /** [BREACH_SOUND_RADIUS] for a breach monster's sounds, 0 (the rev-667 Void rule) for every other npc. */
+    private fun areaRadiusFor(npc: Npc): Int = if (gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.isBreachNpc(npc)) BREACH_SOUND_RADIUS else 0
+
     private fun playSounds(
         pawn: Pawn,
         list: List<Sound>,
         delay: Int?,
+        areaRadius: Int = 0,
     ) {
         for (s in list) {
             val d = delay ?: s.delay
-            if (s.radius == 0) {
+            if (s.radius == 0 && areaRadius > 0) {
+                pawn.world.spawn(AreaSound(tile = pawn.tile, id = s.id, radius = areaRadius, volume = 1, delay = d))
+            } else if (s.radius == 0) {
                 (pawn as? Player)?.playSound(s.id, delay = d)
             } else {
                 val tile = Tile(pawn.tile.x + s.offsetX, pawn.tile.z + s.offsetY, pawn.tile.height)

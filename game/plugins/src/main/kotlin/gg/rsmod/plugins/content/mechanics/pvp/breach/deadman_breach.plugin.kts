@@ -411,7 +411,9 @@ on_command("breach", Privilege.ADMIN_POWER) {
     if (opened == null) {
         player.message(if (only != null) "No usable breach location matches '$first'. Type breachlist." else "No usable breach location.")
     } else {
-        opened.sites.forEach { s -> player.message("Breach: ${s.name} (${s.kind}, ${if (s.multi) "multi" else "single"}) spawner ${s.spawners.first()}") }
+        opened.sites.forEachIndexed { i, s ->
+            player.message("Breach site ${i + 1}: ${s.name} (${if (s.kind == DeadmanBreach.Kind.LOCALISED) "local" else "region"}, ${if (s.multi) "multi" else "single"}) - breachtele site ${i + 1}")
+        }
     }
 }
 
@@ -440,25 +442,28 @@ on_command("breachtest", Privilege.ADMIN_POWER) {
         player.message("No breach monster with that id.")
         return@on_command
     }
-    player.message("<col=ffff00>Spawning ${roster.size} breach monster(s) - report which ones you cannot see.</col>")
+    player.message("<col=ffff00>Spawning ${roster.size} test breach monster(s). They fight normally but give no loot, emblems or points.</col>")
     roster.forEachIndexed { index, monster ->
         // Spread them along a line so two large npcs never share a tile and hide each other.
         val tile = player.tile.transform(1 + (index % 8) * 2, (index / 8) * 2)
-        DeadmanBreach.spawnMonster(world, monster.id, tile, walkRadius = 0)
+        DeadmanBreach.spawnMonster(world, monster.id, tile, walkRadius = 0, test = true)
         player.message("${monster.id} ${monster.name} at ${tile.x},${tile.z}")
     }
 }
 
 /** Closes the open breach and removes its monsters. */
 on_command("breachclose", Privilege.ADMIN_POWER) {
-    DeadmanBreach.close(world)
-    player.message("The breach is closed.")
+    val removed = DeadmanBreach.close(world)
+    player.message("Every breach is closed: spawners, Boss Spawns and $removed breach monster(s) removed.")
 }
 
 on_command("breachtele", Privilege.ADMIN_POWER) {
     // breachtele <number from breachlist | part of a name> goes to any breach location, open or not; breachtele alone goes to
-    // the open breach.
-    val arg = player.getCommandArgs().joinToString(" ").trim()
+    // the open breach's first site, breachtele site <1|2> to that site of the open breach (breach audit 2026-09-27, F3: the
+    // number was always read as a breachlist number, so the second site of an open breach could not be reached).
+    val args = player.getCommandArgs()
+    val siteArg = if (args.firstOrNull()?.equals("site", ignoreCase = true) == true) args.getOrNull(1)?.toIntOrNull() ?: 1 else null
+    val arg = if (siteArg != null) "" else args.joinToString(" ").trim()
     val all = DeadmanBreach.allLocations(world)
     val target = arg.toIntOrNull()?.let { all.getOrNull(it - 1) } ?: arg.takeIf { it.isNotEmpty() }?.let { a -> all.firstOrNull { it.first.contains(a, ignoreCase = true) } }
     if (arg.isNotEmpty() && target == null) {
@@ -475,7 +480,11 @@ on_command("breachtele", Privilege.ADMIN_POWER) {
         player.message("No breach is open. ${DeadmanBreach.statusLine()} Use 'breach' to open one.")
         return@on_command
     }
-    val index = (player.getCommandArgs().firstOrNull()?.toIntOrNull() ?: 1).coerceIn(1, open.sites.size) - 1
+    if (siteArg != null && siteArg !in 1..open.sites.size) {
+        player.message("The open breach has ${open.sites.size} site(s).")
+        return@on_command
+    }
+    val index = (siteArg ?: 1) - 1
     val site = open.sites[index]
     val dest = site.landing.minByOrNull { it.getDistance(site.spawners.first()) } ?: site.spawners.first()
     player.moveTo(dest)

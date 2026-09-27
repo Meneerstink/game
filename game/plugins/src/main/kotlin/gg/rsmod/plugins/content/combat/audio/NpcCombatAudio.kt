@@ -100,13 +100,53 @@ object NpcCombatAudio {
     fun onAttack(
         npc: Npc,
         target: Pawn,
+        anim: Int = npc.combatDef.attackAnimation,
     ) {
         val row = rowFor(npc.id) ?: return
         if (row.attack.isEmpty()) return
+        // One source per sound (breach audit 2026-09-27, A3): an animation that carries its own audible frame sounds already
+        // plays them for everyone nearby, so the table's cue on top of it was a second copy.
+        if (hasAudibleFrameSounds(npc, anim)) return
         val cycle = npc.world.currentCycle
         if (npc.attr[LAST_ATTACK_SOUND_CYCLE] == cycle) return
         npc.attr[LAST_ATTACK_SOUND_CYCLE] = cycle
-        row.attack.forEach { sound -> play(if (sound.on == NPC) npc else target, sound, FamiliarAudio.isFamiliarNpc(npc.id)) }
+        val area = areaRadius(npc)
+        row.attack.forEach { sound ->
+            if (area > 0 && sound.radius == 0) {
+                npc.world.spawn(AreaSound(tile = npc.tile, id = sound.id, radius = area, volume = 1, delay = sound.delay))
+            } else {
+                play(if (sound.on == NPC) npc else target, sound, FamiliarAudio.isFamiliarNpc(npc.id))
+            }
+        }
+    }
+
+    /** True when [anim] has a frame sound with a radius ([gg.rsmod.game.fs.def.AnimDef.hasAudibleFrameSounds]). */
+    fun hasAudibleFrameSounds(
+        npc: Npc,
+        anim: Int,
+    ): Boolean =
+        anim >= 0 && runCatching { npc.world.definitions.getNullable(gg.rsmod.game.fs.def.AnimDef::class.java, anim)?.hasAudibleFrameSounds == true }.getOrDefault(false)
+
+    /**
+     * Breach monsters are OSRS npcs whose attack, hit and death sounds every player nearby hears (breach audit 2026-09-27, A5):
+     * their radius-0 cues go out as area sounds at the monster ([gg.rsmod.plugins.content.combat.attack.NpcAttacks.BREACH_SOUND_RADIUS]).
+     * Every other npc keeps the rev-667 Void rule (target / attacker / killer only).
+     */
+    private fun areaRadius(npc: Npc): Int =
+        if (gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.isBreachNpc(npc)) gg.rsmod.plugins.content.combat.attack.NpcAttacks.BREACH_SOUND_RADIUS else 0
+
+    private fun playAt(
+        npc: Npc,
+        listener: Player?,
+        id: Int,
+    ) {
+        val area = areaRadius(npc)
+        when {
+            area > 0 -> npc.world.spawn(AreaSound(tile = npc.tile, id = id, radius = area, volume = 1))
+            listener == null -> Unit
+            FamiliarAudio.isFamiliarNpc(npc.id) -> FamiliarAudio.play(listener, id)
+            else -> listener.playSound(id)
+        }
     }
 
     fun onDefend(
@@ -114,9 +154,8 @@ object NpcCombatAudio {
         npc: Npc,
     ) {
         val id = rowFor(npc.id)?.defend ?: return
-        if (id >= 0 && source is Player) {
-            if (FamiliarAudio.isFamiliarNpc(npc.id)) FamiliarAudio.play(source, id) else source.playSound(id)
-        }
+        if (id < 0 || hasAudibleFrameSounds(npc, npc.combatDef.blockAnimation)) return
+        if (source is Player || areaRadius(npc) > 0) playAt(npc, source as? Player, id)
     }
 
     fun onDeath(
@@ -124,9 +163,8 @@ object NpcCombatAudio {
         npc: Npc,
     ) {
         val id = rowFor(npc.id)?.death ?: return
-        if (id >= 0) {
-            if (FamiliarAudio.isFamiliarNpc(npc.id)) FamiliarAudio.play(killer, id) else killer.playSound(id)
-        }
+        if (id < 0 || npc.combatDef.deathAnimation.any { hasAudibleFrameSounds(npc, it) }) return
+        playAt(npc, killer, id)
     }
 
     private fun play(

@@ -207,6 +207,10 @@ object OsrsNpcImportTool {
         opt(40, n.walk180)
         opt(41, n.walkLeft)
         opt(42, n.walkRight)
+        // Breach audit 2026-09-27 (C4): the OSRS idle rotations (npc opcodes 15/16) were imported but never written, so an npc
+        // turning on the spot slid round in its stand pose. 667 BASType 38 = readyTurnCcw (left), 39 = readyTurnCw (right).
+        opt(38, n.idleTurnLeft)
+        opt(39, n.idleTurnRight)
         out.u8(0)
         return out.toByteArray()
     }
@@ -331,8 +335,16 @@ object OsrsNpcImportTool {
             println("CENSUS npc_model_candidates=${modelCandidates.size} next npc=$nextNpc bas=$nextBas seq=$nextSeq frameset=$nextFrameset base=$nextBase synth=$nextSynth")
 
             val localIds = OsrsFxImportTool.existingFx(assetMap).toMutableMap()
-            fun local(kind: String, upstream: Int, allocate: () -> Int): Int =
-                localIds.getOrPut("$kind:$upstream") { allocate().also { records += "$kind|$upstream|$it" } }
+            val npcOwned = OsrsFxImportTool.npcOwnedFx(assetMap).toMutableSet()
+            fun local(kind: String, upstream: Int, allocate: () -> Int): Int {
+                if ("$kind:$upstream" !in localIds) npcOwned += "$kind:$upstream"
+                // Breach audit 2026-09-27 (C5): OsrsFxImportTool converts OSRS frames onto the merged PLAYER rig. Reusing one of its
+                // framesets / bases / sequences here would re-put those frames converted for an npc skeleton over the player's
+                // (e.g. HUMAN_SWORD_SLASH 390), breaking player animations. Anything the fx tool owns gets an npc-only copy.
+                val shared = kind in setOf("frameset", "base", "seq") && "$kind:$upstream" in localIds && "$kind:$upstream" !in npcOwned
+                val key = if (shared) "npc$kind" else kind
+                return localIds.getOrPut("$key:$upstream") { allocate().also { records += "$key|$upstream|$it" } }
+            }
 
             fun put(index: Int, group: Int, file: Int, bytes: ByteArray, label: String) {
                 val current = library.data(index, group, file)?.let { CacheItemProbeTool.sha1(it) }

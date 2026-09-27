@@ -117,19 +117,39 @@ suspend fun cycle(it: QueueTask): Boolean {
         pawn.stopMovement()
         pawn.resetFacePawn()
         Combat.reset(pawn)
+        // Breach audit 2026-09-27 (B5): the npc used to stay exactly where the leash ran out, a free safespot at the edge.
+        // It goes back towards its spawn tile instead (OSRS: an npc that loses its target returns to its spawn area).
+        NpcLeash.returnHome(pawn)
         return false
     }
 
-    var pathFound = PawnPathAction.walkTo(it, pawn, target, interactionRange = attackRange, lineOfSight = false)
+    var pathFound: Boolean
 
     if (pawn is Npc && dataAttackRange != null) {
         // RCV-005 root cause (owner: GWD generals/minions "niet meer aggressive"): the melee shortcut below treated a
         // large boss within `size` tiles, or a minion standing diagonally, as in reach; it then stopped walking but no
         // attack section could hit from there, so it stood still forever. A data npc is in reach only when one of
         // its sections can actually hit (Void Attack.withinRange); otherwise it keeps approaching.
+        //
+        // Breach audit 2026-09-27 (B1): the approach itself used a second, different distance rule. The route was asked for
+        // the npc's LONGEST range as a touch radius, which the npc pathfinder measures as a box stretching north-east from the
+        // target's south-west tile, while withinRange measures from the npc's nearest tile with line of sight. The route could
+        // "arrive" where no section can hit (e.g. a 1x1 range-8 npc at +7,+8: box says arrived, withinRange says 11 > 9), and
+        // the npc then stood there every tick. Now withinRange is the only "arrived" rule: in reach -> stop and attack; not in
+        // reach -> step towards the target (a melee approach), and look again next tick.
         if (gg.rsmod.plugins.content.combat.attack.NpcAttacks.hasValidAttack(pawn, target)) {
+            pawn.stopMovement()
             pathFound = true
+        } else {
+            PawnPathAction.walkTo(it, pawn, target, interactionRange = 1, lineOfSight = false, waitForArrival = false)
+            return true
         }
+    } else {
+        pathFound = PawnPathAction.walkTo(it, pawn, target, interactionRange = attackRange, lineOfSight = false)
+    }
+
+    if (pawn is Npc && dataAttackRange != null) {
+        // handled above
     } else if (strategy == MeleeCombatStrategy && pawn.tile.getDistance(target.tile) <= pawn.getSize()) {
         pathFound = true
     }
@@ -193,7 +213,11 @@ suspend fun cycle(it: QueueTask): Boolean {
             // normal rule ("players can also be attacked by another player in a single area if they are not being attacked by
             // the boss").
             val sharedBreachTarget = target is Npc && gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.isBreachNpc(target) && pawn is Player
-            if (guardInvolved) {
+            // Breach audit 2026-09-27 (B6): a breach monster that is already fighting a player keeps doing so when other players
+            // hit it ("multiple players can attack the same boss") or when a PKer hits its target - it was released by the
+            // single-way rules below. Who may start fighting whom is decided by the aggro search and the players' own checks.
+            val breachAttacker = pawn is Npc && gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.isBreachNpc(pawn)
+            if (guardInvolved || breachAttacker) {
                 // no single-combat restriction
             } else if (pawnInMulti || targetInMulti) {
                 if (!pawnInMulti && pawn.isBeingAttacked() && pawn.getLastHitBy() != target) {

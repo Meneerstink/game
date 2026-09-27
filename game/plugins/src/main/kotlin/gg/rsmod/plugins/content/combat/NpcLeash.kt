@@ -63,6 +63,17 @@ object NpcLeash {
     }
 
     /**
+     * Walks a leashed-out [npc] back to its spawn tile when it stands outside its own wander area (breach audit 2026-09-27, B5).
+     * Familiars and npcs that never wander (walk radius 0 on their spawn tile) are left alone.
+     */
+    fun returnHome(npc: Npc) {
+        if (npc.owner != null || npc.static) return
+        if (npc.tile.height != npc.spawnTile.height) return
+        if (npc.tile.isWithinRadius(npc.spawnTile, npc.walkRadius.coerceAtLeast(0))) return
+        npc.walkTo(npc.spawnTile)
+    }
+
+    /**
      * Whether [npc] may keep fighting [target]. Familiars (an owner is set) are never leashed, and
      * neither is an npc fighting a familiar: Void `Combat.retaliate` skips the leash when the source is
      * a familiar, so an npc hit by one always defends itself.

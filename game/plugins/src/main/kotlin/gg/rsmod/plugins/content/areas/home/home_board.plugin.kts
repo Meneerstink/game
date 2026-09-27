@@ -1,13 +1,12 @@
 package gg.rsmod.plugins.content.areas.home
 
-import gg.rsmod.plugins.content.areas.wilderness.WildernessBreach
 import gg.rsmod.plugins.content.areas.wilderness.WildernessHotspot
 import gg.rsmod.plugins.content.daily.DailyObjectives
 import gg.rsmod.plugins.content.mechanics.lfg.Lfg
 
 /**
- * R14.9: home activity/info board. Shows the current Wilderness hotspot and next Breach status
- * from the real, already-running systems ([WildernessHotspot], [WildernessBreach]) - never a
+ * R14.9: home activity/info board. Shows the current Wilderness hotspot and the Deadman breach status
+ * from the real, already-running systems ([WildernessHotspot], `DeadmanBreach.statusLine`) - never a
  * fake countdown when nothing is scheduled, per R14.9's own explicit rule.
  *
  * Uses [Objs.JOB_BOARD] (46296), verified live this session to be the only real board-type

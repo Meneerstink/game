@@ -92,10 +92,18 @@ on_timer(AGGRO_CHECK_TIMER) {
     // Breach monsters (owner 2026-09-23: "they need to be aggro and they need to attack multiple players"): the in-combat timer
     // outlives the fight by several ticks, so after its target died, teleported or ran out of the leash a breach monster stood
     // idle while other players walked past it. A breach monster without a live target hunts again at once.
-    val breachIdle =
-        gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.isBreachNpc(npc) &&
-            npc.getCombatTarget().let { it == null || it.isDead() }
-    if ((!npc.timers.has(ACTIVE_COMBAT_TIMER) || breachIdle) &&
+    val breach = gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.isBreachNpc(npc)
+    val breachIdle = breach && npc.getCombatTarget().let { it == null || it.isDead() }
+    // Breach audit 2026-09-27 (B4): a breach monster that still has a live target it may pursue keeps it. The search below
+    // looks only 8 tiles around the monster and dropped the target when nobody was that close, so the effective chase was 8
+    // tiles instead of the leash (DeadmanBreach.CHASE_RANGE); it also re-picked a random player on every search.
+    val breachPursuing =
+        breach && npc.getCombatTarget().let { t ->
+            t != null && !t.isDead() && NpcLeash.mayPursue(npc, t, gg.rsmod.plugins.content.combat.attack.NpcAttacks.attackRange(npc) ?: 1)
+        }
+    if (breachPursuing) {
+        // keep fighting
+    } else if ((!npc.timers.has(ACTIVE_COMBAT_TIMER) || breachIdle || breach) &&
         npc.lock.canAttack() &&
         npc.isActive()) {
         // A Deadman guard may pursue a valid skulled target anywhere inside the guarded polygon.
@@ -120,34 +128,49 @@ on_timer(AGGRO_CHECK_TIMER) {
         if (npc.combatDef.aggroTargetDelay <= 0) world.random(1..3) else npc.combatDef.aggroTargetDelay
 }
 
+/**
+ * Picks a random player the npc can really fight within its aggro radius and attacks it.
+ *
+ * Breach audit 2026-09-27 (B4): the search stopped at the first tile (scanning from the south-west corner) that held any player
+ * the aggro rule accepted, and attacked him even when the attack would be refused a tick later (PvP protection, the single-way
+ * "someone else is fighting him" rule, a target outside the leash): the refused player "held" the npc forever and every idle npc
+ * in single-way combat piled onto the same player. Now every candidate that passes the real attack checks is collected first,
+ * refused ones are skipped, and one is picked at random. The radius is measured around the npc's whole footprint.
+ */
 fun checkRadius(npc: Npc): Boolean {
     val radius = aggroRadius(npc)
-    for (x in -radius..radius) {
-        for (z in -radius..radius) {
+    val size = npc.getSize().coerceAtLeast(1)
+    val range = gg.rsmod.plugins.content.combat.attack.NpcAttacks.attackRange(npc) ?: 1
+    val candidates = ArrayList<Player>()
+    for (x in -radius until radius + size) {
+        for (z in -radius until radius + size) {
             val tile = npc.tile.transform(x, z)
             val chunk = world.chunks.get(tile, createIfNeeded = false) ?: continue
-
-            val players = chunk.getEntities<Player>(tile, EntityType.PLAYER, EntityType.CLIENT)
-            if (players.isEmpty()) {
-                continue
-            }
-
-            val targets = players.filter { canAttack(npc, it) }
-            if (targets.isEmpty()) {
-                continue
-            }
-
-            val target = targets.random()
-            if (npc.canEngageCombat(target)) {
-                if (npc.getCombatTarget() != target && target.getAggressor() == null) {
-                    target.attr[AGGRESSOR] = WeakReference(npc)
-                }
-                npc.attack(target)
-                return true
+            chunk.getEntities<Player>(tile, EntityType.PLAYER, EntityType.CLIENT).forEach { p ->
+                if (p !in candidates && mayTarget(npc, p, range)) candidates += p
             }
         }
     }
-    return false
+    val target = candidates.randomOrNull() ?: return false
+    if (npc.getCombatTarget() != target && target.getAggressor() == null) {
+        target.attr[AGGRESSOR] = WeakReference(npc)
+    }
+    npc.attack(target)
+    return true
+}
+
+/** Every check the attack itself would make, so a player that would be refused is never picked. */
+fun mayTarget(
+    npc: Npc,
+    target: Player,
+    range: Int,
+): Boolean {
+    if (!canAttack(npc, target) || !npc.canEngageCombat(target)) return false
+    if (!world.plugins.canAttack(npc, target) || !Combat.canEngage(npc, target)) return false
+    if (!NpcLeash.mayPursue(npc, target, range)) return false
+    // Single-way: a player someone else is already fighting is not a target (the combat cycle would refuse it).
+    if (!target.tile.isMulti(world) && target.isBeingAttacked() && target.getLastHitBy() != npc) return false
+    return true
 }
 
 fun canAttack(

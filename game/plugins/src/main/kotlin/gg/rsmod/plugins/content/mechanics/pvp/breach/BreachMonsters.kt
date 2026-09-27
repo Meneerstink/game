@@ -143,6 +143,14 @@ object BreachMonsters {
 
     private fun snd(id: Int) = listOf(NpcAttacks.Sound(id = id))
 
+    /**
+     * Breach audit 2026-09-27 (B7): the God Wars generals' Void rows give their ranged / magic attack range 1, because in God Wars
+     * that attack is a room-wide script of the chamber. A breach clone has no chamber, so range 1 made the ranged / magic attack
+     * adjacent-only (OSRS Wiki "General Graardor (Deadman)": "attacks with both melee and ranged"). ADAPTED: 8 tiles, the reach of
+     * every other ranged / magic breach section.
+     */
+    private val RANGED_REACH = mapOf("range" to 8)
+
     /** Breach monster -> OSRS (attack, hit/defend, death) sound, local ids; -1 = none (e.g. the sound is on the death sequence). */
     val SOUND_ROWS: Map<Int, Triple<Int, Int, Int>> =
         mapOf(
@@ -230,13 +238,13 @@ object BreachMonsters {
                 14442, 12444, "General Graardor",
                 Stats(2000, 280, 350, 250, 80, 350, attbns = 120, strbns = 43, arange = 100, rngbns = 40, dstab = 90, dslash = 90, dcrush = 90, dmagic = 201, dranged = 90),
                 6, StyleType.CRUSH, 15614, 15615, 15616,
-                Template(6260, anims = mapOf("melee" to 15614, "range" to 15617), maxHits = mapOf("melee" to 60)),
+                Template(6260, anims = mapOf("melee" to 15614, "range" to 15617), maxHits = mapOf("melee" to 60), sectionInts = mapOf("range" to RANGED_REACH)),
             ),
             Monster(
                 14443, 12445, "Commander Zilyana",
                 Stats(1500, 280, 196, 150, 300, 250, attbns = 195, strbns = 20, amagic = 200, dstab = 100, dslash = 100, dcrush = 100, dmagic = 100, dranged = 100),
                 2, StyleType.CRUSH, 15618, 15620, 15619,
-                Template(6247, anims = mapOf("melee" to 15618, "magic" to 15621), maxHits = mapOf("melee" to 27)),
+                Template(6247, anims = mapOf("melee" to 15618, "magic" to 15621), maxHits = mapOf("melee" to 27), sectionInts = mapOf("magic" to RANGED_REACH)),
             ),
             Monster(
                 14444, 12446, "K'ril Tsutsaroth",
@@ -246,6 +254,7 @@ object BreachMonsters {
                     6203,
                     anims = mapOf("melee" to 15623, "melee_poison" to 15623, "melee_slam" to 15623, "melee_slam_poison" to 15623, "magic" to 15625),
                     maxHits = mapOf("melee" to 46, "melee_poison" to 46),
+                    sectionInts = mapOf("magic" to RANGED_REACH),
                 ),
             ),
             Monster(

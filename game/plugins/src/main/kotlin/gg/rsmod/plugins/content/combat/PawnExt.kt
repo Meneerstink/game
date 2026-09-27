@@ -327,9 +327,10 @@ fun Pawn.dealHit(
     // RCV-005 shared NPC combat audio (NpcCombatAudio): every strategy and every scripted npc attack
     // deals its damage through here, so this is the one dispatch point. Void Attack.kt plays the
     // attack sound when the npc attacks; Block.kt plays the npc defend sound through the attacker.
-    // A data-driven attack (NpcAttacks) already played its own section sounds this tick.
-    if (this is Npc && !gg.rsmod.plugins.content.combat.attack.NpcAttacks.isDataAttackThisCycle(this)) {
-        gg.rsmod.plugins.content.combat.audio.NpcCombatAudio.onAttack(this, target)
+    // Breach audit 2026-09-27 (A2): only a data section that played attack sounds of its own replaces the row; the attack
+    // animation decides whether its own frame sounds already are the attack sound (A3, one source per sound).
+    if (this is Npc && !gg.rsmod.plugins.content.combat.attack.NpcAttacks.playedSectionSoundsThisCycle(this)) {
+        gg.rsmod.plugins.content.combat.audio.NpcCombatAudio.onAttack(this, target, gg.rsmod.plugins.content.combat.attack.NpcAttacks.attackAnimThisCycle(this))
     }
     if (target is Npc) {
         hit.addAction {

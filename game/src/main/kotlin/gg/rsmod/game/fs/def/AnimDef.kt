@@ -24,6 +24,14 @@ class AnimDef(
     var hasFrameSounds = false
         private set
 
+    /**
+     * True when a frame sound carries a radius (`soundInfo & 0x1F` > 0): the client then plays it as an area sound that every
+     * nearby player hears. A radius-0 frame sound is played only for the local player's own animation, so on an npc it is
+     * silent and a server cue must still be sent (breach audit 2026-09-27, A1/A3).
+     */
+    var hasAudibleFrameSounds = false
+        private set
+
     /** Frame ids (`frameset archive << 16 | frame file`); a frame file's bytes 1-2 name its skeleton (AnimBase). */
     val frames: IntArray get() = if (::frameIds.isInitialized) frameIds else IntArray(0)
     val frameLength: Int get() = frameLengths.sum()
@@ -99,7 +107,7 @@ class AnimDef(
                     val size = buf.readUnsignedByte().toInt()
                     if (size > 0) {
                         hasFrameSounds = true
-                        buf.readMedium()
+                        if (buf.readMedium() and 0x1F > 0) hasAudibleFrameSounds = true
                         for (index in 1 until size) {
                             buf.readShort()
                         }

@@ -99,14 +99,17 @@ class DeadmanBreachTests {
             }
         }
         assertTrue(failures.isEmpty(), failures.joinToString("\n"))
-        // Wiki "Permanent" max hits (x10 in the attack table).
+        // Wiki max hits (x10 in the attack table). Breach audit 2026-09-27 (F11): this was a mapOf with key 14462 twice, so the
+        // Jad melee check was silently replaced by the magic one; a list checks every pair. (Label: the comment said "Permanent"
+        // while BreachMonsters names the "Deadman: Annihilation" version - reported to the owner, values unchanged.)
         val expected =
-            mapOf(
+            listOf(
                 14438 to ("melee" to 260), 14439 to ("melee" to 250), 14441 to ("magic" to 260), 14442 to ("melee" to 600),
                 14443 to ("melee" to 270), 14444 to ("melee" to 460), 14445 to ("melee" to 290), 14446 to ("magic" to 430),
                 14447 to ("melee" to 430), 14448 to ("magic" to 430), 14449 to ("melee" to 270), 14453 to ("melee" to 490),
                 14458 to ("melee" to 290), 14462 to ("melee" to 780), 14462 to ("magic" to 1080), 14467 to ("magic" to 260),
             )
+        assertEquals(2, expected.count { it.first == 14462 }, "both TzTok-Jad pairs are checked")
         expected.forEach { (id, pair) ->
             val (section, max) = pair
             assertEquals(max, rows.getValue(id).attacks.single { it.id == section }.hits.maxOf { it.max }, "npc $id $section")

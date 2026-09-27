@@ -2,7 +2,7 @@ package gg.rsmod.plugins.content.mechanics.pvp.breach
 
 import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.entity.Player
-import gg.rsmod.plugins.api.ext.filterableMessage
+import gg.rsmod.plugins.api.ext.message
 
 /**
  * Breach Points (owner 2026-09-23: a separate currency, never Deadman Points).
@@ -39,7 +39,7 @@ object BreachPoints {
         player.attr[EARNED] = earned(player) + given
         addBalance(player, given)
         val capNote = if (earned(player) >= DAMAGE_CAP) " You have reached the ${"%,d".format(DAMAGE_CAP)} breach point limit." else ""
-        player.filterableMessage("You earn ${"%,d".format(given)} Breach Points (total ${"%,d".format(balance(player))}).$capNote")
+        player.message("You earn ${"%,d".format(given)} Breach Points (total ${"%,d".format(balance(player))}).$capNote")
         return given
     }
 
