@@ -325,6 +325,21 @@ object NpcAttacks {
 
     fun isDataAttackThisCycle(npc: Npc): Boolean = npc.attr[DATA_ATTACK_CYCLE] == npc.world.currentCycle
 
+    /** Why each section of [npc] can or cannot hit [target] from here (BreachSim diagnostics). */
+    fun explainReach(
+        npc: Npc,
+        target: Pawn,
+    ): String =
+        runnable(npc.id).joinToString(" ") { attack ->
+            val check = conditions[attack.condition]
+            val cond = check == null || check(npc, target)
+            val los = npc.hasLineOfSightTo(target, projectile = true, maximumDistance = attack.range + npc.getSize())
+            "${attack.id}(r${attack.range}):cond=$cond within=${withinRange(npc, target, attack)} los=$los"
+        }
+
+    /** The game cycle of [npc]'s last data attack (BreachSim measures attack distance and cadence with it). */
+    fun lastDataAttackCycle(npc: Npc): Int? = npc.attr[DATA_ATTACK_CYCLE]
+
     /**
      * Breach audit 2026-09-27 (A2): true only when this cycle's data attack played attack sounds of its own. The hit pipeline used
      * to skip the npc's combat-sound row for every data attack, so npcs whose sections carry no sound (most of them) never made

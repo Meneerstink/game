@@ -217,6 +217,13 @@ suspend fun cycle(it: QueueTask): Boolean {
             // hit it ("multiple players can attack the same boss") or when a PKer hits its target - it was released by the
             // single-way rules below. Who may start fighting whom is decided by the aggro search and the players' own checks.
             val breachAttacker = pawn is Npc && gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.isBreachNpc(pawn)
+            // ... but in single-way a player still fights one npc at a time (in-engine test run: two monsters shared one player).
+            val otherNpcOnTarget =
+                !targetInMulti && target.isBeingAttacked() && target.getLastHitBy().let { it is Npc && it !== pawn && !it.isDead() }
+            if (breachAttacker && otherNpcOnTarget) {
+                Combat.reset(pawn)
+                return false
+            }
             if (guardInvolved || breachAttacker) {
                 // no single-combat restriction
             } else if (pawnInMulti || targetInMulti) {

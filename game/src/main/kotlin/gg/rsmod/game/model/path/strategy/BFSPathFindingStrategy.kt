@@ -17,6 +17,14 @@ import java.util.*
  */
 class BFSPathFindingStrategy(
     collision: CollisionManager,
+    /**
+     * Tiles other npcs' bodies cover and tiles players stand on, near the walker (npcs only, see
+     * [gg.rsmod.game.model.entity.Pawn.occupiedTiles]). Breach audit 2026-09-27 (in-engine test run): the search only knew
+     * walls, so it routed a monster straight through a standing npc; the mover then refused that step every tick
+     * (MovementQueue.isEntityBlocked) and the monster stood behind the npc forever. With these tiles the route goes around.
+     */
+    private val npcBodies: Set<Tile>? = null,
+    private val playerTiles: Set<Tile>? = null,
 ) : PathFindingStrategy(collision) {
     override fun calculateRoute(request: PathRequest): Route {
         val start = request.start
@@ -69,7 +77,8 @@ class BFSPathFindingStrategy(
                 val node = Node(tile = tile, parent = head)
                 if (!closed.contains(node) &&
                     start.isWithinRadius(tile, MAX_DISTANCE) &&
-                    !isStepBlocked(head.tile, direction, sourceWidth, sourceLength, clipNode, clipLink)
+                    !isStepBlocked(head.tile, direction, sourceWidth, sourceLength, clipNode, clipLink) &&
+                    !isOccupied(tile, sourceWidth, sourceLength)
                 ) {
                     node.cost = head.cost + 1
                     nodes.add(node)
@@ -114,6 +123,22 @@ class BFSPathFindingStrategy(
      * flag for the *actual* step direction rather than a direction re-derived from two arbitrary
      * points.
      */
+    /** Same rule as MovementQueue.isEntityBlocked: an npc body anywhere in the footprint, or a player on its corner tile. */
+    private fun isOccupied(
+        tile: Tile,
+        width: Int,
+        length: Int,
+    ): Boolean {
+        if (playerTiles != null && tile in playerTiles) return true
+        val bodies = npcBodies ?: return false
+        for (x in 0 until width) {
+            for (z in 0 until length) {
+                if (tile.transform(x, z) in bodies) return true
+            }
+        }
+        return false
+    }
+
     private fun isStepBlocked(
         node: Tile,
         direction: Direction,
@@ -239,8 +264,28 @@ class BFSPathFindingStrategy(
         val clipOverlapping = request.clipFlags.contains(PathRequest.ClipFlag.OVERLAP)
 
         val validTiles = hashSetOf<Tile>()
+        val sourceWidth = request.sourceWidth
+        val sourceLength = request.sourceLength
 
-        if (targetWidth == 0 && targetLength == 0) {
+        if ((sourceWidth > 1 || sourceLength > 1) && targetWidth > 0 && targetLength > 0) {
+            /*
+             * Breach audit 2026-09-27 (in-engine test run): the end tiles below are the tiles around the target for a 1x1 walker.
+             * A route is a path of the walker's SOUTH-WEST tile, so for a 2x2..5x5 npc most of those tiles put its body on top of
+             * the target and the rest are not next to it at all: a 4x4 breach monster (General Graardor, Jal-ImKot) never found
+             * a route to melee distance and stood still. For a large walker every south-west tile whose body borders the target
+             * (touching, not overlapping; corners only when diagonals are allowed) is a valid end.
+             */
+            for (x in -sourceWidth..targetWidth) {
+                for (z in -sourceLength..targetLength) {
+                    val tile = end.transform(x, z)
+                    val gapX = maxOf(0, end.x - (tile.x + sourceWidth - 1), tile.x - (end.x + targetWidth - 1))
+                    val gapZ = maxOf(0, end.z - (tile.z + sourceLength - 1), tile.z - (end.z + targetLength - 1))
+                    if (gapX > 1 || gapZ > 1 || (gapX == 0 && gapZ == 0)) continue
+                    if (clipDiagonals && gapX == 1 && gapZ == 1) continue
+                    validTiles.add(tile)
+                }
+            }
+        } else if (targetWidth == 0 && targetLength == 0) {
             validTiles.add(end)
         } else {
             for (x in -1..targetWidth) {

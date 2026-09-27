@@ -97,6 +97,8 @@ BreachMonsters.SOUND_ROWS.forEach { (id, s) ->
 on_world_init {
     DeadmanBreach.start(world)
     logger.info("Deadman breaches: {} monsters, next opening {}.", BreachMonsters.ROSTER.size, DeadmanBreach.nextOpening)
+    // Agent test run only (-Drsps.breachSim=true): never active in a normal start.
+    if (BreachSim.enabled()) BreachSim.start(world)
 }
 
 // ---- rules --------------------------------------------------------------------------------------------------------------
@@ -195,8 +197,14 @@ NpcAttacks.onImpact("breach_dscim", "sever") { _, target ->
 /** Greater abyssal demon: "capable of rapidly teleporting short distances" (ADAPTED: the 667 abyssal demon script's 1/6 per hit). */
 NpcAttacks.onAttack("breach_greater_abyssal_demon", "melee") { npc, target ->
     if (world.random(5) != 0) return@onAttack
-    val dest = Tile(target.tile.x + world.random(-2..2), target.tile.z + world.random(-2..2), target.tile.height)
-    if (dest != target.tile && !world.collision.isClipped(dest) && npc.lock.canMove()) {
+    // Breach audit 2026-09-27 (in-engine test run): the 3x3 demon landed on top of its target (footprint overlapping the
+    // player). The destination is now a spot where its whole footprint is free and next to, never on, the target.
+    val size = npc.getSize()
+    val dest = Tile(target.tile.x + world.random(-(size + 1)..2), target.tile.z + world.random(-(size + 1)..2), target.tile.height)
+    val overlaps =
+        dest.x < target.tile.x + target.getSize() && target.tile.x < dest.x + size &&
+            dest.z < target.tile.z + target.getSize() && target.tile.z < dest.z + size
+    if (!overlaps && DeadmanBreach.fits(world, dest, size) && npc.lock.canMove()) {
         world.spawn(TileGraphic(tile = dest, id = Gfx.ABYSSAL_DEMON_TELEPORT, height = 0))
         npc.teleportNpc(dest)
     }

@@ -996,6 +996,29 @@ abstract class Pawn(
         maximumDistance: Int,
     ) = faces(other, maximumDistance) && hasLineOfSightTo(other, true, maximumDistance)
 
+    /**
+     * Tiles covered by the bodies of other npcs, and tiles players stand on, within [radius] tiles - what
+     * `MovementQueue.isEntityBlocked` would refuse, so a smart npc's route avoids them (breach audit 2026-09-27).
+     */
+    fun occupiedTiles(radius: Int = 16): Pair<Set<Tile>, Set<Tile>> {
+        val bodies = HashSet<Tile>()
+        val players = HashSet<Tile>()
+        for (cx in ((tile.x - radius) shr 3)..((tile.x + radius) shr 3)) {
+            for (cz in ((tile.z - radius) shr 3)..((tile.z + radius) shr 3)) {
+                val chunk = world.chunks.get(Tile(cx shl 3, cz shl 3, tile.height), createIfNeeded = false) ?: continue
+                chunk.getEntities<Npc>(EntityType.NPC).forEach { other ->
+                    if (other === this || other.ignoresEntityCollision || other.tile.height != tile.height) return@forEach
+                    val s = other.getSize().coerceAtLeast(1)
+                    for (x in 0 until s) for (z in 0 until s) bodies += other.tile.transform(x, z)
+                }
+                chunk.getEntities<Player>(EntityType.CLIENT, EntityType.PLAYER).forEach { p ->
+                    if (p.tile.height == tile.height) players += Tile(p.tile)
+                }
+            }
+        }
+        return bodies to players
+    }
+
     internal fun createPathFindingStrategy(copyChunks: Boolean = false): PathFindingStrategy {
         val collision: CollisionManager =
             if (copyChunks) {
@@ -1009,7 +1032,10 @@ abstract class Pawn(
             } else {
                 world.collision
             }
-        return if (entityType.isPlayer || (this is Npc && this.smartPathfinding)) {
+        return if (this is Npc && this.smartPathfinding && !this.ignoresEntityCollision) {
+            val (bodies, players) = occupiedTiles()
+            BFSPathFindingStrategy(collision, bodies, players)
+        } else if (entityType.isPlayer || (this is Npc && this.smartPathfinding)) {
             BFSPathFindingStrategy(
                 collision,
             )

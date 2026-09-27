@@ -505,7 +505,7 @@ object DeadmanBreach {
      * rocks and other monsters - stuck there it could not step anywhere and stood inside the scenery. The monster is now chosen
      * first and lands only where its whole footprint is usable and free of every other npc and every landing still in flight.
      */
-    private fun fire(
+    internal fun fire(
         world: World,
         site: Site,
     ) {

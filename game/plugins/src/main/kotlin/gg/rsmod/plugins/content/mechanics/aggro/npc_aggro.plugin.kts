@@ -170,6 +170,9 @@ fun mayTarget(
     if (!NpcLeash.mayPursue(npc, target, range)) return false
     // Single-way: a player someone else is already fighting is not a target (the combat cycle would refuse it).
     if (!target.tile.isMulti(world) && target.isBeingAttacked() && target.getLastHitBy() != npc) return false
+    // ... also when another npc picked him on this same tick and has not hit yet (idle breach monsters chose him together).
+    val aggressor = target.getAggressor()
+    if (!target.tile.isMulti(world) && aggressor is Npc && aggressor !== npc && !aggressor.isDead() && aggressor.getCombatTarget() === target) return false
     return true
 }
 
