@@ -157,8 +157,16 @@ class GeHomeHallTests {
 
     @Test
     fun `the casino is one table with its dealer and named sign in each upper corner and nowhere else`() {
-        val design = HomeDecorFile.load(Paths.get("..", "..", "data", "cfg", "home_decor.txt"))
-        val tables = design.placements.filter { it.id == 12975 }
+        // The decor file as the owner's own world edits leave it (he moves tables and signs himself in developer mode).
+        val placed = HomeDecorFile.load(Paths.get("..", "..", "data", "cfg", "home_decor.txt")).placements.toMutableList()
+        worldEdits().forEach { e ->
+            val tile = Tile(e["x"].asInt(), e["z"].asInt(), e["level"].asInt())
+            when (e["op"].asText()) {
+                "remove" -> placed.removeIf { it.id == e["id"].asInt() && it.tile == tile }
+                "spawn" -> placed += HomeDecorFile.Placement(e["id"].asInt(), tile, e["type"].asInt(), e["rot"].asInt())
+            }
+        }
+        val tables = placed.filter { it.id == 12975 }
         assertEquals(4, tables.size)
         assertTrue(tables.all { it.tile.height == 1 && it.tile.x in floorX && it.tile.z in floorZ })
         val corners = tables.map { (it.tile.x < GeHomeHall.X + GeHomeHall.WIDTH / 2) to (it.tile.z < GeHomeHall.Z + GeHomeHall.DEPTH / 2) }.toSet()
@@ -167,11 +175,11 @@ class GeHomeHallTests {
         assertEquals(4, dealers.size)
         tables.forEach { table ->
             val cover = footprint(table.tile, 3, 2).map { it.x to it.z }
-            fun touches(t: Tile) = cover.any { (x, z) -> kotlin.math.abs(x - t.x) + kotlin.math.abs(z - t.z) == 1 }
-            assertEquals(1, dealers.count { it.tile.height == 1 && touches(it.tile) }, "table ${table.tile} has no dealer of its own")
-            assertEquals(1, design.placements.count { it.id in RoyalHallLocTool.CASINO_SIGNS && it.tile.height == 1 && touches(it.tile) }, "table ${table.tile} has no sign")
+            fun near(t: Tile) = cover.any { (x, z) -> maxOf(kotlin.math.abs(x - t.x), kotlin.math.abs(z - t.z)) in 1..2 }
+            assertEquals(1, dealers.count { it.tile.height == 1 && near(it.tile) }, "table ${table.tile} has no dealer of its own")
+            assertEquals(1, placed.count { it.id in RoyalHallLocTool.CASINO_SIGNS && it.tile.height == 1 && near(it.tile) }, "table ${table.tile} has no sign")
         }
-        assertEquals(RoyalHallLocTool.CASINO_SIGNS.toSet(), design.placements.filter { it.id in RoyalHallLocTool.CASINO_SIGNS }.map { it.id }.toSet())
+        assertEquals(RoyalHallLocTool.CASINO_SIGNS.toSet(), placed.filter { it.id in RoyalHallLocTool.CASINO_SIGNS }.map { it.id }.toSet())
         // Each dealer carries the owner's name for his game.
         val names = worldEdits().filter { it["op"].asText() == "npc_name" && it["id"].asInt() in GeHomeHall.CASINO_DEALERS }.map { it["note"].asText() }.toSet()
         assertEquals(setOf("Blackjack Gambler", "Dice Gambler", "Flower Poker Gambler", "Mines Gambler"), names)
@@ -193,8 +201,13 @@ class GeHomeHallTests {
                 assertEquals(inside, flags(1, x, z) and 4 != 0, "upper $x,$z")
                 val ring = (x == GeHomeHall.X - 1 || x == GeHomeHall.X + GeHomeHall.WIDTH) && z in GeHomeHall.Z - 1..GeHomeHall.Z + GeHomeHall.DEPTH ||
                     (z == GeHomeHall.Z - 1 || z == GeHomeHall.Z + GeHomeHall.DEPTH) && x in GeHomeHall.X - 1..GeHomeHall.X + GeHomeHall.WIDTH
-                // The wall ring's upper walls and parapet stay drawn from inside (ZERO_LEVEL), doorways included (foto mansion_bug2).
-                if (ring) for (level in 1..3) assertTrue(flags(level, x, z) and 8 != 0, "ring $x,$z level $level")
+                // The wall ring's upper walls and parapet stay drawn from inside (ZERO_LEVEL); the upper doorways hide with
+                // their balcony (owner 2026-09-27: "elke balkon kan ik vanaf de begane grond doorheen kijken").
+                val upperDoorway = ring && flags(1, x, z) == RoyalHallMapTool.BELOW_BUILDING
+                if (ring) for (level in 1..3) if (!(level == 1 && upperDoorway)) assertTrue(flags(level, x, z) and 8 != 0, "ring $x,$z level $level")
+                // Every walkable balcony tile and upper doorway is "part of the building below" (flag 0x20), nothing else.
+                val walkableBalcony = RoyalHallMapTool.BALCONIES.any { x in it.xs && z in it.zs } && flags(1, x, z) and 1 == 0
+                assertEquals(walkableBalcony, flags(1, x, z) == RoyalHallMapTool.BELOW_BUILDING, "balcony flag $x,$z")
                 // No orange "gold trim" (overlay 157, texture 61) round the mansion any more.
                 assertNotEquals(157, tiles.tiles[0][x - 49 * 64][z - 54 * 64].overlayId and 0xFF, "orange trim at $x,$z")
             }

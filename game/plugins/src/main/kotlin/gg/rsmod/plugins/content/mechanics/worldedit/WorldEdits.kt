@@ -167,6 +167,9 @@ object WorldEdits {
         undo(world)
         val edits = load()
         var applied = 0
+        // A move is an npc_remove + npc_spawn in one click (group): the moved npc keeps the name the owner gave it
+        // (owner 2026-09-27: the renamed casino dealers came back as plain "Gambler" after a move and a restart).
+        val movedNames = HashMap<Pair<Long, Int>, String>()
         for (edit in edits) {
             when (edit.op) {
                 "remove" -> {
@@ -189,6 +192,7 @@ object WorldEdits {
                 }
                 "npc_remove" -> {
                     val npc = npcAt(world, edit.tile, edit.id) ?: continue
+                    npc.nameOverride?.let { movedNames[edit.group to edit.id] = it }
                     world.remove(npc)
                     if (npc in spawnedNpcs) spawnedNpcs.remove(npc) else removedNpcs += npc
                     applied++
@@ -201,6 +205,10 @@ object WorldEdits {
                     }
                     if (world.spawn(npc)) {
                         spawnedNpcs += npc
+                        movedNames[edit.group to edit.id]?.let {
+                            npc.nameOverride = it
+                            renamedNpcs += npc
+                        }
                         // A service npc shows no combat level, as when code posted it (StoreNpcs / home_decor npc lines).
                         if (npc.def.options.none { it != null && it.equals("Attack", ignoreCase = true) }) npc.setCombatLevel(0)
                         face(npc, edit.rot)
