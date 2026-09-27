@@ -94,6 +94,8 @@ class BreachAuditImportTests {
                 }
                 assertEquals(3993 to 15830, AnimCoverage.spotanim(library, 3173))
                 assertEquals(3993 to 15831, AnimCoverage.spotanim(library, 3174))
+                assertEquals(3994 to 15832, AnimCoverage.spotanim(library, 3175))
+                assertEquals(3994 to 15833, AnimCoverage.spotanim(library, 3176))
             } finally {
                 library.close()
             }

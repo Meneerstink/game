@@ -96,6 +96,10 @@ object DeadmanBreach {
     const val GFX_BREACH_SPAWN = 3173
     const val GFX_BREACH_DESPAWN = 3174
 
+    /** RuneLite gameval SpotanimID VFX_DM_BOSS_SPAWN 2554 / VFX_DM_BOSS_DESPAWN 2556, baked (tx-20260927-073656). */
+    const val GFX_BOSS_SPAWN = 3175
+    const val GFX_BOSS_DESPAWN = 3176
+
     /** How long a Boss Spawn stands before its monster appears on top of it. */
     private const val BOSS_SPAWN_TICKS = 3
 
@@ -550,6 +554,7 @@ object DeadmanBreach {
                 if (site.closed) return@queue
                 bossSpawn = DynamicObject(BOSS_SPAWN_LOC, 10, 0, centre).also { site.bossSpawns += it }
                 world.spawn(bossSpawn)
+                world.spawn(TileGraphic(centre, GFX_BOSS_SPAWN, height = 0))
                 wait(BOSS_SPAWN_TICKS)
                 if (site.closed) return@queue
                 site.npcs += spawnMonster(world, monster.id, landing, if (site.kind == Kind.LOCALISED) LOCAL_SPAWN_RADIUS else REGIONAL_WANDER_RADIUS)
@@ -560,7 +565,10 @@ object DeadmanBreach {
                 // F7: whatever happens, the footprint is released and the Boss Spawn disappears.
                 site.pending -= reserved
                 bossSpawn?.let {
-                    if (site.bossSpawns.remove(it)) world.remove(it)
+                    if (site.bossSpawns.remove(it)) {
+                        world.remove(it)
+                        world.spawn(TileGraphic(it.tile, GFX_BOSS_DESPAWN, height = 0))
+                    }
                 }
             }
         }

@@ -713,7 +713,10 @@ object SkeletalBakeTool {
                         val current = library.data(index, g, f)?.let { CacheItemProbeTool.sha1(it) }
                         mutations += CacheMutation(index, g, f, bytes, label, expectedCurrentSha1 = current)
                     }
-                    for (spotId in listOf(2519, 2553)) {
+                    // Default: the breach pair; later runs name the ids (RuneLite gameval SpotanimID VFX_DM_BOSS_SPAWN 2554 /
+                    // VFX_DM_BOSS_DESPAWN 2556 on the Boss Spawn model).
+                    val spotIds = args.drop(1).filter { !it.startsWith("--") }.map { it.toInt() }.ifEmpty { listOf(2519, 2553) }
+                    for (spotId in spotIds) {
                         val spot = OsrsFxImportTool.decodeOsrsSpot(reader.file(ModernCacheReader.INDEX_CONFIG, ModernCacheReader.CONFIG_GROUP_SPOTANIM, spotId)!!)
                         val localModel = ids["osrs_loc_model:${spot.model}"] ?: error("model ${spot.model} not imported")
                         val base = nextBase++

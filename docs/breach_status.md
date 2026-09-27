@@ -153,7 +153,11 @@ VFX_DM_BREACH_DESPAWN 2553 -> 3174). `DeadmanBreach` plays 3173 when a spawner o
 stand-in pulse of the projectile graphic is gone. CACHE: AnimCoverage OK in both caches; FUNCTION: BreachAuditImportTests
 (bake error < 3, both caches). LIVE-AV open (owner: does the spiral look like OSRS?).
 
-Not done: the Boss effects VFX_DM_BOSS_* 2554-2558 (which id is which effect is not sourced) and the seven skeletal
+Also baked (tx-20260927-073656, names from RuneLite gameval SpotanimID): VFX_DM_BOSS_SPAWN 2554 -> 3175 (played when a Boss Spawn
+appears) and VFX_DM_BOSS_DESPAWN 2556 -> 3176 (when it disappears). Not used: VFX_DM_BOSS_LOOP 2555 / _TRANSPARENT 2557 (the Boss
+Spawn loc already loops 10423 = the TRANSPARENT sequence) / _COMBINED 2558.
+
+Not done: the seven skeletal
 monsters - the owner decided they stay off the server (Vardorvis, Scurrius, Phantom Muspah, both Wardens, Sol Heredit,
 Yama). The same tool can bake them when the owner wants them (limit: 63 skin groups per model).
 ## Owner decisions / contradictions (reported, not changed)
