@@ -5520,6 +5520,628 @@
       "group": 386
     },
     {
+      "op": "remove",
+      "id": 62781,
+      "x": 3170,
+      "z": 3494,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 387
+    },
+    {
+      "op": "remove",
+      "id": 62781,
+      "x": 3170,
+      "z": 3495,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 388
+    },
+    {
+      "op": "remove",
+      "id": 62781,
+      "x": 3170,
+      "z": 3489,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 389
+    },
+    {
+      "op": "remove",
+      "id": 62781,
+      "x": 3170,
+      "z": 3488,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 390
+    },
+    {
+      "op": "remove",
+      "id": 62781,
+      "x": 3170,
+      "z": 3487,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 391
+    },
+    {
+      "op": "remove",
+      "id": 62781,
+      "x": 3159,
+      "z": 3489,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 392
+    },
+    {
+      "op": "remove",
+      "id": 62781,
+      "x": 3159,
+      "z": 3487,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 393
+    },
+    {
+      "op": "remove",
+      "id": 62781,
+      "x": 3159,
+      "z": 3488,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 394
+    },
+    {
+      "op": "npc_remove",
+      "id": 2290,
+      "x": 3158,
+      "z": 3487,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 395
+    },
+    {
+      "op": "npc_remove",
+      "id": 11679,
+      "x": 3159,
+      "z": 3486,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 396
+    },
+    {
+      "op": "npc_spawn",
+      "id": 11679,
+      "x": 3160,
+      "z": 3486,
+      "level": 0,
+      "type": 10,
+      "rot": 4,
+      "group": 396
+    },
+    {
+      "op": "npc_remove",
+      "id": 11679,
+      "x": 3160,
+      "z": 3486,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 397
+    },
+    {
+      "op": "npc_spawn",
+      "id": 11679,
+      "x": 3160,
+      "z": 3490,
+      "level": 0,
+      "type": 10,
+      "rot": 4,
+      "group": 397
+    },
+    {
+      "op": "remove",
+      "id": 62781,
+      "x": 3159,
+      "z": 3494,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 398
+    },
+    {
+      "op": "remove",
+      "id": 62781,
+      "x": 3159,
+      "z": 3495,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 399
+    },
+    {
+      "op": "npc_remove",
+      "id": 1971,
+      "x": 3161,
+      "z": 3496,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 400
+    },
+    {
+      "op": "npc_spawn",
+      "id": 1971,
+      "x": 3161,
+      "z": 3492,
+      "level": 1,
+      "type": 10,
+      "rot": 4,
+      "group": 400
+    },
+    {
+      "op": "npc_remove",
+      "id": 273,
+      "x": 3171,
+      "z": 3494,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 401
+    },
+    {
+      "op": "npc_spawn",
+      "id": 273,
+      "x": 3159,
+      "z": 3492,
+      "level": 1,
+      "type": 10,
+      "rot": 4,
+      "group": 401
+    },
+    {
+      "op": "npc_remove",
+      "id": 2253,
+      "x": 3171,
+      "z": 3487,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 402
+    },
+    {
+      "op": "npc_spawn",
+      "id": 2253,
+      "x": 3166,
+      "z": 3488,
+      "level": 1,
+      "type": 10,
+      "rot": 4,
+      "group": 402
+    },
+    {
+      "op": "npc_remove",
+      "id": 2909,
+      "x": 3171,
+      "z": 3488,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 403
+    },
+    {
+      "op": "npc_spawn",
+      "id": 2909,
+      "x": 3161,
+      "z": 3489,
+      "level": 1,
+      "type": 10,
+      "rot": 4,
+      "group": 403
+    },
+    {
+      "op": "npc_remove",
+      "id": 3021,
+      "x": 3171,
+      "z": 3489,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 404
+    },
+    {
+      "op": "npc_remove",
+      "id": 3373,
+      "x": 3158,
+      "z": 3488,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 405
+    },
+    {
+      "op": "npc_spawn",
+      "id": 3373,
+      "x": 3161,
+      "z": 3490,
+      "level": 1,
+      "type": 10,
+      "rot": 4,
+      "group": 405
+    },
+    {
+      "op": "remove",
+      "id": 13595,
+      "x": 3163,
+      "z": 3494,
+      "level": 1,
+      "type": 10,
+      "rot": 0,
+      "group": 406
+    },
+    {
+      "op": "remove",
+      "id": 13595,
+      "x": 3163,
+      "z": 3495,
+      "level": 1,
+      "type": 10,
+      "rot": 0,
+      "group": 407
+    },
+    {
+      "op": "remove",
+      "id": 13594,
+      "x": 3162,
+      "z": 3495,
+      "level": 1,
+      "type": 10,
+      "rot": 0,
+      "group": 408
+    },
+    {
+      "op": "remove",
+      "id": 13594,
+      "x": 3162,
+      "z": 3494,
+      "level": 1,
+      "type": 10,
+      "rot": 0,
+      "group": 409
+    },
+    {
+      "op": "remove",
+      "id": 13595,
+      "x": 3164,
+      "z": 3495,
+      "level": 1,
+      "type": 10,
+      "rot": 0,
+      "group": 410
+    },
+    {
+      "op": "remove",
+      "id": 13595,
+      "x": 3164,
+      "z": 3494,
+      "level": 1,
+      "type": 10,
+      "rot": 0,
+      "group": 411
+    },
+    {
+      "op": "remove",
+      "id": 13595,
+      "x": 3166,
+      "z": 3495,
+      "level": 1,
+      "type": 10,
+      "rot": 0,
+      "group": 412
+    },
+    {
+      "op": "remove",
+      "id": 13594,
+      "x": 3167,
+      "z": 3495,
+      "level": 1,
+      "type": 10,
+      "rot": 0,
+      "group": 413
+    },
+    {
+      "op": "remove",
+      "id": 13594,
+      "x": 3167,
+      "z": 3494,
+      "level": 1,
+      "type": 10,
+      "rot": 0,
+      "group": 414
+    },
+    {
+      "op": "remove",
+      "id": 13595,
+      "x": 3166,
+      "z": 3494,
+      "level": 1,
+      "type": 10,
+      "rot": 0,
+      "group": 415
+    },
+    {
+      "op": "remove",
+      "id": 13595,
+      "x": 3165,
+      "z": 3495,
+      "level": 1,
+      "type": 10,
+      "rot": 0,
+      "group": 416
+    },
+    {
+      "op": "remove",
+      "id": 13595,
+      "x": 3165,
+      "z": 3494,
+      "level": 1,
+      "type": 10,
+      "rot": 0,
+      "group": 417
+    },
+    {
+      "op": "npc_remove",
+      "id": 14382,
+      "x": 3160,
+      "z": 3481,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 418
+    },
+    {
+      "op": "npc_spawn",
+      "id": 14382,
+      "x": 3160,
+      "z": 3480,
+      "level": 0,
+      "type": 10,
+      "rot": 4,
+      "group": 418
+    },
+    {
+      "op": "remove",
+      "id": 62781,
+      "x": 3162,
+      "z": 3487,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 419
+    },
+    {
+      "op": "remove",
+      "id": 62781,
+      "x": 3160,
+      "z": 3487,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 420
+    },
+    {
+      "op": "remove",
+      "id": 62781,
+      "x": 3167,
+      "z": 3487,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 421
+    },
+    {
+      "op": "remove",
+      "id": 62781,
+      "x": 3169,
+      "z": 3487,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 422
+    },
+    {
+      "op": "npc_name",
+      "id": 5952,
+      "x": 3164,
+      "z": 3479,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "note": "Donnie",
+      "group": 423
+    },
+    {
+      "op": "npc_remove",
+      "id": 11679,
+      "x": 3160,
+      "z": 3490,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "note": "Quartermaster to the Royal Hall upper floor (owner 2026-09-26: all npcs upstairs)",
+      "group": 424
+    },
+    {
+      "op": "npc_spawn",
+      "id": 11679,
+      "x": 3159,
+      "z": 3486,
+      "level": 1,
+      "type": 10,
+      "rot": 0,
+      "group": 424
+    },
+    {
+      "op": "remove",
+      "id": 62582,
+      "x": 3161,
+      "z": 3488,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 425
+    },
+    {
+      "op": "spawn",
+      "id": 62582,
+      "x": 3161,
+      "z": 3489,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 425
+    },
+    {
+      "op": "remove",
+      "id": 62582,
+      "x": 3161,
+      "z": 3489,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 426
+    },
+    {
+      "op": "spawn",
+      "id": 62582,
+      "x": 3162,
+      "z": 3489,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 426
+    },
+    {
+      "op": "remove",
+      "id": 62582,
+      "x": 3162,
+      "z": 3489,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 427
+    },
+    {
+      "op": "spawn",
+      "id": 62582,
+      "x": 3163,
+      "z": 3489,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 427
+    },
+    {
+      "op": "remove",
+      "id": 50993,
+      "x": 3167,
+      "z": 3482,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 428
+    },
+    {
+      "op": "remove",
+      "id": 50993,
+      "x": 3162,
+      "z": 3482,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 429
+    },
+    {
+      "op": "remove",
+      "id": 50993,
+      "x": 3175,
+      "z": 3489,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 430
+    },
+    {
+      "op": "remove",
+      "id": 50993,
+      "x": 3175,
+      "z": 3494,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 431
+    },
+    {
+      "op": "remove",
+      "id": 50993,
+      "x": 3167,
+      "z": 3501,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 432
+    },
+    {
+      "op": "remove",
+      "id": 50993,
+      "x": 3162,
+      "z": 3501,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 433
+    },
+    {
+      "op": "remove",
+      "id": 50993,
+      "x": 3154,
+      "z": 3494,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 434
+    },
+    {
+      "op": "remove",
+      "id": 47670,
+      "x": 3142,
+      "z": 3482,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 435
+    },
+    {
+      "op": "remove",
+      "id": 50993,
+      "x": 3154,
+      "z": 3489,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 436
+    },
+    {
       "op": "npc_remove",
       "id": 2909,
       "x": 3161,
@@ -5562,6 +6184,290 @@
       "rot": 0,
       "note": "Max one tile north, next to Azzanadra, closing the gap (owner 2026-09-27 final check)",
       "group": 439
+    },
+    {
+      "op": "remove",
+      "id": 12975,
+      "x": 3166,
+      "z": 3512,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 440
+    },
+    {
+      "op": "spawn",
+      "id": 12975,
+      "x": 3173,
+      "z": 3492,
+      "level": 1,
+      "type": 10,
+      "rot": 0,
+      "group": 440
+    },
+    {
+      "op": "remove",
+      "id": 12975,
+      "x": 3173,
+      "z": 3492,
+      "level": 1,
+      "type": 10,
+      "rot": 0,
+      "group": 441
+    },
+    {
+      "op": "spawn",
+      "id": 12975,
+      "x": 3172,
+      "z": 3492,
+      "level": 1,
+      "type": 10,
+      "rot": 0,
+      "group": 441
+    },
+    {
+      "op": "npc_remove",
+      "id": 3002,
+      "x": 3167,
+      "z": 3514,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 442
+    },
+    {
+      "op": "npc_spawn",
+      "id": 3002,
+      "x": 3171,
+      "z": 3491,
+      "level": 0,
+      "type": 10,
+      "rot": 4,
+      "group": 442
+    },
+    {
+      "op": "npc_remove",
+      "id": 3002,
+      "x": 3171,
+      "z": 3491,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 443
+    },
+    {
+      "op": "npc_spawn",
+      "id": 3002,
+      "x": 3173,
+      "z": 3491,
+      "level": 1,
+      "type": 10,
+      "rot": 4,
+      "group": 443
+    },
+    {
+      "op": "remove",
+      "id": 62781,
+      "x": 3167,
+      "z": 3487,
+      "level": 1,
+      "type": 10,
+      "rot": 0,
+      "group": 444
+    },
+    {
+      "op": "remove",
+      "id": 62781,
+      "x": 3169,
+      "z": 3487,
+      "level": 1,
+      "type": 10,
+      "rot": 0,
+      "group": 445
+    },
+    {
+      "op": "remove",
+      "id": 12975,
+      "x": 3162,
+      "z": 3512,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 446
+    },
+    {
+      "op": "spawn",
+      "id": 12975,
+      "x": 3165,
+      "z": 3499,
+      "level": 1,
+      "type": 10,
+      "rot": 0,
+      "group": 446
+    },
+    {
+      "op": "npc_remove",
+      "id": 3001,
+      "x": 3163,
+      "z": 3514,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 447
+    },
+    {
+      "op": "npc_spawn",
+      "id": 3001,
+      "x": 3164,
+      "z": 3499,
+      "level": 1,
+      "type": 10,
+      "rot": 4,
+      "group": 447
+    },
+    {
+      "op": "remove",
+      "id": 12975,
+      "x": 3170,
+      "z": 3512,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 448
+    },
+    {
+      "op": "spawn",
+      "id": 12975,
+      "x": 3164,
+      "z": 3497,
+      "level": 1,
+      "type": 10,
+      "rot": 0,
+      "group": 448
+    },
+    {
+      "op": "npc_remove",
+      "id": 3003,
+      "x": 3171,
+      "z": 3514,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 449
+    },
+    {
+      "op": "npc_spawn",
+      "id": 3003,
+      "x": 3164,
+      "z": 3496,
+      "level": 1,
+      "type": 10,
+      "rot": 4,
+      "group": 449
+    },
+    {
+      "op": "npc_name",
+      "id": 3003,
+      "x": 3164,
+      "z": 3496,
+      "level": 1,
+      "type": 10,
+      "rot": 0,
+      "note": "Flower Poker Gambler",
+      "group": 450
+    },
+    {
+      "op": "npc_name",
+      "id": 3001,
+      "x": 3164,
+      "z": 3499,
+      "level": 1,
+      "type": 10,
+      "rot": 0,
+      "note": "Mines Gambler",
+      "group": 451
+    },
+    {
+      "op": "remove",
+      "id": 12975,
+      "x": 3158,
+      "z": 3512,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 452
+    },
+    {
+      "op": "spawn",
+      "id": 12975,
+      "x": 3158,
+      "z": 3491,
+      "level": 1,
+      "type": 10,
+      "rot": 0,
+      "group": 452
+    },
+    {
+      "op": "npc_remove",
+      "id": 2998,
+      "x": 3159,
+      "z": 3514,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 453
+    },
+    {
+      "op": "npc_spawn",
+      "id": 2998,
+      "x": 3157,
+      "z": 3492,
+      "level": 1,
+      "type": 10,
+      "rot": 4,
+      "group": 453
+    },
+    {
+      "op": "npc_name",
+      "id": 2998,
+      "x": 3157,
+      "z": 3492,
+      "level": 1,
+      "type": 10,
+      "rot": 0,
+      "note": "Dice Gambler",
+      "group": 454
+    },
+    {
+      "op": "npc_name",
+      "id": 3002,
+      "x": 3173,
+      "z": 3491,
+      "level": 1,
+      "type": 10,
+      "rot": 0,
+      "note": "Blackjack Gambler",
+      "group": 455
+    },
+    {
+      "op": "remove",
+      "id": 62781,
+      "x": 3162,
+      "z": 3487,
+      "level": 1,
+      "type": 10,
+      "rot": 0,
+      "group": 456
+    },
+    {
+      "op": "remove",
+      "id": 62781,
+      "x": 3160,
+      "z": 3487,
+      "level": 1,
+      "type": 10,
+      "rot": 0,
+      "group": 457
     }
   ]
 }
