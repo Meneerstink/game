@@ -17,6 +17,9 @@ abstract class QueueTaskSet {
 
     val size: Int get() = queue.size
 
+    /** Conformance probe: the origin of every queued task, head first, and whether it holds the lock. */
+    fun describe(): List<String> = queue.map { it.origin.substringAfterLast('.') + (if (it.ownsLock) "(lock)" else "") + "/" + it.priority }
+
     /**
      * RCV-012 B11: releases the owning pawn's lock. Only set for players; npc locks (Corporeal Beast core,
      * Giant Mole burrow) are held without a task and keep their own explicit unlock.
@@ -42,6 +45,7 @@ abstract class QueueTaskSet {
         task.lock = lock
         task.ownsLock = lock
         task.persistent = persistent
+        task.origin = block.javaClass.name
         task.coroutine = suspendBlock.createCoroutine(completion = task)
 
         if (priority == TaskPriority.STRONG) {

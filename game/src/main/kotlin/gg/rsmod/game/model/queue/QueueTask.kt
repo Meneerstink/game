@@ -64,6 +64,9 @@ data class QueueTask(
      */
     var persistent = false
 
+    /** Conformance probe: the class of the block that started this task (names the plugin/script it came from). */
+    var origin: String = ""
+
     /**
      * True once [terminate] has run. A task keeps executing synchronously until its next
      * suspension point after being terminated (for example the plugin that started a

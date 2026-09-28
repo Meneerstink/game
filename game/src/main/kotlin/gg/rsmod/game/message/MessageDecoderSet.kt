@@ -102,11 +102,17 @@ class MessageDecoderSet {
         val structure =
             structures.get(messageType)
                 ?: throw RuntimeException("Message structure has not been set in packets file. [message=$messageType]")
+        structure.opcodes.firstOrNull()?.let { byType[messageType] = it }
         structure.opcodes.forEach { opcode ->
             decoders[opcode] = decoderType
             handlers[opcode] = handlerType
         }
     }
+
+    /** Conformance suite: the first opcode of each incoming message type (bots inject real input messages by type). */
+    private val byType = HashMap<Class<*>, Int>()
+
+    fun opcodeFor(type: Class<*>): Int? = byType[type]
 
     fun get(opcode: Int): MessageDecoder<*>? {
         return decoders[opcode]

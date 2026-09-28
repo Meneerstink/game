@@ -296,6 +296,11 @@ class Server {
                 reply("Shutting down: players are being saved.")
             }
             //TODO: Add moderation commands once report abuse interface is finished.
+            CommandServerCommands.handlers.containsKey(command.substringBefore(' ')) -> {
+                val parts = command.split(' ').filter { it.isNotBlank() }
+                val handler = CommandServerCommands.handlers[parts[0]]!!
+                onGameThread(world, reply) { handler(world, parts.drop(1)) }
+            }
             else -> reply("Unknown command: $command")
         }
     }

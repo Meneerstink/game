@@ -20,6 +20,8 @@ object NpcPostSynchronizationTask : SynchronizationTask<Npc> {
         // attack animation and hitsplat of a Greater abyssal demon that teleports and strikes on the same tick were lost for every
         // player (in-engine run: 3 of 10 swings unseen). Those blocks are kept and go out with the re-add on the next cycle.
         val carry = pawn.moved && pawn.blockBuffer.isDirty()
+        // A carried block goes out (and is recorded) with the re-add on the next cycle.
+        if (!carry) gg.rsmod.game.model.Probe.recorder?.endOfCycle(pawn)
         pawn.moved = false
         pawn.steps = null
         if (!carry) {

@@ -51,6 +51,11 @@ class AttributeMap {
 
     fun has(key: AttributeKey<*>): Boolean = attributes.containsKey(key)
 
+    /** Conformance probe: every attribute, in no particular order. */
+    fun forEachEntry(action: (AttributeKey<*>, Any) -> Unit) {
+        attributes.toList().forEach { (k, v) -> action(k, v) }
+    }
+
     fun clear() {
         attributes.clear()
     }

@@ -26,6 +26,9 @@ class InterfaceSet(
      */
     private val visible = Int2IntOpenHashMap()
 
+    /** Conformance probe: every open interface as parent:child=id, sorted. */
+    fun describeVisible(): String = visible.int2IntEntrySet().map { "${it.intKey shr 16}:${it.intKey and 0xffff}=${it.intValue}" }.sorted().joinToString(" ")
+
     /**
      * The main screen is allowed to have one 'main' interface opened.
      * When a client closes a main interface, they will send a message

@@ -219,6 +219,25 @@ on_command("sweep", Privilege.ADMIN_POWER) {
     }
 }
 
+/*
+ * P8 conformance suite (conformance\Conformance.kt, catalogue C:\RSPS\docs\conformance_catalogue.md): `conform summoning
+ * [name]` and `conform stop`. Measures everything per tick against the donor references; report in C:\RSPS\bugs\conformance\.
+ */
+on_command("conform", Privilege.ADMIN_POWER) {
+    val args = player.getCommandArgs().toList()
+    when (val domain = args.getOrNull(0)?.lowercase()) {
+        null -> player.message("conform summoning [name] | stop")
+        "stop" -> {
+            gg.rsmod.plugins.content.cmd.conformance.Conformance.stopRequested = true
+            player.message("The conformance run stops after its current entry.")
+        }
+        else -> gg.rsmod.plugins.content.cmd.conformance.Conformance.start(world, player, domain, args.drop(1))
+    }
+}
+
+// The same from the command port (tools\conformance\Send-GameCommand.ps1 conform summoning), for agents.
+gg.rsmod.game.CommandServerCommands.handlers["conform"] = { w, a -> gg.rsmod.plugins.content.cmd.conformance.Conformance.command(w, a) }
+
 on_world_init {
     if (File("C:/RSPS/scan.on").exists()) {
         world.queue {

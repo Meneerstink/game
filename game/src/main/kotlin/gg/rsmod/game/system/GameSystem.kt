@@ -207,6 +207,16 @@ class GameSystem(
         }
     }
 
+    /**
+     * Conformance suite: queues [message] exactly like a decoded client packet - same buffer, same per-cycle handling, same
+     * handler and gates - so a test bot's clicks go through the real input path. False when the type has no handler.
+     */
+    fun inject(message: Message): Boolean {
+        val opcode = service.messageDecoders.opcodeFor(message.javaClass) ?: return false
+        val handler = service.messageDecoders.getHandler(opcode) ?: return false
+        return messages.offer(MessageHandle(message = message, handler = handler, opcode = opcode, length = 0, queuedAtNanos = System.nanoTime()))
+    }
+
     /** The last deliberate action of this player (trace context: which click caused a message or an error). */
     @Volatile
     var lastAction: String = "-"
@@ -238,6 +248,7 @@ class GameSystem(
             silentCheck?.let { if (isAnswer(message)) it.answered = true }
             traceOutgoing(message)
         }
+        gg.rsmod.game.model.Probe.recorder?.message(client, message)
         channel.write(message)
     }
 

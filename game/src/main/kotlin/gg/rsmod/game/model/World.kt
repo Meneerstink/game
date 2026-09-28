@@ -558,6 +558,7 @@ class World(
         AvTrace.log { "projectile gfx=${projectile.gfx} from=$tile to=${projectile.targetPawn?.let { "${it.entityType}#${it.index}" } ?: projectile.targetTile} cycle=$currentCycle" }
         BreachTrace.log("projectile.spawn") { "gfx=${projectile.gfx} from=${tile.x},${tile.z} to=${projectile.targetPawn?.let { "${it.entityType}#${it.index}" } ?: projectile.targetTile}" }
 
+        Probe.recorder?.projectile(projectile)
         chunk.addEntity(this, projectile, tile)
     }
 
@@ -579,6 +580,7 @@ class World(
         }
         BreachTrace.log("areasound.spawn") { "id=${sound.id} at=${tile.x},${tile.z},${tile.height} radius=${sound.radius} delay=${sound.delay}" }
 
+        Probe.recorder?.areaSound(sound)
         chunk.addEntity(this, sound, tile)
     }
 
