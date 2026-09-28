@@ -318,7 +318,7 @@ checkNpcKillCommands.forEach { command ->
                 val killCount = player.getNpcKillCount(npcId)
                 val npcDef = player.world.definitions.get(NpcDef::class.java, npcId)
                 val npcName = npcDef.name
-                player.message("Kill count for $npcName: ${NumberFormat.getNumberInstance().format(killCount as Int)}")
+                player.message("Kill count for $npcName: ${NumberFormat.getNumberInstance(java.util.Locale.ENGLISH).format(killCount as Int)}")
             } catch (e: NumberFormatException) {
                 // If not an ID, treat as a name
                 val allNpcDefs = player.world.definitions.getAll(NpcDef::class.java) as Map<Int, NpcDef>
@@ -333,7 +333,7 @@ checkNpcKillCommands.forEach { command ->
                             if (killCount >
                                 0
                             ) {
-                                "Kill count for ${def.name} (ID: $id): ${NumberFormat.getNumberInstance().format(
+                                "Kill count for ${def.name} (ID: $id): ${NumberFormat.getNumberInstance(java.util.Locale.ENGLISH).format(
                                     killCount as Int,
                                 )}"
                             } else {
@@ -1827,7 +1827,7 @@ fun displayKillCounts(
         player.setComponentText(
             interfaceId = 275,
             component = 17 + index,
-            "$npcName: ${NumberFormat.getNumberInstance().format(count)}",
+            "$npcName: ${NumberFormat.getNumberInstance(java.util.Locale.ENGLISH).format(count)}",
         )
     }
 }
@@ -1842,7 +1842,7 @@ fun tryWithUsage(
         tryUnit.invoke(args)
     } catch (e: Exception) {
         player.message(failMessage, type = ChatMessageType.CONSOLE)
-        e.printStackTrace()
+        gg.rsmod.game.model.Trace.crash("command", e)
     }
 }
 

@@ -62,7 +62,7 @@ fun tryWithUsage(
         tryUnit.invoke(args)
     } catch (e: Exception) {
         player.message(failMessage, type = ChatMessageType.CONSOLE)
-        e.printStackTrace()
+        gg.rsmod.game.model.Trace.crash("addspawn command", e)
     }
 }
 
@@ -96,7 +96,7 @@ fun addItem(
             type = ChatMessageType.CONSOLE,
         )
     } catch (e: Exception) {
-        e.printStackTrace()
+        gg.rsmod.game.model.Trace.crash("addspawn command", e)
     }
 }
 
@@ -147,7 +147,7 @@ fun addNpc(
             type = ChatMessageType.CONSOLE,
         )
     } catch (e: Exception) {
-        e.printStackTrace()
+        gg.rsmod.game.model.Trace.crash("addspawn command", e)
     }
 }
 
