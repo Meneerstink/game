@@ -1,5 +1,6 @@
 package gg.rsmod.plugins.content.cmd
 
+import gg.rsmod.game.Server.Companion.logger
 import gg.rsmod.game.model.Trace
 import gg.rsmod.game.model.entity.GameObject
 import gg.rsmod.game.model.entity.Player
@@ -122,6 +123,27 @@ on_command("traces", Privilege.ADMIN_POWER) {
                     "All traces are OFF."
                 },
             )
+        }
+    }
+}
+
+/*
+ * Phase 3: `scan` checks the whole loaded world without playing (WorldScan: census, npc spawns/combat/BAS, attack-table and
+ * sound-table ids, worn item models) and writes C:\RSPS\bugs\scan-<stamp>.txt. At boot too when C:\RSPS\scan.on exists (one-shot).
+ */
+on_command("scan", Privilege.ADMIN_POWER) {
+    player.message("World scan running... (a few seconds)")
+    val file = WorldScan.run(world)
+    player.message("<col=178000>World scan done:</col> ${file.readLines().getOrNull(1) ?: ""} - ${file.name}")
+}
+
+on_world_init {
+    if (File("C:/RSPS/scan.on").exists()) {
+        world.queue {
+            wait(10)
+            // One-shot: the switch file is removed, so only the next start pays the few seconds again when it is recreated.
+            runCatching { logger.info("World scan written to {}", WorldScan.run(world)) }.onFailure { Trace.crash("world scan at boot", it) }
+            File("C:/RSPS/scan.on").delete()
         }
     }
 }
