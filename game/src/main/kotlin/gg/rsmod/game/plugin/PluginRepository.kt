@@ -834,7 +834,13 @@ class PluginRepository(
         val previous = notifyAttackRefusal
         notifyAttackRefusal = notify
         try {
-            return canAttackPlugins.all { it(attacker, target) }
+            val refusedBy = canAttackPlugins.firstOrNull { !it(attacker, target) } ?: return true
+            // Debug toolkit (PvP/PvM): which can_attack rule refused - the lambda's class names its plugin script.
+            gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.COMBAT) {
+                fun name(p: Pawn) = (p as? Player)?.username ?: (p as? gg.rsmod.game.model.entity.Npc)?.let { "npc ${it.id}#${it.index}" } ?: "$p"
+                "attack refused ${name(attacker)} -> ${name(target)} by ${refusedBy.javaClass.name.substringAfterLast('.').substringBefore('$')}${if (notify) "" else " (automatic)"}"
+            }
+            return false
         } finally {
             notifyAttackRefusal = previous
         }

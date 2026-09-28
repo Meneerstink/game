@@ -1415,7 +1415,38 @@ object SummoningSpecialMoves {
             FamiliarAudio.play(player, STEEL_OF_LEGENDS_SCROLL_SOUND)
         }
         player.timers[SPECIAL_MOVE_DELAY_TIMER] = SPECIAL_MOVE_DELAY_TICKS
+        auditSpecial(player, scroll)
         return true
+    }
+
+    /**
+     * Debug toolkit (owner 2026-09-28 "veel summoningbugs"): two ticks after a special move, the traced evidence must show the
+     * familiar doing something - an animation, a graphic, a sound, a projectile or a hit. Otherwise
+     * `[trace:summon] PROBLEM special ... showed nothing` names the scroll (the effect may still have applied invisibly).
+     */
+    private fun auditSpecial(
+        player: Player,
+        scroll: SummoningScrollData,
+    ) {
+        if (!gg.rsmod.game.model.Trace.enabled(gg.rsmod.game.model.Trace.Cat.SUMMON)) return
+        val familiar = Familiar.current(player) ?: return
+        val cycle = player.world.currentCycle
+        gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.SUMMON) { "special ${scroll.name} by ${player.username} familiar ${familiar.id}#${familiar.index} cycle=$cycle" }
+        player.world.queue {
+            wait(2)
+            val tag = "index=${familiar.index}"
+            val npcTag = "npc=${familiar.id}#${familiar.index}"
+            val evidence =
+                gg.rsmod.game.model.Trace.recent().filter { line ->
+                    (line.contains(tag) || line.contains(npcTag)) &&
+                        (line.contains("anim NPC") || line.contains("graphic NPC") || line.contains("projectile") || line.contains("hit npc"))
+                }
+            if (evidence.isEmpty()) {
+                gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.SUMMON) {
+                    "special ${scroll.name} (familiar ${familiar.id}) showed nothing on the familiar within 2 ticks - no animation, graphic, projectile or hit traced"
+                }
+            }
+        }
     }
 
     private fun refundResources(player: Player, scroll: SummoningScrollData) {

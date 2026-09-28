@@ -644,6 +644,7 @@ fun Player.playSound(
         val caller = Throwable().stackTrace.firstOrNull { !it.fileName.orEmpty().startsWith("PlayerExt") }?.let { "${it.fileName}:${it.lineNumber}" }
         "sound player=$username id=$id loops=$loops delay=$delay volume=$volume rate=$rate cycle=${world.currentCycle} from=$caller"
     }
+    gg.rsmod.game.model.Trace.noteSound("p:$username", world.currentCycle)
     if (gg.rsmod.game.model.AvTrace.enabled && !world.soundExists(id)) {
         gg.rsmod.game.model.AvTrace.log { "PROBLEM sound id=$id sent to $username does not exist in the cache (synth 4 / vorbis 14) - silent" }
     }

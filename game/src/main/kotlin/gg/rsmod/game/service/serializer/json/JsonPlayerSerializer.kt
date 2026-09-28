@@ -337,6 +337,17 @@ class JsonPlayerSerializer : PlayerSerializerService() {
             val temp = Files.createTempFile(directory, save.fileName.toString() + ".", ".tmp")
             try {
                 Files.newBufferedWriter(temp).use { writer -> content(writer) }
+                // Debug toolkit (save check): the written file must read back as JSON before it replaces the old save; a
+                // broken write keeps the previous save and is reported (crash log + PROBLEM) instead of locking the account.
+                val readBack = runCatching { Files.newBufferedReader(temp).use { com.google.gson.JsonParser().parse(it) } }
+                readBack.exceptionOrNull()?.let { e ->
+                    gg.rsmod.game.model.Trace.crash("save check: ${save.fileName} did not read back as JSON - the previous save is kept", e)
+                    return
+                }
+                // One rolling backup of the previous save (<name>.json.bak), so a bad save can be undone by hand.
+                if (Files.exists(save)) {
+                    runCatching { Files.copy(save, save.resolveSibling(save.fileName.toString() + ".bak"), StandardCopyOption.REPLACE_EXISTING) }
+                }
                 try {
                     Files.move(temp, save, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE)
                 } catch (e: java.nio.file.AtomicMoveNotSupportedException) {

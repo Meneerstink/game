@@ -69,7 +69,7 @@ object WorldScan {
             val def = runCatching { npc.def }.getOrNull() ?: return@forEach
             val name = def.name
             if (npc.getSize() == 1 && npc.walkRadius > 0 && stuck(world, npc.tile) && stuckReported.add("${npc.id}:${npc.tile}")) {
-                add("npc-spawn", "npc ${npc.id} '$name' at ${npc.tile.x},${npc.tile.z},${npc.tile.height} cannot step in any direction")
+                add("npc-spawn-suspect", "npc ${npc.id} '$name' at ${npc.tile.x},${npc.tile.z},${npc.tile.height} cannot step north/east/south/west on the collision map (verify in game before fixing)")
             }
             if (!seenIds.add(npc.id)) return@forEach
             val attackable = def.options.any { it.equals("Attack", ignoreCase = true) }
@@ -132,15 +132,22 @@ object WorldScan {
         }
 
         // ---- traversal objects (ladders, stairs, ropes, trapdoors, cave/dungeon entrances): where each one puts the player
-        gg.rsmod.plugins.content.mechanics.objteleports.ObjectTeleports.all().forEach { e ->
-            val from = e.tile ?: return@forEach
-            val dest =
-                e.to?.let { Tile(it.x, it.z, it.height) }
-                    ?: e.delta?.let { Tile(from.x + it.x, from.z + it.z, from.height + it.height) } ?: return@forEach
-            if (dest.height !in 0..3) {
-                add("traversal", "object ${e.id} '${e.option}' at ${from.x},${from.z},${from.height} sends the player to level ${dest.height}")
-            } else if (stuck(world, dest)) {
-                add("traversal", "object ${e.id} '${e.option}' at ${from.x},${from.z},${from.height} lands at ${dest.x},${dest.z},${dest.height} where the player cannot move (${e.source})")
+        // The player clicks from a tile next to the object; `delta` shifts THAT tile (ObjectTeleports.destination), so every free
+        // neighbour is tried and only an object whose every approach lands somewhere the player cannot move is reported.
+        val teleports = gg.rsmod.plugins.content.mechanics.objteleports.ObjectTeleports
+        teleports.all().forEach { e ->
+            val at = e.tile ?: return@forEach
+            val objTile = Tile(at.x, at.z, at.height)
+            val approaches = listOf(objTile.transform(0, 1), objTile.transform(1, 0), objTile.transform(0, -1), objTile.transform(-1, 0), objTile).filter { !stuck(world, it) }
+            if (approaches.isEmpty()) {
+                add("traversal", "object ${e.id} '${e.option}' at ${at.x},${at.z},${at.height} has no free tile around it to click from (${e.source})")
+                return@forEach
+            }
+            val landings = approaches.map { teleports.destination(e, it) }
+            val bad = landings.filter { it.height !in 0..3 || stuck(world, it) }
+            if (bad.size == landings.size) {
+                val d = bad.first()
+                add("traversal", "object ${e.id} '${e.option}' at ${at.x},${at.z},${at.height} lands at ${d.x},${d.z},${d.height} where the player cannot move (${e.source})")
             }
         }
 

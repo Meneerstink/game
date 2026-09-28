@@ -357,6 +357,7 @@ suspend fun cycle(it: QueueTask): Boolean {
                     AttackTab.disableSpecial(pawn)
                     when (SpecialAttacks.perform(pawn, target, world)) {
                         SpecialAttacks.Outcome.PERFORMED -> {
+                            SwingAudit.after(pawn, target, "special")
                             Combat.postAttack(pawn, target)
                             return true
                         }
@@ -379,6 +380,7 @@ suspend fun cycle(it: QueueTask): Boolean {
                     }
                 } else {
                     strategy.attack(pawn, target)
+                    SwingAudit.after(pawn, target, strategy.javaClass.simpleName.removeSuffix("CombatStrategy").lowercase())
                 }
             } catch (e: Exception) {
                 Combat.postAttack(pawn, target)

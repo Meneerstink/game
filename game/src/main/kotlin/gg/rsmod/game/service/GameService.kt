@@ -390,6 +390,7 @@ class GameService : Service {
             if (workMs > expectedCycleMs) {
                 gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.TICK) {
                     "server lag: tick ${world.currentCycle} took ${"%.0f".format(java.util.Locale.ROOT, workMs)} ms (budget ${expectedCycleMs.toInt()}), players=${world.players.count()} npcs=${world.npcs.count()}, " +
+                        "heap=${(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1_048_576}/${Runtime.getRuntime().maxMemory() / 1_048_576} MB, " +
                         "slowest=${taskTimes.toList().sortedByDescending { (_, value) -> value }.take(3).toMap()}"
                 }
             } else {

@@ -68,6 +68,50 @@ fun reportOnce(
     if (reportedInvariants.add(key)) Trace.problem(cat) { text() }
 }
 
+/*
+ * Phase 5 economy ledger (debug toolkit): every tick while the traces are on, each real player's inventory + equipment + bank
+ * is compared with the previous tick. Every change is an `[trace:item] ledger` line with the click that caused it. A net
+ * change of the total (all three together) during an action that only moves items (bank deposit/withdraw, wield/remove) is a
+ * PROBLEM: something was duplicated or lost (ROOT_CAUSES #6, #52, #56).
+ */
+val ledger = java.util.concurrent.ConcurrentHashMap<String, Map<Int, Long>>()
+val NEUTRAL_INTERFACES = setOf(762, 763, 11, 387, 670, 667) // bank, bank inventory, deposit box, equipment, equipment stats
+
+fun totals(p: Player): Map<Int, Long> {
+    val m = HashMap<Int, Long>()
+    listOf(p.inventory, p.equipment, p.bank).forEach { c -> c.rawItems.forEach { it?.let { item -> m.merge(item.id, item.amount.toLong(), Long::plus) } } }
+    return m
+}
+
+on_world_init {
+    world.queue {
+        while (true) {
+            wait(1)
+            if (!Trace.enabled(Trace.Cat.ITEM)) {
+                if (ledger.isNotEmpty()) ledger.clear()
+                continue
+            }
+            runCatching {
+                world.players.forEach { p ->
+                    if (p.username.startsWith("Sweep") || p.username.startsWith("Breachsim")) return@forEach
+                    val now = totals(p)
+                    val before = ledger.put(p.username, now) ?: return@forEach
+                    if (before == now) return@forEach
+                    val changes = (before.keys + now.keys).mapNotNull { id -> val d = (now[id] ?: 0L) - (before[id] ?: 0L); if (d != 0L) id to d else null }
+                    if (changes.isEmpty()) return@forEach
+                    val action = (p as? gg.rsmod.game.model.entity.Client)?.gameSystem?.lastAction ?: "-"
+                    Trace.log(Trace.Cat.ITEM) { "ledger ${p.username} ${changes.joinToString(" ") { (id, d) -> "${if (d > 0) "+" else ""}$d x$id" }} after $action" }
+                    val neutral = Regex("""IfButton\w*\(.*?hash=(\d+)""").find(action)?.groupValues?.get(1)?.toIntOrNull()?.let { (it shr 16) in NEUTRAL_INTERFACES } == true ||
+                        action.startsWith("OpHeld") && (action.contains("option=2") || action.contains("Wield") || action.contains("Wear"))
+                    if (neutral) {
+                        Trace.problem(Trace.Cat.ITEM) { "items appeared or vanished during a move-only action: ${p.username} ${changes.joinToString(" ") { (id, d) -> "${if (d > 0) "+" else ""}$d x$id" }} after $action (dupe or loss?)" }
+                    }
+                }
+            }.onFailure { Trace.crash("economy ledger", it) }
+        }
+    }
+}
+
 on_world_init {
     world.queue {
         while (true) {
@@ -88,7 +132,7 @@ on_world_init {
                         reportOnce("n:${n.index}:${n.tile}", Trace.Cat.NPCPATH) { "stuck: npc ${n.id} '${runCatching { n.def.name }.getOrDefault("?")}' #${n.index} at ${n.tile.x},${n.tile.z},${n.tile.height} cannot step in any direction (spawned or moved into scenery)" }
                     }
                     val hp = n.getCurrentLifepoints()
-                    if (hp < 0 || hp > n.getMaximumLifepoints()) {
+                    if ((hp < 0 || hp > n.getMaximumLifepoints()) && n.attr[Sweeps.SWEEP_DUMMY_ATTR] != true) {
                         reportOnce("hp:${n.index}:$hp", Trace.Cat.COMBAT) { "npc ${n.id} #${n.index} has hitpoints $hp outside 0..${n.getMaximumLifepoints()}" }
                     }
                 }
@@ -132,9 +176,33 @@ on_command("traces", Privilege.ADMIN_POWER) {
  * sound-table ids, worn item models) and writes C:\RSPS\bugs\scan-<stamp>.txt. At boot too when C:\RSPS\scan.on exists (one-shot).
  */
 on_command("scan", Privilege.ADMIN_POWER) {
-    player.message("World scan running... (a few seconds)")
-    val file = WorldScan.run(world)
-    player.message("<col=178000>World scan done:</col> ${file.readLines().getOrNull(1) ?: ""} - ${file.name}")
+    player.message("World scan running in the background... (read-only; the game keeps running)")
+    val name = player.username
+    // Off the game thread: the scan reads files and every definition (it stalled a boot tick for 7.7 s on the game thread).
+    Thread({
+        val result = runCatching { WorldScan.run(world) }
+        result.exceptionOrNull()?.let { Trace.crash("world scan", it) }
+        world.getPlayerForName(name)?.message(
+            result.getOrNull()?.let { "<col=178000>World scan done:</col> ${it.readLines().getOrNull(1) ?: ""} - ${it.name}" } ?: "World scan failed - see C:\\RSPS\\bugs\\crashes-*.log",
+        )
+    }, "world-scan").apply { isDaemon = true }.start()
+}
+
+/*
+ * Phase 4: `sweep weapons|spells|familiars|npcs [from] [count] [...]` and `sweep stop` (Sweeps.kt). Stand in an empty
+ * single-way field: a headless test player runs next to you and writes C:\RSPS\bugs\sweep-<what>-<stamp>.txt.
+ */
+on_command("sweep", Privilege.ADMIN_POWER) {
+    val args = player.getCommandArgs().toList()
+    val what = args.getOrNull(0)?.lowercase()
+    when (what) {
+        null -> player.message("sweep weapons [from] [count] [pvp] | sweep spells | sweep familiars [from] [count] | sweep npcs [from] [count] [name] | sweep stop")
+        "stop" -> {
+            Sweeps.stop()
+            player.message("The running sweep stops after its current entry.")
+        }
+        else -> Sweeps.start(world, player, what, args.drop(1))
+    }
 }
 
 on_world_init {
@@ -142,8 +210,10 @@ on_world_init {
         world.queue {
             wait(10)
             // One-shot: the switch file is removed, so only the next start pays the few seconds again when it is recreated.
-            runCatching { logger.info("World scan written to {}", WorldScan.run(world)) }.onFailure { Trace.crash("world scan at boot", it) }
             File("C:/RSPS/scan.on").delete()
+            Thread({
+                runCatching { logger.info("World scan written to {}", WorldScan.run(world)) }.onFailure { Trace.crash("world scan at boot", it) }
+            }, "world-scan").apply { isDaemon = true }.start()
         }
     }
 }

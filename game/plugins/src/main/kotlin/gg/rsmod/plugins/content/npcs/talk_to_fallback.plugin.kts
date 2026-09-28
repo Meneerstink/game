@@ -75,6 +75,10 @@ on_world_init {
                     }
                     if (TranscriptDialogue.play(this, player.getInteractingNpc())) return@queue
                     if (!bound) {
+                        // Debug toolkit: ROOT_CAUSES #27 - this npc has no real conversation, only a one-line greeting.
+                        gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.INTERACT) {
+                            "npc $id '${def.name}' has no real dialogue: generic one-line greeting (no hand-written, transcript or service dialogue)"
+                        }
                         chatNpc(genericGreetings.random())
                         return@queue
                     }

@@ -499,6 +499,9 @@ object Familiar {
         SummoningCombatLevels.forNpc(npc.id)?.let { npc.setCombatLevel(it) }
         player.world.spawn(npc)
         playArrivalPresentation(player, npc, data)
+        gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.SUMMON) {
+            "summon ${data.name} npc ${data.npc}#${npc.index} by ${player.username} at ${npc.tile.x},${npc.tile.z} size=${npc.getSize()} pendingAnim=${npc.pendingAnimation()}"
+        }
 
         player.attr[FAMILIAR_ATTR] = WeakReference(npc)
         player.attr[FAMILIAR_NPC_ID_ATTR] = data.npc
@@ -849,6 +852,7 @@ object Familiar {
                 "familiar follow teleport npc=${npc.id} from=${npc.tile} to-owner=${player.tile} " +
                     "reason=$recovery cycle=${player.world.currentCycle}"
             }
+            gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.SUMMON) { "familiar ${npc.id} recalled to ${player.username}: $recovery" }
             npc.teleportNpc(placementTile(player, npc.id))
             playRecoveryPresentation(player, npc)
             npc.facePawn(player)
@@ -887,6 +891,9 @@ object Familiar {
             gg.rsmod.game.model.AvTrace.log {
                 "familiar follow teleport npc=${npc.id} at=${npc.tile} target=$target " +
                     "reason=no-route size=${npc.getSize()} cycle=${player.world.currentCycle}"
+            }
+            gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.SUMMON) {
+                "familiar ${npc.id} (size ${npc.getSize()}) found no route to ${player.username} from ${npc.tile.x},${npc.tile.z} - recalled by teleport"
             }
             // A follower that cannot keep up must be recalled; consuming a partial route here
             // would leave it stranded at a wall and invites a later corner-cutting recovery.

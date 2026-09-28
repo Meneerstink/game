@@ -28,12 +28,7 @@ class TraceCrashAppender private constructor(
         val text = event.message?.formattedMessage ?: ""
         val source = event.loggerName?.substringAfterLast('.') ?: "?"
         if (event.level.isMoreSpecificThan(Level.ERROR)) {
-            val thrown = event.thrown
-            if (thrown != null) {
-                Trace.crash("$source: $text", thrown)
-            } else {
-                Trace.crash("$source: $text", Throwable("(error logged without an exception)"))
-            }
+            Trace.crash("$source: $text", event.thrown)
         } else if (event.level == Level.WARN) {
             Trace.problem(Trace.Cat.PLUGIN) { "warning $source: $text${event.thrown?.let { " (${it.javaClass.simpleName} at ${Trace.where(it)})" } ?: ""}" }
         }

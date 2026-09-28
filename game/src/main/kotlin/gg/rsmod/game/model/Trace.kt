@@ -37,6 +37,8 @@ object Trace : KLogging() {
         VAR("var", "varp / varbit values sent to the client"),
         PLUGIN("plugin", "exceptions thrown by packet handlers, plugins, timers, queues and hit actions"),
         TICK("tick", "game ticks that ran late (server lag)"),
+        SUMMON("summon", "familiar summon/dismiss, follow recovery teleports, special moves; PROBLEM when a special shows nothing"),
+        SWEEP("sweep", "automatic sweeps (weapons, spells, familiars, npcs, prayers) and their verdicts"),
     }
 
     private val on: MutableSet<Cat> = ConcurrentHashMap.newKeySet()
@@ -103,6 +105,37 @@ object Trace : KLogging() {
         }
     }
 
+    /** In-engine sweeps ([capture]) receive every traced line while they run, whatever else is on. */
+    @Volatile
+    private var captureSink: MutableList<String>? = null
+
+    /** Starts collecting every traced line into [into] (a sweep's evidence window); [stopCapture] ends it. */
+    fun capture(into: MutableList<String>) {
+        captureSink = into
+    }
+
+    fun stopCapture() {
+        captureSink = null
+    }
+
+    /** Sounds this cycle, per key ("p:<player>" for a sound sent to a player, "t:x,z,h" for an area sound at a tile). */
+    private val soundsThisCycle = ConcurrentHashMap<String, Int>()
+
+    fun noteSound(
+        key: String,
+        cycle: Int,
+    ) {
+        if (!anyOn() && !AvTrace.enabled) return
+        if (soundsThisCycle.size > 5000) soundsThisCycle.clear()
+        soundsThisCycle[key] = cycle
+    }
+
+    /** Whether a sound was noted for [key] in [cycle] (swing audits: did the attack make any sound?). */
+    fun soundNoted(
+        key: String,
+        cycle: Int,
+    ): Boolean = soundsThisCycle[key] == cycle
+
     /** Keeps [line] for the bug report and hands a PROBLEM to [onProblem]. Called by [log], [problem], [AvTrace], [BreachTrace]. */
     fun record(line: String) {
         val stamped = "${LocalDateTime.now().format(TIME)} $line"
@@ -110,6 +143,7 @@ object Trace : KLogging() {
             if (recentLines.size >= RECENT_LINES) recentLines.pollFirst()
             recentLines.addLast(stamped)
         }
+        captureSink?.let { sink -> synchronized(sink) { sink += line } }
         if (line.contains("PROBLEM")) {
             runCatching { onProblem?.invoke(line) }
         }
@@ -124,15 +158,15 @@ object Trace : KLogging() {
      */
     fun crash(
         context: String,
-        e: Throwable,
+        e: Throwable?,
     ) {
-        val head = "$context: ${e.javaClass.simpleName}: ${e.message} at ${where(e)}"
-        problem(Cat.PLUGIN) { "crash $head" }
+        val head = if (e == null) context else "$context: ${e.javaClass.simpleName}: ${e.message} at ${where(e)}"
+        problem(Cat.PLUGIN) { if (e == null) "error $head" else "crash $head" }
         runCatching {
             val dir = File(BUGS_DIR)
             dir.mkdirs()
-            val stack = e.stackTrace.take(25).joinToString("\n") { "    at $it" }
-            val cause = e.cause?.let { "\n  caused by ${it.javaClass.name}: ${it.message} at ${where(it)}" } ?: ""
+            val stack = e?.stackTrace?.take(25)?.joinToString("\n") { "    at $it" } ?: "    (logged as an error, no exception)"
+            val cause = e?.cause?.let { "\n  caused by ${it.javaClass.name}: ${it.message} at ${where(it)}" } ?: ""
             File(dir, "crashes-${LocalDate.now()}.log").appendText("${LocalDateTime.now().format(TIME)} $head$cause\n$stack\n\n")
         }
     }

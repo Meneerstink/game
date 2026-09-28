@@ -573,6 +573,7 @@ class World(
         val tile = sound.tile
         val chunk = chunks.getOrCreate(tile)
         AvTrace.log { "areasound id=${sound.id} at=$tile radius=${sound.radius} delay=${sound.delay} cycle=$currentCycle" }
+        Trace.noteSound("t:${tile.x},${tile.z},${tile.height}", currentCycle)
         if (AvTrace.enabled && !soundExists(sound.id)) {
             AvTrace.log { "PROBLEM areasound id=${sound.id} at=$tile does not exist in the cache (synth 4 / vorbis 14) - nobody hears it" }
         }

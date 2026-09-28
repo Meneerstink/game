@@ -789,6 +789,9 @@ abstract class Pawn(
         addBlock(UpdateBlockType.ANIMATION)
     }
 
+    /** Debug toolkit: the animation this pawn sends this cycle, or -1 when none is pending (swing audits). */
+    fun pendingAnimation(): Int = if (hasBlock(UpdateBlockType.ANIMATION)) blockBuffer.animation else -1
+
     fun resetAnimation() {
         lastAnimation = 0
         blockBuffer.animation = -1
