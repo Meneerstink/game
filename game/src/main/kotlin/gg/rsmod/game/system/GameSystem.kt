@@ -248,7 +248,7 @@ class GameSystem(
             silentCheck?.let { if (isAnswer(message)) it.answered = true }
             traceOutgoing(message)
         }
-        gg.rsmod.game.model.Probe.recorder?.message(client, message)
+        gg.rsmod.game.model.Probe.message(client, message)
         channel.write(message)
     }
 

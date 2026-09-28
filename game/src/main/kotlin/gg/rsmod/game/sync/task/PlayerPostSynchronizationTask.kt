@@ -25,7 +25,7 @@ object PlayerPostSynchronizationTask : SynchronizationTask<Player> {
             }
             pawn.lastTile = Tile(pawn.tile)
         }
-        gg.rsmod.game.model.Probe.recorder?.endOfCycle(pawn)
+        gg.rsmod.game.model.Probe.endOfCycle(pawn)
         pawn.moved = false
         pawn.steps = null
         pawn.blockBuffer.clean()

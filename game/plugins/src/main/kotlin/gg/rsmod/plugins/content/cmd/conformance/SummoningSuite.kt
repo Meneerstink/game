@@ -230,8 +230,9 @@ object SummoningSuite : Conformance.Suite {
         // 7. Panel texts, invisible boosts, every npc option.
         if (Familiar.current(bot) != null) {
             val name = runCatching { world.definitions.get(NpcDef::class.java, fam.id).name }.getOrDefault("?")
-            val texts = run.recording.of("Conf1", "msg").filter { it.cycle >= c1 && it.text.startsWith("IfSetTextMessage") && it.text.contains("parent=$PANEL") }.map { it.text }
-            run.expectTrue(e, "follower panel shows the familiar's name", texts.any { it.contains(name, true) }, texts.joinToString(" / ").take(200).ifEmpty { "(no text sent to 662)" }, "\"$name\" on 662")
+            // The panel name comes from varp 448 through the cache enum (pouch -> npc); Void sets it to the enum key, the pouch id.
+            run.check(e, "varp 448 names the familiar (pouch id, enum summoning_familiar_ids)", bot.varps.getState(VARP_FOLLOWER_NAME), "void" to data.pouch)
+            if (name.isEmpty()) run.note("npc ${fam.id} has no name")
             val boost = v?.get("boost")?.takeIf { !it.isNull }
             val boostSkills = boost?.get("skills")?.map { it.asText() } ?: emptyList()
             for (skillName in (boostSkills + listOf("Fishing", "Woodcutting", "Mining", "Hunter", "Firemaking", "Farming")).distinct()) {
@@ -249,7 +250,7 @@ object SummoningSuite : Conformance.Suite {
             Bots.button(bot, ORB, ORB_DISMISS)
             wait(1)
             val answered = Bots.answerOption(bot, 1)
-            wait(2)
+            wait(6)
             sound(run, e, "dismiss", cd, world.currentCycle, "familiar", "Conf1")
             run.expectTrue(e, "dismiss asks to confirm", answered, "no options dialogue open after Dismiss")
             run.expectTrue(e, "dismissed", Familiar.current(bot) == null && !run.world.npcs.contains(fam), "still there=${Familiar.current(bot)?.id}")

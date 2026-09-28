@@ -94,7 +94,8 @@ class Recording(
     override fun endOfCycle(pawn: Pawn) {
         val who = synchronized(this) { tracked[pawn] } ?: return
         Probe.blocks(pawn).forEach { add(who, "out", it) }
-        val now = snapshot(pawn)
+        // A part of the state that cannot be read is itself recorded, never thrown into the sync.
+        val now = runCatching { snapshot(pawn) }.getOrElse { mapOf("snapshot.error" to it.toString().take(200)) }
         val before = synchronized(this) { last.put(pawn, now) }
         if (before == null) {
             add(who, "init", now.entries.joinToString(" | ") { "${it.key}=${it.value}" })
@@ -144,7 +145,7 @@ class Recording(
         s["clip"] = runCatching { world.collision.isClipped(t).toString() }.getOrDefault("?")
         Probe.internals(pawn).forEach { (k, v) -> s[k] = v }
         pawn.timers.getTimers().forEach { (key, left) -> s["timer.${KeyNames.timer(key)}"] = left.toString() }
-        pawn.attr.forEachEntry { key, value -> s["attr.${KeyNames.attr(key)}"] = render(value) }
+        pawn.attr.forEachEntry { key, value -> s["attr.${KeyNames.attr(key)}"] = runCatching { render(value) }.getOrElse { "(unreadable ${it.javaClass.simpleName})" } }
         when (pawn) {
             is Player -> {
                 for (i in 0 until pawn.skills.maxSkills) {

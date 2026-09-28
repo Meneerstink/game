@@ -31,6 +31,50 @@ object Probe {
     @Volatile
     var recorder: Recorder? = null
 
+    @Volatile
+    private var failures = 0
+
+    // The engine calls these, never the recorder directly: a failing recorder must never break the sync or a packet write.
+    // Every failure goes to the crash log; after 20 the recorder is detached.
+
+    fun message(
+        player: Player,
+        message: Message,
+    ) {
+        val r = recorder ?: return
+        guard { r.message(player, message) }
+    }
+
+    fun endOfCycle(pawn: Pawn) {
+        val r = recorder ?: return
+        guard { r.endOfCycle(pawn) }
+    }
+
+    fun projectile(projectile: Projectile) {
+        val r = recorder ?: return
+        guard { r.projectile(projectile) }
+    }
+
+    fun areaSound(sound: AreaSound) {
+        val r = recorder ?: return
+        guard { r.areaSound(sound) }
+    }
+
+    private inline fun guard(action: () -> Unit) {
+        try {
+            action()
+        } catch (e: Throwable) {
+            if (e is VirtualMachineError) throw e
+            failures++
+            Trace.crash("conformance recorder", e)
+            if (failures >= 20) {
+                recorder = null
+                failures = 0
+                Trace.problem(Trace.Cat.SWEEP) { "conformance recorder detached after 20 errors - see the crash log" }
+            }
+        }
+    }
+
     /** Engine-internal state of [pawn] the recorder cannot reach itself: queued tasks, planned path, lock, facing. */
     fun internals(pawn: Pawn): Map<String, String> =
         linkedMapOf(
@@ -50,7 +94,8 @@ object Probe {
         pawn.steps?.let { s -> out += "step walk=${s.walkDirection ?: "-"} run=${s.runDirection ?: "-"}" }
         if (b.teleport) out += "teleport"
         for (type in UpdateBlockType.values()) {
-            if (!pawn.hasBlock(type)) continue
+            // Not every block type is configured for both players and npcs (hasBlock throws for an unconfigured one).
+            if (!runCatching { pawn.hasBlock(type) }.getOrDefault(false)) continue
             out +=
                 when (type) {
                     UpdateBlockType.ANIMATION -> "anim id=${b.animation} delay=${b.animationDelay}${if (b.idleOnly) " idleOnly" else ""}"
