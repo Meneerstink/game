@@ -74,6 +74,13 @@ class BreachAuditTests {
     }
 
     @Test
+    fun `owner decision 2026-09-28 - every breach monster routes around obstacles, none can be safespotted`() {
+        // Derwen stood still behind a tree; the owner chose routefinding for all breach monsters (ADAPTED, not OSRS).
+        val src = java.io.File("src/main/kotlin/gg/rsmod/plugins/content/mechanics/pvp/breach/DeadmanBreach.kt").readText()
+        assertTrue(src.contains("npc.smartPathfinding = true"), "DeadmanBreach.spawnMonster must give every breach npc routefinding")
+    }
+
+    @Test
     fun `D1 - a long regional projectile starts at most 30 tiles before its landing, on the spawner line`() {
         val landing = Tile(3200, 3500, 0)
         assertEquals(Tile(3210, 3500, 0), DeadmanBreach.projectileStart(Tile(3210, 3500, 0), landing), "short flights unchanged")

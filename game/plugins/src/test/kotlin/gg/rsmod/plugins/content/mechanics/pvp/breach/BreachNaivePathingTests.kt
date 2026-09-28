@@ -81,6 +81,18 @@ class BreachNaivePathingTests {
         assertEquals(Tile(3204, 3509, 0), r.tail)
     }
 
+    @Test
+    fun `a forced step (knockback) never enters a tree - canStep asks the entered tile, canTraverse does not`() {
+        // Owner live test 2026-09-28: the Sulphur Lizard knocked him into an object and he was stuck there.
+        val from = Tile(3300, 3300, 0)
+        val tree = from.step(gg.rsmod.game.model.Direction.WEST)
+        solid(tree)
+        assertTrue(collision.canTraverse(from, gg.rsmod.game.model.Direction.WEST, projectile = false, water = false), "the old check let it through")
+        kotlin.test.assertFalse(collision.canStep(from, gg.rsmod.game.model.Direction.WEST), "west is a tree")
+        kotlin.test.assertFalse(collision.canStep(from, gg.rsmod.game.model.Direction.NORTH_WEST), "a diagonal past the tree's corner is blocked too")
+        assertTrue(collision.canStep(from, gg.rsmod.game.model.Direction.EAST), "open ground")
+    }
+
     /** A solid object (tree, rock, table): CollisionUpdate flags only its own tile, on every side. */
     private fun solid(tile: Tile) {
         val matrix = chunks.get(tile, createIfNeeded = true)!!.getMatrix(tile.height)

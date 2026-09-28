@@ -259,9 +259,11 @@ object NpcAttacks {
     }
 
     /**
-     * Like [onImpact], but the hook runs only when the attack dealt damage to that target (the same "landed" rule as the row's own
-     * freeze/poison/drains). Breach audit 2026-09-28: teleblock, Durial321's freeze, Sever and the Sulphur Lizard knockback were
-     * applied on splashes and misses too.
+     * Like [onImpact], but the hook runs only when the attack's accuracy roll succeeded on that target, protection prayers left
+     * out ([HitRoll.landsIgnoringPrayer]) - a splash or miss applies nothing, a hit blocked to 0 by Protect/Deflect still does
+     * (OSRS: a barrage freezes through Protect from Magic; Sever exists to turn protection prayers off). Breach audit 2026-09-28:
+     * teleblock, Durial321's freeze, Sever and the Sulphur Lizard knockback were applied on misses too; the first fix (damage > 0)
+     * made Sever useless against Deflect Melee (owner live test: prayer never disabled, special every swing).
      */
     fun onLandedImpact(
         combatDef: String,
@@ -487,6 +489,8 @@ object NpcAttacks {
             }
 
             var landed = false
+            // Accuracy succeeded, protection prayers left out (HitRoll.landsIgnoringPrayer): the rule for onLandedImpact effects.
+            var accurate = false
             var firstHit: PawnHit? = null
             attack.hits.forEachIndexed { i, h ->
                 var delay = delays.getOrNull(i) ?: -1
@@ -494,7 +498,9 @@ object NpcAttacks {
                     delay = if (isMelee(h.offense) || h.offense == "damage") 0 else 64
                 }
                 h.delay?.let { delay += it }
-                val pawnHit = hit(npc, target, h, delay, DragonfireTable.typeFor(row.combatDef, attack.id), row.combatDef) ?: return@forEachIndexed
+                val pawnHit =
+                    hit(npc, target, h, delay, DragonfireTable.typeFor(row.combatDef, attack.id), row.combatDef) { if (it.landsIgnoringPrayer) accurate = true }
+                        ?: return@forEachIndexed
                 if (pawnHit.hit.hitmarks.sumOf { it.damage } > 0) landed = true
                 if (firstHit == null) firstHit = pawnHit
             }
@@ -507,14 +513,14 @@ object NpcAttacks {
             val impactOn = firstHit
             val delayTicks = if (impactOn == null) hitDelayTicks(impactDelay ?: 0) else 0
             if (impactOn != null) {
-                impactOn.hit.addAction { impact(npc, row, target, attack, landed) }
+                impactOn.hit.addAction { impact(npc, row, target, attack, landed, accurate) }
             } else if (delayTicks <= 1) {
-                impact(npc, row, target, attack, landed)
+                impact(npc, row, target, attack, landed, accurate)
             } else {
                 npc.world.queue {
                     wait(delayTicks)
                     if (target.isDead() || (target is Player && !target.isOnline)) return@queue
-                    impact(npc, row, target, attack, landed)
+                    impact(npc, row, target, attack, landed, accurate)
                 }
             }
         }
@@ -714,6 +720,7 @@ object NpcAttacks {
         clientDelay: Int,
         dragonfireType: DragonfireTable.Type,
         combatDef: String,
+        onRoll: (HitRoll) -> Unit = {},
     ): PawnHit? {
         var offense = h.offense
         if (offense == "random") offense = listOf("crush", "range", "magic").random()
@@ -789,6 +796,7 @@ object NpcAttacks {
         dealtHooks[combatDef]?.let { hook ->
             pawnHit.hit.addAction { hook(npc, target, roll, pawnHit.hit.hitmarks.sumOf { it.damage }) }
         }
+        onRoll(roll)
         if (gg.rsmod.game.model.BreachTrace.watches(npc.id)) {
             gg.rsmod.game.model.BreachTrace.log("hit") {
                 "npc=${npc.id}#${npc.index} target=${(target as? Player)?.username ?: target.toString()} offense=$offense max=${roll.maxHit} " +
@@ -807,15 +815,16 @@ object NpcAttacks {
         target: Pawn,
         attack: Attack,
         landed: Boolean,
+        accurate: Boolean = landed,
     ) {
         val hook = impactHooks["${row.combatDef}:${attack.id}"]
         if (gg.rsmod.game.model.BreachTrace.watches(npc.id)) {
             gg.rsmod.game.model.BreachTrace.log("impact") {
-                "npc=${npc.id}#${npc.index} section=${attack.id} target=${(target as? Player)?.username ?: target.toString()} landed=$landed " +
+                "npc=${npc.id}#${npc.index} section=${attack.id} target=${(target as? Player)?.username ?: target.toString()} landed=$landed accurate=$accurate " +
                     "freeze=${freezeTicks(row.combatDef, attack)} poison=${attack.poison} drains=${attack.drains.size} hook=${hook != null} message=${attack.message.isNotEmpty()}"
             }
         }
-        if (hook != null && !hook(npc, target, landed)) return
+        if (hook != null && !hook(npc, target, accurate)) return
         if (attack.impactAnim >= 0) target.animate(attack.impactAnim)
         if (!attack.impactRegardless && !landed) return
         attack.drains.forEach { drain(target, it) }

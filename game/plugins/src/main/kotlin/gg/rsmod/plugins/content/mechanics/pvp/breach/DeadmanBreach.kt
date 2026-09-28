@@ -56,6 +56,9 @@ object DeadmanBreach {
     /** How far a regional monster wanders around its landing tile. */
     const val REGIONAL_WANDER_RADIUS = 8
 
+    /** Owner decision 2026-09-28 ("laat alle breachmonsters ook rondlopen, max 10 tiles"): the roam radius of every breach npc. */
+    const val ROAM_RADIUS = 10
+
     /**
      * How far from its landing tile a breach monster keeps chasing (the leash, `NpcLeash.mayPursue`). The generic npc leash is 7
      * tiles (Void `NPC.maxRange()` default), so a breach boss gave up on anyone who stepped a few tiles away (owner 2026-09-23
@@ -476,7 +479,7 @@ object DeadmanBreach {
                 val next = current.step(direction)
                 if (next in seen) continue
                 if (kotlin.math.abs(next.x - centre.x) > radius || kotlin.math.abs(next.z - centre.z) > radius) continue
-                if (!world.collision.canTraverse(current, direction, projectile = false, water = false)) continue
+                if (!world.collision.canStep(current, direction)) continue
                 seen += next
                 queue += next
             }
@@ -687,7 +690,7 @@ object DeadmanBreach {
                         gg.rsmod.game.model.Direction.EAST -> corner.transform(size - 1, i)
                         else -> corner.transform(0, i)
                     }
-                world.collision.canTraverse(edge, dir, projectile = false, water = false)
+                world.collision.canStep(edge, dir)
             }
         }
 
@@ -729,6 +732,8 @@ object DeadmanBreach {
         if (sites.any { s -> s.pending.any { it.overlaps(corner, size) } }) return false
         // F6: never on a spawner (a regional spawner stands on one of the region's own landing points).
         if (sites.any { s -> s.spawners.any { fp.overlaps(it, 1) } }) return false
+        // 2026-09-28: never on a player either (a monster standing on its target cannot attack it and the player is then boxed in).
+        if (playersNear(world, corner, size + 1).any { fp.overlaps(it.tile, 1) }) return false
         return noNpcOn(world, corner, size)
     }
 
@@ -758,12 +763,16 @@ object DeadmanBreach {
         world: World,
         target: Pawn,
         size: Int,
+        nearestTo: Tile? = null,
     ): Tile {
         val t = target.tile
         val ts = target.getSize().coerceAtLeast(1)
         val candidates = ArrayList<Tile>()
         for (x in (t.x - size)..(t.x + ts)) for (z in (t.z - size)..(t.z + ts)) candidates += Tile(x, z, t.height)
-        return candidates.shuffled().firstOrNull { c ->
+        // A summon appears at a random free spot; a monster stepping off its target takes the nearest one (2026-09-28: a random pick
+        // each tick sent Commander Zilyana in a new direction every step, so she never got off her target and never attacked).
+        val ordered = if (nearestTo != null) candidates.sortedBy { maxOf(kotlin.math.abs(it.x - nearestTo.x), kotlin.math.abs(it.z - nearestTo.z)) } else candidates.shuffled()
+        return ordered.firstOrNull { c ->
             !Footprint(c, size).overlaps(t, ts) && fits(world, c, size) && canLeave(world, c, size) && noNpcOn(world, c, size)
         } ?: Tile(t.x + world.random(-1..1), t.z + world.random(-1..1), t.height).takeIf { !world.collision.isClipped(it) } ?: Tile(t)
     }
@@ -782,9 +791,15 @@ object DeadmanBreach {
     ): Npc {
         val npc = Npc(id, Tile(tile), world)
         npc.respawnOverride = false
-        npc.walkRadius = walkRadius
-        // Breach conformance 2026-09-27 (A2): OSRS npc pathing - only the routefinders (Zemouregal, Durial321) go around obstacles.
-        npc.smartPathfinding = id in BreachMonsters.ROUTEFINDERS
+        // Owner decision 2026-09-28: every breach monster roams at most ROAM_RADIUS tiles around where it appeared - breach spawns,
+        // breachtest monsters (they had radius 0 and stood still) and summons alike. [walkRadius] is kept for the callers' logs only.
+        npc.walkRadius = ROAM_RADIUS
+        // Owner decision 2026-09-28 (live test: Derwen and "every breach monster" stood still behind a tree): EVERY breach monster
+        // routes around obstacles - no safespots. ADAPTED on purpose: OSRS gives routefinding only to Zemouregal, his summons and
+        // Durial321 (BreachMonsters.ROUTEFINDERS, kept as the OSRS reference); the 09-27 A2 rule made the others safespottable.
+        npc.smartPathfinding = true
+        // Owner decision 2026-09-28 ("ik kan door breachmonsters lopen"): players cannot walk into a breach monster's body (ADAPTED).
+        npc.blocksPlayers = true
         npc.naivePathfinding = true
         if (id in BreachMonsters.COLLISION_EXCLUDED) npc.ignoresEntityCollision = true
         npc.attr[BREACH_NPC_ATTR] = true
@@ -798,7 +813,7 @@ object DeadmanBreach {
         live += npc
         gg.rsmod.game.Server.logger.info("Breach monster {} spawned at {}.", id, tile)
         gg.rsmod.game.model.BreachTrace.log("breach.spawn") {
-            "npc=$id#${npc.index} at=${tile.x},${tile.z},${tile.height} size=${npc.getSize()} walkRadius=$walkRadius pathing=${if (npc.smartPathfinding) "smart" else if (npc.naivePathfinding) "naive" else "simple"} " +
+            "npc=$id#${npc.index} at=${tile.x},${tile.z},${tile.height} size=${npc.getSize()} walkRadius=${npc.walkRadius} pathing=${if (npc.smartPathfinding) "smart" else if (npc.naivePathfinding) "naive" else "simple"} " +
                 "runs=${id in BreachMonsters.RUNNERS} test=$test hp=${npc.getCurrentLifepoints()} multi=${tile.isMulti(world)}"
         }
         if (lifetimeTicks > 0) {

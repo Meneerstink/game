@@ -163,8 +163,16 @@ object NpcCombatAudio {
         source: Pawn,
         npc: Npc,
     ) {
-        val id = rowFor(npc.id)?.defend ?: -1
-        val frame = id >= 0 && hasAudibleFrameSounds(npc, npc.combatDef.blockAnimation)
+        // Owner live test 2026-09-28 (Commander Zilyana, K'ril Tsutsaroth silent when hit): their hit sound lives only on the
+        // block animation's frames, and an attack animation still running skips the block (Pawn.isAnimationProtected). The
+        // block's frame sound only counts while that animation really plays; when it is skipped the server sends it itself.
+        val blockSound =
+            npc.combatDef.blockAnimation.takeIf { it >= 0 }?.let { anim ->
+                runCatching { npc.world.definitions.getNullable(gg.rsmod.game.fs.def.AnimDef::class.java, anim)?.firstAudibleFrameSound }.getOrNull()
+            } ?: -1
+        val skippedBlock = blockSound >= 0 && npc.isAnimationProtected()
+        val id = (rowFor(npc.id)?.defend ?: -1).takeIf { it >= 0 } ?: if (skippedBlock) blockSound else -1
+        val frame = id >= 0 && hasAudibleFrameSounds(npc, npc.combatDef.blockAnimation) && !skippedBlock
         if (gg.rsmod.game.model.BreachTrace.watches(npc.id)) {
             gg.rsmod.game.model.BreachTrace.log("sound.defend") {
                 "npc=${npc.id}#${npc.index} id=$id blockAnim=${npc.combatDef.blockAnimation} result=${if (id < 0) "no-defend-sound" else if (frame) "block-anim-has-frame-sounds" else "played"}"

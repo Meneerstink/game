@@ -82,6 +82,24 @@ fun Pawn.getLastHit(): Pawn? = attr[LAST_HIT_ATTR]?.get()
 
 fun Pawn.getLastHitBy(): Pawn? = attr[LAST_HIT_BY_ATTR]?.get()
 
+/**
+ * The last attacker only while it still exists: an npc removed from the world (breachclose, despawn, index -1) or dead, or a
+ * player who logged out, no longer counts. Deadman audit 2026-09-28 (owner live test): a removed TzTok-Jad / Porazdir kept its
+ * victim "under attack" for the rest of the combat timer, so in single-way he could not attack Jad-Rek and a new breach monster
+ * could not attack him.
+ */
+fun Pawn.liveLastHitBy(): Pawn? =
+    getLastHitBy()?.takeIf { p ->
+        !p.isDead() && when (p) {
+            is gg.rsmod.game.model.entity.Npc -> p.world.npcs.contains(p)
+            is Player -> p.isOnline
+            else -> true
+        }
+    }
+
+/** Single-way rule: this pawn is being fought by someone that still exists, other than [other]. */
+fun Pawn.isAttackedByOtherThan(other: Pawn): Boolean = isBeingAttacked() && liveLastHitBy().let { it != null && it !== other }
+
 fun Pawn.removeCombatTarget() = attr.remove(COMBAT_TARGET_FOCUS_ATTR)
 
 fun Pawn.canEngageCombat(target: Pawn): Boolean = Combat.canEngage(this, target)

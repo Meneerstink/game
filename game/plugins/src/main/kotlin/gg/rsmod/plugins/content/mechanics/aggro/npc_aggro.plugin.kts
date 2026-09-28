@@ -202,10 +202,10 @@ fun refusal(
     if (!Combat.canEngage(npc, target)) return "combat-canEngage"
     if (!NpcLeash.mayPursue(npc, target, range)) return "leash"
     // Single-way: a player someone else is already fighting is not a target (the combat cycle would refuse it).
-    if (!target.tile.isMulti(world) && target.isBeingAttacked() && target.getLastHitBy() != npc) return "single-under-attack"
+    if (!target.tile.isMulti(world) && target.isAttackedByOtherThan(npc)) return "single-under-attack"
     // ... also when another npc picked him on this same tick and has not hit yet (idle breach monsters chose him together).
     val aggressor = target.getAggressor()
-    if (!target.tile.isMulti(world) && aggressor is Npc && aggressor !== npc && !aggressor.isDead() && aggressor.getCombatTarget() === target) return "single-picked-by-other"
+    if (!target.tile.isMulti(world) && aggressor is Npc && aggressor !== npc && !aggressor.isDead() && world.npcs.contains(aggressor) && aggressor.getCombatTarget() === target) return "single-picked-by-other"
     // ... and for breach monsters any other live breach npc that targets him (a retaliating one never sets the aggressor attribute)
     if (!target.tile.isMulti(world) && gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.isBreachNpc(npc) &&
         gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.live.any { it !== npc && !it.isDead() && it.getCombatTarget() === target }

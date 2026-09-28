@@ -52,6 +52,19 @@ class CollisionManager(
     }
 
     /**
+     * Whether a pawn standing on [tile] may take one step in [direction]: it may leave [tile] that way AND enter the next tile
+     * from the opposite side. [canTraverse] alone asks only the tile being left, and solid scenery (trees, rocks - CollisionUpdate
+     * type 10/11/22) flags only its own tiles, so a forced move checked with it could put a player inside a tree (Deadman audit
+     * 2026-09-28: Sulphur Lizard knockback, ROOT_CAUSES 68/77). Use this for every forced move, placement or flood fill.
+     */
+    fun canStep(
+        tile: Tile,
+        direction: Direction,
+    ): Boolean =
+        canTraverse(tile, direction, projectile = false, water = false) &&
+            canTraverse(tile.step(direction), direction.getOpposite(), projectile = false, water = false)
+
+    /**
      * Casts a line using Bresenham's Line Algorithm with point A [start] and
      * point B [target] being its two points and makes sure that there's no
      * collision flag that can block movement from and to both points.

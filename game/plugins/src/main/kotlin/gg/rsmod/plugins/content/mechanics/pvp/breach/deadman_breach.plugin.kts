@@ -159,11 +159,18 @@ BreachMonsters.ROSTER.forEach { m ->
 /** "casting Tele Block on players, preventing them from teleporting for 1 minute" (ADAPTED: on every landed magic hit). */
 val TELEBLOCK_TICKS = 100
 
+/** Tele Block impact synth, the same id the players' spell plays (SpellSounds: CombatSpell.TELEPORT_BLOCK impact 203). */
+val TELEBLOCK_IMPACT_SOUND = 203
+
 listOf("breach_justiciar", "breach_derwen").forEach { def ->
     NpcAttacks.onLandedImpact(def, "magic") { _, target ->
         if (target is Player && !target.timers.has(TELEBLOCK_TIMER)) {
             gg.rsmod.game.model.BreachTrace.log("mech.teleblock") { "def=$def player=${target.username}" }
             target.timers[TELEBLOCK_TIMER] = TELEBLOCK_TICKS
+            // Owner live test 2026-09-28 ("Derwen mist de teleblock animatie en teleblock sound"): the players' Tele Block impact
+            // look and sound (CombatSpell.TELEPORT_BLOCK: OSRS spotanim 345 TELE_BLOCK_IMPACT, SpellSounds impact 203).
+            target.graphic(gg.rsmod.plugins.content.items.osrs.OsrsGfx.TELE_BLOCK_IMPACT, 0)
+            target.playSound(TELEBLOCK_IMPACT_SOUND)
             target.message("You have been teleblocked.")
         }
         true
@@ -173,18 +180,31 @@ listOf("breach_justiciar", "breach_derwen").forEach { def ->
 /** Flaming pyrelord: "2 hitsplats of 5 burn damage each" per hit (ADAPTED: 4 ticks apart). */
 NpcAttacks.onImpact("breach_pyrelord", "magic") { _, target ->
     gg.rsmod.game.model.BreachTrace.log("mech.burn") { "target=${(target as? Player)?.username ?: target.toString()}" }
-    target.hit(5, HitType.REGULAR_HIT, delay = 4)
-    target.hit(5, HitType.REGULAR_HIT, delay = 8)
+    // The OSRS burn hitsplat (HitType.BURN, owner 2026-09-19), not the plain red one (Deadman audit 2026-09-28).
+    target.hit(5, HitType.BURN, delay = 4)
+    target.hit(5, HitType.BURN, delay = 8)
+    // A burn tick sound (owner 2026-09-28): ADAPTED 2412 sizzle (OSRS Wiki "List of sound IDs", 667 cache id) with each burn hitsplat.
+    world.queue {
+        for (d in listOf(4, 4)) {
+            wait(d)
+            if (target.isDead()) return@queue
+            world.spawn(gg.rsmod.game.model.entity.AreaSound(tile = target.tile, id = BURN_SIZZLE_SOUND, radius = 5, volume = 1))
+        }
+    }
     true
 }
 
 /** Sulphur Lizard: "knocking back any players hit by it" - one tile straight away from the lizard when that tile is free. */
 NpcAttacks.onLandedImpact("breach_sulphur_lizard", "melee") { npc, target ->
-    val dx = Integer.signum(target.tile.x - npc.tile.x)
-    val dz = Integer.signum(target.tile.z - npc.tile.z)
+    // Owner live test 2026-09-28: the knockback pushed players into trees/rocks and they were stuck. Two causes: (1) canTraverse
+    // only asked the tile being left, never the tile entered (CollisionManager.canStep asks both); (2) "away" was measured from
+    // the lizard's south-west corner, so a player beside its 5x5 body could be knocked sideways or diagonally.
+    val size = npc.getSize()
+    val dx = if (target.tile.x < npc.tile.x) -1 else if (target.tile.x > npc.tile.x + size - 1) 1 else 0
+    val dz = if (target.tile.z < npc.tile.z) -1 else if (target.tile.z > npc.tile.z + size - 1) 1 else 0
     val dest = target.tile.transform(dx, dz)
     val dir = Direction.between(target.tile, dest)
-    val moved = dir != Direction.NONE && world.collision.canTraverse(target.tile, dir, projectile = false, water = false)
+    val moved = dir != Direction.NONE && world.collision.canStep(target.tile, dir)
     gg.rsmod.game.model.BreachTrace.log("mech.knockback") { "target=${(target as? Player)?.username ?: target.toString()} moved=$moved to=${dest.x},${dest.z}" }
     if (moved) target.moveTo(dest)
     true
@@ -229,6 +249,8 @@ NpcAttacks.onLandedImpact("breach_dscim", "sever") { _, target ->
     true
 }
 
+val ABYSSAL_TELEPORT_SOUND = 278
+
 /** Greater abyssal demon: "capable of rapidly teleporting short distances" (ADAPTED: the 667 abyssal demon script's 1/6 per hit). */
 NpcAttacks.onAttack("breach_greater_abyssal_demon", "melee") { npc, target ->
     if (world.random(5) != 0) return@onAttack
@@ -241,6 +263,8 @@ NpcAttacks.onAttack("breach_greater_abyssal_demon", "melee") { npc, target ->
             dest.z < target.tile.z + target.getSize() && target.tile.z < dest.z + size
     if (!overlaps && DeadmanBreach.fits(world, dest, size) && npc.lock.canMove()) {
         world.spawn(TileGraphic(tile = dest, id = Gfx.ABYSSAL_DEMON_TELEPORT, height = 0))
+        // Owner live test 2026-09-28 ("mist wat sound"): the teleport was silent. Void abyssal_demon.sounds.toml abyssal_demon_teleport = 278.
+        world.spawn(gg.rsmod.game.model.entity.AreaSound(tile = dest, id = ABYSSAL_TELEPORT_SOUND, radius = 10, volume = 1))
         gg.rsmod.game.model.BreachTrace.log("mech.teleport") { "npc=${npc.id}#${npc.index} from=${npc.tile.x},${npc.tile.z} to=${dest.x},${dest.z}" }
         npc.teleportNpc(dest)
     }
@@ -278,7 +302,11 @@ fun maybeSwitchTarget(npc: Npc, current: gg.rsmod.game.model.entity.Pawn, chance
     val next = others.randomOrNull() ?: return
     world.queue {
         wait(1)
-        if (world.npcs.contains(npc) && !npc.isDead() && world.players.contains(next)) npc.attack(next)
+        if (!world.npcs.contains(npc) || npc.isDead() || !world.players.contains(next)) return@queue
+        // Breach conformance 2026-09-28 (pile-up): Zemouregal and a summon both chose the same player on one tick; each check ran
+        // before the other's switch happened. Single-way: check again now, when the switch is made.
+        if (!next.tile.isMulti(world) && DeadmanBreach.live.any { it !== npc && !it.isDead() && world.npcs.contains(it) && it.getCombatTarget() === next }) return@queue
+        npc.attack(next)
     }
 }
 
@@ -440,6 +468,61 @@ on_npc_pre_death(14468) {
 /** Pestilent Bloat: flies hit every player it can see, fully blocked by Protect from Missiles (ADAPTED: 10 tiles, every 5 ticks). */
 val BLOAT_RANGE = 10
 
+val bloatFacing = gg.rsmod.game.model.attr.AttributeKey<java.lang.ref.WeakReference<Player>>()
+
+/*
+ * Owner decision 2026-09-28 ("de grote monsters moeten ook loop geluiden"): OSRS gives walk frame sounds only to Graardor, K'ril,
+ * Bee Swarm and Bloat (BreachSoundAuditTool vs the pinned OSRS cache; theirs play from their own walk sequences). Every other
+ * breach monster of size 3+ now plays a footstep every second tile it walks: ADAPTED, the God Wars generals' own OSRS footstep
+ * (local 10272, the frame sound of Graardor's / K'ril's OSRS walk sequences). Not for the floating smoke devil and the jelly.
+ */
+val FOOTSTEP_SOUND = 10272
+
+/** OSRS body sounds of the Dagannoth Kings by body type (OSRS Wiki "List of sound IDs": plate / range / shell body), their own footsteps. */
+val FOOTSTEP_BY_NPC = mapOf(14438 to 1062, 14440 to 1068, 14441 to 1069)
+
+val BURN_SIZZLE_SOUND = 2412
+val FOOTSTEP_EVERY_TILES = 2
+val OWN_WALK_SOUNDS = setOf(14442, 14444, 14459, 14470)
+val NO_FOOTSTEPS = setOf(14455, 14460)
+val lastStepTile = gg.rsmod.game.model.attr.AttributeKey<Tile>()
+val stepsWalked = gg.rsmod.game.model.attr.AttributeKey<Int>()
+
+fun footstep(npc: Npc) {
+    if (npc.getSize() < 3 || npc.id in OWN_WALK_SOUNDS || npc.id in NO_FOOTSTEPS) return
+    val last = npc.attr[lastStepTile]
+    npc.attr[lastStepTile] = npc.tile
+    if (last == null || last == npc.tile) return
+    val steps = (npc.attr[stepsWalked] ?: 0) + 1
+    npc.attr[stepsWalked] = steps
+    if (steps % FOOTSTEP_EVERY_TILES == 0) {
+        world.spawn(gg.rsmod.game.model.entity.AreaSound(tile = npc.tile, id = FOOTSTEP_BY_NPC[npc.id] ?: FOOTSTEP_SOUND, radius = 10, volume = 1))
+    }
+}
+
+/**
+ * Owner live test 2026-09-28 ("bloat moet in ieder geval mijn kant op kijken"): the Bloat never gets a combat target (it "does not
+ * directly attack", can_attack above), so it never turned to anyone. OSRS Wiki: it is aggressive and "wanders around, attacking
+ * players with range and line of sight". It now faces the nearest player its flies can reach. Only the client-side face block is
+ * sent - the FACING_PAWN attribute (which stops random walk) is dropped at once, so it keeps wandering while it looks at you.
+ */
+fun bloatFace(npc: Npc) {
+    val current = npc.attr[bloatFacing]?.get()
+    val next =
+        DeadmanBreach.playersNear(world, npc.tile, BLOAT_RANGE)
+            .filter { !it.isDead() && DeadmanBreach.canFight(it) && npc.hasLineOfSightTo(it, projectile = true, maximumDistance = BLOAT_RANGE) }
+            .minByOrNull { it.tile.getDistance(npc.tile) }
+    if (next === current) return
+    if (next == null) {
+        npc.resetFacePawn()
+        npc.attr.remove(bloatFacing)
+    } else {
+        npc.facePawn(next)
+        npc.attr.remove(gg.rsmod.game.model.attr.FACING_PAWN_ATTR)
+        npc.attr[bloatFacing] = java.lang.ref.WeakReference(next)
+    }
+}
+
 on_world_init {
     world.queue {
         var tick = 0
@@ -448,6 +531,7 @@ on_world_init {
             tick++
             DeadmanBreach.pruneLive(world)
             DeadmanBreach.live.forEach { npc ->
+                footstep(npc)
                 when (npc.id) {
                     BEE_SWARM ->
                         DeadmanBreach.playersNear(world, npc.tile, npc.getSize()).forEach { p ->
@@ -459,7 +543,8 @@ on_world_init {
                                 p.filterableMessage("You get stung while stood within the swarm of bees.")
                             }
                         }
-                    BLOAT ->
+                    BLOAT -> {
+                        bloatFace(npc)
                         if (tick % 5 == 0) {
                             DeadmanBreach.playersNear(world, npc.tile, BLOAT_RANGE).forEach { p ->
                                 if (DeadmanBreach.canFight(p) &&
@@ -475,6 +560,7 @@ on_world_init {
                                 }
                             }
                         }
+                    }
                 }
             }
         }

@@ -41,6 +41,12 @@ class Npc private constructor(
      */
     var naivePathfinding = false
 
+    /**
+     * Players cannot walk into this npc's body ([gg.rsmod.game.model.MovementQueue]). OSRS lets players walk through every npc
+     * (osrs-docs "Entity Collision"); owner decision 2026-09-28: the Deadman breach monsters block players (ADAPTED).
+     */
+    var blocksPlayers = false
+
     constructor(id: Int, tile: Tile, world: World) : this(id, world, spawnTile = Tile(tile)) {
         this.tile = tile
     }

@@ -262,6 +262,12 @@ object BreachConformance {
                         }
                     }
                     try {
+                        say(runStaleAttacker(this, world, site, mine, a, arena))
+                    } catch (e: Exception) {
+                        say("stale-attacker | ${if (site.multi) "multi" else "single"} | ERROR $e")
+                        logger.error("BREACHCONF stale-attacker phase failed", e)
+                    }
+                    try {
                         say(runFamiliar(this, world, site, mine, a, arena))
                     } catch (e: Exception) {
                         say("familiar | ${if (site.multi) "multi" else "single"} | ERROR $e")
@@ -284,6 +290,65 @@ object BreachConformance {
                 if (System.getProperty("$PROPERTY.exit") == "true") Runtime.getRuntime().halt(0)
             }
         }
+    }
+
+    /**
+     * Owner live test 2026-09-28 (Justiciar never attacked, TzTok-Jad-Rek could not be attacked in single-way): a monster that was
+     * fighting A is removed (breachclose) and a new one spawns beside A at once. The removed one must not keep A "under attack":
+     * the new monster attacks A and A can attack it, both within a few ticks.
+     */
+    private suspend fun runStaleAttacker(
+        q: gg.rsmod.game.model.queue.QueueTask,
+        world: World,
+        site: DeadmanBreach.Site,
+        bots: List<Client>,
+        home: Tile,
+        arena: Set<Tile>,
+    ): String {
+        val (a, b, c, o) = bots
+        val siteName = if (site.multi) "multi" else "single"
+        DeadmanBreach.close(world)
+        bots.forEach { it.resetInteractions(); it.setCurrentLifepoints(LIFE) }
+        a.moveTo(home)
+        listOf(b, c, o).forEachIndexed { i, p -> p.moveTo(Tile(home.x - 40 - i, home.z, home.height)) }
+        q.wait(18)
+        fun spotFor(id: Int): Tile? {
+            val size = world.definitions.getNullable(gg.rsmod.game.fs.def.NpcDef::class.java, id)?.size ?: 1
+            return arena.filter { t ->
+                val g = maxOf(0, t.x - home.x, home.x - (t.x + size - 1)).coerceAtLeast(maxOf(0, t.z - home.z, home.z - (t.z + size - 1)))
+                t.x > home.x && g == 1 && DeadmanBreach.fits(world, t, size)
+            }.minByOrNull { it.getDistance(home) }
+        }
+        val first = 14446 // Porazdir, as in the owner's session
+        val next = 14447 // Justiciar Zachariah
+        val s1 = spotFor(first) ?: return "stale-attacker | $siteName | SKIPPED no spot"
+        val m1 = DeadmanBreach.spawnMonster(world, first, s1, DeadmanBreach.LOCAL_SPAWN_RADIUS, test = true)
+        m1.attack(a)
+        var hitA = false
+        repeat(20) { q.wait(1); a.setCurrentLifepoints(LIFE); if (a.getLastHitBy() === m1) hitA = true }
+        DeadmanBreach.close(world) // the owner's breachclose while it was still fighting him
+        q.wait(1)
+        val s2 = spotFor(next) ?: return "stale-attacker | $siteName | SKIPPED no spot 2"
+        val m2 = DeadmanBreach.spawnMonster(world, next, s2, DeadmanBreach.LOCAL_SPAWN_RADIUS, test = true)
+        val t2 = trace.size
+        var m2Swung = -1
+        repeat(12) { tick ->
+            q.wait(1)
+            a.setCurrentLifepoints(LIFE)
+            if (m2Swung < 0 && trace.subList(t2, trace.size).any { cat(it) == "attack.swing" && it.contains(npcTag(m2)) }) m2Swung = tick + 1
+        }
+        // and A may attack it (no "single-attacker-under-attack" because of the removed monster)
+        val t3 = trace.size
+        a.attack(m2)
+        q.wait(3)
+        val aRuling = trace.subList(t3, trace.size).lastOrNull { cat(it) == "single" && kv(it, "attacker") == a.username }?.let { kv(it, "result") } ?: "no-ruling"
+        a.resetInteractions()
+        if (world.npcs.contains(m2)) world.remove(m2)
+        val fails = ArrayList<String>()
+        if (!hitA) fails += "setup:first-monster-never-hit-A"
+        if (m2Swung < 0) fails += "new-monster-never-attacked"
+        if (aRuling.startsWith("refused")) fails += "A-refused:$aRuling"
+        return "stale-attacker | $siteName | ${if (fails.isEmpty()) "PASS" else "FAIL(${fails.size})"} | firstHitA=$hitA newMonsterFirstSwingAfter=${m2Swung}t A->new=$aRuling ${fails.joinToString(" ")}"
     }
 
     /**
@@ -609,7 +674,7 @@ object BreachConformance {
                             (0 until size).all { x -> (0 until size).all { z -> world.collision.canTraverse(start.transform(x, z), dir, projectile = false, water = false) } }
                         // routefinders (Zemouregal, summons, Durial321) take a shortest route, which may start straight
                         when {
-                            npc.id in BreachMonsters.ROUTEFINDERS -> "straight (routefinder)"
+                            npc.smartPathfinding -> "straight (routefinder)"
                             open -> "straight FAIL(diagonal was open)"
                             else -> "straight (diagonal blocked)"
                         }
@@ -622,7 +687,7 @@ object BreachConformance {
         ticks(45)
         val released = npc.getCombatTarget() !== a
         val homeGap = maxOf(kotlin.math.abs(npc.tile.x - npc.spawnTile.x), kotlin.math.abs(npc.tile.z - npc.spawnTile.z))
-        val leashCol = "released=$released homeGap=$homeGap${if (!released || homeGap > DeadmanBreach.LOCAL_SPAWN_RADIUS) " FAIL" else ""}"
+        val leashCol = "released=$released homeGap=$homeGap${if (!released || homeGap > DeadmanBreach.ROAM_RADIUS + size) " FAIL" else ""}"
         bots.forEachIndexed { i, p -> p.moveTo(homes[i]) }
         ticks(3)
 

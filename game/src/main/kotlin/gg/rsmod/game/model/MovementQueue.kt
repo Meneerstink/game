@@ -109,6 +109,10 @@ class MovementQueue(
                     clear()
                     return
                 }
+                if (pawn is Player && isBodyBlocked(tile, next.tile)) {
+                    clear()
+                    return
+                }
                 tile = Tile(next.tile)
                 pawn.lastFacingDirection = walkDirection
 
@@ -128,7 +132,8 @@ class MovementQueue(
                         runDirection = Direction.between(tile, next.tile)
 
                         if (canStep(tile, runDirection, next.detectCollision) && !(pawn is Npc && isEntityBlocked(pawn, next.tile)) &&
-                            !(pawn is Player && MoveGate.step?.invoke(pawn, tile, next.tile) == true)
+                            !(pawn is Player && MoveGate.step?.invoke(pawn, tile, next.tile) == true) &&
+                            !(pawn is Player && isBodyBlocked(tile, next.tile))
                         ) {
                             tile = Tile(next.tile)
                             pawn.lastFacingDirection = runDirection
@@ -174,6 +179,31 @@ class MovementQueue(
      * would have rejected is always refused. Making the two agree is the point; being marginally
      * stricter than necessary on a diagonal only ever stops a pawn, it can never clip one.
      */
+    /**
+     * Owner decision 2026-09-28 (Deadman breach monsters, ADAPTED): a player may not step into the body of an npc that
+     * [Npc.blocksPlayers]. A player already inside that body (the monster landed or stepped onto him) may always step out.
+     */
+    private fun isBodyBlocked(
+        from: Tile,
+        to: Tile,
+    ): Boolean {
+        val world = pawn.world
+        val reach = MAX_NPC_SIZE - 1
+        for (x in to.x - reach..to.x) {
+            for (z in to.z - reach..to.z) {
+                val t = Tile(x, z, to.height)
+                val chunk = world.chunks.get(t, createIfNeeded = false) ?: continue
+                for (npc in chunk.getEntities<Npc>(t, EntityType.NPC)) {
+                    if (!npc.blocksPlayers || npc.tile != t || npc.isDead()) continue
+                    val s = npc.getSize().coerceAtLeast(1)
+                    val covers = { p: Tile -> p.height == t.height && p.x in t.x until t.x + s && p.z in t.z until t.z + s }
+                    if (covers(to) && !covers(from)) return true
+                }
+            }
+        }
+        return false
+    }
+
     private fun canStep(
         from: Tile,
         direction: Direction,
@@ -218,6 +248,10 @@ class MovementQueue(
         val world = npc.world
         val size = npc.getSize().coerceAtLeast(1)
         val reach = MAX_NPC_SIZE - 1
+        // Owner live test 2026-09-28 (Sulphur Lizard, 249 refused steps): a pawn already under this npc's own body never blocks it
+        // from moving - otherwise an npc standing on a player (or overlapping another npc) can never step off and stays stuck.
+        val here = npc.tile
+        fun underMe(t: Tile, s: Int) = t.x < here.x + size && here.x < t.x + s && t.z < here.z + size && here.z < t.z + s
         for (x in dest.x - reach until dest.x + size) {
             for (z in dest.z - reach until dest.z + size) {
                 val t = Tile(x, z, dest.height)
@@ -225,13 +259,14 @@ class MovementQueue(
                 for (other in chunk.getEntities<Npc>(t, EntityType.NPC)) {
                     if (other === npc || other.ignoresEntityCollision || other.tile != t) continue
                     val os = other.getSize().coerceAtLeast(1)
+                    if (t.height == here.height && underMe(t, os)) continue
                     if (x + os > dest.x && z + os > dest.z) return true
                 }
                 // osrs-docs "Entity Collision": players flag "all the game squares beneath" them and every npc (except the
                 // excluded ones, [Npc.ignoresEntityCollision]) checks that flag before it moves - a player anywhere under the
                 // npc's destination footprint blocks it, not only on its south-west corner (breach conformance 2026-09-27).
                 if (x >= dest.x && z >= dest.z &&
-                    chunk.getEntities<Player>(t, EntityType.CLIENT, EntityType.PLAYER).any { it.tile == t && !it.invisible }
+                    chunk.getEntities<Player>(t, EntityType.CLIENT, EntityType.PLAYER).any { it.tile == t && !it.invisible && !(t.height == here.height && underMe(t, 1)) }
                 ) {
                     return true
                 }

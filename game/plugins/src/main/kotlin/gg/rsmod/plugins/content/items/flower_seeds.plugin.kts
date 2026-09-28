@@ -51,7 +51,8 @@ SEED_STEPS.forEach { (seed, order) ->
             player.message("You can't plant flowers here.")
             return@on_item_option
         }
-        val step = order.firstOrNull { world.collision.canTraverse(tile, it, projectile = false, water = false) }
+        // canStep, not canTraverse: the player is moved there, so the entered tile must be free too (ROOT_CAUSES 77).
+        val step = order.firstOrNull { world.collision.canStep(tile, it) }
         if (step == null) {
             player.message("You need some space around you to plant flowers.")
             return@on_item_option

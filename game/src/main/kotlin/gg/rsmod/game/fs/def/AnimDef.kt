@@ -32,6 +32,13 @@ class AnimDef(
     var hasAudibleFrameSounds = false
         private set
 
+    /**
+     * Sound id of the first audible frame sound, -1 without one. Deadman audit 2026-09-28: when an npc's block animation is skipped
+     * (an attack animation still protects it) its hit sound - which lives on those frames - is sent by NpcCombatAudio instead.
+     */
+    var firstAudibleFrameSound = -1
+        private set
+
     /** Frame ids (`frameset archive << 16 | frame file`); a frame file's bytes 1-2 name its skeleton (AnimBase). */
     val frames: IntArray get() = if (::frameIds.isInitialized) frameIds else IntArray(0)
     val frameLength: Int get() = frameLengths.sum()
@@ -107,7 +114,12 @@ class AnimDef(
                     val size = buf.readUnsignedByte().toInt()
                     if (size > 0) {
                         hasFrameSounds = true
-                        if (buf.readMedium() and 0x1F > 0) hasAudibleFrameSounds = true
+                        // soundInfo: id << 8 | loops << 5 | radius (rev-667 SeqType; tools/cache667/js5.py decodes the same)
+                        val info = buf.readMedium()
+                        if (info and 0x1F > 0) {
+                            hasAudibleFrameSounds = true
+                            if (firstAudibleFrameSound < 0) firstAudibleFrameSound = info ushr 8
+                        }
                         for (index in 1 until size) {
                             buf.readShort()
                         }

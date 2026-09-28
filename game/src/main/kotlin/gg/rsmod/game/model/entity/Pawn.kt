@@ -746,6 +746,13 @@ abstract class Pawn(
         moveTo(tile.x, tile.z, tile.height)
     }
 
+    /**
+     * True while a priority animation (e.g. an attack) still protects this pawn: a non-priority animation such as a block is
+     * skipped now ([animate]). Deadman audit 2026-09-28: a hit sound that lives only on the block animation's frames is then
+     * never heard (Commander Zilyana, 2-tick attacks), so NpcCombatAudio plays it itself in that case.
+     */
+    fun isAnimationProtected(): Boolean = lastAnimation > world.currentCycle
+
     fun animate(
         id: Int,
         delay: Int = 0,

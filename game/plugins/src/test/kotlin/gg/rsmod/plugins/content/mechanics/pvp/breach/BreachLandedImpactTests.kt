@@ -16,24 +16,29 @@ import kotlin.test.assertEquals
 class BreachLandedImpactTests {
     private val impact =
         NpcAttacks::class.java.getDeclaredMethod(
-            "impact", Npc::class.java, NpcAttacks.Row::class.java, Pawn::class.java, NpcAttacks.Attack::class.java, Boolean::class.javaPrimitiveType,
+            "impact", Npc::class.java, NpcAttacks.Row::class.java, Pawn::class.java, NpcAttacks.Attack::class.java, Boolean::class.javaPrimitiveType, Boolean::class.javaPrimitiveType,
         ).apply { isAccessible = true }
 
-    private fun fire(def: String, landed: Boolean) {
+    private fun fire(def: String, landed: Boolean, accurate: Boolean = landed) {
         val npc = mockk<Npc>(relaxed = true) { every { id } returns -7 }
         val target = mockk<Pawn>(relaxed = true)
         val row = NpcAttacks.Row(id = -7, name = "test", combatDef = def, attackRange = 1, attacks = emptyList())
-        impact.invoke(NpcAttacks, npc, row, target, NpcAttacks.Attack(id = "a"), landed)
+        impact.invoke(NpcAttacks, npc, row, target, NpcAttacks.Attack(id = "a"), landed, accurate)
     }
 
     @Test
-    fun `a landed-impact hook runs only when the attack dealt damage`() {
+    fun `a landed-impact hook runs only when the accuracy roll succeeded, protection prayers left out`() {
         var calls = 0
         NpcAttacks.onLandedImpact("breach_test_landed", "a") { _, _ -> calls++; true }
         fire("breach_test_landed", landed = false)
         assertEquals(0, calls, "a splash or miss must not apply the effect")
         fire("breach_test_landed", landed = true)
         assertEquals(1, calls)
+        // owner live test 2026-09-28: a Sever blocked to 0 by Deflect Melee still hit - the effect must apply (accuracy ignoring prayer)
+        fire("breach_test_landed", landed = false, accurate = true)
+        assertEquals(2, calls, "a hit that only protection prayer reduced to 0 still applies the effect")
+        fire("breach_test_landed", landed = false, accurate = false)
+        assertEquals(2, calls)
     }
 
     @Test

@@ -88,7 +88,8 @@ class DeadmanRouteGateTests {
         val seeds = read("items/flower_seeds.plugin.kts")
         assertTrue(seeds.contains("Direction.WEST, Direction.EAST, Direction.SOUTH, Direction.NORTH"))
         assertTrue(seeds.contains("Items.ADAMANT_SEEDS to listOf(Direction.EAST, Direction.WEST, Direction.SOUTH, Direction.NORTH)"), "OSRS Wiki Adamant seeds: east, west, south, north")
-        assertTrue(seeds.contains("world.collision.canTraverse"))
+        // canStep (2026-09-28): the tile the player is moved onto must be enterable too, not only leavable (ROOT_CAUSES 77).
+        assertTrue(seeds.contains("world.collision.canStep"))
         assertTrue(seeds.contains("player.moveTo(tile.step(step))"), "seed displacement must bypass ordinary frozen walking")
 
         val freeze = File(content, "combat/strategy/magic/CombatSpell.kt").readText()

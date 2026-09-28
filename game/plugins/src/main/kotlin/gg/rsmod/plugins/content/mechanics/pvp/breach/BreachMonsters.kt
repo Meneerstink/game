@@ -60,7 +60,22 @@ object BreachMonsters {
         val addHits: Map<String, NpcAttacks.HitDef> = emptyMap(),
         /** Void section id -> extra integer section fields (serialized names, e.g. `multi_target_radius`). */
         val sectionInts: Map<String, Map<String, Int>> = emptyMap(),
+        /** Void section id -> cast (`sounds`), `target_sounds` and `impact_sounds` to set on the cloned section (null = keep). */
+        val sectionSounds: Map<String, SectionSounds> = emptyMap(),
+        /** Void section id -> projectile / impact graphic to set when the Void section has none. */
+        val sectionVisuals: Map<String, SectionVisuals> = emptyMap(),
     ) : Attacks()
+
+    class SectionSounds(
+        val cast: List<Int>? = null,
+        val target: List<Int>? = null,
+        val impact: List<Int>? = null,
+    )
+
+    class SectionVisuals(
+        val projectile: NpcAttacks.Proj? = null,
+        val impactGfx: NpcAttacks.Gfx? = null,
+    )
 
     class Custom(
         val combatDef: String,
@@ -142,6 +157,23 @@ object BreachMonsters {
     /** rev-667 dragon scimitar attack sound (items.yml attack_audio of item 4587). */
     private const val SFX_DRAGON_SCIMITAR = 2500
 
+    /*
+     * Owner live test 2026-09-28 ("veel sounds missen porazdir"): the Mage Arena II guardians' magic had no impact sound. OSRS does
+     * not publish theirs; ADAPTED by god, the god spells' impact synths (SpellSounds, ids shared by the 667 cache and the OSRS Wiki
+     * "List of sound IDs"): Porazdir (Zamorak) 1655, Derwen (Guthix) 1653, Justiciar Zachariah (Saradomin) 1659 saradomin_strike.
+     */
+    private const val SFX_FLAMES_OF_ZAMORAK = 1655
+    private const val SFX_FIREBREATH = 159
+
+    // Spell cast / impact synths of the players' spells (SpellSounds, Void magic.sounds.toml ids shared by the 667 cache).
+    private const val SFX_FIRE_BLAST_CAST = 155
+    private const val SFX_FIRE_BLAST_HIT = 156
+    private const val SFX_ICE_BARRAGE_CAST = 171
+    private const val SFX_BLOOD_BARRAGE_CAST = 106
+    private const val SFX_TZHAAR_CLUB = 250
+    private const val SFX_CLAWS_OF_GUTHIX = 1653
+    private const val SFX_SARADOMIN_STRIKE = 1659
+
     private fun snd(id: Int) = listOf(NpcAttacks.Sound(id = id))
 
     /**
@@ -179,13 +211,16 @@ object BreachMonsters {
             // Owner 2026-09-27 sound audit (BreachAuditTests): OsrsFxImportTool batch breachsfx2, tx-20260927-153802.
             // Graardor: attack/death are frame sounds of his OSRS sequences; defend = 3867 godwars_bandos_avatar_hit.
             14442 to Triple(-1, 10341, -1),
-            // Zilyana: attack/defend frame sounds; death = 3860 godwars_saradomin_avatar_death.
+            // Zilyana: attack/defend frame sounds (a skipped block animation's frame sound is sent by NpcCombatAudio.onDefend);
+            // death = 3860 godwars_saradomin_avatar_death.
             14443 to Triple(-1, -1, 10342),
             // Cave abomination: attack 497 cave_horror_howl (ADAPTED), hit / death of the Cave horror row it already used (500 / 480).
             14452 to Triple(10344, 500, 480),
             // TzTok-Jad / Jad-Rek melee: 255 tzhaar_ket_attack_punch (ADAPTED, TzHaar family); hit / death of the 667 Jad row (410 / 409).
-            14462 to Triple(10343, 410, 409),
-            14477 to Triple(10343, 410, 409),
+            // Owner live test 2026-09-28: the ADAPTED tzhaar_ket_attack_punch (10343) was too soft to hear; OSRS publishes no Jad melee
+            // sound (Void names an undefined "tztok_jad_attack"). ADAPTED: 250 tzhaar_ket_attack_club (OSRS Wiki list, 667 cache id).
+            14462 to Triple(SFX_TZHAAR_CLUB, 410, 409),
+            14477 to Triple(SFX_TZHAAR_CLUB, 410, 409),
             14475 to Triple(SFX_HUMAN_ATTACK, SFX_HUMAN_HIT, SFX_HUMAN_DEATH), // Fremennik summon
             14476 to Triple(SFX_HUMAN_ATTACK, SFX_HUMAN_HIT, SFX_HUMAN_DEATH), // Khazard summon
         )
@@ -227,6 +262,14 @@ object BreachMonsters {
                     50,
                     anims = mapOf("melee" to 15611, "dragonfire" to 15610, "toxic" to 15610, "ice" to 15610, "shock" to 15610),
                     maxHits = mapOf("melee" to 25, "dragonfire" to 65),
+                    // Owner 2026-09-28: the toxic / ice / shock breaths had no sound of their own. OSRS Wiki "List of sound IDs": 587
+                    // toxicbreath, 586 kingicebreath, 584 lightningbreath (ids shared by the 667 cache); dragonfire keeps 3750.
+                    sectionSounds =
+                        mapOf(
+                            "toxic" to SectionSounds(target = listOf(587)),
+                            "ice" to SectionSounds(target = listOf(586)),
+                            "shock" to SectionSounds(target = listOf(584)),
+                        ),
                 ),
             ),
             Monster(
@@ -285,7 +328,7 @@ object BreachMonsters {
                 Custom(
                     "breach_porazdir", 8,
                     listOf(
-                        NpcAttacks.Attack(id = "magic", chance = 2, range = 8, anim = 15628, projectiles = listOf(proj(GFX_MA2_ZAMORAK_PROJ)), hits = listOf(hit("magic", 43))),
+                        NpcAttacks.Attack(id = "magic", chance = 2, range = 8, anim = 15628, projectiles = listOf(proj(GFX_MA2_ZAMORAK_PROJ)), impactSounds = snd(SFX_FLAMES_OF_ZAMORAK), hits = listOf(hit("magic", 43))),
                         melee("slash", 15627, 16),
                     ),
                 ),
@@ -299,7 +342,7 @@ object BreachMonsters {
                     "breach_justiciar", 8,
                     listOf(
                         melee("slash", 15630, 43),
-                        NpcAttacks.Attack(id = "magic", range = 8, anim = 15632, impactGfx = listOf(gfx(GFX_ZEALOT_LIGHTNING)), hits = listOf(hit("magic", 26))),
+                        NpcAttacks.Attack(id = "magic", range = 8, anim = 15632, impactGfx = listOf(gfx(GFX_ZEALOT_LIGHTNING)), impactSounds = snd(SFX_SARADOMIN_STRIKE), hits = listOf(hit("magic", 26))),
                     ),
                 ),
                 immuneMelee = true, immuneRanged = true,
@@ -311,7 +354,7 @@ object BreachMonsters {
                 Custom(
                     "breach_derwen", 8,
                     listOf(
-                        NpcAttacks.Attack(id = "magic", chance = 2, range = 8, anim = 15636, projectiles = listOf(proj(GFX_MA2_GUTHIX_PROJ)), hits = listOf(hit("magic", 43))),
+                        NpcAttacks.Attack(id = "magic", chance = 2, range = 8, anim = 15636, projectiles = listOf(proj(GFX_MA2_GUTHIX_PROJ)), impactSounds = snd(SFX_CLAWS_OF_GUTHIX), hits = listOf(hit("magic", 43))),
                         melee("crush", 15635, 16),
                     ),
                 ),
@@ -354,7 +397,14 @@ object BreachMonsters {
                 // The Deadman infobox gives no max hit; the regular Malevolent Mage's 20 is used (OSRS Wiki "Malevolent Mage").
                 // Stands on the imported OSRS HUMAN_STAFFREADY: HUMAN_CASTSTRIKE_STAFF (ADAPTED, the wiki names no cast animation).
                 4, StyleType.MAGIC, 15704, OSRS_HUMAN_BLOCK, OSRS_HUMAN_DEATH,
-                Template(1643, anims = mapOf("magic" to 15704), maxHits = mapOf("magic" to 20)),
+                // Owner live test 2026-09-28 ("maakt maar 1 soort geluid"): the Infernal Mage row it clones casts with fireblast_hit (156, OSRS
+                // Wiki "List of sound IDs") as its only cue and has no projectile - its spell is Fire Blast. It now casts like the players'
+                // OSRS Fire Blast (CombatSpell.FIRE_BLAST: projectile 3114, impact 3115; SpellSounds cast 155 / impact 156). ADAPTED.
+                Template(
+                    1643, anims = mapOf("magic" to 15704), maxHits = mapOf("magic" to 20),
+                    sectionSounds = mapOf("magic" to SectionSounds(cast = listOf(155), target = emptyList(), impact = listOf(156))),
+                    sectionVisuals = mapOf("magic" to SectionVisuals(projectile = proj(3114), impactGfx = NpcAttacks.Gfx(id = 3115, defHeight = 32))),
+                ),
             ),
             Monster(
                 14455, 12457, "Vitreous warped Jelly",
@@ -385,11 +435,13 @@ object BreachMonsters {
                         NpcAttacks.Attack(
                             id = "magic", range = 8, condition = "breach_nb_magic", anim = 15658,
                             projectiles = listOf(proj(GFX_FIRE_BLAST_PROJ)), impactGfx = listOf(NpcAttacks.Gfx(id = GFX_FIRE_BLAST_IMPACT, defHeight = 32)),
+                            // Fire Blast cast / impact synths (SpellSounds FIRE_BLAST 155 / 156): the casts "resemble Fire Blast" (OSRS Wiki).
+                            sounds = snd(SFX_FIRE_BLAST_CAST), impactSounds = snd(SFX_FIRE_BLAST_HIT),
                             hits = listOf(hit("magic", 8)),
                         ),
                         NpcAttacks.Attack(
                             id = "fireball", range = 8, condition = "breach_nb_fireball", anim = 15658, multiTargetRadius = 1, multiRadius = 1,
-                            impactRegardless = true, projectiles = listOf(proj(GFX_FIRE_BLAST_PROJ)),
+                            impactRegardless = true, projectiles = listOf(proj(GFX_FIRE_BLAST_PROJ)), sounds = snd(SFX_FIRE_BLAST_CAST), impactSounds = snd(SFX_FIRE_BLAST_HIT),
                             impactGfx = listOf(NpcAttacks.Gfx(id = GFX_FIRE_BLAST_IMPACT, defHeight = 32)),
                         ),
                     ),
@@ -441,6 +493,8 @@ object BreachMonsters {
                     anims = mapOf("melee" to 15675, "range" to 15672, "magic" to 15676),
                     maxHits = mapOf("melee" to 78),
                     addHits = mapOf("range" to hit("range", 108), "magic" to hit("magic", 108)),
+                    // OSRS Wiki "List of sound IDs": 159 firebreath "also used for the start of TzTok-Jad's magic attack".
+                    sectionSounds = mapOf("magic" to SectionSounds(cast = listOf(SFX_FIREBREATH))),
                 ),
             ),
             Monster(
@@ -457,7 +511,7 @@ object BreachMonsters {
                             hits = listOf(hit("slash", 28)),
                         ),
                         NpcAttacks.Attack(
-                            id = "ice_barrage", range = 8, condition = "breach_durial_barrage", anim = ANCIENT_CAST, impactGfx = listOf(NpcAttacks.Gfx(id = 369)),
+                            id = "ice_barrage", range = 8, condition = "breach_durial_barrage", anim = ANCIENT_CAST, impactGfx = listOf(NpcAttacks.Gfx(id = 369)), sounds = snd(SFX_ICE_BARRAGE_CAST),
                             impactSounds = snd(SFX_ICE_BARRAGE_IMPACT), hits = listOf(hit("magic", 30)),
                         ),
                     ),
@@ -472,7 +526,7 @@ object BreachMonsters {
                     "breach_magic_mark", 8,
                     listOf(
                         NpcAttacks.Attack(
-                            id = "blood_barrage", range = 8, anim = ANCIENT_CAST, multiTargetRadius = 1, multiRadius = 1,
+                            id = "blood_barrage", range = 8, anim = ANCIENT_CAST, multiTargetRadius = 1, multiRadius = 1, sounds = snd(SFX_BLOOD_BARRAGE_CAST),
                             impactGfx = listOf(NpcAttacks.Gfx(id = 377)), impactSounds = snd(SFX_BLOOD_BARRAGE_IMPACT), hits = listOf(hit("magic", 18)),
                         ),
                     ),
@@ -568,6 +622,7 @@ object BreachMonsters {
                     anims = mapOf("melee" to 15675, "range" to 15672, "magic" to 15676),
                     maxHits = mapOf("melee" to 25),
                     addHits = mapOf("range" to hit("range", 34), "magic" to hit("magic", 34)),
+                    sectionSounds = mapOf("magic" to SectionSounds(cast = listOf(SFX_FIREBREATH))),
                 ),
                 summon = true,
             ),
@@ -618,6 +673,9 @@ object BreachMonsters {
      * obstacles to reach his target"; "Durial321 (Deadman)": "capable of pursuing targets, unlike most NPCs". Every other breach
      * monster uses the ordinary npc (dumb) pathing and can be safespotted like in OSRS - this undoes the earlier B3 rule that
      * gave all of them smart routes.
+     *
+     * Owner decision 2026-09-28 (live test, Derwen safespotted behind a tree): EVERY breach monster now routes around obstacles
+     * (DeadmanBreach.spawnMonster, ADAPTED). This set stays as the OSRS reference only.
      */
     val ROUTEFINDERS: Set<Int> = setOf(14463, 14466, 14471, 14472, 14473, 14474, 14475, 14476)
 
@@ -704,6 +762,19 @@ object BreachMonsters {
                         a.anims[sectionId]?.let { section.addProperty("anim", it) }
                         a.maxHits[sectionId]?.let { max -> section["hits"].asJsonArray.forEach { h -> h.asJsonObject.addProperty("max", max * 10) } }
                         a.sectionInts[sectionId]?.forEach { (field, value) -> section.addProperty(field, value) }
+                        a.sectionSounds[sectionId]?.let { s ->
+                            fun set(field: String, ids: List<Int>?) {
+                                if (ids != null) section.add(field, gson.toJsonTree(ids.map { NpcAttacks.Sound(id = it) }))
+                            }
+                            set("sounds", s.cast)
+                            set("target_sounds", s.target)
+                            set("impact_sounds", s.impact)
+                        }
+                        a.sectionVisuals[sectionId]?.let { v ->
+                            fun empty(field: String) = !section.has(field) || section[field].isJsonNull || (section[field].isJsonArray && section[field].asJsonArray.size() == 0)
+                            if (v.projectile != null && empty("projectiles")) section.add("projectiles", gson.toJsonTree(listOf(v.projectile)))
+                            if (v.impactGfx != null && empty("impact_gfx")) section.add("impact_gfx", gson.toJsonTree(listOf(v.impactGfx)))
+                        }
                         a.addHits[sectionId]?.let { extra ->
                             if (section["hits"].asJsonArray.size() == 0) section.add("hits", gson.toJsonTree(listOf(extra)))
                         }

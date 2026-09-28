@@ -26,7 +26,10 @@ set_combat_logic {
         // familiar commands and other STRONG/soft actions; only a hard interruption (walk, new
         // interaction, teleport, death) ends it. NPC loops keep the old head-only scheduling so
         // boss/familiar scripts that queue waiting tasks during combat keep their pacing.
+        val traced = (pawn as? Npc)?.takeIf { gg.rsmod.game.model.BreachTrace.watches(it.id) }
+        traced?.let { n -> gg.rsmod.game.model.BreachTrace.log("combat.start") { "npc=${n.id}#${n.index} locked=${!n.lock.canAttack()}" } }
         pawn.queue(persistent = pawn is Player) {
+            traced?.let { n -> gg.rsmod.game.model.BreachTrace.log("combat.loop") { "npc=${n.id}#${n.index} first-cycle" } }
             while (true) {
                 if (!cycle(this)) {
                     break
@@ -71,11 +74,26 @@ on_timer(ACTIVE_COMBAT_TIMER) {
     }
 }
 
+/** Whether the two footprints overlap (a target standing inside an npc's body). */
+fun overlaps(a: gg.rsmod.game.model.entity.Pawn, b: gg.rsmod.game.model.entity.Pawn): Boolean {
+    val sa = a.getSize().coerceAtLeast(1)
+    val sb = b.getSize().coerceAtLeast(1)
+    return a.tile.height == b.tile.height && a.tile.x < b.tile.x + sb && b.tile.x < a.tile.x + sa && a.tile.z < b.tile.z + sb && b.tile.z < a.tile.z + sa
+}
+
 suspend fun cycle(it: QueueTask): Boolean {
     val pawn = it.pawn
-    val target = pawn.getCombatTarget() ?: return false
+    // Owner live test 2026-09-28: Justiciar and Big Evil Chicken picked a target and their combat loop ended at once with no trace;
+    // the two silent exits below now say why (breach trace only).
+    val watched = pawn is Npc && gg.rsmod.game.model.BreachTrace.watches(pawn.id)
+    val target =
+        pawn.getCombatTarget() ?: run {
+            if (watched) gg.rsmod.game.model.BreachTrace.log("combat.exit") { "npc=${(pawn as Npc).id}#${pawn.index} reason=no-target" }
+            return false
+        }
 
     if (!pawn.lock.canAttack()) {
+        if (watched) gg.rsmod.game.model.BreachTrace.log("combat.exit") { "npc=${(pawn as Npc).id}#${pawn.index} reason=locked lock=${pawn.lock}" }
         Combat.reset(pawn)
         return false
     }
@@ -165,6 +183,17 @@ suspend fun cycle(it: QueueTask): Boolean {
             pawn.stopMovement()
             pathFound = true
         } else {
+            // Owner live test 2026-09-28: a player standing inside a breach monster's body was never attacked again - no section
+            // can hit from an overlapping footprint and the melee approach found nothing to walk to. OSRS: the npc steps off its
+            // target first. The monster walks to a free spot of its whole body next to the target, then fights on from there.
+            if (gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.isBreachNpc(pawn) && overlaps(pawn, target)) {
+                val spot = gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.summonTile(pawn.world, target, pawn.getSize().coerceAtLeast(1), nearestTo = pawn.tile)
+                if (gg.rsmod.game.model.BreachTrace.watches(pawn.id)) {
+                    gg.rsmod.game.model.BreachTrace.log("stepoff") { "npc=${pawn.id}#${pawn.index} from=${pawn.tile.x},${pawn.tile.z} to=${spot.x},${spot.z} target=${target.tile.x},${target.tile.z}" }
+                }
+                pawn.walkTo(spot, detectCollision = true)
+                return true
+            }
             PawnPathAction.walkTo(it, pawn, target, interactionRange = 1, lineOfSight = false, waitForArrival = false)
             return true
         }
@@ -243,7 +272,7 @@ suspend fun cycle(it: QueueTask): Boolean {
             val breachAttacker = pawn is Npc && gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.isBreachNpc(pawn)
             // ... but in single-way a player still fights one npc at a time (in-engine test run: two monsters shared one player).
             val otherNpcOnTarget =
-                !targetInMulti && target.isBeingAttacked() && target.getLastHitBy().let { it is Npc && it !== pawn && !it.isDead() }
+                !targetInMulti && target.isAttackedByOtherThan(pawn) && target.liveLastHitBy() is Npc
             val traceSingle =
                 gg.rsmod.game.model.BreachTrace.active() &&
                     ((pawn is Npc && gg.rsmod.game.model.BreachTrace.watches(pawn.id)) || (target is Npc && gg.rsmod.game.model.BreachTrace.watches(target.id)) ||
@@ -267,7 +296,7 @@ suspend fun cycle(it: QueueTask): Boolean {
             if (guardInvolved || breachAttacker) {
                 // no single-combat restriction
             } else if (pawnInMulti || targetInMulti) {
-                if (!pawnInMulti && pawn.isBeingAttacked() && pawn.getLastHitBy() != target) {
+                if (!pawnInMulti && pawn.isAttackedByOtherThan(target)) {
                     ruling("refused:multi-edge-attacker-under-attack")
                     if (pawn is Player) {
                         pawn.message("I'm already under attack!")
@@ -275,7 +304,7 @@ suspend fun cycle(it: QueueTask): Boolean {
                     Combat.reset(pawn)
                     return false
                 }
-                if (!targetInMulti && target.isBeingAttacked() && target.getLastHitBy() != pawn && !sharedBreachTarget) {
+                if (!targetInMulti && target.isAttackedByOtherThan(pawn) && !sharedBreachTarget) {
                     ruling("refused:multi-edge-target-busy")
                     if (pawn is Player) {
                         if (target is Player) {
@@ -290,7 +319,7 @@ suspend fun cycle(it: QueueTask): Boolean {
                 }
             }
             else {
-                if (pawn.isBeingAttacked() && pawn.getLastHitBy() != target) {
+                if (pawn.isAttackedByOtherThan(target)) {
                     ruling("refused:single-attacker-under-attack")
                     if (pawn is Player) {
                         pawn.message("I'm already under attack!")
@@ -298,7 +327,7 @@ suspend fun cycle(it: QueueTask): Boolean {
                     Combat.reset(pawn)
                     return false
                 }
-                if (target.isBeingAttacked() && target.getLastHitBy() != pawn && !sharedBreachTarget) {
+                if (target.isAttackedByOtherThan(pawn) && !sharedBreachTarget) {
                     ruling("refused:single-target-busy")
                     if (pawn is Player) {
                         if (target is Player) {
