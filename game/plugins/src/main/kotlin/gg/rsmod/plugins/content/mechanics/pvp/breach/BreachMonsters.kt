@@ -157,6 +157,10 @@ object BreachMonsters {
     /** rev-667 dragon scimitar attack sound (items.yml attack_audio of item 4587). */
     private const val SFX_DRAGON_SCIMITAR = 2500
 
+    // OSRS Wiki "List of sound IDs": 2540 sever (the dragon scimitar special). Owner breachtrace 2026-09-28: I DSCIM YOU's Sever
+    // swings were silent (16x "row-has-no-attack-sound").
+    private const val SFX_SEVER = 2540
+
     /*
      * Owner live test 2026-09-28 ("veel sounds missen porazdir"): the Mage Arena II guardians' magic had no impact sound. OSRS does
      * not publish theirs; ADAPTED by god, the god spells' impact synths (SpellSounds, ids shared by the 667 cache and the OSRS Wiki
@@ -591,7 +595,7 @@ object BreachMonsters {
                         NpcAttacks.Attack(id = "melee", range = 1, condition = "breach_target_severed", anim = DSCIM_ATTACK, targetSounds = snd(SFX_DRAGON_SCIMITAR), hits = listOf(hit("slash", 21))),
                         NpcAttacks.Attack(
                             id = "sever", range = 1, condition = "breach_sever_ready", anim = 12031, gfx = listOf(NpcAttacks.Gfx(id = 2118)),
-                            hits = listOf(hit("slash", 21)),
+                            sounds = snd(SFX_SEVER), hits = listOf(hit("slash", 21)),
                         ),
                     ),
                 ),

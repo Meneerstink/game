@@ -98,6 +98,28 @@ on_npc_death(KBD) {
     table.getDrop(world, npc.killer() ?: return@on_npc_death, npc.id, npc.tile)
 }
 
+/*
+ * OSRS Wiki "King Black Dragon" (trivia): "Engaging in combat with the King Black Dragon while not having any form of dragonfire
+ * protection gives unique messages in the player's chatbox when they are harmed by the various types of dragonfire". Keyed on the
+ * combat definition, so the Deadman breach King Black Dragon (same definition) gives them too (owner 2026-09-28: breach effects
+ * missing from the chatbox).
+ */
+mapOf(
+    "dragonfire" to "You're horribly burnt by the dragon's fiery breath!",
+    "toxic" to "You're badly scalded by the dragon's toxic breath!",
+    "ice" to "You're chilled to the bone by the dragon's icy breath!",
+    "shock" to "You're zapped by the dragon's shocking breath!",
+).forEach { (attack, text) ->
+    gg.rsmod.plugins.content.combat.attack.NpcAttacks.onLandedImpact("king_black_dragon", attack) { _, target ->
+        if (target is gg.rsmod.game.model.entity.Player) {
+            val p = gg.rsmod.plugins.content.combat.formula.DragonfireFormula.protectionOf(target)
+            val unprotected = !p.shield && !p.prayer && !p.immune && p.potion == gg.rsmod.plugins.content.combat.formula.DragonfireTable.Potion.NONE
+            if (unprotected) target.message(text)
+        }
+        true
+    }
+}
+
 // OSRS Wiki "King Black Dragon" infobox (raw wikitext 2026-09-14): hitpoints 240, att/str/def/mage 240, range 1, attack speed 4,
 // respawn 16, dstab 40, dslash 90, dcrush 90, dmagic 80, dlight 70 / dstandard 70 / dheavy 40 (ADAPTED: one 667 ranged defence, 70),
 // max hit 25 melee / 65 dragonfire and poison 8 in npc-attacks.json.

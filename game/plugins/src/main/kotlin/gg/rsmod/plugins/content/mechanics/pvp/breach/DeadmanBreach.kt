@@ -798,8 +798,8 @@ object DeadmanBreach {
         // routes around obstacles - no safespots. ADAPTED on purpose: OSRS gives routefinding only to Zemouregal, his summons and
         // Durial321 (BreachMonsters.ROUTEFINDERS, kept as the OSRS reference); the 09-27 A2 rule made the others safespottable.
         npc.smartPathfinding = true
-        // Owner decision 2026-09-28 ("ik kan door breachmonsters lopen"): players cannot walk into a breach monster's body (ADAPTED).
-        npc.blocksPlayers = true
+        // Owner 2026-09-28 (later the same day, "dat ik niet meer in breachmonsters kan staan kun je dat weghalen"): the earlier
+        // blocksPlayers rule is withdrawn - players walk through breach monsters again, as in OSRS.
         npc.naivePathfinding = true
         if (id in BreachMonsters.COLLISION_EXCLUDED) npc.ignoresEntityCollision = true
         npc.attr[BREACH_NPC_ATTR] = true

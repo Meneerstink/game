@@ -156,6 +156,12 @@ BreachMonsters.ROSTER.forEach { m ->
 
 // ---- monster mechanics --------------------------------------------------------------------------------------------------
 
+/** A breach effect's chatbox message, also written to the breach trace (owner 2026-09-28: effects missing from the chatbox). */
+fun breachMessage(player: Player, text: String) {
+    player.message(text)
+    gg.rsmod.game.model.BreachTrace.log("mech.msg") { "player=${player.username} text='$text'" }
+}
+
 /** "casting Tele Block on players, preventing them from teleporting for 1 minute" (ADAPTED: on every landed magic hit). */
 val TELEBLOCK_TICKS = 100
 
@@ -163,7 +169,7 @@ val TELEBLOCK_TICKS = 100
 val TELEBLOCK_IMPACT_SOUND = 203
 
 listOf("breach_justiciar", "breach_derwen").forEach { def ->
-    NpcAttacks.onLandedImpact(def, "magic") { _, target ->
+    NpcAttacks.onLandedImpact(def, "magic") { npc, target ->
         if (target is Player && !target.timers.has(TELEBLOCK_TIMER)) {
             gg.rsmod.game.model.BreachTrace.log("mech.teleblock") { "def=$def player=${target.username}" }
             target.timers[TELEBLOCK_TIMER] = TELEBLOCK_TICKS
@@ -171,7 +177,8 @@ listOf("breach_justiciar", "breach_derwen").forEach { def ->
             // look and sound (CombatSpell.TELEPORT_BLOCK: OSRS spotanim 345 TELE_BLOCK_IMPACT, SpellSounds impact 203).
             target.graphic(gg.rsmod.plugins.content.items.osrs.OsrsGfx.TELE_BLOCK_IMPACT, 0)
             target.playSound(TELEBLOCK_IMPACT_SOUND)
-            target.message("You have been teleblocked.")
+            // OSRS Wiki "Tele Block": "A Tele Block has been cast on you by [player name]. It will expire in [time]." (purple).
+            breachMessage(target, "<col=7f007f>A Tele Block has been cast on you by ${BreachMonsters.BY_ID[npc.id]?.name ?: "a breach monster"}. It will expire in 1 minute.</col>")
         }
         true
     }
@@ -225,7 +232,7 @@ val DURIAL_FREEZE_TICKS = 16
 NpcAttacks.onLandedImpact("breach_durial321", "ice_barrage") { _, target ->
     val frozen = target.freeze(DURIAL_FREEZE_TICKS) {}
     gg.rsmod.game.model.BreachTrace.log("mech.freeze") { "npc=durial target=${(target as? Player)?.username} applied=$frozen ticks=$DURIAL_FREEZE_TICKS" }
-    if (frozen && target is Player) target.message("You have been frozen.")
+    if (frozen && target is Player) breachMessage(target, "You have been frozen.")
     true
 }
 
@@ -244,29 +251,59 @@ NpcAttacks.onLandedImpact("breach_dscim", "sever") { _, target ->
         AncientCurses.deactivateCurse(target, AncientCurse.DEFLECT_MELEE)
         Prayers.disableOverheads(target, 8)
         gg.rsmod.game.model.BreachTrace.log("mech.sever") { "player=${target.username} overheadsDisabled=${Prayers.overheadsDisabled(target)}" }
-        target.message("You have been injured!")
+        breachMessage(target, "You have been injured!")
     }
     true
 }
 
 val ABYSSAL_TELEPORT_SOUND = 278
 
-/** Greater abyssal demon: "capable of rapidly teleporting short distances" (ADAPTED: the 667 abyssal demon script's 1/6 per hit). */
-NpcAttacks.onAttack("breach_greater_abyssal_demon", "melee") { npc, target ->
-    if (world.random(5) != 0) return@onAttack
-    // Breach audit 2026-09-27 (in-engine test run): the 3x3 demon landed on top of its target (footprint overlapping the
-    // player). The destination is now a spot where its whole footprint is free and next to, never on, the target.
+/*
+ * Greater abyssal demon (OSRS Wiki "Greater abyssal demon (Deadman)": "Like its regular version, it is capable of rapidly
+ * teleporting short distances"). The regular Greater abyssal demon: "Periodically, the greater abyssal demon will teleport around
+ * the player four times, increasing its attack speed to 1 (0.6 seconds) for the duration of the teleport. Each of these attacks will
+ * always land as a successful hit that is very likely to deal over 20 damage ... Using Protect from Melee will prevent damage. The
+ * demon will only use this attack when in melee range, and ... does not teleport itself or the player outside of this attack."
+ * Owner breachtrace 2026-09-28: 11 swings and 0 teleports (the old 1/6 roll picked a random tile that rarely fitted).
+ * ADAPTED (the wiki gives no numbers): 1 in [ABYSSAL_SPECIAL_CHANCE] swings, each teleport hit ABYSSAL_SPECIAL_MIN..27 (27 = max hit).
+ */
+val ABYSSAL_SPECIAL_CHANCE = 5
+val ABYSSAL_SPECIAL_TELEPORTS = 4
+val ABYSSAL_SPECIAL_MIN = 20
+val ABYSSAL_SPECIAL_MAX = 27
+
+/** A random free spot of the demon's whole body next to (never on) [target], other than where it stands; null when none fits. */
+fun abyssalSpot(npc: Npc, target: gg.rsmod.game.model.entity.Pawn): Tile? {
     val size = npc.getSize()
-    val dest = Tile(target.tile.x + world.random(-(size + 1)..2), target.tile.z + world.random(-(size + 1)..2), target.tile.height)
-    val overlaps =
-        dest.x < target.tile.x + target.getSize() && target.tile.x < dest.x + size &&
-            dest.z < target.tile.z + target.getSize() && target.tile.z < dest.z + size
-    if (!overlaps && DeadmanBreach.fits(world, dest, size) && npc.lock.canMove()) {
-        world.spawn(TileGraphic(tile = dest, id = Gfx.ABYSSAL_DEMON_TELEPORT, height = 0))
-        // Owner live test 2026-09-28 ("mist wat sound"): the teleport was silent. Void abyssal_demon.sounds.toml abyssal_demon_teleport = 278.
-        world.spawn(gg.rsmod.game.model.entity.AreaSound(tile = dest, id = ABYSSAL_TELEPORT_SOUND, radius = 10, volume = 1))
-        gg.rsmod.game.model.BreachTrace.log("mech.teleport") { "npc=${npc.id}#${npc.index} from=${npc.tile.x},${npc.tile.z} to=${dest.x},${dest.z}" }
-        npc.teleportNpc(dest)
+    val dest = DeadmanBreach.summonTile(world, target, size)
+    val t = target.tile
+    val ts = target.getSize().coerceAtLeast(1)
+    val overlaps = dest.x < t.x + ts && t.x < dest.x + size && dest.z < t.z + ts && t.z < dest.z + size
+    return dest.takeIf { !overlaps && it != npc.tile && DeadmanBreach.fits(world, it, size) }
+}
+
+NpcAttacks.onAttack("breach_greater_abyssal_demon", "melee") { npc, target ->
+    if (target !is Player || world.random(ABYSSAL_SPECIAL_CHANCE - 1) != 0) return@onAttack
+    gg.rsmod.game.model.BreachTrace.log("mech.teleport") { "npc=${npc.id}#${npc.index} special=start target=${target.username}" }
+    // The regular swing is not repeated during the four teleport attacks.
+    npc.timers[gg.rsmod.game.model.timer.ATTACK_DELAY] = ABYSSAL_SPECIAL_TELEPORTS + 4
+    world.queue {
+        repeat(ABYSSAL_SPECIAL_TELEPORTS) {
+            wait(1)
+            if (npc.isDead() || target.isDead() || !DeadmanBreach.canFight(target) || !npc.lock.canMove()) return@queue
+            if (npc.tile.height != target.tile.height || !npc.tile.isWithinRadius(target.tile, 16)) return@queue
+            val dest = abyssalSpot(npc, target) ?: return@repeat
+            world.spawn(TileGraphic(tile = npc.tile, id = Gfx.ABYSSAL_DEMON_TELEPORT, height = 0))
+            world.spawn(TileGraphic(tile = dest, id = Gfx.ABYSSAL_DEMON_TELEPORT, height = 0))
+            // Owner live test 2026-09-28 ("mist wat sound"): Void abyssal_demon.sounds.toml abyssal_demon_teleport = 278.
+            world.spawn(gg.rsmod.game.model.entity.AreaSound(tile = dest, id = ABYSSAL_TELEPORT_SOUND, radius = 10, volume = 1))
+            gg.rsmod.game.model.BreachTrace.log("mech.teleport") { "npc=${npc.id}#${npc.index} from=${npc.tile.x},${npc.tile.z} to=${dest.x},${dest.z}" }
+            npc.teleportNpc(dest)
+            npc.facePawn(target)
+            npc.animate(BreachMonsters.BY_ID.getValue(npc.id).attackAnim)
+            val protected = Prayers.isActive(target, Prayer.PROTECT_FROM_MELEE) || AncientCurses.isCurseActive(target, AncientCurse.DEFLECT_MELEE)
+            target.hit(if (protected) 0 else world.random(ABYSSAL_SPECIAL_MIN..ABYSSAL_SPECIAL_MAX), if (protected) HitType.BLOCK else HitType.MELEE, delay = 1)
+        }
     }
 }
 
@@ -410,7 +447,16 @@ val durialOpened = gg.rsmod.game.model.attr.AttributeKey<java.lang.ref.WeakRefer
 
 fun durialOpenedOn(npc: Npc, target: gg.rsmod.game.model.entity.Pawn) = npc.attr[durialOpened]?.get() === target
 
-NpcAttacks.condition("breach_durial_barrage") { npc, target -> !durialOpenedOn(npc, target) || cannotReachMelee(npc, target) }
+/*
+ * Owner 2026-09-28 (breachtrace t=1083-1093: the target ran off and Durial only chased): he barrages again whenever the target
+ * has run out of melee distance and is not held already; a frozen target is walked up to and whipped, so no barrage spam.
+ */
+fun durialTargetRanOff(npc: Npc, target: gg.rsmod.game.model.entity.Pawn) =
+    !nbBordering(npc, target) && !target.timers.has(gg.rsmod.game.model.timer.FROZEN_TIMER)
+
+NpcAttacks.condition("breach_durial_barrage") { npc, target ->
+    !durialOpenedOn(npc, target) || cannotReachMelee(npc, target) || durialTargetRanOff(npc, target)
+}
 NpcAttacks.condition("breach_durial_whip") { npc, target -> durialOpenedOn(npc, target) }
 
 NpcAttacks.onSwing("breach_durial321") { npc, target, _ -> npc.attr[durialOpened] = java.lang.ref.WeakReference(target) }
@@ -540,7 +586,7 @@ on_world_init {
                                 DeadmanBreach.canFight(p)
                             ) {
                                 p.hit(world.random(11))
-                                p.filterableMessage("You get stung while stood within the swarm of bees.")
+                                breachMessage(p, "You get stung while stood within the swarm of bees.")
                             }
                         }
                     BLOAT -> {
@@ -556,7 +602,7 @@ on_world_init {
                                     val protected = Prayers.isActive(p, Prayer.PROTECT_FROM_MISSILES) ||
                                         AncientCurses.isCurseActive(p, AncientCurse.DEFLECT_MISSILES)
                                     p.hit(if (protected) 0 else world.random(20), delay = 1)
-                                    p.filterableMessage("Flies leave the body of the bloat and swarm you.")
+                                    breachMessage(p, "Flies leave the body of the bloat and swarm you.")
                                 }
                             }
                         }
