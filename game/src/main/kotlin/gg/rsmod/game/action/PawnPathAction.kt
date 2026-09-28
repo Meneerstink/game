@@ -320,19 +320,15 @@ object PawnPathAction {
         }
 
         if (frozen) {
+            // A frozen pawn cannot walk, so it attacks only when the target is in reach from where it stands. Conformance
+            // run 2026-09-29 (equipment reach): the melee branch passed the attack range as the TARGET SIZE to bordering()
+            // (a frozen halberd never reached 2 tiles), and projectile attacks were never checked here at all - the route
+            // below "succeeded", the wait loop gave up on the stalled pawn and returned success, so a frozen ranger shot
+            // from one tile beyond its range (dart 4, knife 5, crossbow 8).
             if (overlap(sourceTile, sourceSize, targetTile, targetSize)) {
                 return false
             }
-
-            if (!projectile) {
-                return if (!lineOfSight) {
-                    bordering(sourceTile, sourceSize, targetTile, interactionRange)
-                } else {
-                    overlap(sourceTile, sourceSize, targetTile, interactionRange) &&
-                        (interactionRange == 0 || !sourceTile.sameAs(targetTile)) &&
-                        pawn.world.collision.raycast(sourceTile, targetTile, lineOfSight)
-                }
-            }
+            return inReachWithoutMoving(pawn, sourceTile, sourceSize, targetTile, targetSize, interactionRange, lineOfSight || projectile)
         }
 
         val builder =
@@ -426,6 +422,27 @@ object PawnPathAction {
                 .clipOverlapTiles()
                 .build()
         return pawn.createPathFindingStrategy().calculateRoute(request).success
+    }
+
+    /**
+     * Whether a pawn standing still reaches the target: the footprints are 1..[range] tiles apart (Chebyshev), a range-1
+     * non-projectile attack does not reach diagonally (it needs a shared edge), and a longer reach needs a clear line.
+     */
+    private fun inReachWithoutMoving(
+        pawn: Pawn,
+        source: Tile,
+        sourceSize: Int,
+        target: Tile,
+        targetSize: Int,
+        range: Int,
+        projectile: Boolean,
+    ): Boolean {
+        val dx = maxOf(0, target.x - (source.x + sourceSize - 1), source.x - (target.x + targetSize - 1))
+        val dz = maxOf(0, target.z - (source.z + sourceSize - 1), source.z - (target.z + targetSize - 1))
+        val gap = maxOf(dx, dz)
+        if (gap < 1 || gap > range) return false
+        if (range == 1 && !projectile) return bordering(source, sourceSize, target, targetSize)
+        return pawn.world.collision.raycast(source, target, projectile)
     }
 
     private fun overlap(

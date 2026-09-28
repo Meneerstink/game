@@ -96,6 +96,9 @@ class GameService : Service {
      */
     private var cycleTime = 0
 
+    /** Wall-clock loop period override for agent test servers only; game time per tick stays [GameContext.cycleTime]. */
+    private val LOOP_MS: Long? = System.getProperty("rsps.loopMs")?.toLongOrNull()
+
     /**
      * Monotonic start time of the previous game-cycle invocation. This is kept
      * separately from the measured cycle work time so a scheduler/GC pause
@@ -257,7 +260,8 @@ class GameService : Service {
      * missed ticks are dropped instead of being run as a burst.
      */
     private fun scheduleNextTick() {
-        val period = TimeUnit.MILLISECONDS.toNanos(world.gameContext.cycleTime.toLong())
+        // Conformance headless runs (-Drsps.loopMs): the loop runs faster while every game rule still counts 600 ms ticks.
+        val period = TimeUnit.MILLISECONDS.toNanos(LOOP_MS ?: world.gameContext.cycleTime.toLong())
         val now = System.nanoTime()
         nextTickNanos = nextCycleDeadline(nextTickNanos, period, now)
         try {

@@ -40,7 +40,11 @@ class Recording(
         override fun toString() = "t$cycle $who $kind $text"
     }
 
+    /** Every event in cycle order (pruned by [prune] once an entry's timeline is on disk). */
     val events = ArrayList<Ev>()
+
+    /** The same events per pawn label, so a check reads only its own pawn's events. */
+    private val byWho = HashMap<String, ArrayList<Ev>>()
     private val tracked = IdentityHashMap<Pawn, String>()
     private val last = IdentityHashMap<Pawn, Map<String, String>>()
 
@@ -79,7 +83,11 @@ class Recording(
         who: String,
         kind: String,
         text: String,
-    ) = synchronized(this) { events += Ev(world.currentCycle, who, kind, text) }
+    ) = synchronized(this) {
+        val ev = Ev(world.currentCycle, who, kind, text)
+        events += ev
+        byWho.getOrPut(who) { ArrayList() } += ev
+    }
 
     // ---- probe hooks ------------------------------------------------------------------------------------------------------
 
@@ -92,6 +100,13 @@ class Recording(
     }
 
     override fun endOfCycle(pawn: Pawn) {
+        // A familiar (any npc owned by a tracked player) is tracked from its very first tick, so its spawn is recorded too.
+        if (pawn is Npc && pawn.owner != null) {
+            synchronized(this) {
+                val owner = tracked[pawn.owner!!]
+                if (owner != null && !tracked.containsKey(pawn)) tracked[pawn] = if (owner == "Conf1") "familiar" else "familiar:$owner"
+            }
+        }
         val who = synchronized(this) { tracked[pawn] } ?: return
         Probe.blocks(pawn).forEach { add(who, "out", it) }
         // A part of the state that cannot be read is itself recorded, never thrown into the sync.
@@ -103,7 +118,10 @@ class Recording(
         }
         for ((k, v) in now) {
             val old = before[k]
-            if (old != v) add(who, "state", "$k: ${old ?: "(none)"} -> $v")
+            if (old == v) continue
+            // A timer counting down by one tick is noise; being set, stopped or jumping is recorded.
+            if (k.startsWith("timer.") && old != null && old.toIntOrNull()?.minus(1) == v.toIntOrNull()) continue
+            add(who, "state", "$k: ${old ?: "(none)"} -> $v")
         }
         for (k in before.keys) if (k !in now) add(who, "state", "$k: ${before[k]} -> (none)")
     }
@@ -152,7 +170,7 @@ class Recording(
                     s["skill.$i"] = "${pawn.skills.getCurrentLevel(i)}/${pawn.skills.getMaxLevel(i)} xp=${"%.1f".format(java.util.Locale.ENGLISH, pawn.skills.getCurrentXp(i))}"
                 }
                 s["run"] = "%.2f".format(java.util.Locale.ENGLISH, pawn.runEnergy)
-                s["prayer"] = "%.2f".format(java.util.Locale.ENGLISH, pawn.prayerPoints)
+                s["prayer"] = pawn.getCurrentPrayerPoints().toString()
                 s["weight"] = "%.2f".format(java.util.Locale.ENGLISH, pawn.weight)
                 s["skull"] = pawn.skullIcon.toString()
                 s["combatlevel"] = pawn.combatLevel.toString()
@@ -215,9 +233,36 @@ class Recording(
     fun of(
         who: String,
         kind: String? = null,
-    ): List<Ev> = synchronized(this) { events.filter { it.who == who && (kind == null || it.kind == kind) } }
+    ): List<Ev> = synchronized(this) { byWho[who]?.filter { kind == null || it.kind == kind } ?: emptyList() }
 
-    fun since(cycle: Int): List<Ev> = synchronized(this) { events.filter { it.cycle >= cycle } }
+    fun since(cycle: Int): List<Ev> = synchronized(this) { events.subList(firstAt(events, cycle), events.size).toList() }
+
+    /** Events of cycles [from]..[to] (a timeline slice). */
+    fun slice(
+        from: Int,
+        to: Int,
+    ): List<Ev> = synchronized(this) { events.subList(firstAt(events, from), firstAt(events, to + 1)).toList() }
+
+    /** Drops every event before [cycle] (its timelines are already written): keeps a long run's checks and memory flat. */
+    fun prune(cycle: Int) =
+        synchronized(this) {
+            events.subList(0, firstAt(events, cycle)).clear()
+            byWho.values.forEach { list -> list.subList(0, firstAt(list, cycle)).clear() }
+        }
+
+    /** Index of the first event at or after [cycle] (lists are in cycle order). */
+    private fun firstAt(
+        list: List<Ev>,
+        cycle: Int,
+    ): Int {
+        var lo = 0
+        var hi = list.size
+        while (lo < hi) {
+            val mid = (lo + hi) ushr 1
+            if (list[mid].cycle < cycle) lo = mid + 1 else hi = mid
+        }
+        return lo
+    }
 
     companion object {
         const val NEAR = 20

@@ -13,6 +13,9 @@ class SpotAnimDef(
     private var scaleXZ = 128
     private var scaleY = 128
     private var animationId = -1
+
+    /** The sequence this graphic plays (conformance: its frame sounds are the graphic's sound). */
+    val sequence: Int get() = animationId
     private lateinit var recolorToFind: ShortArray
     private lateinit var recolorToReplace: ShortArray
     private var modelId = 0

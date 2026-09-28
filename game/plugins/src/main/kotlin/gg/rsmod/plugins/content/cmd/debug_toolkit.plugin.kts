@@ -238,6 +238,9 @@ on_command("conform", Privilege.ADMIN_POWER) {
 // The same from the command port (tools\conformance\Send-GameCommand.ps1 conform summoning), for agents.
 gg.rsmod.game.CommandServerCommands.handlers["conform"] = { w, a -> gg.rsmod.plugins.content.cmd.conformance.Conformance.command(w, a) }
 
+// Headless agent run only (-Drsps.conformance=<domain>, tools\conformance\Run-Conformance.ps1): never active in a normal start.
+on_world_init { gg.rsmod.plugins.content.cmd.conformance.Conformance.startHeadless(world) }
+
 on_world_init {
     if (File("C:/RSPS/scan.on").exists()) {
         world.queue {

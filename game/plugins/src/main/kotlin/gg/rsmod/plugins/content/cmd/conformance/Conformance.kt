@@ -7,7 +7,6 @@ import gg.rsmod.game.message.impl.MoveGameClickMessage
 import gg.rsmod.game.message.impl.OpNpc1Message
 import gg.rsmod.game.message.impl.OpNpc2Message
 import gg.rsmod.game.message.impl.OpNpcTMessage
-import gg.rsmod.game.message.impl.OpNpcUMessage
 import gg.rsmod.game.message.impl.ResumePauseButtonMessage
 import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.Trace
@@ -100,7 +99,10 @@ object Conformance {
         val suite: Suite =
             when (domain) {
                 "summoning" -> SummoningSuite
-                else -> return "Unknown conformance domain '$domain' (summoning)."
+                "curses", "prayers" -> CursesSuite
+                "equipment", "weapons", "armour" -> EquipmentSuite
+                "combat" -> CombatSuite
+                else -> return "Unknown conformance domain '$domain' (summoning, curses, equipment, combat)."
             }
         val at = rawArgs.indexOf("at")
         val from =
@@ -129,10 +131,31 @@ object Conformance {
                     "Conformance '$domain' done: ${run.count(Verdict.PASS)} pass, ${run.count(Verdict.FAIL)} fail, " +
                     "${run.count(Verdict.CONFLICT)} conflict, ${run.count(Verdict.UNSOURCED)} unsourced, ${run.count(Verdict.NOT_TESTED)} not tested - ${dir.path}"
                 world.getPlayerForName(run.adminName)?.message("<col=178000>$lastSummary</col>")
-                logger.info(lastSummary)
+                logger.info("CONFORMANCE done: {}", lastSummary)
+                // Headless agent run (tools\conformance\Run-Conformance.ps1): the private test server ends itself, saving nothing.
+                if (System.getProperty("$PROPERTY.exit") == "true") Runtime.getRuntime().halt(0)
             }
         }
         return "Conformance '$domain' started near ${from.x},${from.z},${from.height}. Report: C:\\RSPS\\bugs\\conformance\\ (conform stop ends it)."
+    }
+
+    /** Headless agent run: -Drsps.conformance=<domain> [-Drsps.conformance.args="a b"] [-Drsps.conformance.at=x,z,h] -Drsps.conformance.exit=true */
+    const val PROPERTY = "rsps.conformance"
+
+    fun startHeadless(world: World) {
+        val domain = System.getProperty(PROPERTY) ?: return
+        val args = System.getProperty("$PROPERTY.args")?.split(' ')?.filter { it.isNotBlank() } ?: emptyList()
+        val at = System.getProperty("$PROPERTY.at")?.split(',')?.mapNotNull { it.trim().toIntOrNull() }
+        val origin = if (at != null && at.size >= 2) Tile(at[0], at[1], at.getOrElse(2) { 0 }) else DEFAULT_ORIGIN
+        // The recorder measures by itself; the world-wide traces (on through the owner's toggle files) only cost cycle time
+        // here. Switched off in this test server's memory only - the toggle files are never touched.
+        Trace.Cat.values().forEach { Trace.set(it, it == Trace.Cat.SWEEP) }
+        gg.rsmod.game.model.AvTrace.enabled = false
+        gg.rsmod.game.model.BreachTrace.enabled = false
+        world.queue {
+            wait(5)
+            logger.info("CONFORMANCE headless: {}", start(world, null, origin, domain, args))
+        }
     }
 
     @Volatile
@@ -144,7 +167,7 @@ object Conformance {
         args: List<String>,
     ): String =
         when (val d = args.getOrNull(0)?.lowercase()) {
-            null -> "conform summoning [name] [at x z h] | stop | status"
+            null -> "conform summoning|curses|equipment|combat [name] [at x z h] | stop | status"
             "stop" -> {
                 stopRequested = true
                 "The conformance run stops after its current entry."
@@ -176,7 +199,11 @@ object Conformance {
         private val notes = ArrayList<String>()
         private val bots = ArrayList<Client>()
         private val npcs = ArrayList<Npc>()
-        private val windows = ArrayList<Triple<String, Int, Int>>()
+        /** The report folder, created at the start so every entry's timeline is written as soon as the entry ends. */
+        val dir = File(ROOT, "$domain-${LocalDateTime.now().format(STAMP)}").also { File(it, "timelines").mkdirs() }
+
+        /** Start cycle of the entry each parallel lane is working on; events before the earliest are pruned. */
+        val laneStarts = java.util.concurrent.ConcurrentHashMap<Int, Int>()
 
         fun note(text: String) {
             notes += text
@@ -213,7 +240,13 @@ object Conformance {
             entry: String,
             fromCycle: Int,
         ) {
-            windows += Triple(entry, fromCycle, world.currentCycle)
+            // Written now (the recorder is pruned afterwards), from every pawn's events of this entry's cycles.
+            runCatching {
+                val file = File(File(dir, "timelines"), entry.replace(Regex("[^A-Za-z0-9_.-]"), "_") + ".txt")
+                file.writeText(recording.slice(fromCycle, world.currentCycle).joinToString("\n") + "\n")
+            }
+            val floor = laneStarts.values.minOrNull() ?: world.currentCycle
+            recording.prune(minOf(floor, world.currentCycle))
         }
 
         fun progress(text: String) {
@@ -245,7 +278,8 @@ object Conformance {
                 add(Result(entry, check, Verdict.UNSOURCED, "-", m))
                 return
             }
-            val agree = known.all { same(it.second, known.first().second) }
+            // One source always agrees with itself (it may list several valid values, e.g. "55% (50% imbued)").
+            val agree = known.size == 1 || known.all { same(it.second, known.first().second) }
             val exp = known.joinToString(" / ") { "${norm(it.second)} (${it.first})" }
             val verdict =
                 when {
@@ -288,8 +322,6 @@ object Conformance {
         }
 
         fun write(): File {
-            val dir = File(ROOT, "$domain-${LocalDateTime.now().format(STAMP)}")
-            File(dir, "timelines").mkdirs()
             val previous = previousFailKeys()
             val order = results.sortedWith(compareBy<Result>({ it.verdict.ordinal }, { it.entry }, { it.check }))
             val newFails = order.filter { it.verdict == Verdict.FAIL && it.key !in previous }
@@ -309,17 +341,12 @@ object Conformance {
             order.forEach { sb.append("$it\n") }
             File(dir, "report.txt").writeText(sb.toString())
             File(dir, "fail-keys.txt").writeText(order.filter { it.verdict == Verdict.FAIL }.joinToString("\n") { it.key })
-            val events = synchronized(recording) { recording.events.toList() }
-            for ((entry, from, to) in windows) {
-                val file = File(File(dir, "timelines"), entry.replace(Regex("[^A-Za-z0-9_.-]"), "_") + ".txt")
-                file.writeText(events.filter { it.cycle in from..to }.joinToString("\n") + "\n")
-            }
             logger.info("Conformance {} written to {}", domain, dir)
             return dir
         }
 
         private fun previousFailKeys(): Set<String> {
-            val last = ROOT.listFiles { f -> f.isDirectory && f.name.startsWith("$domain-") }?.maxByOrNull { it.name } ?: return emptySet()
+            val last = ROOT.listFiles { f -> f.isDirectory && f.name.startsWith("$domain-") && f != dir }?.maxByOrNull { it.name } ?: return emptySet()
             return File(last, "fail-keys.txt").takeIf { it.exists() }?.readLines()?.filter { it.isNotBlank() }?.toSet() ?: emptySet()
         }
     }
@@ -365,7 +392,11 @@ object Bots {
     fun inject(
         bot: Client,
         message: Message,
-    ): Boolean = bot.gameSystem.inject(message)
+    ): Boolean {
+        // A message type the server has no decoder for is a harness bug (the real client never sends it): fail loudly.
+        check(bot.gameSystem.inject(message)) { "the server has no handler for ${message.javaClass.simpleName} - the 667 client does not send it" }
+        return true
+    }
 
     /** IfButton opcodes of the 667 client per menu option (IfButton1Handler: 61, 64, 4, 18, 10, .., 25 for option 8). */
     private val OPTION_OPCODES = mapOf(1 to 61, 2 to 64, 3 to 4, 4 to 18, 5 to 10, 8 to 25)
@@ -411,13 +442,14 @@ object Bots {
         else -> false
     }
 
+    /** "Use" an inventory item on an npc: the 667 client sends it as an interface-target packet from inventory 679:0. */
     fun itemOnNpc(
         bot: Client,
         slot: Int,
         npc: Npc,
     ): Boolean {
-        val item = bot.inventory[slot] ?: return false
-        return inject(bot, OpNpcUMessage((679 shl 16), npc.index, item.id, slot, 0))
+        if (bot.inventory[slot] == null) return false
+        return inject(bot, OpNpcTMessage(npc.index, (679 shl 16), slot, 0))
     }
 
     /** A targeted interface action (spell, familiar special, familiar attack) from [parent]:[component] on [npc]. */

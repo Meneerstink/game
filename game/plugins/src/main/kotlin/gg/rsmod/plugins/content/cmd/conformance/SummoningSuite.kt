@@ -164,7 +164,7 @@ object SummoningSuite : Conformance.Suite {
         val xpGained = bot.skills.getCurrentXp(Skills.SUMMONING) - xp0
         v?.get("summon_xp")?.asDouble()?.takeIf { it > 0 }?.let { xpRatios[e] = xpGained / it }
         run.expectTrue(e, "summon xp gained", xpGained > 0, "gained=$xpGained", "> 0")
-        run.check(e, "hitpoints", fam.getMaximumLifepoints(), "void" to v?.get("hitpoints")?.asInt())
+        run.check(e, "hitpoints (void life points / ${voidScale(run)})", fam.getMaximumLifepoints(), "void" to v?.get("hitpoints")?.asInt()?.div(voidScale(run)))
         run.check(e, "hitpoints full at summon", fam.getCurrentLifepoints(), "rule" to fam.getMaximumLifepoints())
         val stats = v?.get("stats")
         mapOf("att" to NpcSkills.ATTACK, "str" to NpcSkills.STRENGTH, "def" to NpcSkills.DEFENCE, "range" to NpcSkills.RANGED, "mage" to NpcSkills.MAGIC).forEach { (k, idx) ->
@@ -179,7 +179,7 @@ object SummoningSuite : Conformance.Suite {
         run.expectTrue(e, "spawn tile next to the owner", g == 1, "gap=$g owner=${bot.tile} familiar=${fam.tile}", "gap 1")
         run.expectTrue(e, "spawn tile free (not in a wall)", !clipped(run, fam.tile, size), "tile=${fam.tile}")
         val lifetime = if (bot.timers.has(FAMILIAR_LIFETIME_TIMER)) bot.timers[FAMILIAR_LIFETIME_TIMER] + (world.currentCycle - c1) else null
-        run.check(e, "lifetime (ticks)", lifetime, "void" to v?.get("time_minutes")?.asInt()?.times(100), "novite" to n?.get("time_ms")?.asLong()?.div(600), same = ::within3)
+        run.check(e, "lifetime (ticks)", lifetime, "void" to v?.get("time_minutes")?.asInt()?.let { ticks(run, it * 60_000L) }, "novite" to n?.get("time_ms")?.asLong()?.let { ticks(run, it) }, same = ::within3)
         run.check(e, "varp 1174 follower chathead", bot.varps.getState(VARP_FOLLOWER_CHATHEAD), "void" to fam.id)
         run.expectTrue(e, "varp 448 follower name set", bot.varps.getState(VARP_FOLLOWER_NAME) != 0, "448=${bot.varps.getState(VARP_FOLLOWER_NAME)}", "non-zero")
         run.expectTrue(e, "varp 1174 sent to the client", sentVarp(run, "Conf1", c1, VARP_FOLLOWER_CHATHEAD), "no Varp message for 1174 since summon", "a varp message")
@@ -428,7 +428,7 @@ object SummoningSuite : Conformance.Suite {
             wait(3)
             val v = refs[d.pouch.toString()]?.get("void")
             run.check(e, "renew: pouch used", 2 - 1 - bot.inventory.getItemCount(d.pouch), "rule" to 1)
-            run.check(e, "renew: lifetime back to full (ticks)", if (bot.timers.has(FAMILIAR_LIFETIME_TIMER)) bot.timers[FAMILIAR_LIFETIME_TIMER] else null, "void" to v?.get("time_minutes")?.asInt()?.times(100), same = ::within3)
+            run.check(e, "renew: lifetime back to full (ticks)", if (bot.timers.has(FAMILIAR_LIFETIME_TIMER)) bot.timers[FAMILIAR_LIFETIME_TIMER] else null, "void" to v?.get("time_minutes")?.asInt()?.let { ticks(run, it * 60_000L) }, same = ::within3)
             val gfx = run.recording.of("Conf1", "out").filter { it.cycle >= c && it.text.startsWith("gfx ") }.map { idOf(it.text) }
             run.check(e, "renew: player graphic", gfx.firstOrNull(), "void" to common["renew_gfx_player"]?.asInt())
             val snd = run.recording.of("Conf1", "msg").filter { it.cycle >= c && it.text.contains("Sound") }.map { it.text }
@@ -439,8 +439,8 @@ object SummoningSuite : Conformance.Suite {
         data("SPIRIT_WOLF")?.let { d ->
             summon(d) ?: return@let
             val c = run.world.currentCycle
-            bot.timers[FAMILIAR_LIFETIME_TIMER] = 105
-            for (t in 0 until 115) {
+            bot.timers[FAMILIAR_LIFETIME_TIMER] = ticks(run, 63_000L)
+            for (t in 0 until ticks(run, 69_000L)) {
                 bot.skills.setCurrentLevel(Skills.SUMMONING, 99)
                 wait(1)
             }
@@ -457,16 +457,17 @@ object SummoningSuite : Conformance.Suite {
             SummoningPouchData.values().mapNotNull { d ->
                 val v = refs[d.pouch.toString()]?.get("void") ?: return@mapNotNull null
                 val total = d.level - v["summon_points"].asInt() + 1
-                val ticks = v["time_minutes"].asInt() * 100
+                val ticks = ticks(run, v["time_minutes"].asInt() * 60_000L)
                 if (ticks <= 0) null else Triple(d, total, ticks)
             }.sortedByDescending { it.second.toDouble() / it.third }.take(2)
         for ((d, total, ticks) in fastest) {
             summon(d) ?: continue
             val p0 = bot.skills.getCurrentLevel(Skills.SUMMONING)
-            wait(300)
+            val window = ticks(run, 180_000L)
+            wait(window)
             val drained = p0 - bot.skills.getCurrentLevel(Skills.SUMMONING)
-            val expected = total * 300 / ticks
-            run.check(e, "drain over 300 ticks: ${d.name.lowercase()} (total $total over $ticks ticks)", drained, "void" to expected, same = ::within1)
+            val expected = total * window / ticks
+            run.check(e, "drain over 3 minutes: ${d.name.lowercase()} (total $total over $ticks ticks)", drained, "void" to expected, same = ::within1)
         }
 
         // Out of points: familiar vanishes with the message.
@@ -485,11 +486,11 @@ object SummoningSuite : Conformance.Suite {
         data("SPIRIT_WOLF")?.let { d ->
             summon(d) ?: return@let
             bot.attr[FAMILIAR_SPECIAL_POINTS_ATTR] = 0
-            wait(52)
+            wait(ticks(run, 31_200L))
             val rg = common["special_points_regen"]
-            run.check(e, "special points after 52 ticks from 0", bot.attr[FAMILIAR_SPECIAL_POINTS_ATTR], "void" to rg["amount"].asInt())
+            run.check(e, "special points 31 s after 0", bot.attr[FAMILIAR_SPECIAL_POINTS_ATTR], "void" to rg["amount"].asInt())
             bot.attr[FAMILIAR_SPECIAL_POINTS_ATTR] = 55
-            wait(52)
+            wait(ticks(run, 31_200L))
             run.check(e, "special points capped", bot.attr[FAMILIAR_SPECIAL_POINTS_ATTR], "void" to rg["cap"].asInt())
         }
 
@@ -500,8 +501,8 @@ object SummoningSuite : Conformance.Suite {
             summon(d) ?: continue
             bot.setCurrentLifepoints(100)
             val c = run.world.currentCycle
-            wait(27)
-            run.check(e, "passive heal after 27 ticks: ${name.lowercase()}", bot.getCurrentLifepoints() - 100, "void" to heal["lifepoints"].asInt())
+            wait(ticks(run, 16_200L))
+            run.check(e, "passive heal after 16 s: ${name.lowercase()}", bot.getCurrentLifepoints() - 100, "void" to heal["lifepoints"].asInt())
             heal["gfx"]?.takeIf { !it.isNull }?.asInt()?.let { gfx ->
                 run.expectTrue(e, "passive heal graphic: ${name.lowercase()}", run.recording.of("Conf1", "out").any { it.cycle >= c && it.text.startsWith("gfx ") && idOf(it.text) == gfx }, "no gfx $gfx on the owner", "gfx $gfx (void)")
             }
@@ -514,9 +515,9 @@ object SummoningSuite : Conformance.Suite {
             val lines = refs[d.pouch.toString()]?.get("void")?.get("overhead")?.map { it.asText() }?.takeIf { it.isNotEmpty() } ?: continue
             summon(d) ?: continue
             val c = run.world.currentCycle
-            wait(55)
+            wait(ticks(run, 33_000L))
             val said = run.recording.of("familiar", "out").filter { it.cycle >= c && it.text.startsWith("forcechat") }.map { it.text.substringAfter('"').substringBeforeLast('"') }
-            run.expectTrue(e, "overhead line within 55 ticks: ${name.lowercase()}", said.any { it in lines }, said.joinToString(" / ").ifEmpty { "(none)" }, lines.joinToString(" | ") + " (void, RS Wiki transcripts)")
+            run.expectTrue(e, "overhead line within 33 s: ${name.lowercase()}", said.any { it in lines }, said.joinToString(" / ").ifEmpty { "(none)" }, lines.joinToString(" | ") + " (void, RS Wiki transcripts)")
         }
 
         // Owner death: the familiar leaves.
@@ -616,7 +617,7 @@ object SummoningSuite : Conformance.Suite {
             run.check(e, "attack projectile", projs.groupBy { it }.maxByOrNull { it.value.size }?.key, "void" to p)
         }
         val hits = run.recording.of("dummy", "out").filter { it.cycle >= c && it.text.startsWith("hits ") }.flatMap { damages(it.text) }
-        val max = a["max"]?.takeIf { !it.isNull }?.asInt()
+        val max = a["max"]?.takeIf { !it.isNull }?.asInt()?.div(voidScale(run))
         if (max != null) {
             val observed = hits.maxOrNull() ?: 0
             run.expectTrue(e, "attack max hit never exceeded", observed <= max, "max observed $observed over ${hits.size} hits", "<= $max (void)")
@@ -624,12 +625,25 @@ object SummoningSuite : Conformance.Suite {
         }
         combatStats(run, fam, dummy, style, a, v, attackCycles, distances, c, e)
         // Defend animation: the dummy hits the familiar once.
-        val cd = world.currentCycle
+        // Stop the fight first: an attack animation still running would (rightly) hide the block animation.
         fam.resetInteractions()
-        fam.hit(1)
-        wait(2)
+        gg.rsmod.plugins.content.combat.Combat.reset(fam)
+        bot.resetInteractions()
+        gg.rsmod.plugins.content.combat.Combat.reset(bot)
+        wait(8)
+        // A real attacker (the dummy) hits the familiar; its defend animation must be among what it plays.
+        val cd = world.currentCycle
+        dummy.attack(fam)
+        for (t in 0 until 10) {
+            fam.setCurrentLifepoints(fam.getMaximumLifepoints())
+            wait(1)
+        }
+        dummy.resetInteractions()
+        gg.rsmod.plugins.content.combat.Combat.reset(dummy)
         sound(run, e, "familiar blocks", cd, world.currentCycle, "familiar")
-        run.check(e, "defend animation", run.recording.of("familiar", "out").firstOrNull { it.cycle >= cd && it.text.startsWith("anim ") }?.let { idOf(it.text) }, "void" to v["defend_anim"]?.takeIf { !it.isNull }?.asInt())
+        val defendAnim = v["defend_anim"]?.takeIf { !it.isNull }?.asInt()
+        val famAnims = run.recording.of("familiar", "out").filter { it.cycle >= cd && it.text.startsWith("anim ") }.map { idOf(it.text) }.distinct()
+        run.check(e, "defend animation (played when hit by the dummy)", if (defendAnim != null && defendAnim in famAnims) defendAnim else famAnims.firstOrNull(), "void" to defendAnim)
         fam.resetInteractions()
         gg.rsmod.plugins.content.combat.Combat.reset(fam)
         fam.setCurrentLifepoints(fam.getMaximumLifepoints())
@@ -671,7 +685,7 @@ object SummoningSuite : Conformance.Suite {
         if (landed.isNotEmpty()) {
             run.check(e, "hitsplat type for $style (${a["offense"]?.asText()})", landed.groupBy { it.first }.maxByOrNull { it.value.size }?.key, "667 hitmark ids" to expectedType)
         }
-        val max = a["max"]?.takeIf { !it.isNull }?.asInt() ?: return
+        val max = a["max"]?.takeIf { !it.isNull }?.asInt()?.div(voidScale(run)) ?: return
         val stats = v["stats"]
         val attLevel =
             when (style) {
@@ -774,7 +788,7 @@ object SummoningSuite : Conformance.Suite {
         val sounds = run.recording.of("Conf1", "msg").filter { it.cycle >= c && it.text.contains("Sound") }.map { it.text }
         val castSound = common["special_cast_sound"]?.asInt()
         run.expectTrue(e, "special: cast sound $castSound sent", castSound == null || sounds.any { it.contains("$castSound") }, sounds.joinToString(" / ").ifEmpty { "(no sound message)" }, "sound $castSound (void summoning_special_cast)")
-        val maxHit = ints(vs?.get("max_hit")).firstOrNull()
+        val maxHit = ints(vs?.get("max_hit")).firstOrNull()?.div(voidScale(run))
         if (maxHit != null) {
             val dealt = run.recording.of("dummy", "out").filter { it.cycle >= c && it.text.startsWith("hits ") }.flatMap { damages(it.text) }
             run.expectTrue(e, "special: damage within max $maxHit", dealt.all { it <= maxHit }, "hits=$dealt (dummy hp ${dummyHp0} -> ${dummy.getCurrentLifepoints()})", "<= $maxHit (void)")
@@ -907,6 +921,13 @@ object SummoningSuite : Conformance.Suite {
 
     // ---- helpers -----------------------------------------------------------------------------------------------------------
 
+    /**
+     * Void writes every familiar hitpoint and damage figure in life points (real HP x10). This server deals and shows real HP
+     * 1:1 (a level-99 player has 99, see FamiliarCombat.LEDGER_UNITS_PER_HITPOINT), so Void figures are divided by 10 here;
+     * on a x10 server (players above 200 hitpoints) they are taken as they are.
+     */
+    private fun voidScale(run: Conformance.Run): Int = if ((run.world.getPlayerForName("Conf1")?.getMaximumLifepoints() ?: 99) > 200) 1 else 10
+
     private fun reset(
         run: Conformance.Run,
         bot: Client,
@@ -921,6 +942,12 @@ object SummoningSuite : Conformance.Suite {
         bot.setCurrentLifepoints(bot.getMaximumLifepoints())
         if (run.world.currentCycle < 0) run.note("unreachable")
     }
+
+    /** [ms] of real time in game ticks at this server's tick length (the headless run uses fast ticks). */
+    private fun ticks(
+        run: Conformance.Run,
+        ms: Long,
+    ): Int = (ms / run.world.gameContext.cycleTime).toInt()
 
     private fun gameMessages(
         run: Conformance.Run,
@@ -975,10 +1002,11 @@ object SummoningSuite : Conformance.Suite {
         b: Any?,
     ) = a != null && b != null && Math.abs(a.toString().toDouble() - b.toString().toDouble()) <= 1
 
+    /** Every reference id was played (extra ids - e.g. the generic cast graphic - are shown but not a failure). */
     private fun sameSet(
         a: Any?,
         b: Any?,
-    ) = (a as? Collection<*>)?.toSet() == (b as? Collection<*>)?.toSet()
+    ) = (a as? Collection<*>)?.toSet()?.containsAll((b as? Collection<*>)?.toSet() ?: emptySet<Any>()) == true
 
     private fun mapVoidTarget(t: String) =
         when (t) {
@@ -1022,6 +1050,12 @@ object SummoningSuite : Conformance.Suite {
             "Herblore" -> Skills.HERBLORE
             else -> null
         }
+
+    /** A free multi-way arena near [from] (shared by every suite that needs one). */
+    fun arenaFor(
+        run: Conformance.Run,
+        from: Tile,
+    ): Tile = nearestMulti(run, from) ?: from
 
     /** The nearest tile (rings of 8 outwards, up to 400) that is multi-way with room for the bot, a familiar and the dummy. */
     private fun nearestMulti(
