@@ -143,7 +143,9 @@ class PawnList<T : Pawn>(
         /*
          * Only able to remove the pawn if it's registered in our array.
          */
-        if (pawns[pawn.index] == pawn) {
+        // A removed pawn has index -1: removing it twice (e.g. a familiar whose owner logged out during its despawn animation,
+        // Deadman audit 2026-09-28) must return false as documented, not throw ArrayIndexOutOfBounds.
+        if (pawn.index in pawns.indices && pawns[pawn.index] == pawn) {
             pawns[pawn.index] = null
             pawn.index = -1
             count--

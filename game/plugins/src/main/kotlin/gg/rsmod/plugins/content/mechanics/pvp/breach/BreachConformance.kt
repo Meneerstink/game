@@ -261,6 +261,12 @@ object BreachConformance {
                             logger.error("BREACHCONF monster {} failed", m.id, e)
                         }
                     }
+                    try {
+                        say(runFamiliar(this, world, site, mine, a, arena))
+                    } catch (e: Exception) {
+                        say("familiar | ${if (site.multi) "multi" else "single"} | ERROR $e")
+                        logger.error("BREACHCONF familiar phase failed", e)
+                    }
                     mine.forEach { world.unregister(it) }
                     bots -= mine
                 }
@@ -278,6 +284,92 @@ object BreachConformance {
                 if (System.getProperty("$PROPERTY.exit") == "true") Runtime.getRuntime().halt(0)
             }
         }
+    }
+
+    /**
+     * Summoning at a breach (owner 2026-09-28 "kijk ook of summoning goed werkt op breaches"). A real Steel titan summoned by bot A
+     * fights a Giant goblin that is frozen out of A's reach, so every point of damage on it comes from the familiar:
+     *  - multi: the attack command is accepted, the familiar hits, and the damage is credited to A in the breach ledger (loot,
+     *    emblem, points); a PvP-protected owner's familiar cannot be ordered onto it;
+     *  - single: the command is refused ("cannot fight unless it is in a multi-way combat area") and nothing is credited.
+     */
+    private suspend fun runFamiliar(
+        q: gg.rsmod.game.model.queue.QueueTask,
+        world: World,
+        site: DeadmanBreach.Site,
+        bots: List<Client>,
+        home: Tile,
+        arena: Set<Tile>,
+    ): String {
+        val (a, b, c, o) = bots
+        val siteName = if (site.multi) "multi" else "single"
+        DeadmanBreach.close(world)
+        bots.forEach { it.resetInteractions(); it.setCurrentLifepoints(LIFE) }
+        a.moveTo(home)
+        listOf(b, c, o).forEachIndexed { i, p -> p.moveTo(Tile(home.x - 40 - i, home.z, home.height)) }
+        q.wait(18)
+        val pouch = gg.rsmod.plugins.content.skills.summoning.SummoningPouchData.STEEL_TITAN
+        a.skills.setBaseLevel(gg.rsmod.plugins.api.Skills.SUMMONING, 99)
+        a.inventory.add(pouch.pouch, 1)
+        val summoned = gg.rsmod.plugins.content.skills.summoning.Familiar.summon(a, pouch)
+        q.wait(3)
+        val familiar = gg.rsmod.plugins.content.skills.summoning.Familiar.current(a) ?: return "familiar | $siteName | FAIL summon=$summoned"
+        val goblin = 14450
+        val size = world.definitions.getNullable(gg.rsmod.game.fs.def.NpcDef::class.java, goblin)?.size ?: 1
+        val spot =
+            arena.filter { t ->
+                val g = maxOf(0, t.x - home.x, home.x - (t.x + size - 1)).coerceAtLeast(maxOf(0, t.z - home.z, home.z - (t.z + size - 1)))
+                t.x > home.x && g in 4..6 && DeadmanBreach.fits(world, t, size) && world.collision.raycast(t, home, projectile = true)
+            }.minByOrNull { it.getDistance(home) }
+        if (spot == null) {
+            gg.rsmod.plugins.content.skills.summoning.Familiar.dismiss(a)
+            return "familiar | $siteName | SKIPPED no spot"
+        }
+        val npc = DeadmanBreach.spawnMonster(world, goblin, spot, DeadmanBreach.LOCAL_SPAWN_RADIUS, test = true)
+        npc.freeze(200) {}
+        q.wait(2)
+        a.resetInteractions()
+
+        // 1. a PvP-protected owner may not send his familiar onto a breach monster
+        // the bots forfeit their protection at creation (bot()); give A a live one for this check only
+        a.attr.remove(gg.rsmod.game.model.attr.PROTECTION_FORFEITED_ATTR)
+        a.timers[gg.rsmod.game.model.timer.NEW_PLAYER_PROTECTION_TIMER] = 500
+        val protectedCommand = gg.rsmod.plugins.content.skills.summoning.FamiliarCombat.commandAttack(a, npc, silent = true)
+        a.timers.remove(gg.rsmod.game.model.timer.NEW_PLAYER_PROTECTION_TIMER)
+        gg.rsmod.plugins.content.mechanics.pvp.BeginnerProtection.forfeit(a)
+        familiar.resetInteractions()
+        q.wait(2)
+
+        // 2. the real command
+        val commanded = gg.rsmod.plugins.content.skills.summoning.FamiliarCombat.commandAttack(a, npc, silent = true)
+        val hp0 = npc.getCurrentLifepoints()
+        var familiarOnIt = 0
+        repeat(30) {
+            q.wait(1)
+            a.setCurrentLifepoints(LIFE)
+            familiar.setCurrentLifepoints(familiar.getMaximumLifepoints())
+            if (familiar.attr[gg.rsmod.game.model.attr.COMBAT_TARGET_FOCUS_ATTR]?.get() === npc) familiarOnIt++
+        }
+        val lost = hp0 - npc.getCurrentLifepoints()
+        val credited = DeadmanBreach.contribution(npc).damageOf(a.username)
+        val aHitIt = a.attr[gg.rsmod.game.model.attr.COMBAT_TARGET_FOCUS_ATTR]?.get() === npc
+        gg.rsmod.plugins.content.skills.summoning.Familiar.dismiss(a)
+        if (world.npcs.contains(npc)) world.remove(npc)
+
+        val fails = ArrayList<String>()
+        if (protectedCommand) fails += "protected-owner-command-accepted"
+        if (site.multi) {
+            if (!commanded) fails += "command-refused"
+            if (familiarOnIt == 0) fails += "familiar-never-on-target"
+            if (lost <= 0) fails += "no-damage"
+            if (credited != lost && !aHitIt) fails += "credit=$credited!=damage=$lost"
+        } else {
+            if (commanded) fails += "single-way-command-accepted"
+            if (lost > 0 || credited > 0) fails += "single-way-damage=$lost credit=$credited"
+        }
+        return "familiar Steel titan | $siteName | ${if (fails.isEmpty()) "PASS" else "FAIL(${fails.size})"} | summoned=$summoned " +
+            "protectedCommand=$protectedCommand command=$commanded ticksOnTarget=$familiarOnIt damage=$lost creditedToOwner=$credited ownerAttacked=$aHitIt " +
+            fails.joinToString(" ")
     }
 
     private suspend fun runMonster(
