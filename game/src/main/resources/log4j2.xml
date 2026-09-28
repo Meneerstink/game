@@ -11,6 +11,10 @@
 			<PatternLayout pattern="[%d{ISO8601} %-5level] %logger{36} - %msg%n"/>
 		</File>
 
+		<!-- Debug toolkit crash catcher (C:\RSPS\TRACES.md): every ERROR to C:\RSPS\bugs\crashes-<date>.log, WARN/ERROR as
+		     PROBLEM trace lines while the traces are on (gg.rsmod.game.model.TraceCrashAppender). -->
+		<TraceCrash name="TraceCrash"/>
+
 		<!-- Routing Appender for Player-Specific Logs -->
 		<Routing name="PlayerLogRouter">
 			<Routes pattern="$${ctx:player}">
@@ -42,6 +46,7 @@
 		<Root level="info">
 			<AppenderRef level="error" ref="File"/>
 			<AppenderRef level="all" ref="Console"/>
+			<AppenderRef level="warn" ref="TraceCrash"/>
 		</Root>
 
 		<!-- Private Message Logger -->

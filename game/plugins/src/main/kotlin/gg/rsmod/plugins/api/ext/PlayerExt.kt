@@ -639,7 +639,11 @@ fun Player.playSound(
     rate: Int = 256,
     loops: Int = 1,
 ) {
-    gg.rsmod.game.model.AvTrace.log { "sound player index=$index id=$id loops=$loops delay=$delay volume=$volume rate=$rate" }
+    // The caller (first frame outside this file) tells which feature sent it (owner 2026-09-28: sound issues).
+    gg.rsmod.game.model.AvTrace.log {
+        val caller = Throwable().stackTrace.firstOrNull { !it.fileName.orEmpty().startsWith("PlayerExt") }?.let { "${it.fileName}:${it.lineNumber}" }
+        "sound player=$username id=$id loops=$loops delay=$delay volume=$volume rate=$rate cycle=${world.currentCycle} from=$caller"
+    }
     write(SynthSoundMessage(sound = id, loops = loops, delay = delay, volume = volume, rate = rate))
 }
 

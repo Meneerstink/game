@@ -158,6 +158,10 @@ class GameSystem(
                     interrupt()
                 }
             }
+            if (!isPassive) {
+                lastAction = "${next.message.javaClass.simpleName}${traceFields(next.message)} cycle=${world.currentCycle}"
+                gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.INPUT) { "${client.username} at=${client.tile.x},${client.tile.z},${client.tile.height} $lastAction" }
+            }
             try {
                 try {
                     next.handler.handle(client, world, next.message)
@@ -166,6 +170,7 @@ class GameSystem(
                     // or the MessageHandlerTask for every later player in the same cycle.
                     // Audit T-01: any non-fatal throwable (a handler's TODO()), not only Exception.
                     e.rethrowIfFatal()
+                    gg.rsmod.game.model.Trace.crash("packet handler, ${client.username}'s $lastAction", e)
                     logger.error(
                         "Error handling incoming message ${next.message.javaClass.simpleName} " +
                             "opcode=${next.opcode} for user=${client.username}",
@@ -186,8 +191,50 @@ class GameSystem(
         }
     }
 
+    /** The last deliberate action of this player (trace context: which click caused a message or an error). */
+    @Volatile
+    var lastAction: String = "-"
+
     fun write(message: Message) {
+        if (gg.rsmod.game.model.Trace.anyOn()) traceOutgoing(message)
         channel.write(message)
+    }
+
+    /** The server -> client side of the traces: chat messages, interfaces and vars, with PROBLEM verdicts. */
+    private fun traceOutgoing(message: Message) {
+        val who = client.username
+        when (message) {
+            is gg.rsmod.game.message.impl.MessageGameMessage -> {
+                val text = message.message
+                gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.MSG) { "$who type=${message.type} '$text'" }
+                if (text == gg.rsmod.game.model.entity.Entity.NOTHING_INTERESTING_HAPPENS || text.startsWith("Nothing interesting happens")) {
+                    gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.MSG) { "$who got 'Nothing interesting happens.' (no handler) after $lastAction" }
+                }
+                if (message.type == 109) {
+                    gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.MSG) { "note: filterable message (hidden when the player's game filter is on): '$text'" }
+                }
+            }
+            is gg.rsmod.game.message.impl.IfOpenSubMessage, is gg.rsmod.game.message.impl.IfOpenTopMessage, is gg.rsmod.game.message.impl.IfCloseSubMessage,
+            is gg.rsmod.game.message.impl.IfMoveSubMessage ->
+                gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.INTERFACE) { "$who ${message.javaClass.simpleName}${traceFields(message)} after $lastAction" }
+            is gg.rsmod.game.message.impl.VarpSmallMessage, is gg.rsmod.game.message.impl.VarpLargeMessage,
+            is gg.rsmod.game.message.impl.VarbitSmallMessage, is gg.rsmod.game.message.impl.VarbitLargeMessage ->
+                gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.VAR) { "$who ${message.javaClass.simpleName}${traceFields(message)}" }
+            else -> {}
+        }
+    }
+
+    /** "(a=1, b=2)" for a data-class message, else the declared fields read reflectively (trace only). */
+    private fun traceFields(message: Any): String {
+        val text = message.toString()
+        if (!text.contains('@')) return text.substringAfter(message.javaClass.simpleName, text)
+        return runCatching {
+            message.javaClass.declaredFields.filter { !java.lang.reflect.Modifier.isStatic(it.modifiers) }.joinToString(", ", "(", ")") { f ->
+                f.isAccessible = true
+                val v = f.get(message)
+                "${f.name}=${if (v is IntArray) v.joinToString(",", "[", "]") else v}"
+            }
+        }.getOrDefault("")
     }
 
     fun flush() {

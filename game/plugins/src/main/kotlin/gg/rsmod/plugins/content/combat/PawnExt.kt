@@ -271,6 +271,16 @@ fun Pawn.dealHit(
 
     val pawnHit = PawnHit(hit, executeHit)
 
+    // Debug toolkit (C:\RSPS\TRACES.md): every hit of every fight, with what changed the rolled damage.
+    gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.COMBAT) {
+        fun name(p: Pawn) = (p as? Player)?.username ?: (p as? Npc)?.let { "npc ${it.id}#${it.index}" } ?: p.toString()
+        "hit ${name(this)} -> ${name(target)} type=$hitType maxHit=$maxHit landed=$landHit damage=${if (executeHit) damage.toInt() else 0} " +
+            "beforeDeflect=$deflectDamage delay=$delay targetHp=${target.getCurrentLifepoints()}/${target.getMaximumLifepoints()}"
+    }
+    if (landHit && maxHit <= 0.0) {
+        gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.COMBAT) { "hit with max hit $maxHit from ${(this as? Player)?.username ?: this} (a landed hit that can never damage)" }
+    }
+
     // Audit X-10: a player with a hit on its way cannot finish an x-log before it lands, and stays held 16 ticks after impact.
     if (target is Player) {
         Combat.holdLogout(target, delay + Combat.LOGOUT_HOLD_TICKS)

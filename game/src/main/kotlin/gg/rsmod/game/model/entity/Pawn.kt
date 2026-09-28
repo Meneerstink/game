@@ -762,6 +762,7 @@ abstract class Pawn(
         // Audit T-13: the protection window is counted in game cycles (it compared milliseconds with ticks).
         if (!priority && lastAnimation > world.currentCycle) {
             if (this is Npc) gg.rsmod.game.model.AvTrace.log { "anim NPC index=$index npc=${(this as Npc).id} id=$id SKIPPED(protected until ${lastAnimation})" }
+            if (this is Player) gg.rsmod.game.model.AvTrace.log { "anim PLAYER ${(this as Player).username} id=$id SKIPPED(protected until ${lastAnimation})" }
             if (this is Npc && gg.rsmod.game.model.BreachTrace.watches((this as Npc).id)) {
                 gg.rsmod.game.model.BreachTrace.log("anim.skipped") { "npc=${(this as Npc).id}#$index anim=$id protectedUntil=$lastAnimation" }
             }
@@ -771,6 +772,11 @@ abstract class Pawn(
             gg.rsmod.game.model.BreachTrace.log("anim.set") { "npc=${(this as Npc).id}#$index anim=$id delay=$delay prio=$priority replaces=${if (hasBlock(UpdateBlockType.ANIMATION)) blockBuffer.animation else -1}" }
         }
         if (this is Npc) gg.rsmod.game.model.AvTrace.log { "anim NPC index=$index npc=${(this as Npc).id} id=$id delay=$delay prio=$priority cycle=${world.currentCycle}" }
+        // Players too, and an animation overwritten in the same tick (only the last one reaches the client, with its frame sounds).
+        if (this is Player) gg.rsmod.game.model.AvTrace.log { "anim PLAYER ${(this as Player).username} id=$id delay=$delay prio=$priority cycle=${world.currentCycle}" }
+        if (hasBlock(UpdateBlockType.ANIMATION) && blockBuffer.animation != id) {
+            gg.rsmod.game.model.AvTrace.log { "PROBLEM anim ${entityType} index=$index id=$id REPLACES ${blockBuffer.animation} in the same cycle=${world.currentCycle}" }
+        }
         lastAnimation = if (id != -1) world.currentCycle + world.getAnimationDelay(id) else 0
         blockBuffer.animation = id
         blockBuffer.animationDelay = delay

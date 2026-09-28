@@ -1284,6 +1284,7 @@ class PluginRepository(
         args: Array<String>? = null,
     ): Boolean {
         val commandPair = commandPlugins[command]
+        gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.INPUT) { "command ${p.username} '$command' args=${args?.joinToString(" ")} bound=${commandPair != null}" }
         if (commandPair != null) {
             val powerRequired = commandPair.first
             val plugin = commandPair.second
@@ -1327,6 +1328,7 @@ class PluginRepository(
         // interface clicks - bank deposits included - are swallowed.
         if (p.attr[DEATH_FLAG] == true) return true
         val plugin = buttonPlugins[hash]
+        gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.INTERFACE) { "button ${p.username} $parent:$child handled=${plugin != null}" }
         if (plugin != null) {
             p.executePlugin(plugin)
             return true
@@ -1360,6 +1362,7 @@ class PluginRepository(
         option: Int,
     ): Boolean {
         val hash = (item shl 16) or option
+        gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.ITEM) { "worn-option ${p.username} item=$item option=$option handled=${equipmentOptionPlugins.containsKey(hash)}" }
         val plugin = equipmentOptionPlugins[hash] ?: return false
         val proceed = { p.executePlugin(plugin) }
         if (itemOptionInterceptor?.invoke(p, item, option, true, proceed) == true) return true
@@ -1673,6 +1676,7 @@ class PluginRepository(
         id: Int,
         opt: Int,
     ): Boolean {
+        gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.ITEM) { "item-option ${p.username} item=$id option=$opt handled=${itemPlugins[id]?.containsKey(opt) == true}" }
         val optMap = itemPlugins[id] ?: return false
         val logic = optMap[opt] ?: return false
         val proceed = { p.executePlugin(logic) }
@@ -1700,6 +1704,7 @@ class PluginRepository(
         id: Int,
         opt: Int,
     ): Boolean {
+        gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.INTERACT) { "grounditem-option ${p.username} item=$id option=$opt handled=${groundItemPlugins[id]?.containsKey(opt) == true}" }
         val optMap = groundItemPlugins[id] ?: return false
         val logic = optMap[opt] ?: return false
         p.executePlugin(logic)
@@ -1920,6 +1925,7 @@ class PluginRepository(
         id: Int,
         opt: Int,
     ): Boolean {
+        gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.INTERACT) { "object-option ${p.username} object=$id option=$opt plugin=${objectPlugins[id]?.containsKey(opt) == true} (false: a fallback may still take it)" }
         val optMap = objectPlugins[id] ?: return false
         val logic = optMap[opt] ?: return false
         p.executePlugin(logic)
@@ -1974,6 +1980,7 @@ class PluginRepository(
         id: Int,
         opt: Int,
     ): Boolean {
+        gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.INTERACT) { "npc-option ${p.username} npc=$id option=$opt handled=${npcPlugins[id]?.containsKey(opt) == true}" }
         val optMap = npcPlugins[id] ?: return false
         val logic = optMap[opt] ?: return false
         p.executePlugin(logic)

@@ -267,11 +267,23 @@ class Chunk(
         update: EntityUpdate<*>,
     ) {
         val traced = BreachTrace.active() && (update.entity is AreaSound || update.entity is Projectile || update.entity is TileGraphic)
+        val sound = update.entity as? AreaSound
         world.players.forEach { client ->
+            // AvTrace (owner 2026-09-28 "we hebben nog steeds veel sound issues"): per nearby player, did the area sound reach him, and
+            // is he inside its radius? The client only plays an area sound within its radius, so "recv ... audible=false" is silent.
+            if (sound != null && gg.rsmod.game.model.AvTrace.enabled && client.tile.height == sound.tile.height && client.tile.isWithinRadius(sound.tile, 32)) {
+                val dist = client.tile.getDistance(sound.tile)
+                val sent = inBuildArea(client) && canBeViewed(client, sound)
+                gg.rsmod.game.model.AvTrace.log {
+                    (if (!sent || dist > sound.radius) "PROBLEM " else "") + "areasound.${if (sent) "recv" else "skip"} id=${sound.id} player=${client.username} dist=$dist radius=${sound.radius} " +
+                        "audible=${sent && dist <= sound.radius} buildArea=${inBuildArea(client)} cycle=${world.currentCycle}"
+                }
+            }
             if (!inBuildArea(client) || !canBeViewed(client, update.entity)) {
                 // Breach conformance trace: a nearby player who does NOT get the sound/projectile/graphic is the bug case.
                 if (traced && client.tile.height == update.entity.tile.height && client.tile.isWithinRadius(update.entity.tile, 32)) {
                     BreachTrace.log("zone.skip") { "${traceName(update.entity)} player=${client.username} dist=${client.tile.getDistance(update.entity.tile)} buildArea=${inBuildArea(client)}" }
+                    BreachTrace.log("PROBLEM") { "not sent to a nearby player: ${traceName(update.entity)} player=${client.username} dist=${client.tile.getDistance(update.entity.tile)}" }
                 }
                 return@forEach
             }

@@ -20,7 +20,7 @@ object BreachTrace : KLogging() {
     const val PROPERTY = "rsps.breachTrace"
 
     @Volatile
-    var enabled: Boolean = System.getProperty(PROPERTY) == "true" || File(TOGGLE_FILE).exists()
+    var enabled: Boolean = System.getProperty(PROPERTY) == "true" || File(TOGGLE_FILE).exists() || File(Trace.ALL_FILE).exists()
 
     /** The game cycle stamped on every line (set by [World] each cycle). */
     @Volatile
@@ -46,6 +46,10 @@ object BreachTrace : KLogging() {
         if (!enabled && out == null) return
         val line = "t=$cycle $category ${message()}"
         out?.invoke(line)
-        if (enabled) logger.info { "[breachtrace] $line" }
+        if (enabled) {
+            // A "PROBLEM" category marks a failure; the bug report and the live chat lines get every breach line too.
+            Trace.record("[breachtrace] $line")
+            logger.info { "[breachtrace] $line" }
+        }
     }
 }

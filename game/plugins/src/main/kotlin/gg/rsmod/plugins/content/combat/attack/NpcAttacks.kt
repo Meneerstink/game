@@ -473,6 +473,20 @@ object NpcAttacks {
                     "impactGfx=${attack.impactGfx.map { it.id }} targetSounds=${attack.targetSounds.map { it.id }} impactSounds=${attack.impactSounds.map { it.id }}"
             }
         }
+        // Verdict for the traces (owner 2026-09-28: the trace must name the issue): a swing with no section sound, no sound-table
+        // attack cue and no audible frame sound on its animation is silent for everybody.
+        if (gg.rsmod.game.model.AvTrace.enabled || gg.rsmod.game.model.BreachTrace.watches(npc.id)) {
+            val sectionSounds = attack.sounds.size + attack.targetSounds.size + attack.impactSounds.size
+            val tableSound = gg.rsmod.plugins.content.combat.audio.NpcCombatAudio.rowFor(npc.id)?.attack?.isNotEmpty() == true
+            val frameSound = gg.rsmod.plugins.content.combat.audio.NpcCombatAudio.hasAudibleFrameSounds(npc, anim)
+            val silent = sectionSounds == 0 && !tableSound && !frameSound
+            val noVisual = anim < 0 && attack.gfx.isEmpty() && attack.projectiles.isEmpty() && attack.targetGfx.isEmpty() && attack.impactGfx.isEmpty()
+            if (silent || noVisual) {
+                val line = "npc=${npc.id}#${npc.index} section=${attack.id} anim=$anim" + (if (silent) " SILENT(no section/table/frame sound)" else "") + (if (noVisual) " NO-VISUAL(no anim/gfx/projectile)" else "")
+                gg.rsmod.game.model.AvTrace.log { "PROBLEM npcattack $line" }
+                if (gg.rsmod.game.model.BreachTrace.watches(npc.id)) gg.rsmod.game.model.BreachTrace.log("PROBLEM") { line }
+            }
+        }
         gg.rsmod.game.model.AvTrace.log {
             "npcattack npc=${npc.id}#${npc.index} section=${attack.id} anim=$anim primary=${primaryTarget.entityType}#${primaryTarget.index} " +
                 "targets=${targetSet.joinToString(",") { "${it.entityType}#${it.index}" }} cycle=${npc.world.currentCycle}"
@@ -833,7 +847,12 @@ object NpcAttacks {
             target.freeze(freeze)
         }
         if (attack.poison != 0) target.poison((attack.poison / 10).coerceAtLeast(1))
-        if (attack.message.isNotEmpty() && target is Player) target.message(attack.message)
+        if (attack.message.isNotEmpty() && target is Player) {
+            target.message(attack.message)
+            if (gg.rsmod.game.model.BreachTrace.watches(npc.id)) {
+                gg.rsmod.game.model.BreachTrace.log("mech.msg") { "npc=${npc.id}#${npc.index} section=${attack.id} player=${target.username} text='${attack.message}'" }
+            }
+        }
     }
 
     private val SKILLS =
