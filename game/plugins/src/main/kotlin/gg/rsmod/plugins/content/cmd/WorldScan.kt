@@ -131,6 +131,48 @@ object WorldScan {
             }
         }
 
+        // ---- traversal objects (ladders, stairs, ropes, trapdoors, cave/dungeon entrances): where each one puts the player
+        gg.rsmod.plugins.content.mechanics.objteleports.ObjectTeleports.all().forEach { e ->
+            val from = e.tile ?: return@forEach
+            val dest =
+                e.to?.let { Tile(it.x, it.z, it.height) }
+                    ?: e.delta?.let { Tile(from.x + it.x, from.z + it.z, from.height + it.height) } ?: return@forEach
+            if (dest.height !in 0..3) {
+                add("traversal", "object ${e.id} '${e.option}' at ${from.x},${from.z},${from.height} sends the player to level ${dest.height}")
+            } else if (stuck(world, dest)) {
+                add("traversal", "object ${e.id} '${e.option}' at ${from.x},${from.z},${from.height} lands at ${dest.x},${dest.z},${dest.height} where the player cannot move (${e.source})")
+            }
+        }
+
+        // ---- literal ids in the code (animate(123), graphic(456), playSound(789), AreaSound(id = ..), TileGraphic(id = ..))
+        val patterns =
+            listOf(
+                "anim" to Regex("""\.animate\(\s*(\d+)"""),
+                "graphic" to Regex("""\.graphic\(\s*(\d+)"""),
+                "sound" to Regex("""playSound\(\s*(\d+)"""),
+                "sound" to Regex("""AreaSound\([^)]*?\bid\s*=\s*(\d+)"""),
+                "graphic" to Regex("""TileGraphic\([^)]*?\bid\s*=\s*(\d+)"""),
+            )
+        listOf(File("C:/RSPS/game/game/game/plugins/src/main"), File("C:/RSPS/game/game/game/src/main")).filter { it.isDirectory }.forEach { root ->
+            root.walkTopDown().filter { it.isFile && (it.name.endsWith(".kt") || it.name.endsWith(".kts")) }.forEach { f ->
+                f.readLines().forEachIndexed { i, line ->
+                    if (line.trimStart().startsWith("//") || line.trimStart().startsWith("*")) return@forEachIndexed
+                    patterns.forEach { (kind, rx) ->
+                        rx.findAll(line).forEach { m ->
+                            val id = m.groupValues[1].toInt()
+                            val ok =
+                                when (kind) {
+                                    "anim" -> animExists(id)
+                                    "graphic" -> gfxExists(id)
+                                    else -> world.soundExists(id)
+                                }
+                            if (!ok) add("code-ids", "${f.name}:${i + 1} $kind $id does not exist in the cache")
+                        }
+                    }
+                }
+            }
+        }
+
         // ---- wearable items with a missing worn model
         if (modelIds.isNotEmpty()) {
             val itemCount = runCatching { world.definitions.getCount(ItemDef::class.java) }.getOrDefault(0)

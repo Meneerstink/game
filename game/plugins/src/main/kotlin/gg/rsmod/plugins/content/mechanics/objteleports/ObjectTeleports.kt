@@ -111,6 +111,9 @@ object ObjectTeleports {
 
     fun entriesAt(tile: Tile): List<Entry> = byTile[key(tile.x, tile.z, tile.height)].orEmpty()
 
+    /** Every retained entry (the debug toolkit's world scan checks where each one lands). */
+    fun all(): List<Entry> = byTile.values.flatten()
+
     /** The entry recorded for this object id set, tile and option; null when the data has none. */
     fun find(
         tile: Tile,
