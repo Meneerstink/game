@@ -67,6 +67,12 @@ object PlayerDeathAction : KLogging() {
             player.attr[KILLER_ATTR] = WeakReference(killer)
         }
 
+        // Debug toolkit (TRACES.md): who killed whom where, and what the victim carried before the death rules ran.
+        gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.COMBAT) {
+            val killer = player.attr[KILLER_ATTR]?.get()
+            val carried = (player.inventory.rawItems.filterNotNull() + player.equipment.rawItems.filterNotNull()).joinToString(",") { "${it.id}x${it.amount}" }
+            "death ${player.username} at ${player.tile.x},${player.tile.z},${player.tile.height} killer=${(killer as? Player)?.username ?: (killer as? gg.rsmod.game.model.entity.Npc)?.let { "npc ${it.id}" } ?: "-"} carried=[$carried]"
+        }
         runDeathHook(player, "player-pre-death") { world.plugins.executePlayerPreDeath(player) }
 
         player.resetFacePawn()
@@ -110,6 +116,10 @@ object PlayerDeathAction : KLogging() {
         player.damageMap.reset()
 
         runDeathHook(player, "player-death") { world.plugins.executePlayerDeath(player) }
+        gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.COMBAT) {
+            val kept = (player.inventory.rawItems.filterNotNull() + player.equipment.rawItems.filterNotNull()).joinToString(",") { "${it.id}x${it.amount}" }
+            "respawn ${player.username} at ${player.tile.x},${player.tile.z},${player.tile.height} kept=[$kept]"
+        }
     }
 
     /**

@@ -54,6 +54,8 @@ Trace.onProblem = { line -> showLive(line) }
  * scenery - ROOT_CAUSES #25, #42, #50, #77, #78); an npc alive with hitpoints outside 0..max. Each case is reported once.
  */
 val INVARIANT_EVERY = 5
+val LOCK_STUCK_TICKS = 50
+val lockSince = java.util.concurrent.ConcurrentHashMap<String, Int>()
 val reportedInvariants: MutableSet<String> = java.util.concurrent.ConcurrentHashMap.newKeySet()
 val CARDINALS = listOf(gg.rsmod.game.model.Direction.NORTH, gg.rsmod.game.model.Direction.EAST, gg.rsmod.game.model.Direction.SOUTH, gg.rsmod.game.model.Direction.WEST)
 
@@ -121,6 +123,18 @@ on_world_init {
                 val players = mutableListOf<Player>()
                 world.players.forEach { players += it }
                 players.forEach { p ->
+                    // A lock that outlives any real action (cutscenes, agility, deaths take seconds, not half a minute):
+                    // the player can no longer click anything - an action that never unlocked (a thrown plugin, a lost queue).
+                    val since = lockSince[p.username]
+                    if (p.lock == gg.rsmod.game.model.LockState.NONE) {
+                        lockSince.remove(p.username)
+                    } else if (since == null) {
+                        lockSince[p.username] = world.currentCycle
+                    } else if (world.currentCycle - since > LOCK_STUCK_TICKS) {
+                        reportOnce("lock:${p.username}:$since", Trace.Cat.INPUT) {
+                            "${p.username} has been locked (${p.lock}) for ${world.currentCycle - since} ticks - cannot act; last click: ${(p as? gg.rsmod.game.model.entity.Client)?.gameSystem?.lastAction}"
+                        }
+                    }
                     if (stuck(p.tile)) {
                         reportOnce("p:${p.username}:${p.tile}", Trace.Cat.NPCPATH) { "stuck: ${p.username} at ${p.tile.x},${p.tile.z},${p.tile.height} cannot step north, east, south or west" }
                     }
@@ -196,7 +210,7 @@ on_command("sweep", Privilege.ADMIN_POWER) {
     val args = player.getCommandArgs().toList()
     val what = args.getOrNull(0)?.lowercase()
     when (what) {
-        null -> player.message("sweep weapons [from] [count] [pvp] | sweep spells | sweep familiars [from] [count] | sweep npcs [from] [count] [name] | sweep stop")
+        null -> player.message("sweep weapons [from] [count] [pvp] | spells | familiars [from] [count] | npcs [from] [count] [name] | dialogues [from] [count] | drops | stop")
         "stop" -> {
             Sweeps.stop()
             player.message("The running sweep stops after its current entry.")

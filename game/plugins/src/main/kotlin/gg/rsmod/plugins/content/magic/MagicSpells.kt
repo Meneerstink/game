@@ -76,6 +76,8 @@ object MagicSpells {
         spellId: Int = -1,
     ): Boolean {
         val problem = castProblem(p, lvl, items, spellId) ?: return true
+        // Debug toolkit: every refused cast with the spell and the reason.
+        gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.COMBAT) { "cast refused ${p.username} spell=$spellId level=$lvl: $problem" }
         p.message(problem)
         return false
     }

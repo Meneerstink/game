@@ -49,6 +49,13 @@ object NpcDeathAction : KLogging() {
             npc.attr[KILLER_ATTR] = WeakReference(killer)
         }
 
+        gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.COMBAT) {
+            val killer = npc.attr[KILLER_ATTR]?.get()
+            "npc death ${npc.id}#${npc.index} at ${npc.tile.x},${npc.tile.z} killer=${(killer as? Player)?.username ?: killer?.toString() ?: "-"} deathAnims=$deathAnimation respawns=${npc.respawns}"
+        }
+        if (deathAnimation.none { it >= 0 }) {
+            gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.COMBAT) { "npc ${npc.id} died without a death animation (it vanishes)" }
+        }
         runDeathHook(npc, "npc-pre-death") { world.plugins.executeNpcPreDeath(npc) }
 
         npc.resetFacePawn()

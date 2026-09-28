@@ -105,6 +105,7 @@ object Sweeps {
                     "familiars" -> familiars(world, bot, base, args, report, counts)
                     "npcs" -> npcs(world, bot, base, args, report, counts)
                     "dialogues" -> dialogues(world, bot, args, report, counts)
+                    "drops" -> drops(world, bot, report, counts)
                     else -> report += "unknown sweep '$what' (weapons, spells, familiars, npcs)"
                 }
             } catch (e: Throwable) {
@@ -364,6 +365,42 @@ object Sweeps {
         }
         bot.interruptQueues()
     }
+
+    /**
+     * Rolls every registered drop table (kill, chest, ...) [DROP_ROLLS] times for the bot, without dropping anything: a table
+     * that throws, gives an item the cache does not have, or never gives anything is reported.
+     */
+    private suspend fun QueueTask.drops(
+        world: World,
+        bot: Client,
+        report: MutableList<String>,
+        counts: MutableMap<String, Int>,
+    ) {
+        val factory = gg.rsmod.plugins.content.drops.DropTableFactory
+        for (type in gg.rsmod.plugins.content.drops.DropTableType.values()) {
+            val ids = factory.tableIds(type)
+            report += "drop tables $type: ${ids.size}"
+            for ((n, id) in ids.withIndex()) {
+                if (stopRequested) return
+                val v = mutableListOf<String>()
+                var gotAnything = false
+                repeat(DROP_ROLLS) {
+                    val items = runCatching { factory.getDrop(bot, id, type) }.onFailure { v += "roll threw ${it.javaClass.simpleName}: ${it.message}" }.getOrNull()
+                    if (items == null) v += "table returned nothing (error inside the table)"
+                    items?.forEach { item ->
+                        gotAnything = true
+                        if (runCatching { world.definitions.getNullable(ItemDef::class.java, item.id) }.getOrNull() == null) v += "item ${item.id} does not exist"
+                        if (item.amount <= 0) v += "item ${item.id} with amount ${item.amount}"
+                    }
+                }
+                if (!gotAnything) v += "no item in $DROP_ROLLS rolls"
+                record("drop table $type $id", v.distinct(), report, counts)
+                if (n % 100 == 0) wait(1)
+            }
+        }
+    }
+
+    private const val DROP_ROLLS = 20
 
     private fun verdicts(
         report: MutableList<String>,

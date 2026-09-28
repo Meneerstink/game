@@ -324,6 +324,12 @@ open class ItemCurrency(
         amt: Int,
     ) {
         val shopItem = shop.items[slot] ?: return
+        // Debug toolkit: every purchase with its price; a 0-price shop item is a PROBLEM (free item / unset price).
+        val tracedPrice = runCatching { sellPriceOf(p.world, shopItem) }.getOrDefault(-1)
+        gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.ITEM) { "shop buy ${p.username} '${shop.name}' item=${shopItem.item} amount=$amt price=$tracedPrice currency=$currencyItem" }
+        if (tracedPrice == 0) {
+            gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.ITEM) { "shop '${shop.name}' sells item ${shopItem.item} for 0" }
+        }
 
         val currencyCost = sellPriceOf(p.world, shopItem)
         if (currencyCost <= 0 || amt <= 0) {
@@ -416,6 +422,7 @@ open class ItemCurrency(
         amt: Int,
     ) {
         val item = p.inventory[slot] ?: return
+        gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.ITEM) { "shop sell ${p.username} '${shop.name}' item=${item.id} amount=$amt currency=$currencyItem" }
         val unnoted = item.toUnnoted(p.world.definitions).id
         val acceptance = canAcceptItem(shop, p.world, unnoted)
 

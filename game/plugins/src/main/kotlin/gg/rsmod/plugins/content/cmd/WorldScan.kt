@@ -180,6 +180,20 @@ object WorldScan {
             }
         }
 
+        // ---- shops: items the cache does not have, and items sold for 0 (free) in a coin/item-currency shop
+        runCatching { gg.rsmod.plugins.content.mechanics.exchange.GeHousePricing.allShops(world) }.getOrDefault(emptyList()).forEach { shop ->
+            shop.items.filterNotNull().forEach { si ->
+                if (runCatching { world.definitions.getNullable(ItemDef::class.java, si.item) }.getOrNull() == null) {
+                    add("shop", "'${shop.name}' stocks item ${si.item} which does not exist in the cache")
+                    return@forEach
+                }
+                val currency = shop.currency as? gg.rsmod.plugins.content.mechanics.shops.ItemCurrency
+                val price = if (currency != null) runCatching { currency.sellPriceOf(world, si) }.getOrDefault(-1) else si.sellPrice ?: -1
+                if (price == 0) add("shop", "'${shop.name}' sells item ${si.item} for 0")
+            }
+            if (shop.items.all { it == null }) add("shop", "'${shop.name}' has no stock at all")
+        }
+
         // ---- wearable items with a missing worn model
         if (modelIds.isNotEmpty()) {
             val itemCount = runCatching { world.definitions.getCount(ItemDef::class.java) }.getOrDefault(0)

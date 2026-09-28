@@ -680,6 +680,7 @@ fun Player.playSong(
     name: String = "",
 ) {
     setComponentText(interfaceId = 187, component = 4, text = name)
+    gg.rsmod.game.model.AvTrace.log { "song player=$username id=$id name='$name' at=${tile.x},${tile.z} region=${tile.regionId}" }
     write(MidiSongMessage(10, id, 255))
 
     val index =

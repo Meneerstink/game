@@ -80,7 +80,30 @@ object EquipAction {
         INVALID_ITEM,
     }
 
+    /** Debug toolkit: every equip with its result; a refusal other than a plugin's own message is a PROBLEM with the reason. */
     fun equip(
+        p: Player,
+        item: Item,
+        inventorySlot: Int = -1,
+    ): Result {
+        val result = equipInner(p, item, inventorySlot)
+        traceResult(p, "equip", item.id, result)
+        return result
+    }
+
+    private fun traceResult(
+        p: Player,
+        what: String,
+        item: Int,
+        result: Result,
+    ) {
+        gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.ITEM) { "$what ${p.username} item=$item result=$result" }
+        if (result == Result.UNHANDLED || result == Result.INVALID_ITEM) {
+            gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.ITEM) { "$what of item $item by ${p.username} failed: $result (no handler / not wearable)" }
+        }
+    }
+
+    private fun equipInner(
         p: Player,
         item: Item,
         inventorySlot: Int = -1,
@@ -277,6 +300,16 @@ object EquipAction {
     }
 
     fun unequip(
+        p: Player,
+        equipmentSlot: Int,
+    ): Result {
+        val itemId = p.equipment[equipmentSlot]?.id ?: -1
+        val result = unequipInner(p, equipmentSlot)
+        traceResult(p, "unequip", itemId, result)
+        return result
+    }
+
+    private fun unequipInner(
         p: Player,
         equipmentSlot: Int,
     ): Result {

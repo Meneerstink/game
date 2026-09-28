@@ -1092,6 +1092,7 @@ class PluginRepository(
      * re-throwing every tick without ever being saved.
      */
     fun executeLogin(p: Player) {
+        gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.INPUT) { "login ${p.username} at ${p.tile.x},${p.tile.z},${p.tile.height} privilege=${p.privilege.name}" }
         loginPlugins.forEach { logic ->
             try {
                 p.executePlugin(logic)
@@ -1107,6 +1108,7 @@ class PluginRepository(
     }
 
     fun executeLogout(p: Player) {
+        gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.INPUT) { "logout ${p.username} at ${p.tile.x},${p.tile.z},${p.tile.height}" }
         logoutPlugins.forEach { logic ->
             try {
                 p.executePlugin(logic)
@@ -1564,7 +1566,13 @@ class PluginRepository(
         p: Player,
         regionId: Int,
     ) {
-        enterRegionPlugins[regionId]?.forEach { logic -> p.executePlugin(logic) }
+        val handlers = enterRegionPlugins[regionId]
+        // Debug toolkit: region changes; a region nothing handles has no region music (region_songs binds every musical region).
+        gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.INTERACT) { "enter region $regionId ${p.username} at ${p.tile.x},${p.tile.z} handlers=${handlers?.size ?: 0}" }
+        if (handlers.isNullOrEmpty()) {
+            gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.INTERACT) { "region $regionId (entered by ${p.username} at ${p.tile.x},${p.tile.z}) has no enter handler - no region music plays here" }
+        }
+        handlers?.forEach { logic -> p.executePlugin(logic) }
     }
 
     fun bindRegionExit(
@@ -1733,9 +1741,14 @@ class PluginRepository(
         item: Int,
     ): Boolean {
         val frozenUntil = p.attr[gg.rsmod.game.model.attr.GUARD_FROZEN_UNTIL_CYCLE_ATTR]
-        if (frozenUntil != null && p.world.currentCycle < frozenUntil) return false
+        if (frozenUntil != null && p.world.currentCycle < frozenUntil) {
+            gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.ITEM) { "pickup refused ${p.username} item=$item: frozen by a guard" }
+            return false
+        }
         val plugin = groundItemPickupConditions[item] ?: return true
-        return p.executePlugin(plugin)
+        val allowed = p.executePlugin(plugin)
+        if (!allowed) gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.ITEM) { "pickup refused ${p.username} item=$item by its pickup condition" }
+        return allowed
     }
 
     fun bindCanItemDrop(

@@ -176,6 +176,10 @@ fun checkRadius(npc: Npc): Boolean {
         }
     }
     target ?: return false
+    // Debug toolkit (PvM): every aggressive pick, so "this npc attacks me / never attacks me" has evidence for all npcs.
+    gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.COMBAT) {
+        "aggro npc ${npc.id}#${npc.index} at ${npc.tile.x},${npc.tile.z} picks ${target.username} (radius $radius, ${candidates.size} candidate(s))"
+    }
     if (npc.getCombatTarget() != target && target.getAggressor() == null) {
         target.attr[AGGRESSOR] = WeakReference(npc)
     }

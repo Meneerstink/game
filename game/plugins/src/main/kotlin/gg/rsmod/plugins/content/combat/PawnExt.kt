@@ -19,6 +19,7 @@ import gg.rsmod.game.model.timer.VENOM_TIMER
 import gg.rsmod.plugins.api.HitType
 import gg.rsmod.plugins.api.ProjectileType
 import gg.rsmod.plugins.api.ext.hit
+import gg.rsmod.plugins.api.ext.isProtectedFrom
 import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.content.combat.CombatConfigs.getCombatClass
 import gg.rsmod.plugins.content.combat.formula.CombatFormula
@@ -274,8 +275,15 @@ fun Pawn.dealHit(
     // Debug toolkit (C:\RSPS\TRACES.md): every hit of every fight, with what changed the rolled damage.
     gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.COMBAT) {
         fun name(p: Pawn) = (p as? Player)?.username ?: (p as? Npc)?.let { "npc ${it.id}#${it.index}" } ?: p.toString()
+        // Protection prayers of a player target (PvP/PvM damage reduction evidence).
+        val prot =
+            if (target is Player) {
+                listOf(CombatClass.MELEE, CombatClass.RANGED, CombatClass.MAGIC).filter { target.isProtectedFrom(it) }.joinToString("+").ifEmpty { "none" }
+            } else {
+                "-"
+            }
         "hit ${name(this)} -> ${name(target)} type=$hitType maxHit=$maxHit landed=$landHit damage=${if (executeHit) damage.toInt() else 0} " +
-            "beforeDeflect=$deflectDamage delay=$delay targetHp=${target.getCurrentLifepoints()}/${target.getMaximumLifepoints()}"
+            "beforeDeflect=$deflectDamage delay=$delay targetHp=${target.getCurrentLifepoints()}/${target.getMaximumLifepoints()} protect=$prot"
     }
     if (landHit && maxHit <= 0.0) {
         gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.COMBAT) { "hit with max hit $maxHit from ${(this as? Player)?.username ?: this} (a landed hit that can never damage)" }

@@ -363,7 +363,12 @@ suspend fun cycle(it: QueueTask): Boolean {
                         }
                         // Audit C-15: a special that could not be performed costs nothing and starts no attack delay; the special
                         // bar is already off, so the fight simply continues with a normal attack from the next cycle.
-                        SpecialAttacks.Outcome.FAILED -> return true
+                        SpecialAttacks.Outcome.FAILED -> {
+                            gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.COMBAT) {
+                                "special refused ${pawn.username} weapon=${pawn.getEquipment(EquipmentType.WEAPON)?.id} energy=${gg.rsmod.plugins.content.inter.attack.AttackTab.getEnergy(pawn)} (the reason is the msg line just before)"
+                            }
+                            return true
+                        }
                         SpecialAttacks.Outcome.NOT_USED -> {}
                     }
                 }

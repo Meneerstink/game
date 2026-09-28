@@ -680,11 +680,13 @@ abstract class Pawn(
         z: Int,
         height: Int = 0,
     ) {
+        val from = tile
         moved = true
         blockBuffer.teleport = true
         tile = Tile(x, z, height)
         movementQueue.clear()
         addMovementBlocks()
+        traceArrival(from, "teleport")
     }
 
     fun teleportTo(tile: Tile) {
@@ -716,11 +718,35 @@ abstract class Pawn(
         if (this is Player && gg.rsmod.game.model.MoveGate.teleport?.invoke(this, Tile(x, z, height)) == true) {
             return
         }
+        val from = tile
         moved = true
         blockBuffer.teleport = !tile.isWithinRadius(x, z, height, Player.NORMAL_VIEW_DISTANCE)
         tile = Tile(x, z, height)
         movementQueue.clear()
         addMovementBlocks()
+        traceArrival(from, "moveTo")
+    }
+
+    /**
+     * Debug toolkit (TRACES.md): every forced move of a player (teleports, stairs, ladders, agility, knockbacks, death) is traced
+     * with the code that moved him, and a destination where he cannot step in any direction is a PROBLEM (ROOT_CAUSES #42, #77).
+     */
+    private fun traceArrival(
+        from: Tile,
+        how: String,
+    ) {
+        if (this !is Player || !gg.rsmod.game.model.Trace.enabled(gg.rsmod.game.model.Trace.Cat.NPCPATH)) return
+        val to = tile
+        val caller = Throwable().stackTrace.firstOrNull { !it.className.startsWith("gg.rsmod.game.model.entity.Pawn") && !it.className.startsWith("gg.rsmod.game.model.entity.Player") }
+            ?.let { "${it.fileName}:${it.lineNumber}" } ?: "?"
+        gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.NPCPATH) { "$how ${(this as Player).username} ${from.x},${from.z},${from.height} -> ${to.x},${to.z},${to.height} by $caller" }
+        val directions = listOf(gg.rsmod.game.model.Direction.NORTH, gg.rsmod.game.model.Direction.EAST, gg.rsmod.game.model.Direction.SOUTH, gg.rsmod.game.model.Direction.WEST)
+        val stuck = directions.none { world.collision.canTraverse(to, it, projectile = false, water = false) }
+        if (stuck || to.height !in 0..3) {
+            gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.NPCPATH) {
+                "${(this as Player).username} was moved to ${to.x},${to.z},${to.height} where he cannot step in any direction (by $caller, from ${from.x},${from.z},${from.height})"
+            }
+        }
     }
 
     /**

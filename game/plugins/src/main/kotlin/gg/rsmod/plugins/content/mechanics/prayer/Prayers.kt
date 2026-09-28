@@ -316,6 +316,11 @@ object Prayers {
                 p.attr[PROTECT_ITEM_ATTR] = true
                 if (AncientCurses.getBook(p) == AncientCurses.PrayerBook.ANCIENT) p.setVarbit(AncientCurse.PROTECT_ITEM_VARBIT, 1)
             }
+            // Debug toolkit: prayer switches with their sound; a normal-book prayer without a sound id is a PROBLEM.
+            gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.COMBAT) { "prayer on ${p.username} ${prayer.name} sound=${prayer.sound} points=${p.getVarp(PRAYER_POINTS_VARP)}" }
+            if (prayer.sound == -1 && AncientCurses.getBook(p) != AncientCurses.PrayerBook.ANCIENT) {
+                gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.COMBAT) { "prayer ${prayer.name} has no activation sound" }
+            }
         }
     }
 
@@ -324,6 +329,7 @@ object Prayers {
         prayer: Prayer,
     ) {
         if (isActive(p, prayer)) {
+            gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.COMBAT) { "prayer off ${p.username} ${prayer.name}" }
             p.setVarbit(prayer.varbit, 0)
             p.playSound(DEACTIVATE_PRAYER_SOUND, volume = PRAYER_SOUND_VOLUME)
             setOverhead(p)

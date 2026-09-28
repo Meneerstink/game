@@ -98,6 +98,7 @@ suspend fun QueueTask.options(
     vararg options: String,
     title: String = "Select an Option",
 ): Int {
+    gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.INTERFACE) { "dialogue options for ${player.username}: $title | ${options.joinToString(" | ")}" }
     if (terminated) return -1
     // Interfaces 228..240 are the 2..8 option chatboxes. 226 (the "1 option" slot) only defines components 0 and 1,
     // so a single-option call used to write to a component the interface does not have and the client dropped the
@@ -253,6 +254,7 @@ internal fun wrapMessageBox(message: Array<out String>): List<String> {
 }
 
 suspend fun QueueTask.messageBox(vararg lines: String) {
+    gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.INTERFACE) { "dialogue box for ${player.username}: '${lines.joinToString(" / ")}'" }
     val message = wrapMessageBox(lines).toTypedArray()
     when(message.size) {
         1 -> messageBox1(*message)
@@ -358,6 +360,7 @@ suspend fun QueueTask.chatNpc(
     wrap: Boolean = true,
     animationOverride: Int? = null,
 ) {
+    gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.INTERFACE) { "dialogue npc ${if (npc != -1) npc else player.attr[INTERACTING_NPC_ATTR]?.get()?.id} -> ${player.username}: '${message.joinToString(" / ")}' face=$facialExpression" }
     var npcId =
         if (npc != -1) {
             npc
@@ -422,6 +425,7 @@ suspend fun QueueTask.chatPlayer(
     title: String? = null,
     wrap: Boolean = true,
 ) {
+    gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.INTERFACE) { "dialogue player ${player.username}: '${message.joinToString(" / ")}'" }
     val dialogTitle = title ?: Misc.formatForDisplay(player.username)
 
     val wrappedMessages =

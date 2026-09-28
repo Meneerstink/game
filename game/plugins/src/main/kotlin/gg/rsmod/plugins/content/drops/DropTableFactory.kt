@@ -56,6 +56,9 @@ object DropTableFactory {
         ids.forEach { tables[type]!![it] = table }
     }
 
+    /** Every registered table id of [type] (the debug toolkit's `sweep drops` rolls each one). */
+    fun tableIds(type: DropTableType = DropTableType.KILL): Set<Int> = tables[type]!!.keys.toSet()
+
     /**
      * Whether a table is registered for [id], so data-sourced fallbacks can defer to hand-written ones.
      */
@@ -75,7 +78,17 @@ object DropTableFactory {
         type: DropTableType = DropTableType.KILL,
     ) {
         try {
-            val items = getDrop(player, npcId, type) ?: return
+            val items = getDrop(player, npcId, type) ?: run {
+                gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.ITEM) { "drop $type table $npcId for ${player.username}: no table" }
+                return
+            }
+            // Debug toolkit: every roll with what it gave; an item id the cache does not have is a PROBLEM (invisible drop).
+            gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.ITEM) {
+                "drop $type table $npcId for ${player.username} at ${tile.x},${tile.z}: ${items.joinToString(",") { "${it.id}x${it.amount}" }.ifEmpty { "nothing" }}"
+            }
+            items.filter { runCatching { world.definitions.getNullable(gg.rsmod.game.fs.def.ItemDef::class.java, it.id) }.getOrNull() == null }.forEach {
+                gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.ITEM) { "drop table $npcId gave item ${it.id} which does not exist in the cache" }
+            }
             // Friends chat LootShare: a shared kill hands each item to one of the sharers (LootShare).
             val sharers = if (type == DropTableType.KILL) gg.rsmod.plugins.content.inter.friends.LootShare.sharers(player, tile) else null
             items.forEach { item ->
@@ -86,7 +99,7 @@ object DropTableFactory {
                 }
             }
         } catch (e: Exception) {
-            e.printStackTrace()
+            gg.rsmod.game.model.Trace.crash("drop table", e)
         }
     }
 
@@ -121,7 +134,7 @@ object DropTableFactory {
             items.addAll(remainingTables.flatMap { it.getDrop() })
             return items
         } catch (e: Exception) {
-            e.printStackTrace()
+            gg.rsmod.game.model.Trace.crash("drop table", e)
         }
         return null
     }
@@ -149,7 +162,7 @@ object DropTableFactory {
             }
             drops
         } catch (e: Exception) {
-            e.printStackTrace()
+            gg.rsmod.game.model.Trace.crash("drop table", e)
             null
         }
     }
@@ -166,7 +179,7 @@ object DropTableFactory {
             val count = tables.sumOf { requiredInventorySpacesToReceiveDrop(player, it) }
             count <= player.inventory.freeSlotCount
         } catch (e: Exception) {
-            e.printStackTrace()
+            gg.rsmod.game.model.Trace.crash("drop table", e)
             null
         }
     }
