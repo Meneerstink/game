@@ -19,6 +19,7 @@ import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.api.Spellbook
 import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.api.ext.hit
+import gg.rsmod.plugins.api.ext.isMulti
 import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.api.ext.setSpellbook
 import gg.rsmod.plugins.api.ext.setVarbit
@@ -69,6 +70,7 @@ object Sweeps {
 
     private const val DUMMY_NPC = 1 // Man: a plain attackable humanoid
     private const val BOT_LIFE = 20000
+    private const val DUMMY_LIFE = 100000
     private val STAMP: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss")
 
     fun stop() {
@@ -103,7 +105,7 @@ object Sweeps {
                     "weapons" -> weapons(world, bot, base, args, report, counts)
                     "spells" -> spells(world, bot, base, report, counts)
                     "familiars" -> familiars(world, bot, base, args, report, counts)
-                    "npcs" -> npcs(world, bot, base, args, report, counts)
+                    "npcs", "npc" -> npcs(world, bot, base, args, report, counts)
                     "dialogues" -> dialogues(world, bot, args, report, counts)
                     "drops" -> drops(world, bot, report, counts)
                     else -> report += "unknown sweep '$what' (weapons, spells, familiars, npcs)"
@@ -193,10 +195,12 @@ object Sweeps {
             spell.requiredWeapons.firstOrNull()?.let { bot.equipment[3] = Item(it) } ?: run { bot.equipment[3] = null }
             bot.addBlock(UpdateBlockType.APPEARANCE)
             wait(1)
+            if (CombatSpell.values.indexOf(spell) % 10 == 0) progress(world, "spells ${CombatSpell.values.indexOf(spell) + 1}/${CombatSpell.values.size}")
             val lines =
                 window(6) {
-                    bot.attr[Combat.CASTING_SPELL] = spell
+                    // attack() resets interactions (and the pending cast) - the spell is set after it, before the combat loop runs.
                     bot.attack(dummy)
+                    bot.attr[Combat.CASTING_SPELL] = spell
                 }
             val verdicts = judgeSwing(lines, "cast").toMutableList()
             if (spell.projectile >= 0 && lines.none { it.contains("projectile gfx=${spell.projectile}") }) verdicts += "projectile ${spell.projectile} never sent"
@@ -209,11 +213,16 @@ object Sweeps {
     private suspend fun QueueTask.familiars(
         world: World,
         bot: Client,
-        base: Tile,
+        start: Tile,
         args: List<String>,
         report: MutableList<String>,
         counts: MutableMap<String, Int>,
     ) {
+        // Combat familiars may only use their special in a multi-way area (SummoningSpecialMoves.castOnNpc, the RS rule):
+        // the first run in single-way Seers' Village refused 40 specials for that reason alone. Use the nearest free multi tile.
+        val base = nearestMulti(world, start) ?: start
+        report += if (base == start) "arena: ${start.x},${start.z} (no multi-way tile found nearby - combat specials will be refused)" else "arena: multi-way ${base.x},${base.z}"
+        bot.moveTo(base)
         val dummy = dummy(world, base.transform(4, 0))
         bot.skills.setBaseLevel(Skills.SUMMONING, 99)
         val from = args.getOrNull(0)?.toIntOrNull() ?: 0
@@ -262,7 +271,7 @@ object Sweeps {
                         if (cast == false) verdicts += "special ${binding.scroll.name} (${binding.target}) refused"
                         if (cast == null) verdicts += "special ${binding.scroll.name} targets ${binding.target} (not swept)"
                     }
-                specialLines.filter { it.contains("PROBLEM") }.forEach { verdicts += it.substringAfter("PROBLEM").trim().take(160) }
+                specialLines.filter { it.contains("PROBLEM") && (it.contains("Sweepbot") || it.contains("familiar ${familiar.id}")) }.forEach { verdicts += it.substringAfter("PROBLEM").trim().take(160) }
             }
             runCatching { Familiar.dismiss(bot) }
             record("familiar ${data.name}", verdicts, report, counts)
@@ -477,8 +486,27 @@ object Sweeps {
         target: gg.rsmod.game.model.entity.Pawn,
     ) {
         bot.setCurrentLifepoints(BOT_LIFE)
-        if (target is Npc) target.setCurrentLifepoints(target.getMaximumLifepoints())
+        // The dummy is held far above its max (a Man has 7 hitpoints; one punch killed it and every later entry had no target).
+        if (target is Npc) target.setCurrentLifepoints(DUMMY_LIFE)
         if (target is Player) target.setCurrentLifepoints(BOT_LIFE)
+    }
+
+    /** The nearest tile (rings of 8 tiles outwards, up to 400) that is multi-way and where the bot and a dummy can stand. */
+    private fun nearestMulti(
+        world: World,
+        from: Tile,
+    ): Tile? {
+        if (from.isMulti(world)) return from
+        val cardinals = listOf(gg.rsmod.game.model.Direction.NORTH, gg.rsmod.game.model.Direction.EAST, gg.rsmod.game.model.Direction.SOUTH, gg.rsmod.game.model.Direction.WEST)
+        fun free(t: Tile) = cardinals.all { world.collision.canTraverse(t, it, projectile = false, water = false) }
+        for (r in 8..400 step 8) {
+            for (dx in -r..r step 8) for (dz in listOf(-r, r)) {
+                listOf(from.transform(dx, dz), from.transform(dz, dx)).forEach { t ->
+                    if (t.isMulti(world) && free(t) && free(t.transform(4, 0))) return t
+                }
+            }
+        }
+        return null
     }
 
     private fun ammoFor(weaponName: String): Int? {
