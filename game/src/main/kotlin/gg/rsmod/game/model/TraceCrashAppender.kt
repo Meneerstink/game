@@ -27,6 +27,8 @@ class TraceCrashAppender private constructor(
         if (event.loggerName?.endsWith("Trace") == true || event.loggerName?.endsWith("TraceCrashAppender") == true) return
         val text = event.message?.formattedMessage ?: ""
         val source = event.loggerName?.substringAfterLast('.') ?: "?"
+        // GameService logs a slow tick (and its task-time maps) as ERROR; lag is the TICK trace's job, not a crash.
+        if (source == "GameService" && (text.startsWith("Cycle took longer") || text.startsWith("{"))) return
         if (event.level.isMoreSpecificThan(Level.ERROR)) {
             Trace.crash("$source: $text", event.thrown)
         } else if (event.level == Level.WARN) {
