@@ -43,8 +43,12 @@ object DeadmanEmblem {
     val POINTS = intArrayOf(60, 110, 200, 360, 650, 1_150)
     val LAMP_XP = intArrayOf(25_000, 45_000, 80_000, 145_000, 260_000, 470_000)
 
-    /** Only NPCs with at least 150 hitpoints (1,500 lifepoints) can drop an emblem. */
-    const val MIN_NPC_LIFEPOINTS = 1_500
+    /**
+     * Only NPCs with at least 150 hitpoints can drop an emblem. Deadman audit 2026-09-28: `NpcCombatDef.lifepoints` is real HP
+     * (NpcCombatDsl / BulkNpcCombatDefs divide the x10 source by ten), but this rule still used the old x10 unit (1,500 and
+     * "/ 10"), so only NPCs with 1,500+ real HP could drop one, at a tenth of the planned chance.
+     */
+    const val MIN_NPC_LIFEPOINTS = 150
 
     /**
      * Drop balance: about one emblem per 3-4 hours of serious PvM. A kill's chance scales with the NPC's hitpoints (time
@@ -163,7 +167,7 @@ object DeadmanEmblem {
 
     fun dropChance(lifepoints: Int, wilderness: Boolean): Double {
         if (lifepoints < MIN_NPC_LIFEPOINTS) return 0.0
-        val base = (lifepoints / 10.0 / HITPOINTS_PER_EMBLEM).coerceAtMost(MAX_CHANCE)
+        val base = (lifepoints / HITPOINTS_PER_EMBLEM).coerceAtMost(MAX_CHANCE)
         return if (wilderness) base * WILDERNESS_BONUS else base
     }
 

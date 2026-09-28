@@ -192,7 +192,7 @@ object NpcAttacks {
 
     private val conditions = HashMap<String, (Npc, Pawn) -> Boolean>()
     private val attackHooks = HashMap<String, (Npc, Pawn) -> Unit>()
-    private val impactHooks = HashMap<String, (Npc, Pawn) -> Boolean>()
+    private val impactHooks = HashMap<String, (Npc, Pawn, Boolean) -> Boolean>()
     private val swingHooks = HashMap<String, (Npc, Pawn, Attack) -> Unit>()
     private val rollHooks = HashMap<String, (Npc, Pawn, HitRoll) -> Unit>()
     private val dealtHooks = HashMap<String, (Npc, Pawn, HitRoll, Int) -> Unit>()
@@ -246,13 +246,29 @@ object NpcAttacks {
         attackHooks["$combatDef:$attack"] = hook
     }
 
-    /** Void `npcImpact(def, attack)`: runs when the hit lands; returning false skips the impact effects. */
+    /**
+     * Void `npcImpact(def, attack)`: runs at impact for every target, whether or not the attack dealt damage; returning false
+     * skips the impact effects. Use [onLandedImpact] for an effect that only a successful hit applies.
+     */
     fun onImpact(
         combatDef: String,
         attack: String,
         hook: (npc: Npc, target: Pawn) -> Boolean,
     ) {
-        impactHooks["$combatDef:$attack"] = hook
+        impactHooks["$combatDef:$attack"] = { npc, target, _ -> hook(npc, target) }
+    }
+
+    /**
+     * Like [onImpact], but the hook runs only when the attack dealt damage to that target (the same "landed" rule as the row's own
+     * freeze/poison/drains). Breach audit 2026-09-28: teleblock, Durial321's freeze, Sever and the Sulphur Lizard knockback were
+     * applied on splashes and misses too.
+     */
+    fun onLandedImpact(
+        combatDef: String,
+        attack: String,
+        hook: (npc: Npc, target: Pawn) -> Boolean,
+    ) {
+        impactHooks["$combatDef:$attack"] = { npc, target, landed -> !landed || hook(npc, target) }
     }
 
     /** Runs once per swing of any attack of [combatDef], before the targets are handled. */
@@ -799,7 +815,7 @@ object NpcAttacks {
                     "freeze=${freezeTicks(row.combatDef, attack)} poison=${attack.poison} drains=${attack.drains.size} hook=${hook != null} message=${attack.message.isNotEmpty()}"
             }
         }
-        if (hook != null && !hook(npc, target)) return
+        if (hook != null && !hook(npc, target, landed)) return
         if (attack.impactAnim >= 0) target.animate(attack.impactAnim)
         if (!attack.impactRegardless && !landed) return
         attack.drains.forEach { drain(target, it) }

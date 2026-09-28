@@ -179,7 +179,8 @@ object BreachConformance {
                     val far =
                         spawned.filter { n ->
                             val s = sites.first { it.npcs.contains(n) }
-                            s.spawners.none { sp -> maxOf(0, sp.x - (n.tile.x + n.getSize() - 1), n.tile.x - sp.x).coerceAtLeast(maxOf(0, sp.z - (n.tile.z + n.getSize() - 1), n.tile.z - sp.z)) <= DeadmanBreach.LOCAL_SPAWN_RADIUS }
+                            // the LANDING tile (2026-09-28: monsters now wander their walk radius around it, so the current tile may be further)
+                            s.spawners.none { sp -> maxOf(0, sp.x - (n.spawnTile.x + n.getSize() - 1), n.spawnTile.x - sp.x).coerceAtLeast(maxOf(0, sp.z - (n.spawnTile.z + n.getSize() - 1), n.spawnTile.z - sp.z)) <= DeadmanBreach.LOCAL_SPAWN_RADIUS }
                         }
                     val overlaps = overlapsAtLanding
                     val rec = recorders.getValue("BcEvent").lines
@@ -453,7 +454,10 @@ object BreachConformance {
                 // refused because B is itself fought by another breach npc (a summon) is the correct single-way rule
                 val busyWithOther = ruling?.let { kv(it, "result") == "refused:single-attacker-under-attack" } == true &&
                     (b.getLastHitBy() as? Npc)?.let { it !== npc && DeadmanBreach.isBreachNpc(it) } == true
-                val ok = busyWithOther || (ruling?.let { kv(it, "result") == "allowed" } ?: p2.any { cat(it) == "damage.in" && it.contains(tag) })
+                // B may already have been fighting it before this phase (no new ruling) and every hit may be a 0 (Bloat's 600/800
+                // defences, 2026-09-28 run): still fighting it counts as allowed.
+                val stillOnIt = b.attr[gg.rsmod.game.model.attr.COMBAT_TARGET_FOCUS_ATTR]?.get() === npc
+                val ok = busyWithOther || stillOnIt || (ruling?.let { kv(it, "result") == "allowed" } ?: p2.any { cat(it) == "damage.in" && it.contains(tag) })
                 "allowed=${ruling?.let { kv(it, "result") } ?: "no-ruling"}${if (ok) "" else " FAIL"}"
             }
         b.resetInteractions()
@@ -533,6 +537,13 @@ object BreachConformance {
         // 6. death seen by everyone in view
         val t6 = trace.size
         val deathAnims = npc.combatDef.deathAnimation.map { "$it" }
+        if (m.id == 14468) {
+            // Splatter's explosion hits the players next to its footprint (multi) or its target (single): put A west and B east of it.
+            a.moveTo(Tile(npc.tile.x - 1, npc.tile.z, npc.tile.height))
+            b.moveTo(Tile(npc.tile.x + size, npc.tile.z, npc.tile.height))
+            npc.attack(a)
+            ticks(2)
+        }
         npc.hit(npc.getCurrentLifepoints() + 10)
         var gone = false
         repeat(15) {
@@ -540,8 +551,11 @@ object BreachConformance {
             if (!world.npcs.contains(npc)) gone = true
         }
         val p6 = trace.subList(t6, trace.size).toList()
-        val deathSeen = bots.count { p -> p6.any { l -> cat(l) == "sync.block" && l.contains(tag) && kv(l, "viewer") == p.username && kv(l, "anim") in deathAnims } }
-        val deathCol = "anim ${deathAnims.joinToString("/")} seenBy=$deathSeen/4 removed=$gone${if (deathSeen < 4 || !gone) " FAIL" else ""}"
+        // Only bots that have the monster in view count (2026-09-28: since the walkMask fix a monster really wanders its whole
+        // walk radius, so one bot's home can lie outside the 15-tile view of where it dies).
+        val viewers = bots.filter { it.tile.height == npc.tile.height && it.tile.isWithinRadius(npc.tile, 14) }
+        val deathSeen = viewers.count { p -> p6.any { l -> cat(l) == "sync.block" && l.contains(tag) && kv(l, "viewer") == p.username && kv(l, "anim") in deathAnims } }
+        val deathCol = "anim ${deathAnims.joinToString("/")} seenBy=$deathSeen/${viewers.size} removed=$gone${if (deathSeen < viewers.size || viewers.isEmpty() || !gone) " FAIL" else ""}"
         if (world.npcs.contains(npc)) world.remove(npc)
         DeadmanBreach.pruneLive(world)
         bots.forEachIndexed { i, p -> p.moveTo(homes[i]) }

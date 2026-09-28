@@ -75,11 +75,12 @@ class DeadmanEmblemTests {
 
     @Test
     fun `only 150 plus HP npcs can drop and the Wilderness adds 10 percent`() {
-        assertEquals(0.0, DeadmanEmblem.dropChance(1_490, wilderness = true))
-        val base = DeadmanEmblem.dropChance(1_500, wilderness = false)
+        // Real hitpoints (Deadman audit 2026-09-28: NpcCombatDef.lifepoints is 1:1; this rule used to read x10 values).
+        assertEquals(0.0, DeadmanEmblem.dropChance(149, wilderness = true))
+        val base = DeadmanEmblem.dropChance(150, wilderness = false)
         assertEquals(150.0 / 40_000, base, 1e-12)
-        assertEquals(base * 1.10, DeadmanEmblem.dropChance(1_500, wilderness = true), 1e-12)
-        assertEquals(DeadmanEmblem.MAX_CHANCE, DeadmanEmblem.dropChance(100_000, wilderness = false), 1e-12)
+        assertEquals(base * 1.10, DeadmanEmblem.dropChance(150, wilderness = true), 1e-12)
+        assertEquals(DeadmanEmblem.MAX_CHANCE, DeadmanEmblem.dropChance(10_000, wilderness = false), 1e-12)
         // About one emblem per 3-4 hours: at ~3 HP of damage per second a player kills ~40k HP in 3.7 hours.
         val hours = DeadmanEmblem.HITPOINTS_PER_EMBLEM / 3.0 / 3600
         assertTrue(hours in 3.0..4.0, "$hours h")

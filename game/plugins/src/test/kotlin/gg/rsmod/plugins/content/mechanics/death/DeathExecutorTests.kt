@@ -320,6 +320,8 @@ class DeathExecutorTests {
         @BeforeClass
         @JvmStatic
         fun loadCache() {
+            // PvP deaths reach DeadmanEmblem/ValidPkKill, which persist state and an audit log: never into the plugins' data dir.
+            gg.rsmod.plugins.content.mechanics.pvp.ValidPkKill.dataDir = java.nio.file.Files.createTempDirectory("death-test").toFile()
             store = CacheLibrary(Paths.get("..", "..", "data", "cache").toFile().toString())
             DEFINITIONS.loadAll(store)
             assertNotEquals(DEFINITIONS.getCount(ItemDef::class.java), 0)

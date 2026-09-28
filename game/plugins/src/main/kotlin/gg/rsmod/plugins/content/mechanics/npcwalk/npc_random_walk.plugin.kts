@@ -2,6 +2,8 @@ package gg.rsmod.plugins.content.mechanics.npcwalk
 
 import gg.rsmod.game.model.attr.FACING_PAWN_ATTR
 import gg.rsmod.game.model.attr.NO_CLIP_ATTR
+import gg.rsmod.plugins.content.combat.isAttacking
+import gg.rsmod.plugins.content.combat.isBeingAttacked
 import gg.rsmod.plugins.content.mechanics.pvp.CityGuards
 
 val SEARCH_FOR_PATH_TIMER = NpcRandomWalk.TIMER
@@ -22,7 +24,10 @@ on_global_npc_spawn {
 on_timer(SEARCH_FOR_PATH_TIMER) {
     // CityGuards.leash is the sole patrol driver for Deadman guards. A second generic route
     // could overwrite the safe patrol path and make the guard look stationary at fences.
-    if (!CityGuards.isGuard(npc) && npc.isActive() && npc.lock.canMove()) {
+    // Deadman audit 2026-09-28 (breach conformance run): an npc in combat never wanders. The facing check below alone let a
+    // random walk start on the tick a fight switched targets (facing briefly cleared), and the npc then walked that path mid-fight.
+    val inCombat = npc.isAttacking() || npc.isBeingAttacked()
+    if (!CityGuards.isGuard(npc) && !inCombat && npc.isActive() && npc.lock.canMove()) {
         val facing = npc.attr[FACING_PAWN_ATTR]?.get()
 
         /*

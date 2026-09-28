@@ -160,7 +160,7 @@ BreachMonsters.ROSTER.forEach { m ->
 val TELEBLOCK_TICKS = 100
 
 listOf("breach_justiciar", "breach_derwen").forEach { def ->
-    NpcAttacks.onImpact(def, "magic") { _, target ->
+    NpcAttacks.onLandedImpact(def, "magic") { _, target ->
         if (target is Player && !target.timers.has(TELEBLOCK_TIMER)) {
             gg.rsmod.game.model.BreachTrace.log("mech.teleblock") { "def=$def player=${target.username}" }
             target.timers[TELEBLOCK_TIMER] = TELEBLOCK_TICKS
@@ -179,7 +179,7 @@ NpcAttacks.onImpact("breach_pyrelord", "magic") { _, target ->
 }
 
 /** Sulphur Lizard: "knocking back any players hit by it" - one tile straight away from the lizard when that tile is free. */
-NpcAttacks.onImpact("breach_sulphur_lizard", "melee") { npc, target ->
+NpcAttacks.onLandedImpact("breach_sulphur_lizard", "melee") { npc, target ->
     val dx = Integer.signum(target.tile.x - npc.tile.x)
     val dz = Integer.signum(target.tile.z - npc.tile.z)
     val dest = target.tile.transform(dx, dz)
@@ -201,7 +201,8 @@ NpcAttacks.onHitDealt("breach_magic_mark") { npc, _, _, damage ->
 /** Durial321: Ice Barrage freeze "lasts for a shorter duration than regular freezes" (ADAPTED: half of Ice Barrage's 32 ticks). */
 val DURIAL_FREEZE_TICKS = 16
 
-NpcAttacks.onImpact("breach_durial321", "ice_barrage") { _, target ->
+// A splashed Ice Barrage freezes nobody (OSRS Wiki "Ice Barrage"), so the freeze needs a landed hit.
+NpcAttacks.onLandedImpact("breach_durial321", "ice_barrage") { _, target ->
     val frozen = target.freeze(DURIAL_FREEZE_TICKS) {}
     gg.rsmod.game.model.BreachTrace.log("mech.freeze") { "npc=durial target=${(target as? Player)?.username} applied=$frozen ticks=$DURIAL_FREEZE_TICKS" }
     if (frozen && target is Player) target.message("You have been frozen.")
@@ -212,7 +213,8 @@ NpcAttacks.onImpact("breach_durial321", "ice_barrage") { _, target ->
 NpcAttacks.condition("breach_sever_ready") { _, target -> target !is Player || !Prayers.overheadsDisabled(target) }
 NpcAttacks.condition("breach_target_severed") { _, target -> target is Player && Prayers.overheadsDisabled(target) }
 
-NpcAttacks.onImpact("breach_dscim", "sever") { _, target ->
+// Sever only disables prayers on a successful hit, as the players' dragon scimitar special.
+NpcAttacks.onLandedImpact("breach_dscim", "sever") { _, target ->
     if (target is Player) {
         Prayers.deactivate(target, Prayer.PROTECT_FROM_MAGIC)
         Prayers.deactivate(target, Prayer.PROTECT_FROM_MISSILES)
@@ -309,8 +311,8 @@ NpcAttacks.onSwing("breach_zemouregal") { npc, target, _ ->
     npc.animate(15678)
     npc.graphic(BreachMonsters.GFX_ZEMOUREGAL_SUMMON)
     val summon = BreachMonsters.SUMMONS.random()
-    val tile = Tile(target.tile.x + world.random(-1..1), target.tile.z + world.random(-1..1), target.tile.height)
-    val spawned = DeadmanBreach.spawnMonster(world, summon.id, if (world.collision.isClipped(tile)) target.tile else tile, 8, DeadmanBreach.LINGER_TICKS)
+    val size = world.definitions.get(gg.rsmod.game.fs.def.NpcDef::class.java, summon.id).size.coerceAtLeast(1)
+    val spawned = DeadmanBreach.spawnMonster(world, summon.id, DeadmanBreach.summonTile(world, target, size), 8, DeadmanBreach.LINGER_TICKS, test = DeadmanBreach.isTestNpc(npc))
     alive += spawned
 }
 
@@ -330,9 +332,11 @@ NpcAttacks.onSwing("tztok_jad") { npc, target, _ ->
     if (swings % JAD_REK_EVERY != 0) return@onSwing
     val alive = npc.attr[jadRek]
     if (alive != null && world.npcs.contains(alive) && !alive.isDead()) return@onSwing
-    val tile = Tile(target.tile.x + world.random(-1..1), target.tile.z + world.random(-1..1), target.tile.height)
+    val size = world.definitions.get(gg.rsmod.game.fs.def.NpcDef::class.java, BreachMonsters.TZTOK_JAD_REK).size.coerceAtLeast(1)
     npc.attr[jadRek] =
-        DeadmanBreach.spawnMonster(world, BreachMonsters.TZTOK_JAD_REK, if (world.collision.isClipped(tile)) target.tile else tile, 8, DeadmanBreach.LINGER_TICKS)
+        DeadmanBreach.spawnMonster(
+            world, BreachMonsters.TZTOK_JAD_REK, DeadmanBreach.summonTile(world, target, size), 8, DeadmanBreach.LINGER_TICKS, test = DeadmanBreach.isTestNpc(npc),
+        )
 }
 
 /*
@@ -346,7 +350,10 @@ NpcAttacks.onSwing("tztok_jad") { npc, target, _ ->
 val NIGHT_BEAST_SPECIAL_CHANCE = 5
 val NIGHT_BEAST_FIREBALLS = 3
 val NIGHT_BEAST_PAUSE_TICKS = 8
-val nbAttacked = gg.rsmod.game.model.attr.AttributeKey<Boolean>()
+/** The target the Night beast has already opened on (breach audit 2026-09-28: a flag per npc made only its very first fight open with magic). */
+val nbAttacked = gg.rsmod.game.model.attr.AttributeKey<java.lang.ref.WeakReference<gg.rsmod.game.model.entity.Pawn>>()
+
+fun nbOpenedOn(npc: Npc, target: gg.rsmod.game.model.entity.Pawn) = npc.attr[nbAttacked]?.get() === target
 val nbFireballsLeft = gg.rsmod.game.model.attr.AttributeKey<Int>()
 val nbResumeCycle = gg.rsmod.game.model.attr.AttributeKey<Int>()
 
@@ -364,8 +371,8 @@ fun cannotReachMelee(npc: Npc, target: gg.rsmod.game.model.entity.Pawn) =
     !nbBordering(npc, target) &&
         (npc.timers.has(gg.rsmod.game.model.timer.FROZEN_TIMER) || !gg.rsmod.game.action.PawnPathAction.meleeRouteExists(npc, target))
 
-NpcAttacks.condition("breach_nb_magic") { npc, target -> !nbSpecialActive(npc) && (npc.attr[nbAttacked] != true || cannotReachMelee(npc, target)) }
-NpcAttacks.condition("breach_nb_melee") { npc, _ -> !nbSpecialActive(npc) && npc.attr[nbAttacked] == true }
+NpcAttacks.condition("breach_nb_magic") { npc, target -> !nbSpecialActive(npc) && (!nbOpenedOn(npc, target) || cannotReachMelee(npc, target)) }
+NpcAttacks.condition("breach_nb_melee") { npc, target -> !nbSpecialActive(npc) && nbOpenedOn(npc, target) }
 
 /*
  * Durial321 (owner 2026-09-27: "hij hoort je 1 keer te barragen dan je whippen"): the opening attack of a fight is Ice Barrage,
@@ -381,8 +388,8 @@ NpcAttacks.condition("breach_durial_whip") { npc, target -> durialOpenedOn(npc, 
 NpcAttacks.onSwing("breach_durial321") { npc, target, _ -> npc.attr[durialOpened] = java.lang.ref.WeakReference(target) }
 NpcAttacks.condition("breach_nb_fireball") { npc, _ -> nbSpecialActive(npc) && world.currentCycle >= (npc.attr[nbResumeCycle] ?: 0) }
 
-NpcAttacks.onSwing("breach_night_beast") { npc, _, attack ->
-    npc.attr[nbAttacked] = true
+NpcAttacks.onSwing("breach_night_beast") { npc, target, attack ->
+    npc.attr[nbAttacked] = java.lang.ref.WeakReference(target)
     if (attack.id == "fireball") {
         npc.attr[nbFireballsLeft] = (npc.attr[nbFireballsLeft] ?: 1) - 1
     } else if (world.random(NIGHT_BEAST_SPECIAL_CHANCE - 1) == 0) {
@@ -416,7 +423,12 @@ on_npc_pre_death(14468) {
     world.spawn(TileGraphic(tile = npc.tile, id = BreachMonsters.GFX_SPLATTER_EXPLODE, height = 0))
     val victims =
         if (npc.tile.isMulti(world)) {
-            DeadmanBreach.playersNear(world, npc.tile, 1 + npc.getSize())
+            // Breach audit 2026-09-28: adjacent to the whole footprint on every side (the radius used to be measured from the
+            // south-west corner, so it reached size+1 tiles west/south and only 1 tile east/north).
+            val size = npc.getSize()
+            DeadmanBreach.playersNear(world, npc.tile, 1 + size).filter { p ->
+                p.tile.x in (npc.tile.x - 1)..(npc.tile.x + size) && p.tile.z in (npc.tile.z - 1)..(npc.tile.z + size)
+            }
         } else {
             listOfNotNull(npc.getCombatTarget() as? Player)
         }

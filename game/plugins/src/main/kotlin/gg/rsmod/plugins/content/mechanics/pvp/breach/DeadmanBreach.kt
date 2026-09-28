@@ -729,13 +729,43 @@ object DeadmanBreach {
         if (sites.any { s -> s.pending.any { it.overlaps(corner, size) } }) return false
         // F6: never on a spawner (a regional spawner stands on one of the region's own landing points).
         if (sites.any { s -> s.spawners.any { fp.overlaps(it, 1) } }) return false
+        return noNpcOn(world, corner, size)
+    }
+
+    /** No live npc's footprint overlaps the [size] x [size] square at [corner]. */
+    private fun noNpcOn(
+        world: World,
+        corner: Tile,
+        size: Int,
+    ): Boolean {
+        val fp = Footprint(corner, size)
         val reach = gg.rsmod.game.model.MovementQueue.MAX_NPC_SIZE - 1
         for (x in corner.x - reach until corner.x + size) for (z in corner.z - reach until corner.z + size) {
             val t = Tile(x, z, corner.height)
             val chunk = world.chunks.get(t, createIfNeeded = false) ?: continue
-            if (chunk.getEntities<Npc>(t, EntityType.NPC).any { it.tile == t && fp.overlaps(t, it.getSize().coerceAtLeast(1)) }) return false
+            if (chunk.getEntities<Npc>(t, EntityType.NPC).any { it.tile == t && !it.isDead() && fp.overlaps(t, it.getSize().coerceAtLeast(1)) }) return false
         }
         return true
+    }
+
+    /**
+     * Where a summon (Zemouregal's summons, TzTok-Jad-Rek) of [size] appears next to [target] (breach audit 2026-09-28): a usable
+     * footprint touching the target, never on the target nor on another npc. It used to be any unclipped tile within one of the
+     * target, so a summon could appear on the player's own tile or inside another monster and stand stuck there. Falls back to
+     * the old rule when nothing around the target is free.
+     */
+    fun summonTile(
+        world: World,
+        target: Pawn,
+        size: Int,
+    ): Tile {
+        val t = target.tile
+        val ts = target.getSize().coerceAtLeast(1)
+        val candidates = ArrayList<Tile>()
+        for (x in (t.x - size)..(t.x + ts)) for (z in (t.z - size)..(t.z + ts)) candidates += Tile(x, z, t.height)
+        return candidates.shuffled().firstOrNull { c ->
+            !Footprint(c, size).overlaps(t, ts) && fits(world, c, size) && canLeave(world, c, size) && noNpcOn(world, c, size)
+        } ?: Tile(t.x + world.random(-1..1), t.z + world.random(-1..1), t.height).takeIf { !world.collision.isClipped(it) } ?: Tile(t)
     }
 
     /** Every breach npc currently in the world (breach monsters and Zemouregal's summons), for the per-tick mechanics. */

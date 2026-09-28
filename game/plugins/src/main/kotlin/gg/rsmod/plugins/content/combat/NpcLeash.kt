@@ -84,6 +84,9 @@ object NpcLeash {
         attackRange: Int,
     ): Boolean {
         if (npc.owner != null) return true
+        // Deadman audit 2026-09-28: a breach monster keeps its own leash and its safe-zone rule when it fights a familiar. The
+        // familiar exception below let a player drag a breach boss anywhere - into a safe zone, even the GE - behind his familiar.
+        if (gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.isBreachNpc(npc)) return breachMayPursue(npc, target, attackRange)
         if (target is Npc && target.owner != null) return true
         // Deadman guards (owner 2026-09-17: "they need to be always aggro in a safezone when a player
         // enters with a skull, so even if a barrier or object is in the way the guard needs to walk
@@ -93,16 +96,24 @@ object NpcLeash {
         if (gg.rsmod.plugins.content.mechanics.pvp.CityGuards.isGuard(npc)) {
             return gg.rsmod.plugins.content.mechanics.pvp.CityGuards.mayPursue(npc, target)
         }
-        if (gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.isBreachNpc(npc)) {
-            // A breach monster never follows anyone into a Safe (guarded) zone: breaches are Dangerous-area events only.
-            // ... except Zemouregal's summons, which "can be lured even into safezones" (OSRS Wiki "Zemouregal Summon").
-            if (npc.id !in gg.rsmod.plugins.content.mechanics.pvp.breach.BreachMonsters.FOLLOW_INTO_SAFE_ZONES &&
-                gg.rsmod.plugins.content.mechanics.pvp.GuardedZones.contains(target.zoneTile())
-            ) {
-                return false
-            }
-            return withinAggro(npc.spawnTile, target.tile, gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.CHASE_RANGE, attackRange)
-        }
         return withinAggro(npc.spawnTile, target.tile, maxRange(npc.id), attackRange)
+    }
+
+    /**
+     * A breach monster never follows anyone - player or familiar - into a Safe (guarded) zone: breaches are Dangerous-area events
+     * only; except Zemouregal's summons, which "can be lured even into safezones" (OSRS Wiki "Zemouregal Summon"). Otherwise it
+     * chases up to [gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.CHASE_RANGE] from its landing tile.
+     */
+    private fun breachMayPursue(
+        npc: Npc,
+        target: Pawn,
+        attackRange: Int,
+    ): Boolean {
+        if (npc.id !in gg.rsmod.plugins.content.mechanics.pvp.breach.BreachMonsters.FOLLOW_INTO_SAFE_ZONES &&
+            gg.rsmod.plugins.content.mechanics.pvp.GuardedZones.contains(target.zoneTile())
+        ) {
+            return false
+        }
+        return withinAggro(npc.spawnTile, target.tile, gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.CHASE_RANGE, attackRange)
     }
 }

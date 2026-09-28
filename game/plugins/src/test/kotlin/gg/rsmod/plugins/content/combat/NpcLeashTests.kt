@@ -57,6 +57,35 @@ class NpcLeashTests {
     }
 
     @Test
+    fun `a breach monster fighting a familiar keeps its leash and never follows it into a safe zone`() {
+        // Deadman audit 2026-09-28: the familiar exception used to let a player drag a breach boss into a safe zone behind it.
+        val breachKey =
+            gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach::class.java.getDeclaredField("BREACH_NPC_ATTR")
+                .apply { isAccessible = true }.get(null) as gg.rsmod.game.model.attr.AttributeKey<Boolean>
+        val spawn = Tile(3164, 3530, 0) // just north of the GE, within the chase range of the GE tile below
+        fun pawnAt(tile: Tile, owner: gg.rsmod.game.model.entity.Player?, breach: Boolean) =
+            io.mockk.mockk<gg.rsmod.game.model.entity.Npc>(relaxed = true).also { n ->
+                val attrs = gg.rsmod.game.model.attr.AttributeMap()
+                if (breach) attrs[breachKey] = true
+                io.mockk.every { n.attr } returns attrs
+                io.mockk.every { n.tile } returns tile
+                io.mockk.every { n.spawnTile } returns spawn
+                io.mockk.every { n.owner } returns owner
+                io.mockk.every { n.id } returns if (breach) 14438 else 7331
+            }
+        val owner = io.mockk.mockk<gg.rsmod.game.model.entity.Player>(relaxed = true)
+        val boss = pawnAt(spawn, null, breach = true)
+        val safeTile = Tile(3164, 3516, 0) // Grand Exchange, a guarded zone (GuardedZonesTests)
+        assertTrue(gg.rsmod.plugins.content.mechanics.pvp.GuardedZones.contains(safeTile))
+        assertFalse(gg.rsmod.plugins.content.mechanics.pvp.GuardedZones.contains(Tile(3164, 3535, 0)))
+        assertFalse(NpcLeash.mayPursue(boss, pawnAt(safeTile, owner, breach = false), 1), "into the GE behind a familiar")
+        assertFalse(NpcLeash.mayPursue(boss, pawnAt(Tile(3164, 3530 + 30, 0), owner, breach = false), 1), "30 tiles past its landing")
+        assertTrue(NpcLeash.mayPursue(boss, pawnAt(Tile(3164, 3530 + 5, 0), owner, breach = false), 1), "a familiar next to its landing")
+        // an ordinary npc still always defends itself against a familiar (Void Combat.retaliate)
+        assertTrue(NpcLeash.mayPursue(pawnAt(spawn, null, breach = false), pawnAt(safeTile, owner, breach = false), 1))
+    }
+
+    @Test
     fun `the melee diagonal corner is outside the leash exactly as in Void`() {
         val spawn = Tile(3200, 3200)
         assertFalse(NpcLeash.withinAggro(spawn, Tile(3208, 3208), 7, 1))
