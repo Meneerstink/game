@@ -47,6 +47,55 @@ fun showLive(line: String) {
 
 Trace.onProblem = { line -> showLive(line) }
 
+/*
+ * Tick invariants (debug toolkit phase 2), every INVARIANT_EVERY ticks while the traces are on, around online players only:
+ * a player or a walking 1x1 npc that cannot step in any of the four directions is stuck (spawned/knocked/teleported into
+ * scenery - ROOT_CAUSES #25, #42, #50, #77, #78); an npc alive with hitpoints outside 0..max. Each case is reported once.
+ */
+val INVARIANT_EVERY = 5
+val reportedInvariants: MutableSet<String> = java.util.concurrent.ConcurrentHashMap.newKeySet()
+val CARDINALS = listOf(gg.rsmod.game.model.Direction.NORTH, gg.rsmod.game.model.Direction.EAST, gg.rsmod.game.model.Direction.SOUTH, gg.rsmod.game.model.Direction.WEST)
+
+fun stuck(tile: gg.rsmod.game.model.Tile): Boolean = CARDINALS.none { world.collision.canTraverse(tile = tile, direction = it, projectile = false, water = false) }
+
+fun reportOnce(
+    key: String,
+    cat: Trace.Cat,
+    text: () -> String,
+) {
+    if (reportedInvariants.size > 50_000) reportedInvariants.clear()
+    if (reportedInvariants.add(key)) Trace.problem(cat) { text() }
+}
+
+on_world_init {
+    world.queue {
+        while (true) {
+            wait(INVARIANT_EVERY)
+            if (!Trace.anyOn()) continue
+            runCatching {
+                val players = mutableListOf<Player>()
+                world.players.forEach { players += it }
+                players.forEach { p ->
+                    if (stuck(p.tile)) {
+                        reportOnce("p:${p.username}:${p.tile}", Trace.Cat.NPCPATH) { "stuck: ${p.username} at ${p.tile.x},${p.tile.z},${p.tile.height} cannot step north, east, south or west" }
+                    }
+                }
+                if (players.isEmpty()) return@runCatching
+                world.npcs.forEach { n ->
+                    if (n.isDead() || players.none { it.tile.height == n.tile.height && it.tile.isWithinRadius(n.tile, 20) }) return@forEach
+                    if (n.getSize() == 1 && n.walkRadius > 0 && stuck(n.tile)) {
+                        reportOnce("n:${n.index}:${n.tile}", Trace.Cat.NPCPATH) { "stuck: npc ${n.id} '${runCatching { n.def.name }.getOrDefault("?")}' #${n.index} at ${n.tile.x},${n.tile.z},${n.tile.height} cannot step in any direction (spawned or moved into scenery)" }
+                    }
+                    val hp = n.getCurrentLifepoints()
+                    if (hp < 0 || hp > n.getMaximumLifepoints()) {
+                        reportOnce("hp:${n.index}:$hp", Trace.Cat.COMBAT) { "npc ${n.id} #${n.index} has hitpoints $hp outside 0..${n.getMaximumLifepoints()}" }
+                    }
+                }
+            }.onFailure { Trace.crash("tick invariants", it) }
+        }
+    }
+}
+
 on_command("traces", Privilege.ADMIN_POWER) {
     val args = player.getCommandArgs()
     val first = args.getOrNull(0)?.lowercase()

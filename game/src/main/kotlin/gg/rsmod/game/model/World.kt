@@ -561,10 +561,21 @@ class World(
         chunk.addEntity(this, projectile, tile)
     }
 
+    /** Debug toolkit: the sound ids the cache holds (synth index 4 and vorbis index 14), read once. */
+    private val cachedSoundIds: Set<Int> by lazy {
+        runCatching { (filestore.index(4).archiveIds().toList() + filestore.index(14).archiveIds().toList()).toHashSet() }.getOrDefault(emptySet())
+    }
+
+    /** False only when the cache was read and has no synth or vorbis sound [id] (the client then plays nothing). */
+    fun soundExists(id: Int): Boolean = id < 0 || cachedSoundIds.isEmpty() || id in cachedSoundIds
+
     fun spawn(sound: AreaSound) {
         val tile = sound.tile
         val chunk = chunks.getOrCreate(tile)
         AvTrace.log { "areasound id=${sound.id} at=$tile radius=${sound.radius} delay=${sound.delay} cycle=$currentCycle" }
+        if (AvTrace.enabled && !soundExists(sound.id)) {
+            AvTrace.log { "PROBLEM areasound id=${sound.id} at=$tile does not exist in the cache (synth 4 / vorbis 14) - nobody hears it" }
+        }
         BreachTrace.log("areasound.spawn") { "id=${sound.id} at=${tile.x},${tile.z},${tile.height} radius=${sound.radius} delay=${sound.delay}" }
 
         chunk.addEntity(this, sound, tile)

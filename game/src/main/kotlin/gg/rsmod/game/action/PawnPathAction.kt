@@ -359,6 +359,13 @@ object PawnPathAction {
                     "success=${route.success} steps=${route.path.size} tail=${route.tail.x},${route.tail.z} frozen=$frozen"
             }
         }
+        // Debug toolkit: any npc or player whose route to its target fails (stuck behind scenery, target unreachable).
+        if (!route.success && !frozen) {
+            gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.NPCPATH) {
+                val who = if (pawn is gg.rsmod.game.model.entity.Npc) "npc ${pawn.id}#${pawn.index}" else (pawn as? gg.rsmod.game.model.entity.Player)?.username ?: "$pawn"
+                "no route: $who at ${sourceTile.x},${sourceTile.z},${sourceTile.height} -> ${target.entityType}#${target.index} at ${targetTile.x},${targetTile.z} range=$interactionRange (stops at ${route.tail.x},${route.tail.z})"
+            }
+        }
 
         val stepType =
             if (pawn is gg.rsmod.game.model.entity.Npc && pawn.attr[gg.rsmod.game.model.attr.NPC_RUNS_ATTR] == true) {

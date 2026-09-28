@@ -774,6 +774,11 @@ abstract class Pawn(
         if (this is Npc) gg.rsmod.game.model.AvTrace.log { "anim NPC index=$index npc=${(this as Npc).id} id=$id delay=$delay prio=$priority cycle=${world.currentCycle}" }
         // Players too, and an animation overwritten in the same tick (only the last one reaches the client, with its frame sounds).
         if (this is Player) gg.rsmod.game.model.AvTrace.log { "anim PLAYER ${(this as Player).username} id=$id delay=$delay prio=$priority cycle=${world.currentCycle}" }
+        if (gg.rsmod.game.model.AvTrace.enabled && id >= 0 &&
+            runCatching { world.definitions.getNullable(gg.rsmod.game.fs.def.AnimDef::class.java, id) == null }.getOrDefault(false)
+        ) {
+            gg.rsmod.game.model.AvTrace.log { "PROBLEM anim id=$id on ${entityType} index=$index does not exist in the cache - nothing plays" }
+        }
         if (hasBlock(UpdateBlockType.ANIMATION) && blockBuffer.animation != id) {
             gg.rsmod.game.model.AvTrace.log { "PROBLEM anim ${entityType} index=$index id=$id REPLACES ${blockBuffer.animation} in the same cycle=${world.currentCycle}" }
         }
@@ -803,6 +808,11 @@ abstract class Pawn(
         gg.rsmod.game.model.AvTrace.log {
             "graphic ${entityType} index=$index at=$tile id=$id height=$height delay=$delay rot=$rotation slot=$slot" +
                 (if (slot < 0) " (duplicate this tick)" else "")
+        }
+        if (gg.rsmod.game.model.AvTrace.enabled && id >= 0 &&
+            runCatching { world.definitions.getNullable(gg.rsmod.game.fs.def.SpotAnimDef::class.java, id) == null }.getOrDefault(false)
+        ) {
+            gg.rsmod.game.model.AvTrace.log { "PROBLEM graphic id=$id on ${entityType} index=$index does not exist in the cache - nothing shows" }
         }
         if (slot >= 0) {
             addBlock(gg.rsmod.game.sync.block.GraphicBlock.SLOTS[slot])

@@ -65,7 +65,16 @@ class GameSystem(
                     logger.warn("No handler found for message $msg")
                     return
                 }
+                val packetBytes = msg.payload.readableBytes()
                 val message = decoder.decode(msg.opcode, service.messageStructures.get(msg.opcode)!!, GamePacketReader(msg))
+                // Debug toolkit (ROOT_CAUSES #34): a decoder that leaves bytes unread reads a wrong layout - every value of the
+                // packet is shifted (missing first letters, wrong ids).
+                if (gg.rsmod.game.model.Trace.enabled(gg.rsmod.game.model.Trace.Cat.INPUT) && msg.payload.readableBytes() > 0) {
+                    val left = msg.payload.readableBytes()
+                    gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.INPUT) {
+                        "packet opcode=${msg.opcode} ${message.javaClass.simpleName} left $left of $packetBytes bytes unread - its decoder reads the wrong layout"
+                    }
+                }
                 val queued = messages.offer(
                     MessageHandle(
                         message = message,
@@ -114,6 +123,7 @@ class GameSystem(
      * next cycle (Audit T-15).
      */
     fun handleMessages() {
+        checkSilentClick()
         for (i in 0 until service.maxMessagesPerCycle) {
             if (!client.isOnline || client.isLogoutPending) {
                 // Do not apply packets queued before a disconnect/logout request.
@@ -158,9 +168,15 @@ class GameSystem(
                     interrupt()
                 }
             }
-            if (!isPassive) {
-                lastAction = "${next.message.javaClass.simpleName}${traceFields(next.message)} cycle=${world.currentCycle}"
+            val messageName = next.message.javaClass.simpleName
+            if (!isPassive && gg.rsmod.game.model.Trace.anyOn() && !messageName.startsWith("Event") && messageName !in UNTRACED_INPUT) {
+                lastAction = "$messageName${traceFields(next.message)} cycle=${world.currentCycle}"
                 gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.INPUT) { "${client.username} at=${client.tile.x},${client.tile.z},${client.tile.height} $lastAction" }
+                // Silent-click detector: a menu option / button / dialogue answer that gets no answer at all within
+                // SILENT_CLICK_CYCLES (no message, interface, var, sound, animation, movement or queued action).
+                if (messageName.startsWith("Op") || messageName.startsWith("IfButton") || messageName.startsWith("Resume")) {
+                    silentCheck = SilentCheck(lastAction, world.currentCycle, client.tile, client.lastAnimation)
+                }
             }
             try {
                 try {
@@ -195,9 +211,40 @@ class GameSystem(
     @Volatile
     var lastAction: String = "-"
 
+    private class SilentCheck(val action: String, val cycle: Int, val tile: gg.rsmod.game.model.Tile, val animation: Int) {
+        @Volatile
+        var answered = false
+    }
+
+    @Volatile
+    private var silentCheck: SilentCheck? = null
+
+    private fun checkSilentClick() {
+        val check = silentCheck ?: return
+        if (world.currentCycle < check.cycle + SILENT_CLICK_CYCLES) return
+        silentCheck = null
+        if (check.answered || !gg.rsmod.game.model.Trace.anyOn()) return
+        val moved = client.tile != check.tile || client.hasMoveDestination()
+        val busy = client.queues.size > 0 || client.lastAnimation != check.animation
+        if (!moved && !busy) {
+            gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.INPUT) {
+                "click did nothing: ${client.username}'s ${check.action} got no message, interface, var, sound, animation, movement or action within $SILENT_CLICK_CYCLES ticks"
+            }
+        }
+    }
+
     fun write(message: Message) {
-        if (gg.rsmod.game.model.Trace.anyOn()) traceOutgoing(message)
+        if (gg.rsmod.game.model.Trace.anyOn()) {
+            silentCheck?.let { if (isAnswer(message)) it.answered = true }
+            traceOutgoing(message)
+        }
         channel.write(message)
+    }
+
+    /** A message that shows the player something happened (not the per-tick sync / map traffic every client gets anyway). */
+    private fun isAnswer(message: Message): Boolean {
+        val name = message.javaClass.simpleName
+        return name !in PER_TICK_OUTPUT && !name.startsWith("UpdateZone") && !name.startsWith("Rebuild")
     }
 
     /** The server -> client side of the traces: chat messages, interfaces and vars, with PROBLEM verdicts. */
@@ -271,6 +318,19 @@ class GameSystem(
 
         /** Audit T-15: log one warning per this many dropped packets. */
         private const val OVERFLOW_WARN_EVERY = 100
+
+        /** Debug toolkit: ticks a click may take before "click did nothing" is reported. */
+        private const val SILENT_CLICK_CYCLES = 3
+
+        /** Output every client gets on its own (regen, run energy, music, timers) - not an answer to a click. */
+        private val PER_TICK_OUTPUT =
+            setOf(
+                "UpdateRunEnergyMessage", "UpdateRunWeightMessage", "UpdateRebootTimerMessage", "UpdateStatMessage", "MidiSongMessage",
+                "UpdateStockmarketSlotMessage", "UpdateFriendListMessage", "UpdateIgnoreListMessage", "UpdateFriendChatChannelFullMessage",
+            )
+
+        /** Input that is noise in the input trace (keep-alives, window/camera/mouse telemetry). */
+        private val UNTRACED_INPUT = setOf("NoTimeoutMessage", "KeyTypedMessage", "WindowStatusMessage", "ChatFilterMessage")
 
         /** Audit T-15: the packet buffer capacity for [messagesPerCycle] handled packets per cycle. */
         internal fun bufferCapacity(messagesPerCycle: Int): Int = (messagesPerCycle * PACKET_BUFFER_CYCLES).coerceAtLeast(1)

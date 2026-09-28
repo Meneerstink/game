@@ -386,6 +386,15 @@ class GameService : Service {
                     "schedulerDelayMs=${(cycleGapMs - expectedCycleMs).coerceAtLeast(0.0)} " +
                     "tasks=${taskTimes.toList().sortedByDescending { (_, value) -> value }.toMap()}"
             }
+            // Debug toolkit: a tick that took longer than a tick is lag every player feels; name the slowest tasks.
+            if (workMs > expectedCycleMs) {
+                gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.TICK) {
+                    "server lag: tick ${world.currentCycle} took ${"%.0f".format(java.util.Locale.ROOT, workMs)} ms (budget ${expectedCycleMs.toInt()}), players=${world.players.count()} npcs=${world.npcs.count()}, " +
+                        "slowest=${taskTimes.toList().sortedByDescending { (_, value) -> value }.take(3).toMap()}"
+                }
+            } else {
+                gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.TICK) { "late tick ${world.currentCycle}: gap ${cycleGapMs.toInt()} ms, work ${workMs.toInt()} ms" }
+            }
         }
 
         if (debugTick++ >= TICKS_PER_DEBUG_LOG) {
