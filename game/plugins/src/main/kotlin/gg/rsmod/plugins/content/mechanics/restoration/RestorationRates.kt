@@ -56,4 +56,17 @@ object RestorationRates {
     fun boostedDue(player: Player): Int = advance(player, BOOSTED_PROGRESS, 1)
 
     fun lifeDue(player: Player): Int = advance(player, LIFE_PROGRESS, lifePointRate(player))
+
+    /**
+     * Ticks until the next lowered stat comes back one level, read from the running [STAT_RESTORE] timer and the lowered
+     * channel's progress at the current rate (Boosts Information overlay). -1 when the timer is not running.
+     */
+    fun ticksUntilLoweredRestore(player: Player): Int {
+        if (!player.timers.has(gg.rsmod.game.model.timer.STAT_RESTORE)) return -1
+        val nextStep = player.timers[gg.rsmod.game.model.timer.STAT_RESTORE]
+        val perStep = STEP * loweredStatRate(player)
+        val missing = CYCLE - (player.attr[LOWERED_PROGRESS] ?: 0)
+        val steps = (missing + perStep - 1) / perStep
+        return nextStep + (steps - 1) * STEP
+    }
 }

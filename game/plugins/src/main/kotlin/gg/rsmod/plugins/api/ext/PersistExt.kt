@@ -1,5 +1,6 @@
 package gg.rsmod.plugins.api.ext
 
+import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.entity.Client
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.service.serializer.PlayerSerializerService
@@ -13,7 +14,11 @@ import gg.rsmod.game.service.serializer.PlayerSerializerService
  * Saving both sides at the moment of transfer closes that window. The save is atomic
  * (see JsonPlayerSerializer) and cheap enough for these rare events.
  */
+/** Headless test players (conformance bots) are never written to disk - not even by a death or a trade. */
+val NEVER_SAVE_ATTR = AttributeKey<Boolean>()
+
 fun Player.persistNow() {
     val client = this as? Client ?: return
+    if (attr[NEVER_SAVE_ATTR] == true) return
     world.getService(PlayerSerializerService::class.java, searchSubclasses = true)?.saveClientData(client)
 }

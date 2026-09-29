@@ -6,6 +6,7 @@ import gg.rsmod.game.model.*
 import gg.rsmod.game.model.collision.CollisionMatrix
 import gg.rsmod.game.model.collision.CollisionUpdate
 import gg.rsmod.game.model.entity.*
+import gg.rsmod.game.model.hud.ClientHud
 import gg.rsmod.game.model.region.update.*
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
 import it.unimi.dsi.fastutil.objects.ObjectArrayList
@@ -271,7 +272,8 @@ class Chunk(
         world.players.forEach { client ->
             // AvTrace (owner 2026-09-28 "we hebben nog steeds veel sound issues"): per nearby player, did the area sound reach him, and
             // is he inside its radius? The client only plays an area sound within its radius, so "recv ... audible=false" is silent.
-            if (sound != null && gg.rsmod.game.model.AvTrace.enabled && client.tile.height == sound.tile.height && client.tile.isWithinRadius(sound.tile, 32)) {
+            // The excluded player already gets this cue directly (soundToBystanders), so skipping him is not a problem (sound audit 2026-09-29).
+            if (sound != null && sound.excluded !== client && gg.rsmod.game.model.AvTrace.enabled && client.tile.height == sound.tile.height && client.tile.isWithinRadius(sound.tile, 32)) {
                 val dist = client.tile.getDistance(sound.tile)
                 val sent = inBuildArea(client) && canBeViewed(client, sound)
                 gg.rsmod.game.model.AvTrace.log {
@@ -281,7 +283,7 @@ class Chunk(
             }
             if (!inBuildArea(client) || !canBeViewed(client, update.entity)) {
                 // Breach conformance trace: a nearby player who does NOT get the sound/projectile/graphic is the bug case.
-                if (traced && client.tile.height == update.entity.tile.height && client.tile.isWithinRadius(update.entity.tile, 32)) {
+                if (traced && (sound == null || sound.excluded !== client) && client.tile.height == update.entity.tile.height && client.tile.isWithinRadius(update.entity.tile, 32)) {
                     BreachTrace.log("zone.skip") { "${traceName(update.entity)} player=${client.username} dist=${client.tile.getDistance(update.entity.tile)} buildArea=${inBuildArea(client)}" }
                     BreachTrace.log("PROBLEM") { "not sent to a nearby player: ${traceName(update.entity)} player=${client.username} dist=${client.tile.getDistance(update.entity.tile)}" }
                 }
@@ -293,8 +295,18 @@ class Chunk(
             val local = client.lastKnownRegionBase!!.toLocal(update.entity.tile)
             client.write(UpdateZonePartialFollowsMessage(local.x shr 3, local.z shr 3, update.entity.tile.height))
             client.write(update.toMessage())
+            // Ground Items overlay: despawn time and value of this tile's stack, right after the obj add/del/count it belongs to.
+            (update.entity as? GroundItem)?.let { ClientHud.sendGround(client, listOf(groundEntry(world, client, it.tile, it.item))) }
         }
     }
+
+    private fun groundEntry(
+        world: World,
+        p: Player,
+        tile: Tile,
+        itemId: Int,
+    ): String =
+        ClientHud.groundEntry(world, p, tile.height, tile.x, tile.z, itemId, entities[tile]?.filterIsInstance<GroundItem>() ?: emptyList())
 
     /**
      * Sends all [updates] from this chunk to the player [p].
@@ -322,6 +334,13 @@ class Chunk(
                     p.write(it.toMessage())
                 }
             }
+            // Ground Items overlay: one entry per visible tile + item id of this zone (region entry, teleport, relog).
+            val ground = LinkedHashSet<String>()
+            updates.forEach {
+                val item = it.entity as? GroundItem ?: return@forEach
+                if (canBeViewed(p, item)) ground += groundEntry(p.world, p, item.tile, item.item)
+            }
+            if (ground.isNotEmpty()) ClientHud.sendGround(p, ground.toList())
         }
     }
 
@@ -339,6 +358,7 @@ class Chunk(
             val item = entity as GroundItem
             return item.isPublic() || item.isOwnedBy(p)
         }
+        if (entity is AreaSound && entity.excluded === p) return false
         return true
     }
 

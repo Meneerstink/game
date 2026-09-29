@@ -604,10 +604,19 @@ abstract class Player(
      * conditions if any logic may modify other [Pawn]s.
      */
     fun postCycle() {
-        /*
-         * Flush the channel at the end.
-         */
-        channelFlush()
+        try {
+            // RSPS information overlays (ClientHud): synced last, so the client gets this cycle's final state - after the
+            // queues, timers, hits, npc damage and deaths of the cycle.
+            gg.rsmod.game.model.hud.ClientHud.tick?.invoke(this)
+        } catch (e: Exception) {
+            // The overlays are information only: a failing sync must never cost the player this cycle's packets.
+            gg.rsmod.game.model.Trace.crash("hud sync for $username", e)
+        } finally {
+            /*
+             * Flush the channel at the end.
+             */
+            channelFlush()
+        }
     }
 
     /**

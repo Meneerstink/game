@@ -14,9 +14,14 @@ object BoostedCombatStats {
     private val ELAPSED = AttributeKey<Int>()
     val skills = setOf(Skills.ATTACK, Skills.STRENGTH, Skills.DEFENCE, Skills.RANGED, Skills.MAGIC)
 
+    private fun interval(player: Player): Int = if (AncientCurses.isCurseActive(player, AncientCurse.BERSERKER)) 115 else 100
+
+    /** Ticks until the next boosted combat stat drops one level (Boosts Information overlay); at least 1. */
+    fun ticksUntilDecay(player: Player): Int = maxOf(1, interval(player) - (player.attr[ELAPSED] ?: 0))
+
     fun tick(player: Player) {
         val elapsed = (player.attr[ELAPSED] ?: 0) + 1
-        val interval = if (AncientCurses.isCurseActive(player, AncientCurse.BERSERKER)) 115 else 100
+        val interval = interval(player)
         if (elapsed < interval) {
             player.attr[ELAPSED] = elapsed
             return

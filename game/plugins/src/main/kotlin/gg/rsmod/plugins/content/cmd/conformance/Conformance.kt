@@ -102,7 +102,8 @@ object Conformance {
                 "curses", "prayers" -> CursesSuite
                 "equipment", "weapons", "armour" -> EquipmentSuite
                 "combat" -> CombatSuite
-                else -> return "Unknown conformance domain '$domain' (summoning, curses, equipment, combat)."
+                "hud" -> HudSuite
+                else -> return "Unknown conformance domain '$domain' (summoning, curses, equipment, combat, hud)."
             }
         val at = rawArgs.indexOf("at")
         val from =
@@ -167,7 +168,7 @@ object Conformance {
         args: List<String>,
     ): String =
         when (val d = args.getOrNull(0)?.lowercase()) {
-            null -> "conform summoning|curses|equipment|combat [name] [at x z h] | stop | status"
+            null -> "conform summoning|curses|equipment|combat|hud [name] [at x z h] | stop | status"
             "stop" -> {
                 stopRequested = true
                 "The conformance run stops after its current entry."
@@ -382,8 +383,9 @@ object Bots {
         for (skill in 0..Skills.DUNGEONEERING) bot.skills.setBaseLevel(skill, 99)
         check(world.register(bot)) { "conformance bot not registered" }
         bot.login()
-        // Never saved: the autosave timer would write a save file for the test player.
+        // Never saved: the autosave timer would write a save file for the test player, and a death / trade saves at once.
         bot.timers.remove(gg.rsmod.game.model.timer.SAVE_TIMER)
+        bot.attr[gg.rsmod.plugins.api.ext.NEVER_SAVE_ATTR] = true
         gg.rsmod.plugins.content.mechanics.pvp.BeginnerProtection.forfeit(bot)
         return bot
     }
