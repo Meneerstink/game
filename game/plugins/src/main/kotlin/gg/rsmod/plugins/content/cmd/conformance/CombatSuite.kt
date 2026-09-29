@@ -84,6 +84,7 @@ object CombatSuite : Conformance.Suite {
         scenario("freezes") { freezes(run, a, b, arena) }
         scenario("freeze range and seeds") { freezeRangeAndSeeds(run, a, b, arena) }
         scenario("miasmic") { miasmic(run, a, b, dummy, arena) }
+        scenario("smoke poison") { smokePoison(run, a, dummy, arena) }
         scenario("protection") { protection(run, a, b, dummy, arena) }
         scenario("retaliation") { retaliation(run, a, dummy, arena) }
         scenario("poison") { poison(run, a, dummy, arena) }
@@ -388,6 +389,44 @@ object CombatSuite : Conformance.Suite {
         run.check(e, "whip swing interval while slowed by Miasmic Rush (whip 4)", gap, "void donor (melee/ranged delay x2)" to 8)
         b.timers.remove(gg.rsmod.game.model.timer.MIASMIC_TIMER)
         b.timers.remove(gg.rsmod.game.model.timer.MIASMIC_IMMUNITY_TIMER)
+    }
+    /**
+     * Combat run 2026-09-29. OSRS Wiki "Smoke Rush": "capable of poisoning a target at a 1/8 chance on hit". Casts Smoke Rush on the
+     * dummy and counts the damaging hits that poisoned it (cured after each cast): 1/8, with a wide statistical window.
+     */
+    private suspend fun QueueTask.smokePoison(
+        run: Conformance.Run,
+        a: Client,
+        dummy: Npc,
+        arena: Tile,
+    ) {
+        val e = "combat smoke poison"
+        a.setVarbit(MagicSpells.INF_RUNES_VARBIT, 1)
+        a.setSpellbook(gg.rsmod.plugins.api.Spellbook.ANCIENT)
+        a.skills.setBaseLevel(Skills.MAGIC, 99)
+        // Only the casts may hit the dummy: no punches from auto retaliation.
+        a.setVarp(AttackTab.DISABLE_AUTO_RETALIATE_VARP, 1)
+        dummy.moveTo(arena.transform(0, 3))
+        var damaging = 0
+        var poisoned = 0
+        repeat(64) {
+            gg.rsmod.plugins.content.mechanics.poison.Poison.cure(dummy)
+            val c = run.world.currentCycle
+            a.attr[Combat.CASTING_SPELL] = CombatSpell.SMOKE_RUSH
+            a.attr[gg.rsmod.plugins.content.combat.magic.Autocast.MANUAL_TARGET] = java.lang.ref.WeakReference(dummy)
+            a.attack(dummy)
+            wait(6)
+            a.resetInteractions()
+            Combat.reset(a)
+            dummy.setCurrentLifepoints(DUMMY_LIFE)
+            val hit = splats(run, "CD", c).any { it > 0 }
+            if (hit) damaging++
+            if (hit && gg.rsmod.plugins.content.mechanics.poison.Poison.isPoisoned(dummy)) poisoned++
+        }
+        gg.rsmod.plugins.content.mechanics.poison.Poison.cure(dummy)
+        a.setVarp(AttackTab.DISABLE_AUTO_RETALIATE_VARP, 0)
+        run.expectTrue(e, "Smoke Rush poisons about 1 in 8 damaging hits ($damaging damaging casts)", damaging >= 30 && poisoned in 1..(damaging / 3),
+            "poisoned $poisoned of $damaging", "OSRS Wiki: 1/8 on hit")
     }
     private suspend fun QueueTask.protection(
         run: Conformance.Run,

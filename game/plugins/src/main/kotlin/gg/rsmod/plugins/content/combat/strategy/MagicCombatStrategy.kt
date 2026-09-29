@@ -40,6 +40,9 @@ import kotlin.math.floor
 object MagicCombatStrategy : CombatStrategy {
     /** Undead npc names Crumble Undead may be cast on (2011 wiki: skeletons, zombies, ghosts, shades and their variants). */
     private val UNDEAD_NAMES = listOf("skeleton", "zombie", "ghost", "shade", "ghast", "revenant", "mummy", "zogre", "banshee", "ankou", "crawling hand", "aberrant spectre", "undead", "skeletal", "spectre", "wight", "zombified")
+    /** OSRS Wiki Smoke spells: "a 1/8 chance on hit" to poison. */
+    const val SMOKE_POISON_CHANCE = 8
+
 
     override fun getAttackRange(pawn: Pawn): Int =
         if (pawn is Player && gg.rsmod.plugins.content.combat.strategy.ranged.RangedAmmo.isSalamander(pawn.getEquipment(EquipmentType.WEAPON)?.id)) {
@@ -371,7 +374,9 @@ object MagicCombatStrategy : CombatStrategy {
                 }
             }
             is SpellEffect.Poison -> {
-                if (damage > 0) {
+                // OSRS Wiki "Smoke Rush" / "Smoke Barrage": "capable of poisoning a target at a 1/8 chance on hit". Every damaging
+                // smoke spell used to poison (combat run 2026-09-29).
+                if (damage > 0 && pawn.world.random(SMOKE_POISON_CHANCE - 1) == 0) {
                     // Smoke spells poison at OSRS severity 10 / 20 (22 / 11 with an ancient sceptre) - AncientSceptres, Poison.
                     val sceptres = gg.rsmod.plugins.content.items.osrs.AncientSceptres
                     Poison.poisonSeverity(target, sceptres.smokeSeverity(effect.damage, sceptres.boosted(pawn)))
