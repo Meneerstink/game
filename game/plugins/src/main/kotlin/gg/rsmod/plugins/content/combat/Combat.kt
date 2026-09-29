@@ -216,6 +216,13 @@ object Combat {
                     target.getCombatTarget() == null &&
                     !target.hasMoveDestination()
                 ) {
+                    // OSRS Wiki "Auto Retaliate": "When a player is attacked, their attack delay is set to their current weapon's
+                    // attack speed divided by two, rounded up, regardless of what it was prior." The retaliation used to swing on
+                    // the next tick (conformance combat retaliation, combat run 2026-09-29). This runs in the hit phase, after this
+                    // tick's timer countdown, and the combat queue swings the tick after the delay is gone - so a delay of d swings
+                    // d + 1 ticks after the hit; ceil(speed / 2) - 1 lands the swing ceil(speed / 2) ticks after it (whip: 2).
+                    val retaliationTicks = (CombatConfigs.getAttackDelay(target) + 1) / 2
+                    if (retaliationTicks > 1) target.timers[ATTACK_DELAY] = retaliationTicks - 1 else target.timers.remove(ATTACK_DELAY)
                     target.attack(pawn, notifyRefusal = false) // auto-retaliate (never skulls: PvpSkull.isRetaliation)
                 }
             }

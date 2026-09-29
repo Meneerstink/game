@@ -111,12 +111,13 @@ object CombatSuite : Conformance.Suite {
         val c = run.world.currentCycle
         a.attack(dummy)
         // Two swings, then eat one tick after the second.
-        var swings = swings(run, "C1", c)
+        val whipAnim = gg.rsmod.plugins.content.combat.CombatConfigs.getAttackAnimation(a)
+        var swings = swings(run, "C1", c, whipAnim)
         var guard = 0
         while (swings.size < 2 && guard++ < 30) {
             keep(a, dummy)
             wait(1)
-            swings = swings(run, "C1", c)
+            swings = swings(run, "C1", c, whipAnim)
         }
         if (swings.size < 2) {
             run.add(Result(e, "setup: two whip swings", Verdict.FAIL, "2 swings", "${swings.size}"))
@@ -126,11 +127,11 @@ object CombatSuite : Conformance.Suite {
         val ate = run.world.currentCycle
         Bots.itemOption(a, a.inventory.getItemIndex(Items.SHARK, false), "Eat")
         guard = 0
-        while (swings(run, "C1", ate).isEmpty() && guard++ < 20) {
+        while (swings(run, "C1", ate, whipAnim).isEmpty() && guard++ < 20) {
             dummy.setCurrentLifepoints(DUMMY_LIFE)
             wait(1)
         }
-        val next = swings(run, "C1", ate).firstOrNull()
+        val next = swings(run, "C1", ate, whipAnim).firstOrNull()
         val gap = next?.minus(swings[1])
         run.check(e, "swing interval with a shark eaten in between (whip 4)", gap, "osrs wiki (food +3 ticks)" to 7)
         // Combo: shark then karambwan in the same tick both eat.
@@ -355,12 +356,13 @@ object CombatSuite : Conformance.Suite {
         wait(1)
         val c = run.world.currentCycle
         b.attack(dummy)
-        var swings = swings(run, "C2", c)
+        val whipAnim = gg.rsmod.plugins.content.combat.CombatConfigs.getAttackAnimation(b)
+        var swings = swings(run, "C2", c, whipAnim)
         var guard = 0
         while (swings.size < 2 && guard++ < 30) {
             keep(b, dummy)
             wait(1)
-            swings = swings(run, "C2", c)
+            swings = swings(run, "C2", c, whipAnim)
         }
         b.resetInteractions()
         Combat.reset(b)
@@ -377,7 +379,11 @@ object CombatSuite : Conformance.Suite {
         arena: Tile,
     ) {
         val e = "combat protection"
-        // PvM: the dummy's melee against Protect from Melee lands nothing.
+        // PvM: the dummy's melee against Protect from Melee lands nothing. C2 stands well away: its auto retaliate from an earlier
+        // scenario punched C1 here (PvP melee through protection), which read as npc damage.
+        b.resetInteractions()
+        Combat.reset(b)
+        b.moveTo(arena.transform(12, 0))
         dummy.moveTo(arena.transform(0, 1))
         Prayers.activate(a, Prayer.PROTECT_FROM_MELEE)
         val c = run.world.currentCycle
@@ -404,7 +410,8 @@ object CombatSuite : Conformance.Suite {
             val c2 = run.world.currentCycle
             b.attack(a)
             var t = 0
-            while (t++ < 400 && splats(run, "C1", c2).size < 80) {
+            // 300 hits a side: with 80 the mean ratio swung between 0.46 and 0.85 run to run (combat run 2026-09-29).
+            while (t++ < 1600 && splats(run, "C1", c2).size < 300) {
                 keep(a, b)
                 a.setCurrentPrayerPoints(99)
                 wait(1)
@@ -434,13 +441,15 @@ object CombatSuite : Conformance.Suite {
         wait(2)
         val c = run.world.currentCycle
         dummy.attack(a)
+        // Only the whip swing counts: the block animation on the hit is not the retaliation.
+        val whipAnim = gg.rsmod.plugins.content.combat.CombatConfigs.getAttackAnimation(a)
         var t = 0
-        while (t++ < 20 && swings(run, "C1", c).isEmpty()) {
+        while (t++ < 20 && swings(run, "C1", c, whipAnim).isEmpty()) {
             keep(a, dummy)
             wait(1)
         }
         val firstHit = run.recording.of("C1", "out").firstOrNull { it.cycle >= c && it.text.startsWith("hits ") }?.cycle
-        val swing = swings(run, "C1", c).firstOrNull()
+        val swing = swings(run, "C1", c, whipAnim).firstOrNull()
         run.check(e, "ticks from the first hit taken to the retaliation swing (whip 4)", if (firstHit != null && swing != null) swing - firstHit else null, "osrs wiki (ceil(speed/2))" to 2)
         dummy.resetInteractions()
         Combat.reset(dummy)
@@ -490,11 +499,16 @@ object CombatSuite : Conformance.Suite {
 
     // ---- helpers -------------------------------------------------------------------------------------------------------------
 
+    /** Cycles of [who]'s attack animations ([anim]; any animation when null - eat and block animations are not swings). */
     private fun swings(
         run: Conformance.Run,
         who: String,
         from: Int,
-    ) = run.recording.of(who, "out").filter { it.cycle >= from && it.text.startsWith("anim ") }.map { it.cycle }.distinct()
+        anim: Int? = null,
+    ) = run.recording.of(who, "out")
+        .filter { it.cycle >= from && it.text.startsWith("anim ") && (anim == null || it.text.startsWith("anim id=$anim ")) }
+        .map { it.cycle }
+        .distinct()
 
     private fun splats(
         run: Conformance.Run,

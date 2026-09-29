@@ -85,7 +85,7 @@ class VenomTests {
     }
 
     @Test
-    fun `poison keeps the stronger dose and refreshes an equal or stronger dose`() {
+    fun `poison keeps the stronger dose and takes an equal or stronger dose without restarting the damage cycle`() {
         val player = newPlayer()
 
         assertTrue(Poison.poison(player, 4))
@@ -102,7 +102,8 @@ class VenomTests {
 
         assertTrue(Poison.poison(player, 4))
         assertEquals(firstTicks, player.attr[POISON_TICKS_LEFT_ATTR])
-        assertEquals(30, player.timers[POISON_TIMER])
+        // Combat run 2026-09-29: the running 30-tick damage cycle is kept (Void), only the severity is reset.
+        assertEquals(3, player.timers[POISON_TIMER])
     }
 
     @Test

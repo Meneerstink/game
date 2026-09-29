@@ -88,15 +88,18 @@ object Poison {
         // envenomed pawn does nothing (it used to overwrite the orb to the green poison orb while the venom kept ticking).
         if (pawn.attr.has(VENOM_TICKS_ELAPSED_ATTR)) return false
 
-        // OSRS/ Void/ Novite all keep the stronger poison and restart its 30-cycle timer when
-        // an equal or stronger application lands. The old guard was inverted: it only entered
+        // OSRS/ Void/ Novite all keep the stronger poison and take an equal or stronger application's
+        // severity. The old guard was inverted: it only entered
         // when no poison existed, so poisoned targets could never be refreshed or upgraded.
         val oldTicks = pawn.attr[POISON_TICKS_LEFT_ATTR]
         val oldDamage = oldTicks?.let(::getDamageForTicks) ?: 0
         val newDamage = getDamageForTicks(ticks)
         if (oldDamage > newDamage) return false
 
-        pawn.timers[POISON_TIMER] = 30
+        // Combat run 2026-09-29: a repeat application resets the severity but never the 30-tick damage cycle (Void Poison.kt:
+        // `timers.contains("poison") || timers.start("poison")`; OSRS Wiki "Poison": damage "once every 30 game ticks"). Restarting
+        // it here meant a weapon re-poisoning every few hits (1/4 per melee hit) kept pushing the next poison hit away.
+        if (!pawn.timers.has(POISON_TIMER)) pawn.timers[POISON_TIMER] = 30
         pawn.attr[POISON_TICKS_LEFT_ATTR] = ticks
         if (pawn is Player) {
             setPoisonVarp(pawn, OrbState.POISON)
