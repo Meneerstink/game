@@ -159,6 +159,7 @@ object HudSuite : Conformance.Suite {
             scenario("opponent player") { opponentPlayer(run, a, b, ma) }
             scenario("ground items") { ground(run, a, b, ma, mb, arena) }
             scenario("death") { death(run, a, ma) }
+            scenario("tour restores") { tourRestores(run, a, ma, arena) }
             run.notTested("hud client", "drawing, projection, colours, hidden/highlight matching", "client side - LIVE-AV in the client")
         } finally {
             ClientHud.observer = null
@@ -519,6 +520,57 @@ object HudSuite : Conformance.Suite {
 
         spawned.forEach { if (world.isSpawned(it)) world.remove(it) }
         wait(1)
+    }
+
+    /**
+     * `hudtour` works on the admin's own character (the owner's), so it must put everything back: levels, life points,
+     * Vengeance, Teleblock, freeze, position, and remove its monster and ground items. Also checks it really produced the
+     * eight screenshot requests.
+     */
+    private suspend fun QueueTask.tourRestores(
+        run: Conformance.Run,
+        a: Client,
+        m: Model,
+        arena: Tile,
+    ) {
+        val e = "hud tour"
+        val tour = gg.rsmod.game.CommandServerCommands.handlers["hudtour"]
+        if (tour == null) {
+            run.add(Result(e, "hudtour registered on the command port", Verdict.FAIL, "handler", "missing"))
+            return
+        }
+        a.skills.setCurrentLevel(Skills.ATTACK, 95)
+        a.timers[TELEBLOCK_TIMER] = 123
+        a.timers.remove(VENGEANCE_COOLDOWN)
+        a.attr.remove(gg.rsmod.game.model.attr.VENGEANCE_ACTIVE_ATTR)
+        val life = a.getCurrentLifepoints()
+        val tile = a.tile
+        val npcsBefore = run.world.npcs.count()
+        val shots = ArrayList<String>()
+        val shotsFrom = run.world.currentCycle
+        val reply = tour(run.world, listOf(a.username))
+        var guard = 0
+        while (guard++ < 120 && !(a.tile.sameAs(tile) && run.recording.of("U1", "msg").any { it.cycle >= shotsFrom && it.text.contains("HUD tour done") })) wait(1)
+        wait(2)
+        run.recording.of("U1", "msg").filter { it.cycle >= shotsFrom && it.text.contains("__RSPS_SHOT__:hud_") }.forEach { shots += it.text.substringAfter("__RSPS_SHOT__:").substringBefore(")") }
+        run.expectTrue(e, "started", reply.startsWith("HUD tour started"), reply)
+        run.expectTrue(e, "eight screenshots requested", shots.size == 8, shots.joinToString(" "))
+        run.expectTrue(e, "position back", a.tile.sameAs(tile), "at ${a.tile}, was $tile")
+        run.expectTrue(e, "levels back", a.skills.getCurrentLevel(Skills.ATTACK) == 95 && a.skills.getCurrentLevel(Skills.DEFENCE) == 99, "attack ${a.skills.getCurrentLevel(Skills.ATTACK)} defence ${a.skills.getCurrentLevel(Skills.DEFENCE)}")
+        run.expectTrue(e, "life points back", a.getCurrentLifepoints() == life, "${a.getCurrentLifepoints()} was $life")
+        run.expectTrue(e, "own teleblock back, no tour freeze/vengeance", serverLeft(a, TELEBLOCK_TIMER) in 1..(123 - (run.world.currentCycle - shotsFrom) + 1) && !a.timers.has(FROZEN_TIMER) &&
+            !a.timers.has(VENGEANCE_COOLDOWN) && !Vengeance.isActive(a), "teleblock ${serverLeft(a, TELEBLOCK_TIMER)} frozen ${serverLeft(a, FROZEN_TIMER)} cd ${serverLeft(a, VENGEANCE_COOLDOWN)}")
+        run.expectTrue(e, "monster removed", run.world.npcs.count() == npcsBefore, "npcs ${run.world.npcs.count()} was $npcsBefore")
+        // The tour drops its items within 2 tiles of its spot (3222,3218): none may be left in the world.
+        val spot = Tile(3222, 3218, 0)
+        val left = ArrayList<String>()
+        for (dx in -3..3) for (dz in -3..3) {
+            val t = spot.transform(dx, dz)
+            run.world.chunks.get(t)?.getEntities<GroundItem>(t, gg.rsmod.game.model.EntityType.GROUND_ITEM)?.forEach { left += "${it.item}@${t.x},${t.z}" }
+        }
+        run.expectTrue(e, "ground items removed", left.isEmpty(), left.joinToString(" ").ifEmpty { "none left" })
+        a.timers.remove(TELEBLOCK_TIMER)
+        a.skills.setCurrentLevel(Skills.ATTACK, 99)
     }
 
     private suspend fun QueueTask.death(
