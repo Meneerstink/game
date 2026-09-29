@@ -67,6 +67,15 @@ object RoyalHallMapTool {
     private const val ZERO_LEVEL = 8
 
     /**
+     * RSPS tile flag 0x20 ("part of the building below", client Static409 / RspsGraphicsProfile): the roof flood of a player
+     * inside a lower storey runs on over it (the client reads it on the level above the player's) and hides what stands on
+     * it, like the roof, while a player on or under it is outside. Map flags only encode 1..32, so such a tile carries no
+     * other flag. Owner 2026-09-29: from inside a lower storey no balcony may show ("op de begane grond zie je alle balkons
+     * dit hoort niet") and no hole either - the facade row it hides is closed per player by GeHomeHallCurtains.
+     */
+    const val BELOW_BUILDING = 0x20
+
+    /**
      * Height steps (x8 client units) of levels 1..3 above the one below: 30 = 240, the wall height (walls 33868/33877 are
      * 240 high), for both upper storeys (levels 1 and 2) and for the roof's eaves and parapet (level 3) exactly on the top
      * storey's wall tops - 31 (248) left an 8-unit slit all round the building between wall and parapet that the sky showed
@@ -289,13 +298,12 @@ object RoyalHallMapTool {
                     upper.overlayId = MARBLE_OVERLAY
                     upper.overlayShape = 0
                     upper.overlayRotation = 0
-                    // A wall-ring tile beside the doorway keeps its storey wall, so it stays closed to walking.
-                    // A balcony is outside and never hides: from inside every storey it stays visible through its open
-                    // doorway, as on any RuneScape balcony (owner 2026-09-29, chosen "Balkon zichtbaar": the 0x20 "hide with
-                    // the building below" flag of 2026-09-27 hid the balcony and its doorway from inside, which left a
-                    // see-through hole in the facade on every storey).
-                    val ringWall = (x in MIN_X..MAX_X && z in MIN_Z..MAX_Z) && (upper.flags and BLOCKED != 0)
-                    upper.flags = if (ringWall) BLOCKED else 0
+                    // Every balcony tile - its whole wall-ring row included, doorway and the walled tiles at its ends - is
+                    // BELOW_BUILDING: from inside a lower storey it hides with the roof (owner 2026-09-29: "op de begane grond
+                    // zie je alle balkons dit hoort niet"), and GeHomeHallCurtains closes that facade row per player with a
+                    // wall, so no hole shows (owner 2026-09-29: "het balkon als gat"). A ring end tile stays closed to the
+                    // hall by its storey wall (a loc); its floor is balcony floor, so walking onto it is harmless.
+                    upper.flags = BELOW_BUILDING
                     upstairs++
                 }
             }
@@ -347,12 +355,15 @@ object RoyalHallMapTool {
             // Inside on the ground floor the upper-storey walls vanished (one-storey walls to look over, beside full-height
             // turrets); on the upper floor the parapet above vanished and the walls looked cut open. The wall ring keeps
             // its upper walls and parapet always drawn, as the Grand Exchange's own canopy did with the same flag; the
-            // floor inside still clears above the player. The upper doorways too: without it the flood's edge step cut the
-            // upper storey open above every door, a see-through patch beside the door (owner 2026-09-27, foto mansion_bug2).
+            // floor inside still clears above the player. The balconies' ring rows are the exception: they hide with their
+            // balcony (BELOW_BUILDING) and GeHomeHallCurtains draws the facade there for a player inside below.
             for (x in MIN_X..MAX_X) for (z in MIN_Z..MAX_Z) {
                 val ring = x == MIN_X || x == MAX_X || z == MIN_Z || z == MAX_Z
                 if (!ring) continue
-                for (level in 1..3) tile(level, x, z).flags = tile(level, x, z).flags or ZERO_LEVEL
+                for (level in 1..3) {
+                    if (tile(level, x, z).flags == BELOW_BUILDING) continue
+                    tile(level, x, z).flags = tile(level, x, z).flags or ZERO_LEVEL
+                }
             }
 
             // The corner turrets (62766, home_decor.txt) are the 2 x 2 Falador turret drawn 1.375x wide, so the model hangs

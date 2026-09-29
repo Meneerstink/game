@@ -578,6 +578,29 @@ object RoyalHallLocTool {
      */
     const val BALCONY_PARAPET_SIDE = 62905
 
+    /**
+     * The facade of a balcony's wall-ring row as seen from inside a lower storey (owner 2026-09-29: from inside no balcony and
+     * no hole). That row hides with its balcony (RoyalHallMapTool.BELOW_BUILDING), so GeHomeHallCurtains sends these to a
+     * player inside below it, on level 0 (never hidden by the roof flood): the plain storey wall 33868 as a centrepiece
+     * (shape 10, same model and rotation as the wall), lifted to its storey ([CURTAIN_1] 240, [CURTAIN_2] 480 and 1.5x
+     * high like [TALL_WALL]), not solid and not in the way of route finding - the doorway under it stays walkable.
+     */
+    const val CURTAIN_1 = 62906
+    const val CURTAIN_2 = 62907
+
+    private fun curtain(def: ByteArray, lift: Int, scaleY: Int): ByteArray {
+        check(listOf(65, 66, 67, 70, 71, 72).none { opcodePosition(33868, def, it) >= 0 }) { "wall already scaled or offset" }
+        val out = def.copyOf()
+        val at = opcodePosition(33868, out, 1)
+        check(at >= 0 && out[at + 2] == 0.toByte()) { "wall models do not start with shape 0" }
+        out[at + 2] = 10
+        check(out.last() == 0.toByte()) { "definition does not end with opcode 0" }
+        val y = -lift / 4
+        val prefix = byteArrayOf(71, (y shr 8).toByte(), y.toByte()) + (if (scaleY != 128) byteArrayOf(66, (scaleY shr 8).toByte(), scaleY.toByte()) else ByteArray(0))
+        // Not solid (17) and ignored by route finding (74), written last so they win over the wall's own blocking opcodes.
+        return prefix + out.copyOfRange(0, out.size - 1) + byteArrayOf(17, 74, 0)
+    }
+
     private fun tallWall(id: Int, def: ByteArray): ByteArray {
         check(listOf(65, 66, 67).none { opcodePosition(id, def, it) >= 0 }) { "wall $id already scaled" }
         return byteArrayOf(66, 0, 192.toByte()) + def
@@ -699,6 +722,8 @@ object RoyalHallLocTool {
             Variant(BALCONY_PARAPET, 11831, "Royal Hall upper balcony parapet: the crenellated parapet 11831 in white marble", ::marbleParapet),
             Variant(BALCONY_PARAPET_SIDE, 11831, "Royal Hall upper balcony parapet as a wall decoration (beside the level-2 doorways)", ::marbleParapetDecor),
             Variant(TALL_WALL, 33868, "Royal Hall second upper storey wall: 33868 at 1.5x height (360)") { tallWall(33868, it) },
+            Variant(CURTAIN_1, 33868, "Royal Hall facade over a level-1 balcony row, seen from inside the ground floor (not solid, lifted 240)") { curtain(it, 240, 128) },
+            Variant(CURTAIN_2, 33868, "Royal Hall facade over a level-2 balcony row, seen from inside below (not solid, lifted 480, 1.5x high)") { curtain(it, 480, 192) },
             Variant(TALL_WINDOW_WALL, 33877, "Royal Hall second upper storey window wall: 33877 at 1.5x height (360)") { tallWall(33877, it) },
             Variant(62768, 15548, "78 carpet corner (Varrock carpet 15548 with the 78 texture)", ::with78Carpet),
             Variant(62769, 15549, "78 carpet edge (Varrock carpet 15549 with the 78 texture)", ::with78Carpet),

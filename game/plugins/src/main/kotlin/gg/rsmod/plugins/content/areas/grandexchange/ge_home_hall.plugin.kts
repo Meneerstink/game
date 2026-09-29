@@ -59,3 +59,18 @@ on_world_init {
         true
     }
 }
+
+// ------------------------------------------------------------------ the facade over the balconies, seen from inside
+
+// Owner 2026-09-29: from inside a lower storey no balcony and no hole - GeHomeHallCurtains closes each hidden balcony row
+// for that player. Checked every tick for the players near the hall (cheap: a tile test, packets only on a change).
+val HALL_CURTAINS = gg.rsmod.game.model.timer.TimerKey()
+
+on_world_init { world.timers[HALL_CURTAINS] = 1 }
+
+on_timer(HALL_CURTAINS) {
+    world.players.forEach { p ->
+        if (p.tile.isWithinRadius(gg.rsmod.game.model.Tile(3164, 3491, p.tile.height), 40)) GeHomeHallCurtains.update(p)
+    }
+    world.timers[HALL_CURTAINS] = 1
+}

@@ -214,15 +214,23 @@ class GeHomeHallTests {
                 assertEquals(inside, flags(2, x, z) and 4 != 0, "top $x,$z")
                 val ring = (x == GeHomeHall.X - 1 || x == GeHomeHall.X + GeHomeHall.WIDTH) && z in GeHomeHall.Z - 1..GeHomeHall.Z + GeHomeHall.DEPTH ||
                     (z == GeHomeHall.Z - 1 || z == GeHomeHall.Z + GeHomeHall.DEPTH) && x in GeHomeHall.X - 1..GeHomeHall.X + GeHomeHall.WIDTH
-                // The wall ring's upper walls, parapet and doorways stay drawn from inside (ZERO_LEVEL, foto mansion_bug2).
-                if (ring) for (level in 1..3) assertTrue(flags(level, x, z) and 8 != 0, "ring $x,$z level $level")
-                // No balcony or doorway ever hides from inside (owner 2026-09-29, "Balkon zichtbaar"): the RSPS 0x20 flag
-                // that hid them left a see-through hole in the facade on every storey. Walkable balcony tiles outside the
-                // ring carry no flag at all, so the roof flood never reaches them.
-                for (level in 0..3) assertEquals(0, flags(level, x, z) and 0x20, "0x20 at $x,$z level $level")
+                // Every balcony tile - its wall-ring row included - is "part of the building below" (0x20): from inside a
+                // lower storey it hides with the roof (owner 2026-09-29: "op de begane grond zie je alle balkons dit hoort
+                // niet"); nothing else carries 0x20. The rest of the wall ring stays drawn from inside (ZERO_LEVEL).
                 for (level in 1..2) {
                     val balconies = if (level == 1) RoyalHallMapTool.BALCONIES else RoyalHallMapTool.BALCONIES_2
-                    if (balconies.any { x in it.xs && z in it.zs } && !ring) assertEquals(0, flags(level, x, z), "balcony flag $x,$z level $level")
+                    val balcony = balconies.any { x in it.xs && z in it.zs }
+                    assertEquals(balcony, flags(level, x, z) == RoyalHallMapTool.BELOW_BUILDING, "balcony flag $x,$z level $level")
+                }
+                for (level in listOf(0, 3)) assertEquals(0, flags(level, x, z) and 0x20, "0x20 at $x,$z level $level")
+                if (ring) for (level in 1..3) if (flags(level, x, z) != RoyalHallMapTool.BELOW_BUILDING) assertTrue(flags(level, x, z) and 8 != 0, "ring $x,$z level $level")
+                // The client reads 0x20 on the level above the player's, so from inside the ground floor a level-2 balcony
+                // hides only with the level-1 balcony under it: every one of its tiles must stand over one.
+                if (RoyalHallMapTool.BALCONIES_2.any { x in it.xs && z in it.zs }) assertEquals(RoyalHallMapTool.BELOW_BUILDING, flags(1, x, z), "no balcony under $x,$z")
+                // No hole instead: every hidden wall-ring tile gets its facade per player (GeHomeHallCurtains), per storey.
+                if (ring) for (level in 1..2) {
+                    val pieces = GeHomeHallCurtains.PIECES.count { it.tile.x == x && it.tile.z == z && it.storey == level }
+                    assertEquals(if (flags(level, x, z) == RoyalHallMapTool.BELOW_BUILDING) 1 else 0, pieces, "facade piece $x,$z storey $level")
                 }
                 // No orange "gold trim" (overlay 157, texture 61) round the mansion any more.
                 assertNotEquals(157, tiles.tiles[0][x - 49 * 64][z - 54 * 64].overlayId and 0xFF, "orange trim at $x,$z")
@@ -234,6 +242,34 @@ class GeHomeHallTests {
             }
         } finally {
             library.close()
+        }
+    }
+
+    @Test
+    fun `the facade over the balconies closes only for a player inside below it`() {
+        assertEquals(40, GeHomeHallCurtains.PIECES.size)
+        assertTrue(GeHomeHallCurtains.PIECES.all { it.tile.height == 0 })
+        // The piece faces like the storey wall of its side (home_decor.txt: the level-1 wall on the same tile).
+        val decor = HomeDecorFile.load(Paths.get("..", "..", "data", "cfg", "home_decor.txt")).placements
+        var matched = 0
+        GeHomeHallCurtains.PIECES.forEach { p ->
+            val wall = decor.firstOrNull { it.tile == Tile(p.tile.x, p.tile.z, p.storey) && it.type == 0 } ?: return@forEach
+            assertEquals(wall.rot, p.rot, "rotation of ${p.tile} storey ${p.storey}")
+            matched++
+        }
+        assertEquals(16, matched, "the walled ring tiles at both ends of every balcony row")
+        val mid = Tile(3164, 3491, 0)
+        assertEquals(0b110, GeHomeHallCurtains.wanted(mid))
+        assertEquals(0b100, GeHomeHallCurtains.wanted(mid.transform(1)))
+        assertEquals(0, GeHomeHallCurtains.wanted(mid.transform(2)))
+        // Outside - on a threshold, under or on a balcony - the doorways stay open.
+        assertEquals(0, GeHomeHallCurtains.wanted(Tile(3164, 3485, 0)))
+        assertEquals(0, GeHomeHallCurtains.wanted(Tile(3164, 3483, 1)))
+        // The two facade locs: lifted to their storey, not solid, the plain storey wall's name.
+        listOf(RoyalHallLocTool.CURTAIN_1, RoyalHallLocTool.CURTAIN_2).forEach { id ->
+            val def = DEFINITIONS.get(ObjectDef::class.java, id)
+            assertEquals(DEFINITIONS.get(ObjectDef::class.java, 33868).name, def.name)
+            assertFalse(def.solid, "loc $id is solid")
         }
     }
 
