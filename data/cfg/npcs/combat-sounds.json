@@ -26454,28 +26454,6 @@
   "death": -1
  },
  {
-  "id": 6205,
-  "name": "",
-  "void_key": "",
-  "combat_def": "",
-  "attack": [
-   {
-    "id": 511,
-    "radius": 0,
-    "delay": 0,
-    "on": "target"
-   }
-  ],
-  "attack_blocked": null,
-  "defend": 513,
-  "death": 512,
-  "source_2009scape": [
-   "attack",
-   "defend",
-   "death"
-  ]
- },
- {
   "id": 6206,
   "name": "Zakl'n Gritch",
   "void_key": "zakln_gritch",
@@ -26484,28 +26462,6 @@
   "attack_blocked": null,
   "defend": 404,
   "death": 403
- },
- {
-  "id": 6207,
-  "name": "",
-  "void_key": "",
-  "combat_def": "",
-  "attack": [
-   {
-    "id": 511,
-    "radius": 0,
-    "delay": 0,
-    "on": "target"
-   }
-  ],
-  "attack_blocked": null,
-  "defend": 513,
-  "death": 512,
-  "source_2009scape": [
-   "attack",
-   "defend",
-   "death"
-  ]
  },
  {
   "id": 6208,
@@ -26523,28 +26479,6 @@
   "attack_blocked": null,
   "defend": 404,
   "death": 403
- },
- {
-  "id": 6209,
-  "name": "",
-  "void_key": "",
-  "combat_def": "",
-  "attack": [
-   {
-    "id": 511,
-    "radius": 0,
-    "delay": 0,
-    "on": "target"
-   }
-  ],
-  "attack_blocked": null,
-  "defend": 513,
-  "death": 512,
-  "source_2009scape": [
-   "attack",
-   "defend",
-   "death"
-  ]
  },
  {
   "id": 6210,
@@ -26708,28 +26642,6 @@
   "death": 3854
  },
  {
-  "id": 6224,
-  "name": "",
-  "void_key": "",
-  "combat_def": "",
-  "attack": [
-   {
-    "id": 511,
-    "radius": 0,
-    "delay": 0,
-    "on": "target"
-   }
-  ],
-  "attack_blocked": null,
-  "defend": 513,
-  "death": 512,
-  "source_2009scape": [
-   "attack",
-   "defend",
-   "death"
-  ]
- },
- {
   "id": 6225,
   "name": "Flockleader Geerin",
   "void_key": "flockleader_geerin",
@@ -26747,28 +26659,6 @@
   "death": 3854
  },
  {
-  "id": 6226,
-  "name": "",
-  "void_key": "",
-  "combat_def": "",
-  "attack": [
-   {
-    "id": 511,
-    "radius": 0,
-    "delay": 0,
-    "on": "target"
-   }
-  ],
-  "attack_blocked": null,
-  "defend": 513,
-  "death": 512,
-  "source_2009scape": [
-   "attack",
-   "defend",
-   "death"
-  ]
- },
- {
   "id": 6227,
   "name": "Flight Kilisa",
   "void_key": "flight_kilisa",
@@ -26784,28 +26674,6 @@
   "attack_blocked": null,
   "defend": 3859,
   "death": 3854
- },
- {
-  "id": 6228,
-  "name": "",
-  "void_key": "",
-  "combat_def": "",
-  "attack": [
-   {
-    "id": 511,
-    "radius": 0,
-    "delay": 0,
-    "on": "target"
-   }
-  ],
-  "attack_blocked": null,
-  "defend": 513,
-  "death": 512,
-  "source_2009scape": [
-   "attack",
-   "defend",
-   "death"
-  ]
  },
  {
   "id": 6229,
@@ -27112,28 +26980,6 @@
   ]
  },
  {
-  "id": 6249,
-  "name": "",
-  "void_key": "",
-  "combat_def": "",
-  "attack": [
-   {
-    "id": 511,
-    "radius": 0,
-    "delay": 0,
-    "on": "target"
-   }
-  ],
-  "attack_blocked": null,
-  "defend": 513,
-  "death": 512,
-  "source_2009scape": [
-   "attack",
-   "defend",
-   "death"
-  ]
- },
- {
   "id": 6250,
   "name": "Growler",
   "void_key": "growler",
@@ -27151,28 +26997,6 @@
   "death": 3867
  },
  {
-  "id": 6251,
-  "name": "",
-  "void_key": "",
-  "combat_def": "",
-  "attack": [
-   {
-    "id": 511,
-    "radius": 0,
-    "delay": 0,
-    "on": "target"
-   }
-  ],
-  "attack_blocked": null,
-  "defend": 513,
-  "death": 512,
-  "source_2009scape": [
-   "attack",
-   "defend",
-   "death"
-  ]
- },
- {
   "id": 6252,
   "name": "Bree",
   "void_key": "bree",
@@ -27181,28 +27005,6 @@
   "attack_blocked": null,
   "defend": 3866,
   "death": 3827
- },
- {
-  "id": 6253,
-  "name": "",
-  "void_key": "",
-  "combat_def": "",
-  "attack": [
-   {
-    "id": 511,
-    "radius": 0,
-    "delay": 0,
-    "on": "target"
-   }
-  ],
-  "attack_blocked": null,
-  "defend": 513,
-  "death": 512,
-  "source_2009scape": [
-   "attack",
-   "defend",
-   "death"
-  ]
  },
  {
   "id": 6254,
@@ -27279,28 +27081,6 @@
   "death": 471
  },
  {
-  "id": 6262,
-  "name": "",
-  "void_key": "",
-  "combat_def": "",
-  "attack": [
-   {
-    "id": 511,
-    "radius": 0,
-    "delay": 0,
-    "on": "target"
-   }
-  ],
-  "attack_blocked": null,
-  "defend": 513,
-  "death": 512,
-  "source_2009scape": [
-   "attack",
-   "defend",
-   "death"
-  ]
- },
- {
   "id": 6263,
   "name": "Sergeant Steelwill",
   "void_key": "sergeant_steelwill",
@@ -27318,28 +27098,6 @@
   "death": -1
  },
  {
-  "id": 6264,
-  "name": "",
-  "void_key": "",
-  "combat_def": "",
-  "attack": [
-   {
-    "id": 511,
-    "radius": 0,
-    "delay": 0,
-    "on": "target"
-   }
-  ],
-  "attack_blocked": null,
-  "defend": 513,
-  "death": 512,
-  "source_2009scape": [
-   "attack",
-   "defend",
-   "death"
-  ]
- },
- {
   "id": 6265,
   "name": "Sergeant Grimspike",
   "void_key": "sergeant_grimspike",
@@ -27355,28 +27113,6 @@
   "attack_blocked": null,
   "defend": 472,
   "death": 471
- },
- {
-  "id": 6266,
-  "name": "",
-  "void_key": "",
-  "combat_def": "",
-  "attack": [
-   {
-    "id": 511,
-    "radius": 0,
-    "delay": 0,
-    "on": "target"
-   }
-  ],
-  "attack_blocked": null,
-  "defend": 513,
-  "death": 512,
-  "source_2009scape": [
-   "attack",
-   "defend",
-   "death"
-  ]
  },
  {
   "id": 6268,
@@ -29661,50 +29397,6 @@
   "attack_blocked": null,
   "defend": 439,
   "death": 438,
-  "source_2009scape": [
-   "attack",
-   "defend",
-   "death"
-  ]
- },
- {
-  "id": 6543,
-  "name": "",
-  "void_key": "",
-  "combat_def": "",
-  "attack": [
-   {
-    "id": 511,
-    "radius": 0,
-    "delay": 0,
-    "on": "target"
-   }
-  ],
-  "attack_blocked": null,
-  "defend": 513,
-  "death": 512,
-  "source_2009scape": [
-   "attack",
-   "defend",
-   "death"
-  ]
- },
- {
-  "id": 6544,
-  "name": "",
-  "void_key": "",
-  "combat_def": "",
-  "attack": [
-   {
-    "id": 511,
-    "radius": 0,
-    "delay": 0,
-    "on": "target"
-   }
-  ],
-  "attack_blocked": null,
-  "defend": 513,
-  "death": 512,
   "source_2009scape": [
    "attack",
    "defend",
