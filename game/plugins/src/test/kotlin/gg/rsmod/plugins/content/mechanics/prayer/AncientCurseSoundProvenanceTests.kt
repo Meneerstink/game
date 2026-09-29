@@ -144,15 +144,16 @@ class AncientCurseSoundProvenanceTests {
     }
 
     /**
-     * The owner-chosen PROVISIONAL activation/Soul Split sounds must be the seven curse-block synths
-     * that no sequence owns (so none doubles a graphic-borne sound) and must exist in the cache.
+     * The owner-chosen PROVISIONAL activation/Soul Split sounds must be unowned curse-block synths (so none doubles a
+     * graphic-borne sound) and must exist in the cache. Owner 2026-09-29: Deflects use Darkan's Protect-prayer sounds
+     * (2675/2676/2677, Summoning 4262) and 8110 is the Leech impact sound, no longer an activation sound.
      */
     @Test
-    fun `provisional owner-chosen curse sounds are the seven unowned curse-block synths and exist`() {
+    fun `curse activation and Soul Split sounds exist and double no graphic-borne sound`() {
         val chosen =
             AncientCurse.values().filter { it.activationGraphic == null }.mapNotNull { AncientCurses.activationSound(it) }.toSet() +
                 setOf(AncientCurses.SOUL_SPLIT_HIT_SOUND, AncientCurses.SOUL_SPLIT_RETURN_SOUND)
-        assertEquals(setOf(8108, 8109, 8110, 8112, 8113, 8114, 8119), chosen)
+        assertEquals(setOf(8108, 8109, 8112, 8113, 8114, 8119, 2675, 2676, 2677, 4262), chosen)
         val graphicBorne = graphicAudio.values.map { it.second }.toSet()
         assertTrue("a chosen sound doubles a graphic-borne sound", chosen.intersect(graphicBorne).isEmpty())
         withCache { library ->

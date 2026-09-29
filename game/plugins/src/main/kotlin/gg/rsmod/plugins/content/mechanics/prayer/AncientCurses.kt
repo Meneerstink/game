@@ -115,17 +115,29 @@ object AncientCurses {
         mapOf(
             AncientCurse.Category.SAP to 8108,
             AncientCurse.Category.LEECH to 8109,
-            AncientCurse.Category.DEFLECT_COMBAT to 8110,
-            AncientCurse.Category.DEFLECT_SUMMONING to 8110,
             AncientCurse.Category.WRATH to 8114,
             AncientCurse.Category.SOUL_SPLIT to 8112,
+        )
+
+    /**
+     * Deflects sound like the Protect prayer they replace (owner 2026-09-29, replacing the by-ear 8110, which Darkan's
+     * `PrayerManager.processLeeches` plays as the Leech impact): Darkan `Prayer.java` activation sounds DEFLECT_MAGIC 2675,
+     * DEFLECT_RANGE 2677, DEFLECT_MELEE 2676 (the 667 cache's Protect from Magic / Missiles / Melee tracks) and
+     * DEFLECT_SUMMONING 4262.
+     */
+    private val ACTIVATION_SOUND_BY_CURSE: Map<AncientCurse, Int> =
+        mapOf(
+            AncientCurse.DEFLECT_MAGIC to Sfx.PROTECT_FROM_MAGIC,
+            AncientCurse.DEFLECT_MISSILES to Sfx.PROTECT_FROM_MISSILES,
+            AncientCurse.DEFLECT_MELEE to Sfx.PROTECT_FROM_MELEE,
+            AncientCurse.DEFLECT_SUMMONING to 4262,
         )
 
     /** PROVISIONAL (owner delegated, same date): Soul Split souls leaving the target / returning to heal. */
     const val SOUL_SPLIT_HIT_SOUND = 8113
     const val SOUL_SPLIT_RETURN_SOUND = 8119
 
-    fun activationSound(curse: AncientCurse): Int? = ACTIVATION_SOUND_BY_CATEGORY[curse.category]
+    fun activationSound(curse: AncientCurse): Int? = ACTIVATION_SOUND_BY_CURSE[curse] ?: ACTIVATION_SOUND_BY_CATEGORY[curse.category]
 
     /** Novite's Sap/Leech projectile packet: start/end 35, speed 20, delay 5, curve 0. */
     private const val CURSE_PROJECTILE_START_HEIGHT = 35
