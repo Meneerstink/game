@@ -261,12 +261,12 @@ object MagicCombatStrategy : CombatStrategy {
             if (spell.thirdProjectile > -1) {
                 world.spawn(pawn.createProjectile(target, gfx = spell.thirdProjectile, type = ProjectileType.MAGIC))
             }
-            hitDelay = getHitDelay(pawn.getCentreTile(), target.getCentreTile())
+            hitDelay = getHitDelay(pawn, target)
             spell.impactGfx?.let { gfx ->
                 target.graphic(Graphic(gfx.id, gfx.height, projectile.lifespan, impactGfxRotation))
             }
         } else {
-            hitDelay = if (spell.fixedHitDelay > -1) spell.fixedHitDelay else getHitDelay(pawn.getCentreTile(), target.getCentreTile())
+            hitDelay = if (spell.fixedHitDelay > -1) spell.fixedHitDelay else getHitDelay(pawn, target)
             spell.impactGfx?.let { gfx ->
                 target.graphic(Graphic(gfx.id, gfx.height, hitDelay * 30, impactGfxRotation))
             }
@@ -469,10 +469,15 @@ object MagicCombatStrategy : CombatStrategy {
     fun getHitDelay(
         start: Tile,
         target: Tile,
-    ): Int {
-        val distance = start.getDistance(target)
-        return 2 + floor((1.0 + distance) / 3.0).toInt()
-    }
+    ): Int = hitDelayForDistance(gg.rsmod.plugins.content.combat.Combat.tileDistance(start, target))
+
+    /** Edge to edge between the two footprints, as the wiki measures it. */
+    fun getHitDelay(
+        pawn: Pawn,
+        target: Pawn,
+    ): Int = hitDelayForDistance(gg.rsmod.plugins.content.combat.Combat.tileDistance(pawn, target))
+
+    fun hitDelayForDistance(distance: Int): Int = 2 + (1 + distance) / 3
 
     /**
      * [baseXp]: the spell's cast experience, awarded once per cast (0 for further victims and for magic special attack hits, see
@@ -481,6 +486,11 @@ object MagicCombatStrategy : CombatStrategy {
     internal fun addCombatXp(
         player: Player,
         target: Pawn,
+    /**
+     * OSRS Wiki "Hit delay": MagicDelay = 1 + floor((1 + Distance) / 3), + 1 server offset. Distance is counted in game squares
+     * (Chebyshev), as the magic projectile's own flight (Combat.getProjectileLifespan) - it was the rounded-up straight-line
+     * distance, so a diagonal cast landed a tick late, after its projectile (combat run 2026-09-29).
+     */
         damage: Int,
         baseXp: Double,
     ) {

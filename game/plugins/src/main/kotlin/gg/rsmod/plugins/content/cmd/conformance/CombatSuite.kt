@@ -63,11 +63,20 @@ object CombatSuite : Conformance.Suite {
             } catch (e: Throwable) {
                 run.add(Result("combat $name", "scenario", Verdict.FAIL, "runs to the end", "threw $e"))
             }
-            for (p in listOf(a, b)) reset(p, if (p === a) arena else arena.transform(1, 0))
-            dummy.resetInteractions()
-            Combat.reset(dummy)
-            dummy.moveTo(arena.transform(0, 3))
-            wait(2)
+            // Hits still in flight land after a reset and start auto retaliation again (the dummy kept fighting C1 into the next
+            // scenario and a manual cast was dropped for the wrong target): clear them, let a tick pass, reset once more.
+            repeat(2) {
+                for (p in listOf<gg.rsmod.game.model.entity.Pawn>(a, b, dummy)) {
+                    p.clearHits()
+                    p.timers.remove(gg.rsmod.game.model.timer.ATTACK_DELAY)
+                }
+                for (p in listOf(a, b)) reset(p, if (p === a) arena else arena.transform(1, 0))
+                dummy.resetInteractions()
+                Combat.reset(dummy)
+                dummy.moveTo(arena.transform(0, 3))
+                wait(2)
+            }
+            b.setVarp(AttackTab.DISABLE_AUTO_RETALIATE_VARP, 0)
             run.window("combat $name", from)
         }
         scenario("eat delay") { eatDelay(run, a, dummy, arena) }
@@ -123,7 +132,7 @@ object CombatSuite : Conformance.Suite {
             run.add(Result(e, "setup: two whip swings", Verdict.FAIL, "2 swings", "${swings.size}"))
             return
         }
-        a.setCurrentLifepoints(a.getMaximumLifepoints() - 400)
+        a.setCurrentLifepoints(a.getMaximumLifepoints() - 40) // 1:1 lifepoints (was a x10 figure)
         val ate = run.world.currentCycle
         Bots.itemOption(a, a.inventory.getItemIndex(Items.SHARK, false), "Eat")
         guard = 0
@@ -138,7 +147,7 @@ object CombatSuite : Conformance.Suite {
         a.resetInteractions()
         Combat.reset(a)
         wait(4)
-        a.setCurrentLifepoints(a.getMaximumLifepoints() - 500)
+        a.setCurrentLifepoints(a.getMaximumLifepoints() - 50)
         val hp0 = a.getCurrentLifepoints()
         Bots.itemOption(a, a.inventory.getItemIndex(Items.SHARK, false), "Eat")
         Bots.itemOption(a, a.inventory.getItemIndex(Items.COOKED_KARAMBWAN, false), "Eat")
@@ -165,6 +174,9 @@ object CombatSuite : Conformance.Suite {
         b: Client,
         arena: Tile,
     ) {
+        // The target only takes the casts: with auto retaliate it started a fist fight with the caster (hits in flight re-trigger
+        // it after every reset) and the caster's manual cast was never fired.
+        b.setVarp(AttackTab.DISABLE_AUTO_RETALIATE_VARP, 1)
         val e = "combat freezes"
         a.setVarbit(MagicSpells.INF_RUNES_VARBIT, 1)
         val cases =
@@ -190,8 +202,8 @@ object CombatSuite : Conformance.Suite {
             var t = 0
             var casts = 0
             while (frozenAt < 0 && casts++ < 6) {
-                a.attack(b)
                 manualCast(a, b, spell)
+                a.attack(b)
                 t = 0
                 while (t++ < 12) {
                     keep(a, b)
@@ -252,6 +264,9 @@ object CombatSuite : Conformance.Suite {
         b: Client,
         arena: Tile,
     ) {
+        // The target only takes the casts: with auto retaliate it started a fist fight with the caster (hits in flight re-trigger
+        // it after every reset) and the caster's manual cast was never fired.
+        b.setVarp(AttackTab.DISABLE_AUTO_RETALIATE_VARP, 1)
         val e = "combat freeze range"
         a.setVarbit(MagicSpells.INF_RUNES_VARBIT, 1)
         a.setSpellbook(gg.rsmod.plugins.api.Spellbook.ANCIENT)
@@ -262,8 +277,8 @@ object CombatSuite : Conformance.Suite {
         val c = run.world.currentCycle
         var casts = 0
         while (!b.timers.has(gg.rsmod.game.model.timer.FROZEN_TIMER) && casts++ < 6) {
-            a.attack(b)
             manualCast(a, b, CombatSpell.ICE_BARRAGE)
+            a.attack(b)
             var t = 0
             while (t++ < 12 && !b.timers.has(gg.rsmod.game.model.timer.FROZEN_TIMER)) {
                 keep(a, b)
@@ -321,6 +336,9 @@ object CombatSuite : Conformance.Suite {
         dummy: Npc,
         arena: Tile,
     ) {
+        // The target only takes the casts: with auto retaliate it started a fist fight with the caster (hits in flight re-trigger
+        // it after every reset) and the caster's manual cast was never fired.
+        b.setVarp(AttackTab.DISABLE_AUTO_RETALIATE_VARP, 1)
         val e = "combat miasmic"
         a.setVarbit(MagicSpells.INF_RUNES_VARBIT, 1)
         a.setSpellbook(gg.rsmod.plugins.api.Spellbook.ANCIENT)
@@ -333,8 +351,8 @@ object CombatSuite : Conformance.Suite {
         val c0 = run.world.currentCycle
         var casts = 0
         while (!slowed() && casts++ < 6) {
-            a.attack(b)
             manualCast(a, b, CombatSpell.MIASMIC_RUSH)
+            a.attack(b)
             var t = 0
             while (t++ < 12 && !slowed()) {
                 keep(a, b)

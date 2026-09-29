@@ -364,9 +364,9 @@ object RangedCombatStrategy : CombatStrategy {
             } else if (pawn is Player && pawn.hasWeaponType(WeaponType.THROWN) && !chinchompa &&
                 pawn.getEquipment(EquipmentType.WEAPON)?.id?.let { gg.rsmod.plugins.content.items.osrs.Tonalztics.isTonalztics(it) } != true
             ) {
-                getThrownHitDelay(pawn.getCentreTile(), target.tile.transform(target.getSize() / 2, target.getSize() / 2))
+                2 + gg.rsmod.plugins.content.combat.Combat.tileDistance(pawn, target) / 6
             } else {
-                getHitDelay(pawn.getCentreTile(), target.tile.transform(target.getSize() / 2, target.getSize() / 2))
+                2 + (3 + gg.rsmod.plugins.content.combat.Combat.tileDistance(pawn, target)) / 6
             }
         // Enchanted dragon bolts roll their effect on every normal crossbow shot (EnchantedBolts).
         val shot =
@@ -528,10 +528,7 @@ object RangedCombatStrategy : CombatStrategy {
     fun getHitDelay(
         start: Tile,
         target: Tile,
-    ): Int {
-        val distance = start.getDistance(target)
-        return 2 + (Math.floor((3.0 + distance) / 6.0)).toInt()
-    }
+    ): Int = 2 + (3 + gg.rsmod.plugins.content.combat.Combat.tileDistance(start, target)) / 6
 
     /**
      * OSRS Wiki "Hit delay": "ThrownDelay = 1 + floor(Distance / 6)" for darts, knives and thrownaxes (bows and crossbows use
@@ -541,7 +538,11 @@ object RangedCombatStrategy : CombatStrategy {
     fun getThrownHitDelay(
         start: Tile,
         target: Tile,
-    ): Int = 2 + start.getDistance(target) / 6
+    ): Int = 2 + gg.rsmod.plugins.content.combat.Combat.tileDistance(start, target) / 6
+    /**
+     * OSRS Wiki "Hit delay": BowDelay = 1 + floor((3 + Distance) / 6), + 1 server offset; Distance in game squares (Chebyshev) -
+     * it was the rounded-up straight-line distance, a tick late on long diagonals (combat run 2026-09-29).
+     */
 
     /** Also used for ranged special attack hits ([gg.rsmod.plugins.content.combat.specialattack.SpecialAttackXp]). */
     /**

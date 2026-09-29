@@ -318,6 +318,22 @@ object Combat {
         return withinRange || PawnPathAction.walkTo(it, pawn, target, interactionRange = distance, lineOfSight = false)
     }
 
+    /** Distance in game squares (Chebyshev), as the OSRS hit-delay formulas count it. */
+    fun tileDistance(
+        a: Tile,
+        b: Tile,
+    ): Int = maxOf(Math.abs(a.x - b.x), Math.abs(a.z - b.z))
+
+    /** OSRS Wiki "Hit delay": "edge-to-edge in game squares" between the two footprints (0 when they overlap). */
+    fun tileDistance(
+        a: Pawn,
+        b: Pawn,
+    ): Int {
+        val dx = maxOf(0, b.tile.x - (a.tile.x + a.getSize() - 1), a.tile.x - (b.tile.x + b.getSize() - 1))
+        val dz = maxOf(0, b.tile.z - (a.tile.z + a.getSize() - 1), a.tile.z - (b.tile.z + b.getSize() - 1))
+        return maxOf(dx, dz)
+    }
+
     fun getProjectileLifespan(
         source: Pawn,
         target: Tile,

@@ -105,7 +105,7 @@ class OsrsItemsAuditTests {
     fun `I-03 a landed Zamorak godsword special freezes for 32 ticks`() {
         val zgs = File("$weapons/zamorak_godsword.plugin.kts").readText()
         assertTrue("val ZGS_FREEZE_TICKS = 32" in zgs)
-        assertTrue("if (landHit) {" in zgs && "victim.freeze(ZGS_FREEZE_TICKS)" in zgs && "victim.graphic(2104)" in zgs)
+        assertTrue("if (landHit) {" in zgs && "victim.freeze(ZGS_FREEZE_TICKS, player)" in zgs && "victim.graphic(2104)" in zgs)
     }
 
     @Test
