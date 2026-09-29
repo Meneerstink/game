@@ -320,10 +320,13 @@ object Sweeps {
             val blockAnim = npc.combatDef.blockAnimation
             if (blockAnim >= 0 && block.none { it.contains("index=${npc.index} ") && it.contains("id=$blockAnim") }) verdicts += "block animation $blockAnim not seen when hit"
             Combat.reset(bot)
+            // Sound audit 2026-09-29: the kill must be credited to the bot - NpcDeathAction takes the killer from the damage map,
+            // and without one on_npc_killed (the death sound) never ran, so every npc was reported "no death sound traced".
+            npc.damageMap.add(bot, npc.getCurrentLifepoints())
             val death = window(npc.combatDef.deathDelay + 5) { npc.hit(npc.getCurrentLifepoints()) }
             val deaths = npc.combatDef.deathAnimation.filter { it >= 0 }
             if (deaths.isNotEmpty() && death.none { l -> deaths.any { l.contains("id=$it") } }) verdicts += "death animation ${deaths.joinToString("/")} not seen"
-            if (death.none { it.contains("sound.death") || it.contains("areasound") }) verdicts += "no death sound traced"
+            if (death.none { it.contains("sound.death") || it.contains("areasound") || it.contains("sound player=${bot.username} ") }) verdicts += "no death sound traced"
             if (!npc.isDead() && world.npcs.contains(npc)) world.remove(npc)
             record("npc $id '$name'", verdicts, report, counts)
             if (n % 25 == 0) progress(world, "npcs ${n + 1}/${list.size}")

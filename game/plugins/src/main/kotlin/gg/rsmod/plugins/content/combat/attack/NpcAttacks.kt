@@ -478,7 +478,9 @@ object NpcAttacks {
         if (gg.rsmod.game.model.AvTrace.enabled || gg.rsmod.game.model.BreachTrace.watches(npc.id)) {
             val sectionSounds = attack.sounds.size + attack.targetSounds.size + attack.impactSounds.size
             val tableSound = gg.rsmod.plugins.content.combat.audio.NpcCombatAudio.rowFor(npc.id)?.attack?.isNotEmpty() == true
-            val frameSound = gg.rsmod.plugins.content.combat.audio.NpcCombatAudio.hasAudibleFrameSounds(npc, anim)
+            val frameSound =
+                gg.rsmod.plugins.content.combat.audio.NpcCombatAudio.hasAudibleFrameSounds(npc, anim) ||
+                    gg.rsmod.plugins.content.combat.audio.NpcCombatAudio.unheardFrameSound(npc, anim) >= 0
             val silent = sectionSounds == 0 && !tableSound && !frameSound
             val noVisual = anim < 0 && attack.gfx.isEmpty() && attack.projectiles.isEmpty() && attack.targetGfx.isEmpty() && attack.impactGfx.isEmpty()
             if (silent || noVisual) {

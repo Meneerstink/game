@@ -85,10 +85,13 @@ object WorldScan {
                     val row = NpcAttacks.rowFor(npc.id)
                     val sectionSound = row?.attacks?.any { it.sounds.isNotEmpty() || it.targetSounds.isNotEmpty() || it.impactSounds.isNotEmpty() } == true
                     val tableSound = NpcCombatAudio.rowFor(npc.id)?.attack?.isNotEmpty() == true
-                    val frameSound = NpcCombatAudio.hasAudibleFrameSounds(npc, combat.attackAnimation)
+                    // A radius-0 frame sound counts: NpcCombatAudio sends it to the player itself (sound audit 2026-09-29).
+                    val frameSound = NpcCombatAudio.hasAudibleFrameSounds(npc, combat.attackAnimation) || NpcCombatAudio.unheardFrameSound(npc, combat.attackAnimation) >= 0
                     if (!sectionSound && !tableSound && !frameSound) add("npc-combat", "npc ${npc.id} '$name' attacks silently (no section, sound-table or frame sound)")
                     if (combat.attackAnimation < 0 && row?.attacks?.all { it.anim < 0 } != false) add("npc-combat", "npc ${npc.id} '$name' has no attack animation")
-                    if (NpcCombatAudio.rowFor(npc.id)?.defend ?: -1 < 0 && !NpcCombatAudio.hasAudibleFrameSounds(npc, combat.blockAnimation)) {
+                    if (NpcCombatAudio.rowFor(npc.id)?.defend ?: -1 < 0 && !NpcCombatAudio.hasAudibleFrameSounds(npc, combat.blockAnimation) &&
+                        NpcCombatAudio.unheardFrameSound(npc, combat.blockAnimation) < 0
+                    ) {
                         add("npc-combat", "npc ${npc.id} '$name' has no hit/defend sound")
                     }
                     if (NpcCombatAudio.rowFor(npc.id)?.death ?: -1 < 0 && combat.deathAnimation.none { NpcCombatAudio.hasAudibleFrameSounds(npc, it) }) {

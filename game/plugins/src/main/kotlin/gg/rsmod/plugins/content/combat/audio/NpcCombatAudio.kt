@@ -60,6 +60,7 @@ object NpcCombatAudio {
     fun load(file: File = File(DEFAULT_PATH)): Int {
         val loaded: Array<Row> = FileReader(file).use { Gson().fromJson(it, Array<Row>::class.java) }
         rows = loaded.associateBy { it.id }
+        families.clear() // resolved against the old rows; resolveFamilies runs again after every combat definition is merged
         return rows.size
     }
 
@@ -83,7 +84,88 @@ object NpcCombatAudio {
         aliases[npcId] = soundsOfNpcId
     }
 
-    fun rowFor(npcId: Int): Row? = rows[npcId] ?: registered[npcId] ?: aliases[npcId]?.let { rows[it] }
+    /**
+     * Sound audit 2026-09-29 (owner "vind rootcauses"): the table is keyed by npc id, but Jagex gives one creature many ids
+     * (40 Goblin ids, 57 Vyrewatch ids, ...) and the donors name only some of them, so the other versions of the same creature
+     * fought in silence. An id without a row takes the row of the npcs with the same cache name AND the same attack, block and
+     * death animations - the same creature - but only when every such row agrees and none is a boss with per-attack sounds.
+     * Filled once per boot by [resolveFamilies] (after every combat definition is merged).
+     */
+    private val families = java.util.concurrent.ConcurrentHashMap<Int, Row>()
+
+    /**
+     * Npcs whose hand-written death block plays its own sound (`data/cfg/npcs/death-sound-scripts.json`, written by
+     * generate.js with the rules of NpcCombatAudioTests): a family row never adds a second death sound to them.
+     */
+    @Volatile
+    private var deathByScript: Set<Int> = emptySet()
+
+    private class DeathByScript(
+        val ids: List<Int> = emptyList(),
+    )
+
+    fun loadDeathByScript(file: File): Int {
+        deathByScript = FileReader(file).use { Gson().fromJson(it, DeathByScript::class.java) }.ids.toSet()
+        return deathByScript.size
+    }
+
+    fun rowFor(npcId: Int): Row? = rows[npcId] ?: registered[npcId] ?: aliases[npcId]?.let { rows[it] } ?: families[npcId]
+
+    fun resolveFamilies(world: gg.rsmod.game.model.World): Int {
+        families.clear()
+        val defs = world.plugins.allNpcCombatDefs()
+        fun key(id: Int): String? {
+            val def = defs[id] ?: return null
+            if (def === gg.rsmod.game.model.combat.NpcCombatDef.DEFAULT) return null
+            if (def.attackAnimation < 0 && def.blockAnimation < 0 && def.deathAnimation.none { it >= 0 }) return null
+            val name = runCatching { world.definitions.get(gg.rsmod.game.fs.def.NpcDef::class.java, id).name }.getOrNull()?.trim()?.lowercase()
+            if (name.isNullOrEmpty() || name == "null") return null
+            return "$name|${def.attackAnimation}|${def.blockAnimation}|${def.deathAnimation.joinToString(",")}"
+        }
+        fun name(id: Int) = runCatching { world.definitions.get(gg.rsmod.game.fs.def.NpcDef::class.java, id).name }.getOrNull()?.trim()?.lowercase()?.takeIf { it.isNotEmpty() && it != "null" }
+        val byAnims = HashMap<String, MutableList<Row>>()
+        val byName = HashMap<String, MutableList<Row>>()
+        rows.values.forEach { row ->
+            key(row.id)?.let { byAnims.getOrPut(it) { mutableListOf() } += row }
+            name(row.id)?.let { byName.getOrPut(it) { mutableListOf() } += row }
+        }
+        defs.keys.forEach { id ->
+            if (rows.containsKey(id) || registered.containsKey(id) || aliases.containsKey(id)) return@forEach
+            // Same creature first (name and animations, one donor is enough); else the same name when at least two donors agree.
+            val row = key(id)?.let { byAnims[it] }?.let { unanimous(id, it, minDonors = 1) } ?: name(id)?.let { byName[it] }?.let { unanimous(id, it, minDonors = 2) }
+            if (row != null) families[id] = row
+        }
+        return families.size
+    }
+
+    /** Per slot, only a value every donor that has one agrees on; a boss with per-attack sounds lends no attack sound. */
+    private fun unanimous(
+        id: Int,
+        donors: List<Row>,
+        minDonors: Int,
+    ): Row? {
+        if (donors.size < minDonors) return null
+        val attacks = donors.map { r -> r.attack.map { Triple(it.id, it.radius, it.on) } }.filter { it.isNotEmpty() }.distinct()
+        val attack = if (attacks.size == 1 && donors.none { it.attackBlocked != null }) donors.first { it.attack.isNotEmpty() }.attack else emptyList()
+        val defend = donors.map { it.defend }.filter { it >= 0 }.distinct().singleOrNull() ?: -1
+        val death = if (id in deathByScript) -1 else donors.map { it.death }.filter { it >= 0 }.distinct().singleOrNull() ?: -1
+        if (attack.isEmpty() && defend < 0 && death < 0) return null
+        return Row(id = id, name = donors.first().name, voidKey = "family-of-${donors.map { it.id }.sorted().take(5).joinToString("/")}", attack = attack, defend = defend, death = death)
+    }
+
+    /**
+     * A radius-0 frame sound is played by the client only for the local player's own animation (rev-667 Static431), so on an
+     * npc it is silent. When the table has no cue, the animation's own cache sound is sent to the player instead - the sound the
+     * sequence itself names for that action (e.g. a Watchman punching with the human punch 422).
+     */
+    fun unheardFrameSound(
+        npc: Npc,
+        anim: Int,
+    ): Int {
+        if (anim < 0) return -1
+        val def = runCatching { npc.world.definitions.getNullable(gg.rsmod.game.fs.def.AnimDef::class.java, anim) }.getOrNull() ?: return -1
+        return if (def.hasFrameSounds && !def.hasAudibleFrameSounds) def.firstFrameSound else -1
+    }
 
     /**
      * True when the shared table plays a death sound for [npcId]. A hand-written death block that
@@ -104,6 +186,15 @@ object NpcCombatAudio {
     ) {
         val traced = gg.rsmod.game.model.BreachTrace.watches(npc.id)
         val row = rowFor(npc.id)
+        if ((row == null || (row.attack.isEmpty() && row.attackBlocked == null)) && npc.attr[LAST_ATTACK_SOUND_CYCLE] != npc.world.currentCycle) {
+            val frame = unheardFrameSound(npc, anim)
+            if (frame >= 0) {
+                npc.attr[LAST_ATTACK_SOUND_CYCLE] = npc.world.currentCycle
+                if (traced) gg.rsmod.game.model.BreachTrace.log("sound.attack") { "npc=${npc.id}#${npc.index} anim=$anim sounds=[$frame] result=played-radius0-frame-sound" }
+                playAt(npc, target as? Player, frame)
+                return
+            }
+        }
         val skip =
             when {
                 row == null -> "no-sound-row"
@@ -171,7 +262,7 @@ object NpcCombatAudio {
                 runCatching { npc.world.definitions.getNullable(gg.rsmod.game.fs.def.AnimDef::class.java, anim)?.firstAudibleFrameSound }.getOrNull()
             } ?: -1
         val skippedBlock = blockSound >= 0 && npc.isAnimationProtected()
-        val id = (rowFor(npc.id)?.defend ?: -1).takeIf { it >= 0 } ?: if (skippedBlock) blockSound else -1
+        val id = (rowFor(npc.id)?.defend ?: -1).takeIf { it >= 0 } ?: if (skippedBlock) blockSound else unheardFrameSound(npc, npc.combatDef.blockAnimation)
         val frame = id >= 0 && hasAudibleFrameSounds(npc, npc.combatDef.blockAnimation) && !skippedBlock
         if (gg.rsmod.game.model.BreachTrace.watches(npc.id)) {
             gg.rsmod.game.model.BreachTrace.log("sound.defend") {

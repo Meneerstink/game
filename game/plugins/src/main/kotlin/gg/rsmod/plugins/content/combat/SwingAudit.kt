@@ -30,7 +30,9 @@ object SwingAudit {
         val weapon = pawn.getEquipment(EquipmentType.WEAPON)?.id ?: -1
         val anim = pawn.pendingAnimation()
         val animDef = if (anim >= 0) runCatching { world.definitions.getNullable(AnimDef::class.java, anim) }.getOrNull() else null
-        val frameSound = animDef?.hasAudibleFrameSounds == true
+        // Sound audit 2026-09-29: the swinging player's own client plays every frame sound of his animation, radius 0 included
+        // (unarmed punch/kick 422/423 carry 4277/4281...), so only an animation without any frame sound is silent for him.
+        val frameSound = animDef?.hasFrameSounds == true
         val t = pawn.tile
         val tt = target.tile
         val heard =

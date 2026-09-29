@@ -15,6 +15,14 @@ if (file.exists()) {
     logger.warn("Npc combat audio: {} is missing - npcs will have no combat sounds.", file.path)
 }
 
+val deathScripts = File("./data/cfg/npcs/death-sound-scripts.json")
+if (deathScripts.exists()) NpcCombatAudio.loadDeathByScript(deathScripts)
+
+on_world_init {
+    val families = NpcCombatAudio.resolveFamilies(world)
+    logger.info("Npc combat audio: {} more npc ids share the row of the same creature (same name and combat animations).", families)
+}
+
 on_npc_killed { killer, npc ->
     NpcCombatAudio.onDeath(killer, npc)
 }

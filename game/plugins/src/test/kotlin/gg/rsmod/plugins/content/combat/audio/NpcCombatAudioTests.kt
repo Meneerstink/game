@@ -167,6 +167,75 @@ class NpcCombatAudioTests {
         assertNull(NpcCombatAudio.rowFor(3))
     }
 
+    private fun combatDef(
+        attack: Int,
+        block: Int,
+        death: List<Int>,
+    ) = mockk<gg.rsmod.game.model.combat.NpcCombatDef>(relaxed = true).also {
+        every { it.attackAnimation } returns attack
+        every { it.blockAnimation } returns block
+        every { it.deathAnimation } returns death
+    }
+
+    @Test
+    fun `an npc id without a row takes the row of the same creature only when every row agrees`() {
+        // Sound audit 2026-09-29: 40 Goblin ids, 57 Vyrewatch ids ... - the donors name only some versions of a creature.
+        loadRows(
+            """
+            [
+             {"id": 1, "name": "Goblin", "attack": [{"id": 469, "radius": 0, "on": "target"}], "defend": 472, "death": 471},
+             {"id": 5, "name": "Goblin", "attack": [{"id": 469, "radius": 0, "on": "target"}], "defend": 472, "death": 471},
+             {"id": 7, "name": "Guard", "attack": [{"id": 2500, "radius": 0, "on": "target"}], "defend": 513, "death": 512},
+             {"id": 8, "name": "Guard", "attack": [{"id": 2501, "radius": 0, "on": "target"}], "defend": 513, "death": 512}
+            ]
+            """.trimIndent(),
+        )
+        val world = mockk<World>(relaxed = true)
+        val goblin = combatDef(6184, 6183, listOf(6182))
+        val guard = combatDef(390, 424, listOf(836))
+        val names = mapOf(1 to "Goblin", 5 to "Goblin", 100 to "Goblin", 101 to "Goblin", 102 to "Hobgoblin", 103 to "Goblin", 7 to "Guard", 8 to "Guard", 200 to "Guard")
+        every { world.plugins.allNpcCombatDefs() } returns
+            mapOf(1 to goblin, 5 to goblin, 100 to goblin, 101 to combatDef(6184, 6183, listOf(9999)), 102 to goblin, 103 to goblin, 7 to guard, 8 to guard, 200 to guard)
+        every { world.definitions.get(NpcDef::class.java, any()) } answers {
+            val id = secondArg<Int>()
+            mockk<NpcDef>(relaxed = true).also { every { it.name } returns names.getValue(id) }
+        }
+        // 103 has a hand-written death block with its own sound: the family gives it no second death sound.
+        NpcCombatAudio.loadDeathByScript(File.createTempFile("death-scripts", ".json").apply { deleteOnExit(); writeText("""{"ids":[103]}""") })
+        assertEquals(4, NpcCombatAudio.resolveFamilies(world))
+        NpcCombatAudio.loadDeathByScript(File.createTempFile("death-scripts", ".json").apply { deleteOnExit(); writeText("""{"ids":[]}""") })
+        assertEquals(472, NpcCombatAudio.rowFor(103)?.defend)
+        assertEquals(-1, NpcCombatAudio.rowFor(103)?.death)
+        assertEquals(472, NpcCombatAudio.rowFor(100)?.defend) // same name, same animations
+        assertEquals(471, NpcCombatAudio.rowFor(100)?.death)
+        assertEquals(listOf(469), NpcCombatAudio.rowFor(101)?.attack?.map { it.id }) // other animations: two agreeing Goblin donors
+        assertNull(NpcCombatAudio.rowFor(102)) // other name
+        // The Guard rows disagree on the attack sound: no guess for it, only the slots they share.
+        NpcCombatAudio.rowFor(200)!!.let {
+            assertTrue(it.attack.isEmpty())
+            assertEquals(513, it.defend)
+            assertEquals(512, it.death)
+        }
+    }
+
+    @Test
+    fun `a radius-0 frame sound on an npc animation is sent to the player when the table has no cue`() {
+        // The client plays a radius-0 frame sound only for the local player's own animation (rev-667 Static431).
+        loadRows("[]")
+        val f = Fixture(npcId = 34)
+        val punch = mockk<gg.rsmod.game.fs.def.AnimDef>(relaxed = true)
+        every { punch.hasFrameSounds } returns true
+        every { punch.hasAudibleFrameSounds } returns false
+        every { punch.firstFrameSound } returns 4282
+        every { f.world.definitions.getNullable(gg.rsmod.game.fs.def.AnimDef::class.java, 422) } returns punch
+        every { f.npc.combatDef } returns combatDef(422, 422, listOf(836))
+        every { f.world.currentCycle } returns 3
+        NpcCombatAudio.onAttack(f.npc, f.player, 422)
+        NpcCombatAudio.onAttack(f.npc, f.player, 422) // once per tick
+        NpcCombatAudio.onDefend(f.player, f.npc)
+        assertEquals(listOf(4282, 4282), f.sounds)
+    }
+
     private fun npcConst(name: String): Int? = runCatching { Npcs::class.java.getField(name).getInt(null) }.getOrNull()
 
     private fun resolve(
