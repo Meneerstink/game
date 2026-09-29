@@ -578,6 +578,12 @@ object EquipmentSuite : Conformance.Suite {
             when {
                 // Karil's crossbow first: it fires only bolt racks (it used to get runite bolts and never swung).
                 n.contains("karil") -> Items.BOLT_RACK
+                // Ammo of their own (combat run 2026-09-29: these never swung for want of ammo, so reach/speed/damage went untested).
+                n.contains("sunlight crossbow") -> Items.SUNLIGHT_ANTLER_BOLTS
+                n.contains("ballista") -> Items.OSRS_DRAGON_JAVELIN
+                n.contains("hand cannon") -> Items.HAND_CANNON_SHOT
+                n.contains("atlatl") -> Items.ATLATL_DART
+                n.contains("seercull") -> Items.RUNE_ARROW
                 n.contains("crossbow") || n.contains("c'bow") -> Items.RUNITE_BOLTS
                 n.contains("ogre") && n.contains("bow") -> Items.OGRE_ARROW
                 n.contains("dark bow") || n.contains("twisted bow") -> Items.DRAGON_ARROW
