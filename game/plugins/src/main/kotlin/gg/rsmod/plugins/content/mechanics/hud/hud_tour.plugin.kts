@@ -27,8 +27,8 @@ import gg.rsmod.plugins.content.mechanics.combatresponse.Vengeance
  * afterwards puts everything back: levels, life points, Vengeance, Teleblock, freeze, position and the account's own
  * hud settings. The monster and the ground items are removed again; the items are private to the admin.
  *
- * Steps: boosts / timers / vengeance proc (cooldown only) / opponent / ground items with everything together / partial
- * pickup / teleported away (no labels may remain) / back and cleaned up (nothing may remain).
+ * Steps: boosts / timers / vengeance proc (cooldown only) / opponent / ground items with everything together / the 78
+ * Plugins panel / Boosts switched off / partial pickup / teleported away (no labels may remain) / back and cleaned up.
  *
  * From the command port (agents): tools\conformance\Send-GameCommand.ps1 hudtour [player]
  */
@@ -114,9 +114,19 @@ fun startTour(
             wait(1)
             npc.setCurrentLifepoints(npc.getMaximumLifepoints() * 2 / 3)
             player.attack(npc)
-            wait(4)
+            // Kept alive for the whole tour (no kill, no loot left behind): its life points are topped up every tick below.
+            fun keepAlive() {
+                if (npc.getCurrentLifepoints() < npc.getMaximumLifepoints() / 3) npc.setCurrentLifepoints(npc.getMaximumLifepoints() * 2 / 3)
+            }
+            repeat(4) {
+                keepAlive()
+                wait(1)
+            }
             shot(player, "hud_4_opponent")
-            wait(2)
+            repeat(2) {
+                keepAlive()
+                wait(1)
+            }
 
             // 5. Ground items (private to the admin) around him, with everything else still on screen.
             fun drop(
@@ -135,15 +145,43 @@ fun startTour(
             drop(Items.DRAGON_BONES, 1, -1, -1)
             drop(Items.THIRDAGE_PLATEBODY, 1, 2, 1)
             drop(Items.DRAGONFIRE_SHIELD, 1, -2, 2)
-            wait(3)
+            repeat(3) {
+                keepAlive()
+                wait(1)
+            }
             shot(player, "hud_5_everything")
-            wait(2)
+            repeat(2) {
+                keepAlive()
+                wait(1)
+            }
+
+            // 5b. The 78 Plugins panel (what `hud` opens), then Boosts switched off: its panel must go, the rest stays.
+            ClientHud.send(player, "open")
+            repeat(2) {
+                keepAlive()
+                wait(1)
+            }
+            shot(player, "hud_5b_plugins_panel")
+            ClientHud.send(player, "close")
+            ClientHud.send(player, "cfg|0011111|20000,100000,1000000,10000000|ffffff,66b2ff,99ff99,ff9600,ff66b2,aa00ff")
+            repeat(2) {
+                keepAlive()
+                wait(1)
+            }
+            shot(player, "hud_5c_boosts_switched_off")
+            ClientHud.send(player, "cfg|1011111|20000,100000,1000000,10000000|ffffff,66b2ff,99ff99,ff9600,ff66b2,aa00ff")
 
             // 6. Partial pickup: three of the six sharks go, the label becomes x3.
             items.filter { it.item == Items.SHARK }.take(3).forEach { world.remove(it) }
-            wait(2)
+            repeat(2) {
+                keepAlive()
+                wait(1)
+            }
             shot(player, "hud_6_partial_pickup")
-            wait(2)
+            repeat(2) {
+                keepAlive()
+                wait(1)
+            }
 
             // 7. Combat stops and the admin teleports away: no opponent panel, no labels of the tour spot.
             Combat.reset(player)

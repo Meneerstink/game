@@ -43,13 +43,23 @@ fun status(player: gg.rsmod.game.model.entity.Player) {
     player.message("Value tiers: " + ClientHudConfig.TIER_NAMES.indices.joinToString(", ") { "${ClientHudConfig.TIER_NAMES[it]} ${tiers[it]}" } + ".")
     player.message("Highlighted: ${ClientHudConfig.list(player, false).joinToString(", ").ifEmpty { "none" }}.")
     player.message("Hidden: ${ClientHudConfig.list(player, true).joinToString(", ").ifEmpty { "none" }}.")
-    player.message("Use: hud <boosts|opponent|grounditems|timers|despawn|value> on/off, hud boosts all/changed, hud highlight <item>, " +
-        "hud hide <item>, hud tier <low|medium|high|insane> <amount>, hud colour <name> <rrggbb>, hud reset.")
+    player.message("Use: hud (opens the 78 Plugins panel), hud <boosts|opponent|grounditems|timers|despawn|value> on/off, hud boosts all/changed, " +
+        "hud highlight <item>, hud hide <item>, hud tier <low|medium|high|insane> <amount>, hud colour <name> <rrggbb>, hud reset. " +
+        "Hold Alt to drag panels; Alt + right-click puts one back.")
+}
+
+// `hud` / `plugins` alone open the clickable 78 Plugins panel in the client (owner 2026-09-29); `hud status` lists it in chat.
+on_command("plugins") {
+    ClientHud.send(player, "open")
 }
 
 on_command("hud") {
     val args = player.getCommandArgs()
     if (args.isEmpty()) {
+        ClientHud.send(player, "open")
+        return@on_command
+    }
+    if (args[0].equals("status", ignoreCase = true) || args[0].equals("help", ignoreCase = true)) {
         status(player)
         return@on_command
     }

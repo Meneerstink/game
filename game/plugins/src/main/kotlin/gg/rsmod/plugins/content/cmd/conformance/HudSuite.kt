@@ -554,7 +554,7 @@ object HudSuite : Conformance.Suite {
         wait(2)
         run.recording.of("U1", "msg").filter { it.cycle >= shotsFrom && it.text.contains("__RSPS_SHOT__:hud_") }.forEach { shots += it.text.substringAfter("__RSPS_SHOT__:").substringBefore(")") }
         run.expectTrue(e, "started", reply.startsWith("HUD tour started"), reply)
-        run.expectTrue(e, "eight screenshots requested", shots.size == 8, shots.joinToString(" "))
+        run.expectTrue(e, "ten screenshots requested", shots.size == 10, shots.joinToString(" "))
         run.expectTrue(e, "position back", a.tile.sameAs(tile), "at ${a.tile}, was $tile")
         run.expectTrue(e, "levels back", a.skills.getCurrentLevel(Skills.ATTACK) == 95 && a.skills.getCurrentLevel(Skills.DEFENCE) == 99, "attack ${a.skills.getCurrentLevel(Skills.ATTACK)} defence ${a.skills.getCurrentLevel(Skills.DEFENCE)}")
         run.expectTrue(e, "life points back", a.getCurrentLifepoints() == life, "${a.getCurrentLifepoints()} was $life")
