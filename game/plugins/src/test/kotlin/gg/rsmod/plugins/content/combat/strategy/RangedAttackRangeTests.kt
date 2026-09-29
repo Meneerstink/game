@@ -44,6 +44,7 @@ class RangedAttackRangeTests {
             Items.THIRDAGE_BOW to 9,
             Items.SCORCHING_BOW to 10,
             Items.ECLIPSE_ATLATL to 5,
+            Items.MAGIC_LONGBOW to 10,
         )
 
     @Test

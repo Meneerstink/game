@@ -49,7 +49,10 @@ object StaffOfTheDead {
     val DEAD_STAVES = setOf(Items.STAFF_OF_THE_DEAD, Items.TOXIC_STAFF_UNCHARGED, Items.TOXIC_STAFF_OF_THE_DEAD, Items.STAFF_OF_BALANCE)
 
     /** Staves sharing Power of Death (staff of the dead, toxic staff, staff of light, staff of balance). */
-    val POWER_OF_DEATH_STAVES = DEAD_STAVES + Items.STAFF_OF_LIGHT
+    /** The Staff of light and its four recolours (22207-22213); the recolours had no special attack (combat run 2026-09-29). */
+    val STAFFS_OF_LIGHT = setOf(Items.STAFF_OF_LIGHT, Items.STAFF_OF_LIGHT_22207, Items.STAFF_OF_LIGHT_22209, Items.STAFF_OF_LIGHT_22211, Items.STAFF_OF_LIGHT_22213)
+
+    val POWER_OF_DEATH_STAVES = DEAD_STAVES + STAFFS_OF_LIGHT
 
     fun scales(item: Item): Int = if (item.id == Items.TOXIC_STAFF_OF_THE_DEAD) item.attr[ItemAttribute.CHARGES] ?: 0 else 0
 

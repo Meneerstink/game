@@ -159382,7 +159382,7 @@
   weight: 1.3
   equipment:
     equip_slot: 3
-    equip_type: -1
+    equip_type: 5
     appearance_id: 3183
     remove_head: false
     remove_beard: false
@@ -183647,7 +183647,7 @@
     magic_damage: 0
     appearance_id: 3757
     equip_slot: 3
-    equip_type: -1
+    equip_type: 5
     weapon_type: 16
     attack_speed: 9
     remove_head: false
@@ -183681,7 +183681,7 @@
     magic_damage: 0
     appearance_id: 3758
     equip_slot: 3
-    equip_type: -1
+    equip_type: 5
     weapon_type: 16
     attack_speed: 9
     remove_head: false
@@ -183715,7 +183715,7 @@
     magic_damage: 0
     appearance_id: 3759
     equip_slot: 3
-    equip_type: -1
+    equip_type: 5
     weapon_type: 16
     attack_speed: 9
     remove_head: false
@@ -183749,7 +183749,7 @@
     magic_damage: 0
     appearance_id: 3760
     equip_slot: 3
-    equip_type: -1
+    equip_type: 5
     weapon_type: 16
     attack_speed: 9
     remove_head: false
@@ -232071,7 +232071,7 @@
     magic_damage: 0
     appearance_id: 4783
     equip_slot: 3
-    equip_type: -1
+    equip_type: 5
     weapon_type: 16
     remove_head: false
     remove_beard: false
@@ -232110,7 +232110,7 @@
     magic_damage: 0
     appearance_id: 4784
     equip_slot: 3
-    equip_type: -1
+    equip_type: 5
     weapon_type: 16
     remove_head: false
     remove_beard: false
@@ -232142,7 +232142,7 @@
     magic_damage: 0
     appearance_id: 4785
     equip_slot: 3
-    equip_type: -1
+    equip_type: 5
     weapon_type: 16
     remove_head: false
     remove_beard: false
@@ -232181,7 +232181,7 @@
     magic_damage: 0
     appearance_id: 4786
     equip_slot: 3
-    equip_type: -1
+    equip_type: 5
     weapon_type: 16
     remove_head: false
     remove_beard: false
@@ -232213,7 +232213,7 @@
     magic_damage: 0
     appearance_id: 4787
     equip_slot: 3
-    equip_type: -1
+    equip_type: 5
     weapon_type: 16
     remove_head: false
     remove_beard: false
@@ -232252,7 +232252,7 @@
     magic_damage: 0
     appearance_id: 4788
     equip_slot: 3
-    equip_type: -1
+    equip_type: 5
     weapon_type: 16
     remove_head: false
     remove_beard: false
@@ -244228,7 +244228,7 @@
     magic_damage: 0
     appearance_id: 5099
     equip_slot: 3
-    equip_type: -1
+    equip_type: 5
     weapon_type: 16
     remove_head: false
     remove_beard: false
@@ -244267,7 +244267,7 @@
     magic_damage: 0
     appearance_id: 5100
     equip_slot: 3
-    equip_type: -1
+    equip_type: 5
     weapon_type: 16
     remove_head: false
     remove_beard: false
@@ -244300,7 +244300,7 @@
     magic_damage: 0
     appearance_id: 5101
     equip_slot: 3
-    equip_type: -1
+    equip_type: 5
     weapon_type: 16
     remove_head: false
     remove_beard: false

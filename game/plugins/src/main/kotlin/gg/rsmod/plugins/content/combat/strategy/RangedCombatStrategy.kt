@@ -83,7 +83,9 @@ object RangedCombatStrategy : CombatStrategy {
                     // OSRS Wiki "3rd Age bow": attack range 9 ("a longer attack range" than a shortbow at the same speed).
                     Items.THIRDAGE_BOW -> 9
                     Items.ECLIPSE_ATLATL -> gg.rsmod.plugins.content.items.osrs.MoonSets.ATLATL_RANGE
-                    in Bows.LONG_BOWS, Items.CHINCHOMPA_10033, Items.RED_CHINCHOMPA_10034, Items.BLACK_CHINCHOMPA, Items.HEAVY_BALLISTA, Items.HEAVY_BALLISTA_OR -> 9
+                    Items.CHINCHOMPA_10033, Items.RED_CHINCHOMPA_10034, Items.BLACK_CHINCHOMPA, Items.HEAVY_BALLISTA, Items.HEAVY_BALLISTA_OR -> 9
+                    // OSRS Wiki infoboxes "Longbow" ... "Magic longbow": attack range 10 (reference\weapons\osrs_weapons.json); was 9.
+                    in Bows.LONG_BOWS -> 10
                     // S4, 2026-09-03: OSRS Wiki "Twisted bow" - "attack range of 10 tiles ...
                     // matching the maximum range in the game", also matches A4's own sourced
                     // param 13 = 10 read from the pinned upstream item def.

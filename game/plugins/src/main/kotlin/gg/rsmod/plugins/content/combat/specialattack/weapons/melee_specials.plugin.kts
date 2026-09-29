@@ -121,7 +121,11 @@ SpecialAttacks.register(50, Items.ABYSSAL_TENTACLE) {
 /* Granite maul - Quick Smash: OSRS rules (60 % / 50 % ornate handle, instant, homing) live in GraniteMaul / granite_maul.plugin.kts. */
 
 /* Abyssal whip - Energy Drain: 50%, +25% accuracy; steals 10 run energy from a player victim. */
-SpecialAttacks.register(50, Items.ABYSSAL_WHIP, Items.FROZEN_ABYSSAL_WHIP, Items.VOLCANIC_ABYSSAL_WHIP) {
+// The four 667 coloured whips (15441-15444) share Energy Drain; they had no special attack (combat run 2026-09-29).
+SpecialAttacks.register(
+    50, Items.ABYSSAL_WHIP, Items.FROZEN_ABYSSAL_WHIP, Items.VOLCANIC_ABYSSAL_WHIP,
+    Items.ABYSSAL_WHIP_15441, Items.ABYSSAL_WHIP_15442, Items.ABYSSAL_WHIP_15443, Items.ABYSSAL_WHIP_15444,
+) {
     val victim = target
     player.animate(1658)
     victim.graphic(341, 96)
