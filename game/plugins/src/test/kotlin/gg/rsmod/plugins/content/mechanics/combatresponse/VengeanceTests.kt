@@ -63,14 +63,22 @@ class VengeanceTests {
         // floor(99 * 0.75) = 74
         assertEquals(74, attacker.damageMap.getDamageFrom(target))
         assertFalse(Vengeance.isActive(target), "Vengeance is single-use and must consume itself on trigger")
-        // Player.message() is an extension function that funnels through the real, abstract
-        // Player.write(vararg Message) - verified at that level since mockk can't intercept
-        // top-level extension-function calls directly.
-        verify {
-            target.write(
-                MessageGameMessage(type = ChatMessageType.GAME_MESSAGE.id, message = "Taste vengeance!", username = null),
-            )
-        }
+        // OSRS Wiki "Vengeance": "The player will say Taste vengeance!" - overhead text (combat run 2026-09-29).
+        verify { target.forceChat("Taste vengeance!") }
+    }
+
+    /** OSRS Wiki "Vengeance": it does not work against Nex (recoil-immune); it stays primed. Not saved over a logout. */
+    @Test
+    fun `vengeance does not trigger on nex and is never saved`() {
+        val nex = io.mockk.mockk<gg.rsmod.game.model.entity.Npc>(relaxed = true)
+        io.mockk.every { nex.id } returns gg.rsmod.plugins.api.cfg.Npcs.NEX
+        val target = newPlayer()
+        Vengeance.activate(target)
+
+        Vengeance.onIncomingHit(nex, target, damage = 99)
+
+        kotlin.test.assertTrue(Vengeance.isActive(target))
+        kotlin.test.assertNull(gg.rsmod.game.model.attr.VENGEANCE_ACTIVE_ATTR.persistenceKey)
     }
 
     @Test

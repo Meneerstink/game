@@ -217,7 +217,8 @@ val REFLECTING_DAMAGE_ATTR = AttributeKey<Boolean>()
  * reflected back onto whoever dealt it. Sourced from the OSRS Wiki "Vengeance" page - see
  * [gg.rsmod.plugins.content.mechanics.combatresponse.Vengeance] and RSPS_DECISIONS.md.
  */
-val VENGEANCE_ACTIVE_ATTR = AttributeKey<Boolean>(persistenceKey = "vengeance_active")
+// Not saved: OSRS Wiki "Vengeance" - the effect "will wear off upon logout" (combat run 2026-09-29; it used to survive a relog).
+val VENGEANCE_ACTIVE_ATTR = AttributeKey<Boolean>()
 
 /**
  * Cumulative damage a ring of recoil (or ring of suffering, once sourced) has reflected for

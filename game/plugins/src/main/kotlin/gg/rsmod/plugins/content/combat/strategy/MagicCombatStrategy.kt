@@ -27,7 +27,6 @@ import gg.rsmod.plugins.content.mechanics.prayer.Prayer
 import gg.rsmod.plugins.content.mechanics.prayer.Prayers
 import gg.rsmod.plugins.content.mechanics.prayer.AncientCurse
 import gg.rsmod.plugins.content.mechanics.prayer.AncientCurses
-import gg.rsmod.plugins.content.mechanics.pvp.AreaState
 import kotlin.math.floor
 
 /**
@@ -231,40 +230,13 @@ object MagicCombatStrategy : CombatStrategy {
                         chunk.getEntities<Npc>(tile, EntityType.NPC)
                     }
                 candidates.forEach { other ->
-                    if (other !== target && other !== pawn && other !in result && canSplash(pawn, other)) {
+                    if (other !== target && other !== pawn && other !in result && gg.rsmod.plugins.content.combat.specialattack.SpecialAttackSupport.canSplash(pawn, other)) {
                         result.add(other)
                     }
                 }
             }
         }
         return result.take(9)
-    }
-
-    /** Silent attackability check for secondary multi-target victims. */
-    private fun canSplash(
-        pawn: Pawn,
-        other: Pawn,
-    ): Boolean {
-        if (other.isDead() || other.invisible || !other.tile.isMulti(pawn.world)) {
-            return false
-        }
-        return when (other) {
-            is Npc -> other.isSpawned() && other.def.isAttackable() && other.combatDef.lifepoints != -1 && other.getCurrentLifepoints() > 0
-                // Every can_attack hook (breach PvP protection, Deadman guards, ...) also gates splash victims, silently.
-                && pawn.world.plugins.canAttack(pawn, other, false)
-            is Player -> {
-                if (!other.isOnline || !other.lock.canBeAttacked()) {
-                    return false
-                }
-                if (pawn is Player) {
-                    // AreaState.canPlayersFight already enforces the shared +/-12 combat-level
-                    // range (Deadman PvP guards plan, 2026-09-16); no separate check needed here.
-                    if (!AreaState.canPlayersFight(pawn, other)) return false
-                }
-                true
-            }
-            else -> false
-        }
     }
 
     private fun castOn(
@@ -392,7 +364,7 @@ object MagicCombatStrategy : CombatStrategy {
                         spell,
                         gg.rsmod.plugins.content.items.osrs.AncientSceptres.freezeTicks(effect.ticks, sceptreBoost),
                     ) + gg.rsmod.plugins.content.items.osrs.BarkArmour.bindBonus(pawn, spell)
-                val frozen = target.freeze(ticks) { if (target is Player) target.message("You have been frozen.") }
+                val frozen = target.freeze(ticks, pawn) { if (target is Player) target.message("You have been frozen.") }
                 if (!frozen && spell == CombatSpell.ICE_BARRAGE) {
                     // Already frozen / immune: barrage shows the frozen-orb graphic instead.
                     target.graphic(Graphic(1677, 96))

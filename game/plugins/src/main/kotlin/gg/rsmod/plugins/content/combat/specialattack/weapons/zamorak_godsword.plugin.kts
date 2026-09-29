@@ -38,7 +38,7 @@ SpecialAttacks.register(50, Items.ZAMORAK_GODSWORD, Items.ZAMORAK_GODSWORD_OR) {
     // Audit I-03: a successful Ice Cleave freezes the target for 32 ticks when the hit lands (graphic 2104, Void `ice_cleave_impact`).
     if (landHit) {
         pawnHit.hit.addAction {
-            if (!victim.isDead() && victim.freeze(ZGS_FREEZE_TICKS) { if (victim is Player) victim.message("You have been frozen.") }) {
+            if (!victim.isDead() && victim.freeze(ZGS_FREEZE_TICKS, player) { if (victim is Player) victim.message("You have been frozen.") }) {
                 victim.graphic(2104)
             }
         }

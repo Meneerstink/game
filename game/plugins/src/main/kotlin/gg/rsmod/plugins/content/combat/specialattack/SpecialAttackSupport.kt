@@ -182,20 +182,26 @@ object SpecialAttackSupport {
         return result
     }
 
-    private fun canSplash(
-        player: Player,
+    /**
+     * The one silent attackability check for every secondary victim of an area attack (Burst/Barrage, chinchompas, area specials).
+     * Every can_attack hook (breach PvP protection, Deadman guards, Castle Wars / Soul Wars teams, Duel Arena rules) gates player
+     * victims too - combat run 2026-09-29: the player branch skipped the hooks, so a barrage in the multi-way Castle Wars or Soul
+     * Wars arenas froze and damaged the caster's own team mates.
+     */
+    fun canSplash(
+        attacker: Pawn,
         other: Pawn,
     ): Boolean {
-        if (other.isDead() || other.invisible || !other.tile.isMulti(player.world)) return false
+        if (other.isDead() || other.invisible || !other.tile.isMulti(attacker.world)) return false
         return when (other) {
-            is Npc -> other.isSpawned() && other.def.isAttackable() && other.combatDef.lifepoints != -1 &&
-                // Every can_attack hook (breach PvP protection, Deadman guards, ...) also gates splash victims, silently.
-                player.world.plugins.canAttack(player, other, false)
+            is Npc -> other.isSpawned() && other.def.isAttackable() && other.combatDef.lifepoints != -1 && other.getCurrentLifepoints() > 0 &&
+                attacker.world.plugins.canAttack(attacker, other, false)
             is Player -> {
+                if (!other.isOnline || !other.lock.canBeAttacked()) return false
                 // AreaState.canPlayersFight already enforces the shared +/-12 combat-level range
                 // (Deadman PvP guards plan, 2026-09-16); no separate check needed here.
-                if (!other.isOnline || !other.lock.canBeAttacked() || !AreaState.canPlayersFight(player, other)) return false
-                true
+                if (attacker is Player && !AreaState.canPlayersFight(attacker, other)) return false
+                attacker.world.plugins.canAttack(attacker, other, false)
             }
             else -> false
         }

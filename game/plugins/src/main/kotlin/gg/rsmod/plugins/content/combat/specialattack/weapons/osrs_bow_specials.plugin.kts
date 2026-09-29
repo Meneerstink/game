@@ -62,7 +62,7 @@ SpecialAttacks.register(ScorchingBow.SHACKLES_ENERGY, Items.SCORCHING_BOW) {
         return@register
     }
     victim.graphic(gg.rsmod.plugins.content.items.osrs.OsrsGfx.SCORCHING_BOW_IMPACT, delay = delay * 30)
-    victim.freeze(ScorchingBow.BIND_TICKS)
+    victim.freeze(ScorchingBow.BIND_TICKS, player)
     // The shackles burn is a normal burn stack (Burns): it counts toward the five-burn cap and the Eclipse special can consume it.
     world.queue {
         wait(delay)

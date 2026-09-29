@@ -43,7 +43,12 @@ object Burns {
         target.world.queue {
             while (burn.remaining > 0) {
                 wait(INTERVAL_TICKS)
-                if (burn.remaining <= 0 || target.isDead() || (target is Player && !target.isOnline)) break
+                // A despawned npc (breach end, instance closed) stops burning too - the loop used to keep hitting the removed npc.
+                if (burn.remaining <= 0 || target.isDead() || (target is Player && !target.isOnline) ||
+                    (target is gg.rsmod.game.model.entity.Npc && !target.isSpawned())
+                ) {
+                    break
+                }
                 burn.remaining--
                 target.hit(damage = 1, type = gg.rsmod.plugins.api.HitType.BURN) // OSRS burn hitsplat (owner 2026-09-19)
             }

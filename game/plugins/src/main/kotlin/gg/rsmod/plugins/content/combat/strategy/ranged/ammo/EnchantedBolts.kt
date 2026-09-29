@@ -241,7 +241,7 @@ object EnchantedBolts {
             // "heal the attacker's Hitpoints by 25% of the total damage dealt".
             Effect.LIFE_LEECH -> if (damageDealt >= 4) attacker.heal(damageDealt / 4)
             Effect.MAGICAL_POISON -> Poison.poison(target, 5)
-            Effect.EARTHS_FURY -> target.freeze(8)
+            Effect.EARTHS_FURY -> target.freeze(8, attacker)
             Effect.DOWN_TO_EARTH -> (target as? Player)?.skills?.decrementCurrentLevel(Skills.MAGIC, 1, capped = false)
             Effect.CLEAR_MIND ->
                 if (target is Player) {

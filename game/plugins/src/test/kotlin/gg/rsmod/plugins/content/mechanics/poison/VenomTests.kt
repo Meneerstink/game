@@ -148,6 +148,19 @@ class VenomTests {
         assertFalse(Venom.envenom(npc))
     }
 
+    /** Combat run 2026-09-29: the 667 data only flags poison immunity; OSRS lists such monsters as immune to venom and poison. */
+    @Test
+    fun `a poison-immune npc cannot be envenomed`() {
+        val npc = mockk<Npc>(relaxed = true)
+        every { npc.attr } returns AttributeMap()
+        every { npc.timers } returns TimerMap()
+        every { npc.combatDef } returns immuneCombatDef().copy(venomImmunity = false, poisonImmunity = true)
+
+        assertFalse(Venom.envenom(npc))
+        every { npc.combatDef } returns immuneCombatDef().copy(venomImmunity = false, poisonImmunity = false)
+        assertTrue(Venom.envenom(npc))
+    }
+
     // ---- venom() PawnExt wrapper ----
 
     @Test

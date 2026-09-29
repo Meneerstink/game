@@ -189,8 +189,10 @@ object CombatConfigs {
                     weapon?.id, castSpell, autocast = pawn.attr[gg.rsmod.plugins.content.combat.magic.Autocast.AUTO_CAST] == true,
                 )
             }
-            // Miasmic spells: attack speed is halved (doubled delay) for the effect duration.
-            if (pawn.timers.has(MIASMIC_TIMER)) {
+            // Miasmic spells: melee and ranged attack speed is halved (doubled delay) for the effect duration. Magic is not
+            // slowed (Void donor Combat.kt: `hasClock("miasmic") && (fightStyle == "range" || fightStyle == "melee")`); a
+            // slowed player used to cast barrages every 10 ticks too (combat run 2026-09-29).
+            if (!magic && pawn.timers.has(MIASMIC_TIMER)) {
                 speed *= 2
             }
             return Math.max(MIN_ATTACK_SPEED, speed)

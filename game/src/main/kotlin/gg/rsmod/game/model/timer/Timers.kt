@@ -257,12 +257,12 @@ val PHANTOM_STRIKE_TIMER = TimerKey()
  * Timer key set while a pawn is slowed by a Miasmic spell (Ancient Magicks): attack delay is
  * doubled for the duration. Set alongside [MIASMIC_IMMUNITY_TIMER].
  */
-val MIASMIC_TIMER = TimerKey()
+val MIASMIC_TIMER = TimerKey(resetOnDeath = true)
 
 /**
  * Timer key that outlives [MIASMIC_TIMER]; while active the pawn can't be slowed again.
  */
-val MIASMIC_IMMUNITY_TIMER = TimerKey()
+val MIASMIC_IMMUNITY_TIMER = TimerKey(resetOnDeath = true)
 
 /**
  * Timer key set by Teleport Block. While active every teleport method is refused with

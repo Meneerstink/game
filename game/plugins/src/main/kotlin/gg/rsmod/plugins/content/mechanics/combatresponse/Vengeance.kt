@@ -49,6 +49,8 @@ object Vengeance {
         damage: Int,
     ) {
         if (!isActive(target)) return
+        // OSRS Wiki "Vengeance": it does not work against the recoil-immune monsters (here: Nex); it stays primed.
+        if (attacker is gg.rsmod.game.model.entity.Npc && attacker.id in RingOfRecoil.RECOIL_IMMUNE_NPCS) return
         target.attr.remove(VENGEANCE_ACTIVE_ATTR)
 
         val reflected = max(1, (damage * REFLECT_PERCENT).toInt())
@@ -57,8 +59,9 @@ object Vengeance {
         gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.recordDamage(attacker, target, reflected)
 
         if (target is Player) {
-            // Sourced exact line ("Taste vengeance!") - OSRS Wiki "Vengeance".
-            target.message("Taste vengeance!")
+            // OSRS Wiki "Vengeance": "The player will say Taste vengeance! when the rebound is activated" - overhead text that the
+            // attacker and bystanders see, not a private game message (combat run 2026-09-29).
+            target.forceChat("Taste vengeance!")
         }
     }
 }

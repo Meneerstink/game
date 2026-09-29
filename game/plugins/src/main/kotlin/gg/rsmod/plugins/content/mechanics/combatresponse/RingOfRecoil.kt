@@ -6,6 +6,7 @@ import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.api.EquipmentType
 import gg.rsmod.plugins.api.HitType
 import gg.rsmod.plugins.api.cfg.Items
+import gg.rsmod.plugins.api.cfg.Npcs
 import gg.rsmod.plugins.api.ext.getEquipment
 import gg.rsmod.plugins.api.ext.hit
 import gg.rsmod.plugins.api.ext.hasEquipped
@@ -18,10 +19,7 @@ import gg.rsmod.plugins.api.ext.message
  * against both players and NPCs, and the ring can absorb a cumulative 40 damage worth of
  * reflects - tracked per-player, not per physical ring - before it shatters.
  *
- * Not implemented (no source found this pass): the specific list of high-level bosses immune
- * to the recoil effect entirely. That is a per-NPC exclusion list, not part of this generic
- * foundation, and guessing at which NPCs belong on it would violate the "never guess IDs"
- * rule - left as a documented follow-up for whichever session adds those NPCs' combat defs.
+ * Recoil-immune monsters: [RECOIL_IMMUNE_NPCS] (the OSRS Wiki list, as far as those monsters exist here).
  */
 object RingOfRecoil {
     const val CHARGE_LIMIT = 40
@@ -31,12 +29,19 @@ object RingOfRecoil {
     // everything below already generalizes to any ring in this list for free.
     private val RECOIL_RING_IDS = intArrayOf(Items.RING_OF_RECOIL)
 
+    /**
+     * OSRS Wiki "Ring of recoil", immune monsters: of that list only Nex exists on this server (all four forms). Combat run
+     * 2026-09-29: recoil and the Ring of suffering reflect used to hit her like any other npc.
+     */
+    val RECOIL_IMMUNE_NPCS = setOf(Npcs.NEX, Npcs.NEX_13448, Npcs.NEX_13449, Npcs.NEX_13450)
+
     fun onIncomingHit(
         attacker: Pawn,
         target: Pawn,
         damage: Int,
     ) {
         if (target !is Player) return
+        if (attacker is gg.rsmod.game.model.entity.Npc && attacker.id in RECOIL_IMMUNE_NPCS) return
         // Ring of suffering (r)/(ri): the same reflect, paid from the ring's own charges (RingOfSuffering).
         val ring = target.getEquipment(EquipmentType.RING)
         if (ring != null && gg.rsmod.plugins.content.items.osrs.RingOfSuffering.isCharged(ring.id)) {

@@ -113,7 +113,7 @@ fun Pawn.hit(
 
 // Sourced from the OSRS wiki's "Freeze" article — see FREEZE_IMMUNITY_TIMER's doc comment in
 // Timers.kt for the full sourcing note.
-private const val FREEZE_IMMUNITY_TICKS = 5
+const val FREEZE_IMMUNITY_TICKS = 5
 
 /**
  * Npc ids with 100 % freeze resistance (OSRS Wiki infobox "freezeresistance = 100", e.g. the Deadman breach Durial321, Magic Mark,
@@ -123,6 +123,7 @@ val FREEZE_RESISTANT_NPCS: MutableSet<Int> = java.util.concurrent.ConcurrentHash
 
 fun Pawn.freeze(
     cycles: Int,
+    source: Pawn? = null,
     onFreeze: () -> Unit,
 ): Boolean {
     if (timers.has(FROZEN_TIMER) || timers.has(FREEZE_IMMUNITY_TIMER)) {
@@ -138,12 +139,17 @@ fun Pawn.freeze(
     // this timer still has FREEZE_IMMUNITY_TICKS left — reproducing "X ticks of immunity after
     // the freeze ends" with a single countdown and no separate on-expiry driver.
     timers[FREEZE_IMMUNITY_TIMER] = cycles + FREEZE_IMMUNITY_TICKS
+    // A player's freeze on a player only holds while both stay within 10 tiles (FreezeLeash, OSRS Wiki "Freeze").
+    gg.rsmod.plugins.content.mechanics.freeze.FreezeLeash.start(this, source)
     onFreeze()
     return true
 }
 
-fun Pawn.freeze(cycles: Int) {
-    freeze(cycles) {
+fun Pawn.freeze(
+    cycles: Int,
+    source: Pawn? = null,
+) {
+    freeze(cycles, source) {
         if (this is Player) {
             this.message("You have been frozen.")
         }

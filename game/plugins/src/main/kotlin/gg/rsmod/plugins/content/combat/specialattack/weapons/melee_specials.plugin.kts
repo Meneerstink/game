@@ -115,7 +115,7 @@ SpecialAttacks.register(50, Items.ABYSSAL_TENTACLE) {
     val victim = target
     player.animate(gg.rsmod.plugins.content.combat.CombatConfigs.getAttackAnimation(player))
     meleeHit(player, victim)
-    victim.freeze(8)
+    victim.freeze(8, player)
 }
 
 /* Granite maul - Quick Smash: OSRS rules (60 % / 50 % ornate handle, instant, homing) live in GraniteMaul / granite_maul.plugin.kts. */

@@ -10,6 +10,7 @@ import gg.rsmod.game.sync.block.UpdateBlockType
 import gg.rsmod.plugins.api.HitType
 import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.api.cfg.Items
+import gg.rsmod.plugins.api.ext.freeze
 import gg.rsmod.plugins.api.ext.setSpellbook
 import gg.rsmod.plugins.api.ext.setVarbit
 import gg.rsmod.plugins.api.ext.setVarp
@@ -72,6 +73,8 @@ object CombatSuite : Conformance.Suite {
         scenario("eat delay") { eatDelay(run, a, dummy, arena) }
         scenario("special regen") { specialRegen(run, a) }
         scenario("freezes") { freezes(run, a, b, arena) }
+        scenario("freeze range and seeds") { freezeRangeAndSeeds(run, a, b, arena) }
+        scenario("miasmic") { miasmic(run, a, b, dummy, arena) }
         scenario("protection") { protection(run, a, b, dummy, arena) }
         scenario("retaliation") { retaliation(run, a, dummy, arena) }
         scenario("poison") { poison(run, a, dummy, arena) }
@@ -180,18 +183,29 @@ object CombatSuite : Conformance.Suite {
             a.setSpellbook(if (spell.interfaceId == 193) gg.rsmod.plugins.api.Spellbook.ANCIENT else gg.rsmod.plugins.api.Spellbook.STANDARD)
             wait(1)
             val c = run.world.currentCycle
-            a.attack(b)
-            a.attr[Combat.CASTING_SPELL] = spell
-            // Wait for the freeze to land, then the target tries to walk every tick.
+            // Wait for the freeze to land, then the target tries to walk every tick. A splash (a missed accuracy roll, "The spell has
+            // no effect.") is normal: cast again, up to six casts.
             var frozenAt = -1
             var t = 0
-            while (t++ < 12) {
-                keep(a, b)
-                wait(1)
-                if (b.timers.has(gg.rsmod.game.model.timer.FROZEN_TIMER)) {
-                    frozenAt = run.world.currentCycle
-                    break
+            var casts = 0
+            while (frozenAt < 0 && casts++ < 6) {
+                a.attack(b)
+                manualCast(a, b, spell)
+                t = 0
+                while (t++ < 12) {
+                    keep(a, b)
+                    wait(1)
+                    if (b.timers.has(gg.rsmod.game.model.timer.FROZEN_TIMER)) {
+                        frozenAt = run.world.currentCycle
+                        break
+                    }
                 }
+                // The splash makes the target retaliate (auto retaliate); stop both so the next cast starts clean.
+                for (p in listOf(a, b)) {
+                    p.resetInteractions()
+                    Combat.reset(p)
+                }
+                if (frozenAt < 0) wait(6)
             }
             a.resetInteractions()
             Combat.reset(a)
@@ -212,24 +226,149 @@ object CombatSuite : Conformance.Suite {
                 }
             }
             run.check(e, "$name: ticks until the player can walk", moved, "osrs wiki" to ticks(run, ms.toLong()), same = { x, y -> x != null && y != null && Math.abs(x.toString().toInt() - y.toString().toInt()) <= 2 })
-            // Immunity: recast at once - no freeze for 3 s.
-            b.moveTo(start)
-            b.resetInteractions()
-            a.attack(b)
-            a.attr[Combat.CASTING_SPELL] = spell
-            var refrozen = false
-            t = 0
-            while (t++ < ticks(run, 2_400)) {
-                keep(a, b)
+            // Immunity (OSRS Wiki "Freeze": 5 ticks after the freeze ends): measured as the ticks the immunity outlives the freeze,
+            // and a freeze attempt inside the window must fail. (The old recast check depended on each spell's hit delay.)
+            val immuneAtThaw = b.timers.has(gg.rsmod.game.model.timer.FREEZE_IMMUNITY_TIMER)
+            val refused = !b.freeze(8, a) {}
+            var immuneTicks = 0
+            while (b.timers.has(gg.rsmod.game.model.timer.FREEZE_IMMUNITY_TIMER) && immuneTicks < 40) {
                 wait(1)
-                if (b.timers.has(gg.rsmod.game.model.timer.FROZEN_TIMER)) refrozen = true
+                immuneTicks++
             }
-            a.resetInteractions()
-            Combat.reset(a)
-            run.expectTrue(e, "$name: immune for 3 s after the freeze ends", !refrozen, "frozen again=$refrozen", "OSRS: 5 ticks of immunity")
+            // The walk is seen one tick after the thaw, so the window left here is one tick shorter than the full 5.
+            run.expectTrue(e, "$name: immune for 5 ticks after the freeze ends", immuneAtThaw && refused && immuneTicks in 3..5, "immune=$immuneAtThaw refused=$refused left=$immuneTicks", "OSRS: 5 ticks of immunity")
         }
     }
 
+    /**
+     * Combat run 2026-09-29. OSRS Wiki "Freeze": a player's freeze on a player only holds "whilst both players remain within the
+     * 10-tile maximum player weapon range" (FreezeLeash). Mithril seeds move a frozen player one tile; seeds clicked in one tick
+     * move him only once (one plant per tick) and the freeze stays.
+     */
+    private suspend fun QueueTask.freezeRangeAndSeeds(
+        run: Conformance.Run,
+        a: Client,
+        b: Client,
+        arena: Tile,
+    ) {
+        val e = "combat freeze range"
+        a.setVarbit(MagicSpells.INF_RUNES_VARBIT, 1)
+        a.setSpellbook(gg.rsmod.plugins.api.Spellbook.ANCIENT)
+        reset(a, arena)
+        reset(b, arena.transform(3, 0))
+        b.timers.remove(gg.rsmod.game.model.timer.FREEZE_IMMUNITY_TIMER)
+        wait(1)
+        val c = run.world.currentCycle
+        var casts = 0
+        while (!b.timers.has(gg.rsmod.game.model.timer.FROZEN_TIMER) && casts++ < 6) {
+            a.attack(b)
+            manualCast(a, b, CombatSpell.ICE_BARRAGE)
+            var t = 0
+            while (t++ < 12 && !b.timers.has(gg.rsmod.game.model.timer.FROZEN_TIMER)) {
+                keep(a, b)
+                wait(1)
+            }
+            for (p in listOf(a, b)) {
+                p.resetInteractions()
+                Combat.reset(p)
+            }
+            if (!b.timers.has(gg.rsmod.game.model.timer.FROZEN_TIMER)) wait(6)
+        }
+        a.resetInteractions()
+        Combat.reset(a)
+        if (!b.timers.has(gg.rsmod.game.model.timer.FROZEN_TIMER)) {
+            run.add(Result(e, "setup: Ice Barrage freezes the player", Verdict.FAIL, "frozen", "not frozen (${lastMessages(run, "C1", c)})"))
+            return
+        }
+        val frozenTile = b.tile
+        a.moveTo(frozenTile.transform(-10, 0))
+        wait(3)
+        run.expectTrue(e, "caster 10 tiles away: still frozen", b.timers.has(gg.rsmod.game.model.timer.FROZEN_TIMER), "frozen=${b.timers.has(gg.rsmod.game.model.timer.FROZEN_TIMER)}", "OSRS: frozen within 10 tiles")
+        a.moveTo(frozenTile.transform(-11, 0))
+        wait(2)
+        val broke = !b.timers.has(gg.rsmod.game.model.timer.FROZEN_TIMER)
+        run.expectTrue(e, "caster 11 tiles away: freeze ends", broke, "frozen=${!broke}", "OSRS Wiki Freeze: 10-tile range")
+        Bots.walk(b, frozenTile.transform(0, 4))
+        wait(2)
+        run.expectTrue(e, "the player walks after the freeze broke", !b.tile.sameAs(frozenTile), "tile=${b.tile}", "moved")
+
+        val s = "combat mithril seeds"
+        reset(b, arena.transform(3, 0))
+        a.moveTo(arena)
+        b.timers.remove(gg.rsmod.game.model.timer.FREEZE_IMMUNITY_TIMER)
+        b.inventory.add(Items.MITHRIL_SEEDS, 3)
+        wait(1)
+        b.freeze(32, a) {}
+        val seedTile = b.tile
+        repeat(3) { Bots.itemOption(b, b.inventory.getItemIndex(Items.MITHRIL_SEEDS, false), "Plant") }
+        wait(2)
+        val dist = Math.max(Math.abs(b.tile.x - seedTile.x), Math.abs(b.tile.z - seedTile.z))
+        run.check(s, "tiles moved by three seeds clicked in one tick while frozen", dist, "one plant per tick" to 1)
+        run.check(s, "seeds used", 3 - b.inventory.getItemCount(Items.MITHRIL_SEEDS), "one plant per tick" to 1)
+        run.expectTrue(s, "still frozen after the seed move", b.timers.has(gg.rsmod.game.model.timer.FROZEN_TIMER), "frozen=${b.timers.has(gg.rsmod.game.model.timer.FROZEN_TIMER)}", "OSRS Wiki Mithril seeds: moves a frozen player, the freeze stays")
+        b.timers.remove(gg.rsmod.game.model.timer.FROZEN_TIMER)
+        b.inventory.removeAll()
+    }
+    /**
+     * Combat run 2026-09-29: a Miasmic spell doubles the target's melee and ranged attack delay (Void donor Combat.kt); casting is not
+     * slowed (unit test AttackDelayTests). Measured: whip swing interval of the slowed player on the dummy.
+     */
+    private suspend fun QueueTask.miasmic(
+        run: Conformance.Run,
+        a: Client,
+        b: Client,
+        dummy: Npc,
+        arena: Tile,
+    ) {
+        val e = "combat miasmic"
+        a.setVarbit(MagicSpells.INF_RUNES_VARBIT, 1)
+        a.setSpellbook(gg.rsmod.plugins.api.Spellbook.ANCIENT)
+        reset(a, arena)
+        reset(b, arena.transform(3, 0))
+        a.equipment[3] = Item(Items.ZURIELS_STAFF)
+        a.addBlock(UpdateBlockType.APPEARANCE)
+        wait(1)
+        val slowed = { b.timers.has(gg.rsmod.game.model.timer.MIASMIC_TIMER) }
+        val c0 = run.world.currentCycle
+        var casts = 0
+        while (!slowed() && casts++ < 6) {
+            a.attack(b)
+            manualCast(a, b, CombatSpell.MIASMIC_RUSH)
+            var t = 0
+            while (t++ < 12 && !slowed()) {
+                keep(a, b)
+                wait(1)
+            }
+            for (p in listOf(a, b)) {
+                p.resetInteractions()
+                Combat.reset(p)
+            }
+            if (!slowed()) wait(6)
+        }
+        if (!slowed()) {
+            run.add(Result(e, "setup: Miasmic Rush slows the player", Verdict.FAIL, "slowed", "not slowed (${lastMessages(run, "C1", c0)})"))
+            return
+        }
+        b.equipment[3] = Item(Items.ABYSSAL_WHIP)
+        b.addBlock(UpdateBlockType.APPEARANCE)
+        dummy.moveTo(b.tile.transform(0, 1))
+        wait(1)
+        val c = run.world.currentCycle
+        b.attack(dummy)
+        var swings = swings(run, "C2", c)
+        var guard = 0
+        while (swings.size < 2 && guard++ < 30) {
+            keep(b, dummy)
+            wait(1)
+            swings = swings(run, "C2", c)
+        }
+        b.resetInteractions()
+        Combat.reset(b)
+        val gap = if (swings.size >= 2) swings[1] - swings[0] else null
+        run.check(e, "whip swing interval while slowed by Miasmic Rush (whip 4)", gap, "void donor (melee/ranged delay x2)" to 8)
+        b.timers.remove(gg.rsmod.game.model.timer.MIASMIC_TIMER)
+        b.timers.remove(gg.rsmod.game.model.timer.MIASMIC_IMMUNITY_TIMER)
+    }
     private suspend fun QueueTask.protection(
         run: Conformance.Run,
         a: Client,
@@ -366,6 +505,20 @@ object CombatSuite : Conformance.Suite {
         .filter { it.first != HitType.REFLECTED.id && it.first != HitType.POISON.id }
         .map { it.second }
 
+    /**
+     * A manual spell-on-player cast as the client sends it: the spell plus its manual target (Autocast.prepareAttack drops a
+     * manual spell without MANUAL_TARGET - the freeze scenarios used to punch instead of casting), with 99 Magic.
+     */
+    private fun manualCast(
+        a: Client,
+        b: Pawn,
+        spell: CombatSpell,
+    ) {
+        a.skills.setBaseLevel(Skills.MAGIC, 99)
+        a.attr[Combat.CASTING_SPELL] = spell
+        a.attr[gg.rsmod.plugins.content.combat.magic.Autocast.MANUAL_TARGET] = java.lang.ref.WeakReference(b)
+    }
+
     private fun keep(
         vararg p: Pawn,
     ) {
@@ -380,6 +533,8 @@ object CombatSuite : Conformance.Suite {
         Combat.reset(p)
         Prayers.deactivateAll(p)
         p.timers.remove(gg.rsmod.game.model.timer.FROZEN_TIMER)
+        p.timers.remove(gg.rsmod.game.model.timer.FREEZE_IMMUNITY_TIMER)
+        gg.rsmod.plugins.content.mechanics.freeze.FreezeLeash.stop(p)
         p.equipment.removeAll()
         p.inventory.removeAll()
         p.moveTo(tile)

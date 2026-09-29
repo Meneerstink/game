@@ -44,8 +44,16 @@ val SEED_STEPS =
         Items.ADAMANT_SEEDS to listOf(Direction.EAST, Direction.WEST, Direction.SOUTH, Direction.NORTH),
     )
 
+/**
+ * The cycle of the last successful plant. Combat run 2026-09-29: every "Plant" packet moved the player at once, so several seeds
+ * clicked in one tick carried a frozen player several tiles in that tick (an escape from any freeze). One seed per game tick.
+ */
+val LAST_SEED_PLANT_CYCLE = gg.rsmod.game.model.attr.AttributeKey<Int>()
+
 SEED_STEPS.forEach { (seed, order) ->
     on_item_option(item = seed, option = "Plant") {
+        if (player.isDead()) return@on_item_option
+        if (player.attr[LAST_SEED_PLANT_CYCLE] == world.currentCycle) return@on_item_option
         val tile = player.tile
         if (world.getObject(tile, ObjectType.INTERACTABLE) != null) {
             player.message("You can't plant flowers here.")
@@ -58,6 +66,7 @@ SEED_STEPS.forEach { (seed, order) ->
             return@on_item_option
         }
         if (!player.inventory.remove(seed, 1).hasSucceeded()) return@on_item_option
+        player.attr[LAST_SEED_PLANT_CYCLE] = world.currentCycle
         val flower = rollFlower(world.random(1_000))
         world.spawnTemporaryObject(DynamicObject(flower.objectId, 10, 0, tile), FLOWER_TICKS)
         player.moveTo(tile.step(step))

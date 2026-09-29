@@ -51,6 +51,26 @@ class AttackDelayTests {
         assertEquals(5, CombatConfigs.getAttackDelay(unarmed))
     }
 
+    /** Combat run 2026-09-29: Miasmic doubles melee and ranged delays only (Void donor Combat.kt); spells keep their 5 ticks. */
+    @Test
+    fun miasmicSlowsMeleeAndRangedButNotMagic() {
+        val timers = gg.rsmod.game.model.timer.TimerMap()
+        timers[gg.rsmod.game.model.timer.MIASMIC_TIMER] = 20
+        val melee = player(4)
+        every { melee.timers } returns timers
+        assertEquals(8, CombatConfigs.getAttackDelay(melee))
+        val rapid = player(5, rapid = true)
+        every { rapid.timers } returns timers
+        assertEquals(8, CombatConfigs.getAttackDelay(rapid))
+        val caster = player(4)
+        every { caster.timers } returns timers
+        caster.attr[Combat.SPELL_OF_THIS_ATTACK] = gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell.ICE_BARRAGE
+        assertEquals(5, CombatConfigs.getAttackDelay(caster))
+        timers.remove(gg.rsmod.game.model.timer.MIASMIC_TIMER)
+        assertEquals(4, CombatConfigs.getAttackDelay(melee))
+        org.junit.Assert.assertTrue(gg.rsmod.game.model.timer.MIASMIC_TIMER.resetOnDeath && gg.rsmod.game.model.timer.MIASMIC_IMMUNITY_TIMER.resetOnDeath)
+    }
+
     /**
      * Live log 2026-09-25: "Invalid attack style" aborted every npc hit on a player autocasting with a staff - the OSRS Spell box
      * sets the style varp to 3, which a staff's 3-style table lacks. Autocasting gives no invisible bonus (OSRS Wiki "Attack styles").

@@ -48,6 +48,19 @@ class RingOfRecoilTests {
         assertEquals(6, target.attr[RING_OF_RECOIL_CHARGE_ATTR])
     }
 
+    /** Combat run 2026-09-29: OSRS Wiki "Ring of recoil" immune monsters - Nex takes no recoil and uses no charge. */
+    @Test
+    fun `nex is immune to recoil`() {
+        val nex = mockk<Npc>(relaxed = true)
+        every { nex.id } returns gg.rsmod.plugins.api.cfg.Npcs.NEX_13449
+        val target = newPlayer(ringEquipped = true)
+
+        RingOfRecoil.onIncomingHit(nex, target, damage = 57)
+
+        assertNull(target.attr[RING_OF_RECOIL_CHARGE_ATTR])
+        io.mockk.verify(exactly = 0) { nex.addHit(any()) }
+    }
+
     @Test
     fun `charge accumulates across hits and shatters once it reaches the 40 damage limit`() {
         val attacker = newPlayer()
