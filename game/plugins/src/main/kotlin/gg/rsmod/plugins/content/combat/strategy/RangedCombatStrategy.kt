@@ -48,8 +48,6 @@ object RangedCombatStrategy : CombatStrategy {
 
     private const val MAX_ATTACK_RANGE = 10
 
-    override fun getAttackRange(pawn: Pawn): Int {
-        if (pawn is Player) {
     private val BLOWPIPES =
         gg.rsmod.plugins.content.items.osrs.Blowpipe.Pipe.values().flatMap { listOf(it.charged, it.empty) }.toSet()
     private val KARILS_CROSSBOWS =
@@ -57,6 +55,8 @@ object RangedCombatStrategy : CombatStrategy {
     private val MORRIGANS_JAVELINS =
         setOf(Items.MORRIGANS_JAVELIN, Items.MORRIGANS_JAVELIN_P, Items.MORRIGANS_JAVELIN_P_13881, Items.MORRIGANS_JAVELIN_P_13882)
 
+    override fun getAttackRange(pawn: Pawn): Int {
+        if (pawn is Player) {
             val weapon = pawn.getEquipment(EquipmentType.WEAPON)
             val attackStyle = CombatConfigs.getAttackStyle(pawn)
 
@@ -95,14 +95,14 @@ object RangedCombatStrategy : CombatStrategy {
                     // the 667 default 7 to 9, but the sourced OSRS value is 10, one range tile short for every
                     // dark bow variant (base, 667 recolours 15701-15704, OSRS painted green/blue/yellow/white).
                     Items.TWISTED_BOW, in Bows.CRYSTAL_BOWS, in Bows.DARK_BOWS -> 10
-                    else -> DEFAULT_ATTACK_RANGE
-                }
                     // Combat run 2026-09-29, OSRS Wiki infobox attack ranges (reference\weapons\osrs_weapons.json): these fell back
                     // to the default 7, so a blowpipe fired from 7 tiles instead of 5 and the 8-tile crossbows came one tile short.
                     in BLOWPIPES -> 5
                     Items.ARMADYL_CROSSBOW, Items.ZARYTE_CROSSBOW, Items.HUNTERS_CROSSBOW, in KARILS_CROSSBOWS -> 8
                     Items.DRAGON_THROWNAXE, Items.MORRIGANS_THROWING_AXE -> 4
                     in MORRIGANS_JAVELINS -> 5
+                    else -> DEFAULT_ATTACK_RANGE
+                }
 
             if (attackStyle == WeaponStyle.LONG_RANGE) {
                 range += if (weapon?.id == Items.SLING) 1 else 2
@@ -527,6 +527,10 @@ object RangedCombatStrategy : CombatStrategy {
         }
     }
 
+    /**
+     * OSRS Wiki "Hit delay": BowDelay = 1 + floor((3 + Distance) / 6), + 1 server offset; Distance in game squares (Chebyshev) -
+     * it was the rounded-up straight-line distance, a tick late on long diagonals (combat run 2026-09-29).
+     */
     fun getHitDelay(
         start: Tile,
         target: Tile,
@@ -541,10 +545,6 @@ object RangedCombatStrategy : CombatStrategy {
         start: Tile,
         target: Tile,
     ): Int = 2 + gg.rsmod.plugins.content.combat.Combat.tileDistance(start, target) / 6
-    /**
-     * OSRS Wiki "Hit delay": BowDelay = 1 + floor((3 + Distance) / 6), + 1 server offset; Distance in game squares (Chebyshev) -
-     * it was the rounded-up straight-line distance, a tick late on long diagonals (combat run 2026-09-29).
-     */
 
     /** Also used for ranged special attack hits ([gg.rsmod.plugins.content.combat.specialattack.SpecialAttackXp]). */
     /**

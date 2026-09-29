@@ -1256,6 +1256,10 @@ object AncientCurses {
         // The reflected-damage splat, as recoil and vengeance use (Void Weapon.mark: "deflect" -> HitSplat.Mark.Reflected); it was a
         // plain hit splat (combat run 2026-09-29).
         attacker.hit(damage = reflected, type = gg.rsmod.plugins.api.HitType.REFLECTED)
+        // Kill credit like Ring of recoil and Vengeance: a player killed by reflected damage alone was a death without a killer
+        // (no PvP death, no loot key for the defender) - combat run 2026-09-29.
+        attacker.damageMap.add(target, reflected)
+        gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.recordDamage(attacker, target, reflected)
     }
 
     const val DEFLECT_REFLECT_CHANCE_PCT = 15.0
@@ -1276,7 +1280,3 @@ object AncientCurses {
     private class DeflectRolls(val attackers: MutableMap<Int, DeflectRollHistory> = mutableMapOf())
     private val DEFLECT_ROLLS_ATTR = AttributeKey<DeflectRolls>()
 }
-        // Kill credit like Ring of recoil and Vengeance: a player killed by reflected damage alone was a death without a killer
-        // (no PvP death, no loot key for the defender) - combat run 2026-09-29.
-        attacker.damageMap.add(target, reflected)
-        gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.recordDamage(attacker, target, reflected)

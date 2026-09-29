@@ -424,6 +424,9 @@ object EquipmentSuite : Conformance.Suite {
         placeDummy(dummy, arena, if (bot.equipment[13] != null || def.stackable) 3 else 1)
         keep(bot, dummy)
         bot.timers.remove(gg.rsmod.game.model.timer.ATTACK_DELAY)
+        // The 10 % regeneration (every 50 ticks since login) must not land inside the 6-tick window: every run reached the special
+        // at the same tick after login, so ACB/ZCB measured 40/65 instead of 50/75 (combat run 2026-09-29).
+        bot.timers[gg.rsmod.game.model.timer.SPECIAL_ATTACK_TIMER] = 1_000
         AttackTab.setEnergy(bot, 100)
         // An instant special (Dragon battleaxe, Staff of light, Dragon thrownaxe, ...) fires from the special bar click itself, not on
         // the next attack: the harness used to set the varp and attack, so these all measured 0 energy used (combat run 2026-09-29).
@@ -440,10 +443,8 @@ object EquipmentSuite : Conformance.Suite {
         wait(6)
         bot.resetInteractions()
         Combat.reset(bot)
-        // The 10 % regeneration (every 50 ticks since login) must not land inside the 6-tick window: every run reached the special
-        // at the same tick after login, so ACB/ZCB measured 40/65 instead of 50/75 (combat run 2026-09-29).
-        bot.timers[gg.rsmod.game.model.timer.SPECIAL_ATTACK_TIMER] = 1_000
         val used = 100 - AttackTab.getEnergy(bot)
+        bot.timers[gg.rsmod.game.model.timer.SPECIAL_ATTACK_TIMER] = gg.rsmod.plugins.content.inter.attack.SpecialEnergyRegen.NORMAL_TICKS
         run.check(e, "special: energy used", used, "wiki" to (if (costs.size > 1) costs else cost), same = { a, b -> if (b is List<*>) b.any { it.toString() == a.toString() } else a.toString() == b.toString() })
         val hits = run.recording.of(dummyLabel, "out").filter { it.cycle >= c && it.text.startsWith("hits ") }
         // Instant specials are often not attacks at all (a stat boost, Power of Death): only a normal special must land.
@@ -452,9 +453,7 @@ object EquipmentSuite : Conformance.Suite {
         val realCost = if (used in costs) used else cost
         if (realCost != null && realCost > 0) {
             val cost = realCost
-        bot.timers[gg.rsmod.game.model.timer.SPECIAL_ATTACK_TIMER] = gg.rsmod.plugins.content.inter.attack.SpecialEnergyRegen.NORMAL_TICKS
             AttackTab.setEnergy(bot, cost - 1)
-            bot.setVarp(AttackTab.SPECIAL_ATTACK_VARP, 1)
             bot.timers.remove(gg.rsmod.game.model.timer.ATTACK_DELAY)
             val c2 = run.world.currentCycle
             if (instant) {
@@ -579,6 +578,7 @@ object EquipmentSuite : Conformance.Suite {
             when {
                 // Karil's crossbow first: it fires only bolt racks (it used to get runite bolts and never swung).
                 n.contains("karil") -> Items.BOLT_RACK
+                n.contains("crossbow") || n.contains("c'bow") -> Items.RUNITE_BOLTS
                 n.contains("ogre") && n.contains("bow") -> Items.OGRE_ARROW
                 n.contains("dark bow") || n.contains("twisted bow") -> Items.DRAGON_ARROW
                 n.contains("bow") && !n.contains("crystal") && !n.contains("faerdhinen") -> Items.RUNE_ARROW
@@ -586,7 +586,6 @@ object EquipmentSuite : Conformance.Suite {
             }
         bot.equipment[13] = ammo?.let { Item(it, 5000) }
         if (def.stackable && bot.equipment[3]?.id == def.id) bot.equipment[3] = Item(def.id, 5000)
-                n.contains("crossbow") || n.contains("c'bow") -> Items.RUNITE_BOLTS
         bot.addBlock(UpdateBlockType.APPEARANCE)
     }
 

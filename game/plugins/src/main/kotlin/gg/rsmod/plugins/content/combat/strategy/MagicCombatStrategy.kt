@@ -38,11 +38,11 @@ import kotlin.math.floor
  * Mechanics sourced from the 2009scape spell handlers and the 2011 RuneScape Wiki.
  */
 object MagicCombatStrategy : CombatStrategy {
-    /** Undead npc names Crumble Undead may be cast on (2011 wiki: skeletons, zombies, ghosts, shades and their variants). */
-    private val UNDEAD_NAMES = listOf("skeleton", "zombie", "ghost", "shade", "ghast", "revenant", "mummy", "zogre", "banshee", "ankou", "crawling hand", "aberrant spectre", "undead", "skeletal", "spectre", "wight", "zombified")
     /** OSRS Wiki Smoke spells: "a 1/8 chance on hit" to poison. */
     const val SMOKE_POISON_CHANCE = 8
 
+    /** Undead npc names Crumble Undead may be cast on (2011 wiki: skeletons, zombies, ghosts, shades and their variants). */
+    private val UNDEAD_NAMES = listOf("skeleton", "zombie", "ghost", "shade", "ghast", "revenant", "mummy", "zogre", "banshee", "ankou", "crawling hand", "aberrant spectre", "undead", "skeletal", "spectre", "wight", "zombified")
 
     override fun getAttackRange(pawn: Pawn): Int =
         if (pawn is Player && gg.rsmod.plugins.content.combat.strategy.ranged.RangedAmmo.isSalamander(pawn.getEquipment(EquipmentType.WEAPON)?.id)) {
@@ -471,6 +471,11 @@ object MagicCombatStrategy : CombatStrategy {
         }
     }
 
+    /**
+     * OSRS Wiki "Hit delay": MagicDelay = 1 + floor((1 + Distance) / 3), + 1 server offset. Distance is counted in game squares
+     * (Chebyshev), as the magic projectile's own flight (Combat.getProjectileLifespan) - it was the rounded-up straight-line
+     * distance, so a diagonal cast landed a tick late, after its projectile (combat run 2026-09-29).
+     */
     fun getHitDelay(
         start: Tile,
         target: Tile,
@@ -491,11 +496,6 @@ object MagicCombatStrategy : CombatStrategy {
     internal fun addCombatXp(
         player: Player,
         target: Pawn,
-    /**
-     * OSRS Wiki "Hit delay": MagicDelay = 1 + floor((1 + Distance) / 3), + 1 server offset. Distance is counted in game squares
-     * (Chebyshev), as the magic projectile's own flight (Combat.getProjectileLifespan) - it was the rounded-up straight-line
-     * distance, so a diagonal cast landed a tick late, after its projectile (combat run 2026-09-29).
-     */
         damage: Int,
         baseXp: Double,
     ) {
