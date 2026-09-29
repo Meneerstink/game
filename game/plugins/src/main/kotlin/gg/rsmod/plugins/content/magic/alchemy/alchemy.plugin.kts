@@ -117,8 +117,7 @@ fun calculateCoinAmount(
     item: Item,
     highAlchemy: Boolean,
 ): Int {
-    val coinModifier = if (highAlchemy) 0.6 else 0.4
-    return (world.definitions.get(ItemDef::class.java, item.id).cost * coinModifier).toInt()
+    return Alchemy.coins(world.definitions.get(ItemDef::class.java, item.id), highAlchemy)
 }
 
 /**

@@ -61,6 +61,15 @@ object RestorationRates {
      * Ticks until the next lowered stat comes back one level, read from the running [STAT_RESTORE] timer and the lowered
      * channel's progress at the current rate (Boosts Information overlay). -1 when the timer is not running.
      */
+    /** Ticks until the next boosted non-combat stat drops one level (the boosted channel runs at rate 1). -1 = not running. */
+    fun ticksUntilBoostedRestore(player: Player): Int {
+        if (!player.timers.has(gg.rsmod.game.model.timer.STAT_RESTORE)) return -1
+        val nextStep = player.timers[gg.rsmod.game.model.timer.STAT_RESTORE]
+        val missing = CYCLE - (player.attr[BOOSTED_PROGRESS] ?: 0)
+        val steps = (missing + STEP - 1) / STEP
+        return nextStep + (steps - 1) * STEP
+    }
+
     fun ticksUntilLoweredRestore(player: Player): Int {
         if (!player.timers.has(gg.rsmod.game.model.timer.STAT_RESTORE)) return -1
         val nextStep = player.timers[gg.rsmod.game.model.timer.STAT_RESTORE]

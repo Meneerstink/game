@@ -83,7 +83,8 @@ fun startTour(
         try {
             player.message("HUD tour: about 45 seconds. Keep the game window visible and uncovered.")
             // Every overlay on for the tour, with RuneLite's default tiers/colours; the account's own settings come back at the end.
-            ClientHud.send(player, "cfg|1011111|20000,100000,1000000,10000000|ffffff,66b2ff,99ff99,ff9600,ff66b2,aa00ff")
+            // Every plugin at its default for the tour (the account's own settings come back at the end).
+            ClientHudConfig.pushDefaults(player)
             ClientHud.send(player, "hl|clear")
             ClientHud.send(player, "hl|add|dragon bones")
             ClientHud.send(player, "hide|clear")
@@ -180,21 +181,33 @@ fun startTour(
                 keepAlive()
                 wait(1)
             }
-            shot(player, "hud_5b_plugins_panel")
-            ClientHud.send(player, "open|ground")
+            // The sidebar lives next to the game view: these two shots take the whole window.
+            shot(player, "window_hud_5b_sidebar")
+            ClientHud.send(player, "open|grounditems")
             repeat(2) {
                 keepAlive()
                 wait(1)
             }
-            shot(player, "hud_5b2_ground_items_settings")
+            shot(player, "window_hud_5b2_ground_items_settings")
             ClientHud.send(player, "close")
-            ClientHud.send(player, "cfg|0011111|20000,100000,1000000,10000000|ffffff,66b2ff,99ff99,ff9600,ff66b2,aa00ff")
+            ClientHud.send(player, "cfg|boosts.enabled=false")
             repeat(2) {
                 keepAlive()
                 wait(1)
             }
             shot(player, "hud_5c_boosts_switched_off")
-            ClientHud.send(player, "cfg|1011111|20000,100000,1000000,10000000|ffffff,66b2ff,99ff99,ff9600,ff66b2,aa00ff")
+            // RuneLite extras: boosts as infoboxes, GE + HA prices, pie timers, tile highlights, a lootbeam, outlined text.
+            ClientHud.send(
+                player,
+                "cfg|boosts.enabled=true;boosts.displayInfoboxes=true;boosts.displayPanel=false;grounditems.priceDisplayMode=BOTH;" +
+                    "grounditems.groundItemTimers=PIE;grounditems.highlightTiles=true;grounditems.showLootbeamForHighlighted=true;grounditems.textOutline=true",
+            )
+            repeat(2) {
+                keepAlive()
+                wait(1)
+            }
+            shot(player, "hud_5d_runelite_extras")
+            ClientHudConfig.pushDefaults(player)
 
             // 6. Partial pickup: three of the six sharks go, the label becomes x3.
             items.filter { it.item == Items.SHARK }.take(3).forEach { world.remove(it) }
@@ -217,7 +230,8 @@ fun startTour(
             world.remove(npc)
             player.timers.remove(FROZEN_TIMER)
             player.moveTo(SAFE_AWAY)
-            wait(8)
+            // Past the opponent's 5 s hold (RuneLite WAIT) as well.
+            wait(maxOf(8, ClientHudSync.holdCycles(player) + 2))
             shot(player, "hud_7_teleported_away")
             wait(2)
 

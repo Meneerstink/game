@@ -16,14 +16,20 @@ import gg.rsmod.game.model.entity.Player
  * chat and no packet id had to be added. One MESSAGE_GAME is a var-byte packet, so each payload stays under [MAX_PAYLOAD].
  *
  * Payloads (fields separated by '|'):
- *  - `cfg|<config>`                           the player's overlay settings (see the plugin's ClientHudConfig)
- *  - `boost|<decayTicks>|<restoreTicks>`      ticks until the next boosted combat stat drops / lowered one returns; -1 = none
+ *  - `cfg|<key>=<value>;...`                  overlay settings (RuneLite's config items, the plugin's ClientHudConfig)
+ *  - `hl|clear`, `hl|add|<a>,<b>`, `hide|...` the highlighted / hidden item lists
+ *  - `open[|<plugin>]`, `close`               open / close the client's 78 Plugins sidebar (at a plugin's settings)
+ *  - `gdelay|<ticks>`                         a new drop's despawn delay (Ground Items' pie timer)
+ *  - `boost|<combatDecay>|<restore>|<nonCombatDecay>`   ticks to the next step of each restoration cycle (always sent; the
+ *                                             client's "next buff / debuff change" settings decide what shows); -1 = not running
  *  - `opp|n|<npcIndex>|<ratio>|<cur>|<max>`   the player's current opponent; ratio 0..255 like the hit mask
  *  - `opp|p|<playerIndex>|<ratio>`            (a player opponent: ratio only, as in the hit mask)
  *  - `opp|none`
  *  - `tmr|<vengActive>|<vengCd>|<teleblock>|<frozen>`   remaining ticks, 0 = not active
- *  - `gi|<entry>;<entry>...`                  ground items: `<level>,<x>,<z>,<id>,<despawnTicks>,<unitValue>` per tile and
- *                                             item id the player can see; despawnTicks -1 = never despawns, -2 = none left
+ *  - `gi|<entry>;<entry>...`                  ground items: `<level>,<x>,<z>,<id>,<despawnTicks>,<unitValue>,<unitAlch>,<flags>`
+ *                                             per tile and item id the player can see; despawnTicks -1 = never despawns,
+ *                                             -2 = none left; flags: 1 untradeable, 2 dropped for this player, 4 dropped
+ *                                             for another player, 8 still private, 16 dropped this cycle
  */
 object ClientHud {
     const val PREFIX = "__RSPS_HUD__:"
@@ -35,6 +41,16 @@ object ClientHud {
     /** Unit value of an item for [player]: bound by the plugins to the price checker / GE guide (one price source). */
     @JvmStatic
     var itemValue: (Player, Int) -> Int = { _, _ -> 0 }
+
+    /** Coins high alchemy pays for one item: bound by the plugins to the spell's own formula (Alchemy.coins). */
+    @JvmStatic
+    var itemAlch: (Int) -> Int = { 0 }
+
+    const val FLAG_UNTRADEABLE = 1
+    const val FLAG_MINE = 2
+    const val FLAG_OTHERS = 4
+    const val FLAG_PRIVATE = 8
+    const val FLAG_FRESH = 16
 
     /** Per-player sync, run by [Player.postCycle] at the very end of every cycle; bound by the plugins (ClientHudSync). */
     @JvmStatic
@@ -72,24 +88,47 @@ object ClientHud {
         items: List<GroundItem>,
     ): String {
         var soonest = Int.MAX_VALUE
-        var any = false
+        var first: GroundItem? = null
+        var fresh = false
         for (item in items) {
             if (item.item != itemId || !item.canBeViewedBy(player)) continue
-            any = true
             // World.cycle: an item despawns once currentCycle reaches gItemDespawnDelay; world spawns (respawnCycles set) never do.
             val remaining = if (item.respawnCycles != -1) Int.MAX_VALUE else maxOf(0, world.gameContext.gItemDespawnDelay - item.currentCycle)
-            soonest = minOf(soonest, remaining)
+            if (first == null || remaining < soonest) {
+                soonest = remaining
+                first = item
+            }
+            if (item.currentCycle == 0 && item.respawnCycles == -1) fresh = true
         }
-        val ticks = if (!any) -2 else if (soonest == Int.MAX_VALUE) -1 else soonest
-        val value = if (any) cachedValue(world, player, itemId) else 0
-        return "$level,$x,$z,$itemId,$ticks,$value"
+        val shown = first ?: return "$level,$x,$z,$itemId,-2,0,0,0"
+        val ticks = if (soonest == Int.MAX_VALUE) -1 else soonest
+        var flags = 0
+        if (!world.definitions.get(gg.rsmod.game.fs.def.ItemDef::class.java, itemId).tradeable) flags = flags or FLAG_UNTRADEABLE
+        val owner = shown.droppedFor
+        if (owner != null) flags = flags or (if (owner.value == player.uid.value) FLAG_MINE else FLAG_OTHERS)
+        if (!shown.isPublic()) flags = flags or FLAG_PRIVATE
+        if (fresh) flags = flags or FLAG_FRESH
+        return "$level,$x,$z,$itemId,$ticks,${cachedValue(world, player, itemId)},${cachedAlch(world, itemId)},$flags"
     }
 
     // ---- 100-player load (owner 2026-09-29: "er gaan 100 players deze plugins gebruiken") -------------------------------
 
     /** Item values of this cycle: one price lookup per item id per cycle, not one per item per viewer. */
     private val valueCache = HashMap<Int, Int>()
+    private val alchCache = HashMap<Int, Int>()
     private var valueCycle = -1
+
+    private fun cachedAlch(
+        world: World,
+        itemId: Int,
+    ): Int {
+        if (valueCycle != world.currentCycle) {
+            valueCache.clear()
+            alchCache.clear()
+            valueCycle = world.currentCycle
+        }
+        return alchCache.getOrPut(itemId) { itemAlch(itemId) }
+    }
 
     private fun cachedValue(
         world: World,
@@ -98,6 +137,7 @@ object ClientHud {
     ): Int {
         if (valueCycle != world.currentCycle) {
             valueCache.clear()
+            alchCache.clear()
             valueCycle = world.currentCycle
         }
         return valueCache.getOrPut(itemId) { itemValue(player, itemId) }

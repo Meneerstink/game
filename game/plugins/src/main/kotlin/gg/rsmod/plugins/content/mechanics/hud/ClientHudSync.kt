@@ -12,7 +12,6 @@ import gg.rsmod.game.model.timer.FROZEN_TIMER
 import gg.rsmod.game.model.timer.TELEBLOCK_TIMER
 import gg.rsmod.game.model.timer.TimerKey
 import gg.rsmod.game.model.timer.VENGEANCE_COOLDOWN
-import gg.rsmod.plugins.content.items.potion.DivinePotions
 import gg.rsmod.plugins.content.mechanics.restoration.BoostedCombatStats
 import gg.rsmod.plugins.content.mechanics.restoration.RestorationRates
 
@@ -33,11 +32,20 @@ object ClientHudSync {
     /** Opponent Information: a target further than this (or on another level) is no longer shown. */
     private const val OPPONENT_RANGE = 15
 
+    /**
+     * RuneLite OpponentInfoPlugin: `WAIT = Duration.ofSeconds(5)` - the last opponent stays shown until five seconds after
+     * the interaction ended (owner 2026-09-29: "de opponent information verdwijnt gelijk ... dit hoort niet").
+     */
+    const val HOLD_MS = 5_000L
+
     private class State {
         var cycle = 0
-        var boost = intArrayOf(Int.MIN_VALUE, Int.MIN_VALUE)
+        var boost = intArrayOf(Int.MIN_VALUE, Int.MIN_VALUE, Int.MIN_VALUE)
         var timers = intArrayOf(Int.MIN_VALUE, Int.MIN_VALUE, Int.MIN_VALUE, Int.MIN_VALUE)
         var opponent: String? = null
+        var last: java.lang.ref.WeakReference<Pawn>? = null
+        var lastPayload: String? = null
+        var endedCycle = -1
     }
 
     private val STATE = AttributeKey<State>()
@@ -53,7 +61,14 @@ object ClientHudSync {
         val now = player.world.currentCycle
         val elapsed = now - state.cycle
 
-        val boost = intArrayOf(boostDecay(player), loweredRestore(player))
+        // The three restoration cycles are always sent; the client's "next buff / debuff change" settings (RuneLite's
+        // ALWAYS / BOOSTED / NEVER) decide what shows.
+        val boost =
+            intArrayOf(
+                BoostedCombatStats.ticksUntilDecay(player),
+                RestorationRates.ticksUntilLoweredRestore(player),
+                RestorationRates.ticksUntilBoostedRestore(player),
+            )
         val timers =
             intArrayOf(
                 if (player.attr[VENGEANCE_ACTIVE_ATTR] == true) 1 else 0,
@@ -67,14 +82,14 @@ object ClientHudSync {
 
         if (boostChanged || timersChanged) {
             // Both groups are countdowns from the same cycle, so they are always sent together from here.
-            ClientHud.send(player, "boost|${boost[0]}|${boost[1]}")
+            ClientHud.send(player, "boost|${boost.joinToString("|")}")
             ClientHud.send(player, "tmr|${timers.joinToString("|")}")
             state.boost = boost
             state.timers = timers
             state.cycle = now
         }
 
-        val opponent = opponentPayload(player)
+        val opponent = heldOpponent(player, state)
         if (opponent != state.opponent) {
             ClientHud.send(player, opponent)
             state.opponent = opponent
@@ -97,19 +112,6 @@ object ClientHudSync {
         return kotlin.math.abs(expected - actual) > JITTER
     }
 
-    private fun boostDecay(player: Player): Int {
-        val boosted =
-            BoostedCombatStats.skills.any {
-                player.skills.getCurrentLevel(it) > player.skills.getMaxLevel(it) && !DivinePotions.protects(player, it)
-            }
-        return if (boosted) BoostedCombatStats.ticksUntilDecay(player) else -1
-    }
-
-    private fun loweredRestore(player: Player): Int {
-        val lowered = BoostedCombatStats.skills.any { player.skills.getCurrentLevel(it) < player.skills.getMaxLevel(it) }
-        return if (lowered) RestorationRates.ticksUntilLoweredRestore(player) else -1
-    }
-
     /**
      * The player's active opponent: the combat target, or - after a manual single cast, which ends the fight but keeps
      * facing the target - the pawn the player faces, once the two have fought. Gone as soon as neither holds.
@@ -126,8 +128,44 @@ object ClientHudSync {
         return pawn
     }
 
+    /** Cycles of [HOLD_MS] at this server's tick length (fast ticks in the headless tests). */
+    fun holdCycles(player: Player): Int {
+        val cycle = player.world.gameContext.cycleTime.toLong().coerceAtLeast(1L)
+        return ((HOLD_MS + cycle - 1) / cycle).toInt()
+    }
+
+    /** The opponent to show: the live one, else the last one until [HOLD_MS] after the fight ended (its health kept fresh). */
+    private fun heldOpponent(
+        player: Player,
+        state: State,
+    ): String {
+        val now = player.world.currentCycle
+        val live = opponent(player)
+        if (live != null) {
+            state.last = java.lang.ref.WeakReference(live)
+            state.endedCycle = -1
+            return payloadOf(live).also { state.lastPayload = it }
+        }
+        val shown = state.lastPayload ?: return "opp|none"
+        if (state.endedCycle < 0) state.endedCycle = now
+        if (now - state.endedCycle >= holdCycles(player)) {
+            state.last = null
+            state.lastPayload = null
+            state.endedCycle = -1
+            return "opp|none"
+        }
+        val pawn = state.last?.get()
+        val stillThere = pawn != null && (if (pawn is Npc) pawn.isSpawned() else (pawn as Player).isOnline)
+        return if (stillThere) payloadOf(pawn!!).also { state.lastPayload = it } else shown
+    }
+
+    /** The live opponent's payload (no hold): what the client must show while the fight goes on. */
     fun opponentPayload(player: Player): String {
         val pawn = opponent(player) ?: return "opp|none"
+        return payloadOf(pawn)
+    }
+
+    private fun payloadOf(pawn: Pawn): String {
         val max = pawn.getMaximumLifepoints()
         val cur = pawn.getCurrentLifepoints()
         // The hit mask's own ratio (PlayerUpdateBlockSegment / NpcUpdateBlockSegment), so the bar matches the one over the head.

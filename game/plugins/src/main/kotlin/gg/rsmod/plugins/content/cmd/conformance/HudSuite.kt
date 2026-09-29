@@ -64,7 +64,8 @@ object HudSuite : Conformance.Suite {
         var restoreEnd = -1
         var opponent = "opp|none"
         var configs = 0
-        var lastConfig = ""
+        val config = HashMap<String, String>()
+        var nonCombatEnd = -1
         var opened = 0
         val lists = HashMap<String, MutableList<String>>()
         val ground = HashMap<String, IntArray>()
@@ -88,11 +89,15 @@ object HudSuite : Conformance.Suite {
                 "boost" -> {
                     decayEnd = end(f[1])
                     restoreEnd = end(f[2])
+                    nonCombatEnd = end(f.getOrElse(3) { "-1" })
                 }
                 "opp" -> opponent = payload
                 "cfg" -> {
                     configs++
-                    lastConfig = payload
+                    payload.substring(4).split(';').forEach { kv ->
+                        val eq = kv.indexOf('=')
+                        if (eq > 0) config[kv.substring(0, eq)] = kv.substring(eq + 1)
+                    }
                 }
                 "open" -> opened++
                 "hl", "hide" ->
@@ -367,7 +372,9 @@ object HudSuite : Conformance.Suite {
         run.expectTrue(e, "next countdown sent after the change", m.decayEnd >= decayActual + 99 || a.skills.getCurrentLevel(Skills.DEFENCE) <= 99, "decay end ${m.decayEnd}, first drop $decayActual, now $now")
         for (s in listOf(Skills.ATTACK, Skills.STRENGTH, Skills.DEFENCE, Skills.RANGED, Skills.MAGIC)) a.skills.setCurrentLevel(s, 99)
         wait(2)
-        run.expectTrue(e, "no countdown once every stat is back", m.decayEnd < 0 && m.restoreEnd < 0, "decay ${m.decayEnd} restore ${m.restoreEnd}")
+        // RuneLite's "next change" ALWAYS mode shows the cycle with nothing boosted: the three cycles keep coming.
+        run.expectTrue(e, "cycles keep coming with every stat back (ALWAYS mode)", m.decayEnd > 0 && m.restoreEnd > 0 && m.nonCombatEnd > 0,
+            "decay ${m.decayEnd} restore ${m.restoreEnd} non-combat ${m.nonCombatEnd}")
     }
 
     /** Model vs the payload the server state gives now (or one tick ago: the change is sent on the next sync tick). */
@@ -428,13 +435,31 @@ object HudSuite : Conformance.Suite {
         Combat.reset(a)
         a.resetInteractions()
         a.resetFacePawn()
-        bad = followOpponent(run, a, m, 2)
-        run.expectTrue(e, "gone when combat stops", bad == null && m.opponent == "opp|none", bad ?: m.opponent)
+        // RuneLite OpponentInfoPlugin: the last opponent stays WAIT = 5 s after the interaction ended, then goes.
+        val hold = ClientHudSync.holdCycles(a)
+        val stoppedAt = run.world.currentCycle
+        var goneAt = -1
+        var guard = 0
+        while (goneAt < 0 && guard++ < hold + 10) {
+            wait(1)
+            if (m.opponent == "opp|none") goneAt = run.world.currentCycle
+        }
+        val shownFor = goneAt - stoppedAt
+        run.check(e, "still shown after combat stops (cycles)", shownFor, "runelite WAIT 5 s" to hold, same = { x, y -> kotlin.math.abs(x.toString().toInt() - y.toString().toInt()) <= 2 })
         a.attack(n2)
         wait(2)
         n2.hit(damage = n2.getCurrentLifepoints() + 10)
-        bad = followOpponent(run, a, m, 12)
-        run.expectTrue(e, "gone after the npc died", bad == null && m.opponent == "opp|none", bad ?: m.opponent)
+        var deadShown = false
+        goneAt = -1
+        guard = 0
+        val killedAt = run.world.currentCycle
+        while (goneAt < 0 && guard++ < hold + 20) {
+            wait(1)
+            if (m.opponent.startsWith("opp|n|${n2.index}|0|0|")) deadShown = true
+            if (m.opponent == "opp|none") goneAt = run.world.currentCycle
+        }
+        run.expectTrue(e, "the killed npc shows 0 hp, then goes after the hold", deadShown && goneAt > 0 && goneAt - killedAt <= hold + 12,
+            "dead shown $deadShown, gone after ${goneAt - killedAt} cycles (hold $hold + death)")
         a.skills.setCurrentLevel(Skills.STRENGTH, strength)
         a.setVarp(gg.rsmod.plugins.content.inter.attack.AttackTab.DISABLE_AUTO_RETALIATE_VARP, 0)
         run.remove(n2)
@@ -581,9 +606,9 @@ object HudSuite : Conformance.Suite {
         var guard = 0
         while (guard++ < 120 && !(a.tile.sameAs(tile) && run.recording.of("U1", "msg").any { it.cycle >= shotsFrom && it.text.contains("HUD tour done") })) wait(1)
         wait(2)
-        run.recording.of("U1", "msg").filter { it.cycle >= shotsFrom && it.text.contains("__RSPS_SHOT__:hud_") }.forEach { shots += it.text.substringAfter("__RSPS_SHOT__:").substringBefore(")") }
+        run.recording.of("U1", "msg").filter { it.cycle >= shotsFrom && (it.text.contains("__RSPS_SHOT__:hud_") || it.text.contains("__RSPS_SHOT__:window_hud_")) }.forEach { shots += it.text.substringAfter("__RSPS_SHOT__:").substringBefore(")") }
         run.expectTrue(e, "started", reply.startsWith("HUD tour started"), reply)
-        run.expectTrue(e, "eleven screenshots requested", shots.size == 11, shots.joinToString(" "))
+        run.expectTrue(e, "twelve screenshots requested", shots.size == 12, shots.joinToString(" "))
         run.expectTrue(e, "position back", a.tile.sameAs(tile), "at ${a.tile}, was $tile")
         run.expectTrue(e, "levels back", a.skills.getCurrentLevel(Skills.ATTACK) == 95 && a.skills.getCurrentLevel(Skills.DEFENCE) == 99, "attack ${a.skills.getCurrentLevel(Skills.ATTACK)} defence ${a.skills.getCurrentLevel(Skills.DEFENCE)}")
         run.expectTrue(e, "life points back", a.getCurrentLifepoints() == life, "${a.getCurrentLifepoints()} was $life")
@@ -620,74 +645,71 @@ object HudSuite : Conformance.Suite {
     ) {
         val e = "hud settings"
         fun hud(vararg args: String) = run.world.plugins.executeCommand(a, "hud", arrayOf(*args))
-        fun flags() = m.lastConfig.split('|').getOrNull(1) ?: ""
-        val index = ClientHudConfig.SWITCHES
-        hud("resetsettings")
+        hud("reset")
         wait(1)
+        run.expectTrue(e, "every RuneLite setting pushed with its default", ClientHudConfig.SETTINGS.all { m.config[it.key] == it.default },
+            "missing or different: " + ClientHudConfig.SETTINGS.filter { m.config[it.key] != it.default }.joinToString(" ") { "${it.key}=${m.config[it.key]}" })
         val opens = m.opened
         run.world.plugins.executeCommand(a, "hud", null)
         run.world.plugins.executeCommand(a, "plugins", null)
         wait(1)
-        run.expectTrue(e, "hud / plugins open the panel", m.opened == opens + 2, "open payloads ${m.opened - opens}")
+        run.expectTrue(e, "hud / plugins open the sidebar", m.opened == opens + 2, "open payloads ${m.opened - opens}")
 
-        for (name in listOf("boosts", "tteleblock", "oppexact", "boosttimers")) {
-            hud("set", name, "off")
+        // One value of every type, saved and pushed back; wrong values change nothing.
+        val cases =
+            listOf(
+                "boosts.enabled" to "false", "timers.showTeleblock" to "false", "grounditems.priceDisplayMode" to "BOTH",
+                "grounditems.groundItemTimers" to "PIE", "grounditems.lowValuePrice" to "5000", "grounditems.highValueColor" to "00ff00",
+                "opponent.hitpointsDisplayStyle" to "BOTH", "boosts.boostThreshold" to "3", "grounditems.hotkey" to "SHIFT",
+            )
+        for ((key, value) in cases) {
+            hud("set", key, value)
             wait(1)
-            val shown = flags().getOrNull(index.indexOf(name))
-            run.expectTrue(e, "switch $name off: saved and pushed", !ClientHudConfig.flag(a, name) && shown == '0', "saved ${ClientHudConfig.flag(a, name)} pushed $shown")
-            hud("set", name, "on")
-            wait(1)
-            run.expectTrue(e, "switch $name on again", ClientHudConfig.flag(a, name) && flags().getOrNull(index.indexOf(name)) == '1', "pushed ${flags()}")
+            run.expectTrue(e, "$key = $value saved and pushed", ClientHudConfig.get(a, key) == value && m.config[key] == value, "saved ${ClientHudConfig.get(a, key)} pushed ${m.config[key]}")
         }
+        hud("set", "grounditems.priceDisplayMode", "banana")
+        hud("set", "boosts.boostThreshold", "500")
+        hud("set", "grounditems.lowValueColor", "zz00zz")
+        hud("set", "no.such.key", "1")
+        wait(1)
+        run.expectTrue(e, "wrong values change nothing", ClientHudConfig.get(a, "grounditems.priceDisplayMode") == "BOTH" &&
+            ClientHudConfig.get(a, "boosts.boostThreshold") == "3" && ClientHudConfig.get(a, "grounditems.lowValueColor") == "66b2ff",
+            "price ${ClientHudConfig.get(a, "grounditems.priceDisplayMode")} threshold ${ClientHudConfig.get(a, "boosts.boostThreshold")}")
+        hud("set", "grounditems.pricedisplaymode", "ha")
+        wait(1)
+        run.expectTrue(e, "keys and values are case-insensitive", ClientHudConfig.get(a, "grounditems.priceDisplayMode") == "HA", ClientHudConfig.get(a, "grounditems.priceDisplayMode"))
 
-        // Values through the input box.
-        hud("edit", "tier", "low")
+        // Lists.
+        hud("list", "highlight", "add", "Dragon*")
+        hud("list", "highlight", "add", "Shark")
         wait(1)
-        Bots.inject(a, gg.rsmod.game.message.impl.ResumePCountDialogMessage(5000))
-        wait(2)
-        run.expectTrue(e, "low value typed in the input box", ClientHudConfig.tiers(a)[0] == 5000L && m.lastConfig.split('|')[2].startsWith("5000,"), "tiers ${ClientHudConfig.tiers(a)} pushed ${m.lastConfig}")
-        hud("edit", "hideunder")
-        wait(1)
-        Bots.inject(a, gg.rsmod.game.message.impl.ResumePCountDialogMessage(2500))
-        wait(2)
-        run.expectTrue(e, "hide-under typed in the input box", ClientHudConfig.hideUnder(a) == 2500L && m.lastConfig.endsWith("|2500"), "pushed ${m.lastConfig}")
-        hud("edit", "colour", "high")
-        wait(1)
-        Bots.inject(a, gg.rsmod.game.message.impl.ResumePStringDialogMessage("#00ff00"))
-        wait(2)
-        run.expectTrue(e, "high colour typed in the input box", ClientHudConfig.colours(a)[3] == 0x00FF00, "colours ${ClientHudConfig.colours(a).map { Integer.toHexString(it) }}")
-        hud("edit", "colour", "low")
-        wait(1)
-        Bots.inject(a, gg.rsmod.game.message.impl.ResumePStringDialogMessage("banana"))
-        wait(2)
-        run.expectTrue(e, "a wrong colour changes nothing", ClientHudConfig.colours(a)[1] == 0x66B2FF, "low ${Integer.toHexString(ClientHudConfig.colours(a)[1])}")
-
-        // Lists: add through the input box, remove one, clear.
-        hud("edit", "highlight")
-        wait(1)
-        Bots.inject(a, gg.rsmod.game.message.impl.ResumePStringDialogMessage("Dragon*"))
-        wait(2)
-        hud("edit", "highlight")
-        wait(1)
-        Bots.inject(a, gg.rsmod.game.message.impl.ResumePStringDialogMessage("Shark"))
-        wait(2)
         run.expectTrue(e, "two highlighted items added", m.lists["hl"] == listOf("dragon*", "shark"), "pushed ${m.lists["hl"]}")
-        hud("remove", "highlight", "dragon*")
+        hud("list", "highlight", "remove", "dragon*")
         wait(1)
-        run.expectTrue(e, "x removes one", m.lists["hl"] == listOf("shark") && ClientHudConfig.list(a, false) == listOf("shark"), "pushed ${m.lists["hl"]}")
-        hud("edit", "hide")
+        run.expectTrue(e, "remove one", m.lists["hl"] == listOf("shark"), "pushed ${m.lists["hl"]}")
+        hud("list", "hide", "add", "shark")
         wait(1)
-        Bots.inject(a, gg.rsmod.game.message.impl.ResumePStringDialogMessage("shark"))
-        wait(2)
         run.expectTrue(e, "an item is highlighted or hidden, never both", m.lists["hide"] == listOf("shark") && m.lists["hl"].isNullOrEmpty(), "hl ${m.lists["hl"]} hide ${m.lists["hide"]}")
-        hud("clear", "hide")
+        hud("list", "hide", "add", "<col=ff0000>bad;name")
         wait(1)
-        run.expectTrue(e, "Clear empties the list", m.lists["hide"].isNullOrEmpty() && ClientHudConfig.list(a, true).isEmpty(), "pushed ${m.lists["hide"]}")
+        run.expectTrue(e, "markup and separators are stripped from names", m.lists["hide"]?.contains("colff0000badname") == true, "hide ${m.lists["hide"]}")
+        hud("list", "hide", "clear")
+        wait(1)
+        run.expectTrue(e, "clear empties the list", m.lists["hide"].isNullOrEmpty(), "pushed ${m.lists["hide"]}")
 
-        hud("resetsettings")
+        // Reset one plugin, then everything.
+        hud("reset", "grounditems")
         wait(1)
-        run.expectTrue(e, "Reset all settings", ClientHudConfig.tiers(a)[0] == 20_000L && ClientHudConfig.hideUnder(a) == 0L && ClientHudConfig.colours(a)[3] == 0xFF9600,
-            "tiers ${ClientHudConfig.tiers(a)} under ${ClientHudConfig.hideUnder(a)}")
+        run.expectTrue(e, "reset one plugin", ClientHudConfig.get(a, "grounditems.lowValuePrice") == "20000" && ClientHudConfig.get(a, "boosts.enabled") == "false",
+            "ground low ${ClientHudConfig.get(a, "grounditems.lowValuePrice")} boosts.enabled ${ClientHudConfig.get(a, "boosts.enabled")}")
+        hud("reset")
+        wait(1)
+        run.expectTrue(e, "reset everything", ClientHudConfig.SETTINGS.all { ClientHudConfig.get(a, it.key) == it.default && m.config[it.key] == it.default }, "after reset")
+        hud("boosts", "off")
+        wait(1)
+        run.expectTrue(e, "typed shortcut: hud boosts off", m.config["boosts.enabled"] == "false", "pushed ${m.config["boosts.enabled"]}")
+        hud("reset")
+        wait(1)
     }
 
     /**

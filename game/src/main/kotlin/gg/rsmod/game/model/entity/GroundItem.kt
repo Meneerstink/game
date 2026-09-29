@@ -35,6 +35,12 @@ class GroundItem private constructor(
 
     var currentCycle = 0
 
+    /**
+     * Who the item was dropped for (the dropper, or the player a kill's loot belongs to). Unlike [ownerUID] it stays after
+     * the item turns public, so the Ground Items overlay can still tell "your drop" (RuneLite's ownership filter).
+     */
+    internal val droppedFor: PlayerUID? = ownerUID
+
     internal var respawnCycles = -1
 
     internal val attr = EnumMap<ItemAttribute, Int>(ItemAttribute::class.java)
