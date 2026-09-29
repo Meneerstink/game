@@ -10,6 +10,9 @@ import gg.rsmod.game.sync.block.UpdateBlockType
 import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.api.ext.getVarbit
+import gg.rsmod.plugins.api.ext.sendWeaponComponentInformation
+import gg.rsmod.plugins.api.ext.setVarbit
+import gg.rsmod.plugins.api.ext.setVarp
 import gg.rsmod.plugins.content.cmd.conformance.Conformance.Result
 import gg.rsmod.plugins.content.cmd.conformance.Conformance.Verdict
 import gg.rsmod.plugins.content.combat.Combat
@@ -291,6 +294,9 @@ object CursesSuite : Conformance.Suite {
         val lp = HashMap<Int, Int>()
         var hits = 0
         var guard = 0
+        // Only the attacker fights: auto retaliation turned a caster into a staff-basher (Deflect Magic saw melee hits).
+        for (p in listOf(bot, target)) p.setVarp(gg.rsmod.plugins.content.inter.attack.AttackTab.DISABLE_AUTO_RETALIATE_VARP, 1)
+        castIfMagic(attacker, defender, style)
         attacker.attack(defender)
         while (hits < HITS && guard++ < HITS * 8) {
             bot.setCurrentPrayerPoints(99)
@@ -299,10 +305,16 @@ object CursesSuite : Conformance.Suite {
             lp[run.world.currentCycle] = bot.getCurrentLifepoints()
             wait(1)
             hits = run.recording.of(if (defender === bot) "Conf1" else "Conf2", "out").count { it.cycle >= c0 && it.text.startsWith("hits ") }
-            if (attacker.getCombatTargetOrNull() == null) attacker.attack(defender)
+            // A manual cast ends the attack: cast again once the previous cast is spent and the attack delay is over.
+            val castDone = style == "magic" && !attacker.attr.has(Combat.CASTING_SPELL) && !attacker.timers.has(gg.rsmod.game.model.timer.ATTACK_DELAY)
+            if (attacker.getCombatTargetOrNull() == null || castDone) {
+                castIfMagic(attacker, defender, style)
+                attacker.attack(defender)
+            }
         }
         attacker.resetInteractions()
         Combat.reset(attacker)
+        for (p in listOf(bot, target)) p.setVarp(gg.rsmod.plugins.content.inter.attack.AttackTab.DISABLE_AUTO_RETALIATE_VARP, 0)
         val defenderLabel = if (defender === bot) "Conf1" else "Conf2"
         val splats =
             run.recording.of(defenderLabel, "out").filter { it.cycle >= c0 && it.text.startsWith("hits ") }
@@ -376,14 +388,15 @@ object CursesSuite : Conformance.Suite {
             run.recording.of("Conf2", "out").filter { it.cycle >= c0 && it.text.startsWith("hits ") }
                 .flatMap { Regex("type=(\\d+) dmg=(\\d+)").findAll(it.text).map { m -> m.groupValues[1].toInt() to m.groupValues[2].toInt() }.toList() }
                 .filter { it.first == gg.rsmod.plugins.api.HitType.REFLECTED.id }
-        val share = if (landed.isEmpty()) 0.0 else reflected.size.toDouble() / landed.count { it.second >= 10 }.coerceAtLeast(1)
+        // The splat is after the PvP deflect reduction (60 % kept): a hit that could reflect (>= 10 before it) shows >= 6.
+        val share = if (landed.isEmpty()) 0.0 else reflected.size.toDouble() / landed.count { it.second >= 6 }.coerceAtLeast(1)
         run.add(
             Result(
                 // Owner balance decision 2026-09-18 (AncientCurses.DEFLECT_REFLECT_CHANCE_PCT): 15 % chance per attack, not Novite's every
                 // hit - a share between 3 % and 35 % over the qualifying hits passes (combat run 2026-09-29).
                 e, "reflected on damaging hits (>= 1 lifepoint of 10 %)", if (share in 0.03..0.35) Verdict.PASS else Verdict.FAIL,
                 "about 15 % of the damaging hits reflect ${deflect["reflect_fraction"]?.get("novite")?.asDouble()} of their damage (owner 2026-09-18)",
-                "${reflected.size} reflects on ${landed.count { it.second >= 10 }} hits (${"%.2f".format(java.util.Locale.ENGLISH, share)})",
+                "${reflected.size} reflects on ${landed.count { it.second >= 6 }} hits (${"%.2f".format(java.util.Locale.ENGLISH, share)})",
             ),
         )
         val anim = deflect["anim"]?.get("novite")?.asInt()
@@ -449,9 +462,23 @@ object CursesSuite : Conformance.Suite {
             else -> p.equipment[3] = Item(Items.ABYSSAL_WHIP)
         }
         p.addBlock(UpdateBlockType.APPEARANCE)
-        if (style == "magic") {
-            p.attr[Combat.CASTING_SPELL] = gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell.values.firstOrNull { it.name.contains("FIRE_BOLT") } ?: gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell.values.first()
-        }
+        // Combat run 2026-09-29: the weapon was put in the slot without the weapon-type refresh, so the bot kept fighting with its
+        // fists (Deflect Missiles/Magic and Sap/Leech Ranger/Mage measured 0 procs against melee hits).
+        p.sendWeaponComponentInformation()
+        p.skills.setBaseLevel(Skills.MAGIC, 99)
+        p.skills.setBaseLevel(Skills.RANGED, 99)
+        p.setVarbit(gg.rsmod.plugins.content.magic.MagicSpells.INF_RUNES_VARBIT, 1)
+    }
+
+    /** A manual Fire Bolt on [target] as the client sends it (spell + manual target), when [style] is magic. */
+    private fun castIfMagic(
+        p: Client,
+        target: Client,
+        style: String,
+    ) {
+        if (style != "magic") return
+        // The route a spell-on-player click takes (Autocast.markManualCast): spell, manual target, no autocast state.
+        gg.rsmod.plugins.content.combat.magic.Autocast.markManualCast(p, gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell.values.firstOrNull { it.name.contains("FIRE_BOLT") } ?: gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell.values.first(), target)
     }
 
     private fun active(

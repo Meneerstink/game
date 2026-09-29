@@ -86,6 +86,7 @@ object CombatSuite : Conformance.Suite {
         scenario("miasmic") { miasmic(run, a, b, dummy, arena) }
         scenario("smoke poison") { smokePoison(run, a, dummy, arena) }
         scenario("packet validation") { packetValidation(run, a) }
+        scenario("manual cast with a staff") { manualCastWithStaff(run, a, b, arena) }
         scenario("protection") { protection(run, a, b, dummy, arena) }
         scenario("retaliation") { retaliation(run, a, dummy, arena) }
         scenario("poison") { poison(run, a, dummy, arena) }
@@ -445,6 +446,41 @@ object CombatSuite : Conformance.Suite {
         val inv = a.inventory.getItemCount(Items.SHARK)
         run.expectTrue(e, "drop packets with an unknown item id are ignored", a.isOnline && run.world.currentCycle > c, "online=${a.isOnline} sharks=$inv", "no crash, player online")
     }
+    /**
+     * Combat run 2026-09-29: a spell clicked on a player is a single cast, also with a staff in hand (OSRS: the caster stops, no
+     * staff bash follows). Seen in the curses suite: after one manual Fire Bolt with a Staff of fire the caster kept hitting with
+     * the staff. Measures the caster's animations for 10 ticks after the cast.
+     */
+    private suspend fun QueueTask.manualCastWithStaff(
+        run: Conformance.Run,
+        a: Client,
+        b: Client,
+        arena: Tile,
+    ) {
+        val e = "combat manual cast with a staff"
+        reset(a, arena)
+        reset(b, arena.transform(3, 0))
+        b.setVarp(AttackTab.DISABLE_AUTO_RETALIATE_VARP, 1)
+        a.setVarbit(MagicSpells.INF_RUNES_VARBIT, 1)
+        a.setSpellbook(gg.rsmod.plugins.api.Spellbook.STANDARD)
+        a.equipment[3] = Item(Items.STAFF_OF_FIRE)
+        a.addBlock(UpdateBlockType.APPEARANCE)
+        a.attr[gg.rsmod.game.model.attr.LAST_KNOWN_WEAPON_TYPE] = a.world.definitions.get(gg.rsmod.game.fs.def.ItemDef::class.java, Items.STAFF_OF_FIRE).weaponType
+        wait(1)
+        val c = run.world.currentCycle
+        manualCast(a, b, CombatSpell.FIRE_BOLT)
+        a.attack(b)
+        var t = 0
+        while (t++ < 14) {
+            keep(a, b)
+            wait(1)
+        }
+        val anims = run.recording.of("C1", "out").filter { it.cycle >= c && it.text.startsWith("anim ") }.map { it.text }
+        val casts = anims.count { it.contains("id=${CombatSpell.FIRE_BOLT.castAnimation[1]} ") || it.contains("id=${CombatSpell.FIRE_BOLT.castAnimation[0]} ") }
+        run.expectTrue(e, "one cast, then the caster stops (no staff swing)", casts == 1 && anims.size == 1, "anims=$anims", "exactly one cast animation")
+        a.resetInteractions()
+        Combat.reset(a)
+    }
     private suspend fun QueueTask.protection(
         run: Conformance.Run,
         a: Client,
@@ -603,8 +639,7 @@ object CombatSuite : Conformance.Suite {
         spell: CombatSpell,
     ) {
         a.skills.setBaseLevel(Skills.MAGIC, 99)
-        a.attr[Combat.CASTING_SPELL] = spell
-        a.attr[gg.rsmod.plugins.content.combat.magic.Autocast.MANUAL_TARGET] = java.lang.ref.WeakReference(b)
+        gg.rsmod.plugins.content.combat.magic.Autocast.markManualCast(a, spell, b)
     }
 
     private fun keep(
