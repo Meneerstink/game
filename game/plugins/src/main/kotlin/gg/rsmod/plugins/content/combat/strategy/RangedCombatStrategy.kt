@@ -1,5 +1,7 @@
 package gg.rsmod.plugins.content.combat.strategy
 
+import gg.rsmod.plugins.content.combat.frameSoundToBystanders
+import gg.rsmod.plugins.content.combat.soundToBystanders
 import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.attr.LAST_KNOWN_WEAPON_TYPE
 import gg.rsmod.game.model.combat.PawnHit
@@ -59,7 +61,6 @@ object RangedCombatStrategy : CombatStrategy {
         if (pawn is Player) {
             val weapon = pawn.getEquipment(EquipmentType.WEAPON)
             val attackStyle = CombatConfigs.getAttackStyle(pawn)
-
             var range =
                 when (weapon?.id) {
                     Items.ORANGE_SALAMANDER,
@@ -121,6 +122,10 @@ object RangedCombatStrategy : CombatStrategy {
         if (pawn is Player) {
             val weapon = pawn.getEquipment(EquipmentType.WEAPON)
             val ammo = pawn.getEquipment(EquipmentType.AMMO)
+
+            // An armed special that fires without ammo (SpecialAttacks.registerReach), e.g. the Eclipse atlatl's Eclipse: OSRS Wiki
+            // "Atlatl darts do not need to be equipped to perform the special attack."
+            if (gg.rsmod.plugins.content.combat.specialattack.SpecialAttacks.armedReach(pawn)?.needsAmmo == false) return true
 
             if (weapon != null && Blowpipe.isBlowpipe(weapon.id) && !Blowpipe.canFire(weapon)) {
                 pawn.message(Blowpipe.noChargesMessage(weapon))
@@ -301,15 +306,19 @@ object RangedCombatStrategy : CombatStrategy {
             // shot sound (cache frame sounds, AnimDef.hasFrameSounds), which the client plays itself - otherwise every shot
             // sounded twice (owner 2026-09-18 duplicate-audio audit). Imported OSRS sequences are silent and keep the cue.
             val sequenceSilent = world.definitions.getNullable(gg.rsmod.game.fs.def.AnimDef::class.java, animation)?.hasFrameSounds != true
-            if (sequenceSilent && pawn.hasWeaponType(WeaponType.CROSSBOW)) pawn.playSound(Sfx.CROSSBOW) // crossbow sound
-            if (sequenceSilent && pawn.hasWeaponType(WeaponType.BOW)) pawn.playSound(Sfx.SHORTBOW) // bow sound
+            // A radius-0 frame sound (bow 426) reaches only the shooter's own client; the players around him get it as an area sound.
+            if (!sequenceSilent) pawn.frameSoundToBystanders(animation)
+            // A server shot cue: the shooter gets it directly, the players around him as an area sound.
+            val shot = { id: Int -> pawn.playSound(id); pawn.soundToBystanders(id) }
+            if (sequenceSilent && pawn.hasWeaponType(WeaponType.CROSSBOW)) shot(Sfx.CROSSBOW) // crossbow sound
+            if (sequenceSilent && pawn.hasWeaponType(WeaponType.BOW)) shot(Sfx.SHORTBOW) // bow sound
             // OSRS throws a chinchompa with chinchompa_attack 359 (xrsps weapon table); 361 chinchompa_hit is the damage sound.
-            if (sequenceSilent && pawn.hasWeaponType(WeaponType.CHINCHOMPA)) pawn.playSound(Sfx.CHINCHOMPA_ATTACK)
+            if (sequenceSilent && pawn.hasWeaponType(WeaponType.CHINCHOMPA)) shot(Sfx.CHINCHOMPA_ATTACK)
             if (sequenceSilent && pawn.hasWeaponType(WeaponType.THROWN)) {
                 // OSRS per-weapon thrown sounds (Jagex names, gameval sound table; xrsps weapon data): darts "dart" 2696, knives
                 // "throwingknife" 2707, thrownaxes and the rest "thrown" 2708 - the same ids in this 667 cache.
                 val thrownId = pawn.getEquipment(EquipmentType.WEAPON)?.id
-                pawn.playSound(
+                shot(
                     when (thrownId) {
                         in gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Darts.DARTS -> Sfx.DART
                         in gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Knives.KNIVES -> Sfx.THROWINGKNIFE
@@ -458,7 +467,18 @@ object RangedCombatStrategy : CombatStrategy {
         if (pawn is Player && landHit && gg.rsmod.plugins.content.items.osrs.MoonSets.eclipseBurnActive(pawn) &&
             world.randomDouble() < gg.rsmod.plugins.content.items.osrs.MoonSets.BURN_CHANCE
         ) {
+            // Owner 2026-09-29 (set effect showed nothing): OSRS Wiki "Eclipse (set effect).gif" - the golden eclipse moon rises over
+            // the player on the attack that triggers it, spotanim 2794 SPECIAL_ATLATL_SPOTANIM (imported, unused until now).
+            pawn.graphic(gg.rsmod.plugins.content.items.osrs.OsrsGfx.SPECIAL_ATLATL)
             pawnHit.hit.addAction { gg.rsmod.plugins.content.items.osrs.Burns.apply(target) }
+        }
+        // Amulet of the damned with Karil's set: "25% chance of hitting twice with one attack. The second hit will deal half the
+        // damage of the first hit."
+        if (pawn is Player && gg.rsmod.plugins.content.items.osrs.AmuletOfTheDamned.karilDoubleHit(pawn)) {
+            pawnHit.hit.addAction {
+                val second = pawnHit.hit.hitmarks.sumOf { it.damage } / 2
+                if (second > 0 && !target.isDead()) target.hit(damage = second, type = HitType.RANGE)
+            }
         }
         // Tonalztics of Ralos (charged): a second hit with its own accuracy and damage rolls.
         if (pawn is Player && gg.rsmod.plugins.content.items.osrs.Tonalztics.hits(pawn.getEquipment(EquipmentType.WEAPON)) == 2) {

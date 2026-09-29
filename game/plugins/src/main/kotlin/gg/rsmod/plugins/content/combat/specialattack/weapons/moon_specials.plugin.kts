@@ -28,6 +28,12 @@ fun gg.rsmod.plugins.content.combat.specialattack.CombatContext.refund(
     specialFailed()
 }
 
+/*
+ * Eclipse is "performed at melee distance" and "Atlatl darts do not need to be equipped" (OSRS Wiki); "if used far away it will make
+ * your character run towards your target" (VirtGold Eclipse atlatl guide). The combat cycle does the running (SpecialAttacks.armedReach).
+ */
+SpecialAttacks.registerReach(Items.ECLIPSE_ATLATL, range = 1, needsAmmo = false) { MoonSets.wearing(it, MoonSets.MoonSet.ECLIPSE) }
+
 /* Eclipse atlatl - Eclipse: 50 %, magic-based at melee distance, accuracy x1.5; consumes the target's burns (+max, +half min, cap 50). */
 SpecialAttacks.register(MoonSets.ECLIPSE_ENERGY, Items.ECLIPSE_ATLATL) {
     val victim: Pawn = target
@@ -35,7 +41,9 @@ SpecialAttacks.register(MoonSets.ECLIPSE_ENERGY, Items.ECLIPSE_ATLATL) {
         refund(MoonSets.ECLIPSE_ENERGY, "You need to wear the full eclipse moon armour set to do that.")
         return@register
     }
-    if (player.tile.getDistance(victim.tile) > 1) {
+    // The combat cycle walks the player to a melee tile first (MoonSets.eclipseSpecialArmed); this is only the safety net for a
+    // special fired another way. Melee reach is measured between the footprints, so any side of a large npc counts.
+    if (!gg.rsmod.plugins.content.combat.Combat.inMeleeReach(player, victim, 1)) {
         refund(MoonSets.ECLIPSE_ENERGY, "You need to be next to your target to do that.")
         return@register
     }

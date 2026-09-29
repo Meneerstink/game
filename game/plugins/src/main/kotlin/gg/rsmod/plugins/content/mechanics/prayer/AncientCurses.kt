@@ -189,7 +189,7 @@ object AncientCurses {
     fun syncStatVarbits(player: Player) {
         STAT_MODIFIER_VARBITS.forEach { (skill, varbit) ->
             val boost =
-                (if (leechSkills[skill]?.let { isCurseActive(player, it) } == true) LEECH_BOOST_BASE_PCT else 0) +
+                (if (leechSkills[skill]?.let { isCurseActive(player, it) } == true) leechBoostPct(skill) else 0) +
                     (player.attr[LEECH_BOOST_PCT_ATTR]?.get(skill) ?: 0)
             val drain =
                 (if (player.attr[CURSE_BASE_DRAIN_ATTR]?.get(skill)?.isNotEmpty() == true) SAP_BASE_PCT else 0) +
@@ -770,11 +770,45 @@ object AncientCurses {
         Skills.MAGIC to AncientCurse.LEECH_MAGIC,
     )
 
-    /** The Leech's base 5 % self-boost: a combat modifier that exists exactly while the Leech is active. */
-    fun leechMultiplier(player: Player, skill: Int): Double {
+    /**
+     * Owner balance decision 2026-09-29 (Leech Ranged / Leech Magic were far weaker than the OSRS prayers beside them):
+     * while active, Leech Ranged gives exactly Rigour's offence (+20 % accuracy, +23 % damage) and Leech Magic exactly
+     * Augury's offence (+25 % accuracy, +4 % magic damage); neither gives Rigour's / Augury's +25 % Defence. Their drain
+     * on the target is unchanged, and they no longer add real levels per proc. Every other Leech keeps the 2011 values.
+     * Owner 2026-09-29, after testing: "one hit lower" than Rigour / Augury by a lower damage percentage, accuracy kept -
+     * Leech Ranged damage +18 % (Rigour +23 %), Leech Magic no magic damage (Augury +4 %); Leech Defence a flat +15 % Defence
+     * while active (no real levels per proc), its drain unchanged.
+     */
+    const val LEECH_RANGED_ACCURACY = 1.20
+    const val LEECH_RANGED_DAMAGE = 1.18
+    const val LEECH_MAGIC_ACCURACY = 1.25
+    const val LEECH_MAGIC_DAMAGE = 0.0
+    const val LEECH_DEFENCE_BOOST = 1.15
+
+    /** The Leech self-boost: a combat modifier that exists exactly while the Leech is active ([damage]: the damage roll). */
+    fun leechMultiplier(player: Player, skill: Int, damage: Boolean = false): Double {
         val curse = leechSkills[skill] ?: return 1.0
-        return if (isCurseActive(player, curse)) 1.0 + LEECH_BOOST_BASE_PCT / 100.0 else 1.0
+        if (!isCurseActive(player, curse)) return 1.0
+        return when (skill) {
+            Skills.RANGED -> if (damage) LEECH_RANGED_DAMAGE else LEECH_RANGED_ACCURACY
+            Skills.MAGIC -> LEECH_MAGIC_ACCURACY
+            Skills.DEFENCE -> LEECH_DEFENCE_BOOST
+            else -> 1.0 + LEECH_BOOST_BASE_PCT / 100.0
+        }
     }
+
+    /** Leech Magic's +4 % magic damage (Augury's), added where the prayer magic damage is. */
+    fun leechMagicDamage(player: Player): Double =
+        if (getBook(player) == PrayerBook.ANCIENT && isCurseActive(player, AncientCurse.LEECH_MAGIC)) LEECH_MAGIC_DAMAGE else 0.0
+
+    /** Prayer-tab percentage of the Leech self-boost modifier for [skill]. */
+    private fun leechBoostPct(skill: Int): Int =
+        when (skill) {
+            Skills.RANGED -> Math.round((LEECH_RANGED_ACCURACY - 1.0) * 100).toInt()
+            Skills.MAGIC -> Math.round((LEECH_MAGIC_ACCURACY - 1.0) * 100).toInt()
+            Skills.DEFENCE -> Math.round((LEECH_DEFENCE_BOOST - 1.0) * 100).toInt()
+            else -> LEECH_BOOST_BASE_PCT
+        }
 
     /**
      * Escalated self-boost: the first proc only establishes the base modifier; each later proc adds
@@ -790,7 +824,10 @@ object AncientCurses {
         // level. The real level is the state (owner 2026-09-23: a lifetime counter stopped every boost after five procs).
         val max = player.skills.getMaxLevel(skill)
         val cap = (max * maxExtra / 100.0).toInt().coerceAtLeast(1)
-        if (player.skills.getCurrentLevel(skill) < max + cap) player.skills.alterCurrentLevel(skill, 1, capValue = cap)
+        // Owner 2026-09-29 ("never break a boost, always only +1", every Leech): a proc is exactly +1 up to the Leech cap and never
+        // touches a level that is already higher (a potion boost stays as it is).
+        val current = player.skills.getCurrentLevel(skill)
+        if (current < max + cap) player.skills.setCurrentLevel(skill, current + 1)
         val boosted = (player.skills.getCurrentLevel(skill) - max).coerceAtLeast(0)
         state[skill] = (boosted * 100 / max).coerceIn(0, maxExtra).let { if (boosted > 0) it.coerceAtLeast(1) else it }
         syncStatVarbits(player)
@@ -835,7 +872,8 @@ object AncientCurses {
         npcSkill: Int,
     ) {
         escalateDrain(attacker, curse, target, playerSkill, npcSkill, LEECH_DRAIN_BASE_PCT, LEECH_DRAIN_CAP_PCT)
-        escalateBoost(attacker, playerSkill)
+        // Leech Ranged / Magic / Defence carry their whole boost as the modifier (owner 2026-09-29): no real levels per proc.
+        if (playerSkill != Skills.RANGED && playerSkill != Skills.MAGIC && playerSkill != Skills.DEFENCE) escalateBoost(attacker, playerSkill)
     }
 
     /**
@@ -986,6 +1024,43 @@ object AncientCurses {
         }
     }
 
+    /**
+     * Owner 2026-09-29: "no sounds at a curse effect". The effects were made silent on 2026-09-14 because their body, projectile
+     * and impact sequences carry no frame sound in the 667 cache - but the sounds were never on those sequences: the server
+     * sends them. RS Wiki "Leech Curses" trivia: "The sound of the leech curse happening is likely to be the sound of someone
+     * sucking blood." Darkan (researched 727 server) sends, per proc, the cast sound when the curse fires and the impact sound
+     * when its projectile lands (`PrayerManager.processLeeches`: Sap 8115 cast / 8116 impact, Leech 8109 cast / 8110 impact,
+     * `soundEffect(target, id, true)` = an area sound both fighters hear; `Leech.playLeechEffect` 8109).
+     * Sap's cast sound 8115 is also the radius-0 frame sound of its caster graphic's sequence (2214.. -> 12570), which only
+     * the caster's own client plays, so he is left out of that area sound. Impacts land with the target graphic (delay 30).
+     */
+    private const val SAP_CAST_SOUND = 8115
+    private const val SAP_IMPACT_SOUND = 8116
+    private const val LEECH_CAST_SOUND = 8109
+    private const val LEECH_IMPACT_SOUND = 8110
+    private const val CURSE_EFFECT_SOUND_RADIUS = 10
+    private const val CURSE_IMPACT_SOUND_DELAY = 30
+
+    private fun playEffectSounds(
+        attacker: Player,
+        target: Pawn,
+        curse: AncientCurse,
+    ) {
+        val (cast, impact) =
+            when (curse.category) {
+                AncientCurse.Category.SAP -> SAP_CAST_SOUND to SAP_IMPACT_SOUND
+                AncientCurse.Category.LEECH -> LEECH_CAST_SOUND to LEECH_IMPACT_SOUND
+                else -> return
+            }
+        val world = attacker.world
+        world.spawn(
+            gg.rsmod.game.model.entity.AreaSound(attacker.tile, cast, CURSE_EFFECT_SOUND_RADIUS, volume = 1).apply {
+                if (curse.castGraphic != null && curse.category == AncientCurse.Category.SAP) excluded = attacker
+            },
+        )
+        world.spawn(gg.rsmod.game.model.entity.AreaSound(target.tile, impact, CURSE_EFFECT_SOUND_RADIUS, volume = 1, delay = CURSE_IMPACT_SOUND_DELAY))
+    }
+
     private fun applySapLeech(
         attacker: Player,
         target: Pawn,
@@ -1008,6 +1083,7 @@ object AncientCurses {
             )
         }
         curse.targetGraphic?.let { target.graphic(it, delay = 30) }
+        playEffectSounds(attacker, target, curse)
         when (curse) {
             AncientCurse.SAP_WARRIOR ->
                 if (sap(attacker, curse, target, Skills.ATTACK to NpcSkills.ATTACK, Skills.STRENGTH to NpcSkills.STRENGTH, Skills.DEFENCE to NpcSkills.DEFENCE)) {

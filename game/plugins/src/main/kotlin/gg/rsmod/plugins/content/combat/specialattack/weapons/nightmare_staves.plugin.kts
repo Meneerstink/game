@@ -46,6 +46,13 @@ fun nightmareHit(
     }
 }
 
+/*
+ * Both specials are spells cast from magic range (10), also while the staff is used in melee without an autocast spell: OSRS
+ * update 2020 (Wiki "Volatile nightmare staff"): "will no longer drag players to their opponents if they do not have a spell
+ * selected to autocast". The melee range 1 used to walk the player into melee before casting.
+ */
+SpecialAttacks.registerReach(Items.VOLATILE_NIGHTMARE_STAFF, Items.ELDRITCH_NIGHTMARE_STAFF, range = 10)
+
 /* Volatile Nightmare staff - Immolate: 55 %, accuracy x1.5, spell max hit min(58, trunc((99 + 58 x Magic) / 99)). */
 SpecialAttacks.register(NightmareStaves.SPECIAL_ENERGY, Items.VOLATILE_NIGHTMARE_STAFF) {
     val base = NightmareStaves.immolateBase(player.skills.getCurrentLevel(Skills.MAGIC))

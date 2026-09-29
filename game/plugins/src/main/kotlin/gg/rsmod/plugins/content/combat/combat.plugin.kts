@@ -138,7 +138,9 @@ suspend fun cycle(it: QueueTask): Boolean {
     val strategy = CombatConfigs.getCombatStrategy(pawn)
     // RCV-005: an npc with data-driven attacks (NpcAttacks, Void Attack.kt) approaches to its longest usable attack.
     val dataAttackRange = (pawn as? Npc)?.let { gg.rsmod.plugins.content.combat.attack.NpcAttacks.attackRange(it) }
-    val attackRange = dataAttackRange ?: strategy.getAttackRange(pawn)
+    // A special with its own reach (SpecialAttacks.armedReach) replaces the weapon's range while it is armed.
+    val specialReach = (pawn as? Player)?.let { SpecialAttacks.armedReach(it) }
+    val attackRange = specialReach?.range ?: dataAttackRange ?: strategy.getAttackRange(pawn)
 
     // RCV-005 root cause: npcs had no leash model. Void CombatMovement.withinAggro - an npc fights on
     // while the target stays inside its spawn leash, and gives up only once the target leaves it.
@@ -248,6 +250,12 @@ suspend fun cycle(it: QueueTask): Boolean {
                 !gg.rsmod.plugins.content.combat.strategy.ranged.RangedAmmo.isSalamander(pawn.getEquipment(EquipmentType.WEAPON)?.id) &&
                 !Combat.inMeleeReach(pawn, target, attackRange)
             ) {
+                return true
+            }
+            // A special with its own reach (owner 2026-09-29, Eclipse atlatl: the character stayed at range and the special was
+            // refused): the route above walked to that reach; until the player really stands there (the target may have stepped
+            // away) he keeps running after it - a player, a breach monster or any npc alike, any footprint size.
+            if (specialReach != null && !Combat.inMeleeReach(pawn, target, specialReach.range)) {
                 return true
             }
             pawn.stopMovement()

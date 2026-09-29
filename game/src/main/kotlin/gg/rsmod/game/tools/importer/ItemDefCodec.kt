@@ -202,6 +202,22 @@ object ItemDefCodec {
         return described
     }
 
+    /** `opcode to payload start` for every opcode in [source], in stream order (same field-width table as [describeOpcodes]). */
+    fun payloadOffsets(source: ByteArray): List<Pair<Int, Int>> {
+        val input = Unpooled.wrappedBuffer(source)
+        val offsets = mutableListOf<Pair<Int, Int>>()
+        while (true) {
+            val opcode = input.readUnsignedByte().toInt()
+            if (opcode == 0) break
+            offsets += opcode to input.readerIndex()
+            val scratch = Unpooled.buffer()
+            copyOrOverrideField(input, scratch, opcode, emptyMap(), emptyMap())
+            scratch.release()
+        }
+        input.release()
+        return offsets
+    }
+
     /** Reads the field the [source]-derived [opcode] introduces from [input] and writes it back to
      * [output], substituting a string from [stringOverrides] instead of the original bytes if this
      * opcode is being overridden. */

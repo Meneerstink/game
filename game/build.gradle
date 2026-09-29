@@ -315,6 +315,13 @@ task runCasinoMinimapIconTool(type: JavaExec) {
     main = 'gg.rsmod.game.tools.importer.CasinoMinimapIconTool'
 }
 
+task runOsrsBodyFrameTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Moves every imported OSRS worn mesh from the 2007 body onto the 667 body (OsrsBodyFrame) and writes the OSRS ' +
+        'worn offsets as item opcode 125/126. Usage: ./gradlew :game:runOsrsBodyFrameTool --args="plan|apply"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.OsrsBodyFrameTool'
+}
 task runOsrsSpriteDumpTool(type: JavaExec) {
     group = 'tools'
     description = 'Read-only: writes every frame of an OSRS (openrs2 2686) sprite group as PNG. Usage: ./gradlew :game:runOsrsSpriteDumpTool --args="<groupId> <outDir> [cachePath]"'

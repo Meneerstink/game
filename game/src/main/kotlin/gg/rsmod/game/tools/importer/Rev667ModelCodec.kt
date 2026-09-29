@@ -122,13 +122,18 @@ object Rev667ModelEncoder {
         out.write(vertexZ.toByteArray())
         out.write(planarMapping.toByteArray())
 
+        // Version 13 (OsrsBodyFrame: fine units, not upscaled by the client) is written as the byte right before the trailer,
+        // flagged by global flag 0x8 - where `Mesh.decodeNew` rewinds to read it. 12 is the client default and is not written.
+        require(model.version == 12 || model.version == 13) { "mesh version ${model.version} is not produced by this encoder" }
+        val versioned = model.version != 12
+        if (versioned) out.write(model.version)
+
         writeShort(out, model.vertexCount)
         writeShort(out, model.faceCount)
         out.write(model.texSpaceCount)
-        // globalFlags: bit 0 flat shading only. Particle effects, billboards and the version byte
-        // are 667-only extensions with no modern source data, so they stay off and the client
-        // keeps its default version 12 (texture-space scale size 6).
-        out.write(if (model.shadingType != null) 0x1 else 0x0)
+        // globalFlags: bit 0 flat shading, bit 3 the version byte above. Particle effects and billboards are 667-only
+        // extensions with no modern source data, so they stay off.
+        out.write((if (model.shadingType != null) 0x1 else 0x0) or (if (versioned) 0x8 else 0x0))
         out.write(if (model.facePriority != null) 255 else model.globalPriority.toInt() and 0xFF)
         out.write(if (model.faceAlpha != null) 1 else 0)
         out.write(if (model.faceLabel != null) 1 else 0)
@@ -188,12 +193,13 @@ object Rev667ModelDecoder {
         val hasFlatShading = globalFlags and 0x1 != 0
         check(globalFlags and 0x2 == 0) { "Particle-effect meshes are out of scope for this pipeline." }
         check(globalFlags and 0x4 == 0) { "Billboard meshes are out of scope for this pipeline." }
+        var version = 12
         if (globalFlags and 0x8 != 0) {
             // The version byte sits immediately before the trailer; the client rewinds, reads it and
-            // rewinds forward again. It only sizes the texture-space scale block, which is empty
-            // unless complex mappings are present, and those are rejected below.
+            // rewinds forward again. It sizes the texture-space scale block (empty unless complex
+            // mappings are present, and those are rejected below) and decides the x4 upscale (< 13).
             header.position -= 7
-            header.u8()
+            version = header.u8()
             header.position += 6
         }
         val priorityFlag = header.u8()
@@ -208,6 +214,7 @@ object Rev667ModelDecoder {
         val texSpaceSize = header.u16()
 
         val model = ModelData(vertexCount, faceCount, texSpaceCount)
+        model.version = version
 
         var planarMappingCount = 0
         if (texSpaceCount > 0) {

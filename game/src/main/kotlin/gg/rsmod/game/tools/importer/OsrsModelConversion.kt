@@ -21,10 +21,15 @@ object OsrsModelConversion {
     /** Every OSRS texture kept on a converted model, with its rev-667 id. */
     val KEPT_TEXTURES: Map<Int, Int> = NATIVE_SAME_TEXTURES.associateWith { it } + IMPORTED_TEXTURES
 
+    /**
+     * [wornSlot]: the equipment slot when the mesh is worn on the player - it is then moved from the 2007 OSRS body onto the
+     * 667 one ([OsrsBodyFrame]). Inventory/ground and spotanim meshes pass null and keep their geometry.
+     */
     fun convert(
         reader: ModernCacheReader,
         modelId: Int,
         dropped: MutableList<String>,
+        wornSlot: Int? = null,
     ): ByteArray {
         val bytes = reader.file(ModernCacheReader.INDEX_MODEL, modelId, 0) ?: error("upstream model $modelId missing")
         val raw =
@@ -52,6 +57,7 @@ object OsrsModelConversion {
             }
         if (raw.droppedFaceZOffsets) dropped += "model $modelId: face z-offsets (not representable in 667)"
         if (raw.droppedAnimayaSkinning) dropped += "model $modelId: animaya skinning (not representable in 667)"
+        if (wornSlot != null && wornSlot in OsrsBodyFrame.RENDERED_SLOTS) OsrsBodyFrame.toRev667Frame(source, wornSlot)
         val converted = Rev667ModelEncoder.encode(source)
         val differences = ModelConvertTool.compare(source, Rev667ModelDecoder.decode(converted))
         check(differences.isEmpty()) { "model $modelId conversion mismatch: $differences" }

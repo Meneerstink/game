@@ -844,6 +844,59 @@ object OsrsItemImportTool {
                     Spec(23389, noted = true), // Spiked manacles
                 ),
             "deadman-breach" to listOf(Spec(29643, noted = true), Spec(28564), Spec(33044), Spec(28570), Spec(33047)),
+            // Owner 2026-09-29 ("Marlin, Dark crab, Bluefin, Halibut - we must have them", "the Ultor ring too", Colossal blade): ids
+            // from RuneLite gameval ItemID (cooked fish), OSRS Wiki infoboxes. Colossal blade: two-handed sword, 60 Attack, speed 6,
+            // no special - the 667 Rune 2h sword class as for the Gilded 2h sword (644 124, 686 7, weapon type 7, audio 2503).
+            // The Ursine chainmace / Accursed sceptre components (gameval WBR_CALLISTO_CLAWS 27667, WBR_VETION_SKULL 27673): "Viggora's
+            // chainmace (u) and Claws of Callisto" (85 Smithing), "Thammaron's sceptre (u) with the Skull of Vet'ion" (85 Crafting).
+            "owner0929b" to listOf(Spec(27667, noted = true), Spec(27673, noted = true)),
+            // Serpentine visage 12927 ("charged with a chisel on a serpentine visage", 52 Crafting) and Basilisk jaw 24268 (the Neitiznot
+            // faceguard's component) - gameval ItemID.
+            "owner0929c" to listOf(Spec(12927, noted = true), Spec(24268, noted = true)),
+            "owner0929" to
+                listOf(
+                    Spec(11936, noted = true), // Dark crab
+                    Spec(32352, noted = true), // Marlin
+                    Spec(32344, noted = true), // Bluefin
+                    Spec(32336, noted = true), // Halibut
+                    Spec(28307), // Ultor ring (untradeable)
+                    // Owner 2026-09-29 ("the colossal blade has its own attack animation"): the wiki gives it the Barrelchest anchor attack
+                    // sound and its walk GIF drags the blade one-handed like the anchor, so it takes the anchor's render set 985 (667
+                    // Barrelchest anchor 10887: 644 985) with the 2h-sword styles.
+                    Spec(27021, rev667Params = mapOf(644 to 985, 686 to 7, 749 to 0, 750 to 60), weaponType = 7, attackAudio = 2503), // Colossal blade
+                    // Second round (owner answers 2026-09-29): Bellator 28316, Brimstone 22975, Neitiznot faceguard 24271, Serpentine
+                    // helm uncharged 12929 / charged 12931, Amulet of the damned (full) 12851 / used 12853; blighted supplies (manta ray
+                    // 24589, anglerfish 24592, karambwan 24595, super restore 24598/24601/24603/24605) - RuneLite gameval ItemID.
+                    Spec(28316), // Bellator ring
+                    Spec(22975, noted = true), // Brimstone ring
+                    Spec(24271, noted = true), // Neitiznot faceguard
+                    Spec(12929, noted = true), // Serpentine helm (uncharged)
+                    Spec(12931), // Serpentine helm
+                    Spec(12851, noted = true), // Amulet of the damned (full)
+                    Spec(12853), // Amulet of the damned (used)
+                    Spec(24589, noted = true), // Blighted manta ray
+                    Spec(24592, noted = true), // Blighted anglerfish
+                    Spec(24595, noted = true), // Blighted karambwan
+                    Spec(24598, noted = true), // Blighted super restore(4)
+                    Spec(24601, noted = true), // Blighted super restore(3)
+                    Spec(24603, noted = true), // Blighted super restore(2)
+                    Spec(24605, noted = true), // Blighted super restore(1)
+                    // Revenant weapons (OSRS Wiki item pages, gameval WILD_CAVE_*): chainmaces in the 667 Dragon mace class (686 8, weapon
+                    // type 8, speed 4; Viggora's 60 / Ursine 70 Attack, Ursine has a special); sceptres in the powered-staff class of the
+                    // tridents (staffParams; Thammaron's 60 / Accursed 70 Magic), "(a)" = the autocasting variant reached with "Swap".
+                    Spec(22542, noted = true, rev667Params = mapOf(686 to 8, 749 to 0, 750 to 60), weaponType = 8), // Viggora's chainmace (u)
+                    Spec(22545, rev667Params = mapOf(686 to 8, 749 to 0, 750 to 60), weaponType = 8), // Viggora's chainmace
+                    Spec(27657, noted = true, rev667Params = mapOf(686 to 8, 687 to 1, 749 to 0, 750 to 70), weaponType = 8), // Ursine chainmace (u)
+                    Spec(27660, rev667Params = mapOf(686 to 8, 687 to 1, 749 to 0, 750 to 70), weaponType = 8), // Ursine chainmace
+                    Spec(22552, noted = true, rev667Params = staffParams(60), weaponType = 1), // Thammaron's sceptre (u)
+                    Spec(22555, rev667Params = staffParams(60), weaponType = 1), // Thammaron's sceptre
+                    Spec(27785, rev667Params = staffParams(60), weaponType = 1), // Thammaron's sceptre (au)
+                    Spec(27788, rev667Params = staffParams(60), weaponType = 1), // Thammaron's sceptre (a)
+                    Spec(27662, noted = true, rev667Params = staffParams(70) + (687 to 1), weaponType = 1), // Accursed sceptre (u)
+                    Spec(27665, rev667Params = staffParams(70) + (687 to 1), weaponType = 1), // Accursed sceptre
+                    Spec(27676, rev667Params = staffParams(70) + (687 to 1), weaponType = 1), // Accursed sceptre (au)
+                    Spec(27679, rev667Params = staffParams(70) + (687 to 1), weaponType = 1), // Accursed sceptre (a)
+                ),
             // Owner 2026-09-23 ("We need the from Deadman's skull it needs to have the option Breach check"): OSRS Wiki "Deadman's
             // skull" id 33065 - options Shop, Unlocks, Swap, Breach Check, Destroy; untradeable, not bankable.
             "deadman-skull" to listOf(Spec(33065)),
@@ -1159,10 +1212,14 @@ object OsrsItemImportTool {
                     }
                 }
 
-            val convertedModels = mutableMapOf<Int, ByteArray>()
-            fun convertModel(modelId: Int): ByteArray =
-                // One conversion for every importer (OsrsModelConversion): texture colour, imported textures, decode-compare.
-                convertedModels.getOrPut(modelId) { OsrsModelConversion.convert(reader, modelId, dropped) }
+            val convertedModels = mutableMapOf<Pair<Int, Int?>, ByteArray>()
+            fun convertModel(
+                modelId: Int,
+                wornSlot: Int? = null,
+            ): ByteArray =
+                // One conversion for every importer (OsrsModelConversion): texture colour, imported textures, decode-compare, and
+                // for a worn mesh the move onto the 667 body (OsrsBodyFrame).
+                convertedModels.getOrPut(modelId to wornSlot) { OsrsModelConversion.convert(reader, modelId, dropped, wornSlot) }
 
             val batch =
                 entries.map { entry ->
@@ -1172,7 +1229,12 @@ object OsrsItemImportTool {
                         ImportBatchOrchestrator.ItemSource(entry.identity, entry.name, emptyList(), expectedSha1) { _ -> notedBytes(base.localId) }
                     } else {
                         val modelIds = entry.def.modelDependencies().values.distinct()
-                        val models = modelIds.map { ImportBatchOrchestrator.ModelSource("upstream_model:$it", "model", convertModel(it)) }
+                        val worn = wornModels(entry.def)
+                        val models =
+                            modelIds.map {
+                                val slot = if (it in worn) entry.def.wearPos1 else null
+                                ImportBatchOrchestrator.ModelSource("upstream_model:$it", "model", convertModel(it, slot))
+                            }
                         ImportBatchOrchestrator.ItemSource(entry.identity, entry.name, models, expectedSha1) { local ->
                             encodeItem(
                                 entry.def,
@@ -1234,6 +1296,22 @@ object OsrsItemImportTool {
      * value divided by 5, rounded to the nearest integer and kept inside a signed byte.
      */
     fun rev667Contrast(osrsContrast: Int): Int = (osrsContrast / 5.0).roundToInt().coerceIn(-128, 127)
+
+    /**
+     * The meshes an item draws on the player (male/female 0-2), which [OsrsBodyFrame] moves onto the 667 body. The inventory
+     * model and the chathead models are not worn geometry; a mesh the item also uses as its inventory model is left alone.
+     */
+    fun wornModels(def: ModernItemDef): Set<Int> =
+        setOf(def.maleModel0, def.maleModel1, def.maleModel2, def.femaleModel0, def.femaleModel1, def.femaleModel2)
+            .filter { it >= 0 && it != def.inventoryModel }
+            .toSet()
+
+    /** Opcode 125/126 payload (x, y, z signed bytes) for an OSRS worn y offset, or null when there is none. */
+    fun wornOffsetBytes(offset: Int): ByteArray? {
+        if (offset == 0) return null
+        require(offset in -128..127) { "worn offset $offset does not fit the 667 signed byte" }
+        return byteArrayOf(0, offset.toByte(), 0)
+    }
 
     private fun notedBytes(baseLocalId: Int): ByteArray =
         byteArrayOf(97, (baseLocalId ushr 8).toByte(), baseLocalId.toByte(), 98, (NOTE_TEMPLATE ushr 8).toByte(), NOTE_TEMPLATE.toByte(), 0)
@@ -1322,14 +1400,15 @@ object OsrsItemImportTool {
             out.writeByte(115)
             out.writeByte(def.team)
         }
-        // OSRS translates the worn mesh by (0, offset, 0); 667 stores x/y/z offsets in quarter units.
-        listOf(125 to def.maleOffset, 126 to def.femaleOffset).filter { it.second != 0 }.forEach { (code, offset) ->
-            val quarters = (offset / 4.0).roundToInt()
-            if (quarters * 4 != offset) dropped += "${def.name}: opcode $code y-offset $offset rounded to ${quarters * 4}"
-            out.writeByte(code)
-            out.writeByte(0)
-            out.writeByte(quarters)
-            out.writeByte(0)
+        // OSRS translates the worn mesh by (0, offset, 0) in OSRS units. Rev 667 opcode 125/126 (`ObjType.manwearyoff` /
+        // `womanwearyoff`) is a signed byte the client multiplies by 4 into its fine units - exactly the OSRS unit - so the byte
+        // IS the OSRS offset. Owner 2026-09-29 (OSRS gear clipping): this used to write offset / 4, so every female ballista,
+        // blowpipe, ward, tome and bow sat 8 instead of 24 units lower.
+        listOf(125 to def.maleOffset, 126 to def.femaleOffset).forEach { (code, offset) ->
+            wornOffsetBytes(offset)?.let {
+                out.writeByte(code)
+                out.writeBytes(it)
+            }
         }
         if (isWearable(def)) {
             // Cursor opcodes every wearable 667 item carries (Rune sword, Amulet of fury, Dragon defender).

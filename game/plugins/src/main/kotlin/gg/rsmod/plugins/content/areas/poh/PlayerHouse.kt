@@ -165,6 +165,18 @@ object PlayerHouse {
     const val OBELISK = Objs.OBELISK_14826
     const val DUMMY = Npcs.MELEE_DUMMY
 
+    /**
+     * Minimap icons (owner 2026-09-29: "er missen iconen op de minimap"). No house loc carries a mapelement in this
+     * cache, and neither do the world's own spirit trees, fairy rings and altars: Jagex draws those icons with an
+     * invisible type-22 marker loc placed beside the object, and the client collects every loc's mapelement from the
+     * scene, spawned ones included. [TRANSPORT_MARKER] (loc 7389, mapelement 612, the orange transport arrow) is the
+     * very marker Jagex placed at the Grand Exchange spirit tree; [ALTAR_MARKER] (loc 2752, mapelement 575) is the
+     * altar icon. This revision has no separate spirit-tree or fairy-ring icon (every MapElementType was rendered and
+     * checked), so the house's teleports all use the transport arrow, as the world's do.
+     */
+    const val TRANSPORT_MARKER = 7389
+    const val ALTAR_MARKER = 2752
+
     /** Marble teleport portals (2009scape Decoration MARBLE_*_PORTAL). */
     const val VARROCK_PORTAL = 13629
     const val FALADOR_PORTAL = 13631
@@ -194,14 +206,10 @@ object PlayerHouse {
             15409 to NEXUS,
             // Superior Garden. The centrepiece spot is where Construction puts a garden's centrepiece, and it is
             // where the rejuvenation pool belongs (owner 2026-09-21: "a superior garden with the rej pool"). The
-            // big-plant spot at the garden's south-east corner is deliberately absent from this map: the spirit
-            // tree stands there instead, and it is placed by hand because it is 3x3.
+            // tree and plant spots stay empty (owner 2026-09-29: "2 spirit trees", "layout klopt niet"): the two
+            // magic trees read as a second and third spirit tree, their canopies hid the fairy ring and spilled over
+            // the room walls, and the tall plant and ferns sat in the corner and doorways the teleports now use.
             15361 to POOL,
-            15362 to Objs.MAGIC_TREE_13417,
-            15363 to Objs.MAGIC_TREE_13424,
-            15365 to Objs.TALL_PLANT_13427,
-            15366 to Objs.FERN_13433,
-            15367 to Objs.FERN_13433,
             // Costume room, top tier of every piece - the containers [PohStorage] fills.
             18810 to Objs.MAGIC_CAPE_RACK,
             18811 to Objs.MAGIC_WARDROBE_18796,
@@ -355,6 +363,12 @@ object PlayerHouse {
                 name == "window space" -> world.spawn(DynamicObject(style.stainedGlass, obj.type, obj.rot, obj.tile))
                 else -> SPOT_REPLACEMENTS[obj.id]?.let { world.spawn(DynamicObject(it, obj.type, obj.rot, obj.tile)) }
             }
+            // The altar's and the nexus's own tiles hold no ground decoration (read from the room map data), so their
+            // minimap marker takes that layer without covering a rug.
+            when (obj.id) {
+                15270 -> world.spawn(DynamicObject(ALTAR_MARKER, 22, 0, obj.tile))
+                15409 -> world.spawn(DynamicObject(TRANSPORT_MARKER, 22, 0, obj.tile))
+            }
         }
     }
 
@@ -373,15 +387,21 @@ object PlayerHouse {
     }
 
     /**
-     * The three things in the Superior Garden that have no build hotspot that fits them.
+     * The Superior Garden: the rejuvenation pool on the centrepiece spot ([SPOT_REPLACEMENTS]) and one teleport in
+     * each corner, so the four mid-edge doorways (x 3-4 and z 3-4) and the paths between them stay clear:
      *
-     * Everything else in the room is built on the garden's own spots ([SPOT_REPLACEMENTS]): the rejuvenation pool on
-     * the centrepiece, magic trees on the two tree spots and ferns on the small-plant spots.
+     * ```
+     *   fairy ring  .  N door  .  exit portal
+     *   W door      .   pool   .  E door
+     *   obelisk     .  S door  .  spirit tree
+     * ```
      *
-     * The spirit tree is placed by hand because of its size. Revision 667's walk-in spirit trees (1293/1294/1295/
-     * 1317) are 4x4, and a 4x4 object cannot stand anywhere in an 8x8 POH room without covering one of the four
-     * mid-edge doorways - so this uses 8355, the 3x3 spirit tree, in the south-east corner where it blocks nothing.
-     * `mechanics/travel/spirit_tree.plugin.kts` binds its Teleport option along with the others.
+     * The spirit tree is 8355, the 3x3 one: revision 667's walk-in spirit trees (1293/1294/1295/1317) are 4x4 and
+     * cannot stand in an 8x8 room without covering a doorway. `mechanics/travel/spirit_tree.plugin.kts` binds it.
+     *
+     * The fairy ring is spawned as ground decoration (type 22) because that is the only shape its loc has a model for;
+     * spawned as scenery (type 10) it was invisible (owner 2026-09-29: "geen fairy ring"). Its ring of mushrooms is
+     * drawn around the tile, so it stands one tile in from the corner with nothing else in the 3x3 around it.
      *
      * The exit portal stands in the garden rather than in a room, so that leaving is one step from wherever the
      * player is: the garden is the only room every other room opens onto.
@@ -391,9 +411,14 @@ object PlayerHouse {
         local: (Int, Int) -> Tile,
     ) {
         world.spawn(DynamicObject(SPIRIT_TREE, 10, 0, local(5, 0)))
-        world.spawn(DynamicObject(FAIRY_RING, 10, 0, local(0, 6)))
-        world.spawn(DynamicObject(OBELISK, 10, 0, local(1, 3)))
-        world.spawn(DynamicObject(PORTAL, 10, 0, local(2, 6)))
+        world.spawn(DynamicObject(FAIRY_RING, 22, 0, local(1, 6)))
+        world.spawn(DynamicObject(OBELISK, 10, 0, local(1, 1)))
+        world.spawn(DynamicObject(PORTAL, 10, 0, local(5, 5)))
+        // Minimap icons: markers on the spirit tree's centre and the obelisk's tile (the ground-decoration layer
+        // under a scenery loc), and beside the fairy ring, which itself fills that layer on its own tile.
+        world.spawn(DynamicObject(TRANSPORT_MARKER, 22, 0, local(6, 1)))
+        world.spawn(DynamicObject(TRANSPORT_MARKER, 22, 0, local(0, 6)))
+        world.spawn(DynamicObject(TRANSPORT_MARKER, 22, 0, local(1, 1)))
     }
 
     /** Spawns the house combat dummy once the owner is inside the house it was built for. */
@@ -410,5 +435,12 @@ object PlayerHouse {
         // A combat dummy never fights back (the generic retaliation needs lock.canAttack()) and never dies.
         dummy.lock = LockState.FULL
         dummy.timers[DUMMY_HEAL_TIMER] = DUMMY_HEAL_TICKS
+        dummy.attr[COMBAT_DUMMY_ATTR] = true
     }
+
+    /**
+     * Owner 2026-09-29: the house dummy is a combat dummy - every attack lands and hits the attacker's max hit with the gear
+     * worn (read in `PawnExt.dealHit`).
+     */
+    val COMBAT_DUMMY_ATTR = AttributeKey<Boolean>()
 }

@@ -29,6 +29,42 @@ object SpecialAttacks {
     }
 
     /**
+     * The reach of a special that is not fired from its weapon's normal attack range, e.g. the Eclipse atlatl's Eclipse
+     * ("performed at melee distance" from a 5-tile ranged weapon). Owner 2026-09-29: the combat cycle only knew the weapon's
+     * range, so the player stayed where he was and every such special was refused ("You need to be next to your target").
+     * The combat cycle reads [armedReach] instead of the weapon range while such a special is armed: it walks the player to
+     * [range] (1 = a melee tile, OSRS "if used far away it will make your character run towards your target"), keeps chasing
+     * until he stands there, and skips the ammo check when [needsAmmo] is false. [requirement] is what the special itself
+     * demands (e.g. the full Eclipse set); without it the special is refused where the player stands, as before.
+     */
+    class SpecialReach(
+        val range: Int,
+        val needsAmmo: Boolean,
+        val requirement: (Player) -> Boolean,
+    )
+
+    private val reaches = mutableMapOf<Int, SpecialReach>()
+
+    fun registerReach(
+        vararg weapon: Int,
+        range: Int,
+        needsAmmo: Boolean = true,
+        requirement: (Player) -> Boolean = { true },
+    ) {
+        weapon.forEach { reaches[it] = SpecialReach(range, needsAmmo, requirement) }
+    }
+
+    /** The [SpecialReach] of the wielded weapon while its special is armed and can fire, else null. */
+    fun armedReach(player: Player): SpecialReach? {
+        if (!AttackTab.isSpecialEnabled(player)) return null
+        val weaponId = player.getEquipment(EquipmentType.WEAPON)?.id ?: return null
+        val reach = reaches[weaponId] ?: return null
+        val special = attacks[weaponId] ?: return null
+        if (AttackTab.getEnergy(player) < special.energyRequired || !reach.requirement(player)) return null
+        return reach
+    }
+
+    /**
      * Whether [itemId] has a registered special attack. Used to hide the special attack bar
      * (interface 884, component 4) for weapons with no special attack, e.g. Twisted bow.
      */

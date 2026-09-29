@@ -35,6 +35,14 @@ class ModelData(
     /** Global priority used when [facePriority] is absent. */
     var globalPriority: Byte = 0
 
+    /**
+     * The rev-667 mesh version (`Mesh.version`, written after the body when global flag 0x8 is set). Below 13 the client
+     * multiplies every vertex by 4 when it loads a worn/ground/spotanim model ("upscale"), so 12 means coarse 2007/OSRS
+     * units and 13+ means the 2010 fine units. Only 12 and 13 are produced here: 14/15 change the complex texture-scale
+     * size, which this pipeline never writes.
+     */
+    var version: Int = 12
+
     var faceAlpha: ByteArray? = null
 
     /** Per-face skin/group label (modern `packedTransparencyVertexGroups`). */

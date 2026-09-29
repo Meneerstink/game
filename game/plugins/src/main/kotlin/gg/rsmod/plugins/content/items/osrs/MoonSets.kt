@@ -77,7 +77,6 @@ object MoonSets {
     fun wieldingAtlatl(player: Player): Boolean = player.getEquipment(EquipmentType.WEAPON)?.id == Items.ECLIPSE_ATLATL
 
     fun eclipseBurnActive(player: Player): Boolean = wieldingAtlatl(player) && wearing(player, MoonSet.ECLIPSE)
-
     /** The atlatl's PvP attack speed: 5 normally, 3 only with the full Eclipse set worn. */
     fun atlatlPvpSpeed(player: Player): Int = if (wearing(player, MoonSet.ECLIPSE)) ATLATL_PVP_SPEED_FULL_SET else ATLATL_PVP_SPEED_NO_SET
 
@@ -102,7 +101,12 @@ object MoonSets {
         roll: () -> Double,
     ) {
         if (!wearing(player, MoonSet.BLOOD)) return
-        if (successfulHits.filter { it }.any { roll() < BLOODRAGER_CHANCE }) player.attr[BLOODRAGER] = true
+        if (successfulHits.filter { it }.any { roll() < BLOODRAGER_CHANCE }) {
+            player.attr[BLOODRAGER] = true
+            // Owner 2026-09-29 (set effect showed nothing): OSRS Wiki "Bloodrager.gif" - the red blood moon rises over the player
+            // on the attack that triggers it, spotanim 2792 SPECIAL_DUAL_MACUAHUITL_SPOTANIM (the same moon as Blood Infusion).
+            player.graphic(OsrsGfx.SPECIAL_DUAL_MACUAHUITL)
+        }
     }
 
     fun shacklesAccuracy(ticks: Int): Double = 1.0 + SHACKLES_PER_TICK * ticks
