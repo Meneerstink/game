@@ -425,9 +425,18 @@ object EquipmentSuite : Conformance.Suite {
         keep(bot, dummy)
         bot.timers.remove(gg.rsmod.game.model.timer.ATTACK_DELAY)
         AttackTab.setEnergy(bot, 100)
-        bot.setVarp(AttackTab.SPECIAL_ATTACK_VARP, 1)
+        // An instant special (Dragon battleaxe, Staff of light, Dragon thrownaxe, ...) fires from the special bar click itself, not on
+        // the next attack: the harness used to set the varp and attack, so these all measured 0 energy used (combat run 2026-09-29).
+        val instant = SpecialAttacks.hasInstantSpecial(def.id)
         val c = run.world.currentCycle
-        bot.attack(dummy)
+        if (instant) {
+            bot.attack(dummy)
+            wait(1)
+            SpecialAttacks.executeInstant(bot)
+        } else {
+            bot.setVarp(AttackTab.SPECIAL_ATTACK_VARP, 1)
+            bot.attack(dummy)
+        }
         wait(6)
         bot.resetInteractions()
         Combat.reset(bot)
@@ -437,7 +446,8 @@ object EquipmentSuite : Conformance.Suite {
         val used = 100 - AttackTab.getEnergy(bot)
         run.check(e, "special: energy used", used, "wiki" to (if (costs.size > 1) costs else cost), same = { a, b -> if (b is List<*>) b.any { it.toString() == a.toString() } else a.toString() == b.toString() })
         val hits = run.recording.of(dummyLabel, "out").filter { it.cycle >= c && it.text.startsWith("hits ") }
-        run.expectTrue(e, "special: lands on the target", hits.isNotEmpty(), "hitsplat blocks=${hits.size}")
+        // Instant specials are often not attacks at all (a stat boost, Power of Death): only a normal special must land.
+        if (!instant) run.expectTrue(e, "special: lands on the target", hits.isNotEmpty(), "hitsplat blocks=${hits.size}")
         run.add(Result(e, "special: what it did", Verdict.NOT_TESTED, (wiki?.get("description")?.asText() ?: "-").take(120), "hits ${hits.joinToString(" ; ") { it.text.removePrefix("hits ") }.take(160)}"))
         val realCost = if (used in costs) used else cost
         if (realCost != null && realCost > 0) {
@@ -447,7 +457,14 @@ object EquipmentSuite : Conformance.Suite {
             bot.setVarp(AttackTab.SPECIAL_ATTACK_VARP, 1)
             bot.timers.remove(gg.rsmod.game.model.timer.ATTACK_DELAY)
             val c2 = run.world.currentCycle
-            bot.attack(dummy)
+            if (instant) {
+                bot.attack(dummy)
+                wait(1)
+                SpecialAttacks.executeInstant(bot)
+            } else {
+                bot.setVarp(AttackTab.SPECIAL_ATTACK_VARP, 1)
+                bot.attack(dummy)
+            }
             wait(4)
             bot.resetInteractions()
             Combat.reset(bot)

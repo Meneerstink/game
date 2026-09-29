@@ -34,6 +34,9 @@ object SpecialAttacks {
      */
     fun hasSpecialAttack(itemId: Int): Boolean = attacks.containsKey(itemId) || instantAttacks.containsKey(itemId)
 
+    /** Whether [itemId]'s special fires from the special bar itself ([executeInstant]) rather than on the next attack. */
+    fun hasInstantSpecial(itemId: Int): Boolean = instantAttacks.containsKey(itemId)
+
     /**
      * Registers an "instant" special that fires the moment the special bar is clicked, without a
      * target (Excalibur, Dragon battleaxe, Dragon pickaxe/hatchet, Staff of light, Granite maul's
