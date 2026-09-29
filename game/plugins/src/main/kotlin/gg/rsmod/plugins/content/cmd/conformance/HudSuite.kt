@@ -15,6 +15,7 @@ import gg.rsmod.game.model.timer.VENGEANCE_COOLDOWN
 import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.api.ext.freeze
+import gg.rsmod.plugins.api.ext.getVarp
 import gg.rsmod.plugins.api.ext.hit
 import gg.rsmod.plugins.api.ext.setVarp
 import gg.rsmod.plugins.content.cmd.conformance.Conformance.Result
@@ -572,6 +573,7 @@ object HudSuite : Conformance.Suite {
         a.attr.remove(gg.rsmod.game.model.attr.VENGEANCE_ACTIVE_ATTR)
         val life = a.getCurrentLifepoints()
         val tile = a.tile
+        a.setVarp(gg.rsmod.plugins.content.inter.attack.AttackTab.DISABLE_AUTO_RETALIATE_VARP, 0)
         val npcsBefore = run.world.npcs.count()
         val shots = ArrayList<String>()
         val shotsFrom = run.world.currentCycle
@@ -587,7 +589,13 @@ object HudSuite : Conformance.Suite {
         run.expectTrue(e, "life points back", a.getCurrentLifepoints() == life, "${a.getCurrentLifepoints()} was $life")
         run.expectTrue(e, "own teleblock back, no tour freeze/vengeance", serverLeft(a, TELEBLOCK_TIMER) in 1..(123 - (run.world.currentCycle - shotsFrom) + 1) && !a.timers.has(FROZEN_TIMER) &&
             !a.timers.has(VENGEANCE_COOLDOWN) && !Vengeance.isActive(a), "teleblock ${serverLeft(a, TELEBLOCK_TIMER)} frozen ${serverLeft(a, FROZEN_TIMER)} cd ${serverLeft(a, VENGEANCE_COOLDOWN)}")
-        run.expectTrue(e, "monster removed", run.world.npcs.count() == npcsBefore, "npcs ${run.world.npcs.count()} was $npcsBefore")
+        run.expectTrue(e, "auto retaliate back as it was", a.getVarp(gg.rsmod.plugins.content.inter.attack.AttackTab.DISABLE_AUTO_RETALIATE_VARP) == 0,
+            "varp ${a.getVarp(gg.rsmod.plugins.content.inter.attack.AttackTab.DISABLE_AUTO_RETALIATE_VARP)}")
+        // The tour's hill giant stands next to its spot (3222,3218); the world's own npc count moves by itself, so look there.
+        val tourSpot = Tile(3222, 3218, 0)
+        var giantsLeft = 0
+        run.world.npcs.forEach { n -> if (n.id == gg.rsmod.plugins.api.cfg.Npcs.HILL_GIANT && n.tile.isWithinRadius(tourSpot, 4)) giantsLeft++ }
+        run.expectTrue(e, "monster removed", giantsLeft == 0, "$giantsLeft hill giants left at the tour spot (world npcs $npcsBefore -> ${run.world.npcs.count()})")
         // The tour drops its items within 2 tiles of its spot (3222,3218): none may be left in the world.
         val spot = Tile(3222, 3218, 0)
         val left = ArrayList<String>()

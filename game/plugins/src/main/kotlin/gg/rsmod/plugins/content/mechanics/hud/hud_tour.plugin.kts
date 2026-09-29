@@ -18,7 +18,10 @@ import gg.rsmod.plugins.api.ChatMessageType
 import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.api.cfg.Npcs
+import gg.rsmod.plugins.api.ext.getVarp
+import gg.rsmod.plugins.api.ext.setVarp
 import gg.rsmod.plugins.content.combat.Combat
+import gg.rsmod.plugins.content.inter.attack.AttackTab
 import gg.rsmod.plugins.content.mechanics.combatresponse.Vengeance
 
 /**
@@ -56,6 +59,8 @@ fun startTour(
         val life = player.getCurrentLifepoints()
         val savedTimers = listOf(TELEBLOCK_TIMER, FROZEN_TIMER, FREEZE_IMMUNITY_TIMER, VENGEANCE_COOLDOWN).associateWith { key: TimerKey -> if (player.timers.has(key)) player.timers[key] else 0 }
         val vengeance = player.attr[VENGEANCE_ACTIVE_ATTR] == true
+        // Auto retaliate off for the tour: a boosted admin hitting back killed the tour's monster (2026-09-29, twice).
+        val retaliateOff = player.getVarp(AttackTab.DISABLE_AUTO_RETALIATE_VARP)
         val startCycle = world.currentCycle
         val items = ArrayList<GroundItem>()
         var giant: Npc? = null
@@ -71,6 +76,7 @@ fun startTour(
             val passed = world.currentCycle - startCycle
             savedTimers.forEach { (key, left) -> if (left - passed > 0) player.timers[key] = left - passed else player.timers.remove(key) }
             if (vengeance) player.attr[VENGEANCE_ACTIVE_ATTR] = true else player.attr.remove(VENGEANCE_ACTIVE_ATTR)
+            player.setVarp(AttackTab.DISABLE_AUTO_RETALIATE_VARP, retaliateOff)
             ClientHudConfig.push(player)
         }
 
@@ -109,7 +115,8 @@ fun startTour(
             shot(player, "hud_3_vengeance_cooldown")
             wait(2)
 
-            // 4. Opponent: a hill giant next to the admin, a real attack.
+            // 4. Opponent: a hill giant next to the admin.
+            player.setVarp(AttackTab.DISABLE_AUTO_RETALIATE_VARP, 1)
             val npc = Npc(Npcs.HILL_GIANT, TOUR_SPOT.transform(1, 0), world)
             npc.respawnOverride = false
             npc.walkRadius = 0
@@ -123,8 +130,12 @@ fun startTour(
             player.attr[COMBAT_TARGET_FOCUS_ATTR] = java.lang.ref.WeakReference(npc)
             npc.setCurrentLifepoints(npc.getMaximumLifepoints() * 2 / 3)
             fun keepAlive() {
-                if (npc.getCurrentLifepoints() < npc.getMaximumLifepoints() / 3) npc.setCurrentLifepoints(npc.getMaximumLifepoints() * 2 / 3)
+                // It does not fight (no hits either way) and keeps a readable health bar.
+                Combat.reset(npc)
+                npc.resetInteractions()
+                npc.setCurrentLifepoints(npc.getMaximumLifepoints() * 2 / 3)
                 player.attr[COMBAT_TARGET_FOCUS_ATTR] = java.lang.ref.WeakReference(npc)
+                player.facePawn(npc)
             }
             repeat(4) {
                 keepAlive()
