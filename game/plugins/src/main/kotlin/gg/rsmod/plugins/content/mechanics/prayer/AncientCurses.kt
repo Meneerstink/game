@@ -1276,3 +1276,7 @@ object AncientCurses {
     private class DeflectRolls(val attackers: MutableMap<Int, DeflectRollHistory> = mutableMapOf())
     private val DEFLECT_ROLLS_ATTR = AttributeKey<DeflectRolls>()
 }
+        // Kill credit like Ring of recoil and Vengeance: a player killed by reflected damage alone was a death without a killer
+        // (no PvP death, no loot key for the defender) - combat run 2026-09-29.
+        attacker.damageMap.add(target, reflected)
+        gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.recordDamage(attacker, target, reflected)
