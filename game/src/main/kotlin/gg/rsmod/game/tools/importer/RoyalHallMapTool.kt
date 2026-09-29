@@ -67,21 +67,16 @@ object RoyalHallMapTool {
     private const val ZERO_LEVEL = 8
 
     /**
-     * RSPS tile flag 0x20 on a level-1 tile ("part of the building below", client Static409 / RspsGraphicsProfile): the
-     * roof flood of a player INSIDE the ground floor also runs over it and hides what stands on it, like the roof, while
-     * a player standing on or under it is outside. Map flags only encode 1..32, so such a tile carries no other flag.
-     */
-    const val BELOW_BUILDING = 0x20
-
-    /**
      * Height steps (x8 client units) of levels 1..3 above the one below: 30 = 240, the wall height (walls 33868/33877 are
      * 240 high), for both upper storeys (levels 1 and 2) and for the roof's eaves and parapet (level 3) exactly on the top
      * storey's wall tops - 31 (248) left an 8-unit slit all round the building between wall and parapet that the sky showed
      * through (owner 2026-09-26: "some walls can be seen through"). Until 2026-09-27 the roof stood on levels 2 and 3 with
      * a 9 (72) step between its rings; the second upper storey (owner: "bouw een extra verdieping") took level 2, so the
-     * whole roof is on level 3 and its rings lift themselves (RoyalHallLocTool.RING2_LIFT).
+     * whole roof is on level 3 and its rings lift themselves (RoyalHallLocTool.RING2_LIFT). Owner 2026-09-29 ("het plafond
+     * te laag", option C of C:/RSPS/foto/mansion_verdieping2_hoogte.png): the second upper storey is 360 high (45), its walls
+     * the 1.5x copies RoyalHallLocTool.TALL_WALL / TALL_WINDOW_WALL, so the roof and parapet stand 120 higher.
      */
-    private val STOREY_STEPS = intArrayOf(30, 30, 30)
+    private val STOREY_STEPS = intArrayOf(30, 30, 45)
 
     /** The centre's planters, their fences, the canopy ring on pillars and the map fountain. */
     private val REMOVED_IDS = setOf(47119, 84, 47174, 47175, 47244, 47246, 47150)
@@ -295,13 +290,12 @@ object RoyalHallMapTool {
                     upper.overlayShape = 0
                     upper.overlayRotation = 0
                     // A wall-ring tile beside the doorway keeps its storey wall, so it stays closed to walking.
-                    // A balcony is outside: standing on or under it shows the roof. From inside the ground floor it hides
-                    // like the roof, upper doorway included (owner 2026-09-27: "elke balkon kan ik vanaf de begane grond
-                    // doorheen kijken" - a floating balcony floor seen through the upper doorway) - BELOW_BUILDING. The client
-                    // reads that flag on the level above the player's, so a level-2 balcony hides from inside level 1 (and,
-                    // standing over the level-1 balcony, with it from inside the ground floor).
+                    // A balcony is outside and never hides: from inside every storey it stays visible through its open
+                    // doorway, as on any RuneScape balcony (owner 2026-09-29, chosen "Balkon zichtbaar": the 0x20 "hide with
+                    // the building below" flag of 2026-09-27 hid the balcony and its doorway from inside, which left a
+                    // see-through hole in the facade on every storey).
                     val ringWall = (x in MIN_X..MAX_X && z in MIN_Z..MAX_Z) && (upper.flags and BLOCKED != 0)
-                    upper.flags = if (ringWall) BLOCKED else BELOW_BUILDING
+                    upper.flags = if (ringWall) BLOCKED else 0
                     upstairs++
                 }
             }
@@ -353,15 +347,12 @@ object RoyalHallMapTool {
             // Inside on the ground floor the upper-storey walls vanished (one-storey walls to look over, beside full-height
             // turrets); on the upper floor the parapet above vanished and the walls looked cut open. The wall ring keeps
             // its upper walls and parapet always drawn, as the Grand Exchange's own canopy did with the same flag; the
-            // floor inside still clears above the player. The upper doorways are the exception (below).
+            // floor inside still clears above the player. The upper doorways too: without it the flood's edge step cut the
+            // upper storey open above every door, a see-through patch beside the door (owner 2026-09-27, foto mansion_bug2).
             for (x in MIN_X..MAX_X) for (z in MIN_Z..MAX_Z) {
                 val ring = x == MIN_X || x == MAX_X || z == MIN_Z || z == MAX_Z
                 if (!ring) continue
-                for (level in 1..3) {
-                    // The upper doorways hide with their balcony instead (BELOW_BUILDING), on both upper storeys.
-                    if (tile(level, x, z).flags == BELOW_BUILDING) continue
-                    tile(level, x, z).flags = tile(level, x, z).flags or ZERO_LEVEL
-                }
+                for (level in 1..3) tile(level, x, z).flags = tile(level, x, z).flags or ZERO_LEVEL
             }
 
             // The corner turrets (62766, home_decor.txt) are the 2 x 2 Falador turret drawn 1.375x wide, so the model hangs

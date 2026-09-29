@@ -108,6 +108,8 @@ object RoyalHallLocTool {
         // towers lopen niet smooth door op het dak"); at 2.25 (453 x 2.25 = 1019) the parapet meets the shaft and the
         // crown stands clear above the roof's eaves. Owner 2026-09-27 ("hoektorens lopen door"): the hall has a second upper
         // storey and the parapet moved up 240 to level 3, so the towers are 2.75 high (1246): the same clearance above it.
+        // Owner 2026-09-29 (option C of C:/RSPS/foto/mansion_verdieping2_hoogte.png): the second upper storey is 120 taller
+        // (RoyalHallMapTool.STOREY_STEPS), so the towers rise 120 more: 386/128 x 453 = 1366.
         val recolour = java.io.ByteArrayOutputStream()
         recolour.write(40)
         recolour.write(TURRET_STONE.size)
@@ -115,7 +117,7 @@ object RoyalHallLocTool {
             val granite = (c and 0x7F) * 55 / 100
             recolour.write(byteArrayOf((c shr 8).toByte(), c.toByte(), (granite shr 8).toByte(), granite.toByte()))
         }
-        return withModel(TURRET_LOC, byteArrayOf(65, 0, 176.toByte(), 66, 1, 96, 67, 0, 176.toByte()) + recolour.toByteArray() + def, TURRET_MODEL, TURRET_MODEL_CLEAN)
+        return withModel(TURRET_LOC, byteArrayOf(65, 0, 176.toByte(), 66, 1, 130.toByte(), 67, 0, 176.toByte()) + recolour.toByteArray() + def, TURRET_MODEL, TURRET_MODEL_CLEAN)
     }
 
     /**
@@ -560,6 +562,36 @@ object RoyalHallLocTool {
     const val STAIRS_MIDDLE = 62901
     const val BALCONY_PARAPET = 62902
 
+    /**
+     * The second upper storey's walls, 1.5x high (360 instead of 240; owner 2026-09-29: "het plafond te laag", option C of
+     * C:/RSPS/foto/mansion_verdieping2_hoogte.png): copies of the plain wall 33868 and the window wall 33877 with model scale
+     * y 192 (opcode 66), standing on level 2 whose storey step to the roof (level 3) is 360 (RoyalHallMapTool.STOREY_STEPS).
+     */
+    const val TALL_WALL = 62903
+    const val TALL_WINDOW_WALL = 62904
+
+    /**
+     * The upper balcony parapet as a straight wall decoration (shape 4), on the wall-ring tile either side of a level-2
+     * doorway, whose wall slot holds the storey wall - so the parapet runs on to the building like the gilded railing 62786
+     * of the balconies below (owner 2026-09-29: "de balkon sluit niet goed aan" - the ring tile beside the doorway was an
+     * open edge between the parapet's corner and the wall).
+     */
+    const val BALCONY_PARAPET_SIDE = 62905
+
+    private fun tallWall(id: Int, def: ByteArray): ByteArray {
+        check(listOf(65, 66, 67).none { opcodePosition(id, def, it) >= 0 }) { "wall $id already scaled" }
+        return byteArrayOf(66, 0, 192.toByte()) + def
+    }
+
+    private fun marbleParapetDecor(def: ByteArray): ByteArray {
+        val out = marbleParapet(def)
+        val at = opcodePosition(11831, out, 1)
+        check(at >= 0 && out[at + 2] == 0.toByte() && out[at + 3] == 1.toByte()) { "parapet models do not start with one shape-0 model" }
+        // Only the straight piece is used; the other shapes (corners 1-3, 9) stay listed, unused, like the source's.
+        out[at + 2] = 4
+        return out
+    }
+
     /** [def] with [pairs] (source colour to target colour) as its only recolour, inserted before everything else. */
     private fun recoloured(def: ByteArray, pairs: List<Pair<Int, Int>>, prefix: ByteArray = ByteArray(0)): ByteArray {
         check(opcodePosition(0, def, 40) < 0) { "already recoloured" }
@@ -665,6 +697,9 @@ object RoyalHallLocTool {
             Variant(STAIRS_MIDDLE, 34872, "Royal Hall spiral staircase (middle, level 1): white marble, gilded rails, Climb-up / Climb-down", ::premiumStairsMiddle),
             Variant(62780, 34873, "Royal Hall spiral staircase (top): white marble, gilded rails", ::premiumStairs),
             Variant(BALCONY_PARAPET, 11831, "Royal Hall upper balcony parapet: the crenellated parapet 11831 in white marble", ::marbleParapet),
+            Variant(BALCONY_PARAPET_SIDE, 11831, "Royal Hall upper balcony parapet as a wall decoration (beside the level-2 doorways)", ::marbleParapetDecor),
+            Variant(TALL_WALL, 33868, "Royal Hall second upper storey wall: 33868 at 1.5x height (360)") { tallWall(33868, it) },
+            Variant(TALL_WINDOW_WALL, 33877, "Royal Hall second upper storey window wall: 33877 at 1.5x height (360)") { tallWall(33877, it) },
             Variant(62768, 15548, "78 carpet corner (Varrock carpet 15548 with the 78 texture)", ::with78Carpet),
             Variant(62769, 15549, "78 carpet edge (Varrock carpet 15549 with the 78 texture)", ::with78Carpet),
             Variant(62770, 15550, "78 carpet middle (Varrock carpet 15550 with the 78 texture)", ::with78Carpet),
@@ -728,7 +763,9 @@ object RoyalHallLocTool {
                 cut++
             }
         }
-        // The encoder writes a version-12 trailer; put the version byte back in front of it and flag it (bit 3).
+        // The encoder writes a version-12 trailer; put the version byte back in front of it and flag it (bit 3). Since
+        // 2026-09-29 the decoder keeps the mesh's version and the encoder only writes 12/13 itself, so encode as 12 here.
+        model.version = 12
         val encoded = Rev667ModelEncoder.encode(model)
         val body = encoded.copyOf(encoded.size - 23)
         val trailer = encoded.copyOfRange(encoded.size - 23, encoded.size)

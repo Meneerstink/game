@@ -133,7 +133,11 @@ class GeHomeHallTests {
         all.forEach { post ->
             val n = size(post.id)
             footprint(post.tile, n, n).forEach { t ->
-                assertTrue(t.x in floorX && t.z in floorZ && t.height in 0..2, "${post.id} leaves the floor at $t")
+                // Owner 2026-09-29: the balconies are floor too (he posted the Archaeologist on the west balcony), but not
+                // their wall-ring row, which is the doorway.
+                val ring = t.x == floorX.first - 1 || t.x == floorX.last + 1 || t.z == floorZ.first - 1 || t.z == floorZ.last + 1
+                val balcony = !ring && RoyalHallMapTool.BALCONIES.any { b -> t.height == b.level && t.x in b.xs && t.z in b.zs }
+                assertTrue((t.x in floorX && t.z in floorZ && t.height in 0..2) || balcony, "${post.id} leaves the floor at $t")
                 assertFalse(t in solid, "${post.id} stands in an object at $t")
                 assertFalse(t in stairs || t in landings, "${post.id} blocks a staircase at $t")
                 assertEquals(null, taken.put(t, post.id), "${post.id} shares $t")
@@ -210,21 +214,23 @@ class GeHomeHallTests {
                 assertEquals(inside, flags(2, x, z) and 4 != 0, "top $x,$z")
                 val ring = (x == GeHomeHall.X - 1 || x == GeHomeHall.X + GeHomeHall.WIDTH) && z in GeHomeHall.Z - 1..GeHomeHall.Z + GeHomeHall.DEPTH ||
                     (z == GeHomeHall.Z - 1 || z == GeHomeHall.Z + GeHomeHall.DEPTH) && x in GeHomeHall.X - 1..GeHomeHall.X + GeHomeHall.WIDTH
-                // The wall ring's upper walls and parapet stay drawn from inside (ZERO_LEVEL); the upper doorways hide with
-                // their balcony (owner 2026-09-27: "elke balkon kan ik vanaf de begane grond doorheen kijken"), on both
-                // upper storeys.
-                if (ring) for (level in 1..3) if (flags(level, x, z) != RoyalHallMapTool.BELOW_BUILDING) assertTrue(flags(level, x, z) and 8 != 0, "ring $x,$z level $level")
-                // Every walkable balcony tile and upper doorway is "part of the building below" (flag 0x20), nothing else.
+                // The wall ring's upper walls, parapet and doorways stay drawn from inside (ZERO_LEVEL, foto mansion_bug2).
+                if (ring) for (level in 1..3) assertTrue(flags(level, x, z) and 8 != 0, "ring $x,$z level $level")
+                // No balcony or doorway ever hides from inside (owner 2026-09-29, "Balkon zichtbaar"): the RSPS 0x20 flag
+                // that hid them left a see-through hole in the facade on every storey. Walkable balcony tiles outside the
+                // ring carry no flag at all, so the roof flood never reaches them.
+                for (level in 0..3) assertEquals(0, flags(level, x, z) and 0x20, "0x20 at $x,$z level $level")
                 for (level in 1..2) {
                     val balconies = if (level == 1) RoyalHallMapTool.BALCONIES else RoyalHallMapTool.BALCONIES_2
-                    val walkableBalcony = balconies.any { x in it.xs && z in it.zs } && flags(level, x, z) and 1 == 0
-                    assertEquals(walkableBalcony, flags(level, x, z) == RoyalHallMapTool.BELOW_BUILDING, "balcony flag $x,$z level $level")
+                    if (balconies.any { x in it.xs && z in it.zs } && !ring) assertEquals(0, flags(level, x, z), "balcony flag $x,$z level $level")
                 }
-                // The client reads 0x20 on the level above the player's, so from inside the ground floor a level-2 balcony
-                // hides only with the level-1 balcony under it: every one of its tiles must stand over one.
-                if (RoyalHallMapTool.BALCONIES_2.any { x in it.xs && z in it.zs }) assertEquals(RoyalHallMapTool.BELOW_BUILDING, flags(1, x, z), "no balcony under $x,$z")
                 // No orange "gold trim" (overlay 157, texture 61) round the mansion any more.
                 assertNotEquals(157, tiles.tiles[0][x - 49 * 64][z - 54 * 64].overlayId and 0xFF, "orange trim at $x,$z")
+            }
+            // The second upper storey is 360 high (owner 2026-09-29, "het plafond te laag"): level 3 (roof, parapet) stands
+            // 45 x 8 above level 2 over the whole hall, walls and balconies included.
+            for (x in RoyalHallMapTool.FLOOR_MIN_X - 1..RoyalHallMapTool.FLOOR_MAX_X + 1) for (z in RoyalHallMapTool.FLOOR_MIN_Z - 1..RoyalHallMapTool.FLOOR_MAX_Z + 1) {
+                assertEquals(45, tiles.tiles[3][x - 49 * 64][z - 54 * 64].height, "level 3 height at $x,$z")
             }
         } finally {
             library.close()
@@ -262,15 +268,38 @@ class GeHomeHallTests {
         val roof = setOf(11831, 62773, RoyalHallLocTool.ROOF_RING2, 62754, 62755, 62756, 62757)
         assertTrue(decor.filter { it.id in roof }.all { it.tile.height == 3 }, "roof or parapet below level 3")
         assertTrue(decor.any { it.id == RoyalHallLocTool.ROOF_RING2 } && decor.any { it.id == 62773 })
-        // The second upper storey repeats the first one's outer walls, plus the wall beside each of its narrower doorways.
+        // The second upper storey repeats the first one's outer walls, plus the wall beside each of its narrower doorways -
+        // all as the 1.5x high copies (360; owner 2026-09-29 "het plafond te laag"), none of the 240 originals.
         val walls = setOf(33868, 33877)
-        fun ring(level: Int) = decor.filter { it.id in walls && it.type == 0 && it.tile.height == level && (it.tile.x !in floorX || it.tile.z !in floorZ) }
+        val tall = setOf(RoyalHallLocTool.TALL_WALL, RoyalHallLocTool.TALL_WINDOW_WALL)
+        fun ring(level: Int) = decor.filter { (it.id in walls || it.id in tall) && it.type == 0 && it.tile.height == level && (it.tile.x !in floorX || it.tile.z !in floorZ) }
         assertEquals(ring(1).size + 8, ring(2).size)
         assertTrue(ring(1).all { w -> ring(2).any { it.tile.x == w.tile.x && it.tile.z == w.tile.z && it.rot == w.rot } })
+        assertTrue(decor.none { it.id in walls && it.tile.height == 2 }, "a 240-high wall left on the second upper storey")
+        assertTrue(decor.none { it.id in tall && it.tile.height != 2 }, "a 360-high wall off the second upper storey")
         // Three rooms: an inner wall on x 3162 and x 3167 with a two-tile opening (z 3491-3492) in each.
-        val inner = decor.filter { it.id in walls && it.tile.height == 2 && it.tile.x in floorX && it.tile.z in floorZ }
+        val inner = decor.filter { it.id in tall && it.tile.height == 2 && it.tile.x in floorX && it.tile.z in floorZ }
         listOf(3162 to 0, 3167 to 2).forEach { (x, rot) ->
             assertEquals(floorZ.filter { it !in 3491..3492 }.toSet(), inner.filter { it.tile.x == x && it.rot == rot }.map { it.tile.z }.toSet())
+        }
+        // Every level-2 balcony's parapet runs on to the building: a wall-decoration piece on the open edge of each wall-ring
+        // tile beside its doorway (owner 2026-09-29: "de balkon sluit niet goed aan").
+        val sides = decor.filter { it.id == RoyalHallLocTool.BALCONY_PARAPET_SIDE }
+        assertTrue(sides.all { it.tile.height == 2 && it.type == 4 })
+        RoyalHallMapTool.BALCONIES_2.forEach { b ->
+            val ringTiles = b.xs.flatMap { x -> b.zs.map { z -> x to z } }.filter { (x, z) ->
+                (x == GeHomeHall.X - 1 || x == GeHomeHall.X + GeHomeHall.WIDTH || z == GeHomeHall.Z - 1 || z == GeHomeHall.Z + GeHomeHall.DEPTH) &&
+                    x in GeHomeHall.X - 1..GeHomeHall.X + GeHomeHall.WIDTH && z in GeHomeHall.Z - 1..GeHomeHall.Z + GeHomeHall.DEPTH
+            }
+            // The two ring tiles at the balcony's ends (not the doorway itself) each carry one side piece.
+            val ends = ringTiles.filter { (x, z) -> ringTiles.count { (ox, oz) -> kotlin.math.abs(ox - x) + kotlin.math.abs(oz - z) == 1 } == 1 }
+            assertEquals(2, ends.size, "balcony ends $ringTiles")
+            ends.forEach { (x, z) -> assertEquals(1, sides.count { it.tile.x == x && it.tile.z == z }, "no parapet side at $x,$z") }
+        }
+        assertEquals(8, sides.size)
+        // The three copies exist in the cache (RoyalHallLocTool, both caches) under their Royal Hall names.
+        listOf(RoyalHallLocTool.TALL_WALL to 33868, RoyalHallLocTool.TALL_WINDOW_WALL to 33877, RoyalHallLocTool.BALCONY_PARAPET_SIDE to 11831).forEach { (id, source) ->
+            assertEquals(DEFINITIONS.get(ObjectDef::class.java, source).name, DEFINITIONS.get(ObjectDef::class.java, id).name, "loc $id")
         }
     }
 
