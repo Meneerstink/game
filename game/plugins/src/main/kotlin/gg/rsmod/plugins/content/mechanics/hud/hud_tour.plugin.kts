@@ -197,10 +197,11 @@ fun startTour(
             }
             shot(player, "hud_5c_boosts_switched_off")
             // RuneLite extras: boosts as infoboxes, GE + HA prices, pie timers, tile highlights, a lootbeam, outlined text.
+            // Two payloads: one MESSAGE_GAME is a var-byte packet (ClientHud.send drops anything longer and traces it).
+            ClientHud.send(player, "cfg|boosts.enabled=true;boosts.displayInfoboxes=true;boosts.displayPanel=false;grounditems.priceDisplayMode=BOTH")
             ClientHud.send(
                 player,
-                "cfg|boosts.enabled=true;boosts.displayInfoboxes=true;boosts.displayPanel=false;grounditems.priceDisplayMode=BOTH;" +
-                    "grounditems.groundItemTimers=PIE;grounditems.highlightTiles=true;grounditems.showLootbeamForHighlighted=true;grounditems.textOutline=true",
+                "cfg|grounditems.groundItemTimers=PIE;grounditems.highlightTiles=true;grounditems.showLootbeamForHighlighted=true;grounditems.textOutline=true",
             )
             repeat(2) {
                 keepAlive()
