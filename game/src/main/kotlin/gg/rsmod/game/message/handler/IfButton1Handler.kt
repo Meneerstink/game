@@ -99,7 +99,9 @@ class IfButton1Handler : MessageHandler<IfButtonMessage> {
                 }
 
                 FIFTH_OPTION -> {
-                    val def = world.definitions.get(ItemDef::class.java, message.item)
+                    // Live 2026-09-29 02:22 (anudd): the client sent this option with item -1 and get() threw in the packet handler.
+                    // An id the cache does not know is a client-side slip - nothing to drop or destroy (combat run 2026-09-29).
+                    val def = world.definitions.getNullable(ItemDef::class.java, message.item) ?: return
                     // The fifth slot is "Drop" by default, but imported OSRS items put their own option there ("Uncharge" on the
                     // Webweaver bow, "Empty" on Dizana's quiver, "Dismantle", ...). Only a real Drop may drop the item.
                     when (def.inventoryMenu.getOrNull(4)?.lowercase()) {

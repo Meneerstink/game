@@ -85,6 +85,7 @@ object CombatSuite : Conformance.Suite {
         scenario("freeze range and seeds") { freezeRangeAndSeeds(run, a, b, arena) }
         scenario("miasmic") { miasmic(run, a, b, dummy, arena) }
         scenario("smoke poison") { smokePoison(run, a, dummy, arena) }
+        scenario("packet validation") { packetValidation(run, a) }
         scenario("protection") { protection(run, a, b, dummy, arena) }
         scenario("retaliation") { retaliation(run, a, dummy, arena) }
         scenario("poison") { poison(run, a, dummy, arena) }
@@ -427,6 +428,22 @@ object CombatSuite : Conformance.Suite {
         a.setVarp(AttackTab.DISABLE_AUTO_RETALIATE_VARP, 0)
         run.expectTrue(e, "Smoke Rush poisons about 1 in 8 damaging hits ($damaging damaging casts)", damaging >= 30 && poisoned in 1..(damaging / 3),
             "poisoned $poisoned of $damaging", "OSRS Wiki: 1/8 on hit")
+    }
+    /**
+     * Combat run 2026-09-29: the server never trusts a client item id. Live 02:22 (anudd): an inventory "Drop" packet with item -1
+     * threw in IfButton1Handler (DefinitionSet.get). The same packet is injected here: it must be ignored, the bot stays online.
+     */
+    private suspend fun QueueTask.packetValidation(
+        run: Conformance.Run,
+        a: Client,
+    ) {
+        val e = "combat packet validation"
+        val c = run.world.currentCycle
+        Bots.button(a, 679, 0, 5, 23, -1)
+        Bots.button(a, 679, 0, 5, 0, 999_999)
+        wait(2)
+        val inv = a.inventory.getItemCount(Items.SHARK)
+        run.expectTrue(e, "drop packets with an unknown item id are ignored", a.isOnline && run.world.currentCycle > c, "online=${a.isOnline} sharks=$inv", "no crash, player online")
     }
     private suspend fun QueueTask.protection(
         run: Conformance.Run,
