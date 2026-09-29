@@ -1253,7 +1253,9 @@ object AncientCurses {
         if (!target.world.percentChance(DEFLECT_REFLECT_CHANCE_PCT)) return
         curse.reflectAnimation?.let { target.animate(it) }
         curse.reflectGraphic?.let { target.graphic(it) }
-        attacker.hit(damage = reflected)
+        // The reflected-damage splat, as recoil and vengeance use (Void Weapon.mark: "deflect" -> HitSplat.Mark.Reflected); it was a
+        // plain hit splat (combat run 2026-09-29).
+        attacker.hit(damage = reflected, type = gg.rsmod.plugins.api.HitType.REFLECTED)
     }
 
     const val DEFLECT_REFLECT_CHANCE_PCT = 15.0

@@ -379,8 +379,10 @@ object CursesSuite : Conformance.Suite {
         val share = if (landed.isEmpty()) 0.0 else reflected.size.toDouble() / landed.count { it.second >= 10 }.coerceAtLeast(1)
         run.add(
             Result(
-                e, "reflected on damaging hits (>= 1 lifepoint of 10 %)", if (share >= 0.95) Verdict.PASS else Verdict.FAIL,
-                "every damaging hit reflects ${deflect["reflect_fraction"]?.get("novite")?.asDouble()} of its damage (novite/divergent)",
+                // Owner balance decision 2026-09-18 (AncientCurses.DEFLECT_REFLECT_CHANCE_PCT): 15 % chance per attack, not Novite's every
+                // hit - a share between 3 % and 35 % over the qualifying hits passes (combat run 2026-09-29).
+                e, "reflected on damaging hits (>= 1 lifepoint of 10 %)", if (share in 0.03..0.35) Verdict.PASS else Verdict.FAIL,
+                "about 15 % of the damaging hits reflect ${deflect["reflect_fraction"]?.get("novite")?.asDouble()} of their damage (owner 2026-09-18)",
                 "${reflected.size} reflects on ${landed.count { it.second >= 10 }} hits (${"%.2f".format(java.util.Locale.ENGLISH, share)})",
             ),
         )

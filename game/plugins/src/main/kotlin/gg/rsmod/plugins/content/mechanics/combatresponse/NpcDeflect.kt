@@ -32,6 +32,6 @@ object NpcDeflect {
     ) {
         if (target !is Npc || damage <= 0) return
         val reflected = reflected(target.prayerIcon, style, damage)
-        if (reflected > 0) attacker.hit(damage = reflected)
+        if (reflected > 0) attacker.hit(damage = reflected, type = gg.rsmod.plugins.api.HitType.REFLECTED)
     }
 }
