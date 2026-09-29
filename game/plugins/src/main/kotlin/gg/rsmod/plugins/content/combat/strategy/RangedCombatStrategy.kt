@@ -50,6 +50,13 @@ object RangedCombatStrategy : CombatStrategy {
 
     override fun getAttackRange(pawn: Pawn): Int {
         if (pawn is Player) {
+    private val BLOWPIPES =
+        gg.rsmod.plugins.content.items.osrs.Blowpipe.Pipe.values().flatMap { listOf(it.charged, it.empty) }.toSet()
+    private val KARILS_CROSSBOWS =
+        setOf(Items.KARILS_CROSSBOW, Items.KARILS_CROSSBOW_100, Items.KARILS_CROSSBOW_75, Items.KARILS_CROSSBOW_50, Items.KARILS_CROSSBOW_25, Items.KARILS_CROSSBOW_0)
+    private val MORRIGANS_JAVELINS =
+        setOf(Items.MORRIGANS_JAVELIN, Items.MORRIGANS_JAVELIN_P, Items.MORRIGANS_JAVELIN_P_13881, Items.MORRIGANS_JAVELIN_P_13882)
+
             val weapon = pawn.getEquipment(EquipmentType.WEAPON)
             val attackStyle = CombatConfigs.getAttackStyle(pawn)
 
@@ -88,6 +95,12 @@ object RangedCombatStrategy : CombatStrategy {
                     Items.TWISTED_BOW, in Bows.CRYSTAL_BOWS, in Bows.DARK_BOWS -> 10
                     else -> DEFAULT_ATTACK_RANGE
                 }
+                    // Combat run 2026-09-29, OSRS Wiki infobox attack ranges (reference\weapons\osrs_weapons.json): these fell back
+                    // to the default 7, so a blowpipe fired from 7 tiles instead of 5 and the 8-tile crossbows came one tile short.
+                    in BLOWPIPES -> 5
+                    Items.ARMADYL_CROSSBOW, Items.ZARYTE_CROSSBOW, Items.HUNTERS_CROSSBOW, in KARILS_CROSSBOWS -> 8
+                    Items.DRAGON_THROWNAXE, Items.MORRIGANS_THROWING_AXE -> 4
+                    in MORRIGANS_JAVELINS -> 5
 
             if (attackStyle == WeaponStyle.LONG_RANGE) {
                 range += if (weapon?.id == Items.SLING) 1 else 2

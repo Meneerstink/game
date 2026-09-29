@@ -269,7 +269,11 @@ object EquipmentSuite : Conformance.Suite {
         if (range != null) reach(run, bot, dummy, arena, range, e, botLabel)
         // Special attack.
         if (SpecialAttacks.hasSpecialAttack(def.id) || ref?.get("special")?.isNull == false) special(run, bot, dummy, arena, def, ref, e, botLabel, dummyLabel)
-        // Block animation: the dummy hits the bot once.
+        // Block animation: the dummy hits the bot once. It stands next to the bot first - after the reach test it was still one tile
+        // beyond the weapon's range and never reached the bot inside the window (Karil's crossbow, Dragon hunter crossbow).
+        placeDummy(dummy, arena, 1)
+        keep(bot, dummy)
+        wait(1)
         val cb = world.currentCycle
         bot.resetInteractions()
         dummy.attack(bot)
@@ -427,6 +431,9 @@ object EquipmentSuite : Conformance.Suite {
         wait(6)
         bot.resetInteractions()
         Combat.reset(bot)
+        // The 10 % regeneration (every 50 ticks since login) must not land inside the 6-tick window: every run reached the special
+        // at the same tick after login, so ACB/ZCB measured 40/65 instead of 50/75 (combat run 2026-09-29).
+        bot.timers[gg.rsmod.game.model.timer.SPECIAL_ATTACK_TIMER] = 1_000
         val used = 100 - AttackTab.getEnergy(bot)
         run.check(e, "special: energy used", used, "wiki" to (if (costs.size > 1) costs else cost), same = { a, b -> if (b is List<*>) b.any { it.toString() == a.toString() } else a.toString() == b.toString() })
         val hits = run.recording.of(dummyLabel, "out").filter { it.cycle >= c && it.text.startsWith("hits ") }
@@ -435,6 +442,7 @@ object EquipmentSuite : Conformance.Suite {
         val realCost = if (used in costs) used else cost
         if (realCost != null && realCost > 0) {
             val cost = realCost
+        bot.timers[gg.rsmod.game.model.timer.SPECIAL_ATTACK_TIMER] = gg.rsmod.plugins.content.inter.attack.SpecialEnergyRegen.NORMAL_TICKS
             AttackTab.setEnergy(bot, cost - 1)
             bot.setVarp(AttackTab.SPECIAL_ATTACK_VARP, 1)
             bot.timers.remove(gg.rsmod.game.model.timer.ATTACK_DELAY)
@@ -552,7 +560,7 @@ object EquipmentSuite : Conformance.Suite {
         val n = def.name.lowercase()
         val ammo =
             when {
-                n.contains("crossbow") || n.contains("c'bow") -> Items.RUNITE_BOLTS
+                // Karil's crossbow first: it fires only bolt racks (it used to get runite bolts and never swung).
                 n.contains("karil") -> Items.BOLT_RACK
                 n.contains("ogre") && n.contains("bow") -> Items.OGRE_ARROW
                 n.contains("dark bow") || n.contains("twisted bow") -> Items.DRAGON_ARROW
@@ -561,6 +569,7 @@ object EquipmentSuite : Conformance.Suite {
             }
         bot.equipment[13] = ammo?.let { Item(it, 5000) }
         if (def.stackable && bot.equipment[3]?.id == def.id) bot.equipment[3] = Item(def.id, 5000)
+                n.contains("crossbow") || n.contains("c'bow") -> Items.RUNITE_BOLTS
         bot.addBlock(UpdateBlockType.APPEARANCE)
     }
 
