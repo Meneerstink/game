@@ -2,6 +2,7 @@ package gg.rsmod.plugins.content.mechanics.hud
 
 import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.World
+import gg.rsmod.game.model.attr.COMBAT_TARGET_FOCUS_ATTR
 import gg.rsmod.game.model.attr.VENGEANCE_ACTIVE_ATTR
 import gg.rsmod.game.model.entity.GroundItem
 import gg.rsmod.game.model.entity.Npc
@@ -34,6 +35,9 @@ import gg.rsmod.plugins.content.mechanics.combatresponse.Vengeance
  */
 
 val TOUR_SPOT = Tile(3222, 3218, 0)
+
+/** Grand Exchange home: never dangerous (owner rule), far enough for a real region change. */
+val SAFE_AWAY = Tile(3165, 3487, 0)
 
 fun shot(
     player: Player,
@@ -112,11 +116,15 @@ fun startTour(
             world.spawn(npc)
             giant = npc
             wait(1)
+            // The giant becomes the admin's opponent without a real fight: a boosted admin kills a hill giant in one or two hits,
+            // which ended the opponent step early and left its loot behind (tour 2026-09-29). Real attacks, damage, heals and
+            // target switches are proven by `conform hud`; here only the picture matters.
+            player.facePawn(npc)
+            player.attr[COMBAT_TARGET_FOCUS_ATTR] = java.lang.ref.WeakReference(npc)
             npc.setCurrentLifepoints(npc.getMaximumLifepoints() * 2 / 3)
-            player.attack(npc)
-            // Kept alive for the whole tour (no kill, no loot left behind): its life points are topped up every tick below.
             fun keepAlive() {
                 if (npc.getCurrentLifepoints() < npc.getMaximumLifepoints() / 3) npc.setCurrentLifepoints(npc.getMaximumLifepoints() * 2 / 3)
+                player.attr[COMBAT_TARGET_FOCUS_ATTR] = java.lang.ref.WeakReference(npc)
             }
             repeat(4) {
                 keepAlive()
@@ -162,6 +170,12 @@ fun startTour(
                 wait(1)
             }
             shot(player, "hud_5b_plugins_panel")
+            ClientHud.send(player, "open|ground")
+            repeat(2) {
+                keepAlive()
+                wait(1)
+            }
+            shot(player, "hud_5b2_ground_items_settings")
             ClientHud.send(player, "close")
             ClientHud.send(player, "cfg|0011111|20000,100000,1000000,10000000|ffffff,66b2ff,99ff99,ff9600,ff66b2,aa00ff")
             repeat(2) {
@@ -183,14 +197,15 @@ fun startTour(
                 wait(1)
             }
 
-            // 7. Combat stops and the admin teleports away: no opponent panel, no labels of the tour spot.
+            // 7. Combat stops and the admin teleports away (to the Grand Exchange home, which is never dangerous - a Deadman
+            //    player must not be put into a dangerous zone by a test): no opponent panel, no labels of the tour spot.
             Combat.reset(player)
             player.resetInteractions()
             npc.resetInteractions()
             Combat.reset(npc)
             world.remove(npc)
             player.timers.remove(FROZEN_TIMER)
-            player.moveTo(TOUR_SPOT.transform(0, 60))
+            player.moveTo(SAFE_AWAY)
             wait(8)
             shot(player, "hud_7_teleported_away")
             wait(2)

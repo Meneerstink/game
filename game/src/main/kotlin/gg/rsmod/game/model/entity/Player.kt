@@ -607,7 +607,10 @@ abstract class Player(
         try {
             // RSPS information overlays (ClientHud): synced last, so the client gets this cycle's final state - after the
             // queues, timers, hits, npc damage and deaths of the cycle.
+            val started = System.nanoTime()
+            gg.rsmod.game.model.hud.ClientHud.flushGround(this)
             gg.rsmod.game.model.hud.ClientHud.tick?.invoke(this)
+            gg.rsmod.game.model.hud.ClientHud.account(world, System.nanoTime() - started)
         } catch (e: Exception) {
             // The overlays are information only: a failing sync must never cost the player this cycle's packets.
             gg.rsmod.game.model.Trace.crash("hud sync for $username", e)

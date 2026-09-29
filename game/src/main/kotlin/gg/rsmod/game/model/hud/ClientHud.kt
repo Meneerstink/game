@@ -2,6 +2,7 @@ package gg.rsmod.game.model.hud
 
 import gg.rsmod.game.model.Trace
 import gg.rsmod.game.model.World
+import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.entity.GroundItem
 import gg.rsmod.game.model.entity.Player
 
@@ -80,9 +81,101 @@ object ClientHud {
             soonest = minOf(soonest, remaining)
         }
         val ticks = if (!any) -2 else if (soonest == Int.MAX_VALUE) -1 else soonest
-        val value = if (any) itemValue(player, itemId) else 0
+        val value = if (any) cachedValue(world, player, itemId) else 0
         return "$level,$x,$z,$itemId,$ticks,$value"
     }
+
+    // ---- 100-player load (owner 2026-09-29: "er gaan 100 players deze plugins gebruiken") -------------------------------
+
+    /** Item values of this cycle: one price lookup per item id per cycle, not one per item per viewer. */
+    private val valueCache = HashMap<Int, Int>()
+    private var valueCycle = -1
+
+    private fun cachedValue(
+        world: World,
+        player: Player,
+        itemId: Int,
+    ): Int {
+        if (valueCycle != world.currentCycle) {
+            valueCache.clear()
+            valueCycle = world.currentCycle
+        }
+        return valueCache.getOrPut(itemId) { itemValue(player, itemId) }
+    }
+
+    /** Ground entries waiting for this player's end-of-cycle flush, one per tile + item id (the newest wins). */
+    private val PENDING = AttributeKey<LinkedHashMap<String, String>>()
+
+    /**
+     * Queues ground entries for [player]. They go out in [flushGround] at the end of the cycle (Player.postCycle), after
+     * every obj packet of the cycle, as few packets as fit: a 28-item death pile seen by 100 players is 100 x 5 packets
+     * instead of 100 x 28, and a tile that changes several times in one cycle is sent once.
+     */
+    fun queueGround(
+        player: Player,
+        entries: Collection<String>,
+    ) {
+        if (entries.isEmpty()) return
+        val pending = player.attr[PENDING] ?: LinkedHashMap<String, String>().also { player.attr[PENDING] = it }
+        for (entry in entries) {
+            // Key = level,x,z,id (the first four fields).
+            var commas = 0
+            var end = entry.length
+            for (i in entry.indices) {
+                if (entry[i] == ',' && ++commas == 4) {
+                    end = i
+                    break
+                }
+            }
+            val key = entry.substring(0, end)
+            pending.remove(key)
+            pending[key] = entry
+        }
+    }
+
+    fun flushGround(player: Player) {
+        val pending = player.attr[PENDING] ?: return
+        if (pending.isEmpty()) return
+        sendGround(player, pending.values.toList())
+        pending.clear()
+    }
+
+    /** Work of the sync this cycle, for the load check and the TICK trace. */
+    @JvmStatic
+    var cycleNanos = 0L
+    @JvmStatic
+    var cyclePlayers = 0
+    private var statsCycle = -1
+
+    /** A cycle whose overlay sync took longer than this is traced as a PROBLEM (the whole tick budget is 600 ms). */
+    const val SLOW_CYCLE_NANOS = 20_000_000L
+
+    /** Called by Player.postCycle around the overlay work of one player. */
+    fun account(
+        world: World,
+        nanos: Long,
+    ) {
+        if (statsCycle != world.currentCycle) {
+            if (statsCycle >= 0 && cycleNanos > SLOW_CYCLE_NANOS) {
+                val ms = cycleNanos / 1_000_000.0
+                val players = cyclePlayers
+                Trace.problem(Trace.Cat.TICK) { "hud overlay sync took ${"%.1f".format(ms)} ms for $players players in one cycle" }
+            }
+            lastCycleNanos = cycleNanos
+            lastCyclePlayers = cyclePlayers
+            cycleNanos = 0L
+            cyclePlayers = 0
+            statsCycle = world.currentCycle
+        }
+        cycleNanos += nanos
+        cyclePlayers++
+    }
+
+    /** The previous cycle's totals (read by `conform hud load`). */
+    @JvmStatic
+    var lastCycleNanos = 0L
+    @JvmStatic
+    var lastCyclePlayers = 0
 
     /** Sends [entries] as few `gi|` payloads as fit the packet. */
     fun sendGround(

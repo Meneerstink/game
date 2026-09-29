@@ -53,6 +53,68 @@ on_command("plugins") {
     ClientHud.send(player, "open")
 }
 
+/**
+ * `hud set <switch> on|off`, `hud edit tier <name>` / `hud edit colour <name>` / `hud edit hideunder` / `hud edit highlight`
+ * / `hud edit hide` (these open the game's own input box), `hud remove highlight|hide <name>`, `hud clear highlight|hide`,
+ * `hud resetsettings`. Returns false for anything else (the typed commands below).
+ */
+fun panelCommand(
+    player: gg.rsmod.game.model.entity.Player,
+    args: List<String>,
+): Boolean {
+    val list = args.getOrNull(1)
+    when (args[0]) {
+        "set" -> {
+            val name = args.getOrNull(1) ?: return true
+            if (name in ClientHudConfig.SWITCHES && args.getOrNull(2) in setOf("on", "off")) ClientHudConfig.setFlag(player, name, args[2] == "on")
+        }
+        "remove" -> if (list == "highlight" || list == "hide") ClientHudConfig.remove(player, list == "hide", args.drop(2).joinToString(" "))
+        "clear" -> if (list == "highlight" || list == "hide") ClientHudConfig.clear(player, list == "hide")
+        "resetsettings" -> ClientHudConfig.reset(player)
+        "edit" -> {
+            val target = args.getOrNull(2)
+            player.queue {
+                when (list) {
+                    "tier" -> {
+                        val index = ClientHudConfig.TIER_NAMES.indexOf(target)
+                        if (index >= 0) {
+                            val value = inputInt("${target!!.replaceFirstChar { it.uppercase() }} value - stacks worth at least this many gp:")
+                            if (value >= 0) ClientHudConfig.setTier(player, index, value.toLong())
+                        }
+                    }
+                    "hideunder" -> {
+                        val value = inputInt("Hide ground items worth less than (gp, 0 = show all):")
+                        if (value >= 0) ClientHudConfig.setHideUnder(player, value.toLong())
+                    }
+                    "colour" -> {
+                        val index = ClientHudConfig.COLOUR_NAMES.indexOf(target)
+                        if (index >= 0) {
+                            val text = inputString("${target!!.replaceFirstChar { it.uppercase() }} colour as rrggbb (e.g. ff9600):").trim().removePrefix("#")
+                            val rgb = text.takeIf { it.length == 6 }?.toIntOrNull(16)
+                            if (rgb != null) ClientHudConfig.setColour(player, index, rgb) else if (text.isNotEmpty()) player.message("'$text' is not a colour: use six hex digits, e.g. ff9600.")
+                        }
+                    }
+                    "highlight", "hide" -> {
+                        val hidden = list == "hide"
+                        val name = inputString(if (hidden) "Item to hide (* matches anything, e.g. *bones):" else "Item to highlight (* matches anything, e.g. dragon*):")
+                        val entry = ClientHudConfig.normalise(name)
+                        if (entry.isNotEmpty() && entry !in ClientHudConfig.list(player, hidden)) {
+                            if (ClientHudConfig.listSize(player, hidden) >= ClientHudConfig.MAX_LIST) {
+                                player.message("That list is full (${ClientHudConfig.MAX_LIST} entries).")
+                            } else {
+                                ClientHudConfig.toggle(player, hidden, entry)
+                            }
+                        }
+                    }
+                }
+                ClientHudConfig.push(player)
+            }
+        }
+        else -> return false
+    }
+    return true
+}
+
 on_command("hud") {
     val args = player.getCommandArgs()
     if (args.isEmpty()) {
@@ -61,6 +123,11 @@ on_command("hud") {
     }
     if (args[0].equals("status", ignoreCase = true) || args[0].equals("help", ignoreCase = true)) {
         status(player)
+        return@on_command
+    }
+    // The 78 Plugins panel's own clicks (quiet: the panel shows the result, nothing goes to chat).
+    if (panelCommand(player, args.map { it.lowercase() })) {
+        ClientHudConfig.push(player)
         return@on_command
     }
     val what = args[0].lowercase()

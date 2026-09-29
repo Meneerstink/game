@@ -296,7 +296,7 @@ class Chunk(
             client.write(UpdateZonePartialFollowsMessage(local.x shr 3, local.z shr 3, update.entity.tile.height))
             client.write(update.toMessage())
             // Ground Items overlay: despawn time and value of this tile's stack, right after the obj add/del/count it belongs to.
-            (update.entity as? GroundItem)?.let { ClientHud.sendGround(client, listOf(groundEntry(world, client, it.tile, it.item))) }
+            (update.entity as? GroundItem)?.let { ClientHud.queueGround(client, listOf(groundEntry(world, client, it.tile, it.item))) }
         }
     }
 
@@ -340,7 +340,7 @@ class Chunk(
                 val item = it.entity as? GroundItem ?: return@forEach
                 if (canBeViewed(p, item)) ground += groundEntry(p.world, p, item.tile, item.item)
             }
-            if (ground.isNotEmpty()) ClientHud.sendGround(p, ground.toList())
+            ClientHud.queueGround(p, ground)
         }
     }
 

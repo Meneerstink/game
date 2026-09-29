@@ -17,10 +17,19 @@ object ClientHudConfig {
     private val HIDDEN = AttributeKey<String>(persistenceKey = "hud_hidden")
     private val TIERS = AttributeKey<String>(persistenceKey = "hud_tiers")
     private val COLOURS = AttributeKey<String>(persistenceKey = "hud_colours")
+    private val HIDE_UNDER = AttributeKey<String>(persistenceKey = "hud_hide_under")
 
-    /** On/off switches, in client order. */
-    val SWITCHES = listOf("boosts", "boostsall", "opponent", "grounditems", "despawn", "value", "timers")
-    private val DEFAULT_FLAGS = mapOf("boosts" to true, "boostsall" to false, "opponent" to true, "grounditems" to true, "despawn" to true, "value" to true, "timers" to true)
+    /**
+     * On/off switches, in client order (RspsHudConfig reads them by position): the four plugins and their settings -
+     * Boosts: all five stats, the next-change timers; Opponent: exact npc life points; Ground Items: despawn timers, values;
+     * Timers & Buffs: each of the four lines.
+     */
+    val SWITCHES =
+        listOf(
+            "boosts", "boostsall", "opponent", "grounditems", "despawn", "value", "timers",
+            "boosttimers", "oppexact", "tveng", "tvengcd", "tteleblock", "tfrozen",
+        )
+    private val DEFAULT_FLAGS = SWITCHES.associateWith { it != "boostsall" }
 
     val TIER_NAMES = listOf("low", "medium", "high", "insane")
     private val DEFAULT_TIERS = listOf(20_000L, 100_000L, 1_000_000L, 10_000_000L)
@@ -52,6 +61,16 @@ object ClientHudConfig {
         val map = flags(player).toMutableMap()
         map[name] = on
         player.attr[FLAGS] = map.entries.joinToString(",") { "${it.key}=${if (it.value) 1 else 0}" }
+    }
+
+    /** Ground Items: stacks worth less than this are not labelled (0 = every stack; highlighted items always show). */
+    fun hideUnder(player: Player): Long = player.attr[HIDE_UNDER]?.toLongOrNull() ?: 0L
+
+    fun setHideUnder(
+        player: Player,
+        value: Long,
+    ) {
+        player.attr[HIDE_UNDER] = value.toString()
     }
 
     fun tiers(player: Player): List<Long> =
@@ -104,6 +123,18 @@ object ClientHudConfig {
         return on
     }
 
+    /** Removes [name] from the list; returns true when it was there. */
+    fun remove(
+        player: Player,
+        hidden: Boolean,
+        name: String,
+    ): Boolean {
+        val list = list(player, hidden).toMutableList()
+        val removed = list.remove(normalise(name))
+        player.attr[if (hidden) HIDDEN else HIGHLIGHT] = list.joinToString(",")
+        return removed
+    }
+
     fun clear(
         player: Player,
         hidden: Boolean,
@@ -112,7 +143,7 @@ object ClientHudConfig {
     }
 
     fun reset(player: Player) {
-        listOf(FLAGS, HIGHLIGHT, HIDDEN, TIERS, COLOURS).forEach { player.attr.remove(it) }
+        listOf(FLAGS, HIGHLIGHT, HIDDEN, TIERS, COLOURS, HIDE_UNDER).forEach { player.attr.remove(it) }
     }
 
     /** Lower case, commas (the list separator) and ';' removed; '*' stays as a wildcard. */
@@ -126,7 +157,7 @@ object ClientHudConfig {
     /** Pushes everything to the client: switches, tiers, colours, then both lists (chunked to the packet size). */
     fun push(player: Player) {
         val switches = SWITCHES.joinToString("") { if (flag(player, it)) "1" else "0" }
-        ClientHud.send(player, "cfg|$switches|${tiers(player).joinToString(",")}|${colours(player).joinToString(",") { Integer.toHexString(it) }}")
+        ClientHud.send(player, "cfg|$switches|${tiers(player).joinToString(",")}|${colours(player).joinToString(",") { Integer.toHexString(it) }}|${hideUnder(player)}")
         pushList(player, "hl", list(player, false))
         pushList(player, "hide", list(player, true))
     }

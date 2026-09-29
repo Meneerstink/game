@@ -22,6 +22,7 @@ import gg.rsmod.plugins.content.cmd.conformance.Conformance.Verdict
 import gg.rsmod.plugins.content.combat.Combat
 import gg.rsmod.plugins.content.inter.pricecheck.PriceChecker
 import gg.rsmod.plugins.content.mechanics.combatresponse.Vengeance
+import gg.rsmod.plugins.content.mechanics.hud.ClientHudConfig
 import gg.rsmod.plugins.content.mechanics.hud.ClientHudSync
 
 /**
@@ -44,6 +45,13 @@ object HudSuite : Conformance.Suite {
     /** The sync runs at the end of every cycle, so the client's countdowns must match the server exactly. */
     private const val JITTER = 0
 
+    /** Payloads / characters the observer saw (all players), for the load scenario. */
+    @Volatile
+    private var sentPayloads = 0L
+
+    @Volatile
+    private var sentChars = 0L
+
     /** Client model of one bot, decoding payloads like the client does. */
     private class Model {
         var vengeance = 0
@@ -55,6 +63,9 @@ object HudSuite : Conformance.Suite {
         var restoreEnd = -1
         var opponent = "opp|none"
         var configs = 0
+        var lastConfig = ""
+        var opened = 0
+        val lists = HashMap<String, MutableList<String>>()
         val ground = HashMap<String, IntArray>()
         val groundReceived = HashMap<String, Int>()
         val groundRemovedAt = HashMap<String, Int>()
@@ -78,7 +89,17 @@ object HudSuite : Conformance.Suite {
                     restoreEnd = end(f[2])
                 }
                 "opp" -> opponent = payload
-                "cfg" -> configs++
+                "cfg" -> {
+                    configs++
+                    lastConfig = payload
+                }
+                "open" -> opened++
+                "hl", "hide" ->
+                    if (f[1] == "clear") {
+                        lists[f[0]] = ArrayList()
+                    } else if (f[1] == "add") {
+                        lists.getOrPut(f[0]) { ArrayList() }.addAll(f[2].split(','))
+                    }
                 "gi" ->
                     payload.substring(3).split(';').forEach { entry ->
                         val e = entry.split(',')
@@ -112,7 +133,11 @@ object HudSuite : Conformance.Suite {
         args: List<String>,
     ) {
         val models = HashMap<Player, Model>()
-        ClientHud.observer = { p, payload -> synchronized(models) { models.getOrPut(p) { Model() }.apply(payload, run.world.currentCycle) } }
+        ClientHud.observer = { p, payload ->
+            synchronized(models) { models.getOrPut(p) { Model() }.apply(payload, run.world.currentCycle) }
+            sentPayloads++
+            sentChars += payload.length + ClientHud.PREFIX.length
+        }
         try {
             val arena = SummoningSuite.arenaFor(run, run.origin.transform(6, 0))
             run.note("arena ${arena.x},${arena.z},${arena.height}")
@@ -160,6 +185,8 @@ object HudSuite : Conformance.Suite {
             scenario("ground items") { ground(run, a, b, ma, mb, arena) }
             scenario("death") { death(run, a, ma) }
             scenario("tour restores") { tourRestores(run, a, ma, arena) }
+            scenario("settings panel") { settingsPanel(run, a, ma) }
+            scenario("load 100 players") { load(run, arena, models) }
             run.notTested("hud client", "drawing, projection, colours, hidden/highlight matching", "client side - LIVE-AV in the client")
         } finally {
             ClientHud.observer = null
@@ -554,7 +581,7 @@ object HudSuite : Conformance.Suite {
         wait(2)
         run.recording.of("U1", "msg").filter { it.cycle >= shotsFrom && it.text.contains("__RSPS_SHOT__:hud_") }.forEach { shots += it.text.substringAfter("__RSPS_SHOT__:").substringBefore(")") }
         run.expectTrue(e, "started", reply.startsWith("HUD tour started"), reply)
-        run.expectTrue(e, "ten screenshots requested", shots.size == 10, shots.joinToString(" "))
+        run.expectTrue(e, "eleven screenshots requested", shots.size == 11, shots.joinToString(" "))
         run.expectTrue(e, "position back", a.tile.sameAs(tile), "at ${a.tile}, was $tile")
         run.expectTrue(e, "levels back", a.skills.getCurrentLevel(Skills.ATTACK) == 95 && a.skills.getCurrentLevel(Skills.DEFENCE) == 99, "attack ${a.skills.getCurrentLevel(Skills.ATTACK)} defence ${a.skills.getCurrentLevel(Skills.DEFENCE)}")
         run.expectTrue(e, "life points back", a.getCurrentLifepoints() == life, "${a.getCurrentLifepoints()} was $life")
@@ -571,6 +598,267 @@ object HudSuite : Conformance.Suite {
         run.expectTrue(e, "ground items removed", left.isEmpty(), left.joinToString(" ").ifEmpty { "none left" })
         a.timers.remove(TELEBLOCK_TIMER)
         a.skills.setCurrentLevel(Skills.ATTACK, 99)
+    }
+
+    /**
+     * The 78 Plugins panel's server side: every click arrives as a quiet `hud ...` command that must be saved with the
+     * account and pushed back; values and list entries go through the game's own input box (answered here with the same
+     * resume packets the client sends).
+     */
+    private suspend fun QueueTask.settingsPanel(
+        run: Conformance.Run,
+        a: Client,
+        m: Model,
+    ) {
+        val e = "hud settings"
+        fun hud(vararg args: String) = run.world.plugins.executeCommand(a, "hud", arrayOf(*args))
+        fun flags() = m.lastConfig.split('|').getOrNull(1) ?: ""
+        val index = ClientHudConfig.SWITCHES
+        hud("resetsettings")
+        wait(1)
+        val opens = m.opened
+        run.world.plugins.executeCommand(a, "hud", null)
+        run.world.plugins.executeCommand(a, "plugins", null)
+        wait(1)
+        run.expectTrue(e, "hud / plugins open the panel", m.opened == opens + 2, "open payloads ${m.opened - opens}")
+
+        for (name in listOf("boosts", "tteleblock", "oppexact", "boosttimers")) {
+            hud("set", name, "off")
+            wait(1)
+            val shown = flags().getOrNull(index.indexOf(name))
+            run.expectTrue(e, "switch $name off: saved and pushed", !ClientHudConfig.flag(a, name) && shown == '0', "saved ${ClientHudConfig.flag(a, name)} pushed $shown")
+            hud("set", name, "on")
+            wait(1)
+            run.expectTrue(e, "switch $name on again", ClientHudConfig.flag(a, name) && flags().getOrNull(index.indexOf(name)) == '1', "pushed ${flags()}")
+        }
+
+        // Values through the input box.
+        hud("edit", "tier", "low")
+        wait(1)
+        Bots.inject(a, gg.rsmod.game.message.impl.ResumePCountDialogMessage(5000))
+        wait(2)
+        run.expectTrue(e, "low value typed in the input box", ClientHudConfig.tiers(a)[0] == 5000L && m.lastConfig.split('|')[2].startsWith("5000,"), "tiers ${ClientHudConfig.tiers(a)} pushed ${m.lastConfig}")
+        hud("edit", "hideunder")
+        wait(1)
+        Bots.inject(a, gg.rsmod.game.message.impl.ResumePCountDialogMessage(2500))
+        wait(2)
+        run.expectTrue(e, "hide-under typed in the input box", ClientHudConfig.hideUnder(a) == 2500L && m.lastConfig.endsWith("|2500"), "pushed ${m.lastConfig}")
+        hud("edit", "colour", "high")
+        wait(1)
+        Bots.inject(a, gg.rsmod.game.message.impl.ResumePStringDialogMessage("#00ff00"))
+        wait(2)
+        run.expectTrue(e, "high colour typed in the input box", ClientHudConfig.colours(a)[3] == 0x00FF00, "colours ${ClientHudConfig.colours(a).map { Integer.toHexString(it) }}")
+        hud("edit", "colour", "low")
+        wait(1)
+        Bots.inject(a, gg.rsmod.game.message.impl.ResumePStringDialogMessage("banana"))
+        wait(2)
+        run.expectTrue(e, "a wrong colour changes nothing", ClientHudConfig.colours(a)[1] == 0x66B2FF, "low ${Integer.toHexString(ClientHudConfig.colours(a)[1])}")
+
+        // Lists: add through the input box, remove one, clear.
+        hud("edit", "highlight")
+        wait(1)
+        Bots.inject(a, gg.rsmod.game.message.impl.ResumePStringDialogMessage("Dragon*"))
+        wait(2)
+        hud("edit", "highlight")
+        wait(1)
+        Bots.inject(a, gg.rsmod.game.message.impl.ResumePStringDialogMessage("Shark"))
+        wait(2)
+        run.expectTrue(e, "two highlighted items added", m.lists["hl"] == listOf("dragon*", "shark"), "pushed ${m.lists["hl"]}")
+        hud("remove", "highlight", "dragon*")
+        wait(1)
+        run.expectTrue(e, "x removes one", m.lists["hl"] == listOf("shark") && ClientHudConfig.list(a, false) == listOf("shark"), "pushed ${m.lists["hl"]}")
+        hud("edit", "hide")
+        wait(1)
+        Bots.inject(a, gg.rsmod.game.message.impl.ResumePStringDialogMessage("shark"))
+        wait(2)
+        run.expectTrue(e, "an item is highlighted or hidden, never both", m.lists["hide"] == listOf("shark") && m.lists["hl"].isNullOrEmpty(), "hl ${m.lists["hl"]} hide ${m.lists["hide"]}")
+        hud("clear", "hide")
+        wait(1)
+        run.expectTrue(e, "Clear empties the list", m.lists["hide"].isNullOrEmpty() && ClientHudConfig.list(a, true).isEmpty(), "pushed ${m.lists["hide"]}")
+
+        hud("resetsettings")
+        wait(1)
+        run.expectTrue(e, "Reset all settings", ClientHudConfig.tiers(a)[0] == 20_000L && ClientHudConfig.hideUnder(a) == 0L && ClientHudConfig.colours(a)[3] == 0xFF9600,
+            "tiers ${ClientHudConfig.tiers(a)} under ${ClientHudConfig.hideUnder(a)}")
+    }
+
+    /**
+     * Owner 2026-09-29: "er gaan 100 players deze plugins gebruiken ... zeker met summoning". 100 bots, each with a real
+     * familiar (summoned through the pouch's own "Summon" option), fighting 50 hill giants two by two, with a Vengeance,
+     * a Teleblock, a freeze and boosted / drained stats, among 200 ground items and a 28-item death pile. Measured every
+     * tick: the sync's own server time (Player.postCycle), payloads and characters per player; checked at the end for
+     * every bot: timers, opponent (never its own familiar) and every ground stack in view.
+     */
+    private suspend fun QueueTask.load(
+        run: Conformance.Run,
+        arena: Tile,
+        models: HashMap<Player, Model>,
+    ) {
+        val e = "hud load 100"
+        val world = run.world
+        val count = 100
+        val centre = openField(run, arena.transform(0, 30), 13) ?: arena.transform(0, 30)
+        run.note("load field centre ${centre.x},${centre.z}")
+        val bots = ArrayList<Client>()
+        for (i in 0 until count) bots += run.bot(centre.transform(-10 + (i % 10) * 2, -10 + (i / 10) * 2), "L%02d".format(i))
+        wait(3)
+
+        // Real familiars: a pouch and its "Summon" option.
+        val pouches = listOf(Items.SPIRIT_WOLF_POUCH, Items.WAR_TORTOISE_POUCH, Items.STEEL_TITAN_POUCH, Items.PACK_YAK_POUCH)
+        bots.forEachIndexed { i, b ->
+            b.inventory.removeAll()
+            b.inventory.add(pouches[i % pouches.size], 1)
+            Bots.itemOption(b, b.inventory.getItemIndex(pouches[i % pouches.size], false), "Summon")
+        }
+        wait(4)
+        val familiars = bots.count { it.attr[gg.rsmod.plugins.content.skills.summoning.FAMILIAR_ATTR]?.get() != null }
+        run.expectTrue(e, "every bot has a familiar out", familiars == count, "$familiars / $count")
+
+        // Two bots per hill giant, with fists at strength 1 so the giants live through the measurement.
+        val giants = ArrayList<Npc>()
+        for (i in 0 until count / 2) giants += run.npc(gg.rsmod.plugins.api.cfg.Npcs.HILL_GIANT, centre.transform(-10 + (i % 10) * 2, -9 + (i / 10) * 4), "LG$i")
+        wait(1)
+        bots.forEachIndexed { i, b ->
+            b.skills.setCurrentLevel(Skills.STRENGTH, 1)
+            b.skills.setCurrentLevel(Skills.ATTACK, 118)
+            b.skills.setCurrentLevel(Skills.DEFENCE, 80)
+            b.timers.remove(VENGEANCE_COOLDOWN)
+            Vengeance.activate(b)
+            b.timers[TELEBLOCK_TIMER] = 500
+            b.timers[FROZEN_TIMER] = 60
+            b.attack(giants[i / 2])
+            // Flower poker / escape seeds: planted while frozen they move the planter one tile (flower_seeds.plugin.kts).
+            b.inventory.add(Items.MITHRIL_SEEDS, 2)
+            b.inventory.add(Items.ADAMANT_SEEDS, 2)
+        }
+        var planted = 0
+        fun keepAlive() = giants.forEach { if (world.npcs.contains(it)) it.setCurrentLifepoints(it.getMaximumLifepoints()) }
+
+        // 200 ground items spread over the area, stackable and not.
+        val items = ArrayList<GroundItem>()
+        val kinds = listOf(Items.ABYSSAL_WHIP, Items.COINS_995, Items.SHARK, Items.DRAGON_BONES, Items.DRAGONFIRE_SHIELD)
+        for (i in 0 until 200) {
+            val item = GroundItem(kinds[i % kinds.size], if (kinds[i % kinds.size] == Items.COINS_995) 1000 + i else 1, centre.transform(-12 + (i % 25), -12 + (i / 25) * 3))
+            world.spawn(item)
+            items += item
+        }
+
+        val perCycleNanos = ArrayList<Long>()
+        val perCycleChars = ArrayList<Long>()
+        var pileCycleNanos = 0L
+        var pilePayloads = 0L
+        val pileTile = centre.transform(1, 1)
+        var charsBefore = sentChars
+        repeat(60) { tick ->
+            keepAlive()
+            if (tick in 10..13) {
+                // Every bot plants a seed (real "Plant" option), mithril and adamant in turn, one per tick.
+                val seed = if (tick % 2 == 0) Items.MITHRIL_SEEDS else Items.ADAMANT_SEEDS
+                bots.forEach { b -> Bots.itemOption(b, b.inventory.getItemIndex(seed, false), "Plant") }
+            }
+            if (tick == 30) {
+                // A death pile: 28 different items land on one tile in one cycle.
+                val payloadsBefore = sentPayloads
+                val pile = listOf(Items.ABYSSAL_WHIP, Items.DRAGONFIRE_SHIELD, Items.SHARK, Items.DRAGON_BONES, Items.COINS_995, Items.THIRDAGE_PLATEBODY, Items.DRAGON_DAGGER_P_5698)
+                for (j in 0 until 28) {
+                    val item = GroundItem(pile[j % pile.size], 1, pileTile)
+                    world.spawn(item)
+                    items += item
+                }
+                wait(1)
+                pileCycleNanos = ClientHud.cycleNanos
+                pilePayloads = sentPayloads - payloadsBefore
+                charsBefore = sentChars
+                return@repeat
+            }
+            wait(1)
+            // This suite runs at the start of a cycle: ClientHud's totals are the previous (complete) cycle's.
+            if (tick > 5 && tick != 31) {
+                perCycleNanos += ClientHud.cycleNanos
+                perCycleChars += sentChars - charsBefore
+            }
+            charsBefore = sentChars
+        }
+        val avgMs = perCycleNanos.average() / 1_000_000.0
+        val maxMs = (perCycleNanos.maxOrNull() ?: 0L) / 1_000_000.0
+        val charsPerPlayer = perCycleChars.average() / count
+        // The plant packets are handled on the next cycle: count what left the inventories.
+        planted = bots.sumOf { 4 - it.inventory.getItemCount(Items.MITHRIL_SEEDS) - it.inventory.getItemCount(Items.ADAMANT_SEEDS) }
+        run.expectTrue(e, "seeds planted during the fight (while frozen)", planted > count, "$planted seeds planted by $count frozen bots", "> $count")
+        run.note("load: players=${world.players.count()} npcs=${world.npcs.count()} sync avg %.3f ms max %.3f ms per cycle, %.1f chars/player/cycle, pile cycle %.3f ms %d payloads".format(
+            java.util.Locale.ENGLISH, avgMs, maxMs, charsPerPlayer, pileCycleNanos / 1_000_000.0, pilePayloads))
+        run.expectTrue(e, "sync time per cycle, 100 players fighting with familiars", avgMs < 5.0 && maxMs < ClientHud.SLOW_CYCLE_NANOS / 1_000_000.0,
+            "avg %.3f ms, max %.3f ms".format(java.util.Locale.ENGLISH, avgMs, maxMs), "avg < 5 ms, max < 20 ms")
+        run.expectTrue(e, "steady traffic per player", charsPerPlayer < 120.0, "%.1f chars per player per cycle".format(java.util.Locale.ENGLISH, charsPerPlayer), "< 120 chars (a few small updates)")
+        run.expectTrue(e, "28-item death pile seen by 100 players", pilePayloads <= count * 8L && pileCycleNanos < ClientHud.SLOW_CYCLE_NANOS,
+            "$pilePayloads payloads, %.3f ms".format(java.util.Locale.ENGLISH, pileCycleNanos / 1_000_000.0), "<= 8 payloads per player, < 20 ms")
+
+        // Correctness for every bot.
+        var timerErrors = 0
+        var opponentErrors = 0
+        var ownFamiliar = 0
+        var groundErrors = 0
+        val now = world.currentCycle
+        val firstErrors = ArrayList<String>()
+        for (b in bots) {
+            val m = models[b] ?: Model()
+            for ((end, key) in listOf(m.cooldownEnd to VENGEANCE_COOLDOWN, m.teleblockEnd to TELEBLOCK_TIMER, m.frozenEnd to FROZEN_TIMER)) {
+                if (kotlin.math.abs(m.left(end, now - 1) - serverLeft(b, key)) > 1) {
+                    timerErrors++
+                    if (firstErrors.size < 5) firstErrors += "${b.username} ${key} shown ${m.left(end, now - 1)} server ${serverLeft(b, key)}"
+                }
+            }
+            if ((if (Vengeance.isActive(b)) 1 else 0) != m.vengeance) timerErrors++
+            val expected = ClientHudSync.opponentPayload(b)
+            if (m.opponent != expected) {
+                opponentErrors++
+                if (firstErrors.size < 5) firstErrors += "${b.username} opponent shown '${m.opponent}' server '$expected'"
+            }
+            val own = b.attr[gg.rsmod.plugins.content.skills.summoning.FAMILIAR_ATTR]?.get()
+            if (own != null && m.opponent.startsWith("opp|n|${own.index}|")) ownFamiliar++
+            for (item in items) {
+                if (!world.isSpawned(item) || !b.tile.isWithinRadius(item.tile, 14)) continue
+                val k = key(item.tile, item.item)
+                if (!m.ground.containsKey(k)) {
+                    groundErrors++
+                    if (firstErrors.size < 5) firstErrors += "${b.username} misses $k"
+                }
+            }
+        }
+        firstErrors.forEach { run.note("load: $it") }
+        run.expectTrue(e, "every bot's timers match the server", timerErrors == 0, "$timerErrors differences")
+        run.expectTrue(e, "every bot's opponent matches the server", opponentErrors == 0, "$opponentErrors differences")
+        run.expectTrue(e, "never the bot's own familiar as opponent", ownFamiliar == 0, "$ownFamiliar bots")
+        run.expectTrue(e, "every ground stack in view is labelled for every bot", groundErrors == 0, "$groundErrors missing")
+
+        items.forEach { if (world.isSpawned(it)) world.remove(it) }
+        giants.forEach { run.remove(it) }
+        bots.forEach { b ->
+            Combat.reset(b)
+            b.resetInteractions()
+            runCatching { gg.rsmod.plugins.content.skills.summoning.Familiar.dismiss(b) }
+        }
+        wait(2)
+    }
+
+    /** The nearest tile (rings of 8, up to 400 away) whose (2r+1)-square has no blocked tile: room for 100 bots to step. */
+    private fun openField(
+        run: Conformance.Run,
+        from: Tile,
+        r: Int,
+    ): Tile? {
+        val world = run.world
+        fun free(t: Tile) =
+            (-r..r).all { dx -> (-r..r).all { dz -> !runCatching { world.collision.isClipped(t.transform(dx, dz)) }.getOrDefault(true) } }
+        if (free(from)) return from
+        for (ring in 8..400 step 8) {
+            for (d in -ring..ring step 8) {
+                for (t in listOf(from.transform(d, -ring), from.transform(d, ring), from.transform(-ring, d), from.transform(ring, d))) {
+                    if (free(t)) return t
+                }
+            }
+        }
+        return null
     }
 
     private suspend fun QueueTask.death(
