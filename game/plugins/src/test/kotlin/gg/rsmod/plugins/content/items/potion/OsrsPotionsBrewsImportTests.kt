@@ -55,7 +55,9 @@ class OsrsPotionsBrewsImportTests {
         val plugin = File("src/main/kotlin/gg/rsmod/plugins/content/items/potion/brew_potions.plugin.kts").readText()
         assertTrue("on_timer(BrewPotions.MENAPHITE_TIMER)" in plugin && "on_timer(BrewPotions.PRAYER_REGEN_TIMER)" in plugin && "on_timer(BrewPotions.SURGE_COOLDOWN)" in plugin)
         assertTrue("val essence = 20 * doses" in plugin && "Skills.HERBLORE) < 91" in plugin)
-        assertEquals(listOf(6, 60, 4), listOf(BrewPotions.GOADING_INTERVAL, BrewPotions.GOADING_CYCLES, BrewPotions.GOADING_RADIUS), "6-tick cycle, 6 minutes, 9x9")
+        assertEquals(listOf(6, 100, 4), listOf(BrewPotions.GOADING_INTERVAL, BrewPotions.GOADING_CYCLES, BrewPotions.GOADING_RADIUS), "6-tick cycle, 6 minutes, 9x9")
+        assertEquals(600, BrewPotions.GOADING_INTERVAL * BrewPotions.GOADING_CYCLES, "a dose lasts 6 minutes = 600 ticks")
+        assertTrue(BrewPotions.SURGE_COOLDOWN.resetOnDeath, "dying removes the surge cooldown")
         listOf("npc.combatDef.slayerReq > player.skills.getMaxLevel(Skills.SLAYER)", "if (!multi) return@on_timer", "npc.getCombatTarget() != null", "world.collision.raycast(npc.tile, player.tile, projectile = true)")
             .forEach { assertTrue(it in plugin, it) }
         assertTrue("DivinePotions.TIMERS.values.forEach { p.timers.remove(it) }" in File("src/main/kotlin/gg/rsmod/plugins/content/items/potion/BrewPotions.kt").readText())

@@ -26,7 +26,7 @@ import gg.rsmod.plugins.content.inter.attack.AttackTab
  *   ticks); messages "You are still full of adrenaline. You'll be able to drink in [time remaining].", "You now feel capable of drinking
  *   another dose of surge potion." and "Drinking this would have no effect." (at 100 % energy).
  * - Goading potion: 9x9 area (radius 4), line of sight, 6-tick cycle "starting one tick after drinking", "Each dose ... will last for 6
- *   minutes" (600 ticks = 60 cycles; RuneLite: counter x 6 ticks). SOURCE_GAP/BLOCKED: the cancellation by cup of tea or teleport and its
+ *   minutes" (600 ticks = 100 cycles of 6 ticks; RuneLite: counter x 6 ticks - it was 60 cycles, 3.6 minutes, until 2026-10-01). SOURCE_GAP/BLOCKED: the cancellation by cup of tea or teleport and its
  *   expiry messages are not wired (no sourced message text); the effect simply runs out. Recipe BLOCKED (aldarium).
  * Every timed effect is one counter per player (a single varbit in OSRS): a new dose restarts it. SOURCE_GAP: whether the remedy's 16 % is
  * taken from the base or the current level (base used, as for every OSRS restore potion); the first remedy and regeneration tick lands one
@@ -50,10 +50,11 @@ object BrewPotions {
     val MENAPHITE_LEFT = AttributeKey<Int>()
     val PRAYER_REGEN_TIMER = TimerKey(resetOnDeath = true)
     val PRAYER_REGEN_LEFT = AttributeKey<Int>()
-    val SURGE_COOLDOWN = TimerKey()
+    // "The cooldown timer can be removed in the following situations: Dying (including in safe minigames ...)" (OSRS Wiki Surge potion).
+    val SURGE_COOLDOWN = TimerKey(resetOnDeath = true)
 
     const val GOADING_INTERVAL = 6
-    const val GOADING_CYCLES = 60
+    const val GOADING_CYCLES = 100
     const val GOADING_RADIUS = 4
     val GOADING_TIMER = TimerKey()
     val GOADING_LEFT = AttributeKey<Int>()
