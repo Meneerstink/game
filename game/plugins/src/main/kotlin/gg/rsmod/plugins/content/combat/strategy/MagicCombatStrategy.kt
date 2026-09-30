@@ -337,6 +337,8 @@ object MagicCombatStrategy : CombatStrategy {
                 pawnHit.hit.addAction { gg.rsmod.plugins.content.items.osrs.PoweredStaves.rollVenom(pawn, target) }
                 // Toxic staff of the dead: 25 % venom for spells cast while the charged staff is wielded.
                 pawnHit.hit.addAction { gg.rsmod.plugins.content.items.osrs.StaffOfTheDead.rollVenom(pawn, target) }
+                // Serpentine helm: a chance to envenom on every successful hit, whatever the style (SerpentineHelm).
+                pawnHit.hit.addAction { gg.rsmod.plugins.content.items.osrs.SerpentineHelm.rollVenom(pawn, target) }
             }
         } else {
             spell.impactGfx?.let { target.graphic(Graphic(85, 96, hitDelay * 30)) }

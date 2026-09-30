@@ -463,6 +463,8 @@ object RangedCombatStrategy : CombatStrategy {
             second.bolt?.let { bolt -> secondHit.hit.addAction { EnchantedBolts.afterHit(bolt, pawn, target, secondDamage) } }
             if (secondDamage > 0) addCombatXp(pawn, target, secondDamage)
         }
+        // Serpentine helm: a chance to envenom on every successful hit, whatever the style (SerpentineHelm).
+        if (pawn is Player && landHit) pawnHit.hit.addAction { gg.rsmod.plugins.content.items.osrs.SerpentineHelm.rollVenom(pawn, target) }
         // Eclipse moon armour set effect: a successful eclipse atlatl attack has a 20 % chance to start a burn (MoonSets, Burns).
         if (pawn is Player && landHit && gg.rsmod.plugins.content.items.osrs.MoonSets.eclipseBurnActive(pawn) &&
             world.randomDouble() < gg.rsmod.plugins.content.items.osrs.MoonSets.BURN_CHANCE

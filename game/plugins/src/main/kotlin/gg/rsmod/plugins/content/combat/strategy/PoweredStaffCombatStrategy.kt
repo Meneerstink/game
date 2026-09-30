@@ -126,6 +126,8 @@ object PoweredStaffCombatStrategy : CombatStrategy {
         if (landHit && staff.venomChance > 0.0) {
             pawnHit.hit.addAction { if (world.randomDouble() < staff.venomChance) target.venom() }
         }
+        // Serpentine helm: a chance to envenom on every successful hit, whatever the style (SerpentineHelm).
+        if (landHit) pawnHit.hit.addAction { gg.rsmod.plugins.content.items.osrs.SerpentineHelm.rollVenom(player, target) }
         if (damage > 0) addCombatXp(player, target, damage)
     }
 

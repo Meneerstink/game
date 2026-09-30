@@ -20307,4 +20307,10 @@ object Items {
     const val DEADMANS_SKULL = 23856
     const val ADAMANT_SEEDS = 23863
     // Auto-generated file using class gg.rsmod.game.service.game.DumpEntityIdService
+    const val NEITIZNOT_FACEGUARD = 23895
+    const val SERPENTINE_HELM_UNCHARGED = 23896
+    const val SERPENTINE_HELM = 23898
+    const val AMULET_OF_THE_DAMNED = 23901
+    const val SERPENTINE_VISAGE = 23936
+    const val BASILISK_JAW = 23938
 }

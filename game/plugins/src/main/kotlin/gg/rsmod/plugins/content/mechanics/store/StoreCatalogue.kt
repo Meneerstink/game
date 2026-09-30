@@ -236,6 +236,9 @@ object StoreCatalogue {
         listOf(Items.RING_OF_THE_GODS_I, Items.TYRANNICAL_RING_I, Items.TREASONOUS_RING_I)
             .forEach { list += itemEntry(m, it, 600, "Imbued items") }
         list += itemEntry(m, Items.RUNE_POUCH, 500, "Utility")
+        // Owner 2026-09-30: the OSRS Deadman Trinket of fairies (remote fairy ring / spirit tree travel, trinket_of_fairies.plugin.kts).
+        // PROVISIONAL price: OSRS only drops it in breaches, so there is no source price.
+        list += itemEntry(m, Items.TRINKET_OF_FAIRIES, 500, "Utility")
         list += itemEntry(m, Items.DIVINE_RUNE_POUCH, 1_000, "Utility")
         list += upgradeEntry(m, Items.DRAGON_DEFENDER, Items.DRAGON_DEFENDER_T, 400, "Defenders")
         list += upgradeEntry(m, Items.RUNE_DEFENDER, Items.RUNE_DEFENDER_T, 250, "Defenders")
