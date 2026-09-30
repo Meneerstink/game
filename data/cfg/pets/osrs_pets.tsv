@@ -1,0 +1,181 @@
+# pet	variant	osrs_item	osrs_npc_ids	osrs_follower_npc	anim  (OSRS Wiki "Pet" 71 pets; per version Infobox Item id + Infobox NPC ids, fetched 2026-09-30; osrs_follower_npc = the id with the OSRS follower flag (npc opcode 122), anim = classic/skeletal movement sequences, OsrsPetImportTool probe)
+Abyssal orphan	Abyssal orphan	13262	5883,5884	5884	classic
+Aggy	Aggy	34042	16317,16334	16317	classic
+Baby Mole	Baby Mole	12646	6635,6651	6635	classic
+Baby Mole	Baby Mole-rat	25613	10650,10651	10651	classic
+Baron	Baron	28250	12155,12159	12159	classic
+Bran	Bran	30622	10476,12593	12593	classic
+Bran	Ric	30624	12592,12595	12595	classic
+Beef	Beef	33124	15631,15633	15631	classic
+Butch	Butch	28248	12154,12158	12158	skeletal
+Callisto cub	Callisto cub	13178	497,5558	5558	skeletal
+Callisto cub	Callisto cub	27649	11982,11986	11986	classic
+Dom	Dom	31130	14785,14519	14785	skeletal
+Gull (pet)	Gull	31285	14931,15059	14931	skeletal
+Gull (pet)	Gulliver	31287	14932,15060	14932	skeletal
+Hellpuppy	Hellpuppy	13247	964,3099	3099	classic
+Huberte	Huberte	30152	14033,14045	14045	skeletal
+Ikkle Hydra	Ikkle Hydra	22746	8492,8517	8492	classic
+Ikkle Hydra	Ikkle Hydra	22748	8493,8518	8493	classic
+Ikkle Hydra	Ikkle Hydra	22750	8494,8519	8494	classic
+Ikkle Hydra	Ikkle Hydra	22752	8495,8520	8495	classic
+Jal-Nib-Rek	Jal-Nib-Rek	21291	7674,7675	7675	classic
+Jal-Nib-Rek	TzRek-Zuk	22319	8009,8011	8011	classic
+Kalphite Princess	Kalphite Princess	12647	6638,6654	6638	classic
+Kalphite Princess	Kalphite Princess	12654	6637,6653	6637	classic
+Lil' Zik	Lil' Zik	22473	8336,8337	8337	classic
+Lil' Zik	Lil' Maiden	25748	10761,10870	10870	classic
+Lil' Zik	Lil' Bloat	25749	10762,10871	10871	classic
+Lil' Zik	Lil' Nylo	25750	10763,10872	10872	classic
+Lil' Zik	Lil' Sot	25751	10764,10873	10873	classic
+Lil' Zik	Lil' Xarp	25752	10765,10874	10874	classic
+Lil'viathan	Lil'viathan	28252	12156,12160	12160	skeletal
+Little Nightmare	Little Nightmare	24491	9398,9399	9399	classic
+Little Nightmare	Little Parasite	25836	8183,8541	8541	classic
+Maggot marquess	Maggot marquess	33642	15740,16293	15740	skeletal
+Moxi	Moxi	30154	14034,14046	14046	skeletal
+Muphin	Muphin	27590	12005,12014	12014	skeletal
+Muphin	Muphin	27592	12006,12015	12015	skeletal
+Muphin	Muphin	27593	12007,12016	12016	skeletal
+Nexling	Nexling	26348	11276,11277	11277	classic
+Nid	Nid	29836	13681,13683	13683	classic
+Nid	Rax	29838	13682,13684	13684	classic
+Noon	Noon	21748	7891,7892	7892	classic
+Noon	Midnight	21750	7890,7893	7893	classic
+Olmlet	Olmlet	20851	7519,7520	7520	classic
+Olmlet	Puppadile	22376	8196,8201	8201	classic
+Olmlet	Tektiny	22378	8202,8197	8202	classic
+Olmlet	Enraged Tektiny	24656	9511,9513	9513	classic
+Olmlet	Vanguard	22380	8198,8203	8203	classic
+Olmlet	Vasa Minirio	22382	8204,8199	8204	classic
+Olmlet	Vespina	22384	8200,8205	8205	classic
+Olmlet	Flying Vespina	24658	9512,9514	9514	classic
+Pet chaos elemental	Pet chaos elemental	11995	2055,5907	2055	classic
+Pet Dagannoth Prime	Pet Dagannoth Prime	12644	6627,6629	6629	classic
+Pet Dagannoth Rex	Pet Dagannoth Rex	12645	6630,6641	6630	classic
+Pet Dagannoth Supreme	Pet Dagannoth Supreme	12643	6626,6628	6628	classic
+Pet dark core	Pet dark core	12816	318,388	318	classic
+Pet dark core	Pet Corporeal Critter	22318	8008,8010	8010	classic
+Pet General Graardor	Pet General Graardor	12650	6632,6644	6632	classic
+Pet K'ril Tsutsaroth	Pet K'ril Tsutsaroth	12652	6634,6647	6634	classic
+Pet Kraken	Pet Kraken	12655	6640,6656	6640	classic
+Pet Kree'arra	Pet Kree'arra	12649	6631,6643	6631	classic
+Pet Smoke Devil	Pet Smoke Devil	12648	6639,6655	6639	classic
+Pet Smoke Devil	Pet Smoke Devil	22663	8482,8483	8483	classic
+Pet Snakeling	Pet Snakeling	12921	2127,2130	2130	classic
+Pet Snakeling	Pet Snakeling	12939	2128,2131	2131	classic
+Pet Snakeling	Pet Snakeling	12940	2129,2132	2132	classic
+Pet Zilyana	Pet Zilyana	12651	6633,6646	6633	classic
+Phoenix	Phoenix	20693	7368,7370	7370	classic
+Phoenix	Phoenix	24484	3078,3082	3082	classic
+Phoenix	Phoenix	24483	3077,3081	3081	classic
+Phoenix	Phoenix	24486	3080,3084	3084	classic
+Phoenix	Phoenix	24485	3079,3083	3083	classic
+Prince Black Dragon	Prince Black Dragon	12653	6636,6652	6636	classic
+Scorpia's offspring	Scorpia's offspring	13181	5547,5561	5561	classic
+Scurry	Scurry	28801	7219,7616	7616	skeletal
+Skotos	Skotos	21273	425,7671	7671	classic
+Smolcano	Smolcano	23760	8731,8739	8739	classic
+Smol Heredit	Smol Heredit	28960	12767,12857	12857	skeletal
+Sraracha	Sraracha	23495	2143,2144	2144	classic
+Sraracha	Sraracha	25842	11157,11159	11159	classic
+Sraracha	Sraracha	25843	11158,11160	11160	classic
+Tiny tempor	Tiny tempor	25602	10562,10637	10637	classic
+Tumeken's guardian	Tumeken's guardian	27352	11652,11812	11812	skeletal
+Tumeken's guardian	Tumeken's damaged guardian	27386	11844,11850	11850	skeletal
+Tumeken's guardian	Elidinis' guardian	27354	11653,11813	11813	skeletal
+Tumeken's guardian	Elidinis' damaged guardian	27387	11845,11851	11851	skeletal
+Tumeken's guardian	Akkhito	27382	11840,11846	11846	skeletal
+Tumeken's guardian	Babi	27383	11841,11847	11847	skeletal
+Tumeken's guardian	Kephriti	27384	11842,11848	11848	skeletal
+Tumeken's guardian	Zebo	27385	11843,11849	11849	classic
+TzRek-Jad	TzRek-Jad	13225	5892,5893	5893	classic
+TzRek-Jad	JalRek-Jad	25519	10620,10625	10625	classic
+Venenatis spiderling	Venenatis spiderling	13177	495,5557	5557	classic
+Venenatis spiderling	Venenatis spiderling	27648	11981,11985	11985	classic
+Vet'ion Jr.	Vet'ion Jr.	13179	5536,5559	5559	skeletal
+Vet'ion Jr.	Vet'ion Jr.	13180	5537,5560	5560	skeletal
+Vet'ion Jr.	Vet'ion Jr.	27650	11983,11987	11987	classic
+Vet'ion Jr.	Vet'ion Jr.	27651	11984,11988	11988	classic
+Vorki	Vorki	21992	8025,8029	8029	classic
+Wisp	Wisp	28246	12153,12157	12157	skeletal
+Yami	Yami	30888	14203,14204	14204	skeletal
+Youngllef	Youngllef	23757	8729,8737	8737	classic
+Youngllef	Corrupted Youngllef	23759	8730,8738	8738	classic
+Baby chinchompa	Baby chinchompa	13324	6719,6757	6757	classic
+Baby chinchompa	Baby chinchompa	13323	6718,6756	6756	classic
+Baby chinchompa	Baby chinchompa	13325	6720,6758	6758	classic
+Baby chinchompa	Baby chinchompa	13326	6721,6759	6759	classic
+Beaver	Beaver	13322	12169,12181	12181	classic
+Beaver	Beaver	28229	12170,12182	12182	classic
+Beaver	Beaver	28230	12171,12183	12183	classic
+Beaver	Beaver	28235	12176,12188	12188	classic
+Beaver	Beaver	28231	12172,12184	12184	classic
+Beaver	Beaver	28236	12177,12189	12189	classic
+Beaver	Beaver	28237	12178,12190	12190	classic
+Beaver	Beaver	28232	12173,12185	12185	classic
+Beaver	Beaver	28233	12174,12186	12186	classic
+Beaver	Beaver	28234	12175,12187	12187	classic
+Beaver	Beaver	31279	14926,15054	14926	classic
+Beaver	Beaver	31280	14927,15055	14927	classic
+Beaver	Beaver	31281	14928,15056	14928	classic
+Beaver	Beaver	31282	14929,15057	14929	classic
+Giant Squirrel	Giant Squirrel	20659	7334,7351	7351	classic
+Giant Squirrel	Dark Squirrel	24701	9637,9638	9637	classic
+Giant Squirrel	Bone Squirrel	30151	14032,14044	14044	classic
+Heron	Heron	13320	6715,6722	6722	classic
+Heron	Great blue heron	25600	6817,10636	10636	classic
+Rift guardian	Rift guardian	20665	7337,7354	7354	classic
+Rift guardian	Rift guardian	20667	7338,7355	7355	classic
+Rift guardian	Rift guardian	20669	7339,7356	7356	classic
+Rift guardian	Rift guardian	20671	7340,7357	7357	classic
+Rift guardian	Rift guardian	20673	7341,7358	7358	classic
+Rift guardian	Rift guardian	20675	7342,7359	7359	classic
+Rift guardian	Rift guardian	20677	7343,7360	7360	classic
+Rift guardian	Rift guardian	20679	7344,7361	7361	classic
+Rift guardian	Rift guardian	20681	7345,7362	7362	classic
+Rift guardian	Rift guardian	20683	7346,7363	7363	classic
+Rift guardian	Rift guardian	20685	7347,7364	7364	classic
+Rift guardian	Rift guardian	20687	7348,7365	7365	classic
+Rift guardian	Rift guardian	20689	7349,7366	7366	classic
+Rift guardian	Rift guardian	20691	7350,7367	7367	classic
+Rift guardian	Rift guardian	21990	8024,8028	8028	classic
+Rift guardian	Greatish guardian	26899	11401,11428	11428	classic
+Rock golem	Rock golem	13321	7439,7451	7451	classic
+Rock golem	Rock golem	21187	7440,7452	7452	classic
+Rock golem	Rock golem	21188	7441,7453	7453	classic
+Rock golem	Rock golem	21189	7442,7454	7454	classic
+Rock golem	Rock golem	21190	7443,7455	7455	classic
+Rock golem	Rock golem	21191	7444,7642	7642	classic
+Rock golem	Rock golem	21192	7445,7643	7643	classic
+Rock golem	Rock golem	21193	7446,7644	7644	classic
+Rock golem	Rock golem	21194	7447,7645	7645	classic
+Rock golem	Rock golem	21195	7448,7646	7646	classic
+Rock golem	Rock golem	21196	7449,7647	7647	classic
+Rock golem	Rock golem	21197	7450,7648	7648	classic
+Rock golem	Rock golem	21340	2182,7711	7711	classic
+Rock golem	Rock golem	21358	7736,7739	7739	classic
+Rock golem	Rock golem	21359	7737,7740	7740	classic
+Rock golem	Rock golem	21360	7738,7741	7741	classic
+Rock golem	Rock golem	31276	14923,15051	14923	classic
+Rock golem	Rock golem	31277	14924,15052	14924	classic
+Rock golem	Rock golem	31278	14925,15053	14925	classic
+Rocky	Rocky	20663	7336,7353	7353	classic
+Rocky	Ziggy	24849	9851,9853	9853	classic
+Rocky	Red	24847	9850,9852	9852	classic
+Soup	Soup	31283	14930,15058	14930	classic
+Tangleroot	Tangleroot	20661	7335,7352	7352	classic
+Tangleroot	Tangleroot	24555	9492,9497	9497	classic
+Tangleroot	Tangleroot	24557	9493,9498	9498	classic
+Tangleroot	Tangleroot	24559	9494,9499	9499	classic
+Tangleroot	Tangleroot	24563	9496,9501	9501	classic
+Tangleroot	Tangleroot	24561	9495,9500	9500	classic
+Abyssal protector	Abyssal protector	26901	11402,11429	11429	classic
+Bloodhound	Bloodhound	19730	6296,7232	7232	classic
+Chompy chick	Chompy chick	13071	4001,4002	4002	classic
+Herbi	Herbi	21509	7759,7760	7760	classic
+Lil' Creator	Lil' Creator	25348	2833,3566	3566	classic
+Lil' Creator	Lil' Destructor	25350	3564,5008	5008	classic
+Pet Penance Queen	Pet Penance Queen	12703	6642,6674	6674	classic
+Quetzin	Quetzin	28962	12768,12858	12858	classic
+Mr McGroot	Mr McGroot	34040	16316,16333	16316	classic

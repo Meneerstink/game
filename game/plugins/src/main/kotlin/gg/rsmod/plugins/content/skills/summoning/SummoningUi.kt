@@ -184,7 +184,7 @@ object SummoningUi {
      */
     fun restorePanel(player: Player) {
         player.openInterface(InterfaceDestination.SUMMONING_TAB)
-        if (Familiar.current(player) != null) showPanel(player)
+        if (Familiar.current(player) != null || Pets.current(player) != null) showPanel(player)
     }
 
     /** Whether this familiar can be ordered to attack - i.e. it has real, sourced combat data. */
@@ -269,7 +269,8 @@ object SummoningUi {
      * do".
      */
     fun settle(player: Player) {
-        val npcId = Familiar.current(player)?.id ?: NO_FAMILIAR
+        // An OSRS pet ([Pets]) is drawn on the same two surfaces when it is the follower (Novite's rev-667 pets open 662 as well).
+        val npcId = Familiar.current(player)?.id ?: Pets.current(player)?.id ?: NO_FAMILIAR
         val now = player.world.currentCycle
         val due = now - (player.attr[RENDERED_ON_CYCLE] ?: Int.MIN_VALUE) >= RESEND_INTERVAL_CYCLES
         if (player.attr[RENDERED_FAMILIAR] == npcId && !due) {
@@ -344,15 +345,17 @@ object SummoningUi {
         npcId: Int?,
     ) {
         val active = npcId != null
+        // A pet has a name, a model, Call and Dismiss - no time / points column, no renew, scrolls, special move or Beast of Burden.
+        val pet = npcId != null && FamiliarCapabilityTable.forNpc(npcId) == null && Pets.isPetNpc(npcId)
         // The pet column is never the familiar column; 751 only hides it on the familiar path,
         // and that path is skipped entirely once varp 448 goes to -1.
         player.setComponentHidden(PANEL, PANEL_PET_LAYER, true)
         player.setComponentHidden(PANEL, PANEL_MODEL_LAYER, !active)
-        player.setComponentHidden(PANEL, PANEL_FAMILIAR_LAYER, !active)
-        player.setComponentHidden(PANEL, PANEL_SCROLL_COUNT, !active)
+        player.setComponentHidden(PANEL, PANEL_FAMILIAR_LAYER, !active || pet)
+        player.setComponentHidden(PANEL, PANEL_SCROLL_COUNT, !active || pet)
         PANEL_CALL.forEach { player.setComponentHidden(PANEL, it, !active) }
         PANEL_DISMISS.forEach { player.setComponentHidden(PANEL, it, !active) }
-        PANEL_RENEW.forEach { player.setComponentHidden(PANEL, it, !active) }
+        PANEL_RENEW.forEach { player.setComponentHidden(PANEL, it, !active || pet) }
 
         if (!active) {
             // Script 751 leaves the last familiar's model and name in place, so clear both by
@@ -368,7 +371,7 @@ object SummoningUi {
         }
 
         player.setComponentHidden(PANEL, PANEL_MODEL, false)
-        player.setComponentHidden(PANEL, PANEL_SPECIAL_INFO, false)
+        player.setComponentHidden(PANEL, PANEL_SPECIAL_INFO, pet)
         // The same capability record the orb reads, so the two surfaces cannot disagree.
         val capabilities = FamiliarCapabilityTable.forNpc(npcId!!)
         val carries = capabilities?.supports(FamiliarAction.TAKE_BOB) == true
@@ -395,7 +398,13 @@ object SummoningUi {
         npcId: Int?,
     ) {
         val capabilities = npcId?.let { FamiliarCapabilityTable.forNpc(it) }
-        if (capabilities == null) {
+        val supports: ((FamiliarAction) -> Boolean)? =
+            when {
+                capabilities != null -> { action -> capabilities.supports(action) }
+                npcId != null && Pets.isPetNpc(npcId) -> { action -> action in Pets.ORB_ACTIONS }
+                else -> null
+            }
+        if (supports == null) {
             /*
              * Without a familiar the orb's authentic menu is "Select left-click option" and
              * nothing else; every entry under 747:8 would be an option with no subject.
@@ -421,7 +430,7 @@ object SummoningUi {
         // cannot perform.
         FamiliarAction.REMOVED_ORB_COMPONENTS.forEach { player.setComponentHidden(ORB, it, true) }
         FamiliarAction.ORDERED.forEach { action ->
-            if (!capabilities.supports(action)) {
+            if (!supports(action)) {
                 action.orbComponents.forEach { player.setComponentHidden(ORB, it, true) }
             }
         }

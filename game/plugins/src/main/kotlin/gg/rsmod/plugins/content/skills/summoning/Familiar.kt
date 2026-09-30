@@ -324,10 +324,13 @@ object Familiar {
     fun updateHud(player: Player) {
         val npc = current(player)
         val pouch = npc?.let { active -> SummoningPouchData.values.firstOrNull { it.npc == active.id } }
+        // An OSRS pet ([Pets]) is the follower when no familiar is out. Novite's rev-667 `Pet.sendMainConfigurations` /
+        // `switchOrb`: varp 448 = the pet's item, varp 1174 = the pet npc - the panel names it and draws its model from those.
+        val pet = if (npc == null) Pets.current(player) else null
         // [gg.rsmod.game.model.varp.VarpSet.setState] marks a varp dirty even when the value is
         // unchanged, so every write here is guarded - this runs once per cycle per online player.
-        setVarpIfChanged(player, POUCH_VARP, pouch?.pouch ?: -1)
-        setVarpIfChanged(player, FAMILIAR_NPC_VARP, npc?.id ?: -1)
+        setVarpIfChanged(player, POUCH_VARP, pouch?.pouch ?: pet?.let { Pets.itemOf(player) } ?: -1)
+        setVarpIfChanged(player, FAMILIAR_NPC_VARP, npc?.id ?: pet?.id ?: -1)
         val (minutes, halfMinute) = remainingTimeVarbits(player)
         setVarbitIfChanged(player, TIME_MINUTES_VARBIT, minutes)
         setVarbitIfChanged(player, TIME_HALF_MINUTE_VARBIT, halfMinute)
@@ -387,7 +390,7 @@ object Familiar {
      * If nothing in the ring fits - a doorway, a dense object cluster - the owner's own tile is
      * the last resort. A familiar must always arrive; being stranded is worse than overlapping.
      */
-    private fun placementTile(
+    internal fun placementTile(
         player: Player,
         npcId: Int,
     ): Tile {
@@ -469,7 +472,7 @@ object Familiar {
         // the new one - the new summon is rejected outright and the existing familiar is
         // untouched. (2026-09-06 owner human retest: summoning another pouch incorrectly replaced
         // the old familiar; this used to unconditionally `dismiss(player)` below instead.)
-        if (current(player) != null) {
+        if (current(player) != null || Pets.current(player) != null) {
             player.message("You can only have one follower at a time.")
             return false
         }
@@ -840,9 +843,11 @@ object Familiar {
             else -> null
         }
 
-    private fun follow(
+    /** [recovered] is the presentation of a recovery teleport: a familiar's arrival effect, nothing for an OSRS pet ([Pets]). */
+    internal fun follow(
         player: Player,
         npc: Npc,
+        recovered: (Player, Npc) -> Unit = { p, n -> playRecoveryPresentation(p, n) },
     ) {
         val recovery = followRecoveryReason(npc.tile, player.tile)
         if (recovery != null) {
@@ -854,7 +859,7 @@ object Familiar {
             }
             gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.SUMMON) { "familiar ${npc.id} recalled to ${player.username}: $recovery" }
             npc.teleportNpc(placementTile(player, npc.id))
-            playRecoveryPresentation(player, npc)
+            recovered(player, npc)
             npc.facePawn(player)
             return
         }
@@ -898,7 +903,7 @@ object Familiar {
             // A follower that cannot keep up must be recalled; consuming a partial route here
             // would leave it stranded at a wall and invites a later corner-cutting recovery.
             npc.teleportNpc(placementTile(player, npc.id))
-            playRecoveryPresentation(player, npc)
+            recovered(player, npc)
             npc.facePawn(player)
             return
         }

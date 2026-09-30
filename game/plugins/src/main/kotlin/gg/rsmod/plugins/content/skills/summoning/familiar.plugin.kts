@@ -374,6 +374,8 @@ on_login {
     // (tickOffline = false) and resumes with the same time/points left on login, it does not
     // get dismissed. See Familiar.disconnect/restoreOnLogin.
     Familiar.restoreOnLogin(player)
+    // An OSRS pet that was following at logout comes back the same way (Pets).
+    Pets.restoreOnLogin(player)
     // Unconditional: varps persist, so an account that logged out with a familiar and then lost it
     // (expiry while offline, a cleared save) would otherwise log back in with varp 448/1174 still
     // naming the old familiar and the tab drawing a follower that does not exist.
@@ -428,11 +430,13 @@ FollowerDetailsTab.clickTargets.forEach { (pane, button) ->
 
 on_timer(familiarTickTimer) {
     Familiar.tick(player)
+    Pets.tick(player)
     player.timers[familiarTickTimer] = 1
 }
 
 on_logout {
     Familiar.disconnect(player)
+    Pets.disconnect(player)
 }
 
 // Owner death, wired at the same real, existing per-player death hook death.plugin.kts uses for
@@ -459,7 +463,7 @@ on_npc_pre_death(*familiarNpcIds) {
  * forged or leftover click after dismiss/expiry/relog can't act on nothing.
  */
 on_button(662, 49) { // "Call familiar" (portrait button)
-    Familiar.call(player)
+    if (!Familiar.call(player)) Pets.call(player)
 }
 
 /*
@@ -468,6 +472,11 @@ on_button(662, 49) { // "Call familiar" (portrait button)
  * IF_BUTTON2 arrives as opcode 64, the same mapping the bank's container handlers already use.
  */
 on_button(662, 51) {
+    // An OSRS pet is never freed: Dismiss returns it to the backpack (Pets.dismiss).
+    if (Familiar.current(player) == null && Pets.current(player) != null) {
+        Pets.dismiss(player)
+        return@on_button
+    }
     if (player.getInteractingOpcode() == 64) {
         Familiar.dismiss(player)
     } else {
@@ -529,12 +538,16 @@ on_button(662, 65) { // "Order your familiar to attack a target"
 on_button(747, arrayOf(10, 19)) { // "Call Follower"
     if (FamiliarCapabilityTable.activeSupports(player, FamiliarAction.CALL)) {
         Familiar.call(player)
+    } else if (Familiar.current(player) == null) {
+        Pets.call(player)
     }
 }
 
 on_button(747, arrayOf(11, 20)) { // "Dismiss"
     if (FamiliarCapabilityTable.activeSupports(player, FamiliarAction.DISMISS)) {
         player.queue { confirmDismiss(player) }
+    } else if (Familiar.current(player) == null) {
+        Pets.dismiss(player)
     }
 }
 

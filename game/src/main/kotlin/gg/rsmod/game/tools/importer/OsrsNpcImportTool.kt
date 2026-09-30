@@ -88,6 +88,9 @@ object OsrsNpcImportTool {
             // Death's Domain (2026-09-26): RuneLite gameval NpcID DEATH_OFFICE_DEATH 9855 (OSRS Wiki "Death (NPC)" infobox 9855),
             // GRAVESTONE_DEFAULT 9856 and GRAVESTONE_ANGEL 9857 (OSRS Wiki "Grave" basic / angel).
             "deaths-office" to listOf(9855, 9856, 9857),
+            // Owner 2026-09-30 ("import all osrs pets ... just like summoning"): the follower npc of every pet variant whose movement
+            // uses classic frames (OsrsPetRoster; the skeletal ones: OsrsPetImportTool skeletal).
+            "pets" to OsrsPetRoster.load().filterNot { it.skeletal }.map { it.osrsFollower }.distinct(),
         )
 
     /**
@@ -329,9 +332,7 @@ object OsrsNpcImportTool {
             val census = ModelNamespaceCensusTool.census(TARGETS[0], TARGETS[1], assetMap)
             check(census.physicalDivergentIds.isEmpty() && census.referencedDivergentIds.isEmpty()) { "target caches diverge" }
             check(census.untracedReferenceTypes.isEmpty()) { "untraced model reference types: ${census.untracedReferenceTypes}" }
-            val modelCandidates =
-                (census.provenFreeHoles.filter { it > OsrsItemImportTool.SPOTANIM_MODEL_LIMIT && it <= MODEL_ID_LIMIT }.sorted() +
-                    census.safeFreeRange.filter { it <= MODEL_ID_LIMIT }).toMutableList()
+            val modelCandidates = OsrsItemImportTool.meshModelCandidates(census)
             println("CENSUS npc_model_candidates=${modelCandidates.size} next npc=$nextNpc bas=$nextBas seq=$nextSeq frameset=$nextFrameset base=$nextBase synth=$nextSynth")
 
             val localIds = OsrsFxImportTool.existingFx(assetMap).toMutableMap()

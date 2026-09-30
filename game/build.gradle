@@ -185,6 +185,14 @@ task runOsrsNpcImportTool(type: JavaExec) {
     main = 'gg.rsmod.game.tools.importer.OsrsNpcImportTool'
 }
 
+task runOsrsPetImportTool(type: JavaExec) {
+    group = 'tools'
+    description = 'OSRS pet roster (data/cfg/pets/osrs_pets.tsv): probe, import the skeletal followers (baked), or write the server pet table. ' +
+        'Usage: ./gradlew :game:runOsrsPetImportTool --args="probe|skeletal [--apply]|table"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.OsrsPetImportTool'
+}
+
 task runOsrsLocImportTool(type: JavaExec) {
     group = 'tools'
     description = 'OSRS loc (scenery) type import batches for runtime-spawned objects (CacheTransaction, both caches). ' +

@@ -1,0 +1,81 @@
+# Pet tiers, stores and boss drops (owner 2026-09-30: "make 3 tiers of pets sort them by most unique and most common ... sell them in the
+# donator store loyalty store and deadmanstore ... some pets need to be only dropped by their boss or monster variant").
+# Owner answers 2026-09-30: tier 1 (most unique) -> Donator Shop, tier 2 -> Deadman Shop, tier 3 (most common) -> Loyalty Shop; a pet whose
+# boss exists on this server is drop-only (never sold); prices proposed by the agent (StorePets.PRICES), owner adjusts.
+# Tiers: 1 = raids, the Inferno / Fight Cave / Colosseum / Gauntlet, Desert Treasure II and the other endgame bosses, Nex and the 1/5,000
+#            God Wars generals and Corporeal Beast; 2 = the other boss pets (Wilderness bosses, slayer bosses, Dagannoth Kings, KQ, KBD);
+#        3 = skilling, minigame and collection-log pets and the low-level bosses (Giant Mole, Scurrius, skilling bosses).
+# drop_npcs / drop_rate: this server's npc ids that roll the pet on a kill (the OSRS boss and its Deadman breach variant) and the OSRS
+# Wiki rate 1/N (Pet page, 2026-09-30). Empty = sold in the tier's shop instead.
+# pet	tier	drop_npcs	drop_rate
+Olmlet	1		
+Lil' Zik	1		
+Tumeken's guardian	1		
+Jal-Nib-Rek	1		
+TzRek-Jad	1	14462	200
+Smol Heredit	1		
+Youngllef	1		
+Nexling	1	13447,13448,13449,13450	500
+Yami	1		
+Dom	1		
+Baron	1		
+Butch	1		
+Lil'viathan	1		
+Wisp	1		
+Vorki	1		
+Ikkle Hydra	1		
+Little Nightmare	1		
+Nid	1		
+Muphin	1		
+Pet dark core	1	8133	5000
+Pet General Graardor	1	6260,14442	5000
+Pet K'ril Tsutsaroth	1	6203,14444	5000
+Pet Kree'arra	1	6222	5000
+Pet Zilyana	1	6247,14443	5000
+Abyssal orphan	2		
+Aggy	2		
+Bran	2		
+Beef	2		
+Callisto cub	2		
+Gull (pet)	2		
+Hellpuppy	2	14458	3000
+Huberte	2		
+Kalphite Princess	2	1160,3836	3000
+Maggot marquess	2		
+Moxi	2		
+Noon	2		
+Pet chaos elemental	2	3200	300
+Pet Dagannoth Prime	2	2882,14441	5000
+Pet Dagannoth Rex	2	2883,14438	5000
+Pet Dagannoth Supreme	2	2881,14440	5000
+Pet Kraken	2		
+Pet Smoke Devil	2	14460	3000
+Pet Snakeling	2		
+Prince Black Dragon	2	50,14439	3000
+Scorpia's offspring	2		
+Skotos	2		
+Sraracha	2		
+Venenatis spiderling	2		
+Vet'ion Jr.	2		
+Baby Mole	3	3340	3000
+Scurry	3		
+Smolcano	3		
+Tiny tempor	3		
+Phoenix	3		
+Baby chinchompa	3		
+Beaver	3		
+Giant Squirrel	3		
+Heron	3		
+Rift guardian	3		
+Rock golem	3		
+Rocky	3		
+Soup	3		
+Tangleroot	3		
+Abyssal protector	3		
+Bloodhound	3		
+Chompy chick	3		
+Herbi	3		
+Lil' Creator	3		
+Pet Penance Queen	3		
+Quetzin	3		
+Mr McGroot	3		

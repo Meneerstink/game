@@ -29,6 +29,19 @@ object OsrsItemImportTool {
     /** Spotanim model fields are signed shorts; keep ids <= this for future GFX/projectile meshes. */
     const val SPOTANIM_MODEL_LIMIT = 32767
 
+    /**
+     * Model ids for item / npc meshes, in allocation order: proven-free holes above [SPOTANIM_MODEL_LIMIT], then the append range, and
+     * only when both are used up the proven-free holes at or below it, highest first. [OsrsFxImportTool] takes spotanim meshes from the
+     * low holes lowest first, so the two ends meet only when the whole namespace is full. (2026-09-30: the pet batch needs ~300 meshes
+     * while 21 ids above the limit were left, against 3,499 proven-free holes below it.)
+     */
+    fun meshModelCandidates(census: ModelNamespaceCensusTool.Report): MutableList<Int> =
+        (
+            census.provenFreeHoles.filter { it > SPOTANIM_MODEL_LIMIT && it <= ModelNamespaceCensusTool.MAX_MODEL_ID }.sorted() +
+                census.safeFreeRange.toList() +
+                census.provenFreeHoles.filter { it in 1..SPOTANIM_MODEL_LIMIT }.sortedDescending()
+        ).toMutableList()
+
     data class Spec(
         val upstreamId: Int,
         /** Also import the upstream noted variant (the item must carry an upstream notedId). */
@@ -1027,6 +1040,8 @@ object OsrsItemImportTool {
                     Spec(23908, noted = true), // Zalcano shard
                     Spec(23677, rev667Params = mapOf(686 to 4, 687 to 1, 749 to 0, 750 to 60, 770 to 14, 771 to 61), weaponType = 4), // Dragon pickaxe (or) (Zalcano)
                 ),
+            // Owner 2026-09-30 ("import all osrs pets"): every pet item of the 71 OSRS pets, one per variant (OsrsPetRoster).
+            "pets" to OsrsPetRoster.load().map { Spec(it.osrsItem) },
         )
 
     /**
@@ -1194,7 +1209,7 @@ object OsrsItemImportTool {
             val census = ModelNamespaceCensusTool.census(TARGETS[0], TARGETS[1], File(ASSET_MAP))
             check(census.physicalDivergentIds.isEmpty() && census.referencedDivergentIds.isEmpty()) { "target caches diverge" }
             check(census.untracedReferenceTypes.isEmpty()) { "untraced model reference types: ${census.untracedReferenceTypes}" }
-            val candidates = census.provenFreeHoles.filter { it > SPOTANIM_MODEL_LIMIT }.sorted() + census.safeFreeRange.toList()
+            val candidates = meshModelCandidates(census)
             println("CENSUS proven_free_holes=${census.provenFreeHoles.size} item_candidates=${candidates.size} safe_free=${census.safeFreeCount}")
 
             val existing = ImportBatchOrchestrator.readExistingMapping(File(ASSET_MAP))

@@ -283,6 +283,8 @@ object StoreCatalogue {
             list += lookUnlockEntry(l, variant, 20_000)
             list += lookUnlockEntry(d, variant, TIER_PRICE.getValue(Tier.PREMIUM))
         }
+        // OSRS pets (owner 2026-09-30): tier 1 Donator, tier 2 Deadman, tier 3 Loyalty; boss-drop pets are never sold (StorePets).
+        list += StorePets.entries()
         return list
     }
 
@@ -300,6 +302,9 @@ object StoreCatalogue {
         ENTRIES.filter { it.purchaseItem in deadmanOnly && it.shop != Shop.DEADMAN }.forEach { problems += "${it.purchaseItem} must be Deadman-only" }
         ENTRIES.filter { it.shop == Shop.DONATOR && it.kind != Kind.KIT && it.kind != Kind.UNLOCK }.forEach { problems += "Donator entry ${it.purchaseItem} is not a kit or look unlock" }
         ENTRIES.filter { it.price <= 0 }.forEach { problems += "entry ${it.purchaseItem} has no price" }
+        // Owner 2026-09-30: a pet whose boss exists on this server only drops from that boss.
+        val dropOnlyPets = StorePets.dropOnlyItems()
+        ENTRIES.filter { it.purchaseItem in dropOnlyPets }.forEach { problems += "pet ${it.purchaseItem} is boss-drop only and must not be sold" }
         ENTRIES.filter { it.previewItems.isEmpty() || it.previewItems.size != it.resultItems.size }.forEach { problems += "entry ${it.purchaseItem} preview/result mismatch" }
         ENTRIES.filter { it.kind != Kind.ITEM && it.requiredBaseItems.size != it.previewItems.size }.forEach { problems += "entry ${it.purchaseItem} needs a base item per result" }
         val forbidden = setOf(Items.MAX_CAPE, Items.DIZANAS_MAX_CAPE, Items.AVAS_ASSEMBLER, Items.NIGHTMARE_STAFF)

@@ -525,6 +525,9 @@ object SkeletalBakeTool {
     private const val GROUPS_PER_CLUSTER = 4
     const val MAX_CLUSTERS = 255 / GROUPS_PER_CLUSTER
 
+    /** A 667 base stores its group count in one byte. */
+    const val MAX_BASE_GROUPS = 255
+
     /** 3x3 rotation of the 667 classic type-2 transform (JavaModel.I): Z first, then X, then Y. */
     fun classicRotation(
         ax: Double,
@@ -680,6 +683,387 @@ object SkeletalBakeTool {
         println("BAKE model $modelId seq $osrsSeq animaya ${seq.animaya} curves=${clip.boneCurves.size} bones=${bones.size} maxVertexMove=$maxMove (osrs units) k=$k")
         return Baked(model, baseBytes, frames, durations.toIntArray(), raw.vertexCount, bones.size, clusters.size, ticks, maxErr, if (errCount > 0) sumErr / errCount else 0.0)
     }
+    /** 667 frame values of one cluster: scale (x128), rotation (4096 steps), translation - each clamped to the frame's value range. */
+    private fun quantize(
+        r: Array<DoubleArray>,
+        s: DoubleArray,
+        t: DoubleArray,
+    ): Triple<IntArray, IntArray, IntArray> {
+        val euler = classicEuler(r)
+        return Triple(
+            IntArray(3) { Math.round(s[it] * 128).toInt().coerceIn(-16384, 16383) },
+            IntArray(3) { angleValue(euler[it]) },
+            IntArray(3) { Math.round(t[it]).toInt().coerceIn(-16384, 16383) },
+        )
+    }
+
+    /** Summed squared distance between the client's replay of [values] (scale, then rotate, then translate) and [dst]. */
+    private fun replayError(
+        values: Triple<IntArray, IntArray, IntArray>,
+        src: List<DoubleArray>,
+        dst: List<DoubleArray>,
+    ): Double {
+        val (sv, rv, tv) = values
+        val rr = classicRotation(rv[0] * 4 * 2 * Math.PI / 16384, rv[1] * 4 * 2 * Math.PI / 16384, rv[2] * 4 * 2 * Math.PI / 16384)
+        var sum = 0.0
+        src.indices.forEach { i ->
+            val v = src[i]
+            val q0 = doubleArrayOf(v[0] * sv[0] / 128.0, v[1] * sv[1] / 128.0, v[2] * sv[2] / 128.0)
+            for (row in 0..2) {
+                val d = rr[row][0] * q0[0] + rr[row][1] * q0[1] + rr[row][2] * q0[2] + tv[row] - dst[i][row]
+                sum += d * d
+            }
+        }
+        return sum
+    }
+
+    private fun det3(m: Array<DoubleArray>) =
+        m[0][0] * (m[1][1] * m[2][2] - m[1][2] * m[2][1]) - m[0][1] * (m[1][0] * m[2][2] - m[1][2] * m[2][0]) + m[0][2] * (m[1][0] * m[2][1] - m[1][1] * m[2][0])
+
+    /** Rotation factor of [m] (Higham's Newton iteration X <- (X + X^-T) / 2); null when [m] is singular or a reflection. */
+    private fun polarRotation(m: Array<DoubleArray>): Array<DoubleArray>? {
+        var x = Array(3) { m[it].copyOf() }
+        repeat(30) {
+            val d = det3(x)
+            if (abs(d) < 1e-12) return null
+            // inverse transpose = cofactor matrix / det
+            val cof = Array(3) { r -> DoubleArray(3) { c ->
+                val r1 = (r + 1) % 3; val r2 = (r + 2) % 3; val c1 = (c + 1) % 3; val c2 = (c + 2) % 3
+                (x[r1][c1] * x[r2][c2] - x[r1][c2] * x[r2][c1]) / d
+            } }
+            x = Array(3) { r -> DoubleArray(3) { c -> 0.5 * (x[r][c] + cof[r][c]) } }
+        }
+        return if (det3(x) > 0.5) x else null
+    }
+
+    /**
+     * Least-squares rotation R, axis scale S (when [initialScale] is given; else 1) and translation t with R S v + t ~ dst, by alternating
+     * an orthogonal Procrustes step for R with a closed-form per-axis step for S. Null for a degenerate cluster (fewer than 3 independent
+     * vertices), where the representative's matrix stays in use.
+     */
+    private fun fitRotationScale(
+        src: List<DoubleArray>,
+        dst: List<DoubleArray>,
+        initialRotation: Array<DoubleArray>,
+        initialScale: DoubleArray?,
+    ): Triple<Array<DoubleArray>, DoubleArray, DoubleArray>? {
+        if (src.size < 3) return null
+        val vb = DoubleArray(3) { a -> src.sumOf { it[a] } / src.size }
+        val yb = DoubleArray(3) { a -> dst.sumOf { it[a] } / dst.size }
+        val vc = src.map { v -> DoubleArray(3) { v[it] - vb[it] } }
+        val yc = dst.map { y -> DoubleArray(3) { y[it] - yb[it] } }
+        var r = initialRotation
+        val s = initialScale?.copyOf() ?: doubleArrayOf(1.0, 1.0, 1.0)
+        repeat(8) {
+            val mm = Array(3) { DoubleArray(3) }
+            vc.indices.forEach { i -> for (a in 0..2) for (b in 0..2) mm[a][b] += yc[i][a] * s[b] * vc[i][b] }
+            r = polarRotation(mm) ?: return null
+            if (initialScale != null) {
+                for (b in 0..2) {
+                    var num = 0.0
+                    var den = 0.0
+                    vc.indices.forEach { i ->
+                        val ry = r[0][b] * yc[i][0] + r[1][b] * yc[i][1] + r[2][b] * yc[i][2]
+                        num += ry * vc[i][b]
+                        den += vc[i][b] * vc[i][b]
+                    }
+                    if (den > 1e-6) s[b] = num / den
+                }
+            }
+        }
+        val t = DoubleArray(3) { row -> yb[row] - (0..2).sumOf { c -> r[row][c] * s[c] * vb[c] } }
+        return Triple(r, s, t)
+    }
+
+    /** [bakeSet] result: one labelled 667 model per input model, one shared base, and per sequence its frames and durations. */
+    class BakedSet(
+        val models: List<ByteArray>,
+        val base: ByteArray,
+        val frames: List<List<ByteArray>>,
+        val durations: List<IntArray>,
+        val vertices: Int,
+        val signatureClusters: Int,
+        val clusters: Int,
+        /** Largest and mean distance (667 model units) between the classic replay and the skinned OSRS position, over every frame. */
+        val maxError: Double,
+        val meanError: Double,
+        /** Vertex-frames whose replay is more than 32 units (1/16 tile, before the npc scale) off the skinned position. */
+        val farOff: Int = 0,
+        val vertexFrames: Int = 0,
+    )
+
+    /**
+     * [bake] for an npc (OSRS pets, owner 2026-09-30): every body model and every movement sequence of the npc share ONE base, because a
+     * 667 BAS plays its stand / walk sequences on the same model. The base holds one shared origin (the 2011scape-client `JavaModel` type 0
+     * with no labels sets the origin to its offsets and keeps it for every later rotate / scale of the frame), then per cluster only the
+     * groups its motion needs: rotate and translate, plus scale when it scales on some frame - up to 127 clusters instead of [bake]'s 63.
+     *
+     * Clusters start as the exact skin signatures over all models together (vertices that blend the same bones with the same weights move
+     * identically). While the base would exceed [MAX_BASE_GROUPS], the pair whose merge moves the vertices least is merged, one pair at a
+     * time: the cost of moving cluster `a` onto cluster `b`'s motion is the summed squared distance, over every baked frame of every sequence
+     * and every vertex of `a`, between `a`'s own skinned position and the position `b`'s blended matrix gives it. Each merged cluster then
+     * takes the member motion that fits all its vertices best. The remaining error is measured on the classic replay and reported.
+     */
+    fun bakeSet(
+        reader: ModernCacheReader,
+        modelIds: List<Int>,
+        osrsSeqs: List<Int>,
+        localBase: Int,
+    ): BakedSet {
+        require(modelIds.isNotEmpty() && osrsSeqs.isNotEmpty())
+        val seqs = osrsSeqs.map { id ->
+            decodeSkeletalSeq(reader.file(ModernCacheReader.INDEX_CONFIG, ModernCacheReader.CONFIG_GROUP_SEQUENCE, id) ?: error("seq $id missing"))
+                ?: error("seq $id is not skeletal")
+        }
+        val clips = seqs.map { s -> decodeClip(reader.file(INDEX_ANIMAYA, s.animaya ushr 16, s.animaya and 0xFFFF) ?: error("animaya ${s.animaya} missing")) }
+        val skeleton = clips.map { it.baseId }.distinct().singleOrNull() ?: error("sequences $osrsSeqs use different skeletons ${clips.map { it.baseId }}")
+        val bones = skeletalBase(reader.file(INDEX_SKELETONS, skeleton, 0) ?: error("skeleton $skeleton missing")) ?: error("skeleton $skeleton has no bones")
+        val raws = modelIds.map { m -> ModernModelDecoder.decode(reader.file(7, m, 0) ?: error("model $m missing"), flattenTextures = true) }
+        val dropped = ArrayList<String>()
+        val labelled = modelIds.map { m -> Rev667ModelDecoder.decode(OsrsModelConversion.convert(reader, m, dropped)) }
+        raws.indices.forEach { i -> check(labelled[i].vertexCount == raws[i].vertexCount) { "model ${modelIds[i]} changed vertex count in conversion" } }
+
+        // Every vertex of every model: (model index, vertex index).
+        val verts = raws.indices.flatMap { mi -> (0 until raws[mi].vertexCount).map { mi to it } }
+        fun bonesOf(p: Pair<Int, Int>) = raws[p.first].animayaBones?.getOrNull(p.second) ?: IntArray(0)
+        fun weightsOf(p: Pair<Int, Int>) = raws[p.first].animayaWeights?.getOrNull(p.second) ?: IntArray(0)
+
+        // 667 units per OSRS unit, as in [bake] (the conversion keeps or scales coordinates).
+        val refs = verts.maxByOrNull { (mi, v) -> abs(raws[mi].vertexX[v]) + abs(raws[mi].vertexY[v]) + abs(raws[mi].vertexZ[v]) }!!
+        val k = (abs(labelled[refs.first].vertexX[refs.second]) + abs(labelled[refs.first].vertexY[refs.second]) + abs(labelled[refs.first].vertexZ[refs.second])).toDouble() /
+            (abs(raws[refs.first].vertexX[refs.second]) + abs(raws[refs.first].vertexY[refs.second]) + abs(raws[refs.first].vertexZ[refs.second])).coerceAtLeast(1)
+
+        // Frame ticks per sequence (OSRS: one skeletal tick per client cycle; baked every STEP cycles).
+        val tickLists = seqs.indices.map { i ->
+            val s = seqs[i]
+            val range = if (s.start >= 0 && s.end > s.start) s.start until s.end else 0..clips[i].lastTick
+            range.step(STEP).toList()
+        }
+        val frameMats = seqs.indices.flatMap { i -> tickLists[i].map { t -> finalMatrices(bones, clips[i], t) } }
+
+        // Blended RS-space matrix of a skin (bones + weights) on one frame: F A F with F = diag(1, -1, -1), translation in 667 units.
+        fun blended(b: IntArray, w: IntArray, mats: List<DoubleArray>): DoubleArray {
+            val a = DoubleArray(16)
+            b.indices.forEach { j ->
+                val m = mats.getOrNull(b[j]) ?: return@forEach
+                val wt = w[j] / 255.0
+                for (i in 0..15) a[i] += wt * m[i]
+            }
+            if (b.isEmpty()) { a[0] = 1.0; a[5] = 1.0; a[10] = 1.0; a[15] = 1.0 }
+            val f = doubleArrayOf(1.0, -1.0, -1.0)
+            // row-major 3x4: [l | t]
+            return DoubleArray(12) { idx ->
+                val r = idx / 4
+                val c = idx % 4
+                if (c < 3) f[r] * a[c * 4 + r] * f[c] else f[r] * a[12 + r] * k
+            }
+        }
+
+        // Exact clusters: skin signatures.
+        fun sig(p: Pair<Int, Int>): String {
+            val b = bonesOf(p)
+            val w = weightsOf(p)
+            return b.indices.sortedBy { b[it] }.joinToString(",") { "${b[it]}:${w[it]}" }
+        }
+        val groupsBySig = verts.groupBy { sig(it) }.values.map { it.toHashSet() }
+        val groups = groupsBySig.map { it.toMutableList() }.toMutableList()
+        val signatureClusters = groups.size
+        // Motion of each cluster: its representative's blended matrix per frame.
+        val motion = groups.map { g -> frameMats.map { mats -> blended(bonesOf(g[0]), weightsOf(g[0]), mats) } }.toMutableList()
+        // Skinned target of every vertex per frame, in 667 units, in the labelled model's space.
+        fun pos(p: Pair<Int, Int>) = doubleArrayOf(labelled[p.first].vertexX[p.second].toDouble(), labelled[p.first].vertexY[p.second].toDouble(), labelled[p.first].vertexZ[p.second].toDouble())
+        fun apply(m: DoubleArray, p: DoubleArray) = DoubleArray(3) { r -> m[r * 4] * p[0] + m[r * 4 + 1] * p[1] + m[r * 4 + 2] * p[2] + m[r * 4 + 3] }
+        fun cost(a: Int, b: Int): Double {
+            var sum = 0.0
+            for (p in groups[a]) {
+                val v = pos(p)
+                for (f in frameMats.indices) {
+                    val x = apply(motion[a][f], v)
+                    val y = apply(motion[b][f], v)
+                    // Squared: a merge that throws a few vertices far off must cost more than one that nudges many a little.
+                    sum += (x[0] - y[0]) * (x[0] - y[0]) + (x[1] - y[1]) * (x[1] - y[1]) + (x[2] - y[2]) * (x[2] - y[2])
+                }
+            }
+            return sum
+        }
+        val originalMotion = motion.toList()
+        val members = groups.indices.map { mutableListOf(it) }.toMutableList()
+        // Groups a cluster costs in the base: rotate + translate, plus scale only when its motion scales on some frame.
+        fun scales(mo: List<DoubleArray>) =
+            mo.any { m -> (0..2).any { c -> Math.round(sqrt(m[c] * m[c] + m[4 + c] * m[4 + c] + m[8 + c] * m[8 + c]) * 128).toInt() != 128 } }
+        fun groupCost(mo: List<DoubleArray>) = if (scales(mo)) 3 else 2
+        var budget = 1 + motion.sumOf { groupCost(it) }
+        if (budget > MAX_BASE_GROUPS) {
+            val n0 = groups.size
+            val costs = Array(n0) { a -> DoubleArray(n0) { b -> if (a == b) Double.MAX_VALUE else cost(a, b) } }
+            val alive = BooleanArray(n0) { true }
+            while (budget > MAX_BASE_GROUPS) {
+                var ba = -1
+                var bb = -1
+                var best = Double.MAX_VALUE
+                for (a in 0 until n0) if (alive[a]) for (b in 0 until n0) if (alive[b] && costs[a][b] < best) { best = costs[a][b]; ba = a; bb = b }
+                groups[bb].addAll(groups[ba])
+                groups[ba].clear()
+                members[bb].addAll(members[ba])
+                alive[ba] = false
+                budget -= groupCost(motion[ba])
+                // b's own vertices grew: the cost of moving b elsewhere changes; moving others onto b does not.
+                for (x in 0 until n0) if (alive[x] && x != bb) costs[bb][x] = cost(bb, x)
+            }
+            val keep = (0 until n0).filter { alive[it] }
+            val g2 = keep.map { groups[it] }
+            val m2 = keep.map { motion[it] }
+            val mem2 = keep.map { members[it] }
+            groups.clear(); groups.addAll(g2)
+            motion.clear(); motion.addAll(m2)
+            members.clear(); members.addAll(mem2)
+            // A merged cluster moves with whichever of its members' own motions fits all its vertices best, as long as the base still fits.
+            groups.indices.forEach { ci ->
+                if (members[ci].size > 1) {
+                    val current = groupCost(motion[ci])
+                    val best =
+                        members[ci].map { originalMotion[it] }
+                            .filter { budget - current + groupCost(it) <= MAX_BASE_GROUPS }
+                            .minByOrNull { cand ->
+                                var sum = 0.0
+                                for (p in groups[ci]) {
+                                    val v = pos(p)
+                                    val own = originalMotion[members[ci].first { m -> p in groupsBySig[m] }]
+                                    for (fi in frameMats.indices) {
+                                        val x = apply(cand[fi], v)
+                                        val y = apply(own[fi], v)
+                                        sum += (x[0] - y[0]) * (x[0] - y[0]) + (x[1] - y[1]) * (x[1] - y[1]) + (x[2] - y[2]) * (x[2] - y[2])
+                                    }
+                                }
+                                sum
+                            }
+                    if (best != null) {
+                        budget += groupCost(best) - current
+                        motion[ci] = best
+                    }
+                }
+            }
+        }
+        check(budget <= MAX_BASE_GROUPS) { "base needs $budget groups" }
+
+        val clusterOf = HashMap<Pair<Int, Int>, Int>()
+        groups.forEachIndexed { ci, g -> g.forEach { clusterOf[it] = ci } }
+        labelled.forEachIndexed { mi, m -> m.vertexLabel = IntArray(m.vertexCount) { v -> clusterOf.getValue(mi to v) } }
+        val models = labelled.map { Rev667ModelEncoder.encode(it) }
+
+        // Base: group 0 = the one shared origin (offsets 0, 0, 0; no labels), then per cluster [scale if it scales], rotate, translate,
+        // each labelled with the cluster.
+        val typeList = ArrayList<Int>()
+        val labels = ArrayList<List<Int>>()
+        typeList += 0
+        labels += emptyList<Int>()
+        val scaleGroup = IntArray(groups.size) { -1 }
+        val rotateGroup = IntArray(groups.size)
+        val translateGroup = IntArray(groups.size)
+        groups.indices.forEach { ci ->
+            if (scales(motion[ci])) {
+                scaleGroup[ci] = typeList.size
+                typeList += 3
+                labels += listOf(ci)
+            }
+            rotateGroup[ci] = typeList.size
+            typeList += 2
+            labels += listOf(ci)
+            translateGroup[ci] = typeList.size
+            typeList += 1
+            labels += listOf(ci)
+        }
+        val n = typeList.size
+        check(n == budget && n <= MAX_BASE_GROUPS)
+        val types = typeList.toIntArray()
+        val base = ByteArrayOutputStream()
+        base.write(n)
+        types.forEach { base.write(it) }
+        repeat(n) { base.write(0) }
+        repeat(n) { base.write(0xFF); base.write(0xFF) }
+        labels.forEach { base.write(it.size) }
+        labels.forEach { l -> l.forEach { base.write(it) } }
+        val baseBytes = base.toByteArray()
+
+        var maxErr = 0.0
+        var sumErr = 0.0
+        var errCount = 0
+        var farOff = 0
+        val allFrames = ArrayList<List<ByteArray>>()
+        var f = 0
+        for (si in seqs.indices) {
+            val out = ArrayList<ByteArray>()
+            repeat(tickLists[si].size) {
+                val mats = frameMats[f]
+                val skinnedByModel = raws.map { skin(it, mats) }
+                val flags = IntArray(n)
+                val groupValues = arrayOfNulls<IntArray>(n)
+                flags[0] = 1
+                groupValues[0] = intArrayOf(0)
+                groups.forEachIndexed { ci, g ->
+                    val m = motion[ci][f]
+                    val l = Array(3) { r -> DoubleArray(3) { c -> m[r * 4 + c] } }
+                    val t = DoubleArray(3) { m[it * 4 + 3] }
+                    val s = DoubleArray(3) { c -> sqrt(l[0][c] * l[0][c] + l[1][c] * l[1][c] + l[2][c] * l[2][c]).coerceAtLeast(1e-9) }
+                    val r = Array(3) { row -> DoubleArray(3) { c -> l[row][c] / s[c] } }
+                    val src = g.map { pos(it) }
+                    val dst = g.map { p -> skinnedByModel[p.first][p.second].let { sk -> doubleArrayOf(sk[0] * k, sk[1] * k, sk[2] * k) } }
+                    val allowScale = scaleGroup[ci] >= 0
+                    // Two candidates: the representative's blended matrix decomposed, and a least-squares fit to the cluster's own skinned
+                    // positions (blended skins carry shear the classic scale-then-rotate cannot hold). The one that replays closer wins.
+                    // The blend makes r slightly non-orthogonal; Euler angles of such a matrix are unstable near a 90 degree x rotation, so the
+                    // nearest rotation (its polar factor) is what gets decomposed.
+                    val decomposed = quantize(polarRotation(r) ?: r, if (allowScale) s else doubleArrayOf(1.0, 1.0, 1.0), t)
+                    val fitted = fitRotationScale(src, dst, r, if (allowScale) s else null)?.let { (fr, fs, ft) -> quantize(fr, fs, ft) }
+                    val chosen = listOfNotNull(decomposed, fitted).minByOrNull { replayError(it, src, dst) }!!
+                    val (sv, rv, tv) = chosen
+                    if (allowScale && sv.any { it != 128 }) {
+                        flags[scaleGroup[ci]] = 7
+                        groupValues[scaleGroup[ci]] = sv
+                    }
+                    if (rv.any { it != 0 }) {
+                        flags[rotateGroup[ci]] = 7
+                        groupValues[rotateGroup[ci]] = rv
+                    }
+                    if (tv.any { it != 0 }) {
+                        flags[translateGroup[ci]] = 7
+                        groupValues[translateGroup[ci]] = tv
+                    }
+                    val rr = classicRotation(rv[0] * 4 * 2 * Math.PI / 16384, rv[1] * 4 * 2 * Math.PI / 16384, rv[2] * 4 * 2 * Math.PI / 16384)
+                    g.forEach { p ->
+                        val v = pos(p)
+                        val q0 = doubleArrayOf(v[0] * sv[0] / 128.0, v[1] * sv[1] / 128.0, v[2] * sv[2] / 128.0)
+                        val q = DoubleArray(3) { row -> rr[row][0] * q0[0] + rr[row][1] * q0[1] + rr[row][2] * q0[2] + tv[row] }
+                        val sk = skinnedByModel[p.first][p.second]
+                        val want = doubleArrayOf(sk[0] * k, sk[1] * k, sk[2] * k)
+                        val err = sqrt((0..2).sumOf { (q[it] - want[it]) * (q[it] - want[it]) })
+                        maxErr = maxOf(maxErr, err)
+                        if (err > 32.0) farOff++
+                        sumErr += err
+                        errCount++
+                    }
+                }
+                val bytes = ByteArrayOutputStream()
+                bytes.write(1)
+                bytes.write(localBase ushr 8)
+                bytes.write(localBase and 0xFF)
+                bytes.write(n)
+                flags.forEach { bytes.write(it) }
+                // values group by group in base order (x, y, z per set flag)
+                groupValues.forEach { gv -> gv?.forEach { bytes.smarts(it) } }
+                val frame = bytes.toByteArray()
+                OsrsFxImportTool.check667Frame(frame, baseBytes)
+                out += frame
+                f++
+            }
+            allFrames += out
+        }
+        return BakedSet(
+            models, baseBytes, allFrames, tickLists.map { IntArray(it.size) { STEP } }, verts.size, signatureClusters, groups.size,
+            maxErr, if (errCount > 0) sumErr / errCount else 0.0, farOff, errCount,
+        )
+    }
+
     // ---- main -------------------------------------------------------------------------------------------------------------
 
     @JvmStatic

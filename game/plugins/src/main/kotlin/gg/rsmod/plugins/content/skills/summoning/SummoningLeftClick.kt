@@ -88,6 +88,7 @@ fun Player.migrateRemovedDefault() {
  * choice is a persistent preference and configuring it without a familiar is legitimate.
  */
 fun Player.selectableActions(): List<FamiliarAction> {
+    if (FamiliarCapabilityTable.active(this) == null && Pets.current(this) != null) return FamiliarAction.ORDERED.filter { it in Pets.ORB_ACTIONS }
     val capabilities = FamiliarCapabilityTable.active(this) ?: return FamiliarAction.ORDERED
     return FamiliarAction.ORDERED.filter { capabilities.supports(it) }
 }
@@ -116,6 +117,11 @@ fun Player.setLeftClickAction(action: FamiliarAction) {
  * dismiss (no familiar -> every action is selectable again, nothing is reset) and login.
  */
 fun Player.resetStaleLeftClickAction() {
+    if (FamiliarCapabilityTable.active(this) == null && Pets.current(this) != null) {
+        // A pet answers Call and Dismiss only (DEFAULT_ACTION is Call).
+        if (leftClickAction() !in Pets.ORB_ACTIONS) setVarbit(ACTIVE_ACTION_VARBIT, DEFAULT_ACTION.leftClickValue)
+        return
+    }
     val capabilities = FamiliarCapabilityTable.active(this) ?: return
     if (!capabilities.supports(leftClickAction())) {
         setVarbit(ACTIVE_ACTION_VARBIT, DEFAULT_ACTION.leftClickValue)
