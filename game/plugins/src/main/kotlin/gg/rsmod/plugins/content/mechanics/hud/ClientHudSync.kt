@@ -8,7 +8,16 @@ import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Pawn
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.hud.ClientHud
+import gg.rsmod.game.model.attr.POISON_TICKS_LEFT_ATTR
+import gg.rsmod.game.model.attr.VENOM_TICKS_ELAPSED_ATTR
 import gg.rsmod.game.model.timer.FROZEN_TIMER
+import gg.rsmod.game.model.timer.POISON_IMMUNITY
+import gg.rsmod.game.model.timer.POISON_TIMER
+import gg.rsmod.game.model.timer.VENOM_IMMUNITY
+import gg.rsmod.game.model.timer.VENOM_TIMER
+import gg.rsmod.plugins.content.items.osrs.Burns
+import gg.rsmod.plugins.content.mechanics.poison.Poison
+import gg.rsmod.plugins.content.mechanics.poison.Venom
 import gg.rsmod.game.model.timer.TELEBLOCK_TIMER
 import gg.rsmod.game.model.timer.TimerKey
 import gg.rsmod.game.model.timer.VENGEANCE_COOLDOWN
@@ -41,7 +50,7 @@ object ClientHudSync {
     private class State {
         var cycle = 0
         var boost = intArrayOf(Int.MIN_VALUE, Int.MIN_VALUE, Int.MIN_VALUE)
-        var timers = intArrayOf(Int.MIN_VALUE, Int.MIN_VALUE, Int.MIN_VALUE, Int.MIN_VALUE)
+        var timers = IntArray(TIMER_FIELDS) { Int.MIN_VALUE }
         var opponent: String? = null
         var last: java.lang.ref.WeakReference<Pawn>? = null
         var lastPayload: String? = null
@@ -49,6 +58,10 @@ object ClientHudSync {
     }
 
     private val STATE = AttributeKey<State>()
+
+    /** Fields of the `tmr` payload (ClientHud); the ones in [TIMER_FLAGS] are states compared exactly, the rest countdowns. */
+    const val TIMER_FIELDS = 12
+    private val TIMER_FLAGS = setOf(0, 4, 5, 9)
 
     /** A fresh session (login / relog): the client starts empty, so everything is sent again. */
     fun reset(player: Player) {
@@ -69,16 +82,11 @@ object ClientHudSync {
                 RestorationRates.ticksUntilLoweredRestore(player),
                 RestorationRates.ticksUntilBoostedRestore(player),
             )
-        val timers =
-            intArrayOf(
-                if (player.attr[VENGEANCE_ACTIVE_ATTR] == true) 1 else 0,
-                remaining(player, VENGEANCE_COOLDOWN),
-                remaining(player, TELEBLOCK_TIMER),
-                remaining(player, FROZEN_TIMER),
-            )
+        val timers = timers(player)
         val boostChanged = boost.indices.any { drifted(state.boost[it], boost[it], elapsed) }
         // Index 0 is a flag, not a countdown.
-        val timersChanged = state.timers[0] != timers[0] || (1 until timers.size).any { drifted(state.timers[it], timers[it], elapsed) }
+        val timersChanged =
+            timers.indices.any { if (it in TIMER_FLAGS) state.timers[it] != timers[it] else drifted(state.timers[it], timers[it], elapsed) }
 
         if (boostChanged || timersChanged) {
             // Both groups are countdowns from the same cycle, so they are always sent together from here.
@@ -94,6 +102,51 @@ object ClientHudSync {
             ClientHud.send(player, opponent)
             state.opponent = opponent
         }
+    }
+
+    /**
+     * The `tmr` fields, all live server state: Vengeance (active flag, cooldown), Teleblock, freeze, then the damage-over-time block -
+     * poison/venom (0 none, 1 poison, 2 venom), the damage of its next hit (Poison.getDamageForTicks / Venom.damageForTick, the exact
+     * numbers the timer plugins deal), ticks to that hit (the POISON_TIMER / VENOM_TIMER itself), antipoison and antivenom immunity,
+     * burn stacks (= the next combined burn hit) and ticks to that hit (the Burns cycle driver).
+     */
+    fun timers(player: Player): IntArray {
+        val venomTicks = player.attr[VENOM_TICKS_ELAPSED_ATTR]
+        val poisonTicks = player.attr[POISON_TICKS_LEFT_ATTR]
+        val dot =
+            when {
+                venomTicks != null && player.timers.has(VENOM_TIMER) -> 2
+                poisonTicks != null && poisonTicks >= 0 && player.timers.has(POISON_TIMER) -> 1
+                else -> 0
+            }
+        val dotDamage =
+            when (dot) {
+                2 -> Venom.damageForTick(venomTicks!!)
+                1 -> Poison.getDamageForTicks(poisonTicks!!)
+                else -> 0
+            }
+        val dotNext =
+            when (dot) {
+                2 -> remaining(player, VENOM_TIMER)
+                1 -> remaining(player, POISON_TIMER)
+                else -> 0
+            }
+        val burns = Burns.nextHitDamage(player)
+        val burnNext = if (burns > 0) ((player.attr[Burns.NEXT_HIT_CYCLE] ?: 0) - player.world.currentCycle).coerceAtLeast(1) else 0
+        return intArrayOf(
+            if (player.attr[VENGEANCE_ACTIVE_ATTR] == true) 1 else 0,
+            remaining(player, VENGEANCE_COOLDOWN),
+            remaining(player, TELEBLOCK_TIMER),
+            remaining(player, FROZEN_TIMER),
+            dot,
+            dotDamage,
+            dotNext,
+            remaining(player, POISON_IMMUNITY),
+            remaining(player, VENOM_IMMUNITY),
+            burns,
+            burnNext,
+            0,
+        )
     }
 
     private fun remaining(

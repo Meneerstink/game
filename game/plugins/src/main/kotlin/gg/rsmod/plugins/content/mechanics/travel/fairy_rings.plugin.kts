@@ -1,33 +1,23 @@
 package gg.rsmod.plugins.content.mechanics.travel
 
 import gg.rsmod.game.fs.def.ObjectDef
-import gg.rsmod.plugins.content.magic.TeleportType
-import gg.rsmod.plugins.content.magic.canTeleport
-import gg.rsmod.plugins.content.magic.teleport
 
 /*
  * Fairy rings (rules and sources in [FairyRings]). Every loc named "Fairy ring" whose option is "Use" opens the dial - an object
- * FALLBACK, so the Zanaris ring 12094 keeps its own route to the Lumbridge shed. The travel log (735) is not opened: it would take the
- * inventory tab's place and only lists codes.
+ * FALLBACK, so the Zanaris ring 12094 keeps its own route to the Lumbridge shed. Owner 2026-09-30: one service ([FairyRings.open] /
+ * [FairyRings.travel]) serves the rings and the Trinket of fairies; the travel log 735 opens in the inventory tab beside the dial, the
+ * dials start on the last destination, and the last code and the visited codes persist.
  */
 
 val USED_RING = gg.rsmod.game.model.attr.AttributeKey<gg.rsmod.game.model.Tile>()
-
-fun wieldsFairyMagic(player: Player): Boolean =
-    player.getEquipment(EquipmentType.WEAPON)?.id in setOf(Items.DRAMEN_STAFF, Items.LUNAR_STAFF)
 
 world.plugins.bindObjectFallback { player, obj, opt ->
     val def = player.world.definitions.get(ObjectDef::class.java, obj.getTransform(player))
     if (!def.name.equals("Fairy ring", ignoreCase = true) || def.options.getOrNull(opt - 1)?.lowercase() != "use") {
         return@bindObjectFallback false
     }
-    if (!wieldsFairyMagic(player)) {
-        player.message("The fairy ring only works for those who wield fairy magic.")
-        return@bindObjectFallback true
-    }
     player.attr[USED_RING] = obj.tile
-    FairyRings.DIAL_VARBITS.forEach { player.setVarbit(it, 0) }
-    player.openInterface(FairyRings.DIAL_INTERFACE, InterfaceDestination.MAIN_SCREEN)
+    FairyRings.open(player, FairyRings.Source.RING)
     true
 }
 
@@ -39,14 +29,23 @@ world.plugins.bindObjectFallback { player, obj, opt ->
 }
 
 on_button(FairyRings.DIAL_INTERFACE, FairyRings.TELEPORT_BUTTON) {
-    val code = FairyRings.code(FairyRings.DIAL_VARBITS.map { player.getVarbit(it) }.toIntArray())
+    val code = FairyRings.dialledCode(player)
+    val source = player.attr[FairyRings.SOURCE] ?: FairyRings.Source.RING
     player.closeInterface(FairyRings.DIAL_INTERFACE)
-    if (!wieldsFairyMagic(player)) {
-        player.message("The fairy ring only works for those who wield fairy magic.")
-        return@on_button
+    FairyRings.travel(player, code, source)
+}
+
+// Travel log "Re-sort list": the log's own client script (957, varp 816 trigger) re-sorts on this varbit.
+on_button(FairyRings.TRAVEL_LOG_INTERFACE, FairyRings.RESORT_BUTTON) {
+    player.setVarbit(FairyRings.RESORT_VARBIT, 1 - player.getVarbit(FairyRings.RESORT_VARBIT))
+}
+
+// Closing the dial gives the inventory tab back (the travel log sat in its place).
+on_interface_close(FairyRings.DIAL_INTERFACE) {
+    player.attr.remove(FairyRings.SOURCE)
+    if (player.interfaces.isVisible(FairyRings.TRAVEL_LOG_INTERFACE)) {
+        player.closeInterface(interfaceId = FairyRings.TRAVEL_LOG_INTERFACE)
     }
-    val destination = FairyRings.CODES[code]?.tile ?: FairyRings.ZANARIS
-    player.canTeleport(TeleportType.FAIRY) {
-        player.teleport(destination, TeleportType.FAIRY)
-    }
+    player.openInterface(dest = InterfaceDestination.INVENTORY_TAB)
+    player.inventory.dirty = true
 }

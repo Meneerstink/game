@@ -25,7 +25,9 @@ import gg.rsmod.game.model.entity.Player
  *  - `opp|n|<npcIndex>|<ratio>|<cur>|<max>`   the player's current opponent; ratio 0..255 like the hit mask
  *  - `opp|p|<playerIndex>|<ratio>`            (a player opponent: ratio only, as in the hit mask)
  *  - `opp|none`
- *  - `tmr|<vengActive>|<vengCd>|<teleblock>|<frozen>`   remaining ticks, 0 = not active
+ *  - `tmr|<vengActive>|<vengCd>|<teleblock>|<frozen>|<dot>|<dotDamage>|<dotNext>|<antiPoison>|<antiVenom>|<burns>|<burnNext>|0`
+ *                                             remaining ticks, 0 = not active; dot 0 none / 1 poison / 2 venom with the damage
+ *                                             of its next hit; burns = active burn stacks = the next combined burn hit
  *  - `gi|<entry>;<entry>...`                  ground items: `<level>,<x>,<z>,<id>,<despawnTicks>,<unitValue>,<unitAlch>,<flags>`
  *                                             per tile and item id the player can see; despawnTicks -1 = never despawns,
  *                                             -2 = none left; flags: 1 untradeable, 2 dropped for this player, 4 dropped

@@ -107,6 +107,10 @@ object ClientHudConfig {
             bool("timers.showVengeanceActive", true),
             bool("timers.showTeleblock", true),
             bool("timers.showFreezes", true),
+            bool("timers.showAntiPoison", true),
+            // Poison / venom (RuneLite PoisonPlugin infobox) and burn: server state from the tmr payload's damage-over-time block.
+            bool("timers.showPoison", true),
+            bool("timers.showBurn", true),
         )
 
     private val BY_KEY = SETTINGS.associateBy { it.key }

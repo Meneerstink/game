@@ -1,6 +1,19 @@
 package gg.rsmod.plugins.content.mechanics.travel
 
 import gg.rsmod.game.model.Tile
+import gg.rsmod.game.model.attr.AttributeKey
+import gg.rsmod.game.model.entity.Player
+import gg.rsmod.plugins.api.EquipmentType
+import gg.rsmod.plugins.api.InterfaceDestination
+import gg.rsmod.plugins.api.cfg.Items
+import gg.rsmod.plugins.api.ext.getEquipment
+import gg.rsmod.plugins.api.ext.getVarbit
+import gg.rsmod.plugins.api.ext.message
+import gg.rsmod.plugins.api.ext.openInterface
+import gg.rsmod.plugins.api.ext.setVarbit
+import gg.rsmod.plugins.content.magic.TeleportType
+import gg.rsmod.plugins.content.magic.canTeleport
+import gg.rsmod.plugins.content.magic.teleport
 
 /**
  * The fairy ring network (owner 2026-09-24: "Check alle donors Void en Novite voor dingen die onze rsps nog niet heeft ... port t
@@ -69,6 +82,83 @@ object FairyRings {
             "dlr" to Destination("Islands: Poison Waste south of Isafdar", Tile(2213, 3099, 0)),
             "dls" to Destination("Dungeons: Myreque hideout under The Hollows", Tile(3501, 9821, 3)),
         )
+
+    /** Travel log "Re-sort list" (735:12) and its persisted varbit (Void fairy_ring.ifaces / travel_log_re_sort 4618). */
+    const val RESORT_BUTTON = 12
+    const val RESORT_VARBIT = 4618
+
+    /** The code last travelled to (rings and the Trinket of fairies share it, as OSRS "Last-destination"). */
+    val LAST_CODE = AttributeKey<String>(persistenceKey = "fairy_ring_last_code")
+
+    /** Every code this player has travelled to, comma separated. */
+    val TRAVEL_LOG = AttributeKey<String>(persistenceKey = "fairy_ring_travel_log")
+
+    /** How the open dial was reached: at a ring, or through the Trinket of fairies (its own Wilderness limit). */
+    enum class Source(val teleport: TeleportType) {
+        RING(TeleportType.FAIRY),
+        TRINKET(TeleportType.TRINKET_FAIRY),
+    }
+
+    val SOURCE = AttributeKey<Source>()
+
+    fun wieldsFairyMagic(player: Player): Boolean =
+        player.getEquipment(EquipmentType.WEAPON)?.id in setOf(Items.DRAMEN_STAFF, Items.LUNAR_STAFF)
+
+    fun travelLog(player: Player): List<String> = player.attr[TRAVEL_LOG]?.split(',')?.filter { it.length == 3 } ?: emptyList()
+
+    /** The dial values that show [code], or null for anything that is not a dialable code. */
+    fun dialsFor(code: String): IntArray? {
+        if (code.length != 3) return null
+        val values = IntArray(3) { DIAL_LETTERS[it].indexOf(code[it]) }
+        return if (values.any { it < 0 }) null else values
+    }
+
+    /**
+     * The one entry point of the network (owner 2026-09-30: one FairyRingService for rings and the Trinket of fairies): the real dial
+     * 734 with the travel log 735 in the inventory tab (Void same-era `fairy_ring` + `travel_log`), dials set to the last destination.
+     */
+    fun open(
+        player: Player,
+        source: Source,
+    ): Boolean {
+        if (source == Source.RING && !wieldsFairyMagic(player)) {
+            player.message("The fairy ring only works for those who wield fairy magic.")
+            return false
+        }
+        player.attr[SOURCE] = source
+        val dials = player.attr[LAST_CODE]?.let(::dialsFor) ?: IntArray(3)
+        DIAL_VARBITS.forEachIndexed { i, varbit -> player.setVarbit(varbit, dials[i]) }
+        player.openInterface(DIAL_INTERFACE, InterfaceDestination.MAIN_SCREEN)
+        player.openInterface(TRAVEL_LOG_INTERFACE, InterfaceDestination.TAB_AREA)
+        return true
+    }
+
+    /** The code on the dials now. */
+    fun dialledCode(player: Player): String = code(DIAL_VARBITS.map { player.getVarbit(it) }.toIntArray())
+
+    /**
+     * Travels to [code] through the shared teleport gate (Tele Block, Deadman countdown, activity/instance locks and the source's
+     * Wilderness limit: 20 for a ring, 30 for the trinket). A code without a destination lands in Zanaris, as Void's network does.
+     */
+    fun travel(
+        player: Player,
+        code: String,
+        source: Source,
+    ) {
+        if (source == Source.RING && !wieldsFairyMagic(player)) {
+            player.message("The fairy ring only works for those who wield fairy magic.")
+            return
+        }
+        val destination = CODES[code]
+        player.canTeleport(source.teleport) {
+            player.teleport(destination?.tile ?: ZANARIS, source.teleport)
+            if (destination != null) {
+                player.attr[LAST_CODE] = code
+                val log = travelLog(player)
+                if (code !in log) player.attr[TRAVEL_LOG] = (log + code).joinToString(",")
+            }
+        }
+    }
 
     /** The dialled code from the three dial varbits. */
     fun code(dials: IntArray): String = dials.mapIndexed { i, v -> DIAL_LETTERS[i][v and 3] }.joinToString("")

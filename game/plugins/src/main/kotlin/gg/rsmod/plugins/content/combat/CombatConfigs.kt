@@ -168,7 +168,7 @@ object CombatConfigs {
             // Eclipse atlatl: "During player versus player combat, its base attack speed is 5, unless the full Eclipse
             // armour set is worn" (then 3).
             if (weapon?.id == gg.rsmod.plugins.api.cfg.Items.ECLIPSE_ATLATL && pawn.attr[gg.rsmod.game.model.attr.COMBAT_TARGET_FOCUS_ATTR]?.get() is Player) {
-                speed = gg.rsmod.plugins.content.items.osrs.MoonSets.atlatlPvpSpeed(pawn)
+                speed = gg.rsmod.plugins.content.items.osrs.MoonSets.atlatlPvpSpeed(pawn, speed)
             }
             // The spell of this attack: the one still selected, or a manual cast that has already fired and was cleared by
             // MagicCombatStrategy.attack before postAttack ran. Without the second source a manual cast (Entangle, a curse, a

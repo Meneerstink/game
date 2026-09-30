@@ -12,6 +12,23 @@ import gg.rsmod.util.Misc.formatForDisplay
 import gg.rsmod.util.Misc.formatSentence
 
 /**
+ * Owner 2026-09-30: explicit chat-channel prefixes "/p " public, "/f " friends chat, "/c " clan chat, "/g " guest clan chat, next to
+ * the 2011 client's own "/", "//" and "///". Each is rewritten to the one route that channel already has, so no channel can leak
+ * into another; a prefix needs the space, so a friends-chat line such as "/fun" still goes to the friends chat.
+ */
+internal fun routeChannelPrefix(text: String): String {
+    if (text.length < 3 || text[0] != '/' || text[2] != ' ') return text
+    val rest = text.substring(3)
+    return when (text[1].lowercaseChar()) {
+        'p' -> rest
+        'f' -> "/$rest"
+        'c' -> "//$rest"
+        'g' -> "///$rest"
+        else -> text
+    }
+}
+
+/**
  * @author Tom <rspsmods@gmail.com>
  */
 class MessagePublicHandler : MessageHandler<MessagePublicMessage> {
@@ -24,7 +41,7 @@ class MessagePublicHandler : MessageHandler<MessagePublicMessage> {
         val huffman = world.huffman
         huffman.decompress(message.data, decompressed, message.length)
 
-        val unpacked = String(decompressed, 0, message.length)
+        val unpacked = routeChannelPrefix(String(decompressed, 0, message.length))
 
         if (unpacked.startsWith("::yell")) {
             client.writeMessage("To talk in the global chat, start your message in public chat with a period (.)")

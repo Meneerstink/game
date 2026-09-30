@@ -77,8 +77,15 @@ object MoonSets {
     fun wieldingAtlatl(player: Player): Boolean = player.getEquipment(EquipmentType.WEAPON)?.id == Items.ECLIPSE_ATLATL
 
     fun eclipseBurnActive(player: Player): Boolean = wieldingAtlatl(player) && wearing(player, MoonSet.ECLIPSE)
-    /** The atlatl's PvP attack speed: 5 normally, 3 only with the full Eclipse set worn. */
-    fun atlatlPvpSpeed(player: Player): Int = if (wearing(player, MoonSet.ECLIPSE)) ATLATL_PVP_SPEED_FULL_SET else ATLATL_PVP_SPEED_NO_SET
+    /**
+     * The atlatl's PvP base attack speed (before Rapid): 5 without the full Eclipse set, else its normal item speed (4), so Rapid
+     * gives the Wiki's 3. Owner 2026-09-30 (full Eclipse attacked too fast): the full set used to set the base to 3 and
+     * CombatConfigs' Rapid -1 then made it 2 ticks; the "attack speed of 3" is the Rapid speed (Accurate/Longrange 4, Rapid 3).
+     */
+    fun atlatlPvpSpeed(
+        player: Player,
+        itemSpeed: Int = ATLATL_PVP_SPEED_FULL_SET + 1,
+    ): Int = if (wearing(player, MoonSet.ECLIPSE)) itemSpeed else ATLATL_PVP_SPEED_NO_SET
 
     /** Max hit and minimum hit of Eclipse after consuming [burnDamage]: +burn (capped at 50) and +half of it. */
     fun eclipseHit(

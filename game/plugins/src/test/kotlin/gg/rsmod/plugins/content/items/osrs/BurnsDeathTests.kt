@@ -29,9 +29,12 @@ class BurnsDeathTests {
     @Test
     fun `a stopped burn is zeroed and removed, and the death hook clears the stacks`() {
         val burns = File("src/main/kotlin/gg/rsmod/plugins/content/items/osrs/Burns.kt").readText()
-        val loopEnd = burns.indexOf("target.hit(damage = 1, type = gg.rsmod.plugins.api.HitType.BURN)")
-        assertTrue(burns.indexOf("burn.remaining = 0", loopEnd) > loopEnd)
-        assertTrue(burns.indexOf("target.attr[ACTIVE]?.remove(burn)", loopEnd) > loopEnd)
+        // Owner 2026-09-30: one cycle driver per target and ONE combined hit per cycle - never a queue or a hit per stack.
+        assertEquals(1, Regex("""world\.queue""").findAll(burns).count(), "one burn driver")
+        assertEquals(1, Regex("""target\.hit\(""").findAll(burns).count(), "one burn hit call")
+        val stop = burns.indexOf("return@queue")
+        assertTrue(burns.indexOf("burns.forEach { it.remaining = 0 }", stop - 200) > 0, "a stopped driver zeroes its burns")
+        assertTrue(burns.indexOf("target.attr.remove(ACTIVE)", burns.indexOf("finally")) > 0, "no stack left behind")
         val hook = File("src/main/kotlin/gg/rsmod/plugins/content/items/osrs/burns.plugin.kts").readText()
         assertTrue("on_player_pre_death" in hook && "Burns.clear(player)" in hook)
     }

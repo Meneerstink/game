@@ -402,6 +402,19 @@ on_world_init {
             } else if (target.tile.x == 2902 && target.tile.z == 3680) {
                 walkOverTile(player, Tile(2900, 3680))
                 player.addXp(Skills.AGILITY, 8.0)
+            } else {
+                // Owner 2026-09-30: this 667 cache places 9306 at (2909,3685), a tile Void's map does not have, and the climb did
+                // nothing at all. Same climb, landing across the rock in this cache's collision (ShortcutSupport.crossingLanding).
+                val landing = crossingLanding(world, target, player.tile)
+                if (landing == null) {
+                    gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.PLUGIN) {
+                        "rocks 9306 at ${target.tile.x},${target.tile.z}: no landing across from ${player.tile.x},${player.tile.z}"
+                    }
+                    player.message("You can't climb the rocks from here.")
+                    return@obstacle
+                }
+                climbDownRocks(player, ANIM_HUMAN_CLIMBING_DOWN, landing, 120, Direction.between(player.tile, landing))
+                player.addXp(Skills.AGILITY, 8.0)
             }
         }
     }

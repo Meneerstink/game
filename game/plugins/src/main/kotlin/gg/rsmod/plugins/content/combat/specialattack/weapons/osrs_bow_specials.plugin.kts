@@ -66,7 +66,7 @@ SpecialAttacks.register(ScorchingBow.SHACKLES_ENERGY, Items.SCORCHING_BOW) {
     // The shackles burn is a normal burn stack (Burns): it counts toward the five-burn cap and the Eclipse special can consume it.
     world.queue {
         wait(delay)
-        if (!victim.isDead()) Burns.apply(victim, ScorchingBow.BURN_HITS)
+        if (!victim.isDead()) Burns.apply(victim, ScorchingBow.BURN_HITS, source = player)
     }
 }
 

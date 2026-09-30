@@ -470,7 +470,7 @@ object RangedCombatStrategy : CombatStrategy {
             // Owner 2026-09-29 (set effect showed nothing): OSRS Wiki "Eclipse (set effect).gif" - the golden eclipse moon rises over
             // the player on the attack that triggers it, spotanim 2794 SPECIAL_ATLATL_SPOTANIM (imported, unused until now).
             pawn.graphic(gg.rsmod.plugins.content.items.osrs.OsrsGfx.SPECIAL_ATLATL)
-            pawnHit.hit.addAction { gg.rsmod.plugins.content.items.osrs.Burns.apply(target) }
+            pawnHit.hit.addAction { gg.rsmod.plugins.content.items.osrs.Burns.apply(target, source = pawn, severity = gg.rsmod.plugins.content.items.osrs.Burns.Severity.STRONG) }
         }
         // Amulet of the damned with Karil's set: "25% chance of hitting twice with one attack. The second hit will deal half the
         // damage of the first hit."

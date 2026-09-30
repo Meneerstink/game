@@ -103,6 +103,8 @@ object WeaponPoison {
         if (severity <= 0) return
         val ranged = hitType == HitType.RANGE
         val tentacleSpecial = source == Items.ABYSSAL_TENTACLE && attacker.attr[SPECIAL_ATTACK_IN_PROGRESS] == true
+        // Binding Tentacle rolls its own 1/2 poison, hit or miss (melee_specials); a second roll here would double the chance.
+        if (tentacleSpecial) return
         if (attacker.world.random(chanceDenominator(ranged, tentacleSpecial) - 1) != 0) return
         val applied = appliedSeverity(severity, ranged)
         pawnHit.hit.addAction {

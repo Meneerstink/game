@@ -158,6 +158,24 @@ enum class TeleportType(
         animation = Anims.FAIRY_TELEPORT_START,
         graphic = Graphic(Gfx.FAIRY_RING_TELEPORT, 0),
         endAnimation = Anims.FAIRY_TELEPORT_END),
+
+    /**
+     * Trinket of fairies (OSRS Wiki, Deadman): the same fairy ring / spirit tree travel, but "The trinket cannot be used beyond level
+     * 30 Wilderness" - the only difference from [FAIRY] / [SPIRIT_TREE].
+     */
+    TRINKET_FAIRY(
+        teleportDelay = 6,
+        animation = Anims.FAIRY_TELEPORT_START,
+        graphic = Graphic(Gfx.FAIRY_RING_TELEPORT, 0),
+        endAnimation = Anims.FAIRY_TELEPORT_END,
+        wildLvlRestriction = 30),
+    TRINKET_SPIRIT_TREE(
+        teleportDelay = 6,
+        animation = Anims.SPIRIT_TREE_TELEPORT_START,
+        graphic = Graphic(Gfx.GFX_129, 0),
+        endAnimation = Anims.SPIRIT_TREE_TELEPORT_END,
+        endGraphic = Graphic(Gfx.GFX_1229, 0),
+        wildLvlRestriction = 30),
     ;
 
     /**
@@ -173,7 +191,7 @@ enum class TeleportType(
             when (this) {
                 MODERN, JEWELRY, ECTOPHIAL, SKULL_SCEPTRE, WILDERNESS_OBELISK, OBELISK -> Sfx.TELEPORT_ALL
                 TAB -> Sfx.POH_TABLET_BREAK_TELEPORT
-                FAIRY -> Sfx.FT_FAIRY_TELEPORT
+                FAIRY, TRINKET_FAIRY -> Sfx.FT_FAIRY_TELEPORT
                 else -> null
             }
 

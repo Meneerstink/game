@@ -725,7 +725,7 @@ object BreachConformance {
             (
                 mechSetup + " " +
                     when (m.id) {
-                        14451 -> { val burns = n("mech.burn"); val fives = all.count { cat(it) == "player.hit" && kv(it, "damage") == "5" && (kv(it, "source") ?: "").contains("deadman_breach", ignoreCase = true) }; "burn=$burns burnHits=$fives${if (burns == 0 || fives < 2 * burns) " FAIL" else ""}" }
+                        14451 -> { val burns = n("mech.burn"); val fives = all.count { cat(it) == "player.hit" && (kv(it, "damage")?.toIntOrNull() ?: 0) >= 5 && (kv(it, "source") ?: "").let { s -> s.contains("deadman_breach", ignoreCase = true) || s.contains("Burns", ignoreCase = true) } }; "burn=$burns burnHits=$fives${if (burns == 0 || fives < 2 * burns) " FAIL" else ""}" }
                         14447, 14448 -> { val tb = n("mech.teleblock"); "teleblock=$tb${if (tb == 0) " FAIL" else ""}" }
                         14456 -> { val kb = n("mech.knockback"); "knockback=$kb${if (kb == 0) " FAIL" else ""}" }
                         14464 -> { val h = n("mech.heal"); "heal=$h${if (h == 0) " FAIL" else ""}" }

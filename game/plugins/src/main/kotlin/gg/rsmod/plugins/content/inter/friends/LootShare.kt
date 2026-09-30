@@ -39,6 +39,30 @@ object LootShare {
 
     val POINTS = AttributeKey<Int>("loot_share_potential")
 
+    /** When [POINTS] last decayed (epoch ms, persisted). */
+    val POINTS_DECAYED_AT = AttributeKey<Long>("loot_share_potential_decayed")
+
+    /** RuneScape Wiki "LootShare" (Mod Emilee, 5 Nov 2009): "LootShare points ... are automatically reduced by 10% per day". */
+    const val DAILY_DECAY = 0.9
+    private const val DAY_MS = 24L * 60 * 60 * 1000
+
+    /** Applies the whole days of decay since the last one (login and before every share); the part-day carries over. */
+    fun decayPoints(
+        player: Player,
+        now: Long = System.currentTimeMillis(),
+    ) {
+        val last = player.attr[POINTS_DECAYED_AT]
+        if (last == null) {
+            player.attr[POINTS_DECAYED_AT] = now
+            return
+        }
+        val days = ((now - last) / DAY_MS).toInt()
+        if (days <= 0) return
+        val points = player.attr[POINTS] ?: 0
+        if (points != 0) player.attr[POINTS] = (points * Math.pow(DAILY_DECAY, days.toDouble())).toInt()
+        player.attr[POINTS_DECAYED_AT] = last + days * DAY_MS
+    }
+
     private val RANK_NAMES = mapOf(0 to "friend", 1 to "recruit", 2 to "corporal", 3 to "sergeant", 4 to "lieutenant", 5 to "captain", 6 to "general", 7 to "owner")
 
     fun isActive(player: Player): Boolean = player.getVarbit(ACTIVE_VARBIT) == 1
@@ -102,7 +126,15 @@ object LootShare {
     fun sharers(killer: Player, tile: Tile): List<Player>? {
         if (!isActive(killer) || !tile.isMulti(killer.world)) return null
         val channel = killer.world.friendsChat.channelOf(killer) ?: return null
-        val members = channel.members().filter { it.isOnline && isActive(it) && it.tile.height == tile.height && it.tile.isWithinRadius(tile, RANGE) }
+        // Owner 2026-09-30 (kill/damage-group ownership): only members who damaged the npc share its drop (Void NPCDeath.shareLoot:
+        // `npc.damageDealers.keys ... within(tile, 16) && clan.members.contains(it) && loot_share`). The dying npc still holds its
+        // damage map while the death hooks run (NpcDeathAction resets it after); without it nobody but the killer would qualify.
+        val npc = killer.world.npcs.firstOrNull { it.isDead() && it.tile == tile && it.damageMap[killer] != null }
+        val members =
+            channel.members().filter {
+                it.isOnline && isActive(it) && it.tile.height == tile.height && it.tile.isWithinRadius(tile, RANGE) &&
+                    (npc == null || npc.damageMap[it] != null)
+            }
         return members.takeIf { killer in it && it.size > 1 }
     }
 
@@ -119,10 +151,15 @@ object LootShare {
             }
             return true
         }
+        members.forEach { decayPoints(it) }
         val awardee = if (def.tradeable) weighted(world, members) ?: killer else killer
-        members.filter { it !== awardee }.forEach { member ->
+        // RuneScape Wiki "LootShare": the others "have their LootShare Points increased, by an even share of the value of the item"
+        // (each used to get the whole value).
+        val others = members.filter { it !== awardee }
+        val share = if (others.isEmpty()) 0L else value / others.size
+        others.forEach { member ->
             member.message("${awardee.username} received: ${item.amount} ${plural(def.name, item.amount)}.")
-            member.attr[POINTS] = ((member.attr[POINTS] ?: 0).toLong() + value).coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
+            member.attr[POINTS] = ((member.attr[POINTS] ?: 0).toLong() + share).coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
             member.message("Your chance of receiving loot has improved.")
         }
         awardee.attr[POINTS] = ((awardee.attr[POINTS] ?: 0).toLong() - value).coerceAtLeast(0).toInt()

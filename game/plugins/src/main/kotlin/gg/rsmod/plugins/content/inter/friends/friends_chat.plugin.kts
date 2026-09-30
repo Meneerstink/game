@@ -107,6 +107,7 @@ world.socialHooks.friendsChatLeft = { p -> LootShare.disable(p) }
 on_login {
     // LootShare never survives a logout; it is switched on again from the tab (2 minutes).
     LootShare.disable(player, quiet = true)
+    LootShare.decayPoints(player)
     world.friendsChat.syncFriends(player)
     world.friendsChat.rejoinOnLogin(player)
 }

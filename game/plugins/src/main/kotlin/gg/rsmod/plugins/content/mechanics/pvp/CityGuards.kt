@@ -213,7 +213,18 @@ object CityGuards {
      * multicombat area status." */
     fun ignoresSingleCombat(pawn: Pawn): Boolean = pawn is Npc && isGuard(pawn)
 
-    fun isGuardedZone(tile: Tile): Boolean = GuardedZones.contains(tile)
+    /**
+     * Where guards act. Owner 2026-09-30 ("Wizzguard en normale Guards verschijnen in Player-Owned Houses"): [GuardedZones.contains]
+     * also holds every player-owned house (the PvP gate's safe-zone predicate, OSRS Deadman "the house is a safe zone"), so a skulled
+     * player in their house was an "intruder": the Wizguard struck and a guard was placed next to them inside the instance. OSRS
+     * Deadman houses have no guards - they are safe because nobody can attack there. Guards therefore never act inside a house or
+     * any other private instance (x >= 6400, InstancedMapAllocator); the world's guarded cities are unchanged.
+     */
+    fun isGuardedZone(tile: Tile): Boolean =
+        tile.x < INSTANCE_MIN_X && !gg.rsmod.plugins.content.areas.poh.PlayerHouse.isSafeTile(tile) && GuardedZones.contains(tile)
+
+    /** InstancedMapAllocator: every instance lies at x >= 6400. */
+    private const val INSTANCE_MIN_X = 6400
 
     /** The only thing a guard ever acts on: a PK-skulled player standing inside a guarded zone. */
     fun isSkulledIntruder(target: Player): Boolean = PvpSkull.isSkulled(target) && isGuardedZone(target.zoneTile())

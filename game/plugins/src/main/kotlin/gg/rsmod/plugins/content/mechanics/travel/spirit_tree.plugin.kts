@@ -26,11 +26,6 @@ import gg.rsmod.plugins.content.magic.teleport
  * Real, named gap - left for the Farming skill batch (R6/R12): do not mark these as always
  * available, that would be wrong.
  */
-private data class SpiritTreeStation(
-    val label: String,
-    val tile: Tile,
-)
-
 private val SPIRIT_TREE_OBJECTS =
     intArrayOf(
         Objs.SPIRIT_TREE_1293, Objs.SPIRIT_TREE_1294, Objs.SPIRIT_TREE_1295, Objs.SPIRIT_TREE_1317,
@@ -39,17 +34,6 @@ private val SPIRIT_TREE_OBJECTS =
         // (PlayerHouse.furnishGarden); it is the same network from the same tree, so it belongs on the same list.
         Objs.SPIRIT_TREE_8355,
     )
-
-private val STATIONS =
-    listOf(
-        SpiritTreeStation("Tree Gnome Village", Tile(2542, 3169, 0)),
-        SpiritTreeStation("Tree Gnome Stronghold", Tile(2462, 3444, 0)),
-        SpiritTreeStation("Battlefield of Khazard", Tile(2557, 3259, 0)),
-        SpiritTreeStation("North-east of the Grand Exchange in Varrock", Tile(3185, 3511, 0)),
-        SpiritTreeStation("Mobilising Armies", Tile(2416, 2851, 0)),
-    )
-
-private val NEAREST_STATION_RADIUS = 30
 
 SPIRIT_TREE_OBJECTS.forEach { obj ->
     on_obj_option(obj = obj, option = "Teleport") {
@@ -81,22 +65,4 @@ on_obj_option(obj = Objs.SPIRIT_TREE_8355, option = "Inspect") {
 suspend fun travel(
     task: gg.rsmod.game.model.queue.QueueTask,
     player: Player,
-) {
-    val origin = STATIONS.minByOrNull { it.tile.getDistance(player.tile) }
-    val destinations =
-        if (origin != null && origin.tile.getDistance(player.tile) <= NEAREST_STATION_RADIUS) {
-            STATIONS.filter { it != origin }
-        } else {
-            STATIONS
-        }
-    val choice = task.options(*destinations.map { it.label }.toTypedArray(), title = "Where would you like to go?")
-    if (choice < 1 || choice > destinations.size) {
-        return
-    }
-    val dest = destinations[choice - 1]
-    // Spirit trees are teleports, so Tele Block and the Deadman teleport rule are shared
-    // with spells, jewellery, tabs, fairy rings, levers and obelisks.
-    player.canTeleport(TeleportType.SPIRIT_TREE) {
-        player.teleport(dest.tile, TeleportType.SPIRIT_TREE)
-    }
-}
+) = SpiritTrees.travel(task, player)

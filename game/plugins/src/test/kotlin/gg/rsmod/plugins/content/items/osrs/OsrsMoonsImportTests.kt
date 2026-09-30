@@ -57,7 +57,7 @@ class OsrsMoonsImportTests {
         assertTrue("val secondLand = firstLand &&" in melee && "MoonSets.rollBloodrager" in melee)
         assertTrue("MoonSets.BLOODRAGER" in File("src/main/kotlin/gg/rsmod/plugins/content/combat/Combat.kt").readText())
         assertTrue("MoonSets.frostweaver(pawn, target, spell)" in File("src/main/kotlin/gg/rsmod/plugins/content/combat/strategy/MagicCombatStrategy.kt").readText())
-        assertTrue("Burns.apply(target)" in File("src/main/kotlin/gg/rsmod/plugins/content/combat/strategy/RangedCombatStrategy.kt").readText())
+        assertTrue("Burns.apply(target, source = pawn" in File("src/main/kotlin/gg/rsmod/plugins/content/combat/strategy/RangedCombatStrategy.kt").readText())
         val specials = File("src/main/kotlin/gg/rsmod/plugins/content/combat/specialattack/weapons/moon_specials.plugin.kts").readText()
         assertTrue("Items.ECLIPSE_ATLATL" in specials && "Items.DUAL_MACUAHUITL" in specials && "Items.BLUE_MOON_SPEAR" in specials)
     }
@@ -74,7 +74,7 @@ class OsrsMoonsImportTests {
         assertEquals(5, MoonSets.ATLATL_PVP_SPEED_NO_SET)
         assertEquals(3, MoonSets.ATLATL_PVP_SPEED_FULL_SET)
         val configs = File("src/main/kotlin/gg/rsmod/plugins/content/combat/CombatConfigs.kt").readText()
-        assertTrue("speed = gg.rsmod.plugins.content.items.osrs.MoonSets.atlatlPvpSpeed(pawn)" in configs, "speed must be looked up per-attack, not hardcoded")
+        assertTrue("speed = gg.rsmod.plugins.content.items.osrs.MoonSets.atlatlPvpSpeed(pawn, speed)" in configs, "speed must be looked up per-attack, not hardcoded")
         assertTrue(
             "speed = gg.rsmod.plugins.content.items.osrs.MoonSets.ATLATL_PVP_SPEED" !in configs,
             "no lingering hardcoded single-value PvP-speed assignment",

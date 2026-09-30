@@ -105,17 +105,29 @@ SpecialAttacks.register(60, Items.DRAGON_2H_SWORD) {
 }
 
 /*
- * Abyssal tentacle - Binding Tentacle (OSRS Wiki "Abyssal tentacle", read 2026-09-18): 50 % energy; "Regardless of whether the
- * hit is successful, the target will be frozen for 4.8 seconds" (8 ticks); ~50 % poison starting at 4 is already applied by
- * WeaponPoison while SPECIAL_ATTACK_IN_PROGRESS is set. The wiki gives no accuracy or damage modifier. Look: the tentacle's own
- * whip attack sequence; the special's spotanim is not sourced, so none is sent (owner 2026-09-18: "abyssal tentacle spec doet
- * het niet" - it was never registered).
+ * Abyssal tentacle - Binding Tentacle (OSRS Wiki "Abyssal tentacle" + "Special attacks" table, re-read 2026-09-30): 50 % energy, attack
+ * roll +25 %, no damage modifier. "Regardless of whether the hit is successful, the target will be frozen for 4.8 seconds (8 ticks), and
+ * there will be approximately a 50% chance of applying poison, starting at 4 damage" (severity 20). Look and sound are the whip's
+ * special: the wiki's sound line is "Abyssal whip special attack" = sound 2713 (Sfx.ENERGYDRAIN, owner: 2713), and RuneLite gameval has
+ * no tentacle special sequence or spotanim, so the tentacle plays its whip attack sequence (SLAYER_ABYSSAL_WHIP_ATTACK 1658) with the
+ * whip special spotanim SP_ATTACK_ABYSSAL_WHIP 341 on the target, exactly as our Energy Drain does.
  */
 SpecialAttacks.register(50, Items.ABYSSAL_TENTACLE) {
     val victim = target
     player.animate(gg.rsmod.plugins.content.combat.CombatConfigs.getAttackAnimation(player))
-    meleeHit(player, victim)
+    victim.graphic(341, 96)
+    player.playSound(Sfx.ENERGYDRAIN)
+    meleeHit(player, victim, accuracy = 1.25)
     victim.freeze(8, player)
+    // The special's own 1/2 poison roll, hit or miss (WeaponPoison skips its landed-hit roll for this special).
+    if (world.random(gg.rsmod.plugins.content.mechanics.poison.WeaponPoison.TENTACLE_SPECIAL_CHANCE - 1) == 0) {
+        world.queue {
+            wait(1)
+            if (!victim.isDead()) {
+                gg.rsmod.plugins.content.mechanics.poison.Poison.poisonSeverity(victim, gg.rsmod.plugins.content.mechanics.poison.WeaponPoison.WEAPON_POISON)
+            }
+        }
+    }
 }
 
 /* Granite maul - Quick Smash: OSRS rules (60 % / 50 % ornate handle, instant, homing) live in GraniteMaul / granite_maul.plugin.kts. */

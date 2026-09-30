@@ -124,3 +124,42 @@ fun Plugin.obstacle(block: suspend QueueTask.(GameObject) -> Unit) {
         block(obj)
     }
 }
+
+/** How far past a climbable loc [crossingLanding] looks for the landing tile. */
+const val MAX_CLIFF_CROSS = 6
+
+/**
+ * Where a climb over a rock / cliff loc lands when no source gives the tile (the 2011 map re-placed the Trollheim rocks): crossing the
+ * loc straight along the axis the player approaches it on, over the blocked tiles in this cache's own collision, to the first walkable
+ * tile beyond (owner 2026-09-30, cliffsides). Null when there is none within reach.
+ */
+fun crossingLanding(
+    world: gg.rsmod.game.model.World,
+    obj: gg.rsmod.game.model.entity.GameObject,
+    from: gg.rsmod.game.model.Tile,
+): Tile? {
+    val def = obj.getDef(world.definitions)
+    val w = def.getRotatedWidth(obj)
+    val l = def.getRotatedLength(obj)
+    val outX = if (from.x < obj.tile.x) obj.tile.x - from.x else if (from.x >= obj.tile.x + w) from.x - (obj.tile.x + w - 1) else 0
+    val outZ = if (from.z < obj.tile.z) obj.tile.z - from.z else if (from.z >= obj.tile.z + l) from.z - (obj.tile.z + l - 1) else 0
+    // One axis: the side the player stands on (the farther one when approached from a corner).
+    val alongX = outX >= outZ && outX > 0
+    val dx = if (alongX) Integer.signum(obj.tile.x - from.x) else 0
+    val dz = if (!alongX) Integer.signum(obj.tile.z - from.z) else 0
+    if (dx == 0 && dz == 0) return null
+    var crossed = false
+    var tile: gg.rsmod.game.model.Tile = from
+    repeat(MAX_CLIFF_CROSS + maxOf(w, l)) {
+        tile = tile.transform(dx, dz)
+        val inLoc = tile.x >= obj.tile.x && tile.x < obj.tile.x + w && tile.z >= obj.tile.z && tile.z < obj.tile.z + l
+        if (inLoc || world.collision.isClipped(tile)) {
+            crossed = true
+        } else if (crossed) {
+            return tile
+        }
+    }
+    return null
+}
+
+

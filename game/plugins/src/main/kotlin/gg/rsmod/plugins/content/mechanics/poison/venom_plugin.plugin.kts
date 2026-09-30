@@ -15,7 +15,8 @@ on_timer(VENOM_TIMER) {
 
     // Audit C-08: OSRS venom keeps hitting while an interface (bank, shop, ...) is open; the old modal guard paused it.
 
-    val ticksElapsed = pawn.attr[VENOM_TICKS_ELAPSED_ATTR] ?: 0
+    // A timer without venom state (cured or died between two ticks) must not start a fresh 6-damage venom of its own.
+    val ticksElapsed = pawn.attr[VENOM_TICKS_ELAPSED_ATTR] ?: return@on_timer
     // Owner 2026-09-18: OSRS venom shows a black splat (HitType.VENOM -> client VenomHitmarkType), not the green poison one.
     val venomDamage = Venom.damageForTick(ticksElapsed)
     pawn.hit(damage = venomDamage, type = HitType.VENOM)
@@ -28,7 +29,9 @@ on_timer(VENOM_TIMER) {
 }
 
 // Reset the player's poison orb (shared with venom) and venom state on death.
+// Owner 2026-09-30: the venom timer used to survive death (only the attribute was removed), so the next timer tick restarted venom at 6
+// on the respawned player; the one cure route stops both.
 on_player_death {
-    player.attr.remove(VENOM_TICKS_ELAPSED_ATTR)
+    Venom.cure(player, immunityTicks = 0, announce = false)
     Poison.setPoisonVarp(player, Poison.OrbState.NONE)
 }

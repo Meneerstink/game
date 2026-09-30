@@ -62,7 +62,7 @@ SpecialAttacks.register(BurningClaws.ENERGY, Items.BURNING_CLAWS) {
             )
         // "Each of the three hits also has a chance to inflict a burn" - per hitsplat, only when one of the three rolls succeeded.
         if (barrage.successfulRoll >= 0 && world.randomDouble() < barrage.burnChance) {
-            hit.hit.addAction { if (!target.isDead()) Burns.apply(target) }
+            hit.hit.addAction { if (!target.isDead()) Burns.apply(target, source = player) }
         }
     }
 }

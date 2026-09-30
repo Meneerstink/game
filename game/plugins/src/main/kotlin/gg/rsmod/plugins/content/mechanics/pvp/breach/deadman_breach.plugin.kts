@@ -184,12 +184,15 @@ listOf("breach_justiciar", "breach_derwen").forEach { def ->
     }
 }
 
-/** Flaming pyrelord: "2 hitsplats of 5 burn damage each" per hit (ADAPTED: 4 ticks apart). */
-NpcAttacks.onImpact("breach_pyrelord", "magic") { _, target ->
+/**
+ * Flaming pyrelord: "applies the burn status effect with each hit, dealing 2 hitsplats of 5 burn damage each" (ADAPTED: on the burn
+ * cycle, 4 ticks apart). Owner 2026-09-30 (never two burn splats on one tick): the burn is a Burns stack of 10 dealt 5 per cycle, so
+ * back-to-back pyrelord hits - and any other burn on the target - land as ONE combined burn hitsplat per cycle.
+ */
+NpcAttacks.onImpact("breach_pyrelord", "magic") { npc, target ->
     gg.rsmod.game.model.BreachTrace.log("mech.burn") { "target=${(target as? Player)?.username ?: target.toString()}" }
     // The OSRS burn hitsplat (HitType.BURN, owner 2026-09-19), not the plain red one (Deadman audit 2026-09-28).
-    target.hit(5, HitType.BURN, delay = 4)
-    target.hit(5, HitType.BURN, delay = 8)
+    gg.rsmod.plugins.content.items.osrs.Burns.apply(target, damage = 10, source = npc, perCycle = 5)
     // A burn tick sound (owner 2026-09-28): ADAPTED 2412 sizzle (OSRS Wiki "List of sound IDs", 667 cache id) with each burn hitsplat.
     world.queue {
         for (d in listOf(4, 4)) {
