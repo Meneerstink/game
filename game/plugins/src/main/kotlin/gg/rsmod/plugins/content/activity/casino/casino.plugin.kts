@@ -37,7 +37,8 @@ for ((interfaceId, fairnessBase) in CASINO_SCREENS) {
     }
 
     on_button(interfaceId = interfaceId, component = fairnessBase + Layout.Fair.SET_SEED) {
-        player.queue {
+        // ROOT_CAUSES 92 (2026-09-30): asked while this screen is open - a STANDARD task pauses while a menu is open, so it never ran.
+        player.queue(gg.rsmod.game.model.queue.TaskPriority.WEAK) {
             CasinoDialogs.askClientSeed(this, player)
             CasinoScreens.refreshFairness(player, interfaceId)
         }
@@ -79,7 +80,8 @@ on_button(interfaceId = Layout.DICE_ID, component = Layout.Dice.BET_MAX) {
 }
 
 on_button(interfaceId = Layout.DICE_ID, component = Layout.Dice.BET_CUSTOM) {
-    player.queue {
+    // ROOT_CAUSES 92 (2026-09-30): asked while this screen is open - a STANDARD task pauses while a menu is open, so it never ran.
+    player.queue(gg.rsmod.game.model.queue.TaskPriority.WEAK) {
         CasinoDialogs.askBet(this, player)
         CasinoScreens.Dice.refresh(player)
     }
@@ -120,7 +122,8 @@ for ((button, preset) in listOf(Layout.Dice.TARGET_P25 to 25, Layout.Dice.TARGET
 }
 
 on_button(interfaceId = Layout.DICE_ID, component = Layout.Dice.TARGET_CUSTOM) {
-    player.queue {
+    // ROOT_CAUSES 92 (2026-09-30): asked while this screen is open - a STANDARD task pauses while a menu is open, so it never ran.
+    player.queue(gg.rsmod.game.model.queue.TaskPriority.WEAK) {
         val value = inputInt("Target (1-100):")
         CasinoScreens.setTarget(player, value)
         CasinoScreens.Dice.refresh(player)
@@ -181,7 +184,7 @@ on_button(interfaceId = Layout.MINES_ID, component = Layout.Mines.BET_MAX) {
 
 on_button(interfaceId = Layout.MINES_ID, component = Layout.Mines.BET_CUSTOM) {
     if (!MinesGame.isPlaying(player)) {
-        player.queue {
+        player.queue(gg.rsmod.game.model.queue.TaskPriority.WEAK) { // ROOT_CAUSES 92: asked while this screen is open
             CasinoDialogs.askBet(this, player)
             CasinoScreens.Mines.refresh(player)
         }
@@ -338,7 +341,7 @@ on_button(interfaceId = Layout.BLACKJACK_ID, component = Layout.Blackjack.BET_MA
 
 on_button(interfaceId = Layout.BLACKJACK_ID, component = Layout.Blackjack.BET_CUSTOM) {
     if (!BlackjackGame.isPlaying(player)) {
-        player.queue {
+        player.queue(gg.rsmod.game.model.queue.TaskPriority.WEAK) { // ROOT_CAUSES 92: asked while this screen is open
             CasinoDialogs.askBet(this, player)
             CasinoScreens.Blackjack.refresh(player)
         }

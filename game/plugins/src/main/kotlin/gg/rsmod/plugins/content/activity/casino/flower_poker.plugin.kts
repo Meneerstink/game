@@ -177,7 +177,8 @@ on_button(interfaceId = Layout.FLOWER_ID, component = Layout.CLOSE) {
 on_button(interfaceId = Layout.FLOWER_ID, component = Layout.Flower.STAKE_BUTTON) {
     val match = player.getFlowerMatch() ?: return@on_button
     if (match.stage != FlowerPokerMatch.Stage.CONFIGURING) return@on_button
-    player.queue {
+    // ROOT_CAUSES 92 (2026-09-30): asked while this screen is open - a STANDARD task pauses while a menu is open, so it never ran.
+    player.queue(gg.rsmod.game.model.queue.TaskPriority.WEAK) {
         val amount = inputInt("Stake each:")
         if (amount <= 0) return@queue
         match.setStake(amount.toLong())

@@ -20,10 +20,13 @@ import gg.rsmod.plugins.api.ext.getVarbit
 import gg.rsmod.plugins.api.ext.getWildernessLevel
 import gg.rsmod.plugins.api.ext.closeInterface
 import gg.rsmod.plugins.api.ext.isMulti
+import gg.rsmod.plugins.api.ext.openInterface
 import gg.rsmod.plugins.api.ext.setVarbit
 import gg.rsmod.plugins.api.ext.sendWeaponComponentInformation
 import gg.rsmod.plugins.api.ext.setVarp
 import gg.rsmod.plugins.content.cmd.conformance.Conformance.Verdict
+import gg.rsmod.game.tools.importer.CasinoInterfaceImportTool as CasinoLayout
+import gg.rsmod.plugins.content.activity.casino.CasinoScreens
 import gg.rsmod.plugins.content.combat.CombatConfigs
 import gg.rsmod.plugins.content.combat.getCombatTarget
 import gg.rsmod.plugins.content.combat.formula.MeleeCombatFormula
@@ -85,6 +88,7 @@ object SystemsSuite : Conformance.Suite {
         scenario("trinket") { trinket(run, arena) }
         scenario("social") { social(run, arena) }
         scenario("options") { options(run, arena) }
+        scenario("screens") { screens(run, arena) }
     }
 
     /** Hitsplats of [type] per cycle on [who] since [from]: cycle -> damages. */
@@ -745,6 +749,16 @@ object SystemsSuite : Conformance.Suite {
         wait(2)
     }
 
+    /** A number typed into an amount box (RESUME_P_COUNTDIALOG), as the client sends it. */
+    private suspend fun QueueTask.typeNumber(
+        bot: Client,
+        value: Int,
+    ) {
+        wait(3)
+        Bots.inject(bot, gg.rsmod.game.message.impl.ResumePCountDialogMessage(value))
+        wait(2)
+    }
+
     private suspend fun QueueTask.options(
         run: Conformance.Run,
         arena: Tile,
@@ -944,5 +958,115 @@ object SystemsSuite : Conformance.Suite {
         wait(1)
         run.expectTrue(e, "clan tab 115: Leave clan", clans.clanOf(b) == null, "B clan=${clans.clanOf(b)}")
         if (clans.clanOf(a) != null) clans.leave(a)
+    }
+
+    // ---- ROOT_CAUSES 92: every input asked while its own screen is open (casino, lectern, quiver, tool store) ------------------
+
+    private suspend fun QueueTask.screens(
+        run: Conformance.Run,
+        arena: Tile,
+    ) {
+        val e = "screens"
+        val a = run.bot(arena.transform(-1, -2), "SCR")
+        repeat(10) { wait(1) } // the login-time queues finish first, as for a real player
+        val min = gg.rsmod.plugins.content.activity.casino.CasinoWallet.MIN_WAGER
+        val bet = min * 3
+        // Dice: custom bet, custom target, client seed (fairness panel).
+        CasinoScreens.Dice.open(a)
+        wait(1)
+        Bots.button(a, CasinoLayout.DICE_ID, CasinoLayout.Dice.BET_CUSTOM)
+        typeNumber(a, (bet).toInt())
+        run.check(e, "casino dice: custom bet (screen open)", CasinoScreens.bet(a), "typed" to bet)
+        Bots.button(a, CasinoLayout.DICE_ID, CasinoLayout.Dice.TARGET_CUSTOM)
+        typeNumber(a, 37)
+        run.check(e, "casino dice: custom target (screen open)", CasinoScreens.target(a), "typed" to 37)
+        CasinoScreens.openFairness(a, CasinoLayout.DICE_ID)
+        wait(1)
+        Bots.button(a, CasinoLayout.DICE_ID, CasinoLayout.Dice.FAIRNESS + CasinoLayout.Fair.SET_SEED)
+        typeText(a, "conformseed")
+        run.check(e, "casino: set client seed (screen open)", gg.rsmod.plugins.content.activity.casino.CasinoSeeds.clientSeed(a), "typed" to "conformseed")
+        a.closeInterface(CasinoLayout.DICE_ID)
+        wait(1)
+        // Mines and Blackjack custom bets.
+        CasinoScreens.Mines.open(a)
+        wait(1)
+        Bots.button(a, CasinoLayout.MINES_ID, CasinoLayout.Mines.BET_CUSTOM)
+        typeNumber(a, (bet + min).toInt())
+        run.check(e, "casino mines: custom bet (screen open)", CasinoScreens.bet(a), "typed" to bet + min)
+        a.closeInterface(CasinoLayout.MINES_ID)
+        wait(1)
+        CasinoScreens.Blackjack.open(a)
+        wait(1)
+        Bots.button(a, CasinoLayout.BLACKJACK_ID, CasinoLayout.Blackjack.BET_CUSTOM)
+        typeNumber(a, (bet + 2 * min).toInt())
+        run.check(e, "casino blackjack: custom bet (screen open)", CasinoScreens.bet(a), "typed" to bet + 2 * min)
+        a.closeInterface(CasinoLayout.BLACKJACK_ID)
+        wait(1)
+        // Flower poker: the stake of a match in its configuring stage.
+        val b = run.bot(arena.transform(0, -2), "SCR2")
+        repeat(10) { wait(1) }
+        val fp = gg.rsmod.plugins.content.activity.casino.FlowerPokerMatch(a, b)
+        a.attr[gg.rsmod.plugins.content.activity.casino.FLOWER_MATCH_ATTR] = fp
+        b.attr[gg.rsmod.plugins.content.activity.casino.FLOWER_MATCH_ATTR] = fp
+        CasinoScreens.Flower.open(a)
+        wait(1)
+        Bots.button(a, CasinoLayout.FLOWER_ID, CasinoLayout.Flower.STAKE_BUTTON)
+        typeNumber(a, (bet).toInt())
+        run.check(e, "flower poker: stake (screen open)", fp.stake, "typed" to bet)
+        a.closeInterface(CasinoLayout.FLOWER_ID)
+        a.attr.remove(gg.rsmod.plugins.content.activity.casino.FLOWER_MATCH_ATTR)
+        b.attr.remove(gg.rsmod.plugins.content.activity.casino.FLOWER_MATCH_ATTR)
+        wait(1)
+        // POH lectern (400): Camelot teleport tablets, option 1 (one) and option 4 (X, typed 2) with the lectern open.
+        a.inventory.add(Items.SOFT_CLAY, 5)
+        a.inventory.add(Items.LAW_RUNE, 10)
+        a.inventory.add(Items.AIR_RUNE, 50)
+        a.openInterface(400, gg.rsmod.plugins.api.InterfaceDestination.MAIN_SCREEN)
+        wait(1)
+        Bots.button(a, 400, 5, option = 1)
+        repeat(8) { wait(1) }
+        run.check(e, "lectern: Make 1 (lectern open)", a.inventory.getItemCount(Items.CAMELOT_TELEPORT), "made" to 1)
+        a.openInterface(400, gg.rsmod.plugins.api.InterfaceDestination.MAIN_SCREEN)
+        wait(1)
+        Bots.button(a, 400, 5, option = 4)
+        typeNumber(a, 2)
+        repeat(14) { wait(1) }
+        run.check(e, "lectern: Make X = 2 (lectern open)", a.inventory.getItemCount(Items.CAMELOT_TELEPORT), "made" to 3)
+        // Dizana's quiver: Store-X with the quiver screen open.
+        val quiverId =
+            listOf(Items.DIZANAS_QUIVER, Items.DIZANAS_QUIVER_UNCHARGED, Items.DIZANAS_QUIVER_L, Items.DIZANAS_QUIVER_L_UNCHARGED).firstOrNull { id ->
+                run.world.definitions.get(gg.rsmod.game.fs.def.ItemDef::class.java, id).inventoryMenu.any { it.equals("Open", true) }
+            }
+        if (quiverId != null) {
+            a.inventory.add(quiverId, 1)
+            a.inventory.add(Items.DRAGON_ARROW, 100)
+            wait(1)
+            // An uncharged add can come back as the other quiver variant: take whichever quiver landed.
+            val quiverIds = setOf(Items.DIZANAS_QUIVER, Items.DIZANAS_QUIVER_UNCHARGED, Items.DIZANAS_QUIVER_L, Items.DIZANAS_QUIVER_L_UNCHARGED)
+            val quiverSlot = (0 until a.inventory.capacity).first { a.inventory[it]?.id in quiverIds }
+            Bots.itemOption(a, quiverSlot, "Open")
+            wait(2)
+            val arrowSlot = a.inventory.getItemIndex(Items.DRAGON_ARROW, false)
+            Bots.button(a, 1125, 0, option = 2, slot = arrowSlot, item = Items.DRAGON_ARROW)
+            typeNumber(a, 40)
+            val quiver = a.inventory[quiverSlot]
+            run.check(e, "Dizana's quiver: Store-X = 40 (quiver open)", gg.rsmod.plugins.content.items.osrs.DizanasQuiver.storedAmmo(quiver)?.amount, "typed" to 40)
+            a.closeInterface(gg.rsmod.game.tools.importer.DizanasQuiverInterfaceImportTool.INTERFACE_ID)
+        } else {
+            run.notTested(e, "Dizana's quiver Store-X", "no quiver id with an Open option in this cache")
+        }
+        wait(1)
+        // Farming tool store (125 + side 126): Store-X of buckets, Withdraw-X of some back.
+        a.inventory.add(Items.BUCKET, 10)
+        a.openInterface(125, gg.rsmod.plugins.api.InterfaceDestination.MAIN_SCREEN)
+        a.openInterface(126, gg.rsmod.plugins.api.InterfaceDestination.TAB_AREA)
+        wait(1)
+        Bots.button(a, 126, 22, option = 4)
+        typeNumber(a, 6)
+        run.check(e, "tool store: Store-X buckets = 6 (store open)", a.getVarbit(1441), "typed" to 6)
+        Bots.button(a, 125, 7, option = 4)
+        typeNumber(a, 2)
+        run.check(e, "tool store: Withdraw-X buckets = 2 (store open)", a.getVarbit(1441), "6 - 2" to 4)
+        a.closeInterface(125)
     }
 }

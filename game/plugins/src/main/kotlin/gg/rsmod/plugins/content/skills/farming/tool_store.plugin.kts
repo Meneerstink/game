@@ -78,7 +78,8 @@ TOOLS.forEach { tool ->
             OP1 -> withdraw(player, tool, 1)
             OP2 -> withdraw(player, tool, 5)
             OP3 -> withdraw(player, tool, stored)
-            OP4 -> player.queue { withdraw(player, tool, inputInt("Enter amount:")) }
+            // ROOT_CAUSES 92 (2026-09-30): asked with the store open - a STANDARD task would never run.
+            OP4 -> player.queue(gg.rsmod.game.model.queue.TaskPriority.WEAK) { withdraw(player, tool, inputInt("Enter amount:")) }
         }
     }
 
@@ -87,7 +88,7 @@ TOOLS.forEach { tool ->
             OP1 -> store(player, tool, 1)
             OP2 -> store(player, tool, 5)
             OP3 -> store(player, tool, Int.MAX_VALUE)
-            OP4 -> player.queue { store(player, tool, inputInt("Enter amount:")) }
+            OP4 -> player.queue(gg.rsmod.game.model.queue.TaskPriority.WEAK) { store(player, tool, inputInt("Enter amount:")) }
         }
     }
 }

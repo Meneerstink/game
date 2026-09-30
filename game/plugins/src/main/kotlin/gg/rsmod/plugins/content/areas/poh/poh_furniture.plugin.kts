@@ -247,7 +247,9 @@ on_obj_option(obj = Objs.LECTERN_13648, option = "study") {
 TABLETS.forEach { (component, tablet) ->
     on_button(interfaceId = LECTERN_INTERFACE, component = component) {
         val opcode = player.getInteractingOpcode()
-        player.queue {
+        // ROOT_CAUSES 92 (2026-09-30): queued with the lectern open - as a STANDARD task it paused on that open menu, so no option
+        // (1 / 5 / 10 / X / All) made a tablet until the player closed the lectern by hand.
+        player.queue(gg.rsmod.game.model.queue.TaskPriority.WEAK) {
             val amount =
                 when (opcode) {
                     61 -> 1

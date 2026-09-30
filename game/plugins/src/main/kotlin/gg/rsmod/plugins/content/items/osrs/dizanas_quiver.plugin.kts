@@ -139,7 +139,8 @@ on_button(interfaceId = QUIVER_INVENTORY, component = 0) {
     when (player.getInteractingOpcode()) {
         61 -> storeIntoOpenQuiver(player, invSlot, itemId, 1)
         64 ->
-            player.queue {
+            // ROOT_CAUSES 92 (2026-09-30): Store-X is asked with the quiver screen open - a STANDARD task would never run.
+            player.queue(gg.rsmod.game.model.queue.TaskPriority.WEAK) {
                 val amount = inputInt("How many would you like to store?")
                 storeIntoOpenQuiver(player, invSlot, itemId, amount)
             }
