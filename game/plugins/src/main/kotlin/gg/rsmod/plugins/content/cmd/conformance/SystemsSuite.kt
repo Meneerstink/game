@@ -16,6 +16,7 @@ import gg.rsmod.game.model.timer.FROZEN_TIMER
 import gg.rsmod.game.model.timer.TELEBLOCK_TIMER
 import gg.rsmod.plugins.api.EquipmentType
 import gg.rsmod.plugins.api.cfg.Items
+import gg.rsmod.plugins.api.ext.getVarbit
 import gg.rsmod.plugins.api.ext.getWildernessLevel
 import gg.rsmod.plugins.api.ext.closeInterface
 import gg.rsmod.plugins.api.ext.isMulti
@@ -83,6 +84,7 @@ object SystemsSuite : Conformance.Suite {
         scenario("fairy") { fairy(run, arena) }
         scenario("trinket") { trinket(run, arena) }
         scenario("social") { social(run, arena) }
+        scenario("options") { options(run, arena) }
     }
 
     /** Hitsplats of [type] per cycle on [who] since [from]: cycle -> damages. */
@@ -284,7 +286,8 @@ object SystemsSuite : Conformance.Suite {
         a.resetInteractions()
         val swings = run.recording.of("EA", "out").filter { it.cycle >= c0 && it.text.startsWith("anim ") && !it.text.startsWith("anim id=-1") }.map { it.cycle }.distinct()
         run.check("eclipse", "Rapid swings 3 ticks apart (live)", swings.zipWithNext { x, y -> y - x }.distinct(), "wiki" to listOf(3))
-        val hitCycles = run.recording.of("ED", "out").filter { it.cycle >= c0 && it.text.startsWith("hits ") }.map { it.cycle }
+        // Weapon hits only: the Eclipse set's burn splats (type 28) land on the dummy too.
+        val hitCycles = run.recording.of("ED", "out").filter { it.cycle >= c0 && it.text.startsWith("hits ") && !it.text.contains("type=28 ") }.map { it.cycle }
         run.expectTrue("eclipse", "no duplicate attacks (hits <= swings)", hitCycles.size <= swings.size + 1, "swings=${swings.size} hits=${hitCycles.size}")
         run.remove(dummy)
     }
@@ -387,14 +390,15 @@ object SystemsSuite : Conformance.Suite {
     // ---- 8. Cliffside -----------------------------------------------------------------------------------------------------
 
     private suspend fun QueueTask.cliffside(run: Conformance.Run) {
-        // The reported click: Wilderness side (2954,3684) of loc 34878 at 2951,3681 - one-way, refused with the wiki message.
+        // The reported click: Wilderness side (2954,3684) of loc 34878 at 2951,3681. Owner decision 2026-09-30: both ways - it climbs
+        // back out of the Wilderness towards Trollheim.
         val a = run.bot(Tile(2954, 3684, 0), "KA")
         wait(2)
         val c0 = run.world.currentCycle
         Bots.inject(a, OpLoc1Message(0, 2951, 34878, 3681))
-        repeat(12) { wait(1) }
+        repeat(14) { wait(1) }
         val msgs = run.recording.of("KA", "msg").filter { it.cycle >= c0 }.map { it.text }
-        run.expectTrue("cliffside", "2954,3684 answers (not 'Nothing interesting happens')", msgs.none { it.contains("Nothing interesting happens") } && msgs.any { it.contains("does not look safe") }, msgs.joinToString(" / ").take(250))
+        run.expectTrue("cliffside", "2954,3684 climbs (owner: both ways)", msgs.none { it.contains("Nothing interesting happens") } && a.tile.x < 2951, "at ${a.tile} ${msgs.filter { it.contains("MessageGame") && !it.contains("__RSPS_HUD__") }.joinToString(" / ").take(150)}")
         // Trollheim side 34889 at 2931,3680: 64 Agility, lands across the cliff.
         val b = run.bot(Tile(2929, 3680, 0), "KB")
         wait(2)
@@ -502,6 +506,16 @@ object SystemsSuite : Conformance.Suite {
         Bots.answerOption(a, 1)
         repeat(12) { wait(1) }
         run.expectTrue("trinket", "Spirit-tree teleport", a.tile.isWithinRadius(gg.rsmod.plugins.content.mechanics.travel.SpiritTrees.STATIONS[0].tile, 3), "at ${a.tile}")
+        // Tool-leprechauns: a menu of the tool leprechauns standing in this world; option 1 lands next to one.
+        val spots = gg.rsmod.plugins.content.mechanics.travel.leprechaunSpotsForTest(run.world)
+        run.expectTrue("trinket", "Tool-leprechauns has destinations", spots.isNotEmpty(), "spots=${spots.size} ${spots.take(4)}")
+        if (spots.isNotEmpty()) {
+            Bots.itemOption(a, slot, "Tool-leprechauns")
+            wait(2)
+            Bots.answerOption(a, 1)
+            repeat(12) { wait(1) }
+            run.expectTrue("trinket", "Tool-leprechauns teleport (${spots[0].first})", a.tile.isWithinRadius(spots[0].second, 2), "at ${a.tile}, target ${spots[0].second}")
+        }
         // Restrictions: level 31+ Wilderness and Tele Block refuse.
         val deep = Tile(3100, 3900, 0)
         a.moveTo(deep)
@@ -717,5 +731,218 @@ object SystemsSuite : Conformance.Suite {
         listOf(a, b).forEach { ls.disable(it, quiet = true) }
         fc.leave(b)
         fc.setPrefix(a, null)
+    }
+
+    // ---- Every Friends Chat / Clan Chat / LootShare option, clicked as the 667 client sends it --------------------------------
+
+    private suspend fun QueueTask.typeText(
+        bot: Client,
+        text: String,
+    ) {
+        // A real player types after the input box is on screen: the button's queue opens it the cycle after the click.
+        wait(3)
+        Bots.inject(bot, gg.rsmod.game.message.impl.ResumePStringDialogMessage(text))
+        wait(2)
+    }
+
+    private suspend fun QueueTask.options(
+        run: Conformance.Run,
+        arena: Tile,
+    ) {
+        val names = java.io.File("data/saves").listFiles()?.map { it.name }?.filter { !it.contains('.') }?.sorted() ?: emptyList()
+        if (names.size < 3) {
+            run.notTested("options", "all", "needs three saved characters")
+            return
+        }
+        // Other accounts than the social scenario (whose kick-ban lasts an hour in memory).
+        val pick = if (names.size >= 6) names.subList(3, 6) else names.subList(0, 3)
+        val a = run.bot(arena.transform(0, 2), pick[0])
+        val b = run.bot(arena.transform(1, 2), pick[1])
+        val c = run.bot(arena.transform(2, 2), pick[2])
+        run.recording.track(a, "OA")
+        run.recording.track(b, "OB")
+        run.recording.track(c, "OC")
+        wait(2)
+        repeat(10) { wait(1) } // the login-time queues (familiar, notes, gameframe) finish first, as for a real player
+        val fc = run.world.friendsChat
+        val e = "options"
+        // -- Friends Chat tab (1109) "Open Settings" (33) -> setup 1108.
+        Bots.button(a, 1109, 33)
+        wait(2)
+        run.expectTrue(e, "FC tab: Settings opens 1108", a.interfaces.isVisible(1108), "1108 visible")
+        // Prefix (22): op1 Set prefix (typed), op2 Disable.
+        Bots.button(a, 1108, 22, option = 1)
+        typeText(a, "OptTest")
+        run.check(e, "FC setup: Set prefix", fc.settingsOf(a.username)?.prefix, "typed" to "OptTest")
+        Bots.button(a, 1108, 22, option = 2)
+        wait(1)
+        run.check(e, "FC setup: Disable", fc.settingsOf(a.username)?.prefix, "disabled" to null)
+        Bots.button(a, 1108, 22, option = 1)
+        typeText(a, "OptTest")
+        // Enter (23) / Talk (24): op1..op9 -> Anyone(-1), Any friends(0), Recruit+..General+ (1..6), Only me (7).
+        for (op in 1..9) {
+            Bots.button(a, 1108, 23, option = op)
+            Bots.button(a, 1108, 24, option = op)
+            wait(1)
+            run.check(e, "FC setup: Who can enter op$op", fc.settingsOf(a.username)?.enterRank, "1108 menu" to op - 2)
+            run.check(e, "FC setup: Who can talk op$op", fc.settingsOf(a.username)?.talkRank, "1108 menu" to op - 2)
+        }
+        // Kick (25): op4 Corporal+ .. op9 Only me.
+        for (op in 4..9) {
+            Bots.button(a, 1108, 25, option = op)
+            wait(1)
+            run.check(e, "FC setup: Who can kick op$op", fc.settingsOf(a.username)?.kickRank, "1108 menu" to op - 2)
+        }
+        // LootShare (26): op1 No-one .. op8 General+.
+        for (op in 1..8) {
+            Bots.button(a, 1108, 26, option = op)
+            wait(1)
+            run.check(e, "FC setup: Who can share loot op$op", fc.settingsOf(a.username)?.lootShareRank, "1108 menu" to op - 2)
+        }
+        // CoinShare (33) toggles; Close (3).
+        val coinBefore = fc.settingsOf(a.username)?.coinShare == true
+        Bots.button(a, 1108, 33)
+        wait(1)
+        run.check(e, "FC setup: CoinShare toggle", fc.settingsOf(a.username)?.coinShare, "toggled" to !coinBefore)
+        Bots.button(a, 1108, 33)
+        Bots.button(a, 1108, 3)
+        wait(1)
+        run.expectTrue(e, "FC setup: Close", !a.interfaces.isVisible(1108), "1108 still open")
+        // Open for everyone again; the owner joins, B joins and leaves through the tab's Join / Leave packet.
+        fc.setEnterRank(a, -1)
+        fc.setTalkRank(a, -1)
+        fc.setKickRank(a, 7)
+        fc.setLootShareRank(a, 0)
+        Bots.inject(a, gg.rsmod.game.message.impl.ClanJoinChatLeaveChatMessage(a.username))
+        Bots.inject(b, gg.rsmod.game.message.impl.ClanJoinChatLeaveChatMessage(a.username))
+        wait(1)
+        run.expectTrue(e, "FC tab: Join", fc.channelOf(b) != null, "B not in")
+        Bots.inject(b, gg.rsmod.game.message.impl.ClanJoinChatLeaveChatMessage(""))
+        wait(1)
+        run.expectTrue(e, "FC tab: Leave", fc.channelOf(b) == null, "B still in")
+        Bots.inject(b, gg.rsmod.game.message.impl.ClanJoinChatLeaveChatMessage(a.username))
+        wait(1)
+        run.expectTrue(e, "FC tab: Rejoin", fc.channelOf(b) != null, "B not in")
+        // LootShare button (19): starts the 2-minute switch (loading varbit).
+        Bots.inject(a, FriendListAddMessage(b.username))
+        wait(1)
+        Bots.button(b, 1109, 19)
+        wait(1)
+        run.check(e, "FC tab: LootShare button starts the 2-minute switch", b.getVarbit(gg.rsmod.plugins.content.inter.friends.LootShare.LOADING_VARBIT), "varbit 4072" to 1)
+        gg.rsmod.plugins.content.inter.friends.LootShare.disable(b, quiet = true)
+        // Kick (FRIENDCHAT_KICK from the member list): a rank below the kick rank is refused, the owner may.
+        Bots.inject(c, gg.rsmod.game.message.impl.ClanJoinChatLeaveChatMessage(a.username))
+        wait(1)
+        Bots.inject(b, gg.rsmod.game.message.impl.FriendsChatKickMessage(c.username))
+        wait(1)
+        run.expectTrue(e, "FC: kick below the kick rank refused", fc.channelOf(c) != null, "C kicked")
+        Bots.inject(a, gg.rsmod.game.message.impl.FriendsChatKickMessage(c.username))
+        wait(1)
+        run.expectTrue(e, "FC: owner kick", fc.channelOf(c) == null, "C still in")
+        fc.leave(b)
+        fc.leave(a)
+        fc.setPrefix(a, null)
+
+        // -- Clan Chat tab (1110).
+        val clans = gg.rsmod.plugins.content.mechanics.clan.Clans
+        val screens = gg.rsmod.plugins.content.mechanics.clan.ClanScreens
+        val S = gg.rsmod.plugins.content.mechanics.clan.ClanSettingsInterface
+        if (clans.clanOf(a) != null) clans.leave(a)
+        if (clans.clanOf(b) != null) clans.leave(b)
+        val clanName = "Opt${run.world.currentCycle % 100000}"
+        // 85 without a clan: found one.
+        Bots.button(a, 1110, 85)
+        wait(3)
+        Bots.answerOption(a, 1)
+        typeText(a, clanName)
+        run.check(e, "clan tab 85: found a clan", clans.clanOf(a), "typed" to clanName)
+        // 90 Invite (player-targeted), invitation screen 1095 Accept (36) / Refuse (46).
+        Bots.inject(a, gg.rsmod.game.message.impl.OpPlayerTMessage(b.index, (1110 shl 16) or 90, -1, 0))
+        wait(2)
+        run.expectTrue(e, "clan tab 90: Invite reaches B", b.attr[clans.PENDING_INVITE] != null, "no invite")
+        // The invite chat line click (OPPLAYER9 with the inviter's index), as the client sends it.
+        Bots.inject(b, gg.rsmod.game.message.impl.OpPlayer9Message(a.index))
+        wait(4)
+        run.expectTrue(e, "invitation screen 1095 opens", b.interfaces.isVisible(screens.INVITE), "1095")
+        Bots.inject(b, gg.rsmod.game.message.impl.ResumePauseButtonMessage(screens.INVITE, screens.INVITE_ACCEPT, screens.INVITE_ACCEPT))
+        wait(4)
+        run.check(e, "invitation: Accept", clans.clanOf(b), "joined" to clanName)
+        Bots.inject(a, gg.rsmod.game.message.impl.OpPlayerTMessage(c.index, (1110 shl 16) or 90, -1, 0))
+        wait(2)
+        Bots.inject(c, gg.rsmod.game.message.impl.OpPlayer9Message(a.index))
+        wait(4)
+        Bots.button(c, screens.INVITE, screens.INVITE_REFUSE.first())
+        wait(2)
+        run.expectTrue(e, "invitation: Refuse", clans.clanOf(c) == null && !c.interfaces.isVisible(screens.INVITE), "C clan=${clans.clanOf(c)}")
+        // 76 Clan Details, 80 Clan Settings and its toggles / sub-screens.
+        Bots.button(a, 1110, 76)
+        wait(1)
+        run.expectTrue(e, "clan tab 76: Clan Details opens", a.interfaces.isVisible(screens.DETAILS), "1107")
+        a.closeInterface(screens.DETAILS)
+        Bots.button(a, 1110, 80)
+        wait(1)
+        run.expectTrue(e, "clan tab 80: Clan Settings opens", a.interfaces.isVisible(S.INTERFACE), "1096")
+        val g0 = clans.clanOfPlayer(a)?.allowGuests
+        Bots.button(a, S.INTERFACE, S.GUESTS_ENTER)
+        wait(1)
+        run.check(e, "settings: guests may enter", clans.clanOfPlayer(a)?.allowGuests, "toggled" to (g0 != true))
+        val t0 = clans.clanOfPlayer(a)?.guestsCanTalk
+        Bots.button(a, S.INTERFACE, S.GUESTS_TALK)
+        wait(1)
+        run.check(e, "settings: guests may talk", clans.clanOfPlayer(a)?.guestsCanTalk, "toggled" to (t0 != true))
+        val r0 = clans.clanOfPlayer(a)?.recruiting
+        Bots.button(a, S.INTERFACE, S.RECRUITING)
+        wait(1)
+        run.check(e, "settings: recruiting", clans.clanOfPlayer(a)?.recruiting, "toggled" to (r0 != true))
+        val ct0 = clans.clanOfPlayer(a)?.clanTime
+        Bots.button(a, S.INTERFACE, S.CLAN_TIME)
+        wait(1)
+        run.check(e, "settings: clan time", clans.clanOfPlayer(a)?.clanTime, "toggled" to (ct0 != true))
+        Bots.button(a, S.INTERFACE, S.SELECT_FLAG)
+        wait(1)
+        run.expectTrue(e, "settings: Select Flag opens 1089", a.interfaces.isVisible(screens.FLAGS), "1089")
+        Bots.button(a, screens.FLAGS, screens.FLAG_CLOSE)
+        wait(1)
+        Bots.button(a, S.INTERFACE, S.EDIT_MOTIF)
+        wait(1)
+        run.expectTrue(e, "settings: Edit motif opens 1105", a.interfaces.isVisible(screens.MOTIF), "1105")
+        a.closeInterface(screens.MOTIF)
+        // The motif designer replaced 1096 on the main screen: reopen Clan Settings from the tab, as a player does.
+        Bots.button(a, 1110, 80)
+        wait(2)
+        Bots.button(a, S.INTERFACE, S.EDIT_MOTTO)
+        typeText(a, "We test everything")
+        run.check(e, "settings: Edit motto (1096 open)", clans.clanOfPlayer(a)?.motto, "typed" to "We test everything")
+        Bots.button(a, S.INTERFACE, S.EDIT_KEYWORDS)
+        typeText(a, "pvm pvp")
+        run.check(e, "settings: Edit keywords (1096 open)", clans.clanOfPlayer(a)?.keywords, "typed" to "pvm pvp")
+        Bots.button(a, S.INTERFACE, S.EDIT_THREAD)
+        typeText(a, "abc123")
+        run.check(e, "settings: Edit thread (1096 open)", clans.clanOfPlayer(a)?.threadId, "typed" to "abc123")
+        a.closeInterface(S.INTERFACE)
+        // 95 guest channel: C types the clan name, a second click leaves.
+        clans.editSettings(a) { allowGuests = true }
+        Bots.button(c, 1110, 95)
+        typeText(c, clanName)
+        run.expectTrue(e, "clan tab 95: join as guest", clans.isListening(c), "C not listening")
+        Bots.button(c, 1110, 95)
+        wait(1)
+        run.expectTrue(e, "clan tab 95: leave guest channel", !clans.isListening(c), "C still listening")
+        // 100 Ban / 105 Unban by name.
+        Bots.button(a, 1110, 100)
+        typeText(a, c.username)
+        run.expectTrue(e, "clan tab 100: Ban", clans.clanOfPlayer(a)?.bans?.any { it.equals(c.username, true) } == true, "bans=${clans.clanOfPlayer(a)?.bans}")
+        clans.listen(c, clanName)
+        run.expectTrue(e, "banned player cannot listen", !clans.isListening(c), "C listening")
+        Bots.button(a, 1110, 105)
+        typeText(a, c.username)
+        run.expectTrue(e, "clan tab 105: Unban", clans.clanOfPlayer(a)?.bans?.none { it.equals(c.username, true) } == true, "bans=${clans.clanOfPlayer(a)?.bans}")
+        // 115 Leave clan, confirmed.
+        Bots.button(b, 1110, 115)
+        wait(3)
+        Bots.answerOption(b, 1)
+        wait(1)
+        run.expectTrue(e, "clan tab 115: Leave clan", clans.clanOf(b) == null, "B clan=${clans.clanOf(b)}")
+        if (clans.clanOf(a) != null) clans.leave(a)
     }
 }

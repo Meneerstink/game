@@ -30,7 +30,8 @@ val CLIFF_CLIMB_DOWN = 1148
 
 val CLIFFS =
     mapOf(
-        Triple(Objs.CLIFFSIDE_34878, 2951, 3681) to Cliff(64, 8.0, oneWayFromWilderness = true),
+        // Owner decision 2026-09-30: climbable from both sides here (OSRS/RS make it one-way into the Wilderness; ADAPTED on request).
+        Triple(Objs.CLIFFSIDE_34878, 2951, 3681) to Cliff(64, 8.0),
         Triple(Objs.CLIFFSIDE_34889, 2931, 3680) to Cliff(64, 8.0),
         Triple(Objs.CLIFFSIDE_34878, 2874, 3595) to Cliff(41, 8.0),
         Triple(Objs.CLIFFSIDE_34877, 2876, 3619) to Cliff(41, 8.0),

@@ -134,19 +134,22 @@ on_button(interfaceId = SETTINGS, component = ClanSettingsInterface.WORLD_OPTION
     if (world in 0..200) Clans.editSettings(player) { worldId = world }
 }
 on_button(interfaceId = SETTINGS, component = ClanSettingsInterface.EDIT_MOTTO) {
-    player.queue {
+    // Owner check 2026-09-30: asked while Clan Settings (1096) is open - a STANDARD task would wait for the menu to close first.
+    player.queue(gg.rsmod.game.model.queue.TaskPriority.WEAK) {
         val text = inputString("Enter your clan motto:").replace('|', ' ').replace('\n', ' ').trim().take(80)
         Clans.editSettings(player) { motto = text.ifEmpty { null } }
     }
 }
 on_button(interfaceId = SETTINGS, component = ClanSettingsInterface.EDIT_KEYWORDS) {
-    player.queue {
+    // Owner check 2026-09-30: asked while Clan Settings (1096) is open - a STANDARD task would wait for the menu to close first.
+    player.queue(gg.rsmod.game.model.queue.TaskPriority.WEAK) {
         val text = inputString("Enter keywords to identify with your clan:").replace('|', ' ').replace('\n', ' ').trim().take(80)
         Clans.editSettings(player) { keywords = text.ifEmpty { null } }
     }
 }
 on_button(interfaceId = SETTINGS, component = ClanSettingsInterface.EDIT_THREAD) {
-    player.queue {
+    // Owner check 2026-09-30: asked while Clan Settings (1096) is open - a STANDARD task would wait for the menu to close first.
+    player.queue(gg.rsmod.game.model.queue.TaskPriority.WEAK) {
         val text = inputString("Enter the Thread ID of your official clan thread:").lowercase().filter { it.isLetterOrDigit() }.take(12)
         Clans.editSettings(player) { threadId = text.ifEmpty { null } }
     }

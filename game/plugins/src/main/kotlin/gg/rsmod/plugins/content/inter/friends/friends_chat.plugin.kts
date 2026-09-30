@@ -47,7 +47,9 @@ on_button(interfaceId = SETUP, component = 3) {
 
 on_button(interfaceId = SETUP, component = PREFIX) {
     when (OP_INDEX[player.getInteractingOpcode()]) {
-        1 -> player.queue {
+        // Owner check 2026-09-30: a STANDARD task pauses while a menu is open (PawnQueueTaskSet.isPaused) - with 1108 open "Set
+        // prefix" never asked for the name. WEAK tasks are not paused by an open menu.
+        1 -> player.queue(gg.rsmod.game.model.queue.TaskPriority.WEAK) {
             val typed = inputString("Enter chat prefix:")
             val prefix = FriendsChat.validPrefix(typed)
             if (prefix == null) {

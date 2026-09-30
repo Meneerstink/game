@@ -93,7 +93,9 @@ object ClanScreens {
         if (player.attr[Clans.CLAN_ATTR] != null) return
         if (player.getInterfaceAt(InterfaceDestination.MAIN_SCREEN) != -1) return player.message("Please close the interface you have open first.")
         val clan = Clans.takeInvite(player, inviter) ?: return
-        player.queue {
+        // Owner check 2026-09-30: this task opens 1095 and then waits for its Accept - as a STANDARD task it paused itself on its own
+        // open menu (PawnQueueTaskSet.isPaused), so Accept never joined the clan. WEAK tasks are not paused by an open menu.
+        player.queue(gg.rsmod.game.model.queue.TaskPriority.WEAK) {
             Clans.sendPreviewSettings(player, clan)
             player.openInterface(INVITE, InterfaceDestination.MAIN_SCREEN)
             player.setComponentText(INVITE, 2, "You have been invited to join ${clan.name} by ${Misc.formatForDisplay(inviter.username)}.")

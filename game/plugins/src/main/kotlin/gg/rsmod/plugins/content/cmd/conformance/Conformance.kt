@@ -401,8 +401,15 @@ object Bots {
         return true
     }
 
-    /** IfButton opcodes of the 667 client per menu option (IfButton1Handler: 61, 64, 4, 18, 10, .., 25 for option 8). */
-    private val OPTION_OPCODES = mapOf(1 to 61, 2 to 64, 3 to 4, 4 to 18, 5 to 10, 8 to 25)
+    /**
+     * IfButton opcodes of the 667 client per menu option - the client's own ClientProt IF_BUTTON1..10 (61, 64, 4, 52, 81, 91, 18, 10,
+     * 20, 25). 2026-09-30: this used to send 18 / 10 / 25 for options 4 / 5 / 8 (IF_BUTTON7 / 8 / 10), so a 4th+ option was never
+     * tested as the client sends it.
+     */
+    private val OPTION_OPCODES = mapOf(1 to 61, 2 to 64, 3 to 4, 4 to 52, 5 to 81, 6 to 91, 7 to 18, 8 to 10, 9 to 20, 10 to 25)
+
+    /** Item menu entry (1-5) of the inventory 679 -> the IF_BUTTON the 667 client sends for it. */
+    private val INVENTORY_OPS = intArrayOf(1, 2, 3, 7, 8)
 
     fun button(
         bot: Client,
@@ -423,7 +430,8 @@ object Bots {
         val menu = item.getDef(bot.world.definitions).inventoryMenu
         val index = menu.indexOfFirst { it?.equals(option, true) == true }
         if (index < 0) return false
-        return button(bot, 679, 0, index + 1, slot, item.id)
+        // The inventory (679) sends item menu entries 1-5 as IF_BUTTON 1, 2, 3, 7, 8 (IfButton1Handler FIRST..FIFTH_OPTION).
+        return button(bot, 679, 0, INVENTORY_OPS[index], slot, item.id)
     }
 
     fun walk(
