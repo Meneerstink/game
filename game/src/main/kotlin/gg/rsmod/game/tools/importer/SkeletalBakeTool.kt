@@ -1084,6 +1084,91 @@ object SkeletalBakeTool {
 
     // ---- main -------------------------------------------------------------------------------------------------------------
 
+    /**
+     * OSRS breach spotanim -> local spotanim of the earlier `spots` runs (journals tx-20260927: "osrs spotanim 2519 -> 3173 (baked)" ...).
+     */
+    val BAKED_BREACH_SPOTS: Map<Int, Int> = mapOf(2519 to 3173, 2553 to 3174, 2554 to 3175, 2556 to 3176)
+
+    /**
+     * Re-bakes the already imported breach locs and spotanims into the ids they already have (ROOT_CAUSES #103: their frames were baked in
+     * file units). The loc / spotanim / sequence definitions stay byte-identical - the server and DeadmanBreachTests name those ids - and only
+     * the frames (and, should they differ, the base and the labelled model) are rewritten. Refuses when the frame count or layout changed.
+     */
+    private fun rebakeInPlace(
+        reader: ModernCacheReader,
+        locs: Map<Int, ByteArray>,
+        ids: Map<String, Int>,
+        apply: Boolean,
+    ) {
+        val library = CacheLibrary(OsrsItemImportTool.TARGETS[0])
+        val mutations = ArrayList<CacheMutation>()
+        try {
+            fun put(index: Int, g: Int, f: Int, bytes: ByteArray, label: String) {
+                val current = library.data(index, g, f)
+                if (current != null && current.contentEquals(bytes)) return
+                mutations += CacheMutation(index, g, f, bytes, label, expectedCurrentSha1 = current?.let { CacheItemProbeTool.sha1(it) })
+            }
+
+            /** Rewrites the frames of local sequence [seqId] with the bake of [osrsModel] under [osrsSeq]. */
+            fun rebake(label: String, osrsModel: Int, osrsSeq: Int, seqId: Int, localModel: Int, modelWritable: Boolean) {
+                val seqBytes = library.data(OsrsFxImportTool.INDEX_SEQ, seqId ushr 7, seqId and 0x7F) ?: error("$label: seq $seqId missing")
+                val frames = OsrsFxImportTool.decode667SeqFrames(seqBytes)
+                val frameset = frames.first() ushr 16
+                check(frames.withIndex().all { (i, f) -> f == (frameset shl 16) or i }) { "$label: seq $seqId frames are not frameset $frameset 0..n" }
+                val first = library.data(OsrsFxImportTool.INDEX_FRAMES, frameset, 0) ?: error("$label: frame $frameset:0 missing")
+                val base = ((first[1].toInt() and 0xFF) shl 8) or (first[2].toInt() and 0xFF)
+                val baked = bake(reader, osrsModel, osrsSeq, base)
+                check(baked.frames.size == frames.size) { "$label: ${baked.frames.size} baked frames, seq $seqId has ${frames.size}" }
+                check(OsrsFxImportTool.encode667Seq(OsrsFxImportTool.Seq(frameDurations = baked.durations, frames = frames)).contentEquals(seqBytes)) {
+                    "$label: seq $seqId would change (durations)"
+                }
+                if (modelWritable) {
+                    put(7, localModel, 0, baked.model, "rebake: $label model $osrsModel -> $localModel")
+                } else {
+                    check(baked.model.contentEquals(library.data(7, localModel, 0)!!)) { "$label: model $localModel is not the labelled loc model" }
+                }
+                put(OsrsFxImportTool.INDEX_BASES, base, 0, baked.base, "rebake: $label base $base")
+                baked.frames.forEachIndexed { i, f -> put(OsrsFxImportTool.INDEX_FRAMES, frameset, i, f, "rebake: $label frame $frameset:$i (client units)") }
+                println("PLAN rebake $label osrs model $osrsModel seq $osrsSeq -> seq $seqId frameset $frameset base $base frames=${frames.size} error max=${"%.1f".format(baked.maxError)} mean=${"%.2f".format(baked.meanError)}")
+            }
+
+            for (loc in OsrsLocImportTool.BATCHES.getValue("deadman-breach")) {
+                val def = ModernObjectDef.decode(loc, locs.getValue(loc))
+                val localLoc = ids["osrs_loc_loc:$loc"] ?: error("loc $loc not imported")
+                val osrsModel = def.models.single()
+                val localModel = ids["osrs_loc_model:$osrsModel"] ?: error("model $osrsModel not imported")
+                val locBytes = library.data(FeroxImportTool.LOC_INDEX, localLoc ushr 8, localLoc and 0xFF) ?: error("loc $localLoc missing")
+                val seqId = Rev667LocType.decode(localLoc, locBytes).animation
+                check(seqId >= 0) { "loc $localLoc has no animation" }
+                rebake("loc $loc", osrsModel, def.animationId, seqId, localModel, modelWritable = true)
+            }
+            for ((spotId, localSpot) in BAKED_BREACH_SPOTS) {
+                val spot = OsrsFxImportTool.decodeOsrsSpot(reader.file(ModernCacheReader.INDEX_CONFIG, ModernCacheReader.CONFIG_GROUP_SPOTANIM, spotId)!!)
+                val localModel = ids["osrs_loc_model:${spot.model}"] ?: error("model ${spot.model} not imported")
+                val (model, seqId) = AnimCoverage.spotanim(library, localSpot) ?: error("spotanim $localSpot missing")
+                check(model == localModel) { "spotanim $localSpot shows model $model, not $localModel" }
+                rebake("spotanim $spotId", spot.model, spot.seq, seqId, localModel, modelWritable = false)
+            }
+        } finally {
+            library.close()
+        }
+        val tx = CacheTransaction(OsrsItemImportTool.TARGETS, mutations)
+        val plan = tx.preflight()
+        val blocking = tx.blockingErrors(plan)
+        println("PREFLIGHT transaction=${tx.id} mutations=${mutations.size} outcomes=${plan.groupingBy { it.outcome }.eachCount()}")
+        blocking.forEach { println("  BLOCKING: $it") }
+        check(blocking.isEmpty()) { "preflight blocked; nothing written" }
+        if (!apply) return println("DRY_RUN")
+        val result = tx.apply(plan)
+        val problems = tx.verify()
+        if (problems.isNotEmpty()) {
+            problems.forEach { println("  VERIFY_FAILURE: $it") }
+            println("ROLLED_BACK ${tx.rollback()}")
+            error("transaction ${tx.id} failed verification and was rolled back")
+        }
+        println("APPLIED transaction=${result.transactionId} writes=${result.applied} skipped=${result.skipped}")
+    }
+
     @JvmStatic
     fun main(args: Array<String>) {
         val apply = "--apply" in args
@@ -1164,7 +1249,8 @@ object SkeletalBakeTool {
                 println("APPLIED transaction=${result.transactionId} writes=${result.applied} skipped=${result.skipped}")
                 return
             }
-            check(args.getOrNull(0) == "locs") { "Usage: probe | locs [--apply] | spots [--apply]" }
+            if (args.getOrNull(0) == "rebake") return rebakeInPlace(reader, locs, ids, apply)
+            check(args.getOrNull(0) == "locs") { "Usage: probe | locs [--apply] | spots [--apply] | rebake [--apply]" }
             val library = CacheLibrary(OsrsItemImportTool.TARGETS[0])
             val mutations = ArrayList<CacheMutation>()
             try {

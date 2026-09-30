@@ -332,9 +332,11 @@ object Pets {
         item: Int = baseItem(pet) ?: -1,
     ) {
         if (item < 0 || byItem[item]?.pet != pet) return
-        PetMorphs.unlock(player, byItem.getValue(item))
         gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.ITEM) { "pet roll hit: $pet for ${player.username}" }
-        when (awardOutcome(owns(player, pet), hasFollower(player), player.inventory.hasSpace, player.bank.hasSpace)) {
+        val outcome = awardOutcome(owns(player, pet), hasFollower(player), player.inventory.hasSpace, player.bank.hasSpace)
+        // The variant received counts as unlocked (a rift guardian in its altar's colour); a duplicate gives nothing (OSRS Wiki Pet).
+        if (outcome != Award.DUPLICATE && outcome != Award.LOST) PetMorphs.unlock(player, byItem.getValue(item))
+        when (outcome) {
             Award.DUPLICATE -> player.message(MSG_DUPLICATE)
             Award.FOLLOWER -> {
                 spawn(player, byItem.getValue(item))
