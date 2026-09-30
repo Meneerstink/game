@@ -689,7 +689,7 @@ suspend fun QueueTask.chooseLeftClickAction(player: Player) {
         val remaining = available.drop(offset)
         val paged = remaining.size > MAX_DIALOGUE_OPTIONS
         val shown = if (paged) remaining.take(MAX_DIALOGUE_OPTIONS - 1) else remaining
-        val labels = shown.map { it.label } + if (paged) listOf("More options...") else emptyList()
+        val labels = shown.map { SummoningUi.labelOf(player, it) } + if (paged) listOf("More options...") else emptyList()
         val choice = options(*labels.toTypedArray(), title = "Select left-click option")
         if (choice < 1 || choice > labels.size) {
             return
@@ -700,7 +700,7 @@ suspend fun QueueTask.chooseLeftClickAction(player: Player) {
         }
         val action = shown[choice - 1]
         player.setLeftClickAction(action)
-        player.message("Left-click on your Summoning orb will now <col=255>${action.label}</col>.")
+        player.message("Left-click on your Summoning orb will now <col=255>${SummoningUi.labelOf(player, action)}</col>.")
         return
     }
 

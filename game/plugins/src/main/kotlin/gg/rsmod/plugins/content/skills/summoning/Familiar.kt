@@ -712,6 +712,14 @@ object Familiar {
      * mapping is source-backed. A recovery must never silently become a soundless teleport just
      * because it was initiated by the follow task.
      */
+    /**
+     * The Summoning orb / panel "Call Follower" presentation for a follower that is not a familiar (an OSRS pet): the same
+     * size-sensitive appearance graphic and generic arrival sound [ARRIVAL_SOUND] every familiar's Call plays, since the pet
+     * is called through the same orb and panel buttons (owner 2026-09-30: "Call audio ontbreekt"). ADAPTED: OSRS has no
+     * orb; its Call follower cue is not sourced, so the 667 call chain is used rather than an invented id.
+     */
+    fun playFollowerCall(player: Player, npc: Npc) = playRecoveryPresentation(player, npc)
+
     private fun playRecoveryPresentation(player: Player, npc: Npc) {
         val data = SummoningPouchData.values.firstOrNull { it.npc == npc.id }
         if (data == null) {

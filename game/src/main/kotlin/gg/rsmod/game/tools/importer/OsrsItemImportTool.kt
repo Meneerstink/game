@@ -1304,13 +1304,45 @@ object OsrsItemImportTool {
     }
 
     /**
-     * Item opcode 114 (contrast). OSRS stores the signed byte as-is and lights the item model with `contrast + 768`
-     * (RuneLite cache `ItemLoader`: `def.contrast = stream.readByte()`; `ItemSpriteFactory`: `item.contrast + 768`). The
-     * 667 client multiplies the byte by 5 before the same term (2011scape-client `ObjType.decode`: `contrast =
-     * packet.g1b() * 5`; `createModel(..., this.ambient + 64, this.contrast + 768)`). The 667 byte is therefore the OSRS
-     * value divided by 5, rounded to the nearest integer and kept inside a signed byte.
+     * Item opcode 114 / npc opcode 101 (contrast). Both clients decode the same signed byte times 5 (OSRS client
+     * `ItemComposition`/`NPCComposition.decode`: `contrast = readByte() * 5`, open-osrs runescape-client; 2011scape-client
+     * `ObjType.decode`: `contrast = g1b() * 5`, `NPCType.decode`: `diffusion = g1b() * 5`) and light with the same
+     * `contrast + 768` (items) / `+ 850` (npcs) term, so the byte is copied unchanged. Until 2026-09-30 it was divided by 5
+     * (read from RuneLite's cache `ItemLoader`, which keeps the raw byte): every imported item and npc had a fifth of its
+     * OSRS contrast.
      */
-    fun rev667Contrast(osrsContrast: Int): Int = (osrsContrast / 5.0).roundToInt().coerceIn(-128, 127)
+    fun rev667Contrast(osrsContrast: Int): Int = osrsContrast.coerceIn(-128, 127)
+
+    /** OSRS item lighting: `toModel(ambient + 64, contrast + 768, -50, -10, -50)` (open-osrs `ItemComposition`). */
+    const val ITEM_CONTRAST_BASE = 768
+
+    /** OSRS npc lighting: `toModel(ambient + 64, contrast + 850, -30, -50, -30)` (open-osrs `NPCComposition`; 667 `NPCType` the same). */
+    const val NPC_CONTRAST_BASE = 850
+
+    /**
+     * Item opcode 113 / npc opcode 100 (ambient). The byte means something different in the two clients:
+     *  - OSRS adds it to the directional light: lightness = L * (ambient + 64 + D cos a) >> 7 with
+     *    D = 65536 / (contrastBase + 5 * contrastByte) (RuneLite `ItemSpriteFactory.light`: `dot / (var7 * magnitude) + ambient`,
+     *    var7 = |light| * contrast >> 8, face normals scaled to 256 - the light length cancels);
+     *  - every 667 toolkit multiplies the colour by it before lighting: lightness = L * (ambient + 64) >> 7, then the
+     *    directional shading (2011scape-client `Model_Sub2.method4985` -> `Static468.method7648` for GL, `JavaModel` for
+     *    software: `(colour & 0x7F) * ambient >> 7`).
+     * Copying the OSRS byte therefore scales a 667 model by (ambient + 64) / 64 instead of shifting it: Blighted super
+     * restore (OSRS ambient -55) was drawn at 9/64 = 14 % lightness - black (owner 2026-09-30).
+     *
+     * No 667 byte reproduces the additive term at every angle (the lighting models differ), so this matches the OSRS
+     * brightness ratio against a neutral (ambient 0) model at the mean angle of the lit hemisphere (cos a = 1/2):
+     * (a' + 64) / 64 = (a + 64 + D/2) / (64 + D/2). ADAPTED, not SOURCE: the mapping is derived, the inputs are sourced.
+     */
+    fun rev667Ambient(
+        osrsAmbient: Int,
+        osrsContrast: Int,
+        contrastBase: Int,
+    ): Int {
+        if (osrsAmbient == 0) return 0
+        val halfDirectional = 32768.0 / (contrastBase + osrsContrast * 5)
+        return (64.0 * osrsAmbient / (64.0 + halfDirectional)).roundToInt().coerceIn(-128, 127)
+    }
 
     /**
      * The meshes an item draws on the player (male/female 0-2), which [OsrsBodyFrame] moves onto the 667 body. The inventory
@@ -1399,13 +1431,14 @@ object OsrsItemImportTool {
         if (def.resizeX != 128) u16(110, def.resizeX)
         if (def.resizeY != 128) u16(111, def.resizeY)
         if (def.resizeZ != 128) u16(112, def.resizeZ)
-        if (def.ambient != 0) {
+        val ambient = rev667Ambient(def.ambient, def.contrast, ITEM_CONTRAST_BASE)
+        if (ambient != def.ambient) dropped += "${def.name}: ambient ${def.ambient} -> $ambient (OSRS additive -> 667 multiplicative lighting)"
+        if (ambient != 0) {
             out.writeByte(113)
-            out.writeByte(def.ambient)
+            out.writeByte(ambient)
         }
         if (def.contrast != 0) {
             val contrast = rev667Contrast(def.contrast)
-            if (contrast * 5 != def.contrast) dropped += "${def.name}: contrast ${def.contrast} rounded to ${contrast * 5}"
             if (contrast != 0) {
                 out.writeByte(114)
                 out.writeByte(contrast)

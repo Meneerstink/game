@@ -92,6 +92,15 @@ object SummoningUi {
     /** The pet variant of the right-hand column (size/hunger); never used by a familiar. */
     private const val PANEL_PET_LAYER = 71
 
+    /**
+     * The pet column's two values, drawn by clientscript 753 (662:71/45 `varpTriggers=[1175]`): varbit 4285 (varp 1175
+     * bits 1..8) -> 662:45/46 "growth", varbit 4286 (bits 9..16) -> 662:48 "hunger", each as "<n>%" - or "NA" when the
+     * value is exactly 101.
+     */
+    private const val PET_GROWTH_VARBIT = 4285
+    private const val PET_HUNGER_VARBIT = 4286
+    private const val PET_VALUE_NOT_APPLICABLE = 101
+
     /** The familiar variant of the right-hand column (time remaining / Summoning points). */
     private const val PANEL_FAMILIAR_LAYER = 72
 
@@ -183,8 +192,27 @@ object SummoningUi {
      * to an unmounted slot. The panel contents are blanked by [refreshPanel].
      */
     fun restorePanel(player: Player) {
-        player.openInterface(InterfaceDestination.SUMMONING_TAB)
+        if (!panelMounted(player)) {
+            player.openInterface(InterfaceDestination.SUMMONING_TAB)
+            // A fresh mount comes up with the cache's baked flags; redraw the gating on the next cycle.
+            invalidate(player)
+        }
         if (Familiar.current(player) != null || Pets.current(player) != null) showPanel(player)
+    }
+
+    /**
+     * Whether 662 already sits on slot 95 of the current gameframe. Owner 2026-09-30 ("Summoning-tab knippert / verdwijnt"):
+     * re-sending `IF_OPENSUB` for a mounted 662 makes the client close it - which wipes its server events
+     * (`InterfaceManager.closeSubInterface` -> `resetServerActiveProperties`), fires the gameframe's sub-change hook and
+     * rebuilds 662 with its baked flags - and open it again. The login, window-mode, gameframe-rebuild and every
+     * side-inventory mount (bank, shop, GE: [gg.rsmod.plugins.api.ext.GameframeRebuild.rearm]) called this, so the panel
+     * was torn down up to seven times in six seconds after login and twice on every bank open.
+     */
+    fun panelMounted(player: Player): Boolean {
+        val mode = player.interfaces.displayMode
+        val parent = gg.rsmod.plugins.api.getDisplayComponentId(mode)
+        val child = gg.rsmod.plugins.api.getChildId(InterfaceDestination.SUMMONING_TAB, mode)
+        return player.interfaces.getInterfaceAt(parent, child) == PANEL
     }
 
     /** Whether this familiar can be ordered to attack - i.e. it has real, sourced combat data. */
@@ -308,6 +336,7 @@ object SummoningUi {
         }
         refreshPanel(player, active)
         refreshOrb(player, active)
+        refreshDismissLabels(player, active)
         refreshSpecialMode(player)
         // The special-move button's own IF_SETEVENTS has exactly the same "live client state"
         // problem, and is what stops a Unicorn's Healing Aura responding mid-fight (H11), so it is
@@ -346,10 +375,16 @@ object SummoningUi {
     ) {
         val active = npcId != null
         // A pet has a name, a model, Call and Dismiss - no time / points column, no renew, scrolls, special move or Beast of Burden.
-        val pet = npcId != null && FamiliarCapabilityTable.forNpc(npcId) == null && Pets.isPetNpc(npcId)
-        // The pet column is never the familiar column; 751 only hides it on the familiar path,
-        // and that path is skipped entirely once varp 448 goes to -1.
-        player.setComponentHidden(PANEL, PANEL_PET_LAYER, true)
+        val pet = npcId != null && isPetFollower(npcId)
+        // The right-hand column is the cache's own choice: script 751 shows the pet layer 71 (growth / hunger) whenever
+        // enum 1283 has no scroll for varp 448 - every pet - and the familiar layer 72 otherwise. Hiding 71 for a pet only
+        // fought 751 (it re-shows 71 on every varp 1174 transmit) and left growth/hunger at varbits 4285/4286 = 0, drawn as
+        // "0%" (owner 2026-09-30). An OSRS pet neither grows nor gets hungry, so both carry script 753's own "NA" value.
+        player.setComponentHidden(PANEL, PANEL_PET_LAYER, !pet)
+        if (pet) {
+            player.setVarbit(PET_GROWTH_VARBIT, PET_VALUE_NOT_APPLICABLE)
+            player.setVarbit(PET_HUNGER_VARBIT, PET_VALUE_NOT_APPLICABLE)
+        }
         player.setComponentHidden(PANEL, PANEL_MODEL_LAYER, !active)
         player.setComponentHidden(PANEL, PANEL_FAMILIAR_LAYER, !active || pet)
         player.setComponentHidden(PANEL, PANEL_SCROLL_COUNT, !active || pet)
@@ -435,6 +470,39 @@ object SummoningUi {
             }
         }
         player.setComponentSprite(ORB, ORB_ICON, ORB_SPRITE_ACTIVE)
+    }
+
+    /**
+     * Clientscript 5378 (SummoningInterfaceScriptTool): `(orb, panel op1, panel op2)` relabels the follower's dismiss entry
+     * on the orb (747:11 op6 / 747:20 op1) and the panel (662:51 op1 / op2). The labels are baked "Dismiss" / "Dismiss
+     * Familiar" / "Dismiss Now"; an OSRS pet is picked up instead (owner 2026-09-30: "osrs Pets moeten ook pickup functie
+     * hebben in de summoning orb ipv dismiss"; OSRS offers only Pick-up on a pet), so its entry reads "Pick-up" and the
+     * "Dismiss Now" shortcut is emptied (an empty label is no menu entry: `InterfaceManager.getOp`). Re-sent with the rest
+     * of the gating because a rebuilt component comes back with its baked labels.
+     */
+    private const val DISMISS_LABEL_SCRIPT = 5378
+    const val PET_PICK_UP = "Pick-up"
+
+    private fun refreshDismissLabels(
+        player: Player,
+        npcId: Int?,
+    ) {
+        if (npcId != null && isPetFollower(npcId)) {
+            player.runClientScript(DISMISS_LABEL_SCRIPT, PET_PICK_UP, PET_PICK_UP, "")
+        } else {
+            player.runClientScript(DISMISS_LABEL_SCRIPT, FamiliarAction.DISMISS.label, "Dismiss Familiar", "Dismiss Now")
+        }
+    }
+
+    private fun isPetFollower(npcId: Int): Boolean = FamiliarCapabilityTable.forNpc(npcId) == null && Pets.isPetNpc(npcId)
+
+    /** The word an orb action shows for the current follower (the left-click chooser uses the same words as the menu). */
+    fun labelOf(
+        player: Player,
+        action: FamiliarAction,
+    ): String {
+        val npcId = Familiar.current(player)?.id ?: Pets.current(player)?.id
+        return if (action == FamiliarAction.DISMISS && npcId != null && isPetFollower(npcId)) PET_PICK_UP else action.label
     }
 
     /**

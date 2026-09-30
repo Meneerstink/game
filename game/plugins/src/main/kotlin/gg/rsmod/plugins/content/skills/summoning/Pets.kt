@@ -5,6 +5,7 @@ import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.plugins.api.ext.message
+import gg.rsmod.plugins.api.ext.playSound
 import java.io.File
 import java.lang.ref.WeakReference
 
@@ -36,6 +37,14 @@ object Pets {
 
     /** Novite rev-667 `PetManager.spawnPet` / `NPCHandler` pet pick-up. */
     const val DROP_ANIMATION = 827
+
+    /**
+     * The engine's own cues for putting an item down and taking one (IfButton1Handler drop: synth 2739 "put_down";
+     * GroundItemPathAction take: synth 2582). Dropping a pet item and picking the pet up are those same two acts, but go
+     * through [drop] / [pickUp] instead of the engine, which is why they were silent (owner 2026-09-30).
+     */
+    const val DROP_SOUND = 2739
+    const val PICK_UP_SOUND = 2582
 
     const val MSG_FOLLOWED = "<col=ef1020>You have a funny feeling like you're being followed.</col>"
     const val MSG_BACKPACK = "<col=ef1020>You feel something weird sneaking into your backpack.</col>"
@@ -210,6 +219,7 @@ object Pets {
             return true
         }
         player.animate(DROP_ANIMATION)
+        player.playSound(DROP_SOUND)
         spawn(player, variant)
         return true
     }
@@ -231,6 +241,7 @@ object Pets {
         player.animate(DROP_ANIMATION)
         clear(player)
         player.inventory.add(item, 1, assureFullInsertion = true)
+        player.playSound(PICK_UP_SOUND)
     }
 
     /** Dismiss from the Summoning tab / orb: the pet goes to the inventory, else the bank; it is never lost. */
@@ -241,10 +252,12 @@ object Pets {
             player.inventory.hasSpace -> {
                 clear(player)
                 player.inventory.add(item, 1, assureFullInsertion = true)
+                player.playSound(PICK_UP_SOUND)
                 player.message("Your pet is now in your backpack.")
             }
             player.bank.add(item, 1, assureFullInsertion = true).hasSucceeded() -> {
                 clear(player)
+                player.playSound(PICK_UP_SOUND)
                 player.message("Your pet has been sent to your bank.")
             }
             else -> player.message("You don't have enough inventory or bank space to do that.")
@@ -255,6 +268,7 @@ object Pets {
     fun call(player: Player): Boolean {
         val npc = current(player) ?: return false
         npc.teleportNpc(Familiar.placementTile(player, npc.id))
+        Familiar.playFollowerCall(player, npc)
         npc.facePawn(player)
         return true
     }

@@ -12,7 +12,8 @@ import java.io.File
  * only where the meaning is proven:
  *
  * - NPCType 1/2/12/30-34/40/60/93/95/97/98/99/100/103/107 carry the same values in both clients (RuneLite `NpcLoader`,
- *   2011scape-client `NPCType.decode`); 101 contrast is divided by 5 exactly like item contrast ([OsrsItemImportTool.rev667Contrast]).
+ *   2011scape-client `NPCType.decode`); 101 contrast is the same byte in both ([OsrsItemImportTool.rev667Contrast]);
+ *   100 ambient is converted from OSRS additive to 667 multiplicative lighting ([OsrsItemImportTool.rev667Ambient]).
  * - Movement: OSRS keeps stand/walk/turn sequences on the npc, 667 on a BASType. The mapping is proven by the Man pair: 667 npc 1
  *   uses BAS 4 = ready 808, walk 819, opcode 40 = 820, 41 = 821, 42 = 822; OSRS Man 3106 = stand 808, walk 819, walk180 820,
  *   walkLeft 821, walkRight 822. So walk180 -> 40, walkLeft -> 41 (walkFollowTurnCcw), walkRight -> 42; the run (7/8/9) and crawl
@@ -275,9 +276,11 @@ object OsrsNpcImportTool {
             1 -> out.u8(99)
             2 -> dropped += "npc ${n.id}: render priority 2 (no 667 equivalent)"
         }
-        if (n.ambient != 0) {
+        val ambient = OsrsItemImportTool.rev667Ambient(n.ambient, n.contrast, OsrsItemImportTool.NPC_CONTRAST_BASE)
+        if (ambient != n.ambient) dropped += "npc ${n.id}: ambient ${n.ambient} -> $ambient (OSRS additive -> 667 multiplicative lighting)"
+        if (ambient != 0) {
             out.u8(100)
-            out.u8(n.ambient)
+            out.u8(ambient)
         }
         if (n.contrast != 0) {
             out.u8(101)

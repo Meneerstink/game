@@ -2,33 +2,51 @@ package gg.rsmod.game.tools.importer
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 /**
- * Item opcode 114 unit conversion: OSRS lights with the raw byte (`contrast + 768`), the 667 client with `byte * 5`
- * (`ObjType.decode`), so the 667 byte is the OSRS value divided by 5 (evidence in `OsrsItemImportTool.rev667Contrast`).
+ * Item opcodes 113/114 and npc opcodes 100/101 (ambient/contrast) from OSRS to 667 (evidence in
+ * `OsrsItemImportTool.rev667Contrast` / `rev667Ambient`).
+ *
+ * Contrast: both clients decode `byte * 5` (open-osrs `ItemComposition`/`NPCComposition`, 2011scape-client
+ * `ObjType`/`NPCType`), so the byte is copied. Ambient: OSRS adds it to the directional light, 667 multiplies the colour by
+ * `(ambient + 64) / 64`, so it is rescaled to the same brightness ratio at the lit hemisphere's mean angle.
  */
 class OsrsContrastConversionTests {
     @Test
-    fun `exact multiples of five convert without loss`() {
-        assertEquals(0, OsrsItemImportTool.rev667Contrast(0))
-        assertEquals(6, OsrsItemImportTool.rev667Contrast(30))
-        assertEquals(-4, OsrsItemImportTool.rev667Contrast(-20))
+    fun `contrast is the same byte in both clients`() {
+        (-128..127).forEach { assertEquals(it, OsrsItemImportTool.rev667Contrast(it)) }
     }
 
     @Test
-    fun `other values round to the nearest representable contrast`() {
-        assertEquals(1, OsrsItemImportTool.rev667Contrast(3))
-        assertEquals(0, OsrsItemImportTool.rev667Contrast(2))
-        assertEquals(25, OsrsItemImportTool.rev667Contrast(127))
-        assertEquals(-26, OsrsItemImportTool.rev667Contrast(-128))
+    fun `ambient zero stays zero`() {
+        assertEquals(0, OsrsItemImportTool.rev667Ambient(0, 0, OsrsItemImportTool.ITEM_CONTRAST_BASE))
+        assertEquals(0, OsrsItemImportTool.rev667Ambient(0, 7, OsrsItemImportTool.NPC_CONTRAST_BASE))
     }
 
     @Test
-    fun `the result always fits the signed byte the 667 decoder reads`() {
-        (-128..127).forEach { osrs ->
-            val converted = OsrsItemImportTool.rev667Contrast(osrs)
-            kotlin.test.assertTrue(converted in -128..127, "$osrs -> $converted")
-            kotlin.test.assertTrue(kotlin.math.abs(converted * 5 - osrs) <= 2, "$osrs -> $converted is the nearest multiple")
+    fun `blighted super restore ambient -55 keeps the OSRS brightness ratio instead of going black`() {
+        // OSRS item 24598: ambient -55, no contrast. OSRS ratio at cos 1/2: (9 + 42.67) / (64 + 42.67) = 0.484.
+        val converted = OsrsItemImportTool.rev667Ambient(-55, 0, OsrsItemImportTool.ITEM_CONTRAST_BASE)
+        assertEquals(-33, converted)
+        val ratio667 = (converted + 64) / 64.0
+        val ratioOsrs = (-55 + 64 + 32768.0 / 768) / (64 + 32768.0 / 768)
+        assertTrue(kotlin.math.abs(ratio667 - ratioOsrs) < 0.01, "667 $ratio667 vs OSRS $ratioOsrs")
+    }
+
+    @Test
+    fun `every OSRS ambient maps into the signed byte with the OSRS brightness ratio`() {
+        for (base in listOf(OsrsItemImportTool.ITEM_CONTRAST_BASE, OsrsItemImportTool.NPC_CONTRAST_BASE)) {
+            for (contrast in listOf(-20, 0, 3, 8, 30)) {
+                for (ambient in -128..127) {
+                    val converted = OsrsItemImportTool.rev667Ambient(ambient, contrast, base)
+                    assertTrue(converted in -128..127)
+                    assertTrue(kotlin.math.abs(converted) <= kotlin.math.abs(ambient), "$ambient -> $converted never amplifies")
+                    val half = 32768.0 / (base + contrast * 5)
+                    val ratioOsrs = (ambient + 64 + half) / (64 + half)
+                    assertTrue(kotlin.math.abs((converted + 64) / 64.0 - ratioOsrs) <= 0.5 / 64 + 1e-9, "$ambient/$contrast/$base")
+                }
+            }
         }
     }
 }

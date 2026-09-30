@@ -51,46 +51,45 @@ import gg.rsmod.game.model.shop.PurchasePolicy
  *
  * Every item below was checked to exist unnoted in this cache and to have a working route: food in `Food`, potions in
  * `Potion`, runes/combination runes through the spellbooks, blighted sacks in `BlightedSacks`, arrows through ranged
- * ammo, the house tab in `player_house.plugin.kts`, the burning amulet in `burning_amulet.plugin.kts` and Mithril seeds
- * in `flower_seeds.plugin.kts`. Prices use the same OSRS guide/mid-price table as the Grand Exchange; the amount is
- * the shop's stock, which restocks at the default rate.
+ * ammo, the house tab in `player_house.plugin.kts`, the burning amulet in `burning_amulet.plugin.kts`, the glory in
+ * `amulet_of_glory.plugin.kts`, the rune pouch in `rune_pouch.plugin.kts`, Mithril/Adamant seeds in `flower_seeds.plugin.kts`
+ * and moonlight antler bolts in `CrossbowType`. Owner 2026-09-30 refined the list: rune/dragon arrows only, no plain runes,
+ * shark, summer pie and tuna potato out (manta ray, sea turtle and the karambwan combo food stay), Bastion/Battlemage as
+ * the other live high-level potions (divine potions are removed). Prices use the same OSRS guide/mid-price table as the
+ * Grand Exchange; the amount is the shop's stock, which restocks at the default rate.
  */
 val QUARTERMASTER = gg.rsmod.plugins.content.areas.grandexchange.GeHomeHall.QUARTERMASTER
 val HOME_SUPPLIES = "Home PK Supplies"
 
 val homePkSupplyStock =
     listOf(
-        // Arrows.
-        Items.BRONZE_ARROW to 5_000, Items.IRON_ARROW to 5_000, Items.STEEL_ARROW to 5_000,
-        Items.MITHRIL_ARROW to 3_000, Items.ADAMANT_ARROW to 3_000, Items.RUNE_ARROW to 2_000,
-        Items.DRAGON_ARROW to 1_000,
-        // Standard runes.
-        Items.AIR_RUNE to 20_000, Items.WATER_RUNE to 20_000, Items.EARTH_RUNE to 20_000, Items.FIRE_RUNE to 20_000,
-        Items.MIND_RUNE to 10_000, Items.BODY_RUNE to 10_000, Items.CHAOS_RUNE to 10_000, Items.COSMIC_RUNE to 5_000,
-        Items.NATURE_RUNE to 5_000, Items.LAW_RUNE to 5_000, Items.ASTRAL_RUNE to 5_000, Items.DEATH_RUNE to 10_000,
-        Items.BLOOD_RUNE to 10_000, Items.SOUL_RUNE to 5_000, Items.WRATH_RUNE to 2_000,
-        // Combination runes.
+        // Arrows (owner 2026-09-30: rune and dragon only).
+        Items.RUNE_ARROW to 2_000, Items.DRAGON_ARROW to 1_000,
+        // Combination runes only (owner 2026-09-30: no plain runes); every elemental pair is covered, the Wilderness
+        // spells themselves come from the blighted sacks below.
         Items.MIST_RUNE to 5_000, Items.DUST_RUNE to 5_000, Items.MUD_RUNE to 5_000, Items.SMOKE_RUNE to 5_000,
         Items.STEAM_RUNE to 5_000, Items.LAVA_RUNE to 5_000,
         // Blighted spell sacks.
         Items.BLIGHTED_ANCIENT_ICE_SACK to 5_000, Items.BLIGHTED_ENTANGLE_SACK to 5_000,
         Items.BLIGHTED_TELEPORT_SPELL_SACK to 2_000, Items.BLIGHTED_VENGEANCE_SACK to 5_000,
-        // High-tier and combo food.
-        Items.SHARK to 2_000, Items.MANTA_RAY to 1_000, Items.SEA_TURTLE to 1_000, Items.ANGLERFISH to 1_000,
-        Items.TUNA_POTATO to 500, Items.COOKED_KARAMBWAN to 2_000, Items.SUMMER_PIE to 500,
+        // High-tier and combo food (owner 2026-09-30: no shark, summer pie or tuna potato).
+        Items.MANTA_RAY to 1_000, Items.SEA_TURTLE to 1_000, Items.ANGLERFISH to 1_000, Items.DARK_CRAB to 1_000,
+        Items.MARLIN to 1_000, Items.HALIBUT to 1_000, Items.COOKED_KARAMBWAN to 2_000,
         // Potions (4 doses).
         Items.SARADOMIN_BREW_4 to 1_000, Items.SUPER_RESTORE_4 to 1_000, Items.SUPER_COMBAT_POTION_4 to 500,
         Items.SUPER_ATTACK_4 to 500, Items.SUPER_STRENGTH_4 to 500, Items.SUPER_DEFENCE_4 to 500,
         Items.RANGING_POTION_4 to 500, Items.MAGIC_POTION_4 to 500, Items.PRAYER_POTION_4 to 1_000,
+        Items.BASTION_POTION_4 to 300, Items.BATTLEMAGE_POTION_4 to 300,
         Items.SANFEW_SERUM_4 to 300, Items.GUTHIX_REST_4 to 300, Items.STAMINA_POTION_4 to 300,
         Items.EXTENDED_ANTIFIRE_4 to 300, Items.ANTI_VENOM_PLUS_4 to 300,
-        Items.DIVINE_SUPER_COMBAT_POTION_4 to 100, Items.DIVINE_RANGING_POTION_4 to 100, Items.DIVINE_MAGIC_POTION_4 to 100,
         // Teleports and utility.
-        Items.TELEPORT_TO_HOUSE to 1_000, Items.BURNING_AMULET_5 to 200, Items.MITHRIL_SEEDS to 1_000,
+        Items.TELEPORT_TO_HOUSE to 1_000, Items.BURNING_AMULET_5 to 200, Items.AMULET_OF_GLORY_4 to 200,
+        Items.RUNE_POUCH to 50, Items.MITHRIL_SEEDS to 1_000, Items.ADAMANT_SEEDS to 1_000,
         // Crossbow ammunition.
         Items.RUNITE_BOLTS to 3_000, Items.DIAMOND_BOLTS_E to 1_000, Items.RUBY_BOLTS_E to 1_000,
         Items.DRAGON_BOLTS_E to 1_000, Items.ONYX_BOLTS_E to 300, Items.DRAGON_BOLTS to 1_000,
-        Items.DIAMOND_DRAGON_BOLTS_E to 500, Items.RUBY_DRAGON_BOLTS_E to 500, Items.DRAGONSTONE_DRAGON_BOLTS_E to 300,
+        Items.OPAL_DRAGON_BOLTS_E to 500, Items.DIAMOND_DRAGON_BOLTS_E to 500, Items.RUBY_DRAGON_BOLTS_E to 500,
+        Items.DRAGONSTONE_DRAGON_BOLTS_E to 300, Items.MOONLIGHT_ANTLER_BOLTS to 500,
     ).distinctBy { it.first }
 
 val availableHomePkSupplyStock = homePkSupplyStock.filter { (itemId, _) ->
@@ -128,15 +127,15 @@ on_npc_option(QUARTERMASTER, "talk-to") {
             SECOND_OPTION -> {
                 chatPlayer("What do you stock?", facialExpression = FacialExpression.THINKING)
                 chatNpc(
-                    "Brews, restores and super combats. Sharks, mantas,",
-                    "anglerfish and karambwans for combo eating. Every",
-                    "rune from air to wrath, combination runes too.",
+                    "Brews, restores and super combats. Anglerfish, dark",
+                    "crabs, mantas and karambwans for combo eating, and",
+                    "combination runes for your elemental spells.",
                     facialExpression = FacialExpression.CALM_TALK,
                 )
                 chatNpc(
-                    "Blighted sacks for the Wilderness, arrows and",
-                    "enchanted bolts, house tabs, burning amulets and",
-                    "mithril seeds. Have a look.",
+                    "Blighted sacks for the Wilderness, rune and dragon",
+                    "arrows, enchanted bolts, rune pouches, glories, house",
+                    "tabs, burning amulets and seeds. Have a look.",
                     facialExpression = FacialExpression.HAPPY,
                 )
                 player.openShop(HOME_SUPPLIES)
