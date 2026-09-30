@@ -188,6 +188,8 @@ object DeathExecutor {
             world.queue {
                 wait(PVP_LOOT_SPAWN_DELAY_TICKS)
                 groundItems.forEach { item -> world.spawn(GroundItem(Item(item), tile, owner)) }
+                // RuneLite Loot Tracker (PlayerLootReceived): the PK loot that appeared for the killer, one event per kill.
+                owner?.let { gg.rsmod.plugins.content.mechanics.hud.LootTracker.playerKill(it, victim.username, groundItems.map { Item(it) }) }
             }
         }
         logger?.logDeathLootTransfer(victim, result.killer, lostItems)
