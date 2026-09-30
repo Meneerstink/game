@@ -23,13 +23,15 @@ object OsrsModelConversion {
 
     /**
      * [wornSlot]: the equipment slot when the mesh is worn on the player - it is then moved from the 2007 OSRS body onto the
-     * 667 one ([OsrsBodyFrame]). Inventory/ground and spotanim meshes pass null and keep their geometry.
+     * 667 one ([OsrsBodyFrame]). Inventory/ground and spotanim meshes pass null and keep their geometry. [female]: the mesh is
+     * a female wear model (needed for the legs, [OsrsBodyFrame.fitShin]).
      */
     fun convert(
         reader: ModernCacheReader,
         modelId: Int,
         dropped: MutableList<String>,
         wornSlot: Int? = null,
+        female: Boolean? = null,
     ): ByteArray {
         val bytes = reader.file(ModernCacheReader.INDEX_MODEL, modelId, 0) ?: error("upstream model $modelId missing")
         val raw =
@@ -57,7 +59,7 @@ object OsrsModelConversion {
             }
         if (raw.droppedFaceZOffsets) dropped += "model $modelId: face z-offsets (not representable in 667)"
         if (raw.droppedAnimayaSkinning) dropped += "model $modelId: animaya skinning (not representable in 667)"
-        if (wornSlot != null && wornSlot in OsrsBodyFrame.RENDERED_SLOTS) OsrsBodyFrame.toRev667Frame(source, wornSlot)
+        if (wornSlot != null && wornSlot in OsrsBodyFrame.RENDERED_SLOTS) OsrsBodyFrame.toRev667Frame(source, wornSlot, female)
         val converted = Rev667ModelEncoder.encode(source)
         val differences = ModelConvertTool.compare(source, Rev667ModelDecoder.decode(converted))
         check(differences.isEmpty()) { "model $modelId conversion mismatch: $differences" }

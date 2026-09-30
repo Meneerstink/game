@@ -25,6 +25,7 @@ object OsrsBodyFrameTool {
     private const val INDEX_MODEL = 7
 
     private val WORN_OPCODES = setOf(23, 24, 25, 26, 78, 79)
+    private val FEMALE_WORN_OPCODES = setOf(25, 26, 79)
     private val OTHER_MODEL_OPCODES = setOf(1, 90, 91, 92, 93)
 
     /** `opcode -> value` of every two-byte item opcode, from [ItemDefCodec.describeOpcodes]. */
@@ -110,6 +111,7 @@ object OsrsBodyFrameTool {
             val importedLocal = imported.values.toSet()
 
             val slotOfModel = HashMap<Int, MutableSet<Int>>()
+            val femaleOfModel = HashMap<Int, MutableSet<Boolean>>()
             val offsets = mutableListOf<Triple<Int, Int, Int>>() // local item, opcode, offset
             ModernCacheReader(File(OsrsItemImportTool.SOURCE_CACHE)).use { reader ->
                 val itemFiles = reader.files(ModernCacheReader.INDEX_CONFIG, ModernCacheReader.CONFIG_GROUP_ITEM)
@@ -118,7 +120,10 @@ object OsrsBodyFrameTool {
                     val bytes = itemBytes[local] ?: return@forEach
                     val slot = osrs.wearPos1
                     if (slot !in OsrsBodyFrame.RENDERED_SLOTS) return@forEach
-                    shortOpcodes(bytes).filterKeys { it in WORN_OPCODES }.values.forEach { slotOfModel.getOrPut(it) { mutableSetOf() } += slot }
+                    shortOpcodes(bytes).filterKeys { it in WORN_OPCODES }.forEach { (op, model) ->
+                        slotOfModel.getOrPut(model) { mutableSetOf() } += slot
+                        femaleOfModel.getOrPut(model) { mutableSetOf() } += op in FEMALE_WORN_OPCODES
+                    }
                     offsets += Triple(local, 125, osrs.maleOffset)
                     offsets += Triple(local, 126, osrs.femaleOffset)
                 }
@@ -131,6 +136,7 @@ object OsrsBodyFrameTool {
                 val foreign = wornBy[modelId].orEmpty().filter { it !in importedLocal }
                 when {
                     slots.size != 1 -> refused += "model $modelId worn in slots $slots"
+                    slots.single() == OsrsBodyFrame.LEGS_SLOT && femaleOfModel.getValue(modelId).size != 1 -> refused += "legs model $modelId worn by both genders"
                     other != null -> refused += "model $modelId also used by $other"
                     foreign.isNotEmpty() -> refused += "model $modelId also worn by non-imported items $foreign"
                     else -> {
@@ -141,7 +147,7 @@ object OsrsBodyFrameTool {
                             return@forEach
                         }
                         val before = Rev667ModelDecoder.decode(current)
-                        OsrsBodyFrame.toRev667Frame(model, slots.single())
+                        OsrsBodyFrame.toRev667Frame(model, slots.single(), femaleOfModel.getValue(modelId).single())
                         val updated = Rev667ModelEncoder.encode(model)
                         val reread = Rev667ModelDecoder.decode(updated)
                         val differences = ModelConvertTool.compare(model, reread)

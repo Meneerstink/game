@@ -4,9 +4,10 @@ import java.io.File
 
 /**
  * Puts `remove_arms` of every already imported OSRS item in `data/cfg/items.yml` on [OsrsItemImportTool.removesArms]
- * (owner 2026-09-30: "de armen van mijn character zijn onzichtbaar met Eclipse / Crystal"). The importer used to hide the
- * arms kit for every OSRS body with wearPos2/3 = 6, also for the bodies without an arms model of their own, which then drew
- * no arms at all. Only the `remove_arms` line of an imported item's block changes; the file is otherwise copied as is.
+ * (OSRS wearPos2/3 = 6). On 2026-09-30 the rule briefly kept the 667 arms kit under OSRS bodies without an arms model; the
+ * 667 arm then showed through their sleeves and armbands (owner `fotodd.png`). The missing forearm under those bodies is
+ * [WornForearm] (see [OsrsForearmTool]). Only the `remove_arms` line of an imported item's block changes; the file is
+ * otherwise copied as is.
  *
  * Usage: `[--apply]` - without it the planned changes are only printed. items.yml is read at server start.
  */

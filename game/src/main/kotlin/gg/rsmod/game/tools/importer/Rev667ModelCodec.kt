@@ -181,7 +181,15 @@ object Rev667ModelEncoder {
  * this pipeline can produce them and a half-read section would mask an encoder bug.
  */
 object Rev667ModelDecoder {
-    fun decode(data: ByteArray): ModelData {
+    /**
+     * [geometryOnly]: read vertices, faces, colours, labels, priorities and alpha of any 667 mesh - also one with complex
+     * texture mappings (the player kits, e.g. arms 151) - and leave every texture space out ([ModelData.texSpaceCount] 0;
+     * [ModelData.faceTexture] still says which faces are textured). The complex-mapping blocks follow every section read here.
+     */
+    fun decode(
+        data: ByteArray,
+        geometryOnly: Boolean = false,
+    ): ModelData {
         val footer = data[data.size - 2].toInt() to data[data.size - 1].toInt()
         check(footer == -1 to -1) { "Rev-667 decodeNew expects footer (-1, -1) but found $footer." }
 
@@ -213,11 +221,13 @@ object Rev667ModelDecoder {
         val faceDataSize = header.u16()
         val texSpaceSize = header.u16()
 
-        val model = ModelData(vertexCount, faceCount, texSpaceCount)
+        val model = ModelData(vertexCount, faceCount, if (geometryOnly) 0 else texSpaceCount)
         model.version = version
 
         var planarMappingCount = 0
-        if (texSpaceCount > 0) {
+        if (texSpaceCount > 0 && geometryOnly) {
+            for (i in 0 until texSpaceCount) if (data[i].toInt() == 0) planarMappingCount++
+        } else if (texSpaceCount > 0) {
             val types = ByteArray(texSpaceCount)
             val typeBuffer = ModelBuffer(data, 0)
             for (i in 0 until texSpaceCount) {
@@ -279,7 +289,7 @@ object Rev667ModelDecoder {
         if (faceGroupFlag == 1) model.faceLabel = IntArray(faceCount)
         if (vertexLabelFlag == 1) model.vertexLabel = IntArray(vertexCount)
         if (faceTextureFlag == 1) model.faceTexture = ShortArray(faceCount)
-        if (faceTextureFlag == 1 && texSpaceCount > 0) model.faceTexSpace = ByteArray(faceCount)
+        if (faceTextureFlag == 1 && texSpaceCount > 0 && !geometryOnly) model.faceTexSpace = ByteArray(faceCount)
 
         val flags = ModelBuffer(data, vertexFlagsPtr)
         val deltaX = ModelBuffer(data, vertexXPtr)
@@ -359,7 +369,7 @@ object Rev667ModelDecoder {
             model.faceC[i] = c
         }
 
-        if (texSpaceCount > 0) {
+        if (texSpaceCount > 0 && !geometryOnly) {
             model.texSpaceDefA = ShortArray(texSpaceCount)
             model.texSpaceDefB = ShortArray(texSpaceCount)
             model.texSpaceDefC = ShortArray(texSpaceCount)

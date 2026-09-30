@@ -1227,14 +1227,24 @@ object OsrsItemImportTool {
                     }
                 }
 
-            val convertedModels = mutableMapOf<Pair<Int, Int?>, ByteArray>()
+            val convertedModels = mutableMapOf<Triple<Int, Int?, Boolean?>, ByteArray>()
             fun convertModel(
                 modelId: Int,
                 wornSlot: Int? = null,
+                female: Boolean? = null,
             ): ByteArray =
                 // One conversion for every importer (OsrsModelConversion): texture colour, imported textures, decode-compare, and
                 // for a worn mesh the move onto the 667 body (OsrsBodyFrame).
-                convertedModels.getOrPut(modelId to wornSlot) { OsrsModelConversion.convert(reader, modelId, dropped, wornSlot) }
+                convertedModels.getOrPut(Triple(modelId, wornSlot, female)) { OsrsModelConversion.convert(reader, modelId, dropped, wornSlot, female) }
+            val forearmPieces by lazy {
+                CacheLibrary(TARGETS[0]).let { library ->
+                    try {
+                        WornForearm.pieces(library)
+                    } finally {
+                        library.close()
+                    }
+                }
+            }
 
             val batch =
                 entries.map { entry ->
@@ -1245,12 +1255,18 @@ object OsrsItemImportTool {
                     } else {
                         val modelIds = entry.def.modelDependencies().values.distinct()
                         val worn = wornModels(entry.def)
-                        val models =
-                            modelIds.map {
-                                val slot = if (it in worn) entry.def.wearPos1 else null
-                                ImportBatchOrchestrator.ModelSource("upstream_model:$it", "model", convertModel(it, slot))
-                            }
-                        ImportBatchOrchestrator.ItemSource(entry.identity, entry.name, models, expectedSha1) { local ->
+                        fun converted(model: Int): ByteArray {
+                            val slot = if (model in worn) entry.def.wearPos1 else null
+                            return convertModel(model, slot, if (slot == OsrsBodyFrame.LEGS_SLOT) wornFemale(entry.def, model) else null)
+                        }
+                        val models = modelIds.map { ImportBatchOrchestrator.ModelSource("upstream_model:$it", "model", converted(it)) }
+                        val forearm = if (removesArms(entry.def)) forearmOps(entry.def, forearmPieces, ::converted) else emptyMap()
+                        forearm.values.forEach { piece ->
+                            check(models.none { it.sourceIdentity == piece.sourceIdentity }) { "${entry.name}: model id clash with ${piece.sourceIdentity}" }
+                        }
+                        val allModels =
+                            models + forearm.values.distinct().map { ImportBatchOrchestrator.ModelSource(it.sourceIdentity, WornForearm.ROLE, it.bytes) }
+                        ImportBatchOrchestrator.ItemSource(entry.identity, entry.name, allModels, expectedSha1) { local ->
                             encodeItem(
                                 entry.def,
                                 { upstream -> local.getValue("upstream_model:$upstream") },
@@ -1259,6 +1275,7 @@ object OsrsItemImportTool {
                                 dropped,
                                 countItem = { upstream -> entries.first { it.identity == "upstream_item:$upstream" }.localId },
                                 rev667StringParams = upstreamWornOps(entry.def) + entry.spec.rev667StringParams,
+                                extraWornModels = forearm.mapValues { (_, piece) -> local.getValue(piece.sourceIdentity) },
                             )
                         }
                     }
@@ -1345,17 +1362,38 @@ object OsrsItemImportTool {
     }
 
     /**
-     * Whether the player's arms kit is left out while [def] is worn (667 `remove_arms`). OSRS marks every body that covers
-     * the arms with wearPos2/3 = 6, but only the classic sleeved bodies bring their own arms model (item opcode 46/49,
-     * maleModel1/femaleModel1: Rune platebody 164, Bandos chestplate 28826, Ancestral robe top 32658). The newer bodies
-     * (Eclipse/Blue/Blood moon chestplates, Masori, Crystal, Swampbark/Bloodbark, Dragon platebody (g), ...) have one torso
-     * model whose arm parts are armbands and shoulder pieces over the bare arm, and OSRS draws that arm (OSRS Wiki
-     * "... equipped male.png": skin arms under the armbands). Hiding the kit for them left the arms invisible (owner
-     * 2026-09-30). The OSRS client draws exactly the kits the server sends (open-osrs PlayerComposition), so the rule is
-     * derived from the item data and the renders: ADAPTED.
+     * Whether the player's arms kit is left out while [def] is worn (667 `remove_arms`): OSRS wearPos2/3 = 6, as in OSRS. The
+     * body then draws the arms itself down to mid-forearm; the lower forearm OSRS takes from the hands kit is added by
+     * [WornForearm] (owner 2026-09-30: forearms under Eclipse / Crystal / Masori invisible).
      */
-    fun removesArms(def: ModernItemDef): Boolean =
-        6 in setOf(def.wearPos2, def.wearPos3) && (def.maleModel1 != -1 || def.femaleModel1 != -1)
+    fun removesArms(def: ModernItemDef): Boolean = 6 in setOf(def.wearPos2, def.wearPos3)
+
+    /** Whether worn [model] of [def] is a female wear model; a mesh worn by both genders is refused (its fit differs per gender). */
+    fun wornFemale(
+        def: ModernItemDef,
+        model: Int,
+    ): Boolean {
+        val female = model in setOf(def.femaleModel0, def.femaleModel1, def.femaleModel2)
+        val male = model in setOf(def.maleModel0, def.maleModel1, def.maleModel2)
+        check(female != male) { "${def.name}: worn mesh $model is ${if (female) "both a male and a female" else "neither a male nor a female"} wear model" }
+        return female
+    }
+
+    /**
+     * Worn-mesh opcode -> [WornForearm.Piece] for an OSRS item that hides the arms: the 667 bare forearm, per gender, when the
+     * item's own worn meshes of that gender ([converted] = the mesh as written, on the 667 body) leave the lower forearm bare.
+     */
+    fun forearmOps(
+        def: ModernItemDef,
+        pieces: List<WornForearm.Piece>,
+        converted: (Int) -> ByteArray,
+    ): Map<Int, WornForearm.Piece> =
+        pieces.mapNotNull { piece ->
+            val ids = if (piece.female) listOf(def.femaleModel0, def.femaleModel1, def.femaleModel2) else listOf(def.maleModel0, def.maleModel1, def.maleModel2)
+            val used = piece.wornOps.zip(ids).filter { it.second >= 0 }.map { it.first }.toSet()
+            val meshes = ids.filter { it >= 0 }.map { Rev667ModelDecoder.decode(converted(it)) }
+            WornForearm.opcodeFor(piece, used, meshes)?.let { it to piece }
+        }.toMap()
 
     /**
      * The meshes an item draws on the player (male/female 0-2), which [OsrsBodyFrame] moves onto the 667 body. The inventory
@@ -1385,6 +1423,7 @@ object OsrsItemImportTool {
         dropped: MutableList<String>,
         countItem: (Int) -> Int = { error("count variant $it has no local item") },
         rev667StringParams: Map<Int, String> = emptyMap(),
+        extraWornModels: Map<Int, Int> = emptyMap(),
     ): ByteArray {
         val out: ByteBuf = Unpooled.buffer()
         fun u16(code: Int, value: Int) {
@@ -1422,7 +1461,11 @@ object OsrsItemImportTool {
             23 to def.maleModel0, 24 to def.maleModel1, 25 to def.femaleModel0, 26 to def.femaleModel1,
             78 to def.maleModel2, 79 to def.femaleModel2, 90 to def.maleHeadModel, 91 to def.femaleHeadModel,
             92 to def.maleHeadModel2, 93 to def.femaleHeadModel2,
-        ).filter { it.second >= 0 }.forEach { (code, id) -> u16(code, model(id)) }
+        ).filter { it.second >= 0 }.also { own ->
+            extraWornModels.keys.forEach { code -> check(own.none { it.first == code }) { "${def.name}: opcode $code is already a worn mesh" } }
+        }.forEach { (code, id) -> u16(code, model(id)) }
+        // Local meshes the item wears besides its own (WornForearm): opcode -> local model id.
+        extraWornModels.forEach { (code, id) -> u16(code, id) }
         def.groundOptions.forEachIndexed { i, op -> if (op != null) str(30 + i, op) }
         def.inventoryOptions.forEachIndexed { i, op -> if (op != null) str(35 + i, op) }
         if (def.colorFind.isNotEmpty()) {

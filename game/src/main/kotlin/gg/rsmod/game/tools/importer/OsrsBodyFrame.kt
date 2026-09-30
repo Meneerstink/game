@@ -1,5 +1,7 @@
 package gg.rsmod.game.tools.importer
 
+import kotlin.math.roundToInt
+
 /**
  * Moves an OSRS worn mesh from the 2007 player body onto the 2010 rev-667 player body.
  *
@@ -170,11 +172,69 @@ object OsrsBodyFrame {
         return Shift(label, ROOT.dx, ROOT.dy, ROOT.dz)
     }
 
+    /** Equipment slot of the legs. */
+    const val LEGS_SLOT = 7
+
+    /** Shin vertex labels (left / right): knee to ankle, the same in both skeletons. */
+    val SHIN_LABELS = setOf(32, 38)
+
+    /** Knee and ankle heights (fine units) of the shin of one gender: OSRS after [shift], and rev 667. */
+    data class Shin(val knee: Int, val osrsAnkle: Int, val ankle: Int)
+
     /**
-     * Converts a version-12 (coarse, 2007 body) worn [model] of equipment [slot] in place to a version-13 mesh on the 667 body.
+     * Owner 2026-09-30 ("remember all osrs ported gear"): every OSRS legs item left the ankle bare above the 667 feet. The shin
+     * is longer on the 2010 body. Measured on the default kits of both caches (legs idk 36 male / 70 female, feet 42 / 79,
+     * shin labels 32/38, after [shift]): OSRS legs end at -108 (male) / -104 (female) and the OSRS feet start there, the 667
+     * legs kit ends at -80 / -100 and the 667 feet (181 / 358) start at -84 / -100; the knees match (L31 rings, male OSRS -210 /
+     * 667 -210, female -206 / -204). The label-centre translation above cannot lengthen a segment, so a legs mesh keeps the
+     * 2007 shin and stops 28 units above the 667 ankle. [fitShin] maps the OSRS knee-to-ankle span onto the 667 one (and the
+     * ankle-to-floor span onto the 667 one, so nothing goes through the floor); every legs imported before gets the same
+     * from [OsrsShinTool].
+     */
+    val MALE_SHIN = Shin(knee = -210, osrsAnkle = -108, ankle = -80)
+    val FEMALE_SHIN = Shin(knee = -206, osrsAnkle = -104, ankle = -100)
+
+    /** The fitted height of an OSRS shin vertex at [y] (after [shift]): piecewise linear, knee and floor (0) fixed. */
+    fun shinY(
+        y: Int,
+        shin: Shin,
+    ): Int =
+        when {
+            y <= shin.knee -> y
+            y <= shin.osrsAnkle -> (shin.knee + (y - shin.knee).toDouble() * (shin.ankle - shin.knee) / (shin.osrsAnkle - shin.knee)).roundToInt()
+            y <= 0 -> (shin.ankle + (y - shin.osrsAnkle).toDouble() * -shin.ankle / -shin.osrsAnkle).roundToInt()
+            else -> y
+        }
+
+    /** Moves the shin vertices of a converted legs [model] of the given gender onto the 667 shin ([MALE_SHIN] / [FEMALE_SHIN]). */
+    fun fitShin(
+        model: ModelData,
+        female: Boolean,
+    ): ModelData {
+        val labels = model.vertexLabel ?: return model
+        val shin = if (female) FEMALE_SHIN else MALE_SHIN
+        for (i in 0 until model.vertexCount) if (labels[i] in SHIN_LABELS) model.vertexY[i] = shinY(model.vertexY[i], shin)
+        return model
+    }
+
+    /**
+     * Converts a version-12 (coarse, 2007 body) worn [model] of equipment [slot] in place to a version-13 mesh on the 667 body:
+     * [shiftToRev667], and for the legs [fitShin] ([female] = the mesh is a female wear model; required for the legs).
      * Refuses a mesh that is already version 13 or more, so no model is ever moved twice.
      */
     fun toRev667Frame(
+        model: ModelData,
+        slot: Int,
+        female: Boolean? = null,
+    ): ModelData {
+        require(slot != LEGS_SLOT || female != null) { "a legs mesh needs its gender for the shin fit" }
+        shiftToRev667(model, slot)
+        if (slot == LEGS_SLOT) fitShin(model, female!!)
+        return model
+    }
+
+    /** The per-label translation alone - [toRev667Frame] as it was before the shin fit (2026-09-30), used by [OsrsShinTool]. */
+    fun shiftToRev667(
         model: ModelData,
         slot: Int,
     ): ModelData {
