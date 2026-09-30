@@ -1345,6 +1345,19 @@ object OsrsItemImportTool {
     }
 
     /**
+     * Whether the player's arms kit is left out while [def] is worn (667 `remove_arms`). OSRS marks every body that covers
+     * the arms with wearPos2/3 = 6, but only the classic sleeved bodies bring their own arms model (item opcode 46/49,
+     * maleModel1/femaleModel1: Rune platebody 164, Bandos chestplate 28826, Ancestral robe top 32658). The newer bodies
+     * (Eclipse/Blue/Blood moon chestplates, Masori, Crystal, Swampbark/Bloodbark, Dragon platebody (g), ...) have one torso
+     * model whose arm parts are armbands and shoulder pieces over the bare arm, and OSRS draws that arm (OSRS Wiki
+     * "... equipped male.png": skin arms under the armbands). Hiding the kit for them left the arms invisible (owner
+     * 2026-09-30). The OSRS client draws exactly the kits the server sends (open-osrs PlayerComposition), so the rule is
+     * derived from the item data and the renders: ADAPTED.
+     */
+    fun removesArms(def: ModernItemDef): Boolean =
+        6 in setOf(def.wearPos2, def.wearPos3) && (def.maleModel1 != -1 || def.femaleModel1 != -1)
+
+    /**
      * The meshes an item draws on the player (male/female 0-2), which [OsrsBodyFrame] moves onto the 667 body. The inventory
      * model and the chathead models are not worn geometry; a mesh the item also uses as its inventory model is left alone.
      */
@@ -1525,7 +1538,7 @@ object OsrsItemImportTool {
         val hidden = setOf(def.wearPos2, def.wearPos3)
         sb.append("    equip_type: ${if (5 in hidden) 5 else -1}\n")
         sb.append("    appearance_id: ${checkNotNull(appearanceId)}\n")
-        sb.append("    remove_head: ${8 in hidden}\n    remove_beard: ${11 in hidden}\n    remove_arms: ${6 in hidden}\n")
+        sb.append("    remove_head: ${8 in hidden}\n    remove_beard: ${11 in hidden}\n    remove_arms: ${removesArms(def)}\n")
         sb.append("    weapon_type: ${entry.spec.weaponType}\n")
         sb.append("    attack_speed: ${if (def.params.containsKey(14)) p(14) else 4}\n")
         listOf("attack_stab", "attack_slash", "attack_crush", "attack_magic", "attack_ranged", "defence_stab", "defence_slash", "defence_crush", "defence_magic", "defence_ranged")

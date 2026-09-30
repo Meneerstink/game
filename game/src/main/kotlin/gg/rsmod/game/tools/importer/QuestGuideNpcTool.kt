@@ -13,8 +13,11 @@ import java.io.ByteArrayOutputStream
  * "Talk-to" and "Quest choices" (opens "Choose your path").
  *
  * Model ids (revision-667 cache, `tools/cache667`): identikit 0 head 230 (chathead 39799), identikit 10 beard 249
- * (chathead 39254), identikit 26 arms 151; Quest point hood 9814 -> 18914, Quest point cape 9813 -> 18946, Mystic robe top
- * 4091 -> 4952, bottom 4093 -> 4844, gloves 4095 -> 4953, boots 4097 -> 4955 (male wear models, item opcode 23).
+ * (chathead 39254); Quest point hood 9814 -> 18914, Quest point cape 9813 -> 18946, Mystic robe top 4091 -> 4952 (sleeves,
+ * item opcode 23) + 5028 (torso, opcode 24), bottom 4093 -> 4844, gloves 4095 -> 4953, boots 4097 -> 4955 - every male wear
+ * model the items have (opcodes 23/24/78), dressed like a player: the robe top hides the arms kit (remove_arms), so
+ * identikit 26 (arms 151) is not worn. Until 2026-09-30 only opcode 23 was taken - no torso 5028, arms kit 151 instead -
+ * so the Quest Tutor had no body (owner: "Quest Tutor: body onzichtbaar").
  *
  * Usage: `java -cp <game lib> gg.rsmod.game.tools.importer.QuestGuideNpcTool [--apply]` - both caches, one transaction; a
  * re-run replaces only its own definition (pinned to what is there).
@@ -29,7 +32,10 @@ object QuestGuideNpcTool {
     val PREVIOUS_NAMES = setOf("Quest Guide")
     const val BAS = 4
 
-    val MODELS = intArrayOf(230, 249, 151, 18914, 18946, 4952, 4844, 4953, 4955)
+    val MODELS = intArrayOf(230, 249, 18914, 18946, 4952, 5028, 4844, 4953, 4955)
+
+    /** The items the Quest Tutor wears (every male wear model of each is in [MODELS]; guarded by QuestGuideNpcToolTests). */
+    val WORN_ITEMS = intArrayOf(9814, 9813, 4091, 4093, 4095, 4097)
     val HEADS = intArrayOf(39799, 39254)
     val OPTIONS = arrayOf("Talk-to", "Quest choices", null, null, null)
 
