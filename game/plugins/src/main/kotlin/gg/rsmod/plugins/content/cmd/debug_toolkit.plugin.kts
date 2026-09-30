@@ -17,6 +17,10 @@ import java.time.format.DateTimeFormatter
  *   traces status     which categories are on
  *   traces <cat>      one category on/off (input msg interface interact item combat npcpath var plugin tick)
  *   problems          the last PROBLEM lines in the chatbox
+ *   rendertest        render A/B switches in your own client (OpenGL): "rendertest cull off" draws back faces too,
+ *                     "rendertest alpha off" draws models with translucent faces without depth writes, "rendertest reset"
+ *                     (also on every login). If a missing part comes back with a switch off, that mechanism hides it.
+ *                     The client's [modeltrace] lines (built npc/player/loc models, hiding frames) need the traces on.
  *   bug <text>        a bug report in C:\RSPS\bugs\ (position, surroundings, inventory, equipment, the last traced lines of
  *                     the server and the client) - the owner types what went wrong, the agent reads the file
  *
@@ -252,6 +256,29 @@ on_world_init {
             }, "world-scan").apply { isDaemon = true }.start()
         }
     }
+}
+
+/*
+ * Render A/B switches for the owner's own client (client RspsRenderTest, sent on the HUD side channel). Owner 2026-09-30:
+ * parts of npcs / pets / the player / the mansion vanish, some by camera angle; each switch removes one mechanism.
+ */
+on_command("rendertest", Privilege.ADMIN_POWER) {
+    val args = player.getCommandArgs().map { it.lowercase() }
+    val payload =
+        when {
+            args.isEmpty() -> null
+            args[0] == "reset" -> "reset"
+            args.size >= 2 && args[0] == "cull" && args[1] in setOf("on", "off") -> "cull=${if (args[1] == "on") 1 else 0}"
+            args.size >= 2 && args[0] == "alpha" && args[1] in setOf("on", "off") -> "alphadepth=${if (args[1] == "on") 1 else 0}"
+            else -> null
+        }
+    if (payload == null) {
+        player.message("rendertest cull off|on (draw back faces) - rendertest alpha off|on (translucent models without depth writes) - rendertest reset")
+        return@on_command
+    }
+    gg.rsmod.game.model.hud.ClientHud.send(player, "render|$payload")
+    Trace.log(Trace.Cat.INPUT) { "rendertest ${player.username}: $payload" }
+    player.message("Render test: $payload (look at the missing part now; 'rendertest reset' to undo).")
 }
 
 on_command("problems", Privilege.ADMIN_POWER) {
