@@ -18,7 +18,8 @@ import gg.rsmod.plugins.api.ext.player
  *
  * Now that fate records a reclaim ([record]): the item as it was (attributes kept) and its reclaim price - the same repair price
  * the death paid the killer ([RepairPrices.repairPrice]), one price source. Perdu's Trade (and Talk-to) lists them; paying the
- * price hands the item back and removes the record. The records persist with the account.
+ * price (carried coins first, then the bank, as OSRS) hands the item back and removes the record. The records persist with
+ * the account.
  */
 object PerduReclaim {
     private val SAVED = AttributeKey<String>(persistenceKey = "perdu_reclaims")
@@ -108,14 +109,24 @@ object PerduReclaim {
             return
         }
         val due = reclaim.price.coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
-        if (player.inventory.getItemCount(Items.COINS_995) < due) {
+        // OSRS Wiki "Perdu": Lost Property takes "coins from either inventory or directly from the bank" - carried coins first.
+        val carried = player.inventory.getItemCount(Items.COINS_995)
+        val banked = player.bank.getItemCount(Items.COINS_995)
+        if (carried.toLong() + banked < due) {
             task.chatNpc("That will be ${"%,d".format(reclaim.price)} coins, which you don't have.")
             return
         }
-        if (due > 0 && !player.inventory.remove(Items.COINS_995, due, assureFullRemoval = true).hasSucceeded()) return
+        val fromInventory = minOf(due, carried)
+        val fromBank = due - fromInventory
+        if (fromInventory > 0 && !player.inventory.remove(Items.COINS_995, fromInventory, assureFullRemoval = true).hasSucceeded()) return
+        if (fromBank > 0 && !player.bank.remove(Items.COINS_995, fromBank, assureFullRemoval = true).hasSucceeded()) {
+            if (fromInventory > 0) player.inventory.add(Items.COINS_995, fromInventory)
+            return
+        }
         if (!player.inventory.add(reclaim.itemId, reclaim.amount, assureFullInsertion = true).hasSucceeded()) {
             // Refund: nothing may be lost between the payment and the hand-over.
-            if (due > 0) player.inventory.add(Items.COINS_995, due)
+            if (fromInventory > 0) player.inventory.add(Items.COINS_995, fromInventory)
+            if (fromBank > 0) player.bank.add(Items.COINS_995, fromBank)
             task.chatNpc("You'll need a free inventory space for that.")
             return
         }
