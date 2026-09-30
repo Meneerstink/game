@@ -52,6 +52,7 @@ object Stalls {
             }
             DropTableFactory.createDropInventory(player, target.id, DropTableType.STALL)
             player.addXp(Skills.THIEVING, targetInfo.xp, checkBrawlingGloves = true)
+            gg.rsmod.plugins.content.skills.summoning.SkillingPets.stall(player, targetInfo)
             player.filterableMessage(targetInfo.message)
         }
     }

@@ -552,6 +552,13 @@ object SkeletalBakeTool {
         }
     }
 
+    /**
+     * The factor the client multiplies a mesh's vertices by when it loads it (`Mesh.upscale` for version < 13 in NPCType, LocType,
+     * SpotAnimationType, ObjType). Frames are applied to the upscaled mesh, so a baked translation must be in those units: taking the
+     * file coordinates made every baked translation 4x too small and threw the skeletal pets' parts up to ~2 tiles off.
+     */
+    fun clientUpscale(mesh: ModelData): Int = if (mesh.version < 13) 4 else 1
+
     /** Angle -> 667 frame value (the client does `value << 2 & 0x3FFF` into a 16384-entry table). */
     fun angleValue(rad: Double): Int {
         var v = Math.round(rad / (2 * Math.PI) * 4096.0).toInt() % 4096
@@ -582,9 +589,11 @@ object SkeletalBakeTool {
         val dropped = ArrayList<String>()
         val labelled = Rev667ModelDecoder.decode(OsrsModelConversion.convert(reader, modelId, dropped))
         check(labelled.vertexCount == raw.vertexCount) { "model $modelId changed vertex count in conversion" }
-        // 667 units per OSRS unit (the conversion keeps or scales the coordinates; OsrsFxImportTool's translate x4 says 4).
+        // Client units per OSRS unit. The client upscales a version < 13 mesh x4 when it loads it ([ModelData.version]) and applies the
+        // frames to that upscaled mesh, so translations and the replay work in the upscaled coordinates (OsrsFxImportTool's translate x4).
+        val up = clientUpscale(labelled)
         val ref = (0 until raw.vertexCount).maxByOrNull { abs(raw.vertexX[it]) + abs(raw.vertexY[it]) + abs(raw.vertexZ[it]) }!!
-        val k = (abs(labelled.vertexX[ref]) + abs(labelled.vertexY[ref]) + abs(labelled.vertexZ[ref])).toDouble() /
+        val k = up * (abs(labelled.vertexX[ref]) + abs(labelled.vertexY[ref]) + abs(labelled.vertexZ[ref])).toDouble() /
             (abs(raw.vertexX[ref]) + abs(raw.vertexY[ref]) + abs(raw.vertexZ[ref])).coerceAtLeast(1)
         // Clusters: vertices with the same skin move with the same blended matrix; too many -> by dominant bone.
         fun signature(v: Int) = skinBones[v].indices.sortedBy { skinBones[v][it] }.joinToString(",") { "${skinBones[v][it]}:${skinWeights[v][it]}" }
@@ -651,7 +660,7 @@ object SkeletalBakeTool {
                 // Replay exactly like the client (scale /128, 16384-step trig, translate) and compare with the skinning.
                 val rr = classicRotation(rv[0] * 4 * 2 * Math.PI / 16384, rv[1] * 4 * 2 * Math.PI / 16384, rv[2] * 4 * 2 * Math.PI / 16384)
                 e.value.forEach { v ->
-                    val p = doubleArrayOf(labelled.vertexX[v] * sv[0] / 128.0, labelled.vertexY[v] * sv[1] / 128.0, labelled.vertexZ[v] * sv[2] / 128.0)
+                    val p = doubleArrayOf(labelled.vertexX[v] * up * sv[0] / 128.0, labelled.vertexY[v] * up * sv[1] / 128.0, labelled.vertexZ[v] * up * sv[2] / 128.0)
                     val q = DoubleArray(3) { row -> rr[row][0] * p[0] + rr[row][1] * p[1] + rr[row][2] * p[2] + tv[row] }
                     val want = doubleArrayOf(skinned[v][0] * k, skinned[v][1] * k, skinned[v][2] * k)
                     val err = sqrt((0..2).sumOf { (q[it] - want[it]) * (q[it] - want[it]) })
@@ -790,6 +799,8 @@ object SkeletalBakeTool {
         /** Vertex-frames whose replay is more than 32 units (1/16 tile, before the npc scale) off the skinned position. */
         val farOff: Int = 0,
         val vertexFrames: Int = 0,
+        /** Per sequence the OSRS skeletal tick each baked frame shows (frame `i` of sequence `s` = tick `ticks[s][i]`). */
+        val ticks: List<List<Int>> = emptyList(),
     )
 
     /**
@@ -828,9 +839,12 @@ object SkeletalBakeTool {
         fun bonesOf(p: Pair<Int, Int>) = raws[p.first].animayaBones?.getOrNull(p.second) ?: IntArray(0)
         fun weightsOf(p: Pair<Int, Int>) = raws[p.first].animayaWeights?.getOrNull(p.second) ?: IntArray(0)
 
-        // 667 units per OSRS unit, as in [bake] (the conversion keeps or scales coordinates).
+        // Client units per OSRS unit, as in [bake]: every model is upscaled by the client on load, so positions, translations and errors
+        // are in the upscaled coordinates the frames are applied to.
+        val ups = labelled.map { clientUpscale(it) }
+        check(ups.distinct().size == 1) { "models $modelIds mix mesh versions ${labelled.map { it.version }}" }
         val refs = verts.maxByOrNull { (mi, v) -> abs(raws[mi].vertexX[v]) + abs(raws[mi].vertexY[v]) + abs(raws[mi].vertexZ[v]) }!!
-        val k = (abs(labelled[refs.first].vertexX[refs.second]) + abs(labelled[refs.first].vertexY[refs.second]) + abs(labelled[refs.first].vertexZ[refs.second])).toDouble() /
+        val k = ups[0] * (abs(labelled[refs.first].vertexX[refs.second]) + abs(labelled[refs.first].vertexY[refs.second]) + abs(labelled[refs.first].vertexZ[refs.second])).toDouble() /
             (abs(raws[refs.first].vertexX[refs.second]) + abs(raws[refs.first].vertexY[refs.second]) + abs(raws[refs.first].vertexZ[refs.second])).coerceAtLeast(1)
 
         // Frame ticks per sequence (OSRS: one skeletal tick per client cycle; baked every STEP cycles).
@@ -870,8 +884,12 @@ object SkeletalBakeTool {
         val signatureClusters = groups.size
         // Motion of each cluster: its representative's blended matrix per frame.
         val motion = groups.map { g -> frameMats.map { mats -> blended(bonesOf(g[0]), weightsOf(g[0]), mats) } }.toMutableList()
-        // Skinned target of every vertex per frame, in 667 units, in the labelled model's space.
-        fun pos(p: Pair<Int, Int>) = doubleArrayOf(labelled[p.first].vertexX[p.second].toDouble(), labelled[p.first].vertexY[p.second].toDouble(), labelled[p.first].vertexZ[p.second].toDouble())
+        // Rest position of a vertex as the client holds it (upscaled), in the labelled model's space.
+        fun pos(p: Pair<Int, Int>): DoubleArray {
+            val m = labelled[p.first]
+            val u = ups[p.first].toDouble()
+            return doubleArrayOf(m.vertexX[p.second] * u, m.vertexY[p.second] * u, m.vertexZ[p.second] * u)
+        }
         fun apply(m: DoubleArray, p: DoubleArray) = DoubleArray(3) { r -> m[r * 4] * p[0] + m[r * 4 + 1] * p[1] + m[r * 4 + 2] * p[2] + m[r * 4 + 3] }
         fun cost(a: Int, b: Int): Double {
             var sum = 0.0
@@ -1060,7 +1078,7 @@ object SkeletalBakeTool {
         }
         return BakedSet(
             models, baseBytes, allFrames, tickLists.map { IntArray(it.size) { STEP } }, verts.size, signatureClusters, groups.size,
-            maxErr, if (errCount > 0) sumErr / errCount else 0.0, farOff, errCount,
+            maxErr, if (errCount > 0) sumErr / errCount else 0.0, farOff, errCount, tickLists,
         )
     }
 

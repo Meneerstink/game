@@ -135,6 +135,7 @@ object Woodcutting {
                     } else {
                         player.inventory.add(tree.log)
                     }
+                    gg.rsmod.plugins.content.skills.summoning.SkillingPets.woodcutting(player, tree)
                 }
                 player.filterableMessage(message)
             }

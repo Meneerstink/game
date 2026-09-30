@@ -124,6 +124,7 @@ object Pickpocketing {
         }
         repeat(totalMultiplier) { DropTableFactory.createDropInventory(player, target.id, DropTableType.PICKPOCKET) }
         player.addXp(Skills.THIEVING, targetInfo.xp, checkBrawlingGloves = true)
+        gg.rsmod.plugins.content.skills.summoning.SkillingPets.pickpocket(player, targetInfo)
         player.filterableMessage(
             messages[displayMultiplier]!!.replace(
                 "{npc}",

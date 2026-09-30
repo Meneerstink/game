@@ -77,7 +77,8 @@ class BreachAuditImportTests {
             for ((model, seq) in listOf(49487 to 10418, 49488 to 10423)) {
                 val baked = SkeletalBakeTool.bake(reader, model, seq, 1)
                 assertTrue(baked.frames.isNotEmpty() && baked.clusters <= SkeletalBakeTool.MAX_CLUSTERS)
-                assertTrue(baked.maxError < 3.0, "model $model replay error ${baked.maxError}")
+                // Client units since ROOT_CAUSES #103 (the mesh is upscaled x4 on load): 3 file units = 12.
+                assertTrue(baked.maxError < 12.0, "model $model replay error ${baked.maxError}")
             }
         }
         assertEquals(0, SkeletalBakeTool.In(byteArrayOf(64)).smart2(), "bone 0 is written as signed smart 64")

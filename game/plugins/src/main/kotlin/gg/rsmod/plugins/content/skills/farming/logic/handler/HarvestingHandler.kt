@@ -54,6 +54,7 @@ class HarvestingHandler(
                         for (i in 0 until transaction.getLeftOver()) {
                             player.world.spawn(GroundItem(state.seed!!.produce.id, 1, player.tile, player))
                         }
+                        rollFinalHarvest()
                         state.clear()
                     } else {
                         player.inventory.add(state.seed!!.produce)
@@ -63,6 +64,7 @@ class HarvestingHandler(
                                 !state.seed!!
                                     .seedType.harvest.livesReplenish
                             ) {
+                                rollFinalHarvest()
                                 state.clear()
                             }
                         }
@@ -78,6 +80,12 @@ class HarvestingHandler(
                 player.filterableMessage("The ${patch.patchName} is now empty.")
             }
         }
+    }
+
+    /** OSRS Wiki Tangleroot: a patch without a check-health stage rolls the pet "during the final harvest". */
+    private fun rollFinalHarvest() {
+        val seed = state.seed ?: return
+        if (seed.harvest.healthCheckXp == null) gg.rsmod.plugins.content.skills.summoning.SkillingPets.farming(player, seed)
     }
 
     private fun canHarvest(): Boolean {

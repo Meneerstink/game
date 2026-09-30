@@ -276,6 +276,8 @@ on_obj_option(obj = Objs.BARRIER_43539, option = "Jump-over", lineOfSightDistanc
         player.filterableMessage("... and land on the ground.")
         if (stage == 6) {
             player.addXp(Skills.AGILITY, 25.0 + ADVANCED_COMPLETION_BONUS_EXPERIENCE, checkBrawlingGloves = true)
+            // ADAPTED: the RS2 advanced gnome lap rolls at the Gnome Stronghold course's chance.
+            gg.rsmod.plugins.content.skills.summoning.SkillingPets.agilityLap(player, gg.rsmod.plugins.content.skills.summoning.SkillingPets.GNOME_COURSE)
             player.setGnomeAgilityStage(0)
         } else {
             player.addXp(Skills.AGILITY, 25.0, checkBrawlingGloves = true)
@@ -336,6 +338,7 @@ pipes.forEach { pipe ->
             player.forceMove(this, move3)
             if (stage == 6) {
                 player.addXp(Skills.AGILITY, 7.5 + COMPLETION_BONUS_EXPERIENCE, checkBrawlingGloves = true)
+                gg.rsmod.plugins.content.skills.summoning.SkillingPets.agilityLap(player, gg.rsmod.plugins.content.skills.summoning.SkillingPets.GNOME_COURSE)
                 player.setGnomeAgilityStage(0)
             } else {
                 player.addXp(Skills.AGILITY, 7.5, checkBrawlingGloves = true)

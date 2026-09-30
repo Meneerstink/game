@@ -113,6 +113,10 @@ object Hunter {
             }
             player.inventory.add(trap.creature.catchItem, trap.creature.catchAmount)
             player.addXp(Skills.HUNTER, trap.creature.xp, checkBrawlingGloves = true)
+            when (trap.creature.catchItem) {
+                gg.rsmod.plugins.api.cfg.Items.CHINCHOMPA -> gg.rsmod.plugins.content.skills.summoning.SkillingPets.chinchompa(player, red = false)
+                gg.rsmod.plugins.api.cfg.Items.RED_CHINCHOMPA -> gg.rsmod.plugins.content.skills.summoning.SkillingPets.chinchompa(player, red = true)
+            }
             player.filterableMessage("You collect your catch: ${trap.creature.name}.")
         } else {
             player.filterableMessage("You pick up your trap.")

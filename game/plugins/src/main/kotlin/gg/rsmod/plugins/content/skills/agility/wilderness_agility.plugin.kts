@@ -272,6 +272,7 @@ on_obj_option(obj = Objs.ROCKS_2328, option = "Climb") {
         player.moveTo(destination)
         if (stage == 4) {
             player.addXp(Skills.AGILITY, 0.0 + COMPLETION_BONUS_EXPERIENCE, checkBrawlingGloves = true)
+            gg.rsmod.plugins.content.skills.summoning.SkillingPets.agilityLap(player, gg.rsmod.plugins.content.skills.summoning.SkillingPets.WILDERNESS_COURSE)
             player.setWildernessAgilityStage(0)
         } else {
             player.addXp(Skills.AGILITY, 0.0)

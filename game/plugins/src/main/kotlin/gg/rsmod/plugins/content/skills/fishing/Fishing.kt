@@ -117,6 +117,7 @@ object Fishing {
 
         firstBaitIdInInventory?.let { player.inventory.remove(it) }
         player.inventory.add(fish.id)
+        gg.rsmod.plugins.content.skills.summoning.SkillingPets.fishing(player, fish)
 
         player.addXp(Skills.FISHING, fish.xp, checkBrawlingGloves = true)
         fish.strengthXp?.let { player.addXp(Skills.STRENGTH, it) }

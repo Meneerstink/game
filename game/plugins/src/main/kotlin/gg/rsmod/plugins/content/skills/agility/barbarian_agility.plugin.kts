@@ -194,6 +194,7 @@ on_obj_option(obj = Objs.CRUMBLING_WALL, option = "Climb-over") {
                 player.addXp(Skills.AGILITY, 13.7, checkBrawlingGloves = true)
                 if (stage == 5) {
                     player.addXp(Skills.AGILITY, 13.7 + COMPLETION_BONUS_EXPERIENCE, checkBrawlingGloves = true)
+                    gg.rsmod.plugins.content.skills.summoning.SkillingPets.agilityLap(player, gg.rsmod.plugins.content.skills.summoning.SkillingPets.BARBARIAN_COURSE)
                     player.setBarbarianAgilityStage(0)
                 } else {
                     player.addXp(Skills.AGILITY, 13.7, checkBrawlingGloves = true)
@@ -284,6 +285,8 @@ on_obj_option(obj = Objs.ROOF_43532, option = "Slide-down") {
         player.moveTo(destination)
         if (stage == 7) {
             player.addXp(Skills.AGILITY, 15.0 + ADVANCED_COMPLETION_BONUS_EXPERIENCE, checkBrawlingGloves = true)
+            // ADAPTED: the RS2 advanced barbarian lap rolls at the Barbarian Outpost course's chance.
+            gg.rsmod.plugins.content.skills.summoning.SkillingPets.agilityLap(player, gg.rsmod.plugins.content.skills.summoning.SkillingPets.BARBARIAN_COURSE)
             player.setAdvancedBarbarianAgilityStage(0)
         } else {
             player.addXp(Skills.AGILITY, 15.0, checkBrawlingGloves = true)

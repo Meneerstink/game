@@ -139,6 +139,9 @@ object OsrsFxImportTool {
                     328, 329, // SLAYER_MAGICDART_TRAVEL / IMPACT
                     76, 77, 78, // SARADOMIN_LIGHTNING, GUNTHIX_CLAW, ZAMORAK_FLAME
                 ),
+            // OSRS pet Beef's rare "Emote": the whirlwind that spins it round (RuneLite gameval SpotanimID VFX_BEEF_TORNADO 3587;
+            // OSRS Wiki Beef "Emotes"). Beef's own sequences are in SEQ_BATCHES under the same name.
+            "pet-beef" to listOf(3587),
         )
 
     /**
@@ -216,6 +219,9 @@ object OsrsFxImportTool {
             "osrsweaponseq3" to listOf(1067, 1658, 1659),
             // OSRS max cape emote, player side: MAX_CAPE_PLAYER_ANIM 7121 (the spotanim is in BATCHES under the same name).
             "maxcapeemote" to listOf(7121),
+            // OSRS pet Beef (Interact -> Emote, OSRS Wiki Beef): the sniff COWBOSS_PET_EMOTE 13801 and, with the rare whirlwind,
+            // COWBOSS_PET_EMOTE_CHARGE 13803 (5.16 s, the length of the whirlwind's own sequence 13802). RuneLite gameval AnimationID.
+            "pet-beef" to listOf(13801, 13803),
         )
 
     /** OSRS synth sounds by Jagex config name (OSRS Wiki "List of sound IDs", read 2026-09-17). */

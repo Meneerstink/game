@@ -195,6 +195,7 @@ object Mining {
         }
         player.inventory.add(reward)
         player.addXp(Skills.MINING, product?.experience ?: rock.experience, checkBrawlingGloves = true)
+        gg.rsmod.plugins.content.skills.summoning.SkillingPets.mining(player, rock)
         player.filterableMessage("You manage to mine some $oreName.")
     }
 

@@ -93,6 +93,9 @@ object RunecraftAction {
                 if (runeCount > 0) inventory.add(item = combo.id, amount = runeCount)
                 // SOURCE_GAP (unchanged): experience stays per essence bound.
                 player.addXp(Skills.RUNECRAFTING, count * combo.xp)
+                // Combination runes are crafted at an elemental altar: the rift guardian takes that altar's colour.
+                gg.rsmod.plugins.content.skills.summoning.SkillingPets.runecraft(player, combo.altar.rune, count)
+                gg.rsmod.plugins.content.skills.summoning.PetMorphs.onRunecraft(player, combo.altar.rune)
             }
         }
     }
@@ -131,6 +134,9 @@ object RunecraftAction {
         if (transaction.hasSucceeded()) {
             player.inventory.add(rune.id, count)
             player.addXp(Skills.RUNECRAFTING, rune.xp * essAmount)
+            // OSRS Wiki Rift guardian: the pet rolls per essence, in the altar's colour; a following rift guardian takes that colour.
+            gg.rsmod.plugins.content.skills.summoning.SkillingPets.runecraft(player, rune, essAmount)
+            gg.rsmod.plugins.content.skills.summoning.PetMorphs.onRunecraft(player, rune)
         }
     }
 

@@ -42,6 +42,9 @@ object Pets {
     const val MSG_DUPLICATE = "<col=ef1020>You have a funny feeling like you would have been followed...</col>"
     const val MSG_BANKED = "<col=ef1020>You have a funny feeling like you're being followed... your pet has been sent to your bank.</col>"
 
+    /** OSRS Wiki Pet: "Pets are limited to walking pace, except Nexling, Babi (Tumeken's Guardian), and Dogs, which move faster". */
+    val FAST_PETS = setOf("Nexling", "Babi")
+
     /** The two orb / panel actions a pet answers. */
     val ORB_ACTIONS = setOf(FamiliarAction.CALL, FamiliarAction.DISMISS)
 
@@ -50,6 +53,8 @@ object Pets {
         val name: String,
         val item: Int,
         val npc: Int,
+        /** The OSRS item id of the variant ([PetMorphs] keys its unlock rules on it); -1 in hand-built tables. */
+        val osrsItem: Int = -1,
     )
 
     data class PetInfo(
@@ -91,7 +96,7 @@ object Pets {
         lines.filter { it.isNotBlank() && !it.startsWith("#") }.map { line ->
             val c = line.split('\t')
             require(c.size >= 4) { "bad pet table line '$line'" }
-            Variant(c[0], c[1], c[2].trim().toInt(), c[3].trim().toInt())
+            Variant(c[0], c[1], c[2].trim().toInt(), c[3].trim().toInt(), c.getOrNull(4)?.trim()?.toIntOrNull() ?: -1)
         }
 
     fun parseTiers(lines: List<String>): List<PetInfo> =
@@ -263,11 +268,21 @@ object Pets {
             player.message("This isn't your pet.")
             return
         }
-        val next = nextVariant(itemOf(player) ?: return) ?: return
+        val next = PetMorphs.nextUnlocked(player, itemOf(player) ?: return) ?: return
         if (next.npc == npc.id) return
+        morphFollower(player, next)
+    }
+
+    /** The follower becomes [variant] where it stands (Metamorphosis, an unlock item, a rift guardian's altar). */
+    fun morphFollower(
+        player: Player,
+        variant: Variant,
+    ) {
+        val npc = current(player) ?: return
+        if (npc.id == variant.npc) return
         val tile = npc.tile
         player.world.remove(npc)
-        spawn(player, next, tile)
+        spawn(player, variant, tile)
     }
 
     /** Metamorphosis on the pet item (the OSRS items that carry it as an inventory option). */
@@ -276,7 +291,7 @@ object Pets {
         item: Int,
         slot: Int,
     ) {
-        val next = nextVariant(item) ?: return
+        val next = PetMorphs.nextUnlocked(player, item) ?: return
         if (next.item == item) return
         val current = player.inventory[slot]
         if (current?.id != item) return
@@ -314,8 +329,10 @@ object Pets {
     fun award(
         player: Player,
         pet: String,
+        item: Int = baseItem(pet) ?: -1,
     ) {
-        val item = baseItem(pet) ?: return
+        if (item < 0 || byItem[item]?.pet != pet) return
+        PetMorphs.unlock(player, byItem.getValue(item))
         gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.ITEM) { "pet roll hit: $pet for ${player.username}" }
         when (awardOutcome(owns(player, pet), hasFollower(player), player.inventory.hasSpace, player.bank.hasSpace)) {
             Award.DUPLICATE -> player.message(MSG_DUPLICATE)
@@ -347,7 +364,7 @@ object Pets {
     /** Once per cycle (familiar tick): follow like a familiar, without a familiar's arrival effect on a recovery teleport. */
     fun tick(player: Player) {
         val npc = current(player) ?: return
-        Familiar.follow(player, npc) { p, n -> n.facePawn(p) }
+        Familiar.follow(player, npc, recovered = { p, n -> n.facePawn(p) }, runs = byNpc[npc.id]?.name in FAST_PETS)
         Familiar.updateHud(player)
     }
 

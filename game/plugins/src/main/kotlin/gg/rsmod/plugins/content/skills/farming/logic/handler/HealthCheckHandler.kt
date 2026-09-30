@@ -22,6 +22,8 @@ class HealthCheckHandler(
                 farmingTimerDelayer.delayIfNeeded(healthCheckWaitTime)
                 wait(healthCheckWaitTime)
                 player.addXp(Skills.FARMING, state.seed!!.harvest.healthCheckXp!!)
+                // OSRS Wiki Tangleroot: "The pet chance is rolled primarily during a patch's check-health stage".
+                gg.rsmod.plugins.content.skills.summoning.SkillingPets.farming(player, state.seed!!)
                 player.filterableMessage(
                     "You examine the ${patch.patchName.removeSuffix(
                         " patch",

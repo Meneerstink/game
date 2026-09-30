@@ -896,10 +896,14 @@ object Familiar {
             else -> null
         }
 
-    /** [recovered] is the presentation of a recovery teleport: a familiar's arrival effect, nothing for an OSRS pet ([Pets]). */
+    /**
+     * [recovered] is the presentation of a recovery teleport: a familiar's arrival effect, nothing for an OSRS pet ([Pets]).
+     * [runs]: the follower keeps up with a running owner (OSRS pets Nexling and Babi, [Pets.FAST_PETS]); every other follower walks.
+     */
     internal fun follow(
         player: Player,
         npc: Npc,
+        runs: Boolean = false,
         recovered: (Player, Npc) -> Unit = { p, n -> playRecoveryPresentation(p, n) },
     ) {
         val recovery = followRecoveryReason(npc.tile, player.tile)
@@ -963,7 +967,7 @@ object Familiar {
             )
         npc.walkPath(
             path,
-            stepType = MovementQueue.StepType.FORCED_WALK,
+            stepType = if (runs && player.isRunning()) MovementQueue.StepType.FORCED_RUN else MovementQueue.StepType.FORCED_WALK,
             detectCollision = true,
         )
         // Movement and combat may leave a stale face target on the NPC. Reassert the owner as the
