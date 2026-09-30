@@ -100,6 +100,8 @@ object DropViewer {
         val ids = DropTableFactory.tableIds()
         val npc = npcId ?: player.attr[NPC] ?: (if (DEFAULT_NPC in ids) DEFAULT_NPC else ids.minOrNull() ?: return)
         player.openInterface(INTERFACE, InterfaceDestination.MAIN_SCREEN)
+        // The window's X, like the Info window's (QuestTab.openInfo): without events the client never sends the click.
+        player.setInterfaceEvents(INTERFACE, L.I_CLOSE, -1..-1, EVENTS_OP1)
         player.setInterfaceEvents(INTERFACE, L.DV_FIND_DROP, -1..-1, EVENTS_OP1)
         player.setInterfaceEvents(INTERFACE, L.DV_FIND_NPC, -1..-1, EVENTS_OP1)
         player.setInterfaceEvents(INTERFACE, L.DV_PREVIOUS, -1..-1, EVENTS_OP1)

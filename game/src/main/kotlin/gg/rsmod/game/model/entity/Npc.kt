@@ -27,13 +27,6 @@ class Npc private constructor(
     var spawnTile: Tile,
 ) : Pawn(world) {
     /**
-     * Route with the same breadth-first path finder players use instead of the axis-aligned
-     * [gg.rsmod.game.model.path.strategy.SimplePathFindingStrategy] every npc gets by default.
-     * The simple strategy walks straight at its target and stops at the first wall, which is why
-     * an npc "forgets" a target standing behind a fence or counter; npcs that must genuinely
-     * chase a target around obstacles (the Deadman guards) opt in here.
-     */
-    /**
      * Set for the one cycle after a reposition (teleportNpc / moveTo): the re-add tells the client to jump to the new tile
      * (AddLocalNpcSegment's "clear path" bit) instead of walking there. Owner 2026-09-30: a recalled familiar played its
      * walk / run sound while teleporting - the 667 client (NPCEntity.clearPath) queues a WALK step from the old tile to the
@@ -42,6 +35,13 @@ class Npc private constructor(
      */
     internal var clearPathOnAdd = false
 
+    /**
+     * Route with the same breadth-first path finder players use instead of the axis-aligned
+     * [gg.rsmod.game.model.path.strategy.SimplePathFindingStrategy] every npc gets by default.
+     * The simple strategy walks straight at its target and stops at the first wall, which is why
+     * an npc "forgets" a target standing behind a fence or counter; npcs that must genuinely
+     * chase a target around obstacles (the Deadman guards) opt in here.
+     */
     var smartPathfinding = false
 
     /**
