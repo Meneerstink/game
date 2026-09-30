@@ -78,7 +78,7 @@ fun Player.teleport(
             wait(cycles = 2)
             self.animate(id = Anims.RESET)
             self.unlock()
-            self.moveTo(tile = endArea.randomTile.let { Tile(it.x, it.z, HEIGHTS[tab] ?: 0) })
+            self.moveTo(tile = gg.rsmod.game.model.collision.Landing.pick(world.collision, endArea, HEIGHTS[tab] ?: 0))
         }
     }
 }

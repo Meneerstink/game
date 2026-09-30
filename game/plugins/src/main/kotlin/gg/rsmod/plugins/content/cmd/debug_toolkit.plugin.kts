@@ -18,8 +18,9 @@ import java.time.format.DateTimeFormatter
  *   traces <cat>      one category on/off (input msg interface interact item combat npcpath var plugin tick)
  *   problems          the last PROBLEM lines in the chatbox
  *   rendertest        render A/B switches in your own client (OpenGL): "rendertest cull off" draws back faces too,
- *                     "rendertest alpha off" draws models with translucent faces without depth writes, "rendertest reset"
- *                     (also on every login). If a missing part comes back with a switch off, that mechanism hides it.
+ *                     "rendertest alpha on" lets translucent faces write depth again as the 667 client did (since
+ *                     2026-10-01 they do not: they hid parts of pets / translucent gear by camera angle), "rendertest reset"
+ *                     (also on every login). If a missing part comes back or goes away with a switch, that mechanism hides it.
  *                     The client's [modeltrace] lines (built npc/player/loc models, hiding frames) need the traces on.
  *   bug <text>        a bug report in C:\RSPS\bugs\ (position, surroundings, inventory, equipment, the last traced lines of
  *                     the server and the client) - the owner types what went wrong, the agent reads the file
@@ -273,7 +274,7 @@ on_command("rendertest", Privilege.ADMIN_POWER) {
             else -> null
         }
     if (payload == null) {
-        player.message("rendertest cull off|on (draw back faces) - rendertest alpha off|on (translucent models without depth writes) - rendertest reset")
+        player.message("rendertest cull off|on (draw back faces) - rendertest alpha on|off (translucent faces write depth as in 667 / not, default off) - rendertest reset")
         return@on_command
     }
     gg.rsmod.game.model.hud.ClientHud.send(player, "render|$payload")

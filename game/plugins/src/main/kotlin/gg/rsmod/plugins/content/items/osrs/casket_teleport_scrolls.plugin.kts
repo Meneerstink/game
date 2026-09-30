@@ -1,6 +1,5 @@
 package gg.rsmod.plugins.content.items.osrs
 
-import gg.rsmod.game.model.collision.ObjectType
 import gg.rsmod.plugins.content.magic.TeleportType
 import gg.rsmod.plugins.content.magic.canTeleport
 import gg.rsmod.plugins.content.magic.teleport
@@ -35,13 +34,8 @@ fun Plugin.scrollTeleport(
         val slot = player.getInteractingItemSlot()
         if (!player.inventory.remove(item = scroll, amount = 1, beginSlot = slot).hasSucceeded()) return@canTeleport
         val area = Area(destination.centreX - destination.radius, destination.centreZ - destination.radius, destination.centreX + destination.radius, destination.centreZ + destination.radius)
-        var tile = area.randomTile
-        var attempts = 1
-        while (world.getObject(tile, ObjectType.INTERACTABLE) != null && attempts < CasketTeleportScrolls.LANDING_ATTEMPTS) {
-            tile = area.randomTile
-            attempts++
-        }
-        if (world.getObject(tile, ObjectType.INTERACTABLE) != null) tile = Tile(destination.centreX, destination.centreZ, 0)
+        // Walkable ground of the destination, never a tile inside scenery (Landing, owner 2026-09-30 Trollheim).
+        val tile = gg.rsmod.game.model.collision.Landing.pick(world.collision, area)
         player.teleport(tile, type)
     }
 }

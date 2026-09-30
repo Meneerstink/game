@@ -428,11 +428,10 @@ object SystemsSuite : Conformance.Suite {
                 val m = run.recording.of(label, "msg").filter { it.cycle >= c }.map { it.text }.filter { it.contains("MessageGame") && !it.contains("__RSPS_HUD__") }
                 detail += "side$n: anim=${anims.size} at ${p.tile.x},${p.tile.z} ${m.joinToString(" / ").take(80)}; "
                 if (anims.isNotEmpty()) {
-                    // Owner 2026-09-30: a climb that ends in a walled-in pocket is a stuck player, not a climb. Only for the locs
-                    // that land by the crossing rule (ShortcutSupport.crossingLanding); the donor-sourced Trollheim rocks
-                    // (3803, 9303-9305) land on their chain's ledges by design, reachable only through the next rock.
-                    val crossingRule = id in setOf(34877, 34878, 34889) || (id == 9306 && x == 2909)
-                    climbed = !crossingRule || gg.rsmod.plugins.content.skills.agility.isUsableLanding(run.world, p.tile)
+                    // Owner 2026-09-30: a climb that ends in a walled-in pocket is a stuck player, not a climb - for every rock and
+                    // cliff, the donor-sourced Trollheim chain (3803, 9303-9305) included: in this cache one side of each of those
+                    // landed on a single walled-in tile (ShortcutSupport.chainLanding).
+                    climbed = gg.rsmod.plugins.content.skills.agility.isUsableLanding(run.world, p.tile)
                     if (!climbed) detail += "landed in a pocket at ${p.tile.x},${p.tile.z}; "
                     break
                 }

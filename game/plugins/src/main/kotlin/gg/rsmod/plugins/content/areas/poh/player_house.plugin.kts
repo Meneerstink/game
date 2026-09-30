@@ -170,7 +170,7 @@ mapOf(
         // then the full directory (PohTeleports).
         player.queue {
             when (options(spell.spellName.removeSuffix(" Teleport"), "All teleports...", "Cancel", title = "House portal")) {
-                1 -> player.canTeleport(TeleportType.MODERN) { player.moveTo(spell.endArea.randomTile) }
+                1 -> player.canTeleport(TeleportType.MODERN) { player.moveTo(gg.rsmod.game.model.collision.Landing.pick(player.world.collision, spell.endArea)) }
                 2 -> with(PohTeleports) { openDirectory(player) }
             }
         }

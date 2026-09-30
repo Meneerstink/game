@@ -52,6 +52,4 @@ object CasketTeleportScrolls {
             Items.IORWERTH_CAMP_TELEPORT to "You need to complete the Regicide quest before you can teleport to Tirannwn.",
             Items.MOS_LEHARMLESS_TELEPORT to "You need to complete the Cabin Fever quest before you can teleport to Mos Le'harmless.",
         )
-
-    const val LANDING_ATTEMPTS = 20
 }

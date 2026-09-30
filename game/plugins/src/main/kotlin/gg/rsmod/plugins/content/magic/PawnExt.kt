@@ -134,7 +134,8 @@ fun Pawn.teleport(
 
         wait(type.teleportDelay)
 
-        teleportTo(endTile)
+        // The destination's walkable ground, never a tile inside scenery (Landing, owner 2026-09-30 Trollheim).
+        teleportTo(gg.rsmod.game.model.collision.Landing.resolve(world.collision, endTile))
         type.landSound?.let { (this@teleport as? Player)?.playSound(it) }
 
         type.endAnimation?.let {

@@ -7,7 +7,6 @@ import gg.rsmod.plugins.api.cfg.Varps
 import gg.rsmod.plugins.api.ext.getVarp
 import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.api.ext.options
-import gg.rsmod.plugins.api.ext.randomTile
 import gg.rsmod.plugins.content.items.osrs.CasketTeleportScrolls
 import gg.rsmod.plugins.content.magic.TeleportType
 import gg.rsmod.plugins.content.magic.canTeleport
@@ -34,7 +33,7 @@ object PohTeleports {
                     player.message("You need to complete Monkey Madness to use this teleport.")
                     null
                 } else {
-                    spell.endArea.randomTile
+                    gg.rsmod.game.model.collision.Landing.pick(player.world.collision, spell.endArea)
                 }
             }
         }
@@ -42,7 +41,7 @@ object PohTeleports {
     private fun fixed(vararg places: Pair<String, Tile>) = places.map { (name, tile) -> Leaf(name, TeleportType.JEWELRY) { tile } }
 
     private fun area(name: String, x1: Int, z1: Int, x2: Int, z2: Int) =
-        Leaf(name, TeleportType.MODERN) { Tile((x1..x2).random(), (z1..z2).random(), 0) }
+        Leaf(name, TeleportType.MODERN) { player -> gg.rsmod.game.model.collision.Landing.pick(player.world.collision, gg.rsmod.game.model.Area(x1, z1, x2, z2)) }
 
     /** Tiles copied from items/jewellery/<item>.plugin.kts and items/teletabs/teleport_tab.plugin.kts. */
     val ROOT =

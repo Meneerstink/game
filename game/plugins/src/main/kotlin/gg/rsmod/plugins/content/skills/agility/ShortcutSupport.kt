@@ -179,6 +179,20 @@ fun crossingLanding(
     return null
 }
 
+/**
+ * The landing of a donor-sourced climb ([donor], a fixed offset over the rock): kept when it is a usable landing in this cache,
+ * else the crossing rule ([crossingLanding]). Owner 2026-09-30 (Trollheim, "bugged in this exact position"): in this 667 cache
+ * one side of every Trollheim chain rock - 9303 from the west (2857,3663), 9304 from the south (2873,3662), 3803 from the west
+ * (2877,3671), 9305 (2895,3674) - was a single walled-in tile, and the player stood there unable to move. Null when neither
+ * gives a landing.
+ */
+fun chainLanding(
+    world: gg.rsmod.game.model.World,
+    obj: gg.rsmod.game.model.entity.GameObject,
+    from: gg.rsmod.game.model.Tile,
+    donor: gg.rsmod.game.model.Tile,
+): Tile? = donor.takeIf { isUsableLanding(world, it) } ?: crossingLanding(world, obj, from)
+
 /** A tile a player can stand on and walk away from: not blocked itself, and opening onto [MIN_LANDING_ROOM] walkable tiles. */
 fun isUsableLanding(
     world: gg.rsmod.game.model.World,

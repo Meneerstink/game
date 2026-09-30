@@ -1,6 +1,5 @@
 package gg.rsmod.plugins.content.magic.teleports
 
-import gg.rsmod.game.model.collision.ObjectType
 import gg.rsmod.plugins.api.cfg.Varps
 import gg.rsmod.plugins.api.ext.getVarp
 import gg.rsmod.plugins.content.magic.*
@@ -36,13 +35,8 @@ fun Player.teleport(
     teleport(spell.type, endTile, spell.xp, data)
 }
 
-fun Player.findValidTile(spell: TeleportSpell): Tile {
-    var tile = spell.endArea.randomTile
-    while (world.getObject(tile, ObjectType.INTERACTABLE) != null) {
-        tile = spell.endArea.randomTile
-    }
-    return tile
-}
+/** A random tile of the spell's area on its walkable ground (Landing: not inside scenery, not in a closed-off pocket). */
+fun Player.findValidTile(spell: TeleportSpell): Tile = gg.rsmod.game.model.collision.Landing.pick(world.collision, spell.endArea)
 
 fun Player.teleport(
     type: TeleportType,

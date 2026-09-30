@@ -99,6 +99,14 @@ suspend fun QueueTask.climbStile(
 
 // ---- Underwall tunnels (Void UnderWallTunnels.tunnel) ----
 
+/** A climb with no landing in this cache ([chainLanding]): traced as a PROBLEM, and the player stays where he is. */
+fun gg.rsmod.game.model.entity.Player.noLanding(target: gg.rsmod.game.model.entity.GameObject) {
+    gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.PLUGIN) {
+        "rocks ${target.id} at ${target.tile.x},${target.tile.z}: no landing across from ${tile.x},${tile.z}"
+    }
+    message("You can't climb the rocks from here.")
+}
+
 fun tunnel(
     id: Int,
     option: String,
@@ -430,18 +438,22 @@ on_world_init {
                 if ((target.tile.x == westTile.x && target.tile.z == westTile.z) ||
                     (id == 3803 && target.tile.x == 2876 && target.tile.z == 3671)
                 ) {
-                    if (player.tile.x >= target.tile.x) {
-                        climbDownRocks(player, ANIM_ROCKS_CLIMB_DOWN, Tile(target.tile.x - 1, target.tile.z), 50, Direction.EAST)
+                    val down = player.tile.x >= target.tile.x
+                    val landing = chainLanding(world, target, player.tile, Tile(target.tile.x + if (down) -1 else 1, target.tile.z)) ?: return@obstacle player.noLanding(target)
+                    if (down) {
+                        climbDownRocks(player, ANIM_ROCKS_CLIMB_DOWN, landing, 50, Direction.EAST)
                         player.addXp(Skills.AGILITY, 1.0)
                     } else {
-                        walkOverTile(player, Tile(target.tile.x + 1, target.tile.z))
+                        walkOverTile(player, landing)
                         player.addXp(Skills.AGILITY, 8.0)
                     }
                 } else if (target.tile.z == 3661) {
-                    if (player.tile.z >= target.tile.z) {
-                        climbDownRocks(player, ANIM_ROCKS_CLIMB_DOWN, Tile(target.tile.x, target.tile.z - 1), 50, Direction.NORTH)
+                    val down = player.tile.z >= target.tile.z
+                    val landing = chainLanding(world, target, player.tile, Tile(target.tile.x, target.tile.z + if (down) -1 else 1)) ?: return@obstacle player.noLanding(target)
+                    if (down) {
+                        climbDownRocks(player, ANIM_ROCKS_CLIMB_DOWN, landing, 50, Direction.NORTH)
                     } else {
-                        walkOverTile(player, Tile(target.tile.x, target.tile.z + 1))
+                        walkOverTile(player, landing)
                     }
                     player.addXp(Skills.AGILITY, 1.0)
                 }
@@ -455,9 +467,9 @@ on_world_init {
             if ((target.tile.x == 2908 && target.tile.z == 3682) ||
                 (target.tile.x == 2894 && target.tile.z == 3672)
             ) {
+                val donor = if (target.tile.x == 2894) Tile(2895, 3674) else Tile(2909, 3684)
+                val landing = chainLanding(world, target, player.tile, donor) ?: return@obstacle player.noLanding(target)
                 climbDownRocks(player, ANIM_HUMAN_CLIMBING_DOWN, target.tile, 40, Direction.WEST)
-                val landing =
-                    if (target.tile.x == 2894) Tile(2895, 3674) else Tile(2909, 3684)
                 climbDownRocks(player, ANIM_HUMAN_CLIMBING_DOWN, landing, 120, Direction.SOUTH)
                 player.addXp(Skills.AGILITY, 8.0)
             } else if ((target.tile.x == 2909 && target.tile.z == 3683) ||
@@ -486,10 +498,12 @@ on_world_init {
     shortcut(9304, "Climb") {
         if (!player.hasAgility(43)) return@shortcut
         obstacle { target ->
-            if (player.tile.z >= target.tile.z) {
-                climbDownRocks(player, ANIM_HUMAN_CLIMBING_DOWN, Tile(target.tile.x, target.tile.z - 2), 120, Direction.NORTH)
+            val down = player.tile.z >= target.tile.z
+            val landing = chainLanding(world, target, player.tile, Tile(target.tile.x, target.tile.z + if (down) -2 else 2)) ?: return@obstacle player.noLanding(target)
+            if (down) {
+                climbDownRocks(player, ANIM_HUMAN_CLIMBING_DOWN, landing, 120, Direction.NORTH)
             } else {
-                walkOverTile(player, Tile(target.tile.x, target.tile.z + 2))
+                walkOverTile(player, landing)
             }
             player.addXp(Skills.AGILITY, 8.0)
         }
@@ -497,10 +511,12 @@ on_world_init {
     shortcut(9303, "Climb") {
         if (!player.hasAgility(41)) return@shortcut
         obstacle { target ->
-            if (player.tile.x >= target.tile.x) {
-                climbDownRocks(player, ANIM_HUMAN_CLIMBING_DOWN, Tile(target.tile.x - 2, target.tile.z), 120, Direction.EAST)
+            val down = player.tile.x >= target.tile.x
+            val landing = chainLanding(world, target, player.tile, Tile(target.tile.x + if (down) -2 else 2, target.tile.z)) ?: return@obstacle player.noLanding(target)
+            if (down) {
+                climbDownRocks(player, ANIM_HUMAN_CLIMBING_DOWN, landing, 120, Direction.EAST)
             } else {
-                walkOverTile(player, Tile(target.tile.x + 2, target.tile.z))
+                walkOverTile(player, landing)
             }
             player.addXp(Skills.AGILITY, 8.0)
         }

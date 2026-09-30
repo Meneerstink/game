@@ -25,7 +25,7 @@ on_item_option(item = Items.ECTOPHIAL, option = "empty") {
     player.canTeleport(TeleportType.ECTOPHIAL) {
         player.inventory.remove(Items.ECTOPHIAL)
         player.inventory.add(Items.ECTOPHIAL_4252)
-        player.teleport(DESTINATION.randomTile, TeleportType.ECTOPHIAL)
+        player.teleport(gg.rsmod.game.model.collision.Landing.pick(player.world.collision, DESTINATION), TeleportType.ECTOPHIAL)
         player.message("You pour some ectoplasm from the vial, and it explodes in a rush of magical energy...")
     }
 }
