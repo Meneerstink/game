@@ -100,7 +100,7 @@ class FriendsChatChannel(
  * and a higher rank than the victim; a kicked player may not rejoin for an hour ([KICK_BAN_MILLIS]). Settings are saved to
  * [SETTINGS_FILE] on every change.
  */
-class FriendsChat(private val settingsFile: File = File(SETTINGS_FILE)) {
+class FriendsChat(private val settingsFile: File = gg.rsmod.util.io.SharedDataFiles.of(SETTINGS_FILE)) {
     private val channels = ConcurrentHashMap<String, FriendsChatChannel>()
     private val settings = ConcurrentHashMap<String, FriendsChatSettings>()
     private val bans = ConcurrentHashMap<String, ConcurrentHashMap<String, Long>>()

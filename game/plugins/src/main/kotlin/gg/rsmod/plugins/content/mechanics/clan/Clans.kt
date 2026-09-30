@@ -161,7 +161,7 @@ object Clans {
     val CLAN_ATTR = AttributeKey<String>(persistenceKey = "clan_name")
 
     private val clans = ConcurrentHashMap<String, Clan>()
-    private val file = File("data/clans.txt")
+    private val file = gg.rsmod.util.io.SharedDataFiles.of("data/clans.txt")
 
     /** Online members / guests currently in each clan's channel, by clan name. */
     private val channelUsers = ConcurrentHashMap<String, MutableSet<Player>>()
@@ -273,7 +273,9 @@ object Clans {
             owner.filterableMessage("A clan named '$clean' already exists.")
             return false
         }
-        if (owner.attr[CLAN_ATTR] != null) {
+        // The registry is the truth: a player whose attribute was lost (a fresh session, a restored save) but who is still listed
+        // in a clan must not found a second one - that left one name OWNER of two clans in data/clans.txt (2026-10-01).
+        if (owner.attr[CLAN_ATTR] != null || clans.values.any { c -> c.members.keys.any { it.equals(owner.username, ignoreCase = true) } }) {
             owner.filterableMessage("You're already in a clan.")
             return false
         }
@@ -422,6 +424,10 @@ object Clans {
         load()
         // A clan that was disbanded while the player was offline.
         player.attr[CLAN_ATTR]?.let { name -> if (clans[name] == null) player.attr.remove(CLAN_ATTR) }
+        // The registry is the membership truth; a session without the saved attribute is given it back.
+        if (player.attr[CLAN_ATTR] == null) {
+            clans.values.firstOrNull { c -> c.members.keys.any { it.equals(player.username, ignoreCase = true) } }?.let { player.attr[CLAN_ATTR] = it.name }
+        }
         val clan = clanFor(player) ?: return
         if (clan.key(player.username) == null) {
             // Kicked (or the clan changed) while offline: the saved clan name is stale (Novite connectToClan "You have been kicked").

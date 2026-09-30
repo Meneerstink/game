@@ -58,6 +58,9 @@ object ClientHudConfig {
             bool("zoom.enabled", false), // RuneLite CameraPlugin enabledByDefault = false
             bool("minimap.enabled", true),
             bool("loottracker.enabled", true),
+            // Owner 2026-10-01: the resizable/fullscreen chatbox background (client RspsChatbox); 667 default transparent.
+            bool("chatbox.enabled", true),
+            bool("chatbox.transparent", true),
             // Boosts Information (BoostsConfig).
             choice("boosts.displayBoosts", "COMBAT", "NONE", "COMBAT", "NON_COMBAT", "BOTH"),
             bool("boosts.relativeBoost", false),
@@ -134,7 +137,7 @@ object ClientHudConfig {
 
     private val BY_KEY = SETTINGS.associateBy { it.key }
 
-    val PLUGINS = listOf("boosts", "opponent", "grounditems", "timers", "zoom", "minimap", "loottracker")
+    val PLUGINS = listOf("boosts", "opponent", "grounditems", "timers", "zoom", "minimap", "loottracker", "chatbox")
 
     private val VALUES = AttributeKey<String>(persistenceKey = "hud_settings")
     private val HIGHLIGHT = AttributeKey<String>(persistenceKey = "hud_highlight")

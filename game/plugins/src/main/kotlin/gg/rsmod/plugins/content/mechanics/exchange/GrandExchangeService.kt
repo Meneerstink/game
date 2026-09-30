@@ -40,7 +40,7 @@ import java.util.concurrent.locks.ReentrantLock
  * traded anything adds it to the owner's History ([GrandExchangeHistory], newest first, [HISTORY_ROWS] kept).
  */
 class GrandExchangeService(
-    private val saveFile: File = File("data/ge/offers.json"),
+    private val saveFile: File = gg.rsmod.util.io.SharedDataFiles.of("data/ge/offers.json"),
     private val clock: () -> Long = System::currentTimeMillis,
 ) : Service {
     private val lock = ReentrantLock()

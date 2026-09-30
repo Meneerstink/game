@@ -17,6 +17,7 @@ import gg.rsmod.game.model.timer.TELEBLOCK_TIMER
 import gg.rsmod.plugins.api.EquipmentType
 import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.api.ext.getVarbit
+import gg.rsmod.plugins.api.ext.getVarp
 import gg.rsmod.plugins.api.ext.getWildernessLevel
 import gg.rsmod.plugins.api.ext.closeInterface
 import gg.rsmod.plugins.api.ext.isMulti
@@ -89,6 +90,7 @@ object SystemsSuite : Conformance.Suite {
         scenario("social") { social(run, arena) }
         scenario("options") { options(run, arena) }
         scenario("screens") { screens(run, arena) }
+        scenario("chattabs") { chatTabs(run, arena) }
     }
 
     /** Hitsplats of [type] per cycle on [who] since [from]: cycle -> damages. */
@@ -591,6 +593,11 @@ object SystemsSuite : Conformance.Suite {
         run.expectTrue("social", "Delete Friend", a.friends.none { it.equals(b.username, true) }, a.friends.toString())
         // Friends chat: A owns "Conf"; B joins, talks with "/" and "/f "; C (outside) receives nothing.
         val fc = run.world.friendsChat
+        // Hermetic: the registries are private copies in conformance mode (SharedDataFiles), seeded from the owner's data - reset
+        // whatever ranks the real accounts' channels carry so every run starts from the 667 defaults.
+        fc.setEnterRank(a, gg.rsmod.game.model.social.FriendsChatRank.GUEST)
+        fc.setTalkRank(a, gg.rsmod.game.model.social.FriendsChatRank.GUEST)
+        fc.setKickRank(a, gg.rsmod.game.model.social.FriendsChatRank.OWNER)
         fc.setPrefix(a, "Conf")
         fc.joinWithMessages(a, a.username)
         run.expectTrue("social", "FC join", fc.joinWithMessages(b, a.username), "B joined")
@@ -603,8 +610,9 @@ object SystemsSuite : Conformance.Suite {
         run.check("social", "FC: outsider hears nothing", received(run, "SC", c1, "MessageFriendChannel"), "no leak" to 0)
         // Clan: A founds, B is invited and accepts; C listens as a guest.
         val clans = gg.rsmod.plugins.content.mechanics.clan.Clans
-        val clanName = "Conf${run.world.currentCycle % 100000}"
-        if (clans.create(a, clanName)) {
+        listOf(b, c).forEach { if (clans.clanOf(it) != null) clans.leave(it) }
+        val clanName = clans.clanOf(a) ?: "Conf${run.world.currentCycle % 100000}"
+        if (clans.clanOf(a) != null || clans.create(a, clanName)) {
             clans.recruit(a, b)
             clans.takeInvite(b, a)?.let { clans.acceptInvite(b, it.name) }
             run.expectTrue("social", "clan invite accepted", clans.clanOf(b) == clanName, "B clan=${clans.clanOf(b)}")
@@ -761,6 +769,67 @@ object SystemsSuite : Conformance.Suite {
         wait(3)
         Bots.inject(bot, gg.rsmod.game.message.impl.ResumePCountDialogMessage(value))
         wait(2)
+    }
+
+    /**
+     * Options tab (261) toggles, Chat Setup (982) colours and the chatbox filter tabs (751), clicked as the 667 client sends them;
+     * every one must leave the var the client draws from on the server (saved with the player, pushed at login). References:
+     * the components' varpTriggers (261) and CS2 83 / 175 / 184 (982, 751), decoded 2026-09-24 and 2026-10-01.
+     */
+    private suspend fun QueueTask.chatTabs(
+        run: Conformance.Run,
+        arena: Tile,
+    ) {
+        val names = java.io.File("data/saves").listFiles()?.map { it.name }?.filter { !it.contains('.') }?.sorted() ?: emptyList()
+        if (names.isEmpty()) {
+            run.notTested("chattabs", "all", "needs a saved character")
+            return
+        }
+        val a = run.bot(arena.transform(0, 4), names.last())
+        run.recording.track(a, "TA")
+        repeat(12) { wait(1) }
+        val e = "chattabs"
+        for ((component, varp) in listOf(8 to 2159, 16 to 1055, 22 to 1054)) {
+            for (op in 2..4) {
+                Bots.button(a, 751, component, option = op)
+                wait(1)
+                run.check(e, "751:$component op$op -> varp $varp", a.getVarp(varp), "CS2 184 mode" to op - 2)
+            }
+            Bots.button(a, 751, component, option = 2)
+            wait(1)
+        }
+        Bots.button(a, 751, 31, option = 4)
+        wait(1)
+        run.check(e, "Game: Filter -> varbit 6161", a.getVarbit(6161), "CS2 184" to 1)
+        Bots.button(a, 751, 31, option = 2)
+        wait(1)
+        run.check(e, "Game: All -> varbit 6161", a.getVarbit(6161), "CS2 184" to 0)
+        // Options tab toggles (261): profanity 1438, chat effects 171, mouse buttons 170, accept aid 427.
+        for ((component, varp) in listOf(3 to 1438, 4 to 171, 6 to 170, 7 to 427)) {
+            val before = a.getVarp(varp)
+            Bots.button(a, 261, component)
+            wait(1)
+            run.expectTrue(e, "261:$component toggles varp $varp", a.getVarp(varp) != before, "before=$before after=${a.getVarp(varp)}")
+            Bots.button(a, 261, component)
+            wait(1)
+            run.check(e, "261:$component toggles back", a.getVarp(varp), "toggle" to before)
+        }
+        // Chat Setup (982): opened from 261:5, clan colour 982:20 (value 3), private split 982:52 (value 4), No split 982:41.
+        Bots.button(a, 261, 5)
+        wait(1)
+        run.expectTrue(e, "261:5 opens Chat Setup 982", a.interfaces.isVisible(982), "982 visible")
+        Bots.button(a, 982, 20)
+        Bots.button(a, 982, 52)
+        wait(1)
+        run.check(e, "982:20 clan chat colour -> varbit 3612", a.getVarbit(3612), "CS2 83" to 3)
+        run.check(e, "982:52 private chat colour -> varp 287", a.getVarp(287), "CS2 83" to 4)
+        Bots.button(a, 982, 41)
+        Bots.button(a, 982, 17)
+        wait(1)
+        run.check(e, "982:41 No split -> varp 287", a.getVarp(287), "CS2 2735" to 0)
+        Bots.button(a, 982, 5)
+        wait(1)
+        run.expectTrue(e, "982:5 back to Options 261", a.interfaces.isVisible(261), "261 visible")
     }
 
     private suspend fun QueueTask.options(

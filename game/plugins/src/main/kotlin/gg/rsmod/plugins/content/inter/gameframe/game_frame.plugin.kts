@@ -27,10 +27,4 @@ on_button(interfaceId = RESIZABLE_GAME_FRAME, component = 229) {
     }
 }
 
-on_button(interfaceId = CHAT_OPTIONS_INTERFACE, component = 31) {
-    when (player.getInteractingOpcode()) {
-        52 -> {
-            player.toggleVarbit(GAME_FILTER_VARBIT)
-        }
-    }
-}
+// 751:31 Game "All" / "Filter" (varbit 6161): chat_tabs.plugin.kts.

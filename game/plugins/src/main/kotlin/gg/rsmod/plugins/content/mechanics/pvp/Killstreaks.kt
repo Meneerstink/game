@@ -29,7 +29,7 @@ val PK_POINTS_ATTR = AttributeKey<Int>(persistenceKey = "pk_points")
  */
 object Killstreaks {
     private const val POINTS_PER_KILL = 2
-    private val leaderboardFile = File("data/killstreak_leaderboard.txt")
+    private val leaderboardFile = gg.rsmod.util.io.SharedDataFiles.of("data/killstreak_leaderboard.txt")
     private val leaderboard = ConcurrentHashMap<String, Int>()
 
     @Volatile private var loaded = false
