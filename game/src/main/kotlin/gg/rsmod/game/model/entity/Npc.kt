@@ -33,6 +33,15 @@ class Npc private constructor(
      * an npc "forgets" a target standing behind a fence or counter; npcs that must genuinely
      * chase a target around obstacles (the Deadman guards) opt in here.
      */
+    /**
+     * Set for the one cycle after a reposition (teleportNpc / moveTo): the re-add tells the client to jump to the new tile
+     * (AddLocalNpcSegment's "clear path" bit) instead of walking there. Owner 2026-09-30: a recalled familiar played its
+     * walk / run sound while teleporting - the 667 client (NPCEntity.clearPath) queues a WALK step from the old tile to the
+     * new one when that bit is 0 and the jump is 8 tiles or less, so a teleport became a walk animation with its movement
+     * sound (and looked like walking through walls).
+     */
+    internal var clearPathOnAdd = false
+
     var smartPathfinding = false
 
     /**

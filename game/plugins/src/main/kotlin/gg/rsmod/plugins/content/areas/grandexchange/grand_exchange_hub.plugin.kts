@@ -40,12 +40,19 @@ on_npc_option(npc = Npcs.PERDU, option = "talk-to") {
         chatNpc(gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.statusLine(), wrap = true)
         // Every PvP-damaged item: imported broken/mangled ids and attribute-broken untradeables (owner 2026-09-26).
         val hasBroken = player.inventory.rawItems.filterNotNull().any(gg.rsmod.plugins.content.mechanics.death.UntradeableDeathProtection::isDamaged)
-        if (!hasBroken) {
-            chatNpc("I can repair and protect eligible equipment. Bring me a broken item and I'll fix it for a fee.", wrap = true)
+        val hasLost = gg.rsmod.plugins.content.mechanics.death.PerduReclaim.has(player)
+        if (!hasBroken && !hasLost) {
+            chatNpc("I can repair and protect eligible equipment, and I return things you've lost - for a price.", wrap = true)
             return@queue
         }
-        BrokenItemRepair.repair(this)
+        if (hasBroken) BrokenItemRepair.repair(this)
+        if (hasLost) gg.rsmod.plugins.content.mechanics.death.PerduReclaim.trade(this)
     }
+}
+
+// OSRS "Lost Property" (Perdu's Trade): untradeables a deep-Wilderness death destroyed, handed back for their repair price.
+on_npc_option(npc = Npcs.PERDU, option = "trade") {
+    player.queue { gg.rsmod.plugins.content.mechanics.death.PerduReclaim.trade(this) }
 }
 
 // Perdu's Trouver unlock and her use-item repair are registered in mechanics/trouver/trouver.plugin.kts, after the registry is filled.

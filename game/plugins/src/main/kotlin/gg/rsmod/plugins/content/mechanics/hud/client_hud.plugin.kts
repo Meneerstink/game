@@ -24,6 +24,7 @@ on_world_init {
 on_login {
     ClientHudSync.reset(player)
     ClientHudConfig.push(player)
+    LootTracker.push(player)
     // Ground Items' pie timer: a new drop's full despawn time on this server.
     ClientHud.send(player, "gdelay|${world.gameContext.gItemDespawnDelay}")
 }
@@ -79,6 +80,13 @@ on_command("hud") {
                 "clear" -> ClientHudConfig.clear(player, hidden)
                 else -> return@on_command
             }
+        }
+        "loot" -> {
+            // Loot Tracker panel: "hud loot reset" (Reset All) / "hud loot reset <level> <name...>" (one box's Reset).
+            if (args.getOrNull(1) != "reset") return@on_command
+            val level = raw.getOrNull(2)?.toIntOrNull()
+            if (level == null) LootTracker.reset(player, null, -1) else LootTracker.reset(player, raw.drop(3).joinToString(" "), level)
+            return@on_command
         }
         "reset" -> {
             val plugin = args.getOrNull(1)

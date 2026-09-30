@@ -54,6 +54,10 @@ object ClientHudConfig {
             bool("opponent.enabled", true),
             bool("grounditems.enabled", true),
             bool("timers.enabled", true),
+            // Owner 2026-09-30: RuneLite Camera (config group "zoom"), Minimap (its zoom) and Loot Tracker.
+            bool("zoom.enabled", false), // RuneLite CameraPlugin enabledByDefault = false
+            bool("minimap.enabled", true),
+            bool("loottracker.enabled", true),
             // Boosts Information (BoostsConfig).
             choice("boosts.displayBoosts", "COMBAT", "NONE", "COMBAT", "NON_COMBAT", "BOTH"),
             bool("boosts.relativeBoost", false),
@@ -111,11 +115,26 @@ object ClientHudConfig {
             // Poison / venom (RuneLite PoisonPlugin infobox) and burn: server state from the tmr payload's damage-over-time block.
             bool("timers.showPoison", true),
             bool("timers.showBurn", true),
+            // Camera (RuneLite CameraConfig, group "zoom"): the zoom items. OSRS zoom units (bigger = closer, 512 = default,
+            // limits 128..896; inner limit 1400; outer limit adjust -400..400; wheel step 25, script 39 ScrollWheelZoomHandler).
+            bool("zoom.inner", false),
+            int("zoom.outerLimit", 0, -400, 400),
+            choice("zoom.controlFunction", "NONE", "NONE", "CONTROL_TO_ZOOM", "CONTROL_TO_RESET"),
+            int("zoom.ctrlZoomValue", 512, -400, 1400),
+            int("zoom.zoomIncrement", 25),
+            // Minimap (RuneLite MinimapConfig): "Zoom" - mouse wheel over the minimap; right-click resets.
+            bool("minimap.zoom", true),
+            // Loot Tracker (RuneLite LootTrackerConfig).
+            choice("loottracker.priceType", "GRAND_EXCHANGE", "GRAND_EXCHANGE", "HIGH_ALCHEMY"),
+            bool("loottracker.showPriceType", false),
+            bool("loottracker.syncPanel", true),
+            bool("loottracker.npcKillChatMessage", false),
+            bool("loottracker.pvpKillChatMessage", false),
         )
 
     private val BY_KEY = SETTINGS.associateBy { it.key }
 
-    val PLUGINS = listOf("boosts", "opponent", "grounditems", "timers")
+    val PLUGINS = listOf("boosts", "opponent", "grounditems", "timers", "zoom", "minimap", "loottracker")
 
     private val VALUES = AttributeKey<String>(persistenceKey = "hud_settings")
     private val HIGHLIGHT = AttributeKey<String>(persistenceKey = "hud_highlight")

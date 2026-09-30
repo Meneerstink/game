@@ -1,6 +1,5 @@
 package gg.rsmod.plugins.content.mechanics.store
 
-import gg.rsmod.plugins.content.mechanics.pvp.PvpSkull
 import gg.rsmod.plugins.content.mechanics.pvp.emblem.DeadmanEmblem
 import gg.rsmod.plugins.content.mechanics.pvp.emblem.EmblemDialogue.cashOut
 
@@ -51,16 +50,5 @@ on_npc_option(npc = StoreNpcs.DEADMAN_STORE, option = "rewards") {
     StoreUi.open(player, StoreCatalogue.Shop.DEADMAN)
 }
 
-/** The OSRS Emblem Trader's "Skull" option: a PK skull on request, after a confirmation (inside a guarded zone the
- * guards react to it exactly as to any other skull). */
-on_npc_option(npc = StoreNpcs.DEADMAN_STORE, option = "skull") {
-    player.queue {
-        if (PvpSkull.isSkulled(player)) {
-            chatNpc("You're already skulled.")
-            return@queue
-        }
-        when (options("Give me a PK skull. (The guards here will attack!)", "No thanks.", title = "Get a PK skull?")) {
-            FIRST_OPTION -> PvpSkull.applyTestSkull(player)
-        }
-    }
-}
+// Owner 2026-09-30: no "Skull" option on this npc (cache option slot 5 cleared with NpcOptionsTool; PK skulls still come from
+// attacking and the other skull sources - PvpSkull is unchanged).

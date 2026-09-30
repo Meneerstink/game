@@ -284,6 +284,13 @@ object BankPin {
         player.setComponentText(PIN_INTERFACE_ID, TITLE_COMPONENT, title)
         player.setComponentText(PIN_INTERFACE_ID, PROMPT_COMPONENT, prompt)
         player.setVarbit(STAGE_VARBIT, 0)
+        // Owner 2026-09-30 ("Finally, the FOURTH digit" and setup does not complete): varps normally go out with the end-of-cycle
+        // varp flush, AFTER the script below has already drawn the keypad. The first keypad starts at stage 0 anyway, but the
+        // second one ("Now please enter that number again.") opens right after the fourth click left the client's stage at 3
+        // (script 1110 caps it there), so it was drawn as "Finally, the FOURTH digit." with four '*' markers and every click
+        // after that showed the wrong digit number. The reset stage and keypad varp are sent now, before script 1271 reads them.
+        sendVarpNow(player, KEYPAD_VARP)
+        sendVarpNow(player, player.world.definitions.get(gg.rsmod.game.fs.def.VarbitDef::class.java, STAGE_VARBIT).varp)
         player.runClientScript(KEYPAD_SCRIPT, 1)
 
         terminateAction = closeKeypad
@@ -300,6 +307,21 @@ object BankPin {
         }
         terminateAction!!(this)
         return digits
+    }
+
+    /** Writes varp [id]'s current server value to the client immediately (ahead of the scripts written after it). */
+    private fun sendVarpNow(
+        player: Player,
+        id: Int,
+    ) {
+        val state = player.varps.getState(id)
+        player.write(
+            if (state in -Byte.MAX_VALUE..Byte.MAX_VALUE) {
+                gg.rsmod.game.message.impl.VarpSmallMessage(id, state)
+            } else {
+                gg.rsmod.game.message.impl.VarpLargeMessage(id, state)
+            },
+        )
     }
 
     private val closeKeypad: QueueTask.() -> Unit = {

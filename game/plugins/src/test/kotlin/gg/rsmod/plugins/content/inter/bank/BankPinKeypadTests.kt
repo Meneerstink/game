@@ -54,4 +54,17 @@ class BankPinKeypadTests {
         assertTrue("on_button(interfaceId = BankPin.PIN_INTERFACE_ID, component = BankPin.EXIT_COMPONENT)" in plugin)
         assertTrue("ResumePauseButtonMessage" !in pin, "the keypad has no pause buttons")
     }
+
+    /**
+     * Owner 2026-09-30 ("Finally, the FOURTH digit" - setup does not complete): the reset digit stage must reach the client before
+     * keypad script 1271 draws it, otherwise the confirm keypad opens drawn at the previous keypad's stage 3.
+     */
+    @Test
+    fun `the reset stage is sent before the keypad script draws it`() {
+        val pin = File("src/main/kotlin/gg/rsmod/plugins/content/inter/bank/BankPin.kt").readText()
+        val script = pin.indexOf("player.runClientScript(KEYPAD_SCRIPT, 1)")
+        val stage = pin.indexOf("sendVarpNow(player, player.world.definitions.get(gg.rsmod.game.fs.def.VarbitDef::class.java, STAGE_VARBIT).varp)")
+        val keypad = pin.indexOf("sendVarpNow(player, KEYPAD_VARP)")
+        assertTrue(stage in 0 until script && keypad in 0 until script, "stage/keypad varps are written before script 1271")
+    }
 }

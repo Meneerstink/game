@@ -129,6 +129,24 @@ class UntradeableDeathProtectionTests {
         assertTrue(UntradeableDeathProtection.isBroken(broken))
         assertEquals(null, broken.attr[ItemAttribute.ATTACHED_ITEM_ID], "the ammo went to the killer only")
     }
+    /** Owner 2026-09-30: a destroyed untradeable leaves a Perdu reclaim at its repair price (Lost Property), nothing else. */
+    @Test
+    fun `a destroyed untradeable is recorded for Perdu at its repair price`() {
+        val victim = io.mockk.mockk<gg.rsmod.game.model.entity.Player>(relaxed = true)
+        io.mockk.every { victim.inventory } returns gg.rsmod.game.model.container.ItemContainer(DEFINITIONS, gg.rsmod.game.model.container.key.INVENTORY_KEY)
+        io.mockk.every { victim.equipment } returns gg.rsmod.game.model.container.ItemContainer(DEFINITIONS, gg.rsmod.game.model.container.key.EQUIPMENT_KEY)
+        io.mockk.every { victim.attr } returns gg.rsmod.game.model.attr.AttributeMap()
+        io.mockk.every { victim.world.definitions } returns DEFINITIONS
+        victim.inventory[0] = Item(Items.AVERNIC_DEFENDER)
+        val lost = listOf(DeathSlotItem(DeathContainerSource.INVENTORY, 0, Item(Items.AVERNIC_DEFENDER)))
+        val resolved = DeathResolutionResult(DeathContext.WILDERNESS_PVP, victim, null, DeathItemRiskResult(0, emptyList(), lost))
+        val (_, outcomes) = UntradeableDeathProtection.splitPvp(DEFINITIONS, resolved, deepWilderness = true)
+        assertEquals(UntradeableFate.DESTROYED, outcomes.single().fate)
+        UntradeableDeathProtection.execute(victim, outcomes)
+        assertEquals(null, victim.inventory[0], "the item itself is gone")
+        assertEquals(listOf(PerduReclaim.Reclaim(Items.AVERNIC_DEFENDER, 1, 600_000L)), PerduReclaim.records(victim))
+    }
+
     companion object {
         private val DEFINITIONS = DefinitionSet()
 

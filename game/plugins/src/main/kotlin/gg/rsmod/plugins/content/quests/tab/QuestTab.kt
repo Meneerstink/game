@@ -101,6 +101,8 @@ object QuestTab {
                         player.setComponentText(L.DEADMAN, L.blockBase(i) + L.BLOCK_TITLE, block.title)
                         player.setInterfaceEvents(L.DEADMAN, L.blockBase(i) + L.BLOCK_INFO, -1..-1, EVENTS_OP1)
                     }
+                    // Drop Viewer (owner 2026-09-30).
+                    player.setInterfaceEvents(L.DEADMAN, L.DROPS_BUTTON, -1..-1, EVENTS_OP1)
                 }
                 else -> Unit
             }

@@ -2,7 +2,6 @@ package gg.rsmod.plugins.content.mechanics.pvp.breach
 
 import gg.rsmod.game.model.shop.PurchasePolicy
 import gg.rsmod.game.model.shop.ShopItem
-import gg.rsmod.plugins.content.mechanics.pvp.PvpSkull
 import gg.rsmod.plugins.content.mechanics.shops.PointCurrency
 
 /*
@@ -86,15 +85,5 @@ on_npc_option(npc = BREACH_TRADER, option = "rewards") {
     player.openShop(BREACH_SHOP)
 }
 
-/** The Emblem Trader's own "Skull" option, kept on the clone: a PK skull on request after a confirmation. */
-on_npc_option(npc = BREACH_TRADER, option = "skull") {
-    player.queue {
-        if (PvpSkull.isSkulled(player)) {
-            chatNpc("You're already skulled.")
-            return@queue
-        }
-        when (options("Give me a PK skull. (The guards here will attack!)", "No thanks.", title = "Get a PK skull?")) {
-            FIRST_OPTION -> PvpSkull.applyTestSkull(player)
-        }
-    }
-}
+// Owner 2026-09-30: no "Skull" option on this npc (cache option slot 5 cleared with NpcOptionsTool; PK skulls still come from
+// attacking and the other skull sources - PvpSkull is unchanged).

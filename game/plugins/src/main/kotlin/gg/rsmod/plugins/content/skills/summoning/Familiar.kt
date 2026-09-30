@@ -412,6 +412,59 @@ object Familiar {
         return player.tile
     }
 
+    /**
+     * Where a follow recovery may put the familiar, decided BEFORE anything is committed (owner 2026-09-30: with walls or
+     * scenery around the owner the familiar teleported again and again - blue GFX and teleport sound every cycle). The tile
+     * must fit the familiar's footprint, not overlap its owner, and be a real follow slot ([isInFollowSlot]), so the very
+     * next follow cycle is satisfied where it stands and neither routes nor recovers again. [placementTile]'s last resort
+     * (the owner's own tile) is exactly what looped: from there the familiar is never in a follow slot, its route fails,
+     * and it was recalled once more. Null when no such tile exists: then nothing happens at all.
+     */
+    internal fun recoveryPlacement(
+        player: Player,
+        npc: Npc,
+    ): Tile? {
+        val tile = placementTile(player, npc.id)
+        val size = npc.getSize()
+        if (tile.sameAs(player.tile) && footprint(tile, size).any { it in footprint(player.tile, player.getSize()) }) return null
+        if (!fits(player, tile, size)) return null
+        return if (isInFollowSlot(tile, size, player.tile, player.getSize())) tile else null
+    }
+
+    /** Owner tile at which the last recovery found no placement (traced once per tile; see [recover]). */
+    private val RECOVERY_BLOCKED_AT = gg.rsmod.game.model.attr.AttributeKey<Tile>()
+
+    /**
+     * One recovery teleport, or none: the arrival GFX and sound only accompany a teleport that really happens. Without a
+     * valid tile the familiar stays where it is until its owner stands somewhere else - the owner's tile is the state that
+     * decides placement, so a new tile is the only thing that can change the answer (no timer involved).
+     */
+    private fun recover(
+        player: Player,
+        npc: Npc,
+        reason: String,
+        recovered: (Player, Npc) -> Unit,
+    ) {
+        val destination = recoveryPlacement(player, npc)
+        if (destination == null) {
+            if (npc.attr[RECOVERY_BLOCKED_AT]?.sameAs(player.tile) != true) {
+                npc.attr[RECOVERY_BLOCKED_AT] = Tile(player.tile)
+                gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.SUMMON) {
+                    "familiar ${npc.id} (size ${npc.getSize()}) has no free tile beside ${player.username} at ${player.tile} ($reason): waits, no teleport"
+                }
+            }
+            return
+        }
+        npc.attr.remove(RECOVERY_BLOCKED_AT)
+        gg.rsmod.game.model.AvTrace.log {
+            "familiar follow teleport npc=${npc.id} from=${npc.tile} to=$destination owner=${player.tile} reason=$reason cycle=${player.world.currentCycle}"
+        }
+        gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.SUMMON) { "familiar ${npc.id} recalled to ${player.username}: $reason" }
+        npc.teleportNpc(destination)
+        recovered(player, npc)
+        npc.facePawn(player)
+    }
+
     private fun fits(
         player: Player,
         tile: Tile,
@@ -851,16 +904,8 @@ object Familiar {
     ) {
         val recovery = followRecoveryReason(npc.tile, player.tile)
         if (recovery != null) {
-            // RCV-010 D2 evidence (owner "familiar noclips while following"): every recovery teleport is traced,
-            // so a live repro shows whether a "clip" is this jump or a walk.
-            gg.rsmod.game.model.AvTrace.log {
-                "familiar follow teleport npc=${npc.id} from=${npc.tile} to-owner=${player.tile} " +
-                    "reason=$recovery cycle=${player.world.currentCycle}"
-            }
-            gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.SUMMON) { "familiar ${npc.id} recalled to ${player.username}: $recovery" }
-            npc.teleportNpc(placementTile(player, npc.id))
-            recovered(player, npc)
-            npc.facePawn(player)
+            // RCV-010 D2 evidence (owner "familiar noclips while following"): every recovery teleport is traced (recover).
+            recover(player, npc, recovery, recovered)
             return
         }
         // Combat owns its chase path; following must not overwrite it every player tick. A dead
@@ -893,18 +938,9 @@ object Familiar {
                 .build()
         val route = BFSPathFindingStrategy(npc.world.collision).calculateRoute(request)
         if (!route.success) {
-            gg.rsmod.game.model.AvTrace.log {
-                "familiar follow teleport npc=${npc.id} at=${npc.tile} target=$target " +
-                    "reason=no-route size=${npc.getSize()} cycle=${player.world.currentCycle}"
-            }
-            gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.SUMMON) {
-                "familiar ${npc.id} (size ${npc.getSize()}) found no route to ${player.username} from ${npc.tile.x},${npc.tile.z} - recalled by teleport"
-            }
-            // A follower that cannot keep up must be recalled; consuming a partial route here
-            // would leave it stranded at a wall and invites a later corner-cutting recovery.
-            npc.teleportNpc(placementTile(player, npc.id))
-            recovered(player, npc)
-            npc.facePawn(player)
+            // A follower that cannot keep up is recalled - only onto a tile it can stay on (recover); consuming a
+            // partial route here would leave it stranded at a wall and invites a later corner-cutting recovery.
+            recover(player, npc, "no-route", recovered)
             return
         }
         /*

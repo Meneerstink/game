@@ -168,6 +168,7 @@ object UntradeableDeathProtection {
         var equipmentChanged = false
         val applied = mutableListOf<UntradeableOutcome>()
         var damaged = false
+        var destroyed = false
         for (outcome in outcomes) {
             val slotItem = outcome.slotItem
             val container =
@@ -187,6 +188,11 @@ object UntradeableDeathProtection {
                     UntradeableFate.MANGLED -> damagedCopy(slotItem.item, current, mangled = true)
                 }
             if (outcome.fate == UntradeableFate.BROKEN || outcome.fate == UntradeableFate.MANGLED) damaged = true
+            if (outcome.fate == UntradeableFate.DESTROYED) {
+                // Perdu's Lost Property keeps what was destroyed, at its repair price (PerduReclaim).
+                PerduReclaim.record(victim, current, RepairPrices.repairPrice(victim.world.definitions, current.id) * current.amount)
+                destroyed = true
+            }
             if (slotItem.source == DeathContainerSource.INVENTORY || replacement == null) {
                 container[slotItem.slot] = replacement
                 if (slotItem.source == DeathContainerSource.EQUIPMENT) equipmentChanged = true
@@ -205,6 +211,7 @@ object UntradeableDeathProtection {
         }
         if (equipmentChanged) victim.refreshBonuses()
         if (damaged) victim.message("Some of your untradeable items were damaged. Perdu at the Grand Exchange can repair them.")
+        if (destroyed) victim.message("Some of your untradeable items were destroyed. Perdu at the Grand Exchange can return them for a price.")
         return killerLoot(applied)
     }
 

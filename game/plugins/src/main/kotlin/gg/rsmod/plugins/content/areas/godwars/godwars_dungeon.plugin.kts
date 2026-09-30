@@ -191,11 +191,16 @@ God.values().filter { it.altarId != -1 }.forEach { god ->
         player.timers[GodWars.ALTAR_RECHARGE_TIMER] = GodWars.ALTAR_RECHARGE_TICKS
         player.queue {
             player.animate(ANIM_PRAYER_ALTAR)
+            // Owner 2026-09-30: the recharge sound with the prayer animation - the same cue every altar here plays
+            // (prayer_altar.plugin.kts) and Void pairs with `altar_pray` (Drezel.kt: anim altar_pray + sound prayer_recharge).
+            player.playSound(Sfx.PRAYER_RECHARGE)
             val restoreTo = player.getMaximumPrayerPoints() + bonus
             player.alterPrayerPoints(value = (restoreTo - player.getCurrentPrayerPoints()).coerceAtLeast(0), capValue = bonus)
             player.message(GodWars.MSG_ALTAR_DONE)
         }
     }
+    // Teleport sound: SOURCE_BLOCKED (2026-09-30) - Void GodwarsAltars (tele), Novite GodWars (useStairs), 2009scape
+    // GodwarsMapzone (setTeleportLocation) and the OSRS Wiki give no sound for this exit, so none is invented here.
     on_obj_option(obj = god.altarId, option = "teleport") {
         player.queue {
             player.lock()

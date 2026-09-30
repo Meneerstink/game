@@ -27,6 +27,57 @@ Block.values().forEachIndexed { i, block ->
     }
 }
 
+// Drop Viewer (owner 2026-09-30): the Deadman panel's "Drops" button and the window's own controls.
+on_button(interfaceId = L.DEADMAN, component = L.DROPS_BUTTON) {
+    DropViewer.open(player)
+}
+
+on_button(interfaceId = DropViewer.INTERFACE, component = L.I_CLOSE) {
+    if (DropViewer.isOpen(player)) player.closeInterface(DropViewer.INTERFACE)
+}
+
+on_button(interfaceId = DropViewer.INTERFACE, component = L.DV_PREVIOUS) {
+    DropViewer.page(player, -1)
+}
+
+on_button(interfaceId = DropViewer.INTERFACE, component = L.DV_NEXT) {
+    DropViewer.page(player, 1)
+}
+
+for (i in 0 until L.DV_RESULTS) {
+    on_button(interfaceId = DropViewer.INTERFACE, component = L.DV_RESULT_FIRST + i) {
+        DropViewer.result(player, i)
+    }
+}
+
+fun dropSearch(player: gg.rsmod.game.model.entity.Player, byDrop: Boolean) {
+    player.queue {
+        val query = inputString(if (byDrop) "Enter the name of the item:" else "Enter the name of the NPC:")
+        val found = if (byDrop) DropViewer.findDrop(player, query) else DropViewer.findNpc(player, query)
+        if (!DropViewer.isOpen(player)) DropViewer.open(player)
+        DropViewer.showResults(player, found)
+        when {
+            found.isEmpty() -> player.message(if (byDrop) "No monster drops an item called '$query'." else "No monster with a drop table is called '$query'.")
+            else -> {
+                DropViewer.show(player, found.first(), 0)
+                if (found.size > L.DV_RESULTS) player.message("${found.size} matches; the first ${L.DV_RESULTS} are listed.")
+            }
+        }
+    }
+}
+
+on_button(interfaceId = DropViewer.INTERFACE, component = L.DV_FIND_DROP) {
+    dropSearch(player, byDrop = true)
+}
+
+on_button(interfaceId = DropViewer.INTERFACE, component = L.DV_FIND_NPC) {
+    dropSearch(player, byDrop = false)
+}
+
+on_command("drops") {
+    DropViewer.open(player)
+}
+
 on_button(interfaceId = QuestTab.INFO, component = L.I_CLOSE) {
     if (player.interfaces.isVisible(QuestTab.INFO)) player.closeInterface(QuestTab.INFO)
 }

@@ -128,10 +128,24 @@ fun Plugin.obstacle(block: suspend QueueTask.(GameObject) -> Unit) {
 /** How far past a climbable loc [crossingLanding] looks for the landing tile. */
 const val MAX_CLIFF_CROSS = 6
 
+/** Sideways lines [crossingLanding] tries when the straight one has no usable landing (the cliff face is not square). */
+private val CROSS_SHIFTS = intArrayOf(0, 1, -1, 2, -2)
+
+/** A landing must open onto at least this many walkable tiles (its own included) within [LANDING_AREA] tiles. */
+const val MIN_LANDING_ROOM = 6
+const val LANDING_AREA = 4
+
 /**
  * Where a climb over a rock / cliff loc lands when no source gives the tile (the 2011 map re-placed the Trollheim rocks): crossing the
- * loc straight along the axis the player approaches it on, over the blocked tiles in this cache's own collision, to the first walkable
- * tile beyond (owner 2026-09-30, cliffsides). Null when there is none within reach.
+ * loc along the axis the player approaches it on, over the blocked tiles in this cache's own collision, to the first tile beyond that a
+ * player can actually use ([isUsableLanding]). Null when there is none within reach.
+ *
+ * Owner 2026-09-30 ("Climb Cliffside ... lands against the wall and is stuck", reported many times): the old rule took the first tile
+ * with no collision flag at all. Between the rock pieces of these cliffs there are unflagged single tiles walled in on every side by
+ * their neighbours' walls and blocked tiles - the player landed in such a pocket and could not move. A landing now has to open onto
+ * walkable ground ([MIN_LANDING_ROOM] tiles reachable by real steps) that is NOT the side the player came from; a pocket is skipped
+ * and the search goes on past it, then along the lines one and two tiles to either side. Every cliffside and the rocks that use this
+ * (sourced_shortcuts 9306) share it, in both directions.
  */
 fun crossingLanding(
     world: gg.rsmod.game.model.World,
@@ -148,18 +162,54 @@ fun crossingLanding(
     val dx = if (alongX) Integer.signum(obj.tile.x - from.x) else 0
     val dz = if (!alongX) Integer.signum(obj.tile.z - from.z) else 0
     if (dx == 0 && dz == 0) return null
-    var crossed = false
-    var tile: gg.rsmod.game.model.Tile = from
-    repeat(MAX_CLIFF_CROSS + maxOf(w, l)) {
-        tile = tile.transform(dx, dz)
-        val inLoc = tile.x >= obj.tile.x && tile.x < obj.tile.x + w && tile.z >= obj.tile.z && tile.z < obj.tile.z + l
-        if (inLoc || world.collision.isClipped(tile)) {
-            crossed = true
-        } else if (crossed) {
-            return tile
+    val nearSide = reachable(world, from, LANDING_AREA + 2)
+    for (shift in CROSS_SHIFTS) {
+        var tile: gg.rsmod.game.model.Tile = if (alongX) from.transform(0, shift) else from.transform(shift, 0)
+        var crossed = false
+        repeat(MAX_CLIFF_CROSS + maxOf(w, l)) {
+            tile = tile.transform(dx, dz)
+            val inLoc = tile.x >= obj.tile.x && tile.x < obj.tile.x + w && tile.z >= obj.tile.z && tile.z < obj.tile.z + l
+            if (inLoc || world.collision.isClipped(tile)) {
+                crossed = true
+            } else if (crossed && tile !in nearSide && isUsableLanding(world, tile)) {
+                return tile
+            }
         }
     }
     return null
 }
 
+/** A tile a player can stand on and walk away from: not blocked itself, and opening onto [MIN_LANDING_ROOM] walkable tiles. */
+fun isUsableLanding(
+    world: gg.rsmod.game.model.World,
+    tile: gg.rsmod.game.model.Tile,
+): Boolean = reachable(world, tile, LANDING_AREA).size >= MIN_LANDING_ROOM
 
+/** Tiles reachable from [start] by ordinary cardinal steps (this cache's collision) within [radius], [start] included when standable. */
+private fun reachable(
+    world: gg.rsmod.game.model.World,
+    start: gg.rsmod.game.model.Tile,
+    radius: Int,
+): Set<gg.rsmod.game.model.Tile> {
+    val seen = LinkedHashSet<gg.rsmod.game.model.Tile>()
+    if (world.collision.isBlocked(start, Direction.NORTH, projectile = false) &&
+        world.collision.isBlocked(start, Direction.SOUTH, projectile = false) &&
+        world.collision.isBlocked(start, Direction.EAST, projectile = false) &&
+        world.collision.isBlocked(start, Direction.WEST, projectile = false)
+    ) {
+        return seen
+    }
+    val queue = ArrayDeque<gg.rsmod.game.model.Tile>()
+    seen += start
+    queue += start
+    while (queue.isNotEmpty()) {
+        val tile = queue.removeFirst()
+        for (dir in Direction.NESW) {
+            if (!world.collision.canTraverse(tile, dir, projectile = false, water = false)) continue
+            val next = tile.step(dir)
+            if (maxOf(Math.abs(next.x - start.x), Math.abs(next.z - start.z)) > radius || !seen.add(next)) continue
+            queue += next
+        }
+    }
+    return seen
+}

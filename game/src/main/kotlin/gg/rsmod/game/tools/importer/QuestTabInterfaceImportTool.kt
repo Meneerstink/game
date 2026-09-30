@@ -41,6 +41,8 @@ object QuestTabInterfaceImportTool {
     const val GROUPS = 1173
     const val DIARIES = 1174
     const val INFO = 1175
+    /** Drop Viewer (owner 2026-09-30): opened from the Deadman panel's "Drops" button. */
+    const val DROPS = 1176
 
     /** First free sprite id (probe 2026-09-26: highest 8320 in both caches). */
     const val SPRITE_BASE = 8321
@@ -279,7 +281,10 @@ object QuestTabInterfaceImportTool {
     const val BLOCK_INFO_TEXT = BLOCK_INFO + 1 + BUTTON_PIECES // 22
     const val BLOCK_VALUE = BLOCK_INFO_TEXT + 1 // 23
     const val BLOCK_STRIDE = BLOCK_VALUE + 1 // 24
-    const val DEADMAN_COUNT = BLOCK_FIRST + BLOCKS * BLOCK_STRIDE
+    const val DROPS_BUTTON = BLOCK_FIRST + BLOCKS * BLOCK_STRIDE // 126: button layer, +1..+9 pieces
+    const val DROPS_BUTTON_TEXT = DROPS_BUTTON + 1 + BUTTON_PIECES // 136
+    const val DROPS_BUTTON_WIDTH = 44
+    const val DEADMAN_COUNT = DROPS_BUTTON_TEXT + 1
     const val INFO_BUTTON_WIDTH = 40
     const val INFO_BUTTON_HEIGHT = 18
 
@@ -299,6 +304,10 @@ object QuestTabInterfaceImportTool {
             b.text(base + BLOCK_INFO_TEXT, 0, 0, INFO_BUTTON_WIDTH, INFO_BUTTON_HEIGHT, info, fonts.p11, "Info", colour = BUTTON_TEXT)
             b.text(base + BLOCK_VALUE, 4, 20, CONTENT_WIDTH - 8, 15, base, fonts.b12, "", colour = WHITE)
         }
+        // Drop Viewer button (owner 2026-09-30), on the title line at the right: the five blocks fill the content height.
+        b.layer(DROPS_BUTTON, PANEL_WIDTH - 4 - DROPS_BUTTON_WIDTH, 1, DROPS_BUTTON_WIDTH, INFO_BUTTON_HEIGHT, P_ROOT, ops = listOf("Drop Viewer"))
+        button(b, DROPS_BUTTON + 1, DROPS_BUTTON, DROPS_BUTTON_WIDTH, INFO_BUTTON_HEIGHT)
+        b.text(DROPS_BUTTON_TEXT, 0, 0, DROPS_BUTTON_WIDTH, INFO_BUTTON_HEIGHT, DROPS_BUTTON, fonts.p11, "Drops", colour = BUTTON_TEXT)
         return b.done(DEADMAN_COUNT)
     }
 
@@ -388,6 +397,94 @@ object QuestTabInterfaceImportTool {
         return b.done(INFO_COUNT)
     }
 
+    // ------------------------------------------------------------------ Drop Viewer
+
+    /**
+     * The Drop Viewer window (owner 2026-09-30, reference "dropviewer.png": King Black Dragon, Find Drop / Find NPC, Previous /
+     * Next Page, Item / Quantity / Rarity). Fits the fixed-mode main screen (512 x 334). The server fills it from the real
+     * drop tables (DropViewer): title = NPC, the stats line, [DV_ROWS] item rows per page, the search results on the left.
+     */
+    const val DV_WIDTH = 500
+    const val DV_HEIGHT = 322
+    const val DV_STATS = 14
+    const val DV_LEFT = 15
+    const val DV_FIND_DROP = 16 // layer, +1..+9 stone pieces, +10 text
+    const val DV_FIND_NPC = 27 // layer, +1..+9, +10 text
+    const val DV_RESULTS_BOX = 38
+    const val DV_RESULT_FIRST = 39
+    const val DV_RESULTS = 10
+    const val DV_PAGE_TEXT = DV_RESULT_FIRST + DV_RESULTS // 49
+    const val DV_PREVIOUS = DV_PAGE_TEXT + 1 // 50
+    const val DV_NEXT = DV_PREVIOUS + 1 // 51
+    const val DV_TABLE = DV_NEXT + 1 // 52
+    const val DV_HEADER = DV_TABLE + 1 // 53
+    const val DV_HEAD_ITEM = DV_HEADER + 1 // 54
+    const val DV_HEAD_QUANTITY = DV_HEAD_ITEM + 1 // 55
+    const val DV_HEAD_RARITY = DV_HEAD_QUANTITY + 1 // 56
+    const val DV_ROW_FIRST = DV_HEAD_RARITY + 1 // 57
+    const val DV_ROW_STRIDE = 5 // background, item, name, quantity, rarity
+    const val DV_ROW_BG = 0
+    const val DV_ROW_ITEM = 1
+    const val DV_ROW_NAME = 2
+    const val DV_ROW_QUANTITY = 3
+    const val DV_ROW_RARITY = 4
+    const val DV_ROWS = 6
+    const val DV_EMPTY = DV_ROW_FIRST + DV_ROWS * DV_ROW_STRIDE // 87
+    const val DV_COUNT = DV_EMPTY + 1
+    const val DV_TABLE_WIDTH = 352
+    const val DV_ROW_HEIGHT = 34
+    const val DV_ROW_PITCH = 35
+    const val DV_HEADER_HEIGHT = 22
+    private const val HEADER_FILL = 0x2B2620
+    private const val ROW_FILL = 0x3E352B
+    private const val ROW_FILL_ALT = 0x463C31
+
+    fun dvRow(row: Int) = DV_ROW_FIRST + row * DV_ROW_STRIDE
+
+    fun dropViewer(fonts: LootKeyInterfaceImportTool.Fonts): List<Comp> {
+        val b = Builder(fonts)
+        b.frame(DV_WIDTH, DV_HEIGHT, "Drop Viewer")
+        b.text(DV_STATS, 12, 36, DV_WIDTH - 24, 28, DeathsOfficeInterfaceImportTool.WINDOW, fonts.p11, "", colour = WHITE, lineHeight = 13)
+        b.layer(DV_LEFT, 12, 68, 118, 244, DeathsOfficeInterfaceImportTool.WINDOW)
+        for ((first, label) in listOf(DV_FIND_DROP to "Find Drop", DV_FIND_NPC to "Find NPC")) {
+            val y = if (first == DV_FIND_DROP) 0 else 28
+            b.layer(first, 0, y, 118, 24, DV_LEFT, ops = listOf(label))
+            button(b, first + 1, first, 118, 24)
+            b.text(first + 1 + BUTTON_PIECES, 0, 0, 118, 24, first, fonts.p12, label, colour = BUTTON_TEXT)
+        }
+        b.rect(DV_RESULTS_BOX, 0, 56, 118, 148, DV_LEFT, BORDER_OUTER)
+        for (i in 0 until DV_RESULTS) {
+            b.text(DV_RESULT_FIRST + i, 4, 58 + i * 14, 110, 14, DV_LEFT, fonts.p11, "", colour = WHITE, alignX = 0, hidden = true)
+        }
+        b.text(DV_PAGE_TEXT, 0, 206, 118, 14, DV_LEFT, fonts.p11, "", colour = WHITE)
+        b.text(DV_PREVIOUS, 0, 222, 56, 18, DV_LEFT, fonts.p12, "Previous", colour = ORANGE, alignX = 0)
+        b.text(DV_NEXT, 58, 222, 60, 18, DV_LEFT, fonts.p12, "Next Page", colour = ORANGE, alignX = 2)
+        b.layer(DV_TABLE, 136, 68, DV_TABLE_WIDTH, 244, DeathsOfficeInterfaceImportTool.WINDOW)
+        b.rect(DV_HEADER, 0, 0, DV_TABLE_WIDTH, DV_HEADER_HEIGHT, DV_TABLE, HEADER_FILL, filled = true)
+        b.text(DV_HEAD_ITEM, 0, 0, 190, DV_HEADER_HEIGHT, DV_TABLE, fonts.b12, "Item")
+        b.text(DV_HEAD_QUANTITY, 190, 0, 80, DV_HEADER_HEIGHT, DV_TABLE, fonts.b12, "Quantity")
+        b.text(DV_HEAD_RARITY, 270, 0, 82, DV_HEADER_HEIGHT, DV_TABLE, fonts.b12, "Rarity")
+        for (r in 0 until DV_ROWS) {
+            val base = dvRow(r)
+            val y = DV_HEADER_HEIGHT + 2 + r * DV_ROW_PITCH
+            b.rect(base + DV_ROW_BG, 0, y, DV_TABLE_WIDTH, DV_ROW_HEIGHT, DV_TABLE, if (r % 2 == 0) ROW_FILL else ROW_FILL_ALT, filled = true)
+            b.item(base + DV_ROW_ITEM, 4, y + 1, DV_TABLE, ops = emptyList())
+            b.text(base + DV_ROW_NAME, 44, y, 146, DV_ROW_HEIGHT, DV_TABLE, fonts.p11, "", colour = WHITE, lineHeight = 12)
+            b.text(base + DV_ROW_QUANTITY, 190, y, 80, DV_ROW_HEIGHT, DV_TABLE, fonts.p11, "", colour = WHITE, lineHeight = 13)
+            b.text(base + DV_ROW_RARITY, 270, y, 82, DV_ROW_HEIGHT, DV_TABLE, fonts.p11, "", colour = WHITE, lineHeight = 13)
+        }
+        b.text(DV_EMPTY, 0, DV_HEADER_HEIGHT, DV_TABLE_WIDTH, 200, DV_TABLE, fonts.p12, "", colour = WHITE, hidden = true)
+        // Clickable texts: the search results ("View") and the page links.
+        return b.done(DV_COUNT).map {
+            when (it.id) {
+                in DV_RESULT_FIRST until DV_RESULT_FIRST + DV_RESULTS -> it.copy(ops = listOf("View"))
+                DV_PREVIOUS -> it.copy(ops = listOf("Previous"))
+                DV_NEXT -> it.copy(ops = listOf("Next Page"))
+                else -> it
+            }
+        }
+    }
+
     // ------------------------------------------------------------------ import
 
     @JvmStatic
@@ -403,7 +500,7 @@ object QuestTabInterfaceImportTool {
         val questList = LinkedHashMap<FieldPatch, ByteArray>()
         try {
             fonts = LootKeyInterfaceImportTool.fonts(library)
-            listOf(CONTAINER, DEADMAN, GROUPS, DIARIES, INFO).forEach { id ->
+            listOf(CONTAINER, DEADMAN, GROUPS, DIARIES, INFO, DROPS).forEach { id ->
                 val files = library.index(index).archive(id)?.fileIds()?.toList() ?: emptyList()
                 current[id] = files.associateWith { f -> CacheItemProbeTool.sha1(library.data(index, id, f)!!) }
             }
@@ -433,6 +530,7 @@ object QuestTabInterfaceImportTool {
                 GROUPS to groups(fonts),
                 DIARIES to diaries(fonts),
                 INFO to info(fonts),
+                DROPS to dropViewer(fonts),
             )
         screens.forEach { (id, comps) ->
             val have = current.getValue(id)
@@ -456,7 +554,7 @@ object QuestTabInterfaceImportTool {
         errors.forEach { println("  BLOCKED: $it") }
         check(errors.isEmpty()) { "preflight blocked; nothing written" }
         if (!apply) {
-            println("DRY RUN: pass --apply to write interfaces $CONTAINER-$INFO, sprites $SPRITE_BASE..${SPRITE_BASE + OSRS_SPRITES.size - 1} and the gameframe icon")
+            println("DRY RUN: pass --apply to write interfaces $CONTAINER-$DROPS, sprites $SPRITE_BASE..${SPRITE_BASE + OSRS_SPRITES.size - 1} and the gameframe icon")
             return
         }
         val applied = transaction.apply(plan)

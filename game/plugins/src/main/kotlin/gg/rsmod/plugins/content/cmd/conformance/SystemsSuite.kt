@@ -409,7 +409,7 @@ object SystemsSuite : Conformance.Suite {
         val before = Tile(b.tile)
         Bots.inject(b, OpLoc1Message(0, 2931, 34889, 3680))
         repeat(14) { wait(1) }
-        run.expectTrue("cliffside", "34889 climbs across", b.tile != before && !run.world.collision.isClipped(b.tile), "from $before to ${b.tile}")
+        run.expectTrue("cliffside", "34889 climbs across", b.tile != before && gg.rsmod.plugins.content.skills.agility.isUsableLanding(run.world, b.tile), "from $before to ${b.tile}")
         // Every cliffside placement answers with a route (no unhandled option).
         val placements = listOf(Triple(3803, 2876, 3671), Triple(9303, 2855, 3663), Triple(9304, 2873, 3660), Triple(9305, 2894, 3672), Triple(9306, 2909, 3685), Triple(34877, 2876, 3619), Triple(34878, 2874, 3595))
         for ((id, x, z) in placements) {
@@ -428,7 +428,12 @@ object SystemsSuite : Conformance.Suite {
                 val m = run.recording.of(label, "msg").filter { it.cycle >= c }.map { it.text }.filter { it.contains("MessageGame") && !it.contains("__RSPS_HUD__") }
                 detail += "side$n: anim=${anims.size} at ${p.tile.x},${p.tile.z} ${m.joinToString(" / ").take(80)}; "
                 if (anims.isNotEmpty()) {
-                    climbed = true
+                    // Owner 2026-09-30: a climb that ends in a walled-in pocket is a stuck player, not a climb. Only for the locs
+                    // that land by the crossing rule (ShortcutSupport.crossingLanding); the donor-sourced Trollheim rocks
+                    // (3803, 9303-9305) land on their chain's ledges by design, reachable only through the next rock.
+                    val crossingRule = id in setOf(34877, 34878, 34889) || (id == 9306 && x == 2909)
+                    climbed = !crossingRule || gg.rsmod.plugins.content.skills.agility.isUsableLanding(run.world, p.tile)
+                    if (!climbed) detail += "landed in a pocket at ${p.tile.x},${p.tile.z}; "
                     break
                 }
             }

@@ -91,15 +91,42 @@ object DropTableFactory {
             }
             // Friends chat LootShare: a shared kill hands each item to one of the sharers (LootShare).
             val sharers = if (type == DropTableType.KILL) gg.rsmod.plugins.content.inter.friends.LootShare.sharers(player, tile) else null
+            // RuneLite Loot Tracker: what each owner really received from this kill, one event per owner.
+            val received = LinkedHashMap<Player, MutableList<Item>>()
             items.forEach { item ->
                 if (sharers == null) {
                     createDrop(world, item, tile, player)
+                    received.getOrPut(player) { mutableListOf() } += item
                 } else {
-                    gg.rsmod.plugins.content.inter.friends.LootShare.share(world, player, sharers, item, tile) { shared, owner -> createDrop(world, shared, tile, owner) }
+                    gg.rsmod.plugins.content.inter.friends.LootShare.share(world, player, sharers, item, tile) { shared, owner ->
+                        createDrop(world, shared, tile, owner)
+                        received.getOrPut(owner) { mutableListOf() } += shared
+                    }
                 }
+            }
+            if (type == DropTableType.KILL) {
+                if (received.isEmpty()) received[player] = mutableListOf()
+                received.forEach { (owner, loot) -> gg.rsmod.plugins.content.mechanics.hud.LootTracker.npcKill(owner, npcId, loot) }
             }
         } catch (e: Exception) {
             gg.rsmod.game.model.Trace.crash("drop table", e)
+        }
+    }
+
+    /**
+     * The built tables of [tableId] without rolling them (the Drop Viewer reads the chances from these), or null without a table.
+     */
+    fun tables(
+        player: Player,
+        tableId: Int,
+        type: DropTableType = DropTableType.KILL,
+    ): List<DropTable>? {
+        val bldr = tables[type]!![tableId] ?: return null
+        return try {
+            DropTableBuilder(player, prng).apply(bldr).build()
+        } catch (e: Exception) {
+            gg.rsmod.game.model.Trace.crash("drop viewer table $tableId", e)
+            null
         }
     }
 

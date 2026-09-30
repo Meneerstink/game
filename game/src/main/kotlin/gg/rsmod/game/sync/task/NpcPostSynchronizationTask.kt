@@ -22,6 +22,8 @@ object NpcPostSynchronizationTask : SynchronizationTask<Npc> {
         val carry = pawn.moved && pawn.blockBuffer.isDirty()
         // A carried block goes out (and is recorded) with the re-add on the next cycle.
         if (!carry) gg.rsmod.game.model.Probe.endOfCycle(pawn)
+        // A repositioned npc is re-added next cycle: that add must jump, not walk (Npc.clearPathOnAdd).
+        pawn.clearPathOnAdd = pawn.moved
         pawn.moved = false
         pawn.steps = null
         if (!carry) {

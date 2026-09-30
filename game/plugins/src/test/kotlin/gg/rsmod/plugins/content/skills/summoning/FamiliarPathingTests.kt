@@ -232,6 +232,53 @@ class FamiliarPathingTests {
     }
 
     /** Builds the exact [PathRequest] shape [Familiar.follow] uses, for a direct BFS assertion. */
+    /**
+     * Owner 2026-09-30: with walls or scenery around the owner a familiar teleported again and again (blue GFX and teleport
+     * sound every cycle). The placement is decided before anything is committed: no tile the familiar can stay on = no
+     * teleport and no effect, however many cycles pass; one free follow slot = exactly one teleport, and none after it.
+     */
+    @Test
+    fun `a recovery without a free follow slot never teleports, a free slot teleports once`() {
+        for (familiar in listOf(SMALL_FAMILIAR, LARGE_FAMILIAR)) {
+            val world = newWorld()
+            val owner = Tile(3200, 3200, 1)
+            val size = sizeOf(familiar)
+            // Every tile around the owner that any footprint could use is solid scenery.
+            for (dx in -size - 1..size + 1) {
+                for (dz in -size - 1..size + 1) {
+                    if (dx == 0 && dz == 0) continue
+                    Direction.NESW.forEach { block(world, owner.transform(dx, dz), it) }
+                }
+            }
+            val player = io.mockk.mockk<gg.rsmod.game.model.entity.Player>(relaxed = true)
+            every { player.tile } answers { owner }
+            every { player.getSize() } returns 1
+            every { player.world } returns world
+            every { player.username } returns "tester"
+            // Owner went upstairs: the familiar on the ground floor must follow (plane recovery).
+            val start = Tile(3200, 3200, 0)
+            val npc = newNpc(world, familiar, start)
+            assertEquals(null, Familiar.recoveryPlacement(player, npc), "size-$size: a walled-in owner has no placement")
+            var teleports = 0
+            repeat(20) { Familiar.follow(player, npc) { _, _ -> teleports++ } }
+            assertEquals(0, teleports, "size-$size: no free tile must never produce a teleport / arrival effect")
+            assertEquals(start, npc.tile, "size-$size: the familiar stays where it was")
+
+            // Free one side: the familiar arrives there once and is then in its follow slot (no second teleport).
+            for (dx in 1..size) {
+                for (dz in 0 until size) {
+                    val tile = owner.transform(dx, dz)
+                    world.chunks.get(tile, createIfNeeded = true)!!.getMatrix(tile.height).reset(tile.x % CHUNK_SIZE, tile.z % CHUNK_SIZE)
+                }
+            }
+            val placed = Familiar.recoveryPlacement(player, npc)
+            assertTrue(placed != null && Familiar.isInFollowSlot(placed, size, owner, 1), "size-$size: the freed side is a follow slot ($placed)")
+            Familiar.follow(player, npc) { _, _ -> teleports++ }
+            assertEquals(1, teleports, "size-$size: one teleport onto the free slot")
+            assertEquals(placed, npc.tile)
+        }
+    }
+
     private fun requestFor(
         start: Tile,
         size: Int,

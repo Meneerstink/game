@@ -7,6 +7,7 @@ import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.timer.SKULL_ICON_DURATION_TIMER
 import gg.rsmod.plugins.api.InterfaceDestination
 import gg.rsmod.plugins.api.ext.closeInterface
+import gg.rsmod.plugins.api.ext.getInterfaceAt
 import gg.rsmod.plugins.api.ext.getWildernessLevel
 import gg.rsmod.plugins.api.ext.isMulti
 import gg.rsmod.plugins.api.ext.message
@@ -186,6 +187,21 @@ object DeadmanHud {
                 // Owner 2026-09-23: the warning must stand out in the chatbox - red.
                 player.message("<col=ff0000>$DANGER_WARNING</col>")
             }
+        }
+
+        // The real mount, not a remembered flag (owner 2026-09-30: the HUD vanished mid-session and only a relog brought it
+        // back). The PvP overlay slot is shared: the God Wars kill count, Barrows, Fight Caves, Clan Wars FFA and the Duel
+        // Arena lobby mount their own overlay there and close the slot when they end, which unmounted 381 behind this
+        // object's back - the flag still said "open" and unchanged texts sent nothing, so the HUD stayed gone.
+        val mounted = player.getInterfaceAt(InterfaceDestination.PVP_OVERLAY)
+        if (mounted != INTERFACE_ID && player.attr[OVERLAY_OPEN_ATTR] == true) {
+            // Lost the slot: everything is re-sent the moment it is free again.
+            gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.PLUGIN) { "deadman hud: overlay slot now holds $mounted for ${player.username}; re-mounts when free" }
+            reset(player)
+        }
+        if (mounted != INTERFACE_ID && mounted != -1) {
+            // An activity overlay holds the slot right now; the HUD comes back the cycle it closes.
+            return
         }
 
         val zoneChanged = player.attr[LAST_ZONE_TEXT_ATTR] != zone

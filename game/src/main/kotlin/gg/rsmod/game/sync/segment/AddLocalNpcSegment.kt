@@ -44,6 +44,7 @@ class AddLocalNpcSegment(
         buf.putBits(2, npc.tile.height)
         buf.putBits(15, id)
         buf.putBits(if (largeScene) 8 else 5, dx)
-        buf.putBits(1, 0)
+        // Client "clear path" (NPCEntity.clearPath): 1 = place at the tile, 0 = walk there from the old tile if within 8.
+        buf.putBits(1, if (npc.clearPathOnAdd) 1 else 0)
     }
 }
