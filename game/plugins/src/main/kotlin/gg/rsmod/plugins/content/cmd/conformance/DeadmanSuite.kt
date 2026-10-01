@@ -91,6 +91,7 @@ object DeadmanSuite : Conformance.Suite {
         scenario("hamstring") { hamstring(run, arena) }
         scenario("aoe") { areaAttacks(run, arena) }
         scenario("familiar") { familiarRules(run, arena) }
+        scenario("corp") { corpCave(run) }
     }
 
     /** Hitsplat types [who] received since [from], in order. */
@@ -1662,5 +1663,50 @@ object DeadmanSuite : Conformance.Suite {
             run.expectTrue(e, "the victim hits the owner back without a skull (retaliation)", landed && !skull.isSkulled(c), "landed=$landed skulled=${skull.isSkulled(c)}")
         }
         gg.rsmod.plugins.content.skills.summoning.Familiar.current(a)?.let { run.world.remove(it) }
+    }
+
+    // ---- corp: the Corporeal Beast cave is no escape from a Tele Block -----------------------------------------------------
+
+    private suspend fun QueueTask.corpCave(run: Conformance.Run) {
+        val e = "corp"
+        val id = gg.rsmod.plugins.api.cfg.Objs.ENTRANCE_37749
+        val near = Tile(3214, 3782, 0)
+        var entrance: gg.rsmod.game.model.entity.GameObject? = null
+        for (dx in -12..12) for (dz in -12..12) {
+            val t = near.transform(dx, dz)
+            run.world.chunks.get(t)?.getEntities<gg.rsmod.game.model.entity.GameObject>(t, gg.rsmod.game.model.EntityType.STATIC_OBJECT)
+                // The placed loc is the varbit wrapper 38815/38816 that shows as 37749 (object_inventory.csv).
+                ?.firstOrNull { it.id == id || it.id == 38815 || it.id == 38816 }?.let { if (entrance == null) entrance = it }
+        }
+        val obj = entrance
+        if (obj == null) {
+            run.notTested(e, "corp cave", "no loc $id / 38815 / 38816 within 12 tiles of $near")
+            return
+        }
+        val option = run.world.definitions.get(gg.rsmod.game.fs.def.ObjectDef::class.java, id).options.indexOfFirst { it?.equals("go-through", true) == true }
+        val sentId = obj.id
+        val start = listOf(obj.tile.transform(0, -1), obj.tile.transform(1, -1), obj.tile.transform(-1, -1), obj.tile.transform(0, 2), obj.tile.transform(2, 0), obj.tile.transform(-1, 0))
+            .firstOrNull { !run.world.collision.isClipped(it) }
+        if (option !in 0..1 || start == null) {
+            run.notTested(e, "corp cave", "option index $option / no free start tile")
+            return
+        }
+        suspend fun enter(label: String, teleblocked: Boolean): Pair<Boolean, String> {
+            val p = run.bot(start, label)
+            wait(2)
+            if (teleblocked) p.timers[gg.rsmod.game.model.timer.TELEBLOCK_TIMER] = 500
+            val c = run.world.currentCycle
+            Bots.inject(p, if (option == 0) gg.rsmod.game.message.impl.OpLoc1Message(0, obj.tile.x, sentId, obj.tile.z) else gg.rsmod.game.message.impl.OpLoc2Message(sentId, obj.tile.x, obj.tile.z, 0))
+            repeat(12) { wait(1) }
+            val inside = p.tile.isWithinRadius(Tile(2885, 4372, 2), 20)
+            val said = run.recording.of(label, "msg").filter { it.cycle >= c && it.text.startsWith("MessageGameMessage") }.joinToString(" / ") { it.text.substringAfter("message=").take(70) }
+            p.timers.remove(gg.rsmod.game.model.timer.TELEBLOCK_TIMER)
+            return inside to said
+        }
+        val (blockedIn, blockedSaid) = enter("CB", teleblocked = true)
+        run.expectTrue(e, "tele-blocked: cannot enter the Corporeal Beast cave", !blockedIn && blockedSaid.contains("magical force"), "inside=$blockedIn msgs: $blockedSaid",
+            "OSRS Wiki Tele Block: \"unable to enter the Corporeal Beast's cave\"")
+        val (freeIn, freeSaid) = enter("CF", teleblocked = false)
+        run.expectTrue(e, "control: without a Tele Block the entrance works", freeIn, "msgs: $freeSaid")
     }
 }

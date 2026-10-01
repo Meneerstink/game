@@ -84,6 +84,12 @@ on_obj_option(obj = Objs.ENTRANCE_37749, option = "go-through") {
         player.message("You need 23 Summoning, 37 Woodcutting, 45 Mining, 47 Firemaking and 55 Prayer to enter this dungeon.")
         return@on_obj_option
     }
+    // OSRS Wiki "Tele Block": a tele-blocked player is "unable to enter the Corporeal Beast's cave" (an escape from the
+    // Wilderness otherwise). ADAPTED: no source quotes the refusal text - the engine's Tele Block message.
+    if (player.timers.has(gg.rsmod.game.model.timer.TELEBLOCK_TIMER)) {
+        player.message("A magical force has stopped you from teleporting.")
+        return@on_obj_option
+    }
     player.goThroughPassage(CORP_CAVE_ARRIVAL)
 }
 
