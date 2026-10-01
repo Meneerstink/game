@@ -10,6 +10,7 @@ import gg.rsmod.game.model.combat.WeaponStyle
 import gg.rsmod.game.model.entity.Client
 import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Player
+import gg.rsmod.game.model.entity.zoneTile
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.game.model.queue.QueueTask
 import gg.rsmod.game.model.timer.FROZEN_TIMER
@@ -381,7 +382,7 @@ object SystemsSuite : Conformance.Suite {
         run.world.npcs.forEach { n -> if (map != null && map.area.contains(n.tile) && n.def.name.contains("guard", ignoreCase = true)) guards += n }
         run.expectTrue("poh", "no Guard / Wizguard in the house (skulled owner, 25 ticks)", guards.isEmpty(), guards.joinToString { "${it.def.name}@${it.tile}" })
         run.expectTrue("poh", "the house is not a guard zone", !CityGuards.isGuardedZone(a.tile), "tile=${a.tile}")
-        run.expectTrue("poh", "the house is still safe (PvP gate)", GuardedZones.contains(a.tile), "tile=${a.tile}")
+        run.expectTrue("poh", "the house is still safe (PvP gate)", GuardedZones.contains(a.zoneTile()), "tile=${a.zoneTile()}")
         if (cityTile != null) {
             run.expectTrue("poh", "world city still guarded", CityGuards.isGuardedZone(cityTile), "tile=$cityTile")
             a.moveTo(cityTile)
