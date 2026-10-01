@@ -206,10 +206,11 @@ object FightCaves {
         npc.respawns = false
         npc.walkRadius = 3
         if (id == Npcs.TZKEK_2736 || id == Npcs.TZKEK_2737 || id == Npcs.TZKEK_2738) {
-            // Tz-Kek recoil: melee attackers take 10 damage per landed hit (only the owner fights here).
+            // Tz-Kek recoil (OSRS Wiki "Tz-Kek": "if attacked with melee, it will reflect 1 point of damage (regardless of the damage
+            // inflicted and distance)"). Was 10 - the x10 life-point value left over after hitpoints became 1:1 (ROOT_CAUSES #72).
             npc.hitModifier = { hit ->
                 if (hit.hitmarks.any { it.type == gg.rsmod.plugins.api.HitType.MELEE.id && it.damage > 0 }) {
-                    session.player.hit(10, gg.rsmod.plugins.api.HitType.REGULAR_HIT)
+                    session.player.hit(1, gg.rsmod.plugins.api.HitType.REGULAR_HIT)
                 }
             }
         }

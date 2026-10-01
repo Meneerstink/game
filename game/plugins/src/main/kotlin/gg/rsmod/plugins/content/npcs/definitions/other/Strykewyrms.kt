@@ -23,6 +23,9 @@ import gg.rsmod.plugins.content.combat.strategy.MagicCombatStrategy
 data class Wyrm(val mound: Int, val wyrm: Int, val slayer: Int, val name: String, val hitpoints: Int, val maxHit: Int, val attack: Int, val strength: Int, val defence: Int, val magic: Int)
 
 object Strykewyrms {
+    /** The emerge hit of the burrow attack, in hitpoints (Novite 300 life points / 10). */
+    const val BURROW_DAMAGE = 30
+
     val WYRMS = listOf(
         Wyrm(Npcs.MOUND_9462, Npcs.ICE_STRYKEWYRM, 93, "Ice strykewyrm", 3000, 17, 142, 165, 142, 142),
         Wyrm(Npcs.MOUND_9464, Npcs.DESERT_STRYKEWYRM, 77, "Desert strykewyrm", 1200, 12, 120, 130, 120, 120),
@@ -103,10 +106,12 @@ object StrykewyrmCombatScript : CombatScript() {
         val dest = npc.world.findRandomTileAround(target.tile, radius = 1) ?: Tile(target.tile)
         npc.moveTo(dest)
         npc.animate(ANIM_EMERGE)
-        target.hit(300, HitType.REGULAR_HIT, 1)
+        // ROOT_CAUSES #72 (2026-10-01): Novite StrykewyrmCombat hits 300 life points on the emerge (and the desert wyrm a second 300) in
+        // the 667 x10 unit - 30 hitpoints here. The unconverted 300 killed any player outright since hitpoints became 1:1.
+        target.hit(Strykewyrms.BURROW_DAMAGE, HitType.REGULAR_HIT, 1)
         when (wyrm.wyrm) {
             Npcs.JUNGLE_STRYKEWYRM -> { target.graphic(GFX_JUNGLE_IMPACT); target.poison(6) }
-            Npcs.DESERT_STRYKEWYRM -> { target.graphic(GFX_DESERT_IMPACT); target.hit(npc.world.random(30), HitType.REGULAR_HIT, 2) }
+            Npcs.DESERT_STRYKEWYRM -> { target.graphic(GFX_DESERT_IMPACT); target.hit(Strykewyrms.BURROW_DAMAGE, HitType.REGULAR_HIT, 2) }
             else -> target.graphic(GFX_ICE_IMPACT)
         }
     }
