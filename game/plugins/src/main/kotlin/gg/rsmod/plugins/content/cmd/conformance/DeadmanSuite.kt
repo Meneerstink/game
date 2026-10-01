@@ -805,6 +805,33 @@ object DeadmanSuite : Conformance.Suite {
         run.expectTrue(e, "skulled: the body stays after the client closed", online(s), "logged out at once")
         val sGone = goneWithin(s, 15)
         run.expectTrue(e, "skulled: the body leaves once the 7-second hold ran out", sGone != null, "still online 20 ticks later")
+
+        // 4. The logout button (182:13) while skulled: the 7-second countdown, then out.
+        val lb = run.bot(arena.transform(3, -3), "XL")
+        wait(2)
+        gg.rsmod.plugins.content.mechanics.pvp.PvpSkull.applyTestSkull(lb)
+        Bots.button(lb, 182, 13)
+        wait(4)
+        run.expectTrue(e, "logout button, skulled: still in the world during the countdown", online(lb), "logged out at once")
+        val lbGone = goneWithin(lb, 14)
+        run.expectTrue(e, "logout button, skulled: out after the countdown", lbGone != null, "still online")
+
+        // 5. The logout button while skulled, then hit by a player during the countdown: the logout is cancelled.
+        val hb = run.bot(arena.transform(4, -3), "XH")
+        val hitter = run.bot(arena.transform(5, -3), "XK")
+        wait(2)
+        wield(hitter, Item(Items.ABYSSAL_WHIP))
+        gg.rsmod.plugins.content.mechanics.pvp.PvpSkull.applyTestSkull(hb)
+        Bots.button(hb, 182, 13)
+        wait(1)
+        hitter.attack(hb)
+        for (i in 0 until 20) {
+            hb.setCurrentLifepoints(hb.getMaximumLifepoints())
+            wait(1)
+        }
+        hitter.resetInteractions()
+        Combat.reset(hitter)
+        run.expectTrue(e, "logout button, hit during the countdown: he stays logged in", online(hb), "logged out")
     }
 
     // ---- pvm: deaths to an npc ---------------------------------------------------------------------------------------------
