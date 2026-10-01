@@ -98,7 +98,8 @@ on_obj_option(obj = Objs.WALL_SAFE, option = "crack") {
             player.animate(Anims.HURT_BY_TRAP)
 
             // Apply damage to the player
-            player.hit(world.random(20..60), type = HitType.REGULAR_HIT)
+            // OSRS Wiki (Rogues' Den wall safe): the trap deals 2 to 6 damage. Was 20..60 - x10 life points (ROOT_CAUSES #72).
+            player.hit(world.random(2..6), type = HitType.REGULAR_HIT)
             wait(1)
 
             // Reset the player's animation

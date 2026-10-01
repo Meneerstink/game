@@ -213,7 +213,8 @@ on_timer(BARROWS_TIMER) {
             if (collapse % 9 == 0) {
                 player.graphic(60)
                 player.forceChat("Ouch!")
-                player.hit(30 + world.random(20), HitType.REGULAR_HIT)
+                // OSRS: the collapsing roof deals "insignificant damage"; 30..50 was the x10 life-point value (ROOT_CAUSES #72).
+                player.hit(3 + world.random(2), HitType.REGULAR_HIT)
                 player.message("Some rocks fall from the ceiling and hit you.")
             }
             player.attr[Barrows.COLLAPSE_TICKS] = collapse + 1

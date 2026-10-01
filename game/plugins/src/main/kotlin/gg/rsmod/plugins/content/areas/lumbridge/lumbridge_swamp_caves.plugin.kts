@@ -206,7 +206,8 @@ on_timer(DARK_ZONE_TIMER) {
         0 -> {}
         1 -> player.message("You hear tiny insects skittering over the ground...")
         2 -> player.message("Tiny biting insects swarm all over you!")
-        else -> player.hit(damage = world.random(10..100), type = HitType.REGULAR_HIT)
+        // Void LightSource insect_swarm: hit 10 (x10 life points) every tick - 1 hitpoint. Was 10..100 a tick (ROOT_CAUSES #72).
+        else -> player.hit(damage = 1, type = HitType.REGULAR_HIT)
     }
     player.attr[lightSourceDelayAttr] = (player.attr[lightSourceDelayAttr] ?: 0) + 1
     player.timers[DARK_ZONE_TIMER] = 10
