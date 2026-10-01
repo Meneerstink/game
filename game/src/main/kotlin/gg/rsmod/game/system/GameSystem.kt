@@ -159,8 +159,22 @@ class GameSystem(
                     next.message is WindowStatusMessage ||
                     next.message is DetectModifiedClientMessage ||
                     next.message is ClientCheatMessage
+            // OSRS Wiki "Deadman Mode": during the 7-second countdown "the player must not perform any further actions or be attacked".
+            // A key press (the client sends every key, so the arrow keys turning the camera), a chat line, a chat filter change or the
+            // map-loaded notice is activity but not a game action - they cancelled a skulled player's teleport/logout countdown
+            // (2026-10-01). They still count for AFK below.
+            val notAnAction =
+                next.message is gg.rsmod.game.message.impl.KeyTypedMessage ||
+                    next.message is gg.rsmod.game.message.impl.MessagePublicMessage ||
+                    next.message is gg.rsmod.game.message.impl.MessagePrivateMessage ||
+                    next.message is gg.rsmod.game.message.impl.MessageQuickChatPublicMessage ||
+                    next.message is gg.rsmod.game.message.impl.MessageQuickChatPrivateMessage ||
+                    next.message is gg.rsmod.game.message.impl.ChatFilterMessage ||
+                    next.message is gg.rsmod.game.message.impl.MapBuildCompleteMessage
             if (!isPassive) {
                 client.attr[LAST_ACTIVE_CYCLE_ATTR] = world.currentCycle
+            }
+            if (!isPassive && !notAnAction) {
                 // Consume before invoking so the callback can safely clear/re-arm itself. This is
                 // the one server-side boundary every deliberate client action crosses.
                 client.attr[PLAYER_ACTION_INTERRUPT_ATTR]?.let { interrupt ->

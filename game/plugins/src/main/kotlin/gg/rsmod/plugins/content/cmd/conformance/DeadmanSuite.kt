@@ -384,6 +384,15 @@ object DeadmanSuite : Conformance.Suite {
         run.expectTrue(e, "skulled: teleports when the countdown ends (12 ticks + spell delay)", counted != null && counted >= 10 && counted <= 20,
             "landed after ${counted?.plus(1)} ticks")
 
+        // 3b. Skulled, turning the camera with the arrow keys during the countdown (the client sends every key press): not an action
+        // (OSRS Wiki "Deadman Mode": "must not perform any further actions or be attacked") - the teleport still happens.
+        prepare(skulled = true)
+        press()
+        wait(2)
+        repeat(4) { Bots.inject(t, gg.rsmod.game.message.impl.KeyTypedMessage(96)); wait(1) }
+        val withKeys = landedWithin(20)
+        run.expectTrue(e, "skulled, arrow keys during the countdown: still teleports", withKeys != null, "no teleport (the key presses cancelled it)")
+
         // 4. Skulled, hit during the countdown: it stops and never fires later.
         prepare(skulled = true)
         press()
