@@ -388,6 +388,28 @@ object DeadmanSuite : Conformance.Suite {
         val afterDeath = landedWithin(20)
         run.expectTrue(e, "skulled, killed during the countdown: respawned", respawned, "tile=${t.tile} dead=${t.isDead()}")
         run.expectTrue(e, "skulled, killed during the countdown: no teleport after the respawn", afterDeath == null, "landed after $afterDeath ticks")
+
+        // 7. The Varrock teleport tablet ("Break") goes through the same gate.
+        suspend fun tablet(skulled: Boolean, teleblocked: Boolean): Pair<Int?, Int> {
+            prepare(skulled)
+            if (teleblocked) t.timers[gg.rsmod.game.model.timer.TELEBLOCK_TIMER] = 500
+            t.inventory.add(Items.VARROCK_TELEPORT, 3)
+            wait(1)
+            Bots.itemOption(t, t.inventory.getItemIndex(Items.VARROCK_TELEPORT, skipAttrItems = false), "Break")
+            val landed = landedWithin(24)
+            val left = t.inventory.getItemCount(Items.VARROCK_TELEPORT)
+            t.timers.remove(gg.rsmod.game.model.timer.TELEBLOCK_TIMER)
+            return landed to left
+        }
+        val (tabInstant, tabsLeft1) = tablet(skulled = false, teleblocked = false)
+        run.expectTrue(e, "tablet, unskulled: teleports at once and uses one tablet", tabInstant != null && tabInstant <= 6 && tabsLeft1 == 2,
+            "landed after $tabInstant ticks, tablets left $tabsLeft1")
+        val (tabCounted, tabsLeft2) = tablet(skulled = true, teleblocked = false)
+        run.expectTrue(e, "tablet, skulled: teleports after the 7-second countdown", tabCounted != null && tabCounted >= 10 && tabsLeft2 == 2,
+            "landed after $tabCounted ticks, tablets left $tabsLeft2")
+        val (tabBlocked, tabsLeft3) = tablet(skulled = false, teleblocked = true)
+        run.expectTrue(e, "tablet, Tele Blocked: no teleport and the tablet is kept", tabBlocked == null && tabsLeft3 == 3,
+            "landed after $tabBlocked ticks, tablets left $tabsLeft3")
     }
 
     // ---- guards: Deadman city guards in Varrock square --------------------------------------------------------------------
