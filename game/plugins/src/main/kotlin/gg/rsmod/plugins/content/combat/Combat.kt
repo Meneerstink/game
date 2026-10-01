@@ -43,6 +43,16 @@ import java.lang.ref.WeakReference
  */
 object Combat {
     /**
+     * The single-way "already under attack" window. OSRS Wiki "PJ timer": "In single-way combat when under attack by a monster,
+     * the player starts a PJ timer of 8 game ticks (4.8 seconds) ... refreshed every time the monster attacks the player"; "NPCs
+     * also have the same 4.8-second PJ timer applied towards them when hit by a player"; the longer PvP-only 20-tick timer is
+     * "NOT applied in the Bounty Hunter or Deadman Mode worlds". Before 2026-10-01 single-way read ACTIVE_COMBAT_TIMER (17 ticks,
+     * the 2023 rsmod default), which kept a PJ'd player locked to his first attacker more than twice as long.
+     */
+    const val PJ_TICKS = 8
+    val PJ_TIMER = gg.rsmod.game.model.timer.TimerKey(tickOffline = false, resetOnDeath = true)
+
+    /**
      * Modal interfaces that survive being attacked, plus -1 for "no modal is open".
      *
      * Blanket-closing every modal on the first incoming hit is not a pre-EoC rule; it is a
@@ -126,6 +136,7 @@ object Combat {
         // Granite maul homing: "for 5 ticks after attacking a target with any weapon" (GraniteMaul).
         pawn.attr[gg.rsmod.plugins.content.items.osrs.GraniteMaul.LAST_ATTACK_CYCLE] = pawn.world.currentCycle
         target.timers[ACTIVE_COMBAT_TIMER] = 17 // 10,2 seconds
+        target.timers[PJ_TIMER] = PJ_TICKS
         // Deadman PvP guards plan (2026-09-16): the out-of-combat teleport gate's own 7-second
         // window, and "being attacked" cancels an in-progress 7-second logout/teleport/portal/
         // transport countdown.

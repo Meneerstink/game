@@ -75,6 +75,7 @@ fun Pawn.setCombatTarget(target: Pawn) {
 
 fun Pawn.clearActiveCombatTimer() {
     timers.remove(ACTIVE_COMBAT_TIMER)
+    timers.remove(Combat.PJ_TIMER)
 }
 
 fun Pawn.getAggressor(): Pawn? = attr[AGGRESSOR]?.get()
@@ -98,8 +99,8 @@ fun Pawn.liveLastHitBy(): Pawn? =
         }
     }
 
-/** Single-way rule: this pawn is being fought by someone that still exists, other than [other]. */
-fun Pawn.isAttackedByOtherThan(other: Pawn): Boolean = isBeingAttacked() && liveLastHitBy().let { it != null && it !== other }
+/** Single-way rule: within the PJ window ([Combat.PJ_TIMER], 8 ticks) this pawn is being fought by someone that still exists, other than [other]. */
+fun Pawn.isAttackedByOtherThan(other: Pawn): Boolean = timers.has(Combat.PJ_TIMER) && liveLastHitBy().let { it != null && it !== other }
 
 fun Pawn.removeCombatTarget() = attr.remove(COMBAT_TARGET_FOCUS_ATTR)
 
