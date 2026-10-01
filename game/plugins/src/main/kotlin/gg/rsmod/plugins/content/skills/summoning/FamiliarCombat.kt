@@ -179,7 +179,9 @@ object FamiliarCombat {
             if (!silent) player.message("Your familiar cannot fight a target that is not in a multi-way combat area.")
             return false
         }
-        if (!player.world.plugins.canAttack(player, target)) {
+        // Combat.canEngage holds the owner's rules for a familiar too (Deadman guards, the PvP gate); checked here so the familiar
+        // never takes a target it may not fight.
+        if (!player.world.plugins.canAttack(player, target) || !gg.rsmod.plugins.content.combat.Combat.canEngage(familiar, target)) {
             if (!silent) player.message("You cannot order your familiar to attack that target.")
             return false
         }

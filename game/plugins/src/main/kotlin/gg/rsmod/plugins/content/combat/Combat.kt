@@ -361,6 +361,9 @@ object Combat {
             }
         }
 
+    /** The player [pawn] fights for: itself, or the owner credited with a familiar's damage (DAMAGE_CREDIT_ATTR). */
+    private fun actingFor(pawn: Pawn): Player? = pawn as? Player ?: pawn.attr[gg.rsmod.game.model.attr.DAMAGE_CREDIT_ATTR]?.get() as? Player
+
     fun canEngage(
         pawn: Pawn,
         target: Pawn,
@@ -404,6 +407,12 @@ object Combat {
             // "You probably don't want to do that." on every route (click, spell, special, queue).
             if (pawn is Player && CityGuards.isGuard(target) && !CityGuards.mayBeAttackedBy(target, pawn)) {
                 pawn.message(CityGuards.ATTACK_REFUSED_MESSAGE)
+                return false
+            }
+            // The same rule for a pawn fighting for a player (a familiar, DAMAGE_CREDIT_ATTR): the owner may not send it at a
+            // guard he may not attack himself.
+            val owner = actingFor(pawn)
+            if (pawn !is Player && owner != null && CityGuards.isGuard(target) && !CityGuards.mayBeAttackedBy(target, owner)) {
                 return false
             }
             // Summoning familiars have no player-facing cache "Attack" option, but a public
@@ -467,6 +476,12 @@ object Combat {
                     } else {
                         pawn.message("You can't attack players here.")
                     }
+                    return false
+                }
+            } else if (pawn is Npc && actingFor(pawn) != null) {
+                // A familiar fighting for its owner obeys the owner's PvP gate (guarded zone, level bracket, kill grace): its hits
+                // were cancelled in dealHit, but it kept attacking.
+                if (!AreaState.canPlayersFight(actingFor(pawn)!!, target)) {
                     return false
                 }
             } else if (pawn is Npc && CityGuards.isGuard(pawn)) {

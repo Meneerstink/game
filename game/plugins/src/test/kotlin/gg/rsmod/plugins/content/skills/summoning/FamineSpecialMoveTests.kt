@@ -26,6 +26,9 @@ import kotlin.test.assertNotEquals
 import kotlin.test.assertTrue
 
 class FamineSpecialMoveTests {
+    @kotlin.test.AfterTest
+    fun unmockCombat() = io.mockk.unmockkObject(gg.rsmod.plugins.content.combat.Combat)
+
     @Test
     fun famineConsumesExactlyOneTargetFoodAndResources() {
         val setup = setup()
@@ -86,6 +89,9 @@ class FamineSpecialMoveTests {
         every { attacker.isOnline } returns true
         every { target.isOnline } returns true
         every { world.plugins.canAttack(attacker, target) } returns true
+        // Mock pawns are not spawned: stub the engagement gate (ROOT_CAUSES #115) like plugins.canAttack above.
+        io.mockk.mockkObject(gg.rsmod.plugins.content.combat.Combat)
+        every { gg.rsmod.plugins.content.combat.Combat.canEngage(any(), target) } returns true
 
 
         val familiar = mockk<Npc>(relaxed = true)

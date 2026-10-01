@@ -90,6 +90,7 @@ object DeadmanSuite : Conformance.Suite {
         scenario("skull") { skulls(run, arena) }
         scenario("hamstring") { hamstring(run, arena) }
         scenario("aoe") { areaAttacks(run, arena) }
+        scenario("familiar") { familiarRules(run, arena) }
     }
 
     /** Hitsplat types [who] received since [from], in order. */
@@ -1570,5 +1571,81 @@ object DeadmanSuite : Conformance.Suite {
             run.expectTrue(e, "Ice Barrage splash: a guard the attacker may not attack is not hit", hitTypes(run, "VG", cast).isEmpty(), "VG hit: ${hitTypes(run, "VG", cast)}")
             run.expectTrue(e, "Ice Barrage splash: an npc without an Attack option is not hit", hitTypes(run, "VN", cast).isEmpty(), "VN hit: ${hitTypes(run, "VN", cast)}")
         }
+    }
+
+    // ---- familiar: a familiar obeys its owner's attack rules ------------------------------------------------------------------
+
+    private suspend fun QueueTask.familiarRules(
+        run: Conformance.Run,
+        arena: Tile,
+    ) {
+        val e = "familiar"
+        val fc = gg.rsmod.plugins.content.skills.summoning.FamiliarCombat
+        val at = arena.transform(0, -2)
+        val a = run.bot(at, "FA")
+        val c = run.bot(at.transform(2, 2), "FC")
+        wait(2)
+        if (!at.isMulti(run.world)) {
+            run.notTested(e, "familiar", "$at is not multi-way")
+            return
+        }
+        reset(a, at)
+        reset(c, at.transform(2, 2))
+        val combat = listOf(Skills.ATTACK, Skills.STRENGTH, Skills.DEFENCE, Skills.CONSTITUTION, Skills.RANGED, Skills.MAGIC, Skills.PRAYER, Skills.SUMMONING)
+        combat.forEach { c.skills.setBaseLevel(it, 60) }
+        c.calculateAndSetCombatLevel()
+        val pouch = gg.rsmod.plugins.content.skills.summoning.SummoningPouchData.SPIRIT_WOLF.pouch
+        a.inventory.add(pouch, 1)
+        Bots.itemOption(a, a.inventory.getItemIndex(pouch, false), "Summon")
+        wait(3)
+        val familiar = gg.rsmod.plugins.content.skills.summoning.Familiar.current(a)
+        if (familiar == null) {
+            run.notTested(e, "familiar", "no familiar summoned")
+            return
+        }
+        run.recording.track(familiar, "FF")
+        val man = run.npc(1, at.transform(-2, 2), "FM")
+        val guard = run.npc(gg.rsmod.plugins.content.mechanics.pvp.CityGuards.MELEE_GUARD_ID, at.transform(0, 3), "FG")
+        wait(2)
+
+        /** Orders the familiar at [t]; true when it fights [t] or any hitsplat lands on [label] within 8 ticks. */
+        suspend fun order(t: gg.rsmod.game.model.entity.Pawn, label: String): Pair<Boolean, Boolean> {
+            val from = run.world.currentCycle
+            familiar.timers.remove(gg.rsmod.game.model.timer.ATTACK_DELAY)
+            fc.commandAttack(a, t)
+            var fought = false
+            repeat(8) {
+                if (familiar.getCombatTarget() === t || familiar.timers.has(gg.rsmod.game.model.timer.ATTACK_DELAY)) fought = true
+                (t as? gg.rsmod.game.model.entity.Npc)?.let { n -> n.setCurrentLifepoints(n.getMaximumLifepoints()) }
+                (t as? Client)?.let { p -> p.setCurrentLifepoints(p.getMaximumLifepoints()) }
+                wait(1)
+            }
+            val hit = hitTypes(run, label, from).isNotEmpty()
+            familiar.resetInteractions(); Combat.reset(familiar)
+            wait(2)
+            return fought to hit
+        }
+        val (manFought, _) = order(man, "FM")
+        run.expectTrue(e, "control: the familiar attacks a man on command", manFought, "never targeted the man")
+        val (guardFought, guardHit) = order(guard, "FG")
+        run.expectTrue(e, "an unskulled owner cannot send his familiar at a guard", !guardFought && !guardHit, "fought=$guardFought hit=$guardHit",
+            "OSRS Wiki Guard (Deadman Mode): only attackable inside the guarded area while skulled")
+        // A scroll special cast straight at a target (Spirit wolf Howl) goes through the same rules.
+        familiar.resetInteractions(); Combat.reset(familiar)
+        a.inventory.add(gg.rsmod.plugins.content.skills.summoning.SummoningScrollData.HOWL_SCROLL.scroll, 5)
+        val howlGuard = gg.rsmod.plugins.content.skills.summoning.SummoningSpecialMoves.castOnNpc(a, guard)
+        run.expectTrue(e, "a scroll special cannot be cast at a guard the owner may not attack", !howlGuard, "Howl accepted on the guard")
+        wait(4)
+        val howlMan = gg.rsmod.plugins.content.skills.summoning.SummoningSpecialMoves.castOnNpc(a, man)
+        run.expectTrue(e, "control: the scroll special works on a man", howlMan, "Howl refused on the man")
+        val (playerFought, playerHit) = order(c, "FC")
+        run.expectTrue(e, "the familiar cannot attack a player outside the owner's level bracket (${a.combatLevel} vs ${c.combatLevel})",
+            !playerFought && !playerHit, "fought=$playerFought hit=$playerHit", "AreaState.canPlayersFight")
+        combat.forEach { c.skills.setBaseLevel(it, 99) }
+        c.calculateAndSetCombatLevel()
+        wait(2)
+        val (pvpFought, _) = order(c, "FC")
+        run.expectTrue(e, "control: the familiar attacks a player in the bracket, both in danger", pvpFought, "never fought (${a.combatLevel} vs ${c.combatLevel})")
+        gg.rsmod.plugins.content.skills.summoning.Familiar.current(a)?.let { run.world.remove(it) }
     }
 }

@@ -55,6 +55,9 @@ class SummoningSpecialMoveTests {
         every { plugins.canAttack(player, target) } returns true
         player.inventory[0] = Item(SummoningScrollData.STEEL_OF_LEGENDS_SCROLL.scroll)
         mockkStatic("gg.rsmod.plugins.content.combat.PawnExtKt")
+        // The relaxed mock target is no spawned npc: stub the engagement gate (ROOT_CAUSES #115) like plugins.canAttack above.
+        io.mockk.mockkObject(gg.rsmod.plugins.content.combat.Combat)
+        every { gg.rsmod.plugins.content.combat.Combat.canEngage(familiar, target) } returns true
         try {
             every { familiar.dealHit(target, any(), any(), any(), any(), any(), any()) } returns mockk(relaxed = true)
             val sent = mutableListOf<Message>()
@@ -92,6 +95,7 @@ class SummoningSpecialMoveTests {
                 "A successful Steel of Legends cast must send the generic cast, Steel of Legends and Steel Titan launch sounds exactly once; its impact sound is queued on first impact.",
             )
         } finally {
+            io.mockk.unmockkObject(gg.rsmod.plugins.content.combat.Combat)
             unmockkStatic("gg.rsmod.plugins.content.combat.PawnExtKt")
         }
     }

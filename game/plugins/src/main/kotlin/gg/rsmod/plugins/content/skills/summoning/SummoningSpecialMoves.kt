@@ -941,7 +941,10 @@ object SummoningSpecialMoves {
             player.message("Your familiar cannot use that special move on this target.")
             return false
         }
-        if (!player.tile.isMulti(player.world) || !target.tile.isMulti(player.world) || !player.world.plugins.canAttack(player, target)) {
+        // ROOT_CAUSES #115: Combat.canEngage carries the owner's rules for the familiar (Deadman guards, the PvP gate, Attack option).
+        if (!player.tile.isMulti(player.world) || !target.tile.isMulti(player.world) || !player.world.plugins.canAttack(player, target) ||
+            !gg.rsmod.plugins.content.combat.Combat.canEngage(familiar, target)
+        ) {
             player.message("Your familiar cannot attack that target here.")
             return false
         }
@@ -1178,7 +1181,7 @@ object SummoningSpecialMoves {
             return false
         }
         if (!player.tile.isMulti(player.world) || !target.tile.isMulti(player.world) ||
-            !player.world.plugins.canAttack(player, target)
+            !player.world.plugins.canAttack(player, target) || !gg.rsmod.plugins.content.combat.Combat.canEngage(familiar, target)
         ) {
             player.message("You cannot attack that player here.")
             return false
@@ -1730,7 +1733,8 @@ object SummoningSpecialMoves {
             if (npc === familiar || npc === excluded || !npc.isAlive() || npc.tile.height != center.tile.height) return@forEach
             if (!npc.tile.isWithinRadius(center.tile, radius)) return@forEach
             if (!player.tile.isMulti(player.world) || !npc.tile.isMulti(player.world)) return@forEach
-            if (!player.world.plugins.canAttack(player, npc)) return@forEach
+            // The one area-attack gate (attackable, Deadman guards, every can_attack hook).
+            if (!gg.rsmod.plugins.content.combat.specialattack.SpecialAttackSupport.canSplash(player, npc)) return@forEach
             targets.add(npc)
         }
         return targets
