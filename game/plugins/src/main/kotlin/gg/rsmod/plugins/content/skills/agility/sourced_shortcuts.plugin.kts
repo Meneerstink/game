@@ -971,7 +971,7 @@ on_world_init {
             // Void: Level.success(level, 90) - "Unknown success rate", flat 90/256 regardless of level.
             val success = agilitySuccess(player, 90, 90)
             if (!success) {
-                player.hit(20)
+                player.hit(2) // Void SlayerTower damage = 20 in x10 life points (ROOT_CAUSES #72)
                 player.filterableMessage("You rip your hands to pieces on the chain as you climb.")
             }
             player.moveTo(Tile(target.tile.x, target.tile.z, target.tile.height + 1))
@@ -984,7 +984,7 @@ on_world_init {
             if (!player.hasAgility(req, "You need an Agility level of $req to negotiate this obstacle.")) return@obstacle
             val success = agilitySuccess(player, 90, 90)
             if (!success) {
-                player.hit(20)
+                player.hit(2) // Void SlayerTower damage = 20 in x10 life points (ROOT_CAUSES #72)
                 player.filterableMessage("You rip your hands to pieces on the chain as you climb.")
             }
             player.moveTo(Tile(target.tile.x, target.tile.z, target.tile.height - 1))

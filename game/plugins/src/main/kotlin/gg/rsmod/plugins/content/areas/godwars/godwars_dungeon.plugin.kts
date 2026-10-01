@@ -90,8 +90,10 @@ on_timer(GWD_CHILL_TIMER) {
         player.sendRunEnergy(0)
         for (skill in 0..Skills.DUNGEONEERING) {
             if (skill == Skills.CONSTITUTION) {
-                if (player.skills.getCurrentLevel(Skills.CONSTITUTION) > 10) {
-                    player.hit(damage = 10, type = HitType.REGULAR_HIT)
+                // Void WindChill: "if life points > 10, directHit(10)" in x10 life points - 1 hitpoint above 1 (ROOT_CAUSES #72;
+                // it took 10 every ten ticks).
+                if (player.skills.getCurrentLevel(Skills.CONSTITUTION) > 1) {
+                    player.hit(damage = 1, type = HitType.REGULAR_HIT)
                 }
             } else {
                 val level = player.skills.getCurrentLevel(skill)

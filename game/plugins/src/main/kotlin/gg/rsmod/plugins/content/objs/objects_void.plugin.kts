@@ -25,7 +25,7 @@ world.plugins.bindObjectFallback { player, obj, opt ->
         player.animate(CLIMB_DOWN_ANIM)
         wait(2)
         if (gloves == null || !gloves.contains("gloves")) {
-            player.hit(20, HitType.POISON)
+            player.hit(2, HitType.POISON) // Void Nettles damage(20) in x10 life points (ROOT_CAUSES #72)
             player.playSound(if (player.appearance.gender.isMale()) 513 else 506)
             player.message("You have been stung by the nettles.")
             return@queue
@@ -83,7 +83,7 @@ world.plugins.bindObjectFallback { player, obj, opt ->
         val roll = world.random(99)
         when {
             roll < 2 -> {
-                player.hit(10, HitType.REGULAR_HIT)
+                player.hit(1, HitType.REGULAR_HIT) // Void HayBales damage(10) in x10 life points (ROOT_CAUSES #72)
                 chatPlayer("Ow! There's something sharp in there!")
             }
             roll < 12 -> {
