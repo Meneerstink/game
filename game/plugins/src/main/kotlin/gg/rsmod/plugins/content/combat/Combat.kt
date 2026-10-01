@@ -451,7 +451,7 @@ object Combat {
             if (pvp) {
                 pawn as Player
 
-                // Deadman PvP guards plan (2026-09-16): the flat +/-12 combat-level range now
+                // Deadman PvP guards plan: the flat combat-level range (AreaState.MAX_COMBAT_LEVEL_DIFFERENCE, owner +/-14) now
                 // lives in the shared AreaState.canPlayersFight gate (every attack entrypoint
                 // inherits it), checked here first only so this specific, more helpful message
                 // fires instead of the generic "can't attack players here" one when the range is

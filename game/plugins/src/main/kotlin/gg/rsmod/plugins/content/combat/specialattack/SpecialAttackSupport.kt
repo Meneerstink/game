@@ -202,7 +202,7 @@ object SpecialAttackSupport {
                 attacker.world.plugins.canAttack(attacker, other, false)
             is Player -> {
                 if (!other.isOnline || !other.lock.canBeAttacked()) return false
-                // AreaState.canPlayersFight already enforces the shared +/-12 combat-level range
+                // AreaState.canPlayersFight already enforces the shared combat-level range (owner +/-14)
                 // (Deadman PvP guards plan, 2026-09-16); no separate check needed here.
                 if (attacker is Player && !AreaState.canPlayersFight(attacker, other)) return false
                 attacker.world.plugins.canAttack(attacker, other, false)
