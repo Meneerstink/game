@@ -4,6 +4,7 @@ import gg.rsmod.game.action.EquipAction
 import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.entity.Client
 import gg.rsmod.game.model.entity.Player
+import gg.rsmod.game.model.entity.zoneTile
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.game.model.queue.QueueTask
 import gg.rsmod.plugins.api.EquipmentType
@@ -219,7 +220,7 @@ object DeadmanSuite : Conformance.Suite {
             fun total(list: List<Pair<Int, Int>>) = list.groupBy({ it.first }, { it.second.toLong() }).mapValues { it.value.sum() }.toSortedMap()
             run.check(e, "$label: nothing duplicated or lost (kept + key + ground)", total(keptNow + keyItems + ground).toString(),
                 "items before the death" to total(before).toString())
-            run.expectTrue(e, "$label: respawn in a guarded zone", gg.rsmod.plugins.content.mechanics.pvp.GuardedZones.contains(b.tile), "tile=${b.tile}")
+            run.expectTrue(e, "$label: respawn in a guarded zone", gg.rsmod.plugins.content.mechanics.pvp.GuardedZones.contains(b.zoneTile()), "tile=${b.zoneTile()}")
             run.expectTrue(e, "$label: full life points after respawn", b.getCurrentLifepoints() == b.getMaximumLifepoints(),
                 "${b.getCurrentLifepoints()}/${b.getMaximumLifepoints()}")
             run.expectTrue(e, "$label: victim's skull gone", !gg.rsmod.plugins.content.mechanics.pvp.PvpSkull.isSkulled(b), "skulled")
