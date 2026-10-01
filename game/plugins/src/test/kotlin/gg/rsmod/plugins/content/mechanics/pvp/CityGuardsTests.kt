@@ -212,6 +212,35 @@ class CityGuardsTests {
     }
 
     @Test
+    fun `guards act wherever a city answers - the AFK basement by Varrock, never Death's Office`() {
+        // AFK basement under the Grand Exchange hall (AfkBasementMapTool square 46,95) and Death's Office (square 12639).
+        val afkBasement = Tile(gg.rsmod.plugins.content.newplayer.AfkArea.MIN_X + 5, gg.rsmod.plugins.content.newplayer.AfkArea.MIN_Z + 5, 0)
+        val deathsOffice = Tile(3170, 6110, 0)
+        assertTrue(gg.rsmod.plugins.content.newplayer.AfkArea.contains(afkBasement))
+        assertTrue(gg.rsmod.plugins.content.areas.deathsoffice.DeathsOfficeArea.inOffice(deathsOffice))
+
+        assertEquals("Varrock", CityGuards.guardZoneName(grandExchange))
+        assertEquals("Varrock", CityGuards.guardZoneName(afkBasement), "the GE guards answer in the basement under the hall")
+        assertTrue(CityGuards.isSkulledIntruder(newPlayer(tile = afkBasement, skulled = true)))
+        assertTrue(CityGuards.mayAttack(npc(CityGuards.MELEE_GUARD_ID, tile = afkBasement), newPlayer(tile = afkBasement, skulled = true)))
+
+        assertTrue(GuardedZones.contains(deathsOffice), "Death's Office stays a safe zone for PvP")
+        assertEquals(null, CityGuards.guardZoneName(deathsOffice))
+        assertFalse(CityGuards.isSkulledIntruder(newPlayer(tile = deathsOffice, skulled = true)), "no guard or Wizguard in Death's Office")
+
+        assertEquals(null, CityGuards.guardZoneName(Tile(3094, 3491, 0)), "Edgeville is dangerous")
+        GuardedZones.ZONES.forEach { assertEquals(it.name, CityGuards.guardZoneName(it.sample)) }
+    }
+
+    @Test
+    fun `a reactive guard on another plane or far away is cut off from its intruder`() {
+        assertFalse(CityGuards.isCutOff(Tile(3208, 3220, 0), Tile(3210, 3222, 0)))
+        assertFalse(CityGuards.isCutOff(Tile(3208, 3220, 1), Tile(3208, 3220 + CityGuards.REJOIN_DISTANCE, 1)))
+        assertTrue(CityGuards.isCutOff(Tile(3208, 3220, 0), Tile(3208, 3220, 1)), "the intruder climbed the castle stairs")
+        assertTrue(CityGuards.isCutOff(Tile(3165, 3487, 0), Tile(2970, 6110, 0)), "the intruder went down to the AFK basement")
+    }
+
+    @Test
     fun `Audit D-10 - a loot-key carrier without a skull timer is a skulled intruder`() {
         val carrier = newPlayer(tile = grandExchange)
         val inventory = gg.rsmod.game.model.container.ItemContainer(gg.rsmod.game.fs.DefinitionSet(), gg.rsmod.game.model.container.key.INVENTORY_KEY)

@@ -509,14 +509,18 @@ object DeadmanSuite : Conformance.Suite {
         gg.rsmod.plugins.content.mechanics.prayer.Prayers.activate(g, gg.rsmod.plugins.content.mechanics.prayer.Prayer.PROTECT_FROM_MELEE)
         val c2 = run.world.currentCycle
         var attackers = 0
+        var wizguardCredited = false
         for (i in 0 until 16) {
             g.setCurrentLifepoints(g.getMaximumLifepoints())
             g.setCurrentPrayerPoints(99)
             wait(1)
             attackers = maxOf(attackers, guardsOnG().size)
+            if (run.world.npcs.entries.filterNotNull().any { it.id == guards.WIZGUARD_ID && g.damageMap[it] != null }) wizguardCredited = true
         }
         val hits = hitsSince(c2)
         run.expectTrue(e, "skulled in the zone: guards attack within 16 ticks", attackers >= 1, "guards on him: $attackers")
+        // Audit 2026-10-02: an uncredited Ice Barrage left a death to it without a guard killer - a safe PvM death.
+        run.expectTrue(e, "skulled: the Wizguard's Ice Barrage is credited to the Wizguard (a death to it is a guard death)", wizguardCredited, "credited=$wizguardCredited")
         run.expectTrue(e, "skulled: guard hits show hitsplats", hits.isNotEmpty(), "splats=$hits")
         run.expectTrue(e, "skulled + Protect from Melee: guards still deal damage", hits.any { it > 0 }, "splats=$hits")
         gg.rsmod.plugins.content.mechanics.prayer.Prayers.deactivateAll(g)
@@ -609,6 +613,42 @@ object DeadmanSuite : Conformance.Suite {
         run.check(e, "killed by guards: no loot key", keys() - keysBefore, "owner: no player killer, no key" to 0)
         run.check(e, "killed by guards: the godsword lies on the ground", ground, "owner: public ground loot" to 1)
         stopAll()
+
+        // 7. Audit 2026-10-02: the guard that came follows a skulled intruder down to the AFK basement under the GE hall (another
+        // map square, owner "safe zone"); before, it stayed upstairs "pursuing" and only the Wizguard came down.
+        val basement = gg.rsmod.plugins.content.newplayer.AfkArea.BASEMENT_ARRIVAL
+        reset(g, square)
+        gg.rsmod.plugins.content.mechanics.pvp.PvpSkull.applyTestSkull(g)
+        hold(6)
+        g.moveTo(basement)
+        var followed: String? = null
+        for (i in 0 until 12) {
+            g.setCurrentLifepoints(g.getMaximumLifepoints())
+            wait(1)
+            followed = guardsOnG().firstOrNull { it.id != guards.WIZGUARD_ID && it.tile.isWithinRadius(g.tile, 3) }?.let { "${it.id}@${it.tile}" } ?: followed
+        }
+        run.expectTrue(e, "skulled in the AFK basement: a melee/ranged guard is beside him within 12 ticks", followed != null, "guard: $followed")
+        stopAll()
+        g.moveTo(square)
+        wait(2)
+
+        // 8. Death's Office is safe for PvP but has no guards (a private instance in OSRS, like the house).
+        val office = gg.rsmod.plugins.content.areas.deathsoffice.DeathsOfficeArea.ARRIVAL
+        reset(g, office)
+        hold(5) // an arrow from scenario 7 still in flight lands first
+        gg.rsmod.plugins.content.mechanics.pvp.PvpSkull.applyTestSkull(g)
+        val c8 = run.world.currentCycle
+        var officeGuard: String? = null
+        for (i in 0 until 14) {
+            g.setCurrentLifepoints(g.getMaximumLifepoints())
+            wait(1)
+            run.world.npcs.entries.filterNotNull().firstOrNull { guards.isGuard(it) && it.tile.isWithinRadius(office, 20) }
+                ?.let { officeGuard = "${it.id}@${it.tile}" }
+        }
+        run.expectTrue(e, "skulled in Death's Office: no guard or Wizguard appears", officeGuard == null, "guard: $officeGuard")
+        run.check(e, "skulled in Death's Office: hits in 14 ticks", hitsSince(c8).size, "no guards in a private safe area" to 0)
+        stopAll()
+        reset(g, square)
     }
 
     // ---- single: the single-way PJ window --------------------------------------------------------------------------------

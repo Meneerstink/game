@@ -219,12 +219,25 @@ object CityGuards {
      * player in their house was an "intruder": the Wizguard struck and a guard was placed next to them inside the instance. OSRS
      * Deadman houses have no guards - they are safe because nobody can attack there. Guards therefore never act inside a house or
      * any other private instance (x >= 6400, InstancedMapAllocator); the world's guarded cities are unchanged.
+     *
+     * Audit 2026-10-02: guards act exactly where a city answers for the tile ([guardZoneName]). Death's Office (a private
+     * instance in OSRS, folded into [GuardedZones.contains] like the house) had the Wizguard freezing and hitting a skulled
+     * visitor while no melee/ranged guard could ever come; it now has no guards, like the house.
      */
-    fun isGuardedZone(tile: Tile): Boolean =
-        tile.x < INSTANCE_MIN_X && !gg.rsmod.plugins.content.areas.poh.PlayerHouse.isSafeTile(tile) && GuardedZones.contains(tile)
+    fun isGuardedZone(tile: Tile): Boolean = guardZoneName(tile) != null
 
-    /** InstancedMapAllocator: every instance lies at x >= 6400. */
-    private const val INSTANCE_MIN_X = 6400
+    /** The pool and guard variant that answer in the AFK basement: the Grand Exchange hall above it is in the Varrock zone. */
+    private const val AFK_BASEMENT_GUARDS = "Varrock"
+
+    /**
+     * The guarded city whose guards answer at [tile], or null where no guard acts. A wiki zone answers for itself (all of
+     * them lie below the instance area, x < 6400, so no house or other instance is ever one). Audit 2026-10-02: the AFK skill
+     * basement under the Grand Exchange hall (owner 2026-09-26, "safe zone", its own map square) is answered by the Varrock
+     * guards above it - before, only the Wizguard came down there and the melee/ranged guard was retried forever.
+     */
+    fun guardZoneName(tile: Tile): String? =
+        GuardedZones.zoneAt(tile)?.name
+            ?: if (gg.rsmod.plugins.content.newplayer.AfkArea.contains(tile)) AFK_BASEMENT_GUARDS else null
 
     /** The only thing a guard ever acts on: a PK-skulled player standing inside a guarded zone. */
     fun isSkulledIntruder(target: Player): Boolean = PvpSkull.isSkulled(target) && isGuardedZone(target.zoneTile())
@@ -334,7 +347,7 @@ object CityGuards {
             if (tile != post.tile) {
                 snapped += "${post.city} ${post.tile.x},${post.tile.z}->${tile.x},${tile.z}"
             }
-            val variant = variantFor(GuardedZones.zoneAt(tile)?.name)
+            val variant = variantFor(guardZoneName(tile))
             val id = if (post.ranged || variant.melee == null) variant.ranged else variant.melee
             val guard =
                 Npc(id, tile, world).also {
@@ -567,6 +580,9 @@ object CityGuards {
 
     /** Called every cycle for every online player from the shared per-cycle poll. */
     fun onZoneCheck(player: Player) {
+        // Audit 2026-10-02: the skull lasts until the end of the death (pvp_skull.plugin on_player_death, which also releases
+        // the guards), so the 10-tick Wizguard could still appear, freeze and hit a dying intruder during the death animation.
+        if (player.isDead()) return
         val world = player.world
         val inZone = isGuardedZone(player.zoneTile())
         val wasInZone = player.attr[WAS_IN_GUARDED_ZONE_ATTR] ?: false
@@ -593,6 +609,8 @@ object CityGuards {
                 engagePhysicalGuard(world, player)
                 player.attr[GUARD_RETRY_CYCLE_ATTR] = world.currentCycle + GUARD_RETRY_CYCLES
             }
+        } else {
+            rejoinCutOffGuards(world, player)
         }
         if (player.attr[REACTIVE_PLAN_ATTR]?.contains(Kind.MAGE) == true) {
             val next = player.attr[WIZGUARD_NEXT_CYCLE_ATTR] ?: world.currentCycle
@@ -618,6 +636,50 @@ object CityGuards {
         player.attr.remove(WIZGUARD_NEXT_CYCLE_ATTR)
         player.attr.remove(ACTIVE_WIZGUARD_ATTR)
         player.attr.remove(GUARD_RETRY_CYCLE_ATTR)
+    }
+
+    /** Beyond this many tiles (or on another plane) the guard that came for an intruder can no longer reach them. */
+    const val REJOIN_DISTANCE = 32
+
+    /**
+     * Audit 2026-10-02: whether a guard at [guard] is cut off from its intruder at [intruder] - another plane (castle and
+     * palace floors, the Gnome Stronghold platforms) or another map square (the AFK basement under the Grand Exchange). The
+     * guard kept "pursuing" a path it could never walk while still counting as the intruder's live guard, so climbing one
+     * staircase inside a city left the skulled player with only the Wizguard.
+     */
+    fun isCutOff(
+        guard: Tile,
+        intruder: Tile,
+    ): Boolean = guard.height != intruder.height || guard.getDistance(intruder) > REJOIN_DISTANCE
+
+    /**
+     * Teleports every cut-off guard of [player] back beside them, the same way it first came ([engagePhysicalGuard]). A guard
+     * of another city (the intruder teleported from one guarded city to the next) stands down and stays home instead; the
+     * new city's own guard is sent at once by the retry in [onZoneCheck].
+     */
+    private fun rejoinCutOffGuards(
+        world: World,
+        player: Player,
+    ) {
+        val guards = player.attr[REACTIVE_GUARDS_ATTR] ?: return
+        val zone = guardZoneName(player.tile)
+        val iterator = guards.iterator()
+        while (iterator.hasNext()) {
+            val guard = iterator.next().get()?.takeIf { it.isSpawned() } ?: continue
+            if (!isCutOff(guard.tile, player.tile)) continue
+            if (guardZoneName(guard.tile) != zone) {
+                standDown(guard)
+                iterator.remove()
+                player.attr[GUARD_RETRY_CYCLE_ATTR] = world.currentCycle
+                continue
+            }
+            val tile = spawnTileNextTo(world, player)
+            guard.stopMovement()
+            guard.moveTo(tile)
+            guard.spawnTile = Tile(tile)
+            guard.facePawn(player)
+            if (guard.getCombatTarget() !== player && guard.canEngageCombat(player)) guard.attack(player)
+        }
     }
 
     /** Random group per [SPAWN_COMBINATIONS]; exposed for tests. */
@@ -649,7 +711,7 @@ object CityGuards {
         player: Player,
         kind: Kind? = player.attr[REACTIVE_PLAN_ATTR]?.firstOrNull { it != Kind.MAGE },
     ) {
-        val zone = GuardedZones.zoneAt(player.tile) ?: return
+        val zone = guardZoneName(player.tile) ?: return
         val wanted = kind ?: if (world.random(1) == 0) Kind.MELEE else Kind.RANGED
         // Wiki: the guard "will also spawn on top of" the intruder (the adjacent tile, so it
         // visibly stands beside and faces them).
@@ -665,20 +727,20 @@ object CityGuards {
     }
 
     /**
-     * A guard of [kind] for [zone], teleported to [tile]: an idle guard from the zone's pool when
+     * A guard of [kind] for [zone] (a [guardZoneName]), teleported to [tile]: an idle guard from the zone's pool when
      * one exists, otherwise a new one. Audit D-12: no pool cap - a guard busy with another intruder
      * never leaves this one unguarded (the pool only grows to the most intruders at one time, since
      * idle guards are always reused first).
      */
     private fun acquire(
         world: World,
-        zone: GuardedZones.Zone,
+        zone: String,
         kind: Kind,
         tile: Tile,
     ): Npc? {
-        val pool = pools.getOrPut(zone.name) { ArrayList() }
+        val pool = pools.getOrPut(zone) { ArrayList() }
         pool.removeAll { it.get()?.isSpawned() != true }
-        val variant = variantFor(zone.name)
+        val variant = variantFor(zone)
         val id = if (kind == Kind.RANGED || variant.melee == null) variant.ranged else variant.melee
         val idle = pool.mapNotNull { it.get() }.firstOrNull { it.id == id && it.getCombatTarget() == null }
         if (idle != null) {
@@ -743,7 +805,11 @@ object CityGuards {
             player.filterableMessage("A Wizguard's Ice Barrage freezes you in place!")
         }
         player.attr[GUARD_FROZEN_UNTIL_CYCLE_ATTR] = world.currentCycle + WIZGUARD_FREEZE_CYCLES
-        player.hit(world.random(WIZGUARD_MAX_HIT), delay = 1)
+        // Audit 2026-10-02: the hit is credited to the Wizguard like any combat hit (PawnExt.dealHit). Without an attacker it
+        // never reached the damage map, so a skulled player it killed had no guard killer and death.plugin's guard-death rule
+        // (Audit D-09) gave them the safe PvM death - Death's Domain kept the items the guards should have dropped.
+        val barrage = player.hit(world.random(WIZGUARD_MAX_HIT), delay = 1)
+        barrage.addAction { player.damageMap.add(wizguard, barrage.hitmarks.sumOf { it.damage }) }
         world.queue {
             wait(1)
             if (wizguard.isSpawned()) faceAndResend(wizguard, player)
