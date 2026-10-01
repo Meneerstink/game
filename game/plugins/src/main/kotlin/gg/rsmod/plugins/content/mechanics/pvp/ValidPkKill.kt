@@ -63,8 +63,8 @@ object ValidPkKill {
     /** Where the emblem system keeps its state and log files (the server's `data` directory; tests point it elsewhere). */
     @Volatile var dataDir = File("data")
 
-    private val stateFile get() = File(dataDir, "deadman_emblem_pairs.txt")
-    private val dailyFile get() = File(dataDir, "deadman_pk_daily.txt")
+    private val stateFile get() = gg.rsmod.util.io.SharedDataFiles.of(File(dataDir, "deadman_emblem_pairs.txt").path)
+    private val dailyFile get() = gg.rsmod.util.io.SharedDataFiles.of(File(dataDir, "deadman_pk_daily.txt").path)
 
     /** Pair keys ([pairKey]) and victim keys ([victimKey]) -> time of the last valid kill. */
     private val lastValidPair = ConcurrentHashMap<String, Long>()

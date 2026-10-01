@@ -381,7 +381,7 @@ object DeadmanEmblem {
 
     /** Emblems owed to players who were offline or dying when they won them; survives restarts. */
     object Ledger {
-        private val file get() = File(ValidPkKill.dataDir, "deadman_emblem_pending.txt")
+        private val file get() = gg.rsmod.util.io.SharedDataFiles.of(File(ValidPkKill.dataDir, "deadman_emblem_pending.txt").path)
         private val pending = ConcurrentHashMap<String, MutableList<Int>>()
 
         @Volatile private var loaded = false
@@ -427,7 +427,7 @@ fun fmt(value: Int): String = String.format(java.util.Locale.US, "%,d", value)
 
 /** Append-only audit log of every emblem event (`data/logs/deadman_emblem.log`). */
 object EmblemLog : mu.KLogging() {
-    private val file get() = File(ValidPkKill.dataDir, "logs/deadman_emblem.log")
+    private val file get() = gg.rsmod.util.io.SharedDataFiles.of(File(ValidPkKill.dataDir, "logs/deadman_emblem.log").path)
 
     @Synchronized
     fun write(type: String, player: Player, vararg fields: Pair<String, Any?>) {

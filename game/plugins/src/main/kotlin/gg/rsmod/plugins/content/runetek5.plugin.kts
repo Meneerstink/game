@@ -42,10 +42,11 @@ set_modal_close_logic {
 
 fun updatePlayerCountInJson() {
     val filePath = "./plugins/configs/player_count.json"
-    val file = File(filePath)
+    // A headless test server's bots never reach the website's player count (SharedDataFiles, ROOT_CAUSES #109).
+    val file = gg.rsmod.util.io.SharedDataFiles.of(filePath)
 
     // Check if the file exists; if not, initialize with default structure
-    if (!file.exists()) {
+    if (!file.exists() || file.readText().isBlank()) {
         file.parentFile.mkdirs()
         file.writeText("""{"playerCount": 0}""")
     }
