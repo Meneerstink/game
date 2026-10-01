@@ -393,6 +393,16 @@ object DeadmanSuite : Conformance.Suite {
         val withKeys = landedWithin(20)
         run.expectTrue(e, "skulled, arrow keys during the countdown: still teleports", withKeys != null, "no teleport (the key presses cancelled it)")
 
+        // 3c. Skulled, opening tabs during the countdown (fixed 548:99 inventory side, resizable 746:43): the client sends an IF_BUTTON
+        // for a tab switch, OSRS sends nothing - not an action, the teleport still happens.
+        prepare(skulled = true)
+        press()
+        wait(2)
+        Bots.button(t, 548, 99); wait(1)
+        Bots.button(t, 746, 43); wait(1)
+        val withTabs = landedWithin(20)
+        run.expectTrue(e, "skulled, switching tabs during the countdown: still teleports", withTabs != null, "no teleport (the tab clicks cancelled it)")
+
         // 4. Skulled, hit during the countdown: it stops and never fires later.
         prepare(skulled = true)
         press()

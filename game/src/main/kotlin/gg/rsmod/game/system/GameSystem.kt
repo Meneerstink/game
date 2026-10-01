@@ -170,7 +170,8 @@ class GameSystem(
                     next.message is gg.rsmod.game.message.impl.MessageQuickChatPublicMessage ||
                     next.message is gg.rsmod.game.message.impl.MessageQuickChatPrivateMessage ||
                     next.message is gg.rsmod.game.message.impl.ChatFilterMessage ||
-                    next.message is gg.rsmod.game.message.impl.MapBuildCompleteMessage
+                    next.message is gg.rsmod.game.message.impl.MapBuildCompleteMessage ||
+                    (next.message is gg.rsmod.game.message.impl.IfButtonMessage && (next.message as gg.rsmod.game.message.impl.IfButtonMessage).hash in TAB_BUTTONS)
             if (!isPassive) {
                 client.attr[LAST_ACTIVE_CYCLE_ATTR] = world.currentCycle
             }
@@ -355,6 +356,14 @@ class GameSystem(
             )
 
         /** Input that is noise in the input trace (keep-alives, window/camera/mouse telemetry). */
+        /**
+         * The gameframe tab buttons (667 cache: every component of the fixed 548 and resizable 746 top-levels whose op runs CS2 1303,
+         * the client-side tab switch): opening a tab is not a game action - OSRS sends no packet for it - so it does not cancel the
+         * Deadman 7-second countdown (2026-10-01).
+         */
+        val TAB_BUTTONS: Set<Int> =
+            ((99..106) + (129..136)).map { (548 shl 16) or it }.toSet() + (39..54).map { (746 shl 16) or it }.toSet()
+
         private val UNTRACED_INPUT = setOf("NoTimeoutMessage", "KeyTypedMessage", "WindowStatusMessage", "ChatFilterMessage")
 
         /** Audit T-15: the packet buffer capacity for [messagesPerCycle] handled packets per cycle. */
