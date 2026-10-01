@@ -320,6 +320,7 @@ class GameService : Service {
         }
         val start = System.currentTimeMillis()
         val startNanos = System.nanoTime()
+        val gcMsAtStart = gg.rsmod.game.model.Trace.gcMillis()
         val previousStartNanos = previousCycleStartNanos
         previousCycleStartNanos = startNanos
         val cycleGapMs =
@@ -395,6 +396,9 @@ class GameService : Service {
                 gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.TICK) {
                     "server lag: tick ${world.currentCycle} took ${"%.0f".format(java.util.Locale.ROOT, workMs)} ms (budget ${expectedCycleMs.toInt()}), players=${world.players.count()} npcs=${world.npcs.count()}, " +
                         "heap=${(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1_048_576}/${Runtime.getRuntime().maxMemory() / 1_048_576} MB, " +
+                        // Garbage-collection pauses inside this tick: with gc close to the lag, the "slowest" task below only had
+                        // the bad luck of running during the pause (2026-10-01: idle Imps / Fungi / Chickens "took" 500-1300 ms).
+                        "gc=${gg.rsmod.game.model.Trace.gcMillis() - gcMsAtStart} ms, " +
                         "slowest=${taskTimes.toList().sortedByDescending { (_, value) -> value }.take(3).toMap()}"
                 }
             } else {

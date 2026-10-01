@@ -1,7 +1,9 @@
 package gg.rsmod.plugins.content.skills.summoning
 
 import gg.rsmod.plugins.api.ext.playSound
+import gg.rsmod.game.model.entity.AreaSound
 import gg.rsmod.game.model.entity.Player
+import gg.rsmod.plugins.content.combat.PLAYER_COMBAT_SOUND_RADIUS
 
 /**
  * Server-addressable familiar presentation sounds from the QC3 table.
@@ -36,8 +38,20 @@ object FamiliarAudio {
 
     fun spawnSound(data: SummoningPouchData): Int? = SPAWN_SOUNDS[data]
 
+    /**
+     * The owner hears the cue as before; the players around the familiar hear it too (conform summoning: "only the owner got
+     * the sound" for summon, call, attacks and special moves of every familiar - RS: nearby players hear a familiar).
+     * Same area-sound route and radius as a player's own combat sounds ([PLAYER_COMBAT_SOUND_RADIUS], ADAPTED), owner excluded
+     * so he never gets it twice.
+     */
     fun play(player: Player, sound: Int, delay: Int = 0, rate: Int = 256, loops: Int = 1) {
         player.playSound(sound, volume = SERVER_SOUND_VOLUME, delay = delay, rate = rate, loops = loops)
+        if (sound <= 0) return
+        val source = Familiar.current(player)?.tile ?: player.tile
+        player.world.spawn(
+            AreaSound(tile = source, id = sound, radius = PLAYER_COMBAT_SOUND_RADIUS, volume = loops, delay = delay, playbackVolume = SERVER_SOUND_VOLUME)
+                .also { it.excluded = player },
+        )
     }
 
     fun isFamiliarNpc(npcId: Int): Boolean = SummoningPouchData.values().any { it.npc == npcId }

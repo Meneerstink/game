@@ -59,7 +59,7 @@ class OsrsGuidePricesTests {
         val unmatched = mutableListOf<String>()
         var matched = 0
         items.sortedBy { it.id }.forEach { def ->
-            val osrs = table.price(def.name)
+            val osrs = table.price(def.name) ?: OsrsGuidePrices.RENAMED_IN_OSRS[def.id]?.let { table.price(it) }
             assertEquals(osrs ?: def.cost, OsrsGuidePrices.seed(def, table), "${def.id} ${def.name}")
             if (osrs != null) matched++ else unmatched += "${def.id}\t${def.name}\t${def.cost}"
         }
@@ -91,7 +91,9 @@ class OsrsGuidePricesTests {
         // blighted food / super restores, Moons broken pieces, Eclipse atlatl + darts) added 26 tradeable unnoted items:
         // 12252 -> 12278; 23 of them are named in the OSRS snapshot: seeded 3332 -> 3355 (unmatched 8920 -> 8923).
         assertEquals(12278, items.size, "exchangeable items (tradeable, unnoted, not coins)")
-        assertEquals(3355, matched, "items seeded from the 13 September 2026 OSRS snapshot; the unmatched list is build/osrs-guide-price-unmatched.txt")
+        // 2026-10-02 OsrsGuidePrices.RENAMED_IN_OSRS (OSRS Wiki item ids): 8013 "Teleport to house" = "Teleport to house (tablet)",
+        // 9244 "Dragon bolts (e)" = "Dragonstone bolts (e)": seeded 3355 -> 3357 (unmatched 8923 -> 8921).
+        assertEquals(3357, matched, "items seeded from the 13 September 2026 OSRS snapshot; the unmatched list is build/osrs-guide-price-unmatched.txt")
     }
 
     @Test

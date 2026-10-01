@@ -22,6 +22,12 @@ import java.util.concurrent.ConcurrentHashMap
  * On: the file [ALL_FILE] at boot (server and client), or the in-game command `traces` (on / off / status / <category>).
  */
 object Trace : KLogging() {
+    /**
+     * Total time the JVM's garbage collectors have spent so far, in ms. A lag line names the GC time inside its window, so a
+     * stop-the-world pause is not blamed on whatever task happened to run during it (2026-10-01: idle Imps / Fungi "took" 1.3 s).
+     */
+    fun gcMillis(): Long = java.lang.management.ManagementFactory.getGarbageCollectorMXBeans().sumOf { it.collectionTime.coerceAtLeast(0L) }
+
     const val ALL_FILE = "C:/RSPS/trace.on"
     const val BUGS_DIR = "C:/RSPS/bugs"
     const val RECENT_LINES = 600

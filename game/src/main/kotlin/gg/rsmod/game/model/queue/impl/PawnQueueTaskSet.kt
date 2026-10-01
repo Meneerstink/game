@@ -72,7 +72,7 @@ class PawnQueueTaskSet : QueueTaskSet() {
     private fun step(task: QueueTask): Boolean {
         val previous = running
         running = task
-        val start = System.nanoTime()
+        val start = stepStart()
         try {
             try {
                 if (!task.invoked) {

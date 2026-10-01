@@ -15,6 +15,14 @@ class KeyTypedHandler : MessageHandler<KeyTypedMessage> {
         world: World,
         message: KeyTypedMessage,
     ) {
+        // Every batched key, in the order typed, exactly as if each had come in its own packet.
+        (listOf(message.keycode) + message.following).forEach { key -> handleKey(client, KeyTypedMessage(key)) }
+    }
+
+    private fun handleKey(
+        client: Client,
+        message: KeyTypedMessage,
+    ) {
         val keycode = message.keycode
         val player = client as Player
 

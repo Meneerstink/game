@@ -132,11 +132,10 @@ object CombatConfigs {
                     // in MeleeCombatFormula (it only understands STAB/SLASH/CRUSH/MAGIC_MELEE) -
                     // aborting that whole cycle's queued-task processing for every pawn, not just
                     // this one. Mirrors the same weapon+style-button lookup getCombatStyle(Pawn)
-                    // below already does, so both stay consistent with each other.
-                    val style = pawn.getAttackStyle()
-                    val option = getCombatStyle(style)
-                    val data = getWeaponType(pawn)?.let { WeaponCombatData.getAttackStyleType(it, option) }
-                    when (data?.styleType) {
+                    // below already does, so both stay consistent with each other. Same styleData route (with the
+                    // equip fallback for a style varp the weapon lacks): the raw lookup returned null -> MELEE while
+                    // getCombatStyle fell back to e.g. a salamander's Blaze (MAGIC) and the melee formula threw.
+                    when (styleData(pawn)?.styleType) {
                         StyleType.MAGIC -> CombatClass.MAGIC
                         StyleType.RANGED -> CombatClass.RANGED
                         else -> CombatClass.MELEE

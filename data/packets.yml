@@ -1069,6 +1069,28 @@ in-packets:
         trans: ADD
       - name: movement_type
         type: BYTE
+      # Client MiniMenu (minimap click): 13 more bytes - two -1 markers, camera yaw, 57, yaw/scale offsets, 89, the
+      # player's x/z and 63. Read (and unused) so the decoder consumes the packet it was sent (ROOT_CAUSES #34).
+      - name: mm_marker1
+        type: BYTE
+      - name: mm_marker2
+        type: BYTE
+      - name: mm_camera_yaw
+        type: SHORT
+      - name: mm_const57
+        type: BYTE
+      - name: mm_yaw_offset
+        type: BYTE
+      - name: mm_scale_offset
+        type: BYTE
+      - name: mm_const89
+        type: BYTE
+      - name: mm_player_x
+        type: SHORT
+      - name: mm_player_z
+        type: SHORT
+      - name: mm_const63
+        type: BYTE
 
   - message: gg.rsmod.game.message.impl.IgnoreMessage # No data
     type: FIXED
@@ -1106,6 +1128,11 @@ in-packets:
       - name: hash
         type: INT
         order: INVERSED_MIDDLE
+      # Client MiniMenu.sendResumePauseButton: p4_alt3(id), p2_alt3(slot) - the slot was left unread (ROOT_CAUSES #34).
+      - name: slot
+        order: LITTLE
+        type: SHORT
+        trans: ADD
 
   - message: gg.rsmod.game.message.impl.IfButtonDMessage
     type: FIXED

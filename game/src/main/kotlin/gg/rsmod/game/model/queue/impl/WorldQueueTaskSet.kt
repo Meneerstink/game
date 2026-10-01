@@ -19,7 +19,7 @@ class WorldQueueTaskSet : QueueTaskSet() {
      */
     override fun cycle() {
         for (task in ArrayList(queue)) {
-            val start = System.nanoTime()
+            val start = stepStart()
             try {
                 if (!task.invoked) {
                     task.invoked = true

@@ -777,6 +777,8 @@ object Familiar {
             BeastOfBurden.release(owner)
         }
         clearState(owner)
+        // Novite 667 Familiar.sendDeath (first death tick): the owner was never told (conform summoning, every familiar).
+        owner.message("Your familiar slowly begins to fade away..")
         updateHud(owner)
     }
     /**
@@ -846,7 +848,8 @@ object Familiar {
             expire(player, npc)
             return
         }
-        follow(player, npc)
+        // Novite 667 Familiar: setRun(true) + calcFollow(owner, 2, ...) - a familiar keeps up with a running owner.
+        follow(player, npc, runs = true)
         updateHud(player)
     }
 
@@ -909,7 +912,8 @@ object Familiar {
 
     /**
      * [recovered] is the presentation of a recovery teleport: a familiar's arrival effect, nothing for an OSRS pet ([Pets]).
-     * [runs]: the follower keeps up with a running owner (OSRS pets Nexling and Babi, [Pets.FAST_PETS]); every other follower walks.
+     * [runs]: the follower keeps up with a running owner - every familiar (Novite 667) and the OSRS pets Nexling and Babi
+     * ([Pets.FAST_PETS]); every other OSRS pet walks.
      */
     internal fun follow(
         player: Player,
@@ -932,9 +936,10 @@ object Familiar {
             npc.removeCombatTarget()
             npc.resetFacePawn()
         }
-        // A familiar follows at walking speed. The owner's pending movement is still used as
-        // the route target so a running owner does not make the familiar chase an already stale
-        // tile, but it must never turn the follower route into a run route.
+        // The owner's pending movement is the route target so a running owner does not make the follower chase an already
+        // stale tile. A follower that [runs] matches the owner's speed this cycle (two queued steps = running), see (2) above;
+        // the 2026-09-24 save point had made every familiar walk, so it fell behind a running owner (conform summoning
+        // "run: never more than 2 tiles behind", every familiar).
         val ownerSteps = player.movementQueue.peekSteps(if (player.isRunning()) 2 else 1)
         val target = ownerSteps.lastOrNull()?.tile ?: player.tile
         val ownerFootprint = footprint(target, player.getSize())
@@ -978,7 +983,7 @@ object Familiar {
             )
         npc.walkPath(
             path,
-            stepType = if (runs && player.isRunning()) MovementQueue.StepType.FORCED_RUN else MovementQueue.StepType.FORCED_WALK,
+            stepType = if (runs && ownerSteps.size > 1) MovementQueue.StepType.FORCED_RUN else MovementQueue.StepType.FORCED_WALK,
             detectCollision = true,
         )
         // Movement and combat may leave a stale face target on the NPC. Reassert the owner as the

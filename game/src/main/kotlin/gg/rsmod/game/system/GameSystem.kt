@@ -189,7 +189,9 @@ class GameSystem(
                 gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.INPUT) { "${client.username} at=${client.tile.x},${client.tile.z},${client.tile.height} $lastAction" }
                 // Silent-click detector: a menu option / button / dialogue answer that gets no answer at all within
                 // SILENT_CLICK_CYCLES (no message, interface, var, sound, animation, movement or queued action).
-                if (messageName.startsWith("Op") || messageName.startsWith("IfButton") || messageName.startsWith("Resume")) {
+                if ((messageName.startsWith("Op") || messageName.startsWith("IfButton") || messageName.startsWith("Resume")) &&
+                    !isClientTabStone(next.message)
+                ) {
                     silentCheck = SilentCheck(lastAction, world.currentCycle, client.tile, client.lastAnimation)
                 }
             }
@@ -230,6 +232,15 @@ class GameSystem(
         val opcode = service.messageDecoders.opcodeFor(message.javaClass) ?: return false
         val handler = service.messageDecoders.getHandler(opcode) ?: return false
         return messages.offer(MessageHandle(message = message, handler = handler, opcode = opcode, length = 0, queuedAtNanos = System.nanoTime()))
+    }
+
+    /**
+     * A gameframe tab stone: its cache onOp is clientscript 1303 (the client switches varc 168 itself), so the server rightly
+     * sends nothing back - not a "click did nothing" (owner session 2026-10-01: 746:41 x7; unhandled tsv 548:99..136).
+     */
+    private fun isClientTabStone(message: Message): Boolean {
+        val hash = (message as? gg.rsmod.game.message.impl.IfButtonMessage)?.hash ?: return false
+        return (hash ushr 16) to (hash and 0xFFFF) in CLIENT_TAB_STONES
     }
 
     /** The last deliberate action of this player (trace context: which click caused a message or an error). */
@@ -344,6 +355,10 @@ class GameSystem(
 
         /** Audit T-15: log one warning per this many dropped packets. */
         private const val OVERFLOW_WARN_EVERY = 100
+
+        /** Interface 746 / 548 components whose cache onOp is clientscript 1303 (InterfaceHookProbeTool, 2026-10-02). */
+        private val CLIENT_TAB_STONES: Set<Pair<Int, Int>> =
+            ((39..54) + 176).map { 746 to it }.toSet() + ((99..106) + (129..136)).map { 548 to it }
 
         /** Debug toolkit: ticks a click may take before "click did nothing" is reported. */
         private const val SILENT_CLICK_CYCLES = 3

@@ -1840,6 +1840,12 @@ fun tryWithUsage(
 ) {
     try {
         tryUnit.invoke(args)
+    } catch (e: NumberFormatException) {
+        // A typed argument that is not a number ("10345:", "+") is a typo, not a server crash: usage line only.
+        player.message(failMessage, type = ChatMessageType.CONSOLE)
+    } catch (e: IndexOutOfBoundsException) {
+        // Too few arguments typed: same.
+        player.message(failMessage, type = ChatMessageType.CONSOLE)
     } catch (e: Exception) {
         player.message(failMessage, type = ChatMessageType.CONSOLE)
         gg.rsmod.game.model.Trace.crash("command", e)

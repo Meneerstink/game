@@ -35,6 +35,14 @@ abstract class QueueTaskSet {
      * Debug toolkit (2026-10-01): one task step that alone eats a third of the tick budget names itself, so a lag line such as
      * "QueueHandlerTask=770 ms" with nobody online (owner session 17:35) points at the plugin whose task it was ([QueueTask.origin]).
      */
+    private var stepGcStart = 0L
+
+    /** Start of one task step: the clock for [reportSlowStep], with the GC time so far. */
+    protected fun stepStart(): Long {
+        stepGcStart = gg.rsmod.game.model.Trace.gcMillis()
+        return System.nanoTime()
+    }
+
     protected fun reportSlowStep(
         task: QueueTask,
         startNanos: Long,
@@ -42,7 +50,8 @@ abstract class QueueTaskSet {
     ) {
         val ms = (System.nanoTime() - startNanos) / 1_000_000
         if (ms >= SLOW_STEP_MS) {
-            gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.TICK) { "$kind queue task ${task.origin} (${task.ctx}) ran $ms ms in one tick" }
+            val gc = gg.rsmod.game.model.Trace.gcMillis() - stepGcStart
+            gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.TICK) { "$kind queue task ${task.origin} (${task.ctx}) ran $ms ms in one tick (gc=$gc ms)" }
         }
     }
 

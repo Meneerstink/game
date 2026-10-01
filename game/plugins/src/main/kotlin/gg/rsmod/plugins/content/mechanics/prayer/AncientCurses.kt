@@ -45,6 +45,9 @@ object AncientCurses {
     private val TURMOIL_ACTIVE_ATTR = AttributeKey<Boolean>()
     private val TURMOIL_BONUS_ATTR = AttributeKey<MutableMap<Int, Int>>()
 
+    /** Cache varbits for the target-derived Turmoil bonus per skill (see [syncTurmoilVarbits]). */
+    private val TURMOIL_BONUS_VARBITS = mapOf(Skills.ATTACK to 6844, Skills.STRENGTH to 6845, Skills.DEFENCE to 6846)
+
     /**
      * Stands in for the real "Temple at Senntisten" unlock quest (PROJECT_PLAN SS18/SS7 confirms an
      * unlock miniquest is expected for Ancient Curses) - a one-off ritual (`curse unlock`).
@@ -274,6 +277,7 @@ object AncientCurses {
         activeCurses(player).filter { it.conflictsWithTurmoil }.forEach { deactivateCurse(player, it, playSound = false) }
         setTurmoil(player, true)
         player.attr[TURMOIL_BONUS_ATTR] = mutableMapOf()
+        syncTurmoilVarbits(player)
         if (playActivationVisual) {
             player.animate(TURMOIL_ACTIVATION_ANIMATION)
             player.graphic(TURMOIL_ACTIVATION_GRAPHIC)
@@ -287,6 +291,18 @@ object AncientCurses {
     ) {
         player.attr[TURMOIL_ACTIVE_ATTR] = active
         player.setVarbit(AncientCurse.TURMOIL_VARBIT, if (active) 1 else 0)
+        syncTurmoilVarbits(player)
+    }
+
+    /**
+     * Varbits 6844 / 6845 / 6846 (varp 1584, 5 bits each): the target-derived Turmoil bonus in levels. Cache clientscript 1710
+     * shows the curse tab's Attack / Strength / Defence as 15 / 23 / 15 % plus clientscript 1714 (bonus x 100 / own base level)
+     * while varbit 6839 is on - the server never set them, so the tab never showed the opponent part (WORK_QUEUE Q3). Void
+     * prayer.varbits.toml turmoil_*_bonus = the same levels [establishTurmoilBonus] stores.
+     */
+    private fun syncTurmoilVarbits(player: Player) {
+        val bonuses = if (isTurmoilActive(player)) player.attr[TURMOIL_BONUS_ATTR] else null
+        TURMOIL_BONUS_VARBITS.forEach { (skill, varbit) -> player.setVarbit(varbit, (bonuses?.get(skill) ?: 0).coerceIn(0, 31)) }
     }
 
     /**
@@ -356,6 +372,7 @@ object AncientCurses {
             } else {
                 player.attr.remove(TURMOIL_BONUS_ATTR)
             }
+            syncTurmoilVarbits(player)
         } else {
             // A valid normal-book state cannot contain active curses. Clear only stale curse bits
             // from older/broken saves; Protect Item remains shared between both books.
@@ -377,7 +394,7 @@ object AncientCurses {
             return
         }
         if (getBook(player) == book) {
-            player.filterableMessage("You are already using the ${book.name.lowercase()} prayer book.")
+            player.message("You are already using the ${book.name.lowercase()} prayer book.")
             return
         }
         // The two books' overhead icon and drain loops are not designed to run at once.
@@ -679,6 +696,7 @@ object AncientCurses {
 
     private fun resetTurmoilBonus(player: Player) {
         player.attr.remove(TURMOIL_BONUS_ATTR)
+        syncTurmoilVarbits(player)
     }
 
     /** Novite's first successful Turmoil melee hit snapshots the opponent's base levels. */
@@ -693,6 +711,7 @@ object AncientCurses {
         bonuses[Skills.ATTACK] = attack * 15 / 100
         bonuses[Skills.STRENGTH] = strength * 10 / 100
         bonuses[Skills.DEFENCE] = defence * 15 / 100
+        syncTurmoilVarbits(player)
     }
 
     private fun maxLevel(

@@ -45,9 +45,20 @@ object OsrsGuidePrices {
 
     val table: Table by lazy { load() }
 
-    /** The starting guide price of [def]: the OSRS guide price by name, otherwise the cache item value. */
+    /**
+     * The same item id under the name OSRS gave it (the sourced rename list the KDoc above asks for). Source: the OSRS Wiki
+     * infobox item id of each page (checked 2026-10-02). Without it the Home PK Supplies house tablets fell back to the cache
+     * value 0 and could not be bought ("This item is not currently available for purchase.", owner session 2026-10-01 19:46).
+     */
+    val RENAMED_IN_OSRS: Map<Int, String> =
+        mapOf(
+            8013 to "Teleport to house (tablet)", // 667 "Teleport to house"
+            9244 to "Dragonstone bolts (e)", // 667 "Dragon bolts (e)"
+        )
+
+    /** The starting guide price of [def]: the OSRS guide price by name (or by its OSRS name), otherwise the cache item value. */
     fun seed(
         def: ItemDef,
         table: Table = this.table,
-    ): Int = table.price(def.name) ?: def.cost
+    ): Int = table.price(def.name) ?: RENAMED_IN_OSRS[def.id]?.let { table.price(it) } ?: def.cost
 }

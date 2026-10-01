@@ -49,6 +49,12 @@ object SummoningSuite : Conformance.Suite {
     private const val PANEL_ATTACK = 65
     private const val VARP_FOLLOWER_NAME = 448
     private const val VARP_FOLLOWER_CHATHEAD = 1174
+
+    /**
+     * Cache clientscript 751 (667) tests var1174 against -1 and then 0 and takes the same "no npc of its own" branch for both;
+     * Novite sends -1 while a familiar is out and 0 without one. Void's 0 alone was a donor choice, not the client rule.
+     */
+    private const val NO_FOLLOWER_1174 = "0 or -1 (cache clientscript 751 treats both as no follower npc)"
     private const val VARBIT_SPECIAL_POINTS_NEEDED = 4288
     private const val VARBIT_MINUTES = 4534
 
@@ -207,7 +213,8 @@ object SummoningSuite : Conformance.Suite {
         wait(1)
         val cc = world.currentCycle
         Bots.button(bot, ORB, ORB_CALL)
-        wait(2)
+        // The click is handled the next cycle and the familiar's update blocks are recorded at the end of the one after.
+        wait(3)
         sound(run, e, "call follower", cc, world.currentCycle, "familiar", "Conf1")
         val cg = gap(bot.tile, bot.getSize(), fam.tile, size)
         run.expectTrue(e, "call follower places it next to the owner", cg == 1, "gap=$cg", "gap 1")
@@ -255,7 +262,9 @@ object SummoningSuite : Conformance.Suite {
             sound(run, e, "dismiss", cd, world.currentCycle, "familiar", "Conf1")
             run.expectTrue(e, "dismiss asks to confirm", answered, "no options dialogue open after Dismiss")
             run.expectTrue(e, "dismissed", Familiar.current(bot) == null && !run.world.npcs.contains(fam), "still there=${Familiar.current(bot)?.id}")
-            run.check(e, "varp 1174 cleared on dismiss", bot.varps.getState(VARP_FOLLOWER_CHATHEAD), "void" to 0)
+            bot.varps.getState(VARP_FOLLOWER_CHATHEAD).let { v1174 ->
+            run.expectTrue(e, "varp 1174 cleared on dismiss", v1174 == 0 || v1174 == -1, "1174=$v1174", NO_FOLLOWER_1174)
+        }
             run.check(e, "varp 448 cleared on dismiss", bot.varps.getState(VARP_FOLLOWER_NAME), "void" to 0)
             run.expectTrue(e, "lifetime timer stopped on dismiss", !bot.timers.has(FAMILIAR_LIFETIME_TIMER), "timer=${if (bot.timers.exists(FAMILIAR_LIFETIME_TIMER)) bot.timers[FAMILIAR_LIFETIME_TIMER] else "-"}")
             if (cd < 0) run.note("unreachable")
@@ -307,11 +316,13 @@ object SummoningSuite : Conformance.Suite {
         wait(3)
         val fam = Familiar.current(bot) ?: return
         run.recording.track(fam, "familiar")
-        val cargo = capacity != null && BeastOfBurden.activeContainer(bot) != null
+        // Foragers cannot be given items (withdraw only), so they have no stored cargo to rescue.
+        val cargo = capacity != null && BeastOfBurden.activeContainer(bot) != null && !BeastOfBurden.isWithdrawOnlyNpc(fam.id)
         val office0 = BeastOfBurden.deathsDomainCount(bot)
         if (cargo) {
-            bot.inventory.add(Items.BRONZE_BAR, 1)
-            Bots.itemOnNpc(bot, bot.inventory.getItemIndex(Items.BRONZE_BAR, false), fam)
+            val item = cargoItem(bot)
+            bot.inventory.add(item, 1)
+            Bots.itemOnNpc(bot, bot.inventory.getItemIndex(item, false), fam)
             wait(2)
         }
         val c = run.world.currentCycle
@@ -321,7 +332,9 @@ object SummoningSuite : Conformance.Suite {
         sound(run, e, "familiar death", c, run.world.currentCycle, "familiar")
         run.check(e, "death animation", anims.lastOrNull(), "void" to v?.get("death_anim")?.takeIf { !it.isNull }?.asInt())
         run.expectTrue(e, "gone after death", Familiar.current(bot) == null && !run.world.npcs.contains(fam), "still there=${run.world.npcs.contains(fam)}")
-        run.check(e, "varp 1174 cleared after death", bot.varps.getState(VARP_FOLLOWER_CHATHEAD), "void" to 0)
+        bot.varps.getState(VARP_FOLLOWER_CHATHEAD).let { v1174 ->
+            run.expectTrue(e, "varp 1174 cleared after death", v1174 == 0 || v1174 == -1, "1174=$v1174", NO_FOLLOWER_1174)
+        }
         val said = gameMessages(run, "Conf1", c)
         run.expectTrue(e, "owner told the familiar died", said.isNotEmpty(), said.joinToString(" / ").ifEmpty { "(no message)" }, "a message")
         if (cargo) run.check(e, "BoB cargo rescued into Death's Domain (owner rule)", BeastOfBurden.deathsDomainCount(bot) - office0, "owner" to 1)
@@ -504,8 +517,17 @@ object SummoningSuite : Conformance.Suite {
             val start = bot.getMaximumLifepoints() / 2
             bot.setCurrentLifepoints(start)
             val c = run.world.currentCycle
-            wait(ticks(run, 16_200L))
-            run.check(e, "passive heal after 16 s: ${name.lowercase()}", bot.getCurrentLifepoints() - start, "void" to LifepointUnits.fromLedger(heal["lifepoints"].asInt()))
+            // The familiar's heal is one jump; the player's own natural regen (+1 now and then) may fall in the same window
+            // (void spinner "11" instead of 10), so the largest single-tick gain is the familiar's.
+            var lastHp = start
+            var heal1 = 0
+            repeat(ticks(run, 16_200L)) {
+                wait(1)
+                val hp = bot.getCurrentLifepoints()
+                heal1 = max(heal1, hp - lastHp)
+                lastHp = hp
+            }
+            run.check(e, "passive heal after 16 s: ${name.lowercase()}", heal1, "void" to LifepointUnits.fromLedger(heal["lifepoints"].asInt()))
             heal["gfx"]?.takeIf { !it.isNull }?.asInt()?.let { gfx ->
                 run.expectTrue(e, "passive heal graphic: ${name.lowercase()}", run.recording.of("Conf1", "out").any { it.cycle >= c && it.text.startsWith("gfx ") && idOf(it.text) == gfx }, "no gfx $gfx on the owner", "gfx $gfx (void)")
             }
@@ -593,25 +615,37 @@ object SummoningSuite : Conformance.Suite {
         val a = attacks[style]
         bot.moveTo(arena)
         dummy.setCurrentLifepoints(DUMMY_LIFE)
+        // A poison left by the previous lane's familiar (swamp titan) ticks on the dummy and its hitsplat was read as this
+        // familiar's first hit (steel titan "hit lands is audible: nothing").
+        gg.rsmod.plugins.content.mechanics.poison.Poison.cure(dummy)
         wait(1)
         val c = world.currentCycle
         // The follower panel's Attack is the real "order your familiar to attack" (the bot itself does not fight).
         Bots.targetNpc(bot, PANEL, PANEL_ATTACK, dummy)
+        val selfDefenceOnly =
+            gg.rsmod.plugins.content.skills.summoning.FamiliarCapabilityTable.forNpc(fam.id)?.combatMode ==
+                gg.rsmod.plugins.content.skills.summoning.FamiliarCombatMode.SELF_DEFENCE_ONLY
         val distances = HashMap<Int, Int>()
-        for (t in 0 until 80) {
+        for (t in 0 until (if (selfDefenceOnly) 3 else 80)) {
             distances[world.currentCycle] = gap(fam.tile, runCatching { world.definitions.get(NpcDef::class.java, fam.id).size }.getOrDefault(1), dummy.tile, dummy.getSize())
             dummy.setCurrentLifepoints(DUMMY_LIFE)
             bot.setCurrentLifepoints(bot.getMaximumLifepoints())
             wait(1)
         }
+        if (selfDefenceOnly) {
+            // Pack yak, unicorn stallion, bunyip, void spinner (SummoningCombatDefinitions DEFENSIVE_ONLY, rev-634 data): they
+            // fight back when attacked but refuse an attack order - the order is answered, not ignored.
+            val said = gameMessages(run, "Conf1", c)
+            run.expectTrue(e, "defensive-only familiar refuses an attack order", said.any { it.contains("Your familiar cannot fight that target.") }, said.joinToString(" / ").ifEmpty { "(no message)" }, "Your familiar cannot fight that target.")
+        }
         val expectedAnim = a["anim"]?.takeIf { !it.isNull }?.asInt()
         val anims = run.recording.of("familiar", "out").filter { it.cycle >= c && it.text.startsWith("anim ") }
         val attackCycles = anims.filter { expectedAnim == null || idOf(it.text) == expectedAnim }.map { it.cycle }
         val mostFrequent = anims.groupBy { idOf(it.text) }.maxByOrNull { it.value.size }?.key
-        run.check(e, "attack ($style) animation", mostFrequent, "void" to expectedAnim)
+        if (!selfDefenceOnly) run.check(e, "attack ($style) animation", mostFrequent, "void" to expectedAnim)
         attackCycles.firstOrNull()?.let { sound(run, e, "attack", it, it + 1, "familiar") }
         run.recording.of("dummy", "out").firstOrNull { it.cycle >= c && it.text.startsWith("hits ") }?.let { sound(run, e, "familiar hit lands", it.cycle, it.cycle, "dummy") }
-        run.expectTrue(e, "attacks when ordered (80 ticks)", attackCycles.size >= 2, "attack animations=${attackCycles.size}", ">= 2")
+        if (!selfDefenceOnly) run.expectTrue(e, "attacks when ordered (80 ticks)", attackCycles.size >= 2, "attack animations=${attackCycles.size}", ">= 2")
         val intervals = attackCycles.zipWithNext { x, y -> y - x }
         val speed = intervals.groupBy { it }.maxByOrNull { it.value.size }?.key
         run.check(e, "attack speed (ticks)", speed, "void" to (a["speed"]?.takeIf { !it.isNull }?.asInt() ?: v["attack_speed"]?.takeIf { !it.isNull }?.asInt()))
@@ -769,13 +803,19 @@ object SummoningSuite : Conformance.Suite {
                 }
             }
         run.expectTrue(e, "special click accepted by the input path", cast, "inject=$cast")
+        // Only the drops count: a regen tick inside the window (every familiar's timer runs on) hid the cost
+        // (steel titan 12 -> "0", war tortoise 20 -> "5" once the Call check took one tick longer).
+        var pointsUsed = 0
+        var lastPoints = 60
         for (t in 0 until 8) {
             dummy.setCurrentLifepoints(max(dummy.getCurrentLifepoints(), 1))
             wait(1)
+            val now = bot.attr[FAMILIAR_SPECIAL_POINTS_ATTR] ?: lastPoints
+            if (now < lastPoints) pointsUsed += lastPoints - now
+            lastPoints = now
         }
         val used = 3 - bot.inventory.getItemCount(scroll.scroll)
         run.check(e, "special: scrolls used", used, "rule" to 1)
-        val pointsUsed = 60 - (bot.attr[FAMILIAR_SPECIAL_POINTS_ATTR] ?: 60)
         run.check(e, "special: special points cost", pointsUsed, "void" to v?.get("scroll")?.get("special_points")?.asInt(), "novite" to n?.get("special_points")?.asText()?.toIntOrNull())
         val famOut = run.recording.of("familiar", "out").filter { it.cycle >= c }
         val botOut = run.recording.of("Conf1", "out").filter { it.cycle >= c }
@@ -799,7 +839,9 @@ object SummoningSuite : Conformance.Suite {
         }
         vs?.get("boosts")?.forEach { b ->
             val skill = skillIndex(b[0].asText()) ?: return@forEach
-            val amount = b[1].asText().trim().toIntOrNull() ?: return@forEach
+            val raw = b[1].asText().trim().toIntOrNull() ?: return@forEach
+            // Void counts life points x10 (Titan's Constitution "80" = 8 real life points), like every other ledger figure.
+            val amount = if (skill == Skills.CONSTITUTION) gg.rsmod.plugins.content.combat.LifepointUnits.fromLedger(raw) else raw
             val delta = bot.skills.getCurrentLevel(skill) - levels0[skill]
             run.check(e, "special: ${b[0].asText()} boost", delta, "void" to amount)
         }
@@ -818,11 +860,21 @@ object SummoningSuite : Conformance.Suite {
         e: String,
     ) {
         run.check(e, "bob capacity (server storage)", BeastOfBurden.activeContainer(bot)?.capacity, "void" to v?.get("bob_capacity")?.takeIf { !it.isNull }?.asInt(), "novite" to n?.get("bob_size")?.asText()?.toIntOrNull()?.takeIf { it > 0 })
+        // A forager only gives items (RS: withdraw only) - storing is refused by design, nothing to fill.
+        if (BeastOfBurden.isWithdrawOnlyNpc(fam.id)) return
         bot.inventory.removeAll()
-        val item = Items.BRONZE_BAR
-        bot.inventory.add(item, 28)
+        // The abyssal familiars carry essence only; every other beast of burden any item.
+        val item = cargoItem(bot)
+        // One more than fits, offered one at a time: a backpack holds 28, so a 30-slot pack yak is topped up as it goes
+        // (the old run handed over 28 and reported "28 of 30 stored").
+        val offered = capacity + 1
+        var supplied = 0
         val c = run.world.currentCycle
-        for (i in 0 until capacity + 1) {
+        for (i in 0 until offered) {
+            if (!bot.inventory.contains(item)) {
+                bot.inventory.add(item, 1)
+                supplied++
+            }
             val slot = bot.inventory.getItemIndex(item, false)
             if (slot < 0) break
             Bots.itemOnNpc(bot, slot, fam)
@@ -830,15 +882,19 @@ object SummoningSuite : Conformance.Suite {
         }
         wait(1)
         val stored = BeastOfBurden.storedCount(bot)
-        run.check(e, "bob: items stored when filled with ${capacity + 1}", stored, "reference" to capacity)
-        run.check(e, "bob: no item lost or made while storing", stored + bot.inventory.getItemCount(item), "rule" to 28)
+        run.check(e, "bob: items stored when filled with $offered", stored, "reference" to capacity)
+        run.check(e, "bob: no item lost or made while storing", stored + bot.inventory.getItemCount(item), "rule" to supplied)
         val said = gameMessages(run, "Conf1", c)
-        run.expectTrue(e, "bob: full message", said.any { it.contains("full", true) || it.contains("carry", true) || it.contains("space", true) }, said.joinToString(" / ").ifEmpty { "(no message)" }, "a message when it is full")
+        run.expectTrue(e, "bob: full message", said.any { it.contains(BeastOfBurden.NO_SPACE_MESSAGE) }, said.joinToString(" / ").ifEmpty { "(no message)" }, BeastOfBurden.NO_SPACE_MESSAGE + " (novite)")
+        bot.inventory.removeAll()
         Bots.button(bot, ORB, ORB_TAKE_BOB)
         wait(2)
-        run.check(e, "bob: Take BoB returns everything", bot.inventory.getItemCount(item), "rule" to 28)
-        run.check(e, "bob: empty after Take BoB", BeastOfBurden.storedCount(bot), "rule" to 0)
+        run.check(e, "bob: Take BoB returns everything", bot.inventory.getItemCount(item), "rule" to minOf(stored, bot.inventory.capacity))
+        run.check(e, "bob: empty after Take BoB", BeastOfBurden.storedCount(bot), "rule" to maxOf(0, stored - bot.inventory.capacity))
     }
+
+    /** Test cargo the familiar out accepts: essence for the abyssal ones, any plain item otherwise. */
+    private fun cargoItem(bot: Client): Int = if (BeastOfBurden.isEssenceOnly(bot)) Items.PURE_ESSENCE else Items.BRONZE_BAR
 
     // ---- judgements across familiars ----------------------------------------------------------------------------------------
 

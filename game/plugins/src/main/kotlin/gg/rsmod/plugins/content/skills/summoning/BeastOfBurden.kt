@@ -35,6 +35,9 @@ private const val DEATHS_DOMAIN_RED = "<col=ff0000>"
  * the familiar's existing Renew/Dismiss/Cancel interact menu gains a "Withdraw-all" option.
  */
 object BeastOfBurden {
+    /** Novite 667 BeastOfBurden.store, sent when the familiar's inventory has no room (was an invented line). */
+    const val NO_SPACE_MESSAGE = "Not enough space in your familiar inventory."
+
     /**
      * [withdrawOnly] separates the two carrying contracts the knowledge base describes. A beast
      * of burden takes items the player hands it; a forager "will find certain items from time to
@@ -114,6 +117,9 @@ object BeastOfBurden {
     fun isWithdrawOnlyNpc(npcId: Int): Boolean =
         storageByPouch.entries.any { (pouch, storage) -> pouch.npc == npcId && storage.withdrawOnly }
 
+    /** True while the familiar out is one of the abyssal ones that carry rune / pure essence only. */
+    fun isEssenceOnly(player: Player): Boolean = storage(player)?.essenceOnly == true
+
     /** The active familiar inventory key, if the summoned familiar can carry items. */
     fun activeKey(player: Player): ContainerKey? = storage(player)?.key
 
@@ -184,9 +190,11 @@ object BeastOfBurden {
         // Audit E-06: keep charges/stored contents (item attributes) on the way in.
         val transaction = held.addPreservingAttr(Item(item, requested), assureFullInsertion = false)
         if (transaction.completed <= 0) {
-            player.message("Your familiar can't carry any more of that.")
+            player.message(NO_SPACE_MESSAGE)
             return 0
         }
+        // Novite 667 BeastOfBurden.store: a stack that only partly fits stores what fits and says so.
+        if (transaction.completed < requested) player.message(NO_SPACE_MESSAGE)
         val removed = player.inventory.remove(item.id, transaction.completed, assureFullRemoval = true).completed
         if (removed < transaction.completed) {
             held.remove(item.id, transaction.completed - removed, assureFullRemoval = true)

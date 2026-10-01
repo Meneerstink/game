@@ -83,6 +83,40 @@ class AncientCurses2011Tests {
         assertTrue(AncientCurses.isCurseActive(player, AncientCurse.SOUL_SPLIT))
     }
 
+    /**
+     * WORK_QUEUE Q3: cache clientscript 1710 draws the curse tab's Turmoil Attack / Strength / Defence as 15 / 23 / 15 % plus
+     * clientscript 1714 of varbits 6844 / 6845 / 6846 (varp 1584 bits 5-9 / 10-14 / 15-19, cache varbit defs). They must carry
+     * the snapshotted opponent bonus in levels and fall back to 0 when Turmoil stops.
+     */
+    @Test
+    fun `Turmoil shows the opponent bonus in the curse tab varbits and clears them`() {
+        val player = newPlayer()
+        val varps = gg.rsmod.game.model.varp.VarpSet((0 until 2000).toSet())
+        every { player.varps } returns varps
+        val layout = mapOf(6844 to 5, 6845 to 10, 6846 to 15)
+        val definitions = player.world.definitions
+        every { definitions.get(VarbitDef::class.java, any()) } answers {
+            val id = secondArg<Int>()
+            VarbitDef(id).apply {
+                layout[id]?.let { start ->
+                    varp = 1584
+                    startBit = start
+                    endBit = start + 4
+                }
+            }
+        }
+        AncientCurses.switchBook(player, AncientCurses.PrayerBook.ANCIENT)
+        AncientCurses.toggleTurmoil(player)
+        val opponent = newPlayer(mapOf(Skills.ATTACK to 99, Skills.STRENGTH to 80, Skills.DEFENCE to 40))
+        AncientCurses.onDamageDealt(player, opponent, damage = 1)
+        assertEquals(14, varps.getBit(1584, 5, 9))
+        assertEquals(8, varps.getBit(1584, 10, 14))
+        assertEquals(6, varps.getBit(1584, 15, 19))
+        AncientCurses.toggleTurmoil(player)
+        assertFalse(AncientCurses.isTurmoilActive(player))
+        assertEquals(0, varps.getBit(1584, 5, 19))
+    }
+
     @Test
     fun `Turmoil deactivates Saps and Leeches but keeps Berserker`() {
         val player = newPlayer()

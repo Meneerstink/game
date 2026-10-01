@@ -106,7 +106,10 @@ create_shop(
 ) {
     availableHomePkSupplyStock.forEachIndexed { index, (itemId, amount) ->
         val def = world.definitions.get(ItemDef::class.java, itemId)
-        items[index] = ShopItem(itemId, amount, sellPrice = OsrsGuidePrices.seed(def))
+        val price = OsrsGuidePrices.seed(def)
+        // A 0 price is refused at purchase ("not currently available") - name it at boot (house tabs, owner session 2026-10-01).
+        if (price <= 0) gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.ITEM) { "shop '$HOME_SUPPLIES' item $itemId '${def.name}' has no price (no OSRS guide price, cache value ${def.cost})" }
+        items[index] = ShopItem(itemId, amount, sellPrice = price)
     }
 }
 

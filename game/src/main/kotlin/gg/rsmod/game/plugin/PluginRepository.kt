@@ -1569,7 +1569,9 @@ class PluginRepository(
         val handlers = enterRegionPlugins[regionId]
         // Debug toolkit: region changes; a region nothing handles has no region music (region_songs binds every musical region).
         gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.INTERACT) { "enter region $regionId ${p.username} at ${p.tile.x},${p.tile.z} handlers=${handlers?.size ?: 0}" }
-        if (handlers.isNullOrEmpty()) {
+        // A region whose music comes from a polygon area (Varrock centre: "Garden") has no region handler but does play -
+        // only report it when no polygon area covers the player either (false PROBLEM, owner session 2026-10-01).
+        if (handlers.isNullOrEmpty() && simplePolygonAreas.none { it.containsTile(p.tile) }) {
             gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.INTERACT) { "region $regionId (entered by ${p.username} at ${p.tile.x},${p.tile.z}) has no enter handler - no region music plays here" }
         }
         handlers?.forEach { logic -> p.executePlugin(logic) }
