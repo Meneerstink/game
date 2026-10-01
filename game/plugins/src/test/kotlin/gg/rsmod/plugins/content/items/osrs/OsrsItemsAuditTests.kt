@@ -127,7 +127,9 @@ class OsrsItemsAuditTests {
     fun `I-06 powered staves never attack players`() {
         val strategy = File("src/main/kotlin/gg/rsmod/plugins/content/combat/strategy/PoweredStaffCombatStrategy.kt").readText()
         val canAttack = strategy.substringAfter("override fun canAttack(").substringBefore("override fun attack(")
-        assertTrue("if (target is Player) {" in canAttack && "PLAYER_TARGET_MESSAGE" in canAttack)
+        // The revenant sceptres are the exception: "unlike other powered staves, the sceptre can attack players outside of
+        // minigames" (OSRS Wiki; owner 2026-09-29, RevenantWeapons).
+        assertTrue("if (target is Player && PoweredStaves.staffFor(weapon.id)?.revenant != true) {" in canAttack && "PLAYER_TARGET_MESSAGE" in canAttack)
         assertFalse("getWildernessLevel" in canAttack)
     }
 

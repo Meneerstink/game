@@ -135,10 +135,26 @@ object OsrsEquipmentStatsAudit {
      * slot (e.g. the 13444 "Abyssal whip" copy with slot 0) has no attack speed to compare (slot differences are recorded
      * separately in OSRS_IMPORT_MASTER.yml, not rewritten by this audit).
      */
-    private fun diff(localId: Int, name: String, upstreamId: Int, local: Map<String, Int>, osrs: Map<String, Int>) =
-        FIELDS.filter { local[it] != osrs[it] }
+    private fun diff(localId: Int, name: String, upstreamId: Int, local: Map<String, Int>, osrsParams: Map<String, Int>): List<Mismatch> {
+        val osrs = charged(localId, osrsParams)
+        return FIELDS.filter { local[it] != osrs[it] }
             .filterNot { it == "attack_speed" && (local[it] == null || osrs[it] == null) }
             .map { Mismatch(localId, name, upstreamId, it, local[it], osrs[it]) }
+    }
+
+    /**
+     * Charged draconic shields: the OSRS cache params carry the uncharged defences; each charge adds 1 to stab, slash, crush
+     * and ranged defence, up to 50 (OSRS Wiki "Dragonfire shield", "Ancient wyvern shield", "Dragonfire ward", Charged tab).
+     * This server's charged id is the fully charged shield (combat run 2026-09-29, ChargedShieldStatsTests).
+     */
+    val CHARGED_DEFENCE_BONUS: Map<Int, String> =
+        mapOf(11283 to "Dragonfire shield", 22952 to "Ancient wyvern shield", 22954 to "Dragonfire ward")
+    const val FULL_CHARGE_DEFENCE = 50
+    val CHARGED_FIELDS = setOf("defence_stab", "defence_slash", "defence_crush", "defence_ranged")
+
+    /** [osrs] params of [localId] with the full-charge bonus when it is a charged draconic shield. */
+    fun charged(localId: Int, osrs: Map<String, Int>): Map<String, Int> =
+        if (localId !in CHARGED_DEFENCE_BONUS) osrs else osrs.mapValues { (field, v) -> if (field in CHARGED_FIELDS) v + FULL_CHARGE_DEFENCE else v }
 
     fun loadYml(file: File = File(ITEMS_YML)): List<JsonNode> = ObjectMapper(YAMLFactory()).readTree(file).toList()
 

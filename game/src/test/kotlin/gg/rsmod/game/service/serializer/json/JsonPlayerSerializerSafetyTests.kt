@@ -55,8 +55,12 @@ class JsonPlayerSerializerSafetyTests {
         @Suppress("DEPRECATION")
         val json = JsonParser().parse(Files.readString(save)).asJsonObject
         assertEquals(4096, json["padding"].asString.length)
-        val names = Files.list(dir).use { files -> files.map { it.fileName.toString() }.collect(Collectors.toList()) }
-        assertEquals(listOf("anudd"), names, "no temp files are left behind")
+        val names = Files.list(dir).use { files -> files.map { it.fileName.toString() }.collect(Collectors.toList()) }.sorted()
+        // The save and its one rolling backup of the previous write (writeAtomically, 2026-09-28) - no temp files.
+        assertEquals(listOf("anudd", "anudd.bak"), names, "no temp files are left behind")
+        @Suppress("DEPRECATION")
+        val backup = JsonParser().parse(Files.readString(dir.resolve("anudd.bak"))).asJsonObject
+        assertEquals(4096, backup["padding"].asString.length)
     }
 
     @Test

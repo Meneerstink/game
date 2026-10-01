@@ -34,7 +34,31 @@ import java.time.format.DateTimeFormatter
 object WorldScan {
     private val STAMP: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss")
 
-    fun run(world: World): File {
+    /**
+     * Runs [run] on its own thread (it reads every definition and the cache: 7.7 s on the game thread once) and hands the
+     * result to [done] back on the game thread. The npc list is copied on the game thread first, so the scan never walks
+     * the live list while the game thread changes it. Call from the game thread.
+     */
+    fun runInBackground(
+        world: World,
+        done: (Result<File>) -> Unit,
+    ) {
+        val npcs = ArrayList<Npc>(world.npcs.count())
+        world.npcs.forEach { npcs += it }
+        val game = world.getService(gg.rsmod.game.service.GameService::class.java)
+        Thread({
+            val result = runCatching { run(world, npcs) }
+            result.exceptionOrNull()?.let { gg.rsmod.game.model.Trace.crash("world scan", it) }
+            if (game != null) game.submitGameThreadJob { done(result) } else logger.warn("World scan: no GameService to report back on - {}", result.getOrNull())
+        }, "world-scan").apply { isDaemon = true }.start()
+    }
+
+    private val logger = mu.KotlinLogging.logger {}
+
+    fun run(
+        world: World,
+        npcs: List<Npc>,
+    ): File {
         val findings = mutableListOf<String>()
         val summary = linkedMapOf<String, Int>()
 
@@ -54,7 +78,7 @@ object WorldScan {
 
         // ---- census (existing tools, now in one report)
         val census = mutableListOf<String>()
-        runCatching { census += "npcs: " + gg.rsmod.game.model.npc.NpcCensus.writeCsv(world) }
+        runCatching { census += "npcs: " + gg.rsmod.game.model.npc.NpcCensus.writeCsv(world, npcs = npcs) }
         runCatching { census += "item options: " + gg.rsmod.game.model.item.ItemOptionCensus.writeCsv(world) }
         runCatching { census += "items: " + gg.rsmod.game.model.item.ItemCensus.writeCsv(world) }
         runCatching { census += "objects: " + gg.rsmod.game.model.obj.ObjectCensus.writeCsv(world) }
@@ -65,7 +89,7 @@ object WorldScan {
         // ---- spawned npcs
         val seenIds = HashSet<Int>()
         val stuckReported = HashSet<String>()
-        world.npcs.forEach { npc ->
+        npcs.forEach { npc ->
             val def = runCatching { npc.def }.getOrNull() ?: return@forEach
             val name = def.name
             if (npc.getSize() == 1 && npc.walkRadius > 0 && stuck(world, npc.tile) && stuckReported.add("${npc.id}:${npc.tile}")) {
@@ -113,7 +137,7 @@ object WorldScan {
 
         // ---- one npc placed twice on one tile (two spawn sources, ROOT_CAUSES #66)
         val perTile = HashMap<String, Int>()
-        world.npcs.forEach { perTile.merge("${it.id}@${it.tile.x},${it.tile.z},${it.tile.height}", 1, Int::plus) }
+        npcs.forEach { perTile.merge("${it.id}@${it.tile.x},${it.tile.z},${it.tile.height}", 1, Int::plus) }
         perTile.filterValues { it > 1 }.forEach { (key, n) -> add("npc-spawn", "npc $key spawned $n times on the same tile (duplicate spawn source)") }
 
         // ---- npc attack table ids

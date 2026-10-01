@@ -292,6 +292,25 @@ object WorldEdits {
         return true
     }
 
+    /**
+     * Npcs and locs that code posts with logic tied to their post (Skully and his Loot Chest - SkullyRoster blocks his tile and
+     * owns the chest; the Quest Guide - its Talk-to only answers on the new_player.yml tile). An editor move, copy or remove
+     * of one only looks right: the code keeps the old post (2026-10-01: the owner's moves left an invisible blocked tile, a
+     * Quest Guide that refused to talk, and two sources for one npc). The value says where the post is set instead.
+     */
+    private val codePosts = java.util.WeakHashMap<Any, String>()
+
+    /** Marks [entity] (an [Npc] or [GameObject]) as posted by code; [source] is where its post is set. */
+    fun registerCodePost(
+        entity: Any,
+        source: String,
+    ) {
+        codePosts[entity] = source
+    }
+
+    /** Where [entity]'s post is set when code posts it, or null when the editor may move it. */
+    fun codePostOf(entity: Any): String? = codePosts[entity]
+
     /** Facing index in [FACINGS] last given to an npc by an edit. */
     private val facings = java.util.WeakHashMap<Npc, Int>()
 

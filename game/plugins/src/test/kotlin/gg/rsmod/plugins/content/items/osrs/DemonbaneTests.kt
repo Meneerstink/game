@@ -117,7 +117,7 @@ class DemonbaneTests {
         val specials = File("src/main/kotlin/gg/rsmod/plugins/content/combat/specialattack/weapons/melee_specials.plugin.kts").readText()
         assertTrue("Items.DARKLIGHT, Items.ARCLIGHT, Items.ARCLIGHT_INACTIVE, Items.EMBERLIGHT" in specials && "StyleType.STAB" in specials)
         val claws = File("src/main/kotlin/gg/rsmod/plugins/content/combat/specialattack/weapons/dragonequipment/dragon_claws.plugin.kts").readText()
-        assertTrue("Items.BURNING_CLAWS" in claws && "Burns.apply(target)" in claws && "StyleType.SLASH" in claws)
+        assertTrue("Items.BURNING_CLAWS" in claws && "Burns.apply(target, source = player)" in claws && "StyleType.SLASH" in claws)
         val death = File("src/main/kotlin/gg/rsmod/plugins/content/mechanics/death/PvpDeathBreakables.kt").readText()
         assertEquals(2, Regex("Demonbane.SYNAPSE_PRODUCTS").findAll(death).count(), "split and execute")
         assertEquals(setOf(Items.EMBERLIGHT, Items.SCORCHING_BOW, Items.PURGING_STAFF), Demonbane.SYNAPSE_PRODUCTS.keys)

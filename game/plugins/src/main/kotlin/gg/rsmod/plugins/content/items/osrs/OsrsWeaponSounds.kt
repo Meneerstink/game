@@ -37,6 +37,9 @@ object OsrsWeaponSounds {
     val BLUNT = Category(crush = Sfx.WARHAMMER_CRUSH)
     val CLAW = Category(stab = Sfx.HACKSWORD_STAB, slash = Sfx.HACKSWORD_SLASH)
 
+    /** OSRS Wiki "Spiked" category (maces): the Jagex mace_stab 2509 / mace_crush 2508 of the same name in this cache. */
+    val SPIKED = Category(stab = Sfx.MACE_STAB, crush = Sfx.MACE_CRUSH)
+
     private val byWeapon = mutableMapOf<Int, Category>()
 
     private fun register(
@@ -59,7 +62,13 @@ object OsrsWeaponSounds {
             Items.TRIDENT_OF_THE_SEAS, Items.TRIDENT_OF_THE_SEAS_FULL, Items.UNCHARGED_TRIDENT, Items.TRIDENT_OF_THE_SWAMP,
             Items.UNCHARGED_TOXIC_TRIDENT, Items.TRIDENT_OF_THE_SEAS_E, Items.UNCHARGED_TRIDENT_E, Items.TRIDENT_OF_THE_SWAMP_E,
             Items.UNCHARGED_TOXIC_TRIDENT_E, Items.SANGUINESTI_STAFF, Items.SANGUINESTI_STAFF_UNCHARGED,
+            // Revenant sceptres (OSRS Wiki category "Powered Staff"): their staff bash like the tridents above.
+            Items.THAMMARONS_SCEPTRE, Items.THAMMARONS_SCEPTRE_U, Items.THAMMARONS_SCEPTRE_A, Items.THAMMARONS_SCEPTRE_AU,
+            Items.ACCURSED_SCEPTRE, Items.ACCURSED_SCEPTRE_U, Items.ACCURSED_SCEPTRE_A, Items.ACCURSED_SCEPTRE_AU,
         )
+        // Revenant chainmaces (OSRS Wiki category "Spiked"): the crush sequence (OSRS 245) carries its own OSRS frame sounds, the
+        // stab sequence (OSRS 246) none - the stab takes the category sound (only played for a silent sequence, MeleeCombatStrategy).
+        register(SPIKED, Items.VIGGORAS_CHAINMACE, Items.VIGGORAS_CHAINMACE_U, Items.URSINE_CHAINMACE, Items.URSINE_CHAINMACE_U)
         // OSRS Wiki "Blunt" category (xrsps generated header "Blunt" -> warhammer_crush).
         register(BLUNT, Items.GILDED_SPADE, Items.DRAGON_CANE)
         register(CLAW, Items.BURNING_CLAWS)

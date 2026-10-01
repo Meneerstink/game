@@ -14,6 +14,7 @@ import gg.rsmod.plugins.api.ext.closeInterface
 import gg.rsmod.plugins.api.ext.hit
 import gg.rsmod.plugins.api.ext.isMulti
 import gg.rsmod.plugins.content.cmd.Sweeps
+import gg.rsmod.plugins.content.combat.LifepointUnits
 import gg.rsmod.plugins.content.cmd.conformance.Conformance.Result
 import gg.rsmod.plugins.content.cmd.conformance.Conformance.Verdict
 import gg.rsmod.plugins.content.skills.summoning.BeastOfBurden
@@ -499,10 +500,12 @@ object SummoningSuite : Conformance.Suite {
             val d = data(name) ?: continue
             val heal = refs[d.pouch.toString()]?.get("void")?.get("heal")?.takeIf { !it.isNull } ?: continue
             summon(d) ?: continue
-            bot.setCurrentLifepoints(100)
+            // Half the maximum, so the heal has room; the donor figure is x10 (LifepointUnits).
+            val start = bot.getMaximumLifepoints() / 2
+            bot.setCurrentLifepoints(start)
             val c = run.world.currentCycle
             wait(ticks(run, 16_200L))
-            run.check(e, "passive heal after 16 s: ${name.lowercase()}", bot.getCurrentLifepoints() - 100, "void" to heal["lifepoints"].asInt())
+            run.check(e, "passive heal after 16 s: ${name.lowercase()}", bot.getCurrentLifepoints() - start, "void" to LifepointUnits.fromLedger(heal["lifepoints"].asInt()))
             heal["gfx"]?.takeIf { !it.isNull }?.asInt()?.let { gfx ->
                 run.expectTrue(e, "passive heal graphic: ${name.lowercase()}", run.recording.of("Conf1", "out").any { it.cycle >= c && it.text.startsWith("gfx ") && idOf(it.text) == gfx }, "no gfx $gfx on the owner", "gfx $gfx (void)")
             }

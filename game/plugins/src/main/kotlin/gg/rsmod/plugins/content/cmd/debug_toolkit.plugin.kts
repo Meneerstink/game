@@ -198,14 +198,12 @@ on_command("traces", Privilege.ADMIN_POWER) {
 on_command("scan", Privilege.ADMIN_POWER) {
     player.message("World scan running in the background... (read-only; the game keeps running)")
     val name = player.username
-    // Off the game thread: the scan reads files and every definition (it stalled a boot tick for 7.7 s on the game thread).
-    Thread({
-        val result = runCatching { WorldScan.run(world) }
-        result.exceptionOrNull()?.let { Trace.crash("world scan", it) }
+    // Off the game thread (WorldScan.runInBackground: it stalled a boot tick for 7.7 s); the reply comes back on the game thread.
+    WorldScan.runInBackground(world) { result ->
         world.getPlayerForName(name)?.message(
             result.getOrNull()?.let { "<col=178000>World scan done:</col> ${it.readLines().getOrNull(1) ?: ""} - ${it.name}" } ?: "World scan failed - see C:\\RSPS\\bugs\\crashes-*.log",
         )
-    }, "world-scan").apply { isDaemon = true }.start()
+    }
 }
 
 /*
@@ -253,9 +251,7 @@ on_world_init {
             wait(10)
             // One-shot: the switch file is removed, so only the next start pays the few seconds again when it is recreated.
             File("C:/RSPS/scan.on").delete()
-            Thread({
-                runCatching { logger.info("World scan written to {}", WorldScan.run(world)) }.onFailure { Trace.crash("world scan at boot", it) }
-            }, "world-scan").apply { isDaemon = true }.start()
+            WorldScan.runInBackground(world) { result -> result.getOrNull()?.let { logger.info("World scan written to {}", it) } }
         }
     }
 }

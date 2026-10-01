@@ -11,6 +11,7 @@ import gg.rsmod.game.tools.importer.Rev667LocCodec
 import gg.rsmod.game.tools.importer.Rev667TileCodec
 import gg.rsmod.game.tools.importer.RoyalHallLocTool
 import gg.rsmod.game.tools.importer.RoyalHallMapTool
+import gg.rsmod.plugins.api.cfg.Npcs
 import gg.rsmod.plugins.content.mechanics.pvp.SkullyRoster
 import gg.rsmod.plugins.content.newplayer.NewPlayerConfig
 import org.junit.BeforeClass
@@ -113,9 +114,12 @@ class GeHomeHallTests {
         assertFalse("spawnAll" in File(root, "mechanics/store/StoreNpcs.kt").readText())
         val casino = File(root, "activity/casino/casino_grandexchange.plugin.kts").readText()
         assertFalse("spawn_npc(" in casino || "spawn_obj(" in casino, "the old Grand Exchange casino pit is still spawned")
-        // The two owners of their own npc: Skully (with his chest) and the Quest Guide stand in the hall once.
+        // The two owners of their own npc: Skully (with his chest, SkullyRoster) and the Quest Guide stand once. Owner 2026-09-30
+        // (world edit group 580): Skully stands outside the hall, south of it at 3160,3481, facing south - posted by the roster
+        // only, never by a world_edits.json line as well.
         val skully = SkullyRoster.SITES.single { it.label == "Grand Exchange" }
-        assertTrue(skully.exact && skully.wanted.x in floorX && skully.wanted.z in floorZ)
+        assertEquals(Tile(3160, 3481, 0), skully.wanted)
+        assertTrue(skully.exact && skully.face == gg.rsmod.game.model.Direction.SOUTH)
         assertTrue(posts.none { it.id == skully.npcId }, "Skully is posted twice")
         assertTrue(posts.none { it.id == NewPlayerConfig.DEFAULTS.choiceNpc }, "the Quest Guide is posted twice")
         assertEquals(NewPlayerConfig.DEFAULTS.choiceNpcTile, NewPlayerConfig.load(File("../../data/cfg/new_player.yml")).choiceNpcTile)
@@ -126,9 +130,8 @@ class GeHomeHallTests {
         val solid = solidTiles()
         val stairs = GeHomeHall.STAIRS.flatMap { s -> (0..2).flatMap { level -> footprint(Tile(s.base.x, s.base.z, level), 2, 2) } }.toSet()
         val landings = GeHomeHall.STAIRS.flatMap { listOf(it.floor, it.gallery, it.landing) }.toSet()
-        val skully = SkullyRoster.SITES.single { it.label == "Grand Exchange" }
-        val all = hallPosts().filter { it.id in GeHomeHall.HALL_NPCS } +
-            Post(skully.npcId, skully.wanted, 0) + Post(NewPlayerConfig.DEFAULTS.choiceNpc, NewPlayerConfig.DEFAULTS.choiceNpcTile, 0)
+        // Skully stands outside the hall since 2026-09-30 (see above), so only the Quest Guide joins the hall posts.
+        val all = hallPosts().filter { it.id in GeHomeHall.HALL_NPCS } + Post(NewPlayerConfig.DEFAULTS.choiceNpc, NewPlayerConfig.DEFAULTS.choiceNpcTile, 0)
         val taken = HashMap<Tile, Int>()
         all.forEach { post ->
             val n = size(post.id)
@@ -140,11 +143,13 @@ class GeHomeHallTests {
                 assertTrue((t.x in floorX && t.z in floorZ && t.height in 0..2) || balcony, "${post.id} leaves the floor at $t")
                 assertFalse(t in solid, "${post.id} stands in an object at $t")
                 assertFalse(t in stairs || t in landings, "${post.id} blocks a staircase at $t")
-                assertEquals(null, taken.put(t, post.id), "${post.id} shares $t")
+                val other = taken.put(t, post.id)
+                // Owner 2026-09-30 in developer mode (groups 552, 570): Azzanadra (2 x 2) at 3162,3490 on level 1 takes in the
+                // Oneiromancer's tile 3163,3491 - his own placement, reported to him on 2026-10-01; no other npc may share a tile.
+                val ownerOverlap = setOf(post.id, other) == setOf(Npcs.AZZANADRA, Npcs.ONEIROMANCER) && t == Tile(3163, 3491, 1)
+                if (!ownerOverlap) assertEquals(null, other, "${post.id} shares $t")
             }
         }
-        // The chest beside Skully is on free floor too.
-        assertFalse(skully.chest!! in solid || skully.chest!! in taken)
     }
 
     @Test
@@ -156,7 +161,9 @@ class GeHomeHallTests {
         val fountain = (3163..3166).flatMap { x -> (3490..3493).map { z -> x to z } }.toSet() + (3163 to 3497)
         val blocked = arms.filter { it !in fountain && Tile(it.first, it.second, 0) in solid }
         assertTrue(blocked.isEmpty(), "objects on the carpet cross: $blocked")
-        val npcs = hallPosts().filter { it.tile.height == 0 && (it.tile.x to it.tile.z) in arms }
+        // Owner 2026-09-30 in developer mode put these on the carpet himself (world edit groups 575, 576) - no one else may.
+        val ownerPlaced = setOf(Post(GeHomeHall.DONATOR_STORE, Tile(3166, 3489, 0), 6), Post(GeHomeHall.DEADMAN_STORE, Tile(3159, 3492, 0), 6))
+        val npcs = hallPosts().filter { it.tile.height == 0 && (it.tile.x to it.tile.z) in arms && it !in ownerPlaced }
         assertTrue(npcs.isEmpty(), "npcs on the carpet cross: $npcs")
     }
 

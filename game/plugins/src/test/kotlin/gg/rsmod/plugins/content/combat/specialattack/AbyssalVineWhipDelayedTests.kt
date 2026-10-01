@@ -19,6 +19,8 @@ class AbyssalVineWhipDelayedTests {
             "delayed vine damage must stop after victim logout",
         )
         assertTrue("!attacker.isOnline" in vine)
-        assertTrue(vine.indexOf("isOnline") < vine.indexOf("victim.hit"))
+        // 2026-10-01 rewrite (Darkan / Novite): every vine hit is a dealHit roll in vineStrike, checked after the online gates.
+        assertTrue(vine.indexOf("isOnline") < vine.lastIndexOf("vineStrike(attacker, victim)"))
+        assertTrue("Combat.canEngage(attacker, victim)" in vine, "a vine hit is an attack: the PvP gate applies to every one")
     }
 }

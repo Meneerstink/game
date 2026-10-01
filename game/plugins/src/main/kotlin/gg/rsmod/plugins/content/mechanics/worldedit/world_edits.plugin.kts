@@ -48,6 +48,17 @@ on_world_init {
     }
 }
 
+/**
+ * A move, copy, rotation or removal of something code posts ([WorldEdits.codePostOf]) is refused with where its post is set:
+ * the editor's edit would only look right while the code keeps the old post. PROBLEM line with the wanted spot.
+ */
+fun codePosted(player: Player, entity: Any?, what: String, wanted: String): Boolean {
+    val source = entity?.let { WorldEdits.codePostOf(it) } ?: return false
+    player.message("$what is placed by code ($source) - the editor cannot $wanted it. Ask for the change there.")
+    gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.INPUT) { "world edit refused: $wanted $what - posted by $source" }
+    return true
+}
+
 fun locAt(player: Player, a: List<Int>): gg.rsmod.game.model.entity.GameObject? {
     val obj = WorldEdits.objectsAt(player.world, Tile(a[0], a[1], a[2])).firstOrNull { it.id == a[3] }
     if (obj == null) player.message("Nothing with id ${a[3]} on that tile.")
@@ -135,6 +146,7 @@ on_command("devmoveloc", Privilege.ADMIN_POWER) {
     val a = intArgs(player)
     if (a.size < 7) return@on_command
     val obj = WorldEdits.objectsAt(world, Tile(a[0], a[1], a[2])).firstOrNull { it.id == a[3] }
+    if (codePosted(player, obj, locName(player, a[3]), "move to ${a[4]},${a[5]},${a[6]}")) return@on_command
     if (obj != null && blocked(player, Tile(a[4], a[5], a[6]), obj.type, moving = obj)) return@on_command
     val ok = WorldEdits.moveLoc(world, Tile(a[0], a[1], a[2]), a[3], Tile(a[4], a[5], a[6]), copy = false)
     player.message(if (ok) "Moved ${a[3]} to ${a[4]},${a[5]},${a[6]}." else "That object is no longer there.")
@@ -144,6 +156,7 @@ on_command("devcopyloc", Privilege.ADMIN_POWER) {
     val a = intArgs(player)
     if (a.size < 7) return@on_command
     val obj = WorldEdits.objectsAt(world, Tile(a[0], a[1], a[2])).firstOrNull { it.id == a[3] }
+    if (codePosted(player, obj, locName(player, a[3]), "copy")) return@on_command
     if (obj != null && blocked(player, Tile(a[4], a[5], a[6]), obj.type)) return@on_command
     val ok = WorldEdits.moveLoc(world, Tile(a[0], a[1], a[2]), a[3], Tile(a[4], a[5], a[6]), copy = true)
     player.message(if (ok) "Copied ${a[3]} to ${a[4]},${a[5]},${a[6]}." else "That object is no longer there.")
@@ -156,6 +169,11 @@ on_command("devnpc", Privilege.ADMIN_POWER) {
     val a = args.drop(1).mapNotNull { it.toIntOrNull() }
     if (a.size < 4) return@on_command
     val to = if (a.size >= 7) Tile(a[4], a[5], a[6]) else null
+    // Turning a code-posted npc is only a facing; moving, copying or removing one is refused.
+    if (op != "rotate") {
+        val npc = WorldEdits.npcAt(world, Tile(a[0], a[1], a[2]), a[3])
+        if (codePosted(player, npc, npc?.name ?: "${a[3]}", if (to != null) "$op to ${to.x},${to.z},${to.height}" else op)) return@on_command
+    }
     val ok = WorldEdits.editNpc(world, op, Tile(a[0], a[1], a[2]), a[3], to)
     player.message(if (ok) "Npc ${a[3]}: $op done." else "Npc ${a[3]} not found there.")
 }
@@ -209,6 +227,8 @@ on_command("devnpcinfo", Privilege.ADMIN_POWER) {
 on_command("devremove", Privilege.ADMIN_POWER) {
     val a = intArgs(player)
     if (a.size < 4) return@on_command
+    val obj = WorldEdits.objectsAt(world, Tile(a[0], a[1], a[2])).firstOrNull { it.id == a[3] }
+    if (codePosted(player, obj, locName(player, a[3]), "remove")) return@on_command
     WorldEdits.removeLoc(world, Tile(a[0], a[1], a[2]), a[3])
     player.message("Removed ${a[3]} at ${a[0]},${a[1]},${a[2]} (undoedit to take it back).")
 }
@@ -217,6 +237,8 @@ on_command("devremove", Privilege.ADMIN_POWER) {
 on_command("devrotate", Privilege.ADMIN_POWER) {
     val a = intArgs(player)
     if (a.size < 4) return@on_command
+    val obj = WorldEdits.objectsAt(world, Tile(a[0], a[1], a[2])).firstOrNull { it.id == a[3] }
+    if (codePosted(player, obj, locName(player, a[3]), "rotate")) return@on_command
     val ok = WorldEdits.rotateLoc(world, Tile(a[0], a[1], a[2]), a[3])
     player.message(if (ok) "Rotated ${a[3]} at ${a[0]},${a[1]},${a[2]}." else "Nothing with id ${a[3]} on that tile.")
 }

@@ -1,0 +1,4 @@
+# Kotlin sources are LF in the repository and in every working copy: the source-text guard tests read them and
+# compare multi-line snippets written with LF (2026-10-01: half the working copies were CRLF via core.autocrlf, ROOT_CAUSES #119).
+*.kt text eol=lf
+*.kts text eol=lf

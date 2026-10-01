@@ -69,6 +69,19 @@ spawn_npc(
     direction = config.choiceNpcFacing,
 )
 
+// Its Talk-to answers only on the yml tile, so the developer-mode editor must not move it (WorldEdits.codePostOf).
+on_world_init {
+    world.queue {
+        // A tick after boot, when every spawn_npc line stands.
+        wait(1)
+        world.npcs.forEach {
+            if (it.id == config.choiceNpc && it.spawnTile == config.choiceNpcTile) {
+                gg.rsmod.plugins.content.mechanics.worldedit.WorldEdits.registerCodePost(it, "data/cfg/new_player.yml, choice_npc")
+            }
+        }
+    }
+}
+
 // Owner 2026-09-26: right-click "Quest choices" opens "Choose your path" (also to see what was chosen).
 on_npc_option(npc = config.choiceNpc, option = "quest choices") {
     QuestGuideUi.open(player)

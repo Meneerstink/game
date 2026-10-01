@@ -9,6 +9,7 @@ import gg.rsmod.game.model.entity.DynamicObject
 import gg.rsmod.game.model.entity.GameObject
 import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.plugins.api.cfg.Npcs
+import gg.rsmod.plugins.content.mechanics.worldedit.WorldEdits
 
 /**
  * Skully and his Loot Chest at every bank site (owner 2026-09-17: "zorg ervoor dat ze niet in een
@@ -72,12 +73,13 @@ object SkullyRoster {
      */
     val SITES: List<Site> =
         listOf(
-            // Owner 2026-09-27: the Royal Hall's PvP corner (north-west of the ground floor), facing into the corner, the Loot
-            // Chest against the west wall beside him, opening east onto the staircase approach. The single source for his post: the
-            // world_edits.json moves that once put him outside the south door were folded into this line.
+            // Owner 2026-09-30 in developer mode (world edit groups 577-580, after the 2026-09-27 PvP-corner post 3158,3494):
+            // outside the hall, south of it at 3160,3481 facing south (edit rot 4 = SOUTH, WorldEdits.FACINGS), the Loot Chest
+            // east of him at 3161,3481 with rotation 3 (front west, towards him). Folded into this line, the single source of
+            // his post: the editor's moves left the roster's blocked tile in the corner (WorldEdits.codePostOf now refuses them).
             Site(
-                "Grand Exchange", Npcs.SKULLY, anchor = Tile(3165, 3487, 0), wanted = Tile(3158, 3494, 0), exact = true,
-                face = Direction.EAST, chest = Tile(3158, 3495, 0), chestFront = Direction.EAST,
+                "Grand Exchange", Npcs.SKULLY, anchor = Tile(3160, 3480, 0), wanted = Tile(3160, 3481, 0), exact = true,
+                face = Direction.SOUTH, chest = Tile(3161, 3481, 0), chestFront = Direction.WEST,
             ),
             // 2026-09-23 bank pass: the heuristic had put him on the staircase tile (3255,3421). North-west corner of
             // the customer side, back to the west wall, chest in the corner.
@@ -290,7 +292,10 @@ object SkullyRoster {
             val faceTile = if (site.face != null) placement.skully.step(site.face) else facing(world, placement.skully, site.anchor, exclude = placement.chest)
             // The chest's front faces the same way Skully does (into the bank), never the wall.
             val front = site.chestFront ?: site.face ?: faceTile?.let { Direction.between(placement.skully, it) } ?: Direction.NORTH
-            world.spawn(DynamicObject(LOOT_CHEST, 10, chestRotation(front), placement.chest))
+            val chest = DynamicObject(LOOT_CHEST, 10, chestRotation(front), placement.chest)
+            world.spawn(chest)
+            WorldEdits.registerCodePost(skully, "SkullyRoster.kt, site \"${site.label}\"")
+            WorldEdits.registerCodePost(chest, "SkullyRoster.kt, site \"${site.label}\"")
             blockTile(world, placement.skully)
             faceTile?.let {
                 // Both the add-npc orientation (what a player who arrives later sees first) and the

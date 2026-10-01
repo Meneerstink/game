@@ -30,9 +30,17 @@ object NpcCensus {
         val liveCount: Int,
     )
 
-    fun collect(world: World): List<Row> {
+    /** [npcs]: a snapshot taken on the game thread when this runs off it (WorldScan); null reads the live list. */
+    fun collect(
+        world: World,
+        npcs: List<gg.rsmod.game.model.entity.Npc>? = null,
+    ): List<Row> {
         val liveCounts = HashMap<Int, Int>()
-        world.npcs.forEach { npc -> liveCounts[npc.id] = (liveCounts[npc.id] ?: 0) + 1 }
+        if (npcs != null) {
+            npcs.forEach { npc -> liveCounts[npc.id] = (liveCounts[npc.id] ?: 0) + 1 }
+        } else {
+            world.npcs.forEach { npc -> liveCounts[npc.id] = (liveCounts[npc.id] ?: 0) + 1 }
+        }
 
         val ids = world.definitions.getAllKeys(NpcDef::class.java).sorted()
         return ids.map { id ->
@@ -67,8 +75,9 @@ object NpcCensus {
     fun writeCsv(
         world: World,
         path: String = "./npc_inventory.csv",
+        npcs: List<gg.rsmod.game.model.entity.Npc>? = null,
     ): String {
-        val rows = collect(world)
+        val rows = collect(world, npcs)
         val lines = mutableListOf(
             "id,name,combat_level,cache_attackable,options,bound_options,transforms,has_combat_def,live_count",
         )

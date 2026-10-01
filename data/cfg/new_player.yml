@@ -38,11 +38,12 @@ choice_npc:
   # The npc the new-player intro sends players to for the permanent quest choices, the Summoning kit and quest lamps.
   # Change the id or the tile here to move or replace it (14482 = the quest-cape "Quest Guide", QuestGuideNpcTool;
   # 949 = the plain cache one); facing is n, e, s or w.
+  # Owner 2026-09-30 (developer mode): west of the fountain, facing south.
   npc: 14482
-  x: 3167
-  z: 3487
+  x: 3162
+  z: 3491
   level: 0
-  facing: w
+  facing: s
 
 starter_chest:
   # The Deadman Mode starter chest the intro will hand out (not handed out yet). item 23881 = OSRS item 22330 "Deadman

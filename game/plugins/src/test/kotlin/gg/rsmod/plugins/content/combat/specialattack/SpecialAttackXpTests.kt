@@ -51,6 +51,8 @@ class SpecialAttackXpTests {
         // SOURCE_GAP (no experience, unchanged): Ancient godsword blood sacrifice. The Scorching bow's burn left this list on 2026-09-17c:
         // it is a normal burn stack now (Burns.apply), like the Burning claws and Eclipse burns. The Abyssal vine whip left it on 2026-10-01:
         // every Vine Call hit is a melee roll through dealHit (melee_specials.plugin.kts, Darkan / Novite), experience included.
-        assertEquals(listOf("ancient_godsword.plugin.kts"), offenders)
+        // The Ursine chainmace's Tendon Strike bleed ("deals 20 damage over 6 seconds", revenant_specials.plugin.kts) is a
+        // damage-over-time effect like poison and the Phantom Strike bleed: no combat experience.
+        assertEquals(listOf("ancient_godsword.plugin.kts", "revenant_specials.plugin.kts"), offenders)
     }
 }

@@ -263,11 +263,14 @@ object Familiar {
         }
     }
 
-    /** Void Spinner and Bunyip restore 100/20 internal life points every 15 online seconds. */
+    /**
+     * Void Spinner and Bunyip restore 100/20 donor (x10) life points every 15 online seconds: 10 and 2 of this server's 1:1
+     * lifepoints (2026-10-01: the raw 100 healed a 99-lifepoint player to full every 15 seconds).
+     */
     private fun applyPassiveHealing(player: Player, npc: Npc) {
         val amount = when (npc.id) {
-            SummoningPouchData.VOID_SPINNER.npc -> 100
-            SummoningPouchData.BUNYIP.npc -> 20
+            SummoningPouchData.VOID_SPINNER.npc -> gg.rsmod.plugins.content.combat.LifepointUnits.fromLedger(100)
+            SummoningPouchData.BUNYIP.npc -> gg.rsmod.plugins.content.combat.LifepointUnits.fromLedger(20)
             else -> {
                 player.attr.remove(FAMILIAR_PASSIVE_HEAL_CYCLES_ATTR)
                 return
