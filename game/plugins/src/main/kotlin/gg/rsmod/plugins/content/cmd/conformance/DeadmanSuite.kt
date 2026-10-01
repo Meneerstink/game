@@ -9,6 +9,8 @@ import gg.rsmod.game.model.item.Item
 import gg.rsmod.game.model.queue.QueueTask
 import gg.rsmod.plugins.api.EquipmentType
 import gg.rsmod.plugins.api.cfg.Items
+import gg.rsmod.plugins.api.ext.calculateAndSetCombatLevel
+import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.api.ext.hit
 import gg.rsmod.plugins.api.ext.isMulti
 import gg.rsmod.plugins.api.ext.setVarp
@@ -44,6 +46,8 @@ import gg.rsmod.plugins.content.combat.getCombatTarget
  *   still a PvP death - the player gets the loot key (DeathResolver aggressor window).
  * - veng: Vengeance Other on the real spell-on-player packet - the 30-second delay is the caster's (OSRS Wiki), an already venged
  *   target is refused, a hit rebounds 75% (rounded down, min 1), entering a player-owned house clears it.
+ * - zones: the PvP gate end to end - a target inside a guarded zone is refused with the guards' message, a combat-level gap over 14
+ *   is refused (Deadman bracket), the same bracket in danger attacks.
  */
 object DeadmanSuite : Conformance.Suite {
     override suspend fun QueueTask.run(
@@ -75,6 +79,7 @@ object DeadmanSuite : Conformance.Suite {
         scenario("xlog") { xLog(run, arena) }
         scenario("pvm") { pvmDeath(run, arena) }
         scenario("veng") { vengeance(run, arena) }
+        scenario("zones") { pvpGate(run, arena) }
     }
 
     /** Hitsplat types [who] received since [from], in order. */
@@ -973,5 +978,73 @@ object DeadmanSuite : Conformance.Suite {
         } else {
             run.expectTrue(e, "entering the house clears vengeance", !veng.isActive(d), "still active at ${d.tile}")
         }
+    }
+
+    // ---- zones: the PvP gate (guarded zone, level bracket) ------------------------------------------------------------------
+
+    private suspend fun QueueTask.pvpGate(
+        run: Conformance.Run,
+        arena: Tile,
+    ) {
+        val e = "zones"
+        val zones = gg.rsmod.plugins.content.mechanics.pvp.GuardedZones
+        val square = Tile(3213, 3428, 0)
+        // A dangerous tile right next to a guarded one, straight west of the Varrock square.
+        val border = (1..120).map { square.transform(-it, 0) }.firstOrNull { t ->
+            !zones.contains(t) && !run.world.collision.isClipped(t) && zones.contains(t.transform(1, 0)) && !run.world.collision.isClipped(t.transform(1, 0))
+        }
+        val a = run.bot(arena, "ZA")
+        val b = run.bot(arena.transform(1, 0), "ZB")
+        wait(2)
+        wield(a, Item(Items.ABYSSAL_WHIP))
+        fun msgs(from: Int) = run.recording.of("ZA", "msg").filter { it.cycle >= from && it.text.startsWith("MessageGameMessage") }
+            .joinToString(" / ") { it.text.substringAfter("message=").take(80) }
+        suspend fun tryAttack(): Pair<Boolean, String> {
+            val c = run.world.currentCycle
+            a.attack(b)
+            var swung = false
+            for (i in 0 until 6) {
+                b.setCurrentLifepoints(b.getMaximumLifepoints())
+                wait(1)
+                if (a.timers.has(gg.rsmod.game.model.timer.ATTACK_DELAY)) swung = true
+            }
+            a.resetInteractions()
+            Combat.reset(a)
+            b.resetInteractions()
+            Combat.reset(b)
+            wait(2)
+            return swung to msgs(c)
+        }
+
+        // 1. B inside the guarded zone, A on the dangerous tile next to it: refused with the guards' message.
+        if (border == null) {
+            run.notTested(e, "safe zone", "no walkable border tile west of $square")
+        } else {
+            a.moveTo(border)
+            b.moveTo(border.transform(1, 0))
+            wait(2)
+            val (swung, said) = tryAttack()
+            run.expectTrue(e, "target inside a guarded zone: refused with the guards' message",
+                !swung && said.contains(gg.rsmod.plugins.content.mechanics.pvp.AreaState.SAFE_ZONE_ATTACK_MESSAGE), "swung=$swung msgs: $said")
+        }
+
+        // 2. Both in danger, B 15+ combat levels lower: refused (Deadman bracket +/-14).
+        a.moveTo(arena)
+        b.moveTo(arena.transform(1, 0))
+        val combat = listOf(Skills.ATTACK, Skills.STRENGTH, Skills.DEFENCE, Skills.CONSTITUTION, Skills.RANGED, Skills.MAGIC, Skills.PRAYER, Skills.SUMMONING)
+        combat.forEach { b.skills.setBaseLevel(it, 60) }
+        b.calculateAndSetCombatLevel()
+        a.calculateAndSetCombatLevel()
+        wait(2)
+        val (swung2, said2) = tryAttack()
+        run.expectTrue(e, "level gap ${a.combatLevel - b.combatLevel} > 14: refused",
+            !swung2 && said2.contains("level difference"), "A=${a.combatLevel} B=${b.combatLevel} swung=$swung2 msgs: $said2")
+
+        // 3. Control: same levels, both in danger - the attack goes out.
+        combat.forEach { b.skills.setBaseLevel(it, 99) }
+        b.calculateAndSetCombatLevel()
+        wait(2)
+        val (swung3, said3) = tryAttack()
+        run.expectTrue(e, "same bracket, both in danger: the attack goes out", swung3, "A=${a.combatLevel} B=${b.combatLevel} msgs: $said3")
     }
 }
