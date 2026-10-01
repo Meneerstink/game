@@ -39,5 +39,7 @@ SpecialAttacks.register(50, Items.MORRIGANS_THROWING_AXE) {
     if (target is Player) {
         target.attr[HAMSTRING] = true
         target.timers[HAMSTRING_TIMER] = 100
+        // OSRS Wiki "Morrigan's throwing axe (Deadman Mode)": the target is told.
+        (target as Player).message("You've been hamstrung! For the next minute, your run energy will drain 6x faster.")
     }
 }

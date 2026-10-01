@@ -1280,6 +1280,11 @@ object DeadmanSuite : Conformance.Suite {
         run.expectTrue(e, "bleed splats of 10 (the last one the rest)", bleed.dropLast(1).all { it.third == 10 } && (bleed.lastOrNull()?.third ?: 0) in 1..10,
             "bleed=${bleed.map { it.third }}")
         run.expectTrue(e, "one bleed splat per tick", bleed.zipWithNext().all { (x, y) -> y.first - x.first == 1 }, "cycles=${bleed.map { it.first - specialCycle }}")
+        val said = run.recording.of("MB", "msg").filter { it.cycle >= specialCycle }.map { it.text }
+        val starts = said.count { it.contains("You start to bleed as a result of the javelin strike.") }
+        val continues = said.count { it.contains("You continue to bleed as a result of the javelin strike.") }
+        run.expectTrue(e, "bleed messages: one 'start', then 'continue' per later splat", starts == 1 && continues == bleed.size - 1,
+            "start=$starts continue=$continues splats=${bleed.size}", "OSRS Wiki Morrigan's javelin (Deadman Mode)")
     }
 
     // ---- dupe: dropping the loot on the tick of the killing blow ---------------------------------------------------------
@@ -1458,6 +1463,8 @@ object DeadmanSuite : Conformance.Suite {
         val left = b.timers[gg.rsmod.game.model.timer.HAMSTRING_TIMER]
         run.expectTrue(e, "the target is hamstrung for a minute", b.attr.has(gg.rsmod.game.model.attr.HAMSTRING) && left in 90..100, "timer=$left",
             "OSRS Wiki Morrigan's throwing axe: for the next minute")
+        run.expectTrue(e, "the target is told", run.recording.of("HB", "msg").any { it.text.contains("You've been hamstrung! For the next minute, your run energy will drain 6x faster.") },
+            "no message", "OSRS Wiki Morrigan's throwing axe (Deadman Mode)")
 
         /** Run energy B spends on 5 ticks of running from [from] towards [to]. */
         suspend fun drainOver(from: Tile, to: Tile): Double {
