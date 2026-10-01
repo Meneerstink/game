@@ -163,14 +163,21 @@ on_magic_spell_button("Vengeance Group") { metadata ->
         player.message("You need a Defence level of 40 to cast this spell.")
         return@on_magic_spell_button
     }
+    // ROOT_CAUSES #111: "Vengeance spells may only be cast every 30 seconds by the same caster" (OSRS Wiki "Vengeance Other"). The
+    // group cast never checked the caster's delay (it could be recast every tick) and put the delay on every player it reached.
+    if (Vengeance.isOnCooldown(player)) {
+        player.message("You can only cast vengeance spells every 30 seconds.")
+        return@on_magic_spell_button
+    }
     if (player.castLunar(metadata, xp = 95.0, animation = 4410, graphic = 726, height = 96, sound = Sfx.LUNAR_VENGENCE)) {
         (nearbyPlayers(player, radius = 1) + player).forEach { p ->
-            if (!Vengeance.isOnCooldown(p)) {
-                Vengeance.activate(p)
+            if (!Vengeance.isActive(p)) {
+                Vengeance.prime(p)
                 p.graphic(725, 96)
                 if (p !== player) p.message("${player.username} has cast vengeance on you.")
             }
         }
+        player.timers[gg.rsmod.game.model.timer.VENGEANCE_COOLDOWN] = Vengeance.COOLDOWN_TICKS
     }
 }
 

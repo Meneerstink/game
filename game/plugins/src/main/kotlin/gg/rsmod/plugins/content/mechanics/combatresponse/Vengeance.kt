@@ -54,9 +54,14 @@ object Vengeance {
         target: Pawn,
     ): Boolean {
         if (isOnCooldown(caster)) return false
-        target.attr[VENGEANCE_ACTIVE_ATTR] = true
+        prime(target)
         caster.timers[VENGEANCE_COOLDOWN] = COOLDOWN_TICKS
         return true
+    }
+
+    /** Primes [target] without touching any cooldown - the caster's delay is the cast's business (Vengeance Group). */
+    fun prime(target: Pawn) {
+        target.attr[VENGEANCE_ACTIVE_ATTR] = true
     }
 
     fun clear(pawn: Pawn) {

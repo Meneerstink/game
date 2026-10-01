@@ -1012,7 +1012,40 @@ object DeadmanSuite : Conformance.Suite {
             run.expectTrue(e, "vengeance used up by the hit", !veng.isActive(b), "still active")
         }
 
-        // 5. Entering a player-owned house clears it (OSRS Wiki "Vengeance": "when teleporting into a player-owned house").
+        // 5. Vengeance Group (spell button): everyone within 1 tile and the caster are venged, only the caster gets the delay,
+        // and he cannot recast it at once.
+        val group = gg.rsmod.plugins.content.magic.MagicSpells.metadataByName("Vengeance Group")
+        if (group == null) {
+            run.notTested(e, "Vengeance Group", "no spell button")
+        } else {
+            // End step 4's fight first: a hit on a freshly venged player would use his vengeance up before it is checked.
+            for (p in listOf(a, b, c)) {
+                p.resetInteractions()
+                Combat.reset(p)
+            }
+            wait(4)
+            for (p in listOf(a, b, c)) {
+                veng.clear(p)
+                p.timers.remove(gg.rsmod.game.model.timer.VENGEANCE_COOLDOWN)
+            }
+            a.moveTo(arena.transform(0, 4))
+            b.moveTo(arena.transform(1, 4))
+            c.moveTo(arena.transform(0, 5))
+            wait(2)
+            Bots.button(a, group.interfaceId, group.component)
+            wait(3)
+            run.expectTrue(e, "Vengeance Group: caster and both neighbours venged", veng.isActive(a) && veng.isActive(b) && veng.isActive(c),
+                "a=${veng.isActive(a)} b=${veng.isActive(b)} c=${veng.isActive(c)}")
+            run.expectTrue(e, "Vengeance Group: only the caster gets the 30-second delay", veng.isOnCooldown(a) && !veng.isOnCooldown(b) && !veng.isOnCooldown(c),
+                "a=${veng.isOnCooldown(a)} b=${veng.isOnCooldown(b)} c=${veng.isOnCooldown(c)}")
+            veng.clear(b)
+            val c5 = run.world.currentCycle
+            Bots.button(a, group.interfaceId, group.component)
+            wait(3)
+            run.expectTrue(e, "Vengeance Group: no recast within 30 seconds", !veng.isActive(b) && msgs("VA", c5).contains("every 30 seconds"), msgs("VA", c5))
+        }
+
+        // 6. Entering a player-owned house clears it (OSRS Wiki "Vengeance": "when teleporting into a player-owned house").
         reset(d, arena.transform(1, 1))
         veng.activate(d)
         d.inventory.add(Items.TELEPORT_TO_HOUSE, 1)
