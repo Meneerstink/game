@@ -40,6 +40,8 @@ import gg.rsmod.plugins.content.combat.getCombatTarget
  *   conserved), at five keys the next kill says the limit message and the loot lies on the ground for the killer.
  * - xlog: closing the client (Player.requestLogout, what a dropped channel does): unskulled and out of combat the body leaves at
  *   once; hit by a player the body stays and can still be killed for its loot; skulled it is held for the 7-second rule.
+ * - pvm: killed by an npc the items go to the gravestone (no key, no ground loot); hit by a player and then killed by the npc it is
+ *   still a PvP death - the player gets the loot key (DeathResolver aggressor window).
  */
 object DeadmanSuite : Conformance.Suite {
     override suspend fun QueueTask.run(
@@ -69,6 +71,7 @@ object DeadmanSuite : Conformance.Suite {
         scenario("single") { singleWay(run, arena) }
         scenario("keys") { lootKeys(run, arena) }
         scenario("xlog") { xLog(run, arena) }
+        scenario("pvm") { pvmDeath(run, arena) }
     }
 
     /** Hitsplat types [who] received since [from], in order. */
@@ -792,5 +795,86 @@ object DeadmanSuite : Conformance.Suite {
         run.expectTrue(e, "skulled: the body stays after the client closed", online(s), "logged out at once")
         val sGone = goneWithin(s, 15)
         run.expectTrue(e, "skulled: the body leaves once the 7-second hold ran out", sGone != null, "still online 20 ticks later")
+    }
+
+    // ---- pvm: deaths to an npc ---------------------------------------------------------------------------------------------
+
+    private suspend fun QueueTask.pvmDeath(
+        run: Conformance.Run,
+        arena: Tile,
+    ) {
+        val e = "pvm"
+        val keys = gg.rsmod.plugins.content.mechanics.pvp.LootKeys
+        val giant = run.npc(gg.rsmod.plugins.api.cfg.Npcs.HILL_GIANT, arena.transform(3, 0), "PN")
+        val v = run.bot(arena.transform(2, 0), "PV")
+        val a = run.bot(arena.transform(2, 2), "PA")
+        wait(2)
+
+        suspend fun npcKills(label: String): Boolean {
+            v.setCurrentLifepoints(3)
+            giant.attack(v)
+            var died = false
+            for (i in 0 until 60) {
+                giant.setCurrentLifepoints(giant.getMaximumLifepoints())
+                wait(1)
+                if (v.isDead()) died = true
+                if (died && !v.isDead()) break
+            }
+            giant.resetInteractions()
+            Combat.reset(giant)
+            wait(4)
+            run.expectTrue(e, "$label: the npc killed him", died, "dead=${v.isDead()} lp=${v.getCurrentLifepoints()}")
+            return died
+        }
+        fun groundNear(t: Tile, id: Int): Int {
+            var n = 0
+            for (dx in -3..3) for (dz in -3..3) {
+                val g = t.transform(dx, dz)
+                run.world.chunks.get(g)?.getEntities<gg.rsmod.game.model.entity.GroundItem>(g, gg.rsmod.game.model.EntityType.GROUND_ITEM)
+                    ?.forEach { if (it.item == id) n++ }
+            }
+            return n
+        }
+
+        // 1. Killed by the npc alone: everything to the gravestone (owner 2026-09-26: PvM deaths are recoverable).
+        reset(v, arena.transform(2, 0))
+        v.inventory.add(Items.ARMADYL_GODSWORD, 1)
+        val tile1 = v.tile
+        if (npcKills("npc only")) {
+            val grave = v.gravestone.toList().filterNotNull().map { it.id }
+            run.expectTrue(e, "npc only: the godsword is in his gravestone", Items.ARMADYL_GODSWORD in grave, "gravestone=$grave")
+            run.check(e, "npc only: nothing on the ground", groundNear(tile1, Items.ARMADYL_GODSWORD), "gravestone, not ground loot" to 0)
+            run.check(e, "npc only: no loot key", run.world.players.entries.filterNotNull().sumOf { keys.heldKeyIndexes(it).size }, "no player killer" to 0)
+        }
+        gg.rsmod.plugins.content.mechanics.death.Gravestone.clear(v)
+        v.gravestone.removeAll()
+
+        // 2. Hit by a player first, the npc lands the kill: still a PvP death (DeathResolver: "the shared aggressor window").
+        reset(v, arena.transform(2, 0))
+        reset(a, arena.transform(2, 2))
+        a.attr.remove(keys.SLOTS)
+        wield(a, Item(Items.ABYSSAL_WHIP))
+        v.inventory.add(Items.AMULET_OF_FURY, 1)
+        a.attack(v)
+        val c2 = run.world.currentCycle
+        for (i in 0 until 12) {
+            v.setCurrentLifepoints(v.getMaximumLifepoints())
+            wait(1)
+            if (run.recording.of("PV", "out").any { it.cycle >= c2 && it.text.startsWith("hits ") }) break
+        }
+        a.resetInteractions()
+        Combat.reset(a)
+        v.resetInteractions()
+        Combat.reset(v)
+        wait(2)
+        if (npcKills("player hit, npc kill")) {
+            val loot = keys.heldKeyIndexes(a).flatMap { keys.slotItems(a, it) }.map { it.id }
+            run.expectTrue(e, "player hit, npc kill: the player gets the loot key", Items.AMULET_OF_FURY in loot, "key loot=$loot")
+            run.expectTrue(e, "player hit, npc kill: nothing in the gravestone", v.gravestone.toList().filterNotNull().none { it.id == Items.AMULET_OF_FURY },
+                "gravestone=${v.gravestone.toList().filterNotNull()}")
+        }
+        a.attr.remove(keys.SLOTS)
+        keys.KEY_IDS.forEach { id -> a.inventory.remove(id, a.inventory.getItemCount(id)) }
+        run.remove(giant)
     }
 }
