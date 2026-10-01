@@ -586,7 +586,7 @@ object CityGuards {
             player.closeInterface(dest = InterfaceDestination.TAB_AREA)
             engageReactiveGuards(world, player)
             player.attr[WIZGUARD_NEXT_CYCLE_ATTR] = world.currentCycle
-        } else if (needsPhysicalGuard(player.attr[REACTIVE_GUARDS_ATTR]?.map { it.get()?.isActive() == true })) {
+        } else if (needsPhysicalGuard(player.attr[REACTIVE_GUARDS_ATTR]?.map { it.get()?.isSpawned() == true })) {
             // Audit D-12: the plan's melee/ranged guard never came (or is gone) - try again every few cycles.
             val next = player.attr[GUARD_RETRY_CYCLE_ATTR] ?: world.currentCycle
             if (world.currentCycle >= next) {
@@ -608,10 +608,10 @@ object CityGuards {
     fun release(player: Player) {
         resetDamageRamp(player)
         player.attr[REACTIVE_GUARDS_ATTR]?.forEach { ref ->
-            ref.get()?.let { guard -> if (guard.isActive()) standDown(guard) }
+            ref.get()?.let { guard -> if (guard.isSpawned()) standDown(guard) }
         }
         player.attr[ACTIVE_WIZGUARD_ATTR]?.get()?.let { wizguard ->
-            if (wizguard.isActive()) player.world.remove(wizguard)
+            if (wizguard.isSpawned()) player.world.remove(wizguard)
         }
         player.attr.remove(REACTIVE_GUARDS_ATTR)
         player.attr.remove(REACTIVE_PLAN_ATTR)
@@ -655,7 +655,7 @@ object CityGuards {
         // visibly stands beside and faces them).
         val guard = acquire(world, zone, wanted, spawnTileNextTo(world, player)) ?: return
         val guards = player.attr[REACTIVE_GUARDS_ATTR] ?: ArrayList<WeakReference<Npc>>(2).also { player.attr[REACTIVE_GUARDS_ATTR] = it }
-        guards.removeAll { it.get()?.isActive() != true }
+        guards.removeAll { it.get()?.isSpawned() != true }
         guards += WeakReference(guard)
         guard.forceChat(GREETING.format(player.username))
         guard.facePawn(player)
@@ -677,7 +677,7 @@ object CityGuards {
         tile: Tile,
     ): Npc? {
         val pool = pools.getOrPut(zone.name) { ArrayList() }
-        pool.removeAll { it.get()?.isActive() != true }
+        pool.removeAll { it.get()?.isSpawned() != true }
         val variant = variantFor(zone.name)
         val id = if (kind == Kind.RANGED || variant.melee == null) variant.ranged else variant.melee
         val idle = pool.mapNotNull { it.get() }.firstOrNull { it.id == id && it.getCombatTarget() == null }
@@ -716,8 +716,11 @@ object CityGuards {
         world: World,
         player: Player,
     ) {
+        // 2026-10-01: guards and Wizguards are checked with isSpawned() (still in the world), not isActive(): Npc.isActive() turns
+        // true the first time a client sees the npc and never back, so a Wizguard nobody saw (its target died or X-logged the same
+        // tick) was never removed, and an unseen reactive guard counted as gone - another one was spawned.
         player.attr[ACTIVE_WIZGUARD_ATTR]?.get()?.let { previous ->
-            if (previous.isActive()) world.remove(previous)
+            if (previous.isSpawned()) world.remove(previous)
         }
         val tile = spawnTileNextTo(world, player)
         val wizguard =
@@ -743,11 +746,11 @@ object CityGuards {
         player.hit(world.random(WIZGUARD_MAX_HIT), delay = 1)
         world.queue {
             wait(1)
-            if (wizguard.isActive()) faceAndResend(wizguard, player)
+            if (wizguard.isSpawned()) faceAndResend(wizguard, player)
             wait(2)
             if (player.attr[ACTIVE_WIZGUARD_ATTR]?.get() === wizguard) {
                 player.attr.remove(ACTIVE_WIZGUARD_ATTR)
-                if (wizguard.isActive()) world.remove(wizguard)
+                if (wizguard.isSpawned()) world.remove(wizguard)
             }
         }
     }
