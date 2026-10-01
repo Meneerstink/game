@@ -152,8 +152,9 @@ object PvpSkull {
         victim.attr[LAST_PVP_HIT_CYCLE_ATTR] = victim.world.currentCycle
     }
 
-    /** Audit D-11: the world cycle this player was last attacked or hit by another player ([markAggression]; session-local). */
-    val LAST_PVP_HIT_CYCLE_ATTR = AttributeKey<Int>()
+    /** Audit D-11: the world cycle this player was last attacked or hit by another player ([markAggression]; session-local).
+     * Cleared by the death (resetOnDeath): the fight that killed him does not keep the respawned player "in combat". */
+    val LAST_PVP_HIT_CYCLE_ATTR = AttributeKey<Int>(resetOnDeath = true)
 
     /** Audit D-11: cycles since [player] was last hit by a player, or null when never (this session). */
     fun cyclesSincePvpHit(player: Player): Int? = player.attr[LAST_PVP_HIT_CYCLE_ATTR]?.let { player.world.currentCycle - it }

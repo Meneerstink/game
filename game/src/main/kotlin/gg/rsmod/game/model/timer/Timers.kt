@@ -56,9 +56,10 @@ val NEW_PLAYER_PROTECTION_TIMER =
     TimerKey(persistenceKey = "new_player_protection", tickOffline = false, resetOnDeath = false, removeOnZero = true)
 
 /**
- * Timer key set when a pawn is attacked either in PvP or in PvM.
+ * Timer key set when a pawn is attacked either in PvP or in PvM. Reset on death (2026-10-01, conform deadman death): a respawned
+ * player is out of combat - it used to stay "under attack" for the rest of the 17 ticks after his respawn.
  */
-val ACTIVE_COMBAT_TIMER = TimerKey()
+val ACTIVE_COMBAT_TIMER = TimerKey(resetOnDeath = true)
 
 /**
  * Deadman PvP guards plan (owner-approved 2026-09-16): "instant teleport if not hit by a player
@@ -66,9 +67,10 @@ val ACTIVE_COMBAT_TIMER = TimerKey()
  * [ACTIVE_COMBAT_TIMER] (10.2s, used for the unrelated combat-escape/logout lock and other
  * existing consumers) so retuning this gate's exact duration can never change those other
  * features' behaviour. Set on the target whenever a hit lands, same event as
- * [ACTIVE_COMBAT_TIMER].
+ * [ACTIVE_COMBAT_TIMER]. Reset on death: right after his respawn a killed player was refused with "You must be out of combat for
+ * another X seconds to teleport." (2026-10-01).
  */
-val TELEPORT_COMBAT_TIMER = TimerKey()
+val TELEPORT_COMBAT_TIMER = TimerKey(resetOnDeath = true)
 
 /**
  * Session-local Deadman logout hold. Audit X-10: combat arms it for every hit a player receives

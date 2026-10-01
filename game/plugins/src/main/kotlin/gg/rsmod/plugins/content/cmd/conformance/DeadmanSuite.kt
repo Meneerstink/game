@@ -266,6 +266,11 @@ object DeadmanSuite : Conformance.Suite {
             run.expectTrue(e, "$label: respawn in a guarded zone", gg.rsmod.plugins.content.mechanics.pvp.GuardedZones.contains(b.zoneTile()), "tile=${b.zoneTile()}")
             run.expectTrue(e, "$label: full life points after respawn", b.getCurrentLifepoints() == b.getMaximumLifepoints(),
                 "${b.getCurrentLifepoints()}/${b.getMaximumLifepoints()}")
+            // Respawned means out of combat: no "in combat" teleport refusal and no "under attack" state carried over from the fight.
+            run.check(e, "$label: teleport decision right after the respawn", gg.rsmod.plugins.content.mechanics.pvp.DeadmanTimerGate.teleportDecision(b).name,
+                "out of combat after death" to "INSTANT")
+            run.expectTrue(e, "$label: not 'under attack' after the respawn", !b.timers.has(gg.rsmod.game.model.timer.ACTIVE_COMBAT_TIMER),
+                "ACTIVE_COMBAT_TIMER=${if (b.timers.has(gg.rsmod.game.model.timer.ACTIVE_COMBAT_TIMER)) b.timers[gg.rsmod.game.model.timer.ACTIVE_COMBAT_TIMER] else 0}")
             run.expectTrue(e, "$label: Tele Block gone after the death", !b.timers.has(gg.rsmod.game.model.timer.TELEBLOCK_TIMER), "still teleblocked")
             run.expectTrue(e, "$label: venom and poison gone after the death",
                 !b.attr.has(gg.rsmod.game.model.attr.VENOM_TICKS_ELAPSED_ATTR) && !gg.rsmod.plugins.content.mechanics.poison.Poison.isPoisoned(b), "still envenomed / poisoned")
