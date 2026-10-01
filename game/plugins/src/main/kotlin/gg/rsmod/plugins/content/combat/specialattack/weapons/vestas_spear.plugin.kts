@@ -36,17 +36,20 @@ SpecialAttacks.register(50, Items.VESTAS_SPEAR, Items.VESTAS_SPEAR_DEG) {
         val attacker = player
         val targets = ArrayList<Pawn>()
         // Audit I-05: never the attacker itself (it stood at distance 0 and was a candidate before).
+        // Every extra victim passes the one area-attack gate (SpecialAttackSupport.canSplash: dead/invisible, attackable npc, the
+        // Deadman PvP rules - guarded zone, level bracket - and every can_attack hook); this list used to take any player in reach.
         val playerTargets = attacker.world.players.all { p ->
             p != primary &&
                 p != attacker &&
                 p.tile.getDistance(attacker.tile) <= 1 &&
-                p.tile.isMulti(attacker.world)
+                gg.rsmod.plugins.content.combat.specialattack.SpecialAttackSupport.canSplash(attacker, p)
         }
         val npcTargets = attacker.world.npcs.all { npc ->
             val nearestTile = npc.nearestTile(attacker.tile)
             npc != primary &&
                 nearestTile.getDistance(attacker.tile) <= 1 &&
-                nearestTile.isMulti(attacker.world)
+                nearestTile.isMulti(attacker.world) &&
+                gg.rsmod.plugins.content.combat.specialattack.SpecialAttackSupport.canSplash(attacker, npc)
         }
         for (other in playerTargets + npcTargets) {
             if (targets.size < SPEAR_WALL_MAX_TARGETS - 1) {

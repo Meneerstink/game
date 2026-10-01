@@ -89,6 +89,7 @@ object DeadmanSuite : Conformance.Suite {
         scenario("dupe") { dropOnDeath(run, arena) }
         scenario("skull") { skulls(run, arena) }
         scenario("hamstring") { hamstring(run, arena) }
+        scenario("aoe") { areaAttacks(run, arena) }
     }
 
     /** Hitsplat types [who] received since [from], in order. */
@@ -1486,5 +1487,88 @@ object DeadmanSuite : Conformance.Suite {
         run.expectTrue(e, "hamstrung run energy drains 6x faster", ratio in 5.5..6.5, "hamstrung=%.2f normal=%.2f ratio=%.2f".format(hamstrung, normal, ratio),
             "OSRS Wiki Morrigan's throwing axe: drain 6x faster")
         b.setVarp(gg.rsmod.plugins.api.cfg.Varps.RUN_STATE, 0)
+    }
+
+    // ---- aoe: secondary victims of an area attack pass the PvP gate --------------------------------------------------------
+
+    private suspend fun QueueTask.areaAttacks(
+        run: Conformance.Run,
+        arena: Tile,
+    ) {
+        val e = "aoe"
+        val at = arena.transform(0, -4)
+        val a = run.bot(at, "VA")
+        val b = run.bot(at.transform(0, 1), "VB")
+        val c = run.bot(at.transform(0, -1), "VC")
+        val d = run.bot(at.transform(1, 0), "VD")
+        // A Deadman guard outside its zone (never attackable there) and a banker (no Attack option), both next to A and B.
+        val guard = run.npc(gg.rsmod.plugins.content.mechanics.pvp.CityGuards.MELEE_GUARD_ID, at.transform(-1, 1), "VG")
+        val banker = run.npc(gg.rsmod.plugins.api.cfg.Npcs.BANKER_CLASSIC_MALE_PURPLE_44, at.transform(1, 1), "VN")
+        wait(2)
+        if (!at.isMulti(run.world)) {
+            run.notTested(e, "spear wall", "$at is not multi-way")
+            return
+        }
+        reset(a, at)
+        reset(b, at.transform(0, 1))
+        reset(c, at.transform(0, -1))
+        reset(d, at.transform(1, 0))
+        val combat = listOf(Skills.ATTACK, Skills.STRENGTH, Skills.DEFENCE, Skills.CONSTITUTION, Skills.RANGED, Skills.MAGIC, Skills.PRAYER, Skills.SUMMONING)
+        combat.forEach { c.skills.setBaseLevel(it, 60) }
+        c.calculateAndSetCombatLevel()
+        wield(a, Item(Items.VESTAS_SPEAR))
+        var from = -1
+        for (attempt in 0 until 4) {
+            AttackTab.setEnergy(a, 100)
+            a.setVarp(AttackTab.SPECIAL_ATTACK_VARP, 1)
+            val c0 = run.world.currentCycle
+            a.attack(b)
+            for (t in 0 until 6) {
+                listOf(b, c, d).forEach { it.setCurrentLifepoints(it.getMaximumLifepoints()) }
+                wait(1)
+                if (AttackTab.getEnergy(a) < 100) { from = c0; break }
+            }
+            if (from >= 0) break
+            a.resetInteractions(); Combat.reset(a)
+        }
+        repeat(3) { listOf(b, c, d).forEach { it.setCurrentLifepoints(it.getMaximumLifepoints()) }; wait(1) }
+        a.resetInteractions(); Combat.reset(a); listOf(b, c, d).forEach { it.resetInteractions(); Combat.reset(it) }
+        if (from < 0) {
+            run.notTested(e, "spear wall", "no special in 4 attempts")
+            return
+        }
+        run.expectTrue(e, "Spear Wall: the adjacent player in the level bracket is hit", hitTypes(run, "VD", from).isNotEmpty(), "no hitsplat on VD")
+        run.expectTrue(e, "Spear Wall: the adjacent player ${a.combatLevel - c.combatLevel} levels lower (outside +/-14) is not hit",
+            hitTypes(run, "VC", from).isEmpty(), "VC hit: ${hitTypes(run, "VC", from)}", "AreaState.canPlayersFight (Deadman bracket)")
+        run.expectTrue(e, "Spear Wall: a guard the attacker may not attack is not hit", hitTypes(run, "VG", from).isEmpty(), "VG hit: ${hitTypes(run, "VG", from)}",
+            "OSRS Wiki Guard (Deadman Mode): only attackable inside the guarded area while skulled")
+        run.expectTrue(e, "Spear Wall: an npc without an Attack option is not hit", hitTypes(run, "VN", from).isEmpty(), "VN hit: ${hitTypes(run, "VN", from)}")
+
+        // The same gate for a spell splash. A splash only takes victims of the primary's kind, so the primary is an npc here: an
+        // Ice Barrage on a man next to the guard and the banker, from an unskulled A; a second man (VW) witnesses the splash.
+        a.timers.remove(gg.rsmod.game.model.timer.SKULL_ICON_DURATION_TIMER)
+        val man = run.npc(1, at.transform(0, 2), "VM")
+        run.npc(1, at.transform(1, 2), "VW")
+        b.moveTo(at.transform(-2, -2))
+        wait(12)
+        gg.rsmod.plugins.content.magic.Spellbooks.select(a, gg.rsmod.plugins.api.Spellbook.ANCIENT)
+        a.inventory.add(Items.WATER_RUNE, 100)
+        a.inventory.add(Items.BLOOD_RUNE, 100)
+        a.inventory.add(Items.DEATH_RUNE, 100)
+        val cast = run.world.currentCycle
+        var barraged = false
+        for (attempt in 0 until 8) {
+            gg.rsmod.plugins.content.combat.magic.Autocast.markManualCast(a, gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell.ICE_BARRAGE, man)
+            a.attack(man)
+            repeat(6) { man.setCurrentLifepoints(man.getMaximumLifepoints()); wait(1) }
+            a.resetInteractions(); Combat.reset(a)
+            if (hitTypes(run, "VW", cast).isNotEmpty()) { barraged = true; break }
+        }
+        if (!barraged) {
+            run.notTested(e, "barrage splash", "no barrage splashed VW in 8 casts")
+        } else {
+            run.expectTrue(e, "Ice Barrage splash: a guard the attacker may not attack is not hit", hitTypes(run, "VG", cast).isEmpty(), "VG hit: ${hitTypes(run, "VG", cast)}")
+            run.expectTrue(e, "Ice Barrage splash: an npc without an Attack option is not hit", hitTypes(run, "VN", cast).isEmpty(), "VN hit: ${hitTypes(run, "VN", cast)}")
+        }
     }
 }
