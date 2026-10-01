@@ -1,0 +1,436 @@
+# OSRS geporte gear - volledige testlijst (high tier, alle varianten)
+# Per regel: item <id> <aantal>   // naam.  In-game zonder "::".
+
+# ===== MELEE WAPENS (32) =====
+item 23614 1   // 3rd Age longsword
+item 22689 1   // Abyssal dagger
+item 22691 1   // Abyssal dagger (p)
+item 22693 1   // Abyssal dagger (p+)
+item 22695 1   // Abyssal dagger (p++)
+item 22685 1   // Ancient godsword
+item 23735 1   // Arclight
+item 23736 1   // Arclight (inactive)
+item 23666 1   // Armadyl godsword (or)
+item 23667 1   // Bandos godsword (or)
+item 22337 1   // Belle's folly
+item 22339 1   // Belle's folly (tarnished)
+item 23137 1   // Blue moon spear
+item 23741 1   // Burning claw
+item 23739 1   // Burning claws
+item 22636 1   // Dragon hunter lance
+item 23670 1   // Dragon scimitar (or)
+item 22638 1   // Dragon warhammer
+item 23135 1   // Dual macuahuitl
+item 23738 1   // Emberlight
+item 23784 1   // Frozen abyssal whip
+item 22720 1   // Granite maul
+item 22680 1   // Noxious halberd
+item 22670 1   // Osmumten's fang
+item 23668 1   // Saradomin godsword (or)
+item 13902 1   // Statius's warhammer
+item 23770 1   // Tzhaar-ket-om (t)
+item 13899 1   // Vesta's longsword
+item 13905 1   // Vesta's spear
+item 22672 1   // Voidwaker
+item 23785 1   // Volcanic abyssal whip
+item 23669 1   // Zamorak godsword (or)
+
+# ===== RANGED WAPENS (41) =====
+item 23612 1   // 3rd Age bow
+item 22411 1   // Armadyl crossbow
+item 23035 1   // Blazing blowpipe
+item 23036 1   // Blazing blowpipe (empty)
+item 22733 1   // Bow of Faerdhinen
+item 22736 1   // Bow of Faerdhinen (c)
+item 22734 1   // Bow of Faerdhinen (inactive)
+item 23039 1   // Camphor blowpipe
+item 23040 1   // Camphor blowpipe (empty)
+item 23007 1   // Craw's bow
+item 23005 1   // Craw's bow (u)
+item 23003 1   // Crystal bow
+item 23004 1   // Crystal bow (inactive)
+item 23802 1   // Dark bow (blue)
+item 23801 1   // Dark bow (green)
+item 23804 1   // Dark bow (white)
+item 23803 1   // Dark bow (yellow)
+item 22415 1   // Dragon crossbow
+item 22417 1   // Dragon crossbow (u)
+item 22634 1   // Dragon hunter crossbow
+item 23128 1   // Eclipse atlatl
+item 23011 1   // Fangs of Venenatis
+item 22536 1   // Heavy ballista
+item 23034 1   // Heavy ballista (or)
+item 22640 1   // Hunters' sunlight crossbow
+item 23042 1   // Ironwood blowpipe
+item 23043 1   // Ironwood blowpipe (empty)
+item 22753 1   // Magic shortbow (i)
+item 23045 1   // Rosewood blowpipe
+item 23046 1   // Rosewood blowpipe (empty)
+item 23027 1   // Scorching bow
+item 23032 1   // Tonalztics of Ralos
+item 23030 1   // Tonalztics of Ralos (uncharged)
+item 22623 1   // Toxic blowpipe
+item 22624 1   // Toxic blowpipe (empty)
+item 22326 1   // Twisted bow
+item 23018 1   // Venator bow
+item 23019 1   // Venator bow (uncharged)
+item 23010 1   // Webweaver bow
+item 23008 1   // Webweaver bow (u)
+item 22413 1   // Zaryte crossbow
+
+# ===== MAGIC WAPENS (57) =====
+item 23616 1   // 3rd Age wand
+item 22971 1   // Ancient sceptre
+item 22972 1   // Ancient sceptre (l)
+item 22990 1   // Ancient sceptre (l) (broken)
+item 22991 1   // Ancient sceptre (l) (mangled)
+item 22974 1   // Blood ancient sceptre
+item 22986 1   // Blood ancient sceptre (broken)
+item 22978 1   // Blood ancient sceptre (l)
+item 22992 1   // Blood ancient sceptre (l) (broken)
+item 22993 1   // Blood ancient sceptre (l) (mangled)
+item 23000 1   // Dragon hunter wand
+item 23755 1   // Dust battlestaff
+item 23085 1   // Eldritch Nightmare staff
+item 23083 1   // Harmonised Nightmare staff
+item 22975 1   // Ice ancient sceptre
+item 22988 1   // Ice ancient sceptre (broken)
+item 22979 1   // Ice ancient sceptre (l)
+item 22994 1   // Ice ancient sceptre (l) (broken)
+item 22995 1   // Ice ancient sceptre (l) (mangled)
+item 22929 1   // Kodai wand
+item 23788 1   // Lava battlestaff (or)
+item 23751 1   // Mist battlestaff
+item 23757 1   // Mystic dust staff
+item 23753 1   // Mystic mist staff
+item 22731 1   // Mystic smoke staff
+item 23792 1   // Mystic steam staff (or)
+item 23081 1   // Nightmare staff
+item 23002 1   // Purging staff
+item 22713 1   // Sanguinesti staff
+item 22714 1   // Sanguinesti staff (uncharged)
+item 22977 1   // Shadow ancient sceptre
+item 22989 1   // Shadow ancient sceptre (broken)
+item 22981 1   // Shadow ancient sceptre (l)
+item 22998 1   // Shadow ancient sceptre (l) (broken)
+item 22999 1   // Shadow ancient sceptre (l) (mangled)
+item 22976 1   // Smoke ancient sceptre
+item 22987 1   // Smoke ancient sceptre (broken)
+item 22980 1   // Smoke ancient sceptre (l)
+item 22996 1   // Smoke ancient sceptre (l) (broken)
+item 22997 1   // Smoke ancient sceptre (l) (mangled)
+item 23749 1   // Smoke battlestaff
+item 22950 1   // Staff of Balance
+item 22759 1   // Staff of the Dead
+item 23791 1   // Steam battlestaff (or)
+item 22761 1   // Toxic staff (uncharged)
+item 22763 1   // Toxic staff of the dead
+item 22697 1   // Trident of the Seas
+item 22707 1   // Trident of the Seas (e)
+item 22698 1   // Trident of the Seas (full)
+item 22702 1   // Trident of the Swamp
+item 22710 1   // Trident of the Swamp (e)
+item 22703 1   // Uncharged toxic trident
+item 22711 1   // Uncharged toxic trident (e)
+item 22700 1   // Uncharged trident
+item 22708 1   // Uncharged trident (e)
+item 23084 1   // Volatile Nightmare staff
+item 13867 1   // Zuriel's staff
+
+# ===== MUNITIE (57) =====
+item 22773 1000   // Amethyst arrow
+item 22788 1000   // Amethyst arrow(p)
+item 22789 1000   // Amethyst arrow(p+)
+item 22790 1000   // Amethyst arrow(p++)
+item 22768 1000   // Amethyst broad bolts
+item 22633 1000   // Amethyst dart
+item 22804 1000   // Amethyst dart(p)
+item 22805 1000   // Amethyst dart(p+)
+item 22806 1000   // Amethyst dart(p++)
+item 22778 1000   // Amethyst fire arrow
+item 22783 1000   // Amethyst fire arrow (lit)
+item 22615 1000   // Amethyst javelin
+item 22616 1000   // Amethyst javelin(p)
+item 22617 1000   // Amethyst javelin(p+)
+item 22618 1000   // Amethyst javelin(p++)
+item 23134 1000   // Atlatl dart
+item 22803 1000   // Black chinchompa
+item 22475 1000   // Diamond dragon bolts
+item 22525 1000   // Diamond dragon bolts (e)
+item 22430 1000   // Dragon bolts
+item 22795 1000   // Dragon bolts (p)
+item 22796 1000   // Dragon bolts (p+)
+item 22797 1000   // Dragon bolts (p++)
+item 22619 1000   // Dragon javelin
+item 22620 1000   // Dragon javelin(p)
+item 22621 1000   // Dragon javelin(p+)
+item 22622 1000   // Dragon javelin(p++)
+item 22798 1000   // Dragon knife
+item 22799 1000   // Dragon knife(p)
+item 22800 1000   // Dragon knife(p+)
+item 22801 1000   // Dragon knife(p++)
+item 22802 1000   // Dragon thrownaxe
+item 22480 1000   // Dragonstone dragon bolts
+item 22530 1000   // Dragonstone dragon bolts (e)
+item 22465 1000   // Emerald dragon bolts
+item 22515 1000   // Emerald dragon bolts (e)
+item 22445 1000   // Jade dragon bolts
+item 22495 1000   // Jade dragon bolts (e)
+item 22651 1000   // Moonlight antler bolts
+item 13879 1000   // Morrigan's javelin
+item 13883 1000   // Morrigan's throwing axe
+item 22485 1000   // Onyx dragon bolts
+item 22535 1000   // Onyx dragon bolts (e)
+item 22440 1000   // Opal dragon bolts
+item 22490 1000   // Opal dragon bolts (e)
+item 22450 1000   // Pearl dragon bolts
+item 22500 1000   // Pearl dragon bolts (e)
+item 22470 1000   // Ruby dragon bolts
+item 22520 1000   // Ruby dragon bolts (e)
+item 22460 1000   // Sapphire dragon bolts
+item 22510 1000   // Sapphire dragon bolts (e)
+item 22841 1000   // Seeking amethyst arrow
+item 22851 1000   // Seeking broad arrows
+item 22846 1000   // Seeking dragon arrow
+item 22646 1000   // Sunlight antler bolts
+item 22455 1000   // Topaz dragon bolts
+item 22505 1000   // Topaz dragon bolts (e)
+
+# ===== MELEE ARMOUR (23) =====
+item 23426 1   // 3rd Age plateskirt
+item 23099 1   // Blood moon chestplate
+item 23124 1   // Blood moon chestplate (broken)
+item 23108 1   // Blood moon chestplate (degraded)
+item 23098 1   // Blood moon helm
+item 23122 1   // Blood moon helm (broken)
+item 23107 1   // Blood moon helm (degraded)
+item 23100 1   // Blood moon tassets
+item 23126 1   // Blood moon tassets (broken)
+item 23109 1   // Blood moon tassets (degraded)
+item 23672 1   // Dragon chainbody (g)
+item 23675 1   // Dragon full helm (g)
+item 23680 1   // Dragon platebody (g)
+item 23673 1   // Dragon platelegs (g)
+item 23674 1   // Dragon plateskirt (g)
+item 13896 1   // Statius's full helm
+item 13884 1   // Statius's platebody
+item 13890 1   // Statius's platelegs
+item 20135 1   // Torva full helm
+item 20139 1   // Torva platebody
+item 20143 1   // Torva platelegs
+item 13887 1   // Vesta's chainbody
+item 13893 1   // Vesta's plateskirt
+
+# ===== RANGED ARMOUR (24) =====
+item 22739 1   // Crystal body
+item 22740 1   // Crystal body (inactive)
+item 22737 1   // Crystal helm
+item 22738 1   // Crystal helm (inactive)
+item 22741 1   // Crystal legs
+item 22742 1   // Crystal legs (inactive)
+item 23093 1   // Eclipse moon chestplate
+item 23112 1   // Eclipse moon chestplate (broken)
+item 23102 1   // Eclipse moon chestplate (degraded)
+item 23092 1   // Eclipse moon helm
+item 23110 1   // Eclipse moon helm (broken)
+item 23101 1   // Eclipse moon helm (degraded)
+item 23094 1   // Eclipse moon tassets
+item 23114 1   // Eclipse moon tassets (broken)
+item 23103 1   // Eclipse moon tassets (degraded)
+item 22374 1   // Masori body
+item 22380 1   // Masori body (f)
+item 22376 1   // Masori chaps
+item 22382 1   // Masori chaps (f)
+item 22372 1   // Masori mask
+item 22378 1   // Masori mask (f)
+item 13876 1   // Morrigan's coif
+item 13870 1   // Morrigan's leather body
+item 13873 1   // Morrigan's leather chaps
+
+# ===== MAGIC ARMOUR (43) =====
+item 23424 1   // 3rd Age druidic robe bottoms
+item 22876 1   // Ancestral hat
+item 22880 1   // Ancestral robe bottom
+item 22878 1   // Ancestral robe top
+item 23151 1   // Bloodbark body
+item 23149 1   // Bloodbark helm
+item 23153 1   // Bloodbark legs
+item 23096 1   // Blue moon chestplate
+item 23118 1   // Blue moon chestplate (broken)
+item 23105 1   // Blue moon chestplate (degraded)
+item 23095 1   // Blue moon helm
+item 23116 1   // Blue moon helm (broken)
+item 23104 1   // Blue moon helm (degraded)
+item 23097 1   // Blue moon tassets
+item 23120 1   // Blue moon tassets (broken)
+item 23106 1   // Blue moon tassets (degraded)
+item 22873 1   // Dagon'hai hat (or)
+item 22875 1   // Dagon'hai robe bottom (or)
+item 22874 1   // Dagon'hai robe top (or)
+item 22857 1   // Dark infinity bottoms
+item 22855 1   // Dark infinity hat
+item 22856 1   // Dark infinity top
+item 22866 1   // Elder chaos hood
+item 22871 1   // Elder chaos hood (or)
+item 22864 1   // Elder chaos robe
+item 22870 1   // Elder chaos robe (or)
+item 22862 1   // Elder chaos top
+item 22869 1   // Elder chaos top (or)
+item 22854 1   // Light infinity bottoms
+item 22852 1   // Light infinity hat
+item 22853 1   // Light infinity top
+item 23141 1   // Swampbark body
+item 23139 1   // Swampbark helm
+item 23143 1   // Swampbark legs
+item 22883 1   // Twisted ancestral hat
+item 22885 1   // Twisted ancestral robe bottom
+item 22884 1   // Twisted ancestral robe top
+item 20159 1   // Virtus mask
+item 20167 1   // Virtus robe legs
+item 20163 1   // Virtus robe top
+item 13864 1   // Zuriel's hood
+item 13861 1   // Zuriel's robe bottom
+item 13858 1   // Zuriel's robe top
+
+# ===== SCHILDEN / DEFENDERS / OFFHAND (24) =====
+item 22952 1   // Ancient wyvern shield
+item 22953 1   // Ancient wyvern shield (uncharged)
+item 22956 1   // Antler guard
+item 22335 1   // Avernic defender
+item 22336 1   // Avernic defender (broken)
+item 23846 1   // Book of darkness
+item 23671 1   // Dragon defender (t)
+item 23677 1   // Dragon kiteshield
+item 23679 1   // Dragon kiteshield (g)
+item 23676 1   // Dragon sq shield (g)
+item 22954 1   // Dragonfire ward
+item 22955 1   // Dragonfire ward (uncharged)
+item 22933 1   // Elidinis' ward
+item 22935 1   // Elidinis' ward (f)
+item 22936 1   // Elidinis' ward (or)
+item 22886 1   // Malediction ward
+item 22903 1   // Malediction ward (or)
+item 22888 1   // Odium ward
+item 22904 1   // Odium ward (or)
+item 22723 1   // Tome of Fire
+item 22724 1   // Tome of Fire (empty)
+item 22727 1   // Tome of Water
+item 22728 1   // Tome of Water (empty)
+item 22931 1   // Twisted buckler
+
+# ===== LAARZEN / HANDSCHOENEN / VAMBRACES (20) =====
+item 22917 1   // Avernic treads
+item 22921 1   // Avernic treads (et)
+item 22925 1   // Avernic treads (max)
+item 22920 1   // Avernic treads (pe)
+item 22924 1   // Avernic treads (pe)(et)
+item 22919 1   // Avernic treads (pr)
+item 22923 1   // Avernic treads (pr)(et)
+item 22922 1   // Avernic treads (pr)(pe)
+item 23157 1   // Bloodbark boots
+item 23155 1   // Bloodbark gauntlets
+item 22969 1   // Confliction gauntlets
+item 23761 1   // Dragon boots (g)
+item 22911 1   // Eternal boots
+item 22361 1   // Ferocious gloves
+item 22913 1   // Pegasian boots
+item 22915 1   // Primordial boots
+item 23854 1   // Spiked manacles
+item 23147 1   // Swampbark boots
+item 23145 1   // Swampbark gauntlets
+item 22364 1   // Zaryte vambraces
+
+# ===== CAPES / MAX CAPES / QUIVERS (59) =====
+item 23422 1   // 3rd Age cloak
+item 23816 1   // Accumulator max cape
+item 23817 1   // Accumulator max hood
+item 23063 1   // Assembler max cape
+item 23065 1   // Assembler max cape (broken)
+item 23066 1   // Assembler max cape (l)
+item 23064 1   // Assembler max hood
+item 22656 1   // Ava's assembler
+item 22657 1   // Ava's assembler (broken)
+item 22658 1   // Ava's assembler (l)
+item 22664 1   // Blessed Dizana's quiver
+item 22665 1   // Blessed Dizana's quiver (l)
+item 23075 1   // Dizana's max cape
+item 23078 1   // Dizana's max cape (broken)
+item 23077 1   // Dizana's max cape (l)
+item 23079 1   // Dizana's max cape (l) (broken)
+item 23080 1   // Dizana's max cape (l) (mangled)
+item 23076 1   // Dizana's max hood
+item 22662 1   // Dizana's quiver
+item 22663 1   // Dizana's quiver (l)
+item 22661 1   // Dizana's quiver (l) (uncharged)
+item 22660 1   // Dizana's quiver (uncharged)
+item 23814 1   // Fire max cape
+item 23815 1   // Fire max hood
+item 22390 1   // Imbued Guthix cape
+item 22393 1   // Imbued Guthix cape (broken)
+item 23061 1   // Imbued Guthix cape (l)
+item 23052 1   // Imbued Guthix max cape
+item 23055 1   // Imbued Guthix max cape (broken)
+item 23059 1   // Imbued Guthix max cape (l)
+item 23053 1   // Imbued Guthix max hood
+item 22389 1   // Imbued Saradomin cape
+item 22392 1   // Imbued Saradomin cape (broken)
+item 23060 1   // Imbued Saradomin cape (l)
+item 23048 1   // Imbued Saradomin max cape
+item 23054 1   // Imbued Saradomin max cape (broken)
+item 23057 1   // Imbued Saradomin max cape (l)
+item 23049 1   // Imbued Saradomin max hood
+item 22391 1   // Imbued Zamorak cape
+item 22394 1   // Imbued Zamorak cape (broken)
+item 23062 1   // Imbued Zamorak cape (l)
+item 23050 1   // Imbued Zamorak max cape
+item 23056 1   // Imbued Zamorak max cape (broken)
+item 23058 1   // Imbued Zamorak max cape (l)
+item 23051 1   // Imbued Zamorak max hood
+item 22386 1   // Infernal cape
+item 22387 1   // Infernal cape (broken)
+item 22388 1   // Infernal cape (l)
+item 23818 1   // Infernal max cape
+item 23819 1   // Infernal max hood
+item 23068 1   // Masori assembler
+item 23069 1   // Masori assembler (broken)
+item 23070 1   // Masori assembler (l)
+item 23071 1   // Masori assembler max cape
+item 23073 1   // Masori assembler max cape (broken)
+item 23074 1   // Masori assembler max cape (l)
+item 23072 1   // Masori assembler max hood
+item 23556 1   // Obsidian cape (r)
+item 22659 1   // Vorkath's head
+
+# ===== AMULETTEN / RINGEN / BRACELETS (32) =====
+item 22756 1   // Amulet of blood fury
+item 22356 1   // Amulet of rancour
+item 22358 1   // Amulet of rancour (s)
+item 22346 1   // Amulet of torture
+item 22350 1   // Amulet of torture (or)
+item 23764 1   // Berserker necklace (or)
+item 15220 1   // Berserker ring (i)
+item 22409 1   // Lightbearer
+item 22946 1   // Magus ring
+item 22341 1   // Necklace of anguish
+item 22345 1   // Necklace of anguish (or)
+item 22958 1   // Necklace of fangs
+item 22962 1   // Necklace of rupture
+item 22328 1   // Occult necklace
+item 22330 1   // Occult necklace (or)
+item 23570 1   // Ring of 3rd Age
+item 23847 1   // Ring of shadows
+item 23848 1   // Ring of shadows (uncharged)
+item 22404 1   // Ring of suffering
+item 22406 1   // Ring of suffering (i)
+item 22407 1   // Ring of suffering (r)
+item 22408 1   // Ring of suffering (ri)
+item 22395 1   // Ring of the gods
+item 22401 1   // Ring of the gods (i)
+item 22351 1   // Tormented bracelet
+item 22355 1   // Tormented bracelet (or)
+item 22399 1   // Treasonous ring
+item 22403 1   // Treasonous ring (i)
+item 22397 1   // Tyrannical ring
+item 22402 1   // Tyrannical ring (i)
+item 22948 1   // Venator ring
+item 15020 1   // Warrior ring (i)

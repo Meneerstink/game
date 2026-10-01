@@ -128053,11 +128053,11 @@
     attack_crush: 0
     attack_magic: -10
     attack_ranged: -5
-    defence_stab: 20
-    defence_slash: 25
-    defence_crush: 22
+    defence_stab: 70
+    defence_slash: 75
+    defence_crush: 72
     defence_magic: 10
-    defence_ranged: 22
+    defence_ranged: 72
     summoning: 17
     melee_strength: 7
     prayer: 0
@@ -277135,7 +277135,35 @@
   examine: "The helm of the Eclipse Moon."
   tradeable: true
   weight: 0.907
-  equipment: null
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6519
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 1, 'level': 50}, {'skill': 4, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
 - id: 23111
   name: "Eclipse moon helm (broken)"
   examine: "Swamp this note at any bank for the equivalent item"
@@ -277147,7 +277175,35 @@
   examine: "The chestplate of the Eclipse Moon."
   tradeable: true
   weight: 3.0
-  equipment: null
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6520
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 1, 'level': 50}, {'skill': 4, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
 - id: 23113
   name: "Eclipse moon chestplate (broken)"
   examine: "Swamp this note at any bank for the equivalent item"
@@ -277159,7 +277215,35 @@
   examine: "The tassets of the Eclipse Moon."
   tradeable: true
   weight: 1.0
-  equipment: null
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 6521
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 1, 'level': 50}, {'skill': 4, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
 - id: 23115
   name: "Eclipse moon tassets (broken)"
   examine: "Swamp this note at any bank for the equivalent item"
@@ -277171,7 +277255,35 @@
   examine: "The helm of the Blue Moon."
   tradeable: true
   weight: 0.453
-  equipment: null
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6522
+    remove_head: true
+    remove_beard: true
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 1, 'level': 50}, {'skill': 6, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
 - id: 23117
   name: "Blue moon helm (broken)"
   examine: "Swamp this note at any bank for the equivalent item"
@@ -277183,7 +277295,35 @@
   examine: "The chestplate of the Blue Moon."
   tradeable: true
   weight: 3.175
-  equipment: null
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6523
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 1, 'level': 50}, {'skill': 6, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
 - id: 23119
   name: "Blue moon chestplate (broken)"
   examine: "Swamp this note at any bank for the equivalent item"
@@ -277195,7 +277335,35 @@
   examine: "The tassets of the Blue Moon."
   tradeable: true
   weight: 1.36
-  equipment: null
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 6524
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 1, 'level': 50}, {'skill': 6, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
 - id: 23121
   name: "Blue moon tassets (broken)"
   examine: "Swamp this note at any bank for the equivalent item"
@@ -277207,7 +277375,35 @@
   examine: "The helm of the Blood Moon."
   tradeable: true
   weight: 0.907
-  equipment: null
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6525
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 1, 'level': 50}, {'skill': 2, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
 - id: 23123
   name: "Blood moon helm (broken)"
   examine: "Swamp this note at any bank for the equivalent item"
@@ -277219,7 +277415,35 @@
   examine: "The chestplate of the Blood Moon."
   tradeable: true
   weight: 5.443
-  equipment: null
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6526
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 1, 'level': 50}, {'skill': 2, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
 - id: 23125
   name: "Blood moon chestplate (broken)"
   examine: "Swamp this note at any bank for the equivalent item"
@@ -277231,7 +277455,35 @@
   examine: "The tassets of the Blood Moon."
   tradeable: true
   weight: 4.082
-  equipment: null
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 6527
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 1, 'level': 50}, {'skill': 2, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
 - id: 23127
   name: "Blood moon tassets (broken)"
   examine: "Swamp this note at any bank for the equivalent item"
@@ -287010,6 +287262,903 @@
   examine: "Contains some useful supplies."
   tradeable: false
   weight: 4.0
+  equipment: null
+- id: 23882
+  name: "Dark crab"
+  examine: "This looks tricky to eat."
+  tradeable: true
+  weight: 0.35
+  equipment: null
+- id: 23883
+  name: "Dark crab"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23884
+  name: "Marlin"
+  examine: "Some nicely cooked marlin."
+  tradeable: true
+  weight: 0.65
+  equipment: null
+- id: 23885
+  name: "Marlin"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23886
+  name: "Bluefin"
+  examine: "Some nicely cooked bluefin."
+  tradeable: true
+  weight: 0.65
+  equipment: null
+- id: 23887
+  name: "Bluefin"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23888
+  name: "Halibut"
+  examine: "Some nicely cooked halibut."
+  tradeable: true
+  weight: 0.65
+  equipment: null
+- id: 23889
+  name: "Halibut"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23890
+  name: "Ultor ring"
+  examine: "An occult ring that grants immense physical power."
+  tradeable: true
+  weight: 0.012
+  equipment:
+    equip_slot: 12
+    equip_type: -1
+    appearance_id: 6711
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 12
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23891
+  name: "Colossal blade"
+  examine: "It takes a lot of guts to wield a blade this big."
+  tradeable: false
+  weight: 30.0
+  equipment:
+    equip_slot: 3
+    equip_type: 5
+    appearance_id: 6711
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 7
+    attack_speed: 6
+    attack_stab: -4
+    attack_slash: 98
+    attack_crush: 65
+    attack_magic: -4
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: -1
+    summoning: 0
+    melee_strength: 100
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: 2503
+    skill_reqs: [{'skill': 0, 'level': 60}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23892
+  name: "Bellator ring"
+  examine: "An occult ring that grants immense slicing power."
+  tradeable: true
+  weight: 0.012
+  equipment:
+    equip_slot: 12
+    equip_type: -1
+    appearance_id: 6712
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 20
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 6
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23893
+  name: "Brimstone ring"
+  examine: "A well balanced ring that aids in piercing magic defence."
+  tradeable: true
+  weight: 0.004
+  equipment:
+    equip_slot: 12
+    equip_type: -1
+    appearance_id: 6712
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 4
+    attack_slash: 4
+    attack_crush: 4
+    attack_magic: 6
+    attack_ranged: 4
+    defence_stab: 4
+    defence_slash: 4
+    defence_crush: 4
+    defence_magic: 6
+    defence_ranged: 4
+    summoning: 0
+    melee_strength: 4
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23894
+  name: "Brimstone ring"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23895
+  name: "Neitiznot faceguard"
+  examine: "A gift from Neitiznot's Burgher enhanced with the jaw of a Basilisk."
+  tradeable: false
+  weight: 2.721
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6712
+    remove_head: true
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 36
+    defence_slash: 34
+    defence_crush: 38
+    defence_magic: 3
+    defence_ranged: 34
+    summoning: 0
+    melee_strength: 6
+    prayer: 3
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 1, 'level': 70}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23896
+  name: "Serpentine helm (uncharged)"
+  examine: "Needs to be charged with Zulrah's scales."
+  tradeable: true
+  weight: 0.9
+  equipment: null
+- id: 23897
+  name: "Serpentine helm (uncharged)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23898
+  name: "Serpentine helm"
+  examine: "Protects the wearer from poison and venom, and helps envenom monsters."
+  tradeable: false
+  weight: 0.9
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6714
+    remove_head: true
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -5
+    attack_ranged: -5
+    defence_stab: 52
+    defence_slash: 55
+    defence_crush: 58
+    defence_magic: 0
+    defence_ranged: 50
+    summoning: 0
+    melee_strength: 5
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 1, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23899
+  name: "Amulet of the Damned (full)"
+  examine: "Heirloom of an ancient family of Morytania."
+  tradeable: true
+  weight: 0.1
+  equipment:
+    equip_slot: 2
+    equip_type: -1
+    appearance_id: 6715
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 10
+    attack_slash: 10
+    attack_crush: 10
+    attack_magic: 10
+    attack_ranged: 10
+    defence_stab: 3
+    defence_slash: 3
+    defence_crush: 3
+    defence_magic: 3
+    defence_ranged: 3
+    summoning: 0
+    melee_strength: 6
+    prayer: 3
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23900
+  name: "Amulet of the Damned (full)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23901
+  name: "Amulet of the Damned"
+  examine: "Heirloom of an ancient and extinct family of Morytania."
+  tradeable: false
+  weight: 0.1
+  equipment:
+    equip_slot: 2
+    equip_type: -1
+    appearance_id: 6716
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 10
+    attack_slash: 10
+    attack_crush: 10
+    attack_magic: 10
+    attack_ranged: 10
+    defence_stab: 3
+    defence_slash: 3
+    defence_crush: 3
+    defence_magic: 3
+    defence_ranged: 3
+    summoning: 0
+    melee_strength: 6
+    prayer: 3
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23902
+  name: "Blighted manta ray"
+  examine: "A rare catch, now blighted so it can be eaten only in the Wilderness."
+  tradeable: true
+  weight: 0.4
+  equipment: null
+- id: 23903
+  name: "Blighted manta ray"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23904
+  name: "Blighted anglerfish"
+  examine: "An unappetising fish, now blighted so it can be eaten only in the Wilderness."
+  tradeable: true
+  weight: 0.4
+  equipment: null
+- id: 23905
+  name: "Blighted anglerfish"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23906
+  name: "Blighted karambwan"
+  examine: "A nutritious octopus, now blighted so it can be eaten only in the Wilderness."
+  tradeable: true
+  weight: 0.65
+  equipment: null
+- id: 23907
+  name: "Blighted karambwan"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23908
+  name: "Blighted super restore(4)"
+  examine: "4 doses of super restore potion, blighted so it can be used only in the Wilderness."
+  tradeable: true
+  weight: 0.035
+  equipment: null
+- id: 23909
+  name: "Blighted super restore(4)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23910
+  name: "Blighted super restore(3)"
+  examine: "3 doses of super restore potion, blighted so it can be used only in the Wilderness."
+  tradeable: true
+  weight: 0.03
+  equipment: null
+- id: 23911
+  name: "Blighted super restore(3)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23912
+  name: "Blighted super restore(2)"
+  examine: "2 doses of super restore potion, blighted so it can be used only in the Wilderness."
+  tradeable: true
+  weight: 0.025
+  equipment: null
+- id: 23913
+  name: "Blighted super restore(2)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23914
+  name: "Blighted super restore(1)"
+  examine: "1 dose of super restore potion, blighted so it can be used only in the Wilderness."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 23915
+  name: "Blighted super restore(1)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23916
+  name: "Viggora's chainmace (u)"
+  examine: "An ancient chainmace with a peculiar mechanism that allows for varying attack styles."
+  tradeable: true
+  weight: 2.0
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6717
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 8
+    attack_speed: 4
+    attack_stab: 53
+    attack_slash: -2
+    attack_crush: 67
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 66
+    prayer: 2
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23917
+  name: "Viggora's chainmace (u)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23918
+  name: "Viggora's chainmace"
+  examine: "An ancient chainmace with a peculiar mechanism that allows for varying attack styles."
+  tradeable: false
+  weight: 2.0
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6718
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 8
+    attack_speed: 4
+    attack_stab: 53
+    attack_slash: -2
+    attack_crush: 67
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 66
+    prayer: 2
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 60}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23919
+  name: "Ursine chainmace (u)"
+  examine: "An ancient and peculiar chainmace, corrupted by the power of Callisto."
+  tradeable: true
+  weight: 2.0
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6719
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 8
+    attack_speed: 4
+    attack_stab: 53
+    attack_slash: -2
+    attack_crush: 71
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 1
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 74
+    prayer: 2
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23920
+  name: "Ursine chainmace (u)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23921
+  name: "Ursine chainmace"
+  examine: "An ancient and peculiar chainmace, corrupted by the power of Callisto."
+  tradeable: false
+  weight: 2.0
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6720
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 8
+    attack_speed: 4
+    attack_stab: 53
+    attack_slash: -2
+    attack_crush: 71
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 1
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 74
+    prayer: 2
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 70}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23922
+  name: "Thammaron's sceptre (u)"
+  examine: "A mighty sceptre used in long forgotten battles."
+  tradeable: true
+  weight: 0.198
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6721
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 15
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 20
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23923
+  name: "Thammaron's sceptre (u)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23924
+  name: "Thammaron's sceptre"
+  examine: "A mighty sceptre used in long forgotten battles."
+  tradeable: false
+  weight: 0.198
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6722
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 15
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 20
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 60}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23925
+  name: "Thammaron's sceptre (au)"
+  examine: "A mighty sceptre used in long forgotten battles."
+  tradeable: true
+  weight: 0.198
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6723
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 15
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 20
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23926
+  name: "Thammaron's sceptre (a)"
+  examine: "A mighty sceptre used in long forgotten battles."
+  tradeable: false
+  weight: 0.198
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6724
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 15
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 20
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 60}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23927
+  name: "Accursed sceptre (u)"
+  examine: "A mighty sceptre from long forgotten battles, corrupted by the power of Vet'ion."
+  tradeable: true
+  weight: 0.198
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6725
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 22
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 20
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23928
+  name: "Accursed sceptre (u)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23929
+  name: "Accursed sceptre"
+  examine: "A mighty sceptre from long forgotten battles, corrupted by the power of Vet'ion."
+  tradeable: false
+  weight: 0.198
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6726
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 22
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 20
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 70}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23930
+  name: "Accursed sceptre (au)"
+  examine: "A mighty sceptre used in long forgotten battles."
+  tradeable: true
+  weight: 0.198
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6727
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 22
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 20
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23931
+  name: "Accursed sceptre (a)"
+  examine: "A mighty sceptre used in long forgotten battles."
+  tradeable: false
+  weight: 0.198
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6728
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 22
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 20
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 70}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 23932
+  name: "Claws of Callisto"
+  examine: "The claws of a great bear. They seem to maintain some of his power, somehow."
+  tradeable: true
+  weight: 2.0
+  equipment: null
+- id: 23933
+  name: "Claws of Callisto"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23934
+  name: "Skull of Vet'ion"
+  examine: "The skull of an oathbound warrior. Severed from its body, it still maintains some power."
+  tradeable: true
+  weight: 2.0
+  equipment: null
+- id: 23935
+  name: "Skull of Vet'ion"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23936
+  name: "Serpentine visage"
+  examine: "Maybe you could use a chisel to craft this into a helmet."
+  tradeable: true
+  weight: 1.0
+  equipment: null
+- id: 23937
+  name: "Serpentine visage"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 23938
+  name: "Basilisk jaw"
+  examine: "The jaw of a Basilisk Knight."
+  tradeable: true
+  weight: 0.005
+  equipment: null
+- id: 23939
+  name: "Basilisk jaw"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
   equipment: null
 - id: 23940
   name: "Abyssal orphan"
