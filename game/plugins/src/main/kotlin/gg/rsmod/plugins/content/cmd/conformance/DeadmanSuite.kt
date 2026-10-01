@@ -48,6 +48,7 @@ import gg.rsmod.plugins.content.combat.getCombatTarget
  *   target is refused, a hit rebounds 75% (rounded down, min 1), entering a player-owned house clears it.
  * - zones: the PvP gate end to end - a target inside a guarded zone is refused with the guards' message, a combat-level gap over 14
  *   is refused (Deadman bracket), the same bracket in danger attacks.
+ * - teleblock: a real Tele Block cast - 500 ticks, 250 with Protect from Magic, a second cast does not refresh it.
  */
 object DeadmanSuite : Conformance.Suite {
     override suspend fun QueueTask.run(
@@ -80,6 +81,7 @@ object DeadmanSuite : Conformance.Suite {
         scenario("pvm") { pvmDeath(run, arena) }
         scenario("veng") { vengeance(run, arena) }
         scenario("zones") { pvpGate(run, arena) }
+        scenario("teleblock") { teleBlock(run, arena) }
     }
 
     /** Hitsplat types [who] received since [from], in order. */
@@ -1046,5 +1048,74 @@ object DeadmanSuite : Conformance.Suite {
         wait(2)
         val (swung3, said3) = tryAttack()
         run.expectTrue(e, "same bracket, both in danger: the attack goes out", swung3, "A=${a.combatLevel} B=${b.combatLevel} msgs: $said3")
+    }
+
+    // ---- teleblock: Tele Block on a player --------------------------------------------------------------------------------
+
+    private suspend fun QueueTask.teleBlock(
+        run: Conformance.Run,
+        arena: Tile,
+    ) {
+        val e = "teleblock"
+        val tb = gg.rsmod.game.model.timer.TELEBLOCK_TIMER
+        val a = run.bot(arena, "TA")
+        val b = run.bot(arena.transform(3, 0), "TB")
+        wait(2)
+
+        /** Casts Tele Block on B until it lands (a splash is normal); the timer left the tick it is seen, or null. */
+        suspend fun castUntilBlocked(): Int? {
+            for (cast in 0 until 8) {
+                gg.rsmod.plugins.content.combat.magic.Autocast.markManualCast(a, gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell.TELEPORT_BLOCK, b)
+                a.attack(b)
+                for (t in 0 until 10) {
+                    b.setCurrentLifepoints(b.getMaximumLifepoints())
+                    wait(1)
+                    if (b.timers.has(tb)) {
+                        val left = b.timers[tb]
+                        a.resetInteractions(); Combat.reset(a); b.resetInteractions(); Combat.reset(b)
+                        return left
+                    }
+                }
+                a.resetInteractions(); Combat.reset(a); b.resetInteractions(); Combat.reset(b)
+                wait(6)
+            }
+            return null
+        }
+
+        suspend fun prepare(protectMagic: Boolean) {
+            reset(a, arena)
+            reset(b, arena.transform(3, 0))
+            b.timers.remove(tb)
+            gg.rsmod.plugins.content.mechanics.prayer.Prayers.deactivateAll(b)
+            gg.rsmod.plugins.content.magic.Spellbooks.select(a, gg.rsmod.plugins.api.Spellbook.STANDARD)
+            a.inventory.add(Items.LAW_RUNE, 100)
+            a.inventory.add(Items.CHAOS_RUNE, 100)
+            a.inventory.add(Items.DEATH_RUNE, 100)
+            if (protectMagic) {
+                b.skills.setBaseLevel(Skills.PRAYER, 99)
+                b.setCurrentPrayerPoints(99)
+                gg.rsmod.plugins.content.mechanics.prayer.Prayers.activate(b, gg.rsmod.plugins.content.mechanics.prayer.Prayer.PROTECT_FROM_MAGIC)
+            }
+            wait(2)
+        }
+
+        prepare(protectMagic = false)
+        val full = castUntilBlocked()
+        run.expectTrue(e, "Tele Block lasts 5:00 (500 ticks)", full != null && full in 495..500, "timer=$full", "OSRS Wiki Tele Block: 5 minutes")
+        // A second Tele Block on a blocked player does not refresh it.
+        val before = b.timers[tb]
+        if (full != null) {
+            gg.rsmod.plugins.content.combat.magic.Autocast.markManualCast(a, gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell.TELEPORT_BLOCK, b)
+            a.attack(b)
+            repeat(8) { b.setCurrentLifepoints(b.getMaximumLifepoints()); wait(1) }
+            a.resetInteractions(); Combat.reset(a); b.resetInteractions(); Combat.reset(b)
+            run.expectTrue(e, "a second Tele Block does not refresh the timer", b.timers.has(tb) && b.timers[tb] < before, "before=$before now=${b.timers[tb]}")
+        }
+
+        prepare(protectMagic = true)
+        val halved = castUntilBlocked()
+        run.expectTrue(e, "Tele Block with Protect from Magic lasts 2:30 (250 ticks)", halved != null && halved in 245..250, "timer=$halved", "OSRS Wiki Tele Block: halved")
+        b.timers.remove(tb)
+        gg.rsmod.plugins.content.mechanics.prayer.Prayers.deactivateAll(b)
     }
 }
