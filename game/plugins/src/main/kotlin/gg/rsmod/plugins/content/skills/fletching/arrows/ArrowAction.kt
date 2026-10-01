@@ -61,7 +61,7 @@ class ArrowAction {
         arrow: ArrowData,
     ): Boolean {
         val player = task.player
-        if (player.skills.getCurrentLevel(Skills.FLETCHING) < arrow.levelRequirement) {
+        if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.FLETCHING, arrow.levelRequirement)) {
             val message =
                 "You need a Fletching level of ${arrow.levelRequirement} to make ${arrow.name.lowercase()} arrows."
             task.doubleItemMessageBox(

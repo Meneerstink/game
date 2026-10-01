@@ -132,7 +132,8 @@ on_login {
 
     player.sendOption("Follow", 3)
     player.sendOption("Trade with", 4)
-    player.sendOption("Req Assist", 5)
+    // Slot 7: the chat op "Give assistance" on an assist request sends OPPLAYER7 (clientscript 86); see AssistSystem.
+    player.sendOption(gg.rsmod.plugins.content.mechanics.assist.AssistSystem.OPTION, gg.rsmod.plugins.content.mechanics.assist.AssistSystem.OPTION_SLOT)
 
     player.setVarp(Varps.UNSTABLE_FOUNDATIONS_PROGRESS, 1000) // unlocks tutorial settings
     player.setVarp(Varps.VARP_1160, -1) // Unlocks summoning orb

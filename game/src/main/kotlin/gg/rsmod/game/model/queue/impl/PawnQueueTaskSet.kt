@@ -72,6 +72,7 @@ class PawnQueueTaskSet : QueueTaskSet() {
     private fun step(task: QueueTask): Boolean {
         val previous = running
         running = task
+        val start = System.nanoTime()
         try {
             try {
                 if (!task.invoked) {
@@ -88,6 +89,7 @@ class PawnQueueTaskSet : QueueTaskSet() {
             }
         } finally {
             running = previous
+            reportSlowStep(task, start, if (task.ctx is Player) "player" else "npc")
         }
 
         if (task.suspended()) {

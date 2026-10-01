@@ -31,6 +31,21 @@ abstract class QueueTaskSet {
 
     abstract fun cycle()
 
+    /*
+     * Debug toolkit (2026-10-01): one task step that alone eats a third of the tick budget names itself, so a lag line such as
+     * "QueueHandlerTask=770 ms" with nobody online (owner session 17:35) points at the plugin whose task it was ([QueueTask.origin]).
+     */
+    protected fun reportSlowStep(
+        task: QueueTask,
+        startNanos: Long,
+        kind: String,
+    ) {
+        val ms = (System.nanoTime() - startNanos) / 1_000_000
+        if (ms >= SLOW_STEP_MS) {
+            gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.TICK) { "$kind queue task ${task.origin} (${task.ctx}) ran $ms ms in one tick" }
+        }
+    }
+
     fun queue(
         ctx: Any,
         dispatcher: CoroutineDispatcher,
@@ -133,7 +148,9 @@ abstract class QueueTaskSet {
         }
     }
 
-    companion object : KLogging()
+    companion object : KLogging() {
+        const val SLOW_STEP_MS = 200L
+    }
 
     /** @return true when a removed task owned the pawn's lock. */
     private fun terminate(keepPersistent: Boolean): Boolean {

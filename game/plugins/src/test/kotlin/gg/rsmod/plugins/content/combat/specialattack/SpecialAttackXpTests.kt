@@ -48,8 +48,9 @@ class SpecialAttackXpTests {
         val claws = specialPlugins().first { it.name == "dragon_claws.plugin.kts" }.readText()
         assertTrue("player.dealHit(" in claws, "claw hitsplats use the shared dealHit route")
         val offenders = withDirect.filter { "SpecialAttackXp.award(" !in it.readText() }.map { it.name }.sorted()
-        // SOURCE_GAP (no experience, unchanged): Ancient godsword blood sacrifice, Abyssal vine whip vine hits. The Scorching bow's burn
-        // left this list on 2026-09-17c: it is a normal burn stack now (Burns.apply), like the Burning claws and Eclipse burns.
-        assertEquals(listOf("ancient_godsword.plugin.kts", "melee_specials.plugin.kts"), offenders)
+        // SOURCE_GAP (no experience, unchanged): Ancient godsword blood sacrifice. The Scorching bow's burn left this list on 2026-09-17c:
+        // it is a normal burn stack now (Burns.apply), like the Burning claws and Eclipse burns. The Abyssal vine whip left it on 2026-10-01:
+        // every Vine Call hit is a melee roll through dealHit (melee_specials.plugin.kts, Darkan / Novite), experience included.
+        assertEquals(listOf("ancient_godsword.plugin.kts"), offenders)
     }
 }

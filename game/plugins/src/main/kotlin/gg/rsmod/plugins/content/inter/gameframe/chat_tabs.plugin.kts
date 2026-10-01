@@ -21,10 +21,20 @@ private val VARP_TABS =
         22 to 1054, // Clan
     )
 
+/** Assist tab op6 "XP Earned/Time" (IF_BUTTON6 = opcode 91; AssistSystem.showEarned). */
+val XP_EARNED_OPCODE = 91
+
 VARP_TABS.forEach { (component, varp) ->
     on_button(interfaceId = 751, component = component) {
+        val assist = varp == gg.rsmod.plugins.content.mechanics.assist.AssistSystem.FILTER_VARP
+        if (assist && player.getInteractingOpcode() == XP_EARNED_OPCODE) {
+            gg.rsmod.plugins.content.mechanics.assist.AssistSystem.showEarned(player)
+            return@on_button
+        }
         val mode = MODE_BY_OPCODE[player.getInteractingOpcode()] ?: return@on_button
         player.setVarp(varp, mode)
+        // Void AssistFilter: switching the Assist filter to Friends / Off ends an assistance the new filter no longer allows.
+        if (assist) gg.rsmod.plugins.content.mechanics.assist.AssistSystem.filterChanged(player)
     }
 }
 

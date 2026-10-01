@@ -363,10 +363,12 @@ suspend fun cycle(it: QueueTask): Boolean {
             }
 
             ruling("allowed")
+            // Assist System (Deadman): a lent level never fights - an attack by or on a player in an assistance ends it first.
+            gg.rsmod.plugins.content.mechanics.assist.AssistSystem.endForCombat(pawn, target)
 
             if (pawn is Player) {
-                if (target is Npc && target.combatDef.slayerReq > pawn.skills.getMaxLevel(Skills.SLAYER)) {
-                    pawn.message("You need a higher Slayer level to know how to wound this monster.")
+                if (target is Npc && Combat.slayerLevelTooLow(pawn, target)) {
+                    pawn.message(Combat.SLAYER_LEVEL_MESSAGE)
                     Combat.reset(pawn)
                     return false
                 }

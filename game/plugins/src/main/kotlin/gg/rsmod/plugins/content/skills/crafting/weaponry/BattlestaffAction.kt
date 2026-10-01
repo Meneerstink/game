@@ -78,7 +78,7 @@ object BattlestaffAction {
             return false
         }
 
-        if (player.skills.getCurrentLevel(Skills.CRAFTING) < staff.levelRequired) {
+        if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.CRAFTING, staff.levelRequired)) {
             task.itemMessageBox(
                 "You need a Crafting level of ${staff.levelRequired} to<br>craft ${Misc.formatWithIndefiniteArticle(
                     resultItem,

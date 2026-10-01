@@ -153,22 +153,45 @@ SpecialAttacks.register(
     }
 }
 
-/* Abyssal vine whip - Vine Call: 60%, +20% damage plus a vine that hits the victim for 10 damage every 2 ticks (up to 5 times). */
+/*
+ * Abyssal vine whip - Vine Call (released 12 July 2011, RuneScape Wiki update history). Darkan's pre-EoC wiki: "uses 60% of the special
+ * attack bar", "summons a vine that strikes the target 10 times (after the initial hit, which functions the same as the rest of the vine
+ * hits - so 11 hits total)", each with "125% of the user's accuracy and 33% of their base strength"; in multicombat a maximum of three
+ * are damaged by it; "Since you no longer wield a vine whip, the vine ignores your call." Novite 667 (PlayerCombat case 21371): the vine
+ * hits once per tick (0.33 max-hit rolls). Until 2026-10-01 this was a Matrix-718 shape - one 120 % hit plus 5 x 10 flat damage every 2
+ * ticks, an x10 life-point value (ROOT_CAUSES #72) that dealt 50 extra hitpoints.
+ */
+val VINE_HITS = 10
+val VINE_ACCURACY = 1.25
+val VINE_DAMAGE = 0.33
+val VINE_MAX_TARGETS = 3
+
+fun vineStrike(
+    attacker: Player,
+    victim: gg.rsmod.game.model.entity.Pawn,
+) {
+    meleeHit(attacker, victim, accuracy = VINE_ACCURACY, damage = VINE_DAMAGE)
+    adjacentTargets(attacker, victim).take(VINE_MAX_TARGETS - 1).forEach { other ->
+        meleeHit(attacker, other, accuracy = VINE_ACCURACY, damage = VINE_DAMAGE)
+    }
+}
+
 SpecialAttacks.register(60, Items.ABYSSAL_VINE_WHIP) {
     val attacker = player
     val victim = target
     player.animate(11971)
     player.graphic(2108)
-    meleeHit(player, victim, damage = 1.2) {
-        victim.graphic(2109)
-        attacker.world.queue {
-            repeat(5) {
-                wait(2)
-                if (victim.isDead() || attacker.isDead() || (victim is Player && !victim.isOnline) || !attacker.isOnline) return@queue
-                victim.hit(damage = 10, type = HitType.MELEE.id)
-                victim.damageMap.add(attacker, 10)
-                gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.recordDamage(victim, attacker, 10)
+    vineStrike(attacker, victim)
+    victim.graphic(2109)
+    attacker.world.queue {
+        repeat(VINE_HITS) {
+            wait(1)
+            if (victim.isDead() || attacker.isDead() || (victim is Player && !victim.isOnline) || !attacker.isOnline) return@queue
+            if (attacker.getEquipment(EquipmentType.WEAPON)?.id != Items.ABYSSAL_VINE_WHIP) {
+                attacker.message("Since you no longer wield a vine whip, the vine ignores your call.")
+                return@queue
             }
+            vineStrike(attacker, victim)
         }
     }
 }

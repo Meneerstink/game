@@ -47,8 +47,7 @@ on_magic_spell_button("Bones to Bananas") { metadata -> bonesTo(player, metadata
 on_magic_spell_button("Bones to Peaches") { metadata -> bonesTo(player, metadata, Items.PEACH, 35.5) }
 
 /*
- * Teleother: the target gets an accept/decline prompt (2011 behaviour; there is no Accept Aid
- * toggle in this server yet, so the prompt itself is the consent).
+ * Teleother: the target must have Accept Aid on (RuneScape Wiki "Accept Aid"; AcceptAid), then gets the 2011 accept/decline prompt.
  */
 private val TELEOTHER =
     mapOf(
@@ -62,6 +61,12 @@ TELEOTHER.forEach { (data, dest) ->
         val target = player.getInteractingPlayer()
         val metadata = spell(data)
         val (tile, xp, place) = dest
+        if (!gg.rsmod.plugins.content.mechanics.aid.AcceptAid.check(
+                player, target, gg.rsmod.plugins.content.mechanics.aid.AcceptAid.TELEOTHER_REFUSED,
+            )
+        ) {
+            return@on_spell_on_player
+        }
         if (!MagicSpells.canCast(player, metadata.lvl, metadata.runes)) return@on_spell_on_player
         // Deadman PvP guards plan (2026-09-16): the old pre-flight target.canTeleport(...) check
         // here (before the accept prompt even showed) already had the pre-existing side effect
@@ -171,7 +176,7 @@ BOLT_ENCHANTS.forEach { enchant ->
         player.closeInterface(432)
         player.queue {
             repeat(casts) {
-                if (player.skills.getCurrentLevel(Skills.MAGIC) < enchant.level) {
+                if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.MAGIC, enchant.level)) {
                     player.message("You need a Magic level of ${enchant.level} to enchant those bolts.")
                     return@queue
                 }

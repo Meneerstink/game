@@ -88,7 +88,7 @@ anvils.forEach { anvil ->
         val bar =
             BarType.values.reversed().firstOrNull { bar ->
                 player.inventory.filterNotNull().any { item -> item.id == bar.item } &&
-                    player.skills.getCurrentLevel(Skills.SMITHING) >= bar.levelRequired
+                    gg.rsmod.plugins.content.mechanics.assist.AssistSystem.effectiveLevel(player, Skills.SMITHING) >= bar.levelRequired
             }
         if (bar == null) {
             player.queue {

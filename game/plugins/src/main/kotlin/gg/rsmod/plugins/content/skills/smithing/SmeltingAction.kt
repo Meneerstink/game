@@ -64,7 +64,7 @@ class SmeltingAction(
         amount: Int,
     ) {
         val player = task.player
-        val level = player.skills.getCurrentLevel(Skills.SMITHING)
+        val level = gg.rsmod.plugins.content.mechanics.assist.AssistSystem.effectiveLevel(player, Skills.SMITHING)
 
         if (!canSmelt(task, bar, level)) return
 
@@ -168,7 +168,7 @@ class SmeltingAction(
             return false
         }
 
-        if (level < bar.levelRequired) {
+        if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(task.player, Skills.SMITHING, bar.levelRequired)) {
             task.messageBox(
                 "You need a ${Skills.getSkillName(
                     player.world,

@@ -64,7 +64,8 @@ class OpHeldUHandler : MessageHandler<OpHeldUMessage> {
                 return
             }
 
-            if (!client.lock.canInterfaceInteract()) {
+            // A spell on an item is an item action too: an assister (LockState.ASSISTING) keeps his interfaces but may not act.
+            if (!client.lock.canInterfaceInteract() || !client.lock.canItemInteract()) {
                 return
             }
 

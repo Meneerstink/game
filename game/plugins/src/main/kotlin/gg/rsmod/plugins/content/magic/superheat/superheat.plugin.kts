@@ -117,7 +117,7 @@ fun performSuperheat(player: Player): Boolean {
         return false
     }
 
-    if (requirements.level != null && player.skills.getCurrentLevel(Skills.SMITHING) < requirements.level) {
+    if (requirements.level != null && !gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.SMITHING, requirements.level)) {
         player.message("You need a Smithing level of ${requirements.level} to superheat this item!")
         return false
     }

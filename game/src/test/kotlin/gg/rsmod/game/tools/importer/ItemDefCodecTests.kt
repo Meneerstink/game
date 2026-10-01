@@ -229,4 +229,35 @@ class ItemDefCodecTests {
             }.exceptionOrNull()
         assertTrue("an id past the 16-bit model ceiling must fail, got $outOfRange", outOfRange is IllegalArgumentException)
     }
+
+    /**
+     * 2026-10-01 (corrupt Morrigan's specials): the corrupt javelins / throwing axe lack param 687 (the special bar flag the attack-tab
+     * CS2 reads), so an int param must be addable - to a definition without a params block, and next to an existing one.
+     */
+    @Test
+    fun intParamsAreAddedWithOrWithoutAParamsBlock() {
+        val added = ItemDefCodec.cloneWithOverrides(source = donor(), stringOverrides = emptyMap(), intParams = mapOf(687 to 1))
+        assertEquals(1, decodeServerSide(added).params.get(687))
+        assertEquals("Magic shortbow", decodeServerSide(added).name)
+
+        val withString = ItemDefCodec.cloneWithOverrides(source = donor(), stringOverrides = emptyMap(), stringParams = mapOf(528 to "Wield"))
+        val both = ItemDefCodec.cloneWithOverrides(source = withString, stringOverrides = emptyMap(), intParams = mapOf(687 to 1, 686 to 18))
+        val def = decodeServerSide(both)
+        assertEquals("Wield", def.params.get(528))
+        assertEquals(1, def.params.get(687))
+        assertEquals(18, def.params.get(686))
+
+        val fresh = ItemDefCodec.cloneWithOverrides(source = donor(), stringOverrides = emptyMap(), stringParams = mapOf(528 to "Wield"), intParams = mapOf(687 to 1))
+        val freshDef = decodeServerSide(fresh)
+        assertEquals("Wield", freshDef.params.get(528))
+        assertEquals(1, freshDef.params.get(687))
+    }
+
+    @Test
+    fun anIntParamReplacesTheSameIdInsteadOfDuplicatingIt() {
+        val once = ItemDefCodec.cloneWithOverrides(source = donor(), stringOverrides = emptyMap(), intParams = mapOf(687 to 0))
+        val twice = ItemDefCodec.cloneWithOverrides(source = once, stringOverrides = emptyMap(), intParams = mapOf(687 to 1))
+        assertEquals(1, decodeServerSide(twice).params.get(687))
+        assertEquals(1, ItemDefCodec.describeOpcodes(twice).count { it.startsWith("249=") })
+    }
 }

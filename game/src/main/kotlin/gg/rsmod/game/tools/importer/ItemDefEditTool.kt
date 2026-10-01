@@ -19,7 +19,7 @@ import java.io.File
  * ```
  * edit <cachePath> <itemId> <outFile>
  *      [--name=<text>] [--short=<opcode>:<value>[,...]] [--int=<opcode>:<value>[,...]]
- *      [--remove=<opcode>[,...]] [--remove-param=<paramId>[,...]]
+ *      [--remove=<opcode>[,...]] [--remove-param=<paramId>[,...]] [--int-param=<paramId>:<value>[,...]]
  * ```
  *
  * Every override value must come from a real source (the pinned upstream definition), never from
@@ -61,6 +61,7 @@ object ItemDefEditTool {
         val removedOpcodes = flags["remove"]?.split(',')?.filter { it.isNotBlank() }?.map { it.trim().toInt() }?.toSet() ?: emptySet()
         val removedParamIds =
             flags["remove-param"]?.split(',')?.filter { it.isNotBlank() }?.map { it.trim().toInt() }?.toSet() ?: emptySet()
+        val intParams = parsePairs(flags["int-param"])
 
         val edited =
             ItemDefCodec.cloneWithOverrides(
@@ -70,6 +71,7 @@ object ItemDefEditTool {
                 intOverrides = intOverrides,
                 removedOpcodes = removedOpcodes,
                 removedParamIds = removedParamIds,
+                intParams = intParams,
             )
 
         println("SOURCE=$cachePath item=$itemId bytes=${source.size} sha1=${CacheItemProbeTool.sha1(source)} name=${ItemDefCodec.readName(source)}")
@@ -101,5 +103,5 @@ object ItemDefEditTool {
     private const val USAGE =
         "Usage:\n" +
             "  edit <cachePath> <itemId> <outFile> [--name=<text>] [--short=<op>:<value>[,...]] " +
-            "[--int=<op>:<value>[,...]] [--remove=<op>[,...]] [--remove-param=<paramId>[,...]]"
+            "[--int=<op>:<value>[,...]] [--remove=<op>[,...]] [--remove-param=<paramId>[,...]] [--int-param=<paramId>:<value>[,...]]"
 }

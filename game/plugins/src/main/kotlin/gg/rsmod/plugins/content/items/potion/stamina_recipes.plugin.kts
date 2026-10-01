@@ -16,7 +16,7 @@ val superEnergyToStamina =
 superEnergyToStamina.forEach { (superEnergy, product) ->
     val (stamina, doses) = product
     on_item_on_item(item1 = Items.AMYLASE_CRYSTAL, item2 = superEnergy) {
-        if (player.skills.getCurrentLevel(Skills.HERBLORE) < 77) {
+        if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.HERBLORE, 77)) {
             player.message("You need a Herblore level of 77 to make a stamina potion.")
             return@on_item_on_item
         }

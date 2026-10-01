@@ -39,6 +39,6 @@ class OsrsPotionsStaminaImportTests {
         }
         assertTrue("StaminaPotions.drainMultiplier(p)" in File("src/main/kotlin/gg/rsmod/plugins/content/mechanics/run/RunEnergy.kt").readText())
         val recipe = File("src/main/kotlin/gg/rsmod/plugins/content/items/potion/stamina_recipes.plugin.kts").readText()
-        assertTrue("Skills.HERBLORE) < 77" in recipe && "25.5 * doses" in recipe && "item1 = Items.AMYLASE_CRYSTAL" in recipe)
+        assertTrue("meets(player, Skills.HERBLORE, 77)" in recipe && "25.5 * doses" in recipe && "item1 = Items.AMYLASE_CRYSTAL" in recipe)
     }
 }

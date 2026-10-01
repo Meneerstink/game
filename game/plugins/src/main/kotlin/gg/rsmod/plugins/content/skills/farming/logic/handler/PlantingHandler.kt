@@ -46,7 +46,7 @@ class PlantingHandler(
             return false
         }
 
-        if (seed.plant.level > player.skills.getCurrentLevel(Skills.FARMING)) {
+        if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.FARMING, seed.plant.level)) {
             player.message("You must be a Level ${seed.plant.level} Farmer to plant those.")
             return false
         }

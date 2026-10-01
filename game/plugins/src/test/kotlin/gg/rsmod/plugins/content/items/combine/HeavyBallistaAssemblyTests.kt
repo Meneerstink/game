@@ -21,7 +21,7 @@ class HeavyBallistaAssemblyTests {
     @Test
     fun `plugin file exists and requires 72 Fletching for all three steps`() {
         assertTrue("LEVEL_REQUIRED = 72" in plugin)
-        val requirementChecks = Regex("getCurrentLevel\\(Skills\\.FLETCHING\\) < LEVEL_REQUIRED").findAll(plugin).count()
+        val requirementChecks = Regex("AssistSystem\\.meets\\(player, Skills\\.FLETCHING, LEVEL_REQUIRED\\)").findAll(plugin).count()
         assertTrue("expected a level gate on each of the 3 steps, found $requirementChecks", requirementChecks == 3)
     }
 

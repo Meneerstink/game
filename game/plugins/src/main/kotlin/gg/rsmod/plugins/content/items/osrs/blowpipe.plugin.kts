@@ -150,7 +150,7 @@ listOf(Items.TOXIC_BLOWPIPE_EMPTY, Items.TANZANITE_FANG).forEach { id ->
 
 // Wiki "Tanzanite fang": chisel on the fang, 78 Fletching, 120 XP -> Toxic blowpipe (empty). Message: Kronos (single source).
 on_item_on_item(item1 = Items.CHISEL, item2 = Items.TANZANITE_FANG) {
-    if (player.skills.getCurrentLevel(Skills.FLETCHING) < Blowpipe.FLETCHING_LEVEL) {
+    if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.FLETCHING, Blowpipe.FLETCHING_LEVEL)) {
         player.message("You need a Fletching level of ${Blowpipe.FLETCHING_LEVEL} to do that.")
         return@on_item_on_item
     }

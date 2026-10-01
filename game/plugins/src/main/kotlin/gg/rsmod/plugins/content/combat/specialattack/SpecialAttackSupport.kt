@@ -199,6 +199,8 @@ object SpecialAttackSupport {
                 // Deadman guards are no can_attack hook (Combat.canAttack refuses them for the primary target): a splash on a guard the
                 // attacker may not attack - unskulled, outside the guarded zone, any Wizguard - was hit all the same.
                 !(attacker is Player && CityGuards.isGuard(other) && !CityGuards.mayBeAttackedBy(other, attacker)) &&
+                // The Slayer gate, likewise primary-only before (owner 2026-10-01): no splash on a monster above the attacker's Slayer level.
+                !(attacker is Player && gg.rsmod.plugins.content.combat.Combat.slayerLevelTooLow(attacker, other)) &&
                 attacker.world.plugins.canAttack(attacker, other, false)
             is Player -> {
                 if (!other.isOnline || !other.lock.canBeAttacked()) return false

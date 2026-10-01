@@ -36,7 +36,7 @@ fun carveAntlers(
     amount: Int,
 ) {
     val recipe = recipes.firstOrNull { it.bolts == item } ?: return
-    if (player.skills.getCurrentLevel(Skills.FLETCHING) < recipe.level) {
+    if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.FLETCHING, recipe.level)) {
         player.message("You need a Fletching level of ${recipe.level} to make these bolts.")
         return
     }

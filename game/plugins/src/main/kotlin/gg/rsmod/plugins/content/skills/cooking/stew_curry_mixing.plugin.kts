@@ -14,7 +14,7 @@ private val CURRY_LEVEL = 60
 private val CURRY_LEAF_AMOUNT = 3
 
 on_item_on_item(item1 = Items.BOWL_OF_WATER, item2 = Items.POTATO) {
-    if (player.skills.getCurrentLevel(Skills.COOKING) < STEW_LEVEL) {
+    if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.COOKING, STEW_LEVEL)) {
         player.message("You need a Cooking level of $STEW_LEVEL to make this.")
         return@on_item_on_item
     }
@@ -25,7 +25,7 @@ on_item_on_item(item1 = Items.BOWL_OF_WATER, item2 = Items.POTATO) {
 }
 
 on_item_on_item(itemUsed = Items.INCOMPLETE_STEW, itemsList = intArrayOf(Items.COOKED_MEAT, Items.COOKED_CHICKEN)) {
-    if (player.skills.getCurrentLevel(Skills.COOKING) < STEW_LEVEL) {
+    if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.COOKING, STEW_LEVEL)) {
         player.message("You need a Cooking level of $STEW_LEVEL to make this.")
         return@on_item_on_item
     }
@@ -37,7 +37,7 @@ on_item_on_item(itemUsed = Items.INCOMPLETE_STEW, itemsList = intArrayOf(Items.C
 }
 
 on_item_on_item(item1 = Items.UNCOOKED_STEW, item2 = Items.SPICE) {
-    if (player.skills.getCurrentLevel(Skills.COOKING) < CURRY_LEVEL) {
+    if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.COOKING, CURRY_LEVEL)) {
         player.message("You need a Cooking level of $CURRY_LEVEL to make this.")
         return@on_item_on_item
     }
@@ -48,7 +48,7 @@ on_item_on_item(item1 = Items.UNCOOKED_STEW, item2 = Items.SPICE) {
 }
 
 on_item_on_item(item1 = Items.UNCOOKED_STEW, item2 = Items.CURRY_LEAF) {
-    if (player.skills.getCurrentLevel(Skills.COOKING) < CURRY_LEVEL) {
+    if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.COOKING, CURRY_LEVEL)) {
         player.message("You need a Cooking level of $CURRY_LEVEL to make this.")
         return@on_item_on_item
     }

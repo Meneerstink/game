@@ -99,7 +99,7 @@ if (bowHasOption(Items.CRAWS_BOW_U, "Dismantle", worn = false)) {
 
 // Webweaver bow (u): Craw's bow (u) + Fangs of Venenatis, 85 Fletching (boostable), 0 experience.
 on_item_on_item(item1 = Items.FANGS_OF_VENENATIS, item2 = Items.CRAWS_BOW_U) {
-    if (player.skills.getCurrentLevel(Skills.FLETCHING) < RevenantBows.WEBWEAVER_FLETCHING) {
+    if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.FLETCHING, RevenantBows.WEBWEAVER_FLETCHING)) {
         player.message("You need a Fletching level of ${RevenantBows.WEBWEAVER_FLETCHING} to do that.")
         return@on_item_on_item
     }
@@ -171,7 +171,7 @@ if (bowHasOption(Items.TONALZTICS_OF_RALOS, "Uncharge", worn = false)) {
 val SCORCHING_BOW_CREATED = gg.rsmod.game.model.attr.AttributeKey<Boolean>(persistenceKey = "osrs_scorching_bow_created")
 
 on_item_on_item(item1 = Items.TORMENTED_SYNAPSE, item2 = Items.MAGIC_LONGBOW_U) {
-    if (player.skills.getCurrentLevel(Skills.FLETCHING) < ScorchingBow.FLETCHING_LEVEL) {
+    if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.FLETCHING, ScorchingBow.FLETCHING_LEVEL)) {
         if (player.getCurrentLifepoints() < ScorchingBow.FAIL_MIN_HITPOINTS) {
             player.message(ScorchingBow.INJURED_MESSAGE)
             return@on_item_on_item

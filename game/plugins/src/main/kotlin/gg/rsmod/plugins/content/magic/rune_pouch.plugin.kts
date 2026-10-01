@@ -115,7 +115,7 @@ listOf(Items.THREAD_OF_ELIDINIS to Items.RUNE_POUCH, Items.NEEDLE to Items.RUNE_
             player.message("You need a needle and a thread of Elidinis to upgrade the rune pouch.")
             return@on_item_on_item
         }
-        if (player.skills.getCurrentLevel(Skills.CRAFTING) < RunePouch.DIVINE_CRAFTING_LEVEL) {
+        if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.CRAFTING, RunePouch.DIVINE_CRAFTING_LEVEL)) {
             player.message("You need a Crafting level of ${RunePouch.DIVINE_CRAFTING_LEVEL} to do that.")
             return@on_item_on_item
         }

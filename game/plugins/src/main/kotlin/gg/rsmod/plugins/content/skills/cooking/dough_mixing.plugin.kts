@@ -58,7 +58,7 @@ fun mixDough(
     amount: Int,
 ) {
     val type = doughTypes.firstOrNull { it.dough == dough } ?: return
-    if (player.skills.getCurrentLevel(Skills.COOKING) < type.level) {
+    if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.COOKING, type.level)) {
         player.message("You need a Cooking level of ${type.level} to make this.")
         return
     }

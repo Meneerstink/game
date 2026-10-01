@@ -9,6 +9,7 @@ import gg.rsmod.game.model.timer.POISON_TIMER
 import gg.rsmod.plugins.content.skills.summoning.FAMILIAR_LIFETIME_TIMER
 import gg.rsmod.plugins.content.combat.isAttacking
 import gg.rsmod.plugins.content.magic.canTeleport
+import gg.rsmod.plugins.content.mechanics.aid.AcceptAid
 import gg.rsmod.plugins.content.magic.teleport
 import gg.rsmod.plugins.content.inter.attack.AttackTab
 import gg.rsmod.plugins.content.magic.MagicSpells
@@ -35,7 +36,7 @@ import gg.rsmod.plugins.content.skills.summoning.SummoningPouchData
  *
  * Out of scope / not implemented here: NPC Contact (needs per-NPC dialogue routing), Borrowed
  * Power, Tune Bane Ore, Repair Rune Pouch, Fertile Soil/Cure Plant/Remote Farm
- * (farming), Boost/Stat Restore Potion Share. Those buttons currently do nothing.
+ * (farming). Those buttons currently do nothing.
  */
 
 /** Group teleports (Tele Group X) ask each nearby player before moving them. */
@@ -62,7 +63,7 @@ GROUP_TELEPORTS.forEach { (name, data) ->
         player.canTeleport(TeleportType.LUNAR) {
             MagicSpells.removeRunes(player, metadata.runes, metadata.sprite)
             player.addXp(Skills.MAGIC, xp, checkBrawlingGloves = true)
-            nearbyPlayers(player, radius = 1).forEach { other ->
+            nearbyPlayers(player, radius = 1).filter(AcceptAid::accepts).forEach { other ->
                 other.queue {
                     other.message("${player.username} is attempting to teleport you to $place.")
                     if (options("Accept the teleport.", "Decline.", title = "${player.username} wishes to teleport you to $place.") == 1) {
@@ -142,6 +143,7 @@ on_magic_spell_button("Vengeance") { metadata ->
 on_spell_on_player(430, SpellbookData.VENGEANCE_OTHER.component) {
     val target = player.getInteractingPlayer()
     val metadata = spell(SpellbookData.VENGEANCE_OTHER)
+    if (!AcceptAid.check(player, target)) return@on_spell_on_player
     // Void VengeanceOther: a target that is already venged is refused; the 30-second delay is the caster's (Vengeance.activateOn).
     if (Vengeance.isActive(target)) {
         player.message("This player already has vengeance cast.")
@@ -170,7 +172,7 @@ on_magic_spell_button("Vengeance Group") { metadata ->
         return@on_magic_spell_button
     }
     if (player.castLunar(metadata, xp = 95.0, animation = 4410, graphic = 726, height = 96, sound = Sfx.LUNAR_VENGENCE)) {
-        (nearbyPlayers(player, radius = 1) + player).forEach { p ->
+        (nearbyPlayers(player, radius = 1).filter(AcceptAid::accepts) + player).forEach { p ->
             if (!Vengeance.isActive(p)) {
                 Vengeance.prime(p)
                 p.graphic(725, 96)
@@ -210,6 +212,7 @@ on_magic_spell_button("Cure Me") { metadata ->
 on_spell_on_player(430, SpellbookData.CURE_OTHER.component) {
     val target = player.getInteractingPlayer()
     val metadata = spell(SpellbookData.CURE_OTHER)
+    if (!AcceptAid.check(player, target)) return@on_spell_on_player
     if (!afflicted(target)) {
         player.message("This player is not poisoned.")
         return@on_spell_on_player
@@ -223,7 +226,7 @@ on_spell_on_player(430, SpellbookData.CURE_OTHER.component) {
 
 on_magic_spell_button("Cure Group") { metadata ->
     if (player.castLunar(metadata, xp = 74.0, animation = 4409, graphic = 744, height = 130, sound = Sfx.LUNAR_CURE_GROUP)) {
-        (nearbyPlayers(player, radius = 1) + player).forEach { p ->
+        (nearbyPlayers(player, radius = 1).filter(AcceptAid::accepts) + player).forEach { p ->
             if (curePoison(p)) {
                 p.graphic(744, 130)
                 p.message(if (p === player) "You have been cured of poison." else "${player.username} has cured you of poison.")
@@ -238,6 +241,7 @@ on_magic_spell_button("Cure Group") { metadata ->
 on_spell_on_player(430, SpellbookData.HEAL_OTHER.component) {
     val target = player.getInteractingPlayer()
     val metadata = spell(SpellbookData.HEAL_OTHER)
+    if (!AcceptAid.check(player, target)) return@on_spell_on_player
     val transfer = (player.getCurrentLifepoints() * 0.75).toInt()
     if (player.getCurrentLifepoints() <= 1 || transfer <= 0) {
         player.message("You don't have enough life points to cast this spell.")
@@ -257,7 +261,7 @@ on_spell_on_player(430, SpellbookData.HEAL_OTHER.component) {
 }
 
 on_magic_spell_button("Heal Group") { metadata ->
-    val others = nearbyPlayers(player, radius = 1).filter { it.getCurrentLifepoints() < it.getMaximumLifepoints() }
+    val others = nearbyPlayers(player, radius = 1).filter { AcceptAid.accepts(it) && it.getCurrentLifepoints() < it.getMaximumLifepoints() }
     if (others.isEmpty()) {
         player.message("There is nobody nearby who needs healing.")
         return@on_magic_spell_button
@@ -284,6 +288,7 @@ on_magic_spell_button("Heal Group") { metadata ->
 on_spell_on_player(430, SpellbookData.ENERGY_TRANSFER.component) {
     val target = player.getInteractingPlayer()
     val metadata = spell(SpellbookData.ENERGY_TRANSFER)
+    if (!AcceptAid.check(player, target)) return@on_spell_on_player
     val cost = player.getMaximumLifepoints() / 10
     if (player.getCurrentLifepoints() <= cost) {
         player.message("You don't have enough life points to cast this spell.")
@@ -346,7 +351,7 @@ on_magic_spell_button("Bake Pie") { metadata ->
         while (true) {
             val next = player.inventory.rawItems.filterNotNull().firstOrNull { item -> pies.any { it.raw == item.id } } ?: break
             val data = pies.first { it.raw == next.id }
-            if (player.skills.getCurrentLevel(Skills.COOKING) < data.levelRequirement) {
+            if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.COOKING, data.levelRequirement)) {
                 player.message("You need a Cooking level of ${data.levelRequirement} to bake that pie.")
                 break
             }
@@ -612,8 +617,65 @@ on_logout {
     SpellbookSwap.revert(player)
 }
 
+/*
+ * Stat Restore Pot Share / Boost Potion Share (rules and sources in [PotionShare]): cast on a potion, one dose to each player in the
+ * 3x3 with Accept Aid on, the caster drinks for free.
+ */
+fun potionShare(
+    player: Player,
+    data: SpellbookData,
+    allowed: Set<gg.rsmod.plugins.content.items.potion.PotionType>,
+    xp: Double,
+    sound: Int,
+    recipientSound: Int,
+) {
+    val slot = player.getInteractingItemSlot()
+    val item = player.inventory[slot] ?: return
+    val potion = PotionShare.shareable(item.id, allowed)
+    if (potion == null) {
+        player.message(PotionShare.CANNOT_SHARE)
+        return
+    }
+    val metadata = spell(data)
+    if (!MagicSpells.canCast(player, metadata.lvl, metadata.runes, spellId = metadata.sprite)) return
+    val recipients = PotionShare.recipients(nearbyPlayers(player, radius = PotionShare.RADIUS), potion)
+    if (recipients.isEmpty()) {
+        player.message(PotionShare.NOBODY)
+        return
+    }
+    val left = PotionShare.remainder(potion, recipients.size)
+    if (!player.inventory.remove(item = potion.item, beginSlot = slot).hasSucceeded()) return
+    player.inventory.add(item = left, beginSlot = slot)
+    MagicSpells.removeRunes(player, metadata.runes, metadata.sprite)
+    player.animate(4413)
+    player.playSound(sound)
+    player.addXp(Skills.MAGIC, xp, checkBrawlingGloves = true)
+    if (potion.potionType.canDrink(player)) potion.potionType.apply(player)
+    recipients.forEach { other ->
+        other.graphic(733, 130)
+        other.playSound(recipientSound)
+        potion.potionType.apply(other)
+        other.timers[gg.rsmod.game.model.timer.POTION_DELAY] = 3
+        other.message("${player.username} has shared a potion with you.")
+    }
+}
+
+on_spell_on_item(fromInterface = 430, fromComponent = SpellbookData.STAT_RESTORE_POT_SHARE.component) {
+    potionShare(
+        player, SpellbookData.STAT_RESTORE_POT_SHARE, PotionShare.STAT_RESTORE, PotionShare.STAT_RESTORE_XP,
+        Sfx.LUNAR_STAT_SHARE, Sfx.LUNAR_STAT_SHARE_INDIVIDUAL,
+    )
+}
+
+on_spell_on_item(fromInterface = 430, fromComponent = SpellbookData.BOOST_POTION_SHARE.component) {
+    potionShare(
+        player, SpellbookData.BOOST_POTION_SHARE, PotionShare.BOOST, PotionShare.BOOST_XP,
+        Sfx.LUNAR_STRENGTH_SHARE, Sfx.LUNAR_STRENGTH_SHARE_INDIVIDUAL,
+    )
+}
+
 // Spells with no implementation yet (see file header) - bind so the click is at least acknowledged.
-listOf("NPC Contact", "Fertile Soil", "Cure Plant", "Remote Farm", "Boost Potion Share", "Stat Restore Pot Share").forEach { name ->
+listOf("NPC Contact", "Fertile Soil", "Cure Plant", "Remote Farm").forEach { name ->
     on_magic_spell_button(name) {
         player.message("This spell is not available yet.")
     }

@@ -49,7 +49,7 @@ object TippedBoltAction {
             return false
         }
 
-        if (player.skills.getCurrentLevel(Skills.FLETCHING) < data.levelRequirement) {
+        if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.FLETCHING, data.levelRequirement)) {
             task.doubleItemMessageBox(
                 "You need a Fletching level of ${data.levelRequirement} to attach these tips.",
                 item1 = data.plainBolt,

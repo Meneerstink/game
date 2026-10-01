@@ -42,8 +42,8 @@ class OsrsPotionsVenomImportTests {
             }
         }
         val recipes = File("src/main/kotlin/gg/rsmod/plugins/content/items/potion/anti_venom_recipes.plugin.kts").readText()
-        assertTrue("val scales = 5 * doses" in recipes && "30.0 * doses" in recipes && "Skills.HERBLORE) < 87" in recipes)
-        assertTrue("item2 = Items.ANTI_VENOM_4" in recipes && "addXp(Skills.HERBLORE, 125.0)" in recipes && "Skills.HERBLORE) < 94" in recipes)
+        assertTrue("val scales = 5 * doses" in recipes && "30.0 * doses" in recipes && "meets(player, Skills.HERBLORE, 87)" in recipes)
+        assertTrue("item2 = Items.ANTI_VENOM_4" in recipes && "addXp(Skills.HERBLORE, 125.0)" in recipes && "meets(player, Skills.HERBLORE, 94)" in recipes)
         assertTrue("VENOM_IMMUNITY] = PotionEffects.ANTIDOTE_PLUS_PLUS_VENOM_IMMUNITY_TICKS" in File("src/main/kotlin/gg/rsmod/plugins/content/items/potion/PotionType.kt").readText())
     }
 }

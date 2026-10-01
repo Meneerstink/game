@@ -45,7 +45,7 @@ object BoltTipAction {
             return false
         }
 
-        if (player.skills.getCurrentLevel(Skills.FLETCHING) < data.levelRequirement) {
+        if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.FLETCHING, data.levelRequirement)) {
             task.itemMessageBox(
                 "You need a Fletching level of ${data.levelRequirement} to cut this into bolt tips.",
                 item = data.gem,

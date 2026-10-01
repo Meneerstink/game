@@ -19,6 +19,7 @@ class WorldQueueTaskSet : QueueTaskSet() {
      */
     override fun cycle() {
         for (task in ArrayList(queue)) {
+            val start = System.nanoTime()
             try {
                 if (!task.invoked) {
                     task.invoked = true
@@ -26,6 +27,7 @@ class WorldQueueTaskSet : QueueTaskSet() {
                 }
 
                 task.cycle()
+                reportSlowStep(task, start, "world")
             } catch (e: Throwable) {
                 // Audit T-01: every non-fatal throwable fails only this task.
                 e.rethrowIfFatal()

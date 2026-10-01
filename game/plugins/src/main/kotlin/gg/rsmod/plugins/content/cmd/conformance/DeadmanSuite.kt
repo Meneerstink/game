@@ -92,6 +92,8 @@ object DeadmanSuite : Conformance.Suite {
         scenario("aoe") { areaAttacks(run, arena) }
         scenario("familiar") { familiarRules(run, arena) }
         scenario("corp") { corpCave(run) }
+        scenario("corrupt") { corruptSpecials(run, arena) }
+        scenario("vine") { vineCall(run, arena) }
     }
 
     /** Hitsplat types [who] received since [from], in order. */
@@ -1446,14 +1448,24 @@ object DeadmanSuite : Conformance.Suite {
         reset(b, start)
         wield(a, Item(Items.MORRIGANS_THROWING_AXE, 100))
         var thrown = false
+        var spent = 0
+        var specialDelay = -1
+        var thrownFrom = -1
         for (attempt in 0 until 6) {
             AttackTab.setEnergy(a, 100)
             a.setVarp(AttackTab.SPECIAL_ATTACK_VARP, 1)
+            val c0 = run.world.currentCycle
             a.attack(b)
             for (t in 0 until 8) {
                 b.setCurrentLifepoints(b.getMaximumLifepoints())
                 wait(1)
-                if (AttackTab.getEnergy(a) < 100) { thrown = true; break }
+                if (AttackTab.getEnergy(a) < 100) {
+                    thrown = true
+                    spent = 100 - AttackTab.getEnergy(a)
+                    specialDelay = if (a.timers.has(gg.rsmod.game.model.timer.ATTACK_DELAY)) a.timers[gg.rsmod.game.model.timer.ATTACK_DELAY] else 0
+                    thrownFrom = c0
+                    break
+                }
             }
             a.resetInteractions(); Combat.reset(a); b.resetInteractions(); Combat.reset(b)
             if (thrown) break
@@ -1489,6 +1501,146 @@ object DeadmanSuite : Conformance.Suite {
         run.expectTrue(e, "hamstrung run energy drains 6x faster", ratio in 5.5..6.5, "hamstrung=%.2f normal=%.2f ratio=%.2f".format(hamstrung, normal, ratio),
             "OSRS Wiki Morrigan's throwing axe: drain 6x faster")
         b.setVarp(gg.rsmod.plugins.api.cfg.Varps.RUN_STATE, 0)
+
+        // Deadman Mode variant (owner 2026-10-01): cost, damage window, the faster next attack.
+        run.check(e, "Hamstring costs 25% special energy", spent, "OSRS Wiki Morrigan's throwing axe (Deadman Mode)" to 25)
+        repeat(3) { b.setCurrentLifepoints(b.getMaximumLifepoints()); wait(1) }
+        val baseMax = gg.rsmod.plugins.content.combat.formula.RangedCombatFormula.getMaxHit(a, b, specialAttackMultiplier = 1.0)
+        val specHit = hitsOn(run, "HB", thrownFrom).firstOrNull { it.second == gg.rsmod.plugins.api.HitType.RANGE.id }?.third
+        if (specHit == null || specHit == 0) {
+            run.notTested(e, "Hamstring damage 20-120% / next attack 1 tick faster", "the special missed")
+        } else {
+            val low = kotlin.math.ceil(baseMax * 0.2 - 1e-9).toInt()
+            val high = kotlin.math.floor(baseMax * 1.2 + 1e-9).toInt()
+            run.expectTrue(e, "Hamstring damage within 20-120% of the max hit", specHit in low..high, "hit $specHit, window $low..$high (max $baseMax)")
+            // A normal throw sampled the same way (the first tick after the throw) is the reference.
+            wait(8)
+            a.setVarp(AttackTab.SPECIAL_ATTACK_VARP, 0)
+            var normalDelay = -1
+            fun delayLeft() = if (a.timers.has(gg.rsmod.game.model.timer.ATTACK_DELAY)) a.timers[gg.rsmod.game.model.timer.ATTACK_DELAY] else 0
+            var prev = delayLeft()
+            a.attack(b)
+            for (t in 0 until 10) {
+                b.setCurrentLifepoints(b.getMaximumLifepoints())
+                wait(1)
+                val now = delayLeft()
+                if (now > prev) { normalDelay = now; break }
+                prev = now
+            }
+            a.resetInteractions(); Combat.reset(a); b.resetInteractions(); Combat.reset(b)
+            if (normalDelay < 0) run.notTested(e, "next attack 1 tick faster", "no normal throw seen")
+            else run.check(e, "a landed Hamstring makes the next attack 1 tick faster", specialDelay, "OSRS Wiki 12 March 2025 update (normal throw $normalDelay)" to normalDelay - 1)
+        }
+    }
+
+    // ---- corrupt: the corrupt Morrigan's javelin and throwing axe carry their special (owner 2026-10-01, Novite) --------------
+
+    private suspend fun QueueTask.corruptSpecials(
+        run: Conformance.Run,
+        arena: Tile,
+    ) {
+        val e = "corrupt"
+        val a = run.bot(arena.transform(-3, -6), "KA")
+        val b = run.bot(arena.transform(0, -6), "KB")
+        wait(2)
+        for ((weapon, cost) in listOf(Items.C_MORRIGANS_THROWING_AXE to 25, Items.CORRUPT_MORRIGANS_JAVELIN to 50)) {
+            reset(a, arena.transform(-3, -6))
+            reset(b, arena.transform(0, -6))
+            wield(a, Item(weapon, 100))
+            var spent = 0
+            for (attempt in 0 until 4) {
+                AttackTab.setEnergy(a, 100)
+                a.setVarp(AttackTab.SPECIAL_ATTACK_VARP, 1)
+                a.attack(b)
+                for (t in 0 until 8) {
+                    b.setCurrentLifepoints(b.getMaximumLifepoints())
+                    wait(1)
+                    if (AttackTab.getEnergy(a) < 100) { spent = 100 - AttackTab.getEnergy(a); break }
+                }
+                a.resetInteractions(); Combat.reset(a); b.resetInteractions(); Combat.reset(b)
+                if (spent > 0) break
+                wait(4)
+            }
+            run.check(e, "item $weapon performs its special", spent, "Novite PlayerCombat: the corrupt items share the special" to cost)
+            b.attr.remove(gg.rsmod.game.model.attr.HAMSTRING)
+            b.attr.remove(gg.rsmod.game.model.attr.PHANTOM_STRIKE_BLEED)
+            wait(12)
+        }
+    }
+
+    // ---- vine: Abyssal vine whip Vine Call --------------------------------------------------------------------------------------
+
+    private suspend fun QueueTask.vineCall(
+        run: Conformance.Run,
+        arena: Tile,
+    ) {
+        val e = "vine"
+        val a = run.bot(arena.transform(-2, -8), "WA")
+        val b = run.bot(arena.transform(-1, -8), "WB")
+        wait(2)
+        reset(a, arena.transform(-2, -8))
+        reset(b, arena.transform(-1, -8))
+        for (p in listOf(a, b)) p.setVarp(AttackTab.DISABLE_AUTO_RETALIATE_VARP, 1)
+        wield(a, Item(Items.ABYSSAL_VINE_WHIP))
+        var from = -1
+        for (attempt in 0 until 4) {
+            AttackTab.setEnergy(a, 100)
+            a.setVarp(AttackTab.SPECIAL_ATTACK_VARP, 1)
+            val c0 = run.world.currentCycle
+            a.attack(b)
+            for (t in 0 until 6) {
+                b.setCurrentLifepoints(b.getMaximumLifepoints())
+                wait(1)
+                if (AttackTab.getEnergy(a) < 100) { from = c0; break }
+            }
+            a.resetInteractions(); Combat.reset(a)
+            if (from >= 0) break
+        }
+        if (from < 0) {
+            run.notTested(e, "Vine Call", "no special in 4 attempts")
+            return
+        }
+        run.check(e, "Vine Call costs 60%", 100 - AttackTab.getEnergy(a), "Darkan / Novite" to 60)
+        repeat(14) { b.setCurrentLifepoints(b.getMaximumLifepoints()); wait(1) }
+        b.resetInteractions(); Combat.reset(b)
+        // Every roll of the call shows a splat: a landed melee hit (type 0) or a miss (block, type 8).
+        val rolls = hitsOn(run, "WB", from).filter { it.second == gg.rsmod.plugins.api.HitType.MELEE.id || it.second == gg.rsmod.plugins.api.HitType.BLOCK.id }
+        val melee = rolls.filter { it.second == gg.rsmod.plugins.api.HitType.MELEE.id }
+        val cap = kotlin.math.floor(gg.rsmod.plugins.content.combat.formula.MeleeCombatFormula.getMaxHit(a, b, specialAttackMultiplier = 0.33) + 1e-9).toInt()
+        run.check(e, "11 rolls (the first + 10 vine hits)", rolls.size, "Darkan pre-EoC wiki" to 11)
+        run.expectTrue(e, "one vine hit per tick", rolls.drop(1).zipWithNext().all { (x, y) -> y.first - x.first <= 1 }, "cycles ${rolls.map { it.first - from }}", "Novite 667: every tick")
+        run.expectTrue(e, "every hit at most 33% of the max hit", melee.all { it.third <= cap }, "hits ${melee.map { it.third }} cap $cap")
+
+        // Unwielding during the call stops it with the message.
+        wait(4)
+        AttackTab.setEnergy(a, 100)
+        a.setVarp(AttackTab.SPECIAL_ATTACK_VARP, 1)
+        val c1 = run.world.currentCycle
+        a.attack(b)
+        for (t in 0 until 6) {
+            b.setCurrentLifepoints(b.getMaximumLifepoints())
+            wait(1)
+            if (AttackTab.getEnergy(a) < 100) break
+        }
+        a.resetInteractions(); Combat.reset(a)
+        wield(a, Item(Items.ABYSSAL_WHIP))
+        repeat(3) { b.setCurrentLifepoints(b.getMaximumLifepoints()); wait(1) }
+        run.expectTrue(e, "unwielded: the vine ignores the call",
+            run.recording.of("WA", "msg").any { it.cycle >= c1 && it.text.contains("Since you no longer wield a vine whip, the vine ignores your call.") },
+            "no message", "Darkan pre-EoC wiki")
+        b.resetInteractions(); Combat.reset(b)
+        for (p in listOf(a, b)) p.setVarp(AttackTab.DISABLE_AUTO_RETALIATE_VARP, 0)
+    }
+
+    /** (cycle, hit type, damage) of every hitsplat on [who] since [from]. */
+    private fun hitsOn(
+        run: Conformance.Run,
+        who: String,
+        from: Int,
+    ): List<Triple<Int, Int, Int>> {
+        val splat = Regex("type=(\\d+) dmg=(\\d+)")
+        return run.recording.of(who, "out").filter { it.cycle >= from && it.text.startsWith("hits ") }
+            .flatMap { ev -> splat.findAll(ev.text).map { Triple(ev.cycle, it.groupValues[1].toInt(), it.groupValues[2].toInt()) }.toList() }
     }
 
     // ---- aoe: secondary victims of an area attack pass the PvP gate --------------------------------------------------------
@@ -1551,6 +1703,9 @@ object DeadmanSuite : Conformance.Suite {
         a.timers.remove(gg.rsmod.game.model.timer.SKULL_ICON_DURATION_TIMER)
         val man = run.npc(1, at.transform(0, 2), "VM")
         run.npc(1, at.transform(1, 2), "VW")
+        // A Slayer monster in the splash (owner 2026-10-01: a splash skips what the attacker may not attack, Slayer level included).
+        val slayerMonster = run.npc(gg.rsmod.plugins.api.cfg.Npcs.ABYSSAL_DEMON, at.transform(-1, 3), "VS")
+        a.skills.setBaseLevel(Skills.SLAYER, 1)
         b.moveTo(at.transform(-2, -2))
         wait(12)
         gg.rsmod.plugins.content.magic.Spellbooks.select(a, gg.rsmod.plugins.api.Spellbook.ANCIENT)
@@ -1571,7 +1726,14 @@ object DeadmanSuite : Conformance.Suite {
         } else {
             run.expectTrue(e, "Ice Barrage splash: a guard the attacker may not attack is not hit", hitTypes(run, "VG", cast).isEmpty(), "VG hit: ${hitTypes(run, "VG", cast)}")
             run.expectTrue(e, "Ice Barrage splash: an npc without an Attack option is not hit", hitTypes(run, "VN", cast).isEmpty(), "VN hit: ${hitTypes(run, "VN", cast)}")
+            if (slayerMonster.combatDef.slayerReq <= 1) {
+                run.notTested(e, "splash Slayer gate", "npc ${slayerMonster.id} has no Slayer requirement in its combat def")
+            } else {
+                run.expectTrue(e, "Ice Barrage splash: a monster above the attacker's Slayer level is not hit", hitTypes(run, "VS", cast).isEmpty(),
+                    "VS hit: ${hitTypes(run, "VS", cast)}", "Combat.slayerLevelTooLow in SpecialAttackSupport.canSplash (owner 2026-10-01)")
+            }
         }
+        a.skills.setBaseLevel(Skills.SLAYER, 99)
     }
 
     // ---- familiar: a familiar obeys its owner's attack rules ------------------------------------------------------------------

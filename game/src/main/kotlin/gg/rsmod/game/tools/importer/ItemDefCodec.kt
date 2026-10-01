@@ -100,6 +100,8 @@ object ItemDefCodec {
         removedParamIds: Set<Int> = emptySet(),
         /** String params (opcode 249) to set; an existing entry with the same id is replaced. */
         stringParams: Map<Int, String> = emptyMap(),
+        /** Int params (opcode 249) to set; an existing entry with the same id is replaced. */
+        intParams: Map<Int, Int> = emptyMap(),
     ): ByteArray {
         require(stringOverrides.keys.all { it in STRING_OPCODES }) {
             "Only string opcodes ($STRING_OPCODES) can be overridden by this codec."
@@ -142,10 +144,11 @@ object ItemDefCodec {
                     output.writeByte(missing)
                     writeNullTerminatedString(output, value)
                 }
-                if (249 !in seen && stringParams.isNotEmpty()) {
+                if (249 !in seen && (stringParams.isNotEmpty() || intParams.isNotEmpty())) {
                     output.writeByte(249)
                     output.writeByte(0)
                     appendStringParams(output, output.writerIndex() - 1, stringParams)
+                    appendIntParams(output, output.writerIndex() - 1 - paramsWidth(stringParams), intParams)
                 }
                 output.writeByte(opcode)
                 break
@@ -154,8 +157,11 @@ object ItemDefCodec {
             // Decoded into a scratch buffer first so a removed opcode can be dropped whole, without
             // this codec ever having to know an opcode's width twice.
             val field = Unpooled.buffer()
-            copyOrOverrideField(input, field, opcode, stringOverrides, shortOverrides, intOverrides, removedParamIds + stringParams.keys)
+            copyOrOverrideField(
+                input, field, opcode, stringOverrides, shortOverrides, intOverrides, removedParamIds + stringParams.keys + intParams.keys,
+            )
             if (opcode == 249 && stringParams.isNotEmpty()) appendStringParams(field, 0, stringParams)
+            if (opcode == 249 && intParams.isNotEmpty()) appendIntParams(field, 0, intParams)
             if (opcode !in removedOpcodes) {
                 output.writeByte(opcode)
                 output.writeBytes(field)
@@ -346,6 +352,25 @@ object ItemDefCodec {
             writeNullTerminatedString(block, value)
         }
     }
+
+    /** Appends [params] as int entries to a params block whose count byte sits at [countIndex] of [block]. */
+    private fun appendIntParams(
+        block: ByteBuf,
+        countIndex: Int,
+        params: Map<Int, Int>,
+    ) {
+        if (params.isEmpty()) return
+        block.setByte(countIndex, block.getUnsignedByte(countIndex) + params.size)
+        params.forEach { (id, value) ->
+            block.writeByte(0)
+            block.writeMedium(id)
+            block.writeInt(value)
+        }
+    }
+
+    /** Bytes [appendStringParams] writes for [params] (to find the count byte again after it). */
+    private fun paramsWidth(params: Map<Int, String>): Int =
+        params.entries.sumOf { (_, value) -> 1 + 3 + value.toByteArray(Charsets.ISO_8859_1).size + 1 }
 
     private fun readNullTerminatedString(buf: ByteBuf): String {
         val start = buf.readerIndex()

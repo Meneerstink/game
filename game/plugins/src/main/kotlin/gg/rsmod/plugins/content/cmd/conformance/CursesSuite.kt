@@ -343,13 +343,20 @@ object CursesSuite : Conformance.Suite {
     ) {
         val casterAnim = proc["caster_anim"]?.get("novite")?.asInt()
         val procs = run.recording.of("Conf1", "out").filter { it.cycle >= c0 && it.text.startsWith("anim ") && idOf(it.text) == casterAnim }
-        val chance = proc["chance"]?.get("novite")?.asDouble()
-        if (chance != null && landed >= 20) {
-            val rate = procs.size.toDouble() / landed
-            val sigma = Math.sqrt(chance * (1 - chance) / landed)
-            // Novite: one proc blocks the next until its effect lands (boostedLeech); the observed rate may sit a little lower.
-            val ok = Math.abs(rate - chance) <= 3 * sigma + 0.02
-            run.add(Result(e, "proc rate over $landed landed hits", if (ok) Verdict.PASS else Verdict.FAIL, "%.3f (novite)".format(java.util.Locale.ENGLISH, chance), "%.3f (${procs.size} procs)".format(java.util.Locale.ENGLISH, rate)))
+        // Proc frequency: the owner's balance rule (AncientCurses, 2026-09-18 "owner values, not 2011 values") replaces Novite's 2011
+        // per-hit chance - one proc per caster per cooldown (45 s; Leech Special Attack 60 s). Measured: the first landed hits proc
+        // (the per-hit roll still applies) and no two procs closer than the cooldown.
+        val cooldown =
+            if (c["name"]?.asText()?.contains("special", ignoreCase = true) == true) AncientCurses.LEECH_SPECIAL_COOLDOWN_TICKS
+            else AncientCurses.SAP_LEECH_COOLDOWN_TICKS
+        if (landed >= 20) {
+            run.expectTrue(e, "at least one proc over $landed landed hits", procs.isNotEmpty(), "${procs.size} procs", ">= 1 (owner rule)")
+            val gaps = procs.zipWithNext { a, b -> b.cycle - a.cycle }
+            val closest = gaps.minOrNull()
+            run.expectTrue(
+                e, "procs at least $cooldown ticks apart", closest == null || closest >= cooldown,
+                closest?.let { "closest $it ticks" } ?: "single proc", ">= $cooldown ticks (owner rule)",
+            )
         }
         if (procs.isEmpty()) return
         val first = procs.first().cycle

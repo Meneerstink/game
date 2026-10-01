@@ -41,7 +41,7 @@ on_timer(BrewPotions.GOADING_TIMER) {
             for (npc in chunk.getEntities<Npc>(tile, EntityType.NPC)) {
                 if (npc.timers.has(ACTIVE_COMBAT_TIMER) || npc.getCombatTarget() != null || !npc.lock.canAttack()) continue
                 if (npc.aggroCheck?.invoke(npc, player) == true) continue
-                if (npc.combatDef.slayerReq > player.skills.getMaxLevel(Skills.SLAYER)) continue
+                if (gg.rsmod.plugins.content.combat.Combat.slayerLevelTooLow(player, npc)) continue
                 if (npc.tile.height != player.tile.height || !world.collision.raycast(npc.tile, player.tile, projectile = true)) continue
                 if (!npc.canEngageCombat(player)) continue
                 if (player.getAggressor() == null) player.attr[AGGRESSOR] = WeakReference(npc)
@@ -64,7 +64,7 @@ val ancientToForgotten =
 ancientToForgotten.forEach { (ancient, product) ->
     val (forgotten, doses) = product
     on_item_on_item(item1 = Items.ANCIENT_ESSENCE, item2 = ancient) {
-        if (player.skills.getCurrentLevel(Skills.HERBLORE) < 91) {
+        if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.HERBLORE, 91)) {
             player.message("You need a Herblore level of 91 to make a forgotten brew.")
             return@on_item_on_item
         }

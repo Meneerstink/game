@@ -138,7 +138,9 @@ object SpecialAttacks {
             return Outcome.NOT_USED
         }
 
-        if (RangedProjectile.MORRIGANS_JAVELIN.items.contains(weaponItem.id) && target is Npc) {
+        if ((RangedProjectile.MORRIGANS_JAVELIN.items.contains(weaponItem.id) || RangedProjectile.CORRUPT_MORRIGANS_JAVELIN.items.contains(weaponItem.id)) &&
+            target is Npc
+        ) {
             player.message("This special attack can only be used against another player.")
             return Outcome.NOT_USED
         }

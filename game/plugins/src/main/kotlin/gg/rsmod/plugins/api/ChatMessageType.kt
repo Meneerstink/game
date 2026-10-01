@@ -31,9 +31,14 @@ enum class ChatMessageType(
     CLAN_INVITE(117),
     /** Duel Arena challenge request (Novite 667 `sendDuelChallengeRequestMessage` → message type 101). */
     DUEL_REQ(101),
-    TRADE(102),
+    /**
+     * "X is requesting your assistance." - Assist System request (clientscript 84: types 102 get the op "Give assistance", which
+     * clientscript 86 sends as OPPLAYER7 for X; clientscript 90 shows it per the Assist tab filter, varp 1055 On / Friends).
+     */
+    ASSIST_REQ(102),
     CHALREQ_TRADE(103),
-    CHALREQ_FRIENDS_CHAT(104),
+    /** Assist System status lines (clientscript 90: shown while the Assist tab filter, varp 1055, is below Off). */
+    ASSIST(104),
     SPAM(105),
     PLAYER_RELATED(106),
     TEN_SEC_TIMEOUT(107),

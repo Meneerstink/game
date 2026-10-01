@@ -14,7 +14,7 @@ package gg.rsmod.plugins.content.skills.cooking
 private val CAKE_LEVEL = 40
 
 on_item_on_item(item1 = Items.POT_OF_FLOUR, item2 = Items.EGG) {
-    if (player.skills.getCurrentLevel(Skills.COOKING) < CAKE_LEVEL) {
+    if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.COOKING, CAKE_LEVEL)) {
         player.message("You need a Cooking level of $CAKE_LEVEL to make this.")
         return@on_item_on_item
     }

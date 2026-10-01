@@ -121,6 +121,9 @@ object Combat {
         }
     }
 
+    /** Set by an attack whose landing makes the attacker's next attack one tick sooner; consumed by [postAttack]. */
+    val NEXT_ATTACK_ONE_TICK_FASTER = gg.rsmod.game.model.attr.AttributeKey<Boolean>(resetOnDeath = true)
+
     fun postAttack(
         pawn: Pawn,
         target: Pawn,
@@ -131,6 +134,11 @@ object Combat {
         // Blood moon armour Bloodrager: the dual macuahuitl attacks one tick earlier after a trigger (MoonSets).
         if (pawn.attr[gg.rsmod.plugins.content.items.osrs.MoonSets.BLOODRAGER] == true) {
             pawn.attr.remove(gg.rsmod.plugins.content.items.osrs.MoonSets.BLOODRAGER)
+            pawn.timers[ATTACK_DELAY] = maxOf(1, attackDelay - 1)
+        }
+        // A landed Hamstring (Morrigan's throwing axe, Deadman Mode): "reduce the attack interval of the next attack by 1 tick".
+        if (pawn.attr[NEXT_ATTACK_ONE_TICK_FASTER] == true) {
+            pawn.attr.remove(NEXT_ATTACK_ONE_TICK_FASTER)
             pawn.timers[ATTACK_DELAY] = maxOf(1, attackDelay - 1)
         }
         // Granite maul homing: "for 5 ticks after attacking a target with any weapon" (GraniteMaul).
@@ -363,6 +371,18 @@ object Combat {
 
     /** The player [pawn] fights for: itself, or the owner credited with a familiar's damage (DAMAGE_CREDIT_ATTR). */
     private fun actingFor(pawn: Pawn): Player? = pawn as? Player ?: pawn.attr[gg.rsmod.game.model.attr.DAMAGE_CREDIT_ATTR]?.get() as? Player
+
+    /**
+     * The Slayer gate (one rule for every attack route): an npc with a Slayer requirement above the player's Slayer level cannot be
+     * wounded. The primary target gets [SLAYER_LEVEL_MESSAGE] (combat.plugin.kts); an area attack's other victims are skipped silently
+     * (SpecialAttackSupport.canSplash; owner 2026-10-01: "splash slaat monsters over die je niet mag aanvallen", ROOT_CAUSES #115).
+     */
+    fun slayerLevelTooLow(
+        player: Player,
+        npc: Npc,
+    ): Boolean = npc.combatDef.slayerReq > player.skills.getMaxLevel(Skills.SLAYER)
+
+    const val SLAYER_LEVEL_MESSAGE = "You need a higher Slayer level to know how to wound this monster."
 
     fun canEngage(
         pawn: Pawn,

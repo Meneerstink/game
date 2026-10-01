@@ -172,15 +172,27 @@ object EquipmentSuite : Conformance.Suite {
         val wikiSlot = b?.get("equipment_slot")?.asText()
         val twoHanded = wikiSlot == "2h"
         if (def.equipSlot == 3) bot.equipment[5] = Item(SHIELD)
-        bot.inventory.add(def.id, if (def.stackable) 5000 else 1)
+        // A charged weapon is tested charged (a powered staff's charged id with no charges is its uncharged form - the Trident of
+        // the Swamp lane threw "Index -1" when the bare item turned uncharged, DMM run 2026-10-01, X4).
+        val staff = gg.rsmod.plugins.content.items.osrs.PoweredStaves.staffFor(def.id)
+        if (staff != null && def.id == staff.charged) {
+            bot.inventory.add(gg.rsmod.plugins.content.items.osrs.PoweredStaves.withCharges(Item(def.id), staff.maxCharges - if (staff.full != null) 1 else 0))
+        } else {
+            bot.inventory.add(def.id, if (def.stackable) 5000 else 1)
+        }
         bot.addBlock(UpdateBlockType.APPEARANCE)
         wait(1)
         // Equip through the real inventory option.
         val option = listOf("Wield", "Wear", "Equip", "Hold").firstOrNull { o -> def.inventoryMenu.any { it?.equals(o, true) == true } }
         run.expectTrue(e, "has a Wield/Wear/Equip option", option != null, "menu=${def.inventoryMenu.toList()}")
+        val invSlot = bot.inventory.getItemIndex(def.id, false)
+        if (invSlot < 0) {
+            run.add(Result(e, "equips (level 99 bot)", Verdict.FAIL, "item ${def.id} in the inventory", "not in the inventory after adding it"))
+            return
+        }
         if (option == null) return
         val c0 = world.currentCycle
-        Bots.itemOption(bot, bot.inventory.getItemIndex(def.id, false), option)
+        Bots.itemOption(bot, invSlot, option)
         wait(2)
         val slot = (0 until bot.equipment.capacity).firstOrNull { bot.equipment[it]?.id == def.id }
         if (slot == null) {
@@ -608,6 +620,10 @@ object EquipmentSuite : Conformance.Suite {
         bot.setVarp(AttackTab.ATTACK_STYLE_VARP, 0)
         bot.setCurrentLifepoints(bot.getMaximumLifepoints())
     }
+        // Every lane starts out of combat: the previous lane's hits kept the bot "being attacked" (ACTIVE_COMBAT_TIMER, 17 ticks),
+        // so a Barrows / Vesta / Statius item degraded on equip - correctly, on its first combat tick (EquipmentDegradation) - and
+        // the lane reported it "not equipped" (DMM run 2026-10-01, X4).
+        bot.timers.remove(gg.rsmod.game.model.timer.ACTIVE_COMBAT_TIMER)
 
     private fun keep(
         bot: Client,

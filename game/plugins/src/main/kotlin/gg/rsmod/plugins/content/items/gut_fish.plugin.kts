@@ -12,7 +12,7 @@ import kotlin.math.min
  * The roe and offcuts serve as bait.
  */
 on_item_on_item(item1 = Items.KNIFE, item2 = Items.LEAPING_TROUT) {
-    val cookingLevel = player.skills.getCurrentLevel(Skills.COOKING)
+    val cookingLevel = gg.rsmod.plugins.content.mechanics.assist.AssistSystem.effectiveLevel(player, Skills.COOKING)
     val roeChance = min(1.0 + 65 * (cookingLevel - 1) / 98.0, 99.0) / 150.0
     val randomValue = Math.random()
 
@@ -41,7 +41,7 @@ on_item_on_item(item1 = Items.KNIFE, item2 = Items.LEAPING_TROUT) {
  * The roe and offcuts serve as bait.
  */
 on_item_on_item(item1 = Items.KNIFE, item2 = Items.LEAPING_SALMON) {
-    val cookingLevel = player.skills.getCurrentLevel(Skills.COOKING)
+    val cookingLevel = gg.rsmod.plugins.content.mechanics.assist.AssistSystem.effectiveLevel(player, Skills.COOKING)
     val roeChance = min(1.25 + 98.75 * (cookingLevel - 1) / 79.0, 100.0) / 100.0
     val randomValue = Math.random()
 
@@ -70,7 +70,7 @@ on_item_on_item(item1 = Items.KNIFE, item2 = Items.LEAPING_SALMON) {
  * The caviar and offcuts serve as bait.
  */
 on_item_on_item(item1 = Items.KNIFE, item2 = Items.LEAPING_STURGEON) {
-    val cookingLevel = player.skills.getCurrentLevel(Skills.COOKING)
+    val cookingLevel = gg.rsmod.plugins.content.mechanics.assist.AssistSystem.effectiveLevel(player, Skills.COOKING)
     val caviarChance = min(1.25 + 98.75 * (cookingLevel - 1) / 79.0, 100.0) / 100.0
     val randomValue = Math.random()
 

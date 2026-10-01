@@ -29,7 +29,7 @@ fun assembleHelmet(player: Player) {
         player.message("You need a nose peg, facemask, earmuffs, spiny helmet, enchanted gem and a black mask to make a Slayer helmet.")
         return
     }
-    if (player.skills.getCurrentLevel(Skills.CRAFTING) < CRAFTING_LEVEL) {
+    if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.CRAFTING, CRAFTING_LEVEL)) {
         player.message("You need a Crafting level of $CRAFTING_LEVEL to make a Slayer helmet.")
         return
     }
@@ -43,7 +43,7 @@ fun assembleFullHelmet(player: Player) {
         player.message("You need a Slayer helmet, a hexcrest and a focus sight to make a full Slayer helmet.")
         return
     }
-    if (player.skills.getCurrentLevel(Skills.CRAFTING) < CRAFTING_LEVEL) {
+    if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.CRAFTING, CRAFTING_LEVEL)) {
         player.message("You need a Crafting level of $CRAFTING_LEVEL to make a full Slayer helmet.")
         return
     }

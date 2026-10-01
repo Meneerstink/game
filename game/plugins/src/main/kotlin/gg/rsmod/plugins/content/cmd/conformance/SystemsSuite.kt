@@ -92,6 +92,9 @@ object SystemsSuite : Conformance.Suite {
         scenario("options") { options(run, arena) }
         scenario("screens") { screens(run, arena) }
         scenario("chattabs") { chatTabs(run, arena) }
+        scenario("acceptaid") { with(AidScenarios) { acceptAid(run, arena) } }
+        scenario("potionshare") { with(AidScenarios) { potionShare(run, arena) } }
+        scenario("assist") { with(AidScenarios) { assist(run, arena) } }
     }
 
     /** Hitsplats of [type] per cycle on [who] since [from]: cycle -> damages. */

@@ -131,7 +131,8 @@ on_world_init {
                     // A lock that outlives any real action (cutscenes, agility, deaths take seconds, not half a minute):
                     // the player can no longer click anything - an action that never unlocked (a thrown plugin, a lost queue).
                     val since = lockSince[p.username]
-                    if (p.lock == gg.rsmod.game.model.LockState.NONE) {
+                    // ASSISTING is a deliberate lock for as long as the player gives assistance (AssistSystem), never a stuck action.
+                    if (p.lock == gg.rsmod.game.model.LockState.NONE || p.lock == gg.rsmod.game.model.LockState.ASSISTING) {
                         lockSince.remove(p.username)
                     } else if (since == null) {
                         lockSince[p.username] = world.currentCycle

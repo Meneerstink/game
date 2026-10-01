@@ -101,7 +101,7 @@ class CrossbowAction(
             )
             return false
         }
-        if (player.skills.getCurrentLevel(Skills.FLETCHING) < data.assembleLevelRequirement) {
+        if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.FLETCHING, data.assembleLevelRequirement)) {
             task.doubleItemMessageBox(
                 "You need a Fletching level of at least ${data.assembleLevelRequirement} to attach these limbs.",
                 item1 = data.stock,
@@ -121,7 +121,7 @@ class CrossbowAction(
         if (!inventory.contains(Items.CROSSBOW_STRING)) {
             return false
         }
-        if (player.skills.getCurrentLevel(Skills.FLETCHING) < data.stringLevelRequirement) {
+        if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.FLETCHING, data.stringLevelRequirement)) {
             task.itemMessageBox(
                 "You need a Fletching level of at least ${data.stringLevelRequirement} to string a ${data.itemName}.",
                 item = data.unstrung,

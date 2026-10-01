@@ -887,6 +887,7 @@ abstract class Player(
         modifiers: Boolean = true,
         disableBonusExperience: Boolean = false,
     ) {
+        if (xp > 0.0 && gg.rsmod.game.model.skill.XpRedirect.handler?.invoke(this, skill, xp) == true) return
         val oldXp = skills.getCurrentXp(skill)
         var modifier = interpolate(1.0, 5.0, skills.getMaxLevel(skill))
 

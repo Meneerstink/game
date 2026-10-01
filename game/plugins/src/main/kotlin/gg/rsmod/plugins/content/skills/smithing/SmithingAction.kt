@@ -68,7 +68,7 @@ class SmithingAction(
             return false
         }
 
-        if (player.skills.getCurrentLevel(Skills.SMITHING) < product.level) {
+        if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.SMITHING, product.level)) {
             task.messageBox(
                 "You need a Smithing level of ${product.level} to make a ${definitions.get(
                     ItemDef::class.java,

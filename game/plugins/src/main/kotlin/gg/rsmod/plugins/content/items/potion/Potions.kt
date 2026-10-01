@@ -65,6 +65,7 @@ object Potions {
             val before = combat.map { player.skills.getCurrentLevel(it) }
             try {
                 potion.potionType.apply(player)
+                SkillPotions.shareMix(player, potion.potionType)
             } finally {
                 // Audit C-01: the dose is already consumed, so the delays must hold even when an effect throws;
                 // otherwise a failing effect allowed several drinks in the same tick.

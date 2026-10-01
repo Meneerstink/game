@@ -38,6 +38,7 @@ val BORK_SPAWN = Tile(3095, 5533)
 val ELITE_SPAWN = Tile(3107, 5547)
 val CAVERN_X = 3072..3135
 val CAVERN_Z = 5504..5567
+val FALLING_ROCKS_DAMAGE = 2
 val LEGION_X = 3093..3106
 val LEGION_Z = 5531..5540
 
@@ -180,7 +181,9 @@ on_timer(COLLAPSE_TIMER) {
         leaveCavern(player)
         return@on_timer
     }
-    player.hit(20, HitType.REGULAR_HIT)
+    // ROOT_CAUSES #72: Void Bork.kt `directHit(20)` is in 2011 x10 life points (its Bork hit 254 / legion 82 / elite 100..250
+    // are 25.4 / 8.2 / 10..25 here) - 2 hitpoints, not 20.
+    player.hit(FALLING_ROCKS_DAMAGE, HitType.REGULAR_HIT)
     player.message("You are hit by falling rocks! Look out!")
     player.timers[COLLAPSE_TIMER] = 33
 }
