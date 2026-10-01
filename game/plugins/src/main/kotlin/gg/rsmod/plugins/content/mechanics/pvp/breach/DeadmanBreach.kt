@@ -742,13 +742,14 @@ object DeadmanBreach {
         world: World,
         corner: Tile,
         size: Int,
+        except: Npc? = null,
     ): Boolean {
         val fp = Footprint(corner, size)
         val reach = gg.rsmod.game.model.MovementQueue.MAX_NPC_SIZE - 1
         for (x in corner.x - reach until corner.x + size) for (z in corner.z - reach until corner.z + size) {
             val t = Tile(x, z, corner.height)
             val chunk = world.chunks.get(t, createIfNeeded = false) ?: continue
-            if (chunk.getEntities<Npc>(t, EntityType.NPC).any { it.tile == t && !it.isDead() && fp.overlaps(t, it.getSize().coerceAtLeast(1)) }) return false
+            if (chunk.getEntities<Npc>(t, EntityType.NPC).any { it !== except && it.tile == t && !it.isDead() && fp.overlaps(t, it.getSize().coerceAtLeast(1)) }) return false
         }
         return true
     }
@@ -774,7 +775,44 @@ object DeadmanBreach {
         val ordered = if (nearestTo != null) candidates.sortedBy { maxOf(kotlin.math.abs(it.x - nearestTo.x), kotlin.math.abs(it.z - nearestTo.z)) } else candidates.shuffled()
         return ordered.firstOrNull { c ->
             !Footprint(c, size).overlaps(t, ts) && fits(world, c, size) && canLeave(world, c, size) && noNpcOn(world, c, size)
-        } ?: Tile(t.x + world.random(-1..1), t.z + world.random(-1..1), t.height).takeIf { !world.collision.isClipped(it) } ?: Tile(t)
+        } ?: farther(world, t, ts, size)
+            ?: Tile(t.x + world.random(-1..1), t.z + world.random(-1..1), t.height).takeIf { !world.collision.isClipped(it) && freeOfBodies(world, it, size) }
+            ?: Tile(t)
+    }
+
+    /**
+     * Breach conformance 2026-10-01 (event: the Greater abyssal demon teleported onto another breach monster): with every spot
+     * touching the target taken, [summonTile] fell back to any unclipped tile next to the target and put the body inside another
+     * monster. The fallback looks further out first (rings up to [Landing.SEARCH_RADIUS]) for a usable, body-free spot.
+     */
+    private fun farther(
+        world: World,
+        t: Tile,
+        ts: Int,
+        size: Int,
+    ): Tile? {
+        for (r in 1..gg.rsmod.game.model.collision.Landing.SEARCH_RADIUS) {
+            val ring = ArrayList<Tile>()
+            for (x in (t.x - size - r)..(t.x + ts + r)) for (z in (t.z - size - r)..(t.z + ts + r)) {
+                val dx = maxOf(t.x - size - x, x - (t.x + ts), 0)
+                val dz = maxOf(t.z - size - z, z - (t.z + ts), 0)
+                if (maxOf(dx, dz) == r) ring += Tile(x, z, t.height)
+            }
+            ring.shuffled().firstOrNull { c -> fits(world, c, size) && canLeave(world, c, size) && freeOfBodies(world, c, size) }?.let { return it }
+        }
+        return null
+    }
+
+    /** No player and no live npc other than [except] (the one moving there) stands on the [size] x [size] square at [corner]. */
+    fun freeOfBodies(
+        world: World,
+        corner: Tile,
+        size: Int,
+        except: Npc? = null,
+    ): Boolean {
+        val fp = Footprint(corner, size)
+        if (playersNear(world, corner, size + 1).any { fp.overlaps(it.tile, 1) }) return false
+        return noNpcOn(world, corner, size, except)
     }
 
     /** Every breach npc currently in the world (breach monsters and Zemouregal's summons), for the per-tick mechanics. */

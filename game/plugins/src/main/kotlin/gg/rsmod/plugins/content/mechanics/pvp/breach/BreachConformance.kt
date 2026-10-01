@@ -691,7 +691,10 @@ object BreachConformance {
         bots.forEachIndexed { i, p -> p.moveTo(homes[i]) }
         ticks(3)
 
-        // 6. death seen by everyone in view
+        // 6. death seen by everyone in view. 2026-10-01: a bot pushed or left out of view (Sulphur Lizard knockback, a far home)
+        // made the row FAIL with no viewer at all - every bot is brought into view first.
+        bots.forEach { p -> if (p.tile.height != npc.tile.height || !p.tile.isWithinRadius(npc.tile, 10)) p.moveTo(DeadmanBreach.summonTile(world, npc, 1)) }
+        ticks(3)
         val t6 = trace.size
         val deathAnims = npc.combatDef.deathAnimation.map { "$it" }
         if (m.id == 14468) {
@@ -725,7 +728,7 @@ object BreachConformance {
             (
                 mechSetup + " " +
                     when (m.id) {
-                        14451 -> { val burns = n("mech.burn"); val fives = all.count { cat(it) == "player.hit" && (kv(it, "damage")?.toIntOrNull() ?: 0) >= 5 && (kv(it, "source") ?: "").let { s -> s.contains("deadman_breach", ignoreCase = true) || s.contains("Burns", ignoreCase = true) } }; "burn=$burns burnHits=$fives${if (burns == 0 || fives < 2 * burns) " FAIL" else ""}" }
+                        14451 -> { val burns = n("mech.burn"); val fives = all.count { cat(it) == "player.hit" && (kv(it, "damage")?.toIntOrNull() ?: 0) >= 5 && (kv(it, "source") ?: "").let { s -> s.contains("deadman_breach", ignoreCase = true) || s.contains("Burns", ignoreCase = true) } }; "burn=$burns burnHits=$fives${if (burns == 0 || fives < 2) " FAIL" else ""}" } // 2026-10-01: overlapping burns merge into one hit per cycle (OSRS burn, Burns / conform systems burn) - not 2 hits per burn
                         14447, 14448 -> { val tb = n("mech.teleblock"); "teleblock=$tb${if (tb == 0) " FAIL" else ""}" }
                         14456 -> { val kb = n("mech.knockback"); "knockback=$kb${if (kb == 0) " FAIL" else ""}" }
                         14464 -> { val h = n("mech.heal"); "heal=$h${if (h == 0) " FAIL" else ""}" }

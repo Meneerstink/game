@@ -282,7 +282,7 @@ fun abyssalSpot(npc: Npc, target: gg.rsmod.game.model.entity.Pawn): Tile? {
     val t = target.tile
     val ts = target.getSize().coerceAtLeast(1)
     val overlaps = dest.x < t.x + ts && t.x < dest.x + size && dest.z < t.z + ts && t.z < dest.z + size
-    return dest.takeIf { !overlaps && it != npc.tile && DeadmanBreach.fits(world, it, size) }
+    return dest.takeIf { !overlaps && it != npc.tile && DeadmanBreach.fits(world, it, size) && DeadmanBreach.freeOfBodies(world, it, size, except = npc) }
 }
 
 NpcAttacks.onAttack("breach_greater_abyssal_demon", "melee") { npc, target ->
