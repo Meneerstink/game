@@ -30,7 +30,9 @@ SpecialAttacks.registerInstant(100, Items.ENHANCED_EXCALIBUR) { p ->
         repeat(10) {
             wait(4)
             if (p.isDead() || !p.isOnline) return@queue
-            p.heal(20)
+            // ROOT_CAUSES #72: 20 is the 2011 life-point heal (x10); hitpoints are 1:1, so it healed 200 instead of 20 over the
+            // ten pulses (Novite's own Sanctuary: 80 life points a pulse, at most 48 hitpoints).
+            p.heal(2)
         }
     }
     true
