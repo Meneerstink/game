@@ -50,6 +50,8 @@ import gg.rsmod.plugins.content.combat.getCombatTarget
  *   is refused (Deadman bracket), the same bracket in danger attacks.
  * - teleblock: a real Tele Block cast - 500 ticks, 250 with Protect from Magic, a second cast does not refresh it.
  * - phantom: Morrigan's javelin Phantom Strike on a player - the bleed is 10 a tick until 75% of the special's damage (OSRS Wiki).
+ * - dupe: the victim drops a godsword every tick while being killed (one drop falls on the killing blow's tick) - every godsword
+ *   ends up exactly once: inventory, ground or loot key.
  */
 object DeadmanSuite : Conformance.Suite {
     override suspend fun QueueTask.run(
@@ -84,6 +86,7 @@ object DeadmanSuite : Conformance.Suite {
         scenario("zones") { pvpGate(run, arena) }
         scenario("teleblock") { teleBlock(run, arena) }
         scenario("phantom") { phantomStrike(run, arena) }
+        scenario("dupe") { dropOnDeath(run, arena) }
     }
 
     /** Hitsplat types [who] received since [from], in order. */
@@ -1256,5 +1259,67 @@ object DeadmanSuite : Conformance.Suite {
         run.expectTrue(e, "bleed splats of 10 (the last one the rest)", bleed.dropLast(1).all { it.third == 10 } && (bleed.lastOrNull()?.third ?: 0) in 1..10,
             "bleed=${bleed.map { it.third }}")
         run.expectTrue(e, "one bleed splat per tick", bleed.zipWithNext().all { (x, y) -> y.first - x.first == 1 }, "cycles=${bleed.map { it.first - specialCycle }}")
+    }
+
+    // ---- dupe: dropping the loot on the tick of the killing blow ---------------------------------------------------------
+
+    private suspend fun QueueTask.dropOnDeath(
+        run: Conformance.Run,
+        arena: Tile,
+    ) {
+        val e = "dupe"
+        val keys = gg.rsmod.plugins.content.mechanics.pvp.LootKeys
+        val spot = arena.transform(6, -6)
+        val a = run.bot(spot, "UA")
+        val b = run.bot(spot.transform(1, 0), "UB")
+        wait(2)
+        fun agsCount(): Int {
+            var n = 0
+            for (p in listOf(a, b)) {
+                n += (p.inventory.toList() + p.equipment.toList()).filterNotNull().count { it.id == Items.ARMADYL_GODSWORD }
+                n += keys.heldKeyIndexes(p).flatMap { keys.slotItems(p, it) }.count { it.id == Items.ARMADYL_GODSWORD }
+            }
+            for (dx in -4..4) for (dz in -4..4) {
+                val t = spot.transform(dx, dz)
+                run.world.chunks.get(t)?.getEntities<gg.rsmod.game.model.entity.GroundItem>(t, gg.rsmod.game.model.EntityType.GROUND_ITEM)
+                    ?.forEach { if (it.item == Items.ARMADYL_GODSWORD) n += it.amount }
+            }
+            return n
+        }
+        for (round in 1..3) {
+            for (p in listOf(a, b)) {
+                reset(p, if (p === a) spot else spot.transform(1, 0))
+                p.attr.remove(keys.SLOTS)
+            }
+            wield(a, Item(Items.ABYSSAL_WHIP))
+            repeat(20) { b.inventory.add(Items.ARMADYL_GODSWORD, 1) }
+            wait(1)
+            val before = agsCount()
+            b.skills.setBaseLevel(Skills.DEFENCE, 1)
+            b.setCurrentLifepoints(6)
+            a.attack(b)
+            var died = false
+            for (i in 0 until 60) {
+                a.setCurrentLifepoints(a.getMaximumLifepoints())
+                // B tries to drop the godsword every tick, so one try falls on the killing blow's tick.
+                val slot = b.inventory.getItemIndex(Items.ARMADYL_GODSWORD, skipAttrItems = false)
+                if (slot >= 0) Bots.itemOption(b, slot, "Drop")
+                wait(1)
+                if (b.isDead()) died = true
+                if (died && !b.isDead()) break
+            }
+            a.resetInteractions(); Combat.reset(a)
+            wait(8) // ground loot appears after the death animation
+            run.check(e, "round $round: godswords after the fight (inventory + ground + keys)", agsCount(), "before the death" to before)
+            b.skills.setBaseLevel(Skills.DEFENCE, 99)
+            // Leave no godsword behind for the next round.
+            for (dx in -4..4) for (dz in -4..4) {
+                val t = spot.transform(dx, dz)
+                run.world.chunks.get(t)?.getEntities<gg.rsmod.game.model.entity.GroundItem>(t, gg.rsmod.game.model.EntityType.GROUND_ITEM)
+                    ?.filter { it.item == Items.ARMADYL_GODSWORD }?.forEach { run.world.remove(it) }
+            }
+            a.attr.remove(keys.SLOTS)
+            keys.KEY_IDS.forEach { id -> a.inventory.remove(id, a.inventory.getItemCount(id)) }
+        }
     }
 }
