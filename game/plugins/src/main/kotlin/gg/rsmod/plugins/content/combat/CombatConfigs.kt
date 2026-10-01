@@ -403,23 +403,26 @@ object CombatConfigs {
             return (pawn as Npc).combatDef.attackStyleType
         }
         if (pawn is Player) {
-            val style = pawn.getAttackStyle()
-            val option = getCombatStyle(style)
-            val data = getWeaponType(pawn)?.let { WeaponCombatData.getAttackStyleType(it, option) }
-            if (data != null) {
-                return data.styleType
-            }
+            styleData(pawn)?.let { return it.styleType }
         }
         throw IllegalArgumentException("Invalid combat style for $pawn")
     }
 
     fun getXpMode(player: Player): XpMode {
-        val style = player.getAttackStyle()
-        val option = getCombatStyle(style)
-        val data = getWeaponType(player)?.let { WeaponCombatData.getAttackStyleType(it, option) }
-        if (data != null) {
-            return data.xpMode
-        }
+        styleData(player)?.let { return it.xpMode }
         throw IllegalArgumentException("Invalid xp mode for $player")
+    }
+
+    /**
+     * The wielded weapon's entry for the style varp. A varp value the weapon has no entry for (set by a script or test, or left by
+     * a weapon swapped between equip sync and the swing) resolves the way an equip does ([Autocast.validStyle]: 4th box -> 3rd,
+     * else the 1st) instead of throwing and aborting the swing (conformance crash 2026-09-29 "Invalid combat style" at the
+     * attack animation). [getAttackStyle] keeps its own rule: the autocast box gives no invisible bonus.
+     */
+    private fun styleData(player: Player): AttackStyleData? {
+        val type = getWeaponType(player) ?: return null
+        val style = player.getAttackStyle()
+        return WeaponCombatData.getAttackStyleType(type, getCombatStyle(style))
+            ?: WeaponCombatData.getAttackStyleType(type, getCombatStyle(gg.rsmod.plugins.content.combat.magic.Autocast.validStyle(player, style)))
     }
 }

@@ -135,12 +135,12 @@ suspend fun cycle(it: QueueTask): Boolean {
         gg.rsmod.plugins.content.combat.magic.Autocast.prepareAttack(pawn, target)
     }
 
-    val strategy = CombatConfigs.getCombatStrategy(pawn)
+    var strategy = CombatConfigs.getCombatStrategy(pawn)
     // RCV-005: an npc with data-driven attacks (NpcAttacks, Void Attack.kt) approaches to its longest usable attack.
     val dataAttackRange = (pawn as? Npc)?.let { gg.rsmod.plugins.content.combat.attack.NpcAttacks.attackRange(it) }
     // A special with its own reach (SpecialAttacks.armedReach) replaces the weapon's range while it is armed.
-    val specialReach = (pawn as? Player)?.let { SpecialAttacks.armedReach(it) }
-    val attackRange = specialReach?.range ?: dataAttackRange ?: strategy.getAttackRange(pawn)
+    var specialReach = (pawn as? Player)?.let { SpecialAttacks.armedReach(it) }
+    var attackRange = specialReach?.range ?: dataAttackRange ?: strategy.getAttackRange(pawn)
 
     // RCV-005 root cause: npcs had no leash model. Void CombatMovement.withinAggro - an npc fights on
     // while the target stays inside its spawn leash, and gives up only once the target leaves it.
@@ -200,7 +200,19 @@ suspend fun cycle(it: QueueTask): Boolean {
             return true
         }
     } else {
-        pathFound = PawnPathAction.walkTo(it, pawn, target, interactionRange = attackRange, lineOfSight = false)
+        // A player's reach is re-read every step: a weapon switched on the way stops the walk where the new one reaches.
+        val liveReach = (pawn as? Player)?.let { p -> { SpecialAttacks.armedReach(p)?.range ?: CombatConfigs.getCombatStrategy(p).getAttackRange(p) } }
+        pathFound = PawnPathAction.walkTo(it, pawn, target, interactionRange = attackRange, lineOfSight = false, reach = liveReach)
+        // walkTo suspends until arrival. A weapon, spell or special switched on the way (hybrid switching while chasing) must not
+        // fire the attack armed before the walk - a melee swing with a bow, a ranged shot with a whip (conformance crash
+        // 2026-09-29 "Invalid combat style. RANGED" in the melee formula). Re-arm from the current equipment; a melee weapon
+        // picked up at range then keeps chasing through the reach check below.
+        if (pawn is Player) {
+            gg.rsmod.plugins.content.combat.magic.Autocast.prepareAttack(pawn, target)
+            strategy = CombatConfigs.getCombatStrategy(pawn)
+            specialReach = SpecialAttacks.armedReach(pawn)
+            attackRange = specialReach?.range ?: strategy.getAttackRange(pawn)
+        }
     }
 
     if (pawn is Npc && dataAttackRange != null) {

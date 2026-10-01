@@ -300,6 +300,7 @@ object PawnPathAction {
         interactionRange: Int,
         lineOfSight: Boolean,
         waitForArrival: Boolean = true,
+        reach: (() -> Int)? = null,
     ): Boolean {
         val sourceSize = pawn.getSize()
         val targetSize = target.getSize()
@@ -382,9 +383,19 @@ object PawnPathAction {
         var stalled = 0
         while (!pawn.tile.sameAs(route.tail)) {
             if (!targetTile.sameAs(target.tile)) {
-                return walkTo(it, pawn, target, interactionRange, lineOfSight)
+                return walkTo(it, pawn, target, reach?.invoke() ?: interactionRange, lineOfSight, reach = reach)
             }
             it.wait(1)
+            // [reach] is the caller's live attack range (combat). It can change on the way - a bow switched in while running at the
+            // target (owner 2026-10-01, Deadman hybrid switching): stop where the weapon held NOW reaches, instead of walking on to
+            // the tail planned for the old one (a melee tail: next to the target).
+            val now = reach?.invoke()
+            if (now != null && !overlap(pawn.tile, sourceSize, target.tile, targetSize) &&
+                inReachWithoutMoving(pawn, pawn.tile, sourceSize, target.tile, targetSize, now, lineOfSight || now > 2)
+            ) {
+                pawn.stopMovement()
+                return true
+            }
             // Breach audit 2026-09-27 (B2): a route cut short (a pawn on the next tile, a freeze, a blocked second run step, a
             // projectile-only route) never reaches its tail, and this loop waited for it forever - the pawn stood still until a
             // new interaction replaced the queue. Stop waiting once the pawn has not moved for STALL_TICKS ticks with nothing

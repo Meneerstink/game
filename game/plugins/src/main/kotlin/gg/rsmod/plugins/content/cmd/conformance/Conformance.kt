@@ -104,7 +104,8 @@ object Conformance {
                 "combat" -> CombatSuite
                 "hud" -> HudSuite
                 "systems" -> SystemsSuite
-                else -> return "Unknown conformance domain '$domain' (summoning, curses, equipment, combat, hud, systems)."
+                "deadman", "dmm" -> DeadmanSuite
+                else -> return "Unknown conformance domain '$domain' (summoning, curses, equipment, combat, hud, systems, deadman)."
             }
         val at = rawArgs.indexOf("at")
         val from =
