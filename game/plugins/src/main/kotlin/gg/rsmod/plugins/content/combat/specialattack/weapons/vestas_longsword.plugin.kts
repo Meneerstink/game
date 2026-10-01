@@ -22,7 +22,7 @@ SpecialAttacks.register(25, Items.VESTAS_LONGSWORD, Items.VESTAS_LONGSWORD_DEG) 
     val normalMax = MeleeCombatFormula.getMaxHit(player, target)
     val minHit = normalMax * 0.2
     val maxHit = normalMax * 1.2
-    val accuracy = MeleeCombatFormula.getAccuracyAgainstReducedDefence(player, target, defenceMultiplier = 0.25)
+    val accuracy = MeleeCombatFormula.getAccuracyAgainstReducedDefence(player, target, defenceMultiplier = 0.25, defenceStyle = gg.rsmod.game.model.combat.StyleType.STAB)
     val landHit = accuracy >= world.randomDouble()
     val delay = 1
     player.dealHit(target = target, minHit = minHit, maxHit = maxHit, landHit = landHit, delay = delay, hitType = HitType.MELEE)

@@ -155,6 +155,19 @@ class MeleeCombatFormulaTests {
     }
 
     @Test
+    fun `getAccuracyAgainstReducedDefence with a stab defence style reads the stab bonus whatever the attack style`() {
+        // Vesta's longsword "Feint" (OSRS Wiki, Deadman Mode page too): "rolled against an opponent's stab defence".
+        val attacker = newPlayer(attackLevel = 99, style = WeaponStyle.ACCURATE, combatStyle = StyleType.CRUSH)
+        val target = newPlayer(defenceLevel = 40, style = WeaponStyle.ACCURATE, combatStyle = StyleType.CRUSH)
+        target.equipmentBonuses[BonusSlot.DEFENCE_CRUSH.id] = 300
+        // stab bonus 0: defenceRoll = 48 * 64 = 3072, reduced to 25% = 768 - the crush bonus must not count.
+        val expected = 1.0 - (768.0 + 2.0) / (2.0 * (7040.0 + 1.0))
+        assertEquals(expected, MeleeCombatFormula.getAccuracyAgainstReducedDefence(attacker, target, 0.25, StyleType.STAB), 1e-9)
+        // Without the style the crush attacker rolls against the 300 crush bonus.
+        assertTrue(MeleeCombatFormula.getAccuracyAgainstReducedDefence(attacker, target, 0.25) < expected)
+    }
+
+    @Test
     fun `getAccuracyAgainstReducedDefence rolls the normal attack against a fraction of the defence roll`() {
         // Vesta's longsword "Feint": "rolled against 25% of the opponent's defence, using the attack
         // bonus of the player's currently selected combat style against the target's stab defence."

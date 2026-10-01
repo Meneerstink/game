@@ -58,7 +58,9 @@ object MeleeCombatFormula : CombatFormula {
         pawn: Pawn,
         target: Pawn,
         defenceMultiplier: Double,
-    ): Double = accuracy(pawn, target, specialAttackMultiplier = 1.0, defenceStyle = null, defenceMultiplier = defenceMultiplier)
+        // Feint rolls against the target's stab defence whatever style the attacker uses (was: the attacker's style).
+        defenceStyle: StyleType? = null,
+    ): Double = accuracy(pawn, target, specialAttackMultiplier = 1.0, defenceStyle = defenceStyle, defenceMultiplier = defenceMultiplier)
 
     private fun accuracy(
         pawn: Pawn,
