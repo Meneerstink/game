@@ -1,4 +1,4 @@
-﻿package gg.rsmod.plugins.content.cmd.conformance
+package gg.rsmod.plugins.content.cmd.conformance
 
 import gg.rsmod.game.action.EquipAction
 import gg.rsmod.game.model.Tile
@@ -9,6 +9,7 @@ import gg.rsmod.game.model.item.Item
 import gg.rsmod.game.model.queue.QueueTask
 import gg.rsmod.plugins.api.EquipmentType
 import gg.rsmod.plugins.api.cfg.Items
+import gg.rsmod.plugins.api.ext.hit
 import gg.rsmod.plugins.content.combat.Combat
 
 /**
@@ -20,6 +21,10 @@ import gg.rsmod.plugins.content.combat.Combat
  *   (agent-handoffs/2026-09-26-death-rework-brief.txt, "Keep rule"): everything is lost; Protect Item keeps exactly 1 item, skulled
  *   or not, the most valuable by guide price. The lost items go into ONE loot key for the killer, never also on the ground; nothing
  *   is duplicated or lost; the victim respawns in a guarded zone with full life points and no skull.
+ * - teleport: Varrock Teleport pressed on the real spellbook button. DeadmanTimerGate (owner 2026-09-17, OSRS Deadman wiki
+ *   wording): unskulled and not hit in 7 s -> instant; unskulled and hit by a player -> refused with "You must be out of combat for
+ *   another X seconds to teleport."; skulled -> 7-second countdown, then the teleport; a hit, a Tele Block or a death during the
+ *   countdown stops it for good.
  */
 object DeadmanSuite : Conformance.Suite {
     override suspend fun QueueTask.run(
@@ -44,6 +49,7 @@ object DeadmanSuite : Conformance.Suite {
         val arena = SummoningSuite.arenaFor(run, run.origin.transform(3, 0))
         scenario("switch") { switchOnApproach(run, arena) }
         scenario("death") { pvpDeath(run, arena) }
+        scenario("teleport") { teleports(run, arena) }
     }
 
     /** Hitsplat types [who] received since [from], in order. */
@@ -232,5 +238,125 @@ object DeadmanSuite : Conformance.Suite {
         kill("unskulled", skulled = false, protectItem = false, expectedKept = 0)
         kill("unskulled + Protect Item", skulled = false, protectItem = true, expectedKept = 1)
         kill("skulled + Protect Item", skulled = true, protectItem = true, expectedKept = 1)
+    }
+
+    // ---- teleport: the Deadman teleport gate on the real spell button ---------------------------------------------------
+
+    private suspend fun QueueTask.teleports(
+        run: Conformance.Run,
+        arena: Tile,
+    ) {
+        val e = "teleport"
+        val t = run.bot(arena, "TT")
+        val h = run.bot(arena.transform(1, 0), "TH")
+        wait(2)
+        val spell = gg.rsmod.plugins.content.magic.MagicSpells.metadataByName("Varrock Teleport")
+        if (spell == null) {
+            run.notTested(e, "all", "no Varrock Teleport spell button")
+            return
+        }
+        val varrock = gg.rsmod.plugins.content.magic.teleports.TeleportSpell.VARROCK.endArea
+        fun inVarrock() = varrock.contains(t.tile)
+
+        suspend fun prepare(skulled: Boolean) {
+            reset(t, arena)
+            reset(h, arena.transform(1, 0))
+            t.timers.remove(gg.rsmod.game.model.timer.SKULL_ICON_DURATION_TIMER)
+            t.timers.remove(gg.rsmod.game.model.timer.TELEBLOCK_TIMER)
+            t.attr.remove(gg.rsmod.plugins.content.mechanics.pvp.LootKeys.SLOTS)
+            gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction.cancel(t)
+            t.inventory.add(Items.LAW_RUNE, 100)
+            t.inventory.add(Items.AIR_RUNE, 300)
+            t.inventory.add(Items.FIRE_RUNE, 100)
+            if (skulled) gg.rsmod.plugins.content.mechanics.pvp.PvpSkull.applyTestSkull(t)
+            // Out of every earlier fight: the 7-second "attacked" window and the last player hit lie in the past.
+            repeat(14) { wait(1) }
+        }
+
+        /** H lands real hits on T (a 0 counts: "attacked by a player"), then stops. */
+        suspend fun hitByPlayer() {
+            wield(h, Item(Items.ABYSSAL_WHIP))
+            val c = run.world.currentCycle
+            h.attack(t)
+            for (i in 0 until 20) {
+                t.setCurrentLifepoints(t.getMaximumLifepoints())
+                wait(1)
+                if (run.recording.of("TT", "out").any { it.cycle >= c && it.text.startsWith("hits ") }) break
+            }
+            h.resetInteractions()
+            Combat.reset(h)
+            t.resetInteractions()
+            Combat.reset(t)
+        }
+
+        fun press() = Bots.button(t, spell.interfaceId, spell.component)
+
+        suspend fun landedWithin(ticks: Int): Int? {
+            for (i in 1..ticks) {
+                wait(1)
+                if (inVarrock()) return i
+            }
+            return null
+        }
+
+        fun messagesSince(c: Int) = run.recording.of("TT", "msg").filter { it.cycle >= c && it.text.startsWith("MessageGameMessage") }.joinToString(" / ") { it.text.take(90) }
+
+        // 1. Unskulled, not attacked: instant (the spell's own animation delay only).
+        prepare(skulled = false)
+        press()
+        val instant = landedWithin(10)
+        run.expectTrue(e, "unskulled, out of combat: teleports at once (spell delay only)", instant != null && instant <= 6, "landed after $instant ticks")
+        run.expectTrue(e, "unskulled, out of combat: no countdown", !gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction.isActive(t), "countdown running")
+
+        // 2. Unskulled, just attacked by a player: refused with the wiki message, no countdown.
+        prepare(skulled = false)
+        hitByPlayer()
+        val c2 = run.world.currentCycle
+        press()
+        val blocked = landedWithin(8)
+        run.expectTrue(e, "unskulled, attacked by a player: no teleport", blocked == null, "landed after $blocked ticks")
+        run.expectTrue(e, "unskulled, attacked by a player: the out-of-combat message", messagesSince(c2).contains("You must be out of combat for another"),
+            messagesSince(c2))
+        run.expectTrue(e, "unskulled, attacked by a player: no countdown interface", !gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction.isActive(t), "countdown running")
+
+        // 3. Skulled: the 7-second countdown, then the teleport by itself.
+        prepare(skulled = true)
+        press()
+        wait(1)
+        run.expectTrue(e, "skulled: the countdown starts", gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction.isActive(t), "no countdown")
+        val counted = landedWithin(24)
+        run.expectTrue(e, "skulled: teleports when the countdown ends (12 ticks + spell delay)", counted != null && counted >= 10 && counted <= 20,
+            "landed after ${counted?.plus(1)} ticks")
+
+        // 4. Skulled, hit during the countdown: it stops and never fires later.
+        prepare(skulled = true)
+        press()
+        wait(2)
+        hitByPlayer()
+        val afterHit = landedWithin(24)
+        run.expectTrue(e, "skulled, hit during the countdown: no teleport", afterHit == null, "landed after $afterHit ticks")
+
+        // 5. Skulled, Tele Blocked during the countdown: no teleport at the end.
+        prepare(skulled = true)
+        press()
+        wait(2)
+        t.timers[gg.rsmod.game.model.timer.TELEBLOCK_TIMER] = 500
+        val afterBlock = landedWithin(24)
+        run.expectTrue(e, "skulled, Tele Blocked during the countdown: no teleport", afterBlock == null, "landed after $afterBlock ticks")
+        t.timers.remove(gg.rsmod.game.model.timer.TELEBLOCK_TIMER)
+
+        // 6. Skulled, killed during the countdown: respawns, and the old countdown never teleports him afterwards.
+        prepare(skulled = true)
+        press()
+        wait(2)
+        t.hit(damage = t.getCurrentLifepoints() + 50)
+        var respawned = false
+        for (i in 0 until 40) {
+            wait(1)
+            if (!t.isDead() && t.tile != arena) { respawned = true; break }
+        }
+        val afterDeath = landedWithin(20)
+        run.expectTrue(e, "skulled, killed during the countdown: respawned", respawned, "tile=${t.tile} dead=${t.isDead()}")
+        run.expectTrue(e, "skulled, killed during the countdown: no teleport after the respawn", afterDeath == null, "landed after $afterDeath ticks")
     }
 }

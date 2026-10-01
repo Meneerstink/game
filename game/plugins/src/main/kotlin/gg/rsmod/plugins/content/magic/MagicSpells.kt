@@ -197,6 +197,13 @@ object MagicSpells {
         }
     }
 
+    /** The spell button [on_magic_spell_button] binds for [name]: the standard book first when a name exists in several books
+     * (e.g. "Trollheim Teleport"). Conformance bots press exactly this button. */
+    fun metadataByName(name: String): SpellMetadata? {
+        if (!isLoaded()) loadSpellRequirements()
+        return metadata.values.filter { it.name == name }.minByOrNull { it.interfaceId }
+    }
+
     fun KotlinPlugin.on_magic_spell_button(
         name: String,
         plugin: Plugin.(SpellMetadata) -> Unit,
@@ -205,9 +212,7 @@ object MagicSpells {
             loadSpellRequirements()
         }
 
-        // Prefer the standard book when a name exists in several books (e.g. "Trollheim Teleport").
-        val spell = metadata.values.filter { it.name == name }.minByOrNull { it.interfaceId }
-            ?: error("No spell named '$name'")
+        val spell = metadataByName(name) ?: error("No spell named '$name'")
 
         on_button(spell.interfaceId, spell.component) {
             plugin(this, spell)
