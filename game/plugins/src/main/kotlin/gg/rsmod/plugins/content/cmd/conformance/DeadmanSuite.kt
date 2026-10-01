@@ -815,17 +815,26 @@ object DeadmanSuite : Conformance.Suite {
     ) {
         val e = "pvm"
         val keys = gg.rsmod.plugins.content.mechanics.pvp.LootKeys
-        val giant = run.npc(gg.rsmod.plugins.api.cfg.Npcs.HILL_GIANT, arena.transform(3, 0), "PN")
-        val v = run.bot(arena.transform(2, 0), "PV")
-        val a = run.bot(arena.transform(2, 2), "PA")
+        // A spot of its own (bots of earlier scenarios stand around the arena tile) with open ground for the three of them.
+        fun open(t: Tile) = (-1..2).all { dx -> (-1..2).all { dz -> !runCatching { run.world.collision.isClipped(t.transform(dx, dz)) }.getOrDefault(true) } }
+        val spot = (6..60 step 2).flatMap { r -> listOf(arena.transform(-r, r), arena.transform(r, r), arena.transform(-r, -r), arena.transform(r, -r)) }
+            .firstOrNull { open(it) && !gg.rsmod.plugins.content.mechanics.pvp.GuardedZones.contains(it) } ?: arena.transform(-6, 6)
+        val giant = run.npc(gg.rsmod.plugins.api.cfg.Npcs.HILL_GIANT, spot.transform(1, 0), "PN")
+        val v = run.bot(spot, "PV")
+        val a = run.bot(spot.transform(-1, 0), "PA")
+        fun keyCount() = run.world.players.entries.filterNotNull().sumOf { keys.heldKeyIndexes(it).size }
         wait(2)
 
         suspend fun npcKills(label: String): Boolean {
+            // Defence 1: the giant must land a hit well inside the 60-second PvP aggressor window (PvpSkull.AGGRESSOR_WINDOW_CYCLES).
+            v.skills.setBaseLevel(Skills.DEFENCE, 1)
             v.setCurrentLifepoints(3)
+            val c0 = run.world.currentCycle
             giant.attack(v)
             var died = false
-            for (i in 0 until 60) {
+            for (i in 0 until 120) {
                 giant.setCurrentLifepoints(giant.getMaximumLifepoints())
+                if (i % 10 == 9 && !died && giant.getCombatTarget() !== v) giant.attack(v)
                 wait(1)
                 if (v.isDead()) died = true
                 if (died && !v.isDead()) break
@@ -834,6 +843,8 @@ object DeadmanSuite : Conformance.Suite {
             Combat.reset(giant)
             wait(4)
             run.expectTrue(e, "$label: the npc killed him", died, "dead=${v.isDead()} lp=${v.getCurrentLifepoints()}")
+            run.note("$label: death and respawn ${run.world.currentCycle - c0} cycles after the npc's attack order")
+            v.skills.setBaseLevel(Skills.DEFENCE, 99)
             return died
         }
         fun groundNear(t: Tile, id: Int): Int {
@@ -847,21 +858,25 @@ object DeadmanSuite : Conformance.Suite {
         }
 
         // 1. Killed by the npc alone: everything to the gravestone (owner 2026-09-26: PvM deaths are recoverable).
-        reset(v, arena.transform(2, 0))
+        reset(v, spot)
+        giant.moveTo(spot.transform(1, 0))
         v.inventory.add(Items.ARMADYL_GODSWORD, 1)
         val tile1 = v.tile
+        val keys0 = keyCount()
+        val ground0 = groundNear(tile1, Items.ARMADYL_GODSWORD)
         if (npcKills("npc only")) {
             val grave = v.gravestone.toList().filterNotNull().map { it.id }
             run.expectTrue(e, "npc only: the godsword is in his gravestone", Items.ARMADYL_GODSWORD in grave, "gravestone=$grave")
-            run.check(e, "npc only: nothing on the ground", groundNear(tile1, Items.ARMADYL_GODSWORD), "gravestone, not ground loot" to 0)
-            run.check(e, "npc only: no loot key", run.world.players.entries.filterNotNull().sumOf { keys.heldKeyIndexes(it).size }, "no player killer" to 0)
+            run.check(e, "npc only: nothing on the ground", groundNear(tile1, Items.ARMADYL_GODSWORD) - ground0, "gravestone, not ground loot" to 0)
+            run.check(e, "npc only: no loot key", keyCount() - keys0, "no player killer" to 0)
         }
         gg.rsmod.plugins.content.mechanics.death.Gravestone.clear(v)
         v.gravestone.removeAll()
 
         // 2. Hit by a player first, the npc lands the kill: still a PvP death (DeathResolver: "the shared aggressor window").
-        reset(v, arena.transform(2, 0))
-        reset(a, arena.transform(2, 2))
+        reset(v, spot)
+        reset(a, spot.transform(-1, 0))
+        giant.moveTo(spot.transform(1, 0))
         a.attr.remove(keys.SLOTS)
         wield(a, Item(Items.ABYSSAL_WHIP))
         v.inventory.add(Items.AMULET_OF_FURY, 1)
