@@ -282,14 +282,7 @@ class MovementQueue(
      * into it (two breach monsters ended up inside each other). OSRS moves npcs one after another against the current positions,
      * so the npc is re-registered the moment it steps; ChunkCreationTask then finds nothing left to do for it.
      */
-    private fun reRegister(npc: Npc) {
-        val world = npc.world
-        val last = npc.lastChunkTile
-        if (last != null && last.sameAs(npc.tile)) return
-        if (last != null) world.chunks.get(last)?.removeEntity(world, npc, last)
-        world.chunks.get(npc.tile, createIfNeeded = false)?.addEntity(world, npc, npc.tile)
-        npc.lastChunkTile = Tile(npc.tile)
-    }
+    private fun reRegister(npc: Npc) = npc.reRegisterChunk()
 
     private fun addStep(
         current: Tile,

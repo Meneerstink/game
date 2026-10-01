@@ -704,6 +704,7 @@ abstract class Pawn(
         blockBuffer.teleport = true
         tile = Tile(x, z, height)
         movementQueue.clear()
+        (this as? Npc)?.reRegisterChunk()
     }
 
     fun teleportNpc(tile: Tile) {
@@ -723,6 +724,7 @@ abstract class Pawn(
         blockBuffer.teleport = !tile.isWithinRadius(x, z, height, Player.NORMAL_VIEW_DISTANCE)
         tile = Tile(x, z, height)
         movementQueue.clear()
+        (this as? Npc)?.reRegisterChunk()
         addMovementBlocks()
         traceArrival(from, "moveTo")
     }

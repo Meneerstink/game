@@ -452,6 +452,11 @@ class World(
     fun spawn(npc: Npc): Boolean {
         val added = npcs.add(npc)
         if (added) {
+            // Registered in its chunk at once (breach harness 2026-10-01: Splatter walked into a Pestilent Bloat that had appeared the
+            // tick before). ChunkCreationTask only registers an npc that moved or that the sync has marked active, so collision and
+            // landing checks (MovementQueue.isEntityBlocked, DeadmanBreach placements) did not see a fresh npc's body for a tick or two -
+            // and never saw an unseen one that stood still. Only when the chunk exists; otherwise ChunkCreationTask does it later.
+            npc.reRegisterChunk()
             setNpcDefaults(npc)
             plugins.executeNpcSpawn(npc)
         }

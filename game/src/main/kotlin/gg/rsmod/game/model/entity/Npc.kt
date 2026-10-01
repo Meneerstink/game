@@ -319,6 +319,21 @@ class Npc private constructor(
     fun isActive(): Boolean = active
 
     /**
+     * Registers this npc in the chunk of its current tile at once. Collision and placement lookups (MovementQueue.isEntityBlocked,
+     * breach landings) find npcs through their chunk registration, which ChunkCreationTask only refreshes once per tick: a step,
+     * a teleport and a spawn re-register here so the next npc moving in the same tick sees the body where it really is
+     * (breach harness 2026-09-27 steps, 2026-10-01 spawns and teleports). Without a loaded chunk it is left to ChunkCreationTask.
+     */
+    internal fun reRegisterChunk() {
+        val last = lastChunkTile
+        if (last != null && last.sameAs(tile)) return
+        val chunk = world.chunks.get(tile, createIfNeeded = false) ?: return
+        if (last != null) world.chunks.get(last)?.removeEntity(world, this, last)
+        chunk.addEntity(world, this, tile)
+        lastChunkTile = Tile(tile)
+    }
+
+    /**
      * Verifies if the npc is currently spawned in the world.
      */
     fun isSpawned(): Boolean = index > 0
