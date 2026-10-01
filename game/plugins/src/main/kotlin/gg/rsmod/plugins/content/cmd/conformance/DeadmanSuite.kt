@@ -87,6 +87,7 @@ object DeadmanSuite : Conformance.Suite {
         scenario("teleblock") { teleBlock(run, arena) }
         scenario("phantom") { phantomStrike(run, arena) }
         scenario("dupe") { dropOnDeath(run, arena) }
+        scenario("skull") { skulls(run, arena) }
     }
 
     /** Hitsplat types [who] received since [from], in order. */
@@ -1340,5 +1341,84 @@ object DeadmanSuite : Conformance.Suite {
             a.attr.remove(keys.SLOTS)
             keys.KEY_IDS.forEach { id -> a.inventory.remove(id, a.inventory.getItemCount(id)) }
         }
+    }
+
+    // ---- skull: who is skulled, retaliation, the reset and the pause ------------------------------------------------------
+
+    private suspend fun QueueTask.skulls(
+        run: Conformance.Run,
+        arena: Tile,
+    ) {
+        val e = "skull"
+        val skull = gg.rsmod.plugins.content.mechanics.pvp.PvpSkull
+        val timer = gg.rsmod.game.model.timer.SKULL_ICON_DURATION_TIMER
+        val a = run.bot(arena.transform(-2, 3), "SA")
+        val b = run.bot(arena.transform(0, 3), "SB")
+        val c = run.bot(arena.transform(2, 3), "SC")
+        wait(2)
+        fun clear(vararg ps: Client) = ps.forEach {
+            it.timers.remove(timer)
+            it.timers.remove(gg.rsmod.game.model.timer.PVP_AGGRESSOR_WINDOW_TIMER)
+            it.attr.remove(gg.rsmod.game.model.attr.PVP_AGGRESSOR_ATTR)
+        }
+        fun stop(vararg ps: Client) = ps.forEach { it.resetInteractions(); Combat.reset(it) }
+        /** [p] attacks [t] until one hitsplat lands on [t] (or [ticks] pass); true when one did. */
+        suspend fun hitOnce(p: Client, t: Client, ticks: Int = 8): Boolean {
+            val from = run.world.currentCycle
+            p.attack(t)
+            for (i in 0 until ticks) {
+                t.setCurrentLifepoints(t.getMaximumLifepoints())
+                wait(1)
+                if (hitTypes(run, if (t === a) "SA" else if (t === b) "SB" else "SC", from).isNotEmpty()) {
+                    stop(p, t)
+                    return true
+                }
+            }
+            stop(p, t)
+            return false
+        }
+        reset(a, arena.transform(-2, 3))
+        reset(b, arena.transform(0, 3))
+        reset(c, arena.transform(2, 3))
+        clear(a, b, c)
+
+        // 1. No hitsplat, no skull: a dark bow without arrows never fires (owner 2026-09-18).
+        wield(a, Item(Items.DARK_BOW))
+        a.attack(b)
+        repeat(6) { wait(1) }
+        stop(a, b)
+        run.expectTrue(e, "an attack that never fires (no ammo): no skull", !skull.isSkulled(a), "skulled")
+
+        // 2. The first hitsplat on an unskulled player skulls the attacker for 5:00; the victim stays clean.
+        wield(a, Item(Items.ABYSSAL_WHIP))
+        wield(b, Item(Items.ABYSSAL_WHIP))
+        wield(c, Item(Items.ABYSSAL_WHIP))
+        val landed = hitOnce(a, b)
+        run.expectTrue(e, "the attacker is skulled when his hit lands", landed && skull.isSkulled(a), "landed=$landed")
+        run.expectTrue(e, "the skull lasts 5:00 (owner 2026-09-16)", a.timers[timer] in 490..500, "timer=${a.timers[timer]}")
+        run.expectTrue(e, "the victim is not skulled", !skull.isSkulled(b), "skulled")
+
+        // 3. The victim hits back: a retaliation, no skull (OSRS Wiki "Skull (status)").
+        val back = hitOnce(b, a)
+        run.expectTrue(e, "the victim retaliates without a skull", back && !skull.isSkulled(b), "landed=$back skulled=${skull.isSkulled(b)}")
+
+        // 4. A third player attacks the skulled attacker, who never attacked him: that is a fresh attack, he is skulled.
+        wait(12) // the single-way PJ timer of the A-B fight runs out
+        val third = hitOnce(c, a)
+        run.expectTrue(e, "a third player attacking the skulled one is skulled", third && skull.isSkulled(c), "landed=$third skulled=${skull.isSkulled(c)}")
+
+        // 5. Standing on one tile for a minute pauses the countdown; moving starts it again.
+        clear(a)
+        stop(a, b, c)
+        skull.applyTestSkull(a)
+        repeat(105) { wait(1) }
+        val stalled = a.timers[timer]
+        repeat(20) { wait(1) }
+        val later = a.timers[timer]
+        run.expectTrue(e, "standing still for a minute pauses the skull", stalled == later && stalled in 390..410, "after 105 ticks=$stalled, 20 ticks later=$later")
+        a.moveTo(a.tile.transform(0, 1))
+        repeat(10) { wait(1) }
+        run.expectTrue(e, "moving again resumes the countdown", a.timers[timer] < later, "was $later now ${a.timers[timer]}")
+        clear(a, b, c)
     }
 }
