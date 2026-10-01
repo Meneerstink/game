@@ -15,6 +15,6 @@ class StrykewyrmDelayedInteractionTests {
             "target is Player && !target.isOnline" in burrow,
             "delayed Strykewyrm burrow must stop after victim logout",
         )
-        assertTrue(burrow.indexOf("isOnline") < burrow.indexOf("target.hit(300"))
+        assertTrue(burrow.indexOf("isOnline") < burrow.indexOf("target.hit(Strykewyrms.BURROW_DAMAGE"))
     }
 }
