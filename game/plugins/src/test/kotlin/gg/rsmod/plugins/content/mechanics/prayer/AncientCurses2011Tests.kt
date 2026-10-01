@@ -270,4 +270,41 @@ class AncientCurses2011Tests {
             }
         }
     }
+
+    @Test
+    /** Owner 2026-09-29: Leech Ranged / Magic = Rigour / Augury accuracy, damage one hit lower (+18 % / none); Leech Defence +15 %. */
+    fun `Leech Ranged and Leech Magic carry Rigour and Augury offence and keep their drain`() {
+        val ranger = newPlayer(mapOf(Skills.RANGED to 99))
+        AncientCurses.switchBook(ranger, AncientCurses.PrayerBook.ANCIENT)
+        assertEquals(1.0, AncientCurses.leechMultiplier(ranger, Skills.RANGED), 1e-9)
+        AncientCurses.toggleCurse(ranger, AncientCurse.LEECH_RANGED)
+        assertEquals(1.20, AncientCurses.leechMultiplier(ranger, Skills.RANGED), 1e-9)
+        assertEquals(1.18, AncientCurses.leechMultiplier(ranger, Skills.RANGED, damage = true), 1e-9)
+        assertEquals(0.0, AncientCurses.leechMagicDamage(ranger), 1e-9)
+        val rangeTarget = newPlayer(mapOf(Skills.RANGED to 99))
+        AncientCurses.onDamageDealt(ranger, rangeTarget, damage = 10, style = CombatClass.RANGED)
+        assertEquals(98, rangeTarget.skills.getCurrentLevel(Skills.RANGED))
+        assertEquals(99, ranger.skills.getCurrentLevel(Skills.RANGED))
+
+        val mage = newPlayer(mapOf(Skills.MAGIC to 99))
+        AncientCurses.switchBook(mage, AncientCurses.PrayerBook.ANCIENT)
+        AncientCurses.toggleCurse(mage, AncientCurse.LEECH_MAGIC)
+        assertEquals(1.25, AncientCurses.leechMultiplier(mage, Skills.MAGIC), 1e-9)
+        assertEquals(0.0, AncientCurses.leechMagicDamage(mage), 1e-9)
+        val mageTarget = newPlayer(mapOf(Skills.MAGIC to 99))
+        AncientCurses.onDamageDealt(mage, mageTarget, damage = 10, style = CombatClass.MAGIC)
+        assertEquals(98, mageTarget.skills.getCurrentLevel(Skills.MAGIC))
+        assertEquals(99, mage.skills.getCurrentLevel(Skills.MAGIC))
+        AncientCurses.toggleCurse(mage, AncientCurse.LEECH_MAGIC)
+        assertEquals(1.0, AncientCurses.leechMultiplier(mage, Skills.MAGIC), 1e-9)
+
+        val tank = newPlayer(mapOf(Skills.DEFENCE to 99))
+        AncientCurses.switchBook(tank, AncientCurses.PrayerBook.ANCIENT)
+        AncientCurses.toggleCurse(tank, AncientCurse.LEECH_DEFENCE)
+        assertEquals(1.15, AncientCurses.leechMultiplier(tank, Skills.DEFENCE), 1e-9)
+        val defTarget = newPlayer(mapOf(Skills.DEFENCE to 99))
+        AncientCurses.onDamageDealt(tank, defTarget, damage = 10, style = CombatClass.MELEE)
+        assertEquals(99, tank.skills.getCurrentLevel(Skills.DEFENCE))
+        assertEquals(0.0, AncientCurses.leechMagicDamage(mage), 1e-9)
+    }
 }

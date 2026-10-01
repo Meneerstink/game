@@ -184,7 +184,23 @@ class NpcSynchronizationTask(
             Tile(tile.x, tile.z, player.tile.height).isWithinRadius(
                 player.tile,
                 if (player.hasLargeViewport()) Player.LARGE_VIEW_DISTANCE else Player.NORMAL_VIEW_DISTANCE,
-            )
+            ) &&
+            (tile.height == player.tile.height || !underFloor(player, tile))
+
+    /**
+     * Owner 2026-09-29 ("summoning monsters noclip on the mansion's first floor, probably because the ceiling is so low"):
+     * a tall npc on a lower floor was drawn through the floor above it. A lower npc is only sent when it stands in the open:
+     * not on a roofed tile (flag 4, inside a building) and with no floor (flag 4 on the upper storeys) above it up to the
+     * viewer's floor. The balconies still see the open square below.
+     */
+    private fun underFloor(
+        player: Player,
+        tile: Tile,
+    ): Boolean {
+        val chunk = player.world.chunks.get(tile) ?: return false
+        if (chunk.isRoofed(tile)) return true
+        return (tile.height + 1..player.tile.height).any { h -> chunk.isRoofed(Tile(tile.x, tile.z, h)) }
+    }
 
     companion object {
         private const val MAX_LOCAL_NPCS = 255

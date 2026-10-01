@@ -21,6 +21,7 @@ import gg.rsmod.plugins.api.ProjectileType
 import gg.rsmod.plugins.api.ext.hit
 import gg.rsmod.plugins.api.ext.isProtectedFrom
 import gg.rsmod.plugins.api.ext.message
+import gg.rsmod.plugins.api.ext.playSound
 import gg.rsmod.plugins.content.combat.CombatConfigs.getCombatClass
 import gg.rsmod.plugins.content.combat.formula.CombatFormula
 import gg.rsmod.plugins.content.mechanics.combatresponse.DamageResponse
@@ -198,7 +199,16 @@ fun Pawn.dealHit(
     // Calculate the 1:1 real damage, applying a random factor.
     // Combat formulas and hitpoints use the same 1:1 real-damage unit. Keep the hitmark value
     // identical to the rolled damage so server state, hitbars and client hit splats agree.
-    var damage = if (landHit) (rollDamage(minHit, maxHit) + bonusDamage).toDouble() else 0.0
+    // POH combat dummy (owner 2026-09-29): every attack lands for the attacker's max hit.
+    val combatDummy = target is Npc && target.attr[gg.rsmod.plugins.content.areas.poh.PlayerHouse.COMBAT_DUMMY_ATTR] == true
+    @Suppress("NAME_SHADOWING")
+    val landHit = landHit || combatDummy
+    var damage =
+        when {
+            combatDummy -> (kotlin.math.floor(maxHit + 1e-9).toInt().coerceAtLeast(0) + bonusDamage).toDouble()
+            landHit -> (rollDamage(minHit, maxHit) + bonusDamage).toDouble()
+            else -> 0.0
+        }
     // Power of Death (staff of the dead, toxic staff, staff of light): halves melee damage taken; ends on damage without the staff.
     if (target is Player) {
         damage = gg.rsmod.plugins.content.items.osrs.StaffOfTheDead.modifyIncomingDamage(target, hitType, damage.toInt()).toDouble()
@@ -375,6 +385,13 @@ fun Pawn.dealHit(
         hit.addAction {
             gg.rsmod.plugins.content.combat.audio.NpcCombatAudio.onDefend(this@dealHit, target)
         }
+    }
+    // Sound audit 2026-09-29 (owner "vind rootcauses"): a player who was hit made no sound at all - every player block
+    // animation is silent in the rev-667 cache (424, 1156, 4177, 1659 ...). Void Block.sounds plays the defend grunt to the hit
+    // player and to his attacker on every combat hit; a magic splash keeps only its own splash sound.
+    if (target is Player && !(landHit.not() && (hitType == HitType.MAGIC || hitType == HitType.CRIT_MAGIC))) {
+        val attacker = this as? Player
+        hit.addAction { playPlayerDefendSound(target, attacker) }
     }
 
     // Execute the provided onHit lambda
@@ -581,4 +598,47 @@ private fun disruptionShieldAbsorbs(
     target.message("Your disruption shield absorbs the attack.")
     attacker.message("${target.username}'s disruption shield absorbs your attack.")
     return true
+}
+
+/** Void sounds.toml male_defend_0..2 (Block.calculateHitSound picks nextInt(0, 3)); all exist in the rev-667 synth index. */
+private val MALE_DEFEND_SOUNDS = intArrayOf(518, 519, 520)
+
+/** Void sounds.toml female_defend_0 (Block.calculateHitSound picks nextInt(0, 1)). */
+private const val FEMALE_DEFEND_SOUND = 509
+
+/** The hit player and a player attacker hear the same defend grunt (Void Block.sounds: source.sound + target.sound). */
+fun playPlayerDefendSound(
+    target: Player,
+    attacker: Player?,
+) {
+    val id = if (target.appearance.gender == gg.rsmod.game.model.Gender.FEMALE) FEMALE_DEFEND_SOUND else MALE_DEFEND_SOUNDS.random()
+    target.playSound(id)
+    if (attacker != null && attacker !== target) attacker.playSound(id)
+}
+
+/** Radius of a player's own combat sounds for the players around him (ADAPTED: the 667 cache gives these no radius). */
+const val PLAYER_COMBAT_SOUND_RADIUS = 10
+
+/**
+ * Lets the players around [this] hear [soundId] as an area sound while [this] himself does not get it a second time - for
+ * sounds his own client already plays (a radius-0 cache frame sound on his attack sequence, or a cue sent only to him).
+ */
+fun Player.soundToBystanders(
+    soundId: Int,
+    delay: Int = 0,
+) {
+    if (soundId <= 0) return
+    world.spawn(
+        gg.rsmod.game.model.entity.AreaSound(tile = tile, id = soundId, radius = PLAYER_COMBAT_SOUND_RADIUS, volume = 1, delay = delay)
+            .also { it.excluded = this },
+    )
+}
+
+/**
+ * The attack [animation]'s own cache frame sound reaches only the local player when it has no radius; send it to the
+ * players around [this] so an attack is heard by everyone nearby, like OSRS.
+ */
+fun Player.frameSoundToBystanders(animation: Int) {
+    val def = world.definitions.getNullable(gg.rsmod.game.fs.def.AnimDef::class.java, animation) ?: return
+    if (def.hasFrameSounds && !def.hasAudibleFrameSounds) soundToBystanders(def.firstFrameSound)
 }

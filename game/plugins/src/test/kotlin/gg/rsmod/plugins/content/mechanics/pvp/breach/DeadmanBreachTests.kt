@@ -182,7 +182,8 @@ class DeadmanBreachTests {
             assertEquals(BreachLoot.REGULAR_ROLLS, regular.size)
             if (regular.any { d -> d.item == ItemIds.CHITIN }) chitin++
         }
-        assertTrue(chitin in (kills * 0.47).toInt()..(kills * 0.53).toInt(), "chitin replaces a regular drop 50% of the time: $chitin / $kills")
+        // Owner 2026-09-29: chitin is removed from breach loot.
+        assertEquals(0, chitin, "breach monsters never drop chitin")
     }
 
     /** Owner 2026-09-19 "sounds, animations, everything": no breach monster may fight silently. */

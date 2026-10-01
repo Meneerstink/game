@@ -88,7 +88,8 @@ object PvpDeathBreakables {
             itemId == Items.BOW_OF_FAERDHINEN || itemId == Items.AMULET_OF_BLOOD_FURY || itemId == Items.TOXIC_STAFF_OF_THE_DEAD ||
             itemId in gg.rsmod.plugins.content.items.osrs.AvernicTreads.UPGRADED || itemId == Items.ANCIENT_SCEPTRE ||
             itemId in gg.rsmod.plugins.content.items.osrs.Demonbane.SYNAPSE_PRODUCTS ||
-            gg.rsmod.plugins.content.items.osrs.PoweredStaves.chargedTierOf(itemId) != null
+            gg.rsmod.plugins.content.items.osrs.PoweredStaves.chargedTierOf(itemId) != null ||
+            gg.rsmod.plugins.content.items.osrs.RevenantWeapons.isCharged(itemId)
 
     fun split(result: DeathResolutionResult): Pair<DeathResolutionResult, List<DeathSlotItem>> {
         if (result.context != DeathContext.WILDERNESS_PVP) return result to emptyList()
@@ -164,6 +165,16 @@ object PvpDeathBreakables {
                 container[slotItem.slot] = null
                 if (slotItem.source == DeathContainerSource.EQUIPMENT) equipmentChanged = true
                 drop(Item(Items.TORMENTED_SYNAPSE, 1))
+                continue
+            }
+            if (gg.rsmod.plugins.content.items.osrs.RevenantWeapons.isCharged(slotItem.item.id)) {
+                // OSRS Wiki (revenant weapons): "Upon death in the Wilderness, stored ether is always dropped" - the killer gets the
+                // uncharged weapon and every ether, the activation deposit included (the Uncharge refund).
+                val (uncharged, ether) = gg.rsmod.plugins.content.items.osrs.RevenantWeapons.uncharge(container[slotItem.slot]!!)
+                container[slotItem.slot] = null
+                if (slotItem.source == DeathContainerSource.EQUIPMENT) equipmentChanged = true
+                drop(Item(uncharged.id, 1))
+                drop(Item(Items.REVENANT_ETHER, ether))
                 continue
             }
             val chargedStaff = gg.rsmod.plugins.content.items.osrs.PoweredStaves.chargedTierOf(slotItem.item.id)

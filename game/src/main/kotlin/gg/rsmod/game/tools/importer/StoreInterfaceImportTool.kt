@@ -138,9 +138,11 @@ object StoreInterfaceImportTool {
         for (slot in 0 until SLOT_COUNT) graphic(SELECT_OUTLINE_FIRST + slot, slotX(slot), slotY(slot), Art.SLOT_SIZE, Art.SLOT_SIZE, WINDOW, Art.SLOT_RING, hidden = true)
 
         val navY = Art.GRID_Y + Art.GRID_HEIGHT + 2
-        text(PAGE_PREVIOUS, Art.GRID_X + 4, navY, 60, 16, WINDOW, fonts.p12, "< Prev", GOLD, alignX = 0, ops = listOf("Previous page"))
+        // Owner 2026-09-29 "staat er niet de prev": the client parses "<" as the start of a text tag (<col=..>), so "< Prev" was never
+        // drawn. Plain words, no angle brackets.
+        text(PAGE_PREVIOUS, Art.GRID_X + 4, navY, 60, 16, WINDOW, fonts.p12, "Prev page", GOLD, alignX = 0, ops = listOf("Previous page"))
         text(PAGE_TEXT, Art.GRID_X + 64, navY, 116, 16, WINDOW, fonts.p12, "Page 1 / 1", CREAM)
-        text(PAGE_NEXT, Art.GRID_X + Art.GRID_WIDTH - 64, navY, 60, 16, WINDOW, fonts.p12, "Next >", GOLD, alignX = 2, ops = listOf("Next page"))
+        text(PAGE_NEXT, Art.GRID_X + Art.GRID_WIDTH - 64, navY, 60, 16, WINDOW, fonts.p12, "Next page", GOLD, alignX = 2, ops = listOf("Next page"))
 
         // Showcase: the result item's model standing on the painted pedestal, carousel arrows at the sides.
         layer(PREVIEW_LAYER, PREVIEW_X, PREVIEW_Y, PREVIEW_WIDTH, PREVIEW_HEIGHT, WINDOW)

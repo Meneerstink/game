@@ -7,6 +7,8 @@ import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.plugin.PluginRepository
 import gg.rsmod.plugins.api.ext.confirmItemAction
 import gg.rsmod.plugins.api.ext.itemMessageBox
+import gg.rsmod.plugins.api.ext.playSound
+import gg.rsmod.plugins.api.cfg.Sfx
 
 /**
  * Owner 2026-09-18 (binding): "every uncharge item needs to give a warning ... or every disassemble", "when disassembling any
@@ -76,6 +78,7 @@ object ItemActionGuard {
     fun install(repository: PluginRepository) {
         repository.itemOptionInterceptor = interceptor@{ player, itemId, option, worn, proceed ->
             val name = optionName(player, itemId, option, worn) ?: return@interceptor false
+            if (name in CONFIRM_OPTIONS) watchResult(player, itemId, worn, name)
             when {
                 name in CONFIRM_OPTIONS && !isSelfConfirming(itemId, name) -> {
                     confirmThenRun(player, itemId, name, worn, proceed)
@@ -86,6 +89,37 @@ object ItemActionGuard {
                     true
                 }
                 else -> false
+            }
+        }
+    }
+
+    /**
+     * Owner 2026-09-29 ("uncharge / revert make no sound", every item): one sound for every Uncharge / Revert / Dismantle /
+     * Disassemble, played once the clicked item has really changed - whether this guard or the item's own dialogue asked,
+     * and never on "No". No OSRS source names these sounds, so they are ADAPTED by name (same ids and names in 667 and OSRS):
+     * 1650 charge_gone for Uncharge, 2632 hunting_dismantle for the others.
+     */
+    const val WATCH_TICKS = 100
+
+    fun sound(option: String): Int = if (option == "uncharge") Sfx.CHARGE_GONE else Sfx.HUNTING_DISMANTLE
+
+    private fun watchResult(
+        player: Player,
+        itemId: Int,
+        worn: Boolean,
+        option: String,
+    ) {
+        val slot = player.attr[INTERACTING_ITEM_SLOT]
+        fun present(): Boolean = if (worn) player.equipment.getItemCount(itemId) > 0 else slot != null && player.inventory[slot]?.id == itemId
+        if (!present()) return
+        player.world.queue {
+            for (tick in 0 until WATCH_TICKS) {
+                wait(1)
+                if (!player.isOnline) return@queue
+                if (!present()) {
+                    player.playSound(sound(option))
+                    return@queue
+                }
             }
         }
     }

@@ -128,6 +128,8 @@ object MeleeCombatFormula : CombatFormula {
 
         // OSRS Wiki "Maximum melee hit": Max hit = ⌊0.5 + Effective Strength × (Strength bonus + 64) / 640⌋.
         var base = floor(0.5 + a * (b + 64.0) / 640.0)
+        // OSRS Wiki "Colossal blade": "MaxHit + [2 × min(MonsterSize,5)]" (a player is size 1).
+        if (pawn is Player && pawn.getEquipment(EquipmentType.WEAPON)?.id == gg.rsmod.plugins.api.cfg.Items.COLOSSAL_BLADE) base += 2 * minOf(target.getSize(), 5)
         if (pawn is Player) {
             base = applyStrengthSpecials(pawn, target, base, specialAttackMultiplier, specialPassiveMultiplier)
         }
@@ -190,6 +192,8 @@ object MeleeCombatFormula : CombatFormula {
         hit = TargetModifiers.addPercent(hit, TargetModifiers.meleeDemonbanePercent(player, target))
         // Dragon hunter lance: multiplicative with the target-specific gear bonus, its own floored step.
         hit = floor(hit * TargetModifiers.meleeDragonbaneDamage(player, target))
+        // Revenant chainmaces: "an additional 50% melee accuracy and damage boost ... when attacking any NPC in the Wilderness".
+        if (gg.rsmod.plugins.content.items.osrs.RevenantWeapons.wildernessBuff(player, target)) hit = floor(hit * 3 / 2)
 
         hit =
             if (specialPassiveMultiplier == 1.0) {
@@ -220,6 +224,7 @@ object MeleeCombatFormula : CombatFormula {
         var hit = floor(base * TargetModifiers.equipmentMultiplier(player, target))
         hit = TargetModifiers.addPercent(hit, TargetModifiers.meleeDemonbanePercent(player, target))
         hit = floor(hit * TargetModifiers.meleeDragonbaneAccuracy(player, target))
+        if (gg.rsmod.plugins.content.items.osrs.RevenantWeapons.wildernessBuff(player, target)) hit = floor(hit * 3 / 2)
         hit = floor(hit * specialAttackMultiplier)
         return hit
     }
@@ -320,7 +325,7 @@ object MeleeCombatFormula : CombatFormula {
     }
 
     private fun getEffectiveDefenceLevel(player: Player, opponent: Pawn? = null): Double {
-        var effectiveLevel = floor(player.skills.getCurrentLevel(Skills.DEFENCE) * getPrayerDefenceMultiplier(player, opponent) * AncientCurses.drainMultiplier(player, Skills.DEFENCE))
+        var effectiveLevel = floor(player.skills.getCurrentLevel(Skills.DEFENCE) * getPrayerDefenceMultiplier(player, opponent) * AncientCurses.drainMultiplier(player, Skills.DEFENCE) * gg.rsmod.plugins.content.items.osrs.AmuletOfTheDamned.toragDefenceMultiplier(player))
 
         effectiveLevel +=
             when (CombatConfigs.getAttackStyle(player)) {

@@ -175,7 +175,7 @@ object BreachLoot {
             }
         }
         val regular = MutableList(REGULAR_ROLLS) { pick(REGULAR, random).drop(random) }
-        if (random.nextBoolean()) regular[random.nextInt(REGULAR_ROLLS)] = Drop(ItemIds.CHITIN, 1, noted = true)
+        // Owner 2026-09-29: no chitin (its only use, the blighted overload, is removed) - both regular drops stay.
         out += regular
         return out
     }

@@ -1,5 +1,7 @@
 package gg.rsmod.plugins.content.combat.strategy
 
+import gg.rsmod.plugins.content.combat.frameSoundToBystanders
+import gg.rsmod.plugins.content.combat.soundToBystanders
 import gg.rsmod.game.model.Direction
 import gg.rsmod.game.model.EntityType
 import gg.rsmod.game.model.Graphic
@@ -186,7 +188,14 @@ object MagicCombatStrategy : CombatStrategy {
         pawn.animate(animation)
 
         if (pawn is Player) {
-            gg.rsmod.plugins.content.combat.strategy.magic.SpellSounds.of(spell)?.cast?.takeIf { it > 0 }?.let { pawn.playSound(it) }
+            // The cast cue goes to the caster and, as an area sound, to the players around him (before: only the caster heard it).
+            val cast = gg.rsmod.plugins.content.combat.strategy.magic.SpellSounds.of(spell)?.cast?.takeIf { it > 0 }
+            if (cast != null) {
+                pawn.playSound(cast)
+                pawn.soundToBystanders(cast)
+            } else {
+                pawn.frameSoundToBystanders(animation)
+            }
             MagicSpells
                 .getMetadata(spell.uniqueId)
                 ?.let { requirement -> MagicSpells.removeRunes(pawn, requirement.runes, spellId = spell.uniqueId) }
@@ -320,7 +329,11 @@ object MagicCombatStrategy : CombatStrategy {
             return
         }
 
-        val maxHit = formula.getMaxHit(pawn, target)
+        // Amulet of the damned with Ahrim's set: "spells have a 25% chance dealing 30% additional damage" (ADAPTED: on the max hit).
+        val maxHit =
+            formula.getMaxHit(pawn, target).let { max ->
+                if (pawn is Player) kotlin.math.floor(max * gg.rsmod.plugins.content.items.osrs.AmuletOfTheDamned.ahrimDamageMultiplier(pawn)) else max
+            }
         val pawnHit =
             pawn.dealHit(
                 target = target,
@@ -330,6 +343,8 @@ object MagicCombatStrategy : CombatStrategy {
                 hitType = HitType.MAGIC,
             )
         val damage = pawnHit.hit.hitmarks.sumOf { it.damage }
+        // Revenant sceptre worn while casting: "1 ether per attack" (once per cast, not per barrage target).
+        if (pawn is Player && primary) gg.rsmod.plugins.content.items.osrs.RevenantWeapons.afterAttack(pawn)
         if (landHit) {
             pawnHit.hit.addAction { applyEffect(pawn, target, spell, damage) }
             // Trident of the Swamp: manually cast combat spells also roll its 25 % venom while it holds a charge.

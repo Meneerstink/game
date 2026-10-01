@@ -386,46 +386,6 @@ enum class PotionType(
     BATTLEMAGE {
         override fun apply(p: Player) = DivinePotions.boost(p, intArrayOf(Skills.MAGIC, Skills.DEFENCE))
     },
-    DIVINE_SUPER_COMBAT {
-        override fun canDrink(p: Player) = DivinePotions.canDrinkDivine(p)
-
-        override fun apply(p: Player) = DivinePotions.drinkDivine(p, intArrayOf(Skills.ATTACK, Skills.STRENGTH, Skills.DEFENCE))
-    },
-    DIVINE_SUPER_ATTACK {
-        override fun canDrink(p: Player) = DivinePotions.canDrinkDivine(p)
-
-        override fun apply(p: Player) = DivinePotions.drinkDivine(p, intArrayOf(Skills.ATTACK))
-    },
-    DIVINE_SUPER_STRENGTH {
-        override fun canDrink(p: Player) = DivinePotions.canDrinkDivine(p)
-
-        override fun apply(p: Player) = DivinePotions.drinkDivine(p, intArrayOf(Skills.STRENGTH))
-    },
-    DIVINE_SUPER_DEFENCE {
-        override fun canDrink(p: Player) = DivinePotions.canDrinkDivine(p)
-
-        override fun apply(p: Player) = DivinePotions.drinkDivine(p, intArrayOf(Skills.DEFENCE))
-    },
-    DIVINE_RANGING {
-        override fun canDrink(p: Player) = DivinePotions.canDrinkDivine(p)
-
-        override fun apply(p: Player) = DivinePotions.drinkDivine(p, intArrayOf(Skills.RANGED))
-    },
-    DIVINE_MAGIC {
-        override fun canDrink(p: Player) = DivinePotions.canDrinkDivine(p)
-
-        override fun apply(p: Player) = DivinePotions.drinkDivine(p, intArrayOf(Skills.MAGIC))
-    },
-    DIVINE_BASTION {
-        override fun canDrink(p: Player) = DivinePotions.canDrinkDivine(p)
-
-        override fun apply(p: Player) = DivinePotions.drinkDivine(p, intArrayOf(Skills.RANGED, Skills.DEFENCE))
-    },
-    DIVINE_BATTLEMAGE {
-        override fun canDrink(p: Player) = DivinePotions.canDrinkDivine(p)
-
-        override fun apply(p: Player) = DivinePotions.drinkDivine(p, intArrayOf(Skills.MAGIC, Skills.DEFENCE))
-    },
 
     // OSRS-IMPORT potions-venom: "instantly cures venom and poison" with the immunity windows in PotionEffects.
     ANTI_VENOM {

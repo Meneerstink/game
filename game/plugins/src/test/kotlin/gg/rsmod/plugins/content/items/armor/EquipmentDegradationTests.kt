@@ -38,7 +38,7 @@ class EquipmentDegradationTests {
         // OSRS-IMPORT moons: nine moon armour pieces, each new -> degraded -> broken.
         val expected =
             BarrowsPiece.values.size * 5 + CorruptArmor.values().size * 2 + ChaoticWeapon.values().size + NexArmour.values().size * 2 +
-                MoonArmour.values().size * 2
+                MoonArmour.values().size * 2 + 2 // + the Amulet of the damned (full -> used -> dust), owner 2026-09-29
         assertEquals(9, MoonArmour.values().size)
         assertEquals(expected, DegradeTable.rows.size)
         assertEquals(DegradeTable.rows.size, DegradeTable.rows.map { it.id }.toSet().size, "one row per item id")

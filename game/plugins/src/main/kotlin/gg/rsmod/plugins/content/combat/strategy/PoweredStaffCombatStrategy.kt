@@ -44,6 +44,10 @@ object PoweredStaffCombatStrategy : CombatStrategy {
         val impactHeight = base.impactGfx?.height ?: 0
         val animation = CAST_WAVE_STAFF
         return when {
+            // Revenant sceptres (batch revfx, gameval SPELLS_THAMMARON01_TRAVEL01 2340 / SPELLS_VETION01_TRAVEL 2337): the spell
+            // projectile only - no cast or impact spotanim is named for them (ADAPTED: none played).
+            staff == PoweredStaves.Staff.THAMMARON -> Look(Graphic(-1, 0), OsrsGfx.THAMMARON_TRAVEL, Graphic(-1, 0), animation)
+            staff == PoweredStaves.Staff.ACCURSED -> Look(Graphic(-1, 0), OsrsGfx.ACCURSED_TRAVEL, Graphic(-1, 0), animation)
             staff.leech -> Look(Graphic(OsrsGfx.SANGUINESTI_STAFF_CASTING, castHeight), OsrsGfx.SANGUINESTI_STAFF_TRAVEL, Graphic(OsrsGfx.SANGUINESTI_STAFF_IMPACT, impactHeight), animation, OsrsGfx.SANGUINESTI_STAFF_HEAL)
             staff.venomChance > 0.0 -> Look(Graphic(OsrsGfx.TOXIC_TOTS_CASTING, castHeight), OsrsGfx.TOXIC_TOTS_PROJECTILE, Graphic(OsrsGfx.TOXIC_TOTS_IMPACT, impactHeight), animation)
             else -> Look(Graphic(OsrsGfx.SLAYER_TOTS_CASTING, castHeight), OsrsGfx.SLAYER_TOTS_PROJECTILE, Graphic(OsrsGfx.SLAYER_TOTS_IMPACT, impactHeight), animation)
@@ -68,7 +72,8 @@ object PoweredStaffCombatStrategy : CombatStrategy {
         }
         // Audit I-06: "Powered staff spells cannot be cast upon other players" - on this server PvP happens outside the Wilderness
         // too, so the old Wilderness-only check let the runeless 4-tick trident/sanguinesti attacks be used in PvP everywhere else.
-        if (target is Player) {
+        // "unlike other powered staves, the sceptre can attack players outside of minigames" (OSRS Wiki, revenant sceptres).
+        if (target is Player && PoweredStaves.staffFor(weapon.id)?.revenant != true) {
             player.message(PoweredStaves.PLAYER_TARGET_MESSAGE)
             return false
         }
@@ -86,10 +91,8 @@ object PoweredStaffCombatStrategy : CombatStrategy {
         val look = look(staff)
 
         player.stopMovement()
-        player.graphic(look.castGfx)
+        if (look.castGfx.id >= 0) player.graphic(look.castGfx)
         player.animate(look.castAnimation)
-        // "One charge is consumed each time you cast the built-in spell."
-        player.equipment[EquipmentType.WEAPON.id] = PoweredStaves.withCharges(weapon, PoweredStaves.charges(weapon) - 1)
 
         val projectile = player.createProjectile(target, gfx = look.projectile, type = ProjectileType.MAGIC)
         world.spawn(projectile)
@@ -98,7 +101,7 @@ object PoweredStaffCombatStrategy : CombatStrategy {
         val landHit =
             gg.rsmod.plugins.content.items.osrs.ConflictionGauntlets.roll(player, target, weapon.id, MagicCombatFormula.getAccuracy(player, target), eligible = true) { world.randomDouble() }
         if (landHit) {
-            target.graphic(Graphic(look.impactGfx.id, look.impactGfx.height, projectile.lifespan))
+            if (look.impactGfx.id >= 0) target.graphic(Graphic(look.impactGfx.id, look.impactGfx.height, projectile.lifespan))
         } else {
             target.graphic(Graphic(85, 96, projectile.lifespan))
         }
@@ -116,6 +119,9 @@ object PoweredStaffCombatStrategy : CombatStrategy {
                 bonusDamage = if (leech) PoweredStaves.LEECH_BONUS_DAMAGE else 0,
             )
         val damage = pawnHit.hit.hitmarks.sumOf { it.damage }
+        // "One charge is consumed each time you cast the built-in spell" - after the hit rolled, so a revenant sceptre's last
+        // ether still carries its Wilderness passive (RevenantWeapons: "1 ether per attack").
+        player.equipment[EquipmentType.WEAPON.id] = PoweredStaves.withCharges(weapon, PoweredStaves.charges(weapon) - 1)
         if (leech) {
             pawnHit.hit.addAction {
                 look.healGfx?.let { player.graphic(it) }

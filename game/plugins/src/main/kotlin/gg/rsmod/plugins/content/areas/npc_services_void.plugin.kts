@@ -95,7 +95,10 @@ fun cureYakHide(
     return "There you go."
 }
 
-listOf(Npcs.THAKKRAD_SIGMUNDSON, Npcs.THAKKRAD_SIGMUNDSON_5506).forEach { thakkrad ->
+// Only the Thakkrad variant whose cache definition carries "Craft-goods" (5466 has no options).
+listOf(Npcs.THAKKRAD_SIGMUNDSON, Npcs.THAKKRAD_SIGMUNDSON_5506).filter { id ->
+    world.definitions.get(gg.rsmod.game.fs.def.NpcDef::class.java, id).options.any { it.equals("Craft-goods", ignoreCase = true) }
+}.forEach { thakkrad ->
     on_npc_option(npc = thakkrad, option = "Craft-goods") {
         player.queue {
             chatPlayer("Cure my yak hide please.")

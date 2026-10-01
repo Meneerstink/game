@@ -50,6 +50,9 @@ object OsrsFxImportTool {
             // Owner answer Q10, The Mimic: TRAIL_MIMIC_SWEET_PURPLE / GREEN / RED / BLUE 1670-1673 and TRAIL_MIMIC_EXPLOSION (+ GREEN /
             // RED / BLUE) 1674-1677 (RuneLite gameval SpotanimID).
             "mimic" to listOf(1670, 1671, 1672, 1673, 1674, 1675, 1676, 1677),
+            // Owner 2026-09-29 (revenant weapons): gameval SpotanimID SPELLS_VETION01_TRAVEL 2337 / _SPECIAL 2338 / _TRAVEL02 2339
+            // (Accursed sceptre), SPELLS_THAMMARON01_TRAVEL01 2340 (Thammaron's sceptre), FX_URSINE01/02_SPECIAL 2341 / 2342.
+            "revfx" to listOf(2337, 2338, 2339, 2340, 2341, 2342),
             // Owner 2026-09-17c (every weapon's special / projectile graphic exactly like OSRS); names from gameval SpotanimID.
             "weaponfx2" to
                 listOf(
@@ -161,6 +164,13 @@ object OsrsFxImportTool {
             // in this cache by any import, which is why `DeadmanBreach` pulses a graphic over it instead. Running
             // this batch re-proves that in a few seconds; it can never apply anything.
             "breach-anim" to listOf(10418, 10423),
+            // Owner 2026-09-29 ("Belle's folly has a weird lunge attack"): OSRS Wiki "Belle's folly" - "the attack animation for
+            // Belle's folly is identical to the Ghrazi rapier". Rapier set (gameval + the LostCity port manifest of OSRS obj 22324):
+            // stab 8145 GHRAZI_RAPIER_ATTACK, slash 390 HUMAN_SWORD_SLASH (already imported), defence 4177 warguild_parry_defend.
+            "rapierseq" to listOf(8145, 4177),
+            // Owner 2026-09-29 (revenant weapons "fully working"): gameval AnimationID WILD_CAVE_CHAINMACE_CRUSH 245 / _STAB 246 /
+            // _DEFEND 7200, HUMAN_SPECIAL_ACCURSED 9961, HUMAN_SPECIAL_URSINE 9962 / HUMAN_SPECIAL02_URSINE 9963.
+            "revseq" to listOf(245, 246, 7200, 9961, 9962, 9963),
             "weaponseq1" to
                 listOf(
                     3294, 3295, 3296, 3297, 3300, // ABYSSAL_DAGGER_HACK / BLOCK / IDLE / LUNGE / SPECIAL
@@ -292,6 +302,14 @@ object OsrsFxImportTool {
             // ADAPTED by name family where OSRS names none: 255 tzhaar_ket_attack_punch (TzTok-Jad / Jad-Rek melee), 497
             // cave_horror_howl (Cave abomination attack, which already uses the Cave horror hit / death sounds).
             "breachsfx2" to listOf(3867, 3860, 255, 497),
+            // Owner 2026-09-29 ("ancient godsword has the wrong blood sacrifice sound"): 2911 blood_sacrifice is the Ruby bolts (e)
+            // sound (wiki note). The Ancient godsword came with Nex 2021 and its Blood Sacrifice is Nex's sacrifice mechanic
+            // (mark, explode unless 5+ tiles away, heal): 5239 nex2021_sacrifice_attack_impact - ADAPTED by name.
+            "agssfx" to listOf(5239),
+            // Owner 2026-09-29 ("the 25 hit still sounds strange"): no source names the sound, so the other Nex 2021 sacrifice sounds
+            // are imported for the owner to listen to and choose: 5182 nex2021_sacrifice_cast, 5192 nex2021_sacrifice_player_marked,
+            // 5223 nex2021_sacrifice_start.
+            "agssfx2" to listOf(5182, 5192, 5223),
         )
 
     // ---- smart values ---------------------------------------------------------------------------

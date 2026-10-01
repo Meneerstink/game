@@ -46,7 +46,7 @@ class FoodAndDrinkLifepointUnitTests {
     fun `every sourced food heal is on the x10 ledger unit`() {
         assertTrue(unsourcedDungeoneeringFoods.contains("CAVE_MORAY"), "Dungeoneering food block not found")
         val offenders = Food.values
-            .filter { it.name !in unsourcedDungeoneeringFoods && it != Food.KEBAB && it != Food.STRANGE_FRUIT && it != Food.ANGLERFISH }
+            .filter { it.name !in unsourcedDungeoneeringFoods && it != Food.KEBAB && it != Food.STRANGE_FRUIT && it != Food.ANGLERFISH && it != Food.BLIGHTED_ANGLERFISH }
             .filter { it.heal <= 0 || it.heal % Food.LEDGER_UNITS_PER_HITPOINT != 0 }
             .map { "${it.name} heal=${it.heal}" }
         assertTrue(offenders.isEmpty(), "food heal not on the x10 ledger unit:\n" + offenders.joinToString("\n"))
@@ -61,8 +61,9 @@ class FoodAndDrinkLifepointUnitTests {
         Food.values.filter { it != Food.KEBAB && it != Food.STRANGE_FRUIT }.forEach { food ->
             val p = player()
             Foods.eat(p, food)
-            val expectedHeal = if (food == Food.ANGLERFISH) Foods.anglerfishHeal(99) else food.heal / 10
-            val cap = if (food == Food.ANGLERFISH) expectedHeal else 0
+            val angler = food == Food.ANGLERFISH || food == Food.BLIGHTED_ANGLERFISH
+            val expectedHeal = if (angler) Foods.anglerfishHeal(99) else food.heal / 10
+            val cap = if (angler) expectedHeal else 0
             verify(exactly = 1) { p.alterLifepoints(expectedHeal, cap) }
         }
         assertEquals(20, Food.SHARK.hitpoints)

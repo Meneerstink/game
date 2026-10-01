@@ -2,6 +2,7 @@ package gg.rsmod.plugins.content.mechanics.store
 
 import gg.rsmod.game.model.priv.Privilege
 import gg.rsmod.game.model.timer.TimerKey
+import gg.rsmod.plugins.content.mechanics.pvp.breach.BreachPoints
 import gg.rsmod.plugins.content.mechanics.store.StoreCatalogue.Currency
 import gg.rsmod.plugins.content.mechanics.store.StoreCatalogue.Shop
 
@@ -23,21 +24,45 @@ on_command("points") {
 on_command("givepoints", Privilege.ADMIN_POWER) {
     val args = player.getCommandArgs()
     if (args.size < 3) {
-        player.message("Usage: givepoints <player> <donator|deadman|loyalty> <amount>")
+        player.message("Usage: givepoints <player> <donator|deadman|loyalty|breach> <amount>")
         return@on_command
     }
     val amount = args[args.size - 1].toIntOrNull()
-    val currency = Currency.values().firstOrNull { it.name.equals(args[args.size - 2], ignoreCase = true) }
+    val currencyName = args[args.size - 2]
+    val currency = Currency.values().firstOrNull { it.name.equals(currencyName, ignoreCase = true) }
+    val breach = currencyName.equals("breach", ignoreCase = true)
     val name = args.dropLast(2).joinToString(" ")
     val target = world.getPlayerForName(name)
-    if (amount == null || currency == null || target == null) {
-        player.message("Usage: givepoints <player> <donator|deadman|loyalty> <amount> (the player must be online).")
+    if (amount == null || (currency == null && !breach) || target == null) {
+        player.message("Usage: givepoints <player> <donator|deadman|loyalty|breach> <amount> (the player must be online).")
         return@on_command
     }
-    val total = ((target.attr[currency.attr] ?: 0).toLong() + amount).coerceIn(0, Int.MAX_VALUE.toLong()).toInt()
+    if (breach) {
+        BreachPoints.addBalance(target, amount)
+        val total = BreachPoints.balance(target)
+        target.message("You have received ${amount.format()} Breach Points. You now have ${total.format()}.")
+        player.message("${target.username} now has ${total.format()} Breach Points.")
+        return@on_command
+    }
+    val total = ((target.attr[currency!!.attr] ?: 0).toLong() + amount).coerceIn(0, Int.MAX_VALUE.toLong()).toInt()
     target.attr[currency.attr] = total
     target.message("You have received ${amount.format()} ${currency.plural}. You now have ${total.format()}.")
     player.message("${target.username} now has ${total.format()} ${currency.plural}.")
+    if (StoreUi.isOpen(target)) StoreUi.renderPreview(target)
+}
+
+/** Owner 2026-09-29: "geef me unlimited deadmanpoints breachpoints loyalty points en donator" - every currency to its maximum. */
+on_command("maxpoints", Privilege.ADMIN_POWER) {
+    val name = player.getCommandArgs().joinToString(" ")
+    val target = if (name.isBlank()) player else world.getPlayerForName(name)
+    if (target == null) {
+        player.message("Usage: maxpoints [player] (the player must be online).")
+        return@on_command
+    }
+    Currency.values().forEach { target.attr[it.attr] = Int.MAX_VALUE }
+    target.attr[BreachPoints.BALANCE] = Int.MAX_VALUE
+    target.message("Donator, Deadman, Loyalty and Breach Points set to ${Int.MAX_VALUE.format()}.")
+    if (target != player) player.message("${target.username} now has maximum points in every currency.")
     if (StoreUi.isOpen(target)) StoreUi.renderPreview(target)
 }
 
@@ -81,6 +106,7 @@ on_login {
 
 on_timer(LOYALTY_PLAYTIME_TIMER) {
     player.attr[Currency.LOYALTY.attr] = (player.attr[Currency.LOYALTY.attr] ?: 0) + LOYALTY_PLAYTIME_POINTS
-    player.filterableMessage("You have been awarded $LOYALTY_PLAYTIME_POINTS Loyalty Points for your time online.")
+    // A reward is not a filterable effect line (lint #msg): it must reach the player with the Game filter on too.
+    player.message("You have been awarded $LOYALTY_PLAYTIME_POINTS Loyalty Points for your time online.")
     player.timers[LOYALTY_PLAYTIME_TIMER] = LOYALTY_PLAYTIME_CYCLES
 }

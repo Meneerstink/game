@@ -161,11 +161,16 @@ class SkillSet(
         check(capValue == 0 || capValue < 0 && value < 0 || capValue > 0 && value >= 0) {
             "Cap value and alter value must always be the same signum (+ or -)."
         }
+        // Owner 2026-09-29 ("my boosted stats reset from 117 to 99"): the caps only limit how far a change may go, they never
+        // move the level the other way. The default branch clamped every change to the base level, so the per-minute boost
+        // decay (-1) turned 117 into min(99, 116) = 99; a raise may no longer lower a higher boost, a drain no longer raise.
+        val current = getCurrentLevel(skill)
         val altered =
             when {
-                capValue > 0 -> min(getCurrentLevel(skill) + value, getMaxLevel(skill) + capValue)
-                capValue < 0 -> max(getCurrentLevel(skill) + value, getMaxLevel(skill) + capValue)
-                else -> min(getMaxLevel(skill), getCurrentLevel(skill) + value)
+                capValue > 0 -> max(current, min(current + value, getMaxLevel(skill) + capValue))
+                capValue < 0 -> min(current, max(current + value, getMaxLevel(skill) + capValue))
+                value < 0 -> current + value
+                else -> max(current, min(getMaxLevel(skill), current + value))
             }
         val newLevel = max(1, altered)
         val curLevel = getCurrentLevel(skill)

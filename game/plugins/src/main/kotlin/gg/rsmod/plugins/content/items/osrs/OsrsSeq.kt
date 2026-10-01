@@ -100,6 +100,8 @@ object OsrsSeq {
     const val HUMAN_SWORD_DEF = 15784 // OSRS 388
     const val HUMAN_SWORD_SLASH = 15785 // OSRS 390
     const val HUMAN_SWORD_LUNGE = 15786 // OSRS 392
+    const val GHRAZI_RAPIER_ATTACK = 15835 // OSRS 8145 (rapierseq, tx-20260929-012048)
+    const val WARGUILD_PARRY_DEFEND = 15836 // OSRS 4177, the rapier's block (rapierseq, tx-20260929-012048)
     const val HUMAN_AXE_CHOP = 15787 // OSRS 393 (staff bash)
     const val HUMAN_STAFF_PUMMEL = 15788 // OSRS 414 (wand melee)
     const val HUMAN_SPEAR_SPIKE = 15789 // OSRS 428
@@ -126,12 +128,20 @@ object OsrsSeq {
     const val D_CLAWS_PUNCH = 15806 // OSRS 1067
     const val SLAYER_ABYSSAL_WHIP_ATTACK = 15807 // OSRS 1658
     const val SLAYER_ABYSSAL_WHIP_DEFEND = 15808 // OSRS 1659
+    // Revenant weapons (batch revseq, tx-20260929-015203; gameval AnimationID).
+    const val WILD_CAVE_CHAINMACE_CRUSH = 15841 // OSRS 245
+    const val WILD_CAVE_CHAINMACE_STAB = 15842 // OSRS 246
+    const val WILD_CAVE_CHAINMACE_DEFEND = 15843 // OSRS 7200
+    const val HUMAN_SPECIAL_ACCURSED = 15844 // OSRS 9961
+    const val HUMAN_SPECIAL_URSINE = 15845 // OSRS 9962
+    const val HUMAN_SPECIAL02_URSINE = 15846 // OSRS 9963
 }
 
 /** OSRS synth sounds of the same batch; names from the OSRS Wiki "List of sound IDs" (Jagex config names). */
 object OsrsSfx {
     const val ZARYTE_CROSSBOW_SPECIAL = 10270 // OSRS 5306 zaryte_crossbow_special (tx-20260918-221303)
     const val GODWARS_GODSWORD_SPECIAL_ATTACK = 10271 // OSRS 3869 godwars_godsword_special_attack (tx-20260918-221303)
+    const val NEX2021_SACRIFICE_ATTACK_IMPACT = 10345 // OSRS 5239 nex2021_sacrifice_attack_impact (agssfx, tx-20260929-000022)
     const val NOXIOUS_HALBERD_SPECIAL_BUILD = 10242 // OSRS 9403 noxious_halberd_special_attack_build_01
     const val NOXIOUS_HALBERD_SPECIAL_IMPACT = 10243 // OSRS 9404 noxious_halberd_special_attack_impact_01
     const val MACUAHUITL_SPECIAL = 10244 // OSRS 7917 varlamore_pm_macuahuitl_special_01

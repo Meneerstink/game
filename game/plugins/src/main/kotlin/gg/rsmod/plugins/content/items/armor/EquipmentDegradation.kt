@@ -97,6 +97,10 @@ object DegradeTable {
             // still in combat after 90 ticks"; at 0 it "will lose all stat bonuses" (broken). ADAPTED to this per-combat-tick table: the
             // first point turns the new piece into its degraded id, the other 2,999 points take 90 combat ticks each (a new combat session
             // does not spend an extra point). No message is sourced.
+            // Amulet of the damned (OSRS Wiki): the (full) amulet becomes the used one in combat and "will degrade at the same rate as
+            // any other barrows armour" (four Barrows stages), then "turns to dust". ADAPTED: the message.
+            add(DegradeRow(Items.AMULET_OF_THE_DAMNED_FULL, Items.AMULET_OF_THE_DAMNED, 1) { null })
+            add(DegradeRow(Items.AMULET_OF_THE_DAMNED, DegradeRow.DESTROY, BarrowsDegradation.STAGE_CYCLES * 4) { name -> "<col=ff0000>Your $name has crumbled to dust." })
             MoonArmour.values().forEach { armour ->
                 add(DegradeRow(armour.newId, armour.degradedId, 1) { null })
                 add(DegradeRow(armour.degradedId, armour.brokenId, MOON_DEGRADED_CHARGES) { null })
@@ -171,6 +175,9 @@ class EquipmentDegradation(
         on_timer(degradeCheck) {
             if (player.isAttacking() || player.isBeingAttacked()) {
                 tick(player)
+                gg.rsmod.plugins.content.items.osrs.SerpentineHelm.combatTick(player)
+            } else {
+                gg.rsmod.plugins.content.items.osrs.SerpentineHelm.resetCombat(player)
             }
             player.timers[degradeCheck] = 1
         }
@@ -186,8 +193,20 @@ class EquipmentDegradation(
                 item.attr[ItemAttribute.CHARGES] = step.charges
                 continue
             }
-            player.equipment.remove(item)
-            step.replaceWith?.let { player.equipment.add(Item(it, item.amount), beginSlot = def.equipSlot) }
+            // Owner 2026-09-29 ("torva / eclipse / blue moon vanish from my body"): `remove` zeroes the removed Item's amount, so
+            // the replacement used to be created with amount 0, refused by `add`, and the worn piece was deleted on the first
+            // combat tick. The next stage now replaces the piece in its own slot with the amount read before anything changes.
+            val amount = item.amount
+            val next = step.replaceWith
+            val nextWearable = next != null && player.world.definitions.get(ItemDef::class.java, next).equipSlot == def.equipSlot
+            player.equipment[slot] = if (next != null && nextWearable) Item(next, amount) else null
+            if (next != null && !nextWearable) {
+                // A stage that cannot be worn (Barrows "0", the 667 broken pieces that need repairing) comes off: into the
+                // inventory, or at the player's feet when it is full - never deleted.
+                if (!player.inventory.add(Item(next, amount), applyCreationRedirect = false).hasSucceeded()) {
+                    player.world.spawn(gg.rsmod.game.model.entity.GroundItem(next, amount, player.tile, player))
+                }
+            }
             step.message?.let { player.message(it) }
         }
     }

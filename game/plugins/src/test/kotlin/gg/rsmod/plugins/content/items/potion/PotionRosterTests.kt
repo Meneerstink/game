@@ -80,8 +80,7 @@ class PotionRosterTests {
         Blocked("SOURCE_BLOCKED: Herblore Habitat juju/scentless/god potions have no donor effect", named("Juju", "Scentless potion", "Saradomin's blessing", "Guthix's gift", "Zamorak's favour")),
         Blocked("BLOCKED: Relicym's balm cures disease; the disease mechanic does not exist server-side", named("Relicym's balm")),
         Blocked("SOURCE_CONFLICT: Guthix rest empty container (Void data: empty = vial, excess = empty_cup)", named("Guthix rest")),
-        Blocked("OWNER_REMOVED: extreme 125-stat/ranged, overload, prayer renewal and recover special") { it.id in RemovedPotions.itemIds },
-        Blocked("SEPARATE HANDLER: Deadman blighted overload (mechanics/pvp/breach/blighted_overload.plugin.kts)") { it.id in gg.rsmod.plugins.content.mechanics.pvp.breach.BlightedOverload.DOSES },
+        Blocked("OWNER_REMOVED: extreme 125-stat/ranged, overload, prayer renewal, recover special, divine potions and blighted overload") { it.id in RemovedPotions.itemIds },
     )
 
     @Test
@@ -111,7 +110,8 @@ class PotionRosterTests {
     @Test
     fun `owner removed potion families have no drink row or herblore recipe`() {
         assertEquals(28, RemovedPotions.doseItemIds.size)
-        assertEquals(32, RemovedPotions.itemIds.size)
+        assertEquals(36, RemovedPotions.divineAndBlightedDoseIds.size, "32 divine doses + 4 blighted overload doses (owner 2026-09-29)")
+        assertEquals(68, RemovedPotions.itemIds.size)
         assertTrue(Potion.values().none { it.item in RemovedPotions.itemIds })
         assertTrue(PotionData.values().none { it.product in RemovedPotions.recipeProducts })
 

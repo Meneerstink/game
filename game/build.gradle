@@ -323,6 +323,14 @@ task runCasinoMinimapIconTool(type: JavaExec) {
     main = 'gg.rsmod.game.tools.importer.CasinoMinimapIconTool'
 }
 
+task runStoreMapIconTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Minimap + world map icons for the three 78 Store npcs (npc mapelement follows the npc; world map static ' +
+        'elements at the npc posts of data/world_edits.json). Usage: ./gradlew :game:runStoreMapIconTool --args="plan|apply [--png=<dir>]"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.StoreMapIconTool'
+}
+
 task runOsrsBodyFrameTool(type: JavaExec) {
     group = 'tools'
     description = 'Moves every imported OSRS worn mesh from the 2007 body onto the 667 body (OsrsBodyFrame) and writes the OSRS ' +

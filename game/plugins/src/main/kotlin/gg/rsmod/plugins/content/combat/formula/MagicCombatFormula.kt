@@ -65,6 +65,14 @@ object MagicCombatFormula : CombatFormula {
                 getDefenceRoll(pawn, target)
             } else {
                 throw IllegalArgumentException("Unhandled pawn.")
+            }.let { roll ->
+                // Brimstone ring (OSRS Wiki): "a 25% chance that the target's defensive roll will be reduced by 10% for that attack" -
+                // every magical attack, players and NPCs alike.
+                if (pawn is Player && pawn.hasEquipped(EquipmentType.RING, Items.BRIMSTONE_RING) && pawn.world.randomDouble() < 0.25) {
+                    roll - roll / 10
+                } else {
+                    roll
+                }
             }
 
         val accuracy: Double
@@ -135,6 +143,9 @@ object MagicCombatFormula : CombatFormula {
             if (TargetModifiers.hasImbuedSlayerHelmetTaskBoost(pawn, target)) {
                 hit = Math.floor(hit * TargetModifiers.IMBUED_SLAYER_HELMET_BOOST)
             }
+            // Revenant sceptres: "an additional 50% magic accuracy and damage boost ... when attacking any NPC in the Wilderness",
+            // "also applied to any combat spells cast when it is equipped" (RevenantWeapons).
+            if (pawn is Player && gg.rsmod.plugins.content.items.osrs.RevenantWeapons.wildernessBuff(pawn, target)) hit = Math.floor(hit * 3 / 2)
             // Elemental weakness: + ⌊Base Max × weakness %⌋, after the slayer/salve step (ElementalWeakness).
             hit += Math.floor(baseMax * ElementalWeakness.percent(target, spell) / 100.0)
             // Charged tomes: "stacking multiplicatively with Magic damage bonuses" (Tomes).
@@ -262,6 +273,7 @@ object MagicCombatFormula : CombatFormula {
         if (TargetModifiers.hasImbuedSlayerHelmetTaskBoost(player, target)) {
             smoke = Math.floor(smoke * TargetModifiers.IMBUED_SLAYER_HELMET_BOOST)
         }
+        if (gg.rsmod.plugins.content.items.osrs.RevenantWeapons.wildernessBuff(player, target)) smoke = Math.floor(smoke * 3 / 2)
         var roll = Math.floor(smoke * gg.rsmod.plugins.content.items.osrs.Tomes.accuracyMultiplier(player, target, castingSpell(player)))
         // Ice ancient sceptre: +10 % for ice spells on freezable, not frozen targets (AncientSceptres).
         roll = Math.floor(roll * gg.rsmod.plugins.content.items.osrs.AncientSceptres.iceAccuracyMultiplier(player, target, castingSpell(player)))
@@ -299,13 +311,14 @@ object MagicCombatFormula : CombatFormula {
             Prayers.isActive(player, Prayer.MYSTIC_LORE) -> 0.01
             Prayers.isActive(player, Prayer.MYSTIC_MIGHT) -> 0.02
             Prayers.isActive(player, Prayer.AUGURY) -> 0.04
-            else -> 0.0
+            // Leech Magic carries Augury's +4 % (owner 2026-09-29); the curse book excludes the prayers above.
+            else -> AncientCurses.leechMagicDamage(player)
         }
 
     private fun getEffectiveDefenceLevel(player: Player): Double {
         var effectiveLevel =
             Math.floor(
-                player.skills.getCurrentLevel(Skills.DEFENCE) * getPrayerDefenceMultiplier(player) * AncientCurses.drainMultiplier(player, Skills.DEFENCE),
+                player.skills.getCurrentLevel(Skills.DEFENCE) * getPrayerDefenceMultiplier(player) * AncientCurses.drainMultiplier(player, Skills.DEFENCE) * gg.rsmod.plugins.content.items.osrs.AmuletOfTheDamned.toragDefenceMultiplier(player),
             )
 
         effectiveLevel +=

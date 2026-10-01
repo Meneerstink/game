@@ -10,7 +10,7 @@ import gg.rsmod.plugins.content.mechanics.pvp.emblem.EmblemDialogue.cashOut
 
 on_npc_option(npc = StoreNpcs.DONATOR_STORE, option = "talk-to") {
     player.queue {
-        chatNpc("Welcome to the Donator Store. Everything here is cosmetic and paid with Donator Points.", wrap = true)
+        chatNpc("Welcome to the Donator Store. Gear, kits and prestige items, all paid with Donator Points.", wrap = true)
         when (options("Show me the Donator Store.", "Never mind.")) {
             FIRST_OPTION -> StoreUi.open(player, StoreCatalogue.Shop.DONATOR)
         }
@@ -29,8 +29,12 @@ on_npc_option(npc = StoreNpcs.DEADMAN_STORE, option = "talk-to") {
         val skullOption = if (hasSkull) "" else "I'd like a Deadman's skull."
         // Deadman emblems (owner 2026-09-25) are cashed in here, through the same Deadman Points currency.
         val emblemOption = if (DeadmanEmblem.holdings(player).isEmpty()) "" else "I'd like to cash in my emblem."
+        // Owner layout page 2026-09-29: the Looting bag is a free PvP tool ("geen betaalmuur"), one per player, replaced when lost.
+        val hasBag =
+            listOf(Items.LOOTING_BAG, Items.LOOTING_BAG_OPEN).any { player.inventory.contains(it) || player.bank.contains(it) }
+        val bagOption = if (hasBag) "" else "I'd like a looting bag."
         // options() drops blank entries, so the answer is matched by its text, not its position.
-        val shown = listOf("Show me the Deadman Store.", skullOption, emblemOption, "Never mind.").filter { it.isNotEmpty() }
+        val shown = listOf("Show me the Deadman Store.", skullOption, bagOption, emblemOption, "Never mind.").filter { it.isNotEmpty() }
         when (shown.getOrNull(options(*shown.toTypedArray()) - 1)) {
             emblemOption -> cashOut(StoreNpcs.DEADMAN_STORE)
             shown[0] -> StoreUi.open(player, StoreCatalogue.Shop.DEADMAN)
@@ -38,6 +42,14 @@ on_npc_option(npc = StoreNpcs.DEADMAN_STORE, option = "talk-to") {
                 if (!hasSkull) {
                     if (player.inventory.add(Items.DEADMANS_SKULL).hasSucceeded()) {
                         itemMessageBox("The Emblem Trader hands you a Deadman's skull.", Items.DEADMANS_SKULL)
+                    } else {
+                        chatNpc("You'll need a free space in your backpack for it.")
+                    }
+                }
+            bagOption ->
+                if (!hasBag) {
+                    if (player.inventory.add(Items.LOOTING_BAG).hasSucceeded()) {
+                        itemMessageBox("The Emblem Trader hands you a looting bag.", Items.LOOTING_BAG)
                     } else {
                         chatNpc("You'll need a free space in your backpack for it.")
                     }

@@ -39,6 +39,10 @@ class AnimDef(
     var firstAudibleFrameSound = -1
         private set
 
+    /** Sound id of the first frame sound of any radius, -1 without one (radius 0: only the animating local player hears it). */
+    var firstFrameSound = -1
+        private set
+
     /** Frame ids (`frameset archive << 16 | frame file`); a frame file's bytes 1-2 name its skeleton (AnimBase). */
     val frames: IntArray get() = if (::frameIds.isInitialized) frameIds else IntArray(0)
     val frameLength: Int get() = frameLengths.sum()
@@ -116,6 +120,7 @@ class AnimDef(
                         hasFrameSounds = true
                         // soundInfo: id << 8 | loops << 5 | radius (rev-667 SeqType; tools/cache667/js5.py decodes the same)
                         val info = buf.readMedium()
+                        if (firstFrameSound < 0) firstFrameSound = info ushr 8
                         if (info and 0x1F > 0) {
                             hasAudibleFrameSounds = true
                             if (firstAudibleFrameSound < 0) firstAudibleFrameSound = info ushr 8

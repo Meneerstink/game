@@ -82,6 +82,7 @@ object GuthanLifesteal {
         if (attacker !is Player || damage <= 0 || combatClass != CombatClass.MELEE) return
         if (!isWearingGuthan(attacker)) return
         if (!attacker.world.chance(PROC_CHANCE_NUMERATOR, PROC_CHANCE_DENOMINATOR)) return
-        attacker.heal(damage)
+        // Amulet of the damned: "healing up to 10 Hitpoints beyond the player's base level".
+        attacker.heal(damage, gg.rsmod.plugins.content.items.osrs.AmuletOfTheDamned.guthanOverheal(attacker))
     }
 }

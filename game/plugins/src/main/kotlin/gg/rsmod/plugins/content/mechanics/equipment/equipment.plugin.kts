@@ -115,11 +115,14 @@ fun bind_unequip(
                     player.filterableMessage("You can't remove free Practice PvP gear - it's cleared automatically when the match ends.")
                     return@on_button
                 }
+                val removed = player.equipment[equipment.id]?.id
                 val result = EquipAction.unequip(player, equipment.id)
                 // R04.7: every slot affects combat bonuses, not just weapon/shield - the bonus
                 // screen (interface 667) went stale after unequipping e.g. a helmet or boots
                 // via the ordinary equipment tab, since only WEAPON refreshed it before this.
                 if (result == EquipAction.Result.SUCCESS) {
+                    // Owner 2026-09-29 (taking an item off was silent): the item's own equip sound (EquipSounds), ADAPTED.
+                    if (removed != null) EquipSounds.play(player, removed, equipment)
                     player.refreshBonuses()
                     if (equipment == EquipmentType.WEAPON) {
                         player.sendWeaponComponentInformation()

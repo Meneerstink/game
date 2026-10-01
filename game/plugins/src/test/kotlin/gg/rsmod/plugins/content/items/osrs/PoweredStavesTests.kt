@@ -17,7 +17,7 @@ class PoweredStavesTests {
         assertEquals(2_500, staves.getValue(PoweredStaves.Staff.SWAMP).maxCharges)
         assertEquals(20_000, staves.getValue(PoweredStaves.Staff.SEAS_E).maxCharges)
         assertEquals(20_000, staves.getValue(PoweredStaves.Staff.SWAMP_E).maxCharges)
-        PoweredStaves.Staff.values().filterNot { it.leech }.forEach { staff ->
+        PoweredStaves.Staff.values().filterNot { it.leech || it.revenant }.forEach { staff ->
             val cost = staff.chargeCost.associate { it.id to it.amount }
             assertEquals(1, cost[Items.DEATH_RUNE], "$staff")
             assertEquals(1, cost[Items.CHAOS_RUNE], "$staff")
@@ -35,6 +35,14 @@ class PoweredStavesTests {
         assertEquals(24, PoweredStaves.Staff.SWAMP.baseMaxHit(78))
         assertEquals(31, PoweredStaves.Staff.SWAMP_E.baseMaxHit(99))
         assertEquals(1, PoweredStaves.Staff.SEAS.baseMaxHit(3))
+        // Revenant sceptres (owner 2026-09-29): 1 ether per cast, 16,000 ether cap; Thammaron's ⌊Magic/3⌋ - 8, Accursed Magic/3 - 6.
+        listOf(PoweredStaves.Staff.THAMMARON, PoweredStaves.Staff.ACCURSED).forEach { staff ->
+            assertTrue(staff.revenant)
+            assertEquals(16_000, staff.maxCharges)
+            assertEquals(mapOf(Items.REVENANT_ETHER to 1), staff.chargeCost.associate { it.id to it.amount })
+        }
+        assertEquals(25, PoweredStaves.Staff.THAMMARON.baseMaxHit(99))
+        assertEquals(27, PoweredStaves.Staff.ACCURSED.baseMaxHit(99))
     }
 
     @Test

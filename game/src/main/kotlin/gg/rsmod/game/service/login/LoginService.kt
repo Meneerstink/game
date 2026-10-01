@@ -153,6 +153,18 @@ class LoginService : Service {
         client.channel.attr(GameHandler.SYSTEM_KEY).set(gameSystem)
 
         /*
+         * The client may give up on a slow login and close the socket before the game thread
+         * registered the player. channelInactive then only saw the LoginSystem (no-op), so the
+         * registered player would stay in the world forever and every later login is refused
+         * with "your account has not logged out". getAndSet makes sure only one of this path
+         * and channelInactive terminates the session.
+         */
+        if (!client.channel.isActive) {
+            client.channel.attr(GameHandler.SYSTEM_KEY).getAndSet(null)?.terminate()
+            return
+        }
+
+        /*
          * NOTE(Tom): we should be able to use an parallel task to handle
          * the pipeline work and then schedule for the [client] to log in on the
          * next game cycle after completion. Should benchmark first.

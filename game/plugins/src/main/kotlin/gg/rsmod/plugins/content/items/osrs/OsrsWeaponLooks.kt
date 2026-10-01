@@ -127,9 +127,27 @@ object OsrsWeaponLooks {
             Items.THIRDAGE_LONGSWORD, Items.GILDED_SCIMITAR, Items.KATANA, Items.DRAGON_SCIMITAR_OR, Items.ARCLIGHT, Items.ARCLIGHT_INACTIVE,
             Items.EMBERLIGHT, Items.VOIDWAKER, Items.RUNE_SCIMITAR_GUTHIX, Items.RUNE_SCIMITAR_SARADOMIN, Items.RUNE_SCIMITAR_ZAMORAK,
         )
-        // Stab sword (OSRS Wiki "Belle's folly": Accurate stab / Lunge stab / Slash / Block stab): HUMAN_SWORD_STAB 386, HUMAN_SWORD_LUNGE
-        // 392, HUMAN_SWORD_SLASH 390 (xrsps stab-sword table 386 / 392 / 390 / 386).
-        register(Look(intArrayOf(HUMAN_SWORD_STAB, HUMAN_SWORD_LUNGE, HUMAN_SWORD_SLASH, HUMAN_SWORD_STAB), block = HUMAN_SWORD_DEF), Items.BELLES_FOLLY)
+        // Stab sword (OSRS Wiki "Belle's folly": Accurate stab / Lunge stab / Slash / Block stab). Owner 2026-09-29 ("a weird lunge
+        // attack"): the wiki says "the attack animation for Belle's folly is identical to the Ghrazi rapier" - the rapier set is stab
+        // 8145 GHRAZI_RAPIER_ATTACK, slash 390 HUMAN_SWORD_SLASH, defence 4177 (gameval + LostCity port manifest of OSRS obj 22324).
+        // Revenant chainmaces (gameval WILD_CAVE_CHAINMACE_*): mace styles Pound / Pummel (crush), Spike (stab), Block (crush) -
+        // crush 245, stab 246, defend 7200 (batch revseq).
+        register(
+            Look(
+                intArrayOf(
+                    OsrsSeq.WILD_CAVE_CHAINMACE_CRUSH, OsrsSeq.WILD_CAVE_CHAINMACE_CRUSH, OsrsSeq.WILD_CAVE_CHAINMACE_STAB, OsrsSeq.WILD_CAVE_CHAINMACE_CRUSH,
+                ),
+                block = OsrsSeq.WILD_CAVE_CHAINMACE_DEFEND,
+            ),
+            Items.VIGGORAS_CHAINMACE, Items.VIGGORAS_CHAINMACE_U, Items.URSINE_CHAINMACE, Items.URSINE_CHAINMACE_U,
+        )
+        register(
+            Look(
+                intArrayOf(OsrsSeq.GHRAZI_RAPIER_ATTACK, OsrsSeq.GHRAZI_RAPIER_ATTACK, HUMAN_SWORD_SLASH, OsrsSeq.GHRAZI_RAPIER_ATTACK),
+                block = OsrsSeq.WARGUILD_PARRY_DEFEND,
+            ),
+            Items.BELLES_FOLLY,
+        )
         // Bladed staves (Staff of the dead, Toxic staff, Staff of balance): every melee style swings HUMAN_SCYTHE_SWEEP 440 (per-item OSRS
         // table of the Glabay OSRS server, attack_animations.json: 11791 / 12902 / 12904 -> 440). Block: no source names it (SOURCE_GAP),
         // so the class block stays.
@@ -143,7 +161,8 @@ object OsrsWeaponLooks {
             Look(all(OsrsSeq.HUMAN_AXE_CHOP)),
             Items.TRIDENT_OF_THE_SEAS, Items.TRIDENT_OF_THE_SEAS_FULL, Items.UNCHARGED_TRIDENT, Items.TRIDENT_OF_THE_SWAMP,
             Items.UNCHARGED_TOXIC_TRIDENT, Items.TRIDENT_OF_THE_SEAS_E, Items.UNCHARGED_TRIDENT_E, Items.TRIDENT_OF_THE_SWAMP_E,
-            Items.UNCHARGED_TOXIC_TRIDENT_E, Items.SANGUINESTI_STAFF, Items.SANGUINESTI_STAFF_UNCHARGED, Items.MYSTIC_SMOKE_STAFF,
+            Items.UNCHARGED_TOXIC_TRIDENT_E, Items.THAMMARONS_SCEPTRE, Items.THAMMARONS_SCEPTRE_U, Items.THAMMARONS_SCEPTRE_A, Items.THAMMARONS_SCEPTRE_AU,
+            Items.ACCURSED_SCEPTRE, Items.ACCURSED_SCEPTRE_U, Items.ACCURSED_SCEPTRE_A, Items.ACCURSED_SCEPTRE_AU, Items.SANGUINESTI_STAFF, Items.SANGUINESTI_STAFF_UNCHARGED, Items.MYSTIC_SMOKE_STAFF,
             Items.ANCIENT_SCEPTRE, Items.ANCIENT_SCEPTRE_L, Items.BLOOD_ANCIENT_SCEPTRE, Items.ICE_ANCIENT_SCEPTRE, Items.SMOKE_ANCIENT_SCEPTRE,
             Items.SHADOW_ANCIENT_SCEPTRE, Items.BLOOD_ANCIENT_SCEPTRE_L, Items.ICE_ANCIENT_SCEPTRE_L, Items.SMOKE_ANCIENT_SCEPTRE_L,
             Items.SHADOW_ANCIENT_SCEPTRE_L, Items.PURGING_STAFF, Items.SMOKE_BATTLESTAFF, Items.MIST_BATTLESTAFF, Items.MYSTIC_MIST_STAFF,
@@ -187,6 +206,9 @@ object OsrsWeaponLooks {
             Look(intArrayOf(OsrsSeq.HUMAN_DHSWORD_SLASH, OsrsSeq.HUMAN_DHSWORD_SLASH, OsrsSeq.HUMAN_DHSWORD_CHOP, OsrsSeq.HUMAN_DHSWORD_SLASH)),
             Items.GILDED_2H_SWORD,
         )
+        // Colossal blade: the Barrelchest anchor's player animations - BRAIN_PLAYER_ANCHOR_ATTACK 5865 on every style, _DEFEND 5866
+        // (same ids in the 667 cache, the anchor's own attack; see OsrsItemImportTool owner0929).
+        register(Look(all(5865), block = 5866), Items.COLOSSAL_BLADE)
         // Claws (Chop / Slash slash, Lunge stab, Block slash): slash HUMAN_AXE_CHOP 393 (combat-logger lists the dragon claws under 393),
         // stab D_CLAWS_PUNCH 1067 ("Claw stab").
         register(

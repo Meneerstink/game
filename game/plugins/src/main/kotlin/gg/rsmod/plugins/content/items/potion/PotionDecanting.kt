@@ -5,7 +5,9 @@ import gg.rsmod.game.fs.def.ItemDef
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.plugins.api.cfg.Items
+import gg.rsmod.plugins.api.cfg.Sfx
 import gg.rsmod.plugins.api.ext.message
+import gg.rsmod.plugins.api.ext.playSound
 
 /**
  * RCV-010 A3 (owner live 2026-09-13: potion on potion did nothing): decanting for every real four-dose
@@ -114,6 +116,8 @@ object PotionDecanting {
         if (container == -1) return false
         val name = player.world.definitions.get(ItemDef::class.java, potion.id).name.lowercase()
         player.inventory[slot] = Item(container)
+        // Owner 2026-09-29 (emptying was silent): OSRS / 667 synth 2610 vial_empty.
+        player.playSound(Sfx.VIAL_EMPTY)
         player.message("You empty the $name.")
         return true
     }
@@ -147,12 +151,14 @@ object PotionDecanting {
             val doses = familyDoses(potion.id, family)
             if (doses == 1) {
                 inventory.swap(fromSlot, toSlot)
+                player.playSound(Sfx.VIAL_POUR)
                 player.message(POUR_MESSAGE)
                 return true
             }
             val vialDoses = doses / 2
             inventory[potionSlot] = Item(idFor(family, doses - vialDoses))
             inventory[vialSlot] = Item(idFor(family, vialDoses))
+            player.playSound(Sfx.VIAL_POUR)
             player.message(SPLIT_MESSAGE)
             return true
         }
@@ -169,6 +175,8 @@ object PotionDecanting {
         toDoses -= remaining
         inventory[fromSlot] = Item(if (remaining > 0) idFor(family, remaining) else Items.VIAL)
         inventory[toSlot] = Item(idFor(family, toDoses))
+        // Owner 2026-09-29 (decanting was silent): OSRS / 667 synth 2613 vial_pour on every successful pour.
+        player.playSound(Sfx.VIAL_POUR)
         player.message(POUR_MESSAGE)
         return true
     }

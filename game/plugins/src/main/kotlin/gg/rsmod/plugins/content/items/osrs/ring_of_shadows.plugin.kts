@@ -48,6 +48,9 @@ fun chargeShadowRing(player: Player) {
         player.inventory.remove(Items.RING_OF_SHADOWS_UNCHARGED, 1, assureFullRemoval = true)
         player.inventory.add(Items.RING_OF_SHADOWS)
     }
+    // Owner 2026-09-29 (rings had no charge / uncharge sounds): no OSRS source names them - ADAPTED by name, 2888 lunar_embue_runes
+    // ("Magic Imbue") for charging; uncharging sounds through ItemActionGuard (1650 charge_gone), like every Uncharge.
+    player.playSound(Sfx.LUNAR_EMBUE_RUNES)
     player.message("You add $sets charge${if (sets == 1) "" else "s"} to your ring of shadows. It now has ${shadowCharges(player)}.")
 }
 

@@ -54,6 +54,11 @@ object PoweredStaves {
         val venomChance: Double,
         /** Sanguinesti life leech on successful hits. */
         val leech: Boolean = false,
+        /**
+         * Revenant sceptre ([RevenantWeapons]): charged with revenant ether behind a 1,000-ether activation deposit, stays
+         * activated at 0 ether, may attack players, and is charged / uncharged by revenant_weapons.plugin.kts.
+         */
+        val revenant: Boolean = false,
     ) {
         SEAS(
             Items.TRIDENT_OF_THE_SEAS, Items.UNCHARGED_TRIDENT, Items.TRIDENT_OF_THE_SEAS_FULL, 2_500, 75,
@@ -74,6 +79,16 @@ object PoweredStaves {
         SANGUINESTI(
             Items.SANGUINESTI_STAFF, Items.SANGUINESTI_STAFF_UNCHARGED, null, 20_000, 82,
             listOf(Item(Items.BLOOD_RUNE, 2)), setOf(Items.BLOOD_RUNE), 0, 0.0, leech = true,
+        ),
+
+        // Revenant sceptres (OSRS Wiki): Thammaron's "⌊Magic/3⌋ - 8", Accursed "Magic/3 - 6"; 1 ether per cast.
+        THAMMARON(
+            Items.THAMMARONS_SCEPTRE, Items.THAMMARONS_SCEPTRE_U, null, RevenantWeapons.MAX_ETHER, 60,
+            listOf(Item(Items.REVENANT_ETHER, 1)), setOf(Items.REVENANT_ETHER), -8, 0.0, revenant = true,
+        ),
+        ACCURSED(
+            Items.ACCURSED_SCEPTRE, Items.ACCURSED_SCEPTRE_U, null, RevenantWeapons.MAX_ETHER, 70,
+            listOf(Item(Items.REVENANT_ETHER, 1)), setOf(Items.REVENANT_ETHER), -6, 0.0, revenant = true,
         ),
         ;
 
@@ -127,6 +142,8 @@ object PoweredStaves {
     /** [item]'s staff holding [charges]: uncharged at 0, (full) at the cap where the staff has one, else the charged item. */
     fun withCharges(item: Item, charges: Int): Item {
         val staff = staffFor(item.id) ?: return item
+        // A revenant sceptre stays activated when its ether runs out (RevenantWeapons).
+        if (staff.revenant) return if (item.id == staff.uncharged) item else RevenantWeapons.withEther(item, charges)
         val id =
             when {
                 charges <= 0 -> staff.uncharged

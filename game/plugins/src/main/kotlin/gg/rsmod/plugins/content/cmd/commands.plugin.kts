@@ -2063,6 +2063,51 @@ on_command("testgear", Privilege.OWNER_POWER) {
     player.message("testgear: $granted baseline melee/ranged/magic kit items granted.", type = ChatMessageType.CONSOLE)
 }
 
+/**
+ * Owner 2026-09-29: puts the OSRS-ported gear test list (data/cfg/osrs_gear_testlist.txt, lines "item <id> <amount>",
+ * groups headed "# ===== NAME (n) =====") into the bank. "osrsgear" = every group, "osrsgear <nr>" = one group,
+ * "osrsgear list" = the group numbers. The file is read on every use, so editing it needs no rebuild.
+ */
+on_command("osrsgear", Privilege.OWNER_POWER) {
+    val file = java.io.File("./data/cfg/osrs_gear_testlist.txt")
+    if (!file.exists()) {
+        player.message("osrsgear: ${file.path} not found.", type = ChatMessageType.CONSOLE)
+        return@on_command
+    }
+    val groups = mutableListOf<Pair<String, MutableList<Pair<Int, Int>>>>()
+    file.readLines().forEach { line ->
+        val header = Regex("^# =+ (.+?) \\(\\d+\\) =+").find(line)
+        val entry = Regex("^item (\\d+) (\\d+)").find(line)
+        when {
+            header != null -> groups.add(header.groupValues[1] to mutableListOf())
+            entry != null && groups.isNotEmpty() ->
+                groups.last().second.add(entry.groupValues[1].toInt() to entry.groupValues[2].toInt())
+        }
+    }
+    val arg = player.getCommandArgs().firstOrNull()
+    if (arg == "list") {
+        groups.forEachIndexed { i, (name, items) ->
+            player.message("${i + 1}. $name (${items.size})", type = ChatMessageType.CONSOLE)
+        }
+        return@on_command
+    }
+    val chosen = arg?.toIntOrNull()?.let { listOfNotNull(groups.getOrNull(it - 1)) } ?: groups
+    var added = 0
+    val failed = mutableListOf<Int>()
+    chosen.forEach { (_, items) ->
+        items.forEach { (id, amount) ->
+            if (player.bank.add(id, amount, assureFullInsertion = false).hasSucceeded()) added++ else failed.add(id)
+        }
+    }
+    player.message(
+        "osrsgear: $added items in je bank gezet (${chosen.joinToString { it.first }}).",
+        type = ChatMessageType.CONSOLE,
+    )
+    if (failed.isNotEmpty()) {
+        player.message("osrsgear: ${failed.size} niet gelukt (bank vol?): ${failed.take(20).joinToString()}", type = ChatMessageType.CONSOLE)
+    }
+}
+
 fun grantTestGearKit(player: Player): Int {
     val kit =
         listOf(

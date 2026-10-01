@@ -47,7 +47,8 @@ object Poison {
      */
     fun isImmune(pawn: Pawn): Boolean =
         when (pawn) {
-            is Player -> pawn.timers.has(POISON_IMMUNITY)
+            // Serpentine helm: "immunity to venom and poison" while charged and worn.
+            is Player -> pawn.timers.has(POISON_IMMUNITY) || gg.rsmod.plugins.content.items.osrs.SerpentineHelm.protects(pawn)
             is Npc -> pawn.combatDef.poisonImmunity
             else -> false
         }

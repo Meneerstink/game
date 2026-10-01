@@ -41,7 +41,8 @@ object Venom {
      */
     fun isImmune(pawn: Pawn): Boolean =
         when (pawn) {
-            is Player -> pawn.timers.has(VENOM_IMMUNITY)
+            // Serpentine helm: "immunity to venom and poison" while charged and worn.
+            is Player -> pawn.timers.has(VENOM_IMMUNITY) || gg.rsmod.plugins.content.items.osrs.SerpentineHelm.protects(pawn)
             // The 667 npc data only carries a poison-immunity flag (121 npcs, none flagged venom-immune), so a poison-immune npc
             // (undead, bosses, the Mimic) took full 6-20 venom damage from every toxic weapon. OSRS lists these monsters as
             // "immune to venom and poison"; poison immunity therefore also blocks venom (combat run 2026-09-29).

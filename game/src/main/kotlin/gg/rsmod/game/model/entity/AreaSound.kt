@@ -20,5 +20,11 @@ class AreaSound private constructor(
         this.tile = tile
     }
 
+    /**
+     * A player who must not receive this sound because his client already plays it itself - e.g. a radius-0 cache frame
+     * sound on his own attack sequence, which only the local player hears. Everyone else nearby still does.
+     */
+    var excluded: Player? = null
+
     override val entityType: EntityType = EntityType.AREA_SOUND
 }

@@ -22,6 +22,8 @@ object ChargedItems {
         PoweredStaves.Staff.values().forEach { map[it.charged] = it.uncharged }
         map.putAll(CrystalEquipment.INACTIVE_FOR)
         RevenantBows.CHARGED_FOR.forEach { (uncharged, charged) -> map[charged] = uncharged }
+        RevenantWeapons.CHARGED_FOR.forEach { (uncharged, charged) -> map[charged] = uncharged }
+        map[Items.SERPENTINE_HELM] = Items.SERPENTINE_HELM_UNCHARGED
         map[Items.VENATOR_BOW] = Items.VENATOR_BOW_UNCHARGED
         map[Items.TONALZTICS_OF_RALOS] = Items.TONALZTICS_OF_RALOS_UNCHARGED
         map[Items.TOXIC_STAFF_OF_THE_DEAD] = Items.TOXIC_STAFF_UNCHARGED

@@ -22,13 +22,42 @@ class StoreCatalogueTests {
     }
 
     @Test
-    fun `the Donator shop sells kits only, never a complete ornamented item`() {
+    fun `the Donator shop sells kits, gear and looks, never a complete ornamented item`() {
         val donator = StoreCatalogue.entries(Shop.DONATOR)
         assertTrue(donator.isNotEmpty())
-        // Owner 2026-09-19: besides kits only look-only max cape unlocks (no item is given for those).
-        assertEquals(emptyList(), donator.filter { it.kind != Kind.KIT && it.kind != Kind.UNLOCK }.map { it.purchaseItem })
+        // Owner 2026-09-29 (layout page): kits, gear, 3rd Age and look unlocks; the kit stays the product, never its ornamented result.
+        assertTrue(donator.any { it.kind == Kind.KIT })
+        assertTrue(donator.any { it.kind == Kind.ITEM && it.purchaseItem == Items.PRIMORDIAL_BOOTS })
         val ornamented = OsrsOrnamentKits.ORNAMENTED_RESULTS
         assertEquals(emptyList(), donator.filter { it.purchaseItem in ornamented }.map { it.purchaseItem })
+        // Charged weapons are sold empty/uncharged only (no free charges); the loaded forms are never listed.
+        assertEquals(emptyList(), donator.filter { it.purchaseItem == Items.TOXIC_BLOWPIPE || it.purchaseItem == Items.TRIDENT_OF_THE_SWAMP }.map { it.purchaseItem })
+        assertTrue(donator.any { it.purchaseItem == Items.TOXIC_BLOWPIPE_EMPTY })
+    }
+
+    @Test
+    fun `every shop pages the highest tier and price first and the cheap items last`() {
+        Shop.values().forEach { shop ->
+            val ordered = StoreCatalogue.entries(shop)
+            assertEquals(StoreCatalogue.ENTRIES.filter { it.shop == shop }.toSet(), ordered.toSet(), "$shop lists every entry once")
+            val ranks = ordered.map { (if (it.tier == StoreCatalogue.Tier.NONE) -1 else it.tier.ordinal) to it.price }
+            ranks.zipWithNext().forEach { (a, b) ->
+                assertTrue(a.first > b.first || (a.first == b.first && a.second >= b.second), "$shop: $a before $b")
+            }
+        }
+        assertEquals(StoreCatalogue.Tier.PRESTIGE, StoreCatalogue.entries(Shop.DONATOR).first().tier)
+        assertEquals(StoreCatalogue.Tier.BASIC, StoreCatalogue.entries(Shop.DONATOR).last().tier)
+        assertEquals(Items.DRAGON_WARHAMMER, StoreCatalogue.entries(Shop.LOYALTY).first().purchaseItem)
+        assertEquals(500, StoreCatalogue.entries(Shop.LOYALTY).last().price)
+    }
+
+    @Test
+    fun `imbued rings are upgrades that need the base ring, never sold outright`() {
+        val imbues = StoreCatalogue.ENTRIES.filter { it.category == "Imbue services" }
+        assertEquals(7, imbues.size)
+        imbues.forEach { assertEquals(Kind.UPGRADE, it.kind, "entry ${it.purchaseItem}") }
+        assertEquals(listOf(Items.RING_OF_SUFFERING_R), imbues.single { it.purchaseItem == Items.RING_OF_SUFFERING_RI }.requiredBaseItems)
+        assertEquals(emptyList(), StoreCatalogue.ENTRIES.filter { it.purchaseItem == Items.DIVINE_RUNE_POUCH }.map { it.shop })
     }
 
     @Test

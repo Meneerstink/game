@@ -46,6 +46,19 @@ enum class Food(
     // OSRS: heals 3-22 based on the player's Hitpoints level and can overheal.
     ANGLERFISH(item = Items.ANGLERFISH, overheal = true),
 
+    // Owner 2026-09-29 (OSRS high-level food): OSRS Wiki heals - Marlin 24, Dark crab 22, Bluefin 22, Halibut 20; blighted manta
+    // ray 22, blighted anglerfish as anglerfish, blighted karambwan 18 (combo) - x10 ledger units like every row here. Owner:
+    // blighted food may be eaten everywhere (no Wilderness-only rule).
+    MARLIN(item = Items.MARLIN, heal = 240),
+    DARK_CRAB(item = Items.DARK_CRAB, heal = 220),
+    // OSRS Wiki "Bluefin": "restores 22 Hitpoints and 5 prayer points when eaten" (the prayer part in Foods.eat).
+    BLUEFIN(item = Items.BLUEFIN, heal = 220),
+    // OSRS Wiki "Halibut": "Like cooked karambwan, halibut can be used as a fast food" (2-tick delay, combo after other food).
+    HALIBUT(item = Items.HALIBUT, heal = 200, tickDelay = 2, comboFood = true),
+    BLIGHTED_MANTA_RAY(item = Items.BLIGHTED_MANTA_RAY, heal = 220),
+    BLIGHTED_ANGLERFISH(item = Items.BLIGHTED_ANGLERFISH, overheal = true),
+    BLIGHTED_KARAMBWAN(item = Items.BLIGHTED_KARAMBWAN, heal = 180, tickDelay = 2, comboFood = true),
+
     /**
      * OSRS Wiki "Strange fruit" (owner 2026-09-19 venom rules): "No Hitpoints are restored", restores 30% run energy, "cure poison,
      * venom" and "prevents further re-application of poison or venom for approximately 18 seconds" (Foods.eat).

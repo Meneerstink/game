@@ -53,6 +53,8 @@ object AutocastWeapons {
         setOf(
             Items.ANCIENT_STAFF, Items.MASTER_WAND, Items.KODAI_WAND, Items.DRAGON_HUNTER_WAND,
             Items.NIGHTMARE_STAFF, Items.ELDRITCH_NIGHTMARE_STAFF, Items.VOLATILE_NIGHTMARE_STAFF, Items.BLUE_MOON_SPEAR,
+            // Revenant sceptres "(a)": "autocasting offensive combat spells from the standard spellbook and Ancient Magicks".
+            Items.THAMMARONS_SCEPTRE_A, Items.THAMMARONS_SCEPTRE_AU, Items.ACCURSED_SCEPTRE_A, Items.ACCURSED_SCEPTRE_AU,
         ) + AncientSceptres.ALL
 
     /**
@@ -119,13 +121,15 @@ object AutocastWeapons {
     fun isPoweredStaff(itemId: Int?): Boolean = PoweredStaves.staffFor(itemId) != null
 
     /** Why [weaponId] can or cannot autocast [spell] - null means it can. */
-    fun incompatibility(definition: ItemDef?, spell: CombatSpell): String? {
+    fun incompatibility(definition: ItemDef?, spell: CombatSpell, player: Player? = null): String? {
         if (definition == null || !isAutocastWeapon(definition)) return "You need a magic weapon to autocast spells."
         if (spell.autoCastId <= 0 || spell.componentId == -1) return "That spell can't be autocast."
         val required = requiredWeapons(spell)
         if (required.isNotEmpty() && definition.id !in required) return requiredWeaponMessage(spell)
         if (spell.interfaceId == Autocast.ANCIENT_BOOK) {
-            return if (definition.id in ANCIENT_WEAPONS || definition.id in required) null else "You can't autocast Ancient Magicks with this weapon."
+            // Amulet of the damned with Ahrim's set: "The staff can autocast Ancient Magicks" (AmuletOfTheDamned).
+            val ahrim = player != null && definition.name.startsWith("Ahrim's staff", ignoreCase = true) && gg.rsmod.plugins.content.items.osrs.AmuletOfTheDamned.ahrimCanAutocastAncients(player)
+            return if (definition.id in ANCIENT_WEAPONS || definition.id in required || ahrim) null else "You can't autocast Ancient Magicks with this weapon."
         }
         if (spell == CombatSpell.CRUMBLE_UNDEAD && definition.id !in CRUMBLE_UNDEAD_WEAPONS) return "You can't autocast that spell with this weapon."
         if (definition.id in WAVE_SURGE_ONLY && required.isEmpty() && spell != CombatSpell.CRUMBLE_UNDEAD && !isWaveOrSurge(spell)) {
@@ -194,7 +198,7 @@ object Autocast {
 
     /** selectionValid: the spell belongs to the open spellbook and the wielded weapon may autocast it (no level / rune check). */
     fun isSelectionValid(player: Player, spell: CombatSpell): Boolean =
-        bookOf(spell) == player.getSpellbook() && AutocastWeapons.incompatibility(weaponDef(player), spell) == null
+        bookOf(spell) == player.getSpellbook() && AutocastWeapons.incompatibility(weaponDef(player), spell, player) == null
 
     /**
      * The spell an attack right now would autocast: mode on, a selection, and a weapon that may cast it. Level and runes are NOT
@@ -248,7 +252,7 @@ object Autocast {
         if (spell != null && weapon != null && (AutocastWeapons.isAutocastWeapon(def) || AutocastWeapons.isPoweredStaff(weapon.id))) {
             when {
                 attackedPlayerRecently(player) && AreaState.isDangerous(player.zoneTile()) -> clear(player, Reason.PVP_WEAPON_SWAP)
-                AutocastWeapons.incompatibility(def, spell) != null -> clear(player, Reason.INCOMPATIBLE_WEAPON)
+                AutocastWeapons.incompatibility(def, spell, player) != null -> clear(player, Reason.INCOMPATIBLE_WEAPON)
             }
         }
         // A spell cast by autocast with the old weapon must never fire with the new one.
@@ -269,7 +273,7 @@ object Autocast {
         val def = weaponDef(player)
         val weapon = player.getEquipment(EquipmentType.WEAPON)
         if (weapon != null && (AutocastWeapons.isAutocastWeapon(def) || AutocastWeapons.isPoweredStaff(weapon.id)) &&
-            AutocastWeapons.incompatibility(def, spell) != null
+            AutocastWeapons.incompatibility(def, spell, player) != null
         ) {
             clear(player, Reason.INCOMPATIBLE_WEAPON)
         }
@@ -436,7 +440,7 @@ object Autocast {
         }
         val book = player.getSpellbook()
         val entries = if (book == Spellbook.ANCIENT) l.ANCIENT else if (book == Spellbook.STANDARD) l.STANDARD else emptyList()
-        if (entries.none { entry -> spellFor(entry)?.let { AutocastWeapons.incompatibility(def, it) == null } == true }) {
+        if (entries.none { entry -> spellFor(entry)?.let { AutocastWeapons.incompatibility(def, it, player) == null } == true }) {
             player.message("You can't autocast any spells from your current spellbook with this weapon.")
             return
         }
@@ -444,7 +448,7 @@ object Autocast {
         player.openInterface(l.SELECT_INTERFACE, InterfaceDestination.ATTACK_TAB)
         player.setComponentHidden(l.SELECT_INTERFACE, l.SELECT_STANDARD_LAYER, book != Spellbook.STANDARD)
         player.setComponentHidden(l.SELECT_INTERFACE, l.SELECT_ANCIENT_LAYER, book != Spellbook.ANCIENT)
-        val allowed = entries.filter { entry -> spellFor(entry)?.let { AutocastWeapons.incompatibility(def, it) == null } == true }
+        val allowed = entries.filter { entry -> spellFor(entry)?.let { AutocastWeapons.incompatibility(def, it, player) == null } == true }
         var slot = 0
         l.ALL.forEach { entry ->
             val component = l.componentOf(entry)
@@ -473,7 +477,7 @@ object Autocast {
         val spell = l.entryAt(component)?.let(::spellFor)
         if (spell == null || !isSelectionValid(player, spell)) {
             trace(player, "refused selection component=$component spell=${spell?.name} reason=${Reason.INVALID_REQUEST}")
-            AutocastWeapons.incompatibility(weaponDef(player), spell ?: return closeSelection(player))?.let(player::message)
+            AutocastWeapons.incompatibility(weaponDef(player), spell ?: return closeSelection(player), player)?.let(player::message)
             closeSelection(player)
             return
         }

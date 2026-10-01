@@ -109,8 +109,12 @@ on_button(interfaceId = EQUIPMENT_BONUS_INTERFACE_ID, component = 7) {
                     player.filterableMessage("You can't remove free Practice PvP gear - it's cleared automatically when the match ends.")
                     return@on_button
                 }
+                val removed = player.equipment[slot]?.id
                 val result = EquipAction.unequip(player, slot)
                 if (result == EquipAction.Result.SUCCESS) {
+                    // Owner 2026-09-29 (taking an item off was silent): the item's own equip sound, as on the equipment tab.
+                    val type = EquipmentType.values().firstOrNull { it.id == slot }
+                    if (removed != null && type != null) gg.rsmod.plugins.content.mechanics.equipment.EquipSounds.play(player, removed, type)
                     player.sendWeaponComponentInformation()
                     player.refreshBonuses()
                 } else if (result == EquipAction.Result.UNHANDLED && world.devContext.debugItemActions) {

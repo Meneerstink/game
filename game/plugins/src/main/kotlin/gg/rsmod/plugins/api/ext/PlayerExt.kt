@@ -1453,7 +1453,8 @@ fun Player.getRangedStrengthBonus(): Int =
 
 fun Player.getMagicDamageBonus(): Int = equipmentBonuses[BonusSlot.MAGIC_DAMAGE_BONUS.id]
 
-fun Player.getPrayerBonus(): Int = equipmentBonuses[BonusSlot.PRAYER_BONUS.id]
+/** Amulet of the damned with Verac's set: "an additional +7 Prayer bonus" (AmuletOfTheDamned). */
+fun Player.getPrayerBonus(): Int = equipmentBonuses[BonusSlot.PRAYER_BONUS.id] + gg.rsmod.plugins.content.items.osrs.AmuletOfTheDamned.veracPrayerBonus(this)
 
 fun Player.completedAllQuests(): Boolean {
     return gg.rsmod.plugins.content.quests.QuestStatus.hasAllQuestPoints(this)

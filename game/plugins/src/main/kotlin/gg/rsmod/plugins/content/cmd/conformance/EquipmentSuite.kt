@@ -52,6 +52,9 @@ object EquipmentSuite : Conformance.Suite {
     /** Wiki equipment_slot -> the 667 equipment container slot. */
     private val SLOT = mapOf("head" to 0, "cape" to 1, "neck" to 2, "weapon" to 3, "2h" to 3, "body" to 4, "shield" to 5, "legs" to 7, "hands" to 9, "feet" to 10, "ring" to 12, "ammo" to 13)
 
+    /** Items whose cache name matches several wiki versions: the 667 id -> the exact wiki page (else the first by name). */
+    private val PAGE_BY_ID = mapOf(11283 to "Dragonfire shield#Charged", 11284 to "Dragonfire shield#Uncharged")
+
     /** Wiki bonus field -> index in Pawn.equipmentBonuses (BonusSlot; 667 order puts magic attack before ranged). */
     private val BONUS =
         linkedMapOf(
@@ -122,7 +125,7 @@ object EquipmentSuite : Conformance.Suite {
                         val from = world.currentCycle
                         run.laneStarts[lane] = from
                         try {
-                            item(run, bot, dummy, arena, def, byName[def.name.lowercase()], entry, "W$lane", "D$lane")
+                            item(run, bot, dummy, arena, def, PAGE_BY_ID[def.id]?.let { byName[it.lowercase()] } ?: byName[def.name.lowercase()], entry, "W$lane", "D$lane")
                         } catch (e: Throwable) {
                             run.add(Result(entry, "scenario", Verdict.FAIL, "runs to the end", "threw $e"))
                         }
@@ -182,14 +185,14 @@ object EquipmentSuite : Conformance.Suite {
         }
         bot.addBlock(UpdateBlockType.APPEARANCE)
         wait(1)
-        // Equip through the real inventory option.
-        val option = listOf("Wield", "Wear", "Equip", "Hold").firstOrNull { o -> def.inventoryMenu.any { it?.equals(o, true) == true } }
-        run.expectTrue(e, "has a Wield/Wear/Equip option", option != null, "menu=${def.inventoryMenu.toList()}")
         val invSlot = bot.inventory.getItemIndex(def.id, false)
         if (invSlot < 0) {
             run.add(Result(e, "equips (level 99 bot)", Verdict.FAIL, "item ${def.id} in the inventory", "not in the inventory after adding it"))
             return
         }
+        // Equip through the real inventory option.
+        val option = listOf("Wield", "Wear", "Equip", "Hold").firstOrNull { o -> def.inventoryMenu.any { it?.equals(o, true) == true } }
+        run.expectTrue(e, "has a Wield/Wear/Equip option", option != null, "menu=${def.inventoryMenu.toList()}")
         if (option == null) return
         val c0 = world.currentCycle
         Bots.itemOption(bot, invSlot, option)
@@ -210,7 +213,9 @@ object EquipmentSuite : Conformance.Suite {
         if (b != null) {
             for ((field, idx) in BONUS) {
                 val wiki = b[field]?.takeIf { !it.isNull }?.asText()?.replace("+", "")?.toDoubleOrNull() ?: continue
-                run.check(e, "bonus $field", bot.equipmentBonuses[idx], "wiki" to wiki.toInt())
+                // The server stores magic damage in tenths of a percent (10 = 1 %), so 0.5 % steps stay exact.
+                val measured = if (field == "magic_damage_bonus") bot.equipmentBonuses[idx] / 10.0 else bot.equipmentBonuses[idx]
+                run.check(e, "bonus $field", measured, "wiki" to (if (field == "magic_damage_bonus") wiki else wiki.toInt()), same = { a, b -> a != null && b != null && Math.abs(a.toString().toDouble() - b.toString().toDouble()) < 0.01 })
             }
         }
         if (def.equipSlot == 3) weapon(run, bot, dummy, arena, def, ref, e, botLabel, dummyLabel) else armour(run, bot, dummy, arena, def, ref, e, botLabel, dummyLabel)
@@ -380,7 +385,9 @@ object EquipmentSuite : Conformance.Suite {
         val left = if (thrown) bot.equipment[3]?.amount else bot.equipment[13]?.amount
         val used = if (left == null) null else 5000 - left
         if (def.name.contains("blowpipe", true) || def.name.contains("crystal", true) || def.name.contains("bow of faerdhinen", true)) return
-        run.check(e, "ammo used per shot over $shots shots", used?.let { "%.2f".format(java.util.Locale.ENGLISH, it.toDouble() / shots) }, "osrs" to "1.00", same = { a, b -> a != null && b != null && Math.abs(a.toString().toDouble() - b.toString().toDouble()) <= 0.05 })
+        // OSRS: the dark bow always fires two arrows per shot (special or not); everything else one.
+        val perShot = if (def.name.contains("dark bow", true)) 2.0 else 1.0
+        run.check(e, "ammo used per shot over $shots shots", used?.let { "%.2f".format(java.util.Locale.ENGLISH, it.toDouble() / shots) }, "osrs" to "%.2f".format(java.util.Locale.ENGLISH, perShot), same = { a, b -> a != null && b != null && Math.abs(a.toString().toDouble() - b.toString().toDouble()) <= 0.05 * perShot + 0.01 })
     }
 
     private suspend fun QueueTask.reach(

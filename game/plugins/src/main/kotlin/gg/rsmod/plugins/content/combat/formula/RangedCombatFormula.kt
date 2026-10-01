@@ -301,7 +301,7 @@ object RangedCombatFormula : CombatFormula {
     private fun getEffectiveDefenceLevel(player: Player): Double {
         var effectiveLevel =
             Math.floor(
-                player.skills.getCurrentLevel(Skills.DEFENCE) * getPrayerDefenceMultiplier(player) * AncientCurses.drainMultiplier(player, Skills.DEFENCE),
+                player.skills.getCurrentLevel(Skills.DEFENCE) * getPrayerDefenceMultiplier(player) * AncientCurses.drainMultiplier(player, Skills.DEFENCE) * gg.rsmod.plugins.content.items.osrs.AmuletOfTheDamned.toragDefenceMultiplier(player),
             )
 
         effectiveLevel +=
@@ -339,7 +339,7 @@ object RangedCombatFormula : CombatFormula {
     private fun getPrayerRangedMultiplier(player: Player): Double =
         when {
             gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.getBook(player) == gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.PrayerBook.ANCIENT && !gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.isTurmoilActive(player) ->
-                gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.leechMultiplier(player, Skills.RANGED)
+                gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.leechMultiplier(player, Skills.RANGED, damage = true)
             Prayers.isActive(player, Prayer.SHARP_EYE) -> 1.05
             Prayers.isActive(player, Prayer.HAWK_EYE) -> 1.10
             Prayers.isActive(player, Prayer.EAGLE_EYE) -> 1.15

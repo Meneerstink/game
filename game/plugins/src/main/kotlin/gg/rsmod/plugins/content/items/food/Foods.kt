@@ -14,6 +14,7 @@ import gg.rsmod.plugins.api.cfg.Sfx
 import gg.rsmod.plugins.api.ext.filterableMessage
 import gg.rsmod.plugins.api.ext.hasEquipped
 import gg.rsmod.plugins.api.ext.heal
+import gg.rsmod.plugins.api.ext.restorePrayer
 import gg.rsmod.plugins.api.ext.playSound
 import kotlin.math.max
 import kotlin.random.Random
@@ -27,6 +28,9 @@ object Foods {
 
     /** Audit C-14: the normal-food delay a karambwan leaves behind (same length as its potion delay). */
     const val KARAMBWAN_FOOD_DELAY = 3
+
+    /** OSRS Wiki "Bluefin": "restores 22 Hitpoints and 5 prayer points". */
+    const val BLUEFIN_PRAYER = 5
 
     /** OSRS anglerfish heal at the player's Hitpoints level (3..22), not a fixed amount. */
     fun anglerfishHeal(hitpointsLevel: Int): Int =
@@ -54,7 +58,7 @@ object Foods {
         val heal =
             when {
                 food == Food.KEBAB -> (kebabEffect?.first ?: 0) / Food.LEDGER_UNITS_PER_HITPOINT
-                food == Food.ANGLERFISH -> anglerfishHeal(p.skills.getMaxLevel(Skills.CONSTITUTION))
+                food == Food.ANGLERFISH || food == Food.BLIGHTED_ANGLERFISH -> anglerfishHeal(p.skills.getMaxLevel(Skills.CONSTITUTION))
                 else -> food.hitpoints
             }
 
@@ -62,7 +66,7 @@ object Foods {
         // overheal in this food table.
         val overHeal =
             when (food) {
-                Food.ANGLERFISH -> heal
+                Food.ANGLERFISH, Food.BLIGHTED_ANGLERFISH -> heal
                 else -> 0
             }
 
@@ -86,7 +90,10 @@ object Foods {
             p.timers[ATTACK_DELAY] = p.timers[ATTACK_DELAY] + food.tickDelay
         }
 
-        if (food == Food.KARAMBWAN) {
+        if (food == Food.BLUEFIN) p.restorePrayer(BLUEFIN_PRAYER)
+
+        // Fast food (cooked karambwan, blighted karambwan, halibut): the OSRS combo order food -> potion -> fast food.
+        if (food == Food.KARAMBWAN || food == Food.BLIGHTED_KARAMBWAN || food == Food.HALIBUT) {
             // Eating Karambwans also blocks drinking potions.
             p.timers[POTION_DELAY] = 3
             // Audit C-14: and normal food, so the OSRS combo order is food -> potion -> karambwan (karambwan -> shark is refused).
