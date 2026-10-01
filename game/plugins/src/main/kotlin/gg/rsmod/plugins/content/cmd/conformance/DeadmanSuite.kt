@@ -1644,8 +1644,23 @@ object DeadmanSuite : Conformance.Suite {
         combat.forEach { c.skills.setBaseLevel(it, 99) }
         c.calculateAndSetCombatLevel()
         wait(2)
-        val (pvpFought, _) = order(c, "FC")
+        val (pvpFought, pvpHit) = order(c, "FC")
         run.expectTrue(e, "control: the familiar attacks a player in the bracket, both in danger", pvpFought, "never fought (${a.combatLevel} vs ${c.combatLevel})")
+        // Its hit is the owner's attack: the owner is skulled, the victim is not, and the victim may hit the owner back unskulled.
+        val skull = gg.rsmod.plugins.content.mechanics.pvp.PvpSkull
+        if (!pvpHit) {
+            run.notTested(e, "familiar skull", "no familiar hitsplat on FC")
+        } else {
+            run.expectTrue(e, "a familiar's hit on an unskulled player skulls its owner", skull.isSkulled(a), "owner not skulled")
+            run.expectTrue(e, "the familiar's victim is not skulled", !skull.isSkulled(c), "victim skulled")
+            wield(c, Item(Items.ABYSSAL_WHIP))
+            val back = run.world.currentCycle
+            c.attack(a)
+            var landed = false
+            for (i in 0 until 8) { a.setCurrentLifepoints(a.getMaximumLifepoints()); wait(1); if (hitTypes(run, "FA", back).isNotEmpty()) { landed = true; break } }
+            c.resetInteractions(); Combat.reset(c)
+            run.expectTrue(e, "the victim hits the owner back without a skull (retaliation)", landed && !skull.isSkulled(c), "landed=$landed skulled=${skull.isSkulled(c)}")
+        }
         gg.rsmod.plugins.content.skills.summoning.Familiar.current(a)?.let { run.world.remove(it) }
     }
 }

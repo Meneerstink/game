@@ -299,9 +299,11 @@ fun Pawn.dealHit(
     // Deadman skull (owner 2026-09-18, MAJOR): the attacker is skulled when this hitsplat registers
     // on the other player - the first hit action, so it runs the cycle the hitmark is written and
     // never for a cancelled hit. Every melee/ranged/magic/special route deals through here.
-    if (this is Player && target is Player) {
-        val attacker = this
-        hit.addAction { PvpSkull.onHitRegistered(attacker, target) }
+    // ROOT_CAUSES #115: a familiar fights for its owner (DAMAGE_CREDIT_ATTR) - its hit on a player is the owner's attack (skull,
+    // and the victim's right to retaliate without one); it gave neither.
+    val skullAttacker = this as? Player ?: (attr[DAMAGE_CREDIT_ATTR]?.get() as? Player)
+    if (skullAttacker != null && target is Player) {
+        hit.addAction { PvpSkull.onHitRegistered(skullAttacker, target) }
     }
 
     // Special attacks give the normal combat experience for their damage (SpecialAttackXp, OSRS Wiki "Combat").
