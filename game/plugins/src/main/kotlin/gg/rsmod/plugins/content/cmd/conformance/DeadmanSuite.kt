@@ -42,6 +42,8 @@ import gg.rsmod.plugins.content.combat.getCombatTarget
  *   once; hit by a player the body stays and can still be killed for its loot; skulled it is held for the 7-second rule.
  * - pvm: killed by an npc the items go to the gravestone (no key, no ground loot); hit by a player and then killed by the npc it is
  *   still a PvP death - the player gets the loot key (DeathResolver aggressor window).
+ * - veng: Vengeance Other on the real spell-on-player packet - the 30-second delay is the caster's (OSRS Wiki), an already venged
+ *   target is refused, a hit rebounds 75% (rounded down, min 1), entering a player-owned house clears it.
  */
 object DeadmanSuite : Conformance.Suite {
     override suspend fun QueueTask.run(
@@ -72,6 +74,7 @@ object DeadmanSuite : Conformance.Suite {
         scenario("keys") { lootKeys(run, arena) }
         scenario("xlog") { xLog(run, arena) }
         scenario("pvm") { pvmDeath(run, arena) }
+        scenario("veng") { vengeance(run, arena) }
     }
 
     /** Hitsplat types [who] received since [from], in order. */
@@ -876,5 +879,99 @@ object DeadmanSuite : Conformance.Suite {
         a.attr.remove(keys.SLOTS)
         keys.KEY_IDS.forEach { id -> a.inventory.remove(id, a.inventory.getItemCount(id)) }
         run.remove(giant)
+    }
+
+    // ---- veng: Vengeance / Vengeance Other -------------------------------------------------------------------------------
+
+    private suspend fun QueueTask.vengeance(
+        run: Conformance.Run,
+        arena: Tile,
+    ) {
+        val e = "veng"
+        val veng = gg.rsmod.plugins.content.mechanics.combatresponse.Vengeance
+        val a = run.bot(arena, "VA")
+        val b = run.bot(arena.transform(1, 0), "VB")
+        val c = run.bot(arena.transform(0, 1), "VC")
+        val d = run.bot(arena.transform(1, 1), "VD")
+        wait(2)
+        for (p in listOf(a, b, c, d)) {
+            reset(p, p.tile)
+            veng.clear(p)
+            p.timers.remove(gg.rsmod.game.model.timer.VENGEANCE_COOLDOWN)
+            gg.rsmod.plugins.content.magic.Spellbooks.select(p, gg.rsmod.plugins.api.Spellbook.LUNAR)
+            p.inventory.add(Items.ASTRAL_RUNE, 100)
+            p.inventory.add(Items.DEATH_RUNE, 100)
+            p.inventory.add(Items.EARTH_RUNE, 300)
+        }
+        val component = gg.rsmod.plugins.content.magic.SpellbookData.VENGEANCE_OTHER.component
+        fun vengeanceOther(caster: Client, target: Client) = Bots.inject(caster, gg.rsmod.game.message.impl.OpPlayerTMessage(target.index, (430 shl 16) or component, -1, 0))
+        fun msgs(who: String, from: Int) = run.recording.of(who, "msg").filter { it.cycle >= from && it.text.startsWith("MessageGameMessage") }
+            .joinToString(" / ") { it.text.substringAfter("message=").take(70) }
+
+        // 1. A casts Vengeance Other on B: B is venged, the 30-second delay is A's, not B's.
+        vengeanceOther(a, b)
+        wait(3)
+        run.expectTrue(e, "Vengeance Other: the target is venged", veng.isActive(b), "not active")
+        run.expectTrue(e, "Vengeance Other: the caster gets the 30-second delay", veng.isOnCooldown(a), "no cooldown on the caster")
+        run.expectTrue(e, "Vengeance Other: the target keeps his own Vengeance free", !veng.isOnCooldown(b),
+            "OSRS Wiki: \"only be cast every 30 seconds by the same caster\"")
+
+        // 2. A again at once, on C: refused by A's delay.
+        val c2 = run.world.currentCycle
+        vengeanceOther(a, c)
+        wait(3)
+        run.expectTrue(e, "the same caster within 30 seconds: refused", !veng.isActive(c) && msgs("VA", c2).contains("every 30 seconds"), msgs("VA", c2))
+
+        // 3. D on the already venged B: refused.
+        val c3 = run.world.currentCycle
+        vengeanceOther(d, b)
+        wait(3)
+        run.expectTrue(e, "a target that is already venged: refused", !veng.isOnCooldown(d) && msgs("VD", c3).contains("already has vengeance"), msgs("VD", c3))
+
+        // 4. C hits B: 75 % (rounded down, at least 1) comes back on C, and B's vengeance is used up.
+        wield(c, Item(Items.ABYSSAL_WHIP))
+        val splat = Regex("type=(\\d+) dmg=(\\d+)")
+        val c4 = run.world.currentCycle
+        c.attack(b)
+        var dealt = -1
+        for (i in 0 until 40) {
+            b.setCurrentLifepoints(b.getMaximumLifepoints())
+            c.setCurrentLifepoints(c.getMaximumLifepoints())
+            wait(1)
+            dealt = run.recording.of("VB", "out").filter { it.cycle >= c4 && it.text.startsWith("hits ") }
+                .flatMap { ev -> splat.findAll(ev.text).map { it.groupValues[2].toInt() }.toList() }.firstOrNull { it > 0 } ?: -1
+            if (dealt > 0) break
+        }
+        wait(2)
+        c.resetInteractions()
+        Combat.reset(c)
+        b.resetInteractions()
+        Combat.reset(b)
+        val reflected = run.recording.of("VC", "out").filter { it.cycle >= c4 && it.text.startsWith("hits ") }
+            .flatMap { ev -> splat.findAll(ev.text).filter { it.groupValues[1].toInt() == gg.rsmod.plugins.api.HitType.REFLECTED.id }.map { it.groupValues[2].toInt() }.toList() }
+        if (dealt <= 0) {
+            run.notTested(e, "vengeance rebound", "no damaging hit on B in 40 ticks")
+        } else {
+            run.check(e, "rebound on the attacker", reflected.firstOrNull(), "OSRS Wiki Vengeance: 75%, rounded down, min 1" to maxOf(1, dealt * 3 / 4))
+            run.expectTrue(e, "vengeance used up by the hit", !veng.isActive(b), "still active")
+        }
+
+        // 5. Entering a player-owned house clears it (OSRS Wiki "Vengeance": "when teleporting into a player-owned house").
+        reset(d, arena.transform(1, 1))
+        veng.activate(d)
+        d.inventory.add(Items.TELEPORT_TO_HOUSE, 1)
+        wait(1)
+        val start = d.tile
+        Bots.itemOption(d, d.inventory.getItemIndex(Items.TELEPORT_TO_HOUSE, skipAttrItems = false), "Break")
+        var arrived = false
+        for (i in 0 until 20) {
+            wait(1)
+            if (!d.tile.isWithinRadius(start, 30)) { arrived = true; break }
+        }
+        if (!arrived) {
+            run.notTested(e, "house clears vengeance", "the house tablet did not move him (${msgs("VD", run.world.currentCycle - 25)})")
+        } else {
+            run.expectTrue(e, "entering the house clears vengeance", !veng.isActive(d), "still active at ${d.tile}")
+        }
     }
 }

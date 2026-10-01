@@ -142,13 +142,18 @@ on_magic_spell_button("Vengeance") { metadata ->
 on_spell_on_player(430, SpellbookData.VENGEANCE_OTHER.component) {
     val target = player.getInteractingPlayer()
     val metadata = spell(SpellbookData.VENGEANCE_OTHER)
-    if (Vengeance.isOnCooldown(target)) {
-        player.message("That player has already cast vengeance recently.")
+    // Void VengeanceOther: a target that is already venged is refused; the 30-second delay is the caster's (Vengeance.activateOn).
+    if (Vengeance.isActive(target)) {
+        player.message("This player already has vengeance cast.")
+        return@on_spell_on_player
+    }
+    if (Vengeance.isOnCooldown(player)) {
+        player.message("You can only cast vengeance spells every 30 seconds.")
         return@on_spell_on_player
     }
     if (player.castLunar(metadata, xp = 108.0, animation = 4411, graphic = -1, sound = Sfx.LUNAR_VENGENCE)) {
         target.graphic(725, 96)
-        Vengeance.activate(target)
+        Vengeance.activateOn(player, target)
         target.message("${player.username} has cast vengeance on you.")
     }
 }

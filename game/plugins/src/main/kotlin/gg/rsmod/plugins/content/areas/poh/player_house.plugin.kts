@@ -84,6 +84,8 @@ fun enterHouse(player: Player): Boolean {
         return false
     }
     player.moveTo(arrival)
+    // OSRS Wiki "Vengeance": "the effect will wear off upon logout or when teleporting into a player-owned house".
+    gg.rsmod.plugins.content.mechanics.combatresponse.Vengeance.clear(player)
     return true
 }
 

@@ -20,8 +20,8 @@ import kotlin.math.max
  * itself (rune consumption, level requirement, spellbook navigation) is out of scope for the
  * P6 combat-response foundation pass.
  *
- * Not implemented (no source found / explicitly out of scope this pass): Vengeance being
- * cleared on entering a player-owned house - this codebase has no POH system yet.
+ * Wears off when the player enters a player-owned house ([clear], player_house.plugin.kts; OSRS Wiki "Vengeance") and on
+ * logout (the attribute is not persisted).
  */
 object Vengeance {
     const val REFLECT_PERCENT = 0.75
@@ -41,6 +41,26 @@ object Vengeance {
         pawn.attr[VENGEANCE_ACTIVE_ATTR] = true
         pawn.timers[VENGEANCE_COOLDOWN] = COOLDOWN_TICKS
         return true
+    }
+
+    /**
+     * Vengeance Other (OSRS Wiki "Vengeance Other": "Vengeance spells may only be cast every 30 seconds by the same caster"; Void
+     * VengeanceOther: the delay is the caster's): primes [target] and starts the cooldown on [caster] only. Until 2026-10-01 the
+     * cooldown went on the target, so a teammate's Vengeance Other locked the target out of his own Vengeance for 30 seconds while
+     * the caster could recast at once.
+     */
+    fun activateOn(
+        caster: Pawn,
+        target: Pawn,
+    ): Boolean {
+        if (isOnCooldown(caster)) return false
+        target.attr[VENGEANCE_ACTIVE_ATTR] = true
+        caster.timers[VENGEANCE_COOLDOWN] = COOLDOWN_TICKS
+        return true
+    }
+
+    fun clear(pawn: Pawn) {
+        pawn.attr.remove(VENGEANCE_ACTIVE_ATTR)
     }
 
     fun onIncomingHit(
