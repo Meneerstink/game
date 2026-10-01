@@ -38,6 +38,8 @@ import gg.rsmod.plugins.content.combat.getCombatTarget
  *   (4.8 s; the 12 s PvP timer is not used on Deadman worlds), and can be after that.
  * - keys: loot keys over six real kills - one key per kill, a killed key carrier hands every key's loot to his killer (contents
  *   conserved), at five keys the next kill says the limit message and the loot lies on the ground for the killer.
+ * - xlog: closing the client (Player.requestLogout, what a dropped channel does): unskulled and out of combat the body leaves at
+ *   once; hit by a player the body stays and can still be killed for its loot; skulled it is held for the 7-second rule.
  */
 object DeadmanSuite : Conformance.Suite {
     override suspend fun QueueTask.run(
@@ -66,6 +68,7 @@ object DeadmanSuite : Conformance.Suite {
         scenario("guards") { guards(run) }
         scenario("single") { singleWay(run, arena) }
         scenario("keys") { lootKeys(run, arena) }
+        scenario("xlog") { xLog(run, arena) }
     }
 
     /** Hitsplat types [who] received since [from], in order. */
@@ -721,5 +724,73 @@ object DeadmanSuite : Conformance.Suite {
             p.attr.remove(keys.SLOTS)
             keys.KEY_IDS.forEach { id -> p.inventory.remove(id, p.inventory.getItemCount(id)) }
         }
+    }
+
+    // ---- xlog: closing the client during a fight --------------------------------------------------------------------------
+
+    private suspend fun QueueTask.xLog(
+        run: Conformance.Run,
+        arena: Tile,
+    ) {
+        val e = "xlog"
+        val world = run.world
+        fun online(p: Client) = world.players.contains(p)
+        suspend fun goneWithin(p: Client, ticks: Int): Int? {
+            for (i in 1..ticks) {
+                wait(1)
+                if (!online(p)) return i
+            }
+            return null
+        }
+
+        // 1. Unskulled and out of combat: the body leaves at once.
+        val calm = run.bot(arena.transform(0, 3), "XC")
+        wait(2)
+        calm.timers.remove(gg.rsmod.game.model.timer.SKULL_ICON_DURATION_TIMER)
+        calm.requestLogout()
+        val calmGone = goneWithin(calm, 5)
+        run.expectTrue(e, "unskulled, out of combat: X-log leaves within 3 ticks", calmGone != null && calmGone <= 3, "gone after $calmGone ticks")
+
+        // 2. Hit by a player, then the client closes: the body stays, the attacker can still kill it and takes the loot key.
+        val a = run.bot(arena, "XA")
+        val v = run.bot(arena.transform(1, 0), "XV")
+        wait(2)
+        wield(a, Item(Items.ABYSSAL_WHIP))
+        v.inventory.add(Items.AMULET_OF_FURY, 1)
+        a.attack(v)
+        val c2 = world.currentCycle
+        for (i in 0 until 12) {
+            wait(1)
+            if (run.recording.of("XV", "out").any { it.cycle >= c2 && it.text.startsWith("hits ") }) break
+        }
+        v.requestLogout()
+        wait(3)
+        run.expectTrue(e, "hit by a player: the body stays after the client closed", online(v), "logged out at once")
+        v.setCurrentLifepoints(10)
+        var died = false
+        for (i in 0 until 40) {
+            a.setCurrentLifepoints(a.getMaximumLifepoints())
+            wait(1)
+            if (v.isDead()) died = true
+            if (!online(v)) break
+        }
+        run.expectTrue(e, "hit by a player: the X-logged body can still be killed", died, "online=${online(v)} dead=${v.isDead()} lp=${v.getCurrentLifepoints()}")
+        val keyLoot = gg.rsmod.plugins.content.mechanics.pvp.LootKeys.heldKeyIndexes(a).flatMap { gg.rsmod.plugins.content.mechanics.pvp.LootKeys.slotItems(a, it) }
+        run.expectTrue(e, "hit by a player: the killer gets the X-logger's loot", keyLoot.any { it.id == Items.AMULET_OF_FURY }, "key loot=$keyLoot")
+        val vGone = goneWithin(v, 30)
+        run.expectTrue(e, "hit by a player: the body leaves after the death", vGone != null, "still online")
+        a.resetInteractions()
+        Combat.reset(a)
+        a.attr.remove(gg.rsmod.plugins.content.mechanics.pvp.LootKeys.SLOTS)
+
+        // 3. Skulled, out of combat: held for the 7-second rule (Player.requestLogout: 12 ticks), then gone.
+        val s = run.bot(arena.transform(0, -3), "XS")
+        wait(2)
+        gg.rsmod.plugins.content.mechanics.pvp.PvpSkull.applyTestSkull(s)
+        s.requestLogout()
+        wait(5)
+        run.expectTrue(e, "skulled: the body stays after the client closed", online(s), "logged out at once")
+        val sGone = goneWithin(s, 15)
+        run.expectTrue(e, "skulled: the body leaves once the 7-second hold ran out", sGone != null, "still online 20 ticks later")
     }
 }
