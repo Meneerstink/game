@@ -88,6 +88,7 @@ object DeadmanSuite : Conformance.Suite {
         scenario("phantom") { phantomStrike(run, arena) }
         scenario("dupe") { dropOnDeath(run, arena) }
         scenario("skull") { skulls(run, arena) }
+        scenario("hamstring") { hamstring(run, arena) }
     }
 
     /** Hitsplat types [who] received since [from], in order. */
@@ -1420,5 +1421,63 @@ object DeadmanSuite : Conformance.Suite {
         repeat(10) { wait(1) }
         run.expectTrue(e, "moving again resumes the countdown", a.timers[timer] < later, "was $later now ${a.timers[timer]}")
         clear(a, b, c)
+    }
+
+    // ---- hamstring: Morrigan's throwing axe special -------------------------------------------------------------------
+
+    private suspend fun QueueTask.hamstring(
+        run: Conformance.Run,
+        arena: Tile,
+    ) {
+        val e = "hamstring"
+        val start = arena.transform(0, -6)
+        val a = run.bot(arena.transform(-3, -6), "HA")
+        val b = run.bot(start, "HB")
+        wait(2)
+        reset(a, arena.transform(-3, -6))
+        reset(b, start)
+        wield(a, Item(Items.MORRIGANS_THROWING_AXE, 100))
+        var thrown = false
+        for (attempt in 0 until 6) {
+            AttackTab.setEnergy(a, 100)
+            a.setVarp(AttackTab.SPECIAL_ATTACK_VARP, 1)
+            a.attack(b)
+            for (t in 0 until 8) {
+                b.setCurrentLifepoints(b.getMaximumLifepoints())
+                wait(1)
+                if (AttackTab.getEnergy(a) < 100) { thrown = true; break }
+            }
+            a.resetInteractions(); Combat.reset(a); b.resetInteractions(); Combat.reset(b)
+            if (thrown) break
+            wait(4)
+        }
+        if (!thrown) {
+            run.notTested(e, "hamstring", "no special thrown in 6 attempts")
+            return
+        }
+        val left = b.timers[gg.rsmod.game.model.timer.HAMSTRING_TIMER]
+        run.expectTrue(e, "the target is hamstrung for a minute", b.attr.has(gg.rsmod.game.model.attr.HAMSTRING) && left in 90..100, "timer=$left",
+            "OSRS Wiki Morrigan's throwing axe: for the next minute")
+
+        /** Run energy B spends on 5 ticks of running from [from] towards [to]. */
+        suspend fun drainOver(from: Tile, to: Tile): Double {
+            b.moveTo(from)
+            wait(1)
+            b.runEnergy = 100.0
+            b.setVarp(gg.rsmod.plugins.api.cfg.Varps.RUN_STATE, 1)
+            b.walkTo(to)
+            repeat(5) { wait(1) }
+            val spent = 100.0 - b.runEnergy
+            b.stopMovement()
+            return spent
+        }
+        val hamstrung = drainOver(start, start.transform(0, 14))
+        b.attr.remove(gg.rsmod.game.model.attr.HAMSTRING)
+        b.timers.remove(gg.rsmod.game.model.timer.HAMSTRING_TIMER)
+        val normal = drainOver(start, start.transform(0, 14))
+        val ratio = if (normal > 0) hamstrung / normal else 0.0
+        run.expectTrue(e, "hamstrung run energy drains 6x faster", ratio in 5.5..6.5, "hamstrung=%.2f normal=%.2f ratio=%.2f".format(hamstrung, normal, ratio),
+            "OSRS Wiki Morrigan's throwing axe: drain 6x faster")
+        b.setVarp(gg.rsmod.plugins.api.cfg.Varps.RUN_STATE, 0)
     }
 }

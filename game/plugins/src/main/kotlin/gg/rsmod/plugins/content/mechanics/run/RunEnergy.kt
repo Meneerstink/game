@@ -21,6 +21,10 @@ object RunEnergy {
     private const val BASE_DRAIN = 0.7
     private const val DRAIN_DELTA_PER_AGILITY_LVL = 0.002
 
+    /** OSRS Wiki "Morrigan's throwing axe" (all versions, Deadman Mode included): Hamstring makes the target's run energy
+     * "drain 6x faster" for the next minute (was 4, unsourced). */
+    const val HAMSTRING_DRAIN_MULTIPLIER = 6
+
     fun toggle(p: Player) {
         if (p.isResting()) {
             return
@@ -44,7 +48,7 @@ object RunEnergy {
                 var decrement = (BASE_DRAIN - agilityDrainDelta) / weightDrainFactor
 
                 if (p.attr.has(HAMSTRING)) {
-                    decrement *= 4
+                    decrement *= HAMSTRING_DRAIN_MULTIPLIER
                 }
                 // OSRS stamina potions: "a 70% reduction in run energy depletion" while the effect lasts (StaminaPotions).
                 decrement *= gg.rsmod.plugins.content.items.potion.StaminaPotions.drainMultiplier(p)
