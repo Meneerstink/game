@@ -11,6 +11,7 @@ import gg.rsmod.plugins.api.EquipmentType
 import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.api.ext.hit
 import gg.rsmod.plugins.content.combat.Combat
+import gg.rsmod.plugins.content.combat.getCombatTarget
 
 /**
  * `conform deadman` - Deadman Mode PvP rules measured on headless bots (owner 2026-10-01: breaches, DMM guards, teleports, deaths
@@ -25,6 +26,10 @@ import gg.rsmod.plugins.content.combat.Combat
  *   wording): unskulled and not hit in 7 s -> instant; unskulled and hit by a player -> refused with "You must be out of combat for
  *   another X seconds to teleport."; skulled -> 7-second countdown, then the teleport; a hit, a Tele Block or a death during the
  *   countdown stops it for good.
+ * - guards: CityGuards (OSRS Wiki "Guard (Deadman Mode)", "Wizguard") in Varrock square: an unskulled player is left alone; a
+ *   skulled one is attacked with visible hitsplats, also through Protect from Melee; guards stop the moment he leaves the zone or
+ *   loses the skull and never step out of the zone; an unskulled player cannot attack a guard ("You probably don't want to do
+ *   that."); a skulled player killed by guards leaves public ground loot and nobody gets a loot key (owner 2026-09-26).
  */
 object DeadmanSuite : Conformance.Suite {
     override suspend fun QueueTask.run(
@@ -50,6 +55,7 @@ object DeadmanSuite : Conformance.Suite {
         scenario("switch") { switchOnApproach(run, arena) }
         scenario("death") { pvpDeath(run, arena) }
         scenario("teleport") { teleports(run, arena) }
+        scenario("guards") { guards(run) }
     }
 
     /** Hitsplat types [who] received since [from], in order. */
@@ -256,7 +262,9 @@ object DeadmanSuite : Conformance.Suite {
             return
         }
         val varrock = gg.rsmod.plugins.content.magic.teleports.TeleportSpell.VARROCK.endArea
-        fun inVarrock() = varrock.contains(t.tile)
+        // The landing is the spell area's tile or, when that one is taken, a walkable tile up to Landing.SEARCH_RADIUS beside it.
+        val near = gg.rsmod.game.model.collision.Landing.SEARCH_RADIUS
+        fun inVarrock() = t.tile.x in varrock.bottomLeftX - near..varrock.topRightX + near && t.tile.z in varrock.bottomLeftZ - near..varrock.topRightZ + near
 
         suspend fun prepare(skulled: Boolean) {
             reset(t, arena)
@@ -358,5 +366,152 @@ object DeadmanSuite : Conformance.Suite {
         val afterDeath = landedWithin(20)
         run.expectTrue(e, "skulled, killed during the countdown: respawned", respawned, "tile=${t.tile} dead=${t.isDead()}")
         run.expectTrue(e, "skulled, killed during the countdown: no teleport after the respawn", afterDeath == null, "landed after $afterDeath ticks")
+    }
+
+    // ---- guards: Deadman city guards in Varrock square --------------------------------------------------------------------
+
+    private suspend fun QueueTask.guards(run: Conformance.Run) {
+        val e = "guards"
+        val zones = gg.rsmod.plugins.content.mechanics.pvp.GuardedZones
+        val guards = gg.rsmod.plugins.content.mechanics.pvp.CityGuards
+        val square = Tile(3213, 3428, 0)
+        if (!guards.isGuardedZone(square)) {
+            run.notTested(e, "all", "$square is not a guarded zone")
+            return
+        }
+        // The nearest walkable tile outside the zone, straight west of the square.
+        val outside = (1..120).map { square.transform(-it, 0) }.firstOrNull { tile ->
+            !zones.contains(tile) && !run.world.collision.isClipped(tile)
+        }
+        val g = run.bot(square, "GG")
+        wait(2)
+        val splat = Regex("type=(\\d+) dmg=(\\d+)")
+        fun guardsOnG() = run.world.npcs.entries.filterNotNull().filter { guards.isGuard(it) && it.getCombatTarget() === g }
+        fun hitsSince(c: Int) = run.recording.of("GG", "out").filter { it.cycle >= c && it.text.startsWith("hits ") }
+            .flatMap { ev -> splat.findAll(ev.text).map { it.groupValues[2].toInt() }.toList() }
+        suspend fun hold(ticks: Int) = repeat(ticks) {
+            g.setCurrentLifepoints(g.getMaximumLifepoints())
+            wait(1)
+        }
+        fun stopAll() {
+            guards.resetDamageRamp(g)
+            g.timers.remove(gg.rsmod.game.model.timer.SKULL_ICON_DURATION_TIMER)
+            g.attr.remove(gg.rsmod.plugins.content.mechanics.pvp.LootKeys.SLOTS)
+        }
+
+        // 1. Unskulled: left alone.
+        stopAll()
+        reset(g, square)
+        val c1 = run.world.currentCycle
+        hold(20)
+        run.check(e, "unskulled in the zone: guard hits in 20 ticks", hitsSince(c1).size, "wiki: guards act only on PK-skulled players" to 0)
+
+        // 2. Skulled: attacked, hits visible, Protect from Melee does not stop the damage.
+        gg.rsmod.plugins.content.mechanics.pvp.PvpSkull.applyTestSkull(g)
+        g.skills.setBaseLevel(gg.rsmod.plugins.api.Skills.PRAYER, 99)
+        g.setCurrentPrayerPoints(99)
+        gg.rsmod.plugins.content.mechanics.prayer.Prayers.activate(g, gg.rsmod.plugins.content.mechanics.prayer.Prayer.PROTECT_FROM_MELEE)
+        val c2 = run.world.currentCycle
+        var attackers = 0
+        for (i in 0 until 16) {
+            g.setCurrentLifepoints(g.getMaximumLifepoints())
+            g.setCurrentPrayerPoints(99)
+            wait(1)
+            attackers = maxOf(attackers, guardsOnG().size)
+        }
+        val hits = hitsSince(c2)
+        run.expectTrue(e, "skulled in the zone: guards attack within 16 ticks", attackers >= 1, "guards on him: $attackers")
+        run.expectTrue(e, "skulled: guard hits show hitsplats", hits.isNotEmpty(), "splats=$hits")
+        run.expectTrue(e, "skulled + Protect from Melee: guards still deal damage", hits.any { it > 0 }, "splats=$hits")
+        gg.rsmod.plugins.content.mechanics.prayer.Prayers.deactivateAll(g)
+
+        // 3. Leaves the zone: guards stop at once and stay inside the zone.
+        if (outside == null) {
+            run.notTested(e, "leaving the zone", "no walkable tile west of $square outside the zone")
+        } else {
+            val left = run.world.currentCycle
+            g.setCurrentLifepoints(g.getMaximumLifepoints())
+            g.moveTo(outside)
+            wait(1)
+            g.setCurrentLifepoints(g.getMaximumLifepoints())
+            val still = guardsOnG().map { "${it.id}#${it.index}@${it.tile}" }
+            run.expectTrue(e, "left the zone: no guard targets him a tick later", still.isEmpty(), "still: $still")
+            hold(4) // an arrow or Ice Barrage already in flight may still land (projectile delay)
+            run.note("hits landing in the 5 ticks after leaving: ${hitsSince(left)}")
+            val c3 = run.world.currentCycle
+            var strayGuard: String? = null
+            for (i in 0 until 15) {
+                g.setCurrentLifepoints(g.getMaximumLifepoints())
+                wait(1)
+                run.world.npcs.entries.filterNotNull().filter { guards.isGuard(it) && it.tile.isWithinRadius(outside, 20) }.forEach {
+                    if (!zones.contains(it.tile)) strayGuard = "${it.id}@${it.tile}"
+                }
+            }
+            run.check(e, "left the zone: guard hits afterwards", hitsSince(c3).size, "wiki: they stop the instant the player leaves" to 0)
+            run.expectTrue(e, "left the zone: no guard steps outside the zone", strayGuard == null, "guard outside: $strayGuard")
+        }
+
+        // 4. Loses the skull inside the zone: guards stop.
+        g.moveTo(square)
+        hold(12)
+        val unskulled = run.world.currentCycle
+        g.timers.remove(gg.rsmod.game.model.timer.SKULL_ICON_DURATION_TIMER)
+        g.setCurrentLifepoints(g.getMaximumLifepoints())
+        wait(1)
+        val stillOn = guardsOnG().map { "${it.id}#${it.index}" }
+        run.expectTrue(e, "skull gone: no guard targets him a tick later", stillOn.isEmpty(), "still: $stillOn")
+        g.setCurrentLifepoints(g.getMaximumLifepoints())
+        wait(4)
+        run.note("hits in the 5 ticks after the skull went: " + run.recording.of("GG", "out").filter { it.cycle >= unskulled && it.text.startsWith("hits ") }
+            .joinToString { "+${it.cycle - unskulled}:${splat.findAll(it.text).joinToString("/") { m -> "t" + m.groupValues[1] + "=" + m.groupValues[2] }}" })
+        val c4 = run.world.currentCycle
+        hold(15)
+        run.check(e, "skull gone in the zone: guard hits afterwards", hitsSince(c4).size, "wiki: they stop when the player loses the skull" to 0)
+
+        // 5. Unskulled player attacks a guard: refused.
+        stopAll()
+        val target = run.world.npcs.entries.filterNotNull()
+            .filter { guards.isGuard(it) && it.id != guards.WIZGUARD_ID && it.tile.isWithinRadius(square, 15) }
+            .minByOrNull { it.tile.getDistance(square) }
+        if (target == null) {
+            run.notTested(e, "attack a guard", "no guard within 15 tiles of $square")
+        } else {
+            val c5 = run.world.currentCycle
+            g.attack(target)
+            hold(4)
+            val msgs = run.recording.of("GG", "msg").filter { it.cycle >= c5 && it.text.startsWith("MessageGameMessage") }.joinToString(" / ") { it.text.take(120) }
+            run.expectTrue(e, "unskulled attacks a guard: refused", msgs.contains(guards.ATTACK_REFUSED_MESSAGE), msgs)
+            g.resetInteractions()
+            Combat.reset(g)
+        }
+
+        // 6. Skulled player killed by guards: public ground loot, no loot key for anyone.
+        stopAll()
+        reset(g, square)
+        g.inventory.add(Items.ARMADYL_GODSWORD, 1)
+        fun keys() = run.world.players.entries.filterNotNull().sumOf { gg.rsmod.plugins.content.mechanics.pvp.LootKeys.heldKeyIndexes(it).size }
+        val keysBefore = keys()
+        gg.rsmod.plugins.content.mechanics.pvp.PvpSkull.applyTestSkull(g)
+        g.setCurrentLifepoints(5)
+        var died = false
+        var lastTile = g.tile
+        for (i in 0 until 60) {
+            wait(1)
+            if (g.isDead()) died = true
+            if (!died) lastTile = g.tile
+            if (died && !g.isDead()) break
+        }
+        val found = mutableSetOf<String>()
+        for (centre in listOf(lastTile, square)) for (dx in -6..6) for (dz in -6..6) {
+            val tile = centre.transform(dx, dz)
+            run.world.chunks.get(tile)?.getEntities<gg.rsmod.game.model.entity.GroundItem>(tile, gg.rsmod.game.model.EntityType.GROUND_ITEM)
+                ?.forEach { if (it.item == Items.ARMADYL_GODSWORD) found += "${it.tile}#${System.identityHashCode(it)}" }
+        }
+        val ground = found.size
+        run.note("guard kill: last tile $lastTile, godsword on the ground at $found")
+        run.expectTrue(e, "killed by guards: died", died, "tile=${g.tile} last=$lastTile")
+        run.check(e, "killed by guards: no loot key", keys() - keysBefore, "owner: no player killer, no key" to 0)
+        run.check(e, "killed by guards: the godsword lies on the ground", ground, "owner: public ground loot" to 1)
+        stopAll()
     }
 }
