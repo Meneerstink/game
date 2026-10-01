@@ -49,6 +49,7 @@ import gg.rsmod.plugins.content.combat.getCombatTarget
  * - zones: the PvP gate end to end - a target inside a guarded zone is refused with the guards' message, a combat-level gap over 14
  *   is refused (Deadman bracket), the same bracket in danger attacks.
  * - teleblock: a real Tele Block cast - 500 ticks, 250 with Protect from Magic, a second cast does not refresh it.
+ * - phantom: Morrigan's javelin Phantom Strike on a player - the bleed is 10 a tick until 75% of the special's damage (OSRS Wiki).
  */
 object DeadmanSuite : Conformance.Suite {
     override suspend fun QueueTask.run(
@@ -82,6 +83,7 @@ object DeadmanSuite : Conformance.Suite {
         scenario("veng") { vengeance(run, arena) }
         scenario("zones") { pvpGate(run, arena) }
         scenario("teleblock") { teleBlock(run, arena) }
+        scenario("phantom") { phantomStrike(run, arena) }
     }
 
     /** Hitsplat types [who] received since [from], in order. */
@@ -1164,5 +1166,62 @@ object DeadmanSuite : Conformance.Suite {
         run.expectTrue(e, "Tele Block with Protect from Magic lasts 2:30 (250 ticks)", halved != null && halved in 245..250, "timer=$halved", "OSRS Wiki Tele Block: halved")
         b.timers.remove(tb)
         gg.rsmod.plugins.content.mechanics.prayer.Prayers.deactivateAll(b)
+    }
+
+    // ---- phantom: Morrigan's javelin Phantom Strike bleed -----------------------------------------------------------------
+
+    private suspend fun QueueTask.phantomStrike(
+        run: Conformance.Run,
+        arena: Tile,
+    ) {
+        val e = "phantom"
+        val a = run.bot(arena.transform(-3, -6), "MA")
+        val b = run.bot(arena.transform(0, -6), "MB")
+        wait(2)
+        reset(a, arena.transform(-3, -6))
+        reset(b, arena.transform(0, -6))
+        wield(a, Item(Items.MORRIGANS_JAVELIN, 200))
+        val splat = Regex("type=(\\d+) dmg=(\\d+)")
+        fun hitsOnB(from: Int) = run.recording.of("MB", "out").filter { it.cycle >= from && it.text.startsWith("hits ") }
+            .flatMap { ev -> splat.findAll(ev.text).map { Triple(ev.cycle, it.groupValues[1].toInt(), it.groupValues[2].toInt()) }.toList() }
+        var special = 0
+        var c = 0
+        for (attempt in 0 until 15) {
+            AttackTab.setEnergy(a, 100)
+            a.setVarp(AttackTab.SPECIAL_ATTACK_VARP, 1)
+            a.attack(b)
+            // The special is the throw that spends the energy; stop A right there so no normal throw follows.
+            var spentAt = -1
+            for (t in 0 until 8) {
+                b.setCurrentLifepoints(b.getMaximumLifepoints())
+                wait(1)
+                if (AttackTab.getEnergy(a) < 100) { spentAt = run.world.currentCycle; break }
+            }
+            a.resetInteractions(); Combat.reset(a); b.resetInteractions(); Combat.reset(b)
+            if (spentAt >= 0) {
+                c = spentAt - 1
+                repeat(3) { b.setCurrentLifepoints(b.getMaximumLifepoints()); wait(1) }
+                special = hitsOnB(c).firstOrNull { it.second == gg.rsmod.plugins.api.HitType.RANGE.id }?.third ?: 0
+            }
+            // A bleed worth measuring: at least 8 (6 of bleed); a smaller hit waits for its bleed to end and tries again.
+            if (special >= 8) break
+            special = 0
+            repeat(6) { b.setCurrentLifepoints(b.getMaximumLifepoints()); wait(1) }
+        }
+        if (special <= 0) {
+            run.notTested(e, "bleed", "no special hit of 8+ in 15 attempts")
+            return
+        }
+        // Collect the bleed: regular-hit splats after the special.
+        repeat(16) {
+            b.setCurrentLifepoints(b.getMaximumLifepoints())
+            wait(1)
+        }
+        val specialCycle = hitsOnB(c).first { it.second == gg.rsmod.plugins.api.HitType.RANGE.id && it.third == special }.first
+        val bleed = hitsOnB(specialCycle).filter { it.second == gg.rsmod.plugins.api.HitType.REGULAR_HIT.id }
+        run.check(e, "bleed total after a $special special hit", bleed.sumOf { it.third }, "OSRS Wiki: 75% of the special's damage" to special * 3 / 4)
+        run.expectTrue(e, "bleed splats of 10 (the last one the rest)", bleed.dropLast(1).all { it.third == 10 } && (bleed.lastOrNull()?.third ?: 0) in 1..10,
+            "bleed=${bleed.map { it.third }}")
+        run.expectTrue(e, "one bleed splat per tick", bleed.zipWithNext().all { (x, y) -> y.first - x.first == 1 }, "cycles=${bleed.map { it.first - specialCycle }}")
     }
 }

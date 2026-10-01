@@ -253,7 +253,7 @@ val HAMSTRING_TIMER = TimerKey()
 /**
  *  Timer that counts down for bleed damage for Phantom Strike
  */
-val PHANTOM_STRIKE_TIMER = TimerKey()
+val PHANTOM_STRIKE_TIMER = TimerKey(resetOnDeath = true)
 
 /**
  * Timer key set while a pawn is slowed by a Miasmic spell (Ancient Magicks): attack delay is
