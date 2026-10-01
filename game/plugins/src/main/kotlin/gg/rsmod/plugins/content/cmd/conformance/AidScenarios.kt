@@ -281,8 +281,18 @@ object AidScenarios {
         wait(5)
         run.check(e, "borrowed level cuts the dragonstone", a.inventory.getItemCount(Items.DRAGONSTONE), "assister's 99 Crafting" to 1)
         run.check(e, "no experience for the helped player", a.skills.getCurrentXp(Skills.CRAFTING), "wiki: the assister receives all skill experience" to axp)
-        run.expectTrue(e, "experience to the assister", b.skills.getCurrentXp(Skills.CRAFTING) > bxp, "b xp ${b.skills.getCurrentXp(Skills.CRAFTING)} vs $bxp")
-        run.check(e, "XP display varbit 4103 (tenths)", b.getVarbit(AssistSystem.EARNED_VARBIT), "137.5 xp" to 1375)
+        val bGain = b.skills.getCurrentXp(Skills.CRAFTING) - bxp
+        val mult = b.xpMultiplier(Skills.CRAFTING)
+        run.expectTrue(e, "experience to the assister, at his own rate", Math.abs(bGain - 137.5 * mult) < 0.01, "gained $bGain, 137.5 x $mult = ${137.5 * mult}")
+        run.check(e, "XP display varbit 4103 (tenths of the xp really gained)", b.getVarbit(AssistSystem.EARNED_VARBIT), "gained $bGain" to Math.round(bGain * 10).toInt())
+
+        // The borrow is the action in progress only: a Crafting gain 12 ticks later (no requirement check) is A's own.
+        repeat(12) { wait(1) }
+        val axpLate = a.skills.getCurrentXp(Skills.CRAFTING)
+        val bxpLate = b.skills.getCurrentXp(Skills.CRAFTING)
+        a.addXp(Skills.CRAFTING, 10.0)
+        run.expectTrue(e, "a later unrelated gain is the helped player's own", a.skills.getCurrentXp(Skills.CRAFTING) > axpLate && b.skills.getCurrentXp(Skills.CRAFTING) == bxpLate,
+            "a +${a.skills.getCurrentXp(Skills.CRAFTING) - axpLate}, b +${b.skills.getCurrentXp(Skills.CRAFTING) - bxpLate}", "AssistSystem.BORROW_WINDOW_TICKS")
 
         // Own level: A (Crafting 20) cuts a sapphire (20) - his own experience.
         a.skills.setBaseLevel(Skills.CRAFTING, 20)
@@ -307,32 +317,65 @@ object AidScenarios {
         val c4 = run.world.currentCycle
         Bots.button(b, 751, 16, option = 6)
         wait(1)
-        run.expectTrue(e, "XP Earned/Time", saw(run, "XB", c4, "You have earned 137 Xp"), msgs(run, "XB", c4).take(2).toString())
+        run.expectTrue(e, "XP Earned/Time", saw(run, "XB", c4, "You have earned ${bGain.toInt()} Xp"), msgs(run, "XB", c4).take(2).toString())
 
         // Daily cap: 30,000 - only the rest is given, then the cap message.
         AssistSystem.setEarned(b, 29_950.0)
+        val bxpCap = b.skills.getCurrentXp(Skills.CRAFTING)
         a.skills.setBaseLevel(Skills.CRAFTING, 1)
         a.inventory.add(Items.UNCUT_DRAGONSTONE, 1)
         Bots.inject(a, OpHeldUMessage(679 shl 16, 0, Items.CHISEL, 679 shl 16, a.inventory.getItemIndex(Items.UNCUT_DRAGONSTONE, false), Items.UNCUT_DRAGONSTONE))
         wait(5)
         run.check(e, "daily cap 30,000", AssistSystem.earnedToday(b), "RuneScape Wiki" to 30_000.0)
+        run.expectTrue(e, "the cap counts the experience really gained", Math.abs(b.skills.getCurrentXp(Skills.CRAFTING) - bxpCap - 50.0) < 0.05,
+            "gained ${b.skills.getCurrentXp(Skills.CRAFTING) - bxpCap} of the last 50")
         val c5 = run.world.currentCycle
         Bots.button(b, 751, 16, option = 6)
         wait(1)
         run.expectTrue(e, "capped: XP Earned/Time names the limit", saw(run, "XB", c5, "maximum XP (30,000 Xp)"), msgs(run, "XB", c5).take(2).toString())
         AssistSystem.setEarned(b, 0.0)
 
-        // A teleport keeps the session; walking 21 squares away ends it.
-        a.moveTo(arena.transform(8, 0))
+        // Range (RuneScape Wiki): 20 squares from the assister; a teleport keeps it (then measured from the landing tile); being moved 25
+        // squares without a teleport (forced movement, a shortcut) ends it, and so does walking 21 squares from the landing tile.
+        a.teleportTo(arena.transform(30, 0))
         wait(2)
         run.expectTrue(e, "a teleport keeps the session", AssistSystem.assistantOf(a) === b, "ended")
         for (i in 1..11) {
             a.moveTo(a.tile.transform(2, 0))
             wait(1)
         }
-        run.expectTrue(e, "walking past 20 squares ends it", AssistSystem.assistantOf(a) == null && b.lock != LockState.ASSISTING, "assistant=${AssistSystem.assistantOf(a)?.username} lock=${b.lock}")
+        run.expectTrue(e, "walking past 20 squares from the landing ends it", AssistSystem.assistantOf(a) == null && b.lock != LockState.ASSISTING,
+            "assistant=${AssistSystem.assistantOf(a)?.username} lock=${b.lock}")
         a.moveTo(arena)
         wait(2)
+        AssistSystem.start(a, b)
+        wait(1)
+        a.moveTo(arena.transform(25, 0))
+        wait(2)
+        run.expectTrue(e, "moved 25 squares without a teleport: ends it", AssistSystem.assistantOf(a) == null, "still assisted")
+        a.moveTo(arena)
+        wait(2)
+
+        // Vengeance is never cast with a lent Magic level (AssistSystem.NO_LENDING_SPELLS), even out of combat.
+        AssistSystem.start(a, b)
+        wait(1)
+        a.skills.setBaseLevel(Skills.MAGIC, 1)
+        a.skills.setBaseLevel(Skills.DEFENCE, 99)
+        Spellbooks.select(a, Spellbook.LUNAR)
+        Vengeance.clear(a)
+        a.timers.remove(gg.rsmod.game.model.timer.VENGEANCE_COOLDOWN)
+        val venge = MagicSpells.metadataByName("Vengeance")
+        if (venge == null) {
+            run.notTested(e, "Vengeance with a lent level", "no spell button")
+        } else {
+            Bots.button(a, venge.interfaceId, venge.component)
+            wait(2)
+            run.expectTrue(e, "Vengeance is not cast with a lent Magic level", !Vengeance.isActive(a), "venged", "AssistSystem.NO_LENDING_SPELLS (Deadman)")
+        }
+        a.skills.setBaseLevel(Skills.MAGIC, 99)
+        Spellbooks.select(a, Spellbook.STANDARD)
+        AssistSystem.end(a, "scenario")
+        wait(1)
 
         // Closing 301 ends it.
         AssistSystem.start(a, b)
@@ -345,6 +388,23 @@ object AidScenarios {
         AssistSystem.start(a, b)
         wait(1)
         val dummy = run.npc(gg.rsmod.plugins.api.cfg.Npcs.CHICKEN, arena.transform(0, 2), "XChicken")
+        wait(1)
+        // A lent Magic level never casts a combat spell (Deadman): Magic 60 (past the Ancient Magicks' own level-50 gate) with a 99
+        // assister, Ice Barrage (94) is refused by the level check itself - Combat.canAttack asks it before the attack would end the
+        // assistance.
+        a.skills.setBaseLevel(Skills.MAGIC, 60)
+        Spellbooks.select(a, Spellbook.ANCIENT)
+        val c6 = run.world.currentCycle
+        gg.rsmod.plugins.content.combat.magic.Autocast.markManualCast(a, gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell.ICE_BARRAGE, dummy)
+        a.attack(dummy)
+        wait(4)
+        val chickenHits = run.recording.of("XChicken", "out").count { it.cycle >= c6 && it.text.startsWith("hits ") }
+        run.expectTrue(e, "a lent Magic level never casts a combat spell", chickenHits == 0 && saw(run, "XA", c6, "Magic level is not high enough"),
+            "hits=$chickenHits msgs=${msgs(run, "XA", c6).take(2)}", "AssistSystem: Deadman, MagicSpells.castProblem")
+        a.resetInteractions()
+        a.skills.setBaseLevel(Skills.MAGIC, 99)
+        Spellbooks.select(a, Spellbook.STANDARD)
+        if (AssistSystem.assistantOf(a) == null) AssistSystem.start(a, b)
         wait(1)
         a.attack(dummy)
         wait(3)

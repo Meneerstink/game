@@ -54,3 +54,24 @@ fun World.closeDoor(
     spawn(newDoor)
     return newDoor
 }
+
+/**
+ * Online players other than [exclude] standing within [radius] tiles of [center] on its plane - the one area scan for effects that
+ * reach players around a spot (Lunar group spells, Accept Aid sharing, Potion Share, hunter's mix and moths).
+ */
+fun World.playersAround(
+    center: gg.rsmod.game.model.Tile,
+    radius: Int,
+    exclude: gg.rsmod.game.model.entity.Player? = null,
+): List<gg.rsmod.game.model.entity.Player> {
+    val result = mutableListOf<gg.rsmod.game.model.entity.Player>()
+    for (x in -radius..radius) {
+        for (z in -radius..radius) {
+            val tile = center.transform(x, z)
+            val chunk = chunks.get(tile, createIfNeeded = false) ?: continue
+            chunk.getEntities<gg.rsmod.game.model.entity.Player>(tile, gg.rsmod.game.model.EntityType.PLAYER, gg.rsmod.game.model.EntityType.CLIENT)
+                .forEach { other -> if (other !== exclude && other.isOnline && other !in result) result.add(other) }
+        }
+    }
+    return result
+}

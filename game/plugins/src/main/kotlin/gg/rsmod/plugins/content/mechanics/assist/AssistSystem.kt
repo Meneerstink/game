@@ -35,7 +35,8 @@ import java.time.ZoneOffset
  *  - "Only 30,000 experience can be gained in a single day through assisting others", reset at 00:00 GMT; after it "assistance
  *    continues without XP rewards".
  *  - "The player being lent a skill must remain within 20 squares of the player they are being assisted by. However, if the
- *    assisted player teleports away, then they shall still be assisted."
+ *    assisted player teleports away, then they shall still be assisted." Measured from the assister; after a real teleport
+ *    (Pawn.lastTeleportCycle - forced movement and shortcuts are not teleports) from the landing tile (Void's assist_point).
  *  - Request: right-click "Req Assist"; "The target player receives a message in the chat box which opens up a window when
  *    clicked"; "The assisting player cannot move or act except chatting" ([LockState.ASSISTING]).
  *  - Accept Aid must be on (to receive assistance - the requester); the Assist chat tab On / Friends / Off filters requests and
@@ -84,6 +85,14 @@ object AssistSystem {
     const val RANGE = 20
     const val REQUEST_DELAY_TICKS = 16
     const val REQUEST_TIMEOUT_TICKS = 100
+
+    /**
+     * How long a borrowed requirement check stays "the action in progress": the experience of the action that borrowed (and of the
+     * next items of the same production loop, each refreshing it) goes to the assister; an unrelated gain later (a harvest minutes
+     * after a borrowed planting, a fish gutted after a borrowed cook) is the player's own. 10 ticks covers the longest gap between a
+     * requirement check and its experience in the nine skills (production loops check every item).
+     */
+    const val BORROW_WINDOW_TICKS = 10
     const val ANIM = 7299
     const val GFX = 1247
 
@@ -98,15 +107,27 @@ object AssistSystem {
     /** On the assister: whom he assists. */
     val ASSISTED = AttributeKey<WeakReference<Player>>()
 
-    /** On the assisted player: the spot the 20-square range is measured from, and his tile on the previous tick. */
+    /** On the assisted player: the landing tile of his last teleport in this session (the range is measured from it, else from the
+     * assister) and the teleport cycle already seen. */
     val POINT = AttributeKey<Tile>()
-    val LAST_TILE = AttributeKey<Tile>()
+    val TELEPORT_SEEN = AttributeKey<Int>()
 
     /** On a requester: the player he asked and the cycle he asked at. */
     val REQUESTED = AttributeKey<Pair<WeakReference<Player>, Int>>()
 
-    /** On the assisted player: skills whose last requirement check needed the lent level (their experience goes to the assister). */
-    val BORROWED = AttributeKey<MutableSet<Int>>()
+    /** On the assisted player: skill -> the cycle its last requirement check needed the lent level ([BORROW_WINDOW_TICKS]). */
+    val BORROWED = AttributeKey<MutableMap<Int, Int>>()
+
+    /**
+     * Spells a lent Magic level never casts besides the combat spells (Deadman: a borrowed level never fights). A session ends at the
+     * first attack, but these are cast before or beside a fight and carry into it: Vengeance kept primed, heals, energy, a god-spell
+     * charge, cures and Disruption Shield for oneself or a fighting team mate.
+     */
+    val NO_LENDING_SPELLS =
+        setOf(
+            "Vengeance", "Vengeance Other", "Vengeance Group", "Heal Other", "Heal Group", "Energy Transfer", "Disruption Shield",
+            "Cure Me", "Cure Other", "Cure Group", "Charge",
+        )
 
     /** Ticks on the assisted player while assisted ([checkRange]). */
     val RANGE_TIMER = TimerKey()
@@ -145,8 +166,8 @@ object AssistSystem {
         return assister.skills.getCurrentLevel(skill)
     }
 
-    /** The level an action of [player] works with: his own or, when higher, the lent one (chances, multipliers). */
-    fun effectiveLevel(
+    /** The highest level [player] could act with right now - his own or the lent one. For what he may choose (lists, selections). */
+    fun availableLevel(
         player: Player,
         skill: Int,
         /** False: real (base) levels on both sides, for what boosts cannot reach. */
@@ -155,6 +176,28 @@ object AssistSystem {
         if (boostable) return maxOf(player.skills.getCurrentLevel(skill), lentLevel(player, skill) ?: 0)
         val lent = lentLevel(player, skill)?.let { assistantOf(player)?.skills?.getMaxLevel(skill) } ?: 0
         return maxOf(player.skills.getMaxLevel(skill), lent)
+    }
+
+    /**
+     * The level an action's chance or yield uses (burn chance, runes per essence, harvest): the lent level only when this action
+     * borrowed it ([meets] marked the skill) - "If the player requesting assistance already has the requisite skill level ... they
+     * gain experience rather than the target player": he acts with his own level then, and gets nothing of the assister's for free.
+     * Call it after the action's [meets].
+     */
+    fun effectiveLevel(
+        player: Player,
+        skill: Int,
+    ): Int = if (borrowedNow(player, skill)) availableLevel(player, skill) else player.skills.getCurrentLevel(skill)
+
+    /** True while [skill]'s last borrowed requirement check is the action in progress ([BORROW_WINDOW_TICKS]). */
+    fun borrowedNow(
+        player: Player,
+        skill: Int,
+    ): Boolean {
+        val at = player.attr[BORROWED]?.get(skill) ?: return false
+        if (player.world.currentCycle - at <= BORROW_WINDOW_TICKS) return true
+        player.attr[BORROWED]?.remove(skill)
+        return false
     }
 
     /**
@@ -178,7 +221,7 @@ object AssistSystem {
             else lentLevel(player, skill)?.let { assistantOf(player)?.skills?.getMaxLevel(skill) }
         if (lent == null) return false
         if (lent < required) return false
-        (player.attr[BORROWED] ?: mutableSetOf<Int>().also { player.attr[BORROWED] = it }).add(skill)
+        (player.attr[BORROWED] ?: mutableMapOf<Int, Int>().also { player.attr[BORROWED] = it })[skill] = player.world.currentCycle
         return true
     }
 
@@ -187,19 +230,25 @@ object AssistSystem {
         player: Player,
         skill: Int,
         xp: Double,
+        modifiers: Boolean,
+        disableBonusExperience: Boolean,
     ): Boolean {
-        if (player.attr[BORROWED]?.contains(skill) != true) return false
+        if (!borrowedNow(player, skill)) return false
         val assister = assistantOf(player)
         if (assister == null || !skillOn(assister, skill)) {
             player.attr[BORROWED]?.remove(skill)
             return false
         }
+        // A production loop's next items keep the window open.
+        player.attr[BORROWED]?.set(skill, player.world.currentCycle)
+        // The cap counts what the assister really gains (his level curve, xp rate and bonus apply as on any gain of his).
         val earned = earnedToday(assister)
-        val give = minOf(xp, MAX_XP - earned)
-        if (give > 0.0) {
-            assister.addXp(skill, give)
-            setEarned(assister, earned + give)
-            if (earned + give >= MAX_XP) {
+        val multiplier = assister.xpMultiplier(skill, modifiers, disableBonusExperience).coerceAtLeast(1e-9)
+        val gained = minOf(xp * multiplier, MAX_XP - earned)
+        if (gained > 0.0) {
+            assister.addXp(skill, gained / multiplier, modifiers, disableBonusExperience)
+            setEarned(assister, earned + gained)
+            if (earned + gained >= MAX_XP) {
                 assister.setComponentText(INTERFACE, DESCRIPTION_COMPONENT, "You've earned the maximum XP from the Assist System within a 24-hour period. You can assist again in ${hoursLeft()} ${hours(hoursLeft())}.")
             }
         }
@@ -283,13 +332,18 @@ object AssistSystem {
     ) {
         if (inSession(requester) || inSession(target)) {
             requester.message("Other player is busy at the moment.")
+            refused(requester, target, "already in an assistance")
             return
         }
         if (!AcceptAid.accepts(requester)) {
             requester.message(NEED_ACCEPT_AID)
+            refused(requester, target, "requester has Accept Aid off")
             return
         }
-        if (!filterAllows(target, requester)) return
+        if (!filterAllows(target, requester)) {
+            refused(requester, target, "the target's Assist filter (varp 1055 = ${target.getVarp(FILTER_VARP)})")
+            return
+        }
         val last = requester.attr[REQUESTED]?.second
         if (last != null && requester.world.currentCycle - last < REQUEST_DELAY_TICKS) {
             val seconds = maxOf(1, ((REQUEST_DELAY_TICKS - (requester.world.currentCycle - last)) * 600 + 999) / 1000)
@@ -299,12 +353,22 @@ object AssistSystem {
         }
         requester.attr[REQUESTED] = WeakReference(target) to requester.world.currentCycle
         if (capped(target)) {
+            refused(requester, target, "the target reached the daily 30,000 xp")
             requester.message("${target.username} is unable to assist at the moment.", ChatMessageType.ASSIST)
             target.message("An assist request has been refused. You can assist again in ${hoursLeft()} ${hours(hoursLeft())}.", ChatMessageType.ASSIST)
             return
         }
         requester.message("Sending assistance request.", ChatMessageType.ASSIST)
         target.message(REQUEST_TEXT, ChatMessageType.ASSIST_REQ, Misc.formatForDisplay(requester.username))
+    }
+
+    /** Debug toolkit (AGENTS.md section 3): every refused request is a PROBLEM line the `bug` report and Show-Problems name. */
+    private fun refused(
+        requester: Player,
+        target: Player,
+        why: String,
+    ) = gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.INTERACT) {
+        "assist request ${requester.username} -> ${target.username} refused: $why"
     }
 
     private fun respond(
@@ -339,8 +403,8 @@ object AssistSystem {
         assister: Player,
     ) {
         assisted.attr[ASSISTANT] = WeakReference(assister)
-        assisted.attr[POINT] = assisted.tile
-        assisted.attr[LAST_TILE] = assisted.tile
+        assisted.attr.remove(POINT)
+        assisted.attr[TELEPORT_SEEN] = assisted.lastTeleportCycle
         assisted.attr.remove(BORROWED)
         assisted.timers[RANGE_TIMER] = 1
         assister.attr[ASSISTED] = WeakReference(assisted)
@@ -377,7 +441,7 @@ object AssistSystem {
         val s = SKILLS.firstOrNull { it.component == component } ?: return
         val assisted = assistedBy(assister)
         if (assisted == null) {
-            end(assister)
+            end(assister, "nobody to assist")
             return
         }
         if (!canAssist(assister, assisted, s.skill)) {
@@ -391,10 +455,18 @@ object AssistSystem {
 
     private val ENDING = AttributeKey<Boolean>()
 
-    /** Ends the session [player] is in (either side), telling both. */
-    fun end(player: Player) {
+    /** Ends the session [player] is in (either side), telling both; [reason] goes to the trace. */
+    fun end(
+        player: Player,
+        reason: String = "ended",
+    ) {
         val assister = if (player.attr.has(ASSISTED)) player else player.attr[ASSISTANT]?.get()
         val assisted = if (player.attr.has(ASSISTANT)) player else player.attr[ASSISTED]?.get()
+        if (assister != null || assisted != null) {
+            gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.INTERACT) {
+                "assist ended ($reason): assister=${assister?.username} assisted=${assisted?.username}"
+            }
+        }
         if (assister != null) {
             if (assister.attr[ENDING] == true) return
             assister.attr[ENDING] = true
@@ -411,7 +483,7 @@ object AssistSystem {
         if (assisted != null) {
             assisted.attr.remove(ASSISTANT)
             assisted.attr.remove(POINT)
-            assisted.attr.remove(LAST_TILE)
+            assisted.attr.remove(TELEPORT_SEEN)
             assisted.attr.remove(BORROWED)
             assisted.timers.remove(RANGE_TIMER)
             assisted.setComponentHidden(ICON_INTERFACE, ICON_COMPONENT, true)
@@ -422,7 +494,7 @@ object AssistSystem {
     /** The player's Assist tab filter changed: a session the new filter no longer allows ends (Off: any; Friends: a non-friend). */
     fun filterChanged(player: Player) {
         val other = assistantOf(player) ?: assistedBy(player) ?: return
-        if (!filterAllows(player, other)) end(player)
+        if (!filterAllows(player, other)) end(player, "assist filter")
     }
 
     /** Every tick for an assisted player: a teleport moves the 20-square spot along; walking out of it ends the assistance. */
@@ -430,28 +502,31 @@ object AssistSystem {
         if (!assisted.attr.has(ASSISTANT)) return
         val assister = assistantOf(assisted)
         if (assister == null) {
-            end(assisted)
+            end(assisted, "assister gone")
             return
         }
         // A queue task that owned a lock releases it to NONE when it ends (QueueTaskSet.releaseLockIfUnowned): the assister stays held.
         if (assister.lock == LockState.NONE) assister.lock = LockState.ASSISTING
-        val last = assisted.attr[LAST_TILE]
-        val now = assisted.tile
-        assisted.attr[LAST_TILE] = now
-        if (last != null && (last.height != now.height || !last.isWithinRadius(now, 2))) {
-            assisted.attr[POINT] = now
-            return
+        if (assisted.lastTeleportCycle > (assisted.attr[TELEPORT_SEEN] ?: -1)) {
+            assisted.attr[TELEPORT_SEEN] = assisted.lastTeleportCycle
+            assisted.attr[POINT] = assisted.tile
         }
-        val point = assisted.attr[POINT] ?: now
-        if (!point.isWithinRadius(now, RANGE)) end(assisted)
+        val anchor = assisted.attr[POINT] ?: assister.tile
+        if (squares(anchor, assisted.tile) > RANGE) end(assisted, "more than $RANGE squares away")
     }
+
+    /** Squares between two tiles (the larger axis distance; floors are ignored - a staircase does not end it). */
+    fun squares(
+        a: Tile,
+        b: Tile,
+    ): Int = maxOf(Math.abs(a.x - b.x), Math.abs(a.z - b.z))
 
     /** Called before any attack resolves (combat.plugin.kts): a borrowed level never fights - both sessions end first. */
     fun endForCombat(
         attacker: Pawn,
         target: Pawn,
     ) {
-        (attacker as? Player)?.takeIf { it.attr.has(ASSISTANT) || it.attr.has(ASSISTED) }?.let { end(it) }
-        (target as? Player)?.takeIf { it.attr.has(ASSISTANT) || it.attr.has(ASSISTED) }?.let { end(it) }
+        (attacker as? Player)?.takeIf { it.attr.has(ASSISTANT) || it.attr.has(ASSISTED) }?.let { end(it, "attack") }
+        (target as? Player)?.takeIf { it.attr.has(ASSISTANT) || it.attr.has(ASSISTED) }?.let { end(it, "attacked") }
     }
 }

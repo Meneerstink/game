@@ -1,12 +1,12 @@
 package gg.rsmod.plugins.content.mechanics.aid
 
-import gg.rsmod.game.model.EntityType
 import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.World
 import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.api.ext.getVarp
 import gg.rsmod.plugins.api.ext.message
+import gg.rsmod.plugins.api.ext.playersAround
 import gg.rsmod.plugins.api.ext.setVarp
 
 /**
@@ -47,28 +47,18 @@ object AcceptAid {
     ): Boolean {
         if (accepts(target)) return true
         caster.message(refusal)
+        // Debug toolkit (AGENTS.md section 3): a refused aid is a traced failure case, so `bug` reports and Show-Problems name it.
+        gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.INTERACT) { "aid refused: ${target.username} has Accept Aid off (varp 427 = 0), caster ${caster.username}" }
         return false
     }
 
-    /** Online players other than [exclude] within [radius] tiles of [center] (same plane) who accept aid. */
+    /** Players other than [exclude] within [radius] tiles of [center] who accept aid. */
     fun nearbyAccepting(
         world: World,
         center: Tile,
         radius: Int,
         exclude: Player? = null,
-    ): List<Player> {
-        val result = mutableListOf<Player>()
-        for (x in -radius..radius) {
-            for (z in -radius..radius) {
-                val tile = center.transform(x, z)
-                val chunk = world.chunks.get(tile, createIfNeeded = false) ?: continue
-                chunk.getEntities<Player>(tile, EntityType.PLAYER, EntityType.CLIENT).forEach { other ->
-                    if (other !== exclude && other.isOnline && accepts(other) && other !in result) result.add(other)
-                }
-            }
-        }
-        return result
-    }
+    ): List<Player> = world.playersAround(center, radius, exclude).filter(::accepts)
 
     fun applyDefault(player: Player) {
         if (player.attr[DEFAULT_APPLIED] == true) return

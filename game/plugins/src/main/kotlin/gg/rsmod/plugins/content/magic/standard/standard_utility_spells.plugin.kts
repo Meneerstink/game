@@ -103,7 +103,7 @@ on_magic_spell_button("Charge") { metadata ->
         player.message("You need to be wearing a god cape to cast this spell.")
         return@on_magic_spell_button
     }
-    if (!MagicSpells.canCast(player, metadata.lvl, metadata.runes)) return@on_magic_spell_button
+    if (!MagicSpells.canCast(player, metadata.lvl, metadata.runes, spellId = metadata.sprite)) return@on_magic_spell_button
     MagicSpells.removeRunes(player, metadata.runes, metadata.sprite)
     player.animate(811)
     player.graphic(308, 96)

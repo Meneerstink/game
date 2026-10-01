@@ -191,6 +191,9 @@ SpecialAttacks.register(60, Items.ABYSSAL_VINE_WHIP) {
                 attacker.message("Since you no longer wield a vine whip, the vine ignores your call.")
                 return@queue
             }
+            // Every vine hit is an attack: the victim may have walked into a guarded zone or out of reach, or teleported - the call
+            // then ends (the same gate as any attack: zones, Deadman bracket, guards, view distance).
+            if (!gg.rsmod.plugins.content.combat.Combat.canEngage(attacker, victim)) return@queue
             vineStrike(attacker, victim)
         }
     }

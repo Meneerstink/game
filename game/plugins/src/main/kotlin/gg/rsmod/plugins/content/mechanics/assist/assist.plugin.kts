@@ -21,7 +21,7 @@ AssistSystem.SKILLS.forEach { s ->
 }
 
 on_interface_close(AssistSystem.INTERFACE) {
-    if (player.attr.has(AssistSystem.ASSISTED)) AssistSystem.end(player)
+    if (player.attr.has(AssistSystem.ASSISTED)) AssistSystem.end(player, "XP display closed")
 }
 
 on_timer(AssistSystem.RANGE_TIMER) {
@@ -31,10 +31,10 @@ on_timer(AssistSystem.RANGE_TIMER) {
 
 on_logout {
     if (AssistSystem.inSession(player) || player.attr.has(AssistSystem.ASSISTANT) || player.attr.has(AssistSystem.ASSISTED)) {
-        AssistSystem.end(player)
+        AssistSystem.end(player, "logout")
     }
 }
 
 on_player_pre_death {
-    if (player.attr.has(AssistSystem.ASSISTANT) || player.attr.has(AssistSystem.ASSISTED)) AssistSystem.end(player)
+    if (player.attr.has(AssistSystem.ASSISTANT) || player.attr.has(AssistSystem.ASSISTED)) AssistSystem.end(player, "death")
 }

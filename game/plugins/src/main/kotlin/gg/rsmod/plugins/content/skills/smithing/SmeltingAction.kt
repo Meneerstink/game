@@ -64,7 +64,7 @@ class SmeltingAction(
         amount: Int,
     ) {
         val player = task.player
-        val level = gg.rsmod.plugins.content.mechanics.assist.AssistSystem.effectiveLevel(player, Skills.SMITHING)
+        val level = player.skills.getCurrentLevel(Skills.SMITHING)
 
         if (!canSmelt(task, bar, level)) return
 
@@ -110,7 +110,7 @@ class SmeltingAction(
                 if (wearingRing && bar.product == Items.IRON_BAR) {
                     true
                 } else {
-                    bar.product != Items.IRON_BAR || rollIronBar(level, player)
+                    bar.product != Items.IRON_BAR || rollIronBar(gg.rsmod.plugins.content.mechanics.assist.AssistSystem.effectiveLevel(player, Skills.SMITHING), player)
                 }
 
             if (wearingRing && bar.product == Items.IRON_BAR) {

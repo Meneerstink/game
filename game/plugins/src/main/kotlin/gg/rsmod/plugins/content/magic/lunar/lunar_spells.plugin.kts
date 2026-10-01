@@ -78,25 +78,11 @@ GROUP_TELEPORTS.forEach { (name, data) ->
     }
 }
 
-/** Players (other than [player]) standing within [radius] tiles. */
+/** Players (other than [player]) standing within [radius] tiles (World.playersAround). */
 fun nearbyPlayers(
     player: Player,
     radius: Int,
-): List<Player> {
-    val result = mutableListOf<Player>()
-    for (x in -radius..radius) {
-        for (z in -radius..radius) {
-            val tile = player.tile.transform(x, z)
-            val chunk = world.chunks.get(tile, createIfNeeded = false) ?: continue
-            chunk.getEntities<Player>(tile, EntityType.PLAYER, EntityType.CLIENT).forEach { other ->
-                if (other !== player && other.isOnline && other !in result) {
-                    result.add(other)
-                }
-            }
-        }
-    }
-    return result
-}
+): List<Player> = world.playersAround(player.tile, radius, exclude = player)
 
 /** Common preflight: level + runes, then consume runes and award [xp]. Returns false when refused. */
 fun Player.castLunar(
@@ -634,6 +620,7 @@ fun potionShare(
     val potion = PotionShare.shareable(item.id, allowed)
     if (potion == null) {
         player.message(PotionShare.CANNOT_SHARE)
+        gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.INTERACT) { "potion share by ${player.username}: item ${item.id} is not on ${data.name}'s list" }
         return
     }
     val metadata = spell(data)
@@ -641,6 +628,9 @@ fun potionShare(
     val recipients = PotionShare.recipients(nearbyPlayers(player, radius = PotionShare.RADIUS), potion)
     if (recipients.isEmpty()) {
         player.message(PotionShare.NOBODY)
+        gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.INTERACT) {
+            "potion share by ${player.username}: nobody in the 3x3 with Accept Aid on who may drink ${potion.potionType}"
+        }
         return
     }
     val left = PotionShare.remainder(potion, recipients.size)
@@ -650,12 +640,15 @@ fun potionShare(
     player.animate(4413)
     player.playSound(sound)
     player.addXp(Skills.MAGIC, xp, checkBrawlingGloves = true)
-    if (potion.potionType.canDrink(player)) potion.potionType.apply(player)
+    if (PotionShare.mayDrink(player, potion.potionType)) {
+        potion.potionType.apply(player)
+        PotionShare.startDelays(player)
+    }
     recipients.forEach { other ->
         other.graphic(733, 130)
         other.playSound(recipientSound)
         potion.potionType.apply(other)
-        other.timers[gg.rsmod.game.model.timer.POTION_DELAY] = 3
+        PotionShare.startDelays(other)
         other.message("${player.username} has shared a potion with you.")
     }
 }

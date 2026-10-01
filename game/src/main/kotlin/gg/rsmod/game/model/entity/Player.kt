@@ -887,34 +887,22 @@ abstract class Player(
         modifiers: Boolean = true,
         disableBonusExperience: Boolean = false,
     ) {
-        if (xp > 0.0 && gg.rsmod.game.model.skill.XpRedirect.handler?.invoke(this, skill, xp) == true) return
+        if (xp > 0.0 && gg.rsmod.game.model.skill.XpRedirect.handler?.invoke(this, skill, xp, modifiers, disableBonusExperience) == true) return
         val oldXp = skills.getCurrentXp(skill)
-        var modifier = interpolate(1.0, 5.0, skills.getMaxLevel(skill))
-
-        // calculate bonus experience
-        // based on players elapsed time in-game
-        var bonusExperience = calculateXpMultiplier()
 
         if (oldXp >= SkillSet.MAX_XP) {
             return
         }
 
-        if (!world.gameContext.bonusExperience || !modifiers || disableBonusExperience) {
-            // apply a 1.0x bonus which does
-            // nothing to overall gain
-            bonusExperience = 1.0
-        } else {
+        // calculate bonus experience
+        // based on players elapsed time in-game
+        val bonusExperience = bonusXpMultiplier(modifiers, disableBonusExperience)
+        if (bonusExperience != 1.0) {
             // set the "bonus xp gained" varp
             val bonusGained = (xp * bonusExperience) - xp
             varps.setState(1878, varps[1878].state.plus(bonusGained.toInt() * 10))
         }
-
-        if (!modifiers) {
-            modifier = 1.0
-        } else {
-            // data/cfg/new_player.yml xp.normal_rate (1.0 = unchanged), on top of the level curve and bonus xp.
-            modifier *= gg.rsmod.game.model.skill.XpRates.normal
-        }
+        val modifier = levelXpModifier(skill, modifiers)
 
         val newXp = min(SkillSet.MAX_XP.toDouble(), (oldXp + (xp * modifier * bonusExperience)))
 
@@ -958,6 +946,25 @@ abstract class Player(
             // writeConsoleMessage("New Time: $newAntiCheatTimer Old Time: $currentAntiCheatTimer Time Subtracted: $subtractableTime Accumulated Time: $accumulatedTime XP: $xpGained")
         }
     }
+
+    /** The level curve times data/cfg/new_player.yml xp.normal_rate (1.0 = unchanged); 1.0 when [modifiers] is off. */
+    private fun levelXpModifier(
+        skill: Int,
+        modifiers: Boolean,
+    ): Double = if (!modifiers) 1.0 else interpolate(1.0, 5.0, skills.getMaxLevel(skill)) * gg.rsmod.game.model.skill.XpRates.normal
+
+    /** The bonus-experience factor (play-time based) while bonus experience is on; 1.0 otherwise. */
+    private fun bonusXpMultiplier(
+        modifiers: Boolean,
+        disableBonusExperience: Boolean,
+    ): Double = if (!world.gameContext.bonusExperience || !modifiers || disableBonusExperience) 1.0 else calculateXpMultiplier()
+
+    /** The factor [addXp] multiplies [skill] experience by - what the player really gains per raw point. No side effects. */
+    fun xpMultiplier(
+        skill: Int,
+        modifiers: Boolean = true,
+        disableBonusExperience: Boolean = false,
+    ): Double = levelXpModifier(skill, modifiers) * bonusXpMultiplier(modifiers, disableBonusExperience)
 
     /**
      * Interpolates a value based on the given level within a range defined by low and high values.

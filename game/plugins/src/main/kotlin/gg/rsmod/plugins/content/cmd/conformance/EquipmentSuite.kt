@@ -613,6 +613,10 @@ object EquipmentSuite : Conformance.Suite {
     ) {
         bot.resetInteractions()
         Combat.reset(bot)
+        // Every lane starts out of combat: the previous lane's hits kept the bot "being attacked" (ACTIVE_COMBAT_TIMER, 17 ticks),
+        // so a Barrows / Vesta / Statius item degraded on equip - correctly, on its first combat tick (EquipmentDegradation) - and
+        // the lane reported it "not equipped" (DMM run 2026-10-01, X4).
+        bot.timers.remove(gg.rsmod.game.model.timer.ACTIVE_COMBAT_TIMER)
         bot.moveTo(arena)
         bot.equipment.removeAll()
         bot.inventory.removeAll()
@@ -620,10 +624,6 @@ object EquipmentSuite : Conformance.Suite {
         bot.setVarp(AttackTab.ATTACK_STYLE_VARP, 0)
         bot.setCurrentLifepoints(bot.getMaximumLifepoints())
     }
-        // Every lane starts out of combat: the previous lane's hits kept the bot "being attacked" (ACTIVE_COMBAT_TIMER, 17 ticks),
-        // so a Barrows / Vesta / Statius item degraded on equip - correctly, on its first combat tick (EquipmentDegradation) - and
-        // the lane reported it "not equipped" (DMM run 2026-10-01, X4).
-        bot.timers.remove(gg.rsmod.game.model.timer.ACTIVE_COMBAT_TIMER)
 
     private fun keep(
         bot: Client,

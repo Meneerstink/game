@@ -675,12 +675,16 @@ abstract class Pawn(
         return route
     }
 
+    /** The world cycle of this pawn's last [teleportTo] (a real teleport, not forced movement); -1 = never. */
+    var lastTeleportCycle = -1
+
     fun teleportTo(
         x: Int,
         z: Int,
         height: Int = 0,
     ) {
         val from = tile
+        lastTeleportCycle = world.currentCycle
         moved = true
         blockBuffer.teleport = true
         tile = Tile(x, z, height)

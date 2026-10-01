@@ -23,7 +23,7 @@ object Construction {
         while (true) {
             val built = player.attr[BUILT_ATTR] ?: emptyList()
             // Assist System: a lent Construction level lists (and builds) the pieces the assister could build.
-            val level = gg.rsmod.plugins.content.mechanics.assist.AssistSystem.effectiveLevel(player, Skills.CONSTRUCTION, boostable = false)
+            val level = gg.rsmod.plugins.content.mechanics.assist.AssistSystem.availableLevel(player, Skills.CONSTRUCTION, boostable = false)
             val available = ConstructionData.PIECES.filter { level >= it.level && it.id !in built }
             if (available.isEmpty()) {
                 it.messageBox("You have nothing left to build at your current Construction level.")

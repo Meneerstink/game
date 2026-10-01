@@ -67,8 +67,12 @@ object SkillPotions {
     ) {
         if (type !in HUNTER_MIXES || !drinker.tile.isMulti(drinker.world)) return
         AcceptAid.nearbyAccepting(drinker.world, drinker.tile, radius = 1, exclude = drinker)
+            .filter { gg.rsmod.plugins.content.magic.lunar.PotionShare.mayDrink(it, type) }
             .take(MIX_SHARE_LIMIT)
-            .forEach { type.apply(it) }
+            .forEach {
+                type.apply(it)
+                gg.rsmod.plugins.content.magic.lunar.PotionShare.startDelays(it)
+            }
     }
 
     /**

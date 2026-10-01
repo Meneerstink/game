@@ -78,6 +78,26 @@ object PotionShare {
         potion: Potion,
     ): List<Player> =
         candidates
-            .filter { gg.rsmod.plugins.content.mechanics.aid.AcceptAid.accepts(it) && !it.timers.has(POTION_DELAY) && potion.potionType.canDrink(it) }
+            .filter { gg.rsmod.plugins.content.mechanics.aid.AcceptAid.accepts(it) && mayDrink(it, potion.potionType) }
             .take(doses(potion))
+
+    /**
+     * The drinking rules a shared dose obeys like a drunk one (Potions.drinkAt): no potion delay running, no activity rule against
+     * drinking (Duel Arena "no drinks" ...), the potion's own gate.
+     */
+    fun mayDrink(
+        p: Player,
+        type: PotionType,
+    ): Boolean =
+        !p.timers.has(POTION_DELAY) &&
+            gg.rsmod.plugins.content.mechanics.restrictions.ActivityRestrictions.refusal(
+                p, gg.rsmod.plugins.content.mechanics.restrictions.RestrictedAction.DRINK,
+            ) == null &&
+            type.canDrink(p)
+
+    /** The delays a dose starts (Potions.drinkAt: 3 ticks for potions and food). */
+    fun startDelays(p: Player) {
+        p.timers[POTION_DELAY] = 3
+        p.timers[gg.rsmod.game.model.timer.FOOD_DELAY] = 3
+    }
 }
