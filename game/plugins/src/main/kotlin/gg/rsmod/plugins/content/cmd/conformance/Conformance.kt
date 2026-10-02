@@ -339,6 +339,15 @@ object Conformance {
         }
 
         fun write(): File {
+            // ROOT_CAUSES #147 (owner 2026-10-02, noclip after rocks): whatever a domain did - climbs, teleports, knockbacks - every
+            // bot's client must still stand on its server tile, or that player walks through walls from then on.
+            if (bots.isNotEmpty()) {
+                val off = bots.filter { it.clientDesyncs > 0 }
+                expectTrue(
+                    "engine", "every bot's client stayed on its server tile", off.isEmpty(),
+                    if (off.isEmpty()) "${bots.size} bots, 0 desyncs" else off.joinToString(" ") { "${it.username}:${it.clientDesyncs}" }.take(250),
+                )
+            }
             val previous = previousFailKeys()
             val order = results.sortedWith(compareBy<Result>({ it.verdict.ordinal }, { it.entry }, { it.check }))
             val newFails = order.filter { it.verdict == Verdict.FAIL && it.key !in previous }

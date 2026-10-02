@@ -66,6 +66,10 @@ abstract class Pawn(
     /** The tile the client was told after the last update (set only by the post-sync task); [lastTile] must equal it. */
     internal var clientDrawnTile: Tile? = null
 
+    /** How many updates were based on a tile the client did not draw (ROOT_CAUSES #147); must stay 0. Conformance checks every bot. */
+    var clientDesyncs = 0
+        internal set
+
     /**
      * Where the pawn was when its current transit began: a forced movement (agility shortcut, tunnel, knockback) puts the
      * server tile on the destination at once while the client still slides there, and an obstacle ([obstacleUntilUnlocked])

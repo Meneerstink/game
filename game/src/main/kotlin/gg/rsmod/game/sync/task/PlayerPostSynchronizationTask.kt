@@ -18,6 +18,7 @@ object PlayerPostSynchronizationTask : SynchronizationTask<Player> {
         // after the previous update. Anything else writing it puts the client off the server tile for good (noclip everywhere).
         val drawn = pawn.clientDrawnTile
         if (drawn != null && oldTile != null && !drawn.sameAs(oldTile)) {
+            pawn.clientDesyncs++
             gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.NPCPATH) {
                 "client/server position desync: ${pawn.username}'s client drew ${drawn.x},${drawn.z},${drawn.height} but the update " +
                     "was based on ${oldTile.x},${oldTile.z},${oldTile.height} (lastTile written outside the post-sync task)"
