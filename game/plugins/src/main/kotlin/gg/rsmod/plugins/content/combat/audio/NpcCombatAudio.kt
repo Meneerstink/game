@@ -275,7 +275,7 @@ object NpcCombatAudio {
             if (frame >= 0) {
                 npc.attr[LAST_ATTACK_SOUND_CYCLE] = npc.world.currentCycle
                 if (traced) gg.rsmod.game.model.BreachTrace.log("sound.attack") { "npc=${npc.id}#${npc.index} anim=$anim sounds=[$frame] result=played-radius0-frame-sound" }
-                playAt(npc, target as? Player, frame)
+                playAt(npc, (target as? Player) ?: familiarOwner(npc), frame)
                 return
             }
         }
@@ -300,7 +300,10 @@ object NpcCombatAudio {
             if (area > 0 && sound.radius == 0) {
                 npc.world.spawn(AreaSound(tile = npc.tile, id = sound.id, radius = area, volume = 1, delay = sound.delay))
             } else {
-                play(if (sound.on == NPC) npc else target, sound, FamiliarAudio.isFamiliarNpc(npc.id))
+                val familiar = FamiliarAudio.isFamiliarNpc(npc.id)
+                val at = if (sound.on == NPC) npc else target
+                // A familiar attacking an npc: the cue goes to its owner and the players near the familiar (overnight 2026-10-02).
+                play(if (familiar && at !is Player && sound.radius <= 0) familiarOwner(npc) ?: at else at, sound, familiar)
             }
         }
     }
@@ -354,7 +357,9 @@ object NpcCombatAudio {
             }
         }
         if (id < 0 || frame) return
-        if (source is Player || areaRadius(npc) > 0) playAt(npc, source as? Player, id)
+        // A familiar blocking an npc's hit has no player on the other side: its owner (and the players near it) hear it.
+        val listener = (source as? Player) ?: familiarOwner(npc)
+        if (listener != null || areaRadius(npc) > 0) playAt(npc, listener, id)
     }
 
     fun onDeath(
@@ -374,6 +379,10 @@ object NpcCombatAudio {
         if (id < 0 || frame) return
         playAt(npc, killer, id)
     }
+
+    /** The player whose live familiar [npc] is, if any. */
+    private fun familiarOwner(npc: Npc): Player? =
+        npc.owner?.takeIf { FamiliarAudio.isFamiliarNpc(npc.id) && gg.rsmod.plugins.content.skills.summoning.Familiar.current(it) === npc }
 
     private fun play(
         at: Pawn,
