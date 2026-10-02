@@ -72,17 +72,13 @@ fun attemptPickableDoor(player: Player) {
     player.message("You pick the lock.")
     player.addXp(Skills.THIEVING, site.xp, checkBrawlingGloves = true)
     player.queue {
-        val horizontal = obj.rot == 1 || obj.rot == 3
-        val destination =
-            when {
-                horizontal && player.tile.x - obj.tile.x >= 0 -> obj.tile.transform(-1, 0)
-                horizontal -> obj.tile.transform(1, 0)
-                player.tile.z - obj.tile.z >= 0 -> obj.tile.transform(0, -1)
-                else -> obj.tile.transform(0, 1)
-            }
+        // One shared crossing rule for every door script (DoorCrossing, owner priority #1 2026-10-03).
+        if (gg.rsmod.plugins.content.mechanics.doors.DoorCrossing.destination(player.tile, obj) == null) {
+            player.message("The door is blocked.")
+            return@queue
+        }
         player.lock = LockState.FULL
-        player.walkTo(this, destination, detectCollision = false)
-        wait(1)
+        gg.rsmod.plugins.content.mechanics.doors.DoorCrossing.cross(this, player, obj)
         player.lock = LockState.NONE
     }
 }

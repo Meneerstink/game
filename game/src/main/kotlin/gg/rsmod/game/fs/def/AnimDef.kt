@@ -45,7 +45,51 @@ class AnimDef(
 
     /** Frame ids (`frameset archive << 16 | frame file`); a frame file's bytes 1-2 name its skeleton (AnimBase). */
     val frames: IntArray get() = if (::frameIds.isInitialized) frameIds else IntArray(0)
-    val frameLength: Int get() = frameLengths.sum()
+    val frameLength: Int get() = if (::frameLengths.isInitialized) frameLengths.sum() else 0
+
+    /**
+     * The 667 client's SeqType loop fields (owner priority #1 2026-10-03, noclip / stuck after obstacles). Opcode 2 `loopOffset`:
+     * when the last frame ends the client jumps back this many frames and plays on, up to [maxLoops] (opcode 8, default 99)
+     * times - a climb such as 740 (16 frames, loopOffset 16) therefore plays ~96 s on the client while [cycleLength] says 2
+     * ticks. Opcode 10 `walkingPrecedence` (default 0 without blend flags): at 0 the client does not draw the body along its
+     * path while the action animation plays, at 1 a movement cancels the animation, at 2 both run.
+     */
+    var loopOffset = -1
+        private set
+    var maxLoops = 99
+        private set
+    private var hasBlendFlags = false
+    private var walkingPrecedenceRaw = -1
+    private var animatingPrecedenceRaw = -1
+
+    /** `SeqType.postDecode`: 0 without blend flags (opcode 3), else 2, unless opcode 10 set it. */
+    val walkingPrecedence: Int get() = if (walkingPrecedenceRaw != -1) walkingPrecedenceRaw else if (hasBlendFlags) 2 else 0
+
+    val animatingPrecedence: Int get() = if (animatingPrecedenceRaw != -1) animatingPrecedenceRaw else if (hasBlendFlags) 2 else 0
+
+    /** True when the client keeps replaying this sequence after its frames ran out (loopOffset set and more than one loop). */
+    val loops: Boolean get() = loopOffset > 0 && maxLoops > 1
+
+    /**
+     * How long the client plays this sequence once started, in game cycles, loops included: the server-side [cycleLength] counts
+     * one pass only. Null when the sequence loops for good (a looping idle).
+     */
+    val clientCycleLength: Int
+        get() {
+            if (!loops || !::frameLengths.isInitialized) return cycleLength
+            val count = frameLengths.size
+            val loopStart = (count - loopOffset).coerceIn(0, count)
+            var total = 0
+            for (i in 0 until count) total += frameLengths[i]
+            var loopPass = 0
+            for (i in loopStart until count) loopPass += frameLengths[i]
+            // The client counts the first pass, then maxLoops - 1 further passes over the loop section before `finished`.
+            val clientTicks = total + loopPass * (maxLoops - 1)
+            return Math.ceil(clientTicks * 20.0 / 600.0).toInt()
+        }
+
+    /** True when the client holds the body still while this sequence plays (walking precedence 0, `Static256.movementTick`). */
+    val holdsBody: Boolean get() = walkingPrecedence == 0
 
     override fun decode(
         buf: ByteBuf,
@@ -88,20 +132,22 @@ class AnimDef(
                  */
                 lengthInCycles = Math.ceil((totalFrameLength * 20.0) / 600.0).toInt()
             }
-            2 -> buf.readUnsignedShort()
+            2 -> loopOffset = buf.readUnsignedShort()
             3 -> {
+                hasBlendFlags = true
                 val count = buf.readUnsignedByte()
                 for (i in 0 until count) {
                     buf.readUnsignedByte()
                 }
             }
             4 -> {}
-            5 -> buf.readUnsignedByte()
+            // Opcode 5 is the client's `priority`; the old decoder read opcode 10 (walking precedence) as the priority.
+            5 -> priority = buf.readUnsignedByte().toInt()
             6 -> buf.readUnsignedShort()
             7 -> buf.readUnsignedShort()
-            8 -> buf.readUnsignedByte()
-            9 -> buf.readUnsignedByte()
-            10 -> priority = buf.readUnsignedByte().toInt()
+            8 -> maxLoops = buf.readUnsignedByte().toInt()
+            9 -> animatingPrecedenceRaw = buf.readUnsignedByte().toInt()
+            10 -> walkingPrecedenceRaw = buf.readUnsignedByte().toInt()
             11 -> buf.readUnsignedByte()
             12 -> {
                 val count = buf.readUnsignedByte()

@@ -49,27 +49,88 @@ fun Tile.add(
     times: Int = 1,
 ): Tile = Tile(x + direction.getDeltaX() * times, z + direction.getDeltaZ() * times, height)
 
+/**
+ * Thrown by [walkToTile] / [walkOverTile] when the player did not reach the tile the obstacle needs: no route, movement
+ * interrupted (frozen, stunned, dead, logged out) or too slow. [Plugin.obstacle] catches it and ends the obstacle cleanly - no
+ * crossing, no experience, nothing left locked or animating (owner priority #1 2026-10-03, plan 8A: approach is normal
+ * movement, the crossing is an explicit action that only starts from its real start tile).
+ */
+class ObstacleApproachFailed(
+    val reason: String,
+    val tile: Tile,
+) : RuntimeException("approach to ${tile.x},${tile.z},${tile.height} failed: $reason")
+
+/** The farthest a bounded collision-free crossing ([walkOverTile]) may carry a player: over a cliff loc and one landing beyond. */
+const val MAX_WALK_OVER = 10
+
+/**
+ * The shared arrival contract of every obstacle approach. Routes the player to [tile] and returns only once he stands on it;
+ * waits as long as the route really takes (a detour is not the bird's-eye distance), and gives up when the route fails, the
+ * movement stops early (a freeze, stun, death, lock or a cleared queue) or the walk overruns twice its own length.
+ * Owner priority #1 2026-10-03: the old helper waited `distance + 1` ticks blind and then animated from wherever the player
+ * happened to be, so a blocked or slow approach crossed from the wrong tile or into scenery.
+ */
+suspend fun QueueTask.arriveAt(
+    player: Player,
+    tile: Tile,
+    stepType: MovementQueue.StepType,
+    detectCollision: Boolean,
+) {
+    if (player.tile.sameAs(tile)) return
+    if (player.timers.has(gg.rsmod.game.model.timer.FROZEN_TIMER)) throw ObstacleApproachFailed("frozen", tile)
+    if (player.timers.has(gg.rsmod.game.model.timer.STUN_TIMER)) throw ObstacleApproachFailed("stunned", tile)
+    val route = player.walkTo(this, tile, stepType, detectCollision)
+    if (!route.success || !route.tail.sameAs(tile)) {
+        player.stopMovement()
+        throw ObstacleApproachFailed("no route (ends at ${route.tail.x},${route.tail.z})", tile)
+    }
+    // The route's deque is consumed by the movement queue, so the bound comes from the distance: a detour of up to four times the
+    // straight line, walking, plus a margin; and the walk must keep making progress (no tile change for 3 ticks = stalled).
+    val limit = player.tile.getDistance(tile) * 4 + 10
+    var waited = 0
+    var stalled = 0
+    var last = Tile(player.tile)
+    while (!player.tile.sameAs(tile)) {
+        if (player.isDead()) throw ObstacleApproachFailed("player died", tile)
+        if (player.timers.has(gg.rsmod.game.model.timer.FROZEN_TIMER)) throw ObstacleApproachFailed("frozen", tile)
+        if (player.timers.has(gg.rsmod.game.model.timer.STUN_TIMER)) throw ObstacleApproachFailed("stunned", tile)
+        if (!player.movementQueue.hasDestination()) throw ObstacleApproachFailed("movement stopped at ${player.tile.x},${player.tile.z}", tile)
+        wait(1)
+        waited++
+        if (player.tile.sameAs(last)) stalled++ else stalled = 0
+        last = Tile(player.tile)
+        if (waited > limit || stalled >= 3) {
+            player.stopMovement()
+            throw ObstacleApproachFailed("too slow (${waited} ticks, stalled $stalled at ${last.x},${last.z})", tile)
+        }
+    }
+}
+
+/** Normal, collision-respecting approach to the obstacle's start tile; see [arriveAt]. */
 suspend fun QueueTask.walkToTile(
     player: Player,
     tile: Tile,
-) {
-    if (player.tile == tile) return
-    val distance = player.tile.getDistance(tile)
-    player.walkTo(tile)
-    wait(distance + 1)
-}
+) = arriveAt(player, tile, MovementQueue.StepType.NORMAL, detectCollision = true)
 
+/**
+ * The bounded collision-free crossing over the obstacle itself (a cliff, a stile, a rock): at most [MAX_WALK_OVER] tiles from
+ * where the player stands, and only inside an obstacle's own task, never as an approach. Arrival is checked like [walkToTile].
+ */
 suspend fun QueueTask.walkOverTile(
     player: Player,
     tile: Tile,
 ) {
-    if (player.tile == tile) return
+    if (player.tile.sameAs(tile)) return
     val distance = player.tile.getDistance(tile)
-    player.walkTo(tile, MovementQueue.StepType.FORCED_WALK, detectCollision = false)
-    wait(distance + 1)
+    if (distance > MAX_WALK_OVER) throw ObstacleApproachFailed("crossing of $distance tiles is no bounded obstacle crossing", tile)
+    arriveAt(player, tile, MovementQueue.StepType.FORCED_WALK, detectCollision = false)
 }
 
-/** Void `exactMoveDelay(target, delay, direction, startDelay)`; delays are client cycles (30 per tick). */
+/**
+ * Void `exactMoveDelay(target, delay, direction, startDelay)`; delays are client cycles (30 per tick). The task resumes only
+ * once the client slide has ended ([Player.slideCycles], rounded up), so a following slide or animation never replaces a
+ * running one (plan 8B).
+ */
 suspend fun QueueTask.exactMove(
     player: Player,
     target: Tile,
@@ -86,7 +147,7 @@ suspend fun QueueTask.exactMove(
             directionAngle = direction.ordinal,
             lockState = LockState.NONE,
         )
-    player.forceMove(this, move, cycleDuration = Math.round(delay / 30.0).toInt().coerceAtLeast(1))
+    player.forceMove(this, move, cycleDuration = Player.slideCycles(maxOf(delay, startDelay)))
 }
 
 fun QueueTask.face(
@@ -116,12 +177,30 @@ fun KotlinPlugin.shortcut(
     on_obj_option(obj = id, option = option, logic = logic)
 }
 
+/**
+ * One obstacle = one locked task with one lifecycle (plan 8D): the player is locked for the whole crossing, zone rules keep
+ * judging the near side until he is across (Pawn.zoneTile), and however the task ends - success, a failed approach
+ * ([ObstacleApproachFailed]), a plugin error, termination by death/logout/a stronger action - the lock, any looping climb
+ * animation ([Pawn.resetLoopingAnimation], released with the lock) and any pending forced walk are cleaned up, so the player
+ * can walk and act at once from wherever he really is. A failed approach never crosses and never gives experience.
+ */
 fun Plugin.obstacle(block: suspend QueueTask.(GameObject) -> Unit) {
     val obj = player.getInteractingGameObj()
     player.lockingQueue(lockState = LockState.FULL) {
         // The whole obstacle is one transit: zone rules keep judging the near side until the player is across (Pawn.zoneTile).
         player.obstacleUntilUnlocked = true
-        block(obj)
+        terminateAction = {
+            // A terminated task never reaches its own cleanup: stop a collision-free walk in its tracks (plan 8D).
+            player.stopMovement()
+        }
+        try {
+            block(obj)
+        } catch (e: ObstacleApproachFailed) {
+            gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.PLUGIN) {
+                "obstacle ${obj.id} at ${obj.tile.x},${obj.tile.z}: ${player.username} ${e.message} - crossing refused"
+            }
+            player.stopMovement()
+        }
     }
 }
 

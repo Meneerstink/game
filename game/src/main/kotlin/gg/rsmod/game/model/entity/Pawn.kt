@@ -148,10 +148,17 @@ abstract class Pawn(
      */
     var lock = LockState.NONE
         set(value) {
+            val wasLocked = field != LockState.NONE
             field = value
             // RCV-012 B11: a player's lock belongs to the queue task that set it (see QueueTaskSet.onLockChanged).
             if (this is Player) {
                 queues.onLockChanged(value != LockState.NONE)
+                // Owner priority #1 2026-10-03: a lock marks an action in progress; its end ends the looping animation that
+                // action started (a climb, a crawl), whichever way the lock goes - task end, interrupt, death, logout - so the
+                // client never keeps the body on the spot while the server walks on (resetLoopingAnimation).
+                if (wasLocked && value == LockState.NONE) {
+                    resetLoopingAnimation()
+                }
             }
         }
 
@@ -178,6 +185,8 @@ abstract class Pawn(
     internal val queues: QueueTaskSet =
         PawnQueueTaskSet().also { set ->
             if (this is Player) {
+                // The end of a locked action (an obstacle, a climb) also ends the looping animation it started: the lock
+                // setter resets it on every locked -> NONE transition (owner priority #1 2026-10-03).
                 set.releaseLock = { lock = LockState.NONE }
             }
         }
@@ -822,6 +831,7 @@ abstract class Pawn(
             gg.rsmod.game.model.AvTrace.log { "PROBLEM anim ${entityType} index=$index id=$id REPLACES ${blockBuffer.animation} in the same cycle=${world.currentCycle}" }
         }
         lastAnimation = if (id != -1) world.currentCycle + world.getAnimationDelay(id) else 0
+        lastAnimationId = id
         blockBuffer.animation = id
         blockBuffer.animationDelay = delay
         blockBuffer.idleOnly = idleOnly
@@ -833,10 +843,32 @@ abstract class Pawn(
 
     fun resetAnimation() {
         lastAnimation = 0
+        lastAnimationId = -1
         blockBuffer.animation = -1
         blockBuffer.animationDelay = 0
         blockBuffer.idleOnly = false
         addBlock(UpdateBlockType.ANIMATION)
+    }
+
+    /** The last animation id sent to the client (-1 after a reset): the one the client is still playing or looping. */
+    var lastAnimationId = -1
+        internal set
+
+    /**
+     * Owner priority #1 2026-10-03 (stuck / noclip after rocks, Trollheim 3803): the 667 client replays a sequence with a loop
+     * offset up to 99 times (AnimDef.loops - rocks climb 740: 16 frames x 99 = ~96 s) and, at walking precedence 0, draws the
+     * body standing still until the sequence ends while the server has long moved the player on. The server owns the end of such
+     * an animation: every forced move and every locked action that started one resets it when it is over. A one-shot sequence
+     * ends on the client by itself and is left alone. Returns true when a reset was sent.
+     */
+    fun resetLoopingAnimation(): Boolean {
+        val id = lastAnimationId
+        if (id == -1) return false
+        val def = runCatching { world.definitions.getNullable(gg.rsmod.game.fs.def.AnimDef::class.java, id) }.getOrNull() ?: return false
+        if (!def.loops) return false
+        if (this is Player) gg.rsmod.game.model.AvTrace.log { "anim PLAYER $username looping id=$id reset at the end of its action cycle=${world.currentCycle}" }
+        resetAnimation()
+        return true
     }
 
     fun graphic(

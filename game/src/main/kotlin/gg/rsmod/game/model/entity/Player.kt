@@ -448,9 +448,7 @@ abstract class Player(
         task: QueueTask,
         animation: Animation,
         movement: ForcedMovement,
-        cycleDuration: Int =
-            movement.maxDuration /
-                30,
+        cycleDuration: Int = slideCycles(movement.maxDuration),
     ) {
         if (animation.id != -1) {
             animate(animation.id)
@@ -471,7 +469,7 @@ abstract class Player(
     suspend fun forceMove(
         task: QueueTask,
         movement: ForcedMovement,
-        cycleDuration: Int = movement.maxDuration / 30,
+        cycleDuration: Int = slideCycles(movement.maxDuration),
     ) {
         movementQueue.clear()
 
@@ -484,20 +482,27 @@ abstract class Player(
         beginTransit(cycleDuration.coerceAtLeast(1))
         moveTo(movement.finalDestination)
         if (tile != movement.finalDestination && tile.sameAs(before)) {
-            // Held back by a MoveGate (the Dangerous-area warning): no slide on the client, no stale lock.
+            // Held back by a MoveGate (the Dangerous-area warning): no slide on the client, no stale lock, and no
+            // climb animation left looping on the near side (owner 2026-10-03, resetLoopingAnimation).
             if (movement.lock != LockState.NONE) lock = LockState.NONE
+            resetLoopingAnimation()
             return
         }
 
         forceMove(movement)
 
-        task.wait(cycleDuration.coerceAtLeast(1))
-        if (world.currentCycle == startCycle) {
-            task.wait(1)
-        }
+        // Resume exactly when the client slide has ended: [cycleDuration] whole game cycles after the update that carried it.
+        // A plain `wait(n)` is checked once more in the cycle it was created in (the first suspension of a task resumes a
+        // cycle early, plan 8B), so the end is pinned to the cycle counter instead of a countdown.
+        val endCycle = startCycle + cycleDuration.coerceAtLeast(1)
+        task.wait { world.currentCycle >= endCycle }
         if (movement.lock != LockState.NONE) {
             lock = LockState.NONE
         }
+        // The slide is over on the client now; a looping sequence started for it (rocks climb 740) would otherwise hold the
+        // body on the landing for ~96 s while every later step the server takes is drawn nowhere (ROOT_CAUSES: stuck after
+        // 3803, owner 2026-10-02 23:58). A one-shot sequence ends by itself; a following animate() in the same cycle wins.
+        resetLoopingAnimation()
     }
 
     /**
@@ -1284,6 +1289,13 @@ abstract class Player(
             .toString()
 
     companion object {
+        /**
+         * Game cycles a client slide of [clientDuration] client cycles (20 ms, 30 per game cycle) occupies, rounded up: the
+         * next movement update may only follow once the slide has visibly ended, or it replaces the slide mid-way (owner
+         * priority #1 2026-10-03, plan 8B). Never 0.
+         */
+        fun slideCycles(clientDuration: Int): Int = Math.ceil(clientDuration / 30.0).toInt().coerceAtLeast(1)
+
         /**
          * Display-only view of the worn-equipment container (inv 94) sent to the client, set by the plugins module: it may
          * append slots the client draws but the server's equipment never holds - e.g. Dizana's quiver's stored ammunition in

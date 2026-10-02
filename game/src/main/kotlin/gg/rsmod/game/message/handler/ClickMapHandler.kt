@@ -62,7 +62,11 @@ class ClickMapHandler : MessageHandler<MoveGameClickMessage> {
             return
         }
         client.closeInterfaceModal()
-        client.fullInterruption(movement = true, interactions = true, animations = false, queue = true)
+        // Owner priority #1 2026-10-03: a walk resets the action animation, as the minimap click (ClickMinimapHandler) always did.
+        // The 667 client draws the body standing still while an action sequence with walking precedence 0 plays
+        // (Static256.movementTick), so a stale or looping sequence left the owner "stuck" on the spot while the server walked him
+        // on, and then rushing through scenery to catch up (Trollheim 3803, rocks climb 740).
+        client.fullInterruption(movement = true, interactions = true, animations = true, queue = true)
 
         /**
          * Normal movement

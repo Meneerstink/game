@@ -2,6 +2,8 @@ package gg.rsmod.plugins.content.npcs.definitions.barrows
 
 import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.attr.AttributeKey
+import gg.rsmod.game.model.entity.GameObject
+import gg.rsmod.plugins.content.mechanics.doors.DoorCrossing
 import gg.rsmod.plugins.content.npcs.definitions.barrows.Barrows.Brother
 import gg.rsmod.plugins.content.npcs.definitions.barrows.Barrows.Corner
 
@@ -80,8 +82,7 @@ on_obj_option(obj = Objs.ROPE_6708, option = "climb-up") {
                 player.message("You hear the doors' locking mechanism grind open.")
             }
             val start = Tile(player.tile)
-            walkThroughDoor(player, obj.tile, obj.rot)
-            wait(1)
+            if (!walkThroughDoor(player, obj)) return@queue
             val dx = player.tile.x - start.x
             val dz = player.tile.z - start.z
             val spawn = player.tile.transform(if (dx != 0) dx.coerceIn(-1, 1) else 0, if (dz != 0) dz.coerceIn(-1, 1) else 0)
@@ -90,29 +91,13 @@ on_obj_option(obj = Objs.ROPE_6708, option = "climb-up") {
     }
 }
 
-suspend fun QueueTask.walkThroughDoor(player: Player, doorTile: Tile, rotation: Int) {
-    val dx = player.tile.x - doorTile.x
-    val dz = player.tile.z - doorTile.z
-    val horizontal = rotation == 1 || rotation == 3
-    val destination = when {
-        horizontal && dx >= 0 -> doorTile.transform(-1, 0)
-        horizontal -> doorTile.transform(1, 0)
-        dz >= 0 -> doorTile.transform(0, -1)
-        else -> doorTile.transform(0, 1)
-    }
-    if (!Barrows.isAtDoor(player.tile, doorTile)) {
-        player.message("The door is blocked.")
-        return
-    }
-    // The object interaction route already brought the player to the door. Only this bounded
-    // one-door crossing is collision-free because the cache's varbit door state is per-player;
-    // never path to an arbitrary door tile with collision disabled.
-    val route = player.walkTo(this, destination, detectCollision = false)
-    wait(1)
-    if (!route.success || player.tile != destination) {
-        player.message("The door is blocked.")
-    }
-}
+/**
+ * The bounded one-door crossing: from the tile the door's face looks at onto the door tile, or back ([DoorCrossing]). Only this
+ * single step is collision-free, because the cache's varbit door state is per-player and the server's static door keeps its
+ * wall flag; from anywhere else the door is "blocked" and nothing moves. Owner 2026-10-03 00:26 ("noclip again"): the old
+ * rotation math walked along the wall instead of through it, into the walled pocket at 3562,9710. Returns true on arrival.
+ */
+suspend fun QueueTask.walkThroughDoor(player: Player, door: GameObject): Boolean = DoorCrossing.cross(this, player, door)
 
 /**
  * Puzzle door: three shapes in a sequence; pick the fourth from three choices.

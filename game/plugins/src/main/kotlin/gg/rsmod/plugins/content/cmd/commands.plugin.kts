@@ -1611,18 +1611,23 @@ on_command("componenttext", Privilege.ADMIN_POWER) {
     }
 }
 
+/**
+ * `clip [x z [height]]`: the server's collision of a tile and its eight neighbours, with every loc on them and the fields the
+ * 667 client's own collision uses (blockwalk, breakroutefinding, shape, rotation, size). Owner priority #1 2026-10-03 (stuck /
+ * noclip): the same lines go to the server log, so a report can be compared tile by tile with the client's `[walktrace]`.
+ */
 on_command("clip", Privilege.ADMIN_POWER) {
-    val chunk = world.chunks.getOrCreate(player.tile)
-    val matrix = chunk.getMatrix(player.tile.height)
-    val lx = player.tile.x % 8
-    val lz = player.tile.z % 8
-    player.message("Tile flags: ${chunk.getMatrix(player.tile.height).get(lx, lz)}")
-    Direction.RS_ORDER.forEach { dir ->
-        val walkBlocked = matrix.isBlocked(lx, lz, dir, projectile = false)
-        val projectileBlocked = matrix.isBlocked(lx, lz, dir, projectile = true)
-        val walkable = if (walkBlocked) "<col=42C66C>blocked</col>" else "<col=178000>walkable</col>"
-        val projectile = if (projectileBlocked) "<col=42C66C>projectiles blocked" else "<col=178000>projectiles allowed"
-        player.message("$dir: $walkable - $projectile", type = ChatMessageType.CONSOLE)
+    val args = player.getCommandArgs()
+    val centre =
+        if (args.size >= 2) {
+            Tile(args[0].toInt(), args[1].toInt(), if (args.size >= 3) args[2].toInt() else player.tile.height)
+        } else {
+            player.tile
+        }
+    val lines = gg.rsmod.plugins.content.mechanics.traversal.CollisionProbe.describe(world, centre)
+    lines.forEach { line ->
+        player.message(line, type = ChatMessageType.CONSOLE)
+        gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.NPCPATH) { "clip ${player.username}: $line" }
     }
 }
 

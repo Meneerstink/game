@@ -613,15 +613,14 @@ fun bind_walkthrough_doors() {
                 return@on_obj_option
             }
             player.queue {
-                val destination = walkthrough_destination(player.tile, obj.tile, obj.rot)
+                if (DoorCrossing.destination(player.tile, obj) == null) {
+                    player.message("The door is blocked.")
+                    return@queue
+                }
                 player.lock = LockState.FULL
                 player.playSound(Sfx.DOOR_OPEN)
-                val route = player.walkTo(this, destination, detectCollision = false)
-                wait(1)
+                DoorCrossing.cross(this, player, obj)
                 player.lock = LockState.NONE
-                if (!route.success || player.tile != destination) {
-                    player.message("The door is blocked.")
-                }
             }
         }
     }
@@ -683,19 +682,13 @@ fun swing_single_id_door(
  * already approaching from - the same rotation-only math `barrows.plugin.kts`'s `walkThroughDoor`
  * uses, since it only needs the door's own tile and rotation, not a config-derived pair.
  */
+/** Kept for the scripts that still name it: the shared rule lives in [DoorCrossing] (owner priority #1 2026-10-03). */
 fun walkthrough_destination(
     playerTile: Tile,
     doorTile: Tile,
+    type: Int,
     rotation: Int,
-): Tile {
-    val horizontal = rotation == 1 || rotation == 3
-    return when {
-        horizontal && playerTile.x - doorTile.x >= 0 -> doorTile.transform(-1, 0)
-        horizontal -> doorTile.transform(1, 0)
-        playerTile.z - doorTile.z >= 0 -> doorTile.transform(0, -1)
-        else -> doorTile.transform(0, 1)
-    }
-}
+): Tile? = DoorCrossing.destination(playerTile, doorTile, type, rotation)
 
 fun is_wall_object(obj: GameObject): Boolean =
     ObjectType.values().firstOrNull { it.value == obj.type }?.group == ObjectGroup.WALL
