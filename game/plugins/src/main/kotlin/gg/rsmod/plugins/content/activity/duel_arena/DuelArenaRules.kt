@@ -116,10 +116,10 @@ object DuelArenaRules {
     /** Novite `battleTeleport`: a free tile within 7 of the arena centre; with No Movement the opponent is adjacent. */
     fun battleTiles(match: DuelArenaMatch, centre: Tile): Pair<Tile, Tile> {
         val world = match.challenger.world
-        val first = world.findRandomTileAround(centre, radius = 7) ?: centre
+        val first = world.findRandomTileAround(centre, radius = DuelArenaLocations.PLACEMENT_RADIUS) ?: centre
         val noMovement = DuelRule.NO_MOVEMENT in match.rules
         val second = (0 until 10).asSequence()
-            .mapNotNull { world.findRandomTileAround(if (noMovement) first else centre, radius = if (noMovement) 1 else 7) }
+            .mapNotNull { world.findRandomTileAround(if (noMovement) first else centre, radius = if (noMovement) 1 else DuelArenaLocations.PLACEMENT_RADIUS) }
             .firstOrNull { !it.sameAs(first) } ?: centre
         return first to second
     }

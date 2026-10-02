@@ -179,4 +179,21 @@ class DuelArenaRulesTests {
             DEFINITIONS.loadAll(CacheLibrary(Paths.get("..", "..", "data", "cache").toFile().toString()))
         }
     }
+
+    /**
+     * Overnight 2026-10-02 (conform deadman measured a fighter at 3339,3217 outside the old box): every tile a duel can place
+     * a fighter on counts as in the arena, so his death is a duel death; the lobby does not.
+     */
+    @Test
+    fun `every placement tile of every arena counts as in the arena and the lobby does not`() {
+        val r = DuelArenaLocations.PLACEMENT_RADIUS
+        DuelArenaLocations.CENTRES.forEach { c ->
+            for (dx in -r..r) for (dz in -r..r) {
+                val t = Tile(c.x + dx, c.z + dz, 0)
+                kotlin.test.assertTrue(DuelArenaLocations.inArena(t), "placement tile $t of centre $c is outside the arena")
+            }
+            kotlin.test.assertFalse(DuelArenaLocations.inArena(Tile(c.x, c.z, 1)), "upper level")
+        }
+        DuelArenaLocations.LOBBY.forEach { kotlin.test.assertFalse(DuelArenaLocations.inArena(it), "lobby tile $it counts as arena") }
+    }
 }

@@ -324,6 +324,20 @@ object Conformance {
             npcs.forEach { n -> runCatching { if (world.npcs.contains(n)) world.remove(n) } }
         }
 
+        /** How many bots / npcs exist now: [cleanupSince] removes only what was spawned after this mark. */
+        fun mark(): Pair<Int, Int> = bots.size to npcs.size
+
+        /**
+         * Removes the bots and npcs spawned since [mark] (overnight 2026-10-02: the deadman "single" bots kept fighting in the
+         * shared arena through the next scenarios - bot SC died in the middle of "keys" and that scenario's sixth kill failed,
+         * while "keys" alone passed 8/8). Each scenario now leaves the world as it found it.
+         */
+        fun cleanupSince(mark: Pair<Int, Int>) {
+            val (b, n) = mark
+            bots.subList(b, bots.size).forEach { bot -> runCatching { gg.rsmod.plugins.content.skills.summoning.Familiar.dismiss(bot) }; runCatching { world.unregister(bot) } }
+            npcs.subList(n, npcs.size).forEach { npc -> runCatching { if (world.npcs.contains(npc)) world.remove(npc) } }
+        }
+
         fun write(): File {
             val previous = previousFailKeys()
             val order = results.sortedWith(compareBy<Result>({ it.verdict.ordinal }, { it.entry }, { it.check }))

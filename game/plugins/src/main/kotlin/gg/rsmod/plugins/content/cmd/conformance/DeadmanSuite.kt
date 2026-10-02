@@ -80,12 +80,16 @@ object DeadmanSuite : Conformance.Suite {
             if (Conformance.stopRequested || (only.isNotBlank() && !name.contains(only))) return
             run.progress(name)
             val start = run.world.currentCycle
+            val spawned = run.mark()
             try {
                 body()
             } catch (e: Throwable) {
                 run.add(Conformance.Result(name, "scenario ran", Conformance.Verdict.FAIL, "no exception", e.toString().take(200)))
             }
             run.window(name, start)
+            // No scenario's bots may fight on into the next one in the shared arena.
+            run.cleanupSince(spawned)
+            wait(1)
         }
         val arena = SummoningSuite.arenaFor(run, run.origin.transform(3, 0))
         scenario("switch") { switchOnApproach(run, arena) }

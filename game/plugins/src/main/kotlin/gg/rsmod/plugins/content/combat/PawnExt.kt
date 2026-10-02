@@ -212,6 +212,8 @@ fun Pawn.dealHit(
     // Power of Death (staff of the dead, toxic staff, staff of light): halves melee damage taken; ends on damage without the staff.
     if (target is Player) {
         damage = gg.rsmod.plugins.content.items.osrs.StaffOfTheDead.modifyIncomingDamage(target, hitType, damage.toInt()).toDouble()
+        // Elysian / Divine spirit shield passive (SpiritShields).
+        damage = SpiritShields.modifyIncomingDamage(target, damage.toInt()).toDouble()
     }
     // Tormented demons: fire shield and style prayer (see TormentedDemonCombatScript).
     // RCV-012 B7: misses reach the rule too - both donors count every hit, a miss included, toward the prayer switch.

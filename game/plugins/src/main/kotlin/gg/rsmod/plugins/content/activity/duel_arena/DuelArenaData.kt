@@ -74,8 +74,24 @@ object DuelArenaLocations {
             else -> REGULAR.random()
         }
 
-    /** Bounding box used for the SafeDeath registration - covers all 3 real arena rooms. */
+    /** How far from its room's centre [DuelArenaRules.battleTiles] places a fighter (Chebyshev radius). */
+    const val PLACEMENT_RADIUS = 7
+
+    /** Every centre a duel can be fought around. */
+    val CENTRES: List<Tile> get() = REGULAR + OBSTACLES + SUMMONING
+
+    /**
+     * The fight rooms, for the SafeDeath registration: every centre's placement square widened to its room walls (x +/-12,
+     * z +/-9), all on level 0 below the lobby. Overnight 2026-10-02 (conform deadman "confirmed: both players are in the
+     * arena" measured a fighter at 3339,3217): the old box started at x 3340, but [DuelArenaRules.battleTiles] places
+     * fighters up to [PLACEMENT_RADIUS] from the summoning centre 3346 / the obstacles centre 3345 - x 3338 and 3339 - so a
+     * fighter could stand in the arena without his death counting as a (safe) duel death.
+     */
     fun inArena(tile: Tile): Boolean =
-        tile.height == 0 &&
-            ((tile.x in 3340..3382 && tile.z in 3205..3260))
+        tile.height == 0 && tile.z < LOBBY.minOf { it.z } - 4 &&
+            CENTRES.any { kotlin.math.abs(tile.x - it.x) <= ROOM_HALF_WIDTH && kotlin.math.abs(tile.z - it.z) <= ROOM_HALF_DEPTH }
+
+    /** Half the size of a fight room around its centre (rooms are about 25 x 18 tiles). */
+    const val ROOM_HALF_WIDTH = 12
+    const val ROOM_HALF_DEPTH = 9
 }
