@@ -14,6 +14,16 @@ object PlayerPostSynchronizationTask : SynchronizationTask<Player> {
         val changedHeight = oldTile?.height != pawn.tile.height
         val moved = oldTile == null || !oldTile.sameAs(pawn.tile) || changedHeight
 
+        // ROOT_CAUSES #147: every move reaches the client as a delta from lastTile, so lastTile must be the tile the client drew
+        // after the previous update. Anything else writing it puts the client off the server tile for good (noclip everywhere).
+        val drawn = pawn.clientDrawnTile
+        if (drawn != null && oldTile != null && !drawn.sameAs(oldTile)) {
+            gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.NPCPATH) {
+                "client/server position desync: ${pawn.username}'s client drew ${drawn.x},${drawn.z},${drawn.height} but the update " +
+                    "was based on ${oldTile.x},${oldTile.z},${oldTile.height} (lastTile written outside the post-sync task)"
+            }
+        }
+
         if (moved) {
             val oldRegion = oldTile?.regionId ?: -1
             val currentRegion = pawn.tile.regionId
@@ -25,6 +35,7 @@ object PlayerPostSynchronizationTask : SynchronizationTask<Player> {
             }
             pawn.lastTile = Tile(pawn.tile)
         }
+        pawn.clientDrawnTile = Tile(pawn.tile)
         gg.rsmod.game.model.Probe.endOfCycle(pawn)
         pawn.moved = false
         pawn.steps = null

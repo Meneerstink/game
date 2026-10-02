@@ -37,6 +37,8 @@ class ZoneTransitGuardTests {
         val player = File("../src/main/kotlin/gg/rsmod/game/model/entity/Player.kt").readText()
         val moves = Regex("""suspend fun forceMove\(""").findAll(player).count()
         assertTrue(moves >= 2)
-        assertEquals(moves, Regex("""beginTransit\(""").findAll(player).count(), "each forceMove overload calls beginTransit")
+        // One implementation starts the transit; the animation overload delegates to it (ROOT_CAUSES #147).
+        assertEquals(1, Regex("""beginTransit\(""").findAll(player).count(), "one forceMove implementation calls beginTransit")
+        assertEquals(moves - 1, Regex("""\n\s+forceMove\(task, movement, cycleDuration\)""").findAll(player).count(), "every other forceMove overload delegates to it")
     }
 }

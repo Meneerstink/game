@@ -63,6 +63,9 @@ abstract class Pawn(
      */
     internal var lastTile: Tile? = null
 
+    /** The tile the client was told after the last update (set only by the post-sync task); [lastTile] must equal it. */
+    internal var clientDrawnTile: Tile? = null
+
     /**
      * Where the pawn was when its current transit began: a forced movement (agility shortcut, tunnel, knockback) puts the
      * server tile on the destination at once while the client still slides there, and an obstacle ([obstacleUntilUnlocked])

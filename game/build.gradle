@@ -37,6 +37,7 @@ dependencies {
     implementation "org.bouncycastle:bcprov-jdk15on:$bouncycastleVersion"
 
     testImplementation "junit:junit:$junitVersion"
+    testImplementation 'io.mockk:mockk:1.13.4'
 }
 
 sourceSets {

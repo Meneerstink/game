@@ -452,33 +452,22 @@ abstract class Player(
             movement.maxDuration /
                 30,
     ) {
-        movementQueue.clear()
-
         if (animation.id != -1) {
             animate(animation.id)
         }
-
-        if (movement.lock != LockState.NONE) {
-            lock = movement.lock
-        }
-
-        lastTile = Tile(tile)
-        beginTransit(cycleDuration.coerceAtLeast(1))
-        moveTo(movement.finalDestination)
-        if (tile != movement.finalDestination && tile == lastTile) {
-            // Held back by a MoveGate (the Dangerous-area warning): no slide on the client, no stale lock.
-            if (movement.lock != LockState.NONE) lock = LockState.NONE
-            return
-        }
-
-        forceMove(movement)
-
-        task.wait(cycleDuration)
-        if (movement.lock != LockState.NONE) {
-            lock = LockState.NONE
-        }
+        forceMove(task, movement, cycleDuration)
     }
 
+    /**
+     * Owner 2026-10-02 ("after a rock my whole character can noclip everywhere", Trollheim rocks, shortcuts, dungeons,
+     * boulders): this used to set [lastTile] to the current tile before moving. [lastTile] is the tile the client last
+     * saw - the player update encodes every move as a delta from it ([gg.rsmod.game.sync.segment.PlayerTeleportSegment])
+     * and only the post-sync task may set it. When the player had already moved in the same cycle (a second forced
+     * move after a first `wait(1)`, which resumes in the cycle it was called in; a moveTo before the slide), the client
+     * got the delta from the in-between tile and stood one or more tiles off the server for good, walking every later
+     * step from that wrong tile through walls. Each forced move now also ends at least one cycle after it began, so two
+     * slides are never sent in one update (only the last one would show).
+     */
     suspend fun forceMove(
         task: QueueTask,
         movement: ForcedMovement,
@@ -490,10 +479,11 @@ abstract class Player(
             lock = movement.lock
         }
 
-        lastTile = Tile(tile)
+        val before = Tile(tile)
+        val startCycle = world.currentCycle
         beginTransit(cycleDuration.coerceAtLeast(1))
         moveTo(movement.finalDestination)
-        if (tile != movement.finalDestination && tile == lastTile) {
+        if (tile != movement.finalDestination && tile.sameAs(before)) {
             // Held back by a MoveGate (the Dangerous-area warning): no slide on the client, no stale lock.
             if (movement.lock != LockState.NONE) lock = LockState.NONE
             return
@@ -501,7 +491,10 @@ abstract class Player(
 
         forceMove(movement)
 
-        task.wait(cycleDuration)
+        task.wait(cycleDuration.coerceAtLeast(1))
+        if (world.currentCycle == startCycle) {
+            task.wait(1)
+        }
         if (movement.lock != LockState.NONE) {
             lock = LockState.NONE
         }
