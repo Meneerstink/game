@@ -37,6 +37,26 @@ class TestServerIsolationTests {
     }
 
     @Test
+    fun `a sibling of a scratch file is seeded from the real sibling (GE prices and history beside offers)`() {
+        val dir = File("build/tmp/sibling-isolation")
+        dir.mkdirs()
+        File(dir, "offers.json").writeText("[]")
+        File(dir, "guide_prices.json").writeText("{\"4151\":[1500000]}")
+        System.setProperty("rsps.testServer", "true")
+        val offers = SharedDataFiles.of("build/tmp/sibling-isolation/offers.json")
+        val prices = SharedDataFiles.sibling(offers, "guide_prices.json")
+        assertNotEquals(File(dir, "guide_prices.json").absoluteFile, prices.absoluteFile)
+        assertTrue(prices.readText().contains("1500000"), "seeded from the real file")
+        prices.writeText("{}")
+        assertTrue(File(dir, "guide_prices.json").readText().contains("1500000"), "the real file is never written")
+        assertFalse(SharedDataFiles.sibling(offers, "history.json").exists(), "no real sibling -> nothing seeded")
+        System.clearProperty("rsps.testServer")
+        assertTrue(SharedDataFiles.sibling(File(dir, "offers.json"), "guide_prices.json").absoluteFile == File(dir, "guide_prices.json").absoluteFile, "live: the file next to it")
+        offers.parentFile.deleteRecursively()
+        dir.deleteRecursively()
+    }
+
+    @Test
     fun `the ban list and account recovery go through the test-server switch`() {
         // Source-level check of the two writers outside SharedDataFiles.of found in the 2026-10-02 sweep.
         val root = generateSequence(File("").absoluteFile) { it.parentFile }.first { File(it, "game/src/main/kotlin").isDirectory }

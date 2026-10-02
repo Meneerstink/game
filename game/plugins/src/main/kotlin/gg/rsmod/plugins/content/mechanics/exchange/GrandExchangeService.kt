@@ -47,13 +47,13 @@ class GrandExchangeService(
     private val offers = mutableListOf<GrandExchangeOffer>()
     private val nextId = AtomicLong(1)
     private val gson = GsonBuilder().setPrettyPrinting().create()
-    private val priceFile: File get() = File(saveFile.parentFile ?: File("."), "guide_prices.json")
-    private val historyFile: File get() = File(saveFile.parentFile ?: File("."), "history.json")
+    private val priceFile: File get() = gg.rsmod.util.io.SharedDataFiles.sibling(saveFile, "guide_prices.json")
+    private val historyFile: File get() = gg.rsmod.util.io.SharedDataFiles.sibling(saveFile, "history.json")
     private val tradePrices = mutableMapOf<Int, MutableList<Int>>()
 
     /** Audit E-01: the guide price per item ([GeGuidePrice]); `guide_prices.json` is still written for older builds. */
     private val guides = mutableMapOf<Int, GeGuideIndex>()
-    private val guideFile: File get() = File(saveFile.parentFile ?: File("."), "guide_index.json")
+    private val guideFile: File get() = gg.rsmod.util.io.SharedDataFiles.sibling(saveFile, "guide_index.json")
     private val history = mutableMapOf<String, MutableList<GeHistoryEntry>>()
     private val buyLedger = GeBuyLedger(clock)
 

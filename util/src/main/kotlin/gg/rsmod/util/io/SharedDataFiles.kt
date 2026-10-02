@@ -23,14 +23,34 @@ object SharedDataFiles {
 
     fun testServer(): Boolean = TEST_SERVER_PROPERTIES.any { !System.getProperty(it).isNullOrBlank() }
 
+    private fun scratchRoot() = File(System.getProperty("java.io.tmpdir"), "rsps-conformance-data")
+
     fun of(path: String): File {
         val real = File(path)
         if (!testServer()) return real
-        val scratch = File(System.getProperty("java.io.tmpdir"), "rsps-conformance-data/" + real.path.replace(File.separatorChar, '/'))
+        val scratch = File(scratchRoot(), real.path.replace(File.separatorChar, '/'))
         if (!scratch.exists()) {
             scratch.parentFile?.mkdirs()
             if (real.isFile) real.copyTo(scratch, overwrite = true) else scratch.writeText("")
         }
         return scratch
+    }
+
+    /**
+     * The file [name] next to [file] (the GE keeps its prices, guide index and history beside `offers.json`). On a test
+     * server [file] is a scratch copy, so the sibling is seeded from the real file beside the real original the first time
+     * (2026-10-02: a test server's GE started without prices and history). Live, it is simply the file next to [file].
+     */
+    fun sibling(file: File, name: String): File {
+        val sibling = File(file.parentFile ?: File("."), name)
+        if (!testServer() || sibling.exists()) return sibling
+        val root = scratchRoot().absoluteFile
+        if (!sibling.absoluteFile.startsWith(root)) return sibling
+        val real = File(sibling.absoluteFile.relativeTo(root).path)
+        if (real.isFile) {
+            sibling.parentFile?.mkdirs()
+            real.copyTo(sibling, overwrite = false)
+        }
+        return sibling
     }
 }
