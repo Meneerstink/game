@@ -172,10 +172,14 @@ object PlayerHouse {
      * scene, spawned ones included. [TRANSPORT_MARKER] (loc 7389, mapelement 612, the orange transport arrow) is the
      * very marker Jagex placed at the Grand Exchange spirit tree; [ALTAR_MARKER] (loc 2752, mapelement 575) is the
      * altar icon. This revision has no separate spirit-tree or fairy-ring icon (every MapElementType was rendered and
-     * checked), so the house's teleports all use the transport arrow, as the world's do.
+     * checked), so the house's teleports all use the transport arrow, as the world's do. [PORTAL_MARKER] (loc 15531,
+     * mapelement 621, the purple portal) marks the exit portal and the three marble portals (owner 2026-10-02).
+     * 2026-10-02: they only showed once the client redrew its minimap after these spawns (client Static235.affectsMinimap,
+     * ROOT_CAUSES #145) - before, the minimap was captured before the house's locs arrived.
      */
     const val TRANSPORT_MARKER = 7389
     const val ALTAR_MARKER = 2752
+    const val PORTAL_MARKER = 15531
 
     /** Marble teleport portals (2009scape Decoration MARBLE_*_PORTAL). */
     const val VARROCK_PORTAL = 13629
@@ -368,6 +372,7 @@ object PlayerHouse {
             when (obj.id) {
                 15270 -> world.spawn(DynamicObject(ALTAR_MARKER, 22, 0, obj.tile))
                 15409 -> world.spawn(DynamicObject(TRANSPORT_MARKER, 22, 0, obj.tile))
+                15406, 15407, 15408 -> world.spawn(DynamicObject(PORTAL_MARKER, 22, 0, obj.tile))
             }
         }
     }
@@ -419,6 +424,7 @@ object PlayerHouse {
         world.spawn(DynamicObject(TRANSPORT_MARKER, 22, 0, local(6, 1)))
         world.spawn(DynamicObject(TRANSPORT_MARKER, 22, 0, local(0, 6)))
         world.spawn(DynamicObject(TRANSPORT_MARKER, 22, 0, local(1, 1)))
+        world.spawn(DynamicObject(PORTAL_MARKER, 22, 0, local(5, 5)))
     }
 
     /** Spawns the house combat dummy once the owner is inside the house it was built for. */
