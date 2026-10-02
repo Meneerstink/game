@@ -10,7 +10,8 @@ import java.io.File
  * for an admin-tool ban list this size.
  */
 object BannedPlayers {
-    private val file = File("banned_players.txt")
+    // ROOT_CAUSES #109: a test server bans in its own scratch copy, never in the live server's list.
+    private val file: File = gg.rsmod.util.io.SharedDataFiles.of("banned_players.txt")
     private val banned: MutableSet<String> = load()
 
     private fun load(): MutableSet<String> =

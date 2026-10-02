@@ -36,6 +36,12 @@ class AccountRecoveryService : Service {
         world: World,
         serviceProperties: ServerProperties,
     ) {
+        // ROOT_CAUSES #109: a test server (SharedDataFiles.testServer - conformance, breach harness, the agent's live test
+        // server) never resets a real save's password, never mails a player and never takes the live server's page port.
+        if (gg.rsmod.util.io.SharedDataFiles.testServer()) {
+            logger.info { "Account recovery: off on a test server." }
+            return
+        }
         val host = serviceProperties.getOrDefault("smtp-host", "")
         val mailer =
             if (host.isBlank()) {

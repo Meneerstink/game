@@ -13,10 +13,13 @@ import java.io.File
  * server too, and the Deadman emblem / valid-kill state, the emblem log and the website player count were written straight into
  * `data` - a `conform deadman death` run left its bots in `data/deadman_emblem_pairs.txt`. Every test server isolates, and every
  * world-state writer goes through [of].
+ *
+ * 2026-10-02 (owner): the agent's live test server (`-Drsps.testServer=true`, tools\live\Start-TestServer.ps1, its own ports
+ * and temp folder) runs beside the owner's server with real clients; it isolates the same way and never writes a player save.
  */
 object SharedDataFiles {
-    /** The system properties that mark a headless test server. */
-    val TEST_SERVER_PROPERTIES = listOf("rsps.conformance", "rsps.breachConformance", "rsps.breachSim")
+    /** The system properties that mark a test server (headless harnesses and the agent's live test server). */
+    val TEST_SERVER_PROPERTIES = listOf("rsps.conformance", "rsps.breachConformance", "rsps.breachSim", "rsps.testServer")
 
     fun testServer(): Boolean = TEST_SERVER_PROPERTIES.any { !System.getProperty(it).isNullOrBlank() }
 
