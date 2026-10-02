@@ -162,6 +162,22 @@ object WorldEdits {
         removedNpcs.clear()
     }
 
+    /**
+     * Re-places code-made dressing UNDER the owner's edits (ROOT_CAUSES #144): undoes the edits, runs [rebuild], applies the
+     * edits again; returns the number applied. The home dressing (home_decor.txt) is placed at tick 5 and again on every save
+     * of that file, after the edits' boot pass at tick 2 - so every loc the owner removed or moved from it in developer mode
+     * came back (2026-10-02: the casino he moved to the top floor stood on the first floor again, its card table walling off
+     * the west staircase - "I can't reach that!").
+     */
+    fun underEdits(
+        world: World,
+        rebuild: () -> Unit,
+    ): Int {
+        undo(world)
+        rebuild()
+        return reload(world)
+    }
+
     /** Undoes the previous apply and applies the file again; returns the number of edits applied. */
     fun reload(world: World): Int {
         undo(world)

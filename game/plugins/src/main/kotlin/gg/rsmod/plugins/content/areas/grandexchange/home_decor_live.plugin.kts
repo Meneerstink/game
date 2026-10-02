@@ -104,8 +104,11 @@ fun reloadIfChanged() {
     if (modified == lastModified) return
     lastModified = modified
     try {
-        val summary = applyDesign(HomeDecorFile.load(path))
-        logger.info("Home decor applied from {}: {}.", path.toAbsolutePath(), summary)
+        val design = HomeDecorFile.load(path)
+        var summary = ""
+        // ROOT_CAUSES #144: the dressing goes in under the owner's developer-mode edits, which are applied again on top.
+        val edits = gg.rsmod.plugins.content.mechanics.worldedit.WorldEdits.underEdits(world) { summary = applyDesign(design) }
+        logger.info("Home decor applied from {}: {}; world edits re-applied on top: {}.", path.toAbsolutePath(), summary, edits)
     } catch (e: Exception) {
         logger.error("Home decor not applied, keeping the current dressing: {}", e.toString())
     }
