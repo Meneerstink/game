@@ -4,6 +4,15 @@ import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.World
 
 fun Tile.isMulti(world: World): Boolean {
+    // ROOT_CAUSES #142 (2026-10-02): "instances keep multi.yml" (above), but instances are allocated at x >= 6400, z < 4500, which
+    // the Deadman surface map below "covers" and never lists - so every instance (Pest Control islands, Fight Caves) was
+    // single-combat and FightCaves' addMultiCombatRegion workaround never applied. An instance is a copy of real chunks: it is
+    // multi where multi.yml (or a region an activity registered) makes its source or the instance region multi.
+    world.instanceAllocator.getMap(this)?.let { map ->
+        if (world.getMultiCombatRegions().contains(regionId) || world.getMultiCombatChunks().contains(chunkCoords.hashCode())) return true
+        val source = instanceSource(map, this) ?: return false
+        return world.getMultiCombatRegions().contains(source.regionId) || world.getMultiCombatChunks().contains(source.chunkCoords.hashCode())
+    }
     // Owner decision 2026-09-27: the surface follows the tile-exact OSRS Deadman: Annihilation multicombat map; dungeons and
     // instances keep data/cfg/areas/multi.yml (MultiCombatZones).
     val zones = gg.rsmod.plugins.content.mechanics.multi.MultiCombatZones
@@ -99,4 +108,16 @@ fun Tile.getWildernessLevel(): Int {
             else -> 0
         }
     return level.coerceIn(0, 60)
+}
+
+/** The real map tile an instance tile was copied from (chunk-exact; tile-exact for unrotated chunks), or null for an empty chunk. */
+fun instanceSource(
+    map: gg.rsmod.game.model.instance.InstancedMap,
+    tile: Tile,
+): Tile? {
+    val cx = (tile.x - map.area.bottomLeftX) shr 3
+    val cz = (tile.z - map.area.bottomLeftZ) shr 3
+    val chunk = map.chunks.values[gg.rsmod.game.model.instance.InstancedChunkSet.getCoordinates(cx, cz, tile.height)] ?: return null
+    val base = Tile.fromRotatedHash(chunk.packed)
+    return if (chunk.rot == 0) base.transform(tile.x and 7, tile.z and 7) else base.transform(3, 3)
 }

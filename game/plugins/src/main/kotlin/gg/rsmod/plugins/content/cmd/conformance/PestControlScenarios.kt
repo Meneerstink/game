@@ -8,6 +8,7 @@ import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.queue.QueueTask
 import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.api.ext.hit
+import gg.rsmod.plugins.api.ext.isMulti
 import gg.rsmod.plugins.content.activity.pest_control.PC_GAME_INTERFACE
 import gg.rsmod.plugins.content.activity.pest_control.PC_HAMMER
 import gg.rsmod.plugins.content.activity.pest_control.PC_KNIGHT_LIFEPOINTS
@@ -194,6 +195,12 @@ object PestControlScenarios {
         run.expectTrue(E, "all five in the instance, overlay 408", bots.all { PestControlHandler.gameOf(it) === game && it.interfaces.isVisible(PC_GAME_INTERFACE) }, "tiles=${bots.map { it.tile }}")
         run.expectTrue(E, "the instance is not the real island", game.base != gg.rsmod.plugins.content.activity.pest_control.PC_REGION_BASE, "base=${game.base}")
         run.expectTrue(E, "inside the game is a safe zone (no PvP)", GuardedZones.contains(a.tile), "tile=${a.tile}")
+        // ROOT_CAUSES #142: the island is multi-combat (multi.yml region 10536); its instance copy must be too.
+        run.expectTrue(
+            E, "the island instance is multi-combat (multi.yml region 10536)",
+            a.tile.isMulti(run.world) && game.local(32, 32).isMulti(run.world) && game.local(4, 31).isMulti(run.world),
+            "instance=${a.tile.isMulti(run.world)} real island=${gg.rsmod.plugins.content.activity.pest_control.PC_REGION_BASE.transform(32, 32, 0).isMulti(run.world)}",
+        )
         run.expectTrue(E, "four shielded portals 6146-6149", game.portals.map { it?.id } == listOf(6146, 6147, 6148, 6149), "${game.portals.map { it?.id }}")
         run.expectTrue(E, "the Void Knight with ${PC_KNIGHT_LIFEPOINTS} lifepoints", game.knight.isSpawned() && game.knight.getCurrentLifepoints() == PC_KNIGHT_LIFEPOINTS, "${game.knight.id} lp=${game.knight.getCurrentLifepoints()}")
         run.expectTrue(E, "all 38 barricades and gates of the island found in the instance", game.barricades.size == 38, "count=${game.barricades.size} ids=${game.barricades.map { it.id }.distinct().sorted()}")
@@ -284,6 +291,20 @@ object PestControlScenarios {
                 (b.tile.x - game.base.x) in 32..35 && (b.tile.z - game.base.z) in 49..54,
             "game=${PestControlHandler.gameOf(b) === game} tile=${b.tile} whip=${b.inventory.contains(gg.rsmod.plugins.api.cfg.Items.ABYSSAL_WHIP)}",
         )
+
+        // 6b. The squire by the landing: "Leave" takes a player off the island.
+        val c = bots[2]
+        val squire = run.world.npcs.firstOrNull { it.id == gg.rsmod.plugins.content.activity.pest_control.PC_LEAVE_SQUIRE && game.map.area.contains(it.tile) }
+        if (squire == null) {
+            run.expectTrue(E, "the leave squire 3781 in the instance", false, "none")
+        } else {
+            c.moveTo(gg.rsmod.plugins.content.mechanics.pvp.CityGuards.nearestWalkable(run.world, squire.tile.transform(0, 1, 0), radius = 3) ?: squire.tile.transform(0, 1, 0))
+            wait(2)
+            Bots.npcOption(c, squire, 3)
+            var w = 0
+            while (w++ < 10 && PestControlHandler.gameOf(c) != null) wait(1)
+            run.expectTrue(E, "squire 3781 Leave: off the island, overlay closed", PestControlHandler.gameOf(c) == null && c.tile.sameAs(PestControlTier.NOVICE.leaveTile) && !c.interfaces.isVisible(PC_GAME_INTERFACE), "tile=${c.tile}")
+        }
 
         // 7. Win: all portals destroyed. PC1 has the zeal for a reward, PC2 is held under 50.
         PestControlHandler.addZeal(a, 60)
