@@ -47,4 +47,19 @@ class FamiliarFollowRecoveryTests {
             assertEquals(Familiar.ARRIVAL_SOUND, cues.first(), "${data.name} lost the generic recovery cue")
         }
     }
+
+    /**
+     * Owner 2026-10-02: a Steel titan teleported to its owner played a loud hit (its spawn cue 4638). Call and the automatic
+     * follow recovery are recalls, not summons: for every familiar they play the generic cue only, while the summon itself
+     * keeps the familiar's own spawn cue.
+     */
+    @Test
+    fun `a recall never replays the familiar's own spawn cue`() {
+        SummoningPouchData.values.forEach { data ->
+            assertEquals(listOf(Familiar.ARRIVAL_SOUND), Familiar.arrivalSoundIds(data, summoned = false), "${data.name} recall cues")
+            FamiliarAudio.spawnSound(data)?.let { spawn ->
+                assertTrue(spawn in Familiar.arrivalSoundIds(data, summoned = true), "${data.name} summon lost its spawn cue $spawn")
+            }
+        }
+    }
 }

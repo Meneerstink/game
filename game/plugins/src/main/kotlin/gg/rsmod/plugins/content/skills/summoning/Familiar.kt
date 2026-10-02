@@ -679,7 +679,7 @@ object Familiar {
         npc.removeCombatTarget()
         npc.resetFacePawn()
         npc.teleportNpc(placementTile(player, npc.id))
-        playArrivalPresentation(player, npc, data)
+        playArrivalPresentation(player, npc, data, summoned = false)
         npc.facePawn(player)
         player.message("You call your familiar to your side.")
         FamiliarCombat.recallToOwnerTarget(player)
@@ -698,15 +698,25 @@ object Familiar {
         player: Player,
         npc: Npc,
         data: SummoningPouchData,
+        summoned: Boolean = true,
     ) {
         playAppearanceGraphic(npc)
         SummoningSpawnDespawnAnimations.spawnAnim(data).takeIf { it != -1 }?.let { npc.animate(it) }
-        arrivalSoundIds(data).forEach { FamiliarAudio.play(player, it) }
+        arrivalSoundIds(data, summoned).forEach { FamiliarAudio.play(player, it) }
     }
 
-    /** Generic arrival cue is mandatory for every roster entry; the second cue is optional. */
-    internal fun arrivalSoundIds(data: SummoningPouchData): List<Int> =
-        listOfNotNull(ARRIVAL_SOUND, FamiliarAudio.spawnSound(data))
+    /**
+     * Generic arrival cue is mandatory for every roster entry; the familiar's own QC3 spawn cue only accompanies the actual
+     * summon. Overnight run 2026-10-02 (owner: "when the steel titan is teleported to me a loud hit/footstep sound plays"):
+     * Call and the automatic follow recovery reused the summon presentation, so every recall replayed the spawn cue - for
+     * the Steel titan 4638, rendered with the client's own synth code a 1 s clipped impact (RMS 55, attack 0 ms, the same
+     * profile as its ranged impact 4670) against the generic call cue 188 (RMS 13). The 14 familiars with a spawn cue all
+     * had it on every Call and teleport; a recall now plays the generic cue only (2009Scape `Familiar.call()`).
+     */
+    internal fun arrivalSoundIds(
+        data: SummoningPouchData,
+        summoned: Boolean = true,
+    ): List<Int> = listOfNotNull(ARRIVAL_SOUND, FamiliarAudio.spawnSound(data).takeIf { summoned })
 
     /**
      * Automatic follow recovery is the same visible re-entry event as summon and Call. Keeping
@@ -731,7 +741,7 @@ object Familiar {
             playAppearanceGraphic(npc)
             FamiliarAudio.play(player, ARRIVAL_SOUND)
         } else {
-            playArrivalPresentation(player, npc, data)
+            playArrivalPresentation(player, npc, data, summoned = false)
         }
     }
 

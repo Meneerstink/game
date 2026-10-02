@@ -222,6 +222,12 @@ object SummoningSuite : Conformance.Suite {
         val callOut = run.recording.of("familiar", "out").filter { it.cycle >= cc }
         run.check(e, "call follower animation", callOut.firstOrNull { it.text.startsWith("anim ") }?.let { idOf(it.text) }, "void" to v?.get("spawn_anim")?.takeIf { !it.isNull }?.asInt())
         run.check(e, "call follower graphic", callOut.firstOrNull { it.text.startsWith("gfx ") }?.let { idOf(it.text) }, "void" to common["summon_gfx_by_size"]?.get(size.toString())?.asInt())
+        // Overnight 2026-10-02 (owner: a loud hit when the Steel titan is teleported to him): a recall - the follow teleport
+        // above and Call - is not a summon, so the familiar's own spawn cue (Steel titan 4638, a clipped impact) never plays.
+        gg.rsmod.plugins.content.skills.summoning.FamiliarAudio.spawnSound(data)?.let { spawn ->
+            val recallSounds = run.recording.of("Conf1", "msg").filter { it.cycle >= ct && it.text.contains("Sound") }.map { it.text }
+            run.expectTrue(e, "recall (follow teleport + Call) without the spawn cue $spawn", recallSounds.none { it.contains("$spawn") }, recallSounds.joinToString(" / ").ifEmpty { "(no sound message)" }, "no sound $spawn")
+        }
         if (ct < 0) run.note("unreachable")
 
         // 4. Combat.
