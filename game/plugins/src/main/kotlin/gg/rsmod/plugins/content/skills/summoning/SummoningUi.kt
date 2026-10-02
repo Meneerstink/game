@@ -177,7 +177,8 @@ object SummoningUi {
      * remains visible with an empty panel when no familiar is out.
      */
     fun showPanel(player: Player) {
-        player.focusTab(Tabs.SUMMONING)
+        // Tab 8's page is slot 95 (SummoningInterfaceScriptTool point 3): this shows 662 with the Follower Details tab lit.
+        player.focusTab(Tabs.BLANK_TAB)
     }
 
     fun hidePanel(player: Player) {

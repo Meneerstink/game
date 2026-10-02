@@ -132,11 +132,12 @@ object FollowerDetailsTab {
 
     /**
      * Opens the Follower Details panel, whatever it currently contains. It is permanently mounted
-     * on gameframe slot 95 ([Tabs.SUMMONING]); switching to it is a pure client-side tab focus.
-     * [SummoningUi.refreshPanel] is what decides whether that slot currently shows a familiar or
-     * sits empty - this call does not need to know which.
+     * on gameframe slot 95 ([Tabs.SUMMONING]), and the cache maps this tab's page to that same slot
+     * (SummoningInterfaceScriptTool point 3), so focusing tab 8 shows the panel AND highlights this
+     * tab's button. The click already did that client-side (onOp 1303(8)); re-focusing the same tab
+     * is a no-op. [SummoningUi.refreshPanel] decides whether that slot shows a familiar or sits empty.
      */
     fun open(player: Player) {
-        player.focusTab(Tabs.SUMMONING)
+        player.focusTab(Tabs.BLANK_TAB)
     }
 }

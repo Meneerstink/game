@@ -22,7 +22,11 @@ object Tabs {
     const val EQUIPMENT = 5
     const val PRAYER = 6
     const val SPELLBOOK = 7
-    /** The spare minigame tab ("Production" in Stealing Creation, "Microtutorial" in the tutorial). */
+    /**
+     * The spare minigame tab ("Production" in Stealing Creation, "Microtutorial" in the tutorial). On this server it is the
+     * Follower Details tab: the cache maps its page to the Follower Details slot 95 (SummoningInterfaceScriptTool point 3),
+     * so focusing it shows interface 662 and highlights the tab button.
+     */
     const val BLANK_TAB = 8
     const val FRIENDS_IGNORE = 9
     const val FRIENDS_CHAT = 10

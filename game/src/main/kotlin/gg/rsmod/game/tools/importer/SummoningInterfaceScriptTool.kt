@@ -22,6 +22,22 @@ import java.io.ByteArrayOutputStream
  *    The labels are baked "Dismiss" / "Dismiss Familiar" / "Dismiss Now" and no server packet in this revision renames an
  *    op, so the server runs this script with "Pick-up" for an OSRS pet and the baked words for a familiar.
  *
+ * 3. Tab 8 (the spare tab that carries Follower Details) opens the Follower Details slot (owner 2026-10-02 overnight run:
+ *    "Summoning tab disappears ... on login with a familiar or pet out, on teleport and other events"). Live repro: opening
+ *    any chatbox dialogue (Dismiss familiar? Yes/No) removed the tab's icon and button. Cause, read from the cache: the
+ *    gameframe script 1364 runs on every sub-interface change and, for each tab 0..15, shows the tab's icon (script 121)
+ *    and button (script 2458) only when the tab's own container (script 8) holds a sub-interface - and hides both
+ *    otherwise. Tab 8's container is 746:98 / 548:212, but 662 lives on slot 95 (746:107 / 548:221), the container the
+ *    orb's own "Follower Details" op (747:9/18 onOp 2457(95)) and its option layer (1364: 747:8 needs slot 95 mounted)
+ *    depend on. So every dialogue, bank, shop or teleport interface change hid the tab until the server happened to
+ *    re-arm it. Fix at the source: every script that names tab 8's container names the Follower Details slot instead,
+ *    so the tab is "mounted" exactly when 662 is and selecting it shows the panel client-side:
+ *      script 8    (tab -> container)      746:98 -> 746:107, 548:212 -> 548:221
+ *      script 1387 (select tab: show it)   746:98 -> 746:107, 548:212 -> 548:221
+ *      script 1314 (is the tab open)       746:98 -> 746:107, 548:212 -> 548:221
+ *    Constant swaps only (PUSH_CONSTANT_INT operand), so no branch offset moves. 1308/1311 (hide every container) and
+ *    1364's "all hidden" check keep naming 746:98 / 548:212, which simply stays empty and hidden.
+ *
  * Usage: `[--apply]`.
  */
 object SummoningInterfaceScriptTool {
@@ -36,6 +52,41 @@ object SummoningInterfaceScriptTool {
     private const val IF_SETOP = 2300
     private const val TAB_VARC = 823
     private val TAB_VARC_READS = intArrayOf(441, 456)
+
+    /** The scripts that name tab 8's container (see point 3 above). */
+    val TAB8_CONTAINER_SCRIPTS = intArrayOf(8, 1387, 1314)
+
+    /** Tab 8's own container -> the Follower Details slot (slot 95), resizable and fixed. */
+    val TAB8_CONTAINER_REMAP: Map<Int, Int> =
+        mapOf(
+            ((746 shl 16) or 98) to ((746 shl 16) or 107),
+            ((548 shl 16) or 212) to ((548 shl 16) or 221),
+        )
+
+    /** Point 3: swaps tab 8's container constants for slot 95's. Idempotent; refuses anything but exactly one hit per constant. */
+    fun remapTab8Container(current: ByteArray): ByteArray {
+        val decoded = ProductionTabClientScriptPatchTool.decode(current)
+        val patched = current.copyOf()
+        val changed = mutableSetOf<Int>()
+        TAB8_CONTAINER_REMAP.forEach { (old, new) ->
+            val hits = decoded.indices.filter { decoded[it].opcode == PUSH_CONSTANT_INT && decoded[it].intOperand == old }
+            if (hits.isEmpty()) return@forEach
+            check(hits.size == 1) { "tab 8 container ${old ushr 16}:${old and 0xFFFF} pushed ${hits.size} times - refusing to guess" }
+            val at = decoded[hits[0]].start + 2
+            patched[at] = (new ushr 24).toByte()
+            patched[at + 1] = (new ushr 16).toByte()
+            patched[at + 2] = (new ushr 8).toByte()
+            patched[at + 3] = new.toByte()
+            changed += hits[0]
+        }
+        val check = ProductionTabClientScriptPatchTool.decode(patched)
+        check(check.size == decoded.size) { "instruction count changed" }
+        decoded.indices.forEach { i ->
+            val expected = if (i in changed) decoded[i].copy(intOperand = TAB8_CONTAINER_REMAP.getValue(decoded[i].intOperand!!)) else decoded[i]
+            check(check[i] == expected) { "instruction $i differs after patch: ${check[i]} vs $expected" }
+        }
+        return patched
+    }
 
     fun patchTabScript(current: ByteArray): ByteArray {
         val decoded = ProductionTabClientScriptPatchTool.decode(current)
@@ -125,6 +176,13 @@ object SummoningInterfaceScriptTool {
             val patched = patchTabScript(tab)
             if (!patched.contentEquals(tab)) {
                 mutations += CacheMutation(CLIENTSCRIPT_INDEX, TAB_SCRIPT, 0, patched, "clientscript $TAB_SCRIPT: Follower Details tab without VARC $TAB_VARC", expectedCurrentSha1 = CacheItemProbeTool.sha1(tab))
+            }
+            TAB8_CONTAINER_SCRIPTS.forEach { id ->
+                val current = requireNotNull(library.data(CLIENTSCRIPT_INDEX, id, 0)) { "clientscript $id missing" }
+                val remapped = remapTab8Container(current)
+                if (!remapped.contentEquals(current)) {
+                    mutations += CacheMutation(CLIENTSCRIPT_INDEX, id, 0, remapped, "clientscript $id: tab 8 opens the Follower Details slot", expectedCurrentSha1 = CacheItemProbeTool.sha1(current))
+                }
             }
             val existing = library.data(CLIENTSCRIPT_INDEX, LABEL_SCRIPT, 0)
             val label = labelScript()

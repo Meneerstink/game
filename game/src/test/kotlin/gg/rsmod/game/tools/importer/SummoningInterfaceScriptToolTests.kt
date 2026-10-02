@@ -41,4 +41,23 @@ class SummoningInterfaceScriptToolTests {
         assertEquals(listOf(747 to 11, 747 to 20, 662 to 51, 662 to 51), targets)
         assertEquals(4, code.count { it.opcode == 2300 })
     }
+
+    /**
+     * Owner 2026-10-02 ("Summoning tab disappears"): 1364 hides a tab whose own container (script 8) is empty, and 662 lives
+     * on slot 95. Every script that names tab 8's container must name slot 95's instead, in both panes, so the tab is shown
+     * whenever the panel is mounted - and no script may still select or test 746:98 / 548:212 as tab 8's page.
+     */
+    @Test
+    fun `tab 8 opens the Follower Details slot in every tab script`() {
+        val remap = SummoningInterfaceScriptTool.TAB8_CONTAINER_REMAP
+        SummoningInterfaceScriptTool.TAB8_CONTAINER_SCRIPTS.forEach { id ->
+            val bytes = script(id)
+            val pushes = ProductionTabClientScriptPatchTool.decode(bytes).filter { it.opcode == 0 }.map { it.intOperand }
+            remap.forEach { (old, new) ->
+                assertTrue(old !in pushes, "clientscript $id still names tab 8's own container ${old ushr 16}:${old and 0xFFFF}")
+                assertEquals(2, pushes.count { it == new }, "clientscript $id: slot ${new ushr 16}:${new and 0xFFFF} should serve tab 8 and slot 95")
+            }
+            assertContentEquals(bytes, SummoningInterfaceScriptTool.remapTab8Container(bytes))
+        }
+    }
 }

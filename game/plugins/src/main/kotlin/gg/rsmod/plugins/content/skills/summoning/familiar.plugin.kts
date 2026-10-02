@@ -356,6 +356,20 @@ on_world_init {
     SummoningLedger.validate()
     // H13: needs the loaded cache, so it cannot live in SummoningLedger.validate().
     SummoningLedger.validateRenderData(world)
+    // Owner 2026-10-02 ("Summoning tab disappears"): while clientscript 8/1387/1314 named tab 8's own empty page, gameframe
+    // script 1364 hid the Follower Details tab on every sub-interface change (SummoningInterfaceScriptTool point 3).
+    gg.rsmod.game.tools.importer.SummoningInterfaceScriptTool.TAB8_CONTAINER_SCRIPTS.forEach { id ->
+        val pushes =
+            runCatching {
+                gg.rsmod.game.tools.importer.ProductionTabClientScriptPatchTool.decode(world.filestore.data(12, id, 0)!!)
+                    .filter { it.opcode == 0 }.map { it.intOperand }
+            }.getOrNull()
+        if (pushes == null || gg.rsmod.game.tools.importer.SummoningInterfaceScriptTool.TAB8_CONTAINER_REMAP.keys.any { it in pushes }) {
+            gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.SUMMON) {
+                "clientscript $id still opens tab 8's own empty page: the Follower Details tab hides on every interface change (run SummoningInterfaceScriptTool --apply)"
+            }
+        }
+    }
     println(
         "R07.1 familiar: bound Summon on $boundSummon/${boundSummon + skippedSummon} pouches, " +
             "Interact on $boundInteract/${boundInteract + skippedInteract} familiar npcs, " +
