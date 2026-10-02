@@ -6,7 +6,6 @@ import gg.rsmod.game.fs.def.ItemDef
 import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.container.ContainerStackType
 import gg.rsmod.game.model.container.ItemContainer
-import gg.rsmod.game.model.entity.GroundItem
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.plugins.api.InterfaceDestination
@@ -143,15 +142,11 @@ object PriceChecker {
             return
         }
 
-        val removal = player.inventory.remove(item.id, count, assureFullRemoval = true, beginSlot = slot)
-        if (removal.hasSucceeded()) {
-            val insertion = container.add(item.id, count, assureFullInsertion = true)
-            if (!insertion.hasSucceeded()) {
-                // Unreachable while the containers are the same size, but an item must never be
-                // destroyed by a screen that only exists to look at prices.
-                player.inventory.add(item.id, count)
-                player.message("You can't check any more items at once.")
-            }
+        // Every exemplar moves with its own attributes (bug search 2026-10-02): a rebuilt `add(item.id, count)` gave a
+        // degraded Chaotic/Nex piece back fully charged and wiped a trident's charges.
+        val moved = player.inventory.moveEach(container, item.id, count, startSlot = slot).moved
+        if (moved < count) {
+            player.message("You can't check any more items at once.")
         }
         refresh(player)
     }
@@ -171,13 +166,9 @@ object PriceChecker {
             return
         }
 
-        val removal = container.remove(item.id, count, assureFullRemoval = true, beginSlot = slot)
-        if (removal.hasSucceeded()) {
-            val insertion = player.inventory.add(item.id, count, assureFullInsertion = true)
-            if (!insertion.hasSucceeded()) {
-                container.add(item.id, count)
-                player.message("You don't have enough inventory space.")
-            }
+        val moved = container.moveEach(player.inventory, item.id, count, startSlot = slot).moved
+        if (moved < count) {
+            player.message("You don't have enough inventory space.")
         }
         refresh(player)
     }
@@ -190,13 +181,7 @@ object PriceChecker {
         val container = player.attr[CONTAINER_ATTR] ?: return
         player.attr.remove(CONTAINER_ATTR)
 
-        container.rawItems.filterNotNull().forEach { item ->
-            val insertion = player.inventory.add(item.id, item.amount, assureFullInsertion = false)
-            val leftOver = insertion.getLeftOver()
-            if (leftOver > 0) {
-                player.world.spawn(GroundItem(item.id, leftOver, player.tile, player))
-            }
-        }
+        container.rawItems.filterNotNull().forEach { item -> giveOrDrop(player, item) }
         container.removeAll()
 
         player.closeInterface(OVERLAY_INTERFACE_ID)

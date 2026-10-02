@@ -759,6 +759,7 @@ object CasinoScreens {
         player: Player,
         game: CasinoGame,
     ) {
+        if (Casino.refusePlay(player)) return
         when (game) {
             CasinoGame.DICE -> Dice.open(player)
             CasinoGame.MINES -> Mines.open(player)

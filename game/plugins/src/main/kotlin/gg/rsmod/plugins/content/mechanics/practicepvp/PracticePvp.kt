@@ -58,12 +58,29 @@ object PracticePvp {
             player.filterableMessage("You're already in a Practice PvP match.")
             return
         }
+        // Bug search 2026-10-02: a match starts where the newest player stands and pulls the waiting one there, so
+        // both ends obey the remote-route rule: queueing from a safe zone, and the waiting player only moved if every
+        // teleport rule still holds for them right now (RemoteAccess).
+        if (gg.rsmod.plugins.content.mechanics.pvp.RemoteAccess.refuse(player, "join Practice PvP")) {
+            return
+        }
         if (!player.inventory.isEmpty || !player.equipment.isEmpty) {
             player.filterableMessage("Bank your items first - Practice PvP requires an empty inventory and equipment.")
             return
         }
         queue.removeIf { it == player || !it.isOnline }
-        val opponent = queue.firstOrNull()
+        var opponent: Player? = null
+        while (opponent == null && queue.isNotEmpty()) {
+            val next = queue.removeAt(0)
+            val refusal = gg.rsmod.plugins.content.mechanics.pvp.RemoteAccess.moveRefusal(next, "be taken to a Practice PvP match")
+            if (refusal == null) {
+                opponent = next
+            } else {
+                next.message(refusal)
+                next.message("You have been removed from the Practice PvP queue.")
+                cleanup(next)
+            }
+        }
         if (opponent == null) {
             queue.add(player)
             player.filterableMessage("Queued for Practice PvP. Waiting for an opponent...")
@@ -91,7 +108,7 @@ object PracticePvp {
         give(preset.helm, EquipmentType.HEAD)
         player.attr[GRANTED_SLOTS_ATTR] = slots
         player.refreshBonuses()
-        player.filterableMessage("You are equipped with the ${preset.label} preset.")
+        player.message("You are equipped with the ${preset.label} preset.")
     }
 
     private fun startMatch(

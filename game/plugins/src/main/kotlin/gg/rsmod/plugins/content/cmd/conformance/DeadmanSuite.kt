@@ -9,11 +9,15 @@ import gg.rsmod.game.model.item.Item
 import gg.rsmod.game.model.queue.QueueTask
 import gg.rsmod.plugins.api.EquipmentType
 import gg.rsmod.plugins.api.cfg.Items
+import gg.rsmod.plugins.api.ext.addPreservingAttr
 import gg.rsmod.plugins.api.ext.calculateAndSetCombatLevel
 import gg.rsmod.plugins.api.Skills
+import gg.rsmod.plugins.api.ext.closeInterface
+import gg.rsmod.plugins.api.ext.isInterfaceVisible
 import gg.rsmod.plugins.api.ext.hit
 import gg.rsmod.plugins.api.ext.isMulti
 import gg.rsmod.plugins.api.ext.setVarp
+import gg.rsmod.plugins.content.activity.duel_arena.getDuelMatch
 import gg.rsmod.plugins.content.combat.Combat
 import gg.rsmod.plugins.content.mechanics.poison.Venom
 import gg.rsmod.plugins.content.inter.attack.AttackTab
@@ -50,6 +54,16 @@ import gg.rsmod.plugins.content.combat.getCombatTarget
  *   is refused (Deadman bracket), the same bracket in danger attacks.
  * - teleblock: a real Tele Block cast - 500 ticks, 250 with Protect from Magic, a second cast does not refresh it.
  * - phantom: Morrigan's javelin Phantom Strike on a player - the bleed is 10 a tick until 75% of the special's damage (OSRS Wiki).
+ * - remote: the shared remote-route gate (RemoteAccess, bug search 2026-10-02) on the real command packet - from a death zone
+ *   `dungeon`, `deadmanstore`, `mines` and `pestcontrolnovice` are refused and nothing moves or opens; Tele Blocked in a safe
+ *   zone `dungeon` is refused; from a safe zone `dungeon` travels and `deadmanstore` opens (the routes still work).
+ * - duel: a staked duel through the native screens on real packets (Challenge option, 640, 631 accept, 626 accept) - the
+ *   fight starts with the match and both stakes intact (bug search 2026-10-02: closing the confirmation screen declined the
+ *   match first), a forfeit pays the winner both stakes with their attributes; a skulled challenger never enters the arena
+ *   and both stakes come back.
+ * - casino: a Mines board laid through the real START button in a safe zone; the START button is refused in a death zone; the
+ *   player carries the open board into a death zone and is killed by a player - the board does not survive the death and the
+ *   killer's loot holds the carried coins plus the board's cash-out value (bug search 2026-10-02: the stake survived death).
  * - dupe: the victim drops a godsword every tick while being killed (one drop falls on the killing blow's tick) - every godsword
  *   ends up exactly once: inventory, ground or loot key.
  */
@@ -94,6 +108,9 @@ object DeadmanSuite : Conformance.Suite {
         scenario("corp") { corpCave(run) }
         scenario("corrupt") { corruptSpecials(run, arena) }
         scenario("vine") { vineCall(run, arena) }
+        scenario("remote") { remoteRoutes(run) }
+        scenario("duel") { stakedDuel(run) }
+        scenario("casino") { casinoDeath(run, arena) }
     }
 
     /** Hitsplat types [who] received since [from], in order. */
@@ -1134,6 +1151,253 @@ object DeadmanSuite : Conformance.Suite {
     }
 
     // ---- zones: the PvP gate (guarded zone, level bracket) ------------------------------------------------------------------
+
+    // ---- remote: commands and remote services obey the shared gate -------------------------------------------------------
+
+    private suspend fun QueueTask.remoteRoutes(run: Conformance.Run) {
+        val e = "remote"
+        val zones = gg.rsmod.plugins.content.mechanics.pvp.GuardedZones
+        val square = Tile(3213, 3428, 0)
+        // A walkable death-zone tile straight west of the Varrock square (the same search the zones scenario uses).
+        val danger = (1..120).map { square.transform(-it, 0) }.firstOrNull { t -> !zones.contains(t) && !run.world.collision.isClipped(t) }
+        if (danger == null) {
+            run.notTested(e, "all", "no walkable death-zone tile west of $square")
+            return
+        }
+        val r = run.bot(square, "RA")
+        wait(2)
+        fun msgs(from: Int) = run.recording.of("RA", "msg").filter { it.cycle >= from && it.text.startsWith("MessageGameMessage") }
+            .joinToString(" / ") { it.text.substringAfter("message=").take(90) }
+
+        /** Types [command] exactly as the client sends it (ClientCheat packet) and returns what the bot was told. */
+        suspend fun type(command: String): String {
+            val c = run.world.currentCycle
+            Bots.inject(r, gg.rsmod.game.message.impl.ClientCheatMessage(0, command))
+            repeat(4) { wait(1) }
+            return msgs(c)
+        }
+
+        suspend fun place(tile: Tile) {
+            r.closeInterface(gg.rsmod.plugins.api.InterfaceDestination.MAIN_SCREEN)
+            reset(r, tile)
+            r.timers.remove(gg.rsmod.game.model.timer.TELEBLOCK_TIMER)
+            r.timers.remove(gg.rsmod.game.model.timer.SKULL_ICON_DURATION_TIMER)
+            r.timers.remove(gg.rsmod.game.model.timer.ACTIVE_COMBAT_TIMER)
+            repeat(2) { wait(1) }
+        }
+
+        // 1. In a death zone every remote route refuses; nothing moves, nothing opens.
+        place(danger)
+        val dungeon = type("dungeon")
+        run.expectTrue(e, "dungeon from a death zone: refused, not moved", r.tile.sameAs(danger) && dungeon.contains("from a safe zone"), "tile=${r.tile} msgs: $dungeon")
+        val store = type("deadmanstore")
+        run.expectTrue(e, "deadmanstore from a death zone: refused", !gg.rsmod.plugins.content.mechanics.store.StoreUi.isOpen(r) && store.contains("from a safe zone"), "msgs: $store")
+        val mines = type("mines")
+        run.expectTrue(
+            e, "mines from a death zone: refused",
+            !r.isInterfaceVisible(gg.rsmod.game.tools.importer.CasinoInterfaceImportTool.MINES_ID) && mines.contains("from a safe zone"), "msgs: $mines",
+        )
+        val pest = type("pestcontrolnovice")
+        run.expectTrue(e, "pest control boarding from a death zone: refused", pest.contains("from a safe zone"), "msgs: $pest")
+
+        // 2. A safe zone does not lift Tele Block.
+        place(square)
+        r.timers[gg.rsmod.game.model.timer.TELEBLOCK_TIMER] = 100
+        val blocked = type("dungeon")
+        run.expectTrue(e, "dungeon while Tele Blocked: refused, not moved", r.tile.sameAs(square) && blocked.contains("magical force"), "tile=${r.tile} msgs: $blocked")
+
+        // 3. The routes still work from where they are allowed.
+        place(square)
+        val opened = type("deadmanstore")
+        run.expectTrue(e, "deadmanstore from a safe zone: opens", gg.rsmod.plugins.content.mechanics.store.StoreUi.isOpen(r), "msgs: $opened")
+        place(square)
+        type("dungeon")
+        repeat(4) { wait(1) }
+        run.expectTrue(e, "dungeon from a safe zone: travels", !r.tile.isWithinRadius(square, 64), "tile=${r.tile}")
+        reset(r, square)
+    }
+
+    // ---- duel: a staked duel end to end through the native screens --------------------------------------------------------
+
+    private suspend fun QueueTask.stakedDuel(run: Conformance.Run) {
+        val e = "duel"
+        val screens = gg.rsmod.plugins.content.activity.duel_arena.DuelArenaInterfaces
+        val tileA = Tile(3367, 3275, 0)
+        val tileB = Tile(3368, 3275, 0)
+        if (!screens.inLobby(tileA) || !screens.inLobby(tileB)) {
+            run.notTested(e, "all", "lobby tiles $tileA / $tileB are not in the lobby")
+            return
+        }
+        val a = run.bot(tileA, "DA")
+        val b = run.bot(tileB, "DB")
+        repeat(4) { wait(1) }
+        val charges = gg.rsmod.game.model.item.ItemAttribute.CHARGES
+        fun probes(p: Client) = p.inventory.rawItems.count { it?.id == Items.ABYSSAL_WHIP && it.attr[charges] == 555 }
+
+        /** Both in the lobby, A challenges B to a staked duel, B accepts by challenging back, both stake and accept the rules. */
+        suspend fun duelToConfirmation(): gg.rsmod.plugins.content.activity.duel_arena.DuelArenaMatch? {
+            for ((p, t) in listOf(a to tileA, b to tileB)) {
+                reset(p, t)
+                p.timers.remove(gg.rsmod.game.model.timer.SKULL_ICON_DURATION_TIMER)
+                p.timers.remove(gg.rsmod.game.model.timer.TELEBLOCK_TIMER)
+            }
+            a.inventory.addPreservingAttr(Item(Items.ABYSSAL_WHIP).apply { attr[charges] = 555 }) // add(Item) would drop the charges
+            b.inventory.add(Items.COINS_995, 5000)
+            repeat(14) { wait(1) } // out of every earlier fight, lobby options refreshed
+            Bots.inject(a, gg.rsmod.game.message.impl.OpPlayerExtraMessage(1, b.index)) // ClientProt OPPLAYER1: "Challenge" in the lobby
+            repeat(3) { wait(1) }
+            Bots.button(a, screens.CHALLENGE_SCREEN, screens.CHALLENGE_STAKE_BUTTONS.first())
+            wait(1)
+            Bots.button(a, screens.CHALLENGE_SCREEN, screens.CHALLENGE_SEND)
+            wait(1)
+            Bots.inject(b, gg.rsmod.game.message.impl.OpPlayerExtraMessage(1, a.index))
+            repeat(3) { wait(1) }
+            val match = a.getDuelMatch() ?: return null
+            screens.addStake(match, a, a.inventory.getItemIndex(Items.ABYSSAL_WHIP, skipAttrItems = false), 1)
+            screens.addStake(match, b, b.inventory.getItemIndex(Items.COINS_995, skipAttrItems = false), 5000)
+            Bots.button(a, screens.STAKE_RULES, screens.STAKE_ACCEPT)
+            Bots.button(b, screens.STAKE_RULES, screens.STAKE_ACCEPT)
+            repeat(2) { wait(1) }
+            return match
+        }
+
+        // 1. A normal staked duel: the fight starts with its match and stakes, a forfeit pays the winner.
+        val match = duelToConfirmation()
+        if (match == null) {
+            run.add(Conformance.Result(e, "challenge from the lobby creates one match", Conformance.Verdict.FAIL, "a match for both", "no match"))
+            return
+        }
+        run.expectTrue(e, "challenge from the lobby: both configure one match", b.getDuelMatch() === match, "b=${b.getDuelMatch()}")
+        run.expectTrue(e, "both accepted the rules: the confirmation screen is up", match.confirming, "confirming=${match.confirming} stage=${match.stage}")
+        Bots.button(a, screens.STAKE_CONFIRM, screens.STAKE_CONFIRM_ACCEPT)
+        Bots.button(b, screens.STAKE_CONFIRM, screens.STAKE_CONFIRM_ACCEPT)
+        repeat(2) { wait(1) }
+        val stakeA = match.stakeOf(a).rawItems.count { it?.id == Items.ABYSSAL_WHIP && it.attr[charges] == 555 }
+        val stakeB = match.stakeOf(b).getItemCount(Items.COINS_995)
+        run.expectTrue(
+            e, "confirmed: the fight starts with its match and both stakes",
+            match.stage == gg.rsmod.plugins.content.activity.duel_arena.DuelStage.FIGHTING && a.getDuelMatch() === match && stakeA == 1 && stakeB == 5000,
+            "stage=${match.stage} a.match=${a.getDuelMatch() != null} stakeA=$stakeA stakeB=$stakeB",
+        )
+        run.expectTrue(
+            e, "confirmed: both players are in the arena",
+            gg.rsmod.plugins.content.activity.duel_arena.DuelArenaLocations.inArena(a.tile) && gg.rsmod.plugins.content.activity.duel_arena.DuelArenaLocations.inArena(b.tile),
+            "a=${a.tile} b=${b.tile}",
+        )
+        repeat(10) { wait(1) } // the 3-2-1 countdown
+        Bots.inject(b, gg.rsmod.game.message.impl.ClientCheatMessage(0, "forfeit"))
+        repeat(4) { wait(1) }
+        run.check(e, "forfeit: the winner receives the loser's stake", a.inventory.getItemCount(Items.COINS_995), "rule" to 5000)
+        run.check(e, "forfeit: the winner's own stake comes back with its charges", probes(a), "rule (attributes kept)" to 1)
+        run.check(e, "forfeit: the loser keeps no stake", b.inventory.getItemCount(Items.COINS_995), "rule" to 0)
+        run.expectTrue(e, "after the duel both are back in the lobby", screens.inLobby(a.tile) && screens.inLobby(b.tile), "a=${a.tile} b=${b.tile}")
+
+        // 2. A skulled challenger is never moved into the arena: the duel is called off and both stakes come back.
+        val second = duelToConfirmation()
+        if (second == null) {
+            run.add(Conformance.Result(e, "second challenge creates a match", Conformance.Verdict.FAIL, "a match", "no match"))
+            return
+        }
+        gg.rsmod.plugins.content.mechanics.pvp.PvpSkull.applyTestSkull(a)
+        Bots.button(a, screens.STAKE_CONFIRM, screens.STAKE_CONFIRM_ACCEPT)
+        Bots.button(b, screens.STAKE_CONFIRM, screens.STAKE_CONFIRM_ACCEPT)
+        repeat(2) { wait(1) }
+        run.expectTrue(
+            e, "skulled: the fight does not start, nobody leaves the lobby",
+            a.getDuelMatch() == null && screens.inLobby(a.tile) && screens.inLobby(b.tile),
+            "a.match=${a.getDuelMatch() != null} a=${a.tile} b=${b.tile}",
+        )
+        run.check(e, "skulled: the stakes are back with their owners", probes(a) to b.inventory.getItemCount(Items.COINS_995), "rule" to (1 to 5000))
+        a.timers.remove(gg.rsmod.game.model.timer.SKULL_ICON_DURATION_TIMER)
+        reset(a, tileA)
+        reset(b, tileB)
+    }
+
+    // ---- casino: a live casino round is at risk on death ---------------------------------------------------------------------
+
+    private suspend fun QueueTask.casinoDeath(
+        run: Conformance.Run,
+        arena: Tile,
+    ) {
+        val e = "casino"
+        val layout = gg.rsmod.game.tools.importer.CasinoInterfaceImportTool
+        val screens = gg.rsmod.plugins.content.activity.casino.CasinoScreens
+        val mines = gg.rsmod.plugins.content.activity.casino.MinesGame
+        val square = Tile(3213, 3428, 0)
+        val a = run.bot(arena, "CA")
+        val b = run.bot(square, "CB")
+        wait(2)
+        reset(a, arena)
+        reset(b, square)
+        a.attr.remove(gg.rsmod.plugins.content.mechanics.pvp.LootKeys.SLOTS)
+        b.timers.remove(gg.rsmod.game.model.timer.SKULL_ICON_DURATION_TIMER)
+        b.inventory.add(Items.COINS_995, 1_000_000)
+        repeat(14) { wait(1) } // out of every earlier fight
+
+        // 1. The START button is refused in a death zone (the screen may still be open there).
+        b.moveTo(arena.transform(1, 0))
+        repeat(2) { wait(1) }
+        gg.rsmod.plugins.content.activity.casino.CasinoScreens.Mines.open(b)
+        screens.setBet(b, 200_000)
+        wait(1)
+        Bots.button(b, layout.MINES_ID, gg.rsmod.game.tools.importer.CasinoInterfaceImportTool.Mines.START_BUTTON)
+        repeat(2) { wait(1) }
+        run.expectTrue(e, "START in a death zone: no board, no coins taken", !mines.isPlaying(b) && b.inventory.getItemCount(Items.COINS_995) == 1_000_000,
+            "playing=${mines.isPlaying(b)} coins=${b.inventory.getItemCount(Items.COINS_995)}")
+        b.closeInterface(layout.MINES_ID)
+
+        // 2. A board laid through the real screen in a safe zone.
+        b.moveTo(square)
+        repeat(2) { wait(1) }
+        gg.rsmod.plugins.content.activity.casino.CasinoScreens.Mines.open(b)
+        screens.setBet(b, 200_000)
+        wait(1)
+        Bots.button(b, layout.MINES_ID, gg.rsmod.game.tools.importer.CasinoInterfaceImportTool.Mines.START_BUTTON)
+        repeat(2) { wait(1) }
+        val board = mines.active(b)
+        if (board == null) {
+            run.add(Conformance.Result(e, "a board is laid from a safe zone", Conformance.Verdict.FAIL, "a live board", "none"))
+            return
+        }
+        val owed = board.cashoutValue()
+        val carried = b.inventory.getItemCount(Items.COINS_995)
+        val bankCoins = b.bank.getItemCount(Items.COINS_995)
+        b.closeInterface(layout.MINES_ID)
+
+        // 3. Into the death zone with the open board, killed by a player.
+        b.moveTo(arena.transform(1, 0))
+        wield(a, Item(Items.ABYSSAL_WHIP))
+        repeat(2) { wait(1) }
+        val deathTile = b.tile
+        b.setCurrentLifepoints(30)
+        a.attack(b)
+        var died = false
+        for (t in 0 until 150) {
+            a.setCurrentLifepoints(a.getMaximumLifepoints())
+            wait(1)
+            if (b.isDead()) died = true
+            if (died && !b.isDead() && b.tile != deathTile) break
+        }
+        a.resetInteractions()
+        Combat.reset(a)
+        wait(2)
+        run.expectTrue(e, "the player with the open board died and respawned", died && !b.isDead(), "dead=${b.isDead()} tile=${b.tile}")
+        run.expectTrue(e, "the board did not survive the death", !mines.isPlaying(b), "playing=${mines.isPlaying(b)}")
+        val keyCoins = gg.rsmod.plugins.content.mechanics.pvp.LootKeys.heldKeyIndexes(a)
+            .flatMap { gg.rsmod.plugins.content.mechanics.pvp.LootKeys.slotItems(a, it) }
+            .filter { it.id == Items.COINS_995 }.sumOf { it.amount.toLong() }
+        var groundCoins = 0L
+        for (dx in -1..1) for (dz in -1..1) {
+            val t = deathTile.transform(dx, dz)
+            run.world.chunks.get(t)?.getEntities<gg.rsmod.game.model.entity.GroundItem>(t, gg.rsmod.game.model.EntityType.GROUND_ITEM)
+                ?.filter { it.item == Items.COINS_995 }?.forEach { groundCoins += it.amount }
+        }
+        run.check(e, "the killer's loot holds the carried coins and the board's value", keyCoins + groundCoins, "rule: carried + cash-out value" to carried + owed)
+        run.check(e, "the victim kept no casino coins (inventory and bank)",
+            b.inventory.getItemCount(Items.COINS_995).toLong() + b.bank.getItemCount(Items.COINS_995) - bankCoins, "rule" to 0L)
+        reset(a, arena)
+        reset(b, square)
+    }
 
     private suspend fun QueueTask.pvpGate(
         run: Conformance.Run,

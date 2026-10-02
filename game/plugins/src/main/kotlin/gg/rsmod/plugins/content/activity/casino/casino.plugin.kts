@@ -131,6 +131,7 @@ on_button(interfaceId = Layout.DICE_ID, component = Layout.Dice.TARGET_CUSTOM) {
 }
 
 on_button(interfaceId = Layout.DICE_ID, component = Layout.Dice.ROLL_BUTTON) {
+    if (Casino.refusePlay(player)) return@on_button
     val stake = CasinoScreens.bet(player)
     val target = CasinoScreens.target(player)
     val under = CasinoScreens.under(player)
@@ -221,6 +222,7 @@ for (index in Layout.Mines.PRESETS.indices) {
 }
 
 on_button(interfaceId = Layout.MINES_ID, component = Layout.Mines.START_BUTTON) {
+    if (Casino.refusePlay(player)) return@on_button
     val stake = CasinoScreens.bet(player)
     val mines = CasinoScreens.mineCount(player)
     val refusal = MinesGame.validate(player, stake, mines)
@@ -357,6 +359,7 @@ for (chip in 0 until Layout.QUICK_BETS) {
 /** Deals a hand at the composed stake. Shared by Deal and Rebet, so both go through the same validation. */
 fun blackjackDeal(player: Player) {
     BlackjackGame.finish(player) // clear a settled table before dealing the next one
+    if (Casino.refusePlay(player)) return
     val stake = CasinoScreens.bet(player)
     val refusal = BlackjackGame.validate(player, stake)
     if (refusal != null) {
@@ -415,6 +418,7 @@ on_button(interfaceId = Layout.BLACKJACK_ID, component = Layout.Blackjack.STAND_
 }
 
 on_button(interfaceId = Layout.BLACKJACK_ID, component = Layout.Blackjack.DOUBLE_BUTTON) {
+    if (Casino.refusePlay(player)) return@on_button
     val table = BlackjackGame.double(player)
     if (table == null) {
         player.message("You cannot double that hand.")
@@ -424,6 +428,7 @@ on_button(interfaceId = Layout.BLACKJACK_ID, component = Layout.Blackjack.DOUBLE
 }
 
 on_button(interfaceId = Layout.BLACKJACK_ID, component = Layout.Blackjack.SPLIT_BUTTON) {
+    if (Casino.refusePlay(player)) return@on_button
     val table = BlackjackGame.split(player)
     if (table == null) {
         player.message("You cannot split that hand.")
@@ -433,6 +438,7 @@ on_button(interfaceId = Layout.BLACKJACK_ID, component = Layout.Blackjack.SPLIT_
 }
 
 on_button(interfaceId = Layout.BLACKJACK_ID, component = Layout.Blackjack.INSURE_BUTTON) {
+    if (Casino.refusePlay(player)) return@on_button
     val table = BlackjackGame.insure(player)
     if (table == null) {
         player.message("You cannot take insurance right now.")

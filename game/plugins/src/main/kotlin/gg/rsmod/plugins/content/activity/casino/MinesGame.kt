@@ -269,6 +269,32 @@ object MinesGame {
         return Cashout(payout, gems, mines, credited)
     }
 
+    /**
+     * Death (bug search 2026-10-02): the stake left the inventory when the board was laid, so a board still open when the
+     * player died survived the death and could be cashed out after respawning - casino coins never at risk. The board is
+     * cashed out now at its current value (what the player could take themselves; before the first reveal that is the
+     * same 98% the formula gives at 0 gems) and the coins are RETURNED, not credited: the death resolution decides who
+     * gets them (the killer's loot, the gravestone, or the player on a safe death). Returns 0 without a live board.
+     */
+    fun settleForDeath(player: Player): Long {
+        val board = active(player) ?: return 0
+        val payout = board.cashoutValue()
+        clear(player)
+        CasinoHistory.record(
+            player,
+            CasinoRound(
+                game = CasinoGame.MINES,
+                stake = board.stake,
+                payout = payout,
+                clientSeed = board.clientSeed,
+                serverSeedHash = board.serverSeedHash,
+                nonce = board.nonce,
+                detail = "mines=${board.mineCount} gems=${board.gems} settled at death",
+            ),
+        )
+        return payout
+    }
+
     private fun clear(player: Player) {
         player.attr.remove(STAKE)
         player.attr.remove(MINE_COUNT)

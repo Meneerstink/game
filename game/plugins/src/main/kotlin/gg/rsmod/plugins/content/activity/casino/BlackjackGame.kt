@@ -88,7 +88,7 @@ object BlackjackGame {
         fun current(): Seat? = hands.getOrNull(active)
 
         /** Total coins currently committed: every hand's stake plus any insurance. */
-        fun committed(): Long = hands.sumOf { it.stake } + insurance
+        fun committed(): Long = hands.sumOf { it.stake } + maxOf(insurance, 0L) // -1 = insurance offered and refused
 
         fun dealerUpcard(): Int = dealer.first()
 
@@ -347,6 +347,7 @@ object BlackjackGame {
     private fun advance(
         player: Player,
         table: Table,
+        credit: (Long) -> CasinoWallet.Payout = { CasinoWallet.deposit(player, it) },
     ): Table {
         while (table.active < table.hands.size && table.hands[table.active].done) {
             table.active++
@@ -356,7 +357,28 @@ object BlackjackGame {
             return table
         }
         save(player, table)
-        return settle(player, table)
+        return settle(player, table, credit)
+    }
+
+    /**
+     * Death (bug search 2026-10-02): the stake left the inventory at the deal, so a hand still open when the player died
+     * survived the death and was finished after respawning - casino coins never at risk. Every unfinished hand stands now
+     * (an undecided insurance offer counts as declined) and the table settles from its predetermined shoe, exactly as
+     * standing would have. The payout is RETURNED, not credited: the death resolution decides who gets it. 0 without a
+     * live hand.
+     */
+    fun settleForDeath(player: Player): Long {
+        val table = active(player) ?: return 0
+        if (table.phase != Phase.PLAYER) return 0
+        if (table.insuranceOffered()) table.insurance = -1
+        table.hands.forEach { it.done = true }
+        var owed = 0L
+        advance(player, table) { amount ->
+            owed += amount
+            CasinoWallet.Payout(0, 0, 0)
+        }
+        finish(player)
+        return owed
     }
 
     // ------------------------------------------------------------------ settlement
@@ -376,6 +398,7 @@ object BlackjackGame {
     private fun settle(
         player: Player,
         table: Table,
+        credit: (Long) -> CasinoWallet.Payout = { CasinoWallet.deposit(player, it) },
     ): Table {
         val anyLive = table.hands.any { !it.hand().bust }
         val dealerNatural = BlackjackCards.isNatural(table.dealer)
@@ -437,7 +460,7 @@ object BlackjackGame {
         table.phase = Phase.SETTLED
         save(player, table)
 
-        val credited = if (payout > 0) CasinoWallet.deposit(player, payout) else CasinoWallet.Payout(0, 0, 0)
+        val credited = if (payout > 0) credit(payout) else CasinoWallet.Payout(0, 0, 0)
         CasinoHistory.record(
             player,
             CasinoRound(

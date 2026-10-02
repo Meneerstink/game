@@ -18,6 +18,10 @@ suspend fun mainChat(it: QueueTask) {
     Dungeoneering.join(player)
 }
 
+/*
+ * Bug search 2026-10-02: the command teleported straight to Daemonheim from anywhere - deep Wilderness, Tele Blocked,
+ * mid-fight. It is a remote travel route now: safe zone, out of combat, and the full teleport gate (RemoteAccess.travel).
+ */
 on_command("dungeon") {
-    Dungeoneering.join(player)
+    gg.rsmod.plugins.content.mechanics.pvp.RemoteAccess.travel(player, "travel to Daemonheim") { Dungeoneering.join(player) }
 }

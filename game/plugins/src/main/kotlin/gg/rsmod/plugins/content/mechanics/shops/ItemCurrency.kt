@@ -4,6 +4,8 @@ import gg.rsmod.game.action.EquipAction
 import gg.rsmod.game.fs.def.ItemDef
 import gg.rsmod.game.model.World
 import gg.rsmod.game.model.attr.LAST_VIEWED_SHOP_ITEM_FREE
+import gg.rsmod.game.model.container.ContainerStackType
+import gg.rsmod.game.model.container.ItemContainer
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.game.model.shop.PurchasePolicy
@@ -449,25 +451,30 @@ open class ItemCurrency(
             return
         }
 
-        val remove = p.inventory.remove(item = item.id, amount = amount, assureFullRemoval = false)
-        if (remove.completed == 0) {
+        /*
+         * Bug search 2026-10-02: the sold stacks are held aside with their attributes, so the "no inventory space" path
+         * below puts back exactly what was taken. It re-added `item.id` by id only, which dropped charges/degradation.
+         */
+        val held = ItemContainer(p.world.definitions, p.inventory.capacity, ContainerStackType.NORMAL)
+        val sold = p.inventory.moveEach(held, item.id, amount, startSlot = slot).moved
+        if (sold == 0) {
             return
         }
 
-        val compensation = Math.min(Int.MAX_VALUE.toLong(), price.toLong() * remove.completed.toLong()).toInt()
+        val compensation = Math.min(Int.MAX_VALUE.toLong(), price.toLong() * sold.toLong()).toInt()
         val add = p.inventory.add(item = currencyItem, amount = compensation, assureFullInsertion = true)
         if (add.requested > 0 && add.completed > 0 || compensation == 0) {
             if (shopSlot != -1) {
-                shop.items[shopSlot]!!.currentAmount += amount
+                shop.items[shopSlot]!!.currentAmount += sold
             } else {
                 val freeSlot = shop.items.indexOfFirst { it == null }
                 check(freeSlot != -1)
                 shop.items[freeSlot] = ShopItem(unnoted, amount = 0, temporary = true)
-                shop.items[freeSlot]!!.currentAmount = amount
+                shop.items[freeSlot]!!.currentAmount = sold
             }
             shop.refresh(p.world)
         } else {
-            p.inventory.add(item.id, amount = remove.completed, beginSlot = slot)
+            held.moveEach(p.inventory, item.id, sold)
             p.message("You don't have enough inventory space.")
         }
     }

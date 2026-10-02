@@ -69,6 +69,11 @@ object PestControlHandler {
         player: Player,
         tier: PestControlTier,
     ) {
+        // Bug search 2026-10-02: the lander is boarded by command from anywhere, so the game start moved players out
+        // of any death zone. Boarding is a remote route now (safe zone, out of combat); the start re-checks it below.
+        if (gg.rsmod.plugins.content.mechanics.pvp.RemoteAccess.refuse(player, "board a Pest Control lander")) {
+            return
+        }
         if (player.combatLevel < tier.combatReq) {
             player.message("You need a combat level of ${tier.combatReq} or higher to board this lander.")
             return
@@ -128,6 +133,13 @@ object PestControlHandler {
         while (queue.isNotEmpty() && count < PC_MAX_TEAM_SIZE) {
             val p = queue.poll()
             if (!p.isOnline) continue
+            // Whoever left the safe zone, got skulled, Tele Blocked or into a fight since boarding stays behind.
+            val refusal = gg.rsmod.plugins.content.mechanics.pvp.RemoteAccess.moveRefusal(p, "be taken to Pest Control")
+            if (refusal != null) {
+                p.message(refusal)
+                p.message("You have lost your place on the Pest Control lander.")
+                continue
+            }
             count++
             s.participants.add(p)
             p.attr[PC_PRIORITY] = 0
@@ -139,6 +151,8 @@ object PestControlHandler {
         for (leftover in queue) {
             leftover.attr[PC_PRIORITY] = (leftover.attr[PC_PRIORITY] ?: 0) + 1
         }
+        // Nobody boarded (all offline or refused above): no empty twenty-minute game.
+        if (count == 0) return
         for (i in 0..3) {
             val (ox, oz) = PC_PORTAL_OFFSETS[i]
             val portal = Npc(tier.portalBaseId + i, PC_REGION_BASE.transform(ox, oz, 0), world)

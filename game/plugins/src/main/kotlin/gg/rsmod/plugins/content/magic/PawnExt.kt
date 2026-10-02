@@ -73,38 +73,40 @@ fun Player.canTeleport(
 
 /** Restrictions that must hold both when a teleport is requested and when a delayed one fires. */
 private fun Player.validateTeleportRestrictions(type: TeleportType): Boolean {
-    val currWildLvl = tile.getWildernessLevel()
-    val wildLvlRestriction = type.wildLvlRestriction
-    val randomEvent = tile.regionId
+    val refusal = teleportRefusal(type) ?: return true
+    refusal.forEach { message(it) }
+    return false
+}
 
+/**
+ * The restrictions [canTeleport] enforces, without the Deadman countdown and without telling the player: null when a
+ * [type] teleport is allowed right now, otherwise the lines the player would be told (an empty list for a silent
+ * refusal - dead, or locked). Shared with routes that move a player without a prompt (a minigame that starts, a duel
+ * that begins), so those obey Tele Block, the Wilderness level and activity locks exactly like a teleport does.
+ */
+fun Player.teleportRefusal(type: TeleportType): List<String>? {
     if (isDead() || !lock.canTeleport()) {
-        return false
+        return emptyList()
     }
 
-    if (gg.rsmod.plugins.content.mechanics.restrictions.ActivityRestrictions.refuse(
-            this, gg.rsmod.plugins.content.mechanics.restrictions.RestrictedAction.TELEPORT,
-        )
-    ) {
-        return false
-    }
+    gg.rsmod.plugins.content.mechanics.restrictions.ActivityRestrictions.refusal(
+        this, gg.rsmod.plugins.content.mechanics.restrictions.RestrictedAction.TELEPORT,
+    )?.let { return listOf(it) }
 
     if (timers.has(TELEBLOCK_TIMER)) {
-        message("A magical force has stopped you from teleporting.")
-        return false
+        return listOf("A magical force has stopped you from teleporting.")
     }
 
-    if (currWildLvl > wildLvlRestriction) {
-        message("A mysterious force blocks your teleport spell!")
-        message("You can't use this teleport after level $wildLvlRestriction wilderness.")
-        return false
+    val wildLvlRestriction = type.wildLvlRestriction
+    if (tile.getWildernessLevel() > wildLvlRestriction) {
+        return listOf("A mysterious force blocks your teleport spell!", "You can't use this teleport after level $wildLvlRestriction wilderness.")
     }
 
-    if (randomEvent == 12619) {
-        message("You can't use this teleport here.")
-        return false
+    if (tile.regionId == 12619) {
+        return listOf("You can't use this teleport here.")
     }
 
-    return true
+    return null
 }
 
 fun Pawn.prepareForTeleport() {

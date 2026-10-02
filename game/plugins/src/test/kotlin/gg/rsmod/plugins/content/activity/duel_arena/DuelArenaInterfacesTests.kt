@@ -11,6 +11,7 @@ import gg.rsmod.game.model.container.key.EQUIPMENT_KEY
 import gg.rsmod.game.model.container.key.INVENTORY_KEY
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
+import gg.rsmod.game.model.item.ItemAttribute
 import gg.rsmod.plugins.api.cfg.Items
 import io.mockk.every
 import io.mockk.mockk
@@ -113,6 +114,47 @@ class DuelArenaInterfacesTests {
         match.stage = DuelStage.FIGHTING
         assertFalse(DuelArenaInterfaces.addStake(match, a, 0, 1), "no staking during the fight")
         assertEquals(1000, a.inventory.getItemCount(Items.COINS_995) + match.stakeOf(a).getItemCount(Items.COINS_995), "no coins created or lost")
+    }
+
+    @Test
+    fun `a staked item keeps its own attributes into the stake and back`() {
+        // Bug search 2026-10-02: stakes moved as add(item.id, n) - a degraded or charged item came back reset.
+        val a = player("a")
+        val match = DuelArenaMatch(a, player("b"))
+        a.inventory[0] = Item(Items.ABYSSAL_WHIP).apply { attr[ItemAttribute.CHARGES] = 321 }
+        a.inventory[4] = Item(Items.ABYSSAL_WHIP).apply { attr[ItemAttribute.CHARGES] = 9 }
+        assertTrue(DuelArenaInterfaces.addStake(match, a, 0, 2))
+        assertEquals(setOf(321, 9), match.stakeOf(a).rawItems.filterNotNull().map { it.attr[ItemAttribute.CHARGES] }.toSet())
+        assertTrue(DuelArenaInterfaces.removeStake(match, a, 0, 2))
+        assertEquals(setOf(321, 9), a.inventory.rawItems.filterNotNull().map { it.attr[ItemAttribute.CHARGES] }.toSet())
+    }
+
+    @Test
+    fun `the backup duel commands use the challenge screen's own lobby rule`() {
+        val a = player("a")
+        val b = player("b")
+        every { b.isOnline } returns true
+        assertTrue(DuelArenaInterfaces.canChallenge(a, b), "both in the lobby, side by side")
+        every { b.tile } returns Tile(3093, 3493, 0) // Edgeville
+        assertFalse(DuelArenaInterfaces.canChallenge(a, b), "a duel can no longer be set up from across the world")
+        assertTrue(DuelArenaRules.startRefusal(b) != null, "and a fight never starts for a player outside the lobby")
+        val plugin = java.io.File("src/main/kotlin/gg/rsmod/plugins/content/activity/duel_arena/duel_arena.plugin.kts").readText()
+        assertEquals(2, Regex("""DuelArenaInterfaces\.canChallenge\(""").findAll(plugin).count(), "duel and duelaccept both ask")
+        assertTrue(plugin.contains("DuelArenaInterfaces.addStake(match, player, slot, amount)"), "dueloffer stakes through the screen's rule")
+    }
+
+    @Test
+    fun `the fight start changes the stage before it closes the duel screens`() {
+        // Closing a rules/confirmation screen declines a match that is still configuring; closing them first returned both
+        // stakes and cleared the match right before the fight (bug search 2026-10-02).
+        val plugin = java.io.File("src/main/kotlin/gg/rsmod/plugins/content/activity/duel_arena/duel_arena.plugin.kts").readText()
+        val start = plugin.substring(plugin.indexOf("fun startDuel("))
+        val body = start.substring(0, start.indexOf("\nfun ", 1))
+        assertTrue(body.indexOf("match.stage = DuelStage.FIGHTING") in 0 until body.indexOf("closeInterface("))
+        assertTrue(body.indexOf("DuelArenaRules.startRefusal(") in 0 until body.indexOf("match.stage = DuelStage.FIGHTING"))
+        val confirm = plugin.substring(plugin.indexOf("fun acceptConfirmation("))
+        val confirmBody = confirm.substring(0, confirm.indexOf("\nfun ", 1))
+        assertFalse(confirmBody.contains("closeInterface("), "acceptConfirmation must not close the screens before startDuel")
     }
 
     companion object {

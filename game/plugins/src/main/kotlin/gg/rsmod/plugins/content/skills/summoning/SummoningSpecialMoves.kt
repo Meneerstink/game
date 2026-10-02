@@ -15,6 +15,7 @@ import gg.rsmod.plugins.api.NpcSkills
 import gg.rsmod.plugins.api.ProjectileType
 import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.api.cfg.Items
+import gg.rsmod.plugins.api.ext.addPreservingAttr
 import gg.rsmod.plugins.api.ext.addXp
 import gg.rsmod.plugins.api.ext.isMulti
 import gg.rsmod.plugins.api.ext.heal
@@ -1286,17 +1287,19 @@ object SummoningSpecialMoves {
 
     private fun executeWinterStorage(player: Player, familiar: Npc, scroll: SummoningScrollData, slot: Int, selected: Item): Boolean {
         val bankProbe = ItemContainer(player.bank)
-        if (!bankProbe.add(selected.id, 1, assureFullInsertion = true).hasSucceeded()) {
+        if (!bankProbe.addPreservingAttr(Item(selected, 1), assureFullInsertion = true).hasSucceeded()) {
             player.message("Your bank is too full to store that item.")
             return false
         }
+        if (player.inventory[slot]?.id != selected.id) return false
         if (!commitResources(player, scroll)) return false
-        if (!player.inventory.remove(selected.id, 1, assureFullRemoval = true, beginSlot = slot).hasSucceeded()) {
-            refundResources(player, scroll)
-            return false
-        }
-        if (!player.bank.add(selected.id, 1, assureFullInsertion = true).hasSucceeded()) {
-            player.inventory.add(selected.id, 1, assureFullInsertion = true, beginSlot = slot)
+        /*
+         * Bug search 2026-10-02: the yak banked the item by its id alone, which dropped its attributes
+         * (a degraded Chaotic/Nex piece came back fully charged, a trident lost its charges) and skipped every rule of
+         * the real bank: the loot-key block and the Deadman "worth 20,000 coins or more so soon after combat" deposit
+         * block (BankSecurity). The shared deposit applies all of them, keeps the attributes, placeholders and tabs.
+         */
+        if (!gg.rsmod.plugins.content.inter.bank.Bank.deposit(player, player.inventory, slot, 1)) {
             refundResources(player, scroll)
             return false
         }
@@ -1333,7 +1336,7 @@ object SummoningSpecialMoves {
             return false
         }
         if (!player.inventory.add(output, 1, assureFullInsertion = true, beginSlot = slot).hasSucceeded()) {
-            player.inventory.add(selected.id, 1, assureFullInsertion = true, beginSlot = slot)
+            player.inventory.addPreservingAttr(Item(selected, 1), assureFullInsertion = true, beginSlot = slot)
             refundResources(player, scroll)
             return false
         }

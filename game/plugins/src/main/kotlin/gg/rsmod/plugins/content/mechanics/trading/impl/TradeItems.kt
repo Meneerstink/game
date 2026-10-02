@@ -5,7 +5,7 @@ import gg.rsmod.game.fs.def.ItemDef
 import gg.rsmod.game.model.container.ItemContainer
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.game.model.item.ItemAttribute
-import gg.rsmod.plugins.api.ext.addPreservingAttr
+import gg.rsmod.plugins.api.ext.moveEach
 
 /**
  * The item bookkeeping of a [TradeSession], kept free of [gg.rsmod.game.model.entity.Player] so it can be unit tested.
@@ -27,28 +27,7 @@ object TradeItems {
         itemId: Int,
         amount: Int,
         startSlot: Int,
-    ): List<Int> {
-        val emptied = mutableListOf<Int>()
-        if (amount <= 0 || from.capacity <= 0) return emptied
-        val start = startSlot.coerceIn(0, from.capacity - 1)
-        var left = amount
-        for (slot in (start until from.capacity) + (0 until start)) {
-            if (left <= 0) break
-            val held = from[slot] ?: continue
-            if (held.id != itemId || held.amount <= 0) continue
-            val take = minOf(left, held.amount)
-            val moving = Item(held, take)
-            if (!to.addPreservingAttr(moving, assureFullInsertion = true).hasSucceeded()) break
-            if (take >= held.amount) {
-                from[slot] = null
-                emptied.add(slot)
-            } else {
-                from[slot] = Item(held, held.amount - take)
-            }
-            left -= take
-        }
-        return emptied
-    }
+    ): List<Int> = from.moveEach(to, itemId, amount, startSlot).emptied
 
     /** Amount per (id, attributes): two items are only the same when their attributes are equal too. */
     fun totals(vararg containers: ItemContainer): Map<Pair<Int, Map<ItemAttribute, Int>>, Long> {

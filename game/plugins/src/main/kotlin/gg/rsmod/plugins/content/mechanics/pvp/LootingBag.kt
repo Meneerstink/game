@@ -11,6 +11,7 @@ import gg.rsmod.game.model.item.Item
 import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.api.ext.getWildernessLevel
 import gg.rsmod.plugins.api.ext.message
+import gg.rsmod.plugins.api.ext.moveEach
 import gg.rsmod.plugins.content.areas.home.BountyHunterHome
 import gg.rsmod.plugins.content.inter.bank.Bank
 import gg.rsmod.plugins.content.items.food.Food
@@ -67,14 +68,11 @@ object LootingBag {
         if (amount <= 0) return 0
 
         val bag = container(player)
-        val added = bag.add(itemId, amount, assureFullInsertion = false).completed
-        if (added <= 0) {
+        // Bug search 2026-10-02: each stack keeps its own attributes (charges, degradation) - see moveEach.
+        val removed = player.inventory.moveEach(bag, itemId, amount).moved
+        if (removed <= 0) {
             player.message("Your looting bag is full.")
             return 0
-        }
-        val removed = player.inventory.remove(itemId, added, assureFullRemoval = true).completed
-        if (removed < added) {
-            bag.remove(itemId, added - removed, assureFullRemoval = true)
         }
         refresh(player)
         if (removed > 0) player.message("You store $removed item${if (removed == 1) "" else "s"} in your looting bag.")
@@ -138,11 +136,7 @@ object LootingBag {
         var moved = 0
         for (slot in 0 until bag.capacity) {
             val item = bag[slot] ?: continue
-            val added = player.inventory.add(item.id, item.amount, assureFullInsertion = false).completed
-            if (added <= 0) continue
-            val removed = bag.remove(item.id, added, assureFullRemoval = true).completed
-            if (removed < added) player.inventory.remove(item.id, added - removed, assureFullRemoval = true)
-            moved += removed
+            moved += bag.moveEach(player.inventory, item.id, item.amount, startSlot = slot).moved
         }
         refresh(player)
         if (moved == 0) player.message("You don't have enough inventory space.")
@@ -154,7 +148,7 @@ object LootingBag {
         if (player.tile.getWildernessLevel() > 0) {
             for (item in bag.sequence().toList()) {
                 if (!destroyOnWilderness(item, player)) {
-                    player.world.spawn(GroundItem(item.id, item.amount, player.tile, player))
+                    player.world.spawn(GroundItem(item, player.tile, player))
                 }
             }
         }

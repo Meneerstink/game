@@ -10,6 +10,7 @@ import gg.rsmod.plugins.api.ext.INTERFACE_INV_INIT_BIG
 import gg.rsmod.plugins.api.ext.closeInterface
 import gg.rsmod.plugins.api.ext.INVENTORY_INTERFACE_KEY
 import gg.rsmod.plugins.api.ext.message
+import gg.rsmod.plugins.api.ext.moveEach
 import gg.rsmod.plugins.api.ext.openInterface
 import gg.rsmod.plugins.api.ext.removeOption
 import gg.rsmod.plugins.api.ext.runClientScript
@@ -148,6 +149,14 @@ object DuelArenaInterfaces {
         player.setVarp(CHALLENGE_TYPE_VARP, if (friendly) CHALLENGE_FRIENDLY else CHALLENGE_STAKE)
     }
 
+    /**
+     * Who may challenge whom (Novite `DuelControler.challenge`): both in the lobby, within 14 tiles. The one rule for the
+     * "Challenge" option and the `duel`/`duelaccept` commands - the commands skipped it (bug search 2026-10-02), so a
+     * duel could be set up, and its fight start could move both players, from anywhere in the world.
+     */
+    fun canChallenge(player: Player, target: Player): Boolean =
+        target.isOnline && inLobby(player.tile) && inLobby(target.tile) && target.tile.isWithinRadius(player.tile, 14)
+
     /** Novite `DuelControler.challenge`. Returns true when the request was sent. */
     fun sendChallenge(player: Player): Boolean {
         player.closeInterface(CHALLENGE_SCREEN)
@@ -155,7 +164,7 @@ object DuelArenaInterfaces {
         val target = player.attr[CHALLENGE_TARGET_ATTR]?.get()
         player.attr.remove(CHALLENGE_FRIENDLY_ATTR)
         player.attr.remove(CHALLENGE_TARGET_ATTR)
-        if (target == null || !target.isOnline || !target.tile.isWithinRadius(player.tile, 14) || !inLobby(target.tile)) {
+        if (target == null || !canChallenge(player, target)) {
             player.message("Unable to find ${target?.let { it.username } ?: "your target"}")
             return false
         }
@@ -242,12 +251,11 @@ object DuelArenaInterfaces {
             return false
         }
         val count = minOf(requested, player.inventory.getItemCount(item.id))
-        val removed = player.inventory.remove(item.id, count, assureFullRemoval = false, beginSlot = slot).completed
-        if (removed <= 0) return false
-        val added = match.stakeOf(player).add(item.id, removed).completed
-        if (added < removed) player.inventory.add(item.id, removed - added)
+        // Bug search 2026-10-02: stakes move with their own attributes (an id-only add repaired degraded gear).
+        val added = player.inventory.moveEach(match.stakeOf(player), item.id, count, startSlot = slot).moved
+        if (added <= 0) return false
         match.resetAccepted()
-        return added > 0
+        return true
     }
 
     fun removeStake(match: DuelArenaMatch, player: Player, slot: Int, requested: Int): Boolean {
@@ -255,12 +263,10 @@ object DuelArenaInterfaces {
         val stake = match.stakeOf(player)
         val item = stake[slot] ?: return false
         val count = minOf(requested, stake.getItemCount(item.id))
-        val removed = stake.remove(item.id, count, assureFullRemoval = false, beginSlot = slot).completed
-        if (removed <= 0) return false
-        val added = player.inventory.add(item.id, removed).completed
-        if (added < removed) stake.add(item.id, removed - added)
+        val added = stake.moveEach(player.inventory, item.id, count, startSlot = slot).moved
+        if (added <= 0) return false
         match.resetAccepted()
-        return added > 0
+        return true
     }
 
     /** Novite `endDuel`: the victor sees the loser's stake on 634 (container 136, script 149). */

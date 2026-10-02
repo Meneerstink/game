@@ -5,12 +5,12 @@ import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.attr.MOVEMENT_RESTRICTION_ATTR
 import gg.rsmod.game.model.combat.CombatClass
-import gg.rsmod.game.model.entity.GroundItem
 import gg.rsmod.game.model.entity.Pawn
 import gg.rsmod.game.model.entity.Player
-import gg.rsmod.game.model.item.Item
 import gg.rsmod.plugins.api.EquipmentType
+import gg.rsmod.plugins.api.ext.giveOrDrop
 import gg.rsmod.plugins.api.ext.message
+import gg.rsmod.plugins.content.mechanics.pvp.RemoteAccess
 import gg.rsmod.plugins.content.mechanics.restrictions.RestrictedAction
 import gg.rsmod.plugins.content.skills.summoning.Familiar
 
@@ -145,15 +145,21 @@ object DuelArenaRules {
         }
     }
 
-    /**
-     * Hands [item] to [player], dropping under them whatever the inventory has no room for. Every
-     * path that gives stake back (payout, decline, logout while configuring) must use this: a plain
-     * `inventory.add` silently destroys the stake when the inventory filled up in the meantime.
+    /*
+     * Every path that gives stake back (payout, decline, logout while configuring) uses the shared
+     * gg.rsmod.plugins.api.ext.giveOrDrop: the item goes back with its attributes, and whatever the inventory has no
+     * room for drops under the player - a plain `inventory.add` destroyed it, and an id-only add repaired degraded gear.
      */
-    fun giveOrDrop(player: Player, item: Item) {
-        val result = player.inventory.add(item.id, item.amount, assureFullInsertion = false)
-        val left = item.amount - result.completed
-        if (left > 0) player.world.spawn(GroundItem(item.id, left, player.tile, player))
+
+    /**
+     * Bug search 2026-10-02: the fight start moves both players from the lobby - a death zone under Deadman rules - into
+     * the arena. Each must still stand in the lobby (the `duel` command never required it) and pass the teleport rules
+     * ([RemoteAccess.escapeRefusal]: Tele Block, activity locks, not skulled, not hit in the last 7 seconds), or a player
+     * escaped a fight by accepting a duel with a friend. Null when [player] may be moved into the arena now.
+     */
+    fun startRefusal(player: Player): String? {
+        if (!DuelArenaInterfaces.inLobby(player.tile)) return "You need to be in the Duel Arena lobby to start a duel."
+        return RemoteAccess.escapeRefusal(player)
     }
 
     fun lostMessage(winner: Player) = "Oh dear, it seems you have lost to ${winner.username}."

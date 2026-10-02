@@ -70,9 +70,13 @@ fun fpPlay(match: FlowerPokerMatch) {
                 wait(FP_ROUND_PAUSE)
             }
         }
-        val settlement = match.finish()
+        // A participant who died mid-plant already settled the match (Casino.settleForDeath): show that result, never pay twice.
+        val settlement = match.finish() ?: match.settlement
         if (settlement == null) {
             // Should not happen: play() always ends on a decided round. Refund rather than strand the pot.
+            gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.ITEM) {
+                "flower poker ${match.challenger.username} vs ${match.opponent.username}: no decided round and no settlement - both stakes refunded (${match.stake} each)"
+            }
             fpMessage(match, "The match could not be decided. Your stakes have been returned.")
             CasinoWallet.refund(match.challenger, match.stake)
             CasinoWallet.refund(match.opponent, match.stake)
@@ -96,6 +100,17 @@ fun fpTryStart(match: FlowerPokerMatch) {
     if (!match.bothAccepted()) {
         return
     }
+    // Bug search 2026-10-02: both stakes are escrowed here, so both players must be where casino games may be played
+    // (Casino.refusePlay: safe zone, out of combat). A refused start leaves the match configuring; accept again later.
+    for (side in listOf(match.challenger, match.opponent)) {
+        if (Casino.refusePlay(side)) {
+            match.setAccepted(match.challenger, false)
+            match.setAccepted(match.opponent, false)
+            match.other(side).message("${side.username} can't play right now.")
+            fpRefresh(match)
+            return
+        }
+    }
     when (val result = match.start()) {
         FlowerPokerMatch.StartResult.OK -> {
             fpMessage(match, "Both players accepted. Commitment: ${ProvablyFair.shortHash(match.serverSeedHash)}")
@@ -111,6 +126,7 @@ fun fpTryStart(match: FlowerPokerMatch) {
 }
 
 on_command("fp") {
+    if (Casino.refusePlay(player)) return@on_command
     val args = player.getCommandArgs()
     if (args.isEmpty()) {
         player.message("Use: fp &lt;player name&gt; - challenge someone to Flower Poker.")
@@ -156,6 +172,11 @@ on_command("fpaccept") {
     }
     if (fpBusy(player) || fpBusy(challenger)) {
         player.message("One of you is already in a game.")
+        return@on_command
+    }
+    if (Casino.refusePlay(player)) return@on_command
+    if (Casino.refusalOf(challenger) != null) {
+        player.message("${challenger.username} can't play right now.")
         return@on_command
     }
     val match = FlowerPokerMatch(challenger, player)

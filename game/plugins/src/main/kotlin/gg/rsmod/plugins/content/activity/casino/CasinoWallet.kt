@@ -152,6 +152,18 @@ object CasinoWallet {
      */
     fun multiplier(value: Double): String = String.format(java.util.Locale.ENGLISH, "%.2fx", value)
 
+    /** [amount] coins as item stacks of at most [MAX_STACK] each - for a death resolution that takes items, not a count. */
+    fun coinStacks(amount: Long): List<Item> {
+        val stacks = ArrayList<Item>()
+        var left = amount
+        while (left > 0) {
+            val chunk = minOf(left, MAX_STACK)
+            stacks += Item(CURRENCY, chunk.toInt())
+            left -= chunk
+        }
+        return stacks
+    }
+
     /** The stake-and-payout item, for callers that need an [Item] rather than a count. */
     fun coins(amount: Int): Item = Item(CURRENCY, amount)
 }

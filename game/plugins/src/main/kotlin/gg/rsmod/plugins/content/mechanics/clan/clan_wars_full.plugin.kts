@@ -232,19 +232,41 @@ on_command("clanwarenter") {
         player.message("Your clan isn't part of the arranged Clan War.")
         return@on_command
     }
-    val spawn = if (team == 1) match.arena.firstSpawn() else match.arena.secondSpawn()
-    if (team == 1) match.firstPlayers.add(player) else match.secondPlayers.add(player)
-    player.moveTo(spawn)
-    player.filterableMessage("You enter the Clan War arena.")
+    // Bug search 2026-10-02: this moved a player into the arena from anywhere (out of any fight, through Tele Block).
+    // Entering by command is a remote travel route: safe zone, out of combat, the full teleport gate (RemoteAccess).
+    gg.rsmod.plugins.content.mechanics.pvp.RemoteAccess.travel(player, "enter the Clan War arena") {
+        val current = ClanWarsMatch.active
+        if (current !== match) return@travel
+        val spawn = if (team == 1) match.arena.firstSpawn() else match.arena.secondSpawn()
+        if (team == 1) match.firstPlayers.add(player) else match.secondPlayers.add(player)
+        player.moveTo(spawn)
+        player.filterableMessage("You enter the Clan War arena.")
+    }
 }
 
 on_command("clanwarleave") {
     val match = ClanWarsMatch.active ?: return@on_command
     val team = match.teamOf(player)
     if (team == 0) return@on_command
+    // Only a player standing in the arena is walked out; a team member who already left it some other way is just
+    // taken off the team (this used to move them back from wherever they were - a free escape). Leaving by command is a
+    // move too: not out of a fight, not through Tele Block (RemoteAccess.escapeRefusal, bug search 2026-10-02).
+    val (sw, ne) = clanWarArenaTiles(match.arena)
+    val tile = player.tile
+    val inArena = tile.height == 0 && tile.x in sw.x..ne.x && tile.z in sw.z..ne.z
+    if (inArena) {
+        gg.rsmod.plugins.content.mechanics.pvp.RemoteAccess.escapeRefusal(player)?.let {
+            player.message(it)
+            return@on_command
+        }
+    }
     if (team == 1) match.firstPlayers.remove(player) else match.secondPlayers.remove(player)
-    player.moveTo(Tile(world_random(3266, 3270), world_random(3679, 3682), 0))
-    player.filterableMessage("You leave the Clan War arena.")
+    if (inArena) {
+        player.moveTo(Tile(world_random(3266, 3270), world_random(3679, 3682), 0))
+        player.filterableMessage("You leave the Clan War arena.")
+    } else {
+        player.message("You are no longer part of the Clan War.")
+    }
     checkVictory(match)
 }
 

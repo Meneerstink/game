@@ -2,6 +2,8 @@ package gg.rsmod.plugins.api.ext
 
 import gg.rsmod.game.model.container.ItemContainer
 import gg.rsmod.game.model.container.ItemTransaction
+import gg.rsmod.game.model.entity.GroundItem
+import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
 
 /**
@@ -88,6 +90,67 @@ fun ItemContainer.addPreservingAttr(
         transaction.items.forEach { it.item.copyAttr(item) }
     }
     return transaction
+}
+
+/**
+ * Moves up to [amount] of [itemId] from this container into [to], one slot at a time starting at [startSlot] and
+ * wrapping round. Every moved stack keeps its *own* attributes (charges, degradation, stored runes) and its id (no
+ * creation redirect), so an item that passes through a holding screen comes back exactly as it went in.
+ *
+ * Bug search 2026-10-02: the price checker, duel stakes and the looting bag moved items as `add(item.id, count)`, which
+ * dropped the attributes - a degraded Chaotic or Nex piece came back fully charged ("absent = full") and a trident lost
+ * its charges ("absent = 0"). Every holding route moves items through here (audit E-04 began this for the trade screen).
+ *
+ * Returns the slots of this container that were emptied, in the order they were emptied; [MoveResult.moved] is the
+ * amount that actually moved (less than [amount] when [to] filled up).
+ */
+fun ItemContainer.moveEach(
+    to: ItemContainer,
+    itemId: Int,
+    amount: Int,
+    startSlot: Int = 0,
+): MoveResult {
+    val emptied = mutableListOf<Int>()
+    if (amount <= 0 || capacity <= 0) return MoveResult(0, emptied)
+    val start = startSlot.coerceIn(0, capacity - 1)
+    var left = amount
+    for (slot in (start until capacity) + (0 until start)) {
+        if (left <= 0) break
+        val held = this[slot] ?: continue
+        if (held.id != itemId || held.amount <= 0) continue
+        val take = minOf(left, held.amount)
+        if (!to.addPreservingAttr(Item(held, take), assureFullInsertion = true).hasSucceeded()) break
+        if (take >= held.amount) {
+            this[slot] = null
+            emptied.add(slot)
+        } else {
+            this[slot] = Item(held, held.amount - take)
+        }
+        left -= take
+    }
+    return MoveResult(amount - left, emptied)
+}
+
+/** What [moveEach] moved: the amount, and the source slots it emptied. */
+data class MoveResult(
+    val moved: Int,
+    val emptied: List<Int>,
+)
+
+/**
+ * Hands an item that already exists (it left this player's inventory for a holding screen, a stake or a bag) back to
+ * [player] with its attributes. Whatever the inventory cannot take is dropped under the player as their own ground
+ * item, attributes included - it is never destroyed and never rebuilt from its id alone.
+ */
+fun giveOrDrop(
+    player: Player,
+    item: Item,
+) {
+    val added = player.inventory.addPreservingAttr(item, assureFullInsertion = false).completed
+    val left = item.amount - added
+    if (left > 0) {
+        player.world.spawn(GroundItem(Item(item, left), player.tile, player))
+    }
 }
 
 fun ItemTransaction.revert(from: ItemContainer) {

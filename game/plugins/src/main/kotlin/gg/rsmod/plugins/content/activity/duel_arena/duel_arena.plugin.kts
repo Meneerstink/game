@@ -23,6 +23,8 @@ import gg.rsmod.plugins.content.mechanics.trading.getTradeSession
  */
 val CHALLENGE_ATTR = AttributeKey<Player>()
 
+val LOBBY_ONLY_MESSAGE = "You both need to be in the Duel Arena lobby, close to each other."
+
 fun Player.busyWithSomethingElse(): Boolean = getDuelMatch() != null || getTradeSession() != null || isLocked()
 
 on_command("duel") {
@@ -36,6 +38,11 @@ on_command("duel") {
         player.message("One of you is already busy.")
         return@on_command
     }
+    // Bug search 2026-10-02: the same rule as the "Challenge" option - the command worked from anywhere in the world.
+    if (!DuelArenaInterfaces.canChallenge(player, target)) {
+        player.message(LOBBY_ONLY_MESSAGE)
+        return@on_command
+    }
     target.attr[CHALLENGE_ATTR] = player
     player.message("Sending ${target.username} a request...")
     target.message("${player.username} wishes to duel with you(stake). Use duelaccept to begin configuring rules.")
@@ -45,6 +52,11 @@ on_command("duelaccept") {
     val existingMatch = player.getDuelMatch()
     if (existingMatch != null) {
         if (existingMatch.stage != DuelStage.CONFIGURING) return@on_command
+        // A match on its confirmation screen is accepted exactly like the screen's own Accept button.
+        if (existingMatch.confirming) {
+            acceptConfirmation(player)
+            return@on_command
+        }
         DuelArenaRules.acceptRefusal(existingMatch, player)?.let {
             player.message(it)
             return@on_command
@@ -65,6 +77,10 @@ on_command("duelaccept") {
         player.message("Your challenger is no longer available.")
         return@on_command
     }
+    if (!DuelArenaInterfaces.canChallenge(player, challenger)) {
+        player.message(LOBBY_ONLY_MESSAGE)
+        return@on_command
+    }
     val newMatch = DuelArenaMatch(challenger, player)
     challenger.attr[DUEL_MATCH_ATTR] = newMatch
     player.attr[DUEL_MATCH_ATTR] = newMatch
@@ -75,7 +91,7 @@ on_command("duelaccept") {
 }
 
 on_command("duelrule") {
-    val match = player.getDuelMatch()?.takeIf { it.stage == DuelStage.CONFIGURING } ?: run { player.message("You're not configuring a duel."); return@on_command }
+    val match = player.getDuelMatch()?.takeIf { it.stage == DuelStage.CONFIGURING && !it.confirming } ?: run { player.message("You're not configuring a duel."); return@on_command }
     val name = player.getCommandArgs().getOrNull(0)?.uppercase() ?: run { player.message("Usage: duelrule <name>"); return@on_command }
     val rule = DuelRule.values().firstOrNull { it.name == name || it.name.replace("_", "") == name.replace("_", "") }
     if (rule == null) {
@@ -88,7 +104,7 @@ on_command("duelrule") {
 }
 
 on_command("duellock") {
-    val match = player.getDuelMatch()?.takeIf { it.stage == DuelStage.CONFIGURING } ?: run { player.message("You're not configuring a duel."); return@on_command }
+    val match = player.getDuelMatch()?.takeIf { it.stage == DuelStage.CONFIGURING && !it.confirming } ?: run { player.message("You're not configuring a duel."); return@on_command }
     val name = player.getCommandArgs().getOrNull(0)?.uppercase() ?: run { player.message("Usage: duellock <slot>"); return@on_command }
     val lock = DuelEquipLock.values().firstOrNull { it.name == name || it.slot.name == name }
     if (lock == null) {
@@ -112,13 +128,17 @@ on_command("dueloffer") {
         return@on_command
     }
     val item = player.inventory[slot] ?: run { player.message("No item in that slot."); return@on_command }
-    val count = minOf(amount, player.inventory.getItemCount(item.id))
-    if (count <= 0) return@on_command
-    val transaction = player.inventory.remove(item.id, count, assureFullRemoval = true, beginSlot = slot)
-    if (transaction.hasSucceeded()) {
-        match.stakeOf(player).add(item.id, count)
-        match.resetAccepted()
-        player.message("You stake ${count}x ${item.id}. Both players must duelaccept again.")
+    /*
+     * Bug search 2026-10-02: the command staked by id with no checks - untradeable items could be staked and won, also in
+     * friendly duels and on the confirmation screen, and attributes were dropped. It goes through the stake screen's own
+     * rule now (tradeable only, staked duels only, not once confirming, attributes kept).
+     */
+    val itemId = item.id
+    val before = match.stakeOf(player).getItemCount(itemId)
+    if (DuelArenaInterfaces.addStake(match, player, slot, amount)) {
+        val count = match.stakeOf(player).getItemCount(itemId) - before
+        DuelArenaInterfaces.refreshStakes(match)
+        player.message("You stake ${count}x $itemId. Both players must duelaccept again.")
         match.other(player).message("${player.username} changed their stake. Both players must duelaccept again.")
     }
 }
@@ -149,24 +169,41 @@ fun challengerAndOpponentMessage(match: DuelArenaMatch, message: String) {
 }
 
 fun returnStakes(match: DuelArenaMatch) {
-    match.challengerStake.rawItems.filterNotNull().forEach { DuelArenaRules.giveOrDrop(match.challenger, it) }
-    match.opponentStake.rawItems.filterNotNull().forEach { DuelArenaRules.giveOrDrop(match.opponent, it) }
+    match.challengerStake.rawItems.filterNotNull().forEach { gg.rsmod.plugins.api.ext.giveOrDrop(match.challenger, it) }
+    match.opponentStake.rawItems.filterNotNull().forEach { gg.rsmod.plugins.api.ext.giveOrDrop(match.opponent, it) }
     match.challengerStake.removeAll()
     match.opponentStake.removeAll()
 }
 
 fun startDuel(match: DuelArenaMatch) {
+    val participants = listOf(match.challenger, match.opponent)
+    for (participant in participants) {
+        val refusal = DuelArenaRules.startRefusal(participant) ?: continue
+        participant.message(refusal)
+        match.other(participant).message("<col=ff0000>The duel could not start: your opponent can't enter the arena right now.")
+        cancelDuel(match)
+        return
+    }
+    /*
+     * The stage changes BEFORE the duel screens close. Closing a rules/confirmation screen runs its close hook, which
+     * declines a match that is still configuring - so every duel accepted on the confirmation screen had its stakes handed
+     * back and its match cleared just before both players were moved into the arena (bug search 2026-10-02): no payout,
+     * and with no match the arena death was not recognised as a duel death.
+     */
     match.stage = DuelStage.FIGHTING
+    participants.forEach {
+        it.closeInterface(dest = InterfaceDestination.MAIN_SCREEN)
+        it.closeInterface(dest = InterfaceDestination.TAB_AREA)
+    }
     val centre = DuelArenaLocations.pick(match.rules)
     match.arenaTile = centre
     val (first, second) = DuelArenaRules.battleTiles(match, centre)
-    for (participant in listOf(match.challenger, match.opponent)) {
+    for (participant in participants) {
         for (lock in match.lockedSlots) {
-            val existing = participant.equipment[lock.slot.id]
-            if (existing != null) {
-                participant.equipment[lock.slot.id] = null
-                participant.inventory.add(existing.id, existing.amount)
-            }
+            val existing = participant.equipment[lock.slot.id] ?: continue
+            participant.equipment[lock.slot.id] = null
+            // Back with its attributes, and onto the floor rather than lost if the pack filled up since accepting.
+            gg.rsmod.plugins.api.ext.giveOrDrop(participant, existing)
         }
     }
     match.challenger.moveTo(first)
@@ -337,7 +374,7 @@ fun acceptConfirmation(player: Player) {
     val match = configuring(player)?.takeIf { it.confirming } ?: return
     match.setAccepted(player, true)
     if (match.bothAccepted()) {
-        listOf(match.challenger, match.opponent).forEach { it.closeInterface(DuelArenaInterfaces.confirmInterface(match)) }
+        // startDuel closes the screens itself, after the stage change (see there).
         startDuel(match)
     } else {
         listOf(match.challenger, match.opponent).forEach { DuelArenaInterfaces.refreshStatus(match, it) }
@@ -346,14 +383,18 @@ fun acceptConfirmation(player: Player) {
 
 fun declineNative(player: Player) {
     val match = configuring(player) ?: return
+    cancelDuel(match)
+    match.other(player).message("<col=ff0000>Other player declined the duel!")
+}
+
+/** Ends a match that never started: both stakes back, the match gone, the duel screens closed. */
+fun cancelDuel(match: DuelArenaMatch) {
     returnStakes(match)
-    val other = match.other(player)
     match.clear()
-    listOf(player, other).forEach {
+    listOf(match.challenger, match.opponent).forEach {
         it.closeInterface(dest = InterfaceDestination.MAIN_SCREEN)
         it.closeInterface(dest = InterfaceDestination.TAB_AREA)
     }
-    other.message("<col=ff0000>Other player declined the duel!")
 }
 
 on_button(DuelArenaInterfaces.STAKE_RULES, DuelArenaInterfaces.STAKE_ACCEPT) { acceptRules(player) }

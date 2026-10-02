@@ -3,10 +3,6 @@ package gg.rsmod.plugins.content.mechanics.exchange
 import gg.rsmod.game.fs.def.ItemDef
 import gg.rsmod.game.model.entity.Client
 import gg.rsmod.game.model.entity.Player
-import gg.rsmod.game.model.attr.DEATH_FLAG
-import gg.rsmod.game.model.entity.zoneTile
-import gg.rsmod.plugins.content.combat.isBeingAttacked
-import gg.rsmod.plugins.content.mechanics.pvp.AreaState
 import gg.rsmod.plugins.api.ChatMessageType
 import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.content.mechanics.practicepvp.PracticePvp
@@ -37,13 +33,8 @@ fun geMsg(
  * work from a guarded (safe) zone, out of combat, while not locked or dying.
  */
 fun geCommandBlocked(player: Player): Boolean {
-    val reason =
-        when {
-            player.attr[DEATH_FLAG] == true || player.isLocked() -> "You can't do that right now."
-            AreaState.isDangerous(player.zoneTile()) -> "You can only use the Grand Exchange from a safe zone."
-            player.isBeingAttacked() -> "You can't use the Grand Exchange while in combat."
-            else -> return false
-        }
+    // The shared remote-service rule (safe zone, out of combat, not dying or locked) - one source, see RemoteAccess.
+    val reason = gg.rsmod.plugins.content.mechanics.pvp.RemoteAccess.refusal(player, "use the Grand Exchange") ?: return false
     geMsg(player, reason)
     return true
 }

@@ -10,6 +10,7 @@ import gg.rsmod.game.model.queue.QueueTask
 import gg.rsmod.plugins.api.NpcSkills
 import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.api.cfg.Items
+import gg.rsmod.plugins.api.ext.addPreservingAttr
 import gg.rsmod.plugins.api.ext.closeInterface
 import gg.rsmod.plugins.api.ext.hit
 import gg.rsmod.plugins.api.ext.isMulti
@@ -792,14 +793,27 @@ object SummoningSuite : Conformance.Suite {
         val levels0 = (0 until bot.skills.maxSkills).map { bot.skills.getCurrentLevel(it) }
         val dummyHp0 = dummy.getCurrentLifepoints()
         wait(1)
+        // Winter Storage (bug search 2026-10-02): the item the yak banks keeps its attributes - a probe whip with charges.
+        val winterProbe = 4321
+        val winterStorage = binding.target == FamiliarSpecialTarget.INVENTORY_ITEM && scroll == SummoningScrollData.WINTER_STORAGE_SCROLL
+        val bankedProbes0 = bot.bank.rawItems.count { it?.id == Items.ABYSSAL_WHIP && it.attr[gg.rsmod.game.model.item.ItemAttribute.CHARGES] == winterProbe }
+        if (winterStorage) {
+            bot.inventory.addPreservingAttr(gg.rsmod.game.model.item.Item(Items.ABYSSAL_WHIP).apply { attr[gg.rsmod.game.model.item.ItemAttribute.CHARGES] = winterProbe })
+        }
         val c = world.currentCycle
         val cast =
             when (binding.target) {
                 FamiliarSpecialTarget.INSTANT -> Bots.button(bot, ORB, ORB_SPECIAL)
                 FamiliarSpecialTarget.NPC -> Bots.targetNpc(bot, ORB, ORB_SPECIAL, dummy)
                 else -> {
-                    run.notTested(e, "special move cast (${binding.target})", "item/object/player-target specials need a target scenario")
-                    return
+                    if (!winterStorage) {
+                        run.notTested(e, "special move cast (${binding.target})", "item/object/player-target specials need a target scenario")
+                        return
+                    }
+                    // The real target-mode click (IF_BUTTONT, OpHeldUMessage): the orb's special button (no source item) onto the
+                    // probe's slot in the inventory (679:0) - exactly what the 667 client sends.
+                    val slot = bot.inventory.getItemIndex(Items.ABYSSAL_WHIP, skipAttrItems = false)
+                    Bots.inject(bot, gg.rsmod.game.message.impl.OpHeldUMessage((ORB shl 16) or ORB_SPECIAL, -1, -1, 679 shl 16, slot, Items.ABYSSAL_WHIP))
                 }
             }
         run.expectTrue(e, "special click accepted by the input path", cast, "inject=$cast")
@@ -816,6 +830,11 @@ object SummoningSuite : Conformance.Suite {
         }
         val used = 3 - bot.inventory.getItemCount(scroll.scroll)
         run.check(e, "special: scrolls used", used, "rule" to 1)
+        if (winterStorage) {
+            val banked = bot.bank.rawItems.count { it?.id == Items.ABYSSAL_WHIP && it.attr[gg.rsmod.game.model.item.ItemAttribute.CHARGES] == winterProbe }
+            run.check(e, "winter storage: the item is banked with its own charges", banked - bankedProbes0, "rule (bank deposit keeps attributes)" to 1)
+            run.check(e, "winter storage: the item left the inventory", bot.inventory.getItemCount(Items.ABYSSAL_WHIP), "rule" to 0)
+        }
         run.check(e, "special: special points cost", pointsUsed, "void" to v?.get("scroll")?.get("special_points")?.asInt(), "novite" to n?.get("special_points")?.asText()?.toIntOrNull())
         val famOut = run.recording.of("familiar", "out").filter { it.cycle >= c }
         val botOut = run.recording.of("Conf1", "out").filter { it.cycle >= c }

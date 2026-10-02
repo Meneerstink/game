@@ -88,6 +88,10 @@ object StoreUi : KLogging() {
         player: Player,
         shop: Shop,
     ) {
+        // Bug search 2026-10-02: the store is reachable without walking to it (`store`/`deadmanstore`/... commands, the
+        // Deadman's skull "Shop" option) and sells real PvP gear, so it was a mid-fight restock anywhere. The shared
+        // remote-service rule applies to every route (safe zone, out of combat); the store npcs stand in safe zones.
+        if (gg.rsmod.plugins.content.mechanics.pvp.RemoteAccess.refuse(player, "use the store")) return
         player.attr[SHOP_ATTR] = shop.ordinal
         player.attr[PAGE_ATTR] = 0
         player.attr[SELECTED_ATTR] = 0
@@ -280,6 +284,8 @@ object StoreUi : KLogging() {
      * rollback can be traced.
      */
     fun buy(player: Player) {
+        // Re-checked at the purchase: the screen can still be open after walking out of the safe zone or into a fight.
+        if (gg.rsmod.plugins.content.mechanics.pvp.RemoteAccess.refuse(player, "use the store")) return
         val entry = selected(player) ?: return
         val currency = entry.currency
         val balance = player.attr[currency.attr] ?: 0

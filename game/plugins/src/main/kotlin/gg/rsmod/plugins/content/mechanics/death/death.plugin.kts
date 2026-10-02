@@ -39,7 +39,10 @@ fun resolveDeath(victim: Player) {
     // take part in the death like every other carried item.
     gg.rsmod.plugins.content.inter.pricecheck.PriceChecker.close(victim)
     if (SafeDeath.isSafe(victim)) {
-        // Safe minigame death: no item loss, no recovery, no killer compensation.
+        // Safe minigame death: no item loss, no recovery, no killer compensation. A live casino round is settled and
+        // paid like any other ending of the round (bug search 2026-10-02, see casinoCoins below).
+        val casino = gg.rsmod.plugins.content.activity.casino.Casino.settleForDeath(victim)
+        if (casino > 0) gg.rsmod.plugins.content.activity.casino.CasinoWallet.deposit(victim, casino)
         return
     }
     val world = victim.world
@@ -93,11 +96,12 @@ fun resolveDeath(victim: Player) {
                 converted += droppedLostAmmo + droppedProtectedAmmo
                 // Audit X-01: a beast of burden's cargo is unprotected PvP loot, not a free Death's Domain batch.
                 converted += gg.rsmod.plugins.content.skills.summoning.BeastOfBurden.takeAllCargo(victim)
+                converted += casinoCoins(victim)
                 converted
             },
             // Owner 2026-09-26: on a PvM death the beast of burden's cargo goes to the gravestone with everything else - taken
             // here, before the gravestone is filled, not afterwards by the familiar's despawn.
-            extraPvmItems = { gg.rsmod.plugins.content.skills.summoning.BeastOfBurden.takeAllCargo(victim) },
+            extraPvmItems = { gg.rsmod.plugins.content.skills.summoning.BeastOfBurden.takeAllCargo(victim) + casinoCoins(victim) },
         )
     if (executed) {
         // Audit X-05: persist the transfer at once, like trades do - a crash before the next autosave
@@ -106,6 +110,18 @@ fun resolveDeath(victim: Player) {
         killer?.persistNow()
     }
 }
+
+/**
+ * Bug search 2026-10-02: a live casino round (Mines, Blackjack, a Flower Poker match being planted) holds coins outside
+ * the inventory, so they were never at risk - a player about to die put them on a hand and finished it after respawning.
+ * The round is settled at its current value inside the death resolution, like a beast of burden's cargo, and the coins
+ * join the lost items: the killer's loot on a PvP death, the gravestone on a PvM death. Called from DeathExecutor's
+ * extras, which run once per death (a second death call returns before them, so nothing is settled twice).
+ */
+fun casinoCoins(victim: Player): List<Item> =
+    gg.rsmod.plugins.content.activity.casino.CasinoWallet.coinStacks(
+        gg.rsmod.plugins.content.activity.casino.Casino.settleForDeath(victim),
+    )
 
 /*
  * Owner 2026-09-26: the old "reclaim" command is gone - like OSRS, items come back only from the gravestone or from Death

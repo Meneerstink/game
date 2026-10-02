@@ -157,7 +157,7 @@ class FlowerPokerMatch(
      * The server seed is revealed here and only here - every round it produced is already settled, so publishing
      * it costs nothing and is what lets either player audit the match afterwards.
      */
-    fun finish(): Settlement? {
+    fun finish(credit: (Player, Long) -> CasinoWallet.Payout = CasinoWallet::deposit): Settlement? {
         if (stage != Stage.PLANTING) {
             return null
         }
@@ -166,7 +166,7 @@ class FlowerPokerMatch(
         winner = won
         stage = Stage.FINISHED
 
-        val credited = CasinoWallet.deposit(won, pot)
+        val credited = credit(won, pot)
         val detail =
             "rounds=${rounds.size} ${challenger.username}=${decisive.firstHand.displayName} " +
                 "${opponent.username}=${decisive.secondHand.displayName} winner=${won.username}"
@@ -197,8 +197,16 @@ class FlowerPokerMatch(
             ),
         )
         CasinoHistory.logReveal(won, CasinoSeeds.Revealed(serverSeed, rounds.size))
-        return Settlement(won, pot, credited, decisive, serverSeed)
+        return Settlement(won, pot, credited, decisive, serverSeed).also { settlement = it }
     }
+
+    /**
+     * The settlement once [finish] has run. A participant's death settles the match early (bug search 2026-10-02: the pot
+     * was paid when the planting animation ended, possibly after the winner had died, so it was never at risk); the
+     * animation then shows this result instead of settling - or refunding - a second time.
+     */
+    var settlement: Settlement? = null
+        private set
 
     /**
      * Cancels a match that never reached [Stage.PLANTING]. Nothing has been escrowed at that point, so there is

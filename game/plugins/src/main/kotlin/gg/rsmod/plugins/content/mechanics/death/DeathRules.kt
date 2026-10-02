@@ -93,6 +93,8 @@ object DeathRules {
         loss += LootingBag.peekContents(player).filterNot { LootingBag.destroyedOnPvpDeath(player, it) }
         // A beast of burden's cargo is unprotected PvP loot too (death.plugin.kts, BeastOfBurden.takeAllCargo).
         loss += gg.rsmod.plugins.content.skills.summoning.BeastOfBurden.activeContainer(player)?.rawItems?.filterNotNull() ?: emptyList()
+        // A live casino round is settled into the killer's loot too (death.plugin.kts casinoCoins, bug search 2026-10-02).
+        loss += gg.rsmod.plugins.content.activity.casino.CasinoWallet.coinStacks(gg.rsmod.plugins.content.activity.casino.Casino.riskCoins(player))
         return loss
     }
 }

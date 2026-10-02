@@ -3,6 +3,7 @@ package gg.rsmod.plugins.content.mechanics.trouver
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.plugins.api.cfg.Items
+import gg.rsmod.plugins.api.ext.addPreservingAttr
 import gg.rsmod.plugins.api.ext.filterableMessage
 
 /**
@@ -132,7 +133,8 @@ object Trouver {
         // Roll back: undo whatever partially succeeded and restore the locked item exactly as it was.
         if (coinGrant?.hasSucceeded() == true) player.inventory.remove(Items.COINS_995, refund, assureFullRemoval = true)
         if (parchmentGrant.hasSucceeded()) player.inventory.remove(Items.TROUVER_PARCHMENT, 1, assureFullRemoval = true)
-        player.inventory.add(lockedItem.id, amount, assureFullInsertion = true)
+        // Restored as it was, attributes included (bug search 2026-10-02: an id-only re-add dropped its charges).
+        player.inventory.addPreservingAttr(Item(lockedItem, amount), assureFullInsertion = true)
         player.filterableMessage("You don't have enough inventory space to unlock that item.")
         return UnlockResult.InventoryFull
     }

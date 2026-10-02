@@ -164,7 +164,7 @@ class DuelArenaRulesTests {
             "skills/summoning/Familiar.kt" to "SUMMON",
         )
         val missing = consumers.filter { (path, action) ->
-            !File(main, path).readText().contains(Regex("""ActivityRestrictions\.refuse\(\s*\w+,\s*gg\.rsmod\.plugins\.content\.mechanics\.restrictions\.RestrictedAction\.$action"""))
+            !File(main, path).readText().contains(Regex("""ActivityRestrictions\.refus(e|al)\(\s*\w+,\s*gg\.rsmod\.plugins\.content\.mechanics\.restrictions\.RestrictedAction\.$action"""))
         }
         assertTrue(missing.isEmpty(), "consumers not wired to the shared gate: $missing")
         assertEquals(RestrictedAction.values().map { it.name }.toSet(), consumers.values.toSet(), "every restricted action has a consumer")
