@@ -499,10 +499,11 @@ abstract class Player(
         if (movement.lock != LockState.NONE) {
             lock = LockState.NONE
         }
-        // The slide is over on the client now; a looping sequence started for it (rocks climb 740) would otherwise hold the
-        // body on the landing for ~96 s while every later step the server takes is drawn nowhere (ROOT_CAUSES: stuck after
-        // 3803, owner 2026-10-02 23:58). A one-shot sequence ends by itself; a following animate() in the same cycle wins.
-        resetLoopingAnimation()
+        // The slide is over on the client now; a looping sequence started for it (rocks climb 740), or a body-holding one-shot
+        // longer than the slide (boulder 6978), would otherwise hold the body on the landing while every later step the server
+        // takes is drawn nowhere (ROOT_CAUSES #148, owner 2026-10-02 23:58 and 2026-10-03 01:53). A following animate() in
+        // the same cycle wins over the reset.
+        resetActionAnimation(slideCycles = cycleDuration.coerceAtLeast(1))
     }
 
     /**

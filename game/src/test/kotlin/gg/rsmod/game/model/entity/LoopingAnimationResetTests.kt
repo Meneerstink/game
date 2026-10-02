@@ -93,13 +93,32 @@ class LoopingAnimationResetTests {
     }
 
     @Test
-    fun `a one-shot climb animation is left to end on the client`() {
-        val player = player(Tile(2893, 3675))
+    fun `a body-holding one-shot animation longer than its slide is reset when the slide ends (God Wars boulder 6978)`() {
+        // Owner 2026-10-03 01:53: Lift the boulder (slide 210 client cycles = 7 game cycles, animation 6978 ~9 cycles, walking
+        // precedence 0), click to walk at once -> the client held the body on the landing while the server walked on.
+        val boulder = anim(6978)
+        assertFalse(boulder.loops)
+        assertTrue(boulder.holdsBody)
+        assertTrue(boulder.clientCycleLength > 7, "6978 outlives a 7-cycle slide: ${boulder.clientCycleLength}")
+        val player = player(Tile(2907, 3708))
+        player.queue {
+            player.animate(6978)
+            player.forceMove(this, slide(player.tile, Tile(2907, 3712), 210), cycleDuration = 7)
+        }
+        run(player, 9)
+        assertEquals(Tile(2907, 3712), player.tile)
+        assertEquals(-1, player.lastAnimationId, "6978 reset at the end of the slide")
+    }
+
+    @Test
+    fun `a one-shot climb animation that ends within its slide is left to end on the client`() {
+        // 1148 is 112 client cycles (4 game cycles): on the 120-cycle 9305 slide it ends by itself and is left alone.
+        val player = player(Tile(2894, 3672))
         player.queue {
             player.animate(1148)
-            player.forceMove(this, slide(player.tile, Tile(2894, 3672), 40), cycleDuration = 2)
+            player.forceMove(this, slide(player.tile, Tile(2898, 3675), 120), cycleDuration = 4)
         }
-        run(player, 4)
+        run(player, 6)
         assertEquals(1148, player.lastAnimationId)
     }
 

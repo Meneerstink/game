@@ -861,12 +861,25 @@ abstract class Pawn(
      * an animation: every forced move and every locked action that started one resets it when it is over. A one-shot sequence
      * ends on the client by itself and is left alone. Returns true when a reset was sent.
      */
-    fun resetLoopingAnimation(): Boolean {
+    fun resetLoopingAnimation(): Boolean = resetActionAnimation(slideCycles = null)
+
+    /**
+     * Ends the action animation the client would otherwise keep playing after the action is over: a looping sequence always,
+     * and a one-shot sequence that holds the body (walking precedence 0) and outlives the slide it was started for
+     * ([slideCycles], the God Wars boulder 6978: 9 cycles of animation on a 7-cycle slide - owner 2026-10-03 01:53, "in een
+     * muur" right after it). Null [slideCycles] = the end of a locked action: every body-holding sequence ends with it.
+     */
+    fun resetActionAnimation(slideCycles: Int?): Boolean {
         val id = lastAnimationId
         if (id == -1) return false
         val def = runCatching { world.definitions.getNullable(gg.rsmod.game.fs.def.AnimDef::class.java, id) }.getOrNull() ?: return false
-        if (!def.loops) return false
-        if (this is Player) gg.rsmod.game.model.AvTrace.log { "anim PLAYER $username looping id=$id reset at the end of its action cycle=${world.currentCycle}" }
+        val outlives = def.holdsBody && (slideCycles == null || def.clientCycleLength > slideCycles)
+        if (!def.loops && !outlives) return false
+        if (this is Player) {
+            gg.rsmod.game.model.AvTrace.log {
+                "anim PLAYER $username ${if (def.loops) "looping" else "body-holding"} id=$id (${def.clientCycleLength} cycles) reset at the end of its action cycle=${world.currentCycle}"
+            }
+        }
         resetAnimation()
         return true
     }
