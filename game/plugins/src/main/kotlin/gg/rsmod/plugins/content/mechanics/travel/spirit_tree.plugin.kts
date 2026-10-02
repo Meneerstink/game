@@ -66,3 +66,8 @@ suspend fun travel(
     task: gg.rsmod.game.model.queue.QueueTask,
     player: Player,
 ) = SpiritTrees.travel(task, player)
+
+// The destination menu's rows (interface 864, client-built; slot = enum 2535 index) - SpiritTrees.open / select.
+on_button(interfaceId = SpiritTrees.INTERFACE, component = SpiritTrees.LIST) {
+    SpiritTrees.select(player, player.getInteractingSlot())
+}

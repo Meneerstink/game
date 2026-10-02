@@ -1,11 +1,6 @@
 package gg.rsmod.plugins.content.areas.poh
 
-import gg.rsmod.game.fs.def.ItemDef
-import gg.rsmod.game.model.queue.QueueTask
 import gg.rsmod.plugins.content.items.armor.BarrowsRepair
-import gg.rsmod.plugins.content.magic.TeleportType
-import gg.rsmod.plugins.content.magic.canTeleport
-import gg.rsmod.plugins.content.magic.teleport
 
 /**
  * The furniture the house gained on 2026-09-21 (owner: "we want nexus teleport and every teleport available in the
@@ -38,15 +33,8 @@ listOf("direct-portal", "scry").forEach { option ->
 
 // ------------------------------------------------------------------ the garden
 
-// Fairy ring: the full code network (PohGarden.FAIRY_RINGS, sourced from the 2009scape fairy-ring table).
-on_obj_option(obj = PlayerHouse.FAIRY_RING, option = "use") {
-    player.queue {
-        val choice = chooseDestination(this, PohGarden.FAIRY_RINGS, "Fairy ring") ?: return@queue
-        player.canTeleport(TeleportType.FAIRY) {
-            player.teleport(choice.tile, TeleportType.FAIRY)
-        }
-    }
-}
+// Fairy ring: the world's own dial 734 + travel log 735 (mechanics/travel/fairy_rings.plugin.kts, FairyRings.Source.HOUSE) - owner
+// 2026-10-02: house options are interfaces, not chat menus. Binding it here would pre-empt that fallback.
 
 /*
  * The small obelisk in the garden needs nothing here. `skills/summoning/summoning_obelisks.plugin.kts` already binds
@@ -73,132 +61,55 @@ on_obj_option(obj = PlayerHouse.JEWELLERY_BOX, option = "teleport") {
     }
 }
 
-/** Paged chooser over a flat destination list, in the same four-per-page shape [PohTeleports.choose] uses. */
-suspend fun chooseDestination(
-    task: QueueTask,
-    destinations: List<PohGarden.Destination>,
-    title: String,
-): PohGarden.Destination? {
-    var page = 0
-    while (true) {
-        val slice = destinations.drop(page * 4).take(4)
-        if (slice.isEmpty()) {
-            return null
-        }
-        val more = destinations.size > (page + 1) * 4
-        val labels = slice.map { it.label } + (if (more) "More..." else "Cancel")
-        val pick = task.options(*labels.toTypedArray(), title = title)
-        if (pick < 1) {
-            return null
-        }
-        if (pick <= slice.size) {
-            return slice[pick - 1]
-        }
-        if (!more) {
-            return null
-        }
-        page++
-    }
-}
-
 // ------------------------------------------------------------------ the costume room
 
 /*
- * Every piece of costume-room furniture opens the same store/withdraw dialogue over its own container
- * ([PohStorage.Family]). The cape rack's cache option is "Search" and the rest carry "Open"; both are bound so the
- * menu entry a player sees is the one the loc actually advertises.
+ * Every piece of costume-room furniture opens its own storage on the real interface 467 ([PohStorageUi]; owner 2026-10-02: house options
+ * are interfaces, not chat menus). The cape rack's cache option is "Search" and the rest carry "Open"; both are bound so the menu entry a
+ * player sees is the one the loc actually advertises.
  */
 PohStorage.Family.values().forEach { family ->
     listOf("open", "search").forEach { option ->
         if (if_obj_has_option(obj = family.furniture, option = option)) {
             on_obj_option(obj = family.furniture, option = option) {
-                player.queue { costumeRoom(this, family) }
+                PohStorageUi.open(player, family)
             }
         }
     }
 }
 
-suspend fun costumeRoom(
-    task: QueueTask,
-    family: PohStorage.Family,
-) {
-    val player = task.player
-    val held = player.inventory.rawItems.filterNotNull().map { it.id }.filter { PohStorage.accepts(family, it) }.distinct()
-    val stored = PohStorage.stored(player, family)
-    when (
-        task.options(
-            "Store an item (${held.size} in your inventory).",
-            "Take an item out (${stored.size} stored).",
-            "Nothing.",
-            title = family.displayName,
-        )
-    ) {
-        1 -> {
-            if (held.isEmpty()) {
-                player.message("You have nothing here that belongs in the ${family.displayName.lowercase()}.")
-                return
-            }
-            val pick = chooseItem(task, held, "Store which item?") ?: return
-            if (player.inventory.remove(pick).hasSucceeded()) {
-                PohStorage.put(player, family, pick)
-                player.message("You put your ${itemName(player, pick)} in the ${family.displayName.lowercase()}.")
-            }
-        }
-        2 -> {
-            if (stored.isEmpty()) {
-                player.message("The ${family.displayName.lowercase()} is empty.")
-                return
-            }
-            val pick = chooseItem(task, stored, "Take out which item?") ?: return
-            if (player.inventory.hasSpace && PohStorage.take(player, family, pick)) {
-                player.inventory.add(pick)
-                player.message("You take your ${itemName(player, pick)} out of the ${family.displayName.lowercase()}.")
-            } else if (!player.inventory.hasSpace) {
-                player.message("You don't have room for that.")
-            }
-        }
-    }
-}
-
-fun itemName(
-    p: Player,
-    id: Int,
-): String = p.world.definitions.get(ItemDef::class.java, id).name
-
-/** Paged item chooser, four per page, in the same shape the teleport directory uses. */
-suspend fun chooseItem(
-    task: QueueTask,
-    ids: List<Int>,
-    title: String,
-): Int? {
-    var page = 0
-    while (true) {
-        val slice = ids.drop(page * 4).take(4)
-        if (slice.isEmpty()) {
-            return null
-        }
-        val more = ids.size > (page + 1) * 4
-        val labels = slice.map { itemName(task.player, it) } + (if (more) "More..." else "Cancel")
-        val pick = task.options(*labels.toTypedArray(), title = title)
-        if (pick < 1) {
-            return null
-        }
-        if (pick <= slice.size) {
-            return slice[pick - 1]
-        }
-        if (!more) {
-            return null
-        }
-        page++
+(0 until PohStorageUi.ROWS).forEach { row ->
+    on_button(interfaceId = PohStorageUi.INTERFACE, component = PohStorageUi.buttonComponent(row)) {
+        PohStorageUi.select(player, row)
     }
 }
 
 // ------------------------------------------------------------------ the study
 
-// The telescope and the bookcase are flavour.
-on_obj_option(obj = Objs.TELESCOPE_13658, option = "observe") {
-    player.message("You peer through the telescope at the night sky above Gielinor.")
+/*
+ * The telescope (owner 2026-10-02: interfaces, not chat lines) - 2009scape TelescopePlugin: the sky view 782 (this cache: a full-screen
+ * layer and two models), the look-through animation 3649, then when the next shooting star lands, as a guess whose spread shrinks with
+ * the telescope (oak 24, teak 9, mahogany 2 minutes either way). The next landing is this server's own star timer
+ * (ShootingStarHandler, 100 ticks a minute).
+ */
+val TELESCOPE_SPREAD = mapOf(Objs.TELESCOPE_13656 to 24, Objs.TELESCOPE_13657 to 9, Objs.TELESCOPE_13658 to 2)
+
+TELESCOPE_SPREAD.forEach { (telescope, spread) ->
+    on_obj_option(obj = telescope, option = "observe") {
+        // WEAK: a STANDARD task pauses while a main-screen interface is open (ROOT_CAUSES #92), and 782 is one.
+        player.queue(gg.rsmod.game.model.queue.TaskPriority.WEAK) {
+            player.animate(3649)
+            player.openInterface(782, gg.rsmod.plugins.api.InterfaceDestination.MAIN_SCREEN)
+            wait(2)
+            val timer = gg.rsmod.plugins.content.activity.shooting_star.ShootingStarEventTimer
+            val minutes = (if (world.timers.has(timer)) world.timers[timer] else 0) / 100
+            val guess = (minutes + world.random(-spread..spread)).coerceAtLeast(1)
+            messageBox("You see a shooting star! The star looks like it will land", "in about $guess minutes!")
+        }
+    }
 }
+
+// The bookcase is flavour.
 
 on_obj_option(obj = Objs.BOOKCASE_13599, option = "search") {
     player.message("You search the bookcase, but find nothing you have not already read.")

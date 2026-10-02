@@ -17,7 +17,8 @@ world.plugins.bindObjectFallback { player, obj, opt ->
         return@bindObjectFallback false
     }
     player.attr[USED_RING] = obj.tile
-    FairyRings.open(player, FairyRings.Source.RING)
+    val house = gg.rsmod.plugins.content.areas.poh.PlayerHouse.isSafeTile(obj.tile)
+    FairyRings.open(player, if (house) FairyRings.Source.HOUSE else FairyRings.Source.RING)
     true
 }
 

@@ -97,6 +97,13 @@ object FairyRings {
     enum class Source(val teleport: TeleportType) {
         RING(TeleportType.FAIRY),
         TRINKET(TeleportType.TRINKET_FAIRY),
+
+        /**
+         * The ring in a player-owned house's garden (owner 2026-10-02: house options are interfaces, not chat menus). Same dial and
+         * travel log; no staff check - the house offers every teleport to every player (owner 2026-09-21), which is what its
+         * former chat list did.
+         */
+        HOUSE(TeleportType.FAIRY),
     }
 
     val SOURCE = AttributeKey<Source>()
