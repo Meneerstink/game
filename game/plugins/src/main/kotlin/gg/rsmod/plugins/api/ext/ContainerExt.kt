@@ -5,6 +5,7 @@ import gg.rsmod.game.model.container.ItemTransaction
 import gg.rsmod.game.model.entity.GroundItem
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
+import gg.rsmod.game.model.item.ItemAttribute
 
 /**
  * Transfer [item] from [this] container to [to] container.
@@ -151,6 +152,47 @@ fun giveOrDrop(
     if (left > 0) {
         player.world.spawn(GroundItem(Item(item, left), player.tile, player))
     }
+}
+
+/**
+ * The attributes that are part of an item's value: charges, degradation, attached/stored contents (blowpipe darts, rune
+ * pouch runes) and the broken state. A route that turns the item into its bare id (the Grand Exchange book, a shop's
+ * stock) would erase them - and the next owner gets a fully charged, undegraded item ("absent = full" for degrading gear).
+ * Bookkeeping attributes (bank tab, a toggle, an attack counter, the death-fee mark) are not value.
+ */
+val VALUE_STATE_ATTRIBUTES: Set<ItemAttribute> =
+    setOf(
+        ItemAttribute.CHARGES, ItemAttribute.DEGRADE, ItemAttribute.ATTACHED_ITEM_ID, ItemAttribute.ATTACHED_ITEM_COUNT,
+        ItemAttribute.RUNE_POUCH_ID_1, ItemAttribute.RUNE_POUCH_AMOUNT_1, ItemAttribute.RUNE_POUCH_ID_2, ItemAttribute.RUNE_POUCH_AMOUNT_2,
+        ItemAttribute.RUNE_POUCH_ID_3, ItemAttribute.RUNE_POUCH_AMOUNT_3, ItemAttribute.RUNE_POUCH_ID_4, ItemAttribute.RUNE_POUCH_AMOUNT_4,
+        ItemAttribute.BROKEN,
+    )
+
+/** True when this item carries [VALUE_STATE_ATTRIBUTES] that rebuilding it from its id would lose. */
+fun Item.carriesState(): Boolean = attr.keys.any { it in VALUE_STATE_ATTRIBUTES }
+
+/** How many of [itemId] this container holds without value state - all an exchange that rebuilds items may take. */
+fun ItemContainer.statelessCount(itemId: Int): Int = rawItems.sumOf { if (it != null && it.id == itemId && !it.carriesState()) it.amount else 0 }
+
+/**
+ * Removes up to [amount] of [itemId], taking only exemplars without value state (bug search 2026-10-02: the Grand Exchange
+ * and shops removed by id, so a used Chaotic or a degraded Moon piece could be sold and came out fresh for its buyer).
+ * Returns the amount removed.
+ */
+fun ItemContainer.removeStateless(
+    itemId: Int,
+    amount: Int,
+): Int {
+    var left = amount
+    for (slot in 0 until capacity) {
+        if (left <= 0) break
+        val held = this[slot] ?: continue
+        if (held.id != itemId || held.amount <= 0 || held.carriesState()) continue
+        val take = minOf(left, held.amount)
+        this[slot] = if (take >= held.amount) null else Item(held, held.amount - take)
+        left -= take
+    }
+    return amount - left
 }
 
 fun ItemTransaction.revert(from: ItemContainer) {

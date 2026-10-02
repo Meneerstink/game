@@ -120,12 +120,29 @@ class HoldingRouteAttributeTests {
         val offenders =
             routes.flatMap { path ->
                 java.io.File(content, path).readLines().mapIndexedNotNull { index, line ->
-                    if (rebuild.containsMatchIn(line)) "$path:${index + 1}: ${line.trim()}" else null
+                    // A rebuild is only allowed for exemplars taken by removeStateless, marked "stateless" on the line.
+                    if (rebuild.containsMatchIn(line) && !line.contains("stateless")) "$path:${index + 1}: ${line.trim()}" else null
                 }
             }
         assertTrue(offenders.isEmpty(), "existing items rebuilt from their id: $offenders")
+        // Routes that turn an item into its bare id (offer book, shop stock) take only exemplars without value state.
+        listOf("mechanics/exchange/GrandExchangeInterface.kt", "mechanics/exchange/grand_exchange.plugin.kts", "mechanics/shops/ItemCurrency.kt").forEach { path ->
+            assertTrue(java.io.File(content, path).readText().contains("removeStateless("), "$path sells stateless exemplars only")
+        }
         val yak = java.io.File(content, "skills/summoning/SummoningSpecialMoves.kt").readText()
         assertTrue(yak.contains("Bank.deposit(player, player.inventory, slot, 1)"), "Winter Storage banks through the real bank rules")
+    }
+
+    @Test
+    fun `exchanges that keep bare ids take only exemplars without value state`() {
+        val inv = ItemContainer(DEFINITIONS, INVENTORY_KEY)
+        inv[0] = charged(12) // a used, partly degraded piece
+        inv[1] = Item(Items.ABYSSAL_WHIP)
+        inv[2] = Item(Items.ABYSSAL_WHIP).apply { attr[ItemAttribute.BANK_TAB] = 2 } // bookkeeping, not value
+        assertTrue(inv[0]!!.carriesState())
+        assertEquals(2, inv.statelessCount(Items.ABYSSAL_WHIP))
+        assertEquals(2, inv.removeStateless(Items.ABYSSAL_WHIP, 3), "never the charged exemplar")
+        assertEquals(listOf<Int?>(12), chargesOf(inv), "the charged one stays")
     }
 
     companion object {

@@ -17,12 +17,14 @@ import gg.rsmod.plugins.api.ext.openInterface
 import gg.rsmod.plugins.api.ext.persistNow
 import gg.rsmod.plugins.api.ext.playJingle
 import gg.rsmod.plugins.api.ext.playSound
+import gg.rsmod.plugins.api.ext.removeStateless
 import gg.rsmod.plugins.api.ext.runClientScript
 import gg.rsmod.plugins.api.ext.sendItemContainer
 import gg.rsmod.plugins.api.ext.setComponentHidden
 import gg.rsmod.plugins.api.ext.setComponentText
 import gg.rsmod.plugins.api.ext.setInterfaceEvents
 import gg.rsmod.plugins.api.ext.setVarp
+import gg.rsmod.plugins.api.ext.statelessCount
 import kotlin.math.ceil
 
 /** The offer being built on the buy/sell page of the Grand Exchange screen. */
@@ -108,6 +110,9 @@ object GrandExchangeInterface {
 
     const val MSG_CHOOSE_FIRST = "You must choose an item first."
     const val MSG_NOT_TRADEABLE = "You can't trade that item on the Grand Exchange."
+
+    /** Bug search 2026-10-02: no exemplar without charges, wear or stored contents (see [ownedCount]). Our wording. */
+    const val MSG_HOLDS_STATE = "Uncharge, repair or empty that item before you sell it on the Grand Exchange."
     const val MSG_TOO_VALUABLE = "The total value of your offer cannot exceed 2147m coins."
     const val MSG_ABORT = "Abort request acknowledged. Please be aware that your offer may have already been completed."
     const val MSG_UPDATED = "One or more of your Grand Exchange offers have been updated."
@@ -357,6 +362,11 @@ object GrandExchangeInterface {
             player.message(MSG_NOT_TRADEABLE)
             return
         }
+        if (selection.type == OfferType.SELL && ownedCount(player, real.id) <= 0) {
+            player.playSound(GrandExchangeSounds.TRADE_ERROR)
+            player.message(MSG_HOLDS_STATE)
+            return
+        }
         selection.itemId = real.id
         selection.guide = service.guidePrice(real.id, OsrsGuidePrices.seed(real))
         selection.price = clampPrice(selection, selection.guide)
@@ -371,8 +381,10 @@ object GrandExchangeInterface {
         itemId: Int,
     ): Int {
         val def = player.world.definitions.getNullable(ItemDef::class.java, itemId) ?: return 0
-        val noted = if (!def.noted && def.noteLinkId > 0) player.inventory.getItemCount(def.noteLinkId) else 0
-        return minOf(player.inventory.getItemCount(itemId).toLong() + noted, Int.MAX_VALUE.toLong()).toInt()
+        // Only exemplars without value state can be sold: the offer book holds bare ids, so a used Chaotic or a degraded
+        // Moon piece would reach its buyer fully charged (bug search 2026-10-02, ROOT_CAUSES 133).
+        val noted = if (!def.noted && def.noteLinkId > 0) player.inventory.statelessCount(def.noteLinkId) else 0
+        return minOf(player.inventory.statelessCount(itemId).toLong() + noted, Int.MAX_VALUE.toLong()).toInt()
     }
 
     /**
@@ -438,10 +450,10 @@ object GrandExchangeInterface {
                 return false
             }
             val def = player.world.definitions.get(ItemDef::class.java, selection.itemId)
-            val unnotedRemoved = player.inventory.remove(selection.itemId, selection.quantity, assureFullRemoval = false).completed
+            val unnotedRemoved = player.inventory.removeStateless(selection.itemId, selection.quantity)
             val notedRemoved =
                 if (unnotedRemoved < selection.quantity && def.noteLinkId > 0) {
-                    player.inventory.remove(def.noteLinkId, selection.quantity - unnotedRemoved, assureFullRemoval = false).completed
+                    player.inventory.removeStateless(def.noteLinkId, selection.quantity - unnotedRemoved)
                 } else {
                     0
                 }

@@ -77,12 +77,13 @@ on_command("ge_sell") {
         return@on_command
     }
     // Debit the stock up front so it can never be sold twice - the offer's
-    // escrow is now the only place these units exist.
-    val removed = player.inventory.remove(item = itemId, amount = quantity, assureFullRemoval = true)
-    if (removed.completed < quantity) {
-        geMsg(player, "You don't have $quantity x $name to sell.")
+    // escrow is now the only place these units exist. Only exemplars without value state (charges, wear, stored
+    // contents) are taken: the book holds bare ids (bug search 2026-10-02, ROOT_CAUSES 133).
+    if (player.inventory.statelessCount(itemId) < quantity) {
+        geMsg(player, if (player.inventory.getItemCount(itemId) >= quantity) GrandExchangeInterface.MSG_HOLDS_STATE else "You don't have $quantity x $name to sell.")
         return@on_command
     }
+    player.inventory.removeStateless(itemId, quantity)
     // Audit E-08: player save (with a pending marker) before the book write, see GeEscrow.
     val (offer, fills) =
         GeEscrow.place(player, listOf(itemId to quantity), restore = { player.inventory.add(itemId, quantity) }) { token ->

@@ -4,8 +4,6 @@ import gg.rsmod.game.action.EquipAction
 import gg.rsmod.game.fs.def.ItemDef
 import gg.rsmod.game.model.World
 import gg.rsmod.game.model.attr.LAST_VIEWED_SHOP_ITEM_FREE
-import gg.rsmod.game.model.container.ContainerStackType
-import gg.rsmod.game.model.container.ItemContainer
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.game.model.shop.PurchasePolicy
@@ -437,7 +435,13 @@ open class ItemCurrency(
         val shopItem = if (shopSlot != -1) shop.items[shopSlot] else null
         val count = shopItem?.currentAmount ?: 0
 
-        val amount = Math.min(Math.min(p.inventory.getItemCount(item.id), amt), Int.MAX_VALUE - count)
+        // Only exemplars without value state are sold: the shop stocks bare ids, so a used Chaotic or a degraded Moon piece
+        // would come back out of the shop fully charged (bug search 2026-10-02, ROOT_CAUSES 133).
+        if (p.inventory.statelessCount(item.id) <= 0) {
+            p.message("Uncharge, repair or empty that item before you sell it.")
+            return
+        }
+        val amount = Math.min(Math.min(p.inventory.statelessCount(item.id), amt), Int.MAX_VALUE - count)
 
         if (count == 0 && shop.items.none { it == null } || amount <= 0) {
             p.filterableMessage("The shop has run out of space.")
@@ -451,12 +455,8 @@ open class ItemCurrency(
             return
         }
 
-        /*
-         * Bug search 2026-10-02: the sold stacks are held aside with their attributes, so the "no inventory space" path
-         * below puts back exactly what was taken. It re-added `item.id` by id only, which dropped charges/degradation.
-         */
-        val held = ItemContainer(p.world.definitions, p.inventory.capacity, ContainerStackType.NORMAL)
-        val sold = p.inventory.moveEach(held, item.id, amount, startSlot = slot).moved
+        // Stateless exemplars only (see above), so the "no inventory space" path below can put them back by id exactly.
+        val sold = p.inventory.removeStateless(item.id, amount)
         if (sold == 0) {
             return
         }
@@ -474,7 +474,7 @@ open class ItemCurrency(
             }
             shop.refresh(p.world)
         } else {
-            held.moveEach(p.inventory, item.id, sold)
+            p.inventory.add(item.id, sold, assureFullInsertion = false, applyCreationRedirect = false) // stateless exemplars only
             p.message("You don't have enough inventory space.")
         }
     }

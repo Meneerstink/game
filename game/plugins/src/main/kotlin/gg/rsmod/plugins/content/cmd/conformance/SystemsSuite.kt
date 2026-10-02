@@ -17,6 +17,7 @@ import gg.rsmod.game.model.timer.FROZEN_TIMER
 import gg.rsmod.game.model.timer.TELEBLOCK_TIMER
 import gg.rsmod.plugins.api.EquipmentType
 import gg.rsmod.plugins.api.cfg.Items
+import gg.rsmod.plugins.api.ext.addPreservingAttr
 import gg.rsmod.plugins.api.ext.getVarbit
 import gg.rsmod.plugins.api.ext.getVarp
 import gg.rsmod.plugins.api.ext.getWildernessLevel
@@ -95,6 +96,32 @@ object SystemsSuite : Conformance.Suite {
         scenario("acceptaid") { with(AidScenarios) { acceptAid(run, arena) } }
         scenario("potionshare") { with(AidScenarios) { potionShare(run, arena) } }
         scenario("assist") { with(AidScenarios) { assist(run, arena) } }
+        scenario("exchange") { exchangeState(run) }
+    }
+
+    /**
+     * exchange (bug search 2026-10-02, ROOT_CAUSES 133): the Grand Exchange book holds bare ids, so a used, partly degraded
+     * item offered on it reached its buyer fully charged ("absent = full"). `ge_sell` on a used Chaotic rapier is refused and
+     * the rapier keeps its charges. Only the refusal is exercised - no offer is written to the book.
+     */
+    private suspend fun QueueTask.exchangeState(run: Conformance.Run) {
+        val e = "exchange"
+        val hall = Tile(3165, 3487, 0)
+        val g = run.bot(hall, "GX")
+        repeat(14) { wait(1) }
+        g.inventory.removeAll()
+        g.inventory.addPreservingAttr(Item(Items.CHAOTIC_RAPIER).apply { attr[gg.rsmod.game.model.item.ItemAttribute.CHARGES] = 12 })
+        wait(1)
+        val c = run.world.currentCycle
+        Bots.inject(g, gg.rsmod.game.message.impl.ClientCheatMessage(0, "ge_sell ${Items.CHAOTIC_RAPIER} 1 1000"))
+        repeat(3) { wait(1) }
+        val said = run.recording.of("GX", "msg").filter { it.cycle >= c }.joinToString(" / ") { it.text.substringAfter("message=").take(100) }
+        val kept = g.inventory.rawItems.count { it?.id == Items.CHAOTIC_RAPIER && it.attr[gg.rsmod.game.model.item.ItemAttribute.CHARGES] == 12 }
+        run.expectTrue(
+            e, "ge_sell of a used Chaotic rapier: refused, the rapier keeps its charges",
+            kept == 1 && said.contains(gg.rsmod.plugins.content.mechanics.exchange.GrandExchangeInterface.MSG_HOLDS_STATE), "kept=$kept msgs: $said",
+        )
+        g.inventory.removeAll()
     }
 
     /** Hitsplats of [type] per cycle on [who] since [from]: cycle -> damages. */
