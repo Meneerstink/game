@@ -413,6 +413,8 @@ fun Pawn.dealHit(
             val dealt = hit.hitmarks.sumOf { it.damage }
             target.damageMap.add(credited, dealt)
             gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.recordDamage(target, credited, dealt)
+            // Pest Control zeal and the live knight/portal health on the game overlay.
+            gg.rsmod.plugins.content.activity.pest_control.PestControlHandler.onDamage(target, credited, dealt)
         }
     }
 

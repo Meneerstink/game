@@ -1,77 +1,156 @@
 package gg.rsmod.plugins.content.activity.pest_control
 
+import gg.rsmod.game.model.Area
 import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.timer.TimerKey
 import gg.rsmod.plugins.api.cfg.Npcs
 
 /**
- * Q-050 Pest Control. Neither donor has a real controller (Void's PestControlBotContext.kt is
- * bot-AI hooks assuming the minigame exists; Novite's PestMonsters.java is unrelated generic
- * monster defs). Source per project rule (read-only GitHub, same rsmod-family Kotlin arch):
- * https://github.com/downthecrop/2009scape-mirror repo, path
- * Server -slash- src -slash- main -slash- content -slash- minigame -slash- pestcontrol
- * (path spelled with placeholders above to avoid nested-comment issues with slash-star in a
- * KDoc block - see the shooting_star/sorceress_garden batches' comment-nesting bug this session).
+ * Pest Control data (owner 2026-10-02: "finish pest control fully").
  *
- * All npc/object ids below verified against this project's own generated Npcs.kt/Objs.kt (exact
- * numeric + name match to the 2009-mirror source), and the physical map placement of the
- * barricade objects was independently confirmed via runObjectPlacementProbeTool at region 10536
- * -> real static content native to this 667 cache, not guessed.
+ * Sources, in order: this project's rev-667 cache (npc/object/interface probes 2026-10-02, quoted where used), the
+ * 2009scape Pest Control port (`import-source/donors/2009scape/.../minigame/pestcontrol`, rev 530) and Void
+ * (`Donors/void/data/minigame/pest_control`, rev 634). The 2009scape logic is what is ported; every id it uses was
+ * re-checked against the 667 cache because the revisions differ.
  *
- * This engine has no instance/zone manager (same documented limit as Dungeoneering/Construction/
- * Clan-Wars-full/Sorceress's-Garden-adjacent findings this session). The donor spawns a fresh
- * DynamicRegion clone of region 10536 per concurrent game session (so novice/intermediate/
- * veteran, or several novice games, can run in parallel). Ported here as ONE shared game in
- * progress at a time on the real static region 10536, regardless of tier - the same deliberate
- * scoped-down substitute pattern already used for Clan Wars (full).
+ * Portal ids (runNpcDefProbeTool 2026-10-02): 6142-6145 and 6150-6153 are "Portal" size 3 with "Attack"; 6146-6149 and
+ * 6154-6157 are the same portals without any option (the shielded form, base id + 4). 7551-7558 are NOT portals in
+ * this cache (General Khazard, Citizen, Tool leprechaun) - the 2009scape veteran ids came from rev 530. The cache has two
+ * portal sets, so the intermediate and the veteran lander both use 6150 (the 2009scape portal health: 200 novice, 250 above).
  */
 enum class PestControlTier(
     val displayName: String,
     val combatReq: Int,
     val portalBaseId: Int,
+    /** Portal lifepoints (667 scale: 2009scape 200/250 hitpoints x 10). */
+    val portalLifepoints: Int,
+    /** 2009scape `type.ordinal() + 2` commendation points per won game. */
     val pointsPerWin: Int,
+    /** Index into the monster tables below (2009scape PCPortalNPC.getDifficultyIndex). */
+    val difficulty: Int,
+    /** Where the player stands after leaving the lander or the game (2009scape getLeaveLocation). */
     val leaveTile: Tile,
+    /**
+     * The boat deck: 2009scape PCLanderZone.configure borders. Its novice box reads (2659, 2637)-(2664, 2664), which would take in
+     * twenty rows of the outpost north of the boat; the deck is capped at z 2644 like the other two boats (8 rows).
+     */
+    val lander: Area,
+    /** Tile on the boat after crossing the gangplank (2009scape PCObjectHandler.startActivity). */
+    val boardTile: Tile,
+    val gangplankId: Int,
+    val exitLadderId: Int,
 ) {
-    NOVICE("Novice", 40, Npcs.PORTAL, 2, Tile(2657, 2639, 0)),
-    INTERMEDIATE("Intermediate", 70, Npcs.PORTAL_6150, 3, Tile(2644, 2644, 0)),
-    VETERAN("Veteran", 100, Npcs.GENERAL_KHAZARD_7551, 4, Tile(2638, 2653, 0)),
+    NOVICE("Novice", 40, Npcs.PORTAL, 2000, 2, 0, Tile(2657, 2639, 0), Area(2659, 2637, 2664, 2644), Tile(2661, 2639, 0), 14315, 14314),
+    INTERMEDIATE("Intermediate", 70, Npcs.PORTAL_6150, 2500, 3, 1, Tile(2644, 2644, 0), Area(2637, 2641, 2642, 2648), Tile(2640, 2644, 0), 25631, 25629),
+    VETERAN("Veteran", 100, Npcs.PORTAL_6150, 2500, 4, 2, Tile(2638, 2653, 0), Area(2631, 2648, 2636, 2655), Tile(2634, 2653, 0), 25632, 25630),
+    ;
+
+    val shieldedPortalBaseId: Int get() = portalBaseId + 4
 }
 
-/** Region 10536's real base tile, derived from its region id and confirmed via the barricade
- *  object placements (id 14230 found at local offsets (13,12)/(13,13)/(52,12)/(52,13), matching
- *  the donor's own OBJECT_OFFSETS table exactly once translated through this base). */
+/** Region 10536 (the island) is copied into every game's instance; local coordinates below are from its south-west corner. */
+const val PC_REGION_ID = 10536
 val PC_REGION_BASE = Tile(2624, 2560, 0)
 
-/** Portal local offsets, in donor spawn order (index 0=purple/western, 1=blue/eastern,
- *  2=yellow/south-eastern, 3=red/south-western). */
+/** Portal local offsets, in 2009scape spawn order (0 = purple/west, 1 = blue/east, 2 = yellow/south-east, 3 = red/south-west). */
 val PC_PORTAL_OFFSETS = arrayOf(4 to 31, 56 to 28, 45 to 10, 21 to 9)
+val PC_PORTAL_NAMES = arrayOf("purple, western", "blue, eastern", "yellow, south-eastern", "red, south-western")
 
 val PC_SQUIRE_OFFSET = 32 to 32
-val PC_SPAWN_X_RANGE = 0..3
-val PC_SPAWN_Z_RANGE = 0..5
-val PC_SPAWN_BASE = 32 to 49
 
-/** Void Knight squire ids - donor randomly picks one of two lookalikes per game. */
-val PC_SQUIRE_IDS = intArrayOf(Npcs.VOID_KNIGHT, Npcs.VOID_KNIGHT_3785)
+/** The Void Knight being defended: 2009scape picks 3782 or 3785 (667 cache: both "Void Knight", no options). */
+val PC_KNIGHT_IDS = intArrayOf(Npcs.VOID_KNIGHT, Npcs.VOID_KNIGHT_3785)
 
-val PC_SPLATTER_IDS = intArrayOf(Npcs.SPLATTER, Npcs.SPLATTER_3728, Npcs.SPLATTER_3729, Npcs.SPLATTER_3730, Npcs.SPLATTER_3731)
-val PC_SHIFTER_IDS = intArrayOf(Npcs.SHIFTER, Npcs.SHIFTER_3733, Npcs.SHIFTER_3734, Npcs.SHIFTER_3735, Npcs.SHIFTER_3736, Npcs.SHIFTER_3737, Npcs.SHIFTER_3738, Npcs.SHIFTER_3739, Npcs.SHIFTER_3740, Npcs.SHIFTER_3741)
-val PC_RAVAGER_IDS = intArrayOf(Npcs.RAVAGER, Npcs.RAVAGER_3743, Npcs.RAVAGER_3744, Npcs.RAVAGER_3745, Npcs.RAVAGER_3746)
-val PC_SPINNER_IDS = intArrayOf(Npcs.SPINNER, Npcs.SPINNER_3748, Npcs.SPINNER_3749, Npcs.SPINNER_3750, Npcs.SPINNER_3751)
-val PC_TORCHER_IDS = intArrayOf(Npcs.TORCHER, Npcs.TORCHER_3753, Npcs.TORCHER_3754, Npcs.TORCHER_3755, Npcs.TORCHER_3756, Npcs.TORCHER_3757, Npcs.TORCHER_3758, Npcs.TORCHER_3759, Npcs.TORCHER_3760, Npcs.TORCHER_3761)
-val PC_DEFILER_IDS = intArrayOf(Npcs.DEFILER, Npcs.DEFILER_3763, Npcs.DEFILER_3764, Npcs.DEFILER_3765, Npcs.DEFILER_3766, Npcs.DEFILER_3767, Npcs.DEFILER_3768, Npcs.DEFILER_3769, Npcs.DEFILER_3770, Npcs.DEFILER_3771)
-val PC_BRAWLER_IDS = intArrayOf(Npcs.BRAWLER, Npcs.BRAWLER_3773, Npcs.BRAWLER_3774, Npcs.BRAWLER_3775, Npcs.BRAWLER_3776)
+/** Void Knight lifepoints: the 2009scape overlay starts at "200" hitpoints (x 10). */
+const val PC_KNIGHT_LIFEPOINTS = 2000
 
-/** Real durations, ported verbatim from PestControlActivityPlugin/PestControlSession. */
+/** The squire by the landing (667 cache 3781 "Squire": Talk-to, Leave) at local (30, 47). */
+const val PC_LEAVE_SQUIRE = Npcs.SQUIRE_3781
+val PC_LEAVE_SQUIRE_OFFSET = 30 to 47
+
+/** Arrival / respawn: local (32..35, 49..54) - 2009scape addPlayer and death(). */
+const val PC_SPAWN_X = 32
+const val PC_SPAWN_Z = 49
+
+/** Monster ids per difficulty index (2009scape PCPortalNPC tables, ids verified "Splatter"/"Shifter"/... in Npcs.kt). */
+val PC_SPLATTERS = arrayOf(intArrayOf(3727, 3728, 3729), intArrayOf(3728, 3729, 3730), intArrayOf(3729, 3730, 3731))
+val PC_SHIFTERS =
+    arrayOf(intArrayOf(3732, 3733, 3734, 3735, 3736, 3737), intArrayOf(3734, 3735, 3736, 3737, 3738, 3739), intArrayOf(3736, 3737, 3738, 3739, 3740, 3741))
+val PC_RAVAGERS = arrayOf(intArrayOf(3742, 3743, 3744), intArrayOf(3743, 3744, 3745), intArrayOf(3744, 3745, 3746))
+val PC_SPINNERS = arrayOf(intArrayOf(3747, 3748, 3749), intArrayOf(3748, 3749, 3750), intArrayOf(3749, 3750, 3751))
+val PC_TORCHERS =
+    arrayOf(intArrayOf(3752, 3753, 3754, 3755, 3756, 3757), intArrayOf(3754, 3755, 3756, 3757, 3758, 3759), intArrayOf(3756, 3757, 3758, 3759, 3760, 3761))
+val PC_DEFILERS =
+    arrayOf(intArrayOf(3762, 3763, 3764, 3765, 3766, 3767), intArrayOf(3764, 3765, 3766, 3767, 3768, 3769), intArrayOf(3766, 3767, 3768, 3769, 3770, 3771))
+val PC_BRAWLERS = arrayOf(intArrayOf(3772, 3773, 3774), intArrayOf(3773, 3774, 3775), intArrayOf(3774, 3775, 3776))
+
+enum class PestMonster { SPLATTER, SHIFTER, RAVAGER, SPINNER, TORCHER, DEFILER, BRAWLER }
+
+fun pestMonsterOf(id: Int): PestMonster? =
+    when (id) {
+        in 3727..3731 -> PestMonster.SPLATTER
+        in 3732..3741 -> PestMonster.SHIFTER
+        in 3742..3746 -> PestMonster.RAVAGER
+        in 3747..3751 -> PestMonster.SPINNER
+        in 3752..3761 -> PestMonster.TORCHER
+        in 3762..3771 -> PestMonster.DEFILER
+        in 3772..3776 -> PestMonster.BRAWLER
+        else -> null
+    }
+
+/** Real durations, ported verbatim from 2009scape PestControlActivityPlugin/PestControlSession. */
 const val PC_MIN_TEAM_SIZE = 5
 const val PC_MAX_TEAM_SIZE = 25
 const val PC_LOBBY_DEPARTURE_TICKS = 500
 const val PC_GAME_DURATION_TICKS = 2000
 val PC_SHIELD_DROP_TICKS = intArrayOf(50, 100, 150, 200)
 
-/** Pest points balance, this project's per-currency AttributeKey pattern (see PointCurrency.kt -
- *  every real point-shop balance gets its own AttributeKey rather than sharing LOYALTY_POINTS). */
+/** 2009scape: a won game pays only players with at least 50 zeal (damage dealt, in hitpoints, plus 5 per repair). */
+const val PC_MIN_ZEAL = 50
+const val PC_REPAIR_ZEAL = 5
+
+/** Interfaces (667 cache layout probe 2026-10-02 matches 2009scape's component use): lander, game overlay, rewards. */
+const val PC_LANDER_INTERFACE = 407
+const val PC_GAME_INTERFACE = 408
+const val PC_REWARD_INTERFACE = 267
+
+/** Void `pest_control.jingles.toml`. */
+const val PC_JINGLE_DEFEAT = 144
+const val PC_JINGLE_WIN = 145
+
+/** The island's music: data/cfg/music/music_by_region.yaml "pest_control" = track index 401 (region 10536); the instance has no
+ *  region of its own, so the track is played on arrival. */
+const val PC_MUSIC_INDEX = 401
+
+/**
+ * Barricades: intact 14224-14226, damaged 14227-14229, broken 14230-14232 (+3 per step; island placement probe 2026-10-02:
+ * 14224/14225/14226 stand at the 2009scape OBJECT_OFFSETS, 14230-14232 lie broken at (13, 11..14) and (52, 11..14)).
+ * Gates 14233-14248 (+4 per step). Only the damaged and broken ids carry the cache's "Repair" option.
+ */
+val PC_BARRICADE_IDS = 14224..14232
+val PC_REPAIRABLE_BARRICADE_IDS = 14227..14232
+val PC_GATE_IDS = 14233..14248
+
+/** Ids that cannot be damaged further (2009scape INVALID_OBJECT_IDS): the most damaged barricades and gates. */
+val PC_DESTROYED_IDS = setOf(14230, 14231, 14232, 14245, 14246, 14247, 14248)
+
+/** Tower ladder inside the camp (2009scape handleTurretTower). */
+const val PC_TOWER_LADDER = 14296
+
+const val PC_HAMMER = 2347
+const val PC_LOGS = 1511
+const val PC_REPAIR_ANIM = 898
+
+/** Monster visuals (2009scape PC*NPC). */
+const val PC_SPINNER_HEAL_ANIM = 3911
+const val PC_SPINNER_HEAL_GFX = 658
+const val PC_SPLATTER_EXPLODE_ANIM = 3888
+const val PC_SPLATTER_EXPLODE_GFX_BASE = 649
+const val PC_SHIFTER_TELEPORT_GFX = 654
+const val PC_SHIFTER_TELEPORT_ANIM = 3904
+
+/** Pest points balance - persisted under the same key since Q-050, so existing balances are kept. */
 val PEST_POINTS = AttributeKey<Int>(persistenceKey = "pest_points")
 
 val PC_MASTER_TICK = TimerKey()

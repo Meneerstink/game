@@ -255,5 +255,7 @@ object GuardedZones {
             // so it is folded in like the house: nobody can attack anybody there.
             gg.rsmod.plugins.content.areas.deathsoffice.DeathsOfficeArea.inOffice(tile) ||
             // The AFK skill basement under the Grand Exchange hall (owner 2026-09-26, "safe zone"): its own map square.
-            gg.rsmod.plugins.content.newplayer.AfkArea.contains(tile)
+            gg.rsmod.plugins.content.newplayer.AfkArea.contains(tile) ||
+            // Pest Control (2026-10-02): the lander decks and every game instance - players fight the pests, never each other.
+            gg.rsmod.plugins.content.activity.pest_control.PestControlHandler.isSafeTile(tile)
 }

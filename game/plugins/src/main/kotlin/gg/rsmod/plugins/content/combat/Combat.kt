@@ -43,6 +43,12 @@ import java.lang.ref.WeakReference
  */
 object Combat {
     /**
+     * An npc that only other npcs may attack (Pest Control's Void Knight, 2026-10-02): the cache gives it no "Attack" option,
+     * so players cannot target it, yet the pests must be able to. Checked in [canEngage] next to the familiar exception.
+     */
+    val NPC_ONLY_TARGET_ATTR = AttributeKey<Boolean>()
+
+    /**
      * The single-way "already under attack" window. OSRS Wiki "PJ timer": "In single-way combat when under attack by a monster,
      * the player starts a PJ timer of 8 game ticks (4.8 seconds) ... refreshed every time the monster attacks the player"; "NPCs
      * also have the same 4.8-second PJ timer applied towards them when hit by a player"; the longer PvP-only 20-tick timer is
@@ -452,7 +458,8 @@ object Combat {
             // familiar (a familiar deliberately has no "Attack" option). Void `Target.attackable:56-63`:
             // ordinary players need the option; public familiars are the explicit multi-combat
             // exception above, while npc attackers may still fight an owned familiar.
-            if ((!target.def.isAttackable() && !publicFamiliar && (pawn is Player || target.owner == null)) ||
+            val npcOnlyTarget = pawn !is Player && target.attr[NPC_ONLY_TARGET_ATTR] == true
+            if ((!target.def.isAttackable() && !publicFamiliar && !npcOnlyTarget && (pawn is Player || target.owner == null)) ||
             target.combatDef.lifepoints == -1) {
                 // Owner 2026-09-24: players only ever see the game message, never internal npc ids.
                 (pawn as? Player)?.message("You can't attack this npc.")

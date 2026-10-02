@@ -113,8 +113,17 @@ class Npc private constructor(
      * (re)spawned, which clobbers a value set on a freshly-constructed npc before it is passed to
      * [World.spawn]. Callers that need to force a one-off, non-respawning spawn (e.g. Nex, Barrows
      * brothers) must set [respawnOverride] instead - see its kdoc.
+     *
+     * ROOT_CAUSES #139 (2026-10-02): ten one-off spawners (Pest Control, Fight Caves, Barrows, Nex, Bork, the Corporeal core,
+     * glacytes, gravestones) still wrote `respawns = false` before [World.spawn], so their npcs respawned after death whenever the
+     * combat def had a respawn delay. An explicit `false` set before the npc is spawned is therefore kept as [respawnOverride];
+     * `true` (every `spawn_npc` world spawn) still follows the combat def as before.
      */
     var respawns = false
+        set(value) {
+            field = value
+            if (!value && !isSpawned()) respawnOverride = false
+        }
 
     /**
      * Forces [respawns] to a fixed value on every [World.setNpcDefaults] call instead of letting
