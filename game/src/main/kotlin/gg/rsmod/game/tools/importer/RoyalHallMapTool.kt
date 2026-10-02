@@ -83,12 +83,22 @@ object RoyalHallMapTool {
      * a 9 (72) step between its rings; the second upper storey (owner: "bouw een extra verdieping") took level 2, so the
      * whole roof is on level 3 and its rings lift themselves (RoyalHallLocTool.RING2_LIFT). Owner 2026-09-29 ("het plafond
      * te laag", option C of C:/RSPS/foto/mansion_verdieping2_hoogte.png): the second upper storey is 360 high (45), its walls
-     * the 1.5x copies RoyalHallLocTool.TALL_WALL / TALL_WINDOW_WALL, so the roof and parapet stand 120 higher.
+     * the 1.5x copies RoyalHallLocTool.TALL_WALL / TALL_WINDOW_WALL, so the roof and parapet stand 120 higher. Owner 2026-10-02
+     * ("het plafond van de hele mansion is veel te laag ... op alle verdiepingen behalve de bovenste", foto/mansion2.png): the
+     * ground floor and the first upper storey are 360 high as well - every storey wall is a tall copy, the staircases, portico
+     * pillars and doors are 1.5x, the facade pieces lift 360 / 720 and the towers rise 240 more.
      */
-    private val STOREY_STEPS = intArrayOf(30, 30, 45)
+    val STOREY_STEPS = intArrayOf(45, 45, 45)
 
     /** The centre's planters, their fences, the canopy ring on pillars and the map fountain. */
     private val REMOVED_IDS = setOf(47119, 84, 47174, 47175, 47244, 47246, 47150)
+
+    /**
+     * The exchange ring's six bushes (owner 2026-09-30, WORK_QUEUE P8D), first taken out by GeHomeGroundDecorTool
+     * (tx-20260930-161853). This tool rebuilds the locs from the pristine file, so it removes them as well - else every
+     * re-run (2026-10-02: 360-high storeys) put them back.
+     */
+    private const val GE_RING_BUSH = 47153
 
     /** A balcony: marble floor on these tiles of [level], outside a doorway of that storey. */
     class Balcony(val xs: IntRange, val zs: IntRange, val level: Int = 1)
@@ -398,7 +408,7 @@ object RoyalHallMapTool {
             val inHall = { l: Rev667Loc -> rx * 64 + l.localX in MIN_X..MAX_X && rz * 64 + l.localZ in MIN_Z..MAX_Z }
             // Floor decorations (dirt decals 46976, grass tufts) on the repaved granite band and brick path go too.
             val onRepaved = { l: Rev667Loc -> l.plane == 0 && l.type == 22 && (rx * 64 + l.localX to rz * 64 + l.localZ) in repaved }
-            val removed = locs.filter { inHall(it) && (it.id in REMOVED_IDS || it.type == 22 && it.id != KEPT_MARKER) || onRepaved(it) }
+            val removed = locs.filter { inHall(it) && (it.id in REMOVED_IDS || it.type == 22 && it.id != KEPT_MARKER) || onRepaved(it) || it.id == GE_RING_BUSH && it.type == 10 }
             removed.groupBy { it.id }.forEach { (id, list) -> println("REMOVE $id x${list.size}") }
             removed.filter { !inHall(it) }.forEach { println("REMOVE_REPAVED ${it.id} at ${rx * 64 + it.localX},${rz * 64 + it.localZ}") }
             val cuts = RoyalHallLocTool.CUTS.associateBy { Triple(it.source, it.x, it.z) }

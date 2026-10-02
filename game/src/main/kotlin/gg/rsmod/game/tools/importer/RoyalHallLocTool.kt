@@ -109,7 +109,9 @@ object RoyalHallLocTool {
         // crown stands clear above the roof's eaves. Owner 2026-09-27 ("hoektorens lopen door"): the hall has a second upper
         // storey and the parapet moved up 240 to level 3, so the towers are 2.75 high (1246): the same clearance above it.
         // Owner 2026-09-29 (option C of C:/RSPS/foto/mansion_verdieping2_hoogte.png): the second upper storey is 120 taller
-        // (RoyalHallMapTool.STOREY_STEPS), so the towers rise 120 more: 386/128 x 453 = 1366.
+        // (RoyalHallMapTool.STOREY_STEPS), so the towers rise 120 more: 386/128 x 453 = 1366. Owner 2026-10-02 ("het plafond van de
+        // hele mansion is veel te laag ... behalve de bovenste"): the ground floor and the first upper storey are 360 high too,
+        // so the parapet stands 240 higher again: 454/128 x 453 = 1606.
         val recolour = java.io.ByteArrayOutputStream()
         recolour.write(40)
         recolour.write(TURRET_STONE.size)
@@ -117,7 +119,7 @@ object RoyalHallLocTool {
             val granite = (c and 0x7F) * 55 / 100
             recolour.write(byteArrayOf((c shr 8).toByte(), c.toByte(), (granite shr 8).toByte(), granite.toByte()))
         }
-        return withModel(TURRET_LOC, byteArrayOf(65, 0, 176.toByte(), 66, 1, 130.toByte(), 67, 0, 176.toByte()) + recolour.toByteArray() + def, TURRET_MODEL, TURRET_MODEL_CLEAN)
+        return withModel(TURRET_LOC, byteArrayOf(65, 0, 176.toByte(), 66, 1, 198.toByte(), 67, 0, 176.toByte()) + recolour.toByteArray() + def, TURRET_MODEL, TURRET_MODEL_CLEAN)
     }
 
     /**
@@ -508,7 +510,11 @@ object RoyalHallLocTool {
         val at = opcodePosition(34872, def, 40)
         check(at >= 0) { "stairs have no recolour" }
         val pairs = def[at + 1].toInt() and 0xFF
+        check(listOf(65, 66, 67).none { opcodePosition(34872, def, it) >= 0 }) { "stairs already scaled" }
         val out = java.io.ByteArrayOutputStream()
+        // 1.5x high (opcode 66, 192): every storey is 360 high since 2026-10-02 (RoyalHallMapTool.STOREY_STEPS), the 240-high
+        // spiral would end 120 under the next floor.
+        out.write(byteArrayOf(66, 0, 192.toByte()))
         out.write(byteArrayOf(41, 4, 0, 70, 0, 254.toByte(), 1, 121, 0, 254.toByte(), 0, 67, 0, 254.toByte(), 0, 105, 0, 254.toByte()))
         out.write(def, 0, at)
         out.write(40)
@@ -563,9 +569,11 @@ object RoyalHallLocTool {
     const val BALCONY_PARAPET = 62902
 
     /**
-     * The second upper storey's walls, 1.5x high (360 instead of 240; owner 2026-09-29: "het plafond te laag", option C of
-     * C:/RSPS/foto/mansion_verdieping2_hoogte.png): copies of the plain wall 33868 and the window wall 33877 with model scale
-     * y 192 (opcode 66), standing on level 2 whose storey step to the roof (level 3) is 360 (RoyalHallMapTool.STOREY_STEPS).
+     * The storey walls, 1.5x high (360 instead of 240): copies of the plain wall 33868 and the window wall 33877 with model
+     * scale y 192 (opcode 66). First the second upper storey only (owner 2026-09-29: "het plafond te laag", option C of
+     * C:/RSPS/foto/mansion_verdieping2_hoogte.png); since 2026-10-02 every storey ("het plafond van de hele mansion is veel te
+     * laag ... op alle verdiepingen behalve de bovenste", foto/mansion2.png), each 360 above the one below
+     * (RoyalHallMapTool.STOREY_STEPS).
      */
     const val TALL_WALL = 62903
     const val TALL_WINDOW_WALL = 62904
@@ -582,8 +590,9 @@ object RoyalHallLocTool {
      * The facade of a balcony's wall-ring row as seen from inside a lower storey (owner 2026-09-29: from inside no balcony and
      * no hole). That row hides with its balcony (RoyalHallMapTool.BELOW_BUILDING), so GeHomeHallCurtains sends these to a
      * player inside below it, on level 0 (never hidden by the roof flood): the plain storey wall 33868 as a centrepiece
-     * (shape 10, same model and rotation as the wall), lifted to its storey ([CURTAIN_1] 240, [CURTAIN_2] 480 and 1.5x
-     * high like [TALL_WALL]), not solid and not in the way of route finding - the doorway under it stays walkable.
+     * (shape 10, same model and rotation as the wall), lifted to its storey and 1.5x high like [TALL_WALL] ([CURTAIN_1] 360,
+     * [CURTAIN_2] 720 since every storey is 360 high, 2026-10-02), not solid and not in the way of route finding - the doorway
+     * under it stays walkable.
      */
     const val CURTAIN_1 = 62906
     const val CURTAIN_2 = 62907
@@ -599,6 +608,13 @@ object RoyalHallLocTool {
         val prefix = byteArrayOf(71, (y shr 8).toByte(), y.toByte()) + (if (scaleY != 128) byteArrayOf(66, (scaleY shr 8).toByte(), scaleY.toByte()) else ByteArray(0))
         // Not solid (17) and ignored by route finding (74), written last so they win over the wall's own blocking opcodes.
         return prefix + out.copyOfRange(0, out.size - 1) + byteArrayOf(17, 74, 0)
+    }
+
+    private fun tallDoor(id: Int, def: ByteArray): ByteArray {
+        // The door definitions carry opcodes this walker cannot size (170 and up) after their model opcodes; a scale opcode
+        // would come before them, so a walk that stops there has seen every place one could be.
+        check(listOf(65, 66, 67).none { runCatching { opcodePosition(id, def, it) }.getOrDefault(-1) >= 0 }) { "door $id already scaled" }
+        return byteArrayOf(66, 0, 192.toByte()) + def
     }
 
     private fun tallWall(id: Int, def: ByteArray): ByteArray {
@@ -650,7 +666,8 @@ object RoyalHallLocTool {
 
     /**
      * The portico pillar: the Grand Exchange pillar 47169 in bright white ("a white bright color instead of champagne")
-     * at 0.95 height, so its top stays under the balcony floor (level 1, 240 up) instead of showing through it.
+     * at 0.95 of the storey height, so its top stays under the balcony floor (level 1) instead of showing through it: 0.95 x 1.5
+     * (182) since every storey is 360 high (owner 2026-10-02), 0.95 (122) when the ground floor was 240.
      */
     private fun brightPillar(def: ByteArray) =
         recoloured(
@@ -658,7 +675,7 @@ object RoyalHallLocTool {
             listOf(0x802c to 0x0076, 0x8030 to 0x0078, 0x8031 to 0x0078, 0x8036 to 0x007A, 0x803b to 0x007C, 0x8040 to 0x007E, 0x8044 to 0x007F,
                 // the base in gold (owner 2026-09-26: "white gold base pilars", C:/RSPS/foto/pillar_options.png option 3)
                 0x8066 to 0x23B2, 0x806a to 0x23B8, 0x806e to 0x23BE, 0x8075 to 0x23C0),
-            prefix = byteArrayOf(66, 0, 122),
+            prefix = byteArrayOf(66, 0, 182.toByte()),
         )
 
     /**
@@ -711,7 +728,7 @@ object RoyalHallLocTool {
             Variant(62776, 45238, "Royal Hall premium stall counter: white marble and gold (45238 at half length)", ::premiumCounter),
             Variant(62778, 36695, "Royal Hall fountain: the Fountain of Heroes widened to 4x4", ::grandFountain),
             Variant(62781, 35454, "Royal Hall stall counter: the opulent table at half length, see-through", ::opulentCounter),
-            Variant(62782, 47169, "Royal Hall portico pillar: the GE pillar in bright white, 0.95 high", ::brightPillar),
+            Variant(62782, 47169, "Royal Hall portico pillar: the GE pillar in bright white, 0.95 of the 360 storey", ::brightPillar),
             Variant(62783, 15602, "Royal Hall balcony railing: gilded on white marble plinths", ::gildedRailing),
             Variant(62786, 15602, "Royal Hall balcony railing as a wall decoration (beside the upper doorways)", ::gildedRailingDecor),
             // 34871 is the set's real bottom piece (model 36515, "Climb-up"); the middle piece 34872 it was copied from before
@@ -721,10 +738,10 @@ object RoyalHallLocTool {
             Variant(62780, 34873, "Royal Hall spiral staircase (top): white marble, gilded rails", ::premiumStairs),
             Variant(BALCONY_PARAPET, 11831, "Royal Hall upper balcony parapet: the crenellated parapet 11831 in white marble", ::marbleParapet),
             Variant(BALCONY_PARAPET_SIDE, 11831, "Royal Hall upper balcony parapet as a wall decoration (beside the level-2 doorways)", ::marbleParapetDecor),
-            Variant(TALL_WALL, 33868, "Royal Hall second upper storey wall: 33868 at 1.5x height (360)") { tallWall(33868, it) },
-            Variant(CURTAIN_1, 33868, "Royal Hall facade over a level-1 balcony row, seen from inside the ground floor (not solid, lifted 240)") { curtain(it, 240, 128) },
-            Variant(CURTAIN_2, 33868, "Royal Hall facade over a level-2 balcony row, seen from inside below (not solid, lifted 480, 1.5x high)") { curtain(it, 480, 192) },
-            Variant(TALL_WINDOW_WALL, 33877, "Royal Hall second upper storey window wall: 33877 at 1.5x height (360)") { tallWall(33877, it) },
+            Variant(TALL_WALL, 33868, "Royal Hall storey wall: 33868 at 1.5x height (360)") { tallWall(33868, it) },
+            Variant(CURTAIN_1, 33868, "Royal Hall facade over a level-1 balcony row, seen from inside the ground floor (not solid, lifted 360, 1.5x high)") { curtain(it, 360, 192) },
+            Variant(CURTAIN_2, 33868, "Royal Hall facade over a level-2 balcony row, seen from inside below (not solid, lifted 720, 1.5x high)") { curtain(it, 720, 192) },
+            Variant(TALL_WINDOW_WALL, 33877, "Royal Hall storey window wall: 33877 at 1.5x height (360)") { tallWall(33877, it) },
             Variant(62768, 15548, "78 carpet corner (Varrock carpet 15548 with the 78 texture)", ::with78Carpet),
             Variant(62769, 15549, "78 carpet edge (Varrock carpet 15549 with the 78 texture)", ::with78Carpet),
             Variant(62770, 15550, "78 carpet middle (Varrock carpet 15550 with the 78 texture)", ::with78Carpet),
@@ -732,8 +749,9 @@ object RoyalHallLocTool {
             Variant(ICON_LOC, GE_MARKER, "Royal Hall map marker (27990 carrying map element $ICON_ELEMENT)") { withElement(it, ICON_ELEMENT) },
             Variant(62763, 22435, "Royal Hall open gold door, west leaf (22435 without its option)", ::withoutLeadingOption),
             Variant(62764, 22437, "Royal Hall open gold door, east leaf (22437 without its option)", ::withoutLeadingOption),
-            Variant(62784, 1506, "Royal Hall open door, west leaf: white with gold studs (1506 without its option)", ::withoutOptions),
-            Variant(62785, 1508, "Royal Hall open door, east leaf: white with gold studs (1508 without its option)", ::withoutOptions),
+            // 1.5x high like the 360-high storeys (2026-10-02): the doorways are open up to the floor above.
+            Variant(62784, 1506, "Royal Hall open door, west leaf: white with gold studs (1506 without its option, 1.5x high)") { tallDoor(1506, withoutOptions(it)) },
+            Variant(62785, 1508, "Royal Hall open door, east leaf: white with gold studs (1508 without its option, 1.5x high)") { tallDoor(1508, withoutOptions(it)) },
             Variant(62765, 37169, "Royal Hall 1x1 white marble stall counter (37169 at half length)", ::halfCounter),
             // The casino upstairs (owner 2026-09-27): one gilded sign (14869, as in the Skilling Basement) named after the game
             // beside each card table.

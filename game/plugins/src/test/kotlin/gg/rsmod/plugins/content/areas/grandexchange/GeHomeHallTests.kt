@@ -242,10 +242,12 @@ class GeHomeHallTests {
                 // No orange "gold trim" (overlay 157, texture 61) round the mansion any more.
                 assertNotEquals(157, tiles.tiles[0][x - 49 * 64][z - 54 * 64].overlayId and 0xFF, "orange trim at $x,$z")
             }
-            // The second upper storey is 360 high (owner 2026-09-29, "het plafond te laag"): level 3 (roof, parapet) stands
-            // 45 x 8 above level 2 over the whole hall, walls and balconies included.
+            // Every storey is 360 high (owner 2026-09-29 for the top storey, 2026-10-02 for all: "het plafond van de hele
+            // mansion is veel te laag"): levels 1, 2 and 3 (roof, parapet) each stand 45 x 8 above the one below over the whole
+            // hall, walls and balconies included.
+            assertEquals(listOf(45, 45, 45), RoyalHallMapTool.STOREY_STEPS.toList())
             for (x in RoyalHallMapTool.FLOOR_MIN_X - 1..RoyalHallMapTool.FLOOR_MAX_X + 1) for (z in RoyalHallMapTool.FLOOR_MIN_Z - 1..RoyalHallMapTool.FLOOR_MAX_Z + 1) {
-                assertEquals(45, tiles.tiles[3][x - 49 * 64][z - 54 * 64].height, "level 3 height at $x,$z")
+                for (level in 1..3) assertEquals(45, tiles.tiles[level][x - 49 * 64][z - 54 * 64].height, "level $level height at $x,$z")
             }
         } finally {
             library.close()
@@ -312,14 +314,14 @@ class GeHomeHallTests {
         assertTrue(decor.filter { it.id in roof }.all { it.tile.height == 3 }, "roof or parapet below level 3")
         assertTrue(decor.any { it.id == RoyalHallLocTool.ROOF_RING2 } && decor.any { it.id == 62773 })
         // The second upper storey repeats the first one's outer walls, plus the wall beside each of its narrower doorways -
-        // all as the 1.5x high copies (360; owner 2026-09-29 "het plafond te laag"), none of the 240 originals.
+        // all as the 1.5x high copies (360), like every other storey since 2026-10-02 - none of the 240 originals anywhere.
         val walls = setOf(33868, 33877)
         val tall = setOf(RoyalHallLocTool.TALL_WALL, RoyalHallLocTool.TALL_WINDOW_WALL)
         fun ring(level: Int) = decor.filter { (it.id in walls || it.id in tall) && it.type == 0 && it.tile.height == level && (it.tile.x !in floorX || it.tile.z !in floorZ) }
         assertEquals(ring(1).size + 8, ring(2).size)
         assertTrue(ring(1).all { w -> ring(2).any { it.tile.x == w.tile.x && it.tile.z == w.tile.z && it.rot == w.rot } })
-        assertTrue(decor.none { it.id in walls && it.tile.height == 2 }, "a 240-high wall left on the second upper storey")
-        assertTrue(decor.none { it.id in tall && it.tile.height != 2 }, "a 360-high wall off the second upper storey")
+        assertTrue(decor.none { it.id in walls }, "a 240-high wall left in the hall")
+        (0..2).forEach { level -> assertTrue(ring(level).isNotEmpty() && ring(level).all { it.id in tall }, "storey $level wall ring") }
         // Three rooms: an inner wall on x 3162 and x 3167 with a two-tile opening (z 3491-3492) in each.
         val inner = decor.filter { it.id in tall && it.tile.height == 2 && it.tile.x in floorX && it.tile.z in floorZ }
         listOf(3162 to 0, 3167 to 2).forEach { (x, rot) ->
