@@ -969,11 +969,6 @@ in-packets:
     length: 0
     ignore: true
 
-  - message: gg.rsmod.game.message.impl.IgnoreMessage # No data
-    type: FIXED
-    opcode: 69
-    length: 7
-    ignore: true
 
   - message: gg.rsmod.game.message.impl.MapBuildCompleteMessage
     type: FIXED
@@ -1306,6 +1301,30 @@ in-packets:
   - message: gg.rsmod.game.message.impl.OpLoc4Message
     type: FIXED
     opcode: 0
+    length: 7
+    structure:
+      - name: movement_type
+        type: BYTE
+        trans: ADD
+      - name: x
+        type: SHORT
+        trans: ADD
+      - name: id
+        order: LITTLE
+        sign: UNSIGNED
+        type: SHORT
+        trans: ADD
+      - name: z
+        order: LITTLE
+        type: SHORT
+
+  # ClientProt OPLOC5 (69, 7 bytes), the fifth loc option: same field layout as every OPLOC variant (rev-667 client MiniMenu writes them all
+  # in one block). It was an IgnoreMessage since the base project's "chore: ignore packet 69" (2023), so every fifth loc option did
+  # nothing (ROOT_CAUSES #146: 1274 locs - POH Remove/Build/Replace, agility Jump-to, Imbue-Staff, Pick-lock, the house spirit tree's
+  # Teleport ...).
+  - message: gg.rsmod.game.message.impl.OpLoc5Message
+    type: FIXED
+    opcode: 69
     length: 7
     structure:
       - name: movement_type
