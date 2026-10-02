@@ -605,6 +605,7 @@ object Familiar {
     fun dismiss(player: Player) {
         val npc = current(player) ?: return
         BeastOfBurden.release(player)
+        FamiliarAudio.dismissSound(npc)?.let { FamiliarAudio.play(player, it) }
         despawnWithAnimation(npc)
         clearState(player)
         player.message("Your familiar is dismissed.")
@@ -786,6 +787,9 @@ object Familiar {
         if (BeastOfBurden.isBobNpc(npc.id)) {
             BeastOfBurden.release(owner)
         }
+        // Overnight 2026-10-02 block 6: the death was silent unless a player landed the killing blow (NpcCombatAudio.onDeath
+        // only reached the killer) - the owner and everyone near hear it now, whoever killed it.
+        FamiliarAudio.deathSound(npc)?.let { FamiliarAudio.play(owner, it) }
         clearState(owner)
         // Novite 667 Familiar.sendDeath (first death tick): the owner was never told (conform summoning, every familiar).
         owner.message("Your familiar slowly begins to fade away..")

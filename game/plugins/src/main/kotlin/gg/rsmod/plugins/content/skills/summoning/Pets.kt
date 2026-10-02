@@ -5,7 +5,6 @@ import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.plugins.api.ext.message
-import gg.rsmod.plugins.api.ext.playSound
 import java.io.File
 import java.lang.ref.WeakReference
 
@@ -45,6 +44,22 @@ object Pets {
      */
     const val DROP_SOUND = 2739
     const val PICK_UP_SOUND = 2582
+
+    /** Pet cues play at full volume as before (owner-tested 2026-09-30); [sound] also reaches players near the pet. */
+    private const val PET_SOUND_VOLUME = 255
+
+    /**
+     * Overnight 2026-10-02 block 7 (owner: "pets have no sound at all"): every pet act is heard by the owner AND the players
+     * near the pet (they only reached the owner), from the pet's tile.
+     */
+    private fun sound(player: Player, id: Int, at: gg.rsmod.game.model.Tile? = null) =
+        FamiliarAudio.play(player, id, volume = PET_SOUND_VOLUME, at = at)
+
+    /**
+     * Metamorphosis: OSRS plays no documented sound (wiki "Metamorphosis" and the pet pages: none; Y3 SOURCE_BLOCKED). ADAPTED:
+     * the pet changes form in a puff like a follower's arrival, so the same cue - [Familiar.ARRIVAL_SOUND] 188.
+     */
+    const val METAMORPH_SOUND = Familiar.ARRIVAL_SOUND
 
     const val MSG_FOLLOWED = "<col=ef1020>You have a funny feeling like you're being followed.</col>"
     const val MSG_BACKPACK = "<col=ef1020>You feel something weird sneaking into your backpack.</col>"
@@ -219,8 +234,8 @@ object Pets {
             return true
         }
         player.animate(DROP_ANIMATION)
-        player.playSound(DROP_SOUND)
-        spawn(player, variant)
+        val npc = spawn(player, variant)
+        sound(player, DROP_SOUND, npc.tile)
         return true
     }
 
@@ -239,9 +254,10 @@ object Pets {
             return
         }
         player.animate(DROP_ANIMATION)
+        val at = npc.tile
         clear(player)
         player.inventory.add(item, 1, assureFullInsertion = true)
-        player.playSound(PICK_UP_SOUND)
+        sound(player, PICK_UP_SOUND, at)
     }
 
     /** Dismiss from the Summoning tab / orb: the pet goes to the inventory, else the bank; it is never lost. */
@@ -250,14 +266,16 @@ object Pets {
         val item = itemOf(player) ?: return
         when {
             player.inventory.hasSpace -> {
+                val at = current(player)?.tile
                 clear(player)
                 player.inventory.add(item, 1, assureFullInsertion = true)
-                player.playSound(PICK_UP_SOUND)
+                sound(player, PICK_UP_SOUND, at)
                 player.message("Your pet is now in your backpack.")
             }
             player.bank.add(item, 1, assureFullInsertion = true).hasSucceeded() -> {
+                val at = current(player)?.tile
                 clear(player)
-                player.playSound(PICK_UP_SOUND)
+                sound(player, PICK_UP_SOUND, at)
                 player.message("Your pet has been sent to your bank.")
             }
             else -> player.message("You don't have enough inventory or bank space to do that.")
@@ -297,6 +315,7 @@ object Pets {
         val tile = npc.tile
         player.world.remove(npc)
         spawn(player, variant, tile)
+        sound(player, METAMORPH_SOUND, tile)
     }
 
     /** Metamorphosis on the pet item (the OSRS items that carry it as an inventory option). */

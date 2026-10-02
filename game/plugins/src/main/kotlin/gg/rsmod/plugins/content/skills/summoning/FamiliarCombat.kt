@@ -59,6 +59,9 @@ object FamiliarCombat {
         val impact: Int? = null,
     )
 
+    /** Whether [pouch]'s familiar sends its own attack cue from here (so the shared npc table must not add a second one). */
+    fun sendsOwnAttackSound(pouch: SummoningPouchData): Boolean = pouch == SummoningPouchData.STEEL_TITAN || pouch in NORMAL_ATTACK_SOUNDS
+
     internal val NORMAL_ATTACK_SOUNDS: Map<SummoningPouchData, NormalAttackSounds> = mapOf(
         SummoningPouchData.THORNY_SNAIL to NormalAttackSounds(4320),
         SummoningPouchData.SPIRIT_MOSQUITO to NormalAttackSounds(4610),

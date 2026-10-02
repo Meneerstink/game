@@ -109,7 +109,91 @@ object NpcCombatAudio {
         return deathByScript.size
     }
 
-    fun rowFor(npcId: Int): Row? = rows[npcId] ?: registered[npcId] ?: aliases[npcId]?.let { rows[it] } ?: families[npcId]
+    fun rowFor(npcId: Int): Row? = familiars[npcId] ?: rows[npcId] ?: registered[npcId] ?: aliases[npcId]?.let { rows[it] } ?: families[npcId]
+
+    /**
+     * Overnight 2026-10-02 block 6 (owner: "every familiar, every moment ... never leave a moment silent"): conform summoning
+     * measured 18 familiars attacking and 19 blocking in silence (spirit wolf, spirit spider, dreadfowl, the cockatrice
+     * family, ...) - no donor row names them. A familiar is the creature it is named after, so each missing slot is taken
+     * from the row of that creature: an npc with a row that plays the same attack or block animation (same creature,
+     * same skeleton), else the npc named like the familiar without "Spirit" (spirit wolf -> wolf), else its last word
+     * (spirit pengatrice -> no "pengatrice" -> the cockatrice family by animation). ADAPTED (no source names the familiar
+     * itself). Filled once per boot by [resolveFamiliars], checked before every other row.
+     */
+    private val familiars = java.util.concurrent.ConcurrentHashMap<Int, Row>()
+
+    /**
+     * Familiars whose name is no npc of their own creature, by the creature they are (ADAPTED, overnight 2026-10-02): the
+     * Spirit kalphite and the Bull ant are ants, the Abyssal parasite an abyssal leech, the Ravenous locust a locust, the
+     * Praying mantis a kalphite soldier-like insect, the Wolpertinger a rabbit. Non-combat familiars (beaver, macaw, magpie,
+     * ibis) and the Phoenix have no creature with sounds; they stay a boot PROBLEM.
+     */
+    private val FAMILIAR_CREATURE =
+        mapOf(
+            "kalphite" to "kalphite worker", "bull ant" to "kalphite worker", "abyssal parasite" to "abyssal leech",
+            "ravenous locust" to "locust", "praying mantis" to "kalphite soldier", "wolpertinger" to "rabbit",
+        )
+
+    /** familiar npc id -> the npc id whose sounds it borrowed (for the boot log and the guard test). */
+    val familiarDonors = java.util.concurrent.ConcurrentHashMap<Int, Int>()
+
+    fun resolveFamiliars(
+        world: gg.rsmod.game.model.World,
+        familiarIds: Collection<Int>,
+        ownAttackSound: (Int) -> Boolean = { false },
+    ): Int {
+        familiars.clear()
+        familiarDonors.clear()
+        val defs = world.plugins.allNpcCombatDefs()
+        fun name(id: Int) = runCatching { world.definitions.get(gg.rsmod.game.fs.def.NpcDef::class.java, id).name }.getOrNull()?.trim()?.lowercase()?.takeIf { it.isNotEmpty() && it != "null" }
+        val familiarSet = familiarIds.toSet()
+        // Candidate donors: every npc with a complete-enough row that is not itself a familiar.
+        val donors = (rows.keys + registered.keys + families.keys).filter { it !in familiarSet }.mapNotNull { id -> rowFor(id)?.let { id to it } }
+        val byAttackAnim = HashMap<Int, MutableList<Pair<Int, Row>>>()
+        val byBlockAnim = HashMap<Int, MutableList<Pair<Int, Row>>>()
+        val byName = HashMap<String, MutableList<Pair<Int, Row>>>()
+        donors.forEach { (id, row) ->
+            val def = defs[id]
+            if (def != null && def !== gg.rsmod.game.model.combat.NpcCombatDef.DEFAULT) {
+                if (def.attackAnimation >= 0 && row.attack.isNotEmpty()) byAttackAnim.getOrPut(def.attackAnimation) { mutableListOf() } += id to row
+                if (def.blockAnimation >= 0 && row.defend >= 0) byBlockAnim.getOrPut(def.blockAnimation) { mutableListOf() } += id to row
+            }
+            name(id)?.let { byName.getOrPut(it) { mutableListOf() } += id to row }
+        }
+        familiarSet.forEach { id ->
+            val own = rows[id] ?: registered[id] ?: aliases[id]?.let { rows[it] } ?: families[id]
+            // A familiar whose attack cue FamiliarCombat sends itself (NORMAL_ATTACK_SOUNDS, Steel titan) never borrows one too.
+            val needsAttack = !ownAttackSound(id) && own?.attack.isNullOrEmpty()
+            if (own != null && !needsAttack && own.defend >= 0 && own.death >= 0) return@forEach
+            val def = defs[id]
+            val n = name(id)
+            val stripped = n?.removePrefix("spirit ")?.trim()
+            // Every candidate in priority order; each missing slot comes from the first candidate that has it.
+            val candidates =
+                listOfNotNull(
+                    def?.attackAnimation?.takeIf { it >= 0 }?.let { byAttackAnim[it] },
+                    def?.blockAnimation?.takeIf { it >= 0 }?.let { byBlockAnim[it] },
+                    stripped?.let { byName[it] },
+                    stripped?.substringAfterLast(' ')?.let { byName[it] },
+                    stripped?.let { FAMILIAR_CREATURE[it] }?.let { byName[it] },
+                ).flatten()
+            if (candidates.isEmpty()) return@forEach
+            val attackFrom = if (needsAttack) candidates.firstOrNull { it.second.attack.isNotEmpty() } else null
+            val defendFrom = if ((own?.defend ?: -1) < 0) candidates.firstOrNull { it.second.defend >= 0 } else null
+            val deathFrom = if ((own?.death ?: -1) < 0) candidates.firstOrNull { it.second.death >= 0 } else null
+            val donorId = (attackFrom ?: defendFrom ?: deathFrom)?.first ?: return@forEach
+            familiars[id] =
+                Row(
+                    id = id, name = own?.name ?: n.orEmpty(), voidKey = "familiar-adapted-from-$donorId",
+                    attack = own?.attack?.takeIf { it.isNotEmpty() } ?: attackFrom?.second?.attack ?: emptyList(),
+                    attackBlocked = own?.attackBlocked,
+                    defend = own?.defend?.takeIf { it >= 0 } ?: defendFrom?.second?.defend ?: -1,
+                    death = own?.death?.takeIf { it >= 0 } ?: deathFrom?.second?.death ?: -1,
+                )
+            familiarDonors[id] = donorId
+        }
+        return familiars.size
+    }
 
     fun resolveFamilies(world: gg.rsmod.game.model.World): Int {
         families.clear()
@@ -277,6 +361,8 @@ object NpcCombatAudio {
         killer: Player,
         npc: Npc,
     ) {
+        // A familiar's death is voiced once, for its owner and everyone near it, by Familiar.onDeath (also when no player killed it).
+        if (FamiliarAudio.isFamiliarNpc(npc.id)) return
         val id = rowFor(npc.id)?.death ?: -1
         val frame = id >= 0 && npc.combatDef.deathAnimation.any { hasAudibleFrameSounds(npc, it) }
         if (gg.rsmod.game.model.BreachTrace.watches(npc.id)) {

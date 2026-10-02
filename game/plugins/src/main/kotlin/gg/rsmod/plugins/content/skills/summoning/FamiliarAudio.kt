@@ -44,17 +44,40 @@ object FamiliarAudio {
      * Same area-sound route and radius as a player's own combat sounds ([PLAYER_COMBAT_SOUND_RADIUS], ADAPTED), owner excluded
      * so he never gets it twice.
      */
-    fun play(player: Player, sound: Int, delay: Int = 0, rate: Int = 256, loops: Int = 1) {
-        player.playSound(sound, volume = SERVER_SOUND_VOLUME, delay = delay, rate = rate, loops = loops)
+    fun play(player: Player, sound: Int, delay: Int = 0, rate: Int = 256, loops: Int = 1, volume: Int = SERVER_SOUND_VOLUME, at: gg.rsmod.game.model.Tile? = null) {
+        player.playSound(sound, volume = volume, delay = delay, rate = rate, loops = loops)
         if (sound <= 0) return
-        val source = Familiar.current(player)?.tile ?: player.tile
+        val source = at ?: Familiar.current(player)?.tile ?: Pets.current(player)?.tile ?: player.tile
         player.world.spawn(
-            AreaSound(tile = source, id = sound, radius = PLAYER_COMBAT_SOUND_RADIUS, volume = loops, delay = delay, playbackVolume = SERVER_SOUND_VOLUME)
+            AreaSound(tile = source, id = sound, radius = PLAYER_COMBAT_SOUND_RADIUS, volume = loops, delay = delay, playbackVolume = volume)
                 .also { it.excluded = player },
         )
     }
 
     fun isFamiliarNpc(npcId: Int): Boolean = SummoningPouchData.values().any { it.npc == npcId }
+
+    /**
+     * The familiar's death sound: its own (or its creature's, NpcCombatAudio.resolveFamiliars) death row; nothing when the death
+     * animation already carries an audible frame sound (the client plays it); else ADAPTED [Familiar.ARRIVAL_SOUND] 188 - the
+     * 667 summoning cue of the same graphic family, "Your familiar slowly begins to fade away" (no source names a death sound).
+     */
+    fun deathSound(npc: gg.rsmod.game.model.entity.Npc): Int? {
+        val row = gg.rsmod.plugins.content.combat.audio.NpcCombatAudio.rowFor(npc.id)?.death ?: -1
+        if (npc.combatDef.deathAnimation.any { gg.rsmod.plugins.content.combat.audio.NpcCombatAudio.hasAudibleFrameSounds(npc, it) }) return null
+        return if (row >= 0) row else Familiar.ARRIVAL_SOUND
+    }
+
+    /**
+     * The dismiss sound: nothing when the despawn animation carries an audible frame sound; else ADAPTED
+     * [Familiar.ARRIVAL_SOUND] 188 - the dismiss shows the same 1314/1315 puff as a summon, and neither Novite, Void nor
+     * 2009Scape send a dismiss sound (conform summoning: dismiss silent for 71 familiars).
+     */
+    fun dismissSound(npc: gg.rsmod.game.model.entity.Npc): Int? {
+        val data = SummoningPouchData.values.firstOrNull { it.npc == npc.id }
+        val anim = data?.let { SummoningSpawnDespawnAnimations.despawnAnim(it) } ?: -1
+        if (anim >= 0 && gg.rsmod.plugins.content.combat.audio.NpcCombatAudio.hasAudibleFrameSounds(npc, anim)) return null
+        return Familiar.ARRIVAL_SOUND
+    }
 
     fun playSpawn(player: Player, data: SummoningPouchData) {
         spawnSound(data)?.let { play(player, it) }
