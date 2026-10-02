@@ -628,11 +628,21 @@ abstract class Player(
     private fun updateInventory() {
         if (inventory.dirty) {
             write(UpdateInvFullMessage(containerKey = 93, items = inventory.rawItems))
-            setEvents(interfaceId = 679, to = 27, setting = 0x457D8E)
-            setEvents(interfaceId = 679, from = 28, to = 55, setting = 0x200000)
+            sendInventoryEvents()
             inventory.dirty = false
             calculateWeight = true
         }
+    }
+
+    /**
+     * The inventory tab's (679:0) item ops - the cache gives its slots none. ROOT_CAUSES #143: the client drops these
+     * whenever 679 is closed or mounted again (InterfaceManager.closeSubInterface -> resetServerActiveProperties), so they
+     * are also sent after every re-mount of the inventory tab (PaneMountHooks, plugins); without them a left click on an
+     * item sends nothing at all (2026-10-02: "Pest control teleport does nothing" after the GE's Back button).
+     */
+    fun sendInventoryEvents() {
+        setEvents(interfaceId = 679, to = 27, setting = 0x457D8E)
+        setEvents(interfaceId = 679, from = 28, to = 55, setting = 0x200000)
     }
 
     /**

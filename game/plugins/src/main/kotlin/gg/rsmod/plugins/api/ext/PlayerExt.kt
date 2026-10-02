@@ -488,6 +488,9 @@ fun Player.openInterface(
         if (dest.clickThrough) 1 else 0,
         isModal = dest == InterfaceDestination.MAIN_SCREEN,
     )
+    // ROOT_CAUSES #143: a re-mounted tab comes up without its server-set events (the client drops them on close/re-open);
+    // the same post-mount hooks as the overload above re-send them (inventory item ops, combat style buttons).
+    PaneMountHooks.afterMount(this, dest.interfaceId)
 }
 
 fun Player.openInterface(
