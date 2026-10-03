@@ -1,0 +1,309 @@
+{
+ "provenance": "obstacle batch 3 (owner priority #1, 2026-10-03): teleport locs of open-batch-3.tsv, each with its source",
+ "teleports": [
+  {
+   "id": 4161,
+   "name": "Escape rope",
+   "option": "Climb-up",
+   "tile": {
+    "x": 2630,
+    "z": 10026,
+    "height": 0
+   },
+   "to": {
+    "x": 2644,
+    "z": 3658,
+    "height": 0
+   },
+   "source": "Swensen's maze escape rope: same exit as the maze's entry rope 4159 (Void fremennik teles via object-teleports.json 4159@2631,10005 -> 2644,3658, beside Swensen's ladder 4158@2644,3657); OSRS Wiki Swensen the Navigator: every room's rope leaves the maze"
+  },
+  {
+   "id": 4161,
+   "name": "Escape rope",
+   "option": "Climb-up",
+   "tile": {
+    "x": 2630,
+    "z": 10037,
+    "height": 0
+   },
+   "to": {
+    "x": 2644,
+    "z": 3658,
+    "height": 0
+   },
+   "source": "Swensen's maze escape rope: same exit as the maze's entry rope 4159 (Void fremennik teles via object-teleports.json 4159@2631,10005 -> 2644,3658, beside Swensen's ladder 4158@2644,3657); OSRS Wiki Swensen the Navigator: every room's rope leaves the maze"
+  },
+  {
+   "id": 4161,
+   "name": "Escape rope",
+   "option": "Climb-up",
+   "tile": {
+    "x": 2631,
+    "z": 10015,
+    "height": 0
+   },
+   "to": {
+    "x": 2644,
+    "z": 3658,
+    "height": 0
+   },
+   "source": "Swensen's maze escape rope: same exit as the maze's entry rope 4159 (Void fremennik teles via object-teleports.json 4159@2631,10005 -> 2644,3658, beside Swensen's ladder 4158@2644,3657); OSRS Wiki Swensen the Navigator: every room's rope leaves the maze"
+  },
+  {
+   "id": 4161,
+   "name": "Escape rope",
+   "option": "Climb-up",
+   "tile": {
+    "x": 2642,
+    "z": 10005,
+    "height": 0
+   },
+   "to": {
+    "x": 2644,
+    "z": 3658,
+    "height": 0
+   },
+   "source": "Swensen's maze escape rope: same exit as the maze's entry rope 4159 (Void fremennik teles via object-teleports.json 4159@2631,10005 -> 2644,3658, beside Swensen's ladder 4158@2644,3657); OSRS Wiki Swensen the Navigator: every room's rope leaves the maze"
+  },
+  {
+   "id": 4161,
+   "name": "Escape rope",
+   "option": "Climb-up",
+   "tile": {
+    "x": 2642,
+    "z": 10015,
+    "height": 0
+   },
+   "to": {
+    "x": 2644,
+    "z": 3658,
+    "height": 0
+   },
+   "source": "Swensen's maze escape rope: same exit as the maze's entry rope 4159 (Void fremennik teles via object-teleports.json 4159@2631,10005 -> 2644,3658, beside Swensen's ladder 4158@2644,3657); OSRS Wiki Swensen the Navigator: every room's rope leaves the maze"
+  },
+  {
+   "id": 4161,
+   "name": "Escape rope",
+   "option": "Climb-up",
+   "tile": {
+    "x": 2642,
+    "z": 10026,
+    "height": 0
+   },
+   "to": {
+    "x": 2644,
+    "z": 3658,
+    "height": 0
+   },
+   "source": "Swensen's maze escape rope: same exit as the maze's entry rope 4159 (Void fremennik teles via object-teleports.json 4159@2631,10005 -> 2644,3658, beside Swensen's ladder 4158@2644,3657); OSRS Wiki Swensen the Navigator: every room's rope leaves the maze"
+  },
+  {
+   "id": 4161,
+   "name": "Escape rope",
+   "option": "Climb-up",
+   "tile": {
+    "x": 2642,
+    "z": 10039,
+    "height": 0
+   },
+   "to": {
+    "x": 2644,
+    "z": 3658,
+    "height": 0
+   },
+   "source": "Swensen's maze escape rope: same exit as the maze's entry rope 4159 (Void fremennik teles via object-teleports.json 4159@2631,10005 -> 2644,3658, beside Swensen's ladder 4158@2644,3657); OSRS Wiki Swensen the Navigator: every room's rope leaves the maze"
+  },
+  {
+   "id": 4161,
+   "name": "Escape rope",
+   "option": "Climb-up",
+   "tile": {
+    "x": 2653,
+    "z": 10004,
+    "height": 0
+   },
+   "to": {
+    "x": 2644,
+    "z": 3658,
+    "height": 0
+   },
+   "source": "Swensen's maze escape rope: same exit as the maze's entry rope 4159 (Void fremennik teles via object-teleports.json 4159@2631,10005 -> 2644,3658, beside Swensen's ladder 4158@2644,3657); OSRS Wiki Swensen the Navigator: every room's rope leaves the maze"
+  },
+  {
+   "id": 4161,
+   "name": "Escape rope",
+   "option": "Climb-up",
+   "tile": {
+    "x": 2653,
+    "z": 10015,
+    "height": 0
+   },
+   "to": {
+    "x": 2644,
+    "z": 3658,
+    "height": 0
+   },
+   "source": "Swensen's maze escape rope: same exit as the maze's entry rope 4159 (Void fremennik teles via object-teleports.json 4159@2631,10005 -> 2644,3658, beside Swensen's ladder 4158@2644,3657); OSRS Wiki Swensen the Navigator: every room's rope leaves the maze"
+  },
+  {
+   "id": 4161,
+   "name": "Escape rope",
+   "option": "Climb-up",
+   "tile": {
+    "x": 2653,
+    "z": 10037,
+    "height": 0
+   },
+   "to": {
+    "x": 2644,
+    "z": 3658,
+    "height": 0
+   },
+   "source": "Swensen's maze escape rope: same exit as the maze's entry rope 4159 (Void fremennik teles via object-teleports.json 4159@2631,10005 -> 2644,3658, beside Swensen's ladder 4158@2644,3657); OSRS Wiki Swensen the Navigator: every room's rope leaves the maze"
+  },
+  {
+   "id": 4161,
+   "name": "Escape rope",
+   "option": "Climb-up",
+   "tile": {
+    "x": 2655,
+    "z": 10027,
+    "height": 0
+   },
+   "to": {
+    "x": 2644,
+    "z": 3658,
+    "height": 0
+   },
+   "source": "Swensen's maze escape rope: same exit as the maze's entry rope 4159 (Void fremennik teles via object-teleports.json 4159@2631,10005 -> 2644,3658, beside Swensen's ladder 4158@2644,3657); OSRS Wiki Swensen the Navigator: every room's rope leaves the maze"
+  },
+  {
+   "id": 4161,
+   "name": "Escape rope",
+   "option": "Climb-up",
+   "tile": {
+    "x": 2664,
+    "z": 10004,
+    "height": 0
+   },
+   "to": {
+    "x": 2644,
+    "z": 3658,
+    "height": 0
+   },
+   "source": "Swensen's maze escape rope: same exit as the maze's entry rope 4159 (Void fremennik teles via object-teleports.json 4159@2631,10005 -> 2644,3658, beside Swensen's ladder 4158@2644,3657); OSRS Wiki Swensen the Navigator: every room's rope leaves the maze"
+  },
+  {
+   "id": 4161,
+   "name": "Escape rope",
+   "option": "Climb-up",
+   "tile": {
+    "x": 2665,
+    "z": 10015,
+    "height": 0
+   },
+   "to": {
+    "x": 2644,
+    "z": 3658,
+    "height": 0
+   },
+   "source": "Swensen's maze escape rope: same exit as the maze's entry rope 4159 (Void fremennik teles via object-teleports.json 4159@2631,10005 -> 2644,3658, beside Swensen's ladder 4158@2644,3657); OSRS Wiki Swensen the Navigator: every room's rope leaves the maze"
+  },
+  {
+   "id": 4161,
+   "name": "Escape rope",
+   "option": "Climb-up",
+   "tile": {
+    "x": 2666,
+    "z": 10026,
+    "height": 0
+   },
+   "to": {
+    "x": 2644,
+    "z": 3658,
+    "height": 0
+   },
+   "source": "Swensen's maze escape rope: same exit as the maze's entry rope 4159 (Void fremennik teles via object-teleports.json 4159@2631,10005 -> 2644,3658, beside Swensen's ladder 4158@2644,3657); OSRS Wiki Swensen the Navigator: every room's rope leaves the maze"
+  },
+  {
+   "id": 15767,
+   "name": "Cave entrance",
+   "option": "Enter",
+   "tile": {
+    "x": 3748,
+    "z": 2973,
+    "height": 0
+   },
+   "to": {
+    "x": 3748,
+    "z": 9373,
+    "height": 0
+   },
+   "source": "Void content/area/morytania/mos_le_harmless/MosLeHarmlessCave.kt tele(3748, 9373); 667 map: Cave exit 15811/15812 at 3749,9373-9374"
+  },
+  {
+   "id": 17406,
+   "name": "Gangplank",
+   "option": "Cross",
+   "tile": {
+    "x": 3670,
+    "z": 2931,
+    "height": 1
+   },
+   "to": {
+    "x": 3668,
+    "z": 2931,
+    "height": 1
+   },
+   "source": "Void data/entity/obj/boat/charter_ship.teles.toml mos_le_harmless_gangplank_enter -> (3668,2931,1); the 667 census places 17406 on plane 1 (the plane-0 entry in object-teleports.json is placement-rejected)"
+  },
+  {
+   "id": 24842,
+   "name": "Manhole",
+   "option": "Enter",
+   "tile": {
+    "x": 2899,
+    "z": 3469,
+    "height": 0
+   },
+   "to": {
+    "x": 2901,
+    "z": 9867,
+    "height": 0
+   },
+   "source": "Void data/quest/members/ratcatchers/rat_pits.teles.toml [24842] -> (2901,9867); return ladder 24687@2898,9867 -> 2898,3469 is in object-teleports.json"
+  },
+  {
+   "id": 33185,
+   "name": "Crevasse",
+   "option": "Enter",
+   "tile": {
+    "x": 2772,
+    "z": 10233,
+    "height": 0
+   },
+   "to": {
+    "x": 2778,
+    "z": 3869,
+    "height": 0
+   },
+   "source": "2009scape content/region/asgarnia/trollweiss/handlers/TrollweissListeners.kt CREVASSE_33185 -> (2778,3869,0); reverse of batch-2's tunnel 5009 -> (2772,10232,0)"
+  },
+  {
+   "id": 12327,
+   "name": "Cave exit",
+   "option": "Exit",
+   "tile": {
+    "x": 3011,
+    "z": 9276,
+    "height": 0
+   },
+   "to": {
+    "x": 2948,
+    "z": 2955,
+    "height": 0
+   },
+   "source": "Novite controlers/impl/JadinkoLair.java object 12327 -> useStairs WorldTile(2948,2955,0); the way back out of the Jadinko Lair entered through hole 12328 (batch3/karamja_misc.plugin.kts)"
+  }
+ ]
+}

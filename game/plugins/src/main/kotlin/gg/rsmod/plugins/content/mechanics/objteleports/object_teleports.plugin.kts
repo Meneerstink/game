@@ -11,7 +11,7 @@ import java.nio.file.Paths
  * staircases across the world.
  */
 on_world_init {
-    ObjectTeleports.load(Paths.get("./data/cfg/object-teleports/object-teleports.json"))
+    ObjectTeleports.loadAll(Paths.get("./data/cfg/object-teleports"))
     val placementRejected = ObjectTeleports.retainPlaced { entry ->
         val point = entry.tile!!
         val tile = Tile(point.x, point.z, point.height)

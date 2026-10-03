@@ -52,8 +52,8 @@ class ObjectTeleportsPlacementAuditTests {
     }
 
     private fun loadEntries(): List<ObjectTeleports.Entry> {
-        val path = Paths.get("..", "..", "data", "cfg", "object-teleports", "object-teleports.json")
-        ObjectTeleports.load(path)
+        // Every table in the folder (the Void conversion + the sourced per-family additions of 2026-10-03).
+        ObjectTeleports.loadAll(Paths.get("..", "..", "data", "cfg", "object-teleports"))
         val field = ObjectTeleports::class.java.getDeclaredField("byTile").apply { isAccessible = true }
         @Suppress("UNCHECKED_CAST")
         return (field.get(ObjectTeleports) as Map<Int, List<ObjectTeleports.Entry>>).values.flatten()

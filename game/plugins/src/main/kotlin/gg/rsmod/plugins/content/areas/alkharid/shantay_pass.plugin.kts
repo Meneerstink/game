@@ -18,16 +18,20 @@ val GATE_ROW_SOUTH = 3116
 
 on_obj_option(obj = Objs.SHANTAY_PASS_12774, option = "go-through") {
     val entering = player.tile.z >= GATE_ROW_NORTH
+    if (entering && !player.inventory.contains(Items.SHANTAY_PASS)) {
+        // The refusal is a dialogue only: never under the crossing lock (conform traversal 2026-10-03: a player without a pass
+        // stayed FULL-locked until he clicked the guard's line away).
+        player.queue {
+            chatNpc(
+                "You need a Shantay pass to get through this gate. See Shantay, he will sell you one for a very reasonable price.",
+                npc = Npcs.SHANTAY_GUARD,
+                facialExpression = FacialExpression.CALM_TALK,
+            )
+        }
+        return@on_obj_option
+    }
     player.lockingQueue(lockState = LockState.FULL) {
         if (entering) {
-            if (!player.inventory.contains(Items.SHANTAY_PASS)) {
-                chatNpc(
-                    "You need a Shantay pass to get through this gate. See Shantay, he will sell you one for a very reasonable price.",
-                    npc = Npcs.SHANTAY_GUARD,
-                    facialExpression = FacialExpression.CALM_TALK,
-                )
-                return@lockingQueue
-            }
             if (!player.inventory.remove(Items.SHANTAY_PASS).hasSucceeded()) return@lockingQueue
             player.message("The guard takes your Shantay Pass as you go through the gate.")
         }

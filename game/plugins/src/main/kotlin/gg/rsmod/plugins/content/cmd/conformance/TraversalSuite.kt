@@ -54,6 +54,32 @@ object TraversalSuite : Conformance.Suite {
 
     private val census: File get() = File("../../tools/conformance/traversal/placements_667.tsv")
 
+    /**
+     * Owner decision 2026-10-03 04:3x: content this server does not have (Dungeoneering floors, minigames that do not exist here)
+     * gets the verdict NOT_APPLICABLE with what was checked, instead of being built. One line per entry, tab separated:
+     * `box <x0> <z0> <x1> <z1> <reason>` (inclusive, every plane) or `id <id> <reason>`. `#` starts a comment.
+     */
+    private val notApplicableFile: File get() = File("../../reference/traversal/not_applicable.tsv")
+
+    private class NotApplicable(val x0: Int, val z0: Int, val x1: Int, val z1: Int, val id: Int, val reason: String) {
+        fun matches(p: Placement) = if (id >= 0) p.id == id else p.x in x0..x1 && p.z in z0..z1
+    }
+
+    private fun notApplicable(): List<NotApplicable> {
+        // not_applicable.tsv plus one not_applicable-<family batch>.tsv per audited batch, same format.
+        val files = notApplicableFile.parentFile?.listFiles { f -> f.name.startsWith("not_applicable") && f.name.endsWith(".tsv") }?.sortedBy { it.name }.orEmpty()
+        return files.flatMap { it.readLines() }.filter { it.isNotBlank() && !it.startsWith("#") }.mapNotNull { line ->
+            val c = line.split('\t')
+            runCatching {
+                when (c[0]) {
+                    "box" -> NotApplicable(c[1].toInt(), c[2].toInt(), c[3].toInt(), c[4].toInt(), -1, c[5])
+                    "id" -> NotApplicable(0, 0, 0, 0, c[1].toInt(), c[2])
+                    else -> null
+                }
+            }.getOrNull()
+        }
+    }
+
     /** Failing crossings that get a timeline file per run (disk: each is the one bot's events, at most 200 kB). */
     private const val MAX_TIMELINES = 300
     private val NL = System.lineSeparator()
@@ -101,6 +127,27 @@ object TraversalSuite : Conformance.Suite {
         return null
     }
 
+    /** The option slot (1-5) with a traversal verb that the sourced teleport table handles on exactly this tile; null when none. */
+    private fun tableSlot(
+        def: ObjectDef,
+        id: Int,
+        tile: Tile,
+    ): Pair<Int, String>? {
+        def.options.forEachIndexed { i, option ->
+            val text = option?.lowercase()?.trim() ?: return@forEachIndexed
+            if (!verbs.any { text == it || text.startsWith("$it-") || text.startsWith("$it ") }) return@forEachIndexed
+            // Bridge tiles: the census keeps the raw plane, the server loads the loc one plane lower (batch 1 report: 17400, 17396).
+            val tiles = listOfNotNull(tile, if (tile.height > 0) Tile(tile.x, tile.z, tile.height - 1) else null)
+            val found =
+                tiles.any { t ->
+                    gg.rsmod.plugins.content.mechanics.objteleports.ObjectTeleports.find(t, setOf(id), option) != null ||
+                        (text == "climb" && listOf("climb-up", "climb-down").any { gg.rsmod.plugins.content.mechanics.objteleports.ObjectTeleports.find(t, setOf(id), it) != null })
+                }
+            if (found) return (i + 1) to option
+        }
+        return null
+    }
+
     /** One placement of a bound traversal loc, ready to cross. */
     private class Work(
         val p: Placement,
@@ -120,17 +167,49 @@ object TraversalSuite : Conformance.Suite {
         val defs = run.world.definitions
         val rows = java.util.Collections.synchronizedList(ArrayList<String>())
         var open = 0
+        var na = 0
+        val skip = notApplicable()
         val work = ArrayList<Work>()
-        for ((id, placements) in all.groupBy { it.id }.toSortedMap()) {
+        for ((id, all_) in all.groupBy { it.id }.toSortedMap()) {
             val def = defs.getNullable(ObjectDef::class.java, id) ?: continue
             if (filter.isNotBlank() && filter != id.toString() && !def.name.lowercase().contains(filter)) continue
+            val hasAnyVerb = def.options.any { o -> o != null && verbs.any { o.lowercase().startsWith(it) } }
+            val placements =
+                all_.filter { p ->
+                    val reason = skip.firstOrNull { it.matches(p) }?.reason ?: return@filter true
+                    if (hasAnyVerb) {
+                        na++
+                        rows += "$id@${p.x},${p.z},${p.plane}\t${def.name}\t${def.options.filterNotNull().joinToString("|")}\t-\t-\t-\t-\tNOT_APPLICABLE\t$reason"
+                    }
+                    false
+                }
             val verb = boundVerb(run, id, def)
             if (verb == null) {
+                // Handled per placement by the object fallback: the sourced teleport table (data/cfg/object-teleports/*.json) has an
+                // entry for this exact id + tile + option. Those are tested like any bound placement (batch 2 report 2026-10-03).
+                val (tabled, rest) =
+                    placements.partition { p ->
+                        tableSlot(def, id, Tile(p.x, p.z, p.plane)) != null
+                    }
+                for (p in tabled) {
+                    val obj = (p.plane downTo maxOf(0, p.plane - 1)).asSequence().mapNotNull { h ->
+                        run.world.chunks.get(Tile(p.x, p.z, h), createIfNeeded = true)
+                            ?.getEntities<gg.rsmod.game.model.entity.GameObject>(Tile(p.x, p.z, h), gg.rsmod.game.model.EntityType.STATIC_OBJECT)
+                            ?.firstOrNull { it.id == id }
+                    }.firstOrNull()
+                    val slot = tableSlot(def, id, Tile(p.x, p.z, p.plane))!!
+                    if (obj == null) {
+                        rows += "$id@${p.x},${p.z},${p.plane}\t${def.name}\t${slot.second}\ttable\t-\t-\t-\tNOT_TESTED\tnot on the live map (removed or replaced)"
+                    } else {
+                        work += Work(p, def, slot, obj)
+                    }
+                }
+                if (rest.isEmpty()) continue
                 // Listed, not hidden: the catalogue keeps every unhandled traversal loc as OPEN.
                 val hasVerb = def.options.any { o -> o != null && verbs.any { o.lowercase().startsWith(it) } }
                 if (hasVerb) {
-                    open += placements.size
-                    placements.forEach { p -> rows += "$id@${p.x},${p.z},${p.plane}\t${def.name}\t${def.options.filterNotNull().joinToString("|")}\tno\t-\t-\t-\tOPEN\tno handler bound" }
+                    open += rest.size
+                    rest.forEach { p -> rows += "$id@${p.x},${p.z},${p.plane}\t${def.name}\t${def.options.filterNotNull().joinToString("|")}\tno\t-\t-\t-\tOPEN\tno handler bound" }
                 }
                 continue
             }
@@ -171,7 +250,7 @@ object TraversalSuite : Conformance.Suite {
         }
         while (done.get() < laneCount) wait(5)
         File(run.dir, "catalogue.tsv").writeText("key\tname\toption\tbound\tside\tstart\tend\tverdict\tdetail\n" + rows.sorted().joinToString("\n") + "\n")
-        run.note("traversal catalogue: ${all.size} census placements, ${tested.get()} placement-sides tested, $open placements with a traversal option and no handler (OPEN)")
+        run.note("traversal catalogue: ${all.size} census placements, ${tested.get()} placement-sides tested, $open placements with a traversal option and no handler (OPEN), $na NOT_APPLICABLE (reference/traversal/not_applicable.tsv)")
     }
 
     private suspend fun QueueTask.placement(
@@ -254,11 +333,18 @@ object TraversalSuite : Conformance.Suite {
         // Approach + crossing: until the obstacle task has released the lock, the walk is done and no transit is pending - for three
         // ticks in a row, so a handler that waits before it locks (a run-up, a dialogue) is not judged as "did nothing".
         var idle = 0
+        var answered = 0
         do {
             wait(1)
             waited++
             idle = if (bot.lock != LockState.NONE || bot.movementQueue.hasDestination() || bot.inTransit()) 0 else idle + 1
-        } while (waited < 40 && idle < 3)
+            // A middle-floor "Climb" (Void Stairs.kt) asks "What would you like to do?" - the bot picks "Go up the stairs."
+            // like a player would; any other options dialogue gets its first line too. Answering counts as the click acting.
+            if (answered < 2 && Bots.answerOption(bot, 1)) {
+                answered++
+                idle = 0
+            }
+        } while (waited < 80 && idle < 3)
         val end = Tile(bot.tile)
         val msgs = run.recording.of(bot.username, "msg").filter { it.cycle >= c0 }.map { it.text }.filter { it.contains("MessageGame") && !it.contains("__RSPS_HUD__") }
         val nothing = msgs.any { it.contains("Nothing interesting happens") }
@@ -279,7 +365,14 @@ object TraversalSuite : Conformance.Suite {
         val acted =
             run.recording.of(bot.username, "out").filter { it.cycle >= c0 }.any { e ->
                 (e.text.startsWith("anim id=") && !e.text.startsWith("anim id=-1")) || e.text == "teleport" || e.text.contains("FORCE", ignoreCase = true)
-            } || end.height != start.height
+            } || end.height != start.height || answered > 0 ||
+                // A Void climb-render walk (walkOverTile with Render.CLIMBING: Trollheim "up", stiles, handholds) has no sequence and
+                // no forced move: the evidence is that the player ended on the other side of the loc. A walk through the loc WITHOUT
+                // the climbing render is caught separately as OB7 (Player.plainWalksThroughScenery) and fails below.
+                crossedLoc(start, end, objTile) ||
+                // A short moveTo (Chaos Tunnels portal 3266,5552 -> 3262,5552, Void chaos_tunnels.teles.toml) goes out as a
+                // movement-type jump, not a teleport block: a tile change of more than one tile in a single tick is the action.
+                run.recording.of(bot.username, "state").filter { it.cycle >= c0 && it.text.startsWith("tile: ") }.any { e -> jumped(e.text) }
         if (moved && !acted && msgs.isEmpty()) {
             problems += "click did nothing: walked to the loc, then no action and no message"
         } else if (moved) {
@@ -305,6 +398,23 @@ object TraversalSuite : Conformance.Suite {
         }
         run.retire(bot)
         return Triple(if (problems.isEmpty()) "PASS" else "FAIL", end, detail)
+    }
+
+    /** [start] and [end] lie on opposite sides of the loc's anchor along x or z. */
+    private fun crossedLoc(
+        start: Tile,
+        end: Tile,
+        loc: Tile,
+    ): Boolean = (start.x < loc.x && end.x > loc.x) || (start.x > loc.x && end.x < loc.x) || (start.z < loc.z && end.z > loc.z) || (start.z > loc.z && end.z < loc.z)
+
+    /** `tile: x,z,h -> x,z,h` with more than one tile (or a plane change) between the two: a jump, not a walk step. */
+    private fun jumped(text: String): Boolean {
+        val parts = text.removePrefix("tile: ").split(" -> ")
+        if (parts.size != 2) return false
+        val a = parts[0].trim().split(',').mapNotNull { it.trim().toIntOrNull() }
+        val b = parts[1].trim().split(',').mapNotNull { it.trim().toIntOrNull() }
+        if (a.size < 3 || b.size < 3) return false
+        return maxOf(Math.abs(a[0] - b[0]), Math.abs(a[1] - b[1])) > 2 || a[2] != b[2]
     }
 
     /** True when a loc with a traversal option stands on [tile] (a stepping stone, the next rock of a chain). */

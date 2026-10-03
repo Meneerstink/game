@@ -1,0 +1,29 @@
+{
+ "provenance": "Obstacle batch 4 (2026-10-03, owner priority #1): sourced teleports for traversal locs the Void conversion (object-teleports.json) lacks. Each entry names its source.",
+ "teleports": [
+  {
+   "id": 48798,
+   "name": "lumbridge_catacomb_exit_stairs",
+   "option": "Climb-up",
+   "tile": {"x": 3877, "z": 5525, "height": 1},
+   "to": {"x": 3246, "z": 3198, "height": 0},
+   "source": "Void content/area/misthalin/lumbridge/catacomb/LumbridgeCatacombs.kt objectOperate(Climb-up, lumbridge_catacomb_exit_stairs) outside an instance: tele(3246, 3198, 0) (Lumbridge graveyard beside the catacomb entrance 48797 at 3247,3197 - object-teleports.json enters at 3877,5526,1, the tile north of this exit)"
+  },
+  {
+   "id": 48683,
+   "name": "lower_catacomb_exit",
+   "option": "Climb-up",
+   "tile": {"x": 3972, "z": 5566, "height": 0},
+   "to": {"x": 3868, "z": 5524, "height": 0},
+   "source": "Void data/activity/event/halloween/halloween.teles.toml [48683] Climb-up 3972,5566 -> 3868,5524 (the tile east of the 3x1 catacomb stairs 48688 at 3865-3867,5524 in the upper Lumbridge catacomb, region 15446)"
+  },
+  {
+   "id": 48688,
+   "name": "lumbridge_catacomb_stairs_down",
+   "option": "Climb-down",
+   "tile": {"x": 3865, "z": 5524, "height": 0},
+   "to": {"x": 3972, "z": 5565, "height": 0},
+   "source": "Void data/quest/free/blood_pact/blood_pact.teles.toml [48688] Climb-down 3865,5524 -> 3972,5565 (the tile south of the lower catacomb exit 48683 at 3972,5566); the counterpart of 48683 so the lower catacomb is not one-way"
+  }
+ ]
+}

@@ -1,0 +1,1125 @@
+{
+ "provenance": "Obstacle batch 2 (2026-10-03, owner priority #1): sourced teleports for traversal locs of open-batch-2.tsv",
+ "teleports": [
+  {
+   "id": 20572,
+   "name": "Passageway",
+   "option": "Enter",
+   "tile": {
+    "x": 3149,
+    "z": 4659,
+    "height": 0
+   },
+   "to": {
+    "x": 3149,
+    "z": 4664,
+    "height": 0
+   },
+   "source": "2009scape LairOfTarnListeners.kt (Lair of Tarn passage/stairs deltas; landing = tile beside the counterpart loc on the far side, 667 map placement 20573@3149,4663,0)"
+  },
+  {
+   "id": 20573,
+   "name": "Passageway",
+   "option": "Enter",
+   "tile": {
+    "x": 3149,
+    "z": 4663,
+    "height": 0
+   },
+   "to": {
+    "x": 3149,
+    "z": 4658,
+    "height": 0
+   },
+   "source": "2009scape LairOfTarnListeners.kt (Lair of Tarn passage/stairs deltas; landing = tile beside the counterpart loc on the far side, 667 map placement 20572@3149,4659,0)"
+  },
+  {
+   "id": 20575,
+   "name": "Passageway",
+   "option": "Enter",
+   "tile": {
+    "x": 3147,
+    "z": 4548,
+    "height": 0
+   },
+   "to": {
+    "x": 3143,
+    "z": 4548,
+    "height": 1
+   },
+   "source": "2009scape LairOfTarnListeners.kt (Lair of Tarn passage/stairs deltas; landing = tile beside the counterpart loc on the far side, 667 map placement 20619@3144,4548,1)"
+  },
+  {
+   "id": 20619,
+   "name": "Stairs",
+   "option": "Climb",
+   "tile": {
+    "x": 3144,
+    "z": 4548,
+    "height": 1
+   },
+   "to": {
+    "x": 3148,
+    "z": 4548,
+    "height": 0
+   },
+   "source": "2009scape LairOfTarnListeners.kt (Lair of Tarn passage/stairs deltas; landing = tile beside the counterpart loc on the far side, 667 map placement 20575@3147,4548,0)"
+  },
+  {
+   "id": 20575,
+   "name": "Passageway",
+   "option": "Enter",
+   "tile": {
+    "x": 3158,
+    "z": 4553,
+    "height": 0
+   },
+   "to": {
+    "x": 3158,
+    "z": 4557,
+    "height": 1
+   },
+   "source": "2009scape LairOfTarnListeners.kt (Lair of Tarn passage/stairs deltas; landing = tile beside the counterpart loc on the far side, 667 map placement 20619@3158,4556,1)"
+  },
+  {
+   "id": 20619,
+   "name": "Stairs",
+   "option": "Climb",
+   "tile": {
+    "x": 3158,
+    "z": 4556,
+    "height": 1
+   },
+   "to": {
+    "x": 3158,
+    "z": 4552,
+    "height": 0
+   },
+   "source": "2009scape LairOfTarnListeners.kt (Lair of Tarn passage/stairs deltas; landing = tile beside the counterpart loc on the far side, 667 map placement 20575@3158,4553,0)"
+  },
+  {
+   "id": 20575,
+   "name": "Passageway",
+   "option": "Enter",
+   "tile": {
+    "x": 3168,
+    "z": 4569,
+    "height": 0
+   },
+   "to": {
+    "x": 3172,
+    "z": 4569,
+    "height": 1
+   },
+   "source": "2009scape LairOfTarnListeners.kt (Lair of Tarn passage/stairs deltas; landing = tile beside the counterpart loc on the far side, 667 map placement 20619@3171,4569,1)"
+  },
+  {
+   "id": 20619,
+   "name": "Stairs",
+   "option": "Climb",
+   "tile": {
+    "x": 3171,
+    "z": 4569,
+    "height": 1
+   },
+   "to": {
+    "x": 3167,
+    "z": 4569,
+    "height": 0
+   },
+   "source": "2009scape LairOfTarnListeners.kt (Lair of Tarn passage/stairs deltas; landing = tile beside the counterpart loc on the far side, 667 map placement 20575@3168,4569,0)"
+  },
+  {
+   "id": 20575,
+   "name": "Passageway",
+   "option": "Enter",
+   "tile": {
+    "x": 3184,
+    "z": 4553,
+    "height": 0
+   },
+   "to": {
+    "x": 3184,
+    "z": 4557,
+    "height": 1
+   },
+   "source": "2009scape LairOfTarnListeners.kt (Lair of Tarn passage/stairs deltas; landing = tile beside the counterpart loc on the far side, 667 map placement 20619@3184,4556,1)"
+  },
+  {
+   "id": 20619,
+   "name": "Stairs",
+   "option": "Climb",
+   "tile": {
+    "x": 3184,
+    "z": 4556,
+    "height": 1
+   },
+   "to": {
+    "x": 3184,
+    "z": 4552,
+    "height": 0
+   },
+   "source": "2009scape LairOfTarnListeners.kt (Lair of Tarn passage/stairs deltas; landing = tile beside the counterpart loc on the far side, 667 map placement 20575@3184,4553,0)"
+  },
+  {
+   "id": 20575,
+   "name": "Passageway",
+   "option": "Enter",
+   "tile": {
+    "x": 3190,
+    "z": 4598,
+    "height": 0
+   },
+   "to": {
+    "x": 3194,
+    "z": 4598,
+    "height": 1
+   },
+   "source": "2009scape LairOfTarnListeners.kt (Lair of Tarn passage/stairs deltas; landing = tile beside the counterpart loc on the far side, 667 map placement 20619@3193,4598,1)"
+  },
+  {
+   "id": 20619,
+   "name": "Stairs",
+   "option": "Climb",
+   "tile": {
+    "x": 3193,
+    "z": 4598,
+    "height": 1
+   },
+   "to": {
+    "x": 3189,
+    "z": 4598,
+    "height": 0
+   },
+   "source": "2009scape LairOfTarnListeners.kt (Lair of Tarn passage/stairs deltas; landing = tile beside the counterpart loc on the far side, 667 map placement 20575@3190,4598,0)"
+  },
+  {
+   "id": 20654,
+   "name": "Passageway",
+   "option": "Enter",
+   "tile": {
+    "x": 3141,
+    "z": 4551,
+    "height": 1
+   },
+   "to": {
+    "x": 3141,
+    "z": 4555,
+    "height": 2
+   },
+   "source": "2009scape LairOfTarnListeners.kt (Lair of Tarn passage/stairs deltas; landing = tile beside the counterpart loc on the far side, 667 map placement 20684@3141,4554,2)"
+  },
+  {
+   "id": 20684,
+   "name": "Stairs",
+   "option": "Climb",
+   "tile": {
+    "x": 3141,
+    "z": 4554,
+    "height": 2
+   },
+   "to": {
+    "x": 3141,
+    "z": 4550,
+    "height": 1
+   },
+   "source": "2009scape LairOfTarnListeners.kt (Lair of Tarn passage/stairs deltas; landing = tile beside the counterpart loc on the far side, 667 map placement 20654@3141,4551,1)"
+  },
+  {
+   "id": 20654,
+   "name": "Passageway",
+   "option": "Enter",
+   "tile": {
+    "x": 3158,
+    "z": 4564,
+    "height": 1
+   },
+   "to": {
+    "x": 3158,
+    "z": 4568,
+    "height": 2
+   },
+   "source": "2009scape LairOfTarnListeners.kt (Lair of Tarn passage/stairs deltas; landing = tile beside the counterpart loc on the far side, 667 map placement 20684@3158,4567,2)"
+  },
+  {
+   "id": 20684,
+   "name": "Stairs",
+   "option": "Climb",
+   "tile": {
+    "x": 3158,
+    "z": 4567,
+    "height": 2
+   },
+   "to": {
+    "x": 3158,
+    "z": 4563,
+    "height": 1
+   },
+   "source": "2009scape LairOfTarnListeners.kt (Lair of Tarn passage/stairs deltas; landing = tile beside the counterpart loc on the far side, 667 map placement 20654@3158,4564,1)"
+  },
+  {
+   "id": 20654,
+   "name": "Passageway",
+   "option": "Enter",
+   "tile": {
+    "x": 3177,
+    "z": 4577,
+    "height": 1
+   },
+   "to": {
+    "x": 3181,
+    "z": 4577,
+    "height": 2
+   },
+   "source": "2009scape LairOfTarnListeners.kt (Lair of Tarn passage/stairs deltas; landing = tile beside the counterpart loc on the far side, 667 map placement 20721@3180,4577,2)"
+  },
+  {
+   "id": 20721,
+   "name": "Passageway",
+   "option": "Enter",
+   "tile": {
+    "x": 3180,
+    "z": 4577,
+    "height": 2
+   },
+   "to": {
+    "x": 3176,
+    "z": 4577,
+    "height": 1
+   },
+   "source": "2009scape LairOfTarnListeners.kt (Lair of Tarn passage/stairs deltas; landing = tile beside the counterpart loc on the far side, 667 map placement 20654@3177,4577,1)"
+  },
+  {
+   "id": 20821,
+   "name": "Passageway",
+   "option": "Enter",
+   "tile": {
+    "x": 3163,
+    "z": 4564,
+    "height": 0
+   },
+   "to": {
+    "x": 3163,
+    "z": 4560,
+    "height": 0
+   },
+   "source": "2009scape LairOfTarnListeners.kt (Lair of Tarn passage/stairs deltas; landing = tile beside the counterpart loc on the far side, 667 map placement 20822@3163,4561,0)"
+  },
+  {
+   "id": 20822,
+   "name": "Passageway",
+   "option": "Enter",
+   "tile": {
+    "x": 3163,
+    "z": 4561,
+    "height": 0
+   },
+   "to": {
+    "x": 3163,
+    "z": 4565,
+    "height": 0
+   },
+   "source": "2009scape LairOfTarnListeners.kt (Lair of Tarn passage/stairs deltas; landing = tile beside the counterpart loc on the far side, 667 map placement 20821@3163,4564,0)"
+  },
+  {
+   "id": 20823,
+   "name": "Passageway",
+   "option": "Enter",
+   "tile": {
+    "x": 3160,
+    "z": 4559,
+    "height": 0
+   },
+   "to": {
+    "x": 3155,
+    "z": 4559,
+    "height": 0
+   },
+   "source": "2009scape LairOfTarnListeners.kt (Lair of Tarn passage/stairs deltas; landing = tile beside the counterpart loc on the far side, 667 map placement 20824@3156,4559,0)"
+  },
+  {
+   "id": 20824,
+   "name": "Passageway",
+   "option": "Enter",
+   "tile": {
+    "x": 3156,
+    "z": 4559,
+    "height": 0
+   },
+   "to": {
+    "x": 3161,
+    "z": 4559,
+    "height": 0
+   },
+   "source": "2009scape LairOfTarnListeners.kt (Lair of Tarn passage/stairs deltas; landing = tile beside the counterpart loc on the far side, 667 map placement 20823@3160,4559,0)"
+  },
+  {
+   "id": 20829,
+   "name": "Passageway",
+   "option": "Enter",
+   "tile": {
+    "x": 3141,
+    "z": 4561,
+    "height": 2
+   },
+   "to": {
+    "x": 3141,
+    "z": 4565,
+    "height": 1
+   },
+   "source": "2009scape LairOfTarnListeners.kt (Lair of Tarn passage/stairs deltas; landing = tile beside the counterpart loc on the far side, 667 map placement 20830@3141,4564,1)"
+  },
+  {
+   "id": 20830,
+   "name": "Passageway",
+   "option": "Enter",
+   "tile": {
+    "x": 3141,
+    "z": 4564,
+    "height": 1
+   },
+   "to": {
+    "x": 3141,
+    "z": 4560,
+    "height": 2
+   },
+   "source": "2009scape LairOfTarnListeners.kt (Lair of Tarn passage/stairs deltas; landing = tile beside the counterpart loc on the far side, 667 map placement 20829@3141,4561,2)"
+  },
+  {
+   "id": 20831,
+   "name": "Passageway",
+   "option": "Enter",
+   "tile": {
+    "x": 3144,
+    "z": 4567,
+    "height": 1
+   },
+   "to": {
+    "x": 3144,
+    "z": 4571,
+    "height": 2
+   },
+   "source": "2009scape LairOfTarnListeners.kt (Lair of Tarn passage/stairs deltas; landing = tile beside the counterpart loc on the far side, 667 map placement 20832@3144,4570,2)"
+  },
+  {
+   "id": 20832,
+   "name": "Passageway",
+   "option": "Enter",
+   "tile": {
+    "x": 3144,
+    "z": 4570,
+    "height": 2
+   },
+   "to": {
+    "x": 3144,
+    "z": 4566,
+    "height": 1
+   },
+   "source": "2009scape LairOfTarnListeners.kt (Lair of Tarn passage/stairs deltas; landing = tile beside the counterpart loc on the far side, 667 map placement 20831@3144,4567,1)"
+  },
+  {
+   "id": 20833,
+   "name": "Passageway",
+   "option": "Enter",
+   "tile": {
+    "x": 3144,
+    "z": 4578,
+    "height": 2
+   },
+   "to": {
+    "x": 3144,
+    "z": 4582,
+    "height": 1
+   },
+   "source": "2009scape LairOfTarnListeners.kt (Lair of Tarn passage/stairs deltas; landing = tile beside the counterpart loc on the far side, 667 map placement 20834@3144,4581,1)"
+  },
+  {
+   "id": 20834,
+   "name": "Passageway",
+   "option": "Enter",
+   "tile": {
+    "x": 3144,
+    "z": 4581,
+    "height": 1
+   },
+   "to": {
+    "x": 3144,
+    "z": 4577,
+    "height": 2
+   },
+   "source": "2009scape LairOfTarnListeners.kt (Lair of Tarn passage/stairs deltas; landing = tile beside the counterpart loc on the far side, 667 map placement 20833@3144,4578,2)"
+  },
+  {
+   "id": 20835,
+   "name": "Passageway",
+   "option": "Enter",
+   "tile": {
+    "x": 3147,
+    "z": 4583,
+    "height": 1
+   },
+   "to": {
+    "x": 3151,
+    "z": 4583,
+    "height": 0
+   },
+   "source": "2009scape LairOfTarnListeners.kt (Lair of Tarn passage/stairs deltas; landing = tile beside the counterpart loc on the far side, 667 map placement 20836@3150,4583,0)"
+  },
+  {
+   "id": 20836,
+   "name": "Passageway",
+   "option": "Enter",
+   "tile": {
+    "x": 3150,
+    "z": 4583,
+    "height": 0
+   },
+   "to": {
+    "x": 3146,
+    "z": 4583,
+    "height": 1
+   },
+   "source": "2009scape LairOfTarnListeners.kt (Lair of Tarn passage/stairs deltas; landing = tile beside the counterpart loc on the far side, 667 map placement 20835@3147,4583,1)"
+  },
+  {
+   "id": 20837,
+   "name": "Passageway",
+   "option": "Enter",
+   "tile": {
+    "x": 3162,
+    "z": 4577,
+    "height": 0
+   },
+   "to": {
+    "x": 3166,
+    "z": 4577,
+    "height": 0
+   },
+   "source": "2009scape LairOfTarnListeners.kt (Lair of Tarn passage/stairs deltas; landing = tile beside the counterpart loc on the far side, 667 map placement 20838@3165,4577,0)"
+  },
+  {
+   "id": 20838,
+   "name": "Passageway",
+   "option": "Enter",
+   "tile": {
+    "x": 3165,
+    "z": 4577,
+    "height": 0
+   },
+   "to": {
+    "x": 3161,
+    "z": 4577,
+    "height": 0
+   },
+   "source": "2009scape LairOfTarnListeners.kt (Lair of Tarn passage/stairs deltas; landing = tile beside the counterpart loc on the far side, 667 map placement 20837@3162,4577,0)"
+  },
+  {
+   "id": 20841,
+   "name": "Passageway",
+   "option": "Enter",
+   "tile": {
+    "x": 3184,
+    "z": 4567,
+    "height": 1
+   },
+   "to": {
+    "x": 3184,
+    "z": 4571,
+    "height": 0
+   },
+   "source": "2009scape LairOfTarnListeners.kt (Lair of Tarn passage/stairs deltas; landing = tile beside the counterpart loc on the far side, 667 map placement 20842@3184,4570,0)"
+  },
+  {
+   "id": 20842,
+   "name": "Passageway",
+   "option": "Enter",
+   "tile": {
+    "x": 3184,
+    "z": 4570,
+    "height": 0
+   },
+   "to": {
+    "x": 3184,
+    "z": 4566,
+    "height": 1
+   },
+   "source": "2009scape LairOfTarnListeners.kt (Lair of Tarn passage/stairs deltas; landing = tile beside the counterpart loc on the far side, 667 map placement 20841@3184,4567,1)"
+  },
+  {
+   "id": 20843,
+   "name": "Passageway",
+   "option": "Enter",
+   "tile": {
+    "x": 3184,
+    "z": 4580,
+    "height": 0
+   },
+   "to": {
+    "x": 3184,
+    "z": 4585,
+    "height": 1
+   },
+   "source": "2009scape LairOfTarnListeners.kt (Lair of Tarn passage/stairs deltas; landing = tile beside the counterpart loc on the far side, 667 map placement 20844@3184,4584,1)"
+  },
+  {
+   "id": 20844,
+   "name": "Passageway",
+   "option": "Enter",
+   "tile": {
+    "x": 3184,
+    "z": 4584,
+    "height": 1
+   },
+   "to": {
+    "x": 3184,
+    "z": 4579,
+    "height": 0
+   },
+   "source": "2009scape LairOfTarnListeners.kt (Lair of Tarn passage/stairs deltas; landing = tile beside the counterpart loc on the far side, 667 map placement 20843@3184,4580,0)"
+  },
+  {
+   "id": 20845,
+   "name": "Passageway",
+   "option": "Enter",
+   "tile": {
+    "x": 3174,
+    "z": 4577,
+    "height": 1
+   },
+   "to": {
+    "x": 3170,
+    "z": 4577,
+    "height": 0
+   },
+   "source": "2009scape LairOfTarnListeners.kt (Lair of Tarn passage/stairs deltas; landing = tile beside the counterpart loc on the far side, 667 map placement 20846@3171,4577,0)"
+  },
+  {
+   "id": 20846,
+   "name": "Passageway",
+   "option": "Enter",
+   "tile": {
+    "x": 3171,
+    "z": 4577,
+    "height": 0
+   },
+   "to": {
+    "x": 3175,
+    "z": 4577,
+    "height": 1
+   },
+   "source": "2009scape LairOfTarnListeners.kt (Lair of Tarn passage/stairs deltas; landing = tile beside the counterpart loc on the far side, 667 map placement 20845@3174,4577,1)"
+  },
+  {
+   "id": 20847,
+   "name": "Passageway",
+   "option": "Enter",
+   "tile": {
+    "x": 3178,
+    "z": 4561,
+    "height": 0
+   },
+   "to": {
+    "x": 3174,
+    "z": 4561,
+    "height": 1
+   },
+   "source": "2009scape LairOfTarnListeners.kt (Lair of Tarn passage/stairs deltas; landing = tile beside the counterpart loc on the far side, 667 map placement 20848@3175,4561,1)"
+  },
+  {
+   "id": 20848,
+   "name": "Passageway",
+   "option": "Enter",
+   "tile": {
+    "x": 3175,
+    "z": 4561,
+    "height": 1
+   },
+   "to": {
+    "x": 3179,
+    "z": 4561,
+    "height": 0
+   },
+   "source": "2009scape LairOfTarnListeners.kt (Lair of Tarn passage/stairs deltas; landing = tile beside the counterpart loc on the far side, 667 map placement 20847@3178,4561,0)"
+  },
+  {
+   "id": 20849,
+   "name": "Passageway",
+   "option": "Enter",
+   "tile": {
+    "x": 3195,
+    "z": 4571,
+    "height": 0
+   },
+   "to": {
+    "x": 3195,
+    "z": 4575,
+    "height": 1
+   },
+   "source": "2009scape LairOfTarnListeners.kt (Lair of Tarn passage/stairs deltas; landing = tile beside the counterpart loc on the far side, 667 map placement 20850@3195,4574,1)"
+  },
+  {
+   "id": 20850,
+   "name": "Passageway",
+   "option": "Enter",
+   "tile": {
+    "x": 3195,
+    "z": 4574,
+    "height": 1
+   },
+   "to": {
+    "x": 3195,
+    "z": 4570,
+    "height": 0
+   },
+   "source": "2009scape LairOfTarnListeners.kt (Lair of Tarn passage/stairs deltas; landing = tile beside the counterpart loc on the far side, 667 map placement 20849@3195,4571,0)"
+  },
+  {
+   "id": 20851,
+   "name": "Passageway",
+   "option": "Enter",
+   "tile": {
+    "x": 3193,
+    "z": 4577,
+    "height": 1
+   },
+   "to": {
+    "x": 3189,
+    "z": 4577,
+    "height": 2
+   },
+   "source": "2009scape LairOfTarnListeners.kt (Lair of Tarn passage/stairs deltas; landing = tile beside the counterpart loc on the far side, 667 map placement 20852@3190,4577,2)"
+  },
+  {
+   "id": 20852,
+   "name": "Passageway",
+   "option": "Enter",
+   "tile": {
+    "x": 3190,
+    "z": 4577,
+    "height": 2
+   },
+   "to": {
+    "x": 3194,
+    "z": 4577,
+    "height": 1
+   },
+   "source": "2009scape LairOfTarnListeners.kt (Lair of Tarn passage/stairs deltas; landing = tile beside the counterpart loc on the far side, 667 map placement 20851@3193,4577,1)"
+  },
+  {
+   "id": 20853,
+   "name": "Passageway",
+   "option": "Enter",
+   "tile": {
+    "x": 3186,
+    "z": 4579,
+    "height": 2
+   },
+   "to": {
+    "x": 3186,
+    "z": 4585,
+    "height": 1
+   },
+   "source": "2009scape LairOfTarnListeners.kt (Lair of Tarn passage/stairs deltas; landing = tile beside the counterpart loc on the far side, 667 map placement 20854@3186,4584,1)"
+  },
+  {
+   "id": 20854,
+   "name": "Passageway",
+   "option": "Enter",
+   "tile": {
+    "x": 3186,
+    "z": 4584,
+    "height": 1
+   },
+   "to": {
+    "x": 3186,
+    "z": 4578,
+    "height": 2
+   },
+   "source": "2009scape LairOfTarnListeners.kt (Lair of Tarn passage/stairs deltas; landing = tile beside the counterpart loc on the far side, 667 map placement 20853@3186,4579,2)"
+  },
+  {
+   "id": 20855,
+   "name": "Passageway",
+   "option": "Enter",
+   "tile": {
+    "x": 3168,
+    "z": 4580,
+    "height": 0
+   },
+   "to": {
+    "x": 3168,
+    "z": 4586,
+    "height": 0
+   },
+   "source": "2009scape LairOfTarnListeners.kt (Lair of Tarn passage/stairs deltas; landing = tile beside the counterpart loc on the far side, 667 map placement 20856@3168,4585,0)"
+  },
+  {
+   "id": 20856,
+   "name": "Passageway",
+   "option": "Enter",
+   "tile": {
+    "x": 3168,
+    "z": 4585,
+    "height": 0
+   },
+   "to": {
+    "x": 3168,
+    "z": 4579,
+    "height": 0
+   },
+   "source": "2009scape LairOfTarnListeners.kt (Lair of Tarn passage/stairs deltas; landing = tile beside the counterpart loc on the far side, 667 map placement 20855@3168,4580,0)"
+  },
+  {
+   "id": 20857,
+   "name": "Passageway",
+   "option": "Enter",
+   "tile": {
+    "x": 3165,
+    "z": 4589,
+    "height": 0
+   },
+   "to": {
+    "x": 3161,
+    "z": 4589,
+    "height": 1
+   },
+   "source": "2009scape LairOfTarnListeners.kt (Lair of Tarn passage/stairs deltas; landing = tile beside the counterpart loc on the far side, 667 map placement 20858@3162,4589,1)"
+  },
+  {
+   "id": 20858,
+   "name": "Passageway",
+   "option": "Enter",
+   "tile": {
+    "x": 3162,
+    "z": 4589,
+    "height": 1
+   },
+   "to": {
+    "x": 3166,
+    "z": 4589,
+    "height": 0
+   },
+   "source": "2009scape LairOfTarnListeners.kt (Lair of Tarn passage/stairs deltas; landing = tile beside the counterpart loc on the far side, 667 map placement 20857@3165,4589,0)"
+  },
+  {
+   "id": 20859,
+   "name": "Passageway",
+   "option": "Enter",
+   "tile": {
+    "x": 3145,
+    "z": 4590,
+    "height": 1
+   },
+   "to": {
+    "x": 3145,
+    "z": 4594,
+    "height": 0
+   },
+   "source": "2009scape LairOfTarnListeners.kt (Lair of Tarn passage/stairs deltas; landing = tile beside the counterpart loc on the far side, 667 map placement 20860@3145,4593,0)"
+  },
+  {
+   "id": 20860,
+   "name": "Passageway",
+   "option": "Enter",
+   "tile": {
+    "x": 3145,
+    "z": 4593,
+    "height": 0
+   },
+   "to": {
+    "x": 3145,
+    "z": 4589,
+    "height": 1
+   },
+   "source": "2009scape LairOfTarnListeners.kt (Lair of Tarn passage/stairs deltas; landing = tile beside the counterpart loc on the far side, 667 map placement 20859@3145,4590,1)"
+  },
+  {
+   "id": 20861,
+   "name": "Passageway",
+   "option": "Enter",
+   "tile": {
+    "x": 3150,
+    "z": 4598,
+    "height": 0
+   },
+   "to": {
+    "x": 3160,
+    "z": 4598,
+    "height": 0
+   },
+   "source": "2009scape LairOfTarnListeners.kt (Lair of Tarn passage/stairs deltas; landing = tile beside the counterpart loc on the far side, 667 map placement 20862@3159,4598,0)"
+  },
+  {
+   "id": 20862,
+   "name": "Passageway",
+   "option": "Enter",
+   "tile": {
+    "x": 3159,
+    "z": 4598,
+    "height": 0
+   },
+   "to": {
+    "x": 3149,
+    "z": 4598,
+    "height": 0
+   },
+   "source": "2009scape LairOfTarnListeners.kt (Lair of Tarn passage/stairs deltas; landing = tile beside the counterpart loc on the far side, 667 map placement 20861@3150,4598,0)"
+  },
+  {
+   "id": 20863,
+   "name": "Passageway",
+   "option": "Enter",
+   "tile": {
+    "x": 3168,
+    "z": 4596,
+    "height": 0
+   },
+   "to": {
+    "x": 3168,
+    "z": 4592,
+    "height": 0
+   },
+   "source": "2009scape LairOfTarnListeners.kt (Lair of Tarn passage/stairs deltas; landing = tile beside the counterpart loc on the far side, 667 map placement 20864@3168,4593,0)"
+  },
+  {
+   "id": 20864,
+   "name": "Passageway",
+   "option": "Enter",
+   "tile": {
+    "x": 3168,
+    "z": 4593,
+    "height": 0
+   },
+   "to": {
+    "x": 3168,
+    "z": 4597,
+    "height": 0
+   },
+   "source": "2009scape LairOfTarnListeners.kt (Lair of Tarn passage/stairs deltas; landing = tile beside the counterpart loc on the far side, 667 map placement 20863@3168,4596,0)"
+  },
+  {
+   "id": 20865,
+   "name": "Passageway",
+   "option": "Enter",
+   "tile": {
+    "x": 3154,
+    "z": 4597,
+    "height": 1
+   },
+   "to": {
+    "x": 3151,
+    "z": 4597,
+    "height": 1
+   },
+   "source": "2009scape LairOfTarnListeners.kt (Lair of Tarn passage/stairs deltas; landing = tile beside the counterpart loc on the far side, 667 map placement 20866@3152,4597,1)"
+  },
+  {
+   "id": 20866,
+   "name": "Passageway",
+   "option": "Enter",
+   "tile": {
+    "x": 3152,
+    "z": 4597,
+    "height": 1
+   },
+   "to": {
+    "x": 3155,
+    "z": 4597,
+    "height": 1
+   },
+   "source": "2009scape LairOfTarnListeners.kt (Lair of Tarn passage/stairs deltas; landing = tile beside the counterpart loc on the far side, 667 map placement 20865@3154,4597,1)"
+  },
+  {
+   "id": 20867,
+   "name": "Passageway",
+   "option": "Enter",
+   "tile": {
+    "x": 3176,
+    "z": 4598,
+    "height": 1
+   },
+   "to": {
+    "x": 3179,
+    "z": 4598,
+    "height": 1
+   },
+   "source": "2009scape LairOfTarnListeners.kt (Lair of Tarn passage/stairs deltas; landing = tile beside the counterpart loc on the far side, 667 map placement 20868@3178,4598,1)"
+  },
+  {
+   "id": 20868,
+   "name": "Passageway",
+   "option": "Enter",
+   "tile": {
+    "x": 3178,
+    "z": 4598,
+    "height": 1
+   },
+   "to": {
+    "x": 3175,
+    "z": 4598,
+    "height": 1
+   },
+   "source": "2009scape LairOfTarnListeners.kt (Lair of Tarn passage/stairs deltas; landing = tile beside the counterpart loc on the far side, 667 map placement 20867@3176,4598,1)"
+  },
+  {
+   "id": 20573,
+   "name": "Passageway",
+   "option": "Enter",
+   "tile": {
+    "x": 3186,
+    "z": 4631,
+    "height": 0
+   },
+   "to": {
+    "x": 3186,
+    "z": 4626,
+    "height": 0
+   },
+   "source": "2009scape LairOfTarnListeners.kt (Lair of Tarn passage/stairs deltas; landing = tile beside the counterpart loc on the far side, 667 map placement 20467@3186,4627,0; 2009scape PASSAGEWAY_20573 locY-6)"
+  },
+  {
+   "id": 20465,
+   "name": "Passageway",
+   "option": "Enter",
+   "tile": {
+    "x": 3186,
+    "z": 4611,
+    "height": 0
+   },
+   "to": {
+    "x": 3185,
+    "z": 4601,
+    "height": 0
+   },
+   "source": "2009scape LairOfTarnListeners.kt PASSAGEWAY_20465 -> location(3185, 4601, 0) (exit of the Tarn / terror dog rooms beside 20871@3185,4602)"
+  },
+  {
+   "id": 20466,
+   "name": "Passageway",
+   "option": "Enter",
+   "tile": {
+    "x": 3149,
+    "z": 4643,
+    "height": 0
+   },
+   "to": {
+    "x": 3185,
+    "z": 4601,
+    "height": 0
+   },
+   "source": "2009scape LairOfTarnListeners.kt PASSAGEWAY_20466 -> location(3185, 4601, 0) (exit of the Tarn / terror dog rooms beside 20871@3185,4602)"
+  },
+  {
+   "id": 20602,
+   "name": "Cave entrance",
+   "option": "Enter",
+   "tile": {
+    "x": 3019,
+    "z": 3403,
+    "height": 0
+   },
+   "to": {
+    "x": 2954,
+    "z": 9675,
+    "height": 0
+   },
+   "source": "Novite ObjectHandler id 20602 'gamers groto' -> WorldTile(2954, 9675, 0); 667 map: counterpart 20604 Cave exit at 2953,9675,0"
+  },
+  {
+   "id": 20604,
+   "name": "Cave exit",
+   "option": "Leave",
+   "tile": {
+    "x": 2953,
+    "z": 9675,
+    "height": 0
+   },
+   "to": {
+    "x": 3018,
+    "z": 3404,
+    "height": 0
+   },
+   "source": "Novite ObjectHandler id 20604 'gamers groto' -> WorldTile(3018, 3404, 0); 667 map: counterpart 20602 Cave entrance at 3019,3403,0"
+  },
+  {
+   "id": 4006,
+   "name": "Cave entrance",
+   "option": "Enter",
+   "tile": {
+    "x": 2313,
+    "z": 3215,
+    "height": 0
+   },
+   "to": {
+    "x": 2314,
+    "z": 9624,
+    "height": 0
+   },
+   "source": "2009scape IsafdarListeners.kt CAVE_ENTRANCE 4006 -> inside (2314, 9624, 0); 667 map: counterpart 4007 Cave Exit at 2312,9623,0"
+  },
+  {
+   "id": 4007,
+   "name": "Cave Exit",
+   "option": "Exit",
+   "tile": {
+    "x": 2312,
+    "z": 9623,
+    "height": 0
+   },
+   "to": {
+    "x": 2312,
+    "z": 3217,
+    "height": 0
+   },
+   "source": "2009scape IsafdarListeners.kt CAVE_EXIT 4007 -> outside (2312, 3217, 0); 667 map: counterpart 4006 Cave entrance at 2313,3215,0"
+  },
+  {
+   "id": 5009,
+   "name": "Tunnel",
+   "option": "Enter",
+   "tile": {
+    "x": 2779,
+    "z": 3868,
+    "height": 0
+   },
+   "to": {
+    "x": 2772,
+    "z": 10232,
+    "height": 0
+   },
+   "source": "2009scape TrollweissListeners.kt TUNNEL_5009 -> (2772, 10232, 0); 667 map: counterpart 33185 Crevasse at 2772,10233,0 (its reverse is open-batch-3)"
+  },
+  {
+   "id": 33174,
+   "name": "Icy Cavern",
+   "option": "Enter",
+   "tile": {
+    "x": 3055,
+    "z": 9556,
+    "height": 0
+   },
+   "to": {
+    "x": 3056,
+    "z": 9562,
+    "height": 0
+   },
+   "source": "Void asgarnian_ice_dungeon.teles.toml ice_dungeon_wyvern_cave_enter (to 3056,9562). Void's tile 3056,9555 is not this 667 placement (census: 33174 at 3055,9556, 3x2 rot 0), so the object-teleports.json entry is placement-rejected; landing is the tile north of 33173 (3055-3057,9560-9561)"
+  },
+  {
+   "id": 33173,
+   "name": "Cave",
+   "option": "Exit",
+   "tile": {
+    "x": 3055,
+    "z": 9560,
+    "height": 0
+   },
+   "to": {
+    "x": 3056,
+    "z": 9555,
+    "height": 0
+   },
+   "source": "Void asgarnian_ice_dungeon.teles.toml ice_dungeon_wyvern_cave_exit (to 3056,9555). 667 placement 33173 at 3055,9560 (3x2 rot 2), Void's tile 3056,9562 is placement-rejected; landing is the tile south of 33174 (3055-3057,9556-9557)"
+  }
+ ]
+}

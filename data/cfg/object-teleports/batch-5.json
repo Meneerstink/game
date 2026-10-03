@@ -1,0 +1,21 @@
+{
+ "provenance": "Obstacle batch 5 (2026-10-03, owner priority #1): sourced object teleports the Void conversion lacked. Each entry names its source; the destination was checked as a usable tile of this 667 map (MapProbe reach >= 6).",
+ "teleports": [
+  {
+   "id": 29729,
+   "name": "stronghold_of_player_safety_rope",
+   "option": "Climb",
+   "tile": {
+    "x": 3159,
+    "z": 4280,
+    "height": 3
+   },
+   "source": "Void area/misthalin/edgeville/stronghold_of_player_safety/StrongholdOfPlayerSafety.kt objectOperate(\"Climb\", \"stronghold_of_player_safety_rope\") -> tele(3077, 3462, 0); placement 3159,4280,3 (667 map); landing 3077,3462,0 reach 69",
+   "to": {
+    "x": 3077,
+    "z": 3462,
+    "height": 0
+   }
+  }
+ ]
+}

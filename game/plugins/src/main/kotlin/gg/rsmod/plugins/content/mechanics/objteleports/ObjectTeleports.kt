@@ -68,6 +68,16 @@ object ObjectTeleports {
         return size
     }
 
+    /**
+     * Every `*.json` table in [dir]: the Void conversion (object-teleports.json) plus the sourced additions per family
+     * (2026-10-03 obstacle sweep: ladders / stairs / entrances the Void table lacks; each entry names its source).
+     */
+    fun loadAll(dir: Path): Int {
+        val files = Files.list(dir).use { s -> s.filter { it.fileName.toString().endsWith(".json") }.sorted().collect(java.util.stream.Collectors.toList()) }
+        load(files.flatMap { f -> Files.newBufferedReader(f).use { Gson().fromJson(it, Table::class.java) }.teleports.orEmpty() })
+        return size
+    }
+
     fun load(entries: List<Entry>) {
         byTile = entries.filter { it.tile != null && it.id >= 0 }.groupBy { key(it.tile!!.x, it.tile.z, it.tile.height) }
     }

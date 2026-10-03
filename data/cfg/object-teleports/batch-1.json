@@ -1,0 +1,37 @@
+{
+ "provenance": "Obstacle batch 1 (owner priority #1, 2026-10-03): gangplanks the Void conversion left out (Entrana is in an area script, Pest Control in the excluded minigame folder). Tiles and levels are Void's.",
+ "teleports": [
+  {
+   "id": 2414,
+   "name": "entrana_gangplank_enter",
+   "option": "Cross",
+   "tile": {"x": 2834, "z": 3334, "height": 0},
+   "to": {"x": 2834, "z": 3332, "height": 1},
+   "source": "Void area/asgarnia/entrana/Entrana.kt (Cross: walkOverDelay(2834,3334) then tele(2834,3332,1)); same pattern as port_sarim.teles.toml port_sarim_entrana_gangplank_enter"
+  },
+  {
+   "id": 2415,
+   "name": "entrana_gangplank_exit",
+   "option": "Cross",
+   "tile": {"x": 2834, "z": 3333, "height": 1},
+   "to": {"x": 2834, "z": 3335, "height": 0},
+   "source": "Void area/asgarnia/entrana/Entrana.kt (Cross entrana_gangplank_exit: walkOverDelay(2834,3333,1) then tele(2834,3335,0))"
+  },
+  {
+   "id": 14306,
+   "name": "pest_control_gangplank_enter",
+   "option": "Cross",
+   "tile": {"x": 2660, "z": 2676, "height": 0},
+   "to": {"x": 2662, "z": 2676, "height": 1},
+   "source": "Void minigame/pest_control/pest_control.teles.toml pest_control_gangplank_enter (Void Knights' Outpost ship to Port Sarim)"
+  },
+  {
+   "id": 14307,
+   "name": "pest_control_gangplank_exit",
+   "option": "Cross",
+   "tile": {"x": 2661, "z": 2676, "height": 1},
+   "to": {"x": 2659, "z": 2676, "height": 0},
+   "source": "Void minigame/pest_control/pest_control.teles.toml pest_control_gangplank_exit"
+  }
+ ]
+}
