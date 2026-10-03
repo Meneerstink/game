@@ -13,9 +13,11 @@ import gg.rsmod.plugins.api.ext.getWildernessLevel
  *  - 34889 (2931,3680, Trollheim side) and 34878 (2951,3681, Wilderness side): 64 Agility, 8 xp, one-way into the Wilderness - RuneScape
  *    Wiki "Cliffside (Trollheim/Wilderness)" ("Climbing up here does not look safe." from the Wilderness), OSRS Wiki "Rocks (Wilderness,
  *    Trollheim)": "the final step of the shortcut is one-way and can not be used to leave the Wilderness".
- * Animations: the Trollheim rocks' own climb up / down (sourced_shortcuts ANIM_ROCKS_CLIMB_DOWN 740 / ANIM_HUMAN_CLIMBING_DOWN 1148).
- * WHERE IT LANDS: no donor has these tiles, so none is typed in: the player crosses the loc straight along the axis they approach it
- * on, over the cliff's blocked tiles in this cache's own collision, to the first walkable tile beyond. None within reach is a PROBLEM.
+ * The climb is the Trollheim rocks' own (ShortcutSupport.climbCliff, 2026-10-03): the map dump of each placement shows the loc filling
+ * a gap between low and high ground, so the crossing is a fixed straight lane through the loc across that height step - walk to
+ * the tile in front, climb down with human_climbing_down 1148 or up with the "climbing" render (BAS 0, Void Trollheim). The old
+ * computed landing slid from wherever the click left the player, over 2-6 blocked tiles and up to two lanes sideways (conform
+ * traversal 2026-10-03: noclip through the neighbouring cliff pieces and walls).
  */
 
 data class Cliff(
@@ -23,10 +25,6 @@ data class Cliff(
     val xp: Double,
     val oneWayFromWilderness: Boolean = false,
 )
-
-/** 2009scape TrollheimPlugin CLIMB_UP 740 / CLIMB_DOWN 1148 (the same ids sourced_shortcuts uses for the Trollheim rocks). */
-val CLIFF_CLIMB_UP = 740
-val CLIFF_CLIMB_DOWN = 1148
 
 val CLIFFS =
     mapOf(
@@ -52,19 +50,9 @@ listOf(Objs.CLIFFSIDE_34877, Objs.CLIFFSIDE_34878, Objs.CLIFFSIDE_34889).forEach
             return@shortcut
         }
         if (!player.hasAgility(cliff.level, "You need an Agility level of ${cliff.level} in order to climb this cliffside.")) return@shortcut
-        val dest = crossingLanding(world, obj, player.tile)
-        if (dest == null) {
-            Trace.problem(Trace.Cat.PLUGIN) { "cliffside ${obj.id} at ${obj.tile.x},${obj.tile.z}: no walkable landing across from ${player.tile.x},${player.tile.z}" }
-            player.message("You can't climb the cliffside from here.")
-            return@shortcut
-        }
         obstacle { target ->
-            player.faceTile(target.tile)
-            // Into the Wilderness is the way down (the one-way drop); the Death Plateau rocks use the climb-up.
-            val anim = if (dest.getWildernessLevel() > 0) CLIFF_CLIMB_DOWN else CLIFF_CLIMB_UP
-            player.animate(anim)
-            exactMove(player, dest, delay = 120, direction = Direction.between(player.tile, dest))
-            player.addXp(Skills.AGILITY, cliff.xp)
+            // human_climbing_down 1148, the Trollheim rocks' own (Void Trollheim.kt).
+            if (climbCliff(player, target, 1148)) player.addXp(Skills.AGILITY, cliff.xp)
         }
     }
 }

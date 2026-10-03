@@ -32,12 +32,25 @@ object GenericLadders {
     fun isLadder(def: ObjectDef): Boolean =
         def.name.contains("ladder", ignoreCase = true) ||
             def.name.contains("trapdoor", ignoreCase = true) ||
-            def.name.contains("vine", ignoreCase = true)
+            def.name.contains("vine", ignoreCase = true) ||
+            isStairs(def)
+
+    /**
+     * Staircases follow the same evidence rule (conform traversal 2026-10-03: ~480 staircase options answered "Nothing interesting
+     * happens"; the map probe found their counterpart on the other floor on the same anchor or one or two tiles off, e.g. 10017 /
+     * 10018 at (1893,4620) floors 1 / 2, 10525 / 10526 one tile apart).
+     */
+    fun isStairs(def: ObjectDef): Boolean =
+        def.name.contains("stair", ignoreCase = true) || def.name.equals("steps", ignoreCase = true) ||
+            def.name.contains("trapdoor steps", ignoreCase = true)
+
+    /** How far from the clicked loc's anchor the counterpart on the other floor may sit (ladders are re-placed a tile off). */
+    private const val FLOOR_SEARCH_RADIUS = 2
 
     fun optionDirection(option: String?): Direction? =
         when (option?.lowercase()) {
-            "climb-up", "climb up" -> Direction.UP
-            "climb-down", "climb down" -> Direction.DOWN
+            "climb-up", "climb up", "ascend", "go-up", "walk-up" -> Direction.UP
+            "climb-down", "climb down", "descend", "go-down", "walk-down" -> Direction.DOWN
             else -> null
         }
 
@@ -53,12 +66,15 @@ object GenericLadders {
     ): Tile? {
         val opposite = if (direction == Direction.UP) Direction.DOWN else Direction.UP
 
-        // 1. Same tile, one floor up or down (buildings, towers).
+        // 1. One floor up or down, on the same anchor or up to FLOOR_SEARCH_RADIUS tiles off (buildings, towers); nearest first.
         val floor = ladder.tile.height + if (direction == Direction.UP) 1 else -1
         if (floor in 0..3) {
-            val above = Tile(ladder.tile.x, ladder.tile.z, floor)
-            if (ladderAt(world, above, opposite) != null) {
-                return standTile(world, Tile(from.x, from.z, floor), above)
+            val candidates =
+                (-FLOOR_SEARCH_RADIUS..FLOOR_SEARCH_RADIUS).flatMap { dx -> (-FLOOR_SEARCH_RADIUS..FLOOR_SEARCH_RADIUS).map { dz -> dx to dz } }
+                    .sortedBy { (dx, dz) -> dx * dx + dz * dz }
+            for ((dx, dz) in candidates) {
+                val counterpart = ladderAt(world, Tile(ladder.tile.x + dx, ladder.tile.z + dz, floor), opposite) ?: continue
+                return standTile(world, Tile(from.x + dx, from.z + dz, floor), counterpart.tile, counterpart)
             }
         }
 
@@ -74,7 +90,7 @@ object GenericLadders {
                 val tile = Tile(ladder.tile.x + dx, mirroredZ + dz, 0)
                 val counterpart = ladderAt(world, tile, opposite) ?: continue
                 val mirroredFrom = Tile(from.x, from.z + (mirroredZ - ladder.tile.z), 0)
-                return standTile(world, mirroredFrom, counterpart.tile)
+                return standTile(world, mirroredFrom, counterpart.tile, counterpart)
             }
         }
         return null
@@ -95,20 +111,25 @@ object GenericLadders {
     }
 
     /**
-     * The mirrored standing tile when it is walkable, otherwise the first walkable tile adjacent
-     * to the counterpart ladder.
+     * Where the climber stands on the other floor: the mirror of his own tile when that is a usable tile right beside the
+     * counterpart, else the usable tile beside the counterpart's whole footprint nearest to that mirror - never on the counterpart
+     * itself (a staircase is 2x2 and more) and never in a walled-in pocket ([isUsableLanding]).
      */
     private fun standTile(
         world: World,
         preferred: Tile,
         counterpart: Tile,
+        loc: GameObject? = null,
     ): Tile? {
-        if (preferred.isWithinRadius(counterpart, 1) && !world.collision.isClipped(preferred)) {
-            return preferred
-        }
-        val candidates =
-            listOf(0 to -1, 0 to 1, -1 to 0, 1 to 0, -1 to -1, 1 to -1, -1 to 1, 1 to 1)
-                .map { (dx, dz) -> Tile(counterpart.x + dx, counterpart.z + dz, counterpart.height) }
-        return candidates.firstOrNull { !world.collision.isClipped(it) }
+        val def = loc?.getDef(world.definitions)
+        val w = if (loc != null && def != null) def.getRotatedWidth(loc) else 1
+        val l = if (loc != null && def != null) def.getRotatedLength(loc) else 1
+        fun inside(t: Tile) = t.x >= counterpart.x && t.x < counterpart.x + w && t.z >= counterpart.z && t.z < counterpart.z + l
+        val around =
+            (counterpart.x - 1..counterpart.x + w).flatMap { x -> (counterpart.z - 1..counterpart.z + l).map { z -> Tile(x, z, counterpart.height) } }
+                .filter { !inside(it) }
+        if (around.any { it.sameAs(preferred) } && gg.rsmod.plugins.content.skills.agility.isUsableLanding(world, preferred)) return preferred
+        return around.filter { gg.rsmod.plugins.content.skills.agility.isUsableLanding(world, it) }
+            .minByOrNull { (it.x - preferred.x) * (it.x - preferred.x) + (it.z - preferred.z) * (it.z - preferred.z) }
     }
 }

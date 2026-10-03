@@ -130,7 +130,8 @@ suspend fun chopDramenTree(it: QueueTask) {
 on_obj_option(Objs.MAGIC_DOOR, "open") {
     val obj = player.getInteractingGameObj()
     player.lockingQueue(TaskPriority.STRONG) {
-        handleDoor(player, obj)
+        // Void Entrana.kt (magic_door_closed): no walk through, the fairy teleport only. The old walk onto the door tile, in a
+        // second locking queue, left the player standing in the door when the teleport was refused (audit 2026-10-03).
         wait(2)
         player.message("You feel the world around you dissolve...")
         player.playSound(Sfx.FT_FAIRY_TELEPORT)

@@ -305,6 +305,74 @@ abstract class Player(
     }
 
     /**
+     * Crossings that passed the collision of a loc other than the obstacle being crossed (owner hard rule 2026-10-03, buglist E17:
+     * "a player may never noclip"); must stay 0. Conformance checks every bot ([gg.rsmod.game.model.collision.SceneryCrossing]).
+     */
+    var sceneryNoclips = 0
+        private set
+
+    /**
+     * Collision-free steps through a loc taken in the plain walk (no render animation): on the client the body walks through the
+     * rock (owner FAIL 2026-10-03 02:24, WORK_QUEUE OB7). A climb shows the climbing render; must stay 0.
+     */
+    var plainWalksThroughScenery = 0
+        private set
+
+    /** The last foreign or plain-walk crossing, for the conformance detail. */
+    var lastCrossingProblem: String? = null
+
+    /**
+     * Judges one crossing from [from] to [to] (a collision-free step or a forced slide, same plane): every refused step on the
+     * line must belong to the obstacle being crossed ([INTERACTING_OBJ_ATTR]). A foreign loc is a noclip; a loc passed in the
+     * plain walk is the OB7 walk-through-rock.
+     */
+    fun judgeCrossing(
+        from: Tile,
+        to: Tile,
+        kind: String,
+    ) = judgeCrossing(listOf(from, to), kind)
+
+    /** [judgeCrossing] over a whole collision-free walk: where it starts, then every waypoint (Pawn.walkPath). */
+    fun judgeCrossing(
+        points: List<Tile>,
+        kind: String,
+    ) {
+        if (points.size < 2) return
+        val from = points.first()
+        val to = points.last()
+        if (points.any { it.height != from.height } || from.sameAs(to)) return
+        // Staff no-clip (`noclip`, crown toggles) is deliberate, not a crossing; a slide out of sight (a tunnel) passes under it.
+        if (attr[NO_CLIP_ATTR] == true) return
+        if (kind == "slide" && lastAnimationId in gg.rsmod.game.model.collision.SceneryCrossing.HIDDEN_SEQUENCES) return
+        val own = attr[INTERACTING_OBJ_ATTR]?.get()
+        val blocks = gg.rsmod.game.model.collision.SceneryCrossing.pathBlocks(world, points, own)
+        if (blocks.isEmpty()) return
+        val foreign = blocks.filter { it.cause == gg.rsmod.game.model.collision.SceneryCrossing.Cause.FOREIGN_LOC }
+        if (foreign.isNotEmpty()) {
+            sceneryNoclips++
+            lastCrossingProblem = "$kind ${from.x},${from.z}->${to.x},${to.z} through ${foreign.joinToString("; ")}"
+            gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.PLUGIN) {
+                "noclip: $username $lastCrossingProblem (obstacle ${own?.id}@${own?.tile?.x},${own?.tile?.z})"
+            }
+        }
+        // Walking through a doorway or gate in a wall line (wall shapes 0-3) is how a door looks; the OB7 case is the plain walk
+        // through a rock, stile, log or other solid loc.
+        val throughLoc = blocks.any { it.cause != gg.rsmod.game.model.collision.SceneryCrossing.Cause.FLOOR && !it.wallOnly }
+        // A passage is walked through (a barrier field, a doorway, a gate: Pass-through / Go-through / Pass / Open / Enter).
+        val passage =
+            own?.let { world.definitions.getNullable(gg.rsmod.game.fs.def.ObjectDef::class.java, it.id) }?.options?.any { o ->
+                o != null && o.lowercase().let { it.startsWith("pass") || it.startsWith("go-through") || it == "open" || it.startsWith("enter") }
+            } == true
+        if (kind == "walk" && throughLoc && !passage && appearance.renderAnim == -1) {
+            plainWalksThroughScenery++
+            lastCrossingProblem = "plain walk ${from.x},${from.z}->${to.x},${to.z} through ${blocks.joinToString("; ")}"
+            gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.PLUGIN) {
+                "walk through scenery: $username $lastCrossingProblem (obstacle ${own?.id}@${own?.tile?.x},${own?.tile?.z})"
+            }
+        }
+    }
+
+    /**
      * Mining accumulator used for dragon pickaxe
      */
 
@@ -473,18 +541,24 @@ abstract class Player(
     ) {
         movementQueue.clear()
 
+        // The lock the slide found is the one it hands back: an obstacle task that holds a FULL lock around several slides
+        // must still hold it after each of them. Ending a slide with NONE unlocked the player halfway through a course
+        // obstacle - a walk click then cancelled it and left him mid-air or inside scenery (audit 2026-10-03, owner E17).
+        val lockBefore = lock
         if (movement.lock != LockState.NONE) {
             lock = movement.lock
         }
 
         val before = Tile(tile)
         val startCycle = world.currentCycle
+        // The slide is drawn on the straight line: it may pass only the obstacle's own collision (SceneryCrossing, E17).
+        judgeCrossing(before, movement.finalDestination, "slide")
         beginTransit(cycleDuration.coerceAtLeast(1))
         moveTo(movement.finalDestination)
         if (tile != movement.finalDestination && tile.sameAs(before)) {
             // Held back by a MoveGate (the Dangerous-area warning): no slide on the client, no stale lock, and no
             // climb animation left looping on the near side (owner 2026-10-03, resetLoopingAnimation).
-            if (movement.lock != LockState.NONE) lock = LockState.NONE
+            if (movement.lock != LockState.NONE) lock = lockBefore
             resetLoopingAnimation()
             return
         }
@@ -497,7 +571,7 @@ abstract class Player(
         val endCycle = startCycle + cycleDuration.coerceAtLeast(1)
         task.wait { world.currentCycle >= endCycle }
         if (movement.lock != LockState.NONE) {
-            lock = LockState.NONE
+            lock = lockBefore
         }
         // The slide is over on the client now; a looping sequence started for it (rocks climb 740), or a body-holding one-shot
         // longer than the slide (boulder 6978), would otherwise hold the body on the landing while every later step the server

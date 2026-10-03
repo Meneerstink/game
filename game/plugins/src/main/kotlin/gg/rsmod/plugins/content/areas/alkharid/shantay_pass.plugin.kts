@@ -2,6 +2,10 @@ package gg.rsmod.plugins.content.areas.alkharid
 
 import gg.rsmod.game.model.Tile
 import gg.rsmod.plugins.content.inter.bank.openBank
+import gg.rsmod.plugins.content.skills.agility.ObstacleApproachFailed
+import gg.rsmod.plugins.content.skills.agility.Render
+import gg.rsmod.plugins.content.skills.agility.walkOverTile
+import gg.rsmod.plugins.content.skills.agility.walkToTile
 
 /*
  * Shantay Pass (667 cache: gate 12774 "Go-through"/"Look-at", Shantay 836 "Buy-pass", Shantay chest 2693 "Open" - none were bound, so
@@ -14,7 +18,7 @@ val GATE_ROW_SOUTH = 3116
 
 on_obj_option(obj = Objs.SHANTAY_PASS_12774, option = "go-through") {
     val entering = player.tile.z >= GATE_ROW_NORTH
-    player.queue {
+    player.lockingQueue(lockState = LockState.FULL) {
         if (entering) {
             if (!player.inventory.contains(Items.SHANTAY_PASS)) {
                 chatNpc(
@@ -22,14 +26,21 @@ on_obj_option(obj = Objs.SHANTAY_PASS_12774, option = "go-through") {
                     npc = Npcs.SHANTAY_GUARD,
                     facialExpression = FacialExpression.CALM_TALK,
                 )
-                return@queue
+                return@lockingQueue
             }
-            if (!player.inventory.remove(Items.SHANTAY_PASS).hasSucceeded()) return@queue
+            if (!player.inventory.remove(Items.SHANTAY_PASS).hasSucceeded()) return@lockingQueue
             player.message("The guard takes your Shantay Pass as you go through the gate.")
         }
+        // Void ShantayPass: walkToDelay to the gate row on the player's side (arrival), then one step through. The old script
+        // threw that walk away and walked collision-free from the click tile (audit 2026-10-03, HIGH: diagonally through the wall).
         val x = if (player.tile.x < 3304) 3303 else 3305
-        player.walkTo(this, x, if (entering) GATE_ROW_NORTH else GATE_ROW_SOUTH)
-        player.walkTo(Tile(x, if (entering) GATE_ROW_SOUTH else GATE_ROW_NORTH, player.tile.height), detectCollision = false)
+        try {
+            walkToTile(player, Tile(x, if (entering) GATE_ROW_NORTH else GATE_ROW_SOUTH, player.tile.height))
+            walkOverTile(player, Tile(x, if (entering) GATE_ROW_SOUTH else GATE_ROW_NORTH, player.tile.height), Render.NONE)
+        } catch (e: ObstacleApproachFailed) {
+            player.stopMovement()
+            player.message("I can't reach that!")
+        }
     }
 }
 

@@ -1,5 +1,7 @@
 package gg.rsmod.plugins.content.areas.asgarnia
 
+import gg.rsmod.plugins.content.skills.agility.doorStep
+
 on_obj_option(obj = Objs.STAIRCASE_9582, option = "climb-up") {
     val stairsObj = player.getInteractingGameObj()
     if (stairsObj.tile.z == 3282) {
@@ -49,7 +51,7 @@ fun handleGuildDoor(
             world.spawn(blockEntrance)
             world.spawn(doorOpen)
             val targetTile = if (isNorth) Tile(obj.tile.x, obj.tile.z - 1) else Tile(obj.tile.x, obj.tile.z + 1)
-            player.walkTo(Tile(targetTile), detectCollision = false)
+            doorStep(player, Tile(targetTile))
             wait(3)
             world.remove(blockEntrance)
             world.remove(doorOpen)

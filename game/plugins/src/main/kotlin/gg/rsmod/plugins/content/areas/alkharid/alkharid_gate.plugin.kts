@@ -1,5 +1,10 @@
 package gg.rsmod.plugins.content.areas.alkharid
 
+import gg.rsmod.plugins.content.skills.agility.ObstacleApproachFailed
+import gg.rsmod.plugins.content.skills.agility.Render
+import gg.rsmod.plugins.content.skills.agility.walkOverTile
+import gg.rsmod.plugins.content.skills.agility.walkToTile
+
 val PRINCE_ALI_RESCUE_VARBIT = 273
 val COMPLETED_QUEST = 110
 
@@ -64,6 +69,12 @@ fun payToll(player: Player): Boolean {
     return (player.inventory.remove(item = toll, assureFullRemoval = true).hasSucceeded())
 }
 
+/**
+ * The toll gate (35549 / 35551 at x 3268, z 3227-3228, wall on the west face): Void Tollgate `enterDoor` - the player first walks
+ * with collision to the gate tile on his side of his row and arrives there (also when he talked to the border guard from further
+ * away), the gate shows open, then the one step through. The old script walked a collision-free line from wherever the player
+ * stood - from the guard dialogue that crossed the fence (audit 2026-10-03, HIGH).
+ */
 fun handleKharidGate(player: Player) {
     val southOriginalGate = DynamicObject(id = 35549, type = 0, rot = 0, tile = Tile(x = 3268, z = 3227))
     val northOriginalGate = DynamicObject(id = 35551, type = 0, rot = 0, tile = Tile(x = 3268, z = 3228))
@@ -74,7 +85,15 @@ fun handleKharidGate(player: Player) {
     val northGate = DynamicObject(id = 35552, type = 0, rot = 1, tile = Tile(x = 3267, z = 3228))
     val southGate = DynamicObject(id = 35550, type = 0, rot = 3, tile = Tile(x = 3267, z = 3227))
 
-    player.lockingQueue(lockState = LockState.DELAY_ACTIONS) {
+    player.lockingQueue(lockState = LockState.FULL) {
+        val west = player.tile.x <= 3267
+        val z = player.tile.z.coerceIn(3227, 3228)
+        try {
+            walkToTile(player, Tile(if (west) 3267 else 3268, z))
+        } catch (e: ObstacleApproachFailed) {
+            player.message("I can't reach that!")
+            return@lockingQueue
+        }
         world.remove(southOriginalGate)
         world.remove(northOriginalGate)
         world.spawn(southBlockedGate)
@@ -82,10 +101,12 @@ fun handleKharidGate(player: Player) {
         player.playSound(Sfx.DOOR_OPEN)
         world.spawn(northGate)
         world.spawn(southGate)
-        val x = if (player.tile.x <= 3267) 3268 else 3267
-        val z = if (player.tile.z == 3228) 3228 else 3227
-        player.walkTo(tile = Tile(x = x, z = z), detectCollision = false)
-        wait(3)
+        try {
+            walkOverTile(player, Tile(if (west) 3268 else 3267, z), Render.NONE)
+        } catch (e: ObstacleApproachFailed) {
+            player.stopMovement()
+        }
+        wait(2)
         world.remove(northGate)
         world.remove(southGate)
         world.spawn(northOriginalGate)

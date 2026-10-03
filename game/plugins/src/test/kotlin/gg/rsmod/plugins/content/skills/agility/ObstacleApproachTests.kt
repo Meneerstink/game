@@ -108,7 +108,7 @@ class ObstacleApproachTests {
         var failure: String? = null
         player.queue {
             try {
-                walkOverTile(player, Tile(2883, 3669 + MAX_WALK_OVER + 1))
+                walkOverTile(player, Tile(2883, 3669 + MAX_WALK_OVER + 1), Render.CLIMBING)
             } catch (e: ObstacleApproachFailed) {
                 failure = e.reason
             }

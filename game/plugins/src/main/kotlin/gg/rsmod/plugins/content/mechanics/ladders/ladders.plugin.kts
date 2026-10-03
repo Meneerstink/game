@@ -94,9 +94,14 @@ on_world_init_late {
                     return@on_obj_option
                 }
                 player.lockingQueue(lockState = LockState.FULL) {
-                    wait(1)
-                    player.animate(Anims.LADDER_CLIMB, idleOnly = true)
-                    wait(2)
+                    // Void ObjectTeleports / Stairs.kt: a climbable (ladder, vine, trapdoor) plays climb_up 828 / climb_down 827
+                    // and moves after two ticks; a staircase moves after one tick with no sequence.
+                    if (GenericLadders.isStairs(def)) {
+                        wait(1)
+                    } else {
+                        player.animate(if (direction == GenericLadders.Direction.UP) 828 else 827)
+                        wait(2)
+                    }
                     player.moveTo(destination)
                 }
             }

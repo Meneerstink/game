@@ -1,5 +1,7 @@
 package gg.rsmod.plugins.content.areas.burthorpe
 
+import gg.rsmod.plugins.content.skills.agility.doorStep
+
 import gg.rsmod.game.model.LockState
 import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.entity.DynamicObject
@@ -32,7 +34,7 @@ fun handleMainDoor(player: Player) {
     player.queue {
         val x = if (player.tile.x == 2877) 2876 else 2877
         val z = 3542
-        player.walkTo(tile = Tile(x = x, z = z), detectCollision = false)
+        doorStep(player, Tile(x = x, z = z))
         wait(3)
         world.remove(door)
         player.lock = LockState.NONE

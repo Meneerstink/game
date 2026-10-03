@@ -220,6 +220,24 @@ object Conformance {
             name: String,
         ): Client = Bots.create(world, tile, name).also { bots += it; recording.track(it, name) }
 
+        private var retiredBots = 0
+        private val retiredDesyncs = ArrayList<String>()
+        private val retiredNoclips = ArrayList<String>()
+
+        /**
+         * Ends a bot a long sweep is done with (`conform traversal` crosses thousands of placements): its engine counters go into
+         * the run's totals for the checks in [write], then it leaves the world, so the bot count stays bounded.
+         */
+        fun retire(bot: Client) {
+            retiredBots++
+            if (bot.clientDesyncs > 0) retiredDesyncs += "${bot.username}:${bot.clientDesyncs}"
+            if (bot.sceneryNoclips > 0 || bot.plainWalksThroughScenery > 0) retiredNoclips += "${bot.username}: ${bot.lastCrossingProblem}"
+            runCatching { gg.rsmod.plugins.content.skills.summoning.Familiar.dismiss(bot) }
+            runCatching { world.unregister(bot) }
+            bots.remove(bot)
+            recording.untrack(bot)
+        }
+
         fun npc(
             id: Int,
             tile: Tile,
@@ -249,6 +267,12 @@ object Conformance {
                 val file = File(File(dir, "timelines"), entry.replace(Regex("[^A-Za-z0-9_.-]"), "_") + ".txt")
                 file.writeText(recording.slice(fromCycle, world.currentCycle).joinToString("\n") + "\n")
             }
+            val floor = laneStarts.values.minOrNull() ?: world.currentCycle
+            recording.prune(minOf(floor, world.currentCycle))
+        }
+
+        /** Drops recorded events no running lane still needs (a long sweep that writes timelines only for failures). */
+        fun prune() {
             val floor = laneStarts.values.minOrNull() ?: world.currentCycle
             recording.prune(minOf(floor, world.currentCycle))
         }
@@ -342,11 +366,18 @@ object Conformance {
         fun write(): File {
             // ROOT_CAUSES #147 (owner 2026-10-02, noclip after rocks): whatever a domain did - climbs, teleports, knockbacks - every
             // bot's client must still stand on its server tile, or that player walks through walls from then on.
-            if (bots.isNotEmpty()) {
-                val off = bots.filter { it.clientDesyncs > 0 }
+            if (bots.isNotEmpty() || retiredBots > 0) {
+                val off = bots.filter { it.clientDesyncs > 0 }.map { "${it.username}:${it.clientDesyncs}" } + retiredDesyncs
                 expectTrue(
                     "engine", "every bot's client stayed on its server tile", off.isEmpty(),
-                    if (off.isEmpty()) "${bots.size} bots, 0 desyncs" else off.joinToString(" ") { "${it.username}:${it.clientDesyncs}" }.take(250),
+                    if (off.isEmpty()) "${bots.size + retiredBots} bots, 0 desyncs" else "${off.size}: " + off.joinToString(" ").take(250),
+                )
+                // Owner hard rule 2026-10-03 (E17, "a player may never noclip") and OB7: no bot crossed a loc that was not its
+                // obstacle, and none walked through a loc in the plain walk (SceneryCrossing).
+                val noclip = bots.filter { it.sceneryNoclips > 0 || it.plainWalksThroughScenery > 0 }.map { "${it.username}: ${it.lastCrossingProblem}" } + retiredNoclips
+                expectTrue(
+                    "engine", "no bot passed scenery that was not its obstacle, none walked through a loc", noclip.isEmpty(),
+                    if (noclip.isEmpty()) "${bots.size + retiredBots} bots, 0 noclips" else "${noclip.size}: " + noclip.joinToString(" | ").take(250),
                 )
             }
             val previous = previousFailKeys()

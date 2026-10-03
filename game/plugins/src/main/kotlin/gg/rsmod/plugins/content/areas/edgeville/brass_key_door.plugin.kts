@@ -1,5 +1,7 @@
 package gg.rsmod.plugins.content.areas.edgeville
 
+import gg.rsmod.plugins.content.skills.agility.doorStep
+
 /**
  * @author Alycia <https://github.com/alycii>
  */
@@ -45,7 +47,7 @@ fun handleDoor(player: Player) {
     player.queue {
         val x = 3115
         val z = if (player.tile.z == 3450) 3449 else 3450
-        player.walkTo(tile = Tile(x = x, z = z), detectCollision = false)
+        doorStep(player, Tile(x = x, z = z))
         wait(3)
         world.remove(door)
         player.lock = LockState.NONE

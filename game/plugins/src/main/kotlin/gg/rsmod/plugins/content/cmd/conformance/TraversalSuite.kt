@@ -19,7 +19,7 @@ import gg.rsmod.plugins.content.skills.agility.isUsableLanding
 import java.io.File
 
 /**
- * `conform traversal [id|name|limit=N]` - owner priority #1 2026-10-03 (obstacles and noclip, "in heel Gielinor"): every
+ * `conform traversal [id|name] [limit=N] [lanes=8]` - owner priority #1 2026-10-03 (obstacles and noclip, "in heel Gielinor"): every
  * traversal placement of this 667 map that a handler is bound for, crossed by a bot from every side it can be approached from,
  * measured per placement + side (the coverage unit of the plan, not the object id):
  *
@@ -54,15 +54,21 @@ object TraversalSuite : Conformance.Suite {
 
     private val census: File get() = File("../../tools/conformance/traversal/placements_667.tsv")
 
+    /** Failing crossings that get a timeline file per run (disk: each is the one bot's events, at most 200 kB). */
+    private const val MAX_TIMELINES = 300
+    private val NL = System.lineSeparator()
+    private val timelines = java.util.concurrent.atomic.AtomicInteger(0)
+
     override suspend fun QueueTask.run(
         run: Conformance.Run,
         args: List<String>,
     ) {
-        val filter = args.filter { !it.startsWith("limit=") && it != "pursuit" && it != "placements" }.joinToString(" ").lowercase()
+        val filter = args.filter { !it.startsWith("limit=") && !it.startsWith("lanes=") && it != "pursuit" && it != "placements" }.joinToString(" ").lowercase()
         val limit = args.firstOrNull { it.startsWith("limit=") }?.substringAfter('=')?.toIntOrNull() ?: Int.MAX_VALUE
+        val lanes = args.firstOrNull { it.startsWith("lanes=") }?.substringAfter('=')?.toIntOrNull() ?: 8
         val only = args.filter { it == "pursuit" || it == "placements" }
         if (only.isEmpty() || "pursuit" in only) pursuit(run)
-        if (only.isEmpty() || "placements" in only) placements(run, filter, limit)
+        if (only.isEmpty() || "placements" in only) placements(run, filter, limit, lanes)
     }
 
     // ---- placements ------------------------------------------------------------------------------------------------------
@@ -95,18 +101,27 @@ object TraversalSuite : Conformance.Suite {
         return null
     }
 
+    /** One placement of a bound traversal loc, ready to cross. */
+    private class Work(
+        val p: Placement,
+        val def: ObjectDef,
+        val verb: Pair<Int, String>,
+        val obj: gg.rsmod.game.model.entity.GameObject,
+    )
+
     private suspend fun QueueTask.placements(
         run: Conformance.Run,
         filter: String,
         limit: Int,
+        lanes: Int,
     ) {
         val all = load(run)
+        timelines.set(0)
         val defs = run.world.definitions
-        val rows = StringBuilder("key\tname\toption\tbound\tside\tstart\tend\tverdict\tdetail\n")
-        var tested = 0
+        val rows = java.util.Collections.synchronizedList(ArrayList<String>())
         var open = 0
-        val byId = all.groupBy { it.id }
-        for ((id, placements) in byId.toSortedMap()) {
+        val work = ArrayList<Work>()
+        for ((id, placements) in all.groupBy { it.id }.toSortedMap()) {
             val def = defs.getNullable(ObjectDef::class.java, id) ?: continue
             if (filter.isNotBlank() && filter != id.toString() && !def.name.lowercase().contains(filter)) continue
             val verb = boundVerb(run, id, def)
@@ -115,54 +130,95 @@ object TraversalSuite : Conformance.Suite {
                 val hasVerb = def.options.any { o -> o != null && verbs.any { o.lowercase().startsWith(it) } }
                 if (hasVerb) {
                     open += placements.size
-                    placements.forEach { p -> rows.append("$id@${p.x},${p.z},${p.plane}\t${def.name}\t${def.options.filterNotNull().joinToString("|")}\tno\t-\t-\t-\tOPEN\tno handler bound\n") }
+                    placements.forEach { p -> rows += "$id@${p.x},${p.z},${p.plane}\t${def.name}\t${def.options.filterNotNull().joinToString("|")}\tno\t-\t-\t-\tOPEN\tno handler bound" }
                 }
                 continue
             }
             for (p in placements) {
-                if (tested >= limit || Conformance.stopRequested) break
                 val obj = run.world.chunks.get(Tile(p.x, p.z, p.plane), createIfNeeded = true)
                     ?.getEntities<gg.rsmod.game.model.entity.GameObject>(Tile(p.x, p.z, p.plane), gg.rsmod.game.model.EntityType.STATIC_OBJECT)
                     ?.firstOrNull { it.id == id }
                 if (obj == null) {
-                    rows.append("$id@${p.x},${p.z},${p.plane}\t${def.name}\t${verb.second}\tyes\t-\t-\t-\tNOT_TESTED\tnot on the live map (removed or replaced)\n")
+                    rows += "$id@${p.x},${p.z},${p.plane}\t${def.name}\t${verb.second}\tyes\t-\t-\t-\tNOT_TESTED\tnot on the live map (removed or replaced)"
                     continue
                 }
-                val w = def.getRotatedWidth(obj)
-                val l = def.getRotatedLength(obj)
-                val sides =
-                    listOf(
-                        "W" to { d: Int -> Tile(p.x - d, p.z + l / 2, p.plane) },
-                        "E" to { d: Int -> Tile(p.x + w - 1 + d, p.z + l / 2, p.plane) },
-                        "S" to { d: Int -> Tile(p.x + w / 2, p.z - d, p.plane) },
-                        "N" to { d: Int -> Tile(p.x + w / 2, p.z + l - 1 + d, p.plane) },
-                    )
-                var crossedFromSomeSide = false
-                var sidesTried = 0
-                val refusals = ArrayList<String>()
-                for ((side, at) in sides) {
-                    val start = (1..3).map(at).firstOrNull { t -> t.height in 0..3 && Landing.pocket(run.world.collision, t).size >= Landing.OPEN_GROUND } ?: continue
-                    tested++
-                    sidesTried++
-                    run.progress("traversal $id ${def.name} at ${p.x},${p.z} from $side ($tested)")
-                    val key = "$id@${p.x},${p.z},${p.plane}/$side"
-                    val (verdict, end, detail) = cross(run, key, obj.id, obj.tile, verb.first, start)
-                    if (!end.sameAs(start)) crossedFromSomeSide = true else refusals += "$side: ${detail.substringAfter("ticks; ").take(60)}"
-                    rows.append("$id@${p.x},${p.z},${p.plane}\t${def.name}\t${verb.second}\tyes\t$side\t${start.x},${start.z}\t${end.x},${end.z},${end.height}\t$verdict\t$detail\n")
-                    run.expectTrue(key, "${def.name} '${verb.second}' from $side", verdict == "PASS", detail.take(250))
-                    run.window(key, run.world.currentCycle - 40)
-                }
-                // A placement nobody can use from any side is a dead obstacle even when every side answers politely
-                // ("I can't reach that!" from everywhere = the object cannot be routed to), unless a requirement refused it.
-                if (sidesTried > 0 && !crossedFromSomeSide) {
-                    val requirement = refusals.any { it.contains("level") || it.contains("need") || it.contains("quest", ignoreCase = true) }
-                    run.expectTrue("$id@${p.x},${p.z},${p.plane}", "${def.name} '${verb.second}' is usable from at least one side", requirement, refusals.joinToString(" | ").take(250))
+                work += Work(p, def, verb, obj)
+            }
+        }
+        // Lanes work on contiguous blocks of the map (sorted by region), so two lanes are never at the same obstacle.
+        val ordered = work.sortedWith(compareBy({ (it.p.x shr 6) * 256 + (it.p.z shr 6) }, { it.p.plane }, { it.p.x }, { it.p.z })).take(limit)
+        val laneCount = lanes.coerceIn(1, 16).coerceAtMost(maxOf(1, ordered.size))
+        val block = (ordered.size + laneCount - 1) / laneCount
+        val tested = java.util.concurrent.atomic.AtomicInteger(0)
+        val done = java.util.concurrent.atomic.AtomicInteger(0)
+        run.note("traversal: ${ordered.size} bound placements in $laneCount lanes")
+        for (lane in 0 until laneCount) {
+            val share = ordered.drop(lane * block).take(block)
+            run.world.queue {
+                try {
+                    for (w in share) {
+                        if (Conformance.stopRequested) break
+                        try {
+                            placement(run, w, lane, rows, tested)
+                        } catch (e: Throwable) {
+                            run.expectTrue("${w.p.id}@${w.p.x},${w.p.z},${w.p.plane}", "scenario runs to the end", false, "threw $e")
+                        }
+                    }
+                } finally {
+                    done.incrementAndGet()
                 }
             }
-            if (tested >= limit || Conformance.stopRequested) break
         }
-        File(run.dir, "catalogue.tsv").writeText(rows.toString())
-        run.note("traversal catalogue: ${all.size} census placements, $tested placement-sides tested, $open placements with a traversal option and no handler (OPEN)")
+        while (done.get() < laneCount) wait(5)
+        File(run.dir, "catalogue.tsv").writeText("key\tname\toption\tbound\tside\tstart\tend\tverdict\tdetail\n" + rows.sorted().joinToString("\n") + "\n")
+        run.note("traversal catalogue: ${all.size} census placements, ${tested.get()} placement-sides tested, $open placements with a traversal option and no handler (OPEN)")
+    }
+
+    private suspend fun QueueTask.placement(
+        run: Conformance.Run,
+        w: Work,
+        lane: Int,
+        rows: MutableList<String>,
+        tested: java.util.concurrent.atomic.AtomicInteger,
+    ) {
+        val p = w.p
+        val def = w.def
+        val obj = w.obj
+        val wd = def.getRotatedWidth(obj)
+        val l = def.getRotatedLength(obj)
+        val sides =
+            listOf(
+                "W" to { d: Int -> Tile(p.x - d, p.z + l / 2, p.plane) },
+                "E" to { d: Int -> Tile(p.x + wd - 1 + d, p.z + l / 2, p.plane) },
+                "S" to { d: Int -> Tile(p.x + wd / 2, p.z - d, p.plane) },
+                "N" to { d: Int -> Tile(p.x + wd / 2, p.z + l - 1 + d, p.plane) },
+            )
+        var crossedFromSomeSide = false
+        var sidesTried = 0
+        val refusals = ArrayList<String>()
+        for ((side, at) in sides) {
+            val start = (1..3).map(at).firstOrNull { t -> t.height in 0..3 && Landing.pocket(run.world.collision, t).size >= Landing.OPEN_GROUND } ?: continue
+            val n = tested.incrementAndGet()
+            sidesTried++
+            if (n % 25 == 0) run.progress("traversal $n: ${p.id} ${def.name} at ${p.x},${p.z} from $side")
+            val key = "${p.id}@${p.x},${p.z},${p.plane}/$side"
+            val from = run.world.currentCycle
+            run.laneStarts[lane] = from
+            val (verdict, end, detail) = cross(run, key, obj.id, obj.tile, w.verb.first, start)
+            run.laneStarts.remove(lane)
+            if (!end.sameAs(start)) crossedFromSomeSide = true else refusals += "$side: ${detail.substringAfter("ticks; ").take(60)}"
+            rows += "${p.id}@${p.x},${p.z},${p.plane}\t${def.name}\t${w.verb.second}\tyes\t$side\t${start.x},${start.z}\t${end.x},${end.z},${end.height}\t$verdict\t$detail"
+            run.expectTrue(key, "${def.name} '${w.verb.second}' from $side", verdict == "PASS", detail.take(250))
+            // The recorder is pruned either way; a failing crossing's own timeline is written by cross() (bot-only, capped - the
+            // 2026-10-03 sweeps wrote every lane's events per failure, 0.5-0.7 GB a run, and filled C:).
+            run.prune()
+        }
+        // A placement nobody can use from any side is a dead obstacle even when every side answers politely
+        // ("I can't reach that!" from everywhere = the object cannot be routed to), unless a requirement refused it.
+        if (sidesTried > 0 && !crossedFromSomeSide) {
+            val requirement = refusals.any { it.contains("level") || it.contains("need") || it.contains("quest", ignoreCase = true) }
+            run.expectTrue("${p.id}@${p.x},${p.z},${p.plane}", "${def.name} '${w.verb.second}' is usable from at least one side", requirement, refusals.joinToString(" | ").take(250))
+        }
     }
 
     private fun opLoc(
@@ -195,11 +251,14 @@ object TraversalSuite : Conformance.Suite {
         val c0 = run.world.currentCycle
         Bots.inject(bot, opLoc(slot, id, objTile))
         var waited = 0
-        // Approach + crossing: until the obstacle task has released the lock, the walk is done and no transit is pending.
+        // Approach + crossing: until the obstacle task has released the lock, the walk is done and no transit is pending - for three
+        // ticks in a row, so a handler that waits before it locks (a run-up, a dialogue) is not judged as "did nothing".
+        var idle = 0
         do {
             wait(1)
             waited++
-        } while (waited < 40 && (bot.lock != LockState.NONE || bot.movementQueue.hasDestination() || bot.inTransit()))
+            idle = if (bot.lock != LockState.NONE || bot.movementQueue.hasDestination() || bot.inTransit()) 0 else idle + 1
+        } while (waited < 40 && idle < 3)
         val end = Tile(bot.tile)
         val msgs = run.recording.of(bot.username, "msg").filter { it.cycle >= c0 }.map { it.text }.filter { it.contains("MessageGame") && !it.contains("__RSPS_HUD__") }
         val nothing = msgs.any { it.contains("Nothing interesting happens") }
@@ -210,21 +269,52 @@ object TraversalSuite : Conformance.Suite {
         val anim = bot.lastAnimationId
         if (anim != -1 && run.world.definitions.getNullable(AnimDef::class.java, anim)?.loops == true) problems += "looping animation $anim still running on the client"
         if (bot.clientDesyncs > 0) problems += "client off the server tile (${bot.clientDesyncs})"
-        if (moved) {
-            if (!isUsableLanding(run.world, end)) problems += "landed in a pocket at ${end.x},${end.z}"
-            // One ordinary step afterwards: a real walk click to a neighbouring tile the server can route to.
-            val next = Direction.NESW.map { end.step(it) }.firstOrNull { run.world.collision.canStep(end, Direction.between(end, it)) }
-            if (next != null) {
-                Bots.inject(bot, MoveGameClickMessage(next.x, next.z, 0))
-                repeat(3) { wait(1) }
-                if (bot.tile.sameAs(end)) problems += "cannot walk on after the crossing (click to ${next.x},${next.z} did nothing)"
+        if (bot.sceneryNoclips > 0) problems += "noclip: ${bot.lastCrossingProblem}"
+        if (bot.plainWalksThroughScenery > 0) problems += "walked through the loc without a climb (OB7): ${bot.lastCrossingProblem}"
+        // A stop on a chain - the stepping stone just jumped onto, or the next traversal loc of the chain - is not a pocket: the
+        // player goes on with the next jump, not with a walk.
+        val chainStop = end.sameAs(objTile) || traversalLocAt(run, end)
+        // Evidence the obstacle itself did something: an animation, a teleport or a forced movement sent for the bot (a walk to the
+        // loc that then stands still is a dead click, not a crossing).
+        val acted =
+            run.recording.of(bot.username, "out").filter { it.cycle >= c0 }.any { e ->
+                (e.text.startsWith("anim id=") && !e.text.startsWith("anim id=-1")) || e.text == "teleport" || e.text.contains("FORCE", ignoreCase = true)
+            } || end.height != start.height
+        if (moved && !acted && msgs.isEmpty()) {
+            problems += "click did nothing: walked to the loc, then no action and no message"
+        } else if (moved) {
+            if (!chainStop) {
+                if (!isUsableLanding(run.world, end)) problems += "landed in a pocket at ${end.x},${end.z}"
+                // One ordinary step afterwards: a real walk click to a neighbouring tile the server can route to.
+                val next = Direction.NESW.map { end.step(it) }.firstOrNull { run.world.collision.canStep(end, Direction.between(end, it)) }
+                if (next != null) {
+                    Bots.inject(bot, MoveGameClickMessage(next.x, next.z, 0))
+                    repeat(3) { wait(1) }
+                    if (bot.tile.sameAs(end)) problems += "cannot walk on after the crossing (click to ${next.x},${next.z} did nothing)"
+                }
             }
         } else if (msgs.isEmpty()) {
             problems += "click did nothing: no movement and no message"
         }
         val detail = "from ${start.x},${start.z} to ${end.x},${end.z} in $waited ticks; ${msgs.joinToString(" / ").take(120)}" + (if (problems.isEmpty()) "" else "; PROBLEM " + problems.joinToString("; "))
+        if (problems.isNotEmpty() && timelines.incrementAndGet() <= MAX_TIMELINES) {
+            runCatching {
+                val file = File(File(run.dir, "timelines").also { it.mkdirs() }, label.replace(Regex("[^A-Za-z0-9_.-]"), "_") + ".txt")
+                file.writeText(run.recording.of(bot.username).filter { it.cycle >= c0 - 5 }.joinToString(NL) { it.toString() }.take(200_000) + NL)
+            }
+        }
+        run.retire(bot)
         return Triple(if (problems.isEmpty()) "PASS" else "FAIL", end, detail)
     }
+
+    /** True when a loc with a traversal option stands on [tile] (a stepping stone, the next rock of a chain). */
+    private fun traversalLocAt(
+        run: Conformance.Run,
+        tile: Tile,
+    ): Boolean =
+        run.world.chunks.get(tile, createIfNeeded = true)
+            ?.getEntities<gg.rsmod.game.model.entity.GameObject>(tile, gg.rsmod.game.model.EntityType.STATIC_OBJECT, gg.rsmod.game.model.EntityType.DYNAMIC_OBJECT)
+            ?.any { o -> run.world.definitions.getNullable(ObjectDef::class.java, o.id)?.options?.any { opt -> opt != null && verbs.any { opt.lowercase().startsWith(it) } } == true } == true
 
     // ---- Deadman: escape and pursuit on the Trollheim rocks --------------------------------------------------------------
 

@@ -1,5 +1,7 @@
 package gg.rsmod.plugins.content.areas.morytania
 
+import gg.rsmod.plugins.content.skills.agility.doorStep
+
 import gg.rsmod.game.model.attr.*
 import gg.rsmod.plugins.content.combat.dealHit
 import gg.rsmod.plugins.content.quests.advanceToNextStage
@@ -303,8 +305,9 @@ fun handleDoor(player: Player) {
 
     player.queue {
         val x = 3405
-        val z = if (player.tile.z >= 9895) 9893 else 9896
-        player.walkTo(tile = Tile(x = x, z = z), detectCollision = false)
+        // The gate is on the south face of 9895: the crossing is 9895 <-> 9894 (the old 9893 / 9896 went one tile past it).
+        val z = if (player.tile.z >= 9895) 9894 else 9895
+        doorStep(player, Tile(x = x, z = z))
         wait(3)
         world.remove(door)
         world.remove(invisibleDoor)
@@ -325,9 +328,10 @@ fun handleDoor2(player: Player) {
     world.spawn(door)
 
     player.queue {
-        val x = if (player.tile.x >= 3432) 3430 else 3433
+        // The gate is on the east face of 3431: the crossing is 3431 <-> 3432 (the old 3430 / 3433 went one tile past it).
+        val x = if (player.tile.x >= 3432) 3431 else 3432
         val z = 9897
-        player.walkTo(tile = Tile(x = x, z = z), detectCollision = false)
+        doorStep(player, Tile(x = x, z = z))
         wait(3)
         world.remove(door)
         world.remove(invisibleDoor)
@@ -383,7 +387,7 @@ fun openLargeDoors(player: Player) {
         world.spawn(southGate)
         val x = if (player.tile.x <= 3406) 3407 else 3406
         val z = if (player.tile.z >= 3489) 3489 else 3488
-        player.walkTo(tile = Tile(x = x, z = z), detectCollision = false)
+        doorStep(player, Tile(x = x, z = z))
         wait(3)
         world.remove(northGate)
         world.remove(southGate)

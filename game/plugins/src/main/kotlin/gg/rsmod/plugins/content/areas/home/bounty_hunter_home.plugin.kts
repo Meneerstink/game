@@ -48,17 +48,18 @@ listOf(FeroxObjects.BARRIER_A, FeroxObjects.BARRIER_B, FeroxObjects.BARRIER_FIEL
         if (goingOutward && gate.exitsToWilderness) {
             player.message("You pass through the barrier into the Wilderness.")
         }
-        player.faceTile(endTile)
-        player.queue {
-            player.stopMovement()
-            // This is a walk-through field, not a jump. Normal movement updates select
-            // the equipped player's walk animation; forced-movement packets do not.
-            player.lock = LockState.FULL
+        val startTile = if (goingOutward) gate.innerLanding else gate.outerLanding
+        player.lockingQueue(lockState = LockState.FULL) {
+            // This is a walk-through field, not a jump: the ordinary walk. Owner hard rule E17 (audit 2026-10-03): first with
+            // collision to this side's landing (the old step went collision-free from the click tile, diagonally through the
+            // barrier wall beside the gap), then through the field to the other landing.
             try {
-                player.movementQueue.addStep(endTile, MovementQueue.StepType.FORCED_WALK, detectCollision = false)
-                wait(player.tile.getDistance(endTile) + 1)
-            } finally {
-                player.lock = LockState.NONE
+                gg.rsmod.plugins.content.skills.agility.walkToTileFrom(this, player, startTile)
+                player.faceTile(endTile)
+                gg.rsmod.plugins.content.skills.agility.walkOverTileFrom(this, player, endTile)
+            } catch (e: gg.rsmod.plugins.content.skills.agility.ObstacleApproachFailed) {
+                player.stopMovement()
+                player.message("I can't reach that!")
             }
         }
     }

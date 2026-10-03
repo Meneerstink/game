@@ -26,18 +26,14 @@ on_obj_option(Objs.DOOR_2406, "open") {
     val minQuestStage = LostCity.CREATE_DRAMEN_BRANCH // Set your minimum quest stage here
     val dramenStaffId = Items.DRAMEN_STAFF
 
-    if (player.hasEquipped(intArrayOf(dramenStaffId)) && currentStage >= 5) {
-        player.queue {
-            handleDoor(player, obj)
-            if (player.tile.x == 3201) {
-                player.walkTo(shedTile)
-            }
+    // Void LumbridgeSwampShed enterDoor (then the fairy teleport): one locked task - the old script raced two queues and snapped
+    // the player onto a door tile before a collision-free walk (audit 2026-10-03).
+    val zanaris = player.hasEquipped(intArrayOf(dramenStaffId)) && currentStage >= 5
+    player.lockingQueue(lockState = LockState.FULL) {
+        handleDoor(this, player, obj)
+        if (zanaris) {
             wait(2)
             zanarisTeleport(player)
-        }
-    } else {
-        player.queue {
-            handleDoor(player, obj)
         }
     }
 }
@@ -55,26 +51,19 @@ fun zanarisTeleport(player: Player) {
 }
 
 suspend fun handleDoor(
+    task: QueueTask,
     player: Player,
     obj: GameObject,
 ) {
     val openDoor = DynamicObject(id = 2406, type = 0, rot = 1, tile = Tile(x = 3202, z = 3169))
     val door = DynamicObject(id = 2406, type = 0, rot = 2, tile = Tile(x = 3201, z = 3169))
-    player.lockingQueue {
-        if (player.tile in inShed) {
-            player.moveTo(Tile(3202, 3169, 0))
-        } else {
-            player.moveTo(Tile(3201, 3169, 0))
-        }
-        val x = if (player.tile.x == 3201) 3202 else 3201
-        val z = 3169
-        world.remove(obj)
-        world.spawn(openDoor)
-        player.playSound(Sfx.DOOR_OPEN)
-        player.walkTo(tile = Tile(x = x, z = z), detectCollision = false)
-        wait(3)
-        world.remove(openDoor)
-        player.playSound(Sfx.DOOR_CLOSE)
-        world.spawn(door)
-    }
+    val far = if (player.tile in inShed) Tile(3201, 3169) else Tile(3202, 3169)
+    world.remove(obj)
+    world.spawn(openDoor)
+    player.playSound(Sfx.DOOR_OPEN)
+    gg.rsmod.plugins.content.skills.agility.doorStepFrom(task, player, far)
+    task.wait(1)
+    world.remove(openDoor)
+    player.playSound(Sfx.DOOR_CLOSE)
+    world.spawn(door)
 }

@@ -162,12 +162,10 @@ God.values().filter { it.doorId != -1 && it != God.ZAROS }.forEach { god ->
 }
 
 fun walkThroughDoor(player: Player, doorTile: Tile, destination: Tile) {
-    player.queue(TaskPriority.STRONG) {
-        player.lock = LockState.FULL
-        player.walkTo(this, doorTile, detectCollision = false)
-        wait(1)
-        player.moveTo(destination)
-        player.lock = LockState.NONE
+    // Void GodwarsDoors enterDoor: up to the door with collision, then through (owner hard rule E17 - the old walk went onto the
+    // door tile collision-free from wherever the click left the player, then teleported).
+    player.lockingQueue(lockState = LockState.FULL) {
+        if (gg.rsmod.plugins.content.skills.agility.doorStepFrom(this, player, doorTile)) player.moveTo(destination)
     }
 }
 
@@ -226,7 +224,11 @@ fun hasKnightsNotes(player: Player): Boolean =
 // Void's Sir Gerry route: searching the dying knight supplies the notes needed to prepare the
 // permanent entrance rope. A full dialogue implementation is not available in this cache build.
 on_obj_option(obj = Objs.KNIGHT, option = "search") {
-    if (hasKnightsNotes(player)) {
+    // OSRS Wiki (God Wars Dungeon): "You don't even need the notes to enter - just speak to the knight before entering the first
+    // time." Owner E12 2026-10-03: the rope kept answering "Cough... Hey, over here." because only the notes in the inventory counted
+    // and nothing remembered the knight. Remembered now (varbit 3936, saved), whatever happens to the notes.
+    player.setVarbit(Varbits.VARBIT_3936, 1)
+    if (hasKnightsNotes(player) && (player.inventory.contains(Items.KNIGHTS_NOTES) || player.inventory.contains(Items.KNIGHTS_NOTES_11735) || player.bank.contains(Items.KNIGHTS_NOTES) || player.bank.contains(Items.KNIGHTS_NOTES_11735))) {
         player.message("You find nothing of value on the knight.")
         return@on_obj_option
     }
@@ -354,7 +356,6 @@ on_obj_option(obj = Objs.LITTLE_CRACK, option = "crawl-through") {
         player.animate(ANIM_HUMAN_CRAWL)
         wait(2)
         player.moveTo(destination)
-        player.unlock()
     }
 }
 
@@ -400,10 +401,15 @@ on_obj_option(obj = Objs.ICE_BRIDGE, option = "climb-off") {
     }
     val withinZamorak = GodWars.inZamorakPrepare(player.tile)
     val destination = GodWars.zamorakBridgeDestination(player.tile)
-    player.queue {
-        player.walkTo(this, obj.tile, detectCollision = false)
-        wait(1)
-        player.lock()
+    player.lockingQueue(lockState = LockState.FULL) {
+        // Void ZamorakBridge: walkToDelay(target.tile) - with collision and arrival - before the jump (the old walk was collision-free
+        // and unlocked from the click tile).
+        try {
+            gg.rsmod.plugins.content.skills.agility.walkToTileFrom(this, player, obj.tile)
+        } catch (e: gg.rsmod.plugins.content.skills.agility.ObstacleApproachFailed) {
+            player.message("I can't reach that!")
+            return@lockingQueue
+        }
         player.moveTo(Tile(obj.tile.x, obj.tile.z, obj.tile.height))
         world.spawn(TileGraphic(player.tile, GFX_BIG_SPLASH, 0))
         wait(4)

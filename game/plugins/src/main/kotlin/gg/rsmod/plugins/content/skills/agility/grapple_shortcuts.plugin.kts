@@ -180,7 +180,7 @@ on_world_init {
                 wait(3)
                 player.filterableMessage("You successfully grapple the raft and tie the rope to a tree.")
                 if (direction == Direction.EAST) lumbridgeTree(grapple = false) else alKharidTree(grapple = false)
-                walkOverTile(player, start.add(direction))
+                walkOverTile(player, start.add(direction), Render.NONE)
                 player.animate(ANIM_GRAPPLE_ENTER_WATER)
                 player.playSound(SOUND_GRAPPLE_SPLASH_WATER)
                 exactMove(player, Tile(start.x + direction.getDeltaX() * 6, start.z), 120, direction)
@@ -203,7 +203,7 @@ on_world_init {
             player.animate(ANIM_GRAPPLE_EXIT_WATER)
             player.playSound(SOUND_GRAPPLE_SPLASH_WATER)
             exactMove(player, if (direction == Direction.EAST) Tile(3258, 3180) else Tile(3248, 3179), 160, direction)
-            walkOverTile(player, if (direction == Direction.EAST) Tile(3259, 3180) else Tile(3246, 3179))
+            walkOverTile(player, if (direction == Direction.EAST) Tile(3259, 3180) else Tile(3246, 3179), Render.NONE)
         }
     }
 
@@ -275,8 +275,9 @@ on_world_init {
             for (x in 2867..2869) temporaryObject(OBJ_CATHERBY_GRAPPLE_ROPE, Tile(x, 3429), 0, 14)
             temporaryObject(OBJ_CATHERBY_ROCKS_GRAPPLE, Tile(2869, 3429), 0, 14)
             wait(1)
-            walkOverTile(player, Tile(2868, 3429))
-            walkOverTile(player, Tile(2869, 3430))
+            walkOverTile(player, Tile(2868, 3429), Render.CLIMBING)
+            player.resetRenderAnimation()
+            walkOverTile(player, Tile(2869, 3430), Render.NONE)
         }
     }
 

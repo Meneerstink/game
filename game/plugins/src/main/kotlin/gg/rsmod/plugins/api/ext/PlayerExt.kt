@@ -198,17 +198,20 @@ fun Player.handleTemporaryDoor(
     waitTime: Int,
 ) {
     val moveX = if (moveObjX == -1) obj.tile.x else moveObjX
-    val moveZ = if (moveObjZ == -1) obj.tile.x else moveObjZ
+    // Was obj.tile.x (audit 2026-10-03): the open door of a caller that leaves the z out stood on a wrong tile.
+    val moveZ = if (moveObjZ == -1) obj.tile.z else moveObjZ
     val nextDoorId = if (newDoorId == -1) obj.id else newDoorId
     val rotation = if (newRotation == -1) obj.rot else newRotation
     val wait = if (waitTime == -1) 2 else waitTime
     lockingQueue(lockState = LockState.DELAY_ACTIONS) {
         world.remove(obj)
-        val openDoor = DynamicObject(id = nextDoorId, type = 0, rot = newRotation, tile = Tile(x = moveX, z = moveZ))
+        val openDoor = DynamicObject(id = nextDoorId, type = 0, rot = newRotation, tile = Tile(x = moveX, z = moveZ, height = obj.tile.height))
         playSound(Sfx.DOOR_OPEN)
         world.spawn(openDoor)
         if (movePlayerX != -1 || movePlayerZ != -1) {
-            walkTo(tile = Tile(x = movePlayerX, z = movePlayerZ), detectCollision = false)
+            // Owner hard rule E17: the walk to the door with collision first, then the one step through (never a collision-free
+            // line from wherever the click left the player).
+            gg.rsmod.plugins.content.skills.agility.doorStepFrom(this, this@handleTemporaryDoor, Tile(x = movePlayerX, z = movePlayerZ, height = tile.height))
         }
         wait(wait)
         world.remove(openDoor)

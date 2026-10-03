@@ -565,6 +565,8 @@ abstract class Pawn(
         }
 
         movementQueue.clear()
+        // A collision-free walk of a player is a crossing: the whole path is judged before it is walked (SceneryCrossing, E17/OB7).
+        if (!detectCollision && this is Player) judgeCrossing(listOf(Tile(tile)) + path.toList(), "walk")
         var tail: Tile? = null
         var next = path.poll()
         while (next != null) {

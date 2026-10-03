@@ -242,6 +242,40 @@ on_command("conform", Privilege.ADMIN_POWER) {
 // The same from the command port (tools\conformance\Send-GameCommand.ps1 conform summoning), for agents.
 gg.rsmod.game.CommandServerCommands.handlers["conform"] = { w, a -> gg.rsmod.plugins.content.cmd.conformance.Conformance.command(w, a) }
 
+// Agent driving its own logged-in client from the command port (tools\conformance\Send-GameCommand.ps1, token required; the
+// developer console often will not close again - tools\live\Con3.ps1): `oploc <name> <slot 1-5> <id> <x> <z>` clicks a loc option
+// for that player through the real handler path (his client draws the real movement), `as <name> <command...>` runs an in-game
+// command as him. Owner priority #1 2026-10-03: obstacles are verified in the agent's own client.
+gg.rsmod.game.CommandServerCommands.handlers["oploc"] = { w, a ->
+    val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "") as? gg.rsmod.game.model.entity.Client
+    val slot = a.getOrNull(1)?.toIntOrNull()
+    val id = a.getOrNull(2)?.toIntOrNull()
+    val x = a.getOrNull(3)?.toIntOrNull()
+    val z = a.getOrNull(4)?.toIntOrNull()
+    if (p == null || slot == null || id == null || x == null || z == null) {
+        "usage: oploc <name> <slot> <id> <x> <z>"
+    } else {
+        val msg =
+            when (slot) {
+                1 -> gg.rsmod.game.message.impl.OpLoc1Message(0, x, id, z)
+                2 -> gg.rsmod.game.message.impl.OpLoc2Message(id, x, z, 0)
+                3 -> gg.rsmod.game.message.impl.OpLoc3Message(id, x, z, 0)
+                4 -> gg.rsmod.game.message.impl.OpLoc4Message(id, x, z, 0)
+                else -> gg.rsmod.game.message.impl.OpLoc5Message(id, x, z, 0)
+            }
+        if (p.gameSystem.inject(msg)) "clicked option $slot of $id at $x,$z for ${p.username} (at ${p.tile.x},${p.tile.z},${p.tile.height})" else "no handler"
+    }
+}
+gg.rsmod.game.CommandServerCommands.handlers["as"] = { w, a ->
+    val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "")
+    if (p == null || a.size < 2) {
+        "usage: as <name> <command> [args]"
+    } else {
+        val handled = w.plugins.executeCommand(p, a[1].lowercase(), a.drop(2).toTypedArray().ifEmpty { null })
+        "${a[1]} as ${p.username}: handled=$handled (at ${p.tile.x},${p.tile.z},${p.tile.height})"
+    }
+}
+
 // Headless agent run only (-Drsps.conformance=<domain>, tools\conformance\Run-Conformance.ps1): never active in a normal start.
 on_world_init { gg.rsmod.plugins.content.cmd.conformance.Conformance.startHeadless(world) }
 

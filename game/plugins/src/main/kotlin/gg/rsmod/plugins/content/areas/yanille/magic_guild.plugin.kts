@@ -1,5 +1,7 @@
 package gg.rsmod.plugins.content.areas.yanille
 
+import gg.rsmod.plugins.content.skills.agility.doorStep
+
 import gg.rsmod.plugins.content.magic.TeleportType
 import gg.rsmod.plugins.content.magic.canTeleport
 
@@ -52,7 +54,7 @@ fun handleMagicGuildDoors(
         world.spawn(northDoor)
         val x = if (player.tile.x in originalDoorX..originalDoorX + 3) blockedDoorX else originalDoorX
         val z = player.tile.z
-        player.walkTo(tile = Tile(x = x, z = z), detectCollision = false)
+        doorStep(player, Tile(x = x, z = z))
         wait(3)
         world.remove(southDoor)
         world.remove(northDoor)

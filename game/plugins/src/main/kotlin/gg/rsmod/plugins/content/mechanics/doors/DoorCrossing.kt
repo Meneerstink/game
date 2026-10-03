@@ -57,6 +57,77 @@ object DoorCrossing {
         return true
     }
 
+    /**
+     * Void `enterDoor` for every hand-written door / gate script (owner hard rule 2026-10-03 E17, "a player may never noclip";
+     * audit-2026-10-03-forcedmove-vs-donors.md: about twenty area scripts walked a collision-free line from wherever the click left
+     * the player, some two tiles past the door): walk with collision to the tile in front of the door on the player's side and
+     * arrive there, show the door open ([openedId], back after [openTicks]), then the one bounded step through ([cross]).
+     * [farSide] (optional) is where the script's own rule says the player must end up; a crossing that does not end there is
+     * refused. Returns false (nothing crossed, the player stands where he was) when no crossing is possible.
+     */
+    suspend fun enter(
+        task: gg.rsmod.game.model.queue.QueueTask,
+        player: gg.rsmod.game.model.entity.Player,
+        door: GameObject,
+        openedId: Int = -1,
+        openTicks: Int = 2,
+        farSide: Tile? = null,
+    ): Boolean {
+        val near = nearSide(player.tile, door) ?: run {
+            player.message("The door is blocked.")
+            return false
+        }
+        if (!player.tile.sameAs(near)) {
+            val route = player.walkTo(task, near)
+            if (!route.success || !route.tail.sameAs(near)) {
+                player.stopMovement()
+                player.message("I can't reach that!")
+                return false
+            }
+            var waited = 0
+            while (!player.tile.sameAs(near) && waited < near.getDistance(player.tile) * 4 + 10) {
+                if (!player.movementQueue.hasDestination()) break
+                task.wait(1)
+                waited++
+            }
+            if (!player.tile.sameAs(near)) {
+                player.stopMovement()
+                player.message("I can't reach that!")
+                return false
+            }
+        }
+        if (farSide != null && destination(player.tile, door)?.sameAs(farSide) != true) {
+            player.message("The door is blocked.")
+            return false
+        }
+        if (openedId != -1) {
+            val world = player.world
+            world.spawn(gg.rsmod.game.model.entity.DynamicObject(door, openedId))
+            world.queue {
+                wait(openTicks + 1)
+                world.spawn(gg.rsmod.game.model.entity.DynamicObject(door))
+            }
+        }
+        player.faceTile(door.tile)
+        return cross(task, player, door)
+    }
+
+    /**
+     * The tile a crossing of [door] starts from on [playerTile]'s side: for a wall door the nearer of its own tile and the tile its
+     * face looks at; for a 1x1 gate / free-standing door the nearest cardinal neighbour whose mirror through the door is a tile too.
+     */
+    fun nearSide(
+        playerTile: Tile,
+        door: GameObject,
+    ): Tile? {
+        val group = ObjectType.values().firstOrNull { it.value == door.type }?.group
+        if (group == ObjectGroup.WALL && door.type != ObjectType.DIAGONAL_WALL.value) {
+            val outside = door.tile.step(faceDirection(door.rot))
+            return listOf(door.tile, outside).minByOrNull { (it.x - playerTile.x) * (it.x - playerTile.x) + (it.z - playerTile.z) * (it.z - playerTile.z) }
+        }
+        return Direction.NESW.map { door.tile.step(it) }.minByOrNull { (it.x - playerTile.x) * (it.x - playerTile.x) + (it.z - playerTile.z) * (it.z - playerTile.z) }
+    }
+
     fun destination(
         playerTile: Tile,
         door: GameObject,

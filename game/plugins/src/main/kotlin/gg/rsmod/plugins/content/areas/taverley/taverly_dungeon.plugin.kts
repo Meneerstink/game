@@ -1,5 +1,7 @@
 package gg.rsmod.plugins.content.areas.taverley
 
+import gg.rsmod.plugins.content.skills.agility.doorStep
+
 /**
  * @author Alycia <https://github.com/alycii>
  */
@@ -113,7 +115,7 @@ fun handleDustyGate(player: Player) {
         val x = if (player.tile.x >= 2924) 2923 else 2924
         val z = 9803
         player.message("You unlock the gate.")
-        player.walkTo(tile = Tile(x = x, z = z), detectCollision = false)
+        doorStep(player, Tile(x = x, z = z))
         wait(4)
         world.remove(openedDoor)
         world.spawn(closedDoor)
@@ -156,7 +158,7 @@ fun handleJailDoor(player: Player) {
     player.lockingQueue(lockState = LockState.DELAY_ACTIONS) {
         val x = 2931
         val z = if (player.tile.z == 9690) 9689 else 9690
-        player.walkTo(tile = Tile(x = x, z = z), detectCollision = false)
+        doorStep(player, Tile(x = x, z = z))
         wait(4)
         world.remove(openedDoor)
         world.spawn(closedDoor)

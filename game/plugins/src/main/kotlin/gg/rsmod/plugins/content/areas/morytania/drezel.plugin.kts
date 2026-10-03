@@ -1,5 +1,7 @@
 package gg.rsmod.plugins.content.areas.morytania
 
+import gg.rsmod.plugins.content.skills.agility.doorStep
+
 import gg.rsmod.game.model.attr.RUNE_ESSENCE_REMAINING
 import gg.rsmod.plugins.content.quests.advanceToNextStage
 import gg.rsmod.plugins.content.quests.getCurrentStage
@@ -74,7 +76,7 @@ fun handleCellDoor(player: Player) {
     player.queue {
         val z = 3487
         val x = if (player.tile.x >= 3414) 3413 else 3414
-        player.walkTo(tile = Tile(x = x, z = z), detectCollision = false)
+        doorStep(player, Tile(x = x, z = z))
         wait(3)
         world.remove(door)
         world.remove(invisibleDoor)

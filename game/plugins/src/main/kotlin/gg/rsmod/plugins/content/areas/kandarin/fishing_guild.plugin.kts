@@ -1,5 +1,7 @@
 package gg.rsmod.plugins.content.areas.kandarin
 
+import gg.rsmod.plugins.content.skills.agility.doorStep
+
 /**
  * @author Harley<github.com/HarleyGilpin>
  */
@@ -33,7 +35,7 @@ fun handleGate(player: Player) {
         player.playSound(Sfx.GATE_OPEN)
         val x = if (player.tile.x == 2614) 2614 else 2613
         val z = if (player.tile.z <= 3386) 3387 else 3386
-        player.walkTo(tile = Tile(x = x, z = z), detectCollision = false)
+        doorStep(player, Tile(x = x, z = z))
         wait(3)
         world.remove(westOpenGate)
         world.remove(eastOpenGate)

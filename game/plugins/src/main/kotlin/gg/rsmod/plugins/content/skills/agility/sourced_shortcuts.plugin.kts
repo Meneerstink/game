@@ -59,6 +59,7 @@ val ANIM_PASS_THROUGH_BARRIER = 10584
 val ANIM_CRACK_ENTER = 2594
 val ANIM_CRACK_LEAVE = 2595
 val ANIM_SHORTCUT_JUMP = 10738
+val ANIM_WILD_DITCH_JUMP = 6132
 
 val SOUND_STUMBLE_LOOP = 2493
 val SOUND_POOL_PLOP = 1658
@@ -72,30 +73,6 @@ val SOUND_MALE_DEFEND_2 = 520
 
 /* Shared helpers (agilitySuccess, hasAgility, Tile.add, walkToTile, walkOverTile, exactMove, face,
  * shortcut, obstacle) live in ShortcutSupport.kt so grapple_shortcuts.plugin.kts can use them too. */
-
-// ---- Stiles (Void Stiles.climbStile) ----
-
-suspend fun QueueTask.climbStile(
-    player: Player,
-    target: GameObject,
-    rotation: Direction,
-    anim: Int = ANIM_ROCKS_PILE_CLIMB,
-) {
-    val direction =
-        when (rotation) {
-            Direction.NORTH -> if (player.tile.z > target.tile.z) Direction.SOUTH else Direction.NORTH
-            Direction.EAST -> if (player.tile.x > target.tile.x) Direction.WEST else Direction.EAST
-            Direction.WEST -> if (player.tile.x < target.tile.x) Direction.EAST else Direction.WEST
-            else -> if (player.tile.z < target.tile.z) Direction.NORTH else Direction.SOUTH
-        }
-    val start = if (direction == rotation) target.tile else target.tile.add(direction.getOpposite())
-    walkOverTile(player, start)
-    face(player, direction)
-    wait(1)
-    player.animate(anim)
-    val end = if (direction == rotation) target.tile.add(direction) else target.tile
-    exactMove(player, end, 30, direction)
-}
 
 // ---- Underwall tunnels (Void UnderWallTunnels.tunnel) ----
 
@@ -153,10 +130,10 @@ fun verticalPipe(
         walkToTile(player, Tile(target.tile.x, if (above) north else south))
         val direction = if (above) Direction.SOUTH else Direction.NORTH
         face(player, direction)
-        player.animate(ANIM_CLIMB_THROUGH_PIPE)
+        player.animate(ANIM_CLIMB_THROUGH_PIPE, delay = 30)
         exactMove(player, Tile(target.tile.x, middle), delay = 126, direction = direction, startDelay = 30)
         player.moveTo(Tile(target.tile.x, targetTile.z - direction.getDeltaZ() * 2))
-        player.animate(ANIM_CLIMB_THROUGH_PIPE)
+        player.animate(ANIM_CLIMB_THROUGH_PIPE, delay = 20)
         exactMove(player, targetTile, delay = 96, direction = direction)
         player.addXp(Skills.AGILITY, xp)
     }
@@ -172,8 +149,8 @@ fun brimhavenLog(
     obstacle { target ->
         player.filterableMessage("You walk carefully across the slippery log...")
         player.setRenderAnimation(RENDER_ROPE_BALANCE)
-        walkOverTile(player, target.tile)
-        walkOverTile(player, Tile(targetX, target.tile.z))
+        walkOverTile(player, target.tile, Render.ROPE_BALANCE)
+        walkOverTile(player, Tile(targetX, target.tile.z), Render.ROPE_BALANCE)
         player.resetRenderAnimation()
         player.addXp(Skills.AGILITY, 10.0)
         player.filterableMessage("... and make it safely to the other side.")
@@ -188,11 +165,11 @@ fun ardougneLog(
     obstacle { target ->
         player.filterableMessage("You attempt to walk across the slippery log.")
         player.setRenderAnimation(RENDER_ROPE_BALANCE)
-        walkOverTile(player, target.tile)
+        walkOverTile(player, target.tile, Render.ROPE_BALANCE)
         val middle = target.tile.add(direction)
-        walkOverTile(player, middle)
+        walkOverTile(player, middle, Render.ROPE_BALANCE)
         if (agilitySuccess(player, 90, 250)) {
-            walkOverTile(player, middle.add(direction, 2))
+            walkOverTile(player, middle.add(direction, 2), Render.ROPE_BALANCE)
             player.message("You make it across the log without any problems.")
             player.resetRenderAnimation()
             wait(1)
@@ -206,13 +183,13 @@ fun ardougneLog(
             player.setRenderAnimation(RENDER_SWIM)
             player.playSound(SOUND_POOL_PLOP)
             player.message("You're being washed down the river.")
-            walkOverTile(player, Tile(middle.x, middle.z - 1))
+            walkOverTile(player, Tile(middle.x, middle.z - 1), Render.SWIM)
             player.filterableMessage("You feel like you're drowning...")
-            walkOverTile(player, Tile(middle.x, middle.z - 6))
-            walkOverTile(player, Tile(middle.x, middle.z - 7).add(direction))
+            walkOverTile(player, Tile(middle.x, middle.z - 6), Render.SWIM)
+            walkOverTile(player, Tile(middle.x, middle.z - 7).add(direction), Render.SWIM)
             player.filterableMessage("You finally come to shore.")
             player.resetRenderAnimation()
-            walkOverTile(player, Tile(middle.x, middle.z - 7).add(direction, 2))
+            walkOverTile(player, Tile(middle.x, middle.z - 7).add(direction, 2), Render.NONE)
             player.hit(ThreadLocalRandom.current().nextInt(2, 5))
             player.addXp(Skills.AGILITY, 2.0)
         }
@@ -233,11 +210,19 @@ suspend fun QueueTask.climbDownRocks(
 }
 
 on_world_init {
-    // Stiles not already covered by agility_shortcuts.plugin.kts.
-    listOf(993 to Direction.NORTH, 3730 to Direction.NORTH, 19222 to Direction.NORTH, 18411 to Direction.NORTH).forEach { (id, axis) ->
-        shortcut(id, "Climb-over") { obstacle { climbStile(player, it, axis) } }
+    // Stiles, fences and the Falador crumbling wall (Void Stiles.kt: freds_farm 45205, catherby 993, death_plateau 3730, falconry
+    // 19222, meiyerditch broken fence 18411, ardougne_farm 34776, al_kharid 48208, falador_farm 7527, vinesweeper 29460, falador
+    // crumbling wall 11844 at 5 Agility for 0.5 xp, McGrubor's railing 51 with railing_squeeze 3844). No xp and no message for the
+    // stiles in Void. The old agility_shortcuts stile code (anim 1560 = a cockatrice sequence, xp before the climb, the lock released
+    // after 2 ticks while the walk went on) and crumbling_wall.plugin.kts (a slide from the player's tile +-2) are gone (2026-10-03).
+    listOf(993, 3730, 19222, 18411, 45205, 34776, 48208, 7527, 29460).forEach { id ->
+        shortcut(id, "Climb-over") { obstacle { climbOver(player, it) } }
     }
-    shortcut(51, "Squeeze-through") { obstacle { climbStile(player, it, Direction.WEST, ANIM_RAILING_SQUEEZE) } }
+    shortcut(11844, "Climb-over") {
+        if (!player.hasAgility(5, "You need an Agility level of 5 to climb over this wall.")) return@shortcut
+        obstacle { if (climbOver(player, it)) player.addXp(Skills.AGILITY, 0.5) }
+    }
+    shortcut(51, "Squeeze-through") { obstacle { climbOver(player, it, ANIM_RAILING_SQUEEZE) } }
 
     // Level corrected 2026-09-18: 2009scape TunnelShortcut sources ids 9301/9302 at level 16, not the
     // 15/21 previously recorded here (which disagreed with each other and with the source).
@@ -248,11 +233,11 @@ on_world_init {
     tunnel(9310, "Climb-into", 26, Tile(2948, 3313), Tile(2948, 3310), Direction.SOUTH)
     tunnel(9309, "Climb-into", 26, Tile(2948, 3309), Tile(2948, 3312), Direction.NORTH)
 
-    // Level/xp corrected 2026-09-18: 2009scape PipeShortcut sources id 5099 (Red dragons -> Black
-    // demons, z~9498) at level 22/8.5xp and id 5100 (Moss giants -> Moss giants, z~9567) at level
-    // 34/10.0xp; this file had the two values swapped between the ids.
-    verticalPipe(5100, requirementZ = 9567, level = 34, north = 9573, middle = 9570, south = 9566, xp = 10.0)
-    verticalPipe(5099, requirementZ = 9498, level = 22, north = 9499, middle = 9495, south = 9492, xp = 8.5)
+    // Void Pipes.kt (2026-10-03): brimhaven_pipe_moss 5100 needs 22 at y 9567 for 8.5 xp, brimhaven_pipe_dragon 5099 needs 34 at
+    // y 9498 for 10 xp - the OSRS Wiki's 22 (moss giants) / 34 (red dragons). The 2026-09-18 "correction" took 2009scape's
+    // swapped numbers.
+    verticalPipe(5100, requirementZ = 9567, level = 22, north = 9573, middle = 9570, south = 9566, xp = 8.5)
+    verticalPipe(5099, requirementZ = 9498, level = 34, north = 9499, middle = 9495, south = 9492, xp = 10.0)
 
     shortcut(9293, "Squeeze-through") {
         if (!player.hasAgility(70, "You need an Agility level of 70 to squeeze through the pipe.")) return@shortcut
@@ -359,6 +344,9 @@ on_world_init {
     shortcut(5110, "Jump-from") {
         if (!player.hasAgility(12, "You need an agility level of 12 to attempt to swing on this vine.")) return@shortcut
         obstacle {
+            // Void jumps from wherever the player stands; the chain only lands on its stones from this tile (5110 at 2649,9561).
+            walkToTile(player, Tile(2649, 9562))
+            face(player, Direction.SOUTH)
             player.filterableMessage("You carefully start crossing the stepping stones...")
             for (direction in brimhavenStones) {
                 player.animate(ANIM_STEPPING_STONE_JUMP)
@@ -372,6 +360,9 @@ on_world_init {
     }
     shortcut(5111, "Jump-from") {
         obstacle {
+            // The reverse chain lands on its stones only from this tile (5111 at 2647,9558).
+            walkToTile(player, Tile(2647, 9557))
+            face(player, Direction.NORTH)
             player.filterableMessage("You carefully start crossing the stepping stones...")
             for (step in brimhavenStones.reversed()) {
                 val direction = step.getOpposite()
@@ -400,125 +391,35 @@ on_world_init {
         }
     }
 
-    // ---- Trollheim rocks ----
-    shortcut(9306, "Climb") {
-        obstacle { target ->
-            player.faceTile(target.tile)
-            if (target.tile.x == 2901 && target.tile.z == 3680) {
-                climbDownRocks(player, ANIM_HUMAN_CLIMBING_DOWN, Tile(2903, 3680), 120, Direction.WEST)
-                player.addXp(Skills.AGILITY, 1.0)
-            } else if (target.tile.x == 2902 && target.tile.z == 3680) {
-                walkOverTile(player, Tile(2900, 3680))
-                player.addXp(Skills.AGILITY, 8.0)
-            } else {
-                // Owner 2026-09-30: this 667 cache places 9306 at (2909,3685), a tile Void's map does not have, and the climb did
-                // nothing at all. Same climb, landing across the rock in this cache's collision (ShortcutSupport.crossingLanding).
-                val landing = crossingLanding(world, target, player.tile)
-                if (landing == null) {
-                    gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.PLUGIN) {
-                        "rocks 9306 at ${target.tile.x},${target.tile.z}: no landing across from ${player.tile.x},${player.tile.z}"
-                    }
-                    player.message("You can't climb the rocks from here.")
-                    return@obstacle
-                }
-                climbDownRocks(player, ANIM_HUMAN_CLIMBING_DOWN, landing, 120, Direction.between(player.tile, landing))
-                player.addXp(Skills.AGILITY, 8.0)
-            }
-        }
-    }
-    // The local 667 cache has the 3803 climb at (2876,3671); the old donor
-    // coordinate was a different map revision. Keep both sourced placements.
+    // ---- Trollheim rocks (Void Trollheim.kt; this 2011 map's own placements) ----
+    // The 667 map re-placed every Trollheim rock as one "Cliffside" loc (3803 @2876,3671, 9303 @2855,3663, 9304 @2873,3660,
+    // 9305 @2894,3672, 9306 @2909,3685, 3748 x3); Void's tiles (2885,3683 ...) are not on this map. Each climb is the shared
+    // climbCliff: a fixed lane through the loc, down = Void's climb-down sequence, up = Void's "climbing" render, levels / xp as Void
+    // (9305: OSRS Wiki 47, Void has a TODO). Owner FAIL 2026-10-03 02:24 (walked through the rock) and the stuck / noclip reports
+    // 09-30 .. 10-03 were the slides from wherever the click left the player and the plain walk up (OB7).
     listOf(
-        3804 to Tile(2885, 3684),
-        3803 to Tile(2885, 3683),
-    ).forEach { (id, westTile) ->
+        // id, level, down sequence, xp down, xp up
+        listOf(9306, 0, ANIM_HUMAN_CLIMBING_DOWN, 1, 8),
+        listOf(3803, 0, ANIM_ROCKS_CLIMB_DOWN, 1, 8),
+        listOf(3804, 0, ANIM_ROCKS_CLIMB_DOWN, 1, 8),
+        listOf(9305, 47, ANIM_HUMAN_CLIMBING_DOWN, 8, 8),
+        listOf(9304, 43, ANIM_HUMAN_CLIMBING_DOWN, 8, 8),
+        listOf(9303, 41, ANIM_HUMAN_CLIMBING_DOWN, 8, 8),
+    ).forEach { (id, level, downAnim, xpDown, xpUp) ->
         shortcut(id, "Climb") {
+            if (level > 0 && !player.hasAgility(level)) return@shortcut
             obstacle { target ->
-                player.faceTile(target.tile)
-                if ((target.tile.x == westTile.x && target.tile.z == westTile.z) ||
-                    (id == 3803 && target.tile.x == 2876 && target.tile.z == 3671)
-                ) {
-                    val down = player.tile.x >= target.tile.x
-                    val landing = chainLanding(world, target, player.tile, Tile(target.tile.x + if (down) -1 else 1, target.tile.z)) ?: return@obstacle player.noLanding(target)
-                    if (down) {
-                        climbDownRocks(player, ANIM_ROCKS_CLIMB_DOWN, landing, 50, Direction.EAST)
-                        player.addXp(Skills.AGILITY, 1.0)
-                    } else {
-                        walkOverTile(player, landing)
-                        player.addXp(Skills.AGILITY, 8.0)
-                    }
-                } else if (target.tile.z == 3661) {
-                    val down = player.tile.z >= target.tile.z
-                    val landing = chainLanding(world, target, player.tile, Tile(target.tile.x, target.tile.z + if (down) -1 else 1)) ?: return@obstacle player.noLanding(target)
-                    if (down) {
-                        climbDownRocks(player, ANIM_ROCKS_CLIMB_DOWN, landing, 50, Direction.NORTH)
-                    } else {
-                        walkOverTile(player, landing)
-                    }
-                    player.addXp(Skills.AGILITY, 1.0)
-                }
-            }
-        }
-    }
-    shortcut(9305, "Climb") {
-        if (!player.hasAgility(47)) return@shortcut
-        obstacle { target ->
-            player.faceTile(target.tile)
-            if ((target.tile.x == 2908 && target.tile.z == 3682) ||
-                (target.tile.x == 2894 && target.tile.z == 3672)
-            ) {
-                val donor = if (target.tile.x == 2894) Tile(2895, 3674) else Tile(2909, 3684)
-                val landing = chainLanding(world, target, player.tile, donor) ?: return@obstacle player.noLanding(target)
-                climbDownRocks(player, ANIM_HUMAN_CLIMBING_DOWN, target.tile, 40, Direction.WEST)
-                climbDownRocks(player, ANIM_HUMAN_CLIMBING_DOWN, landing, 120, Direction.SOUTH)
-                player.addXp(Skills.AGILITY, 8.0)
-            } else if ((target.tile.x == 2909 && target.tile.z == 3683) ||
-                (target.tile.x == 2895 && target.tile.z == 3673)
-            ) {
-                val middle = if (target.tile.x == 2895) Tile(2895, 3672) else Tile(2909, 3682)
-                val landing = if (target.tile.x == 2895) Tile(2893, 3672) else Tile(2907, 3682)
-                walkOverTile(player, middle)
-                wait(1)
-                walkOverTile(player, landing)
-                player.addXp(Skills.AGILITY, 8.0)
+                val crossing = cliffCrossing(world, target, player.tile)
+                val down = crossing != null && goesDown(world, crossing)
+                if (climbCliff(player, target, downAnim)) player.addXp(Skills.AGILITY, (if (down) xpDown else xpUp).toDouble())
             }
         }
     }
     shortcut(3748, "Climb") {
         if (!player.hasAgility(44)) return@shortcut
         obstacle { target ->
-            player.faceTile(target.tile)
             player.message("You climb onto the rock...")
-            player.animate(ANIM_ROCKS_PILE_CLIMB)
-            val direction = if (player.tile.x >= target.tile.x) Direction.WEST else Direction.EAST
-            exactMove(player, target.tile.add(direction), delay = 94, direction = direction, startDelay = 30)
-            player.message("...and step down the other side.")
-        }
-    }
-    shortcut(9304, "Climb") {
-        if (!player.hasAgility(43)) return@shortcut
-        obstacle { target ->
-            val down = player.tile.z >= target.tile.z
-            val landing = chainLanding(world, target, player.tile, Tile(target.tile.x, target.tile.z + if (down) -2 else 2)) ?: return@obstacle player.noLanding(target)
-            if (down) {
-                climbDownRocks(player, ANIM_HUMAN_CLIMBING_DOWN, landing, 120, Direction.NORTH)
-            } else {
-                walkOverTile(player, landing)
-            }
-            player.addXp(Skills.AGILITY, 8.0)
-        }
-    }
-    shortcut(9303, "Climb") {
-        if (!player.hasAgility(41)) return@shortcut
-        obstacle { target ->
-            val down = player.tile.x >= target.tile.x
-            val landing = chainLanding(world, target, player.tile, Tile(target.tile.x + if (down) -2 else 2, target.tile.z)) ?: return@obstacle player.noLanding(target)
-            if (down) {
-                climbDownRocks(player, ANIM_HUMAN_CLIMBING_DOWN, landing, 120, Direction.EAST)
-            } else {
-                walkOverTile(player, landing)
-            }
-            player.addXp(Skills.AGILITY, 8.0)
+            if (climbCliff(player, target, ANIM_ROCKS_PILE_CLIMB)) player.message("...and step down the other side.")
         }
     }
 
@@ -574,13 +475,16 @@ on_world_init {
             face(player, Direction.EAST)
             wait(1)
             walkToTile(player, Tile(3303, 3315))
-            walkOverTile(player, Tile(3307, 3315))
+            walkOverTile(player, Tile(3307, 3315), Render.CLIMBING)
         }
     }
     shortcut(9331, "Climb") {
         if (!player.hasAgility(38, "You need an Agility level of 38 to negotiate these rocks.")) return@shortcut
         obstacle {
-            walkOverTile(player, Tile(3305, 3315))
+            // Void walks over the rocks to the edge in the plain walk; here with the climbing render like every other rock walk
+            // (Trollheim, Wilderness course 2328) - the plain walk reads as walking through the rock (OB7, conform traversal).
+            walkOverTile(player, Tile(3305, 3315), Render.CLIMBING)
+            player.resetRenderAnimation()
             face(player, Direction.WEST)
             wait(1)
             climbDownRocks(player, ANIM_HUMAN_CLIMBING_DOWN, Tile(3303, 3315), 120, Direction.EAST)
@@ -593,7 +497,7 @@ on_world_init {
         obstacle { target ->
             val direction = if (player.tile.x < target.tile.x) Direction.EAST else Direction.WEST
             val landing = if (direction == Direction.EAST) target.tile else target.tile.add(Direction.WEST)
-            walkOverTile(player, landing.add(direction.getOpposite(), 2))
+            walkOverTile(player, landing.add(direction.getOpposite(), 2), Render.NONE)
             face(player, direction)
             wait(1)
             player.animate(ANIM_LOW_FENCE_JUMP)
@@ -617,12 +521,13 @@ on_world_init {
     shortcut(9317, "Climb") {
         if (!player.hasAgility(37, "You need an Agility level of 37 to negotiate these rocks.")) return@shortcut
         obstacle {
-            walkOverTile(player, Tile(2489, 3521))
+            walkOverTile(player, Tile(2489, 3521), Render.NONE)
             face(player, Direction.SOUTH)
-            walkOverTile(player, Tile(2489, 3519))
-            walkOverTile(player, Tile(2489, 3517))
-            walkOverTile(player, Tile(2488, 3516))
-            walkOverTile(player, Tile(2487, 3515))
+            walkOverTile(player, Tile(2489, 3519), Render.CLIMBING)
+            walkOverTile(player, Tile(2489, 3517), Render.CLIMBING)
+            walkOverTile(player, Tile(2488, 3516), Render.CLIMBING)
+            walkOverTile(player, Tile(2487, 3515), Render.CLIMBING)
+            player.resetRenderAnimation()
             walkToTile(player, Tile(2486, 3515))
         }
     }
@@ -675,13 +580,13 @@ on_world_init {
                     2 -> {
                         val x = if (player.tile.x <= target.tile.x) target.tile.x + 1 else target.tile.x
                         val z = player.tile.z.coerceIn(target.tile.z, target.tile.z + 1)
-                        walkOverTile(player, Tile(player.tile.x, z))
+                        walkOverTile(player, Tile(player.tile.x, z), Render.NONE)
                         Tile(x, z)
                     }
                     3 -> {
                         val x = player.tile.x.coerceIn(target.tile.x, target.tile.x + 1)
                         val z = if (player.tile.z >= target.tile.z) target.tile.z - 1 else target.tile.z
-                        walkOverTile(player, Tile(x, player.tile.z))
+                        walkOverTile(player, Tile(x, player.tile.z), Render.NONE)
                         Tile(x, z)
                     }
                     else -> return@obstacle
@@ -697,7 +602,7 @@ on_world_init {
             val start = if (north) Tile(1633, 5292) else Tile(1633, 5294)
             val end = if (north) Tile(1633, 5294) else Tile(1633, 5292)
             val direction = if (north) Direction.NORTH else Direction.SOUTH
-            walkOverTile(player, start)
+            walkOverTile(player, start, Render.NONE)
             face(player, direction)
             wait(1)
             player.animate(ANIM_ROCKS_PILE_CLIMB)
@@ -710,6 +615,8 @@ on_world_init {
         if (!player.hasAgility(62, "You need level 62 agility in order to contort your body through this crack.")) return@shortcut
         obstacle { target ->
             val direction = if (player.tile.x < 2734) Direction.EAST else Direction.WEST
+            // Void slides onto the crevice from wherever the player stands; the crawl starts in front of it.
+            walkToTile(player, target.tile.add(direction.getOpposite()))
             face(player, direction)
             player.animate(ANIM_CRACK_ENTER)
             exactMove(player, target.tile, direction = direction)
@@ -746,18 +653,6 @@ on_world_init {
      * revision-667 cache and are intentionally left unbound - SOURCE_BLOCKED, no matching object.
      */
 
-    // ---- Falador crumbling wall (2009scape CrumblingWallShortcut, obj 11844) ----
-    shortcut(11844, "Climb-over") {
-        if (!player.hasAgility(5, "You need an Agility level of 5 to climb over this wall.")) return@shortcut
-        obstacle {
-            val east = player.tile.x >= 2936
-            val dest = if (east) Tile(2934, 3355) else Tile(2936, 3355)
-            player.animate(ANIM_ROCKS_PILE_CLIMB)
-            exactMove(player, dest, delay = 40, direction = if (east) Direction.WEST else Direction.EAST)
-            player.addXp(Skills.AGILITY, 0.5)
-        }
-    }
-
     // ---- Yanille Dungeon pipe (2009scape PipeShortcut, obj 2290) ----
     shortcut(2290, "Squeeze-through") {
         if (!player.hasAgility(49, "You need an Agility level of 49 to squeeze through the pipe.")) return@shortcut
@@ -770,18 +665,21 @@ on_world_init {
         }
     }
 
-    // ---- Barbarian Outpost obstacle pipe (2009scape PipeShortcut, obj 20210; not part of the course) ----
+    // ---- Barbarian Outpost entrance pipe (Void BarbarianOutpost.kt: start (2552,3561) / (2552,3558), walk there, face, climb
+    // through to the other end in 60 cycles; requirement 35 with the standard message; no xp in Void). The 2009scape port landed on
+    // 3562 / 3556 and refused anyone not already on x 2552.
     shortcut(20210, "Squeeze-through") {
-        if (player.tile.x != 2552) {
-            player.message("I can't get into this pipe at that angle.")
-            return@shortcut
-        }
-        if (!player.hasAgility(35, "You need an Agility level of 35 to squeeze through the pipe.")) return@shortcut
-        obstacle {
-            val direction = if (player.tile.z < 3559) Direction.NORTH else Direction.SOUTH
+        if (!player.hasAgility(35)) return@shortcut
+        obstacle { target ->
+            val south = player.tile.z >= 3560
+            val start = Tile(2552, if (south) 3561 else 3558)
+            if (!player.tile.sameAs(start)) {
+                walkToTile(player, start)
+                player.faceTile(target.tile)
+                wait(1)
+            }
             player.animate(ANIM_CLIMB_THROUGH_PIPE)
-            exactMove(player, Tile(2552, 3559 + direction.getDeltaZ() * 3), delay = 90, direction = direction)
-            player.addXp(Skills.AGILITY, 10.0)
+            exactMove(player, Tile(2552, if (south) 3558 else 3561), delay = 60, direction = if (south) Direction.SOUTH else Direction.NORTH)
         }
     }
 
@@ -806,7 +704,7 @@ on_world_init {
                 val dest = if (north) Tile(2722, 3596) else Tile(2722, 3592)
                 player.filterableMessage("You walk carefully across the slippery log...")
                 player.setRenderAnimation(RENDER_ROPE_BALANCE)
-                walkOverTile(player, dest)
+                walkOverTile(player, dest, Render.ROPE_BALANCE)
                 player.resetRenderAnimation()
                 player.addXp(Skills.AGILITY, 4.0)
                 player.filterableMessage("... and make it safely to the other side.")
@@ -827,71 +725,71 @@ on_world_init {
                 val dest = if (player.tile.getDistance(a) < player.tile.getDistance(b)) b else a
                 player.filterableMessage("You carefully cross the log.")
                 player.setRenderAnimation(RENDER_ROPE_BALANCE)
-                walkOverTile(player, dest)
+                walkOverTile(player, dest, Render.ROPE_BALANCE)
                 player.resetRenderAnimation()
                 player.addXp(Skills.AGILITY, 1.0)
             }
         }
     }
 
-    // ---- Arandar (Elven Overpass) rock climbs, three tiers (2009scape RockClimbShortcut, obj 9296/9297) ----
+    // ---- Rock pairs over one cliff band (shared climbPair: from the tile behind the clicked rock to the tile behind its partner,
+    // down / up / level by this map's terrain heights). The 2009scape ports slid from wherever the player stood onto the partner
+    // rock's own tile (a blocked tile - conform traversal 2026-10-03 "landed in a pocket" on every one).
+    // Arandar (Elven Overpass), three tiers: levels 59 / 85 / 68 (OSRS Wiki), no xp in any source.
     val arandarTiers =
         listOf(
-            Triple(59, Tile(2346, 3299), Tile(2344, 3295)),
+            Triple(59, Tile(2333, 3252), Tile(2337, 3253)),
             Triple(85, Tile(2338, 3282), Tile(2338, 3285)),
-            Triple(68, Tile(2333, 3252), Tile(2337, 3253)),
+            Triple(68, Tile(2346, 3299), Tile(2344, 3295)),
         )
     listOf(9296, 9297).forEach { id ->
         shortcut(id, "Climb") {
-            obstacle { target ->
-                val tier = arandarTiers.firstOrNull { (_, a, b) -> target.tile == a || target.tile == b } ?: return@obstacle
-                val (level, from, to) = tier
-                if (!player.hasAgility(level, "You need an Agility level of at least $level to do this.")) return@obstacle
-                val dest = if (target.tile == from) to else from
-                val direction = Direction.between(player.tile, dest)
-                player.animate(if (id == 9296) ANIM_HUMAN_CLIMBING_DOWN else ANIM_ROCKS_CLIMB_DOWN)
-                exactMove(player, dest, direction = direction)
-            }
+            val clicked = player.getInteractingGameObj()
+            val tier = arandarTiers.firstOrNull { (_, a, b) -> clicked.tile.sameAs(a) || clicked.tile.sameAs(b) } ?: return@shortcut
+            val (level, a, b) = tier
+            if (!player.hasAgility(level, "You need an Agility level of at least $level to do this.")) return@shortcut
+            obstacle { target -> climbPair(player, target, if (target.tile.sameAs(a)) b else a, if (id == 9296) ANIM_HUMAN_CLIMBING_DOWN else ANIM_ROCKS_CLIMB_DOWN) }
         }
     }
 
-    // ---- Eagles' Peak rocks (2009scape RockClimbShortcut, obj 19849) ----
+    // ---- Eagles' Peak rocks 19849 (Void EaglesEyries.kt): the lower rock (2322,3501) climbs up to (2324,3497) - rocks_climb 4435
+    // (delay 15), a 250-cycle slide south, human_walk_forward 819; the two upper rocks climb back down to (2322,3502) -
+    // human_walk_backwards 820 (delay 7), a 240-cycle slide, rocks_climb_down 740 (delay 7); 1 xp either way (terrain: 2322,3502
+    // h -344, 2324,3497 h -1224 = higher). Added: the walk to the tile in front first.
     shortcut(19849, "Climb") {
-        if (!player.hasAgility(25, "You need an Agility level of at least 25 to do this.")) return@shortcut
-        obstacle {
-            val west = player.tile.x <= 2322
-            val dest = if (west) Tile(2324, 3497) else Tile(2322, 3502)
-            player.animate(if (west) ANIM_ROCKS_CLIMB_DOWN else ANIM_HUMAN_CLIMBING_DOWN)
-            exactMove(player, dest, direction = Direction.SOUTH)
+        if (!player.hasAgility(25, "You must have an Agility level of at least 25 to climb these rocks.")) return@shortcut
+        obstacle { target ->
+            if (target.tile.x == 2322 && target.tile.z == 3501) {
+                walkToTile(player, Tile(2322, 3502))
+                face(player, Direction.SOUTH)
+                player.animate(4435, delay = 15)
+                exactMove(player, Tile(2324, 3497), delay = 250, direction = Direction.SOUTH)
+                player.animate(819)
+                wait(1)
+            } else {
+                walkToTile(player, Tile(2324, 3497))
+                face(player, Direction.SOUTH)
+                player.animate(820, delay = 7)
+                exactMove(player, Tile(2322, 3502), delay = 240, direction = Direction.SOUTH)
+                player.animate(ANIM_ROCKS_CLIMB_DOWN, delay = 7)
+                wait(1)
+            }
+            player.animate(-1)
+            player.addXp(Skills.AGILITY, 1.0)
         }
     }
 
-    // ---- God Wars Dungeon rocky handholds, separate from the entrance boulder/crack (2009scape
-    // RockClimbShortcut, obj 26323/26324/26327/26328) ----
-    listOf(
-        26327 to Tile(2942, 3768),
-        26328 to Tile(2950, 3767),
-        26324 to Tile(2928, 3757),
-        26323 to Tile(2927, 3761),
-    ).forEach { (id, dest) ->
+    // ---- God Wars Dungeon rocky handholds, two pairs on the way in (level 60, no xp in any source).
+    listOf(26327 to Tile(2943, 3768), 26328 to Tile(2949, 3767), 26324 to Tile(2928, 3758), 26323 to Tile(2927, 3760)).forEach { (id, partner) ->
         shortcut(id, "Climb") {
             if (!player.hasAgility(60, "You need an Agility level of at least 60 to do this.")) return@shortcut
-            obstacle {
-                val direction = Direction.between(player.tile, dest)
-                player.animate(ANIM_ROCKS_CLIMB_DOWN)
-                exactMove(player, dest, direction = direction)
-            }
+            obstacle { target -> climbPair(player, target, partner, ANIM_ROCKS_CLIMB_DOWN) }
         }
     }
 
-    // ---- Low-level, no-requirement rocks (2009scape RockClimbShortcut base level 1, obj 2231/9335/9336) ----
+    // ---- Karamja rocks 2231, three lanes of two rocks (2792,z) / (2794,z), no requirement.
     shortcut(2231, "Climb") {
-        obstacle {
-            val west = player.tile.x <= 2791
-            val dest = if (west) Tile(2794, player.tile.z) else Tile(2792, player.tile.z)
-            player.animate(if (west) ANIM_ROCKS_CLIMB_DOWN else ANIM_HUMAN_CLIMBING_DOWN)
-            exactMove(player, dest, direction = Direction.between(player.tile, dest))
-        }
+        obstacle { target -> climbPair(player, target, Tile(if (target.tile.x == 2792) 2794 else 2792, target.tile.z), ANIM_ROCKS_CLIMB_DOWN) }
     }
     shortcut(9335, "Climb") {
         obstacle {
@@ -913,41 +811,39 @@ on_world_init {
             val south = player.tile.z >= 9494
             val direction = if (south) Direction.SOUTH else Direction.NORTH
             val dest = if (south) Tile(2599, 9489) else Tile(2599, 9494)
+            // The 2009scape failure fell to (2599,9564) - a 70-tile slide out of the bars' cave; no donor has a failure here
+            // (Void/Novite none), so the crossing always succeeds (SOURCE_BLOCKED: failure rate and landing, 2026-10-03).
+            walkToTile(player, Tile(2599, if (south) 9494 else 9489))
+            face(player, direction)
             player.animate(Anims.AGIL_JUMP_UP_BARS)
-            // 2009scape AgilityHandler.hasFailed(level=57, failChance=0.01): rate falls to ~0 once the
-            // player's level clears 57 by more than a couple of levels, so this is a low, level-scaled chance.
-            val levelDiff = (player.skills.getCurrentLevel(Skills.AGILITY) - 57).coerceAtMost(69)
-            val failed = levelDiff <= 69 && (1 + levelDiff) * 0.01 * ThreadLocalRandom.current().nextDouble() <= 0.01 * ThreadLocalRandom.current().nextDouble()
-            if (failed) {
-                player.animate(Anims.AGIL_SWING_BARS)
-                exactMove(player, player.tile.add(direction), direction = direction)
-                player.animate(768)
-                player.hit(ThreadLocalRandom.current().nextInt(1, 4))
-                exactMove(player, Tile(2599, 9564), delay = 60, direction = direction)
-            } else {
-                player.animate(Anims.AGIL_SWING_BARS)
-                exactMove(player, dest, delay = 150, direction = direction, startDelay = 30)
-                player.addXp(Skills.AGILITY, 20.0)
-            }
+            wait(1)
+            player.animate(Anims.AGIL_SWING_BARS)
+            exactMove(player, dest, delay = 150, direction = direction, startDelay = 30)
+            player.addXp(Skills.AGILITY, 20.0)
         }
     }
 
-    // ---- Wilderness ditch (border crossing, no level/xp - Void WildernessWall.kt, obj 1440-1444) ----
-    // Not an agility-skill obstacle, but was entirely unbound: every "Cross" click on the border ditch
-    // around the whole wilderness did nothing, so this is the shared root cause for "can't cross into
-    // the wilderness here" reports at any of the five wall variants.
+    // ---- Wilderness ditch (Void WildernessWall.kt, obj 1440-1444; Novite ObjectHandler 439-452) ----
+    // Void: wild_ditch_jump 6132 and a 60-cycle slide to the far side of the 3x2 segment (wall.y + 2 / wall.y - 1; the vertical
+    // segment at 2996,3531 across x). The far side is the wall's, never "three tiles from wherever the player stands" (the old
+    // objs/wilderness_wall handler, which shadowed this one until 2026-10-03 and slid along or into the ditch from a segment's end).
+    // Added on top of Void: the walk to the tile right in front of the segment first (owner priority #1, a slide never starts from an
+    // arbitrary tile) - Deadman escapes and pursuits cross here all the time.
     (1440..1444).forEach { id ->
         shortcut(id, "Cross") {
             obstacle { target ->
-                if (id == 1440 && target.tile.x == 2996 && target.tile.z == 3531) {
-                    val direction = if (player.tile.x < target.tile.x) Direction.EAST else Direction.WEST
-                    player.animate(6132)
-                    exactMove(player, Tile(target.tile.x + if (direction == Direction.EAST) 2 else -1, player.tile.z), delay = 60, direction = direction)
+                val crossing = shortAxisCrossing(world, target, player.tile)
+                if (crossing == null) {
+                    gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.PLUGIN) {
+                        "ditch ${target.id} at ${target.tile.x},${target.tile.z}: no lane from ${player.tile.x},${player.tile.z}"
+                    }
+                    player.message("You can't cross the ditch from here.")
                     return@obstacle
                 }
-                val direction = if (player.tile.z < target.tile.z) Direction.NORTH else Direction.SOUTH
-                player.animate(6132)
-                exactMove(player, Tile(player.tile.x, target.tile.z + if (direction == Direction.NORTH) 2 else -1), delay = 60, direction = direction)
+                walkToTile(player, crossing.start)
+                face(player, crossing.direction)
+                player.animate(ANIM_WILD_DITCH_JUMP)
+                exactMove(player, crossing.landing, delay = 60, direction = crossing.direction)
             }
         }
     }
@@ -962,33 +858,27 @@ on_world_init {
         obstacle { player.moveTo(Tile(3671, 9888, 2)) }
     }
 
-    // ---- Slayer Tower spiked chains, medium (3422,3550, level61) and advanced (3447,3576, level71)
-    // (Void SlayerTower.kt: obj 9319 "Climb-up" always ground->up, obj 9320 "Climb-down" always down) ----
-    shortcut(9319, "Climb-up") {
-        obstacle { target ->
+    // ---- Slayer Tower spiked chains (Void SlayerTower.kt takeOff/land + ObjectTeleports/Stairs.kt: a chain is climbed like a
+    // ladder) - requirement by the chain's tile (3422,3550: 61, else 71), Level.success(level, 90) "unknown success rate", a failed
+    // climb hurts (Void 20 = 2 here) and still climbs, xp 3 / 6; climb_up 828 / climb_down 827, two ticks, then the player's own
+    // tile one floor up / down. Replaces areas/slayertower/spikey_chain.plugin.kts (no roll, no damage, no xp), 2026-10-03.
+    listOf(9319 to "Climb-up", 9320 to "Climb-down").forEach { (id, option) ->
+        shortcut(id, option) {
+            val target = player.getInteractingGameObj()
             val req = if (target.tile.x == 3422 && target.tile.z == 3550) 61 else 71
-            if (!player.hasAgility(req, "You need an Agility level of $req to negotiate this obstacle.")) return@obstacle
-            // Void: Level.success(level, 90) - "Unknown success rate", flat 90/256 regardless of level.
-            val success = agilitySuccess(player, 90, 90)
-            if (!success) {
-                player.hit(2) // Void SlayerTower damage = 20 in x10 life points (ROOT_CAUSES #72)
-                player.filterableMessage("You rip your hands to pieces on the chain as you climb.")
+            if (!player.hasAgility(req, "You need an Agility level of $req to negotiate this obstacle.")) return@shortcut
+            obstacle {
+                val up = id == 9319
+                val success = agilitySuccessUntil(player, 90)
+                if (!success) {
+                    player.hit(2)
+                    player.filterableMessage("You rip your hands to pieces on the chain as you climb.")
+                }
+                player.animate(if (up) 828 else 827)
+                wait(2)
+                player.moveTo(Tile(player.tile.x, player.tile.z, player.tile.height + if (up) 1 else -1))
+                player.addXp(Skills.AGILITY, if (success) 3.0 else 6.0)
             }
-            player.moveTo(Tile(target.tile.x, target.tile.z, target.tile.height + 1))
-            player.addXp(Skills.AGILITY, if (success) 3.0 else 6.0)
-        }
-    }
-    shortcut(9320, "Climb-down") {
-        obstacle { target ->
-            val req = if (target.tile.x == 3422 && target.tile.z == 3550) 61 else 71
-            if (!player.hasAgility(req, "You need an Agility level of $req to negotiate this obstacle.")) return@obstacle
-            val success = agilitySuccess(player, 90, 90)
-            if (!success) {
-                player.hit(2) // Void SlayerTower damage = 20 in x10 life points (ROOT_CAUSES #72)
-                player.filterableMessage("You rip your hands to pieces on the chain as you climb.")
-            }
-            player.moveTo(Tile(target.tile.x, target.tile.z, target.tile.height - 1))
-            player.addXp(Skills.AGILITY, if (success) 3.0 else 6.0)
         }
     }
 
@@ -1003,11 +893,21 @@ on_world_init {
             }
         }
     }
+    // The rockslide (1x5, x 2760, z 3651-3655) closes the gap between the west and east ground (map dump 2026-10-03): it is climbed
+    // across x on the player's own lane, over the rocks only - the 2009scape port slid 3 tiles north / south from the player's tile
+    // along it and landed in the rocks.
     shortcut(5847, "Climb-over") {
-        obstacle {
-            val direction = if (player.tile.z <= 3657) Direction.NORTH else Direction.SOUTH
-            player.animate(ANIM_ROCKS_PILE_CLIMB)
-            exactMove(player, player.tile.add(direction, 3), delay = 90, direction = direction)
+        obstacle { target ->
+            val crossing = shortAxisCrossing(world, target, player.tile)
+            if (crossing == null) {
+                player.message("You can't climb over from here.")
+                return@obstacle
+            }
+            walkToTile(player, crossing.start)
+            face(player, crossing.direction)
+            wait(1)
+            player.animate(ANIM_ROCKS_PILE_CLIMB, delay = 30)
+            exactMove(player, crossing.landing, delay = 94, direction = crossing.direction, startDelay = 30)
             player.addXp(Skills.AGILITY, 1.0)
         }
     }
@@ -1045,73 +945,5 @@ on_world_init {
             }
         }
     }
-
-    // ---- Gnome Stronghold agility course (2009scape GnomeStrongholdCourse.kt) ----
-    // A different, unrelated OSRS location from the "Tree Gnome Stronghold rocks" shortcut already
-    // above and from gnome_agility.plugin.kts's Tree Gnome Village course. No level requirement is
-    // sourced for any of these obstacles - the donor gates none of them, so none is added here.
-    // Trainer NPC dialogue (TRAINERS[0..4] in the donor) is flavour text only and is not ported;
-    // every obstacle's own crossing/xp/animation is sourced and functional without it. Obj
-    // 4058/154 (the pipe obstacle) does not exist with a matching option in this cache and is
-    // skipped, same as every other cache-verified-first shortcut in this file.
-    shortcut(2295, "Walk-across") {
-        obstacle {
-            walkToTile(player, Tile(2474, 3436))
-            player.filterableMessage("You walk carefully across the slippery log...")
-            player.setRenderAnimation(RENDER_ROPE_BALANCE)
-            walkOverTile(player, Tile(2474, 3429))
-            player.resetRenderAnimation()
-            player.addXp(Skills.AGILITY, 7.5)
-            player.filterableMessage("...You make it safely to the other side.")
-        }
-    }
-    shortcut(2285, "Climb-over") {
-        obstacle { target ->
-            player.filterableMessage("You climb the netting...")
-            player.animate(828)
-            exactMove(player, Tile(target.tile.x, target.tile.z - 1, target.tile.height + 1), delay = 60, direction = Direction.NORTH)
-            player.addXp(Skills.AGILITY, 7.5)
-        }
-    }
-    shortcut(35970, "Climb") {
-        obstacle {
-            player.filterableMessage("You climb the tree...")
-            player.animate(828)
-            exactMove(player, Tile(2473, 3420, 2), delay = 60)
-            player.addXp(Skills.AGILITY, 5.0)
-            player.filterableMessage("...To the platform above.")
-        }
-    }
-    shortcut(2312, "Walk-on") {
-        obstacle {
-            player.filterableMessage("You carefully cross the tightrope.")
-            player.setRenderAnimation(RENDER_ROPE_BALANCE)
-            walkOverTile(player, Tile(2483, 3420, 2))
-            player.resetRenderAnimation()
-            player.addXp(Skills.AGILITY, 7.5)
-        }
-    }
-    listOf(2314, 2315).forEach { id ->
-        shortcut(id, "Climb-down") {
-            obstacle {
-                player.filterableMessage("You climb down the tree...")
-                player.animate(828)
-                exactMove(player, Tile(2487, 3420, 0), delay = 60)
-                player.addXp(Skills.AGILITY, 5.0)
-                player.filterableMessage("You land on the ground.")
-            }
-        }
-    }
-    shortcut(2286, "Climb-over") {
-        obstacle {
-            face(player, Direction.SOUTH)
-            player.filterableMessage("You climb the netting...")
-            player.animate(828)
-            exactMove(player, player.tile.add(Direction.SOUTH, 2), delay = 60, direction = Direction.SOUTH)
-            player.addXp(Skills.AGILITY, 7.5)
-        }
-    }
-    shortcut(4059, "Walk-on") {
-        obstacle { player.message("You can't do that from here.") }
-    }
+    // The Gnome Stronghold course lives in gnome_agility.plugin.kts (Void port, 2026-10-03).
 }
