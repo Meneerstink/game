@@ -107,6 +107,7 @@ on_item_on_item(item1 = Items.FANGS_OF_VENENATIS, item2 = Items.CRAWS_BOW_U) {
     player.inventory.remove(Items.FANGS_OF_VENENATIS, 1)
     player.inventory.remove(Items.CRAWS_BOW_U, 1)
     player.inventory.add(Items.WEBWEAVER_BOW_U, 1)
+    gg.rsmod.plugins.content.items.combine.ItemAttachSounds.attached(player, Items.FANGS_OF_VENENATIS, Items.CRAWS_BOW_U)
 }
 
 // Venator bow: ancient essence up to 50,000, Check, Uncharge ("returns all essence").
@@ -184,6 +185,7 @@ on_item_on_item(item1 = Items.TORMENTED_SYNAPSE, item2 = Items.MAGIC_LONGBOW_U) 
     player.inventory.remove(Items.TORMENTED_SYNAPSE, 1)
     player.inventory.remove(Items.MAGIC_LONGBOW_U, 1)
     player.inventory.add(Items.SCORCHING_BOW, 1)
+    gg.rsmod.plugins.content.items.combine.ItemAttachSounds.attached(player, Items.TORMENTED_SYNAPSE, Items.MAGIC_LONGBOW_U)
     val first = player.attr[SCORCHING_BOW_CREATED] != true
     player.attr[SCORCHING_BOW_CREATED] = true
     player.addXp(Skills.FLETCHING, if (first) ScorchingBow.FIRST_EXPERIENCE else ScorchingBow.EXPERIENCE)

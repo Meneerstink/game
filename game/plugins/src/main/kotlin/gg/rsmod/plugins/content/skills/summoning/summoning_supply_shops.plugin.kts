@@ -1,3 +1,4 @@
+import gg.rsmod.plugins.content.skills.summoning.SummoningShopStock
 import gg.rsmod.plugins.content.mechanics.shops.CoinCurrency
 import gg.rsmod.game.model.shop.PurchasePolicy
 
@@ -34,8 +35,32 @@ create_shop("Summoning Supplies", CoinCurrency(), containsSamples = false, purch
     items[9] = ShopItem(Items.SPIRIT_SHARD_PACK, 65000)
 }
 
+// Owner 2026-10-03 (bug 210035): every familiar pouch and every scroll, split into shop windows that fit (SummoningShopStock).
+SummoningShopStock.pages.forEach { page ->
+    create_shop(
+        page.title,
+        CoinCurrency(),
+        stockSize = gg.rsmod.game.model.shop.Shop.CLIENT_VISIBLE_SLOTS,
+        containsSamples = false,
+        purchasePolicy = PurchasePolicy.BUY_NONE,
+    ) {
+        page.stock.forEachIndexed { index, (item, amount) ->
+            val price = SummoningShopStock.price(world.definitions, item)
+            if (price <= 0) gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.ITEM) { "shop '${page.title}' item $item has no price" }
+            items[index] = ShopItem(item, amount, sellPrice = price, resupplyAmount = maxOf(1, amount / 100))
+        }
+    }
+}
+
 on_npc_option(Npcs.PIKKUPSTIX, "trade") {
-    player.openShop("Pikkupstix's Summoning Shop")
+    player.queue {
+        val choices = listOf("Summoning supplies.") + SummoningShopStock.pages.map { it.option }
+        val choice = options(*choices.toTypedArray(), title = "What would you like to buy?")
+        when {
+            choice == 1 -> player.openShop("Pikkupstix's Summoning Shop")
+            choice in 2..choices.size -> player.openShop(SummoningShopStock.pages[choice - 2].title)
+        }
+    }
 }
 
 on_npc_option(Npcs.BOGROG, "trade") {

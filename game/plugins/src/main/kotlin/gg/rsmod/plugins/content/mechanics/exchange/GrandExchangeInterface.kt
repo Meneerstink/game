@@ -106,6 +106,51 @@ object GrandExchangeInterface {
     const val OPCODE_OP1 = 61
     const val OPCODE_OP2 = 64
 
+    /* ---- E6 (owner 2026-10-03): OSRS Grand Exchange buttons the revision-667 screens never had ----
+     * OSRS cache 2686 (pinned, import-source/openrs2-2686) is the source of every label: script 793 builds the GE
+     * screen's "Collect" button with the ops "Collect to inventory" / "Collect to bank" and the index text "Select an
+     * offer slot to set up or view an offer."; script 788 builds the collection box's "Inventory" ("Collect to
+     * inventory") and "Bank" ("Collect to bank") buttons; the History button sits top left of the GE screen (OSRS
+     * Wiki changes, 26 November 2015; its op "History" is script 803). The 667 interfaces have no such components, so the 78 client builds them as
+     * dynamic children of an existing layer with its own script [SCRIPT_RSPS_BUTTON] (RspsGrandExchange.java); a click
+     * arrives as an IF_BUTTON on that layer with the child index as slot. */
+
+    /** The six offer boxes' page (105:17, shown only on the index view: client script 622). */
+    const val INDEX_LAYER = 17
+
+    /** The collection box's frame layer (109:1). */
+    const val COLLECTION_BOX_LAYER = 1
+
+    /** RspsGrandExchange.SCRIPT_BUTTON: (layer, firstChild, x, y, width, height, label, op1, op2) -> background + text child. */
+    const val SCRIPT_RSPS_BUTTON = 40100
+
+    /** Every button is two children: the button sprite at its first index, the clickable label one above. */
+    const val INDEX_HISTORY_FIRST_CHILD = 0
+    const val INDEX_COLLECT_FIRST_CHILD = 2
+    const val BOX_INVENTORY_FIRST_CHILD = 0
+    const val BOX_BANK_FIRST_CHILD = 2
+
+    /** The clickable label child of a button whose first child is [firstChild]. */
+    fun buttonLabelChild(firstChild: Int) = firstChild + 1
+
+    const val INDEX_TEXT = 18
+    const val MSG_INDEX = "Select an offer slot to set up or view an offer."
+    const val OP_COLLECT_INVENTORY = "Collect to inventory"
+    const val OP_COLLECT_BANK = "Collect to bank"
+
+    /** E6 "search history is not remembered": the last item picked in the item search (OSRS Poll 70, 8 April 2020). */
+    val LAST_SEARCH_ATTR = AttributeKey<Int>("ge_last_search")
+
+    /** Side channel to the 78 client (console line, like `__RSPS_HUD__:`): `last|<itemId>` = the previous search, -1 none. */
+    const val CLIENT_PREFIX = "__RSPS_GE__:"
+
+    /** Instruction line of the item search (389:7). OSRS script 3362 once a previous search exists; else the 667 text. */
+    const val SEARCH_TEXT = 7
+    const val MSG_SEARCH_WITH_PREVIOUS =
+        "Start typing the name of an item to search for it. You can press enter to select the last item you searched for."
+    const val MSG_SEARCH_667 =
+        "To search for an item, start by typing part of its name.<br>Then, simply select the item you want from the results on display."
+
     val SELECTION_ATTR = AttributeKey<GeSelection>()
 
     const val MSG_CHOOSE_FIRST = "You must choose an item first."
@@ -323,9 +368,12 @@ object GrandExchangeInterface {
      * PIN protection" on the OSRS Wiki) and Novite's `sendSummary`, the screen asks for the bank PIN first - buy offers
      * now spend banked coins too ([coinSplit]).
      */
-    fun openMain(player: Player) {
+    fun openMain(
+        player: Player,
+        then: ((Player) -> Unit)? = null,
+    ) {
         if (gg.rsmod.plugins.content.inter.bank.BankPin.required(player)) {
-            gg.rsmod.plugins.content.inter.bank.BankPin.request(player) { openMain(it) }
+            gg.rsmod.plugins.content.inter.bank.BankPin.request(player) { openMain(it, then) }
             return
         }
         val service = service(player) ?: return
@@ -338,7 +386,94 @@ object GrandExchangeInterface {
         // the warning could not be dismissed, blocking every sell).
         player.setInterfaceEvents(interfaceId = MAIN, component = WARNING_DISMISS, range = -1..-1, setting = 2)
         hideGuidePriceWarning(player)
+        sendIndexButtons(player)
         refreshAll(player, service)
+        then?.invoke(player)
+    }
+
+    /** The one place both OSRS buttons of the offer-box page are laid out (layer 105:17 is 512 x 334, boxes from y 80). */
+    data class RspsButton(
+        val layer: Int,
+        val firstChild: Int,
+        val x: Int,
+        val y: Int,
+        val width: Int,
+        val height: Int,
+        val label: String,
+        val op1: String,
+        val op2: String = "",
+    ) {
+        /** IF_SETEVENTS bits of the label child: op1 = 2, op2 = 4. */
+        val events: Int get() = 2 or (if (op2.isNotEmpty()) 4 else 0)
+
+        fun args(): Array<Any> = arrayOf(layer, firstChild, x, y, width, height, label, op1, op2)
+    }
+
+    /** OSRS: History top left, Collect top right of the offer-box page, either side of the index line (105:18, y 60). */
+    val INDEX_BUTTONS =
+        listOf(
+            RspsButton((MAIN shl 16) or INDEX_LAYER, INDEX_HISTORY_FIRST_CHILD, 30, 55, 70, 22, "History", "History"),
+            RspsButton((MAIN shl 16) or INDEX_LAYER, INDEX_COLLECT_FIRST_CHILD, 412, 55, 70, 22, "Collect", OP_COLLECT_INVENTORY, OP_COLLECT_BANK),
+        )
+
+    /** OSRS collection box: "Inventory" and "Bank" top right of the frame (109:1 is 366 wide; close button at its right). */
+    val COLLECTION_BOX_BUTTONS =
+        listOf(
+            RspsButton((COLLECTION_BOX shl 16) or COLLECTION_BOX_LAYER, BOX_INVENTORY_FIRST_CHILD, 234, 6, 60, 20, "Inventory", OP_COLLECT_INVENTORY),
+            RspsButton((COLLECTION_BOX shl 16) or COLLECTION_BOX_LAYER, BOX_BANK_FIRST_CHILD, 298, 6, 40, 20, "Bank", OP_COLLECT_BANK),
+        )
+
+    fun sendButtons(
+        player: Player,
+        buttons: List<RspsButton>,
+    ) {
+        buttons.forEach { button ->
+            player.runClientScript(SCRIPT_RSPS_BUTTON, *button.args())
+            val label = buttonLabelChild(button.firstChild)
+            player.setInterfaceEvents(interfaceId = button.layer shr 16, component = button.layer and 0xFFFF, range = label..label, setting = button.events)
+        }
+    }
+
+    fun sendIndexButtons(player: Player) {
+        player.setComponentText(MAIN, INDEX_TEXT, MSG_INDEX)
+        sendButtons(player, INDEX_BUTTONS)
+        // OSRS Wiki (Grand Exchange, trivia): right-click the quantity "..." button, "All" = buy all that you can afford.
+        player.runClientScript(SCRIPT_RSPS_SET_OP, (MAIN shl 16) or EDIT_QUANTITY, 2, OP_ALL)
+        player.setInterfaceEvents(interfaceId = MAIN, component = EDIT_QUANTITY, range = -1..-1, setting = 2 or 4)
+    }
+
+    /** RspsGrandExchange.SCRIPT_SET_OP: (component, op index, text) on a static component. */
+    const val SCRIPT_RSPS_SET_OP = 40104
+    const val OP_ALL = "All"
+
+    /** The quantity "All" sets: a buy offer as many as the inventory and bank coins pay for at the offer price, a sell offer everything owned. */
+    fun allQuantity(
+        selection: GeSelection,
+        carriedCoins: Int,
+        bankedCoins: Int,
+        owned: Int,
+    ): Int {
+        if (selection.type == OfferType.SELL) return owned.coerceAtLeast(0)
+        if (selection.price < 1) return 0
+        val coins = carriedCoins.coerceAtLeast(0).toLong() + bankedCoins.coerceAtLeast(0).toLong()
+        return minOf(coins / selection.price, Int.MAX_VALUE.toLong()).toInt()
+    }
+
+    /** E6: the GE screen's History button / a history row's Buy-offer, both lead here or to [collectAll]. */
+    fun lastSearch(player: Player): Int = (player.attr[LAST_SEARCH_ATTR] as Number?)?.toInt() ?: -1
+
+    fun rememberSearch(
+        player: Player,
+        itemId: Int,
+    ) {
+        player.attr[LAST_SEARCH_ATTR] = itemId
+    }
+
+    /** Tells the 78 client which item the search offers as "Previous search:" (and Enter on an empty search picks). */
+    fun sendPreviousSearch(player: Player) {
+        val last = lastSearch(player)
+        player.write(gg.rsmod.game.message.impl.MessageGameMessage(type = 99, message = "${CLIENT_PREFIX}last|$last", username = null))
+        player.setComponentText(ITEM_SEARCH, SEARCH_TEXT, if (last != -1) MSG_SEARCH_WITH_PREVIOUS else MSG_SEARCH_667)
     }
 
     fun beginBuy(
@@ -356,6 +491,8 @@ object GrandExchangeInterface {
 
     fun openItemSearch(player: Player) {
         player.openInterface(parent = 752, child = 7, interfaceId = ITEM_SEARCH, type = 1)
+        // E6: the previous search first, so the client's empty-search view (script 576) already shows it.
+        sendPreviousSearch(player)
         player.runClientScript(SCRIPT_ITEM_SEARCH, "Grand Exchange Item Search")
     }
 
@@ -375,25 +512,25 @@ object GrandExchangeInterface {
         player.sendItemContainer(INVENTORY_INTERFACE_KEY, player.inventory)
     }
 
-    /** Picks [itemId] for the current buy/sell selection (item search result or sell-inventory click). */
+    /** Picks [itemId] for the current buy/sell selection (item search result or sell-inventory click); false when refused. */
     fun select(
         player: Player,
         itemId: Int,
         quantity: Int = 1,
-    ) {
-        val service = service(player) ?: return
-        val selection = player.attr[SELECTION_ATTR] ?: return
-        val def = player.world.definitions.getNullable(ItemDef::class.java, itemId) ?: return
-        val real = player.world.definitions.getNullable(ItemDef::class.java, unnoted(def)) ?: return
+    ): Boolean {
+        val service = service(player) ?: return false
+        val selection = player.attr[SELECTION_ATTR] ?: return false
+        val def = player.world.definitions.getNullable(ItemDef::class.java, itemId) ?: return false
+        val real = player.world.definitions.getNullable(ItemDef::class.java, unnoted(def)) ?: return false
         if (!exchangeable(real)) {
             player.playSound(GrandExchangeSounds.TRADE_ERROR)
             player.message(MSG_NOT_TRADEABLE)
-            return
+            return false
         }
         if (selection.type == OfferType.SELL && ownedCount(player, real.id) <= 0) {
             player.playSound(GrandExchangeSounds.TRADE_ERROR)
             player.message(MSG_HOLDS_STATE)
-            return
+            return false
         }
         selection.itemId = real.id
         selection.guide = service.guidePrice(real.id, OsrsGuidePrices.seed(real))
@@ -402,6 +539,25 @@ object GrandExchangeInterface {
         selection.quantity = if (selection.type == OfferType.SELL) quantity.coerceIn(1, ownedCount(player, real.id).coerceAtLeast(1)) else 1
         sendSelection(player, selection)
         sendExamine(player, real.id)
+        return true
+    }
+
+    /**
+     * E6: a history row's "Buy-offer" (OSRS Wiki changes, 25 August 2016: "Buy offers can now be created from the Grand
+     * Exchange history menu"; op label from OSRS script 1645): the GE screen opens on a buy offer for [itemId] in the
+     * first free offer box, at its guide price. False when every box is taken (the offer boxes stay in view).
+     */
+    fun buyOffer(
+        player: Player,
+        itemId: Int,
+    ) = openMain(player) { opened ->
+        val service = service(opened) ?: return@openMain
+        val slot = (0 until GrandExchangeService.SLOTS).firstOrNull { service.offerInSlot(username(opened), it) == null } ?: return@openMain
+        opened.attr[SELECTION_ATTR] = GeSelection(slot, OfferType.BUY)
+        if (!select(opened, itemId)) {
+            opened.attr.remove(SELECTION_ATTR)
+            resetConfigs(opened)
+        }
     }
 
     fun ownedCount(
@@ -674,6 +830,101 @@ object GrandExchangeInterface {
         return added > 0
     }
 
+    /**
+     * E6 (owner 2026-10-03 "there is no collect button like osrs"): the GE screen's Collect button and the collection
+     * box's Inventory / Bank buttons (OSRS scripts 793 / 788). Everything every offer box owes goes to the inventory
+     * (a stack of more than one item as notes, as the left-click collect, [collectedId]) or to the bank (the item
+     * itself); what does not fit stays in its box, so nothing is ever lost. Returns how many offer parts moved.
+     */
+    fun collectAll(
+        player: Player,
+        toBank: Boolean,
+    ): Int {
+        val service = service(player) ?: return 0
+        val username = username(player)
+        var movedItems = 0
+        var movedCoins = 0
+        var blocked = false
+        for (slot in 0 until GrandExchangeService.SLOTS) {
+            val offer = service.offerInSlot(username, slot) ?: continue
+            for (coins in listOf(false, true)) {
+                val owed = service.takePart(username, offer.id, coins)
+                if (owed <= 0) continue
+                val itemId = if (coins) Items.COINS_995 else offer.itemId
+                val amount = minOf(owed, Int.MAX_VALUE.toLong()).toInt()
+                val added =
+                    if (toBank) {
+                        addToBank(player, itemId, amount)
+                    } else {
+                        val deliverId = if (coins) itemId else collectedId(player.world.definitions.get(ItemDef::class.java, itemId), amount, op1 = true)
+                        player.inventory.add(deliverId, amount, assureFullInsertion = false).completed
+                    }
+                val leftover = owed - added
+                if (leftover > 0) {
+                    service.restoreCollectable(offer.id, if (coins) leftover else 0, if (coins) 0 else leftover.toInt())
+                    blocked = true
+                }
+                if (added > 0) {
+                    if (coins) movedCoins++ else movedItems++
+                }
+            }
+            service.releaseIfDrained(username, offer.id)
+            refresh(player, service, slot)
+            player.sendItemContainer(collectContainerKey(slot), collectItems(player.world.definitions, service.offerInSlot(username, slot)))
+        }
+        if (blocked) player.message(if (toBank) gg.rsmod.plugins.content.inter.bank.Bank.BANK_FULL_MESSAGE else MSG_NO_SPACE)
+        // 2009scape collect sounds, as [collect]: items before coins; GE_TRADE_ERROR when something owed did not fit at all.
+        when {
+            movedItems > 0 -> player.playSound(GrandExchangeSounds.COLLECT_ITEMS)
+            movedCoins > 0 -> player.playSound(GrandExchangeSounds.COLLECT_COINS)
+            blocked -> player.playSound(GrandExchangeSounds.TRADE_ERROR)
+        }
+        val moved = movedItems + movedCoins
+        if (moved > 0) player.persistNow()
+        return moved
+    }
+
+    /**
+     * "Collect to bank": [amount] of unnoted [itemId] into the bank; returns how many went in. A bank placeholder of the
+     * item (OSRS bank placeholders, Bank.determineDepositSlot) is filled in place, so the item lands in its own tab and
+     * slot instead of a second stack at the end of the bank.
+     */
+    fun addToBank(
+        player: Player,
+        itemId: Int,
+        amount: Int,
+    ): Int {
+        if (amount <= 0) return 0
+        val bank = player.bank
+        val def = player.world.definitions.getNullable(ItemDef::class.java, itemId)
+        if (def != null && def.placeholderLink > 0 && bank.getItemCount(itemId) == 0) {
+            val placeholder = bank.indexOfFirst { it?.id == def.placeholderLink && it.amount == 0 }
+            if (placeholder >= 0) {
+                bank[placeholder] = gg.rsmod.game.model.item.Item(itemId, amount)
+                return amount
+            }
+        }
+        return bank.add(itemId, amount, assureFullInsertion = false).completed
+    }
+
+    /** A click on one of the 78 client's GE buttons ([INDEX_BUTTONS], [COLLECTION_BOX_BUTTONS]); false when [child] is none. */
+    fun pressButton(
+        player: Player,
+        buttons: List<RspsButton>,
+        child: Int,
+        op2: Boolean,
+    ): Boolean {
+        val button = buttons.firstOrNull { buttonLabelChild(it.firstChild) == child } ?: return false
+        val op = if (op2) button.op2 else button.op1
+        when (op) {
+            OP_COLLECT_INVENTORY -> collectAll(player, toBank = false)
+            OP_COLLECT_BANK -> collectAll(player, toBank = true)
+            "History" -> GrandExchangeHistory.open(player)
+            else -> return false
+        }
+        return true
+    }
+
     fun back(player: Player) {
         player.attr.remove(SELECTION_ATTR)
         resetConfigs(player)
@@ -693,6 +944,7 @@ object GrandExchangeInterface {
         val service = service(player) ?: return
         resumeHeld(player, service)
         player.openInterface(COLLECTION_BOX, InterfaceDestination.MAIN_SCREEN)
+        sendButtons(player, COLLECTION_BOX_BUTTONS)
         for (slot in 0 until GrandExchangeService.SLOTS) {
             refresh(player, service, slot)
             player.sendItemContainer(collectContainerKey(slot), collectItems(player.world.definitions, service.offerInSlot(username(player), slot)))

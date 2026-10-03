@@ -4,9 +4,10 @@ import com.displee.cache.CacheLibrary
 
 /**
  * Gives the plain max cape (667 item 20767) the OSRS menus (owner 2026-09-24, OSRS Wiki "Max cape": inventory "Wear, Teleports,
- * Spellbook, Features, Drop"; worn "Home, Crafting Guild, Guild Teleports, Skilling Areas, POH Portals, Spellbook, Features").
- * The 667 inventory menu has five slots with the wear option in slot 2 (opcode 36) and Drop in slot 5, so the inventory order is
- * Teleports, Wear, Spellbook, Features, Drop. Worn options are the rev-667 string params 528.. (server `ItemDef.equipmentMenu`).
+ * Spellbook, Features, Drop"; worn "Home, Crafting Guild, Guild Teleports, Skilling Areas, POH Portals, Spellbook, Features"),
+ * without "Spellbook" since owner buglist E2 (2026-10-03). The 667 inventory menu has five slots with the wear option in slot 2
+ * (opcode 36) and Drop in slot 5, so the inventory order is Teleports, Wear, Features, (empty), Drop. Worn options are the
+ * rev-667 string params 528.. (server `ItemDef.equipmentMenu`).
  * Handlers: `max_cape_options.plugin.kts`.
  *
  * Usage: `java -cp <game lib> gg.rsmod.game.tools.importer.MaxCapeMenuTool plan|apply`
@@ -17,9 +18,18 @@ object MaxCapeMenuTool {
     private const val INDEX_ITEMS = 19
     const val MAX_CAPE = 20767
 
-    val INVENTORY = mapOf(35 to "Teleports", 36 to "Wear", 37 to "Spellbook", 38 to "Features")
+    /*
+     * Owner 2026-10-03 (buglist E2): "Normale max cape heeft een 'Spellbook swap' optie - hoort daar niet." The OSRS Wiki infobox
+     * does list "Spellbook" (inventory and worn); the owner's decision overrides it for this server, so the plain max cape keeps
+     * every other OSRS option and loses "Spellbook" in both menus (inventory slot 4 / opcode 38 is dropped, Drop stays slot 5).
+     */
+    val INVENTORY = mapOf(35 to "Teleports", 36 to "Wear", 37 to "Features")
+
+    /** Inventory option opcodes the plain max cape no longer carries (owner E2: the old slot-4 option). */
+    val REMOVED_INVENTORY_OPCODES = setOf(38)
+
     val WORN =
-        listOf("Home", "Crafting Guild", "Guild Teleports", "Skilling Areas", "POH Portals", "Spellbook", "Features")
+        listOf("Home", "Crafting Guild", "Guild Teleports", "Skilling Areas", "POH Portals", "Features")
             .mapIndexed { i, option -> 528 + i to option }.toMap()
 
     @JvmStatic
@@ -31,7 +41,14 @@ object MaxCapeMenuTool {
         val edited: ByteArray
         try {
             bytes = library.data(INDEX_ITEMS, MAX_CAPE ushr 8, MAX_CAPE and 0xFF) ?: error("item $MAX_CAPE missing")
-            edited = ItemDefCodec.cloneWithOverrides(bytes, INVENTORY, removedParamIds = (528..535).toSet(), stringParams = WORN)
+            edited =
+                ItemDefCodec.cloneWithOverrides(
+                    bytes,
+                    INVENTORY,
+                    removedOpcodes = REMOVED_INVENTORY_OPCODES,
+                    removedParamIds = (528..535).toSet(),
+                    stringParams = WORN,
+                )
         } finally {
             library.close()
         }

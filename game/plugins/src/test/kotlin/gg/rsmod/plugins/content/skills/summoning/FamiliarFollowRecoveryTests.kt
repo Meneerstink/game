@@ -40,7 +40,9 @@ class FamiliarFollowRecoveryTests {
     }
 
     @Test
-    fun `automatic recovery has a generic spawn cue for every familiar`() {
+    // The automatic follow recovery itself is silent (FamiliarPathingTests "an automatic recovery teleport plays no sound"); the
+    // generic cue belongs to the player's own summon and Call.
+    fun `summon and call have a generic arrival cue for every familiar`() {
         SummoningPouchData.values.forEach { data ->
             val cues = Familiar.arrivalSoundIds(data)
             assertTrue(cues.isNotEmpty(), "${data.name} has no recovery-arrival sound")

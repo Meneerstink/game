@@ -62,10 +62,20 @@ NpcAttacks.condition("no_protect_range") { _, target -> !target.isProtectedFrom(
 NpcAttacks.condition("target_protect_magic") { _, target -> target is Player && target.isProtectedFrom(CombatClass.MAGIC) }
 
 // Void Wizards.kt: Spell.canDrain, on the rule shared with player casts (Ahrim, dark wizards, chaos druids, skeleton mages)
-NpcAttacks.condition("not_confused") { _, target -> StatDrainRule.canDrain(target, CombatSpell.CONFUSE) }
-NpcAttacks.condition("not_weakened") { _, target -> StatDrainRule.canDrain(target, CombatSpell.WEAKEN) }
-NpcAttacks.condition("not_cursed") { _, target -> StatDrainRule.canDrain(target, CombatSpell.CURSE) }
-NpcAttacks.condition("not_vulnerable") { _, target -> StatDrainRule.canDrain(target, CombatSpell.VULNERABILITY) }
+// OSRS Wiki Confuse: "can only be cast if an opponent's stats haven't already been lowered" - also not while an earlier npc drain
+// still holds the stat under the level it had (a boosted player never drops under his base level; NpcAttacks.stillLowered).
+fun npcMayCurse(
+    target: Pawn,
+    spell: CombatSpell,
+): Boolean {
+    val skill = (spell.effect as? gg.rsmod.plugins.content.combat.strategy.magic.SpellEffect.StatDrain)?.skill ?: return false
+    return StatDrainRule.canDrain(target, spell) && !NpcAttacks.stillLowered(target, skill)
+}
+
+NpcAttacks.condition("not_confused") { _, target -> npcMayCurse(target, CombatSpell.CONFUSE) }
+NpcAttacks.condition("not_weakened") { _, target -> npcMayCurse(target, CombatSpell.WEAKEN) }
+NpcAttacks.condition("not_cursed") { _, target -> npcMayCurse(target, CombatSpell.CURSE) }
+NpcAttacks.condition("not_vulnerable") { _, target -> npcMayCurse(target, CombatSpell.VULNERABILITY) }
 NpcAttacks.condition("not_frozen") { _, target -> !target.timers.has(FROZEN_TIMER) && !target.timers.has(FREEZE_IMMUNITY_TIMER) }
 
 // Void Catablepon.kt: target Strength above 3 + 92% of its level

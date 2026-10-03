@@ -161,6 +161,12 @@ data class Shop(
         const val DEFAULT_STOCK_SIZE = 40
 
         /**
+         * The most stock rows the client's shop window (interface 620) can draw: it shows inv 4, whose cache size is 40, and its
+         * build script loops `INV_SIZE(4)` with 40 price varcs (946..985). A row at index 40 or later is never visible.
+         */
+        const val CLIENT_VISIBLE_SLOTS = 40
+
+        /**
          * The default amount of an item that is resupplied per "resupply tick".
          */
         const val DEFAULT_RESUPPLY_AMOUNT = 1

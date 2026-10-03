@@ -293,7 +293,7 @@ object CombatConfigs {
                 pawn.hasWeaponType(WeaponType.WHIP) -> Animations.WHIP.slash.id // OSRS whip 1658, every style
                 pawn.hasWeaponType(WeaponType.SPEAR) ->
                     when (option) {
-                        CombatStyle.SECOND -> Anims.ATTACK_SPEAR_SLASH
+                        CombatStyle.SECOND -> 440 // spear swipe, see CombatAnimation.SPEAR
                         CombatStyle.THIRD -> Anims.ATTACK_SPEAR_CRUSH
                         else -> Anims.ATTACK_SPEAR_STAB
                     }

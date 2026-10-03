@@ -114,6 +114,7 @@ PoweredStaves.TOXIC_UPGRADE.forEach { (trident, toxic) ->
         }
         if (player.inventory.remove(Items.MAGIC_FANG, 1).hasSucceeded() && player.inventory.remove(trident, 1).hasSucceeded()) {
             player.inventory.add(toxic, 1)
+            gg.rsmod.plugins.content.items.combine.ItemAttachSounds.attached(player, Items.MAGIC_FANG, trident)
         }
     }
     if (hasOption(toxic, "Dismantle")) {

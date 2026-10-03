@@ -279,7 +279,8 @@ on_world_init {
     brimhavenLog(5090, 2682)
 
     // ---- Stepping stones (Void SteppingStones) ----
-    shortcut(5948, "Jump-across") {
+    // Stone in water, start tiles 2 tiles away: the click acts from there (batch 16: "I can't reach that!").
+    shortcut(5948, "Jump-across", lineOfSightDistance = 2) {
         obstacle { target ->
             val direction = if (player.tile.x > target.tile.x) Direction.WEST else Direction.EAST
             val start = if (direction == Direction.WEST) Tile(3208, 9572) else Tile(3204, 9572)
@@ -344,7 +345,8 @@ on_world_init {
         }
     }
 
-    shortcut(10536, "Jump-to") {
+    // The stone stands in water: its start tile is 3 tiles away, no route ends beside it ("I can't reach that!", batch 15).
+    shortcut(10536, "Jump-to", lineOfSightDistance = 3) {
         obstacle { target ->
             val direction = if (target.tile.z > player.tile.z) Direction.NORTH else Direction.SOUTH
             walkToTile(player, Tile(target.tile.x, target.tile.z - direction.getDeltaZ() * 3))
@@ -812,18 +814,11 @@ on_world_init {
     shortcut(2231, "Climb") {
         obstacle { target -> climbPair(player, target, Tile(if (target.tile.x == 2792) 2794 else 2792, target.tile.z), ANIM_ROCKS_CLIMB_DOWN) }
     }
-    shortcut(9335, "Climb") {
-        obstacle {
-            player.animate(ANIM_ROCKS_CLIMB_DOWN)
-            exactMove(player, Tile(3425, 3476), direction = Direction.between(player.tile, Tile(3425, 3476)))
-        }
-    }
-    shortcut(9336, "Climb") {
-        obstacle {
-            player.animate(ANIM_HUMAN_CLIMBING_DOWN)
-            exactMove(player, Tile(3426, 3477), direction = Direction.between(player.tile, Tile(3426, 3477)))
-        }
-    }
+    // The two rocks are 9335@3425,3476 and 9336@3426,3477 (placements_667): each slid the player onto a rock's own tile (E17 noclip,
+    // batch 16). The shared rock-pair crossing goes from beside the clicked rock to beside its partner (2009scape lands 3427,3478 /
+    // 3424,3476 - the ends of the same lane).
+    shortcut(9335, "Climb") { obstacle { target -> climbPair(player, target, Tile(3426, 3477), ANIM_ROCKS_CLIMB_DOWN) } }
+    shortcut(9336, "Climb") { obstacle { target -> climbPair(player, target, Tile(3425, 3476), ANIM_ROCKS_CLIMB_DOWN) } }
 
     // ---- Brimhaven Dungeon monkey bars, red dragons <-> black demons (2009scape MonkeyBarShortcut, obj 2321) ----
     shortcut(2321, "Swing across") {

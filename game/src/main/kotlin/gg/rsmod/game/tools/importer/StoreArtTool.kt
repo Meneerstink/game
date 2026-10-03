@@ -36,7 +36,8 @@ import javax.imageio.ImageIO
  * Nothing is taken from another game: the art is drawn from shapes in this file. Sprite ids start at [BASE], the first
  * free sprite group in both caches (probe 2026-09-22: highest group 7940), and are written through [CacheTransaction].
  *
- * Usage: `java -cp <game lib> gg.rsmod.game.tools.importer.StoreArtTool [--apply] [--png=<dir>]`
+ * Usage: `java -cp <game lib> gg.rsmod.game.tools.importer.StoreArtTool [--png=<dir>]` (dry run / preview; the art is written
+ * together with its window by `StoreInterfaceImportTool --apply`)
  */
 object StoreArtTool {
     const val BASE = 7941
@@ -58,32 +59,37 @@ object StoreArtTool {
 
     // ---- geometry shared with StoreInterfaceImportTool ------------------------------------------------------------
 
-    const val WIDTH = 488
-    const val HEIGHT = 330
-    const val TAB_Y = 50
-    const val TAB_WIDTH = 150
+    // Owner 2026-10-03 (bug 210545): "can be a bit bigger like 8 procent bigger visually also make it shows more items on one
+    // page". The window grew from 488x330 to 527x360 (+8% wide, +9% high; the header moved up 4 px to make room), the grid from
+    // 6x5 to 7x6 slots (42 a page instead of 30) and the showcase from 208x120 to 209x138. The owner plays resizable (gameframe
+    // 746); the fixed-mode viewport (512x334) clips the outer frame by a few pixels.
+    const val WIDTH = 527
+    const val HEIGHT = 360
+    const val HEADER_SHIFT = -4
+    const val TAB_Y = 46
+    const val TAB_WIDTH = 162
     const val TAB_HEIGHT = 26
     const val TAB_X = 14
-    const val TAB_PITCH = 155
+    const val TAB_PITCH = 168
     const val STRIP_X = 14
-    const val STRIP_Y = 80
-    const val STRIP_WIDTH = 460
+    const val STRIP_Y = 76
+    const val STRIP_WIDTH = 499
     const val STRIP_HEIGHT = 20
     const val GRID_X = 14
-    const val GRID_Y = 104
-    const val GRID_WIDTH = 244
-    const val GRID_HEIGHT = 194
-    const val SHOW_X = 266
-    const val SHOW_Y = 104
-    const val SHOW_WIDTH = 208
-    const val SHOW_HEIGHT = 120
-    const val CARD_X = 266
-    const val CARD_Y = 228
-    const val CARD_WIDTH = 208
-    const val CARD_HEIGHT = 66
+    const val GRID_Y = 100
+    const val GRID_WIDTH = 282
+    const val GRID_HEIGHT = 230
+    const val SHOW_X = 304
+    const val SHOW_Y = 100
+    const val SHOW_WIDTH = 209
+    const val SHOW_HEIGHT = 138
+    const val CARD_X = 304
+    const val CARD_Y = 242
+    const val CARD_WIDTH = 209
+    const val CARD_HEIGHT = 70
     const val SLOT_SIZE = 36
-    const val BUY_WIDTH = 150
-    const val BUY_HEIGHT = 24
+    const val BUY_WIDTH = 162
+    const val BUY_HEIGHT = 26
     const val ICON_SIZE = 16
     const val ARROW_WIDTH = 18
     const val ARROW_HEIGHT = 28
@@ -345,7 +351,7 @@ object StoreArtTool {
             g.paint = vertical(0.0, h, 0f to t.bgTop, 0.55f to t.bgBottom.brighter(), 1f to t.bgBottom)
             g.fill(body)
             g.clip = body
-            g.paint = RadialGradientPaint(Point2D.Double(w / 2, 20.0), 300f, floatArrayOf(0f, 1f), arrayOf(alpha(t.glow, 0.28), alpha(t.glow, 0.0)))
+            g.paint = RadialGradientPaint(Point2D.Double(w / 2, 20.0), 330f, floatArrayOf(0f, 1f), arrayOf(alpha(t.glow, 0.28), alpha(t.glow, 0.0)))
             g.fill(body)
             g.paint = RadialGradientPaint(
                 Point2D.Double(w / 2, h / 2),
@@ -357,7 +363,7 @@ object StoreArtTool {
             // Faint diagonal light streaks.
             g.composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.05f)
             g.color = Color.WHITE
-            for (i in 0 until 4) {
+            for (i in 0 until 5) {
                 val x0 = 40.0 + i * 120
                 val p = GeneralPath()
                 p.moveTo(x0, 0.0)
@@ -372,9 +378,9 @@ object StoreArtTool {
 
             // Header: emblem, title in engraved gold with a glow, flanking ornaments and a jewelled divider.
             val titleFont = font(21f)
-            val titleShape = textShape(g, t.title, titleFont, w / 2 + 12, 34.0, 0.08f)
+            val titleShape = textShape(g, t.title, titleFont, w / 2 + 12, 34.0 + HEADER_SHIFT, 0.08f)
             val tb = titleShape.bounds2D
-            val emblemShape = emblem(themeIndex, tb.minX - 20, 26.0, 9.0)
+            val emblemShape = emblem(themeIndex, tb.minX - 20, 26.0 + HEADER_SHIFT, 9.0)
             glow(g, titleShape, t.glow, 7, 0.5)
             glow(g, emblemShape, t.glow, 6, 0.55)
             g.color = alpha(Color.BLACK, 0.7)
@@ -398,11 +404,11 @@ object StoreArtTool {
                     arrayOf(alpha(GOLD, 0.95), alpha(GOLD, 0.0)),
                 )
                 g.stroke = BasicStroke(1.4f)
-                g.draw(java.awt.geom.Line2D.Double(start, 27.0, end, 27.0))
+                g.draw(java.awt.geom.Line2D.Double(start, 27.0 + HEADER_SHIFT, end, 27.0 + HEADER_SHIFT))
                 g.stroke = BasicStroke(0.8f)
-                g.draw(java.awt.geom.Line2D.Double(start, 31.0, end + side * -30, 31.0))
-                val d = gem(start, 29.0, 3.2)
-                g.paint = vertical(24.0, 33.0, 0f to t.accentLight, 1f to t.accentDark)
+                g.draw(java.awt.geom.Line2D.Double(start, 31.0 + HEADER_SHIFT, end + side * -30, 31.0 + HEADER_SHIFT))
+                val d = gem(start, 29.0 + HEADER_SHIFT, 3.2)
+                g.paint = vertical(24.0 + HEADER_SHIFT, 33.0 + HEADER_SHIFT, 0f to t.accentLight, 1f to t.accentDark)
                 g.fill(d)
                 g.color = GOLD
                 g.stroke = BasicStroke(0.7f)
@@ -416,9 +422,9 @@ object StoreArtTool {
                 arrayOf(alpha(GOLD, 0.0), GOLD, alpha(GOLD, 0.0)),
             )
             g.stroke = BasicStroke(1.2f)
-            g.draw(java.awt.geom.Line2D.Double(20.0, 45.5, w - 20, 45.5))
-            val centreGem = gem(w / 2, 45.5, 4.5)
-            g.paint = vertical(40.0, 50.0, 0f to t.accentLight, 1f to t.accentDark)
+            g.draw(java.awt.geom.Line2D.Double(20.0, 45.5 + HEADER_SHIFT, w - 20, 45.5 + HEADER_SHIFT))
+            val centreGem = gem(w / 2, 45.5 + HEADER_SHIFT, 4.5)
+            g.paint = vertical(40.0 + HEADER_SHIFT, 50.0 + HEADER_SHIFT, 0f to t.accentLight, 1f to t.accentDark)
             g.fill(centreGem)
             g.color = GOLD_HI
             g.stroke = BasicStroke(0.8f)
@@ -838,7 +844,10 @@ object StoreArtTool {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        val apply = "--apply" in args
+        // Since 2026-10-03 the art is sized for one window layout, so it is written only together with that layout:
+        // StoreInterfaceImportTool --apply writes interface and art in one transaction. This entry point previews.
+        check("--apply" !in args) { "StoreArtTool no longer applies on its own: run StoreInterfaceImportTool --apply (window + art in one transaction)" }
+        val apply = false
         val art = all()
         args.firstOrNull { it.startsWith("--png=") }?.substringAfter('=')?.let { dir ->
             File(dir).mkdirs()

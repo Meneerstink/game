@@ -24,6 +24,7 @@ on_item_on_item(item1 = Items.ORNATE_MAUL_HANDLE, item2 = Items.GRANITE_MAUL) {
         if (!player.inventory.contains(Items.ORNATE_MAUL_HANDLE) || !player.inventory.contains(Items.GRANITE_MAUL)) return@queue
         if (player.inventory.remove(Items.ORNATE_MAUL_HANDLE, 1).hasSucceeded() && player.inventory.remove(Items.GRANITE_MAUL, 1).hasSucceeded()) {
             player.inventory.add(Items.GRANITE_MAUL_ORNATE_HANDLE, 1)
+            gg.rsmod.plugins.content.items.combine.ItemAttachSounds.attached(player, Items.ORNATE_MAUL_HANDLE, Items.GRANITE_MAUL)
         }
     }
 }

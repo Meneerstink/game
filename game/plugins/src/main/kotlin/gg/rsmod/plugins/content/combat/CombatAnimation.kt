@@ -124,7 +124,9 @@ enum class CombatAnimation(
 
     SPEAR(
         style(CombatStyle.FIRST, Animations.SPEAR.stab),
-        style(CombatStyle.SECOND, Animations.SPEAR.slash),
+        // Swipe (slash) is the spear sweep 440 - Void 667 weapon.anims.toml spear_swipe = 440 and Novite 667
+        // getWeaponAttackEmote "spear" style 1 = 440 agree; 429 is not a swipe in either (D5 family check, Vesta's spear).
+        style(CombatStyle.SECOND, Animation(440)),
         style(CombatStyle.THIRD, Animations.SPEAR.stab),
         blockAnimation = Animations.SPEAR.block,
         weaponType = WeaponType.SPEAR,
@@ -206,6 +208,21 @@ enum class CombatAnimation(
             ),
     ),
 
+    // Owner 2026-09-29 (D5) "vesta longsword verdwijnt ook als je ermee attackt": Vesta's longsword (and its deg / corrupt ids) plays
+    // its own sequences - Void 667 weapon_animations.toml [vestas_longsword]: default 12311, lunge 12310, defend 388
+    // (melee.anims.toml); Novite 667 PlayerCombat.getWeaponAttackEmote "longsword": style 2 (Lunge) 12310, else 12311. The
+    // cache style set is 6 (Chop / Slash / Lunge / Block, item param 686), so the third box is the lunge.
+    VESTAS_LONGSWORD(
+        style(CombatStyle.FIRST, Animation(12311)),
+        style(CombatStyle.SECOND, Animation(12311)),
+        style(CombatStyle.THIRD, Animation(12310)),
+        style(CombatStyle.FOURTH, Animation(12311)),
+        blockAnimation = Animation(388),
+        weaponType = WeaponType.LONG_SWORD,
+        equipType = EquipmentType.WEAPON,
+        itemIds = listOf(Items.VESTAS_LONGSWORD, Items.VESTAS_LONGSWORD_DEG, Items.CORRUPT_VESTAS_LONGSWORD, Items.C_VESTAS_LONGSWORD_DEG),
+    ),
+    // (Declared last on purpose: getItemAnimation's weapon-type fallback takes the FIRST entry of a type, which must stay LONGSWORD.)
     ;
 
     companion object {

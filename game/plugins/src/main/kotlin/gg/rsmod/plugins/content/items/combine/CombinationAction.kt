@@ -30,7 +30,8 @@ object CombinationAction {
         val ornament =
             data.resultItem in gg.rsmod.plugins.content.items.osrs.OsrsOrnamentKits.ORNAMENTED_RESULTS ||
                 kitName.any { it.contains("ornament kit") }
-        if (ornament) {
+        val ornamentRow = gg.rsmod.plugins.content.items.osrs.OsrsOrnamentKits.forOrnamented(data.resultItem)
+        if (ornament && ornamentRow?.confirmAttach != false) {
             val target =
                 data.items.firstOrNull { !player.world.definitions.get(ItemDef::class.java, it).name.lowercase().contains("kit") }
                     ?: data.resultItem
@@ -51,9 +52,15 @@ object CombinationAction {
             return
         }
         player.addXp(data.skill, data.experience)
+        // Owner 2026-10-03: every attach makes a sound (ItemAttachSounds); a chisel row sounds like the chisel.
+        if (data.tool == CombinationTool.CHISEL) {
+            ItemAttachSounds.carved(player)
+        } else {
+            ItemAttachSounds.attached(player, *data.items)
+        }
 
         if (ornament) {
-            task.itemMessageBox(gg.rsmod.plugins.content.items.osrs.OsrsOrnamentKits.ATTACH_MESSAGE, item = data.resultItem)
+            task.itemMessageBox(ornamentRow?.attachMessage ?: gg.rsmod.plugins.content.items.osrs.OsrsOrnamentKits.ATTACH_MESSAGE, item = data.resultItem)
             return
         }
 

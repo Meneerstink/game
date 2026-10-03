@@ -52,6 +52,24 @@ object MaxCapes {
             )
     }
 
+    /*
+     * Owner 2026-10-03 (buglist E3): "a cape on the max cape combines, but without the OSRS message, sound and dialogue". The OSRS Wiki
+     * ("Max cape", the variant pages, "Max hood", "Mac"; raw wikitext 2026-10-03) quotes no combine dialogue or message, so the
+     * wording is ADAPTED: the shared item warning GUI (interface 94, as every ornament kit attach here), a chat line and the
+     * item dialogue, built only on what the pages state - the hood converts with the cape, and "the max cape and [item] can be
+     * separated by using a knife on the cape". Sound: ItemAttachSounds (attach on combine, detach on the knife split).
+     */
+    const val COMBINE_DETAIL = "Your max hood will change with it. A knife on the cape separates them again."
+
+    /** "Infernal cape" -> "infernal cape", "Imbued Saradomin cape" -> "imbued Saradomin cape" (proper nouns keep their capital). */
+    fun lower(name: String): String = name.replaceFirstChar { it.lowercaseChar() }
+
+    fun combineQuestion(componentName: String): String = "Are you sure you want to combine your max cape with the ${lower(componentName)}?"
+
+    fun combinedMessage(componentName: String): String = "You combine your max cape with the ${lower(componentName)}."
+
+    fun separatedMessage(componentName: String): String = "You separate the ${lower(componentName)} from your max cape."
+
     fun forComponent(itemId: Int): Variant? = VARIANTS.firstOrNull { it.component == itemId }
 
     fun forCape(itemId: Int): Variant? = VARIANTS.firstOrNull { it.cape == itemId }

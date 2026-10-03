@@ -203,7 +203,7 @@ suspend fun QueueTask.exactMove(
             directionAngle = direction.ordinal,
             lockState = LockState.NONE,
         )
-    player.forceMove(this, move, cycleDuration = Player.slideCycles(maxOf(delay, startDelay)))
+    player.forceMove(this, move, requestedCycles = Player.slideCycles(maxOf(delay, startDelay)))
 }
 
 fun QueueTask.face(
@@ -218,6 +218,8 @@ fun QueueTask.face(
 fun KotlinPlugin.shortcut(
     id: Int,
     option: String,
+    /** A stone in the water: the click acts from this many tiles with line of sight, the route never reaches an adjacent tile. */
+    lineOfSightDistance: Int = -1,
     logic: Plugin.() -> Unit,
 ) {
     val def = world.definitions.getNullable(ObjectDef::class.java, id)
@@ -230,7 +232,7 @@ fun KotlinPlugin.shortcut(
         logger.info("Sourced shortcuts: object {} '{}' is already handled elsewhere; skipped.", id, option)
         return
     }
-    on_obj_option(obj = id, option = option, logic = logic)
+    on_obj_option(obj = id, option = option, lineOfSightDistance = lineOfSightDistance, logic = logic)
 }
 
 /**
@@ -290,6 +292,8 @@ fun straightCrossing(
     world: gg.rsmod.game.model.World,
     obj: GameObject,
     from: Tile,
+    /** What counts as standable ground at both ends (a chain of locs lands on the one-tile stop between two; batch 14). */
+    usable: (Tile) -> Boolean = { isUsableLanding(world, it) },
 ): Crossing? {
     val def = obj.getDef(world.definitions)
     val w = def.getRotatedWidth(obj)
@@ -308,7 +312,7 @@ fun straightCrossing(
         for (z in lanes) {
             val start = Tile(if (east) x0 - 1 else x0 + w, z, h)
             val landing = Tile(if (east) x0 + w else x0 - 1, z, h)
-            if (isUsableLanding(world, start) && isUsableLanding(world, landing)) return Crossing(start, landing, direction)
+            if (usable(start) && usable(landing)) return Crossing(start, landing, direction)
         }
     } else {
         val north = from.z < z0
@@ -317,7 +321,7 @@ fun straightCrossing(
         for (x in lanes) {
             val start = Tile(x, if (north) z0 - 1 else z0 + l, h)
             val landing = Tile(x, if (north) z0 + l else z0 - 1, h)
-            if (isUsableLanding(world, start) && isUsableLanding(world, landing)) return Crossing(start, landing, direction)
+            if (usable(start) && usable(landing)) return Crossing(start, landing, direction)
         }
     }
     return null
@@ -331,6 +335,7 @@ fun shortAxisCrossing(
     world: gg.rsmod.game.model.World,
     obj: GameObject,
     from: Tile,
+    usable: (Tile) -> Boolean = { isUsableLanding(world, it) },
 ): Crossing? {
     val def = obj.getDef(world.definitions)
     val w = def.getRotatedWidth(obj)
@@ -344,7 +349,7 @@ fun shortAxisCrossing(
         } else {
             Tile(if (from.x * 2 < x0 * 2 + w - 1) x0 - 1 else x0 + w, from.z.coerceIn(z0, z0 + l - 1), h)
         }
-    return straightCrossing(world, obj, probe)
+    return straightCrossing(world, obj, probe, usable)
 }
 
 /**

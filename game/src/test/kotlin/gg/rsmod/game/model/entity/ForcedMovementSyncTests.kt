@@ -71,8 +71,8 @@ class ForcedMovementSyncTests {
         val landing = Tile(2898, 3673)
         val player = player(start)
         player.queue {
-            player.forceMove(this, slide(player.tile, rock, 40), cycleDuration = 1)
-            player.forceMove(this, slide(player.tile, landing, 120), cycleDuration = 4)
+            player.forceMove(this, slide(player.tile, rock, 40), requestedCycles = 1)
+            player.forceMove(this, slide(player.tile, landing, 120), requestedCycles = 4)
         }
         val (clientTile, serverTiles) = run(player, start, 8)
         assertEquals(landing, player.tile)
@@ -86,8 +86,8 @@ class ForcedMovementSyncTests {
         val player = player(start)
         player.queue {
             player.moveTo(Tile(3201, 3200))
-            player.forceMove(this, slide(player.tile, Tile(3204, 3200), 90), cycleDuration = 3)
-            player.forceMove(this, slide(player.tile, Tile(3204, 3203), 90), cycleDuration = 3)
+            player.forceMove(this, slide(player.tile, Tile(3204, 3200), 90), requestedCycles = 3)
+            player.forceMove(this, slide(player.tile, Tile(3204, 3203), 90), requestedCycles = 3)
         }
         val (clientTile, _) = run(player, start, 10)
         assertEquals(Tile(3204, 3203), player.tile)

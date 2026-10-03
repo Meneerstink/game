@@ -70,6 +70,36 @@ object SummoningBoosts {
         skill: Int,
     ): Int = player.skills.getCurrentLevel(skill) + invisibleBoost(player, skill)
 
+    /**
+     * Visible boosts a familiar gives when its owner talks to it (Interact). RS Wiki "Geyser titan": "When spoken with, the
+     * familiar grants a 1 + 3% (rounded down) Ranged temporary level boost." (2011 Knowledge Base: "Ranged Boost (1 + 3% of
+     * your level)", [SummoningCatalogue]). It is a normal temporary boost on the real level - not an invisible one: Void lists it
+     * in its invisible `familiar_boosts` table but never reads a Ranged row anywhere (conform summoning 2026-10-03).
+     * familiar pouch -> (skill, flat, percent of the base level).
+     */
+    private val INTERACT_BOOSTS = mapOf(SummoningPouchData.GEYSER_TITAN to Triple(Skills.RANGED, 1, 3))
+
+    /** The level [interactBoost] raises [skill] (base level [base]) to for this familiar, or null when talking to it boosts nothing. */
+    fun interactBoostLevel(
+        pouch: SummoningPouchData,
+        skill: Int,
+        base: Int,
+    ): Int? {
+        val (boosted, flat, percent) = INTERACT_BOOSTS[pouch] ?: return null
+        if (boosted != skill) return null
+        return base + flat + base * percent / 100
+    }
+
+    /** Talking to the familiar: its visible boost, potion-style (from the base level, never lowering a higher boost). */
+    fun interactBoost(
+        player: Player,
+        pouch: SummoningPouchData,
+    ) {
+        val skill = INTERACT_BOOSTS[pouch]?.first ?: return
+        val level = interactBoostLevel(pouch, skill, player.skills.getMaxLevel(skill)) ?: return
+        if (player.skills.getCurrentLevel(skill) < level) player.skills.setCurrentLevel(skill, level)
+    }
+
     /** Every familiar that gives at least one invisible skilling boost, for the ledger's checks. */
     val boostedFamiliars: Set<Int> get() = boosts.keys
 }

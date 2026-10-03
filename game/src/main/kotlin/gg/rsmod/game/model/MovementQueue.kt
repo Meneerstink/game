@@ -152,6 +152,7 @@ class MovementQueue(
             if (walkDirection != null && walkDirection != Direction.NONE) {
                 traceStep("step", pawn.tile, tile, if (runDirection != null) "run" else "walk")
                 pawn.steps = StepDirection(walkDirection, runDirection)
+                pawn.lastStepCycle = pawn.world.currentCycle
                 pawn.tile = Tile(tile)
                 if (pawn is Player) {
                     pawn.addBlock(UpdateBlockType.MOVEMENT)

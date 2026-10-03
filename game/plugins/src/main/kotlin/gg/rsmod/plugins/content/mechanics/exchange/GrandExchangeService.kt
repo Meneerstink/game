@@ -76,7 +76,8 @@ class GrandExchangeService(
     ) {
         definitions = world.definitions
         this.world = world
-        GeBuyLimits.load()
+        // "buy-limits" (optional service property): the table's path; unit tests run from game/plugins, not the repo root.
+        GeBuyLimits.load(File(serviceProperties.getOrDefault("buy-limits", GeBuyLimits.DEFAULT_PATH)))
         load()
         // Audit T-11: in the running server the book is written off the game thread (see save()).
         asyncWrites = serviceProperties.getOrDefault("async-writes", true)
@@ -517,7 +518,7 @@ class GrandExchangeService(
             if (offer.status == OfferStatus.ACTIVE || offer.collectableCoins > 0 || offer.collectableItems > 0) return false
             if (offer.quantityFilled > 0) {
                 val entries = history.getOrPut(username) { mutableListOf() }
-                entries.add(0, GeHistoryEntry(offer.itemId, offer.quantityFilled, offer.coinsTraded, offer.type == OfferType.SELL))
+                entries.add(0, GeHistoryEntry(offer.itemId, offer.quantityFilled, offer.coinsTraded, offer.type == OfferType.SELL, offer.taxPaid))
                 while (entries.size > HISTORY_ROWS) entries.removeAt(entries.size - 1)
             }
             offers.remove(offer)
@@ -589,7 +590,7 @@ class GrandExchangeService(
         const val SLOTS = 6
         const val PRICE_HISTORY = GeGuidePrice.SAMPLES
 
-        /** Rows on the History screen (interface 643). */
-        const val HISTORY_ROWS = GrandExchangeHistory.ROWS
+        /** Trades kept per player for the History screen: OSRS keeps 20 (E6; the 667 screen shows the newest five). */
+        const val HISTORY_ROWS = GrandExchangeHistory.KEPT
     }
 }

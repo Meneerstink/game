@@ -20,7 +20,20 @@ object OsrsOrnamentKits {
         val pvpConvert: Boolean = true,
         /** The cache option that detaches the kit: "Dismantle" on the imported OSRS items, "Split" on the 667 native ones. */
         val detachOption: String = "Dismantle",
+        /** Item-dialogue line after attaching / detaching (owner 2026-09-18 kit wording unless the item's OSRS transcript says otherwise). */
+        val attachMessage: String = ATTACH_MESSAGE,
+        val detachMessage: String = DETACH_MESSAGE,
+        /** The "Are you sure" item GUI before attaching (owner 2026-09-18/19 for kits); false where OSRS attaches without asking. */
+        val confirmAttach: Boolean = true,
     )
+
+    /**
+     * OSRS Wiki "Transcript:Nightmare staff" / "Transcript:Harmonised orb": using an orb on the staff shows only the item box "You add
+     * the orb to the staff." (no confirmation); "Harmonised nightmare staff" transcript: dismantling says "You remove the orb from
+     * the staff."
+     */
+    const val ORB_ADD = "You add the orb to the staff."
+    const val ORB_REMOVE = "You remove the orb from the staff."
 
     val ALL =
         listOf(
@@ -54,9 +67,9 @@ object OsrsOrnamentKits {
             // Nightmare staff orbs (OSRS Wiki orb staff pages): the untradeable staff "can be reverted to its tradeable components at any
             // time" (Dismantle) and "If lost on death in the Wilderness, the killer will receive the staff and the orb" - the same base +
             // attachment behaviour as a tradeable ornament kit.
-            Ornament(Items.HARMONISED_NIGHTMARE_STAFF, Items.NIGHTMARE_STAFF, Items.HARMONISED_ORB, pvpConvert = true),
-            Ornament(Items.VOLATILE_NIGHTMARE_STAFF, Items.NIGHTMARE_STAFF, Items.VOLATILE_ORB, pvpConvert = true),
-            Ornament(Items.ELDRITCH_NIGHTMARE_STAFF, Items.NIGHTMARE_STAFF, Items.ELDRITCH_ORB, pvpConvert = true),
+            Ornament(Items.HARMONISED_NIGHTMARE_STAFF, Items.NIGHTMARE_STAFF, Items.HARMONISED_ORB, pvpConvert = true, attachMessage = ORB_ADD, detachMessage = ORB_REMOVE, confirmAttach = false),
+            Ornament(Items.VOLATILE_NIGHTMARE_STAFF, Items.NIGHTMARE_STAFF, Items.VOLATILE_ORB, pvpConvert = true, attachMessage = ORB_ADD, detachMessage = ORB_REMOVE, confirmAttach = false),
+            Ornament(Items.ELDRITCH_NIGHTMARE_STAFF, Items.NIGHTMARE_STAFF, Items.ELDRITCH_ORB, pvpConvert = true, attachMessage = ORB_ADD, detachMessage = ORB_REMOVE, confirmAttach = false),
             Ornament(Items.DAGONHAI_ROBE_BOTTOM_OR, Items.DAGONHAI_ROBE_BOTTOM, Items.DAGONHAI_ROBES_ORNAMENT_KIT, pvpConvert = false),
             // magegeara: "Elidinis' ward (f)" + "Menaphite ornament kit" (both untradeable); "Dismantle" separates them; on a PvP death
             // "the Menaphite ornament kit will be placed in their gravestone" (no base + kit drop to the PKer).

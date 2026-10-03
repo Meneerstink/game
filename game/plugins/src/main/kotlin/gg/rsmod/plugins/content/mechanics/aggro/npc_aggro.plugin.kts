@@ -44,6 +44,11 @@ val defaultAggressiveness: (Npc, Player) -> Boolean = boolean@{ n, p ->
         return@boolean false
     }
 
+    // OSRS Wiki Crypt rat: "As with all monsters in the crypts, they are aggressive to any player regardless of their combat level."
+    if (gg.rsmod.plugins.content.npcs.definitions.barrows.Barrows.aggressiveRegardlessOfLevel(n)) {
+        return@boolean n.tile.height == p.tile.height && world.collision.raycast(n.tile, p.tile, projectile = true)
+    }
+
     val npcLvl = n.def.combatLevel
     // RCV-012.B14: an npc that also has a Void player hunt mode applies that mode's checks (Void Hunting.canHunt) - e.g. "aggressive"
     // has no level cap - instead of the one "cowardly" level rule every other npc keeps (NpcHuntModes).
@@ -97,12 +102,21 @@ on_timer(AGGRO_CHECK_TIMER) {
     // Breach audit 2026-09-27 (B4): a breach monster that still has a live target it may pursue keeps it. The search below
     // looks only 8 tiles around the monster and dropped the target when nobody was that close, so the effective chase was 8
     // tiles instead of the leash (DeadmanBreach.CHASE_RANGE); it also re-picked a random player on every search.
-    val breachPursuing =
-        breach && npc.getCombatTarget().let { t ->
-            t != null && !t.isDead() && NpcLeash.mayPursue(npc, t, gg.rsmod.plugins.content.combat.attack.NpcAttacks.attackRange(npc) ?: 1)
-        }
-    if (breachPursuing) {
-        // keep fighting
+    // Owner 2026-10-03 20:46 ("verac the defiled loses agro ... when u 1 hit him then clicking away") and E21 (npcs not facing you):
+    // the same keep-the-target rule for EVERY npc, not only breach monsters. An npc that is not being hit itself has no
+    // ACTIVE_COMBAT_TIMER, so this search ran against its live fight every 1-3 ticks: the acquisition rules (hunt radius 5,
+    // tolerance, the cowardly level cap, "target already under attack" - by this very npc, in single-way) refused its own target
+    // and the npc dropped the fight (Verac idle 23 s), or npc.attack() restarted the fight and its resetInteractions cleared the
+    // npc's facing for a tick each time. The acquisition rules pick a NEW target; the combat cycle alone ends a fight
+    // (canEngage / NpcLeash.mayPursue) and walks the npc home.
+    val currentTarget = npc.getCombatTarget()
+    val pursuing =
+        currentTarget != null && !currentTarget.isDead() && Combat.canEngage(npc, currentTarget) &&
+            NpcLeash.mayPursue(npc, currentTarget, gg.rsmod.plugins.content.combat.attack.NpcAttacks.attackRange(npc) ?: 1)
+    if (pursuing) {
+        // keep fighting. The combat cycle faces its target every cycle; a target with no face means the fight loop was ended by
+        // something else (an interrupted queue) while the target stayed set - start it again instead of standing idle.
+        if (npc.attr[gg.rsmod.game.model.attr.FACING_PAWN_ATTR]?.get() !== currentTarget) npc.attack(currentTarget!!)
     } else if ((!npc.timers.has(ACTIVE_COMBAT_TIMER) || breachIdle || breach) &&
         npc.lock.canAttack() &&
         npc.isActive()) {

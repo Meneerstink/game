@@ -56,6 +56,31 @@ object SummoningSuite : Conformance.Suite {
      * Novite sends -1 while a familiar is out and 0 without one. Void's 0 alone was a donor choice, not the client rule.
      */
     private const val NO_FOLLOWER_1174 = "0 or -1 (cache clientscript 751 treats both as no follower npc)"
+
+    /**
+     * Varp 448 (the follower's pouch) after a dismiss. Cache clientscript 751 (667) tests it against -1 itself
+     * (`[140] PUSH_VAR(448) PUSH_CONSTANT_INT(-1) BRANCH_NOT` - only then `OC_PARAM(var448, 394)`), and with 0 the same lookups
+     * (`ENUM 1320/1283`, `OC_PARAM 394`) fall to their defaults: both mean "no pouch". Void's 0 is a donor choice, not the rule.
+     */
+    private const val NO_FOLLOWER_448 = "0 or -1 (cache clientscript 751 tests var448 against -1; 0 falls to the same enum/param defaults)"
+
+    /**
+     * Donor values that are not revision-667 (2011) values, replaced by the era value with its source. RS Wiki "Abyssal titan",
+     * update history: "They used to have a summon duration of 32 minutes and could only hold 7 essence." and (September 2014)
+     * "Abyssal titan storage increased from 7 to 20. Abyssal titan duration increased from 32 minutes to 42 minutes." Void's
+     * summoning.npcs.toml has `summoning_time_minutes = 93` (the summon level) and capacity 20 (post-2014); Novite (667) has
+     * 32 minutes (1920000 ms) and 7. pouch -> field -> value.
+     */
+    private val ERA = mapOf(12796 to mapOf("time_minutes" to 32, "bob_capacity" to 7))
+    private const val ERA_SOURCE = "rs wiki 667 era"
+
+    /**
+     * Boosts the donors file as invisible that are really visible boosts given when the owner talks to the familiar. RS Wiki
+     * "Geyser titan": "When spoken with, the familiar grants a 1 + 3% (rounded down) Ranged temporary level boost." Void lists it
+     * in familiar_boosts.tables.toml but no Void code reads a Ranged row (familiarBoost is only called by skilling actions).
+     * pouch -> skill name.
+     */
+    private val VISIBLE_ON_INTERACT = mapOf(12786 to "Ranged")
     private const val VARBIT_SPECIAL_POINTS_NEEDED = 4288
     private const val VARBIT_MINUTES = 4534
 
@@ -187,12 +212,14 @@ object SummoningSuite : Conformance.Suite {
         run.expectTrue(e, "spawn tile next to the owner", g == 1, "gap=$g owner=${bot.tile} familiar=${fam.tile}", "gap 1")
         run.expectTrue(e, "spawn tile free (not in a wall)", !clipped(run, fam.tile, size), "tile=${fam.tile}")
         val lifetime = if (bot.timers.has(FAMILIAR_LIFETIME_TIMER)) bot.timers[FAMILIAR_LIFETIME_TIMER] + (world.currentCycle - c1) else null
-        run.check(e, "lifetime (ticks)", lifetime, "void" to v?.get("time_minutes")?.asInt()?.let { ticks(run, it * 60_000L) }, "novite" to n?.get("time_ms")?.asLong()?.let { ticks(run, it) }, same = ::within3)
+        val era = ERA[data.pouch].orEmpty()
+        val minutesRef = era["time_minutes"]?.let { ERA_SOURCE to it } ?: ("void" to v?.get("time_minutes")?.asInt())
+        run.check(e, "lifetime (ticks)", lifetime, minutesRef.first to minutesRef.second?.let { ticks(run, it * 60_000L) }, "novite" to n?.get("time_ms")?.asLong()?.let { ticks(run, it) }, same = ::within3)
         run.check(e, "varp 1174 follower chathead", bot.varps.getState(VARP_FOLLOWER_CHATHEAD), "void" to fam.id)
         run.expectTrue(e, "varp 448 follower name set", bot.varps.getState(VARP_FOLLOWER_NAME) != 0, "448=${bot.varps.getState(VARP_FOLLOWER_NAME)}", "non-zero")
         run.expectTrue(e, "varp 1174 sent to the client", sentVarp(run, "Conf1", c1, VARP_FOLLOWER_CHATHEAD), "no Varp message for 1174 since summon", "a varp message")
         run.check(e, "varbit 4288 special points needed", runCatching { bot.varps.getVarbit(world, VARBIT_SPECIAL_POINTS_NEEDED) }.getOrNull(), "void" to v?.get("scroll")?.get("special_points")?.asInt())
-        run.check(e, "varbit 4534 minutes shown", runCatching { bot.varps.getVarbit(world, VARBIT_MINUTES) }.getOrNull(), "void" to v?.get("time_minutes")?.asInt(), same = ::within1)
+        run.check(e, "varbit 4534 minutes shown", runCatching { bot.varps.getVarbit(world, VARBIT_MINUTES) }.getOrNull(), minutesRef, same = ::within1)
         run.expectTrue(e, "follower details panel 662 open", bot.interfaces.isVisible(PANEL), "visible=${bot.interfaces.isVisible(PANEL)}", "open (Void opens familiar_details on summon)")
 
         // 3. Follow.
@@ -239,8 +266,8 @@ object SummoningSuite : Conformance.Suite {
         special(run, bot, fam, dummy, data, v, n, common, e)
 
         // 6. Beast of burden.
-        val capacity = v?.get("bob_capacity")?.takeIf { !it.isNull }?.asInt() ?: n?.get("bob_size")?.asText()?.toIntOrNull()?.takeIf { it > 0 }
-        if (capacity != null && Familiar.current(bot) != null) bob(run, bot, fam, capacity, v, n, e)
+        val capacity = era["bob_capacity"] ?: v?.get("bob_capacity")?.takeIf { !it.isNull }?.asInt() ?: n?.get("bob_size")?.asText()?.toIntOrNull()?.takeIf { it > 0 }
+        if (capacity != null && Familiar.current(bot) != null) bob(run, bot, fam, capacity, era["bob_capacity"], v, n, e)
 
         // 7. Panel texts, invisible boosts, every npc option.
         if (Familiar.current(bot) != null) {
@@ -250,13 +277,27 @@ object SummoningSuite : Conformance.Suite {
             if (name.isEmpty()) run.note("npc ${fam.id} has no name")
             val boost = v?.get("boost")?.takeIf { !it.isNull }
             val boostSkills = boost?.get("skills")?.map { it.asText() } ?: emptyList()
+            val visible = VISIBLE_ON_INTERACT[data.pouch]
             for (skillName in (boostSkills + listOf("Fishing", "Woodcutting", "Mining", "Hunter", "Firemaking", "Farming")).distinct()) {
                 val idx = skillIndex(skillName) ?: continue
+                if (skillName == visible) {
+                    run.check(e, "invisible $skillName boost", gg.rsmod.plugins.content.skills.summoning.SummoningBoosts.invisibleBoost(bot, idx), "rs wiki (visible, on Interact)" to 0)
+                    continue
+                }
                 val expected =
                     if (skillName in boostSkills) boost!!["flat"].asInt() + bot.skills.getMaxLevel(idx) * boost["multiplier_percent"].asInt() / 100 else if (v == null) null else 0
                 run.check(e, "invisible $skillName boost", gg.rsmod.plugins.content.skills.summoning.SummoningBoosts.invisibleBoost(bot, idx), "void" to expected)
             }
+            val visibleIdx = visible?.let { skillIndex(it) }
+            if (visibleIdx != null) bot.skills.setCurrentLevel(visibleIdx, bot.skills.getMaxLevel(visibleIdx))
             npcOptions(run, bot, fam, e)
+            if (visible != null && visibleIdx != null && boost != null) {
+                // Void's own amount (flat + percent of the base level), given as a visible boost by talking to the familiar.
+                val base = bot.skills.getMaxLevel(visibleIdx)
+                val want = boost["flat"].asInt() + base * boost["multiplier_percent"].asInt() / 100
+                run.check(e, "$visible boost after Interact (visible)", bot.skills.getCurrentLevel(visibleIdx) - base, "rs wiki + void amount" to want)
+                bot.skills.setCurrentLevel(visibleIdx, base)
+            }
         }
 
         // 8. Dismiss.
@@ -272,7 +313,9 @@ object SummoningSuite : Conformance.Suite {
             bot.varps.getState(VARP_FOLLOWER_CHATHEAD).let { v1174 ->
             run.expectTrue(e, "varp 1174 cleared on dismiss", v1174 == 0 || v1174 == -1, "1174=$v1174", NO_FOLLOWER_1174)
         }
-            run.check(e, "varp 448 cleared on dismiss", bot.varps.getState(VARP_FOLLOWER_NAME), "void" to 0)
+            bot.varps.getState(VARP_FOLLOWER_NAME).let { v448 ->
+                run.expectTrue(e, "varp 448 cleared on dismiss", v448 == 0 || v448 == -1, "448=$v448", NO_FOLLOWER_448)
+            }
             run.expectTrue(e, "lifetime timer stopped on dismiss", !bot.timers.has(FAMILIAR_LIFETIME_TIMER), "timer=${if (bot.timers.exists(FAMILIAR_LIFETIME_TIMER)) bot.timers[FAMILIAR_LIFETIME_TIMER] else "-"}")
             if (cd < 0) run.note("unreachable")
         }
@@ -670,10 +713,15 @@ object SummoningSuite : Conformance.Suite {
         combatStats(run, fam, dummy, style, a, v, attackCycles, distances, c, e)
         // Defend animation: the dummy hits the familiar once.
         // Stop the fight first: an attack animation still running would (rightly) hide the block animation.
+        // The dummy too: it fought back during the 80 ticks and kept attacking the familiar, which kept retaliating, so every
+        // "defend" window opened inside a running fight and the block was always hidden (conform 2026-10-03: a titan attack
+        // animation every 4 ticks from the fight straight through the window).
         fam.resetInteractions()
         gg.rsmod.plugins.content.combat.Combat.reset(fam)
         bot.resetInteractions()
         gg.rsmod.plugins.content.combat.Combat.reset(bot)
+        dummy.resetInteractions()
+        gg.rsmod.plugins.content.combat.Combat.reset(dummy)
         wait(8)
         // A real attacker (the dummy) hits the familiar; its defend animation must be among what it plays.
         val cd = world.currentCycle
@@ -803,6 +851,11 @@ object SummoningSuite : Conformance.Suite {
         val winterProbe = 4321
         val winterStorage = binding.target == FamiliarSpecialTarget.INVENTORY_ITEM && scroll == SummoningScrollData.WINTER_STORAGE_SCROLL
         val bankedProbes0 = bot.bank.rawItems.count { it?.id == Items.ABYSSAL_WHIP && it.attr[gg.rsmod.game.model.item.ItemAttribute.CHARGES] == winterProbe }
+        // Essence Shipment refuses without pure essence (Void: "You have no essence for your familiar to bank.", nothing spent;
+        // RS Wiki: "transports all pure essence from the backpack and the abyssal titan's inventory to the bank").
+        val essenceShipment = scroll == SummoningScrollData.ESSENCE_SHIPMENT_SCROLL
+        val bankedEssence0 = bot.bank.getItemCount(Items.PURE_ESSENCE)
+        if (essenceShipment) bot.inventory.add(Items.PURE_ESSENCE, 5)
         if (winterStorage) {
             bot.inventory.addPreservingAttr(gg.rsmod.game.model.item.Item(Items.ABYSSAL_WHIP).apply { attr[gg.rsmod.game.model.item.ItemAttribute.CHARGES] = winterProbe })
         }
@@ -840,6 +893,10 @@ object SummoningSuite : Conformance.Suite {
             val banked = bot.bank.rawItems.count { it?.id == Items.ABYSSAL_WHIP && it.attr[gg.rsmod.game.model.item.ItemAttribute.CHARGES] == winterProbe }
             run.check(e, "winter storage: the item is banked with its own charges", banked - bankedProbes0, "rule (bank deposit keeps attributes)" to 1)
             run.check(e, "winter storage: the item left the inventory", bot.inventory.getItemCount(Items.ABYSSAL_WHIP), "rule" to 0)
+        }
+        if (essenceShipment) {
+            run.check(e, "essence shipment: pure essence banked", bot.bank.getItemCount(Items.PURE_ESSENCE) - bankedEssence0, "rule (all carried pure essence)" to 5)
+            run.check(e, "essence shipment: none left in the backpack", bot.inventory.getItemCount(Items.PURE_ESSENCE), "rule" to 0)
         }
         run.check(e, "special: special points cost", pointsUsed, "void" to v?.get("scroll")?.get("special_points")?.asInt(), "novite" to n?.get("special_points")?.asText()?.toIntOrNull())
         val famOut = run.recording.of("familiar", "out").filter { it.cycle >= c }
@@ -880,11 +937,13 @@ object SummoningSuite : Conformance.Suite {
         bot: Client,
         fam: Npc,
         capacity: Int,
+        eraCapacity: Int?,
         v: JsonNode?,
         n: JsonNode?,
         e: String,
     ) {
-        run.check(e, "bob capacity (server storage)", BeastOfBurden.activeContainer(bot)?.capacity, "void" to v?.get("bob_capacity")?.takeIf { !it.isNull }?.asInt(), "novite" to n?.get("bob_size")?.asText()?.toIntOrNull()?.takeIf { it > 0 })
+        val capacityRef = eraCapacity?.let { ERA_SOURCE to it } ?: ("void" to v?.get("bob_capacity")?.takeIf { !it.isNull }?.asInt())
+        run.check(e, "bob capacity (server storage)", BeastOfBurden.activeContainer(bot)?.capacity, capacityRef, "novite" to n?.get("bob_size")?.asText()?.toIntOrNull()?.takeIf { it > 0 })
         // A forager only gives items (RS: withdraw only) - storing is refused by design, nothing to fill.
         if (BeastOfBurden.isWithdrawOnlyNpc(fam.id)) return
         bot.inventory.removeAll()

@@ -25,6 +25,11 @@ CLERKS.forEach { clerk ->
     }
 }
 
+/** E6: a History row's "Buy-offer" (op1) and "Examine" (op10), OSRS script 1645. */
+GrandExchangeHistory.ROW.forEachIndexed { row, component ->
+    on_button(GrandExchangeHistory.INTERFACE, component) { GrandExchangeHistory.press(player, row, player.getInteractingOpcode()) }
+}
+
 suspend fun clerkDialogue(task: QueueTask) {
     task.chatNpc("Welcome to the Grand Exchange. Would you like to trade now, or exchange item sets?", wrap = true)
     clerkMenu(task, explained = false)

@@ -6,6 +6,7 @@ import gg.rsmod.game.model.entity.GameObject
 import gg.rsmod.plugins.content.mechanics.doors.DoorCrossing
 import gg.rsmod.plugins.content.npcs.definitions.barrows.Barrows.Brother
 import gg.rsmod.plugins.content.npcs.definitions.barrows.Barrows.Corner
+import gg.rsmod.plugins.api.cfg.Sfx
 
 /**
  * Barrows bindings: mounds, crypts, tunnels, puzzle doors, chest and underground timers.
@@ -22,18 +23,19 @@ val CRYPT_CREATURES = intArrayOf(Npcs.BLOODWORM, Npcs.CRYPT_RAT, Npcs.GIANT_CRYP
 Brother.values().forEach { brother ->
     on_obj_option(obj = brother.sarcophagus, option = "search") {
         Barrows.ensureRun(player)
-        val hidden = player.attr[Barrows.SELECTED_BROTHER] == brother.key
-        if (hidden) {
+        val result = Barrows.searchResult(player, brother)
+        if (result == Barrows.SearchResult.HIDDEN_TUNNEL) {
             player.queue {
                 messageBox("You've found a hidden tunnel, do you want to enter?")
                 val choice = options("Yeah, I'm fearless!", "No way, looks scary!")
                 if (choice == 1) {
                     val corner = Corner.values().firstOrNull { it.key == player.attr[Barrows.EXIT_CORNER] } ?: Corner.NORTH_EAST
                     player.moveTo(Tile(corner.tile.x, corner.tile.z, 0))
+                    player.attr[Barrows.IN_TUNNEL] = false
                     Barrows.openOverlay(player)
                 }
             }
-        } else if (Barrows.liveBrother(player, brother) == null && !Barrows.isKilled(player, brother)) {
+        } else if (result == Barrows.SearchResult.WAKE_BROTHER) {
             val tile = world.findRandomTileAround(brother.spawn, radius = 2) ?: brother.spawn
             Barrows.spawnBrother(player, brother, tile)
         } else {
@@ -44,9 +46,12 @@ Brother.values().forEach { brother ->
     on_obj_option(obj = brother.stairs, option = "climb-up") {
         Barrows.liveBrother(player, brother)?.let { if (it.isSpawned()) world.remove(it) }
         Barrows.spawned(player).remove(brother.key)
+        // F10 (owner 2026-10-03 "there is no teleport delay in barrows"): animate(828) + wait(1) moved the player on the next
+        // cycle (a fresh queue's first wait resumes one cycle early). The shared ladder timing: wait(1), climb animation, two ticks.
         player.lockingQueue(lockState = gg.rsmod.game.model.LockState.FULL) {
-            player.animate(Anims.LADDER_CLIMB)
             wait(1)
+            player.animate(Anims.LADDER_CLIMB)
+            wait(2)
             player.moveTo(Tile(brother.hillX.first + 1, brother.hillZ.first + 1, 0))
         }
     }
@@ -56,7 +61,10 @@ Brother.values().forEach { brother ->
 
 on_obj_option(obj = Objs.ROPE_6708, option = "climb-up") {
     val brother = Brother.byKey(player.attr[Barrows.SELECTED_BROTHER] ?: Brother.DHAROK.key)
+    // Void BarrowsCrypts rope: anim("climb_up"), delay(2), tele. F10: the shared ladder timing (ladders.plugin.kts) - wait(1) absorbs
+    // the early first resume of a fresh queue, then the climb animation and two ticks.
     player.lockingQueue(lockState = gg.rsmod.game.model.LockState.FULL) {
+        wait(1)
         player.animate(Anims.LADDER_CLIMB)
         wait(2)
         player.moveTo(brother.spawn)
@@ -68,68 +76,68 @@ on_obj_option(obj = Objs.ROPE_6708, option = "climb-up") {
     options.any { it.equals("open", ignoreCase = true) }
 }.forEach { door ->
     on_obj_option(obj = door, option = "open") {
+        // The click dispatches the transformed child (6714/6733); the map object is the multiloc parent (6716..6750).
         val obj = player.getInteractingGameObj()
-        player.queue {
-            // The click dispatches the transformed child (6714/6733); the puzzle doors are identified by the map object.
-            // Puzzle doors are inside the central room. The old negated check let every
-            // puzzle door open without a puzzle while underground.
-            if (Barrows.shouldSolvePuzzle(player.tile, obj.id)) {
-                if (!solvePuzzle(this)) {
-                    Barrows.shufflePuzzle(player, incorrect = true)
-                    player.message("You got the puzzle wrong! You can hear the catacombs moving around you.")
-                    return@queue
-                }
-                player.message("You hear the doors' locking mechanism grind open.")
-            }
-            val start = Tile(player.tile)
-            if (!walkThroughDoor(player, obj)) return@queue
-            val dx = player.tile.x - start.x
-            val dz = player.tile.z - start.z
-            val spawn = player.tile.transform(if (dx != 0) dx.coerceIn(-1, 1) else 0, if (dz != 0) dz.coerceIn(-1, 1) else 0)
-            Barrows.onTunnelDoor(player, spawn)
+        // E10: a locked door has no "Open" on the client; never let a forged or stale click through it on the server either.
+        if (Barrows.isLockedDoor(player, obj.id)) return@on_obj_option
+        if (Barrows.shouldSolvePuzzle(player.tile, obj.id)) {
+            // Owner 2026-10-03 20:49 ("when u try to select one puzzle nothing happens"): the puzzle used to wait for the answer
+            // inside a STANDARD queue, and a STANDARD queue is paused while a main-screen interface is open (PawnQueueTaskSet
+            // isPaused) - the answer buttons set the choice but the waiting task never ran again. Void BarrowsPuzzle resumes on
+            // the button; here the button handler itself finishes the door.
+            openPuzzle(player, obj)
+            return@on_obj_option
         }
+        player.queue { passDoor(obj) }
     }
 }
 
 /**
- * The bounded one-door crossing: from the tile the door's face looks at onto the door tile, or back ([DoorCrossing]). Only this
- * single step is collision-free, because the cache's varbit door state is per-player and the server's static door keeps its
- * wall flag; from anywhere else the door is "blocked" and nothing moves. Owner 2026-10-03 00:26 ("noclip again"): the old
- * rotation math walked along the wall instead of through it, into the walled pocket at 3562,9710. Returns true on arrival.
+ * Void BarrowsCrypts "Open": door sound, `enterDoor` (walk with collision to the tile in front of the door on the player's side, the
+ * double door swings open, one step through, the door shuts after three ticks), toggle `barrows_in_tunnel`, then the door's monster
+ * one tile further on. The crossing is the shared bounded [DoorCrossing.enter]; from anywhere it cannot cross, nothing moves.
  */
-suspend fun QueueTask.walkThroughDoor(player: Player, door: GameObject): Boolean = DoorCrossing.cross(this, player, door)
+suspend fun QueueTask.passDoor(door: GameObject) {
+    // Void: sound("barrows_door_close") (41) on operating the door.
+    player.playSound(Sfx.BARROWS_DOOR_OPEN)
+    val near = DoorCrossing.nearSide(player.tile, door) ?: return
+    val far = DoorCrossing.destination(near, door) ?: return
+    if (!DoorCrossing.enter(this, player, door, open = { Barrows.swingOpen(player, door) })) return
+    player.attr[Barrows.IN_TUNNEL] = player.attr[Barrows.IN_TUNNEL] != true
+    player.setVarbit(Barrows.IN_TUNNEL_VARBIT, if (player.attr[Barrows.IN_TUNNEL] == true) 1 else 0)
+    Barrows.onTunnelDoor(player, far.transform(far.x - near.x, far.z - near.z))
+}
 
 /**
- * Puzzle door: three shapes in a sequence; pick the fourth from three choices.
+ * Puzzle door: three shapes in a sequence; pick the fourth from three choices (Void BarrowsPuzzle: interface 25, sequence models on
+ * components 6/7/8, the choices on the buttons 2/3/5).
  */
-suspend fun solvePuzzle(task: QueueTask): Boolean {
-    val player = task.player
+fun openPuzzle(player: Player, door: GameObject) {
     val puzzle = Barrows.PUZZLES.random()
     player.openInterface(interfaceId = Barrows.PUZZLE_INTERFACE, dest = InterfaceDestination.MAIN_SCREEN)
-    puzzle.options.forEachIndexed { i, model -> player.setComponentModel(Barrows.PUZZLE_INTERFACE, 6 + i, model) }
+    puzzle.options.forEachIndexed { i, model -> player.setComponentModel(Barrows.PUZZLE_INTERFACE, Barrows.PUZZLE_OPTION_COMPONENTS[i], model) }
     val choices = puzzle.choices.toList().shuffled()
-    val components = intArrayOf(2, 3, 5)
-    choices.forEachIndexed { i, model -> player.setComponentModel(Barrows.PUZZLE_INTERFACE, components[i], model) }
+    choices.forEachIndexed { i, model -> player.setComponentModel(Barrows.PUZZLE_INTERFACE, Barrows.PUZZLE_CHOICE_COMPONENTS[i], model) }
     player.attr[Barrows.PUZZLE_ANSWER] = choices.indexOf(puzzle.answer)
-    val chosen = task.waitForPuzzleChoice()
-    player.closeInterface(Barrows.PUZZLE_INTERFACE)
-    return chosen == player.attr[Barrows.PUZZLE_ANSWER]
+    player.attr[Barrows.PUZZLE_DOOR] = door
 }
 
-val PUZZLE_CHOICE = AttributeKey<Int>()
-
-suspend fun QueueTask.waitForPuzzleChoice(): Int {
-    player.attr.remove(PUZZLE_CHOICE)
-    while (player.attr[PUZZLE_CHOICE] == null) {
-        if (!player.isOnline || !player.interfaces.isVisible(Barrows.PUZZLE_INTERFACE)) return -1
-        wait(1)
-    }
-    return player.attr[PUZZLE_CHOICE] ?: -1
-}
-
-intArrayOf(2, 3, 5).forEachIndexed { index, component ->
+Barrows.PUZZLE_CHOICE_COMPONENTS.forEachIndexed { index, component ->
     on_button(interfaceId = Barrows.PUZZLE_INTERFACE, component = component) {
-        player.attr[PUZZLE_CHOICE] = index
+        val door = player.attr[Barrows.PUZZLE_DOOR]
+        val answer = player.attr[Barrows.PUZZLE_ANSWER]
+        player.attr.remove(Barrows.PUZZLE_DOOR, Barrows.PUZZLE_ANSWER)
+        player.closeInterface(Barrows.PUZZLE_INTERFACE)
+        if (door == null || answer == null) return@on_button
+        if (!Barrows.puzzleAnswered(index, answer)) {
+            // OSRS Wiki Barrows/Strategies: "If you get the puzzle wrong, the doors and rooms within the tunnels will shift around".
+            Barrows.shufflePuzzle(player, incorrect = true)
+            player.message("You got the puzzle wrong! You can hear the catacombs moving around you.")
+            return@on_button
+        }
+        player.playSound(Sfx.BARROWS_DOOR_UNLOCK)
+        player.message("You hear the doors' locking mechanism grind open.")
+        player.queue { passDoor(door) }
     }
 }
 
@@ -145,6 +153,8 @@ on_obj_option(obj = Objs.CHEST_6774, option = "open") {
         if (tile == player.tile) tile = tile.transform(1, 0)
         Barrows.spawnBrother(player, brother, tile)
     }
+    // Owner 2026-10-03 20:3x (F8): the chest opened without a sound (667 sound 52 "chest_open", Void obj.sounds.toml).
+    player.playSound(Sfx.CHEST_OPEN)
     player.filterableMessage("You open the chest.")
 }
 
@@ -158,6 +168,7 @@ on_obj_option(obj = Objs.CHEST_6775, option = "search") {
 }
 
 on_obj_option(obj = Objs.CHEST_6775, option = "close") {
+    player.playSound(Sfx.CHEST_CLOSE)
     player.attr.remove(Barrows.CHEST_OPEN)
     player.setVarbit(Barrows.CHEST_VARBIT, 0)
 }
@@ -173,6 +184,7 @@ on_timer(BARROWS_TIMER) {
     val was = player.attr[WAS_UNDERGROUND] ?: false
     if (underground && !was) {
         player.attr[WAS_UNDERGROUND] = true
+        player.attr[Barrows.IN_TUNNEL] = false
         Barrows.ensureRun(player)
         Barrows.openOverlay(player)
         player.attr[PRAYER_DRAIN_TICK] = Barrows.PRAYER_DRAIN_TICKS
@@ -180,7 +192,9 @@ on_timer(BARROWS_TIMER) {
         player.attr[WAS_UNDERGROUND] = false
         Barrows.resetRun(player)
         if (!Barrows.onSurface(player.tile)) Barrows.closeOverlay(player)
+        player.attr[Barrows.IN_TUNNEL] = false
         player.setVarbit(Barrows.IN_TUNNEL_VARBIT, 0)
+        player.setVarc(Barrows.BROTHER_HEAD_VARC, -1)
     } else if (underground) {
         val drain = (player.attr[PRAYER_DRAIN_TICK] ?: Barrows.PRAYER_DRAIN_TICKS) - 1
         if (drain <= 0) {

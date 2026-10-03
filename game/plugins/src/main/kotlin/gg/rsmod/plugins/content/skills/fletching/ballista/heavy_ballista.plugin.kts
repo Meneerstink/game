@@ -29,6 +29,7 @@ on_item_on_item(item1 = Items.BALLISTA_LIMBS, item2 = Items.HEAVY_FRAME) {
         return@on_item_on_item
     }
     player.addXp(Skills.FLETCHING, 30.0)
+    gg.rsmod.plugins.content.items.combine.ItemAttachSounds.attached(player)
     player.filterableMessage("You attach the limbs to the frame.")
 }
 
@@ -47,6 +48,7 @@ on_item_on_item(item1 = Items.INCOMPLETE_HEAVY_BALLISTA, item2 = Items.BALLISTA_
         return@on_item_on_item
     }
     player.addXp(Skills.FLETCHING, 30.0)
+    gg.rsmod.plugins.content.items.combine.ItemAttachSounds.attached(player)
     player.filterableMessage("You attach the spring to the ballista.")
 }
 
@@ -65,5 +67,6 @@ on_item_on_item(item1 = Items.UNSTRUNG_HEAVY_BALLISTA, item2 = Items.MONKEY_TAIL
         return@on_item_on_item
     }
     player.addXp(Skills.FLETCHING, 600.0)
+    gg.rsmod.plugins.content.items.combine.ItemAttachSounds.attached(player)
     player.filterableMessage("You attach the monkey tail, completing the heavy ballista.")
 }

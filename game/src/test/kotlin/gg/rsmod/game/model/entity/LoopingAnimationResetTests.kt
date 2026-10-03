@@ -85,7 +85,7 @@ class LoopingAnimationResetTests {
         val player = player(Tile(2878, 3670))
         player.queue {
             player.animate(740)
-            player.forceMove(this, slide(player.tile, Tile(2875, 3671), 50), cycleDuration = 2)
+            player.forceMove(this, slide(player.tile, Tile(2875, 3671), 50), requestedCycles = 2)
         }
         run(player, 4)
         assertEquals(Tile(2875, 3671), player.tile)
@@ -103,7 +103,7 @@ class LoopingAnimationResetTests {
         val player = player(Tile(2907, 3708))
         player.queue {
             player.animate(6978)
-            player.forceMove(this, slide(player.tile, Tile(2907, 3712), 210), cycleDuration = 7)
+            player.forceMove(this, slide(player.tile, Tile(2907, 3712), 210), requestedCycles = 7)
         }
         run(player, 9)
         assertEquals(Tile(2907, 3712), player.tile)
@@ -116,7 +116,7 @@ class LoopingAnimationResetTests {
         val player = player(Tile(2894, 3672))
         player.queue {
             player.animate(1148)
-            player.forceMove(this, slide(player.tile, Tile(2898, 3675), 120), cycleDuration = 4)
+            player.forceMove(this, slide(player.tile, Tile(2898, 3675), 120), requestedCycles = 4)
         }
         run(player, 6)
         assertEquals(1148, player.lastAnimationId)

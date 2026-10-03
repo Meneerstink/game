@@ -166,6 +166,14 @@ abstract class KotlinPlugin(
             Shop(name, stockType, purchasePolicy, currency, arrayOfNulls(stockSize), arrayOfNulls(6), containsSamples)
         r.shops[name] = shop
         init(shop)
+        // Bug run 2026-10-03: the shop window draws only the first Shop.CLIENT_VISIBLE_SLOTS rows (inv 4 is 40 in the cache), so a
+        // longer stock silently hid its tail (Home PK Supplies lost all its bolts). Name it at boot; split such a shop instead.
+        val hidden = shop.items.withIndex().count { it.index >= Shop.CLIENT_VISIBLE_SLOTS && it.value != null }
+        if (hidden > 0) {
+            gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.ITEM) {
+                "shop '$name' stocks $hidden row(s) past slot ${Shop.CLIENT_VISIBLE_SLOTS - 1}; the client never draws them - split the shop"
+            }
+        }
     }
 
     /**

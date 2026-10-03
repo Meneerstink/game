@@ -163926,7 +163926,7 @@
     remove_head: false
     remove_beard: false
     remove_arms: false
-    weapon_type: 5
+    weapon_type: 6
     attack_speed: 5
     attack_stab: 106
     attack_slash: 121
@@ -163967,7 +163967,7 @@
     remove_head: false
     remove_beard: false
     remove_arms: false
-    weapon_type: 5
+    weapon_type: 6
     attack_speed: 5
     attack_stab: 106
     attack_slash: 121
@@ -164526,7 +164526,7 @@
     remove_head: false
     remove_beard: false
     remove_arms: false
-    weapon_type: 5
+    weapon_type: 6
     attack_speed: 5
     attack_stab: 106
     attack_slash: 121
@@ -164567,7 +164567,7 @@
     remove_head: false
     remove_beard: false
     remove_arms: false
-    weapon_type: 5
+    weapon_type: 6
     attack_speed: 5
     attack_stab: 106
     attack_slash: 121
@@ -164601,7 +164601,7 @@
     remove_head: false
     remove_beard: false
     remove_arms: false
-    weapon_type: 8
+    weapon_type: 10
     attack_speed: 6
     attack_stab: -4
     attack_slash: -4
@@ -164642,7 +164642,7 @@
     remove_head: false
     remove_beard: false
     remove_arms: false
-    weapon_type: 8
+    weapon_type: 10
     attack_speed: 6
     attack_stab: -4
     attack_slash: -4
@@ -166042,7 +166042,7 @@
     remove_head: false
     remove_beard: false
     remove_arms: false
-    weapon_type: 5
+    weapon_type: 6
     attack_speed: 5
     attack_stab: 58
     attack_slash: 69
@@ -166083,7 +166083,7 @@
     remove_head: false
     remove_beard: false
     remove_arms: false
-    weapon_type: 5
+    weapon_type: 6
     attack_speed: 5
     attack_stab: 58
     attack_slash: 69

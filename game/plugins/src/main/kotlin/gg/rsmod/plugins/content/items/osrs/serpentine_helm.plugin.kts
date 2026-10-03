@@ -77,6 +77,7 @@ on_item_on_item(item1 = Items.CHISEL, item2 = Items.SERPENTINE_VISAGE) {
     }
     if (!player.inventory.remove(Items.SERPENTINE_VISAGE, 1).hasSucceeded()) return@on_item_on_item
     player.inventory.add(Items.SERPENTINE_HELM_UNCHARGED, 1)
+    gg.rsmod.plugins.content.items.combine.ItemAttachSounds.carved(player)
     player.addXp(Skills.CRAFTING, 120.0)
     player.message("You carve the serpentine visage into a helm.")
 }
@@ -100,6 +101,7 @@ on_item_on_item(item1 = Items.BASILISK_JAW, item2 = Items.HELM_OF_NEITIZNOT) {
     player.inventory.remove(Items.BASILISK_JAW, 1)
     player.inventory.remove(Items.HELM_OF_NEITIZNOT, 1)
     player.inventory.add(Items.NEITIZNOT_FACEGUARD, 1)
+    gg.rsmod.plugins.content.items.combine.ItemAttachSounds.attached(player, Items.BASILISK_JAW, Items.HELM_OF_NEITIZNOT)
     player.message("You fit the basilisk jaw onto the helm.")
 }
 

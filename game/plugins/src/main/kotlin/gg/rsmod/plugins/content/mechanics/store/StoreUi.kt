@@ -1,6 +1,7 @@
 package gg.rsmod.plugins.content.mechanics.store
 
 import gg.rsmod.game.fs.def.ItemDef
+import gg.rsmod.game.model.World
 import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
@@ -20,32 +21,76 @@ import java.time.LocalDateTime
  * the currencies are persistent account attributes ([StoreCatalogue.Currency]).
  */
 object StoreUi : KLogging() {
-    // Component ids come straight from the tool that builds the window, so the two can never drift apart.
+    // Component ids come straight from the tool that builds the window, so the two can never drift apart. Ids before the grid
+    // are the same in every layout; the grid and everything after it come from [layout].
     const val INTERFACE_ID = Ui.INTERFACE_ID
     const val CLOSE = Ui.CLOSE
     const val TAB_FIRST = Ui.TAB_FIRST
     const val TAB_STRIDE = Ui.TAB_STRIDE
-    const val SLOT_BACKGROUND_FIRST = Ui.SLOT_BACKGROUND_FIRST
-    const val SLOT_FIRST = Ui.SLOT_FIRST
-    const val SLOT_COUNT = Ui.SLOT_COUNT
-    const val PAGE_PREVIOUS = Ui.PAGE_PREVIOUS
-    const val PAGE_TEXT = Ui.PAGE_TEXT
-    const val PAGE_NEXT = Ui.PAGE_NEXT
-    const val PREVIEW_MODEL = Ui.PREVIEW_MODEL
-    const val CAROUSEL_PREVIOUS = Ui.CAROUSEL_PREVIOUS
-    const val RESULT_NAME = Ui.RESULT_NAME
-    const val CAROUSEL_NEXT = Ui.CAROUSEL_NEXT
-    const val KIT_NAME = Ui.KIT_NAME
-    const val REQUIREMENT = Ui.REQUIREMENT
-    const val COSMETIC = Ui.COSMETIC
-    const val PRICE = Ui.PRICE
     const val BALANCE = Ui.BALANCE
-    const val BUY_LAYER = Ui.BUY_LAYER
-    const val BUY_GRAPHIC = Ui.BUY_GRAPHIC
-    const val BUY_TEXT = Ui.BUY_TEXT
     const val BALANCE_ICON = Ui.BALANCE_ICON
-    const val PRICE_ICON = Ui.PRICE_ICON
-    const val EMPTY_TEXT = Ui.EMPTY_TEXT
+
+    @Volatile
+    private var detected: Ui.Layout? = null
+
+    /**
+     * The grid layout the cache holds (owner 2026-10-03: 7x6 in a larger window, applied by `StoreInterfaceImportTool --apply`
+     * while the servers are down). Read once from interface [INTERFACE_ID]'s component count, so this server build drives the
+     * old 6x5 window correctly until the cache is updated, and the new one after.
+     */
+    fun layout(world: World): Ui.Layout =
+        detected ?: run {
+            val count = runCatching { world.filestore.index(INTERFACE_INDEX).archive(INTERFACE_ID)?.fileIds()?.size ?: 0 }.getOrDefault(0)
+            val layout = Ui.layoutFor(count)
+            if (layout !== Ui.CURRENT) {
+                gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.INTERFACE) {
+                    "store interface $INTERFACE_ID has $count components, not the ${Ui.CURRENT.componentCount} of the 7x6 layout: the cache still " +
+                        "holds the old 6x5 store window - run StoreInterfaceImportTool --apply with the servers stopped"
+                }
+            }
+            logger.info { "Store window: interface $INTERFACE_ID has $count components -> ${layout.columns}x${layout.rows} grid" }
+            detected = layout
+            layout
+        }
+
+    private const val INTERFACE_INDEX = 3
+
+    fun layout(player: Player): Ui.Layout = layout(player.world)
+
+    /** Every component a click can arrive on, in any layout (the plugin binds them all and [click] dispatches). */
+    val CLICKABLE: Set<Int> =
+        listOf(Ui.CURRENT, Ui.LEGACY).flatMap { l ->
+            listOf(CLOSE, l.pagePrevious, l.pageNext, l.carouselPrevious, l.carouselNext, l.buyLayer) +
+                (0 until Shop.values().size).map { TAB_FIRST + it * TAB_STRIDE } +
+                (0 until l.slotCount).map { l.slotFirst + it }
+        }.toSortedSet()
+
+    /** A click on [component] of the store window, routed by the live layout. */
+    fun click(
+        player: Player,
+        component: Int,
+        opcode: Int,
+    ) {
+        val l = layout(player)
+        val tab = (component - TAB_FIRST) / TAB_STRIDE
+        when {
+            component == CLOSE -> player.closeInterface(INTERFACE_ID)
+            component >= TAB_FIRST && (component - TAB_FIRST) % TAB_STRIDE == 0 && tab in Shop.values().indices -> switchShop(player, tab)
+            component in l.slotFirst until l.slotFirst + l.slotCount -> {
+                val slot = component - l.slotFirst
+                if (opcode == 25) {
+                    slotEntry(player, slot)?.let { player.world.sendExamine(player, it.purchaseItem, gg.rsmod.game.model.ExamineEntityType.ITEM) }
+                } else {
+                    select(player, slot)
+                }
+            }
+            component == l.pagePrevious -> turnPage(player, -1)
+            component == l.pageNext -> turnPage(player, 1)
+            component == l.carouselPrevious -> turnCarousel(player, -1)
+            component == l.carouselNext -> turnCarousel(player, 1)
+            component == l.buyLayer -> buy(player)
+        }
+    }
 
     /** Header tagline per shop (tab order). */
     private val TAGLINES =
@@ -100,10 +145,11 @@ object StoreUi : KLogging() {
         if (!isOpen(player)) {
             player.openInterface(INTERFACE_ID, InterfaceDestination.MAIN_SCREEN)
         }
+        val l = layout(player)
         player.setInterfaceEvents(INTERFACE_ID, CLOSE, -1..-1, OP1)
         for (i in 0 until Shop.values().size) player.setInterfaceEvents(INTERFACE_ID, TAB_FIRST + i * TAB_STRIDE, -1..-1, OP1)
-        for (slot in 0 until SLOT_COUNT) player.setInterfaceEvents(INTERFACE_ID, SLOT_FIRST + slot, -1..-1, OP1_OP10)
-        listOf(PAGE_PREVIOUS, PAGE_NEXT, CAROUSEL_PREVIOUS, CAROUSEL_NEXT, BUY_LAYER).forEach { player.setInterfaceEvents(INTERFACE_ID, it, -1..-1, OP1) }
+        for (slot in 0 until l.slotCount) player.setInterfaceEvents(INTERFACE_ID, l.slotFirst + slot, -1..-1, OP1_OP10)
+        listOf(l.pagePrevious, l.pageNext, l.carouselPrevious, l.carouselNext, l.buyLayer).forEach { player.setInterfaceEvents(INTERFACE_ID, it, -1..-1, OP1) }
         render(player)
     }
 
@@ -115,7 +161,9 @@ object StoreUi : KLogging() {
         open(player, Shop.values()[tab])
     }
 
-    fun pages(player: Player): Int = maxOf(1, (entries(player).size + SLOT_COUNT - 1) / SLOT_COUNT)
+    fun slotCount(player: Player): Int = layout(player).slotCount
+
+    fun pages(player: Player): Int = maxOf(1, (entries(player).size + slotCount(player) - 1) / slotCount(player))
 
     fun turnPage(
         player: Player,
@@ -131,7 +179,8 @@ object StoreUi : KLogging() {
         player: Player,
         slot: Int,
     ) {
-        val index = (player.attr[PAGE_ATTR] ?: 0) * SLOT_COUNT + slot
+        if (slot !in 0 until slotCount(player)) return
+        val index = (player.attr[PAGE_ATTR] ?: 0) * slotCount(player) + slot
         if (index !in entries(player).indices) return
         player.attr[SELECTED_ATTR] = index
         player.attr[CAROUSEL_ATTR] = 0
@@ -143,7 +192,7 @@ object StoreUi : KLogging() {
     fun slotEntry(
         player: Player,
         slot: Int,
-    ): Entry? = entries(player).getOrNull((player.attr[PAGE_ATTR] ?: 0) * SLOT_COUNT + slot)
+    ): Entry? = if (slot !in 0 until slotCount(player)) null else entries(player).getOrNull((player.attr[PAGE_ATTR] ?: 0) * slotCount(player) + slot)
 
     fun turnCarousel(
         player: Player,
@@ -165,6 +214,7 @@ object StoreUi : KLogging() {
     ): String = player.world.definitions.getNullable(ItemDef::class.java, item)?.name ?: "item $item"
 
     fun render(player: Player) {
+        val l = layout(player)
         val shop = shop(player)
         val list = entries(player)
         val page = player.attr[PAGE_ATTR] ?: 0
@@ -180,59 +230,61 @@ object StoreUi : KLogging() {
         }
         player.setComponentText(INTERFACE_ID, Ui.TAGLINE, TAGLINES[shop] ?: "")
         player.setComponentSprite(INTERFACE_ID, BALANCE_ICON, Art.ICON_FIRST + shop.ordinal)
-        player.setComponentSprite(INTERFACE_ID, PRICE_ICON, Art.ICON_FIRST + shop.ordinal)
-        for (slot in 0 until SLOT_COUNT) {
-            val entry = list.getOrNull(page * SLOT_COUNT + slot)
-            player.setComponentHidden(INTERFACE_ID, SLOT_BACKGROUND_FIRST + slot, entry == null)
-            player.setComponentHidden(INTERFACE_ID, SLOT_FIRST + slot, entry == null)
+        player.setComponentSprite(INTERFACE_ID, l.priceIcon, Art.ICON_FIRST + shop.ordinal)
+        for (slot in 0 until l.slotCount) {
+            val entry = list.getOrNull(page * l.slotCount + slot)
+            player.setComponentHidden(INTERFACE_ID, l.slotBackgroundFirst + slot, entry == null)
+            player.setComponentHidden(INTERFACE_ID, l.slotFirst + slot, entry == null)
             // IF_SETOBJECT with -1 dereferences a null ObjType in the 667 client: empty slots are hidden instead.
-            if (entry != null) player.setComponentItem(INTERFACE_ID, SLOT_FIRST + slot, entry.purchaseItem, 1)
+            if (entry != null) player.setComponentItem(INTERFACE_ID, l.slotFirst + slot, entry.purchaseItem, 1)
         }
-        player.setComponentText(INTERFACE_ID, PAGE_TEXT, "Page ${page + 1} / ${pages(player)}")
-        player.setComponentText(INTERFACE_ID, EMPTY_TEXT, if (list.isEmpty()) "This shop has no stock yet." else "")
+        player.setComponentText(INTERFACE_ID, l.pageText, "Page ${page + 1} / ${pages(player)}")
+        player.setComponentText(INTERFACE_ID, l.emptyText, if (list.isEmpty()) "This shop has no stock yet." else "")
         renderSelection(player)
         renderPreview(player)
     }
 
     /** Gold glow + outline on the selected slot when it is on the visible page. */
     fun renderSelection(player: Player) {
-        val onPage = (player.attr[SELECTED_ATTR] ?: 0) - (player.attr[PAGE_ATTR] ?: 0) * SLOT_COUNT
+        val l = layout(player)
+        val onPage = (player.attr[SELECTED_ATTR] ?: 0) - (player.attr[PAGE_ATTR] ?: 0) * l.slotCount
         val valid = selected(player) != null
-        for (slot in 0 until SLOT_COUNT) {
+        for (slot in 0 until l.slotCount) {
             val show = valid && slot == onPage
-            player.setComponentHidden(INTERFACE_ID, Ui.SELECT_GLOW_FIRST + slot, !show)
-            player.setComponentHidden(INTERFACE_ID, Ui.SELECT_OUTLINE_FIRST + slot, !show)
+            player.setComponentHidden(INTERFACE_ID, l.selectGlowFirst + slot, !show)
+            player.setComponentHidden(INTERFACE_ID, l.selectOutlineFirst + slot, !show)
         }
     }
 
     fun renderPreview(player: Player) {
+        val l = layout(player)
         val entry = selected(player)
         val currency = shop(player).currency
         val balance = player.attr[currency.attr] ?: 0
         player.setComponentText(INTERFACE_ID, BALANCE, "<col=ffd700>${balance.format()}</col> ${if (balance == 1) currency.singular else currency.plural}")
-        player.setComponentHidden(INTERFACE_ID, PREVIEW_MODEL, entry == null)
-        player.setComponentHidden(INTERFACE_ID, PRICE_ICON, entry == null)
+        player.setComponentHidden(INTERFACE_ID, l.previewModel, entry == null)
+        player.setComponentHidden(INTERFACE_ID, l.priceIcon, entry == null)
         if (entry == null) {
-            listOf(RESULT_NAME, KIT_NAME, REQUIREMENT, COSMETIC, PRICE).forEach { player.setComponentText(INTERFACE_ID, it, "") }
-            player.setComponentHidden(INTERFACE_ID, BUY_LAYER, true)
-            player.setComponentHidden(INTERFACE_ID, CAROUSEL_PREVIOUS, true)
-            player.setComponentHidden(INTERFACE_ID, CAROUSEL_NEXT, true)
+            listOf(l.resultName, l.kitName, l.requirement, l.cosmetic, l.price).forEach { player.setComponentText(INTERFACE_ID, it, "") }
+            player.setComponentHidden(INTERFACE_ID, l.buyLayer, true)
+            player.setComponentHidden(INTERFACE_ID, l.carouselPrevious, true)
+            player.setComponentHidden(INTERFACE_ID, l.carouselNext, true)
             return
         }
         val index = (player.attr[CAROUSEL_ATTR] ?: 0).coerceIn(0, entry.previewItems.size - 1)
         val preview = entry.previewItems[index]
         // The preview is the real ornamented/result item id; it is only drawn, never given.
-        player.setComponentItem(INTERFACE_ID, PREVIEW_MODEL, preview, 1)
+        player.setComponentItem(INTERFACE_ID, l.previewModel, preview, 1)
         val several = entry.previewItems.size > 1
-        player.setComponentHidden(INTERFACE_ID, CAROUSEL_PREVIOUS, !several)
-        player.setComponentHidden(INTERFACE_ID, CAROUSEL_NEXT, !several)
-        player.setComponentText(INTERFACE_ID, RESULT_NAME, name(player, preview) + if (several) " (${index + 1}/${entry.previewItems.size})" else "")
+        player.setComponentHidden(INTERFACE_ID, l.carouselPrevious, !several)
+        player.setComponentHidden(INTERFACE_ID, l.carouselNext, !several)
+        player.setComponentText(INTERFACE_ID, l.resultName, name(player, preview) + if (several) " (${index + 1}/${entry.previewItems.size})" else "")
         val tier = TIER_COLOURS[entry.tier]?.let { "<col=$it>${entry.tier.label}</col> - " } ?: ""
-        player.setComponentText(INTERFACE_ID, KIT_NAME, tier + name(player, entry.purchaseItem))
+        player.setComponentText(INTERFACE_ID, l.kitName, tier + name(player, entry.purchaseItem))
         val base = entry.requiredBaseItems.getOrNull(index)
         player.setComponentText(
             INTERFACE_ID,
-            REQUIREMENT,
+            l.requirement,
             when {
                 base == null -> "No base item required"
                 entry.kind == Kind.UPGRADE -> "Exchanges your ${name(player, base)}"
@@ -242,7 +294,7 @@ object StoreUi : KLogging() {
         )
         player.setComponentText(
             INTERFACE_ID,
-            COSMETIC,
+            l.cosmetic,
             when (entry.kind) {
                 Kind.KIT -> "Stats unchanged - cosmetic only"
                 Kind.UPGRADE -> "Stats unchanged - base item required"
@@ -259,16 +311,16 @@ object StoreUi : KLogging() {
         val priceColour = if (affordable) "ffd700" else "ff5050"
         player.setComponentText(
             INTERFACE_ID,
-            PRICE,
+            l.price,
             "<col=$priceColour>${entry.price.format()}</col> ${if (entry.price == 1) currency.singular else currency.plural}",
         )
-        player.setComponentHidden(INTERFACE_ID, BUY_LAYER, false)
+        player.setComponentHidden(INTERFACE_ID, l.buyLayer, false)
         val confirming = player.attr[CONFIRM_ATTR] == player.attr[SELECTED_ATTR]
         // Armed purchase: the button turns gold and asks for the second press.
-        player.setComponentSprite(INTERFACE_ID, BUY_GRAPHIC, if (confirming) Art.BUY_CONFIRM else Art.BUY)
+        player.setComponentSprite(INTERFACE_ID, l.buyGraphic, if (confirming) Art.BUY_CONFIRM else Art.BUY)
         player.setComponentText(
             INTERFACE_ID,
-            BUY_TEXT,
+            l.buyText,
             when {
                 confirming -> "Confirm purchase"
                 entry.kind == Kind.KIT -> "Buy kit"

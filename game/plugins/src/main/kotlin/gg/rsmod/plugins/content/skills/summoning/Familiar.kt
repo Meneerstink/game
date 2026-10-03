@@ -933,7 +933,7 @@ object Familiar {
         player: Player,
         npc: Npc,
         runs: Boolean = false,
-        recovered: (Player, Npc) -> Unit = { p, n -> playRecoveryPresentation(p, n) },
+        recovered: (Player, Npc) -> Unit = { _, n -> playFollowRecoveryPresentation(n) },
     ) {
         val recovery = followRecoveryReason(npc.tile, player.tile)
         if (recovery != null) {
@@ -954,10 +954,20 @@ object Familiar {
         // stale tile. A follower that [runs] matches the owner's speed this cycle (two queued steps = running), see (2) above;
         // the 2026-09-24 save point had made every familiar walk, so it fell behind a running owner (conform summoning
         // "run: never more than 2 tiles behind", every familiar).
-        val ownerSteps = player.movementQueue.peekSteps(if (player.isRunning()) 2 else 1)
+        // E18/F6 (owner: "familiars RUN"): whether the owner really runs this cycle is decided exactly as MovementQueue.cycle
+        // decides it - by the type of the first queued step (a ctrl-click walk while the run toggle is on is a WALK, resting and
+        // zero energy never run) and only with a second step queued. Before, the run *toggle* alone (Player.isRunning) chose
+        // two steps, so a familiar ran beside an owner who was walking.
+        val ownerRuns = ownerRunsThisCycle(player)
+        val ownerSteps = player.movementQueue.peekSteps(if (ownerRuns) 2 else 1)
         val target = ownerSteps.lastOrNull()?.tile ?: player.tile
+        val stepType = if (runs && ownerRuns) MovementQueue.StepType.FORCED_RUN else MovementQueue.StepType.FORCED_WALK
         val ownerFootprint = footprint(target, player.getSize())
         if (isInFollowSlot(npc.tile, npc.getSize(), target, player.getSize())) {
+            // Already beside the owner's end-of-cycle tile: stop here. The queue still held last cycle's route, which walked
+            // the familiar on past the slot (onto/around its owner) and made it stop-start every tick (Void Follow.tick:
+            // "an npc already beside its target just faces it" - clearDestination).
+            npc.movementQueue.clear()
             npc.facePawn(player)
             return
         }
@@ -973,22 +983,43 @@ object Familiar {
         val route = BFSPathFindingStrategy(npc.world.collision).calculateRoute(request)
         if (!route.success) {
             /*
-             * E18 (owner 2026-10-03, weeks of reports: "teleporten om de 1 seconde"; log 10-02: a steel titan recalled 6 times in
-             * 10 s, reason no-route, each with sound 188). Void `Follow.tick` never teleports a follower because a path fails:
-             * it queues one plain step towards the follow tile ("dumb" follow) and repositions only on another plane or past 15
-             * tiles (followRecoveryReason above). The step goes through the normal collision check, so a blocked step simply
-             * does not happen - the follower waits beside the obstacle until its owner moves on.
+             * E18 (owner 2026-10-03, weeks of reports: "teleporten om de 1 seconde"). Void `Follow.tick` never teleports a follower
+             * because a path fails; it repositions only on another plane or past 15 tiles (followRecoveryReason above).
+             * Live log 2026-10-03 20:57 (War tortoise by the Grand Exchange): the previous fallback - ONE diagonal step - was
+             * blocked by a wall corner every tick for 50 s while a straight step was free, so the familiar froze until the
+             * distance teleport (with its sound) fired. Now, like a player's own pathfinder: walk the search's partial route to
+             * the closest tile it can reach; only when that is where it already stands, Void Movement.nextDirection's dumb step
+             * (diagonal, else its horizontal part, else its vertical part), each checked for the familiar's whole footprint.
+             *
+             * A follower that genuinely cannot reach its owner (a 2x2 titan at a one-tile door such as the Varrock general
+             * store's, the other side of a wall after a shortcut) is NOT teleported: both donors leave it where it is - Void
+             * `Follow.tick` dumb-steps and repositions only on another plane or past 15 tiles, Novite 667 `Familiar.sendFollow`
+             * uses the non-intelligent `calcFollow(owner, 2, true, false)` and repositions only outside 12 tiles - and 2011 RS
+             * gives the player "Call Follower" for exactly that case. (A bounded "unreachable" teleport was tried on 2026-10-04 and
+             * removed: the titan teleported into and out of the Varrock general store while its owner simply walked through.)
+             *
+             * The partial route is only taken when its end really brings the familiar's BODY closer to its owner. The search
+             * picks its closest tile by the south-west corner alone, which for a 2x2 body can be a tile beside the obstacle that
+             * is no closer at all (sim 2026-10-04: the titan stepped east along the store front while its owner went south inside).
              */
-            val dx = Integer.signum(target.x - npc.tile.x)
-            val dz = Integer.signum(target.z - npc.tile.z)
-            if (dx != 0 || dz != 0) {
-                npc.walkPath(
-                    java.util.ArrayDeque(listOf(npc.tile.transform(dx, dz))),
-                    stepType = if (runs && ownerSteps.size > 1) MovementQueue.StepType.FORCED_RUN else MovementQueue.StepType.FORCED_WALK,
-                    detectCollision = true,
-                )
+            val partial = route.path.toList()
+            val gapNow = footprintGap(npc.tile, npc.getSize(), target, player.getSize())
+            if (partial.isNotEmpty() && footprintGap(route.tail, npc.getSize(), target, player.getSize()) < gapNow) {
+                npc.walkPath(java.util.ArrayDeque(partial), stepType = stepType, detectCollision = true)
+                gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.SUMMON) {
+                    "familiar ${npc.id} cannot reach ${player.username}: walks to the closest tile ${route.tail}, no teleport"
+                }
+            } else {
+                val step = dumbStep(npc, target)
+                if (step != null) {
+                    npc.walkPath(java.util.ArrayDeque(listOf(step)), stepType = MovementQueue.StepType.FORCED_WALK, detectCollision = true)
+                } else {
+                    npc.movementQueue.clear()
+                }
+                gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.SUMMON) {
+                    "familiar ${npc.id} cannot reach ${player.username}: ${if (step != null) "dumb step to $step" else "waits"}, no teleport"
+                }
             }
-            gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.SUMMON) { "familiar ${npc.id} no route to ${player.username}: plain step ($dx,$dz), no teleport" }
             npc.facePawn(player)
             return
         }
@@ -1010,11 +1041,7 @@ object Familiar {
             java.util.ArrayDeque(
                 route.path.toList().dropLastWhile { step -> footprint(step, npc.getSize()).any { it in ownerFootprint } },
             )
-        npc.walkPath(
-            path,
-            stepType = if (runs && ownerSteps.size > 1) MovementQueue.StepType.FORCED_RUN else MovementQueue.StepType.FORCED_WALK,
-            detectCollision = true,
-        )
+        if (path.isEmpty()) npc.movementQueue.clear() else npc.walkPath(path, stepType = stepType, detectCollision = true)
         // Movement and combat may leave a stale face target on the NPC. Reassert the owner as the
         // sole facing target for the non-combat follow state; combat takes ownership again in
         // FamiliarCombat.handleCombat before it attacks.
@@ -1037,6 +1064,74 @@ object Familiar {
      * So the test is expressed over footprints: the familiar must be **touching** the owner and
      * must **not overlap** them, which is what a real 2011 follower does.
      */
+    /**
+     * Whether [player] moves two tiles this cycle - the same decision [MovementQueue.cycle] makes: the FIRST queued step's
+     * type (NORMAL = the run toggle, varp 173 == 1, never while resting; FORCED_RUN = only with energy left; FORCED_WALK =
+     * never) and a second step queued.
+     */
+    internal fun ownerRunsThisCycle(player: Player): Boolean {
+        val steps = player.movementQueue.peekSteps(2)
+        if (steps.size < 2) return false
+        return when (steps.first().type) {
+            MovementQueue.StepType.NORMAL -> player.isRunning() && !player.isResting()
+            MovementQueue.StepType.FORCED_RUN -> player.runEnergy >= 1.0
+            MovementQueue.StepType.FORCED_WALK -> false
+        }
+    }
+
+    /**
+     * Void `Movement.nextDirection`: one step towards [target] - the diagonal, else its horizontal part, else its vertical part -
+     * that the familiar's whole footprint can take (the tile left and the tile entered, as [MovementQueue] checks it). Null when
+     * none is free: the familiar waits.
+     */
+    internal fun dumbStep(
+        npc: Npc,
+        target: Tile,
+    ): Tile? {
+        val dx = Integer.signum(target.x - npc.tile.x)
+        val dz = Integer.signum(target.z - npc.tile.z)
+        val size = npc.getSize().coerceAtLeast(1)
+        val collision = npc.world.collision
+        fun free(sx: Int, sz: Int): Boolean {
+            if (sx == 0 && sz == 0) return false
+            val direction = gg.rsmod.game.model.Direction.between(npc.tile, npc.tile.transform(sx, sz))
+            for (x in 0 until size) for (z in 0 until size) {
+                val part = npc.tile.transform(x, z)
+                if (!collision.canTraverse(part, direction, projectile = false, water = false)) return false
+                if (!collision.canTraverse(part.step(direction), direction.getOpposite(), projectile = false, water = false)) return false
+            }
+            return true
+        }
+        return when {
+            free(dx, dz) -> npc.tile.transform(dx, dz)
+            dx != 0 && free(dx, 0) -> npc.tile.transform(dx, 0)
+            dz != 0 && free(0, dz) -> npc.tile.transform(0, dz)
+            else -> null
+        }
+    }
+
+    /**
+     * The automatic follow recovery (another plane, or more than [FOLLOW_RECOVERY_DISTANCE] tiles away): Novite 667
+     * `Familiar.processNPC` -> `call(false)` shows only the size 1314/1315 appearance graphic, Void `Follow.tick` not even
+     * that. No sound and no spawn animation (owner B1/A4: every recall played sound 188 and the titan's spawn cue). The
+     * player's own "Call follower" keeps the full call presentation ([call]).
+     */
+    private fun playFollowRecoveryPresentation(npc: Npc) = playAppearanceGraphic(npc)
+
+    /** Chebyshev tiles between two square bodies (0 = overlapping, 1 = touching). */
+    internal fun footprintGap(
+        aTile: Tile,
+        aSize: Int,
+        bTile: Tile,
+        bSize: Int,
+    ): Int {
+        val a = aSize.coerceAtLeast(1)
+        val b = bSize.coerceAtLeast(1)
+        val dx = maxOf(0, aTile.x - (bTile.x + b - 1), bTile.x - (aTile.x + a - 1))
+        val dz = maxOf(0, aTile.z - (bTile.z + b - 1), bTile.z - (aTile.z + a - 1))
+        return maxOf(dx, dz)
+    }
+
     fun isInFollowSlot(
         npcTile: Tile,
         npcSize: Int,

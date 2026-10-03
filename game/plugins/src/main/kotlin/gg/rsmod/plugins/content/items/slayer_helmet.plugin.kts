@@ -35,6 +35,7 @@ fun assembleHelmet(player: Player) {
     }
     (HELMET_PARTS + mask).forEach { player.inventory.remove(it, 1) }
     player.inventory.add(Items.SLAYER_HELMET, 1)
+    gg.rsmod.plugins.content.items.combine.ItemAttachSounds.attached(player, *(HELMET_PARTS + mask).toIntArray())
     player.message("You combine the items into a Slayer helmet.")
 }
 
@@ -49,6 +50,7 @@ fun assembleFullHelmet(player: Player) {
     }
     FULL_HELMET_PARTS.forEach { player.inventory.remove(it, 1) }
     player.inventory.add(Items.FULL_SLAYER_HELMET, 1)
+    gg.rsmod.plugins.content.items.combine.ItemAttachSounds.attached(player, *FULL_HELMET_PARTS.toIntArray())
     player.message("You combine the items into a full Slayer helmet.")
 }
 

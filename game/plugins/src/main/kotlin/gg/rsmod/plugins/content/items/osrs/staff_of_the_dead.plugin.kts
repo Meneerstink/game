@@ -70,6 +70,7 @@ on_item_on_item(item1 = Items.MAGIC_FANG, item2 = Items.STAFF_OF_THE_DEAD) {
     player.inventory.remove(Items.MAGIC_FANG, 1)
     player.inventory.remove(Items.STAFF_OF_THE_DEAD, 1)
     player.inventory.add(Items.TOXIC_STAFF_UNCHARGED, 1)
+    gg.rsmod.plugins.content.items.combine.ItemAttachSounds.attached(player, Items.MAGIC_FANG, Items.STAFF_OF_THE_DEAD)
     player.message("You attach the magic fang to the staff of the dead.")
 }
 

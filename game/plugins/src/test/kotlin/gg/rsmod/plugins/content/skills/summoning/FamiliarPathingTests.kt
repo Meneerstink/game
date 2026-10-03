@@ -279,6 +279,124 @@ class FamiliarPathingTests {
         }
     }
 
+    /**
+     * B1/A4 (owner: a loud hit / the call sound on every familiar teleport; log 10-02: sound 188 six times in 10 s). The automatic
+     * follow recovery is silent - Novite 667 `call(false)` shows only the 1314/1315 graphic, Void `Follow.tick` nothing; only the
+     * player's own summon / "Call follower" plays the arrival cue. Positive control: the same matcher sees a real familiar sound.
+     */
+    @Test
+    fun `an automatic recovery teleport plays no sound`() {
+        val world = newWorld()
+        val owner = Tile(3200, 3200, 1)
+        val player = io.mockk.mockk<gg.rsmod.game.model.entity.Player>(relaxed = true)
+        every { player.tile } answers { owner }
+        every { player.getSize() } returns 1
+        every { player.world } returns world
+        every { player.username } returns "tester"
+        val npc = newNpc(world, LARGE_FAMILIAR, Tile(3200, 3200, 0))
+        Familiar.follow(player, npc, runs = true)
+        assertEquals(1, npc.tile.height, "the plane recovery really teleported the familiar")
+        io.mockk.verify(exactly = 0) { world.spawn(any<gg.rsmod.game.model.entity.AreaSound>()) }
+        FamiliarAudio.play(player, Familiar.ARRIVAL_SOUND, at = owner)
+        io.mockk.verify(exactly = 1) { world.spawn(any<gg.rsmod.game.model.entity.AreaSound>()) }
+    }
+
+    @Test
+    fun `footprint gap measures body to body`() {
+        assertEquals(1, Familiar.footprintGap(Tile(3201, 3200), 2, Tile(3200, 3200), 1))
+        assertEquals(0, Familiar.footprintGap(Tile(3199, 3199), 2, Tile(3200, 3200), 1))
+        assertEquals(4, Familiar.footprintGap(Tile(3196, 3200), 1, Tile(3200, 3201), 2))
+    }
+
+    /**
+     * E18, donor rule (Void `Follow.tick`, Novite 667 `Familiar.processNPC`/`sendFollow`): a follower its owner can not be reached
+     * from - here a wall longer than the 20-tile search - is never teleported while it is within 15 tiles (RS: "Call Follower"),
+     * and it does not wander off along the wall either: it waits at the wall, as close to its owner as it can get.
+     */
+    @Test
+    fun `a familiar walled off within 15 tiles waits at the wall and never teleports`() {
+        for (familiar in listOf(SMALL_FAMILIAR, LARGE_FAMILIAR)) {
+            val world = newWorld()
+            // A wall between z=3202 and z=3203 from x=3170 to x=3230: beyond the search's 20 tiles either way.
+            for (x in 3170..3230) {
+                block(world, Tile(x, 3202, 0), Direction.NORTH)
+                block(world, Tile(x, 3203, 0), Direction.SOUTH)
+            }
+            val owner = Tile(3200, 3200, 0)
+            val player = io.mockk.mockk<gg.rsmod.game.model.entity.Player>(relaxed = true)
+            every { player.tile } answers { owner }
+            every { player.getSize() } returns 1
+            every { player.world } returns world
+            every { player.username } returns "tester"
+            val npc = newNpc(world, familiar, Tile(3203, 3208, 0))
+            npc.ignoresEntityCollision = true
+            val startGap = Familiar.footprintGap(npc.tile, npc.getSize(), owner, 1)
+            var teleports = 0
+            var worstGap = startGap
+            repeat(30) {
+                Familiar.follow(player, npc, runs = true) { _, _ -> teleports++ }
+                npc.movementQueue.cycle()
+                worstGap = maxOf(worstGap, Familiar.footprintGap(npc.tile, npc.getSize(), owner, 1))
+            }
+            val size = sizeOf(familiar)
+            assertEquals(0, teleports, "size-$size: no teleport within 15 tiles")
+            assertEquals(startGap, worstGap, "size-$size: never further from its owner than it started (${npc.tile})")
+            assertEquals(3203, npc.tile.z, "size-$size: waits right at the wall (${npc.tile})")
+            assertEquals(3, Familiar.footprintGap(npc.tile, npc.getSize(), owner, 1), "size-$size: as close as the wall allows (${npc.tile})")
+        }
+    }
+
+    /**
+     * F6 / E18 on open ground: a familiar of each size follows an owner who walks (never runs then) and one who runs (keeps up),
+     * never more than 2 tiles from its owner's body and never teleported.
+     */
+    @Test
+    fun `on open ground a familiar walks with a walking owner and keeps up with a running one`() {
+        for (familiar in listOf(SMALL_FAMILIAR, LARGE_FAMILIAR)) {
+            for (running in listOf(false, true)) {
+                val world = newWorld()
+                var owner = Tile(3200, 3200, 0)
+                val pending = java.util.ArrayDeque<Tile>()
+                (1..24).forEach { pending.add(Tile(3200 + it, 3200, 0)) }
+                (1..10).forEach { pending.add(Tile(3224, 3200 + it, 0)) }
+                (1..8).forEach { pending.add(Tile(3224 - it, 3210 + it, 0)) }
+                val type = if (running) MovementQueue.StepType.FORCED_RUN else MovementQueue.StepType.FORCED_WALK
+                val queue = io.mockk.mockk<MovementQueue>(relaxed = true)
+                every { queue.peekSteps(any()) } answers { pending.take(firstArg<Int>()).map { MovementQueue.Step(it, type, true) } }
+                val player = io.mockk.mockk<gg.rsmod.game.model.entity.Player>(relaxed = true)
+                every { player.tile } answers { owner }
+                every { player.getSize() } returns 1
+                every { player.world } returns world
+                every { player.username } returns "tester"
+                every { player.movementQueue } returns queue
+                every { player.isRunning() } returns running
+                every { player.isResting() } returns false
+                every { player.runEnergy } returns 100.0
+                val npc = newNpc(world, familiar, Familiar.placementTile(player, familiar))
+                npc.ignoresEntityCollision = true
+                var teleports = 0
+                var ranWhileWalking = 0
+                var worstGap = 0
+                val log = StringBuilder()
+                repeat(pending.size + 6) { tick ->
+                    Familiar.follow(player, npc, runs = true) { _, _ -> teleports++ }
+                    repeat(if (running) 2 else 1) { pending.pollFirst()?.let { owner = it } }
+                    val before = npc.tile
+                    npc.movementQueue.cycle()
+                    if (!running && maxOf(Math.abs(npc.tile.x - before.x), Math.abs(npc.tile.z - before.z)) > 1) ranWhileWalking++
+                    val gap = Familiar.footprintGap(npc.tile, npc.getSize(), owner, 1)
+                    worstGap = maxOf(worstGap, gap)
+                    log.append("t$tick owner=${owner.x},${owner.z} npc=${npc.tile.x},${npc.tile.z} gap=$gap\n")
+                }
+                val what = "size-${sizeOf(familiar)} running=$running\n$log"
+                assertEquals(0, teleports, what)
+                assertEquals(0, ranWhileWalking, what)
+                assertTrue(worstGap <= 2, "worst gap $worstGap $what")
+                assertTrue(Familiar.footprintGap(npc.tile, npc.getSize(), owner, 1) <= 1, what)
+            }
+        }
+    }
+
     private fun requestFor(
         start: Tile,
         size: Int,

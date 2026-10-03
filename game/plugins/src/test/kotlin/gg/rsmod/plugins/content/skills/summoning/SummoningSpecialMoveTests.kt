@@ -244,6 +244,9 @@ class SummoningSpecialMoveTests {
         every { player.containers } returns HashMap()
         every { player.skills } returns skills
         every { player.tile } returns Tile(0, 0, 0)
+        // A bank deposit (Winter Storage) refreshes the bank space varcs 192/1038 (Bank.refreshSpaceCounts): a relaxed mock's
+        // varcs is an empty list, so the read threw IndexOutOfBoundsException.
+        every { player.varcs } returns MutableList(4096) { 0 }
         val npc = mockk<Npc>(relaxed = true)
         every { npc.id } returns familiarNpcId
         every { npc.tile } returns Tile(0, 0, 0)

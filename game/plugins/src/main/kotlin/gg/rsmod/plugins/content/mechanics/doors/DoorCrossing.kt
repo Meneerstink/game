@@ -72,6 +72,8 @@ object DoorCrossing {
         openedId: Int = -1,
         openTicks: Int = 2,
         farSide: Tile? = null,
+        /** The script's own door-open visual (a hinged double door swinging open), run instead of the [openedId] swap. */
+        open: (() -> Unit)? = null,
     ): Boolean {
         val near = nearSide(player.tile, door) ?: run {
             player.message("The door is blocked.")
@@ -100,7 +102,9 @@ object DoorCrossing {
             player.message("The door is blocked.")
             return false
         }
-        if (openedId != -1) {
+        if (open != null) {
+            open()
+        } else if (openedId != -1) {
             val world = player.world
             world.spawn(gg.rsmod.game.model.entity.DynamicObject(door, openedId))
             world.queue {

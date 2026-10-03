@@ -144,7 +144,7 @@ class GrandExchangeBuyLimitTests {
     }
 
     @Test
-    fun `finished offers enter the history newest first, five kept, persisted, wording from Void`() {
+    fun `finished offers enter the history newest first, twenty kept, persisted, OSRS wording`() {
         val (service, file) = newService { 0L }
         fun trade(
             price: Int,
@@ -158,24 +158,31 @@ class GrandExchangeBuyLimitTests {
             assertTrue(service.releaseIfDrained("s", sell.id))
             assertTrue(service.releaseIfDrained("b", buy.id))
         }
-        (1..6).forEach { trade(price = 1000 * it, quantity = it) }
+        // OSRS Wiki, Grand Exchange changes 9 March 2017: "The Grand Exchange 'History' tab now displays up to 20
+        // transactions, as opposed to 10." 21 trades: the oldest one drops out.
+        (1..21).forEach { trade(price = 1000 * it, quantity = it) }
         val unfilled = service.submit("b", OfferType.BUY, Items.LOBSTER, 1, 1)!!.first
         service.cancel("b", unfilled.id)
         service.takePart("b", unfilled.id, coins = true)
         assertTrue(service.releaseIfDrained("b", unfilled.id))
 
         val bought = service.historyFor("b")
-        assertEquals(5, bought.size, "an aborted offer that traded nothing is not history; five rows kept")
-        assertEquals(listOf(6, 5, 4, 3, 2), bought.map { it.amount }, "newest first")
-        assertEquals(GeHistoryEntry(Items.LOBSTER, 6, 36_000, sold = false), bought.first())
+        assertEquals(GrandExchangeHistory.KEPT, bought.size, "an aborted offer that traded nothing is not history; twenty rows kept")
+        assertEquals(20, GrandExchangeHistory.KEPT)
+        assertEquals((21 downTo 2).toList(), bought.map { it.amount }, "newest first")
+        assertEquals(GeHistoryEntry(Items.LOBSTER, 21, 441_000, sold = false), bought.first())
         assertTrue(service.historyFor("s").all { it.sold })
 
         val restarted = GrandExchangeService(file) { 0L }.also { it.load() }
         assertEquals(bought, restarted.historyFor("b"))
+        assertEquals(service.historyFor("s"), restarted.historyFor("s"), "the fee a sale paid survives a restart")
 
-        val rows = GrandExchangeHistory.rows(listOf(bought.first(), service.historyFor("s").first())) { "Lobster" }
-        assertEquals(GrandExchangeHistory.Row("You bought", "Lobster", "6", "It cost you<br>36,000 gp"), rows[0])
-        assertEquals(GrandExchangeHistory.Row("You sold", "Lobster", "6", "You got<br>36,000 gp"), rows[1])
+        // OSRS script 1645 wording ("Bought:" / "Sold:", price in coins; see GrandExchangeOsrsButtonsTests for the price text).
+        val sold = service.historyFor("s").first()
+        val rows = GrandExchangeHistory.rows(listOf(bought.first(), sold)) { "Lobster" }
+        assertEquals(GrandExchangeHistory.Row("Bought:", "Lobster", "21", GrandExchangeHistory.price(bought.first())), rows[0])
+        assertEquals(GrandExchangeHistory.Row("Sold:", "Lobster", "21", GrandExchangeHistory.price(sold)), rows[1])
+        assertEquals("<col=ffb83f>441,000 coins</col><br>= 21,000 each", rows[0].price)
         assertEquals(GrandExchangeHistory.Row("", "", "", ""), rows[4])
     }
 

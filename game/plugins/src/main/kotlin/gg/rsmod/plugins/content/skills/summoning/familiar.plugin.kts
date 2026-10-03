@@ -45,6 +45,8 @@ suspend fun QueueTask.familiarDialogue(
     npcId: Int,
 ) {
     val pouch = SummoningPouchData.values.firstOrNull { it.npc == npcId }
+    // "When spoken with" (RS Wiki, Geyser titan): talking to the familiar gives its visible boost.
+    pouch?.let { SummoningBoosts.interactBoost(player, it) }
     val conversations = pouch?.let { SummoningDialogueData.conversationsFor(it) }.orEmpty()
     if (pouch == null || conversations.isEmpty()) {
         if (BeastOfBurden.isCarrierNpc(npcId)) {

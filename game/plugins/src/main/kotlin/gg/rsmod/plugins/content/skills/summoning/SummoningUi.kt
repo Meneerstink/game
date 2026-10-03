@@ -334,6 +334,13 @@ object SummoningUi {
             // one already out, a reconnect, a renew that swapped the npc - which is what left the
             // owner with no Follower Details panel to look at.
             if (active != null) showPanel(player)
+        } else {
+            // B4 (owner, reported again after #105 and #135: "summoning tab disappears on login with a pet/familiar, on teleport,
+            // ..."): the tab button and icon are live client state exactly like the gating below - every rebuild of the tab strip
+            // the server is not told about brings them back with the cache's baked "hidden, no op" flags. They were re-armed only on
+            // a familiar change, login, window-mode switch and the known gameframe rebuilds; now on every full pass as well
+            // (invalidate, and the RESEND_INTERVAL_CYCLES heartbeat), so whatever reset path hid the tab, it comes back by itself.
+            FollowerDetailsTab.install(player)
         }
         refreshPanel(player, active)
         refreshOrb(player, active)

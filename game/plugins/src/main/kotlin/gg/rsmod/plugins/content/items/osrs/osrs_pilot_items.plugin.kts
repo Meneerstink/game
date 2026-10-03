@@ -25,7 +25,10 @@ OsrsOrnamentKits.CONSUMED.forEach { kit ->
         on_item_on_item(item1 = Items.CLEANING_CLOTH, item2 = kit.ornamented) {
             val first = player.attr[gg.rsmod.game.model.attr.INTERACTING_ITEM_SLOT] ?: return@on_item_on_item
             val second = player.attr[gg.rsmod.game.model.attr.OTHER_ITEM_SLOT_ATTR] ?: return@on_item_on_item
-            revert(player, if (player.inventory[first]?.id == kit.ornamented) first else second)
+            val slot = if (player.inventory[first]?.id == kit.ornamented) first else second
+            revert(player, slot)
+            // The cleaning cloth is an item-on-item detach: ItemActionGuard only sounds the Revert / Dismantle options.
+            if (player.inventory[slot]?.id == kit.base) gg.rsmod.plugins.content.items.combine.ItemAttachSounds.detached(player)
         }
     } else {
         on_item_option(item = kit.ornamented, option = "Revert") { revert(player, player.getInteractingItemSlot()) }
@@ -43,8 +46,10 @@ OsrsOrnamentKits.ALL.forEach { ornament ->
         }
         player.inventory.add(item = ornament.base, assureFullInsertion = true)
         player.inventory.add(item = ornament.kit, assureFullInsertion = true)
+        // "Dismantle" already sounds through ItemActionGuard; the 667 "Split" option is not one of its options.
+        if (!ornament.detachOption.equals("Dismantle", ignoreCase = true)) gg.rsmod.plugins.content.items.combine.ItemAttachSounds.detached(player)
         // Owner 2026-09-18: dismantling says the opposite of attaching, in the item GUI.
-        player.queue { doubleItemMessageBox(OsrsOrnamentKits.DETACH_MESSAGE, item1 = ornament.base, item2 = ornament.kit) }
+        player.queue { doubleItemMessageBox(ornament.detachMessage, item1 = ornament.base, item2 = ornament.kit) }
     }
 }
 

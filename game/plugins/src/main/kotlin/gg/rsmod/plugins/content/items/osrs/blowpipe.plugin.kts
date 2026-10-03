@@ -156,6 +156,7 @@ on_item_on_item(item1 = Items.CHISEL, item2 = Items.TANZANITE_FANG) {
     }
     if (player.inventory.remove(Items.TANZANITE_FANG, 1).hasSucceeded()) {
         player.inventory.add(Items.TOXIC_BLOWPIPE_EMPTY, 1)
+        gg.rsmod.plugins.content.items.combine.ItemAttachSounds.carved(player)
         player.addXp(Skills.FLETCHING, Blowpipe.FLETCHING_XP)
         player.message("You carve the fang and turn it into a powerful blowpipe.")
     }

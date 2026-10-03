@@ -16,6 +16,7 @@ AncientSceptres.QUARTZ_UPGRADES.forEach { (quartz, sceptre) ->
         if (quartzSlot == -1 || sceptreSlot == -1) return@on_item_on_item
         player.inventory.remove(item = quartz, beginSlot = quartzSlot)
         player.inventory[sceptreSlot] = gg.rsmod.game.model.item.Item(sceptre)
+        gg.rsmod.plugins.content.items.combine.ItemAttachSounds.attached(player, quartz, Items.ANCIENT_SCEPTRE)
     }
 
     on_item_option(item = sceptre, option = "Dismantle") {

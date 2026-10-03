@@ -2,6 +2,11 @@ package gg.rsmod.plugins.content.npcs.definitions.barrows
 
 import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.attr.AttributeKey
+import gg.rsmod.game.fs.def.ObjectDef
+import gg.rsmod.game.model.collision.ObjectType
+import gg.rsmod.game.model.entity.AreaSound
+import gg.rsmod.game.model.entity.DynamicObject
+import gg.rsmod.game.model.entity.GameObject
 import gg.rsmod.game.model.entity.GroundItem
 import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Player
@@ -11,6 +16,8 @@ import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.api.cfg.Anims
 import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.api.cfg.Npcs
+import gg.rsmod.plugins.api.cfg.Sfx
+import gg.rsmod.plugins.content.mechanics.doors.VoidDoors
 import gg.rsmod.plugins.api.ext.*
 import gg.rsmod.plugins.content.combat.getCombatTarget
 import java.lang.ref.WeakReference
@@ -30,7 +37,13 @@ import java.lang.ref.WeakReference
 object Barrows {
     const val OVERLAY_INTERFACE = 24
     const val PUZZLE_INTERFACE = 25
-    const val BROTHER_HEAD_VARBIT = 1043
+    /**
+     * Owner 2026-10-03 20:49 ("in the crypt there is no animation which lowers your prayer"): Void `barrows.varcs.toml`
+     * `barrows_brother_head` id 1043 is a client VARC (map clear -1, ahrims 4761, ahrims_tunnels 4762 ... verac_tunnels 4772) that
+     * the overlay interface 24 script reads to show the draining brother's face. It was written as a varbit (a different var
+     * space), so the client never saw it and no face ever appeared.
+     */
+    const val BROTHER_HEAD_VARC = 1043
     const val KILLS_VARBIT = 463
     const val KILLED_MONSTERS_VARBIT = 464
     const val IN_TUNNEL_VARBIT = 5028
@@ -58,6 +71,14 @@ object Barrows {
     val COLLAPSE_TICKS = AttributeKey<Int>()
     val SPAWNED_BROTHERS = AttributeKey<MutableMap<String, WeakReference<Npc>>>()
     val PUZZLE_ANSWER = AttributeKey<Int>()
+    val PUZZLE_DOOR = AttributeKey<GameObject>()
+    val IN_TUNNEL = AttributeKey<Boolean>()
+
+    /** OSRS chat "Your Barrows chest count is: <col=ff0000>N</col>." (RuneLite ChatCommands kill-count pattern). */
+    val CHEST_COUNT = AttributeKey<Int>(persistenceKey = "barrows_chest_count")
+
+    /** Collection log items already obtained from the chest (comma separated item ids). */
+    val COLLECTION_LOG = AttributeKey<String>(persistenceKey = "barrows_collection_log")
 
     enum class Brother(
         val key: String,
@@ -129,6 +150,121 @@ object Barrows {
     /** The door children that carry "Open" (6713/6732 are not placed on the 667 map). */
     val TUNNEL_DOORS = intArrayOf(6714, 6733)
 
+    /**
+     * The 32 placed tunnel door multilocs (BarrowsMapBindingTests): left leaves 6716..6731 resolve to 6714 (Open) / 6715 (locked),
+     * right leaves 6735..6750 to 6733 / 6734, both on varbits 469..484 = Void `barrows_door_a..p`. Void `barrows.objs.toml`: the
+     * swung-open leaves are `barrows_door_left_opened` 6713 and `barrows_door_right_opened` 6732.
+     */
+    val LEFT_DOOR_PARENTS = 6716..6731
+    val RIGHT_DOOR_PARENTS = 6735..6750
+    const val LEFT_DOOR_CLOSED = 6714
+    const val RIGHT_DOOR_CLOSED = 6733
+    const val LEFT_DOOR_OPENED = 6713
+    const val RIGHT_DOOR_OPENED = 6732
+
+    /** Void `enterDoor(target, def)` default `ticks = 3`: the door stays open three ticks, then swings shut. */
+    const val DOOR_OPEN_TICKS = 3
+
+    /** The door letter (a..p) of a placed tunnel door leaf, or null for anything else. */
+    fun doorLetter(objectId: Int): Char? =
+        when (objectId) {
+            in LEFT_DOOR_PARENTS -> 'a' + (objectId - LEFT_DOOR_PARENTS.first)
+            in RIGHT_DOOR_PARENTS -> 'a' + (objectId - RIGHT_DOOR_PARENTS.first)
+            else -> null
+        }
+
+    /** The closed child a door leaf shows while unlocked (6714 / 6733), the id whose definition names it a "Door". */
+    fun closedLeaf(objectId: Int): Int =
+        when (objectId) {
+            in LEFT_DOOR_PARENTS -> LEFT_DOOR_CLOSED
+            in RIGHT_DOOR_PARENTS -> RIGHT_DOOR_CLOSED
+            else -> -1
+        }
+
+    fun openedLeaf(objectId: Int): Int =
+        when (objectId) {
+            in LEFT_DOOR_PARENTS -> LEFT_DOOR_OPENED
+            in RIGHT_DOOR_PARENTS -> RIGHT_DOOR_OPENED
+            else -> -1
+        }
+
+    /** True when [objectId] is a tunnel door leaf whose letter is locked in this run ([LOCKED_DOORS]). */
+    fun isLockedDoor(player: Player, objectId: Int): Boolean {
+        val letter = doorLetter(objectId) ?: return false
+        return letter in (player.attr[LOCKED_DOORS] ?: "")
+    }
+
+    /**
+     * Void `DoubleDoor.open` for a Barrows tunnel door: both leaves of the pair swing to their opened ids (6713 / 6732) on the tiles
+     * and rotations Void computes ([VoidDoors.plan]). [objectAt] finds the placed object of a wall type on a tile, [defOf] the
+     * definition of an id. Null when [door] is no tunnel door.
+     */
+    fun doorSwing(
+        door: GameObject,
+        objectAt: (Tile, Int) -> GameObject?,
+        defOf: (Int) -> ObjectDef?,
+    ): List<VoidDoors.Replacement>? {
+        if (doorLetter(door.id) == null) return null
+        val opened = (LEFT_DOOR_PARENTS.associateWith { LEFT_DOOR_OPENED }) + (RIGHT_DOOR_PARENTS.associateWith { RIGHT_DOOR_OPENED })
+        return VoidDoors.plan(
+            obj = door,
+            open = true,
+            closedToOpened = opened,
+            openedToClosed = emptyMap(),
+            objectAt = objectAt,
+            // The parents carry no name; their unlocked child is the "Door" Void's DoubleDoor.get looks for.
+            defOf = { id -> defOf(if (doorLetter(id) != null) closedLeaf(id) else id) },
+            inPlace = { false },
+        )
+    }
+
+    /** Door tiles currently swung open, so a second click during the swing does not stack replacements. */
+    private val swungOpen = HashSet<Tile>()
+
+    /**
+     * Owner 2026-10-03 20:48 ("i can noclip through the barrows door ... no open door animation or sound"): the crossing stepped the
+     * player through the closed door. Void BarrowsCrypts "Open": `sound("barrows_door_close")` (41), `enterDoor` -> `Door.openDoor`
+     * swings the double door open with the material sound `barrows_door_open` (62) and reverts after [DOOR_OPEN_TICKS] ticks with
+     * the area sound `barrows_door_close` (41). The leaves are restored as the placed multiloc parents, so every client shows its
+     * own varbit state again.
+     */
+    fun swingOpen(player: Player, door: GameObject) {
+        val world = player.world
+        player.playSound(Sfx.DOOR_OPEN)
+        if (door.tile in swungOpen) return
+        val plan =
+            doorSwing(
+                door,
+                objectAt = { tile, type -> ObjectType.values().firstOrNull { it.value == type }?.let { world.getObject(tile, it) } },
+                defOf = { world.definitions.getNullable(ObjectDef::class.java, it) },
+            ) ?: return
+        val originals = plan.map { it.original }
+        // A wall-layer object already on a swing tile would be replaced by the opened leaf: keep it and put it back afterwards.
+        val displaced =
+            plan.mapNotNull { r ->
+                ObjectType.values().firstOrNull { it.value == r.original.type }?.let { world.getObject(r.tile, it) }
+                    ?.takeIf { existing -> originals.none { it === existing } }
+            }
+        originals.forEach { swungOpen.add(Tile(it.tile)) }
+        originals.forEach { world.remove(it) }
+        val spawned = plan.map { DynamicObject(id = it.id, type = it.original.type, rot = it.rot, tile = Tile(it.tile)).also { o -> world.spawn(o) } }
+        world.queue {
+            wait(DOOR_OPEN_TICKS)
+            spawned.forEach { world.remove(it) }
+            displaced.forEach { world.spawn(DynamicObject(it)) }
+            originals.forEach { world.spawn(DynamicObject(it)) }
+            originals.forEach { swungOpen.remove(it.tile) }
+            world.spawn(AreaSound(tile = Tile(door.tile), id = Sfx.BARROWS_DOOR_OPEN, radius = 5, volume = 1))
+        }
+    }
+
+    /** Void `barrows.ifaces.toml` barrows_puzzle (25): option1..3 = components 6/7/8, choice1..3 = buttons 2/3/5. */
+    val PUZZLE_OPTION_COMPONENTS = intArrayOf(6, 7, 8)
+    val PUZZLE_CHOICE_COMPONENTS = intArrayOf(2, 3, 5)
+
+    /** Void `Player.puzzle()`: the picked choice is right when it is the puzzle's answer model. */
+    fun puzzleAnswered(chosenIndex: Int, answerIndex: Int): Boolean = answerIndex >= 0 && chosenIndex == answerIndex
+
     class Puzzle(val options: IntArray, val choices: IntArray, val answer: Int)
 
     val PUZZLES = listOf(
@@ -182,6 +318,31 @@ object Barrows {
         return npc
     }
 
+    /**
+     * Owner 2026-10-03 20:50 ("not every npc is aggressive inside the barrows crypt"): OSRS Wiki Crypt rat, "As with all monsters in
+     * the crypts, they are aggressive to any player regardless of their combat level." The bulk hunt mode of the crypt monsters is
+     * Void's "cowardly" (combat level x2 cap), so a level-138 player was never attacked by a level-43..52 monster. Used by the shared
+     * aggro check (npc_aggro.plugin.kts).
+     */
+    fun aggressiveRegardlessOfLevel(npc: Npc): Boolean = underground(npc.tile) && npc.id in CRYPT_MONSTERS
+
+    /** The crypt / tunnel monsters (Void BarrowsCrypts npcDeath list, 667 ids). */
+    val CRYPT_MONSTERS = setOf(Npcs.BLOODWORM, Npcs.CRYPT_RAT, Npcs.GIANT_CRYPT_RAT, Npcs.CRYPT_SPIDER, 2035, 2036, Npcs.SKELETON_2037, 5381, 5422)
+
+    enum class SearchResult { HIDDEN_TUNNEL, WAKE_BROTHER, NOTHING }
+
+    /**
+     * Void BarrowsCrypts "Search" on a sarcophagus (E8, owner 2026-10-03: "the hidden-tunnel brother blocks the other five"): the
+     * hidden brother's sarcophagus offers the tunnel; every other one wakes its brother unless he is already up or killed in this run
+     * (kills last until the chest is looted).
+     */
+    fun searchResult(player: Player, brother: Brother): SearchResult =
+        when {
+            player.attr[SELECTED_BROTHER] == brother.key -> SearchResult.HIDDEN_TUNNEL
+            liveBrother(player, brother) == null && !isKilled(player, brother) -> SearchResult.WAKE_BROTHER
+            else -> SearchResult.NOTHING
+        }
+
     /** Ensures a run is set up: hidden brother chosen and puzzle route rolled. */
     fun ensureRun(player: Player) {
         if (player.attr[SELECTED_BROTHER] == null || player.attr[LOOTED] == true) {
@@ -223,7 +384,8 @@ object Barrows {
         val locked = player.attr[LOCKED_DOORS] ?: ""
         DOOR_LETTERS.forEach { player.setVarbit(doorVarbit(it), if (it in locked) 1 else 0) }
         player.setVarbit(CHEST_VARBIT, if (player.attr[CHEST_OPEN] == true) 1 else 0)
-        player.setVarbit(IN_TUNNEL_VARBIT, if (inTunnels(player.tile)) 1 else 0)
+        // Void BarrowsCrypts: `barrows_in_tunnel` starts false on entering and toggles with every tunnel door crossed.
+        player.setVarbit(IN_TUNNEL_VARBIT, if (inTunnels(player.tile) && player.attr[IN_TUNNEL] == true) 1 else 0)
     }
 
     fun openOverlay(player: Player) {
@@ -233,7 +395,7 @@ object Barrows {
 
     fun closeOverlay(player: Player) {
         player.closeInterface(dest = InterfaceDestination.PVP_OVERLAY)
-        player.setVarbit(BROTHER_HEAD_VARBIT, -1)
+        player.setVarc(BROTHER_HEAD_VARC, -1)
     }
 
     fun spawnBrother(player: Player, brother: Brother, tile: Tile): Npc? {
@@ -289,9 +451,16 @@ object Barrows {
      */
     fun drainAmount(brothersKilled: Int): Int = (8 + brothersKilled).coerceAtMost(14)
 
+    /** Void `barrows_brother_head`: the crypt face on the crypt plane (3), the `_tunnels` face in the tunnels (plane 0). */
+    fun headValue(brother: Brother, tile: Tile): Int = if (tile.height == 0) brother.tunnelHeadValue else brother.headValue
+
     fun drainPrayer(player: Player) {
         val brother = Brother.values().random()
-        player.setVarbit(BROTHER_HEAD_VARBIT, if (player.tile.height == 0) brother.tunnelHeadValue else brother.headValue)
+        // OSRS Wiki Barrows/Strategies: "the brothers' faces will occasionally appear on-screen" with every drain. Void sets the
+        // varc to the drawn brother; the same brother twice in a row would leave the value unchanged, so the client got no new
+        // value and showed no face for that drain. Clear first (Void `clear` = -1), then the face: every drain is a change.
+        player.setVarc(BROTHER_HEAD_VARC, -1)
+        player.setVarc(BROTHER_HEAD_VARC, headValue(brother, player.tile))
         player.alterPrayerPoints(-drainAmount(Brother.values().count { isKilled(player, it) }))
     }
 
@@ -392,11 +561,32 @@ object Barrows {
         }
         if (items.isEmpty()) player.message("You find nothing of value in the chest.")
         player.attr[LOOTED] = true
+        // Owner 2026-10-03 20:3x (F9): no Barrows kill count after looting.
+        val count = (player.attr[CHEST_COUNT] ?: 0) + 1
+        player.attr[CHEST_COUNT] = count
+        player.message(chestCountMessage(count))
+        // Owner 2026-10-03 20:3x (F8): no collection-log message for the loot.
+        newCollectionLogItems(player, items).forEach { id ->
+            player.message("New item added to your collection log: ${player.world.definitions.get(gg.rsmod.game.fs.def.ItemDef::class.java, id).name}")
+        }
         // The run's kills stay until the next run starts (ensureRun): while the tunnels collapse every door summons a brother
         // "whom you did not kill on that run" (OSRS Wiki Barrows/Strategies).
         refreshVarbits(player)
         player.attr[COLLAPSE_TICKS] = 0
         player.message("The cave begins to collapse!")
+    }
+
+    fun chestCountMessage(count: Int): String = "Your Barrows chest count is: <col=ff0000>$count</col>."
+
+    /** OSRS Wiki "Collection log": the Barrows Chests entry is the 24 brothers' equipment pieces and the Bolt rack. */
+    val COLLECTION_LOG_ITEMS: Set<Int> = REWARD_ARMOUR.values.flatMap { it.toList() }.toSet() + Items.BOLT_RACK
+
+    /** Records [items] in the player's Barrows collection log and returns the ids that were new, in reward order. */
+    fun newCollectionLogItems(player: Player, items: List<Item>): List<Int> {
+        val have = (player.attr[COLLECTION_LOG] ?: "").split(',').mapNotNull { it.toIntOrNull() }.toMutableSet()
+        val fresh = items.map { it.id }.filter { it in COLLECTION_LOG_ITEMS }.distinct().filter { have.add(it) }
+        if (fresh.isNotEmpty()) player.attr[COLLECTION_LOG] = have.sorted().joinToString(",")
+        return fresh
     }
 
     fun resetRun(player: Player) {
@@ -416,11 +606,18 @@ object Barrows {
      * allows one item-option handler per (item, option) pair; that handler dispatches here when
      * the player isn't on the Pirate's Treasure dig tile.
      */
+    /** Void BarrowsMounds: `delay(2)` between the dig and the drop into the crypt. */
+    const val DIG_DELAY_TICKS = 2
+
     fun digMound(player: Player): Boolean {
         val brother = Brother.byHill(player.tile) ?: return false
-        player.queue {
+        // Owner 2026-10-03 20:3x (F10, "there is no teleport delay in barrows"): Void BarrowsMounds digs, `delay(2)`, then teleports.
+        // The first suspension of a fresh queue resumes one cycle early (QueueTask plan 8B, see DoorCrossing.cross), so the old
+        // wait(2) moved the player one tick after the click with the dig animation barely started. wait(1) absorbs that cycle.
+        player.lockingQueue(lockState = gg.rsmod.game.model.LockState.FULL) {
             player.animate(Anims.DIG_SPADE)
-            wait(2)
+            wait(1)
+            wait(DIG_DELAY_TICKS)
             player.message("You've broken into a crypt!")
             ensureRun(player)
             player.moveTo(brother.crypt)

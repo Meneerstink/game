@@ -495,7 +495,14 @@ object NpcAttacks {
         }
         for (target in targetSet) {
             val targetHeight = heightOf(target)
-            if (attack.targetAnim >= 0) target.animate(attack.targetAnim)
+            if (attack.targetAnim >= 0) {
+                target.animate(attack.targetAnim)
+            } else if (attack.hits.any { isMelee(it.offense) }) {
+                // Void Block.anims: the target blocks every npc swing. MeleeCombatStrategy does this at the swing and dealHit only for
+                // non-melee classes, so a data-driven npc's melee hit never made its target block (players: 423 instead of 424 in the
+                // equipment suite; every familiar's defend animation in conform summoning).
+                target.animate(gg.rsmod.plugins.content.combat.CombatConfigs.getBlockAnimation(target), priority = false)
+            }
             playGfx(target, targetHeight, attack.targetGfx, null)
             playSounds(target, attack.targetSounds, null, areaRadiusFor(npc))
 
@@ -881,8 +888,39 @@ object NpcAttacks {
                 (if (drain.multiplier > 0.0) (target.skills.getMaxLevel(skill) * drain.multiplier).toInt() else 0)
             val floor = if (skill == Skills.PRAYER || skill == Skills.SUMMONING) 0 else 1
             val current = target.skills.getCurrentLevel(skill)
-            target.skills.setCurrentLevel(skill, (current - amount).coerceAtLeast(floor).coerceAtMost(current))
+            val after = (current - amount).coerceAtLeast(floor).coerceAtMost(current)
+            if (after < current) noteLowered(target, skill, current)
+            target.skills.setCurrentLevel(skill, after)
         }
+    }
+
+    /** Per player: skill -> the level it had before an npc attack last lowered it ([stillLowered]). */
+    private val NPC_LOWERED_FROM = AttributeKey<HashMap<Int, Int>>()
+
+    fun noteLowered(
+        target: Player,
+        skill: Int,
+        before: Int,
+    ) {
+        val lowered = target.attr[NPC_LOWERED_FROM] ?: HashMap<Int, Int>().also { target.attr[NPC_LOWERED_FROM] = it }
+        lowered[skill] = before
+    }
+
+    /**
+     * Owner 2026-10-03 20:44 ("ahrims ... now only used weakening spells"): OSRS Wiki Confuse, "The spell can only be cast if an
+     * opponent's stats haven't already been lowered, meaning you can not stack stat-reduction with multiple spells in a row." The
+     * drain conditions (`not_confused` / `not_weakened` / `not_cursed`) compared only with the base level, which a boosted player
+     * (super combat) never drops under - so the three curses stayed castable forever and Ahrim picked one of them 3 times in 4.
+     * True while [target]'s [skill] is still under the level it had before an npc attack lowered it (until it is restored or
+     * boosted back).
+     */
+    fun stillLowered(
+        target: Pawn,
+        skill: Int,
+    ): Boolean {
+        if (target !is Player) return false
+        val before = target.attr[NPC_LOWERED_FROM]?.get(skill) ?: return false
+        return target.skills.getCurrentLevel(skill) < before
     }
 
     // ---- visuals ------------------------------------------------------------------------------------------

@@ -33,6 +33,9 @@ class AncientCursesRuntimeTests {
         val world = mockk<World>(relaxed = true)
         val queues = WorldQueueTaskSet()
 
+        /** The world cycle the fixture reports ([Prayers.activatedThisTick] compares against it). */
+        var cycle = 0
+
         init {
             val definitions = mockk<DefinitionSet>()
             every { definitions.get(VarbitDef::class.java, any()) } answers {
@@ -49,6 +52,7 @@ class AncientCursesRuntimeTests {
                 }
             }
             every { world.definitions } returns definitions
+            every { world.currentCycle } answers { cycle }
             every { world.queue(any()) } answers {
                 queues.queue(world, Dispatchers.Unconfined, TaskPriority.STANDARD, firstArg<suspend QueueTask.(CoroutineScope) -> Unit>())
             }
@@ -98,16 +102,27 @@ class AncientCursesRuntimeTests {
         fixture.ancient()
         assertEquals(0, AncientCurses.activeCurseDrainEffect(fixture.player))
 
+        // OSRS Wiki "Prayer flicking" (commit bae1ca31e, Prayers.activatedThisTick): what is switched on this tick does not drain
+        // this tick, only from the next one.
         AncientCurses.toggleCurse(fixture.player, AncientCurse.DEFLECT_MELEE)
+        assertEquals(0, AncientCurses.activeCurseDrainEffect(fixture.player))
+        fixture.cycle++
         assertEquals(AncientCurse.DEFLECT_MELEE.drainEffect, AncientCurses.activeCurseDrainEffect(fixture.player))
 
         AncientCurses.toggleCurse(fixture.player, AncientCurse.DEFLECT_SUMMONING)
+        assertEquals(AncientCurse.DEFLECT_MELEE.drainEffect, AncientCurses.activeCurseDrainEffect(fixture.player))
+        fixture.cycle++
         assertEquals(
             AncientCurse.DEFLECT_MELEE.drainEffect + AncientCurse.DEFLECT_SUMMONING.drainEffect,
             AncientCurses.activeCurseDrainEffect(fixture.player),
         )
 
         AncientCurses.toggleTurmoil(fixture.player)
+        assertEquals(
+            AncientCurse.DEFLECT_MELEE.drainEffect + AncientCurse.DEFLECT_SUMMONING.drainEffect,
+            AncientCurses.activeCurseDrainEffect(fixture.player),
+        )
+        fixture.cycle++
         assertEquals(
             AncientCurse.DEFLECT_MELEE.drainEffect + AncientCurse.DEFLECT_SUMMONING.drainEffect +
                 AncientCurse.TURMOIL_DRAIN_EFFECT,

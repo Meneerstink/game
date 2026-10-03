@@ -79,6 +79,15 @@ on_button(GE.MAIN, GE.EDIT_QUANTITY) {
         chooseFirst(player)
         return@on_button
     }
+    if (player.getInteractingOpcode() == GE.OPCODE_OP2) {
+        // E6: "All" (OSRS) - buy all that you can afford / sell everything owned.
+        val before = selection.quantity
+        selection.quantity =
+            GE.allQuantity(selection, player.inventory.getItemCount(Items.COINS_995), player.bank.getItemCount(Items.COINS_995), GE.ownedCount(player, selection.itemId))
+        amountSound(player, before, selection.quantity)
+        GE.sendSelection(player, selection)
+        return@on_button
+    }
     player.queue(TaskPriority.WEAK) {
         // Void "Edit Quantity" prompts.
         val input = inputInt(if (selection.type == OfferType.SELL) "Enter the amount you wish to sell:" else "Enter the amount you wish to purchase:")
@@ -143,7 +152,17 @@ on_obj_dialog {
     val selection = player.attr[GE.SELECTION_ATTR] ?: return@on_obj_dialog
     if (selection.type != OfferType.BUY) return@on_obj_dialog
     val item = player.attr[OBJ_DIALOG_ITEM_ATTR] ?: return@on_obj_dialog
-    GE.select(player, item)
+    // E6: OSRS remembers the last item searched ("Previous search:" in the next search, Enter picks it).
+    if (GE.select(player, item)) GE.rememberSearch(player, selection.itemId)
+}
+
+/** E6: the 78 client's OSRS buttons - History / Collect on the offer-box page, Inventory / Bank in the collection box. */
+on_button(GE.MAIN, GE.INDEX_LAYER) {
+    GE.pressButton(player, GE.INDEX_BUTTONS, player.getInteractingSlot(), op2 = player.getInteractingOpcode() == GE.OPCODE_OP2)
+}
+
+on_button(GE.COLLECTION_BOX, GE.COLLECTION_BOX_LAYER) {
+    GE.pressButton(player, GE.COLLECTION_BOX_BUTTONS, player.getInteractingSlot(), op2 = player.getInteractingOpcode() == GE.OPCODE_OP2)
 }
 
 on_interface_close(GE.MAIN) {

@@ -855,6 +855,10 @@ object SummoningSpecialMoves {
                             remaining -= take
                         }
                         player.message("Your titan ships $banked pure essence to your bank.")
+                        // Void FamiliarUtilitySpecials (abyssal_titan_familiar): `titan.anim("essence_shipment")` 7698 and
+                        // `titan.gfx("essence_shipment")` 1457 (summoning_special.anims/gfx.toml) on a successful shipment.
+                        familiar.animate(7698)
+                        familiar.graphic(1457)
                         true
                     }
                 }

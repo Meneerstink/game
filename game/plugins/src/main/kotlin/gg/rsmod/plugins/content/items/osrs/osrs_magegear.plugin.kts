@@ -1,6 +1,7 @@
 package gg.rsmod.plugins.content.items.osrs
 
 import gg.rsmod.game.model.item.Item
+import gg.rsmod.plugins.content.items.combine.ItemAttachSounds
 
 /**
  * OSRS-IMPORT magegeara recipes that need more than one skill or a rune cost (CombinationData checks one skill only). Sources: OSRS Wiki
@@ -33,6 +34,7 @@ listOf(
             return@on_item_on_item
         }
         player.inventory.add(result, 1)
+        ItemAttachSounds.attached(player, crystal, base)
         player.addXp(Skills.RUNECRAFTING, 200.0)
         player.addXp(Skills.MAGIC, 200.0)
     }
@@ -56,6 +58,7 @@ AvernicTreads.Boots.values().forEach { boots ->
             player.inventory.remove(boots.item, 1)
             player.inventory.remove(Items.DEMON_TEAR, AvernicTreads.TEARS_PER_PAIR)
             player.inventory.add(result, 1)
+            ItemAttachSounds.attached(player, boots.item, treads)
         }
     }
 }
@@ -96,6 +99,7 @@ on_item_on_item(item1 = Items.ARCANE_SIGIL, item2 = Items.ELIDINIS_WARD) {
     player.inventory.remove(Items.ELIDINIS_WARD, 1)
     player.inventory.remove(Items.SOUL_RUNE, 10_000)
     player.inventory.add(Items.ELIDINIS_WARD_F, 1)
+    ItemAttachSounds.attached(player, Items.ARCANE_SIGIL, Items.ELIDINIS_WARD)
     player.addXp(Skills.PRAYER, 260.0)
     player.addXp(Skills.SMITHING, 260.0)
 }
@@ -125,6 +129,7 @@ on_item_on_item(item1 = Items.MOKHAIOTL_CLOTH, item2 = Items.TORMENTED_BRACELET)
     player.inventory.remove(Items.TORMENTED_BRACELET, 1)
     player.inventory.remove(Items.DEMON_TEAR, 10_000)
     player.inventory.add(Items.CONFLICTION_GAUNTLETS, 1)
+    ItemAttachSounds.attached(player, Items.MOKHAIOTL_CLOTH, Items.TORMENTED_BRACELET)
 }
 
 // Magus and venator icons.
@@ -145,6 +150,7 @@ listOf(
         player.inventory.remove(vestige, 1)
         player.inventory.remove(Items.BLOOD_RUNE, 500)
         player.inventory.add(result, 1)
+        ItemAttachSounds.attached(player, icon, vestige)
         player.addXp(Skills.MAGIC, 400.0)
     }
 }

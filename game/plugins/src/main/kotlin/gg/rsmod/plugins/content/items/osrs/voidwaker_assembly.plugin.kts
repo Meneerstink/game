@@ -39,6 +39,7 @@ fun assembleVoidwaker(player: Player) {
         return
     }
     if (!player.grantOrRefund(Item(Items.VOIDWAKER), consumed)) return
+    gg.rsmod.plugins.content.items.combine.ItemAttachSounds.attached(player, Items.VOIDWAKER_HILT, Items.VOIDWAKER_BLADE, Items.VOIDWAKER_GEM)
     player.message("You reassemble the Voidwaker.")
 }
 

@@ -66,31 +66,13 @@ on_command("maxpoints", Privilege.ADMIN_POWER) {
     if (StoreUi.isOpen(target)) StoreUi.renderPreview(target)
 }
 
-on_button(interfaceId = StoreUi.INTERFACE_ID, component = StoreUi.CLOSE) {
-    player.closeInterface(StoreUi.INTERFACE_ID)
-}
-
-Shop.values().indices.forEach { tab ->
-    on_button(interfaceId = StoreUi.INTERFACE_ID, component = StoreUi.TAB_FIRST + tab * StoreUi.TAB_STRIDE) {
-        StoreUi.switchShop(player, tab)
+// Every clickable component of either window layout (6x5 legacy, 7x6 since 2026-10-03); StoreUi.click routes by the layout the
+// cache holds, so these bindings never point at the wrong component whichever cache is live.
+StoreUi.CLICKABLE.forEach { component ->
+    on_button(interfaceId = StoreUi.INTERFACE_ID, component = component) {
+        StoreUi.click(player, component, player.getInteractingOpcode())
     }
 }
-
-(0 until StoreUi.SLOT_COUNT).forEach { slot ->
-    on_button(interfaceId = StoreUi.INTERFACE_ID, component = StoreUi.SLOT_FIRST + slot) {
-        if (player.getInteractingOpcode() == 25) {
-            StoreUi.slotEntry(player, slot)?.let { world.sendExamine(player, it.purchaseItem, gg.rsmod.game.model.ExamineEntityType.ITEM) }
-        } else {
-            StoreUi.select(player, slot)
-        }
-    }
-}
-
-on_button(interfaceId = StoreUi.INTERFACE_ID, component = StoreUi.PAGE_PREVIOUS) { StoreUi.turnPage(player, -1) }
-on_button(interfaceId = StoreUi.INTERFACE_ID, component = StoreUi.PAGE_NEXT) { StoreUi.turnPage(player, 1) }
-on_button(interfaceId = StoreUi.INTERFACE_ID, component = StoreUi.CAROUSEL_PREVIOUS) { StoreUi.turnCarousel(player, -1) }
-on_button(interfaceId = StoreUi.INTERFACE_ID, component = StoreUi.CAROUSEL_NEXT) { StoreUi.turnCarousel(player, 1) }
-on_button(interfaceId = StoreUi.INTERFACE_ID, component = StoreUi.BUY_LAYER) { StoreUi.buy(player) }
 
 /*
  * Loyalty Points from play time (owner: "speeltijd"): PROVISIONAL 50 points per 30 minutes online, on top of the existing daily

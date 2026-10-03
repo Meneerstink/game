@@ -153,7 +153,19 @@ object FamiliarCombat {
         val maxHit = ledgerToHitpoints(ledgerMaxHit)
         // dealHit rolls in [0.1, maxHit); a max below one real hitpoint can only ever splat 0.
         val lands = landHit && maxHit > 0.1
-        return familiar.dealHit(target, 0.1, if (lands) maxHit else 1.0, lands, delay, onHit, hitType)
+        // Every familiar hit on an npc (normal attack and special move alike): its owner hears the struck npc's defend sound
+        // when the hit lands (FamiliarAudio.playTargetDefend - Void Block.sounds, ADAPTED to the owner).
+        val owner = familiar.owner
+        val withDefendSound: (PawnHit) -> Unit =
+            if (target is Npc && owner != null) {
+                { hit ->
+                    onHit(hit)
+                    if (Familiar.current(owner) === familiar && owner.isOnline) FamiliarAudio.playTargetDefend(owner, target)
+                }
+            } else {
+                onHit
+            }
+        return familiar.dealHit(target, 0.1, if (lands) maxHit else 1.0, lands, delay, withDefendSound, hitType)
     }
 
     fun commandAttack(player: Player, target: Pawn, silent: Boolean = false): Boolean {
@@ -310,6 +322,12 @@ object FamiliarCombat {
         }
         familiar.animate(definition.attackAnimation, priority = true)
         if (definition.attackGraphic >= 0) familiar.graphic(definition.attackGraphic)
+        // Void Block.anims runs on every npc combat attack too: the target plays its block animation when the swing starts.
+        // A familiar's melee swing never went through MeleeCombatStrategy (which does this for every other melee attacker), so
+        // the dummy stood still under a titan's punches; ranged and magic hits get theirs from dealHit when they land.
+        if (definition.style == FamiliarAttackStyle.MELEE) {
+            target.animate(gg.rsmod.plugins.content.combat.CombatConfigs.getBlockAnimation(target), priority = false)
+        }
 
         var hitDelay = 1
         if (definition.projectile >= 0 && projectileType != null) {

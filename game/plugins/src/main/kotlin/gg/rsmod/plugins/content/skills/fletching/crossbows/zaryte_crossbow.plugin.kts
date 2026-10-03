@@ -23,5 +23,6 @@ on_item_on_item(item1 = Items.NIHIL_HORN, item2 = Items.ARMADYL_CROSSBOW) {
     ) {
         return@on_item_on_item
     }
+    gg.rsmod.plugins.content.items.combine.ItemAttachSounds.attached(player)
     player.filterableMessage("You attach the nihil horn to your Armadyl crossbow, forming a Zaryte crossbow.")
 }

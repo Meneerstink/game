@@ -79,6 +79,30 @@ object FamiliarAudio {
         return Familiar.ARRIVAL_SOUND
     }
 
+    /**
+     * Conform summoning 2026-10-03 ("sound: familiar hit lands is audible" silent for every melee titan): a hit a familiar lands
+     * on an npc made no sound. Void `Block.sounds` plays the struck npc's defend sound to the attacker on every combat damage
+     * (`source.sound(combat.defendSound)`), but for an npc attacker that call is a no-op, and NpcCombatAudio.onDefend likewise
+     * finds no player on the attacking side of a familiar. The familiar fights for its owner, so - the same ADAPTED rule as the
+     * familiar's own attack and block cues - its owner and the players around the target hear the struck npc's defend sound.
+     * Resolution is NpcCombatAudio.onDefend's: the table's defend row, else the block animation's own cache sound; nothing
+     * when the block animation carries an audible frame sound and really plays (the client plays it for everyone).
+     * A familiar target is skipped: NpcCombatAudio.onDefend already voices it for its own owner and the players near it.
+     */
+    fun playTargetDefend(owner: Player, target: gg.rsmod.game.model.entity.Npc) {
+        if (isFamiliarNpc(target.id) && target.owner != null) return
+        val audio = gg.rsmod.plugins.content.combat.audio.NpcCombatAudio
+        val blockAnim = target.combatDef.blockAnimation
+        val blockSound =
+            blockAnim.takeIf { it >= 0 }?.let { anim ->
+                runCatching { target.world.definitions.getNullable(gg.rsmod.game.fs.def.AnimDef::class.java, anim)?.firstAudibleFrameSound }.getOrNull()
+            } ?: -1
+        val skippedBlock = blockSound >= 0 && target.isAnimationProtected()
+        val id = (audio.rowFor(target.id)?.defend ?: -1).takeIf { it >= 0 } ?: if (skippedBlock) blockSound else audio.unheardFrameSound(target, blockAnim)
+        if (id < 0 || (audio.hasAudibleFrameSounds(target, blockAnim) && !skippedBlock)) return
+        play(owner, id, at = target.tile)
+    }
+
     fun playSpawn(player: Player, data: SummoningPouchData) {
         spawnSound(data)?.let { play(player, it) }
     }

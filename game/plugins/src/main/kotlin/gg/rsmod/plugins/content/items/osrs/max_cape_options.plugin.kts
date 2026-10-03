@@ -1,7 +1,6 @@
 package gg.rsmod.plugins.content.items.osrs
 
 import gg.rsmod.plugins.content.areas.poh.PlayerHouse
-import gg.rsmod.plugins.api.Spellbook
 import gg.rsmod.plugins.content.magic.TeleportType
 import gg.rsmod.plugins.content.magic.canTeleport
 import gg.rsmod.plugins.content.magic.prepareForTeleport
@@ -17,12 +16,13 @@ import gg.rsmod.plugins.content.skills.SkillcapePerks.DailyUse
  * behind them are the skillcapes' own (OSRS Wiki "Cape of Accomplishment"):
  * - teleports: Strength (Warriors' Guild), Fishing (Fishing Guild, Otto's Grotto), Crafting (Crafting Guild), Hunter ("Five teleports
  *   per day to the black or carnivorous chinchompa Hunter areas"), Construction (own house and every house portal) - [MaxCapeTeleports];
- * - Spellbook: Magic cape, "permanently change their spellbook up to five times per day";
+ * - NOT offered: the OSRS "Spellbook" option (Magic cape spellbook swap). Owner 2026-10-03 (buglist E2): it does not belong on
+ *   the normal max cape - MaxCapeMenuTool drops it from both cache menus and no handler is bound;
  * - Features: Agility cape ("Once per day ... restore 100% run energy and provide the effect of a stamina potion for one minute"),
  *   Fletching cape ("searched for a mithril grapple and bronze crossbow up to three times each day"), Herblore cape ("Can be searched
  *   for a pestle and mortar"), and the owner's look chooser ([MaxCapeLooks]).
  * ADAPTED: the Features menu lists the operable perks (the wiki names the option but not its lines). The 667 inventory menu holds five
- * options with the wear option second, so the order is Teleports, Wear, Spellbook, Features, Drop. Defence cape's ring of life is not
+ * options with the wear option second, so the order is Teleports, Wear, Features, Drop. Defence cape's ring of life is not
  * offered: OSRS Wiki "Ring of life" - it does not work in Deadman Mode, which this server is.
  */
 
@@ -95,23 +95,6 @@ suspend fun openPohPortals(
     if (picked === home) teleportHome(player) else capeTeleport(player, picked)
 }
 
-fun openSpellbook(player: Player) {
-    val left = SkillcapePerks.remainingToday(player, DailyUse.SPELLBOOK)
-    if (left == 0) {
-        player.message("You have changed your spellbook ${MaxCapeTeleports.SPELLBOOK_SWAPS_PER_DAY} times today already.")
-        return
-    }
-    player.queue {
-        // Only books the player has unlocked (Desert Treasure / Lunar Diplomacy) - the cape is no way around the quests.
-        val books = Spellbook.values.filter { it != player.getSpellbook() && gg.rsmod.plugins.content.magic.Spellbooks.hasAccess(player, it) }
-        val names = books.map { it.name.lowercase().replaceFirstChar { c -> c.uppercase() } }
-        val picked = books.getOrNull(options(*(names + "Cancel").toTypedArray(), title = "Change spellbook ($left left today)") - 1) ?: return@queue
-        if (!SkillcapePerks.takeDailyUse(player, DailyUse.SPELLBOOK)) return@queue
-        player.switchSpellbook(picked)
-        player.message("Your spellbook is now the ${names[books.indexOf(picked)]} spellbook.")
-    }
-}
-
 fun staminaBoost(player: Player) {
     if (!SkillcapePerks.takeDailyUse(player, DailyUse.STAMINA)) {
         player.message("You have already used the cape's stamina boost today.")
@@ -150,7 +133,6 @@ fun openFeatures(player: Player) {
 }
 
 on_item_option(item = CAPE, option = "Teleports") { openTeleports(player) }
-on_item_option(item = CAPE, option = "Spellbook") { openSpellbook(player) }
 on_item_option(item = CAPE, option = "Features") { openFeatures(player) }
 
 on_equipment_option(item = CAPE, option = "Home") { teleportHome(player) }
@@ -162,5 +144,4 @@ on_equipment_option(item = CAPE, option = "Skilling Areas") {
     player.queue { chooseDestination("Skilling Areas", MaxCapeTeleports.SKILLING_AREAS)?.let { capeTeleport(player, it) } }
 }
 on_equipment_option(item = CAPE, option = "POH Portals") { player.queue { openPohPortals(player, this) } }
-on_equipment_option(item = CAPE, option = "Spellbook") { openSpellbook(player) }
 on_equipment_option(item = CAPE, option = "Features") { openFeatures(player) }

@@ -136,6 +136,7 @@ REV_UPGRADES.forEach { upgrade ->
         val slot = revUsedSlot(player, upgrade.base) ?: return@on_item_on_item
         if (!player.inventory.remove(upgrade.part, 1).hasSucceeded()) return@on_item_on_item
         player.inventory[slot] = Item(upgrade.result)
+        gg.rsmod.plugins.content.items.combine.ItemAttachSounds.attached(player, upgrade.part, upgrade.base)
         player.message("You attach the ${world.definitions.get(ItemDef::class.java, upgrade.part).name} to the weapon.")
     }
     if (revHasOption(upgrade.result, "Dismantle", worn = false)) {

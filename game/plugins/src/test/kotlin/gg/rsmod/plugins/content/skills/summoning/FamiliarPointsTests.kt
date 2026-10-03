@@ -165,6 +165,31 @@ class FamiliarPointsTests {
 
         assertEquals(45, Familiar.currentSpecialPoints(player))
     }
+    /**
+     * B4 (owner: "summoning tab disappears on login with a pet/familiar, on teleport, ..."): the Follower Details tab button is live
+     * client state, so it is re-armed on the gating heartbeat too, not only when the familiar changes - whatever rebuilt the tab
+     * strip without telling the server, the tab comes back by itself.
+     */
+    @Test
+    fun `the follower details tab is re-armed on the gating heartbeat`() {
+        val player = newPlayer(summoningLevel = DREADFOWL.level)
+        val world = player.world
+        var cycle = 1000
+        every { world.currentCycle } answers { cycle }
+        var installs = 0
+        every { player.setEvents(548, 99, any(), any(), any()) } answers { installs += 1 }
+        player.inventory[0] = Item(DREADFOWL.pouch, 1)
+        check(Familiar.summon(player, DREADFOWL))
+        Familiar.tick(player)
+        val afterSummon = installs
+        assertTrue(afterSummon >= 1, "the familiar appearing arms the tab")
+        repeat(60) {
+            cycle++
+            Familiar.tick(player)
+        }
+        assertTrue(installs > afterSummon, "the heartbeat re-armed the tab ($afterSummon -> $installs)")
+    }
+
     private val DREADFOWL get() = SummoningPouchData.DREADFOWL
     private val PACK_YAK get() = SummoningPouchData.PACK_YAK
 

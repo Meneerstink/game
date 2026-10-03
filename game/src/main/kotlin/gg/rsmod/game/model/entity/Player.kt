@@ -486,7 +486,8 @@ abstract class Player(
     }
 
     override fun hasBlock(block: UpdateBlockType): Boolean {
-        val bits = world.playerUpdateBlocks.updateBlocks[block]!!
+        // As addBlock: a world without the update-block table (unit tests) has no block of that type.
+        val bits = world.playerUpdateBlocks.updateBlocks[block] ?: return false
         return blockBuffer.hasBit(bits.bit)
     }
 
@@ -536,10 +537,40 @@ abstract class Player(
      */
     suspend fun forceMove(
         task: QueueTask,
-        movement: ForcedMovement,
-        cycleDuration: Int = slideCycles(movement.maxDuration),
+        requested: ForcedMovement,
+        requestedCycles: Int = slideCycles(requested.maxDuration),
     ) {
         movementQueue.clear()
+
+        // One shared timing rule for every slide (SlideTiming, owner 2026-10-03 20:58 "not smooth ... stands on the tile"): a phase-1
+        // lead while the client still draws the approach (no snap onto the start tile), and no standing glide after a one-shot
+        // animation that ends long before the slide. The animation started for the slide in this cycle moves with the lead.
+        val animDef =
+            if (hasBlock(UpdateBlockType.ANIMATION) && blockBuffer.animation != -1) {
+                runCatching { world.definitions.getNullable(gg.rsmod.game.fs.def.AnimDef::class.java, blockBuffer.animation) }.getOrNull()
+            } else {
+                null
+            }
+        val plan =
+            gg.rsmod.game.model.SlideTiming.plan(
+                clientDuration1 = requested.clientDuration1,
+                clientDuration2 = requested.clientDuration2,
+                distance = tile.getDistance(requested.finalDestination),
+                cyclesSinceStep = world.currentCycle - lastStepCycle,
+                anim = animDef,
+                animationDelay = blockBuffer.animationDelay,
+            )
+        val movement = requested.copy(clientDuration1 = plan.clientDuration1, clientDuration2 = plan.clientDuration2)
+        if (animDef != null && plan.animationDelay != null) blockBuffer.animationDelay = plan.animationDelay
+        val cycleDuration = (requestedCycles - slideCycles(requested.maxDuration) + slideCycles(movement.maxDuration)).coerceAtLeast(1)
+        if (plan.lead > 0 || plan.shortenedFrom != null) {
+            gg.rsmod.game.model.AvTrace.log {
+                "slide PLAYER $username ${tile.x},${tile.z} -> ${requested.finalDestination.x},${requested.finalDestination.z} " +
+                    "t1=${requested.clientDuration1}->${movement.clientDuration1} t2=${requested.clientDuration2}->${movement.clientDuration2} " +
+                    "lead=${plan.lead} anim=${animDef?.id ?: -1} animDelay=${plan.animationDelay ?: -1}" +
+                    (plan.shortenedFrom?.let { " (ended with its animation instead of $it)" } ?: "")
+            }
+        }
 
         // The lock the slide found is the one it hands back: an obstacle task that holds a FULL lock around several slides
         // must still hold it after each of them. Ending a slide with NONE unlocked the player halfway through a course

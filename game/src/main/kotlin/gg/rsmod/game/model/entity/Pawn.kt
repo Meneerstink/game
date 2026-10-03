@@ -123,6 +123,9 @@ abstract class Pawn(
      */
     internal var steps: MovementQueue.StepDirection? = null
 
+    /** The game cycle of this pawn's last walk / run step (MovementQueue); a forced move right after it gets a phase-1 lead (SlideTiming). */
+    var lastStepCycle = Int.MIN_VALUE / 2
+
     /**
      * The last [Direction] this pawn was facing.
      */
