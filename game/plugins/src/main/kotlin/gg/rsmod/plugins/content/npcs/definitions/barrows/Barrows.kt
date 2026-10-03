@@ -186,7 +186,15 @@ object Barrows {
     fun ensureRun(player: Player) {
         if (player.attr[SELECTED_BROTHER] == null || player.attr[LOOTED] == true) {
             player.attr.remove(LOOTED)
+            player.attr.remove(KILLS)
+            player.attr.remove(KILLED_MONSTERS)
+            player.attr.remove(KILL_LEVELS)
+            Brother.values().forEach { player.attr.remove(it.killedAttr) }
             player.attr[SELECTED_BROTHER] = Brother.values().random().key
+            shufflePuzzle(player)
+        } else if (player.attr[LOCKED_DOORS] == null || player.attr[EXIT_CORNER] == null) {
+            // E10 (owner 2026-10-03 "alle tunneldeuren kun je standaard openen"): a run started before the locked-door state existed
+            // (the owner's save: hidden brother + 4 kills, no barrows_locked_doors) never rolled its doors, so every door was open.
             shufflePuzzle(player)
         }
     }
@@ -275,20 +283,32 @@ object Barrows {
         refreshVarbits(killer)
     }
 
-    /** Prayer drain while underground: 8 points every 18 seconds, rising by one each time (max 13). */
+    /**
+     * OSRS Wiki Barrows/Strategies: "draining a considerable amount of Prayer points every 18 seconds. The amount of Prayer drained
+     * begins at eight Prayer points, and increases by one for each brother killed, for a maximum of fourteen." (Was: +1 per drain.)
+     */
+    fun drainAmount(brothersKilled: Int): Int = (8 + brothersKilled).coerceAtMost(14)
+
     fun drainPrayer(player: Player) {
         val brother = Brother.values().random()
         player.setVarbit(BROTHER_HEAD_VARBIT, if (player.tile.height == 0) brother.tunnelHeadValue else brother.headValue)
-        val step = (player.attr[PRAYER_DRAIN_STEP] ?: 0) + 1
-        player.attr[PRAYER_DRAIN_STEP] = step
-        val drain = (8 + step - 1).coerceAtMost(13)
-        player.alterPrayerPoints(-drain)
+        player.alterPrayerPoints(-drainAmount(Brother.values().count { isKilled(player, it) }))
     }
 
-    /** Doors in the tunnels: 12/128 chance to wake a remaining brother, else a crypt creature. */
+    /** OSRS Wiki Barrows/Strategies: "No new monster spawns if a room already contains eleven enemies." */
+    const val MAX_ROOM_ENEMIES = 11
+
+    /**
+     * Doors in the tunnels (OSRS Wiki Barrows/Strategies): 12/128 a remaining brother, 52/128 skeletons, 32/128 bloodworms,
+     * 32/128 crypt rats; after the chest is looted every door "is guaranteed to summon one of the brothers whom you did not
+     * kill on that run".
+     */
     fun onTunnelDoor(player: Player, spawnTile: Tile) {
         val world = player.world
-        val roll = world.random(127)
+        val nearby = world.npcs.count { n -> n.isSpawned() && !n.isDead() && n.tile.height == spawnTile.height && n.tile.isWithinRadius(spawnTile, 8) && underground(n.tile) }
+        if (nearby >= MAX_ROOM_ENEMIES) return
+        val collapsing = player.attr[LOOTED] == true && player.attr[COLLAPSE_TICKS] != null
+        val roll = if (collapsing) 0 else world.random(127)
         if (roll < 12) {
             val brother = Brother.values().firstOrNull { !isKilled(player, it) && liveBrother(player, it) == null } ?: return
             spawnBrother(player, brother, spawnTile)
@@ -317,21 +337,34 @@ object Barrows {
      * unpublished): one armour roll per brother killed with a 1/(450 - 58 * kills) chance each,
      * then a runes/coins roll weighted by the combat levels killed (capped at 1012).
      */
+    /** OSRS Wiki Chest (Barrows): R = min(sum of killed monsters' combat levels, 1000) + 2 per brother killed (max 1012). */
+    fun rewardPotential(levels: Int, brothersKilled: Int): Int = levels.coerceAtMost(1000) + 2 * brothersKilled.coerceIn(0, 6)
+
+    /** OSRS Wiki Chest (Barrows): one roll, plus one per brother killed, at most seven. */
+    fun rollCount(brothersKilled: Int): Int = (1 + brothersKilled.coerceIn(0, 6)).coerceAtMost(7)
+
     fun reward(player: Player): List<Item> {
         val world = player.world
         val items = ArrayList<Item>()
-        val kills = (player.attr[KILLS] ?: 0).coerceAtMost(6)
         val killed = Brother.values().filter { isKilled(player, it) }
-        if (killed.isNotEmpty()) {
-            repeat(kills) {
-                if (world.random(450 - 58 * kills - 1) == 0) {
-                    val brother = killed.random()
-                    items.add(Item(REWARD_ARMOUR.getValue(brother).random()))
-                }
+        val kills = killed.size
+        val potential = rewardPotential(player.attr[KILL_LEVELS] ?: 0, kills)
+        repeat(rollCount(kills)) {
+            // Each roll first tries the Barrows equipment: P(N) = 1 / (450 - 58 N) with N brothers killed.
+            if (kills > 0 && world.random(450 - 58 * kills - 1) == 0) {
+                val brother = killed.random()
+                items.add(Item(REWARD_ARMOUR.getValue(brother).random()))
+                return@repeat
             }
+            rollTable(player, potential)?.let { items.add(it) }
         }
-        val levels = (player.attr[KILL_LEVELS] ?: 0).coerceAtMost(1012)
-        if (levels > 0) {
+        return items
+    }
+
+    private fun rollTable(player: Player, levels: Int): Item? {
+        val world = player.world
+        run {
+            if (levels <= 0) return null
             val roll = world.random(levels - 1)
             val entry = when {
                 roll < 380 -> Item(Items.COINS_995, 2 + world.random(772))
@@ -344,9 +377,8 @@ object Barrows {
                 roll < 1011 -> Item(Items.TOOTH_HALF_OF_A_KEY)
                 else -> Item(Items.DRAGON_MED_HELM)
             }
-            items.add(entry)
+            return entry
         }
-        return items
     }
 
     fun loot(player: Player) {
@@ -360,10 +392,8 @@ object Barrows {
         }
         if (items.isEmpty()) player.message("You find nothing of value in the chest.")
         player.attr[LOOTED] = true
-        player.attr.remove(KILLS)
-        player.attr.remove(KILLED_MONSTERS)
-        player.attr.remove(KILL_LEVELS)
-        Brother.values().forEach { player.attr.remove(it.killedAttr) }
+        // The run's kills stay until the next run starts (ensureRun): while the tunnels collapse every door summons a brother
+        // "whom you did not kill on that run" (OSRS Wiki Barrows/Strategies).
         refreshVarbits(player)
         player.attr[COLLAPSE_TICKS] = 0
         player.message("The cave begins to collapse!")

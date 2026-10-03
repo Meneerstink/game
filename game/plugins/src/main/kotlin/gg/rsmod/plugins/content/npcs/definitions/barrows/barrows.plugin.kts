@@ -153,11 +153,7 @@ on_obj_option(obj = Objs.CHEST_6775, option = "search") {
         player.message("The chest is empty.")
         return@on_obj_option
     }
-    val hidden = Brother.byKey(player.attr[Barrows.SELECTED_BROTHER] ?: Brother.DHAROK.key)
-    if (Barrows.liveBrother(player, hidden) != null) {
-        player.message("You can't loot the chest while ${hidden.key.replaceFirstChar { it.uppercase() }} is still awake!")
-        return@on_obj_option
-    }
+    // OSRS Wiki Barrows/Strategies: killing the brother the chest wakes "is not required to loot".
     Barrows.loot(player)
 }
 

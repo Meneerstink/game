@@ -29,51 +29,52 @@ class BarrowsRewardTests {
     @Test
     fun `a killed brother rolls armour on a hit and the item belongs to that brother's set`() {
         val world = mockk<World>()
-        // kills=1 -> armour bound is (450 - 58*1 - 1) = 391; roll 0 hits.
+        // 1 brother -> armour bound (450 - 58*1 - 1) = 391; roll 0 hits on both of the 1 + 1 rolls (Chest (Barrows)).
         every { world.random(391) } returns 0
         val player = newPlayer(world = world)
-        player.attr[Barrows.KILLS] = 1
         player.attr[Barrows.Brother.AHRIM.killedAttr] = true
 
         val items = Barrows.reward(player)
 
-        assertEquals(1, items.size)
-        assertTrue(items[0].id in Barrows.REWARD_ARMOUR.getValue(Barrows.Brother.AHRIM))
+        assertEquals(2, items.size)
+        items.forEach { assertTrue(it.id in Barrows.REWARD_ARMOUR.getValue(Barrows.Brother.AHRIM)) }
     }
 
     @Test
     fun `a killed brother rolls no armour on a miss`() {
         val world = mockk<World>()
         every { world.random(391) } returns 1
+        // Reward potential = 0 levels + 2 for the brother -> table bound 1; roll 0 = coins.
+        every { world.random(1) } returns 0
+        every { world.random(772) } returns 0
         val player = newPlayer(world = world)
-        player.attr[Barrows.KILLS] = 1
         player.attr[Barrows.Brother.AHRIM.killedAttr] = true
 
         val items = Barrows.reward(player)
 
-        assertTrue(items.isEmpty())
+        assertEquals(2, items.size)
+        items.forEach { assertEquals(Items.COINS_995, it.id) }
     }
 
     @Test
-    fun `kills is capped at 6 for the armour roll bound even if more were recorded`() {
+    fun `six brothers give seven rolls at the 1 in 102 armour chance`() {
         val world = mockk<World>()
-        // Bound must use kills=6 (450 - 58*6 - 1 = 101), not the raw recorded value.
+        // 450 - 58*6 - 1 = 101.
         every { world.random(101) } returns 0
         val player = newPlayer(world = world)
+        Barrows.Brother.values().forEach { player.attr[it.killedAttr] = true }
         player.attr[Barrows.KILLS] = 9
-        player.attr[Barrows.Brother.VERAC.killedAttr] = true
 
         val items = Barrows.reward(player)
 
-        // repeat(kills) with the capped kills=6 means up to 6 armour rolls attempted.
-        assertEquals(6, items.size)
-        items.forEach { assertTrue(it.id in Barrows.REWARD_ARMOUR.getValue(Barrows.Brother.VERAC)) }
+        assertEquals(7, items.size)
+        items.forEach { item -> assertTrue(Barrows.REWARD_ARMOUR.values.any { item.id in it }) }
     }
 
     @Test
-    fun `kill levels is capped at 1012 for the rune roll bound`() {
+    fun `kill levels are capped at 1000 without brothers`() {
         val world = mockk<World>()
-        every { world.random(1011) } returns 0
+        every { world.random(999) } returns 0
         every { world.random(772) } returns 0 // coins amount roll
         val player = newPlayer(world = world)
         player.attr[Barrows.KILL_LEVELS] = 5000
@@ -108,9 +109,9 @@ class BarrowsRewardTests {
             )
         for ((roll, expected) in cases) {
             val world = mockk<World>()
+            // Six brothers, armour missed: reward potential 1000 + 12 = 1012 -> bound 1011, seven rolls.
+            every { world.random(101) } returns 1
             every { world.random(1011) } returns roll
-            // Each bracket's item amount is a second, independent roll - stub every possible
-            // bound rather than branch on which one this roll lands in.
             every { world.random(772) } returns 0 // coins
             every { world.random(83) } returns 0 // mind rune
             every { world.random(27) } returns 0 // chaos rune
@@ -118,12 +119,13 @@ class BarrowsRewardTests {
             every { world.random(6) } returns 0 // blood rune
             every { world.random(5) } returns 0 // bolt rack
             val player = newPlayer(world = world)
-            player.attr[Barrows.KILL_LEVELS] = 1012
+            Barrows.Brother.values().forEach { player.attr[it.killedAttr] = true }
+            player.attr[Barrows.KILL_LEVELS] = 1000
 
             val items = Barrows.reward(player)
 
-            assertEquals(1, items.size, "roll $roll")
-            assertEquals(expected, items[0].id, "roll $roll")
+            assertEquals(7, items.size, "roll $roll")
+            items.forEach { assertEquals(expected, it.id, "roll $roll") }
         }
     }
 
