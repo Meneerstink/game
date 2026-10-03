@@ -4,18 +4,13 @@ import gg.rsmod.game.model.entity.zoneTile
 
 import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.entity.Player
+import gg.rsmod.game.model.hud.ClientHud
 import gg.rsmod.game.model.timer.SKULL_ICON_DURATION_TIMER
-import gg.rsmod.plugins.api.InterfaceDestination
-import gg.rsmod.plugins.api.ext.closeInterface
-import gg.rsmod.plugins.api.ext.getInterfaceAt
 import gg.rsmod.plugins.api.ext.getWildernessLevel
 import gg.rsmod.plugins.api.ext.isMulti
 import gg.rsmod.plugins.api.ext.message
-import gg.rsmod.plugins.api.ext.openInterface
 import gg.rsmod.plugins.api.ext.removeOption
 import gg.rsmod.plugins.api.ext.sendOption
-import gg.rsmod.plugins.api.ext.setComponentHidden
-import gg.rsmod.plugins.api.ext.setComponentText
 
 /**
  * Deadman HUD - server side of the owner's reference screenshots ("deadmanmode vervijning",
@@ -28,14 +23,12 @@ import gg.rsmod.plugins.api.ext.setComponentText
  *           [own skull] 5:00               (only while PK-skulled; refreshes every 30 s)
  * </pre>
  *
- * Built on interface 381, the revision-667 Wilderness/PvP overlay: component 0 is the zone layer
- * whose text component 2 carries `"<state>|<lo>-<hi>"`; component 3 is the skull-timer layer whose
- * text component 5 carries `m:ss`. The client (`DeadmanSkullHud`) never draws the cache layouts of
- * either layer; it renders the screenshot layout from these two strings at the zone layer's own
- * screen position, so the HUD is identical in fixed, resizable and fullscreen mode and in every
- * graphics mode. The overlay is mounted through [InterfaceDestination.PVP_OVERLAY] and re-mounted
- * after every window-mode change ([reset] runs from the WINDOW_STATUS handler).
- *
+ * Two strings carry the whole HUD: the zone text `"<state>|<lo>-<hi>[|M]"` and the timer text (skull, grace, emblem, grave).
+ * Until 2026-10-03 they were the texts of interface 381 mounted in the shared PvP-overlay slot, which every activity overlay
+ * took over (E9/E16). Now they travel on the RSPS side channel ([ClientHud] `dmmz|` / `dmmt|`) and the client
+ * (`DeadmanSkullHud.drawOverlay`) draws them after the whole interface tree on the full canvas, identical in fixed,
+ * resizable and fullscreen mode, over every modal, the bank, the GE and the world map. Interface 381 is never mounted.
+
  * Every number here comes from the same shared predicates the gameplay uses: the zone from
  * [GuardedZones] (also the PvP gate, the guards and the danger signs), the bracket from
  * [AreaState.bracketOf] (also the attack gate), the timer from [PvpSkull.isSkulled] (also the guards,
@@ -69,7 +62,6 @@ object DeadmanHud {
     private val LAST_ZONE_TEXT_ATTR = AttributeKey<String>()
     private val LAST_SKULL_TEXT_ATTR = AttributeKey<String>()
     private val LAST_STATE_ATTR = AttributeKey<State>()
-    private val OVERLAY_OPEN_ATTR = AttributeKey<Boolean>()
 
     enum class State {
         WILDERNESS,
@@ -166,19 +158,37 @@ object DeadmanHud {
         return "%d:%02d".format(stepped / 60, stepped % 60)
     }
 
-    /** Forces the next [refresh] to re-mount and re-send everything (login, window-mode change). */
+    /** Every this many ticks both strings are sent again even without a change, so a lost packet or a client reset heals itself. */
+    const val RESEND_TICKS = 5
+
+    private val HUD_ACTIVE_ATTR = AttributeKey<Boolean>()
+    private val LAST_SENT_CYCLE_ATTR = AttributeKey<Int>()
+
+    /** Forces the next [refresh] to re-send everything (login, window-mode change) and starts the HUD for this session. */
     fun reset(player: Player) {
         player.attr.remove(LAST_ZONE_TEXT_ATTR)
         player.attr.remove(LAST_SKULL_TEXT_ATTR)
-        player.attr.remove(OVERLAY_OPEN_ATTR)
+        player.attr.remove(LAST_SENT_CYCLE_ATTR)
+        player.attr[HUD_ACTIVE_ATTR] = true
     }
 
-    /** Called every cycle; only sends packets on an actual change. */
+    /**
+     * Called at the end of every cycle from [gg.rsmod.game.model.hud.ClientHud.tick] (Player.postCycle, inside its own try/catch -
+     * it cannot be removed the way the old self-re-arming timer was, research 2026-10-03 R2).
+     *
+     * E16 / E9 (owner 2026-10-03: "DE DMM HUD MOET ALTIJD IN BEELD ZIJN ... MAG NOOOIT VERDWIJNEN"): the HUD is no tenant of the
+     * shared PvP-overlay slot (548:19 / 746:10) any more. Barrows, God Wars, Fight Caves, Clan Wars FFA, the Duel Arena and Pest
+     * Control mount their own overlay there and the old code yielded to them, so the HUD was gone for the whole stay
+     * (research-2026-10-03-dmm-hud.md R1). The state goes out on the RSPS side channel ([ClientHud]: `dmmz|<zoneText>`,
+     * `dmmt|<timerText>`) on every change and every [RESEND_TICKS] ticks; the client (DeadmanSkullHud.drawOverlay) draws it after
+     * the whole interface tree, so no interface, overlay, top level or modal can hide it.
+     */
     fun refresh(player: Player) {
+        if (player.attr[HUD_ACTIVE_ATTR] != true) return
         gg.rsmod.plugins.content.items.osrs.BlightedSacks.syncClient(player)
         val state = stateOf(player)
         val zone = zoneText(player)
-        val skull = timerText(player)
+        val skull = timerText(player) ?: ""
 
         val previousState = player.attr[LAST_STATE_ATTR]
         if (previousState != state) {
@@ -189,56 +199,25 @@ object DeadmanHud {
             }
         }
 
-        // The real mount, not a remembered flag (owner 2026-09-30: the HUD vanished mid-session and only a relog brought it
-        // back). The PvP overlay slot is shared: the God Wars kill count, Barrows, Fight Caves, Clan Wars FFA and the Duel
-        // Arena lobby mount their own overlay there and close the slot when they end, which unmounted 381 behind this
-        // object's back - the flag still said "open" and unchanged texts sent nothing, so the HUD stayed gone.
-        val mounted = player.getInterfaceAt(InterfaceDestination.PVP_OVERLAY)
-        if (mounted != INTERFACE_ID && player.attr[OVERLAY_OPEN_ATTR] == true) {
-            // Lost the slot: everything is re-sent the moment it is free again.
-            gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.PLUGIN) { "deadman hud: overlay slot now holds $mounted for ${player.username}; re-mounts when free" }
-            reset(player)
-        }
-        if (mounted != INTERFACE_ID && mounted != -1) {
-            // An activity overlay holds the slot right now; the HUD comes back the cycle it closes.
-            return
-        }
-
+        val now = player.world.currentCycle
+        val periodic = now - (player.attr[LAST_SENT_CYCLE_ATTR] ?: Int.MIN_VALUE / 2) >= RESEND_TICKS
         val zoneChanged = player.attr[LAST_ZONE_TEXT_ATTR] != zone
-        val skullChanged = player.attr[LAST_SKULL_TEXT_ATTR] != (skull ?: "")
-        if (!zoneChanged && !skullChanged) return
-
-        if (player.attr[OVERLAY_OPEN_ATTR] != true) {
-            player.openInterface(dest = InterfaceDestination.PVP_OVERLAY, interfaceId = INTERFACE_ID)
-            player.attr[OVERLAY_OPEN_ATTR] = true
-        }
-
+        val skullChanged = player.attr[LAST_SKULL_TEXT_ATTR] != skull
         if (zoneChanged) {
-            player.attr[LAST_ZONE_TEXT_ATTR] = zone
-            player.setComponentText(INTERFACE_ID, ZONE_TEXT, zone)
-            player.setComponentHidden(INTERFACE_ID, ZONE_SKULL_GRAPHIC, hidden = state == State.GUARDED)
             if (state == State.GUARDED) {
                 player.removeOption(2)
             } else {
                 player.sendOption("Attack", 2)
             }
         }
-
-        if (skullChanged) {
-            player.attr[LAST_SKULL_TEXT_ATTR] = skull ?: ""
-            if (skull != null) {
-                player.setComponentText(INTERFACE_ID, SKULL_TEXT, skull)
-                player.setComponentHidden(INTERFACE_ID, SKULL_PARENT, hidden = false)
-            } else {
-                // Clear the text too: the client draws the timer row from the text alone.
-                player.setComponentText(INTERFACE_ID, SKULL_TEXT, "")
-                player.setComponentHidden(INTERFACE_ID, SKULL_PARENT, hidden = true)
-            }
+        if (!zoneChanged && !skullChanged && !periodic) return
+        if (zoneChanged || skullChanged) {
+            gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.PLUGIN) { "deadman hud: sent ${player.username} zone=$zone timer=$skull (change)" }
         }
-    }
-
-    fun close(player: Player) {
-        player.closeInterface(dest = InterfaceDestination.PVP_OVERLAY)
-        reset(player)
+        player.attr[LAST_ZONE_TEXT_ATTR] = zone
+        player.attr[LAST_SKULL_TEXT_ATTR] = skull
+        player.attr[LAST_SENT_CYCLE_ATTR] = now
+        ClientHud.send(player, "dmmz|$zone")
+        ClientHud.send(player, "dmmt|$skull")
     }
 }

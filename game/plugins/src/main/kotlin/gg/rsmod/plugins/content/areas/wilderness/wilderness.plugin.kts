@@ -3,18 +3,11 @@ package gg.rsmod.plugins.content.areas.wilderness
 import gg.rsmod.plugins.content.mechanics.pvp.DeadmanHud
 
 /**
- * Per-cycle driver of the Deadman zone/skull HUD ([DeadmanHud]) - Wilderness level inside the
- * Wilderness, "Guarded"/"Dangerous" everywhere else, and the PK-skull countdown. The overlay is
- * server-authoritative: the client never derives danger or a level from raw coordinates.
+ * Starts the Deadman zone/skull HUD ([DeadmanHud]) for the session - Wilderness level inside the Wilderness,
+ * "Guarded"/"Deadman" everywhere else, and the PK-skull countdown. The HUD is driven at the end of every cycle from
+ * ClientHud.tick (client_hud.plugin.kts), not from a timer: an exception in a timer removed it for good (research
+ * 2026-10-03 R2). The overlay is server-authoritative: the client never derives danger or a level from raw coordinates.
  */
-val wildernessCheckTimer = TimerKey()
-
 on_login {
     DeadmanHud.reset(player)
-    player.timers[wildernessCheckTimer] = 1
-}
-
-on_timer(wildernessCheckTimer) {
-    DeadmanHud.refresh(player)
-    player.timers[wildernessCheckTimer] = 1
 }

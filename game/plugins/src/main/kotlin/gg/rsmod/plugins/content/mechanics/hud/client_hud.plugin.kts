@@ -18,7 +18,16 @@ on_world_init {
     // "HA" price: what the high alchemy spell really pays here.
     ClientHud.itemAlch = { id -> Alchemy.coins(world.definitions.get(ItemDef::class.java, id), true) }
     // End of every cycle (Player.postCycle), so a death, hit or npc heal of this cycle is in this cycle's update.
-    ClientHud.tick = { player -> ClientHudSync.tick(player) }
+    // The Deadman HUD (E16) rides the same end-of-cycle hook in its own try/catch: nothing can stop it the way an exception
+    // removed the old self-re-arming timer, and an overlay failure cannot take the HUD with it.
+    ClientHud.tick = { player ->
+        try {
+            gg.rsmod.plugins.content.mechanics.pvp.DeadmanHud.refresh(player)
+        } catch (e: Exception) {
+            gg.rsmod.game.model.Trace.crash("deadman hud for ${player.username}", e)
+        }
+        ClientHudSync.tick(player)
+    }
 }
 
 on_login {
