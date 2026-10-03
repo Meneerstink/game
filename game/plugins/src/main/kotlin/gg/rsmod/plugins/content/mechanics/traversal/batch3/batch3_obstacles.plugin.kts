@@ -39,6 +39,14 @@ shortcut(31221, "Go-through-wall") {
         world.plugins.executeObject(player, Objs.CAVE_ENTRANCE_9356, 1)
         return@shortcut
     }
+    // The arena-side faces of Nex's landslide (2910,5201-5205, batch 12): the prison has no way out but death or a teleport - Novite
+    // NexEntrance.java's own words, no movement.
+    if (clicked.tile.height == 0 && clicked.tile.x == 2910 && clicked.tile.z in 5201..5205) {
+        player.queue {
+            messageBox("The room beyond this point is a prison!", "There is no way out other than death or teleport.", "Only those who endure dangerous encounters should proceed.")
+        }
+        return@shortcut
+    }
     if (clicked.tile.height != 0 || clicked.tile.z != 5219 || clicked.tile.x !in 2860..2861) {
         ObjectTeleports.fallback(player)
         return@shortcut

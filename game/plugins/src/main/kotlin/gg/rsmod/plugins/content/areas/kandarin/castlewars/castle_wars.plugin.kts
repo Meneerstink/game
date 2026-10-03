@@ -242,3 +242,13 @@ on_obj_option(obj = Objs.BANDAGES_TABLE, option = "Take-1") { player.inventory.a
 on_obj_option(obj = Objs.BANDAGES_TABLE, option = "Take-5") { player.inventory.add(Items.BANDAGES, 5) }
 on_obj_option(obj = Objs.BANDAGES_TABLE_36586, option = "Take-1") { player.inventory.add(Items.BANDAGES, 1) }
 on_obj_option(obj = Objs.BANDAGES_TABLE_36586, option = "Take-5") { player.inventory.add(Items.BANDAGES, 5) }
+
+// conform traversal tests the barriers as a member of the owning team (mechanics/traversal/ObstacleAccess).
+on_world_init {
+    mapOf(Objs.ENERGY_BARRIER to CastleWarsTeam.SARADOMIN, Objs.ENERGY_BARRIER_4470 to CastleWarsTeam.ZAMORAK).forEach { (id, team) ->
+        gg.rsmod.plugins.content.mechanics.traversal.ObstacleAccess.register(id) { p ->
+            CastleWarsRound.playing[team]!!.add(p)
+            return@register { CastleWarsRound.playing[team]!!.remove(p) }
+        }
+    }
+}

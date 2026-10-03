@@ -185,7 +185,9 @@ shortcut(35121, "Climb-down") {
             player.moveTo(Tile(2641, 9763, 0))
         } else {
             player.moveTo(Tile(2641, 9740, 0))
-            messageBox("Hmm...bit dark down here! I'm not going to venture far!")
+            // The remark is its own unlocked task once the climb has ended: inside the obstacle it held the player FULL-locked
+            // until "Click here to continue" (sweep 2026-10-03: "lock still FULL after 80 ticks").
+            player.queue { messageBox("Hmm...bit dark down here! I'm not going to venture far!") }
         }
     }
 }

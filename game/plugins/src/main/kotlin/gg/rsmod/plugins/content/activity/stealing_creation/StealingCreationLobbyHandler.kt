@@ -48,33 +48,39 @@ object StealingCreationLobbyHandler {
         return true
     }
 
-    fun join(
+    fun isQueued(player: Player): Boolean = redTeam.contains(player) || blueTeam.contains(player)
+
+    /** The team checks of the stile; the climb itself is the plugin's obstacle (Novite climOverStile). */
+    fun mayEnter(
+        player: Player,
+        joinRed: Boolean,
+    ): Boolean = canEnter(player, joinRed)
+
+    /** Joins after the climb over the stile has landed the player in the team's pen. */
+    fun enter(
         player: Player,
         joinRed: Boolean,
     ) {
-        if (redTeam.contains(player) || blueTeam.contains(player)) {
-            leave(player)
-            return
-        }
-        if (!canEnter(player, joinRed)) {
-            return
-        }
+        if (isQueued(player)) return
         if (joinRed) redTeam.add(player) else blueTeam.add(player)
-        player.moveTo(if (joinRed) StealingCreationLobbyData.RED_WAITING_TILE else StealingCreationLobbyData.BLUE_WAITING_TILE)
         if (redTeam.size >= StealingCreationLobbyData.MIN_TEAM_SIZE && blueTeam.size >= StealingCreationLobbyData.MIN_TEAM_SIZE) {
             if (countdownTicks == null) countdownTicks = StealingCreationLobbyData.LOBBY_COUNTDOWN_STEPS
         }
         updateInterfaces()
     }
 
-    fun leave(player: Player) {
+    /** Leaves the queue; [move] puts the player outside the pens (a forced leave), a stile climb has already moved him. */
+    fun leave(
+        player: Player,
+        move: Boolean = true,
+    ) {
         val wasQueued = redTeam.remove(player) || blueTeam.remove(player)
         if (!wasQueued) return
         if (redTeam.size < StealingCreationLobbyData.MIN_TEAM_SIZE || blueTeam.size < StealingCreationLobbyData.MIN_TEAM_SIZE) {
             countdownTicks = null
         }
         player.setComponentHidden(StealingCreationLobbyData.LOBBY_INTERFACE, 2, true)
-        player.moveTo(StealingCreationLobbyData.EXIT_TILE)
+        if (move) player.moveTo(StealingCreationLobbyData.EXIT_TILE)
         updateInterfaces()
     }
 

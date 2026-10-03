@@ -1,6 +1,7 @@
 package gg.rsmod.plugins.content.areas.godwars
 
 import gg.rsmod.game.model.LockState
+import gg.rsmod.plugins.content.skills.agility.*
 import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.combat.CombatClass
 import gg.rsmod.game.model.entity.Npc
@@ -550,16 +551,18 @@ on_obj_option(obj = Objs.CRATE_26440, option = "search") {
  * lives in nex/nex_arena.plugin.kts.
  * ---------------------------------------------------------------------------------------- */
 
-// Novite's 70 Agility obstacle-pipe shortcut; placement probe: 57234 at (2860,5219,0).
+// Novite's 70 Agility obstacle-pipe shortcut (GodWars.java 57234: anim 1133, a 1-tick forced move, then the tile). Novite's tiles
+// 2863 <-> 2860 are one tile east of this map's pipe (clip 2026-10-03: the 2x1 pipe covers 2860-2861,5219, the walkable ends are
+// 2859,5219 west and 2862,5219 east): from the east end Novite "travelled east" one tile away from the pipe, from the west it
+// landed on the pipe itself. Now the shared lane through the pipe's footprint, from the tile in front to the tile behind it.
 on_obj_option(obj = Objs.OBSTACLE_PIPE_57234, option = "Squeeze-through") {
-    if (player.skills.getCurrentLevel(Skills.AGILITY) < 70) return@on_obj_option
-    val destination = GodWars.ancientPrisonObstacleDestination(player.tile)
-    player.queue {
-        player.lock()
+    if (!player.hasAgility(70)) return@on_obj_option
+    obstacle { target ->
+        val crossing = longAxisCrossing(world, target, player.tile) ?: throw ObstacleApproachFailed("no lane through the pipe", target.tile)
+        walkToTile(player, crossing.start)
+        face(player, crossing.direction)
         player.animate(1133)
-        wait(1)
-        player.moveTo(destination)
-        player.unlock()
+        exactMove(player, crossing.landing, delay = 30, direction = crossing.direction)
     }
 }
 

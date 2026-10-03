@@ -1,0 +1,61 @@
+{
+ "provenance": "Obstacle batch 12 (2026-10-03, owner priority #1, agent-handoffs/obstacle-batches/rest-batch-12.tsv): sourced object teleports. Every landing was checked on this 667 map with MapProbe 2026-10-03 ('use': not clipped and the reach within 4 tiles is open ground) and every source tile is the live plane (MapProbe locs).",
+ "teleports": [
+  {
+   "id": 23584,
+   "name": "shilo_underground_gem_mine_ladder_up",
+   "option": "Climb-up",
+   "tile": {"x": 2838, "z": 9388, "height": 0},
+   "to": {"x": 2825, "z": 2999, "height": 0},
+   "source": "CACHE: the counterpart is the surface ladder of the Shilo Village gem mine, multiloc 23586 at 2825,2998,0 (varbit 3610 -> 23585 'Ladder' Climb-down; DefProbe + MapProbe locsall 2026-10-03); landing 2825,2999 = the walkable tile north of it inside the mine (MapProbe reach 81). WIKI: RuneScape Wiki 'Shilo Village underground mine' - the ladder in the north section of the surface mine (Karamja gloves 3/4); this server's Karamja gloves 3/4 teleport to 2840,9386 (teleport_items.plugin.kts) is how players get down."
+  },
+  {
+   "id": 10229,
+   "name": "dks_ladder_up_level1_copy",
+   "option": "Climb-up",
+   "tile": {"x": 2899, "z": 4449, "height": 1},
+   "to": {"x": 1910, "z": 4367, "height": 0},
+   "source": "Void waterbirth_island.teles.toml dks_ladder_up (2899,4449 -> 1910,4367; already in object-teleports.json for plane 0). This 667 map places the Dagannoth Kings ladder 10229 on 2899,4449 on plane 0 AND plane 1 (MapProbe locs 2026-10-03), so the plane-1 copy gets the same exit; landing reach 68."
+  },
+  {
+   "id": 3762,
+   "name": "troll_stronghold_secret_entrance",
+   "option": "Enter",
+   "tile": {"x": 2829, "z": 3638, "height": 0},
+   "to": {"x": 2824, "z": 10050, "height": 0},
+   "source": "WIKI: RuneScape Wiki 'Secret Entrance (Troll Stronghold)' - the back way into the stronghold south of Troll Stronghold, reached by climbing the Death Plateau rock (15 Agility, climbing boots; batch12_obstacles 35391). CACHE: its counterpart is the stronghold's 'Exit' 3761 (Open) at 2823,10048,0 (placements_667.tsv); landing 2824,10050 = the walkable tile inside, north of it (MapProbe map: 2823-2825,10050 open, reach 33; conn to the prison level 2830,10060 true)."
+  },
+  {
+   "id": 3761,
+   "name": "troll_stronghold_secret_exit",
+   "option": "Open",
+   "tile": {"x": 2823, "z": 10048, "height": 0},
+   "to": {"x": 2831, "z": 3636, "height": 0},
+   "source": "CACHE: the way back of the Secret Entrance 3762 (2829,3638, 4x4; Troll Stronghold 'Exit' 3761 is its only counterpart in placements_667.tsv); landing 2831,3636 = the walkable tile in front (south) of the entrance (MapProbe map rows 3634-3637 x 2830-2832 open, reach 34). Added with 3762 so the back way is two-way like the wiki's 'back way into the stronghold'."
+  },
+  {
+   "id": 12390,
+   "name": "goblin_village_cave_ladder_up_north",
+   "option": "Climb-up",
+   "tile": {"x": 2981, "z": 9916, "height": 0},
+   "to": {"x": 2960, "z": 3506, "height": 0},
+   "source": "CACHE: the only way down into this cave (region 11930, music Too Many Cooks) is the Goblin Village ladder 12389 'Climb-Down' at 2960,3507 (same ladder family 12389/12390/12391; brass_key_door.plugin.kts binds 12389 to handleLadder(underground) = +6400 into this region, MapProbe 2960,9907 reach 81); no other Climb-down exists near the z-6400 mirror tiles (placements_667.tsv 2960-3000,3460-3530). Landing 2960,3506 = the walkable tile south of 12389 inside its house (MapProbe reach 15)."
+  },
+  {
+   "id": 12391,
+   "name": "goblin_village_cave_ladder_up_south",
+   "option": "Climb-up",
+   "tile": {"x": 2981, "z": 9876, "height": 0},
+   "to": {"x": 2960, "z": 3506, "height": 0},
+   "source": "CACHE: as 12390 - the cave's only way in is Goblin Village ladder 12389 at 2960,3507 (handleLadder +6400 lands on 2960,9907, MapProbe conn 2960,9907 -> 2982,9877 true); landing 2960,3506 south of 12389 (reach 15)."
+  },
+  {
+   "id": 20608,
+   "name": "gamers_grotto_fist_of_guthix_portal",
+   "option": "Enter",
+   "tile": {"x": 2968, "z": 9670, "height": 0},
+   "to": {"x": 1703, "z": 5599, "height": 0},
+   "source": "WIKI: RuneScape Wiki 'Gamers' Grotto' - 'To the South is the portal to the Fist of Guthix minigame. Enter the portal and you will be teleported directly to the cave'. CACHE: the cave tile this server's ring of duelling 'Fist of Guthix' teleport already uses, 1703,5599,0 (ring_of_dueling.plugin.kts:25), between the cave's scoreboards 30205 (MapProbe reach 81). The games necklace 'Gamers' Grotto' teleport lands 2970,9673, right north of this portal."
+  }
+ ]
+}

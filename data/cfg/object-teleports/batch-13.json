@@ -1,0 +1,357 @@
+{
+ "provenance": "Obstacle batch 13 (2026-10-03, owner priority #1): sourced object teleports for agent-handoffs/obstacle-batches/rest-batch-13.tsv. Every landing checked on this 667 map with MapProbe (walkable, not inside scenery); each entry names its source (CACHE = the 667 map counterpart, WIKI = OSRS/RS3 Wiki page).",
+ "teleports": [
+  {
+   "id": 10416,
+   "name": "genie_cave_crevice",
+   "option": "Climb-down",
+   "tile": {
+    "x": 3373,
+    "z": 2902,
+    "height": 0
+   },
+   "to": {
+    "x": 3373,
+    "z": 9306,
+    "height": 0
+   },
+   "source": "OSRS Wiki 'Crevice (Spirits of the Elid)' (id 10416, west of Nardah, Climb-down into the Genie's Cave; rope no longer required since 12 Feb 2018) + RS3 Wiki 'Rope (Genie's Cave)' (exit rope 10434 at 3373,9305). CACHE: 10434 'Rope' Climb at 3373,9305,0 (the z-6400 mirror of the crevice cluster); landing 3373,9306 walkable beside it (MapProbe reach 71, 2026-10-03)"
+  },
+  {
+   "id": 10416,
+   "name": "genie_cave_crevice",
+   "option": "Climb-down",
+   "tile": {
+    "x": 3373,
+    "z": 2903,
+    "height": 0
+   },
+   "to": {
+    "x": 3373,
+    "z": 9306,
+    "height": 0
+   },
+   "source": "OSRS Wiki 'Crevice (Spirits of the Elid)' (id 10416, west of Nardah, Climb-down into the Genie's Cave; rope no longer required since 12 Feb 2018) + RS3 Wiki 'Rope (Genie's Cave)' (exit rope 10434 at 3373,9305). CACHE: 10434 'Rope' Climb at 3373,9305,0 (the z-6400 mirror of the crevice cluster); landing 3373,9306 walkable beside it (MapProbe reach 71, 2026-10-03)"
+  },
+  {
+   "id": 10416,
+   "name": "genie_cave_crevice",
+   "option": "Climb-down",
+   "tile": {
+    "x": 3373,
+    "z": 2904,
+    "height": 0
+   },
+   "to": {
+    "x": 3373,
+    "z": 9306,
+    "height": 0
+   },
+   "source": "OSRS Wiki 'Crevice (Spirits of the Elid)' (id 10416, west of Nardah, Climb-down into the Genie's Cave; rope no longer required since 12 Feb 2018) + RS3 Wiki 'Rope (Genie's Cave)' (exit rope 10434 at 3373,9305). CACHE: 10434 'Rope' Climb at 3373,9305,0 (the z-6400 mirror of the crevice cluster); landing 3373,9306 walkable beside it (MapProbe reach 71, 2026-10-03)"
+  },
+  {
+   "id": 10416,
+   "name": "genie_cave_crevice",
+   "option": "Climb-down",
+   "tile": {
+    "x": 3373,
+    "z": 2905,
+    "height": 0
+   },
+   "to": {
+    "x": 3373,
+    "z": 9306,
+    "height": 0
+   },
+   "source": "OSRS Wiki 'Crevice (Spirits of the Elid)' (id 10416, west of Nardah, Climb-down into the Genie's Cave; rope no longer required since 12 Feb 2018) + RS3 Wiki 'Rope (Genie's Cave)' (exit rope 10434 at 3373,9305). CACHE: 10434 'Rope' Climb at 3373,9305,0 (the z-6400 mirror of the crevice cluster); landing 3373,9306 walkable beside it (MapProbe reach 71, 2026-10-03)"
+  },
+  {
+   "id": 10416,
+   "name": "genie_cave_crevice",
+   "option": "Climb-down",
+   "tile": {
+    "x": 3373,
+    "z": 2906,
+    "height": 0
+   },
+   "to": {
+    "x": 3373,
+    "z": 9306,
+    "height": 0
+   },
+   "source": "OSRS Wiki 'Crevice (Spirits of the Elid)' (id 10416, west of Nardah, Climb-down into the Genie's Cave; rope no longer required since 12 Feb 2018) + RS3 Wiki 'Rope (Genie's Cave)' (exit rope 10434 at 3373,9305). CACHE: 10434 'Rope' Climb at 3373,9305,0 (the z-6400 mirror of the crevice cluster); landing 3373,9306 walkable beside it (MapProbe reach 71, 2026-10-03)"
+  },
+  {
+   "id": 10416,
+   "name": "genie_cave_crevice",
+   "option": "Climb-down",
+   "tile": {
+    "x": 3373,
+    "z": 2907,
+    "height": 0
+   },
+   "to": {
+    "x": 3373,
+    "z": 9306,
+    "height": 0
+   },
+   "source": "OSRS Wiki 'Crevice (Spirits of the Elid)' (id 10416, west of Nardah, Climb-down into the Genie's Cave; rope no longer required since 12 Feb 2018) + RS3 Wiki 'Rope (Genie's Cave)' (exit rope 10434 at 3373,9305). CACHE: 10434 'Rope' Climb at 3373,9305,0 (the z-6400 mirror of the crevice cluster); landing 3373,9306 walkable beside it (MapProbe reach 71, 2026-10-03)"
+  },
+  {
+   "id": 10416,
+   "name": "genie_cave_crevice",
+   "option": "Climb-down",
+   "tile": {
+    "x": 3374,
+    "z": 2904,
+    "height": 0
+   },
+   "to": {
+    "x": 3373,
+    "z": 9306,
+    "height": 0
+   },
+   "source": "OSRS Wiki 'Crevice (Spirits of the Elid)' (id 10416, Climb-down into the Genie's Cave) + RS3 Wiki 'Rope (Genie's Cave)' (exit rope 10434 at 3373,9305). CACHE: 10434 at 3373,9305,0; landing 3373,9306 walkable (MapProbe reach 71)"
+  },
+  {
+   "id": 10416,
+   "name": "genie_cave_crevice",
+   "option": "Climb-down",
+   "tile": {
+    "x": 3374,
+    "z": 2905,
+    "height": 0
+   },
+   "to": {
+    "x": 3373,
+    "z": 9306,
+    "height": 0
+   },
+   "source": "OSRS Wiki 'Crevice (Spirits of the Elid)' (id 10416, Climb-down into the Genie's Cave) + RS3 Wiki 'Rope (Genie's Cave)' (exit rope 10434 at 3373,9305). CACHE: 10434 at 3373,9305,0; landing 3373,9306 walkable (MapProbe reach 71)"
+  },
+  {
+   "id": 10434,
+   "name": "genie_cave_rope",
+   "option": "Climb",
+   "tile": {
+    "x": 3373,
+    "z": 9305,
+    "height": 0
+   },
+   "to": {
+    "x": 3372,
+    "z": 2905,
+    "height": 0
+   },
+   "source": "RS3 Wiki 'Rope (Genie's Cave)' (id 10434 at 3373,9305: 'used to climb out of the Genie's Cave. The cave can be re-entered from the crevice outside'). CACHE: crevice 10416 cluster 3373-3374,2902-2907 (z+6400 mirror); landing 3372,2905 walkable west of it, connected to Nardah (MapProbe reach 81). NOTE batch1 not_applicable line 19 (box 3365,9298-3380,9312) assumed no surface entrance - the crevice is now bound"
+  },
+  {
+   "id": 19425,
+   "name": "desert_eagle_eyrie_cave",
+   "option": "Enter",
+   "tile": {
+    "x": 3405,
+    "z": 3159,
+    "height": 0
+   },
+   "to": {
+    "x": 3420,
+    "z": 9562,
+    "height": 0
+   },
+   "source": "RS3 Wiki 'Eagle transport system' (desert eagles' eyrie: the cave north-east of the Dominion Tower) + OSRS Wiki 'Desert eagle' (eyrie interior 3422,9571). CACHE: the eyrie interior 3419-3434,9562-9578 (172 tiles) has the only 'Exit' caves of the area, 19791 (3419,9560) and 19792 (3427,9561); landing 3420,9562 walkable beside 19791 (MapProbe reach 15, both exits in the same area)"
+  },
+  {
+   "id": 19791,
+   "name": "desert_eagle_eyrie_exit",
+   "option": "Exit",
+   "tile": {
+    "x": 3419,
+    "z": 9560,
+    "height": 0
+   },
+   "to": {
+    "x": 3405,
+    "z": 3158,
+    "height": 0
+   },
+   "source": "CACHE: the eyrie exit; the only surface cave with 'Enter' within 40 tiles of the eyrie's mirror is 19425 at 3405,3159 (RS3 Wiki 'Eagle transport system': cave NE of the Dominion Tower); landing 3405,3158 in front of it (MapProbe reach 61, connected to the desert)"
+  },
+  {
+   "id": 19792,
+   "name": "desert_eagle_eyrie_exit",
+   "option": "Exit",
+   "tile": {
+    "x": 3427,
+    "z": 9561,
+    "height": 0
+   },
+   "to": {
+    "x": 3405,
+    "z": 3158,
+    "height": 0
+   },
+   "source": "CACHE: the eyrie's second exit, same area as 19791; same surface cave 19425 at 3405,3159; landing 3405,3158 (MapProbe reach 61)"
+  },
+  {
+   "id": 59921,
+   "name": "burgh_de_rott_cave_entrance",
+   "option": "Enter",
+   "tile": {
+    "x": 3496,
+    "z": 3203,
+    "height": 0
+   },
+   "to": {
+    "x": 2273,
+    "z": 5152,
+    "height": 0
+   },
+   "source": "RS3 Wiki 'Cave entrance (Burgh de Rott)' (id 59921 at 3496,3203, The Branches of Darkmeyer - completed here, QuestStatus) + 'Cave (Burgh de Rott)' (map 2272,5154). CACHE: the cave 2260-2285,5145-5160 with rope 61091 'Climb' at 2274,5152, coffin 61092, pool 61094, decaying tome 61297; landing 2273,5152 beside the rope (MapProbe reach 65)"
+  },
+  {
+   "id": 61091,
+   "name": "burgh_de_rott_cave_rope",
+   "option": "Climb",
+   "tile": {
+    "x": 2274,
+    "z": 5152,
+    "height": 0
+   },
+   "to": {
+    "x": 3496,
+    "z": 3202,
+    "height": 0
+   },
+   "source": "RS3 Wiki 'Cave (Burgh de Rott)' (cave under the cave entrance south of the bank) + Drakan's medallion destination 'Burgh de Rott' 3496,3202 (RS Wiki, teleport_items.plugin.kts) = the tile in front of the cave entrance 59921; walkable (MapProbe reach 81). NOTE batch1 not_applicable line 35 (box 2265,5145-2285,5160) assumed no way in - the entrance is now bound"
+  },
+  {
+   "id": 12779,
+   "name": "burgh_de_rott_hideout_ladder",
+   "option": "Climb-up",
+   "tile": {
+    "x": 3490,
+    "z": 9632,
+    "height": 0
+   },
+   "to": {
+    "x": 3491,
+    "z": 3231,
+    "height": 0
+   },
+   "source": "RS3 Wiki 'Myreque Hideout' (Burgh de Rott: the cellar of the ruined derelict inn) + 'Broken down wall' (inside the derelict inn, climbed over to reach the hideout). CACHE: z-6400 mirror 3490,3232 is the walled corner of the inn behind the broken down wall 12737 (3491,3230; corner 3490-3491,3231-3232, 4 tiles); landing 3491,3231 right behind the wall (its way back, batch13/morytania.plugin.kts); the cellar copies on level 0 and 1 both climb to it"
+  },
+  {
+   "id": 12779,
+   "name": "burgh_de_rott_hideout_ladder",
+   "option": "Climb-up",
+   "tile": {
+    "x": 3490,
+    "z": 9632,
+    "height": 1
+   },
+   "to": {
+    "x": 3491,
+    "z": 3231,
+    "height": 0
+   },
+   "source": "RS3 Wiki 'Myreque Hideout' (Burgh de Rott: the cellar of the ruined derelict inn) + 'Broken down wall' (inside the derelict inn, climbed over to reach the hideout). CACHE: z-6400 mirror 3490,3232 is the walled corner of the inn behind the broken down wall 12737 (3491,3230; corner 3490-3491,3231-3232, 4 tiles); landing 3491,3231 right behind the wall (its way back, batch13/morytania.plugin.kts); the cellar copies on level 0 and 1 both climb to it"
+  },
+  {
+   "id": 1757,
+   "name": "experiment_cave_ladder",
+   "option": "Climb-up",
+   "tile": {
+    "x": 3578,
+    "z": 9927,
+    "height": 0
+   },
+   "to": {
+    "x": 3578,
+    "z": 3526,
+    "height": 0
+   },
+   "source": "OSRS Wiki 'Experiment cave' ('By pushing the easternmost memorial, players may enter the experiment caves below', map 3575,3526). CACHE: the easternmost Memorial 5167 'Push' at 3578,3527 is exactly the z-6400 mirror of this ladder; landing 3578,3526 in front of it (MapProbe reach 81). 2009scape CreatureOfFenkenstrainListeners: the memorial push/search leads to 3577,9927 beside this ladder (batch13/morytania.plugin.kts)"
+  },
+  {
+   "id": 528,
+   "name": "region14411_stairs_up",
+   "option": "Climb-up",
+   "tile": {
+    "x": 3618,
+    "z": 4814,
+    "height": 0
+   },
+   "to": {
+    "x": 3358,
+    "z": 3305,
+    "height": 0
+   },
+   "source": "Void skill/dungeoneering/dungeoneering.teles.toml [527] trapdoor 3357,3305 Climb-down -> 3619,4814 (object-teleports.json, region 14411); this staircase is the way back. CACHE: trapdoor 527 placed at 3357,3305,0; landing 3358,3305 beside it (MapProbe reach 40)"
+  },
+  {
+   "id": 17986,
+   "name": "meiyerditch_hideout_ladder",
+   "option": "Climb-up",
+   "tile": {
+    "x": 3626,
+    "z": 9617,
+    "height": 0
+   },
+   "to": {
+    "x": 3626,
+    "z": 3217,
+    "height": 0
+   },
+   "source": "RS3 Wiki 'Myreque Hideout' (Meiyerditch: a secret trapdoor in the floor of the house with the Silver Sickle lever leads to the base) + Drakan's medallion 'Meiyerditch' 3627,9617 = this hideout. CACHE: z-6400 mirror 3626,3217 is the floor of that house (Sickle logo 17647 at 3626,3220 level 1), walkable (MapProbe reach 38)"
+  },
+  {
+   "id": 34978,
+   "name": "uzer_golem_staircase_down",
+   "option": "Climb-down",
+   "tile": {
+    "x": 3492,
+    "z": 3089,
+    "height": 0
+   },
+   "to": {
+    "x": 2721,
+    "z": 4886,
+    "height": 0
+   },
+   "source": "Void content/quest/member/the_golem/TheGolem.kt objectOperate(Climb-down, sote_warped_library_floor_lvl2_centre_01 = 34978 at the Uzer ruins, the_golem.objs.toml: 'the ids and placements are the golem's') tele(2721,4886); the way back (6372 -> 3491,3090) is batch-9.json. Landing walkable (MapProbe reach 72, 2026-10-03)"
+  },
+  {
+   "id": 11244,
+   "name": "adventurous_climbing_net",
+   "option": "Climb-down",
+   "tile": {
+    "x": 3683,
+    "z": 2949,
+    "height": 2
+   },
+   "to": {
+    "x": 3683,
+    "z": 2949,
+    "height": 1
+   },
+   "source": "The Adventurous at Mos Le'Harmless (RS3 Wiki 'The Adventurous': moored and boardable there; gangplanks 11211/11212 batch13/mos_le_harmless.plugin.kts). CACHE: the net hangs from the top deck (level 2) over the main deck; 3683,2949 level 1 is open deck inside the hull walls (MapProbe map level 1, reach 41)"
+  },
+  {
+   "id": 1757,
+   "name": "memorial_cave_ladder",
+   "option": "Climb-up",
+   "tile": {
+    "x": 3504,
+    "z": 9970,
+    "height": 0
+   },
+   "to": {
+    "x": 3504,
+    "z": 3571,
+    "height": 0
+   },
+   "source": "2009scape CreatureOfFenkenstrainListeners addClimbDest(3504,9970 -> 3504,3571): the cave under the memorial 5167 at 3505,3571 (memorial push/search -> 3504,9969, batch13/morytania.plugin.kts). Landing 3504,3571 walkable beside the memorial (MapProbe reach 77). NOTE not_applicable-batch9 line 21 (box 3504,9970) assumed the memorial is unbound - it is now bound"
+  }
+ ]
+}

@@ -30,7 +30,7 @@ val SOUND_JUMP = 2461
 
 // ---- Wrecked ghost ship gangplanks (Void: walkOverDelay onto the plank, then tele) ----
 shortcut(5285, "Cross") {
-    player.queue {
+    player.lockingQueue(lockState = gg.rsmod.game.model.LockState.FULL) {
         wait(1)
         player.moveTo(3605, 3548, 0)
         player.filterableMessage("You cross the gangplank.")
@@ -38,7 +38,7 @@ shortcut(5285, "Cross") {
 }
 
 shortcut(5286, "Cross") {
-    player.queue {
+    player.lockingQueue(lockState = gg.rsmod.game.model.LockState.FULL) {
         wait(1)
         player.moveTo(3605, 3545, 1)
         player.filterableMessage("You cross the gangplank.")

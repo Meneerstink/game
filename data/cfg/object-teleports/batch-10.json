@@ -1,0 +1,277 @@
+{
+ "provenance": "Obstacle batch 10 (owner priority #1, 2026-10-03, rest batch): teleports whose destination is a counterpart loc / walkable tile of this 667 map (CACHE) plus the OSRS/RS3 Wiki for the area. Every landing checked walkable with MapProbe.",
+ "teleports": [
+  {
+   "id": 25662,
+   "name": "keep_le_faye_basement_down",
+   "option": "Climb-down",
+   "tile": {
+    "x": 2770,
+    "z": 3407,
+    "height": 0
+   },
+   "to": {
+    "x": 1888,
+    "z": 4269,
+    "height": 0
+   },
+   "source": "King's Ransom keep basement (667 map, batch 10 2026-10-03): ladder 25662 'Climb-down' pairs with the basement's only ladder 25663 'Climb-up' at 1887,4269,0 (MapProbe locs - the jail with the knights' cells 25876 and Sir Lancelot/Bedivere/Lucan/Tristram/Palomedes locs; RS3 Wiki Keep Le Faye: 'There is a stairs and a small trap door to enter the Basement ... the family jail'). Landing 1888,4269,0 = the walkable tile east of 25663 (MapProbe reach 53). Keep Le Faye ground floor, south of Catherby."
+  },
+  {
+   "id": 25662,
+   "name": "keep_le_faye_copy_basement_down",
+   "option": "Climb-down",
+   "tile": {
+    "x": 1696,
+    "z": 4262,
+    "height": 0
+   },
+   "to": {
+    "x": 1888,
+    "z": 4269,
+    "height": 0
+   },
+   "source": "King's Ransom keep basement (667 map, batch 10 2026-10-03): ladder 25662 'Climb-down' pairs with the basement's only ladder 25663 'Climb-up' at 1887,4269,0 (MapProbe locs - the jail with the knights' cells 25876 and Sir Lancelot/Bedivere/Lucan/Tristram/Palomedes locs; RS3 Wiki Keep Le Faye: 'There is a stairs and a small trap door to enter the Basement ... the family jail'). Landing 1888,4269,0 = the walkable tile east of 25663 (MapProbe reach 53). Second copy of the keep (region 6722, same locs as 2763-2780,3398-3407)."
+  },
+  {
+   "id": 25663,
+   "name": "keep_le_faye_basement_up",
+   "option": "Climb-up",
+   "tile": {
+    "x": 1887,
+    "z": 4269,
+    "height": 0
+   },
+   "to": {
+    "x": 2771,
+    "z": 3407,
+    "height": 0
+   },
+   "source": "King's Ransom keep basement (667 map, batch 10): the basement ladder 25663 (id pair of 25662) leads back up to the keep's own ladder 25662@2770,3407,0 (Keep Le Faye); landing 2771,3407,0 = walkable tile east of it (MapProbe reach 56). Without it the basement entered through 25662 would have no way out."
+  },
+  {
+   "id": 10194,
+   "name": "waterbirth_lighthouse_ladder",
+   "option": "Climb-up",
+   "tile": {
+    "x": 1975,
+    "z": 4408,
+    "height": 3
+   },
+   "to": {
+    "x": 2515,
+    "z": 10008,
+    "height": 0
+   },
+   "source": "Waterbirth Island Dungeon sublevel ladder to the Lighthouse (RS3 Wiki Waterbirth Island Dungeon: 'At sublevel 2, there is a final ladder, which if used, will bring players to the Lighthouse dungeon'; OSRS Wiki: 'the ladder ... will send them into the Dagannoth under the Lighthouse', Horror from the Deep - completed here, QuestStatus). 667 map: the Dagannoth chamber (Void lighthouse.areas lighthouse_dungeon 2496-2559,9984-10047) has no counterpart ladder; landing = 2515,10008,0, the chamber tile Void lighthouse.teles.toml 4485 (2515,10006,1 delta z+3, level -1) lands on (MapProbe reach 45)."
+  },
+  {
+   "id": 43885,
+   "name": "mobilising_armies_tower_basement_down",
+   "option": "Climb-down",
+   "tile": {
+    "x": 2422,
+    "z": 2833,
+    "height": 0
+   },
+   "to": {
+    "x": 2395,
+    "z": 9247,
+    "height": 0
+   },
+   "source": "Mobilising Armies officer tower basement (667 map, batch 10): RS3 Wiki Mobilising Armies Command Centre: 'Junior Cadets could only enter the basement' of the officer tower (the lowest rank - open to everyone). The tower stairs 43885 'Climb-down' (2422,2833) pair with the basement room 2389-2397,9243-9250 and its only stairs 43897 'Climb-up' (2396,9246, 1x2) (placements_667.tsv + MapProbe). Landing 2395,9247,0 = walkable tile west of 43897 (MapProbe reach 48)."
+  },
+  {
+   "id": 43897,
+   "name": "mobilising_armies_tower_basement_up",
+   "option": "Climb-up",
+   "tile": {
+    "x": 2396,
+    "z": 9246,
+    "height": 0
+   },
+   "to": {
+    "x": 2422,
+    "z": 2834,
+    "height": 0
+   },
+   "source": "Mobilising Armies officer tower basement (667 map, batch 10): RS3 Wiki Mobilising Armies Command Centre: 'Junior Cadets could only enter the basement' of the officer tower (the lowest rank - open to everyone). The tower stairs 43885 'Climb-down' (2422,2833) pair with the basement room 2389-2397,9243-9250 and its only stairs 43897 'Climb-up' (2396,9246, 1x2) (placements_667.tsv + MapProbe). Back up: landing 2422,2834,0 = walkable tile north of 43885, reachable from the ring of duelling arrival 2412,2849 (MapProbe conn)."
+  },
+  {
+   "id": 26684,
+   "name": "poison_waste_sewer_enter",
+   "option": "Enter",
+   "tile": {
+    "x": 2322,
+    "z": 3098,
+    "height": 0
+   },
+   "to": {
+    "x": 1925,
+    "z": 4171,
+    "height": 0
+   },
+   "source": "Poison Waste Slayer Dungeon sewer (667 map, batch 10): RS3 Wiki 'When outside the dungeon, the player must click on the sewer entrance to enter the dungeon'; OSRS Wiki 'proceed west into the Poison Waste Dungeon entrance by entering the sewer and climbing up the ladder' (The Path of Glouphrie - completed here, QuestStatus). The surface 'Sewer entrance' 26684-26686 (2322,3098-3102, in the corridor x=2321) pair with the dungeon's 'Sewer exit' 26570-26575 (1924,4169-4174), whose corridor 1925-1931,4171-4172 holds the ladder 26518 up (MapProbe). Landing = the corridor tile east of the sewer exit (MapProbe reach 24)."
+  },
+  {
+   "id": 26685,
+   "name": "poison_waste_sewer_enter",
+   "option": "Enter",
+   "tile": {
+    "x": 2322,
+    "z": 3099,
+    "height": 0
+   },
+   "to": {
+    "x": 1925,
+    "z": 4171,
+    "height": 0
+   },
+   "source": "Poison Waste Slayer Dungeon sewer (667 map, batch 10): RS3 Wiki 'When outside the dungeon, the player must click on the sewer entrance to enter the dungeon'; OSRS Wiki 'proceed west into the Poison Waste Dungeon entrance by entering the sewer and climbing up the ladder' (The Path of Glouphrie - completed here, QuestStatus). The surface 'Sewer entrance' 26684-26686 (2322,3098-3102, in the corridor x=2321) pair with the dungeon's 'Sewer exit' 26570-26575 (1924,4169-4174), whose corridor 1925-1931,4171-4172 holds the ladder 26518 up (MapProbe). Landing = the corridor tile east of the sewer exit (MapProbe reach 24)."
+  },
+  {
+   "id": 26685,
+   "name": "poison_waste_sewer_enter",
+   "option": "Enter",
+   "tile": {
+    "x": 2322,
+    "z": 3100,
+    "height": 0
+   },
+   "to": {
+    "x": 1925,
+    "z": 4171,
+    "height": 0
+   },
+   "source": "Poison Waste Slayer Dungeon sewer (667 map, batch 10): RS3 Wiki 'When outside the dungeon, the player must click on the sewer entrance to enter the dungeon'; OSRS Wiki 'proceed west into the Poison Waste Dungeon entrance by entering the sewer and climbing up the ladder' (The Path of Glouphrie - completed here, QuestStatus). The surface 'Sewer entrance' 26684-26686 (2322,3098-3102, in the corridor x=2321) pair with the dungeon's 'Sewer exit' 26570-26575 (1924,4169-4174), whose corridor 1925-1931,4171-4172 holds the ladder 26518 up (MapProbe). Landing = the corridor tile east of the sewer exit (MapProbe reach 24)."
+  },
+  {
+   "id": 26685,
+   "name": "poison_waste_sewer_enter",
+   "option": "Enter",
+   "tile": {
+    "x": 2322,
+    "z": 3101,
+    "height": 0
+   },
+   "to": {
+    "x": 1925,
+    "z": 4172,
+    "height": 0
+   },
+   "source": "Poison Waste Slayer Dungeon sewer (667 map, batch 10): RS3 Wiki 'When outside the dungeon, the player must click on the sewer entrance to enter the dungeon'; OSRS Wiki 'proceed west into the Poison Waste Dungeon entrance by entering the sewer and climbing up the ladder' (The Path of Glouphrie - completed here, QuestStatus). The surface 'Sewer entrance' 26684-26686 (2322,3098-3102, in the corridor x=2321) pair with the dungeon's 'Sewer exit' 26570-26575 (1924,4169-4174), whose corridor 1925-1931,4171-4172 holds the ladder 26518 up (MapProbe). Landing = the corridor tile east of the sewer exit (MapProbe reach 24)."
+  },
+  {
+   "id": 26686,
+   "name": "poison_waste_sewer_enter",
+   "option": "Enter",
+   "tile": {
+    "x": 2322,
+    "z": 3102,
+    "height": 0
+   },
+   "to": {
+    "x": 1925,
+    "z": 4172,
+    "height": 0
+   },
+   "source": "Poison Waste Slayer Dungeon sewer (667 map, batch 10): RS3 Wiki 'When outside the dungeon, the player must click on the sewer entrance to enter the dungeon'; OSRS Wiki 'proceed west into the Poison Waste Dungeon entrance by entering the sewer and climbing up the ladder' (The Path of Glouphrie - completed here, QuestStatus). The surface 'Sewer entrance' 26684-26686 (2322,3098-3102, in the corridor x=2321) pair with the dungeon's 'Sewer exit' 26570-26575 (1924,4169-4174), whose corridor 1925-1931,4171-4172 holds the ladder 26518 up (MapProbe). Landing = the corridor tile east of the sewer exit (MapProbe reach 24)."
+  },
+  {
+   "id": 26572,
+   "name": "poison_waste_sewer_exit",
+   "option": "Exit",
+   "tile": {
+    "x": 1924,
+    "z": 4169,
+    "height": 0
+   },
+   "to": {
+    "x": 2321,
+    "z": 3100,
+    "height": 0
+   },
+   "source": "Poison Waste Slayer Dungeon sewer (667 map, batch 10): RS3 Wiki 'When outside the dungeon, the player must click on the sewer entrance to enter the dungeon'; OSRS Wiki 'proceed west into the Poison Waste Dungeon entrance by entering the sewer and climbing up the ladder' (The Path of Glouphrie - completed here, QuestStatus). The surface 'Sewer entrance' 26684-26686 (2322,3098-3102, in the corridor x=2321) pair with the dungeon's 'Sewer exit' 26570-26575 (1924,4169-4174), whose corridor 1925-1931,4171-4172 holds the ladder 26518 up (MapProbe). Exit lands west of the sewer entrance, 2321,3100,0 (RS3 Wiki: leaving = a point west of the sewer entrance; MapProbe reach 30, connected to the Poison Waste 2339,3110)."
+  },
+  {
+   "id": 26571,
+   "name": "poison_waste_sewer_exit",
+   "option": "Exit",
+   "tile": {
+    "x": 1924,
+    "z": 4170,
+    "height": 0
+   },
+   "to": {
+    "x": 2321,
+    "z": 3100,
+    "height": 0
+   },
+   "source": "Poison Waste Slayer Dungeon sewer (667 map, batch 10): RS3 Wiki 'When outside the dungeon, the player must click on the sewer entrance to enter the dungeon'; OSRS Wiki 'proceed west into the Poison Waste Dungeon entrance by entering the sewer and climbing up the ladder' (The Path of Glouphrie - completed here, QuestStatus). The surface 'Sewer entrance' 26684-26686 (2322,3098-3102, in the corridor x=2321) pair with the dungeon's 'Sewer exit' 26570-26575 (1924,4169-4174), whose corridor 1925-1931,4171-4172 holds the ladder 26518 up (MapProbe). Exit lands west of the sewer entrance, 2321,3100,0 (RS3 Wiki: leaving = a point west of the sewer entrance; MapProbe reach 30, connected to the Poison Waste 2339,3110)."
+  },
+  {
+   "id": 26570,
+   "name": "poison_waste_sewer_exit",
+   "option": "Exit",
+   "tile": {
+    "x": 1924,
+    "z": 4171,
+    "height": 0
+   },
+   "to": {
+    "x": 2321,
+    "z": 3100,
+    "height": 0
+   },
+   "source": "Poison Waste Slayer Dungeon sewer (667 map, batch 10): RS3 Wiki 'When outside the dungeon, the player must click on the sewer entrance to enter the dungeon'; OSRS Wiki 'proceed west into the Poison Waste Dungeon entrance by entering the sewer and climbing up the ladder' (The Path of Glouphrie - completed here, QuestStatus). The surface 'Sewer entrance' 26684-26686 (2322,3098-3102, in the corridor x=2321) pair with the dungeon's 'Sewer exit' 26570-26575 (1924,4169-4174), whose corridor 1925-1931,4171-4172 holds the ladder 26518 up (MapProbe). Exit lands west of the sewer entrance, 2321,3100,0 (RS3 Wiki: leaving = a point west of the sewer entrance; MapProbe reach 30, connected to the Poison Waste 2339,3110)."
+  },
+  {
+   "id": 26573,
+   "name": "poison_waste_sewer_exit",
+   "option": "Exit",
+   "tile": {
+    "x": 1924,
+    "z": 4172,
+    "height": 0
+   },
+   "to": {
+    "x": 2321,
+    "z": 3100,
+    "height": 0
+   },
+   "source": "Poison Waste Slayer Dungeon sewer (667 map, batch 10): RS3 Wiki 'When outside the dungeon, the player must click on the sewer entrance to enter the dungeon'; OSRS Wiki 'proceed west into the Poison Waste Dungeon entrance by entering the sewer and climbing up the ladder' (The Path of Glouphrie - completed here, QuestStatus). The surface 'Sewer entrance' 26684-26686 (2322,3098-3102, in the corridor x=2321) pair with the dungeon's 'Sewer exit' 26570-26575 (1924,4169-4174), whose corridor 1925-1931,4171-4172 holds the ladder 26518 up (MapProbe). Exit lands west of the sewer entrance, 2321,3100,0 (RS3 Wiki: leaving = a point west of the sewer entrance; MapProbe reach 30, connected to the Poison Waste 2339,3110)."
+  },
+  {
+   "id": 26574,
+   "name": "poison_waste_sewer_exit",
+   "option": "Exit",
+   "tile": {
+    "x": 1924,
+    "z": 4173,
+    "height": 0
+   },
+   "to": {
+    "x": 2321,
+    "z": 3100,
+    "height": 0
+   },
+   "source": "Poison Waste Slayer Dungeon sewer (667 map, batch 10): RS3 Wiki 'When outside the dungeon, the player must click on the sewer entrance to enter the dungeon'; OSRS Wiki 'proceed west into the Poison Waste Dungeon entrance by entering the sewer and climbing up the ladder' (The Path of Glouphrie - completed here, QuestStatus). The surface 'Sewer entrance' 26684-26686 (2322,3098-3102, in the corridor x=2321) pair with the dungeon's 'Sewer exit' 26570-26575 (1924,4169-4174), whose corridor 1925-1931,4171-4172 holds the ladder 26518 up (MapProbe). Exit lands west of the sewer entrance, 2321,3100,0 (RS3 Wiki: leaving = a point west of the sewer entrance; MapProbe reach 30, connected to the Poison Waste 2339,3110)."
+  },
+  {
+   "id": 26575,
+   "name": "poison_waste_sewer_exit",
+   "option": "Exit",
+   "tile": {
+    "x": 1924,
+    "z": 4174,
+    "height": 0
+   },
+   "to": {
+    "x": 2321,
+    "z": 3100,
+    "height": 0
+   },
+   "source": "Poison Waste Slayer Dungeon sewer (667 map, batch 10): RS3 Wiki 'When outside the dungeon, the player must click on the sewer entrance to enter the dungeon'; OSRS Wiki 'proceed west into the Poison Waste Dungeon entrance by entering the sewer and climbing up the ladder' (The Path of Glouphrie - completed here, QuestStatus). The surface 'Sewer entrance' 26684-26686 (2322,3098-3102, in the corridor x=2321) pair with the dungeon's 'Sewer exit' 26570-26575 (1924,4169-4174), whose corridor 1925-1931,4171-4172 holds the ladder 26518 up (MapProbe). Exit lands west of the sewer entrance, 2321,3100,0 (RS3 Wiki: leaving = a point west of the sewer entrance; MapProbe reach 30, connected to the Poison Waste 2339,3110)."
+  }
+ ]
+}

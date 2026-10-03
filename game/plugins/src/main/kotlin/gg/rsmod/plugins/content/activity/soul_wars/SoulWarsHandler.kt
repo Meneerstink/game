@@ -26,11 +26,16 @@ object SoulWarsHandler {
         return tile.x in min.x..max.x && tile.z in min.z..max.z
     }
 
-    fun joinLobby(player: Player) {
+    fun mayJoinLobby(player: Player): Boolean {
         if (player.equipment[EquipmentType.CAPE.id] != null) {
             player.message("You cannot enter the lobby with a cape.")
-            return
+            return false
         }
+        return true
+    }
+
+    fun joinLobby(player: Player) {
+        if (!mayJoinLobby(player)) return
         SoulWarsMatch.lobbyPlayers.add(player)
         player.attr[SW_ZEAL] = player.attr[SW_ZEAL] ?: 0
         updateLobbyVars(player)

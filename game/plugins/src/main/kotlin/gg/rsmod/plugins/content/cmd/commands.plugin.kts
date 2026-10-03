@@ -70,6 +70,10 @@ on_command("empty", Privilege.ADMIN_POWER) {
             player.inventory.remove(item)
         }
     }
+    // `empty all`: the worn items too (agent tests of item-free minigame entrances on the test server).
+    if (player.getCommandArgs().firstOrNull()?.lowercase() == "all") {
+        for (slot in 0 until player.equipment.capacity) player.equipment[slot] = null
+    }
 }
 
 on_command("pnpc", Privilege.ADMIN_POWER) {

@@ -11,6 +11,7 @@ import gg.rsmod.plugins.api.EquipmentType
 import gg.rsmod.plugins.api.HitType
 import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.api.cfg.Npcs
+import gg.rsmod.plugins.api.cfg.Objs
 import gg.rsmod.plugins.api.ext.filterableMessage
 import gg.rsmod.plugins.api.ext.hit
 import gg.rsmod.plugins.api.ext.message
@@ -303,6 +304,16 @@ object CastleWarsHandler {
         player: Player,
         obj: GameObject,
     ) {
+        // Novite CastleWarsPlaying.processObjectClick1: 4469 only for Saradomin (its respawn room, base 2426,3076,1), 4470 only for
+        // Zamorak (2373,3131,1); anyone else's click does nothing there - no message in Novite, Void or the OSRS Wiki, so none is
+        // invented (traced instead).
+        val owner = if (obj.id == Objs.ENERGY_BARRIER) CastleWarsTeam.SARADOMIN else CastleWarsTeam.ZAMORAK
+        if (CastleWarsRound.playing[owner]?.contains(player) != true) {
+            gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.PLUGIN) {
+                "castle wars barrier ${obj.id}: ${player.username} refused - not playing for $owner"
+            }
+            return
+        }
         val carryingFlag = CastleWarsTeam.forFlagWeapon(player.equipment[EquipmentType.WEAPON.id]?.id ?: -1) != null
         if (carryingFlag) {
             player.message("You can't cross barrier with flag.")

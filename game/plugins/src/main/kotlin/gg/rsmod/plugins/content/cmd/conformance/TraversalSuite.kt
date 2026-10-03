@@ -279,7 +279,16 @@ object TraversalSuite : Conformance.Suite {
         var sidesTried = 0
         val refusals = ArrayList<String>()
         for ((side, at) in sides) {
-            val start = (1..3).map(at).firstOrNull { t -> t.height in 0..3 && Landing.pocket(run.world.collision, t).size >= Landing.OPEN_GROUND } ?: continue
+            // The tile right beside the loc may be a small room (a ladder in a 3-tile room behind a door, 1747 at 2434,3346): a start
+            // there is real; further out only open ground counts. Open ground only put the bot outside the room's wall, where the route
+            // finder rightly answered "I can't reach that!" from every side (476 "usable from at least one side" FAILs, sweep 10:23).
+            val start =
+                (1..3).firstOrNull { d ->
+                    val t = at(d)
+                    t.height in 0..3 && Landing.pocket(run.world.collision, t).size >= (if (d == 1) 2 else Landing.OPEN_GROUND) &&
+                        // standable: a player can step onto it (never a start inside scenery)
+                        Direction.NESW.any { dir -> run.world.collision.canStep(t.step(dir), dir.getOpposite()) }
+                }?.let(at) ?: continue
             val n = tested.incrementAndGet()
             sidesTried++
             if (n % 25 == 0) run.progress("traversal $n: ${p.id} ${def.name} at ${p.x},${p.z} from $side")
@@ -298,7 +307,8 @@ object TraversalSuite : Conformance.Suite {
         // A placement nobody can use from any side is a dead obstacle even when every side answers politely
         // ("I can't reach that!" from everywhere = the object cannot be routed to), unless a requirement refused it.
         if (sidesTried > 0 && !crossedFromSomeSide) {
-            val requirement = refusals.any { it.contains("level") || it.contains("need") || it.contains("quest", ignoreCase = true) }
+            // A warning screen first (the Clan Wars free-for-all portals, interface 793) is the obstacle's own answer, not a dead loc.
+            val requirement = refusals.any { it.contains("level") || it.contains("need") || it.contains("quest", ignoreCase = true) || it.contains(" interface ") }
             run.expectTrue("${p.id}@${p.x},${p.z},${p.plane}", "${def.name} '${w.verb.second}' is usable from at least one side", requirement, refusals.joinToString(" | ").take(250))
         }
     }
@@ -329,6 +339,8 @@ object TraversalSuite : Conformance.Suite {
         start: Tile,
     ): Triple<String, Tile, String> {
         val bot = run.bot(start, label.replace(Regex("[^A-Za-z0-9]"), "").take(12))
+        // A team barrier is tested by a member of its team (the minigame's own grant), not judged on an outsider's refusal.
+        val revoke = gg.rsmod.plugins.content.mechanics.traversal.ObstacleAccess.grant(id, bot)
         wait(2)
         val c0 = run.world.currentCycle
         Bots.inject(bot, opLoc(slot, id, objTile))
@@ -340,7 +352,7 @@ object TraversalSuite : Conformance.Suite {
         do {
             wait(1)
             waited++
-            idle = if (bot.lock != LockState.NONE || bot.movementQueue.hasDestination() || bot.inTransit()) 0 else idle + 1
+            idle = if (bot.lock != LockState.NONE || bot.movementQueue.hasDestination() || bot.inTransit() || startedTaskRunning(run, bot, c0)) 0 else idle + 1
             // A middle-floor "Climb" (Void Stairs.kt) asks "What would you like to do?" - the bot picks "Go up the stairs."
             // like a player would; any other options dialogue gets its first line too. Answering counts as the click acting.
             if (answered < 2 && Bots.answerOption(bot, 1)) {
@@ -348,12 +360,17 @@ object TraversalSuite : Conformance.Suite {
                 idle = 0
             }
         } while (waited < 80 && idle < 3)
+        revoke?.invoke()
         val end = Tile(bot.tile)
         val msgs = run.recording.of(bot.username, "msg").filter { it.cycle >= c0 }.map { it.text }.filter { it.contains("MessageGame") && !it.contains("__RSPS_HUD__") }
         val nothing = msgs.any { it.contains("Nothing interesting happens") }
         // A refusal or a requirement can be a chat-box dialogue (Abbot Langley, the Stronghold reward gate, "you will need a rope"):
         // an interface opened in the chatbox pane (752) counts as the obstacle answering (batch 6 report 2026-10-03).
-        val dialogue = run.recording.of(bot.username, "msg").any { it.cycle >= c0 && it.text.contains("IfOpenSubMessage(parent=752") }
+        // A main-screen modal is an answer too: the Clan Wars free-for-all portals open their warning screen 793 first (sweep 2026-10-03
+        // 10:23 counted that as "no movement and no message").
+        val dialogue =
+            run.recording.of(bot.username, "msg").any { it.cycle >= c0 && it.text.contains("IfOpenSubMessage(parent=752") } ||
+                run.recording.of(bot.username, "state").any { it.cycle >= c0 && it.text.startsWith("modal: -1 -> ") }
         val moved = !end.sameAs(start)
         val problems = ArrayList<String>()
         if (nothing) problems += "unhandled option"
@@ -378,12 +395,21 @@ object TraversalSuite : Conformance.Suite {
                 crossedLoc(start, end, objTile) ||
                 // A short moveTo (Chaos Tunnels portal 3266,5552 -> 3262,5552, Void chaos_tunnels.teles.toml) goes out as a
                 // movement-type jump, not a teleport block: a tile change of more than one tile in a single tick is the action.
-                run.recording.of(bot.username, "state").filter { it.cycle >= c0 && it.text.startsWith("tile: ") }.any { e -> jumped(e.text) }
+                run.recording.of(bot.username, "state").filter { it.cycle >= c0 && it.text.startsWith("tile: ") }.any { e -> jumped(e.text) } ||
+                // A single step the collision map refuses (over a wall-edge barrier, along a climb-render walk over a multi-tile rock)
+                // is never a route step, so the obstacle moved the player. crossedLoc only compares against the loc's own tile and
+                // missed every crossing whose click came from the side along the loc (Castle Wars 4469 from N/S, Trollheim 3803 from N,
+                // sweep 2026-10-03 10:23). A noclip through scenery is caught separately below (sceneryNoclips / OB7).
+                run.recording.of(bot.username, "state").filter { it.cycle >= c0 && it.text.startsWith("tile: ") }.any { e -> refusedStep(run, e.text) }
         if (moved && !acted && msgs.isEmpty() && !dialogue) {
             problems += "click did nothing: walked to the loc, then no action and no message"
         } else if (moved) {
             if (!chainStop) {
-                if (!isUsableLanding(run.world, end)) problems += "landed in a pocket at ${end.x},${end.z}"
+                // A dead-end floor whose only exit is the loc back (the Gnome Stronghold treehouse ladders 1747: a one-tile platform
+                // between a hammock and a table, clip 2026-10-03) is the map, not a stuck player: a traversal loc beside the landing.
+                val wayBack = Direction.values().any { d -> d != Direction.NONE && traversalLocAt(run, end.step(d)) }
+                // Only a crossing lands anywhere: a refused bot that walked up to the loc stays in its own (small) start room.
+                if (acted && !isUsableLanding(run.world, end) && !wayBack) problems += "landed in a pocket at ${end.x},${end.z}"
                 // One ordinary step afterwards: a real walk click to a neighbouring tile the server can route to.
                 val next = Direction.NESW.map { end.step(it) }.firstOrNull { run.world.collision.canStep(end, Direction.between(end, it)) }
                 if (next != null) {
@@ -395,7 +421,9 @@ object TraversalSuite : Conformance.Suite {
         } else if (msgs.isEmpty() && !dialogue) {
             problems += "click did nothing: no movement and no message"
         }
-        val detail = "from ${start.x},${start.z} to ${end.x},${end.z} in $waited ticks; ${msgs.joinToString(" / ").take(120)}" + (if (problems.isEmpty()) "" else "; PROBLEM " + problems.joinToString("; "))
+        val modal = run.recording.of(bot.username, "state").lastOrNull { it.cycle >= c0 && it.text.startsWith("modal: -1 -> ") }?.text?.substringAfter("-> ")
+        val detail = "from ${start.x},${start.z} to ${end.x},${end.z} in $waited ticks; ${msgs.joinToString(" / ").take(120)}" + (if (modal != null) " interface $modal" else "") +
+            (if (problems.isEmpty()) "" else "; PROBLEM " + problems.joinToString("; "))
         if (problems.isNotEmpty() && timelines.incrementAndGet() <= MAX_TIMELINES) {
             runCatching {
                 val file = File(File(run.dir, "timelines").also { it.mkdirs() }, label.replace(Regex("[^A-Za-z0-9_.-]"), "_") + ".txt")
@@ -421,6 +449,38 @@ object TraversalSuite : Conformance.Suite {
         val b = parts[1].trim().split(',').mapNotNull { it.trim().toIntOrNull() }
         if (a.size < 3 || b.size < 3) return false
         return maxOf(Math.abs(a[0] - b[0]), Math.abs(a[1] - b[1])) > 2 || a[2] != b[2]
+    }
+
+    /**
+     * A task the click started is still queued (an unlocked `player.queue { animate; wait; moveTo }` climb): the bot is not idle yet.
+     * Judged from the recorded queue changes: the tasks before the first change after the click are the bot's background tasks.
+     */
+    private fun startedTaskRunning(
+        run: Conformance.Run,
+        bot: Client,
+        c0: Int,
+    ): Boolean {
+        val changes = run.recording.of(bot.username, "state").filter { it.cycle >= c0 && it.text.startsWith("queues: ") }
+        if (changes.isEmpty()) return false
+        val names = { part: String -> part.trim().split(' ').filter { it.isNotBlank() }.toSet() }
+        val background = names(changes.first().text.removePrefix("queues: ").substringBefore(" -> "))
+        val now = names(changes.last().text.substringAfter(" -> ", ""))
+        return (now - background).any { !it.startsWith("ObjectPathAction") }
+    }
+
+    /** `tile: a -> b` is one step on one plane that the collision map does not allow. */
+    private fun refusedStep(
+        run: Conformance.Run,
+        text: String,
+    ): Boolean {
+        val parts = text.removePrefix("tile: ").split(" -> ")
+        if (parts.size != 2) return false
+        val a = parts[0].trim().split(',').mapNotNull { it.trim().toIntOrNull() }
+        val b = parts[1].trim().split(',').mapNotNull { it.trim().toIntOrNull() }
+        if (a.size < 3 || b.size < 3 || a[2] != b[2]) return false
+        if (maxOf(Math.abs(a[0] - b[0]), Math.abs(a[1] - b[1])) != 1) return false
+        val from = Tile(a[0], a[1], a[2])
+        return !run.world.collision.canStep(from, Direction.between(from, Tile(b[0], b[1], b[2])))
     }
 
     /** True when a loc with a traversal option stands on [tile] (a stepping stone, the next rock of a chain). */

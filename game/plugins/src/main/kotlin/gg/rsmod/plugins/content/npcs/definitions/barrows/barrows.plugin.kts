@@ -44,7 +44,7 @@ Brother.values().forEach { brother ->
     on_obj_option(obj = brother.stairs, option = "climb-up") {
         Barrows.liveBrother(player, brother)?.let { if (it.isSpawned()) world.remove(it) }
         Barrows.spawned(player).remove(brother.key)
-        player.queue {
+        player.lockingQueue(lockState = gg.rsmod.game.model.LockState.FULL) {
             player.animate(Anims.LADDER_CLIMB)
             wait(1)
             player.moveTo(Tile(brother.hillX.first + 1, brother.hillZ.first + 1, 0))
@@ -56,7 +56,7 @@ Brother.values().forEach { brother ->
 
 on_obj_option(obj = Objs.ROPE_6708, option = "climb-up") {
     val brother = Brother.byKey(player.attr[Barrows.SELECTED_BROTHER] ?: Brother.DHAROK.key)
-    player.queue {
+    player.lockingQueue(lockState = gg.rsmod.game.model.LockState.FULL) {
         player.animate(Anims.LADDER_CLIMB)
         wait(2)
         player.moveTo(brother.spawn)

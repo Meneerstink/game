@@ -1,5 +1,8 @@
 package gg.rsmod.plugins.content.activity.soul_wars
 
+import gg.rsmod.plugins.content.skills.agility.doorStep
+import gg.rsmod.plugins.content.skills.agility.obstacle
+
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.timer.TimerKey
 import gg.rsmod.plugins.api.cfg.Items
@@ -66,12 +69,32 @@ on_timer(SW_TICK_TIMER) {
 
 // Real, independently-confirmed lobby entry points (both lead into the same auto-balanced
 // lobby - Soul Wars has no "choose your team" step, per the donor's SoulWars.init logic).
-on_obj_option(Objs.BLUE_BARRIER_42029, "Pass") {
-    SoulWarsHandler.joinLobby(player)
+// The two waiting-room barriers are wall locs on one tile edge (clip 2026-10-03): 42029 Blue barrier 1879,3162 rot 2 (east edge,
+// the blue room is its own tile, the lobby floor 1880,3162 beyond), 42030 Red barrier 1900,3162 rot 0 (west edge, the red room is
+// its own tile, the lobby floor 1899,3162 beyond). "Pass" was only a join of the lobby list - the player stayed outside the room
+// (sweep 2026-10-03: "no movement and no message"). Now the bounded step across the edge (shared doorStep), into the room joins
+// the lobby, out of it leaves.
+fun lobbyBarrier(plugin: Plugin) {
+    val player = plugin.player
+    val wall = player.getInteractingGameObj()
+    val room = Tile(wall.tile.x, wall.tile.z, wall.tile.height)
+    val floor =
+        when (wall.rot) {
+            0 -> room.transform(-1, 0)
+            1 -> room.transform(0, 1)
+            2 -> room.transform(1, 0)
+            else -> room.transform(0, -1)
+        }
+    val entering = player.tile.getDistance(floor) <= player.tile.getDistance(room)
+    if (entering && !SoulWarsHandler.mayJoinLobby(player)) return
+    plugin.obstacle {
+        if (!doorStep(player, if (entering) room else floor)) return@obstacle
+        if (entering) SoulWarsHandler.joinLobby(player) else SoulWarsHandler.leaveLobby(player)
+    }
 }
-on_obj_option(Objs.RED_BARRIER_42030, "Pass") {
-    SoulWarsHandler.joinLobby(player)
-}
+
+on_obj_option(Objs.BLUE_BARRIER_42029, "Pass") { lobbyBarrier(this) }
+on_obj_option(Objs.RED_BARRIER_42030, "Pass") { lobbyBarrier(this) }
 on_obj_option(Objs.BALANCE_PORTAL, "Join-team") {
     SoulWarsHandler.joinLobby(player)
 }

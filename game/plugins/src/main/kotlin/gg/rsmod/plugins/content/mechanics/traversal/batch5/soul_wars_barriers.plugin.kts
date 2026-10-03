@@ -51,6 +51,11 @@ suspend fun QueueTask.passEdge(
 
 on_world_init {
     mapOf(BLUE_BARRIER to SoulWarsTeam.BLUE, RED_BARRIER to SoulWarsTeam.RED).forEach { (id, team) ->
+        // conform traversal tests the barrier as a member of its team (mechanics/traversal/ObstacleAccess).
+        gg.rsmod.plugins.content.mechanics.traversal.ObstacleAccess.register(id) { p ->
+            p.attr[SW_TEAM] = team
+            return@register { p.attr.remove(SW_TEAM) }
+        }
         shortcut(id, "Pass") {
             if (player.attr[SW_TEAM] != team) {
                 gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.PLUGIN) {

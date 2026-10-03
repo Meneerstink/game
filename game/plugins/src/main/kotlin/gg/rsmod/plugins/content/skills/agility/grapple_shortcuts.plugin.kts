@@ -79,7 +79,8 @@ suspend fun QueueTask.hasGrappleRequirements(
         player.skills.getCurrentLevel(Skills.AGILITY) < agility ||
         player.skills.getCurrentLevel(Skills.STRENGTH) < strength
     ) {
-        messageBox("You need at least $ranged Ranged, $agility Agility and $strength Strength to do that.")
+        // Its own unlocked task: inside the obstacle the refusal kept the player FULL-locked until "Click here to continue".
+        player.queue { messageBox("You need at least $ranged Ranged, $agility Agility and $strength Strength to do that.") }
         return false
     }
     if (player.equipment[EquipmentType.AMMO.id]?.id != MITHRIL_GRAPPLE) {
@@ -295,12 +296,19 @@ on_world_init {
             climbGrappleWall(player, Tile(destination.x, destination.z, 1))
         }
     }
+    // 17048 is a wall loc on the south edge of its tile (rot 3) at both ends of the level-1 wall top 2556,3073-3074 (clip
+    // 2026-10-03): the jump goes across that edge - from the wall top (z >= the loc) down south to z - 1 outside the town, or
+    // from z - 1 down north onto the loc's own tile inside it. Void's "player on the loc tile -> south, else the loc tile"
+    // walked onto the far side of the edge for the north piece ("I can't reach that!": stuck on the wall top) and dropped the
+    // south piece's north click into the level-0 gap between the two wall lines.
     shortcut(17048, "Jump") {
         obstacle { target ->
-            val direction = if (player.tile.z == target.tile.z) Direction.SOUTH else Direction.NORTH
-            walkToTile(player, target.tile)
-            val destination = if (direction == Direction.SOUTH) target.tile.add(direction) else target.tile
-            jumpDownWall(player, Tile(destination.x, destination.z, 0))
+            val south = player.tile.z >= target.tile.z
+            val start = if (south) target.tile else target.tile.add(Direction.SOUTH)
+            val landing = if (south) target.tile.add(Direction.SOUTH) else target.tile
+            walkToTile(player, Tile(start.x, start.z, target.tile.height))
+            face(player, if (south) Direction.SOUTH else Direction.NORTH)
+            jumpDownWall(player, Tile(landing.x, landing.z, 0))
         }
     }
 }

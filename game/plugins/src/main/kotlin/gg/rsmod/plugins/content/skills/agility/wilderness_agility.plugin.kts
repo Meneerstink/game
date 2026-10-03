@@ -155,7 +155,8 @@ on_obj_option(obj = Objs.LOG_BALANCE_2297, option = "Walk-across") {
         walkToTile(player, Tile(target.tile.x + 1, target.tile.z))
         player.filterableMessage("You walk carefully across the slippery log...")
         val success = agilitySuccess(player, 200, 250)
-        walkOverTile(player, target.tile, Render.NONE)
+        // The step onto the log is already the balance walk (sweep 2026-10-03 18:54: the plain first step was OB7, a walk into the log).
+        walkOverTile(player, target.tile, Render.BEAM_BALANCE)
         if (success) {
             walkOverTile(player, Tile(2994, 3945), Render.BEAM_BALANCE)
             player.filterableMessage("You skillfully edge across the gap.")

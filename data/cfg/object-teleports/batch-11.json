@@ -1,0 +1,85 @@
+{
+ "provenance": "Obstacle batch 11 (2026-10-03, owner priority #1): sourced object teleports for agent-handoffs/obstacle-batches/rest-batch-11.tsv. Every landing checked on this 667 map with MapProbe (use = walkable tile with reach >= 24, beside the counterpart); each entry names its source.",
+ "teleports": [
+  {
+   "id": 1757,
+   "name": "glarials_tomb_ladder_up",
+   "option": "Climb-up",
+   "tile": {"x": 2556, "z": 9844, "height": 0},
+   "to": {"x": 2556, "z": 3444, "height": 0},
+   "source": "Glarial's Tomb exit ladder (music Waterfall). CACHE: Glarial's tombstone 1992 at 2558,3444,0 (2x2) is the counterpart on the surface, the landing 2556,3444,0 is the mirrored tile (z-6400) two tiles west of it, walkable (MapProbe reach 81). OSRS Wiki 'Glarial's Tomb': a dungeon underneath the tombstone near the Baxtorian Falls. 2009scape agrees: WaterfallListeners enters the tomb at 2555,9844 beside this ladder, and its ladder rule climbs up to z-6400."
+  },
+  {
+   "id": 2316,
+   "name": "yanille_dungeon_north_stairs_up",
+   "option": "Climb-up",
+   "tile": {"x": 2578, "z": 9585, "height": 0},
+   "to": {"x": 2569, "z": 9525, "height": 0},
+   "source": "Yanille Agility Dungeon north staircase: 2009scape YanilleAgilityDungeon.kt on(2316, 'climb-up') -> Location(2569, 9525, 0). CACHE: 2569,9525,0 is walkable (MapProbe reach 64) in the room of staircase 32270 (2569,9522, Void yanille.teles.toml exit to Yanille)."
+  },
+  {
+   "id": 96,
+   "name": "temple_of_ikov_stairs_up",
+   "option": "Climb-up",
+   "tile": {"x": 2638, "z": 9763, "height": 0},
+   "to": {"x": 2649, "z": 9804, "height": 0},
+   "source": "Temple of Ikov lit stairs: 2009scape TempleOfIkovListeners on(STAIRS_96, 'Climb-up') -> 2649,9804,0, the tile beside the top stairs 35121 (2650,9804, 3x2; batch 9 fork3_tail binds its Climb-down to 2641,9763 beside these stairs). Landing walkable (MapProbe reach 24)."
+  },
+  {
+   "id": 33232,
+   "name": "temple_of_ikov_dark_stairs_up",
+   "option": "Climb-up",
+   "tile": {"x": 2638, "z": 9740, "height": 0},
+   "to": {"x": 2649, "z": 9804, "height": 0},
+   "source": "Temple of Ikov dark stairs (same family as stairs 96, the landing of 35121 without a light source): 2009scape TempleOfIkovListeners on(STAIRS_33232, 'Climb-up') -> 2649,9804,0, walkable (MapProbe reach 24)."
+  },
+  {
+   "id": 4968,
+   "name": "haunted_mine_ladder_up",
+   "option": "Climb-up",
+   "tile": {"x": 2796, "z": 4529, "height": 0},
+   "to": {"x": 2733, "z": 4529, "height": 0},
+   "source": "Haunted (Abandoned) Mine: 2009scape HauntedMineListeners on(LADDER_4968, 'Climb-up') x 2795..2797 -> 2733,4529,0, beside ladder 4967 (2732,4529) whose Climb-down batch-9.json lands at 2797,4529. Landing walkable (MapProbe reach 37)."
+  },
+  {
+   "id": 4968,
+   "name": "haunted_mine_ladder_up",
+   "option": "Climb-up",
+   "tile": {"x": 2789, "z": 4486, "height": 0},
+   "to": {"x": 2726, "z": 4486, "height": 0},
+   "source": "Haunted (Abandoned) Mine: 2009scape HauntedMineListeners on(LADDER_4968, 'Climb-up') x 2788..2790 -> 2726,4486,0, beside ladder 4967 (2725,4486) whose Climb-down batch-9.json lands at 2790,4486. Landing walkable (MapProbe reach 35)."
+  },
+  {
+   "id": 4968,
+   "name": "haunted_mine_ladder_up",
+   "option": "Climb-up",
+   "tile": {"x": 2760, "z": 4497, "height": 0},
+   "to": {"x": 2697, "z": 4497, "height": 0},
+   "source": "Haunted (Abandoned) Mine: 2009scape HauntedMineListeners on(LADDER_4968, 'Climb-up') x 2759..2761 -> 2697,4497,0, beside ladder 4967 (2696,4497) whose Climb-down batch-9.json lands at 2760,4498. Landing walkable (MapProbe reach 32)."
+  },
+  {
+   "id": 4968,
+   "name": "haunted_mine_ladder_up",
+   "option": "Climb-up",
+   "tile": {"x": 2774, "z": 4540, "height": 0},
+   "to": {"x": 2711, "z": 4540, "height": 0},
+   "source": "Haunted (Abandoned) Mine, fourth placement of the same ladder family: 2009scape HauntedMineListeners on(LADDER_4968, 'Climb-up') x 2773..2775 -> 2711,4540,0, beside ladder 4967 (2710,4540) whose Climb-down batch-9.json lands at 2775,4540. Landing walkable (MapProbe reach 26)."
+  },
+  {
+   "id": 5012,
+   "name": "trollheim_tunnel_down",
+   "option": "Enter",
+   "tile": {"x": 2795, "z": 3717, "height": 0},
+   "to": {"x": 2799, "z": 10134, "height": 0},
+   "source": "Trollheim tunnel: 2009scape TrollweissListeners on(TUNNEL_5012, 'enter') -> 2799,10134,0, beside the way-back tunnel 5013 (2798,10135, 3x2; batch-9.json binds it to 2796,3719 from the same file). Landing walkable (MapProbe reach 38)."
+  },
+  {
+   "id": 4745,
+   "name": "ape_atoll_end_of_bridge_jump",
+   "option": "Jump off",
+   "tile": {"x": 2803, "z": 2727, "height": 2},
+   "to": {"x": 2803, "z": 2725, "height": 0},
+   "source": "Ape Atoll bamboo bridge end. RS Wiki 'End of bridge': reached by the bamboo ladder (4743/4744 at 2803,2734, batch-9.json), a one-way shortcut down to the south-eastern part of the island. CACHE: the bridge deck is plane 2 at 2803,2727-2733 (MapProbe map); 2803,2725,0 is the first ground tile straight past the bridge end, walkable (MapProbe reach 50, the area south of the palace wall)."
+  }
+ ]
+}

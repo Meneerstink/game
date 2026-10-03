@@ -41,7 +41,8 @@ suspend fun QueueTask.grappleRequirements(player: Player): Boolean {
         player.skills.getCurrentLevel(Skills.AGILITY) < 39 ||
         player.skills.getCurrentLevel(Skills.STRENGTH) < 38
     ) {
-        messageBox("You need at least 21 Ranged, 39 Agility and 38 Strength to do that.")
+        // Its own unlocked task: inside the obstacle the refusal kept the player FULL-locked until "Click here to continue".
+        player.queue { messageBox("You need at least 21 Ranged, 39 Agility and 38 Strength to do that.") }
         return false
     }
     if (player.equipment[EquipmentType.AMMO.id]?.id != MITHRIL_GRAPPLE) {

@@ -11,7 +11,7 @@ on_obj_option(obj = Objs.TRAPDOOR_5490, option = "open") {
 }
 
 on_obj_option(obj = Objs.TRAPDOOR_5491, option = "climb-down") {
-    player.queue {
+    player.lockingQueue(lockState = gg.rsmod.game.model.LockState.FULL) {
         player.animate(Anims.REACH_DOWN)
         wait(world.getAnimationDelay(Anims.REACH_DOWN))
         player.moveTo(Tile(3149, 9652, 0))
@@ -19,7 +19,7 @@ on_obj_option(obj = Objs.TRAPDOOR_5491, option = "climb-down") {
 }
 
 on_obj_option(obj = Objs.LADDER_5493, option = "climb-up") {
-    player.queue {
+    player.lockingQueue(lockState = gg.rsmod.game.model.LockState.FULL) {
         player.animate(Anims.LADDER_CLIMB)
         wait(world.getAnimationDelay(828))
         player.moveTo(Tile(3165, 3251, 0))
