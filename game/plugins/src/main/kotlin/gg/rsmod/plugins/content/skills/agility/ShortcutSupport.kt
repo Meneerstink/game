@@ -260,6 +260,8 @@ fun Plugin.obstacle(block: suspend QueueTask.(GameObject) -> Unit) {
                 "obstacle ${obj.id} at ${obj.tile.x},${obj.tile.z}: ${player.username} ${e.message} - crossing refused"
             }
             player.stopMovement()
+            // The same answer the route finder and doorStep give: a refused crossing is never a silent click (batch 9 report).
+            player.message(gg.rsmod.game.model.entity.Entity.YOU_CANT_REACH_THAT)
         } finally {
             restoreRender()
         }

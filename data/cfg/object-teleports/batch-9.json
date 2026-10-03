@@ -1,0 +1,821 @@
+{
+ "provenance": "Obstacle batch 9 (2026-10-03, owner priority #1): sourced object teleports for agent-handoffs/obstacle-batches/fail-batch-9.tsv. Every landing checked on this 667 map with MapProbe; each entry names its source.",
+ "teleports": [
+  {
+   "id": 16946,
+   "name": "lunar_ship_stairs_up",
+   "option": "Climb",
+   "tile": {
+    "x": 2141,
+    "z": 3911,
+    "height": 0
+   },
+   "to": {
+    "x": 2141,
+    "z": 3909,
+    "height": 1
+   },
+   "source": "Lunar Isle docked ship (667 map, placements_667.tsv + MapProbe locs/use 2026-10-03, batch 9): the 'Climb' stairs pair up 16946@2141,3911,0 with 16947@2141,3910,1 (1x2); landing 2141,3909,1 is a walkable tile beside the counterpart (MapProbe reach 52). Ship reachable: FoundationQuests LUNAR_DOCK 2142,3900,0 (Lunar Diplomacy step) is on this hull's lower deck"
+  },
+  {
+   "id": 16945,
+   "name": "lunar_ship_stairs_up",
+   "option": "Climb",
+   "tile": {
+    "x": 2138,
+    "z": 3895,
+    "height": 1
+   },
+   "to": {
+    "x": 2139,
+    "z": 3895,
+    "height": 2
+   },
+   "source": "Lunar Isle docked ship (667 map, placements_667.tsv + MapProbe locs/use 2026-10-03, batch 9): the 'Climb' stairs pair up 16945@2138,3895,1 with 16947@2137,3895,2 (2x1); landing 2139,3895,2 is a walkable tile beside the counterpart (MapProbe reach 20). Ship reachable: FoundationQuests LUNAR_DOCK 2142,3900,0 (Lunar Diplomacy step) is on this hull's lower deck"
+  },
+  {
+   "id": 16945,
+   "name": "lunar_ship_stairs_up",
+   "option": "Climb",
+   "tile": {
+    "x": 2142,
+    "z": 3895,
+    "height": 1
+   },
+   "to": {
+    "x": 2141,
+    "z": 3895,
+    "height": 2
+   },
+   "source": "Lunar Isle docked ship (667 map, placements_667.tsv + MapProbe locs/use 2026-10-03, batch 9): the 'Climb' stairs pair up 16945@2142,3895,1 with 16947@2142,3895,2 (2x1); landing 2141,3895,2 is a walkable tile beside the counterpart (MapProbe reach 20). Ship reachable: FoundationQuests LUNAR_DOCK 2142,3900,0 (Lunar Diplomacy step) is on this hull's lower deck"
+  },
+  {
+   "id": 16945,
+   "name": "lunar_ship_stairs_up",
+   "option": "Climb",
+   "tile": {
+    "x": 2137,
+    "z": 3897,
+    "height": 2
+   },
+   "to": {
+    "x": 2137,
+    "z": 3898,
+    "height": 3
+   },
+   "source": "Lunar Isle docked ship (667 map, placements_667.tsv + MapProbe locs/use 2026-10-03, batch 9): the 'Climb' stairs pair up 16945@2137,3897,2 with 16947@2137,3896,3 (1x2); landing 2137,3898,3 is a walkable tile beside the counterpart (MapProbe reach 64). Ship reachable: FoundationQuests LUNAR_DOCK 2142,3900,0 (Lunar Diplomacy step) is on this hull's lower deck"
+  },
+  {
+   "id": 16945,
+   "name": "lunar_ship_stairs_up",
+   "option": "Climb",
+   "tile": {
+    "x": 2143,
+    "z": 3897,
+    "height": 2
+   },
+   "to": {
+    "x": 2143,
+    "z": 3898,
+    "height": 3
+   },
+   "source": "Lunar Isle docked ship (667 map, placements_667.tsv + MapProbe locs/use 2026-10-03, batch 9): the 'Climb' stairs pair up 16945@2143,3897,2 with 16947@2143,3896,3 (1x2); landing 2143,3898,3 is a walkable tile beside the counterpart (MapProbe reach 64). Ship reachable: FoundationQuests LUNAR_DOCK 2142,3900,0 (Lunar Diplomacy step) is on this hull's lower deck"
+  },
+  {
+   "id": 16945,
+   "name": "lunar_ship_stairs_up",
+   "option": "Climb",
+   "tile": {
+    "x": 2137,
+    "z": 3909,
+    "height": 2
+   },
+   "to": {
+    "x": 2137,
+    "z": 3908,
+    "height": 3
+   },
+   "source": "Lunar Isle docked ship (667 map, placements_667.tsv + MapProbe locs/use 2026-10-03, batch 9): the 'Climb' stairs pair up 16945@2137,3909,2 with 16947@2137,3909,3 (1x2); landing 2137,3908,3 is a walkable tile beside the counterpart (MapProbe reach 67). Ship reachable: FoundationQuests LUNAR_DOCK 2142,3900,0 (Lunar Diplomacy step) is on this hull's lower deck"
+  },
+  {
+   "id": 16945,
+   "name": "lunar_ship_stairs_up",
+   "option": "Climb",
+   "tile": {
+    "x": 2143,
+    "z": 3909,
+    "height": 2
+   },
+   "to": {
+    "x": 2143,
+    "z": 3908,
+    "height": 3
+   },
+   "source": "Lunar Isle docked ship (667 map, placements_667.tsv + MapProbe locs/use 2026-10-03, batch 9): the 'Climb' stairs pair up 16945@2143,3909,2 with 16947@2143,3909,3 (1x2); landing 2143,3908,3 is a walkable tile beside the counterpart (MapProbe reach 67). Ship reachable: FoundationQuests LUNAR_DOCK 2142,3900,0 (Lunar Diplomacy step) is on this hull's lower deck"
+  },
+  {
+   "id": 16947,
+   "name": "lunar_ship_stairs_down",
+   "option": "Climb",
+   "tile": {
+    "x": 2141,
+    "z": 3910,
+    "height": 1
+   },
+   "to": {
+    "x": 2141,
+    "z": 3912,
+    "height": 0
+   },
+   "source": "Lunar Isle docked ship (667 map, placements_667.tsv + MapProbe locs/use 2026-10-03, batch 9): the 'Climb' stairs pair up 16947@2141,3910,1 with 16946@2141,3911,0; landing 2141,3912,0 is a walkable tile beside the counterpart (MapProbe reach 31). Ship reachable: FoundationQuests LUNAR_DOCK 2142,3900,0 (Lunar Diplomacy step) is on this hull's lower deck"
+  },
+  {
+   "id": 16947,
+   "name": "lunar_ship_stairs_down",
+   "option": "Climb",
+   "tile": {
+    "x": 2137,
+    "z": 3895,
+    "height": 2
+   },
+   "to": {
+    "x": 2138,
+    "z": 3896,
+    "height": 1
+   },
+   "source": "Lunar Isle docked ship (667 map, placements_667.tsv + MapProbe locs/use 2026-10-03, batch 9): the 'Climb' stairs pair up 16947@2137,3895,2 with 16945@2138,3895,1; landing 2138,3896,1 is a walkable tile beside the counterpart (MapProbe reach 46). Ship reachable: FoundationQuests LUNAR_DOCK 2142,3900,0 (Lunar Diplomacy step) is on this hull's lower deck"
+  },
+  {
+   "id": 16947,
+   "name": "lunar_ship_stairs_down",
+   "option": "Climb",
+   "tile": {
+    "x": 2142,
+    "z": 3895,
+    "height": 2
+   },
+   "to": {
+    "x": 2142,
+    "z": 3896,
+    "height": 1
+   },
+   "source": "Lunar Isle docked ship (667 map, placements_667.tsv + MapProbe locs/use 2026-10-03, batch 9): the 'Climb' stairs pair up 16947@2142,3895,2 with 16945@2142,3895,1; landing 2142,3896,1 is a walkable tile beside the counterpart (MapProbe reach 45). Ship reachable: FoundationQuests LUNAR_DOCK 2142,3900,0 (Lunar Diplomacy step) is on this hull's lower deck"
+  },
+  {
+   "id": 16947,
+   "name": "lunar_ship_stairs_down",
+   "option": "Climb",
+   "tile": {
+    "x": 2137,
+    "z": 3896,
+    "height": 3
+   },
+   "to": {
+    "x": 2137,
+    "z": 3898,
+    "height": 2
+   },
+   "source": "Lunar Isle docked ship (667 map, placements_667.tsv + MapProbe locs/use 2026-10-03, batch 9): the 'Climb' stairs pair up 16947@2137,3896,3 with 16945@2137,3897,2; landing 2137,3898,2 is a walkable tile beside the counterpart (MapProbe reach 44). Ship reachable: FoundationQuests LUNAR_DOCK 2142,3900,0 (Lunar Diplomacy step) is on this hull's lower deck"
+  },
+  {
+   "id": 16947,
+   "name": "lunar_ship_stairs_down",
+   "option": "Climb",
+   "tile": {
+    "x": 2143,
+    "z": 3896,
+    "height": 3
+   },
+   "to": {
+    "x": 2143,
+    "z": 3898,
+    "height": 2
+   },
+   "source": "Lunar Isle docked ship (667 map, placements_667.tsv + MapProbe locs/use 2026-10-03, batch 9): the 'Climb' stairs pair up 16947@2143,3896,3 with 16945@2143,3897,2; landing 2143,3898,2 is a walkable tile beside the counterpart (MapProbe reach 38). Ship reachable: FoundationQuests LUNAR_DOCK 2142,3900,0 (Lunar Diplomacy step) is on this hull's lower deck"
+  },
+  {
+   "id": 16947,
+   "name": "lunar_ship_stairs_down",
+   "option": "Climb",
+   "tile": {
+    "x": 2137,
+    "z": 3909,
+    "height": 3
+   },
+   "to": {
+    "x": 2137,
+    "z": 3908,
+    "height": 2
+   },
+   "source": "Lunar Isle docked ship (667 map, placements_667.tsv + MapProbe locs/use 2026-10-03, batch 9): the 'Climb' stairs pair up 16947@2137,3909,3 with 16945@2137,3909,2; landing 2137,3908,2 is a walkable tile beside the counterpart (MapProbe reach 44). Ship reachable: FoundationQuests LUNAR_DOCK 2142,3900,0 (Lunar Diplomacy step) is on this hull's lower deck"
+  },
+  {
+   "id": 16947,
+   "name": "lunar_ship_stairs_down",
+   "option": "Climb",
+   "tile": {
+    "x": 2143,
+    "z": 3909,
+    "height": 3
+   },
+   "to": {
+    "x": 2143,
+    "z": 3908,
+    "height": 2
+   },
+   "source": "Lunar Isle docked ship (667 map, placements_667.tsv + MapProbe locs/use 2026-10-03, batch 9): the 'Climb' stairs pair up 16947@2143,3909,3 with 16945@2143,3909,2; landing 2143,3908,2 is a walkable tile beside the counterpart (MapProbe reach 42). Ship reachable: FoundationQuests LUNAR_DOCK 2142,3900,0 (Lunar Diplomacy step) is on this hull's lower deck"
+  },
+  {
+   "id": 21395,
+   "name": "jatizso_shout_tower_ladder",
+   "option": "Climb-up",
+   "tile": {
+    "x": 2373,
+    "z": 3800,
+    "height": 0
+   },
+   "to": {
+    "x": 2374,
+    "z": 3800,
+    "height": 2
+   },
+   "source": "2009scape core/game/global/action/SpecialLadders.java JATIZSO_SHOUT_TOWER_DOWN(2373,3800,0 -> 2374,3800,2); 667 map: counterpart 21396@2373,3800,2 (Climb-down) two planes up (plane 1 holds another 21395, no floor); landing 2374,3800,2 is on the tower top beside it (MapProbe map plane 2: walkable, reach 10)"
+  },
+  {
+   "id": 5007,
+   "name": "trollheim_trollweiss_cave_entrance",
+   "option": "Enter",
+   "tile": {
+    "x": 2820,
+    "z": 3743,
+    "height": 0
+   },
+   "to": {
+    "x": 2803,
+    "z": 10187,
+    "height": 0
+   },
+   "source": "2009scape content/region/asgarnia/trollweiss/handlers/TrollweissListeners.kt CAVE_ENTRANCE_5007 enter -> 2803,10187,0; 667 map: directly north of the return 32743 'Cave Exit'@2802,10185,0 (3x2), landing walkable (MapProbe reach 34)"
+  },
+  {
+   "id": 6440,
+   "name": "ice_path_cave_entrance",
+   "option": "Enter",
+   "tile": {
+    "x": 2868,
+    "z": 3718,
+    "height": 0
+   },
+   "to": {
+    "x": 2874,
+    "z": 3720,
+    "height": 0
+   },
+   "source": "2009scape content/region/desert/quest/deserttreasure/DiamondOfIceListeners.kt CAVE_ENTRANCE_6441 (the open state of this multiloc) enter -> 2874,3720,0; 667 map: beside the return 6447 'Cave exit'@2872,3719,0, landing walkable (MapProbe reach 34). 2009scape plays crawl anim 2796 first; the table entry cannot animate"
+  },
+  {
+   "id": 6447,
+   "name": "ice_path_cave_exit",
+   "option": "Enter",
+   "tile": {
+    "x": 2872,
+    "z": 3719,
+    "height": 0
+   },
+   "to": {
+    "x": 2867,
+    "z": 3719,
+    "height": 0
+   },
+   "source": "2009scape content/region/desert/quest/deserttreasure/DiamondOfIceListeners.kt CAVE_EXIT_6447 enter -> 2867,3719,0; 667 map: beside the entrance 6440@2868,3718,0, landing walkable (MapProbe reach 45). 2009scape plays crawl anim 2796 first; the table entry cannot animate"
+  },
+  {
+   "id": 18833,
+   "name": "troll_stronghold_roof_ladder_down",
+   "option": "Climb-down",
+   "tile": {
+    "x": 2812,
+    "z": 3668,
+    "height": 0
+   },
+   "to": {
+    "x": 2831,
+    "z": 10076,
+    "height": 2
+   },
+   "source": "Void area/troll_country/troll_stronghold/troll_stronghold.teles.toml 18833 -> 2831,10076,2 (recorded there on the OSRS tile 2828,3677, where this 667 map has no 18833) and 2009scape TrollheimPlugin.java 18833 climb-down -> 2831,10076,2 'You clamber back inside the Troll Stronghold.'; 667 map: the only 18833 placement is 2812,3668,0 and the only counterpart 18834@2831,10077,2; landing walkable beside it (MapProbe reach 32)"
+  },
+  {
+   "id": 4743,
+   "name": "ape_atoll_bamboo_ladder_up",
+   "option": "Climb-up",
+   "tile": {
+    "x": 2803,
+    "z": 2734,
+    "height": 0
+   },
+   "to": {
+    "x": 2803,
+    "z": 2733,
+    "height": 2
+   },
+   "source": "667 map (placements_667.tsv / MapProbe find+map+use 2026-10-03, batch 9 fork 2): counterpart 4744 'Climb-down' on the same tile two planes up (2803,2734,2); plane 1 has no floor there (empty collision), plane 2 is the walled walkway 2803,2727-2733 to 'End of bridge' 4745. Landing 2803,2733,2 is the walkway tile beside the top ladder (reach 16, connected to 2803,2728,2). No donor (Void/Novite/2009scape) has this ladder; the generic +-1 plane rule finds nothing"
+  },
+  {
+   "id": 4744,
+   "name": "ape_atoll_bamboo_ladder_down",
+   "option": "Climb-down",
+   "tile": {
+    "x": 2803,
+    "z": 2734,
+    "height": 2
+   },
+   "to": {
+    "x": 2803,
+    "z": 2735,
+    "height": 0
+   },
+   "source": "667 map (placements_667.tsv / MapProbe find+map+use 2026-10-03, batch 9 fork 2): way back for 4743 - counterpart 4743 'Climb-up' two planes down (2803,2734,0); landing 2803,2735,0 beside it (reach 75; 2803,2733,0 is blocked)"
+  },
+  {
+   "id": 4774,
+   "name": "ape_atoll_watchtower_ladder_up",
+   "option": "Climb-up",
+   "tile": {
+    "x": 2729,
+    "z": 2766,
+    "height": 0
+   },
+   "to": {
+    "x": 2728,
+    "z": 2766,
+    "height": 2
+   },
+   "source": "667 map (placements_667.tsv / MapProbe find+map+use 2026-10-03, batch 9 fork 2): east watchtower of the Marim north gate; counterpart 4776 'Climb-down' two planes up (2729,2766,2); the plane-1 loc 34216 there stands on a tile with no floor collision; the tower top 2728-2730,2765-2767 plane 2 joins the gate bridge 2714-2728,2766. Landing 2728,2766,2 beside the top ladder (reach 21, connected to the west tower top 2714,2766,2)"
+  },
+  {
+   "id": 4776,
+   "name": "ape_atoll_watchtower_ladder_down",
+   "option": "Climb-down",
+   "tile": {
+    "x": 2729,
+    "z": 2766,
+    "height": 2
+   },
+   "to": {
+    "x": 2729,
+    "z": 2765,
+    "height": 0
+   },
+   "source": "667 map (placements_667.tsv / MapProbe find+map+use 2026-10-03, batch 9 fork 2): way back for 4774 - counterpart 4774 'Climb-up' two planes down (2729,2766,0); landing 2729,2765,0 beside it (reach 74)"
+  },
+  {
+   "id": 4775,
+   "name": "ape_atoll_watchtower_ladder_up",
+   "option": "Climb-up",
+   "tile": {
+    "x": 2713,
+    "z": 2766,
+    "height": 0
+   },
+   "to": {
+    "x": 2714,
+    "z": 2766,
+    "height": 2
+   },
+   "source": "667 map (placements_667.tsv / MapProbe find+map+use 2026-10-03, batch 9 fork 2): west watchtower of the Marim north gate; counterpart 4777 'Climb-down' two planes up (2713,2766,2); the plane-1 loc 34217 there stands on a tile with no floor collision. Landing 2714,2766,2 beside the top ladder on the gate bridge (reach 21)"
+  },
+  {
+   "id": 4777,
+   "name": "ape_atoll_watchtower_ladder_down",
+   "option": "Climb-down",
+   "tile": {
+    "x": 2713,
+    "z": 2766,
+    "height": 2
+   },
+   "to": {
+    "x": 2713,
+    "z": 2765,
+    "height": 0
+   },
+   "source": "667 map (placements_667.tsv / MapProbe find+map+use 2026-10-03, batch 9 fork 2): way back for 4775 - counterpart 4775 'Climb-up' two planes down (2713,2766,0); landing 2713,2765,0 beside it (reach 66)"
+  },
+  {
+   "id": 4965,
+   "name": "haunted_mine_ladder",
+   "option": "Climb-down",
+   "tile": {
+    "x": 3413,
+    "z": 9633,
+    "height": 0
+   },
+   "to": {
+    "x": 2774,
+    "z": 4577,
+    "height": 0
+   },
+   "source": "2009scape HauntedMineListeners.kt (Haunted Mine = Abandoned Mine ladders; the mine is reachable from the Lair of Tarn passageway 20814 and the surface cart tunnels, batch9/fork3_tail.plugin.kts); landing walkable on this 667 map beside the counterpart ladder (MapProbe 2026-10-03): north ladder 4965 -> 2774,4577 beside 4966@2773,4577"
+  },
+  {
+   "id": 4966,
+   "name": "haunted_mine_ladder",
+   "option": "Climb-up",
+   "tile": {
+    "x": 2773,
+    "z": 4577,
+    "height": 0
+   },
+   "to": {
+    "x": 3412,
+    "z": 9633,
+    "height": 0
+   },
+   "source": "2009scape HauntedMineListeners.kt (Haunted Mine = Abandoned Mine ladders; the mine is reachable from the Lair of Tarn passageway 20814 and the surface cart tunnels, batch9/fork3_tail.plugin.kts); landing walkable on this 667 map beside the counterpart ladder (MapProbe 2026-10-03): north ladder 4966 -> 3412,9633 beside 4965@3413,9633"
+  },
+  {
+   "id": 4966,
+   "name": "haunted_mine_ladder",
+   "option": "Climb-up",
+   "tile": {
+    "x": 2782,
+    "z": 4569,
+    "height": 0
+   },
+   "to": {
+    "x": 3422,
+    "z": 9624,
+    "height": 0
+   },
+   "source": "2009scape HauntedMineListeners.kt (Haunted Mine = Abandoned Mine ladders; the mine is reachable from the Lair of Tarn passageway 20814 and the surface cart tunnels, batch9/fork3_tail.plugin.kts); landing walkable on this 667 map beside the counterpart ladder (MapProbe 2026-10-03): south ladder 4966 -> 3422,9624 (level 1; walkable, reach 27)"
+  },
+  {
+   "id": 4969,
+   "name": "haunted_mine_ladder",
+   "option": "Climb-down",
+   "tile": {
+    "x": 2797,
+    "z": 4599,
+    "height": 0
+   },
+   "to": {
+    "x": 2733,
+    "z": 4536,
+    "height": 0
+   },
+   "source": "2009scape HauntedMineListeners.kt (Haunted Mine = Abandoned Mine ladders; the mine is reachable from the Lair of Tarn passageway 20814 and the surface cart tunnels, batch9/fork3_tail.plugin.kts); landing walkable on this 667 map beside the counterpart ladder (MapProbe 2026-10-03): north ladder 4969 -> 2733,4536 beside 4970@2733,4535"
+  },
+  {
+   "id": 4969,
+   "name": "haunted_mine_ladder",
+   "option": "Climb-down",
+   "tile": {
+    "x": 2798,
+    "z": 4567,
+    "height": 0
+   },
+   "to": {
+    "x": 2733,
+    "z": 4503,
+    "height": 0
+   },
+   "source": "2009scape HauntedMineListeners.kt (Haunted Mine = Abandoned Mine ladders; the mine is reachable from the Lair of Tarn passageway 20814 and the surface cart tunnels, batch9/fork3_tail.plugin.kts); landing walkable on this 667 map beside the counterpart ladder (MapProbe 2026-10-03): south ladder 4969 -> 2733,4503 beside 4970@2734,4503"
+  },
+  {
+   "id": 4970,
+   "name": "haunted_mine_ladder",
+   "option": "Climb-up",
+   "tile": {
+    "x": 2733,
+    "z": 4535,
+    "height": 0
+   },
+   "to": {
+    "x": 2797,
+    "z": 4600,
+    "height": 0
+   },
+   "source": "2009scape HauntedMineListeners.kt (Haunted Mine = Abandoned Mine ladders; the mine is reachable from the Lair of Tarn passageway 20814 and the surface cart tunnels, batch9/fork3_tail.plugin.kts); landing walkable on this 667 map beside the counterpart ladder (MapProbe 2026-10-03): north ladder 4970 -> 2797,4600 beside 4969@2797,4599"
+  },
+  {
+   "id": 4970,
+   "name": "haunted_mine_ladder",
+   "option": "Climb-up",
+   "tile": {
+    "x": 2734,
+    "z": 4503,
+    "height": 0
+   },
+   "to": {
+    "x": 2797,
+    "z": 4567,
+    "height": 0
+   },
+   "source": "2009scape HauntedMineListeners.kt (Haunted Mine = Abandoned Mine ladders; the mine is reachable from the Lair of Tarn passageway 20814 and the surface cart tunnels, batch9/fork3_tail.plugin.kts); landing walkable on this 667 map beside the counterpart ladder (MapProbe 2026-10-03): south ladder 4970 -> 2797,4567 beside 4969@2798,4567"
+  },
+  {
+   "id": 4967,
+   "name": "haunted_mine_ladder",
+   "option": "Climb-down",
+   "tile": {
+    "x": 2732,
+    "z": 4529,
+    "height": 0
+   },
+   "to": {
+    "x": 2797,
+    "z": 4529,
+    "height": 0
+   },
+   "source": "2009scape HauntedMineListeners.kt (Haunted Mine = Abandoned Mine ladders; the mine is reachable from the Lair of Tarn passageway 20814 and the surface cart tunnels, batch9/fork3_tail.plugin.kts); landing walkable on this 667 map beside the counterpart ladder (MapProbe 2026-10-03): north-east ladder 4967 -> 2797,4529"
+  },
+  {
+   "id": 4967,
+   "name": "haunted_mine_ladder",
+   "option": "Climb-down",
+   "tile": {
+    "x": 2710,
+    "z": 4540,
+    "height": 0
+   },
+   "to": {
+    "x": 2775,
+    "z": 4540,
+    "height": 0
+   },
+   "source": "2009scape HauntedMineListeners.kt (Haunted Mine = Abandoned Mine ladders; the mine is reachable from the Lair of Tarn passageway 20814 and the surface cart tunnels, batch9/fork3_tail.plugin.kts); landing walkable on this 667 map beside the counterpart ladder (MapProbe 2026-10-03): north-west ladder 4967 -> 2775,4540"
+  },
+  {
+   "id": 4967,
+   "name": "haunted_mine_ladder",
+   "option": "Climb-down",
+   "tile": {
+    "x": 2725,
+    "z": 4486,
+    "height": 0
+   },
+   "to": {
+    "x": 2790,
+    "z": 4486,
+    "height": 0
+   },
+   "source": "2009scape HauntedMineListeners.kt (Haunted Mine = Abandoned Mine ladders; the mine is reachable from the Lair of Tarn passageway 20814 and the surface cart tunnels, batch9/fork3_tail.plugin.kts); landing walkable on this 667 map beside the counterpart ladder (MapProbe 2026-10-03): south-east ladder 4967 -> 2790,4486"
+  },
+  {
+   "id": 4967,
+   "name": "haunted_mine_ladder",
+   "option": "Climb-down",
+   "tile": {
+    "x": 2696,
+    "z": 4497,
+    "height": 0
+   },
+   "to": {
+    "x": 2760,
+    "z": 4498,
+    "height": 0
+   },
+   "source": "2009scape HauntedMineListeners.kt (Haunted Mine = Abandoned Mine ladders; the mine is reachable from the Lair of Tarn passageway 20814 and the surface cart tunnels, batch9/fork3_tail.plugin.kts); landing walkable on this 667 map beside the counterpart ladder (MapProbe 2026-10-03): south-west ladder 4967 -> 2760,4498"
+  },
+  {
+   "id": 20814,
+   "name": "tarn_lair_exit",
+   "option": "Enter",
+   "tile": {
+    "x": 3166,
+    "z": 4546,
+    "height": 0
+   },
+   "to": {
+    "x": 3424,
+    "z": 9660,
+    "height": 0
+   },
+   "source": "2009scape HauntedMineListeners.kt PASSAGEWAY_20814 -> 3424,9660 (Lair of Tarn Razorlor exit into Haunted Mine level 1, beside the lair entrance loc 20979 at 3424,9661); the lair is reachable (ring of slaying / POH, batch-2); landing walkable (MapProbe reach 46)"
+  },
+  {
+   "id": 6501,
+   "name": "jaldraocht_ladder",
+   "option": "Climb-up",
+   "tile": {
+    "x": 3232,
+    "z": 9293,
+    "height": 0
+   },
+   "to": {
+    "x": 2783,
+    "z": 4941,
+    "height": 1
+   },
+   "source": "2009scape DesertTreasureListeners.kt THE LADDERS (Jaldraocht Pyramid; the inside is reached through the back-door Tunnel 6481 after Desert Treasure, batch9/fork3_tail.plugin.kts); landing walkable beside the counterpart ladder on this 667 map (MapProbe 2026-10-03): LADDER_6501 -> 2783,4941,1 beside 6500@2784,4941,1"
+  },
+  {
+   "id": 6500,
+   "name": "jaldraocht_ladder",
+   "option": "Climb-down",
+   "tile": {
+    "x": 2784,
+    "z": 4941,
+    "height": 1
+   },
+   "to": {
+    "x": 3233,
+    "z": 9293,
+    "height": 0
+   },
+   "source": "2009scape DesertTreasureListeners.kt THE LADDERS (Jaldraocht Pyramid; the inside is reached through the back-door Tunnel 6481 after Desert Treasure, batch9/fork3_tail.plugin.kts); landing walkable beside the counterpart ladder on this 667 map (MapProbe 2026-10-03): LADDER_6500 -> 3233,9293 beside 6501@3232,9293"
+  },
+  {
+   "id": 6502,
+   "name": "jaldraocht_ladder",
+   "option": "Climb-up",
+   "tile": {
+    "x": 2782,
+    "z": 4973,
+    "height": 1
+   },
+   "to": {
+    "x": 2845,
+    "z": 4973,
+    "height": 2
+   },
+   "source": "2009scape DesertTreasureListeners.kt THE LADDERS (Jaldraocht Pyramid; the inside is reached through the back-door Tunnel 6481 after Desert Treasure, batch9/fork3_tail.plugin.kts); landing walkable beside the counterpart ladder on this 667 map (MapProbe 2026-10-03): LADDER_6502 -> 2845,4973,2 beside 6499@2846,4973,2"
+  },
+  {
+   "id": 6499,
+   "name": "jaldraocht_ladder",
+   "option": "Climb-down",
+   "tile": {
+    "x": 2846,
+    "z": 4973,
+    "height": 2
+   },
+   "to": {
+    "x": 2782,
+    "z": 4972,
+    "height": 1
+   },
+   "source": "2009scape DesertTreasureListeners.kt THE LADDERS (Jaldraocht Pyramid; the inside is reached through the back-door Tunnel 6481 after Desert Treasure, batch9/fork3_tail.plugin.kts); landing walkable beside the counterpart ladder on this 667 map (MapProbe 2026-10-03): LADDER_6499 -> 2782,4972,1 beside 6502@2782,4973,1"
+  },
+  {
+   "id": 6503,
+   "name": "jaldraocht_ladder",
+   "option": "Climb-up",
+   "tile": {
+    "x": 2845,
+    "z": 4964,
+    "height": 2
+   },
+   "to": {
+    "x": 2909,
+    "z": 4963,
+    "height": 3
+   },
+   "source": "2009scape DesertTreasureListeners.kt THE LADDERS (Jaldraocht Pyramid; the inside is reached through the back-door Tunnel 6481 after Desert Treasure, batch9/fork3_tail.plugin.kts); landing walkable beside the counterpart ladder on this 667 map (MapProbe 2026-10-03): LADDER_6503 -> 2909,4963,3 beside 6498@2909,4964,3"
+  },
+  {
+   "id": 6498,
+   "name": "jaldraocht_ladder",
+   "option": "Climb-down",
+   "tile": {
+    "x": 2909,
+    "z": 4964,
+    "height": 3
+   },
+   "to": {
+    "x": 2846,
+    "z": 4964,
+    "height": 2
+   },
+   "source": "2009scape DesertTreasureListeners.kt THE LADDERS (Jaldraocht Pyramid; the inside is reached through the back-door Tunnel 6481 after Desert Treasure, batch9/fork3_tail.plugin.kts); landing walkable beside the counterpart ladder on this 667 map (MapProbe 2026-10-03): LADDER_6498 -> 2846,4964,2 beside 6503@2845,4964,2"
+  },
+  {
+   "id": 6504,
+   "name": "jaldraocht_ladder",
+   "option": "Climb-up",
+   "tile": {
+    "x": 2913,
+    "z": 4953,
+    "height": 3
+   },
+   "to": {
+    "x": 3233,
+    "z": 2898,
+    "height": 0
+   },
+   "source": "2009scape DesertTreasureListeners.kt THE LADDERS (Jaldraocht Pyramid; the inside is reached through the back-door Tunnel 6481 after Desert Treasure, batch9/fork3_tail.plugin.kts); landing walkable beside the counterpart ladder on this 667 map (MapProbe 2026-10-03): LADDER_6504 -> 3233,2898 (outside, beside the top ladder 6497@3233,2897)"
+  },
+  {
+   "id": 6497,
+   "name": "jaldraocht_ladder",
+   "option": "Climb-down",
+   "tile": {
+    "x": 3233,
+    "z": 2897,
+    "height": 0
+   },
+   "to": {
+    "x": 2913,
+    "z": 4954,
+    "height": 3
+   },
+   "source": "2009scape DesertTreasureListeners.kt THE LADDERS (Jaldraocht Pyramid; the inside is reached through the back-door Tunnel 6481 after Desert Treasure, batch9/fork3_tail.plugin.kts); landing walkable beside the counterpart ladder on this 667 map (MapProbe 2026-10-03): LADDER_6497 -> 2913,4954,3 beside 6504@2913,4953,3"
+  },
+  {
+   "id": 5013,
+   "name": "trollheim_tunnel",
+   "option": "Enter",
+   "tile": {
+    "x": 2798,
+    "z": 10135,
+    "height": 0
+   },
+   "to": {
+    "x": 2796,
+    "z": 3719,
+    "height": 0
+   },
+   "source": "2009scape TrollweissListeners.kt TUNNEL_5013 -> 2796,3719 (Trollheim surface); the cave is reachable (batch-7 5008); landing walkable (MapProbe reach 49)"
+  },
+  {
+   "id": 39329,
+   "name": "hettys_basement_ladder",
+   "option": "Climb-up",
+   "tile": {
+    "x": 3165,
+    "z": 4514,
+    "height": 0
+   },
+   "to": {
+    "x": 2967,
+    "z": 3201,
+    "height": 0
+   },
+   "source": "Void quest/free/swept_away/swept_away.teles.toml hettys_basement_ladder -> 2967,3201 (Hetty's house, Rimmington); the basement is reached by 39331 (object-teleports.json); landing walkable (MapProbe reach 62)"
+  },
+  {
+   "id": 6372,
+   "name": "golem_insidestairs_base",
+   "option": "Climb-up",
+   "tile": {
+    "x": 2721,
+    "z": 4884,
+    "height": 0
+   },
+   "to": {
+    "x": 3491,
+    "z": 3090,
+    "height": 0
+   },
+   "source": "Void content/quest/member/the_golem/TheGolem.kt objectOperate(Climb-up, golem_insidestairs_base) tele(3491,3090) - beside the Uzer staircase 34978@3492,3089; landing walkable (MapProbe reach 80)"
+  },
+  {
+   "id": 18050,
+   "name": "meiyerditch_lab_stairs",
+   "option": "Climb-up",
+   "tile": {
+    "x": 3637,
+    "z": 9696,
+    "height": 0
+   },
+   "to": {
+    "x": 3643,
+    "z": 3303,
+    "height": 0
+   },
+   "source": "667 map counterpart (placements_667.tsv / MapProbe 2026-10-03): Meiyerditch staircase 18049@3643,3304 (1x2, Climb-down) is the only staircase over the Meiyerditch Laboratories (OSRS Wiki Meiyerditch Laboratories: entered by a staircase in Meiyerditch); the labs are reachable (Drakan's medallion 'Meiyerditch Laboratories' 3633,9696, teleport_items.plugin.kts). Landing 3643,3303 = the walkable tile in front of 18049"
+  },
+  {
+   "id": 18049,
+   "name": "meiyerditch_lab_stairs",
+   "option": "Climb-down",
+   "tile": {
+    "x": 3643,
+    "z": 3304,
+    "height": 0
+   },
+   "to": {
+    "x": 3637,
+    "z": 9695,
+    "height": 0
+   },
+   "source": "667 map counterpart (placements_667.tsv / MapProbe 2026-10-03): laboratory staircase 18050@3637,9696 (1x3, Climb-up), the reverse of the 18050 entry; landing 3637,9695 = the walkable tile in front of 18050 (reach 35)"
+  },
+  {
+   "id": 18834,
+   "name": "troll_stronghold_ladder_up",
+   "option": "Climb-up",
+   "tile": {
+    "x": 2831,
+    "z": 10077,
+    "height": 2
+   },
+   "to": {
+    "x": 2813,
+    "z": 3668,
+    "height": 0
+   },
+   "source": "667 map: the only counterpart 18833 is at 2812,3668 (Void troll_stronghold.teles.toml lands on the OSRS spot 2828,3678, which has no ladder here and is not connected to it - batch 9 MapProbe); 2813,3668 is the walkable tile east of it (sweep start tile)"
+  }
+ ]
+}

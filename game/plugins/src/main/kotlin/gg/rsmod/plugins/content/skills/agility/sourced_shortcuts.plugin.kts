@@ -954,15 +954,16 @@ on_world_init {
         val (tile, option) = pair
         shortcut(id, option) {
             obstacle { target ->
-                if (target.tile != tile) return@obstacle
-                if (player.tile == tile) {
+                // The table keeps the census plane (1); the live loc sits one plane lower on these bridge tiles, so only x/z
+                // identify the rock and the jump stays on the player's own plane (batch 9: the plane-1 compare always returned).
+                if (target.tile.x != tile.x || target.tile.z != tile.z) return@obstacle
+                val landing = Tile(tile.x, tile.z, player.tile.height)
+                if (player.tile.sameAs(landing)) {
                     player.message("I can't jump from here.")
                     return@obstacle
                 }
-                player.lockingQueue(lockState = LockState.FULL) {
-                    player.animate(ANIM_STEPPING_STONE_STEP)
-                    exactMove(player, tile, direction = Direction.between(player.tile, tile))
-                }
+                player.animate(ANIM_STEPPING_STONE_STEP)
+                exactMove(player, landing, direction = Direction.between(player.tile, landing))
             }
         }
     }

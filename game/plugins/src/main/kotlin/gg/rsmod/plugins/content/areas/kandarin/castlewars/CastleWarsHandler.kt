@@ -14,6 +14,11 @@ import gg.rsmod.plugins.api.cfg.Npcs
 import gg.rsmod.plugins.api.ext.filterableMessage
 import gg.rsmod.plugins.api.ext.hit
 import gg.rsmod.plugins.api.ext.message
+import gg.rsmod.game.model.LockState
+import gg.rsmod.plugins.content.skills.agility.ObstacleApproachFailed
+import gg.rsmod.plugins.content.skills.agility.Render
+import gg.rsmod.plugins.content.skills.agility.walkOverTile
+import gg.rsmod.plugins.content.skills.agility.walkToTile
 
 /**
  * Core Castle Wars logic, ported from Novite's `CastleWars.java` static methods. See
@@ -292,8 +297,7 @@ object CastleWarsHandler {
      * itself despite the accompanying "can't cross barrier with flag" message. Implemented here
      * against the real flag weapon ids instead, matching the donor's stated intent rather than
      * its literal (bugged) comparison - disclosed, not a silent behavior change from a working
-     * mechanic. Movement is a direct teleport one tile past the barrier rather than Novite's
-     * queued walk animation - a disclosed cosmetic simplification.
+     * mechanic. Movement is Novite's one-step walk across the barrier (see below), not a teleport.
      */
     fun passBarrier(
         player: Player,
@@ -304,15 +308,39 @@ object CastleWarsHandler {
             player.message("You can't cross barrier with flag.")
             return
         }
+        // Novite CastleWarsPlaying.passBarrier: the barrier is a wall loc on one edge of its own tile (rotation 0 west, 1 north,
+        // 2 east, 3 south); the crossing is the one step between the barrier's tile and the tile across that edge, walked with
+        // addWalkSteps(.., checks = false) while locked. Novite only starts it when the player already stands on the barrier's
+        // row/column and otherwise does nothing; the click's route usually ends beside the barrier (or diagonally), so the player
+        // first walks - with collision - to the aligned tile on his own side, then takes the one bounded step across
+        // (owner priority #1 2026-10-03, fail-batch-9: "walked to the loc, then no action and no message").
         val rotation = obj.rot
-        if (rotation == 0 || rotation == 2) {
-            if (player.tile.z != obj.tile.z) return
-            val destX = if (obj.tile.x == player.tile.x) obj.tile.x + (if (rotation == 0) -1 else 1) else obj.tile.x
-            player.moveTo(Tile(destX, obj.tile.z, obj.tile.height))
-        } else {
-            if (player.tile.x != obj.tile.x) return
-            val destZ = if (obj.tile.z == player.tile.z) obj.tile.z + (if (rotation == 3) -1 else 1) else obj.tile.z
-            player.moveTo(Tile(obj.tile.x, destZ, obj.tile.height))
+        val own = Tile(obj.tile.x, obj.tile.z, player.tile.height)
+        val across =
+            when (rotation) {
+                0 -> own.transform(-1, 0)
+                1 -> own.transform(0, 1)
+                2 -> own.transform(1, 0)
+                else -> own.transform(0, -1)
+            }
+        // The player's side: across the barrier's edge when he stands beyond it on the crossing axis.
+        val onAcrossSide =
+            when (rotation) {
+                0 -> player.tile.x < obj.tile.x
+                1 -> player.tile.z > obj.tile.z
+                2 -> player.tile.x > obj.tile.x
+                else -> player.tile.z < obj.tile.z
+            }
+        val near = if (onAcrossSide) across else own
+        val far = if (onAcrossSide) own else across
+        player.lockingQueue(lockState = LockState.FULL) {
+            try {
+                walkToTile(player, near)
+                walkOverTile(player, far, Render.NONE)
+            } catch (e: ObstacleApproachFailed) {
+                player.stopMovement()
+                player.message("I can't reach that!")
+            }
         }
     }
 

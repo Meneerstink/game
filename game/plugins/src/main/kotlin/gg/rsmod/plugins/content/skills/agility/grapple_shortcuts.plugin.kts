@@ -212,7 +212,9 @@ on_world_init {
     // variants of the wall (ObjectPlacementProbeTool: 213 at 3006,3395 north face, 214 at 3005,3392
     // south face, options Grapple / Build hidey-hole), not Void's 17049/17050, so the bindings were
     // silently skipped. Both faces are bound; the wall-top 17051/17052 "Jump" objects are present.
-    listOf(Triple(213, Tile(3006, 3395), Direction.SOUTH), Triple(214, Tile(3005, 3393), Direction.NORTH)).forEach { (id, stand, facing) ->
+    // 2026-10-03 (obstacle batch 9 map probe): 3005,3393 on plane 0 lies in a sealed 83-tile pocket inside the wall, so the south
+    // face starts and lands on 3005,3392 and the 17052 wall-top stand is 3005,3393,1.
+    listOf(Triple(213, Tile(3006, 3395), Direction.SOUTH), Triple(214, Tile(3005, 3392), Direction.NORTH)).forEach { (id, stand, facing) ->
         shortcut(id, "Grapple") {
             obstacle {
                 walkToTile(player, stand)
@@ -223,7 +225,7 @@ on_world_init {
             }
         }
     }
-    listOf(Triple(17051, Tile(3006, 3394, 1), Tile(3006, 3395, 0)), Triple(17052, Tile(3005, 3394, 1), Tile(3005, 3393, 0))).forEach { (id, stand, landing) ->
+    listOf(Triple(17051, Tile(3006, 3394, 1), Tile(3006, 3395, 0)), Triple(17052, Tile(3005, 3393, 1), Tile(3005, 3392, 0))).forEach { (id, stand, landing) ->
         shortcut(id, "Jump") {
             obstacle {
                 walkToTile(player, stand)

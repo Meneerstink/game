@@ -190,6 +190,9 @@ on_obj_option(obj = 4415, option = "Climb-down") {
         t.x == 2382 && t.z == 3132 && t.height == 1 -> player.moveTo(Tile(2382, 3129, 0))
         t.x == 2369 && t.z == 3126 && t.height == 2 -> player.moveTo(Tile(2372, 3126, 1))
         t.x == 2374 && t.z == 3133 && t.height == 3 -> player.moveTo(Tile(2374, 3130, 2))
+        // The same Novite destination for the copy the live map loads on plane 0 (batch 9), and a sourced answer for the rest.
+        t.x == 2382 && t.z == 3132 && t.height == 0 -> player.moveTo(Tile(2382, 3129, 0))
+        else -> gg.rsmod.plugins.content.mechanics.objteleports.ObjectTeleports.fallback(player)
     }
 }
 
