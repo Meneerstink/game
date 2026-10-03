@@ -62,6 +62,11 @@ fun currentDay(): Long = TimeUnit.MILLISECONDS.toDays(System.currentTimeMillis()
 
 on_obj_option(obj = Objs.PORTAL_28779, option = "enter") {
     val obj = player.getInteractingGameObj()
+    if (obj.tile.x == 3326 && obj.tile.z == 5469) {
+        // 2009scape ChaosTunnelZone: this portal is the one-way end of its pair.
+        player.message("You can't go back through this portal.")
+        return@on_obj_option
+    }
     if (obj.tile != PORTAL_TILE) {
         // The other 108 Chaos Tunnels portals share this id; their pairs are sourced table data.
         gg.rsmod.plugins.content.mechanics.objteleports.ObjectTeleports.fallback(player)

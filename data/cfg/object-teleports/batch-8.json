@@ -1,0 +1,485 @@
+{
+ "provenance": "Obstacle batch 8 (2026-10-03, owner priority #1): sourced object teleports for agent-handoffs/obstacle-batches/fail-batch-8.tsv. Each entry names its source; every landing was checked on this 667 map with MapProbe (land / conn: walkable, beside the counterpart loc, on the far side for the Chaos Tunnels portal pairs).",
+ "teleports": [
+  {
+   "id": 28779,
+   "name": "chaos_tunnels_portal",
+   "option": "Enter",
+   "tile": {
+    "x": 3162,
+    "z": 5545,
+    "height": 0
+   },
+   "to": {
+    "x": 3166,
+    "z": 5554,
+    "height": 0
+   },
+   "source": "Chaos Tunnels portal pair 3162,5545 <-> 3166,5553: 2009scape ChaosTunnelZone.addLink (secondary source; Void chaos_tunnels.teles.toml lacks this pair but has the reverse 3166,5553 -> 3162,5545); the 667 map has 28779 at both tiles (placements_667.tsv). Landing = walkable tile beside the counterpart portal on its far side (MapProbe land/conn 2026-10-03: not connected to the source side)"
+  },
+  {
+   "id": 28779,
+   "name": "chaos_tunnels_portal",
+   "option": "Enter",
+   "tile": {
+    "x": 3167,
+    "z": 5471,
+    "height": 0
+   },
+   "to": {
+    "x": 3172,
+    "z": 5473,
+    "height": 0
+   },
+   "source": "Chaos Tunnels portal pair 3167,5471 <-> 3171,5473: 2009scape ChaosTunnelZone.addLink (secondary source; Void chaos_tunnels.teles.toml lacks this pair); the 667 map has 28779 at both tiles (placements_667.tsv). Landing = walkable tile beside the counterpart portal on its far side (MapProbe land/conn 2026-10-03: not connected to the source side)"
+  },
+  {
+   "id": 28779,
+   "name": "chaos_tunnels_portal",
+   "option": "Enter",
+   "tile": {
+    "x": 3167,
+    "z": 5478,
+    "height": 0
+   },
+   "to": {
+    "x": 3172,
+    "z": 5478,
+    "height": 0
+   },
+   "source": "Chaos Tunnels portal pair 3167,5478 <-> 3171,5478: 2009scape ChaosTunnelZone.addLink (secondary source; Void chaos_tunnels.teles.toml lacks this pair); the 667 map has 28779 at both tiles (placements_667.tsv). Landing = walkable tile beside the counterpart portal on its far side (MapProbe land/conn 2026-10-03: not connected to the source side)"
+  },
+  {
+   "id": 28779,
+   "name": "chaos_tunnels_portal",
+   "option": "Enter",
+   "tile": {
+    "x": 3171,
+    "z": 5473,
+    "height": 0
+   },
+   "to": {
+    "x": 3166,
+    "z": 5471,
+    "height": 0
+   },
+   "source": "Chaos Tunnels portal pair 3171,5473 <-> 3167,5471: 2009scape ChaosTunnelZone.addLink (secondary source; Void chaos_tunnels.teles.toml lacks this pair); the 667 map has 28779 at both tiles (placements_667.tsv). Landing = walkable tile beside the counterpart portal on its far side (MapProbe land/conn 2026-10-03: not connected to the source side)"
+  },
+  {
+   "id": 28779,
+   "name": "chaos_tunnels_portal",
+   "option": "Enter",
+   "tile": {
+    "x": 3171,
+    "z": 5478,
+    "height": 0
+   },
+   "to": {
+    "x": 3166,
+    "z": 5478,
+    "height": 0
+   },
+   "source": "Chaos Tunnels portal pair 3171,5478 <-> 3167,5478: 2009scape ChaosTunnelZone.addLink (secondary source; Void chaos_tunnels.teles.toml lacks this pair); the 667 map has 28779 at both tiles (placements_667.tsv). Landing = walkable tile beside the counterpart portal on its far side (MapProbe land/conn 2026-10-03: not connected to the source side)"
+  },
+  {
+   "id": 28779,
+   "name": "chaos_tunnels_portal",
+   "option": "Enter",
+   "tile": {
+    "x": 3197,
+    "z": 5448,
+    "height": 0
+   },
+   "to": {
+    "x": 3205,
+    "z": 5445,
+    "height": 0
+   },
+   "source": "Chaos Tunnels portal pair 3197,5448 <-> 3204,5445: 2009scape ChaosTunnelZone.addLink (secondary source; Void chaos_tunnels.teles.toml lacks this pair); the 667 map has 28779 at both tiles (placements_667.tsv). Landing = walkable tile beside the counterpart portal on its far side (MapProbe land/conn 2026-10-03: not connected to the source side)"
+  },
+  {
+   "id": 28779,
+   "name": "chaos_tunnels_portal",
+   "option": "Enter",
+   "tile": {
+    "x": 3197,
+    "z": 5529,
+    "height": 0
+   },
+   "to": {
+    "x": 3202,
+    "z": 5531,
+    "height": 0
+   },
+   "source": "Chaos Tunnels portal pair 3197,5529 <-> 3201,5531: 2009scape ChaosTunnelZone.addLink (secondary source; Void chaos_tunnels.teles.toml lacks this pair); the 667 map has 28779 at both tiles (placements_667.tsv). Landing = walkable tile beside the counterpart portal on its far side (MapProbe land/conn 2026-10-03: not connected to the source side)"
+  },
+  {
+   "id": 28779,
+   "name": "chaos_tunnels_portal",
+   "option": "Enter",
+   "tile": {
+    "x": 3201,
+    "z": 5531,
+    "height": 0
+   },
+   "to": {
+    "x": 3196,
+    "z": 5529,
+    "height": 0
+   },
+   "source": "Chaos Tunnels portal pair 3201,5531 <-> 3197,5529: 2009scape ChaosTunnelZone.addLink (secondary source; Void chaos_tunnels.teles.toml lacks this pair); the 667 map has 28779 at both tiles (placements_667.tsv). Landing = walkable tile beside the counterpart portal on its far side (MapProbe land/conn 2026-10-03: not connected to the source side)"
+  },
+  {
+   "id": 28779,
+   "name": "chaos_tunnels_portal",
+   "option": "Enter",
+   "tile": {
+    "x": 3204,
+    "z": 5445,
+    "height": 0
+   },
+   "to": {
+    "x": 3196,
+    "z": 5448,
+    "height": 0
+   },
+   "source": "Chaos Tunnels portal pair 3204,5445 <-> 3197,5448: 2009scape ChaosTunnelZone.addLink (secondary source; Void chaos_tunnels.teles.toml lacks this pair); the 667 map has 28779 at both tiles (placements_667.tsv). Landing = walkable tile beside the counterpart portal on its far side (MapProbe land/conn 2026-10-03: not connected to the source side)"
+  },
+  {
+   "id": 28779,
+   "name": "chaos_tunnels_portal",
+   "option": "Enter",
+   "tile": {
+    "x": 3273,
+    "z": 5460,
+    "height": 0
+   },
+   "to": {
+    "x": 3281,
+    "z": 5460,
+    "height": 0
+   },
+   "source": "Chaos Tunnels portal pair 3273,5460 <-> 3280,5460: 2009scape ChaosTunnelZone.addLink (secondary source; Void chaos_tunnels.teles.toml lacks this pair); the 667 map has 28779 at both tiles (placements_667.tsv). Landing = walkable tile beside the counterpart portal on its far side (MapProbe land/conn 2026-10-03: not connected to the source side)"
+  },
+  {
+   "id": 28779,
+   "name": "chaos_tunnels_portal",
+   "option": "Enter",
+   "tile": {
+    "x": 3280,
+    "z": 5460,
+    "height": 0
+   },
+   "to": {
+    "x": 3272,
+    "z": 5460,
+    "height": 0
+   },
+   "source": "Chaos Tunnels portal pair 3280,5460 <-> 3273,5460: 2009scape ChaosTunnelZone.addLink (secondary source; Void chaos_tunnels.teles.toml lacks this pair); the 667 map has 28779 at both tiles (placements_667.tsv). Landing = walkable tile beside the counterpart portal on its far side (MapProbe land/conn 2026-10-03: not connected to the source side)"
+  },
+  {
+   "id": 28779,
+   "name": "chaos_tunnels_portal",
+   "option": "Enter",
+   "tile": {
+    "x": 3283,
+    "z": 5448,
+    "height": 0
+   },
+   "to": {
+    "x": 3288,
+    "z": 5448,
+    "height": 0
+   },
+   "source": "Chaos Tunnels portal pair 3283,5448 <-> 3287,5448: 2009scape ChaosTunnelZone.addLink (secondary source; Void chaos_tunnels.teles.toml lacks this pair); the 667 map has 28779 at both tiles (placements_667.tsv). Landing = walkable tile beside the counterpart portal on its far side (MapProbe land/conn 2026-10-03: not connected to the source side)"
+  },
+  {
+   "id": 28779,
+   "name": "chaos_tunnels_portal",
+   "option": "Enter",
+   "tile": {
+    "x": 3285,
+    "z": 5474,
+    "height": 0
+   },
+   "to": {
+    "x": 3286,
+    "z": 5469,
+    "height": 0
+   },
+   "source": "Chaos Tunnels portal pair 3285,5474 <-> 3286,5470: 2009scape ChaosTunnelZone.addLink (secondary source; Void chaos_tunnels.teles.toml lacks this pair); the 667 map has 28779 at both tiles (placements_667.tsv). Landing = walkable tile beside the counterpart portal on its far side (MapProbe land/conn 2026-10-03: not connected to the source side)"
+  },
+  {
+   "id": 28779,
+   "name": "chaos_tunnels_portal",
+   "option": "Enter",
+   "tile": {
+    "x": 3286,
+    "z": 5470,
+    "height": 0
+   },
+   "to": {
+    "x": 3285,
+    "z": 5475,
+    "height": 0
+   },
+   "source": "Chaos Tunnels portal pair 3286,5470 <-> 3285,5474: 2009scape ChaosTunnelZone.addLink (secondary source; Void chaos_tunnels.teles.toml lacks this pair); the 667 map has 28779 at both tiles (placements_667.tsv). Landing = walkable tile beside the counterpart portal on its far side (MapProbe land/conn 2026-10-03: not connected to the source side)"
+  },
+  {
+   "id": 28779,
+   "name": "chaos_tunnels_portal",
+   "option": "Enter",
+   "tile": {
+    "x": 3287,
+    "z": 5448,
+    "height": 0
+   },
+   "to": {
+    "x": 3282,
+    "z": 5448,
+    "height": 0
+   },
+   "source": "Chaos Tunnels portal pair 3287,5448 <-> 3283,5448: 2009scape ChaosTunnelZone.addLink (secondary source; Void chaos_tunnels.teles.toml lacks this pair); the 667 map has 28779 at both tiles (placements_667.tsv). Landing = walkable tile beside the counterpart portal on its far side (MapProbe land/conn 2026-10-03: not connected to the source side)"
+  },
+  {
+   "id": 28779,
+   "name": "chaos_tunnels_portal",
+   "option": "Enter",
+   "tile": {
+    "x": 3290,
+    "z": 5463,
+    "height": 0
+   },
+   "to": {
+    "x": 3303,
+    "z": 5469,
+    "height": 0
+   },
+   "source": "Chaos Tunnels portal pair 3290,5463 <-> 3302,5469: 2009scape ChaosTunnelZone.addLink (secondary source; Void chaos_tunnels.teles.toml lacks this pair); the 667 map has 28779 at both tiles (placements_667.tsv). Landing = walkable tile beside the counterpart portal on its far side (MapProbe land/conn 2026-10-03: not connected to the source side)"
+  },
+  {
+   "id": 28779,
+   "name": "chaos_tunnels_portal",
+   "option": "Enter",
+   "tile": {
+    "x": 3296,
+    "z": 5455,
+    "height": 0
+   },
+   "to": {
+    "x": 3300,
+    "z": 5450,
+    "height": 0
+   },
+   "source": "Chaos Tunnels portal pair 3296,5455 <-> 3299,5450: 2009scape ChaosTunnelZone.addLink (secondary source; Void chaos_tunnels.teles.toml lacks this pair); the 667 map has 28779 at both tiles (placements_667.tsv). Landing = walkable tile beside the counterpart portal on its far side (MapProbe land/conn 2026-10-03: not connected to the source side)"
+  },
+  {
+   "id": 28779,
+   "name": "chaos_tunnels_portal",
+   "option": "Enter",
+   "tile": {
+    "x": 3299,
+    "z": 5450,
+    "height": 0
+   },
+   "to": {
+    "x": 3296,
+    "z": 5456,
+    "height": 0
+   },
+   "source": "Chaos Tunnels portal pair 3299,5450 <-> 3296,5455: 2009scape ChaosTunnelZone.addLink (secondary source; Void chaos_tunnels.teles.toml lacks this pair); the 667 map has 28779 at both tiles (placements_667.tsv). Landing = walkable tile beside the counterpart portal on its far side (MapProbe land/conn 2026-10-03: not connected to the source side)"
+  },
+  {
+   "id": 28779,
+   "name": "chaos_tunnels_portal",
+   "option": "Enter",
+   "tile": {
+    "x": 3302,
+    "z": 5469,
+    "height": 0
+   },
+   "to": {
+    "x": 3289,
+    "z": 5463,
+    "height": 0
+   },
+   "source": "Chaos Tunnels portal pair 3302,5469 <-> 3290,5463: 2009scape ChaosTunnelZone.addLink (secondary source; Void chaos_tunnels.teles.toml lacks this pair); the 667 map has 28779 at both tiles (placements_667.tsv). Landing = walkable tile beside the counterpart portal on its far side (MapProbe land/conn 2026-10-03: not connected to the source side)"
+  },
+  {
+   "id": 28779,
+   "name": "chaos_tunnels_portal",
+   "option": "Enter",
+   "tile": {
+    "x": 3307,
+    "z": 5496,
+    "height": 0
+   },
+   "to": {
+    "x": 3318,
+    "z": 5496,
+    "height": 0
+   },
+   "source": "Chaos Tunnels portal pair 3307,5496 <-> 3317,5496: 2009scape ChaosTunnelZone.addLink (secondary source; Void chaos_tunnels.teles.toml lacks this pair); the 667 map has 28779 at both tiles (placements_667.tsv). Landing = walkable tile beside the counterpart portal on its far side (MapProbe land/conn 2026-10-03: not connected to the source side)"
+  },
+  {
+   "id": 28779,
+   "name": "chaos_tunnels_portal",
+   "option": "Enter",
+   "tile": {
+    "x": 3317,
+    "z": 5496,
+    "height": 0
+   },
+   "to": {
+    "x": 3306,
+    "z": 5496,
+    "height": 0
+   },
+   "source": "Chaos Tunnels portal pair 3317,5496 <-> 3307,5496: 2009scape ChaosTunnelZone.addLink (secondary source; Void chaos_tunnels.teles.toml lacks this pair); the 667 map has 28779 at both tiles (placements_667.tsv). Landing = walkable tile beside the counterpart portal on its far side (MapProbe land/conn 2026-10-03: not connected to the source side)"
+  },
+  {
+   "id": 31221,
+   "name": "tzhaar_city_exit_tunnel",
+   "option": "Go-through-wall",
+   "tile": {
+    "x": 2479,
+    "z": 5176,
+    "height": 0
+   },
+   "to": {
+    "x": 2866,
+    "z": 9571,
+    "height": 0
+   },
+   "source": "Void tzhaar_city.teles.toml cave_exit_tzhaar_city (2479,5176 -> 2866,9571; 2009scape TzhaarListeners 9359 agrees). The 667 map puts three 'Tunnel entrance' wall locs 31221 (Go-through-wall) on the Cave exit 9359's own front tiles 2479-2481,5176 (MapProbe locs 2026-10-03), so they are the same exit; same landing as the existing 9359 entry"
+  },
+  {
+   "id": 31221,
+   "name": "tzhaar_city_exit_tunnel",
+   "option": "Go-through-wall",
+   "tile": {
+    "x": 2480,
+    "z": 5176,
+    "height": 0
+   },
+   "to": {
+    "x": 2866,
+    "z": 9571,
+    "height": 0
+   },
+   "source": "Void tzhaar_city.teles.toml cave_exit_tzhaar_city (2479,5176 -> 2866,9571; 2009scape TzhaarListeners 9359 agrees). The 667 map puts three 'Tunnel entrance' wall locs 31221 (Go-through-wall) on the Cave exit 9359's own front tiles 2479-2481,5176 (MapProbe locs 2026-10-03), so they are the same exit; same landing as the existing 9359 entry"
+  },
+  {
+   "id": 31221,
+   "name": "tzhaar_city_exit_tunnel",
+   "option": "Go-through-wall",
+   "tile": {
+    "x": 2481,
+    "z": 5176,
+    "height": 0
+   },
+   "to": {
+    "x": 2866,
+    "z": 9571,
+    "height": 0
+   },
+   "source": "Void tzhaar_city.teles.toml cave_exit_tzhaar_city (2479,5176 -> 2866,9571; 2009scape TzhaarListeners 9359 agrees). The 667 map puts three 'Tunnel entrance' wall locs 31221 (Go-through-wall) on the Cave exit 9359's own front tiles 2479-2481,5176 (MapProbe locs 2026-10-03), so they are the same exit; same landing as the existing 9359 entry"
+  },
+  {
+   "id": 2447,
+   "name": "gnome_stronghold_tree_up",
+   "option": "Climb-up",
+   "tile": {
+    "x": 2484,
+    "z": 3464,
+    "height": 1
+   },
+   "to": {
+    "x": 2485,
+    "z": 3465,
+    "height": 2
+   },
+   "source": "667 map counterpart (placements_667.tsv / MapProbe 2026-10-03): Tree 2448 'Climb-down' at 2485,3464,2; 2485,3465,2 is the only walkable tile beside it (treetop platform, MapProbe land pocket 7)"
+  },
+  {
+   "id": 2448,
+   "name": "gnome_stronghold_tree_down",
+   "option": "Climb-down",
+   "tile": {
+    "x": 2485,
+    "z": 3464,
+    "height": 2
+   },
+   "to": {
+    "x": 2485,
+    "z": 3464,
+    "height": 1
+   },
+   "source": "667 map counterpart (placements_667.tsv / MapProbe 2026-10-03): Tree 2447 'Climb-up' at 2484,3464,1; 2485,3464,1 is a walkable tile beside it (MapProbe land: open area, pocket >= 64)"
+  },
+  {
+   "id": 15896,
+   "name": "copper_ladder_up",
+   "option": "Climb-up",
+   "tile": {
+    "x": 3813,
+    "z": 2952,
+    "height": 0
+   },
+   "to": {
+    "x": 3814,
+    "z": 2952,
+    "height": 2
+   },
+   "source": "667 map counterpart two planes up (placements_667.tsv / MapProbe 2026-10-03): Copper Ladder 15898 'Climb-down' on the same tile 3813,2952,2 (no loc on plane 1); 3814,2952,2 is the walkable tile beside it (MapProbe land, 58-tile platform)"
+  },
+  {
+   "id": 15899,
+   "name": "copper_ladder_up",
+   "option": "Climb-up",
+   "tile": {
+    "x": 3820,
+    "z": 2999,
+    "height": 0
+   },
+   "to": {
+    "x": 3819,
+    "z": 2999,
+    "height": 2
+   },
+   "source": "667 map counterpart two planes up (placements_667.tsv / MapProbe 2026-10-03): Copper Ladder 15901 'Climb-down' on the same tile 3820,2999,2 (no loc on plane 1); 3819,2999,2 is the walkable tile beside it (MapProbe land, 58-tile platform)"
+  },
+  {
+   "id": 16369,
+   "name": "stairs_up",
+   "option": "Climb-up",
+   "tile": {
+    "x": 4116,
+    "z": 5584,
+    "height": 0
+   },
+   "to": {
+    "x": 4116,
+    "z": 5585,
+    "height": 2
+   },
+   "source": "667 map counterpart two planes up (placements_667.tsv / MapProbe 2026-10-03): Stairs 16371 'Climb-down' at 4116,5586,2 (no stairs loc on plane 1); 4116,5585,2 is a walkable tile beside it (MapProbe land, pocket >= 64)"
+  },
+  {
+   "id": 16369,
+   "name": "stairs_up",
+   "option": "Climb-up",
+   "tile": {
+    "x": 4116,
+    "z": 5599,
+    "height": 0
+   },
+   "to": {
+    "x": 4116,
+    "z": 5598,
+    "height": 2
+   },
+   "source": "667 map counterpart two planes up (placements_667.tsv / MapProbe 2026-10-03): Stairs 16371 'Climb-down' at 4116,5597,2 (no stairs loc on plane 1); 4116,5598,2 is a walkable tile beside it (MapProbe land, pocket >= 64)"
+  }
+ ]
+}

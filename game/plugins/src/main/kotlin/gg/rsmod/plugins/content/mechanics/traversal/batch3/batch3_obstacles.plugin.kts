@@ -34,6 +34,11 @@ val PRISON_PIPE = Tile(2860, 5219, 0)
 
 shortcut(31221, "Go-through-wall") {
     val clicked = player.getInteractingGameObj()
+    // The three wall locs on the front tiles of the Fight Caves entrance 9356 (batch 8 map probe): the same entry as the cave.
+    if (clicked.tile.height == 0 && clicked.tile.z == 5167 && clicked.tile.x in 2437..2439) {
+        world.plugins.executeObject(player, Objs.CAVE_ENTRANCE_9356, 1)
+        return@shortcut
+    }
     if (clicked.tile.height != 0 || clicked.tile.z != 5219 || clicked.tile.x !in 2860..2861) {
         ObjectTeleports.fallback(player)
         return@shortcut
