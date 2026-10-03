@@ -57,6 +57,11 @@ on_button(interfaceId = Bank.BANK_INTERFACE_ID, component = 35) {
     Bank.depositEquipment(player)
 }
 
+/* E7: 762:37 'Deposit beast of burden inventory' had no handler. */
+on_button(interfaceId = Bank.BANK_INTERFACE_ID, component = Bank.DEPOSIT_BOB_COMPONENT) {
+    Bank.depositBeastOfBurden(player)
+}
+
 on_button(interfaceId = Bank.DEPOSIT_BOX_INTERFACE_ID, component = 18) {
     Bank.depositInventory(player)
 }
@@ -65,9 +70,32 @@ on_button(interfaceId = Bank.DEPOSIT_BOX_INTERFACE_ID, component = 20) {
     Bank.depositEquipment(player)
 }
 
-on_button(interfaceId = Bank.BANK_INTERFACE_ID, component = 17) {
-    player.setVarp(Varps.VARP_190, 1)
-    player.runClientScript(1472)
+/* E7: 11:22 'Deposit beast of burden inventory' had no handler. */
+on_button(interfaceId = Bank.DEPOSIT_BOX_INTERFACE_ID, component = Bank.DEPOSIT_BOX_BOB_COMPONENT) {
+    Bank.depositBeastOfBurden(player)
+}
+
+/*
+ * 762:17 'Search': the client runs the search itself (onOp CS2 1471) and clears varc 190; re-arm it so the button works
+ * again. This used to set varp 190 (a different variable) and run 1472 while varc 190 was still 0, so 1472 did nothing.
+ */
+on_button(interfaceId = Bank.BANK_INTERFACE_ID, component = Bank.SEARCH_COMPONENT) {
+    Bank.armSearch(player)
+}
+
+/*
+ * E7: 762:117 'Show Equipment Stats' (OSRS 'Show worn items') and the way back, 667:49 'Show bank'.
+ */
+on_button(interfaceId = Bank.BANK_INTERFACE_ID, component = Bank.EQUIPMENT_STATS_COMPONENT) {
+    if (player.getInteractingOpcode() == 61) {
+        Bank.showEquipmentStats(player)
+    }
+}
+
+on_button(interfaceId = Bank.EQUIPMENT_BONUS_INTERFACE_ID, component = Bank.SHOW_BANK_COMPONENT) {
+    if (player.getInteractingOpcode() == 61) {
+        Bank.showBank(player)
+    }
 }
 
 on_button(interfaceId = Bank.DEPOSIT_BOX_INTERFACE_ID, component = 17) p@{
@@ -80,31 +108,20 @@ on_button(interfaceId = Bank.DEPOSIT_BOX_INTERFACE_ID, component = 17) p@{
         return@p
     }
 
-    var amount =
-        when (opcode) {
-            61 -> 1
-            64 -> 5
-            4 -> 10
-            52 -> player.getVarp(Bank.LAST_X_INPUT)
-            81 -> -1 // X
-            91 -> 0 // All
-            else -> return@p
-        }
-
-    if (amount == 0) {
-        amount = player.inventory.getItemCount(item.id)
-    } else if (amount == -1) {
+    val amount = Bank.depositBoxAmount(opcode, player.inventory.getItemCount(item.id)) ?: return@p
+    if (amount == -1) {
         player.queue(TaskPriority.WEAK) {
-            amount = inputInt("How many would you like to bank?")
-            if (amount > 0) {
-                player.setVarp(Bank.LAST_X_INPUT, amount)
-                Bank.deposit(player, player.inventory, slot, amount)
+            val input = inputInt(Bank.AMOUNT_PROMPT)
+            if (input > 0) {
+                player.setVarp(Bank.LAST_X_INPUT, input)
+                Bank.deposit(player, player.inventory, slot, input)
             }
         }
         return@p
     }
-
-    Bank.deposit(player, player.inventory, slot, amount)
+    if (amount > 0) {
+        Bank.deposit(player, player.inventory, slot, amount)
+    }
 }
 
 on_button(interfaceId = Bank.INV_INTERFACE_ID, component = Bank.INV_INTERFACE_CHILD) p@{
@@ -117,31 +134,20 @@ on_button(interfaceId = Bank.INV_INTERFACE_ID, component = Bank.INV_INTERFACE_CH
         return@p
     }
 
-    var amount =
-        when (opcode) {
-            61 -> 1
-            64 -> 5
-            4 -> 10
-            52 -> player.getVarp(Bank.LAST_X_INPUT)
-            81 -> -1 // X
-            91 -> 0 // All
-            else -> return@p
-        }
-
-    if (amount == 0) {
-        amount = player.inventory.getItemCount(item.id)
-    } else if (amount == -1) {
+    val amount = Bank.bankInventoryDepositAmount(player, opcode, player.inventory.getItemCount(item.id)) ?: return@p
+    if (amount == -1) {
         player.queue(TaskPriority.WEAK) {
-            amount = inputInt("How many would you like to bank?")
-            if (amount > 0) {
-                player.setVarp(Bank.LAST_X_INPUT, amount)
-                Bank.deposit(player, player.inventory, slot, amount)
+            val input = inputInt(Bank.AMOUNT_PROMPT)
+            if (input > 0) {
+                player.setVarp(Bank.LAST_X_INPUT, input)
+                Bank.deposit(player, player.inventory, slot, input)
             }
         }
         return@p
     }
-
-    Bank.deposit(player, player.inventory, slot, amount)
+    if (amount > 0) {
+        Bank.deposit(player, player.inventory, slot, amount)
+    }
 }
 
 on_button(interfaceId = Bank.BANK_INTERFACE_ID, component = 93) p@{
@@ -155,19 +161,7 @@ on_button(interfaceId = Bank.BANK_INTERFACE_ID, component = 93) p@{
         return@p
     }
 
-    var amount: Int
-
-    amount =
-        when (opcode) {
-            61 -> 1
-            64 -> 5
-            4 -> 10
-            52 -> player.getVarp(Bank.LAST_X_INPUT)
-            81 -> -1 // X
-            91 -> item.amount
-            18 -> item.amount - 1
-            else -> return@p
-        }
+    val amount = Bank.withdrawAmount(player, opcode, item.amount) ?: return@p
 
     if (amount == -1) {
         /**
@@ -179,16 +173,19 @@ on_button(interfaceId = Bank.BANK_INTERFACE_ID, component = 93) p@{
             return@p
         }
         player.queue(TaskPriority.WEAK) {
-            amount = inputInt("How many would you like to withdraw?")
-            if (amount > 0) {
-                player.setVarp(Bank.LAST_X_INPUT, amount)
-                Bank.withdraw(player, item.id, amount, slot)
+            val input = inputInt(Bank.AMOUNT_PROMPT)
+            if (input > 0) {
+                player.setVarp(Bank.LAST_X_INPUT, input)
+                Bank.withdraw(player, item.id, input, slot)
             }
         }
         return@p
     }
 
-    amount = Math.max(0, amount)
+    if (opcode == 18 && amount <= 0) {
+        player.filterableMessage(Bank.ALL_BUT_ONE_MESSAGE)
+        return@p
+    }
     if (amount > 0) {
         Bank.withdraw(player, item.id, amount, slot)
     }

@@ -13,6 +13,10 @@ import mu.KLogging
 
 /**
  * @author Tom <rspsmods@gmail.com>
+ *
+ * E7 (owner 2026-10-03, "onze bank moet precies functioneren als osrs bank"): every component used below was read
+ * from the revision-667 cache with `runInterfaceHookProbeTool layout|interface 762 / 763 / 11 / 667` and the CS2
+ * scripts behind them (`disasm 1449 1465 1471 1472 2318 2319 150`), never assumed.
  */
 class Bank {
     companion object : KLogging() {
@@ -26,6 +30,69 @@ class Bank {
         const val REARRANGE_MODE_VARP = 304
         const val WITHDRAW_AS_VARB = 115
         const val LAST_X_INPUT = 1249
+
+        /** 762:17 op1 'Search'. */
+        const val SEARCH_COMPONENT = 17
+
+        /**
+         * Varc 190 arms the search button: CS2 1449 binds 762:17's onVarcTransmit to script 1472 on varc 190, and 1472
+         * only puts 'Search' + onOp 1471 back when varc 190 is true. 1471 (the click) clears it to 0, so the server has
+         * to set it back to 1 after every click (void `armBankSearch`), otherwise the button goes dead after one use.
+         */
+        const val SEARCH_ARM_VARC = 190
+        const val SEARCH_ARM_SCRIPT = 1472
+
+        /**
+         * CS2 1465 (bound by 1449 on varcs 192/1038 to the 762:21 layer) prints the bank space counters 762:29-32:
+         * varc 1038 = slots used by free-to-play items, varc 192 = all slots used (members = 192 - 1038).
+         */
+        const val SPACE_USED_FREE_VARC = 1038
+        const val SPACE_USED_TOTAL_VARC = 192
+
+        /** 762:37 / 11:22 op1 'Deposit beast of burden inventory'. */
+        const val DEPOSIT_BOB_COMPONENT = 37
+        const val DEPOSIT_BOX_BOB_COMPONENT = 22
+
+        /** 762:117 op1 'Show Equipment Stats' (icon 762:118). */
+        const val EQUIPMENT_STATS_COMPONENT = 117
+        const val EQUIPMENT_STATS_ICON_COMPONENT = 118
+
+        /**
+         * Varbit 8348 (varp 638): CS2 2318 (onOp of 762:117 and of 667:49) toggles it client-side and CS2 2319 then hides
+         * the bank (762:0, 763:0) and shows the equipment screen (667:0, 763:1) - or the reverse. The server keeps it in
+         * step: 1 while the equipment stats replace the bank, 0 whenever the bank is shown.
+         */
+        const val EQUIPMENT_VIEW_VARBIT = 8348
+        const val EQUIPMENT_BONUS_INTERFACE_ID = 667
+        const val EQUIPMENT_SIDE_INTERFACE_ID = 670
+
+        /** 667:49 op1 'Show bank' ("Return to the bank"). */
+        const val SHOW_BANK_COMPONENT = 49
+
+        /** Same masks the equipment stats screen itself sends (ops 1, 9, 10). */
+        private const val EQUIPMENT_SCREEN_EVENTS = 1538
+
+        /** Source: OSRS Wiki, Bank (Withdraw-All but one). */
+        const val ALL_BUT_ONE_MESSAGE = "You only have one of this item, so withdrawing all but one does nothing."
+
+        /** Source: OSRS Wiki, Bank (stack limit). */
+        const val FULL_STACK_MESSAGE = "You already have a full stack of that item in the bank."
+
+        /** Source: Donors/void BankWithdraw.kt. */
+        const val CANNOT_NOTE_MESSAGE = "This item cannot be withdrawn as a note."
+
+        /** Source: Donors/void BankDeposit.kt. */
+        const val EMPTY_INVENTORY_MESSAGE = "You have no items in your inventory to deposit."
+        const val EMPTY_EQUIPMENT_MESSAGE = "You have no equipped items to deposit."
+        const val EMPTY_FAMILIAR_MESSAGE = "Your familiar has no items to deposit."
+
+        /** Same text the server's own familiar inventory window uses when no carrier is out. */
+        const val NO_FAMILIAR_MESSAGE = "You don't have a familiar that can carry items."
+
+        const val BANK_FULL_MESSAGE = "Bank full."
+
+        /** Prompt of Withdraw-X / Deposit-X. OSRS: "Enter amount:". */
+        const val AMOUNT_PROMPT = "Enter amount:"
 
         /**
          * Clean any empty slots in the bank. Shift tabs as needed.
@@ -51,17 +118,57 @@ class Bank {
         }
 
         fun depositInventory(player: Player) {
-            player.inventory.forEachIndexed { index, item ->
-                item?.let { deposit(player, player.inventory, index, item.amount) }
-            }
+            depositAll(player, player.inventory, EMPTY_INVENTORY_MESSAGE)
         }
 
         fun depositEquipment(player: Player) {
-            player.equipment.forEachIndexed { index, item ->
-                item?.let {
-                    if (deposit(player, player.equipment, index, item.amount)) {
-                        EquipAction.onItemUnequip(player, item.id, index)
-                    }
+            val equipment = player.equipment
+            if (equipment.occupiedSlotCount == 0) {
+                player.filterableMessage(EMPTY_EQUIPMENT_MESSAGE)
+                return
+            }
+            for (index in 0 until equipment.capacity) {
+                val item = equipment[index] ?: continue
+                val result = depositInternal(player, equipment, index, item.amount)
+                if (result.deposited > 0) {
+                    EquipAction.onItemUnequip(player, item.id, index)
+                }
+                if (result.bankFull) {
+                    break
+                }
+            }
+        }
+
+        /**
+         * 762:37 / 11:22 'Deposit beast of burden inventory': everything the summoned beast of burden carries goes
+         * straight to the bank.
+         */
+        fun depositBeastOfBurden(player: Player) {
+            val container = gg.rsmod.plugins.content.skills.summoning.BeastOfBurden.activeContainer(player)
+            if (container == null) {
+                player.filterableMessage(NO_FAMILIAR_MESSAGE)
+                return
+            }
+            depositAll(player, container, EMPTY_FAMILIAR_MESSAGE)
+        }
+
+        /**
+         * Deposits every item of [from]. One "bank full" stops the whole run, so the message is shown once instead of
+         * once per remaining item.
+         */
+        fun depositAll(
+            player: Player,
+            from: ItemContainer,
+            emptyMessage: String,
+        ) {
+            if (from.occupiedSlotCount == 0) {
+                player.filterableMessage(emptyMessage)
+                return
+            }
+            for (index in 0 until from.capacity) {
+                val item = from[index] ?: continue
+                if (depositInternal(player, from, index, item.amount).bankFull) {
+                    break
                 }
             }
         }
@@ -71,19 +178,39 @@ class Bank {
             from: ItemContainer,
             fromSlot: Int,
             amt: Int,
-        ): Boolean {
+        ): Boolean = depositInternal(player, from, fromSlot, amt).success
+
+        internal data class DepositResult(
+            val deposited: Int,
+            val success: Boolean,
+            val bankFull: Boolean,
+        )
+
+        private fun depositInternal(
+            player: Player,
+            from: ItemContainer,
+            fromSlot: Int,
+            amt: Int,
+        ): DepositResult {
             val to = player.bank
-            val item = from[fromSlot] ?: return false
+            val item = from[fromSlot] ?: return DepositResult(0, success = false, bankFull = false)
+            if (amt <= 0) return DepositResult(0, success = false, bankFull = false)
             // Audit D-01: a loot key's loot lives with the key, so the key itself can't be banked.
             if (gg.rsmod.plugins.content.mechanics.pvp.LootKeys.isKey(item.id)) {
                 player.filterableMessage("You can't bank a loot key. Open it at Skully instead.")
-                return false
+                return DepositResult(0, success = false, bankFull = false)
             }
             val amount = from.getItemCount(item.id).coerceAtMost(amt)
             val value = gg.rsmod.plugins.content.mechanics.pvp.LootKeys.value(player.world.definitions, listOf(Item(item.id, amount)))
             if (gg.rsmod.plugins.content.mechanics.pvp.BankSecurity.blocksDeposit(player, value)) {
                 player.filterableMessage("You can't deposit items worth 20,000 coins or more so soon after combat.")
-                return false
+                return DepositResult(0, success = false, bankFull = false)
+            }
+            // The bank always holds the unnoted form; a full stack of it takes nothing more (OSRS stack limit).
+            val bankId = item.toUnnoted(player.world.definitions).id
+            if (to.getItemCount(bankId) == Int.MAX_VALUE) {
+                player.filterableMessage(FULL_STACK_MESSAGE)
+                return DepositResult(0, success = false, bankFull = false)
             }
             val currentTab = BankTabs.selectedTab(player)
 
@@ -110,7 +237,8 @@ class Bank {
                         transferFailed = true
                     } else {
                         deposited += transfer.completed
-                        if (currentTab > 0 && isEmptySlot) {
+                        // Only a new stack that really landed in the free slot moves into the viewed tab.
+                        if (currentTab > 0 && isEmptySlot && to[slot] != null) {
                             BankTabs.dropToTab(player, currentTab, slot)
                         }
                     }
@@ -118,28 +246,35 @@ class Bank {
             }
 
             if (bankFull) {
-                player.filterableMessage("Bank full.")
+                player.filterableMessage(BANK_FULL_MESSAGE)
+            } else if (transferFailed && deposited > 0 && to.getItemCount(bankId) == Int.MAX_VALUE) {
+                player.filterableMessage(FULL_STACK_MESSAGE)
+            }
+            if (deposited > 0) {
+                refreshSpaceCounts(player)
             }
 
-            return !transferFailed && !bankFull
+            return DepositResult(deposited, success = !transferFailed && !bankFull, bankFull = bankFull)
         }
 
         /**
-         * Figures out the slot an item should be deposited to
+         * Figures out the slot an item should be deposited to. The bank stacks the unnoted id, so a noted item looks
+         * for its unnoted stack - it used to look for the noted id, miss the existing stack and treat the deposit as a
+         * new slot, which with a tab selected moved an empty slot into that tab.
          */
-        private fun determineDepositSlot(
+        internal fun determineDepositSlot(
             player: Player,
             item: Item,
         ): Int {
             val placeholderSlot = player.bank.removePlaceholder(player.world, item)
-            return if (placeholderSlot >= 0) {
-                placeholderSlot
-            } else {
-                player.bank
-                    .indexOfFirst {
-                        it != null && it.id == item.id && it.amount < Int.MAX_VALUE
-                    }.takeUnless { it == -1 } ?: player.bank.nextFreeSlot
+            if (placeholderSlot >= 0) {
+                return placeholderSlot
             }
+            val bankId = item.toUnnoted(player.world.definitions).id
+            return player.bank
+                .indexOfFirst {
+                    it != null && it.id == bankId && it.amount < Int.MAX_VALUE
+                }.takeUnless { it == -1 } ?: player.bank.nextFreeSlot
         }
 
         fun withdraw(
@@ -150,7 +285,6 @@ class Bank {
         ) {
             val from = player.bank
             val to = player.inventory
-            val tab = BankTabs.getCurrentTab(player, fromSlot)
 
             /*
              * Withdraw-X resumes after an input dialog, by which time the bank may have shifted
@@ -158,14 +292,23 @@ class Bank {
              * item the click was made on; otherwise this withdrew a different item, or threw on an
              * empty slot.
              */
-            val slotItem = from[fromSlot]
-            if (fromSlot !in 0 until from.capacity || slotItem == null || slotItem.id != id) {
+            if (fromSlot !in 0 until from.capacity) {
                 player.bank.dirty = true
                 return
             }
+            val slotItem = from[fromSlot]
+            if (slotItem == null || slotItem.id != id || amt <= 0) {
+                player.bank.dirty = true
+                return
+            }
+            val tab = BankTabs.getCurrentTab(player, fromSlot)
 
             val amount = from.getItemCount(id).coerceAtMost(amt)
             val note = player.getVarp(WITHDRAW_AS_VARB) == 1
+            // Stackable items need no note; only an unstackable item without a noted form is refused (and withdrawn as itself).
+            if (note && !slotItem.getDef(player.world.definitions).stackable && slotItem.toNoted(player.world.definitions).id == slotItem.id) {
+                player.filterableMessage(CANNOT_NOTE_MESSAGE)
+            }
 
             val copy = Item(slotItem, amount)
             val withdrawn =
@@ -179,8 +322,10 @@ class Bank {
 
                         if (BankTabs.getTabSize(player, tab) == 0) {
                             BankTabs.shiftTabs(player)
+                            BankTabs.afterTabRemoved(player, tab)
                         }
                     }
+                    refreshSpaceCounts(player)
                 }
             }
 
@@ -189,6 +334,61 @@ class Bank {
             } else if (withdrawn != amount) {
                 player.filterableMessage("You don't have enough inventory space to withdraw that many.")
             }
+        }
+
+        /** The withdraw amount of a bank item menu option (762:93), or null for an option that withdraws nothing. */
+        fun withdrawAmount(
+            player: Player,
+            opcode: Int,
+            stackAmount: Int,
+        ): Int? =
+            when (opcode) {
+                61 -> 1 // op1 Withdraw-1
+                64 -> 5 // op2 Withdraw-5
+                4 -> 10 // op3 Withdraw-10
+                52 -> player.getVarp(LAST_X_INPUT) // op4 Withdraw-<last X>
+                81 -> -1 // op5 Withdraw-X
+                91 -> stackAmount // op6 Withdraw-All
+                18 -> stackAmount - 1 // op7 Withdraw-All but one
+                else -> null
+            }
+
+        /**
+         * Sends the bank space counters (varc 1038 free-to-play slots used, varc 192 all slots used) that CS2 1465 prints
+         * on 762:29-32. They were never sent, so the bank always read 0 used.
+         */
+        fun refreshSpaceCounts(
+            player: Player,
+            force: Boolean = false,
+        ) {
+            val (free, total) = spaceCounts(player)
+            if (force || player.getVarc(SPACE_USED_FREE_VARC) != free) {
+                player.setVarc(SPACE_USED_FREE_VARC, free)
+            }
+            if (force || player.getVarc(SPACE_USED_TOTAL_VARC) != total) {
+                player.setVarc(SPACE_USED_TOTAL_VARC, total)
+            }
+        }
+
+        /** (free-to-play slots used, all slots used). */
+        fun spaceCounts(player: Player): Pair<Int, Int> {
+            val definitions = player.world.definitions
+            var total = 0
+            var free = 0
+            for (index in 0 until player.bank.capacity) {
+                val item = player.bank[index] ?: continue
+                total++
+                if (!item.getDef(definitions).members) {
+                    free++
+                }
+            }
+            return free to total
+        }
+
+        /** Re-arms the search button after a click (see [SEARCH_ARM_VARC]). */
+        fun armSearch(player: Player) {
+            player.setVarc(SEARCH_ARM_VARC, 1)
+            player.runClientScript(SEARCH_ARM_SCRIPT)
         }
 
         fun open(player: Player) {
@@ -205,22 +405,54 @@ class Bank {
                 BankPin.request(player) { open(it) }
                 return
             }
+            // The bank is the visible screen again (CS2 2319 hides 762:0 while varbit 8348 is 1).
+            player.setVarbit(EQUIPMENT_VIEW_VARBIT, 0)
             player.openInterface(BANK_INTERFACE_ID, InterfaceDestination.MAIN_SCREEN)
             player.openInterface(INV_INTERFACE_ID, InterfaceDestination.TAB_AREA)
             player.inventory.dirty = true
             player.bank.dirty = true
-            player.setEvents(interfaceId = BANK_INTERFACE_ID, component = 93, to = 516, setting = 0x2804FE)
+            player.setEvents(interfaceId = BANK_INTERFACE_ID, component = BANK_MAINTAB_COMPONENT, to = player.bank.capacity - 1, setting = 0x2804FE)
             player.setEvents(interfaceId = INV_INTERFACE_ID, to = 27, setting = 0x25047E)
 
-            // TODO: re-enable equipment stats
-            player.setComponentHidden(interfaceId = BANK_INTERFACE_ID, component = 117, hidden = true)
-            player.setComponentHidden(interfaceId = BANK_INTERFACE_ID, component = 118, hidden = true)
-
-            player.setVarp(WITHDRAW_AS_VARB, 0)
+            /*
+             * E7: 'Withdraw as: Note' and the rearrange mode are kept between visits (OSRS; void persists varp 115 and
+             * 304). The note toggle used to be reset to Item on every open. 762:117/118 'Show Equipment Stats' is no
+             * longer hidden - it now opens the equipment screen (see [showEquipmentStats]).
+             */
             if (player.getVarbit(Varbits.RESET_BANK_TAB_VIEW_INDEX) == 0) {
                 player.setVarbit(Varbits.RESET_BANK_TAB_VIEW_INDEX, 1)
             }
-            player.sendTempVarbit(190, 1) // resets search
+            armSearch(player)
+            refreshSpaceCounts(player, force = true)
+        }
+
+        /**
+         * 762:117 'Show Equipment Stats' (OSRS "Show worn items"): the equipment stats screen 667 with its own inventory
+         * 670 replaces the bank, with 667:49 'Show bank' to come back ([showBank]). Varbit 4894 tells 667 it was opened
+         * from the bank. Same mount as the equipment tab's own route (equipment_stats_interface.plugin.kts).
+         */
+        fun showEquipmentStats(player: Player) {
+            if (!player.interfaces.isVisible(BANK_INTERFACE_ID)) return
+            player.setVarbit(EQUIPMENT_VIEW_VARBIT, 1)
+            player.openInterface(EQUIPMENT_BONUS_INTERFACE_ID, InterfaceDestination.MAIN_SCREEN)
+            player.setVarbit(Varbits.IS_BANK_EQUIPMENT_INTERFACE, 1)
+            player.openInterface(EQUIPMENT_SIDE_INTERFACE_ID, InterfaceDestination.TAB_AREA)
+            player.setInterfaceEvents(EQUIPMENT_SIDE_INTERFACE_ID, 0, 0 until player.inventory.capacity, EQUIPMENT_SCREEN_EVENTS)
+            player.setInterfaceEvents(EQUIPMENT_BONUS_INTERFACE_ID, 7, 0 until player.equipment.capacity, EQUIPMENT_SCREEN_EVENTS)
+            player.refreshBonuses()
+            player.equipment.dirty = true
+            player.inventory.dirty = true
+        }
+
+        /** 667:49 'Show bank': only when the equipment screen was opened from the bank. */
+        fun showBank(player: Player) {
+            if (player.getVarbit(Varbits.IS_BANK_EQUIPMENT_INTERFACE) != 1) {
+                // The client already toggled varbit 8348 locally; 1 keeps 667:0 shown (CS2 2319), and [open] resets it.
+                player.setVarbit(EQUIPMENT_VIEW_VARBIT, 1)
+                return
+            }
+            player.setVarbit(Varbits.IS_BANK_EQUIPMENT_INTERFACE, 0)
+            open(player)
         }
 
         fun openDepositBox(player: Player) {
@@ -231,13 +463,18 @@ class Bank {
             }
             player.openInterface(DEPOSIT_BOX_INTERFACE_ID, InterfaceDestination.MAIN_SCREEN)
             player.openInterface(INV_INTERFACE_ID, InterfaceDestination.TAB_AREA)
+            /*
+             * CS2 150 takes six ints (`disasm 150`: intArgCount=6) - component, inv, columns, rows, 0, -1 - then the
+             * ops. The -1 was missing, so the client ran it with a 0 there. Options op1..op5 (Novite ButtonHandler 11:17).
+             */
             player.runClientScript(
                 150,
-                11 shl 16 or 17,
+                DEPOSIT_BOX_INTERFACE_ID shl 16 or 17,
                 93,
                 6,
                 5,
                 0,
+                -1,
                 "Deposit-1",
                 "Deposit-5",
                 "Deposit-10",
@@ -246,6 +483,40 @@ class Bank {
             )
             player.setEvents(interfaceId = DEPOSIT_BOX_INTERFACE_ID, component = 17, to = 27, setting = 1150)
         }
+
+        /**
+         * The deposit amount of a deposit-box item op (11:17, ops from [openDepositBox]): op4 is Deposit-All and op5
+         * Deposit-X there. op4 used to deposit the last-X amount while the menu said "Deposit-All".
+         */
+        fun depositBoxAmount(
+            opcode: Int,
+            inventoryCount: Int,
+        ): Int? =
+            when (opcode) {
+                61 -> 1
+                64 -> 5
+                4 -> 10
+                52 -> inventoryCount // op4 Deposit-All
+                81 -> -1 // op5 Deposit-X
+                91 -> inventoryCount
+                else -> null
+            }
+
+        /** The deposit amount of a bank side inventory op (763:0): op4 is Deposit-<last X>. */
+        fun bankInventoryDepositAmount(
+            player: Player,
+            opcode: Int,
+            inventoryCount: Int,
+        ): Int? =
+            when (opcode) {
+                61 -> 1
+                64 -> 5
+                4 -> 10
+                52 -> player.getVarp(LAST_X_INPUT)
+                81 -> -1
+                91 -> inventoryCount
+                else -> null
+            }
 
         private fun ItemContainer.removePlaceholder(
             world: World,

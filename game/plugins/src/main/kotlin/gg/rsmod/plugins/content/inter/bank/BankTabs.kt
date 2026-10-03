@@ -32,17 +32,47 @@ class BankTabs {
             }
         }
 
+        /**
+         * Tab 'Collapse' (762:46-60 op2): the tab's items move, in order, to the end of the bank - the main tab - and the
+         * tab disappears. This used to insert each item before the last occupied slot, which with an empty main tab is a
+         * slot of the last tab itself: the items went round in circles (collapsing the last tab did nothing) or landed
+         * in another tab.
+         */
         fun collapseTab(
             player: Player,
             tab: Int,
         ) {
-            if (isTabUnlocked(player, tab)) {
-                val bank = player.bank
-                val tabIndices = tabIndices(player, tab)
-                val from = tabIndices.first
-                val to = bank.nextFreeSlot - 1
-                repeat(tabIndices.count()) { tabSafeInsert(player, from, to) }
+            if (tab <= 0 || tab > MAX_BANK_TABS || getTabSize(player, tab) == 0) {
+                return
+            }
+            val bank = player.bank
+            val range = tabIndices(player, tab)
+            val count = range.count()
+            val lastOccupied = bank.nextFreeSlot.let { if (it == -1) bank.capacity else it } - 1
+            val moved = range.map { bank[it] }
+            // Close the gap the tab leaves, then put its items after everything else.
+            for (i in range.first..lastOccupied - count) {
+                bank[i] = bank[i + count]
+            }
+            moved.forEachIndexed { index, item -> bank[lastOccupied - count + 1 + index] = item }
+            setTabSize(player, tab, 0)
+            shiftTabs(player)
+            viewTab(player, 0)
+        }
+
+        /**
+         * After [removedTab] emptied and [shiftTabs] closed the gap: the viewed tab follows (viewing the removed tab
+         * shows the whole bank, a later tab moved one place left).
+         */
+        fun afterTabRemoved(
+            player: Player,
+            removedTab: Int,
+        ) {
+            val selected = selectedTab(player)
+            if (selected == removedTab) {
                 viewTab(player, 0)
+            } else if (selected > removedTab) {
+                viewTab(player, selected - 1)
             }
         }
 
@@ -71,7 +101,17 @@ class BankTabs {
             srcSlot: Int,
         ) {
             val bank = player.bank
+            if (srcSlot !in 0 until bank.capacity || bank[srcSlot] == null) {
+                bank.dirty = true
+                return
+            }
             val curTab = getCurrentTab(player, srcSlot)
+            // Only an existing tab or the first free one ('+'): a higher tab number would leave empty tabs in between.
+            val newTab = numTabsUnlocked(player) + 1
+            if (dstTab < 0 || dstTab > MAX_BANK_TABS || (dstTab > 0 && getTabSize(player, dstTab) == 0 && dstTab != newTab)) {
+                bank.dirty = true
+                return
+            }
 
             if (dstTab != curTab) {
                 if (dstTab == 0) { // add to main tab
