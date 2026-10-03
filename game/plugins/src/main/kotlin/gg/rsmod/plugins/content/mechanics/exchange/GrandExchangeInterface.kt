@@ -118,6 +118,8 @@ object GrandExchangeInterface {
     const val MSG_UPDATED = "One or more of your Grand Exchange offers have been updated."
     const val MSG_NO_SPACE = "Not enough space in your inventory."
     const val MSG_ITEMS_WAITING = "You have items waiting in your Grand Exchange collection box!"
+    const val MSG_NOT_ENOUGH_COINS = "You don't have enough coins."
+    const val MSG_PRACTICE_GEAR = "You can't use the Grand Exchange while wearing free Practice PvP gear."
 
     fun service(player: Player): GrandExchangeService? = player.world.getService(GrandExchangeService::class.java)
 
@@ -204,6 +206,23 @@ object GrandExchangeInterface {
         selection: GeSelection,
         price: Int,
     ): Int = price.coerceAtLeast(1)
+
+    /**
+     * E6 - OSRS Wiki "Grand Exchange" (changes, 2023): "Buy offers can now use the coins from the player's bank as
+     * payment; coins in the player's inventory take precedence if present, and any more coins required if the player has
+     * insufficient funds in their inventory are taken from the bank." Returns (from inventory, from bank) for a buy
+     * offer costing [total], or null when [carried] and [banked] together are not enough.
+     */
+    fun coinSplit(
+        total: Int,
+        carried: Int,
+        banked: Int,
+    ): Pair<Int, Int>? {
+        if (total <= 0) return null
+        if (carried.toLong() + banked.toLong() < total) return null
+        val fromInventory = minOf(total, carried.coerceAtLeast(0))
+        return fromInventory to (total - fromInventory)
+    }
 
     /** Items that may be offered: tradeable, not coins, never the noted form (offers are made for the real item), never a removed item. */
     fun exchangeable(def: ItemDef): Boolean =
@@ -299,9 +318,18 @@ object GrandExchangeInterface {
         player.setComponentHidden(interfaceId = MAIN, component = WARNING_CONTAINER, hidden = true)
     }
 
-    /** Novite `ExchangeManagement.sendSummary`: the six offer boxes. */
+    /**
+     * Novite `ExchangeManagement.sendSummary`: the six offer boxes. E6: like the OSRS Grand Exchange (listed under "Bank
+     * PIN protection" on the OSRS Wiki) and Novite's `sendSummary`, the screen asks for the bank PIN first - buy offers
+     * now spend banked coins too ([coinSplit]).
+     */
     fun openMain(player: Player) {
+        if (gg.rsmod.plugins.content.inter.bank.BankPin.required(player)) {
+            gg.rsmod.plugins.content.inter.bank.BankPin.request(player) { openMain(it) }
+            return
+        }
         val service = service(player) ?: return
+        resumeHeld(player, service)
         player.attr.remove(SELECTION_ATTR)
         resetConfigs(player)
         player.openInterface(MAIN, InterfaceDestination.MAIN_SCREEN)
@@ -403,9 +431,30 @@ object GrandExchangeInterface {
             if (notedRemoved > 0 && def.noteLinkId > 0) add(def.noteLinkId to notedRemoved)
         }
 
+    /**
+     * Why [player] may not place an offer now (told to them), else false. Placing an offer moves coins or items into GE
+     * escrow, out of death risk, so the screen obeys the same rules as the `ge_sell`/`ge_buy` commands (audit E-02,
+     * [gg.rsmod.plugins.content.mechanics.pvp.RemoteAccess]) and the bank (skulled players in a guarded area,
+     * [gg.rsmod.plugins.content.mechanics.pvp.BankSecurity]; buy offers spend banked coins) - before E6 only the
+     * commands checked them. Free Practice PvP gear can never be offered.
+     */
+    fun placementRefused(player: Player): Boolean {
+        val reason = gg.rsmod.plugins.content.mechanics.pvp.RemoteAccess.refusal(player, "use the Grand Exchange")
+        if (reason != null) {
+            player.message(reason)
+            return true
+        }
+        if (gg.rsmod.plugins.content.mechanics.pvp.BankSecurity.denyBank(player)) return true
+        if (gg.rsmod.plugins.content.mechanics.practicepvp.PracticePvp.isHoldingTempGear(player)) {
+            player.message(MSG_PRACTICE_GEAR)
+            return true
+        }
+        return false
+    }
+
     /** Novite/Void confirm: escrow the coins or items first, then submit; anything refused is handed straight back. */
     fun confirm(player: Player): Boolean {
-        val placed = placeOffer(player)
+        val placed = !placementRefused(player) && placeOffer(player)
         if (!placed) player.playSound(GrandExchangeSounds.TRADE_ERROR)
         return placed
     }
@@ -431,16 +480,27 @@ object GrandExchangeInterface {
                 return false
             }
             val total = totalCost.toInt()
-            if (player.inventory.getItemCount(Items.COINS_995) < total) {
-                player.message("You don't have enough coins.")
+            // E6: inventory coins first, then the bank (OSRS, see coinSplit).
+            val (fromInventory, fromBank) =
+                coinSplit(total, player.inventory.getItemCount(Items.COINS_995), player.bank.getItemCount(Items.COINS_995)) ?: run {
+                    player.message(MSG_NOT_ENOUGH_COINS)
+                    return false
+                }
+            if (fromInventory > 0 && player.inventory.remove(Items.COINS_995, fromInventory, assureFullRemoval = true).hasFailed()) {
                 return false
             }
-            if (player.inventory.remove(Items.COINS_995, total, assureFullRemoval = true).hasFailed()) {
+            if (fromBank > 0 && player.bank.remove(Items.COINS_995, fromBank, assureFullRemoval = true).hasFailed()) {
+                if (fromInventory > 0) player.inventory.add(Items.COINS_995, fromInventory)
                 return false
             }
-            // Audit E-08: player save (with a pending marker) before the book write, see GeEscrow.
+            val restore = {
+                if (fromInventory > 0) player.inventory.add(Items.COINS_995, fromInventory)
+                if (fromBank > 0) player.bank.add(Items.COINS_995, fromBank)
+            }
+            // Audit E-08: player save (with a pending marker) before the book write, see GeEscrow. A crash refund goes to
+            // the inventory, then the bank (GeEscrow.reconcile).
             val submitted =
-                GeEscrow.place(player, listOf(Items.COINS_995 to total), restore = { player.inventory.add(Items.COINS_995, total) }) { token ->
+                GeEscrow.place(player, listOf(Items.COINS_995 to total), restore = { restore() }) { token ->
                     service.submit(username, OfferType.BUY, selection.itemId, selection.price, selection.quantity, selection.slot, token)
                 } ?: return false
             fills = submitted.second
@@ -525,11 +585,18 @@ object GrandExchangeInterface {
         }
     }
 
+    /** E6: carries on [player]'s buy offers held back by a buy limit whose window has reset ([GrandExchangeService.resumeHeldOffers]). */
+    fun resumeHeld(
+        player: Player,
+        service: GrandExchangeService,
+    ) = announceFills(player.world, service, service.resumeHeldOffers(username(player)))
+
     /** Void `GrandExchange.login` / 2009scape `GrandExchangeRecords`: boxes refresh; anything owed is announced. */
     fun onLogin(player: Player) {
         val service = service(player) ?: return
         // Audit E-08: settle an offer placement a crash interrupted, before anything else can touch the book.
         GeEscrow.reconcile(player, service, username(player))
+        resumeHeld(player, service)
         refreshAll(player, service)
         val waiting = service.offersFor(username(player)).any { it.collectableCoins > 0 || it.collectableItems > 0 }
         if (waiting) {
@@ -563,12 +630,17 @@ object GrandExchangeInterface {
         player.sendItemContainer(collectContainerKey(slot), collectItems(player.world.definitions, service.offerInSlot(username(player), slot)))
     }
 
-    /** Collects index 0 (items) or 1 (coins) of offer box [slot]; the slot is freed once the offer is drained. */
+    /**
+     * Collects index 0 (items) or 1 (coins) of offer box [slot]; the slot is freed once the offer is drained. E6: when
+     * that happens on the offer screen ([returnToIndex]) the player is taken back to the six offer boxes, as on OSRS
+     * and in Novite (`GrandExchangeListener.collectItem` -> `sendSummary`), instead of staying on an empty offer page.
+     */
     fun collect(
         player: Player,
         slot: Int,
         index: Int,
         op1: Boolean,
+        returnToIndex: Boolean = false,
     ): Boolean {
         val service = service(player) ?: return false
         val username = username(player)
@@ -594,9 +666,10 @@ object GrandExchangeInterface {
                 else -> GrandExchangeSounds.COLLECT_ITEMS
             },
         )
-        service.releaseIfDrained(username, offer.id)
+        val released = service.releaseIfDrained(username, offer.id)
         refresh(player, service, slot)
         player.sendItemContainer(collectContainerKey(slot), collectItems(player.world.definitions, service.offerInSlot(username, slot)))
+        if (released && returnToIndex) resetConfigs(player)
         if (added > 0) player.persistNow()
         return added > 0
     }
@@ -611,9 +684,14 @@ object GrandExchangeInterface {
         service(player)?.let { refreshAll(player, it) }
     }
 
-    /** Novite `ExchangeManagement.openCollectionBox`: the collection box (109) with every box's two items. */
+    /** Novite `ExchangeManagement.openCollectionBox`: the collection box (109) with every box's two items; behind the bank PIN (E6, as [openMain]). */
     fun openCollectionBox(player: Player) {
+        if (gg.rsmod.plugins.content.inter.bank.BankPin.required(player)) {
+            gg.rsmod.plugins.content.inter.bank.BankPin.request(player) { openCollectionBox(it) }
+            return
+        }
         val service = service(player) ?: return
+        resumeHeld(player, service)
         player.openInterface(COLLECTION_BOX, InterfaceDestination.MAIN_SCREEN)
         for (slot in 0 until GrandExchangeService.SLOTS) {
             refresh(player, service, slot)

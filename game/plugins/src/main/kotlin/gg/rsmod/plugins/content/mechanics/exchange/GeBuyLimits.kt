@@ -14,7 +14,11 @@ import java.io.FileReader
  * SOURCE_CONFLICT, 19475 is "Nardah teleport" in the 667 cache.
  *
  * SOURCE_CONFLICT (window): Void's comment and setting say "every 4 hours", its expiry code (`toHours(elapsed) > 4`)
- * only clears after 5 whole hours; the documented 4-hour window is used. Like Void the ledger lives in memory only.
+ * only clears after 5 whole hours; the documented 4-hour window is used.
+ *
+ * E6 (owner 2026-10-03, "GE exactly like OSRS"): the ledger used to live in memory only (as in Void), so a server restart
+ * reset every buy limit - OSRS keeps the 4-hour window running from the first purchase whatever happens to the world.
+ * [GeBuyLedger.snapshot]/[GeBuyLedger.restore] let [GrandExchangeService] persist it next to the book (`buy_limits.json`).
  */
 object GeBuyLimits {
     const val DEFAULT_PATH = "./data/cfg/ge/buy-limits.json"
@@ -76,6 +80,14 @@ interface GeBuyAllowance {
     }
 }
 
+/** One persisted ledger row ([GeBuyLedger.snapshot]); defaults so Gson builds it through the no-argument constructor. */
+data class GeBuyRecord(
+    val username: String = "",
+    val itemId: Int = -1,
+    val amount: Int = 0,
+    val since: Long = 0L,
+)
+
 /** Void `BuyLimits`: amount bought per buyer and item since the first purchase of the current window. */
 class GeBuyLedger(
     private val clock: () -> Long = System::currentTimeMillis,
@@ -85,12 +97,28 @@ class GeBuyLedger(
         val since: Long,
     )
 
-    private val entries = HashMap<String, Entry>()
+    private val entries = HashMap<Pair<String, Int>, Entry>()
 
     private fun key(
         username: String,
         itemId: Int,
-    ) = "$username:$itemId"
+    ) = username to itemId
+
+    /** The rows whose window is still running (an expired row means a full limit again, so it is not kept). */
+    fun snapshot(): List<GeBuyRecord> {
+        val now = clock()
+        return entries
+            .filter { (_, entry) -> now - entry.since < GeBuyLimits.WINDOW_MS }
+            .map { (key, entry) -> GeBuyRecord(key.first, key.second, entry.amount, entry.since) }
+    }
+
+    /** Replaces the ledger with [records] (a load of `buy_limits.json`). */
+    fun restore(records: List<GeBuyRecord>) {
+        entries.clear()
+        records.filter { it.username.isNotEmpty() && it.itemId >= 0 && it.amount > 0 }.forEach {
+            entries[key(it.username, it.itemId)] = Entry(it.amount, it.since)
+        }
+    }
 
     override fun remaining(
         username: String,

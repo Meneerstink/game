@@ -49,6 +49,9 @@ class GrandExchangeService(
     private val gson = GsonBuilder().setPrettyPrinting().create()
     private val priceFile: File get() = gg.rsmod.util.io.SharedDataFiles.sibling(saveFile, "guide_prices.json")
     private val historyFile: File get() = gg.rsmod.util.io.SharedDataFiles.sibling(saveFile, "history.json")
+
+    /** E6: the buy-limit ledger ([GeBuyLedger]) survives a restart, as the OSRS 4-hour window does. */
+    private val buyLimitFile: File get() = gg.rsmod.util.io.SharedDataFiles.sibling(saveFile, "buy_limits.json")
     private val tradePrices = mutableMapOf<Int, MutableList<Int>>()
 
     /** Audit E-01: the guide price per item ([GeGuidePrice]); `guide_prices.json` is still written for older builds. */
@@ -194,6 +197,13 @@ class GrandExchangeService(
                     if (prices.isNotEmpty()) guides[itemId] = GeGuidePrice.migrate(prices, seedOf(itemId), clock())
                 }
             }
+            if (buyLimitFile.exists()) {
+                buyLimitFile.bufferedReader().use { reader ->
+                    val type = object : TypeToken<MutableList<GeBuyRecord>>() {}.type
+                    val loaded: MutableList<GeBuyRecord>? = gson.fromJson(reader, type)
+                    buyLedger.restore(loaded ?: emptyList())
+                }
+            }
             if (historyFile.exists()) {
                 historyFile.bufferedReader().use { reader ->
                     val type = object : TypeToken<MutableMap<String, MutableList<GeHistoryEntry>>>() {}.type
@@ -231,6 +241,7 @@ class GrandExchangeService(
                 priceFile to gson.toJson(tradePrices),
                 guideFile to gson.toJson(guides),
                 historyFile to gson.toJson(history),
+                buyLimitFile to gson.toJson(buyLedger.snapshot()),
             )
         val write = { snapshot.forEach { (file, json) -> AtomicFiles.writeText(file, json) } }
         if (asyncWrites) {
@@ -337,6 +348,39 @@ class GrandExchangeService(
         lock.lock()
         try {
             return offers.any { it.username == username && it.escrowToken == token }
+        } finally {
+            lock.unlock()
+        }
+    }
+
+    /**
+     * E6 (OSRS Wiki "Grand Exchange" - buy limits: "restricted to a certain quantity every 4 hours"; the offer itself
+     * stays open): a buy offer held back by its buy limit carries on filling once the window has reset. Matching used
+     * to run only when an offer was submitted, so a held offer never traded again unless a new sell offer arrived -
+     * not even from the house, which sells every item. Every active buy offer of a limited item whose buyer has
+     * allowance again is matched once more, oldest first, against the book and the house ([GrandExchangeBook.match]).
+     * [username] limits the pass to one player; null runs it for the whole book (the world timer). Returns the fills,
+     * for the caller to announce ([GrandExchangeInterface.announceFills]).
+     */
+    fun resumeHeldOffers(username: String? = null): List<GeFill> {
+        lock.lock()
+        try {
+            val held =
+                offers
+                    .filter { it.status == OfferStatus.ACTIVE && it.type == OfferType.BUY && it.remaining > 0 }
+                    .filter { username == null || it.username == username }
+                    .filter { GeBuyLimits.limitOf(it.itemId) != null && buyLedger.remaining(it.username, it.itemId) > 0 }
+                    .sortedBy { it.createdAtMs }
+            if (held.isEmpty()) return emptyList()
+            val fills = mutableListOf<GeFill>()
+            held.forEach { offer ->
+                if (offer.status != OfferStatus.ACTIVE || offer.remaining <= 0) return@forEach
+                val matched = GrandExchangeBook.match(offers, offer, buyLedger, ::taxPerItem, ::houseQuote)
+                matched.filter { !it.fromSystem }.forEach { recordTrade(offer.itemId, it) }
+                fills += matched
+            }
+            if (fills.isNotEmpty()) save()
+            return fills
         } finally {
             lock.unlock()
         }

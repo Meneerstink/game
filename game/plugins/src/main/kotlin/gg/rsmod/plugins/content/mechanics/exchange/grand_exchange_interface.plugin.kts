@@ -11,6 +11,24 @@ on_login {
     GE.onLogin(player)
 }
 
+/**
+ * E6: buy offers held back by a buy limit carry on once their 4-hour window has reset, for online and offline owners
+ * alike (OSRS); checked once a minute ([GrandExchangeService.resumeHeldOffers]), online owners are told at once.
+ */
+val GE_RESUME_TIMER = gg.rsmod.game.model.timer.TimerKey()
+val GE_RESUME_TICKS = 100
+
+on_world_init {
+    world.timers[GE_RESUME_TIMER] = GE_RESUME_TICKS
+}
+
+on_timer(GE_RESUME_TIMER) {
+    world.getService(GrandExchangeService::class.java)?.let { service ->
+        GE.announceFills(world, service, service.resumeHeldOffers())
+    }
+    world.timers[GE_RESUME_TIMER] = GE_RESUME_TICKS
+}
+
 /** "You must choose an item first." with GE_TRADE_ERROR (2009scape plays it for every refused GE action). */
 fun chooseFirst(player: Player) {
     player.playSound(GrandExchangeSounds.TRADE_ERROR)
@@ -102,7 +120,7 @@ GE.COLLECT.forEachIndexed { index, component ->
     on_button(GE.MAIN, component) {
         val slot = player.getVarp(GE.VARP_SLOT)
         if (slot in 0 until GrandExchangeService.SLOTS) {
-            GE.collect(player, slot, index, op1 = player.getInteractingOpcode() == GE.OPCODE_OP1)
+            GE.collect(player, slot, index, op1 = player.getInteractingOpcode() == GE.OPCODE_OP1, returnToIndex = true)
         }
     }
 }
