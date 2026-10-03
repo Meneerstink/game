@@ -972,9 +972,24 @@ object Familiar {
                 .build()
         val route = BFSPathFindingStrategy(npc.world.collision).calculateRoute(request)
         if (!route.success) {
-            // A follower that cannot keep up is recalled - only onto a tile it can stay on (recover); consuming a
-            // partial route here would leave it stranded at a wall and invites a later corner-cutting recovery.
-            recover(player, npc, "no-route", recovered)
+            /*
+             * E18 (owner 2026-10-03, weeks of reports: "teleporten om de 1 seconde"; log 10-02: a steel titan recalled 6 times in
+             * 10 s, reason no-route, each with sound 188). Void `Follow.tick` never teleports a follower because a path fails:
+             * it queues one plain step towards the follow tile ("dumb" follow) and repositions only on another plane or past 15
+             * tiles (followRecoveryReason above). The step goes through the normal collision check, so a blocked step simply
+             * does not happen - the follower waits beside the obstacle until its owner moves on.
+             */
+            val dx = Integer.signum(target.x - npc.tile.x)
+            val dz = Integer.signum(target.z - npc.tile.z)
+            if (dx != 0 || dz != 0) {
+                npc.walkPath(
+                    java.util.ArrayDeque(listOf(npc.tile.transform(dx, dz))),
+                    stepType = if (runs && ownerSteps.size > 1) MovementQueue.StepType.FORCED_RUN else MovementQueue.StepType.FORCED_WALK,
+                    detectCollision = true,
+                )
+            }
+            gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.SUMMON) { "familiar ${npc.id} no route to ${player.username}: plain step ($dx,$dz), no teleport" }
+            npc.facePawn(player)
             return
         }
         /*
