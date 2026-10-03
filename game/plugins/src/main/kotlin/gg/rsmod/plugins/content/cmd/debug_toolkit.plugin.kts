@@ -266,6 +266,27 @@ gg.rsmod.game.CommandServerCommands.handlers["oploc"] = { w, a ->
         if (p.gameSystem.inject(msg)) "clicked option $slot of $id at $x,$z for ${p.username} (at ${p.tile.x},${p.tile.z},${p.tile.height})" else "no handler"
     }
 }
+// `opheld <name> <option 1-5> <item id>`: an inventory item option (Dig with a spade, Rub, Eat...) through the real handler path.
+gg.rsmod.game.CommandServerCommands.handlers["opheld"] = { w, a ->
+    val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "") as? gg.rsmod.game.model.entity.Client
+    val option = a.getOrNull(1)?.toIntOrNull()
+    val item = a.getOrNull(2)?.toIntOrNull()
+    val slot = if (p != null && item != null) p.inventory.rawItems.indexOfFirst { it?.id == item } else -1
+    if (p == null || option == null || item == null || slot < 0) {
+        "usage: opheld <name> <option> <item id> (item in the inventory)"
+    } else {
+        // 667 sends inventory options as IF_BUTTON (IfButton1Handler); this runs the same item path on the game thread.
+        val inv = p.inventory[slot]!!
+        w.queue {
+            p.attr[gg.rsmod.game.model.attr.INTERACTING_ITEM] = java.lang.ref.WeakReference(inv)
+            p.attr[gg.rsmod.game.model.attr.INTERACTING_ITEM_ID] = inv.id
+            p.attr[gg.rsmod.game.model.attr.INTERACTING_ITEM_SLOT] = slot
+            p.fullInterruption(movement = false, interactions = true, animations = false, queue = true)
+            if (!w.plugins.executeItem(p, inv.id, option)) gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.PLUGIN) { "opheld: no handler for item ${inv.id} option $option" }
+        }
+        "item option $option of $item (slot $slot) for ${p.username} at ${p.tile.x},${p.tile.z},${p.tile.height}"
+    }
+}
 gg.rsmod.game.CommandServerCommands.handlers["as"] = { w, a ->
     val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "")
     if (p == null || a.size < 2) {
