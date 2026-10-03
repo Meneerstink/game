@@ -252,6 +252,7 @@ class Bank {
             }
             if (deposited > 0) {
                 refreshSpaceCounts(player)
+                gg.rsmod.plugins.content.mechanics.ItemMoveSounds.putIn(player)
             }
 
             return DepositResult(deposited, success = !transferFailed && !bankFull, bankFull = bankFull)
@@ -314,6 +315,7 @@ class Bank {
             val withdrawn =
                 from.transfer(to, item = copy, fromSlot = fromSlot, note = note, unnote = !note)?.completed ?: 0
             if (withdrawn > 0) {
+                gg.rsmod.plugins.content.mechanics.ItemMoveSounds.takeOut(player)
                 if (from[fromSlot] == null) {
                     player.bank.shift()
 

@@ -80,7 +80,14 @@ on_login {
 
 GWD_CHILL_REGIONS.forEach { regionId ->
     on_enter_region(regionId) { player.timers[GWD_CHILL_TIMER] = 1 }
-    on_exit_region(regionId) { player.timers.remove(GWD_CHILL_TIMER) }
+    on_exit_region(regionId) {
+        if (player.tile.regionId in GWD_CHILL_REGIONS) return@on_exit_region
+        player.timers.remove(GWD_CHILL_TIMER)
+        // Void WindChill exited("godwars_chill_area"): leaving with his notes, Sir Gerry has died (varbit 3936 hides npc 6202).
+        if (player.inventory.contains(Items.KNIGHTS_NOTES) || player.inventory.contains(Items.KNIGHTS_NOTES_11735)) {
+            player.setVarbit(Varbits.VARBIT_3936, 1)
+        }
+    }
 }
 
 /** Void's 2011 Wind Chill: drain every ten ticks while in the sourced polygon. */
@@ -217,10 +224,55 @@ God.values().filter { it.altarId != -1 }.forEach { god ->
  * Entrance: rope on the hole outside, climb down; rope at the bottom to leave.
  * ---------------------------------------------------------------------------------------- */
 
-fun hasKnightsNotes(player: Player): Boolean =
-    player.getVarbit(Varbits.VARBIT_3936) == 1 ||
-        player.inventory.contains(Items.KNIGHTS_NOTES) ||
-        player.inventory.contains(Items.KNIGHTS_NOTES_11735)
+fun ownsKnightsNotes(player: Player): Boolean =
+    player.inventory.contains(Items.KNIGHTS_NOTES) || player.inventory.contains(Items.KNIGHTS_NOTES_11735) ||
+        player.bank.contains(Items.KNIGHTS_NOTES) || player.bank.contains(Items.KNIGHTS_NOTES_11735)
+
+// Void SirGerry Tie-rope: godwars_knights_notes (varbit 3936) || ownsItem(knights_notes / knights_notes_opened).
+fun hasKnightsNotes(player: Player): Boolean = player.getVarbit(Varbits.VARBIT_3936) == 1 || ownsKnightsNotes(player)
+
+// Owner E12 2026-10-03: "there should be an npc which i can talk to then enter the dungeon". Sir Gerry was never spawned, so the
+// notes could not be had and the rope always answered "Cough... Hey, over here.". Void god_wars_dungeon.npc-spawns.toml: sir_gerry
+// (6202) at 2912,3748 facing south. Cache (NpcDefProbeTool): 6202 transforms by varbit 3936 - 0 = 6201 'Knight' [Talk-to], 1 = none
+// (the knight has died, Void WindChill sets it once you leave the area with his notes).
+spawn_npc(npc = 6202, x = 2912, z = 3748, walkRadius = 0, direction = Direction.SOUTH)
+
+// Void SirGerry npcOperate("Talk-to", "sir_gerry_*") - same lines, same order.
+on_npc_option(npc = Npcs.KNIGHT_6201, option = "Talk-to") {
+    if (hasKnightsNotes(player)) {
+        player.message("He's still alive, but in no condition to talk. He appears to be almost unconscious.")
+        return@on_npc_option
+    }
+    player.queue {
+        chatPlayer("Who are you? What are you doing here in the snow?", facialExpression = FacialExpression.CONFUSED)
+        chatNpc(
+            "My name is...Sir Gerry. I am...a member of a secret...society of knights. My time is short and I need...your help.",
+            facialExpression = FacialExpression.SCARED,
+        )
+        if (player.getVarbit(Varbits.RECRUITMENT_DRIVE_PROGRESS) >= 2) {
+            chatPlayer("A secret society of knights? You don't mean the Temple Knights, do you?", facialExpression = FacialExpression.CONFUSED)
+            chatNpc(
+                "Yes! Praise Saradomin! You...have been sent in...my hour of need. Please, take...this scroll to Sir Tiffy in Falador park... You should not...read it.",
+                facialExpression = FacialExpression.HAPPY,
+            )
+        } else {
+            chatPlayer(
+                "A secret society of knights? What a surprise! Is there an old charter or decree that says if you're a knight you have to belong to a secret order?",
+                facialExpression = FacialExpression.CONFUSED,
+            )
+            chatNpc(
+                "I'm sorry, my friend... I do not understand your meaning. Please, time is short... Take this scroll to Sir Tiffy. You will find him in Falador park... You should not...read it... It contains information for his eyes only.",
+                facialExpression = FacialExpression.SAD,
+            )
+        }
+        if (player.inventory.freeSlotCount < 1) {
+            messageBox("You need an empty inventory slot to take the scroll.")
+            return@queue
+        }
+        messageBox("The knight hands you a scroll.")
+        player.inventory.add(Items.KNIGHTS_NOTES)
+    }
+}
 
 // Void's Sir Gerry route: searching the dying knight supplies the notes needed to prepare the
 // permanent entrance rope. A full dialogue implementation is not available in this cache build.
@@ -272,11 +324,17 @@ on_obj_option(obj = Objs.HOLE_26340, option = "Tie-rope") {
         player.message("Cough... Hey, over here.")
         return@on_obj_option
     }
-    if (player.getVarbit(ROPE_ENTRANCE_VARBIT) != 1) {
+    if (player.getVarbit(ROPE_ENTRANCE_VARBIT) == 1) {
+        descendIntoDungeon(player)
+        return@on_obj_option
+    }
+    // Void SirGerry objectOperate("Tie-rope"): a rope in the inventory is tied on (the old handler never used it and kept
+    // answering "I'll need a rope" even with one in the pack).
+    if (!player.inventory.contains(Items.ROPE)) {
         player.message("I'll need a rope to climb down there.")
         return@on_obj_option
     }
-    descendIntoDungeon(player)
+    tieEntranceRope(player)
 }
 
 // Cache placement at the white-wolf entrance: 26345 is the placed rope with

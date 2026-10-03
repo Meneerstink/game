@@ -200,6 +200,7 @@ object BeastOfBurden {
             held.remove(item.id, transaction.completed - removed, assureFullRemoval = true)
         }
         synchronise(player)
+        if (removed > 0) gg.rsmod.plugins.content.mechanics.ItemMoveSounds.putIn(player)
         return removed
     }
 
@@ -242,6 +243,7 @@ object BeastOfBurden {
             withdrawn += transaction.completed
         }
         synchronise(player)
+        if (withdrawn > 0) gg.rsmod.plugins.content.mechanics.ItemMoveSounds.takeOut(player)
         return withdrawn
     }
 
@@ -261,6 +263,7 @@ object BeastOfBurden {
         if (transaction.completed <= 0) return 0
         container[slot] = if (transaction.completed == item.amount) null else Item(item, item.amount - transaction.completed)
         synchronise(player)
+        gg.rsmod.plugins.content.mechanics.ItemMoveSounds.takeOut(player)
         return transaction.completed
     }
 

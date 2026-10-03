@@ -2906,7 +2906,7 @@
 - id: 426
   name: "Priest gown"
   examine: "It's a Priest gown."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 4
@@ -2936,13 +2936,13 @@
 - id: 427
   name: "Priest gown"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 428
   name: "Priest gown"
   examine: "It's a Priest gown."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 7
@@ -2972,7 +2972,7 @@
 - id: 429
   name: "Priest gown"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 430
@@ -4096,7 +4096,7 @@
 - id: 542
   name: "Monk's robe"
   examine: "It's a Monk's robe."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 7
@@ -4126,13 +4126,13 @@
 - id: 543
   name: "Monk's robe"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 544
   name: "Monk's robe"
   examine: "It's a Monk's robe."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 4
@@ -4162,7 +4162,7 @@
 - id: 545
   name: "Monk's robe"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 546
@@ -4914,7 +4914,7 @@
 - id: 626
   name: "Pink boots"
   examine: "It's a Pink boots."
-  tradeable: false
+  tradeable: true
   weight: 0.3
   equipment:
     equip_slot: 10
@@ -4947,13 +4947,13 @@
 - id: 627
   name: "Pink boots"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 628
   name: "Green boots"
   examine: "It's a Green boots."
-  tradeable: false
+  tradeable: true
   weight: 0.3
   equipment:
     equip_slot: 10
@@ -4986,13 +4986,13 @@
 - id: 629
   name: "Green boots"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 630
   name: "Blue boots"
   examine: "It's a Blue boots."
-  tradeable: false
+  tradeable: true
   weight: 1.0
   equipment:
     equip_slot: 10
@@ -5025,13 +5025,13 @@
 - id: 631
   name: "Blue boots"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 632
   name: "Cream boots"
   examine: "It's a Cream boots."
-  tradeable: false
+  tradeable: true
   weight: 0.3
   equipment:
     equip_slot: 10
@@ -5064,13 +5064,13 @@
 - id: 633
   name: "Cream boots"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 634
   name: "Turquoise boots"
   examine: "It's a Turquoise boots."
-  tradeable: false
+  tradeable: true
   weight: 0.3
   equipment:
     equip_slot: 10
@@ -5103,7 +5103,7 @@
 - id: 635
   name: "Turquoise boots"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 636
@@ -5304,7 +5304,7 @@
 - id: 646
   name: "Pink robe bottoms"
   examine: "It's a Pink robe bottoms."
-  tradeable: false
+  tradeable: true
   weight: 0.9
   equipment:
     equip_slot: 7
@@ -5337,13 +5337,13 @@
 - id: 647
   name: "Pink robe bottoms"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 648
   name: "Green robe bottoms"
   examine: "It's a Green robe bottoms."
-  tradeable: false
+  tradeable: true
   weight: 0.9
   equipment:
     equip_slot: 7
@@ -5376,13 +5376,13 @@
 - id: 649
   name: "Green robe bottoms"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 650
   name: "Blue robe bottoms"
   examine: "It's a Blue robe bottoms."
-  tradeable: false
+  tradeable: true
   weight: 0.9
   equipment:
     equip_slot: 7
@@ -5415,13 +5415,13 @@
 - id: 651
   name: "Blue robe bottoms"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 652
   name: "Cream robe bottoms"
   examine: "It's a Cream robe bottoms."
-  tradeable: false
+  tradeable: true
   weight: 0.9
   equipment:
     equip_slot: 7
@@ -5454,13 +5454,13 @@
 - id: 653
   name: "Cream robe bottoms"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 654
   name: "Turquoise robe bottoms"
   examine: "It's a Turquoise robe bottoms."
-  tradeable: false
+  tradeable: true
   weight: 0.9
   equipment:
     equip_slot: 7
@@ -5493,13 +5493,13 @@
 - id: 655
   name: "Turquoise robe bottoms"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 656
   name: "Pink hat"
   examine: "It's a Pink hat."
-  tradeable: false
+  tradeable: true
   weight: 0.4
   equipment:
     equip_slot: 0
@@ -5532,13 +5532,13 @@
 - id: 657
   name: "Pink hat"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 658
   name: "Green hat"
   examine: "It's a Green hat."
-  tradeable: false
+  tradeable: true
   weight: 0.4
   equipment:
     equip_slot: 0
@@ -5571,13 +5571,13 @@
 - id: 659
   name: "Green hat"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 660
   name: "Blue hat"
   examine: "It's a Blue hat."
-  tradeable: false
+  tradeable: true
   weight: 0.4
   equipment:
     equip_slot: 0
@@ -5610,13 +5610,13 @@
 - id: 661
   name: "Blue hat"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 662
   name: "Cream hat"
   examine: "It's a Cream hat."
-  tradeable: false
+  tradeable: true
   weight: 0.4
   equipment:
     equip_slot: 0
@@ -5649,13 +5649,13 @@
 - id: 663
   name: "Cream hat"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 664
   name: "Turquoise hat"
   examine: "It's a Turquoise hat."
-  tradeable: false
+  tradeable: true
   weight: 0.4
   equipment:
     equip_slot: 0
@@ -5688,7 +5688,7 @@
 - id: 665
   name: "Turquoise hat"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 666
@@ -10862,7 +10862,7 @@
 - id: 1033
   name: "Zamorak robe"
   examine: "It's a Zamorak robe."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 7
@@ -10895,13 +10895,13 @@
 - id: 1034
   name: "Zamorak robe"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 1035
   name: "Zamorak robe"
   examine: "It's a Zamorak robe."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 4
@@ -10934,7 +10934,7 @@
 - id: 1036
   name: "Zamorak robe"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 1037
@@ -13585,7 +13585,7 @@
 - id: 1171
   name: "Wooden shield"
   examine: "It's a Wooden shield."
-  tradeable: false
+  tradeable: true
   weight: 2.0
   equipment:
     equip_slot: 5
@@ -13618,7 +13618,7 @@
 - id: 1172
   name: "Wooden shield"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 1173
@@ -19975,13 +19975,13 @@
 - id: 1611
   name: "Jade"
   examine: "It's a Jade."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 1612
   name: "Jade"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 1613
@@ -23308,13 +23308,13 @@
 - id: 1997
   name: "Incomplete stew"
   examine: "It's an Incomplete stew."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 1998
   name: "Incomplete stew"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 1999
@@ -25144,13 +25144,13 @@
 - id: 2303
   name: "1/2 p'apple pizza"
   examine: "It's a 1/2 p'apple pizza."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 2304
   name: "1/2 p'apple pizza"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 2305
@@ -26143,7 +26143,7 @@
 - id: 2422
   name: "Blue partyhat"
   examine: "A nice hat from a cracker."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 0
@@ -31596,7 +31596,7 @@
 - id: 2894
   name: "Boots"
   examine: "It's a Boots."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 10
@@ -31626,7 +31626,7 @@
 - id: 2895
   name: "Boots"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 2896
@@ -31671,7 +31671,7 @@
 - id: 2898
   name: "Robe bottoms"
   examine: "It's a Robe bottoms."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 7
@@ -31701,13 +31701,13 @@
 - id: 2899
   name: "Robe bottoms"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 2900
   name: "Hat"
   examine: "It's an Hat."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 0
@@ -31737,13 +31737,13 @@
 - id: 2901
   name: "Hat"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 2902
   name: "Gloves"
   examine: "It's a Gloves."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 9
@@ -31773,13 +31773,13 @@
 - id: 2903
   name: "Gloves"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 2904
   name: "Boots"
   examine: "It's a Boots."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 10
@@ -31809,7 +31809,7 @@
 - id: 2905
   name: "Boots"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 2906
@@ -31854,7 +31854,7 @@
 - id: 2908
   name: "Robe bottoms"
   examine: "It's a Robe bottoms."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 7
@@ -31884,13 +31884,13 @@
 - id: 2909
   name: "Robe bottoms"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 2910
   name: "Hat"
   examine: "It's an Hat."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 0
@@ -31920,13 +31920,13 @@
 - id: 2911
   name: "Hat"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 2912
   name: "Gloves"
   examine: "It's a Gloves."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 9
@@ -31956,13 +31956,13 @@
 - id: 2913
   name: "Gloves"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 2914
   name: "Boots"
   examine: "It's a Boots."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 10
@@ -31992,7 +31992,7 @@
 - id: 2915
   name: "Boots"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 2916
@@ -32037,7 +32037,7 @@
 - id: 2918
   name: "Robe bottoms"
   examine: "It's a Robe bottoms."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 7
@@ -32067,13 +32067,13 @@
 - id: 2919
   name: "Robe bottoms"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 2920
   name: "Hat"
   examine: "It's an Hat."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 0
@@ -32103,13 +32103,13 @@
 - id: 2921
   name: "Hat"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 2922
   name: "Gloves"
   examine: "It's a Gloves."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 9
@@ -32139,13 +32139,13 @@
 - id: 2923
   name: "Gloves"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 2924
   name: "Boots"
   examine: "It's a Boots."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 10
@@ -32175,7 +32175,7 @@
 - id: 2925
   name: "Boots"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 2926
@@ -32220,7 +32220,7 @@
 - id: 2928
   name: "Robe bottoms"
   examine: "It's a Robe bottoms."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 7
@@ -32250,13 +32250,13 @@
 - id: 2929
   name: "Robe bottoms"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 2930
   name: "Hat"
   examine: "It's an Hat."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 0
@@ -32286,13 +32286,13 @@
 - id: 2931
   name: "Hat"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 2932
   name: "Gloves"
   examine: "It's a Gloves."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 9
@@ -32322,13 +32322,13 @@
 - id: 2933
   name: "Gloves"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 2934
   name: "Boots"
   examine: "It's a Boots."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 10
@@ -32358,7 +32358,7 @@
 - id: 2935
   name: "Boots"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 2936
@@ -32403,7 +32403,7 @@
 - id: 2938
   name: "Robe bottoms"
   examine: "It's a Robe bottoms."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 7
@@ -32433,13 +32433,13 @@
 - id: 2939
   name: "Robe bottoms"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 2940
   name: "Hat"
   examine: "It's an Hat."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 0
@@ -32469,13 +32469,13 @@
 - id: 2941
   name: "Hat"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 2942
   name: "Gloves"
   examine: "It's a Gloves."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 9
@@ -32505,7 +32505,7 @@
 - id: 2943
   name: "Gloves"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 2944
@@ -34443,7 +34443,7 @@
 - id: 3105
   name: "Rock climbing boots"
   examine: "Boots made for general climbing; rocks a speciality."
-  tradeable: false
+  tradeable: true
   weight: 0.3
   equipment:
     equip_slot: 10
@@ -34476,7 +34476,7 @@
 - id: 3106
   name: "Rock climbing boots"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 3107
@@ -35704,7 +35704,7 @@
 - id: 3224
   name: "Strip of cloth"
   examine: "A strip of cloth."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 3225
@@ -40723,7 +40723,7 @@
 - id: 3799
   name: "Gloves"
   examine: "It's a Gloves."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 9
@@ -40753,7 +40753,7 @@
 - id: 3800
   name: "Gloves"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 3801
@@ -45104,7 +45104,7 @@
 - id: 4212
   name: "New crystal bow"
   examine: "A nice sturdy magical bow."
-  tradeable: false
+  tradeable: true
   weight: 1.8
   equipment:
     equip_slot: 3
@@ -45138,13 +45138,13 @@
 - id: 4213
   name: "New crystal bow"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 4214
   name: "Crystal bow full"
   examine: "A nice sturdy magical bow."
-  tradeable: false
+  tradeable: true
   weight: 1.8
   equipment:
     equip_slot: 3
@@ -46500,7 +46500,7 @@
 - id: 4308
   name: "H.a.m. gloves"
   examine: "It's an H.a.m. gloves."
-  tradeable: false
+  tradeable: true
   weight: 0.4
   equipment:
     equip_slot: 9
@@ -46533,13 +46533,13 @@
 - id: 4309
   name: "H.a.m. gloves"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 4310
   name: "H.a.m. boots"
   examine: "It's an H.a.m. boots."
-  tradeable: false
+  tradeable: true
   weight: 0.3
   equipment:
     equip_slot: 10
@@ -46572,7 +46572,7 @@
 - id: 4311
   name: "H.a.m. boots"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 4312
@@ -49737,37 +49737,37 @@
 - id: 4544
   name: "Bullseye lantern"
   examine: "A sturdy steel lantern casting a bright beam."
-  tradeable: false
+  tradeable: true
   weight: 1.0
   equipment: null
 - id: 4545
   name: "Bullseye lantern"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 4546
   name: "Bullseye lantern"
   examine: "A sturdy steel lantern casting a bright beam."
-  tradeable: false
+  tradeable: true
   weight: 1.0
   equipment: null
 - id: 4547
   name: "Bullseye lantern"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 4548
   name: "Bullseye lantern"
   examine: "A sturdy steel lantern casting a bright beam."
-  tradeable: false
+  tradeable: true
   weight: 1.0
   equipment: null
 - id: 4549
   name: "Bullseye lantern"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 4550
@@ -52933,7 +52933,7 @@
 - id: 4856
   name: "Ahrim's hood 100"
   examine: "Ahrim The Blighted's Hood."
-  tradeable: false
+  tradeable: true
   weight: 0.9
   equipment:
     equip_slot: 0
@@ -53081,7 +53081,7 @@
 - id: 4862
   name: "Ahrim's staff 100"
   examine: "Ahrim the Blighted's quarterstaff."
-  tradeable: false
+  tradeable: true
   weight: 2.0
   equipment:
     equip_slot: 3
@@ -53229,7 +53229,7 @@
 - id: 4868
   name: "Ahrim's robe top 100"
   examine: "Ahrim the Blighted's armoured robe top."
-  tradeable: false
+  tradeable: true
   weight: 5.0
   equipment:
     equip_slot: 4
@@ -53377,7 +53377,7 @@
 - id: 4874
   name: "Ahrim's robe skirt 100"
   examine: "Ahrim the Blighted's armoured robe skirt."
-  tradeable: false
+  tradeable: true
   weight: 11.3
   equipment:
     equip_slot: 7
@@ -53525,7 +53525,7 @@
 - id: 4880
   name: "Dharok's helm 100"
   examine: "Dharok The Wretched's Helmet"
-  tradeable: false
+  tradeable: true
   weight: 1.0
   equipment:
     equip_slot: 0
@@ -53673,7 +53673,7 @@
 - id: 4886
   name: "Dharok's greataxe 100"
   examine: "Dharok the Wretched's Greataxe."
-  tradeable: false
+  tradeable: true
   weight: 13.0
   equipment:
     equip_slot: 3
@@ -53821,7 +53821,7 @@
 - id: 4892
   name: "Dharok's platebody 100"
   examine: "Dharok the Wretched's platebody."
-  tradeable: false
+  tradeable: true
   weight: 9.9
   equipment:
     equip_slot: 4
@@ -53969,7 +53969,7 @@
 - id: 4898
   name: "Dharok's platelegs 100"
   examine: "Dharok the wretched's plate leg armour."
-  tradeable: false
+  tradeable: true
   weight: 10.0
   equipment:
     equip_slot: 7
@@ -54117,7 +54117,7 @@
 - id: 4904
   name: "Guthan's helm 100"
   examine: "Guthan the Infested's helm."
-  tradeable: false
+  tradeable: true
   weight: 2.0
   equipment:
     equip_slot: 0
@@ -54265,7 +54265,7 @@
 - id: 4910
   name: "Guthan's warspear 100"
   examine: "Guthan The Infested's Warspear."
-  tradeable: false
+  tradeable: true
   weight: 2.2
   equipment:
     equip_slot: 3
@@ -54413,7 +54413,7 @@
 - id: 4916
   name: "Guthan's platebody 100"
   examine: "Guthan the Infested's platebody armour."
-  tradeable: false
+  tradeable: true
   weight: 9.0
   equipment:
     equip_slot: 4
@@ -54561,7 +54561,7 @@
 - id: 4922
   name: "Guthan's chainskirt 100"
   examine: "Guthan the Infested's chainskirt."
-  tradeable: false
+  tradeable: true
   weight: 8.0
   equipment:
     equip_slot: 7
@@ -54709,7 +54709,7 @@
 - id: 4928
   name: "Karil's coif 100"
   examine: "Karil the Tainted's coif."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 0
@@ -54857,7 +54857,7 @@
 - id: 4934
   name: "Karil's crossbow 100"
   examine: "Karil the Tainted's repeating crossbow."
-  tradeable: false
+  tradeable: true
   weight: 2.0
   equipment:
     equip_slot: 3
@@ -55005,7 +55005,7 @@
 - id: 4940
   name: "Karil's top 100"
   examine: "Karil the Tainted's leatherbody."
-  tradeable: false
+  tradeable: true
   weight: 6.8
   equipment:
     equip_slot: 4
@@ -55153,7 +55153,7 @@
 - id: 4946
   name: "Karil's skirt 100"
   examine: "Karil the Tainted's leather skirt."
-  tradeable: false
+  tradeable: true
   weight: 2.0
   equipment:
     equip_slot: 7
@@ -55301,7 +55301,7 @@
 - id: 4952
   name: "Torag's helm 100"
   examine: "Torag the Corrupted's helm."
-  tradeable: false
+  tradeable: true
   weight: 5.0
   equipment:
     equip_slot: 0
@@ -55449,7 +55449,7 @@
 - id: 4958
   name: "Torag's hammers 100"
   examine: "Torag the Corrupted's twin hammers."
-  tradeable: false
+  tradeable: true
   weight: 4.0
   equipment:
     equip_slot: 3
@@ -55597,7 +55597,7 @@
 - id: 4964
   name: "Torag's platebody 100"
   examine: "Torag the Corrupted's plate body armour."
-  tradeable: false
+  tradeable: true
   weight: 9.0
   equipment:
     equip_slot: 4
@@ -55745,7 +55745,7 @@
 - id: 4970
   name: "Torag's platelegs 100"
   examine: "Torag the Corrupted's plate leg armour."
-  tradeable: false
+  tradeable: true
   weight: 9.0
   equipment:
     equip_slot: 7
@@ -55893,7 +55893,7 @@
 - id: 4976
   name: "Verac's helm 100"
   examine: "Verac the Defiled's helm."
-  tradeable: false
+  tradeable: true
   weight: 1.0
   equipment:
     equip_slot: 0
@@ -56041,7 +56041,7 @@
 - id: 4982
   name: "Verac's flail 100"
   examine: "Verac the Defiled's Flail."
-  tradeable: false
+  tradeable: true
   weight: 2.0
   equipment:
     equip_slot: 3
@@ -56189,7 +56189,7 @@
 - id: 4988
   name: "Verac's brassard 100"
   examine: "Verac the Defiled's brassard."
-  tradeable: false
+  tradeable: true
   weight: 5.0
   equipment:
     equip_slot: 4
@@ -56337,7 +56337,7 @@
 - id: 4994
   name: "Verac's plateskirt 100"
   examine: "Verac the Defiled's plate skirt."
-  tradeable: false
+  tradeable: true
   weight: 4.5
   equipment:
     equip_slot: 7
@@ -56846,7 +56846,7 @@
 - id: 5030
   name: "Shirt"
   examine: "It's a Shirt."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 4
@@ -56876,13 +56876,13 @@
 - id: 5031
   name: "Shirt"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 5032
   name: "Shirt"
   examine: "It's a Shirt."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 4
@@ -56912,13 +56912,13 @@
 - id: 5033
   name: "Shirt"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 5034
   name: "Shirt"
   examine: "It's a Shirt."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 4
@@ -56948,13 +56948,13 @@
 - id: 5035
   name: "Shirt"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 5036
   name: "Trousers"
   examine: "It's a Trousers."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 7
@@ -56984,13 +56984,13 @@
 - id: 5037
   name: "Trousers"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 5038
   name: "Trousers"
   examine: "It's a Trousers."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 7
@@ -57020,13 +57020,13 @@
 - id: 5039
   name: "Trousers"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 5040
   name: "Trousers"
   examine: "It's a Trousers."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 7
@@ -57056,13 +57056,13 @@
 - id: 5041
   name: "Trousers"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 5042
   name: "Shorts"
   examine: "It's a Shorts."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 7
@@ -57092,13 +57092,13 @@
 - id: 5043
   name: "Shorts"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 5044
   name: "Shorts"
   examine: "It's a Shorts."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 7
@@ -57128,13 +57128,13 @@
 - id: 5045
   name: "Shorts"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 5046
   name: "Shorts"
   examine: "It's a Shorts."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 7
@@ -57164,13 +57164,13 @@
 - id: 5047
   name: "Shorts"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 5048
   name: "Skirt"
   examine: "It's a Skirt."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 7
@@ -57200,13 +57200,13 @@
 - id: 5049
   name: "Skirt"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 5050
   name: "Skirt"
   examine: "It's a Skirt."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 7
@@ -57236,13 +57236,13 @@
 - id: 5051
   name: "Skirt"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 5052
   name: "Skirt"
   examine: "It's a Skirt."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 7
@@ -57272,7 +57272,7 @@
 - id: 5053
   name: "Skirt"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 5054
@@ -58838,7 +58838,7 @@
 - id: 5282
   name: "Bittercap mushroom spore"
   examine: "It's a Bittercap mushroom spore."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 5283
@@ -59132,61 +59132,61 @@
 - id: 5331
   name: "Watering can"
   examine: "See article"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 5332
   name: "Watering can"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 5333
   name: "Watering can (1)"
   examine: "See article"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 5334
   name: "Watering can (2)"
   examine: "See article"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 5335
   name: "Watering can (3)"
   examine: "See article"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 5336
   name: "Watering can (4)"
   examine: "See article"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 5337
   name: "Watering can (5)"
   examine: "See article"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 5338
   name: "Watering can (6)"
   examine: "See article"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 5339
   name: "Watering can (7)"
   examine: "See article"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 5340
   name: "Watering can (8)"
   examine: "See article"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 5341
@@ -62527,7 +62527,7 @@
 - id: 5646
   name: "Adamant javelin (p+)"
   examine: "It's an Adamant javelin (p+)."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 3
@@ -62726,7 +62726,7 @@
 - id: 5652
   name: "Adamant javelin (p++)"
   examine: "It's an Adamant javelin (p++)."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 3
@@ -63198,7 +63198,7 @@
 - id: 5666
   name: "Adamant knife (p++)"
   examine: "It's an Adamant knife (p++)."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 3
@@ -63424,7 +63424,7 @@
 - id: 5676
   name: "Adamant dagger (p+)"
   examine: "It's an Adamant dagger (p+)."
-  tradeable: false
+  tradeable: true
   weight: 0.4
   equipment:
     equip_slot: 3
@@ -63458,7 +63458,7 @@
 - id: 5677
   name: "Adamant dagger (p+)"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 5678
@@ -63778,7 +63778,7 @@
 - id: 5694
   name: "Adamant dagger (p++)"
   examine: "It's an Adamant dagger (p++)."
-  tradeable: false
+  tradeable: true
   weight: 0.4
   equipment:
     equip_slot: 3
@@ -63812,7 +63812,7 @@
 - id: 5695
   name: "Adamant dagger (p++)"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 5696
@@ -64410,7 +64410,7 @@
 - id: 5726
   name: "Adamant spear (p++)"
   examine: "It's an Adamant spear (p++)."
-  tradeable: false
+  tradeable: true
   weight: 2.0
   equipment:
     equip_slot: 3
@@ -64444,7 +64444,7 @@
 - id: 5727
   name: "Adamant spear (p++)"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 5728
@@ -66218,13 +66218,13 @@
 - id: 6004
   name: "Bittercap mushroom"
   examine: "It's a Bittercap mushroom."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 6005
   name: "Bittercap mushroom"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 6006
@@ -67411,7 +67411,7 @@
 - id: 6129
   name: "Rock-shell plate"
   examine: "It's a Rock-shell plate."
-  tradeable: false
+  tradeable: true
   weight: 9.0
   equipment:
     equip_slot: 4
@@ -75907,7 +75907,7 @@
   name: "Guthix mjolnir"
   examine: "A Guthix Mjolnir."
   destroy_message: "You can reclaim this item from the place you found it."
-  tradeable: false
+  tradeable: true
   weight: 2.0
   equipment:
     equip_slot: 3
@@ -75940,14 +75940,14 @@
 - id: 6761
   name: "Guthix mjolnir"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 6762
   name: "Saradomin mjolnir"
   examine: "A Saradomin Mjolnir."
   destroy_message: "You can reclaim this item from the place you found it."
-  tradeable: false
+  tradeable: true
   weight: 2.0
   equipment:
     equip_slot: 3
@@ -75980,14 +75980,14 @@
 - id: 6763
   name: "Saradomin mjolnir"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 6764
   name: "Zamorak mjolnir"
   examine: "A Zamorak mjolnir."
   destroy_message: "You can reclaim this item from the place you found it."
-  tradeable: false
+  tradeable: true
   weight: 2.0
   equipment:
     equip_slot: 3
@@ -76020,7 +76020,7 @@
 - id: 6765
   name: "Zamorak mjolnir"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 6766
@@ -78297,7 +78297,7 @@
 - id: 6961
   name: "Baguette"
   examine: "A freshly baked baguette."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 6962
@@ -78309,7 +78309,7 @@
 - id: 6963
   name: "Roll"
   examine: "A freshly made roll."
-  tradeable: false
+  tradeable: true
   weight: 0.5
   equipment: null
 - id: 6964
@@ -78321,7 +78321,7 @@
 - id: 6965
   name: "Square sandwich"
   examine: "A freshly made square sandwich."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 6966
@@ -79925,7 +79925,7 @@
 - id: 7147
   name: "Cannon balls"
   examine: "It's a Cannon balls."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 7148
@@ -80503,7 +80503,7 @@
 - id: 7230
   name: "Skewered chompy"
   examine: "A skewered chompy bird."
-  tradeable: false
+  tradeable: true
   weight: 2.5
   equipment: null
 - id: 7231
@@ -81995,7 +81995,7 @@
 - id: 7370
   name: "Dragonhide body (g)"
   examine: "It's a Dragonhide body (g)."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 4
@@ -82026,13 +82026,13 @@
 - id: 7371
   name: "Dragonhide body (g)"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 7372
   name: "Dragonhide body (t)"
   examine: "It's a Dragonhide body (t)."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 4
@@ -82063,13 +82063,13 @@
 - id: 7373
   name: "Dragonhide body (t)"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 7374
   name: "Dragonhide body (g)"
   examine: "It's a Dragonhide body (g)."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 4
@@ -82100,13 +82100,13 @@
 - id: 7375
   name: "Dragonhide body (g)"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 7376
   name: "Dragonhide body (t)"
   examine: "It's a Dragonhide body (t)."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 4
@@ -82137,13 +82137,13 @@
 - id: 7377
   name: "Dragonhide body (t)"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 7378
   name: "Dragonhide chaps (g)"
   examine: "It's a Dragonhide chaps (g)."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 7
@@ -82174,13 +82174,13 @@
 - id: 7379
   name: "Dragonhide chaps (g)"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 7380
   name: "Dragonhide chaps (t)"
   examine: "It's a Dragonhide chaps (t)."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 7
@@ -82211,13 +82211,13 @@
 - id: 7381
   name: "Dragonhide chaps (t)"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 7382
   name: "Dragonhide chaps (g)"
   examine: "It's a Dragonhide chaps (g)."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 7
@@ -82248,13 +82248,13 @@
 - id: 7383
   name: "Dragonhide chaps (g)"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 7384
   name: "Dragonhide chaps (t)"
   examine: "It's a Dragonhide chaps (t)."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 7
@@ -82285,7 +82285,7 @@
 - id: 7385
   name: "Dragonhide chaps (t)"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 7386
@@ -91152,145 +91152,145 @@
 - id: 8496
   name: "Crude wooden chair"
   examine: "It's a Crude wooden chair."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8497
   name: "Crude wooden chair"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8498
   name: "Wooden chair"
   examine: "It's a Wooden chair."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8499
   name: "Wooden chair"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8500
   name: "Rocking chair"
   examine: "It's a Rocking chair."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8501
   name: "Rocking chair"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8502
   name: "Oak chair"
   examine: "It's an Oak chair."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8503
   name: "Oak chair"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8504
   name: "Oak armchair"
   examine: "It's an Oak armchair."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8505
   name: "Oak armchair"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8506
   name: "Teak armchair"
   examine: "It's a Teak armchair."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8507
   name: "Teak armchair"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8508
   name: "Mahogany armchair"
   examine: "It's a Mahogany armchair."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8509
   name: "Mahogany armchair"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8510
   name: "Wooden bookcase"
   examine: "It's a Wooden bookcase."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8511
   name: "Wooden bookcase"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8512
   name: "Oak bookcase"
   examine: "It's an Oak bookcase."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8513
   name: "Oak bookcase"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8514
   name: "Mahogany b'kcase"
   examine: "It's a Mahogany b'kcase."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8515
   name: "Mahogany b'kcase"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8516
   name: "Beer barrel"
   examine: "It's a Beer barrel."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8517
   name: "Beer barrel"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8518
   name: "Cider barrel"
   examine: "It's a Cider barrel."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8519
   name: "Cider barrel"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8520
@@ -91344,37 +91344,37 @@
 - id: 8528
   name: "Wood kitchen table"
   examine: "It's a Wood kitchen table."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8529
   name: "Wood kitchen table"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8530
   name: "Oak kitchen table"
   examine: "It's an Oak kitchen table."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8531
   name: "Oak kitchen table"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8532
   name: "Teak kitchen table"
   examine: "It's a Teak kitchen table."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8533
   name: "Teak kitchen table"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8534
@@ -91464,457 +91464,457 @@
 - id: 8548
   name: "Wood dining table"
   examine: "It's a Wood dining table."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8549
   name: "Wood dining table"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8550
   name: "Oak dining table"
   examine: "It's an Oak dining table."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8551
   name: "Oak dining table"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8552
   name: "Carved oak table"
   examine: "It's a Carved oak table."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8553
   name: "Carved oak table"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8554
   name: "Teak table"
   examine: "It's a Teak table."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8555
   name: "Teak table"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8556
   name: "Carved teak table"
   examine: "It's a Carved teak table."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8557
   name: "Carved teak table"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8558
   name: "Mahogany table"
   examine: "It's a Mahogany table."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8559
   name: "Mahogany table"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8560
   name: "Opulent table"
   examine: "It's an Opulent table."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8561
   name: "Opulent table"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8562
   name: "Wooden bench"
   examine: "It's a Wooden bench."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8563
   name: "Wooden bench"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8564
   name: "Oak bench"
   examine: "It's an Oak bench."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8565
   name: "Oak bench"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8566
   name: "Carved oak bench"
   examine: "It's a Carved oak bench."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8567
   name: "Carved oak bench"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8568
   name: "Teak dining bench"
   examine: "It's a Teak dining bench."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8569
   name: "Teak dining bench"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8570
   name: "Carved teak bench"
   examine: "It's a Carved teak bench."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8571
   name: "Carved teak bench"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8572
   name: "Mahogany bench"
   examine: "It's a Mahogany bench."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8573
   name: "Mahogany bench"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8574
   name: "Gilded bench"
   examine: "It's a Gilded bench."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8575
   name: "Gilded bench"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8576
   name: "Wooden bed"
   examine: "It's a Wooden bed."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8577
   name: "Wooden bed"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8578
   name: "Oak bed"
   examine: "It's an Oak bed."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8579
   name: "Oak bed"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8580
   name: "Large oak bed"
   examine: "It's a Large oak bed."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8581
   name: "Large oak bed"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8582
   name: "Teak bed"
   examine: "It's a Teak bed."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8583
   name: "Teak bed"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8584
   name: "Large teak bed"
   examine: "It's a Large teak bed."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8585
   name: "Large teak bed"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8586
   name: "4-poster"
   examine: "It's a 4-poster."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8587
   name: "4-poster"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8588
   name: "Gilded 4-poster"
   examine: "It's a Gilded 4-poster."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8589
   name: "Gilded 4-poster"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8590
   name: "Oak clock"
   examine: "It's an Oak clock."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8591
   name: "Oak clock"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8592
   name: "Teak clock"
   examine: "It's a Teak clock."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8593
   name: "Teak clock"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8594
   name: "Gilded clock"
   examine: "It's a Gilded clock."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8595
   name: "Gilded clock"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8596
   name: "Shaving stand"
   examine: "It's a Shaving stand."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8597
   name: "Shaving stand"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8598
   name: "Oak shaving stand"
   examine: "It's an Oak shaving stand."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8599
   name: "Oak shaving stand"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8600
   name: "Oak dresser"
   examine: "It's an Oak dresser."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8601
   name: "Oak dresser"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8602
   name: "Teak dresser"
   examine: "It's a Teak dresser."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8603
   name: "Teak dresser"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8604
   name: "Fancy teak dresser"
   examine: "It's a Fancy teak dresser."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8605
   name: "Fancy teak dresser"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8606
   name: "Mahogany dresser"
   examine: "It's a Mahogany dresser."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8607
   name: "Mahogany dresser"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8608
   name: "Gilded dresser"
   examine: "It's a Gilded dresser."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8609
   name: "Gilded dresser"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8610
   name: "Shoe box"
   examine: "It's a Shoe box."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8611
   name: "Shoe box"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8612
   name: "Oak drawers"
   examine: "It's an Oak drawers."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8613
   name: "Oak drawers"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8614
   name: "Oak wardrobe"
   examine: "It's an Oak wardrobe."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8615
   name: "Oak wardrobe"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8616
   name: "Teak drawers"
   examine: "It's a Teak drawers."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8617
   name: "Teak drawers"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8618
   name: "Teak wardrobe"
   examine: "It's a Teak wardrobe."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8619
   name: "Teak wardrobe"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8620
   name: "Mahogany 'drobe"
   examine: "It's a Mahogany 'drobe."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8621
   name: "Mahogany 'drobe"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8622
   name: "Gilded wardrobe"
   examine: "It's a Gilded wardrobe."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8623
   name: "Gilded wardrobe"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8624
@@ -95393,7 +95393,7 @@
 - id: 8872
   name: "Bone dagger"
   examine: "A powerful dagger."
-  tradeable: false
+  tradeable: true
   weight: 0.4
   equipment:
     equip_slot: 3
@@ -95426,13 +95426,13 @@
 - id: 8873
   name: "Bone dagger"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8874
   name: "Bone dagger (p)"
   examine: "A powerful dagger."
-  tradeable: false
+  tradeable: true
   weight: 0.4
   equipment:
     equip_slot: 3
@@ -95465,13 +95465,13 @@
 - id: 8875
   name: "Bone dagger (p)"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8876
   name: "Bone dagger (p+)"
   examine: "A powerful dagger."
-  tradeable: false
+  tradeable: true
   weight: 0.4
   equipment:
     equip_slot: 3
@@ -95504,13 +95504,13 @@
 - id: 8877
   name: "Bone dagger (p+)"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8878
   name: "Bone dagger (p++)"
   examine: "A powerful dagger."
-  tradeable: false
+  tradeable: true
   weight: 0.4
   equipment:
     equip_slot: 3
@@ -95543,7 +95543,7 @@
 - id: 8879
   name: "Bone dagger (p++)"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8880
@@ -99677,7 +99677,7 @@
 - id: 9181
   name: "Mith crossbow"
   examine: "It's a Mith crossbow."
-  tradeable: false
+  tradeable: true
   weight: 2.0
   equipment:
     equip_slot: 3
@@ -99711,7 +99711,7 @@
 - id: 9182
   name: "Mith crossbow"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 9183
@@ -103405,7 +103405,7 @@
 - id: 9594
   name: "Ground mud runes"
   examine: "Mud runes ground into a powder."
-  tradeable: false
+  tradeable: true
   weight: 0.1
   equipment: null
 - id: 9595
@@ -107242,151 +107242,151 @@
 - id: 9843
   name: "Oak cape rack"
   examine: "It's an Oak cape rack."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 9844
   name: "Teak cape rack"
   examine: "It's a Teak cape rack."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 9845
   name: "M'gany cape rack"
   examine: "It's a M'gany cape rack."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 9846
   name: "Gilded cape rack"
   examine: "It's a Gilded cape rack."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 9847
   name: "Marble cape rack"
   examine: "It's a Marble cape rack."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 9848
   name: "Magical cape rack"
   examine: "It's a Magical cape rack."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 9849
   name: "Oak toy box"
   examine: "It's an Oak toy box."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 9850
   name: "Teak toy box"
   examine: "It's a Teak toy box."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 9851
   name: "Mahogany toy box"
   examine: "It's a Mahogany toy box."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 9852
   name: "Oak magic wardrobe"
   examine: "It's an Oak magic wardrobe."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 9853
   name: "Carved oak magic wardrobe"
   examine: "It's a Carved oak magic wardrobe."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 9854
   name: "Teak magic wardrobe"
   examine: "It's a Teak magic wardrobe."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 9855
   name: "Carved teak magic wardrobe"
   examine: "It's a Carved teak magic wardrobe."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 9856
   name: "Mahogany magic wardrobe"
   examine: "It's a Mahogany magic wardrobe."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 9857
   name: "Gilded magic wardrobe"
   examine: "It's a Gilded magic wardrobe."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 9858
   name: "Marble magic wardrobe"
   examine: "It's a Marble magic wardrobe."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 9859
   name: "Oak armour case"
   examine: "It's an Oak armour case."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 9860
   name: "Teak armour case"
   examine: "It's a Teak armour case."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 9861
   name: "M'gany arm'r case"
   examine: "It's a M'gany arm'r case."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 9862
   name: "Oak treasure chest"
   examine: "It's an Oak treasure chest."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 9863
   name: "Teak treas' chest"
   examine: "It's a Teak treas' chest."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 9864
   name: "M'gany treas' chest"
   examine: "It's a M'gany treas' chest."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 9865
   name: "Oak costume box"
   examine: "It's an Oak costume box."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 9866
   name: "Teak costume box"
   examine: "It's a Teak costume box."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 9867
   name: "Mahogany cos box"
   examine: "It's a Mahogany cos box."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 9868
@@ -108505,7 +108505,7 @@
 - id: 9976
   name: "Chinchompa"
   examine: "It's a Chinchompa."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 9977
@@ -108758,49 +108758,49 @@
 - id: 10014
   name: "Black warlock"
   examine: "It's a Black warlock."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 10015
   name: "Black warlock"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 10016
   name: "Snowy knight"
   examine: "It's a Snowy knight."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 10017
   name: "Snowy knight"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 10018
   name: "Sapphire glacialis"
   examine: "It's a Sapphire glacialis."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 10019
   name: "Sapphire glacialis"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 10020
   name: "Ruby harvest"
   examine: "It's a Ruby harvest."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 10021
   name: "Ruby harvest"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 10022
@@ -108926,7 +108926,7 @@
 - id: 10033
   name: "Chinchompa"
   examine: "It's a Chinchompa."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 3
@@ -122708,7 +122708,7 @@
 - id: 10822
   name: "Yak-hide armour"
   examine: "It's a Yak-hide armour."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 4
@@ -122739,13 +122739,13 @@
 - id: 10823
   name: "Yak-hide armour"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 10824
   name: "Yak-hide armour"
   examine: "It's a Yak-hide armour."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 7
@@ -122776,13 +122776,13 @@
 - id: 10825
   name: "Yak-hide armour"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 10826
   name: "Fremennik round shield"
   examine: "A shield worn by Fremennik warriors."
-  tradeable: false
+  tradeable: true
   weight: 3.6
   equipment:
     equip_slot: 5
@@ -122816,7 +122816,7 @@
 - id: 10827
   name: "Fremennik round shield"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 10828
@@ -126580,7 +126580,7 @@
   name: "Hunter kit"
   examine: "A box of Hunter goodies."
   destroy_message: "You will have to create another using the Lunar Spellbook."
-  tradeable: false
+  tradeable: true
   weight: 0.4
   equipment: null
 - id: 11160
@@ -128932,7 +128932,7 @@
 - id: 11381
   name: "Bronze hasta (kp)"
   examine: "It's a Bronze hasta (kp)."
-  tradeable: false
+  tradeable: true
   weight: 2.2
   equipment:
     equip_slot: 3
@@ -129082,7 +129082,7 @@
 - id: 11388
   name: "Iron hasta (kp)"
   examine: "It's an Iron hasta (kp)."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 3
@@ -129233,7 +129233,7 @@
 - id: 11395
   name: "Steel hasta (kp)"
   examine: "It's a Steel hasta (kp)."
-  tradeable: false
+  tradeable: true
   weight: 2.2
   equipment:
     equip_slot: 3
@@ -129541,7 +129541,7 @@
 - id: 11409
   name: "Adamant hasta (kp)"
   examine: "It's an Adamant hasta (kp)."
-  tradeable: false
+  tradeable: true
   weight: 2.0
   equipment:
     equip_slot: 3
@@ -129615,7 +129615,7 @@
 - id: 11412
   name: "Adamant hasta (p++)"
   examine: "It's an Adamant hasta (p++)."
-  tradeable: false
+  tradeable: true
   weight: 2.0
   equipment:
     equip_slot: 3
@@ -129649,7 +129649,7 @@
 - id: 11413
   name: "Adamant hasta (p++)"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 11414
@@ -129695,7 +129695,7 @@
 - id: 11416
   name: "Rune hasta (kp)"
   examine: "It's a Rune hasta (kp)."
-  tradeable: false
+  tradeable: true
   weight: 2.2
   equipment:
     equip_slot: 3
@@ -133308,25 +133308,25 @@
 - id: 11842
   name: "Dragon chain armour set (lg)"
   examine: "It's a Dragon chain armour set (lg)."
-  tradeable: false
+  tradeable: true
   weight: 2.2
   equipment: null
 - id: 11843
   name: "Dragon chain armour set (lg)"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 11844
   name: "Dragon chain armour set (sk)"
   examine: "It's a Dragon chain armour set (sk)."
-  tradeable: false
+  tradeable: true
   weight: 2.2
   equipment: null
 - id: 11845
   name: "Dragon chain armour set (sk)"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 11846
@@ -134397,613 +134397,613 @@
 - id: 12007
   name: "Spirit terrorbird pouch"
   examine: "It's a Spirit terrorbird pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12008
   name: "Spirit terrorbird pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12009
   name: "Granite crab pouch"
   examine: "It's a Granite crab pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12010
   name: "Granite crab pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12011
   name: "Praying mantis pouch"
   examine: "It's a Praying mantis pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12012
   name: "Praying mantis pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12013
   name: "Giant ent pouch"
   examine: "It's a Giant ent pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12014
   name: "Giant ent pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12015
   name: "Spirit cobra pouch"
   examine: "It's a Spirit cobra pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12016
   name: "Spirit cobra pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12017
   name: "Spirit dagannoth pouch"
   examine: "It's a Spirit dagannoth pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12018
   name: "Spirit dagannoth pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12019
   name: "Thorny snail pouch"
   examine: "It's a Thorny snail pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12020
   name: "Thorny snail pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12021
   name: "Beaver pouch"
   examine: "It's a Beaver pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12022
   name: "Beaver pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12023
   name: "Karam. overlord pouch"
   examine: "It's a Karam. overlord pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12024
   name: "Karam. overlord pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12025
   name: "Hydra pouch"
   examine: "It's an Hydra pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12026
   name: "Hydra pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12027
   name: "Spirit jelly pouch"
   examine: "It's a Spirit jelly pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12028
   name: "Spirit jelly pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12029
   name: "Bunyip pouch"
   examine: "It's a Bunyip pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12030
   name: "Bunyip pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12031
   name: "War tortoise pouch"
   examine: "It's a War tortoise pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12032
   name: "War tortoise pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12033
   name: "Fruit bat pouch"
   examine: "It's a Fruit bat pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12034
   name: "Fruit bat pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12035
   name: "Abyssal parasite pouch"
   examine: "It's an Abyssal parasite pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12036
   name: "Abyssal parasite pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12037
   name: "Abyssal lurker pouch"
   examine: "It's an Abyssal lurker pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12038
   name: "Abyssal lurker pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12039
   name: "Unicorn stallion pouch"
   examine: "It's an Unicorn stallion pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12040
   name: "Unicorn stallion pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12041
   name: "Magpie pouch"
   examine: "It's a Magpie pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12042
   name: "Magpie pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12043
   name: "Dreadfowl pouch"
   examine: "It's a Dreadfowl pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12044
   name: "Dreadfowl pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12045
   name: "Stranger plant pouch"
   examine: "It's a Stranger plant pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12046
   name: "Stranger plant pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12047
   name: "Spirit wolf pouch"
   examine: "It's a Spirit wolf pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12048
   name: "Spirit wolf pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12049
   name: "Desert wyrm pouch"
   examine: "It's a Desert wyrm pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12050
   name: "Desert wyrm pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12051
   name: "Evil turnip pouch"
   examine: "It's an Evil turnip pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12052
   name: "Evil turnip pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12053
   name: "Vampyre bat pouch"
   examine: "It's a Vampyre bat pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12054
   name: "Vampyre bat pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12055
   name: "Spirit scorpion pouch"
   examine: "It's a Spirit scorpion pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12056
   name: "Spirit scorpion pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12057
   name: "Arctic bear pouch"
   examine: "It's an Arctic bear pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12058
   name: "Arctic bear pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12059
   name: "Spirit spider pouch"
   examine: "It's a Spirit spider pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12060
   name: "Spirit spider pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12061
   name: "Bloated leech pouch"
   examine: "It's a Bloated leech pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12062
   name: "Bloated leech pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12063
   name: "Spirit kalphite pouch"
   examine: "It's a Spirit kalphite pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12064
   name: "Spirit kalphite pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12065
   name: "Honey badger pouch"
   examine: "It's an Honey badger pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12066
   name: "Honey badger pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12067
   name: "Albino rat pouch"
   examine: "It's an Albino rat pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12068
   name: "Albino rat pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12069
   name: "Granite lobster pouch"
   examine: "It's a Granite lobster pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12070
   name: "Granite lobster pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12071
   name: "Macaw pouch"
   examine: "It's a Macaw pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12072
   name: "Macaw pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12073
   name: "Bronze minotaur pouch"
   examine: "It's a Bronze minotaur pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12074
   name: "Bronze minotaur pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12075
   name: "Iron minotaur pouch"
   examine: "It's an Iron minotaur pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12076
   name: "Iron minotaur pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12077
   name: "Steel minotaur pouch"
   examine: "It's a Steel minotaur pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12078
   name: "Steel minotaur pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12079
   name: "Mithril minotaur pouch"
   examine: "It's a Mithril minotaur pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12080
   name: "Mithril minotaur pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12081
   name: "Adamant minotaur pouch"
   examine: "It's an Adamant minotaur pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12082
   name: "Adamant minotaur pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12083
   name: "Rune minotaur pouch"
   examine: "It's a Rune minotaur pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12084
   name: "Rune minotaur pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12085
   name: "Smoke devil pouch"
   examine: "It's a Smoke devil pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12086
   name: "Smoke devil pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12087
   name: "Bull ant pouch"
   examine: "It's a Bull ant pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12088
   name: "Bull ant pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12089
   name: "Wolpertinger pouch"
   examine: "It's a Wolpertinger pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12090
   name: "Wolpertinger pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12091
   name: "Compost mound pouch"
   examine: "It's a Compost mound pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12092
   name: "Compost mound pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12093
   name: "Pack yak pouch"
   examine: "It's a Pack yak pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12094
   name: "Pack yak pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12095
   name: "Sp. cockatrice pouch"
   examine: "It's a Sp. cockatrice pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12096
   name: "Sp. cockatrice pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12097
   name: "Sp. guthatrice pouch"
   examine: "It's a Sp. guthatrice pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12098
   name: "Sp. guthatrice pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12099
   name: "Sp. saratrice pouch"
   examine: "It's a Sp. saratrice pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12100
   name: "Sp. saratrice pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12101
   name: "Sp. zamatrice pouch"
   examine: "It's a Sp. zamatrice pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12102
   name: "Sp. zamatrice pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12103
   name: "Sp. pengatrice pouch"
   examine: "It's a Sp. pengatrice pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12104
   name: "Sp. pengatrice pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12105
   name: "Sp. coraxatrice pouch"
   examine: "It's a Sp. coraxatrice pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12106
   name: "Sp. coraxatrice pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12107
   name: "Sp. vulatrice pouch"
   examine: "It's a Sp. vulatrice pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12108
   name: "Sp. vulatrice pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12109
@@ -135093,13 +135093,13 @@
 - id: 12123
   name: "Barker toad pouch"
   examine: "It's a Barker toad pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12124
   name: "Barker toad pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12125
@@ -135285,7 +135285,7 @@
 - id: 12155
   name: "Pouch"
   examine: "It's a Pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12156
@@ -136306,7 +136306,7 @@
 - id: 12248
   name: "Pouch"
   examine: "It's a Pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12249
@@ -137350,283 +137350,283 @@
 - id: 12422
   name: "Herbcall scroll"
   examine: "It's a Herbcall scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12423
   name: "Fruitfall scroll"
   examine: "It's a Fruitfall scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12424
   name: "Fish rain scroll"
   examine: "It's a Fish rain scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12425
   name: "Howl scroll"
   examine: "It's an Howl scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12426
   name: "Thieving fingers scroll"
   examine: "It's a Thieving fingers scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12427
   name: "Abyssal stealth scroll"
   examine: "It's an Abyssal stealth scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12428
   name: "Egg spawn scroll"
   examine: "It's an Egg spawn scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12429
   name: "Multichop scroll"
   examine: "It's a Multichop scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12430
   name: "Cheese feast scroll"
   examine: "It's a Cheese feast scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12431
   name: "Unburden scroll"
   examine: "It's an Unburden scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12432
   name: "Venom shot scroll"
   examine: "It's a Venom shot scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12433
   name: "Insane ferocity scroll"
   examine: "It's an Insane ferocity scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12434
   name: "Healing aura scroll"
   examine: "It's a Healing aura scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12435
   name: "Winter storage scroll"
   examine: "It's a Winter storage scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12436
   name: "Oph. incubation scroll"
   examine: "It's an Oph. incubation scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12437
   name: "Magic focus scroll"
   examine: "It's a Magic focus scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12438
   name: "Swallow whole scroll"
   examine: "It's a Swallow whole scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12439
   name: "Testudo scroll"
   examine: "It's a Testudo scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12440
   name: "Generate compost scroll"
   examine: "It's a Generate compost scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12441
   name: "Tireless run scroll"
   examine: "It's a Tireless run scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12442
   name: "Regrowth scroll"
   examine: "It's a Regrowth scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12443
   name: "Call to arms scroll"
   examine: "It's a Call to arms scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12444
   name: "Blood drain scroll"
   examine: "It's a Blood drain scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12445
   name: "Dreadfowl strike scroll"
   examine: "It's a Dreadfowl strike scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12446
   name: "Sandstorm scroll"
   examine: "It's a Sandstorm scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12447
   name: "Vampyre touch scroll"
   examine: "It's a Vampyre touch scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12448
   name: "Evil flames scroll"
   examine: "It's an Evil flames scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12449
   name: "Crushing claw scroll"
   examine: "It's a Crushing claw scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12450
   name: "Mantis strike scroll"
   examine: "It's a Mantis strike scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12451
   name: "Arctic blast scroll"
   examine: "It's an Arctic blast scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12452
   name: "Toad bark scroll"
   examine: "It's a Toad bark scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12453
   name: "Dissolve scroll"
   examine: "It's a Dissolve scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12454
   name: "Abyssal drain scroll"
   examine: "It's an Abyssal drain scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12455
   name: "Doomsphere scroll"
   examine: "It's a Doomsphere scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12456
   name: "Spike shot scroll"
   examine: "It's a Spike shot scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12457
   name: "Acorn missile scroll"
   examine: "It's an Acorn missile scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12458
   name: "Petrifying gaze scroll"
   examine: "It's a Petrifying gaze scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12459
   name: "Slime spray scroll"
   examine: "It's a Slime spray scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12460
   name: "Electric lash scroll"
   examine: "It's an Electric lash scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12461
   name: "Bronze bull rush scroll"
   examine: "It's a Bronze bull rush scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12462
   name: "Iron bull rush scroll"
   examine: "It's an Iron bull rush scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12463
   name: "Steel bull rush scroll"
   examine: "It's a Steel bull rush scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12464
   name: "Mith bull rush scroll"
   examine: "It's a Mith bull rush scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12465
   name: "Addy bull rush scroll"
   examine: "It's an Addy bull rush scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12466
   name: "Rune bull rush scroll"
   examine: "It's a Rune bull rush scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12467
   name: "Poisonous blast scroll"
   examine: "It's a Poisonous blast scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12468
   name: "Dust cloud scroll"
   examine: "It's a Dust cloud scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12469
@@ -138037,19 +138037,19 @@
 - id: 12531
   name: "Ibis pouch"
   examine: "It's an Ibis pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12532
   name: "Ibis pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12533
   name: "Stony shell scroll"
   examine: "It's a Stony shell scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12534
@@ -139259,7 +139259,7 @@
   name: "Easter egg"
   examine: "Happy Easter."
   destroy_message: "You can reclaim this item from the place you found it."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12645
@@ -140723,397 +140723,397 @@
 - id: 12776
   name: "Swamp titan pouch"
   examine: "It's a Swamp titan pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12777
   name: "Swamp titan pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12778
   name: "Spirit mosquito pouch"
   examine: "It's a Spirit mosquito pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12779
   name: "Spirit mosquito pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12780
   name: "Void spinner pouch"
   examine: "It's a Void spinner pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12781
   name: "Void spinner pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12782
   name: "Forge regent pouch"
   examine: "It's a Forge regent pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12783
   name: "Forge regent pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12784
   name: "Spirit larupia pouch"
   examine: "It's a Spirit larupia pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12785
   name: "Spirit larupia pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12786
   name: "Geyser titan pouch"
   examine: "It's a Geyser titan pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12787
   name: "Geyser titan pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12788
   name: "Lava titan pouch"
   examine: "It's a Lava titan pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12789
   name: "Lava titan pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12790
   name: "Steel titan pouch"
   examine: "It's a Steel titan pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12791
   name: "Steel titan pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12792
   name: "Obsidian golem pouch"
   examine: "It's an Obsidian golem pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12793
   name: "Obsidian golem pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12794
   name: "Talon beast pouch"
   examine: "It's a Talon beast pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12795
   name: "Talon beast pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12796
   name: "Abyssal titan pouch"
   examine: "It's an Abyssal titan pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12797
   name: "Abyssal titan pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12798
   name: "Void torcher pouch"
   examine: "It's a Void torcher pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12799
   name: "Void torcher pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12800
   name: "Giant chinchompa pouch"
   examine: "It's a Giant chinchompa pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12801
   name: "Giant chinchompa pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12802
   name: "Fire titan pouch"
   examine: "It's a Fire titan pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12803
   name: "Fire titan pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12804
   name: "Moss titan pouch"
   examine: "It's a Moss titan pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12805
   name: "Moss titan pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12806
   name: "Ice titan pouch"
   examine: "It's an Ice titan pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12807
   name: "Ice titan pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12808
   name: "Spirit tz-kih pouch"
   examine: "It's a Spirit tz-kih pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12809
   name: "Spirit tz-kih pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12810
   name: "Spirit graahk pouch"
   examine: "It's a Spirit graahk pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12811
   name: "Spirit graahk pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12812
   name: "Spirit kyatt pouch"
   examine: "It's a Spirit kyatt pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12813
   name: "Spirit kyatt pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12814
   name: "Void shifter pouch"
   examine: "It's a Void shifter pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12815
   name: "Void shifter pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12816
   name: "Pyrelord pouch"
   examine: "It's a Pyrelord pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12817
   name: "Pyrelord pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12818
   name: "Void ravager pouch"
   examine: "It's a Void ravager pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12819
   name: "Void ravager pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12820
   name: "Ravenous locust pouch"
   examine: "It's a Ravenous locust pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12821
   name: "Ravenous locust pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12822
   name: "Iron titan pouch"
   examine: "It's an Iron titan pouch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12823
   name: "Iron titan pouch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12824
   name: "Titan's con. scroll"
   examine: "It's a Titan's con. scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12825
   name: "Steel of legends scroll"
   examine: "It's a Steel of legends scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12826
   name: "Volcanic str. scroll"
   examine: "It's a Volcanic str. scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12827
   name: "Essence shipment scroll"
   examine: "It's an Essence shipment scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12828
   name: "Iron within scroll"
   examine: "It's an Iron within scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12829
   name: "Immense heat scroll"
   examine: "It's an Immense heat scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12830
   name: "Famine scroll"
   examine: "It's a Famine scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12831
   name: "Deadly claw scroll"
   examine: "It's a Deadly claw scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12832
   name: "Swamp plague scroll"
   examine: "It's a Swamp plague scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12833
   name: "Boil scroll"
   examine: "It's a Boil scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12834
   name: "Explode scroll"
   examine: "It's an Explode scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12835
   name: "Goad scroll"
   examine: "It's a Goad scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12836
   name: "Ambush scroll"
   examine: "It's an Ambush scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12837
   name: "Ebon thunder scroll"
   examine: "It's an Ebon thunder scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12838
   name: "Pester scroll"
   examine: "It's a Pester scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12839
   name: "Fireball assault scroll"
   examine: "It's a Fireball assault scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12840
   name: "Rending scroll"
   examine: "It's a Rending scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12841
   name: "Inferno scroll"
   examine: "It's an Inferno scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12842
@@ -145235,7 +145235,7 @@
 - id: 12985
   name: "Bronze gauntlets"
   examine: "I have to keep my hands safe!"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 9
@@ -145268,7 +145268,7 @@
 - id: 12986
   name: "Worn-out bronze gauntlets"
   examine: "I have to keep my hands safe!"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 9
@@ -145301,7 +145301,7 @@
 - id: 12987
   name: "Worn-out bronze gauntlets"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 12988
@@ -145453,7 +145453,7 @@
 - id: 12994
   name: "Black gauntlets"
   examine: "I have to keep my hands safe!"
-  tradeable: false
+  tradeable: true
   weight: 0.2
   equipment:
     equip_slot: 9
@@ -145527,7 +145527,7 @@
 - id: 12997
   name: "Mithril gauntlets"
   examine: "I have to keep my hands safe!"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 9
@@ -145561,7 +145561,7 @@
 - id: 12998
   name: "Worn-out mithril gauntlets"
   examine: "I have to keep my hands safe!"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 9
@@ -145595,7 +145595,7 @@
 - id: 12999
   name: "Worn-out mithril gauntlets"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13000
@@ -145675,7 +145675,7 @@
 - id: 13003
   name: "Rune gauntlets"
   examine: "Fully charged: I have to keep my hands safe!  Worn-Out: A bit worse for wear."
-  tradeable: false
+  tradeable: true
   weight: 0.2
   equipment:
     equip_slot: 9
@@ -145709,7 +145709,7 @@
 - id: 13004
   name: "Worn-out rune gauntlets"
   examine: "Fully charged: I have to keep my hands safe!  Worn-Out: A bit worse for wear."
-  tradeable: false
+  tradeable: true
   weight: 0.2
   equipment:
     equip_slot: 9
@@ -145743,13 +145743,13 @@
 - id: 13005
   name: "Worn-out rune gauntlets"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13006
   name: "Dragon gauntlets"
   examine: "Uncharged: A bit worse for wear. Charged: I have to keep my hands safe!"
-  tradeable: false
+  tradeable: true
   weight: 0.2
   equipment:
     equip_slot: 9
@@ -149588,13 +149588,13 @@
 - id: 13278
   name: "Broad arrow heads"
   examine: "For use against turoth and kurasks."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13279
   name: "Unfinished broad bolts"
   examine: "For use against turoth and kurasks."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13280
@@ -149880,7 +149880,7 @@
 - id: 13290
   name: "Leaf-bladed sword"
   examine: "A razor-sharp sword."
-  tradeable: false
+  tradeable: true
   weight: 1.8
   equipment:
     equip_slot: 3
@@ -149914,7 +149914,7 @@
 - id: 13291
   name: "Leaf-bladed sword"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13292
@@ -150352,13 +150352,13 @@
   name: "Pirate impling jar"
   examine: "A pirate impling in a jar."
   destroy_message: "If you drop this it will disappear. Are you sure you want to do this?"
-  tradeable: false
+  tradeable: true
   weight: 2.2
   equipment: null
 - id: 13338
   name: "Pirate impling jar"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13339
@@ -150844,7 +150844,7 @@
 - id: 13355
   name: "Left eyepatch"
   examine: "A patch for the left eye."
-  tradeable: false
+  tradeable: true
   weight: 0.1
   equipment:
     equip_slot: 0
@@ -150874,7 +150874,7 @@
 - id: 13356
   name: "Left eyepatch"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13357
@@ -150910,7 +150910,7 @@
 - id: 13358
   name: "Stripy pirate shirt"
   examine: "It's a Stripy pirate shirt."
-  tradeable: false
+  tradeable: true
   weight: 1.0
   equipment:
     equip_slot: 4
@@ -150940,13 +150940,13 @@
 - id: 13359
   name: "Stripy pirate shirt"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13360
   name: "Stripy pirate shirt"
   examine: "It's a Stripy pirate shirt."
-  tradeable: false
+  tradeable: true
   weight: 1.0
   equipment:
     equip_slot: 4
@@ -150976,13 +150976,13 @@
 - id: 13361
   name: "Stripy pirate shirt"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13362
   name: "Stripy pirate shirt"
   examine: "It's a Stripy pirate shirt."
-  tradeable: false
+  tradeable: true
   weight: 1.0
   equipment:
     equip_slot: 4
@@ -151012,13 +151012,13 @@
 - id: 13363
   name: "Stripy pirate shirt"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13364
   name: "Pirate leggings"
   examine: "It's a Pirate leggings."
-  tradeable: false
+  tradeable: true
   weight: 1.0
   equipment:
     equip_slot: 7
@@ -151048,13 +151048,13 @@
 - id: 13365
   name: "Pirate leggings"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13366
   name: "Pirate leggings"
   examine: "It's a Pirate leggings."
-  tradeable: false
+  tradeable: true
   weight: 1.0
   equipment:
     equip_slot: 7
@@ -151084,13 +151084,13 @@
 - id: 13367
   name: "Pirate leggings"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13368
   name: "Pirate leggings"
   examine: "It's a Pirate leggings."
-  tradeable: false
+  tradeable: true
   weight: 1.0
   equipment:
     equip_slot: 7
@@ -151120,13 +151120,13 @@
 - id: 13369
   name: "Pirate leggings"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13370
   name: "Bandana"
   examine: "Essential pirate wear."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 0
@@ -151156,13 +151156,13 @@
 - id: 13371
   name: "Bandana"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13372
   name: "Bandana"
   examine: "Essential pirate wear."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 0
@@ -151192,13 +151192,13 @@
 - id: 13373
   name: "Bandana"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13374
   name: "Bandana"
   examine: "Essential pirate wear."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 0
@@ -151228,7 +151228,7 @@
 - id: 13375
   name: "Bandana"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13376
@@ -152482,37 +152482,37 @@
 - id: 13431
   name: "Crayfish cage"
   examine: "Useful for catching crayfish."
-  tradeable: false
+  tradeable: true
   weight: 1.0
   equipment: null
 - id: 13432
   name: "Crayfish cage"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13433
   name: "Crayfish"
   examine: "Some cooked crayfish. Eat it to heal."
-  tradeable: false
+  tradeable: true
   weight: 0.1
   equipment: null
 - id: 13434
   name: "Crayfish"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13435
   name: "Raw crayfish"
   examine: "I should try cooking this. Used in Cooking (1)."
-  tradeable: false
+  tradeable: true
   weight: 1.0
   equipment: null
 - id: 13436
   name: "Raw crayfish"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13437
@@ -156322,13 +156322,13 @@
 - id: 13563
   name: "Button mushroom"
   examine: "An occasionally edible mushroom."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13564
   name: "Button mushroom"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13565
@@ -162847,7 +162847,7 @@
 - id: 13858
   name: "Zuriel's robe top"
   examine: "This item degrades in combat, and will turn to dust."
-  tradeable: false
+  tradeable: true
   weight: 4.0
   equipment:
     equip_slot: 4
@@ -162881,7 +162881,7 @@
 - id: 13859
   name: "Zuriel's robe top"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13860
@@ -162922,7 +162922,7 @@
 - id: 13861
   name: "Zuriel's robe bottom"
   examine: "This item degrades in combat, and will turn to dust."
-  tradeable: false
+  tradeable: true
   weight: 5.0
   equipment:
     equip_slot: 7
@@ -162956,7 +162956,7 @@
 - id: 13862
   name: "Zuriel's robe bottom"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13863
@@ -162997,7 +162997,7 @@
 - id: 13864
   name: "Zuriel's hood"
   examine: "This item degrades in combat, and will turn to dust."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 0
@@ -163031,7 +163031,7 @@
 - id: 13865
   name: "Zuriel's hood"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13866
@@ -163072,7 +163072,7 @@
 - id: 13867
   name: "Zuriel's staff"
   examine: "This item degrades in combat, and will turn to dust."
-  tradeable: false
+  tradeable: true
   weight: 2.2
   equipment:
     equip_slot: 3
@@ -163106,7 +163106,7 @@
 - id: 13868
   name: "Zuriel's staff"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13869
@@ -163147,7 +163147,7 @@
 - id: 13870
   name: "Morrigan's leather body"
   examine: "This item degrades in combat, and will turn to dust."
-  tradeable: false
+  tradeable: true
   weight: 6.8
   equipment:
     equip_slot: 4
@@ -163181,7 +163181,7 @@
 - id: 13871
   name: "Morrigan's leather body"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13872
@@ -163222,7 +163222,7 @@
 - id: 13873
   name: "Morrigan's leather chaps"
   examine: "This item degrades in combat, and will turn to dust."
-  tradeable: false
+  tradeable: true
   weight: 5.4
   equipment:
     equip_slot: 7
@@ -163256,7 +163256,7 @@
 - id: 13874
   name: "Morrigan's leather chaps"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13875
@@ -163297,7 +163297,7 @@
 - id: 13876
   name: "Morrigan's coif"
   examine: "This item degrades in combat, and will turn to dust."
-  tradeable: false
+  tradeable: true
   weight: 1.0
   equipment:
     equip_slot: 0
@@ -163331,7 +163331,7 @@
 - id: 13877
   name: "Morrigan's coif"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13878
@@ -163372,7 +163372,7 @@
 - id: 13879
   name: "Morrigan's javelin"
   examine: "A vicious javelin."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 3
@@ -163406,7 +163406,7 @@
 - id: 13880
   name: "Morrigan's javelin (p)"
   examine: "A vicious javelin."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 3
@@ -163440,7 +163440,7 @@
 - id: 13881
   name: "Morrigan's javelin (p+)"
   examine: "A vicious javelin."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 3
@@ -163474,7 +163474,7 @@
 - id: 13882
   name: "Morrigan's javelin (p++)"
   examine: "A vicious javelin."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 3
@@ -163508,7 +163508,7 @@
 - id: 13883
   name: "Morrigan's throwing axe"
   examine: "A vicious throwing axe."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 3
@@ -163542,7 +163542,7 @@
 - id: 13884
   name: "Statius's platebody"
   examine: "This item degrades in combat, and will turn to dust."
-  tradeable: false
+  tradeable: true
   weight: 9.0
   equipment:
     equip_slot: 4
@@ -163576,7 +163576,7 @@
 - id: 13885
   name: "Statius's platebody"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13886
@@ -163617,7 +163617,7 @@
 - id: 13887
   name: "Vesta's chainbody"
   examine: "This item degrades in combat, and will turn to dust."
-  tradeable: false
+  tradeable: true
   weight: 6.0
   equipment:
     equip_slot: 4
@@ -163651,7 +163651,7 @@
 - id: 13888
   name: "Vesta's chainbody"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13889
@@ -163692,7 +163692,7 @@
 - id: 13890
   name: "Statius's platelegs"
   examine: "This item degrades in combat, and will turn to dust."
-  tradeable: false
+  tradeable: true
   weight: 8.0
   equipment:
     equip_slot: 7
@@ -163726,7 +163726,7 @@
 - id: 13891
   name: "Statius's platelegs"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13892
@@ -163767,7 +163767,7 @@
 - id: 13893
   name: "Vesta's plateskirt"
   examine: "This item degrades in combat, and will turn to dust."
-  tradeable: false
+  tradeable: true
   weight: 8.0
   equipment:
     equip_slot: 7
@@ -163801,7 +163801,7 @@
 - id: 13894
   name: "Vesta's plateskirt"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13895
@@ -163842,7 +163842,7 @@
 - id: 13896
   name: "Statius's full helm"
   examine: "This item degrades in combat, and will turn to dust."
-  tradeable: false
+  tradeable: true
   weight: 8.0
   equipment:
     equip_slot: 0
@@ -163876,7 +163876,7 @@
 - id: 13897
   name: "Statius's full helm"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13898
@@ -163917,7 +163917,7 @@
 - id: 13899
   name: "Vesta's longsword"
   examine: "This item degrades in combat, and will turn to dust."
-  tradeable: false
+  tradeable: true
   weight: 1.0
   equipment:
     equip_slot: 3
@@ -163951,7 +163951,7 @@
 - id: 13900
   name: "Vesta's longsword"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13901
@@ -163992,7 +163992,7 @@
 - id: 13902
   name: "Statius's warhammer"
   examine: "This item degrades in combat, and will turn to dust."
-  tradeable: false
+  tradeable: true
   weight: 1.8
   equipment:
     equip_slot: 3
@@ -164026,7 +164026,7 @@
 - id: 13903
   name: "Statius's warhammer"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13904
@@ -164067,7 +164067,7 @@
 - id: 13905
   name: "Vesta's spear"
   examine: "This item degrades in combat, and will turn to dust."
-  tradeable: false
+  tradeable: true
   weight: 4.0
   equipment:
     equip_slot: 3
@@ -164101,7 +164101,7 @@
 - id: 13906
   name: "Vesta's spear"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13907
@@ -164142,7 +164142,7 @@
 - id: 13908
   name: "Corrupt statius's platebody"
   examine: "This item degrades while worn, and will turn to dust."
-  tradeable: false
+  tradeable: true
   weight: 9.0
   equipment:
     equip_slot: 4
@@ -164176,7 +164176,7 @@
 - id: 13909
   name: "Corrupt statius's platebody"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13910
@@ -164217,7 +164217,7 @@
 - id: 13911
   name: "Corrupt vesta's chainbody"
   examine: "This item degrades while worn, and will turn to dust."
-  tradeable: false
+  tradeable: true
   weight: 6.0
   equipment:
     equip_slot: 4
@@ -164251,7 +164251,7 @@
 - id: 13912
   name: "Corrupt vesta's chainbody"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13913
@@ -164292,7 +164292,7 @@
 - id: 13914
   name: "Corrupt statius's platelegs"
   examine: "This item degrades while worn, and will turn to dust."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 7
@@ -164326,7 +164326,7 @@
 - id: 13915
   name: "Corrupt statius's platelegs"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13916
@@ -164367,7 +164367,7 @@
 - id: 13917
   name: "Corrupt vesta's plateskirt"
   examine: "This item degrades while worn, and will turn to dust."
-  tradeable: false
+  tradeable: true
   weight: 8.0
   equipment:
     equip_slot: 7
@@ -164401,7 +164401,7 @@
 - id: 13918
   name: "Corrupt vesta's plateskirt"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13919
@@ -164442,7 +164442,7 @@
 - id: 13920
   name: "Corrupt statius's full helm"
   examine: "This item degrades while worn, and will turn to dust."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 0
@@ -164476,7 +164476,7 @@
 - id: 13921
   name: "Corrupt statius's full helm"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13922
@@ -164517,7 +164517,7 @@
 - id: 13923
   name: "Corrupt vesta's longsword"
   examine: "This item degrades while worn, and will turn to dust."
-  tradeable: false
+  tradeable: true
   weight: 1.0
   equipment:
     equip_slot: 3
@@ -164551,7 +164551,7 @@
 - id: 13924
   name: "Corrupt vesta's longsword"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13925
@@ -164592,7 +164592,7 @@
 - id: 13926
   name: "Corrupt statius's warhammer"
   examine: "This item degrades while worn, and will turn to dust."
-  tradeable: false
+  tradeable: true
   weight: 15.0
   equipment:
     equip_slot: 3
@@ -164626,7 +164626,7 @@
 - id: 13927
   name: "Corrupt statius's warhammer"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13928
@@ -164667,7 +164667,7 @@
 - id: 13929
   name: "Corrupt vesta's spear"
   examine: "This item degrades while worn, and will turn to dust."
-  tradeable: false
+  tradeable: true
   weight: 2.0
   equipment:
     equip_slot: 3
@@ -164701,7 +164701,7 @@
 - id: 13930
   name: "Corrupt vesta's spear"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13931
@@ -164742,7 +164742,7 @@
 - id: 13932
   name: "Corrupt zuriel's robe top"
   examine: "This item degrades while worn, and will turn to dust."
-  tradeable: false
+  tradeable: true
   weight: 27.0
   equipment:
     equip_slot: 4
@@ -164776,7 +164776,7 @@
 - id: 13933
   name: "Corrupt zuriel's robe top"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13934
@@ -164817,7 +164817,7 @@
 - id: 13935
   name: "Corrupt zuriel's robe bottom"
   examine: "This item degrades while worn, and will turn to dust."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 7
@@ -164851,7 +164851,7 @@
 - id: 13936
   name: "Corrupt zuriel's robe bottom"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13937
@@ -164892,7 +164892,7 @@
 - id: 13938
   name: "Corrupt zuriel's hood"
   examine: "This item degrades while worn, and will turn to dust."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 0
@@ -164926,7 +164926,7 @@
 - id: 13939
   name: "Corrupt zuriel's hood"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13940
@@ -164967,7 +164967,7 @@
 - id: 13941
   name: "Corrupt zuriel's staff"
   examine: "This item degrades while worn, and will turn to dust."
-  tradeable: false
+  tradeable: true
   weight: 2.0
   equipment:
     equip_slot: 3
@@ -165000,7 +165000,7 @@
 - id: 13942
   name: "Corrupt zuriel's staff"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13943
@@ -165041,7 +165041,7 @@
 - id: 13944
   name: "Corrupt morrigan's leather body"
   examine: "This item degrades while worn, and will turn to dust."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 4
@@ -165075,7 +165075,7 @@
 - id: 13945
   name: "Corrupt morrigan's leather body"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13946
@@ -165116,7 +165116,7 @@
 - id: 13947
   name: "Corrupt morrigan's leather chaps"
   examine: "This item degrades while worn, and will turn to dust."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 7
@@ -165150,7 +165150,7 @@
 - id: 13948
   name: "Corrupt morrigan's leather chaps"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13949
@@ -165191,7 +165191,7 @@
 - id: 13950
   name: "Corrupt morrigan's coif"
   examine: "This item degrades while worn, and will turn to dust."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 0
@@ -165225,7 +165225,7 @@
 - id: 13951
   name: "Corrupt morrigan's coif"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13952
@@ -165266,7 +165266,7 @@
 - id: 13953
   name: "Corrupt morrigan's javelin"
   examine: "A vicious javelin."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 3
@@ -165300,7 +165300,7 @@
 - id: 13954
   name: "C. morrigan's javelin (p)"
   examine: "A vicious javelin."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 3
@@ -165334,7 +165334,7 @@
 - id: 13955
   name: "C. morrigan's javelin (p+)"
   examine: "A vicious javelin."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 3
@@ -165368,7 +165368,7 @@
 - id: 13956
   name: "C. morrigan's javelin (p++)"
   examine: "A vicious javelin."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 3
@@ -165402,7 +165402,7 @@
 - id: 13957
   name: "C. morrigan's throwing axe"
   examine: "A vicious throwing axe."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 3
@@ -165436,7 +165436,7 @@
 - id: 13958
   name: "Corrupt dragon chainbody"
   examine: "This item degrades while worn, and will turn to dust."
-  tradeable: false
+  tradeable: true
   weight: 7.0
   equipment:
     equip_slot: 4
@@ -165470,7 +165470,7 @@
 - id: 13959
   name: "Corrupt dragon chainbody"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13960
@@ -165511,7 +165511,7 @@
 - id: 13961
   name: "Corrupt dragon med helm"
   examine: "This item degrades while worn, and will turn to dust."
-  tradeable: false
+  tradeable: true
   weight: 1.0
   equipment:
     equip_slot: 0
@@ -165545,7 +165545,7 @@
 - id: 13962
   name: "Corrupt dragon med helm"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13963
@@ -165583,7 +165583,7 @@
 - id: 13964
   name: "Corrupt dragon sq shield"
   examine: "This item degrades while worn, and will turn to dust."
-  tradeable: false
+  tradeable: true
   weight: 3.0
   equipment:
     equip_slot: 5
@@ -165617,7 +165617,7 @@
 - id: 13965
   name: "Corrupt dragon sq shield"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13966
@@ -165658,7 +165658,7 @@
 - id: 13967
   name: "Corrupt dragon plateskirt"
   examine: "This item degrades while worn, and will turn to dust."
-  tradeable: false
+  tradeable: true
   weight: 9.0
   equipment:
     equip_slot: 7
@@ -165692,7 +165692,7 @@
 - id: 13968
   name: "Corrupt dragon plateskirt"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13969
@@ -165733,7 +165733,7 @@
 - id: 13970
   name: "Corrupt dragon platelegs"
   examine: "This item degrades while worn, and will turn to dust."
-  tradeable: false
+  tradeable: true
   weight: 9.0
   equipment:
     equip_slot: 7
@@ -165767,7 +165767,7 @@
 - id: 13971
   name: "Corrupt dragon platelegs"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13972
@@ -165808,7 +165808,7 @@
 - id: 13973
   name: "Corrupt dragon battleaxe"
   examine: "This item degrades while worn, and will turn to dust."
-  tradeable: false
+  tradeable: true
   weight: 1.0
   equipment:
     equip_slot: 3
@@ -165842,7 +165842,7 @@
 - id: 13974
   name: "Corrupt dragon battleaxe"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13975
@@ -165883,7 +165883,7 @@
 - id: 13976
   name: "Corrupt dragon dagger"
   examine: "This item degrades while worn, and will turn to dust."
-  tradeable: false
+  tradeable: true
   weight: 4.0
   equipment:
     equip_slot: 3
@@ -165917,7 +165917,7 @@
 - id: 13977
   name: "Corrupt dragon dagger"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13978
@@ -165958,7 +165958,7 @@
 - id: 13979
   name: "Corrupt dragon scimitar"
   examine: "This item degrades while worn, and will turn to dust."
-  tradeable: false
+  tradeable: true
   weight: 4.0
   equipment:
     equip_slot: 3
@@ -165992,7 +165992,7 @@
 - id: 13980
   name: "Corrupt dragon scimitar"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13981
@@ -166033,7 +166033,7 @@
 - id: 13982
   name: "Corrupt dragon longsword"
   examine: "This item degrades while worn, and will turn to dust."
-  tradeable: false
+  tradeable: true
   weight: 2.0
   equipment:
     equip_slot: 3
@@ -166067,7 +166067,7 @@
 - id: 13983
   name: "Corrupt dragon longsword"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13984
@@ -166108,7 +166108,7 @@
 - id: 13985
   name: "Corrupt dragon mace"
   examine: "This item degrades while worn, and will turn to dust."
-  tradeable: false
+  tradeable: true
   weight: 1.0
   equipment:
     equip_slot: 3
@@ -166142,7 +166142,7 @@
 - id: 13986
   name: "Corrupt dragon mace"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13987
@@ -166183,7 +166183,7 @@
 - id: 13988
   name: "Corrupt dragon spear"
   examine: "This item degrades while worn, and will turn to dust."
-  tradeable: false
+  tradeable: true
   weight: 2.0
   equipment:
     equip_slot: 3
@@ -166217,7 +166217,7 @@
 - id: 13989
   name: "Corrupt dragon spear"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 13990
@@ -174268,7 +174268,7 @@
 - id: 14622
   name: "Rise from the ashes scroll"
   examine: "It's a Rise from the ashes scroll."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 14623
@@ -179830,7 +179830,7 @@
 - id: 15259
   name: "Dragon pickaxe"
   examine: "A very fancy cloak made from black silk and gossamer."
-  tradeable: false
+  tradeable: true
   weight: 2.2
   equipment:
     equip_slot: 3
@@ -179864,7 +179864,7 @@
 - id: 15260
   name: "Dragon pickaxe"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 15261
